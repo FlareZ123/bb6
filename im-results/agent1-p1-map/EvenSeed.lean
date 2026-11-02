@@ -19,7 +19,7 @@ theorem even_hub_reset_seed (b d : Nat) (hr : Reach b d)
         obtain ⟨ha, hc, hbval, hdval⟩ :=
           even_target_parent a c b d ht hb hdpos hdeven h2
         obtain ⟨x, y, hrx, hxe, hax, hy⟩ :=
-          odd_target_parent a c hpre ha (by omega)
+          odd_target_parent a c hpre ha (by omega) (by omega)
         have hxless : x<b := by omega
         have hyeven : y%2=0 := by omega
         obtain ⟨j,s,hs,hpow,hsum⟩ :=
