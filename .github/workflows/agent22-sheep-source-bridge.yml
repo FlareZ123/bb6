@@ -44,7 +44,7 @@ jobs:
           for name in CounterBridge DeterministicMacro SheepPowerBridge SheepBlankCriterion; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
-          lake env lean SheepSourceBridge.lean
+          lake env lean -o ".lake/build/lib/lean/SheepSourceBridge.olean" SheepSourceBridge.lean
 
           for name in InfiniteAncestry PeriodicAncestry GeneralAncestry; do
             cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-infinite-inverse/$name.lean" "$name.lean"
