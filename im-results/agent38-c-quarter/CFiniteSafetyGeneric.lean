@@ -53,6 +53,8 @@ theorem gateway_exclusion_instantiated (j : Nat) (hj : j ≤ 15742) :
     (by intro j hj; omega)
     (by intro j hj; simp only [rank]; omega) j hj
 
+#print axioms gateway_exclusion_optimal_bound
+#print axioms maxSafeIndex_at_witness
 #print axioms gateway_exclusion_from_safe_tail
 #print axioms gateway_exclusion_instantiated
 end BB6Agent38
