@@ -83,6 +83,7 @@ theorem low_gate_fortytwo_mod64_unreachable (t : Nat)
   have hu32 : u%32=21 := by omega
   have hsub : 32*u-(11*u+3)=21*u-3 := by omega
   have hsource : BB6.Agent15.CReach (22*u-3) (21*u-3) := by
+    change BB6.Agent3.CReach (22*u-3) (21*u-3)
     simpa [hsub] using hparent
   exact high_parent_twentyone_unreachable u hu32 hsource
 
