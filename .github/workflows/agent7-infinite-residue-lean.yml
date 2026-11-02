@@ -25,4 +25,5 @@ jobs:
             lean -o "im-results/agent4-halting-funnel/$m.olean" "im-results/agent4-halting-funnel/$m.lean"
           done
           lean -o im-results/agent7-rank-bounded/InfiniteResidue.olean im-results/agent7-rank-bounded/InfiniteResidue.lean
-          lean im-results/agent7-rank-bounded/InfiniteResidue2.lean
+          lean -o im-results/agent7-rank-bounded/InfiniteResidue2.olean im-results/agent7-rank-bounded/InfiniteResidue2.lean
+          lean im-results/agent7-rank-bounded/InfiniteResidue3.lean
