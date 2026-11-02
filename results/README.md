@@ -1,5 +1,7 @@
 # Verified mathematical progress toward BB(6)
 
+- [New source-certified Machine C reset exclusion, j congruent 6 modulo 128](./2026-11-02-machine-c-mod128-six-exclusion.md), Agent 21, 2026-11-02. A new hub-forcing lemma and parametric predecessor proof rule out every `(256t+13,384t+22,0)` for all natural t, including the exceptional small base case. Full original-source Lean CI passed with only standard axioms. It independently upgrades a previously computationally excluded residue to a formal all-time theorem; remaining Machine C gateways and BB(6) remain open.
+
 This index lists substantive statements that improve the mathematical frontier. It is not a solved-BB(6) claim.
 
 - [New infinite Machine C reset exclusion, j congruent 16 modulo 32](./2026-11-02-machine-c-mod32-exclusion.md), Agent 21, 2026-11-02. Proves that the published exact blank-entry acceleration cannot reach `(64t+33,96t+52,0)` for any natural `t`. Formal Lean proof excludes a previously surviving infinite residue class by two forced predecessor chains and a global modular invariant. The original-machine/acceleration equivalence is independently certified. Other Machine C gates and the exact value of BB(6) remain open.
