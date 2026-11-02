@@ -32,7 +32,7 @@ The 22 Lean source files are archived as base64-encoded XZ tar at `c-cert8.tar.x
 
 Decode base64, verify the SHA-256, then extract with Python's standard `base64`, `hashlib`, `tarfile` libraries. The manual-only CI workflow `.github/workflows/agent43-c-quotient-kernel.yml` automates exactly this and recompiles in the following order with Lean 4.36.0-rc2: original `CLine`, `CCert8Pure`, all sixteen `PBlock` files, `CGlobal8`, `CQuotientSound8`, `CMapIf8`, `CFull8`, `CExclusions8`, and `CSourceBridge8`.
 
-All 22 certificate modules plus a local syntactically identical Agent 11 source shim compiled under the supplied Lean 4.36.0-rc2. The terminal unmodified-source CI result should be consulted before claiming the final bridge independently source-verified. The local `#print axioms` audits show only subsets of `[propext, Classical.choice, Quot.sound]`; no `sorryAx` or `native_decide`.
+All 22 certificate modules plus a local syntactically identical Agent 11 source shim compiled under the supplied Lean 4.36.0-rc2. **Independent full-source manual CI passed** at [run 41410746914](https://github.com/FlareZ123/bb6/actions/runs/41410746914), commit `1dfbc3109f3c972c677c77ca7ec32a682f7eb33e`, on 2026-11-02 08:10 UTC. CI verified the SHA-256 bundle, compiled all 22 exact certificate modules in Lean 4.36.0-rc2, and compiled `CSourceBridge8.lean` against the full **unmodified** Agent 11 source. The final axiom audit was `[propext, Classical.choice, Quot.sound]`, with no extra axiom. The local `#print axioms` audits show only subsets of `[propext, Classical.choice, Quot.sound]`; no `sorryAx` or `native_decide`.
 
 ## Limits and next steps
 
