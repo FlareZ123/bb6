@@ -57,6 +57,7 @@ jobs:
           lean -o im-results/agent8-coverage-contract/LeafRules.olean im-results/agent8-coverage-contract/LeafRules.lean
           lean im-results/agent44-drift-closure/BounceCycle.lean
           python im-results/agent44-drift-closure/census.py
+          python im-results/agent44-drift-closure/holdout_overlap.py
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
