@@ -45,5 +45,19 @@ jobs:
           lean -o CSourceBridge8.olean CSourceBridge8.lean
           if test -f "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean"; then
             cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean" Mod8SevenFour.lean
-            lean Mod8SevenFour.lean
+            lean -o Mod8SevenFour.olean Mod8SevenFour.lean
           fi
+      - name: Check Agent 11 all-depth inverse exclusion against original M8 source
+        run: |
+          cd /tmp/a41mod8
+          export LEAN_PATH=.
+          cp "$GITHUB_WORKSPACE"/im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize,AffineParityDepth}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward,EvenTargetExact,EvenTargetOrbit}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{M8ThinBridge,LowGate6,AffineDepthM8,DeepLowGate,DeepFamily}.lean .
+          for f in GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof Agent3CImage SectionAffineInverse ReachAffine AffineNormalize AffineParityDepth BounceInverse Agent3COneFamily Agent3COrbitIff FeederGeneric FeederOrbitGeneric GeneralHighInverse EvenTargetForward EvenTargetExact EvenTargetOrbit M8ThinBridge LowGate6 AffineDepthM8 DeepLowGate DeepFamily; do
+            lean -o "$f.olean" "$f.lean"
+          done
