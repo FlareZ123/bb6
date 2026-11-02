@@ -40,5 +40,28 @@ theorem dyadic_odd_depth_mod8_excluded (a k depth time : Nat)
   have hsecond := (Prod.mk.inj he).2
   omega
 
+/-- Every one-left-counter dyadic halting input with depth 2 mod 8
+    is excluded at all times from the actual blank section. -/
+theorem dyadic_one_depth_two_mod8_excluded (k depth time : Nat)
+    (hk : 4≤k)
+    (hlevel : 2*k-3=haltLevel 4 depth)
+    (hdepth : depth%8=2)
+    (hr : BB6.Agent8Section.run secNext time (some (5,1))=some (1,k)) : False := by
+  have hc := haltLevel_closed 4 depth
+  have hrel : 2*k+3*depth+8=2^(depth+1)*8 := by omega
+  have hdvd : 8 ∣ 2^(depth+1)*8 := by
+    refine ⟨2^(depth+1),?_⟩
+    omega
+  have hmod : (2*k+3*depth+8)%8=0 := by
+    rw [hrel]
+    exact Nat.mod_eq_zero_of_dvd hdvd
+  have hkodd : k%2=1 := by omega
+  have hsum : (1+k)%4=2 := by omega
+  have he := blank_section_mod4 time 1 k hr hkodd hsum
+  have hx := (Prod.mk.inj he).1
+  omega
+
+#print axioms dyadic_one_depth_two_mod8_excluded
+
 #print axioms dyadic_odd_depth_mod8_excluded
 end BB6Agent38
