@@ -52,4 +52,16 @@ private theorem raw_step_agree (m : BB6.Coverage.SimpleMachine) (c : BB6.Coverag
     cases d <;> simp [toAgent8Machine, toAgent8Config,
       BB6Coverage.readSlot, BB6Coverage.applyMove, h] <;> omega
 
+/-- Both representations execute identical full infinite-tape blank computations. -/
+theorem run_agree (m : BB6.Coverage.SimpleMachine) (n : Nat) :
+    BB6Coverage.run (toAgent8Machine m) n BB6Coverage.blank =
+      (BB6.Coverage.run (BB6.Coverage.tick m) n).map toAgent8Config := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [BB6Coverage.run, BB6.Coverage.run, ih]
+    cases h : BB6.Coverage.run (BB6.Coverage.tick m) n with
+    | none => simp [h]
+    | some c => simp [h, raw_step_agree]
+
 end BB6.CoverageAdapter
