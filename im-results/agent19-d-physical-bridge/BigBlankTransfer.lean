@@ -6,6 +6,16 @@ set_option maxRecDepth 16384
 
 namespace BB6.Agent19.Physical
 
+/-- Extract the state component of a physical observational equality without
+    unfolding either source run. This keeps enormous certified checkpoints
+    opaque while retaining the exact state projection. -/
+private theorem obsEq_state {c d : CryptidBoundary.Cfg}
+    (h : BB6.BoundaryPadding.ObsEq c d) : c.st = d.st := by
+  change BB6.BoundaryPadding.CfgEq
+    (BB6.BoundaryPadding.represent c)
+    (BB6.BoundaryPadding.represent d) at h
+  exact h.2.2.2
+
 /-- The original certified frozen-source blank configuration is exactly
     the same infinite physical tape as the literal D0 rooted blank input. -/
 theorem source_blank_physically_blank :
@@ -29,7 +39,7 @@ theorem source_blank_physically_blank :
 theorem original_blank_big_state :
     (CryptidBoundary.run 19848692333528818046 CryptidBoundary.blank).st = 5 := by
   have h := CryptidBoundary.blank19848692333528818046
-  have hs := h.2.2.2
+  have hs := obsEq_state h
   exact Eq.trans hs (by rfl)
 
 /-- Exact infinite-tape primitive-run existence at the source-authenticated
