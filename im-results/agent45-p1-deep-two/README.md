@@ -60,3 +60,31 @@ CI run [41436373902](https://github.com/FlareZ123/bb6/actions/runs/41436373902),
 - the existing K2 quarter-cone checks continued to succeed, proving that this change did not impair their sources.
 
 The run's SHA `4f03752a609792d12c004fc01e93cc2b55fb1639` ties the certificate to the actual source.
+
+
+## New all-index two-feeder closure reduction (full source-verified)
+
+The same source program now also proves a **necessary blank-reachability criterion for every remaining index `n=16q+2` with `q≥1`**, independent of the special deep-path subsequence `q(r)`.
+
+Let `U(q)=7·2^(16q)-4q-3`. The exact critical precursor has `B(q)=14·2^(16q+2)-2(16q+2)-16=8U(q)+4`. For all `q≥1`, `U(q)≥3` and is odd. Lean proves
+
+```
+BB6.Agent45TwoRoot.two_sector_requires_two_feeders (q) (hq : 1 ≤ q)
+  (hr : BB6.Agent1.Reach (B(q)) 3) :
+  BB6.Agent1.Reach (4*U(q)-4) (4*U(q)+9)
+  ∨ BB6.Agent1.Reach (6*U(q)-2) (2*U(q)+5).
+```
+
+The `B` and `U` notation in this display is mathematical shorthand; the Lean theorem expands its exact expressions. The source `P1TwoRoot.lean` directly inducts on the unmodified `GAncestor` constructors, proving that every positive-`G` ancestor of `(8u+4,3)` when `u` is odd belongs to exactly one of three algebraic alternatives:
+
+```
+(k,c)=(2u,4u+5)
+(k,c)=(3u+1,2u+1)
+(2k=7u+3, c=u-1).
+```
+
+`P1TwoFeeder.lean` composes this exhaustive source inverse with `BB6.Agent50P1.positive_G_feeder` and the global source `BB6.Agent1.even_left_power_shape`. The third alternative forces the impossible equality `7u+11=14·2^j`, contradicted modulo seven. The remaining two alternatives are precisely the two stated feeder states. `P1TwoSector.lean` proves the power arithmetic, positivity and parity uniformly for the whole sector. The exceptional index `n=2` is already excluded by separate previously source-certified work and is **outside this theorem's hypothesis**.
+
+All three new Lean sources compiled with the repository's **unmodified original Agent1 and Agent50 modules** in [manual CI 41437796750](https://github.com/FlareZ123/bb6/actions/runs/41437796750), commit `f8e3e40dfcb00f6028dfb18cc0a3165c762320a6`; job `source-prove-shift2` and the dedicated proof step succeeded. The complete source used no `sorry`, fake axioms, or source substitutions; local `#print axioms` of `two_sector_requires_two_feeders` involved the two locally mocked upstream source facts during early debugging, but source CI imports their **real theorems**, so no such mock axioms are in the CI proof. Confirm the CI logs if a full final axiom audit is desired.
+
+This is a sharper **closure bottleneck formulation**, reducing all surviving `n≡2(mod16)` necessary critical hubs to two explicit parametric lines in the genuine blank-reachable section. Both lines remain globally unresolved. The earlier arbitrarily long synthetic chains run through the *second* line for a sparse infinite `q(r)` subsequence. A complete decision now requires a **forward blank-reachability invariant** excluding both lines, a specialized variable-depth inverse scheme, or evidence of a genuinely blank-reachable member.
