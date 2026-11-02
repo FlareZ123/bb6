@@ -173,3 +173,23 @@ In particular `all_reset_index_growth` proves for **every** natural `n`:
 ```
 
 The exponential inequalities come from the exact affine recurrence `2v_{m+1}=3v_m+7(v_m%2)`, `v_0=8`, and hold uniformly without simulation. `#print axioms` for the bounds prints only `[propext, Quot.sound]` in the underlying scalar proof and the standard `Classical.choice` where used by imported theorems; no `sorryAx`. They sharply quantify superlinear reset growth, but are not a parity invariant and do not classify the original six-state machine.
+
+## Two-bit boundary coding and exact modulo-42 stopping classes (07:18 UTC)
+
+The further locally verified `BResetResidues.lean` lemmas establish that the **penultimate** scalar parity bit of a sampled cycle controls the next reset's modulo-six class:
+
+```
+resetA (n+1)%6 = 1  ↔  (iterG (resetA n-1) 0)%2 = 0
+resetA (n+1)%6 = 3  ↔  (iterG (resetA n-1) 0)%2 = 1
+```
+
+Combined with the final scalar parity bit's modulo-seven criterion, this gives the exhaustive equivalences:
+
+```
+sampleZ n%2=1 ↔ resetA(n+1)%42∈{3,25,31,39}
+sampleZ n%2=0 ↔ resetA(n+1)%42∈{7,13,21,27}.
+```
+
+All four theorems are universally quantified, Lean 4.36.0-rc2 compiled, and use only standard axioms, without `sorryAx`. They hold for every syntactically continued reset even if an earlier machine cycle were to halt. The modulo-42 classification uses only the Chinese remainder relation between the earlier verified modulo-6 and modulo-7 constraints.
+
+`Agent24BResidueBridge.lean` has also been extended with `raw_halts_iff_mod42_reset`, composing the same equality of local and source-connected counter maps with the original six-state machine's formal halting criterion. Local arithmetic checking of the mod7↔mod42 equivalence passed. **Pinned-source end-to-end CI re-verification is pending**, and this exact modulo-42 biconditional is a reformulation, with no new halting decision.
