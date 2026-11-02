@@ -92,3 +92,10 @@ jobs:
           lean -o Feeder56.olean Feeder56.lean
           lean -o AffineTargetReach56.olean AffineTargetReach56.lean
           lean Depth2128.lean
+
+          # Agent 11: original-source composite infinite first-halting-family exclusion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-first-family/First24.lean .
+          lean -o SectionAffineInverse.olean SectionAffineInverse.lean
+          lean -o ReachAffine.olean ReachAffine.lean
+          lean First24.lean
