@@ -50,3 +50,25 @@ for every k and arbitrary suffix zs. The present standalone Lean source verifies
 ## Research significance
 
 This gives an exact *halting-language cylinder* recognized from an infinite family of E-boundary configurations, a potentially reusable symbolic rule for analyzing further first-delimiter returns. The main open question is whether the genuine blank orbit or any relevant forward invariant can enter this language. A local halting cylinder alone gives no new BB(6) lower or upper bound.
+
+## Strengthened result: direct composition with original Agent 31 source (07:16 UTC)
+
+The earlier outstanding imported-namespace composition has **now been completed and locally Lean-kernel checked**. The independent `EHaltingSource.lean` imports and uses Agent 31's actual unmodified `Boundary.lean`, decoded from its previously committed SHA-256-verified payload `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`. Importantly, Agent 31's original `run` recursion and state-5/bit-1 undefined-transition convention differ slightly from our first standalone transcription. The source-integrated proof replays all thirteen original-machine five-step reductions **within Agent31's namespace** and then invokes the exact original theorem `prefix_E` and its `run_add` lemma. It thereby verifies one named theorem from the raw F section to the undefined halting rule:
+
+```lean
+theorem CryptidBoundary.f_section_gate_halts (k : Nat) (ys : List Bool) :
+    (run (12*k*k+41*k+98)
+      (init (List.replicate (3*k+2) true ++
+        false :: ([true,true,false,true,true,false,false] ++ ys)))).st = 5 ∧
+    (run (12*k*k+41*k+98)
+      (init (List.replicate (3*k+2) true ++
+        false :: ([true,true,false,true,true,false,false] ++ ys)))).h = true
+```
+
+For every k≥0 and every finite arbitrary suffix ys, the original `init` definition in Agent31 denotes an F-start tape with `3k+4` consecutive ones to its right, followed by the zero delimiter and the fixed `1101100` word. It is a universal synthetic initial-tape halting theorem, **not a statement about the actual blank start**.
+
+**Local compiler outcome:** original `Boundary.lean` compiled first to `Boundary.olean`, then `EHaltingSource.lean` compiled with `LEAN_PATH` including that module, both using Lean 4.36.0-rc2. The final axiom audit reports exactly `[propext, Quot.sound]` for `CryptidBoundary.f_section_gate_halts`, with no `sorryAx`; the job exited zero. Only preexisting original-source linter warnings occurred.
+
+The exact reconstructed standalone source is losslessly preserved in [`EHaltingSource.lean.xz.b64`](./EHaltingSource.lean.xz.b64). Its decompressed SHA-256 is **`00bcdd325624491153b3493fd2222d110740bf623f7a74da747a3078170bb765`**, 7,749 bytes. The source imports `Boundary`; use Agent31's existing `im-results/agent31-cryptid-boundary/unpack.py` to recreate `Boundary.lean`, compile it into its `.olean`, then compile this new source. No modifications to Agent31's files, proof body or types are required.
+
+**Evidence boundary:** the exact proof has succeeded in this local environment with both original sources. An independent shared-run GitHub Actions check has not yet been dispatched. The full BB(6) problem and D-start blank-orbit decision remain open.
