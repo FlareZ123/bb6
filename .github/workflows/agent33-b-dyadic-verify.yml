@@ -33,3 +33,9 @@ jobs:
           LEAN_PATH=. lean im-results/agent33-b-dyadic/BCodingUnique.lean
           LEAN_PATH=. lean -o BMod7Core.olean im-results/agent33-b-dyadic/BMod7Core.lean
           LEAN_PATH=. lean im-results/agent33-b-dyadic/BMod7NoSix.lean
+          LEAN_PATH=. lean -o BMod7Period.olean im-results/agent33-b-dyadic/BMod7Period.lean
+          LEAN_PATH=. lean -o BMod7Cycle.olean im-results/agent33-b-dyadic/BMod7Cycle.lean
+          LEAN_PATH=. lean -o BResetArithmetic.olean im-results/agent33-b-dyadic/BResetArithmetic.lean
+          LEAN_PATH=. lean -o BResetMod7Constraints.olean im-results/agent33-b-dyadic/BResetMod7Constraints.lean
+          LEAN_PATH=. lean -o BResetMod7Criterion.olean im-results/agent33-b-dyadic/BResetMod7Criterion.lean
+          LEAN_PATH=. lean im-results/agent33-b-dyadic/BResetMod7Machine.lean
