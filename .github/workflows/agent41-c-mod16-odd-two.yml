@@ -46,5 +46,9 @@ jobs:
           lean -o CSourceBridge16.olean CSourceBridge16.lean
           if test -f "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean"; then
             cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean" Mod16OneTwo.lean
-            lean Mod16OneTwo.lean
+            lean -o Mod16OneTwo.olean Mod16OneTwo.lean
+          fi
+          if test -f "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16First.lean"; then
+            cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16First.lean" Mod16First.lean
+            lean Mod16First.lean
           fi
