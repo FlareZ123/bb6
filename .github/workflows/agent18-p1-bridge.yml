@@ -35,7 +35,12 @@ jobs:
       - name: Verify independent local P1 acceleration equality
         working-directory: /tmp/cryptids
         run: |
-          cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/HaltingFunnel.lean" HaltingFunnel.lean
+          for m in HaltingFunnel EvenSector OddReturn Reachability BlankCriterion; do
+            cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/$m.lean" "$m.lean"
+          done
           cp "$GITHUB_WORKSPACE/im-results/agent18-p1-bridge/P1Bridge.lean" P1Bridge.lean
-          lake env lean -o .lake/build/lib/lean/HaltingFunnel.olean HaltingFunnel.lean
-          lake env lean P1Bridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-p1-bridge/P1FullBridge.lean" P1FullBridge.lean
+          for m in HaltingFunnel EvenSector OddReturn Reachability BlankCriterion P1Bridge; do
+            lake env lean -o ".lake/build/lib/lean/$m.olean" "$m.lean"
+          done
+          lake env lean P1FullBridge.lean
