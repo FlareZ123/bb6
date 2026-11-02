@@ -13,4 +13,4 @@ new = """    have hmult : (14*2^n)%4=0 := by
   intro hr
 """
 assert source.count(old) == 1
-path.write_text(source.replace(old, new), encoding="utf-8")
+path.write_text(source.replace(old, new).replace("private ", ""), encoding="utf-8")
