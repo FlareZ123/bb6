@@ -102,6 +102,90 @@ theorem alternating_cover (B : Nat) :
   exact partial_drift_cover alternatingTable alternatingStates true B
     (Or.inl rfl) alternating_closed
 
+
+/-- A finite state-set is closed under zero-writing transitions on blank. Its
+    instructions may change direction at every step. -/
+def ZeroWriterClosed (m : Machine) (states : Fin 6 → Prop) : Prop :=
+  ∀ s, states s → ∃ dir next,
+    m (s, false) = some ⟨false, dir, next⟩ ∧ states next
+
+private theorem zero_writer_step (m : Machine) (states : Fin 6 → Prop)
+    (hclosed : ZeroWriterClosed m states)
+    (c : Config) (hs : states c.state)
+    (hblank : ∀ x, c.tape x = false) :
+    ∃ d, rawStep m c = some d ∧ states d.state ∧
+      ∀ x, d.tape x = false := by
+  obtain ⟨dir, next, hm, hn⟩ := hclosed c.state hs
+  let d : Config := applyMove c ⟨false, dir, next⟩
+  refine ⟨d, ?_, hn, ?_⟩
+  · have hz : c.tape c.head = false := hblank c.head
+    simp [rawStep, readSlot, hz, hm, d]
+  · intro x
+    simp [d, applyMove, hblank x]
+
+/-- Exact all-time blank-tape invariant and nonhalting for any finite-control
+    zero-writer, irrespective of direction changes. -/
+theorem zero_writer_never (m : Machine) (states : Fin 6 → Prop)
+    (hinit : states (⟨0, by decide⟩ : Fin 6))
+    (hclosed : ZeroWriterClosed m states) : NeverHalts m := by
+  have all_time : ∀ n, ∃ c, run m n blank = some c ∧
+      states c.state ∧ ∀ x, c.tape x = false := by
+    intro n
+    induction n with
+    | zero =>
+        exact ⟨blank, rfl, hinit, by intro x; rfl⟩
+    | succ n ih =>
+        obtain ⟨c, hc, hs, hb⟩ := ih
+        obtain ⟨d, hd, hsd, hbd⟩ := zero_writer_step m states hclosed c hs hb
+        exact ⟨d, by simp [run, hc, hd], hsd, hbd⟩
+  intro n
+  obtain ⟨c, hc, _, _⟩ := all_time n
+  simp [hc]
+
+def PartialZeroWriterClosed (p : PartialMachine) (states : Fin 6 → Prop) : Prop :=
+  ∀ s, states s → ∃ dir next,
+    p (s, false) = some (some ⟨false, dir, next⟩) ∧ states next
+
+/-- A genuine sparse nonhalting certificate for closed zero-writer controls
+    with arbitrary per-state head directions. -/
+theorem partial_zero_writer_cover (p : PartialMachine)
+    (states : Fin 6 → Prop) (B : Nat)
+    (hinit : states (⟨0, by decide⟩ : Fin 6))
+    (hclosed : PartialZeroWriterClosed p states) :
+    Cover (DecidedBelow B) p := by
+  apply Cover.leaf
+  intro m hm
+  left
+  apply zero_writer_never m states hinit
+  intro s hs
+  obtain ⟨dir, next, h, hn⟩ := hclosed s hs
+  exact ⟨dir, next, hm (s, false) (some ⟨false, dir, next⟩) h, hn⟩
+
+/-- An alternating left/right blank-tape cycle, with all other ten table
+    entries arbitrary, is a certified zero-writer leaf. -/
+def alternatingZeroTable : PartialMachine := fun slot =>
+  if slot = (0, false) then some (some ⟨false, true, 1⟩)
+  else if slot = (1, false) then some (some ⟨false, false, 0⟩)
+  else none
+
+private theorem alternating_zero_closed :
+    PartialZeroWriterClosed alternatingZeroTable alternatingStates := by
+  intro s hs
+  rcases hs with hs | hs
+  · subst s
+    exact ⟨true, 1, by decide, Or.inr rfl⟩
+  · subst s
+    exact ⟨false, 0, by decide, Or.inl rfl⟩
+
+theorem alternating_zero_cover (B : Nat) :
+    Cover (DecidedBelow B) alternatingZeroTable := by
+  exact partial_zero_writer_cover alternatingZeroTable alternatingStates B
+    (Or.inl rfl) alternating_zero_closed
+
+#print axioms zero_writer_never
+#print axioms partial_zero_writer_cover
+#print axioms alternating_zero_cover
+
 #print axioms alternating_cover
 #print axioms directed_drift_never
 #print axioms partial_drift_cover
