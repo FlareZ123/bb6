@@ -116,6 +116,65 @@ theorem critical_residual_two_feeders (n:Nat) (hn:18≤n) (hmod:n%16=2)
   refine ⟨K,hbval,?_⟩
   exact reachable_two_feeders K hK (by simpa [b,hbval] using hr)
 
+
+/-- Each of the two permitted even-sector feeders actually reaches the
+    odd-counter target in exactly two accelerated transitions. -/
+theorem first_feeder_to_target (K:Nat) (hK:K%8=2)
+    (hr:BlankReach (2*K-4) (2*K+9)) :
+    BlankReach (4*K+4) 3 := by
+  have hKbound : 2≤K := by omega
+  have heven : (2*K-4)%2=0 := by omega
+  have hstep1 : T (2*K-4) (2*K+9) = some (2*K-1,2*K+7) := by
+    simp [T,heven]
+    omega
+  have hGshape : ThreeShape (4*K+4) 3 K (2*K+5) := by
+    refine ⟨K,rfl,Or.inl ⟨rfl,by omega⟩⟩
+  have hm : (3+(4*K+4)/2+3)%8=4 := by omega
+  have hG : G K (2*K+5)=(4*K+4,3) :=
+    (G_preimages_mod8_four (4*K+4) 3 K (2*K+5) (by omega) hm).mpr hGshape
+  have hstep2 : T (2*K-1) (2*K+7) = some (4*K+4,3) := by
+    have hpar : (2*K-1)%2=1 := by omega
+    have hk : (2*K-1)/2+1=K := by omega
+    simpa [T, hpar, hk, hG, show 2*K+7-2=2*K+5 by omega]
+  exact BlankReach.next (2*K-1) (2*K+7) (4*K+4) 3
+    (BlankReach.next (2*K-4) (2*K+9) (2*K-1) (2*K+7) hr hstep1) hstep2
+
+theorem second_feeder_to_target (K:Nat) (hK:K%8=2)
+    (hr:BlankReach (3*K-2) (K+5)) :
+    BlankReach (4*K+4) 3 := by
+  have hKbound : 2≤K := by omega
+  have heven : (3*K-2)%2=0 := by omega
+  have hstep1 : T (3*K-2) (K+5) = some (3*K+1,K+3) := by
+    simp [T,heven]
+    omega
+  have hk : (3*K+1)/2+1=K+(K+1)/2+1 := by omega
+  have hGshape : ThreeShape (4*K+4) 3 (K+(K+1)/2+1) (K+1) := by
+    refine ⟨K,rfl,Or.inr (Or.inl ⟨by omega,rfl⟩)⟩
+  have hm : (3+(4*K+4)/2+3)%8=4 := by omega
+  have hG : G (K+(K+1)/2+1) (K+1)=(4*K+4,3) :=
+    (G_preimages_mod8_four (4*K+4) 3 (K+(K+1)/2+1) (K+1) (by omega) hm).mpr hGshape
+  have hstep2 : T (3*K+1) (K+3) = some (4*K+4,3) := by
+    have hpar : (3*K+1)%2=1 := by omega
+    have hnzero : K≠0 := by omega
+    simpa [T, hpar, hk, hG, hnzero, show K+3-2=K+1 by omega,
+      show K+3 ≠3 by omega]
+  exact BlankReach.next (3*K+1) (K+3) (4*K+4) 3
+    (BlankReach.next (3*K-2) (K+5) (3*K+1) (K+3) hr hstep1) hstep2
+
+/-- Exact two-family equivalence at all residual K=2(mod8): this is
+    fully quantified over all finite times and the real blank orbit. -/
+theorem reach_two_feeders_iff (K:Nat) (hK:K%8=2) :
+    BlankReach (4*K+4) 3 ↔
+    BlankReach (2*K-4) (2*K+9) ∨ BlankReach (3*K-2) (K+5) := by
+  constructor
+  · exact reachable_two_feeders K hK
+  · intro h
+    rcases h with h | h
+    · exact first_feeder_to_target K hK h
+    · exact second_feeder_to_target K hK h
+
+#print axioms BB6.Agent19.TwoFeeder.reach_two_feeders_iff
+
 #print axioms BB6.Agent19.TwoFeeder.T_to_K_three
 #print axioms BB6.Agent19.TwoFeeder.reachable_two_feeders
 #print axioms BB6.Agent19.TwoFeeder.critical_residual_two_feeders
