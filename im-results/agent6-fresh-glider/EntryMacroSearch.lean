@@ -1,5 +1,5 @@
 import MacroSearch
-import EntryMacroOracle
+import EntryMacroLeft
 
 namespace BB6Coverage
 
@@ -9,7 +9,7 @@ namespace BB6Coverage
 def entryDecisionOracle (p : PartialMachine)
     (bound rayLimit macroLimit entryLimit : Nat) : Bool :=
   macroDecisionOracle p bound rayLimit macroLimit ||
-    finiteEntryMacroOracle p entryLimit macroLimit
+    finiteEntryMacroBiOracle p entryLimit macroLimit
 
 theorem entryDecisionOracle_sound (p : PartialMachine)
     (bound rayLimit macroLimit entryLimit : Nat)
@@ -17,7 +17,7 @@ theorem entryDecisionOracle_sound (p : PartialMachine)
     Cover (DecidedBelow bound) p := by
   rcases (Bool.or_eq_true _ _).mp h with hm | he
   · exact macroDecisionOracle_sound p bound rayLimit macroLimit hm
-  · exact finiteEntryMacroOracle_sound p entryLimit macroLimit bound he
+  · exact finiteEntryMacroBiOracle_sound p entryLimit macroLimit bound he
 
 def entryMacroCoverSearch (p : PartialMachine)
     (bound rayLimit macroLimit entryLimit : Nat) : Nat → Bool
@@ -72,7 +72,7 @@ theorem entryToB_new_accept :
     refine ⟨1, by decide, ?_⟩
     apply List.any_eq_true.mpr
     exact ⟨2, by decide, entryToB_check⟩
-  simp [entryDecisionOracle, he]
+  simp [entryDecisionOracle, finiteEntryMacroBiOracle, he]
 
 theorem entryToB_new_search_leaf :
     Cover (DecidedBelow 2) entryToBExample :=
@@ -82,5 +82,21 @@ theorem entryToB_new_search_leaf :
 #print axioms entryDecisionOracle_sound
 #print axioms entryMacroCoverSearch_sound
 #print axioms entryToB_new_search_leaf
+
+theorem entryToBLeft_new_accept :
+    entryDecisionOracle entryToBLeftExample 2 0 3 2 = true := by
+  have hl : finiteEntryMacroLeftOracle entryToBLeftExample 2 3 = true := by
+    apply List.any_eq_true.mpr
+    refine ⟨1, by decide, ?_⟩
+    apply List.any_eq_true.mpr
+    exact ⟨2, by decide, entryToBLeft_check⟩
+  simp [entryDecisionOracle, finiteEntryMacroBiOracle, hl]
+
+theorem entryToBLeft_new_search_leaf :
+    Cover (DecidedBelow 2) entryToBLeftExample :=
+  entryMacroCoverSearch_sound 2 0 3 2 0 entryToBLeftExample
+    (by simpa [entryMacroCoverSearch] using entryToBLeft_new_accept)
+
+#print axioms entryToBLeft_new_search_leaf
 
 end BB6Coverage
