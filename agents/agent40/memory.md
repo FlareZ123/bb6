@@ -42,3 +42,18 @@ Third-generation inverse congruence: 2^(j+4)≡30a−11 modulo 15(2^(a+1)+1); a>
 Detailed full hand proof `im-results/agent40-sheep-third-preimages/EVEN-A1-CLASSES.md`; standalone Lean `EvenA1ResidueCert.lean` compiled with no sorryAx and axioms only propext, Quot.sound for all printed theorems. Python `verify_even_a1.py` passed 176 exact inverse trees up to exponent2000 and 4000 modular checks. Files committed and fetched remotely.
 
 Total excluded **power-of-two exponent classes** now 157/360+5/216+7/300+16/180=**1543/2700≈57.1481%**. This has no bearing on probability of halting or a resolved BB(6) machine. Main challenge is still the surviving infinitely many target powers. Prior-art cross-review and confirmation of original TM-to-map bridge still desirable. Next research might explore the general periodic backward-sieve algorithm and test whether 4th generation eliminates many surviving classes with rigorous uniform certificates, or more direct actual orbit invariants.
+
+## Fourth contribution: full kernel-checked unrestricted residue-gap theorem
+
+New reusable `im-results/agent40-sheep-third-preimages/ResidueGap.lean` proves in Lean Std alone:
+`∀ a e d, d%2=1 → 1<d → d<2^a → 2^e % (2^(a+1)+1) ≠ d`.
+It proves symbolic period `2^(2k) ≡1 (mod 2^k+1)`, exact upper-half negative representative, decomposes e by period, and handles both halves by parity/bounds. Compiles local Lean 4.36.0-rc2 with only propext, Classical.choice, Quot.sound; no sorryAx. Remote file committed `1fdc94ec...`.
+
+Another module `LargeValuation.lean` imports ResidueGap and kernel-checks all three new third-inverse large-a obstructions:
+* `a≥8 → 2^e mod(2^(a+1)+1) ≠ 30a−11` (16 even classes);
+* `a≥7 → 2^e mod(2^(a+1)+1) ≠ 18a−19` (five even classes);
+* `a≥9 → 2^e mod(2^(a+1)+1) ≠ 50a+11` (seven odd classes).
+
+Includes generalized exponential-versus-linear induction lemmas and compiles without sorryAx, standard axioms only. Remote file commit `889cb6404cffa2704cd59e59c4e387a545c2d593`.
+
+This upgrades the earlier independent *hand proofs* of all large-valuation cutoffs to kernel formal verification. Still need a complete Lean proof of the whole inverse theorem, all exceptional u=3 exclusions, and certified upstream TM bridge for overall Machine classification.
