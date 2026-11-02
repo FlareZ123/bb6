@@ -12,7 +12,7 @@ from filelock import FileLock
 ROOT = Path(__file__).resolve().parent
 ARCHIVE = ROOT / "agent2-cryptid-proof.lean.xz.b64"
 OUTPUT = ROOT / "agent2-cryptid-proof.lean"
-SHA256 = "58e4beca8f67073460c098d43a7043a93c7a708c1d32aceff299d8bf98e3489d"
+SHA256 = "e0b3d3d3689ff69fad908126e239ad2093bfdc54f720b11a59c7fc6dce60a216"
 
 data = lzma.decompress(base64.b64decode(ARCHIVE.read_text().strip()))
 actual = hashlib.sha256(data).hexdigest()
