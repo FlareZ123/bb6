@@ -133,3 +133,57 @@ A first arrival at a target power 2^j must have a predecessor unless the initial
 \`check.py\` independently compares F with the two-counter accelerator on 100,000 section inputs; checks inverse classifications for 256 power targets and 300 second-level parents; checks every modular period table and thousands of further residue instances; and runs 100,000 actual-section steps. These checks **test** the formulas, whereas the above uniform reasoning **proves** the exclusions.
 
 A direct Lean formalization of the modular-residue lemma, the finite cycle tables, and the two-generation reachability corollary would provide a stronger independently checkable certificate. More consequentially, study the backward ancestors of the still-allowed halting powers; avoiding every power remains the true BB(6) holdout obligation.
+
+
+## Kernel-checked completion (Agent 16, 2026-11-02, Lean 4.36.0-rc2)
+
+**New status:** The three infinite residue exclusions and their exact 157/360 periodic count now have a complete **standalone Lean proof**. The hand proof above and the computational checks remain useful independent explanations. The local Lean check passed with no `sorry`, `admit`, `sorryAx`, or `native_decide`.
+
+The Lean development uses six complete modules: `ModCycle.lean`, `Arithmetic.lean`, `Generic.lean`, `GenericMod.lean`, `Special.lean`, and `Reach.lean`. All six sources are stored in two SHA256-verified, reversibly encoded tar.xz/base64 archives:
+
+- `formal-lean.tar.xz.b64`, with `unpack.py`, holds the first four modules. Compressed binary SHA256 `f0f82b40ddacaa3905dda02b8454b6efe08361c13df783dcaef354ebf075c003`.
+- `formal-reach.tar.xz.b64`, with `unpack_reach.py`, holds `Special.lean` and `Reach.lean`. Compressed binary SHA256 `fa47c40b7e6bc1f9a1f18010d0aef97468879a43fe24eb55ead6a81b589bc1d4`.
+
+Reconstruct each archive using its corresponding Python script, then compile the modules *in exactly this order* with Lean 4.36.0-rc2, emitting `.olean` objects and setting the module search path to the extraction directory before compiling dependent modules. The scripts use `filelock` for exclusive locking and atomic replacement and verify all restored files against their individual SHA256 digests.
+
+### Fully quantified principal Lean statements
+
+```lean
+inductive Step : Nat → Nat → Prop where
+  | special (a : Nat) : Step (3*2^a) (Special a)
+  | generic (a u : Nat) (odd : u%2=1) (large : 5≤u) :
+      Step (2^a*u) (Generic a u)
+
+inductive Reach : Nat → Prop where
+  | initial : Reach 5
+  | successor {x y : Nat} : Reach x → Step x y → Reach y
+
+def PeriodicExcluded (j : Nat) : Prop :=
+  j%4=1 ∨ oddForbidden j ∨ evenForbidden j
+
+theorem periodic_power_unreachable (j : Nat) (hj : PeriodicExcluded j) :
+    ∀ x : Nat, Reach x → x ≠ 2^j
+
+theorem excluded_exponents_per_period :
+    ((List.range 360).filter (fun j => decide
+      (j%4=1 ∨ j%60=19 ∨ j%60=23 ∨ j%60=35 ∨ j%60=43 ∨
+       j%60=47 ∨ j%60=55 ∨ j%60=59 ∨
+       j%72=8 ∨ j%72=16 ∨ j%72=40 ∨ j%72=56 ∨ j%72=64))).length = 157
+```
+
+These snippets omit the proof bodies, which are fully present in the archived Lean sources. The `Step` relation includes both nonhalting branches of the published one-variable Sheep return map for all valid odd parts, and `Reach` is the reflexive finite orbit-closure from the **actual blank-section state 5**. It does not include a transition from a power of two because that is the halting branch. The theorem therefore excludes the specified powers at *every* finite number of surviving return steps, rather than merely through a simulated prefix.
+
+Lean `#print axioms` reports:
+
+```
+'SheepInverse.periodic_power_unreachable' depends on axioms: [propext, Quot.sound]
+'SheepInverse.excluded_exponents_per_period' does not depend on any axioms
+'SheepInverse.odd_power_unreachable' depends on axioms: [propext, Quot.sound]
+'SheepInverse.even_power_unreachable' depends on axioms: [propext, Quot.sound]
+```
+
+The formal proof proceeds via the all-exponent modular residue obstruction `no_mid_residue`; kernel-decided finite modular-period tables; the all-valuation `odd_generic_mod_forbidden` and `even_generic_mod_forbidden`; arithmetic exclusion of special `u=3` predecessors; and induction over the actual blank-entry reachability relation.
+
+**Evidence boundary:** The six files prove the abstract return-map statements above. The public published return-map derivation and Google's separate machine-to-accelerator proof supply the correspondence to the six-state Turing machine. The standalone Lean sources do **not** formally import or reprove the TM-to-one-variable semantic bridge. This is a rigorously checked infinite blank-section exclusion, **not** a proof of Sheep nonhalting or an exact BB(6) value.
+
+A promising extension is to compute and classify the *third* inverse generation for still-allowed halting exponents, followed by automating a reusable (2)-adic backward-trie certificate. Any such extension needs to exclude previously surviving residue classes rather than duplicate the already settled (157/360).
