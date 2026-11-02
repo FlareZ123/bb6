@@ -57,6 +57,168 @@ theorem affineQuotientExcluded_sound (a k : Nat)
 
 #print axioms affineQuotientExcluded_sound
 
+/-- Elementary exponential domination needed to prove that the exceptional
+    M16 base point (1,7) is never a stopping parameter for m≡7 mod 16. -/
+private theorem powBoundAll (m : Nat) :
+    m=0 ∨ 3*m+11 < 2^(2*m+3) := by
+  induction m using Nat.strongRecOn with
+  | ind m ih =>
+      cases m with
+      | zero => exact Or.inl rfl
+      | succ n =>
+          cases n with
+          | zero => exact Or.inr (by decide)
+          | succ n =>
+              have hprev := ih (n+1) (by omega)
+              have hprev' : 3*(n+1)+11 < 2^(2*(n+1)+3) := by
+                rcases hprev with h0|hbound
+                · omega
+                · exact hbound
+              have hpow : 2^(2*(n+2)+3) = 4*2^(2*(n+1)+3) := by
+                have h : 2*(n+2)+3 = (2*(n+1)+3)+2 := by omega
+                rw [h,Nat.pow_add,show 2^2=4 by decide]
+                simp [Nat.mul_comm]
+              rw [hpow]
+              exact Or.inr (by omega)
+
+/-- The first-family right-hand side is divisible by 16 for m>0. -/
+private theorem first_mod16_zero (m k : Nat) (hm : 0<m)
+    (hk : k+3*m+4=2^(2*m+3)) :
+    (k+3*m+4)%16=0 := by
+  have hpow : 16 ∣ 2^(2*m+3) := by
+    obtain ⟨r,hr⟩ : ∃ r, 2*m+3=4+r := ⟨2*m-1,by omega⟩
+    rw [hr,Nat.pow_add]
+    rw [show 2^4=16 by decide]
+    exact ⟨2^r,rfl⟩
+  rw [hk]
+  exact Nat.mod_eq_zero_of_dvd hpow
+
+/-- The combined arithmetic and quotient filter rejects eight of the
+    sixteen first-family m-residue classes. The two M16 classes are included
+    alongside six classes already caught by affine normalization. -/
+private theorem affineQuotientExcluded_first_family
+    (m k : Nat)
+    (hm : m%16=1 ∨ m%16=4 ∨ m%16=5 ∨ m%16=7 ∨
+          m%16=9 ∨ m%16=12 ∨ m%16=13 ∨ m%16=14)
+    (hk : k+3*m+4=2^(2*m+3)) :
+    affineQuotientExcluded 1 k = true := by
+  have hmpos : 0<m := by
+    rcases hm with h|h|h|h|h|h|h|h <;> omega
+  have hmod := first_mod16_zero m k hmpos hk
+  have hbig : 3*m+11 < 2^(2*m+3) := by
+    rcases powBoundAll m with h0|hbound
+    · omega
+    · exact hbound
+  rcases hm with hm1|hm4|hm5|hm7|hm9|hm12|hm13|hm14
+  · have hkmod : k%16=9 := by omega
+    have hnorm : affineNormalize 1 k=(1,k) := by
+      unfold affineNormalize
+      have hc : ¬ (4≤k ∧ k%2=0 ∧ (1+k)%4=1) := by omega
+      simp [hc]
+    have hbasic : affineExcluded 1 k=true := by
+      unfold affineExcluded
+      apply of_decide_eq_true
+      simp [hnorm]
+      omega
+    simp [affineQuotientExcluded,hbasic]
+  · have hkmod : k%16=0 := by omega
+    have hk8 : k%8=0 := by omega
+    have hstep : 4≤k ∧ k%2=0 ∧ (1+k)%4=1 := by omega
+    have hstop : ¬ (4≤(k-2)/2 ∧ ((k-2)/2)%2=0 ∧ ((k-1)+(k-2)/2)%4=1) := by omega
+    have hnorm : affineNormalize 1 k=(k-1,(k-2)/2) := by
+      unfold affineNormalize
+      rw [dif_pos hstep]
+      have ha : 1+k-2=k-1 := by omega
+      rw [ha,affineNormalize,dif_neg hstop]
+    have hbasic : affineExcluded 1 k=true := by
+      unfold affineExcluded
+      apply of_decide_eq_true
+      simp [hnorm]
+      omega
+    simp [affineQuotientExcluded,hbasic]
+  · have hkmod : k%16=13 := by omega
+    have hnorm : affineNormalize 1 k=(1,k) := by
+      unfold affineNormalize
+      have hc : ¬ (4≤k ∧ k%2=0 ∧ (1+k)%4=1) := by omega
+      simp [hc]
+    have hbasic : affineExcluded 1 k=true := by
+      unfold affineExcluded
+      apply of_decide_eq_true
+      simp [hnorm]
+      omega
+    simp [affineQuotientExcluded,hbasic]
+  · have hkmod : k%16=7 := by omega
+    have hnorm : affineNormalize 1 k=(1,k) := by
+      unfold affineNormalize
+      have hc : ¬ (4≤k ∧ k%2=0 ∧ (1+k)%4=1) := by omega
+      simp [hc]
+    have hkneq : k≠7 := by omega
+    have hquot : affineQuotientCondition 1 k := by
+      simp [affineQuotientCondition,hnorm,hkmod,hkneq]
+    have hdec : decide (affineQuotientCondition 1 k)=true :=
+      decide_eq_true hquot
+    unfold affineQuotientExcluded
+    simp [hdec]
+  · have hkmod : k%16=1 := by omega
+    have hnorm : affineNormalize 1 k=(1,k) := by
+      unfold affineNormalize
+      have hc : ¬ (4≤k ∧ k%2=0 ∧ (1+k)%4=1) := by omega
+      simp [hc]
+    have hbasic : affineExcluded 1 k=true := by
+      unfold affineExcluded
+      apply of_decide_eq_true
+      simp [hnorm]
+      omega
+    simp [affineQuotientExcluded,hbasic]
+  · have hkmod : k%16=8 := by omega
+    have hk8 : k%8=0 := by omega
+    have hstep : 4≤k ∧ k%2=0 ∧ (1+k)%4=1 := by omega
+    have hstop : ¬ (4≤(k-2)/2 ∧ ((k-2)/2)%2=0 ∧ ((k-1)+(k-2)/2)%4=1) := by omega
+    have hnorm : affineNormalize 1 k=(k-1,(k-2)/2) := by
+      unfold affineNormalize
+      rw [dif_pos hstep]
+      have ha : 1+k-2=k-1 := by omega
+      rw [ha,affineNormalize,dif_neg hstop]
+    have hbasic : affineExcluded 1 k=true := by
+      unfold affineExcluded
+      apply of_decide_eq_true
+      simp [hnorm]
+      omega
+    simp [affineQuotientExcluded,hbasic]
+  · have hkmod : k%16=5 := by omega
+    have hnorm : affineNormalize 1 k=(1,k) := by
+      unfold affineNormalize
+      have hc : ¬ (4≤k ∧ k%2=0 ∧ (1+k)%4=1) := by omega
+      simp [hc]
+    have hbasic : affineExcluded 1 k=true := by
+      unfold affineExcluded
+      apply of_decide_eq_true
+      simp [hnorm]
+      omega
+    simp [affineQuotientExcluded,hbasic]
+  · have hkmod : k%16=2 := by omega
+    have hnorm : affineNormalize 1 k=(1,k) := by
+      unfold affineNormalize
+      have hc : ¬ (4≤k ∧ k%2=0 ∧ (1+k)%4=1) := by omega
+      simp [hc]
+    have hquot : affineQuotientCondition 1 k := by
+      simp [affineQuotientCondition,hnorm,hkmod]
+    have hdec : decide (affineQuotientCondition 1 k)=true :=
+      decide_eq_true hquot
+    unfold affineQuotientExcluded
+    simp [hdec]
+
+/-- Eight first-family parameter classes are impossible for the blank
+    Machine C orbit: m≡1,4,5,7,9,12,13,14 (mod 16). -/
+theorem blank_no_first_halt_parameter_residue
+    (m k : Nat)
+    (hm : m%16=1 ∨ m%16=4 ∨ m%16=5 ∨ m%16=7 ∨
+          m%16=9 ∨ m%16=12 ∨ m%16=13 ∨ m%16=14)
+    (hk : k+3*m+4=2^(2*m+3)) :
+    ¬ CReach 1 k := by
+  exact affineQuotientExcluded_sound 1 k
+    (affineQuotientExcluded_first_family m k hm hk)
+
 /-- Every reachable section input is rejected by neither branch of the
     sound one-sided filter. -/
 theorem affineQuotientExcluded_false_of_reachable (a k : Nat)
