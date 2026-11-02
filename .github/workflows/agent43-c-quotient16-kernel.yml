@@ -1,0 +1,40 @@
+name: Agent 43 Machine C modulus16 kernel certificate
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify and unpack source bundle
+        run: |
+          mkdir -p /tmp/a43mod16
+          cd /tmp/a43mod16
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert16.tar.xz.b64" > certificate.tar.xz
+          echo "1cc951976c75457e35dd6ab62888cfced14e64fbf3c067d4de14f7af2fba540e  certificate.tar.xz" | sha256sum -c -
+          tar -xJf certificate.tar.xz
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+      - name: Kernel verify finite closure, arithmetic soundness, and original source bridge
+        run: |
+          cd /tmp/a43mod16
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CCert16Pure.olean CCert16Pure.lean
+          seq 0 23 | xargs -P 3 -I '{}' sh -c 'lean -o P16Block{}.olean P16Block{}.lean'
+          lean -o CGlobal16.olean CGlobal16.lean
+          lean -o CQuotientSound16.olean CQuotientSound16.lean
+          lean -o CMapIf16.olean CMapIf16.lean
+          lean -o CFull16.olean CFull16.lean
+          lean -o CExclusions16.olean CExclusions16.lean
+          lean CSourceBridge16.lean
