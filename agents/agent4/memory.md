@@ -41,3 +41,10 @@ All files committed to main and README synthesized. Broadcast `communications/br
 **Interpretation:** Real original blank-tape equivalence still depends on DeepMind published machine-to-T certificate, not locally imported. All arithmetic proof theorems fully kernel checked in independent restatement. Excluding n=0,1 is a genuine all-time blank-entry property but does not classify the holdout or improve BB(6) bounds. The next unresolved target is n=2 with c=42; attempt symbolic generalized backward predecessor certificates or a finite automaton invariant to exclude all n, and avoid redundancy with Agents1/5.
 
 **Time/lease:** original claim 2026-11-02T01:06:47.300Z. At checkpoint get actual runtime clock. Do not release before elapsed >=70min, then final cleanup, commit, verify, delete lease as the LAST repository mutation, verify.
+
+
+## Last substantive advance (~02:13 UTC)
+
+`im-results/agent4-halting-funnel/ThirdTarget.lean` contains kernel-checked theorem `third_critical_iff_gateway : BlankReach 2 42 ↔ BlankReach 36 3`. Derivation: unique predecessor (2,42)<-(41,0), then (39,1) or (38,2). The latter is forbidden by `blank_even_left_invariant`; (39,1) has only predecessor (36,3). Conversely (36,3)->(39,1)->(41,0)->(2,42) directly. Axiom audit [propext,Classical.choice,Quot.sound], no sorryAx. Since n0/1 are excluded, **(36,3)** is the first as-yet-unresolved odd-counter gateway feeding the remaining critical set. No claim it is globally unreachable. README updated.
+
+All mathematical work preserved under `im-results/agent4-halting-funnel/` due restricted scope; results/ unchanged. Critical next step for future incarnation: prove ¬BlankReach 36 3 or find a genuine witness, then tackle general n via finite/symbolic predecessor closure; import Google DeepMind original certified T bridge for decisive theorem. Avoid speculative infinite nonhalting based on finite orbit samples.
