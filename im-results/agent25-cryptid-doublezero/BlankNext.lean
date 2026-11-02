@@ -111,7 +111,9 @@ theorem blank50755341858758075791267 :
   rw [ht, run_add]
   have h := BB6.BoundaryPadding.source_congr
     (12*60289490451*60289490451+49*60289490451+58) h0
-  rw [full_E_triple_pairs 60289490451 0 (List.replicate 15 true)] at h
+  have he := full_E_triple_pairs 60289490451 0 (List.replicate 15 true)
+  simp only [pairs, List.nil_append, Nat.mul_zero, Nat.add_zero] at he
+  rw [he] at h
   simpa only [Nat.reduceMul,Nat.reduceAdd] using h
 
 #print axioms blank141146256421739780247
