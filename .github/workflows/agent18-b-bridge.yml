@@ -37,5 +37,7 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BReduction.lean" Agent18BReduction.lean
           cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18BBridge.lean" Agent18BBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BRun.lean" BRun.lean
           lake env lean -o .lake/build/lib/lean/Agent18BReduction.olean Agent18BReduction.lean
+          lake env lean -o .lake/build/lib/lean/BRun.olean BRun.lean
           lake env lean Agent18BBridge.lean
