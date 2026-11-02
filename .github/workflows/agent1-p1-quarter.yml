@@ -48,4 +48,6 @@ jobs:
           for m in QuarterGap QuarterCone QuarterFinal SecondFeederValuation; do
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
           done
+          lean -o im-results/agent1-p1-quarter/ShortConeGap.olean im-results/agent1-p1-quarter/ShortConeGap.lean
+          lean -o im-results/agent1-p1-quarter/ShortConeBridge.olean im-results/agent1-p1-quarter/ShortConeBridge.lean
           echo "Verified all q≥1 with q%4=0 or3 using genuine source Lean dependencies."
