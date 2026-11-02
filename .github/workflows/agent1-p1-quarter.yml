@@ -52,4 +52,5 @@ jobs:
           lean -o im-results/agent1-p1-quarter/ShortConeBridge.olean im-results/agent1-p1-quarter/ShortConeBridge.lean
           lean -o im-results/agent1-p1-quarter/MediumConeGap.olean im-results/agent1-p1-quarter/MediumConeGap.lean
           lean -o im-results/agent1-p1-quarter/MediumConeReach.olean im-results/agent1-p1-quarter/MediumConeReach.lean
+          lean -o im-results/agent1-p1-quarter/UniversalSmallLeft.olean im-results/agent1-p1-quarter/UniversalSmallLeft.lean
           echo "Verified all q≥1 with q%4=0 or3 using genuine source Lean dependencies."
