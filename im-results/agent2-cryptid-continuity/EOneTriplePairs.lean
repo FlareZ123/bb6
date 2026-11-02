@@ -78,13 +78,15 @@ theorem scan_pairs (q : Nat) (L ys : List Bool) :
       simp [pairs,List.append_assoc]
     rw [h]
     rw [scan2, ih]
-    simpa only [List.append_assoc,oppairs_app]
+    rw [←List.append_assoc,oppairs_app]
 
 theorem oppairs_add (a b : Nat) :
     oppairs (a+b) = oppairs a ++ oppairs b := by
   induction a with
   | zero => simp [oppairs]
-  | succ a ih => simp [oppairs,ih,List.append_assoc]
+  | succ a ih =>
+      simpa only [Nat.succ_add, oppairs, List.cons_append] using
+        congrArg (fun xs => false::true::xs) ih
 
 theorem oppairs_comm (a b : Nat) :
     oppairs a ++ oppairs b = oppairs b ++ oppairs a := by
