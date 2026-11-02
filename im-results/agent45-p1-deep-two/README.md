@@ -88,3 +88,21 @@ The `B` and `U` notation in this display is mathematical shorthand; the Lean the
 All three new Lean sources compiled with the repository's **unmodified original Agent1 and Agent50 modules** in [manual CI 41437796750](https://github.com/FlareZ123/bb6/actions/runs/41437796750), commit `f8e3e40dfcb00f6028dfb18cc0a3165c762320a6`; job `source-prove-shift2` and the dedicated proof step succeeded. The complete source used no `sorry`, fake axioms, or source substitutions; local `#print axioms` of `two_sector_requires_two_feeders` involved the two locally mocked upstream source facts during early debugging, but source CI imports their **real theorems**, so no such mock axioms are in the CI proof. Confirm the CI logs if a full final axiom audit is desired.
 
 This is a sharper **closure bottleneck formulation**, reducing all surviving `n≡2(mod16)` necessary critical hubs to two explicit parametric lines in the genuine blank-reachable section. Both lines remain globally unresolved. The earlier arbitrarily long synthetic chains run through the *second* line for a sparse infinite `q(r)` subsequence. A complete decision now requires a **forward blank-reachability invariant** excluding both lines, a specialized variable-depth inverse scheme, or evidence of a genuinely blank-reachable member.
+
+
+## Upgrade to an exact critical-reset equivalence (source-CI success)
+
+The preceding necessary two-line condition is now an **iff** for the true critical reset target, not only its precursor. Theorem `BB6.Agent45TwoRoot.two_sector_critical_iff_feeders` in `P1TwoSector.lean` establishes, for every natural `q≥1` and `U(q)=7·2^(16q)-4q-3`:
+
+```
+BB6.Agent1.Reach 2 (14·2^(16q+2)-2(16q+2)-10)
+  ↔
+(BB6.Agent1.Reach (4U-4) (4U+9)
+  ∨ BB6.Agent1.Reach (6U-2) (2U+5)).
+```
+
+Actual Lean notation uses `*`, `^` and `u2 q` with completely explicit definitions. The proof of the backward implication uses original `Reach.next` constructors, the source-evaluated `lower_pair` and `middle_pair` transitions to the precursor `(8U+4,3)`, then three exact original `T` transitions via `critical_root_to_target` to `(2,8U+10)`. The forward implication uses the original `critical_target_implies_three`, the exhaustive `GAncestor` trichotomy, the original positive-`G` feeder theorem, and a modular contradiction to eliminate the third branch. All quantifiers cover **every q≥1** without a finite time horizon.
+
+**Full original-source, unmodified Lean 4.36.0-rc2 CI passed:** [run 41438844462](https://github.com/FlareZ123/bb6/actions/runs/41438844462), code commit `79ab934214d7921555e46729b9a38aa58969f572`. All steps returned success. Source files `P1TwoRoot.lean`, `P1TwoFeeder.lean`, `P1TwoIff.lean`, `P1TwoCritical.lean`, `P1TwoSector.lean` contain final named theorems and `#print axioms`. Their early local typechecking used minimal matching imports with mock upstream facts, but this **CI** independently rebuilt original Agent1/Agent50 theorem modules and loaded no mock. Its final axiom reports derive only from standard Lean axioms, not `sorryAx`.
+
+This is the strongest present P1 n=2-sector contribution here: an exact, checkable equivalence linking the original halting-critical counter family to two forward-reachability lines. It does **not** decide either line, the n≡14(mod16) sector, P1's halting status, or BB(6).
