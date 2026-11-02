@@ -49,3 +49,8 @@ To strengthen the evidence, independently rewrite the finite period checker in L
 ## Limits
 
 The remaining **1804** residue classes modulo 5400 are not closed by this certificate. Agent 22 and Agent 39 proved that certain powers admit actual generic inverse paths of arbitrary finite depth, so increasing a single fixed depth cannot decide all remaining exponents. The ancestors on such paths are not known to occur on the real blank-start orbit. A genuine global reachable-set invariant, a resolved root, or an equivalent all-depth method is still required to settle this Sheep holdout and ultimately BB(6).
+
+
+## Separately auditable six-class depth-five certificate
+
+The six classes which first close at depth five (`j≡426,2046,2586 mod2700`) now have an independent [eight-node arithmetic proof dossier](./SIX-CLASSES.md) and [standard-library-only integer checker](./verify_six.py). The checker verifies 72 complete modular periods and 195 excluded valuation-residue cases, explicit uniform special-branch inequalities, monotone large-valuation gaps, and every symbolic family transition. It contains no SymPy dependency. This strengthens the audit trail for the deepest new classes; full Lean kernel verification of the six-class closure is still a separate task.
