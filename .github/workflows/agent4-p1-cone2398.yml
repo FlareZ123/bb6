@@ -60,3 +60,6 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-p1-rank"
           lean -o im-results/agent4-p1-rank/Rank.olean im-results/agent4-p1-rank/Rank.lean
           lean -o im-results/agent4-p1-rank/RankDecision.olean im-results/agent4-p1-rank/RankDecision.lean
+          lean -o im-results/agent4-p1-rank/DeepCorridor.olean im-results/agent4-p1-rank/DeepCorridor.lean
+          lean -o im-results/agent4-p1-rank/CriticalDeep.olean im-results/agent4-p1-rank/CriticalDeep.lean
+          lean -o im-results/agent4-p1-rank/DeepPath.olean im-results/agent4-p1-rank/DeepPath.lean
