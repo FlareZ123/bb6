@@ -21,7 +21,7 @@ jobs:
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a3-bounce/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-bounce/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-bounce/
-          cp im-results/agent3-c-bounce-inverse/{BounceInverse,AffineTarget,AffineTargetReach,AffineTargetExact,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse}.lean /tmp/a3-bounce/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,AffineTarget,AffineTargetReach,AffineTargetExact,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward}.lean /tmp/a3-bounce/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a3-bounce/
           cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a3-bounce/
           cd /tmp/a3-bounce
@@ -39,5 +39,6 @@ jobs:
           lean -o Agent3COrbitIff.olean Agent3COrbitIff.lean
           lean FeederOrbitGeneric.lean
           lean GeneralHighInverse.lean
+          lean EvenTargetForward.lean
           lean -o Agent38SectionParity.olean Agent38SectionParity.lean
           lean AffineTargetReach.lean
