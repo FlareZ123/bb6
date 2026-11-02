@@ -111,6 +111,7 @@ private theorem feeder_generic_true_edge (t : Nat) (ht : 1≤t) :
   have hsmall : 8*t+1≤2*(12*t-1)+6 := by omega
   simp only [hlow,ite_false,hodd,ite_true,hsmall,Option.some.injEq,
     Prod.mk.injEq]
+  trace_state
   omega
 
 /-- Uniform exact inverse for the complete j=4t+1 feeder, t>=1.
