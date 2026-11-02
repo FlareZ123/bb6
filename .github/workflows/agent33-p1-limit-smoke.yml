@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
-        base: [3474]
+        base: [3474, 3538]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -49,5 +49,6 @@ jobs:
           done
           echo "FINAL P1 SOURCE REACHABILITY EXCLUSION n=4096q+${{ matrix.base }}"
           sed -i '/^namespace BB6.Cert$/a set_option maxRecDepth 65536\nset_option maxHeartbeats 2000000' SourceBridge.lean
-          nl -ba SourceBridge.lean | head -100
+          sed -i 's/^set_option maxRecDepth 8192$/set_option maxRecDepth 65536/' SourceBridge.lean
+          grep 'set_option' SourceBridge.lean
           lean SourceBridge.lean
