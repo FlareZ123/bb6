@@ -81,7 +81,7 @@ theorem iterate_lift (n : Nat) (s : Option (Nat × Nat)) :
       exact ih (s.bind nextT)
 
 theorem isNone_equiv (n : Nat) :
-    (((Option.bind · Source.highLevelNext)^[n] (some Source.highLevelStart)).isNone =
+    (((Option.bind · Source.highLevelNext)^[n] (some Source.highLevelStart)).isNone) =
       (runT n (some (2,1))).isNone := by
   change (((Option.bind · Source.highLevelNext)^[n]
       (Option.map liftPair (some (2,1)))).isNone = _
@@ -94,9 +94,9 @@ theorem collatz_iff_run :
   unfold CollatzHalts
   constructor
   · rintro ⟨n,hn⟩
-    exact ⟨n,(isNone_equiv n).mp hn⟩
+    exact ⟨n,by rwa [isNone_equiv n] at hn⟩
   · rintro ⟨n,hn⟩
-    exact ⟨n,(isNone_equiv n).mpr hn⟩
+    exact ⟨n,by rwa [← isNone_equiv n] at hn⟩
 
 /-- Semantics connection from the six-state, two-symbol blank tape to
     the independently established local P1 formal halting relation. -/
