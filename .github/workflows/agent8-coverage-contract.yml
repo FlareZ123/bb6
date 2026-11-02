@@ -37,6 +37,7 @@ jobs:
           lean -o im-results/agent6-fresh-glider/RayMacro.olean im-results/agent6-fresh-glider/RayMacro.lean
           lean -o im-results/agent6-fresh-glider/FreshRayGlider.olean im-results/agent6-fresh-glider/FreshRayGlider.lean
           lean -o im-results/agent6-fresh-glider/MacroOracle.olean im-results/agent6-fresh-glider/MacroOracle.lean
+          lean im-results/agent6-fresh-glider/FiveFamily.lean
           lean -o im-results/agent8-coverage-contract/RayFiniteOracle.olean im-results/agent8-coverage-contract/RayFiniteOracle.lean
           lean -o im-results/agent8-coverage-contract/FiniteHalting.olean im-results/agent8-coverage-contract/FiniteHalting.lean
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
