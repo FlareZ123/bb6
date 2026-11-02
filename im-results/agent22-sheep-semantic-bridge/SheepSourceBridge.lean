@@ -27,7 +27,7 @@ theorem next_lift (s : SheepBridge.State) :
   rcases m with _ | _ | m
   · rcases k with _ | k <;> rfl
   · rfl
-  · rfl
+  · by_cases hm : m % 2 = 0 <;> simp [Source.next, SheepBridge.nextA, lift, hm]
 
 /-- Transfer the upstream machine-certified acceleration to the exact
 counter rules used by SheepPowerBridge. -/
@@ -50,14 +50,14 @@ theorem valid_local :
 
 /-- Abstract local iterates agree exactly with Cryptids' convention. -/
 theorem iter_agree (n : Nat) (s : Option SheepBridge.State) :
-    ((Option.bind · SheepBridge.nextA)^[n] s) =
+    Function.iterate (fun x : Option SheepBridge.State => x.bind SheepBridge.nextA) n s =
       BB6.Agent22.iter SheepBridge.nextA n s := by
   induction n generalizing s with
   | zero => rfl
   | succ n ih =>
     rw [Function.iterate_succ_apply]
-    change ((Option.bind · SheepBridge.nextA)^[n]
-      (s.bind SheepBridge.nextA)) =
+    change Function.iterate (fun x : Option SheepBridge.State => x.bind SheepBridge.nextA) n
+      (s.bind SheepBridge.nextA) =
       BB6.Agent22.iter SheepBridge.nextA (n+1) s
     rw [ih]
     have hs := BB6.Agent22.iter_add SheepBridge.nextA 1 n s
@@ -71,7 +71,7 @@ theorem raw_halts_iff_local :
         (some ((0,2) : SheepBridge.State)) = none := by
   have hb := valid_local.isHalt_iff
   unfold CollatzHalts at hb
-  simpa only [iter_agree] using hb
+  simpa only [iter_agree, Option.isNone_iff_eq_none] using hb
 
 /-- End-to-end original six-state blank-tape semantic equivalence.
 The remaining mathematical problem is whether the t=5 section orbit
