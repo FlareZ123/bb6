@@ -24,4 +24,5 @@ jobs:
           for m in HaltingFunnel EvenSector OddReturn Reachability BlankCriterion BlankInvariants NoFirstTarget NoSecondTarget; do
             lean -o "im-results/agent4-halting-funnel/$m.olean" "im-results/agent4-halting-funnel/$m.lean"
           done
-          lean im-results/agent7-rank-bounded/InfiniteResidue.lean
+          lean -o im-results/agent7-rank-bounded/InfiniteResidue.olean im-results/agent7-rank-bounded/InfiniteResidue.lean
+          lean im-results/agent7-rank-bounded/InfiniteResidue2.lean
