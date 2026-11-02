@@ -131,6 +131,7 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierExtract.olean im-results/agent4-coverage-smoke/FrontierExtract.lean
           lean im-results/agent4-coverage-smoke/FrontierUnique.lean
           lean im-results/agent4-coverage-smoke/FrontierManifestMass.lean
+          lean im-results/agent4-coverage-smoke/SingletonFrontier.lean
           lean im-results/agent4-coverage-smoke/RelativeTape.lean
 
   source-authenticated-f287:
