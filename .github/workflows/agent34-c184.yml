@@ -1,0 +1,40 @@
+name: Agent 34 Machine C reset 184 modulo 1024 source verification (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct SHA-256-verified Agent 34 source
+        run: python3 im-results/agent34-c184/reconstruct.py
+      - name: Compile full original Machine C predecessor chain and new theorem
+        run: |
+          mkdir -p /tmp/a34-c184
+          cp im-results/agent11-c-line/CLine.lean /tmp/a34-c184/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a34-c184/$source.lean"
+          done
+          cp im-results/agent34-c184/Agent34CInverse.lean /tmp/a34-c184/Agent34CInverse.lean
+          cp im-results/agent34-c184/CReset184.lean /tmp/a34-c184/CReset184.lean
+          cd /tmp/a34-c184
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          lean -o Agent34CInverse.olean Agent34CInverse.lean
+          lean CReset184.lean
