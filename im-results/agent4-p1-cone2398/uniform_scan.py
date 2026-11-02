@@ -98,7 +98,7 @@ def check_residue(r, max_depth=16, max_nodes=2000):
         if inverses is None:
             return False, "inverse", len(seen), leaves
         for k, u in inverses:
-            x, y = 2 * k - 4, u + 4
+            x, y = k * 2 - 4, u + 4
             if not x.at_least(4) or not y.at_least(1):
                 return False, "range", len(seen), leaves
             parity = y.residue(2)
