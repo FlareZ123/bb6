@@ -1,0 +1,67 @@
+name: Agent 47 general P1 modulo1024 original-source Lean batch
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent47-p1-mod1024-full-audit]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact original P1 recursive G source
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse"
+          lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
+          lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent1-p1-map/PosEvenForm.olean im-results/agent1-p1-map/PosEvenForm.lean
+          lean -o im-results/agent1-p1-map/ResetGate.olean im-results/agent1-p1-map/ResetGate.lean
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1NoRootOne.olean im-results/agent47-p1-finite-inverse/P1NoRootOne.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1CriticalValuation.olean im-results/agent47-p1-finite-inverse/P1CriticalValuation.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1CriticalList.olean im-results/agent47-p1-finite-inverse/P1CriticalList.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1CriticalArithmetic.olean im-results/agent47-p1-finite-inverse/P1CriticalArithmetic.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1CriticalReachBridge.olean im-results/agent47-p1-finite-inverse/P1CriticalReachBridge.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1ConeListBridge.olean im-results/agent47-p1-finite-inverse/P1ConeListBridge.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseFixed.olean im-results/agent47-p1-finite-inverse/P1InverseFixed.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Generated.olean im-results/agent47-p1-finite-inverse/P1R54Generated.lean
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Blocked.olean im-results/agent47-p1-finite-inverse/P1R54Blocked.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Gap.olean im-results/agent47-p1-finite-inverse/P1R54Gap.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Identity.olean im-results/agent47-p1-finite-inverse/P1R54Identity.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Final.olean im-results/agent47-p1-finite-inverse/P1R54Final.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1SixAffine.olean im-results/agent47-p1-finite-inverse/P1SixAffine.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1SixBlocked.olean im-results/agent47-p1-finite-inverse/P1SixBlocked.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1SixGap.olean im-results/agent47-p1-finite-inverse/P1SixGap.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1SixFinal.olean im-results/agent47-p1-finite-inverse/P1SixFinal.lean
+      - name: Restore exact symbolic cone generator from hashed source archive
+        run: |
+          base64 -d im-results/agent47-p1-mod1024-generator/P1Mod1024Generator.tar.gz.b64 | gzip -dc | tar xf - -C im-results/agent47-p1-mod1024-generator
+          echo "63a6226ecbe3ae1e146161388e7254e76fcfa9c3efa4a60d40e8a829d0a8aff9  im-results/agent47-p1-mod1024-generator/gen_p1_mod1024.py" | sha256sum -c -
+          echo "6e91296470b633e14c4e9980ffa593af15957bbab8dd49f1828071c152b8eb83  im-results/agent47-p1-mod1024-generator/p1_scan_mod1024.py" | sha256sum -c -
+          echo "4e88f9286c1eba55b8dde7d970f4c4888f82da9c2cf180045790b38cb271fde7  im-results/agent47-p1-mod1024-generator/P1GapTemplate.txt" | sha256sum -c -
+          echo "214ca00acc95ddf4239da479660731798d4cc7d9d8ed197b68512e7126dd961a  im-results/agent47-p1-mod1024-generator/P1FinalTemplate.txt" | sha256sum -c -
+          echo "5b2dff26f8785fb15b229dac9302b3e08898646f37c2044253cf88eea422c01f  im-results/agent47-p1-mod1024-generator/verify_batch.py" | sha256sum -c -
+          python -m pip install --quiet filelock
+      - name: Source-verify six distinct all-natural residue families in original Lean source
+        env:
+          P1_GROUP: ${{ matrix.group }}
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent47-p1-mod1024-generator"
+          python im-results/agent47-p1-mod1024-generator/verify_batch.py
