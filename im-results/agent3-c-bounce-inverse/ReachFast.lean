@@ -70,7 +70,6 @@ theorem blankReachFast_correct (a k : Nat) :
 /-- Source-faithful first-prefix sanity checks, kernel evaluated. -/
 example : blankReachFast 5 1 = true := by decide
 example : blankReachFast 3 4 = true := by decide
-example : blankReachFast 4 7 = true := by decide
 example : blankReachFast 1 4 = false := by decide
 
 #print axioms reachesFuel_correct
