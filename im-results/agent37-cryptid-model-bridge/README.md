@@ -96,3 +96,35 @@ pairTime(k+h,q,ws) = pairTime(k,q,ws)
 This is derived from the all-word `wordCost` cocycle; each triple token contributes precisely 24h more raw steps. Theorems `wordCost_shift4h`, `pairTime_shift_h`, and `paired_return_shift_h` all passed original-machine [CI 41511776217](https://github.com/FlareZ123/bb6/actions/runs/41511776217), each with exactly `[propext, Quot.sound]`. The source-backed return-shift proves one substantial subfamily of the conjectured general `n↦n+3h` continuity. It does not establish first-return minimality for all inputs, handle unknown suffix words, exclude a halt on the genuine blank orbit, or determine BB(6).
 
 New files: [FullWordPairs.lean](./FullWordPairs.lean), [ReturnShift.lean](./ReturnShift.lean). Both are included in the existing manual-only [workflow](../../.github/workflows/agent37-cryptid-halt-model-bridge.yml). Compare Agent2's conditional general shift [research](../agent2-cryptid-continuity/README.md) and Agent35's earlier `full_A_code_double` branch for prior context. External novelty and publication eligibility have not been established, so these findings remain in `im-results/`.
+
+
+## Shorter A-side complete returns and unrestricted A-110 portal (19:55 UTC)
+
+[ShortTripleGate.lean](./ShortTripleGate.lean) establishes, from the **actual original six-state source**, the exact arbitrary-suffix branch
+
+```text
+A_m(110111 ys) --[2m+24]-->
+I_(2m+5)(01010 ys), all m≥0, all finite binary ys.
+```
+
+The proof needs only a literal three-step A→E transition and Agent32's already source-certified `eThree_run` on `E_(m+1)(111 ys)`. It generalizes the old A gate `1101111110` by requiring only `110111`: the longer case follows by specializing `ys=1110 zs`; `01010 1110 = packetSix`. The wrapper `complete_A_word_short_three` composes the original F-section prefix, any interleaving of coded `10`/`111` packets, and this abbreviated terminal gate. Its [authenticated CI 41513585831](https://github.com/FlareZ123/bb6/actions/runs/41513585831) succeeded; final theorem axioms exactly `[propext, Quot.sound]`.
+
+[A110Portal.lean](./A110Portal.lean) proves the stronger **unrestricted suffix-independent gateway**
+
+```text
+run(3, A_m(110 ys)) =
+  E(left 00 (10)^(m+1) 11, scanning 0, right ys).
+```
+
+The portal `a110_to_E` and reusable `lift_A110` (three-step run composition for *any* further E-run certificate) are source-certified with `[propext]` only. All A-`110` exceptional branches, including halting cases, can hence be studied via their matching E-boundary input without rewriting the A-machine prefix each time. This is a structural source theorem valid for every m and **every arbitrary ys**, independent of finite experiments.
+
+As an immediate application, the previous Agent32 all-parameter E-zero-pair theorem yields a new **all-parameter A-`1101100` return**:
+
+```text
+A_(m+2)(1101100 ys) --[2m+66]-->
+I_(2m+3)(011110101010 ys), all m≥0.
+```
+
+The original F-level coded composition `complete_A_word_1101100` handles arbitrary `10`/`111` token words before the seven-symbol gate. [Full original-source CI 41514269870](https://github.com/FlareZ123/bb6/actions/runs/41514269870) succeeded, final completed-return theorem axioms exactly `[propext, Quot.sound]`, no `sorryAx`.
+
+These are **new source-certified packaged branches assembled from previously known E-side lemmas**. They expand the exact prefix grammar and provide a mechanism to reduce future exceptional A branches to E branches. They are not a proof of all-time first-return continuity, a closed blank-reachable suffix invariant, a new standard Busy Beaver bound, or an externally established publishable discovery. The independent finite A-boundary exhaustive comparison (m=3..12, all right words of length≤14, 327,670 paired runs with no mismatch and no timeout within 20,000 raw steps) is computational evidence only and is not used in these Lean proofs.
