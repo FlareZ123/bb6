@@ -9,7 +9,7 @@ theorem parent_is_actual {x y : Nat} (hp : Parent0 x y) :
   rcases hp with ⟨hge, hodd, hxy⟩
   have hy : x + (x-1)/2 = y := by omega
   have he := SheepBridge.SectionNext.general 0 x hge hodd
-  simpa only [Nat.pow_zero, Nat.one_mul, Nat.zero_add, hy] using he
+  simpa only [Nat.pow_zero, Nat.one_mul, Nat.add_zero, hy] using he
 
 /-- Every all-zero-valuation chain consists of real counter-machine transitions. -/
 theorem chain_is_actual {h x y : Nat} (c : Chain0 h x y) :
