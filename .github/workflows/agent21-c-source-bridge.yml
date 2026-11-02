@@ -88,6 +88,8 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CHubSplit.olean CHubSplit.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128Eighteen.lean" CMod128Eighteen.lean
           lake env lean -o .lake/build/lib/lean/CMod128Eighteen.olean CMod128Eighteen.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128SeventyTwo.lean" CMod128SeventyTwo.lean
+          lake env lean -o .lake/build/lib/lean/CMod128SeventyTwo.olean CMod128SeventyTwo.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32Bridge.lean" CMod32Bridge.lean
           lake env lean -o .lake/build/lib/lean/CMod32Bridge.olean CMod32Bridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128SixBridge.lean" CMod128SixBridge.lean
@@ -95,7 +97,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32TwentyTwoBridge.lean" CMod32TwentyTwoBridge.lean
           lake env lean -o .lake/build/lib/lean/CMod32TwentyTwoBridge.olean CMod32TwentyTwoBridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128EighteenBridge.lean" CMod128EighteenBridge.lean
-          lake env lean CMod128EighteenBridge.lean
+          lake env lean -o .lake/build/lib/lean/CMod128EighteenBridge.olean CMod128EighteenBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128SeventyTwoBridge.lean" CMod128SeventyTwoBridge.lean
+          lake env lean CMod128SeventyTwoBridge.lean
 
       - name: Source-certify Agent 20 finite quotient representative lemma
         working-directory: /tmp/cryptids
