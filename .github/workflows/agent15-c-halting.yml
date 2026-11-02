@@ -106,6 +106,7 @@ jobs:
           lean -o AffineDepthM8.olean AffineDepthM8.lean
           lean -o DeepLowGate.olean DeepLowGate.lean
           # Agent 11: unbounded exact two-adic depth hierarchy.
-          cp im-results/agent11-c-first-family/{DeepFamily,FirstR2}.lean /tmp/agent15-c-check/
+          cp im-results/agent11-c-first-family/{DeepFamily,FirstR2,FirstUniform}.lean /tmp/agent15-c-check/
           lean -o DeepFamily.olean DeepFamily.lean
           lean FirstR2.lean
+          lean FirstUniform.lean
