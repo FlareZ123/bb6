@@ -24,3 +24,20 @@ Do not promote to `results/` without frontier-advancing findings.
 Created `im-results/agent4-halting-funnel/EvenSector.lean` (imports `HaltingFunnel`; compile base to olean then extension). The kernel-checked theorem `even_trace_from_zero_iff` proves `(∃ steps, EvenHIn steps a 0) ↔ (∃ n, a = C 0 n - 1)`, where `EvenHIn` encodes literal T-halting traces whose second counter is even at every hub. The proof models exhaustive even-sector gates, resets, growth, and exits, includes recursive G parity, and proves `E_j+4≠C(0,m)` for all j,m to eliminate reset-assisted halts. It compiled using Lean 4.36.0-rc2, with axiom audit [propext, Classical.choice, Quot.sound], no sorryAx. README updated. This does not handle later odd-c excursions nor settle blank-tape BB(6).
 
 Next focus: odd-c excursion normal forms and exact constraints on the blank-tape orbit's return to c=0, ideally linking the converse to reachability.
+
+
+## Major proof milestone (~02:11 UTC): full blank-entry target criterion
+
+Lean module chain `im-results/agent4-halting-funnel/` now also contains:
+- `OddReturn.lean`: exact two-/three-step U map for even-a odd-c, unique even-c entry at c=3, clean-halt criterion.
+- `GModular.lean` and `Mod8Gateway.lean`: rigorous mod8/mod4 dichotomy and even-k G exit c3 restriction.
+- `Reachability.lean`: T from odd c can only produce odd c or c0; no direct transition to positive even c.
+- `BlankCriterion.lean`: **full global blank-start reduction** `blank_halts_iff_closed`, proved Lean kernel: (∃s,HaltsIn s 2 1) ↔ (∃n, ReachT 2 1 2 (14*2^n−2*n−10)). This closes Agent1's previously *informal* PHASE-CLASSIFICATION forward direction for all possible odd excursions, using strong induction on halting trace length plus EvenSector complete converse. Axioms [propext, Classical.choice, Quot.sound], no sorryAx.
+- `BlankInvariants.lean`: `blank_even_left_invariant` proves all reachable positive-c even-a hubs satisfy a=2 or a%4=0. `BlankReach` forward-path form is proved equivalent to `ReachT 2 1`.
+- `NoFirstTarget.lean`: `blank_ne_first_critical : ¬BlankReach 2 4`. Verified permanent nonreachability by exhaustive predecessors (2,4) ← (3,0) ← (1,1) or (0,2), last two no T predecessors.
+- `NoSecondTarget.lean`: `blank_ne_second_critical : ¬BlankReach 2 16`. Backward: (2,16) ← (15,0) ← (13,1) or (12,2). The (13,1) branch requires forbidden (10,3), contradicting blank_even_left_invariant. The (12,2) branch requires (3,10) ← (0,12), which has no predecessor under T. Rigorous `G_even_positive_output_direct` handles all recursion. Entire proof compiled Lean 4.36.0-rc2 with standard axioms only.
+All files committed to main and README synthesized. Broadcast `communications/broadcast/2026-11-02T0157Z_agent4-formal-global-criterion.md` and direct note to Agent1 `communications/agent1/2026-11-02T0207Z_agent4-global-criterion-verified.md` publicized criterion and first exclusion.
+
+**Interpretation:** Real original blank-tape equivalence still depends on DeepMind published machine-to-T certificate, not locally imported. All arithmetic proof theorems fully kernel checked in independent restatement. Excluding n=0,1 is a genuine all-time blank-entry property but does not classify the holdout or improve BB(6) bounds. The next unresolved target is n=2 with c=42; attempt symbolic generalized backward predecessor certificates or a finite automaton invariant to exclude all n, and avoid redundancy with Agents1/5.
+
+**Time/lease:** original claim 2026-11-02T01:06:47.300Z. At checkpoint get actual runtime clock. Do not release before elapsed >=70min, then final cleanup, commit, verify, delete lease as the LAST repository mutation, verify.
