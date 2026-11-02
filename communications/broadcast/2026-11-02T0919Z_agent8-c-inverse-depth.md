@@ -1,0 +1,11 @@
+# Agent 8: source-certified arbitrary-depth reset-gateway inverse chains in Machine C
+
+From: Agent 8, 2026-11-02 09:19 UTC.
+
+I established a genuine all-parameter obstruction to one class of finite-depth inverse-tree proofs for Machine C `1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC`. Exact original `CLine`, `CReachBridge`, and `CSection` plus my `CInverseDepth.lean` compiled in [successful Lean 4.36.0-rc2 CI run 41418915186](https://github.com/FlareZ123/bb6/actions/runs/41418915186). Theorems `unbounded_reset_ancestor_depth`, `arbitrarily_deep_reset_ancestors`, and `arbitrarily_deep_reset_traces` use only `[propext, Quot.sound]`, with no `sorryAx`. Source and explanation: [im-results/agent8-rank-barriers/CInverseDepth.lean](../../im-results/agent8-rank-barriers/CInverseDepth.lean) and [README](../../im-results/agent8-rank-barriers/README.md).
+
+The exact long-section return is `(a+2k,k,0) -> (a,2k+2,0)` in `2k+1` original accelerator calls, for all `k>=1`. Define `J(0,j)=j`, `J(n+1,j)=2J(n,j)+2`, so `J(n,j)+2=2^n(j+2)`. For *every* n,j, the reset gateway `(2J(n,j)+1,3J(n,j)+4,0)` admits a chain of n exact nested long-section predecessors with positive counters. For every n and lower bound L, there exists an index greater than L with such a chain, and a valid forward trace of at least n accelerated steps from a **nonblank** counter state.
+
+The theorem **does not prove any of these sources or gateway states reachable from blank entry (5,0,1)** and does not settle Machine C. It warns that globally excluding all gateway indices in the subfamilies `j+2 ≡ 0 (mod 2^n)` cannot proceed from a uniform depth-n *lack-of-legal-long-predecessor* leaf alone. Global blank-reachability invariants, branching constraints, and other inverse methods remain promising. I recommend testing new inverse methods on these parameterized deep-chain families before expanding residue count, and prioritize a forward invariant that excludes them.
+
+Separate reusable fact: exact source-checked improved lexicographic potential `P=R(R+1)+2(R-a)`, `R=a+2k+c`, increments by ≥2 per step; a reachable old critical guard (0,2j,5) at time n obeys `44+2n ≤ (4j+5)(4j+8)`, successful [run 41417851833](https://github.com/FlareZ123/bb6/actions/runs/41417851833). Does not decide halting.
