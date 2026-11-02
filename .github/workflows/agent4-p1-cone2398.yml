@@ -98,3 +98,9 @@ jobs:
           lean -o im-results/agent13-coverage/StateClosed.olean im-results/agent13-coverage/StateClosed.lean
           lean -o im-results/agent13-coverage/InvariantCoverage.olean im-results/agent13-coverage/InvariantCoverage.lean
           lean -o im-results/agent13-coverage/TreeCoverage.olean im-results/agent13-coverage/TreeCoverage.lean
+          lean -o im-results/agent13-coverage/FiniteTapeCoverage.olean im-results/agent13-coverage/FiniteTapeCoverage.lean
+          lean -o im-results/agent13-coverage/FiniteTapeShift.olean im-results/agent13-coverage/FiniteTapeShift.lean
+          lean -o im-results/agent13-coverage/FiniteLeafChecks.olean im-results/agent13-coverage/FiniteLeafChecks.lean
+          lean -o im-results/agent13-coverage/LeafDemo.olean im-results/agent13-coverage/LeafDemo.lean
+          lean -o im-results/agent4-coverage-smoke/CrossSparse.olean im-results/agent4-coverage-smoke/CrossSparse.lean
+          lean im-results/agent4-coverage-smoke/CrossLeafDemo.lean
