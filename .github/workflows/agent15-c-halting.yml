@@ -95,11 +95,12 @@ jobs:
           # Agent 11: original-source composite low-gate and first-family exclusion.
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-odd-image/{Agent3COneFamily,Agent3COrbitIff}.lean /tmp/agent15-c-check/
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward,EvenTargetExact,EvenTargetOrbit}.lean /tmp/agent15-c-check/
-          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/LowGate6.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{M8ThinBridge,LowGate6}.lean /tmp/agent15-c-check/
           for f in BounceInverse Agent3COneFamily Agent3COrbitIff FeederGeneric FeederOrbitGeneric GeneralHighInverse EvenTargetForward EvenTargetExact EvenTargetOrbit; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean LowGate6.lean
+          lean -o M8ThinBridge.olean M8ThinBridge.lean
+          lean -o LowGate6.olean LowGate6.lean
 
           # Agent 11: compositional 2-adic affine invariant at all depths.
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{AffineDepthM8,DeepLowGate}.lean /tmp/agent15-c-check/
