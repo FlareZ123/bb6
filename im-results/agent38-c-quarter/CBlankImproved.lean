@@ -124,7 +124,29 @@ theorem blank_thin_cutoff (j n : Nat)
   rw [hadd] at hs
   omega
 
+/-- Explicit tightened Machine C blank-orbit target-search budget. -/
+theorem blank_thin_cutoff_clean (j n : Nat)
+    (h : run n (some (5,0,1)) = some (0,2*j,4*j+10)) :
+    n ≤ 16*j*(j+2)+11 := by
+  have hb := blank_thin_cutoff j n h
+  have hprod : (8*j)*(8*j)=4*((16*j)*j) := by
+    calc
+      (8*j)*(8*j) = (8*8)*(j*j) := by ac_rfl
+      _ = (4*16)*(j*j) := rfl
+      _ = 4*((16*j)*j) := by ac_rfl
+  have hpoly : (8*j+10)*(8*j+11)-2*(4*j+10) =
+      4*(16*j*(j+2)+11)+32*j+46 := by
+    have he : (8*j+10)*(8*j+11) =
+        (4*(16*j*(j+2)+11)+32*j+46)+2*(4*j+10) := by
+      simp only [Nat.mul_add,Nat.add_mul]
+      rw [hprod]
+      omega
+    omega
+  rw [hpoly] at hb
+  omega
+
 #print axioms strong_step
 #print axioms strong_run
 #print axioms blank_thin_cutoff
+#print axioms blank_thin_cutoff_clean
 end BB6Agent38
