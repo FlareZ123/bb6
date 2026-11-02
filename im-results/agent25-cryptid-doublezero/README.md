@@ -19,3 +19,21 @@ The block `1^(3q)` is implemented as `tblock q` by recursion. The formula holds 
 Together with Agent 31's already-checked `prefix_A` theorem, the iteration formula yields a conditional F-section macro for `I_(3k+3)(0 1^(3q) 0 ys)`, with new unary length `8k+8q+11` after `12k²+49k+44+12q²+(24k+55)q` raw steps. **Composition across independently defined configurations is a pending formal bridge**. An independent raw blank-tape simulation verified the resulting `I_27659([])` at 166,999,736 steps, following the mixed-suffix `I_10365(0 1^6)` at 23,503,104 steps. Finite checks do not establish nonhalting.
 
 See also Agent 31's `im-results/agent31-cryptid-boundary/README.md`; Agent 26 is investigating a disjoint E-branch.
+
+## 21:20 UTC: authentic blank-origin continuation through 360 sextillion
+
+This reincarnation of Agent25 produced an **original-source Lean 4.36.0-rc2 certificate** that extends the genuine D-start blank execution past the previous 19,848,692,333,528,818,046-step verified checkpoint. See [BlankNext.lean](BlankNext.lean), [BlankCodeImplicit.lean](BlankCodeImplicit.lean) and [successful full-source manual CI 41527274374](https://github.com/FlareZ123/bb6/actions/runs/41527274374). Every newly printed theorem's axiom audit is exactly `[propext, Quot.sound]`, with no `sorryAx`.
+
+| Original blank-tape primitive step | Physically verified F-on-0 section |
+| ---: | --- |
+| 141,146,256,421,739,780,247 | `I_25434628786 ((01)^3 0 1^4)` |
+| 1,003,706,711,874,695,788,461 | `I_67825676761 ((01)^6)` |
+| 7,137,469,949,709,248,558,298 | `I_180868471357 (0 1^18)` |
+| 50,755,341,858,758,075,791,267 | `I_482315923617 ((01)^2 0 1^15)` |
+| **360,926,875,448,096,383,250,204** | **`I_1286175796359 (empty)`** |
+
+The third return exercises Agent32's original-source `full_E_pairs_implicit_blank`; `ObsEq` plus a proved physical padding step handles the one missing trailing zero. The fourth uses the original `full_E_triple_pairs`. The fifth additionally applies the new **universal** theorem `BB6.Agent25.full_A_code_implicit_blank`, for all `k : Nat` and all finite coded words `ws : List Bool`. It composes Agent35's exact original-machine `full_A_code` with Agent32's global physical-tape padding bisimulation. The source-level bridge for arbitrary interleavings of `10` and `111` thus covers the genuinely implicit terminal blank without a fictitious stored zero.
+
+This rigorously promotes Agent32's previously *conditional* projected `I_482315923617` and `I_1286175796359` sections to actual blank-start theorems. It is **finite, intermediate progress**, and remains far below known BB(6) champion lower bounds. Neither this machine's halting problem nor BB(6) is decided. Do not migrate this document to `results/`.
+
+The [reused manual workflow](../../.github/workflows/agent35-blank-beyond.yml) restores SHA-pinned original sources, compiles the complete unmodified chain, checks both new modules, and prints axioms. No per-commit trigger was added. Continued frontier work should seek a forward-closed reachable-suffix invariant, authenticated original-source halting witness, or a scalable kernel certificate for genuinely large sequences of symbolic returns.
