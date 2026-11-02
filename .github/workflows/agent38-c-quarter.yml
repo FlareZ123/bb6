@@ -1,0 +1,31 @@
+name: Agent 38 Machine C energy cutoff (manual source audit)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify unmodified original CLine and energy theorem
+        run: |
+          mkdir -p /tmp/a38-lean
+          cp im-results/agent11-c-line/CLine.lean /tmp/a38-lean/CLine.lean
+          cp im-results/agent38-c-quarter/CQuarter.lean /tmp/a38-lean/CQuarter.lean
+          cp im-results/agent38-c-quarter/CQuarterBridge.lean /tmp/a38-lean/CQuarterBridge.lean
+          cd /tmp/a38-lean
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CQuarter.olean CQuarter.lean
+          lean CQuarterBridge.lean
