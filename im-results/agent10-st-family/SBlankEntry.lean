@@ -51,11 +51,13 @@ private theorem sFin47 :
 private theorem sSupport47 :
     embed (⟨(1:State),3,[5,6,1,-1,-3,-5,-8]⟩ : FiniteCfg) =
       S0pZero 1 3 3 := by
+  have hp : sZeroPositions 1 3 3 =
+      ([1,-1,-3,-5,-8,5,6] : List Int) := by decide
   simp only [embed,S0pZero]
   congr 1
   funext i
-  simp [sZeroPositions, List.mem_cons]
-  tauto
+  simp [hp, List.mem_cons]
+  ac_rfl
 
 /-- Real infinite-blank physical tape, raw step exact, at the B initial state.
     This is the preimage under STPerm of TRoot's designated blank A. -/
