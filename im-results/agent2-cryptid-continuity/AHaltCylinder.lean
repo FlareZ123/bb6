@@ -37,6 +37,21 @@ theorem full_A_halt (k : Nat) (ys : List Bool) :
       haltWord ++ ys,0⟩ : Cfg)).st = 6
   exact a_halt_69 _ _
 
+/-- Precisely one transition before the A-family halt, the original
+    source machine is F reading one, with exact primitive time. -/
+theorem full_A_before_halt (k : Nat) (ys : List Bool) :
+    (run (12*k*k+41*k+100)
+      (init (List.replicate (3*k+1) true ++
+        false :: (haltWord ++ ys)))).st = 5 ∧
+    (run (12*k*k+41*k+100)
+      (init (List.replicate (3*k+1) true ++
+        false :: (haltWord ++ ys)))).h = true := by
+  have ht : 12*k*k+41*k+100 = (12*k*k+41*k+32)+68 := by omega
+  simp only [ht,run_add,prefix_A]
+  exact a_before_halt _ _
+
+#print axioms full_A_before_halt
+
 #print axioms a_before_halt
 #print axioms a_halt_69
 #print axioms full_A_halt
