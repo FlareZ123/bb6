@@ -24,7 +24,7 @@ jobs:
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a49-ladder/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a49-ladder/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/a49-ladder/
-          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity,SectionGate,SectionGateBridge,SectionReach,BlankGateBridge}.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity,SectionGate,SectionGateBridge,SectionReach,BlankGateBridge,Base4Gate}.lean /tmp/a49-ladder/
           cd /tmp/a49-ladder
           export LEAN_PATH="."
           lean --version
@@ -52,4 +52,5 @@ jobs:
           lean -o Agent46CBridge.olean Agent46CBridge.lean
           lean -o SectionGateBridge.olean SectionGateBridge.lean
           lean -o SectionReach.olean SectionReach.lean
-          lean BlankGateBridge.lean
+          lean -o BlankGateBridge.olean BlankGateBridge.lean
+          lean Base4Gate.lean
