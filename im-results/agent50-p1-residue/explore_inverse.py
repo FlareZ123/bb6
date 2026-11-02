@@ -43,16 +43,20 @@ def finite_inverse_sieve(n: int, depth: int = 3) -> tuple[int, int]:
             unresolved += 1
             continue
         for k, v in candidates:
-            leaves += 1
             if v < 2 or k < 2:
+                leaves += 1
                 unresolved += 1
                 continue
             x, y = 2 * k - 4, v + 4
             if y % 2 == 0:
                 if power_of_two_after_div14(x + 12):
                     stack.append((x, y, level + 1))
+                else:
+                    leaves += 1
             elif x == 2 or x % 4 == 0:
                 stack.append((x, y, level + 1))
+            else:
+                leaves += 1
     return leaves, unresolved
 
 
