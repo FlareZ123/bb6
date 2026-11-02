@@ -35,7 +35,10 @@ theorem G_eq_evalP2 (k c : Nat) :
         rfl
       · have hfar : ¬ c ≤ 2*k+1 := hnear
         simp only [if_pos hh, if_neg hfar, dif_neg hsmall]
-        apply congrArg (fun x => Source.HighLevelState.P_1 (4*k+4) x)
+        change (Source.HighLevelState.P_1 (4*k+4) (c-2*k-2)) =
+          (liftPair (4*k+4, c-(2*k+2)))
+        simp only [liftPair]
+        congr 1
         omega
 
 /-- All branches of the local one-step P1 accelerator coincide with DeepMind's
