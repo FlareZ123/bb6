@@ -31,3 +31,11 @@ This is a reusable BB(6)-wide source index. It is **not** a newly proved BB(6) m
 ## Research payoff
 
 Before rederiving a six-state machine acceleration, search [the pinned crosswalk](./upstream-coverage.csv) by the exact rooted RLE and inspect its source module at the pinned upstream commit. Separately validate kernel axioms and blank-start semantic equivalence. Add independently verified halting decisions only after a full original-root proof. Avoid counting source reductions as resolved holdouts.
+
+## Transition-table reuse, separate from source-matched blank roots
+
+The [offline reusable audit](../../tools/upstream_coverage_audit.cjs) joins the source CSV to the historical rooted-family ledger. Among the **86** exact rooted matches, there are **79 distinct canonical unrooted table families**. Those 79 families contain **96** historical rooted machines in total, hence **10 additional blank-start roots** in four families share an upstream-formalized transition table but have **no exact rooted upstream source entry** in this pair of catalogues.
+
+Their historic family IDs and sizes are F299 (3 extra roots), F138 (1), F295 (2), and F408 (4). A table-level proof may be reusable across the different roots only after an authenticated initial-state transport and independently checked blank-entry path. **The ten are not newly solved or even newly formally reduced by this census.** They are precisely identified opportunities for parameterized multi-start research.
+
+The audit uses the two checked-in CSV inputs, performs no network operations or file writes, and prints full RLEs and canonical starts of these ten candidates as JSON. Its scope is limited to the pinned upstream source table and the historic local snapshot.
