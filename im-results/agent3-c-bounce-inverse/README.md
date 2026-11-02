@@ -124,3 +124,16 @@ This is exhaustive over all low and high source-map branches, including every re
 The forward direction is the earlier established invariant. **The new converse** is proven by constructing every arbitrary-depth inverse path using `invLiftK`, `invLiftC` and their exact closed forms from `EvenTargetForward.lean`. It proves that both equations suffice for a *genuine source transition*, so arbitrary-depth candidate inverses are not spurious abstract states. This removes any need to simulate or bound recursion depth when inverting the even-bounce branch and applies to every output `(x,y)` satisfying the guard. The guard `y≥5` is essential because the special even-`K` case `c=5` stops rather than returns.
 
 [**Manual full original-source Lean 4.36.0-rc2 CI 41513833722**](https://github.com/FlareZ123/bb6/actions/runs/41513833722) succeeded, checking the unmodified original `bounce` with standard axioms only. This result remains intermediate until used to solve a genuine blank input or unlock a machine-wide conclusion; no BB(6) claim.
+
+## Complete exact inverse across the entire even/odd section-output quadrant (19:57 UTC)
+
+[SectionOddInverse.lean](./SectionOddInverse.lean) establishes an **all-input, original-source exact iff** for every output `(x,y)` with `x` even, `y` odd, and `y≥5`. The complete preimage consists of exactly four possibilities:
+
+1. Exceptional one-left source `(a,k)=(1,2)` yielding `(x,y)=(2,5)`;
+2. Exceptional one-left source `(1,3)` yielding `(0,7)`;
+3. One-left source `a=1,k≥4` and some recursion depth `n` satisfying `x+y+1=16·2^n` and `2k+13+3n=x+2y+2`;
+4. High odd-source `a≥3` odd, `a<2k`, and some depth `n` satisfying `x+y+1=2^n(2a+6)` and `2k+a+9+3n=x+2y+2`.
+
+All four cases are **if-and-only-if**, with every feasible arithmetic pair producing a real source transition. They exhaust every direct source branch and every recursive bounce, unbounded in both input counters and recursion depth. The proof directly composes the new `bounce_even_output_exact` with source case analysis and the prior original-source odd-bounce invariant. The full-original-source Lean 4.36.0-rc2 [manual CI run 41514385714](https://github.com/FlareZ123/bb6/actions/runs/41514385714) **passed**, standard Lean axioms only.
+
+This is a general exact inverse grammar for a full infinite output quadrant, stronger in scope than the fixed affine `(12t,10t-1)` family and earlier finite inverse sieves. The full Machine C blank-orbit halting decision remains open. Future research should apply this to complete symbolic antecedents of Agent15's odd-a halting locus, using actual blank-orbit invariants rather than mere numerical modular exclusions.
