@@ -69,6 +69,12 @@ theorem original_never : NeverHalts original :=
   not_halts_to_agent8 source
     BusyBeaver.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH.not_halts
 
+/-- Public literal RLE table statement, independent of the names of the
+source-machine converter definitions. -/
+theorem literal_never : NeverHalts expectedRLE := by
+  rw [← original_eq_expectedRLE]
+  exact original_never
+
 def rootCylinder : PartialMachine := fun s => some (original s)
 
 /-- Authentic, source-identified A6/F287 original-root nonhalting leaf. -/
@@ -88,5 +94,6 @@ def rootedAudit (bound : Nat) : FrontierAudit (DecidedBelow bound) rootCylinder 
 #print axioms BB6.ConjectureBridge.not_halts_to_agent8
 #print axioms original_eq_expectedRLE
 #print axioms original_never
+#print axioms literal_never
 #print axioms root_cover
 end BB6.F287
