@@ -39,6 +39,7 @@ jobs:
             lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
           done
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          lean -o im-results/agent1-p1-quarter/OddShift.olean im-results/agent1-p1-quarter/OddShift.lean
           lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
           for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
             lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
