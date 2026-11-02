@@ -29,6 +29,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean" Mod8SevenFour.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean" Mod16OneTwo.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16First.lean" Mod16First.lean
+          for f in CCert16Pure.lean P16Block*.lean CGlobal16.lean CQuotientSound16.lean CMapIf16.lean CFull16.lean CExclusions16.lean CSourceBridge16.lean Mod16OneTwo.lean Mod16First.lean; do
+            sed -i 's/\bCCert\b/CCert16/g' "$f"
+          done
       - name: Kernel verify M8 and M16 quotient source chains
         run: |
           cd /tmp/agent15-c-check
