@@ -57,4 +57,48 @@ theorem affineQuotientExcluded_sound (a k : Nat)
 
 #print axioms affineQuotientExcluded_sound
 
+/-- Every reachable section input is rejected by neither branch of the
+    sound one-sided filter. -/
+theorem affineQuotientExcluded_false_of_reachable (a k : Nat)
+    (hreach : CReach a k) :
+    affineQuotientExcluded a k = false := by
+  cases hq : affineQuotientExcluded a k with
+  | false => rfl
+  | true =>
+      exact False.elim ((affineQuotientExcluded_sound a k hq) hreach)
+
+/-- Exact Machine C blank-halting gateway with the source-verified quotient
+    filter attached as a necessary condition on each normalized parameter
+    family. The filter is executable; the remaining reachability predicate
+    is still the unresolved mathematical problem. -/
+theorem blank_halts_iff_filtered_normalized_families :
+    BB6.CReachBridge.RunHalts ↔
+      (∃ m k, k+3*m+4=2^(2*m+3) ∧
+         CReach (affineNormalize 1 k).1 (affineNormalize 1 k).2 ∧
+         affineQuotientExcluded 1 k = false) ∨
+      (∃ j m k, k+j+3*m+5=2^(2*m+2)*(j+3) ∧
+         CReach (affineNormalize (2*j+3) k).1
+           (affineNormalize (2*j+3) k).2 ∧
+         affineQuotientExcluded (2*j+3) k = false) := by
+  rw [blank_halts_iff_normalized_families]
+  constructor
+  · rintro (h1 | h2)
+    · rcases h1 with ⟨m,k,heq,hreach⟩
+      have hsource : CReach 1 k :=
+        (reach_iff_normalize 1 k).mpr hreach
+      exact Or.inl ⟨m,k,heq,hreach,
+        affineQuotientExcluded_false_of_reachable 1 k hsource⟩
+    · rcases h2 with ⟨j,m,k,heq,hreach⟩
+      have hsource : CReach (2*j+3) k :=
+        (reach_iff_normalize (2*j+3) k).mpr hreach
+      exact Or.inr ⟨j,m,k,heq,hreach,
+        affineQuotientExcluded_false_of_reachable (2*j+3) k hsource⟩
+  · rintro (h1 | h2)
+    · rcases h1 with ⟨m,k,heq,hreach,_⟩
+      exact Or.inl ⟨m,k,heq,hreach⟩
+    · rcases h2 with ⟨j,m,k,heq,hreach,_⟩
+      exact Or.inr ⟨j,m,k,heq,hreach⟩
+
+#print axioms blank_halts_iff_filtered_normalized_families
+
 end BB6.Agent15
