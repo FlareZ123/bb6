@@ -33,6 +33,12 @@ def gliders():
                 assert len(p) in (3, 4)
                 yield ("four", d, b, c, v, u, z), p
 
+        for b, c, v in product(range(1, N), range(N), range(2)):
+            p = {(0, 0): (1, d, b), (b, 0): (v, reverse, c),
+                 (c, 1): (0, reverse, 0)}
+            assert len(p) == 3
+            yield ("turnaround", d, b, c, v), p
+
 
 def compatible(x, y):
     return all(y[s] == move for s, move in x.items() if s in y)
@@ -41,7 +47,7 @@ def compatible(x, y):
 def main():
     items = list(gliders())
     counts = Counter(name[0] for name, _ in items)
-    assert counts == {"three": 120, "four": 380}, counts
+    assert counts == {"three": 120, "four": 380, "turnaround": 120}, counts
     for i, (name, table) in enumerate(items):
         assert table[(0, 0)][0] == 1
         b = table[(0, 0)][2]
@@ -51,8 +57,8 @@ def main():
     total = sum(Q ** (2 * N - len(p)) for _, p in items)
     one_halt = sum((2 * N - len(p)) * 24 ** (2 * N - len(p) - 1)
                    for _, p in items)
-    assert total == 588_989_257_812_500
-    assert one_halt == 151_903_933_562_880
+    assert total == 1_046_752_929_687_500
+    assert one_halt == 270_785_272_872_960
     previous_total = 26_171_093_750_000_000
     previous_one = 7_226_311_367_983_104
     print(f"cylinders by type: {dict(counts)}; pairwise overlaps: 0")
