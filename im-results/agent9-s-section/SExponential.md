@@ -43,3 +43,13 @@ Locally compiled with Lean **4.36.0-rc2**, with four final `#print axioms` outpu
 The S-to-T event is determined by residue zero when the separate c counter is zero. The bound controls q's size, not the frequency or timing of zero residues. In particular the theorem supplies no uniform bound on the possible first transfer time for either fixed blank-rooted q=17 or q=141. It does not change the set of classified holdouts or furnish a BB(6) upper bound.
 
 The possible utility is as a quantitative counter-magnitude invariant for symbolic reverse search and explicit raw-runtime estimates, if composed with the source-certified machine bridge. Avoid promoting this elementary lemma to `results/` absent an actual new root decision or general theorem closing a hard branch.
+
+## Exact weighted digit identity (strengthened locally)
+
+The same Lean module additionally formalizes the exact digit penalty `e(q)` equal to 0,13,5 when q mod 3 is 0,1,2 respectively. For every q>=16, define E_0=0 and E_(n+1)=4 E_n+3^n e(q_n), with q_n=f^[n](q). The new all-natural theorem `digit_conservation` proves
+
+```
+3^n*q_n + E_n = 4^n*q.
+```
+
+It follows by induction from the exact source-derived one-step equality `3*f(q)+e(q)=4*q`. Thus the two growth inequalities are bounds on a precisely determined weighted finite residue word. In particular, the identity can be used as an integer-only invariant in exact certificate search. The theorem was locally kernel-checked by Lean 4.36.0-rc2 with axioms `[propext, Quot.sound]`; it inherits the same standalone-map provenance limitation and gives no c-height reachability conclusion.
