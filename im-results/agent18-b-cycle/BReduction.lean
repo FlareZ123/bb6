@@ -1,4 +1,8 @@
-import Lean.Elab.Tactic.Omega
+module
+
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 namespace BB6.BReduction
 
