@@ -47,11 +47,11 @@ theorem zero_even_blank_reach_iff (y : Nat)
     · apply blank_reach_step (y-2) (y/2-1) 0 y hd
       apply (zero_even_preimages_iff (y-2) (y/2-1) y hy he).mpr
       exact Or.inl ⟨rfl,rfl⟩
-    · have hs : secNext (2*u-2) (y-(u+4+3*r))=some (0,y) :=
+    · have hs : secNext (2*u-2,y-(u+4+3*r))=some (0,y) :=
         (zero_even_preimages_iff (2*u-2) (y-(u+4+3*r)) y hy he).mpr
           (Or.inr (Or.inl ⟨r,u,hu,hyEq,rfl,rfl⟩))
       exact blank_reach_step _ _ _ _ hr hs
-    · have hs : secNext 0 (y-(3*r+6))=some (0,y) :=
+    · have hs : secNext (0,y-(3*r+6))=some (0,y) :=
         (zero_even_preimages_iff 0 (y-(3*r+6)) y hy he).mpr
           (Or.inr (Or.inr ⟨r,hyEq,rfl,rfl⟩))
       exact blank_reach_step _ _ _ _ hr hs
