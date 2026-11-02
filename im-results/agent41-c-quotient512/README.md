@@ -1,4 +1,4 @@
-# Agent 41: Machine C finite-quotient refinement to modulus 512
+# Agent 41: Machine C finite-quotient refinements through modulus 1024
 
 **Status (2026-11-02): intermediate, not a BB(6) solution.** This extends Agent 20's independently source-mapped quotient approach to modulus 128, 256 and 512; it does **not** classify Machine C. Sources: [Agent 20's mod-64 work](../agent20-c-quotient/README.md), [Agent 11's accelerated stopping criterion](../agent11-c-line/README.md), and [Agent 21's raw-machine semantic bridge](../agent21-c-source-bridge/CSourceBridge.lean). All novel numerical exclusions below are computational results with a Lean-checked transition soundness theorem; the finite 512-state-per-coordinate closure is separately cross-checked in JavaScript and C++, not Lean-kernel certified.
 
@@ -51,3 +51,16 @@ At modulus 512 the abstract filter excludes 327/512 reset residues and 236/512 s
 ## Boundaries and next questions
 
 A source-checked local proof of abstract-edge soundness does not itself certify the 52-million-vertex closure inside Lean. Upgrading the closure to a small independently checked finite certificate or a Lean-executable decision proof remains a valuable further step. More consequentially, this finite abstraction leaves nonexcluded residue classes even at modulus 512. Researchers should seek a **uniform global invariant** or a better forward section reduction that can decide the surviving infinite families. The numeric refinements are preserved here under `im-results/` rather than the publishable `results/` directory.
+
+## Independently checked extension to M=1024 (06:26 UTC)
+
+The same exact quotient construction was computed at modulus **1024**, yielding **1,099,104,768** possible abstract vertices, **385,473,152** reachable vertices, and **3,050,991,229** examined representative edges. The set excludes **678/1024** reset-gateway residues and **540/1024** side-gateway residues. All numbers and **every one of the 2048 individual gateway flags** agree exactly between two independently implemented C++ graph traversals: an original byte-array BFS with lazily allocated queue and a new compact bitset traversal (`validate_bits.cpp`). The second implementation uses approximately 1.64 GB peak RSS and completed in approximately 89.5 seconds on the local environment. Its source SHA-256 is `bcc6d010d0c75a3e2acfee087284c6423d6cb0ab1f963ebc51efac85657e55db`.
+
+**Precisely new exclusions beyond lifting the M=512 residue sets**, for all indicated natural indices:
+
+- Reset `j>=4`, `j%1024` in `{8,74,96,154,256,271,311,338,343,376,395,424,454,550,610,696,738,750,798,875,879,927,938,1016}`.
+- Side `n>=2`, `n%1024` in `{12,24,38,42,50,55,84,120,136,146,147,155,162,179,190,191,202,268,280,294,298,306,311,340,376,392,402,403,411,418,435,446,447,458,524,536,550,554,562,567,596,632,648,658,659,667,674,691,702,703,714,780,792,806,810,818,823,852,888,904,914,915,923,930,947,958,959,970}`.
+
+The 1024-modulus **unbounded transition soundness** is independently checked in Lean 4.36.0-rc2, in `Quotient1024.lean.xz.b64` (decompressed SHA-256 `428771b347719b0c1f9f54d01fc69f3d78abed3dc5e8dd5882c806fc9fc29585`) and `CMapBridge1024.lean` (source SHA-256 `c6af3d86da25ac43b679434fbd1c806a0740038c91d891d1119583d5090c3227`). The full, unmodified Agent 11 `CLine.lean` source and these proofs compiled successfully in [manual pinned-source CI run 41399745807](https://github.com/FlareZ123/bb6/actions/runs/41399745807); final axiom audit reports `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. See [manual workflow](../../.github/workflows/agent41-c1024-verify.yml). The finite BFS itself remains double-checked externally rather than Lean-kernel certified.
+
+**Important:** This additional refinement still leaves 346 reset residues and 484 side residues at modulus 1024 not excluded by this quotient. The goal of deciding the complete Machine C blank orbit, and hence BB(6), remains open. No universal upper bound or halting decision is claimed here.
