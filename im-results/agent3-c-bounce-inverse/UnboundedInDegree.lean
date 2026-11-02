@@ -1,4 +1,5 @@
 import BounceOddExact
+import FastSectionDef
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent3
