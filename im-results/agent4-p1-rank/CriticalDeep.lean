@@ -25,6 +25,16 @@ theorem crit_index_add (L : Nat) : critIndex L + 2 = 2^(L+4) := by
   have hbound := power_growth L
   omega
 
+/-- Every special index in the depth obstruction lies in n ≡ 14 (mod 16). -/
+theorem crit_index_mod_sixteen (L : Nat) : critIndex L % 16 = 14 := by
+  have hpower : 2^(L+4)=16*2^L := by
+    rw [show L+4=4+L by omega,Nat.pow_add]
+  have hp := crit_index_add L
+  rw [hpower] at hp
+  omega
+
+#print axioms BB6.P1Deep.crit_index_mod_sixteen
+
 theorem crit_index_ge (L : Nat) : L+4 ≤ critIndex L := by
   have hbound := power_growth L
   have hplus := crit_index_add L
