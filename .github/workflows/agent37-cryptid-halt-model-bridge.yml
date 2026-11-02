@@ -38,4 +38,5 @@ jobs:
           lean -o im-results/agent37-cryptid-model-bridge/WordReturns.olean im-results/agent37-cryptid-model-bridge/WordReturns.lean
           lean -o im-results/agent37-cryptid-model-bridge/DoubleOneBranch.olean im-results/agent37-cryptid-model-bridge/DoubleOneBranch.lean
           lean -o im-results/agent37-cryptid-model-bridge/DoubleOnePairs.olean im-results/agent37-cryptid-model-bridge/DoubleOnePairs.lean
-          lean im-results/agent37-cryptid-model-bridge/FullWordPairs.lean
+          lean -o im-results/agent37-cryptid-model-bridge/FullWordPairs.olean im-results/agent37-cryptid-model-bridge/FullWordPairs.lean
+          lean im-results/agent37-cryptid-model-bridge/ReturnShift.lean
