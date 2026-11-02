@@ -99,3 +99,60 @@ This is the first source-level theorem in this workspace we found that uniformly
 **Validation:** [pinned original-source manual GitHub Actions run 41410193629](https://github.com/FlareZ123/bb6/actions/runs/41410193629), head `139d4a93b1656a3cf509b4d28e479c027997c6f4`, succeeded at 08:03 UTC, compiling unmodified recovered `Boundary.lean`, `CryptidThird.lean`, and `CryptidSix.lean`. Its final axiom audit exactly reports `[propext, Quot.sound]` for `CryptidBoundary.full_E_six` and `eSix_run`, with no `sorryAx`. An independent raw interpreter additionally checked all 896 input configurations `m=0..127` with seven randomized arbitrary suffixes each, obtaining exact tape and step equality.
 
 **Implication for the projected genuine blank orbit:** At `m=13,262,159`, the E-boundary return takes exactly **26,524,337** primitive steps and produces right unary length **26,524,321**, followed by `010101110` and any untouched suffix. Agent 25's current conditional E-entry raw time is `153,499,657,266,461`; adding these costs yields the conditional next F-section time `153,499,683,790,798`. Treat this as conditional until the preceding genuine blank itinerary is source-composed and audited. Next analyze the new mixed `010101110` suffix and construct the full blank-to-return composition.
+
+## Two new infinite-variable E-word transducers, proved with unmodified source (08:32 UTC)
+
+The two most general new source-certified results for this investigation are now:
+
+**Alternating block followed by zero** (`CryptidPairs.lean`):
+
+```text
+I_(3k+4)(0 (10)^q 0 ys)
+  --[12k² + 49k + 50 + 4q]-->
+I_(8k+5)(0 1^(2q+6) ys)
+```
+
+This is `CryptidBoundary.full_E_pairs`, proved for **all k, q : Nat** and **arbitrary ys : List Bool**. At the inner E boundary it is:
+
+```text
+(E, left 00(10)^(m+2)11, scan0, right (10)^q 0 ys)
+  --[2m+4q+15]-->
+I_(2m+3)(0 1^(2q+6) ys).
+```
+
+Its proof combines a `2(q+1)`-step forward scan with a `2(q+1)`-step C-on-one reverse sweep of the reversed alternating block, whose output is a uniform unary word. New parametric lemmas `cWalk_run`, `aClose_run`, `ePairs_toB` supply fully quantified proofs at arbitrarily large q.
+
+**Alternating block followed by three ones** (`CryptidTriplePairs.lean`):
+
+```text
+I_(3k+4)(0 (10)^q 111 ys)
+  --[12k² + 49k + 58 + 6q]-->
+I_(8k+9)((01)^(q+2) 0 ys).
+```
+
+This is `CryptidBoundary.full_E_triple_pairs`, proved for **all k,q,ys**. The intermediate E-boundary theorem is:
+
+```text
+(E, left 00(10)^m11, scan0, right (10)^q 111 ys)
+  --[2m+6q+19]-->
+I_(2m+3)((01)^(q+2) 0 ys).
+```
+
+It uses a parametric alternating forward scan, an exact 8-step universal A→B handoff on three ones with arbitrary left tape, and a (4q)-step reverse-word sweep `bPop_run`.
+
+**Source-level CI verification:** the complete, unmodified original Agent31 `Boundary.lean` is reconstructed from its SHA-pinned payload and compiled with Lean 4.36.0-rc2, then each new theorem is compiled in the source's `CryptidBoundary` namespace. Both final formal theorems report exactly `[propext, Quot.sound]` and no `sorryAx` or other extra axiom:
+
+- [full_E_pairs, successful run 41413736067](https://github.com/FlareZ123/bb6/actions/runs/41413736067), original definition and full proof in [CryptidPairs.lean](./CryptidPairs.lean).
+- [full_E_triple_pairs, successful run 41413674846](https://github.com/FlareZ123/bb6/actions/runs/41413674846), original definition and full proof in [CryptidTriplePairs.lean](./CryptidTriplePairs.lean).
+
+These strict equalities establish unbounded primitive-step symbolic behavior, rather than extrapolating a finite simulation. Their hypotheses describe **synthetic F-entry tapes**; they are not universal claims that the actual blank orbit enters any such entry, nor do they decide halting, nonhalting or the maximum step count BB(6). The direct original-source blank composition of the long projected itinerary is still outstanding.
+
+## Other source-verified families
+
+Additional useful specialized certificates on the same original raw machine:
+
+- [CryptidEight.lean](./CryptidEight.lean), [run 41410766261](https://github.com/FlareZ123/bb6/actions/runs/41410766261): E right prefix `10101110`, return `I_(2m+3)(0101010100 ys)` after `2m+31` steps, including arbitrary `ys`.
+- [CryptidThree.lean](./CryptidThree.lean), [run 41412302342](https://github.com/FlareZ123/bb6/actions/runs/41412302342): E right prefix `111`, return `I_(2m+3)(01010 ys)` after `2m+19`.
+- [CryptidSeven.lean](./CryptidSeven.lean), [run 41412510704](https://github.com/FlareZ123/bb6/actions/runs/41412510704): E right prefix `1010111`, return `I_(2m+3)(010101010 ys)` after `2m+31`.
+
+The three and seven families are subsumed by the new `full_E_triple_pairs` family at q=0 and q=2 respectively. The eight family with final zero is a useful independent fixed-prefix branch. These remain under `im-results/` pending any demonstration of externally publishable novelty.
