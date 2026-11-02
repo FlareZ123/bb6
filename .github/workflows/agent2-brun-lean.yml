@@ -30,3 +30,5 @@ jobs:
           lean im-results/agent2-cryptid-continuity/BRunSource.lean
           lean im-results/agent2-cryptid-continuity/APortal.lean
           lean im-results/agent2-cryptid-continuity/AHaltCylinder.lean
+          lean -o im-results/agent2-cryptid-continuity/BExit.olean im-results/agent2-cryptid-continuity/BExit.lean
+          lean im-results/agent2-cryptid-continuity/EHaltCylinder.lean
