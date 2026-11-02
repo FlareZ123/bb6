@@ -1,0 +1,29 @@
+name: Agent 19 D-family physical/list bridge (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  physical-tape-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile all original source modules and audit physical bridge
+        run: |
+          mkdir -p /tmp/a19-d-physical
+          cp im-results/agent3-portfolio-raw-conjugacy/{MachineConjugacy,DTableWitness,DStartFinite,DSectionTransfer}.lean /tmp/a19-d-physical/
+          cp im-results/agent32-cryptid-padding/Generic.lean /tmp/a19-d-physical/
+          cp im-results/agent19-d-physical-bridge/PhysicalBridge.lean /tmp/a19-d-physical/
+          cd /tmp/a19-d-physical
+          export LEAN_PATH="."
+          lean --version
+          for module in MachineConjugacy DTableWitness DStartFinite DSectionTransfer Generic; do
+            lean -o "$module.olean" "$module.lean"
+          done
+          lean PhysicalBridge.lean
