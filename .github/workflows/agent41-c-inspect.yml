@@ -1,0 +1,19 @@
+name: Agent 41 inspect C reusable predecessor source (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack and display reusable Agent23 predecessor lemmas
+        run: |
+          cd im-results/agent23-c-mod16
+          python3 -c 'import base64,lzma,pathlib; pathlib.Path("/tmp/Cm16.lean").write_bytes(lzma.decompress(base64.b64decode(pathlib.Path("CM16.lean.xz.b64").read_text()))); pathlib.Path("/tmp/C59.lean").write_bytes(lzma.decompress(base64.b64decode(pathlib.Path("C59.lean.xz.b64").read_text())))'
+          echo "=== ALL RELEVANT DECLARATIONS ==="
+          grep -n -A 7 -E '^(theorem|private theorem|def|inductive|namespace) ' /tmp/Cm16.lean
+          echo "=== FIFTYNINE PROOF AND SPLIT ==="
+          cat /tmp/C59.lean
