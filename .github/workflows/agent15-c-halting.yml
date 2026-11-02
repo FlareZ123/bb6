@@ -18,15 +18,14 @@ jobs:
         run: |
           mkdir -p /tmp/agent15-c-check
           cd /tmp/agent15-c-check
-          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
           base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert8.tar.xz.b64" > c-cert8.tar.xz
           echo "8a9a54fd96c81aaffcb3c06a941cabb06fe0aaa7387b8834ef0d72fbd2acec42  c-cert8.tar.xz" | sha256sum -c -
           tar -xJf c-cert8.tar.xz
           base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert16.tar.xz.b64" > c-cert16.tar.xz
           echo "1cc951976c75457e35dd6ab62888cfced14e64fbf3c067d4de14f7af2fba540e  c-cert16.tar.xz" | sha256sum -c -
           tar -xJf c-cert16.tar.xz
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
           cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge8.lean" CSourceBridge8.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge16.lean" CSourceBridge16.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean" Mod8SevenFour.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean" Mod16OneTwo.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16First.lean" Mod16First.lean
