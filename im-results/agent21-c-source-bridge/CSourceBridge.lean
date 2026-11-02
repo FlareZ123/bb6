@@ -33,7 +33,9 @@ theorem next_lift (s : S) :
   · rcases a with _ | a
     · have he : d+1+1+1+1 = d+4 := by omega
       rw [he]
-      simp [Source.next, BB6CLine.nextC, lift]
+      by_cases hk : k % 2 = 0
+      · simp [hk, Source.next, BB6CLine.nextC, lift]
+      · simp [hk, Source.next, BB6CLine.nextC, lift]
     · rfl
 
 def encodeC (s : S) : Cfg (Fin 2) (Fin 6) := Source.encode (lift s)
