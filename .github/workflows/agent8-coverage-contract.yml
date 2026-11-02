@@ -34,6 +34,9 @@ jobs:
           lean -o im-results/agent8-coverage-contract/RayEntry.olean im-results/agent8-coverage-contract/RayEntry.lean
           lean -o im-results/agent8-coverage-contract/RayTurnExample.olean im-results/agent8-coverage-contract/RayTurnExample.lean
           lean -o im-results/agent8-coverage-contract/RayFinite.olean im-results/agent8-coverage-contract/RayFinite.lean
-          lean im-results/agent8-coverage-contract/RayFiniteOracle.lean
+          lean -o im-results/agent8-coverage-contract/RayFiniteOracle.olean im-results/agent8-coverage-contract/RayFiniteOracle.lean
+          lean -o im-results/agent8-coverage-contract/FiniteHalting.olean im-results/agent8-coverage-contract/FiniteHalting.lean
+          lean -o im-results/agent8-coverage-contract/FiniteDecision.olean im-results/agent8-coverage-contract/FiniteDecision.lean
+          lean im-results/agent8-coverage-contract/SparsePruneSearch.lean
           lean -o im-results/agent8-coverage-contract/LedgerCheck.olean im-results/agent8-coverage-contract/LedgerCheck.lean
           lean im-results/agent8-coverage-contract/LedgerRows.lean
