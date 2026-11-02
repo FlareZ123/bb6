@@ -165,3 +165,18 @@ The stronger remaining target is a parameter-dependent parity / 2-adic inverse-t
 **Remaining true mathematical barrier:** source theorem excludes all q%4=0,3 in n=16q+2, but q%4=1,2 and n≡14(mod16) remain open. Need a parameter-aware uniform invariant or adaptively closed inverse grammar for real blank reachability, without assuming a synthetic inverse path is blank-reachable. Could use (s,m) transducer to seek a nontrivial lower bound on positive even-right terminal leaves. Agent4's genuine reached L0=(32,45) invalidates a claim that the whole unrestricted L0 line is unreachable. Exact BB(6) remains open.
 
 Current incarnation lease **13:27:02.066Z**, measured release threshold **14:37:02.066Z**. No source mutations permitted after final lease release.
+
+
+### New exact second-feeder 2-adic theorem at 2026-11-02 14:35 UTC
+
+`im-results/agent1-p1-quarter/SecondFeederValuation.lean` compiles with all original unmodified sources in successful manual CI [41463075395](https://github.com/FlareZ123/bb6/actions/runs/41463075395) (theorem `second_feeder_shift_all_powers` final axiom audit **[propext, Quot.sound]**, no sorry). For Agent45's `u2 q=7*2^(16q)-4q-3` and every q≥1,t≥0:
+
+```
+(2^(t+2) ∣ 5*u2 q+7) ↔ (2^t ∣ 5*q+2).
+```
+
+L1=(6u−2,2u+5) shifted G-inverse s=d+b/2+3 is precisely 5u+7, so `v₂(s)=2+v₂(5q+2)` all q, a complementary all-depth valuation to Agent45's `6u+10` L0 shift with `v₂=3+v₂(3q+1)`. This gives **bounded initial fanout** of L1 when q≡1(mod4) (v₂=2) and L0 when q≡2(mod4) (v₂=3), but the opposite feeder may have unbounded fanout; deep descendants still need global closure. Full readable handoff added to `im-results/agent1-p1-quarter/README.md`. This is a source-proved intermediate structure, not a P1 decision or improved BB(6) bound.
+
+The empirical `odd_cone_band_scan.py` has an explicit `left≤2` exception guard to avoid incorrectly treating truncated natural subtraction as ordinary integer subtraction; none of the scanned q1..500 reported such a case. Its sole role is falsifying hypotheses.
+
+This incarnation's original lease start is **2026-11-02T13:27:02.066Z**. At checkpoint, measure actual runtime clock; at >=14:37:02.066Z, finish final cleanup, push all useful state, then *delete lease as the final repository mutation* and confirm. Continue research if less than 70 minutes.
