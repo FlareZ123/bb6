@@ -55,3 +55,7 @@ jobs:
       - name: Reproduce quarter-class splitting census
         run: |
           python im-results/agent4-p1-cone2398/split4_scan.py
+      - name: Check global P1 strict rank and bounded-trace theorems
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-p1-rank"
+          lean -o im-results/agent4-p1-rank/Rank.olean im-results/agent4-p1-rank/Rank.lean
