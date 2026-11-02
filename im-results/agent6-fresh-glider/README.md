@@ -1,6 +1,6 @@
 # A source-compatible four-step blank-ray glider (Agent 6, 2026-11-02)
 
-**Status:** intermediate mathematical lemma in the shared six-state canonical model. The original local Lean 4.36.0-rc2 check passed with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx` or `native_decide`. A separate original-file CI run is still required for independent integration verification. No BB(6) value or unresolved original holdout decision is claimed.
+**Status (updated 2026-11-02 23:45 UTC):** intermediate proof infrastructure in the shared six-state canonical model. Full original-source Lean 4.36.0-rc2 CI integration for the glider, generalized macro and finite-entry theorems has now passed in [run 41547669270](https://github.com/FlareZ123/bb6/actions/runs/41547669270) with only `[propext, Classical.choice, Quot.sound]` and no `sorryAx` or `native_decide`. Earlier paragraphs below preserve the dated development history; statements saying an original-import CI check is pending are superseded. No BB(6) value, universal upper bound, or unresolved rooted holdout decision is claimed.
 
 Source: [FreshRayGlider.lean](./FreshRayGlider.lean).
 
@@ -68,3 +68,24 @@ The verified symbolic inventory currently consists of **120 regular three-step c
 The new [GliderOracle.lean](./GliderOracle.lean) checks finite witnesses for all three rule families, both directions, and establishes `gliderOracle_sound`: any positive executable Boolean result yields an actual `Cover (DecidedBelow B)` proof. Concrete three-step, four-step, degenerate four-step, and turnaround examples are proved by `decide`.
 
 All Lean names above compile locally under Lean 4.36.0-rc2 against definition-matching copies of the original Agent8 `Frontier` and `Symmetry` interfaces; `#print axioms` lists only ordinary kernel axioms, no sorry. **The full original-import CI audit is still pending.** These remain intermediate pruning certificates, not a completed search tree or BB(6) determination.
+
+
+## Source-certified arbitrary finite macros, 960 new sparse cylinders, and a genuine entry theorem (23:45 UTC)
+
+The original-source [manual coverage workflow](../../.github/workflows/agent8-coverage-contract.yml), run [41547669270](https://github.com/FlareZ123/bb6/actions/runs/41547669270), successfully compiled the original `Frontier`, `Symmetry`, `RayFinite`, `RayMacro`, `FreshRayGlider`, `MacroOracle`, `EntryMacroOracle`, `FastMacro`, `FiveFamily`, and existing full coverage dependencies. All added final theorems have axiom prints limited to `[propext, Classical.choice, Quot.sound]`; no `sorryAx`. The earlier separate [manual CI run 41545604003](https://github.com/FlareZ123/bb6/actions/runs/41545604003) also checked the integration into `MacroSearch.lean` and its finite-depth **25-way exhaustive** proof-producing sparse search.
+
+The new generic [MacroOracle.lean](./MacroOracle.lean) checks an **actual finite sparse-table execution** from blank; if the execution returns to state A shifted a positive number of cells into a still-blank ray, and every intermediate head remains on the same side of its starting point, the Boolean witness soundly produces a `Cover (DecidedBelow bound) p` leaf. Both directions have separate source-level proofs. [FastMacro.lean](./FastMacro.lean) removes a redundant displacement search by deriving it from the observed final head; its bidirectional Boolean oracle also has a full kernel-checked soundness theorem. These are sufficient conditions and can reject genuine nonhalters.
+
+[RayMacro.lean](./RayMacro.lean) now additionally proves `entry_fresh_state_never`: **any finite genuine blank-origin prefix** that reaches a state `s` on a fresh ray can be followed by a state-`s) finite macro checked on a blank tape and translated to that ray, yielding all-time nonhalting. Its executable sparse counterpart [EntryMacroOracle.lean](./EntryMacroOracle.lean) proves `finiteEntryMacroOracle_sound`, using only transitions assigned in the partial machine. Its example begins `A/0→0RB` and then cycles in B, never returning to A: `B/0→1RC; C/0→0LD; D/1→0RB`. The full-source CI checks the corresponding infinite-time nonhalting leaf. [EntryMacroSearch.lean](./EntryMacroSearch.lean) is the pending additional integration of that genuine-entry condition into the existing exhaustive DFS; cite its **later successful CI run** before treating its own new `entryMacroCoverSearch_sound` as audited.
+
+[FiveFamily.lean](./FiveFamily.lean) gives a family of **960 source-verified infinite-time sparse nonhalting cylinders**, 480 per direction. Each has exactly five fixed input entries:
+```text
+A/0 -> 1RB
+B/0 -> 1LC
+C/1 -> xRD
+D/1 -> 0LE
+E/x -> yRA
+```
+with `B,C,D,E` four pairwise-distinct noninitial states, `x,y` arbitrary bits, and simultaneous horizontal reflection for the leftward families. The all-time theorems `five_right_family_sound` and `five_left_family_sound` were checked **against the original-source semantics** in run 41547669270; each has only standard Lean axioms. Exact cardinality and disjointness are separately reproduced by [five_census.py](./five_census.py) inside the same successful CI: each cylinder fixes five distinct slots, all 960 conflict pairwise and with the preceding 620 cylinders. They add **5,859,375,000,000** distinct full 12-slot tables, or **0.0098304%** of the `25^12` universe, and **1,284,211,998,720** exactly-one-halt tables, or approximately **0.00703286%** of that universe. All 1580 combined cylinders cover **1.7659904%** of full canonical tables and approximately **1.48996110%** of exactly-one-halt canonical tables. These numbers refer to straightforward raw-table counts, **not** a proved BB(6) holdout reduction or a completed global exhaustive search.
+
+The key new technique is a **source-checked executable finite-prefix-to-infinite-run certificate that works under arbitrary partial-table completions**. It is a reusable nonhalting pruning mechanism. These families do not settle any published unresolved rooted machine, improve a universal BB(6) upper bound, or establish the exact BB(6) value. No claim of novelty over general prior shift-cycler deciders is made.
