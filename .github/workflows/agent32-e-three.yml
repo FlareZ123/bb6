@@ -28,3 +28,4 @@ jobs:
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean im-results/agent32-cryptid-third/CryptidThree.lean
+          lean im-results/agent32-cryptid-third/CryptidSeven.lean
