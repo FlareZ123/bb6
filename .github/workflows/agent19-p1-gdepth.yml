@@ -31,4 +31,6 @@ jobs:
           for m in InfiniteResidue InfiniteResidue2 InfiniteResidue3 InfiniteResidue4 InfiniteResidue5 EvenFamily; do
             lean -o "im-results/agent7-rank-bounded/$m.olean" "im-results/agent7-rank-bounded/$m.lean"
           done
-          lean im-results/agent19-p1-source-bridge/TwoFeeder.lean
+          lean -o im-results/agent19-p1-source-bridge/TwoFeeder.olean im-results/agent19-p1-source-bridge/TwoFeeder.lean
+          lean -o im-results/agent19-p1-source-bridge/FourDepth.olean im-results/agent19-p1-source-bridge/FourDepth.lean
+          lean im-results/agent19-p1-source-bridge/SingleFeeder.lean
