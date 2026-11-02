@@ -78,3 +78,12 @@ Proof idea: From even `a,c` the accelerated dynamics have exactly four outcomes:
 **Reproduction:** Compile `HaltingFunnel.lean` into a Lean object file under the Lean module search path; then compile `EvenSector.lean` with that object available. Both sources use only the bundled `Std`. In our local test the two-file compilation succeeded; neither file contains `sorry`.
 
 This theorem still does **not** classify trajectories that later encounter odd `c`; those trajectories include the actual blank-tape orbit. The full BB(6) question remains open.
+
+## Kernel-checked gateway for the actual odd-counter orbit
+
+Two further sources added:
+
+- `OddReturn.lean`, importing `EvenSector`, gives an exact two- or three-call return map `U` for all odd `c` and even `a`. Theorems `U_one`, `U_three`, and `U_large` prove the step-for-step relation to published `T`. The theorem `U_left_even` proves that every return lands at even `a`. The theorem `U_even_counter_iff_three` proves `(U(a,c)).2` is even **if and only if** the input odd `c` equals 3, isolating the gateway into the even-counter sector. Finally, `U_three_closed_iff` states that once the return begins at `(a,3)`, the resulting `(2,a+6)` halts while remaining in even-c hubs exactly if `a+2n+16=14*2^n` for some natural `n`. Both the return and clean-halt criteria are kernel checked, no `sorryAx`, standard axioms only.
+- `GModular.lean`, importing `HaltingFunnel`, proves a residue dichotomy for all input `c≡1(mod 4)`: its output `(a',c')` has either `(a' mod8,c' mod4)=(0,1)` or `(4,3)`. This theorem is valid for every `k` and the full recursive `G`, not just finite samples.
+
+These results are a tractable phase reduction for the real blank-start orbit, with the remaining key obligation to prove that the concrete orbit never reaches a clean-halting gateway. They **do not** prove nonhalting. Compile `OddReturn.lean` after the first two compiled Lean modules; `GModular.lean` imports the first module only.
