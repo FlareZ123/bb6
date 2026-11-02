@@ -61,4 +61,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10Growth.lean" Agent10Growth.lean
           cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10GrowthSource.lean" Agent10GrowthSource.lean
           lake env lean -o .lake/build/lib/lean/Agent10Growth.olean Agent10Growth.lean
-          lake env lean Agent10GrowthSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent10GrowthSource.olean Agent10GrowthSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10Tower.lean" Agent10Tower.lean
+          lake env lean Agent10Tower.lean
