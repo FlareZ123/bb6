@@ -1,6 +1,6 @@
 import AffineParityDepth
 import EvenTargetOrbit
-import M8M16Composition
+import M8ThinBridge
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11
@@ -29,7 +29,7 @@ theorem normalize_even_depth_m8_forbidden (a k : Nat)
   have hpk : p.2=8*(p.2/8)+4 := by omega
   change CReach p.1 p.2 at hrnorm
   rw [hpa,hpk] at hrnorm
-  exact blank_no_m8_cylinder _ _ hrnorm
+  exact m8_blank_no_m8_cylinder _ _ hrnorm
 
 /-- Explicit depth certificate on a whole modulo-32 parameter class. -/
 theorem depth_case_21 (u : Nat) (hu : u%32=21) :
