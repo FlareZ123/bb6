@@ -86,6 +86,55 @@ theorem blank_no_two_eightk_twenty_eight (k : Nat) :
                       rcases hinv with h | h <;> omega
 
 
+/-- The required power of two dominates the affine index. -/
+theorem pow4k2_large (k : Nat) : k+1 ≤ 2^(4*k+2) := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    have hp : 2^(4*(k+1)+2) = 16*2^(4*k+2) := by
+      have he : 4*(k+1)+2 = (4*k+2)+4 := by omega
+      rw [he,Nat.pow_add]
+      simp only [Nat.reducePow]
+      omega
+    rw [hp]
+    omega
+
+/-- A whole infinite subfamily of genuine critical halting gateways is avoided. -/
+theorem blank_no_critical_four_k_plus_five (k : Nat) :
+    ¬BlankReach 2 (14*2^(4*k+5) - 2*(4*k+5) - 10) := by
+  have hp : 2^(4*k+5) = 8*2^(4*k+2) := by
+    have he : 4*k+5 = (4*k+2)+3 := by omega
+    rw [he,Nat.pow_add]
+    simp only [Nat.reducePow]
+    omega
+  have hb : k+6 ≤ 14*2^(4*k+2) := by
+    have hh := pow4k2_large k
+    omega
+  have hid :
+      14*2^(4*k+5) - 2*(4*k+5) - 10 =
+        8*(14*2^(4*k+2)-k-6)+28 := by
+    rw [hp]
+    omega
+  rw [hid]
+  exact blank_no_two_eightk_twenty_eight _
+
+/-- Every critical index n congruent to one modulo four is unreachable. -/
+theorem blank_no_critical_one_mod_four (n : Nat) (hn : n%4=1) :
+    ¬BlankReach 2 (14*2^n - 2*n - 10) := by
+  by_cases hn1 : n=1
+  · subst n
+    have hval : 14*2^1 - 2*1 - 10 = (16:Nat) := by decide
+    rw [hval]
+    exact blank_ne_second_critical
+  · have hge : 5≤n := by omega
+    let k := (n-5)/4
+    have he : n=4*k+5 := by dsimp [k]; omega
+    rw [he]
+    exact blank_no_critical_four_k_plus_five k
+
+#print axioms BB6.HaltingFunnel.blank_no_critical_four_k_plus_five
+#print axioms BB6.HaltingFunnel.blank_no_critical_one_mod_four
+
 #print axioms BB6.HaltingFunnel.blank_no_two_eightk_twenty_eight
 #print axioms BB6.HaltingFunnel.T_to_eightk_twentyfour_two
 end BB6.HaltingFunnel
