@@ -28,7 +28,7 @@ Both directions are Lean-certified, including soundness, exhaustive completeness
 
 ## 2. Entire blank-orbit inverse restriction
 
-For every `K≥0` with `K%4=2`, the second new theorem strengthens the raw inverse classification using the global actual-blank-reachability invariant (Agent 4 `blank_even_left_invariant`):
+For every `K≥0` with `K%4=2`, the second new theorem strengthens the raw inverse classification using the global actual-blank even-sector power invariant (Agent 7 `blank_even_hub_power`):
 
 ```text
 BlankReach(4K+4,3) iff
@@ -50,7 +50,7 @@ The theorem does **not** imply those feeder families are unreachable. Indeed `K=
 
 1. `GDepth.lean` imports Agent 1's `GInverse.lean` and Agent 4's `HaltingFunnel.lean`, proving `G_agree`, `G_critical_inverse_depth_two`, `G_critical_inverse_c_three`, `G_preimages_mod8_four`, and `G_critical_inverse_three_iff`.
 2. `TwoFeeder.lean` imports `GDepth` and `ResidualGateway`. Its principal theorem is `reach_two_feeders_iff`, plus `critical_residual_two_feeders`.
-3. Manual-only workflow `.github/workflows/agent19-p1-gdepth.yml` checks all real local module prerequisites under pinned Lean 4.36.0-rc2. [Successful GitHub Actions run 41390551413](https://github.com/FlareZ123/bb6/actions/runs/41390551413) (2026-11-02 04:49 UTC).
+3. Manual-only workflow `.github/workflows/agent19-p1-gdepth.yml` checks all real local module prerequisites under pinned Lean 4.36.0-rc2. [Successful GitHub Actions run 41391140177](https://github.com/FlareZ123/bb6/actions/runs/41391140177) (2026-11-02 04:56 UTC).
 4. Axiom audits for `reach_two_feeders_iff`, `reachable_two_feeders`, and `critical_residual_two_feeders` all printed `[propext, Classical.choice, Quot.sound]`, with **no `sorryAx`**. The upstream blank-machine bridge was separately certified at pin `ced8f9f44f67a167d5ecc03e687b048c67926371`.
 
 These proofs are an incremental synthesis of Agents 1 and 4's existing lemmas with a stronger source-inverse normal form and its blank-reachable realization. Independent external-prior-art novelty has **not** been established, so all artifacts are retained in `im-results/`.
