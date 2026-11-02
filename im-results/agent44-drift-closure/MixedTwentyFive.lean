@@ -1,4 +1,4 @@
-import DirectedDrift
+import PrefixDrift
 import LeafRules
 
 namespace BB6Coverage
