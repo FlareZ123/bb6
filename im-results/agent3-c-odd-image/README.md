@@ -1,37 +1,68 @@
-# Agent 3: Exact Machine C return-map image and a blank-origin dyadic exclusion
+# Agent 3: Machine C exact section image and infinite affine gate equivalence
 
-**Status (2026-11-02): Unmodified-source Lean 4.36.0-rc2 CI verified, intermediate result.** Machine C and BB(6) are unresolved. The repository retains the source in `Agent3CImage.lean` and `Agent3C14.lean`; `.github/workflows/agent3-c-odd-image.yml` is manually triggered and has no push/commit trigger.
+**Status: source-certified Lean intermediate research, 2026-11-02.** The genuine Machine C blank start, source definitions, published source semantics, and original Agent38 auxiliary proof are unchanged. No Machine C or BB(6) halting decision is claimed. All new source lives in this directory; the manually dispatched verification workflow is `.github/workflows/agent3-c-odd-image.yml`.
 
-## Source-proved global bounce invariant
+## All-input bounce-image invariant
 
-For the **original** `BB6.Agent46.bounce`, every successful output `some (x,y)` satisfying `y>=4` obeys
+Theorem `BB6.Agent3.bounce_large_image` (`Agent3CImage.lean`): for all natural `k,c,x,y`,
+
 ```
-(x+y) % 4 = 0 ∨ (x+y) % 4 = 3.
+(bounce k c).2 = some (x,y) ∧ 4 ≤ y
+  → (x+y)%4=0 ∨ (x+y)%4=3.
 ```
-This is a strong-induction theorem over the decreasing high counter. For an odd middle counter the final bounce sum is `2*k+6 ≡ 0 mod4`; for an even middle counter and final height at least four, the sum is `2*k+7 ≡ 3 mod4`. Recursion preserves the final output and strictly decreases the high counter. The exceptional even `c=4` branch outputs height 3, outside this theorem.
 
-**The original-source complete section map:** Every successful `BB6.Agent46.secNext (a,k)=some (x,y)` with `y>=5` odd has sum in `{0,3} mod4`. This follows from the bounce invariant plus complete, explicit enumeration of direct section branches. On the authentic blank-origin orbit starting at `(5,1)`, we thus exclude at **every time** all points
+The proof uses strong induction on the **strictly decreasing** high counter in Agent46's original recursion. Terminal odd-middle branches have sum `2*k+6`, divisible by four; terminal even-middle branches of height ≥4 have sum `2*k+7`, congruent to three mod four. Only the exceptional height-three output lies outside the theorem. Recursive branches preserve the final output exactly.
+
+Theorem `section_odd_image` transfers this to the **complete** original `secNext` map: for every input and successful output `(x,y)` with odd `y≥5`, the sum lies in `{0,3} (mod4)`. Theorem `blank_no_two_three_high` therefore globally excludes every blank-start section point
+
 ```
-(4*u+2, 4*(v+1)+3)    (u,v : Nat).
+(4*u+2, 4*(v+1)+3),   u,v : Nat,
 ```
-The newly excluded family consists of `x≡2(mod4), y≡3(mod4), y>=7`. This is a global, all-natural invariant, not a finite simulation or a density estimate.
 
-## Smallest dyadic halting target
+at **every** natural section time. This is a universal inductive image restriction rather than a bounded experiment.
 
-`Agent3C14.lean` imports the **unmodified Agent38SectionParity** proof `bounce_positive` to establish that `secNext` never emits `(3,1)` from any state. The strengthened bounce-image theorem rules out `(1,4)` as a bounce output. All direct branches are enumerated, leaving the **unique** possible input `(3,1)` to an output `(1,4)`. Since the initial state is `(5,1)`, `(3,1)` is unreachable from the authentic blank section, and hence so is `(1,4)`.
+## Exact all-natural predecessor for the infinite (1,4j) line
 
-This eliminates the depth-zero `a=1` stopping target of Agent46's source-certified exact dyadic stopping basin; the infinitely many other stopping targets remain unclassified. In particular, no proof of Machine C nonhalting is claimed.
+Theorem `BB6.Agent3.section_one_four_exact` (`Agent3COneFamily.lean`) proves for all natural `a,k,j` with `1≤j`:
 
-## Exact source-level Lean verification
+```
+secNext (a,k) = some (1,4*j)
+  ↔ a=4*j-1 ∧ k=2*j-1.
+```
 
-[Successful manual GitHub Actions run 41441884283](https://github.com/FlareZ123/bb6/actions/runs/41441884283), source checkout commit `12041bf8eb00cd6ac82b849e38f56ab921384e46`, source-odd-image job `125265508225`.
+For the forward direction, the preceding bounce-image theorem excludes every bounce predecessor since `(1+4j)%4=1`. The other direct section branches have incompatible output; the only possible affine high-input branch fixes `a=4j-1,k=2j-1`. Conversely these values satisfy the source's long-section branch and produce `(1,4j)` in one exact `secNext` call.
 
-The workflow compiles the complete unchanged Agent11 `CLine`, Agent8 `GenericSection` and `CSectionTotal`, Agent21 `CReachBridge`/`CPhaseRank`, all exact Agent46 prerequisite modules including `BounceCalc`, `BounceProof` and `FastSectionDef`, plus **unmodified** Agent38 `Agent38SectionParity`. It then compiles Agent3's two source files against those imports. Every step completed successfully. The final `#print axioms` output for `section_no_31`, `section_14_requires_31`, `blank_no_31`, `blank_no_14` lists only `[propext, Classical.choice, Quot.sound]`; no `sorryAx`.
+Theorem `BB6.Agent3.blank_one_four_iff_feeder` (`Agent3COrbitIff.lean`) upgrades this to genuine **all-time blank-orbit reachability**:
 
-Earlier [successful run 41440848197](https://github.com/FlareZ123/bb6/actions/runs/41440848197) independently verified the initial weaker odd-height theorem. The later run verifies its strengthened replacement.
+```
+CReach 1 (4*j) ↔ CReach (4*j-1) (2*j-1)    (j≥1).
+```
 
-## Scope and next mathematical bottleneck
+Here `CReach a k := ∃ t, run secNext t (some (5,1))=some (a,k)`; the start `(5,1)` is original-source checked through Agent46's existing semantic bridge. The right-to-left implication adds one section step; the left-to-right implication analyses the final predecessor. The initial state is distinct from `(1,4j)`.
 
-The exact Machine C blank halting equivalence is already provided by Agent46 and Agent21's original-machine bridges and can be combined with the now-proved exclusion of `(1,4)`. The surviving infinite stopping-depth families require a forward blank-reachability language, or a genuinely unbounded inverse proof, to resolve. A useful next step is to examine source predecessors of `(1,k)` for all depths in the dyadic stopping equation; the source restriction eliminates every bounce predecessor when `k≡0(mod4)`, but the direct predecessor `(k-1,k/2-1)` remains when `k>=4`. Even this reduction leaves infinitely many admissible parameter values and is **not** a closure theorem.
+This exact equivalence simultaneously handles all infinite dyadic a=1 halting-target indices with `k≡0(mod4)`. If any feeder is actually blank-reachable, its target is too. Proving none of these feeders is blank-reachable, or finding one, remains an **unbounded global obligation**.
 
-This work is retained under `im-results/` because it does not yet give a full holdout decision or an academically publishable BB(6) frontier result.
+## Exact exclusion of first dyadic halting target (1,4)
+
+`Agent3C14.lean` imports the **unmodified** Agent38 theorem `bounce_positive` to show that `secNext` never outputs `(3,1)`. The unique predecessor formula for `(1,4)` is `(3,1)`, and the actual blank start is `(5,1)`. Consequently, for every time,
+
+```
+run secNext time (some (5,1)) ≠ some (1,4).
+```
+
+The `(1,4)` target corresponds to depth zero of the complete a=1 dyadic halting basin established by Agent46. Other infinitely many stopping targets remain.
+
+## Source verification, reproducibility, limits
+
+The [latest successful GitHub Actions run **41442813596**](https://github.com/FlareZ123/bb6/actions/runs/41442813596), job `125268594335`, checked source commit `273325989ffcffb9c0d27da839b0ef7008a16c18`. Original unchanged `CLine`, `GenericSection`, `CReachBridge`, `CPhaseRank`, `CSectionTotal`, all needed Agent46 jump/bounce modules, and original Agent38 `Agent38SectionParity` were compiled first. Then all four original Agent3 source files compiled with exit status zero:
+
+- `Agent3CImage.lean`: global bounce and section image theorem.
+- `Agent3C14.lean`: pointwise and blank-orbit forbidden `(3,1)` and `(1,4)`.
+- `Agent3COneFamily.lean`: the uniform exact infinite predecessor line.
+- `Agent3COrbitIff.lean`: the exact blank-origin reachability equivalence.
+
+The last `#print axioms` audits for `section_one_four_exact` and `blank_one_four_iff_feeder` each output only `[propext, Classical.choice, Quot.sound]`; no `sorryAx` or `native_decide`. The same applies to `blank_no_14` and `section_no_31`, verified in [prior complete source CI 41441884283](https://github.com/FlareZ123/bb6/actions/runs/41441884283).
+
+The mathematical next step is to characterize the true forward blank-reachability of the infinite affine feeder `a=2k+1`, with `k=2j-1` odd. This requires more than a finite modulus sieve or a short inverse cone. The empirical absence of such feeders from a finite trace is **not** a proof, and the present theorem does not decide Machine C or BB(6). Please challenge every proposed global exclusion with exact original-source counterexamples before inferring closure.
+
+All artifacts remain under `im-results/`, preserving the repository's requirement that only academically publishable frontier advances enter `results/`.
