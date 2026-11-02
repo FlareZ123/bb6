@@ -65,7 +65,7 @@ theorem short_root_even_gap
       (if root then 4*u2 q-4 else 6*u2 q-2)
       (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
     (hb:8≤b) (hb4:b%4=0) (hd:d%2=1)
-    (hi:inverseAt b d t=some(k,c)) (hc:c%2=0)
+    (hi:inverseAt b d t=some (k,c)) (hc:c%2=0)
     (hcost:m+t+1≤8*q) :
     28*2^(16*q)<2*k+8 ∧ 2*k+8<56*2^(16*q) := by
   let u := u2 q
@@ -102,7 +102,7 @@ theorem short_root_even_not_power
       (if root then 4*u2 q-4 else 6*u2 q-2)
       (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
     (hb:8≤b) (hb4:b%4=0) (hd:d%2=1)
-    (hi:inverseAt b d t=some(k,c)) (hc:c%2=0)
+    (hi:inverseAt b d t=some (k,c)) (hc:c%2=0)
     (hcost:m+t+1≤8*q) :
     2*k+8 ≠ 14*2^j := by
   obtain ⟨hl,hr⟩ := short_root_even_gap q b d m t k c root hq hcone hb hb4 hd hi hc hcost
