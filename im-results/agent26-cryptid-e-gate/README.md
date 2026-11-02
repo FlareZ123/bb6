@@ -72,3 +72,30 @@ For every k≥0 and every finite arbitrary suffix ys, the original `init` defini
 The exact reconstructed standalone source is losslessly preserved in [`EHaltingSource.lean.xz.b64`](./EHaltingSource.lean.xz.b64). Its decompressed SHA-256 is **`00bcdd325624491153b3493fd2222d110740bf623f7a74da747a3078170bb765`**, 7,749 bytes. The source imports `Boundary`; use Agent31's existing `im-results/agent31-cryptid-boundary/unpack.py` to recreate `Boundary.lean`, compile it into its `.olean`, then compile this new source. No modifications to Agent31's files, proof body or types are required.
 
 **Evidence boundary:** the exact proof has succeeded in this local environment with both original sources. An independent shared-run GitHub Actions check has not yet been dispatched. The full BB(6) problem and D-start blank-orbit decision remain open.
+
+## New theorem: genuinely blank-origin trace at 23,503,104 raw steps (07:30 UTC)
+
+The previously unverified first **empty-right-suffix** E branch is now proved for all natural k. The new kernel-audited module `EEmpty.lean` imports Agent31's original `Boundary.lean` and establishes:
+
+```lean
+CryptidBoundary.full_E_nil (k : Nat) :
+  run (12*k*k+49*k+50) (init (List.replicate (3*k+2) true)) =
+    init (List.replicate (8*k+3) true ++
+      false :: List.replicate 6 true)
+```
+
+This is an exact raw-machine equality for **every k**, distinguishing the genuine implicit blank beyond a finite list from the explicit right-zero condition of prior `full_E_00`. It composes a newly proven `prefix_E_nil` (Agent31 already proved the lower-level `boundary_E_nil`) with a 10-step E-start conversion and an inductive E/F/C cursor sweep. The source is [`EEmpty.lean.xz.b64`](./EEmpty.lean.xz.b64) and its uncompressed SHA-256 is **`f0e0b227fc7a50ef7dd6bbb09bbdc96a3d2aaca9d72f0ba68d187a99ad38561e`** (4,245 bytes).
+
+An additional direct Lean source [`EBlankTrace.lean`](./EBlankTrace.lean), SHA-256 `c01d713c52c0ade92614c30cb4f67c636847beb012757636a630b454f9270dcd`, imports **Agent31's original `BlankTrace.lean`** and `EEmpty`, then certifies exact actual blank-orbit configurations:
+
+| Raw steps since blank start | Certified primitive configuration |
+|---:|---|
+| 468,794 | `init (1^1455)`, hence 1,457 consecutive right ones |
+| 3,315,299 | `init (1^3887)`, hence 3,889 consecutive right ones |
+| **23,503,104** | **`init (1^10363 ++ 0 :: 1^6)`**, hence 10,365 right ones followed by zero and six ones |
+
+The jumps after Agent31's `blank66753` use its earlier `full_B_nil` twice with k=181 and 485, followed by the newly verified `full_E_nil 1295`. This **crosses the first genuine E encounter** and certifies an actual nonuniform blank-origin right suffix. It is a finite prefix result only and does not imply an eventual halt or nonhalt.
+
+**Independent GitHub Actions reproduction PASSED:** [manual, no-per-commit Lean CI run 41406526967](https://github.com/FlareZ123/bb6/actions/runs/41406526967) (2026-11-02 07:28 UTC), using the repository's unmodified Agent31 `Boundary.lean`, `BoundaryExtra.lean`, and `BlankTrace.lean` together with the SHA-pinned decoded `EEmpty.lean` and `EBlankTrace.lean`. All displayed new theorem axiom audits show `[propext, Quot.sound]` only, no `sorryAx`. The first CI attempt failed because **the existing** `BlankTrace.lean` needs a higher Lean recursion budget at 543-symbol normalization; the manual workflow was corrected to invoke it with `-DmaxRecDepth=16384`, keeping Agent31's original source unchanged. The second run passed.
+
+**Frontier:** the next actual F section has unary length 10,365 and a suffix `0 1^6`. The all-natural A-prefix theorem can reduce its initial delimiter, but a new A-boundary return for a six-one suffix is needed to progress symbolically. Experimental simulation suggests a promising A-boundary closed rule with time `14m+128` and output `1^(2m+21)`, starting from A on 0, left `0 (10)^m 11`, right `1^6`; this is currently **a conjecture backed by finite simulation**, not a Lean theorem. For the authentic next section, the relevant `m=13,819`.
