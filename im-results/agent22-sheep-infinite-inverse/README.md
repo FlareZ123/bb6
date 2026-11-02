@@ -12,7 +12,7 @@ u -> (3u-1)/2
 
 is a real `a=0` generic edge. Equivalently, if a target `y` has `2y+1` divisible by 3, it has generic predecessor `(2y+1)/3`, provided that predecessor is odd and at least five.
 
-For **every natural depth `n`** and **every positive modulus `m`**, there exist an exponent `j` divisible by `m` and a concrete, genuinely valid chain of **exactly `n`** generic Sheep return edges, ending at the halting power `2^j`. The strongest standalone theorem is:
+For **every natural depth `n`** and **every positive modulus `m`**, there are **infinitely many distinct exponents `j` divisible by `m`** whose halting powers have a concrete, valid chain of **exactly `n`** generic Sheep return edges. The first formal theorem supplies an explicit witness:
 
 ```lean
 theorem BB6.Agent22.GeneralAncestry.every_modulus_has_unbounded_inverse_chains
@@ -20,7 +20,7 @@ theorem BB6.Agent22.GeneralAncestry.every_modulus_has_unbounded_inverse_chains
     ∃ j t : Nat, m ∣ j ∧ SectionChain n t (2^j)
 ```
 
-`SectionChain` is defined recursively using the **actual** `SheepBridge.SectionNext` relation; every displayed edge is verified to be generic with `a=0`, `u` odd and `u>=5`. This is a theorem about full finite chains of real transitions, not merely about congruences or speculative candidates.
+`SectionChain` is defined recursively using the **actual** `SheepBridge.SectionNext` relation; every displayed edge is verified to be generic with `a=0`, `u` odd and `u>=5`. The stronger `arbitrarily_large_exponents_have_deep_chains` theorem proves `∀ m>0,n,K, ∃ j>K,t, m∣j ∧ SectionChain n t (2^j)`, thereby supplying infinitely many such powers in every zero-modulus residue class. Both are fully quantified Lean theorems of actual return edges.
 
 ### Explicit construction
 
@@ -63,7 +63,7 @@ These constructed predecessor states are **not known to be reachable from the ac
 
 - `InfiniteAncestry.lean`: explicit lifted family, natural-valued `Q`, and a real generic-edge chain for arbitrary depth.
 - `PeriodicAncestry.lean`: exact quotient `W`, power exponent restricted to `j≡0 (mod 5400)`.
-- `GeneralAncestry.lean`: uniform statement for every `m>=1`.
+- `GeneralAncestry.lean`: uniform statement for every `m>=1`, including the infinite-target strengthening.
 - They import `SheepPowerBridge.lean` from `im-results/agent22-sheep-semantic-bridge/`, which in turn imports Agent 14's `CounterBridge.lean`; source restoration and module conversion are documented there.
 - All statements are wholly quantified and require no numerical tests, sampling, untrusted `native_decide`, or external arithmetic oracle. The Lean `#print axioms` commands are included in the files.
 - The existing manually triggered workflow `.github/workflows/agent22-sheep-source-bridge.yml` can be extended to compile all three files in the pinned Cryptids environment.
