@@ -41,6 +41,8 @@ def scan(q, max_nodes):
         if shifted & (shifted - 1) == 0 and shifted >= 4:
             exceptional += 1
         for left, right in ancestors(b, d):
+            if left <= 2:
+                return {"q": q, "failure": "small-left source requires separate exact Nat handling", "left": left, "right": right}
             if left % 4 == 0 and right % 2 == 0:
                 leaves += 1
                 if not (4 * u < left + 12 < 8 * u):
