@@ -112,6 +112,41 @@ theorem single_feeder_iff (m:Nat) (hm:0<m) :
  · exact only_first_feeder m hm
  · exact first_feeder_to_target m hm
 
+
+theorem high_power_mod32 (n:Nat) (hn:5≤n) : (2^n)%32=0 := by
+  have he : n=n-5+5 := by omega
+  rw [he,Nat.pow_add]
+  simp
+
+theorem pow_bound : ∀ n:Nat, n+1≤2^n := by
+  intro n
+  induction n with
+  | zero => decide
+  | succ n ih => rw [Nat.pow_succ]; omega
+
+/-- Every critical target n>=6 congruent 6 modulo 16 is reached iff
+    one explicitly indexed two-cell feeder is reached. -/
+theorem critical_single_feeder (n:Nat) (hn:6≤n) (hmod:n%16=6) :
+    ∃ m:Nat, 0<m ∧
+      (BlankReach 2 (14*2^n-2*n-10) ↔
+       BlankReach (16*m-4) (16*m+9)) := by
+  let b := 14*2^n-2*n-16
+  have hp:=high_power_mod32 n (by omega)
+  have hb0:=pow_bound n
+  have hbBig:36≤b := by dsimp[b];omega
+  have hbMod:b%32=4 := by dsimp[b];omega
+  let m:=(b-4)/32
+  have hm:0<m := by dsimp[m];omega
+  have hbVal:b=32*m+4 := by dsimp[m];omega
+  refine ⟨m,hm,?_⟩
+  have hcriterion:=BB6.Agent19.P1.residual_critical_gateway n (by omega) (by omega)
+  have hsingle:=single_feeder_iff m hm
+  have hbexpr:14*2^n-2*n-16=32*m+4 := by simpa only [b] using hbVal
+  rw [hbexpr] at hcriterion
+  exact hcriterion.trans hsingle
+
+#print axioms critical_single_feeder
+
 #print axioms single_feeder_iff
 #print axioms only_first_feeder
 #print axioms G_no_one_K8
