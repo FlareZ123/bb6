@@ -76,7 +76,7 @@ def verify():
 
     # Sanity check that all twenty residue classes fit the second-parent formula.
     for r in RESIDUES:
-        for j in (r, r + 540, r + 360):
+        for j in (r, r + 540, r + 1080):
             p = 1 << j
             y1 = (4 * p - 2) // 5
             y2 = (32 * p - 76) // 45
