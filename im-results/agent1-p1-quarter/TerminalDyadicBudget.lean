@@ -84,5 +84,38 @@ theorem source_small_left_dyadic_budget
 
 #print axioms source_small_left_dyadic_budget
 
+open BB6.Agent47P1
+open BB6.Agent1Quarter
+open BB6.Agent45TwoRoot
+open BB6.Agent1ShortCone
+
+theorem reachable_even_terminal_logdepth
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hb : 8 ≤ b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : c%2=0) (hk : 2 ≤ k)
+    (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
+    2^t ≤ 256*q+8*m+76 := by
+  let u := u2 q
+  have hdom := pow16_dom q hq
+  have hu : u+4*q+3=7*2^(16*q) := by dsimp [u,u2]; omega
+  have hinverse := inverseAt_power b d t k c hi
+  have hsmall := reachable_even_terminal_small_left q b d m t k c root hq hcone hb hb4 hd hi hc hk hr
+  cases root with
+  | false =>
+    have hm:=odd_cone_mass (6*u-2) (2*u+5) b d m (by simpa [u] using hcone)
+    have hmass:b+d+2*m=8*u+3 := by omega
+    exact source_small_left_dyadic_budget q u b d m t c 3 (Or.inl rfl) hu hmass hb4 hinverse hsmall
+  | true =>
+    have hm:=odd_cone_mass (4*u-4) (4*u+9) b d m (by simpa [u] using hcone)
+    have hmass:b+d+2*m=8*u+5 := by omega
+    exact source_small_left_dyadic_budget q u b d m t c 5 (Or.inr rfl) hu hmass hb4 hinverse hsmall
+
+#print axioms reachable_even_terminal_logdepth
+
 #print axioms dyadic_defect_gap
 end BB6.Agent1Bottleneck
