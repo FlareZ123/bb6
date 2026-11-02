@@ -60,4 +60,9 @@ jobs:
           python im-results/agent45-p1-generator/src/emit_shift2.py 261822 im-results/agent45-p1-generator/src/Quarter261822.lean
           lean -o im-results/agent45-p1-generator/src/Quarter261822.olean im-results/agent45-p1-generator/src/Quarter261822.lean
           lean im-results/agent45-p1-generator/Critical261822.lean
-          echo "Source-certified every q: P1 critical indices 262144*q+262130, +262114, +262050, and +261822 unreachable."
+          for r in 262046 262078; do
+            python im-results/agent45-p1-generator/src/emit_shift2.py "$r" "im-results/agent45-p1-generator/src/Quarter$r.lean"
+            lean -o "im-results/agent45-p1-generator/src/Quarter$r.olean" "im-results/agent45-p1-generator/src/Quarter$r.lean"
+            lean "im-results/agent45-p1-generator/Critical$r.lean"
+          done
+          echo "Source-certified every q: P1 critical indices 262144*q+262130, +262114, +262050, +261822, +262046 and +262078 are unreachable."
