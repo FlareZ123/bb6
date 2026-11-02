@@ -8,6 +8,8 @@ namespace BB6.CryptidUniversalExtension
 open CryptidBoundary
 open BB6.CryptidBRun
 
+set_option maxRecDepth 8192
+
 /-- An F-on-zero section with v+2 unary ones is exactly the original
     source-machine initial section carrying v additional ones. -/
 theorem section_init (v : Nat) (ys : List Bool) :
@@ -56,6 +58,34 @@ theorem every_unary_has_halting_extension (n : Nat) (hn : 2 ≤ n) :
       t1+(12*k*k+41*k+99), ?_⟩
     rw [run_add, ht1, hk]
     simpa using (halt_E_section k [])
+
+/-- A finite source-level direct certificate for the exceptional n=0 input. -/
+theorem zero_unary_halts :
+    (run 151 (I 0
+      [false,false,false,true,true,false,true,true,false,false])).st = 6 := by
+  decide
+
+/-- A finite source-level direct certificate for the exceptional n=1 input. -/
+theorem one_unary_halts :
+    (run 74 (I 1
+      [false,true,true,false,true,true,false,false])).st = 6 := by
+  decide
+
+/-- The all-natural strengthening includes the two exceptional unary inputs. -/
+theorem every_unary_has_halting_extension_all (n : Nat) :
+    ∃ (xs : List Bool) (t : Nat), (run t (I n xs)).st = 6 := by
+  by_cases hn : 2 ≤ n
+  · exact every_unary_has_halting_extension n hn
+  · have hh : n = 0 ∨ n = 1 := by omega
+    rcases hh with rfl | rfl
+    · exact ⟨[false,false,false,true,true,false,true,true,false,false],
+        151,zero_unary_halts⟩
+    · exact ⟨[false,true,true,false,true,true,false,false],
+        74,one_unary_halts⟩
+
+#print axioms zero_unary_halts
+#print axioms one_unary_halts
+#print axioms every_unary_has_halting_extension_all
 
 #print axioms section_init
 #print axioms halt_A_section
