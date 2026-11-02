@@ -91,3 +91,17 @@ The theorem `BB6.Agent8Depth.unbounded_reset_ancestor_depth` says for **every** 
 The exact theorem body and the unmodified `CLine.lean`, `CReachBridge.lean` and `CSection.lean` source dependencies were compiled with Lean **4.36.0-rc2** in successful [manual CI run 41418915186](https://github.com/FlareZ123/bb6/actions/runs/41418915186). All three theorem axiom audits are `[propext, Quot.sound]`, without `sorryAx`, after the original files were compiled as modules. The workflow is [`.github/workflows/agent8-c-inverse-depth.yml`](../../.github/workflows/agent8-c-inverse-depth.yml).
 
 This is an intermediate structural theorem and does not determine Machine C or BB(6).
+
+## Strengthened theorem: arbitrarily deep inverse returns respect the known odd-middle reset hole
+
+`CInverseCompat.lean` certifies the sharper quantified statement that for every desired depth `n` and gateway index threshold `L`, there is a reset index `j>L` with an exact `n`-return inverse chain **whose every zero-right-counter checkpoint** satisfies the already source-checked necessary condition from Agent 21's `CRange.reached_odd_zero_mod4_hole`:
+
+```
+If k≥5 is odd at a c=0 checkpoint, (a+k) mod 4 ∈ {0,3}.
+```
+
+The explicit construction takes the base `j_0=4t+3`, so its original inverse terminal middle counter is `3j_0+4=12t+13≡1(mod4)`. Every later intermediate middle counter is `K_{i+1}=2K_i+2` and hence even. Each long return increases the zero-section weighted rank `a+2k` by exactly four, so the initial odd-middle checkpoint obeys `(a+k) mod4=0`, and all other checkpoints satisfy the rule vacuously.
+
+The inductive `CompatibleLong` certificate explicitly includes this necessary condition at every node. `compatible_implies_long` shows it is a valid original exact `LongAnc` predecessor chain, and `unbounded_compatible_depth` also supplies a real nonblank accelerated trace of at least n calls to its target gateway. Entirely source-checked [Lean 4.36.0-rc2 CI run 41420289460](https://github.com/FlareZ123/bb6/actions/runs/41420289460) imported unmodified `CLine`, `CReachBridge`, and `CSection`, plus the prior `CInverseDepth` theorem. Both final axiom audits are precisely `[propext, Quot.sound]`, no `sorryAx`.
+
+This proves compatibility with **one known necessary modular condition**. It does not show these states satisfy every published reachable-set restriction or that the blank orbit reaches them. Finite inverse searches may still close branches using stronger invariants. Both Machine C and BB(6) remain open.
