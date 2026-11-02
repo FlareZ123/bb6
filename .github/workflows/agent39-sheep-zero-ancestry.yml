@@ -27,13 +27,15 @@ jobs:
           cp im-results/agent39-sheep-zero-ancestry/PowerCorridor.lean "$RUNNER_TEMP/agent39/PowerCorridor.lean"
           cp im-results/agent39-sheep-zero-ancestry/ForwardBlock.lean "$RUNNER_TEMP/agent39/ForwardBlock.lean"
           cp im-results/agent39-sheep-zero-ancestry/ResidueCorridor.lean "$RUNNER_TEMP/agent39/ResidueCorridor.lean"
+          cp im-results/agent39-sheep-zero-ancestry/ActualResidue.lean "$RUNNER_TEMP/agent39/ActualResidue.lean"
           cd "$RUNNER_TEMP/agent39"
           export LEAN_PATH=".:$LEAN_PATH"
           lean --version
           lean -o CounterBridge.olean CounterBridge.lean
           lean -o ZeroAncestry.olean ZeroAncestry.lean
-          lean ZeroAncestryBridge.lean
+          lean -o ZeroAncestryBridge.olean ZeroAncestryBridge.lean
           lean -o ThreeAdicOrder.olean ThreeAdicOrder.lean
           lean -o PowerCorridor.olean PowerCorridor.lean
           lean ForwardBlock.lean
-          lean ResidueCorridor.lean
+          lean -o ResidueCorridor.olean ResidueCorridor.lean
+          lean ActualResidue.lean
