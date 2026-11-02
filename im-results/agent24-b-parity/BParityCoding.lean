@@ -200,4 +200,79 @@ theorem finite_prefix_separates (a b n : Nat)
 #print axioms prefix_forces_divisor
 #print axioms full_itinerary_injective
 #print axioms finite_prefix_separates
+/-- Construct a unique residue representative from any prescribed finite parity word. -/
+def inputFor (bit : Nat → Nat) : Nat → Nat
+  | 0 => 0
+  | n+1 =>
+    let a := inputFor bit n
+    if path a n % 2 = bit n % 2 then a else a + 2^n
+
+theorem inputFor_lt (bit : Nat → Nat) (n : Nat) : inputFor bit n < 2^n := by
+  induction n with
+  | zero => simp [inputFor]
+  | succ n ih =>
+      have hpow : 2^(n+1) = 2*2^n := by rw [Nat.pow_succ]; omega
+      rw [inputFor]
+      split
+      · omega
+      · omega
+
+/-- Every finite binary parity word is realized by a natural starting value. -/
+theorem inputFor_prefix (bit : Nat → Nat) (n : Nat) :
+    ∀ i : Nat, i < n → path (inputFor bit n) i%2 = bit i%2 := by
+  induction n with
+  | zero => intro i hi; omega
+  | succ n ih =>
+      intro i hi
+      have hs : inputFor bit (n+1) =
+          if path (inputFor bit n) n%2=bit n%2
+          then inputFor bit n else inputFor bit n+2^n := rfl
+      rw [hs]
+      by_cases he : path (inputFor bit n) n%2 = bit n%2
+      · rw [if_pos he]
+        by_cases hlt : i < n
+        · exact ih i hlt
+        · have hn : i=n := by omega
+          rw [hn]
+          exact he
+      · rw [if_neg he]
+        have hflip := parity_bit_lift (inputFor bit n) n
+        by_cases hlt : i<n
+        · have hp := hflip.1 i hlt
+          rw [hp]
+          exact ih i hlt
+        · have hn : i=n := by omega
+          rw [hn]
+          have ha := hflip.2
+          have hleft := Nat.mod_lt (path (inputFor bit n) n) (by omega : 0<2)
+          have hright := Nat.mod_lt (path (inputFor bit n+2^n) n) (by omega : 0<2)
+          have hbit := Nat.mod_lt (bit n) (by omega : 0<2)
+          omega
+
+/-- First n parity bits uniquely specify one integer in [0,2^n). -/
+theorem inputFor_unique (bit : Nat → Nat) (n a : Nat)
+    (ha : a < 2^n)
+    (hp : ∀ i : Nat, i < n → path a i%2 = bit i%2) :
+    a = inputFor bit n := by
+  have hc := inputFor_lt bit n
+  have hprefix := inputFor_prefix bit n
+  by_cases hle : a ≤ inputFor bit n
+  · have hd := prefix_forces_divisor a (inputFor bit n) n hle
+      (by intro i hi; rw [hp i hi, hprefix i hi])
+    by_cases hdiff : a = inputFor bit n
+    · exact hdiff
+    · have hpos : 0 < inputFor bit n - a := by omega
+      have hbound := Nat.le_of_dvd hpos hd
+      omega
+  · have hl : inputFor bit n ≤ a := by omega
+    have hd := prefix_forces_divisor (inputFor bit n) a n hl
+      (by intro i hi; rw [hprefix i hi, hp i hi])
+    have hpos : 0 < a-inputFor bit n := by omega
+    have hbound := Nat.le_of_dvd hpos hd
+    omega
+
+#print axioms inputFor_lt
+#print axioms inputFor_prefix
+#print axioms inputFor_unique
+
 end BB6.Agent24.Coding
