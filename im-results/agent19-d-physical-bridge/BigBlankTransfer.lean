@@ -2,6 +2,8 @@ import CheckpointTransport
 import BlankFurther
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 16384
+
 namespace BB6.Agent19.Physical
 
 /-- The original certified frozen-source blank configuration is exactly
@@ -24,7 +26,6 @@ theorem source_blank_physically_blank :
 /-- Agent35's source-certified enormous genuine blank endpoint is still
     a live F/0 configuration. This extracts only the authentic source
     state component of its infinite-blank observational equality. -/
-set_option maxRecDepth 16384 in
 theorem original_blank_big_state :
     (CryptidBoundary.run 19848692333528818046 CryptidBoundary.blank).st = 5 := by
   have h := CryptidBoundary.blank19848692333528818046
