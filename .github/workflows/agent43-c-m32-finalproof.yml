@@ -1,0 +1,48 @@
+name: Agent 43 Machine C M32 final original-source certificate
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify exact M32 BFS and regenerate certificate sources
+        run: python3 tools/agent43_c32_certificate.py
+      - name: Download eight independently compiled, kernel-checked 40-block closure artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: a43-m32-olean-*
+          merge-multiple: true
+          path: tools
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 41538277695
+      - name: Verify original CLine reachability and all-time stopping input exclusions
+        run: |
+          cd tools
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighAll.lean" M32HighAll.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighSourceBridge.lean" M32HighSourceBridge.lean
+          export LEAN_PATH=.
+          lean --version
+          lean -o CCert32Pure.olean CCert32Pure.lean
+          lean -o CLine.olean CLine.lean
+          lean -o CQuotientSound32.olean CQuotientSound32.lean
+          lean -o CMapIf32.olean CMapIf32.lean
+          lean -o CGlobal32.olean CGlobal32.lean
+          lean -o CFull32.olean CFull32.lean
+          lean -o CExclusions32.olean CExclusions32.lean
+          lean -o CSourceBridge32.olean CSourceBridge32.lean
+          lean -o M32HighAll.olean M32HighAll.lean
+          lean M32HighSourceBridge.lean
