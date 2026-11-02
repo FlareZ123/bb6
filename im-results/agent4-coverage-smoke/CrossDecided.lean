@@ -34,4 +34,15 @@ private theorem bounded_to_decided (B : Nat) (m : BB6Coverage.Machine)
   · exact Or.inl hn
   · exact Or.inr ⟨n, h n hh, hh⟩
 
+/-- Import any actual Agent13 source-certified subtree directly into the
+    original Agent8 DecidedBelow-B complete-search proof-object vocabulary. -/
+theorem import_source_tree_as_decided_cover (B : Nat)
+    (p : BB6.Coverage.PartialMachine) (tree : BB6.Coverage.CoverTree B p) :
+    BB6Coverage.Cover (BB6Coverage.DecidedBelow B) (sparseTo8 p) := by
+  apply BB6Coverage.Cover.leaf
+  intro m hm
+  have hc := (import_source_tree_as_cover_leaf B p tree).sound m hm
+  exact bounded_to_decided B m hc
+
+#print axioms import_source_tree_as_decided_cover
 end BB6.CoverageAdapter
