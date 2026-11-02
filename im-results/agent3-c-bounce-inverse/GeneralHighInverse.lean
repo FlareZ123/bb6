@@ -46,12 +46,31 @@ theorem target_high_even_index (t a k : Nat)
   obtain ⟨n,_,hsum,_⟩ :=
     target_high_inverse_arithmetic t a k ht ha hodd hhigh h
   have hav : a+3=2*((a+3)/2) := by omega
+  have hsum' := hsum
+  rw [hav] at hsum'
   have hdiv : 11*t=2*(2^n*((a+3)/2)) := by
     calc
-      11*t=2^n*(a+3) := hsum
-      _ = 2^n*(2*((a+3)/2)) := by rw [hav]
+      11*t=2^n*(2*((a+3)/2)) := hsum'
       _ = 2*(2^n*((a+3)/2)) := by ac_rfl
   omega
+
+
+/-- Exact power-of-four parameterization, exhibiting the source recursion
+    depth as 2*r with a single witness r across both sum and cost laws. -/
+theorem target_high_inverse_power4 (t a k : Nat)
+    (ht : 1≤t) (ha : 3≤a) (hodd : a%2=1) (hhigh : a<2*k)
+    (h : secNext (a,k)=some (12*t,10*t-1)) :
+    ∃ r : Nat, 11*t=4^r*(a+3) ∧
+      2*k+a+9+6*r=32*t := by
+  obtain ⟨n,hn,hpow,hcost⟩ :=
+    target_high_inverse_arithmetic t a k ht ha hodd hhigh h
+  refine ⟨n/2, ?_, ?_⟩
+  have heq : n=2*(n/2) := by omega
+  rw [heq, Nat.pow_mul] at hpow
+  simpa using hpow
+  omega
+
+#print axioms target_high_inverse_power4
 
 #print axioms target_high_inverse_arithmetic
 #print axioms target_high_even_index
