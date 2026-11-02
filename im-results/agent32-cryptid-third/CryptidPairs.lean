@@ -21,18 +21,18 @@ theorem cWalk_run (n : Nat) (L ys : List Bool) :
     have ht : 2*(n+1) = 2+(2*n) := by omega
     rw [ht, run_add, cWalk_step, ih]
     have hR : List.replicate (2*n) true ++ (true::true::ys) =
-        List.replicate (2*(n+1)) true ++ ys := by
+        List.replicate (2+2*n) true ++ ys := by
       calc
         _ = (List.replicate (2*n) true ++ List.replicate 2 true) ++ ys := by
           simp [List.append_assoc]
         _ = List.replicate (2*n+2) true ++ ys := by
           rw [List.replicate_append_replicate]
-        _ = _ := by rw [show 2*n+2 = 2*(n+1) by omega]
+        _ = _ := by rw [show 2*n+2 = 2+2*n by omega]
     exact congrArg (fun z : List Bool => Cfg.mk L true z 2) hR
 
 /-- Initial A-on-zero state after the forward 10-pair scan. -/
 def aCloseStart (n m : Nat) (ys : List Bool) : Cfg :=
-  ⟨oppairs n ++ pairs (m+2) ++ [true,true], false, false::ys, 0⟩
+  ⟨oppairs n ++ (pairs (m+2) ++ [true,true]), false, false::ys, 0⟩
 
 theorem aClose_two (n m : Nat) (ys : List Bool) :
   run 2 (aCloseStart n m ys) =
@@ -65,6 +65,7 @@ theorem aClose_run (n m : Nat) (ys : List Bool) :
             List.replicate_append_replicate]
       _ = _ := by
           rw [show 3+2*n+1 = 2*n+4 by omega]
+          simp only [List.cons_append]
   exact congrArg (fun z : List Bool => sweepB m z) hp
 
 /-- Any number of 10 pairs followed by 0 at an E boundary. -/
