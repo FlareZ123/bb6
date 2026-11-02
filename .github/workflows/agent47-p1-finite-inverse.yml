@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   lean-check:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent47-p114-source-audit]'
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent47-p114-source-audit]' || github.event.issue.title == '[agent47-p162-source-audit]'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -65,3 +65,18 @@ jobs:
           lean -o im-results/agent47-p1-finite-inverse/P114Blocked.olean im-results/agent47-p1-finite-inverse/P114Blocked.lean
           lean im-results/agent47-p1-finite-inverse/P114Final.lean
           echo "All 15 symbolic hubs, 45 inverse branches, 30 forbidden leaves, original-source blank reachability proven"
+      - name: Reconstruct r62 P1 original-source proof certificate
+        run: |
+          base64 -d im-results/agent47-p1-finite-inverse/P162Source.tar.gz.b64 | gzip -dc | tar xf - -C im-results/agent47-p1-finite-inverse
+          echo "14e341241bad5265d6fb3aa055c807ac486d024ead5febca311a53cc293a366b  im-results/agent47-p1-finite-inverse/P162Final.lean" | sha256sum -c -
+          python im-results/agent47-p1-finite-inverse/gen_p162.py
+          echo "0b46c304a1929c7fc98ab96cda0e648baf3ef668617224ae7e0148c54887a86c  im-results/agent47-p1-finite-inverse/P162Affine.lean" | sha256sum -c -
+          echo "54bb9bf660b5338e76df4cf0a4a54b9fb4b7cf0f23a98a7168a3fe4de84dd245  im-results/agent47-p1-finite-inverse/P162Blocked.lean" | sha256sum -c -
+      - name: Source-level Lean audit n=1024q+62
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse"
+          lean -o im-results/agent47-p1-finite-inverse/P162Gap.olean im-results/agent47-p1-finite-inverse/P162Gap.lean
+          lean -o im-results/agent47-p1-finite-inverse/P162Affine.olean im-results/agent47-p1-finite-inverse/P162Affine.lean
+          lean -o im-results/agent47-p1-finite-inverse/P162Blocked.olean im-results/agent47-p1-finite-inverse/P162Blocked.lean
+          lean im-results/agent47-p1-finite-inverse/P162Final.lean
+          echo "All 19 symbolic hubs, 57 inverse branches, 38 forbidden leaves, original-source blank reachability proven"
