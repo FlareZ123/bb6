@@ -112,3 +112,23 @@ parity_disagrees_linear (N k : Nat) (hk : 0<k) :
 Proof: the finite-prefix two-adic injectivity lemma implies that a common parity prefix of length \(m\) forces \(2^m\) to divide \(v_{N+k}-v_N\). The shifted trajectory is strictly increasing, while induction from its exact recurrence gives \(v_j\le 2^{j+3}\). The positive difference is therefore strictly below \(2^{N+k+3}\), so \(m=N+k+3\) matching bits are impossible. It also proves the stronger gap-sensitive lemma `parity_disagrees_within_gap` when a sharper value of the separation is known.
 
 This quantitative nonrepetition theorem compiles locally in Lean 4.36.0-rc2 with only `[propext, Quot.sound]`, no `sorryAx`. It concerns full scalar parity histories; the recursively sampled halting criterion remains unresolved.
+
+## Original-machine source bridge: independently certified (07:03 UTC)
+
+**The complete end-to-end Machine B interpretation is now Lean-kernel-certified against the unmodified pinned original-machine implementation**, not merely inspection of copied maps. Manual upstream workflow [41403230037](https://github.com/FlareZ123/bb6/actions/runs/41403230037) **passed** (2026-11-02 07:01 UTC, commit `fdb1fe977bfef98f37c21d5e73904d0ad791e351`), compiling the unmodified Agent18 `BReduction.lean, BRun.lean, Agent18BBridge.lean, BOneDim.lean, Agent18OneDimBridge.lean`, then Agent24 `BParityAperiodic.lean, BResetResidues.lean, Agent24BResidueBridge.lean`, against Cryptids SHA `ced8f9f44f67a167d5ecc03e687b048c67926371` and the pinned upstream Lean v4.35.0-rc4 toolchain.
+
+```lean
+BB6.Agent24.SourceBridge.raw_halts_iff_mod7_reset :
+  IsHalt BB6.Bridge.Source.target ↔
+    ∃ n : Nat, BB6.Agent24.Reset.resetA (n+1)%7=0 ∨
+      BB6.Agent24.Reset.resetA (n+1)%7=6
+```
+
+The bridge proves by **definitional equality and induction** that Agent24's scalar `G`, `iterG`, and `resetA` exactly equal Agent18's source-connected `OneDim.G`, `OneDim.iterG`, and `OneDim.scalarA`. Axiom audits:
+
+- `source_G_eq`, `source_iterG_eq`, `source_scalarA_eq`: **zero axioms**.
+- `raw_halts_iff_mod7_reset`: **`[propext, Classical.choice, Quot.sound]`**. No `sorryAx`, `admit`, or `native_decide`.
+
+The first CI dispatch [41402790071](https://github.com/FlareZ123/bb6/actions/runs/41402790071) failed only because a module-mode file attempted to import the nonmodule `BResetResidues.lean`; removing the `module` declaration from the bridge resolved this without changing its mathematical content. The successful second run reproduces the complete chain.
+
+**Scope caution:** This is a source-audited *equivalent reformulation* of the same undecided B stopping question. Since `resetA` is computed from the parity sample itself, the modular target `{0,6}` is not a currently verified exclusion. It cannot be promoted to a BB(6) value or to a decision of this holdout.
