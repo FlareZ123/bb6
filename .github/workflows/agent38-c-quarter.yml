@@ -28,6 +28,9 @@ jobs:
           cp im-results/agent38-c-quarter/CJumpCore.lean /tmp/a38-lean/CJumpCore.lean
           cp im-results/agent38-c-quarter/CJumpWitness.lean /tmp/a38-lean/CJumpWitness.lean
           cp im-results/agent38-c-quarter/CJumpWitnessBridge.lean /tmp/a38-lean/CJumpWitnessBridge.lean
+          cp im-results/agent38-c-quarter/CJumpSafety.lean /tmp/a38-lean/CJumpSafety.lean
+          cp im-results/agent38-c-quarter/CFiniteSafety.lean /tmp/a38-lean/CFiniteSafety.lean
+          cp im-results/agent38-c-quarter/CFiniteSafetyBridge.lean /tmp/a38-lean/CFiniteSafetyBridge.lean
           cd /tmp/a38-lean
           export LEAN_PATH="."
           lean --version
@@ -39,3 +42,6 @@ jobs:
           lean -o CJumpCore.olean CJumpCore.lean
           lean -o CJumpWitness.olean CJumpWitness.lean
           lean CJumpWitnessBridge.lean
+          lean -o CJumpSafety.olean CJumpSafety.lean
+          lean -o CFiniteSafety.olean CFiniteSafety.lean
+          lean CFiniteSafetyBridge.lean
