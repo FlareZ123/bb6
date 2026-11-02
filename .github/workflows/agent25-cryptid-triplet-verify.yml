@@ -1,0 +1,29 @@
+name: Agent 25 Cryptid triplet return certificate (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct the exact source and compile all modules
+        run: |
+          python3 -m pip install --quiet filelock
+          cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
+          python3 unpack.py
+          export LEAN_PATH="."
+          for module in DoubleZero DoubleZeroE TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration; do
+            echo "Checking $module"
+            lean -o "$module.olean" "$module.lean"
+          done
