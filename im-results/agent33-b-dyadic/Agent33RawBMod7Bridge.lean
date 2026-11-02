@@ -1,9 +1,5 @@
-module
-
-public import Agent18OneDimBridge
-public import BResetMod7Machine
-
-@[expose] public section
+import Agent18OneDimBridge
+import BResetMod7Machine
 
 namespace BB6.Bridge
 open BusyBeaver
