@@ -155,6 +155,54 @@ theorem highLevelNext_iff_oddTower (d e : Nat) :
   · rintro ⟨q,k,rfl,rfl⟩
     simpa [highLevelNext] using scan_oddTower q k 0
 
+/-- Powers of two modulo seven avoid the residue three. -/
+theorem pow_two_mod_seven (k : Nat) :
+    2^k % 7 = 1 ∨ 2^k % 7 = 2 ∨ 2^k % 7 = 4 := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Nat.pow_succ']
+      have hm : (2 * 2^k)%7 = (2*((2^k)%7))%7 := by
+        simp [Nat.mul_mod]
+      rw [hm]
+      rcases ih with h|h|h
+      · rw [h]; decide
+      · rw [h]; decide
+      · rw [h]; decide
+
+/-- No terminal tower can be entered from a state whose d+2 has exactly
+one factor of two. This is a uniform infinite-source exclusion. -/
+theorem no_one_halving_into_power (q k : Nat) :
+    highLevelNext (.N (oddTower q 1)) ≠ some (.N (haltTower k)) := by
+  intro h
+  change scanEven (oddTower q 1) 0 = some (.N (haltTower k)) at h
+  rw [scan_oddTower] at h
+  have he : haltTower k = oddTower q 1 + 1 + 3*(q+1) := by
+    simp only [Option.some.injEq, HighLevelState.N.injEq] at h
+    omega
+  have hodd : oddTower q 1 = 4*q+4 := by simp [oddTower]; omega
+  have hp := haltTower_power k
+  have hx : 2^(k+1)=7*q+10 := by omega
+  have hm : 2^(k+1)%7 = 3 := by rw [hx]; omega
+  rcases pow_two_mod_seven (k+1) with h1 | h2 | h3 <;> omega
+
+/-- Exact Diophantine test for a one-step predecessor of any terminal tower.
+The right side is suitable for modular inverse sieving. -/
+theorem predecessor_power_identity (q v k : Nat) :
+    highLevelNext (.N (oddTower q v)) = some (.N (haltTower k)) ↔
+      2^(k+2)+3 = (2^(v+1)+3)*(2*q+3)+2*v := by
+  change scanEven (oddTower q v) 0 = some (.N (haltTower k)) ↔ _
+  rw [scan_oddTower]
+  simp only [Option.some.injEq, HighLevelState.N.injEq, Nat.zero_add]
+  have hodd := oddTower_factor q v
+  have hhalt := haltTower_power k
+  have hcoef : (2^(v+1)+3)*(2*q+3) =
+      2*(2^v*(2*q+3))+3*(2*q+3) := by
+    rw [Nat.pow_succ', Nat.add_mul, Nat.mul_assoc]
+  have hp : 2^(k+2)=2*2^(k+1) := by rw [Nat.pow_succ']
+  rw [hcoef, hp]
+  omega
+
 #print axioms scan_haltTower
 #print axioms scan_oddTower
 #print axioms haltTower_power
@@ -165,4 +213,7 @@ theorem highLevelNext_iff_oddTower (d e : Nat) :
 #print axioms scanEven_strict
 #print axioms highLevelNext_strict
 #print axioms highLevelNext_iff_oddTower
+#print axioms pow_two_mod_seven
+#print axioms no_one_halving_into_power
+#print axioms predecessor_power_identity
 end BB6.Agent48.SpaceNeedle
