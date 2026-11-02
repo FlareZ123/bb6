@@ -59,6 +59,36 @@ theorem residual_gateway (d : Nat) (hd:10≤d) (hmod:d%4=2) :
       (BlankReach.next (d-3) 1 (d-1) 0
         (BlankReach.next (d-6) 3 (d-3) 1 h ht1) ht2) ht3
 
+
+/-- For every remaining critical index congruent to 2 modulo 4, the
+    original critical halting gate is reached iff the odd-sector gateway
+    with an explicitly known first counter is reached. -/
+theorem two_pow_mod_four (n:Nat) (hn:2≤n) : (2^n)%4=0 := by
+  have he : n=n-2+2 := by omega
+  rw [he,Nat.pow_add]
+  simp
+
+theorem pow_bound : ∀ n:Nat, n+1≤2^n := by
+  intro n
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    rw [Nat.pow_succ]
+    omega
+
+theorem residual_critical_gateway (n:Nat) (hn:2≤n) (hmod:n%4=2) :
+    BlankReach 2 (14*2^n-2*n-10) ↔
+    BlankReach (14*2^n-2*n-16) 3 := by
+  let d := 14*2^n-2*n-10
+  have hb := pow_bound n
+  have hp := two_pow_mod_four n hn
+  have hd : 10≤d := by dsimp [d]; omega
+  have hm : d%4=2 := by dsimp [d]; omega
+  have he : d-6 = 14*2^n-2*n-16 := by dsimp [d]; omega
+  simpa only [he] using residual_gateway d hd hm
+
+#print axioms BB6.Agent19.P1.residual_critical_gateway
+
 #print axioms BB6.Agent19.P1.residual_gateway
 
 end BB6.Agent19.P1
