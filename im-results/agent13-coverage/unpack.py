@@ -14,6 +14,7 @@ SOURCES = {
     "SparseCoverage": "c2271613c1c9676e1ef1cd92ed0ad07647e1e0187a11614a5d9e643c01cbc809",
     "LassoCoverage": "8544a335fb62a34329dc0c07edeeb5a948a3afb7a314b95f7d1f712cfb57c730",
     "ShiftCoverage": "3ea7b0bbac9b2ca575b34c362b478e52c335d390113b2934a4c73b0e2f309c3e",
+    "TreeCoverage": "c5d2858599d0ad1beaa993c106f35bb0c5152cb22659a11575450a344731eeab",
 }
 
 
