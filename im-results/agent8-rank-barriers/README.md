@@ -29,3 +29,14 @@ These are escape-to-infinity certificates that rule out finite macro-state cycle
 Run Lean **4.36.0-rc2** directly on `RankCertificate.lean`; it imports only `Lean.Elab.Tactic.Omega`, with no Mathlib or upstream Cryptids dependency. The local compilation exited with status 0.
 
 Follow-up work: connect these certificates to the original Cryptids modules through a Lean import, and investigate whether stronger modular/inequality invariants can exclude the halting sets. A rank potential alone does not do so.
+
+
+## Third machine: weighted potential and certified sweep shortcut
+
+**Machine C** `1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC`, from [Cryptids' formal acceleration](https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC.lean), starts at `B(5,0,1)` and halts its accelerated dynamics when `c=2`. Its accelerated state is `(a,k,c)`.
+
+[RankC.lean](./RankC.lean) kernel-checks the weighted integer `R = a + 2*k + c`: on every surviving accelerated transition, either `R` increases, or `R` is unchanged and the first counter `a` decreases. The natural-valued **quadratic potential** `E = R*R + (R-a)` consequently increases strictly at every surviving transition. Starting from `B(5,0,1)`, `E=37`, so any surviving `n`-step macro run satisfies the formally proved bound **`37 + n ≤ R*(R+1)`**. This is a uniform superlinear-potential lower bound on the rank growth and rules out recurrent macro configurations, conditionally on the run continuing.
+
+[Sweep.lean](./Sweep.lean) independently certifies the exact shortcut: for any `q≤a` and `q+3≤c`, `q` consecutive high-counter sweep steps can be replaced by `(a,k,c) → (a-q,k+q,c-q)`. A simulator can safely choose `q=min(a,c-3)` when `a>0,c≥4`. The shortcut reduces billions of affine decrement transitions to single jumps; it was compiled locally using Lean 4.36.0-rc2 with imports `RankCertificate` and `RankC` (each compiled to `.olean` first).
+
+Neither certificate excludes the designated halting state `c=2`. The correspondence between standalone `nextC` and the upstream published `next` is verified by comparing their definitions, and would benefit from an explicit kernel-checked cross-module bridge.
