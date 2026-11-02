@@ -82,6 +82,34 @@ theorem source_transport (n : Nat) (c c2 d d2 : CryptidBoundary.Cfg)
 
 #print axioms source_chain
 #print axioms source_transport
+/-- Initial F-section tapes can be padded with any number of blank cells. -/
+theorem source_init_pad (n q : Nat) (xs : List Bool) :
+    ObsEq (CryptidBoundary.run n (CryptidBoundary.init xs))
+      (CryptidBoundary.run n
+        (CryptidBoundary.init (xs ++ List.replicate q false))) := by
+  apply source_congr
+  exact ⟨tapeEq_refl _, rfl,
+    tapeEq_cons true (tapeEq_cons true (tapeEq_pad xs q)), rfl⟩
+
+/-- Exact halting equivalence for all explicitly padded initial configurations. -/
+theorem source_init_halt_iff (n q : Nat) (xs : List Bool) :
+    (CryptidBoundary.run n (CryptidBoundary.init xs)).st = 6 ↔
+    (CryptidBoundary.run n
+      (CryptidBoundary.init (xs ++ List.replicate q false))).st = 6 := by
+  have h := (source_init_pad n q xs).2.2.2
+  change (CryptidBoundary.run n (CryptidBoundary.init xs)).st =
+    (CryptidBoundary.run n
+      (CryptidBoundary.init (xs ++ List.replicate q false))).st at h
+  constructor
+  · intro hs
+    rw [← h]
+    exact hs
+  · intro hs
+    rw [h]
+    exact hs
+
+#print axioms source_init_pad
+#print axioms source_init_halt_iff
 #print axioms source_step
 #print axioms source_run
 #print axioms source_congr
