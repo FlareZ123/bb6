@@ -71,6 +71,27 @@ theorem toA_aBoundary (m : Nat) (ys : List Bool) :
     toA (aBoundary m ys) = CryptidA.ab m ys := by
   simp [aBoundary, toA, CryptidA.ab, pairs_pat]
 
+/-- A converted A-on-zero section uniquely identifies its source state. -/
+theorem toA_aBoundary_converse (s : CryptidBoundary.Cfg)
+    (m : Nat) (ys : List Bool)
+    (h : toA s = CryptidA.ab m ys) : s = aBoundary m ys := by
+  rcases s with ⟨l,hd,rs,st⟩
+  by_cases hs : st = 6
+  · simp [toA, hs, CryptidA.ab] at h
+  · simp [toA, hs, CryptidA.ab] at h
+    rcases h with ⟨h1,h2,h3,h4⟩
+    simp [aBoundary, pairs_pat, h1,h2,h3,h4]
+
+/-- An arbitrary encoded word is consumed by the exact original-machine
+    interpreter in the same number of primitive transitions. -/
+theorem a_code_return (m : Nat) (ws ys : List Bool) :
+    CryptidBoundary.run (CryptidA.wordCost m ws)
+      (aBoundary m (CryptidA.wordCode ws ++ ys)) =
+      aBoundary (m+CryptidA.wordInc ws) ys := by
+  apply toA_aBoundary_converse
+  rw [toA_run, toA_aBoundary]
+  exact CryptidA.consume_code m ws ys
+
 theorem code_then_zero (m : Nat) (ws ys : List Bool) :
   CryptidA.run (CryptidA.wordCost m ws +
       (2*(m+CryptidA.wordInc ws)+6))
@@ -106,5 +127,6 @@ theorem full_A_code (k : Nat) (ws ys : List Bool) :
 
 #print axioms toA_step
 #print axioms toA_run
+#print axioms a_code_return
 #print axioms full_A_code
 end BB6.Agent35
