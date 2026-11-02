@@ -23,6 +23,7 @@ jobs:
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-c-odd/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a3-c-odd/
           cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14,Agent3COneFamily,Agent3COrbitIff,BouncePowerOdd,BouncePowerEven,BounceReverse,BounceOddGrammar,BounceEvenGrammar,BounceRank,SectionRank,BlankRank,BlankReachDecidable}.lean /tmp/a3-c-odd/
+          cp im-results/agent6-c-feeder/EvenFeeder.lean /tmp/a3-c-odd/
           cd /tmp/a3-c-odd
           export LEAN_PATH="."
           lean --version
@@ -30,6 +31,7 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean BlankReachDecidable.lean
+          lean EvenFeeder.lean
       - name: Verify executable inverse candidates
         run: |
           cd im-results/agent3-c-odd-image
