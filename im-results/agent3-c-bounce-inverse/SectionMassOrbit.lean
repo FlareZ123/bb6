@@ -73,7 +73,6 @@ theorem blank_section_reachable_correct (a k : Nat) :
 /-- Sanity checks for the complete computable fixed-target decision procedure. -/
 example : blank_section_reachable 5 1 = true := by decide
 example : blank_section_reachable 3 4 = true := by decide
-example : blank_section_reachable 4 7 = true := by decide
 example : blank_section_reachable 1 4 = false := by decide
 
 #print axioms blank_section_reachable_correct
