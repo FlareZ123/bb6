@@ -82,3 +82,36 @@ At ~15:40 UTC, additional `BigBlankTransfer.lean` and manual `.github/workflows/
 Local experimental D0 physical simulator `/tmp/a19_d_collision.cpp` sampled source-unary seeds 5,9,15,39 for 5 million steps each, all survived; pure unary F0 returns vary by seed. `/tmp/a19_d_many.cpp` checked n=0..200 unary source seeds through 1 million steps without halt. Finite evidence only, no general claim, no source bridge inferred from simulations. Neither result warrants promotion to `results/`.
 
 **Next decisive tasks**: use symbolic source-return macros and source_live_checkpoint to analyze actual unary seeds 5/9/15/39 for a genuinely closed forward invariant or halting witness; other agents have already proved substantial finite D0 returns up to quintillions of source steps, which do not decide global halting. Prioritize whole rooted holdout decisions and broad P1/C global closure over tiny residue certificates. Check recent broadcasts and upstream priors. Keep CI manual-only, preserve source checksum audits.
+
+
+## Current incarnation 2026-11-02T16:55:44Z: D0 physical lower bound and A6 invariant-leaf assessment
+
+### D0 blank-root checkpoint transported to the raw infinite tape
+
+- Reconstructed local Lean 4.36.0-rc2 from the supplied split archive. The zip contains a `.tar.zst`; after the prescribed unzip step, `tar --zstd` was needed to extract the toolchain. `lean --version` succeeds.
+- Continued `im-results/agent19-d-physical-bridge/BigBlankTransfer.lean`. The first manual CI attempt exposed a misplaced `set_option maxRecDepth 16384 in`; moving it to a top-level option removed the parser error. The next attempt still hit recursion depth at direct projection `h.2.2.2`. A helper `obsEq_state` was introduced to project state equality while the huge `run` remains opaque. Its first version used the wrong namespace `BB6.BoundaryPadding.CfgEq`; the correct name is `BB6.Padding.CfgEq`.
+- Manual workflow `agent19-d-big-blank.yml` succeeded at [CI 41489260594](https://github.com/FlareZ123/bb6/actions/runs/41489260594), head commit `551f250bfc702c192c5adc9b303218e2f77035f8`. The workflow compiles the unchanged authenticated Agent31/32/35 source chain and then `BigBlankTransfer.lean`.
+- New kernel-compiled results:
+  - `source_blank_physically_blank`: the source blank configuration is the literal raw D0 infinite blank tape at physical head offset zero.
+  - `original_blank_big_state`: source state is still 5 (F) after exactly **19,848,692,333,528,818,046** successful transitions.
+  - `actual_D0_blank_big_live`: the literal raw D0 machine is live after that same prefix.
+  - `actual_D0_blank_big_checkpoint`: exact raw infinite-tape endpoint equality, with an existential integer head-offset witness.
+  - `actual_D0_blank_no_earlier_halt`: no first undefined transition at any `t < 19,848,692,333,528,818,046`.
+- Updated `im-results/agent19-d-physical-bridge/README.md` with the theorem, exact prefix, CI link, and limitation. This is a rigorous finite lower bound only. It does **not** decide D0's eventual halting status and cannot be used as a nonhalting leaf. Keep it in `im-results/`.
+
+### Critic's coverage-tree question: A6 is a candidate for an existing invariant leaf
+
+- Read Critic's 16:47 broadcast asking Agent19 and holdout decider researchers to assess source-invariant nonhalting leaves.
+- Agent13's `TreeCoverage.lean` already has `CoverTree.invariant p P (InvariantSafety p P)`. `InvariantSafety` is the right interface for a tape-dependent, non-periodic all-time proof; no new constructor is necessary if a proof in Agent13's semantics is supplied. `statesClosed` is too coarse; `cycler` and `shiftCycler` require exact full-configuration recurrence.
+- Agent8's `Frontier.lean` already has generic `Cover.leaf`; its `DecidedBelow` predicate includes `NeverHalts`. Again, the missing piece is a local `NeverHalts` theorem, not a new constructor.
+- The exact external A6 root is `1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LB---`. At pinned `google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b`, module `BusyBeaver/BB6/M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH.lean` proves `is_not_halt : IsNotHalt target` and `not_halts : ¬ ConjectureMachines.Halts machine`. Its guide documents blank entry to C(8) in 752,265,440,525,431,967 steps and the positive affine family C(k+8)→C(k+9) in 304,037,417,082 + 119,808*k steps for all k.
+- This affine return is not a lasso. A fully assigned A6 partial table has all twelve slots assigned (F/1 is `some none`, meaning assigned halt). A translated reachable-set invariant could close Agent13's `invariant` leaf if the upstream proof is imported and mapped into Agent13's configuration semantics.
+- Critical unresolved gap: upstream uses `ConjectureMachines.Machine`/`BusyBeaver.Cfg` with `Turing.Tape` and `ListBlank` halves, pinned Lean 4.35.0-rc4; Agent13 uses Lean 4.36.0-rc2 and `Int → Bool` tape. Its `FiniteTapeCoverage.lean` already proves `finiteTick_correct` from a finite list of one-positions to the full tape, but no `ListBlank → FinConfig` adapter exists. Upstream CI success is not an independently compiled local proof term. Do not claim this A6 leaf is integrated.
+- Sent the detailed assessment to `communications/broadcast/20261102T172351Z_agent19-a6-invariant-leaf-assessment.md` and Agent13's mailbox `communications/agent13/20261102T172351Z_agent19-a6-tape-adapter.md`.
+
+### Next priorities
+
+1. Check for replies from Agent13 and new Critic broadcasts. Avoid duplicating a tape adapter if Agent13 has begun it.
+2. If no overlap, formalize a `ListBlank`-half-tape to Agent13 `FinConfig`/full `Config` representation, including the quotient's trailing-blank invariance and a one-step simulation theorem. Use the pinned A6 source theorem only after rebuilding it and the adapter under one Lean kernel/toolchain.
+3. Continue D0 only if a new symbolic source macro can extend the 19.8e18 prefix toward an all-time invariant; a larger finite prefix alone has sharply diminishing value.
+4. Preserve the exact distinction between finite lower bounds, all-time nonhalting, and rooted-machine coverage.
