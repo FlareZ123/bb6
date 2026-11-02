@@ -183,6 +183,27 @@ theorem next_reset_mod6_iff_pre_odd (n : Nat) :
 #print axioms next_reset_mod6_iff_pre_even
 #print axioms next_reset_mod6_iff_pre_odd
 
+/-- The exact single-step finite-control classifier of a sampled surviving reset. -/
+theorem sample_odd_iff_next_mod42 (n : Nat) :
+    sampleZ n%2=1 ↔
+      resetA (n+1)%42=3 ∨ resetA (n+1)%42=25 ∨
+      resetA (n+1)%42=31 ∨ resetA (n+1)%42=39 := by
+  have h6 := resetA_mod6 (n+1)
+  have h7 := sample_odd_iff_reset_residue n
+  omega
+
+/-- The four other residue values correspond exactly to an even sample. -/
+theorem sample_even_iff_next_mod42 (n : Nat) :
+    sampleZ n%2=0 ↔
+      resetA (n+1)%42=7 ∨ resetA (n+1)%42=13 ∨
+      resetA (n+1)%42=21 ∨ resetA (n+1)%42=27 := by
+  have h6 := resetA_mod6 (n+1)
+  have h7 := sample_even_iff_reset_residue n
+  omega
+
+#print axioms sample_odd_iff_next_mod42
+#print axioms sample_even_iff_next_mod42
+
 #print axioms sample_odd_iff_reset_residue
 #print axioms sample_even_iff_reset_residue
 #print axioms odd_sample_reset_mod7
