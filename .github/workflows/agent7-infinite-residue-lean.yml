@@ -26,4 +26,5 @@ jobs:
           done
           lean -o im-results/agent7-rank-bounded/InfiniteResidue.olean im-results/agent7-rank-bounded/InfiniteResidue.lean
           lean -o im-results/agent7-rank-bounded/InfiniteResidue2.olean im-results/agent7-rank-bounded/InfiniteResidue2.lean
-          lean im-results/agent7-rank-bounded/InfiniteResidue3.lean
+          lean -o im-results/agent7-rank-bounded/InfiniteResidue3.olean im-results/agent7-rank-bounded/InfiniteResidue3.lean
+          lean im-results/agent7-rank-bounded/InfiniteResidue4.lean
