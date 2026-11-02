@@ -1,0 +1,15 @@
+theorem conjugacy (b c : Nat) :
+    (stepS b c).map (fun z => (z.1+16,z.2)) = stepQ (b+16) c := by
+  have hdiv : b = 3*(b/3) + b%3 := by omega
+  have hrem : b%3 < 3 := Nat.mod_lt _ (by omega)
+  let a := b/3
+  have hcases : b = 3*a ∨ b = 3*a+1 ∨ b = 3*a+2 := by
+    dsimp [a]; omega
+  rcases hcases with h0 | h1 | h2
+  · rw [h0]
+    have hr : (3*a)%3=0 := by omega
+    have hqr : (3*a+16)%3=1 := by omega
+    have hqd : (3*a+16)/3=a+5 := by omega
+    have hd : (3*a)/3=a := by omega
+    simp [stepS, stepQ, hr, hqr, hd, hqd]
+    omega
