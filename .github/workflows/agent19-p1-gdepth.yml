@@ -1,0 +1,26 @@
+name: Agent 19 P1 critical G inverse depth (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify uniform P1 recursive inverse depth and source equality
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-halting-funnel:im-results/agent19-p1-source-bridge"
+          lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
+          lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
+          lean -o im-results/agent4-halting-funnel/HaltingFunnel.olean im-results/agent4-halting-funnel/HaltingFunnel.lean
+          lean im-results/agent19-p1-source-bridge/GDepth.lean
