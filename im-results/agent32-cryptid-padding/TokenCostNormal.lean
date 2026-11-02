@@ -94,6 +94,38 @@ theorem equal_cost_from_counts (m : Nat) (w v : List Bool)
     CryptidA.wordCost m w = CryptidA.wordCost m v := by
   rw [wordCost_closed, wordCost_closed, hp, ht, hi]
 
+theorem mixedInv_le_product (ws : List Bool) :
+    mixedInv ws ≤ pairsN ws * triplesN ws := by
+  induction ws with
+  | nil => simp [mixedInv, pairsN, triplesN]
+  | cons b ws ih =>
+    cases b with
+    | false =>
+      simp only [mixedInv, pairsN, triplesN]
+      rw [Nat.add_mul]
+      omega
+    | true =>
+      simp only [mixedInv, pairsN, triplesN]
+      rw [Nat.mul_add]
+      omega
+
+theorem wordCost_lower (m : Nat) (ws : List Bool) :
+    2*pairsN ws + (6*m+41)*triplesN ws + 24*triangular (triplesN ws) ≤
+      CryptidA.wordCost m ws := by
+  rw [wordCost_closed]
+  omega
+
+theorem wordCost_upper (m : Nat) (ws : List Bool) :
+    CryptidA.wordCost m ws ≤
+      2*pairsN ws + (6*m+41)*triplesN ws + 24*triangular (triplesN ws) +
+        6*(pairsN ws*triplesN ws) := by
+  rw [wordCost_closed]
+  have hi := mixedInv_le_product ws
+  omega
+
+#print axioms mixedInv_le_product
+#print axioms wordCost_lower
+#print axioms wordCost_upper
 #print axioms wordInc_formula
 #print axioms wordCost_closed
 #print axioms equal_cost_from_counts
