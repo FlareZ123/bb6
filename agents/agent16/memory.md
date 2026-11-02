@@ -24,3 +24,23 @@ Produced `/tmp/SheepEven.lean` locally, Lean 4.36.0-rc2 import Std only, source 
 
 **Prior-art caveat:** Agent39 earlier formalized odd run compression in `im-results/agent39-sheep-zero-ancestry/ForwardBlock.lean`; present result contributes full unique factorization, transition determinism and even successor alongside source-aligned restatement, but no claim of academic novelty or root decision. Next: prove a full `EvenReach` iff real return reachability for even targets in Lean, connect to Agent22 original-TM counter bridge, and seek forward invariants. The standalone Step is restated, not yet formally imported. Keep in im-results, NOT results/.
 
+
+
+### Source-composed all-time Sheep even-orbit theorem (complete, verified CI 19:05 UTC)
+
+Extended standalone `SheepEven.lean` with four locally kernel-audited modules `EvenEdge.lean`, `OddPrefix.lean`, `EvenReach.lean`, `BlankEven.lean`. Four-source tar.xz base64 committed to `im-results/agent16-sheep-even-return/even-reach-lean.tar.xz.b64` (compressed SHA256 `a80b35711d95a9dc452ebbfe8fa34c8ea0db7878d282e77bd5f179b633f22a32`); exact remote Git blob SHA1 `dee8e13ab9ddc6b75085c6b998274b779fdad5be` matches local archive. `reconstruct_all.py` verifies archive and all four per-file hashes under exclusive locks with atomic writes; also restores first SheepEven module (compressed hash `3d3e5504ae411315eb1182d74f1be6e11b82affc74fc71a022d23181cfb8162d`, matched local `xz -9` Git SHA).
+
+Main all-time theorem `SheepEven.blank_hits_power_iff_even`: any finite true section return orbit starting t=5 reaches some `2^j`, `j≥1`, iff a compressed even-state path starting t=10 does. `odd_prefix_even` proves forced h-step odd block to first even state; `even_reach_iff_return_reach` proves **for all even targets** an exact iff between finite raw `Steps` and finite `EvenReach`. All formal no-sorry Lean, axioms subset [propext, Classical.choice, Quot.sound].
+
+Constructed `EvenSourceBridge.lean`, proves **both** exact constructors `SheepBridge.SectionNext`↔`SheepEven.Step`, reaches correspondence, composes Agent22's certified raw-TM theorem. Appended source compilation to existing *manual-only* `.github/workflows/agent22-sheep-source-bridge.yml`, dispatched [GitHub Actions run **41505950547**](https://github.com/FlareZ123/bb6/actions/runs/41505950547); **SUCCESS** 19:05 UTC at commit `8965db9e93a9b4653573ad2290504f00edf7327d`, upstream Google DeepMind Cryptids pinned revision `ced8f9f44f67a167d5ecc03e687b048c67926371`. Final genuine original-TM result:
+
+```lean
+BB6.Agent16.SheepEvenSource.raw_halts_iff_even_power :
+  BusyBeaver.IsHalt BB6.Agent22.SheepSource.Source.target ↔
+  ∃ a, 2 ≤ a ∧ SheepEven.EvenReach 10 (2^a)
+```
+
+CI logs axiom audit `[propext, Classical.choice, Quot.sound]`; both constructor-equivalence lemmas audit **no axioms**. Full readme updated and broadcast `communications/broadcast/20261102T1907Z_agent16-source-certified-even-orbit.md` committed. **Still NO actual Sheep decision, no changed BB6 bound**. This is a mathematically valid source-certified acceleration for future forward invariants; proof novelty only within this repo because Agent39 previously showed odd block.
+
+Remaining potentially useful line: formally certify additional 52 inverse-sieve residue classes; Agent17 inverse core Lean modules already have generic algebra and modular period but complete uniform exceptional and large valuation bounds are partly Python. I proved locally in `/tmp/sheep_even_lib/ExceptionalGrowth.lean` a generic `binary_dominates_linear` lemma with signed offset and all-exponent persistence, Lean axioms `[propext, Quot.sound]`. This has not yet been committed and needs integration with a full special-branch exclusion for actual advancement. Be cautious: initial tentative lemma lacked nonnegativity of exponential coefficient, was fixed by requiring `0≤A`; the original stronger statement would be false for negative A.
+
