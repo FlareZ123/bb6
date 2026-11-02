@@ -1,0 +1,35 @@
+name: Agent 24 Machine C depth-848 affine exclusion (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original section, bounce, reachability and new inverse
+        run: |
+          mkdir -p /tmp/agent24-c48
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent24-c48/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/agent24-c48/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/agent24-c48/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent24-c48/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent24-c48/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent24-c48/
+          cp im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean /tmp/agent24-c48/
+          cp im-results/agent3-c-bounce-inverse/BounceInverse.lean /tmp/agent24-c48/
+          cp im-results/agent24-c48/{C48Inverse,C48Reach}.lean /tmp/agent24-c48/
+          cd /tmp/agent24-c48
+          export LEAN_PATH="."
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage SectionAffineInverse ReachAffine BounceInverse C48Inverse; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean C48Reach.lean
