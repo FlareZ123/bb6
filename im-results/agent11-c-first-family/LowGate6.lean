@@ -1,5 +1,5 @@
 import EvenTargetOrbit
-import M8M16Composition
+import M8ThinBridge
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11
@@ -35,7 +35,7 @@ theorem low_gate_six_mod_sixteen_unreachable (t : Nat)
   have ha : 22*u-3=8*((22*u-3)/8)+7 := by omega
   have hk : 21*u-3=8*((21*u-3)/8)+4 := by omega
   rw [ha,hk] at hsource
-  exact BB6.Agent15.blank_no_m8_cylinder _ _ hsource
+  exact BB6.Agent15.m8_blank_no_m8_cylinder _ _ hsource
 
 /-- A previously residual infinite congruence class in Machine C's
     first parameterized stopping family. -/
