@@ -77,3 +77,28 @@ For k>=2, the corresponding positive even-right feeder `(2*k-4,c+4)` therefore *
 **What this does NOT prove:** The theorem imposes no global upper bound m+t+1<=15q on all valid inverse cones. Some *synthetic*, valid source inverse chains have cost beyond the earlier 8q threshold (e.g. q=1,2,45); other unbounded families might require >15q. It does not independently discharge the c=1 exceptional branch, nor does it provide a complete bounded-depth inverse closure for every q. Therefore no P1 or BB(6) nonhalting claim follows. Treat as a reusable intermediate obstruction in `im-results/`.
 
 **Independent finite exploratory stress test, not a theorem:** an exact Python source-arithmetic explorer on q=1..300 with a cap of 10,000 distinct odd hubs per q found 293 completely exhausted cones and seven capped cases q=38,101,129,146,189,273,294. No completed cone had an even terminal cost exceeding 15q; the largest observed cost/q among completed q was 14.5 at q=2. This neither establishes a uniform length bound nor proves complete P1 halting classification.
+
+## New all-depth small-left obstruction for any surviving two-feeder index (21:12 UTC)
+
+**Status:** Fully source-checked Lean 4.36.0-rc2 on original repository dependencies, [CI run 41526013597](https://github.com/FlareZ123/bb6/actions/runs/41526013597), source commit `8cfb2d687fe389b54722a9744ef286231e946baa`, job `125553821977`. The four axiom reports in the final job log are `[propext, Quot.sound]` for the three arithmetic theorems and `[propext, Classical.choice, Quot.sound]` for the genuine-reachability theorem, without `sorryAx`, unsafe, or source mocks.
+
+File: [`UniversalSmallLeft.lean`](./UniversalSmallLeft.lean), added to the manual-only CI workflow.
+
+For **every** natural q≥1, either of the two exact original Agent45 feeders L0,L1, and **every** finite `OddCone` of arbitrary length and cumulative inverse cost m terminating at an odd-right hub (b,d), let `inverseAt b d t = some(k,c)` be a genuine source inverse branch with c even and k≥2. If the even-right input `(2k-4,c+4)` is blank-reachable in the original source-verified P1 relation, then the newly proved universal inequality is
+
+```
+b ≤ 4*m + 192*q + 40.
+```
+
+No assumption `m+t+1≤15q` is present. This converts the previously unresolved unbounded-inverse-depth part of the P1 n≡2(mod16) problem into a **necessary narrow-left bottleneck**. It is *not* a proof that the bottleneck is never reached. One must also exclude all exceptional right-counter-one/prehalting branches separately, and rigorously analyze the remaining n≡14(mod16) families.
+
+The detailed source-connected derivation is:
+
+1. Source `OddCone` mass equality: `b+d+2m=8u+e`, where e∈{3,5}, and `u+4q+3=7·2^(16q)`.
+2. Exact source `inverseAt` power equation `d+b/2+3=2^t(c+3)` and mass `2k+c+2t+1=b+d` (for even c).
+3. Since d odd, b divisible by 4, and c even, parity forces t≥1. Blank-reachability and original even-hub theorem imply `2k+8=14·2^j` for some j. Total mass forces `j≤16q+1`, giving `b≤64q+4m+8t+8`.
+4. The source dyadic equation and `b+d+2m<56·2^(16q)` force `t≤16q+4` **at every inverse depth**, yielding the displayed bound.
+
+The proof neither assumes a finite sample cap nor bounds total m. If a global all-q lower barrier `b>4m+192q+40` can be established for every exact odd predecessor cone from both roots, it will close this entire **even-right exit** branch uniformly, beyond the earlier 15q condition. The bound is a *necessary filter* on candidate source states, and the alternate c=1 input remains to be handled.
+
+An independent exact integer feasibility probe of both roots for q=1..1500 with a cap of 300,000 distinct odd hubs per q exhausted 1496 cases; 4 (q=294,498,633,774) hit the cap. No completed inverse enumeration produced a counterexample to the older m+t+1≤15q observation, and none of the enumerated branches was certified blank-reachable. This is evidence only; it does not extend the theorem or decide any holdout. Local reproduction script is under preparation. A computational cap means the remaining four cases have no exhaustiveness claim.
