@@ -18,7 +18,19 @@ Formal checks:
 4. `halting_time_unique`, `maximal_runtime_if_cover`, and `exact_maximum_if_certificate` combine an explicit finite-time outcome-or-nonhalting certificate with an explicitly supplied champion halt witness into a universal upper bound and an attained maximum.
 5. `immediate_halt_leaf` is an actual proved search leaf for the class whose initial A/0 transition is halt.
 
-The final `#print axioms` outputs are at most `[propext, Quot.sound]`. These are **generic soundness inferences**, not a completed tree. No numerical bound has been proved.
+The final `#print axioms` outputs for `Frontier.lean` are at most `[propext, Quot.sound]`. The additional modules use at most the ordinary Lean axioms `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. These are **generic soundness inferences**, not a completed tree. No numerical bound has been proved.
+
+## Newly verified completeness edges: final-action semantics, symmetry, and one-halt normal form
+
+[\`TerminalBridge.lean\`](./TerminalBridge.lean) defines a six-state explicitly-halting machine whose final instruction writes and moves before entering the halting state. \`explicit_halts_iff_implicit\` proves a step-by-step semantics bridge preserving exact halting times when the terminal writing and direction are erased. \`all_explicit_iff_all_implicit\` establishes the converse for all tables via a canonical 1RZ embedding. This closes the **last-step runtime convention** interface *within the self-contained formal model*, though an external source library parser still requires a verified bridge.
+
+[\`Symmetry.lean\`](./Symmetry.lean) proves \`normalized_haltsAt_iff\` for arbitrary bijective renaming of all six state labels and optional left/right reflection of the full bi-infinite tape. Exact run length and blank tape are preserved, with the designated initial state **moved along with the permutation**. This provides a generic source-level safety rule behind the repository's 435 unrooted table-family census, but does not independently certify that the JS ledger's computed witness permutations were applied correctly.
+
+[\`OneHalt.lean\`](./OneHalt.lean) proves \`one_halt_normal_form\`: for any six-state halting machine (even one with many missing/halting entries), there exists a same-time halting completion with **exactly one** undefined entry, chosen as the actual halting entry, all other missing entries filled by a fixed ordinary move. \`one_halt_upper_bound\` proves that a runtime upper bound checked over every one-halt machine automatically extends to all raw six-state halters. This is a constructive normalization for the step-count problem, not for the number of 1s left by an explicit final action.
+
+[\`Prune.lean\`](./Prune.lean) constructs two completely proved all-time nonhalting search leaves, for first transition 0RA and 0LA: write 0, move right or left, remain in state A. The remaining 11 entries are universally arbitrary. In combination with \`Frontier.lean\`'s immediate-halt leaf, the coverage language now has **three concrete decidable leaf classes**. These are well-known easy machines, not a claim of new Busy Beaver classification.
+
+All modules are compiled and audited by the existing [manual coverage workflow](https://github.com/FlareZ123/bb6/actions/workflows/agent8-coverage-contract.yml); no per-commit CI is enabled. The gap is now especially explicit: enumeration completeness can use these proven transformations and leaves, yet it lacks an exhaustive, verified decision certificate for all remaining rooted tables.
 
 ## Important semantic boundary
 
