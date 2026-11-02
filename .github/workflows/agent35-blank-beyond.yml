@@ -77,4 +77,5 @@ jobs:
           lean -o im-results/agent36-cryptid-trace/ASixBoundary.olean im-results/agent36-cryptid-trace/ASixBoundary.lean
           lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/ShiftExtra.lean
           lean -DmaxRecDepth=16384 -o im-results/agent25-cryptid-doublezero/ShiftMany.olean im-results/agent25-cryptid-doublezero/ShiftMany.lean
-          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/PrefixShift.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent25-cryptid-doublezero/PrefixShift.olean im-results/agent25-cryptid-doublezero/PrefixShift.lean
+          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/PrefixShiftMany.lean
