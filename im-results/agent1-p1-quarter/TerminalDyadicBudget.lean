@@ -115,6 +115,30 @@ theorem reachable_even_terminal_logdepth
     have hmass:b+d+2*m=8*u+5 := by omega
     exact source_small_left_dyadic_budget q u b d m t c 5 (Or.inr rfl) hu hmass hb4 hinverse hsmall
 
+/-- Necessary simultaneous triple gate for any genuinely blank-reachable
+even source of either unbounded n=16q+2 critical feeder cone. -/
+theorem reachable_terminal_three_gates
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hb : 8 ≤ b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : c%2=0) (hk : 2 ≤ k)
+    (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
+    15*q < m+t+1 ∧ b ≤ 4*m+192*q+40 ∧
+      2^t ≤ 256*q+8*m+76 := by
+  have hdeep : 15*q < m+t+1 := by
+    by_cases hcost : m+t+1 ≤ 15*q
+    · exact False.elim ((medium_root_even_not_reachable q b d m t k c root hq hcone hb hb4 hd hi hc hcost hk) hr)
+    · omega
+  exact ⟨hdeep,
+    reachable_even_terminal_small_left q b d m t k c root hq hcone hb hb4 hd hi hc hk hr,
+    reachable_even_terminal_logdepth q b d m t k c root hq hcone hb hb4 hd hi hc hk hr⟩
+
+#print axioms reachable_terminal_three_gates
+
 #print axioms reachable_even_terminal_logdepth
 
 #print axioms dyadic_defect_gap
