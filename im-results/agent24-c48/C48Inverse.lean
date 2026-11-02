@@ -2,6 +2,7 @@ import FastSectionDef
 import BounceInverse
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 8192
 namespace BB6.Agent46
 
 private theorem pow_two_four (n : Nat) (hn : 2≤n) : ∃ v : Nat, 2^n=4*v := by
