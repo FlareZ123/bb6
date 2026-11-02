@@ -40,6 +40,46 @@ theorem twelve_q_cost_barrier (q m t : Nat) (hq : 4≤q)
     omega
   · omega
 
+open BB6.Agent47P1
+open BB6.Agent1Quarter
+open BB6.Agent45TwoRoot
+
+/-- Exact source connected trade-off: possible reachable leaf requires
+an all-odd inverse cost within a logarithm of 15q. -/
+theorem reachable_terminal_log_cost
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hb : 8 ≤ b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : c%2=0) (hk : 2 ≤ k)
+    (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
+    15*q < m+Nat.log2 (256*q+8*m+76)+1 := by
+  obtain ⟨hdeep,_,hbudget⟩ := reachable_terminal_three_gates q b d m t k c root hq hcone hb hb4 hd hi hc hk hr
+  exact logarithmic_cost_necessity q m t hdeep hbudget
+
+/-- All potentially blank-reachable even exits from the deep critical
+cones require more than 12q prior odd inverse cost when q≥4. -/
+theorem reachable_terminal_over_twelve_q
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 4 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hb : 8 ≤ b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : c%2=0) (hk : 2 ≤ k)
+    (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
+    12*q < m := by
+  have hq1 : 1≤q := by omega
+  obtain ⟨hdeep,_,hbudget⟩ := reachable_terminal_three_gates q b d m t k c root hq1 hcone hb hb4 hd hi hc hk hr
+  exact twelve_q_cost_barrier q m t hq hdeep hbudget
+
+#print axioms reachable_terminal_log_cost
+#print axioms reachable_terminal_over_twelve_q
+
 #print axioms logarithmic_cost_necessity
 #print axioms pow3_dominates_linear
 #print axioms twelve_q_cost_barrier
