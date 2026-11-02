@@ -1,0 +1,27 @@
+name: Agent 7 P1 rank-bracket Lean verification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Check source map, proof kernel, and reported axioms
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent7-rank-bounded"
+          lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
+          lean -o im-results/agent1-p1-map/Packet.olean im-results/agent1-p1-map/Packet.lean
+          lean -o im-results/agent7-rank-bounded/RankBase.olean im-results/agent7-rank-bounded/RankBase.lean
+          lean im-results/agent7-rank-bounded/RankCertificate.lean
