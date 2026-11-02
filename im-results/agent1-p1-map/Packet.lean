@@ -109,6 +109,46 @@ theorem critical_two_closed_form (n : Nat) :
   omega
 
 
+
+/-- Even input strictly below the direct-exit threshold returns an odd
+    second counter after the nested G recursion. -/
+theorem G_small_even_returns_odd (k c : Nat)
+    (hc : c%2=0) (hsmall : c < 2*k+2) :
+    (G k c).2 % 2 = 1 := by
+  by_cases hlow : c < 2*k
+  · rw [G]
+    simp only [hlow, dite_true]
+    apply G_preserves_odd_second
+    omega
+  · have hmid : c ≤ 2*k+1 := by omega
+    rw [G]
+    simp only [hlow, dite_false, hmid, ite_true]
+    omega
+
+/-- The medium-counter even phase always exits to an odd second counter
+    after two accelerated transitions. -/
+theorem T_even_small_exits_odd (a c : Nat)
+    (ha : a%2=0) (hceven : c%2=0)
+    (hcmin : 6 ≤ c) (hcmax : c < a+10) :
+    ∃ b d, T a c = some (a+3,c-2) ∧
+      T (a+3) (c-2) = some (b,d) ∧ d%2=1 := by
+  have hn0 : c≠0 := by omega
+  have hn1 : c≠1 := by omega
+  have h1 : T a c = some (a+3,c-2) := by simp [T,hn0,hn1,ha]
+  have hn0' : c-2≠0 := by omega
+  have hn1' : c-2≠1 := by omega
+  have hn2' : c-2≠2 := by omega
+  have hn3' : c-2≠3 := by omega
+  have ha' : (a+3)%2≠0 := by omega
+  let g := G ((a+3)/2+1) ((c-2)-2)
+  have hodd : g.2 %2=1 := by
+    apply G_small_even_returns_odd
+    · omega
+    · omega
+  have h2 : T (a+3) (c-2) = some g := by
+    simp [T,hn0',hn1',hn2',hn3',ha',g]
+  exact ⟨g.1,g.2,h1,h2,hodd⟩
+
 /-- Iteration of the certified accelerated map. `some` means the machine
     has not taken a halting transition within the specified horizon. -/
 def iterT : Nat → Nat × Nat → Option (Nat × Nat)
