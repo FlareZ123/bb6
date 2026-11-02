@@ -68,3 +68,5 @@ jobs:
           done
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
           lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/BlankCodeImplicit.lean
+          lean -o im-results/agent32-cryptid-padding/TokenCostNormal.olean im-results/agent32-cryptid-padding/TokenCostNormal.lean
+          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/ShiftCylinders.lean
