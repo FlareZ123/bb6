@@ -23,7 +23,7 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a8-total/
           cp im-results/agent21-c-source-bridge/CReachBridge.lean /tmp/a8-total/
           cp im-results/agent21-c-source-bridge/CPhaseRank.lean /tmp/a8-total/
-          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal,GenericScan,CSectionComputable}.lean /tmp/a8-total/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal,GenericScan,CSectionComputable,CSectionRank}.lean /tmp/a8-total/
           cd /tmp/a8-total
           export LEAN_PATH="."
           lean --version
@@ -33,4 +33,5 @@ jobs:
           lean -o GenericSection.olean GenericSection.lean
           lean -o CSectionTotal.olean CSectionTotal.lean
           lean -o GenericScan.olean GenericScan.lean
-          lean CSectionComputable.lean
+          lean -o CSectionComputable.olean CSectionComputable.lean
+          lean CSectionRank.lean
