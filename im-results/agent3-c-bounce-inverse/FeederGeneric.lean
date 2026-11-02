@@ -69,18 +69,17 @@ theorem feeder_generic_only_parent (t a k : Nat) (ht : 1≤t)
         omega
       · by_cases hk1 : k=1
         · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h
-          omega
         · by_cases hk2 : k=2
           · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
           · by_cases hk3 : k=3
             · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h
-              omega
             · have hb : (bounce 4 (2*k-3)).2=some (16*t+3,8*t+1) := by
                 simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] using h
               exact False.elim (feeder_even_sum_impossible _ _ _ _ (by decide) (by omega) hb (by omega))
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
+        omega
       · by_cases hregion : 2*k≤a
         · simp [secNext,exactSection,ha0,ha1,hk0,hregion] at h
           omega
