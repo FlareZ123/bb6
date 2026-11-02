@@ -102,7 +102,6 @@ private theorem feeder_generic_true_edge (t : Nat) (ht : 1≤t) :
   have hreg : ¬(2*(10*t-1)≤12*t) := by omega
   simp only [secNext,exactSection,if_neg h0,if_neg h1,
     if_neg hk,if_neg hreg]
-  have hK : 12*t-1=12*t-1 := rfl
   have hC : 2*(10*t-1)-12*t+3=8*t+1 := by omega
   rw [hC]
   rw [bounce]
@@ -111,8 +110,9 @@ private theorem feeder_generic_true_edge (t : Nat) (ht : 1≤t) :
   have hsmall : 8*t+1≤2*(12*t-1)+6 := by omega
   simp only [hlow,ite_false,hodd,ite_true,hsmall,Option.some.injEq,
     Prod.mk.injEq]
-  trace_state
-  omega
+  constructor
+  · omega
+  · trivial
 
 /-- Uniform exact inverse for the complete j=4t+1 feeder, t>=1.
     This subsumes special t=8(16q+4), 8(16q+7) predecessor analyses. -/
