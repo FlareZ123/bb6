@@ -1,0 +1,42 @@
+name: Agent45 P1 generated inverse cones (manual source audit)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-source-certification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore exact proof generator and check archive checksum
+        run: |
+          mkdir -p im-results/agent45-p1-generator/src
+          base64 -d im-results/agent45-p1-generator/generator.tar.xz.b64 > /tmp/agent45-generator.tar.xz
+          echo "eb5e2a6226bedabc1aac614750d977433fd92ef46829f784237c71446ee68952  /tmp/agent45-generator.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent45-generator.tar.xz -C im-results/agent45-p1-generator/src
+          python im-results/agent45-p1-generator/src/emit.py 94 im-results/agent45-p1-generator/src/Cert94.lean source
+      - name: Compile exact unmodified source modules
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+      - name: Audit universal inverse cone and real blank-index theorem
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src:im-results/agent45-p1-generator"
+          lean -o im-results/agent45-p1-generator/src/Cert94.olean im-results/agent45-p1-generator/src/Cert94.lean
+          lean im-results/agent45-p1-generator/Critical94.lean
+          echo "Completed full-source Agent45 r94 proof and final standard-axiom audit."
