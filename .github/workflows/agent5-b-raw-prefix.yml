@@ -62,3 +62,17 @@ jobs:
           done
           cp "$SRC/BTraceRaw.lean" BTraceRaw.lean
           lake env lean BTraceRaw.lean
+          # Compose the new diagonal 3x+7 theorem with the unchanged upstream raw-machine proof.
+          SP="$GITHUB_WORKSPACE/im-results/agent5-b-parity-runs"
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18OneDimBridge.lean" Agent18OneDimBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent18OneDimBridge.olean Agent18OneDimBridge.lean
+          for f in BParityRuns BParityCoding; do
+            base64 -d "$SP/$f.lean.xz.b64" | xz -dc > "$f.lean"
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
+          for f in BParityRunsSource BParityCodingSource BCollatzDiagonal; do
+            cp "$SP/$f.lean" "$f.lean"
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
+          cp "$SP/BCollatzRawBridge.lean" BCollatzRawBridge.lean
+          lake env lean BCollatzRawBridge.lean
