@@ -1,4 +1,5 @@
 import SecondUniform
+import SecondResidue
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11
@@ -10,7 +11,7 @@ open BB6.Agent15
     state (2j+3,k) is unreachable from the authentic blank entry.
     Original-source CI must certify the imported exclusion theorem. -/
 theorem second_halt_unbounded_witness (r lower : Nat) :
-    ∃ m j k : Nat, lower≤m ∧ m%4=3 ∧
+    ∃ m j k : Nat, lower≤m ∧ m%4=3 ∧ (r=0 ∨ j%4=0) ∧
       k+j+3*m+5=2^(2*m+2)*(j+3) ∧
       ¬CReach (2*j+3) k := by
   let m : Nat := 4*(r+lower)+3
@@ -46,7 +47,12 @@ theorem second_halt_unbounded_witness (r lower : Nat) :
     omega
   let k : Nat := H-(j+3*m+5)
   have hk : k+j+3*m+5=2^(2*m+2)*(j+3) := by dsimp [k,H]; omega
-  refine ⟨m,j,k,hmlower,hm,hk,?_⟩
+  have hj4 : r=0 ∨ j%4=0 := by
+    by_cases hz : r=0
+    · exact Or.inl hz
+    · exact Or.inr (second_index_divisible_four m r j q hm (by omega)
+        (by simpa [q] using hX))
+  refine ⟨m,j,k,hmlower,hm,hj4,hk,?_⟩
   exact second_halt_arbitrary_depth m k r j q hm hr (by dsimp [q]; omega)
     (by simpa [q] using hX) hk
 
