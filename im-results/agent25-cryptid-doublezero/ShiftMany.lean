@@ -25,6 +25,16 @@ theorem costShift (f : Nat → Nat) (k extra j : Nat)
       simp only [skew]
       omega
 
+/-- Closed quadratic primitive-time cocycle, for any number of lifts. -/
+theorem skew_closed (k triplePackets j : Nat) :
+    skew k triplePackets j =
+      12*j*j + (24*k+49+24*triplePackets)*j := by
+  induction j with
+  | zero => simp [skew]
+  | succ j ih =>
+      simp only [skew, ih, Nat.mul_add, Nat.add_mul]
+      omega
+
 /-- Add an arbitrary unary right prefix to the original raw head-relative
     configuration, retaining both sides and the original control state. -/
 def prependN (d : Nat) (c : Cfg) : Cfg :=
@@ -125,6 +135,7 @@ theorem Acode_shift_many (k j : Nat) (ws ys : List Bool) :
       (2*(4*k+3+CryptidA.wordInc ws)+5)+8*j := by omega
   rw [hr]
 
+#print axioms skew_closed
 #print axioms costShift
 #print axioms sourceShiftMany
 #print axioms B_shift_many
