@@ -50,5 +50,5 @@ jobs:
           echo "c6ac9de6bb3a60f29f1a23d5a0ca360ebdaab465afa3af694570ca91137f5981  StaggerFiniteLeft.lean" | sha256sum -c -
           LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerFiniteLeft.lean
           base64 -d "$SRC/census.py.xz.b64" | xz -dc > census.py
-          echo "21eafab86ed664d392d5f2e95f58fa53207974300fcf0a993c5fb60c99985c3d  census.py" | sha256sum -c -
+          echo "806dc035956c0031348a0b3b8088706a28b15cf7a1497cfc94179a1238a37173  census.py" | sha256sum -c -
           python3 census.py
