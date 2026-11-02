@@ -30,3 +30,4 @@ jobs:
           done
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
           lean im-results/agent32-cryptid-padding/CodeImplicitNil.lean
+          lean im-results/agent32-cryptid-padding/TokenCostNormal.lean
