@@ -25,4 +25,6 @@ jobs:
           lean -o Agent18BReduction.olean Agent18BReduction.lean
           LEAN_PATH=. lean -o Agent18BOneDim.olean Agent18BOneDim.lean
           LEAN_PATH=. lean -o BDyadicCore.olean im-results/agent33-b-dyadic/BDyadicCore.lean
-          LEAN_PATH=. lean im-results/agent33-b-dyadic/BDyadic.lean
+          LEAN_PATH=. lean -o BDyadic.olean im-results/agent33-b-dyadic/BDyadic.lean
+          LEAN_PATH=. lean -o BConstantCore.olean im-results/agent33-b-dyadic/BConstantCore.lean
+          LEAN_PATH=. lean im-results/agent33-b-dyadic/BConstantRuns.lean
