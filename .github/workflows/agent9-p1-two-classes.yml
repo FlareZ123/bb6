@@ -1,0 +1,54 @@
+name: Agent9 P1 two inverse-cone source audit (one-shot issue or manual)
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  source-audit:
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent9-source-audit-20261102]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore generated exact Lean source and audit hashes
+        run: |
+          for r in 110 158; do
+            base64 -d "im-results/agent9-s-section/R${r}Proof.lean.gz.b64" | gzip -dc > "im-results/agent9-s-section/R${r}Proof.lean"
+          done
+          echo "f807cd1dcdc0ecb2839c13b8f6b35b6a86ad0ef05f3b223bb41707a8b675dd54  im-results/agent9-s-section/R110Proof.lean" | sha256sum -c -
+          echo "1f4b882d824b9e4f37e6c9bbae6c747fdb49388a7a797be49c5883726db6323d  im-results/agent9-s-section/R158Proof.lean" | sha256sum -c -
+      - name: Compile original G, Reach, and cone definitions without modifications
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent9-s-section"
+          lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
+          lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          for m in PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          for m in P1InverseLog P1NoRootOne P1CriticalValuation P1CriticalList P1CriticalArithmetic P1CriticalReachBridge P1ConeListBridge P1InverseFixed P1R54Generated; do
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+      - name: Audit all-time source-certified residues n=512h+110,158
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent9-s-section"
+          lean -o im-results/agent9-s-section/P1FourGap.olean im-results/agent9-s-section/P1FourGap.lean
+          for r in 110 158; do
+            lean -o "im-results/agent9-s-section/R${r}Proof.olean" "im-results/agent9-s-section/R${r}Proof.lean"
+            lean "im-results/agent9-s-section/R${r}Final.lean"
+          done
+          echo "Source-level P1 inverse-cone and blank-entry proofs compiled."
