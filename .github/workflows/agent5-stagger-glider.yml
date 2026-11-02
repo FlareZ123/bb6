@@ -34,7 +34,18 @@ jobs:
           LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerFast.lean
           base64 -d "$SRC/StaggerEntry.lean.xz.b64" | xz -dc > StaggerEntry.lean
           echo "8f36e227ec7d550b8e3f8c13c4ca3473f3fa1d376f5389b164baddbe5fb52f4c  StaggerEntry.lean" | sha256sum -c -
-          LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerEntry.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o StaggerEntry.olean StaggerEntry.lean
+          cp im-results/agent8-coverage-contract/RayClosed.lean RayClosed.lean
+          cp im-results/agent8-coverage-contract/RayEntry.lean RayEntry.lean
+          cp im-results/agent8-coverage-contract/RayChecker.lean RayChecker.lean
+          cp im-results/agent8-coverage-contract/RayFinite.lean RayFinite.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o RayClosed.olean RayClosed.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o RayEntry.olean RayEntry.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o RayChecker.olean RayChecker.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o RayFinite.olean RayFinite.lean
+          base64 -d "$SRC/StaggerFiniteRight.lean.xz.b64" | xz -dc > StaggerFiniteRight.lean
+          echo "27922e209c840d25fc26cd7120eb103bb0ebdb020ea3d913a6a352ee68d95f60  StaggerFiniteRight.lean" | sha256sum -c -
+          LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerFiniteRight.lean
           base64 -d "$SRC/census.py.xz.b64" | xz -dc > census.py
           echo "21eafab86ed664d392d5f2e95f58fa53207974300fcf0a993c5fb60c99985c3d  census.py" | sha256sum -c -
           python3 census.py
