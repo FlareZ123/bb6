@@ -1,0 +1,49 @@
+name: Agent 41 machine C mod8 seven-four source proof
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct existing original-source certificate
+        run: |
+          mkdir -p /tmp/a41mod8
+          cd /tmp/a41mod8
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert8.tar.xz.b64" > c-cert8.tar.xz
+          echo "8a9a54fd96c81aaffcb3c06a941cabb06fe0aaa7387b8834ef0d72fbd2acec42  c-cert8.tar.xz" | sha256sum -c -
+          tar -xJf c-cert8.tar.xz
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          echo "=== CCert8Pure.lean ==="
+          sed -n '1,105p' CCert8Pure.lean
+          echo "=== CFull8.lean ==="
+          cat CFull8.lean
+          echo "=== CExclusions8.lean ==="
+          cat CExclusions8.lean
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile kernel certificate and proposed restriction
+        run: |
+          cd /tmp/a41mod8
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CCert8Pure.olean CCert8Pure.lean
+          for i in $(seq 0 15); do lean -o PBlock${i}.olean PBlock${i}.lean; done
+          lean -o CGlobal8.olean CGlobal8.lean
+          lean -o CQuotientSound8.olean CQuotientSound8.lean
+          lean -o CMapIf8.olean CMapIf8.lean
+          lean -o CFull8.olean CFull8.lean
+          lean -o CExclusions8.olean CExclusions8.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge8.lean" CSourceBridge8.lean
+          lean -o CSourceBridge8.olean CSourceBridge8.lean
+          if test -f "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean"; then
+            cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean" Mod8SevenFour.lean
+            lean Mod8SevenFour.lean
+          fi
