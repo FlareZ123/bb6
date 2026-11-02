@@ -30,6 +30,7 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/EOneZeroHalt.olean im-results/agent2-cryptid-continuity/EOneZeroHalt.lean
           lean im-results/agent2-cryptid-continuity/ReturnGuard.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
-          lean im-results/agent2-cryptid-continuity/NoEarlierF.lean
+          lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
           lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
+          lean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
           lean im-results/agent2-cryptid-continuity/EOneTriplePairs.lean
