@@ -15,6 +15,8 @@ SOURCES = {
     "LassoCoverage": "8544a335fb62a34329dc0c07edeeb5a948a3afb7a314b95f7d1f712cfb57c730",
     "ShiftCoverage": "3ea7b0bbac9b2ca575b34c362b478e52c335d390113b2934a4c73b0e2f309c3e",
     "TreeCoverage": "c5d2858599d0ad1beaa993c106f35bb0c5152cb22659a11575450a344731eeab",
+    "FiniteTapeCoverage": "7ce8ab8c411038a0ca0f9ff568c23529dae4b7c514689dd2b14eb9c44bd17000",
+    "FiniteTapeShift": "23bed37b7c46bc7d46714700605ca9309656a99558a8565b2b15c877fd194579",
 }
 
 
