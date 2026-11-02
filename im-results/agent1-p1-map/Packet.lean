@@ -108,6 +108,67 @@ theorem critical_two_closed_form (n : Nat) :
   change critical 2 n + 2*n = 14*(2^n-1)+4 at h
   omega
 
+
+/-- Iteration of the certified accelerated map. `some` means the machine
+    has not taken a halting transition within the specified horizon. -/
+def iterT : Nat → Nat × Nat → Option (Nat × Nat)
+  | 0, x => some x
+  | n+1, x => (T x.1 x.2).bind (iterT n)
+
+/-- All critical inputs reach the dangerous gate after 2n safe transitions. -/
+theorem critical_gate (a n : Nat) (ha : a%2=0) :
+    ∃ b, b%2=0 ∧ iterT (2*n) (a,critical a n) = some (b,4) := by
+  induction n generalizing a with
+  | zero =>
+    exact ⟨a,ha,by simp [iterT,critical]⟩
+  | succ n ih =>
+    obtain ⟨b,hbeven,hrun⟩ := ih (2*a+12) (by omega)
+    let c := critical a (n+1)
+    have hc : a+10 ≤ c := by dsimp [c,critical]; omega
+    have h1 := T_even_big_first a c ha hc
+    have h2 := T_even_big_second a c ha hc
+    have hc' : c-a-10 = critical (2*a+12) n := by
+      dsimp [c,critical]; omega
+    rw [hc'] at h2
+    refine ⟨b,hbeven,?_⟩
+    have hnum : 2*(n+1) = (2*n)+2 := by omega
+    rw [hnum]
+    have hnum' : (2*n)+2 = (2*n+1)+1 := by omega
+    rw [hnum']
+    change (T a c).bind (fun x => (T x.1 x.2).bind (iterT (2*n))) = some (b,4)
+    simp only [h1, Option.bind_some, h2]
+    exact hrun
+
+/-- Prefix/suffix fusion for iteration. -/
+theorem iterT_add (m n : Nat) (s : Nat × Nat) :
+    iterT (m+n) s = (iterT m s).bind (iterT n) := by
+  induction m generalizing s with
+  | zero => simp [iterT]
+  | succ m ih =>
+    rw [Nat.succ_add]
+    simp only [iterT]
+    cases h : T s.1 s.2 with
+    | none => simp [h]
+    | some t => simp [h, ih]
+
+/-- The first halting transition follows the 2n safe steps and one more
+    safe transition through (odd,2); the (2n+2)-step iterate is none. -/
+theorem critical_halts_at (a n : Nat) (ha : a%2=0) :
+    iterT (2*n+2) (a,critical a n) = none := by
+  obtain ⟨b,hbeven,hrun⟩ := critical_gate a n ha
+  have hstep : T b 4 = some (b+3,2) := by simp [T,hbeven]
+  have hstop : T (b+3) 2 = none := by
+    apply (T_none_iff _ _).2
+    omega
+  have htwo : iterT 2 (b,4) = none := by
+    simp [iterT,hstep,hstop]
+  rw [show 2*n+2 = (2*n)+2 by omega, iterT_add, hrun]
+  exact htwo
+
+#print axioms BB6.P1Reduction.critical_closed_form
+#print axioms BB6.P1Reduction.critical_gate
+#print axioms BB6.P1Reduction.critical_halts_at
+
 #print axioms BB6.P1Reduction.T_even_big_second
 #print axioms BB6.P1Reduction.critical_halts
 
