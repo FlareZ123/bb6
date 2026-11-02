@@ -33,6 +33,7 @@ jobs:
           cp im-results/agent38-c-quarter/CFiniteSafetyBridge.lean /tmp/a38-lean/CFiniteSafetyBridge.lean
           cp im-results/agent38-c-quarter/CFiniteSafetyGeneric.lean /tmp/a38-lean/CFiniteSafetyGeneric.lean
           cp im-results/agent38-c-quarter/CFiniteGateTransfer.lean /tmp/a38-lean/CFiniteGateTransfer.lean
+          cp im-results/agent38-c-quarter/CHighGateCriterion.lean /tmp/a38-lean/CHighGateCriterion.lean
           cd /tmp/a38-lean
           export LEAN_PATH="."
           lean --version
@@ -49,3 +50,4 @@ jobs:
           lean -o CFiniteSafetyBridge.olean CFiniteSafetyBridge.lean
           lean CFiniteSafetyGeneric.lean
           lean CFiniteGateTransfer.lean
+          lean CHighGateCriterion.lean
