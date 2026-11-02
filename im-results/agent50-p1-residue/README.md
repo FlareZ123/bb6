@@ -90,3 +90,7 @@ The successful job printed:
 ```
 
 No `sorryAx`, no Lean compiler error, and the job exited successfully. This establishes that the all-time `n≡10(mod16)` exclusion theorem is genuinely kernel-checked **against the original Agent 1 accelerated Reach definition in this repository**. The global original-Turing-machine semantic composition through Agent 4's separately defined Reach relation remains a distinct proof obligation. Neither P1 nonhalting nor BB(6) is thereby settled.
+
+## Exploratory next direction (unproved)
+
+The finite inversion script `explore_inverse.py` uses the exact generic G ancestor recurrence and positive-even reachability constraints to prune candidate inverse trees. At depth three, sampled `n≡2` or `50 (mod 64)`, with n≥50, produced fully pruned finite trees in the initial tests. These finite observations are neither an infinite-family proof nor a halting classification; other residual samples (notably n≡18 or34 mod64) retained live inverse branches. A useful future target is a uniform symbolic proof for the `n≡2,50 (mod 64)` subset of the remaining `n≡2 (mod16)` class. More fundamentally, seek a global forward reachable-set invariant capable of handling the residual n≡14(mod16) and other difficult classes, since bounded backward depth alone can be insufficient.
