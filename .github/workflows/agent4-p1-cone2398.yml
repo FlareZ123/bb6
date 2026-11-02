@@ -1,0 +1,39 @@
+name: Agent 4 P1 index 2398 modular cone (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore mathematical Lean proof sources and audit archive integrity
+        run: |
+          mkdir -p im-results/agent4-p1-cone2398/src
+          cat im-results/agent4-p1-cone2398/cert.part00 im-results/agent4-p1-cone2398/cert.part01 im-results/agent4-p1-cone2398/cert.part02 | base64 -d > /tmp/agent4-cone2398.tar.xz
+          echo "26c441bed288b55764c0ad5fe89b0a3c39bd134c81a05a4c90f6858e25cc7036  /tmp/agent4-cone2398.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent4-cone2398.tar.xz -C im-results/agent4-p1-cone2398/src
+      - name: Compile exact unmodified upstream map and all new source theorems
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398/src"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          for m in PowerGap PowerBand Inverses ConeNodes0 ConeNodes1 ConeNodes2 ConeNodes3 ConeNodes4 ConeNodes5 ConeNodes6 P1Final; do
+            echo "Checking Agent4 $m"
+            lean -o "im-results/agent4-p1-cone2398/src/$m.olean" "im-results/agent4-p1-cone2398/src/$m.lean"
+          done
+          echo "Final theorem compiled against unmodified upstream source modules"
