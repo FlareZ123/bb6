@@ -109,4 +109,10 @@ jobs:
           cp im-results/agent11-c-first-family/{DeepFamily,FirstR2,FirstUniform}.lean /tmp/agent15-c-check/
           lean -o DeepFamily.olean DeepFamily.lean
           lean FirstR2.lean
-          lean FirstUniform.lean
+          lean -o FirstUniform.olean FirstUniform.lean
+          # Agent 11: self-contained number theory + authentic source-linked
+          # every-depth infinite-family nonreachability.
+          cp im-results/agent11-c-first-family/{IndexWitness,IndexLift,IndexReach}.lean /tmp/agent15-c-check/
+          lean -o IndexWitness.olean IndexWitness.lean
+          lean -o IndexLift.olean IndexLift.lean
+          lean IndexReach.lean
