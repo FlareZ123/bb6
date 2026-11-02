@@ -67,6 +67,33 @@ theorem project_f0_detect (c : CryptidBoundary.Cfg) (_h : (project c).state = 5)
     have hs : state = 6 := by simpa [bState] using hc
     simp [project, hs] at hb
 
+/-- A terminal configuration whose projected state is not F cannot be
+    the explicit-frozen state 6 of the Boundary model. -/
+theorem project_nonF_detect (c : CryptidBoundary.Cfg)
+    (h : (project c).state ≠ 5) : bState c ≠ 6 := by
+  cases c with
+  | mk left bit right state =>
+    intro hc
+    have hs : state = 6 := by simpa [bState] using hc
+    simp [project, hs] at h
+
+/-- Transport an exact Agent25 run ending at a state distinct from F.
+    This includes intermediate A/0 configurations needed for arbitrary
+    token-word parsing; F/1 cannot have been visited on the way. -/
+theorem transfer_nonF (n : Nat) (c d : CryptidA.Cfg)
+    (hc : c.state ≠ 6) (hr : CryptidA.run n c = d)
+    (hds : d.state ≠ 5) :
+    CryptidBoundary.run n (embed c) = embed d := by
+  have he : project (CryptidBoundary.run n (embed c)) = d := by
+    rw [project_run, project_embed c hc, hr]
+  have hh : bState (CryptidBoundary.run n (embed c)) ≠ 6 :=
+    project_nonF_detect _ (by rw [he]; exact hds)
+  calc
+    CryptidBoundary.run n (embed c) =
+        embed (project (CryptidBoundary.run n (embed c))) :=
+      (embed_project _ hh).symm
+    _ = embed d := by rw [he]
+
 /-- Transfer any exact run ending in F/0 to Agent31's original step semantics.
     The F/1 halt encoding difference is handled by the total projection. -/
 theorem transfer_f0 (n : Nat) (c d : CryptidA.Cfg)
@@ -112,6 +139,7 @@ theorem boundary_a_pairs_triples_nil (m q r : Nat) :
 
 #print axioms project_step
 #print axioms project_run
+#print axioms transfer_nonF
 #print axioms transfer_f0
 #print axioms boundary_a_pairs_triples
 #print axioms boundary_a_pairs_triples_nil
