@@ -40,6 +40,31 @@ def source : ConjectureMachines.Machine 6 2 :=
 
 def original : BB6Coverage.Machine := toAgent8 source
 
+/-- Literal external RLE transition table, preserving its blank-state label and
+halt at F/1. Used to prevent a silent state-permutation or text mismatch. -/
+def expectedRLE (s : Slot) : Transition :=
+  match s.1.val, s.2 with
+  | 0, false => some ⟨true,  true,  1⟩
+  | 0, true  => some ⟨false, false, 5⟩
+  | 1, false => some ⟨true,  true,  2⟩
+  | 1, true  => some ⟨false, true,  0⟩
+  | 2, false => some ⟨true,  false, 3⟩
+  | 2, true  => some ⟨false, true,  1⟩
+  | 3, false => some ⟨false, false, 4⟩
+  | 3, true  => some ⟨false, false, 2⟩
+  | 4, false => some ⟨false, false, 0⟩
+  | 4, true  => some ⟨false, false, 2⟩
+  | 5, false => some ⟨false, false, 1⟩
+  | 5, true  => none
+  | _, _ => none
+
+/-- All twelve source transitions are definitionally the specified RLE
+tokens, including the halting convention. -/
+theorem original_eq_expectedRLE : original = expectedRLE := by
+  funext slot
+  rcases slot with ⟨q,b⟩
+  fin_cases q <;> cases b <;> rfl
+
 theorem original_never : NeverHalts original :=
   not_halts_to_agent8 source
     BusyBeaver.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH.not_halts
@@ -61,6 +86,7 @@ def rootedAudit (bound : Nat) : FrontierAudit (DecidedBelow bound) rootCylinder 
   .certified rootCylinder (root_cover bound)
 
 #print axioms BB6.ConjectureBridge.not_halts_to_agent8
+#print axioms original_eq_expectedRLE
 #print axioms original_never
 #print axioms root_cover
 end BB6.F287
