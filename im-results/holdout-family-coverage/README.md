@@ -15,7 +15,7 @@ The source is reproducible with `tools/holdout_family_ledger.cjs` (Node.js Commo
 - `mirror_original_to_canonical`: whether the chosen witness reflects directions and physical tape coordinates.
 - `canonical_state_order_original_letters`: six original-state letters appearing in canonical A,B,C,D,E,F positions, respectively.
 - `family_member_count`: number of roots of that table **appearing in the snapshot**, not the orbit size under the entire symmetry group.
-- `local_proof_status`, `local_source_path`, `local_ci_run_id`: conservative, source-linked entries for eight manually curated roots. The other 655 rows say *not curated*, which does **not** mean unproved, unsolved, or independently verified.
+- `local_proof_status`, `local_source_path`, `local_ci_run_id`: conservative, source-linked entries for ten manually curated roots (including the two S/T rooted witnesses). The other 653 rows say *not curated*, which does **not** mean unproved, unsolved, or independently verified.
 - `global_rooted_halting_status`: one reviewed F287 root is marked **nonhalting from upstream proof**; all other entries retain `not established by this ledger`. No classification is inferred from a table-family match.
 - `external_status`: pinned Cryptids source provenance for the reviewed F287 root; `not checked` for the other 662 roots. The snapshot may be stale relative to external developments.
 
