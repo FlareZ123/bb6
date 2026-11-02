@@ -50,3 +50,17 @@ This follows because `2*v_(n+1) = 3*v_n (mod 7)` and `2*5=3 (mod 7)`. Fully cert
 ## Next possibilities
 
 Investigate the induced sample-index recurrence and whether a stronger nonperiodicity proof applies to those sampled bits or yields a modulus-free obstruction. Avoid confusing the easily proved existence of infinitely many even **unsampled** iterates with a sampled halting witness.
+
+## Universal parity-prefix separation
+
+The separately compiled [BParityCoding.lean](./BParityCoding.lean) strengthens the aperiodicity analysis into a **finite** and **all-starts** theorem. Let \(T(v)=(3v+7(v\bmod2))/2\), and \(T^i(v)\) denote its \(i\)-th iterate. For any natural \(a\le b\), agreement of the first \(n\) parity bits proves
+
+```lean
+prefix_forces_divisor (a b n : Nat) (hab : a ≤ b)
+  (hp : ∀ i, i < n → (path a i)%2 = (path b i)%2) :
+  2^n ∣ b-a
+```
+
+Consequently, whenever \(a<b\) and \(b-a<2^n\), there is a parity disagreement at some \(i<n\) (`finite_prefix_separates`). The proof propagates the ordered difference while parity matches and uses coprimality of \(2^n\) and \(3^n\); there is no infinite-tail assumption. This gives a quantitative finite-prefix injectivity certificate and a candidate building block for two-adic coding of the reset sampler.
+
+Compiled locally under Lean 4.36.0-rc2 with axiom audit `[propext, Quot.sound]`, no `sorryAx`. This is an intermediate statement about the exact scalar map; it still does not decide recursively sampled parity.
