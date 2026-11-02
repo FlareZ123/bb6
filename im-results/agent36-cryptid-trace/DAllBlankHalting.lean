@@ -19,8 +19,8 @@ theorem run_terminal (n : Nat) (c : Cfg) (hc : c.st = 6) :
   induction n with
   | zero => rfl
   | succ n ih =>
-    change step (run n c) = c
-    rw [ih, step_terminal c hc]
+    rw [show n+1 = n+1 by rfl, run_add n 1, ih]
+    exact step_terminal c hc
 
 /-- A finite prefix ending at an unhalted section preserves all-time
     blank halting iff, because the original terminal state is absorbing.
