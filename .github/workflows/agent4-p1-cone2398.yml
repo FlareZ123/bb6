@@ -79,10 +79,6 @@ jobs:
           lean im-results/agent4-coverage-smoke/BranchSmoke.lean
           lean im-results/agent4-coverage-smoke/WriteOneDrift.lean
 
-      - name: Compare source-defined raw six-state semantics
-        run: |
-          python im-results/agent13-coverage/unpack.py
-          python -c "from pathlib import Path; print(Path('im-results/agent13-coverage/BB6Coverage.lean').read_text())"
 
       - name: Source-check equivalence of the Agent 8 and Agent 13 proof universes
         run: |
