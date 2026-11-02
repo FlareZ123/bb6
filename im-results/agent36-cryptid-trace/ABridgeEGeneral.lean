@@ -61,7 +61,6 @@ theorem full_A_code_E_triple (k q : Nat) (ws ys : List Bool) :
     (4*k+2+CryptidA.wordInc ws)+1 := by omega
   rw [harg,a_gate_triple_pairs]
   congr 1
-  omega
 
 #print axioms a_gate_to_E
 #print axioms a_gate_triple_pairs
