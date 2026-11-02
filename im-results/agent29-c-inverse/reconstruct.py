@@ -87,3 +87,22 @@ with (HERE / ".reconstruct-side-generator-v2.lock").open("w") as lock:
         if os.path.exists(filename):
             os.unlink(filename)
 print(f"Verified generate_c_side_inverse_v2.py: {len(raw)} bytes, sha256={actual}")
+
+RESET_V2_SHA256 = "ed307881016cd207b4de2859f1c964e9311112851aceafd9bf59972395d2be3d"
+with (HERE / ".reconstruct-reset-generator-v2.lock").open("w") as lock:
+    fcntl.flock(lock, fcntl.LOCK_EX)
+    raw = lzma.decompress(base64.b64decode((HERE / "generate_c_inverse_v2.py.xz.b64").read_bytes()))
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != RESET_V2_SHA256:
+        raise ValueError(f"Affine reset generator checksum mismatch: {actual}")
+    fd, filename = tempfile.mkstemp(prefix=".resetgenv2.", suffix=".tmp", dir=HERE)
+    try:
+        with os.fdopen(fd, "wb") as out:
+            out.write(raw)
+            out.flush()
+            os.fsync(out.fileno())
+        os.replace(filename, HERE / "generate_c_inverse_v2.py")
+    finally:
+        if os.path.exists(filename):
+            os.unlink(filename)
+print(f"Verified generate_c_inverse_v2.py: {len(raw)} bytes, sha256={actual}")
