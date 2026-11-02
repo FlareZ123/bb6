@@ -11,7 +11,7 @@ namespace BB6.Agent19.Physical
     opaque while retaining the exact state projection. -/
 private theorem obsEq_state {c d : CryptidBoundary.Cfg}
     (h : BB6.BoundaryPadding.ObsEq c d) : c.st = d.st := by
-  change BB6.BoundaryPadding.CfgEq
+  change BB6.Padding.CfgEq
     (BB6.BoundaryPadding.represent c)
     (BB6.BoundaryPadding.represent d) at h
   exact h.2.2.2
