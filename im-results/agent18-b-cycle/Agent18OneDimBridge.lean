@@ -7,6 +7,8 @@ public import BOneDim
 
 namespace BB6.Bridge
 
+open BusyBeaver
+
 /-- The published original six-state machine halts precisely when the
     explicitly defined scalar 3/2 recurrence has an even sampled iterate. -/
 theorem raw_halts_iff_two_branch :
