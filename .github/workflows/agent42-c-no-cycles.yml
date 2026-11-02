@@ -23,9 +23,13 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a42-lean/CLine.lean
           cp im-results/agent42-c-no-cycles/CNoCycles.lean /tmp/a42-lean/CNoCycles.lean
           cp im-results/agent42-c-no-cycles/CNoCyclesBridge.lean /tmp/a42-lean/CNoCyclesBridge.lean
+          cp im-results/agent42-c-no-cycles/CBoundedRank.lean /tmp/a42-lean/CBoundedRank.lean
+          cp im-results/agent42-c-no-cycles/CBoundedRankBridge.lean /tmp/a42-lean/CBoundedRankBridge.lean
           cd /tmp/a42-lean
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
           lean -o CNoCycles.olean CNoCycles.lean
-          lean CNoCyclesBridge.lean
+          lean -o CNoCyclesBridge.olean CNoCyclesBridge.lean
+          lean -o CBoundedRank.olean CBoundedRank.lean
+          lean CBoundedRankBridge.lean
