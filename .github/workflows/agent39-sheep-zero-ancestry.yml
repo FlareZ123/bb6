@@ -23,9 +23,13 @@ jobs:
           cp im-results/agent14-sheep-preimages/CounterBridge.lean "$RUNNER_TEMP/agent39/CounterBridge.lean"
           cp im-results/agent39-sheep-zero-ancestry/ZeroAncestry.lean "$RUNNER_TEMP/agent39/ZeroAncestry.lean"
           cp im-results/agent39-sheep-zero-ancestry/ZeroAncestryBridge.lean "$RUNNER_TEMP/agent39/ZeroAncestryBridge.lean"
+          cp im-results/agent39-sheep-zero-ancestry/ThreeAdicOrder.lean "$RUNNER_TEMP/agent39/ThreeAdicOrder.lean"
+          cp im-results/agent39-sheep-zero-ancestry/PowerCorridor.lean "$RUNNER_TEMP/agent39/PowerCorridor.lean"
           cd "$RUNNER_TEMP/agent39"
           export LEAN_PATH=".:$LEAN_PATH"
           lean --version
           lean -o CounterBridge.olean CounterBridge.lean
           lean -o ZeroAncestry.olean ZeroAncestry.lean
           lean ZeroAncestryBridge.lean
+          lean -o ThreeAdicOrder.olean ThreeAdicOrder.lean
+          lean PowerCorridor.lean
