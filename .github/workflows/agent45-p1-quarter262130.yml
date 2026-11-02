@@ -48,6 +48,7 @@ jobs:
           lean -o im-results/agent45-p1-deep-two/P1TwoRoot.olean im-results/agent45-p1-deep-two/P1TwoRoot.lean
           lean -o im-results/agent45-p1-deep-two/P1TwoFeeder.olean im-results/agent45-p1-deep-two/P1TwoFeeder.lean
           lean -o im-results/agent45-p1-deep-two/P1TwoIff.olean im-results/agent45-p1-deep-two/P1TwoIff.lean
+          lean -o im-results/agent45-p1-deep-two/P1TwoCritical.olean im-results/agent45-p1-deep-two/P1TwoCritical.lean
           lean im-results/agent45-p1-deep-two/P1TwoSector.lean
       - name: Kernel-check all 7 inverse hubs and original blank critical gate
         run: |
