@@ -1,0 +1,30 @@
+name: Agent 2 source-certified Cryptid B-run arithmetic (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify and reconstruct original six-state source
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+      - name: Compile unmodified original source and exact B-run theorem
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity
+        run: |
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          lean -o im-results/agent2-cryptid-continuity/BRunValuation.olean im-results/agent2-cryptid-continuity/BRunValuation.lean
+          lean im-results/agent2-cryptid-continuity/BRunSource.lean
