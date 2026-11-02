@@ -28,5 +28,6 @@ jobs:
           lean im-results/agent8-coverage-contract/Prune.lean
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean im-results/agent8-coverage-contract/LeafRules.lean
+          lean im-results/agent8-coverage-contract/RayClosed.lean
           lean -o im-results/agent8-coverage-contract/LedgerCheck.olean im-results/agent8-coverage-contract/LedgerCheck.lean
           lean im-results/agent8-coverage-contract/LedgerRows.lean
