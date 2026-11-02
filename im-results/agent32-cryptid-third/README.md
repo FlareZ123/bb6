@@ -156,3 +156,19 @@ Additional useful specialized certificates on the same original raw machine:
 - [CryptidSeven.lean](./CryptidSeven.lean), [run 41412510704](https://github.com/FlareZ123/bb6/actions/runs/41412510704): E right prefix `1010111`, return `I_(2m+3)(010101010 ys)` after `2m+31`.
 
 The three and seven families are subsumed by the new `full_E_triple_pairs` family at q=0 and q=2 respectively. The eight family with final zero is a useful independent fixed-prefix branch. These remain under `im-results/` pending any demonstration of externally publishable novelty.
+
+## Universal A-boundary alternating-pair and triple-one return
+
+A complementary unbounded theorem has now been proved in the repository's **independent Agent25 `CryptidA` original-machine semantics**, by composition of its existing source-certified `ten_iter`, `iter_triplet`, and `close_double_zero`:
+
+```text
+A(left 0(10)^m11, scan0, right (10)^q 1^(3r) 0ys)
+  --[12r²+(6(m+q)+29)r+2q+2(m+q+4r)+6 primitive steps]-->
+I_(2m+2q+8r+5)(ys)
+```
+
+All natural m,q,r and any finite `ys`. The new `a_pairs_triples` theorem is readable in [AAlternating.lean](./AAlternating.lean). It was checked against unmodified Agent25 original raw-machine source in [manual successful Lean CI run 41414479378](https://github.com/FlareZ123/bb6/actions/runs/41414479378), standard axioms `[propext, Quot.sound]`.
+
+An extra variant `a_pairs_triples_nil` handles a **genuinely implicit all-blank suffix** after the final unary block, where `(10)^q 1^(3r)` ends the finite `List Bool`. It uses Agent25's independently certified `a_close_nil`; a separate CI verification is required before claiming its success. This is the relevant configuration at the far future **conditional** blank-orbit stage with n=482315923617, right suffix `0(10)^2 1^15` after normalization.
+
+The derived conditional next pure-unary state, assuming all the earlier blank itineraries and source bridges, is `I_1286175796359([])`, at raw step `360926875448096383250204`. This is **arithmetic on a conditional itinerary, not a proven actual blank step**. The Agent25/Agent31 Cfg bridge remains a separate proof obligation, because the two raw tables encode the frozen F/1 halt differently.
