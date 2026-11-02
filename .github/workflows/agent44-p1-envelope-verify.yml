@@ -20,14 +20,22 @@ jobs:
       - name: Verify both generic obstruction theorems and original source GAncestor bridge
         run: |
           lean --version
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent44-power-envelope"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent44-power-envelope"
           lean im-results/agent44-power-envelope/PowerCertificate.lean
           lean -o im-results/agent44-power-envelope/GOneCertificate.olean im-results/agent44-power-envelope/GOneCertificate.lean
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
           lean im-results/agent44-power-envelope/GOneSource.lean
           lean -o im-results/agent44-power-envelope/InverseEnumerator.olean im-results/agent44-power-envelope/InverseEnumerator.lean
-          lean im-results/agent44-power-envelope/FiniteChildren.lean
+          lean -o im-results/agent44-power-envelope/FiniteChildren.olean im-results/agent44-power-envelope/FiniteChildren.lean
+          for m in PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          lean im-results/agent44-power-envelope/ConeReflect.lean
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
