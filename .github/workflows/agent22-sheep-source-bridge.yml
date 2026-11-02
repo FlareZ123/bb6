@@ -72,3 +72,17 @@ jobs:
             SectionExclusionBridge.lean
           lake env lean -o ".lake/build/lib/lean/SectionExclusionBridge.olean" SectionExclusionBridge.lean
           lake env lean SheepSourceExclusions.lean
+
+          # Agent16: restore source-checked exact even-section graph and
+          # compose it with Agent22's verified original six-state semantics.
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/reconstruct_all.py"
+          for name in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            SheepEven.lean EvenEdge.lean OddPrefix.lean EvenReach.lean BlankEven.lean
+          for name in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
+          lake env lean EvenSourceBridge.lean
