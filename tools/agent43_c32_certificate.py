@@ -140,6 +140,7 @@ theorem closed2_verified : closed2 = true := by
         write(ROOT/"CFull32.lean",
               src["CFull16.lean"].replace("CMapIf16","CMapIf32").replace("CGlobal16","CGlobal32"))
         exclusions = """import CFull32
+import Lean.Elab.Tactic.Omega
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace CCert
@@ -156,7 +157,15 @@ theorem low_twenty_unreachable (k : Nat) (hk : k % 32 = 20) :
   have hs := reachable_seen h
   rw [low_twenty_absent k hk] at hs
   cases hs
+theorem low_parameter_implies_twenty (m k : Nat)
+    (hm : 1 ≤ m) (hr : m % 32 = 24)
+    (heq : k + 3*m + 4 = 2^(2*m+3)) : k % 32 = 20 := by
+  have hdiv : 32 ∣ 2^(2*m+3) := by
+    simpa using Nat.pow_dvd_pow 2 (show 5 ≤ 2*m+3 by omega)
+  obtain ⟨d, hd⟩ := hdiv
+  omega
 #print axioms low_twenty_unreachable
+#print axioms low_parameter_implies_twenty
 end CCert
 """
         write(ROOT/"CExclusions32.lean",exclusions)
@@ -174,7 +183,14 @@ theorem original_low_twenty_unreachable (k : Nat) (hk : k % 32 = 20) :
     ¬ BB6CLine.Reach (1,k,0) := by
   intro h
   exact low_twenty_unreachable k hk (source_reachable_embeds32 h)
+theorem original_low_parameter_24_absent (m k : Nat)
+    (hm : 1 ≤ m) (hr : m % 32 = 24)
+    (heq : k + 3*m + 4 = 2^(2*m+3)) :
+    ¬ BB6CLine.Reach (1,k,0) := by
+  exact original_low_twenty_unreachable k
+    (low_parameter_implies_twenty m k hm hr heq)
 #print axioms original_low_twenty_unreachable
+#print axioms original_low_parameter_24_absent
 end CCert
 """
         write(ROOT/"CSourceBridge32.lean",bridge)
