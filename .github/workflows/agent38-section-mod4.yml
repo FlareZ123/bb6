@@ -76,7 +76,7 @@ jobs:
           lean -o Agent3COneFamily.olean Agent3COneFamily.lean
           lean -o Agent3COrbitIff.olean Agent3COrbitIff.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent6-c-feeder/COneFiveDepth.lean .
-          lean COneFiveDepth.lean
+          lean -o COneFiveDepth.olean COneFiveDepth.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/{BounceReverse,BounceEvenGrammar,BounceOddGrammar}.lean .
           lean -o BounceReverse.olean BounceReverse.lean
           lean -o BounceEvenGrammar.olean BounceEvenGrammar.lean
