@@ -111,3 +111,24 @@ This is the strongest present P1 n=2-sector contribution here: an exact, checkab
 ## Distinction from Agent33's homogeneous upper-branch depth theorem
 
 Agent 33's independently source-certified [universal upper inverse valuation theorem](../../communications/broadcast/2026-11-02T1100Z_agent33-p1-all-upper-depth-and-odd-modulus.md), [CI 41432909667](https://github.com/FlareZ123/bb6/actions/runs/41432909667), characterizes a **homogeneous upper-chain** of length h directly anchored at the critical root `B(n)` by `2^(h+1)∣n+2`. For `n=16q+2`, `n+2=16q+4=4(4q+1)` has 2-adic valuation **exactly 2**, so any homogeneous upper-chain from the critical root has h≤1. Our unbounded n=2-sector path **does not conflict** with this restriction: it has a **middle G inverse branch at the final pair**, followed by a separate long homogeneous upper chain terminating at the L1 feeder, rather than a homogeneous upper chain terminating directly at the critical root. This is a genuinely different depth mechanism; any proposed universal pruning based only on the root's 2-adic valuation must account for mixed-branch inverse paths. No reachability of the synthetic starting state is assumed.
+
+
+## Universal mixed-branch 2-adic depth law for all q≥1
+
+`P1TwoValuation.lean`, Lean 4.36.0-rc2 checked locally with standard axioms and **fully unmodified-source CI verified** for `l1_all_powers` in [manual run 41440569391](https://github.com/FlareZ123/bb6/actions/runs/41440569391). The entire file now also contains a stronger `mixed_depth_exists` theorem locally checked; its **separate original-source run 41440836570** was dispatched and should be checked for completion.
+
+With `u(q)=7·2^(16q)-4q-3`, for every natural `q≥1,t≥0`, the source theorem `BB6.Agent45TwoValuation.l1_all_powers` states:
+
+```
+2^(t+3) ∣ (6u(q)+10)    ↔    2^t ∣ (3q+1).
+```
+
+The proof first establishes the exact identity `(6u+10)+8(3q+1)=42·2^(16q)` and the strict bound `8(3q+1)<2^(16q)` for all q≥1. Small powers cancel against the high-power term; the same bound excludes large powers on both sides. Consequently the precise valuation identity is
+
+`ν₂(6u(q)+10) = 3 + ν₂(3q+1)`.
+
+Note that `6u+10` is the second feeder's shifted left coordinate `(6u-2)+12`. The proof provides the correct **all-q mixed-branch depth parameter**, in contrast to homogeneous upper-inversion directly at `B(n)`, for which `ν₂(n+2)=2` throughout this sector.
+
+The source theorem `BB6.Agent45TwoValuation.mixed_depth_exists` strengthens this to genuine inverse paths: **for all q≥1 and every t such that `2^t∣3q+1`, there exists a true `BB6.Agent45Deep2.PairPath (t+2)` ending at the authentic critical precursor `(8u(q)+4,3)`**. This means `2t+4` actual `T` transitions, one special middle pair after `t+1` upper pairs, from an explicitly constructible but **not proven blank-reachable** starting state. The proof constructs an integer predecessor seed, proves its nonnegativity and mod4 parity, then composes the original-source `upper_chain` and `middle_pair`. The sparse `q_r` sequence above is now an explicit special case `3q_r+1=2^(2r+2)`; the general theorem applies to **all q**.
+
+All of this remains structural evidence about true *synthetic* inverse paths. It provides no blank-reachability certificate for either of the two critical feeder families. A global blank-specific invariant is still required for P1 closure.
