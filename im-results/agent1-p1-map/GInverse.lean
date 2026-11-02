@@ -52,6 +52,31 @@ theorem GAncestor_complete (k c b d : Nat) (h:G k c=(b,d))
           subst c
           exact GAncestor.upper k d
 
+/-- Each inverse recursion exactly halves the shifted right counter.
+    In particular its depth is constrained by the powers of two in the output. -/
+theorem GAncestor_power (b d k c:Nat) (h:GAncestor b d k c) :
+    ∃ t:Nat, d + b/2 + 3 = 2^t*(c+3) := by
+  induction h with
+  | upper k d =>
+      refine ⟨0,?_⟩
+      simp
+      omega
+  | nest b d k c h ih =>
+      obtain ⟨t,ht⟩ := ih
+      refine ⟨t+1,?_⟩
+      rw [Nat.pow_succ]
+      calc
+        d+b/2+3 = 2^t*((2*c+3)+3) := ht
+        _ = (2^t*2)*(c+3) := by
+          have heq : (2*c+3)+3=2*(c+3) := by omega
+          rw [heq,Nat.mul_assoc]
+
+theorem G_input_power (k c b d:Nat) (h:G k c=(b,d)) (hb:0<b) :
+    ∃ t:Nat, d + b/2+3 = 2^t*(c+3) :=
+  GAncestor_power b d k c (GAncestor_complete k c b d h hb)
+
+#print axioms BB6.P1Reduction.GAncestor_power
+#print axioms BB6.P1Reduction.G_input_power
 #print axioms BB6.P1Reduction.GAncestor_sound
 #print axioms BB6.P1Reduction.GAncestor_complete
 end BB6.P1Reduction
