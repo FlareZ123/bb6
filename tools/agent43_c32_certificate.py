@@ -86,7 +86,7 @@ def gen():
         base = src["CCert16Pure.lean"]
         base = base.replace("def modulus : Nat := 16","def modulus : Nat := 32")
         base = base.replace("def N : Nat := 24","def N : Nat := 40")
-        base, count = re.subn(r"def rows : Array Nat := #\\[[^]]*\\]",
+        base, count = re.subn(r"def rows : Array Nat := #\[[^]]*\]",
                               "def rows : Array Nat := #["+", ".join(map(str,rows))+"]",base)
         assert count == 1
         write(ROOT/"CCert32Pure.lean",base)
