@@ -23,4 +23,5 @@ jobs:
           export LEAN_PATH=.
           lean -o BB6Coverage.olean BB6Coverage.lean
           lean -o SparseCoverage.olean SparseCoverage.lean
-          lean LassoCoverage.lean
+          lean -o LassoCoverage.olean LassoCoverage.lean
+          lean ShiftCoverage.lean
