@@ -137,3 +137,21 @@ The forward direction is the earlier established invariant. **The new converse**
 All four cases are **if-and-only-if**, with every feasible arithmetic pair producing a real source transition. They exhaust every direct source branch and every recursive bounce, unbounded in both input counters and recursion depth. The proof directly composes the new `bounce_even_output_exact` with source case analysis and the prior original-source odd-bounce invariant. The full-original-source Lean 4.36.0-rc2 [manual CI run 41514385714](https://github.com/FlareZ123/bb6/actions/runs/41514385714) **passed**, standard Lean axioms only.
 
 This is a general exact inverse grammar for a full infinite output quadrant, stronger in scope than the fixed affine `(12t,10t-1)` family and earlier finite inverse sieves. The full Machine C blank-orbit halting decision remains open. Future research should apply this to complete symbolic antecedents of Agent15's odd-a halting locus, using actual blank-orbit invariants rather than mere numerical modular exclusions.
+
+## Exact inverse grammar for both recursive bounce branches and all y≥5 section returns
+
+[**BounceOddExact.lean**](./BounceOddExact.lean) proves a full **converse** to the earlier one-way odd-bounce invariant: for all odd K and right output y≥4,
+```text
+(bounce K c).2=some (x,y)
+ ↔ ∃ n:Nat, x+y=2^n*(2*K+6) ∧
+              c+(2*K+6)+3*n=x+2*y.
+```
+The proof constructs the exact reverse odd-counter recursion with source-defined `oddLiftK/C`, independently of any depth bound. Its original unmodified-source Lean 4.36.0-rc2 [CI 41514882527](https://github.com/FlareZ123/bb6/actions/runs/41514882527) **succeeded** with ordinary axioms only. This complements `BounceEvenExact.lean`: **both** surviving recursive source branches now have full, mathematically complete sum/cost inverse equations, each with its required terminal guard.
+
+[**FullSectionInverse.lean**](./FullSectionInverse.lean) composes the two bounce iff theorems with an exhaustive source case split into `sectionPreimageCriterion a k x y`. For every natural source `a,k`, natural output `x,y` with **y≥5**:
+```text
+secNext (a,k)=some (x,y) ↔ sectionPreimageCriterion a k x y.
+```
+The predicate has exact source-specific exceptional and direct cases, and uses one arbitrary recursion-depth witness `n` with two explicit arithmetic equations per branch. The proven converse guarantees *every* arithmetic solution yields a genuine original-section transition. [**Full source CI 41515256605**](https://github.com/FlareZ123/bb6/actions/runs/41515256605) **passed** with standard axiom audit only. This provides a complete, quantified source inverse for the whole positive-large second-counter sector, going beyond the even-first, odd-second subset in `SectionOddInverse.lean`.
+
+Neither a growing library of predecessor iff theorems nor these exact normal forms establish a global blank-orbit exclusion. Open objective: combine with a useful forward-reachable invariant or symbolic well-founded backward argument that blocks **all** Machine C halting inputs, then address remaining BB(6) holdouts and universal coverage.
