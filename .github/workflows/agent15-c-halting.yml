@@ -1,4 +1,4 @@
-name: Agent 15 Machine C exact halting locus (manual)
+name: Agent 15 Machine C exact halting locus and quotient composition (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -6,7 +6,7 @@ permissions:
 jobs:
   verify-original-source:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -14,20 +14,59 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile unchanged Machine C source with Agent 15 proofs
+      - name: Reconstruct M8 and M16 source-certified quotient certificates
         run: |
           mkdir -p /tmp/agent15-c-check
-          cp im-results/agent11-c-line/CLine.lean /tmp/agent15-c-check/
+          cd /tmp/agent15-c-check
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert8.tar.xz.b64" > c-cert8.tar.xz
+          echo "8a9a54fd96c81aaffcb3c06a941cabb06fe0aaa7387b8834ef0d72fbd2acec42  c-cert8.tar.xz" | sha256sum -c -
+          tar -xJf c-cert8.tar.xz
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert16.tar.xz.b64" > c-cert16.tar.xz
+          echo "1cc951976c75457e35dd6ab62888cfced14e64fbf3c067d4de14f7af2fba540e  c-cert16.tar.xz" | sha256sum -c -
+          tar -xJf c-cert16.tar.xz
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge8.lean" CSourceBridge8.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge16.lean" CSourceBridge16.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod8SevenFour.lean" Mod8SevenFour.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean" Mod16OneTwo.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16First.lean" Mod16First.lean
+      - name: Kernel verify M8 and M16 quotient source chains
+        run: |
+          cd /tmp/agent15-c-check
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CCert8Pure.olean CCert8Pure.lean
+          seq 0 15 | xargs -P 3 -I '{}' sh -c 'lean -o PBlock{}.olean PBlock{}.lean'
+          lean -o CGlobal8.olean CGlobal8.lean
+          lean -o CQuotientSound8.olean CQuotientSound8.lean
+          lean -o CMapIf8.olean CMapIf8.lean
+          lean -o CFull8.olean CFull8.lean
+          lean -o CExclusions8.olean CExclusions8.lean
+          lean -o CSourceBridge8.olean CSourceBridge8.lean
+          lean -o Mod8SevenFour.olean Mod8SevenFour.lean
+          lean -o CCert16Pure.olean CCert16Pure.lean
+          seq 0 23 | xargs -P 3 -I '{}' sh -c 'lean -o P16Block{}.olean P16Block{}.lean'
+          lean -o CGlobal16.olean CGlobal16.lean
+          lean -o CQuotientSound16.olean CQuotientSound16.lean
+          lean -o CMapIf16.olean CMapIf16.lean
+          lean -o CFull16.olean CFull16.lean
+          lean -o CExclusions16.olean CExclusions16.lean
+          lean -o CSourceBridge16.olean CSourceBridge16.lean
+          lean -o Mod16OneTwo.olean Mod16OneTwo.lean
+          lean -o Mod16First.olean Mod16First.lean
+      - name: Compile exact Agent 15 section and original-source bridge
+        run: |
+          mkdir -p /tmp/agent15-c-check
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/agent15-c-check/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/agent15-c-check/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent15-c-check/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent15-c-check/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent15-c-check/
-          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse,SectionDyadic,ReachAffine,AffineNormalize,AffineExclusion,NormalizedGateway}.lean /tmp/agent15-c-check/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse,SectionDyadic,ReachAffine,AffineNormalize,AffineExclusion,NormalizedGateway,M8M16Composition}.lean /tmp/agent15-c-check/
           cd /tmp/agent15-c-check
           export LEAN_PATH="."
-          lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting; do
+          for f in GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting; do
             lean -o "$f.olean" "$f.lean"
           done
           lean -o SectionHalting.olean SectionHalting.lean
@@ -40,5 +79,6 @@ jobs:
           lean -o SectionDyadic.olean SectionDyadic.lean
           lean -o ReachAffine.olean ReachAffine.lean
           lean -o AffineNormalize.olean AffineNormalize.lean
-          lean AffineExclusion.lean
-          lean NormalizedGateway.lean
+          lean -o AffineExclusion.olean AffineExclusion.lean
+          lean -o NormalizedGateway.olean NormalizedGateway.lean
+          lean M8M16Composition.lean
