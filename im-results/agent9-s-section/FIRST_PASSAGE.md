@@ -68,6 +68,23 @@ For either known height-three root, \(k=4\). Exact rational sign evaluations at 
 
 The complement's 3-adic probability is therefore above 0.9874213326113. This is a statement about randomized *synthetic* starting counters, **not a probability that the particular q=17 or q=141 Turing machine will not halt**. Conditional on any given finite nontransferring digit prefix ending at height h, the future-transfer probability is exactly \(\rho^{h+1}\).
 
+
+## Uniform exponentially decaying finite-transfer tail
+
+The exact cycle-lemma count gives an immediate **all-horizon bound with an extra 1/n prefactor**, sharper than the earlier pure exponential tilt bound. For any real \(t>0\) such that \(\alpha(t)=(1+t^5+t^7)/(3t)<1\), and all \(n\ge k=h+1\):
+
+\[
+\frac{A_{n,h}}{3^n}\le \frac{k}{n} t^k\alpha(t)^n.
+\]
+
+Indeed, if \(B\) is the unrestricted multinomial count of words with \(5a+7b=n-k\), the nonnegative-coefficient polynomial \((1+t^5+t^7)^n\) contains \(B t^{n-k}\) among its terms. Thus \(B t^{n-k}\le(1+t^5+t^7)^n\), and the exact first-passage factor k/n yields the inequality. Consequently, for any \(N\ge k-1\),
+
+\[
+\Pr(N<\tau<\infty)\le\frac{k\,t^k\alpha(t)^{N+1}}{(N+1)(1-\alpha(t))}.
+\]
+
+Taking \(t=15/22\) gives the exact rational \(\alpha=3032754763/5102095680<1\); at h=3 the bound for transfer *after* step 100 is under \(3.216\times 10^{-25}\) in the uniform 3-adic symbolic model. This is an explicit **unconditional tail over randomized starting counters**, and says nothing deterministic about q17 or q141. The exponent is near-optimal within polynomial tilting: \(\alpha(t)\) attains its minimum at the unique positive \(t_*\) solving \(4t_*^5+6t_*^7=1\); approximately \(t_*=0.681773663149\), \(\alpha(t_*)=0.594413535584\). The derivation uses only finite multinomial expansion and a geometric series, with no numerical asymptotic assumption. Relative to the existing [GenericTail](./TailMass.md) rational tilt, the exact first-passage formula supplies the further k/n factor.
+
 ## Topological consequence: a fat 3-adic survival set
 
 For fixed initial height h, the set E of 3-adic starting counters with a finite-time S transfer is a union of finite congruence cylinders, hence open. By the existing explicit dense-transfer cylinder construction (see [DigitalAperiodic](./DigitalAperiodic.md)), **E is dense**. Its complement N, the set of section inputs whose digit streams never transfer, is closed and nowhere dense. The new exact probability gives
