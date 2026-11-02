@@ -1,0 +1,31 @@
+name: Agent 3 Machine C bounce inverse arithmetic (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bounce-inverse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify against original unmodified section and bounce source
+        run: |
+          mkdir -p /tmp/a3-bounce
+          cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a3-bounce/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-bounce/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc}.lean /tmp/a3-bounce/
+          cp im-results/agent3-c-bounce-inverse/BounceInverse.lean /tmp/a3-bounce/
+          cd /tmp/a3-bounce
+          export LEAN_PATH="."
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean BounceInverse.lean
