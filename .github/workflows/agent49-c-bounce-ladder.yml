@@ -24,6 +24,7 @@ jobs:
           cp im-results/agent46-c-jump/JumpHigh.lean /tmp/a49-ladder/
           cp im-results/agent49-c-bounce-ladder/Ladder.lean /tmp/a49-ladder/
           cp im-results/agent49-c-bounce-ladder/LadderSection.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/EvenLadder.lean /tmp/a49-ladder/
           cd /tmp/a49-ladder
           export LEAN_PATH="."
           lean --version
@@ -31,3 +32,4 @@ jobs:
           lean -o JumpHigh.olean JumpHigh.lean
           lean -o Ladder.olean Ladder.lean
           lean LadderSection.lean
+          lean EvenLadder.lean
