@@ -103,6 +103,55 @@ theorem parent_neq (t s u : Nat) (_hs : s≤t) (_hu : u≤t) (h : s≠u) :
     have hh := parent_first_strict u s hgt
     omega
 
+/-- For any r and any even-factor u≥2, this source is a genuine
+    original Machine C high-even section predecessor of (0,8*4^r*u).
+    It strictly extends the earlier dyadic subfamily u=2*4^s. -/
+theorem general_zero_even_parent (r u : Nat) (hu : 2≤u) :
+    secNext (2*u-2,8*4^r*u-(u+4+3*r)) = some (0,8*4^r*u) := by
+  let Q : Nat := 4^r
+  let Y : Nat := 8*Q*u
+  let a : Nat := 2*u-2
+  let k : Nat := Y-(u+4+3*r)
+  let K : Nat := a-1
+  have hR : r+1≤Q := parent_four_ge r
+  have hQ : 1≤Q := Nat.one_le_pow r 4 (by decide)
+  have hU : u≤Q*u := by
+    have hh:=Nat.mul_le_mul_right u hQ
+    omega
+  have hru : r≤Q*u := by
+    have h1 : r≤Q := by omega
+    have h2 := Nat.le_mul_of_pos_right Q (by omega : 0<u)
+    omega
+  have hA : a+2=2*u := by dsimp [a]; omega
+  have hY : Y=8*(Q*u) := by dsimp [Y]; ac_rfl
+  have hk : k+(u+4+3*r)=Y := by dsimp [k]; omega
+  have ha : 2≤a := by omega
+  have hk1 : 1≤k := by omega
+  have hreg : a<2*k := by omega
+  have hK : K%2=1 := by dsimp [K]; omega
+  have hy : 4≤Y := by dsimp [Y]; omega
+  have hnum : 2^(2*r+1)=2*Q := by
+    rw [show 2*r+1=(2*r)+1 by omega,Nat.pow_succ,parent_two_pow_double]
+    omega
+  have hsum : 0+Y=2^(2*r+1)*(2*K+6) := by
+    have hh : 2*K+6=4*u := by omega
+    rw [hh,hnum]
+    dsimp [Y]
+    calc
+      0+8*Q*u = (2*4)*Q*u := by simp
+      _ = (2*Q)*(4*u) := by ac_rfl
+  have hcost : (2*k-a+3)+(2*K+6)+3*(2*r+1)=0+2*Y := by omega
+  have hb : (bounce K (2*k-a+3)).2=some (0,Y) := by
+    exact (bounce_odd_output_exact K (2*k-a+3) 0 Y hK hy).mpr
+      ⟨2*r+1,hsum,hcost⟩
+  change secNext (a,k)=some (0,Y)
+  simp only [secNext,exactSection,if_neg (by omega:a≠0),
+    if_neg (by omega:a≠1),if_neg (by omega:k≠0),
+    if_neg (by omega:¬2*k≤a)]
+  exact hb
+
+#print axioms general_zero_even_parent
+
 #print axioms unbounded_source_parent
 #print axioms family_parent
 #print axioms parent_neq
