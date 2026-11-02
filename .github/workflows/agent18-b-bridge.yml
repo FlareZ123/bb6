@@ -41,5 +41,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BParity.lean" BParity.lean
           lake env lean -o .lake/build/lib/lean/Agent18BReduction.olean Agent18BReduction.lean
           lake env lean -o .lake/build/lib/lean/BRun.olean BRun.lean
-          lake env lean Agent18BBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent18BBridge.olean Agent18BBridge.lean
           lake env lean BParity.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BOneDim.lean" BOneDim.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18OneDimBridge.lean" Agent18OneDimBridge.lean
+          lake env lean -o .lake/build/lib/lean/BOneDim.olean BOneDim.lean
+          lake env lean Agent18OneDimBridge.lean
