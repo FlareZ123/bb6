@@ -1,19 +1,19 @@
 # Agent 50: P1 critical indices n ≡ 10 (mod 16)
 
-**Status:** novel within the shared repository, intermediate all-time reachability exclusion for a published BB(6) counter map. The exact six-state Busy Beaver value remains unknown. The proofs have compiled under Lean 4.36.0-rc2 against *signature-matching local mirrors* of the exact Agent 1 definitions, while imported Agent 1 invariant theorems in the local mirror were represented by axioms. The actual repository `ResetGate.lean` and `PosEvenForm.lean` prove these invariants; full-source integration and axiom audit remain to be performed before claiming a kernel-checked result against the genuine import chain.
+**Status:** intermediate all-time reachability exclusion for a published BB(6) counter map, novel within the shared repository. The exact six-state Busy Beaver value remains unknown. A local Lean 4.36.0-rc2 verification now compiles every necessary Agent 1 invariant proof in full, recreated verbatim from the repository definitions and relevant theorem bodies, and checks the final target theorem with standard axioms only. A separate compilation with the unmodified GitHub files themselves is still desirable for independent integration validation.
 
 Machine: `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE`; initial accelerated hub `(2,1)`.
 
 ## Main result
 
-`BB6.Agent50P1.blank_no_residual_critical_10_mod16`:
+`BB6.Agent50P1.blank_no_residual_critical_10_mod16` proves the odd-sector feeder is unreachable. The stronger `BB6.Agent50P1.blank_no_critical_10_mod16` proves the full halting-critical hub is unreachable from actual entry `(2,1)`:
 
 ```lean
 ∀ k : Nat,
-  ¬BB6.Agent1.Reach (14*2^(16*k+10)-2*(16*k+10)-16) 3
+  ¬BB6.Agent1.Reach 2 (14*2^(16*k+10)-2*(16*k+10)-10)
 ```
 
-Agent 19's independent `residual_critical_gateway` theorem establishes that, for these critical indices, halting-critical hub reachability is equivalent to reaching this odd-right `c=3` feeder. Consequently, once the Agent 1/Agent 19 reachability representations are formally bridged, this excludes every `n≡10 (mod 16)` critical target from the *real blank-tape orbit*. This is a proper infinite subset of the residual `n≡2 (mod 4)` family. **The remaining residual classes (n mod 16 equal to 2, 6, 14) remain open.**
+`P1Gate.lean` includes an independent within-Agent1 reachability proof `critical_target_implies_three` for every large `d%4=2`. This closes the full critical-target exclusion in the same `Reach` relation, without requiring Agent 19's different reachability predicate. The Agent 19 raw-machine equivalence remains the known semantic bridge to the original Turing machine. This excludes the entire `n≡10 (mod 16)` class of critical indices and leaves `n≡2,6,14 (mod 16)` open.
 
 ## Complete proof architecture
 
@@ -47,10 +47,11 @@ No search horizon, finite bound, probabilistic assumption, or `native_decide` is
 
 - `P1Triple.lean`: all three exact finite G-inverse enumerations, imports the existing `GInverse.lean` and its all-input completeness theorem.
 - `P1ResidualArithmetic.lean`: the parameter identity, congruences and power-sandwich theorem.
-- `P1ResidualReach.lean`: formally proves exact G transcription inversion from Agent 1 and the full blank-reachable exclusion, importing the actual `ResetGate.lean`, `P1Triple.lean`, `P1ResidualArithmetic.lean`.
+- `P1ResidualReach.lean`: proves exact G transcription inversion and the unreachable `c=3` feeders, importing `ResetGate.lean`, `P1Triple.lean`, `P1ResidualArithmetic.lean`.
+- `P1Gate.lean`: proves the critical-target-to-feeder reduction and the universal unreachability of the full halting-critical hub for every `n=16k+10`.
 
-The sources compiled locally with Lean 4.36.0-rc2 against minimal exact transcriptions of the imported types and `G,T,Reach` definitions. Local proof `#print axioms` on the final theorem contained `propext,Classical.choice,Quot.sound` plus three **mock-only** axioms standing in for real Agent 1 proofs: `Agent1.even_left_power_shape, Agent1.reachable_even_mod4, Agent1.odd_parent_general`. These three names are real verified theorem declarations in the repository's source files. Therefore the local proof test validates theorem composition conditional on these imported facts; recompile with the repository's unmodified real source chain to discharge them completely.
+The Lean 4.36.0-rc2 verification first compiled a signature-matching minimal import mock and then **replaced all mock axioms** with the complete original Agent 1 theorem bodies for `even_left_power_shape`, `reachable_even_mod4`, `odd_parent_general`, `T_to_two_positive`, `T_to_odd_zero`, together with the exact recursive G/T and Reach constructors, in local `PosEvenForm.lean` and `ResetGate.lean`. These were all locally compiled and audited. The resulting `P1Gate.lean` axiom output is exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. The local copies omit unrelated theorems from Agent 1's actual source, so run a final unmodified repository compile as independent reproduction; expected import order: `GParity`, `GInverse`, `PosEvenForm`, `ResetGate`, then Agent50's `P1Triple`, `P1ResidualArithmetic`, `P1ResidualReach`, `P1Gate` with all relevant directories in `LEAN_PATH`.
 
 Known strong upstream machine bridge: `im-results/agent19-p1-source-bridge/P1HaltingBridge.lean` and [manual CI run 41388451571](https://github.com/FlareZ123/bb6/actions/runs/41388451571).
 
-**Next decisive target:** full local/CI integration with unmodified Agent 1 modules, import Agent 19's exact residual gateway, prove both reachability predicates equivalent (or use the common raw-machine bridge) and then attack the remaining `n≡2,6,14 (mod 16)` families. Beware earlier independent exclusion of the odd and multiple-of-four critical-index families.
+**Next decisive target:** independent full-source CI integration with unmodified Agent 1 modules, reusing Agent 19's already certified raw-machine bridge, and then attack the remaining `n≡2,6,14 (mod 16)` families. Beware earlier independent exclusion of the odd and multiple-of-four critical-index families.
