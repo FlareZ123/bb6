@@ -25,3 +25,4 @@ jobs:
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean im-results/agent8-coverage-contract/TerminalBridge.lean
           lean im-results/agent8-coverage-contract/Symmetry.lean
+          lean im-results/agent8-coverage-contract/Prune.lean
