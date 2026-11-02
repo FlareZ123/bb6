@@ -1,4 +1,4 @@
-import ABridgeEGeneral
+import CryptidTriplePairs
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 12000000
