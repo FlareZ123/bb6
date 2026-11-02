@@ -50,3 +50,16 @@ Main `stops_iff_stronger_gates` (kernel accepted no sorry) proves halting iff �
 Exploration at 1 billion accelerated steps reveals c0 odd-a residue pair (a mod8,k mod8) (1,0) absent, suggesting a further j≡4 mod8 reset exclusion; not yet proved. Preliminary backwards chain: c0 (a,k) with a≡1mod8,k≡0mod8,k≥8 forces predecessor of high boundary (a+k-5,2,k-2) with left≡4mod8, so the only inbound route is high to (a+k-4,1,k-1), whose high k0 predecessor has even a and is impossible; therefore a preceding c0 state (a+k-2,(k-2)/2,0) is required, and its S mod4=2 may itself be a forbidden c0 residue. Needs careful machine-checked universal derivation. Empirical residues are not proofs.
 
 Original lease 2026-11-02T02:19:39Z, release threshold 03:29:39Z, check system clock after every checkpoint. Ensure lease deletion is LAST mutation.
+
+
+## New strongest result: mod8 reset exclusion (2026-11-02 ~03:25 UTC)
+
+Formal all-natural theorem `BB6CLine.reset_mod8_four_unreachable (j) (hj:j%8=4) : ¬Reach (2*j+1,3*j+4,0)`, and exact sharpened blank-entry stopping theorem `stops_iff_mod8_gates`, compiled in Lean 4.36.0-rc2 with standard axiom audit `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. Surviving reset indices have residues mod8 in {0,2,3,6,7}; side family still `Reach (0,4*n,24*n+23)` for n>=1. Machine remains open.
+
+Formal source: `im-results/agent11-c-line/MOD8-GATES.md`, plus preserved `mod8-lean.tar.xz.b64` and `reconstruct-mod8.py` (SHA-256 verified atomic). Original source files `MoreResidue.lean` (7264 bytes, SHA `dc6fe87cbf6c3b185997c5b5d7369e9c8a89bcf19729fbcf1f1ad876bfd7d475`) and `FinalGate.lean` (834 bytes, SHA `515d7e918642c93f16d70fc6e88cd9db626923b906eac6b7c83461331113d2a2`). Remote archive FNV32 0xdbfdf27b matches local file (3161 chars). README now links latest theorem; broadcast `communications/broadcast/2026-11-02T0325Z_agent11-mod8-gates.md`.
+
+Technique: exact all-natural backwards high-sweep to k2 hub for any c0 reset with k>=6, yielding `Reach(a+k-5,2,k-2)`. If k odd and (a+k)%4=2, this violates global parity invariant (k2 even, c=k-2 odd, S%4=3). Handle k=3 case with no-output theorem for (a,0,3). For target a%8=1,k%8=0,k>=8, unique backwards k2→k1→c0 preimages force a prior c0 state with sum 2 mod4 and odd k≥3, excluded by these two cases. Applying to reset j%8=4 gives infinite exclusion.
+
+**Highest value next**: derive return map for the c0 section `(a,k,0) → ... → (a',k',0)`; it involves a division by two in backwards forced branch and may allow general 2-adic descent of remaining reset residue classes. Do not mistake modular exclusions for complete machine decision. Check current claims against future inter-agent results.
+
+Lease timestamp immutable `2026-11-02T02:19:39Z`; 70-minute release threshold `2026-11-02T03:29:39Z`. Final repository mutation MUST delete `agents/agent11/.lease.json` after all useful state commits. Confirm git remote.
