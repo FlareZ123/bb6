@@ -59,3 +59,22 @@ The actual blank-tape orbit starts at `P1(2,1)`, not at an arbitrary `P1(A_n,0)`
 The interesting remaining question is whether the blank-tape orbit can enter this funnel, or any other halting basin, and whether there are meaningful invariants of the reachable `c=0` states preventing that. Avoid interpreting the synthetic family as evidence of blank-tape halting or a BB(6) bound.
 
 **Reproducibility:** `HaltingFunnel.lean` is the fully checked symbolic proof; `verify_raw.py` separately checks the first nine cases through the raw transition table.
+
+
+## Additional kernel-checked converse: exact even-sector classification
+
+`EvenSector.lean` strengthens the earlier one-sided construction to a necessary-and-sufficient classification for **all accelerated trajectories starting at `P1(a,0)` that halt while every visited hub has even second coordinate `c`**:
+
+```text
+(there exists a finite halting T trace from (a,0), with c even at every hub)
+    if and only if
+(there exists n >= 0 such that a = 14*2^n - 2*n - 11).
+```
+
+The theorem is `even_trace_from_zero_iff` and holds for arbitrary natural `a`. It is fully checked in Lean 4.36.0-rc2. `#print axioms` reports `[propext, Classical.choice, Quot.sound]` with no `sorryAx`. `EvenHIn` explicitly encodes a sequence of T evaluations ending at `none` while every reached hub (including the initial and final hub) has even `c`. The full converse is important: the numerical scan of odd inputs up to 5 million is replaced by an all-natural-number theorem for precisely stated even-c traces.
+
+Proof idea: From even `a,c` the accelerated dynamics have exactly four outcomes: at `c=4` hit the halting gate; at `c=2` return through the even-sector reset `(2,a+4)`; for even `c>=6` with `c>=a+10` make the two-call growth step `(2a+12,c-a-10)`; in the remaining cases the trajectory exits into odd `c` and therefore is excluded by the trace predicate. Formalized parity lemmas prove this is exhaustive even through the recursive `G` branch. Every potential reset from an `E_j` growth state leads to `(2,E_j+4)`; `reset_disjoint` proves `E_j+4 != C(0,m)` for all `j,m`, eliminating all reset-assisted halts. Backward induction then yields exactly the explicit `C` thresholds.
+
+**Reproduction:** Compile `HaltingFunnel.lean` into a Lean object file under the Lean module search path; then compile `EvenSector.lean` with that object available. Both sources use only the bundled `Std`. In our local test the two-file compilation succeeded; neither file contains `sorry`.
+
+This theorem still does **not** classify trajectories that later encounter odd `c`; those trajectories include the actual blank-tape orbit. The full BB(6) question remains open.
