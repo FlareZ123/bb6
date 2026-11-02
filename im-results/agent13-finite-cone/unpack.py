@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "FiniteCone.lean.xz.b64"
 TARGET = ROOT / "FiniteCone.lean"
 LOCK = ROOT / "FiniteCone.lean.lock"
-EXPECTED = "bfacc8f58000c410da4777b945a522ddbbe8b1f692dd984785de0f876ff1d644"
+EXPECTED = "d3da96644529df55c4aa88ad7ebf17e002fb936940e874c3ae86700b48b6ddc6"
 
 def unpack() -> None:
     fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
