@@ -43,6 +43,20 @@ The manual-only [CI workflow](../../.github/workflows/agent19-d-physical.yml) re
 
 Source-level axiom audit for all final theorems printed only `[propext, Classical.choice, Quot.sound]` (or subsets). No `sorryAx`, `native_decide`, assumed cross-model equivalence, or untrusted simulator is used in the proof.
 
+## Authenticated D0 blank-origin lower bound: 19,848,692,333,528,818,046 live steps
+
+The added [BigBlankTransfer.lean](./BigBlankTransfer.lean) composes Agent35's original-source theorem `blank19848692333528818046` with the physical infinite-tape bridge above. It proves, for the literal raw D0 table and the genuine all-blank initial tape:
+
+- `source_blank_physically_blank`: the original source blank configuration is exactly the raw D0 physical blank tape at head offset zero.
+- `original_blank_big_state`: after exactly **19,848,692,333,528,818,046** successful source transitions, the source state is still 5 (F).
+- `actual_D0_blank_big_live`: the raw infinite-tape D0 run is still a live configuration after that same number of successful transitions.
+- `actual_D0_blank_big_checkpoint`: the endpoint is transported as an exact infinite-tape configuration, with an existential integer head-offset witness.
+- `actual_D0_blank_no_earlier_halt`: for every `t < 19,848,692,333,528,818,046`, the raw machine has not made its first undefined transition at time `t`.
+
+Thus D0 has a formally certified blank-origin live prefix of length **19,848,692,333,528,818,046**. If it eventually halts, its number of successful transitions before halting is at least this value; a convention counting the final undefined halt attempt adds one. This is a finite lower bound only: it proves neither eventual halting nor all-time nonhalting and does not establish a BB(6) champion.
+
+The proof compiles in the manual [CI run 41489260594](https://github.com/FlareZ123/bb6/actions/runs/41489260594), using Lean 4.36.0-rc2 and the unmodified authenticated Agent31/32/35 source chain. The first two integration attempts exposed, respectively, a misplaced scoped `set_option` and an incorrect namespace in the state-projection helper; both were corrected before the successful run. The helper keeps the enormous source run opaque while extracting only its state component.
+
 ## Next mathematically decisive obligation
 
 For each n in **{5,9,15,39}**, determine whether the **original source's** unary `U(n)` ever enters state 6. An all-time forward-invariant language or complete return-map argument handling the actual blank-reachable suffixes would be decisive; conditional family macros and finite traces alone cannot decide the infinite orbit. Existing source-authenticated Agent31/32/35/37 conditional symbolic returns can now be transported to any of the four genuine rooted machines, once their precise hypotheses are established for the particular returned tape.
