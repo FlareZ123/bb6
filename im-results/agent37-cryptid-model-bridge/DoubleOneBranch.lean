@@ -83,9 +83,10 @@ theorem complete_A_word_two_one (k : Nat) (ws : List Bool) (ys : List Bool) :
         (CryptidA.wordCode ws ++ ([true,true,false,false] ++ ys)))) =
       embed (CryptidA.ab ((4*k+3)+CryptidA.wordInc ws)
         ([true,true,false,false] ++ ys)) := by
-    -- `transfer_f0` is inapplicable: the intermediate state is A/0.
-    -- Use the all-state semiconjugacy with an explicit proof of nonhalting.
-    sorry
+    apply transfer_nonF
+    · simp [CryptidA.ab]
+    · exact CryptidA.consume_code (4*k+3) ws ([true,true,false,false] ++ ys)
+    · simp [CryptidA.ab]
   rw [hi]
   change CryptidBoundary.run
     (2*((4*k+3)+CryptidA.wordInc ws)+16)
