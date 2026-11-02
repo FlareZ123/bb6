@@ -1,6 +1,6 @@
 # Uniform predecessor-valuation cutoff for symbolic Sheep families with arbitrary coefficients
 
-**Status:** new intermediate mathematical tool, with complete written modular proof and reproducible exact-integer tests. A small persistence sublemma is Lean-kernel-checked locally; the full all-exponent modular obstruction has **not yet been formalized**. Existing Agent 14 results already give the stronger special-case c=3 immediate-parent table, and Agent 17's earlier symbolic sieve handles c=1. This note generalizes the *symbolic family language* to all c>0, including nonzero offsets b and arbitrary odd denominators d. It does not classify a blank orbit, determine the Sheep Machine's behavior, or improve a BB(6) bound.
+**Status:** new intermediate mathematical tool, with complete written proof and **Lean-kernel-checked all-exponent modular gap** in [GeneralOddGap.lean](./GeneralOddGap.lean), plus exact-integer tests. The abstract tail-persistence lemma is also Lean checked. The full machine-to-symbolic-inverse framework has not yet been composed in Lean. Existing Agent 14 results already give the stronger special-case c=3 immediate-parent table, and Agent 17's earlier symbolic sieve handles c=1. This note generalizes the *symbolic family language* to all c>0, including nonzero offsets b and arbitrary odd denominators d. It does not classify a blank orbit, determine the Sheep Machine's behavior, or improve a BB(6) bound.
 
 ## Setup and theorem
 
@@ -17,7 +17,7 @@ Here `K(a)` is always odd, even when b is negative. Write `M(a)=2^(a+1)+1`. In p
 
     c*2^(j+s+1) ≡ K(a) (mod M(a)).            (2)
 
-**General odd-remainder gap theorem.** For every c>=1, a>=0, odd integer K, and `M=2^(a+1)+1`, if
+**Kernel-checked general odd-remainder gap theorem** (`BB6Sheep17Gap.no_power_signed_gap`). For every c>=1, a>=0, odd integer K, and `M=2^(a+1)+1`, if
 
     c < K,    M > c*(c+K)+K,                 (3)
 
@@ -60,8 +60,12 @@ For unshifted integer targets `Y(j)=c*2^j` with b=0,d=1, the conservative genera
 
 Some are intentionally weaker than specialized exact classifications, notably Agent 14's c=3 bound a<=3. Unlike the special-case proofs, the same algorithm applies to arbitrary rational-exponential symbolic descendants including b!=0.
 
-Run `python symbolic_odd_coefficient.py` (Python 3.10+, standard library only). In a local Python 3.11 run it passed **7,728** exact high-valuation cutoff/complete-modulus-period tests, across 23 coefficients, 7 signed offsets and 4 odd denominators, plus **20,000** exact algebra and genuine generic section-edge tests with seed 17062026. The tests are finite regression evidence; the elementary proof above establishes the all-exponent exclusion. `GeneralTailPersistence.lean` was independently compiled with Lean 4.36.0-rc2 locally and its axiom report was `[propext, Quot.sound]`.
+Run `python symbolic_odd_coefficient.py` (Python 3.10+, standard library only). In a local Python 3.11 run it passed **7,728** exact high-valuation cutoff/complete-modulus-period tests, across 23 coefficients, 7 signed offsets and 4 odd denominators, plus **20,000** exact algebra and genuine generic section-edge tests with seed 17062026. The tests are finite regression evidence; the all-exponent modular exclusion is now independently **proved in Lean 4.36.0-rc2** in `GeneralOddGap.lean` under the name `no_power_signed_gap`. Its full proof was compiled locally, and the final axiom audit listed only `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. `GeneralTailPersistence.lean` separately compiled locally with `[propext, Quot.sound]`.
 
 ## Scope and next constructive application
 
 The bound eliminates the unbounded valuation parameter when building a finite backward tree for any fixed coefficient-c symbolic target. It **does not** eliminate every predecessor, including arbitrary-depth zero-valuation corridors. A future extension of `symbolic_sieve.py` can track `(c,s,b,d)` and exploit the uniform cutoff, while using the exceptional `u=3` branch separately and retaining source reachability checks. To make progress toward full Sheep closure, use the generalized families to discover a valid forward reachable-set invariant from 5 or an unbounded-depth argument. Do not interpret increased finite residue coverage as proof of a machine decision.
+
+## Further uniformity
+
+[EXCEPTIONAL-TAIL.md](./EXCEPTIONAL-TAIL.md) independently establishes an explicit all-exponent cutoff for exceptional `u=3` parents of **every** fixed positive-coefficient symbolic family. Combined with the generic `a<A` theorem here, both branching mechanisms are controlled above a computable exponent threshold. This produces a genuinely reusable finite-local-branch algorithm, while leaving arbitrary inverse depth and the blank-origin reachability problem unresolved.
