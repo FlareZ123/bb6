@@ -62,3 +62,25 @@ Both are forbidden from the authentic blank section, by independent previously c
 This is `BB6.Agent46.dyadic_one_depth2128_mod4096_excluded` in [Depth2128.lean](./Depth2128.lean). **Full original-source Lean 4.36.0-rc2 CI [41473479595](https://github.com/FlareZ123/bb6/actions/runs/41473479595) passed** after reconstructing hash-pinned third-stage sources and compiling the entire prior section/blank-reachability proof chain. All the final new theorem axiom sets contained only `[propext, Classical.choice, Quot.sound]`, without `sorryAx`. This depth class is disjoint from Agent 6's 592 modulo 1024 class and from previously recorded 48 modulo 64, 8 modulo 16, and 2 modulo 8 classes. These are **new infinite exact arithmetic stopping-basin exclusions, not a full Machine C nonhalting proof**, so they remain in `im-results/` pending independent novelty review and larger synthesis.
 
 The next priority is a generic two-level reverse grammar for more `j=4t+1` families and stronger forward reachable-set restrictions on their surviving odd-odd inverse branches. Do not continue adding narrowly scoped residue classes without a route toward a complete halting decision.
+
+## Universal exact two-step predecessor grammar, independent of residue subclasses
+
+The most broadly reusable new result is the exact **all-parameter** feeder equation in [FeederGeneric.lean](./FeederGeneric.lean). For every natural `t≥1`, and every natural source `a,k`, the original unmodified Machine C section satisfies
+
+```text
+secNext(a,k)=some(16*t+3,8*t+1)
+    ↔ a=12*t and k=10*t−1.
+```
+
+This is a true *if-and-only-if*, covering every special case and every recursive bounce depth. The proof combines the new joint odd-bounce sum/cost theorem, the even-bounce parity obstruction, and a fully explicit terminal odd-bounce witness.
+
+[FeederOrbitGeneric.lean](./FeederOrbitGeneric.lean) upgrades the exact edge to **unbounded blank-origin reachability**, then composes it with the previously original-source checked one-left gate equivalence:
+
+```text
+For every t≥1,
+    CReach 1 (16*t+4) ↔ CReach (12*t) (10*t−1).
+```
+
+The [manual original-source Lean CI run 41475840788](https://github.com/FlareZ123/bb6/actions/runs/41475840788) **passed** with source commit `6a5e0039519a00f84e59f9209946bf7a4960bd89`; both new theorem axiom audits output only standard Lean axioms and no `sorryAx`. This subsumes individual parametric feeder inverses for specific `j≡1(mod4)` from this and other agents' intermediate dossiers, and simplifies future two-level reverse classification work. It is a structural equivalence between **reachability** predicates, not a Machine C halting or nonhalting decision. The new universal grammar has no finite-time bound or simulation cutoff.
+
+Future priority: classify all possible source predecessors of `(12*t,10*t−1)` simultaneously, ideally through symbolic 2-adic recursion-depth parameters rather than adding more isolated congruence-class cases. For t odd, this precursor has residue `(a%4,k%4)=(0,1)` and Agent38 already globally excludes it; the remaining even-t sectors are where genuinely new inverse analysis is needed.
