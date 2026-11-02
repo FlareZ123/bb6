@@ -1,0 +1,51 @@
+name: Agent 26 D-start E-empty and authentic blank trace (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore original verified Agent 31 source
+        run: |
+          python -m pip install filelock
+          python im-results/agent31-cryptid-boundary/unpack.py
+      - name: Restore and authenticate Agent 26 E-empty source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import lzma
+          root = Path("im-results/agent26-cryptid-e-gate")
+          src = lzma.decompress(base64.b64decode((root / "EEmpty.lean.xz.b64").read_bytes()))
+          digest = hashlib.sha256(src).hexdigest()
+          assert digest == "f0e0b227fc7a50ef7dd6bbb09bbdc96a3d2aaca9d72f0ba68d187a99ad38561e", digest
+          (root / "EEmpty.lean").write_bytes(src)
+          print("Authenticated EEmpty.lean SHA-256:", digest)
+          PY
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Check unmodified Agent 31 imported original source chain
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate
+        run: |
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
+          lean -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
+      - name: Check Agent 26 universal E-empty return and source-level blank trace
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate
+        run: |
+          lean -o im-results/agent26-cryptid-e-gate/EEmpty.olean im-results/agent26-cryptid-e-gate/EEmpty.lean
+          lean im-results/agent26-cryptid-e-gate/EBlankTrace.lean
