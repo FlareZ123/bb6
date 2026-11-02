@@ -10,5 +10,12 @@ theorem source_blank_thin_cutoff (j n : Nat)
   rw [source_run_agrees] at h
   exact blank_thin_cutoff j n h
 
+theorem source_blank_thin_cutoff_clean (j n : Nat)
+    (h : sourceRun n (some (5,0,1)) = some (0,2*j,4*j+10)) :
+    n ≤ 16*j*(j+2)+11 := by
+  rw [source_run_agrees] at h
+  exact blank_thin_cutoff_clean j n h
+
 #print axioms source_blank_thin_cutoff
+#print axioms source_blank_thin_cutoff_clean
 end BB6Agent38
