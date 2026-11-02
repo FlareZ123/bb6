@@ -52,6 +52,10 @@ jobs:
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
           lean -o im-results/agent44-drift-closure/PrefixDrift.olean im-results/agent44-drift-closure/PrefixDrift.lean
           lean im-results/agent44-drift-closure/TransientExample.lean
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure"
+          lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
+          lean -o im-results/agent8-coverage-contract/LeafRules.olean im-results/agent8-coverage-contract/LeafRules.lean
+          lean im-results/agent44-drift-closure/BounceCycle.lean
           python im-results/agent44-drift-closure/census.py
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
