@@ -122,3 +122,16 @@ To verify the whole chain, compile successive Lean object files in this order wi
 The complete backwards decomposition is: `(2,16)` could only have predecessor `(15,0)`; that hub could only follow `(13,1)` or `(12,2)`. The first branch requires `(10,3)`, excluded by the global reached-hub modular invariant because 10 is neither 2 nor divisible by 4. The second branch forces `(3,10)` and then `(0,12)); the latter is impossible as a successor of any `T` state. A supporting all-natural `G` lemma proves every even output second coordinate comes from the immediate high branch, since any recursive step yields odd output. The standalone Lean proof classifies all possible predecessors, avoiding finite search bounds.
 
 Therefore the first two critical targets `(2,4)` and `(2,16)` are rigorously unreachable. The **third target `(2,42)` and all later targets remain unresolved**. These small exclusions are genuine blank-entry statements, not a decision of the six-state machine. The generalization of this backward certificate to infinitely many targets is a promising direction. Compile `NoSecondTarget.lean` after `NoFirstTarget.lean`.
+
+
+## Exact third-target gateway reformulation
+
+`ThirdTarget.lean` (imports `NoSecondTarget.lean`) proves another all-time blank-entry equivalence:
+
+```text
+BlankReach 2 42  ↔  BlankReach 36 3
+```
+
+The new theorem `third_critical_iff_gateway` was checked using Lean 4.36.0-rc2, standard axioms only, no `sorryAx`. The complete backwards alternatives from `(2,42)` reach `(41,0)`, which has predecessors `(39,1)` and `(38,2)`. The latter is excluded by the global positive-c modular invariant, since 38 is even and congruent to 2 mod4 but differs from 2. The former has unique predecessor `(36,3)`. Forward reachability is a direct three-call `T` trace.
+
+**The reachability of `(36,3)` remains open.** This theorem translates the first unclassified critical target into a single odd-counter gateway obligation, possibly more amenable to modular or automatic reachability certificates. The no-halt conclusion for the machine still has not been established.
