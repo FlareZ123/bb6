@@ -161,10 +161,10 @@ theorem next_reset_mod6_iff_pre_even (n : Nat) :
   have hp := Nat.mod_lt (iterG m 0) (by omega : 0<2)
   have hq := Nat.mod_lt (sampleZ n) (by omega : 0<2)
   have hodd := resetA_odd (n+1)
-  have h3 : resetA (n+1)%3 = sampleZ n%3 := by
-    dsimp [resetA]
-    omega
-  rw [hstep] at h3
+  have hre : resetA (n+1) = sampleZ n + 9 - 3*(sampleZ n%2) := rfl
+  have h3 : resetA (n+1)%3 = sampleZ n%3 := by omega
+  have hmod : resetA (n+1)%3 = (1+2*(iterG m 0%2))%3 := by
+    rw [h3, hstep, hg]
   rw [hm']
   constructor
   · intro he
