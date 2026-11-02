@@ -45,3 +45,13 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean SheepSourceBridge.lean
+
+          for name in InfiniteAncestry PeriodicAncestry GeneralAncestry; do
+            cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-infinite-inverse/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            InfiniteAncestry.lean PeriodicAncestry.lean GeneralAncestry.lean
+          for name in InfiniteAncestry PeriodicAncestry; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean GeneralAncestry.lean
