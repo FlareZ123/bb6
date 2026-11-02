@@ -148,6 +148,39 @@ theorem section_twostep_target_parent_residues (q a k : Nat)
             have hrel : (2*k-a+3)+a=2*k+3 := by omega
             exact even_back_target_restricted q (a-1) (2*k-a+3) a k heven hc hback ha hrel
 
+
+/-- The authentic blank section never visits the entire affine feeder-line
+    that can precede the new 128q+33 family. -/
+theorem blank_no_twostep_target_line (q : Nat) :
+    ¬ CReach (24*(16*q+4)) (20*(16*q+4)-1) := by
+  rintro ⟨time,hr⟩
+  cases time with
+  | zero =>
+      simp [BB6.Agent8Section.run] at hr
+      omega
+  | succ t =>
+      cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
+      | none => simp [BB6.Agent8Section.run,hp] at hr
+      | some p =>
+          rcases p with ⟨a,k⟩
+          have ht : secNext (a,k)=some (24*(16*q+4),20*(16*q+4)-1) := by
+            simpa [BB6.Agent8Section.run,hp] using hr
+          have hres := section_twostep_target_parent_residues q a k ht
+          have hodd : k%2=1 := by
+            rcases hres with ⟨_,hk⟩ | ⟨_,hk⟩ <;> omega
+          have hsum : (a+k)%4=2 := by
+            rcases hres with ⟨ha,hk⟩ | ⟨ha,hk⟩ <;> omega
+          have he := BB6Agent38.blank_section_mod4 t a k hp hodd hsum
+          have ha5 : a=5 := (Prod.mk.inj he).1
+          have hk1 : k=1 := (Prod.mk.inj he).2
+          have hbase : secNext (5,1)=some (3,4) := by decide
+          have hh : secNext (5,1)=some (24*(16*q+4),20*(16*q+4)-1) := by
+            simpa only [ha5,hk1] using ht
+          rw [hbase] at hh
+          omega
+
+#print axioms blank_no_twostep_target_line
+
 #print axioms oddBack_sum_even
 #print axioms section_twostep_target_parent_residues
 
