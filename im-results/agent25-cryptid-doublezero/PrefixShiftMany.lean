@@ -14,8 +14,11 @@ def liftStackN (z j : Nat) (c : Cfg) : Cfg :=
 theorem pairs_append (u v : Nat) :
     pairs (u+v) = pairs u ++ pairs v := by
   induction u with
-  | zero => rfl
-  | succ u ih => simp [pairs, ih, List.append_assoc]
+  | zero => simp [pairs]
+  | succ u ih =>
+    have h : u+1+v=(u+v)+1 := by omega
+    rw [h]
+    simp [pairs,ih]
 
 theorem lift_boundaryN (z m st j : Nat) (ys : List Bool) :
     liftStackN z j (boundary z m st ys) =
@@ -33,7 +36,12 @@ theorem prefixTime_multi (k phase j : Nat) :
     prefixTime (k+j) phase =
       prefixTime k phase + (12*j*j+(24*k+41)*j) := by
   unfold prefixTime
-  simp only [Nat.mul_add, Nat.add_mul]
+  have hx : 12*j*k = 12*k*j := by ac_rfl
+  have hy : 24*k*j = 12*k*j + 12*k*j := by
+    calc
+      24*k*j = (12*k+12*k)*j := by congr 1 <;> omega
+      _ = (12*k)*j+(12*k)*j := Nat.add_mul _ _ _
+  simp only [Nat.mul_add,Nat.add_mul]
   omega
 
 /-- Source-level all-j lift through the complete first-delimiter scan,
