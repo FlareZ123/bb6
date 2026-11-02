@@ -38,7 +38,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check unmodified upstream original machine and blank path
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
@@ -52,4 +52,9 @@ jobs:
           lean -o im-results/agent35-cryptid-code/ESixBlank.olean im-results/agent35-cryptid-code/ESixBlank.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankSixCheckpoint.olean im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
           lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
-          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankTripleCheckpoint.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankTripleCheckpoint.olean im-results/agent35-cryptid-code/BlankTripleCheckpoint.lean
+          lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
+          lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
+          lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
+          lean -o im-results/agent32-cryptid-padding/PaddedApplications.olean im-results/agent32-cryptid-padding/PaddedApplications.lean
+          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankBContin.lean
