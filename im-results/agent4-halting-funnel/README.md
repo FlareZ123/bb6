@@ -87,3 +87,29 @@ Two further sources added:
 - `GModular.lean`, importing `HaltingFunnel`, proves a residue dichotomy for all input `c≡1(mod 4)`: its output `(a',c')` has either `(a' mod8,c' mod4)=(0,1)` or `(4,3)`. This theorem is valid for every `k` and the full recursive `G`, not just finite samples.
 
 These results are a tractable phase reduction for the real blank-start orbit, with the remaining key obligation to prove that the concrete orbit never reaches a clean-halting gateway. They **do not** prove nonhalting. Compile `OddReturn.lean` after the first two compiled Lean modules; `GModular.lean` imports the first module only.
+
+
+## Kernel-checked global blank-entry criterion (strongest result as of this update)
+
+`Reachability.lean` proves that a `T` transition starting at an odd right counter can enter an even right counter only at `c=0`. At `c=0`, the next hub always has first counter 2. 
+
+`BlankCriterion.lean` proves the **full global biconditional** on the real blank-tape entry `P1(2,1)`:
+
+```text
+(∃ finite halting T trace from (2,1))
+    ↔
+(∃ n, finite T trajectory from (2,1)
+          reaches (2, 14*2^n - 2*n - 10)).
+```
+
+Formal theorem `blank_halts_iff_closed`, checked with Lean 4.36.0-rc2 and standard axioms only. The proof is an all-natural strong induction on halting-trace length: the odd-c sector keeps odd c or passes through zero, zero creates a new hub with a=2, and a positive even-c excursion either halts entirely in that sector (classified by `EvenSector.lean`) or reaches an odd-c hub with a shorter halting suffix. The converse uses the previously proved halting funnel and finite reachability concatenation.
+
+This is the formally verified version of the corresponding *informal* reduction in Agent 1's `im-results/agent1-p1-map/PHASE-CLASSIFICATION.md`. It is a genuinely blank-entry-relevant theorem, but it does not establish reachability or nonreachability of this infinite set. There is **no proof of BB(6)**.
+
+`BlankInvariants.lean` proves a reachable-state modular invariant from the actual initial hub: when a reached hub has positive c and even a, then either `a=2` or `a≡0 (mod 4)`. Its `BlankReach` forward-closure relation is proved equivalent to `ReachT 2 1` from `BlankCriterion.lean`.
+
+`NoFirstTarget.lean` proves **`blank_ne_first_critical : ¬ BlankReach 2 4`**, excluding the first member `(2,4)` of the critical family from the real blank orbit, for all finite times. The proof classifies all predecessors: `(2,4)` can only follow `(3,0)`, which can only follow `(1,1)` or `(0,2)`. Both are globally impossible successors under the exact `T`. This is a genuine all-time reachability exclusion, though a very small part of the infinite target set.
+
+`Mod8Gateway.lean` proves a residue restriction on `G`: if `k` is even and `c` odd, then `G(k,c).2 = 3` implies `G(k,c).1 ≡ 4 (mod 8)`. This helps analyze the observed odd reset mod-8 pattern without claiming it globally.
+
+To verify the whole chain, compile successive Lean object files in this order with `LEAN_PATH` pointing to their output directory: `HaltingFunnel.lean`, `EvenSector.lean`, `OddReturn.lean`, `Reachability.lean`, `BlankCriterion.lean`, `BlankInvariants.lean`, `NoFirstTarget.lean`. `GModular.lean` imports the first module and `Mod8Gateway.lean` imports `GModular`. Each final theorem's `#print axioms` shows standard Lean axioms and no `sorryAx`. Machine-to-counter semantic correctness is separately proved by the cited Google DeepMind module; this standalone proof series restates the counter map without importing DeepMind's package.
