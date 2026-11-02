@@ -37,7 +37,7 @@ jobs:
           lean -o BlankParam.olean BlankParam.lean
           lean -o SectionMod8.olean SectionMod8.lean
           lean -o SectionAffineInverse.olean SectionAffineInverse.lean
-          lean SectionDyadic.lean
+          lean -o SectionDyadic.olean SectionDyadic.lean
           lean -o ReachAffine.olean ReachAffine.lean
           lean -o AffineNormalize.olean AffineNormalize.lean
           lean AffineExclusion.lean
