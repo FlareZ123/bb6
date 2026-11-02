@@ -1,0 +1,24 @@
+name: Agent 8 Machine C billion-section empirical forward replication (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  finite-forward:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build C++ finite simulator with warnings
+        run: |
+          g++ -std=c++17 -O3 -Wall -Wextra im-results/agent8-c-total-section/fast_forward.cpp -o /tmp/a8-forward
+      - name: Run exact-step differential test on 10000 pseudorandom section inputs
+        run: |
+          /tmp/a8-forward --self-test
+      - name: Replicate experimental billion zero-section returns from blank
+        run: |
+          /tmp/a8-forward 1000000000 | tee /tmp/a8-forward.out
+          grep -F 'section=1000000000 a=358994343 k=3320495488 rank=6999985319 hash=6ca2dec99e9d8f93 macro=1750010467923799866' /tmp/a8-forward.out
