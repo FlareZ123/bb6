@@ -40,6 +40,11 @@ jobs:
           base64 -d "$SRC_PARITY/BParityWords.lean.xz.b64" | xz -dc > BParityWords.lean
           echo "d31a748aa486f7fba3e1ac62b26f4a8e1368e73a6cd45040af3a48efc4cf9625  BParityWords.lean" | sha256sum -c -
           LEAN_PATH="$GITHUB_WORKSPACE" lean BParityWords.lean
+          base64 -d "$SRC_PARITY/BBlockAffine.lean.xz.b64" | xz -dc > BBlockAffine.lean
+          echo "99e82c9be9ab62f8aab75b9f75bcd22ce781000e75f0d1b73dbe59dd72e3fbd7  BBlockAffine.lean" | sha256sum -c -
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o BBlockAffine.olean BBlockAffine.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean "$SRC_PARITY/BBlockAffineSource.lean"
+          python3 "$SRC_PARITY/fast_g.py"
           SRC="im-results/agent5-b-certified-prefix"
           GENERATED="$GITHUB_WORKSPACE/.generated-btrace"
           mkdir -p "$GENERATED"
