@@ -52,8 +52,50 @@ theorem complete_A_word (k : Nat) (ws : List Bool) (ys : List Bool) :
   rw [preA_embed_ab]
   exact boundary_a_word_close (4*k+3) ws ys
 
+/-- The unbounded word decoder also closes when the final zero is
+    implicit in the all-blank right half-line, not present as a list element. -/
+theorem a_word_close_nil (m : Nat) (ws : List Bool) :
+    CryptidA.run
+      (CryptidA.wordCost m ws + (2*(m+CryptidA.wordInc ws)+6))
+      (CryptidA.ab m (CryptidA.wordCode ws)) =
+    CryptidA.finish (2*(m+CryptidA.wordInc ws)+5) [] := by
+  have he := CryptidA.consume_code m ws ([] : List Bool)
+  simp only [List.append_nil] at he
+  rw [CryptidA.run_add, he]
+  exact CryptidA.a_close_nil _
+
+theorem boundary_a_word_close_nil (m : Nat) (ws : List Bool) :
+    CryptidBoundary.run
+      (CryptidA.wordCost m ws + (2*(m+CryptidA.wordInc ws)+6))
+      (embed (CryptidA.ab m (CryptidA.wordCode ws))) =
+    embed (CryptidA.finish (2*(m+CryptidA.wordInc ws)+5) []) := by
+  apply transfer_f0
+  · simp [CryptidA.ab]
+  · exact a_word_close_nil m ws
+  · rfl
+  · rfl
+
+theorem complete_A_word_nil (k : Nat) (ws : List Bool) :
+    CryptidBoundary.run
+      ((12*k*k+41*k+32) +
+       (CryptidA.wordCost (4*k+3) ws +
+        (2*((4*k+3)+CryptidA.wordInc ws)+6)))
+      (CryptidBoundary.init
+        (List.replicate (3*k+1) true ++ false :: CryptidA.wordCode ws)) =
+    embed (CryptidA.finish (2*((4*k+3)+CryptidA.wordInc ws)+5) []) := by
+  rw [CryptidBoundary.run_add, CryptidBoundary.prefix_A]
+  change CryptidBoundary.run
+    (CryptidA.wordCost (4*k+3) ws +
+      (2*((4*k+3)+CryptidA.wordInc ws)+6))
+    (CryptidBoundary.preA (4*k+3) (CryptidA.wordCode ws)) = _
+  rw [preA_embed_ab]
+  exact boundary_a_word_close_nil (4*k+3) ws
+
 #print axioms a_word_close
 #print axioms boundary_a_word_close
 #print axioms complete_A_word
+#print axioms a_word_close_nil
+#print axioms boundary_a_word_close_nil
+#print axioms complete_A_word_nil
 
 end BB6.CryptidBridge
