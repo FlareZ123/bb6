@@ -21,3 +21,16 @@ The workflow `.github/workflows/agent45-p1-cones.yml` is **manual dispatch only*
 To reproduce, base64-decode the archive and extract the two Python files, run `python emit.py 94 Cert94.lean source` with both files in the same directory, compile the original P1 import chain, then compile `Cert94.lean` and `Critical94.lean`. The workflow is the executable complete version of these steps. No Mathlib, oracle, finite time horizon, or `native_decide` is used.
 
 An important limitation is that the generator only handles complete finite inverse cones with coefficientwise fixed parity. Many candidate classes still fail this conservative test. This work reduces the effort required to **verify** Agent 4's many symbolic candidates, while a full P1 nonhalting proof still needs control of all remaining critical indices, including classes with parameter-dependent inverse parity.
+
+## Two additional original-source-certified residue classes (2026-11-02 10:07 UTC)
+
+A second manual workflow [41425740067](https://github.com/FlareZ123/bb6/actions/runs/41425740067) **succeeded**, compiling the same unmodified Agent 1/50/4 source chain plus generator-produced full source for **r=382 and r=942**. The repository includes separate `Critical382.lean` and `Critical942.lean` proofs transferring each generated unreachable hub to the authentic critical reset. Both establish exact all-natural blank-reachability exclusions:
+
+```lean
+∀ q : Nat, ¬BB6.Agent1.Reach 2
+  (14*2^(65536*q+382)-2*(65536*q+382)-10)
+∀ q : Nat, ¬BB6.Agent1.Reach 2
+  (14*2^(65536*q+942)-2*(65536*q+942)-10)
+```
+
+Each generator certificate has 31 interior inverse hubs and 62 terminal branches, with exact all-natural arithmetic and no search horizon. Their classes modulo 1024 (382 and 942) are absent from Agent 28's 36 symbolically closed classes; Agent 4's later modulus-65536 scanner independently discovered these specific closures as **computational candidates**. This new work formalizes them against the genuine unmodified source. It does not prove the P1 machine nonhalting or determine BB(6). The original theorem bridges are unchanged, and all success runs printed `#print axioms` for the corresponding final proof source.
