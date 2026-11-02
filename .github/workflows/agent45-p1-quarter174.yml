@@ -1,0 +1,49 @@
+name: Agent45 P1 novel quarter-class 174 (manual original-source Lean)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quarter174-source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore SHA256-checked source generators and emit proof modules
+        run: |
+          mkdir -p im-results/agent45-p1-generator/src
+          base64 -d im-results/agent45-p1-generator/generator.tar.xz.b64 > /tmp/agent45-generator.tar.xz
+          echo "eb5e2a6226bedabc1aac614750d977433fd92ef46829f784237c71446ee68952  /tmp/agent45-generator.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent45-generator.tar.xz -C im-results/agent45-p1-generator/src
+          base64 -d im-results/agent45-p1-generator/quarter-generator.tar.xz.b64 > /tmp/agent45-quarter.tar.xz
+          echo "2ba1fab89c5e6268569c5e3f04a899299d532dd7cf2d8f914cdde89f6a2f087c  /tmp/agent45-quarter.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent45-quarter.tar.xz -C im-results/agent45-p1-generator/src
+          python im-results/agent45-p1-generator/src/emit4shift.py 174 im-results/agent45-p1-generator/src/Quarter174Full.lean
+          python im-results/agent45-p1-generator/src/split4.py 174 im-results/agent45-p1-generator/src/Quarter174Full.lean im-results/agent45-p1-generator/src
+      - name: Compile original unmodified acceleration and reachability calculus
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+      - name: Kernel-check modular quarter cone and the genuine blank critical gate
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src:im-results/agent45-p1-generator"
+          for m in Core I0 I1 I2 I3 I4 I5 I6 I7 I8 N0 N1 N2 N3 N4 N5 N6 Final; do
+            echo "Checking quarter-class Lean module $m"
+            lean -o "im-results/agent45-p1-generator/src/Quarter174$m.olean" "im-results/agent45-p1-generator/src/Quarter174$m.lean"
+          done
+          lean im-results/agent45-p1-generator/Critical174.lean
+          echo "Certified all-natural no_critical_174 against unmodified original source."
