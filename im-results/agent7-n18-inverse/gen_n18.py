@@ -124,4 +124,4 @@ end BB6.Agent7N18
 '''
 code=header+'\n\n'.join(blocks)+footer
 Path(__file__).with_name('N18.lean').write_text(code)
-print('nodes',len(nodes),'bytes',len(code),'inverse branches',sum(len(g_inputs(*u)) for u in nodes),'leaf modulo',sum(is_mod_leaf(2*k-4,v+4) for u in nodes for k,v in g_inputs(*u) if v>=2),'leaf powers',sum(is_power_leaf(2*k-4,v+4) for u in nodes for k,v in g_inputs(*u) if v>=2))
+print('nodes',len(nodes),'bytes',len(code),'inverse branches',sum(len(g_inputs(*u)) for u in nodes),'leaf modulo',sum(is_mod_leaf(2*k-4,v+4) for u in nodes for k,v in g_inputs(*u) if v>=2),'leaf powers',sum(is_power_leaf(2*k-4,v+4) and not is_mod_leaf(2*k-4,v+4) for u in nodes for k,v in g_inputs(*u) if v>=2))
