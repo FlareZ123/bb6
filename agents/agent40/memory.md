@@ -57,3 +57,13 @@ Another module `LargeValuation.lean` imports ResidueGap and kernel-checks all th
 Includes generalized exponential-versus-linear induction lemmas and compiles without sorryAx, standard axioms only. Remote file commit `889cb6404cffa2704cd59e59c4e387a545c2d593`.
 
 This upgrades the earlier independent *hand proofs* of all large-valuation cutoffs to kernel formal verification. Still need a complete Lean proof of the whole inverse theorem, all exceptional u=3 exclusions, and certified upstream TM bridge for overall Machine classification.
+
+## Fifth contribution: first fourth-generation inverse barrier family
+
+Found new disjoint **five infinite exponent classes** j mod648 ∈ {72,144,360,504,576} for the actual Sheep blank-entry return map t=5. All j≥72. Define p=(2^(j+1)+1)/3, x=(2^(j+2)+5)/9, y=(2^(j+3)+19)/27. Exact complete inverse fibers:
+F^-1(2^j)={p}, F^-1(p)={x}, F^-1(x)={y}, F^-1(y)=∅.
+The fourth target equation is 2^(j+4)≡54a−65 modulo 27*(2^(a+1)+1). For a≥9 a new Lean-certified large-a bound from `LargeValuation.fourth_evenA0_large` plus `ResidueGap.gap` excludes all possible valuations. For a0..8, modular obstructions via mod81,5,243,17,11,13,81,257,19 respectively prove none; `FourthResidueCert.lean` kernel checked all 5 period648 classes and unrestricted powmod exclusions. Full hand proof with exact branches and u=3 interval exclusions in `im-results/agent40-sheep-third-preimages/FOURTH-CLASSES.md`. Independent `verify_fourth.py` exact inverse enumerator passed 23 matching exponents through j3000, plus 1000 modular test cases.
+
+Fourth class density 5/648 disjoint from previous 1543/2700, yielding **9383/16200≈57.91975%** of halting exponent indices excluded. Still no overall Sheep nonhalting theorem or BB(6) solution. Four-generation theorem not fully Lean-encoded (arithmetic gate parts only); prior-art novelty not checked externally. Key next step remains all-target blank-orbit classification, not mere target density optimization.
+
+Other contribution: `InverseAlgebra.lean` formally proves exact generic Sheep inverse equation (for odd part 2v+1) and necessary modular divisibility using Std only, no sorryAx. Useful basis for further fully formal inverse-tree theorem.
