@@ -81,4 +81,6 @@ jobs:
           done
           lean C16Residual.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformInverse.lean .
-          lean UniformInverse.lean
+          lean -o UniformInverse.olean UniformInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformReach.lean .
+          lean UniformReach.lean
