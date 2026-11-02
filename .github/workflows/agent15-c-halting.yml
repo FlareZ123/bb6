@@ -23,7 +23,7 @@ jobs:
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent15-c-check/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent15-c-check/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent15-c-check/
-          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse,SectionDyadic}.lean /tmp/agent15-c-check/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse,SectionDyadic,ReachAffine}.lean /tmp/agent15-c-check/
           cd /tmp/agent15-c-check
           export LEAN_PATH="."
           lean --version
@@ -38,3 +38,4 @@ jobs:
           lean -o SectionMod8.olean SectionMod8.lean
           lean -o SectionAffineInverse.olean SectionAffineInverse.lean
           lean SectionDyadic.lean
+          lean ReachAffine.lean
