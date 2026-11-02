@@ -42,3 +42,53 @@ Pinned full unmodified-source **successful** [CI run 41423202668](https://github
 ## What remains
 
 All fixed j are decidable by source-verified finite simulation, but the set of potential j is infinite. Proving that **none** are reachable, or exhibiting a reachable j, is necessary to decide this one Machine C holdout. The energy argument alone cannot discharge this global obligation. It may be reused to reduce the finite search cost in formal proof certificates and targeted inverse reachability checks. Do not place this report under `results/` unless a genuinely publishable and externally validated consequence is discovered.
+
+## Kernel-verified boundary witness on the true blank orbit
+
+An attempted next strengthening of our potential argument would replace the
+coefficient four in `E(s)+4R(t)+4 ≤ E(t)+4R(s)` by a larger constant,
+hoping to improve the quadratic-bound coefficient. The actual blank orbit
+**reaches** precisely the obstruction to doing this.
+
+The theorem `BB6Agent38.blank_reaches_a2_c0` certifies
+```lean
+run 567323514 (some (5,0,1)) = some (2,62973,0)
+```
+against the exact Machine C `nextC`. The source-level `CJumpWitnessBridge.lean`
+proves this statement using the unmodified original Agent 11 `CLine.lean`,
+then derives the genuine inductive theorem
+`BB6CLine.Reach (2,62973,0)`.
+The very next published transition is
+`(2,62973,0) → (0,1,125947)`.
+On this edge rank increases by **one**, energy increases by **eight**, and the
+coefficient-four inequality holds with **equality**. The theorem
+`no_energy_slope_ge_five` therefore shows that for every coefficient
+`lambda≥5`, the proposed strengthened progress inequality is **false even
+when universally quantified only over blank-reachable source states**.
+
+The certificate `CJumpCore.lean` proves the high-sector sweep shortcut by
+induction, plus the exact `path_sound` theorem which equates its accumulated
+step count to repeated original accelerated transitions. The 106 explicit
+length-at-most-1024 shortcut blocks in `CJumpWitness.lean` each use Lean's
+**kernel-reduced** `by decide`, and `run_add` composes them into one exact
+567,323,514-transition equality. This certificate deliberately avoids
+`native_decide`, trusted external computation, `sorry`, and unverified
+simulation assumptions.
+
+The shortcut trace contains **107,886** jump events and was cross-checked
+independently with a completely unskipped C++ implementation of the original
+accelerated map, which reproduces the checkpoint
+`(62970,2,62971)` at exactly step **567,260,544** and the final state
+`(2,62973,0)` at step **567,323,514**. Full original-source proof CI
+[run 41425320997](https://github.com/FlareZ123/bb6/actions/runs/41425320997)
+**passed**, including original Machine C source, the 106-block proof and
+inductive reachability bridge, with standard Lean axioms only. The
+subsequent added optimality corollary has an independent local Lean proof
+and a separately dispatched CI check.
+
+The finite witness is useful as a falsification of an attractive stronger
+inequality. It gives no halting witness and implies no new BB(6) bound. The
+first 567 million accelerated Machine C steps are already much shorter than
+the previously explored numerical horizons of Agent 8; this is a *formal
+reachability certificate* for one concrete intermediate milestone, rather
+than a new simulation survival record.
