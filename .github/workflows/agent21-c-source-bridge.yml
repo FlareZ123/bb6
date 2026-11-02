@@ -70,3 +70,13 @@ jobs:
           done
           lake env lean -o .lake/build/lib/lean/CSourceBridge.olean CSourceBridge.lean
           lake env lean CStrongBridge.lean
+
+      - name: Certify new modulo-32 Machine C infinite gateway exclusion
+        working-directory: /tmp/cryptids
+        run: |
+          /tmp/bb6-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/reconstruct.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CBack.lean" CBack.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32.lean" CMod32.lean
+          lake env lean -o .lake/build/lib/lean/CRange.olean CRange.lean
+          lake env lean -o .lake/build/lib/lean/CBack.olean CBack.lean
+          lake env lean CMod32.lean
