@@ -55,8 +55,27 @@ The interval lies between consecutive values `14·2^j`, hence all eleven power c
 - The CI log for the final theorem reports **`[propext, Classical.choice, Quot.sound]`** and no `sorryAx`. Warning-only unused parameter messages do not affect proof success.
 - The original Turing-machine/accelerator semantic bridge is separately verified in Agent 19's previous CI; the current run independently checks the theorem in authentic Agent 1 `Reach`. A newly named one-shot original-machine composition theorem has not yet been checked here.
 
-The novelty relative to *this repository* is exclusion of the previously untreated family `206(mod256)`, a strict subfamily of the difficult `14(mod16)` critical exponents. Nearby `158(mod256)` and `190(mod256)` exhibit similar finite symbolic cones, but require their own independent proofs.
+The novelty relative to *this repository* is exclusion of the previously untreated family `206(mod256)`, a strict subfamily of the difficult `14(mod16)` critical exponents. Nearby `158(mod256)` and `190(mod256)` are independently source-certified below.
 
 ## Next work
 
 Check the other short inverse cones; develop a reusable certificate generator while retaining Lean source verification; prioritize an invariant closing entire surviving classes, since enumerating isolated residue families cannot by itself decide the P1 machine.
+
+
+## Additional source-certified results: n ≡ 158 and 190 (mod 256)
+
+**Successful manual original-source GitHub Actions verification:** [run 41405343696](https://github.com/FlareZ123/bb6/actions/runs/41405343696), head commit `ec7da8e22fb7220d9a94ef5a2eaff0c743389664`, completed 2026-11-02 07:18:51 UTC. This single run recompiles all eight **unmodified** original Agent 1 and Agent 50 dependency modules, checks SHA-256 of both full 552-line Lean sources, and compiles each final theorem. The final axiom audit is exactly `[propext, Classical.choice, Quot.sound]` for **both** theorems, no `sorryAx`.
+
+```lean
+BB6.Agent27.blank_no_critical_158_mod256 (k : Nat) :
+  ¬BB6.Agent1.Reach 2 (14*2^(256*k+158)-2*(256*k+158)-10)
+BB6.Agent27.blank_no_critical_190_mod256 (k : Nat) :
+  ¬BB6.Agent1.Reach 2 (14*2^(256*k+190)-2*(256*k+190)-10)
+```
+
+- Full exact sources: [`P1Critical158.lean.xz.b64`](./P1Critical158.lean.xz.b64), decompressed SHA-256 `0052ca07b1691c5599c949147ae3b10dcec53199df95c0a02f9a8458c20ebf70`; [`P1Critical190.lean.xz.b64`](./P1Critical190.lean.xz.b64), SHA-256 `4623e1e15648cb3091e6625d9868b9ccca71659fd2946922a649a41a92943d12`.
+- Exact manual-only workflow: [`agent27-p1-158-190-verify.yml`](../../.github/workflows/agent27-p1-158-190-verify.yml).
+- Each proof exhaustively classifies its eleven-node `GAncestor` inverse cone. Source-proven `positive_G_feeder` and `reachable_even_mod4` remove most predecessors. Every remaining even-positive leaf forces `14·2^j` strictly between consecutive powers `14·2^(256k+R−1)` and `14·2^(256k+R)` for `R=158` or `190`; universally quantified Lean lemmas close these power constraints.
+- The original-machine semantic bridge is separately source-verified by Agent19. Neither these new exclusions nor the earlier n≡206 family resolves all P1 candidates or determines BB(6).
+
+**Aggregate:** Three genuinely distinct `n ≡ 158, 190, 206 (mod 256)` infinite all-time critical-index exclusions are now source-certified, representing three of the 16 subfamilies of the difficult `n ≡ 14 (mod 16)` class. These are intermediate partial results; external literature novelty remains to be checked. Preserve future work on wider classes and holdout-decision methods.
