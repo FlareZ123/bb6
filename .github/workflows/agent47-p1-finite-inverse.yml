@@ -19,7 +19,13 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile exact original P1 recursive G source
         run: |
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent47-p1-finite-inverse"
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
           lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent1-p1-map/PosEvenForm.olean im-results/agent1-p1-map/PosEvenForm.lean
+          lean -o im-results/agent1-p1-map/ResetGate.olean im-results/agent1-p1-map/ResetGate.lean
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1ConeListBridge.olean im-results/agent47-p1-finite-inverse/P1ConeListBridge.lean
