@@ -111,6 +111,15 @@ theorem critical_no_shallow_up_to (L fuel : Nat) (h : fuel≤L) :
   have hw := shallow_le L fuel _ _ h hs
   exact critical_no_shallow_certificate L hw
 
+/-- There is no uniform finite universal feeder-depth bound that proves
+    every n ≡ 14 (mod 16) root using the two existing terminal leaf rules. -/
+theorem no_uniform_shallow_depth (fuel : Nat) :
+    ∃ n : Nat, n%16=14 ∧
+      ¬Shallow fuel (14*2^n-2*n-16) 3 := by
+  refine ⟨critIndex fuel, crit_index_mod_sixteen fuel, ?_⟩
+  exact critical_no_shallow_up_to fuel fuel (by omega)
+
+#print axioms BB6.P1Deep.no_uniform_shallow_depth
 #print axioms BB6.P1Deep.critical_no_shallow_up_to
 #print axioms BB6.P1Deep.corridor_ancestor
 #print axioms BB6.P1Deep.corridor_requires_unbounded_depth
