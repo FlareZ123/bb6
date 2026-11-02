@@ -24,10 +24,12 @@ jobs:
           cp im-results/agent21-c-source-bridge/CReachBridge.lean /tmp/a8-depth/CReachBridge.lean
           cp im-results/agent21-c-source-bridge/CSection.lean /tmp/a8-depth/CSection.lean
           cp im-results/agent8-rank-barriers/CInverseDepth.lean /tmp/a8-depth/CInverseDepth.lean
+          cp im-results/agent8-rank-barriers/CInverseCompat.lean /tmp/a8-depth/CInverseCompat.lean
           cd /tmp/a8-depth
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
           lean -o CReachBridge.olean CReachBridge.lean
           lean -o CSection.olean CSection.lean
-          lean CInverseDepth.lean
+          lean -o CInverseDepth.olean CInverseDepth.lean
+          lean CInverseCompat.lean
