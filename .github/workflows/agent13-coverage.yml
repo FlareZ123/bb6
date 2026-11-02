@@ -15,9 +15,12 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Unpack, integrity check and compile source
+      - name: Unpack, integrity check and compile complete source chain
         run: |
           set -e
           cd im-results/agent13-coverage
           python unpack.py
-          lean BB6Coverage.lean
+          export LEAN_PATH=.
+          lean -o BB6Coverage.olean BB6Coverage.lean
+          lean -o SparseCoverage.olean SparseCoverage.lean
+          lean LassoCoverage.lean
