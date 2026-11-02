@@ -46,3 +46,33 @@ Manual-only CI: `.github/workflows/agent3-portfolio-raw-conjugacy.yml`. This res
 The source is intentionally in `im-results/` since proof-of-isomorphism is an enabling infrastructure result, not an externally publishable BB(6) classification. Reuse this technique to transport existing D0 raw-TM macros **after** deriving the genuine blank-origin section for D0 starts B, C and F separately. Never assume a D0-start-A macro theorem applies to those starts without that bridge. The four-member grouping comes from the pinned snapshot and does not assert an up-to-date holdout count.
 
 A remaining worthwhile extension is to specialize the theorem to the upstream `google-deepmind/cryptids` raw-machine semantics, proving the local definition agrees with their representation. Until then this is a kernel-checked mathematical theorem for precisely encoded raw Turing-machine rules with no direct source-level import from their code.
+
+## Fully source-certified genuine blank-start unary sections
+
+The extension `DStartFinite.lean` now constructs a finite-support exact raw simulator `FiniteCfg`, proves its complete all-time semantic equality `embed_step` and `embed_run` with the actual infinite `Int → Bool` D0 tape, and proves the exact unbounded identification of finite interval lists with the physical unary tape `F0Pure n h`. These source theorems justify three `decide`-checked finite blank-origin entry equalities **without any untrusted simulator-to-raw inference**:
+
+| D0 initial blank state | Primitive raw steps | Exact endpoint | Rooted holdout |
+| --- | ---: | --- | --- |
+| B (state 1) | 15 | `F0Pure 5 (-3)` | D3 |
+| C (state 2) | 92 | `F0Pure 15 (-12)` | D2 |
+| F (state 5) | 403 | `F0Pure 39 (-35)` | D1 |
+
+`F0Pure n h` has state F scanning a zero at physical tape position h, an **entirely blank infinite left half-tape**, exactly n consecutive ones immediately to the right, and an **entirely blank infinite suffix**. No finite-list trailing-zero convention is left implicit.
+
+`DSectionTransfer.lean` strengthens these finite entries to genuine **all-time halting biconditionals**, using the generic partial-run prefix-cutoff theorem `haltsCfg_after_prefix`, a universal integer-head/tape translation conjugacy `translate_step`, and already certified state renaming/reflection:
+
+```lean
+D3_root_halts_iff_I5 :
+  haltsFrom D3 0 ↔ HaltsCfg D0 (F0Pure 5 0)
+D2_root_halts_iff_I15 :
+  haltsFrom D2 0 ↔ HaltsCfg D0 (F0Pure 15 0)
+D1_root_halts_iff_I39 :
+  haltsFrom D1 0 ↔ HaltsCfg D0 (F0Pure 39 0)
+```
+
+All three are actual original-blank-root halting iff statements, allowing future research on the D0 F-section accelerator from **three additional authentic starts** n=5,15,39. Each right-side question remains open. They do **not** imply the three roots share the same halting outcome: the unary seeds are different.
+
+The exact **unmodified full-source check**, including both new Lean files and independently regenerated 663-row ledger, passed [manual CI run 41460859283](https://github.com/FlareZ123/bb6/actions/runs/41460859283). The compiler reports only `[propext, Classical.choice, Quot.sound]` for each final original-root iff theorem; no `sorryAx`, `native_decide`, or other nonstandard theorem. The existing Agent31/35 D0 F-section results and their source-level macro proofs can now be studied as shared mechanisms across all four genuine rooted blank origins.
+
+*Boundary:* This is complete original-source certification in our self-contained D0 raw-TM model; it has not been imported directly against the separate Agent31 `CryptidBoundary.Cfg` semantic representation. The unary configuration agrees with its declared physical meaning, but any additional direct composition with Agent31's theorems still needs an explicit same-tape representation bridge.
+
