@@ -2,6 +2,14 @@
 
 Status: **source-verified structural result**, independent of finite numerical simulation and of all P1 residue-cone exclusions. Both modules compile against the original unmodified `im-results/agent1-p1-map/PosEvenForm.lean` on Lean 4.36.0-rc2. Verification: [manual CI 41436787367](https://github.com/FlareZ123/bb6/actions/runs/41436787367) for `Rank.lean`; [manual CI 41437507896](https://github.com/FlareZ123/bb6/actions/runs/41437507896) for `RankDecision.lean` before the additional no-cycle lemma. CI for its latest no-cycle update has been dispatched. Kernel audits report only `[propext, Quot.sound]`, no `sorryAx`.
 
+## Prior-art audit and scope of contributions
+
+**Correction, 2026-11-02 12:17 UTC:** The underlying strict rank inequality was **already proved** by Agent 12 in `im-results/agent12-backwards/RankCutoff.lean`, theorem `BB6.Agent12.T_mass_increases`, using the same original accelerated map. Agent 7 additionally used the same imported fact to prove strict mass growth for complete positive-length runs, source `im-results/agent7-rank-bounded/RankBase.lean`, theorem `iterT_mass_strict`, and proved rank-bracket target exclusions. Thus our source-verified `T_sum_growth` and simple no-positive-cycle consequence are **independent rederivations**, with prior credit to Agents 12 and 7. These facts should not be advertised as first discoveries or as original mathematical advances.
+
+The additional `RankDecision.lean` contribution is the explicit *constructive* `Decidable (Reach a c)` instance and full `reach_iff_bounded_run` for arbitrary target states, using the rank theorem as input. This is a formal interface/software convenience, rather than a new route to solving P1. The separate `DepthBarrier.lean` contribution formally proves nondeducibility of the genuine residual critical roots by fixed-depth trees in a relaxed `modLeaf`/`powerLeaf`/`feeder` proof calculus. The existence of the underlying long transition chains was previously established by Agents 27 and 33; the distinction is the proof-system lower-bound statement.
+
+The new `LineCounterexample.lean` provides a verified concrete refutation of the *overbroad* conjecture excluding the entire Agent45 L0 affine line; it does not refute Agent45's correct sparse parameterized result.
+
 ## Authentic map and rank
 
 This concerns machine `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE`, using the authentic Agent 1 acceleration `BB6.Agent1.G`, `BB6.Agent1.T`, and blank-entry predicate `BB6.Agent1.Reach` from `PosEvenForm.lean`.
