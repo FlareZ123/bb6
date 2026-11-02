@@ -29,6 +29,9 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-halting-gates/proof-seven.tar.xz.b64" > proof-seven.tar.xz
           echo "d149400785df8bb6262a985e6b1f2cd311333e34fc561092cab4de89b7e6e791  proof-seven.tar.xz" | sha256sum -c -
           tar -xJf proof-seven.tar.xz
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-halting-gates/proof-two-and-gateways.tar.xz.b64" > proof-two-and-gateways.tar.xz
+          echo "e0e4040b931f9439e8510f5b288f72e49ff0609ac9de99a1cd716f73aa60d840  proof-two-and-gateways.tar.xz" | sha256sum -c -
+          tar -xJf proof-two-and-gateways.tar.xz
           export LEAN_PATH="."
           lean --version
           for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam SectionMod8 SectionAffineInverse GateArithmetic GatewayRefinement GateArithmeticEight; do
@@ -37,4 +40,8 @@ jobs:
           lean -o GatewayRefinementEight.olean GatewayRefinementEight.lean
           lean -o SectionRightOne.olean SectionRightOne.lean
           lean -o InverseSeven.olean InverseSeven.lean
-          lean SectionSeven.lean
+          lean -o SectionSeven.olean SectionSeven.lean
+          lean -o GatewaySeven.olean GatewaySeven.lean
+          lean -o InverseTwo.olean InverseTwo.lean
+          lean -o SectionTwo.olean SectionTwo.lean
+          lean GatewayFourteen.lean
