@@ -67,4 +67,7 @@ theorem sparse_compatibility_iff (p : BB6.Coverage.PartialMachine)
       simp only [toAgent8Machine, instructionTo8]
       rw [h q b i hp]
 
+def BoundedRuntime (B : Nat) (m : BB6Coverage.Machine) : Prop :=
+  ∀ n, BB6Coverage.HaltsAfter m n → n+1 ≤ B
+
 end BB6.CoverageAdapter
