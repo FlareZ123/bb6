@@ -51,6 +51,7 @@ jobs:
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
           lean -o im-results/agent44-drift-closure/ZeroWriterOracle.olean im-results/agent44-drift-closure/ZeroWriterOracle.lean
+          lean im-results/agent44-drift-closure/FastZeroWriter.lean
           lean -o im-results/agent8-coverage-contract/RayClosed.olean im-results/agent8-coverage-contract/RayClosed.lean
           lean -o im-results/agent8-coverage-contract/RayChecker.olean im-results/agent8-coverage-contract/RayChecker.lean
           lean -o im-results/agent8-coverage-contract/RayOracle.olean im-results/agent8-coverage-contract/RayOracle.lean
