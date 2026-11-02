@@ -62,4 +62,6 @@ jobs:
           lean -o DyadicResidualCriterion.olean DyadicResidualCriterion.lean
           lean -o SectionMod8Predecessor.olean SectionMod8Predecessor.lean
           lean -o FurtherDyadicMod16.olean FurtherDyadicMod16.lean
-          lean ThirdStageOddDepth.lean
+          lean -o ThirdStageOddDepth.olean ThirdStageOddDepth.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/DyadicResidualMod32.lean .
+          lean DyadicResidualMod32.lean
