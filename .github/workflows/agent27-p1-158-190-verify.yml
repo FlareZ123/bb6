@@ -1,0 +1,39 @@
+name: Agent 27 P1 n=158 and 190 modulo256 infinite exclusions (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original P1 modules and two candidate symbolic proofs
+        run: |
+          mkdir -p /tmp/agent27-p1-double
+          cd /tmp/agent27-p1-double
+          for name in GParity GInverse PosEvenForm ResetGate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/$name.lean" "$name.lean"
+          done
+          for name in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/$name.lean" "$name.lean"
+          done
+          python3 -c 'import base64,hashlib,lzma,pathlib,os; root=pathlib.Path(os.environ["GITHUB_WORKSPACE"])/"im-results/agent27-p1-critical"; hashes={158:"0052ca07b1691c5599c949147ae3b10dcec53199df95c0a02f9a8458c20ebf70",190:"4623e1e15648cb3091e6625d9868b9ccca71659fd2946922a649a41a92943d12"}; [(lambda n,b: (hashlib.sha256(b).hexdigest()==hashes[n] or (_ for _ in ()).throw(ValueError("hash mismatch")), pathlib.Path("/tmp/agent27-p1-double/P1Critical"+str(n)+".lean").write_bytes(b)))(n,lzma.decompress(base64.b64decode((root/("P1Critical"+str(n)+".lean.xz.b64")).read_text()))) for n in hashes]'
+          export LEAN_PATH="."
+          for name in GParity GInverse PosEvenForm ResetGate P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "COMPILING unmodified source $name"
+            lean -o "$name.olean" "$name.lean"
+          done
+          echo "CHECKING EXACT AGENT 27 158 MOD256 CANDIDATE AGAINST ORIGINAL SOURCE"
+          lean P1Critical158.lean
+          echo "CHECKING EXACT AGENT 27 190 MOD256 CANDIDATE AGAINST ORIGINAL SOURCE"
+          lean P1Critical190.lean
