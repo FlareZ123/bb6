@@ -7,8 +7,8 @@ open BusyBeaver.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
 
 private theorem iterate_bind_right {S : Type} (f : S → Option S)
     (n : Nat) (x : Option S) :
-    Function.iterate (fun z : Option S => z.bind f) (n+1) x =
-      (Function.iterate (fun z : Option S => z.bind f) n x).bind f := by
+    Nat.iterate (fun z : Option S => z.bind f) (n+1) x =
+      (Nat.iterate (fun z : Option S => z.bind f) n x).bind f := by
   rw [Nat.add_comm n 1, Function.iterate_add_apply]
   rfl
 
@@ -18,12 +18,12 @@ private theorem generic_collatz_terminal {S : Type} (f : S → Option S) (s₀ :
   constructor
   · rintro ⟨n,hn⟩
     induction n with
-    | zero => simp [Function.iterate,Option.isNone] at hn
+    | zero => simp [Nat.iterate,Option.isNone] at hn
     | succ n ih =>
         rw [iterate_bind_right] at hn
-        cases hr : Function.iterate (fun z : Option S => z.bind f) n (some s₀) with
+        cases hr : Nat.iterate (fun z : Option S => z.bind f) n (some s₀) with
         | none =>
-            have hprev : (Function.iterate (fun z : Option S => z.bind f) n (some s₀)).isNone := by
+            have hprev : (Nat.iterate (fun z : Option S => z.bind f) n (some s₀)).isNone := by
               simp [hr]
             exact ih hprev
         | some s =>
