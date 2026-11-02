@@ -81,3 +81,21 @@ d+14*2^j=14*2^t+2*j+6.
 This replaces the earlier odd-exponent ladder by a strict quarter-class exponent ladder and is a **global forward reachable-set invariant** independent of any sampled simulation horizon. It may strengthen future inverse-cone closure certificates for the currently surviving P1 critical families `n%16=2,14`. No P1 decision or new lower/upper bound on BB(6) is established.
 
 **Exploratory evidence only (not a theorem).** A script `/tmp/p1seed/scan_shift.py` (uncommitted local scratch) enumerated integer G-ancestor inverse cones into shifted `n%4=1` gateways for the first 100 sampled indices `5≤n<405`. Each closed under existing 14-power and mod-four obstructions in at most 1,179 interior nodes. These are finite samples; inversion depth grows irregularly and does not prove the uniform shifted-gateway exclusion for `n%4=1`. The remaining conceptual task is a uniform grammar for arbitrary positive-odd-right inverse chains, or a stronger blank-specific forward invariant.
+
+## Exact reachability equivalence for the entire even-left right-two class (2026-11-02 12:27 UTC)
+
+The new Lean source `NearResetBridge.lean` constructs a complete, **genuine** even-sector chain of `2n` accelerated transitions from the synthetic reset `(2,14*2^n-2n-12)` to an even-left hub `(14*2^n-12,2)` for every `n`. This is a *conditional implication* about a synthetic reset becoming genuinely blank-reachable. The construction uses the exact two-step high-`G` T identity and a recursively defined natural counter `near a n`; its `near_two_form` theorem proves `near 2 n=14*2^n-2*n-12` by induction, with no assumed machine reachability.
+
+Composing this **sufficiency** with the authentic reset-origin **necessity** from `EvenSeed` and the `j%4=1` restriction in `EvenQuarter` establishes a notable global exact criterion:
+
+```
+BB6.Agent1.blank_even_two_iff_quarter_shifted_reset :
+  (∃ b:Nat, b%2=0 ∧ Reach b 2) ↔
+  (∃ n:Nat, n%4=1 ∧ Reach 2 (14*2^n-2*n-12)).
+```
+
+The predecessor and reset statements are about `Reach` from genuine blank-entry `(2,1)`. The forward synthetic chain only shows that if one specified reset is reached, then an even-left right-two hub is reached; it is **not a proof that such resets actually occur**. This equivalence cleanly collapses the entire existence question for reachable even `c=2` hubs to one sparse shifted-reset index class `n%4=1`. There are still infinitely many members, and the exact BB(6) and P1 halting status remain unsolved. Earlier Agent 4's independent even-sector grammar handles synthetic halting funnels with related methods; novelty should be interpreted as a new composition with the blank reachability restrictions, not as an original discovery of the high-branch dynamics.
+
+Source-level verification: the pinned manual [GitHub Actions run 41444698548](https://github.com/FlareZ123/bb6/actions/runs/41444698548) succeeded against the unmodified `PosEvenForm` and `ResetGate`, compiling every new theorem through `NearResetBridge.lean`. Its final `#print axioms` reports for `blank_even_two_iff_quarter_shifted_reset`, `blank_even_two_iff_shifted_reset`, and `near_reaches_even_two` show only standard `[propext, Classical.choice, Quot.sound]` or fewer, no `sorryAx`, no mock source. The earlier source-check run `41443054134` covers the quarter-exponent predecessor restrictions before this final composition.
+
+**Remaining research target:** prove `∀n, n%4=1 → ¬Reach 2 (14*2^n-2*n-12)` to eliminate **all** reachable even-left right-two hubs, or find an actual reachable witness. The nearby `n%4=3` shifted-reset family was already excluded by `ShiftOdd`; finite inverse-cone closure samples for `n%4=1` show strongly varying depths, suggesting that a global invariant or parametric variable-depth argument is required. Even complete exclusion of these even hubs would not by itself prove P1 nonhalting, because halting can pass through the separate odd-left right-two gate.
