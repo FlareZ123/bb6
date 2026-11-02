@@ -117,3 +117,8 @@ jobs:
           lean IndexDisjoint.lean
           lean -o IndexLift.olean IndexLift.lean
           lean IndexReach.lean
+          # Agent 11: exact-source finite mod-8 residue counterexamples and
+          # explicit conditional pullback of Agent 43's emerging M32 cells.
+          cp im-results/agent11-c-first-family/{ResidueWitness,M32PullbackConditional}.lean /tmp/agent15-c-check/
+          lean ResidueWitness.lean
+          lean M32PullbackConditional.lean
