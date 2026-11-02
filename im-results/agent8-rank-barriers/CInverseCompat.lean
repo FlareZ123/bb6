@@ -6,7 +6,8 @@ open BB6.Agent8Depth
 
 /-- The reachable-state odd-middle zero-right residue necessary condition. -/
 def admissible (a k : Nat) : Prop :=
-  5 ≤ k → k % 2 = 1 → (a+k) % 4 = 0 ∨ (a+k) % 4 = 3
+  a % 2 = 1 ∧
+  (5 ≤ k → k % 2 = 1 → (a+k) % 4 = 0 ∨ (a+k) % 4 = 3)
 
 /-- A reverse certificate all of whose c=0 checkpoints satisfy the existing
     global odd-k modulo-four necessary condition. -/
@@ -26,11 +27,13 @@ theorem compatible_implies_long {n a k : Nat} (h : CompatibleLong n a k) :
 theorem admissible_of_rank (a k : Nat)
     (hr : (a+2*k)%4=1) (hk : k%2=0 ∨ k%4=1) :
     admissible a k := by
-  intro h5 hodd
-  rcases hk with he | he
+  constructor
   · omega
-  · left
-    omega
+  · intro h5 hodd
+    rcases hk with he | he
+    · omega
+    · left
+      omega
 
 /-- The base odd counter is 1 mod4; all later reverse middle counters are even. -/
 theorem K_good_mod (n t : Nat) :
