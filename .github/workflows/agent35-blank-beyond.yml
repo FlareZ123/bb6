@@ -39,7 +39,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check unmodified upstream original machine and blank path
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent25-cryptid-doublezero
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent25-cryptid-doublezero:im-results/agent36-cryptid-trace
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
@@ -69,4 +69,10 @@ jobs:
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
           lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/BlankCodeImplicit.lean
           lean -o im-results/agent32-cryptid-padding/TokenCostNormal.olean im-results/agent32-cryptid-padding/TokenCostNormal.lean
-          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/ShiftCylinders.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent25-cryptid-doublezero/ShiftCylinders.olean im-results/agent25-cryptid-doublezero/ShiftCylinders.lean
+          lean -o im-results/agent35-cryptid-code/ABridgeTwo.olean im-results/agent35-cryptid-code/ABridgeTwo.lean
+          lean -o im-results/agent35-cryptid-code/EDouble.olean im-results/agent35-cryptid-code/EDouble.lean
+          lean -o im-results/agent32-cryptid-padding/EZeroPair.olean im-results/agent32-cryptid-padding/EZeroPair.lean
+          lean -o im-results/agent36-cryptid-trace/AExtraBranches.olean im-results/agent36-cryptid-trace/AExtraBranches.lean
+          lean -o im-results/agent36-cryptid-trace/ASixBoundary.olean im-results/agent36-cryptid-trace/ASixBoundary.lean
+          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/ShiftExtra.lean
