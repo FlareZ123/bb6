@@ -41,6 +41,26 @@ theorem full_E_halt (k : Nat) (ys : List Bool) :
       haltWord ++ ys,4⟩ : Cfg)).st = 6
   exact e_halt_66 _ _
 
+/-- Precisely one primitive step before every E-family halt,
+    the source machine is F reading one. -/
+theorem full_E_before_halt (k : Nat) (ys : List Bool) :
+    (run (12*k*k+41*k+98)
+      (init (List.replicate (3*k+2) true ++
+        false :: (haltWord ++ ys)))).st = 5 ∧
+    (run (12*k*k+41*k+98)
+      (init (List.replicate (3*k+2) true ++
+        false :: (haltWord ++ ys)))).h = true := by
+  have ht : 12*k*k+41*k+98 = (12*k*k+41*k+33)+65 := by omega
+  simp only [ht,run_add,prefix_E]
+  have hp : pairs (4*k+3) =
+      true :: false :: pairs (4*k+2) := by
+    rw [show 4*k+3 = (4*k+2)+1 by omega]
+    rfl
+  rw [hp]
+  exact e_before_halt _ _
+
+#print axioms full_E_before_halt
+
 #print axioms e_before_halt
 #print axioms e_halt_66
 #print axioms full_E_halt
