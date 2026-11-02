@@ -23,7 +23,7 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a46-jump/
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a46-jump/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a46-jump/
-          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge,BounceParity,BounceHaltLevel,BounceHaltingInputs}.lean /tmp/a46-jump/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin}.lean /tmp/a46-jump/
           cd /tmp/a46-jump
           export LEAN_PATH="."
           lean --version
@@ -46,4 +46,5 @@ jobs:
           lean -o Agent46CBridge.olean Agent46CBridge.lean
           lean -o BounceParity.olean BounceParity.lean
           lean -o BounceHaltLevel.olean BounceHaltLevel.lean
-          lean BounceHaltingInputs.lean
+          lean -o BounceHaltingInputs.olean BounceHaltingInputs.lean
+          lean BounceHaltBasin.lean
