@@ -82,6 +82,48 @@ theorem exponential_upper (q n : Nat) (hq : 16 ≤ q) :
       _ ≤ 4*(4^n*q) := Nat.mul_le_mul_left _ ih
       _ = 4^(n+1)*q := by simp only [Nat.pow_succ]; ac_rfl
 
+
+/-- Exact digit penalty in the accelerated rational-base map. -/
+def penalty (q : Nat) : Nat :=
+  if q % 3 = 0 then 0 else if q % 3 = 1 then 13 else 5
+
+theorem one_step_identity (q : Nat) (hq : 16 ≤ q) :
+    3*nextQ q + penalty q = 4*q := by
+  unfold nextQ penalty
+  by_cases h0 : q % 3 = 0
+  · simp only [ite_eq_left h0]
+    omega
+  · simp only [ite_eq_right h0]
+    by_cases h1 : q % 3 = 1
+    · simp only [ite_eq_left h1]
+      omega
+    · simp only [ite_eq_right h1]
+      omega
+
+/-- Positive-integer exact sum of weighted penalties, avoiding rationals. -/
+def errorSum (q : Nat) : Nat → Nat
+  | 0 => 0
+  | n+1 => 4*errorSum q n + 3^n*penalty (iterQ q n)
+
+theorem digit_conservation (q n : Nat) (hq : 16 ≤ q) :
+    3^n*iterQ q n + errorSum q n = 4^n*q := by
+  induction n with
+  | zero => simp [iterQ, errorSum]
+  | succ n ih =>
+    have hs := one_step_identity (iterQ q n) (iterQ_ge q hq n)
+    calc
+      3^(n+1)*iterQ q (n+1)+errorSum q (n+1)
+          = 3^n*(3*nextQ (iterQ q n)) +
+            (4*errorSum q n + 3^n*penalty (iterQ q n)) := by
+              simp only [iterQ, errorSum, Nat.pow_succ]; ac_rfl
+      _ = 3^n*(3*nextQ (iterQ q n)+penalty (iterQ q n)) + 4*errorSum q n := by
+            simp only [Nat.mul_add]; omega
+      _ = 3^n*(4*iterQ q n) + 4*errorSum q n := by rw [hs]
+      _ = 4*(3^n*iterQ q n + errorSum q n) := by
+            simp only [Nat.mul_add]; ac_rfl
+      _ = 4*(4^n*q) := by rw [ih]
+      _ = 4^(n+1)*q := by simp only [Nat.pow_succ]; ac_rfl
+
 theorem q17_lower (n : Nat) :
     4^n*4 ≤ 3^n*(iterQ 17 n-13) := by
   simpa using exponential_growth 17 n (by omega)
@@ -98,6 +140,7 @@ theorem q141_upper (n : Nat) :
     3^n*iterQ 141 n ≤ 4^n*141 :=
   exponential_upper 141 n (by omega)
 
+#print axioms BB6.Agent9SExp.digit_conservation
 #print axioms BB6.Agent9SExp.q17_lower
 #print axioms BB6.Agent9SExp.q141_lower
 #print axioms BB6.Agent9SExp.exponential_growth
