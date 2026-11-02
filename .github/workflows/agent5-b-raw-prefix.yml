@@ -1,0 +1,64 @@
+name: Agent 5 source-certified raw Machine B long finite prefix (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned upstream Lean toolchain
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Clone and verify Cryptids original mathematical semantics
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet ced8f9f44f67a167d5ecc03e687b048c67926371
+          test "$(git rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+      - name: Restore upstream Mathlib proof cache
+        working-directory: /tmp/cryptids
+        run: lake exe cache get
+      - name: Build original six-state Machine B semantics
+        working-directory: /tmp/cryptids
+        run: lake build BusyBeaver.BB6.M_1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_HHH1RE
+      - name: Check finite 132847-bit sample and raw machine lower-time certificate
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          SRC="$GITHUB_WORKSPACE/im-results/agent5-b-certified-prefix"
+          for name in BReduction BOneDim BRun Agent18BBridge; do
+            case "$name" in
+              BReduction) dest=Agent18BReduction ;;
+              BOneDim) dest=BOneDim ;;
+              *) dest="$name" ;;
+            esac
+            cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/$name.lean" "$dest.lean"
+          done
+          lake env lean -o .lake/build/lib/lean/Agent18BReduction.olean Agent18BReduction.lean
+          lake env lean -o .lake/build/lib/lean/BRun.olean BRun.lean
+          lake env lean -o .lake/build/lib/lean/BOneDim.olean BOneDim.lean
+          lake env lean -o .lake/build/lib/lean/Agent18BBridge.olean Agent18BBridge.lean
+          printf 'module\npublic import BOneDim\n' > Agent18BOneDim.lean
+          lake env lean -o .lake/build/lib/lean/Agent18BOneDim.olean Agent18BOneDim.lean
+          cp "$SRC/BTraceCore.lean" BTraceCore.lean
+          lake env lean -o .lake/build/lib/lean/BTraceCore.olean BTraceCore.lean
+          python3 "$SRC/make_certificate.py" --output .
+          for index in $(seq -w 1 28); do
+            lake env lean -o ".lake/build/lib/lean/BTrace$index.olean" "BTrace$index.lean"
+          done
+          lake env lean -o .lake/build/lib/lean/BTraceFinal.olean BTraceFinal.lean
+          for name in BTraceSource BTraceReach BTraceMagnitude BTraceRuntime; do
+            cp "$SRC/$name.lean" "$name.lean"
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          cp "$SRC/BTraceRaw.lean" BTraceRaw.lean
+          lake env lean BTraceRaw.lean
