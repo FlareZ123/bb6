@@ -1,4 +1,5 @@
 import EntryMacroLeft
+import MacroOracle
 
 namespace BB6Coverage
 
