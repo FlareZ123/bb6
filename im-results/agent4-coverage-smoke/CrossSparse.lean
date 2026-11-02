@@ -42,4 +42,29 @@ theorem sparseTo8_to13 (p : BB6Coverage.PartialMachine) :
   | none => simp [sparseTo13, sparseTo8, h]
   | some i => simp [sparseTo13, sparseTo8, h]
 
+/-- The corresponding sparse cylinders have exactly the same completions. -/
+theorem sparse_compatibility_iff (p : BB6.Coverage.PartialMachine)
+    (m : BB6.Coverage.SimpleMachine) :
+    BB6Coverage.compatible (sparseTo8 p) (toAgent8Machine m) ↔
+      BB6.Coverage.Extends p m := by
+  constructor
+  · intro h q b i hi
+    have hs : sparseTo8 p (q,b) = some (instructionTo8 i) := by
+      simp [sparseTo8, hi]
+    have ht := h (q,b) (instructionTo8 i) hs
+    have hi2 : instructionTo8 (m q b) = instructionTo8 i := by
+      simpa only [toAgent8Machine, instructionTo8] using ht
+    have hi3 := congrArg instructionTo13 hi2
+    simpa using hi3
+  · intro h slot t ht
+    rcases slot with ⟨q,b⟩
+    cases hp : p q b with
+    | none => simp [sparseTo8, hp] at ht
+    | some i =>
+      have htEq : instructionTo8 i = t := by
+        simpa [sparseTo8, hp] using ht
+      rw [← htEq]
+      simp only [toAgent8Machine, instructionTo8]
+      rw [h q b i hp]
+
 end BB6.CoverageAdapter
