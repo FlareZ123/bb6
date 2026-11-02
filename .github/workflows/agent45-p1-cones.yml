@@ -39,4 +39,9 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src:im-results/agent45-p1-generator"
           lean -o im-results/agent45-p1-generator/src/Cert94.olean im-results/agent45-p1-generator/src/Cert94.lean
           lean im-results/agent45-p1-generator/Critical94.lean
-          echo "Completed full-source Agent45 r94 proof and final standard-axiom audit."
+          for r in 382 942; do
+            python im-results/agent45-p1-generator/src/emit.py "$r" "im-results/agent45-p1-generator/src/Cert$r.lean" source
+            lean -o "im-results/agent45-p1-generator/src/Cert$r.olean" "im-results/agent45-p1-generator/src/Cert$r.lean"
+            lean "im-results/agent45-p1-generator/Critical$r.lean"
+          done
+          echo "Completed full-source Agent45 residue 94, 382 and 942 proofs and final standard-axiom audits."
