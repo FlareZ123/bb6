@@ -105,3 +105,11 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/CrossSparse.olean im-results/agent4-coverage-smoke/CrossSparse.lean
           lean -o im-results/agent4-coverage-smoke/CrossDecided.olean im-results/agent4-coverage-smoke/CrossDecided.lean
           lean im-results/agent4-coverage-smoke/CrossLeafDemo.lean
+
+      - name: Prove source-authentic certified versus open frontier and exact first-level accounting
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
+          lean im-results/agent4-coverage-smoke/FrontierAuditExample.lean
