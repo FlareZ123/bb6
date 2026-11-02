@@ -42,7 +42,7 @@ The conclusion is `ObsEq` (infinite-tape semantics), not syntactic equality of t
 - SHA-verified original upstream `Boundary.lean` from `../agent31-cryptid-boundary/unpack.py`, whose recorded content hash is `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
 - Manual workflow: [`.github/workflows/agent32-cryptid-padding.yml`](../../.github/workflows/agent32-cryptid-padding.yml); it runs **only** via manual `workflow_dispatch`, never on commits.
 - Original-source CI [41419395469](https://github.com/FlareZ123/bb6/actions/runs/41419395469) passed. The core `source_step`, `source_run`, `source_congr`, `source_pad`, `source_chain`, `source_transport` all have axiom audit exactly `[propext]`, with no `sorryAx`.
-- The additional initial-padding and E-pairs specialization are in the later workflow run, whose exact success and axiom list should be checked independently before citing them as original-source verified.
+- The additional initial-padding and E-pairs specialization passed [original-source CI 41419879489](https://github.com/FlareZ123/bb6/actions/runs/41419879489) (2026-11-02 09:21 UTC). The four added theorems `source_init_pad`, `source_init_halt_iff`, `source_chain`, `source_transport` have only `[propext]`, and `full_E_pairs_implicit_blank` has exactly `[propext, Quot.sound]`; no `sorryAx`.
 
 ## Why it matters and what it does not imply
 
