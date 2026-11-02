@@ -105,6 +105,25 @@ theorem reachable_terminal_over_twelve_q
   obtain ⟨hdeep,_,hbudget⟩ := reachable_terminal_three_gates q b d m t k c root hq1 hcone hb hb4 hd hi hc hk hr
   exact twelve_q_cost_barrier q m t hq hdeep hbudget
 
+/-- Deep-length necessity at q≥13: an authentic even leaf would require
+strictly more than 14q odd inverse cost before its final branch. -/
+theorem reachable_terminal_over_fourteen_q
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 13 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hb : 8 ≤ b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : c%2=0) (hk : 2 ≤ k)
+    (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
+    14*q < m := by
+  have hq1 : 1≤q := by omega
+  obtain ⟨hdeep,_,hbudget⟩ := reachable_terminal_three_gates q b d m t k c root hq1 hcone hb hb4 hd hi hc hk hr
+  exact fourteen_q_cost_barrier q m t hq hdeep hbudget
+
+#print axioms reachable_terminal_over_fourteen_q
+
 #print axioms reachable_terminal_log_cost
 #print axioms reachable_terminal_over_twelve_q
 
