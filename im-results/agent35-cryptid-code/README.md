@@ -117,3 +117,18 @@ Original Lean:
 
 These are finite original-blank-trace certificates and are classified as **intermediate**. The proven physical nonhalting horizon is far smaller than the established Busy Beaver champion lower bound, and no resolution of blank-tape nonhalting or BB(6) follows. Investigate invariant closure on reachable right suffixes and rigorous cross-representation composition, now supported by original-source tape-padding bisimulation.
 
+
+## Original blank tape beyond 392 quadrillion
+
+[BlankAfterPadding.lean](./BlankAfterPadding.lean) uses Agent32's source-certified all-time physical tape bisimulation `source_congr` to compose the preceding observational blank section with Agent32's exact original-machine `full_E_three` return. The resulting source theorem, for the **actual original blank start**, proves
+
+```text
+After 2,791,222,372,148,762,301 primitive steps:
+  ObsEq F(left blank, scan 0, right 1^3576744673 01010 1111111).
+```
+
+This is a rigorous finite lower bound on the exact D-start Cryptid blank runtime in the original machine, from the real blank, without a fabricated final blank. [Original-source pinned Lean CI 41421482616](https://github.com/FlareZ123/bb6/actions/runs/41421482616) passed, final theorem axiom audit `[propext, Quot.sound]` only. It combines the new and shared universal symbolic rules and has no bounded simulation dependency.
+
+The related [BlankFurther.lean](./BlankFurther.lean) attempts to compose an additional E triple-pairs return, aiming for a finite physical blank checkpoint at **19,848,692,333,528,818,046** primitive steps, but was still in CI verification when this text was written. Treat it as unverified until the manual checker succeeds.
+
+All of these are intermediate formally certified finite prefixes, not any proof that the Cryptid holdout runs forever. **The exact BB(6) remains open.**
