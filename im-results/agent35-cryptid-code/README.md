@@ -86,3 +86,34 @@ At the E boundary, the left stack is `00(10)^(m+2)11`. The `eDouble_front` proof
 ### Open boundary
 
 The remaining crucial goal is a genuinely blank-origin composition of these macros, including implicit-blank versus explicitly written zero at the end of `Cfg` lists. The artificial `List Bool` encoding represents the same physical tape by different finite lists unless trailing-blank equivalence is accounted for. A fully certified raw blank tape trace is stronger evidence than arithmetic continuation of individually valid section formulas. There is no known global halt/nonhalt decision.
+
+## Genuine blank-tape source certificates
+
+These results were compiled through the complete actual blank-tape proof chain, importing the original Agent31/Agent26 Lean sources and, where required, Agent32's universal E-returns and physically sound tape-padding bisimulation.
+
+| Absolute primitive-step time | Exact or physical original-machine checkpoint | Verification |
+|---:|---|---|
+| 1,187,331,039 | F on zero, \(I_{73761}\), pure unary | [CI 41420196359](https://github.com/FlareZ123/bb6/actions/runs/41420196359) |
+| 8,442,192,549 | \(I_{196699}\), pure unary | same |
+| 60,030,635,984 | \(I_{524525}(0\,1^6)\) | same |
+| 426,871,706,605 | \(I_{1398743}\), pure unary | same |
+| 3,035,529,732,856 | \(I_{3729985}\), pure unary | same |
+| **21,585,935,003,077** | \(I_{9946621}(0\,1^6)\) | [CI 41420196359](https://github.com/FlareZ123/bb6/actions/runs/41420196359) |
+| **153,499,683,790,798** | \(I_{26524321}(01010111)\) with implicit trailing blank | [CI 41420449861](https://github.com/FlareZ123/bb6/actions/runs/41420449861) |
+| **1,091,552,640,110,031** | \(I_{70731521}(010101010)\) | [CI 41420683093](https://github.com/FlareZ123/bb6/actions/runs/41420683093) |
+| **7,762,150,835,454,696** | \(I_{188617394}(0101010)\) | [CI 41421143137](https://github.com/FlareZ123/bb6/actions/runs/41421143137) |
+| **55,197,514,669,381,024** | \(I_{502979722}(01010)\) | same |
+| **392,515,651,843,862,508** | \(I_{1341279253}(0\,1^{10})\), **physical-tape equivalence (ObsEq)** | [CI 41421143137](https://github.com/FlareZ123/bb6/actions/runs/41421143137) |
+
+Notation: \(I_n(y)\) is original state F scanning zero, left tape blank, right tape \(1^ny\). Every row is derived from the previously kernel-checked real **blank start** (Agent26's \(I_{27659}\) at step 166,999,736), not assumed as a synthetic input. The first ten new rows are strict equality in Agent31's original finite-list `Cfg` representation; the last row uses Agent32's source-certified observational equality, representing the same infinite blank-extended physical tape. Nonhalting up to the last checkpoint follows from the observed F-on-zero state, because original halting F-on-one goes to frozen state6.
+
+Original Lean:
+- [BlankBeyond.lean](./BlankBeyond.lean): six exact genuine blank returns through >21 trillion raw steps.
+- [ESixBlank.lean](./ESixBlank.lean): completely source-checked universal E-on-six-ones with genuinely implicit trailing blank, preserving the finite output **without** a fabricated terminal zero; universal exact rule for every k.
+- [BlankSixCheckpoint.lean](./BlankSixCheckpoint.lean): combines that theorem to reach >153 trillion steps.
+- [BlankTripleCheckpoint.lean](./BlankTripleCheckpoint.lean): composes Agent32's fully general E-on-alternating-pairs and `111` family to cross one quadrillion steps.
+- [BlankBContin.lean](./BlankBContin.lean): source-proved universally parametric B branch with one incoming extra 1, two exact blank returns, then Agent32's `full_E_pairs_implicit_blank` observational theorem to reach >392 quadrillion steps.
+- Manual CI [agent35-blank-beyond.yml](../../.github/workflows/agent35-blank-beyond.yml) reconstructs all original checksum-pinned sources and checks the actual proof chain. Every named finalized theorem has `#print axioms` containing exactly `[propext, Quot.sound]`, no `sorryAx`. The source semantics and arithmetic were compiled by Lean 4.36.0-rc2; there is no bounded simulation substituting for these macro-composition proofs.
+
+These are finite original-blank-trace certificates and are classified as **intermediate**. The proven physical nonhalting horizon is far smaller than the established Busy Beaver champion lower bound, and no resolution of blank-tape nonhalting or BB(6) follows. Investigate invariant closure on reachable right suffixes and rigorous cross-representation composition, now supported by original-source tape-padding bisimulation.
+
