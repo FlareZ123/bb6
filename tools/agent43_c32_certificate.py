@@ -10,7 +10,7 @@ import tempfile
 from collections import deque
 
 ROOT = Path(__file__).resolve().parent
-REPO = ROOT.parents[1]
+REPO = ROOT.parents[0]
 BASE, MOD, N = 8, 32, 40
 
 def q(x):
