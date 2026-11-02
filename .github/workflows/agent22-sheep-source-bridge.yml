@@ -55,3 +55,20 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean GeneralAncestry.lean
+
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-preimages/unpack.py"
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-preimages/unpack_reach.py"
+          for name in ModCycle Arithmetic Generic GenericMod Special Reach; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-power-preimages/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            ModCycle.lean Arithmetic.lean Generic.lean GenericMod.lean Special.lean Reach.lean
+          for name in ModCycle Arithmetic Generic GenericMod Special Reach; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/SectionExclusionBridge.lean" SectionExclusionBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/SheepSourceExclusions.lean" SheepSourceExclusions.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            SectionExclusionBridge.lean
+          lake env lean -o ".lake/build/lib/lean/SectionExclusionBridge.olean" SectionExclusionBridge.lean
+          lake env lean SheepSourceExclusions.lean
