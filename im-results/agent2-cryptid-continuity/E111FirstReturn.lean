@@ -188,7 +188,6 @@ theorem e111_boundary_first_return (m : Nat) (ys : List Bool) :
     NoReturn (e0 m ys) (2*m+137) := by
   constructor
   · rw [e111_run]
-    rfl
   · have hBsweep : NoReturn (sweepB m (packet ++ ys)) (2*m+3) := by
       intro t ht h
       exact sweepB_firstF m (packet ++ ys) t ht h.1
