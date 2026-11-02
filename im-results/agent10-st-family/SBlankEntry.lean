@@ -54,8 +54,8 @@ private theorem sSupport47 :
   simp only [embed,S0pZero]
   congr 1
   funext i
-  simp [sZeroPositions, List.mem_cons, List.mem_singleton]
-  omega
+  simp [sZeroPositions, List.mem_cons]
+  tauto
 
 /-- Real infinite-blank physical tape, raw step exact, at the B initial state.
     This is the preimage under STPerm of TRoot's designated blank A. -/
