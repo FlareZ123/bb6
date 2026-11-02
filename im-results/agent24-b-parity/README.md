@@ -98,3 +98,17 @@ Unlike the unsampled parity coding above, the following statements constrain **e
 - **Survival/halting index residue dichotomy:** `Z[n]%2=1 ↔ A[n+1]%7 ∈ {3,4}`; `Z[n]%2=0 ↔ A[n+1]%7 ∈ {0,6}`. The two biconditionals are `sample_odd_iff_reset_residue` and `sample_even_iff_reset_residue`.
 
 All these universal statements compiled locally in Lean 4.36.0-rc2 with only `[propext, Quot.sound]`; no finite bound on `n`. This yields an exact modular **alternative test** for a halting sample, but is currently a rearrangement of the same undecided sampled-parity problem, as the next index itself is defined from that parity. It does **not** imply any halting witness or all-time nonhalting. A direct imported equality between this copied `resetA` and the existing Agent 18 `OneDim.scalarA` is straightforward but is not yet separately CI-certified.
+
+## Quantitative finite-time obstruction to repeating parity (07:02 UTC)
+
+[BParityDiscrepancy.lean](./BParityDiscrepancy.lean) imports the previous two modules and proves an explicit *linear-in-offset* bound strengthening their generic aperiodicity result. For the actual blank-entry shifted scalar orbit \(v_n=G^n(0)+8\), every \(N\ge0\) and positive proposed period \(k\) have a parity disagreement at some \(0\le i<N+k+3\):
+
+```lean
+parity_disagrees_linear (N k : Nat) (hk : 0<k) :
+  ∃ i : Nat, i<N+k+3 ∧
+    orbit (N+i+k)%2 ≠ orbit (N+i)%2
+```
+
+Proof: the finite-prefix two-adic injectivity lemma implies that a common parity prefix of length \(m\) forces \(2^m\) to divide \(v_{N+k}-v_N\). The shifted trajectory is strictly increasing, while induction from its exact recurrence gives \(v_j\le 2^{j+3}\). The positive difference is therefore strictly below \(2^{N+k+3}\), so \(m=N+k+3\) matching bits are impossible. It also proves the stronger gap-sensitive lemma `parity_disagrees_within_gap` when a sharper value of the separation is known.
+
+This quantitative nonrepetition theorem compiles locally in Lean 4.36.0-rc2 with only `[propext, Quot.sound]`, no `sorryAx`. It concerns full scalar parity histories; the recursively sampled halting criterion remains unresolved.
