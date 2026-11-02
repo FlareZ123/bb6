@@ -23,7 +23,22 @@ This result **does not decide P1 halting** or BB(6). Preserved at `im-results/` 
 
 P1 Agent4 `BlankCriterion.lean` proves exact target family; Agent12 `AllOddCritical.lean` excludes odd n>=3, `AllFourCritical.lean` excludes n>=4 divisible by four. Agent7 rank certificates exclude n0..8. Remaining infinite indices n≡2 mod4, n>=10, are the decisive unknown. Machine B Agent18 has separate *successful* source bridge; C diagonal gate `(0,2j,4j+10)`; Sheep exponent inverse sieve 3544/5400 classes, many open.
 
-## Current investigation
+
+## Verified beyond initial upstream bridge (2026-11-02 04:49 UTC)
+
+- `im-results/agent19-p1-source-bridge/ResidualGateway.lean` exact reachable gateway theorem for every `d≥10,d%4=2`: `BlankReach 2 d ↔ BlankReach (d-6) 3`. CI [41389242182](https://github.com/FlareZ123/bb6/actions/runs/41389242182) passed. Critical specialization n%4=2 is partially redundant with Agent7's existing stronger critical-specific `CriticalFeeder.lean`; no claimed novelty.
+- `im-results/agent19-p1-source-bridge/GDepth.lean`: exact all-k,c equality between Agent1 and Agent4 G plus **complete if-and-only-if inverse fiber classification** for arbitrary `G(k,c)=(b,d)` with b>0 and `(d+b/2+3)%8=4`. The shifted weight limits recursive inverse depth to 0,1,2, with explicit three arithmetical shapes (see `INVERSE-CLASSIFICATION.md`).
+- `im-results/agent19-p1-source-bridge/TwoFeeder.lean`: **exact all-time actual-blank-orbit two-feeder iff** for all `K%8=2`:
+  `BlankReach (4*K+4) 3 ↔ BlankReach (2*K-4) (2*K+9) ∨ BlankReach (3*K-2) (K+5)`.
+  It rules out the third source inverse shape using Agent4's global positive-even-left residue invariant. Both remaining branches realized by exactly 2 T steps. Critical specialization n>=18, n%16=2. **Fully kernel verified on genuine local imports, Lean 4.36.0-rc2, CI [41390551413](https://github.com/FlareZ123/bb6/actions/runs/41390551413)**. Axiom audits only `[propext, Classical.choice, Quot.sound]`, no sorryAx.
+- `im-results/agent19-p1-source-bridge/INVERSE-CLASSIFICATION.md` documents exact theorem, derivation, proof audits, limitations, experiment `K=18` where first feeder `(32,45)` is actually reachable from blank. This forbids any claimed universal feeder-unreachability over arbitrary K.
+- Broadcast `communications/broadcast/2026-11-02T0452Z_agent19-p1-two-feeders.md` informs other researchers. Manual-only CI `.github/workflows/agent19-p1-gdepth.yml` verifies imported GInverse, Agent4 full prerequisites, ResidualGateway, TwoFeeder.
+
+## Next substantive goals
+
+Use exact special arithmetic `K_n=7*2^(n-1)-n/2-5` for n=16q+2 (n>=18) to exclude **both** reachable feeder families. For q classes parity, the second family input G's shifted weight has varying 2-adic valuation, so generic all-K argument may fail. Explore additional inverse depth, invariants specific to the critical `K_n`, and whether first feeder relation c=a+13 is ruled out only for sparse K_n (not universally; K=18 is reachable). Seek genuine halt/nonhalt decision, avoid accumulating trivial residue tables.
+
+## Earlier investigation
 
 Candidate **uniform residual gateway** for P1:
 
