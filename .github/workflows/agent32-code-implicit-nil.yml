@@ -32,3 +32,4 @@ jobs:
           lean -o im-results/agent32-cryptid-padding/CodeImplicitNil.olean im-results/agent32-cryptid-padding/CodeImplicitNil.lean
           lean -o im-results/agent32-cryptid-padding/TokenCostNormal.olean im-results/agent32-cryptid-padding/TokenCostNormal.lean
           lean im-results/agent32-cryptid-padding/CodePermutation.lean
+          lean im-results/agent32-threeadic/ThreeAdic.lean
