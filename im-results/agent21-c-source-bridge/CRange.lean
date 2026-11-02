@@ -113,6 +113,22 @@ theorem zero_return_mod4_hole (a k A K n : Nat)
       change BB6CLine.nextC s = some (A,K,0) at h
       exact good_last s A K (good_run a k n s hp) h hK hodd
 
+
+/-- Every reachable symbolic state satisfies the stage invariant. -/
+theorem reached_good (s : S) (h : BB6CLine.Reach s) : good s := by
+  induction h with
+  | init => simp [good]
+  | next p q hp ht ih => exact good_preserved p q ih ht
+
+/-- Exact actual blank-entry exclusion for odd zero-right-counter states. -/
+theorem reached_odd_zero_mod4_hole (A K : Nat)
+    (hr : BB6CLine.Reach (A,K,0)) (hK : 5 ≤ K) (hodd : K%2=1) :
+    (A+K)%4=0 ∨ (A+K)%4=3 := by
+  cases hr with
+  | next p t hp ht =>
+      exact good_last p A K (reached_good p hp) ht hK hodd
+
 #print axioms good_preserved
 #print axioms zero_return_mod4_hole
+#print axioms reached_odd_zero_mod4_hole
 end BB6.CRange
