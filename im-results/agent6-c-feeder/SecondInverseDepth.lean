@@ -79,6 +79,78 @@ theorem even_back_target_restricted (q kin c a k : Nat)
     right
     omega
 
+
+/-- Odd-bounce grammar outputs always have even sum, at arbitrary depth. -/
+theorem oddBack_sum_even (x y k c : Nat) (h : OddBack x y k c) :
+    (x+y)%2=0 := by
+  induction h with
+  | terminal k hk hy hbd hx => omega
+  | step k c hk hc h ih => exact ih
+
+/-- The entire affine image family has *only* globally forbidden
+    modulo-four predecessor classes. The proof uses the original exact
+    section definition and the complete genuine odd/even bounce grammars. -/
+theorem section_twostep_target_parent_residues (q a k : Nat)
+    (h : secNext (a,k)=some (24*(16*q+4),20*(16*q+4)-1)) :
+    (a%4=1 ∧ k%4=1) ∨ (a%4=3 ∧ k%4=3) := by
+  by_cases ha0 : a=0
+  · by_cases hk0 : k=0
+    · simp [secNext,exactSection,ha0,hk0] at h
+    · by_cases hk1 : k=1
+      · simp [secNext,exactSection,ha0,hk0,hk1] at h
+      · have hb : (bounce 1 (2*k+1)).2=some (24*(16*q+4),20*(16*q+4)-1) := by
+          simpa only [secNext,exactSection,if_pos ha0,if_neg hk0,if_neg hk1] using h
+        have hodd : OddBack (24*(16*q+4)) (20*(16*q+4)-1) 1 (2*k+1) :=
+          (oddBack_iff_bounce _ _ _ _ (by decide)).mpr hb
+        have hsum := oddBack_sum_even _ _ _ _ hodd
+        omega
+  · by_cases ha1 : a=1
+    · by_cases hk0 : k=0
+      · simp [secNext,exactSection,ha0,ha1,hk0] at h
+        omega
+      · by_cases hk1 : k=1
+        · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h
+          omega
+        · by_cases hk2 : k=2
+          · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
+            omega
+          · by_cases hk3 : k=3
+            · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h
+            · have hb : (bounce 4 (2*k-3)).2=some (24*(16*q+4),20*(16*q+4)-1) := by
+                simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] using h
+              have heven : EvenBack (24*(16*q+4)) (20*(16*q+4)-1) 4 (2*k-3) :=
+                (evenBack_iff_bounce _ _ _ _ (by decide)).mpr hb
+              obtain ⟨n,hpow,_⟩ := evenBack_depth_cost _ _ _ _ (by omega) heven
+              have hformula : 44*(16*q+4) = 2^n*16 := by omega
+              cases n with
+              | zero => simp at hformula; omega
+              | succ n =>
+                  rw [Nat.pow_succ] at hformula
+                  omega
+    · by_cases hk0 : k=0
+      · simp [secNext,exactSection,ha0,ha1,hk0] at h
+        omega
+      · by_cases hregion : 2*k≤a
+        · simp [secNext,exactSection,ha0,ha1,hk0,hregion] at h
+          omega
+        · have hb : (bounce (a-1) (2*k-a+3)).2=some (24*(16*q+4),20*(16*q+4)-1) := by
+            simpa only [secNext,exactSection,if_neg ha0,if_neg ha1,if_neg hk0,if_neg hregion] using h
+          by_cases hodd : (a-1)%2=1
+          · have ho : OddBack (24*(16*q+4)) (20*(16*q+4)-1) (a-1) (2*k-a+3) :=
+              (oddBack_iff_bounce _ _ _ _ hodd).mpr hb
+            have hsum := oddBack_sum_even _ _ _ _ ho
+            omega
+          · have heven : (a-1)%2=0 := by omega
+            have hback : EvenBack (24*(16*q+4)) (20*(16*q+4)-1) (a-1) (2*k-a+3) :=
+              (evenBack_iff_bounce _ _ _ _ heven).mpr hb
+            have hc : (2*k-a+3)%2=0 := by omega
+            have ha : a=(a-1)+1 := by omega
+            have hrel : (2*k-a+3)+a=2*k+3 := by omega
+            exact even_back_target_restricted q (a-1) (2*k-a+3) a k heven hc hback ha hrel
+
+#print axioms oddBack_sum_even
+#print axioms section_twostep_target_parent_residues
+
 #print axioms evenBack_depth_cost
 #print axioms even_back_target_restricted
 
