@@ -45,8 +45,21 @@ The first [run 41427729455](https://github.com/FlareZ123/bb6/actions/runs/414277
 
 ## General all-residue semantic bridge
 
-`GeneralQuarterBridge.lean` proves an **all-r** theorem `BB6.Agent45Quarter.critical_of_quarter_hub`: given even `r≥18` with `2r≤524272`, a valid exponential lower bound, and a proof excluding the exact affine inverse-cone hub, the genuine halting-critical `Reach 2 H(262144q+r)` is impossible for every `q`. The generic statement has passed a local Lean declaration-level test; full original-source CI verification is configured in a follow-up quarter workflow run. `Generic174.lean` is a compact instance of that general bridge and also awaits full original-source CI confirmation. The already fully source-certified `Critical174.lean` remains the principal proof.
+`GeneralQuarterBridge.lean` proves an **all-r** theorem `BB6.Agent45Quarter.critical_of_quarter_hub`: given even `r≥18` with `2r≤524272`, a valid exponential lower bound, and a proof excluding the exact affine inverse-cone hub, the genuine halting-critical `Reach 2 H(262144q+r)` is impossible for every `q`. The generic statement and `Generic174.lean` instance have now also **passed an end-to-end original-source Lean CI audit** in [run 41428407632](https://github.com/FlareZ123/bb6/actions/runs/41428407632). This source-confirmed general bridge removes the need to handcraft a separate machine-specific reachability transfer for each generated quarter-class certificate. The already fully source-certified `Critical174.lean` remains the principal proof.
 
 ## What remains
 
 This technique supplies proof objects for affine-closed classes, and may scale to many of Agent 4's 1,451 new computational quarter closures. It currently proves only a strict subset of P1's possible halting-critical indices. Parameter-dependent inverse parity and other residual sectors remain open; therefore neither the P1 halting question nor BB(6) is settled. No finite-run simulation is taken as a universal nonhalting proof.
+
+## Structural scanner audit and uniform exponential lemma (2026-11-02 10:26 UTC)
+
+A direct exact-integer audit of all **22,507** closed quarter cones produced by the source-derived scanner inspected every hub, leaf and inverse input under the affine shift `A*s+C = A*(s-K)+(C+K*A)`. With `K=1`, **22,486** closed cones have nonnegative shifted constants throughout; 21 high-residue classes have a small negative offset (worst `-10`). With `K=2`, **all 22,507** closed cones have positive shifted offsets throughout (minimum **3**). This is a **computational structural finding** across finite candidate cones, awaiting an integrated proof-level coverage checker; it is not 22,507 kernel-certified reachability exclusions. It suggests a generic `K=2` certificate generator can avoid natural-number subtraction overhead for every closed quarter cone.
+
+`GeneralQuarterBound.lean` now establishes, with only Lean standard axioms and without expanding huge powers, the all-residue inequality
+
+```lean
+∀ (r q : Nat), 34 ≤ r →
+    32*(q+r+1) ≤ 2^(262144*q+(r-18))
+```
+
+This is mathematically valid for **all natural** residues `r≥34`, not just the explicitly scanned residue numbers. Its proof uses strong induction on `r` to establish `32*(r+1) ≤ 2^(r-18)` and the elementary `q+1≤2^q`; a local Lean 4.36.0-rc2 kernel/standard-axiom audit succeeded. It avoids the giant numeral evaluation in the currently archived emitter, and makes a future shifted-`K=2` universal checker practical even near `r=262130`. Source CI incorporation is a natural next step.
