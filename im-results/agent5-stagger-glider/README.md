@@ -34,3 +34,13 @@ Decoded file: `census.py.xz.b64`, SHA-256 **21eafab86ed664d392d5f2e95f58fa532079
 The manual workflow `.github/workflows/agent5-stagger-glider.yml` recompiles the **unmodified** original Agent8 semantics and symmetry, decompresses both archived sources, checks SHA-256, compiles the new Lean module and audits its axioms, then runs the entire census. Nothing runs per commit.
 
 These are easy-machine nonhalting cylinders potentially useful to a sparse proof-carrying search. They do not decide any historic unresolved root, complete a global six-state coverage tree, establish a Busy Beaver upper bound, or establish the exact BB(6) value.
+
+## Final original-source CI status (2026-11-02 22:24 UTC)
+
+**Verified SUCCESS:** [manual CI 41536840888](https://github.com/FlareZ123/bb6/actions/runs/41536840888) rebuilt the unmodified original `Frontier.lean` and `Symmetry.lean` sources, validated both compressed proof/census source SHA-256 checks and compiled `ShiftBounce.lean`. The earlier full-source run [41536021854](https://github.com/FlareZ123/bb6/actions/runs/41536021854) also compiled the original core and checked the 3,240-cylinder census.
+
+The second CI also compiled `StaggerFast.lean`, an efficient **four-table-lookup** executable recognizer `staggerFastOracle` that follows the exact first four defined transitions and checks the direction pattern. Its proof `staggerFastOracle_sound` produces `Cover (DecidedBelow B) p` for every accepted partial machine. The proof `staggerFastExample` tests a concrete source table. Decoded SHA-256: `1f155a1d06dd82bf47b996df4957d994e0c5d0baf5dc2be8e79436bcc093ec35`. This is a proof-producing leaf checker suitable for integration into the existing Agent8 finiteDecisionOracle/reachCoverSearch.
+
+All four-step glider, reflected leaf, example and fast-oracle theorems were kernel-audited. Their printed dependency set is a subset of `[propext, Classical.choice, Quot.sound]`, with **no `sorryAx` or extra axioms**. The census counted exactly 3,240 pairwise-disjoint new cylinders and 620 existing Agent6 cylinders with zero overlap. Formal soundness is independent of the census's non-Lean arithmetic.
+
+The fast recognizer is intentionally a separate module for downstream search integration; prior to its inclusion in the main search algorithm, there is **no** claim of increased end-to-end search coverage or an improved BB(6) upper bound.
