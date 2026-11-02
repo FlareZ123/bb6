@@ -28,7 +28,9 @@ theorem project_embed (c : CryptidA.Cfg) (h : c.state ≠ 6) :
 theorem embed_project (c : CryptidBoundary.Cfg) (h : bState c ≠ 6) :
     embed (project c) = c := by
   cases c with
-  | mk left bit right state => simp [embed, project, h]
+  | mk left bit right state =>
+    have hs : state ≠ 6 := by simpa [bState] using h
+    simp [embed, project, hs]
 
 /-- One-step semiconjugacy, including all state-6 configurations.
     It does not assume that either machine avoids the halt transition. -/
