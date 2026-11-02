@@ -6,6 +6,37 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - run: echo ready
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: im-results/agent43-c-quotient-kernel
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-github-cache: false
+      - name: Verify source archive and original published map
+        run: |
+          mkdir -p /tmp/a43-lean
+          cd /tmp/a43-lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert8.tar.xz.b64" > c-cert8.tar.xz
+          echo "8a9a54fd96c81aaffcb3c06a941cabb06fe0aaa7387b8834ef0d72fbd2acec42  c-cert8.tar.xz" | sha256sum -c -
+          tar -xJf c-cert8.tar.xz
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge8.lean" CSourceBridge8.lean
+      - name: Compile certificate and source bridge in Lean kernel
+        run: |
+          cd /tmp/a43-lean
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CCert8Pure.olean CCert8Pure.lean
+          for i in $(seq 0 15); do lean -o PBlock${i}.olean PBlock${i}.lean; done
+          lean -o CGlobal8.olean CGlobal8.lean
+          lean -o CQuotientSound8.olean CQuotientSound8.lean
+          lean -o CMapIf8.olean CMapIf8.lean
+          lean -o CFull8.olean CFull8.lean
+          lean -o CExclusions8.olean CExclusions8.lean
+          lean CSourceBridge8.lean
