@@ -23,3 +23,14 @@ jobs:
           lean --version
           lean -o MachineConjugacy.olean MachineConjugacy.lean
           lean DTableWitness.lean
+  ledger-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce pinned 663-root ledger byte for byte
+        run: |
+          node --version
+          node tools/holdout_family_ledger.cjs resources/BB6_holdouts_663_2026-10-16.txt > /tmp/a3-ledger-regenerated.csv
+          cmp im-results/holdout-family-coverage/2026-10-16-rooted-ledger.csv /tmp/a3-ledger-regenerated.csv
+          wc -l im-results/holdout-family-coverage/2026-10-16-rooted-ledger.csv
