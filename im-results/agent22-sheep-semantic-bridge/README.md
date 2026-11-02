@@ -1,6 +1,6 @@
 # Agent 22: Sheep halting equivalence, including return-section completeness
 
-**Status: intermediate semantic theorem.** The locally imported pair-to-section equivalence and the actual `(0,2)` counter-entry theorem have been checked in Lean 4.36.0-rc2, with no `sorry`, `admit`, `native_decide`, or nonstandard axioms. A source-level import of the original six-state machine at a pinned Google DeepMind Cryptids revision is prepared as `SheepSourceBridge.lean` and has **not yet been independently verified by CI**. Consequently no fully kernel-verified original-machine theorem is claimed until that final import succeeds.
+**Status: original-machine semantic theorem, independently verified in Lean CI.** The locally imported counter-to-section equivalence and the actual `(0,2)` entry theorem were checked in Lean 4.36.0-rc2. The final import of the original six-state machine at pinned Google DeepMind Cryptids revision `ced8f9f44f67a167d5ecc03e687b048c67926371` **passed complete GitHub Actions Lean verification** in [run 41390686337](https://github.com/FlareZ123/bb6/actions/runs/41390686337) on 2026-11-02 04:54 UTC. All axiom audits show only `[propext, Classical.choice, Quot.sound]` (or subsets); no `sorryAx`.
 
 ## Machine, definitions, and significance
 
@@ -57,7 +57,7 @@ theorem BB6.Agent22.SheepSource.raw_halts_iff_power :
       ∃ a, 2 ≤ a ∧ BB6.Agent22.Sheep.Reach 5 (2^a)
 ```
 
-It imports the original upstream certification module and proves complete branch equality, transfers `IsValidAcceleration`, and reconciles Cryptids' `CollatzHalts` iteration convention with the local iterator. **That final module is not yet validated**, so this is an intended, auditable theorem statement rather than an established upstream-linked result.
+It imports the original upstream certification module, proves complete branch equality, transfers `IsValidAcceleration`, and reconciles Cryptids' `CollatzHalts` iteration convention with the local iterator. **This exact end-to-end theorem has been compiled and axiom-audited by the upstream Lean toolchain in the successful CI run.** The final theorem reports only `[propext, Classical.choice, Quot.sound]`.
 
 ## Source, reproduction, and integrity
 
@@ -67,8 +67,8 @@ It imports the original upstream certification module and proves complete branch
 - `prepare_modules.py` converts original top-of-file Lean imports to public module imports for an upstream Lean package build; this adapter itself was tested against all four local modules under Lean 4.36.0-rc2.
 - `.github/workflows/agent22-sheep-source-bridge.yml` is manually dispatched only. It pins Cryptids to commit `ced8f9f44f67a167d5ecc03e687b048c67926371`, builds the original Sheep proof, then compiles the counter-to-section chain and final end-to-end source bridge.
 
-To reproduce locally after checkout, run `python im-results/agent22-sheep-semantic-bridge/unpack.py`, copy Agent 14's `CounterBridge.lean` plus the four files to a temporary module directory, run `prepare_modules.py` over the four pre-source-bridge Lean files, and compile in the order CounterBridge, DeterministicMacro, SheepPowerBridge, SheepBlankCriterion, then SheepSourceBridge in the pinned upstream Cryptids build environment. The manual CI workflow does exactly this.
+To reproduce locally after checkout, run `python im-results/agent22-sheep-semantic-bridge/unpack.py`, copy Agent 14's `CounterBridge.lean` plus the four files to a temporary module directory, run `prepare_modules.py` over the four pre-source-bridge Lean files, and compile in the order CounterBridge, DeterministicMacro, SheepPowerBridge, SheepBlankCriterion, then SheepSourceBridge in the pinned upstream Cryptids build environment. The manual CI workflow does exactly this. The verified run is [41390686337](https://github.com/FlareZ123/bb6/actions/runs/41390686337); its final log confirms `BB6.Agent22.SheepSource.raw_halts_iff_power` has no `sorryAx`.
 
 ## Mathematical limits and next objective
 
-The theorem reduces the actual blank-run halting question to reaching any `2^a` from `t=5`. It does not show that any such power is or is not reached and **does not settle this machine, change an accepted BB(6) bound, or determine BB(6)**. Prior source and partial-return results exist; novelty relative to external literature has not been established. The theorem's immediate value is semantic: inverse-tree exclusions can be interpreted as rigorous counter-level nonreachability once the final upstream source bridge is checked. The most important next mathematical task remains a *uniform exclusion of all remaining power-of-two targets* or discovery of a genuinely reachable one.
+The theorem reduces the actual blank-run halting question to reaching any `2^a` from `t=5`. It does not show that any such power is or is not reached and **does not settle this machine, change an accepted BB(6) bound, or determine BB(6)**. Prior source and partial-return results exist; novelty relative to external literature has not been established. The theorem's immediate value is semantic: inverse-tree exclusions proved in the exact `SectionNext` return graph can now be interpreted as rigorous original-machine nonreachability. Any additional theorem expressed using a separately defined return graph still requires its own relation-equivalence bridge. The most important next mathematical task remains a *uniform exclusion of all remaining power-of-two targets* or discovery of a genuinely reachable one.
