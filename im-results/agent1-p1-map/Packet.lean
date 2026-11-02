@@ -149,6 +149,33 @@ theorem T_even_small_exits_odd (a c : Nat)
     simp [T,hn0',hn1',hn2',hn3',ha',g]
   exact ⟨g.1,g.2,h1,h2,hodd⟩
 
+
+/-- From an odd right counter the map makes a non-halting transition
+    to a zero or odd right counter. -/
+theorem T_odd_second_avoids_positive_even (a c : Nat) (hc : c%2=1) :
+    ∃ a' c', T a c = some (a',c') ∧ (c'=0 ∨ c'%2=1) := by
+  have hn0 : c≠0 := by omega
+  by_cases hc1 : c=1
+  · refine ⟨a+2,0,?_,Or.inl rfl⟩
+    simp [T,hn0,hc1]
+  · have hc3 : c≥3 := by omega
+    by_cases ha : a%2=0
+    · refine ⟨a+3,c-2,?_,Or.inr (by omega)⟩
+      simp [T,hn0,hc1,ha]
+    · by_cases hc' : c=3
+      · let g := G (a/2) 1
+        have hodd : g.2%2=1 := by
+          exact G_preserves_odd_second (a/2) 1 (by decide)
+        refine ⟨g.1,g.2,?_,Or.inr hodd⟩
+        simp [T,hn0,hc1,ha,hc',g]
+      · let g := G (a/2+1) (c-2)
+        have hodd : g.2%2=1 := by
+          apply G_preserves_odd_second
+          omega
+        have hc2 : c≠2 := by omega
+        refine ⟨g.1,g.2,?_,Or.inr hodd⟩
+        simp [T,hn0,hc1,ha,hc2,hc',g]
+
 /-- Iteration of the certified accelerated map. `some` means the machine
     has not taken a halting transition within the specified horizon. -/
 def iterT : Nat → Nat × Nat → Option (Nat × Nat)
