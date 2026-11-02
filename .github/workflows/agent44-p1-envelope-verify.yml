@@ -1,0 +1,26 @@
+name: Agent 44 P1 power envelope verification (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify source-committed universal power theorem with axiom audit
+        run: |
+          lean --version
+          lean im-results/agent44-power-envelope/PowerCertificate.lean
+      - name: Reproduce full 5,264-cone coefficient census
+        run: |
+          python im-results/agent44-power-envelope/envelope_audit.py
