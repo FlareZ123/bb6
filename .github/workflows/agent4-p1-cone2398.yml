@@ -77,6 +77,7 @@ jobs:
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
           lean im-results/agent4-coverage-smoke/BranchSmoke.lean
+          lean im-results/agent4-coverage-smoke/WriteOneDrift.lean
 
       - name: Compare source-defined raw six-state semantics
         run: |
