@@ -22,7 +22,7 @@ theorem raw_halts_iff_mod32_gates :
           constructor
           · omega
           · exact ⟨by omega, trivial⟩
-        exact BB6.CMod32.reset_mod32_sixteen_unreachable (j/32) (heq.symm ▸ hr)
+        exact BB6.CMod32.reset_mod32_sixteen_unreachable (j/32) (heq ▸ hr)
       exact Or.inl ⟨j,h1,h4,h8,h32,hr⟩
     · exact Or.inr hs
   · rintro (⟨j,h1,h4,h8,h32,hr⟩|hs)
