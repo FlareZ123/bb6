@@ -33,5 +33,6 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/HaltingFunnel.lean" HaltingFunnel.lean
           cp "$GITHUB_WORKSPACE/im-results/agent19-p1-source-bridge/P1Bridge.lean" Agent19P1Bridge.lean
+          export LEAN_PATH=".:${LEAN_PATH:-}"
           lake env lean -o HaltingFunnel.olean HaltingFunnel.lean
           lake env lean Agent19P1Bridge.lean
