@@ -138,3 +138,29 @@ This composes `BlankParam.lean` with exact normalization, requiring real blank-o
 
 **Open obstacle:** both normalized infinite parameter families remain globally unresolved. Further progress requires a uniform property of the stopped normal forms, possibly Agent3's full recursive bounce inverse grammar. Do not interpret normalization or sound exclusion as a general reachability decider.
 
+
+## M8/M16 source-quotient composition and extended executable filter (pending combined CI)
+
+`M8M16Composition.lean` composes Agent 15's exact section semantics with Agent 46's `section_exact` simulation into the original three-counter `BB6CLine.Reach` relation. The theorem `section_reach_embeds` transports every finite Agent 15 section run from the genuine blank-origin start `(5,1)` to an original CLine reachable state `(a,k,0)`. It then imports the source-verified M8 and M16 quotient exclusions through that bridge.
+
+The intended CReach consequences are:
+- M8 direct cylinder `(8u+7,8v+4)`;
+- M8 affine predecessor cylinder `(8u+7,16v+10)`;
+- M8 odd-first-counter halting parameters `(j mod 8,m mod 8)=(2,7)` or `(6,3)`;
+- four additional M8 affine-preimage parameter classes `(j mod 16,m mod 16)=(2,5),(6,9),(10,13),(14,1)`;
+- M16 even/odd classes `j mod 4=3` and `(m+1) mod 16=j mod 16`;
+- M16 `(9,15)` classes `j mod 8=3` and `m mod 16=j mod 16`;
+- M16 `(1,7)` classes `j mod 8=7` and `(m+8) mod 16=j mod 16`;
+- M16 first-family classes `m mod 16=7 or 14`.
+
+`AffineQuotientExclusion.lean` extends the previous `affineExcluded` filter. The new executable `affineQuotientExcluded(a,k)` first uses the complete affine normalizer, then checks the four source-certified quotient cylinders `(7,4) mod 8`, `(1,2) mod (8,16)`, `(9,15) mod 16`, and `(1,7) mod 16` (excluding the explicit base point `(1,7)`). Its intended theorem proves this filter sound for original blank-origin `CReach`; false remains inconclusive.
+
+The same module derives an exact filtered version of `blank_halts_iff_normalized_families`: either original parametric halting family must have a normalized reachable gateway on which `affineQuotientExcluded` is false. It also derives a first-family exclusion for all eight residues `m mod 16 ∈ {1,4,5,7,9,12,13,14}`. Six are caught by the existing affine arithmetic filter after zero or one normalization step; residues 7 and 14 use the M16 quotient cylinders. The remaining first-family residues are not excluded by this theorem.
+
+**Verification status:** local Lean scratch tests checked the generic section-run induction, the M8 affine arithmetic, the combined filter soundness shape, the filtered-family iff, and the eight-residue first-family proof. These checks used theorem-shaped stubs for imported source declarations and do not establish the repository result.
+
+The first combined source CI run [41490760188](https://github.com/FlareZ123/bb6/actions/runs/41490760188) failed because the M8 and M16 archives both declared `CCert.reps` in the same Lean environment. This was a namespace collision, not a mathematical counterexample. The manual workflow now renames the M16 certificate namespace to `CCert16` during reconstruction, leaving M8 under `CCert`; M16 theorem references use `CCert16`.
+
+The corrected full original-source CI is [41496155633](https://github.com/FlareZ123/bb6/actions/runs/41496155633), head commit `ac4058f89bc8e560f939f4bc4ce7134c85c67bf2`. It was running the M8/M16 source compilation step at the time this section was written. **Do not claim any new theorem above as source-verified until that run succeeds.** If it fails, inspect only the failed job log tail and correct the concrete failure.
+
+These exclusions are infinite residue families within the exact Machine C stopping equations. They do not settle the remaining parameter classes, prove Machine C nonhalting, or determine `BB(6)`. Keep all material here in `im-results/`; it is not yet a standalone publishable solution.
