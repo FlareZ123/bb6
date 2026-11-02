@@ -43,7 +43,7 @@ def main():
                 rec[2],rec[3] = min(rec[2],c),max(rec[3],c)
                 counts[side] += 1
                 for k, u in all_positive_g_ancestors(b, d):
-                    x, y = 2*k-4, u+4
+                    x, y = k*2-4, u+4
                     if y.residue(2) == 1 and x.residue(4) == 0:
                         stack.append((x, y))
     assert counts == Counter(closed=5264, lower=14827, upper=61337), counts
