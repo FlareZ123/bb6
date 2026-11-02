@@ -172,6 +172,8 @@ jobs:
           cp ../im-results/agent8-coverage-contract/Prune.lean BB6Agent4/
           cp ../im-results/agent8-coverage-contract/HaltSlotFreedom.lean BB6Agent4/
           cp ../im-results/agent8-coverage-contract/F287HaltFreedom.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/CylinderFrontier.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/F287CylinderGlobal.lean BB6Agent4/
           for m in RelativeTape FrontierAudit FrontierMass FrontierClose SingletonFrontier CryptidsTapeAdapter CryptidsF287 CryptidsF287Global; do
             cp "../im-results/agent4-coverage-smoke/$m.lean" BB6Agent4/
           done
@@ -185,6 +187,8 @@ jobs:
           lake env lean -o BB6Agent4/FrontierClose.olean BB6Agent4/FrontierClose.lean
           lake env lean -o BB6Agent4/CryptidsTapeAdapter.olean BB6Agent4/CryptidsTapeAdapter.lean
           lake env lean -o BB6Agent4/SingletonFrontier.olean BB6Agent4/SingletonFrontier.lean
+          lake env lean -o BB6Agent4/CylinderFrontier.olean BB6Agent4/CylinderFrontier.lean
           lake env lean -o BB6Agent4/CryptidsF287.olean BB6Agent4/CryptidsF287.lean
           lake env lean BB6Agent4/CryptidsF287Global.lean
-          lake env lean BB6Agent4/F287HaltFreedom.lean
+          lake env lean -o BB6Agent4/F287HaltFreedom.olean BB6Agent4/F287HaltFreedom.lean
+          lake env lean BB6Agent4/F287CylinderGlobal.lean
