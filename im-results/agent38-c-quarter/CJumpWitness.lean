@@ -837,7 +837,7 @@ private theorem p104 : run 552041396 (some (5,0,1)) = some (104197,10046,0) := b
     simpa only [show 10855464 + 541185932 = 552041396 by decide] using run_add 10855464 541185932 (some (5,0,1))
   rw [hc,p103,hs]
 
-private theorem p105 : run 563272575 (some (5,0,1)) = some (72311,26600,0) := by
+theorem p105 : run 563272575 (some (5,0,1)) = some (72311,26600,0) := by
   have hp : path 1024 (104197,10046,0) = (11231179, some (72311,26600,0)) := by decide
   have hs : run 11231179 (some (104197,10046,0)) = some (72311,26600,0) := by
     simpa only [hp,Prod.fst,Prod.snd] using path_sound 1024 (104197,10046,0)
