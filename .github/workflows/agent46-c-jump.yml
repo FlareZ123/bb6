@@ -22,7 +22,7 @@ jobs:
           mkdir -p /tmp/a46-jump
           cp im-results/agent11-c-line/CLine.lean /tmp/a46-jump/
           cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a46-jump/
-          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof}.lean /tmp/a46-jump/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting}.lean /tmp/a46-jump/
           cd /tmp/a46-jump
           export LEAN_PATH="."
           lean --version
@@ -35,4 +35,7 @@ jobs:
           lean -o JumpOneReturn.olean JumpOneReturn.lean
           lean -o JumpBounceSections.olean JumpBounceSections.lean
           lean -o BounceCalc.olean BounceCalc.lean
-          lean BounceProof.lean
+          lean -o BounceProof.olean BounceProof.lean
+          lean -o FastSectionDef.olean FastSectionDef.lean
+          lean -o FastSectionProof.olean FastSectionProof.lean
+          lean FastSectionHalting.lean
