@@ -24,7 +24,7 @@ jobs:
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a38-section/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a38-section/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,BounceHaltClosed,OddSectionExponential,SectionHaltingBasin,SectionCompleteBasin,Agent46CBridge,BlankDyadicGate}.lean /tmp/a38-section/
-          cp im-results/agent38-c-section-mod4/{Agent38SectionParity,DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor}.lean /tmp/a38-section/
+          cp im-results/agent38-c-section-mod4/{Agent38SectionParity,DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor,FurtherDyadicMod16}.lean /tmp/a38-section/
           cd /tmp/a38-section
           export LEAN_PATH="."
           lean --version
@@ -57,4 +57,5 @@ jobs:
           lean -o Agent46CBridge.olean Agent46CBridge.lean
           lean -o BlankDyadicGate.olean BlankDyadicGate.lean
           lean -o DyadicResidualCriterion.olean DyadicResidualCriterion.lean
-          lean SectionMod8Predecessor.lean
+          lean -o SectionMod8Predecessor.olean SectionMod8Predecessor.lean
+          lean FurtherDyadicMod16.lean
