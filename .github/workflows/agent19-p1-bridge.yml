@@ -38,8 +38,8 @@ jobs:
           done
           cp "$GITHUB_WORKSPACE/im-results/agent19-p1-source-bridge/P1HaltingBridge.lean" Agent19P1HaltingBridge.lean
           export LEAN_PATH=".:${LEAN_PATH:-}"
-          lake env lean -o HaltingFunnel.olean HaltingFunnel.lean
-          lake env lean -o Agent19P1Bridge.olean Agent19P1Bridge.lean
+          lake env lean -o .lake/build/lib/lean/HaltingFunnel.olean HaltingFunnel.lean
+          lake env lean -o .lake/build/lib/lean/Agent19P1Bridge.olean Agent19P1Bridge.lean
           for name in EvenSector OddReturn Reachability BlankCriterion; do
             lake env lean -o "${name}.olean" "${name}.lean"
           done
