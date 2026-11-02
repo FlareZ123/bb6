@@ -58,3 +58,18 @@ The Lean theorem uses the arithmetically equivalent unsimplified primitive-step 
 ## Open mathematical tasks
 
 Compose the actual blank-origin F sections end to end using the now-unified symbolic macros. Verify all F/0 suffix traces and seek a global closed forward invariant or decisive halting witness. The halting language of this machine is unknown at its actual blank start; BB(6) has not been determined. Compare the full return equations to @-d's published Cryptid reductions before claiming historical priority. This work belongs under `im-results/`; it does not meet the repo's requirement for publishable standalone results in `results/`.
+
+## Extension: all finite binary token words (source verified)
+
+[WordReturns.lean](./WordReturns.lean) improves the complete A return from ordered pairs and triples to **any finite interleaving** of the tokens `10` and `111`. For a word `ws : List Bool`, the existing Agent25 `wordCode` maps false to `10` and true to `111`, `wordInc` adds 1 or 4 to the A counter, and `wordCost m ws` accounts exactly for the primitive work in sequence. The source-checked `complete_A_word` states for arbitrary natural k and arbitrary finite `ws,ys`:
+
+```text
+I_(3k+3)(0 wordCode(ws) 0 ys)
+  --[12k²+41k+32 + wordCost(4k+3,ws)
+       + 2*(4k+3+wordInc(ws))+6]-->
+I_(2*(4k+3+wordInc(ws))+5)(ys).
+```
+
+The proof imports the genuine Agent25 `TokenCode.consume_code` theorem, invokes its exact universally quantified word decoder, closes the boundary by `close_double_zero`, transfers through `transfer_f0`, and composes with Agent31 `prefix_A`. Manual [CI 41417962868](https://github.com/FlareZ123/bb6/actions/runs/41417962868) succeeded under Lean 4.36.0-rc2 with original source and only `[propext, Quot.sound]` in all final axiom audits. This strictly subsumes the previously certified ordered `q,r` A branch for explicit zero delimiters, without determining any blank-orbit result. General empty-suffix closure is a separate case.
+
+An exploratory attempt at a distinct `1100` suffix branch is under construction in `DoubleOneBranch.lean`; treat it as unverified until a full authenticated CI success. No claim in this README depends upon it.
