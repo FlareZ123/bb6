@@ -55,4 +55,15 @@ theorem cover_gives_agent13_raw_upper (B : Nat)
   intro m n hn
   exact BB6Coverage.maximal_runtime_if_cover B cert (n+1) ⟨m,n,hn,rfl⟩
 
+theorem agent8_cover_gives_agent13_exact (B : Nat)
+    (cert : BB6Coverage.Cover (BB6Coverage.DecidedBelow B) BB6Coverage.emptyTable)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B := by
+  exact ⟨champ, cover_gives_agent13_raw_upper B cert⟩
+
+#print axioms universal_raw_upper_iff
+#print axioms universal_code_upper_iff
+#print axioms cover_gives_agent13_raw_upper
+#print axioms agent8_cover_gives_agent13_exact
 end BB6.CoverageAdapter
