@@ -1,0 +1,26 @@
+name: Agent 48 Machine C zero-middle invariant (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check actual unmodified CLine source and new symbolic theorem
+        run: |
+          mkdir -p /tmp/agent48
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent48/CLine.lean
+          cp im-results/agent48-c-middle-zero/KZeroMod4.lean /tmp/agent48/KZeroMod4.lean
+          cd /tmp/agent48
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean KZeroMod4.lean
