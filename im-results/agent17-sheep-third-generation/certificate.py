@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact periodic certificates for four Sheep-Machine inverse exclusions.
+"""Exact periodic certificates for twenty Sheep-Machine inverse exclusions.
 
 This checks finite modular facts used by the mathematical proof in README.md.
 Its assertions exhaust *all* j in the stated residue classes, not a bounded
@@ -7,14 +7,14 @@ numerical sample. No third-party dependencies.
 """
 from math import gcd
 
-RESIDUES = (15, 87, 123, 159)
+RESIDUES = (15, 27, 87, 99, 123, 135, 159, 195, 207, 243, 267, 303, 315, 339, 375, 423, 447, 459, 483, 519)
 # (denominator factor, exponent offset, numerator remainder function,
 #  valid periods for a=0,1,..., expected admissible a values)
 STAGES = (
     (5, 3, lambda a: 10 * a - 1,
      (4, 20, 12, 8, 20, 60, 28), frozenset({2})),
     (45, 6, lambda a: 107 + 90 * a,
-     (36, 60, 108, 24, 180, 60, 252, 48, 324, 300),
+     (36, 60, 108, 24, 540, 60, 252, 48, 324, 300),
      frozenset()),
 )
 
@@ -58,10 +58,10 @@ def verify():
                 modulus = factor * (2 ** (a + 1) + 1)
                 assert pow(2, period, modulus) == 1, (factor, a, period)
                 # Because each period works, the list is complete for
-                # j=residue+180*k as k ranges over *all* natural numbers.
-                cycle_length = period // gcd(period, 180)
+                # j=residue+540*k as k ranges over *all* natural numbers.
+                cycle_length = period // gcd(period, 540)
                 for k in range(cycle_length):
-                    j = residue + 180 * k
+                    j = residue + 540 * k
                     if pow(2, j + offset, modulus) == remainder(a) % modulus:
                         admissible.add(a)
             assert admissible == expected, (factor, residue, admissible)
@@ -74,9 +74,9 @@ def verify():
         actual = [t for t in range(5, y) if section_next(t) == y]
         assert predicted == actual, (y, predicted, actual)
 
-    # Sanity check that all four residue classes fit the second-parent formula.
+    # Sanity check that all twenty residue classes fit the second-parent formula.
     for r in RESIDUES:
-        for j in (r, r + 180, r + 360):
+        for j in (r, r + 540, r + 360):
             p = 1 << j
             y1 = (4 * p - 2) // 5
             y2 = (32 * p - 76) // 45
