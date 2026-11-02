@@ -1,0 +1,27 @@
+name: Agent 41 Machine C modulus-512 transition abstraction (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original Machine C map and Agent 41 soundness proof
+        run: |
+          mkdir -p /tmp/agent41-c512
+          cd /tmp/agent41-c512
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/CMapBridge.lean" CMapBridge.lean
+          python3 -c 'import base64,hashlib,lzma,pathlib,os; p=pathlib.Path(os.environ["GITHUB_WORKSPACE"])/"im-results/agent41-c-quotient512/Quotient512.lean.xz.b64"; data=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(data).hexdigest()=="58d27cdf96c62d7eeac74bf9dfe3b51c7a3f193b196c2b5b9f858ce657643b94"; pathlib.Path("Quotient512.lean").write_bytes(data)'
+          export LEAN_PATH="."
+          lean -o CLine.olean CLine.lean
+          lean -o Quotient512.olean Quotient512.lean
+          lean CMapBridge.lean
