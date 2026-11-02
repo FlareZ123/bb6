@@ -38,8 +38,10 @@ theorem a_pairs_triples_nil (m q r : Nat) :
         omega
   rw [ht, run_add (2*q) (tcost (m+q) r + (2*(m+q+4*r)+6)),
     ten_iter]
-  rw [run_add (tcost (m+q) r) (2*(m+q+4*r)+6),
-    iter_triplet]
+  rw [run_add (tcost (m+q) r) (2*(m+q+4*r)+6)]
+  have hr := iter_triplet (m+q) r ([] : List Bool)
+  simp only [List.append_nil] at hr
+  rw [hr]
   exact a_close_nil _
 
 #print axioms a_pairs_triples_nil
