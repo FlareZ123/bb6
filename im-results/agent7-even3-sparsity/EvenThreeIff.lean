@@ -83,6 +83,31 @@ theorem reachable_eight_fourw_three_iff_feeder (z w : Nat) (hz : 3≤z) :
       (BB6.Agent1.Reach.next _ _ _ _ hr (paired_first z w hz))
       (paired_second z w hz)
 
+/-- Explicitly parameterize all reachable odd-sector members via the
+    genuine even-right growth coordinate E_j = 14*2^j-12. -/
+theorem reachable_eight_three_phase_iff (z w : Nat) (hz:3≤z) :
+    BB6.Agent1.Reach (8*z) (4*w+3) ↔
+    ∃ j : Nat, 3*z+w+4=7*2^j ∧
+      BB6.Agent1.Reach (14*2^j-12) (14*2^j-4*z-4) := by
+  have hh := reachable_eight_fourw_three_iff_feeder z w hz
+  constructor
+  · intro hr
+    have hf := hh.mp hr
+    obtain ⟨j,hj⟩ := BB6.Agent1.even_left_power_shape
+      (6*z+2*w-4) (2*z+2*w+4) hf (by omega) (by omega) (by omega)
+    have hpow : 3*z+w+4=7*2^j := by omega
+    refine ⟨j,hpow,?_⟩
+    have ha : 6*z+2*w-4=14*2^j-12 := by omega
+    have hc : 2*z+2*w+4=14*2^j-4*z-4 := by omega
+    rwa [ha,hc] at hf
+  · rintro ⟨j,hpow,hf⟩
+    have ha : 6*z+2*w-4=14*2^j-12 := by omega
+    have hc : 2*z+2*w+4=14*2^j-4*z-4 := by omega
+    apply hh.mpr
+    rwa [ha,hc]
+
+#print axioms reachable_eight_three_phase_iff
+
 #print axioms paired_first
 #print axioms paired_second
 #print axioms reachable_eight_fourw_three_iff_feeder
