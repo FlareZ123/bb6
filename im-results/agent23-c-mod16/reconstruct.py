@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent
 EXPECTED = {
     "CM16.lean": "d8ea25e4a62b5f2fe7211d7bdef1b58af6193501daf54797e10d290ed24ad516",
     "C59.lean": "12828c07852c20734f342347b32ef3b15b6e6f2307b1a2f2c48193a0303e7543",
+    "CSide.lean": "d557b6246e93c2fef6481164644b9df936eff31c10a8fe45402dfe2e5e72aa44",
 }
 
 for name, expected in EXPECTED.items():
