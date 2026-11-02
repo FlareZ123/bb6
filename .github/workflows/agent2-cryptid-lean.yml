@@ -1,0 +1,29 @@
+name: Agent 2 cryptid Lean kernel check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-cryptid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare proof and pin Lean version
+        run: |
+          python -m pip install filelock
+          python im-results/agent2-unpack-proof.py
+          python -c 'from pathlib import Path; Path("lean-toolchain").write_text("leanprover/lean4:v4.36.0-rc2\n")'
+      - name: Install Lean without building the repository
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-github-cache: 'false'
+      - name: Check complete source and axiom reports
+        run: lean im-results/agent2-cryptid-proof.lean
