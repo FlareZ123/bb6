@@ -5,21 +5,23 @@ import TokenCode
 set_option maxHeartbeats 3000000
 namespace BB6.Agent35
 
-/-- Convert Agent 31's configuration representation to Agent 25's. -/
+/-- Identify the original machine's terminal state 6 with the other
+    interpreter's frozen F-on-1 terminal configuration. -/
 def toA : CryptidBoundary.Cfg → CryptidA.Cfg
-  | ⟨l,h,r,st⟩ => ⟨l,h,r,st⟩
+  | ⟨l,h,r,st⟩ => if st = 6 then ⟨l,true,r,5⟩ else ⟨l,h,r,st⟩
 
-theorem toA_injective : Function.Injective toA := by
-  intro x y heq
-  cases x with
-  | mk l h r st =>
-    cases y with
-    | mk l' h' r' st' =>
-      simp only [toA, CryptidA.Cfg.mk.injEq] at heq
-      rcases heq with ⟨h1,h2,h3,h4⟩
-      simp [h1,h2,h3,h4]
+/-- An F-on-0 output uniquely identifies the original (nonterminal) source state. -/
+theorem toA_finish (s : CryptidBoundary.Cfg) (r : List Bool)
+    (h : toA s = (⟨[],false,r,5⟩ : CryptidA.Cfg)) :
+    s = (⟨[],false,r,5⟩ : CryptidBoundary.Cfg) := by
+  rcases s with ⟨l,hd,rs,st⟩
+  by_cases hs : st = 6
+  · simp [toA, hs] at h
+  · simp [toA, hs] at h
+    rcases h with ⟨h1,h2,h3,h4⟩
+    simp [h1,h2,h3,h4]
 
-/-- One raw six-state transition is exactly the same in the two sources. -/
+/-- All raw transitions commute, including the differently represented halt. -/
 theorem toA_step (s : CryptidBoundary.Cfg) :
     toA (CryptidBoundary.step s) = CryptidA.step (toA s) := by
   rcases s with ⟨l,h,r,st⟩
@@ -40,9 +42,12 @@ theorem toA_step (s : CryptidBoundary.Cfg) :
           | succ st =>
             cases st with
             | zero => cases h <;> cases l <;> rfl
-            | succ st => cases h <;> rfl
+            | succ st =>
+              cases st with
+              | zero => cases h <;> rfl
+              | succ st => cases h <;> simp [toA, CryptidBoundary.step, CryptidA.step]
 
-/-- Raw-time simulation commutes with the source conversion, for all steps. -/
+/-- All finite runs commute with the encoding, without a nonhalting hypothesis. -/
 theorem toA_run (n : Nat) (s : CryptidBoundary.Cfg) :
     toA (CryptidBoundary.run n s) = CryptidA.run n (toA s) := by
   induction n with
@@ -74,7 +79,7 @@ theorem code_then_zero (m : Nat) (ws ys : List Bool) :
   rw [CryptidA.run_add, CryptidA.consume_code]
   exact CryptidA.close_double_zero _ _
 
-/-- An exact original-machine F-to-F return for every finite coded combination
+/-- Uniform original-machine F-to-F return for any finite coded combination
     of 10 and 111 symbols, followed by a zero and an arbitrary suffix. -/
 theorem full_A_code (k : Nat) (ws ys : List Bool) :
   CryptidBoundary.run
@@ -92,7 +97,7 @@ theorem full_A_code (k : Nat) (ws ys : List Bool) :
       (2*((4*k+3)+CryptidA.wordInc ws)+6))
     (aBoundary (4*k+3)
       (CryptidA.wordCode ws ++ (false::ys))) = _
-  apply toA_injective
+  apply toA_finish
   rw [toA_run, toA_aBoundary]
   change CryptidA.run _ (CryptidA.ab (4*k+3)
     (CryptidA.wordCode ws ++ (false::ys))) =
