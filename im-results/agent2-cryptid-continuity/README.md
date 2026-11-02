@@ -100,3 +100,21 @@ For every natural `n`, there exists a finite right binary suffix `w` and a finit
 A runnable [halting_witness.py](./halting_witness.py) constructs one specific suffix and its **exact first-halt primitive-step count** by iterating the B arithmetic rule and choosing the corresponding terminal cylinder. Its independent sparse-tape raw simulator reproduced the predicted halting step exactly for every `n=0,…,24`, including `n=14`, which halts at step **1,041,317** for the constructed suffix. The formal Lean theorem independently establishes eventual halt for all n, and the generator uses the exact component step formulas; the computer samples are a cross-check rather than the proof.
 
 **Key limitation and relevance to BB(6):** The theorem quantifies existentially over an input **extension chosen to force halting**. It does **not** show that the all-blank orbit ever encounters any chosen extension, nor that the original blank tape halts or runs forever. In fact it is a counter-obstruction to any attempted global nonhalting proof based solely on unary F-section length without restricting the accompanying right suffix. The longstanding `n→n+3` first-return conjugacy and exact BB(6) remain open. No `results/` promotion without external novelty and direct frontier relevance review.
+
+
+## 2026-11-02 20:35 UTC: exact *first* return of the original E111 boundary
+
+**Original-source Lean CI:** [successful workflow 41520580312](https://github.com/FlareZ123/bb6/actions/runs/41520580312), commit `511e22a5899dd2e359095e02d69759d1f70dca5e`, Lean 4.36.0-rc2. The workflow checksum-reconstructs unmodified Agent31 `Boundary.lean`, compiles Agent32 `CryptidSix.lean`, and checks the two new original-machine modules `NoEarlierF.lean` and `E111FirstReturn.lean`, plus preexisting `EOneTripleReturn.lean` and `EOneTriplePairs.lean`. Final axiom audits show `[propext, Quot.sound]` without `sorryAx`.
+
+**New strict first-return result.** `BB6.CryptidE111FirstReturn.e111_boundary_first_return` proves, for every `m : Nat` and arbitrary finite binary suffix `ys`, that starting from Agent2's authentic `e0 m ys` E boundary:
+
+- at exactly `2*m+137` original raw Turing-machine steps, the state is F on zero with the *entire physical left tape blank*;
+- for every earlier time `t < 2*m+137`, this physical F/0 return does not occur.
+
+Proof: all intermediate times of the initial 134-step source-certified E-to-B bridge are split into fourteen 10-or-4-step symbolic configurations `e0,...,e134`. The `NoReturn` property, checked by Lean at every step for all `m,ys`, allows internal F-on-zero visits only if the left tape remains nonempty. The separate all-natural theorem `BB6.CryptidFirstReturn.sweepB_firstF` proves that the subsequent  `2*m+3` B-sweep does not encounter **state F at all** before its exact endpoint. Exact step composition yields the strict first-return theorem.
+
+**Fix to older proof chain:** this run also repaired two existing associativity obligations in `EOneTriplePairs.lean` (`scan_pairs`, `oppairs_add`). Those obligations caused `sorryAx` in previously failed CI runs; the successful source-level rebuild compiles all legacy dependencies with standard axioms only.
+
+**Remaining missing implication:** the full F-section `I_(3k+4)(0 101101100111 ys)` first reaches the boundary `e0 (4k) ys` by the source-certified `prefix_E` after `12k²+41k+33` steps. It is not yet formally proved that no earlier physically blank-left F/0 return happens during that initial prefix. The  E-boundary first-return certificate alone is therefore **not yet** a first-return theorem for the original entire F-to-F section. The single-return shift law for arbitrary suffixes and the genuine blank orbit remain unresolved.
+
+**Computational test (independent finite evidence):** a literal sparse-tape C++ simulator compared all F-section inputs `I_n(0 w)` for unary lengths `n=2..15`, suffix lengths through 15 bits, with their `n+3` counterparts. It completed 458,752 paired first-return-or-halt comparisons, with no mismatch or timeout at the prescribed finite cutoff. This is consistent with the conjectured shift law but cannot establish it and is not used by the Lean proof.
