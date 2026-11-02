@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Reconstruct upstream symbolic certificate generator
-        run: python3 im-results/agent29-c-inverse/reconstruct.py
+        run: |
+          python3 im-results/agent29-c31/reconstruct.py
+          python3 im-results/agent29-c-inverse/reconstruct.py
       - name: Search smaller second-half residue window
         run: python3 im-results/agent8-rank-barriers/scan_4096.py --start 2048 --end 2112 --timeout 5
