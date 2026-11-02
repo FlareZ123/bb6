@@ -41,6 +41,10 @@ jobs:
           lean im-results/agent44-power-envelope/P1Case130.lean
           python im-results/agent44-power-envelope/generate_case130.py 94
           lean im-results/agent44-power-envelope/P1Case94.lean
+          for residue in 302 254 478 654 430 638; do
+            python im-results/agent44-power-envelope/generate_case130.py "$residue"
+            lean "im-results/agent44-power-envelope/P1Case${residue}.lean"
+          done
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
