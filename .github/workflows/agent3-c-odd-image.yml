@@ -1,0 +1,45 @@
+name: Agent 3 Machine C complete odd-output image (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-odd-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check Agent 3 theorem against unchanged Machine C source
+        run: |
+          mkdir -p /tmp/a3-c-odd
+          cp im-results/agent11-c-line/CLine.lean /tmp/a3-c-odd/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a3-c-odd/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-c-odd/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-c-odd/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/a3-c-odd/
+          cd /tmp/a3-c-odd
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o GenericSection.olean GenericSection.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CPhaseRank.olean CPhaseRank.lean
+          lean -o CSectionTotal.olean CSectionTotal.lean
+          lean -o JumpHigh.olean JumpHigh.lean
+          lean -o JumpMacro.olean JumpMacro.lean
+          lean -o JumpSection.olean JumpSection.lean
+          lean -o JumpBounce.olean JumpBounce.lean
+          lean -o JumpOneReturn.olean JumpOneReturn.lean
+          lean -o JumpBounceSections.olean JumpBounceSections.lean
+          lean -o BounceCalc.olean BounceCalc.lean
+          lean -o BounceProof.olean BounceProof.lean
+          lean -o FastSectionDef.olean FastSectionDef.lean
+          lean Agent3CImage.lean
