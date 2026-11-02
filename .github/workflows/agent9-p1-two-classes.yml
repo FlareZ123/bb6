@@ -65,10 +65,11 @@ jobs:
           lean -o im-results/agent9-s-section/P1FourGap.olean im-results/agent9-s-section/P1FourGap.lean
           for r in 110 158; do
             lean -o "im-results/agent9-s-section/R${r}Proof.olean" "im-results/agent9-s-section/R${r}Proof.lean"
-            lean "im-results/agent9-s-section/R${r}Final.lean"
+            lean -o "im-results/agent9-s-section/R${r}Final.olean" "im-results/agent9-s-section/R${r}Final.lean"
           done
           lean -o im-results/agent9-s-section/R190Proof.olean im-results/agent9-s-section/R190Proof.lean
           for r in 206 366 414 446 462; do
             lean -o "im-results/agent9-s-section/R${r}Proof.olean" "im-results/agent9-s-section/R${r}Proof.lean"
           done
+          lean "im-results/agent9-s-section/P1EightFinal.lean"
           echo "Source-level P1 inverse-cone and blank-entry proofs compiled for residues 110,158,190,206,366,414,446,462."
