@@ -39,9 +39,11 @@ jobs:
           lean -o im-results/agent6-fresh-glider/MacroOracle.olean im-results/agent6-fresh-glider/MacroOracle.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroOracle.olean im-results/agent6-fresh-glider/EntryMacroOracle.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroLeft.olean im-results/agent6-fresh-glider/EntryMacroLeft.lean
+          lean im-results/agent6-fresh-glider/ThreeSlotBounce.lean
           lean im-results/agent6-fresh-glider/FastMacro.lean
           lean im-results/agent6-fresh-glider/FiveFamily.lean
           python im-results/agent6-fresh-glider/five_census.py
+          python im-results/agent6-fresh-glider/bootstrap_census.py
           lean -o im-results/agent8-coverage-contract/RayFiniteOracle.olean im-results/agent8-coverage-contract/RayFiniteOracle.lean
           lean -o im-results/agent8-coverage-contract/FiniteHalting.olean im-results/agent8-coverage-contract/FiniteHalting.lean
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
