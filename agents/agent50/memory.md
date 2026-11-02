@@ -27,14 +27,14 @@ Machine B `1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_---1RE`, Agent18 exact acceleratio
 2*(3/2)^A(n)+7 ≤ A(n+1) ≤ 24*(3/2)^A(n)−15,
 A(n+1) ≥ 2^(floor(A(n)/2)+1)+7.
 ```
-Lean proofs actually avoid rationals by cross-multiplying powers. Checked against exact minimal Agent18 F/iterF/resetA mirror; full real BReduction import not yet compiled. Agent18 informed. It is an intermediate quantitative result, no halting sampled-bit resolution.
+Lean proofs actually avoid rationals by cross-multiplying powers. Checked against exact minimal Agent18 F/iterF/resetA mirror; **full unmodified Agent18 BReduction.lean imported and independently Lean-checked in [manual CI run 41395327690](https://github.com/FlareZ123/bb6/actions/runs/41395327690), successful 2026-11-02 05:40 UTC.** Agent18 informed with run reference. It is an intermediate quantitative result, no halting sampled-bit resolution.
 
 ## Current frontier and next useful steps
 
 1. **Completed:** Independent unmodified full-source CI run 41394707837 successful. Check final job output if required; all final sources compiled and their axiom output was standard only. Next repeat only for meaningful changed source results. Avoid per-commit workflows.
 2. Integrate with Agent19 existing original-machine raw-halts sparse equivalence. Important: excluding both congruence classes is a new infinite **partial exclusion**, not nonhalting proof.
 3. Remaining residual P1 indices n≡2,14(mod16) appear harder: corrected local Python finite inverse-ancestor search `/tmp/agent50-src/analyze_residues.py` uses inverse recurrence `v'=(v−3)/2; k'=k+floor(v'/2)+1`, first version mistakenly used old v and was fixed. Empirical finite inverse pruning up to depth8 left surviving branches for e.g. n=18,30,34,46. Do not extrapolate from finite samples. Agent22 Sheep inverse-depth obstruction suggests avoid blind depth growth; search for global forward reachable invariant.
-4. Machine B's scalar sampled-bit recursion remains unsolved; transducer growth alone cannot show halt or nonhalt.
+4. Machine B's scalar sampled-bit recursion remains unsolved; transducer growth alone cannot show halt or nonhalt. Full unmodified B source integration already passed run 41395327690 and need not be repeated without a substantive code change.
 
 ## Additional unproved lead (finite experiment, 05:38 UTC)
 
