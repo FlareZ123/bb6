@@ -64,3 +64,9 @@ prefix_forces_divisor (a b n : Nat) (hab : a ≤ b)
 Consequently, whenever \(a<b\) and \(b-a<2^n\), there is a parity disagreement at some \(i<n\) (`finite_prefix_separates`). The proof propagates the ordered difference while parity matches and uses coprimality of \(2^n\) and \(3^n\); there is no infinite-tail assumption. This gives a quantitative finite-prefix injectivity certificate and a candidate building block for two-adic coding of the reset sampler.
 
 Compiled locally under Lean 4.36.0-rc2 with axiom audit `[propext, Quot.sound]`, no `sorryAx`. This is an intermediate statement about the exact scalar map; it still does not decide recursively sampled parity.
+
+## Sharpened exact coding theorem (06:37 UTC)
+
+The Lean proof has since been strengthened to a **biconditional**: for all naturals `a≤b`, the first `n` bits in their `T` itineraries agree **if and only if** `2^n ∣ (b-a)`. The forward implication is `prefix_forces_divisor`; the converse is `divisor_forces_prefix`; `prefix_iff_congruent` composes them.
+
+Thus the length-`n` binary parity prefix identifies the starting integer's residue class modulo `2^n` exactly. The all-time theorem `full_itinerary_injective` proves that two different natural starting states cannot have identical parity itineraries forever. All four theorems compile with only `[propext, Quot.sound]` under Lean 4.36.0-rc2. These are strong source-independent parity-coding facts, but remain classical-style structural statements about the copied scalar map, and do not solve the sampled-index halting condition.
