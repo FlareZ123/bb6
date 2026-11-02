@@ -48,6 +48,21 @@ Previous agent4/45/47 P1 inverse-cone proofs close finite branches with either a
 
 This challenges fixed-depth local-cone exhaustion, but it does **not** rule out a stronger global invariant that excludes some hub without further expansion. The synthetic starting state `(B_L,D_L)` need not be reachable from the actual blank-entry state `(2,1)`. Thus none of these paths proves that any critical gate is blank-reachable. Nothing here decides P1 or BB(6).
 
+## Formal lower bound for the two-leaf inverse-certificate calculus
+
+`DepthBarrier.lean` now imports **the original** `BB6.P1Reduction.GAncestor` from Agent 1's `GInverse.lean`. It defines `Shallow fuel b d`, a deliberately **relaxed** depth-indexed form of the project's `Blocked` calculus: the `modLeaf` and `powerLeaf` hypotheses are identical, while `feeder` omits several additional original restrictions. This makes the shallow system **more permissive** than the existing proof strategy, so a nonderivability result for `Shallow` is a genuine lower bound for the corresponding restricted strategy.
+
+The theorem `corridor_ancestor` proves the exact source `GAncestor.upper` witnesses at each link, matching the child coordinates `(2*k-4,v+4)` expected by the original feeder rule. The induction `corridor_requires_unbounded_depth` rules out a depth budget equal to the remaining corridor length. Budget-monotonicity `shallow_le` then gives the stronger theorem:
+
+```lean
+theorem critical_no_shallow_up_to (L fuel : Nat) (h : fuel≤L) :
+    ¬Shallow fuel (14*2^(critIndex L)-2*(critIndex L)-16) 3
+```
+
+This is a **mathematical theorem about the inverse proof calculus**. It proves that no fixed depth bound works for all critical indices `n≡14(mod16)` if one uses only those two existing leaves and the complete G-feeder case. A proof using a new invariant or an entirely different constructor is outside this lower bound.
+
+Original-source CI: [run 41440912345](https://github.com/FlareZ123/bb6/actions/runs/41440912345) verified the base depth barrier with standard Lean axioms and zero sorryAx. The stronger `critical_no_shallow_up_to` was locally Lean-verified using a definition-equivalent GAncestor import; its updated unmodified-source CI has been dispatched.
+
 ## Reproduction and next direction
 
 Compile original `im-results/agent1-p1-map/PosEvenForm.lean`, then `Rank.lean`, `DeepCorridor.lean`, `CriticalDeep.lean`, and `DeepPath.lean` with Lean 4.36.0-rc2, `LEAN_PATH` containing the two corresponding directories. The workflow `.github/workflows/agent4-p1-cone2398.yml` is manual-only and compiles these against the authentic original source.
