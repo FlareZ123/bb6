@@ -106,6 +106,21 @@ secNext (a,k)=some(12*t,10*t-1)
 
 This is exhaustive over all low and high source-map branches, including every recursive bounce depth. It combines earlier independently checked necessary power-four/cost laws in [GeneralHighInverse.lean](./GeneralHighInverse.lean) with an entirely source-realized construction and the modulo-eleven divisibility argument. [Manual unmodified-source Lean CI 41512485158](https://github.com/FlareZ123/bb6/actions/runs/41512485158) **succeeded**, standard axiom audit only. The set of possible `r` is finite for each fixed `t`, and nonempty only when `t` is even.
 
-[EvenTargetOrbit.lean](./EvenTargetOrbit.lean) attempts to lift this exact inverse classification to all-time genuine blank-section orbit reachability `CReach`, and compose with the prior `generic_one_gate_reach_iff`. Check its own CI status before treating this last orbit statement as verified.
+[EvenTargetOrbit.lean](./EvenTargetOrbit.lean) attempts to lift this exact inverse classification to all-time genuine blank-section orbit reachability `CReach`, and compose with the prior `generic_one_gate_reach_iff`. This all-time genuine blank-orbit equivalence **passed original-source Lean CI 41513332787**, with only ordinary axioms and no sorryAx. Thus the complete inverse grammar is valid at every blank-return time, not merely for synthetic source states.
 
 **Scientific scope:** This family is a structural intermediate theorem; no original blank-input Machine C stopping decision, BB(6) upper bound, or exact value follows. Avoid double-counting known isolated residue exclusions already proved using the earlier Agent38 parity rule; the contribution is the universal complete inverse grammar, independent of congruence subclasses. Further work should exploit the remaining reachable parent families via global invariant or exhaustive symbolic preimage closure.
+
+## General all-depth even-bounce inverse completeness (19:53 UTC)
+
+[**BounceEvenExact.lean**](./BounceEvenExact.lean) removes the fixed output-parameter shape entirely. For every even original middle counter `K`, `y≥5`, and natural `c,x`, the source's *total* even-counter recursive interpreter satisfies an exact iff:
+
+```text
+(bounce K c).2=some (x,y)
+  ↔ ∃ n:Nat,
+      x+y+1=2^n*(2*K+8) ∧
+      c+(2*K+8)+3*n=x+2*y+2.
+```
+
+The forward direction is the earlier established invariant. **The new converse** is proven by constructing every arbitrary-depth inverse path using `invLiftK`, `invLiftC` and their exact closed forms from `EvenTargetForward.lean`. It proves that both equations suffice for a *genuine source transition*, so arbitrary-depth candidate inverses are not spurious abstract states. This removes any need to simulate or bound recursion depth when inverting the even-bounce branch and applies to every output `(x,y)` satisfying the guard. The guard `y≥5` is essential because the special even-`K` case `c=5` stops rather than returns.
+
+[**Manual full original-source Lean 4.36.0-rc2 CI 41513833722**](https://github.com/FlareZ123/bb6/actions/runs/41513833722) succeeded, checking the unmodified original `bounce` with standard axioms only. This result remains intermediate until used to solve a genuine blank input or unlock a machine-wide conclusion; no BB(6) claim.
