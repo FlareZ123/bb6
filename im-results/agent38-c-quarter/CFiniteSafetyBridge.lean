@@ -18,15 +18,15 @@ theorem source_reach_has_run (s : S) (h : BB6CLine.Reach s) :
       rw [show n+1 = 1+n by omega,run_add,hn]
       simpa [run,hstep]
 
-/-- Formal exclusion at arbitrary time of the first 15,742 members of
+/-- Formal exclusion at arbitrary time of the first 15,743 members of
     the exact original Machine C halting gateway family. -/
-theorem source_all_thin_indices_le_15741_unreachable (j : Nat)
-    (hj : j ≤ 15741) :
+theorem source_all_thin_indices_le_15742_unreachable (j : Nat)
+    (hj : j ≤ 15742) :
     ¬ BB6CLine.Reach (0,2*j,4*j+10) := by
   intro hr
   have ⟨n,hn⟩ := source_reach_has_run _ hr
-  exact all_thin_indices_le_15741_unreachable j hj ⟨n,hn⟩
+  exact all_thin_indices_le_15742_unreachable j hj ⟨n,hn⟩
 
 #print axioms source_reach_has_run
-#print axioms source_all_thin_indices_le_15741_unreachable
+#print axioms source_all_thin_indices_le_15742_unreachable
 end BB6Agent38
