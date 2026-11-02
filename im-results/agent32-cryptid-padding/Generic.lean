@@ -52,6 +52,17 @@ structure Config where
 def CfgEq (c d : Config) : Prop :=
   TapeEq c.left d.left ∧ c.bit = d.bit ∧ TapeEq c.right d.right ∧ c.state = d.state
 
+theorem cfgEq_refl (c : Config) : CfgEq c c :=
+  ⟨tapeEq_refl _, rfl, tapeEq_refl _, rfl⟩
+theorem cfgEq_symm {c d : Config} (h : CfgEq c d) : CfgEq d c := by
+  rcases h with ⟨hl,hb,hr,hs⟩
+  exact ⟨tapeEq_symm hl, hb.symm, tapeEq_symm hr, hs.symm⟩
+theorem cfgEq_trans {c d e : Config} (h : CfgEq c d)
+    (g : CfgEq d e) : CfgEq c e := by
+  rcases h with ⟨hl,hb,hr,hs⟩
+  rcases g with ⟨gl,gb,gr,gs⟩
+  exact ⟨tapeEq_trans hl gl, hb.trans gb, tapeEq_trans hr gr, hs.trans gs⟩
+
 def goLeft (c : Config) (write : Bool) (st : Nat) : Config :=
   ⟨c.left.drop 1, bitAt c.left 0, write::c.right, st⟩
 def goRight (c : Config) (write : Bool) (st : Nat) : Config :=
