@@ -89,5 +89,45 @@ theorem reachable_eightk_three_sparse (z : Nat) (hz : 1≤z)
     refine ⟨j,?_⟩
     omega
 
+private theorem pow_two_mod_three (j : Nat) :
+    2^j % 3 = if j%2=0 then 1 else 2 := by
+  induction j with
+  | zero => decide
+  | succ j ih =>
+    rw [Nat.pow_succ, Nat.mul_mod]
+    by_cases hj : j%2=0
+    · have hs : (j+1)%2 ≠ 0 := by omega
+      simp [ih, hj, hs]
+    · have hs : (j+1)%2 = 0 := by omega
+      simp [ih, hj, hs]
+
+private theorem sparse_even_index (z j : Nat)
+    (h : 3*z+4=7*2^j) : j%2=0 := by
+  have hh : (2^j)%3=1 := by omega
+  have he := pow_two_mod_three j
+  by_cases hj : j%2=0
+  · exact hj
+  · simp [hj] at he
+    omega
+
+private theorem sparse_power_four (z j : Nat) (h : 3*z+4=7*2^j) :
+    ∃ m : Nat, 3*z+4=7*4^m := by
+  have hj := sparse_even_index z j h
+  have heq : j=2*(j/2) := by omega
+  rw [heq] at h
+  refine ⟨j/2,?_⟩
+  simpa [Nat.pow_mul] using h
+
+/-- The necessary sparse index is a power of four, hence only one possible
+    z per power; a single small exceptional z=2 remains. -/
+theorem reachable_eightk_three_power_four (z : Nat) (hz : 1≤z)
+    (hr : BB6.Agent1.Reach (8*z) 3) :
+    z=2 ∨ ∃ m : Nat, 3*z+4=7*4^m := by
+  rcases reachable_eightk_three_sparse z hz hr with h | ⟨j,hj⟩
+  · exact Or.inl h
+  · exact Or.inr (sparse_power_four z j hj)
+
+#print axioms reachable_eightk_three_power_four
+
 #print axioms reachable_eightk_three_sparse
 end BB6.Agent7EightThree
