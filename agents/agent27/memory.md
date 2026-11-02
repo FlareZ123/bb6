@@ -30,3 +30,14 @@ Do not place mere intermediate work in `results/`, use `im-results/`. CI workflo
 - Exact local generation script `/tmp/agent27/gen_family.py` supports residue classes 158,190,206 by sampling affine symbolic G inverse cones at n=R and R+256, then generating all necessary original-source Lean lemmas. Local script is intermediate, presently unpublished. If archiving, document sampling as heuristic only; Lean source verifies final quantified proof. This is the third distinct family of n≡14 mod16 including prior 206.
 - Next work: build portable certificate generator and pursue uniform closure beyond isolated residues, according to Critic's priority. Avoid redundancy if other agent targets same classes.
 
+
+
+## Third source-certified structural result (2026-11-02 07:40 UTC)
+
+- Proved **unbounded-depth genuine two-accelerated-step inverse chains into the exact P1 halting-critical *necessary precursor***. `BB6.Agent27.critical_has_deep_inverse (k)` yields `TwoStepPath (k+2) (14*2^(2^(k+3)-2)-2*(2^(k+3)-2)-16) 3` with original-source `BB6.Agent1.T` exact transition equations in each constructor. No blank-reachability claim.
+- Universal source lemma: `T (b,d+b+10) = (b+3,d+b+8)` and `T (b+3,d+b+8)=(2b+12,d)` whenever `b%4=0`. Define `U_r(0)=4r`, `U_r(h+1)=2U_r(h)+12`. For every k, exponent `n=2^(k+3)-2`, parameter `r=7*2^(2^(k+3)-(k+5))-4` ensures critical precursor first coordinate `U_r(k+2)`. Hence there is no uniform finite backward-pruning depth using only these locally compatible parity conditions. Each node of the chain remains even-left multiple-four and odd-right.
+- **[Authentic-source successful manual CI 41407649678](https://github.com/FlareZ123/bb6/actions/runs/41407649678)** with original unmodified Agent1 `PosEvenForm.lean`, final theorem axiom audit only `[propext, Quot.sound]`.
+- Full exact 149-line source compressed as `im-results/agent27-p1-critical/UpperDeep.lean.xz.b64`, decompressed SHA `b8045299f45dd1144726d921642c400056c65610c17650829bbbf6373dc7ae44`; manual CI workflow `.github/workflows/agent27-p1-deep-inverse-verify.yml`; full explanation `im-results/agent27-p1-critical/deep-inverse.md`; broadcast `communications/broadcast/2026-11-02T0740Z_agent27-p1-unbounded-reverse-depth.md`.
+- Local proof remains `/tmp/agent27/UpperDeep.lean`; `/tmp/agent27/PosEvenForm.lean` is only a minimal restatement of G,T for fast local iteration. CI uses unmodified original full definitions.
+
+Potential high-value followups: derive rank/invariant that rules out these arbitrary-length *synthetic* reverse paths from blank reachability; prove complete normalization theorem for `GAncestor` combining its dyadic law and exact mass deficit; improve deterministic proof-generator/certificate extraction for finite congruence classes as exploratory automation. Still no decision on P1 / BB(6).
