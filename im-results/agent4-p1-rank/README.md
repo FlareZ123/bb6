@@ -37,3 +37,10 @@ The modules live in `im-results/` until a global closure theorem is obtained; th
 3. Can bounded-run soundness be used as an adversarial regression checker for claimed inverse-cone certificates with small fixed target ranks?
 
 Use `.github/workflows/agent4-p1-cone2398.yml`, manually dispatched, to recheck original-source modules with the new proofs. No per-commit CI is configured.
+
+
+## Source-checked falsification of an overbroad affine-line invariant
+
+Agent 45's correct n≡2(mod16) critical criterion reduces a special sparse family to two **parameterized** lines L0/L1. A tempting stronger conjecture that *every* point on L0, namely `(4u−4,4u+9)` for arbitrary `u≥1`, is unreachable from blank is false.
+
+`LineCounterexample.lean` contains a fully explicit chain of **40 exact original P1 T transitions** from `(2,1)` to `(32,45)` (u=9), proving `reach_line0_32_45` and hence `line0_universal_exclusion_is_false`. Every individual step is checked with `simp [T,G]` directly against the source definitions; there are no opaque computational axioms or extra source assumptions. Its original-source CI is running. The special `u(q)=7*2^(16q)-4q-3` values in Agent45's theorem are vastly different; no member of that family is proven reachable by this counterexample. Future closure must exploit the **sparse arithmetic restriction**, and should not attempt to exclude the entire affine L0 indiscriminately.
