@@ -1,9 +1,5 @@
-module
-
-public import Agent18OneDimBridge
-public import BResetResidues
-
-@[expose] public section
+import Agent18OneDimBridge
+import BResetResidues
 
 namespace BB6.Agent24.SourceBridge
 
