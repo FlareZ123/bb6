@@ -32,5 +32,6 @@ jobs:
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
           lean -o im-results/agent7-even3-sparsity/EightThree.olean im-results/agent7-even3-sparsity/EightThree.lean
           lean -o im-results/agent7-even3-sparsity/EvenThreeFamily.olean im-results/agent7-even3-sparsity/EvenThreeFamily.lean
+          lean -o im-results/agent7-even3-sparsity/EvenThreeIff.olean im-results/agent7-even3-sparsity/EvenThreeIff.lean
           lean -o im-results/agent7-even3-sparsity/RankBridge.olean im-results/agent7-even3-sparsity/RankBridge.lean
           lean -o im-results/agent7-even3-sparsity/NoSixteen.olean im-results/agent7-even3-sparsity/NoSixteen.lean
