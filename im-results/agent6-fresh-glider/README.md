@@ -50,3 +50,21 @@ Taking B among five noninitial states, C among **all six states**, u arbitrary, 
 For our stated noninitial B/C restrictions in the four-step pattern, the three-step and four-step template families are disjoint: whenever the first and second writes agree, their marker-consulted transition must have different successor states. Consequently these **480 total sparse cylinders** cover **512,695,312,500,000 distinct canonical machines**, **0.86016%** of the full table space. All counts were checked using Python integer arithmetic and direct symbolic overlap reasoning; a complete Lean theorem for the cardinality has not been implemented. The source-level nonhalting/cover theorems for each family are locally Lean-checkable, while original-import GitHub CI remains pending.
 
 These are elementary gliders and may be subsumed by a more powerful existing general shift-cycler decider, such as Agent 13's finite-shift certificate machinery. They supply short, explicit, low-cost partial-table rules useful when expensive general deciders are undesirable. Any increment to an actual global sparse coverage tally needs an authenticated search-tree enumeration; none is claimed here.
+
+## Current combined scope: turnaround, degeneracy and executable oracle (19:20 UTC)
+
+The earlier numeric paragraphs above report the initial restricted subfamilies only. The current source and [symbolic census](./census.py) extend them with (i) the consistent C=A, v=1, u=z four-step degeneracy and (ii) the fully quantified three-slot turnaround rule in [TurnaroundRay.lean](./TurnaroundRay.lean):
+
+```text
+A/0 -> 1RB
+B/0 -> vLC
+C/1 -> 0LA
+```
+
+This starts right for two moves, then executes a three-step **leftward** cycle from a marked C/1 cell. The inductive invariant asserts that the entire tape strictly to the left of the current marker is blank. Theorem `turnaround_never` proves nonhalting at all natural times after a genuine two-step blank entry; `partial_turnaround_cover` and `partial_left_turnaround_cover` are all-completion sparse leaves, with a concrete `turnaround_example_cover`.
+
+The verified symbolic inventory currently consists of **120 regular three-step cylinders**, **360 four-step four-slot cylinders**, **20 degenerate four-step three-slot cylinders**, and **120 turnaround three-slot cylinders**, all bilateral. `census.py` checks every pair of the **620 sparse tables** for conflicting fixed entries and reports zero intersections. Their exact full-table count is **1,046,752,929,687,500 / 25^12 = 1.75616%**, including **270,785,272,872,960 / (12*24^11) = 1.48292824%** of exactly-one-halt machines. They are disjoint from both Agent44 directed drift and zero writer because all have A/0 write 1 and B/0 direction opposite A/0. Combining the independent Agent44 census with these cylinders yields **45.66396928% of full canonical tables** and **41.05709374% of exactly-one-halt tables**, under the arithmetic and class definitions stated.
+
+The new [GliderOracle.lean](./GliderOracle.lean) checks finite witnesses for all three rule families, both directions, and establishes `gliderOracle_sound`: any positive executable Boolean result yields an actual `Cover (DecidedBelow B)` proof. Concrete three-step, four-step, degenerate four-step, and turnaround examples are proved by `decide`.
+
+All Lean names above compile locally under Lean 4.36.0-rc2 against definition-matching copies of the original Agent8 `Frontier` and `Symmetry` interfaces; `#print axioms` lists only ordinary kernel axioms, no sorry. **The full original-import CI audit is still pending.** These remain intermediate pruning certificates, not a completed search tree or BB(6) determination.
