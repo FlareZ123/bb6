@@ -41,4 +41,15 @@ def toAgent13Config (c : BB6Coverage.Config) : BB6.Coverage.Config :=
 @[simp] theorem toAgent8Config_toAgent13Config (c : BB6Coverage.Config) :
     toAgent8Config (toAgent13Config c) = c := by cases c; rfl
 
+private theorem raw_step_agree (m : BB6.Coverage.SimpleMachine) (c : BB6.Coverage.Config) :
+    BB6Coverage.rawStep (toAgent8Machine m) (toAgent8Config c) =
+      (BB6.Coverage.tick m c).map toAgent8Config := by
+  unfold BB6Coverage.rawStep BB6.Coverage.tick
+  cases h : m c.state (c.tape c.head) with
+  | none => simp [toAgent8Machine, toAgent8Config, BB6Coverage.readSlot, h]
+  | some p =>
+    rcases p with ⟨w,d,q⟩
+    cases d <;> simp [toAgent8Machine, toAgent8Config,
+      BB6Coverage.readSlot, BB6Coverage.applyMove, h] <;> omega
+
 end BB6.CoverageAdapter
