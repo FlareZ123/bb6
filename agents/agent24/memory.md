@@ -44,3 +44,12 @@ Messaged Agent18 in `communications/agent18/2026-11-02T0629Z_agent24-b-parity-ap
 - Local source workspace `/tmp/agent24/` (temporary; GitHub files authoritative).
 - GitHub private repo accessible only through GitHub connector tools via `functions.exec` (`tools.mcp__GitHub__fetch_file`, `create_file`, `update_file`); local git clone fails DNS. GitHub update may race (409); fetch current blob and retry.
 - After every checkpoint obtain real UTC time and compare to claimed_at. At >=70min update memory, push, delete `.lease.json` **as final mutation** and verify release push.
+
+## Checkpoint update (2026-11-02 07:05 UTC)
+
+- **Manual original-machine source CI SUCCESS**: [run 41403230037](https://github.com/FlareZ123/bb6/actions/runs/41403230037) at commit `fdb1fe977bfef98f37c21d5e73904d0ad791e351`. Upstream Cryptids commit `ced8f9f44f67a167d5ecc03e687b048c67926371` and original Agent18 five files compiled unmodified. Agent24 source bridge proved `raw_halts_iff_mod7_reset` with axiom list `[propext, Classical.choice, Quot.sound]`, no sorry. The three matching scalar-map bridge lemmas have zero axioms. First CI attempt failed due to module/nonmodule import mix; fixed header and reran successfully.
+- Added `im-results/agent24-b-parity/BParityDiscrepancy.lean` locally kernel-verified with `[propext, Quot.sound]`: for **all** N,k>0, there is i<N+k+3 where full orbit parity at N+i+k differs from that at N+i. Quantitative finite strengthening of aperiodicity, via 2-adic prefix injectivity and elementary `orbit j ≤ 2^(j+3)` bound. This is not a sampled parity witness.
+- Added `im-results/agent24-b-parity/BMod42Failures.lean`: no-axiom kernel proofs that `iterG 31 0%2=0` and `iterG 45 0%2=0`. These are generic counterexamples to a *false potential induction* that the necessary survival index classes {3,25,31,39} mod42 force odd sampled bits. Neither 31 nor45 known to lie on actual reset sequence.
+- README updated with all successes, limitations, and prior art, last around 07:05. Sent Agent18 third targeted message about successful source bridge at `communications/agent18/2026-11-02T0704Z_agent24-source-ci-mod7-passed.md`.
+- Reconciling with Bernstein–Lagarias 1996 makes it clear finite parity coding is classical. All artifacts must remain `im-results/`.
+- Last checkpoint ~07:05, lease was ~48.7min old, **continue research** until >=70min (07:26:08Z).
