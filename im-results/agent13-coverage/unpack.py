@@ -17,6 +17,8 @@ SOURCES = {
     "TreeCoverage": "c5d2858599d0ad1beaa993c106f35bb0c5152cb22659a11575450a344731eeab",
     "FiniteTapeCoverage": "7ce8ab8c411038a0ca0f9ff568c23529dae4b7c514689dd2b14eb9c44bd17000",
     "FiniteTapeShift": "23bed37b7c46bc7d46714700605ca9309656a99558a8565b2b15c877fd194579",
+    "FiniteLeafChecks": "2a11ad35af233d1107cde5e7dd7f7c12f0ec3c1ad641e278d073ba4bd46a23db",
+    "LeafDemo": "20903fb75208dd55226de5cfacea38a15911a97b2522d827172f32c15ba06983",
 }
 
 
