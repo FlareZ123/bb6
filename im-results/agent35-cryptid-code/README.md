@@ -67,6 +67,22 @@ The `1100` case is the first previously unresolved A branch of a *conditional, c
 - Finite-list raw configurations distinguish an explicit trailing zero from an implicit blank beyond the list; therefore the new explicit-zero theorem cannot be inserted into the genuine *implicit-blank* trajectory by a bare syntactic rewrite. Reuse Agent 31/32's existing `_nil` special cases or prove a separately certified blank-padding semantic equivalence before claiming an end-to-end blank-origin result.
 - The present results establish arbitrary finite forward prefixes. They do not show a recurrent infinite invariant, a halt, or any new BB(6) bound. They remain in `im-results/` pending real frontier-level advancement.
 
-### Suggested next original-source theorem
+## New universal E return on alternating pairs followed by 1100 (source certified)
 
-Synthetic raw interpreter experiments (not a proof) indicate that, for all small tested `m≥2, q≥1`, an E boundary `E(left 00(10)^m11, right (10)^q1100 y)` returns in `2m+4q+21` steps with right `1^(2m-1) 0 1^(2q+2) 0 1^6 y`. This would extend the current conditional branch beyond approximately the 8386th macro stage. Its all-parameter correctness, threshold, and exact suffix independence require a new Lean derivation; no conclusion about actual blank halting follows from finite tests.
+The previously speculative generalized E-on-(10)^q1100 branch is **now an actual all-parameter Lean theorem**, not a finite-simulation guess. The original-source proof is [EDouble.lean](./EDouble.lean), importing Agent32's unmodified `CryptidPairs.lean` and through it Agent31's exact raw machine.
+
+For every `k,q : Nat` and every arbitrary suffix `ys`:
+
+```
+I_(3k+4)(0 (10)^(q+1) 1100 ys)
+  --[12k²+49k+64+4q]-->
+I_(8k+5)(0 1^(2q+4) 0 1^6 ys).
+```
+
+At the E boundary, the left stack is `00(10)^(m+2)11`. The `eDouble_front` proof first consumes the right prefix `(10)^(q+1)1100` and reaches `sweepB m` in exactly `4(q+1)+22` primitive steps, preserving arbitrary `ys`. The subsequent `sweepB_run` adds `2m+3` steps, producing the F-on-zero configuration. Proof decomposition: one-pair explicit base; for larger q, `scan_run` followed by a symbolic sixteen-step A turnaround, `cWalk_run`, and a four-step close. These are exact `run` equalities at the source-machine transition level.
+
+**Independent full unmodified-source Lean CI passed:** [workflow run 41418613418](https://github.com/FlareZ123/bb6/actions/runs/41418613418), compiler Lean 4.36.0-rc2. Axiom audit for `BB6.Agent35.eDouble_front`, `eDouble_run` and `full_E_double` reports **exactly `[propext, Quot.sound]`**, with no `sorryAx`. This theorem closes the first formerly unresolved E word in Agent35's provisional symbolic trace (~8386th accelerated section) but does not prove the entire prior tape trajectory arose from the blank start.
+
+### Open boundary
+
+The remaining crucial goal is a genuinely blank-origin composition of these macros, including implicit-blank versus explicitly written zero at the end of `Cfg` lists. The artificial `List Bool` encoding represents the same physical tape by different finite lists unless trailing-blank equivalence is accounted for. A fully certified raw blank tape trace is stronger evidence than arithmetic continuation of individually valid section formulas. There is no known global halt/nonhalt decision.
