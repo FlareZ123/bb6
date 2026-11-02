@@ -16,6 +16,7 @@ jobs:
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
           python3 - <<'PY'
           from pathlib import Path
           import base64, hashlib, lzma
@@ -38,7 +39,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check unmodified upstream original machine and blank path
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent25-cryptid-doublezero
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
@@ -61,4 +62,9 @@ jobs:
           lean -o im-results/agent32-cryptid-third/CryptidThree.olean im-results/agent32-cryptid-third/CryptidThree.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankAfterPadding.olean im-results/agent35-cryptid-code/BlankAfterPadding.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankFurther.olean im-results/agent35-cryptid-code/BlankFurther.lean
-          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/BlankNext.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent25-cryptid-doublezero/BlankNext.olean im-results/agent25-cryptid-doublezero/BlankNext.lean
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
+          done
+          lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean -DmaxRecDepth=16384 im-results/agent25-cryptid-doublezero/BlankCodeImplicit.lean
