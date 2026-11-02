@@ -48,3 +48,70 @@ Note that the final certified trace also includes one state after these bracket 
 This certificate uses exact finite computation followed by a rigorous all-time rank argument. It is reproducible and more economical than an exhaustive backward-predecessor tree for these specific thresholds. It does **not** furnish an invariant excluding the infinitely many `critical(i)` with `i≥9`; no claimed BB(6) lower/upper-bound improvement follows. All material stays in `im-results/`.
 
 Potential research use: extend to later thresholds using chunked certificates, optimize proof compression via block accelerations, or extract new modular patterns in first-crossing configurations that permit a genuinely infinite family theorem. The latter would be more substantive than simply increasing a finite cutoff.
+
+
+## Infinite blank-reachability exclusions (2026-11-02, Lean-verified)
+
+**Major improvement over the finite target certificates:** New modules
+`InfiniteResidue.lean`, `InfiniteResidue2.lean`, `InfiniteResidue3.lean`, and
+`InfiniteResidue4.lean` import Agent 4's previously verified `NoSecondTarget`
+and prove uniform all-time arithmetic exclusions for **infinitely many** blank-entry
+states. These modules and all dependencies passed manually dispatched
+Lean 4.36.0-rc2 CI:
+https://github.com/FlareZ123/bb6/actions/workflows/agent7-infinite-residue-lean.yml
+
+- **`blank_no_two_eightk_twenty_eight`**: For all natural `k`,
+  `¬BlankReach 2 (8*k+28)`. Every positive even-right, large-left gateway
+  `(8k+24,2)` has only the forced G high-branch predecessor
+  `(4k+9,4k+16)`, whose only possible predecessor is
+  `(4k+6,4k+18)`; Agent 4's global blank-even-left mod4 invariant
+  forbids that. The alternative predecessor through `(8k+25,1)` is
+  similarly forbidden via `(8k+22,3)`.
+- **`blank_no_two_sixteen_k_thirty`**: For all natural `k`,
+  `¬BlankReach 2 (16*k+30)`. The G inverse of `(16k+24,3)` has
+  precisely two possibilities `(8k+9,8k+17)` and
+  `(12k+17,4k+8)`. Their even-left immediate predecessors are,
+  respectively, `(8k+6,8k+19)` and `(12k+14,4k+10)`,
+  both excluded by the mod4 reachability invariant. The recursion
+  completeness is formally proved by strong induction on the G index.
+- **`blank_no_two_sixteen_k_plus_sixtyfour`**: For all natural `k`,
+  `¬BlankReach 2 (16*k+64)`. Two exact even-output inverse reductions
+  lead to the forced predecessor `(4k+6,12k+52)`, which violates
+  the global modular invariant. The other reset predecessor is likewise
+  excluded.
+- **`blank_no_big_eight_even`**: For all natural `k,d` with
+  `0<d` and `d%2=0`, `¬BlankReach (8*k+24) d`.
+  This is a separate, globally quantified **even-sector reachability invariant**:
+  the actual blank orbit never has a positive-even right counter together
+  with an even left counter divisible by eight and at least 24.
+
+These pure Lean statements were verified against Agent 4's real import chain,
+not just mocks, with standard axioms `propext`, `Classical.choice`,
+`Quot.sound`, no `sorryAx`.
+
+### Exact infinite subsets of the halting-critical index
+
+Let `H(n)=14*2^n-2*n-10`. Additional Lean power-of-two arithmetic
+establishes, for every natural `n`:
+
+```lean
+n % 4 = 1 → ¬BlankReach 2 (H n)
+n % 8 = 4 → ¬BlankReach 2 (H n)
+n % 8 = 3 → ¬BlankReach 2 (H n)
+```
+
+The first theorem incorporates Agent 4's earlier individual exclusion
+of `n=1`, extending it to all `n=4k+5`. The other two theorems
+are uniform for their complete infinite index classes.
+
+Together these results eliminate four of the eight residue classes
+of critical indices, or exactly half of the indices under natural-density
+counting. **Four classes remain open: n%8 in {0,2,6,7}.** This is an
+infinite subset exclusion of the halting basin of one undecided accelerator,
+not a complete nonhalting decision. Stronger modular and 2-adic backward
+invariants are being investigated.
+
+The Lean files import a standalone transcription of the published DeepMind
+accelerator through Agent 4's modules. The upstream Cryptids paper/module
+establishes the original Turing-machine-to-accelerator equivalence, but that
+bridge has not been re-imported into these local Lean source modules.
