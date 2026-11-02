@@ -1,0 +1,46 @@
+name: Agent 34 four further C reset residue proofs (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct original Agent 34 source and four generated proofs with SHA-256 checks
+        run: |
+          python3 im-results/agent34-c184/reconstruct.py
+          python3 im-results/agent34-c184/reconstruct_extra.py
+      - name: Compile all full unmodified Machine C prerequisites and four new proofs
+        run: |
+          mkdir -p /tmp/a34-four
+          cp im-results/agent11-c-line/CLine.lean /tmp/a34-four/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a34-four/$source.lean"
+          done
+          cp im-results/agent34-c184/Agent34CInverse.lean /tmp/a34-four/Agent34CInverse.lean
+          for residue in 38 130 642 783; do
+            cp "im-results/agent34-c184/CReset$residue.lean" "/tmp/a34-four/CReset$residue.lean"
+          done
+          cd /tmp/a34-four
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          lean -o Agent34CInverse.olean Agent34CInverse.lean
+          for residue in 38 130 642 783; do
+            lean "CReset$residue.lean"
+          done
