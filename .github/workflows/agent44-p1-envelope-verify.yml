@@ -39,6 +39,8 @@ jobs:
           lean -o im-results/agent44-power-envelope/NatAffineWrappers.olean im-results/agent44-power-envelope/NatAffineWrappers.lean
           python im-results/agent44-power-envelope/generate_case130.py
           lean im-results/agent44-power-envelope/P1Case130.lean
+          python im-results/agent44-power-envelope/generate_case130.py 94
+          lean im-results/agent44-power-envelope/P1Case94.lean
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
