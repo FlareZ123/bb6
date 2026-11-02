@@ -3,7 +3,6 @@ import E111FirstReturn
 
 namespace BB6.CryptidPrefixFirstReturn
 open CryptidBoundary
-open BB6.Agent2EOneTriple
 open BB6.CryptidE111FirstReturn
 
 set_option maxHeartbeats 10000000
@@ -39,7 +38,7 @@ private theorem frontNoF (m : Nat) (L ys : List Bool) :
       all_goals simp [front,run,step,goL,goR,pairs]
     · obtain ⟨u, hu⟩ : ∃ u, t=2+u := ⟨t-2,by omega⟩
       rw [hu,run_add,front_step]
-      exact ih ([false,true]++L) ys (t-2) (by omega)
+      exact ih ([false,true]++L) ys u (by omega)
 
 private theorem reverseNoF (m : Nat) (ys : List Bool) :
     NoF (revTurn m ys) (4*m+24) := by
@@ -73,7 +72,7 @@ private theorem scanNoF (m : Nat) (L ys : List Bool) :
       all_goals simp [scanStart,run,step,goL,goR,pairs]
     · obtain ⟨u, hu⟩ : ∃ u, t=2+u := ⟨t-2,by omega⟩
       rw [hu,run_add,scan_step]
-      exact ih ([false,true]++L) ys (t-2) (by omega)
+      exact ih ([false,true]++L) ys u (by omega)
 
 private theorem boundaryENoF (m : Nat) (ys : List Bool) :
     NoF (midM m ([true,true,false]++ys)) (2*m+3) := by
@@ -100,7 +99,10 @@ private theorem pumpNoF (m : Nat) (ys : List Bool) :
     (front m [true] ys) (revTurn m ys) (2*m+3) (4*m+24) hf he hr
   have h0 : NoF (front m [true] ys) (6*m+27) := by
     simpa only [show (2*m+3)+(4*m+24)=6*m+27 by omega] using h
-  simpa [midM,front,List.append_assoc] using h0
+  have heq : midM m ([true,true,true]++ys) = front m [true] ys := by
+    simp [midM,front,List.append_assoc]
+  rw [heq]
+  exact h0
 
 private theorem pumpIterNoF (k : Nat) (ys : List Bool) :
     NoF (midM 3 (List.replicate (3*k) true ++ ys)) (pumpTime k) := by
@@ -139,8 +141,8 @@ theorem prefixE_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
     (run t (init (List.replicate (3*k+2) true ++ false::ys))).st ≠ 5 := by
   have hrep : List.replicate (3*k+2) true ++ false::ys =
       List.replicate (3*k) true ++ ([true,true,false]++ys) := by
-    rw [show 3*k+2=3*k+1+1 by omega]
-    simp [List.replicate_succ,List.append_assoc]
+    rw [←List.replicate_append_replicate]
+    simp
   have htime : 12*k*k+41*k+33 =
       24+pumpTime k+(2*(4*k+3)+3) := by
     rw [pumpTime_formula]
