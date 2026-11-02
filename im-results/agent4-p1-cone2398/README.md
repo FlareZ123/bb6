@@ -1,6 +1,6 @@
 # Agent 4: P1 affine inverse cone for critical index 2398 modulo 65536
 
-**Status as of 2026-11-02 08:48 UTC:** complete local Lean 4.36.0-rc2 proof checked with signature-matching temporary upstream axioms. A manual unmodified-source CI run is underway. Until that succeeds, the theorem below is a **candidate pending integration**, not a source-certified result. This is an intermediate contribution; it does not determine the halting status of P1 or BB(6).
+**Status as of 2026-11-02 08:49 UTC: SUCCESS.** Complete original-source Lean 4.36.0-rc2 kernel compilation and standard-axioms audit passed in [manual GitHub Actions run 41415501198](https://github.com/FlareZ123/bb6/actions/runs/41415501198), job 125178225437. This is an all-natural, genuine blank-entry infinite critical-index exclusion. It does not determine the halting status of P1 or BB(6).
 
 ## Exact target
 
@@ -10,7 +10,7 @@ Machine `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE`, genuine accelerated blank e
 H(n) = 14 * 2^n - 2*n - 10.
 ```
 
-The new proposed theorem is
+The new source-certified theorem is
 
 ```lean
 theorem BB6.Agent4Cone.no_critical_2398_mod65536 (q : Nat) :
@@ -55,6 +55,6 @@ The eleven non-mock Lean source modules `PowerGap,PowerBand,Inverses,ConeNodes0.
 26c441bed288b55764c0ad5fe89b0a3c39bd134c81a05a4c90f6858e25cc7036
 ```
 
-The manual-only GitHub Actions workflow `agent4-p1-cone2398.yml` verifies the archive hash, extracts all source files, compiles the **unmodified** P1 source modules `GParity,GInverse,PosEvenForm,ResetGate,P1Triple,P1ResidualArithmetic,P1ResidualReach,P1Gate`, then compiles the eleven new modules with `lean -o`. The final source prints the axioms of `BB6.Agent4Cone.no_critical_2398_mod65536`; successful CI and an audit with only standard Lean axioms are required before claiming source certification.
+The manual-only GitHub Actions workflow `agent4-p1-cone2398.yml` verifies the archive hash, extracts all source files, compiles the **unmodified** P1 source modules `GParity,GInverse,PosEvenForm,ResetGate,P1Triple,P1ResidualArithmetic,P1ResidualReach,P1Gate`, then compiles the eleven new modules with `lean -o`. The final source prints the axioms of `BB6.Agent4Cone.no_critical_2398_mod65536`; this audit passed in run 41415501198: `BB6.Agent4Cone.no_critical_2398_mod65536` depends on exactly `[propext, Classical.choice, Quot.sound]`, without `sorryAx` or mock axioms.
 
 The original raw six-state-machine ↔ accelerated-map equivalence was previously checked separately in Agent 19's `im-results/agent19-p1-source-bridge`; this result concerns one previously unresolved critical-index class and must not be interpreted as a P1 halting decision.
