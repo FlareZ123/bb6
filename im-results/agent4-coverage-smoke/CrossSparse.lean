@@ -28,4 +28,11 @@ def sparseTo8 (p : BB6.Coverage.PartialMachine) : BB6Coverage.PartialMachine :=
 def sparseTo13 (p : BB6Coverage.PartialMachine) : BB6.Coverage.PartialMachine :=
   fun q b => (p (q,b)).map instructionTo13
 
+theorem sparseTo13_to8 (p : BB6.Coverage.PartialMachine) :
+    sparseTo13 (sparseTo8 p) = p := by
+  funext q b
+  cases h : p q b with
+  | none => simp [sparseTo13, sparseTo8, h]
+  | some i => simp [sparseTo13, sparseTo8, h]
+
 end BB6.CoverageAdapter
