@@ -70,6 +70,12 @@ theorem blank_section_reachable_correct (a k : Nat) :
       (∃ n, BB6.Agent8Section.run secNext n (some (5,1))=some (a,k)) := by
   simp [blank_section_reachable,decide_eq_true_eq]
 
+/-- Sanity checks for the complete computable fixed-target decision procedure. -/
+example : blank_section_reachable 5 1 = true := by decide
+example : blank_section_reachable 3 4 = true := by decide
+example : blank_section_reachable 4 7 = true := by decide
+example : blank_section_reachable 1 4 = false := by decide
+
 #print axioms blank_section_reachable_correct
 
 #print axioms blank_section_mass_bound
