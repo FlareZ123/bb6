@@ -59,3 +59,16 @@ theorem nextC_stops_iff_critical :
 [AcceleratedC.cpp](./AcceleratedC.cpp) implements the same transitions and the formally checked sweep shortcut. It uses unsigned 128-bit macro-step counts and a guard against counter overflow. The independently implemented Python scalar map was compared against unaccelerated C++ at 100,000 and 1,000,000 steps; plain and skipping C++ simulators matched at 1 billion steps, and 64-bit and 128-bit shortcut variants matched at `10^18` steps.
 
 At exactly `10^18` surviving accelerated steps, state `(3275195632,829068763,358117677)` was observed. At exactly `10^20` steps the state was `(3468056923,20301726861,8843523918)`. No halt was observed in either simulation. The `10^20` simulation used 30,237,230,344 unskipped event transitions and 15,118,567,736 exact sweep jumps. It encountered `(a,c)=(0,5)` once, with odd `k=1053` at step 156,095, and never encountered a reachable halting precursor. This is finite empirical evidence. The original Turing machine's halting status remains unresolved.
+
+## 2026-11-02: optimal triangular-width lexicographic potential (source certified)
+
+Agent 8's earlier potential `R²+R-a` gives `37+n ≤ (4j+5)(4j+6)` for a reachable old halt precursor `(0,2j,5)`. The strictly tighter potential
+`P(R,a)=R(R+1)+2(R-a)`, where `R=a+2k+c`, increases **by at least two** along every surviving transition. This uses the original exact lexicographic progress proof: if R is unchanged then a strictly decreases, and an increase of R by one more than compensates even for the worst possible a reset.
+
+Hence every exact n-step surviving counter path from `(5,0,1)` to `(0,2j,5)` satisfies
+```
+44 + 2*n <= (4*j+5)*(4*j+8).
+```
+The coefficient of the leading `j²` on the right is 16 rather than the original 16 with n coefficient 1, giving approximately a factor-two stronger n restriction for large j. This bound still does not exclude any unbounded gateway family or determine halting, and belongs in `im-results/`.
+
+The exact files are `PotentialCore.lean`, `PotentialC.lean` and `PotentialBridge.lean`. The last file proves by Lean definitional equality that the copied `BB6Rank.nextC` is precisely the **original unmodified** `BB6CLine.nextC`, and transfers reachability over a finite step count to the actual published source. This is not merely an inspected correspondence. Manual [source-level CI run 41417851833](https://github.com/FlareZ123/bb6/actions/runs/41417851833) compiled the full original `RankCertificate`, `RankC`, `CLine` modules plus the three new files with Lean 4.36.0-rc2. The terminal axiom audit is exactly `[propext, Quot.sound]` for `source_critical_time_bound`, and `[Quot.sound]` for `source_nextC_eq`; there is no `sorryAx`. The manual-only workflow is `.github/workflows/agent8-c-potential.yml`.
