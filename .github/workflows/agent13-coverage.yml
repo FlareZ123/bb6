@@ -26,6 +26,7 @@ jobs:
           lean -o LassoCoverage.olean LassoCoverage.lean
           lean -o ShiftCoverage.olean ShiftCoverage.lean
           lean -o StateClosed.olean StateClosed.lean
+          lean -o InvariantCoverage.olean InvariantCoverage.lean
           lean -o TreeCoverage.olean TreeCoverage.lean
           lean -o FiniteTapeCoverage.olean FiniteTapeCoverage.lean
           lean -o FiniteTapeShift.olean FiniteTapeShift.lean
