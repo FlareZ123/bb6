@@ -46,3 +46,7 @@ No blank-tape machine classification or BB(6) bound is claimed.
 ## Second, stronger gateway theorem
 
 The fully Lean-checked theorem `stops_iff_reset_or_side` sharpens the diagonal condition to the disjunction `∃ j≥1, Reach (2*j+1,3*j+4,0)` or `∃ m, Reach (0,2*m,12*m+23)`. The proof is preserved with SHA256-verified reconstruction in `gates-lean.tar.xz.b64` and `reconstruct.py`, with complete explanations in [RESET-GATEWAY.md](./RESET-GATEWAY.md). It remains an intermediate blank-entry criterion, with both target families undecided.
+
+## New all-time modular invariant and infinite exclusions
+
+The strongest proved statement is now `stops_iff_stronger_gates`: stopping iff a reachable reset `(2*j+1,3*j+4,0)` exists with `j>=1` and `j%4 != 1`, or a reachable side gate `(0,4*n,24*n+23)` exists with `n>=1`. This uses the global reachable invariant `c>=4 ∧ (a+k)%4>=2 → k%2=c%2`, fully Lean-checked for all transitions, and excludes two infinite modular subfamilies. Sources, SHA-256 verified reconstruction and mathematical limitations: [PARITY-GATES.md](./PARITY-GATES.md). **Both remaining classes remain unclassified.**
