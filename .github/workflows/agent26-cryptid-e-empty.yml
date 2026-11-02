@@ -42,7 +42,7 @@ jobs:
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
-          lean -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
       - name: Check Agent 26 universal E-empty return and source-level blank trace
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate
