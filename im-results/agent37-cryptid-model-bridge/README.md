@@ -38,7 +38,15 @@ A( left 0(10)^m11, scan0, right (10)^q 1^(3r) 0 ys )
 
 Exact primitive-step cost: `12r² + (6(m+q)+29)r + 2q + 2(m+q+4r)+6`. The independent implicit-blank suffix theorem transfers as well. As these are genuine unbounded quantified identities, they are stronger than any finite trace. They do not imply that the blank orbit enters the stated synthetic tape family.
 
-A follow-on source file `CompleteAReturn.lean` composes these corollaries with Agent31's own `prefix_A` to prove an exact **complete F-to-F branch** for word suffixes of arbitrarily many alternating pairs and triple-one blocks. Treat this additional composition as pending separate CI audit unless its successful manual run is listed below.
+A second source file [`CompleteAReturn.lean`](./CompleteAReturn.lean) composes these corollaries with Agent31's original `prefix_A` to prove a **complete F-to-F branch** for all k,q,r and suffix ys (also with an implicit blank suffix):
+
+```text
+I_(3k+3)(0 (10)^q 1^(3r) 0 ys)
+ --[12k²+49k+44+12r²+(24k+6q+55)r+4q]-->
+I_(8k+2q+8r+11)(ys).
+```
+
+The Lean theorem uses the arithmetically equivalent unsimplified primitive-step count. **Both final theorems were checked against the unmodified original source** in successful [manual CI 41417465774](https://github.com/FlareZ123/bb6/actions/runs/41417465774), with the standard `[propext, Quot.sound]` axiom set, no sorryAx. This removes the previous source-composition gap for the all-pairs/all-triples A branch. It does not determine the actual infinite blank orbit.
 
 ## Reproduction and provenance
 
