@@ -37,6 +37,8 @@ jobs:
             cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/${name}.lean" "${name}.lean"
           done
           cp "$GITHUB_WORKSPACE/im-results/agent19-p1-source-bridge/P1HaltingBridge.lean" Agent19P1HaltingBridge.lean
+          python3 "$GITHUB_WORKSPACE/im-results/agent19-p1-source-bridge/prepare_modules.py" \
+            HaltingFunnel.lean EvenSector.lean OddReturn.lean Reachability.lean BlankCriterion.lean
           export LEAN_PATH=".:${LEAN_PATH:-}"
           lake env lean -o .lake/build/lib/lean/HaltingFunnel.olean HaltingFunnel.lean
           lake env lean -o .lake/build/lib/lean/Agent19P1Bridge.olean Agent19P1Bridge.lean
