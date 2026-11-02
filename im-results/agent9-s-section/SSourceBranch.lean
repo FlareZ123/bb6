@@ -57,6 +57,22 @@ theorem source_q_run (b c n : Nat) :
       simp only [Option.map_some,Option.bind_some]
       rw [source_q_step]
 
+/-- Original source b-coordinates of the two authentic rooted S entries
+    enjoy the sharp growing gap while both sections remain in S. -/
+theorem source_root_distance (a b : Nat) (u v : Nat × Nat)
+    (hu : sourceRun (1,3) a = some u)
+    (hv : sourceRun (125,3) b = some v) :
+    (u.1 + (16+min a b) ≤ v.1) ∨
+    (v.1 + (16+min a b) ≤ u.1) := by
+  have hs : runS (17,3) a = some (u.1+16,u.2) := by
+    simpa [hu] using source_q_run 1 3 a
+  have ht : runS (141,3) b = some (v.1+16,v.2) := by
+    simpa [hv] using source_q_run 125 3 b
+  have hd := BB6.Agent9SPhysicalPhase.surviving_roots_distance a b _ _ hs ht
+  simp only [Prod.fst] at hd
+  omega
+
+#print axioms BB6.Agent9SSourceBranch.source_root_distance
 #print axioms BB6.Agent9SSourceBranch.source_q_run
 #print axioms BB6.Agent9SSourceBranch.source_q_step
 end BB6.Agent9SSourceBranch
