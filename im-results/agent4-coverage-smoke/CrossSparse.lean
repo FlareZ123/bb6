@@ -78,4 +78,12 @@ theorem import_source_tree_as_cover_leaf (B : Nat)
   have hcomp : BB6.Coverage.Extends p (toAgent13Machine m) := by
     apply (sparse_compatibility_iff p (toAgent13Machine m)).mp
     simpa only [toAgent8_toAgent13] using hm
+  have hhalts : BB6.Coverage.HaltsAt
+      (BB6.Coverage.tick (toAgent13Machine m)) (n+1) := by
+    apply (halts_agree (toAgent13Machine m) n).mpr
+    simpa only [toAgent8_toAgent13] using hn
+  exact BB6.Coverage.coverTree_sound B p tree (toAgent13Machine m) hcomp (n+1) hhalts
+
+#print axioms sparse_compatibility_iff
+#print axioms import_source_tree_as_cover_leaf
 end BB6.CoverageAdapter
