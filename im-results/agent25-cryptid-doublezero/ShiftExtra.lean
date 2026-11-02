@@ -112,7 +112,7 @@ theorem ASix_shift (k : Nat) (ws ys : List Bool) :
     prependEight (run (costAsix k ws)
       (init (List.replicate (3*k+1) true ++
         false :: (CryptidA.wordCode ws ++
-          ([true,true,false] ++ (List.replicate 6 true ++ (false :: ys)))))) := by
+          ([true,true,false] ++ (List.replicate 6 true ++ (false :: ys))))))) := by
   rw [←costAsix_succ]
   simp only [costAsix]
   rw [BB6.Agent36.full_A_code_six (k+1) ws ys,
