@@ -54,3 +54,22 @@ These two classes are **disjoint**: the former is `m%256=136`, the latter `m%256
 ## Open problem
 
 The above barriers are one-sided exclusions. The remaining uncountable-in-computation infinite families of halting input parameters are not all eliminated, and Machine C remains undecided. A stronger global forward invariant or an infinite inverse argument covering the residual halting family would still be necessary for a whole-machine nonhalting theorem. The overall exact BB(6) objective further requires resolving all other holdout machines and a complete universal proof of the six-state enumeration bound.
+
+## 22:30 UTC continuation: uniform first-halt index hierarchy and verification repair
+
+A new all-natural Lean source candidate [`FirstUniform.lean`](./FirstUniform.lean) upgrades the individually enumerated first-family exclusions to the following **single parameterized theorem**, for arbitrary `m,k,r,s,t : Nat`:
+
+```text
+m = 64*s+8
+63*s+11 = 2^(2*r)*(4*t+1)
+r+3 <= m
+k+3*m+4 = 2^(2*m+3)
+----------------------------
+NOT CReach(1,k)
+```
+
+The exact arithmetic lift is `k = 32*u+4` and `21*u-1 = 2^(2*r+1)*(4*q+3)` for some naturals u,q. This reduces the stopping parameter to `DeepFamily.deep_low_gate_diophantine`, the older exact unbounded-depth inverse-reachability obstruction. Because 63 is coprime to every power of 4, the index condition has a solution s modulo `4^(r+1)` for each fixed r; adding multiples of `4^(r+1)` yields infinitely many indices. This is an algebraic observation, separate from the Lean source theorem. For r=0,1,2 the smallest positive index classes are respectively m≡136(mod256), m≡456(mod1024), and m≡3784(mod4096). The third class has a dedicated exact [`FirstR2.lean`](./FirstR2.lean) instance. These three classes are disjoint.
+
+**Evidence status:** the proof body of `FirstUniform.lean` was accepted by Lean 4.36.0-rc2 in a local test **with an explicitly assumed upstream `deep_low_gate_diophantine` statement**. The two new files are committed, and the *full original-source compilation* is being dispatched through the existing manual `agent15-c-halting.yml` workflow. This local isolated typecheck is **not a complete kernel verification of the source-integrated mathematical claim**. The final axiom audit and any failed CI logs take precedence over this preliminary status.
+
+Two preceding manual original-source CI attempts [41519952402](https://github.com/FlareZ123/bb6/actions/runs/41519952402), [41522387396](https://github.com/FlareZ123/bb6/actions/runs/41522387396) failed **before reaching these Agent11 theorems** because `AffineQuotientExclusion.lean` used `affineExcluded` without importing `AffineExclusion`. This concrete dependency defect has now been corrected, and the workflow is also updated to emit the imported `.olean` files for `DeepLowGate` and `DeepFamily`. The repaired source chain must pass CI before changing these entries to certified mathematical results. The underlying Machine C nonhalting problem and BB(6) remain open.
