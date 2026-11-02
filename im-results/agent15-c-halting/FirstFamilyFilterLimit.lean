@@ -85,4 +85,27 @@ theorem first_family_remaining_pass (m k : Nat)
     · apply simple_pass k (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (by omega))))))
 
 #print axioms first_family_remaining_pass
+/-- Exact, all-natural modulo-16 classification of this particular one-sided
+filter on the first Machine C halting family. Passing the filter does not
+establish reachability. -/
+theorem first_family_filter_exact (m k : Nat)
+    (hk : k+3*m+4=2^(2*m+3)) :
+    affineQuotientExcluded 1 k = true ↔
+      (m%16=1 ∨ m%16=4 ∨ m%16=5 ∨ m%16=7 ∨
+       m%16=9 ∨ m%16=12 ∨ m%16=13 ∨ m%16=14) := by
+  constructor
+  · intro htrue
+    by_cases hgood : (m%16=1 ∨ m%16=4 ∨ m%16=5 ∨ m%16=7 ∨
+                     m%16=9 ∨ m%16=12 ∨ m%16=13 ∨ m%16=14)
+    · exact hgood
+    · have hother : m%16=0 ∨ m%16=2 ∨ m%16=3 ∨ m%16=6 ∨
+         m%16=8 ∨ m%16=10 ∨ m%16=11 ∨ m%16=15 := by omega
+      have hfalse := first_family_remaining_pass m k hother hk
+      rw [hfalse] at htrue
+      contradiction
+  · intro hyes
+    exact affineQuotientExcluded_first_family m k hyes hk
+
+#print axioms first_family_filter_exact
+
 end BB6.Agent15
