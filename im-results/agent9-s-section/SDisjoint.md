@@ -61,3 +61,19 @@ The complete source is [`SDisjoint.lean`](./SDisjoint.lean), importing prior loc
 No `sorryAx`, no unproved constants, no presumed root-merging equivalence. Before GitHub upload local source SHA-256 `36667e52c6850e3e6b35acdff08f70d9a74322ea619b3c8ca5595c911c3fe8e8`, using `import SExponential` compiled to `SExponential.olean`. The Lean proof is entirely standalone arithmetic of the same published S q map, while authenticated raw-machine entry and original semantics are separate earlier source facts. An unmodified upstream-source integration CI chain has **not yet been run for this theorem**, so do not claim original-source-certified raw-machine exclusion.
 
 **Research scope:** This structural disjointness is potentially valuable for rooted holdout classification, avoiding unsupported fusion of the two designated starts. It does not imply that either initial S episode lasts forever, and alone cannot settle either six-state machine or BB(6). Record only in `im-results/` unless integrated into a substantive machine decision.
+
+## Strengthened quantitative bound and two-dimensional surviving-phase semantics
+
+The later [`SQuantitative.lean`](./SQuantitative.lean) verifies a sharper all-time theorem for every pair of iteration counts:
+
+```
+iterQ 17 a + (16 + min a b) ≤ iterQ 141 b
+  ∨
+iterQ 141 b + (16 + min a b) ≤ iterQ 17 a.
+```
+
+The **16-unit constant is optimal**, with equality at `a=8,b=0`: 141−125=16. The general kernel-checked lemma `nextQ_gap_growth` establishes that a difference of at least 14 between source q counters grows by **at least one unit per common subsequent iteration**. Hence a 16-unit separation at the time-alignment boundary becomes `16+min(a,b)` after shared steps.
+
+[`SPhysicalPhase.lean`](./SPhysicalPhase.lean) encodes the exact S-phase height updates as a partial map on `(q,c)`, where the only failure means **transfer to T**. Lean establishes that every surviving phase has the q-only iterated projection, and proves `surviving_roots_distance` for actual surviving S-phase trajectories, with the same lower bound `16+min(a,b)` on their q difference. Both final theorems compiled locally in Lean 4.36.0-rc2 with only `[propext, Quot.sound]` and no sorry; as above, a separate unmodified-upstream semantic import check remains open.
+
+The stronger result rules out even a near-coincidence at any large pair of surviving S epochs. It still does not decide whether the first S episode ever transfers to T, nor whether the two full raw machines eventually have related configurations.
