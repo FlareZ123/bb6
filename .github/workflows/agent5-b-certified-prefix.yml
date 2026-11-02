@@ -36,4 +36,5 @@ jobs:
             lean -o "$GENERATED/BTrace$index.olean" "$GENERATED/BTrace$index.lean"
           done
           lean -o "$GENERATED/BTraceFinal.olean" "$GENERATED/BTraceFinal.lean"
-          lean "$SRC/BTraceSource.lean"
+          lean -o "$GENERATED/BTraceSource.olean" "$SRC/BTraceSource.lean"
+          lean "$SRC/BTraceReach.lean"
