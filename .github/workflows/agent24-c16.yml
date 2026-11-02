@@ -84,3 +84,7 @@ jobs:
           lean -o UniformInverse.olean UniformInverse.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformReach.lean .
           lean UniformReach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/BounceReverse.lean .
+          lean -o BounceReverse.olean BounceReverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformEdges.lean .
+          lean UniformEdges.lean
