@@ -119,6 +119,9 @@ def candidate_valuations(f: Family, residue: int, modulus: int) -> tuple[int, ..
         target = (f.d * (2 * a - 1) - 2 * f.b) % m
         period = checked_period(m)
         checks = period // gcd(period, modulus)
+        # Verify the optimized class period independently. PeriodCore.lean
+        # proves that this single assertion covers every exponent in class.
+        assert checks > 0 and pow(2, modulus * checks, m) == 1
         if any(
             pow(2, residue + f.shift + 1 + modulus * k, m) == target
             for k in range(checks)
