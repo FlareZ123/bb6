@@ -48,7 +48,7 @@ This is `blank198`. Thus the universal prefix macro is rigorously connected to o
 
 - Source (losslessly encoded): [`Boundary.lean.xz.b64`](./Boundary.lean.xz.b64).
 - Reconstruction: [`unpack.py`](./unpack.py), atomically writes `Boundary.lean` after SHA-256 verification.
-- Verified decoded source SHA-256: `ce4fc8359dfcc4b42cbcae689cbb91e39ce6969aaaf460b0fdd232141cf0add2`.
+- Verified decoded source SHA-256: `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
 - Lean: 4.36.0-rc2 from the uploaded two-part archive. The archive contains an inner `lean-4.36.0-rc2-linux.tar.zst`, which must also be extracted.
 - `#print axioms` on `pump_generic`, `prefix_B`, `prefix_A`, `prefix_E`, `prefix_A_nil`, `blank198` reports only `[propext, Quot.sound]`. The direct `blank36` calculation reports **no axioms**. The compiler emitted only unused-simp-argument warnings; no compilation errors.
 - Reference context: [BusyBeaverWiki's related machine analysis](https://wiki.bbchallenge.org/wiki/1RB1RD_1LC0LE_1RA0LB_1RA1RF_0RA0RC_1RE---), Agent 2's [synthetic quadratic halting family](../agent2-cryptid-proof.md). The results are different: Agent 2's family is specially designed to halt, while this theorem describes an unconditional first-delimiter prefix.
@@ -58,3 +58,18 @@ This is `blank198`. Thus the universal prefix macro is rigorously connected to o
 This establishes a reusable, suffix-parametric exact symbolic reduction and authentic blank-orbit bridge. The unresolved difficulty is what happens *after* the delimiter, starting with a massive alternating block behind the head. In particular, a tempting broad claim that `n` and `n+3^j` always have the same first `j` high-level branches is false for some small tapes (Agent 2's explicit `n=4` counterexample). Our theorem only describes the initial transition to the delimiter and does not assert the full return.
 
 The productive next step is to prove that the three boundary configurations carry out a suffix-parametric return macro, ideally relating `m` and `m+4` without examining every bit of the suffix. A rigorous return conjugacy would turn the observed `n -> n+3` macro relationship into an inductive theorem and could enable an invariant for the actual infinite blank orbit. Keep such conjectures distinct from the formally verified prefix theorem.
+
+
+## Additional theorem: complete universal full return for the 2 mod 3 branch
+
+The extended source now also proves `CryptidBoundary.full_B`. It closes the earlier `prefix_B` exactly, by a two-step inductive leftward sweep (`sweepD_run` and `preB_run`), for **every** `k : Nat` and finite `ys`:
+
+```
+run (12*k*k + 49*k + 40)
+  (I_(3*k+2)(0 ys))
+    = I_(8*k+9)(ys).
+```
+
+Here `I_n(r)` denotes the same raw F-state entry as above. The delimiter zero is consumed and replaced by a longer unary run; the *entire* remaining suffix `ys` is carried through unchanged. The equation is an exact elapsed primitive-step count and raw configuration equality, rather than only a predicted macro outcome. For k=0,1,2 this says `I_2(0 ys) -> I_9(ys)` in 40 steps, `I_5(0 ys) -> I_17(ys)` in 101 steps, and `I_8(0 ys) -> I_25(ys)` in 186 steps.
+
+The new `#print axioms full_B` audit also reports only `[propext, Quot.sound]`. This is a complete symbolic macro for one third of the possible run lengths, but the other two congruence branches and global blank-orbit halting remain open. **Current verified SHA-256:** `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883` (supersedes the earlier hash above).
