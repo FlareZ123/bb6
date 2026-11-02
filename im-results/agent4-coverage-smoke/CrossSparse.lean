@@ -70,4 +70,12 @@ theorem sparse_compatibility_iff (p : BB6.Coverage.PartialMachine)
 def BoundedRuntime (B : Nat) (m : BB6Coverage.Machine) : Prop :=
   ∀ n, BB6Coverage.HaltsAfter m n → n+1 ≤ B
 
+theorem import_source_tree_as_cover_leaf (B : Nat)
+    (p : BB6.Coverage.PartialMachine) (tree : BB6.Coverage.CoverTree B p) :
+    BB6Coverage.Cover (BoundedRuntime B) (sparseTo8 p) := by
+  apply BB6Coverage.Cover.leaf
+  intro m hm n hn
+  have hcomp : BB6.Coverage.Extends p (toAgent13Machine m) := by
+    apply (sparse_compatibility_iff p (toAgent13Machine m)).mp
+    simpa only [toAgent8_toAgent13] using hm
 end BB6.CoverageAdapter
