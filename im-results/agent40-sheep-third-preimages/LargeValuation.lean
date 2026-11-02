@@ -86,6 +86,15 @@ theorem oddA1_third_large (a e : Nat) (ha:9≤a) :
     plus_bound 50 9 11 a ha (by decide) (by decide)
   exact SheepResidueGap.gap a e (50*a+11) (by omega) (by omega) hd
 
+/-- All large fourth-inverse valuations for j≡0(mod72) blocked. -/
+theorem fourth_evenA0_large (a e : Nat) (ha:9≤a) :
+    2^e % (2^(a+1)+1) ≠ 54*a-65 := by
+  have hd : 54*a-65 < 2^a :=
+    minus_bound 54 9 65 a ha (by decide) (by decide)
+  exact SheepResidueGap.gap a e (54*a-65) (by omega) (by omega) hd
+
+#print axioms fourth_evenA0_large
+
 #print axioms evenA1_third_large
 #print axioms evenA0_third_large
 #print axioms oddA1_third_large
