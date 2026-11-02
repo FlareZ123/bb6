@@ -37,7 +37,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CReachBridge.lean" CReachBridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CSourceBridge.lean" CSourceBridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CSection.lean" CSection.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CReturn.lean" CReturn.lean
           lake env lean -o .lake/build/lib/lean/CLine.olean CLine.lean
           lake env lean -o .lake/build/lib/lean/CReachBridge.olean CReachBridge.lean
           lake env lean CSourceBridge.lean
-          lake env lean CSection.lean
+          lake env lean -o .lake/build/lib/lean/CSection.olean CSection.lean
+          lake env lean CReturn.lean
