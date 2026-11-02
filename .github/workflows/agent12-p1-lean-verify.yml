@@ -1,0 +1,34 @@
+name: Agent 12 BB6 P1 Lean kernel checks
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-p1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct and hash-check standalone baseline
+        run: |
+          python -c 'from pathlib import Path; import base64,hashlib,lzma; p=Path("im-results/agent12-backwards"); b=lzma.decompress(base64.b64decode((p/"InfiniteMod8Barrier.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="ea708a402104f1b333ba1e50cda8fe889ada6c01f1b5c4d997b4586d30d08501"; (p/"NoFourthTarget.lean").write_bytes(b)'
+          python -c 'from pathlib import Path; Path("lean-toolchain").write_text("leanprover/lean4:v4.36.0-rc2\n")'
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Kernel check baseline and four extension modules
+        working-directory: im-results/agent12-backwards
+        env:
+          LEAN_PATH: .
+        run: |
+          lean -o NoFourthTarget.olean NoFourthTarget.lean
+          lean -o InfiniteMod16Barrier.olean InfiniteMod16Barrier.lean
+          lean -o RankCutoff.olean RankCutoff.lean
+          lean -o Mod16SixBarrier.olean Mod16SixBarrier.lean
+          lean -o Mod32SixBarrier.olean Mod32SixBarrier.lean
