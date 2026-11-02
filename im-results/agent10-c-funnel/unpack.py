@@ -12,7 +12,7 @@ from filelock import FileLock
 ROOT = Path(__file__).resolve().parent
 ARCHIVE = ROOT / "Funnel.lean.xz.b64"
 OUTPUT = ROOT / "Funnel.lean"
-SHA256 = "3094b6c7f7ba871fb6e13c10a1955e53bd4f0b6ebd410d3390e867d916225c1c"
+SHA256 = "5385feff08cbbb6c59bbde7008011956e9195a7e5dcf9098f899a80e232bf712"
 
 data = lzma.decompress(base64.b64decode(ARCHIVE.read_text(encoding="ascii")))
 actual = hashlib.sha256(data).hexdigest()
