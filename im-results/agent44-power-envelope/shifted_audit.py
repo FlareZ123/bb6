@@ -12,8 +12,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agent4-p1-cone2398
 from uniform_scan import Aff, all_positive_g_ancestors, check_residue
 
 
+def v2(n):
+    assert n > 0
+    return (n & -n).bit_length() - 1
+
+
 def main():
     counts = Counter()
+    depth_counts = Counter()
     ext = {"lower": [10**10, 0, 10**10, -10**10],
            "upper": [10**10, 0, 10**10, -10**10]}
     for sector, first in ((2, 34), (14, 30)):
@@ -27,6 +33,10 @@ def main():
                 b, d = stack.pop()
                 D = d + b.divide_exact(2) + 3
                 a, c = D.a, D.c
+                m = v2(c)
+                assert v2(a) > m, (r, D)
+                assert m <= 9, (r, D)
+                depth_counts[m] += 1
                 side = "lower" if a <= 74888 else "upper"
                 if side == "lower":
                     assert 65536 <= a <= 74888 and 12 <= c <= 74562, (r, D)
@@ -53,7 +63,9 @@ def main():
     print("total candidate interior nodes:", counts["lower"]+counts["upper"])
     print("low-band coefficient extent:", ext["lower"])
     print("high-band coefficient extent:", ext["upper"])
-    print("all nodes pass Lean-proved gap premises; generated trees remain unverified")
+    print("uniform inverse-depth valuation distribution:", dict(sorted(depth_counts.items())))
+    print("max certified enumerator depth:", max(depth_counts))
+    print("all nodes pass Lean-proved gap and valuation premises; trees remain unverified")
 
 
 if __name__ == "__main__":
