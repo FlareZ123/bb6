@@ -27,4 +27,6 @@ jobs:
           lean -o ShiftCoverage.olean ShiftCoverage.lean
           lean -o TreeCoverage.olean TreeCoverage.lean
           lean -o FiniteTapeCoverage.olean FiniteTapeCoverage.lean
-          lean FiniteTapeShift.lean
+          lean -o FiniteTapeShift.olean FiniteTapeShift.lean
+          lean -o FiniteLeafChecks.olean FiniteLeafChecks.lean
+          lean LeafDemo.lean
