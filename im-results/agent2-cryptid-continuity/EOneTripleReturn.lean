@@ -1,5 +1,5 @@
 import Lean.Elab.Tactic.Omega
-import Boundary
+import CryptidSix
 
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 2000
