@@ -21,7 +21,7 @@ jobs:
       - name: Verify total-machine coverage inference and axiom audit
         run: |
           set -eu
-          export LEAN_PATH=im-results/agent8-coverage-contract
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent44-drift-closure
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean im-results/agent8-coverage-contract/TerminalBridge.lean
           lean im-results/agent8-coverage-contract/Symmetry.lean
@@ -36,6 +36,8 @@ jobs:
           lean -o im-results/agent8-coverage-contract/RayFinite.olean im-results/agent8-coverage-contract/RayFinite.lean
           lean -o im-results/agent8-coverage-contract/RayFiniteOracle.olean im-results/agent8-coverage-contract/RayFiniteOracle.lean
           lean -o im-results/agent8-coverage-contract/FiniteHalting.olean im-results/agent8-coverage-contract/FiniteHalting.lean
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          lean -o im-results/agent8-coverage-contract/ZeroMaskOracle.olean im-results/agent8-coverage-contract/ZeroMaskOracle.lean
           lean -o im-results/agent8-coverage-contract/FiniteDecision.olean im-results/agent8-coverage-contract/FiniteDecision.lean
           lean -o im-results/agent8-coverage-contract/SparsePruneSearch.olean im-results/agent8-coverage-contract/SparsePruneSearch.lean
           lean im-results/agent8-coverage-contract/SparseReachPolicy.lean
