@@ -34,4 +34,5 @@ jobs:
           lean im-results/agent2-cryptid-continuity/BRunGrowth.lean
           lean -o im-results/agent2-cryptid-continuity/EHaltCylinder.olean im-results/agent2-cryptid-continuity/EHaltCylinder.lean
           lean -o im-results/agent2-cryptid-continuity/UniversalExtension.olean im-results/agent2-cryptid-continuity/UniversalExtension.lean
-          lean im-results/agent2-cryptid-continuity/ExactFirstHalt.lean
+          lean -o im-results/agent2-cryptid-continuity/ExactFirstHalt.olean im-results/agent2-cryptid-continuity/ExactFirstHalt.lean
+          lean im-results/agent2-cryptid-continuity/FirstHaltMinimal.lean
