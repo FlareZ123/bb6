@@ -23,10 +23,11 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile unmodified original source and Agent 2 proof
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third
         run: |
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean im-results/agent2-cryptid-continuity/EOneZeroHalt.lean
           lean im-results/agent2-cryptid-continuity/ReturnGuard.lean
+          lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
