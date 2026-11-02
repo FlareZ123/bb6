@@ -1,4 +1,4 @@
-import Frontier
+import Symmetry
 import Lean.Elab.Tactic.Omega
 namespace BB6Coverage
 
@@ -163,4 +163,42 @@ theorem example_glider_cover (B : Nat) : Cover (DecidedBelow B) gliderExample :=
 #print axioms four_glider_never
 #print axioms partial_glider_cover
 #print axioms example_glider_cover
+
+/-- Leftward reflected glider: a second certified nonhalting family. -/
+def PartialLeftGlider (p : PartialMachine) : Prop :=
+  p (0,false) = some (some ⟨true,false,b⟩) ∧
+  p (b,false) = some (some ⟨v,true,0⟩) ∧
+  p (0,true) = some (some ⟨u,false,c⟩) ∧
+  p (c,v) = some (some ⟨z,false,0⟩)
+
+private theorem mirror_never (m : Machine)
+    (h : NeverHalts (reflectTable m)) : NeverHalts m := by
+  intro n
+  have hr := mirror_run m blank n
+  simp only [mirror_blank] at hr
+  cases ht : run m n blank with
+  | none =>
+    simp only [ht, Option.map_none] at hr
+    have hn := h n
+    rw [hr] at hn
+    simp at hn
+  | some q => simp
+
+/-- Sparse mirror family, with complete infinite-tape reflection proof. -/
+theorem partial_left_glider_cover (p : PartialMachine) (B : Nat)
+    (hp : PartialLeftGlider b c u v z p) : Cover (DecidedBelow B) p := by
+  apply Cover.leaf
+  intro m hm
+  left
+  apply mirror_never m
+  apply four_glider_never (reflectTable m) b c u v z
+  obtain ⟨h0,h1,h2,h3⟩ := hp
+  have h0' := hm _ _ h0
+  have h1' := hm _ _ h1
+  have h2' := hm _ _ h2
+  have h3' := hm _ _ h3
+  simp [FourGlider,reflectTable,reflectMove,h0',h1',h2',h3']
+
+#print axioms partial_left_glider_cover
+
 end BB6Coverage
