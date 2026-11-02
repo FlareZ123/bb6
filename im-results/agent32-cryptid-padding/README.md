@@ -63,3 +63,28 @@ in exactly `12k*k+41*k+32 + C(4k+3,w) + 2*(4k+3+d(w))+6` primitive steps. The co
 Proof: compose Agent35's `a_code_return` with Agent25's `a_close_nil`, using original-source A prefix and Agent35's all-time semantics bridge to lift the finish back into Agent31. The complete source chain passed [manual CI 41420762660](https://github.com/FlareZ123/bb6/actions/runs/41420762660) against the unmodified SHA-verified upstream originals. The final two theorem axiom audits are exactly `[propext, Quot.sound]`; no extra axioms. Workflow: [agent32-code-implicit-nil.yml](../../.github/workflows/agent32-code-implicit-nil.yml).
 
 This is an intermediate generalization. No closed blank-start nonhalting argument or BB(6) bound follows.
+
+
+## Packet algebra, inversion cost and source-level confluence
+
+Two new fully original-source verified Lean modules give exact algebraic control of the previously certified arbitrary-codeword family.
+
+[TokenCostNormal.lean](./TokenCostNormal.lean) defines `pairsN(w)` as the number of 10 tokens, `triplesN(w)` as the number of 111 tokens, and `mixedInv(w)` as the number of ordered pairs of positions with a 10 token before a 111 token. Write `T(t)=t(t-1)/2`, encoded as the primitive recursive `triangular`. It proves for **all** words w and every m:
+
+```text
+wordInc(w) = p + 4*t
+wordCost(m,w) = 2*p + (6*m+41)*t + 24*T(t) + 6*I
+0 <= I <= p*t.
+```
+
+Consequently the exact primitive cost lies between `2p+(6m+41)t+24T(t)` and that value plus `6pt`. The `wordCost_append` theorem proves the precise cost cocycle, and `swap_cost_context` shows that exchanging a 10 packet immediately preceding a 111 packet reduces the exact cost by six **independently of the preceding and following packet words**.
+
+[CodePermutation.lean](./CodePermutation.lean) combines those theorems with the original-machine `full_A_code_implicit_nil`:
+
+- `swap_times`: the return cost of swapping adjacent 10 and 111 is exactly six steps apart.
+- `swap_confluence`: two genuine raw six-state runs, starting from the two differently encoded initial F tapes, reach **the exact same finite configuration**, at their respective exact return times, with a six-step time difference.
+- `same_counts_confluence`: for all k and all codewords u,v with the same numbers of both token types, the source-machine trajectories reach the same exact F-return configuration. Their timings need not coincide, and are determined by the inversion formula.
+
+**Full source Lean 4.36.0-rc2 original-source CI [41422121853](https://github.com/FlareZ123/bb6/actions/runs/41422121853) PASSED** 2026-11-02 09:38 UTC. `wordCost_closed`, `wordCost_lower`, `wordCost_upper`, `wordCost_append`, `swap_cost_context`, `swap_times`, `swap_confluence`, `same_counts_confluence` all have precisely standard `[propext, Quot.sound]` dependencies and no extra axioms. The raw machine and token parser were independently restored from the existing SHA-verified original source files.
+
+This gives a reusable **quotient of an entire infinite family of conditional return trajectories by token counts**, and an exact cost correction by word inversion count. No property of a complete infinite blank-start trajectory follows automatically, and no historical priority claim is made.
