@@ -83,10 +83,10 @@ theorem section_reach_embeds {a k : Nat} (h : CReach a k) :
 theorem blank_no_m8_affine_cylinder (u v : Nat) :
     ¬ CReach (8*u+7) (16*v+10) := by
   intro h
+  have hpreRaw := (blank_reach_iff_affine (8*u+7) (16*v+10)
+    (by omega) (by omega) (by omega)).mp h
   have hpre : CReach (8*u+16*v+15) (8*v+4) := by
-    apply (blank_reach_iff_affine (8*u+7) (16*v+10)
-      (by omega) (by omega) (by omega)).mp
-    exact h
+    convert hpreRaw using 1 <;> omega
   have hline := section_reach_embeds hpre
   apply CCert.published_no_seven_four (u+2*v+1) v
   have heq :
