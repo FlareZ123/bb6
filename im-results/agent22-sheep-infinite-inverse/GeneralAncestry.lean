@@ -99,4 +99,33 @@ theorem every_modulus_has_unbounded_inverse_chains (m : Nat) (hm : 0<m) (n : Nat
   exact finite_ancestryM m n n hm (by omega)
 
 #print axioms BB6.Agent22.GeneralAncestry.every_modulus_has_unbounded_inverse_chains
+
+/-- There are infinitely many distinct halting-power exponents in the
+zero residue class of every modulus with genuine generic ancestors
+at least any prescribed finite depth. -/
+theorem arbitrarily_large_exponents_have_deep_chains
+    (m : Nat) (hm : 0<m) (n K : Nat) :
+    ∃ j t : Nat, K < j ∧ m ∣ j ∧ SectionChain n t (2^j) := by
+  let modulus := m*(K+1)
+  have hmod : 0<modulus := Nat.mul_pos hm (by omega)
+  let j := exponentM modulus n
+  let t := ancestorM modulus n n
+  have h1 : K+1 ≤ modulus := by
+    exact Nat.le_mul_of_pos_left _ hm
+  have hfact : 0 < 2*3^(n+1) :=
+    Nat.mul_pos (by decide) (Nat.pow_pos (by decide))
+  have h2 : modulus ≤ j := by
+    dsimp [j, exponentM]
+    exact Nat.le_mul_of_pos_left _ hfact
+  have hmdiv : m ∣ j := by
+    refine ⟨(2*3^(n+1))*(K+1),?_⟩
+    dsimp [j,exponentM,modulus]
+    ac_rfl
+  refine ⟨j,t,by omega,hmdiv,?_⟩
+  dsimp [j,t]
+  rw [←ancestorM_zero modulus n]
+  exact finite_ancestryM modulus n n hmod (by omega)
+
+#print axioms BB6.Agent22.GeneralAncestry.arbitrarily_large_exponents_have_deep_chains
+
 end BB6.Agent22.GeneralAncestry
