@@ -129,3 +129,38 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierClose.olean im-results/agent4-coverage-smoke/FrontierClose.lean
           lean im-results/agent4-coverage-smoke/FrontierAuditBench.lean
           lean im-results/agent4-coverage-smoke/RelativeTape.lean
+
+  source-authenticated-f287:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch immutable upstream Cryptids theorem source
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+      - name: Install upstream Lean 4.35.0-rc4
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Retrieve pinned Mathlib artifacts and verify external A6
+        working-directory: cryptids
+        run: |
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH
+      - name: Source-check external A6/F287 rooted-cover semantics in same Lean kernel
+        working-directory: cryptids
+        run: |
+          export LEAN_PATH="../im-results/agent8-coverage-contract:../im-results/agent4-coverage-smoke"
+          lake env lean -o ../im-results/agent8-coverage-contract/Frontier.olean ../im-results/agent8-coverage-contract/Frontier.lean
+          lake env lean -o ../im-results/agent8-coverage-contract/Prune.olean ../im-results/agent8-coverage-contract/Prune.lean
+          lake env lean -o ../im-results/agent4-coverage-smoke/RelativeTape.olean ../im-results/agent4-coverage-smoke/RelativeTape.lean
+          lake env lean -o ../im-results/agent4-coverage-smoke/FrontierAudit.olean ../im-results/agent4-coverage-smoke/FrontierAudit.lean
+          lake env lean -o ../im-results/agent4-coverage-smoke/FrontierMass.olean ../im-results/agent4-coverage-smoke/FrontierMass.lean
+          lake env lean -o ../im-results/agent4-coverage-smoke/FrontierClose.olean ../im-results/agent4-coverage-smoke/FrontierClose.lean
+          lake env lean -o ../im-results/agent4-coverage-smoke/CryptidsTapeAdapter.olean ../im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean
+          lake env lean ../im-results/agent4-coverage-smoke/CryptidsF287.lean
