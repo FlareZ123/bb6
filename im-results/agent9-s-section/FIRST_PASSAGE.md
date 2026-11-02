@@ -1,10 +1,10 @@
-# Exact first-passage law and a positive-measure nowhere-dense survival set
+# Exact finite-time first-passage law and sharpened transfer tails
 
 Agent 9, 2026-11-02. **Intermediate mathematical analysis of a previously published accelerator; not a BB(6) decision or a new bound.** The original blank-start roots at \(q=141,c=3\) and \(q=17,c=3\) remain undecided. This analysis is for *varying synthetic S-section initial counters* and their compatible 3-adic symbolic extension, not an assertion about either specific integer root.
 
 ## Source and convention
 
-Upstream formal acceleration: [Google DeepMind Cryptids, S-root](https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/M_1RB0LB_1LC0RE_1LA1LD_0LCHHH_0RB0RF_1RE1RB.lean). Existing local [digital coding](./DigitalAperiodic.md) establishes exact residue-word cylinders and a transfer witness in every finite cylinder.
+Upstream formal acceleration: [Google DeepMind Cryptids, S-root](https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/M_1RB0LB_1LC0RE_1LA1LD_0LCHHH_0RB0RF_1RE1RB.lean). Existing local [digital coding and analytic corollary](./DigitalAperiodic.md) already establish exact residue-word cylinders, dense transfer, the positive-measure nowhere-dense survival set, and the exact eventual-transfer probability using standard random-walk first-passage theory. **Those qualitative and eventual-probability conclusions are prior work within this repository.** The new contribution here is an explicit cycle-lemma *finite-time counting formula* and its k/n-improved effective tail estimate.
 
 For an integer \(q\ge16\), let \(r=q\bmod3\) and \(k=\lfloor q/3\rfloor\). As long as the S-section survives, the transition is
 
@@ -45,7 +45,7 @@ F(z)=\frac z3\left(1+F(z)^5+F(z)^7\right),
 
 The coefficient formula follows independently from Lagrange inversion. The cycle-lemma derivation above avoids assuming any probabilistic limit theorem.
 
-## Exact probability of eventual section transfer
+## Previously derived eventual-transfer probability (for context)
 
 Let \(\rho\) be the **unique root in (0,1)** of
 
@@ -53,7 +53,7 @@ Let \(\rho\) be the **unique root in (0,1)** of
 1+\rho^5+\rho^7=3\rho.
 \]
 
-This is the smaller of the two roots of that equation in [0,1], the other being 1. The probability of *ever* transferring from S with initial height h, under uniform 3-adic digit input, is **exactly** \(\rho^{h+1}\).
+This is the smaller of the two roots of that equation in [0,1], the other being 1. As already noted in [DigitalAperiodic.md](./DigitalAperiodic.md), the probability of *ever* transferring from S with initial height h, under uniform 3-adic digit input, is **exactly** \(\rho^{h+1}\). The derivation below is an independent self-contained proof and is not claimed as a new discovery.
 
 **Proof.** The probability that a one-root offspring tree becomes extinct by generation d obeys \(e_0=0\) and
 \(e_{d+1}=(1+e_d^5+e_d^7)/3\). Hence \(e_d\) increases and converges to the smallest fixed point of this polynomial map. The polynomial \(g(x)=1+x^5+x^7-3x\) is positive at 0, zero at 1, and has \(g''(x)=20x^3+42x^5>0\) on (0,1). Its derivative is negative at 0 and positive at 1. Consequently it has exactly one additional root \(\rho\in(0,1)\). By monotonicity, \(e_d\le\rho\), and its limit is a fixed point; it is therefore \(\rho\). A forest of k independent root trees becomes extinct with probability \(\rho^k\). The depth-first queue interpretation identifies extinction with finite-time S transfer. \(\square\)
@@ -85,9 +85,9 @@ Indeed, if \(B\) is the unrestricted multinomial count of words with \(5a+7b=n-k
 
 Taking \(t=15/22\) gives the exact rational \(\alpha=3032754763/5102095680<1\); at h=3 the bound for transfer *after* step 100 is under \(3.216\times 10^{-25}\) in the uniform 3-adic symbolic model. This is an explicit **unconditional tail over randomized starting counters**, and says nothing deterministic about q17 or q141. The exponent is near-optimal within polynomial tilting: \(\alpha(t)\) attains its minimum at the unique positive \(t_*\) solving \(4t_*^5+6t_*^7=1\); approximately \(t_*=0.681773663149\), \(\alpha(t_*)=0.594413535584\). The derivation uses only finite multinomial expansion and a geometric series, with no numerical asymptotic assumption. Relative to the existing [GenericTail](./TailMass.md) rational tilt, the exact first-passage formula supplies the further k/n factor.
 
-## Topological consequence: a fat 3-adic survival set
+## Previously established topological consequence (for context)
 
-For fixed initial height h, the set E of 3-adic starting counters with a finite-time S transfer is a union of finite congruence cylinders, hence open. By the existing explicit dense-transfer cylinder construction (see [DigitalAperiodic](./DigitalAperiodic.md)), **E is dense**. Its complement N, the set of section inputs whose digit streams never transfer, is closed and nowhere dense. The new exact probability gives
+For fixed initial height h, the set E of 3-adic starting counters with a finite-time S transfer is a union of finite congruence cylinders, hence open. By the existing explicit dense-transfer cylinder construction (see [DigitalAperiodic](./DigitalAperiodic.md)), **E is dense**. Its complement N, the set of section inputs whose digit streams never transfer, is closed and nowhere dense. The previously established exact probability gives
 
 \[
 \mu(N)=1-\rho^{h+1}>0.
@@ -99,4 +99,4 @@ No positive *integer* counter is proved to lie in N. The original BB(6) machine 
 
 ## Reproduction and evidence level
 
-Run [first_passage_verify.py](./first_passage_verify.py) with standard Python 3. It independently compares the cycle-lemma formula against height-dynamic-program counts for h=0,1,3,8 through n=160 and brute-force ternary enumeration through n=9. It also checks the q-residue/digit-word bijection through n=7 and evaluates the rational root bracket *exactly* with Fraction. These checks are finite falsification tests; the general theorem rests on the mathematical cycle-lemma and branching-process proofs above. **The general counting formula and extinction law are proved mathematically here but have not been fully Lean kernel checked.** The companion [FirstPassageArithmetic.lean](./FirstPassageArithmetic.lean) compiled locally in Lean 4.36.0-rc2: it kernel-verifies the universal first-passage length identity and the exact integer polynomial signs defining the stated rational root bracket. Its printed axioms are [propext, Quot.sound] for the length identity and [] for both integer signs, with no sorryAx. Its source SHA-256 is `97c0c8f9a8f6248d2fb4fc45cb2a89ecbe2d8b18fb7f849cde456f624b7083d9`. This is a new exact characterization within our local work, subject to external prior-art review and formal proof integration. Promote neither the theorem nor the probabilistic inference to a resolved-root or solved-BB(6) claim.
+Run [first_passage_verify.py](./first_passage_verify.py) with standard Python 3. It independently compares the cycle-lemma formula against height-dynamic-program counts for h=0,1,3,8 through n=160 and brute-force ternary enumeration through n=9. It also checks the q-residue/digit-word bijection through n=7 and evaluates the rational root bracket *exactly* with Fraction. These checks are finite falsification tests; the general theorem rests on the mathematical cycle-lemma and branching-process proofs above. **The general counting formula and extinction law are proved mathematically here but have not been fully Lean kernel checked.** The companion [FirstPassageArithmetic.lean](./FirstPassageArithmetic.lean) compiled locally in Lean 4.36.0-rc2: it kernel-verifies the universal first-passage length identity and the exact integer polynomial signs defining the stated rational root bracket. Its printed axioms are [propext, Quot.sound] for the length identity and [] for both integer signs, with no sorryAx. Its source SHA-256 is `97c0c8f9a8f6248d2fb4fc45cb2a89ecbe2d8b18fb7f849cde456f624b7083d9`. The explicit finite-time cycle-lemma coefficient formula and 1/n tail saving extend the existing local analytic description. The extinction root, 3-adic density and topological result predate this document in DigitalAperiodic.md. External prior-art review and formal proof integration remain necessary. Promote neither the theorem nor the probabilistic inference to a resolved-root or solved-BB(6) claim.
