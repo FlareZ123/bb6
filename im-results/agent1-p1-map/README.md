@@ -73,3 +73,21 @@ The raw-transition count excludes an attempt to execute the undefined halt rule.
 A full-holdout snapshot of 663 distinct, dated representative RLE strings is mirrored under `resources/`. A finite structural screen grouped them into 435 transition-table families when the starting state was forgotten, including 145 families with multiple listed starts. Retaining the distinguished initial state leaves all 663 distinct. The 435 figure does not reduce the undecided blank-tape questions: equivalent transition tables may run differently from distinct starting states.
 
 A search of the 373 starts belonging to non-singleton transition-table families to 100,000 raw transitions each found **no verified same-tape, same-state cross-start coincidence up to translation**. An earlier 32-bit double polynomial hash collision was falsified by an exact tape comparison; the corrected screen used bases 5 and 7 and checked any candidate by replaying and comparing every nonzero tape cell. These are only bounded observations and do not establish non-coalescence. All 663 holdouts passed a separate 10,000-step screen without reaching a halt or translated cycle; this too is expected from prior decidability filtering and not new mathematics.
+
+## Exact raw-step cost model for the synthetic halting family
+
+The machine-level DeepMind source (rules 3, 4, 6, 10, 11) documents raw transition costs. Summing them yields the following conditional-on-the-source-rule-counts derivation for the large-counter two-step map. Write even `a=2m`. The first `P1` transition costs `4m+6`. The next odd `P1` transition costs `4m+16` and enters `P2` with initial small counter 2 and countdown `m+1`. The `m+1` repeated `P2` rule-11 sweeps cost `sum_{j=0}^m (14+8j)=4m^2+18m+14`; rule 10 exits to `P1` with cost `8m+22`. Their sum is
+
+```
+large_counter_pair_raw_steps(a) = a*a + 17*a + 58.
+```
+
+At the last gate `P1(a,4)`, the even rule takes `2a+6` raw steps and the terminal odd rule takes `2a+13`, giving `4a+19` defined transitions before the first undefined transition. Therefore for `a_j=14*2^j-12` and `H_2(n)=14*2^n-2n-10`:
+
+```
+rawDefinedSteps(n)
+  = sum_{j=0}^{n-1} (a_j*a_j + 17*a_j + 58) + (4*a_n+19)
+  = (196*4^n+11)/3 - 42*2^n - 2*n.
+```
+
+This value is an integer for all `n` since `4^n=1 mod 3`. The formula is mathematically derived from exact rule timings stated in the upstream source, while the local Lean proofs verify the counter transition identities and the existence/number of accelerated transitions. **The raw timing annotations themselves have not been independently formalized as counted Lean machine-step theorems**, so this is recorded as a source-dependent derivation plus reproducible computational checks. Raw simulation (starting with full synthetic tapes) agreed for every `n` from 0 through 8 inclusive, including at `n=8`: `H_2(8)=3558`, 4,270,921 defined raw transitions, and 1,790 ones at the undefined rule. The machine still has no known blank-tape halting decision.
