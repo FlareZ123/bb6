@@ -42,6 +42,7 @@ jobs:
           lean -o im-results/agent8-coverage-contract/SparsePruneSearch.olean im-results/agent8-coverage-contract/SparsePruneSearch.lean
           lean im-results/agent8-coverage-contract/SparseReachPolicy.lean
           node im-results/agent8-coverage-contract/ray_count.cjs
+          python im-results/agent8-coverage-contract/orbit_census.py
           lean -o im-results/agent8-coverage-contract/LedgerCheck.olean im-results/agent8-coverage-contract/LedgerCheck.lean
           lean im-results/agent8-coverage-contract/LedgerRows.lean
       - name: Source-verify generalized halt-slot cylinder and global frontier
