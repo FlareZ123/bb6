@@ -1,4 +1,4 @@
-name: Agent 25 Cryptid triplet return certificate (manual)
+name: Agent 25 Cryptid symbolic prefix proof (manual)
 
 on:
   workflow_dispatch:
@@ -17,13 +17,13 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Reconstruct the exact source and compile all modules
+      - name: Reconstruct source and compile all exact raw-step theorems
         run: |
           python3 -m pip install --quiet filelock
           cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
           python3 unpack.py
           export LEAN_PATH="."
-          for module in DoubleZero DoubleZeroE TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration; do
+          for module in DoubleZero DoubleZeroE TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode APrefixCode; do
             echo "Checking $module"
             lean -o "$module.olean" "$module.lean"
           done
