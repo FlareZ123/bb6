@@ -50,4 +50,6 @@ jobs:
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankBeyond.olean im-results/agent35-cryptid-code/BlankBeyond.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent35-cryptid-code/ESixBlank.olean im-results/agent35-cryptid-code/ESixBlank.lean
-          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankSixCheckpoint.olean im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
+          lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
+          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankTripleCheckpoint.lean
