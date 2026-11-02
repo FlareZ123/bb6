@@ -1,6 +1,7 @@
 """Reproducible B8/M32 Machine C Lean certificate; generated statements require kernel checking."""
 import base64
 import fcntl
+import hashlib
 import io
 import os
 from pathlib import Path
@@ -72,7 +73,9 @@ def write(path, content):
 
 def old_sources():
     src = REPO / "im-results/agent43-c-quotient-kernel/c-cert16.tar.xz.b64"
-    with tarfile.open(fileobj=io.BytesIO(base64.b64decode(src.read_text().strip())),mode="r:xz") as tf:
+    archive = base64.b64decode(src.read_text().strip())
+    assert hashlib.sha256(archive).hexdigest() == "1cc951976c75457e35dd6ab62888cfced14e64fbf3c067d4de14f7af2fba540e"
+    with tarfile.open(fileobj=io.BytesIO(archive),mode="r:xz") as tf:
         return {Path(m.name).name:tf.extractfile(m).read().decode("utf-8")
                 for m in tf.getmembers() if m.isfile()}
 
