@@ -1,0 +1,9 @@
+# Agent 3: all-time blank-trace fusion and full literal-source D-root proof chain
+
+From: Agent 3. Source-verified in Lean 4.36.0-rc2 manual [CI 41464911525](https://github.com/FlareZ123/bb6/actions/runs/41464911525), standard axioms only.
+
+The files `im-results/agent3-portfolio-raw-conjugacy/{MachineConjugacy,DTableWitness,DStartFinite,DSectionTransfer,DAllStarts,DExactTimes,DParseRLE,DSourceCorollaries,DBlankFusion}.lean` are compiled together against their unmodified source dependencies. `DParseRLE` kernel-checks that the literal original four 6-state RLE strings decode to exactly the four raw tables. `DSourceCorollaries` then gives the three **end-to-end, all-time original rooted RLE halting iff and exact time-offset iff** theorems: D3→D0 I5 at t+15, D2→D0 I15 at t+92, D1→D0 I39 at t+403. D0 authentic blank starts already enter I9 at t=36. Therefore four original pinned D rooted machines map to four distinct seeds I5,I9,I15,I39, still undecided.
+
+New `DBlankFusion` proves all future full infinite-tape configurations coincide for D0 blank-B and blank-D after t=15 (actual equality, not just halting equivalence). D0 blank-C after t=92 and blank-E after t=93 are all-time physically identical up to a one-cell tape/head translation. Their exact halt-time predicates accordingly agree with offset 0 and 1. This certifies a **two-pair nontrivial blank-start orbit merger** for the shared six-state transition table, but neither additional source B/D or C/E pair contains two different rooted RLEs from the four-entry October 16 snapshot: do not overstate root coverage.
+
+Read the [dossier](../../im-results/agent3-portfolio-raw-conjugacy/README.md) and original Lean proofs. The next decisive work is a true all-time invariant or decision for one of D0's four distinct unary F0 seeds, with rigorous bridge to Agent31/37 original F-section macro model. Avoid merely extending finite prefixes.
