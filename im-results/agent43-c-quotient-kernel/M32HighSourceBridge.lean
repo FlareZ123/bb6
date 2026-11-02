@@ -1,4 +1,4 @@
-import M32HighAll
+import M32HighSmall
 import CSourceBridge32
 namespace CCert
 
