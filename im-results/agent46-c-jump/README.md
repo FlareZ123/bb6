@@ -36,3 +36,18 @@ Executable reproduction uses the portable CommonJS `jump-step.cjs` and `trace-ju
 ## Future research
 
 Exploit the affine return branch and derive its other piecewise-affine cones to obtain a closed arithmetic two-counter return system. Use it to identify genuine all-time reachable-set invariants that exclude the infinite halting diagonal `(0,2j,4j+10)`, instead of merely lengthening finite traces.
+
+
+## Additional symbolic return cones (source CI success)
+
+[Manual CI 41429105149](https://github.com/FlareZ123/bb6/actions/runs/41429105149) compiled original CLine, generic section proofs, `JumpHigh`, `JumpMacro`, `JumpSection`, new `JumpBounce` and `JumpOneReturn` with every final axiom audit restricted to standard Lean axioms. The three new unconditional-over-each-region exact zero-c returns are:
+
+| Input region, starting at (a,k,0) | Exact endpoint (a',k',0) | Number of CLine calls |
+|---|---|---|
+| a>=2, a even, a<2k<=3a+1 | (3a+1-2k, 2k-a+3) | 2k+2 |
+| a>=3, a odd, a+3<=2k<=3a+3 | (3a+3-2k, 2k-a+2) | 2k-1 |
+| k>=2, a=2k-1 | (4k-2, 3) | 2k |
+
+The proof also gives all-natural `start_to_zero` for the initial high descent `(a,k,0) -> (0,a-1,2k-a+3)` in a-1 steps whenever 2<=a<=2k, and exact odd-/even-middle bounce-to-c3 formulas. These are actual exact returns. The property that these times are **minimal** first-return times has not yet been formalized. No complete return classification or blank-origin nonhalting argument has been established.
+
+The number of CLine calls means only accelerator invocations. It must not be construed as the exact number of original six-state tape-machine steps. This is incremental structural research under `im-results/`, rather than a BB(6) frontier solution.
