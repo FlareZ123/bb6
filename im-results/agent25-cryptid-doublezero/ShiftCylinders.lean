@@ -17,8 +17,9 @@ def prependEight (c : Cfg) : Cfg :=
 private theorem prependEight_finish (n : Nat) (ys : List Bool) :
     prependEight (⟨[],false,List.replicate n true ++ ys,5⟩ : Cfg) =
       (⟨[],false,List.replicate (n+8) true ++ ys,5⟩ : Cfg) := by
-  simp only [prependEight, List.append_assoc,
-    List.replicate_append_replicate, Nat.add_comm 8 n]
+  unfold prependEight
+  rw [←List.append_assoc, List.replicate_append_replicate]
+  rw [Nat.add_comm 8 n]
 
 def costB (k : Nat) : Nat := 12*k*k+49*k+40
 def costEpair (k q : Nat) : Nat := 12*k*k+49*k+50+4*q
@@ -85,8 +86,6 @@ theorem B_shift (k : Nat) (ys : List Bool) :
   rw [←costB_succ]
   simp only [costB]
   rw [full_B (k+1) ys, full_B k ys, prependEight_finish]
-  congr 1
-  omega
 
 theorem Epair_shift (k q : Nat) (ys : List Bool) :
     run (costEpair k q + (24*k+61))
@@ -98,8 +97,6 @@ theorem Epair_shift (k q : Nat) (ys : List Bool) :
   rw [←costEpair_succ]
   simp only [costEpair]
   rw [full_E_pairs (k+1) q ys, full_E_pairs k q ys, prependEight_finish]
-  congr 1
-  omega
 
 theorem Etriple_shift (k q : Nat) (ys : List Bool) :
     run (costEtriple k q + (24*k+61))
@@ -112,8 +109,6 @@ theorem Etriple_shift (k q : Nat) (ys : List Bool) :
   simp only [costEtriple]
   rw [full_E_triple_pairs (k+1) q ys, full_E_triple_pairs k q ys,
     prependEight_finish]
-  congr 1
-  omega
 
 theorem Acode_shift (k : Nat) (ws ys : List Bool) :
     run (costA k ws + (24*k+61+24*BB6.Parikh.triplesN ws))
@@ -126,8 +121,9 @@ theorem Acode_shift (k : Nat) (ws ys : List Bool) :
   simp only [costA]
   rw [BB6.Agent35.full_A_code (k+1) ws ys,
       BB6.Agent35.full_A_code k ws ys, prependEight_finish]
-  congr 1
-  omega
+  have hr : 2*(4*(k+1)+3+CryptidA.wordInc ws)+5 =
+      (2*(4*k+3+CryptidA.wordInc ws)+5)+8 := by omega
+  rw [hr]
 
 #print axioms wordCost_shift4
 #print axioms costA_succ
