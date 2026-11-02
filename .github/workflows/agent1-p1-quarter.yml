@@ -1,0 +1,44 @@
+name: Agent1 P1 quarter-index entire-family proof (manual full-source audit)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode quarter inverse proofs and verify exact original source SHA256
+        run: |
+          set -e
+          base64 -d im-results/agent1-p1-quarter/QuarterCone.lean.xz.b64 | xz -d > im-results/agent1-p1-quarter/QuarterCone.lean
+          echo "c7b09fa15b003cabd29dd3f04ae84a1f226ced37b6350d2d0251def20295ac28  im-results/agent1-p1-quarter/QuarterCone.lean" | sha256sum -c -
+          head -n 3 im-results/agent1-p1-quarter/QuarterCone.lean
+      - name: Compile all unmodified upstream Lean dependencies and new universal theorems
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          for m in P1InverseLog P1InverseFixed; do
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          for m in QuarterGap QuarterCone QuarterFinal; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          echo "Verified all q≥1 with q%4=0 or3 using genuine source Lean dependencies."
