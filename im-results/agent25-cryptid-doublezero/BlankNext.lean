@@ -50,7 +50,44 @@ theorem blank1003706711874695788461 :
   rw [full_E_triple_pairs 8478209594 3 [true]] at h
   simpa only [Nat.reduceMul,Nat.reduceAdd] using h
 
+
+/-- A further E-pairs return across a physically implicit trailing zero.
+    The padding step is justified by the unbounded source congruence theorem. -/
+theorem blank7137469949709248558298 :
+    BB6.BoundaryPadding.ObsEq
+      (run 7137469949709248558298 blank)
+      (⟨[],false,List.replicate 180868471357 true ++
+        (false :: List.replicate 18 true),5⟩ : Cfg) := by
+  have h0 := blank1003706711874695788461
+  have hn : 67825676761 = 67825676759+2 := by decide
+  rw [hn] at h0
+  rw [finish_packet_init 67825676759 (oppairs 5 ++ false :: [true])] at h0
+  have hs : (oppairs 5 ++ false :: [true]) ++ [false] = false :: pairs 6 := by decide
+  have hr :
+    (List.replicate 67825676759 true ++ (oppairs 5 ++ false :: [true])) ++ [false] =
+      List.replicate 67825676759 true ++ false :: pairs 6 := by
+    rw [List.append_assoc, hs]
+  have hpad := BB6.BoundaryPadding.source_init_pad 0 1
+    (List.replicate 67825676759 true ++ (oppairs 5 ++ false :: [true]))
+  change BB6.BoundaryPadding.ObsEq
+    (init (List.replicate 67825676759 true ++ (oppairs 5 ++ false :: [true])))
+    (init ((List.replicate 67825676759 true ++ (oppairs 5 ++ false :: [true])) ++ [false])) at hpad
+  rw [hr] at hpad
+  have h1 := BB6.Padding.cfgEq_trans h0 hpad
+  have hk : 67825676759 = 3*22608558919+2 := by decide
+  rw [hk] at h1
+  have ht : 7137469949709248558298 =
+    1003706711874695788461 +
+      (12*22608558919*22608558919+49*22608558919+50+4*6) := by decide
+  rw [ht, run_add]
+  have h := BB6.BoundaryPadding.source_congr
+    (12*22608558919*22608558919+49*22608558919+50+4*6) h1
+  have he := BB6.BoundaryPadding.full_E_pairs_implicit_blank 22608558919 6
+  have hh := BB6.Padding.cfgEq_trans h he
+  simpa only [Nat.reduceMul,Nat.reduceAdd] using hh
+
 #print axioms blank141146256421739780247
 #print axioms blank1003706711874695788461
+#print axioms blank7137469949709248558298
 
 end CryptidBoundary
