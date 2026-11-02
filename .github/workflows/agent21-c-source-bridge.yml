@@ -82,10 +82,14 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CMod32.olean CMod32.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128Six.lean" CMod128Six.lean
           lake env lean -o .lake/build/lib/lean/CMod128Six.olean CMod128Six.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32TwentyTwo.lean" CMod32TwentyTwo.lean
+          lake env lean -o .lake/build/lib/lean/CMod32TwentyTwo.olean CMod32TwentyTwo.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32Bridge.lean" CMod32Bridge.lean
           lake env lean -o .lake/build/lib/lean/CMod32Bridge.olean CMod32Bridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128SixBridge.lean" CMod128SixBridge.lean
-          lake env lean CMod128SixBridge.lean
+          lake env lean -o .lake/build/lib/lean/CMod128SixBridge.olean CMod128SixBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32TwentyTwoBridge.lean" CMod32TwentyTwoBridge.lean
+          lake env lean CMod32TwentyTwoBridge.lean
 
       - name: Source-certify Agent 20 finite quotient representative lemma
         working-directory: /tmp/cryptids
