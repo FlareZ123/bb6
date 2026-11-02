@@ -26,6 +26,8 @@ jobs:
           base64 -d im-results/agent45-p1-generator/quarter-generator.tar.xz.b64 > /tmp/agent45-quarter.tar.xz
           echo "2ba1fab89c5e6268569c5e3f04a899299d532dd7cf2d8f914cdde89f6a2f087c  /tmp/agent45-quarter.tar.xz" | sha256sum -c -
           tar -xJf /tmp/agent45-quarter.tar.xz -C im-results/agent45-p1-generator/src
+          # Compatibility: the pinned base generator predates a separate no_critical theorem; remove the obsolete slice guard. The resulting full source is kernel-checked below.
+          python -c 'from pathlib import Path; p=Path("im-results/agent45-p1-generator/src/emit4shift.py"); p.write_text("".join(line for line in p.read_text().splitlines(keepends=True) if "source=source[:source.index(" not in line))'
           python im-results/agent45-p1-generator/src/emit4shift.py 174 im-results/agent45-p1-generator/src/Quarter174Full.lean
           python im-results/agent45-p1-generator/src/split4.py 174 im-results/agent45-p1-generator/src/Quarter174Full.lean im-results/agent45-p1-generator/src
       - name: Compile original unmodified acceleration and reachability calculus
