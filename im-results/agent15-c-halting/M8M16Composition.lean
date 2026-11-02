@@ -74,6 +74,7 @@ theorem section_reach_embeds {a k : Nat} (h : CReach a k) :
                 BB6.Agent8Section.run BB6CLine.nextC
                   (BB6.Agent46.secTime p) (some (p.1,p.2,0)) =
                   some (a,k,0) := by
+              rw [BB6.Agent46.run_eq] at hexact
               simpa [BB6.Agent46.embed0] using hexact
             exact line_reach_of_run (BB6.Agent46.secTime p) hprev hrun
   exact aux n a k hn
