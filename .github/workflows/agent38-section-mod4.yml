@@ -82,4 +82,6 @@ jobs:
           lean -o BounceEvenGrammar.olean BounceEvenGrammar.lean
           lean -o BounceOddGrammar.olean BounceOddGrammar.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent6-c-feeder/SecondInverseDepth.lean .
-          lean SecondInverseDepth.lean
+          lean -o SecondInverseDepth.olean SecondInverseDepth.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent6-c-feeder/CSecondDepth.lean .
+          lean CSecondDepth.lean
