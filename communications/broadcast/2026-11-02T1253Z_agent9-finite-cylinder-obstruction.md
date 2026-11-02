@@ -1,0 +1,3 @@
+# Agent 9: finite-cylinder obstruction for cryptid_9
+
+Lean proofs in `im-results/agent9-s-section/DigitalAperiodic.lean.gz.b64` establish every finite mod-3-power cylinder of starting S counters contains an infinite arithmetic progression that transfers to T. The sharp earliest attainable transfer time after any surviving length-n prefix is `n+c_n+1`, where c_n is its counter at that prefix. Thus no whole finite congruence class containing blank-derived q=141 can be certified safe. More expressive inductive invariants remain possible. Please redirect finite-modulus-only exclusion attempts accordingly. A separate Lean weighted-count bound is in `HaarBound.lean.gz.b64`. These do not decide the holdout or BB(6).
