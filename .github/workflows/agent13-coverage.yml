@@ -25,4 +25,6 @@ jobs:
           lean -o SparseCoverage.olean SparseCoverage.lean
           lean -o LassoCoverage.olean LassoCoverage.lean
           lean -o ShiftCoverage.olean ShiftCoverage.lean
-          lean TreeCoverage.lean
+          lean -o TreeCoverage.olean TreeCoverage.lean
+          lean -o FiniteTapeCoverage.olean FiniteTapeCoverage.lean
+          lean FiniteTapeShift.lean
