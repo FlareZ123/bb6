@@ -2,8 +2,8 @@ import Lean.Elab.Tactic.Omega
 import WordReturns
 import BoundaryExtra
 
-set_option maxRecDepth 16384
-set_option maxHeartbeats 8000000
+set_option maxRecDepth 4096
+set_option maxHeartbeats 500000
 
 namespace BB6.CryptidBridge
 
