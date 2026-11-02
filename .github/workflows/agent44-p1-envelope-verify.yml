@@ -26,7 +26,8 @@ jobs:
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
           lean im-results/agent44-power-envelope/GOneSource.lean
-          lean im-results/agent44-power-envelope/InverseEnumerator.lean
+          lean -o im-results/agent44-power-envelope/InverseEnumerator.olean im-results/agent44-power-envelope/InverseEnumerator.lean
+          lean im-results/agent44-power-envelope/FiniteChildren.lean
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
