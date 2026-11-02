@@ -1,4 +1,4 @@
-"""Generate an original-source Lean proof for P1 critical index 130 mod 65536.
+"""Generate an original-source Lean proof for P1 critical residue classes.
 
 The deterministic affine tree comes from Agent 4's original conservative
 scanner. This generator only emits proof terms; Lean verifies every claim.
@@ -9,7 +9,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'agent4-p1-cone2398'))
 from uniform_scan import Aff, check_residue, all_positive_g_ancestors
 
-R = 130
+R = int(sys.argv[1]) if len(sys.argv) > 1 else 130
 assert check_residue(R)[0]
 root = (Aff(131072, 131056 - 2*R), Aff(0, 3))
 stack = [root]
@@ -28,25 +28,25 @@ while stack:
     def v2(z):
         return (z & -z).bit_length() - 1
     nodes.append((i, b, d, D, v2(D.c), branches))
-assert len(nodes) == 7
+assert len(nodes) == check_residue(R)[2]
 
 out = []
 def add(s=''):
     out.append(s)
 def ex(a):
-    return f'({a.a}*tt q+{a.c})' if a.a else str(a.c)
+    return (f'({a.a}*tt q+{a.c})' if a.c >= 0 else f'({a.a}*tt q-{abs(a.c)})') if a.a else str(a.c)
 
 add('import ConeReflect')
 add('import NatAffineWrappers')
 add('import P1Gate')
 add('set_option maxRecDepth 16384')
 add('set_option maxHeartbeats 2000000')
-add('namespace BB6.Agent44.Case130')
+add(f'namespace BB6.Agent44.Case{R}')
 add('open BB6.Agent44')
 add('open BB6.Agent4Cone')
-add('def tt (q : Nat) : Nat := 7*2^(65536*q+130-16)-(q+1)')
+add(f'def tt (q : Nat) : Nat := 7*2^(65536*q+{R}-16)-(q+1)')
 add('theorem tt_ge (q:Nat) : 223≤tt q := by')
-add('  have h := BB6.Agent44.universal_strong_growth q 130 (by decide)')
+add(f'  have h := BB6.Agent44.universal_strong_growth q {R} (by decide)')
 add('  dsimp [tt]')
 add('  omega')
 for i, b, d, D, m, branches in nodes:
@@ -60,7 +60,7 @@ for i, b, d, D, m, branches in reversed(nodes):
     add(f'    dsimp [b{i},d{i}]')
     add('    omega')
     add(f'  have hno : ∀ k, ¬BB6.P1Reduction.GAncestor (b{i} q) (d{i} q) k 1 := by')
-    add(f'    apply nat_no_one_ancestor q 130 (b{i} q) (d{i} q) {D.a} {D.c} (by decide) (by decide)')
+    add(f'    apply nat_no_one_ancestor q {R} (b{i} q) (d{i} q) {D.a} {D.c} (by decide) (by decide)')
     add('    exact hD')
     add(f'  refine blocked_from_val_cert (b{i} q) (d{i} q) {D.a} {D.c} (tt q) {m} (by dsimp [b{i}]; omega) (by dsimp [b{i}]; omega) (by dsimp [d{i}]; omega) hno hD (by decide) (by decide) ?_')
     add('  intro n hn hv')
@@ -80,7 +80,7 @@ for i, b, d, D, m, branches in reversed(nodes):
         elif typ == 'power':
             P = x+12
             add('    refine Blocked.powerLeaf _ _ (by omega) (by omega) (by omega) ?_')
-            add(f'    apply nat_power_leaf q 130 (2*{ex(k)}-4) {P.a} {P.c} (by decide) (by decide) (by decide) (by decide) (by decide)')
+            add(f'    apply nat_power_leaf q {R} (2*{ex(k)}-4) {P.a} {P.c} (by decide) (by decide) (by decide) (by decide) (by decide)')
             add(f'    change (2*{ex(k)}-4)+12={P.a}*tt q+{P.c}')
             add('    omega')
         else:
@@ -91,11 +91,11 @@ for i, b, d, D, m, branches in reversed(nodes):
             add(f'    exact blocked_{tgt} q')
 add('theorem root_not_reached (q:Nat) : ¬BB6.Agent1.Reach (b0 q) (d0 q) :=')
 add('  BB6.Agent4Cone.blocked_no_reach (b0 q) (d0 q) (blocked_0 q)')
-add('def critical (q:Nat):Nat := 14*2^(65536*q+130)-2*(65536*q+130)-10')
+add(f'def critical (q:Nat):Nat := 14*2^(65536*q+{R})-2*(65536*q+{R})-10')
 add('theorem critical_eq_root_plus_six (q:Nat) : critical q = b0 q + 6 := by')
-add('  let n : Nat := 65536*q+130')
+add(f'  let n : Nat := 65536*q+{R}')
 add('  let X : Nat := 2^(n-16)')
-add('  have hX := BB6.Agent44.universal_strong_growth q 130 (by decide)')
+add(f'  have hX := BB6.Agent44.universal_strong_growth q {R} (by decide)')
 add('  have hn : n=(n-16)+16 := by dsimp [n]; omega')
 add('  have hp : 2^n=65536*X := by')
 add('    rw [hn, Nat.pow_add]')
@@ -107,10 +107,10 @@ add('  have ht : tt q+(q+1)=7*X := by')
 add('    have hsub : q+1≤7*X := by dsimp [X,n]; omega')
 add('    exact Nat.sub_add_cancel hsub')
 add('  dsimp [critical,b0]')
-add('  change 14*2^n-2*n-10=131072*tt q+130796+6')
+add(f'  change 14*2^n-2*n-10=131072*tt q+{131056-2*R}+6')
 add('  rw [hp]')
 add('  omega')
-add('theorem blank_no_critical_130_mod65536 (q:Nat) :')
+add(f'theorem blank_no_critical_{R}_mod65536 (q:Nat) :')
 add('    ¬BB6.Agent1.Reach 2 (critical q) := by')
 add('  intro hr')
 add('  have heq := critical_eq_root_plus_six q')
@@ -123,11 +123,11 @@ add('    have hv : critical q-6=b0 q := by omega')
 add('    rw [hv] at h')
 add('    exact h')
 add('  exact root_not_reached q hroot')
-add('#print axioms BB6.Agent44.Case130.blank_no_critical_130_mod65536')
-add('#print axioms BB6.Agent44.Case130.root_not_reached')
-add('end BB6.Agent44.Case130')
+add(f'#print axioms BB6.Agent44.Case{R}.blank_no_critical_{R}_mod65536')
+add(f'#print axioms BB6.Agent44.Case{R}.root_not_reached')
+add(f'end BB6.Agent44.Case{R}')
 
 source = '\n'.join(out) + '\n'
-path = Path(__file__).with_name('P1Case130.lean')
+path = Path(__file__).with_name(f'P1Case{R}.lean')
 path.write_text(source)
 print('generated Lean proof:', path, 'lines:', len(out), 'bytes:', len(source))
