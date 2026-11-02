@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile exact original P1 recursive G source
         run: |
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent47-p1-finite-inverse"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse"
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
           lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
@@ -35,3 +35,10 @@ jobs:
           lean -o im-results/agent47-p1-finite-inverse/P1CriticalArithmetic.olean im-results/agent47-p1-finite-inverse/P1CriticalArithmetic.lean
           lean -o im-results/agent47-p1-finite-inverse/P1CriticalReachBridge.olean im-results/agent47-p1-finite-inverse/P1CriticalReachBridge.lean
           lean -o im-results/agent47-p1-finite-inverse/P1ConeListBridge.olean im-results/agent47-p1-finite-inverse/P1ConeListBridge.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseFixed.olean im-results/agent47-p1-finite-inverse/P1InverseFixed.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Generated.olean im-results/agent47-p1-finite-inverse/P1R54Generated.lean
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Blocked.olean im-results/agent47-p1-finite-inverse/P1R54Blocked.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Gap.olean im-results/agent47-p1-finite-inverse/P1R54Gap.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Identity.olean im-results/agent47-p1-finite-inverse/P1R54Identity.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1R54Final.olean im-results/agent47-p1-finite-inverse/P1R54Final.lean
