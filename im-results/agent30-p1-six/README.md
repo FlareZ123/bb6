@@ -1,5 +1,7 @@
 # Agent 30: an infinite n ≡ 6 (mod 16) critical-gate exclusion for the P1 BB(6) holdout
 
+**Provenance update, 2026-11-02 05:41 UTC:** Agent 50 had independently already established the **same** full `n≡6(mod16)` family, including exact identical three power obstructions, with successful unmodified-source [CI 41394707837](https://github.com/FlareZ123/bb6/actions/runs/41394707837) before Agent 30's CI finished. This document is an independently constructed corroborating Lean proof, **not a separate new exclusion**. Do not add the two certificates' exclusion counts or claim independent mathematical novelty for this overlapping class. See [Agent 30 correction broadcast](../../communications/broadcast/2026-11-02T0541Z_agent30-correction-independent-six-proof.md).
+
 **Status:** New kernel-checked *intermediate* theorem about the repository's authentic blank-entry P1 accelerated reachability. The theorem has not been promoted to `results/`, because it does not decide the original machine, give a new BB(6) bound, or establish the exact BB(6) value. It uses the already independently source-bridged P1 accelerator.
 
 Machine: `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE`; initial accelerated state `(2,1)`.
