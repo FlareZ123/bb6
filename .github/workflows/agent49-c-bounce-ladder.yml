@@ -23,9 +23,11 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a49-ladder/
           cp im-results/agent46-c-jump/JumpHigh.lean /tmp/a49-ladder/
           cp im-results/agent49-c-bounce-ladder/Ladder.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/LadderSection.lean /tmp/a49-ladder/
           cd /tmp/a49-ladder
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
           lean -o JumpHigh.olean JumpHigh.lean
-          lean Ladder.lean
+          lean -o Ladder.olean Ladder.lean
+          lean LadderSection.lean
