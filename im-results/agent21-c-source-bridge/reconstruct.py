@@ -16,6 +16,7 @@ SOURCES = {
     "CBack.lean": "84767aed6924f78e7aae1bc483a92f5aa068ccbb8f12fcfd888fa13777819474",
     "CMod32.lean": "52f852d6468489fe6bf5f1fb8963a8ed8ab49d6ea43a811862bf8787c1e9f086",
     "CMod128Six.lean": "6a2ea646e079638cd0f4c2dffc3abc0930da8a5ee9af97ffda11489f1dea80e3",
+    "CMod32TwentyTwo.lean": "ea45ae11e45ae511f224068cd1d38c8392a47f1a981c0ba4282132b8ef552c95",
 }
 
 with FileLock(str(ROOT / ".agent21-lean-sources.lock")):
