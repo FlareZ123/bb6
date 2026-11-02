@@ -88,3 +88,18 @@ Consequently the exact primitive cost lies between `2p+(6m+41)t+24T(t)` and that
 **Full source Lean 4.36.0-rc2 original-source CI [41422121853](https://github.com/FlareZ123/bb6/actions/runs/41422121853) PASSED** 2026-11-02 09:38 UTC. `wordCost_closed`, `wordCost_lower`, `wordCost_upper`, `wordCost_append`, `swap_cost_context`, `swap_times`, `swap_confluence`, `same_counts_confluence` all have precisely standard `[propext, Quot.sound]` dependencies and no extra axioms. The raw machine and token parser were independently restored from the existing SHA-verified original source files.
 
 This gives a reusable **quotient of an entire infinite family of conditional return trajectories by token counts**, and an exact cost correction by word inversion count. No property of a complete infinite blank-start trajectory follows automatically, and no historical priority claim is made.
+
+
+## New complete E 1100 branch and exact conditional halting cylinder (09:57 UTC)
+
+The original six-state D-start Cryptid has new source-verified E-return and halting families, universally quantified over k and arbitrary trailing binary suffix y.
+
+- [EZeroPair.lean](./EZeroPair.lean): **q=0** branch `I_(3k+4)(0 1100 y)` returns after exactly `12k²+49k+96` steps to `I_(8k+3)(0 1111 0 101010 y)`. This is a genuine distinct branch compared with Agent35's E-(10)^q1100 for q≥1. The proof uses an exact 60-step E-to-B turn with a symbolic arbitrary left alternating stack and Agent32's existing universal left sweep.
+- [EAllDouble.lean](./EAllDouble.lean): for **every q≥0**, a single exact original-machine E return theorem `all_e_double` covers both the q=0 case and Agent35's source-verified q≥1 case. The companion `all_e_double_implicit_blank` formalizes the physical-tape return when the final two zeros are supplied by the infinite blank tape, using the source-level `ObsEq` semantic bridge. The result is a complete **specified pattern family**, without claiming every possible E suffix is classified.
+- [EZeroHalt.lean](./EZeroHalt.lean): the precisely guarded input `I_(3k+4)(0 1101100 y)` enters the original machine's frozen terminal state 6 **for the first time** at exactly `12k²+41k+99` steps. Universally valid for every k and suffix y. `full_E_zero_exact_first_halt` proves exclusion of every earlier time, using a certified state-5 configuration at step 65 after the E boundary and absorption of frozen state 6. A weaker supposed all-suffix `11011` trigger is demonstrably false; the two following zeros are essential for the all-suffix cylinder. The k=0 base example appears in earlier @-d research, so external novelty is unestablished.
+
+**Original-source Lean 4.36.0-rc2 successful checks:**
+[EZeroPair CI 41422953241](https://github.com/FlareZ123/bb6/actions/runs/41422953241),
+[EZeroHalt exact-first-time CI 41424490768](https://github.com/FlareZ123/bb6/actions/runs/41424490768),
+[all-q E/implicit-blanks CI 41424743730](https://github.com/FlareZ123/bb6/actions/runs/41424743730).
+Every final theorem has `[propext, Quot.sound]` only, no `sorryAx`. All workflow runs compiled the unmodified SHA-checked original Agent31/Agent35 modules and exact new sources. All artifacts remain intermediate in `im-results/`. None proves that these patterns arise on the actual blank-start orbit, or determines BB(6).
