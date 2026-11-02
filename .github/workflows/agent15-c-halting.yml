@@ -112,7 +112,8 @@ jobs:
           lean -o FirstUniform.olean FirstUniform.lean
           # Agent 11: self-contained number theory + authentic source-linked
           # every-depth infinite-family nonreachability.
-          cp im-results/agent11-c-first-family/{IndexWitness,IndexLift,IndexReach}.lean /tmp/agent15-c-check/
+          cp im-results/agent11-c-first-family/{IndexWitness,IndexDisjoint,IndexLift,IndexReach}.lean /tmp/agent15-c-check/
           lean -o IndexWitness.olean IndexWitness.lean
+          lean IndexDisjoint.lean
           lean -o IndexLift.olean IndexLift.lean
           lean IndexReach.lean
