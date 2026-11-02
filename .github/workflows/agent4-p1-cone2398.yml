@@ -52,3 +52,6 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-p1-cone2398"
           lean -o im-results/agent4-p1-cone2398/ValuationBound.olean im-results/agent4-p1-cone2398/ValuationBound.lean
           lean -o im-results/agent4-p1-cone2398/ValuationSource.olean im-results/agent4-p1-cone2398/ValuationSource.lean
+      - name: Reproduce quarter-class splitting census
+        run: |
+          python im-results/agent4-p1-cone2398/split4_scan.py
