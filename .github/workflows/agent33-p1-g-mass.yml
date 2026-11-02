@@ -1,0 +1,27 @@
+name: Agent 33 P1 recursive drain exact mass and depth (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact G mass and recursion depth with the unmodified P1 source
+        run: |
+          mkdir -p /tmp/agent33-G-mass
+          cd /tmp/agent33-G-mass
+          cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/PosEvenForm.lean" PosEvenForm.lean
+          python3 -c 'import base64,hashlib,lzma,pathlib,os; root=pathlib.Path(os.environ["GITHUB_WORKSPACE"]); s=root/"im-results/agent33-p1-mass/GMass.lean.xz.b64"; data=lzma.decompress(base64.b64decode(s.read_text())); assert hashlib.sha256(data).hexdigest()=="30f5f53d28ccd34e060f9840081d8f000ee8cab9ef7b03aa2d7e38afddd30515"; pathlib.Path("GMass.lean").write_bytes(data)'
+          export LEAN_PATH="."
+          lean -o PosEvenForm.olean PosEvenForm.lean
+          lean GMass.lean
