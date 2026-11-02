@@ -203,7 +203,6 @@ theorem predecessor_power_identity (q v k : Nat) :
   rw [hcoef, hp]
   omega
 
-/-- Powers of two modulo five never vanish. -/
 /-- A generic modular obstruction: any odd modulus relatively prime to two
 which divides the candidate denominator, while forcing the valuation
 correction to be three, rules out every predecessor of a terminal power. -/
@@ -226,6 +225,7 @@ theorem no_common_modulus_into_power (q v k m : Nat)
   have hmone : m=1 := hcopow.eq_one_of_dvd hdiv
   omega
 
+/-- Powers of two modulo five never vanish. -/
 theorem pow_two_mod5_cases (n : Nat) :
     2^n % 5 = 1 ∨ 2^n % 5 = 2 ∨ 2^n % 5 = 4 ∨ 2^n % 5 = 3 := by
   induction n with
