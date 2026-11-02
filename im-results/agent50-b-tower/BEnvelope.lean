@@ -1,6 +1,4 @@
-module
-public import BTower
-@[expose] public section
+import BTower
 
 namespace BB6.Agent50
 open BB6.BReduction
