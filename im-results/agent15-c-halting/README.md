@@ -169,3 +169,10 @@ These exclusions are infinite residue families within the exact Machine C stoppi
 `residue_filter_explore.py` mirrors the executable filter and samples 16×16 lifts for each `(j mod 16,m mod 16)` pair in the second halting family (256 sampled pairs per residue class). In the sampled window it found 100 residue pairs rejected on every lift, 12 mixed pairs, and 144 pairs never rejected. For the first family it found eight of the sixteen `m mod 16` classes rejected on every sampled lift. This suggests the affine-normalized filter may expose a larger stable residue structure than the source cylinders alone.
 
 These counts are **only finite computational observations**. The script does not establish periodicity or universal exclusion for any of the 100 pairs. A worthwhile next step is to prove a symbolic 2-adic description of the number of affine predecessor steps and then certify any stable classes in Lean. The 14 native-modulus second-family classes listed above remain the only parameter classes currently derived from source-cylinder theorems in this composition.
+### 2-adic structure of affine normalization (derived; formalization pending)
+
+For the affine predecessor `T(a,k)=(a+k-2,(k-2)/2)`, direct algebra gives the identities `a'+2k'+4=a+2k` and `k'+2=(k+2)/2`. After n successful steps, `a_n+2k_n+4n=a_0+2k_0` and `k_n+2=(k_0+2)/2^n`.
+
+For odd `a_0`, write `C=a_0+2k_0`. Modulo 4, `a_n+k_n ≡ C-k_n`, so the normalizer's congruence guard is equivalent to `(k_0+2)/2^n ≡ C+1 (mod 4)`, together with `k_n≥4`. In Machine C's second halting family, `a_0=2j+3`, `C mod 4=3` for odd m and 1 for even m; `k_0+2=2^(2m+2)(j+3)-(j+3m+3)`. When `v₂(j+3m+3)<2m+2`, the valuation of `k_0+2` equals that of `j+3m+3`.
+
+This recasts the number of affine predecessor steps as a 2-adic valuation problem and may explain the empirical mod-16 pattern. The one-step identities are exact algebraic derivations; the complete stopping-depth classification, including the `k_n≥4` cutoff and exceptional odd part, has not yet been formalized. This is a candidate direction for future work.
