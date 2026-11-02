@@ -69,6 +69,25 @@ Hence every exact n-step surviving counter path from `(5,0,1)` to `(0,2j,5)` sat
 ```
 44 + 2*n <= (4*j+5)*(4*j+8).
 ```
-The coefficient of the leading `j²` on the right is 16 rather than the original 16 with n coefficient 1, giving approximately a factor-two stronger n restriction for large j. This bound still does not exclude any unbounded gateway family or determine halting, and belongs in `im-results/`.
+The quadratic coefficient in `j` is unchanged, while the coefficient of `n` doubles; for a fixed large `j` this approximately halves the old upper bound on `n`. This bound still does not exclude any unbounded gateway family or determine halting, and belongs in `im-results/`.
 
 The exact files are `PotentialCore.lean`, `PotentialC.lean` and `PotentialBridge.lean`. The last file proves by Lean definitional equality that the copied `BB6Rank.nextC` is precisely the **original unmodified** `BB6CLine.nextC`, and transfers reachability over a finite step count to the actual published source. This is not merely an inspected correspondence. Manual [source-level CI run 41417851833](https://github.com/FlareZ123/bb6/actions/runs/41417851833) compiled the full original `RankCertificate`, `RankC`, `CLine` modules plus the three new files with Lean 4.36.0-rc2. The terminal axiom audit is exactly `[propext, Quot.sound]` for `source_critical_time_bound`, and `[Quot.sound]` for `source_nextC_eq`; there is no `sorryAx`. The manual-only workflow is `.github/workflows/agent8-c-potential.yml`.
+
+## 2026-11-02: formally constructed arbitrary-depth Machine C inverse-return chains
+
+Source `CInverseDepth.lean` proves a general obstruction to arguments that try to eliminate Machine C reset gateways merely because they lack a bounded-depth chain of legal long-sector predecessors. For any `n,j : Nat`, recursively define
+
+```
+J(0,j)=j,    J(n+1,j)=2*J(n,j)+2.
+J(n,j)+2 = 2^n*(j+2).
+```
+
+The exact long-section return lemma from Agent 21 says that for every `k≥1` and `a`, the genuine counter accelerator runs from `(a+2k,k,0)` to `(a,2k+2,0)` in precisely `2k+1` calls. Starting with the gateway `(2*J(n,j)+1,3*J(n,j)+4,0)`, we construct **n nested valid long-sector inverse returns**, and each has a positive source middle counter. The kernel proves that an actual accelerated trace from some (possibly nonblank) counter state realizes the entire path and uses at least n calls.
+
+The theorem `BB6.Agent8Depth.unbounded_reset_ancestor_depth` says for **every** depth `n` and arbitrary index threshold `L`, some `j>L` has an n-link legal inverse chain ending at the reset gateway `(2j+1,3j+4,0)`. The index also satisfies `2^n ∣ j+2`. A second theorem `arbitrarily_deep_reset_traces` witnesses real accelerated runs from unrestricted starting states.
+
+**Logical limitation:** these predecessor sources are **not proved reachable from the authentic blank entry `(5,0,1)`**. Hence there is no evidence here that any gateway is actually hit by the original six-state machine. More sophisticated inverse reasoning that invokes global blank-orbit invariants could still exclude the entire family. The result is a method-specific obstruction to fixed-depth predecessor-absence arguments.
+
+The exact theorem body and the unmodified `CLine.lean`, `CReachBridge.lean` and `CSection.lean` source dependencies were compiled with Lean **4.36.0-rc2** in successful [manual CI run 41418915186](https://github.com/FlareZ123/bb6/actions/runs/41418915186). All three theorem axiom audits are `[propext, Quot.sound]`, without `sorryAx`, after the original files were compiled as modules. The workflow is [`.github/workflows/agent8-c-inverse-depth.yml`](../../.github/workflows/agent8-c-inverse-depth.yml).
+
+This is an intermediate structural theorem and does not determine Machine C or BB(6).
