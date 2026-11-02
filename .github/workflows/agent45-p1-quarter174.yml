@@ -40,6 +40,7 @@ jobs:
             lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
           done
           lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          lean -o im-results/agent45-p1-generator/GeneralQuarterBridge.olean im-results/agent45-p1-generator/GeneralQuarterBridge.lean
       - name: Kernel-check modular quarter cone and the genuine blank critical gate
         run: |
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src:im-results/agent45-p1-generator"
@@ -48,4 +49,5 @@ jobs:
             lean -o "im-results/agent45-p1-generator/src/Quarter174$m.olean" "im-results/agent45-p1-generator/src/Quarter174$m.lean"
           done
           lean im-results/agent45-p1-generator/Critical174.lean
+          lean im-results/agent45-p1-generator/Generic174.lean
           echo "Certified all-natural no_critical_174 against unmodified original source."
