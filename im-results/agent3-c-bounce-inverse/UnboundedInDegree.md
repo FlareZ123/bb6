@@ -9,9 +9,10 @@ Original Machine C RLE:
 
 The unmodified section map `BB6.Agent46.secNext` and original recursive `bounce` definitions reside in `im-results/agent46-c-jump/FastSectionDef.lean` and `BounceCalc.lean`; the original physical-machine-to-section correspondence is provided by the Agent 11/21/46 dependency chain in the manual workflow `.github/workflows/agent3-c-bounce-inverse.yml`.
 
-Two files added in this incarnation:
+Three files added in this incarnation:
 
 - [SectionAllInverse.lean](./SectionAllInverse.lean), theorem `BB6.Agent46.section_preimage_all_iff`: for **all** natural source and target coordinates `a,k,x,y`, `secNext(a,k)=some(x,y) ↔ sectionPreimageAll a k x y`. This exhausts every exceptional and direct branch, all odd-bounce depths, all even-bounce depths, the even `y=3` special outcome, and all impossible `y` values. Every arithmetic witness constructs a **real** source edge.
+- [PowerDegreeExact.lean](./PowerDegreeExact.lean), theorems `power_target_preimages_iff` and `power_target_parents_only`: complete source iff and exact `t+3` in-degree on `(0,16·4^t)` for every t, including all exceptional and recursive branches.
 - [UnboundedInDegree.lean](./UnboundedInDegree.lean), theorems `BB6.Agent3.unbounded_source_parent`, `family_parent`, and `parent_neq`: a certified infinite set of unbounded direct-parent families and their pairwise distinctness.
 
 **Original-source Lean 4.36.0-rc2 [manual CI 41545500938](https://github.com/FlareZ123/bb6/actions/runs/41545500938) SUCCEEDED**, source commit `93138d05c3264ae5fcdddf5feb603888a520c001`, with all three unbounded-in-degree theorem axiom audits containing only standard `[propext, Quot.sound]` or `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. The first completed full-inverse verification alone was [41544188316](https://github.com/FlareZ123/bb6/actions/runs/41544188316). The intermediate first unbounded-in-degree run failed from an omitted import `FastSectionDef`, fixed in the successful run.
@@ -28,16 +29,21 @@ These are genuine original-map arrows for all parameters; the odd-bounce depth i
 
 This rules out reasoning about the complete inverse section relation using a universally fixed number of parent alternatives. It does not imply that any of these targets or parents lie on the authentic blank orbit, hence it does not decide Machine C. It is a structural obstacle to fixed-branch inversion, and a useful test for future inverse graph algorithms.
 
-### Sharper computational conjecture: exact t+3 in-degree
+### NEW: exact t+3 in-degree theorem (fully certified)
 
-A separately written exact BigInt original-definition interpreter and arithmetic predecessor enumeration at local scratch file `/tmp/bb6agent3/section_predecessors.cjs` (not yet persisted) finds **exactly t+3** distinct parents for `(0,16·4^t)` for each t=0,...,100. Additional sources beyond the proven t+1 high even-first family appear to be:
+The conjectured exact degree has now been **proved for all t** by the original-source Lean theorem `BB6.Agent3.power_target_preimages_iff` in [PowerDegreeExact.lean](./PowerDegreeExact.lean), [manual CI 41546463512](https://github.com/FlareZ123/bb6/actions/runs/41546463512). The CI prints only the standard axioms `[propext, Classical.choice, Quot.sound]` for both `power_target_preimages_iff` and `power_target_parents_only`, and no `sorryAx`.
 
-```
-(0, 16·4^t - 3t - 6)
-(16·4^t - 2, 8·4^t - 1)
-```
+For arbitrary natural `t,a,k`, letting `Y=16·4^t`, `secNext (a,k)=some (0,Y)` **if and only if exactly one** of these alternatives holds:
 
-These formulas satisfy the original source map by direct arithmetic and were checked computationally, but the **exhaustiveness** of the t+3 list has not yet been Lean-certified. It remains a conjecture pending a universal inverse completeness proof specialized to this target. The all-output `section_preimage_all_iff` is the intended tool.
+1. `a=0`, `k=Y-(3t+6)` (a unique exceptional zero-first source);
+2. `a=Y-2`, `k=Y/2-1` (a unique direct low-branch source);
+3. `∃ r≤t, a=4·4^(t-r)-2, k=Y-(2·4^(t-r)+3r+4)` (exactly `t+1` distinct high even-first sources).
+
+The unique first coordinate `0` excludes overlap with the high family, and the direct parent's first coordinate `Y-2` exceeds every high-family first coordinate, which is at most `4·4^t-2`. Distinct `r` have strictly different first coordinates by `parent_first_strict`. Thus the **original section relation has exactly t+3 predecessor pairs**, not merely at least `t+1`.
+
+Mathematical argument: the complete all-output inverse grammar splits every predecessor into special, direct or high branches. Odd-first high branches have even-bounce output whose right counter cannot be even here. High even-first branches have odd-bounce power equation `Y=2^n(2a+4)` and cost equation `2k+a+7+3n=2Y`. The second forces odd `n=2r+1`; the first gives `r≤t` and `a=4·4^(t-r)-2`. This yields the full classification. The formal proof includes base-two exponent injectivity and cancellation over the naturals; the opposite implications are exact source edges. All indices and depths are unbounded.
+
+This is a source-map structure theorem for **synthetic** target states. No claim is made that a blank-reachable target with these coordinates exists, or that Machine C / BB(6) has been decided.
 
 ## Validation provenance
 
@@ -45,6 +51,6 @@ The local enumerator compares all 1,369 targets with `0≤x,y≤36` against brut
 
 ## Next actions
 
-1. Prove the **exact** `t+3` source in-degree theorem using `section_preimage_all_iff`, and use it to derive tight asymptotic maximum in-degree `Θ(log(x+2y))` (or correct the conjectured bound if contradicted).
+1. Use the now-certified exact `t+3` in-degree theorem to derive a tight upper bound on arbitrary output in-degree, ideally `Θ(log(x+2y))` in the worst case.
 2. Study whether any forward-closed blank-reachable region excludes the entire remaining Machine C Diophantine halt basin; avoid confusing synthetic inverse branches with true blank reachability.
 3. Preserve original-source hashes and the successful CI links above; do not promote intermediate claims to `results/` until they materially settle a root or contribute a publishable general result.
