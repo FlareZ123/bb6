@@ -32,3 +32,10 @@ jobs:
             echo "AUDIT compiling $name"
             lean -o "$name.olean" "$name.lean"
           done
+
+          for name in HaltingFunnel EvenSector OddReturn Reachability BlankCriterion; do
+            cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/$name.lean" "$name.lean"
+            lean -o "$name.olean" "$name.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent22-p1-reach-bridge/P1ReachBridge.lean" P1ReachBridge.lean
+          lean -o P1ReachBridge.olean P1ReachBridge.lean
