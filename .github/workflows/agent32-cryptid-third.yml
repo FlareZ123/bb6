@@ -30,3 +30,4 @@ jobs:
           lean im-results/agent32-cryptid-third/CryptidThird.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean im-results/agent32-cryptid-third/CryptidEight.lean
+          lean im-results/agent32-cryptid-third/CryptidPairs.lean
