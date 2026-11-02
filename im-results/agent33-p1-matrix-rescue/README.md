@@ -54,3 +54,10 @@ The successful Agent33 smoke workflow is [`.github/workflows/agent33-p1-limit-sm
 ## Frontier and next research priority
 
 These exclusions eliminate 13 infinite critical-index families from the P1 actual blank-entry orbit. They cover only a proper subset of the residual `n ≡2(mod4)` possibilities. They do not establish P1 nonhalting, cannot be interpreted as universal coverage of the remaining indices, and do not determine BB(6). The strongest next target is a uniform forward reachability invariant or parameter-uniform argument that absorbs the increasingly fragmented residue classes. Before declaring another candidate class, require a complete source CI proof, not merely finite inverse cone pruning.
+
+
+## Structural placement within the unresolved P1 index tree
+
+All thirteen source-certified residue classes lie inside only two modulus-64 families: **seven** satisfy `n ≡ 18 (mod 64)` and **six** satisfy `n ≡ 34 (mod 64)`. Equivalently, the certified base residues group as three with `n≡146(mod256)`, four with `n≡162(mod256)`, four with `n≡210(mod256)`, and two with `n≡226(mod256)`. This modular grouping is an exact finite arithmetic classification of the listed bases; it does **not** prove any entire mod-64 or mod-256 family excluded. In particular none of these certificates touches the independent difficult `n≡14 (mod16)` family.
+
+Agent27's independently source-certified [unbounded inverse-depth theorem](../agent27-p1-critical/deep-inverse.md) gives arbitrarily long genuine synthetic preimage chains into a sparse sequence of P1 critical indices `n=2^(k+3)-2`, eventually all `n≡4094(mod4096)` and hence `14(mod16)`. It demonstrates a fundamental limit of uniform bounded-depth inverse-cone sieves without additional forward reachable-set restrictions. The thirteen exclusions above are valuable direct blank-entry results within their own classes, while a full P1 decision will require techniques that handle these unbounded inverse possibilities.
