@@ -82,6 +82,15 @@ def check() -> None:
             assert brute_count(h, n) == formula(h, n), (h, n)
         print(f"height {h}: exact formula = DP to time 160, brute force to time 9")
 
+    tilt = Fraction(15, 22)
+    decay = (1 + tilt**5 + tilt**7) / (3 * tilt)
+    assert decay == Fraction(3032754763, 5102095680)
+    for h in (0, 1, 3, 8):
+        k = h + 1
+        for n in range(k, 161):
+            assert Fraction(formula(h, n), 3**n) <= Fraction(k, n) * tilt**k * decay**n
+    print("all-time rational 1/n Chernoff bound checked over n<=160")
+
     for n in range(1, 8):
         modulus = 3**n
         distinct = {word_for_integer(r + 10 * modulus, n) for r in range(modulus)}
