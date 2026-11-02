@@ -78,20 +78,32 @@ theorem scan_pairs (q : Nat) (L ys : List Bool) :
       simp [pairs,List.append_assoc]
     rw [h]
     rw [scan2, ih]
-    simp only [List.append_assoc]
-    rw [oppairs_app]
+    simpa only [List.append_assoc,oppairs_app]
 
-theorem oppairs_comm (a b : Nat) :
-    oppairs a ++ oppairs b = oppairs b ++ oppairs a := by
+theorem oppairs_add (a b : Nat) :
+    oppairs (a+b) = oppairs a ++ oppairs b := by
   induction a with
   | zero => simp [oppairs]
   | succ a ih => simp [oppairs,ih,List.append_assoc]
+
+theorem oppairs_comm (a b : Nat) :
+    oppairs a ++ oppairs b = oppairs b ++ oppairs a := by
+  calc
+    oppairs a ++ oppairs b = oppairs (a+b) := (oppairs_add a b).symm
+    _ = oppairs (b+a) := by rw [Nat.add_comm]
+    _ = oppairs b ++ oppairs a := oppairs_add b a
 
 theorem scan_ready (m q : Nat) (ys : List Bool) :
     run (2*q) (ready0 m (pairs q ++ ys)) = ready m q ys := by
   unfold ready0 ready
   rw [scan_pairs]
-  rw [oppairs_comm q 6]
+  simpa only [List.append_assoc] using
+    congrArg (fun xs => Cfg.mk xs false ys 0)
+      (show oppairs q ++ (oppairs 6 ++ [true] ++ pairs (m+2) ++ [true,true]) =
+        oppairs 6 ++ (oppairs q ++ [true] ++ pairs (m+2) ++ [true,true]) by
+        simpa only [List.append_assoc] using
+          congrArg (fun xs => xs ++ ([true] ++ pairs (m+2) ++ [true,true]))
+            (oppairs_comm q 6))
 
 /-- This 32-step phase consumes six fixed left 01 pairs and leaves the extra q. -/
 theorem bridge32 (m q : Nat) (ys : List Bool) :
@@ -130,8 +142,8 @@ theorem front_pairs (m q : Nat) (ys : List Bool) :
     sweepB m (BB6.Agent2EOneTriple.packet ++ pairs q ++ ys) := by
   have ht : 134+6*q = 90+(7+(2*q+(32+(4*q+5)))) := by omega
   rw [ht,run_add,prefix90,run_add,seven,run_add,scan_ready,
-      run_add,bridge32,run_add,pump_all,run_add,finish5]
-  simp
+      run_add,bridge32,run_add,pump_all]
+  simpa only [Nat.zero_add] using (finish5 m q ys)
 
 theorem e111_pairs_run (m q : Nat) (ys : List Bool) :
     run (2*m+137+6*q)
@@ -153,8 +165,9 @@ theorem full_E_one_triple_pairs (k q : Nat) (ys : List Bool) :
   rw [ht,run_add,prefix_E]
   change run (2*(4*k)+137+6*q)
     (startE1 (4*k) (pairs q ++ [true,true,true] ++ ys)) = _
-  rw [e111_pairs_run]
-  rw [show 2*(4*k)+3=8*k+3 by omega]
+  have hrun := e111_pairs_run (4*k) q ys
+  rw [show 2*(4*k)+3=8*k+3 by omega] at hrun
+  simpa only [List.append_assoc] using hrun
 
 #print axioms scan_pairs
 #print axioms bridge32
