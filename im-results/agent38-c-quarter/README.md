@@ -92,3 +92,66 @@ first 567 million accelerated Machine C steps are already much shorter than
 the previously explored numerical horizons of Agent 8; this is a *formal
 reachability certificate* for one concrete intermediate milestone, rather
 than a new simulation survival record.
+
+## All-time exclusion of the first 15,743 halting gateways
+
+An additional **kernel-checked** consequence (2026-11-02) goes beyond the
+finite time bound and finite witness. The theorem
+`BB6Agent38.source_all_thin_indices_le_15742_unreachable` proves for the
+**unmodified original Agent 11 Machine C accelerator**
+
+```lean
+theorem source_all_thin_indices_le_15742_unreachable (j : Nat)
+    (hj : j ≤ 15742) :
+    ¬ BB6CLine.Reach (0,2*j,4*j+10)
+```
+
+This excludes **every one of the 15,743 indices 0 through 15,742, at
+arbitrary time**. It is stronger than observing that the trajectory did not
+halt in the first 567 million macro steps. This result is a *finite initial
+family*, and its proof must not be misrepresented as an infinite modular
+family or a Machine C nonhalting decision. Unresolved gateways with
+arbitrarily large j persist.
+
+The proof in `CFiniteSafety.lean` shows:
+
+1. A gateway `(0,2*j,4*j+10)` necessarily reaches `none` after precisely
+   `4*j+5` additional accelerator calls, by an explicitly proved long sweep.
+2. The source-certified blank orbit is alive at time `N=567323514` in state
+   `(2,62973,0)`, of rank `125948`.
+3. At `T=567260541`, the same orbit is in `(2,31482,62976)`. The final
+   `N−T=62973` original calls are checked free of every thin gateway.
+   `CJumpSafety.checkedPath_safe` checks **all intermediate original states**
+   hidden by the sweep shortcut; an exact five-jump `by decide` certificate
+   suffices.
+4. If `j≤15742`, the forced stopping delay `4j+5` is at most `62973`.
+   A gateway encountered before T would make the verified live endpoint
+   impossible. The safe tail forbids gateway encounters between T and N.
+   After N, rank monotonicity forbids the smaller target rank
+   `8j+10≤125946 < 125948`.
+5. `CFiniteSafetyBridge.lean` additionally proves that every inductively
+   `BB6CLine.Reach`-reachable state has a finite run in our exact copied
+   accelerator. Its source-level theorem therefore excludes reachability
+   under the actual published accelerator and its original encoding.
+
+The formal generic theorem
+`BB6Agent38.gateway_exclusion_from_safe_tail` in
+`CFiniteSafetyGeneric.lean` packages this reasoning into a reusable lemma
+parameterized by the certified endpoint time, tail start, tail length,
+live states, maximum gateway index, and rank/halting-delay inequalities.
+`gateway_exclusion_instantiated` checks the above concrete instance.
+This is intended for future source-certified longer trajectories rather than
+repetition of ad hoc gateway proofs.
+
+**Verification:** the unmodified full `CLine.lean` source and all new
+modules compiled in [successful manual Lean CI run
+41427351037](https://github.com/FlareZ123/bb6/actions/runs/41427351037).
+The kernel axiom audit of the source gateway theorem showed only
+`[propext, Classical.choice, Quot.sound]`; it uses no `native_decide`,
+`sorryAx`, or external certificate oracle. The generic lemma compiled
+locally against the same Lean 4.36.0-rc2 source shim and has a separate
+full-source CI dispatch; see the workflow run history for its status.
+
+This remains under `im-results/` because it is a finite, albeit formally
+unbounded-time, exclusion and leaves the open global Machine C problem
+untouched.
