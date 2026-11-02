@@ -28,4 +28,29 @@ theorem blank_no_critical_eight_mod512 (h r : Nat)
   · subst r; exact blank_no_critical_462_mod512 h
 
 #print axioms BB6.Agent47P1.blank_no_critical_eight_mod512
+
+/-- Eight mod-512 classes coalesce into four complete mod-256 classes by
+    splitting the quotient parameter into its two parities. -/
+theorem blank_no_critical_four_mod256 (h r : Nat)
+    (hr : r ∈ [110, 158, 190, 206]) :
+    ¬BB6.Agent1.Reach 2
+      (14*2^(256*h+r)-2*(256*h+r)-10) := by
+  let q := h/2
+  let s := h%2
+  have hdiv : h = 2*q+s := by dsimp [q,s]; omega
+  have hs : s=0 ∨ s=1 := by dsimp [s]; omega
+  rcases hs with hz | ho
+  · have heq : 256*h+r=512*q+r := by omega
+    have hh : r∈[110, 158, 190, 206, 366, 414, 446, 462] := by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at hr ⊢
+      rcases hr with h1|h2|h3|h4 <;> omega
+    simpa [heq] using blank_no_critical_eight_mod512 q r hh
+  · have heq : 256*h+r=512*q+(r+256) := by omega
+    have hh : r+256∈[110, 158, 190, 206, 366, 414, 446, 462] := by
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at hr ⊢
+      rcases hr with h1|h2|h3|h4 <;> omega
+    simpa [heq] using blank_no_critical_eight_mod512 q (r+256) hh
+
+#print axioms BB6.Agent47P1.blank_no_critical_four_mod256
+
 end BB6.Agent47P1
