@@ -41,10 +41,11 @@ theorem bounce_odd_full_exact (K c x y : Nat) (hK : K%2=1) :
     have hp := BB6Agent38.bounce_positive c K x y hb
     have hn3 := bounce_odd_no_three K c x hK
     have hy : 4≤y := by
-      by_contra h
-      have he : y=3 := by omega
-      subst y
-      exact hn3 hb
+      by_cases h : 4≤y
+      · exact h
+      · have he : y=3 := by omega
+        subst y
+        exact False.elim (hn3 hb)
     exact ⟨hy,(bounce_odd_output_exact K c x y hK hy).mp hb⟩
   · rintro ⟨hy,hs⟩
     exact (bounce_odd_output_exact K c x y hK hy).mpr hs
@@ -66,10 +67,11 @@ theorem bounce_even_full_exact (K c x y : Nat) (hK : K%2=0) :
       exact ⟨rfl,(bounce_three_exact K c x hK).mp hb⟩
     · have hn4 := bounce_even_no_four K c x hK
       have hy : 5≤y := by
-        by_contra h
-        have he : y=4 := by omega
-        subst y
-        exact hn4 hb
+        by_cases h : 5≤y
+        · exact h
+        · have he : y=4 := by omega
+          subst y
+          exact False.elim (hn4 hb)
       right
       exact ⟨hy,(bounce_even_output_exact K c x y hK hy).mp hb⟩
   · rintro (⟨h3,h⟩ | ⟨hy,h⟩)
