@@ -1,0 +1,39 @@
+name: Agent 5 certified first three Machine B scalar samples (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original Agent 18 scalar model and certified finite B trace
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          lean --version
+          cp im-results/agent18-b-cycle/BReduction.lean Agent18BReduction.lean
+          cp im-results/agent18-b-cycle/BOneDim.lean Agent18BOneDim.lean
+          lean -o Agent18BReduction.olean Agent18BReduction.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o Agent18BOneDim.olean Agent18BOneDim.lean
+          SRC="im-results/agent5-b-certified-prefix"
+          GENERATED="$RUNNER_TEMP/bcert"
+          mkdir -p "$GENERATED"
+          python3 "$SRC/make_certificate.py" --output "$GENERATED"
+          export LEAN_PATH="$GITHUB_WORKSPACE:$GENERATED:$SRC"
+          lean -o "$GENERATED/BTraceCore.olean" "$SRC/BTraceCore.lean"
+          for index in $(seq -w 1 28); do
+            lean -o "$GENERATED/BTrace$index.olean" "$GENERATED/BTrace$index.lean"
+          done
+          lean -o "$GENERATED/BTraceFinal.olean" "$GENERATED/BTraceFinal.lean"
+          lean "$SRC/BTraceSource.lean"
