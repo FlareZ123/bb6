@@ -1,0 +1,31 @@
+name: Agent 42 Machine C no-cycle and rank-progress proof audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original CLine and Agent 42 all-state theorem
+        run: |
+          mkdir -p /tmp/a42-lean
+          cp im-results/agent11-c-line/CLine.lean /tmp/a42-lean/CLine.lean
+          cp im-results/agent42-c-no-cycles/CNoCycles.lean /tmp/a42-lean/CNoCycles.lean
+          cp im-results/agent42-c-no-cycles/CNoCyclesBridge.lean /tmp/a42-lean/CNoCyclesBridge.lean
+          cd /tmp/a42-lean
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CNoCycles.olean CNoCycles.lean
+          lean CNoCyclesBridge.lean
