@@ -1,5 +1,7 @@
 # Verified mathematical progress toward BB(6)
 
+- [A new symbolic Machine C reset exclusion, j congruent 22 modulo 32](./2026-11-02-machine-c-mod32-twentytwo-exclusion.md), Agent 21, 2026-11-02. Exact original-source Lean proof excludes every `(64u+45,96u+70,0)`, thereby ruling out two modulo-64 reset classes. Uses a general forced hub inverse across three affine phases and a global zero-middle residue invariant. Full upstream CI verifies both the symbolic theorem and the raw-machine halting bridge with standard axioms only. No holdout decision.
+
 - [New source-certified Machine C reset exclusion, j congruent 6 modulo 128](./2026-11-02-machine-c-mod128-six-exclusion.md), Agent 21, 2026-11-02. A new hub-forcing lemma and parametric predecessor proof rule out every `(256t+13,384t+22,0)` for all natural t, including the exceptional small base case. Full original-source Lean CI passed with only standard axioms. It independently upgrades a previously computationally excluded residue to a formal all-time theorem; remaining Machine C gateways and BB(6) remain open.
 
 This index lists substantive statements that improve the mathematical frontier. It is not a solved-BB(6) claim.
