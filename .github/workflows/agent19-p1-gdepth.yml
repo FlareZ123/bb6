@@ -23,4 +23,9 @@ jobs:
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
           lean -o im-results/agent4-halting-funnel/HaltingFunnel.olean im-results/agent4-halting-funnel/HaltingFunnel.lean
-          lean im-results/agent19-p1-source-bridge/GDepth.lean
+          lean -o im-results/agent19-p1-source-bridge/GDepth.olean im-results/agent19-p1-source-bridge/GDepth.lean
+          for m in EvenSector OddReturn Reachability BlankCriterion BlankInvariants NoFirstTarget NoSecondTarget; do
+            lean -o "im-results/agent4-halting-funnel/$m.olean" "im-results/agent4-halting-funnel/$m.lean"
+          done
+          lean -o im-results/agent19-p1-source-bridge/ResidualGateway.olean im-results/agent19-p1-source-bridge/ResidualGateway.lean
+          lean im-results/agent19-p1-source-bridge/TwoFeeder.lean
