@@ -78,6 +78,34 @@ theorem live_shifted_blank (m : Machine) (j : Int)
       simp [h] at hh
   | some d => rfl
 
+
+/-- A finite live prefix into a translated original blank start promotes
+original-root nonhalting to all-time nonhalting from another state root.
+The prefix itself establishes liveness at every earlier time. -/
+theorem shifted_blank_root_never (m : Machine) (root : Fin 6)
+    (delay : Nat) (j : Int)
+    (hprefix : run m delay (blankAt root) = some (shiftConfig j blank))
+    (hne : NeverHalts m) :
+    ∀ n, (run m n (blankAt root)).isSome = true := by
+  intro n
+  by_cases hle : n ≤ delay
+  · cases hr : run m n (blankAt root) with
+    | some c => rfl
+    | none =>
+        have heq : delay = n + (delay-n) := by omega
+        have hrest : run m delay (blankAt root) = none := by
+          calc
+            run m delay (blankAt root) = run m (n+(delay-n)) (blankAt root) := by rw [← heq]
+            _ = (run m n (blankAt root)).bind (run m (delay-n)) := run_append m (blankAt root) n (delay-n)
+            _ = none := by rw [hr]; rfl
+        simp [hprefix] at hrest
+  · have hge : delay ≤ n := by omega
+    have heq : n = delay+(n-delay) := by omega
+    rw [heq, run_append, hprefix]
+    exact live_shifted_blank m j hne (n-delay)
+
+#print axioms shifted_blank_root_never
+
 #print axioms shift_run
 #print axioms run_append
 #print axioms live_shifted_blank
