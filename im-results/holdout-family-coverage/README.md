@@ -31,6 +31,10 @@ The four-root family **F341** is independently source-certified in `im-results/a
 
 Other annotated source bridges and their CI IDs are in the CSV itself. Their status summaries are intentionally restricted to the particular rooted machine and do not propagate to other roots merely from table isomorphism.
 
+## Pinned upstream source-module footprint (Agent 18, 2026-11-02)
+
+A separate [86-root filename-level cross-reference](./CryptidsModuleMap.md) joins the frozen 2026-10-16 snapshot against 89 machine-specific Lean source files in pinned Google DeepMind Cryptids commit `c86f15861709b76042998c5211c7b2f83991621b`; 51 matched files lie in `BusyBeaver/BB6/M_*.lean` and 35 in `BusyBeaver/BB6/Accelerations/M_*.lean`. All 86 correspondences are **source presence only**, not established halt/nonhalt decisions or verified source theorem-level certifications. The reproducible read-only Node tool is [`tools/cryptids_holdout_modules.cjs`](../../tools/cryptids_holdout_modules.cjs). Do not change any root's `external_status` to *proved* merely because a source module exists.
+
 ## Remaining research task
 
 A solver can reuse machine-specific raw transition lemmas across family members via the general Lean theorem `relabel_reflect_haltsAt_iff`, but must independently derive or decide each original A-start orbit in its mapped canonical start. Add verified outcome evidence to a root only after a source-checked blank-origin proof. Maintain an independently dated review of external holdout decisions before interpreting this historic snapshot as a current BB(6) frontier.
