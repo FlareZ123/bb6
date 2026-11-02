@@ -51,4 +51,10 @@ jobs:
             lean -o "im-results/agent45-p1-generator/src/Quarter262114$m.olean" "im-results/agent45-p1-generator/src/Quarter262114$m.lean"
           done
           lean im-results/agent45-p1-generator/Critical262114.lean
-          echo "Source-certified all q: unreachable P1 blank critical indices n=262144*q+262130 and n=262144*q+262114."
+          python im-results/agent45-p1-generator/src/emit_shift2.py 262050 im-results/agent45-p1-generator/src/Quarter262050Full.lean
+          python im-results/agent45-p1-generator/src/split4.py 262050 im-results/agent45-p1-generator/src/Quarter262050Full.lean im-results/agent45-p1-generator/src
+          for m in Core I0 I1 I2 I3 I4 I5 N0 N1 N2 N3 N4 Final; do
+            lean -o "im-results/agent45-p1-generator/src/Quarter262050$m.olean" "im-results/agent45-p1-generator/src/Quarter262050$m.lean"
+          done
+          lean im-results/agent45-p1-generator/Critical262050.lean
+          echo "Source-certified every q: P1 critical indices 262144*q+262130, +262114 and +262050 are unreachable."
