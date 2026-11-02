@@ -16,7 +16,7 @@ private theorem pow_two_mul_four (t v : Nat) :
   refine ⟨2^t*(v+3),?_⟩
   simp [Nat.pow_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
 
-private theorem depth_le_one (z v t : Nat)
+theorem depth_le_one (z v t : Nat)
     (h : 4*z+6=2^t*(v+3)) : t≤1 := by
   by_cases hle : t≤1
   · exact hle
@@ -27,7 +27,7 @@ private theorem depth_le_one (z v t : Nat)
       exact pow_two_mul_four (t-2) v
     omega
 
-private theorem exceptional_not_one (z : Nat) (hz : 1≤z) :
+theorem exceptional_not_one (z : Nat) (hz : 1≤z) :
     ∀ k, ¬GAncestor (8*z) 3 k 1 := by
   intro k h
   obtain ⟨t,ht,_⟩ :=
