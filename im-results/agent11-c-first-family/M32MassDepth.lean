@@ -69,7 +69,7 @@ theorem original_m32_mass_barrier
     unfold m32MassCell at hcell
     unfold m32Cylinder at hcell ⊢
     rw [hp1mod,hp2mod] at hcell
-    exact hcell
+    simpa only [Nat.mod_mod] using hcell
   exact original_section_no_eight p.1 p.2 hc
     ((reach_iff_normalize a k).mp hreach)
 
