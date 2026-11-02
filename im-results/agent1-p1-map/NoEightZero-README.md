@@ -30,7 +30,7 @@ The reset corollary follows because the only incoming transition to positive-rig
 
 ## Formal verification and limitations
 
-Locally, all four Lean modules compiled with **Lean 4.36.0-rc2**, no `sorry`, with axiom audits reporting only `[propext, Classical.choice, Quot.sound]` on the main results. The pushed full three-file prerequisite plus `NoEightZero` compiled in the manual-only GitHub Actions workflow [run 41385026594](https://github.com/FlareZ123/bb6/actions/runs/41385026594), result **success**. A further manual workflow run is intended to include `NoOneResets`.
+Locally, all four Lean modules compiled with **Lean 4.36.0-rc2**, no `sorry`, with axiom audits reporting only `[propext, Classical.choice, Quot.sound]` on the main results. The pushed full three-file prerequisite plus `NoEightZero` compiled in the manual-only GitHub Actions workflow [run 41385026594](https://github.com/FlareZ123/bb6/actions/runs/41385026594), result **success**. A follow-up manual GitHub Actions verification also passed, run 41385181322, checking all four Lean modules together.
 
 The proof is about the mathematically exact copied accelerator, not a separate end-to-end TM-to-accelerator machine bridge; the latter is provided by DeepMind's cited source. There is no direct exclusion of the remaining halting-critical family with indices `n≡2 (mod 4)`: those counter values are `2 mod 8`, whereas our reset exclusion is `1 mod 8`. This invariant is best viewed as an additional reachability restriction and a useful guard when proving future odd-sector properties.
 
