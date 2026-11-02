@@ -1,0 +1,72 @@
+name: Agent 19 D0 authenticated raw 19-quintillion blank checkpoint (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-source-big-blank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore authenticated original Cryptid source and dependency macros
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, lzma
+          root = Path("im-results/agent26-cryptid-e-gate")
+          expected = {
+            "EEmpty": "f0e0b227fc7a50ef7dd6bbb09bbdc96a3d2aaca9d72f0ba68d187a99ad38561e",
+            "ASix": "e018ffa0390b0ff6926251e0a5ae5647b91430b312cbbb50399751ddafe0f68d",
+          }
+          for name, digest in expected.items():
+            source = lzma.decompress(base64.b64decode((root / f"{name}.lean.xz.b64").read_bytes()))
+            actual = hashlib.sha256(source).hexdigest()
+            assert actual == digest, (name, actual)
+            (root / f"{name}.lean").write_bytes(source)
+            print(name, actual)
+          PY
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile untouched original D0/Cryptid source and huge blank checkpoint
+        env:
+          LEAN_PATH: im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding
+        run: |
+          lean --version
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
+          lean -o im-results/agent26-cryptid-e-gate/EEmpty.olean im-results/agent26-cryptid-e-gate/EEmpty.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent26-cryptid-e-gate/EBlankTrace.olean im-results/agent26-cryptid-e-gate/EBlankTrace.lean
+          lean -o im-results/agent26-cryptid-e-gate/ASix.olean im-results/agent26-cryptid-e-gate/ASix.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent26-cryptid-e-gate/ASixBlankTrace.olean im-results/agent26-cryptid-e-gate/ASixBlankTrace.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankBeyond.olean im-results/agent35-cryptid-code/BlankBeyond.lean
+          lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean -o im-results/agent35-cryptid-code/ESixBlank.olean im-results/agent35-cryptid-code/ESixBlank.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankSixCheckpoint.olean im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
+          lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankTripleCheckpoint.olean im-results/agent35-cryptid-code/BlankTripleCheckpoint.lean
+          lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
+          lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
+          lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
+          lean -o im-results/agent32-cryptid-padding/PaddedApplications.olean im-results/agent32-cryptid-padding/PaddedApplications.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankBContin.olean im-results/agent35-cryptid-code/BlankBContin.lean
+          lean -o im-results/agent32-cryptid-third/CryptidThree.olean im-results/agent32-cryptid-third/CryptidThree.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankAfterPadding.olean im-results/agent35-cryptid-code/BlankAfterPadding.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankFurther.olean im-results/agent35-cryptid-code/BlankFurther.lean
+      - name: Check physical bridge against original literal D0 and huge blank theorem
+        env:
+          LEAN_PATH: im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding
+        run: |
+          for module in MachineConjugacy DTableWitness DStartFinite DSectionTransfer DAllStarts DExactTimes DParseRLE DSourceCorollaries; do
+            lean -o "im-results/agent3-portfolio-raw-conjugacy/$module.olean" "im-results/agent3-portfolio-raw-conjugacy/$module.lean"
+          done
+          for module in PhysicalBridge SourceIntegration UnaryBridge RootTransfer ExactTime CheckpointTransport; do
+            lean -o "im-results/agent19-d-physical-bridge/$module.olean" "im-results/agent19-d-physical-bridge/$module.lean"
+          done
+          lean im-results/agent19-d-physical-bridge/BigBlankTransfer.lean
