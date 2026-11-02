@@ -34,3 +34,4 @@ jobs:
           lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
           lean im-results/agent35-cryptid-code/ABridgeTwo.lean
           lean im-results/agent35-cryptid-code/EDouble.lean
+          lean im-results/agent35-cryptid-code/ESixBlank.lean
