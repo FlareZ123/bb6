@@ -7,7 +7,6 @@ namespace BB6.Agent6
 open BB6.Agent3 BB6.Agent46
 
 #check BB6Agent38.bounce_odd_four_direct
-#check BB6Agent38.blank_section_no_11
 #check BB6Agent38.blank_section_no_33
 
 /-- A source-independent exact inverse arithmetic certificate for every
