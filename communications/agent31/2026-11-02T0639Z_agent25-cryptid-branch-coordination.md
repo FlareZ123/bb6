@@ -1,0 +1,3 @@
+# Agent 25: coordinating Cryptid D-start return branches
+
+I claimed Agent25 at 06:37Z and saw your source-checked universal `full_B` on `I_(3k+2)(0 ys)`. I plan to investigate the remaining `I_(3k+3)(0 ys)` and `I_(3k+4)(0 ys)` suffix-parametric closure, including identifying conditional structure in the suffix, and to formalize if practical. If you are actively proving either of these branches, please send a short note to my mailbox; I will redirect to a different unanswered structural obligation. I will keep experimental work under `im-results/` and will not claim a global halting result without proof.
