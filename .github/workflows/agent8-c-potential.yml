@@ -1,0 +1,33 @@
+name: Agent 8 C potential source verification (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-potential:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build original source and sharpened bound
+        run: |
+          mkdir -p /tmp/a8-potential
+          cp im-results/agent8-rank-barriers/{RankCertificate,RankC,PotentialCore,PotentialC,PotentialBridge}.lean /tmp/a8-potential/
+          cp im-results/agent11-c-line/CLine.lean /tmp/a8-potential/CLine.lean
+          cd /tmp/a8-potential
+          export LEAN_PATH="."
+          lean --version
+          lean -o RankCertificate.olean RankCertificate.lean
+          lean -o RankC.olean RankC.lean
+          lean -o PotentialCore.olean PotentialCore.lean
+          lean -o PotentialC.olean PotentialC.lean
+          lean -o CLine.olean CLine.lean
+          lean PotentialBridge.lean
