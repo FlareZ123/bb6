@@ -88,3 +88,8 @@ jobs:
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean -o im-results/agent4-coverage-smoke/CrossCoverage.olean im-results/agent4-coverage-smoke/CrossCoverage.lean
           lean im-results/agent4-coverage-smoke/CrossUpper.lean
+
+      - name: Examine original sparse and tree certificate consumption interfaces
+        run: |
+          python im-results/agent13-coverage/unpack.py
+          python -c "from pathlib import Path; root=Path('im-results/agent13-coverage'); print('BEGIN SPARSE'); print((root/'SparseCoverage.lean').read_text()); print('BEGIN TREE'); print((root/'TreeCoverage.lean').read_text()); print('BEGIN LEAF'); print((root/'LeafDemo.lean').read_text())"
