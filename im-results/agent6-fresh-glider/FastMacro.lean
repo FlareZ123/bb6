@@ -67,7 +67,7 @@ theorem fastMacroOracle_sound (p : PartialMachine) (limit bound : Nat)
   · exact fastMacroLeft_sound p limit bound hl
 
 /-- Straightforward bounds-independent all-time certificate of five-step
-    left-/right-frontier growth. -/
+    leftward and rightward frontier growth. -/
 theorem five_fast_example : fastMacroRight fiveStepMacroTable 5 = true := by
   decide
 
