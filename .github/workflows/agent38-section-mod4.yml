@@ -64,4 +64,8 @@ jobs:
           lean -o FurtherDyadicMod16.olean FurtherDyadicMod16.lean
           lean -o ThirdStageOddDepth.olean ThirdStageOddDepth.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/DyadicResidualMod32.lean .
-          lean DyadicResidualMod32.lean
+          lean -o DyadicResidualMod32.olean DyadicResidualMod32.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/FourthStage.lean.xz.b64 .
+          base64 -d FourthStage.lean.xz.b64 | xz -d > FourthStage.lean
+          echo 'ef2f92ff9145069b2bb69be7b947441364d645d9f90c44fcb9e587ae6a1771f5  FourthStage.lean' | sha256sum -c -
+          lean FourthStage.lean
