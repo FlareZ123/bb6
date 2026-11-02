@@ -24,7 +24,7 @@ jobs:
           export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent44-drift-closure
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean im-results/agent8-coverage-contract/TerminalBridge.lean
-          lean im-results/agent8-coverage-contract/Symmetry.lean
+          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
           lean im-results/agent8-coverage-contract/Prune.lean
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean im-results/agent8-coverage-contract/LeafRules.lean
@@ -55,3 +55,4 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/SingletonFrontier.olean im-results/agent4-coverage-smoke/SingletonFrontier.lean
           lean -o im-results/agent8-coverage-contract/CylinderFrontier.olean im-results/agent8-coverage-contract/CylinderFrontier.lean
           lean im-results/agent8-coverage-contract/AllHaltsGlobal.lean
+          lean im-results/agent8-coverage-contract/RootShift.lean
