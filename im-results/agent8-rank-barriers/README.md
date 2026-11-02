@@ -40,3 +40,22 @@ Follow-up work: connect these certificates to the original Cryptids modules thro
 [Sweep.lean](./Sweep.lean) independently certifies the exact shortcut: for any `q≤a` and `q+3≤c`, `q` consecutive high-counter sweep steps can be replaced by `(a,k,c) → (a-q,k+q,c-q)`. A simulator can safely choose `q=min(a,c-3)` when `a>0,c≥4`. The shortcut reduces billions of affine decrement transitions to single jumps; it was compiled locally using Lean 4.36.0-rc2 with imports `RankCertificate` and `RankC` (each compiled to `.olean` first).
 
 Neither certificate excludes the designated halting state `c=2`. The correspondence between standalone `nextC` and the upstream published `next` is verified by comparing their definitions, and would benefit from an explicit kernel-checked cross-module bridge.
+
+
+## Certified critical guard
+
+[Critical.lean](./Critical.lean) verifies all predecessors of the halting layer `c=2`: `(0,0,0)` and `(0,2j,5)`. [CriticalReach.lean](./CriticalReach.lean) proves that the initial state `(5,0,1)` cannot reach `(0,0,0)`, using monotonicity of `R=a+2k+c`. Consequently, its theorem `nextC_stops_iff_critical` certifies:
+
+```lean
+theorem nextC_stops_iff_critical :
+    CollatzStops nextC (5,0,1) ↔
+      ∃ n j, runSteps nextC n (5,0,1) = some (0,2*j,5)
+```
+
+[CriticalBounds.lean](./CriticalBounds.lean) further proves `j>0` at any reachable critical state and `37+n ≤ (4*j+5)*(4*j+6)` for a critical encounter after `n` surviving macro steps. **These are exact properties of the accelerated map, not a nonhalting proof.**
+
+## Reproducible computational experiment
+
+[AcceleratedC.cpp](./AcceleratedC.cpp) implements the same transitions and the formally checked sweep shortcut. It uses unsigned 128-bit macro-step counts and a guard against counter overflow. The independently implemented Python scalar map was compared against unaccelerated C++ at 100,000 and 1,000,000 steps; plain and skipping C++ simulators matched at 1 billion steps, and 64-bit and 128-bit shortcut variants matched at `10^18` steps.
+
+At exactly `10^18` surviving accelerated steps, state `(3275195632,829068763,358117677)` was observed. At exactly `10^20` steps the state was `(3468056923,20301726861,8843523918)`. No halt was observed in either simulation. The `10^20` simulation used 30,237,230,344 unskipped event transitions and 15,118,567,736 exact sweep jumps. It encountered `(a,c)=(0,5)` once, with odd `k=1053` at step 156,095, and never encountered a reachable halting precursor. This is finite empirical evidence. The original Turing machine's halting status remains unresolved.
