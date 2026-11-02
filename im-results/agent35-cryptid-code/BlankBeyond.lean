@@ -39,7 +39,6 @@ theorem full_B_six (k : Nat) :
   have hr : List.replicate (8*k+9) true ++ List.replicate 6 true =
       List.replicate (8*k+15) true := by
     rw [List.replicate_append_replicate]
-    congr 1
   rw [hr] at h
   have he : 8*k+15=(8*k+13)+2 := by omega
   rw [he] at h
