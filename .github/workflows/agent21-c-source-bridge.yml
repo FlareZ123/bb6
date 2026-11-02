@@ -38,8 +38,33 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CSourceBridge.lean" CSourceBridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CSection.lean" CSection.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CReturn.lean" CReturn.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CFarReturn.lean" CFarReturn.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CGatewayTime.lean" CGatewayTime.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CPhaseRank.lean" CPhaseRank.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CStrongBridge.lean" CStrongBridge.lean
           lake env lean -o .lake/build/lib/lean/CLine.olean CLine.lean
           lake env lean -o .lake/build/lib/lean/CReachBridge.olean CReachBridge.lean
           lake env lean CSourceBridge.lean
           lake env lean -o .lake/build/lib/lean/CSection.olean CSection.lean
-          lake env lean CReturn.lean
+          lake env lean -o .lake/build/lib/lean/CReturn.olean CReturn.lean
+          lake env lean -o .lake/build/lib/lean/CFarReturn.olean CFarReturn.lean
+          lake env lean CGatewayTime.lean
+          lake env lean CPhaseRank.lean
+
+      - name: Reconstruct Agent 11 modular proofs with hash verification
+        run: |
+          python3 -m venv /tmp/bb6-venv
+          /tmp/bb6-venv/bin/python -m pip -q install filelock
+          cd im-results/agent11-c-line
+          /tmp/bb6-venv/bin/python reconstruct.py
+          /tmp/bb6-venv/bin/python reconstruct-parity.py
+          /tmp/bb6-venv/bin/python reconstruct-mod8.py
+      - name: Compile and transport strongest modular gates to raw TM
+        working-directory: /tmp/cryptids
+        run: |
+          for source in LowGate BackGate ResetGate CParity CParityGates MoreResidue FinalGate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/$source.lean" "$source.lean"
+            lake env lean -o ".lake/build/lib/lean/$source.olean" "$source.lean"
+          done
+          lake env lean -o .lake/build/lib/lean/CSourceBridge.olean CSourceBridge.lean
+          lake env lean CStrongBridge.lean
