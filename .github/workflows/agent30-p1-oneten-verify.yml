@@ -1,0 +1,37 @@
+name: Agent 30 P1 n=110 modulo256 infinite exclusion (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unmodified P1 modules and new 110mod256 theorem
+        run: |
+          mkdir -p /tmp/agent30-one-ten
+          cd /tmp/agent30-one-ten
+          for name in GParity GInverse PosEvenForm ResetGate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/$name.lean" "$name.lean"
+          done
+          for name in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/$name.lean" "$name.lean"
+          done
+          python3 -c 'import base64,hashlib,lzma,pathlib,os; p=pathlib.Path(os.environ["GITHUB_WORKSPACE"])/"im-results/agent30-p1-one-ten/Agent30P1OneTen.lean.xz.b64"; data=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(data).hexdigest()=="9cd6716625cd368f4207eaf9fca73633e08939124a928548b81b2934e504ece2"; pathlib.Path("/tmp/agent30-one-ten/Agent30P1OneTen.lean").write_bytes(data)'
+          export LEAN_PATH="."
+          for name in GParity GInverse PosEvenForm ResetGate P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "COMPILING unmodified source $name"
+            lean -o "$name.olean" "$name.lean"
+          done
+          echo "CHECKING THEOREM AGAINST ORIGINAL SOURCE"
+          lean Agent30P1OneTen.lean
