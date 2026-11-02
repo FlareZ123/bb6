@@ -1,0 +1,1 @@
+Verified local Lean 4.36.0-rc2: triplet_pump axioms [propext, Quot.sound].
