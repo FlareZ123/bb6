@@ -64,7 +64,8 @@ theorem finiteEntryMacroCheck_sound (p : PartialMachine)
             · simp only [embedFinRay]
               omega
             · intro x hx
-              exact finiteFreshRight_sound c hmacroFresh x (by simpa [embedFinRay] using hx)
+              have hge : c.head ≤ x := by omega
+              exact finiteFreshRight_sound c hmacroFresh x hge
           · intro j hj d hrun
             have hflag :
                 (match finitePartialRun p j (finiteStateBlank entry.state) with
