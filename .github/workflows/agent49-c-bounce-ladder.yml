@@ -1,4 +1,4 @@
-name: Agent 49 Machine C odd bounce ladder (manual source audit)
+name: Agent 49 Machine C bounce arithmetic classification (manual source audit)
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ permissions:
 jobs:
   lean-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -17,19 +17,26 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile original Machine C source and odd-bounce ladder
+      - name: Compile unchanged Machine C source, published exact bounce, and new arithmetic proofs
         run: |
           mkdir -p /tmp/a49-ladder
           cp im-results/agent11-c-line/CLine.lean /tmp/a49-ladder/
-          cp im-results/agent46-c-jump/JumpHigh.lean /tmp/a49-ladder/
-          cp im-results/agent49-c-bounce-ladder/Ladder.lean /tmp/a49-ladder/
-          cp im-results/agent49-c-bounce-ladder/LadderSection.lean /tmp/a49-ladder/
-          cp im-results/agent49-c-bounce-ladder/EvenLadder.lean /tmp/a49-ladder/
+          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a49-ladder/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc}.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity}.lean /tmp/a49-ladder/
           cd /tmp/a49-ladder
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
+          lean -o GenericSection.olean GenericSection.lean
           lean -o JumpHigh.olean JumpHigh.lean
+          lean -o JumpMacro.olean JumpMacro.lean
+          lean -o JumpSection.olean JumpSection.lean
+          lean -o JumpBounce.olean JumpBounce.lean
+          lean -o JumpOneReturn.olean JumpOneReturn.lean
+          lean -o JumpBounceSections.olean JumpBounceSections.lean
+          lean -o BounceCalc.olean BounceCalc.lean
           lean -o Ladder.olean Ladder.lean
           lean LadderSection.lean
-          lean EvenLadder.lean
+          lean -o EvenLadder.olean EvenLadder.lean
+          lean BounceParity.lean
