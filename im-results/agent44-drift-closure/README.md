@@ -93,6 +93,41 @@ These exact arithmetic counts use the independent Python census, the distinct fi
 
 No claim is made that these certificates constitute a single universally completed `Cover` object, a new machine decision, or a solution of BB(6).
 
+## Executable oracle integration with Agent 8
+
+Agent 8 independently developed [`RayOracle.lean`](../agent8-coverage-contract/RayOracle.lean), which decides the same fixed-direction fresh-zero ray family using an executable search of 64 state subsets and produces an actual `Cover` object. The prefix-entry theorem in [`RayEntry.lean`](../agent8-coverage-contract/RayEntry.lean) likewise overlaps our independently obtained [`PrefixDrift.lean`](PrefixDrift.lean). Future work should reuse Agent 8's executable implementations and avoid multiplying redundant theorem variants.
+
+Our **complementary** [`ZeroWriterOracle.lean`](ZeroWriterOracle.lean) defines:
+
+```lean
+zeroWriterOracle (p : PartialMachine) : Bool
+zeroWriterOracle_sound (p : PartialMachine) (bound : Nat)
+  (h : zeroWriterOracle p = true) : Cover (DecidedBelow bound) p
+```
+
+For each six-bit state mask, it checks that A belongs to the mask and every state in it has an already assigned nonhalting zero-writing zero-reading transition returning to the mask, with no direction restriction. The proof `zeroMaskCheck_sound` translates accepted Booleans into our source-certified tape-blank invariant. The six-state mask search is exhaustive over this predicate.
+
+[`UnifiedNonhaltingOracle.lean`](UnifiedNonhaltingOracle.lean) combines the two source-certified Boolean checks into one usable `basicControlOracle p := rayOracle p || zeroWriterOracle p` and theorem `basicControlOracle_sound`. Its same-source integration was **verified successfully** by [manual CI 41507584847](https://github.com/FlareZ123/bb6/actions/runs/41507584847), which compiled **unmodified original** `Frontier`, `RayClosed`, `RayChecker`, and `RayOracle` before both new checker modules. Both final source certificates have no `sorryAx`; they yield genuine infinite-run leaves over every compatible full table.
+
+The exact combined all-table coverage of the two oracles is **43.907809280%**, an increment of **6.566764544 percentage points** from zero-writer graphs not already included in Agent 8's 37.341044736% ray oracle. This is an all-transition-table census, not a percentage of classified outstanding BB(6) machines. To consume the oracle in a proof-producing sparse search, evaluate the Boolean on a partial table; when it is true, invoke `basicControlOracle_sound`.
+
+[`FastZeroWriter.lean`](FastZeroWriter.lean) is an optional cheaper candidate check: follow seven deterministic zero-successor edges to construct one candidate mask, then use the exact same `zeroMaskCheck`. The theorem `zeroWriterFastOracle_sound` proves **soundness** on acceptance; **completeness against the 64-mask oracle is not formally shown**, so a `false` result must be treated as inconclusive. This file awaits the current full-source CI run; no speedup figure is claimed without a runtime benchmark.
+
+## Reached, unresolved transition and a heterogeneous 25-way branch
+
+[`MixedTwentyFive.lean`](MixedTwentyFive.lean) defines a partial table with A/0=0RB, assigned B/1 halting, assigned C/0 through F/0 halting, and B/0 **unassigned**. Thus the first unresolved slot is genuinely read after the first ordinary move. For every choice among its 25 actions, all remaining unknown slots are irrelevant and:
+
+- 18 actions halt within **at most four counted steps**.
+- 7 actions never halt, proved using full physical-tape finite-cycle or fresh-direction invariants.
+
+The Lean theorem `mixed_decided B (4 ≤ B)` classifies **every** compatible completion. A second theorem `mixed_reached_branch` genuinely constructs a `Cover.branch` on the *visited* B/0 slot, with all 25 children receiving source-derived `Cover.leaf` proofs. This is a stronger coverage-tree integration test than a branch on an untouched table entry, though its small parent cylinder contains multiple halting slots and does **not** belong to the exactly-one-halt-normalized representation.
+
+The parent covers precisely `25^6 = 244,140,625` complete canonical tables, split into `18×25^5=175,781,250` halters and `7×25^5=68,359,375` nonhalters. These **must not be added** to the earlier nonhalting union count without overlap analysis. This branch has passed local signature-matching source compilation but its final original-Frontier/LeafRules CI verification is pending; the local cycle lemma was declared as a matching mock during typechecking and is not evidence for the final source result.
+
+## Historic unresolved-root overlap audit
+
+The self-contained [`holdout_overlap.py`](holdout_overlap.py) reads the pinned repository resource `resources/BB6_holdouts_663_2026-10-16.txt` and strictly parses all 663 distinct six-state RLE codes. Exactly **zero** of the listed historical roots satisfies the two Boolean control-closure families or the particular transient and bounce examples. This provides an explicit negative check against misleading table-percentage claims. The audit does not imply the 663 roots remain the current live list, nor that the source list is complete or up to date. It was replayed successfully in the existing manual CI.
+
 ## Verification boundary
 
 The complete **unmodified** Agent 8 `Frontier.lean` and new `DirectedDrift.lean` compiled in successful manual-only [CI 41503271213](https://github.com/FlareZ123/bb6/actions/runs/41503271213) using Lean 4.36.0-rc2. All three new theorem axiom audits report only `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The existing [Agent 44 manual workflow](../../.github/workflows/agent44-p1-envelope-verify.yml) now builds the unchanged `Frontier` module before the new proof, alongside the previously source-checked power envelopes. Local signature-matching mock compilation was preliminary and is superseded by this full-source result.
