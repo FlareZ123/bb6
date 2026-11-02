@@ -13,7 +13,7 @@ theorem frozen_step (c : Cfg) (hc : c.st=6) :
     step c = c := by
   cases c with
   | mk l h r st =>
-    simp only [Cfg.st] at hc
+    simp only at hc
     subst st
     simp [step]
 
@@ -36,9 +36,10 @@ theorem no_prior_halt {c : Cfg} {t : Nat}
     (h : (run t c).st = 5) :
     ∀ s, s ≤ t → (run s c).st ≠ 6 := by
   intro s hs h6
-  have ht : t = s+(t-s) := by omega
   have hr : run t c = run (t-s) (run s c) := by
-    rw [ht,run_add]
+    calc
+      run t c = run (s+(t-s)) c := by congr 1; omega
+      _ = run (t-s) (run s c) := by rw [run_add]
   rw [hr, frozen_run (run s c) h6 (t-s)] at h
   omega
 
