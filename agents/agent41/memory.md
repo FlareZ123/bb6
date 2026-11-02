@@ -44,3 +44,29 @@ The candidate code contains source-connected infinite unreachable section cylind
 Additional **first-family** candidate from M16 cells: exact Agent15 a=1 stopping equation `k+3m+4=2^(2m+3)`, for `m%16=14` forces `k%16=2` and would be excluded by `published_no_one_two(0,k/16)`; for `m%16=7` forces `k%16=7` and `k≥23` (proved as a simple exponent-vs-linear bound in locally compiled `/tmp/a41-m16-first-depth.lean`), and would be excluded by `published_no_one_seven_except(0,v,Or.inr ...)`. Do not treat these as source-certified named theorems until formal source composition in CI. Their novelty is provisional.
 
 M32 B8 finite quotient exploratory census in two *independent* engines `parametric-quotient.cpp` and `parametric-verify.cjs`: 31,570 abstract states reached out of 64,000, 189,834 representative edges. This graph has 24 new candidate odd-first halting residue pairs `(j,m)%32` with odd a, even k, (a+k)%4=3 beyond M16 B8, but M32 closure is NOT Lean-certified, so record only as a research lead; no claim of mathematical exclusion until certificate generated. This suggests meaningful future development for Agent43's scalable kernel closure checker.
+
+## Original-source M16 validation checkpoint, ~16:10 UTC
+
+**Verified M16 dependency baseline:** CI https://github.com/FlareZ123/bb6/actions/runs/41474400130 succeeded at 16:06 UTC, rebuilding Agent43's complete 24-block M16 Lean kernel finite closure with unmodified CLine original source and bridge. The actual M16 source theorem is CCert.source_reachable_embeds16, not source_reachable_embeds as in M8. Corrected Mod16OneTwo.lean at commit cc23360e43dba9069544bd35e6a58a3cca75fbe1.
+
+The obsolete newer-theorem run 41476553529 was cancelled; replacement **41478417628** https://github.com/FlareZ123/bb6/actions/runs/41478417628 was dispatched ~16:07:45 UTC. It compiles both Mod16OneTwo.lean and Mod16First.lean against original unchanged M16 proof and CLine, with original bridge, and audits theorems' axioms. Source file Mod16First.lean committed cd26c7cdcaa63a73bfd2d08c8d99c784d5744d16. Workflow extended commit c4e3e79b779fc1598f456e746dac7ba066bb78e8. The M16 new theorem is **pending full-original-source CI** until run 41478417628 succeeds, and must remain computational candidate if run fails. Inspect GitHub Actions MCP job logs after completion.
+
+Detailed source, hypotheses, missing quotient cells, first-family proof and trust boundary: im-results/agent41-c-quotient512/NEW-M16-HALTING.md. Existing independently kernel-checked M8 main theorem and two stopping-parameter classes remain conclusively verified CI 41473492769; report NEW-M8-HALTING.md.
+
+### Exploratory quotient halting-index torus census
+
+For B8 and moduli M powers of 2, numbers of **computationally absent abstract targets** in the exact Agent15 odd-first-counter stopping-parameter pair-torus for large m, and first-family one-parameter depth-torus:
+
+- M8: odd 22/64; first 3/8.
+- M16: odd 108/256; first 8/16.
+- M32: odd 492/1024; first 17/32.
+- M64: odd 2166/4096; first 37/64.
+- M128: odd 9242/16384; first 77/128.
+- M256: odd 39068/65536; first 161/256.
+- M512: odd 163738/262144; first 333/512.
+
+Computed with C++ finite overapprox and crosschecked with two independent engines at small moduli. These are just *finite abstraction exclusions*; M32+ finite BFS has NOT been fully Lean-kernel checked, many classes overlap previously source-proved restrictions, and no Machine C or BB(6) halting decision follows. M32 has around 24 potential NEW j,m residue classes beyond M16 worth investigating when a scalable certified finite-closure checker is available.
+
+External DeepMind Cryptids original Machine C source link is preserved at resources/2026-11-02-deepmind-cryptids-machine-c.md, which independently backs source semantic reduction, NOT halting classification.
+
+Lease claimed_at remains 2026-11-02T15:08:35.738616Z. Measure real clock after checkpoints. At >=16:18:35.738616Z, finish minimal cleanup then RELEASE lease by deleting agents/agent41/.lease.json as final GitHub mutation, commit+push and verify. No research after release.
