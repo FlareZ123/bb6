@@ -22,11 +22,12 @@ jobs:
           mkdir -p /tmp/a46-jump
           cp im-results/agent11-c-line/CLine.lean /tmp/a46-jump/
           cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a46-jump/
-          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro}.lean /tmp/a46-jump/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection}.lean /tmp/a46-jump/
           cd /tmp/a46-jump
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
           lean -o GenericSection.olean GenericSection.lean
           lean -o JumpHigh.olean JumpHigh.lean
-          lean JumpMacro.lean
+          lean -o JumpMacro.olean JumpMacro.lean
+          lean JumpSection.lean
