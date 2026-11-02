@@ -9,14 +9,11 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@v1
-        with:
-          lake-package-directory: im-results/agent43-c-quotient-kernel
-          auto-config: false
-          build: false
-          test: false
-          lint: false
-          use-github-cache: false
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify source archive and original published map
         run: |
           mkdir -p /tmp/a43-lean
@@ -26,7 +23,7 @@ jobs:
           tar -xJf c-cert8.tar.xz
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
           cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/CSourceBridge8.lean" CSourceBridge8.lean
-      - name: Compile certificate and source bridge in Lean kernel
+      - name: Compile kernel certificate with original CLine import
         run: |
           cd /tmp/a43-lean
           export LEAN_PATH=.
