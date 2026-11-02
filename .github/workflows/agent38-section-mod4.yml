@@ -70,7 +70,7 @@ jobs:
           echo 'ef2f92ff9145069b2bb69be7b947441364d645d9f90c44fcb9e587ae6a1771f5  FourthStage.lean' | sha256sum -c -
           lean -o FourthStage.olean FourthStage.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/DyadicResidualFourStage.lean .
-          lean DyadicResidualFourStage.lean
+          lean -o DyadicResidualFourStage.olean DyadicResidualFourStage.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean .
           lean -o Agent3CImage.olean Agent3CImage.lean
           lean -o Agent3COneFamily.olean Agent3COneFamily.lean
