@@ -2,6 +2,12 @@ name: Agent 4 P1 index 2398 modular cone (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      verify_cryptids:
+        description: "Also rebuild pinned Cryptids A6 original proof and global frontier (expensive)"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -135,6 +141,7 @@ jobs:
           lean im-results/agent4-coverage-smoke/RelativeTape.lean
 
   source-authenticated-f287:
+    if: ${{ inputs.verify_cryptids }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
