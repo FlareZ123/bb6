@@ -15,7 +15,7 @@ This agrees with the map used by Agents 14 and 16. The upstream correspondence i
 For every `k>=0` and every exponent `j >=15` with
 
 ```text
-j modulo 540 is one of 15, 27, 87, 99, 123, 135, 159, 195, 207, 243, 267, 303, 315, 339, 375, 423, 447, 459, 483, 519,
+j modulo 540 is one of 15, 27, 87, 99, 123, 135, 159, 195, 207, 243, 267, 303, 315, 339, 375, 423, 447, 459, 483, 519.
 ```
 
 the `k`-th defined iterate of `F` starting from `5` **does not equal `2^j`**. These twenty residues are disjoint from all the periodic classes excluded in `im-results/agent16-sheep-power-preimages/README.md`. Together with the earlier 157/360 classes, this increases the proven periodic-index exclusion density to at least `511/1080`, assuming the independent proofs there. This is a fraction of *halting exponents excluded*, never a halting probability.
@@ -70,7 +70,7 @@ Finally, `y1` and `y2` are larger than `5` for `j>=15`. If the real orbit from `
 
 ## Exact finite certificate
 
-The Python script verifies the modular calculations for **every** admissible exponent, using complete multiplicative periods rather than a cutoff on `j`. For a modulus `m` and a declared period `p`, it checks `2^p=1 (mod m)`. For `j=r+540*k` the residues of `2^(j+c) (mod m)` are exhausted by `0<=k<p/gcd(p,180)`. It tests all twenty `r`, all bounded exponents `a`, and both inverse congruences. The asserted periods are:
+The Python script verifies the modular calculations for **every** admissible exponent, using complete multiplicative periods rather than a cutoff on `j`. For a modulus `m` and a declared period `p`, it checks `2^p=1 (mod m)`. For `j=r+540*k` the residues of `2^(j+c) (mod m)` are exhausted by `0<=k<p/gcd(p,540)`. It tests all twenty `r`, all bounded exponents `a`, and both inverse congruences. The asserted periods are:
 
 | Inverse layer | modulus | a range | periods in increasing a |
 | --- | --- | --- | --- |
