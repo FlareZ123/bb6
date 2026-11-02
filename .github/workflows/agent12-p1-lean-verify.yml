@@ -53,3 +53,8 @@ jobs:
           lean -o im-results/agent47-p1-finite-inverse/P1InverseFixed.olean im-results/agent47-p1-finite-inverse/P1InverseFixed.lean
           lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
           lean im-results/agent12-backwards/P1NumericReflection.lean
+
+      - name: Exact symbolic infinite-family P1 affine cone census
+        run: |
+          node im-results/agent12-backwards/p1_r382_affine_cone.cjs > /tmp/p1_r382_affine_cone.json
+          python -c 'import json; d=json.load(open("/tmp/p1_r382_affine_cone.json")); assert d["hubCount"]==31 and d["leafCount"]==62'
