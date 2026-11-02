@@ -1,4 +1,4 @@
-# P1: source-certified exclusion of the entire critical index class n ≡ 14 (mod 1024)
+# P1: source-certified infinite critical-index classes n ≡ 14 and 62 (mod 1024)
 
 **Agent 47, 2026-11-02.** Verified by the full unmodified-source Lean 4.36.0-rc2 [manual issue-triggered CI run 41508096971](https://github.com/FlareZ123/bb6/actions/runs/41508096971) (job 125492481047). This is an infinite all-time blank-entry reachability exclusion, not a six-state machine nonhalting decision or BB(6) solution.
 
@@ -42,3 +42,27 @@ The durable source files are:
 The successful CI run [41508096971](https://github.com/FlareZ123/bb6/actions/runs/41508096971) verifies file hashes for the generated affine, blocked, and final modules, then audits their Lean proofs. GitHub issue [#2](https://github.com/FlareZ123/bb6/issues/2) is the one-shot workflow trigger.
 
 This excludes one complete residue class among the remaining P1 critical indices. Infinitely many other critical indices remain. It establishes neither the original P1 machine's nonhalting nor BB(6)'s exact value.
+
+## Second original-source certificate: n ≡ 62 (mod 1024)
+
+The same approach now also proves **for all natural q** the original-source theorem
+
+```lean
+BB6.Agent47P162.blank_no_critical_62_mod1024 (q : Nat) :
+  ¬ BB6.Agent1.Reach 2
+    (14*2^(1024*q+62)-2*(1024*q+62)-10)
+```
+
+The complete unmodified-source Lean 4.36.0-rc2 [CI run 41509337455](https://github.com/FlareZ123/bb6/actions/runs/41509337455), job 125496796957, compiled both classes and printed **exactly** `[propext, Classical.choice, Quot.sound]` for the new `blocked0` and `blank_no_critical_62_mod1024`. Axiom audit has no `sorryAx` and the original source dependencies were left unchanged.
+
+Put `w(q)=2^(1024q)`, `u(q)=31525197391593472*w(q)-q` where `31525197391593472=7*2^52`. The n62 critical hub `(H(n)-6,3)` equals `(2048*u(q)-140,3)`. The exhaustive exact inverse cone has **19** internal hubs, **57** GAncestor inverse branches, and **38** terminal leaves: nineteen positive-mod4 contradictions and nineteen power-shape contradictions. Each power leaf `x+12=A*u(q)-C` has `1088≤A≤2032` and `0≤C≤138`. By the global `u≥(31525197391593471)q+31525197391593472` bound, every terminal power candidate satisfies
+
+```
+14*2^(1024q+61) < A*u(q)-C < 14*2^(1024q+62),
+```
+
+excluding all `14*2^j`. The entire 19-node induction is source-imported through Agent47's exact inverseAt completeness and Agent4's Blocked soundness, and finally through Agent50's blank-entry critical-gateway theorem. The r62 cone was also listed by Agent28 as an earlier computational closed candidate (19 nodes); this work supplies its full new original-source kernel certificate.
+
+Reproduction: `im-results/agent47-p1-finite-inverse/P162Gap.lean` has the independent universal gap theorem and root identity, and `P162Source.tar.gz.b64` archives `p1_62.py`, `gen_p162.py`, and `P162Final.lean`. The existing guarded workflow reconstructs and checks the exact affine and blocked Lean modules via deterministic SHA-256 before compiling them. The reference CI run is [41509337455](https://github.com/FlareZ123/bb6/actions/runs/41509337455), triggered through [issue #3](https://github.com/FlareZ123/bb6/issues/3).
+
+The two certificates jointly prove n≡14 or62(mod1024) critical-index exclusions. Neither implies P1 nonhalting or determines BB(6).
