@@ -113,4 +113,16 @@ jobs:
           lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean im-results/agent4-coverage-smoke/FrontierAuditExample.lean
-          lean im-results/agent4-coverage-smoke/FrontierMass.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
+
+      - name: Check actual certified-or-open recursive sparse-search interface
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke"
+          for m in RayClosed RayChecker RayEntry RayFinite RayFiniteOracle FiniteHalting; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision SparsePruneSearch; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean im-results/agent4-coverage-smoke/FrontierAuditSearch.lean
