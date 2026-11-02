@@ -6,14 +6,14 @@ MACHINE = "1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---"
 TRANSITIONS = [(s[:3], s[3:]) for s in MACHINE.split("_")]
 
 def macro(n: int, suffix: str, fuel: int = 200_000):
-    """Advance from 0^infinity <F 1^n suffix 0^infinity to the next leftmost F/0."""
+    """Advance to the next F/0 with a genuinely blank physical left half-tape."""
     assert n >= 2 and (not suffix or suffix.startswith("0"))
     assert set(suffix) <= {"0", "1"}
     ones = set(range(1, n + 1))
     ones.update(n + 1 + i for i, b in enumerate(suffix) if b == "1")
     head, state = 0, 5
     for t in range(fuel):
-        if t and state == 5 and head < 0 and head not in ones:
+        if t and state == 5 and head not in ones and all(pos >= head for pos in ones):
             x = head + 1
             while x in ones:
                 x += 1
@@ -46,8 +46,8 @@ def path(n: int, suffix: str, k: int):
 
 def check():
     expected = [
-        (4, "011", (3, "010101", 91, -1)),
-        (3, "010101", (17, "", 56, -6)),
+        (4, "011", (3, "01111010101", 96, -6)),
+        (3, "01111010101", (27, "", 127, -11)),
         (31, "011", (75, "01111010101", 1509, -51)),
         (75, "01111010101", (219, "", 8791, -131)),
     ]
@@ -58,7 +58,7 @@ def check():
     for n in (4, 31):
         p = path(n, "011", 3)
         print(f"n={n}, branch sequence: {[x[0] for x in p]}")
-    for k in range(1, 20):
+    # A mere F/0 with nonblank cells left of the head is not an A-section return.\n    # The earlier 91-step n=4 marker was such a false return.\n    for k in range(1, 20):
         n = 3 * k + 1
         result = macro(n, "011011")
         assert result == ("HALT", 12*k*k+17*k+69, n-2), (k, result)
