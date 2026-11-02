@@ -337,4 +337,19 @@ theorem three_glider_example_cover (B : Nat) :
 #print axioms partial_left_three_glider_cover
 #print axioms three_glider_example_cover
 
+
+/-- A degenerate four-step glider uses only three distinct transition slots. -/
+def fourDegenerateExample : PartialMachine := fun s =>
+  if s = (0,false) then some (some ⟨true,true,1⟩)
+  else if s = (1,false) then some (some ⟨true,false,0⟩)
+  else if s = (0,true) then some (some ⟨false,true,0⟩)
+  else none
+
+theorem four_degenerate_example_cover (B : Nat) :
+    Cover (DecidedBelow B) fourDegenerateExample := by
+  exact partial_glider_cover (b:=1) (c:=0) (u:=false) (v:=true) (z:=false)
+    fourDegenerateExample B (by simp [PartialFourGlider,fourDegenerateExample])
+
+#print axioms four_degenerate_example_cover
+
 end BB6Coverage
