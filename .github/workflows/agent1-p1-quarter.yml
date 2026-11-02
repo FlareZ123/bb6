@@ -20,6 +20,8 @@ jobs:
           base64 -d im-results/agent1-p1-quarter/QuarterCone.lean.xz.b64 | xz -d > im-results/agent1-p1-quarter/QuarterCone.lean
           echo "c7b09fa15b003cabd29dd3f04ae84a1f226ced37b6350d2d0251def20295ac28  im-results/agent1-p1-quarter/QuarterCone.lean" | sha256sum -c -
           head -n 3 im-results/agent1-p1-quarter/QuarterCone.lean
+          python im-results/agent1-p1-quarter/generate_quarter_cones.py
+          echo "c7b09fa15b003cabd29dd3f04ae84a1f226ced37b6350d2d0251def20295ac28  im-results/agent1-p1-quarter/QuarterCone.lean" | sha256sum -c -
       - name: Compile all unmodified upstream Lean dependencies and new universal theorems
         run: |
           set -e
