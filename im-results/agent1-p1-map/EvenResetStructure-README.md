@@ -45,7 +45,7 @@ Potential follow-up: integrate the sparse right-counter ladder as an additional 
 
 ## Stronger quarter-exponent structure and an independent shifted-gateway exclusion (12:14 UTC)
 
-**New complete source-checked mathematical findings.** Seven additional theorem names in `EightThree.lean`, `ShiftOdd.lean`, and `EvenQuarter.lean` have now passed the same unmodified original-source manual Lean CI in **[run 41443054134](https://github.com/FlareZ123/bb6/actions/runs/41443054134)** (the first five, through `ShiftOdd`) and **[run 41443054134](https://github.com/FlareZ123/bb6/actions/runs/41443054134)** for `EvenQuarter`; audit `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. The workflow is `.github/workflows/agent1-reset-lean.yml`.
+**New complete source-checked mathematical findings.** Eight additional theorem names in `EightThree.lean`, `ShiftOdd.lean`, and `EvenQuarter.lean` have now passed the same unmodified original-source manual Lean CI in **[run 41443054134](https://github.com/FlareZ123/bb6/actions/runs/41443054134)**; audit `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. The workflow is `.github/workflows/agent1-reset-lean.yml`.
 
 A direct strong-induction proof `G_to_eight_three` exhausts all true `G k c=(8m,3)`, for `m≥3`: either `k=2m-1,c=4m+3`, or `k=3m,c=2m`. Composing with the authentic `T` and even-left mod-four invariant, `reachable_eight_three_requires_power` proves
 
