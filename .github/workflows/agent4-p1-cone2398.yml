@@ -81,6 +81,7 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent8-coverage-contract/HaltSlotFreedom.olean im-results/agent8-coverage-contract/HaltSlotFreedom.lean
           lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
           lean im-results/agent4-coverage-smoke/BranchSmoke.lean
           lean im-results/agent4-coverage-smoke/WriteOneDrift.lean
@@ -169,12 +170,15 @@ jobs:
           mkdir -p BB6Agent4
           cp ../im-results/agent8-coverage-contract/Frontier.lean BB6Agent4/
           cp ../im-results/agent8-coverage-contract/Prune.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/HaltSlotFreedom.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/F287HaltFreedom.lean BB6Agent4/
           for m in RelativeTape FrontierAudit FrontierMass FrontierClose SingletonFrontier CryptidsTapeAdapter CryptidsF287 CryptidsF287Global; do
             cp "../im-results/agent4-coverage-smoke/$m.lean" BB6Agent4/
           done
           export LEAN_PATH="BB6Agent4"
           lake env lean -o BB6Agent4/Frontier.olean BB6Agent4/Frontier.lean
           lake env lean -o BB6Agent4/Prune.olean BB6Agent4/Prune.lean
+          lake env lean -o BB6Agent4/HaltSlotFreedom.olean BB6Agent4/HaltSlotFreedom.lean
           lake env lean -o BB6Agent4/RelativeTape.olean BB6Agent4/RelativeTape.lean
           lake env lean -o BB6Agent4/FrontierAudit.olean BB6Agent4/FrontierAudit.lean
           lake env lean -o BB6Agent4/FrontierMass.olean BB6Agent4/FrontierMass.lean
@@ -183,3 +187,4 @@ jobs:
           lake env lean -o BB6Agent4/SingletonFrontier.olean BB6Agent4/SingletonFrontier.lean
           lake env lean -o BB6Agent4/CryptidsF287.olean BB6Agent4/CryptidsF287.lean
           lake env lean BB6Agent4/CryptidsF287Global.lean
+          lake env lean BB6Agent4/F287HaltFreedom.lean
