@@ -8,7 +8,10 @@ public import Agent18BReduction
 namespace BB6.Bridge
 
 open BusyBeaver
-namespace Source := BusyBeaver.M_1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_HHH1RE
+namespace Source
+export BusyBeaver.M_1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_HHH1RE
+  (State start next encode target is_valid_acceleration)
+end Source
 
 /-- Convert the exact local triple to the upstream certified symbolic state. -/
 def lift : BReduction.S → Source.State
