@@ -1,0 +1,38 @@
+name: Agent 29 Machine C four new residue exclusions (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct hash-checked original Lean certificate
+        run: python3 im-results/agent29-c-inverse/reconstruct.py
+      - name: Compile complete original Machine C proof chain and new results
+        run: |
+          mkdir -p /tmp/a29-new
+          cp im-results/agent11-c-line/CLine.lean /tmp/a29-new/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a29-new/$source.lean"
+          done
+          cp im-results/agent29-c-inverse/CNew.lean /tmp/a29-new/CNew.lean
+          cd /tmp/a29-new
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          lean CNew.lean
