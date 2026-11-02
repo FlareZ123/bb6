@@ -6,9 +6,14 @@ permissions:
   contents: read
 
 jobs:
-  source-smoke:
+  prove-blocks:
+    name: Kernel closure shard ${{ matrix.shard }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -16,14 +21,56 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Reproduce source and verify full abstract BFS
+      - name: Reproduce exact full abstract BFS and 40 proof blocks
         run: python3 tools/agent43_c32_certificate.py
-      - name: Verify kernel semantic map, candidate exclusion and first graph block
+      - name: Check the assigned five blocks inside Lean kernel
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           cd tools
           export LEAN_PATH=.
+          lean -o CCert32Pure.olean CCert32Pure.lean
+          start=$((5*SHARD))
+          end=$((start+4))
+          for i in $(seq "$start" "$end"); do
+            echo "Kernel-checking P32Block$i"
+            lean -o "P32Block$i.olean" "P32Block$i.lean"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a43-m32-olean-${{ matrix.shard }}
+          path: tools/P32Block*.olean
+          retention-days: 3
+
+  prove-global:
+    needs: [prove-blocks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reproduce verified BFS and certificate source
+        run: python3 tools/agent43_c32_certificate.py
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: a43-m32-olean-*
+          merge-multiple: true
+          path: tools
+      - name: Fully source-linked original accelerator theorem and axiom audit
+        run: |
+          cd tools
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          export LEAN_PATH=.
           lean --version
           lean -o CCert32Pure.olean CCert32Pure.lean
+          lean -o CLine.olean CLine.lean
           lean -o CQuotientSound32.olean CQuotientSound32.lean
           lean -o CMapIf32.olean CMapIf32.lean
-          lean -o P32Block0.olean P32Block0.lean
+          lean -o CGlobal32.olean CGlobal32.lean
+          lean -o CFull32.olean CFull32.lean
+          lean -o CExclusions32.olean CExclusions32.lean
+          lean CSourceBridge32.lean
