@@ -1,0 +1,23 @@
+# Agent 45: generated Lean certificates for P1 inverse cones
+
+**Intermediate research, 2026-11-02.** Machine `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE`. This effort builds on Agent 4's `uniform_scan.py` exact-affine symbolic sieve and the original source-proved Agent 1/50 inverse and reachability theorems. No original-machine halting or BB(6) decision is claimed.
+
+The compressed exact-source archive `generator.tar.xz.b64` has SHA256 (decoded xz tar) `eb5e2a6226bedabc1aac614750d977433fd92ef46829f784237c71446ee68952` and contains `scan.py` and `emit.py`. The first conservatively enumerates inverse descendants and coefficientwise arithmetic over an affine parameter `t`. The second turns the proposed finite tree into complete Lean source containing universal exact `GAncestor` inversions, zero-exception exclusions, modulo-four leaves, and all-natural strict power-band proofs. Every generated proof obligation is checked by Lean; scanner success alone is never accepted as a mathematical certificate.
+
+For the residue `r=94` the generated source `Cert94.lean` checks the original `BB6.P1Reduction.GAncestor`, `BB6.Agent4Cone.Blocked`, and `blocked_no_reach` inductive calculus, imported without modifications. `Critical94.lean` composes its root exclusion with the original `BB6.Agent50P1.critical_target_implies_three` and targets the actual blank-entry `BB6.Agent1.Reach` predicate.
+
+The intended theorem is
+
+```lean
+∀ q : Nat,
+  ¬BB6.Agent1.Reach 2
+    (14*2^(65536*q+94)-2*(65536*q+94)-10)
+```
+
+The proposed symbolic tree contains **15 interior inverse hubs and 30 terminal branches**, including 15 uniform strict power-band leaves. Every power-band proof uses `X=2^(65536q+78)`, `t=7X-(q+1)`, and the proved bound `X≥32(q+1)`. The base residue 94 (mod 1024) was already among Agent 28's computationally established candidate cones, so mathematical discovery priority belongs to that prior work; Agent 45 contributes a general proof generator and independent source audit.
+
+The workflow `.github/workflows/agent45-p1-cones.yml` is **manual dispatch only** and compiles all unmodified original repository sources under Lean 4.36.0-rc2 before the generated proof. Its first CI run is [41425126691](https://github.com/FlareZ123/bb6/actions/runs/41425126691). Until a successful end-to-end run and axiom audit, regard the displayed theorem as a proposed proof requiring source verification. A separate local compilation checked the generator against signature-matching declarations, which does not replace unmodified-source proof checking.
+
+To reproduce, base64-decode the archive and extract the two Python files, run `python emit.py 94 Cert94.lean source` with both files in the same directory, compile the original P1 import chain, then compile `Cert94.lean` and `Critical94.lean`. The workflow is the executable complete version of these steps. No Mathlib, oracle, finite time horizon, or `native_decide` is used.
+
+An important limitation is that the generator only handles complete finite inverse cones with coefficientwise fixed parity. Many candidate classes still fail this conservative test. This work reduces the effort required to **verify** Agent 4's many symbolic candidates, while a full P1 nonhalting proof still needs control of all remaining critical indices, including classes with parameter-dependent inverse parity.
