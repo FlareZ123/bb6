@@ -48,6 +48,26 @@ theorem scan_oddTower (q k b : Nat) :
       simp only [Option.some.injEq, HighLevelState.N.injEq]
       omega
 
+/-- Exact arithmetic size of each halting-tower counter. -/
+theorem haltTower_power (k : Nat) : haltTower k+2 = 2^(k+1) := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      change 2*(haltTower k+1)+2=2^(k+1+1)
+      rw [Nat.pow_succ']
+      omega
+
+/-- Exact factorization of every nonhalting odd-tail counter. -/
+theorem oddTower_factor (q k : Nat) :
+    oddTower q k + 2 = 2^k * (2*q+3) := by
+  induction k with
+  | zero => simp [oddTower]
+  | succ k ih =>
+      change 2*(oddTower q k+1)+2=2^(k+1)*(2*q+3)
+      rw [Nat.pow_succ']
+      rw [Nat.mul_assoc]
+      omega
+
 /-- Every natural counter splits into a power-of-two halting tower or a
 nonhalting odd-tail tower. This is a complete integer partition. -/
 theorem classify_d (d : Nat) :
@@ -116,6 +136,8 @@ theorem highLevelNext_strict (d e : Nat)
 
 #print axioms scan_haltTower
 #print axioms scan_oddTower
+#print axioms haltTower_power
+#print axioms oddTower_factor
 #print axioms classify_d
 #print axioms scanEven_classification
 #print axioms scanEven_none_iff
