@@ -45,6 +45,28 @@ Mathematical argument: the complete all-output inverse grammar splits every pred
 
 This is a source-map structure theorem for **synthetic** target states. No claim is made that a blank-reachable target with these coordinates exists, or that Machine C / BB(6) has been decided.
 
+## Universal even zero-first predecessor theorem (new, all y>=16)
+
+[ZeroEvenUniversal.lean](./ZeroEvenUniversal.lean) proves the complete exact source relation `BB6.Agent3.zero_even_preimages_iff` for **every even natural y with 16≤y**, rather than only the dyadic subsequence. Its original-source **[Lean 4.36.0-rc2 CI 41548461859](https://github.com/FlareZ123/bb6/actions/runs/41548461859) succeeded**, auditing both `zero_even_preimages_iff` and `zero_even_parents_only` with axioms `[propext, Classical.choice, Quot.sound]` and **no sorryAx**. The generalized high-branch converse `general_zero_even_parent` was separately checked in successful CI [41547975533](https://github.com/FlareZ123/bb6/actions/runs/41547975533).
+
+For arbitrary input `a,k` and even target second counter `y≥16`:
+
+```
+secNext(a,k) = some(0,y)
+  ↔ (a=y-2 ∧ k=y/2-1)
+    ∨ (∃ r u, u≥2 ∧ y=8·4^r·u ∧
+               a=2u-2 ∧ k=y-(u+4+3r))
+    ∨ (∃ r, y=16·4^r ∧ a=0 ∧ k=y-(3r+6)).
+```
+
+The three source sectors are pairwise distinct. Every listed source is a true original-section edge; exhaustive necessity includes arbitrary odd-bounce recursion depth, even-bounce obstruction by parity, and all exceptional cases. The dyadic theorem `power_target_preimages_iff` is an explicit in-degree special case. **This classifies synthetic inbound edges, with no assertion of reachability from the genuine blank start.**
+
+## Finite, arithmetic-only inverse witness bound (original-source certified)
+
+[BounceLogBound.lean](./BounceLogBound.lean) proves `bounce_full_log_bounded` with **[CI 41547236372](https://github.com/FlareZ123/bb6/actions/runs/41547236372)**. A successful output pair `(x,y)` of the *original total bounce* has a valid arithmetic inverse witness of recursion depth `n≤Nat.log2(x+y+6)`, irrespective of source counter magnitudes. The bound is sufficient for all odd, even and exceptional y=3 branches.
+
+[SectionLogBound.lean](./SectionLogBound.lean) lifts this to `BB6.Agent3.section_bounded_exact`: for all `a,k,x,y`, `secNext(a,k)=some(x,y)` iff the finite arithmetic predicate `sectionBounded a k x y`, whose recursive witness depths are bounded logarithmically. It provides executable Bool `boundedEdge` and correctness `boundedEdge_correct`, which check a genuine section edge via arithmetic without executing the original recursive interpreter. Both passed **[full-source CI 41547542026](https://github.com/FlareZ123/bb6/actions/runs/41547542026)**. This is a certified finite per-edge checker, while the all-time blank-input halting problem remains open.
+
 ## Validation provenance
 
 The local enumerator compares all 1,369 targets with `0≤x,y≤36` against brute force across all `a,k` with source mass `a+2k≤x+2y`, matching 1,223 direct edges. It independently checks each of 100,000 original-definition forward transitions against computed inverse lists, or halting earlier; these finite tests are supporting evidence only. Finite mass bound was previously source-proved as `section_mass_strict` by this identity.
