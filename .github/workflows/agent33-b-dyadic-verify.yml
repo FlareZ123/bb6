@@ -31,3 +31,5 @@ jobs:
           LEAN_PATH=. lean -o BCodingBalance.olean im-results/agent33-b-dyadic/BCodingBalance.lean
           LEAN_PATH=. lean -o BCodingCore.olean im-results/agent33-b-dyadic/BCodingCore.lean
           LEAN_PATH=. lean im-results/agent33-b-dyadic/BCodingUnique.lean
+          LEAN_PATH=. lean -o BMod7Core.olean im-results/agent33-b-dyadic/BMod7Core.lean
+          LEAN_PATH=. lean im-results/agent33-b-dyadic/BMod7NoSix.lean
