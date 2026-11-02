@@ -40,6 +40,10 @@ jobs:
           lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
           lean -o im-results/agent45-p1-generator/GeneralQuarterBound.olean im-results/agent45-p1-generator/GeneralQuarterBound.lean
           lean -o im-results/agent45-p1-generator/GeneralQuarterBridge2.olean im-results/agent45-p1-generator/GeneralQuarterBridge2.lean
+      - name: Verify deep n=2(mod16) real-source P1 predecessor chains
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map"
+          lean im-results/agent45-p1-deep-two/P1Deep2.lean
       - name: Kernel-check all 7 inverse hubs and original blank critical gate
         run: |
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-generator/src:im-results/agent45-p1-generator"
