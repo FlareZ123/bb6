@@ -32,3 +32,4 @@ jobs:
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
           lean im-results/agent32-cryptid-padding/PaddedApplications.lean
+          lean im-results/agent32-cryptid-padding/EZeroPair.lean
