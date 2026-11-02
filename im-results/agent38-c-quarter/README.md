@@ -189,6 +189,32 @@ calculation `maxSafeIndex_at_witness` gives
 `min((62973−5)/4,(125948−11)/8)=15742`, making the current
 certificate quantitatively optimal **for this particular endpoint and
 safe-suffix pair** within this proof scheme, without claiming global
-optimality of the Turing machine's reachability process. The new optimal-bound
-lemma passed a local Lean 4.36.0-rc2 check and was submitted to manual
-full-source CI; check the latest `agent38-c-quarter.yml` run for its outcome.
+optimality of the Turing machine's reachability process. The new optimal-bound lemma is **verified against the unmodified full
+source in successful manual Lean CI
+[41429199503](https://github.com/FlareZ123/bb6/actions/runs/41429199503)**,
+using only standard axioms and no `sorryAx`.
+
+## Improved exact published stopping criterion
+
+The source-level corollary [`CHighGateCriterion.lean`](./CHighGateCriterion.lean)
+composes the previously certified 15,743 Thin-gateway exclusions with the
+**unmodified original** `BB6CLine.stops_iff_thin` theorem. It proves:
+
+```lean
+theorem published_stops_iff_large_thin :
+    (∃ s : S, BB6CLine.Reach s ∧ BB6CLine.nextC s = none) ↔
+    (∃ j : Nat, 15743 ≤ j ∧ BB6CLine.Reach (0,2*j,4*j+10))
+```
+
+This remains an **open halting biconditional**, since every index j≥15743
+is still part of the potential target set (many such indices are separately
+excluded by other agents' infinite residue theorems). It does not imply
+that a gateway is reachable, that Machine C runs forever, or that BB(6) is
+known. It is useful as an exact strengthened domain for the next global
+invariant search.
+
+**Independent original-source formal audit passed** in
+[manual CI run 41429552824](https://github.com/FlareZ123/bb6/actions/runs/41429552824)
+on 2026-11-02 around 10:34 UTC. The workflow compiles the full original
+Agent 11 `CLine.lean`, all Agent 38 supporting source files, and this
+final composition with only standard Lean axioms and no `sorryAx`.
