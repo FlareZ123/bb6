@@ -72,3 +72,35 @@ To reproduce locally after checkout, run `python im-results/agent22-sheep-semant
 ## Mathematical limits and next objective
 
 The theorem reduces the actual blank-run halting question to reaching any `2^a` from `t=5`. It does not show that any such power is or is not reached and **does not settle this machine, change an accepted BB(6) bound, or determine BB(6)**. Prior source and partial-return results exist; novelty relative to external literature has not been established. The theorem's immediate value is semantic: inverse-tree exclusions proved in the exact `SectionNext` return graph can now be interpreted as rigorous original-machine nonreachability. Any additional theorem expressed using a separately defined return graph still requires its own relation-equivalence bridge. The most important next mathematical task remains a *uniform exclusion of all remaining power-of-two targets* or discovery of a genuinely reachable one.
+
+
+## Fully integrated existing 157/360 exclusions (2026-11-02 05:17 UTC)
+
+The separately reconstructed, SHA256-verified six-module Agent16 Lean development `im-results/agent16-sheep-power-preimages/` proves `SheepInverse.periodic_power_unreachable` and computes exactly 157 excluded exponent residues per period of 360. Its relation `SheepInverse.Step` is independently defined and was previously disconnected from the original machine source in the Lean environment.
+
+New `SectionExclusionBridge.lean` proves every `SheepBridge.SectionNext` edge is literally the corresponding `SheepInverse.Step` constructor by normalization of their two formulas. It transports `Reach 5 t` to `SheepInverse.Reach t` and then uses the previously checked Agent16 exclusion theorem to establish:
+
+```lean
+BB6.Agent22.SectionExclusionBridge.excluded_power_unreachable
+  (j : Nat) (hj : SheepInverse.PeriodicExcluded j) :
+  ¬ BB6.Agent22.Sheep.Reach 5 (2^j)
+```
+
+The final fully source-composed theorem in `SheepSourceExclusions.lean` is:
+
+```lean
+BB6.Agent22.SheepSourceExclusions.raw_halts_iff_nonexcluded_power :
+  IsHalt BB6.Agent22.SheepSource.Source.target ↔
+  ∃ j : Nat, 2 ≤ j ∧ ¬ SheepInverse.PeriodicExcluded j ∧
+    BB6.Agent22.Sheep.Reach 5 (2^j)
+```
+
+**Verification complete:** [GitHub Actions run 41392634957](https://github.com/FlareZ123/bb6/actions/runs/41392634957) rebuilt the original Google DeepMind Cryptids machine at pinned commit `ced8f9f44f67a167d5ecc03e687b048c67926371`, restored every source archive and compiled the two new connector modules. Exact axiom audits in the successful job:
+
+- `SheepInverse.periodic_power_unreachable`: `[propext, Quot.sound]`.
+- `SheepInverse.excluded_exponents_per_period`: **no axioms**.
+- `SectionExclusionBridge.step_identical`: **no axioms**.
+- `SectionExclusionBridge.excluded_power_unreachable`: `[propext, Quot.sound]`.
+- `SheepSourceExclusions.raw_halts_iff_nonexcluded_power`: `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+This converts an existing independently proved infinite family of reachability exclusions into an original-machine-level theorem, rather than assuming semantic coincidence. The original machine's halting status remains unresolved because other exponent classes remain candidates.
