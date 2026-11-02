@@ -43,10 +43,20 @@ set_option maxRecDepth 16384
 set_option maxHeartbeats 0
 
 theorem five_right_family_check :
-    fiveRightFamily.all (fun p => finiteMacroRightCheck p 5 1) = true := by decide
+    fiveRightFamily.all (fun p => finiteMacroRightCheck p 5 1) = true := by
+  simp only [fiveRightFamily, List.all_flatMap]
+  apply List.all_eq_true.mpr
+  intro b _
+  have cases : b = 0 ∨ b = 1 ∨ b = 2 ∨ b = 3 ∨ b = 4 ∨ b = 5 := by omega
+  rcases cases with h | h | h | h | h | h <;> subst b <;> decide
 
 theorem five_left_family_check :
-    fiveLeftFamily.all (fun p => finiteMacroLeftCheck p 5 1) = true := by decide
+    fiveLeftFamily.all (fun p => finiteMacroLeftCheck p 5 1) = true := by
+  simp only [fiveLeftFamily, List.all_flatMap]
+  apply List.all_eq_true.mpr
+  intro b _
+  have cases : b = 0 ∨ b = 1 ∨ b = 2 ∨ b = 3 ∨ b = 4 ∨ b = 5 := by omega
+  rcases cases with h | h | h | h | h | h <;> subst b <;> decide
 
 /-- Every member of the 480-element right list is a universally certified
     nonhalting sparse leaf for all its total completions. -/
