@@ -176,6 +176,7 @@ theorem blank_no_twostep_target_line (q : Nat) :
           have hh : secNext (5,1)=some (24*(16*q+4),20*(16*q+4)-1) := by
             simpa only [ha5,hk1] using ht
           rw [hbase] at hh
+          have hcoord := (Prod.mk.inj (Option.some.inj hh)).2
           omega
 
 #print axioms blank_no_twostep_target_line
