@@ -75,6 +75,20 @@ theorem critical_hub_shift_all_powers (n t : Nat) (hn : 4 ≤ n) :
   rw [hsum]
   exact critical_shift_all_powers n t hn
 
+/-- Every positive G inverse of a critical hub has inverse depth at most
+    floor(log2(n+2)), independent of the enormous 2^n tape counter. -/
+theorem critical_hub_log_depth (n k c : Nat) (hn : 4 ≤ n)
+    (h : BB6.P1Reduction.GAncestor (14*2^n-2*n-16) 3 k c) :
+    ∃ t : Nat, t ≤ Nat.log2 (n+2) ∧
+       3+(14*2^n-2*n-16)/2+3 = 2^t*(c+3) := by
+  obtain ⟨t,ht⟩ := BB6.P1Reduction.GAncestor_power _ _ _ _ h
+  have hdiv : 2^t ∣ 3+(14*2^n-2*n-16)/2+3 := ⟨c+3,ht⟩
+  have hplus : 2^t ∣ n+2 := (critical_hub_shift_all_powers n t hn).mp hdiv
+  have hle : 2^t ≤ n+2 := Nat.le_of_dvd (by omega) hplus
+  exact ⟨t, (Nat.le_log2 (by omega : n+2 ≠ 0)).mpr hle, ht⟩
+
+#print axioms critical_hub_log_depth
+
 #print axioms critical_shift_dvd_iff
 #print axioms critical_shift_all_powers
 #print axioms critical_hub_shift_all_powers
