@@ -10,7 +10,7 @@ open BB6.Agent46
     closed-form dyadic parameter families; the zero-pair is impossible. -/
 theorem blank_halts_iff_two_parametric_families :
     BB6.CReachBridge.RunHalts ↔
-      ∃ time a k, BB6.Agent8Section.run secNext time (some (5,1))=some(a,k) ∧
+      ∃ time a k, BB6.Agent8Section.run secNext time (some (5,1))=some (a,k) ∧
       ((a=1 ∧ ∃ m, k+3*m+4=2^(2*m+3)) ∨
        (∃ j m, a=2*j+3 ∧ k+j+3*m+5=2^(2*m+2)*(j+3))) := by
   rw [blank_halts_iff_arithmetic]
