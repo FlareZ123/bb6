@@ -63,3 +63,4 @@ jobs:
           lean -o im-results/agent4-p1-rank/DeepCorridor.olean im-results/agent4-p1-rank/DeepCorridor.lean
           lean -o im-results/agent4-p1-rank/CriticalDeep.olean im-results/agent4-p1-rank/CriticalDeep.lean
           lean -o im-results/agent4-p1-rank/DeepPath.olean im-results/agent4-p1-rank/DeepPath.lean
+          lean -o im-results/agent4-p1-rank/DepthBarrier.olean im-results/agent4-p1-rank/DepthBarrier.lean
