@@ -1,20 +1,20 @@
-name: Agent 3 Machine C exact bounce images and inverses (manual)
+name: Agent 3 Machine C exact bounce image and inverse grammar (manual)
 on:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  source-odd-image:
+  source-inverse:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: Install pinned Lean 4.36.0-rc2
+      - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check all source modules and Agent 3 reverse proofs
+      - name: Check original source and exact inverse grammars
         run: |
           mkdir -p /tmp/a3-c-odd
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-c-odd/
@@ -22,15 +22,16 @@ jobs:
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-c-odd/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-c-odd/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a3-c-odd/
-          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14,Agent3COneFamily,Agent3COrbitIff,BouncePowerOdd,BouncePowerEven,BounceReverse}.lean /tmp/a3-c-odd/
+          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14,Agent3COneFamily,Agent3COrbitIff,BouncePowerOdd,BouncePowerEven,BounceReverse,BounceOddGrammar,BounceEvenGrammar}.lean /tmp/a3-c-odd/
           cd /tmp/a3-c-odd
           export LEAN_PATH="."
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent3CImage Agent38SectionParity Agent3C14 Agent3COneFamily Agent3COrbitIff BouncePowerOdd BouncePowerEven; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent3CImage Agent38SectionParity Agent3C14 Agent3COneFamily Agent3COrbitIff BouncePowerOdd BouncePowerEven BounceReverse; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean BounceReverse.lean
-      - name: Reproduce finite inverse checks
+          lean -o BounceOddGrammar.olean BounceOddGrammar.lean
+          lean BounceEvenGrammar.lean
+      - name: Verify inverse candidate engine
         run: |
           cd im-results/agent3-c-odd-image
           python3 test_source_inverse.py
