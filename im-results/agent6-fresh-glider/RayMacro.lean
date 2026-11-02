@@ -377,4 +377,81 @@ theorem entry_fresh_state_never (m : Machine) (s : Fin 6)
 #print axioms fresh_ray_state_never_from
 #print axioms entry_fresh_state_never
 
+/-- Reflection fixes a blank tape with arbitrary control state. -/
+@[simp] theorem mirror_stateBlank (s : Fin 6) :
+    mirrorConfig (stateBlank s) = stateBlank s := rfl
+
+/-- The arbitrary-state genuine-entry macro theorem also holds for a
+    pristine left ray, by physical-tape reflection of the entire run. -/
+theorem entry_fresh_state_never_left (m : Machine) (s : Fin 6)
+    (entrySteps n delta : Nat) (hn : 0 < n) (hdelta : 0 < delta)
+    (hentry : ∃ q, run m entrySteps blank = some q ∧
+      q.state = s ∧ ∀ x, x ≤ q.head → q.tape x = false)
+    (htrace : ∃ r, run m n (stateBlank s) = some r ∧
+      r.state = s ∧ r.head = -(delta : Int) ∧
+      ∀ x, x ≤ -(delta : Int) → r.tape x = false)
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (stateBlank s) = some d → d.head ≤ 0) :
+    NeverHalts m := by
+  obtain ⟨q, hq, hstate, hblank⟩ := hentry
+  obtain ⟨r, hr, hrs, hhead, hrblank⟩ := htrace
+  have hentryMirror :
+      ∃ q', run (reflectTable m) entrySteps blank = some q' ∧
+        FreshState s q' := by
+    refine ⟨mirrorConfig q, ?_, ?_⟩
+    · have h := mirror_run m blank entrySteps
+      simpa only [mirror_blank, hq, Option.map_some] using h
+    · constructor
+      · simpa [mirrorConfig] using hstate
+      · intro x hx
+        have hle : -x ≤ q.head := by
+          simp only [mirrorConfig] at hx
+          omega
+        simpa [mirrorConfig] using hblank (-x) hle
+  have htraceMirror :
+      ∃ r', run (reflectTable m) n (stateBlank s) = some r' ∧
+        r'.state = s ∧ r'.head = (delta : Int) ∧
+        ∀ x, (delta : Int) ≤ x → r'.tape x = false := by
+    refine ⟨mirrorConfig r, ?_, ?_, ?_, ?_⟩
+    · have h := mirror_run m (stateBlank s) n
+      simpa only [mirror_stateBlank, hr, Option.map_some] using h
+    · simpa [mirrorConfig] using hrs
+    · simp [mirrorConfig, hhead]
+    · intro x hx
+      have hle : -x ≤ -(delta : Int) := by omega
+      simpa [mirrorConfig] using hrblank (-x) hle
+  have hwindowMirror : ∀ k, k < n → ∀ d,
+      run (reflectTable m) k (stateBlank s) = some d → 0 ≤ d.head := by
+    intro k hk d hd
+    have h := mirror_run m (stateBlank s) k
+    simp only [mirror_stateBlank] at h
+    cases hactual : run m k (stateBlank s) with
+    | none =>
+        simp only [hactual, Option.map_none] at h
+        rw [h] at hd
+        contradiction
+    | some c =>
+        have heq : d = mirrorConfig c := by
+          have hc : some d = some (mirrorConfig c) := by
+            rw [← hd, h, hactual]
+            rfl
+          exact Option.some.inj hc
+        subst d
+        have hle := hwindow k hk c hactual
+        simpa [mirrorConfig] using hle
+  have hnever := entry_fresh_state_never (reflectTable m) s
+    entrySteps n delta hn hdelta hentryMirror htraceMirror hwindowMirror
+  intro t
+  have h := mirror_run m blank t
+  simp only [mirror_blank] at h
+  cases ht : run m t blank with
+  | none =>
+      simp only [ht, Option.map_none] at h
+      have contradiction := hnever t
+      rw [h] at contradiction
+      simp at contradiction
+  | some q => simp
+
+#print axioms entry_fresh_state_never_left
+
 end BB6Coverage
