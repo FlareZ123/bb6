@@ -1,0 +1,56 @@
+name: Agent 34 forty-three new C reset exclusions modulo 2048 (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: 0
+            residues: "183 267 394 654 911 978 1239 1322 1472 1896"
+          - shard: 1
+            residues: "42 128 411 498 535 792 1056 1099 1458 1778 1862"
+          - shard: 2
+            residues: "439 474 582 747 1003 1070 1248 1416 1646 1871 1954"
+          - shard: 3
+            residues: "166 546 824 952 1119 1160 1344 1498 1504 1766 1994"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate SHA-256-verified symbolic Lean sources
+        run: |
+          python3 im-results/agent34-c184/reconstruct.py
+          python3 im-results/agent34-c184/reconstruct2048.py ${{ matrix.shard }}
+      - name: Compile unmodified Machine C proof chain and every shard theorem
+        run: |
+          mkdir -p /tmp/a34-2048
+          cp im-results/agent11-c-line/CLine.lean /tmp/a34-2048/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a34-2048/$source.lean"
+          done
+          cp im-results/agent34-c184/Agent34CInverse.lean /tmp/a34-2048/Agent34CInverse.lean
+          for residue in ${{ matrix.residues }}; do
+            cp "im-results/agent34-c184/C2048R$residue.lean" "/tmp/a34-2048/C2048R$residue.lean"
+          done
+          cd /tmp/a34-2048
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          lean -o Agent34CInverse.olean Agent34CInverse.lean
+          for residue in ${{ matrix.residues }}; do lean "C2048R$residue.lean"; done
