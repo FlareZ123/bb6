@@ -16,7 +16,7 @@ theorem r54_no_hub (q : Nat) :
   have hno := BB6.Agent4Cone.blocked_no_reach _ _ hc
   have heq := r54_root_identity q
   rw [heq] at hno
-  simpa only [r54b0d, zero_mul, zero_add] using hno
+  simpa [r54b0d] using hno
 
 /-- Infinite blank-halting-gateway exclusion for a P1 critical residue
 outside the previously certified n ≡ 10 (mod 16) family. -/
