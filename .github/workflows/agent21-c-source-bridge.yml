@@ -41,6 +41,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CFarReturn.lean" CFarReturn.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CGatewayTime.lean" CGatewayTime.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CPhaseRank.lean" CPhaseRank.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CRange.lean" CRange.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CStrongBridge.lean" CStrongBridge.lean
           lake env lean -o .lake/build/lib/lean/CLine.olean CLine.lean
           lake env lean -o .lake/build/lib/lean/CReachBridge.olean CReachBridge.lean
@@ -50,6 +51,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CFarReturn.olean CFarReturn.lean
           lake env lean CGatewayTime.lean
           lake env lean CPhaseRank.lean
+          lake env lean CRange.lean
 
       - name: Reconstruct Agent 11 modular proofs with hash verification
         run: |
