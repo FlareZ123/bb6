@@ -36,3 +36,4 @@ jobs:
           lean im-results/agent32-cryptid-padding/EZeroHalt.lean
           lean -o im-results/agent35-cryptid-code/EDouble.olean im-results/agent35-cryptid-code/EDouble.lean
           lean im-results/agent32-cryptid-padding/EAllDouble.lean
+          lean im-results/agent32-cryptid-padding/ETripleZero.lean
