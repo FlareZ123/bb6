@@ -77,4 +77,40 @@ theorem leaf_gap (h k A B:Nat) (hk:5≤k)
   · simpa only [show 512*h+k+6+1=512*h+k+7 by omega, power_high] using hu
 
 #print axioms leaf_gap
+
+/-- The smaller affine parameter used by finite G-inverse certificates. -/
+def s (h k : Nat) : Nat := 7*2^(512*h+k-2)-(h+1)
+
+theorem s_shift (h k:Nat) (hk:7≤k) :
+    s h k+(h+1)=7*2^(512*h+k-2) := by
+  have he : 512*h+k-2 = 512*h+(k-2) := by omega
+  have hb := X_growth h (k-2) (by omega)
+  unfold X at hb
+  rw [←he] at hb
+  dsimp [s]
+  omega
+
+theorem four_s_eq_t (h k:Nat) (hk:7≤k) :
+    4*s h k=t h k := by
+  have hs := s_shift h k hk
+  have ht := t_shift h k (by omega)
+  have hpow : X h k = 4*2^(512*h+k-2) := by
+    unfold X
+    have he : 512*h+k = (512*h+k-2)+2 := by omega
+    rw [he, Nat.pow_add]
+    simp [Nat.mul_comm]
+  rw [hpow] at ht
+  omega
+
+/-- Common all-residue affine gateway identity. -/
+theorem root_affine (h k C:Nat) (hk:7≤k)
+    (hC:C+2*k=994) :
+    1024*s h k+C = 14*2^(512*h+k+7)-2*(512*h+k+7)-16 := by
+  have ht := t_shift h k (by omega)
+  have hs := four_s_eq_t h k hk
+  have hp := power_high h k
+  omega
+
+#print axioms root_affine
+
 end BB6.Agent9P1
