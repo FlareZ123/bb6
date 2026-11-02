@@ -85,3 +85,10 @@ jobs:
           lean -o SecondInverseDepth.olean SecondInverseDepth.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent6-c-feeder/CSecondDepth.lean .
           lean CSecondDepth.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{BounceInverse,AffineTarget,AffineTarget56,Feeder56,AffineTargetReach56,Depth2128}.lean .
+          lean -o BounceInverse.olean BounceInverse.lean
+          lean -o AffineTarget.olean AffineTarget.lean
+          lean -o AffineTarget56.olean AffineTarget56.lean
+          lean -o Feeder56.olean Feeder56.lean
+          lean -o AffineTargetReach56.olean AffineTargetReach56.lean
+          lean Depth2128.lean
