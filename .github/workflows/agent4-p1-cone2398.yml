@@ -103,4 +103,5 @@ jobs:
           lean -o im-results/agent13-coverage/FiniteLeafChecks.olean im-results/agent13-coverage/FiniteLeafChecks.lean
           lean -o im-results/agent13-coverage/LeafDemo.olean im-results/agent13-coverage/LeafDemo.lean
           lean -o im-results/agent4-coverage-smoke/CrossSparse.olean im-results/agent4-coverage-smoke/CrossSparse.lean
+          lean -o im-results/agent4-coverage-smoke/CrossDecided.olean im-results/agent4-coverage-smoke/CrossDecided.lean
           lean im-results/agent4-coverage-smoke/CrossLeafDemo.lean
