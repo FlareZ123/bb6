@@ -1,0 +1,14 @@
+name: Agent 6 finite-entry macro sparse frontier benchmark (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check deterministic Python sparse-prefix census
+        run: |
+          python im-results/agent6-fresh-glider/macro_benchmark.py
