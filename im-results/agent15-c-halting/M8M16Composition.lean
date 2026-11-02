@@ -78,6 +78,31 @@ theorem section_reach_embeds {a k : Nat} (h : CReach a k) :
             exact line_reach_of_run (BB6.Agent46.secTime p) hprev hrun
   exact aux n a k hn
 
+/-- The M8 (7,4) cylinder is excluded in the exact blank section. -/
+theorem blank_no_m8_cylinder (u v : Nat) :
+    ¬ CReach (8*u+7) (8*v+4) := by
+  intro h
+  exact CCert.published_no_seven_four u v (section_reach_embeds h)
+
+/-- The M16 (1,2) cylinder is excluded in the exact blank section. -/
+theorem blank_no_m16_one_two_cylinder (u v : Nat) :
+    ¬ CReach (8*u+1) (16*v+2) := by
+  intro h
+  exact CCert.published_no_one_two u v (section_reach_embeds h)
+
+/-- The M16 (9,15) cylinder is excluded in the exact blank section. -/
+theorem blank_no_m16_nine_fifteen_cylinder (u v : Nat) :
+    ¬ CReach (16*u+9) (16*v+15) := by
+  intro h
+  exact CCert.published_no_nine_fifteen u v (section_reach_embeds h)
+
+/-- The M16 (1,7) cylinder is excluded except for its explicit base point. -/
+theorem blank_no_m16_one_seven_cylinder (u v : Nat)
+    (hpos : 0<u ∨ 0<v) :
+    ¬ CReach (16*u+1) (16*v+7) := by
+  intro h
+  exact CCert.published_no_one_seven_except u v hpos (section_reach_embeds h)
+
 /-- The M8 forbidden cylinder pulls back through the exact all-input
     affine predecessor theorem to another infinite section cylinder. -/
 theorem blank_no_m8_affine_cylinder (u v : Nat) :
