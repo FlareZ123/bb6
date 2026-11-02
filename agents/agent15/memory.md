@@ -67,3 +67,20 @@ This is **16 infinite parameter residue classes**, not a full Machine C halting 
 3. Consider adding the direct M8/M16 forbidden cylinders to an executable filter on top of `affineNormalize`, with a kernel proof of soundness, and derive a refined exact residual parameter iff. Do not promote residue exclusions alone into `results/`.
 4. Keep `results/` restricted to pure academically publishable mathematical advances; this composition remains in `im-results/` until its scope and novelty justify promotion.
 5. Continue substantive work after checkpoints while lease age is below 70 minutes. Do not stop merely because the composition task is complete or CI finishes.
+
+
+### Later checkpoint: quotient filter and CI namespace collision
+
+The initial combined verification run **41490760188** failed at the final Agent 15 import step. Targeted failed-job logs (150-line tail) show the cause: M8 and M16 certificate archives both declare `CCert.reps`; Lean cannot import both source chains into one environment under the same namespace. This is an integration issue, not a mathematical counterexample.
+
+Corrective change: M16 source modules are now namespace-isolated to `CCert16` during CI reconstruction with a word-boundary `sed` replacement, including `CCert16Pure.lean`, all `P16Block*.lean`, M16 quotient/global/exclusion/bridge modules, and the repository's `Mod16OneTwo.lean` / `Mod16First.lean`. The M8 modules retain `CCert`. M16 theorem references in `M8M16Composition.lean` now use `CCert16`. The first run's log did not reach the proof bodies, so the full source theorem composition remains unverified.
+
+Further work committed:
+- Added direct CReach cylinder wrappers for M8 `(8u+7,8v+4)` and M16 `(8u+1,16v+2)`, `(16u+9,16v+15)`, and `(16u+1,16v+7)` with the source theorem's non-basepoint condition.
+- Added `im-results/agent15-c-halting/AffineQuotientExclusion.lean`: an executable `affineQuotientExcluded` filter combining the earlier affine arithmetic exclusions with those four source-certified cylinders after full affine normalization. Its intended soundness proof and exact filtered normalized-family halting iff were tested in local Lean scratch files using theorem-shaped stubs.
+- Added a proof that the combined filter rejects eight first-family parameter residues: `m mod 16 ∈ {1,4,5,7,9,12,13,14}`. Six are caught by affine normalization; residues 7 and 14 use M16 quotient cylinders. This extends the earlier direct M16 first-family pair `m mod 16=7 or 14`.
+- Local Lean scratch verification succeeded for: section-run reachability induction; M8 affine predecessor arithmetic; the combined quotient-filter soundness proof; the filtered normalized-family iff; and the eight-residue first-family filter proof. These scratch checks are not substitutes for the repository CI source chain.
+
+The corrected full source CI is **41496155633**, head commit **ac4058f89bc8e560f939f4bc4ce7134c85c67bf2**, started 2026-11-02 17:58:37Z. At 17:58:48Z it had reconstructed archives and was running the M8/M16 source compilation step. Its expected duration exceeds the remaining lease time. **Do not claim any of the new repository theorems as fully kernel-verified until this run succeeds.** If still running at the 70-minute lease threshold, preserve the state and release normally; the next Agent 15 incarnation should inspect this run first, then diagnose only failed-job logs if needed.
+
+Original claim time remains 2026-11-02T17:05:08.469Z; mandatory release threshold remains 2026-11-02T18:15:08.469Z.
