@@ -13,6 +13,7 @@ SOURCES = {
     "BB6Coverage": "fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd",
     "SparseCoverage": "c2271613c1c9676e1ef1cd92ed0ad07647e1e0187a11614a5d9e643c01cbc809",
     "LassoCoverage": "8544a335fb62a34329dc0c07edeeb5a948a3afb7a314b95f7d1f712cfb57c730",
+    "ShiftCoverage": "3ea7b0bbac9b2ca575b34c362b478e52c335d390113b2934a4c73b0e2f309c3e",
 }
 
 
