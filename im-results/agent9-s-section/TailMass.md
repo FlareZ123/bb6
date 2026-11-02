@@ -53,3 +53,24 @@ This uses a bound on all unrestricted height-zero histories, so is valid without
 The full Lean source is stored as one base64-encoded gzip UTF-8 file at `TailMass.lean.gz.b64`. Decode base64 and gzip and compile the resulting `TailMass.lean` using Lean **4.36.0-rc2**. Uncompressed source: **9,529 bytes**, SHA-256 **`78d1d2a481aa3e7b7c1d14d08f9e325f751f5181e5f243836858ae9bd966020f`**. Local compilation finished with no errors; nonfatal linter/deprecation warnings do not affect the kernel proof. No Mathlib required, only `import Std`.
 
 These are reusable finite-word counting certificates and exponential probabilistic tail estimates. They neither prove nontransfer for `q=141` nor decide this six-state machine or BB(6). Hence all work is deliberately in `im-results/`.
+
+## Generic rational-tilt theorem (formalized after the initial bound)
+
+A second source module, [GenericTail.lean.gz.b64](./GenericTail.lean.gz.b64), imports the compiled first module as `TailMass` and proves **for every `a,b,n,c : Nat`**:
+
+```lean
+Agent9Tail.critical_count_boundAB (a b n c : Nat) :
+  (a^c * (b*a^6)^n) * criticalCount n c ≤
+    b^c * (a^7+a^2*b^5+b^7)^n
+```
+
+This is a universal, integer-only Chernoff-family inequality, including the earlier cases `(a,b)=(2,1)` and `(3,2)`. It comes from the three digit weights `a^7, a^2*b^5, b^7`; every zero-height word has the exact cross-multiplied weight `a^c*(b*a^6)^n` after multiplying its original weight by `b^c`. Source theorem `critical_count_boundAB` has axiom audit **`[propext, Quot.sound]`**, no `sorryAx`.
+
+A near-optimal small-integer specialization `(a,b)=(22,15)` is also source-checked as `critical_count_bound2215`:
+
+```lean
+(22^c * 1700698560^n) * criticalCount n c ≤
+  15^c * 3032754763^n
+```
+
+The corresponding exponential factor is `3032754763/5102095680 ≈ 0.594413541653`. This is tighter than the fixed `3/2` tilt. The generic source is 4,720 bytes, SHA-256 **`84c67672e81c8f139c2763a252f91684e368e2ac322cb8402c83247295008e50`** (base64-gzip encoding). To reproduce: decode both compressed files, save their uncompressed content as `TailMass.lean` and `GenericTail.lean`, compile the first to `TailMass.olean`, then compile the second with `LEAN_PATH` pointing to that module. The generic proof was locally compiled against the first module with Lean 4.36.0-rc2; no Mathlib needed. The improvement is a rigorous reusable combinatorial estimate; it still cannot certify an individual natural-number orbit.
