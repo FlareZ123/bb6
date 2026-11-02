@@ -9,8 +9,8 @@
  */
 
 /** @param {number} n @returns {bigint} */
-function power25(n) {
-  return 25n ** BigInt(n);
+function powerChoices(states, exponent) {
+  return BigInt(4 * states + 1) ** BigInt(exponent);
 }
 
 /** @param {number} mask @returns {number} */
@@ -36,7 +36,7 @@ function countRayZeroDP(states) {
   /** @param {number} state @param {number} visited @returns {bigint} */
   function visit(state, visited) {
     if ((visited & (1 << state)) !== 0) {
-      return power25(states - popcount(visited));
+      return powerChoices(states, states - popcount(visited));
     }
     const key = `${state}:${visited}`;
     const existing = memo.get(key);
@@ -65,7 +65,7 @@ function countRayZeroFormula(states) {
   for (let k = 1; k <= states; k++) {
     let falling = 1n;
     for (let j = 1; j < k; j++) falling *= BigInt(states - j);
-    count += falling * BigInt(k) * (2n ** BigInt(k)) * power25(states - k);
+    count += falling * BigInt(k) * (2n ** BigInt(k)) * powerChoices(states, states - k);
   }
   return count;
 }
@@ -77,9 +77,9 @@ for (let n = 1; n <= 6; n++) {
     throw new Error(`Independent methods disagree for ${n} states`);
   }
 
-  const perDirection = dp * power25(n);
+  const perDirection = dp * powerChoices(n, n);
   const bothDirections = 2n * perDirection;
-  const total = power25(2 * n);
+  const total = powerChoices(n, 2 * n);
   // Directions disjoint: the initial A0 instruction cannot be both R and L.
   if (bothDirections > total) throw new Error('Unphysical count');
   const partsPerMillion = bothDirections * 1000000n / total;
