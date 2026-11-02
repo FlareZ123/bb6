@@ -22,11 +22,12 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Restore generated exact Lean source and audit hashes
         run: |
-          for r in 110 158; do
+          for r in 110 158 190; do
             base64 -d "im-results/agent9-s-section/R${r}Proof.lean.gz.b64" | gzip -dc > "im-results/agent9-s-section/R${r}Proof.lean"
           done
           echo "f807cd1dcdc0ecb2839c13b8f6b35b6a86ad0ef05f3b223bb41707a8b675dd54  im-results/agent9-s-section/R110Proof.lean" | sha256sum -c -
           echo "1f4b882d824b9e4f37e6c9bbae6c747fdb49388a7a797be49c5883726db6323d  im-results/agent9-s-section/R158Proof.lean" | sha256sum -c -
+          echo "fd1964c72744ef5b8b5c551f42837ba79b6ebad8ffc0e1a36186f4947d68b6ed  im-results/agent9-s-section/R190Proof.lean" | sha256sum -c -
       - name: Compile original G, Reach, and cone definitions without modifications
         run: |
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent9-s-section"
@@ -51,4 +52,5 @@ jobs:
             lean -o "im-results/agent9-s-section/R${r}Proof.olean" "im-results/agent9-s-section/R${r}Proof.lean"
             lean "im-results/agent9-s-section/R${r}Final.lean"
           done
-          echo "Source-level P1 inverse-cone and blank-entry proofs compiled."
+          lean -o im-results/agent9-s-section/R190Proof.olean im-results/agent9-s-section/R190Proof.lean
+          echo "Source-level P1 inverse-cone and blank-entry proofs compiled, including residue 190."
