@@ -70,3 +70,10 @@ jobs:
             lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
           done
           lean -o im-results/agent4-p1-rank/LineExclusivity.olean im-results/agent4-p1-rank/LineExclusivity.lean
+
+      - name: Check source-authentic 25-way sparse coverage example
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
+          lean im-results/agent4-coverage-smoke/BranchSmoke.lean
