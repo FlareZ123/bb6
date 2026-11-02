@@ -91,3 +91,15 @@ rawDefinedSteps(n)
 ```
 
 This value is an integer for all `n` since `4^n=1 mod 3`. The formula is mathematically derived from exact rule timings stated in the upstream source, while the local Lean proofs verify the counter transition identities and the existence/number of accelerated transitions. **The raw timing annotations themselves have not been independently formalized as counted Lean machine-step theorems**, so this is recorded as a source-dependent derivation plus reproducible computational checks. Raw simulation (starting with full synthetic tapes) agreed for every `n` from 0 through 8 inclusive, including at `n=8`: `H_2(8)=3558`, 4,270,921 defined raw transitions, and 1,790 ones at the undefined rule. The machine still has no known blank-tape halting decision.
+
+## New kernel-checked global rank inequality and actual blank trace
+
+The Lean theorem `T_mass_increases` in `Packet.lean` establishes, for **all** natural counters and **every** successful accelerated action,
+```
+T(a,c) = some(a',c')  implies  a+c < a'+c'.
+```
+Its proof includes the recursive helper inequality `2k+c+2 <= G(k,c).1+G(k,c).2` and the sharp special case `2k+5 <= G(k,1).1+G(k,1).2`. Lean 4.36.0-rc2 reports only `propext` and `Quot.sound` for the rank theorem, with no admitted assumptions. This supplies a universal ranking invariant for the actual blank-tape accelerated orbit, including every odd-sector excursion. Since the halting gate is compatible with an increasing rank, the theorem does not decide the machine.
+
+An independent Node.js 100,000,000-step iteration from the certified start `(2,1)` observed no halting gate, 17 zero-counter resets, and 5 odd zero-counter resets; final state `(98,318,715,101,629,047)`. All arithmetic stayed inside JavaScript's exact safe-integer range during this run (but the implementation should be audited before longer extrapolations). The observed five odd resets were each congruent to 1 modulo 8. This motivates the **unproved** reachable-set candidate: every odd `a` at reachable `(a,0)` satisfies `a%8=1`. It is equivalent to a restriction on the preceding reachable `(a',3)` states with even `a'` (`a'%8=4`). The proposed invariant would only exclude three-quarters of the critical reset sequence, leaving infinitely many unexcluded values. Agent 5 was asked to falsify or investigate the hypothesis. It remains observational, no theorem claimed.
+
+The complete odd-sector entry case argument suggesting that all blank halting paths must enter a critical `(2,H_2(n))` hub is in `PHASE-CLASSIFICATION.md`. The accompanying `T_odd_second_avoids_positive_even` theorem is kernel checked. The global if-and-only-if statement is **not** yet formalized; explicit adversarial review is required before any substantive claim of new holdout progress.
