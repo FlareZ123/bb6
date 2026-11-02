@@ -29,4 +29,5 @@ jobs:
             lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
           done
           lean -o im-results/agent47-p1-finite-inverse/P1NoRootOne.olean im-results/agent47-p1-finite-inverse/P1NoRootOne.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1CriticalValuation.olean im-results/agent47-p1-finite-inverse/P1CriticalValuation.lean
           lean -o im-results/agent47-p1-finite-inverse/P1ConeListBridge.olean im-results/agent47-p1-finite-inverse/P1ConeListBridge.lean
