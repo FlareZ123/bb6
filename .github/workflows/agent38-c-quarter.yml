@@ -25,6 +25,9 @@ jobs:
           cp im-results/agent38-c-quarter/CQuarterBridge.lean /tmp/a38-lean/CQuarterBridge.lean
           cp im-results/agent38-c-quarter/CBlankImproved.lean /tmp/a38-lean/CBlankImproved.lean
           cp im-results/agent38-c-quarter/CBlankBridge.lean /tmp/a38-lean/CBlankBridge.lean
+          cp im-results/agent38-c-quarter/CJumpCore.lean /tmp/a38-lean/CJumpCore.lean
+          cp im-results/agent38-c-quarter/CJumpWitness.lean /tmp/a38-lean/CJumpWitness.lean
+          cp im-results/agent38-c-quarter/CJumpWitnessBridge.lean /tmp/a38-lean/CJumpWitnessBridge.lean
           cd /tmp/a38-lean
           export LEAN_PATH="."
           lean --version
@@ -33,3 +36,6 @@ jobs:
           lean -o CQuarterBridge.olean CQuarterBridge.lean
           lean -o CBlankImproved.olean CBlankImproved.lean
           lean CBlankBridge.lean
+          lean -o CJumpCore.olean CJumpCore.lean
+          lean -o CJumpWitness.olean CJumpWitness.lean
+          lean CJumpWitnessBridge.lean
