@@ -41,6 +41,18 @@ theorem blank_no_critical_extra (R q:Nat)
   obtain ⟨hR,he,hConst⟩ := of_decide_eq_true hb
   exact blank_no_critical_of_affine_check R q hR he hConst hgood
 
+theorem extraResidues_count : extraResidues.length = 187 := by decide
+theorem extraResidues_nodup : extraResidues.Nodup := by decide
+def priorCertifiedMod1024 : List Nat :=
+  [14,62,94,110,158,190,206,254,302,366,414,430,
+   446,462,478,510,558,622,638,654,670,686,702,718,
+   734,782,798,846,862,878,894,910,926,958,974,1006]
+theorem extraPriorDisjoint :
+    extraResidues.all (fun r => decide (r%1024 ∉ priorCertifiedMod1024)) = true := by decide
+
+#print axioms extraResidues_count
+#print axioms extraResidues_nodup
+#print axioms extraPriorDisjoint
 #print axioms all_extra_checked
 #print axioms blank_no_critical_extra
 end BB6.Agent12Affine
