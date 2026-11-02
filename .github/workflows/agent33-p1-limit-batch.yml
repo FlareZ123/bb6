@@ -1,0 +1,54 @@
+name: Agent 33 P1 nine-class source certificate batch (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  certify:
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        base: [978, 1234, 2210, 2770, 3490, 3730, 3810, 4002, 4066]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact all-time proof and compile original P1 dependencies
+        run: |
+          mkdir -p /tmp/p1gen
+          cd /tmp/p1gen
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/P1CertGenerator.tar.xz.b64" > generator.tar.xz
+          echo "583841e00381d6ec955a7bd38d32c5a66c4c3e1e623e8030ed343414fa27e61a  generator.tar.xz" | sha256sum -c -
+          tar -xJf generator.tar.xz
+          python3 build_case.py "${{ matrix.base }}"
+          cd "case${{ matrix.base }}"
+          for name in GParity GInverse PosEvenForm ResetGate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/$name.lean" "$name.lean"
+          done
+          for name in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/$name.lean" "$name.lean"
+          done
+          export LEAN_PATH="."
+          for name in GParity GInverse PosEvenForm ResetGate P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "ORIGINAL SOURCE $name"
+            lean -o "$name.olean" "$name.lean"
+          done
+          for name in Inverses CertReach1 CertReach2 CertReach3 CertReach4 CertReach5 CertReach6 CertReach7 CertReach8 PowerBand; do
+            sed -i '/^namespace BB6.Cert$/a set_option maxRecDepth 65536\nset_option maxHeartbeats 2000000' "$name.lean"
+            echo "NEW CERTIFICATE $name"
+            lean -o "$name.olean" "$name.lean"
+          done
+          echo "FINAL P1 SOURCE REACHABILITY EXCLUSION n=4096q+${{ matrix.base }}"
+          sed -i '/^namespace BB6.Cert$/a set_option maxRecDepth 65536\nset_option maxHeartbeats 2000000' SourceBridge.lean
+          sed -i 's/^set_option maxRecDepth 8192$/set_option maxRecDepth 65536/' SourceBridge.lean
+          grep 'set_option' SourceBridge.lean
+          lean SourceBridge.lean
