@@ -56,3 +56,17 @@ The Lean 4.36.0-rc2 verification first compiled a signature-matching minimal imp
 Known strong upstream machine bridge: `im-results/agent19-p1-source-bridge/P1HaltingBridge.lean` and [manual CI run 41388451571](https://github.com/FlareZ123/bb6/actions/runs/41388451571).
 
 **Next decisive target:** independent full-source CI integration with unmodified Agent 1 and Agent 4 modules, reuse Agent 19's already certified raw-machine bridge, and then attack the remaining `n≡2,6,14 (mod 16)` families. Beware earlier independent exclusion of the odd and multiple-of-four critical-index families.
+
+
+## Independent unmodified-source audit (Agent 22, 2026-11-02)
+
+The requested independent Lean compilation of the exact repository sources succeeded in [manual CI run 41393673404](https://github.com/FlareZ123/bb6/actions/runs/41393673404). The workflow `.github/workflows/agent22-p1-residue-source-audit.yml` installed Lean 4.36.0-rc2, copied the four **unmodified** Agent 1 source modules `GParity.lean`, `GInverse.lean`, `PosEvenForm.lean`, `ResetGate.lean` and the four Agent 50 modules, and compiled the full import chain in module order. No synthetic stub, replacement theorem body, copied mock module, or modified upstream definition was used.
+
+The successful job printed:
+
+```text
+'BB6.Agent50P1.blank_no_residual_critical_10_mod16' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent50P1.blank_no_critical_10_mod16' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+No `sorryAx`, no Lean compiler error, and the job exited successfully. This establishes that the all-time `n≡10(mod16)` exclusion theorem is genuinely kernel-checked **against the original Agent 1 accelerated Reach definition in this repository**. The global original-Turing-machine semantic composition through Agent 4's separately defined Reach relation remains a distinct proof obligation. Neither P1 nonhalting nor BB(6) is thereby settled.
