@@ -25,7 +25,10 @@ jobs:
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a38-section/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,BounceHaltClosed,OddSectionExponential,SectionHaltingBasin,SectionCompleteBasin,Agent46CBridge,BlankDyadicGate}.lean /tmp/a38-section/
           cp im-results/agent38-c-section-mod4/{Agent38SectionParity,DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor,FurtherDyadicMod16}.lean /tmp/a38-section/
+          cp im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 /tmp/a38-section/
           cd /tmp/a38-section
+          base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
+          echo '48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  ThirdStageOddDepth.lean' | sha256sum -c -
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
@@ -58,4 +61,5 @@ jobs:
           lean -o BlankDyadicGate.olean BlankDyadicGate.lean
           lean -o DyadicResidualCriterion.olean DyadicResidualCriterion.lean
           lean -o SectionMod8Predecessor.olean SectionMod8Predecessor.lean
-          lean FurtherDyadicMod16.lean
+          lean -o FurtherDyadicMod16.olean FurtherDyadicMod16.lean
+          lean ThirdStageOddDepth.lean
