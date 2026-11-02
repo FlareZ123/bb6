@@ -3,6 +3,8 @@ import HaltingFunnel
 
 namespace BB6.Agent19.Depth
 
+open BB6.P1Reduction (GAncestor)
+
 /-- Exact identity of Agent 1's generic inverse model and Agent 4's
     machine-certified P1 drain, on every pair of natural counters. -/
 theorem G_agree (k c : Nat) :
@@ -88,6 +90,99 @@ theorem G_critical_inverse_c_three
     simp at ht
     right; right
     omega
+
+
+/-- A complete, fixed-depth inverse normal form for any G output whose
+    shifted weight is 4 modulo 8. The three disjuncts correspond to zero,
+    one, or two recursive descent steps, respectively. -/
+def ThreeShape (b d k c : Nat) : Prop :=
+  ∃ K, b=4*K+4 ∧
+    ((k=K ∧ c=d+2*K+2) ∨
+     (2*c+3=d+2*K+2 ∧ k=K+c/2+1) ∨
+     (2*(2*c+3)+3=d+2*K+2 ∧
+       k=K+(2*c+3)/2+1+c/2+1))
+
+theorem ancestor_shapes (b d k c : Nat) (h:GAncestor b d k c) :
+    (d+b/2+3)%8=4 → ThreeShape b d k c := by
+  induction h with
+  | upper k d =>
+    intro hm
+    refine ⟨k, rfl, Or.inl ⟨rfl, rfl⟩⟩
+  | nest b d k c hh ih =>
+    intro hm
+    obtain ⟨K,hb,hs⟩ := ih hm
+    refine ⟨K,hb,?_⟩
+    rcases hs with ⟨hk,hc⟩ | ⟨hc,hk⟩ | ⟨hc,hk⟩
+    · right; left
+      constructor
+      · exact hc
+      · omega
+    · right; right
+      constructor
+      · exact hc
+      · omega
+    · exfalso
+      omega
+
+theorem shape_sound (b d k c:Nat) (hshape:ThreeShape b d k c) :
+    BB6.P1Reduction.G k c=(b,d) := by
+  obtain ⟨K,hb,hs⟩ := hshape
+  rcases hs with ⟨hk,hc⟩ | ⟨hc,hk⟩ | ⟨hc,hk⟩
+  · have hanc : GAncestor (4*K+4) d K (d+2*K+2) := GAncestor.upper K d
+    have h0 := BB6.P1Reduction.GAncestor_sound _ _ _ _ hanc
+    simpa [hb,hk,hc] using h0
+  · have hup : GAncestor (4*K+4) d K (2*c+3) := by
+      simpa [hc] using (GAncestor.upper K d)
+    have hanc : GAncestor (4*K+4) d (K+c/2+1) c :=
+      GAncestor.nest (4*K+4) d K c hup
+    have h0 := BB6.P1Reduction.GAncestor_sound _ _ _ _ hanc
+    simpa [hb,hk] using h0
+  · have hup : GAncestor (4*K+4) d K (2*(2*c+3)+3) := by
+      simpa [hc] using (GAncestor.upper K d)
+    have hone : GAncestor (4*K+4) d (K+(2*c+3)/2+1) (2*c+3) :=
+      GAncestor.nest (4*K+4) d K (2*c+3) hup
+    have hanc : GAncestor (4*K+4) d (K+(2*c+3)/2+1+c/2+1) c :=
+      GAncestor.nest (4*K+4) d (K+(2*c+3)/2+1) c hone
+    have h0 := BB6.P1Reduction.GAncestor_sound _ _ _ _ hanc
+    simpa [hb,hk] using h0
+
+/-- Exhaustive *if and only if* algebraic inverse fiber for the exact
+    P1 G drain, valid uniformly for arbitrary positive first output. -/
+theorem G_preimages_mod8_four (b d k c : Nat)
+    (hb:0<b) (hmod:(d+b/2+3)%8=4) :
+    BB6.HaltingFunnel.G k c = (b,d) ↔ ThreeShape b d k c := by
+  constructor
+  · intro h
+    have hred : BB6.P1Reduction.G k c = (b,d) := by
+      rw [G_agree k c]
+      exact h
+    exact ancestor_shapes b d k c
+      (BB6.P1Reduction.GAncestor_complete k c b d hred hb) hmod
+  · intro hh
+    have hred := shape_sound b d k c hh
+    rw [G_agree k c] at hred
+    exact hred
+
+/-- Complete three-form input classification for the infinite residual
+    critical halting-gate family n congruent 2 modulo 8. -/
+theorem G_critical_inverse_three_iff (n k c : Nat)
+    (hn:10≤n) (hmod:n%8=2) :
+    BB6.HaltingFunnel.G k c = (14*2^n-2*n-16,3) ↔
+      ThreeShape (14*2^n-2*n-16) 3 k c := by
+  let b:=14*2^n-2*n-16
+  have hb0 := pow_bound n
+  have hbn : 0<b := by dsimp [b]; omega
+  have hformula : 3+b/2+3=7*2^n-n-2 := by dsimp [b]; omega
+  have hm : (3+b/2+3)%8=4 := by
+    rw [hformula]
+    have hp := high_power_mod8 n (by omega)
+    omega
+  exact G_preimages_mod8_four b 3 k c hbn hm
+
+#print axioms BB6.Agent19.Depth.ancestor_shapes
+#print axioms BB6.Agent19.Depth.shape_sound
+#print axioms BB6.Agent19.Depth.G_preimages_mod8_four
+#print axioms BB6.Agent19.Depth.G_critical_inverse_three_iff
 
 #print axioms BB6.Agent19.Depth.G_agree
 #print axioms BB6.Agent19.Depth.G_critical_inverse_depth_two
