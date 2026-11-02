@@ -147,3 +147,21 @@ Exact integer inverse-cone probe from Agent45 L0/L1 using original inverse formu
 
 The stronger remaining target is a parameter-dependent parity / 2-adic inverse-tree invariant giving a uniform exclusion for q%4=1,2, or a direct blank-orbit forward guard on both L0/L1 sparse families. Agent45 proves true synthetic inverse depth unbounded via `ν₂(3q+1)`, so a fixed-depth proof cannot handle all. Test conjectures adversarially against real reachable L0 (32,45) from Agent4 and the deep synthetic L1 corridors.
 
+
+
+### Further formal all-depth P1 odd-inverse grammar, 2026-11-02 14:30 UTC
+
+**All new source formalizations CI verified** in the existing manual workflow, final success [41461096964](https://github.com/FlareZ123/bb6/actions/runs/41461096964), standard axioms only, original unmodified Agent1/47/50/45/4 sources. Stored in `im-results/agent1-p1-quarter/`:
+
+- `MassInverse.lean`: exact inverseAt mass identity `2*k+c+2*t+1+c%2=b+d` for `inverseAt b d t=some(k,c)`, `b≥4,b%4=0,d` odd. Proved induction over true algorithm, no mock source.
+- `InverseIff.lean`: exact **all-depth source GAncestor iff** with a pair of Diophantine conditions: `GAncestor b d k c ↔ ∃t, d+b/2+3=2^t*(c+3) ∧ 2*k+c+2*t+1+c%2=b+d` for the same b/d parity conditions. Uses source-proved `inverseAt_complete` and power identity; explicitly a COMPLETE iff, not finite evidence.
+- `OddConeMass.lean`: inductive `OddCone b0 d0 b d m` for arbitrarily many odd-right inverse feeders with total inverse cost `m=Σ(t_i+1)`; exact `b+d+2m=b0+d0`. At Agent45 L0 feeder, total `8u+5`; at L1 `8u+3`.
+- `OddShift.lean`: for shifted `s=d+b/2+3`, any odd-cone edge inverse depth t obeys `2^(t+1)*(s'+m')=2^t*(S0+7)+s` with `m'=m+t+1`, `S0=b0+d0`.
+- `OddConeCoordinates.lean`: given even b0 and OddCone, exact `b+2s+4m=2S0+6` and `d+S0+6=2s+2m`, yielding a lossless 2D (s,m) coordinate system.
+- `im-results/agent1-p1-quarter/README.md`: readable complete synthesis, source links, remaining barrier. Broadcast `communications/broadcast/2026-11-02T1426Z_agent1-global-p1-inverse-dyadic-mass-grammar.md`.
+
+**New conjecture, NOT theorem:** `im-results/agent1-p1-quarter/BAND-HEURISTIC.md` and exact arbitrary-precision reproducible `odd_cone_band_scan.py`. On the two original Agent45 feeder roots for q1..500, cap10000 odd inverse hubs per q, 487 completed and 13 capped, no power leaf violation of empirical `4u<x+12<8u`, no exceptional c=1 shifted-power source. Capped q=38,101,129,146,189,273,294,301,342,346,358,389,498. This band alone **does not** imply 14-power exclusion because endpoint power scales 28*2^(16q),56*2^(16q) differ from 4u,8u by O(q). A stronger strict power band or endpoint handling is essential. Scanner now reports small-left exceptions rather than treating negative integer 2k−4 as legitimate Nat source. Need adversarial source proof/counterexample; targeted Agent45 message `communications/agent45/2026-11-02T1431Z_agent1-exact-odd-inverse-transducer-band-challenge.md`.
+
+**Remaining true mathematical barrier:** source theorem excludes all q%4=0,3 in n=16q+2, but q%4=1,2 and n≡14(mod16) remain open. Need a parameter-aware uniform invariant or adaptively closed inverse grammar for real blank reachability, without assuming a synthetic inverse path is blank-reachable. Could use (s,m) transducer to seek a nontrivial lower bound on positive even-right terminal leaves. Agent4's genuine reached L0=(32,45) invalidates a claim that the whole unrestricted L0 line is unreachable. Exact BB(6) remains open.
+
+Current incarnation lease **13:27:02.066Z**, measured release threshold **14:37:02.066Z**. No source mutations permitted after final lease release.
