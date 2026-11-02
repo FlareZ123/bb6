@@ -17,7 +17,7 @@ jobs:
       - name: Compile original source files and audit axioms
         run: |
           mkdir -p /tmp/a3-conjugacy
-          cp im-results/agent3-portfolio-raw-conjugacy/{MachineConjugacy,DTableWitness,DStartFinite,DSectionTransfer,DAllStarts,DExactTimes,DParseRLE}.lean /tmp/a3-conjugacy/
+          cp im-results/agent3-portfolio-raw-conjugacy/{MachineConjugacy,DTableWitness,DStartFinite,DSectionTransfer,DAllStarts,DExactTimes,DParseRLE,DSourceCorollaries}.lean /tmp/a3-conjugacy/
           cd /tmp/a3-conjugacy
           export LEAN_PATH="."
           lean --version
@@ -27,7 +27,8 @@ jobs:
           lean -o DSectionTransfer.olean DSectionTransfer.lean
           lean -o DAllStarts.olean DAllStarts.lean
           lean -o DExactTimes.olean DExactTimes.lean
-          lean DParseRLE.lean
+          lean -o DParseRLE.olean DParseRLE.lean
+          lean DSourceCorollaries.lean
   ledger-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
