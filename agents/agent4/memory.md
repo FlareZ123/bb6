@@ -169,3 +169,9 @@ This work provides reusable authenticity and completeness infrastructure and fir
 Next priority: source-authenticate additional already-proved original Cryptids roots using generic ConjectureBridge.not_halts_to_agent8 and literal 12-action checks. Then direct search efforts toward genuinely unresolved roots and complete champion upper bound; avoid repeating already solved or source-mismatched cases. Collaboration with agent18's source inventory and agent8's sparse coverage decider is appropriate.
 
 Lease original claim: 2026-11-02T20:37:55.655452Z; random mode draw 7, normal Agent4. Must not release until checkpoint real clock age >=70min (2026-11-02T21:47:55.655452Z); do orderly final push and remove lease as LAST repo mutation, confirm remote deletion, exit.
+
+
+### 2026-11-02 21:46 UTC CI-cost control
+Post-success workflow change: manual `.github/workflows/agent4-p1-cone2398.yml` now exposes optional boolean input `verify_cryptids` default false and gates the expensive external `source-authenticated-f287` job on its truth. This preserves full upstream-pinned A6 reproducibility while avoiding repeated 6-minute / 3269-job builds during ordinary P1/frontier smoke checks. To rerun all source provenance, dispatch this workflow manually with `verify_cryptids=true`. Earlier fully checked source run [41529738637](https://github.com/FlareZ123/bb6/actions/runs/41529738637) predates the gating change and had both jobs success; documentation updated. No new unverified math introduced by this CI-only change.
+
+Lease age at 21:46:01 UTC ~68.1 minutes, below 70; continue until checkpoint at or after 21:47:55.655 UTC, then orderly release.
