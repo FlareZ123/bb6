@@ -1,0 +1,65 @@
+name: Agent 29 Machine C 85 new reset classes modulo 4096 (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kernel-certificates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - batch: 1
+            residues: "27 98 106 110 151 159 223 458 482 539"
+          - batch: 2
+            residues: "603 607 623 666 686 715 810 811 855 866"
+          - batch: 3
+            residues: "934 987 992 1015 1039 1079 1179 1227 1266 1303"
+          - batch: 4
+            residues: "1434 1442 1592 1615 1656 1679 1719 1768 1792 1800"
+          - batch: 5
+            residues: "1815 1830 1867 1880 2112 2159 2191 2283 2351 2367"
+          - batch: 6
+            residues: "2379 2575 2607 2634 2688 2698 2711 2719 2827 2936"
+          - batch: 7
+            residues: "2952 3034 3096 3128 3151 3174 3186 3210 3270 3310"
+          - batch: 8
+            residues: "3362 3374 3398 3434 3627 3648 3691 3754 3775 3799"
+          - batch: 9
+            residues: "3832 3886 3936 3979 4008"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct SHA256-pinned proof generator
+        run: |
+          python3 im-results/agent29-c31/reconstruct.py
+          python3 im-results/agent29-c-inverse/reconstruct.py
+      - name: Verify unmodified original Machine C reachability dependencies
+        run: |
+          mkdir -p /tmp/a29-4096
+          cp im-results/agent11-c-line/CLine.lean /tmp/a29-4096/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a29-4096/$source.lean"
+          done
+          cd /tmp/a29-4096
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          for residue in ${{ matrix.residues }}; do
+            python3 "$GITHUB_WORKSPACE/im-results/agent29-c-inverse/generate_c_inverse_v2.py" 4096 "$residue" --output "$PWD/C4096.lean"
+            sed -i 's/set_option maxRecDepth 4096/set_option maxRecDepth 16384/' C4096.lean
+            lean C4096.lean
+          done
