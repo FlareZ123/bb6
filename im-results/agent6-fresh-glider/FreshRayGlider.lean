@@ -201,4 +201,140 @@ theorem partial_left_glider_cover (p : PartialMachine) (B : Nat)
 
 #print axioms partial_left_glider_cover
 
+
+/-- Three-step backtracking glider: first paint the old frontier, then bounce back,
+    finally depart toward the next completely blank frontier. -/
+def ThreeGlider : Prop :=
+  m (0,false) = some ⟨true,true,b⟩ ∧
+  m (b,false) = some ⟨false,false,c⟩ ∧
+  m (c,true) = some ⟨u,true,0⟩
+
+private theorem three_cycle (q : Config) (h : ThreeGlider m b c u)
+    (hq : Fresh q) :
+    ∃ q', run m 3 q = some q' ∧ Fresh q' ∧ q'.head = q.head + 1 := by
+  obtain ⟨ha,hb,hc⟩ := h
+  obtain ⟨hstate,hfresh⟩ := hq
+  let q1 := applyMove q ⟨true,true,b⟩
+  let q2 := applyMove q1 ⟨false,false,c⟩
+  let q3 := applyMove q2 ⟨u,true,0⟩
+  have h0 : q.tape q.head = false := hfresh _ (by omega)
+  have hhead1 : q1.head = q.head + 1 := rfl
+  have hhead2 : q2.head = q.head := by
+    dsimp [q2,q1,applyMove]
+    omega
+  have hhead3 : q3.head = q.head + 1 := by
+    dsimp [q3,q2,q1,applyMove]
+    omega
+  have h1 : q1.tape q1.head = false := by
+    have hneq : q.head + 1 ≠ q.head := by omega
+    simpa [q1,applyMove,hneq] using hfresh (q.head+1) (by omega)
+  have h2 : q2.tape q2.head = true := by
+    change (if q2.head = q1.head then false else if q2.head = q.head then true else q.tape q2.head) = true
+    rw [hhead2,hhead1]
+    simp <;> omega
+  have hr1 : rawStep m q = some q1 := by
+    change (m (q.state, q.tape q.head)).map (applyMove q) = some q1
+    rw [hstate,h0,ha]
+    rfl
+  have hr2 : rawStep m q1 = some q2 := by
+    change (m (q1.state, q1.tape q1.head)).map (applyMove q1) = some q2
+    rw [h1]
+    change (m (b,false)).map (applyMove q1) = some q2
+    rw [hb]
+    rfl
+  have hr3 : rawStep m q2 = some q3 := by
+    change (m (q2.state, q2.tape q2.head)).map (applyMove q2) = some q3
+    rw [h2]
+    change (m (c,true)).map (applyMove q2) = some q3
+    rw [hc]
+    rfl
+  have ht : run m 3 q = some q3 := by
+    simp [run,hr1,hr2,hr3]
+  refine ⟨q3, ht, ?_, ?_⟩
+  constructor
+  · simp [q3,applyMove]
+  · intro x hx
+    have hne1 : x ≠ q.head := by
+      rw [hhead3] at hx
+      omega
+    change (if x = q2.head then u else if x = q1.head then false else
+      if x = q.head then true else q.tape x) = false
+    rw [hhead2,hhead1]
+    simp [hne1,hfresh x (by rw [hhead3] at hx; omega)]
+  · exact hhead3
+
+private theorem fresh_three_multiples (h : ThreeGlider m b c u) (n : Nat) :
+    ∃ q, run m (3*n) blank = some q ∧ Fresh q := by
+  induction n with
+  | zero =>
+    refine ⟨blank, by rfl, ?_⟩
+    constructor
+    · rfl
+    · intro x hx
+      rfl
+  | succ n ih =>
+    obtain ⟨q,hq,hfresh⟩ := ih
+    obtain ⟨q',hthree,hfresh',_⟩ := three_cycle m b c u q h hfresh
+    refine ⟨q', ?_, hfresh'⟩
+    have htime : 3*(n+1) = 3*n+3 := by omega
+    rw [htime,run_add,hq]
+    exact hthree
+
+/-- A genuine three-move macro recurs on virgin blanks forever. -/
+theorem three_glider_never (h : ThreeGlider m b c u) : NeverHalts m := by
+  intro n
+  obtain ⟨q,hq,_⟩ := fresh_three_multiples m b c u h (n+1)
+  apply run_some_prefix m blank (3*(n+1)) n (by omega)
+  simp [hq]
+
+/-- Three ordinary transitions determine an all-time nonhalting leaf. -/
+def PartialThreeGlider (p : PartialMachine) : Prop :=
+  p (0,false) = some (some ⟨true,true,b⟩) ∧
+  p (b,false) = some (some ⟨false,false,c⟩) ∧
+  p (c,true) = some (some ⟨u,true,0⟩)
+
+theorem partial_three_glider_cover (p : PartialMachine) (B : Nat)
+    (hp : PartialThreeGlider b c u p) : Cover (DecidedBelow B) p := by
+  apply Cover.leaf
+  intro m hm
+  left
+  apply three_glider_never m b c u
+  obtain ⟨h0,h1,h2⟩ := hp
+  exact ⟨hm _ _ h0,hm _ _ h1,hm _ _ h2⟩
+
+/-- The mirror moves left forever, with one reversal per period. -/
+def PartialLeftThreeGlider (p : PartialMachine) : Prop :=
+  p (0,false) = some (some ⟨true,false,b⟩) ∧
+  p (b,false) = some (some ⟨false,true,c⟩) ∧
+  p (c,true) = some (some ⟨u,false,0⟩)
+
+theorem partial_left_three_glider_cover (p : PartialMachine) (B : Nat)
+    (hp : PartialLeftThreeGlider b c u p) : Cover (DecidedBelow B) p := by
+  apply Cover.leaf
+  intro m hm
+  left
+  apply mirror_never m
+  apply three_glider_never (reflectTable m) b c u
+  obtain ⟨h0,h1,h2⟩ := hp
+  have h0' := hm _ _ h0
+  have h1' := hm _ _ h1
+  have h2' := hm _ _ h2
+  simp [ThreeGlider,reflectTable,reflectMove,h0',h1',h2']
+
+def threeGliderExample : PartialMachine := fun s =>
+  if s = (0,false) then some (some ⟨true,true,1⟩)
+  else if s = (1,false) then some (some ⟨false,false,2⟩)
+  else if s = (2,true) then some (some ⟨false,true,0⟩)
+  else none
+
+theorem three_glider_example_cover (B : Nat) :
+    Cover (DecidedBelow B) threeGliderExample := by
+  exact partial_three_glider_cover (b:=1) (c:=2) (u:=false)
+    threeGliderExample B (by simp [PartialThreeGlider,threeGliderExample])
+
+#print axioms three_glider_never
+#print axioms partial_three_glider_cover
+#print axioms partial_left_three_glider_cover
+#print axioms three_glider_example_cover
+
 end BB6Coverage
