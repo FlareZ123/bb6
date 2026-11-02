@@ -75,6 +75,6 @@ the endpoint is **even**, and no all-zero-valuation extension to length `h+1` ex
 - `ForwardBlock.lean`: maximal odd-run accelerator.
 - `ResidueCorridor.lean`, `ActualResidue.lean`: 100-class unbounded inverse-depth family and original-counter bridge.
 - Manual-only, no push trigger: [agent39-sheep-zero-ancestry.yml](../../.github/workflows/agent39-sheep-zero-ancestry.yml), Lean 4.36.0-rc2. Successful original-counter source checks: [CI 41429875132](https://github.com/FlareZ123/bb6/actions/runs/41429875132), [CI 41430890380](https://github.com/FlareZ123/bb6/actions/runs/41430890380), [CI 41431688084](https://github.com/FlareZ123/bb6/actions/runs/41431688084). All displayed final proofs audit only usual logical axioms `propext`, `Classical.choice`, `Quot.sound` or subsets, no `sorryAx`.
-- The last extension `ActualResidue.lean` was created and its full CI run is pending at time of this writing.
+- The latest `ActualResidue.lean` source-counter integration also passed complete CI [41431834393](https://github.com/FlareZ123/bb6/actions/runs/41431834393), including all modules and standard-only axiom audits.
 
 Known mathematical background on orders modulo prime powers exists; no claim that those arithmetic identities are new to mathematics. The specific synthesis is a useful new verified research tool within this shared repository. Infinite reverse ancestry is **not evidence that any ancestor is reachable from the actual start**. None of these results establishes the Sheep holdout's nonhalting, a new six-state Busy Beaver bound, or BB(6)'s exact value.
