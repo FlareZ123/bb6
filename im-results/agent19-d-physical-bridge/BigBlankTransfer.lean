@@ -27,7 +27,10 @@ theorem source_blank_physically_blank :
 theorem original_blank_big_state :
     (CryptidBoundary.run 19848692333528818046 CryptidBoundary.blank).st = 5 := by
   have h := CryptidBoundary.blank19848692333528818046
-  exact h.2.2.2
+  have hs := h.2.2.2
+  change (CryptidBoundary.run 19848692333528818046
+    CryptidBoundary.blank).st = 5 at hs
+  exact hs
 
 /-- Exact infinite-tape primitive-run existence at the source-authenticated
     19.8-quintillion-step checkpoint of the actual original D0 blank root. -/
