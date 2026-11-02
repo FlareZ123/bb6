@@ -41,7 +41,7 @@ theorem generic_one_gate_reach_iff (t : Nat) (ht : 1≤t) :
   have ha : 4*(4*t+1)-1=16*t+3 := by omega
   have hk : 2*(4*t+1)-1=8*t+1 := by omega
   have htar : 4*(4*t+1)=16*t+4 := by omega
-  rw [htar,ha,hk] at h
+  rw [ha,hk,htar] at h
   exact h.trans (generic_feeder_reach_iff t ht)
 
 #print axioms generic_feeder_reach_iff
