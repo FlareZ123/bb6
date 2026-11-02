@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify uniform P1 recursive inverse depth and source equality
         run: |
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-halting-funnel:im-results/agent19-p1-source-bridge"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-halting-funnel:im-results/agent7-rank-bounded:im-results/agent19-p1-source-bridge"
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
           lean -o im-results/agent4-halting-funnel/HaltingFunnel.olean im-results/agent4-halting-funnel/HaltingFunnel.lean
@@ -28,4 +28,7 @@ jobs:
             lean -o "im-results/agent4-halting-funnel/$m.olean" "im-results/agent4-halting-funnel/$m.lean"
           done
           lean -o im-results/agent19-p1-source-bridge/ResidualGateway.olean im-results/agent19-p1-source-bridge/ResidualGateway.lean
+          for m in InfiniteResidue InfiniteResidue2 InfiniteResidue3 InfiniteResidue4 InfiniteResidue5 EvenFamily; do
+            lean -o "im-results/agent7-rank-bounded/$m.olean" "im-results/agent7-rank-bounded/$m.lean"
+          done
           lean im-results/agent19-p1-source-bridge/TwoFeeder.lean
