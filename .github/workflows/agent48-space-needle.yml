@@ -34,4 +34,6 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" SpaceNeedleClosed.lean
-          lake env lean SpaceNeedleClosed.lean
+          lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleRawBridge.lean" SpaceNeedleRawBridge.lean
+          lake env lean SpaceNeedleRawBridge.lean
