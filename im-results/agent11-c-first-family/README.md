@@ -1,28 +1,56 @@
-# Machine C: composition of exact inverse grammars and global quotient barriers
+# Machine C: exact affine-depth barriers for blank-origin stopping gates
 
-Agent 11, 2026-11-02. Intermediate research. **Machine C and BB(6) remain undecided.**
+Agent 11, 2026-11-02. **Intermediate mathematical research, original-source CI pending for the newest theorems.** This work does not settle Machine C's halting status, BB(6), or the universal upper-bound task. Preserve in `im-results/` pending reproducible full-chain verification and independent novelty review.
 
-## New candidate: all-time low-gate exclusion for t ≡ 6 (mod 16)
+## Principal result: unbounded-depth 2-adic predecessor obstruction
 
-`LowGate6.lean` combines Agent3's complete original-source inverse family `low_gate_all_parents_iff` with Agent15/43's global M8 quotient barrier `blank_no_m8_cylinder`, to prove:
+The unmodified original Machine C first-return section map is `BB6.Agent46.secNext`, with blank-origin initial pair `(5,1)`. Write `CReach(a,k)` for exact eventual reachability of pair `(a,k)`, and `oddDepth(k)` for the number of forced affine predecessors when the first counter is 3 mod 4, as in Agent15's source-certified `AffineParityDepth.lean`.
 
-```lean
-∀ t : Nat, 1≤t → t%16=6 → ¬ BB6.Agent3.CReach 1 (16*t+4)
+**Theorem (source-composition candidate, `AffineDepthM8.lean`):** for arbitrary naturals a,k satisfying
+```text
+a%4 = 3,
+(a+2*k)%8 = 7,
+oddDepth(k)%2 = 0,
+k+2 = 2^oddDepth(k) * (8*q+6)   for some q,
 ```
+we have `¬CReach(a,k)`. This is a whole two-dimensional, variable-depth reachable-set obstruction, quantified over unbounded counters and depths. Proof: let `(A,K)=affineNormalize(a,k)`, the **exact** blank-reachability-preserving forced inverse from Agent15's `ReachAffine.lean` and `AffineNormalize.lean`. Its formally derived invariants are `A+2K+4*oddDepth(k)=a+2k` and `2^oddDepth(k)*(K+2)=k+2`. The assumptions imply `(A%8,K%8)=(7,4)`, contradicting the source-certified full-orbit quotient theorem `blank_no_m8_cylinder`. The proof is independent of simulated blank trajectories or any fixed recursion-depth search limit.
 
-The inverse grammar says that any reachable (1,16t+4) has a parent (22u−3,32·4^r·u−11u−3−3r) with t=2·4^r·u and u>0. Since t%16=6, r=0 and u%8=3. The parent is therefore (22u−3,21u−3), in the **globally unreachable exact original-section cylinder** a%8=7, k%8=4. The contradiction holds at all times and uses all possible recursion depths, without any simulation cutoff. It is a new *composition* of previously separately proved source theorems; assess novelty against the current fast-changing research frontier before publication.
+**Consequence (`DeepLowGate.lean`):** for every odd positive u, if `d=oddDepth(21u−3)` is even and `21u−1=2^d(8q+6)` for some q, then `¬CReach(1,32u+4)`. Agent3's exact three-section `low_gate_all_parents_iff` forces every such low gate to derive from the state `(22u−3,21u−3)` because the odd u excludes every higher even-bounce inverse depth. Its first counter is 3 mod4, weighted sum 7 mod8, and the general invariant above eliminates it.
 
-By Agent15's exact first-family halt equation k+3m+4=2^(2m+3), the new low-gate exclusion also eliminates every **m≡136 (mod256)**: it forces k≡100 (mod256) and k=16t+4 with t≡6 (mod16). This m-class lies inside the m%16=8 group passing Agent15's earlier `affineQuotientExcluded` filter (`FirstFamilyFilterLimit.lean`), and is a new candidate additional infinite parameter exclusion.
+**Unbounded hierarchy (`DeepFamily.lean`):** the source expression `oddDepth` has the universally quantified exact formula
+```text
+oddDepth(2^(2r+1)*(4q+3)−2) = 2r
+```
+for every r,q. Therefore for any r,q,u with
+```text
+21u−1 = 2^(2r+1)*(4q+3)
+```
+the genuine blank section never reaches `(1,32u+4)`. Its proof is a complete induction over r and two exact inverse steps at each induction successor. There is no bound on r. For each fixed r the Diophantine condition has infinitely many positive solutions: choose q satisfying `2^(2r+1)*(4q+3)≡−1 (mod21)` and increase q by 21. Since 21 is odd and coprime to 2, and multiplication by 4 is invertible modulo21, the condition has exactly one class of q modulo21. It determines a whole infinite nonreachability family at arbitrary forced-inverse depths.
 
-**Verification status:** Local proof typechecks in Lean 4.36.0-rc2 with signatures matching the original dependencies. Its repository `LowGate6.lean` imports the original source, without stubs or axioms. Authoritative integrated CI must compile the entire Agent3/Agent15 source chain and audit `#print axioms`. Until it succeeds this is a *candidate source composition*.
+## Explicit machine-halting parameters removed
 
-Dependencies:
-- `im-results/agent3-c-bounce-inverse/EvenTargetOrbit.lean` and `FeederOrbitGeneric.lean`, source CI [41513332787](https://github.com/FlareZ123/bb6/actions/runs/41513332787).
-- `im-results/agent15-c-halting/M8M16Composition.lean`, source-certified M8 quotient bridge to exact blank-section reachability (individual upstream `CSourceBridge8` and `Mod8SevenFour`).
-- The existing manual `.github/workflows/agent15-c-halting.yml` is extended to compile the new composition with those original definitions.
+The original Agent15 first halting family has the exact equation `k+3m+4=2^(2m+3)` and requires reaching `(1,k)`. Repeated use of Agent3's complete inverse and the above quotient/normalizer forbids the following entire index congruences:
 
-## Earlier independent proof of an already-known class
+| First-halt index | First-family candidate gate | Source theorem | Status |
+|---|---|---|---|
+| `m%256=136` | `k%256=100`, `t=(k−4)/16%16=6` | `LowGate6.first_halt_m136_mod256_unreachable` | Lean source job 41519952402 pending |
+| `m%1024=456` | `k%1024=676`, `t%64=42` | `AffineDepthM8.first_halt_m456_mod1024_unreachable` | Lean source job 41522387396 pending |
 
-`First24.lean` proves all first-family m≡24 (mod32) impossible by composing Agent15's unique affine predecessor and Agent38's odd-special global invariant. This was checked with the entire unmodified original-source chain and standard Lean axioms, CI [41518668629](https://github.com/FlareZ123/bb6/actions/runs/41518668629) at SHA `5241ec95b9babf6fe9cb17c06c0a59ae0c86ccca`. However, **Agent3 already proved the strictly stronger global `low_gate_odd_t_excluded` in `EvenTargetOrbit.lean` before this invocation**: every (1,32q+20) is unreachable, which covers the m24 class. Thus this earlier module is an independent verification/corollary and **must not be counted as a new mathematical exclusion**. Its full source CI audited standard axioms `[propext, Classical.choice, Quot.sound]`; no sorryAx.
+These two classes are **disjoint**: the former is `m%256=136`, the latter `m%256=200`, and both lie in `m%16=8`, a sector that passed Agent15's earlier `affineQuotientExcluded` filter. Passing that filter never implied reachability. The general Diophantine hierarchy subsumes these as r=0 and r=1. It yields additional all-time low-gate exclusions for arbitrarily large r, without requiring a finite residue-class enumeration.
 
-The true blank-section reachability of all other halting input families is unresolved, and no new BB(6) bound or complete machine disposition is claimed.
+## Formalization files and provenance
+
+- [`AffineDepthM8.lean`](./AffineDepthM8.lean): all-natural affine normalization exclusion; explicit two-level residue witness; `t%64=42` and first-family `m%1024=456`.
+- [`DeepLowGate.lean`](./DeepLowGate.lean): uniform all-depth odd-u gate obstruction.
+- [`DeepFamily.lean`](./DeepFamily.lean): exact unbounded `oddDepth` induction and Diophantine hierarchy.
+- [`LowGate6.lean`](./LowGate6.lean): t%16=6 and first-family m%256=136.
+- Original source dependencies: Agent3 [`EvenTargetOrbit.lean`](../agent3-c-bounce-inverse/EvenTargetOrbit.lean), source CI [41513332787](https://github.com/FlareZ123/bb6/actions/runs/41513332787); Agent15 [`AffineParityDepth.lean`](../agent15-c-halting/AffineParityDepth.lean) and [`M8M16Composition.lean`](../agent15-c-halting/M8M16Composition.lean); Agent41/43 quotient [`Mod8SevenFour.lean`](../agent41-c-quotient512/Mod8SevenFour.lean) with original CLine source.
+- Two manual **original-source** CI invocations: [41519952402](https://github.com/FlareZ123/bb6/actions/runs/41519952402) (first low-gate), [41522387396](https://github.com/FlareZ123/bb6/actions/runs/41522387396) (full all-depth hierarchy). The same existing `.github/workflows/agent15-c-halting.yml` compiles original imported source and prints every new theorem's axiom set. These jobs were still in progress at the time of this update. In the local environment Lean 4.36.0-rc2 accepted all exact proof bodies against matching theorem signatures, with no sorry. That preliminary check is **not** a substitute for full-source compilation.
+
+## Earlier independent verification, explicitly credited as prior art
+
+[`First24.lean`](./First24.lean) shows all first-family `m%32=24` unreachable by combining Agent15's exact single-affine predecessor with Agent38's blank `odd_special` exclusion. Complete original-source Lean CI [41518668629](https://github.com/FlareZ123/bb6/actions/runs/41518668629) passed, axioms exactly `[propext, Classical.choice, Quot.sound]`. **Agent3 had already proved a stronger theorem `low_gate_odd_t_excluded`** encompassing this residue. Consequently `First24` is an independent sanity check only and carries **no claim of mathematical novelty**.
+
+## Open problem
+
+The above barriers are one-sided exclusions. The remaining uncountable-in-computation infinite families of halting input parameters are not all eliminated, and Machine C remains undecided. A stronger global forward invariant or an infinite inverse argument covering the residual halting family would still be necessary for a whole-machine nonhalting theorem. The overall exact BB(6) objective further requires resolving all other holdout machines and a complete universal proof of the six-state enumeration bound.
