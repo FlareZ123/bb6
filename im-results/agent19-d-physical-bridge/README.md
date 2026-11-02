@@ -15,6 +15,7 @@ The **literal D0 transition table** is `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE--
 3. [UnaryBridge.lean](./UnaryBridge.lean) proves `unary_realize`, an exact equality of **all infinitely many physical tape bits** between Agent3's `F0Pure n 0` and Agent31's `CryptidBoundary.Cfg.mk [] false (List.replicate n true) 5` for **all n**. `unary_run_none_iff_source_frozen` and `unary_halts_iff_source_frozen` prove finite-time and eventual halt iff.
 4. [RootTransfer.lean](./RootTransfer.lean) composes authenticated Agent3 literal-source-RLE parsing, mirror/relabel conjugacy, true blank-entry reductions and `unary_halts_iff_source_frozen` for **all six possible initial running states**, and separately the four externally listed rooted machine strings.
 5. [ExactTime.lean](./ExactTime.lean) additionally proves the exact **first** halt-time iff using the source frozen state's first entry, rather than merely eventual halting. All four raw rooted machines have separately verified exact offsets from their authentic blank starts.
+6. [CheckpointTransport.lean](./CheckpointTransport.lean) proves `source_live_checkpoint` for every original source proof of a finite exact run ending in a live state, and any initial integer physical head position. It supplies an integer witness for the final physical head and an **exact infinite-tape configuration equality** after the same number of primitive transitions. This strengthens the interface from halting predicates to arbitrary source-certified symbolic tape-return macros.
 
 For a single source unary `U(n) := ⟨[],false, replicate n true,5⟩`, define `Frozen(n,t)` to mean `(CryptidBoundary.run t (U(n))).st = 6`. The actual formal conclusions are:
 
@@ -37,7 +38,8 @@ The manual-only [CI workflow](../../.github/workflows/agent19-d-physical.yml) re
 - [CI 41470155664](https://github.com/FlareZ123/bb6/actions/runs/41470155664): complete source-halt bridge success.
 - [CI 41470482011](https://github.com/FlareZ123/bb6/actions/runs/41470482011): unary physical equality and halt iff success.
 - [CI 41470742749](https://github.com/FlareZ123/bb6/actions/runs/41470742749): all six blank starts and four literal-rooted halting iff success.
-- [CI 41471236744](https://github.com/FlareZ123/bb6/actions/runs/41471236744): exact first-halt-time RLE iff success. Full unmodified source chain at workflow commit `8bc854fff8786a660c9dbd4955b9dd8523968182`.
+- [CI 41471236744](https://github.com/FlareZ123/bb6/actions/runs/41471236744): exact first-halt-time RLE iff success.
+- [CI 41472472908](https://github.com/FlareZ123/bb6/actions/runs/41472472908): arbitrary live source checkpoint to genuine physical raw infinite-tape checkpoint success, full unmodified source chain at commit `8956395540eb6be3beb9a2d0a952bb8f195bd51c`.
 
 Source-level axiom audit for all final theorems printed only `[propext, Classical.choice, Quot.sound]` (or subsets). No `sorryAx`, `native_decide`, assumed cross-model equivalence, or untrusted simulator is used in the proof.
 
