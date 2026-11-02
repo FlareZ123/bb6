@@ -10,15 +10,15 @@ Machine: `1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_---1LE`. The Google DeepMind [Lean-
 
 This agrees with the map used by Agents 14 and 16. The upstream correspondence is imported as a published result, not re-proved here.
 
-## Theorem: four additional infinite halting-power families are unreachable
+## Theorem: twenty additional infinite halting-power families are unreachable
 
 For every `k>=0` and every exponent `j >=15` with
 
 ```text
-j modulo 180 is one of 15, 87, 123, 159,
+j modulo 540 is one of 15, 27, 87, 99, 123, 135, 159, 195, 207, 243, 267, 303, 315, 339, 375, 423, 447, 459, 483, 519,
 ```
 
-the `k`-th defined iterate of `F` starting from `5` **does not equal `2^j`**. The four residues are disjoint from all the periodic classes excluded in `im-results/agent16-sheep-power-preimages/README.md`. Together with the earlier 157/360 classes, this increases the proven periodic-index exclusion density to at least `165/360 = 11/24`, assuming the independent proofs there. This is a fraction of *halting exponents excluded*, never a halting probability.
+the `k`-th defined iterate of `F` starting from `5` **does not equal `2^j`**. These twenty residues are disjoint from all the periodic classes excluded in `im-results/agent16-sheep-power-preimages/README.md`. Together with the earlier 157/360 classes, this increases the proven periodic-index exclusion density to at least `511/1080`, assuming the independent proofs there. This is a fraction of *halting exponents excluded*, never a halting probability.
 
 ### Generic inverse congruence
 
@@ -30,7 +30,7 @@ For a generic parent `t=2^a*u` with odd `u>=5`, `F(t)=y` implies
 
 Put `M_a=2^(a+1)+1`. Modulo `M_a`, every power of 2 has residue `2^r` or `M_a-2^r` for some `0<=r<=a`, because `2^(a+1)=-1 (mod M_a)`. Hence **no positive odd `D` with `1<D<2^a` is congruent to any power of two modulo `M_a`**: positive residues are either 1 or even, and negative residues are at least `2^a+1`. This is an all-exponents obstruction.
 
-A power `2^j` with `j=15,87,123,159 (mod 180)` is odd-indexed with `j=3 (mod4)`. Its only possible parent is
+A power `2^j` with `j in the twenty displayed residue classes (mod 540)` is odd-indexed with `j=3 (mod4)`. Its only possible parent is
 
 ```text
 y1 = 2*(2^(j+1)-1)/5 = (2^(j+2)-2)/5.
@@ -46,7 +46,7 @@ For a generic parent of `y1`, clearing the denominator gives
 2^(j+3) = 5*M_a*u + (10*a-1).
 ```
 
-For `a>=7`, the odd remainder `10*a-1` lies strictly between 1 and `2^a`, ruling out all such `a` by the lemma. This bound follows from its base case `a=7` and induction. For `a=0,...,6`, the finite periodic arithmetic test in `certificate.py` shows that **only a=2** can satisfy the necessary congruence for any of the four residue classes of `j`. Its sole candidate is
+For `a>=7`, the odd remainder `10*a-1` lies strictly between 1 and `2^a`, ruling out all such `a` by the lemma. This bound follows from its base case `a=7` and induction. For `a=0,...,6`, the finite periodic arithmetic test in `certificate.py` shows that **only a=2** can satisfy the necessary congruence for any of the twenty residue classes of `j`. Its sole candidate is
 
 ```text
 y2 = 4*(2^(j+3)-19)/45 = (2^(j+5)-76)/45.
@@ -62,7 +62,7 @@ For a generic parent of `y2`, the necessary congruence is
 2^(j+6) = 45*M_a*u + (107+90*a).
 ```
 
-For `a>=10`, the odd number `107+90*a` satisfies `1<107+90*a<2^a`: at `a=10`, `1007<1024`, and induction preserves the bound. Thus `a>=10` is impossible. The finite period test rules out every `a=0,...,9` for all four residue classes.
+For `a>=10`, the odd number `107+90*a` satisfies `1<107+90*a<2^a`: at `a=10`, `1007<1024`, and induction preserves the bound. Thus `a>=10` is impossible. The finite period test rules out every `a=0,...,9` for all twenty residue classes.
 
 The exceptional `u=3` inverse of `y2` would give `2^(j+5)=135*2^a+45*a+211`. If `a>=j-2` the right side is already too large; if `a<=j-3` it is at most `135*2^(j-3)+45*j+76<2^(j+5)` for all `j>=15`. Consequently **`y2` has no possible predecessor anywhere in the section**.
 
@@ -70,7 +70,7 @@ Finally, `y1` and `y2` are larger than `5` for `j>=15`. If the real orbit from `
 
 ## Exact finite certificate
 
-The Python script verifies the modular calculations for **every** admissible exponent, using complete multiplicative periods rather than a cutoff on `j`. For a modulus `m` and a declared period `p`, it checks `2^p=1 (mod m)`. For `j=r+180*k` the residues of `2^(j+c) (mod m)` are exhausted by `0<=k<p/gcd(p,180)`. It tests all four `r`, all bounded exponents `a`, and both inverse congruences. The asserted periods are:
+The Python script verifies the modular calculations for **every** admissible exponent, using complete multiplicative periods rather than a cutoff on `j`. For a modulus `m` and a declared period `p`, it checks `2^p=1 (mod m)`. For `j=r+540*k` the residues of `2^(j+c) (mod m)` are exhausted by `0<=k<p/gcd(p,180)`. It tests all twenty `r`, all bounded exponents `a`, and both inverse congruences. The asserted periods are:
 
 | Inverse layer | modulus | a range | periods in increasing a |
 | --- | --- | --- | --- |
