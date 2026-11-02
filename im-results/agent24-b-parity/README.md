@@ -151,3 +151,25 @@ Both theorems use `by decide` and have **zero axioms**; `31 mod 42=31` and `45 m
 The `parity_bit_lift` theorem gives a precise negative result for a broad family of proposed shortcuts: for every \(n\) and every starting integer \(a\), the starts \(a\) and \(a+2^n\) agree modulo \(2^n\), yet their parity outcomes at iteration \(n\) are **opposite**. Their first \(n\) parity bits also agree. Consequently, **no predictor using only the starting state modulo \(2^n\) can correctly determine its \(n\)-th output parity for every input**. In this exact sense, to predict the bit at time \(n\) uniformly, the input needs one additional 2-adic digit. This is a theorem about uniform low-bit predictors; it is **not** a computational lower bound on all algorithms for the specific initial value 8, and does not rule out more sophisticated special-value identities or symbolic computation.
 
 Combined with `parity_disagrees_linear`, this points away from a finite fixed-modulus encoding of Machine B's **complete** parity trace. The true unknown is the sparsely sampled sequence. A finite-state invariant only for the reachable reset orbit is still logically possible and would require extra structure.
+
+## Uniform growth envelope for the actually sampled recurrence (07:12 UTC)
+
+The auxiliary source [BSampleEnvelope.lean](./BSampleEnvelope.lean) imports the actual recurrence `resetA` and the translated scalar orbit and proves **unconditional, all-index, two-sided bounds** that hold even after a hypothetical halting sample. With `A=resetA n`, `Z=iterG A 0`, the locally Lean 4.36.0-rc2 verified statements are
+
+```
+8*3^A ≤ 2^A*(Z+8)
+2^A*(Z+15) ≤ 15*3^A
+Z+6 ≤ resetA(n+1) ≤ Z+9.
+```
+
+In particular `all_reset_index_growth` proves for **every** natural `n`:
+
+```
+8*3^(resetA n) ≤
+  2^(resetA n)*(resetA(n+1)+2)
+
+2^(resetA n)*(resetA(n+1)+6) ≤
+  15*3^(resetA n)
+```
+
+The exponential inequalities come from the exact affine recurrence `2v_{m+1}=3v_m+7(v_m%2)`, `v_0=8`, and hold uniformly without simulation. `#print axioms` for the bounds prints only `[propext, Quot.sound]` in the underlying scalar proof and the standard `Classical.choice` where used by imported theorems; no `sorryAx`. They sharply quantify superlinear reset growth, but are not a parity invariant and do not classify the original six-state machine.
