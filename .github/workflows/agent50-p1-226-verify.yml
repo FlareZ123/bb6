@@ -1,0 +1,43 @@
+name: Agent 50 P1 n=226 mod4096 all-time exclusion (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore checked source bundle and compile unmodified repository dependencies
+        run: |
+          mkdir -p /tmp/agent50-226
+          cd /tmp/agent50-226
+          for name in GParity GInverse PosEvenForm ResetGate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/$name.lean" "$name.lean"
+          done
+          for name in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/$name.lean" "$name.lean"
+          done
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/P1Cert226.tar.xz.b64" > bundle.tar.xz
+          echo "24cf176a58c5f65b18f571cd1363334448801431b37b9df3e1ac36a208534eed  bundle.tar.xz" | sha256sum -c -
+          tar -xJf bundle.tar.xz
+          export LEAN_PATH="."
+          for name in GParity GInverse PosEvenForm ResetGate P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "SOURCE $name"
+            lean -o "$name.olean" "$name.lean"
+          done
+          for name in Inverses CertReach1 CertReach2 CertReach3 CertReach4 CertReach5 CertReach6 CertReach7 CertReach8 PowerBand; do
+            echo "NEW PROOF MODULE $name"
+            lean -o "$name.olean" "$name.lean"
+          done
+          echo "FINAL DIRECT ORIGINAL SOURCE THEOREM"
+          lean SourceBridge.lean
