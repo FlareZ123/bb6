@@ -204,6 +204,28 @@ theorem predecessor_power_identity (q v k : Nat) :
   omega
 
 /-- Powers of two modulo five never vanish. -/
+/-- A generic modular obstruction: any odd modulus relatively prime to two
+which divides the candidate denominator, while forcing the valuation
+correction to be three, rules out every predecessor of a terminal power. -/
+theorem no_common_modulus_into_power (q v k m : Nat)
+    (hgt : 1 < m) (hc : Nat.Coprime m 2)
+    (hden : m ∣ 2^(v+1)+3)
+    (hv : ∃ t, 2*v=3+m*t) :
+    highLevelNext (.N (oddTower q v)) ≠ some (.N (haltTower k)) := by
+  intro h
+  have heq := (predecessor_power_identity q v k).mp h
+  rcases hden with ⟨r, hr⟩
+  rcases hv with ⟨t, ht⟩
+  rw [hr, ht] at heq
+  have hcalc : (m*r)*(2*q+3)+(3+m*t) = m*(r*(2*q+3)+t)+3 := by
+    simp [Nat.mul_add, Nat.mul_assoc, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+  rw [hcalc] at heq
+  have hpow : 2^(k+2)=m*(r*(2*q+3)+t) := by omega
+  have hdiv : m ∣ 2^(k+2) := ⟨r*(2*q+3)+t, hpow⟩
+  have hcopow : Nat.Coprime m (2^(k+2)) := hc.pow_right (k+2)
+  have hmone : m=1 := hcopow.eq_one_of_dvd hdiv
+  omega
+
 theorem pow_two_mod5_cases (n : Nat) :
     2^n % 5 = 1 ∨ 2^n % 5 = 2 ∨ 2^n % 5 = 4 ∨ 2^n % 5 = 3 := by
   induction n with
@@ -287,6 +309,7 @@ theorem no_21t_plus_19_halving_into_power (q k t : Nat) :
 #print axioms scanEven_classification
 #print axioms scanEven_none_iff
 #print axioms scanEven_strict
+#print axioms no_common_modulus_into_power
 #print axioms highLevelNext_strict
 #print axioms highLevelNext_iff_oddTower
 #print axioms pow_two_mod_seven
