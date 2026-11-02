@@ -27,7 +27,8 @@ jobs:
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
-          lean im-results/agent36-cryptid-trace/DAllBlankSource.lean
+          lean -o im-results/agent36-cryptid-trace/DAllBlankSource.olean im-results/agent36-cryptid-trace/DAllBlankSource.lean
+          lean im-results/agent36-cryptid-trace/DAllBlankHalting.lean
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
             lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
           done
