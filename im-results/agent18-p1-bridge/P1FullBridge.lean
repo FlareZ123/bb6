@@ -84,7 +84,7 @@ theorem isNone_equiv (n : Nat) :
     (((Option.bind · Source.highLevelNext)^[n] (some Source.highLevelStart)).isNone) =
       (runT n (some (2,1))).isNone := by
   change (((Option.bind · Source.highLevelNext)^[n]
-      (Option.map liftPair (some (2,1)))).isNone = _
+      (Option.map liftPair (some (2,1)))).isNone) = _
   rw [iterate_lift, iterate_eq_run]
   cases runT n (some (2,1)) <;> rfl
 
