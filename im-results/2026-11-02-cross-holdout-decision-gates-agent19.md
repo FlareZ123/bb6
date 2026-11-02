@@ -1,0 +1,35 @@
+# BB(6) shared decision gates (2026-11-02, Agent 19)
+
+Status: **cross-agent synthesis of intermediate results**. No original six-state blank-tape holdout has been decided here; no new global bound, exact BB(6) value, or publishable result is asserted. This is a map of precise outstanding obligations, not an independent verification of every referenced theorem. Refer to the source files, upstream formalizations, and original reproducibility records before citing results.
+
+## Decisive entry systems
+
+| Holdout | Exact known blank-entry state | Current strongest finite-halting criterion in the local accelerator | Last unresolved global obligation |
+|---|---|---|---|
+| **P1** `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE` | `(2,1)` | **iff** reachable `(2,14·2^n−2n−10)` for some `n≥0`; see Agent 4 `BlankCriterion.lean` | Exclude **all** indices `n≡2 (mod 4)`, beyond known finite and modular obstructions, or find one actually reachable |
+| **B** `1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_---1RE` | `(3,0,0)` | Exact cycle with `F(p,d)=(d%2,3⌊d/2⌋+2+4p)`: halt if sampled bit is zero, else reset `a'=2d+9`; Agent 18 `BReduction.lean` | Prove all bits of **the recursively sampled sequence starting at `a=3`** are one, or exhibit a zero |
+| **C** `1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC` | `(5,0,1)` | **iff** reachable `(0,2j,4j+10)`; independently proved in Agent 10 `Funnel.lean` and Agent 11 `CLine.lean` | Exclude all `j` in this infinite family. Agent 11 refines it to surviving reset and side-gate subfamilies |
+| **Sheep** `1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_---1LE` | section variable `t=5` | Halt iff forward section reaches a power of two; defined return `F(2^a u)` increases with `u` odd, `u≥3` | Exclude **all** `2^j` or exhibit one; finite-depth inverse residue exclusions cover a proper subset only |
+| **Cryptid D-start** `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---` | No locally established useful blank-entry in synthetic family | Agent 2 proves an exact `12k²+17k+69` halting time for a synthetic F-start tape family | Find an actual blank-orbit entry into tractable invariant/macro section |
+
+### Dependency and bridge audit
+
+**P1.** `im-results/agent4-halting-funnel/{HaltingFunnel,EvenSector,OddReturn,Reachability,BlankCriterion}.lean` proves the global criterion; `NoFirstTarget.lean`, `NoSecondTarget.lean` and Agent 7 `RankCertificate.lean` exclude small indices. `im-results/agent12-backwards/AllOddCritical.lean` excludes **all odd n≥3**; its `AllFourCritical.lean` excludes **all n≥4 divisible by four**. Together with n=0,1 finite proofs, all unclassified critical indices are contained in `n≡2(mod4)` (including n=2, which is separately excluded). These statements are inside the copied accelerated dynamics. Agent 19's `im-results/agent19-p1-source-bridge/P1Bridge.lean` is a **candidate** kernel import bridge from Agent 4's `G,T` definitions to pinned upstream `evalP2,highLevelNext`, and its manual CI result must be checked before treating that source relation as certified. The upstream machine-to-high-level-accelerator theorem is `BusyBeaver.M_1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_HHH0RE.isHalt_iff_highLevel_acceleration`.
+
+**B.** `im-results/agent18-b-cycle/BReduction.lean` contains the whole-cycle halting iff. Agent 18 has already authored an upstream semantic import bridge `Agent18BBridge.lean` and a manual CI workflow; consult its CI result before claiming the bridge was checked. Source standalone methods in Agent 5 `Section.lean`. Three actual reset cycles were computationally observed, which does not imply the universal claim.
+
+**C.** `im-results/agent10-c-funnel/README.md` describes the one-family theorem, with xz+base64-certified `Funnel.lean`; `im-results/agent11-c-line/README.md` describes independently established exact gateway and stronger modular conditions, with individual Lean source and packed modules. `im-results/agent8-rank-barriers/CriticalReach.lean` proves the earlier `(0,2j,5)` condition. Kernel import bridge from these local accelerators to upstream is unreported in these files.
+
+**Sheep.** `im-results/agent17-sheep-third-generation/{SYMBOLIC-SIEVE.md,symbolic_sieve.py}` develops an exact, finite-depth generic inverse-tree sieve with **3544/5400** exponent residue classes excluded, subject to the script's mathematical claims and independent audit; it is not a Lean certificate. Agents 14/15/16/40 have distinct analytic and Lean checks on overlapping periodic families; do not add their percentages without set-union verification. A complete inverse-depth closure or forward invariant is still needed, and the local return function-to-upstream transition should be certified.
+
+**Cryptid D-start.** `im-results/agent2-cryptid-proof.md` documents synthetic F-start halting certificates; no claim there establishes blank-orbit relevance.
+
+### Prioritized next experiments and proof targets
+
+1. **P1:** find a parameter-uniform obstruction for the remaining `n≡2(mod4)` critical indices. Test any purported invariant first against actual `(2,1)` traces and the complete inverse recurrence; use existing global modular invariants instead of re-proving them. Combine the global halting criterion with the new semantic bridge and a generic halting-relation equivalence once CI passes.
+2. **C:** pursue a symbolic quotient / canonical return section on zero-`a` configurations which excludes the full `(0,2j,4j+10)` diagonal, or finds a genuine reachable member.
+3. **Sheep:** formalize the exact inverse-tree certificate engine, including its exceptional-branch proof; determine why surviving classes require unbounded depth rather than optimizing only modular coverage.
+4. **B:** seek an all-iterate invariant of the specifically induced sequence `A_0=3`, `A_{k+1}=2d_k+9`; a universal statement for generic `A` is false.
+5. **All:** treat the raw TM ↔ published accelerator ↔ standalone map ↔ new reachability theorem chain as separate proof obligations. Preserve semantic source revision and axiom audit.
+
+No file in `results/` is justified by this synthesis; retain research under `im-results/`.
