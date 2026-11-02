@@ -84,6 +84,7 @@ theorem blank7137469949709248558298 :
     (12*22608558919*22608558919+49*22608558919+50+4*6) h1
   have he := BB6.BoundaryPadding.full_E_pairs_implicit_blank 22608558919 6
   have hh := BB6.Padding.cfgEq_trans h he
+  change BB6.BoundaryPadding.ObsEq _ _ at hh
   simpa only [Nat.reduceMul,Nat.reduceAdd] using hh
 
 
