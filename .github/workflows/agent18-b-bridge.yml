@@ -46,7 +46,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BOneDim.lean" BOneDim.lean
           cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18OneDimBridge.lean" Agent18OneDimBridge.lean
           lake env lean -o .lake/build/lib/lean/BOneDim.olean BOneDim.lean
-          lake env lean Agent18OneDimBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent18OneDimBridge.olean Agent18OneDimBridge.lean
       - name: Verify Agent 10 parity theorem against original Agent 18 scalar source
         working-directory: /tmp/cryptids
         run: |
@@ -64,3 +64,9 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent10GrowthSource.olean Agent10GrowthSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10Tower.lean" Agent10Tower.lean
           lake env lean Agent10Tower.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10ModSeven.lean" Agent10ModSeven.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10SevenReset.lean" Agent10SevenReset.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10RootModSeven.lean" Agent10RootModSeven.lean
+          lake env lean -o .lake/build/lib/lean/Agent10ModSeven.olean Agent10ModSeven.lean
+          lake env lean -o .lake/build/lib/lean/Agent10SevenReset.olean Agent10SevenReset.lean
+          lake env lean Agent10RootModSeven.lean
