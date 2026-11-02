@@ -122,3 +122,12 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{ResidueWitness,M32PullbackConditional}.lean /tmp/agent15-c-check/
           lean ResidueWitness.lean
           lean M32PullbackConditional.lean
+          # Agent 11: general arbitrary-depth normalization, eight conditional
+          # M32 target classes, and genuine infinite second halting family.
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{OddDepthGeneric,OddDepthResidue,M32AllDepthConditional,SecondResidue,SecondUniform,SecondWitness}.lean /tmp/agent15-c-check/
+          lean -o OddDepthGeneric.olean OddDepthGeneric.lean
+          lean -o OddDepthResidue.olean OddDepthResidue.lean
+          lean M32AllDepthConditional.lean
+          lean -o SecondResidue.olean SecondResidue.lean
+          lean -o SecondUniform.olean SecondUniform.lean
+          lean SecondWitness.lean
