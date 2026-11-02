@@ -47,6 +47,21 @@ theorem reach_iff_bounded_run (a c:Nat) :
   · rintro ⟨n,_,h⟩
     exact run_reachable n a c h
 
+/-- Each finite accelerated trajectory increases additive rank by at least its length. -/
+theorem iter_rank_growth (n a c b d : Nat) (h:Iter n a c b d) :
+    n+a+c ≤ b+d := by
+  induction h with
+  | refl a c => omega
+  | step n a c b d e f hp ht ih =>
+      have hs := T_sum_growth b d e f ht
+      omega
+
+/-- No positive-length accelerated trajectory can revisit its starting state. -/
+theorem no_positive_cycle (n a c : Nat) : ¬Iter (n+1) a c a c := by
+  intro h
+  have hr := iter_rank_growth (n+1) a c a c h
+  omega
+
 private theorem finite_iff (a c : Nat) :
     (∃ n : Fin (a+c+1), run n.val=some (a,c)) ↔ Reach a c := by
   constructor
@@ -63,6 +78,7 @@ instance reach_decidable (a c:Nat) : Decidable (Reach a c) :=
 
 #print axioms BB6.P1Rank.reach_iff_bounded_run
 #print axioms BB6.P1Rank.run_reachable
+#print axioms BB6.P1Rank.no_positive_cycle
 #print axioms BB6.P1Rank.reach_decidable
 end BB6.P1Rank
 
