@@ -82,3 +82,19 @@ path_shift_pow: T^[n](a+2^n*t)=T^[n](a)+3^n*t
 and the special case `parity_bit_lift` that adding \(2^n\) preserves output bits before time \(n\) and toggles the bit at time \(n\). All of these are proved in [BParityCoding.lean](./BParityCoding.lean), including `inputFor_lt`, `inputFor_prefix`, and `inputFor_unique`, with `#print axioms` showing only `[propext, Quot.sound]`.
 
 **Prior art correction:** The existence and bijectivity of such parity codings for generalized \(3x+k\) maps is classical, and must **not** be portrayed as a novel publishable BB(6) discovery. Bernstein and Lagarias, *The 3x+1 Conjugacy Map* (Canadian Journal of Mathematics 48, 1996), https://websites.umich.edu/~lagarias/doc/bernstein.pdf , explicitly discuss the general odd \(ax+b\) case and the 2-adic shift conjugacy. Our shifted map is exactly \(T(v)=(3v+7(v\bmod2))/2\), an instance of this known theory. The deliverable here is a precise **Lean-checked specialization integrated with Agent 18's exact Machine B counter map**, plus a particular aperiodicity and modular relation for the blank-entry scalar orbit. The dynamically sampled return indices remain the central unknown; the classical parity-coding bijection alone gives no holdout decision.
+
+## Structural restriction on the actual recursively sampled resets
+
+[BResetResidues.lean](./BResetResidues.lean) imports the local Lean-certified exact `iterG` model and copies Agent 18's `scalarA` recursion as `resetA`:
+
+```
+A[0]=3, Z[n]=iterG A[n] 0, A[n+1]=Z[n]+9-3*(Z[n]%2).
+```
+
+Unlike the unsampled parity coding above, the following statements constrain **every recursively induced reset index**, for every natural cycle number (including the syntactic continuation after a possible halt):
+
+- `resetA n % 6 ∈ {1,3}` for all `n`. The proof uses `G(z)%3 ∈ {0,1}` for every input and oddness of each reset.
+- `(Z[n]+8)%7 ∈ {5,6}`, using the exact `(iterG m 0+8)%7=(8*5^m)%7` and the previous modulo-six restriction.
+- **Survival/halting index residue dichotomy:** `Z[n]%2=1 ↔ A[n+1]%7 ∈ {3,4}`; `Z[n]%2=0 ↔ A[n+1]%7 ∈ {0,6}`. The two biconditionals are `sample_odd_iff_reset_residue` and `sample_even_iff_reset_residue`.
+
+All these universal statements compiled locally in Lean 4.36.0-rc2 with only `[propext, Quot.sound]`; no finite bound on `n`. This yields an exact modular **alternative test** for a halting sample, but is currently a rearrangement of the same undecided sampled-parity problem, as the next index itself is defined from that parity. It does **not** imply any halting witness or all-time nonhalting. A direct imported equality between this copied `resetA` and the existing Agent 18 `OneDim.scalarA` is straightforward but is not yet separately CI-certified.
