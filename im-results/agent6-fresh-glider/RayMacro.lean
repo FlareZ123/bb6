@@ -275,4 +275,105 @@ theorem fresh_left_macro_never (m : Machine) (n delta : Nat)
 #print axioms fresh_ray_macro_never
 #print axioms fresh_ray_macro_never_window
 #print axioms fresh_left_macro_never
+/-- Configuration with arbitrary initial state on a globally blank tape. -/
+def stateBlank (s : Fin 6) : Config :=
+  { state := s, head := 0, tape := fun _ => false }
+
+/-- A state-specific ray frontier, allowing a distinct initial preamble. -/
+def FreshState (s : Fin 6) (q : Config) : Prop :=
+  q.state = s ∧ ∀ x, q.head ≤ x → q.tape x = false
+
+/-- A ray-pumping step from any control state, even if this state was
+    reached after an arbitrary finite blank-start entry. -/
+theorem fresh_ray_state_step (m : Machine) (s : Fin 6) (n delta : Nat)
+    (hdelta : 0 < delta)
+    (htrace : ∃ r, run m n (stateBlank s) = some r ∧
+      r.state = s ∧ r.head = (delta : Int) ∧
+      ∀ x, (delta : Int) ≤ x → r.tape x = false)
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (stateBlank s) = some d → 0 ≤ d.head) :
+    ∀ q, FreshState s q →
+      ∃ q', run m n q = some q' ∧
+        FreshState s q' ∧ q'.head = q.head + delta := by
+  intro q hq
+  obtain ⟨rs, hrs, hstate, hhead, hb⟩ := htrace
+  let origin := q.head
+  have hstart : RayAgree origin q (stateBlank s) := by
+    constructor
+    · exact hq.1
+    constructor
+    · simp [origin, stateBlank]
+    · intro x hx
+      simp [stateBlank, hq.2 x (by simpa [origin] using hx)]
+  obtain ⟨qs, hqs, hagree⟩ :=
+    ray_transfer m origin q (stateBlank s) hstart n hwindow rs hrs
+  refine ⟨qs, hqs, ?_, ?_⟩
+  · constructor
+    · exact hagree.1.trans hstate
+    · intro x hx
+      have horigin : origin ≤ x := by
+        rw [hagree.2.1, hhead] at hx
+        dsimp [origin]
+        omega
+      have ht := hagree.2.2 x horigin
+      rw [ht]
+      apply hb (x-origin)
+      rw [hagree.2.1, hhead] at hx
+      omega
+  · dsimp [origin] at hagree
+    rw [hagree.2.1, hhead]
+
+/-- The positive-shift state-specific macro runs forever when initiated
+    from any configuration carrying a fresh ray of the correct state. -/
+theorem fresh_ray_state_never_from (m : Machine) (s : Fin 6)
+    (n delta : Nat) (hn : 0 < n) (hdelta : 0 < delta)
+    (htrace : ∃ r, run m n (stateBlank s) = some r ∧
+      r.state = s ∧ r.head = (delta : Int) ∧
+      ∀ x, (delta : Int) ≤ x → r.tape x = false)
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (stateBlank s) = some d → 0 ≤ d.head)
+    (q : Config) (hq : FreshState s q) :
+    ∀ t, (run m t q).isSome = true := by
+  have hm := fresh_ray_state_step m s n delta hdelta htrace hwindow
+  have hall : ∀ z, ∃ r, run m (n*z) q = some r ∧ FreshState s r := by
+    intro z
+    induction z with
+    | zero =>
+        exact ⟨q, rfl, hq⟩
+    | succ z ih =>
+        obtain ⟨r, hr, hfresh⟩ := ih
+        obtain ⟨r', hnstep, hfresh', _⟩ := hm r hfresh
+        refine ⟨r', ?_, hfresh'⟩
+        have ht : n*(z+1) = n*z+n := by simp [Nat.mul_add]
+        rw [ht, run_add_macro, hr]
+        exact hnstep
+  intro t
+  obtain ⟨r, hr, _⟩ := hall (t+1)
+  have hle : t ≤ n*(t+1) := by omega
+  exact run_prefix_macro m q (n*(t+1)) t hle (by simp [hr])
+
+/-- A finite genuine blank-start entry into a fresh state-specific
+    frontier, followed by a repeatable macro, proves all-time nonhalting. -/
+theorem entry_fresh_state_never (m : Machine) (s : Fin 6)
+    (entrySteps n delta : Nat) (hn : 0 < n) (hdelta : 0 < delta)
+    (hentry : ∃ q, run m entrySteps blank = some q ∧ FreshState s q)
+    (htrace : ∃ r, run m n (stateBlank s) = some r ∧
+      r.state = s ∧ r.head = (delta : Int) ∧
+      ∀ x, (delta : Int) ≤ x → r.tape x = false)
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (stateBlank s) = some d → 0 ≤ d.head) :
+    NeverHalts m := by
+  obtain ⟨q, hq, hfresh⟩ := hentry
+  have htail := fresh_ray_state_never_from m s n delta
+    hn hdelta htrace hwindow q hfresh
+  intro t
+  have htotal : (run m (entrySteps+t) blank).isSome = true := by
+    rw [run_add_macro, hq]
+    exact htail t
+  exact run_prefix_macro m blank (entrySteps+t) t (by omega) htotal
+
+#print axioms fresh_ray_state_step
+#print axioms fresh_ray_state_never_from
+#print axioms entry_fresh_state_never
+
 end BB6Coverage
