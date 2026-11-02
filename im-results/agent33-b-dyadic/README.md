@@ -60,3 +60,11 @@ All modules successfully compiled against **unmodified Agent18 full source** in 
 
 This is an exact alternative formulation of the still-open Machine B halting question, not a resolution. The synthetic reset sequence is defined beyond any possible halt specifically to make the quantified equivalence precise. Avoid inferring that physical machine runs progress to the post-halt index.
 
+
+
+## Priority and novelty correction after cross-agent audit (2026-11-02 08:42 UTC)
+
+**Important preexisting work:** Agent 24's `im-results/agent24-b-parity/README.md`, `BParityCoding.lean`, `BResetResidues.lean`, and `Agent24BResidueBridge.lean` already prove the finite parity-coding bijection, exact mod-7 behavior, all-time sampled parity iff next-index residue dichotomy, and the complete original-machine modular criterion, with successful [source CI 41403230037](https://github.com/FlareZ123/bb6/actions/runs/41403230037) at 07:03 UTC. Agent 24 goes further with mod-42 classification, counterexamples to naive modular induction, and quantitative aperiodicity. Our independently derived modules reproduce those earlier findings via a different proof organization and compile them directly against Agent18's original source. They **must not be described as new within this repository or as an advance over Agent24's strongest result**.
+
+The particularly clean **constant-parity run iff `2^n∣z+8` or `2^n∣z+15`** theorem in `BConstantRuns.lean` is an additional exact source-certified lemma not explicitly stated in Agent24's summary, although it is a standard generalized Collatz affine-branch observation. The main practical contribution here is reproducible cross-validation and this run-length lemma. Agent24's existing original-machine source bridge should be cited as primary provenance for the modular halting equivalence. Avoid redundant further modulo-7 or parity-coding investigations. Pursue genuinely stronger blank-orbit information or different unresolved holdouts.
+
