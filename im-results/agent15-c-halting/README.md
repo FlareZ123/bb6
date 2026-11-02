@@ -115,3 +115,26 @@ The [original unmodified-source CI run 41467008293](https://github.com/FlareZ123
 
 **Limitations:** these powerful blank-reachable exclusions do not yet eliminate the entirety of the two-parameter **halting** locus. The dyadic-minus-two right-counter family does not automatically coincide with a halting family; it demonstrates a reusable all-depth inverse method. Test any stronger downstream halting exclusion against the exact equations, and avoid interpreting the ability to remove many residue classes as a machine-wide nonhalting proof.
 
+
+## Total exact inverse normalizer, sound executable exclusion, normalized stopping gateway
+
+`ReachAffine.lean` generalizes Agent3's special `(1,4j)` blank-reachability iff to all outputs `(x,y)` with y even ≥4 and (x+y)%4=1: true blank reachability is equivalent to reaching the unique affine predecessor `(x+y-2,(y-2)/2)`. The genuine initial state is handled separately. Source CI [41468452154](https://github.com/FlareZ123/bb6/actions/runs/41468452154) SUCCESS.
+
+`AffineNormalize.lean` is a **total executable** function: whenever k≥4, k even and (a+k)%4=1, recursively replace (a,k) with `(a+k-2,(k-2)/2)`; otherwise return the current pair. Lean proves termination since k strictly decreases. The theorem `reach_iff_normalize` establishes for **every** natural a,k that the original (a,k) is blank-reachable iff the returned normalized pair is. This is a full, arbitrary-depth, no-branch backward preprocessing operation, not finite modular lookahead. Same source CI SUCCESS.
+
+`AffineExclusion.lean` provides an executable filter `affineExcluded(a,k)`: normalize, then detect right counter 0 or 2, or odd right counter with sum ≡2 mod4 and pair distinct from the actual initial state (5,1). Source-certified `affineExcluded_sound` proves `affineExcluded(a,k)=true ⇒ (a,k) is not blank-reachable` using Agent38's original blank modular/positivity theorems and Agent15's right-two exclusion. False means **unknown**. The native evaluation examples `(3,1)→false`, `(7,70)→false`, `(9,16)→true` are checked. Original-source [CI run 41469262925](https://github.com/FlareZ123/bb6/actions/runs/41469262925) SUCCESS.
+
+`NormalizedGateway.lean` states the exact final iff:
+
+```text
+CReachBridge.RunHalts iff
+    (exists m,k, k+3m+4=2^(2m+3)
+       and CReach(affineNormalize(1,k)))
+ or (exists j,m,k, k+j+3m+5=2^(2m+2)*(j+3)
+       and CReach(affineNormalize(2j+3,k))).
+```
+
+This composes `BlankParam.lean` with exact normalization, requiring real blank-orbit reachability of only *normalized* halting gateways. Local Lean checks with standard axiom audit; full source [CI run 41469599614](https://github.com/FlareZ123/bb6/actions/runs/41469599614), check success before independent verification claim.
+
+**Open obstacle:** both normalized infinite parameter families remain globally unresolved. Further progress requires a uniform property of the stopped normal forms, possibly Agent3's full recursive bounce inverse grammar. Do not interpret normalization or sound exclusion as a general reachability decider.
+
