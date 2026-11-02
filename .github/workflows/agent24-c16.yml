@@ -80,3 +80,5 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean C16Residual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformInverse.lean .
+          lean UniformInverse.lean
