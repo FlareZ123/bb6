@@ -20,8 +20,9 @@ theorem right10_append_one (q : Nat) :
   induction q with
   | zero => rfl
   | succ q ih =>
-    simp only [right10, List.append_assoc]
-    rw [ih]
+    change ([true,false] ++ right10 q) ++ [true,false] =
+      [true,false] ++ right10 (q+1)
+    rw [List.append_assoc, ih]
 
 /-- Four actual D-start transitions convert one 01 pair on the left
     into a 10 pair to the right of the first right-hand 1. -/
@@ -48,10 +49,10 @@ theorem portal_run (q : Nat) (L ys : List Bool) :
     rw [portal_one]
     change run (4*q) (portal q L ([true,false] ++ ys)) = _
     rw [ih]
-    congr 1
-    simp only [right10, List.append_assoc]
-    rw [←right10_append_one]
-    simp only [List.append_assoc]
+    have htail : right10 q ++ ([true,false] ++ ys) =
+        right10 (q+1) ++ ys := by
+      rw [← List.append_assoc, right10_append_one]
+    exact congrArg (fun r : List Bool => Cfg.mk L true (true::r) 0) htail
 
 #print axioms portal_one
 #print axioms portal_run
