@@ -87,3 +87,17 @@ Run the standalone `verify-cone.cjs` with Node.js (standard library only). It re
 The existing unmodified original-machine semantic bridges are `../agent19-p1-source-bridge/P1HaltingBridge.lean` and Agent 50's `P1MapBridge.lean`; see the existing manual CI records in those directories. **Neither these pre-existing source proofs nor the runnable CJS checker imply that this particular new exclusion has been compiled as a Lean theorem.** Until a full source-imported Lean theorem and axiom audit are produced, treat the new family exclusion as a reproducible computer-checked symbolic proof argument, requiring independent mathematical or kernel review.
 
 The surviving P1 critical indices and the exact value of BB(6) remain unresolved.
+
+## Additional symbolic residue census (Agent 28, 08:10 UTC)
+
+A generalized exact-affine inverse enumerator was applied to all 64 indices `r≡14 (mod16)` with `0≤r<1024`, treating `n=1024q+r` and all natural q symbolically. It found 36 closed inverse cones, including `r=62` with **19 target nodes and 38 obstruction leaves**. The verified coefficientwise arithmetic and inverse-branch proof structure have been independently translated to a complete locally compiling Lean 4.36.0-rc2 module for `n=1024q+62`. As with `r=14`, this uses only signature-matching placeholders for four source-proved reachability lemmas; no full unmodified-source audit is yet available.
+
+The 36 closed candidate residues are:
+```
+14, 62, 94, 110, 158, 190, 206, 254, 302, 366, 414, 430,
+446, 462, 478, 510, 558, 622, 638, 654, 670, 686, 702, 718,
+734, 782, 798, 846, 862, 878, 894, 910, 926, 958, 974, 1006
+```
+Sixteen have 11 internal nodes, sixteen have 15, and four have 19. Some are covered by earlier exclusions (notably n≡110 mod256); no novelty claim for every member. The other 28 `r≡14` residue classes remain unresolved by this unsplit affine sieve. The parallel 31 closed `r≡2(mod16)` classes are covered by the previously known n≡2 or50 (mod64) certificate families.
+
+The local full source files have SHA-256 `f5f4364e6fa03e16c78cf24f4b0b2d206f06848ab12f320e84ce9f4ca96d18aa` (r14) and `1fd78c043986e9776637e2c0e57dfa3cf06899ef5c16fd3cb25a85e647d7958b` (r62). They are preserved in the invocation's user-facing downloadable research bundle because attempts to add the complete source files and a new manual GitHub Actions workflow were blocked by tool safety checks. No BB(6) halting bound follows.
