@@ -1,10 +1,11 @@
 import FreshRayGlider
+import TurnaroundRay
 set_option maxRecDepth 8192
 
 namespace BB6Coverage
 
 inductive GliderKind where
-  | threeRight | threeLeft | fourRight | fourLeft
+  | threeRight | threeLeft | fourRight | fourLeft | turnRight | turnLeft
   deriving DecidableEq, Repr
 
 structure GliderSpec where
@@ -17,7 +18,7 @@ structure GliderSpec where
   deriving Repr
 
 def gliderSpecs : List GliderSpec :=
-  ([.threeRight, .threeLeft, .fourRight, .fourLeft] : List GliderKind).flatMap fun kind =>
+  ([.threeRight, .threeLeft, .fourRight, .fourLeft, .turnRight, .turnLeft] : List GliderKind).flatMap fun kind =>
     (List.finRange 6).flatMap fun b =>
       (List.finRange 6).flatMap fun c =>
         ([false,true] : List Bool).flatMap fun u =>
@@ -45,12 +46,24 @@ instance (b c : Fin 6) (u v z : Bool) (p : PartialMachine) :
   unfold PartialLeftGlider
   infer_instance
 
+instance (b c : Fin 6) (v : Bool) (p : PartialMachine) :
+    Decidable (PartialTurnaround b c v p) := by
+  unfold PartialTurnaround
+  infer_instance
+
+instance (b c : Fin 6) (v : Bool) (p : PartialMachine) :
+    Decidable (PartialLeftTurnaround b c v p) := by
+  unfold PartialLeftTurnaround
+  infer_instance
+
 def gliderFits (p : PartialMachine) (s : GliderSpec) : Bool :=
   match s.kind with
   | .threeRight => decide (PartialThreeGlider s.b s.c s.u p)
   | .threeLeft => decide (PartialLeftThreeGlider s.b s.c s.u p)
   | .fourRight => decide (PartialFourGlider s.b s.c s.u s.v s.z p)
   | .fourLeft => decide (PartialLeftGlider s.b s.c s.u s.v s.z p)
+  | .turnRight => decide (PartialTurnaround s.b s.c s.v p)
+  | .turnLeft => decide (PartialLeftTurnaround s.b s.c s.v p)
 
 /-- Executable finite witness search, with a proof-producing answer. -/
 def gliderOracle (p : PartialMachine) : Bool :=
@@ -86,8 +99,22 @@ theorem gliderOracle_sound (p : PartialMachine) (B : Nat)
       exact of_decide_eq_true hd
     exact partial_left_glider_cover s.b s.c s.u s.v s.z p B hh
 
+  | turnRight =>
+    have hh : PartialTurnaround s.b s.c s.v p := by
+      have hd : decide (PartialTurnaround s.b s.c s.v p) = true := by
+        simpa [gliderFits,hk] using hs
+      exact of_decide_eq_true hd
+    exact partial_turnaround_cover s.b s.c s.v p B hh
+  | turnLeft =>
+    have hh : PartialLeftTurnaround s.b s.c s.v p := by
+      have hd : decide (PartialLeftTurnaround s.b s.c s.v p) = true := by
+        simpa [gliderFits,hk] using hs
+      exact of_decide_eq_true hd
+    exact partial_left_turnaround_cover s.b s.c s.v p B hh
+
 theorem oracle_three_example : gliderOracle threeGliderExample = true := by decide
 theorem oracle_four_example : gliderOracle gliderExample = true := by decide
+theorem oracle_turnaround_example : gliderOracle turnaroundExample = true := by decide
 theorem oracle_four_degenerate_example : gliderOracle fourDegenerateExample = true := by decide
 
 theorem oracle_three_leaf (B : Nat) : Cover (DecidedBelow B) threeGliderExample :=
@@ -97,6 +124,10 @@ theorem oracle_four_degenerate_leaf (B : Nat) :
     Cover (DecidedBelow B) fourDegenerateExample :=
   gliderOracle_sound fourDegenerateExample B oracle_four_degenerate_example
 
+theorem oracle_turnaround_leaf (B : Nat) : Cover (DecidedBelow B) turnaroundExample :=
+  gliderOracle_sound turnaroundExample B oracle_turnaround_example
+
+#print axioms oracle_turnaround_leaf
 #print axioms gliderOracle_sound
 #print axioms oracle_three_leaf
 #print axioms oracle_four_degenerate_leaf
