@@ -134,6 +134,27 @@ theorem highLevelNext_strict (d e : Nat)
     (h : highLevelNext (.N d) = some (.N e)) : d<e := by
   exact scanEven_strict d 0 e h
 
+/-- All successful one-counter successors have an explicit inverse parameterization. -/
+theorem highLevelNext_iff_oddTower (d e : Nat) :
+    highLevelNext (.N d) = some (.N e) ↔
+      ∃ q k, d = oddTower q k ∧ e = d+k+3*(q+1) := by
+  constructor
+  · intro hn
+    rcases classify_d d with ⟨k,hk⟩ | ⟨q,k,hq⟩
+    · rw [hk] at hn
+      have hno := scan_haltTower k 0
+      simp only [highLevelNext] at hn
+      rw [hno] at hn
+      contradiction
+    · have he : e = d+k+3*(q+1) := by
+        change scanEven d 0=some (.N e) at hn
+        rw [hq,scan_oddTower] at hn
+        simp only [Option.some.injEq, HighLevelState.N.injEq] at hn
+        omega
+      exact ⟨q,k,hq,he⟩
+  · rintro ⟨q,k,rfl,rfl⟩
+    simpa [highLevelNext] using scan_oddTower q k 0
+
 #print axioms scan_haltTower
 #print axioms scan_oddTower
 #print axioms haltTower_power
@@ -143,4 +164,5 @@ theorem highLevelNext_strict (d e : Nat)
 #print axioms scanEven_none_iff
 #print axioms scanEven_strict
 #print axioms highLevelNext_strict
+#print axioms highLevelNext_iff_oddTower
 end BB6.Agent48.SpaceNeedle
