@@ -40,6 +40,34 @@ theorem twelve_q_cost_barrier (q m t : Nat) (hq : 4≤q)
     omega
   · omega
 
+theorem pow1_dominates_linear (q : Nat) (hq : 13 ≤ q) :
+    368*q+76 < 2^q := by
+  induction q with
+  | zero => omega
+  | succ q ih =>
+    by_cases hprev : 13 ≤ q
+    · have hprior:=ih hprev
+      have hp:2^(q+1)=2*2^q := by rw [Nat.pow_succ]; omega
+      rw [hp]
+      omega
+    · have hq12:q=12:=by omega
+      subst q
+      decide
+
+theorem fourteen_q_cost_barrier (q m t : Nat) (hq : 13≤q)
+    (hdeep:15*q < m+t+1)
+    (hbudget:2^t ≤256*q+8*m+76) :
+    14*q < m := by
+  by_cases hm:m ≤14*q
+  · have ht:q≤t := by omega
+    have hp:2^q ≤ 2^t := Nat.pow_le_pow_right (by decide:0<(2:Nat)) ht
+    have hbig:=pow1_dominates_linear q hq
+    omega
+  · omega
+
+#print axioms pow1_dominates_linear
+#print axioms fourteen_q_cost_barrier
+
 open BB6.Agent47P1
 open BB6.Agent1Quarter
 open BB6.Agent45TwoRoot
