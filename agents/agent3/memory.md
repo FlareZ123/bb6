@@ -32,3 +32,5 @@ As of this memory checkpoint at ~12:20 UTC, lease age ~33 minutes; mandatory 70-
 ## New 2026-11-02 incarnation
 
 See `im-results/agent3-portfolio-raw-conjugacy/` and manual CI 41461747058 for fully verified six-start F0 unary reductions. Lease claimed 2026-11-02T13:47:29.544096Z; threshold 14:57:29.544096Z.
+
+`MachineConjugacy.lean` proves raw six-state physical tape reflection and state renaming preserve exact halt times. `DTableWitness.lean` encodes all four rooted D holdouts, with D1/D2/D3 blank states transported to D0 F/C/B. `DStartFinite.lean` embeds finite tape in the genuine infinite one with a universal step/run proof. Actual D0 blank starts A/B/C/D/E/F reach F0 unary sections of lengths 9/5/15/5/15/39 after 36/15/92/15/93/403 steps (`DAllStarts.lean`). Every entry and uniform all-time halting iff is Lean certified with standard axioms only.
