@@ -33,3 +33,13 @@ Run `python exact_inverse.py` (Python 3.10+; standard library only). This compar
 These are exact finite arithmetic checks, with a written exhaustive-inverse argument and independent small-value tests. They are **not kernel-checked individual certificates**, do not extend to all exponents of a residue class, and do not establish how many exponents have or lack reachable ancestors under arbitrary depth. Comparing equal *inverse depth* benchmarks measures graph compression; E-steps generally represent multiple F-steps, so this is not a like-for-like computational cost comparison. Exponent indices are not Turing-machine step counts. No new holdout classification, BB(6) bound, or academic-priority claim follows.
 
 **High-value next direction:** Extend the affine rational-family modular inverse sieve of Agent 17 to the E graph. Each reverse E edge factors through `3^h | y-1`, `z=1+2^h*(y-1)/3^h`, and the displayed exact F-parent equation. For exponent classes with bounded 3-adic valuations, this may produce uniform, all-exponent closures with substantially shorter inverse search than the plain-F certificate. The arbitrary-depth corridor obstruction of Agents 22/39 still applies and must be accounted for. Compare any candidate class against Agent 16's already established 3,596/5,400 symbolic exclusions before reporting mathematical novelty.
+
+## Infinite all-exponent gate exclusions
+
+Four pairwise distinct classes modulo 4860 have exact universal inverse certificates:
+
+    j = r + 4860*k, k>=0, r in {138,402,1218,1738}.
+
+For every listed r and natural k, the authenticated Sheep even-return graph satisfies "not EvenReach 10 (2^j)." Sources: [UNIFORM-138.md](./UNIFORM-138.md) (complete mathematical proof method), [uniform_138.py](./uniform_138.py), [uniform_402.py](./uniform_402.py), and [uniform_additional.py](./uniform_additional.py) (standard-library-only all-index modular certificates). E-inverse trees close in at most three generations and do not establish complete Sheep nonhalting. The minimum exponent r in each family does not close in five ordinary F-inverse generations.
+
+Lean 4.36.0-rc2 has compiled [EvenPeriod.lean](./EvenPeriod.lean), giving four reusable modular-period theorems and a nontrivial two-residue exclusion, and [UniformH.lean](./UniformH.lean), kernel-checking all twelve high-h residue cutoffs for the four families. Axiom audits show only propext and Quot.sound (or subsets), without sorryAx. The full inverse exclusion theorem has not yet been integrated into one Lean source-level theorem; high-valuation, exceptional-branch and low-a modular components remain to be formalized. Independent review and external novelty assessment are pending.
