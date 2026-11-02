@@ -73,10 +73,12 @@ proof-carrying report. Completeness and uniqueness are kernel theorems. -/
 theorem FrontierAudit.unique_actual_terminal {good : Machine → Prop}
     {p : PartialMachine} (audit : FrontierAudit good p)
     (m : Machine) (hm : compatible p m) :
-    ∃! term : AuditTerminal, term ∈ audit.terminals ∧ term.matches m := by
+    ∃ term : AuditTerminal, term ∈ audit.terminals ∧ term.matches m ∧
+      (∀ other : AuditTerminal, other ∈ audit.terminals →
+        other.matches m → other = term) := by
   obtain ⟨term, hmem, hcorrect⟩ := audit.has_actual_terminal m hm
-  refine ⟨term, ⟨hmem, hcorrect⟩, ?_⟩
-  intro other ⟨homem, hocorrect⟩
+  refine ⟨term, hmem, hcorrect, ?_⟩
+  intro other homem hocorrect
   exact audit.terminals_unique [] m other term homem hmem hocorrect hcorrect
 
 #print axioms FrontierAudit.terminal_extends
