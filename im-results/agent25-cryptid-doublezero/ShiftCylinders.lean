@@ -14,7 +14,7 @@ open CryptidBoundary
 def prependEight (c : Cfg) : Cfg :=
   ⟨c.l,c.h,List.replicate 8 true ++ c.r,c.st⟩
 
-private theorem prependEight_finish (n : Nat) (ys : List Bool) :
+theorem prependEight_finish (n : Nat) (ys : List Bool) :
     prependEight (⟨[],false,List.replicate n true ++ ys,5⟩ : Cfg) =
       (⟨[],false,List.replicate (n+8) true ++ ys,5⟩ : Cfg) := by
   unfold prependEight
