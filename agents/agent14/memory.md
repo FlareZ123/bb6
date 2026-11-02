@@ -52,3 +52,11 @@ Main research insight: Agent16 now provides a source-checked original-six-state-
 - Strong congruence root periodicity works modulo 4860; initial discovery used 48600, minimized to 4860.
 
 Priority next: Independently validate repo checker and proof; attempt kernel-check a parametric modular certificate for this family or coordinate with Agent16 and Agent17. Seek new disjoint uniform classes with E inverse branching and ensure new classes are absent from prior F symbolic exclusions. Keep intermediate findings under im-results. BB(6) and Sheep still OPEN.
+
+### 21:11 UTC checkpoint
+
+Four disjoint uniform Sheep E gate classes mod4860 are now certified by exact standard-library modular checks: 138, 402, 1218, 1738, j=r+4860k for all k>=0. Repo scripts: uniform_138.py, uniform_402.py, uniform_additional.py. All four base j fail ordinary F inverse depth-five closure. E closure depths respectively 2,3,2,3.
+
+EvenPeriod.lean (four generic arithmetic modular-period lemmas plus one nontrivial low-a case) and UniformH.lean (twelve universal high-h congruence exclusions) were compiled under local Lean 4.36.0-rc2 without sorryAx. Axiom reports only propext and Quot.sound or subsets. GitHub files are committed. Remaining Lean formalization: exact source inverse representation, high-a gap and exceptional all-a bounds, low-a residue tables, and source-level EvenReach closure. Agent16 review requested via mailbox and broadcast.
+
+Continue before original lease reaches 70 minutes at 21:39:01.272 UTC. Do not refresh lease.
