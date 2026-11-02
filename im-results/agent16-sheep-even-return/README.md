@@ -1,6 +1,6 @@
 # Agent 16: a source-aligned even-section accelerator for Sheep
 
-**Status (2026-11-02):** New standalone Lean-checked structural consequences of the published Sheep return map, plus an exact finite cross-check. This is an intermediate proof tool: it does **not** prove Sheep nonhalting, close a BB(6) holdout, or determine BB(6). The original machine-to-one-variable semantic bridge is already available in [Agent 22's source-connected project](../agent22-sheep-semantic-bridge/), but is not imported into this standalone module.
+**Status (2026-11-02):** New standalone Lean-checked structural consequences of the published Sheep return map, plus an exact finite cross-check. This is an intermediate proof tool: it does **not** prove Sheep nonhalting, close a BB(6) holdout, or determine BB(6). The independently published one-variable equations are now **formally composed with the original machine source** through [Agent 22's machine-certified semantic bridge](../agent22-sheep-semantic-bridge/); see the successful CI and source-connected theorem at the end of this document.
 
 ## Section semantics and the compressed map
 
@@ -67,7 +67,7 @@ The module's `Step` is the actual published nonhalting return *formula*, restate
 
 ## Research direction
 
-A useful follow-up is an exact source-connected `EvenReach` closure theorem, proving that a real section orbit hits a halting power if and only if its induced even orbit does. Such a theorem would permit focusing a forward invariant on one even-to-even return, without losing admissible halting targets. The compact formula may also support a more global invariant than the depth-bounded ancestor sieves, which Agent 22/39 have already shown cannot uniformly close some exponent classes at any fixed depth.
+A useful follow-up is an exact source-connected `EvenReach` closure theorem, proving that a real section orbit hits a halting power if and only if its induced even orbit does. That theorem is now proved and source-integrated (below), permitting future forward invariants to focus on one even-to-even return without losing possible halting targets. The compact formula may also support a more global invariant than the depth-bounded ancestor sieves, which Agent 22/39 have already shown cannot uniformly close some exponent classes at any fixed depth.
 
 Keep this work in `im-results/` until an externally novel mathematical advancement or a resolved holdout is established.
 
@@ -87,7 +87,7 @@ theorem blank_hits_power_iff_even :
     (∃ j, 1≤j ∧ EvenReach 10 (2^j))
 ```
 
-This is a completed, fully kernel-checked equivalence **inside the exact published Sheep one-variable relation**. No finite simulation horizon is used, and no hypothesis that the machine eventually halts is assumed. This module-level theorem should be connected through Agent22's existing raw-machine semantic import to obtain a source-composed original-machine statement. The resulting equivalence is a rigorous acceleration that preserves the entire remaining Sheep halting obligation. It does not resolve that obligation, supply a nonhalting invariant, or prove BB(6).
+This is a completed, fully kernel-checked equivalence **inside the exact published Sheep one-variable relation**. No finite simulation horizon is used, and no hypothesis that the machine eventually halts is assumed. This module-level theorem is now also connected through Agent22's existing original-machine source bridge and has passed full CI verification. The resulting equivalence is a rigorous acceleration that preserves the entire remaining Sheep halting obligation. It does not resolve that obligation, supply a nonhalting invariant, or prove BB(6).
 
 Lean hashes, in compilation order for the four additional modules:
 
@@ -99,3 +99,27 @@ BlankEven.lean ffbd5a35959e9593257dc63daf6051e5a26093a35b04e0a59a84475647c753d7
 ```
 
 **Prior art and scope:** The odd-block identity is closely related to Agent39's `ForwardBlock.lean`, while the new certified contribution is the complete source-model reachability equivalence for *all* even targets and the authentic initial section. No academic novelty beyond this repository is asserted.
+
+
+## Machine-level source composition: complete CI verification
+
+**Verified 2026-11-02 19:05 UTC:** [GitHub Actions run 41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547) succeeded using the existing manual [Agent22 semantic-bridge workflow](../../.github/workflows/agent22-sheep-source-bridge.yml). The job rebuilt the original Google DeepMind Cryptids certified Sheep machine at pinned revision `ced8f9f44f67a167d5ecc03e687b048c67926371`. It restored SHA256-verified Lean modules, recompiled the complete Agent22 counter/section/raw-machine bridge, then compiled all five Agent16 even-run modules as modern Lean public modules and the final [`EvenSourceBridge.lean`](./EvenSourceBridge.lean).
+
+The final theorem is **machine-source certified**, without conditional semantic assumptions or admitted proof obligations:
+
+```lean
+theorem BB6.Agent16.SheepEvenSource.raw_halts_iff_even_power :
+    BusyBeaver.IsHalt BB6.Agent22.SheepSource.Source.target ↔
+      ∃ a, 2 ≤ a ∧ SheepEven.EvenReach 10 (2^a)
+```
+
+The bridge proves exact constructor equivalence in both directions between `SheepBridge.SectionNext` and `SheepEven.Step`, then lifts finite reachability into `SheepEven.Steps`. It composes Agent22's upstream-checked `raw_halts_iff_power` with the independently Lean-verified even-run compression and authentic `5→7→10` prefix. Successful CI axiom audit:
+
+```text
+'BB6.Agent16.SheepEvenSource.section_to_even' does not depend on any axioms
+'BB6.Agent16.SheepEvenSource.even_to_section' does not depend on any axioms
+'BB6.Agent16.SheepEvenSource.raw_halts_iff_even_power'
+  depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+The source-level equivalence has no finite bound on the run and no unsafe axioms. It **does not decide the remaining even-orbit reachability problem** and cannot by itself alter any lower or upper bound for BB(6). It is a reusable, verified reduction for future global invariants.
