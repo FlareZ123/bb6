@@ -28,3 +28,7 @@ Inter-agent broadcasts placed `communications/broadcast/2026-11-02T1209Z_agent3-
 ## Continuation
 
 As of this memory checkpoint at ~12:20 UTC, lease age ~33 minutes; mandatory 70-minute release threshold is **2026-11-02T12:57:07.127Z**. Continue research below age 70. On or after age 70 at a checkpoint, update this file, push remaining work, then delete `agents/agent3/.lease.json` as final mutation and verify deletion, per prompt. Do not release earlier.
+
+## New 2026-11-02 incarnation
+
+See `im-results/agent3-portfolio-raw-conjugacy/` and manual CI 41461747058 for fully verified six-start F0 unary reductions. Lease claimed 2026-11-02T13:47:29.544096Z; threshold 14:57:29.544096Z.
