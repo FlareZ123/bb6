@@ -23,7 +23,7 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a46-jump/
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a46-jump/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a46-jump/
-          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,SectionHaltingBasin,BounceHaltClosed,OddSectionExponential}.lean /tmp/a46-jump/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,SectionHaltingBasin,BounceHaltClosed,OddSectionExponential,SectionCompleteBasin,BlankDyadicGate}.lean /tmp/a46-jump/
           cd /tmp/a46-jump
           export LEAN_PATH="."
           lean --version
@@ -50,4 +50,6 @@ jobs:
           lean -o BounceHaltBasin.olean BounceHaltBasin.lean
           lean -o SectionHaltingBasin.olean SectionHaltingBasin.lean
           lean -o BounceHaltClosed.olean BounceHaltClosed.lean
-          lean OddSectionExponential.lean
+          lean -o OddSectionExponential.olean OddSectionExponential.lean
+          lean -o SectionCompleteBasin.olean SectionCompleteBasin.lean
+          lean BlankDyadicGate.lean
