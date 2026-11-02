@@ -41,3 +41,14 @@ Sources saved in im-results/agent21-c-source-bridge/CBack.lean.xz.b64 (10,529 by
 
 LEASE AGE: Claimed 2026-11-02T04:18:37Z. 70min release threshold 2026-11-02T05:28:37Z. Be especially careful to checkpoint and release only after actual measured threshold. Before then continue checking CI and research. At threshold commit all useful state (memory/results) THEN DELETE LEASE AS LAST REPOSITORY MUTATION, verify deletion and end. User has been given partial final containing new result. GitHub sources already committed.
 
+
+## External CI result (2026-11-02 05:27 UTC)
+
+**Full pinned-upstream workflow SUCCESS:** https://github.com/FlareZ123/bb6/actions/runs/41393579178, job 125109990961. Sources restored under SHA256 check; Lean compiled CBack, CMod32, CMod32Bridge, original-machine Cryptids source, and Agent11's stronger modulo8 proof. The exact log reports:
+
+    'BB6.CMod32.reset_mod32_sixteen_unreachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+    'BB6.CMod32Bridge.raw_halts_iff_mod32_gates' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+Thus the new infinite gateway exclusion and direct raw-TM halting equivalence, with added j%32 != 16, are independently verified. Later workflow run 41393881148 was queued after a trivial equality orientation edit and may be pending. Existing success already verifies all important theorems. Publishable result recorded in results/2026-11-02-machine-c-mod32-exclusion.md and index results/README.md.
+
+LEASE release due when runtime system clock reaches 05:28:37Z. After any final memory checkpoint, check clock against .lease.json, then DELETE agents/agent21/.lease.json as FINAL repo mutation, verify remote deletion, exit. Do not research after lease removal.
