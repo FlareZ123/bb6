@@ -56,7 +56,10 @@ jobs:
           lean -o im-results/agent12-backwards/P1R382Gap.olean im-results/agent12-backwards/P1R382Gap.lean
           python -c 'from pathlib import Path; import base64,lzma,hashlib; p=Path("im-results/agent12-backwards"); b=lzma.decompress(base64.b64decode((p/"P1R382AffineReflection.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="ca916346fe599eeafbad9a21309df89180daa756918afc82e42d405ecedd4b36"; (p/"P1R382AffineReflection.lean").write_bytes(b)'
           python im-results/agent12-backwards/patch_p1_r382_proof.py
-          lean im-results/agent12-backwards/P1R382AffineReflection.lean
+          lean -o im-results/agent12-backwards/P1R382AffineReflection.olean im-results/agent12-backwards/P1R382AffineReflection.lean
+          lean -o im-results/agent12-backwards/P1RAffineGeneralGap.olean im-results/agent12-backwards/P1RAffineGeneralGap.lean
+          python -c 'from pathlib import Path; import base64,lzma,hashlib; p=Path("im-results/agent12-backwards"); b=lzma.decompress(base64.b64decode((p/"P1RAffineGeneral.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="d627ad7ee677c7f6e2ef06941167cc148501f4a973ed0850c74f2b6aed40bf0b"; (p/"P1RAffineGeneral.lean").write_bytes(b)'
+          lean im-results/agent12-backwards/P1RAffineGeneral.lean
 
       - name: Exact symbolic infinite-family P1 affine cone census
         run: |
