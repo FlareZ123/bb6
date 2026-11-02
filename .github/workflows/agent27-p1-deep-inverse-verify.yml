@@ -1,0 +1,28 @@
+name: Agent 27 P1 unbounded critical inverse-depth theorem (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify unmodified Agent 1 definitions and deep inverse proof
+        run: |
+          mkdir -p /tmp/agent27-p1-deep
+          cd /tmp/agent27-p1-deep
+          cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/PosEvenForm.lean" PosEvenForm.lean
+          python3 -c 'import base64,hashlib,lzma,pathlib,os; p=pathlib.Path(os.environ["GITHUB_WORKSPACE"])/"im-results/agent27-p1-critical/UpperDeep.lean.xz.b64"; data=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(data).hexdigest()=="b8045299f45dd1144726d921642c400056c65610c17650829bbbf6373dc7ae44"; pathlib.Path("UpperDeep.lean").write_bytes(data)'
+          export LEAN_PATH="."
+          lean -o PosEvenForm.olean PosEvenForm.lean
+          lean UpperDeep.lean
