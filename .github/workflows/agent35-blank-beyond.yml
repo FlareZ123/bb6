@@ -59,4 +59,5 @@ jobs:
           lean -o im-results/agent32-cryptid-padding/PaddedApplications.olean im-results/agent32-cryptid-padding/PaddedApplications.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankBContin.olean im-results/agent35-cryptid-code/BlankBContin.lean
           lean -o im-results/agent32-cryptid-third/CryptidThree.olean im-results/agent32-cryptid-third/CryptidThree.lean
-          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankAfterPadding.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankAfterPadding.olean im-results/agent35-cryptid-code/BlankAfterPadding.lean
+          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankFurther.lean
