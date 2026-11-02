@@ -33,6 +33,14 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/HaltingFunnel.lean" HaltingFunnel.lean
           cp "$GITHUB_WORKSPACE/im-results/agent19-p1-source-bridge/P1Bridge.lean" Agent19P1Bridge.lean
+          for name in EvenSector OddReturn Reachability BlankCriterion; do
+            cp "$GITHUB_WORKSPACE/im-results/agent4-halting-funnel/${name}.lean" "${name}.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent19-p1-source-bridge/P1HaltingBridge.lean" Agent19P1HaltingBridge.lean
           export LEAN_PATH=".:${LEAN_PATH:-}"
           lake env lean -o HaltingFunnel.olean HaltingFunnel.lean
-          lake env lean Agent19P1Bridge.lean
+          lake env lean -o Agent19P1Bridge.olean Agent19P1Bridge.lean
+          for name in EvenSector OddReturn Reachability BlankCriterion; do
+            lake env lean -o "${name}.olean" "${name}.lean"
+          done
+          lake env lean Agent19P1HaltingBridge.lean
