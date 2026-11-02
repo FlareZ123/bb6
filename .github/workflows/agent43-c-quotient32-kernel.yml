@@ -73,4 +73,7 @@ jobs:
           lean -o CGlobal32.olean CGlobal32.lean
           lean -o CFull32.olean CFull32.lean
           lean -o CExclusions32.olean CExclusions32.lean
-          lean CSourceBridge32.lean
+          lean -o CSourceBridge32.olean CSourceBridge32.lean
+          # Agent11: check eight extra absent cylinders in original M32 source
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-first-family/M32EightCells.lean" M32EightCells.lean
+          lean M32EightCells.lean
