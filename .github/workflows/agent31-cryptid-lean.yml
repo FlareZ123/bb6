@@ -29,4 +29,9 @@ jobs:
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary
         run: |
-          lean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
+          lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
+      - name: Kernel check composed authentic blank trace
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary
+        run: |
+          lean im-results/agent31-cryptid-boundary/BlankTrace.lean
