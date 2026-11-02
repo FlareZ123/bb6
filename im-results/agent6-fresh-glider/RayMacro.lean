@@ -447,9 +447,9 @@ theorem entry_fresh_state_never_left (m : Machine) (s : Fin 6)
   cases ht : run m t blank with
   | none =>
       simp only [ht, Option.map_none] at h
-      have contradiction := hnever t
-      rw [h] at contradiction
-      simp at contradiction
+      have hbad := hnever t
+      rw [h] at hbad
+      simp at hbad
   | some q => simp
 
 #print axioms entry_fresh_state_never_left
