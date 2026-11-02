@@ -29,3 +29,21 @@ Current new work, all pushed:
 - Manual workflows only, obey repo README prohibition on per-commit workflows.
 
 Next: Seek global blank-reachable-section invariant. In particular can strengthen the inverse-depth obstruction by constructing chains satisfying the existing `CRange.reached_odd_zero_mod4_hole` necessary *modular* condition, e.g. choose initial j≡3 mod4. But do not confuse modular compatibility with actual blank-reachability. Critic messages emphasize closure over residue counts. Avoid wasting CI on already quotient-excluded candidates. Machine C and BB(6) remain OPEN.
+
+
+## Incarnation claimed 2026-11-02T16:10:52.181Z (global coverage program)
+
+Run `agent8-bb6-coverage-20261102T161052181Z`, normal mode, actual RNG selected 1. Original lease remains at `agents/agent8/.lease.json` and **must not be refreshed**. Releasing is permitted only following a checkpoint at/after **2026-11-02T17:20:52.181Z UTC**; push all useful state and release by deleting lease as LAST GitHub mutation. Keep working if age <70 minutes.
+
+Investigated Critic 16:08 broadcast and the dated 663 rooted (435 unrooted) holdout ledger, external bbchallenge conventions. Their status is historic and incomplete for global six-state enumeration; the exact BB(6) value remains **open**.
+
+New locally compiled Lean 4.36.0-rc2 proof modules under `im-results/agent8-coverage-contract/`, manually audited with `#print axioms` free of sorryAx:
+- `Frontier.lean`: defines distinct outer unassigned transition vs inner genuine halt; complete 25-outcome slot branching; deterministic trace agreement across sparse completions; proof-carrying `Cover` tree, `Cover.sound`, `global_coverage`, precise contingent `exact_maximum_if_certificate`. Only three actual easy example leaf classes; **no full Cover term**.
+- `TerminalBridge.lean`: precise runtime-only bridge between explicit terminal write/direction action and implicit missing-transition semantics; preserves exact halting time and divergence, with surjective 1RZ embed. Does **not** preserve final 1-count, irrelevant for BB_S(6).
+- `Symmetry.lean`: all-time 6-state renaming/reflection conjugacy, `normalized_haltsAt_iff` with mapped start root. Preserves complete infinite tape and time. Does NOT by itself check the 663 CSV generator witness rows.
+- `Prune.lean`: universally safe finite-tree nonhalting leaves for `0RA` and `0LA`, regardless of other 11 entries.
+- `OneHalt.lean`: all-time `one_halt_normal_form`: every halting m (even many undefined transitions) has a unique-halt-entry completion with same exact halt time; `one_halt_upper_bound` reduces universal *upper bounds* to machines with exactly one halt entry.
+
+Manual workflow `.github/workflows/agent8-coverage-contract.yml` uses only `workflow_dispatch` (repo prohibits per-commit workflows). Original full coverage run 41480597583 succeeded; terminal bridge run 41481240736 succeeded; symmetry+prune run 41482665261 succeeded; OneHalt-inclusive run 41482985101 triggered 16:35 UTC (check final status). All modules independently compiled locally with standard Lean axioms only. README at `im-results/agent8-coverage-contract/README.md` explains missing proof edge from raw six-state tables to a complete source-certified total enumeration and finally a maximal champion.
+
+**Critical distinction:** These are generic structural foundational theorems, likely prior mathematical knowledge, not a new original machine decision or BB6 bound. Stay under `im-results/`, not `results/`. More directly useful next step: connect real six-state external enumerator's admissible seed/symmetry/decider rules and dated provenance to `Cover` or build a trusted, independently checkable leaf-certificate interpreter. Avoid treating 663 historic holdouts as exhaustive. The other agent8 Machine C rank research described in earlier memory remains intact.
