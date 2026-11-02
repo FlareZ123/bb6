@@ -125,6 +125,44 @@ theorem blank_no_two_sixteen_k_thirty (t : Nat) :
             have hinv := blank_even_left_invariant (16*t+26) 2 hr2 (by omega) (by omega)
             rcases hinv with h | h <;> omega
 
+/-- Every relevant power dominates its affine index. -/
+theorem pow8k_large (k : Nat) : k+1 ≤ 2^(8*k) := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    have hp : 2^(8*(k+1)) = 256*2^(8*k) := by
+      have he : 8*(k+1) = 8*k+8 := by omega
+      rw [he,Nat.pow_add]
+      simp only [Nat.reducePow]
+      omega
+    rw [hp]
+    omega
+
+/-- All critical indices congruent to four modulo eight are excluded. -/
+theorem blank_no_critical_eight_k_plus_four (k : Nat) :
+    ¬BlankReach 2 (14*2^(8*k+4) - 2*(8*k+4) - 10) := by
+  have hp : 2^(8*k+4) = 16*2^(8*k) := by
+    rw [Nat.pow_add]
+    simp only [Nat.reducePow]
+    omega
+  have hb : k+3 ≤ 14*2^(8*k) := by
+    have hh:=pow8k_large k
+    omega
+  have hid : 14*2^(8*k+4) - 2*(8*k+4) - 10 =
+      16*(14*2^(8*k)-k-3)+30 := by
+    rw [hp]
+    omega
+  rw [hid]
+  exact blank_no_two_sixteen_k_thirty _
+
+theorem blank_no_critical_four_mod_eight (n : Nat) (hn : n%8=4) :
+    ¬BlankReach 2 (14*2^n-2*n-10) := by
+  have he : n=8*(n/8)+4 := by omega
+  rw [he]
+  exact blank_no_critical_eight_k_plus_four _
+
+#print axioms BB6.HaltingFunnel.blank_no_critical_four_mod_eight
+
 #print axioms BB6.HaltingFunnel.G_to_sixteen_k_plus_twentyfour_three
 #print axioms BB6.HaltingFunnel.blank_no_two_sixteen_k_thirty
 end BB6.HaltingFunnel
