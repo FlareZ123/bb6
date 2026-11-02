@@ -129,3 +129,32 @@ blank-tape halting status and the exact BB(6) value remain open.
 **Research status:** Reproducible and Lean-kernel-checked intermediate mathematical
 results. Their novelty relative to the entire external literature is not established,
 and they remain under `im-results/`.
+
+
+## Additional forward machine-acceleration bridge (Lean-checked)
+
+The new, directly readable Lean file `CounterBridge.lean` (5,405 UTF-8 bytes,
+SHA-256 `14cf42918166d866351aaa2f5e47d3b6b00770a1d2cbff08576d096adb4ad1c4`)
+independently restates the exact published two-counter `nextA` transition map.
+It proves, by induction on the complete 2-adic extraction count and explicit arithmetic,
+that **every** published nonhalting one-variable `SectionNext t v` edge expands
+into a genuine finite sequence of counter transitions from `(t-3,1)` to
+`(v-3,1)`:
+
+```lean
+theorem SheepBridge.section_edge_counter_sound {t v : Nat}
+    (h : SheepBridge.SectionNext t v) :
+    SheepBridge.Steps (t-3,1) (v-3,1)
+```
+
+The underlying `halve_iter`, `general_section`, and `triple_section`
+theorems all compiled under Lean 4.36.0-rc2 with axioms only
+`[propext, Quot.sound]` and no `sorryAx`. The proof is direct and independent
+of the bounded numerical cross-check, covering arbitrary natural counters.
+
+**Important remaining semantic obligation:** This is a forward simulation
+inside an exact standalone transcription of the DeepMind accelerator.
+It does not yet prove the converse that every machine run observed at a
+section state belongs to the return relation, and it does not import
+DeepMind's upstream source-level TM bridge. Consequently, original-machine
+interpretations still rely partly on published upstream verification.
