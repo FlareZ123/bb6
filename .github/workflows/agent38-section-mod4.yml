@@ -71,3 +71,9 @@ jobs:
           lean -o FourthStage.olean FourthStage.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/DyadicResidualFourStage.lean .
           lean DyadicResidualFourStage.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean .
+          lean -o Agent3CImage.olean Agent3CImage.lean
+          lean -o Agent3COneFamily.olean Agent3COneFamily.lean
+          lean -o Agent3COrbitIff.olean Agent3COrbitIff.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent6-c-feeder/COneFiveDepth.lean .
+          lean COneFiveDepth.lean
