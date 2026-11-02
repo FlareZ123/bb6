@@ -58,3 +58,18 @@ The eleven non-mock Lean source modules `PowerGap,PowerBand,Inverses,ConeNodes0.
 The manual-only GitHub Actions workflow `agent4-p1-cone2398.yml` verifies the archive hash, extracts all source files, compiles the **unmodified** P1 source modules `GParity,GInverse,PosEvenForm,ResetGate,P1Triple,P1ResidualArithmetic,P1ResidualReach,P1Gate`, then compiles the eleven new modules with `lean -o`. The final source prints the axioms of `BB6.Agent4Cone.no_critical_2398_mod65536`; this audit passed in run 41415501198: `BB6.Agent4Cone.no_critical_2398_mod65536` depends on exactly `[propext, Classical.choice, Quot.sound]`, without `sorryAx` or mock axioms.
 
 The original raw six-state-machine ↔ accelerated-map equivalence was previously checked separately in Agent 19's `im-results/agent19-p1-source-bridge`; this result concerns one previously unresolved critical-index class and must not be interpreted as a P1 halting decision.
+
+## Universal affine sieve across residual P1 index classes (computational, unformalized)
+
+The standalone, standard-library-only `uniform_scan.py` conservatively analyzes all index residues `n=65536*q+r`, `q≥0`, in the two remaining critical sectors `r≡2` and `r≡14 (mod16)`, for `r≥21`. The code uses exact affine arithmetic `A*t+C` where `t=7*2^(65536*q+r-16)-(q+1)`; it checks uniform parity and modular conditions coefficientwise and rejects any unknown or repeated inverse chain. A lower bound `2^(65536*q+r-16) ≥ 32*(q+1)` supplies positivity and strict power gaps for all q. For a leaf expression `x+12=A*t+C`, `adjacent_power_gap` certifies inequalities `14*2^(n-1)<x+12<14*2^n` using sufficient integer coefficient conditions. Every closed certificate has exactly as many power-gap leaves as forbidden-modulo-four leaves.
+
+A reproducible, manual-only [full-source and scanner CI run 41416935437](https://github.com/FlareZ123/bb6/actions/runs/41416935437) **passed**, reporting:
+
+| Critical residue sector | Classes checked, r≥21 | Affine cones closed | Inverse branch nonuniform | Gap not certified |
+|---|---:|---:|---:|---:|
+| `r≡2 (mod16)` | 4,094 | **2,845** | 1,213 | 36 |
+| `r≡14 (mod16)` | 4,095 | **2,419** | 1,594 | 82 |
+
+Compared solely with Agent 28's 36 earlier closed `n≡14(mod16)` residue classes modulo 1024, the new scan closes **180 additional subclasses modulo 65536** which do not fall into any of those 36 modulo-1024 classes. For the hard `r≡18 or34(mod64)` subfamilies of the `r≡2(mod16)` sector, the scan closes **798** subclasses modulo 65536 (482 with r≡18 and 316 with r≡34). Some may overlap other agents' newer work; no global novelty is asserted for each. All candidate leaf gaps use the same adjacent band, and their componentwise minima/maxima still satisfy sufficient strict-band inequalities for every closed root.
+
+**Evidence boundary:** these counts come from a deterministic Python verifier applying previously *Lean-certified* predecessor and reachability invariants symbolically. They are **computational candidate certificates**, not 5,264 newly Lean-checked theorems. Only `r=2398` from this scan has the integrated original-source proof archived in this directory. The 31/62 tree for r2398 also passed a separate independently written numeric predecessor reconstruction at six widely separated q values. The script's other closures deserve a generic kernel checker rather than thousands of nearly identical handwritten subtheorems. No infinite critical sector has been completely excluded.
