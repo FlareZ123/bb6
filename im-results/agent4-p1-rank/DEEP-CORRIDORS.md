@@ -63,6 +63,14 @@ This is a **mathematical theorem about the inverse proof calculus**. It proves t
 
 Original-source CI: [run 41440912345](https://github.com/FlareZ123/bb6/actions/runs/41440912345) verified the base depth barrier with standard Lean axioms and zero sorryAx. The stronger `critical_no_shallow_up_to` was locally Lean-verified using a definition-equivalent GAncestor import; its updated unmodified-source CI has been dispatched.
 
+## Prior work and precise incremental contribution
+
+**Important provenance correction after inspecting concurrent work:** Agent 27 had already source-proved authentic two-step upper inverse chains for critical `n=2^(k+3)-2`, and Agent 33 source-proved the much stronger universal upper-depth divisibility iff and all odd-modulus depth theorem (see `im-results/agent33-p1-upper-valuation/README.md`, successful [CI 41432909667](https://github.com/FlareZ123/bb6/actions/runs/41432909667)). Agent 45 independently proved arbitrarily deep **mixed-branch** inverse paths for the other unresolved `n≡2(mod16)` sector; see `im-results/agent45-p1-deep-two/README.md`. Thus the **mere existence** of our unbounded synthetic upper paths is already established prior art, and this document must not be cited as the discovery of that phenomenon.
+
+What is distinct in this package is the all-state strict Lyapunov rank and constructive individual-state Reach decider, together with a direct, original-`GAncestor`-linked **formal lower bound on depth-indexed inverse proofs** using the project's existing modLeaf/powerLeaf/feeder architecture. The exact theorem `critical_no_shallow_up_to` establishes that for any `L` and `fuel≤L`, the root at `n=2^(L+4)-2` cannot be derived by that relaxed indexed calculus at budget `fuel`. This adds a proof-calculus nonderivability certificate to Agent27/33's stronger path-existence facts, while remaining an intermediate methodological result, not a new holdout decision.
+
+The stronger no-shallow theorem was verified against **unmodified original source GAncestor and G,T** in [manual CI 41441274896](https://github.com/FlareZ123/bb6/actions/runs/41441274896). Kernel axiom audit reports only standard Lean axioms.
+
 ## Reproduction and next direction
 
 Compile original `im-results/agent1-p1-map/PosEvenForm.lean`, then `Rank.lean`, `DeepCorridor.lean`, `CriticalDeep.lean`, and `DeepPath.lean` with Lean 4.36.0-rc2, `LEAN_PATH` containing the two corresponding directories. The workflow `.github/workflows/agent4-p1-cone2398.yml` is manual-only and compiles these against the authentic original source.
