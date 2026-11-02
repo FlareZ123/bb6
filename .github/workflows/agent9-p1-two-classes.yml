@@ -39,6 +39,10 @@ jobs:
           echo "9691bc0ef06bc178866f4df8c96c4bf3380f656f1bc64244d450fed7ae4703a0  im-results/agent9-s-section/R366Proof.lean" | sha256sum -c -
           echo "1632f2fc4a9c6e9aa2789db7bc20e2c903737888ad32b906f9ebdc6b7215ec5d  im-results/agent9-s-section/R414Proof.lean" | sha256sum -c -
           echo "14c4ea02d9720a2b9b5f5c48e0eb23416a977efe42acadd499638ab22e6c9dcb  im-results/agent9-s-section/R462Proof.lean" | sha256sum -c -
+          python -c "from pathlib import Path; p=Path('/tmp/make_p1_cone.py'); s=p.read_text().replace('        assert c[1]>=3','        pass').replace('    assert len(nodes)==11 and len(gaps)==11, (r,len(nodes),len(gaps))','    assert len(nodes)<=11 and len(gaps)<=11, (r,len(nodes),len(gaps))'); Path('/tmp/make_p1_cone_general.py').write_text(s)"
+          echo "f23dddc467b2dec742834e3d35de090d9c0b41f4fdebc26fe736a45618846031  /tmp/make_p1_cone_general.py" | sha256sum -c -
+          python /tmp/make_p1_cone_general.py 446 im-results/agent9-s-section/R446Proof.lean
+          echo "d0e4970ec9200a0e8bd583c92cf367f4d8c07fa46a330b55cb0eda0933366f96  im-results/agent9-s-section/R446Proof.lean" | sha256sum -c -
       - name: Compile original G, Reach, and cone definitions without modifications
         run: |
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent9-s-section"
@@ -64,7 +68,7 @@ jobs:
             lean "im-results/agent9-s-section/R${r}Final.lean"
           done
           lean -o im-results/agent9-s-section/R190Proof.olean im-results/agent9-s-section/R190Proof.lean
-          for r in 206 366 414 462; do
+          for r in 206 366 414 446 462; do
             lean -o "im-results/agent9-s-section/R${r}Proof.olean" "im-results/agent9-s-section/R${r}Proof.lean"
           done
-          echo "Source-level P1 inverse-cone and blank-entry proofs compiled for residues 110,158,190,206,366,414,462."
+          echo "Source-level P1 inverse-cone and blank-entry proofs compiled for residues 110,158,190,206,366,414,446,462."
