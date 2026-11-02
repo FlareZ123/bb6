@@ -42,3 +42,7 @@ This yields `guard_iff_thin`, `halting_layer_iff_thin`, and `stops_iff_thin`, pl
 Establish or refute `∀ j, ¬ Reach (0,2*j,4*j+10)` from the initial `(5,0,1)`, preferably through a genuine modular or symbolic return-map invariant for reachable zero-first-counter sections. The new diagonal gate allows attacks on a specific relation among the two other counters, rather than the whole `c=5` even-`k` guard.
 
 No blank-tape machine classification or BB(6) bound is claimed.
+
+## Second, stronger gateway theorem
+
+The fully Lean-checked theorem `stops_iff_reset_or_side` sharpens the diagonal condition to the disjunction `∃ j≥1, Reach (2*j+1,3*j+4,0)` or `∃ m, Reach (0,2*m,12*m+23)`. The proof is preserved with SHA256-verified reconstruction in `gates-lean.tar.xz.b64` and `reconstruct.py`, with complete explanations in [RESET-GATEWAY.md](./RESET-GATEWAY.md). It remains an intermediate blank-entry criterion, with both target families undecided.
