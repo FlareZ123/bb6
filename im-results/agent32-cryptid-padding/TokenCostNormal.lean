@@ -126,6 +126,54 @@ theorem wordCost_upper (m : Nat) (ws : List Bool) :
 #print axioms mixedInv_le_product
 #print axioms wordCost_lower
 #print axioms wordCost_upper
+theorem wordInc_append (u v : List Bool) :
+  CryptidA.wordInc (u++v) = CryptidA.wordInc u+CryptidA.wordInc v := by
+  induction u with
+  | nil => simp [CryptidA.wordInc]
+  | cons b u ih =>
+    cases b <;> simp [CryptidA.wordInc, ih] <;> omega
+
+/-- Exact two-component cocycle: cost of suffix depends on updated counter. -/
+theorem wordCost_append (m : Nat) (u v : List Bool) :
+  CryptidA.wordCost m (u++v) =
+    CryptidA.wordCost m u +
+      CryptidA.wordCost (m+CryptidA.wordInc u) v := by
+  induction u generalizing m with
+  | nil => simp [CryptidA.wordInc, CryptidA.wordCost]
+  | cons b u ih =>
+    cases b with
+    | false =>
+      simp only [List.cons_append, CryptidA.wordCost, CryptidA.wordInc]
+      rw [ih (m+1)]
+      have hm : m+1+CryptidA.wordInc u = m+(1+CryptidA.wordInc u) := by omega
+      rw [hm]
+      omega
+    | true =>
+      simp only [List.cons_append, CryptidA.wordCost, CryptidA.wordInc]
+      rw [ih (m+4)]
+      have hm : m+4+CryptidA.wordInc u = m+(4+CryptidA.wordInc u) := by omega
+      rw [hm]
+      omega
+
+/-- Exchanging adjacent 10 and 111 packets changes the exact time by six. -/
+theorem swap_cost (m : Nat) (ws : List Bool) :
+    CryptidA.wordCost m (false :: true :: ws) =
+      CryptidA.wordCost m (true :: false :: ws) + 6 := by
+  simp only [CryptidA.wordCost]
+  have hm : m+1+4 = m+4+1 := by omega
+  rw [hm]
+  omega
+
+/-- The swap has a constant six-step time skew in any preceding context. -/
+theorem swap_cost_context (m : Nat) (u v : List Bool) :
+  CryptidA.wordCost m (u ++ (false::true::v)) =
+    CryptidA.wordCost m (u ++ (true::false::v)) + 6 := by
+  rw [wordCost_append, wordCost_append, swap_cost]
+  omega
+
+#print axioms wordInc_append
+#print axioms wordCost_append
+#print axioms swap_cost_context
 #print axioms wordInc_formula
 #print axioms wordCost_closed
 #print axioms equal_cost_from_counts
