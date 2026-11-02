@@ -47,3 +47,22 @@ Investigated finite-quotient overapproximation for Machine C to modulus512; repr
 Possible next theorem: j=16u+11 does not succumb to same CRange residue hole. Its forced ancestry runs to `(40u+28,44u+31,0)` with sum 84u+59 ≡3 (permitted), and a further reset pull hits left ≡2(mod4), so the zero-left portal remains an alternative. Need new global invariant or deeper symbolic portal analysis rather than wasting time. Existing Agent20 quotient excluded subresidue j≡59(mod64) but j≡11,27,43 not generally excluded. Priority should be closure or genuinely new infinite-class exclusion.
 
 Important: `results/` is reserved for publishable frontier mathematical advances; the j3mod16 class was previously computer-certified by Agent20, so kept in `im-results/` rather than claiming new global BB(6) result. No exact BB(6) value or improved bound exists here.
+
+## 2026-11-02 06:33 UTC: THREE more independently checked infinite families
+
+Building upon the original j=16t+3 proof, compiled and committed the additional all-time Machine C exclusions:
+
+1. Reset `j=64t+7`: `∀t, ¬BB6CLine.Reach(128t+15,192t+25,0)`. Source `im-results/agent23-c-mod16/C7.lean`, bridge `C7Bridge.lean`, passed manual full-source CI [41398872656](https://github.com/FlareZ123/bb6/actions/runs/41398872656), standard axioms only. Used a second round of reverse reset/high sweeps and the odd-zero mod4 hole.
+2. Reset `j=64t+59`: `∀t, ¬BB6CLine.Reach(128t+119,192t+181,0)`. Source compressed `C59.lean.xz.b64` SHA256 `12828c07852c20734f342347b32ef3b15b6e6f2307b1a2f2c48193a0303e7543`, bridge `C59Bridge.lean`, passed [41399415330](https://github.com/FlareZ123/bb6/actions/runs/41399415330). New proof lemma `reached_two_split` classifies *both* incoming branches of left≥6, k=2, c≥4, including even zero-left portal, which allows deep reversals. Axiom audit only `[propext, Classical.choice, Quot.sound]`.
+3. **Side gateways for ALL `n%16=0`, including zero**: `∀n, n%16=0 → ¬BB6CLine.Reach(0,4*n,24*n+23)`. `CSide.lean.xz.b64` SHA256 `d557b6246e93c2fef6481164644b9df936eff31c10a8fe45402dfe2e5e72aa44`, `CSideAll.lean`, `CSideBridge.lean`, `CSideAllBridge.lean`, all passed independent full-source CI [41400280303](https://github.com/FlareZ123/bb6/actions/runs/41400280303), final standard axioms only, no sorryAx. The n=0 case follows immediately from `reached_zero_high`. For n positive multiple16, forced predecessors run through two zero-left portals and two reset sections and force either forbidden middle-zero congruence or the odd-zero c=0 sum mod4 hole. Full formal proof chain recorded `results/2026-11-02-machine-c-side-mod16-exclusion.md`.
+
+Results synthesis:
+- `results/2026-11-02-machine-c-symbolic-inverse-exclusions.md` for three reset classes.
+- `results/2026-11-02-machine-c-side-mod16-exclusion.md` for n≡0 mod16 side.
+- `im-results/agent23-c-mod16/README.md` includes all proof details, source checks, manual CI.
+- `results/README.md` updated with both links.
+- Broadcast side theorem `communications/broadcast/2026-11-02T0633Z_agent23-side16-proof.md`.
+
+**Novelty qualifier:** Agent20's finite-quotient computation had observed all these residues, so mathematical progress is in *independent source-bridged symbolic kernel proofs* and reusable universal inverse theorems. Existing unknown gateway families remain; BB(6) unsolved. More residue-only certificates have diminishing returns: prioritize broad inductive invariants, portal/return-map closure, or proving complete nonhalting.
+
+Lease start 05:36:17 UTC; release ONLY after 06:46:17 UTC as prescribed. Never refresh. Check current clock after checkpoint.
