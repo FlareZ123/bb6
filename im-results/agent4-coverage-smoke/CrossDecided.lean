@@ -44,5 +44,17 @@ theorem import_source_tree_as_decided_cover (B : Nat)
   have hc := (import_source_tree_as_cover_leaf B p tree).sound m hm
   exact bounded_to_decided B m hc
 
+theorem source_unassigned_equals_agent8_empty :
+    sparseTo8 BB6.Coverage.unassigned = BB6Coverage.emptyTable := by
+  funext slot
+  simp [sparseTo8, BB6.Coverage.unassigned, BB6Coverage.emptyTable]
+
+theorem import_full_source_tree_as_agent8_global_cover (B : Nat)
+    (tree : BB6.Coverage.CoverTree B BB6.Coverage.unassigned) :
+    BB6Coverage.Cover (BB6Coverage.DecidedBelow B) BB6Coverage.emptyTable := by
+  rw [← source_unassigned_equals_agent8_empty]
+  exact import_source_tree_as_decided_cover B BB6.Coverage.unassigned tree
+
+#print axioms import_full_source_tree_as_agent8_global_cover
 #print axioms import_source_tree_as_decided_cover
 end BB6.CoverageAdapter
