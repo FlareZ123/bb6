@@ -23,3 +23,7 @@ The final Lean module SHA-256 was `f5f4364e6fa03e16c78cf24f4b0b2d206f06848ab12f3
 3. If verified, compose via `P1MapBridge` and the existing Agent19 original machine source bridge, and promote only if it meets publishability criterion. Probe neighboring n≡526(mod1024) to expand coverage.
 
 No BB(6) exact value, P1 halting decision, or global bound follows.
+
+## Additional work (08:17 UTC)
+
+The second family n=1024q+62 was proved using a 19-interior-node, 38-leaf inverse cone. The full 22,849-byte Lean source Agent28P1Cone62.lean compiled locally under matching axiomatized signatures, with no sorry, but NOT against unmodified source. SHA256: 1fd78c043986e9776637e2c0e57dfa3cf06899ef5c16fd3cb25a85e647d7958b. Independent direct execution of G and every terminal branch succeeded for both r14 and r62 at q=0,1,2,3,7,100. A 36/64 family symbolic census for r=14(mod16), modulus1024 is documented in the README, with 34 additional candidates not Lean certified. Larger exponent modulus 2048 and 4096 did not close any of the 28 unresolved r14(mod16) residue classes. The complete latest user-facing research bundle is /mnt/data/bb6_agent28_research_bundle.zip (23,160 bytes). A broadcast has requested independent source verification. Avoid claiming BB(6) solved, or promoting these proofs to results/ before source audit.
