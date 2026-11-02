@@ -21,7 +21,7 @@ jobs:
         run: |
           lean --version
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent44-power-envelope"
-          lean im-results/agent44-power-envelope/PowerCertificate.lean
+          lean -o im-results/agent44-power-envelope/PowerCertificate.olean im-results/agent44-power-envelope/PowerCertificate.lean
           lean -o im-results/agent44-power-envelope/GOneCertificate.olean im-results/agent44-power-envelope/GOneCertificate.lean
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
