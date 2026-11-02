@@ -145,3 +145,9 @@ generic_residue_45_even : (iterG 45 0)%2=0
 ```
 
 Both theorems use `by decide` and have **zero axioms**; `31 mod 42=31` and `45 mod 42=3` lie in the candidate survival index classes. These indices are synthetic and **are not known to occur in the true blank-entry reset sequence**. They refute any blanket implication from membership in those four classes to odd sampled parity. A successful nonhalting invariant must exploit *more than these ordinary residue restrictions* and, in particular, features of the recursively selected A_n.
+
+## Concrete obstruction to bounded-bit modular prediction
+
+The `parity_bit_lift` theorem gives a precise negative result for a broad family of proposed shortcuts: for every \(n\) and every starting integer \(a\), the starts \(a\) and \(a+2^n\) agree modulo \(2^n\), yet their parity outcomes at iteration \(n\) are **opposite**. Their first \(n\) parity bits also agree. Consequently, **no predictor using only the starting state modulo \(2^n\) can correctly determine its \(n\)-th output parity for every input**. In this exact sense, to predict the bit at time \(n\) uniformly, the input needs one additional 2-adic digit. This is a theorem about uniform low-bit predictors; it is **not** a computational lower bound on all algorithms for the specific initial value 8, and does not rule out more sophisticated special-value identities or symbolic computation.
+
+Combined with `parity_disagrees_linear`, this points away from a finite fixed-modulus encoding of Machine B's **complete** parity trace. The true unknown is the sparsely sampled sequence. A finite-state invariant only for the reachable reset orbit is still logically possible and would require extra structure.
