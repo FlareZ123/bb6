@@ -26,3 +26,4 @@ jobs:
           lean im-results/agent8-coverage-contract/TerminalBridge.lean
           lean im-results/agent8-coverage-contract/Symmetry.lean
           lean im-results/agent8-coverage-contract/Prune.lean
+          lean im-results/agent8-coverage-contract/OneHalt.lean
