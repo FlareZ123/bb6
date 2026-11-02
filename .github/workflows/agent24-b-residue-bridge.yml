@@ -1,0 +1,53 @@
+name: Agent 24 Machine B mod7 raw-source verification (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned upstream Lean toolchain
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Clone pinned certified upstream revision
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet ced8f9f44f67a167d5ecc03e687b048c67926371
+          test "$(git rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+      - name: Restore upstream Mathlib build cache
+        working-directory: /tmp/cryptids
+        run: |
+          lake exe cache get
+      - name: Build source-level Machine B acceleration theorem
+        working-directory: /tmp/cryptids
+        run: |
+          lake build BusyBeaver.BB6.M_1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_HHH1RE
+      - name: Verify complete raw-machine to mod7 recurrence equivalence
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BReduction.lean" Agent18BReduction.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18BBridge.lean" Agent18BBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BRun.lean" BRun.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/BOneDim.lean" BOneDim.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18OneDimBridge.lean" Agent18OneDimBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent24-b-parity/BParityAperiodic.lean" BParityAperiodic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent24-b-parity/BResetResidues.lean" BResetResidues.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent24-b-parity/Agent24BResidueBridge.lean" Agent24BResidueBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent18BReduction.olean Agent18BReduction.lean
+          lake env lean -o .lake/build/lib/lean/BRun.olean BRun.lean
+          lake env lean -o .lake/build/lib/lean/Agent18BBridge.olean Agent18BBridge.lean
+          lake env lean -o .lake/build/lib/lean/BOneDim.olean BOneDim.lean
+          lake env lean -o .lake/build/lib/lean/Agent18OneDimBridge.olean Agent18OneDimBridge.lean
+          lake env lean -o .lake/build/lib/lean/BParityAperiodic.olean BParityAperiodic.lean
+          lake env lean -o .lake/build/lib/lean/BResetResidues.olean BResetResidues.lean
+          lake env lean Agent24BResidueBridge.lean
