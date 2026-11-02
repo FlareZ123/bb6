@@ -1,0 +1,54 @@
+name: Agent 29 Machine C forty-two new side-gateway exclusions (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  side-proof-batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - batch: a
+            residues: "24 34 38 42 50 55 66 84 120 136 146"
+          - batch: b
+            residues: "147 151 155 162 179 190 202 268 280 290 294"
+          - batch: c
+            residues: "298 306 311 340 376 392 402 403 411 418"
+          - batch: d
+            residues: "427 428 435 436 446 447 458 478 484 492"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct independent SHA256-pinned source and generator
+        run: |
+          python3 im-results/agent29-c31/reconstruct.py
+          python3 im-results/agent29-c-inverse/reconstruct.py
+      - name: Compile original reachability dependencies and one complete side proof per module
+        run: |
+          mkdir -p /tmp/a29-side
+          cp im-results/agent11-c-line/CLine.lean /tmp/a29-side/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a29-side/$source.lean"
+          done
+          cd /tmp/a29-side
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          for residue in ${{ matrix.residues }}; do
+            python3 "$GITHUB_WORKSPACE/im-results/agent29-c-inverse/generate_c_side_inverse.py" 512 "$residue" --output "$PWD/CSide.lean"
+            lean CSide.lean
+          done
