@@ -104,3 +104,10 @@ Consequently, any *designated-state* version of the D0 table, under permitted re
 
 and specializes to the three rooted RLEs with offsets **15, 92, and 403**. This is about equality of halting-time *predicates* under source-certified deterministic reduction. It gives no halting bound, because none of the four unary seeds is decided here.
 
+
+## Whole-trajectory merges and literal-source end-to-end checks
+
+An additional source theorem goes beyond same-halting-outcome for the unrooted D table. [DBlankFusion.lean](./DBlankFusion.lean) proves that the **actual, distinct blank starts B and D** have **identical complete physical configurations after 15 raw steps**; for every natural n, their configurations at step 15+n are equal. For **blank starts C and E**, the configurations at steps 92+n and 93+n agree under a physical translation of the full head/tape by one cell. Their exact primitive halting-time predicates inherit the corresponding zero-step and one-step offsets. This is a bona fide all-time coalescence, not only a finite common symbolic pattern. Original source and the 663-row ledger passed [Lean CI 41464911525](https://github.com/FlareZ123/bb6/actions/runs/41464911525), with only standard axioms.
+
+[DParseRLE.lean](./DParseRLE.lean) checks the actual source data used for the four rooted machines by defining a decoder for all 12 transitions of the six-underscore-separated three-character notation and then kernel proving equality to all four literal D0-D3 definitions. [DSourceCorollaries.lean](./DSourceCorollaries.lean) imports those literal decoder equalities and proves the exact unbounded blank-halting iff and exact primitive-step-time iff of the three additional rooted RLEs from the *decoded text itself*. This guards against accidental mismatch between a named Lean table and the catalogued machine string; it does not assert any outcome for those open roots. All source checks passed the same manual CI.
+
