@@ -35,7 +35,7 @@ theorem G_eq_evalP2 (k c : Nat) :
         rfl
       · have hfar : ¬ c ≤ 2*k+1 := hnear
         simp only [if_pos hh, if_neg hfar, dif_neg hsmall]
-        change (Source.HighLevelState.P_1 (4*k+4) (c-2*k-2)) =
+        change (liftPair (4*k+4, c-2*k-2)) =
           (liftPair (4*k+4, c-(2*k+2)))
         simp only [liftPair]
         congr 1
