@@ -50,3 +50,7 @@ The fully Lean-checked theorem `stops_iff_reset_or_side` sharpens the diagonal c
 ## New all-time modular invariant and infinite exclusions
 
 The strongest proved statement is now `stops_iff_stronger_gates`: stopping iff a reachable reset `(2*j+1,3*j+4,0)` exists with `j>=1` and `j%4 != 1`, or a reachable side gate `(0,4*n,24*n+23)` exists with `n>=1`. This uses the global reachable invariant `c>=4 ∧ (a+k)%4>=2 → k%2=c%2`, fully Lean-checked for all transitions, and excludes two infinite modular subfamilies. Sources, SHA-256 verified reconstruction and mathematical limitations: [PARITY-GATES.md](./PARITY-GATES.md). **Both remaining classes remain unclassified.**
+
+## Further infinite modular exclusion (latest)
+
+The stronger theorem `stops_iff_mod8_gates` excludes *another infinite reset residue class*: `j%8=4`, in addition to all `j%4=1` and odd side indices proved earlier. Stopping is now exactly equivalent to a reachable reset `(2j+1,3j+4,0)` for `j>=1,j%4 !=1,j%8 !=4`, or a reachable side `(0,4n,24n+23)` for `n>=1`. This is proved for all finite times in Lean without `sorry` using backwards high-counter section lemmas. Source and verification: [MOD8-GATES.md](./MOD8-GATES.md). The surviving infinite families remain open.
