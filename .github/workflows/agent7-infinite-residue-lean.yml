@@ -28,4 +28,6 @@ jobs:
           lean -o im-results/agent7-rank-bounded/InfiniteResidue2.olean im-results/agent7-rank-bounded/InfiniteResidue2.lean
           lean -o im-results/agent7-rank-bounded/InfiniteResidue3.olean im-results/agent7-rank-bounded/InfiniteResidue3.lean
           lean -o im-results/agent7-rank-bounded/InfiniteResidue4.olean im-results/agent7-rank-bounded/InfiniteResidue4.lean
-          lean im-results/agent7-rank-bounded/InfiniteResidue5.lean
+          lean -o im-results/agent7-rank-bounded/InfiniteResidue5.olean im-results/agent7-rank-bounded/InfiniteResidue5.lean
+          lean -o im-results/agent7-rank-bounded/EvenFamily.olean im-results/agent7-rank-bounded/EvenFamily.lean
+          lean im-results/agent7-rank-bounded/OddCritical.lean
