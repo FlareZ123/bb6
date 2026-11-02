@@ -15,8 +15,8 @@ def fiveTemplate (right : Bool) (b c d e : Fin 6) (x y : Bool) :
   else none
 
 def fiveDistinct (b c d e : Fin 6) : Bool :=
-  decide (b != 0 && c != 0 && d != 0 && e != 0 &&
-    b != c && b != d && b != e && c != d && c != e && d != e)
+  b != 0 && c != 0 && d != 0 && e != 0 &&
+    b != c && b != d && b != e && c != d && c != e && d != e
 
 /-- Finite, explicit list: 5 choices of b, 4·3·2 for c,d,e, and
     two bits x,y, so 480 right and 480 left sparse cylinders. -/
