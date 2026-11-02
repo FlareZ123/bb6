@@ -21,14 +21,18 @@ jobs:
         run: |
           mkdir -p /tmp/a49-ladder
           cp im-results/agent11-c-line/CLine.lean /tmp/a49-ladder/
-          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a49-ladder/
-          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a49-ladder/
-          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity,SectionGate,SectionGateBridge,SectionReach}.lean /tmp/a49-ladder/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a49-ladder/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a49-ladder/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity,SectionGate,SectionGateBridge,SectionReach,BlankGateBridge}.lean /tmp/a49-ladder/
           cd /tmp/a49-ladder
           export LEAN_PATH="."
           lean --version
           lean -o CLine.olean CLine.lean
           lean -o GenericSection.olean GenericSection.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CPhaseRank.olean CPhaseRank.lean
+          lean -o CSectionTotal.olean CSectionTotal.lean
           lean -o JumpHigh.olean JumpHigh.lean
           lean -o JumpMacro.olean JumpMacro.lean
           lean -o JumpSection.olean JumpSection.lean
@@ -43,5 +47,9 @@ jobs:
           lean -o SectionGate.olean SectionGate.lean
           lean -o BounceProof.olean BounceProof.lean
           lean -o FastSectionDef.olean FastSectionDef.lean
+          lean -o FastSectionProof.olean FastSectionProof.lean
+          lean -o FastSectionHalting.olean FastSectionHalting.lean
+          lean -o Agent46CBridge.olean Agent46CBridge.lean
           lean -o SectionGateBridge.olean SectionGateBridge.lean
-          lean SectionReach.lean
+          lean -o SectionReach.olean SectionReach.lean
+          lean BlankGateBridge.lean
