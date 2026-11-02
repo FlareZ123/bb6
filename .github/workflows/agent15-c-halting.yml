@@ -21,16 +21,18 @@ jobs:
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/agent15-c-check/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/agent15-c-check/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent15-c-check/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent15-c-check/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent15-c-check/
-          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam}.lean /tmp/agent15-c-check/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8}.lean /tmp/agent15-c-check/
           cd /tmp/agent15-c-check
           export LEAN_PATH="."
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity BounceHalting; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting; do
             lean -o "$f.olean" "$f.lean"
           done
           lean -o SectionHalting.olean SectionHalting.lean
           lean -o SectionPower.olean SectionPower.lean
           lean -o BlankHalting.olean BlankHalting.lean
           lean -o SectionParam.olean SectionParam.lean
-          lean BlankParam.lean
+          lean -o BlankParam.olean BlankParam.lean
+          lean SectionMod8.lean
