@@ -1,8 +1,9 @@
-import SDisjoint
+import SQuantitative
 import Init.Omega
 namespace BB6.Agent9SPhysicalPhase
 open BB6.Agent9SExp
 open BB6.Agent9SDisjoint
+open BB6.Agent9SQuantitative
 
 /-- Exact q=b+16 representation of the source S-only rule. `none` is T-transfer,
     not a primitive Turing machine halt. -/
@@ -61,5 +62,16 @@ theorem surviving_roots_ne (a b : Nat) (s t : Nat × Nat)
   rw [h1, h2]
   exact roots_ne a b
 
+theorem surviving_roots_distance (a b : Nat) (s t : Nat × Nat)
+    (hs : runS (17,3) a = some s)
+    (ht : runS (141,3) b = some t) :
+    (s.1 + (16+min a b) ≤ t.1) ∨
+    (t.1 + (16+min a b) ≤ s.1) := by
+  have h1 : s.1 = iterQ 17 a := runS_q _ _ _ hs
+  have h2 : t.1 = iterQ 141 b := runS_q _ _ _ ht
+  rw [h1, h2]
+  exact rooted_distance a b
+
+#print axioms BB6.Agent9SPhysicalPhase.surviving_roots_distance
 #print axioms BB6.Agent9SPhysicalPhase.surviving_roots_ne
 end BB6.Agent9SPhysicalPhase
