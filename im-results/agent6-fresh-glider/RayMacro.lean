@@ -349,8 +349,9 @@ theorem fresh_ray_state_never_from (m : Machine) (s : Fin 6)
         exact hnstep
   intro t
   obtain ⟨r, hr, _⟩ := hall (t+1)
-  have hle : t ≤ n*(t+1) := by omega
-  exact run_prefix_macro m q (n*(t+1)) t hle (by simp [hr])
+  have hmul : 1*(t+1) ≤ n*(t+1) :=
+    Nat.mul_le_mul_right (t+1) (Nat.succ_le_of_lt hn)
+  exact run_prefix_macro m q (n*(t+1)) t (by omega) (by simp [hr])
 
 /-- A finite genuine blank-start entry into a fresh state-specific
     frontier, followed by a repeatable macro, proves all-time nonhalting. -/
