@@ -23,7 +23,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
           python3 unpack.py
           export LEAN_PATH="."
-          for module in DoubleZero DoubleZeroE TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode APrefixCode; do
+          for module in DoubleZero DoubleZeroE TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode APrefixCode SixOnes; do
             echo "Checking $module"
             lean -o "$module.olean" "$module.lean"
           done
