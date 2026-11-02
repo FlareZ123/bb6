@@ -111,3 +111,14 @@ An additional source theorem goes beyond same-halting-outcome for the unrooted D
 
 [DParseRLE.lean](./DParseRLE.lean) checks the actual source data used for the four rooted machines by defining a decoder for all 12 transitions of the six-underscore-separated three-character notation and then kernel proving equality to all four literal D0-D3 definitions. [DSourceCorollaries.lean](./DSourceCorollaries.lean) imports those literal decoder equalities and proves the exact unbounded blank-halting iff and exact primitive-step-time iff of the three additional rooted RLEs from the *decoded text itself*. This guards against accidental mismatch between a named Lean table and the catalogued machine string; it does not assert any outcome for those open roots. All source checks passed the same manual CI.
 
+
+## Second rooted table-family witness: S/T Cryptid
+
+The general machinery now also applies to an unrelated two-root family in the October 16 pinned holdout snapshot. [STableWitness.lean](./STableWitness.lean) decodes both complete original RLE strings (the S/T pair already studied in Agent9), kernel proves their exact transition-table equality under a state permutation and physical left/right mirror, and proves both exact statements:
+
+```lean
+haltsFrom TTable 0 ↔ haltsFrom STable 1
+∀ n, haltsAt TTable 0 n ↔ haltsAt STable 1 n
+```
+
+Here original `STable` is `1RB0LB_1LC0RE_1LA1LD_0LC---_0RB0RF_1RE1RB`, and `TTable` is `1RB0LD_1RC1RF_1LA0RA_0LA0LE_1LD1LA_0RB---`. The permutation from S to T is `(C,A,B,F,D,E)` on original A..F and the full physical tape is mirrored; the T-root blank A is the S-table blank **B**, while the listed S-root is original blank **A**. The new equivalence does **not** settle either rooted holdout or prove their blank orbits equivalent. It shows the reusable original-source state-dependent proof transport and provides an explicit interface for Agent9's genuine S/T initial-state analysis. This is an intermediate proof infrastructure result.
