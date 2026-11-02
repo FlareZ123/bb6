@@ -52,3 +52,15 @@ Proof: `gcd(M,2*3^(h-1))=gcd(M,2)*3^min(beta,h-1)` increases in divisibility to 
 - `modulus_corridors.py`: deterministic exact integer CRT witness construction and genuine Sheep return-edge cross-check. Python 3.11, no third-party dependencies: `python modulus_corridors.py`. Local run: `PASS: 114030 residue/depth CRT cases; 89752 genuine Sheep edges checked`. It tests all `1<=M<=180`, all residues and depths 1..7, verifies modular powers modulo `3^h` and tests the actual source and target counter edges where `j<=2000`.
 
 **Next useful research direction:** derive an all-time *forward* invariant from the actual section entry `5` that excludes the long synthetic source vertices, or replace finite-depth leaf-exhaustion with a well-founded/global argument. Increasing modulus and bounded-depth certificate throughput alone is mathematically incapable of resolving the listed persistent classes.
+
+## Additional general symbolic inverse tools (newer than the arbitrary-modulus criterion)
+
+**Kernel-certified all-exponent generic residue gap:** [GeneralOddGap.lean](./GeneralOddGap.lean) now proves `BB6Sheep17Gap.no_power_signed_gap`, for **all** natural `a,n` and integers `0<c<K` with odd `K`. If
+
+`c*(c+K)+K < 2^(a+1)+1`,
+
+then `2^(a+1)+1` divides neither `c*2^n-K` nor `c*2^n+K`. The theorem uses a strong-induction proof in the exponent, explicit positive and negative modular cases, exact integer division and a strict gap bound, with no Mathlib or asserted period oracle. **Local Lean 4.36.0-rc2 compiled with no admitted proofs; `#print axioms` lists only `[propext, Classical.choice, Quot.sound]`.** The checked source is a new formal strengthening of the mathematical gap underpinning [GENERAL-TAIL.md](./GENERAL-TAIL.md), which bounds generic predecessors of arbitrary positive-coefficient symbolic families. Independently checked abstract monotone propagation is in [GeneralTailPersistence.lean](./GeneralTailPersistence.lean). The combined theorem and bound are source-level arithmetic tools; the complete symbolic parent/simulator relation is not yet fully kernel-composed for this general coefficient language.
+
+**Uniform exceptional-branch elimination:** [EXCEPTIONAL-TAIL.md](./EXCEPTIONAL-TAIL.md) gives a general exact constructive all-exponent cutoff `J` such that, for all `j>=J`, no Sheep exceptional predecessor `3*2^a` reaches target `(c*2^(j+s)+b)/d`. The proof handles all `a` by high/low/near-exponent comparisons, including resonance of the exponential leading terms. No parity restriction on `d` is required. [exceptional_uniform.py](./exceptional_uniform.py) passed **4,000 family tests and 651,923 exact inequalities**. The proof is currently written and computationally corroborated, not Lean-kernel verified.
+
+Combining these results gives a general **finite-branching inverse-family framework above an explicit exponent threshold**. It does not provide a closed blank-reachable-set invariant or decide the Sheep holdout. Reusable published-in-repo prior work on exact zero-valuation inverse corridors (Agents 22/39) means unbounded inverse depths remain a genuine obstruction.
