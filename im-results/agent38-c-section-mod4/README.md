@@ -32,3 +32,21 @@ Agent 46's theorem `blank_halts_iff_reaches_dyadic_target` reduces authentic Mac
 The invariant is **forward and globally inductive**, requiring no finite residue cutoff, long simulation, bounded inverse cone, or modulo-two-power search. It is a reusable necessary condition for candidate closure proofs. Future work should combine it with exact parameterized `haltLevel` congruences, the source-checked return-map algebra, and stronger forward-reachable symbolic languages that also exclude the remaining stopping sectors.
 
 Priorities: prove structural all-parameter restrictions, challenge them against exact blank trajectories, and avoid extrapolating a full nonhalting claim from this partial obstruction.
+
+
+## Fully source-verified dyadic stopping-depth refinements (2026-11-02 11:22 UTC)
+
+**Manual unmodified-source CI [41435724589](https://github.com/FlareZ123/bb6/actions/runs/41435724589) succeeded** on commit `aea0afd4f58a04c5399a9ec129123d695a5e6944`, compiling all original Agent 46 modules, including `SectionCompleteBasin.lean`, `Agent46CBridge.lean`, and `BlankDyadicGate.lean`; plus our `Agent38SectionParity.lean`, `DyadicDepthPrune.lean`, and `DyadicResidualCriterion.lean`. Every final axiom audit prints only ordinary Lean axioms.
+
+The source-level theorems concern the true section blank orbit starting at `(5,1)` and the published full halting condition `RunHalts`.
+
+- **`dyadic_one_depth_two_mod8_excluded`:** every `a=1` candidate with `4≤k`, `2k-3=haltLevel 4 n`, and `n≡2 (mod8)` is impossible at every section time.
+- **`dyadic_odd_depth_mod8_excluded`:** for every odd `a≥3`, if `a<2k`, `2k-a+3=haltLevel (a-1) n`, `n` odd and `a≡3n (mod8)`, the target is impossible at every section time.
+- **`haltLevel_parity`:** for any `r,n`, `(haltLevel r n+n)%2=1`. In particular all odd-a halting candidates automatically require odd `n`.
+- **`blank_halts_iff_mod8_residual`:** exact original source-level equivalence, reducing true Machine C `RunHalts` to an existential blank-return orbit point in one of only the following residual families:
+  1. `a=1, k≥4, 2*k-3=haltLevel 4 n`, `n%8≠2`;
+  2. `a≥3, a%2=1, a<2*k, 2*k-a+3=haltLevel(a-1) n`, `n%2=1` and `a%8≠(3*n)%8`.
+
+This is a **strict global arithmetic narrowing** of the exact full dyadic stopping basin from Agent 46, valid for all n and orbit times, and not a finite-residue enumeration. We have not eliminated either residual infinite family, and BB(6) remains unknown. The source `DyadicResidualCriterion.lean` explicitly prints the axiom set for `blank_halts_iff_mod8_residual`.
+
+The use of a congruence restriction on `n` is especially helpful for future symbolic inverse/automatic invariant studies: it discards whole stopping-depth subsequences without inspecting any particular enormous target counter values. Further closure work should seek a restriction eliminating residual depths and residue classes universally, rather than only enlarging finite traced prefixes.
