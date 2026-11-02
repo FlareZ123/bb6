@@ -28,7 +28,7 @@ Both directions are Lean-certified, including soundness, exhaustive completeness
 
 ## 2. Entire blank-orbit inverse restriction
 
-For every `K≥0` with `K%8=2`, the second new theorem strengthens the raw inverse classification using the global actual-blank-reachability invariant (Agent 4 `blank_even_left_invariant`):
+For every `K≥0` with `K%4=2`, the second new theorem strengthens the raw inverse classification using the global actual-blank-reachability invariant (Agent 4 `blank_even_left_invariant`):
 
 ```text
 BlankReach(4K+4,3) iff
@@ -38,11 +38,11 @@ BlankReach(4K+4,3) iff
 
 Lean theorem: `BB6.Agent19.TwoFeeder.reach_two_feeders_iff`.
 
-**Necessity**: every incoming edge into `(4K+4,3)` must be a positive-right odd-left predecessor. A `G(k,1)` branch is arithmetically impossible when `K≡2(mod8)`. The `G` long-right-input branch then has the three source shapes from theorem 1. The odd-left predecessor must itself be preceded by an even-left positive-right hub; evaluating the three shapes yields the two explicit feeder families, while the third forces an even-left counter congruent 2 mod4 and larger than 2, contradicting Agent 4's all-time reachability invariant.
+**Necessity**: every incoming edge into `(4K+4,3)` must be a positive-right odd-left predecessor. A `G(k,1)` branch is arithmetically impossible when `K≡2(mod4)`. The `G` long-right-input branch then has the three source shapes from theorem 1. The odd-left predecessor must itself be preceded by an even-left positive-right hub; evaluating the three shapes yields the two explicit feeder families, while the third forces the even-left even-right ancestor `(14m+6,2m+4)` with `K=4m+2`. Agent 7's power theorem would require `14m+18=14·2^j`, contradicted modulo 7. This excludes the third branch uniformly.
 
 **Sufficiency**: each listed feeder maps in exactly two `T` steps into `(4K+4,3)`, with both finite transitions proved using `G_preimages_mod8_four`. Thus the equation is an exact reachable-set equivalence, not merely a necessary condition.
 
-As a useful specialization, for all `n≥18, n%16=2`, write `b_n=14·2^n−2n−16` and `K_n=(b_n−4)/4`. Then `K_n%8=2`; if the corresponding critical odd-sector hub `(b_n,3)` is blank-reachable, one of the two explicit feeder families must be reachable. Combined with Agent 19's `residual_critical_gateway` and the upstream semantic bridge, this narrows an infinite subset of the actual holdout's remaining halting-event candidates to two fully specified arithmetic families.
+As a useful specialization, for all `n≥10, n%8=2`, write `b_n=14·2^n−2n−16` and `K_n=(b_n−4)/4`. Then `K_n%4=2`; if the corresponding critical odd-sector hub `(b_n,3)` is blank-reachable, one of the two explicit feeder families must be reachable. Combined with Agent 19's `residual_critical_gateway` and the upstream semantic bridge, this narrows an infinite subset of the actual holdout's remaining halting-event candidates to two fully specified arithmetic families.
 
 The theorem does **not** imply those feeder families are unreachable. Indeed `K=18` has a blank-reachable first feeder `(32,45)`, leading to `(76,3)`; this positive example rules out a naive all-`K` exclusion of either family. Computational examples are explanatory, and not part of the formal theorem.
 
@@ -57,4 +57,4 @@ These proofs are an incremental synthesis of Agents 1 and 4's existing lemmas wi
 
 ## Valuable next work
 
-Investigate whether special arithmetic of `K_n=7·2^(n−1)−n/2−5` for `n≡2(mod16)` excludes both remaining reachable feeders simultaneously, or find an actual critical `K_n` entrance. An invariant excluding all `K≡2mod8` is already falsified by the `K=18` example. The central goal remains the **entire remaining infinite critical index family**, especially `n≡2(mod4)`, rather than individual target exclusions.
+Investigate whether special arithmetic of `K_n=7·2^(n−1)−n/2−5` for `n≡2(mod8)` excludes both remaining reachable feeders simultaneously, or find an actual critical `K_n` entrance. An invariant excluding all `K≡2mod4` is already falsified by the `K=18` example. The central goal remains the **entire remaining infinite critical index family**, especially `n≡2(mod4)`, rather than individual target exclusions.
