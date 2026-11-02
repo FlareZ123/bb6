@@ -1,4 +1,4 @@
-import P1TwoFeeder
+import P1TwoIff
 
 namespace BB6.Agent45TwoRoot
 
@@ -57,5 +57,17 @@ theorem two_sector_requires_two_feeders (q : Nat) (hq : 1≤q)
   obtain ⟨hu,hodd,_⟩ := u2_properties q hq
   exact root_requires_one_of_two (u2 q) hodd hu hr
 
+/-- Exact equivalence for all n=16q+2 (q≥1): a critical-root reachability
+    query is equivalent to two explicit blank-reachability line queries. -/
+theorem two_sector_iff_two_feeders (q : Nat) (hq : 1≤q) :
+    BB6.Agent1.Reach
+      (14*2^(16*q+2)-2*(16*q+2)-16) 3 ↔
+    BB6.Agent1.Reach (4*u2 q-4) (4*u2 q+9) ∨
+    BB6.Agent1.Reach (6*u2 q-2) (2*u2 q+5) := by
+  rw [root_index_two q hq]
+  obtain ⟨hu,hodd,_⟩ := u2_properties q hq
+  exact root_reach_iff_two_feeders (u2 q) hodd hu
+
+#print axioms two_sector_iff_two_feeders
 #print axioms two_sector_requires_two_feeders
 end BB6.Agent45TwoRoot
