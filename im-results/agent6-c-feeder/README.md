@@ -20,3 +20,25 @@ Related repository work: `im-results/agent8-rank-barriers/`, `im-results/agent10
 ## Source-verified cross-agent feeder consequence (new incarnation, 2026-11-02 14:18 UTC)
 
 `EvenFeeder.lean` imports the **unmodified** Agent 3 arithmetic section and Agent 38 blank-orbit invariant. For every `t≥1`, it proves authentic blank-section nonreachability of `(8*t-1,4*t-1)` and `(1,8*t)`, by composing Agent 3's exact `(1,4*j)` predecessor equivalence with Agent 38's odd-second-coordinate modulo-four image exclusion. The shared [manual CI run 41460541649](https://github.com/FlareZ123/bb6/actions/runs/41460541649) compiled the proof against the original dependencies and passed with Lean 4.36.0-rc2. The latter exclusion is **already implied** by Agent 38's stronger `blank_section_no_one8`; the composition is a reproducibility check and may help future arithmetic analyses, but makes **no mathematical-frontier or holdout-decision claim**. The source filename was added to an existing shared manual workflow to avoid redundant CI proliferation.
+
+## Fifth-stage, *new* infinite Machine C stopping-depth exclusion (14:40 UTC)
+
+**Source-certified result:** [manual GitHub Actions CI run 41463963447](https://github.com/FlareZ123/bb6/actions/runs/41463963447), commit `8ff6d2579e1d96c0d9c52a2c179f8504a2e2019c`, successfully rebuilt all the original Agent 46 source modules, Agent 38's packed third and fourth-stage dependencies, and Agent 3's unmodified inverse-feeder source, then checked **[COneFiveDepth.lean](./COneFiveDepth.lean)** under Lean **4.36.0-rc2**. Final `#print axioms` for all three new theorems reports only ordinary `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+The new result is a **source-level, globally quantified**, all-time Machine C restriction beyond the existing fourth-stage halting-basin statement. It is obtained by composing *two already formally proved generic facts in a previously unused way*:
+
+- Agent 3's exact `blank_one_four_iff_feeder`: reaching section `(1,4j)` is equivalent to reaching `(4j-1,2j-1)` for every `j≥1`.
+- Agent 38's `blank_section_no_odd_special`: every odd-odd section state with `(a+k)%8=4` and `(a+3k)%16=14` is globally absent from the true blank orbit.
+
+Taking **`j=8t+5`**, the exact affine feeder `(32t+19,16t+9)` meets the two Agent 38 restrictions for **every** `t:Nat`; therefore:
+
+```lean
+BB6.Agent6.blank_no_one_index_five_mod_eight (t : Nat) :
+  ¬ BB6.Agent3.CReach 1 (4*(8*t+5))
+```
+
+From Agent 46's genuine exact halting-level identity `haltLevel 4 depth + 3*depth + 16 = 2^(depth+1)*8+5`, any one-left-counter halting input `(1,k)` with `2*k-3=haltLevel 4 depth` and **`depth % 64 = 48`** necessarily has **`k % 32 = 20`**. Such a `k` is `4*(8*t+5)`, which is permanently unreachable. The theorem `dyadic_one_depth_fortyeight_mod64_excluded` formalizes this for **all** depths, times and counters satisfying the stated conditions.
+
+The final theorem **`blank_halts_iff_fifth_stage_residual`** imports the unchanged **`blank_halts_iff_four_stage_residual`** and strengthens its `a=1` branch by requiring `depth % 64 ≠ 48`, leaving all previous odd-`a≥3` restrictions untouched. This is an exact equivalence for the original halting predicate `BB6.CReachBridge.RunHalts`, not merely a necessary condition or a finite bounded trace.
+
+Prior-art and scope: Agent 38 already proved the generic odd-special image restriction, and Agent 3 the generic feeder equivalence. This composition and its depth-48 exclusion are newly recorded here; they **do not solve Machine C, establish a BB(6) bound, or exclude remaining depth residues**. The result remains in `im-results/` pending stronger holistic closure or independent novelty review. Neither the one-left-counter family with other depths nor the odd-left-counter halting family has been decided.
