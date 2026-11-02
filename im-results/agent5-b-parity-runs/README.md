@@ -27,3 +27,19 @@ The theorem `later_opposite` proves `∀ z n, ∃ m>n, (G^m(z))%2 ≠ (G^n(z))%2
 * `verify_parity_runs.py` passed 5,000 deterministic random partial-iteration tests, 10,000 exhaustive parity-run tests, and independently recomputed `G^[227097](0)` to have parity 1, 132,847 bits and SHA256 `15d1bf0d327f41d76b4a47e6d5293cab98143a69ae12c70487be42a23f3593cc`, agreeing with the existing giant finite Lean certificate.
 
 Lean local axiom audits for `shift_iter`, `even_block`, `odd_block`, and `later_opposite`: `[propext, Quot.sound]`, no `sorryAx`. This is a reusable arithmetic representation rather than an original claim to discover the known generalized Collatz transformation. See [Agent 18's source-connected reduction](../agent18-b-cycle/ONE-DIMENSIONAL.md) for the still-undecided machine semantics.
+
+
+## Exact 2-adic finite parity coding, source-certified
+
+A second source module `BParityCoding.lean.xz.b64` (uncompressed SHA256 `5d01059206dce41bdacd8ea45f517ea4659777c0cea219ac8c6b2adb2be4a67c`) proves `parity_gap` and `G_parity_gap`. For any two starting values whose positive difference is `2^k*m` with odd `m`, their first `k` parity observations agree; at exactly the `k`-th position they differ, and the numerical gap has become `3^k*m`. The same module proves `G_no_eventual_parity_period`: **every** natural-start G orbit has an eventually *aperiodic* parity word. The source transfer file `BParityCodingSource.lean` checks the exact original unchanged Agent18 map and proves `source_parity_gap` and `source_no_eventual_parity_period`.
+
+A third module `BParityWords.lean.xz.b64` (uncompressed SHA256 `d31a748aa486f7fba3e1ac62b26f4a8e1368e73a6cd45040af3a48efc4cf9625`) proves:
+```text
+∀ k, ∀ binary parity word b of length k,
+∃! z with z<2^k such that parity(G^j(z))=b_j for all j<k.
+```
+The certificates are `parity_prefix_exists`, `parity_prefix_unique`, and `parity_word_bijection`, all compiled locally with `[propext, Quot.sound]`, no `sorryAx`. They constitute the standard finite 2-adic parity-coding phenomenon specialized to this map. We make **no novelty claim for generic Collatz parity coding**.
+
+**Independent CI:** [run 41492546809](https://github.com/FlareZ123/bb6/actions/runs/41492546809) passed the aperiodicity and original-source bridge; [run 41493062011](https://github.com/FlareZ123/bb6/actions/runs/41493062011) additionally compiled the finite-word bijection and all prior unmodified source imports. Both are manual-only and used Lean 4.36.0-rc2. An earlier [run 41492034088](https://github.com/FlareZ123/bb6/actions/runs/41492034088) initially failed due to a workflow-local `LEAN_PATH` configuration, which was fixed and reverified.
+
+**Implication and limitation:** no fixed finite-period classification describes the entire scalar parity itinerary; the exceptional reset-sampling indices remain an open infinite-horizon problem. The finite 2-adic bijection is a toolkit for backward parity-cylinder searches. It supplies no bound on the first even sampled bit and cannot prove its existence or absence.
