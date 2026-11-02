@@ -1,6 +1,4 @@
-module
-public import BReduction
-@[expose] public section
+import BReduction
 
 namespace BB6.Agent50
 open BB6.BReduction
