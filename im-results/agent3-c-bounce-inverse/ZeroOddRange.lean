@@ -24,21 +24,21 @@ theorem zero_first_odd_necessary (a k y : Nat)
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hi
-    · by_cases hk1 : k=1
-      · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hi
-      · by_cases hk2 : k=2
-        · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hi
-        · by_cases hk3 : k=3
-          · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] at hi
-            omega
-          · simp only [sectionPreimageAll,if_neg ha0,if_pos ha1,
-              if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hi
-            rcases hi with ⟨_,n,hs,_⟩ | ⟨hy,n,hs,_⟩
-            · have hp : 1≤2^n := Nat.one_le_pow n 2 (by decide)
+      · by_cases hk1 : k=1
+        · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hi
+        · by_cases hk2 : k=2
+          · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hi
+          · by_cases hk3 : k=3
+            · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] at hi
               omega
-            · have heq : 2^n*16=4*(2^n*4) := by ac_rfl
-              rw [heq] at hs
-              omega
+            · simp only [sectionPreimageAll,if_neg ha0,if_pos ha1,
+                if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hi
+              rcases hi with ⟨_,n,hs,_⟩ | ⟨hy,n,hs,_⟩
+              · have hp : 1≤2^n := Nat.one_le_pow n 2 (by decide)
+                omega
+              · have heq : 2^n*16=4*(2^n*4) := by ac_rfl
+                rw [heq] at hs
+                omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hi
