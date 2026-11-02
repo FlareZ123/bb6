@@ -25,4 +25,6 @@ theorem imported_original_shift_leaf (B : Nat) :
   exact import_source_tree_as_cover_leaf B BB6.Coverage.rightWalkerPartial
     (BB6.Coverage.rightWalkerTree B)
 
+#print axioms imported_rightwalker_same_cylinder
+#print axioms imported_original_shift_leaf
 end BB6.CoverageAdapter
