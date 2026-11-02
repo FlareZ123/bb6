@@ -14,6 +14,13 @@ theorem path_step (v i : Nat) :
   dsimp [path,T]
   omega
 
+theorem path_succ_initial (a i : Nat) : path a (i+1) = path (T a) i := by
+  induction i with
+  | zero => rfl
+  | succ i ih =>
+      change T (path a (i+1)) = T (path (T a) i)
+      rw [ih]
+
 /-- Matching length-n parity prefixes force initial values to coincide modulo 2^n. -/
 theorem prefix_forces_divisor (a b n : Nat)
     (hab : a ≤ b)
@@ -61,6 +68,46 @@ theorem prefix_forces_divisor (a b n : Nat)
     exact ⟨d n, (hmul n (by omega)).symm⟩
   exact hdiv
 
+/-- Congruence modulo 2^n also suffices for agreement of the first n bits. -/
+theorem divisor_forces_prefix (a b n : Nat)
+    (hab : a ≤ b) (hdiv : 2^n ∣ b-a) :
+    ∀ i : Nat, i < n → (path a i)%2 = (path b i)%2 := by
+  induction n generalizing a b with
+  | zero =>
+      intro i hi
+      omega
+  | succ n ih =>
+      obtain ⟨t, ht⟩ := hdiv
+      have hfactor : 2^(n+1)*t = 2*(2^n*t) := by
+        rw [Nat.pow_succ]
+        ac_rfl
+      rw [hfactor] at ht
+      have hb : b = a + 2*(2^n*t) := by omega
+      have hpar : a%2=b%2 := by omega
+      have hstepa : 2*T a = 3*a + 7*(a%2) := by dsimp [T]; omega
+      have hstepb : 2*T b = 3*b + 7*(b%2) := by dsimp [T]; omega
+      have hT : T b = T a + 3*(2^n*t) := by omega
+      have horder : T a ≤ T b := by omega
+      have hnext : 2^n ∣ T b - T a := by
+        refine ⟨3*t, ?_⟩
+        rw [hT]
+        simp only [Nat.add_sub_cancel_left]
+        ac_rfl
+      intro i hi
+      cases i with
+      | zero => simpa [path] using hpar
+      | succ i =>
+          have hrest := ih (T a) (T b) horder hnext i (by omega)
+          rw [path_succ_initial, path_succ_initial]
+          exact hrest
+
+/-- First-n parity words are equivalent to initial residue classes modulo 2^n. -/
+theorem prefix_iff_congruent (a b n : Nat) (hab : a ≤ b) :
+    (∀ i : Nat, i < n → (path a i)%2 = (path b i)%2) ↔ 2^n ∣ b-a := by
+  constructor
+  · exact prefix_forces_divisor a b n hab
+  · exact divisor_forces_prefix a b n hab
+
 /-- Two distinct inputs with gap less than 2^n have distinct length-n parity prefixes. -/
 theorem finite_prefix_separates (a b n : Nat)
     (hab : a < b) (hgap : b-a < 2^n) :
@@ -77,6 +124,8 @@ theorem finite_prefix_separates (a b n : Nat)
     have hle := Nat.le_of_dvd hpos hd
     omega
 
+#print axioms divisor_forces_prefix
+#print axioms prefix_iff_congruent
 #print axioms prefix_forces_divisor
 #print axioms finite_prefix_separates
 end BB6.Agent24.Coding
