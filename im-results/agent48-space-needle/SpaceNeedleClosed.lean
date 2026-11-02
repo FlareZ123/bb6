@@ -203,6 +203,82 @@ theorem predecessor_power_identity (q v k : Nat) :
   rw [hcoef, hp]
   omega
 
+/-- Powers of two modulo five never vanish. -/
+theorem pow_two_mod5_cases (n : Nat) :
+    2^n % 5 = 1 ∨ 2^n % 5 = 2 ∨ 2^n % 5 = 4 ∨ 2^n % 5 = 3 := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Nat.pow_succ']
+      have hm : (2*2^n)%5 = (2*((2^n)%5))%5 := by simp [Nat.mul_mod]
+      rw [hm]
+      rcases ih with h|h|h|h
+      · rw [h]; decide
+      · rw [h]; decide
+      · rw [h]; decide
+      · rw [h]; decide
+
+theorem pow_two_mod5_four_k_plus_one (k : Nat) :
+  (2^(4*k+1))%5=2 := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      rw [show 4*(k+1)+1=(4*k+1)+4 by omega, Nat.pow_add]
+      have hmul : (2^(4*k+1)*2^4)%5 = ((2^(4*k+1))%5*(2^4%5))%5 := by
+        exact Nat.mul_mod _ _ _
+      rw [hmul,ih]
+
+/-- An infinite arithmetic progression of 2-adic input valuations cannot
+lead directly into any terminal power-of-two counter. -/
+theorem no_20t_plus_4_halving_into_power (q k t : Nat) :
+    highLevelNext (.N (oddTower q (20*t+4))) ≠
+      some (.N (haltTower k)) := by
+  intro h
+  let v := 20*t+4
+  have heq := (predecessor_power_identity q v k).mp h
+  have hvexp : v+1 = 4*(5*t+1)+1 := by dsimp [v]; omega
+  have hpow : (2^(v+1))%5=2 := by
+    rw [hvexp]
+    exact pow_two_mod5_four_k_plus_one (5*t+1)
+  have hden : (2^(v+1)+3)%5=0 := by omega
+  have hmul : ((2^(v+1)+3)*(2*q+3))%5=0 := by
+    rw [Nat.mul_mod,hden]
+    simp
+  have hv : (2*v)%5=3 := by dsimp [v]; omega
+  have hrem : (2^(k+2))%5=0 := by omega
+  rcases pow_two_mod5_cases (k+2) with h1|h2|h3|h4 <;> omega
+
+/-- The 3-step multiplicative period of the powers of two modulo seven. -/
+theorem pow_two_mod7_three_k_plus_two (k : Nat) :
+    2^(3*k+2)%7=4 := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      rw [show 3*(k+1)+2=(3*k+2)+3 by omega, Nat.pow_add]
+      have hmul : (2^(3*k+2)*2^3)%7 = ((2^(3*k+2))%7*(2^3%7))%7 := by
+        exact Nat.mul_mod _ _ _
+      rw [hmul,ih]
+
+/-- A second infinite family of forbidden immediate predecessors of any
+terminal power-of-two counter, from a 7-divisibility obstruction. -/
+theorem no_21t_plus_19_halving_into_power (q k t : Nat) :
+    highLevelNext (.N (oddTower q (21*t+19))) ≠
+      some (.N (haltTower k)) := by
+  intro h
+  let v := 21*t+19
+  have heq := (predecessor_power_identity q v k).mp h
+  have hvexp : v+1 = 3*(7*t+6)+2 := by dsimp [v]; omega
+  have hpow : (2^(v+1))%7=4 := by
+    rw [hvexp]
+    exact pow_two_mod7_three_k_plus_two (7*t+6)
+  have hden : (2^(v+1)+3)%7=0 := by omega
+  have hmul : ((2^(v+1)+3)*(2*q+3))%7=0 := by
+    rw [Nat.mul_mod,hden]
+    simp
+  have hv : (2*v)%7=3 := by dsimp [v]; omega
+  have hrem : (2^(k+2))%7=0 := by omega
+  rcases pow_two_mod_seven (k+2) with h1|h2|h3 <;> omega
+
 #print axioms scan_haltTower
 #print axioms scan_oddTower
 #print axioms haltTower_power
@@ -216,4 +292,9 @@ theorem predecessor_power_identity (q v k : Nat) :
 #print axioms pow_two_mod_seven
 #print axioms no_one_halving_into_power
 #print axioms predecessor_power_identity
+#print axioms pow_two_mod5_cases
+#print axioms pow_two_mod5_four_k_plus_one
+#print axioms no_20t_plus_4_halving_into_power
+#print axioms pow_two_mod7_three_k_plus_two
+#print axioms no_21t_plus_19_halving_into_power
 end BB6.Agent48.SpaceNeedle
