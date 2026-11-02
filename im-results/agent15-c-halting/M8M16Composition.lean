@@ -85,15 +85,15 @@ theorem blank_no_m8_affine_cylinder (u v : Nat) :
   intro h
   have hpreRaw := (blank_reach_iff_affine (8*u+7) (16*v+10)
     (by omega) (by omega) (by omega)).mp h
-  have hpre : CReach (8*u+16*v+15) (8*v+4) := by
-    convert hpreRaw using 1 <;> omega
+  have hfirst : (8*u+7)+(16*v+10)-2 = 8*u+16*v+15 := by omega
+  have hsecond : (16*v+10-2)/2 = 8*v+4 := by omega
+  rw [hfirst,hsecond] at hpreRaw
+  have hpre : CReach (8*u+16*v+15) (8*v+4) := hpreRaw
   have hline := section_reach_embeds hpre
   apply CCert.published_no_seven_four (u+2*v+1) v
-  have heq :
-      (8*(u+2*v+1)+7,8*v+4,0) =
-      (8*u+16*v+15,8*v+4,0) := by
-    congr 1 <;> omega
-  simpa [heq] using hline
+  have hfirst : 8*(u+2*v+1)+7 = 8*u+16*v+15 := by omega
+  rw [hfirst]
+  exact hline
 
 /-- The two M8 odd-first-counter stopping-parameter cylinders are
     excluded in Agent 15's exact blank section semantics. -/
