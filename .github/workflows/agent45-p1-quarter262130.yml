@@ -43,10 +43,11 @@ jobs:
       - name: Verify deep n=2(mod16) real-source P1 predecessor chains
         run: |
           export LEAN_PATH="im-results/agent1-p1-map"
-          lean im-results/agent45-p1-deep-two/P1Deep2.lean
+          lean -o im-results/agent45-p1-deep-two/P1Deep2.olean im-results/agent45-p1-deep-two/P1Deep2.lean
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent45-p1-deep-two"
           lean -o im-results/agent45-p1-deep-two/P1TwoRoot.olean im-results/agent45-p1-deep-two/P1TwoRoot.lean
           lean -o im-results/agent45-p1-deep-two/P1TwoFeeder.olean im-results/agent45-p1-deep-two/P1TwoFeeder.lean
+          lean -o im-results/agent45-p1-deep-two/P1TwoIff.olean im-results/agent45-p1-deep-two/P1TwoIff.lean
           lean im-results/agent45-p1-deep-two/P1TwoSector.lean
       - name: Kernel-check all 7 inverse hubs and original blank critical gate
         run: |
