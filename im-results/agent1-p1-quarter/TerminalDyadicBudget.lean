@@ -48,5 +48,41 @@ theorem dyadic_defect_gap (n t c D : Nat)
       have hmul := Nat.mul_le_mul_left (2^t) (show 3≤c+3 by omega)
       omega
 
+/-- Under the exact two-feeder mass, every narrow-left inverse source
+has a logarithmic bound on its final dyadic inverse depth. -/
+theorem source_small_left_dyadic_budget
+    (q u b d m t c e : Nat)
+    (he : e=3 ∨ e=5)
+    (hu : u+4*q+3=7*2^(16*q))
+    (hmass : b+d+2*m=8*u+e)
+    (hb4 : b%4=0)
+    (hinverse : d+b/2+3=2^t*(c+3))
+    (hsmall : b ≤ 4*m+192*q+40) :
+    2^t ≤ 256*q+8*m+76 := by
+  let D := 56*2^(16*q) - (d+b/2+3)
+  have hscaled : 8*u+32*q+24=56*2^(16*q) := by omega
+  have hsBound : d+b/2+3 < 56*2^(16*q) := by
+    rcases he with he | he <;> omega
+  have hdsum : D+(d+b/2+3)=56*2^(16*q) := by
+    dsimp [D]
+    omega
+  have hDpositive : 0 < D := by
+    dsimp [D]
+    omega
+  have hDbound : D ≤ 32*q+18+2*m+b/2 := by
+    rcases he with he | he <;> omega
+  have hp : 7*2^(16*q+3)=56*2^(16*q) := by
+    rw [Nat.pow_add]
+    have hz : (2:Nat)^3=8 := by decide
+    rw [hz]
+    omega
+  have hg : D+2^t*(c+3)=7*2^(16*q+3) := by
+    rw [hp]
+    omega
+  have hh:=dyadic_defect_gap (16*q+3) t c D hg hDpositive
+  omega
+
+#print axioms source_small_left_dyadic_budget
+
 #print axioms dyadic_defect_gap
 end BB6.Agent1Bottleneck
