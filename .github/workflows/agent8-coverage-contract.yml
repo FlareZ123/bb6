@@ -50,6 +50,7 @@ jobs:
           set -eu
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke"
           lean -o im-results/agent8-coverage-contract/HaltSlotFreedom.olean im-results/agent8-coverage-contract/HaltSlotFreedom.lean
+          lean im-results/agent8-coverage-contract/TotalHaltAudit.lean
           lean -o im-results/agent8-coverage-contract/AllHaltsFreedom.olean im-results/agent8-coverage-contract/AllHaltsFreedom.lean
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
