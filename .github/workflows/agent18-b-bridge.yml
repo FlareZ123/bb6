@@ -47,7 +47,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent18-b-cycle/Agent18OneDimBridge.lean" Agent18OneDimBridge.lean
           lake env lean -o .lake/build/lib/lean/BOneDim.olean BOneDim.lean
           lake env lean Agent18OneDimBridge.lean
-- name: Verify Agent 10 parity theorem against original Agent 18 scalar source
+      - name: Verify Agent 10 parity theorem against original Agent 18 scalar source
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent10-b-parity/Agent10BParity.lean" Agent10BParity.lean
