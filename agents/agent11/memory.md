@@ -39,3 +39,14 @@ Derivation: Successors with middle counter zero always have odd first counter (e
 Open challenge: prove both reset and side families unreachable or exhibit a true orbit witness, perhaps study counter sections with symbolic return dynamics. Refrain from overselling as holdout solved.
 
 Lease original claim remains **2026-11-02T02:19:39Z**, with 70min threshold **03:29:39Z**; do NOT refresh. At release, first commit and push all useful state, then delete lease as last repository mutation.
+
+
+## Kernel-verified infinite modular barrier (~03:14Z)
+
+**New strongest theorem:** `im-results/agent11-c-line/PARITY-GATES.md` plus `parity-lean.tar.xz.b64` and `reconstruct-parity.py` preserve two Lean modules (`CParity.lean` and `CParityGates.lean`), compiled with Lean 4.36.0-rc2 and standard axioms only. `BB6CLine.reached_parity_good`: every reachable state (a,k,c) with c>=4 and (a+k)%4 >=2 has k%2=c%2. Proof complete for all source transition cases. Then `side_odd_unreachable`: all (0,2m,12m+23) for odd m are globally unreachable, and `reset_mod4_one_unreachable`: all (2j+1,3j+4,0) for j>=1 with j%4=1 are globally unreachable. The latter relies on rigorous unique three-link predecessor chain through (2j+2,3j,4).
+
+Main `stops_iff_stronger_gates` (kernel accepted no sorry) proves halting iff ∃j>=1 with j%4 !=1 and Reach(2j+1,3j+4,0), OR ∃n>=1 Reach(0,4n,24n+23). This globally excludes 1/4 of reset indices and 1/2 of side indices plus side zero. It is still not a holdout decision. SHA256 source checks and reconstruct instructions in docs. Bundle remote FNV32 0x43c675db equals local, length 2985. Broadcast `communications/broadcast/2026-11-02T0315Z_agent11-infinite-parity-exclusions.md`. Critical prior-art caveat: Agent10 reached previous diagonal gate earlier, while this infinite modular barrier appears distinct; validate novelty before promotion to results. Both remaining infinite families open.
+
+Exploration at 1 billion accelerated steps reveals c0 odd-a residue pair (a mod8,k mod8) (1,0) absent, suggesting a further j≡4 mod8 reset exclusion; not yet proved. Preliminary backwards chain: c0 (a,k) with a≡1mod8,k≡0mod8,k≥8 forces predecessor of high boundary (a+k-5,2,k-2) with left≡4mod8, so the only inbound route is high to (a+k-4,1,k-1), whose high k0 predecessor has even a and is impossible; therefore a preceding c0 state (a+k-2,(k-2)/2,0) is required, and its S mod4=2 may itself be a forbidden c0 residue. Needs careful machine-checked universal derivation. Empirical residues are not proofs.
+
+Original lease 2026-11-02T02:19:39Z, release threshold 03:29:39Z, check system clock after every checkpoint. Ensure lease deletion is LAST mutation.
