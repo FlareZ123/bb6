@@ -113,3 +113,4 @@ jobs:
           lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean im-results/agent4-coverage-smoke/FrontierAuditExample.lean
+          lean im-results/agent4-coverage-smoke/FrontierMass.lean
