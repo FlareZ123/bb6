@@ -26,6 +26,11 @@ jobs:
           cp im-results/agent18-b-cycle/BOneDim.lean Agent18BOneDim.lean
           lean -o Agent18BReduction.olean Agent18BReduction.lean
           LEAN_PATH="$GITHUB_WORKSPACE" lean -o Agent18BOneDim.olean Agent18BOneDim.lean
+          SRC_PARITY="im-results/agent5-b-parity-runs"
+          base64 -d "$SRC_PARITY/BParityRuns.lean.xz.b64" | xz -dc > BParityRuns.lean
+          echo "7818c8a6b29b4f21773fa9364faad7d6485adcdad0e9fa308f136a2ef2d717fc  BParityRuns.lean" | sha256sum -c -
+          lean -o BParityRuns.olean BParityRuns.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean "$SRC_PARITY/BParityRunsSource.lean"
           SRC="im-results/agent5-b-certified-prefix"
           GENERATED="$GITHUB_WORKSPACE/.generated-btrace"
           mkdir -p "$GENERATED"
