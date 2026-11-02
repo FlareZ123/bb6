@@ -27,7 +27,7 @@ Every four-slot cylinder fixes four nonhalting transitions, leaving eight arbitr
 
 The deterministic `census.py` independently enumerates this family and the earlier Agent6 set: 120 three-step, 380 four-step, and 120 turnaround cylinders. It checks **7,447,870** distinct pairs for incompatible transition requirements. **All 3,860 cylinders are pairwise disjoint.** Their union covers **1,541,137,695,312,500 = 2.5856%·25^12** full tables. This union statement includes only Agent6's enumerated three sets, without making a completeness claim about other existing nonhalting proof families.
 
-Decoded file: `census.py.xz.b64`, SHA-256 **21eafab86ed664d392d5f2e95f58fa53207974300fcf0a993c5fb60c99985c3d**. The census is an explicitly reproducible finite calculation, not a Lean kernel theorem about cardinalities. The infinite-run and sparse-cover Lean theorems do not depend on this counting code.
+Decoded file: `census.py.xz.b64`, SHA-256 **806dc035956c0031348a0b3b8088706a28b15cf7a1497cfc94179a1238a37173**. The census is an explicitly reproducible finite calculation, not a Lean kernel theorem about cardinalities. The infinite-run and sparse-cover Lean theorems do not depend on this counting code.
 
 ## Reproduction and limitations
 
@@ -60,3 +60,14 @@ The new `stagger_finite_entry` theorem proves: if an arbitrary finite blank run 
 Executable checks `finiteStaggerRightCheck p k` and `finiteStaggerLeftCheck p k` run Agent8's **certified finitePartialRun** on a sparse machine for exactly k steps, demand state A at a pristine half-tape frontier, then inspect four assigned transitions for the matching outward four-step glider. Their source-certified proofs `finiteStaggerRightCheck_sound` and `finiteStaggerLeftCheck_sound` each construct `Cover (DecidedBelow bound) p` for **every bound** and **every compatible completion**. Each also has a `by decide` example with all other table slots arbitrary. The original-source checks use only standard Lean axioms and no `sorryAx`.
 
 Both checkers are **currently proof-producing finite-prefix leaves, separate from Agent8's larger recursive search**. An eventual efficient integration could replace the 3,456-candidate tail parameter enumeration with the four-entry `staggerFastOracle` while preserving exact orientation. A positive outcome is sound for all future steps; a negative outcome for one cutoff is inconclusive. No claim is made that the scanners have been run exhaustively over any historic holdout list.
+
+## Distinct sparse leaves after prior simple oracles
+
+[Full manual CI 41539133560](https://github.com/FlareZ123/bb6/actions/runs/41539133560) **passed** the expanded census and all unmodified-source Lean modules. The current decoded census SHA-256 is `806dc035956c0031348a0b3b8088706a28b15cf7a1497cfc94179a1238a37173`.
+
+An additional reproducible finite enumeration applies **exactly the same six-bit closure tests** as Agent8's existing `zeroMaskOracle` and directional `rayOracle` to each of our 3,240 fully assigned four-slot cylinders:
+- `zeroMaskOracle` recognizes 120 of the 3,240 cylinders;
+- directional zero-read ray-closure recognizes zero;
+- **3,120** remain *unrecognized by either of those existing simple sparse oracles*. None overlaps Agent6's 620 glider cylinders. These are newly covered four-slot leaves against this explicitly specified comparison set.
+
+This is a relative sparse **partial-table** comparison only. More sophisticated existing finite-prefix oracles can potentially accept some of the 3,120 sparse cylinders, and fully specified machines in these cylinders may be certified by other methods. Do not use 3,120 as an independent increment to an all-machine union percentage without further deduplication.
