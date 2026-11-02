@@ -1,5 +1,8 @@
-import BReduction
-import Lean.Elab.Tactic.Omega
+module
+
+public import Agent18BReduction
+
+@[expose] public section
 
 namespace BB6.IterBridge
 open BReduction
