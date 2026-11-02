@@ -1,4 +1,4 @@
-import P1TwoIff
+import P1TwoCritical
 
 namespace BB6.Agent45TwoRoot
 
@@ -68,6 +68,22 @@ theorem two_sector_iff_two_feeders (q : Nat) (hq : 1≤q) :
   obtain ⟨hu,hodd,_⟩ := u2_properties q hq
   exact root_reach_iff_two_feeders (u2 q) hodd hu
 
+/-- End-to-end equivalence for the *actual* P1 critical reset counter
+    at every index n=16q+2 (q≥1). Each direction is proved against
+    original T steps and original Reach, with an exact 2-line frontier. -/
+theorem two_sector_critical_iff_feeders (q : Nat) (hq : 1≤q) :
+    BB6.Agent1.Reach 2
+      (14*2^(16*q+2)-2*(16*q+2)-10) ↔
+    BB6.Agent1.Reach (4*u2 q-4) (4*u2 q+9) ∨
+    BB6.Agent1.Reach (6*u2 q-2) (2*u2 q+5) := by
+  have hcrit : 14*2^(16*q+2)-2*(16*q+2)-10=8*u2 q+10 := by
+    have hr := root_index_two q hq
+    omega
+  rw [hcrit]
+  obtain ⟨hu,hodd,_⟩ := u2_properties q hq
+  exact critical_target_iff_two_feeders (u2 q) hodd hu
+
+#print axioms two_sector_critical_iff_feeders
 #print axioms two_sector_iff_two_feeders
 #print axioms two_sector_requires_two_feeders
 end BB6.Agent45TwoRoot
