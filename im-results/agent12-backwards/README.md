@@ -74,3 +74,16 @@ The plain Lean module `RankCutoff.lean` imports the reconstructed `NoFourthTarge
 The proof establishes that every nonhalting T transition strictly increases rank a+c. A complete 24-state initial prefix has a kernel-verified Boolean one-step closure: all next states are within the prefix or have rank at least 45. By induction every reachable state is either on this prefix or has rank>=45. The critical target (2,42), rank44, is not in the prefix. `earlyValid_true` uses `decide +kernel`, and the axiom audit for the final theorem reports only `[propext, Classical.choice, Quot.sound]`; no sorryAx.
 
 To reproduce, compile `NoFourthTarget.lean` from the packed baseline, then compile `RankCutoff.lean` with `LEAN_PATH` set to its olean directory.
+
+## Further infinite critical residue classes: n=4 mod 8 and n=0 mod 16
+
+Two more plain source modules import the same baseline and compile under Lean 4.36.0-rc2:
+
+* `Mod16SixBarrier.lean` proves the complete all-natural `G_to_eight_multiple_three` and `T_to_eight_multiple_three` inverse classifications for output `(8*m,3)`. These yield `blank_no_fourteen_mod_sixteen`: every `d>=30,d%16=14` excludes `BlankReach 2 d`, and `blank_no_critical_four_mod_eight`: every `n>=4,n%8=4` excludes the critical target.
+* `Mod32SixBarrier.lean` proves `blank_no_eight_multiple_three_mod_four` for `m>=6,m%4=2`, yielding `blank_no_twentytwo_mod_thirtytwo`: every `d>=54,d%32=22` excludes `BlankReach 2 d`, and `blank_no_critical_zero_mod_sixteen`: every `n>=16,n%16=0` excludes the critical target.
+
+All audited theorems depend only on `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. All source files are intermediate mathematical research, despite the infinite and completely kernel-proved character of the arithmetic exclusions. The actual holdout and BB(6) remain unsolved.
+
+### Independently reproducible GitHub Actions
+
+The **manual-only** workflow `.github/workflows/agent12-p1-lean-verify.yml` reconstructs the packed `NoFourthTarget.lean` with SHA256 verification and compiles the baseline plus `InfiniteMod16Barrier.lean`, `RankCutoff.lean`, `Mod16SixBarrier.lean`, `Mod32SixBarrier.lean` with the pinned Lean 4.36.0-rc2 toolchain. The first dispatch **succeeded**, run [41380983362](https://github.com/FlareZ123/bb6/actions/runs/41380983362) on 2026-11-02. It has no automatic per-commit trigger, per repository rules.
