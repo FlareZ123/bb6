@@ -33,6 +33,42 @@ identifies its halting status with the table differing only at the terminal
 instruction `---0LA`, which *is* in this snapshot. This equivalence
 predates this inventory.
 
+## Upstream-documented Lean properties (same pinned revision)
+
+The source module filenames have a stronger, separately sourced metadata layer:
+the pinned [BB6 README](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/README.md)
+and [Accelerations README](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/Accelerations/README.md)
+list the following declared predicates for the **86 exact historic-root
+matches**. A source may declare more than one predicate.
+
+| Documented Lean predicate | Matched historic roots |
+|---|---:|
+| `IsNotHalt` | 1 |
+| `IsClosedPatternSet` | 50 |
+| `HasCollatzReduction` | 50 |
+| `IsValidAcceleration` | 70 |
+| `HasStackReduction` | 12 |
+| `HasOdometerReduction` | 3 |
+| `HasTransducerReduction` | 1 |
+
+The matched direct-source population partitions into one A6 nonhalting
+theorem, 50 published closed-pattern/Collatz accelerations, and 35
+stack/odometer/transducer module sources. Of the latter 35, twenty declare
+`IsValidAcceleration` and fifteen declare a structural reduction.
+One odometer module additionally declares `IsValidAcceleration`, so the
+category counts overlap. The per-root declarations are frozen verbatim as
+machine/predicate metadata in
+[`resources/cryptids-bb6-predicates-c86f1586.tsv`](../../resources/cryptids-bb6-predicates-c86f1586.tsv);
+the read-only cross-reference tool emits those values.
+
+**Status boundary:** This is a reproducible inventory of what the pinned
+upstream documentation **claims**, without rebuilding and axiom-auditing
+all 89 individual source modules locally. All documented acceleration and
+structural predicates are reductions rather than original blank-tape
+halt/nonhalt decisions. A6's outcome is separately source-reviewed and
+CI-backed in the ledger. Neither predicate frequency nor source presence
+implies a current solved-holdout count or a Busy Beaver bound.
+
 ## How to reproduce and reuse
 
 - All **89** upstream filenames are frozen verbatim in
