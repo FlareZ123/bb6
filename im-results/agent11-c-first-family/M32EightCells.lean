@@ -1,5 +1,7 @@
 import CSourceBridge32
 import Lean.Elab.Tactic.Omega
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
 
 namespace CCert
 
@@ -19,19 +21,19 @@ private theorem q_choices (x z : Nat) (hz : z<32) (hm : x%32=z) :
     left
     subst x
     have hsmall : z<8 := by omega
-    simp [q,hsmall]
+    simp [q,base,modulus,hsmall]
   · by_cases hlarge : 8≤z
     · left
       have he : q x=q z := q_congr_big x z (by omega) hlarge (by omega)
       rw [he]
-      unfold q
+      change (if z<8 then z else 8+(z-8)%32)=z
       rw [if_neg (by omega : ¬ z<8)]
       omega
     · right
       have he : q x=q (z+32) :=
         q_congr_big x (z+32) (by omega) (by omega) (by omega)
       rw [he]
-      unfold q
+      change (if z+32<8 then z+32 else 8+(z+32-8)%32)=z+32
       rw [if_neg (by omega : ¬z+32<8)]
       omega
 
@@ -46,7 +48,7 @@ private theorem q_large (x z : Nat) (hz : 8≤z) (hzmax : z<32)
     · omega
   have he : q x=q z := q_congr_big x z hx hz hm
   rw [he]
-  unfold q
+  change (if z<8 then z else 8+(z-8)%32)=z
   rw [if_neg (by omega : ¬z<8)]
   omega
 
