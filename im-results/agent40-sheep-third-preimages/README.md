@@ -1,3 +1,22 @@
+# Agent 40: Sheep inverse-tree synthesis (depths 3 and 4)
+
+**Intermediate rigorously derived infinite blank-section target exclusions; the Sheep holdout and exact BB(6) remain unresolved.** All results use the published Sheep return map from the real blank-entry section t=5. The three- and four-generation inverse fibers are proved by all-valuation arithmetic in the linked detailed reports; Lean has certified the unrestricted residue-gap lemma, every large-valuation obstruction, and all necessary finite modular gates. The complete inverse and reachability theorems have not yet been jointly encoded in this local Lean development or imported into the upstream Turing-machine formalization.
+
+| New inverse obstruction | Exponent residue classes | Density | Complete proof |
+|---|---|---:|---|
+| Depth 3, even parent via a=0 | j mod216∈{24,48,96,120,168} | 5/216 | [Detailed even proof](#sheep-machine-an-infinite-third-generation-inverse-obstruction) (below) |
+| Depth 3, odd parent via a=1 | j mod300∈{11,31,71,91,131,191,211} | 7/300 | [ODD-CLASSES.md](./ODD-CLASSES.md) |
+| Depth 3, even parent via a=1 | j mod180∈{2,22,26,38,58,62,70,98,106,110,130,142,146,166,170,178} | 16/180 | [EVEN-A1-CLASSES.md](./EVEN-A1-CLASSES.md) |
+| Depth 4, all parent valuations a=0 | j mod648∈{72,144,360,504,576} | 5/648 | [FOURTH-CLASSES.md](./FOURTH-CLASSES.md) |
+
+The classes are pairwise disjoint, including with the Agent16 prior 157/360 exclusions; total proven all-time exclusion of halting-power **exponent indices** is **9383/16200 ≈57.91975%**. This is an exact density of a union of arithmetic progressions, **not** a probability that the machine halts or a fraction of BB(6) holdouts resolved.
+
+**Reusable Lean verification:** `ResidueGap.lean` certifies uniformly for all a,e,d the impossibility of `2^e%(2^(a+1)+1)=d` when d is odd and 1<d<2^a. `LargeValuation.lean` imports it and proves all new large-valuation third- and fourth-level exclusions. `InverseAlgebra.lean` certifies exact generic predecessor arithmetic. `ResidueCert.lean`, `OddResidueCert.lean`, `EvenA1ResidueCert.lean`, and `FourthResidueCert.lean` certify complete periodic small-valuation gates. No `sorryAx`; standard Lean axioms only. Four independent Python scripts `verify.py`, `verify_odd.py`, `verify_even_a1.py`, `verify_fourth.py` check exact inversion on bounded exponents. All have compiled or run successfully locally under Lean 4.36.0-rc2 / Python 3.
+
+**Critical remaining obligation:** exclude **every** surviving power of two from the actual section orbit starting at 5, or produce a genuine halt. Until this is done, the undecided six-state machine and BB(6) remain open. Prior-art novelty and independent cross-review of these new families are still pending.
+
+---
+
 # Agent 40: Sheep Machine, third-generation source-free powers
 
 **2026-11-02; intermediate mathematical theorem, not a BB(6) solution.** The global argument below is an elementary handwritten proof, with a standalone Lean 4.36.0-rc2 kernel certificate for the infinite fixed-modulus subcases. It does not establish the undecided machine's halting status. Novelty beyond the repository and public prior art has not been established.
