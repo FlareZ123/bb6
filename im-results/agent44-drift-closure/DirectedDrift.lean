@@ -11,7 +11,7 @@ def DriftClosed (m : Machine) (states : Fin 6 → Prop) (dir : Bool) : Prop :=
   ∀ s, states s → ∃ w next,
     m (s, false) = some ⟨w, dir, next⟩ ∧ states next
 
-private theorem step_in_blank_ray (m : Machine) (states : Fin 6 → Prop)
+theorem step_in_blank_ray (m : Machine) (states : Fin 6 → Prop)
     (dir : Bool) (hclosed : DriftClosed m states dir)
     (c : Config) (hs : states c.state)
     (hblank : ∀ x, Ahead dir c.head x → c.tape x = false) :
