@@ -24,7 +24,8 @@ theorem code_then_implicit_nil (m : Nat) (ws : List Bool) :
   rw [hc]
   apply BB6.Agent35.toA_finish
   rw [BB6.Agent35.toA_run, BB6.Agent35.toA_aBoundary]
-  exact CryptidA.a_close_nil (m+CryptidA.wordInc ws)
+  simpa [CryptidA.finish] using
+    (CryptidA.a_close_nil (m+CryptidA.wordInc ws))
 
 /-- Every mixture of 10 and 111 packet symbols closes on an implicit
     blank, with an exact universal primitive-step formula. -/
