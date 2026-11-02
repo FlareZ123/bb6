@@ -20,3 +20,24 @@ The local toolchain lives in /tmp/lean/installed/lean-4.36.0-rc2-linux/bin/lean.
 **Unresolved mathematical question:** All work characterizes arbitrary accelerated states or exactly transports existing blank-start gateway theorem; it does not classify reachability of residual gateway families, does not solve Machine C or BB(6). Keep under im-results/. Strong route: exploit complete positive-c phase termination to define a total two-counter c0 return-or-halt map, then seek an infinite inductive invariant avoiding the reset/side gates. The c0-to-c0 affine bands have weighted-rank increments +4 (long), +7 (middle), +10 (far) independently of parameters, suggesting deeper structural quotient with additional higher bands. Existing Agent11 modulo8 invariant excludes j=1,4,5 mod8 for reset gates; surviving infinite families remain open. Inform other C researchers of source bridge and phase rank.
 
 Current lease start 04:18:37 UTC; orderly release when system clock >=05:28:37 UTC. At release update memory and push all state, then delete lease as final GitHub mutation, verify deletion, exit. Prior to threshold continue.
+
+## Major new result at 05:18 UTC: genuine modulo32 infinite Machine C reset exclusion
+
+Local Lean 4.36.0-rc2 kernel proved **for ALL naturals t**:
+
+    BB6.CMod32.reset_mod32_sixteen_unreachable (t):
+      ¬ BB6CLine.Reach (64*t+33,96*t+52,0).
+
+This is reset index j=32t+16 in the PREVIOUSLY SURVIVING j mod8=0 class. A new nontrivial infinite family is now excluded beyond Agent11 prior modulo8 sieve. All actual Machine C/BB6 classifications remain open.
+
+Proof is composed of two all-time forced predecessor lemmas:
+    Reach(64t+33,96t+52,0) => Reach(160t+83,48t+25,0)
+    Reach(160t+83,48t+25,0) => Reach(104t+52,76t+37,0)
+Final target middle odd>=5, sum=180t+89 congruent1 mod4, contradicting our newly established universal CRange.reached_odd_zero_mod4_hole. No finite-step cutoff or hidden assumed unreachability.
+
+The new generic backward precursor calculus (local CBack.lean) proves seven universal lemmas, including reached_kzero_odd, reached_high_pred, reverse_high, reached_zero_prev, reached_one_prev, reached_three_prev, reached_zero_hub, reached_hub_prev, reached_one_high_or_reset, reached_high_kzero_prev. Compiles without sorryAx. Local CMod32.lean compiles and #print axioms for first_ancestor, second_ancestor, reset_mod32_sixteen_unreachable shows ONLY [propext, Classical.choice, Quot.sound].
+
+Sources saved in im-results/agent21-c-source-bridge/CBack.lean.xz.b64 (10,529 bytes, SHA256 84767aed6924f78e7aae1bc483a92f5aa068ccbb8f12fcfd888fa13777819474), CMod32.lean.xz.b64 (6,623 bytes, SHA256 52f852d6468489fe6bf5f1fb8963a8ed8ab49d6ea43a811862bf8787c1e9f086); im-results/agent21-c-source-bridge/reconstruct.py decompresses via stdlib and SHA-checks, atomic under filelock. CMod32Bridge.lean (plain) strengthens upstream original-machine halting equivalence by adding j%32 != 16. Manual CI workflow extended, two runs began 05:20:49 and 05:21:48 UTC; monitor and address failures. They take ~4min. Final theorem and hashes explained in MOD32-NEW-EXCLUSION.md. Broadcast sent 05:23Z, targeted prior requests to agent11 and agent10 at ~05:10Z.
+
+LEASE AGE: Claimed 2026-11-02T04:18:37Z. 70min release threshold 2026-11-02T05:28:37Z. Be especially careful to checkpoint and release only after actual measured threshold. Before then continue checking CI and research. At threshold commit all useful state (memory/results) THEN DELETE LEASE AS LAST REPOSITORY MUTATION, verify deletion and end. User has been given partial final containing new result. GitHub sources already committed.
+
