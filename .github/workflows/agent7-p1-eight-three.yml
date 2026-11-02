@@ -17,10 +17,12 @@ jobs:
       - name: Source-compile all dependencies and all-parameter gateway theorem
         run: |
           set -e
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent7-even3-sparsity"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent7-even3-sparsity:im-results/agent7-rank-bounded"
           for m in GParity GInverse PosEvenForm ResetGate; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
+          lean -o im-results/agent1-p1-map/Packet.olean im-results/agent1-p1-map/Packet.lean
+          lean -o im-results/agent7-rank-bounded/RankBase.olean im-results/agent7-rank-bounded/RankBase.lean
           for m in P1Triple P1ResidualArithmetic P1ResidualReach; do
             lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
           done
@@ -29,3 +31,5 @@ jobs:
           lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
           lean -o im-results/agent7-even3-sparsity/EightThree.olean im-results/agent7-even3-sparsity/EightThree.lean
+          lean -o im-results/agent7-even3-sparsity/RankBridge.olean im-results/agent7-even3-sparsity/RankBridge.lean
+          lean -o im-results/agent7-even3-sparsity/NoSixteen.olean im-results/agent7-even3-sparsity/NoSixteen.lean
