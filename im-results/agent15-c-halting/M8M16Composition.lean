@@ -22,17 +22,17 @@ private theorem line_reach_of_run (n : Nat) :
       exact hs
   | succ n ih =>
       intro s t hs hr
-      rw [BB6.Agent8Section.run_succ_head] at hr
-      cases hstep : BB6CLine.nextC s with
+      change
+        (BB6.Agent8Section.run BB6CLine.nextC n (some s)).bind
+          BB6CLine.nextC = some t at hr
+      cases hp : BB6.Agent8Section.run BB6CLine.nextC n (some s) with
       | none =>
-          simp [hstep, BB6.Agent8Section.run_none] at hr
+          simp [hp] at hr
       | some u =>
-          have hu : BB6CLine.Reach u :=
-            BB6CLine.Reach.next s u hs hstep
-          have htail :
-              BB6.Agent8Section.run BB6CLine.nextC n (some u) = some t := by
-            simpa [hstep] using hr
-          exact ih hu htail
+          have hu : BB6CLine.Reach u := ih hs hp
+          have hstep : BB6CLine.nextC u = some t := by
+            simpa [hp] using hr
+          exact BB6CLine.Reach.next u t hu hstep
 
 /-- The Agent 46 exact section-return simulation transports every
     Agent 15 section-reachable pair into the original CLine reachability
@@ -57,7 +57,9 @@ theorem section_reach_embeds {a k : Nat} (h : CReach a k) :
         exact hstart
     | succ n ih =>
         intro a k hr
-        rw [BB6.Agent8Section.run_succ_head] at hr
+        change
+          (BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1))).bind
+            BB6.Agent46.secNext = some (a,k) at hr
         cases hp : BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) with
         | none =>
             simp [hp] at hr
