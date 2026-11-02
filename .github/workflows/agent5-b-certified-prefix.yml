@@ -38,3 +38,5 @@ jobs:
           lean -o "$GENERATED/BTraceFinal.olean" "$GENERATED/BTraceFinal.lean"
           lean -o "$GENERATED/BTraceSource.olean" "$SRC/BTraceSource.lean"
           lean "$SRC/BTraceReach.lean"
+          lean -o "$GENERATED/BTraceMagnitude.olean" "$SRC/BTraceMagnitude.lean"
+          lean "$SRC/BTraceRuntime.lean"
