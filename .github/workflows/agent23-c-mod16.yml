@@ -32,6 +32,8 @@ jobs:
           cp im-results/agent23-c-mod16/C7Bridge.lean /tmp/a23-lean/C7Bridge.lean
           cp im-results/agent23-c-mod16/C59.lean /tmp/a23-lean/C59.lean
           cp im-results/agent23-c-mod16/C59Bridge.lean /tmp/a23-lean/C59Bridge.lean
+          cp im-results/agent23-c-mod16/CSide.lean /tmp/a23-lean/CSide.lean
+          cp im-results/agent23-c-mod16/CSideBridge.lean /tmp/a23-lean/CSideBridge.lean
           cd /tmp/a23-lean
           export LEAN_PATH="."
           lean --version
@@ -41,4 +43,6 @@ jobs:
           lean -o C7.olean C7.lean
           lean C7Bridge.lean
           lean -o C59.olean C59.lean
-          lean C59Bridge.lean
+          lean -o C59Bridge.olean C59Bridge.lean
+          lean -o CSide.olean CSide.lean
+          lean CSideBridge.lean
