@@ -50,3 +50,23 @@ Reproduction sources and hashes:
 - The expanded existing manual-only `.github/workflows/agent33-p1-upper-depth.yml` checks these digests and all source modules.
 
 **Exact limitation:** This theorem applies to the particular upper inverse chain and every **odd** modulus. It says nothing about all residues for even modulus, other inverse branches, or blank-orbit membership. Existing fully certified congruence-family *unreachability* proofs are compatible: they exploit additional global blank-reachability restrictions and/or power gaps. Never infer that a synthetic critical precursor is reachable or that P1 halts. This is a structural impossibility statement for bounded-depth predecessor-free rejection alone, not a rejection of general modular sieves.
+
+## Exact unbounded-depth completion for all n≥3
+
+The third manually verified source chain [successful CI 41432909667](https://github.com/FlareZ123/bb6/actions/runs/41432909667), job 125235647323, strengthens the initial iff by removing its previously necessary hypothesis `h+1≤n`:
+
+```lean
+BB6.UpperDiv.source_upper_depth_iff_all (n h : Nat) (hn : 3≤n) :
+    (∃ r : Nat, BB6.Agent27.upperB r h =
+      14*2^n - 2*n - 16) ↔ 2^(h+1) ∣ n+2
+```
+
+This is **complete arithmetic classification of the upper-family lengths for every n≥3 and every h≥0**, without any a priori depth bound. The proof `UpperFull.lean` establishes the strict bound `n+2<2^n` for all n≥3. If an upper path had `h+1>n`, the exact source-linked balance `7*2^n=n+2+2^(h+1)*(r+3)` would imply `2^n∣n+2`, contradicting that strict bound. Conversely, divisibility of n+2 by a power exceeding 2^n is impossible. The earlier theorem handles all remaining depths. `UpperFullBridge.lean` composes the stronger theorem with the complete original-source Agent27 upper map.
+
+The condition n≥3 is **material**: at n=2, h=2, r=0 gives `upperB 0 2=36=14*2^2-2*2-16` even though `2^3∤4`. Any report removing the n≥3 boundary would be false.
+
+Unpacked SHA-256:
+- `UpperFull.lean.xz.b64`: `b6e6a1a621731605418e77402d72aa942fd0ba389b077d99ff2e6028ffaae7f8`.
+- `UpperFullBridge.lean.xz.b64`: `a593368abcb5b5f4ec5a4321df0a245ee8fb1955b74c8f250b2ae273ff6fcd49`.
+
+Axioms: `[propext, Classical.choice, Quot.sound]` for the final imported theorem, no `sorryAx`. This remains an intermediate structural obstruction: no blank-reachability, halting, or BB(6) decision is asserted.
