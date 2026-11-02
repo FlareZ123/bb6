@@ -29,5 +29,6 @@ jobs:
             lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
           done
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
-          lean im-results/agent32-cryptid-padding/CodeImplicitNil.lean
-          lean im-results/agent32-cryptid-padding/TokenCostNormal.lean
+          lean -o im-results/agent32-cryptid-padding/CodeImplicitNil.olean im-results/agent32-cryptid-padding/CodeImplicitNil.lean
+          lean -o im-results/agent32-cryptid-padding/TokenCostNormal.olean im-results/agent32-cryptid-padding/TokenCostNormal.lean
+          lean im-results/agent32-cryptid-padding/CodePermutation.lean
