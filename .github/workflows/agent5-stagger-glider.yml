@@ -46,6 +46,9 @@ jobs:
           base64 -d "$SRC/StaggerFiniteRight.lean.xz.b64" | xz -dc > StaggerFiniteRight.lean
           echo "27922e209c840d25fc26cd7120eb103bb0ebdb020ea3d913a6a352ee68d95f60  StaggerFiniteRight.lean" | sha256sum -c -
           LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerFiniteRight.lean
+          base64 -d "$SRC/StaggerFiniteLeft.lean.xz.b64" | xz -dc > StaggerFiniteLeft.lean
+          echo "c6ac9de6bb3a60f29f1a23d5a0ca360ebdaab465afa3af694570ca91137f5981  StaggerFiniteLeft.lean" | sha256sum -c -
+          LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerFiniteLeft.lean
           base64 -d "$SRC/census.py.xz.b64" | xz -dc > census.py
           echo "21eafab86ed664d392d5f2e95f58fa53207974300fcf0a993c5fb60c99985c3d  census.py" | sha256sum -c -
           python3 census.py
