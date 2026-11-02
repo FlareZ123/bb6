@@ -33,6 +33,7 @@ jobs:
           cd tools
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
           cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighAll.lean" M32HighAll.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighSmall.lean" M32HighSmall.lean
           cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighSourceBridge.lean" M32HighSourceBridge.lean
           export LEAN_PATH=.
           lean --version
@@ -45,4 +46,5 @@ jobs:
           lean -o CExclusions32.olean CExclusions32.lean
           lean -o CSourceBridge32.olean CSourceBridge32.lean
           lean -o M32HighAll.olean M32HighAll.lean
+          lean -o M32HighSmall.olean M32HighSmall.lean
           lean M32HighSourceBridge.lean
