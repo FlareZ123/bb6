@@ -57,7 +57,7 @@ jobs:
           python im-results/agent4-p1-cone2398/split4_scan.py
       - name: Check global P1 strict rank and bounded-trace theorems
         run: |
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-p1-rank"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent45-p1-deep-two:im-results/agent4-p1-rank"
           lean -o im-results/agent4-p1-rank/Rank.olean im-results/agent4-p1-rank/Rank.lean
           lean -o im-results/agent4-p1-rank/RankDecision.olean im-results/agent4-p1-rank/RankDecision.lean
           lean -o im-results/agent4-p1-rank/DeepCorridor.olean im-results/agent4-p1-rank/DeepCorridor.lean
@@ -65,3 +65,8 @@ jobs:
           lean -o im-results/agent4-p1-rank/DeepPath.olean im-results/agent4-p1-rank/DeepPath.lean
           lean -o im-results/agent4-p1-rank/DepthBarrier.olean im-results/agent4-p1-rank/DepthBarrier.lean
           lean -o im-results/agent4-p1-rank/LineCounterexample.olean im-results/agent4-p1-rank/LineCounterexample.lean
+          lean -o im-results/agent4-p1-rank/RankUniqueness.olean im-results/agent4-p1-rank/RankUniqueness.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff; do
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          lean -o im-results/agent4-p1-rank/LineExclusivity.olean im-results/agent4-p1-rank/LineExclusivity.lean
