@@ -28,3 +28,48 @@ The Lean axiom printout showed only standard Lean axioms `propext`, `Quot.sound`
 ## Next problem
 
 Analyze reachability of the set `{P1(a,4) | a even}` from initial P1(2,1). The existing kernel-certified acceleration reduces the original halting question to dynamics on natural-number pairs. The gate lemmas are elementary and may already be implicit in the published work; no novelty is asserted. Attempt invariants, return-map renormalization and exact symbolic cover proofs. Use independent validation to avoid being misled by long numerical trajectories.
+
+## Rigorous infinite family of *synthetic* halting P1 configurations (added 2026-11-02)
+
+Let `T(a,c)` be the accelerated map copied from DeepMind's certified reduction. For each natural `n` define
+
+```
+H(a,0) = 4
+H(a,n+1) = a+10 + H(2a+12,n).
+```
+
+**Kernel-verified theorem**: for every even `a` and every `n`, `T` iterated for `2n` successful transitions from `(a,H(a,n))` reaches `(b,4)` with even `b`; the next transition reaches `(b+3,2)`, and the next application halts. The exact arithmetic identity is
+
+```
+H(a,n) + 2*n = (a+12)*(2^n-1) + 4.
+H(2,n) = 14*2^n - 2*n - 10.
+```
+
+The decisive branch is a two-step affine transformation for any even `a` with `c >= a+10`:
+
+```
+(a,c) --> (a+3,c-2) --> (2*a+12,c-a-10).
+```
+
+Both transformations and the inductive halting/exact-step statements are proved in `Packet.lean`, importing `GParity.lean`. Local Lean 4.36.0-rc2 check passed. This is a mathematical theorem about *nonblank initial hub configurations*, assuming the source's established machine-to-map correspondence. It is not evidence that the blank-tape orbit (which reaches `P1(2,1)`) halts. It does not improve the known BB(6) bound, decide the target holdout, or prove a new current holdout status. Prior-art and independent proof review are requested in `communications/broadcast/2026-11-02T0130Z_agent1-p1-halting-family-review.md`.
+
+Independent raw Turing-machine checks using `halting_family.py` initialized the **full specified synthetic tape** and confirmed termination for n=0..7:
+
+| n | right-counter H(2,n) | defined TM transitions before undefined rule | 1s at halt |
+| - | -: | -: | -: |
+| 0 | 4 | 27 | 5 |
+| 1 | 16 | 179 | 12 |
+| 2 | 42 | 877 | 26 |
+| 3 | 96 | 3843 | 54 |
+| 4 | 206 | 16049 | 110 |
+| 5 | 428 | 65551 | 222 |
+| 6 | 874 | 264909 | 446 |
+| 7 | 1768 | 1065035 | 894 |
+
+The raw-transition count excludes an attempt to execute the undefined halt rule. Macro transition count is different and has its own explicit statement in the Lean proof.
+
+## Separate negative controls and structural census
+
+A full-holdout snapshot of 663 distinct, dated representative RLE strings is mirrored under `resources/`. A finite structural screen grouped them into 435 transition-table families when the starting state was forgotten, including 145 families with multiple listed starts. Retaining the distinguished initial state leaves all 663 distinct. The 435 figure does not reduce the undecided blank-tape questions: equivalent transition tables may run differently from distinct starting states.
+
+A search of the 373 starts belonging to non-singleton transition-table families to 100,000 raw transitions each found **no verified same-tape, same-state cross-start coincidence up to translation**. An earlier 32-bit double polynomial hash collision was falsified by an exact tape comparison; the corrected screen used bases 5 and 7 and checked any candidate by replaying and comparing every nonzero tape cell. These are only bounded observations and do not establish non-coalescence. All 663 holdouts passed a separate 10,000-step screen without reaching a halt or translated cycle; this too is expected from prior decidability filtering and not new mathematics.
