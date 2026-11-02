@@ -1,0 +1,50 @@
+name: Agent 41 C modulus16 halting parameter source proof
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct source-certified modular certificate
+        run: |
+          mkdir -p /tmp/a41mod16
+          cd /tmp/a41mod16
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/c-cert16.tar.xz.b64" > certificate.tar.xz
+          echo "1cc951976c75457e35dd6ab62888cfced14e64fbf3c067d4de14f7af2fba540e  certificate.tar.xz" | sha256sum -c -
+          tar -xJf certificate.tar.xz
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          echo "=== CQuotientSound16.lean ==="
+          sed -n '1,130p' CQuotientSound16.lean
+          echo "=== CFull16.lean ==="
+          cat CFull16.lean
+          echo "=== CExclusions16.lean ==="
+          cat CExclusions16.lean
+          echo "=== CSourceBridge16.lean ==="
+          cat CSourceBridge16.lean
+      - name: Kernel verify graph and new original-source cylinder
+        run: |
+          cd /tmp/a41mod16
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CCert16Pure.olean CCert16Pure.lean
+          seq 0 23 | xargs -P 3 -I '{}' sh -c 'lean -o P16Block{}.olean P16Block{}.lean'
+          lean -o CGlobal16.olean CGlobal16.lean
+          lean -o CQuotientSound16.olean CQuotientSound16.lean
+          lean -o CMapIf16.olean CMapIf16.lean
+          lean -o CFull16.olean CFull16.lean
+          lean -o CExclusions16.olean CExclusions16.lean
+          lean -o CSourceBridge16.olean CSourceBridge16.lean
+          if test -f "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean"; then
+            cp "$GITHUB_WORKSPACE/im-results/agent41-c-quotient512/Mod16OneTwo.lean" Mod16OneTwo.lean
+            lean Mod16OneTwo.lean
+          fi
