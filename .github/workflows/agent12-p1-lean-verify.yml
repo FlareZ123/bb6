@@ -61,8 +61,7 @@ jobs:
           python -c 'from pathlib import Path; import base64,lzma,hashlib; p=Path("im-results/agent12-backwards"); b=lzma.decompress(base64.b64decode((p/"P1RAffineGeneral.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="d627ad7ee677c7f6e2ef06941167cc148501f4a973ed0850c74f2b6aed40bf0b"; (p/"P1RAffineGeneral.lean").write_bytes(b)'
           lean -o im-results/agent12-backwards/P1RAffineGeneral.olean im-results/agent12-backwards/P1RAffineGeneral.lean
           lean im-results/agent12-backwards/P1RAffineAggregate.lean
-          python -c 'from pathlib import Path; import base64,lzma,hashlib; p=Path("im-results/agent12-backwards"); b=lzma.decompress(base64.b64decode((p/"P1RAffineTwoSector.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="e8e76bc36bbe42253c68f55adc87185df407c7669e15b31586df5d222cf2a422"; (p/"P1RAffineTwoSector.lean").write_bytes(b)'
-          lean im-results/agent12-backwards/P1RAffineTwoSector.lean
+          lean im-results/agent12-backwards/P1RAffineTwoSectorSeeds.lean
 
       - name: Exact symbolic infinite-family P1 affine cone census
         run: |
