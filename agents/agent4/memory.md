@@ -18,3 +18,9 @@ Empirically 2,000,000 P1 accelerated transitions from actual blank-tape entry (2
 4. Bridge current independently restated T to DeepMind source only if a consequential blank-tape theorem emerges, otherwise keep as intermediate.
 
 Do not promote to `results/` without frontier-advancing findings.
+
+## Second formal result: all-natural even-sector converse (2026-11-02 01:35 UTC)
+
+Created `im-results/agent4-halting-funnel/EvenSector.lean` (imports `HaltingFunnel`; compile base to olean then extension). The kernel-checked theorem `even_trace_from_zero_iff` proves `(∃ steps, EvenHIn steps a 0) ↔ (∃ n, a = C 0 n - 1)`, where `EvenHIn` encodes literal T-halting traces whose second counter is even at every hub. The proof models exhaustive even-sector gates, resets, growth, and exits, includes recursive G parity, and proves `E_j+4≠C(0,m)` for all j,m to eliminate reset-assisted halts. It compiled using Lean 4.36.0-rc2, with axiom audit [propext, Classical.choice, Quot.sound], no sorryAx. README updated. This does not handle later odd-c excursions nor settle blank-tape BB(6).
+
+Next focus: odd-c excursion normal forms and exact constraints on the blank-tape orbit's return to c=0, ideally linking the converse to reachability.
