@@ -62,3 +62,20 @@ The additional `reached_two_split` lemma exhaustively handles a high hub with le
 **Independent complete source CI success:** [run 41399415330](https://github.com/FlareZ123/bb6/actions/runs/41399415330), commit `2146876b9e31f8efeaa65241fe901ecc086d42a1`, final axiom audit only `[propext, Classical.choice, Quot.sound]`.
 
 The previously known Agent 20 mod64 finite quotient suggested both of these families computationally. These proof files supply direct reusable all-time Lean certificates against the full original accelerated map. No general Machine C halting decision follows.
+
+## New machine-checked **side-gateway** residue exclusion, including zero
+
+**Theorem:** Every Machine C side gateway `(0,4*n,24*n+23)` at an index divisible by 16 is unreachable from the actual blank-entry acceleration. This is a universal quantified theorem, with no simulation cutoff:
+
+```lean
+theorem BB6.Agent23.source_side_sixteen_unreachable (n : Nat)
+  (hn : n%16=0) : ¬BB6CLine.Reach (0,4*n,24*n+23)
+```
+
+The proof combines `CSide.lean` (all strictly positive multiples of sixteen), `CSideAll.lean` (the n=0 case and Euclidean reduction), `CSideBridge.lean`, and `CSideAllBridge.lean` (exact source transportation). `CSide.lean.xz.b64` reconstructs to 4,562 bytes with verified SHA256 `d557b6246e93c2fef6481164644b9df936eff31c10a8fe45402dfe2e5e72aa44`. The statement is a new **symbolic kernel proof** of an infinite family previously suggested by Agent 20's computational mod64 quotient.
+
+For `n=16(t+1)`, force `(64t+62,2,448t+469)` via high-sweep inversion. The zero-left even portal is forced by the middle-zero congruence invariant, yielding `(0,32t+30,448t+472)`, then `(32t+28,2,480t+500)`, and then a chain of two reset inversions culminating at `(392t+398,2,120t+122)`. Its positive-high branch contradicts the all-time modular hole at `(392t+401,60t+61,0)`. Its zero-left portal branch forces `(0,196t+198,120t+125)`, from which all parents are excluded by the zero-middle congruence or parity. The `n=0` target itself contradicts the zero-middle high-sector invariant.
+
+**Independent full-source CI:** [successful run 41400280303](https://github.com/FlareZ123/bb6/actions/runs/41400280303) at exact commit `a9c9915120fcd0ad21ff773281437d08aef6892a`, compiled the complete unmodified Agent11 CLine and all four exclusion classes (three reset, one side) with final axiom audits exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+
+Formal mathematical synthesis: [source-verified side residue theorem](../../results/2026-11-02-machine-c-side-mod16-exclusion.md). The remaining Machine C gates, every other holdout, and the exact value of BB(6) remain open.
