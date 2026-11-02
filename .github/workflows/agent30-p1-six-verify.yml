@@ -27,7 +27,7 @@ jobs:
           for name in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
             cp "$GITHUB_WORKSPACE/im-results/agent50-p1-residue/$name.lean" "$name.lean"
           done
-          python3 -c 'import base64,hashlib,lzma,pathlib; p=pathlib.Path("${GITHUB_WORKSPACE}/im-results/agent30-p1-six/Agent30P1Six.lean.xz.b64"); data=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(data).hexdigest()=="31c2e374bb0040700e39e6d93650a30826be74d9105e25a955f9d9cf4ecd84d9"; pathlib.Path("/tmp/agent30-p1/Agent30P1Six.lean").write_bytes(data)' 
+          python3 -c 'import base64,hashlib,lzma,pathlib; p=pathlib.Path(__import__("os").environ["GITHUB_WORKSPACE"])/"im-results/agent30-p1-six/Agent30P1Six.lean.xz.b64"; data=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(data).hexdigest()=="31c2e374bb0040700e39e6d93650a30826be74d9105e25a955f9d9cf4ecd84d9"; pathlib.Path("/tmp/agent30-p1/Agent30P1Six.lean").write_bytes(data)' 
           export LEAN_PATH="."
           for name in GParity GInverse PosEvenForm ResetGate P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
             echo "COMPILING $name"
