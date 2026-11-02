@@ -176,6 +176,71 @@ theorem T_odd_second_avoids_positive_even (a c : Nat) (hc : c%2=1) :
         refine ⟨g.1,g.2,?_,Or.inr hodd⟩
         simp [T,hn0,hc1,ha,hc2,hc',g]
 
+
+/-- For any pair of naturals, G raises the sum above its weighted input. -/
+theorem G_mass_lower (k c : Nat) :
+    2*k+c+2 ≤ (G k c).1+(G k c).2 := by
+  induction k using Nat.strongRecOn generalizing c with
+  | ind k ih =>
+    by_cases h1 : c < 2*k
+    · have hr : k - (c/2+1) < k := by omega
+      have hrec := ih _ hr (2*c+3)
+      rw [G]
+      simp only [h1, dite_true]
+      omega
+    · by_cases h2 : c ≤ 2*k+1
+      · rw [G]
+        simp [h1,h2]
+        omega
+      · rw [G]
+        simp [h1,h2]
+        omega
+
+/-- The special c=1 branch has two additional units of mass. -/
+theorem G_mass_one (k : Nat) :
+    2*k+5 ≤ (G k 1).1+(G k 1).2 := by
+  by_cases hk:k=0
+  · subst k
+    simp [G]
+  · have hlow : 1 < 2*k := by omega
+    have hr := G_mass_lower (k-1) 5
+    rw [G]
+    simp only [hlow, dite_true, Nat.reduceDiv, Nat.reduceMul, Nat.reduceAdd]
+    omega
+
+/-- Strict rank growth along every nonhalting accelerated action. -/
+theorem T_mass_increases (a c a' c' : Nat)
+    (h : T a c = some (a',c')) :
+    a+c < a'+c' := by
+  unfold T at h
+  by_cases hc0 : c=0
+  · simp [hc0] at h
+    omega
+  · by_cases hc1 : c=1
+    · simp [hc0,hc1] at h
+      omega
+    · by_cases ha : a%2=0
+      · simp [hc0,hc1,ha] at h
+        omega
+      · by_cases hc2 : c=2
+        · simp [hc0,hc1,ha,hc2] at h
+        · by_cases hc3 : c=3
+          · simp [hc0,hc1,ha,hc2,hc3] at h
+            have hm := G_mass_one (a/2)
+            have heq : (G (a/2) 1).1 = a' ∧ (G (a/2) 1).2 = c' := by
+              exact Prod.mk.inj h
+            rw [heq.1,heq.2] at hm
+            omega
+          · simp [hc0,hc1,ha,hc2,hc3] at h
+            have hm := G_mass_lower (a/2+1) (c-2)
+            have heq : (G (a/2+1) (c-2)).1 = a' ∧
+              (G (a/2+1) (c-2)).2 = c' := by
+              exact Prod.mk.inj h
+            rw [heq.1,heq.2] at hm
+            omega
+
+#print axioms BB6.P1Reduction.T_mass_increases
+
 /-- Iteration of the certified accelerated map. `some` means the machine
     has not taken a halting transition within the specified horizon. -/
 def iterT : Nat → Nat × Nat → Option (Nat × Nat)
