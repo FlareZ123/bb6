@@ -40,6 +40,38 @@ theorem blank_section_bounded_iff (a k : Nat) :
   · rintro ⟨n,_,h⟩
     exact ⟨n,h⟩
 
+
+/-- Computable, certified search for a fixed Machine C section target.
+    The finite existential is implemented by the standard bounded Nat
+    quantifier Decidable, not by classical choice. -/
+def blank_section_reach_decidable (a k : Nat) :
+    Decidable (∃ n, BB6.Agent8Section.run secNext n (some (5,1))=some (a,k)) := by
+  let M := (a+2*k-7)/2
+  have hiff :
+      (∃ n, n<M+1 ∧
+        BB6.Agent8Section.run secNext n (some (5,1))=some (a,k)) ↔
+      (∃ n, BB6.Agent8Section.run secNext n (some (5,1))=some (a,k)) := by
+    rw [blank_section_bounded_iff]
+    constructor
+    · rintro ⟨n,hn,h⟩
+      exact ⟨n,by dsimp [M] at hn ⊢; omega,h⟩
+    · rintro ⟨n,hn,h⟩
+      exact ⟨n,by dsimp [M] at hn ⊢; omega,h⟩
+  exact decidable_of_iff
+    (∃ n, n<M+1 ∧
+      BB6.Agent8Section.run secNext n (some (5,1))=some (a,k)) hiff
+
+/-- Executable theorem-backed Boolean fixed-target reachability decision. -/
+def blank_section_reachable (a k : Nat) : Bool :=
+  @decide _ (blank_section_reach_decidable a k)
+
+theorem blank_section_reachable_correct (a k : Nat) :
+    blank_section_reachable a k = true ↔
+      (∃ n, BB6.Agent8Section.run secNext n (some (5,1))=some (a,k)) := by
+  simp [blank_section_reachable,decide_eq_true_eq]
+
+#print axioms blank_section_reachable_correct
+
 #print axioms blank_section_mass_bound
 #print axioms blank_section_bounded_iff
 end BB6.Agent3
