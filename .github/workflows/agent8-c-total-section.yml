@@ -1,0 +1,34 @@
+name: Agent 8 exact Machine C bounded two-counter return section (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-section:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile complete unmodified source and total section equivalence
+        run: |
+          mkdir -p /tmp/a8-total
+          cp im-results/agent11-c-line/CLine.lean /tmp/a8-total/
+          cp im-results/agent21-c-source-bridge/CReachBridge.lean /tmp/a8-total/
+          cp im-results/agent21-c-source-bridge/CPhaseRank.lean /tmp/a8-total/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a8-total/
+          cd /tmp/a8-total
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CPhaseRank.olean CPhaseRank.lean
+          lean -o GenericSection.olean GenericSection.lean
+          lean CSectionTotal.lean
