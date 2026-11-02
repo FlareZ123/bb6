@@ -26,11 +26,9 @@ Result macro(int n, const string& r, int64_t fuel = 2000000) {
   for (int j = 0; j < int(r.size()); ++j)
     tape[pad+n+1+j] = (r[j] == '1');
 
-  int p = pad, state = 5;
+  int p = pad, state = 5, leftOnes = 0;
   for (int64_t t = 0; t < fuel; ++t) {
-    if (t && state == 5 && p < pad && tape[p] == 0) {
-      for (int j = 0; j < p; ++j)
-        if (tape[j]) return {-1, "", t, 'L'};
+    if (t && state == 5 && tape[p] == 0 && leftOnes == 0) {
       int i = p+1;
       while (i < size && tape[i]) ++i;
       int last = size-1;
@@ -44,7 +42,13 @@ Result macro(int n, const string& r, int64_t fuel = 2000000) {
     const string& op = table[state][tape[p]];
     if (op == "---") return {-1, "", t, 'H'};
     tape[p] = op[0]-'0';
-    p += (op[1]=='R' ? 1 : -1);
+    if (op[1] == 'R') {
+      leftOnes += tape[p];
+      ++p;
+    } else {
+      leftOnes -= tape[p-1];
+      --p;
+    }
     state = op[2]-'A';
   }
   return {-1, "", fuel, 'T'};
@@ -53,7 +57,7 @@ Result macro(int n, const string& r, int64_t fuel = 2000000) {
 int main() {
   mt19937 rng(94929);
   int64_t compared=0, failures=0, incomplete=0, both_halt=0;
-  for (int n=5; n<=14; ++n) {
+  for (int n=2; n<=14; ++n) {
     for (int len=1; len<=90; ++len) {
       for (int sample=0; sample<120; ++sample) {
         string suffix = "0";
