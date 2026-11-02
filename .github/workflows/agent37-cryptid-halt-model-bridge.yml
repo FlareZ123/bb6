@@ -33,10 +33,13 @@ jobs:
           done
           cd "$GITHUB_WORKSPACE"
           lean -o im-results/agent32-cryptid-third/AAlternating.olean im-results/agent32-cryptid-third/AAlternating.lean
+          lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean -o im-results/agent32-cryptid-third/CryptidThree.olean im-results/agent32-cryptid-third/CryptidThree.lean
           lean -o im-results/agent37-cryptid-model-bridge/CrossModelBridge.olean im-results/agent37-cryptid-model-bridge/CrossModelBridge.lean
           lean -o im-results/agent37-cryptid-model-bridge/CompleteAReturn.olean im-results/agent37-cryptid-model-bridge/CompleteAReturn.lean
           lean -o im-results/agent37-cryptid-model-bridge/WordReturns.olean im-results/agent37-cryptid-model-bridge/WordReturns.lean
           lean -o im-results/agent37-cryptid-model-bridge/DoubleOneBranch.olean im-results/agent37-cryptid-model-bridge/DoubleOneBranch.lean
           lean -o im-results/agent37-cryptid-model-bridge/DoubleOnePairs.olean im-results/agent37-cryptid-model-bridge/DoubleOnePairs.lean
           lean -o im-results/agent37-cryptid-model-bridge/FullWordPairs.olean im-results/agent37-cryptid-model-bridge/FullWordPairs.lean
-          lean im-results/agent37-cryptid-model-bridge/ReturnShift.lean
+          lean -o im-results/agent37-cryptid-model-bridge/ReturnShift.olean im-results/agent37-cryptid-model-bridge/ReturnShift.lean
+          lean im-results/agent37-cryptid-model-bridge/ShortTripleGate.lean
