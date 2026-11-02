@@ -64,4 +64,50 @@ theorem run_agree (m : BB6.Coverage.SimpleMachine) (n : Nat) :
     | none => simp [h]
     | some c => simp [h, raw_step_agree]
 
+/-- The attempted halt is step n+1 in both models; no time shift is lost. -/
+theorem halts_agree (m : BB6.Coverage.SimpleMachine) (n : Nat) :
+    BB6.Coverage.HaltsAt (BB6.Coverage.tick m) (n+1) ↔
+      BB6Coverage.HaltsAfter (toAgent8Machine m) n := by
+  constructor
+  · intro hh
+    have hp : (BB6.Coverage.run (BB6.Coverage.tick m) n).isSome = true :=
+      hh.2 n (by omega)
+    constructor
+    · rw [run_agree]
+      cases h : BB6.Coverage.run (BB6.Coverage.tick m) n with
+      | none => simp [h] at hp
+      | some c => simp [h]
+    · rw [run_agree]
+      cases h : BB6.Coverage.run (BB6.Coverage.tick m) (n+1) with
+      | none => rfl
+      | some c =>
+          have hnone := hh.1
+          simp [h] at hnone
+  · intro hh
+    have hn : (BB6.Coverage.run (BB6.Coverage.tick m) n).isSome = true := by
+      have hh0 := hh.1
+      rw [run_agree] at hh0
+      cases h : BB6.Coverage.run (BB6.Coverage.tick m) n with
+      | none => simp [h] at hh0
+      | some c => rfl
+    have hnext : BB6.Coverage.run (BB6.Coverage.tick m) (n+1) = none := by
+      have hh0 := hh.2
+      rw [run_agree] at hh0
+      cases h : BB6.Coverage.run (BB6.Coverage.tick m) (n+1) with
+      | none => rfl
+      | some c => simp [h] at hh0
+    constructor
+    · simp [hnext]
+    · intro k hk
+      have hr : (BB6Coverage.run (toAgent8Machine m) k BB6Coverage.blank).isSome = true :=
+        BB6Coverage.run_some_prefix (toAgent8Machine m) BB6Coverage.blank n k (by omega) hh.1
+      rw [run_agree] at hr
+      cases h : BB6.Coverage.run (BB6.Coverage.tick m) k with
+      | none => simp [h] at hr
+      | some c => rfl
+
+#print axioms toAgent13_toAgent8
+#print axioms toAgent8_toAgent13
+#print axioms run_agree
+#print axioms halts_agree
 end BB6.CoverageAdapter
