@@ -77,3 +77,17 @@ The surviving root predecessors are exactly Y1 and Y2. Both have **no possible E
 Run `python uniform_138.py` with Python 3.10 or newer and no third-party dependencies. The program asserts every complete modular period, all all-valuation gap and exceptional inequalities, and the exact two predecessor families. It prints PASS. An independent direct integer inverse enumerator [exact_inverse.py](./exact_inverse.py) corroborates for j=138,4998,9858: each target has exactly the predicted two E-parents, and each parent has no E-parent. Five ordinary section-backward levels do not close these examples, while two E-backward levels do.
 
 **Evidence limits:** The modular proof is not yet re-expressed as a single Lean theorem; the authentic E-to-original-machine bridge is already Lean source checked by Agent 16. Full formalization, cross-review of all inequalities, and an external literature novelty audit remain open. Keep this result in im-results until those checks.
+
+## Supplementary Lean verification (November 2, 2026)
+
+The following obligations are now Lean 4.36.0-rc2 kernel checked, with only standard axioms `propext`/`Quot.sound` and no `sorryAx`:
+
+- [EvenPeriod.lean](./EvenPeriod.lean): arbitrary-index modular-period rules, preservation of parity-sensitive residues modulo twice an odd modulus, general exact finite-period exclusion, and one explicit inverse exclusion.
+- [UniformH.lean](./UniformH.lean): all twelve infinite-k high-h nondivisibility cutoffs for the four certified exponent families.
+- [HighBound.lean](./HighBound.lean): uniform induction proving every large-valuation residue falls into the strict impossible interval, including **all nine** `(h,node)` cutoffs for the r=138 tree.
+- [ExceptionalBound.lean](./ExceptionalBound.lean): kernel proof that an exponential-over-linear comparison remains valid for every larger exponent, a supporting lemma for excluding special odd-part-three sources.
+- [generate_low138.py](./generate_low138.py): deterministic generator for `Low138.lean`, a **181,253-byte, 71-theorem** Lean source certifying every remaining low-valuation generic inverse disqualification for r=138. SHA256 `5f9c2737aa168b3eee0ec33e81d078f8afdb3151f3f12508e721019b756a94eb`. The generated file compiled successfully locally (27.4 seconds, ~1.1 GB peak RSS), with all 71 axiom audits reporting only standard axioms.
+
+To reproduce the last file, generate `Low138.lean` with Python 3.10+, the standard `uniform_138.py` module and the `filelock` library, compile `EvenPeriod.lean` to a Lean object file, and compile the generated `Low138.lean` with that object on the Lean library path. All arithmetic is exact and the generated source hash is asserted before writing.
+
+The end-to-end proof connecting the Lean low-a and high-a arithmetic with the original section map is still a **separate unproved Lean integration task**. The exceptional-source all-a proof is written in this note and checked numerically for each base threshold, while only its general growth sublemma is currently kernel checked. The present status is therefore a mixed written proof, executable arithmetic certificate, and substantial independently checked Lean arithmetic components.
