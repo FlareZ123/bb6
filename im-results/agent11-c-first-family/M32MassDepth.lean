@@ -60,7 +60,8 @@ theorem original_m32_mass_barrier
   let k := 2^(d+1)*(2*q+1)-2
   let p := affineNormalize a k
   obtain ⟨hp2,hm⟩ := odd_term_normalized_exact a d q ha hq
-  change p.2=4*q ∧ p.1+8*q+4*d=a+2*k at *
+  change p.2=4*q at hp2
+  change p.1+8*q+4*d=a+2*k at hm
   have hp1mod :
       (a+2*k+32*(d+q+1)-4*d-8*q)%32=p.1%32 := by omega
   have hp2mod : (4*q)%32=p.2%32 := by omega
