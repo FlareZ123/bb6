@@ -23,9 +23,12 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile exact source model and padding theorem
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-padding
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-padding:im-results/agent32-cryptid-third
         run: |
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
-          lean im-results/agent32-cryptid-padding/BoundaryPadding.lean
+          lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
+          lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
+          lean im-results/agent32-cryptid-padding/PaddedApplications.lean
