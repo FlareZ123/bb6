@@ -132,3 +132,16 @@ The bridge proves by **definitional equality and induction** that Agent24's scal
 The first CI dispatch [41402790071](https://github.com/FlareZ123/bb6/actions/runs/41402790071) failed only because a module-mode file attempted to import the nonmodule `BResetResidues.lean`; removing the `module` declaration from the bridge resolved this without changing its mathematical content. The successful second run reproduces the complete chain.
 
 **Scope caution:** This is a source-audited *equivalent reformulation* of the same undecided B stopping question. Since `resetA` is computed from the parity sample itself, the modular target `{0,6}` is not a currently verified exclusion. It cannot be promoted to a BB(6) value or to a decision of this holdout.
+
+## Failure of the obvious finite-modulus induction
+
+If all preceding sampled cycles survive, the two proved index restrictions combine to put every subsequent reset index into one of **`{3,25,31,39}` modulo 42**. This condition is necessary but still vastly too weak to prove the sampled parity stays odd.
+
+Two Lean-kernel-checked counterexamples in [BMod42Failures.lean](./BMod42Failures.lean) are:
+
+```lean
+generic_residue_31_even : (iterG 31 0)%2=0
+generic_residue_45_even : (iterG 45 0)%2=0
+```
+
+Both theorems use `by decide` and have **zero axioms**; `31 mod 42=31` and `45 mod 42=3` lie in the candidate survival index classes. These indices are synthetic and **are not known to occur in the true blank-entry reset sequence**. They refute any blanket implication from membership in those four classes to odd sampled parity. A successful nonhalting invariant must exploit *more than these ordinary residue restrictions* and, in particular, features of the recursively selected A_n.
