@@ -23,3 +23,7 @@ Lean 4.36.0-rc2 additionally verified `minimum_transfer_iff_zeros`: for any q>=1
 ### Elementary CRT corollary (outside Lean)
 
 For any q>=16,c>=0,modulus m>=1, there are infinitely many y>=q with y congruent to q modulo m whose accelerated S section transfers to T. Factor m=3^e*u with 3 coprime to u. The source-checked `dense_transfer_progression` at n=e gives an eventual transfer for all y0+3^H*t, with H>=e and y0 congruent to q modulo 3^e. Since 3^H is invertible modulo u, infinitely many choices of t also satisfy congruence to q modulo u. Thus a finite congruence-class safety condition cannot prove the particular blank counter q=141 nontransferring. The modular inverse argument is elementary mathematics not separately certified by Lean.
+
+## New all-time finite-word estimates
+
+[Source-certified exponential and generic rational-tilt transfer-word bounds](./TailMass.md) provide rigorous upper bounds on *the density of potentially transferring counter histories* through exact ternary-cylinder counting. Sources: [TailMass.lean.gz.b64](./TailMass.lean.gz.b64) and [GenericTail.lean.gz.b64](./GenericTail.lean.gz.b64), both compiled under Lean 4.36.0-rc2 and audited for axioms. These are estimates over varying synthetic S starts, not a nonhalting certificate for the actual q=141 entry.
