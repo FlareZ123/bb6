@@ -24,8 +24,9 @@ jobs:
           "$HOME/.elan/bin/lean" --version
       - name: Compile authentic raw machine and E return theorems
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean im-results/agent32-cryptid-third/CryptidThird.lean
-          lean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean im-results/agent32-cryptid-third/CryptidEight.lean
