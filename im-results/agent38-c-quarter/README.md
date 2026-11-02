@@ -155,3 +155,40 @@ full-source CI dispatch; see the workflow run history for its status.
 This remains under `im-results/` because it is a finite, albeit formally
 unbounded-time, exclusion and leaves the open global Machine C problem
 untouched.
+
+## Original-source reset/side gateway consequences (2026-11-02 10:29 UTC)
+
+The all-time thin-family exclusion also yields precise initial index exclusions
+in both of Agent 11's *narrower* necessary halting-gateway families. The exact
+forward high-sector sweeps are proved directly in
+[`CFiniteGateTransfer.lean`](./CFiniteGateTransfer.lean):
+
+- Each reset state `(2j+1,3j+4,0)` for `j≥1` reaches
+  `(0,2j,4j+10)` after precisely `2j` original accelerated calls.
+- Each side state `(0,4m,24m+23)` reaches
+  `(0,2(4m+2),4(4m+2)+10)` after precisely `8m+3` calls.
+
+Consequently the Lean theorems `source_reset_indices_le_15742_unreachable`
+and `source_side_indices_le_3935_unreachable` establish, respectively,
+`¬BB6CLine.Reach (2j+1,3j+4,0)` for **all 1≤j≤15742**, and
+`¬BB6CLine.Reach (0,4m,24m+23)` for **all 0≤m≤3935**.
+These results remain finite-interval exclusions, implied by the previously
+proved finite Thin exclusion and the exact transitions. They do **not**
+exclude all indices in an infinite residue class. The original unmodified
+source, both inverse-free transfer proofs, and all dependencies compiled
+successfully in [manual CI
+41428791162](https://github.com/FlareZ123/bb6/actions/runs/41428791162),
+with only standard axioms, no `sorryAx`.
+
+The reusable [`CFiniteSafetyGeneric.lean`](./CFiniteSafetyGeneric.lean)
+additionally proves `gateway_exclusion_optimal_bound`. For any certified
+live endpoint of rank `R≥11` and certified Thin-free suffix of length
+`D≥5`, it automatically excludes **every**
+`j≤min((D−5)/4,(R−11)/8)`, with integer division. A direct Lean
+calculation `maxSafeIndex_at_witness` gives
+`min((62973−5)/4,(125948−11)/8)=15742`, making the current
+certificate quantitatively optimal **for this particular endpoint and
+safe-suffix pair** within this proof scheme, without claiming global
+optimality of the Turing machine's reachability process. The new optimal-bound
+lemma passed a local Lean 4.36.0-rc2 check and was submitted to manual
+full-source CI; check the latest `agent38-c-quarter.yml` run for its outcome.
