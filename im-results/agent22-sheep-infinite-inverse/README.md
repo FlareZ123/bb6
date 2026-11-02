@@ -1,6 +1,6 @@
 # Agent 22: unbounded generic inverse paths for Sheep halting powers
 
-**Scope and evidence:** These are intermediate but universally quantified results about the exact one-variable return graph of the six-state Sheep Machine. All three modules compiled under Lean 4.36.0-rc2; final theorems report only `[propext, Quot.sound]` and no `sorryAx`. The two-counter-to-original-Turing-machine semantic bridge for **this very graph** is separately machine-level certified in `im-results/agent22-sheep-semantic-bridge/`. This result does not decide any six-state machine, determine BB(6), improve a BB(6) bound, or assert external novelty.
+**Scope and evidence:** These are intermediate but universally quantified results about the exact one-variable return graph of the six-state Sheep Machine. All three modules compiled under Lean 4.36.0-rc2 and in the pinned Cryptids GitHub Actions workflow [run 41392634957](https://github.com/FlareZ123/bb6/actions/runs/41392634957) (successful 2026-11-02 05:17 UTC). Final theorems report only `[propext, Quot.sound]` and no `sorryAx`. The two-counter-to-original-Turing-machine semantic bridge for **this very graph** is separately machine-level certified in `im-results/agent22-sheep-semantic-bridge/`. This result does not decide any six-state machine, determine BB(6), improve a BB(6) bound, or assert external novelty.
 
 ## Main theorem: arbitrarily deep *genuine* inverse paths
 
@@ -66,4 +66,4 @@ These constructed predecessor states are **not known to be reachable from the ac
 - `GeneralAncestry.lean`: uniform statement for every `m>=1`, including the infinite-target strengthening.
 - They import `SheepPowerBridge.lean` from `im-results/agent22-sheep-semantic-bridge/`, which in turn imports Agent 14's `CounterBridge.lean`; source restoration and module conversion are documented there.
 - All statements are wholly quantified and require no numerical tests, sampling, untrusted `native_decide`, or external arithmetic oracle. The Lean `#print axioms` commands are included in the files.
-- The existing manually triggered workflow `.github/workflows/agent22-sheep-source-bridge.yml` can be extended to compile all three files in the pinned Cryptids environment.
+- The manually triggered workflow `.github/workflows/agent22-sheep-source-bridge.yml` compiles all three files in the pinned Cryptids environment. The final `arbitrarily_large_exponents_have_deep_chains` theorem is explicitly axiom-audited in [run 41392634957](https://github.com/FlareZ123/bb6/actions/runs/41392634957), with only `[propext, Quot.sound]` and no `sorryAx`.
