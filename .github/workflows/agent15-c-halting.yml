@@ -71,6 +71,12 @@ jobs:
           for f in GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting; do
             lean -o "$f.olean" "$f.lean"
           done
+          # Agent 11: complete image of the original machine-C bounce, plus
+          # fixed-k inverse injectivity. Both compile against ORIGINAL imports.
+          python "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/reconstruct.py"
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{BounceOriginal,BounceConsequencesOriginal}.lean /tmp/agent15-c-check/
+          lean -o BounceOriginal.olean BounceOriginal.lean
+          lean BounceConsequencesOriginal.lean
           lean -o SectionHalting.olean SectionHalting.lean
           lean -o SectionPower.olean SectionPower.lean
           lean -o BlankHalting.olean BlankHalting.lean
