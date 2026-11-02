@@ -53,3 +53,16 @@ The exploratory backwards predecessor enumeration (distinct from these proved Le
 ### Reproducibility SHA256
 
 `InfiniteMod8Barrier.lean.xz.b64`: decompressed source SHA256 `ea708a402104f1b333ba1e50cda8fe889ada6c01f1b5c4d997b4586d30d08501`; compressed text Adler-32 `b0dd6af9`. Both the file length (4160 base64 characters) and the Adler checksum were verified against the pushed GitHub blob.
+
+## Second infinite residue barrier, n ≡ 3 (mod 8)
+
+The separate, **plain-text**, Lean module `InfiniteMod16Barrier.lean` imports `NoFourthTarget` (reconstructed from `InfiniteMod8Barrier.lean.xz.b64`) and contains two more fully checked theorems:
+
+- `blank_no_zero_mod_sixteen`: for every `d≥64` with `d % 16=0`, the original reachable set from `(2,1)` excludes `(2,d)`.
+- `blank_no_critical_three_mod_eight`: for every `n≥3` with `n % 8=3`, the critical target `(2,14*2^n-2*n-10)` is unreachable. In particular the formerly unresolved n=3 target `(2,96)` is ruled out.
+
+These results were independently compiled with Lean 4.36.0-rc2, with the audit `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. Reconstruct the packed baseline module according to the Python recipe above, compile it into `NoFourthTarget.olean`, and then run `LEAN_PATH=<module-directory> lean InfiniteMod16Barrier.lean`. In the working local setup both compiled successfully in that order.
+
+The mod16 proof unrolls two additional layers of alternating odd-output and `G` direct even-output inverse transitions. Every possible branch either contradicts the global even-left reachable invariant or is ruled out arithmetically. These are genuine all-time reachability exclusions but do not classify all critical-index residue classes and do not decide BB(6).
+
+Potential research: analogous short symbolic inverse trees for the `d%16=8` class (critical `n%8=7`), then `d%8=6` (critical `n%4=0`) and `d%8=2` (critical `n%4=2`).
