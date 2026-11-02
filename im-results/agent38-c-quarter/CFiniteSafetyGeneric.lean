@@ -44,6 +44,46 @@ theorem gateway_exclusion_from_safe_tail
       have hg := hrank j hj
       omega
 
+/-- Optimal *numerical* gateway index certified by a fixed successful endpoint
+    and a fixed safe suffix. The two constraints are the forced halting
+    countdown 4j+5 and strict rank comparison 8j+10<R(end). -/
+def maxSafeIndex (D : Nat) (endState : S) : Nat :=
+  min ((D-5)/4) ((rank endState-11)/8)
+
+/-- For a live prefix and gateway-free suffix, all thin gateway indices
+    at most maxSafeIndex are excluded at every future time. -/
+theorem gateway_exclusion_optimal_bound
+    (N T D : Nat) (tailState endState : S)
+    (hlen : N = T+D)
+    (hprefix : run T (some (5,0,1)) = some tailState)
+    (hend : run N (some (5,0,1)) = some endState)
+    (hsafe : ∀ i, i ≤ D → ∀ t, run i (some tailState) = some t → ¬thinS t)
+    (hd : 5 ≤ D) (hr : 11 ≤ rank endState)
+    (j : Nat) (hj : j ≤ maxSafeIndex D endState) :
+    ¬ ∃ n, run n (some (5,0,1)) = some (0,2*j,4*j+10) := by
+  exact gateway_exclusion_from_safe_tail N T D (maxSafeIndex D endState)
+    tailState endState hlen hprefix hend hsafe
+    (by
+      intro k hk
+      have hle : k ≤ (D-5)/4 :=
+        Nat.le_trans hk (Nat.min_le_left _ _)
+      omega)
+    (by
+      intro k hk
+      have hle : k ≤ (rank endState-11)/8 :=
+        Nat.le_trans hk (Nat.min_le_right _ _)
+      have hsub : rank endState-11+11=rank endState := Nat.sub_add_cancel hr
+      have hnum : 8*k+11 ≤ rank endState := by omega
+      simp only [rank] at hnum ⊢
+      omega)
+    j hj
+
+/-- The two independent numeric constraints meet at the same ceiling
+    for the certified endpoint; the current index 15742 is maximally
+    extractable from this exact fixed safe-tail certificate. -/
+theorem maxSafeIndex_at_witness : maxSafeIndex 62973 (2,62973,0) = 15742 := by
+  decide
+
 /-- Instantiation of the reusable theorem on the formal 567M-step trace. -/
 theorem gateway_exclusion_instantiated (j : Nat) (hj : j ≤ 15742) :
     ¬∃n, run n (some (5,0,1)) = some (0,2*j,4*j+10) := by
