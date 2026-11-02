@@ -43,6 +43,19 @@ theorem no_14_power_between (m x : Nat)
     have hpm := Nat.mul_le_mul_left 14 hp
     omega
 
+theorem pow256_ge_linear (h : Nat) : h+1 ≤ 2^(256*h) := by
+  induction h with
+  | zero => decide
+  | succ h ih =>
+    have hp : 2^(256*(h+1)) = 2^256 * 2^(256*h) := by
+      have he : 256*(h+1) = 256+256*h := by omega
+      rw [he, Nat.pow_add]
+    rw [hp]
+    have hpow : 2^(256:Nat) ≥ 2 := by decide
+    have hpos : 0 < 2^(256*h) := Nat.pow_pos (by decide)
+    omega
+
+#print axioms pow256_ge_linear
 #print axioms affine_window
 #print axioms no_14_power_between
 end BB6.Agent5P1Affine
