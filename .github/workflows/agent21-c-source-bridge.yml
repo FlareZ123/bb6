@@ -80,6 +80,8 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CRange.olean CRange.lean
           lake env lean -o .lake/build/lib/lean/CBack.olean CBack.lean
           lake env lean -o .lake/build/lib/lean/CMod32.olean CMod32.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod128Six.lean" CMod128Six.lean
+          lake env lean -o .lake/build/lib/lean/CMod128Six.olean CMod128Six.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32Bridge.lean" CMod32Bridge.lean
           lake env lean CMod32Bridge.lean
 
