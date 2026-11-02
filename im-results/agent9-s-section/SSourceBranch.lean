@@ -1,4 +1,5 @@
 import SPhysicalPhase
+import SExponentialGap
 import Init.Omega
 namespace BB6.Agent9SSourceBranch
 open BB6.Agent9SExp
@@ -72,6 +73,22 @@ theorem source_root_distance (a b : Nat) (u v : Nat × Nat)
   simp only [Prod.fst] at hd
   omega
 
+theorem source_root_gap_exp (a b : Nat) (u v : Nat × Nat)
+    (hu : sourceRun (1,3) a = some u)
+    (hv : sourceRun (125,3) b = some v) :
+    (3^(min a b) * (v.1-u.1-13) ≥ 3*4^(min a b)) ∨
+    (3^(min a b) * (u.1-v.1-13) ≥ 3*4^(min a b)) := by
+  have hs : runS (17,3) a = some (u.1+16,u.2) := by
+    simpa [hu] using source_q_run 1 3 a
+  have ht : runS (141,3) b = some (v.1+16,v.2) := by
+    simpa [hv] using source_q_run 125 3 b
+  have h1 : u.1+16 = iterQ 17 a := runS_q _ _ _ hs
+  have h2 : v.1+16 = iterQ 141 b := runS_q _ _ _ ht
+  have he := BB6.Agent9SExponentialGap.roots_gap_exp a b
+  rw [← h1, ← h2] at he
+  simpa only [Nat.add_sub_add_right] using he
+
+#print axioms BB6.Agent9SSourceBranch.source_root_gap_exp
 #print axioms BB6.Agent9SSourceBranch.source_root_distance
 #print axioms BB6.Agent9SSourceBranch.source_q_run
 #print axioms BB6.Agent9SSourceBranch.source_q_step
