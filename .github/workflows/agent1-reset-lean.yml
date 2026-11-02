@@ -19,6 +19,6 @@ jobs:
         run: |
           set -e
           export LEAN_PATH="im-results/agent1-p1-map"
-          for m in PosEvenForm ResetGate NoEightZero NoOneResets ZeroShape GParity GInverse CriticalG EvenSeed EvenMiss EvenLow ResetOdd EvenFull EvenSparse; do
+          for m in PosEvenForm ResetGate NoEightZero NoOneResets ZeroShape GParity GInverse CriticalG EvenSeed EvenMiss EvenLow ResetOdd EvenFull EvenSparse EightThree ShiftOdd; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
