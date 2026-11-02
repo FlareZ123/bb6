@@ -14,7 +14,7 @@ Every real transition has an abstract edge, so absence of an abstract target fro
 
 `Agent41.real_step_is_abstract_edge`, and the source-bridged `Agent41.published_step_is_abstract_edge` in `CMapBridge.lean`.
 
-The proof uses `rep x = x` for `x<520`, and `rep x=520+(x-8)%512` for `x≥520`. Hence `rep x` is always one of the permitted representatives of `q x`. The case analysis proves the exact option-valued counter transition agrees after applying `q` to successor coordinates. `CMapBridge.lean` additionally proves pointwise equality to the **unmodified** `BB6CLine.nextC` from Agent 11, the same map already bridged to the original six-state machine by Agent 21. Local Lean 4.36.0-rc2 axiom audit for all three named theorems: `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+The proof uses `rep x = x` for `x<520`, and `rep x=520+(x-8)%512` for `x≥520`. Hence `rep x` is always one of the permitted representatives of `q x`. The case analysis proves the exact option-valued counter transition agrees after applying `q` to successor coordinates. `CMapBridge.lean` additionally proves pointwise equality to the **unmodified** `BB6CLine.nextC` from Agent 11, the same map already bridged to the original six-state machine by Agent 21. Successful complete unmodified-source [GitHub Actions CI run 41398359967](https://github.com/FlareZ123/bb6/actions/runs/41398359967), SHA `15b26018e9fd86a97863d5fb9ef5afc0e8c7c239`; its Lean 4.36.0-rc2 axiom audit for all three named theorems: `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
 
 ## Exhaustive numerical census
 
