@@ -58,8 +58,17 @@ theorem P1_no_critical_10_mod16_source (k : Nat) :
   have h1 := (P1_reach_equiv _ _).mpr h
   exact blank_no_critical_10_mod16 k h1
 
+/-- Direct transfer to the certified source-oriented reflexive/transitive reach predicate. -/
+theorem P1_no_critical_10_mod16_ReachT (k : Nat) :
+    ¬BB6.HaltingFunnel.ReachT 2 1 2
+      (14*2^(16*k+10)-2*(16*k+10)-10) := by
+  intro h
+  exact P1_no_critical_10_mod16_source k
+    ((BB6.HaltingFunnel.blank_reach_iff_T _ _).mpr h)
+
 #print axioms P1_G_identical
 #print axioms P1_T_identical
 #print axioms P1_reach_equiv
 #print axioms P1_no_critical_10_mod16_source
+#print axioms P1_no_critical_10_mod16_ReachT
 end BB6.Agent50P1
