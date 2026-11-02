@@ -35,6 +35,16 @@ const SOURCE_STATUS = new Map([
     "im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean", "41457732702"]],
 ]);
 
+// Curated external classifications are separate from locally checked results.
+// Pin upstream repository commits and preserve the difference between a published
+// Lean theorem and a local independent reconstruction of its dependency closure.
+const EXTERNAL_HALTING = new Map([
+  ["1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LB---", [
+    "nonhalting (upstream Lean proof; no independent local rebuild)",
+    "Cryptids theorem is_not_halt; google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b; artifacts/a6/Audit.lean"
+  ]],
+]);
+
 const FIELDS = [
   "catalogue_asof", "curation_asof", "rooted_rle", "family_id",
   "canonical_unrooted_table", "canonical_start_for_root",
@@ -77,7 +87,7 @@ function buildLedger(snapshot) {
       e.normalized, String.fromCharCode(65 + e.start), e.reflect ? "yes" : "no",
       e.order.map(i => String.fromCharCode(65 + i)).join(""),
       grouped.get(e.normalized).length, status, source, ci,
-      "not established by this ledger", "not checked",
+      ...(EXTERNAL_HALTING.get(e.machine) || ["not established by this ledger", "not checked"]),
     ];
     csv.push(row.map(quote).join(","));
   }
