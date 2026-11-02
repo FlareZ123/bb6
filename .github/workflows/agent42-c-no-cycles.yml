@@ -25,6 +25,8 @@ jobs:
           cp im-results/agent42-c-no-cycles/CNoCyclesBridge.lean /tmp/a42-lean/CNoCyclesBridge.lean
           cp im-results/agent42-c-no-cycles/CBoundedRank.lean /tmp/a42-lean/CBoundedRank.lean
           cp im-results/agent42-c-no-cycles/CBoundedRankBridge.lean /tmp/a42-lean/CBoundedRankBridge.lean
+          cp im-results/agent42-c-no-cycles/CSharpBound.lean /tmp/a42-lean/CSharpBound.lean
+          cp im-results/agent42-c-no-cycles/CSharpBoundBridge.lean /tmp/a42-lean/CSharpBoundBridge.lean
           cd /tmp/a42-lean
           export LEAN_PATH="."
           lean --version
@@ -33,3 +35,5 @@ jobs:
           lean -o CNoCyclesBridge.olean CNoCyclesBridge.lean
           lean -o CBoundedRank.olean CBoundedRank.lean
           lean CBoundedRankBridge.lean
+          lean -o CSharpBound.olean CSharpBound.lean
+          lean CSharpBoundBridge.lean
