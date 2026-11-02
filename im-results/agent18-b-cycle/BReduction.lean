@@ -174,6 +174,156 @@ theorem cycle_halts_iff (a : Nat) :
     simp [halt_one_iff] at hc ⊢
     exact hc
 
+/-- The transducer's payload grows on every countdown substep. -/
+theorem F_grows (p d : Nat) : d < (F (p,d)).2 := by
+  simp only [F]
+  omega
+
+theorem iterF_growth (n p d : Nat) : d+n ≤ (iterF n (p,d)).2 := by
+  induction n generalizing p d with
+  | zero => simp [iterF]
+  | succ n ih =>
+    have h := ih (F (p,d)).1 (F (p,d)).2
+    have hstep := F_grows p d
+    have hpair : ((F (p,d)).1,(F (p,d)).2) = F (p,d) := by
+      cases F (p,d) <;> rfl
+    rw [hpair] at h
+    change d+(n+1) ≤ (iterF n (F (p,d))).2
+    omega
+
+/-- Symbolic reset indices, even when a hypothetical earlier cycle would halt. -/
+def resetA : Nat → Nat
+  | 0 => 3
+  | n+1 => 2 * (iterF (resetA n) (0,0)).2 + 9
+
+theorem reset_growth (n : Nat) : 2*resetA n+9 ≤ resetA (n+1) := by
+  simp only [resetA]
+  have h := iterF_growth (resetA n) 0 0
+  omega
+
+theorem reset_exp_lower (n : Nat) : 12*2^n ≤ resetA n + 9 := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    have h := reset_growth n
+    have hpow : 12*2^(n+1) = 2*(12*2^n) := by
+      simp [Nat.pow_succ]
+      omega
+    omega
+
+/-- Exact parity sampled at the recursively generated reset index. -/
+def sample (n : Nat) : Nat × Nat := iterF (resetA n) (0,0)
+
+theorem sample_bit (n : Nat) : (sample n).1 ≤ 1 :=
+  bit_iterF (resetA n) (0,0) (by omega)
+
+theorem reset_index_ge (n : Nat) : n ≤ resetA n := by
+  induction n with
+  | zero => simp [resetA]
+  | succ n ih =>
+    have h := reset_growth n
+    omega
+
+/-- If every sampled bit is one, all generated reset states are genuinely reachable. -/
+theorem all_one_reaches (h : ∀ n, (sample n).1 = 1) (n : Nat) :
+    Star (3,0,0) (resetA n,0,0) := by
+  induction n with
+  | zero => simpa only [resetA] using Star.refl (3,0,0)
+  | succ n ih =>
+    have hc := cycle (resetA n) 0 0 (by omega)
+    have hstep : Star (resetA n,0,0) (0,1,(sample n).2) := by
+      have heq : (iterF (resetA n) (0,0)).1 = 1 := h n
+      rw [heq] at hc
+      exact hc
+    have hreset : Star (0,1,(sample n).2) (resetA (n+1),0,0) := by
+      apply Star.single
+      simp [nextB, resetA, sample]
+    exact ih.trans (hstep.trans hreset)
+
+/-- Finite halting proofs bound the first counter of all reachable states. -/
+theorem halt_bounded {s : S} (h : Halts s) :
+    ∃ B : Nat, ∀ t : S, Star s t → t.1 ≤ B := by
+  induction h with
+  | @stop s hs =>
+    refine ⟨s.1, ?_⟩
+    intro t ht
+    cases ht with
+    | refl => exact Nat.le_refl _
+    | step hx _ => simp [hs] at hx
+  | @next s t ht hh ih =>
+    obtain ⟨B,hB⟩ := ih
+    refine ⟨max s.1 B, ?_⟩
+    intro u hu
+    cases hu with
+    | refl => exact Nat.le_max_left _ _
+    | @step _ v _ hv htail =>
+      have heq : v=t := Option.some.inj (hv.symm.trans ht)
+      subst v
+      have hBound := hB _ htail
+      omega
+
+/-- Any finite sampling horizon already has a halt or has reached the next reset. -/
+theorem halt_or_reset (n : Nat) :
+    Halts (3,0,0) ∨ Star (3,0,0) (resetA n,0,0) := by
+  induction n with
+  | zero => exact Or.inr (by simpa [resetA] using Star.refl (3,0,0))
+  | succ n ih =>
+    rcases ih with hhalt | hreach
+    · exact Or.inl hhalt
+    · have hc := cycle (resetA n) 0 0 (by omega)
+      have hb := sample_bit n
+      have hor : (sample n).1 = 0 ∨ (sample n).1 = 1 := by omega
+      rcases hor with hz | ho
+      · have hlast : Halts (resetA n,0,0) := by
+          have heq : (iterF (resetA n) (0,0)).1 = 0 := hz
+          rw [heq] at hc
+          apply (halts_iff_star hc).2
+          exact halt_zero (sample n).2
+        exact Or.inl ((halts_iff_star hreach).2 hlast)
+      · have hstep : Star (resetA n,0,0) (0,1,(sample n).2) := by
+          have heq : (iterF (resetA n) (0,0)).1 = 1 := ho
+          rw [heq] at hc
+          exact hc
+        have hreset : Star (0,1,(sample n).2) (resetA (n+1),0,0) := by
+          apply Star.single
+          simp [nextB,resetA,sample]
+        exact Or.inr (hreach.trans (hstep.trans hreset))
+
+/-- Complete, infinite-horizon reduction for the certified blank-entry triple (3,0,0).
+    Machine B halts exactly if one of its recursively sampled parity bits is zero. -/
+theorem blank_halts_iff_sample_zero :
+    Halts (3,0,0) ↔ ∃ n : Nat, (sample n).1 = 0 := by
+  constructor
+  · intro hh
+    by_cases hzero : ∃ n : Nat, (sample n).1 = 0
+    · exact hzero
+    · exfalso
+      have hall : ∀ n, (sample n).1 = 1 := by
+        intro n
+        have hb := sample_bit n
+        have hneq : (sample n).1 ≠ 0 := by
+          intro hz
+          exact hzero ⟨n,hz⟩
+        omega
+      obtain ⟨B,hB⟩ := halt_bounded hh
+      have hr := all_one_reaches hall (B+1)
+      have hbound := hB _ hr
+      have hlarge := reset_index_ge (B+1)
+      omega
+  · rintro ⟨n,hzero⟩
+    rcases halt_or_reset n with hh | hr
+    · exact hh
+    · have hc := cycle (resetA n) 0 0 (by omega)
+      have hlast : Halts (resetA n,0,0) := by
+        have heq : (iterF (resetA n) (0,0)).1 = 0 := hzero
+        rw [heq] at hc
+        apply (halts_iff_star hc).2
+        exact halt_zero (sample n).2
+      exact (halts_iff_star hr).2 hlast
+
+#print axioms blank_halts_iff_sample_zero
+#print axioms reset_exp_lower
+
 #print axioms cycle
 #print axioms cycle_halts_iff
 end BB6.BReduction
