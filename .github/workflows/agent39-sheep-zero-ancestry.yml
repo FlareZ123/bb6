@@ -1,0 +1,31 @@
+name: Agent 39 exact Sheep 3-adic predecessor criterion (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Lean 4 toolchain
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original Sheep counter reduction and new Lean source
+        run: |
+          mkdir -p "$RUNNER_TEMP/agent39"
+          cp im-results/agent14-sheep-preimages/CounterBridge.lean "$RUNNER_TEMP/agent39/CounterBridge.lean"
+          cp im-results/agent39-sheep-zero-ancestry/ZeroAncestry.lean "$RUNNER_TEMP/agent39/ZeroAncestry.lean"
+          cp im-results/agent39-sheep-zero-ancestry/ZeroAncestryBridge.lean "$RUNNER_TEMP/agent39/ZeroAncestryBridge.lean"
+          cd "$RUNNER_TEMP/agent39"
+          export LEAN_PATH=".:$LEAN_PATH"
+          lean --version
+          lean -o CounterBridge.olean CounterBridge.lean
+          lean -o ZeroAncestry.olean ZeroAncestry.lean
+          lean ZeroAncestryBridge.lean
