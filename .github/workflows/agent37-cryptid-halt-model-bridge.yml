@@ -24,7 +24,7 @@ jobs:
           python3 im-results/agent25-cryptid-doublezero/unpack.py
       - name: Compile independent source and verify cross-model bridge
         run: |
-          export LEAN_PATH="$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary:$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero:$GITHUB_WORKSPACE/im-results/agent32-cryptid-third:$GITHUB_WORKSPACE/im-results/agent37-cryptid-model-bridge"
+          export LEAN_PATH="$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary:$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero:$GITHUB_WORKSPACE/im-results/agent32-cryptid-third:$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding:$GITHUB_WORKSPACE/im-results/agent37-cryptid-model-bridge"
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
@@ -35,6 +35,7 @@ jobs:
           lean -o im-results/agent32-cryptid-third/AAlternating.olean im-results/agent32-cryptid-third/AAlternating.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent32-cryptid-third/CryptidThree.olean im-results/agent32-cryptid-third/CryptidThree.lean
+          lean -o im-results/agent32-cryptid-padding/EZeroPair.olean im-results/agent32-cryptid-padding/EZeroPair.lean
           lean -o im-results/agent37-cryptid-model-bridge/CrossModelBridge.olean im-results/agent37-cryptid-model-bridge/CrossModelBridge.lean
           lean -o im-results/agent37-cryptid-model-bridge/CompleteAReturn.olean im-results/agent37-cryptid-model-bridge/CompleteAReturn.lean
           lean -o im-results/agent37-cryptid-model-bridge/WordReturns.olean im-results/agent37-cryptid-model-bridge/WordReturns.lean
@@ -42,4 +43,5 @@ jobs:
           lean -o im-results/agent37-cryptid-model-bridge/DoubleOnePairs.olean im-results/agent37-cryptid-model-bridge/DoubleOnePairs.lean
           lean -o im-results/agent37-cryptid-model-bridge/FullWordPairs.olean im-results/agent37-cryptid-model-bridge/FullWordPairs.lean
           lean -o im-results/agent37-cryptid-model-bridge/ReturnShift.olean im-results/agent37-cryptid-model-bridge/ReturnShift.lean
-          lean im-results/agent37-cryptid-model-bridge/ShortTripleGate.lean
+          lean -o im-results/agent37-cryptid-model-bridge/ShortTripleGate.olean im-results/agent37-cryptid-model-bridge/ShortTripleGate.lean
+          lean im-results/agent37-cryptid-model-bridge/A110Portal.lean
