@@ -27,4 +27,11 @@ theorem imported_original_shift_leaf (B : Nat) :
 
 #print axioms imported_rightwalker_same_cylinder
 #print axioms imported_original_shift_leaf
+theorem imported_original_shift_decided_leaf (B : Nat) :
+    BB6Coverage.Cover (BB6Coverage.DecidedBelow B) (BB6Coverage.driftLeaf true) := by
+  rw [← imported_rightwalker_same_cylinder]
+  exact import_source_tree_as_decided_cover B BB6.Coverage.rightWalkerPartial
+    (BB6.Coverage.rightWalkerTree B)
+
+#print axioms imported_original_shift_decided_leaf
 end BB6.CoverageAdapter
