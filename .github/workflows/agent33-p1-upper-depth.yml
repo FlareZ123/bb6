@@ -1,0 +1,29 @@
+name: Agent 33 P1 exact upper-chain classification (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct original P1 source and certify generalized inverse paths
+        run: |
+          mkdir -p /tmp/agent33-upper-depth
+          cd /tmp/agent33-upper-depth
+          cp "$GITHUB_WORKSPACE/im-results/agent1-p1-map/PosEvenForm.lean" PosEvenForm.lean
+          python3 -c 'import base64,hashlib,lzma,pathlib,os; root=pathlib.Path(os.environ["GITHUB_WORKSPACE"]); specs=[("UpperDeep","im-results/agent27-p1-critical/UpperDeep.lean.xz.b64","b8045299f45dd1144726d921642c400056c65610c17650829bbbf6373dc7ae44"),("UpperDiv","im-results/agent33-p1-upper-valuation/UpperDiv.lean.xz.b64","69768a4f6641889d27173a12c9def5fc4277eea4fb3a6d8ea78b38e1c4744c94"),("UpperBridge","im-results/agent33-p1-upper-valuation/UpperBridge.lean.xz.b64","62e831ce4b339ea53a102c732003bf26f285b89616d882fd0fa3c7091ab25576")]; decoded=[(name,lzma.decompress(base64.b64decode((root/path).read_text())),digest) for name,path,digest in specs]; assert all(hashlib.sha256(data).hexdigest()==digest for name,data,digest in decoded); [pathlib.Path(name+".lean").write_bytes(data) for name,data,digest in decoded]'
+          export LEAN_PATH="."
+          lean -o PosEvenForm.olean PosEvenForm.lean
+          lean -o UpperDeep.olean UpperDeep.lean
+          lean -o UpperDiv.olean UpperDiv.lean
+          lean UpperBridge.lean
