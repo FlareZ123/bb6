@@ -36,13 +36,14 @@ jobs:
           lean -o im-results/agent8-coverage-contract/RayFinite.olean im-results/agent8-coverage-contract/RayFinite.lean
           lean -o im-results/agent6-fresh-glider/RayMacro.olean im-results/agent6-fresh-glider/RayMacro.lean
           lean -o im-results/agent6-fresh-glider/FreshRayGlider.olean im-results/agent6-fresh-glider/FreshRayGlider.lean
-          lean im-results/agent6-fresh-glider/MacroOracle.lean
+          lean -o im-results/agent6-fresh-glider/MacroOracle.olean im-results/agent6-fresh-glider/MacroOracle.lean
           lean -o im-results/agent8-coverage-contract/RayFiniteOracle.olean im-results/agent8-coverage-contract/RayFiniteOracle.lean
           lean -o im-results/agent8-coverage-contract/FiniteHalting.olean im-results/agent8-coverage-contract/FiniteHalting.lean
           lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
           lean -o im-results/agent8-coverage-contract/ZeroMaskOracle.olean im-results/agent8-coverage-contract/ZeroMaskOracle.lean
           lean -o im-results/agent8-coverage-contract/FiniteDecision.olean im-results/agent8-coverage-contract/FiniteDecision.lean
           lean -o im-results/agent8-coverage-contract/SparsePruneSearch.olean im-results/agent8-coverage-contract/SparsePruneSearch.lean
+          lean im-results/agent6-fresh-glider/MacroSearch.lean
           lean im-results/agent8-coverage-contract/SparseReachPolicy.lean
           node im-results/agent8-coverage-contract/ray_count.cjs
           python im-results/agent8-coverage-contract/orbit_census.py
