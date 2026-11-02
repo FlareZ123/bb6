@@ -42,3 +42,16 @@ External context: [bbchallenge sparse enumeration method](https://bbchallenge.or
 3. Exhibit a raw halter at the greatest verified runtime and derive a globally certified upper bound matching that value.
 
 The 2026-10-16 list of 663 rooted representative machines and the local 435-unrooted-table grouping are triage inventories. Neither is a proof of step 1. The module's universal theorems avoid assuming that inventory is exhaustive.
+
+
+## Source-certified sparse search and nonhalting leaves
+
+The separate modules `SparseCoverage.lean` and `LassoCoverage.lean` import the first source file and close two additional proof links that support a future verified TNF search-tree generator.
+
+**Partial-machine branch coverage:** A `PartialMachine` has twelve slots of type `Option SimpleInstruction`. Here `none` means *unassigned*, and `some none` means an intentionally assigned **halting** instruction. This distinction prevents accidental conflation of an open TNF search-tree branch with a halting machine. The all-natural theorem `split_covers_every_code` establishes that for any canonical full table extending a partial table and any unassigned slot, the unique child obtained by filling that slot with the full table's actual choice still covers that full table. `child_extension_is_parent` proves each child remains inside its parent space. These are the exact local branch-completeness conditions for a future depth-first finite search.
+
+**Trace and certified leaf correctness:** `all_extensions_agree_on_prefix` proves that when the entries queried by one finite prefix are all assigned, *every* full completion has the identical prefix. `halting_leaf_sound` certifies the exact halting time for every completion when one such prefix halts. `repeated_configuration_nonhalt` proves a general deterministic infinite-run theorem: if one entire configuration (including its infinite tape) recurs at steps `i<j`, no future run step can halt. Finally, `sparse_lasso_leaf_nonhalts` lifts such a lasso to every extension of a partial table whose prefix was fully assigned. This is a mathematically complete finite-configuration cycler decider rule, conditional on an authentic equality of infinite configurations. No actual new holdout has been assigned a loop certificate.
+
+Original source hashes: `SparseCoverage.lean` SHA-256 `c2271613c1c9676e1ef1cd92ed0ad07647e1e0187a11614a5d9e643c01cbc809`; `LassoCoverage.lean` SHA-256 `8544a335fb62a34329dc0c07edeeb5a948a3afb7a314b95f7d1f712cfb57c730`. All three compressed source blobs are reconstructed by the same locked/atomic `unpack.py`. Compile in order `BB6Coverage`, `SparseCoverage`, then `LassoCoverage`, with `LEAN_PATH=.`. Local Lean 4.36.0-rc2 checked all three with only standard axioms and no sorry.
+
+**Remaining coverage gap:** These lemmas prove that a correctly built search tree cannot lose a table when it branches on an unassigned slot, and that individual certified halt/cycler leaves are valid for all completions. They do not prove a particular recursive search algorithm visits every reachable pending branch, that other more powerful deciders are sound, or that all six-state machines obtain a certified outcome. The source-to-sparse-enumerator completeness theorem and the universal runtime comparison remain open.
