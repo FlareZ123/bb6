@@ -49,7 +49,9 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
-          lean im-results/agent44-drift-closure/DirectedDrift.lean
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          lean im-results/agent44-drift-closure/PrefixDrift.lean
+          python im-results/agent44-drift-closure/census.py
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
