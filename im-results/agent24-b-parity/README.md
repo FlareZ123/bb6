@@ -70,3 +70,15 @@ Compiled locally under Lean 4.36.0-rc2 with axiom audit `[propext, Quot.sound]`,
 The Lean proof has since been strengthened to a **biconditional**: for all naturals `a≤b`, the first `n` bits in their `T` itineraries agree **if and only if** `2^n ∣ (b-a)`. The forward implication is `prefix_forces_divisor`; the converse is `divisor_forces_prefix`; `prefix_iff_congruent` composes them.
 
 Thus the length-`n` binary parity prefix identifies the starting integer's residue class modulo `2^n` exactly. The all-time theorem `full_itinerary_injective` proves that two different natural starting states cannot have identical parity itineraries forever. All four theorems compile with only `[propext, Quot.sound]` under Lean 4.36.0-rc2. These are strong source-independent parity-coding facts, but remain classical-style structural statements about the copied scalar map, and do not solve the sampled-index halting condition.
+
+## Exact finite parity-word synthesis and prior art (06:48 UTC)
+
+The new `inputFor` algorithm builds the unique integer \(a<2^n\) whose first \(n\) parity bits equal an arbitrary prescribed word \(b_0,\ldots,b_{n-1}\). It starts at zero and, at bit position \(i\), adds \(2^i\) exactly if the current \(i\)-th output bit disagrees with \(b_i\). The key universal lemma is
+
+```
+path_shift_pow: T^[n](a+2^n*t)=T^[n](a)+3^n*t
+```
+
+and the special case `parity_bit_lift` that adding \(2^n\) preserves output bits before time \(n\) and toggles the bit at time \(n\). All of these are proved in [BParityCoding.lean](./BParityCoding.lean), including `inputFor_lt`, `inputFor_prefix`, and `inputFor_unique`, with `#print axioms` showing only `[propext, Quot.sound]`.
+
+**Prior art correction:** The existence and bijectivity of such parity codings for generalized \(3x+k\) maps is classical, and must **not** be portrayed as a novel publishable BB(6) discovery. Bernstein and Lagarias, *The 3x+1 Conjugacy Map* (Canadian Journal of Mathematics 48, 1996), https://websites.umich.edu/~lagarias/doc/bernstein.pdf , explicitly discuss the general odd \(ax+b\) case and the 2-adic shift conjugacy. Our shifted map is exactly \(T(v)=(3v+7(v\bmod2))/2\), an instance of this known theory. The deliverable here is a precise **Lean-checked specialization integrated with Agent 18's exact Machine B counter map**, plus a particular aperiodicity and modular relation for the blank-entry scalar orbit. The dynamically sampled return indices remain the central unknown; the classical parity-coding bijection alone gives no holdout decision.
