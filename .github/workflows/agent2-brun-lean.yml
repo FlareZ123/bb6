@@ -29,3 +29,4 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/BRunValuation.olean im-results/agent2-cryptid-continuity/BRunValuation.lean
           lean im-results/agent2-cryptid-continuity/BRunSource.lean
           lean im-results/agent2-cryptid-continuity/APortal.lean
+          lean im-results/agent2-cryptid-continuity/AHaltCylinder.lean
