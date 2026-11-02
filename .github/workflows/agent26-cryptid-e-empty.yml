@@ -48,4 +48,24 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate
         run: |
           lean -o im-results/agent26-cryptid-e-gate/EEmpty.olean im-results/agent26-cryptid-e-gate/EEmpty.lean
-          lean im-results/agent26-cryptid-e-gate/EBlankTrace.lean
+          lean -o im-results/agent26-cryptid-e-gate/EBlankTrace.olean im-results/agent26-cryptid-e-gate/EBlankTrace.lean
+      - name: Authenticate source for A-six symbolic return
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import lzma
+          root = Path("im-results/agent26-cryptid-e-gate")
+          src = lzma.decompress(base64.b64decode((root / "ASix.lean.xz.b64").read_bytes()))
+          digest = hashlib.sha256(src).hexdigest()
+          assert digest == "e018ffa0390b0ff6926251e0a5ae5647b91430b312cbbb50399751ddafe0f68d", digest
+          (root / "ASix.lean").write_bytes(src)
+          print("Authenticated ASix.lean SHA-256:", digest)
+          PY
+      - name: Check exact A-six original source and 166999736-step blank trace
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate
+        run: |
+          lean -o im-results/agent26-cryptid-e-gate/ASix.olean im-results/agent26-cryptid-e-gate/ASix.lean
+          lean im-results/agent26-cryptid-e-gate/ASixBlankTrace.lean
