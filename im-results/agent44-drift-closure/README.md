@@ -72,9 +72,26 @@ The **union** has **205,664** canonical disjoint cylinders and covers exactly **
 
 [PrefixDrift.lean](PrefixDrift.lean) proves `prefix_drift_never`: if an actual finite blank-origin run reaches a state in a fixed-direction closed graph, while its unexplored forward half-line remains blank, then the **entire** blank-origin run never halts. Its sparse counterpart `prefix_drift_cover` demands that the finite entry prefix consult only already-assigned sparse transitions, via Agent 8's unmodified `common_prefix_of_partial_table`. This can close search nodes even if the early transitions change direction or write/revisit marked tape cells. The original-source dependency chain and both prefix theorems compiled successfully in [manual CI 41504835085](https://github.com/FlareZ123/bb6/actions/runs/41504835085).
 
-[TransientExample.lean](TransientExample.lean) gives a concrete four-rule case: A/0=1RB, B/0=0LA, A/1=0RC, C/0=1RC. Three genuine steps bring the blank machine to C scanning zero, with an entirely blank physical tape, after a direction reversal and a revisited 1. From then on it writes 1 while drifting right in C. The 25^8 compatible full tables are all nonhalting. These tables are **disjoint** from the earlier two families, because A/0 and B/0 reverse directions and A/0 writes 1. Its final `transient_drift_cover` is awaiting the full upstream-source CI audit; locally it compiles in a signature-compatible mock with only standard axioms.
+[TransientExample.lean](TransientExample.lean) gives a concrete four-rule case: A/0=1RB, B/0=0LA, A/1=0RC, C/0=1RC. Three genuine steps bring the blank machine to C scanning zero, with an entirely blank physical tape, after a direction reversal and a revisited 1. From then on it writes 1 while drifting right in C. The 25^8 compatible full tables are all nonhalting. These tables are **disjoint** from the earlier two families, because A/0 and B/0 reverse directions and A/0 writes 1. Its final `transient_drift_cover` **passed original-source CI [41505253066](https://github.com/FlareZ123/bb6/actions/runs/41505253066)**, compiling unchanged Agent 8 `Frontier.lean`, the previous source-certified prefix theorem, and the exact finite-entry certificate with only ordinary Lean axioms.
 
-Thus the source-backed coverage schemas handle at least the original 43.9078% family and this additional distinct finite-prefix cylinder once the source check passes. The resulting arithmetic would be 26,171,246,337,890,625 / 25^12 = 43.908065280%. No claim is made that these certificates constitute a single universally completed `Cover` object, or that the six-state Busy Beaver problem is settled.
+## Source-certified four-step physical-tape bounce cycler
+
+[BounceCycle.lean](BounceCycle.lean) imports the existing original Agent 8 `LeafRules.cycle_leaf` theorem. It fixes A/0=1RB, B/0=0LA, A/1=0RB, and proves that the literal blank-origin run returns after exactly **four genuine primitive steps** to the exact same starting `Config`, including every physical cell of the bi-infinite tape. Only these three sparse slots were consulted during the first four transitions. Therefore `bounce_cover B` is an authentic `Cover (DecidedBelow B) bounceTable` for all `B`, regardless of the nine unassigned transitions.
+
+[Manual CI 41505951766](https://github.com/FlareZ123/bb6/actions/runs/41505951766) compiled the **unmodified original** `Frontier.lean`, `OneHalt.lean`, and `LeafRules.lean` before the full `BounceCycle.lean` source and completed successfully; its axiom audit prints ordinary Lean axioms only, with no `sorryAx`. Local signature-compatible mock use was preliminary and superseded by this upstream-source check.
+
+The bounce cylinder covers exactly `25^9 = 3,814,697,265,625` canonical completions; it is **disjoint** from the two zero-symbol-control closure families because it reverses direction and writes 1, and disjoint from the finite-prefix drift example because the required A/1 target differs (B versus C). Its nonhalting proof uses the existing sound general cycle decider instead of requiring a new mathematical theorem.
+
+## Combined proven cylinder count and limits
+
+Taking the pairwise disjoint transient-entry and bounce examples together with the exact union of the two large closure families, the **four original-source-certified certificates** cover
+
+- **26,175,061,035,156,250 of 59,604,644,775,390,625** full canonical six-state tables, or **43.914465280%**.
+- **7,227,338,737,582,080 of 18,260,173,718,028,288** exactly-one-halt canonical tables, or **39.579791787%**.
+
+These exact arithmetic counts use the independent Python census, the distinct fixed-table patterns, and `25^u` or `u·24^(u-1)` for `u` remaining unassigned slots. The combinatorial cardinality calculation itself is not a Lean theorem. **Every nonhalting implication is original-source kernel-checked.** The percentages are counts in the unnaturally broad all-tables space, not measures of progress toward classifying the outstanding BB(6) holdouts. A complete universal `Cover (DecidedBelow B) emptyTable` remains absent.
+
+No claim is made that these certificates constitute a single universally completed `Cover` object, a new machine decision, or a solution of BB(6).
 
 ## Verification boundary
 
