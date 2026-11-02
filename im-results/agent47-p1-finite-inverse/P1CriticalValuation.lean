@@ -2,7 +2,7 @@ import P1NoRootOne
 
 namespace BB6.Agent47P1
 
-private theorem n_plus_two_lt_pow (n : Nat) (hn : 4 ≤ n) :
+theorem n_plus_two_lt_pow (n : Nat) (hn : 4 ≤ n) :
     n + 2 < 2^n := by
   obtain ⟨k,hk⟩ := Nat.exists_eq_add_of_le hn
   subst n
