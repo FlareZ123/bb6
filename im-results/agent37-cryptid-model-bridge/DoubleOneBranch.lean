@@ -7,17 +7,47 @@ set_option maxHeartbeats 8000000
 
 namespace BB6.CryptidBridge
 
-/-- A previously uncovered A-boundary prefix 1100 is consumed in a
-    fixed 17-step scan, leaving an arbitrarily long standard D sweep.
-    This is a raw-machine theorem over every m and every suffix. -/
+/-- Fixed prefix factoring avoids exploding a 17-step reduction. -/
+private def twoOneMid4 (m : Nat) (ys : List Bool) : CryptidBoundary.Cfg :=
+  ⟨false :: CryptidBoundary.pairs (m+3) ++ [true,true],
+    false, [false,false] ++ ys,2⟩
+
+private def twoOneMid10 (m : Nat) (ys : List Bool) : CryptidBoundary.Cfg :=
+  ⟨[true,true,false] ++ CryptidBoundary.pairs (m+2) ++ [true,true],
+    false, [true,true] ++ ys,3⟩
+
+private theorem two_one_front4 (m : Nat) (ys : List Bool) :
+    CryptidBoundary.run 4
+      (CryptidBoundary.preA (m+2) ([true,true,false,false] ++ ys)) =
+    twoOneMid4 m ys := by
+  simp [CryptidBoundary.run, CryptidBoundary.preA, twoOneMid4,
+    CryptidBoundary.step, CryptidBoundary.goL, CryptidBoundary.goR,
+    CryptidBoundary.pairs]
+
+private theorem two_one_front6 (m : Nat) (ys : List Bool) :
+    CryptidBoundary.run 6 (twoOneMid4 m ys) = twoOneMid10 m ys := by
+  simp [CryptidBoundary.run, twoOneMid4, twoOneMid10,
+    CryptidBoundary.step, CryptidBoundary.goL, CryptidBoundary.goR,
+    CryptidBoundary.pairs]
+
+private theorem two_one_front7 (m : Nat) (ys : List Bool) :
+    CryptidBoundary.run 7 (twoOneMid10 m ys) =
+    CryptidBoundary.sweepD m
+      ([true,true,false] ++ List.replicate 6 true ++ ys) := by
+  simp [CryptidBoundary.run, twoOneMid10, CryptidBoundary.sweepD,
+    CryptidBoundary.step, CryptidBoundary.goL, CryptidBoundary.goR,
+    CryptidBoundary.pairs, List.append_assoc]
+
+/-- Previously uncovered A-boundary prefix 1100 enters the standard D sweep
+    in exactly 17 machine steps, for every m and every suffix. -/
 theorem two_one_front (m : Nat) (ys : List Bool) :
     CryptidBoundary.run 17
       (CryptidBoundary.preA (m+2) ([true,true,false,false] ++ ys)) =
     CryptidBoundary.sweepD m
       ([true,true,false] ++ List.replicate 6 true ++ ys) := by
-  simp [CryptidBoundary.run, CryptidBoundary.preA, CryptidBoundary.sweepD,
-    CryptidBoundary.step, CryptidBoundary.goL, CryptidBoundary.goR,
-    CryptidBoundary.pairs, List.append_assoc]
+  have ht : 17 = 4 + (6+7) := by decide
+  rw [ht, CryptidBoundary.run_add, two_one_front4,
+      CryptidBoundary.run_add, two_one_front6, two_one_front7]
 
 /-- A return that introduces a fixed 0 1^6 suffix packet, for all m,ys.
     The initial A left exponent m+2 is >= 2 by construction. -/
