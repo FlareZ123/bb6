@@ -9,7 +9,7 @@ preserved because genuine blank-orbit states can occur there.
 namespace BB6.Agent7EightThree
 open BB6.P1Reduction
 
-private theorem exceptional_not_one_all (z w : Nat) (hz:1≤z) :
+theorem exceptional_not_one_all (z w : Nat) (hz:1≤z) :
     ∀ k, ¬GAncestor (8*z) (4*w+3) k 1 := by
   intro k h
   obtain ⟨t,ht,_⟩ :=
