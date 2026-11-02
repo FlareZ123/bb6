@@ -32,8 +32,6 @@ jobs:
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
           lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
-          lean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
+          lean im-results/agent2-cryptid-continuity/PrefixNoF.lean
           lean im-results/agent2-cryptid-continuity/EOneTriplePairs.lean
-      - name: Inspect public source for the remaining first-prefix proof
-        run: |
-          nl -ba im-results/agent31-cryptid-boundary/Boundary.lean | sed -n '1,460p'
