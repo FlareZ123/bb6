@@ -66,7 +66,8 @@ theorem original_m32_mass_barrier
       (a+2*k+32*(d+q+1)-4*d-8*q)%32=p.1%32 := by omega
   have hp2mod : (4*q)%32=p.2%32 := by omega
   have hc : m32Cylinder p.1 p.2 := by
-    unfold m32MassCell m32Cylinder at hcell ⊢
+    unfold m32MassCell at hcell
+    unfold m32Cylinder at hcell ⊢
     rw [hp1mod,hp2mod] at hcell
     exact hcell
   exact original_section_no_eight p.1 p.2 hc
