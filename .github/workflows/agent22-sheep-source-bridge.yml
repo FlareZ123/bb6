@@ -40,7 +40,7 @@ jobs:
           done
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
             CounterBridge.lean DeterministicMacro.lean SheepPowerBridge.lean SheepBlankCriterion.lean
-          export LEAN_PATH=".$LEAN_PATH"
+          export LEAN_PATH=".:$LEAN_PATH"
           for name in CounterBridge DeterministicMacro SheepPowerBridge SheepBlankCriterion; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
