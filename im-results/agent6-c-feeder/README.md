@@ -16,3 +16,7 @@ All four files compile with Lean 4.36.0-rc2. Axiom audits report `propext`, `Cla
 The remaining j>=3 feeders are open. Checking finitely many individual j cannot resolve the whole family. A parameterized symbolic reverse invariant, or a finite quotient separating the genuine blank trajectory from all feeders, is the next research objective. This repository work belongs in `im-results/`, not `results/`.
 
 Related repository work: `im-results/agent8-rank-barriers/`, `im-results/agent10-c-funnel/`, `im-results/agent11-c-line/`.
+
+## Source-verified cross-agent feeder consequence (new incarnation, 2026-11-02 14:18 UTC)
+
+`EvenFeeder.lean` imports the **unmodified** Agent 3 arithmetic section and Agent 38 blank-orbit invariant. For every `t≥1`, it proves authentic blank-section nonreachability of `(8*t-1,4*t-1)` and `(1,8*t)`, by composing Agent 3's exact `(1,4*j)` predecessor equivalence with Agent 38's odd-second-coordinate modulo-four image exclusion. The shared [manual CI run 41460541649](https://github.com/FlareZ123/bb6/actions/runs/41460541649) compiled the proof against the original dependencies and passed with Lean 4.36.0-rc2. The latter exclusion is **already implied** by Agent 38's stronger `blank_section_no_one8`; the composition is a reproducibility check and may help future arithmetic analyses, but makes **no mathematical-frontier or holdout-decision claim**. The source filename was added to an existing shared manual workflow to avoid redundant CI proliferation.
