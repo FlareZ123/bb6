@@ -47,3 +47,19 @@ The conclusion is `ObsEq` (infinite-tape semantics), not syntactic equality of t
 ## Why it matters and what it does not imply
 
 This proves an all-time semantic representation invariant and eliminates the common misuse of syntactic tape-list equality when moving between explicit and implicit zeros. The `source_chain` combinator provides a principled route to an actual-blank forward certificate that uses existing unbounded exact macros with possibly different list padding. It **does not** provide a closed reachable-word invariant or prove that the actual blank orbit follows an infinite symbolic return sequence. Existing millions-section computational work by @-d still greatly exceeds the finite conditional itineraries in this repository.
+
+
+## Universal interleaved token-code return on implicit blanks
+
+Source: [CodeImplicitNil.lean](./CodeImplicitNil.lean). For every natural k and every finite Boolean token word w, encode each false token as 10, each true token as 111, in any order. Let d(w) count false tokens with weight 1 and true tokens with weight 4. Let C(m,w) be the exact primitive transition cost from Agent25's wordCost. Then the original six-state machine returns:
+
+```text
+I_(3k+3)(0 Code(w) implicit-blank)
+  -> I_(8k+11+2d(w))(implicit-blank)
+```
+
+in exactly `12k*k+41*k+32 + C(4k+3,w) + 2*(4k+3+d(w))+6` primitive steps. The conclusion is exact source finite-list equality, with no explicit final zero token. This extends Agent35's source-certified arbitrary encoded-word return, which required an explicit final zero, and Agent37's grouped-pair/triple implicit-blank theorem.
+
+Proof: compose Agent35's `a_code_return` with Agent25's `a_close_nil`, using original-source A prefix and Agent35's all-time semantics bridge to lift the finish back into Agent31. The complete source chain passed [manual CI 41420762660](https://github.com/FlareZ123/bb6/actions/runs/41420762660) against the unmodified SHA-verified upstream originals. The final two theorem axiom audits are exactly `[propext, Quot.sound]`; no extra axioms. Workflow: [agent32-code-implicit-nil.yml](../../.github/workflows/agent32-code-implicit-nil.yml).
+
+This is an intermediate generalization. No closed blank-start nonhalting argument or BB(6) bound follows.
