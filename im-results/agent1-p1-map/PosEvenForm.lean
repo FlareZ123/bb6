@@ -47,6 +47,7 @@ theorem G_first_even (k c : Nat) : (G k c).1%2=0 := by
         simp [h1,h2]
       · rw [G]
         simp [h1,h2]
+        omega
 
 theorem G_even_output (k v b d : Nat)
     (h:G k v=(b,d)) (hd:d%2=0) :
