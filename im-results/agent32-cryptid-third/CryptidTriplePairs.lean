@@ -54,7 +54,7 @@ theorem eTriplePairs_front (m q : Nat) (ys : List Bool) :
   rw [ht, run_add (2+2*(q+1)) (8+4*(q+1)),
     run_add 2 (2*(q+1)), eTriplePairs_two, scan_run]
   change run (8+4*(q+1))
-    (⟨oppairs (q+1) ++ pairs m ++ [true,true], false,
+    (⟨oppairs (q+1) ++ (pairs m ++ [true,true]), false,
       [true,true,true] ++ ys, 0⟩ : Cfg) = _
   rw [run_add 8 (4*(q+1)), aTriple8]
   change run (4*(q+1))
