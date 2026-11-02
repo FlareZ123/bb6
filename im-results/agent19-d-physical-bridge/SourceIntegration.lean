@@ -18,7 +18,7 @@ theorem list_step_projection (c : SafeCfg) :
   rcases hcase with h|h|h|h|h|h <;> subst st <;>
     cases bit <;>
     simp [stepFinite, BB6.Padding.step,BB6.BoundaryPadding.delta,
-      BB6.Portfolio.D0,BB6.Padding.goLeft,BB6.Padding.goRight] <;> decide
+      BB6.Portfolio.D0,BB6.Padding.goLeft,BB6.Padding.goRight,BB6.Padding.goStay] <;> decide
 
 /-- Live and frozen-halt states are related by an exact output projection. -/
 def RunRel (finite : Option SafeCfg) (total : BB6.Padding.Config) : Prop :=
