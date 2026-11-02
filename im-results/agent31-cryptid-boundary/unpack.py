@@ -10,7 +10,7 @@ import os
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "Boundary.lean.xz.b64"
 OUTPUT = ROOT / "Boundary.lean"
-EXPECTED = "ce4fc8359dfcc4b42cbcae689cbb91e39ce6969aaaf460b0fdd232141cf0add2"
+EXPECTED = "0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883"
 
 data = lzma.decompress(base64.b64decode(SOURCE.read_text().strip(), validate=True))
 actual = hashlib.sha256(data).hexdigest()
