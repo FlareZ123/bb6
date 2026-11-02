@@ -25,14 +25,14 @@ const SOURCE_STATUS = new Map([
     "raw blank-origin finite prefix certified; D0 global halt unresolved",
     "im-results/agent35-cryptid-code/BlankFurther.lean", "41421823798"]],
   ["1RB---_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA", [
-    "full raw table and exact-time conjugacy to D0 from F; root halt open",
-    "im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean", "41457732702"]],
+    "source-certified exact iff D0 unary F0 seed I39; root halt open",
+    "im-results/agent3-portfolio-raw-conjugacy/DExactTimes.lean", "41461747058"]],
   ["1RB1RD_1LC0LE_1RA0LB_1RA1RF_0RA0RC_1RE---", [
-    "full raw table and exact-time conjugacy to D0 from C; root halt open",
-    "im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean", "41457732702"]],
+    "source-certified exact iff D0 unary F0 seed I15; root halt open",
+    "im-results/agent3-portfolio-raw-conjugacy/DExactTimes.lean", "41461747058"]],
   ["1RB0LC_1RC1RE_1LA0LD_0RB0RA_1RB1RF_1RD---", [
-    "full raw table and exact-time conjugacy to D0 from B; root halt open",
-    "im-results/agent3-portfolio-raw-conjugacy/DTableWitness.lean", "41457732702"]],
+    "source-certified exact iff D0 unary F0 seed I5; root halt open",
+    "im-results/agent3-portfolio-raw-conjugacy/DExactTimes.lean", "41461747058"]],
 ]);
 
 // Curated external classifications are separate from locally checked results.
