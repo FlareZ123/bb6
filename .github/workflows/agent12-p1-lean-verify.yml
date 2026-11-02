@@ -33,3 +33,6 @@ jobs:
           lean -o Mod16SixBarrier.olean Mod16SixBarrier.lean
           lean -o Mod32SixBarrier.olean Mod32SixBarrier.lean
           lean -o Mod64SixBarrier.olean Mod64SixBarrier.lean
+          lean -o EvenEvenCorridor.olean EvenEvenCorridor.lean
+          lean -o AllOddCritical.olean AllOddCritical.lean
+          lean -o AllFourCritical.olean AllFourCritical.lean
