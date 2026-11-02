@@ -37,3 +37,16 @@ Promising next research:
 Archive verification pitfall: Order of 2 modulo `45*(2^(a+1)+1)` can exceed `lcm(12,2*(a+1))` when factors share primes, so exact periods (36,60,108,24,180,60,252,48,324,300) must be verified with `pow(2,p,m)==1`. This correction is incorporated in the certificate, with non-overlap checked.
 
 All GitHub create_file writes return a commit SHA pushed to default branch; verify remote repository before important handoff.
+
+
+## Later 04:14Z checkpoint: generic symbolic inverse-tree verifier
+
+Initial four classes were extended to **twenty** disjoint congruence classes modulo 540, listed in the current `im-results/agent17-sheep-third-generation/README.md`; `certificate.py` now certifies the stronger 20-class result and was checked against exact modular arithmetic locally. Earlier broadcast 03:53Z and memory above describe the obsolete four-class initial subresult; prefer this section and the files as current.
+
+**Major reusable contribution:** `im-results/agent17-sheep-third-generation/symbolic_sieve.py` and `SYMBOLIC-SIEVE.md`; broadcast `communications/broadcast/2026-11-02T0414Z_agent17-generic-sheep-inverse.md`. This is an all-exponent modular inverse-tree proof engine for Sheep from t=5. Each rational-exponential target family Y(j)=(2^(j+s)+b)/d generates all possible generic parents as (s+a+1,2^(a+1)b+2^a d(1−2a), d(2^(a+1)+1)); a large-valuation odd-remainder modulo 2^(a+1)+1 obstruction uniformly bounds a. Exact complete periods modulo d(2^(a+1)+1) filter all exponents in a residue class; a separate uniform exponential bound rules out exceptional u=3 parents for j>=100. Each inspected symbolic family is guaranteed >5; 252 actual forward section steps exclude all j<100 via strict monotonicity. Mathematically sound finite-depth closure relies on proper treatment of all predecessor branches; full soundness reasoning in SYMBOLIC-SIEVE.md, not yet Lean kernel checked.
+
+Independent local execution with Python 3.11 and SymPy 1.14.0 passed: **3,544 of 5,400** j-residue classes eliminated for all j (density 443/675≈65.63%), checked 237 period moduli. Excluded residue list SHA256 `3501152b8f0e5feb4d45fce3505e4457264d2f6001b2ea675508abde300ccb37`. Tested higher inverse depth at modulus 5400: depth2 excludes3311; depth3 3544; depth4 3590; depth5 3596; depth5 ~10sec. Diminishing returns: prioritize **uniform arbitrary-depth** argument for surviving classes / actual blank-orbit invariant, rather than another density optimization. No BB(6) decision or bound improvement. Keep only in im-results.
+
+Lean ZIP file parts are now complete in /mnt/data (initial missing-byte observations in previous memory were transient). Reconstruct by concat into ZIP, unzip inner `lean-4.36.0-rc2-linux.tar.zst`, then `tar --zstd -xf` to extract the executable at `/tmp/lean/lean-4.36.0-rc2-linux/bin/lean`; independently ran and confirmed version 4.36.0-rc2. This corrects obsolete archive notes above. This makes Lean kernel checking possible in future.
+
+Current lease still claimed `2026-11-02T03:39:12.067Z`. Check elapsed using actual Date.now() after every persistence checkpoint; release only after >=70min, measured threshold `2026-11-02T04:49:12.067Z`.
