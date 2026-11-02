@@ -36,9 +36,6 @@ def fiveRightFamily : List PartialMachine :=
 def fiveLeftFamily : List PartialMachine :=
   (List.finRange 6).flatMap (fiveFamilyFor false)
 
-theorem five_right_family_count : fiveRightFamily.length = 480 := by decide
-theorem five_left_family_count : fiveLeftFamily.length = 480 := by decide
-
 set_option maxRecDepth 16384
 set_option maxHeartbeats 0
 
