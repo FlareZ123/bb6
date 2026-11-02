@@ -167,10 +167,29 @@ def verify() -> None:
     assert len(excluded) == EXPECTED_EXCLUDED, len(excluded)
     assert result == EXPECTED_SHA256, result
 
+    # Independently check that this generic certificate subsumes the earlier
+    # Agent 16 two-generation and Agent 40 third-generation period families.
+    prior_two = {
+        r for r in range(MODULUS)
+        if r % 4 == 1
+        or r % 60 in (19, 23, 35, 43, 47, 55, 59)
+        or r % 72 in (8, 16, 40, 56, 64)
+    }
+    prior_three = {
+        r for r in range(MODULUS)
+        if r % 216 in (24, 48, 96, 120, 168)
+        or r % 300 in (11, 31, 71, 91, 131, 191, 211)
+    }
+    prior = prior_two | prior_three
+    assert len(prior) == 2606
+    assert prior.issubset(set(excluded))
+    assert len(set(excluded) - prior) == 938
+
     print(f"Finite prefix: {finite_steps} strictly increasing section steps")
     print(f"Uniform theorem: all j >= {MIN_EXPONENT} with j mod {MODULUS} in")
     print(f"{len(excluded)} certified classes are unreachable from t=5")
     print(f"Certificate class-list SHA256: {result}")
+    print("Previously reported class union: 2,606; additional classes: 938")
     print(f"Unique modular periods verified: {checked_period.cache_info().currsize}")
     print("PASS: symbolic inverse-tree modular certificate")
 
