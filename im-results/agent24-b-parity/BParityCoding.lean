@@ -108,6 +108,26 @@ theorem prefix_iff_congruent (a b n : Nat) (hab : a ≤ b) :
   · exact prefix_forces_divisor a b n hab
   · exact divisor_forces_prefix a b n hab
 
+/-- The full parity itinerary is injective on all natural starting states. -/
+theorem full_itinerary_injective (a b : Nat)
+    (hp : ∀ i : Nat, (path a i)%2 = (path b i)%2) : a = b := by
+  by_cases hab : a ≤ b
+  · by_cases heq : a=b
+    · exact heq
+    · have hpos : 0 < b-a := by omega
+      have hdiv (n : Nat) : 2^n ∣ b-a :=
+        prefix_forces_divisor a b n hab (by intro i _; exact hp i)
+      have hle := Nat.le_of_dvd hpos (hdiv (b-a))
+      have hgt : b-a < 2^(b-a) := Nat.lt_pow_self (by omega)
+      omega
+  · have hba : b ≤ a := by omega
+    have hpos : 0 < a-b := by omega
+    have hdiv (n : Nat) : 2^n ∣ a-b :=
+      prefix_forces_divisor b a n hba (by intro i _; exact (hp i).symm)
+    have hle := Nat.le_of_dvd hpos (hdiv (a-b))
+    have hgt : a-b < 2^(a-b) := Nat.lt_pow_self (by omega)
+    omega
+
 /-- Two distinct inputs with gap less than 2^n have distinct length-n parity prefixes. -/
 theorem finite_prefix_separates (a b n : Nat)
     (hab : a < b) (hgap : b-a < 2^n) :
@@ -127,5 +147,6 @@ theorem finite_prefix_separates (a b n : Nat)
 #print axioms divisor_forces_prefix
 #print axioms prefix_iff_congruent
 #print axioms prefix_forces_divisor
+#print axioms full_itinerary_injective
 #print axioms finite_prefix_separates
 end BB6.Agent24.Coding
