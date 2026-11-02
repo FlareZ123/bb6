@@ -65,7 +65,7 @@ jobs:
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent15-c-check/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent15-c-check/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent15-c-check/
-          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse,SectionDyadic,ReachAffine,AffineNormalize,AffineExclusion,NormalizedGateway,M8M16Composition,AffineQuotientExclusion,AffineParityDepth,AffineHaltOneStep}.lean /tmp/agent15-c-check/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse,SectionDyadic,ReachAffine,AffineNormalize,AffineExclusion,NormalizedGateway,M8M16Composition,AffineQuotientExclusion,AffineParityDepth,AffineHaltOneStep,AffineParityReach}.lean /tmp/agent15-c-check/
           cd /tmp/agent15-c-check
           export LEAN_PATH="."
           for f in GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting; do
@@ -87,3 +87,4 @@ jobs:
           lean AffineQuotientExclusion.lean
           lean AffineParityDepth.lean
           lean AffineHaltOneStep.lean
+          lean AffineParityReach.lean
