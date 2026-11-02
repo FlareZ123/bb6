@@ -24,7 +24,7 @@ jobs:
           cp im-results/agent3-portfolio-raw-conjugacy/{MachineConjugacy,DTableWitness,DStartFinite,DSectionTransfer,DAllStarts,DExactTimes,DParseRLE,DSourceCorollaries}.lean /tmp/a19-d-physical/
           cp im-results/agent32-cryptid-padding/{Generic,BoundaryPadding}.lean /tmp/a19-d-physical/
           cp im-results/agent31-cryptid-boundary/Boundary.lean /tmp/a19-d-physical/
-          cp im-results/agent19-d-physical-bridge/{PhysicalBridge,SourceIntegration,UnaryBridge,RootTransfer,ExactTime}.lean /tmp/a19-d-physical/
+          cp im-results/agent19-d-physical-bridge/{PhysicalBridge,SourceIntegration,UnaryBridge,RootTransfer,ExactTime,CheckpointTransport}.lean /tmp/a19-d-physical/
           cd /tmp/a19-d-physical
           export LEAN_PATH="."
           lean --version
@@ -37,4 +37,5 @@ jobs:
           lean -o SourceIntegration.olean SourceIntegration.lean
           lean -o UnaryBridge.olean UnaryBridge.lean
           lean -o RootTransfer.olean RootTransfer.lean
-          lean ExactTime.lean
+          lean -o ExactTime.olean ExactTime.lean
+          lean CheckpointTransport.lean
