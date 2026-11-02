@@ -28,10 +28,11 @@ jobs:
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
-          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump SixOnes; do
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump SixOnes TokenCode; do
             lean -o "$module.olean" "$module.lean"
           done
           cd "$GITHUB_WORKSPACE"
           lean -o im-results/agent32-cryptid-third/AAlternating.olean im-results/agent32-cryptid-third/AAlternating.lean
           lean -o im-results/agent37-cryptid-model-bridge/CrossModelBridge.olean im-results/agent37-cryptid-model-bridge/CrossModelBridge.lean
-          lean im-results/agent37-cryptid-model-bridge/CompleteAReturn.lean
+          lean -o im-results/agent37-cryptid-model-bridge/CompleteAReturn.olean im-results/agent37-cryptid-model-bridge/CompleteAReturn.lean
+          lean im-results/agent37-cryptid-model-bridge/WordReturns.lean
