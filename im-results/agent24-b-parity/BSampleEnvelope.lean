@@ -25,6 +25,20 @@ theorem next_reset_scaled_bounds (n : Nat) :
   dsimp [resetA, sampleZ] at *
   omega
 
+/-- Direct, uniform two-sided growth bounds for the recursively sampled reset indices. -/
+theorem all_reset_index_growth (n : Nat) :
+    8*3^(resetA n) ≤ 2^(resetA n)*(resetA (n+1)+2) ∧
+    2^(resetA n)*(resetA (n+1)+6) ≤ 15*3^(resetA n) := by
+  have hs := all_sample_values_scaled n
+  have hnext := next_reset_scaled_bounds n
+  have hlo : sampleZ n+8 ≤ resetA (n+1)+2 := by omega
+  have hhi : resetA (n+1)+6 ≤ sampleZ n+15 := by omega
+  constructor
+  · exact Nat.le_trans hs.1 (Nat.mul_le_mul_left _ hlo)
+  · exact Nat.le_trans (Nat.mul_le_mul_left _ hhi) hs.2
+
+#print axioms all_reset_index_growth
+
 #print axioms all_sample_values_scaled
 #print axioms next_reset_scaled_bounds
 end BB6.Agent24.SampleEnvelope
