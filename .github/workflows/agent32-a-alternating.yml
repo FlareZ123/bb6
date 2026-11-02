@@ -1,0 +1,29 @@
+name: Agent 32 Cryptid A alternating macro (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile authentic Cryptid source and new A return
+        run: |
+          python3 -m pip install --quiet filelock
+          cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
+          python3 unpack.py
+          export LEAN_PATH=".:$GITHUB_WORKSPACE/im-results/agent32-cryptid-third"
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump; do
+            lean -o "$module.olean" "$module.lean"
+          done
+          lean "$GITHUB_WORKSPACE/im-results/agent32-cryptid-third/AAlternating.lean"
