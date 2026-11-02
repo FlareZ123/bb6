@@ -50,6 +50,42 @@ theorem parity_disagrees_linear (N k : Nat) (hk : 0<k) :
   have hgap : orbit (N+k)-orbit N < 2^(N+k+3) := by omega
   exact parity_disagrees_within_gap N k (N+k+3) hk hgap
 
+/-- Sharp elementary exponential envelope: 2^n*(v_n+7) <= 15*3^n. -/
+theorem scaled_orbit_upper (n : Nat) :
+    2^n*(orbit n+7) ≤ 15*3^n := by
+  induction n with
+  | zero => simp [orbit]
+  | succ n ih =>
+      have hs := orbit_step n
+      have hb := Nat.mod_lt (orbit n) (by omega : 0<2)
+      have hstep : 2*(orbit (n+1)+7) ≤3*(orbit n+7) := by omega
+      calc
+        2^(n+1)*(orbit (n+1)+7) = 2^n*(2*(orbit (n+1)+7)) := by
+          rw [Nat.pow_succ]
+          ac_rfl
+        _ ≤ 2^n*(3*(orbit n+7)) := Nat.mul_le_mul_left _ hstep
+        _ = 3*(2^n*(orbit n+7)) := by ac_rfl
+        _ ≤ 3*(15*3^n) := Nat.mul_le_mul_left _ ih
+        _ = 15*3^(n+1) := by rw [Nat.pow_succ]; ac_rfl
+
+/-- Complementary lower envelope: the orbit grows at least as (3/2)^n. -/
+theorem scaled_orbit_lower (n : Nat) :
+    8*3^n ≤ 2^n*orbit n := by
+  induction n with
+  | zero => simp [orbit]
+  | succ n ih =>
+      have hs := orbit_step n
+      have hlocal : 3*orbit n ≤2*orbit (n+1) := by omega
+      calc
+        8*3^(n+1) = 3*(8*3^n) := by rw [Nat.pow_succ]; ac_rfl
+        _ ≤ 3*(2^n*orbit n) := Nat.mul_le_mul_left _ ih
+        _ = 2^n*(3*orbit n) := by ac_rfl
+        _ ≤ 2^n*(2*orbit (n+1)) := Nat.mul_le_mul_left _ hlocal
+        _ = 2^(n+1)*orbit (n+1) := by rw [Nat.pow_succ]; ac_rfl
+
+#print axioms scaled_orbit_upper
+#print axioms scaled_orbit_lower
+
 #print axioms parity_disagrees_linear
 #print axioms parity_disagrees_within_gap
 end BB6.Agent24.Discrepancy
