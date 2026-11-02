@@ -19,11 +19,12 @@ jobs:
           set -e
           mkdir -p /tmp/a10-st
           cp im-results/agent3-portfolio-raw-conjugacy/{MachineConjugacy,DTableWitness,DStartFinite,DSectionTransfer,DAllStarts,DExactTimes,DParseRLE}.lean /tmp/a10-st/
-          cp im-results/agent10-st-family/STableWitness.lean /tmp/a10-st/
+          cp im-results/agent10-st-family/{STableWitness,SBlankEntry}.lean /tmp/a10-st/
           cd /tmp/a10-st
           export LEAN_PATH="."
           lean --version
           for f in MachineConjugacy DTableWitness DStartFinite DSectionTransfer DAllStarts DExactTimes DParseRLE; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean STableWitness.lean
+          lean -o STableWitness.olean STableWitness.lean
+          lean SBlankEntry.lean
