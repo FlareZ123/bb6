@@ -66,3 +66,11 @@ These results were independently compiled with Lean 4.36.0-rc2, with the audit `
 The mod16 proof unrolls two additional layers of alternating odd-output and `G` direct even-output inverse transitions. Every possible branch either contradicts the global even-left reachable invariant or is ruled out arithmetically. These are genuine all-time reachability exclusions but do not classify all critical-index residue classes and do not decide BB(6).
 
 Potential research: analogous short symbolic inverse trees for the `d%16=8` class (critical `n%8=7`), then `d%8=6` (critical `n%4=0`) and `d%8=2` (critical `n%4=2`).
+
+## Third critical target n=2, d=42, now rigorously excluded
+
+The plain Lean module `RankCutoff.lean` imports the reconstructed `NoFourthTarget.lean` and proves `blank_ne_third_critical : ¬BlankReach 2 42`. This settles the previously open target equivalent to Agent 4's gateway (36,3).
+
+The proof establishes that every nonhalting T transition strictly increases rank a+c. A complete 24-state initial prefix has a kernel-verified Boolean one-step closure: all next states are within the prefix or have rank at least 45. By induction every reachable state is either on this prefix or has rank>=45. The critical target (2,42), rank44, is not in the prefix. `earlyValid_true` uses `decide +kernel`, and the axiom audit for the final theorem reports only `[propext, Classical.choice, Quot.sound]`; no sorryAx.
+
+To reproduce, compile `NoFourthTarget.lean` from the packed baseline, then compile `RankCutoff.lean` with `LEAN_PATH` set to its olean directory.
