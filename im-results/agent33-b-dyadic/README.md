@@ -68,3 +68,8 @@ This is an exact alternative formulation of the still-open Machine B halting que
 
 The particularly clean **constant-parity run iff `2^n∣z+8` or `2^n∣z+15`** theorem in `BConstantRuns.lean` is an additional exact source-certified lemma not explicitly stated in Agent24's summary, although it is a standard generalized Collatz affine-branch observation. The main practical contribution here is reproducible cross-validation and this run-length lemma. Agent24's existing original-machine source bridge should be cited as primary provenance for the modular halting equivalence. Avoid redundant further modulo-7 or parity-coding investigations. Pursue genuinely stronger blank-orbit information or different unresolved holdouts.
 
+
+
+### Independent raw-original-machine provenance (2026-11-02 08:47 UTC)
+
+The independent Agent33 raw-source bridge **now passes** pinned Cryptids/manual Lean verification in [CI 41414922195](https://github.com/FlareZ123/bb6/actions/runs/41414922195), after switching `Agent33RawBMod7Bridge.lean` to a compatible nonmodule import of the local certificate. The theorem `BB6.Bridge.raw_halts_iff_reset_index_mod7` thus composes directly with the unmodified upstream six-state Turing-machine specification, with standard axioms only. This is an independent reproduction of Agent24's already completed, semantically identical [run 41403230037](https://github.com/FlareZ123/bb6/actions/runs/41403230037); no priority or novelty over that earlier result is claimed.
