@@ -106,6 +106,55 @@ theorem scan_complete (f : α → Option α) (decode : α → Option β)
               obtain ⟨n,y,hn⟩ := ih fuel (s.bind f) (by omega) he
               exact ⟨n+1,y,by simp [scan,hf,hn]⟩
 
+/-- The scanner returns the first terminal section-or-halt event, not a later
+    hit: every smaller elapsed time has no recognized return or stop. -/
+theorem scan_first (f : α → Option α) (decode : α → Option β)
+    (fuel : Nat) (s : Option α) (m : Nat) (y : Option β)
+    (h : scan f decode fuel s = some (m,y)) :
+    ∀ j : Nat, j < m → finish decode (run f j s) = none := by
+  induction fuel generalizing s m y with
+  | zero =>
+      simp only [scan] at h
+      cases hf : finish decode s with
+      | none => simp [hf] at h
+      | some z =>
+          simp only [hf,Option.map_some,Option.some.injEq,Prod.mk.injEq] at h
+          rcases h with ⟨hm,hy⟩
+          subst m
+          intro j hj
+          omega
+  | succ fuel ih =>
+      change (match finish decode s with
+        | some z => some (0,z)
+        | none => (scan f decode fuel (s.bind f)).map
+            (fun p => (p.1+1,p.2))) = some (m,y) at h
+      cases hf : finish decode s with
+      | some z =>
+          simp only [hf,Option.some.injEq,Prod.mk.injEq] at h
+          rcases h with ⟨hm,hy⟩
+          subst m
+          intro j hj
+          omega
+      | none =>
+          simp only [hf] at h
+          cases hn : scan f decode fuel (s.bind f) with
+          | none => simp [hn] at h
+          | some p =>
+              rcases p with ⟨q,z⟩
+              simp only [hn,Option.map_some,Option.some.injEq,Prod.mk.injEq] at h
+              rcases h with ⟨hm,hy⟩
+              subst m
+              subst y
+              intro j hj
+              cases j with
+              | zero => simpa [run] using hf
+              | succ j =>
+                  have hlt : j < q := by omega
+                  have hi := ih (s.bind f) q z hn j hlt
+                  simpa only [run_succ_head] using hi
+
+#print axioms scan_first
+
 #print axioms scan_sound
 #print axioms scan_complete
 end BB6.Agent8Scan
