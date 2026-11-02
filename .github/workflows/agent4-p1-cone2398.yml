@@ -47,3 +47,8 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398"
           lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+      - name: Check certified inverse-valuation upper bound
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent4-p1-cone2398"
+          lean -o im-results/agent4-p1-cone2398/ValuationBound.olean im-results/agent4-p1-cone2398/ValuationBound.lean
+          lean -o im-results/agent4-p1-cone2398/ValuationSource.olean im-results/agent4-p1-cone2398/ValuationSource.lean
