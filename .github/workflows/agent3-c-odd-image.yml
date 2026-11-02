@@ -1,4 +1,4 @@
-name: Agent 3 Machine C source odd-image and initial dyadic gate (manual)
+name: Agent 3 Machine C exact source image and inverse-gate proofs (manual)
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-c-odd/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-c-odd/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a3-c-odd/
-          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14}.lean /tmp/a3-c-odd/
+          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14,Agent3COneFamily}.lean /tmp/a3-c-odd/
           cd /tmp/a3-c-odd
           export LEAN_PATH="."
           lean --version
@@ -45,4 +45,5 @@ jobs:
           lean -o FastSectionDef.olean FastSectionDef.lean
           lean -o Agent3CImage.olean Agent3CImage.lean
           lean -o Agent38SectionParity.olean Agent38SectionParity.lean
-          lean Agent3C14.lean
+          lean -o Agent3C14.olean Agent3C14.lean
+          lean Agent3COneFamily.lean
