@@ -118,10 +118,7 @@ theorem complete_A_word_two_one (k : Nat) (ws : List Bool) (ys : List Bool) :
     · exact CryptidA.consume_code (4*k+3) ws ([true,true,false,false] ++ ys)
     · simp [CryptidA.ab]
   rw [hi]
-  change CryptidBoundary.run
-    (2*((4*k+3)+CryptidA.wordInc ws)+16)
-    (CryptidBoundary.preA ((4*k+3)+CryptidA.wordInc ws)
-      ([true,true,false,false] ++ ys)) = _
+  rw [←preA_embed_ab]
   have hparam : 2 ≤ ((4*k+3)+CryptidA.wordInc ws) := by omega
   obtain ⟨u, hu⟩ : ∃ u, ((4*k+3)+CryptidA.wordInc ws) = u+2 := by
     exact ⟨((4*k+3)+CryptidA.wordInc ws)-2,by omega⟩
