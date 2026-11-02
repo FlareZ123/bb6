@@ -69,11 +69,9 @@ theorem no_kfour_bounce_target48 (q k : Nat)
   by_cases hn : n=0
   · subst n
     simp at hsum'
-    omega
   by_cases hn1 : n=1
   · subst n
     simp at hsum'
-    omega
   have hn2 : 2≤n := by omega
   obtain ⟨u,hu⟩ := pow_two_four n hn2
   have hh : 1408*q+1056=64*u := by
