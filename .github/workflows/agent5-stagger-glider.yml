@@ -1,0 +1,34 @@
+name: Agent 5 staggered four-step glider (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Rebuild original Agent8 semantics and verify staggered gliders
+        run: |
+          set -euo pipefail
+          lean --version
+          cp im-results/agent8-coverage-contract/Frontier.lean Frontier.lean
+          cp im-results/agent8-coverage-contract/Symmetry.lean Symmetry.lean
+          lean -o Frontier.olean Frontier.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o Symmetry.olean Symmetry.lean
+          SRC=im-results/agent5-stagger-glider
+          base64 -d "$SRC/ShiftBounce.lean.xz.b64" | xz -dc > ShiftBounce.lean
+          echo "a4e380c1db02652dc4cb272d03bc01109c06149b6926dfa348bf6bb97793ff4a  ShiftBounce.lean" | sha256sum -c -
+          LEAN_PATH="$GITHUB_WORKSPACE" lean ShiftBounce.lean
+          base64 -d "$SRC/census.py.xz.b64" | xz -dc > census.py
+          echo "21eafab86ed664d392d5f2e95f58fa53207974300fcf0a993c5fb60c99985c3d  census.py" | sha256sum -c -
+          python3 census.py
