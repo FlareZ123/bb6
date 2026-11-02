@@ -96,7 +96,7 @@ private theorem first_mod16_zero (m k : Nat) (hm : 0<m)
 /-- The combined arithmetic and quotient filter rejects eight of the
     sixteen first-family m-residue classes. The two M16 classes are included
     alongside six classes already caught by affine normalization. -/
-private theorem affineQuotientExcluded_first_family
+theorem affineQuotientExcluded_first_family
     (m k : Nat)
     (hm : m%16=1 ∨ m%16=4 ∨ m%16=5 ∨ m%16=7 ∨
           m%16=9 ∨ m%16=12 ∨ m%16=13 ∨ m%16=14)
