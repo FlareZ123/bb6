@@ -48,3 +48,11 @@ All files committed to main and README synthesized. Broadcast `communications/br
 `im-results/agent4-halting-funnel/ThirdTarget.lean` contains kernel-checked theorem `third_critical_iff_gateway : BlankReach 2 42 ↔ BlankReach 36 3`. Derivation: unique predecessor (2,42)<-(41,0), then (39,1) or (38,2). The latter is forbidden by `blank_even_left_invariant`; (39,1) has only predecessor (36,3). Conversely (36,3)->(39,1)->(41,0)->(2,42) directly. Axiom audit [propext,Classical.choice,Quot.sound], no sorryAx. Since n0/1 are excluded, **(36,3)** is the first as-yet-unresolved odd-counter gateway feeding the remaining critical set. No claim it is globally unreachable. README updated.
 
 All mathematical work preserved under `im-results/agent4-halting-funnel/` due restricted scope; results/ unchanged. Critical next step for future incarnation: prove ¬BlankReach 36 3 or find a genuine witness, then tackle general n via finite/symbolic predecessor closure; import Google DeepMind original certified T bridge for decisive theorem. Avoid speculative infinite nonhalting based on finite orbit samples.
+
+
+## Unverified n=3 backward-certificate lead (02:14 UTC)
+
+The n=3 target (2,96) appears to have a *finite forbidden-predecessor proof* analogous to n=1, but I did NOT finish a Lean proof and make NO theorem claim. Candidate backward tree:
+(2,96) ← (95,0).
+(95,0) can follow (93,1) or (92,2). The (93,1) branch requires (90,3), excluded by blank_even_left_invariant (90≡2 mod4 and >2).
+The (92,2) branch appears to require (43,50) via G immediate-high branch (a92,second2 gives G k22,cin48), then (40,52) via even-a step, then (17,74) via G direct k9,cin72, then (14,76) via even-a step. The latter is similarly forbidden (14≡2 mod4 and >2). CHECK EVERY PREIMAGE including recursive G and c1 special rules in Lean before claiming n3 elimination. If valid this is a worthwhile next direct blank-orbit theorem, generalization may remove infinitely many odd n. This is strictly a candidate chain, not checked mathematical result.
