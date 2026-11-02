@@ -24,7 +24,7 @@ The exact finite statement here is `forall n<3, Z(n)%2=1`. In particular, `A(1)=
 - `BTraceSource.lean` proves definitional equality to Agent 18's original unmodified `OneDim.G` and `iterG`, verifies `scalarA 1=25` and `scalarA 2=227097`, and states `first_three_samples_odd` for every `n<3`.
 - The **manual-only** workflow `.github/workflows/agent5-b-certified-prefix.yml` imports the unmodified `BReduction.lean` and `BOneDim.lean` under pinned Lean 4.36.0-rc2, regenerates and compiles all 28 proof chunks, and checks `BTraceSource.lean`. It does not run on commits and preserves the CI policy.
 
-Local verification on 2026-11-02: all 28 generated modules, final parity theorem, and the source-bound theorem against an exact signature-matching mock compiled with Lean 4.36.0-rc2. The terminal proof had axiom set `[propext]`; the mock-composed all-first-three theorem had `[propext, Quot.sound]`, with no `sorryAx`. This is not a claim of independent full-source verification until the manual workflow succeeds.
+The original-source finite scalar and counter-level proofs passed [manual CI 41462423124](https://github.com/FlareZ123/bb6/actions/runs/41462423124). The larger primitive-machine bridge was subsequently verified under the pinned upstream toolchain, as documented below.
 
 The basic arithmetic facts about this sample are substantial finite evidence only. The unresolved statement remains deciding whether **any** future recursively sampled parity is zero, an infinite quantified question unaffected by three verified examples. Further research should prioritize a special-orbit invariant or uniform sampled recurrence and avoid merely extending the computational horizon.
 
