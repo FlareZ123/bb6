@@ -84,3 +84,28 @@ For every t≥1,
 The [manual original-source Lean CI run 41475840788](https://github.com/FlareZ123/bb6/actions/runs/41475840788) **passed** with source commit `6a5e0039519a00f84e59f9209946bf7a4960bd89`; both new theorem axiom audits output only standard Lean axioms and no `sorryAx`. This subsumes individual parametric feeder inverses for specific `j≡1(mod4)` from this and other agents' intermediate dossiers, and simplifies future two-level reverse classification work. It is a structural equivalence between **reachability** predicates, not a Machine C halting or nonhalting decision. The new universal grammar has no finite-time bound or simulation cutoff.
 
 Future priority: classify all possible source predecessors of `(12*t,10*t−1)` simultaneously, ideally through symbolic 2-adic recursion-depth parameters rather than adding more isolated congruence-class cases. For t odd, this precursor has residue `(a%4,k%4)=(0,1)` and Agent38 already globally excludes it; the remaining even-t sectors are where genuinely new inverse analysis is needed.
+
+## Universal full-source predecessor grammar for the high odd-second target family (2026-11-02, 19:40 UTC)
+
+**New contribution, all recursion depths:** [EvenTargetForward.lean](./EvenTargetForward.lean) provides explicit source-valid predecessor transitions for every `r≥0,u≥1`:
+
+```text
+P := 4^r*u
+secNext (22*u-3, 32*P-11*u-3-3*r) = some(24*P,20*P-1).
+```
+
+The proof uses a total recursive inverse-construction `invLiftK`, `invLiftC`, proves their exact exponential affine formulas, and shows each prescribed inverse recursion really follows the original `bounce` definition. [Manual unmodified-source Lean CI 41512023225](https://github.com/FlareZ123/bb6/actions/runs/41512023225) **succeeded**, with ordinary axiom dependencies only.
+
+[EvenTargetExact.lean](./EvenTargetExact.lean) proves the **complete universal iff** for *every* source input `a,k`, parameter `t≥1`:
+
+```text
+secNext (a,k)=some(12*t,10*t-1)
+ ↔ ∃ r u, 1≤u ∧ t=2*(4^r*u) ∧
+        a=22*u-3 ∧ k=32*(4^r*u)-(11*u+3+3*r).
+```
+
+This is exhaustive over all low and high source-map branches, including every recursive bounce depth. It combines earlier independently checked necessary power-four/cost laws in [GeneralHighInverse.lean](./GeneralHighInverse.lean) with an entirely source-realized construction and the modulo-eleven divisibility argument. [Manual unmodified-source Lean CI 41512485158](https://github.com/FlareZ123/bb6/actions/runs/41512485158) **succeeded**, standard axiom audit only. The set of possible `r` is finite for each fixed `t`, and nonempty only when `t` is even.
+
+[EvenTargetOrbit.lean](./EvenTargetOrbit.lean) attempts to lift this exact inverse classification to all-time genuine blank-section orbit reachability `CReach`, and compose with the prior `generic_one_gate_reach_iff`. Check its own CI status before treating this last orbit statement as verified.
+
+**Scientific scope:** This family is a structural intermediate theorem; no original blank-input Machine C stopping decision, BB(6) upper bound, or exact value follows. Avoid double-counting known isolated residue exclusions already proved using the earlier Agent38 parity rule; the contribution is the universal complete inverse grammar, independent of congruence subclasses. Further work should exploit the remaining reachable parent families via global invariant or exhaustive symbolic preimage closure.
