@@ -28,7 +28,10 @@ jobs:
           SRC=im-results/agent5-stagger-glider
           base64 -d "$SRC/ShiftBounce.lean.xz.b64" | xz -dc > ShiftBounce.lean
           echo "a4e380c1db02652dc4cb272d03bc01109c06149b6926dfa348bf6bb97793ff4a  ShiftBounce.lean" | sha256sum -c -
-          LEAN_PATH="$GITHUB_WORKSPACE" lean ShiftBounce.lean
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o ShiftBounce.olean ShiftBounce.lean
+          base64 -d "$SRC/StaggerFast.lean.xz.b64" | xz -dc > StaggerFast.lean
+          echo "1f155a1d06dd82bf47b996df4957d994e0c5d0baf5dc2be8e79436bcc093ec35  StaggerFast.lean" | sha256sum -c -
+          LEAN_PATH="$GITHUB_WORKSPACE" lean StaggerFast.lean
           base64 -d "$SRC/census.py.xz.b64" | xz -dc > census.py
           echo "21eafab86ed664d392d5f2e95f58fa53207974300fcf0a993c5fb60c99985c3d  census.py" | sha256sum -c -
           python3 census.py
