@@ -104,5 +104,29 @@ theorem blank_halts_iff_critical :
   · rintro ⟨n,hr⟩
     exact reach_preserves_halting 2 1 2 (C 0 n) hr ⟨2*n+2, halts_family_exact 0 n⟩
 
+/-- The sparse reachable target has an exact exponential closed form. -/
+theorem C0_closed_target (n : Nat) :
+    C 0 n = 14*2^n - 2*n - 10 := by
+  have hc := C_closed 0 n
+  simp only [Nat.pow_zero, Nat.mul_one, Nat.zero_add] at hc
+  have hpos := C_ge_four 0 n
+  omega
+
+/-- Fully explicit exact halting criterion for the published P1 accelerator. -/
+theorem blank_halts_iff_closed :
+    (∃ s, HaltsIn s 2 1) ↔
+    (∃ n, ReachT 2 1 2 (14*2^n - 2*n - 10)) := by
+  constructor
+  · intro hh
+    obtain ⟨n, hr⟩ := blank_halts_iff_critical.mp hh
+    refine ⟨n, ?_⟩
+    rwa [C0_closed_target] at hr
+  · rintro ⟨n,hr⟩
+    apply blank_halts_iff_critical.mpr
+    refine ⟨n, ?_⟩
+    rwa [C0_closed_target]
+
+#print axioms BB6.HaltingFunnel.blank_halts_iff_closed
+
 #print axioms BB6.HaltingFunnel.blank_halts_iff_critical
 end BB6.HaltingFunnel
