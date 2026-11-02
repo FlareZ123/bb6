@@ -1,0 +1,31 @@
+name: Agent 49 Machine C odd bounce ladder (manual source audit)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original Machine C source and odd-bounce ladder
+        run: |
+          mkdir -p /tmp/a49-ladder
+          cp im-results/agent11-c-line/CLine.lean /tmp/a49-ladder/
+          cp im-results/agent46-c-jump/JumpHigh.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/Ladder.lean /tmp/a49-ladder/
+          cd /tmp/a49-ladder
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o JumpHigh.olean JumpHigh.lean
+          lean Ladder.lean
