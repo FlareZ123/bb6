@@ -38,7 +38,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check unmodified upstream original machine and blank path
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
@@ -47,4 +47,7 @@ jobs:
           lean -DmaxRecDepth=16384 -o im-results/agent26-cryptid-e-gate/EBlankTrace.olean im-results/agent26-cryptid-e-gate/EBlankTrace.lean
           lean -o im-results/agent26-cryptid-e-gate/ASix.olean im-results/agent26-cryptid-e-gate/ASix.lean
           lean -DmaxRecDepth=16384 -o im-results/agent26-cryptid-e-gate/ASixBlankTrace.olean im-results/agent26-cryptid-e-gate/ASixBlankTrace.lean
-          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankBeyond.lean
+          lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankBeyond.olean im-results/agent35-cryptid-code/BlankBeyond.lean
+          lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          lean -o im-results/agent35-cryptid-code/ESixBlank.olean im-results/agent35-cryptid-code/ESixBlank.lean
+          lean -DmaxRecDepth=16384 im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
