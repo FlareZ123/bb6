@@ -125,4 +125,6 @@ jobs:
           for m in ZeroMaskOracle FiniteDecision SparsePruneSearch; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
           done
-          lean im-results/agent4-coverage-smoke/FrontierAuditSearch.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierAuditSearch.olean im-results/agent4-coverage-smoke/FrontierAuditSearch.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierClose.olean im-results/agent4-coverage-smoke/FrontierClose.lean
+          lean im-results/agent4-coverage-smoke/FrontierAuditBench.lean
