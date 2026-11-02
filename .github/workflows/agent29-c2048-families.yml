@@ -33,9 +33,6 @@ jobs:
         run: |
           python3 im-results/agent29-c31/reconstruct.py
           python3 im-results/agent29-c-inverse/reconstruct.py
-      - name: Generate complete parametric inverse proof certificate
-        run: |
-          python3 im-results/agent29-c-inverse/generate_c_inverse.py 2048 ${{ matrix.residues }} --output "im-results/agent29-c-inverse/C2048-${{ matrix.batch }}.lean"
       - name: Lean-kernel audit against complete original source chain
         run: |
           mkdir -p /tmp/a29-2048
@@ -43,7 +40,6 @@ jobs:
           for source in CReachBridge CRange CBack CHubSplit; do
             cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a29-2048/$source.lean"
           done
-          cp "im-results/agent29-c-inverse/C2048-${{ matrix.batch }}.lean" /tmp/a29-2048/C2048.lean
           cd /tmp/a29-2048
           export LEAN_PATH="."
           lean --version
@@ -52,4 +48,7 @@ jobs:
           lean -o CRange.olean CRange.lean
           lean -o CBack.olean CBack.lean
           lean -o CHubSplit.olean CHubSplit.lean
-          lean C2048.lean
+          for residue in ${{ matrix.residues }}; do
+            python3 "$GITHUB_WORKSPACE/im-results/agent29-c-inverse/generate_c_inverse.py" 2048 "$residue" --output "$PWD/C2048.lean"
+            lean C2048.lean
+          done
