@@ -34,6 +34,7 @@ theorem source_live_checkpoint (n : Nat) (c d : CryptidBoundary.Cfg)
   rw [hsrc] at hrel
   cases hf : runFinite n (some (boundarySafe c hc offset)) with
   | none =>
+    simp only [hf,RunRel] at hrel
     change (BB6.BoundaryPadding.represent d).state = 6 at hrel
     change d.st = 6 at hrel
     omega
@@ -48,7 +49,7 @@ theorem source_live_checkpoint (n : Nat) (c d : CryptidBoundary.Cfg)
       apply safeCfg_ext
       · simpa [boundarySafe] using hdrep
       · rfl
-    exact ⟨z.offset, by simpa only [hz] using hrz⟩
+    exact ⟨z.offset, hrz.trans (congrArg (fun x : SafeCfg => some (realize x)) hz)⟩
 
 /-- Physical checkpoint transportation is invariant under initial-head
     coordinate translation: every source theorem can be lifted from any
