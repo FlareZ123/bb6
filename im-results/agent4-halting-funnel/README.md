@@ -113,3 +113,12 @@ This is the formally verified version of the corresponding *informal* reduction 
 `Mod8Gateway.lean` proves a residue restriction on `G`: if `k` is even and `c` odd, then `G(k,c).2 = 3` implies `G(k,c).1 ≡ 4 (mod 8)`. This helps analyze the observed odd reset mod-8 pattern without claiming it globally.
 
 To verify the whole chain, compile successive Lean object files in this order with `LEAN_PATH` pointing to their output directory: `HaltingFunnel.lean`, `EvenSector.lean`, `OddReturn.lean`, `Reachability.lean`, `BlankCriterion.lean`, `BlankInvariants.lean`, `NoFirstTarget.lean`. `GModular.lean` imports the first module and `Mod8Gateway.lean` imports `GModular`. Each final theorem's `#print axioms` shows standard Lean axioms and no `sorryAx`. Machine-to-counter semantic correctness is separately proved by the cited Google DeepMind module; this standalone proof series restates the counter map without importing DeepMind's package.
+
+
+## Further exact blank-orbit exclusion: second critical target
+
+`NoSecondTarget.lean` now proves `blank_ne_second_critical : ¬BlankReach 2 16`, excluding the second target `(2,16)` for **all finite times** from the blank entry `(2,1)`. Lean 4.36.0-rc2 checked the proof with the standard axioms `propext`, `Classical.choice`, and `Quot.sound` and no `sorryAx`.
+
+The complete backwards decomposition is: `(2,16)` could only have predecessor `(15,0)`; that hub could only follow `(13,1)` or `(12,2)`. The first branch requires `(10,3)`, excluded by the global reached-hub modular invariant because 10 is neither 2 nor divisible by 4. The second branch forces `(3,10)` and then `(0,12)); the latter is impossible as a successor of any `T` state. A supporting all-natural `G` lemma proves every even output second coordinate comes from the immediate high branch, since any recursive step yields odd output. The standalone Lean proof classifies all possible predecessors, avoiding finite search bounds.
+
+Therefore the first two critical targets `(2,4)` and `(2,16)` are rigorously unreachable. The **third target `(2,42)` and all later targets remain unresolved**. These small exclusions are genuine blank-entry statements, not a decision of the six-state machine. The generalization of this backward certificate to infinitely many targets is a promising direction. Compile `NoSecondTarget.lean` after `NoFirstTarget.lean`.
