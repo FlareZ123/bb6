@@ -47,14 +47,23 @@ theorem project_run (n : Nat) (c : CryptidBoundary.Cfg) :
   induction n with
   | zero => rfl
   | succ n ih =>
-    change project (CryptidBoundary.step (CryptidBoundary.run n c)) =
-      CryptidA.step (CryptidA.run n (project c))
-    rw [project_step, ih]
+    have hr := congrArg project (CryptidBoundary.run_add n 1 c)
+    calc
+      project (CryptidBoundary.run (n+1) c) =
+          project (CryptidBoundary.run 1 (CryptidBoundary.run n c)) := by
+        simpa using hr
+      _ = project (CryptidBoundary.step (CryptidBoundary.run n c)) := rfl
+      _ = CryptidA.step (project (CryptidBoundary.run n c)) := project_step _
+      _ = CryptidA.step (CryptidA.run n (project c)) := by rw [ih]
+      _ = CryptidA.run (n+1) (project c) := rfl
 
 theorem project_f0_detect (c : CryptidBoundary.Cfg) (_h : (project c).state = 5)
     (hb : (project c).bit = false) : bState c ≠ 6 := by
-  intro hc
-  simp [project, hc] at hb
+  cases c with
+  | mk left bit right state =>
+    intro hc
+    have hs : state = 6 := by simpa [bState] using hc
+    simp [project, hs] at hb
 
 /-- Transfer any exact run ending in F/0 to Agent31's original step semantics.
     The F/1 halt encoding difference is handled by the total projection. -/
