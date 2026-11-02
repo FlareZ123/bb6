@@ -21,4 +21,6 @@ jobs:
       - name: Verify total-machine coverage inference and axiom audit
         run: |
           set -eu
-          lean im-results/agent8-coverage-contract/Frontier.lean
+          export LEAN_PATH=im-results/agent8-coverage-contract
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean im-results/agent8-coverage-contract/TerminalBridge.lean
