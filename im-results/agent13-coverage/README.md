@@ -55,3 +55,48 @@ The separate modules `SparseCoverage.lean` and `LassoCoverage.lean` import the f
 Original source hashes: `SparseCoverage.lean` SHA-256 `c2271613c1c9676e1ef1cd92ed0ad07647e1e0187a11614a5d9e643c01cbc809`; `LassoCoverage.lean` SHA-256 `8544a335fb62a34329dc0c07edeeb5a948a3afb7a314b95f7d1f712cfb57c730`. All three compressed source blobs are reconstructed by the same locked/atomic `unpack.py`. Compile in order `BB6Coverage`, `SparseCoverage`, then `LassoCoverage`, with `LEAN_PATH=.`. Local Lean 4.36.0-rc2 checked all three with only standard axioms and no sorry.
 
 **Remaining coverage gap:** These lemmas prove that a correctly built search tree cannot lose a table when it branches on an unassigned slot, and that individual certified halt/cycler leaves are valid for all completions. They do not prove a particular recursive search algorithm visits every reachable pending branch, that other more powerful deciders are sound, or that all six-state machines obtain a certified outcome. The source-to-sparse-enumerator completeness theorem and the universal runtime comparison remain open.
+
+
+## Complete proof-tree composition, translated cyclers, executable tapes
+
+The source chain now extends to **seven** modules, all compiled locally under Lean 4.36.0-rc2 with only standard axioms. A manually dispatched full-chain CI workflow pins the toolchain and checks the unpacked source hashes.
+
+### Translation-invariant cyclers
+
+`ShiftCoverage.lean` introduces `shiftConfig d c`, which shifts both the head and every cell of the entire infinite tape by an arbitrary integer displacement. `tick_shift` proves exact source-step translation covariance, and `shifted_configuration_nonhalt` proves that if a real run has configurations `c` at time `i` and `shiftConfig d c` at time `j>i`, **every subsequent step is defined**. It therefore extends the lasso certificate to drift/translated-cycle phenomena. `sparse_shift_cycler_leaf_nonhalts` lifts this to every full table completion of a correctly assigned observed prefix. Neither lemma assumes that two configurations with matching local tape *windows* are equal on the full tape. Infinite tape equality or a verified finite-support equivalent is mandatory.
+
+### A falsifiable end-to-end proof contract
+
+`TreeCoverage.lean` defines `CoverTree B p : Type`, an inductive, **proof-carrying** search tree. Its constructors are a certified halter leaf bounded by B, exact full-configuration cycler leaf, translated cycler leaf, and **25-way exhaustive split** on an explicitly unassigned state/symbol entry. Source-level theorem `coverTree_sound` proves that every completion of the partial root has halting time at most B; `rooted_coverage_upper` lifts a complete tree from the *entirely unassigned* root to **every raw six-state machine** under the stated semantics. The final Lean theorem
+
+```lean
+full_bb6_from_coverage_and_witness (B : Nat)
+  (tree : CoverTree B unassigned)
+  (witness : ∃ m : RawMachine, HaltsAt (tickRaw m) B) : ExactBB6 B
+```
+
+is the precise **conditional** goal. No `CoverTree B unassigned` exists in the repository and no missing BB(6) witness is asserted. The type requires each gap to be closed with checked proof terms; recursively branching without certified leaves cannot forge a coverage proof.
+
+### Executable finite-support physical tape
+
+`FiniteTapeCoverage.lean` implements `FinConfig` as a working state, integer head, and finite list of positions containing symbol 1. The tape is zero everywhere else; the list may have any order. `finiteTick_correct` proves that each computable finite-tape transition agrees with `tick` over the **whole bi-infinite tape**, and `finiteRun_correct` proves this for arbitrarily long prefixes. `finite_run_halts_at` turns verified bounded finite simulation into an original infinite-tape halting certificate. `sameFinConfig` compares tapes using finitely many membership checks rather than external semantic equality. `finite_cycle_nonhalt` turns an executable finite-state recurrence into an all-time source-level nonhalting proof.
+
+`FiniteTapeShift.lean` further proves `shiftFinite_correct`, equating finite list translation with full infinite tape translation, and `finite_shift_cycle_nonhalt` for concrete executable shift-recurrence certificates. `assignedFinite_sound` transports finite prefix assignment into the original sparse trace predicate. Finally, `finite_shift_tree_leaf` constructs an actual inhabitant of `CoverTree B p` from a verified finite shift-cycle witness, allowing a certifying search engine to build sound proof objects by composing finite computations and 25-way branches.
+
+**Source hashes (uncompressed SHA-256):**
+
+- `ShiftCoverage.lean`: `3ea7b0bbac9b2ca575b34c362b478e52c335d390113b2934a4c73b0e2f309c3e`.
+- `TreeCoverage.lean`: `c5d2858599d0ad1beaa993c106f35bb0c5152cb22659a11575450a344731eeab`.
+- `FiniteTapeCoverage.lean`: `7ce8ab8c411038a0ca0f9ff568c23529dae4b7c514689dd2b14eb9c44bd17000`.
+- `FiniteTapeShift.lean`: `23bed37b7c46bc7d46714700605ca9309656a99558a8565b2b15c877fd194579`.
+
+The `unpack.py` reconstructs all seven source files and refuses any source hash mismatch before compiling. Each source uses the unchanged previous theorem imports and source integrity is audited by manual CI.
+
+### Remaining hard research, precisely stated
+
+1. **Construct a real global `CoverTree B unassigned`** or extend its sound leaf constructors with more general formally verified nonhalting deciders. The current proof tree is a trusted proof object interface, not an instantiated exhaustive search. Enumerating 25^12 tables directly would be prohibitively large.
+2. Mechanically verify normal-form reductions (including first-state renaming, reflections, write-symbol constraints, initial state, and initial blank) against the exact standard BBChallenge/DeepMind convention. Our raw semantics is mathematically explicit; there is not yet a kernel-certified import-level equivalence with an externally enumerated six-state machine vocabulary.
+3. Connect all external decider outputs, including machines removed *before* the dated 663-root holdout list, to trusted terminal proof objects. Distinguish proven halting times, proven all-time nonhalting, and unresolved roots.
+4. Establish and verify the maximum attainable raw step count. The present project still lacks a universal solved-BB(6) bound.
+
+**Strict evidence classification:** these are source-level, verified general-purpose *foundational* results with a clear missing-premise boundary. They are not newly resolved BB(6) machines, a complete enumeration, or publishable original Busy Beaver frontier results.
