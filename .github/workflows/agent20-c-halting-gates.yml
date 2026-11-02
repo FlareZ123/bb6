@@ -23,12 +23,13 @@ jobs:
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent20-gates/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent20-gates/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent20-gates/
-          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8}.lean /tmp/agent20-gates/
-          cp im-results/agent20-c-halting-gates/{GateArithmetic,GatewayRefinement,GateArithmeticEight,GatewayRefinementEight}.lean /tmp/agent20-gates/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionMod8,SectionAffineInverse}.lean /tmp/agent20-gates/
+          cp im-results/agent20-c-halting-gates/{GateArithmetic,GatewayRefinement,GateArithmeticEight,GatewayRefinementEight,SectionRightOne}.lean /tmp/agent20-gates/
           cd /tmp/agent20-gates
           export LEAN_PATH="."
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam SectionMod8 GateArithmetic GatewayRefinement GateArithmeticEight; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam SectionMod8 SectionAffineInverse GateArithmetic GatewayRefinement GateArithmeticEight; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean GatewayRefinementEight.lean
+          lean -o GatewayRefinementEight.olean GatewayRefinementEight.lean
+          lean SectionRightOne.lean
