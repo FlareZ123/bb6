@@ -39,7 +39,6 @@ theorem G_eq_evalP2 (k c : Nat) :
           (liftPair (4*k+4, c-(2*k+2)))
         simp only [liftPair]
         congr 1
-        omega
 
 /-- All branches of the local one-step P1 accelerator coincide with DeepMind's
     certified high-level transition function after constructor encoding. -/
