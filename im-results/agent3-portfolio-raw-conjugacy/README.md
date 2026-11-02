@@ -76,3 +76,31 @@ The exact **unmodified full-source check**, including both new Lean files and in
 
 *Boundary:* This is complete original-source certification in our self-contained D0 raw-TM model; it has not been imported directly against the separate Agent31 `CryptidBoundary.Cfg` semantic representation. The unary configuration agrees with its declared physical meaning, but any additional direct composition with Agent31's theorems still needs an explicit same-tape representation bridge.
 
+
+## Complete six-state blank-origin classification into four unary seeds
+
+`DAllStarts.lean` proves a **single quantified original-source theorem for all six possible designated blank initial states** `s : Fin 6`. It is not restricted to the four roots already selected by the October 16 snapshot. The exact kernel-certified entry schedule is:
+
+| D0 initial state | Raw steps | F0 unary length | Physical head |
+| --- | ---: | ---: | ---: |
+| A | 36 | 9 | -6 |
+| B | 15 | 5 | -3 |
+| C | 92 | 15 | -12 |
+| D | 15 | 5 | -3 |
+| E | 93 | 15 | -13 |
+| F | 403 | 39 | -35 |
+
+`every_blank_reaches_unary s` proves this exact physical-tape equality for **every** `s`, using the authenticated finite-support simulator semantics and kernel `decide` over the complete `Fin 6` enumeration. `every_blank_halts_iff_unary s` proves for **every** `s` the genuine all-time iff with `HaltsCfg D0 (F0Pure (startSeed s) 0)`.
+
+Consequently, any *designated-state* version of the D0 table, under permitted renaming and left/right reflection, reduces to one of **four unary seeds: n=5,9,15,39**. The previously listed **four rooted holdouts map to four different seeds**, so this argument alone does not merge any two of those four open blank-halting questions. It additionally proves true same-table B-vs-D and C-vs-E blank-halting equivalences, since those pairs share the same seeds, without claiming the externally catalogued roots include the D/E starts. Source and CI evidence: [DAllStarts.lean](./DAllStarts.lean), [manual run 41461461590](https://github.com/FlareZ123/bb6/actions/runs/41461461590), final theorem axioms standard only.
+
+`DExactTimes.lean` further proves the uniform exact-primitive-step iff
+
+```lean
+∀ (s : State) (n : Nat),
+  haltsAt D0 s (startTime s + n) ↔
+    HaltsAtCfg D0 (F0Pure (startSeed s) 0) n
+```
+
+and specializes to the three rooted RLEs with offsets **15, 92, and 403**. This is about equality of halting-time *predicates* under source-certified deterministic reduction. It gives no halting bound, because none of the four unary seeds is decided here.
+
