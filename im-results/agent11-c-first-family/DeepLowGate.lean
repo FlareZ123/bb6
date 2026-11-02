@@ -35,6 +35,7 @@ theorem low_gate_odd_u_2adic_unreachable (u : Nat)
   subst v
   have hsub : 32*u-(11*u+3)=21*u-3 := by omega
   have hp : BB6.Agent15.CReach (22*u-3) (21*u-3) := by
+    change BB6.Agent3.CReach (22*u-3) (21*u-3)
     simpa [hsub] using hparent
   have ha : (22*u-3)%4=3 := by omega
   have hmass : ((22*u-3)+2*(21*u-3))%8=7 := by omega
