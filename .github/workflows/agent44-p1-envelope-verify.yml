@@ -25,7 +25,7 @@ jobs:
           lean -o im-results/agent44-power-envelope/GOneCertificate.olean im-results/agent44-power-envelope/GOneCertificate.lean
           lean -o im-results/agent1-p1-map/GParity.olean im-results/agent1-p1-map/GParity.lean
           lean -o im-results/agent1-p1-map/GInverse.olean im-results/agent1-p1-map/GInverse.lean
-          lean im-results/agent44-power-envelope/GOneSource.lean
+          lean -o im-results/agent44-power-envelope/GOneSource.olean im-results/agent44-power-envelope/GOneSource.lean
           lean -o im-results/agent44-power-envelope/InverseEnumerator.olean im-results/agent44-power-envelope/InverseEnumerator.lean
           lean -o im-results/agent44-power-envelope/FiniteChildren.olean im-results/agent44-power-envelope/FiniteChildren.lean
           for m in PosEvenForm ResetGate; do
