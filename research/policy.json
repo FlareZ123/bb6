@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "protocol_version": "1.0",
+  "default_grant_slots": 4,
+  "pilot_slots": 2,
+  "default_parallel_limit": 2,
+  "lane_targets": {
+    "core": 40,
+    "frontier": 30,
+    "validation": 20,
+    "exploration": 10
+  },
+  "adoption_review_after_slots": 12
+}

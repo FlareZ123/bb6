@@ -1,5 +1,21 @@
 # Verified mathematical progress toward BB(6)
 
+## Contribution map and review standard — Super-Critic protocol v1.0
+
+The maintainer-authorized [research protocol](../RESEARCH_PROTOCOL.md) now governs coordination and new promotion decisions. The legacy detailed index below is preserved; installation is **not** an independent re-verification or academic-acceptance judgment for those entries.
+
+| Contribution family | Useful starting evidence | Remaining question / current programme |
+|---|---|---|
+| P1 inverse grammar, cone certificates and all-depth necessary conditions | [Dossier](../im-results/agent1-p1-quarter/README.md) | Uniform treatment of actual remaining gates and exceptional branches: [R002](../research/issues/R002.md). |
+| Machine C exact section, halting locus and normalization | [Dossier](../im-results/agent15-c-halting/README.md) | Actual blank-origin reachability of normalized families: [R003](../research/issues/R003.md). |
+| Source-connected reductions for other rooted machines | [Decision gates](../im-results/2026-11-02-cross-holdout-decision-gates-agent19.md) | New mechanisms, transfer and precise limitations: [R004](../research/issues/R004.md), [R007](../research/issues/R007.md). |
+| Exhaustive proof interfaces and authenticated prior-work integration | [Frontier audit](../im-results/agent4-coverage-smoke/FRONTIER-AUDIT.md) | Needed coverage/runtime edges and actual residuals: [R005](../research/issues/R005.md). |
+| External frontier and source provenance | [Historical rooted ledger](../im-results/holdout-family-coverage/README.md) | Current rooted concordance and new targets: [R001](../research/issues/R001.md). |
+
+New substantial entries require independent assessment of **correctness**, **goal relevance**, and **external novelty** with an exact theorem/source/evidence chain and remaining uncertainty. [R006](../research/issues/R006.md) supplies technical review; an internal review is not publication acceptance. Structural results and useful negative results can matter without solving a root. Routine parameter extensions normally belong in im-results/ unless a specific contribution justifies promotion.
+
+No numerical proximity to BB(6) closure follows from counts of certificates, residues, long prefixes, or easy raw-table mass. Distinguish novel decisions, imported known results, verified reductions and unknown cases. Preserve detailed evidence when reorganizing synthesis.
+
 ## Whole-problem status and missing proof links (Critic review, 2026-11-02)
 
 **BB(6) remains undetermined.** The results catalogued below establish source-connected, all-time **necessary reachability exclusions** for selected Machine C and P1 families; they do **not** classify either original blank-start machine, settle the other studied holdouts, provide a universal six-state upper bound, or establish a new exact BB(6) value. The number of excluded congruence classes should not be interpreted as a numerical measure of proximity to closure: the surviving infinite families may contain the decisive cases.
@@ -55,4 +71,3 @@ This index lists substantive statements that improve the mathematical frontier. 
 - [Machine C side-gateway modulo-16 exclusion](./2026-11-02-machine-c-side-mod16-exclusion.md), Agent 23, 2026-11-02. A direct source-bridged Lean proof excludes every `(0,4n,24n+23)` side gateway with `n%16=0` for all n, including zero; full verification [run 41400280303](https://github.com/FlareZ123/bb6/actions/runs/41400280303). The family had appeared in Agent20's computational sieve; the new all-time symbolic certificate is independent of finite graph enumeration. Machine C and BB(6) remain undecided.
 
 Underlying verified Lean modules, compressed source hashes, CI workflow and full proof dossier are in [Agent 21's detailed intermediate source directory](../im-results/agent21-c-source-bridge/).
-
