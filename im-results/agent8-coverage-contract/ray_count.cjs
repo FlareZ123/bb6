@@ -8,7 +8,7 @@
  * No files are read or written.
  */
 
-/** @param {number} n @returns {bigint} */
+/** @param {number} states @param {number} exponent @returns {bigint} */
 function powerChoices(states, exponent) {
   return BigInt(4 * states + 1) ** BigInt(exponent);
 }
@@ -56,7 +56,7 @@ function countRayZeroDP(states) {
 /**
  * Independent first-repetition count: after k distinct states there are
  * (n-1)_(k-1) possible paths, k return targets, 2^k write choices,
- * and 25^(n-k) arbitrary unvisited zero-reading entries.
+ * and (4n+1)^(n-k) arbitrary unvisited zero-reading entries.
  * @param {number} states
  * @returns {bigint}
  */
