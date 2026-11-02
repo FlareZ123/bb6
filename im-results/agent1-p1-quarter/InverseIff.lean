@@ -39,5 +39,21 @@ theorem inverseAt_iff_power_mass (b d t k c : Nat)
     subst x
     exact hs
 
+/-- Source GAncestor exactly iff a scalar dyadic equation and one linear
+    counter-mass equation have a common natural depth. -/
+theorem ancestor_iff_power_mass (b d k c : Nat)
+    (hb:4≤b) (hmod:b%4=0) (hd:d%2=1) :
+    GAncestor b d k c ↔
+    ∃ t : Nat, d+b/2+3=2^t*(c+3) ∧
+      2*k+c+2*t+1+c%2=b+d := by
+  constructor
+  · intro h
+    obtain ⟨t,ht,_⟩ := inverseAt_complete b d k c h
+    exact ⟨t, (inverseAt_iff_power_mass b d t k c hb hmod hd).mp ht⟩
+  · rintro ⟨t,ht⟩
+    exact inverseAt_sound b d t k c
+      ((inverseAt_iff_power_mass b d t k c hb hmod hd).mpr ht)
+
 #print axioms inverseAt_iff_power_mass
+#print axioms ancestor_iff_power_mass
 end BB6.Agent1Quarter
