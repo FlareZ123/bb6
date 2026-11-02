@@ -2,6 +2,7 @@ module
 
 public import BusyBeaver.BB6.M_1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_HHH1RE
 public import Agent18BReduction
+public import BRun
 
 @[expose] public section
 
@@ -58,6 +59,38 @@ theorem is_valid_B : IsValidAcceleration Source.target (3,0,0) encodeB BReductio
 theorem raw_halts_iff :
     IsHalt Source.target ↔ CollatzHalts BReduction.nextB (3,0,0) :=
   is_valid_B.isHalt_iff
+
+/-- Translate direct finite-iteration semantics to the local primitive recursion. -/
+theorem iterate_eq_runN (n : Nat) (s : Option BReduction.S) :
+    ((Option.bind · BReduction.nextB)^[n] s) = IterBridge.runN n s := by
+  induction n generalizing s with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply]
+      exact ih (s.bind BReduction.nextB)
+
+/-- The two independently defined finite-halting predicates are equivalent. -/
+theorem collatz_iff_local :
+    CollatzHalts BReduction.nextB (3,0,0) ↔ BReduction.Halts (3,0,0) := by
+  unfold CollatzHalts
+  constructor
+  · rintro ⟨n,hn⟩
+    apply (IterBridge.halts_iff_runN (3,0,0)).2
+    refine ⟨n, ?_⟩
+    rw [← iterate_eq_runN]
+    exact hn
+  · intro hh
+    obtain ⟨n,hn⟩ := (IterBridge.halts_iff_runN (3,0,0)).1 hh
+    refine ⟨n, ?_⟩
+    rw [iterate_eq_runN]
+    exact hn
+
+/-- Exact raw TM halting criterion via the recursively sampled parity sequence. -/
+theorem raw_halts_iff_sample_zero :
+    IsHalt Source.target ↔ ∃ n : Nat, (BReduction.sample n).1 = 0 :=
+  raw_halts_iff.trans (collatz_iff_local.trans BReduction.blank_halts_iff_sample_zero)
+
+#print axioms raw_halts_iff_sample_zero
 
 #print axioms next_lift
 #print axioms is_valid_B
