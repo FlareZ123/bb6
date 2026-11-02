@@ -37,7 +37,10 @@ theorem high_target_reach_iff (t : Nat) (ht : 1≤t) :
       general_even_inverse_edge r u hu
     refine ⟨n+1,?_⟩
     rw [htEq]
-    simpa [BB6.Agent8Section.run,hr,hpre] using hpre
+    have hx : 24*(4^r*u)=12*(2*(4^r*u)) := by omega
+    have hy : 20*(4^r*u)-1=10*(2*(4^r*u))-1 := by omega
+    rw [hx,hy] at hpre
+    simpa [BB6.Agent8Section.run,hr] using hpre
 
 /-- Combining the exact two-step low-counter feeder with complete
     high-counter inversion yields an all-time three-section inverse grammar
