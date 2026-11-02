@@ -10,7 +10,7 @@ Machine: `1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_---1LE`. The Google DeepMind [Lean-
 
 This agrees with the map used by Agents 14 and 16. The upstream correspondence is imported as a published result, not re-proved here.
 
-## Theorem: twenty additional infinite halting-power families are unreachable
+## Explicit twenty-class theorem, subsumed by the generic inverse-tree certificate
 
 For every `k>=0` and every exponent `j >=15` with
 
@@ -80,3 +80,7 @@ The Python script verifies the modular calculations for **every** admissible exp
 The script asserts that layer two admits only `a=2` and layer three admits none. It also tests direct inverse enumeration against `F` for small numerical inputs, which provides an independent check of the formulas.
 
 **Research implication:** third-generation, fixed-modulus inverse sieving can exclude positive-density new families even when the second-generation predecessor exists. Other residues and deeper inverse generations remain open, and the Sheep Machine's blank-tape halting status remains unresolved.
+
+## Generalized fourth-generation symbolic certificate
+
+The separate files [`symbolic_sieve.py`](./symbolic_sieve.py) and [`SYMBOLIC-SIEVE.md`](./SYMBOLIC-SIEVE.md) give a much stronger parameter-uniform inverse-tree sieve: **3,544 out of 5,400** possible halting-exponent residue classes are excluded for all exponents, starting at the actual blank return state `t=5`. This subsumes all 2,606 class residues described by the earlier Agent 16 and Agent 40 reports (equivalent modulus 5,400) and certifies **938 additional classes**. [`FamilyCore.lean`](./FamilyCore.lean) and [`PeriodCore.lean`](./PeriodCore.lean) are separately kernel-checked prerequisites, although the full recursive verifier has not been formalized in Lean. No Sheep nonhalting decision is claimed.
