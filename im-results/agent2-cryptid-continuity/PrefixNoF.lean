@@ -20,7 +20,7 @@ private theorem appendNoF (c d : Cfg) (a b : Nat)
   · exact hc t hsmall
   · obtain ⟨u, hu⟩ : ∃ u, t = a+u := ⟨t-a,by omega⟩
     rw [hu,run_add,he]
-    exact hd (t-a) (by omega)
+    exact hd u (by omega)
 
 private theorem frontNoF (m : Nat) (L ys : List Bool) :
     NoF (front m L ys) (2*m+3) := by
@@ -56,7 +56,7 @@ private theorem reverseNoF (m : Nat) (ys : List Bool) :
       all_goals simp [revTurn,run,step,goL,goR,pairs]
     · obtain ⟨u, hu⟩ : ∃ u, t=4+u := ⟨t-4,by omega⟩
       rw [hu,run_add,reverse_step]
-      exact ih ([true,false]++ys) (t-4) (by omega)
+      exact ih ([true,false]++ys) u (by omega)
 
 private theorem scanNoF (m : Nat) (L ys : List Bool) :
     NoF (scanStart m L ys) (2*m) := by
