@@ -30,7 +30,11 @@ theorem next_lift (s : S) :
   · rfl
   · rfl
   · rfl
-  · rcases a with _ | a <;> rfl
+  · rcases a with _ | a
+    · have he : d+1+1+1+1 = d+4 := by omega
+      rw [he]
+      simp [Source.next, BB6CLine.nextC, lift]
+    · rfl
 
 def encodeC (s : S) : Cfg (Fin 2) (Fin 6) := Source.encode (lift s)
 
