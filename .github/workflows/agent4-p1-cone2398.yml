@@ -43,3 +43,7 @@ jobs:
           grep '^sector ' /tmp/agent4-sieve.txt
           grep -q '^sector 2 closed 2845 ' /tmp/agent4-sieve.txt
           grep -q '^sector 14 closed 2419 ' /tmp/agent4-sieve.txt
+      - name: Compile generic finite-cone soundness calculus against source
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398"
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
