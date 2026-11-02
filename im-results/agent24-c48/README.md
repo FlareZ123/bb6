@@ -57,3 +57,25 @@ These statements exclude an infinite family of *potential stopping inputs* throu
 ## Generalizable next questions
 
 The method uses exact two-parent classification of an entire affine family, followed by previously source-verified unreachable parent classes. The related previously documented `t≡8(mod32)` family was separately resolved by Agent 3. A further exploratory family `t≡16(mod256)` appears to yield one source parent forbidden by Agent 38's usual odd mod-four restriction and a second forbidden by the stronger odd-special theorem, conditional on source verification. Seek a parametric inverse cone normalizer that subsumes these unrelated named residues and can eventually decide *all* surviving blank stopping gateways.
+
+## Second disjoint certified infinite low halting-depth family: m≡4008 modulo 4096
+
+**New source-verified extension, 2026-11-02 ~16:35 UTC:** [full original-source manual CI 41482657781](https://github.com/FlareZ123/bb6/actions/runs/41482657781) succeeded on commit `6d359d719a9c2d35651d3027868536fa71597593`. This run reconstructed Agent 38's original hash-pinned `ThirdStageOddDepth.lean`, compiled the complete unmodified Machine C/Agent 38/Agent 15/Agent 3 chain, and checked all seven new declarations below. All seven `#print axioms` outputs were exactly `[propext, Classical.choice, Quot.sound]`, without `sorryAx`.
+
+This new family is **disjoint** from the preceding m≡424 mod1024 class. The exact source inverse theorem `target_section_inverse16` in [C16Inverse.lean](./C16Inverse.lean) proves for all q,a,k:
+
+```text
+secNext(a,k)=some(3072q+192,2560q+159)
+  => (a,k)=(2816q+173,2688q+165)
+     or (a,k)=(704q+41,3744q+228).
+```
+
+The first candidate parent has odd second coordinate and sum2 modulo4, forbidden on the real blank section by Agent38's original globally quantified theorem. The second has even second coordinate and sum1 modulo4, and Agent15's all-depth forced affine predecessor theorem makes its reachability imply reachability of **(4448q+267,1872q+113)**. This predecessor has odd second coordinate and `(a+k)%8=4`, `(a+3*k)%16=14`, forbidden at every blank-section time by Agent38's stronger `blank_section_no_odd_special`. Thus [C16Reach.lean](./C16Reach.lean) proves the new all-time theorem `blank_no_c16_target` for every q and time. There is no simulation-depth assumption.
+
+The original `generic_one_gate_reach_iff` of Agent3 transports the result from the section target `(12t,10t-1)`, with `t=256q+16`, to exclude every **`CReach(1,4096q+260)`**. The exact source low halting equation `k+3m+4=2^(2m+3)` and `m%4096=4008` force `k%4096=260`, so [C16Depth.lean](./C16Depth.lean) proves `blank_no_low_halt_depth4008` for all such m,k. In Agent46's dyadic notation `d=2m`, this eliminates **`d≡8016 (mod 8192)`**.
+
+[C16Residual.lean](./C16Residual.lean) proves the source-connected exact iff `blank_halts_iff_without_depth424_4008`: authentic Machine C blank-tape halting is equivalent to reaching a low halting gateway with **both** `m%1024 ≠ 424` and `m%4096 ≠ 4008`, or reaching an unchanged high halting gateway. This is a nontrivial infinite family of forbidden stopping cases, yet the overall Machine C halting problem remains undecided. The proof consists entirely of original-source Lean theorems, with no `sorry`, `native_decide`, or fabricated source axioms.
+
+Source files: `C16Inverse.lean`, `C16Reach.lean`, `C16Depth.lean`, `C16Residual.lean`; manual verification [.github/workflows/agent24-c16.yml](../../.github/workflows/agent24-c16.yml). This workflow imports a SHA256-checked reconstruction of Agent38's bundled source, so the stronger blank image restriction is verified against its actual original proof, rather than an abstract assumption.
+
+**Structural consequence and next investigation:** for section feeder index `t=16s` with odd `s`, the two-parent inverse grammar has a uniform n=0 and n=2 decomposition, and the first parent is always forbidden by Agent38 mod4. The remaining parent has one forced affine predecessor `(278s-11,117s-4)`. When `s≡3 (mod4)`, that predecessor is eliminated by the mod4 invariant (our C48 case). When `s≡1 (mod16)`, Agent38's deeper odd-special invariant eliminates it (our C16 case). Remaining odd s classes demand a deeper structural inverse analysis. An all-parameter Lean theorem subsuming the two explicit affine source files may be a useful next reusable proof interface, but should not be confused with a machine decision.
