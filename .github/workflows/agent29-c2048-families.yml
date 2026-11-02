@@ -50,5 +50,6 @@ jobs:
           lean -o CHubSplit.olean CHubSplit.lean
           for residue in ${{ matrix.residues }}; do
             python3 "$GITHUB_WORKSPACE/im-results/agent29-c-inverse/generate_c_inverse.py" 2048 "$residue" --output "$PWD/C2048.lean"
+            sed -i 's/set_option maxRecDepth 4096/set_option maxRecDepth 16384/' C2048.lean
             lean C2048.lean
           done
