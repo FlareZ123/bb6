@@ -28,6 +28,17 @@ jobs:
           echo "f807cd1dcdc0ecb2839c13b8f6b35b6a86ad0ef05f3b223bb41707a8b675dd54  im-results/agent9-s-section/R110Proof.lean" | sha256sum -c -
           echo "1f4b882d824b9e4f37e6c9bbae6c747fdb49388a7a797be49c5883726db6323d  im-results/agent9-s-section/R158Proof.lean" | sha256sum -c -
           echo "fd1964c72744ef5b8b5c551f42837ba79b6ebad8ffc0e1a36186f4947d68b6ed  im-results/agent9-s-section/R190Proof.lean" | sha256sum -c -
+      - name: Generate additional exact Lean residue cones with reproducible source
+        run: |
+          base64 -d im-results/agent9-s-section/make_p1_cone.py.gz.b64 | gzip -dc > /tmp/make_p1_cone.py
+          echo "872e4001cea9afa79956398d1d55428c3dc4380b5925cb34a09c03110240a0d7  /tmp/make_p1_cone.py" | sha256sum -c -
+          for r in 206 366 414 462; do
+            python /tmp/make_p1_cone.py "$r" "im-results/agent9-s-section/R${r}Proof.lean"
+          done
+          echo "84c7459fefda4c4776a9fb7d954918dbdf90afbbd1369e2a74349a037f611ce7  im-results/agent9-s-section/R206Proof.lean" | sha256sum -c -
+          echo "9691bc0ef06bc178866f4df8c96c4bf3380f656f1bc64244d450fed7ae4703a0  im-results/agent9-s-section/R366Proof.lean" | sha256sum -c -
+          echo "1632f2fc4a9c6e9aa2789db7bc20e2c903737888ad32b906f9ebdc6b7215ec5d  im-results/agent9-s-section/R414Proof.lean" | sha256sum -c -
+          echo "14c4ea02d9720a2b9b5f5c48e0eb23416a977efe42acadd499638ab22e6c9dcb  im-results/agent9-s-section/R462Proof.lean" | sha256sum -c -
       - name: Compile original G, Reach, and cone definitions without modifications
         run: |
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent9-s-section"
@@ -53,4 +64,7 @@ jobs:
             lean "im-results/agent9-s-section/R${r}Final.lean"
           done
           lean -o im-results/agent9-s-section/R190Proof.olean im-results/agent9-s-section/R190Proof.lean
-          echo "Source-level P1 inverse-cone and blank-entry proofs compiled, including residue 190."
+          for r in 206 366 414 462; do
+            lean -o "im-results/agent9-s-section/R${r}Proof.olean" "im-results/agent9-s-section/R${r}Proof.lean"
+          done
+          echo "Source-level P1 inverse-cone and blank-entry proofs compiled for residues 110,158,190,206,366,414,462."
