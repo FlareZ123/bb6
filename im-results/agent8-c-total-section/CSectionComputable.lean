@@ -90,6 +90,31 @@ theorem blank_halts_iff_computable_two_counter :
   exact section_halts_iff_of_step BB6CLine.nextC embed fastTime fastNext
     (fun p => (fastTime_bounds p).1) fastNext_exact (5,1)
 
+/-- No intermediate positive-time state before fastTime is a c=0 return
+    or a halting configuration. This proves the computed return is the first. -/
+theorem fastNext_first (p : Nat × Nat) (j : Nat)
+    (hpos : 1 ≤ j) (hlt : j < fastTime p) :
+    finish decode (run BB6CLine.nextC j (some (embed p))) = none := by
+  obtain ⟨m,y,hm⟩ := scan0_complete p
+  have hmpos : j-1 < m := by
+    simp only [fastTime,hm] at hlt
+    omega
+  have hi := scan_first BB6CLine.nextC decode (4*p.2+4)
+    (BB6CLine.nextC (embed p)) m y hm (j-1) hmpos
+  have htime : (j-1)+1=j := by omega
+  rw [← htime,run_succ_head]
+  simpa using hi
+
+/-- Independent definitional-evaluation smoke check on the source-aligned
+    first three blank-entry section returns and exact elapsed call counts. -/
+theorem first_three_sections :
+    fastNext (5,1) = some (3,4) ∧ fastTime (5,1) = 3 ∧
+    fastNext (3,4) = some (4,7) ∧ fastTime (3,4) = 7 ∧
+    fastNext (4,7) = some (20,4) ∧ fastTime (4,7) = 17 := by decide
+
+#print axioms fastNext_first
+#print axioms first_three_sections
+
 #print axioms scan0_complete
 #print axioms fastNext_exact
 #print axioms blank_halts_iff_computable_two_counter
