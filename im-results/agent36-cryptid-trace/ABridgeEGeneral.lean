@@ -20,15 +20,16 @@ theorem a_gate_to_E (m : Nat) (ys : List Bool) :
 
 /-- Exact A-to-F return through ANY E q-pair triple-one gate. -/
 theorem a_gate_triple_pairs (m q : Nat) (ys : List Bool) :
-  run (2*m+6*q+22)
+  run (2*m+6*q+26)
     (BB6.Agent35.aBoundary (m+1)
       ([true,true,false] ++ (pairs q ++ ([true,true,true] ++ ys)))) =
-    ⟨[],false,List.replicate (2*m+3) true ++
+    ⟨[],false,List.replicate (2*m+7) true ++
       (oppairs (q+2) ++ (false::ys)),5⟩ := by
-  have ht : 2*m+6*q+22 = 3+(2*m+6*q+19) := by omega
+  have ht : 2*m+6*q+26 = 3+(2*(m+2)+6*q+19) := by omega
   rw [ht,run_add,a_gate_to_E]
-  change run (2*m+6*q+19) (eTriplePairs m q ys) = _
+  change run (2*(m+2)+6*q+19) (eTriplePairs (m+2) q ys) = _
   rw [eTriplePairs_run]
+  rw [show 2*(m+2)+3=2*m+7 by omega]
 
 /-- Arbitrary A-side encoded prefix followed by 110 (10)^q 111 and
     arbitrary continuation: universally exact original machine steps. -/
@@ -36,24 +37,24 @@ theorem full_A_code_E_triple (k q : Nat) (ws ys : List Bool) :
   run
     ((12*k*k+41*k+32) +
       (CryptidA.wordCost (4*k+3) ws +
-        (2*((4*k+3)+CryptidA.wordInc ws)+6*q+20)))
+        (2*((4*k+3)+CryptidA.wordInc ws)+6*q+24)))
     (init (List.replicate (3*k+1) true ++
       false :: (CryptidA.wordCode ws ++
         ([true,true,false] ++ (pairs q ++ ([true,true,true] ++ ys)))))) =
     ⟨[],false,
-      List.replicate (2*((4*k+3)+CryptidA.wordInc ws)+1) true ++
+      List.replicate (2*((4*k+3)+CryptidA.wordInc ws)+5) true ++
         (oppairs (q+2) ++ (false::ys)),5⟩ := by
   rw [run_add,prefix_A]
   change run
     (CryptidA.wordCost (4*k+3) ws +
-      (2*((4*k+3)+CryptidA.wordInc ws)+6*q+20))
+      (2*((4*k+3)+CryptidA.wordInc ws)+6*q+24))
     (BB6.Agent35.aBoundary (4*k+3)
       (CryptidA.wordCode ws ++
         ([true,true,false] ++ (pairs q ++ ([true,true,true] ++ ys))))) = _
   rw [run_add,BB6.Agent35.a_code_return]
   have ht :
-    2*((4*k+3)+CryptidA.wordInc ws)+6*q+20 =
-    2*((4*k+2)+CryptidA.wordInc ws)+6*q+22 := by omega
+    2*((4*k+3)+CryptidA.wordInc ws)+6*q+24 =
+    2*((4*k+2)+CryptidA.wordInc ws)+6*q+26 := by omega
   rw [ht]
   have harg :
     4*k+3+CryptidA.wordInc ws =
