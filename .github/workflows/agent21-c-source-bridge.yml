@@ -82,3 +82,12 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CMod32.olean CMod32.lean
           cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CMod32Bridge.lean" CMod32Bridge.lean
           lake env lean CMod32Bridge.lean
+
+      - name: Source-certify Agent 20 finite quotient representative lemma
+        working-directory: /tmp/cryptids
+        run: |
+          python3 "$GITHUB_WORKSPACE/im-results/agent20-c-quotient/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent20-c-quotient/QuotientArithmetic.lean" QuotientArithmetic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-source-bridge/CQuotSourceLink.lean" CQuotSourceLink.lean
+          lake env lean -o .lake/build/lib/lean/QuotientArithmetic.olean QuotientArithmetic.lean
+          lake env lean CQuotSourceLink.lean
