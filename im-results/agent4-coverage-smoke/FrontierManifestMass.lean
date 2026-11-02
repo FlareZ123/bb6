@@ -1,4 +1,5 @@
 import FrontierExtract
+import FrontierMass
 namespace BB6Coverage
 
 def AuditTerminal.certMass (a : AuditTerminal) : Nat :=
