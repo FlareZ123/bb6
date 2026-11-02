@@ -1,0 +1,52 @@
+name: Agent 34 fourteen further Machine C reset exclusions mod4096 (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: 0
+            residues: "3691 3936 992 1079 1792 1867 2112"
+          - shard: 1
+            residues: "2283 2379 2688 2827 3648 3979 855"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct SHA-256-checked source
+        run: |
+          python3 im-results/agent34-c184/reconstruct.py
+          python3 im-results/agent34-c184/reconstruct4096.py ${{ matrix.shard }}
+      - name: Verify complete original Machine C source and new theorem statements
+        run: |
+          mkdir -p /tmp/a34-4096
+          cp im-results/agent11-c-line/CLine.lean /tmp/a34-4096/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a34-4096/$source.lean"
+          done
+          cp im-results/agent34-c184/Agent34CInverse.lean /tmp/a34-4096/Agent34CInverse.lean
+          for residue in ${{ matrix.residues }}; do
+            cp "im-results/agent34-c184/C4096R$residue.lean" "/tmp/a34-4096/C4096R$residue.lean"
+          done
+          cd /tmp/a34-4096
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          lean -o Agent34CInverse.olean Agent34CInverse.lean
+          for residue in ${{ matrix.residues }}; do lean "C4096R$residue.lean"; done
