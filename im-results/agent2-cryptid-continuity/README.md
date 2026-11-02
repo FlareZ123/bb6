@@ -118,3 +118,32 @@ Proof: all intermediate times of the initial 134-step source-certified E-to-B br
 **Remaining missing implication:** the full F-section `I_(3k+4)(0 101101100111 ys)` first reaches the boundary `e0 (4k) ys` by the source-certified `prefix_E` after `12k²+41k+33` steps. It is not yet formally proved that no earlier physically blank-left F/0 return happens during that initial prefix. The  E-boundary first-return certificate alone is therefore **not yet** a first-return theorem for the original entire F-to-F section. The single-return shift law for arbitrary suffixes and the genuine blank orbit remain unresolved.
 
 **Computational test (independent finite evidence):** a literal sparse-tape C++ simulator compared all F-section inputs `I_n(0 w)` for unary lengths `n=2..15`, suffix lengths through 15 bits, with their `n+3` counterparts. It completed 458,752 paired first-return-or-halt comparisons, with no mismatch or timeout at the prescribed finite cutoff. This is consistent with the conjectured shift law but cannot establish it and is not used by the Lean proof.
+
+
+## 2026-11-02 20:49 UTC: **complete original-source E111 first positive return**
+
+The stronger [original-source Lean workflow 41522567162](https://github.com/FlareZ123/bb6/actions/runs/41522567162) passed at commit `671836c22176bf4e4c327bcc60b03d726f5ff669`, checking [`PrefixNoF.lean`](./PrefixNoF.lean) and [`FullE111First.lean`](./FullE111First.lean) in addition to the strict E-boundary proof above. The final original-source statement is `BB6.CryptidFullE111First.full_E_one_triple_first_return`.
+
+For *every* natural `k` and arbitrary finite binary suffix `ys`, the actual original D-start six-state machine started at the physical F/0 section
+
+```
+I_(3k+4)(0 101101100111 ys)
+```
+
+has its **first positive-time physically blank-left F-on-zero return** exactly at
+
+```
+T(k) = 12*k*k + 49*k + 170
+```
+
+and reaches
+
+```
+I_(8k+3)(01111010101010101010 ys).
+```
+
+The source-certified prefix `prefix_E` takes `12*k*k+41*k+33` raw steps and is followed by the E111 boundary run of `8*k+137` steps. The new `prefixE_positive_noF` proves **state F does not occur at all at any strictly positive intermediate prefix time** for *any* `k,ys`; it decomposes all intermediate times among a 24-step initial setup, arbitrarily many complete triple-symbol pumps, and the final delimiter scan. The parametric pump no-F proof is itself decomposed into forward `2m+3` and reverse `4m+24` sweeps; each local transition segment is checked against the authentic source. The E111 boundary result rules out physically blank-left F/0 at all remaining intermediate times, while permitting internal visits to state F with nonblank left tape.
+
+The resulting exact first-return theorem reports **only standard Lean axioms `[propext, Quot.sound]`**, no `sorryAx`, no `native_decide`, and no unverified assumption. The original source is automatically SHA-restored and compiled in the manual-only workflow. This resolves the previously documented *first-return minimality* gap in the E111 family. It is a mathematically fully certified infinite-family theorem, but remains classified **intermediate** because it has no demonstrated implication for the actual all-blank orbit or universal BB(6) upper bound.
+
+Reusable targets now include proving analogous *all-time* prefix exclusions for residue 2 and residue 0 (`prefix_B` and `prefix_A`), then exploiting their exact completed first returns for global macro shift invariants. The four-left-pair A/E portal and unconditional first-return shift across *arbitrary suffixes* remain open.
