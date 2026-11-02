@@ -100,3 +100,8 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean LowGate6.lean
+
+          # Agent 11: compositional 2-adic affine invariant at all depths.
+          cp im-results/agent11-c-first-family/{AffineDepthM8,DeepLowGate}.lean /tmp/agent15-c-check/
+          lean -o AffineDepthM8.olean AffineDepthM8.lean
+          lean DeepLowGate.lean
