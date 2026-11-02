@@ -33,6 +33,12 @@ const SOURCE_STATUS = new Map([
   ["1RB0LC_1RC1RE_1LA0LD_0RB0RA_1RB1RF_1RD---", [
     "source-certified exact iff D0 unary F0 seed I5; root halt open",
     "im-results/agent3-portfolio-raw-conjugacy/DExactTimes.lean", "41461747058"]],
+  ["1RB0LB_1LC0RE_1LA1LD_0LC---_0RB0RF_1RE1RB", [
+    "source-certified S/T table and exact-time mirror conjugacy; S root A outcome open",
+    "im-results/agent3-portfolio-raw-conjugacy/STableWitness.lean", "41465840765"]],
+  ["1RB0LD_1RC1RF_1LA0RA_0LA0LE_1LD1LA_0RB---", [
+    "source-certified iff S table blank B at exact same halt time; T root A outcome open",
+    "im-results/agent3-portfolio-raw-conjugacy/STableWitness.lean", "41465840765"]],
 ]);
 
 // Curated external classifications are separate from locally checked results.
