@@ -64,3 +64,7 @@ The proof's only additional arithmetic is a formal integer divisibility argument
 - **Independent numerical reproduction:** [parametric-quotient.cpp](./parametric-quotient.cpp) and [parametric-verify.cjs](./parametric-verify.cjs), separate C++ and Node.js implementations. For B8,M8 they reproduce 2148 reachable and 8032 edges, including all four absent cells. Additional B64,M512 experiments did **not** supply a new reset/side index exclusion beyond other agents' existing symbolic proofs; those remain exploratory.
 
 This result narrows a necessary original-machine halting parameter family. The other infinitely many parameters and the entire BB(6) classification remain unresolved.
+
+## Additional prior-art crosscheck: other M8 first-family absences
+
+An independent full 4096-state BFS recensus identifies exactly three M8 residue classes absent from the **first** exact stopping parameter equation `k+3m+4=2^(2m+3)` for sufficiently large m: `m%8=1,4,5` with corresponding `k%8=1,0,5`. These are **already handled by earlier all-time source results**: for m%8=1 or 5, `(a,k)=(1,k)` has odd k and `(a+k)%4=2`, excluded by Agent38's original blank-section modulo-four theorem; for m%8=4, `k%8=0`, excluded by Agent38's established global `(1,8t)` restriction for positive t. This explains why the present new M8 report focuses on the two genuinely interesting odd-first-counter parameter classes. In no case is a class known to be excluded earlier promoted as a newly discovered theorem.
