@@ -23,7 +23,7 @@ theorem source_B_step {n m : Nat} (ys : List Bool) (h : BStep n m) :
       _ = List.replicate 2 true ++ List.replicate (3*k) true :=
         (List.replicate_append_replicate).symm
       _ = _ := rfl
-  simpa only [I, init, hr, List.append_assoc] using (full_B k ys)
+  simpa only [I, init, hr, List.append_assoc, List.cons_append] using (full_B k ys)
 
 /-- Every certified arithmetic j-branch B chain executes on the original
     six-state machine when the suffix supplies j explicit zero delimiters. -/
