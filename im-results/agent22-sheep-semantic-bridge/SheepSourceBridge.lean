@@ -50,14 +50,14 @@ theorem valid_local :
 
 /-- Abstract local iterates agree exactly with Cryptids' convention. -/
 theorem iter_agree (n : Nat) (s : Option SheepBridge.State) :
-    Function.iterate (fun x : Option SheepBridge.State => x.bind SheepBridge.nextA) n s =
+    ((fun x : Option SheepBridge.State => x.bind SheepBridge.nextA)^[n] s) =
       BB6.Agent22.iter SheepBridge.nextA n s := by
   induction n generalizing s with
   | zero => rfl
   | succ n ih =>
     rw [Function.iterate_succ_apply]
-    change Function.iterate (fun x : Option SheepBridge.State => x.bind SheepBridge.nextA) n
-      (s.bind SheepBridge.nextA) =
+    change ((fun x : Option SheepBridge.State => x.bind SheepBridge.nextA)^[n]
+      (s.bind SheepBridge.nextA)) =
       BB6.Agent22.iter SheepBridge.nextA (n+1) s
     rw [ih]
     have hs := BB6.Agent22.iter_add SheepBridge.nextA 1 n s
