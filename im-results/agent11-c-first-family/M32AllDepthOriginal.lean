@@ -1,6 +1,6 @@
 import M32EightCells
 import M32AllDepthConditional
-import M8ThinBridge
+import M32SectionEmbedding
 import M32PullbackConditional
 import Lean.Elab.Tactic.Omega
 
@@ -18,7 +18,7 @@ theorem original_section_no_eight (x y : Nat)
     change CCert.eightCells x y at hcell
     exact hcell
   exact CCert.original_eight_unreachable x y hc
-    (m8_section_reach_embeds h)
+    (m32_section_reach_embeds h)
 
 /-- Unbounded odd-depth normalization exclusions, fully source-linked to
     the original 40-block M32 quotient closure if all imported modules
