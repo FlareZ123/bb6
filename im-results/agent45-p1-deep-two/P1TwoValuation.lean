@@ -102,5 +102,71 @@ theorem l1_all_powers (q t : Nat) (hq : 1≤q) :
   have hnotRight := l1_no_big_rhs q t hq hn
   simp [hnotLeft,hnotRight]
 
+/-- Every power of two dividing 3q+1 yields that many *genuine* upper
+    inverse pairs through the other live critical feeder, followed by
+    the exact non-upper middle pair. The start is synthetic, not blank. -/
+theorem mixed_depth_exists (q t : Nat) (hq : 1≤q)
+    (hpower : 2^t ∣ 3*q+1) :
+    ∃ s : Nat × Nat,
+      BB6.Agent45Deep2.PairPath (t+2) s (8*u2 q+4,3) := by
+  let pow := 2^(t+3)
+  let m := 3*q+1
+  let D := 6*u2 q+10
+  have hdiv : pow ∣ D := (l1_all_powers q t hq).mpr hpower
+  obtain ⟨z,hz⟩ := hdiv
+  have hp := pow16_big q hq
+  have hm := l1_mass_identity q hq
+  have hpow : pow=8*2^t := by
+    simp only [pow]
+    have he : t+3=3+t := by omega
+    rw [he,Nat.pow_add]
+  have hsmall : pow ≤ 8*m := by
+    have hs : 2^t ≤ m := Nat.le_of_dvd (by omega) hpower
+    dsimp only [m]
+    rw [hpow]
+    omega
+  have h4 : 4*pow ≤ D := by
+    dsimp only [D,m] at *
+    omega
+  have hpowpos : 0<pow := Nat.pow_pos (by decide)
+  have hz4 : 4≤z := by
+    have hh : pow*4 ≤ pow*z := by
+      rw [←hz]
+      simpa only [Nat.mul_comm] using h4
+    exact Nat.le_of_mul_le_mul_left hh hpowpos
+  let seed := 4*z-12
+  have hs : seed%4=0 ∧ seed+12=4*z := by
+    dsimp only [seed]
+    omega
+  have halign : BB6.Agent45Deep2.upper seed (t+1)=6*u2 q-2 := by
+    have hsize:=BB6.Agent45Deep2.upper_size seed (t+1)
+    have ht2 : 2^(t+1)=2*2^t := by rw [Nat.pow_succ]; omega
+    have hsz : BB6.Agent45Deep2.upper seed (t+1)+12=D := by
+      calc
+        BB6.Agent45Deep2.upper seed (t+1)+12 = 2^(t+1)*(seed+12) := hsize
+        _ = 2^(t+1)*4*z := by rw [hs.2]; simp only [Nat.mul_assoc]
+        _ = pow*z := by
+          rw [hpow,ht2]
+          calc
+            (2*2^t)*4*z = (2*4)*(2^t*z) := by ac_rfl
+            _ = (8*2^t)*z := by simp [Nat.mul_assoc]
+        _ = D := hz.symm
+    dsimp only [D] at hsz
+    omega
+  obtain ⟨s,hchain⟩ := BB6.Agent45Deep2.upper_chain
+    seed (t+1) (2*u2 q+5) hs.1
+  have hchain' : BB6.Agent45Deep2.PairPath (t+1) s
+      (6*u2 q-2,2*u2 q+5) := by
+    rw [halign] at hchain
+    exact hchain
+  have hpair := BB6.Agent45Deep2.middle_pair (u2 q) (by
+    have hpowbig:=pow16_big q hq
+    dsimp [u2]
+    omega)
+  refine ⟨s,?_⟩
+  exact BB6.Agent45Deep2.PairPath.extend hchain' hpair.1 hpair.2
+
+#print axioms mixed_depth_exists
+
 #print axioms l1_all_powers
 end BB6.Agent45TwoValuation
