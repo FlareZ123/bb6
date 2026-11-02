@@ -81,3 +81,16 @@ The added `ValuationBound.lean` and `ValuationSource.lean` establish, against th
 ### Modulus-scaling observation (computational, do not misinterpret)
 
 An experimental reparameterization at modulus `2*65536` and `4*65536` counted respectively 10,531 of 16,380, and 21,065 of 32,764 symbolic closed cones. These represent essentially the **same** residue families: a residue `r+65536` at the finer modulus lies in the earlier residue family `r (mod65536)`, and the scan counts scale accordingly. The three extra classes per doubling arise from the initial scanner's omission of very small base residues. Consequently raw growth in the count of closed higher-modulus classes does **not** indicate increased coverage or mathematical progress. The meaningful frontier is the *specific new residue classes outside previously proven families* and a source-certified reusable checker.
+
+## New parameter-sensitive four-way split (experimental)
+
+The additional self-contained `split4_scan.py` applies the same exact G-ancestor rules with the *finer index modulus* 262144. For `n=262144q+r`, set `X=2^(n-16)`, `s=7X/4-q` (integer for all tested residues), so that `H(n)-6=524288s-2r-16`. The positivity and power-gap checks are uniform in every natural q, using `X≥128(q+r+1)` and `s≥223+224r`, valid for all tested r≥34. This differs from naively rescaling previous classes: fixed q modulo 4 exposes extra parity information in the affine inverse branches.
+
+Across 8,188 base residues modulo 65536 in the two residual sectors, the exploratory scan tests exactly 32,752 quarter-classes and reports:
+
+- **5,264** base classes have all four quarter-classes symbolically closed (same base classes as the prior scanner).
+- **857** previously unresolved base classes have one to three of their four quarter-classes symbolically closed.
+- **22,507 quarter-classes** are symbolically closed in total, compared to 21,056 from directly splitting the earlier 5,264 full-class closures. Thus **1,451 additional quarter-classes** are computer-certified by the finer affine test.
+- **9,572** remaining quarter-classes fail the conservative uniform inverse rule, and **673** fail the current strict power-gap test.
+
+**Evidence boundary:** This is an exact-integer symbolic computational result awaiting generic Lean certification, with no newly fully eliminated base residue and no solution of P1 or BB(6). The scanned classes exclude a few small residues where the chosen uniform lower bounds are not asserted. The script is included in the manual source-check workflow to reproduce these numbers. This supersedes the weaker conclusion that modulus-scaling is purely redundant: reparameterizing the suborbit, and retaining the resulting parity information, yields additional partial exclusions even though no additional complete base classes close.
