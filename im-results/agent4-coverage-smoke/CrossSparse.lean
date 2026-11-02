@@ -35,4 +35,11 @@ theorem sparseTo13_to8 (p : BB6.Coverage.PartialMachine) :
   | none => simp [sparseTo13, sparseTo8, h]
   | some i => simp [sparseTo13, sparseTo8, h]
 
+theorem sparseTo8_to13 (p : BB6Coverage.PartialMachine) :
+    sparseTo8 (sparseTo13 p) = p := by
+  funext slot
+  cases h : p slot with
+  | none => simp [sparseTo13, sparseTo8, h]
+  | some i => simp [sparseTo13, sparseTo8, h]
+
 end BB6.CoverageAdapter
