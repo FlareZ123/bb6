@@ -1,6 +1,6 @@
 # Agent 18: a two-branch scalar model for an undecided BB(6) holdout
 
-**Scope:** intermediate mathematical reduction in the locally formalized counter model; its final scalar-to-original-machine composition still requires a successful upstream CI check. The earlier source bridge for the counter model is independently verified. This document does not claim the holdout halts, never halts, or changes any BB(6) bound. The equation is a more economical representation of Agent 5's already known three-counter-to-two-counter collapse.
+**Scope:** intermediate mathematical reduction whose complete scalar-to-original-machine composition is now verified in pinned upstream Lean CI. The earlier source bridge for the counter model is independently verified. This document does not claim the holdout halts, never halts, or changes any BB(6) bound. The equation is a more economical representation of Agent 5's already known three-counter-to-two-counter collapse.
 
 Target: `1RB0LD_1RC1RA_1LD0RB_1LE1LA_1RF0RC_---1RE`. Its original blank-tape machine semantics were proved equivalent to the exact published three-counter acceleration by the Google DeepMind Cryptids module at pinned revision `ced8f9f44f67a167d5ecc03e687b048c67926371`. Agent 18's import-based proof of the connection is `Agent18BBridge.lean`, passing [manual CI run 41387857461](https://github.com/FlareZ123/bb6/actions/runs/41387857461).
 
@@ -43,7 +43,7 @@ The recursion is purely syntactic and continues even after a hypothetical earlie
 Halts(3,0,0)  ↔  ∃ n : Nat, Z_n mod 2 = 0.
 ```
 
-`Agent18OneDimBridge.lean` is intended to compose this with the kernel-checked original-machine semantic bridge to produce the following final statement (not yet successfully checked):
+`Agent18OneDimBridge.lean` composes this with the kernel-checked original-machine semantic bridge and has now successfully checked the following final statement:
 
 ```lean
 raw_halts_iff_two_branch :
@@ -54,6 +54,6 @@ raw_halts_iff_two_branch :
 
 ## Verification
 
-`BOneDim.lean` compiled under supplied Lean 4.36.0-rc2 with no `sorryAx` and `#print axioms` for `F_enc`, `conj_iter`, `scalarA_eq_resetA`, and `raw_criterion_local` reported only `propext`, `Classical.choice`, `Quot.sound`. The pinned-source manual CI workflow `.github/workflows/agent18-b-bridge.yml` **attempted** to compile `Agent18OneDimBridge.lean` in [run 41390037469](https://github.com/FlareZ123/bb6/actions/runs/41390037469) at commit `d7a39f9f48a98a279d1ef3c18b0ab73ad8e7a5c7`. This run **failed** with unknown identifier `IsHalt` at `Agent18OneDimBridge.lean:13:4`; the final theorem's axiom audit reported `[sorryAx]`. The local `BOneDim.lean` theorems in that run compiled with standard axioms only, and the earlier original-machine-to-counter-model theorem `raw_halts_iff_sample_zero` passed independently in [run 41388514940](https://github.com/FlareZ123/bb6/actions/runs/41388514940). Until a successful new pinned CI run checks `raw_halts_iff_two_branch` itself, treat the scalar raw-machine composition as **pending**. The displayed scalar equation is currently a checked local model equivalence plus a separately checked source bridge; it must not be advertised as a successfully kernel-checked final imported theorem.
+`BOneDim.lean` compiled under supplied Lean 4.36.0-rc2 with no `sorryAx` and `#print axioms` for `F_enc`, `conj_iter`, `scalarA_eq_resetA`, and `raw_criterion_local` reported only `propext`, `Classical.choice`, `Quot.sound`. The pinned-source manual CI workflow `.github/workflows/agent18-b-bridge.yml` **successfully** compiled the exact final scalar-to-original-machine theorem in [run 41393439663](https://github.com/FlareZ123/bb6/actions/runs/41393439663), on 2026-11-02 05:23 UTC, after Agent 22 supplied the missing `open BusyBeaver` in `Agent18OneDimBridge.lean`. The Lean proof prints `[propext, Classical.choice, Quot.sound]` for `BB6.Bridge.raw_halts_iff_two_branch`, without `sorryAx`, and the overall GitHub Actions job finished with conclusion `success`. This establishes a complete source-level biconditional; it does not decide the sampled parity sequence or the halting status of Machine B.
 
 This compact scalar normalization could support further algebraic or 2-adic analysis of the sparsely sampled parity sequence. It does not imply the answer and should remain in `im-results/` until a globally decisive theorem is found.
