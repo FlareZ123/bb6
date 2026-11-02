@@ -23,7 +23,7 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a49-ladder/
           cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a49-ladder/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a49-ladder/
-          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity,SectionGate,SectionGateBridge}.lean /tmp/a49-ladder/
+          cp im-results/agent49-c-bounce-ladder/{Ladder,LadderSection,EvenLadder,BounceParity,SectionGate,SectionGateBridge,SectionReach}.lean /tmp/a49-ladder/
           cd /tmp/a49-ladder
           export LEAN_PATH="."
           lean --version
@@ -43,4 +43,5 @@ jobs:
           lean -o SectionGate.olean SectionGate.lean
           lean -o BounceProof.olean BounceProof.lean
           lean -o FastSectionDef.olean FastSectionDef.lean
-          lean SectionGateBridge.lean
+          lean -o SectionGateBridge.olean SectionGateBridge.lean
+          lean SectionReach.lean
