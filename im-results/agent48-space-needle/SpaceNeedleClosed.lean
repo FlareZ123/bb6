@@ -249,6 +249,7 @@ theorem pow_two_mod5_four_k_plus_one (k : Nat) :
       have hmul : (2^(4*k+1)*2^4)%5 = ((2^(4*k+1))%5*(2^4%5))%5 := by
         exact Nat.mul_mod _ _ _
       rw [hmul,ih]
+      all_goals decide
 
 /-- An infinite arithmetic progression of 2-adic input valuations cannot
 lead directly into any terminal power-of-two counter. -/
@@ -280,6 +281,7 @@ theorem pow_two_mod7_three_k_plus_two (k : Nat) :
       have hmul : (2^(3*k+2)*2^3)%7 = ((2^(3*k+2))%7*(2^3%7))%7 := by
         exact Nat.mul_mod _ _ _
       rw [hmul,ih]
+      all_goals decide
 
 /-- A second infinite family of forbidden immediate predecessors of any
 terminal power-of-two counter, from a 7-divisibility obstruction. -/
