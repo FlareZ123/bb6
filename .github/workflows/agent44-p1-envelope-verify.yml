@@ -45,6 +45,11 @@ jobs:
             python im-results/agent44-power-envelope/generate_case130.py "$residue"
             lean "im-results/agent44-power-envelope/P1Case${residue}.lean"
           done
+      - name: Verify directed-drift cover leaf against original Frontier semantics
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean im-results/agent44-drift-closure/DirectedDrift.lean
       - name: Reproduce both full 5,264-cone coefficient censuses
         run: |
           python im-results/agent44-power-envelope/envelope_audit.py
