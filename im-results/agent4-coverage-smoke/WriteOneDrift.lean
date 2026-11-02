@@ -33,4 +33,29 @@ private theorem filledRight_step (m : Machine) (n : Nat)
       constructor <;> intro h <;> omega
     simp [hh]
 
+theorem writeOneRight_run (m : Machine) (n : Nat)
+    (hm : m initialSlot = some writeOneRight) :
+    run m n blank = some (filledRight n) := by
+  induction n with
+  | zero => simp [run, filledRight_zero]
+  | succ n ih =>
+    simp only [run, ih, Option.bind_some, filledRight_step m n hm]
+
+theorem writeOneRight_never (m : Machine)
+    (hm : m initialSlot = some writeOneRight) : NeverHalts m := by
+  intro n
+  rw [writeOneRight_run m n hm]
+  rfl
+
+def writeOneRightLeaf : PartialMachine := refine emptyTable initialSlot (some writeOneRight)
+
+theorem writeOneRight_certificate (B : Nat) : Cover (DecidedBelow B) writeOneRightLeaf := by
+  apply Cover.leaf
+  intro m hm
+  left
+  apply writeOneRight_never m
+  exact hm initialSlot (some writeOneRight) (by simp [writeOneRightLeaf, refine])
+
+#print axioms writeOneRight_never
+#print axioms writeOneRight_certificate
 end BB6Coverage
