@@ -86,6 +86,8 @@ theorem B_shift (k : Nat) (ys : List Bool) :
   rw [←costB_succ]
   simp only [costB]
   rw [full_B (k+1) ys, full_B k ys, prependEight_finish]
+  have hr : 8*(k+1)+9 = (8*k+9)+8 := by omega
+  rw [hr]
 
 theorem Epair_shift (k q : Nat) (ys : List Bool) :
     run (costEpair k q + (24*k+61))
@@ -97,6 +99,8 @@ theorem Epair_shift (k q : Nat) (ys : List Bool) :
   rw [←costEpair_succ]
   simp only [costEpair]
   rw [full_E_pairs (k+1) q ys, full_E_pairs k q ys, prependEight_finish]
+  have hr : 8*(k+1)+5 = (8*k+5)+8 := by omega
+  rw [hr]
 
 theorem Etriple_shift (k q : Nat) (ys : List Bool) :
     run (costEtriple k q + (24*k+61))
@@ -109,6 +113,8 @@ theorem Etriple_shift (k q : Nat) (ys : List Bool) :
   simp only [costEtriple]
   rw [full_E_triple_pairs (k+1) q ys, full_E_triple_pairs k q ys,
     prependEight_finish]
+  have hr : 8*(k+1)+9 = (8*k+9)+8 := by omega
+  rw [hr]
 
 theorem Acode_shift (k : Nat) (ws ys : List Bool) :
     run (costA k ws + (24*k+61+24*BB6.Parikh.triplesN ws))
