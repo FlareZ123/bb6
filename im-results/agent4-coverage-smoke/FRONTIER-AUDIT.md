@@ -40,3 +40,12 @@ The existing manually dispatched workflow `.github/workflows/agent4-p1-cone2398.
 4. in a separate job, upstream-pinned Cryptids theorem with matching original mathlib version plus the complete original-root adapter.
 
 There are no per-commit CI triggers. The verification contract is compile all original dependencies without mocks; printed axiom lists for final named theorems should contain only ordinary Lean axioms, never `sorryAx`. Source-level source imports matter more than local signature-compatible mock compilation.
+
+
+## Concrete complete/disjoint terminal manifests
+
+Three further modules strengthen the abstract report into an independently inspectable leaf list. `FrontierExtract.lean` emits an explicit `AuditTerminal` per leaf containing the full sequence of split-slot/transition choices, certified/open flag and exact arbitrary-precision cylinder weight. `FrontierAudit.has_actual_terminal` proves that every compatible original machine has a leaf whose entire path matches its transition table. `FrontierUnique.lean` proves `FrontierAudit.unique_actual_terminal`: that manifest leaf is **unique**, formally excluding overlap across the actual list of terminal records. `FrontierManifestMass.lean` proves both certified and unresolved manifest-weight sums agree exactly with the original proof-carrying `report` coordinates and hence with `cylinderMass`. No unverified JSON/JavaScript preprocessing is involved.
+
+`SingletonFrontier.lean` is a generic proof construction: given an existing, authentic `good original` proof for *one complete 12-cell machine*, it creates a global `FrontierAudit good emptyTable` branching over every actual input slot, inserting that one authentic certified root and recording all other branches as open. It does not assert additional undecided roots have been classified. The full-source audit of these newer modules is included in manual CI [run 41528774972](https://github.com/FlareZ123/bb6/actions/runs/41528774972), with outcome pending at time of this note.
+
+`CryptidsF287Global.lean` composes this generic insertion with the pinned external Cryptids A6/F287 nonhalting proof, so its promised `globalAudit` covers every raw total table while identifying one previously known, externally proven original root. The *new cross-library theorem* and its provenance remain tentative until external source CI succeeds on that file. See the stronger `globalAudit_mass` theorem for the exact `25^12` global accounting claim.
