@@ -48,6 +48,7 @@ def main() -> None:
     parser.add_argument("--timeout", type=int, default=5)
     options = parser.parse_args()
     assert 0 <= options.start < options.end <= 4096
+    print("CONTROL_2048_42", test(2048, 42, options.timeout), flush=True)
     candidates = []
     raw = []
     for residue in range(options.start, options.end):
@@ -57,6 +58,8 @@ def main() -> None:
             candidates.append({"residue": residue, "child": high, "parent": parent})
         raw.append({"residue": residue, "child": high["status"],
                     "parent": None if parent is None else parent["status"]})
+        if high["status"] != "ok" and residue < options.start + 3:
+            print("ERROR_DETAIL", residue, json.dumps(high), flush=True)
         if residue % 8 == 0:
             print(f"Progress {residue}: {high['status']}", flush=True)
     print("EXPERIMENTAL_FINE_MODULUS_CANDIDATES", json.dumps(candidates), flush=True)
