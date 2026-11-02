@@ -47,6 +47,23 @@ theorem reachable_energy_step_exact :
   · exact published_blank_reaches_a2_c0
   constructor <;> decide
 
+/-- The rank-corrected energy potential's coefficient four is optimal even
+    among transitions on the actual blank-reachable orbit; larger slopes
+    fail at the explicitly certified half-billion-step boundary point. -/
+theorem no_energy_slope_ge_five (lambda : Nat) (h5 : 5 ≤ lambda) :
+    ¬ ∀ (s t : S), BB6CLine.Reach s → BB6CLine.nextC s = some t →
+        energy s + lambda*rank t + 4 ≤ energy t + lambda*rank s := by
+  intro h
+  have hs := h (2,62973,0) (0,1,125947)
+    published_blank_reaches_a2_c0 (by decide)
+  have es : energy (2,62973,0) = 15863024648 := by decide
+  have et : energy (0,1,125947) = 15863024656 := by decide
+  have rs : rank (2,62973,0) = 125948 := by decide
+  have rt : rank (0,1,125947) = 125949 := by decide
+  rw [es,et,rs,rt] at hs
+  omega
+
+#print axioms no_energy_slope_ge_five
 #print axioms source_blank_reaches_a2_c0
 #print axioms published_blank_reaches_a2_c0
 #print axioms reachable_energy_step_exact
