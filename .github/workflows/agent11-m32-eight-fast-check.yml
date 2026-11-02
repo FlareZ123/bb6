@@ -1,0 +1,46 @@
+name: Agent 11 Machine C eight M32 exclusions against pinned kernel artifacts
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-eight-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reproduce the original entire finite M32 graph source
+        run: python3 tools/agent43_c32_certificate.py
+      - name: Download eight fully kernel-checked proof shards from successful run 41538277695
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 41538277695
+          github-token: ${{ github.token }}
+          pattern: a43-m32-olean-*
+          merge-multiple: true
+          path: tools
+      - name: Recheck original source bridge and all eight section cylinders
+        run: |
+          cd tools
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-first-family/M32EightCells.lean" M32EightCells.lean
+          export LEAN_PATH=.
+          lean --version
+          test "$(find . -maxdepth 1 -name 'P32Block*.olean' | wc -l)" -eq 40
+          lean -o CCert32Pure.olean CCert32Pure.lean
+          lean -o CLine.olean CLine.lean
+          lean -o CQuotientSound32.olean CQuotientSound32.lean
+          lean -o CMapIf32.olean CMapIf32.lean
+          lean -o CGlobal32.olean CGlobal32.lean
+          lean -o CFull32.olean CFull32.lean
+          lean -o CExclusions32.olean CExclusions32.lean
+          lean -o CSourceBridge32.olean CSourceBridge32.lean
+          lean M32EightCells.lean
