@@ -1,10 +1,6 @@
-module
-
-public import BusyBeaver.BB6.M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC
-public import CLine
-public import CReachBridge
-
-@[expose] public section
+import BusyBeaver.BB6.M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC
+import CLine
+import CReachBridge
 
 namespace BB6.CSourceBridge
 
