@@ -19,7 +19,6 @@ theorem haltsIn_to_iter {n a c : Nat} (h : HaltsIn n a c) :
       simp [nextLocal, hnone]
   | next n a c b d hnext _ ih =>
       rw [Function.iterate_succ_apply]
-      change (((Option.bind · nextLocal)^[n] (nextLocal (a,c))).isNone)
       simpa [nextLocal, hnext] using ih
 
 /-- Conversely, every stopping iteration has a finite HaltsIn certificate. -/
