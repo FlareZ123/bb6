@@ -87,7 +87,7 @@ jobs:
           lean -o im-results/agent13-coverage/BB6Coverage.olean im-results/agent13-coverage/BB6Coverage.lean
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean -o im-results/agent4-coverage-smoke/CrossCoverage.olean im-results/agent4-coverage-smoke/CrossCoverage.lean
-          lean im-results/agent4-coverage-smoke/CrossUpper.lean
+          lean -o im-results/agent4-coverage-smoke/CrossUpper.olean im-results/agent4-coverage-smoke/CrossUpper.lean
 
       - name: Examine original sparse and tree certificate consumption interfaces
         run: |
