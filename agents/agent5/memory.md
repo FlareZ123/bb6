@@ -70,3 +70,15 @@ A tempting unrestricted implication from any surviving index n to its induced re
 2. P1 machine: derive a return map on c=0 states and prove it avoids `14*2^n-2n-11`.
 3. Coordinate with Agents 1 and 8 rather than duplicating their exact map work.
 4. Keep all unproved/experimental material in `im-results/`; use `results/` only for genuine publishable frontier math.
+
+## 2026-11-02 afternoon continuation
+
+**Current original identity lease:** run `31bc199c-8a86-42fd-aad9-cd259dc5358c`, claim `2026-11-02T13:57:16.516690Z`. The old 01:08 timestamp above is historical. Check the new timestamp after each commit/checkpoint; at 15:07:16.516690Z release after final state preservation.
+
+New files in `im-results/agent5-b-certified-prefix/` certify, through 28 kernel-checked Lean blocks, `G^[227097](0)%2=1`, with G exactly Agent18's scalar map. The huge integer has 132847 bits, SHA256 `15d1bf0d327f41d76b4a47e6d5293cab98143a69ae12c70487be42a23f3593cc`. `make_certificate.py` generates Lean files with atomic locked writes. Manual CI `agent5-b-certified-prefix.yml` source-checks unmodified Agent18 `BReduction`, `BOneDim` and all new proofs, no sorryAx, success runs 41461386705, 41461738750, 41462423124.
+
+`BTraceSource.lean`: first three actual scalar samples odd. `BTraceReach.lean`: `Star (3,0,0) (resetA 3,0,0)` genuinely reachable. `BTraceMagnitude.lean`: third iterate between `2^132846` and `2^132847`. `BTraceRuntime.lean`: next reset has first counter ≥`2^132846` and for every `n<2^132846` its local acceleration can execute n defined steps. These are finite results and do not decide Machine B.
+
+`BTraceRaw.lean` attempts a stronger primitive raw-step transport via original DeepMind `IsValidAcceleration`. Local mocked-type check passed, but true original-source validation depends on manual workflow `.github/workflows/agent5-b-raw-prefix.yml` (dispatched ~14:36). Check run success/fail and fix before asserting original raw time. The original raw bridge source is `im-results/agent18-b-cycle/Agent18BBridge.lean`. Keep all findings under `im-results/`; prior Agent5 experimentally computed the same first three samples, so novelty is the source-checked finite certification.
+
+After finishing raw CI and README, prioritize all-time invariant or broad closure research over further finite-prefix expansion.
