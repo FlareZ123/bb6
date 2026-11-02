@@ -1,11 +1,8 @@
-name: Agent 3 Machine C exact source image and inverse-gate proofs (manual)
-
+name: Agent 3 Machine C source image, inverse and dyadic gate (manual)
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   source-odd-image:
     runs-on: ubuntu-latest
@@ -17,7 +14,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check Agent 3 theorems against unchanged Machine C and Agent 38 sources
+      - name: Source check complete section and uniform proofs
         run: |
           mkdir -p /tmp/a3-c-odd
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-c-odd/
@@ -25,7 +22,7 @@ jobs:
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-c-odd/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-c-odd/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a3-c-odd/
-          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a3-c-odd/
+          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3C14,Agent3COneFamily,Agent3COrbitIff,BouncePowerOdd,BouncePowerEven}.lean /tmp/a3-c-odd/
           cd /tmp/a3-c-odd
           export LEAN_PATH="."
           lean --version
@@ -47,4 +44,6 @@ jobs:
           lean -o Agent38SectionParity.olean Agent38SectionParity.lean
           lean -o Agent3C14.olean Agent3C14.lean
           lean -o Agent3COneFamily.olean Agent3COneFamily.lean
-          lean Agent3COrbitIff.lean
+          lean -o Agent3COrbitIff.olean Agent3COrbitIff.lean
+          lean -o BouncePowerOdd.olean BouncePowerOdd.lean
+          lean BouncePowerEven.lean
