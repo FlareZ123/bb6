@@ -93,32 +93,32 @@ jobs:
           lean -o SecondDeepSector.olean SecondDeepSector.lean
           lean SecondPartition.lean
           # Agent 11: original-source composite low-gate and first-family exclusion.
-          cp im-results/agent3-c-odd-image/{Agent3COneFamily,Agent3COrbitIff}.lean /tmp/agent15-c-check/
-          cp im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward,EvenTargetExact,EvenTargetOrbit}.lean /tmp/agent15-c-check/
-          cp im-results/agent11-c-first-family/LowGate6.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-odd-image/{Agent3COneFamily,Agent3COrbitIff}.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward,EvenTargetExact,EvenTargetOrbit}.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/LowGate6.lean /tmp/agent15-c-check/
           for f in BounceInverse Agent3COneFamily Agent3COrbitIff FeederGeneric FeederOrbitGeneric GeneralHighInverse EvenTargetForward EvenTargetExact EvenTargetOrbit; do
             lean -o "$f.olean" "$f.lean"
           done
           lean LowGate6.lean
 
           # Agent 11: compositional 2-adic affine invariant at all depths.
-          cp im-results/agent11-c-first-family/{AffineDepthM8,DeepLowGate}.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{AffineDepthM8,DeepLowGate}.lean /tmp/agent15-c-check/
           lean -o AffineDepthM8.olean AffineDepthM8.lean
           lean -o DeepLowGate.olean DeepLowGate.lean
           # Agent 11: unbounded exact two-adic depth hierarchy.
-          cp im-results/agent11-c-first-family/{DeepFamily,FirstR2,FirstUniform}.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{DeepFamily,FirstR2,FirstUniform}.lean /tmp/agent15-c-check/
           lean -o DeepFamily.olean DeepFamily.lean
           lean FirstR2.lean
           lean -o FirstUniform.olean FirstUniform.lean
           # Agent 11: self-contained number theory + authentic source-linked
           # every-depth infinite-family nonreachability.
-          cp im-results/agent11-c-first-family/{IndexWitness,IndexDisjoint,IndexLift,IndexReach}.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{IndexWitness,IndexDisjoint,IndexLift,IndexReach}.lean /tmp/agent15-c-check/
           lean -o IndexWitness.olean IndexWitness.lean
           lean IndexDisjoint.lean
           lean -o IndexLift.olean IndexLift.lean
           lean IndexReach.lean
           # Agent 11: exact-source finite mod-8 residue counterexamples and
           # explicit conditional pullback of Agent 43's emerging M32 cells.
-          cp im-results/agent11-c-first-family/{ResidueWitness,M32PullbackConditional}.lean /tmp/agent15-c-check/
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{ResidueWitness,M32PullbackConditional}.lean /tmp/agent15-c-check/
           lean ResidueWitness.lean
           lean M32PullbackConditional.lean
