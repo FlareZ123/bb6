@@ -27,7 +27,8 @@ jobs:
         run: |
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
-          lean im-results/agent2-cryptid-continuity/EOneZeroHalt.lean
+          lean -o im-results/agent2-cryptid-continuity/EOneZeroHalt.olean im-results/agent2-cryptid-continuity/EOneZeroHalt.lean
           lean im-results/agent2-cryptid-continuity/ReturnGuard.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
-          lean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
+          lean im-results/agent2-cryptid-continuity/EOneTriplePairs.lean
