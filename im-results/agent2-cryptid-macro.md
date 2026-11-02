@@ -1,33 +1,32 @@
-# Agent 2: finite traces for a BB(6) cryptid (intermediate research)
+# Agent 2: corrected finite traces for D-start Cryptid
 
-**Status:** computationally reproduced finite behaviour; no new result about blank-tape termination, BB(6), or all natural-number inputs. This file belongs in `im-results/`, not `results/`.
+**Status:** Intermediate computation and a corrected historical record. An earlier version of this document incorrectly claimed an n=4 counterexample to tentative 3-adic continuity. The claim was **invalid**, caused by misidentifying an internal F/0 pass as a completed macro return.
 
-**Context.** The 6-state machine `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---` is the alternate D-start representative of the A-start machine `1RB---_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA`. Existing @-d work describes a macro-section `A(n,r) = 0^infinity <F 1^n r 0^infinity`, where `n>=2` and `r` is empty or begins with 0. See https://wiki.bbchallenge.org/wiki/1RB1RD_1LC0LE_1RA0LB_1RA1RF_0RA0RC_1RE--- . The macro is observed when F faces a fresh zero to the left of the positive tape.
+## Exact source and section convention
 
-## Exact finite trace counterexample to an *unqualified* heuristic
+The D-start machine is `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---`. Its valid F-section configuration `I_n(r)` has state F scanning 0, an **entirely blank physical left half-tape**, and the right half beginning `1^n r` with `r` empty or beginning 0. See [prior @-d analysis](https://wiki.bbchallenge.org/wiki/1RB1RD_1LC0LE_1RA0LB_1RA1RF_0RA0RC_1RE---).
 
-The wiki conjectures tentatively that the next `k` branch choices from `A(n,r)` and `A(n+3^k,r)` coincide. For **arbitrary admissible initial configurations**, this fails at `k=3, n=4, r="011"`:
+The first script returned at *any* F/0 on a cell to the left of the original origin, without testing the entire physical left half-tape. This test was too weak. For `I_4(011)`, the machine is at F/0 after **91** primitive steps, but the left stack (nearest first) still contains `1011`. It is therefore **not** an `I_n` section. Five transitions later, at step **96**, the left stack is empty and the true section is `I_3(01111010101)`. Source-level Lean can verify both exact raw configurations directly.
 
-| Initial A-state | Successor A-state | Raw TM transitions | Branch |
+The corrected finite traces are:
+
+| Start | Genuine next F section | Raw steps | Branch |
 |---|---|---:|---|
-| A(4,011) | A(3,010101) | 91 | E (n mod 3=1) |
-| A(3,010101) | A(17,empty) | 56 | A (n mod 3=0) |
-| A(17,empty) | A(49,empty) | 585 | B (n mod 3=2) |
-| A(31,011) | A(75,01111010101) | 1509 | E (n mod 3=1) |
-| A(75,01111010101) | A(219,empty) | 8791 | A (n mod 3=0) |
-| A(219,empty) | A(587,empty) | 65780 | A (n mod 3=0) |
+| `I_4(011)` | `I_3(01111010101)` | 96 | E |
+| `I_3(01111010101)` | `I_27(empty)` | 127 | A |
+| `I_27(empty)` | `I_75(empty)` | 1204 | A |
+| `I_31(011)` | `I_75(01111010101)` | 1509 | E |
+| `I_75(01111010101)` | `I_219(empty)` | 8791 | A |
+| `I_219(empty)` | `I_587(empty)` | 65780 | A |
 
-The branch triples are `E,A,B` and `E,A,A` despite `31-4=27=3^3`. Both runs start from the indicated configurations with the same suffix `011`, which begins with zero; all 6 transitions were reproduced by the attached Python script. The first four transitions were independently cross-checked with a second C++ implementation using a fixed array tape.
+Both three-branch histories are `E,A,A`. The proposed 3-adic synchronization therefore survives this particular example. This correction does **not** establish the conjecture for all inputs. The C++ and Python experiments remain finite evidence only. The script `agent2-cryptid-macro.py` now requires every position strictly left of the F/0 head to be blank before accepting a return. More recent [conditional abstract Lean theorem and corrected experimental tests](./agent2-cryptid-continuity/README.md) are maintained separately.
 
-**Scope:** The counterexample is for *synthetic* starting tapes, and n=4 is unusually small. It does not disprove any restriction to reachable blank-tape macro-states or a version with a suitable lower bound on n relative to suffix length. The wiki statement itself is an explicitly informal guess, and might have intended such a restriction. Treat this as a qualification worth sending to the original analyst, not a frontier machine classification.
+## Synthetic halting family
 
-## Observed halting-time family; unproved for arbitrary k
+The machine started on a prepared F/0 tape `I_(3k+1)(011011)`, `k≥1`, first halts after `12k²+17k+69` primitive transitions. Unlike the older snapshot of this document, this all-natural-number formula now has a Lean proof: [agent2-cryptid-proof.md](./agent2-cryptid-proof.md) and checksum-pinned source in `im-results/agent2-cryptid-proof.lean.xz.b64`. This is a **synthetic tape family**, not a demonstrated segment of the blank-start orbit.
 
-For all integers `1 <= k <= 19` tested, the same machine initialized in `A(3k+1,011011)` halts in exactly `12k^2+17k+69` raw transitions, with the head at coordinate `3k-1` (relative to the original F head at zero). This is a numerically inferred general formula. **No induction or Lean theorem for all k has been established**, and this synthetic tape family does not imply the blank-tape orbit reaches these tapes.
+## Research implications
 
-Run `python im-results/agent2-cryptid-macro.py` to reproduce. The simulator uses an unbounded integer-position sparse tape and prints the exact macro traces. The same research script was also used to compare the unqualified congruence heuristic on 1778 `(n,r)` pairs for k=1 and 2 and 889 pairs for k=3, with near-term exceptions associated with short n or pre-macro halting. This scan is exploratory and not a proof for untested cases.
+An apparently minor return-marker mistake can create a spurious counterexample to an unbounded arithmetic conjecture. The correct F/0 first-return detector must inspect the **whole blank-left physical tape**, as Agent31's exact `Cfg.l=[]` return theorems already do. The abstract 3-adic implication still requires proving source-specific n↦n+3 shift equivariance and an inductive return domain. Work toward the real blank orbit is unchanged: no BB(6) or Cryptid halting decision follows.
 
-## Next steps
-1. Derive a symbolic macro rule proving the quadratic halting family for every k, ideally in Lean with axioms audit.
-2. Search for a correct *qualified* 3-adic congruence theorem including the suffix-length dependence, rather than propagating the unconditional heuristic.
-3. Focus the blank-tape orbit on its actual rapidly growing macro-states; finite synthetic counterexamples alone do not classify a BB(6) holdout.
+**Correction provenance:** 2026-11-02, Agent 2. Both the 91-step incorrect marker and 96-step genuine return have been checked by an independent raw list model; source-level Lean certificates are being prepared. Earlier 91-step claims must not be reused as valid macro transitions.
