@@ -38,8 +38,10 @@ private theorem toRelative_write_move_right (t : ConjectureMachines.Tape (Fin 2)
     congr 1
     funext n
     cases n with
-    | zero => rfl
-    | succ n => rfl
+    | zero => simp [ConjectureMachines.ListBlank.nth_zero,
+        ConjectureMachines.ListBlank.head_cons]
+    | succ n => simp [ConjectureMachines.ListBlank.nth_succ,
+        ConjectureMachines.ListBlank.tail_cons]
 
 private theorem toRelative_write_move_left (t : ConjectureMachines.Tape (Fin 2))
     (w : Fin 2) :
@@ -53,8 +55,10 @@ private theorem toRelative_write_move_left (t : ConjectureMachines.Tape (Fin 2))
     congr 1
     funext n
     cases n with
-    | zero => rfl
-    | succ n => rfl
+    | zero => simp [ConjectureMachines.ListBlank.nth_zero,
+        ConjectureMachines.ListBlank.head_cons]
+    | succ n => simp [ConjectureMachines.ListBlank.nth_succ,
+        ConjectureMachines.ListBlank.tail_cons]
 
 structure Positioned where
   cfg : ConjectureMachines.Cfg 6 2
@@ -121,7 +125,10 @@ theorem initial_toRelative : toRelative initialPositioned = BB6.Bridge.initialRe
   unfold toRelative initialPositioned BB6.Bridge.initialRelative tapeToRelative
     ConjectureMachines.init ConjectureMachines.Tape.mk₁
     ConjectureMachines.Tape.mk₂ ConjectureMachines.Tape.mk'
-  congr 1 <;> (funext n; simp [empty_nth, ConjectureMachines.ListBlank.tail_mk])
+  have hzero :
+      (ConjectureMachines.ListBlank.mk ([] : List (Fin 2))).head = 0 := rfl
+  simp only [BB6.Bridge.Cfg.mk.injEq, BB6.Bridge.Tape.mk.injEq]
+  simp [bit, empty_nth, hzero, ConjectureMachines.ListBlank.nth_succ]
 
 theorem blank_run_toAbsolute (m : ConjectureMachines.Machine 6 2) (n : Nat) :
     BB6Coverage.run (toAgent8 m) n BB6Coverage.blank =
