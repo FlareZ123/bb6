@@ -88,3 +88,13 @@ jobs:
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean -o im-results/agent4-coverage-smoke/CrossCoverage.olean im-results/agent4-coverage-smoke/CrossCoverage.lean
           lean -o im-results/agent4-coverage-smoke/CrossUpper.olean im-results/agent4-coverage-smoke/CrossUpper.lean
+
+      - name: Verify Agent13 partial-tree source chain for cross-import
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent13-coverage:im-results/agent4-coverage-smoke"
+          lean -o im-results/agent13-coverage/SparseCoverage.olean im-results/agent13-coverage/SparseCoverage.lean
+          lean -o im-results/agent13-coverage/LassoCoverage.olean im-results/agent13-coverage/LassoCoverage.lean
+          lean -o im-results/agent13-coverage/ShiftCoverage.olean im-results/agent13-coverage/ShiftCoverage.lean
+          lean -o im-results/agent13-coverage/StateClosed.olean im-results/agent13-coverage/StateClosed.lean
+          lean -o im-results/agent13-coverage/InvariantCoverage.olean im-results/agent13-coverage/InvariantCoverage.lean
+          lean -o im-results/agent13-coverage/TreeCoverage.olean im-results/agent13-coverage/TreeCoverage.lean
