@@ -72,4 +72,27 @@ I_(2*(4k+3+wordInc(ws))+5)(ys).
 
 The proof imports the genuine Agent25 `TokenCode.consume_code` theorem, invokes its exact universally quantified word decoder, closes the boundary by `close_double_zero`, transfers through `transfer_f0`, and composes with Agent31 `prefix_A`. Manual [CI 41417962868](https://github.com/FlareZ123/bb6/actions/runs/41417962868) succeeded under Lean 4.36.0-rc2 with original source and only `[propext, Quot.sound]` in all final axiom audits. This strictly subsumes the previously certified ordered `q,r` A branch for explicit zero delimiters, without determining any blank-orbit result. General empty-suffix closure is a separate case.
 
-An exploratory attempt at a distinct `1100` suffix branch is under construction in `DoubleOneBranch.lean`; treat it as unverified until a full authenticated CI success. No claim in this README depends upon it.
+The earlier `1100` suffix branch is now source-certified in `DoubleOneBranch.lean`, and the complete arbitrary-`q` A-boundary branch `110(10)^q0` is certified in `DoubleOnePairs.lean`. The original SHA-checked machine and both modules passed manual [CI 41421031957](https://github.com/FlareZ123/bb6/actions/runs/41421031957), with ordinary `[propext, Quot.sound]` axioms only. These remain intermediate returns.
+
+## Universal mixed-token 110(10)^q0 return and exact 3-adic shift (19:39 UTC)
+
+`FullWordPairs.lean` composes the original-source `prefix_A`, Agent25's arbitrary interleaved `10`/`111` token consumer, the total finite-model semiconjugacy, and Agent37's all-`q` `two_one_pairs_return`. For every natural `k,q`, finite Boolean token word `ws`, and unrestricted binary suffix `ys`, define `d(ws)=#10+4·#111` and `C(m,ws)=wordCost(m,ws)`. The original machine has the exact raw primitive run
+
+```text
+I_(3k+3)(0 wordCode(ws) 110 (10)^q 0 ys)
+  --[12k²+41k+32+C(4k+3,ws)+2(4k+3+d(ws))+16+4q]-->
+I_(8k+7+2d(ws))(0 1^(2q+6) ys).
+```
+
+There are no assumptions on the token ordering or suffix. Its complete source-level [CI 41510638294](https://github.com/FlareZ123/bb6/actions/runs/41510638294) succeeded. The final theorem `complete_A_word_two_one_pairs` has `[propext, Quot.sound]` and no `sorryAx`. An independently implemented raw sparse-tape simulator matched 2,100 inputs (k<4, q<5, token-word lengths below four, suffix lengths below three); computational checks are supplementary.
+
+`ReturnShift.lean` establishes a **true original-source return-shift family** for these precisely characterized input tapes. Holding `q,ws,ys` fixed while replacing `k` with `k+h` adds `3h` ones to the input unary prefix and adds `8h` ones to the completed output unary prefix, leaving the explicit right suffix unchanged. The exact primitive time shift is
+
+```text
+pairTime(k+h,q,ws) = pairTime(k,q,ws)
+   + h·(24k+12h+49+24·tripleTokens(ws)).
+```
+
+This is derived from the all-word `wordCost` cocycle; each triple token contributes precisely 24h more raw steps. Theorems `wordCost_shift4h`, `pairTime_shift_h`, and `paired_return_shift_h` all passed original-machine [CI 41511776217](https://github.com/FlareZ123/bb6/actions/runs/41511776217), each with exactly `[propext, Quot.sound]`. The source-backed return-shift proves one substantial subfamily of the conjectured general `n↦n+3h` continuity. It does not establish first-return minimality for all inputs, handle unknown suffix words, exclude a halt on the genuine blank orbit, or determine BB(6).
+
+New files: [FullWordPairs.lean](./FullWordPairs.lean), [ReturnShift.lean](./ReturnShift.lean). Both are included in the existing manual-only [workflow](../../.github/workflows/agent37-cryptid-halt-model-bridge.yml). Compare Agent2's conditional general shift [research](../agent2-cryptid-continuity/README.md) and Agent35's earlier `full_A_code_double` branch for prior context. External novelty and publication eligibility have not been established, so these findings remain in `im-results/`.
