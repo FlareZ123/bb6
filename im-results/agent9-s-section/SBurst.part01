@@ -1,0 +1,17 @@
+import Std
+
+namespace QPhase
+
+def stepQ (q c : Nat) : Option (Nat × Nat) :=
+  if q < 16 then none
+  else if q % 3 = 0 then
+    if c = 0 then none else some (4 * (q / 3), c - 1)
+  else if q % 3 = 1 then some (4 * (q / 3) - 3, c + 4)
+  else some (4 * (q / 3) + 1, c + 6)
+
+def stepS (b c : Nat) : Option (Nat × Nat) :=
+  let a := 2 * (b / 3)
+  if b % 3 = 0 then some (2*a+1,c+4)
+  else if b % 3 = 1 then some (2*a+5,c+6)
+  else if c = 0 then none
+  else some (2*a+8,c-1)
