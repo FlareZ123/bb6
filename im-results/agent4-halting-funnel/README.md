@@ -1,0 +1,61 @@
+# Agent 4: an infinite halting funnel in a formally accelerated BB(6) holdout
+
+**Status: mathematical intermediate result concerning synthetic initial configurations.** This does not prove that the blank-tape computation halts, does not classify the holdout, and does not change the known bounds for BB(6). Keep under `im-results/` unless a decisive blank-tape link or genuinely frontier-advancing theorem is found.
+
+## Machine and independently published reduction
+
+Machine: `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE` (initial state A). The Lean-certified reduction from DeepMind:
+https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/M_1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_HHH0RE.lean
+
+Published configuration: `P1(a,c) = 0∞ 1^a A> 1^c 0∞`. Its accelerated map `T` and auxiliary recursion `G` are restated literally in `HaltingFunnel.lean`. The formal theorem here concerns this independently restated `T`. DeepMind separately proves equivalence of its accelerator to the Turing machine.
+
+## Kernel-checked theorem
+
+For each natural number `n`, set
+
+```text
+A_n = 14 * 2^n - 2*n - 11
+E_0 = 2; E_(j+1) = 2*E_j + 12
+C(j,0) = 4; C(j,n+1) = C(j+1,n) + E_j + 10
+```
+
+Then `A_n = C(0,n)-1`, and starting from the synthetic state `P1(A_n,0)`, the accelerated map executes exactly `2*n+2` nonhalting transitions and then halts on the following call. Equivalently, `HaltsIn (2*n+3) A_n 0`, where the last call evaluates to `none` and is included in the count.
+
+The proof is by induction over the funnel stages. At `(E_j,C(j,n+1))`, the next two accelerated transitions are
+
+```text
+(E_j, C(j,n+1))
+ -> (E_j+3, C(j,n+1)-2)
+ -> (E_(j+1), C(j+1,n)).
+```
+
+The second transition is the nonrecursive `G` branch, justified for all parameters by the exact lower bound `C(j+1,n) >= 4`. At the endpoint `(E_n,4)`, the next transition reaches `(E_n+3,2)`, which is the halting gate. The induction proves every parameter value, not just a finite scan.
+
+Files: `HaltingFunnel.lean` holds the all-natural-number theorem `halts_from_zero_exact`, the closed-form lemma `A_closed`, and the transition lemmas. It compiles using Lean **4.36.0-rc2** importing only `Std`; `#print axioms` reports `[propext, Quot.sound]` and no `sorryAx`. Run `lean im-results/agent4-halting-funnel/HaltingFunnel.lean` with that Lean version.
+
+Examples:
+
+| n | A_n | Raw TM transitions until halting (finite experiment) |
+|---:|---:|---:|
+| 0 | 3 | 36 |
+| 1 | 15 | 200 |
+| 2 | 41 | 924 |
+| 3 | 95 | 3,944 |
+| 4 | 205 | 16,260 |
+| 5 | 427 | 65,984 |
+| 6 | 873 | 265,788 |
+| 7 | 1767 | 1,066,808 |
+| 8 | 3557 | 4,274,484 |
+| 9 | 7139 | 17,112,368 |
+| 10 | 14305 | 68,478,252 |
+
+The raw transition counts are observed by an independent direct 6-state tape interpreter, including the initial synthetic tape. Using the raw per-rule costs printed as comments in the DeepMind source, they fit the algebraic formula
+`(196*4^n -84*2^n -12*n -4)/3`. This raw-step cost identity is **not** presently kernel-checked for all `n`; the Lean theorem rigorously proves the accelerated transition count.
+
+## Scope and direction
+
+The actual blank-tape orbit starts at `P1(2,1)`, not at an arbitrary `P1(A_n,0)`. Direct simulation over two million `T` transitions saw no halting gate, and a scan of all odd `a <= 5,000,000` found precisely the 19 `A_n` in that range that halt before the accelerated orbit first leaves even-`c` states. Those scans are empirical and not a completeness proof.
+
+The interesting remaining question is whether the blank-tape orbit can enter this funnel, or any other halting basin, and whether there are meaningful invariants of the reachable `c=0` states preventing that. Avoid interpreting the synthetic family as evidence of blank-tape halting or a BB(6) bound.
+
+**Reproducibility:** `HaltingFunnel.lean` is the fully checked symbolic proof; `verify_raw.py` separately checks the first nine cases through the raw transition table.
