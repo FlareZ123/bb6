@@ -37,4 +37,22 @@ theorem universal_raw_upper_iff (B : Nat) :
       simpa only [toAgent8_toAgent13] using hn
     exact h (toAgent13Raw m) (n+1) h13
 
+/-- Agent13's 25-code full-table runtime bound is precisely Agent8's
+    full-table bound, with no missing or duplicated machine outcomes. -/
+theorem universal_code_upper_iff (B : Nat) :
+    (∀ m : BB6Coverage.Machine, ∀ n : Nat,
+       BB6Coverage.HaltsAfter m n → n+1 ≤ B) ↔
+    (∀ m : BB6.Coverage.CodeMachine, ∀ n : Nat,
+       BB6.Coverage.HaltsAt (BB6.Coverage.tick (BB6.Coverage.decodeMachine m)) n → n ≤ B) :=
+  (universal_raw_upper_iff B).trans (BB6.Coverage.universal_bound_iff B)
+
+/-- A fully checked Agent8 Cover cert bounds every Agent13 raw six-state machine. -/
+theorem cover_gives_agent13_raw_upper (B : Nat)
+    (cert : BB6Coverage.Cover (BB6Coverage.DecidedBelow B) BB6Coverage.emptyTable) :
+    ∀ m : BB6.Coverage.RawMachine, ∀ n : Nat,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) n → n ≤ B := by
+  apply (universal_raw_upper_iff B).mp
+  intro m n hn
+  exact BB6Coverage.maximal_runtime_if_cover B cert (n+1) ⟨m,n,hn,rfl⟩
+
 end BB6.CoverageAdapter
