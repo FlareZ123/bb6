@@ -42,7 +42,7 @@ private theorem not_reach_unseen (a k c : Nat)
     (h : seen (q a) (q k) (q c) = false) :
     ¬ BB6CLine.Reach (a,k,c) := by
   intro hr
-  have hs := reachable_seen (source_reachable_embeds hr)
+  have hs := reachable_seen (source_reachable_embeds16 hr)
   rw [h] at hs
   cases hs
 
