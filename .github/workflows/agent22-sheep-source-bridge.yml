@@ -86,3 +86,17 @@ jobs:
           done
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
           lake env lean EvenSourceBridge.lean
+
+          # Agent16: all-time exceptional-branch exclusions and exact
+          # modular periods/finite-cycle nonmatches for 8 inverse families.
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-deep-sieve/reconstruct_gates.py"
+          for name in ExceptionalGrowth ExceptionalGap ExceptionalUniform ExceptionalEight FiniteModCert FiniteGates0 FiniteGates1 FiniteGates2 FiniteGates3 FiniteGates4 FiniteGates5 FiniteGates6 FiniteGates7; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-deep-sieve/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            ExceptionalGrowth.lean ExceptionalGap.lean ExceptionalUniform.lean ExceptionalEight.lean \
+            FiniteModCert.lean FiniteGates0.lean FiniteGates1.lean FiniteGates2.lean \
+            FiniteGates3.lean FiniteGates4.lean FiniteGates5.lean FiniteGates6.lean FiniteGates7.lean
+          for name in ExceptionalGrowth ExceptionalGap ExceptionalUniform ExceptionalEight FiniteModCert FiniteGates0 FiniteGates1 FiniteGates2 FiniteGates3 FiniteGates4 FiniteGates5 FiniteGates6 FiniteGates7; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
