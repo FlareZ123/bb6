@@ -20,7 +20,7 @@ theorem G_eq (k c : Nat) :
 theorem T_eq (a c : Nat) :
     BB6.Agent1.T a c = BB6.HaltingFunnel.T a c := by
   unfold BB6.Agent1.T BB6.HaltingFunnel.T
-  split_ifs <;> simp only [G_eq]
+  simp only [G_eq]
 
 /-- Any Agent4 finite trajectory from an Agent1-reachable state
 remains reachable according to the actual Agent1 blank-root predicate. -/
