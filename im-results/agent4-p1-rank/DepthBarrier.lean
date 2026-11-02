@@ -19,6 +19,32 @@ inductive Shallow : Nat → Nat → Nat → Prop where
         Shallow fuel (2*k-4) (v+4)) :
       Shallow (fuel+1) b d
 
+/-- A larger depth budget preserves any certificate in the relaxed calculus. -/
+theorem shallow_weaken (fuel b d : Nat) (h : Shallow fuel b d) :
+    Shallow (fuel+1) b d := by
+  induction h with
+  | modLeaf fuel a c heven hpos hlarge hmod =>
+    exact Shallow.modLeaf (fuel+1) a c heven hpos hlarge hmod
+  | powerLeaf fuel a c heven hpos hceven hgap =>
+    exact Shallow.powerLeaf (fuel+1) a c heven hpos hceven hgap
+  | feeder fuel b d hchildren ih =>
+    apply Shallow.feeder (fuel+1) b d
+    intro k v hanc hv
+    exact ih k v hanc hv
+
+theorem shallow_le (cap : Nat) :
+    ∀ fuel b d : Nat, fuel≤cap → Shallow fuel b d → Shallow cap b d := by
+  induction cap with
+  | zero =>
+    intro fuel b d hle h
+    have hf : fuel=0 := by omega
+    simpa only [hf] using h
+  | succ cap ih =>
+    intro fuel b d hle h
+    by_cases hf : fuel=cap+1
+    · simpa only [hf] using h
+    · exact shallow_weaken cap b d (ih fuel b d (by omega) h)
+
 /-- The next corridor hub is an actual source GAncestor upper feeder. -/
 theorem corridor_ancestor (L K i : Nat) (hK : 3≤K) (hi : i<L) :
     ∃ k v : Nat,
@@ -78,6 +104,14 @@ theorem critical_no_shallow_certificate (L : Nat) :
   have hright : right (L+2) (critWeight L) 0 = 3 := rfl
   simpa only [hr,hright] using h
 
+/-- Strong form: every depth no greater than L is formally impossible. -/
+theorem critical_no_shallow_up_to (L fuel : Nat) (h : fuel≤L) :
+    ¬Shallow fuel (14*2^(critIndex L)-2*(critIndex L)-16) 3 := by
+  intro hs
+  have hw := shallow_le L fuel _ _ h hs
+  exact critical_no_shallow_certificate L hw
+
+#print axioms BB6.P1Deep.critical_no_shallow_up_to
 #print axioms BB6.P1Deep.corridor_ancestor
 #print axioms BB6.P1Deep.corridor_requires_unbounded_depth
 #print axioms BB6.P1Deep.critical_no_shallow_certificate
