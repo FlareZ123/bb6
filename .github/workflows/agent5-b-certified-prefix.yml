@@ -34,7 +34,9 @@ jobs:
           base64 -d "$SRC_PARITY/BParityCoding.lean.xz.b64" | xz -dc > BParityCoding.lean
           echo "5d01059206dce41bdacd8ea45f517ea4659777c0cea219ac8c6b2adb2be4a67c  BParityCoding.lean" | sha256sum -c -
           LEAN_PATH="$GITHUB_WORKSPACE" lean -o BParityCoding.olean BParityCoding.lean
-          LEAN_PATH="$GITHUB_WORKSPACE" lean "$SRC_PARITY/BParityCodingSource.lean"
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o BParityCodingSource.olean "$SRC_PARITY/BParityCodingSource.lean"
+          LEAN_PATH="$GITHUB_WORKSPACE" lean -o BCollatzDiagonal.olean "$SRC_PARITY/BCollatzDiagonal.lean"
+          LEAN_PATH="$GITHUB_WORKSPACE" lean "$SRC_PARITY/BCollatzCriterion.lean"
           base64 -d "$SRC_PARITY/BParityWords.lean.xz.b64" | xz -dc > BParityWords.lean
           echo "d31a748aa486f7fba3e1ac62b26f4a8e1368e73a6cd45040af3a48efc4cf9625  BParityWords.lean" | sha256sum -c -
           LEAN_PATH="$GITHUB_WORKSPACE" lean BParityWords.lean
