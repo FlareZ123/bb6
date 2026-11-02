@@ -41,3 +41,32 @@ The finite (2)-adic valuation lemma of Agent 4 (in `im-results/agent4-p1-cone239
 A finite first-level inverse list and its exact 2-adic depth do not exclude the positive-c feeder branches. Descendant reachability remains universally open across most critical-index residue classes. An actual P1 nonhalting decision would require an inductively closed inverse cone for **all** remaining critical indices, or a forward invariant excluding all gateways. The exact BB(6) value remains unknown.
 
 Preserve these structural and software-enabling findings under `im-results/`, rather than promoting them to `results/` as a new solved holdout.
+
+## Major new all-index residue exclusion: n congruent 6 modulo 16
+
+**Source-verified in [manual Lean CI run 41431134143](https://github.com/FlareZ123/bb6/actions/runs/41431134143)**, 2026-11-02. The theorem `BB6.Agent47P1.blank_no_critical_6_mod16 (h : Nat)` establishes, against the unmodified original Agent1 and Agent50 source definitions:
+
+```lean
+∀ h : Nat, ¬ BB6.Agent1.Reach 2
+  (14*2^(16*h+6)-2*(16*h+6)-10)
+```
+
+This eliminates **the complete previously unresolved critical-index class n≡6 (mod16)** for the P1 machine. Alongside Agent50's original complete n≡10(mod16) exclusion and existing n≡0,1,3,4,5,7,8,9,11,12,13,15 (mod16) exclusions, the possible P1 critical indices now lie only in **n≡2 or 14 (mod16)**, with small n=2 separately excluded by existing proofs. The original raw six-state machine to Agent1 map equivalence was established in other agents' source-checked work; our theorem is a source-level blank-reach theorem under that existing semantics, not an independent raw-machine-to-accelerator rederivation.
+
+The proof relies on **three hubs uniformly for all h**, rather than a large index modulus or thousands of individual classes. Let X=2^(16h), u=28X-h-2 (with u≥3). The critical hub `(H(16h+6)-6,3)` is exactly `(32u+36,3)`. Exhaustive true G-ancestor inverses produce just three nonterminal hubs:
+
+- Root `(32u+36,3)`: four predecessor branches, a continuation `(16u+12,16u+25)`, two impossible positive-mod4 leaves, and a power-of-two leaf with `x+12=30u+40`.
+- Middle `(16u+12,16u+25)`: two branches, a continuation `(8u,24u+35)` and power leaf `20u+28`.
+- Bottom `(8u,24u+35)`: two branches, a forbidden positive-mod4 leaf and power leaf `18u+24`.
+
+The three power-leaf expressions are
+
+```text
+30u+40 = 840 X - 30h - 20
+20u+28 = 560 X - 20h - 12
+18u+24 = 504 X - 18h - 12.
+```
+
+Using X≥h+1, each is strictly between `448X=14*2^(16h+5)` and `896X=14*2^(16h+6)`, so cannot equal `14*2^j` for any j. The original-source finite predecessor algorithm and generic `Agent4Cone.Blocked` inductive soundness prove exhaustiveness and all-time unreachability. `P1SixAffine.lean` proves every inverse branch is in the stated finite list, `P1SixBlocked.lean` constructs a finite three-hub `Blocked` proof, `P1SixGap.lean` proves the power gaps and critical-root identity, and `P1SixFinal.lean` invokes original-source `positive_G_feeder` and `critical_target_implies_three` to reach the actual `Reach 2 H(n)` conclusion.
+
+The latest CI run compiles original unmodified `GParity,GInverse,PosEvenForm,ResetGate,P1Triple,P1ResidualArithmetic,P1ResidualReach,P1Gate`, Agent4's original `ConeKernel`, and every one of our modules including the new four. `#print axioms` of `blank_no_critical_6_mod16` reports only `[propext, Classical.choice, Quot.sound]`, with **no sorryAx**. This is an all-natural rigorous mathematical result, no numerical horizon, and **still not a P1 or BB(6) nonhalting proof**.
