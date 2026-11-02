@@ -23,6 +23,7 @@ jobs:
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
+          sed -n '1,90p' im-results/agent31-cryptid-boundary/Boundary.lean
           python3 im-results/agent25-cryptid-doublezero/unpack.py
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
