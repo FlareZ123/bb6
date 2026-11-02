@@ -78,21 +78,6 @@ def order_of_two(modulus: int) -> int:
     raise AssertionError(modulus)
 
 
-def modulus_rows(multiplier: int, linear: int, offset: int,
-                 rows: dict[int, tuple[int, int | None]]) -> None:
-    for a, (expected_period, expected_j) in rows.items():
-        modulus = multiplier * ((1 << (a + 1)) + 1)
-        period = order_of_two(modulus)
-        assert period == expected_period, (a, modulus, period)
-        candidates = [
-            j for j in range(period)
-            if pow(2, j + offset, modulus) == (linear * a - (linear - 1)) % modulus
-        ]
-        assert candidates == ([] if expected_j is None else [expected_j]), (
-            a, modulus, candidates
-        )
-
-
 def main() -> None:
     for t in range(3, 100_003):
         assert section_map(t) == two_counter_section(t), t
@@ -131,8 +116,6 @@ def main() -> None:
         0: (6, 0), 1: (4, 2), 2: (18, 14),
         3: (8, 4), 4: (30, None),
     }
-    # Here offset is 3 or 2, and target residues are 10*a-1 or 6*a-5.
-    # The helper expects linear*a-(linear-1), so set explicit checks below.
     for multiplier, slope, constant, offset, rows in (
         (5, 10, 1, 3, odd_rows), (3, 6, 5, 2, even_rows)
     ):
