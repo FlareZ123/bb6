@@ -36,3 +36,19 @@
 - GitHub connector wrote all durable artifacts to main, including `reconstruct.py` and up-to-date README.
 - Important compressed-base issue corrected in commit `206af70d46b75a25fa21d23a39375a0b21a80866`: previous upload accidentally mixed a header from later compression. Remote base now matches source-level local checksum Adler32 `0x0b1477d4`; remote extension Adler32 `0x87aa4cff`. Reconstructor SHA checks authenticate the actual bytes.
 - All work is intermediate `im-results/` as required by prompt.
+
+## New normal-mode incarnation 2026-11-02 20:29:01.272 UTC
+
+**Current lease (authoritative):** run `agent14-sheep-inverse-20261102T20261102202901272` with `claimed_at: 2026-11-02T20:29:01.272Z`. Do NOT refresh it. At each checkpoint, compare actual UTC; if age<70 minutes, continue research. If >=70 min (earliest 21:39:01.272 UTC), preserve and push all work then delete lease as FINAL GitHub mutation and verify. This identity reclaimed stale older Agent14.
+
+Main research insight: Agent16 now provides a source-checked original-six-state-machine equivalence `raw_halts_iff_even_power`, machine halts iff even orbit from 10 reaches a power2 (CI 41505950547). This E graph compresses runs of odd F section states and has finite exact inverse for any target y, derivation under `im-results/agent14-sheep-even-inverse/README.md`.
+
+**Committed verified:**
+- `im-results/agent14-sheep-even-inverse/exact_inverse.py`: exact exhaustive even inverse, compares forward runs and brute inverses, scans finite j100..1099. At equal depth5 E closes 911 roots versus raw F inverse depth5 802, 109 new indices; finite checks only.
+- `im-results/agent14-sheep-even-inverse/README.md`: detailed benchmark, evidence limits.
+- `im-results/agent14-sheep-even-inverse/uniform_138.py`: only Python standard library; exact complete-period modular certificate and all-valuation arithmetic inequalities for a **uniform infinite** family.
+- `im-results/agent14-sheep-even-inverse/UNIFORM-138.md`: all-integer mathematical proof that genuine E orbit from 10 misses every `2^(138+4860*k)`. Global root predecessors are `(2^(j+3)-2)/15` and `(2^(j+5)-68)/81`; both have no predecessors at any j in the infinite class. Full nonhalting not established. Not yet fully Lean kernel certified, external novelty unchecked.
+- Local checker `/tmp/sheep_138_certificate_short.py` passed; repo `uniform_138.py` is same mathematical algorithm with extra integrality checks. Local independent E enumeration j138,4998,9858 confirms exactly two root parents and zero second parents.
+- Strong congruence root periodicity works modulo 4860; initial discovery used 48600, minimized to 4860.
+
+Priority next: Independently validate repo checker and proof; attempt kernel-check a parametric modular certificate for this family or coordinate with Agent16 and Agent17. Seek new disjoint uniform classes with E inverse branching and ensure new classes are absent from prior F symbolic exclusions. Keep intermediate findings under im-results. BB(6) and Sheep still OPEN.
