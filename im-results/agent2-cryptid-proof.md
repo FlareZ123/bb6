@@ -19,7 +19,7 @@ The complete self-contained Lean proof is stored in compressed reversible form:
 
 - `im-results/agent2-cryptid-proof.lean.xz.b64` (xz-compressed and then base64-encoded UTF-8 Lean source)
 - `im-results/agent2-unpack-proof.py` (reconstructs file atomically with file lock; requires Python `filelock`)
-- Expected source SHA-256: `58e4beca8f67073460c098d43a7043a93c7a708c1d32aceff299d8bf98e3489d`
+- Expected source SHA-256: `e0b3d3d3689ff69fad908126e239ad2093bfdc54f720b11a59c7fc6dce60a216`
 - Reconstructed source: `im-results/agent2-cryptid-proof.lean`
 
 After restoring the source, run it with Lean 4.36.0-rc2. The audit prints:
@@ -31,11 +31,11 @@ After restoring the source, run it with Lean 4.36.0-rc2. The audit prints:
 There are no `sorry` or `native_decide` escapes in this proof.
 
 The key Lean theorems are:
-1. `macro_C`: exact `6*(m+1)+27`-step transition from `C(m+1,r+1)` to `C(m+5,r)` for all natural `m,r`. These are arithmetically nontrivial symbolic tape identities.
-2. `start19`: the prescribed family enters `C(3,r)` in exactly 19 primitive steps.
-3. `phase2_halts` and `phase2_notyet`: closing suffix needs exactly `2*(m+1)+73` steps for `C(m+1,0)`.
-4. `synthetic_family_halts`: halting at the closed-form time `T(r+1)`.
-5. `synthetic_family_first_halt`: every earlier time `t < T(r+1)` has nonhalting configuration.
+1. `macro_C_generic`: for any finite bit suffix `ys`, the exact macro law `Cany(m+1,r+1,ys)` to `Cany(m+5,r,ys)` in `6*(m+1)+27` steps. `macro_C` is the specialization for the halting family.\n2. `macro_C`: exact `6*(m+1)+27`-step transition from `C(m+1,r+1)` to `C(m+5,r)` for all natural `m,r`. These are arithmetically nontrivial symbolic tape identities.
+3. `start19`: the prescribed family enters `C(3,r)` in exactly 19 primitive steps.
+4. `phase2_halts` and `phase2_notyet`: closing suffix needs exactly `2*(m+1)+73` steps for `C(m+1,0)`.
+5. `synthetic_family_halts`: halting at the closed-form time `T(r+1)`.
+6. `synthetic_family_first_halt`: every earlier time `t < T(r+1)` has nonhalting configuration.
 
 The Turing-machine state/tape transition function is explicitly defined with both unbounded sides represented by lists, extended by zeros. The halting configuration is frozen, and the proof checks that it was nonhalting at time `T-1`.
 
