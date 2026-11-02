@@ -53,6 +53,22 @@ theorem raw_halts_iff_mod7_reset :
       intro n
       exact BB6.Agent24.Reset.sample_even_iff_reset_residue n
 
+/-- An equivalent machine-level stopping criterion using the complete
+    residue split modulo 42 for every syntactically induced reset index. -/
+theorem raw_halts_iff_mod42_reset :
+    IsHalt BB6.Bridge.Source.target ↔
+      ∃ n : Nat, BB6.Agent24.Reset.resetA (n+1)%42=7 ∨
+        BB6.Agent24.Reset.resetA (n+1)%42=13 ∨
+        BB6.Agent24.Reset.resetA (n+1)%42=21 ∨
+        BB6.Agent24.Reset.resetA (n+1)%42=27 := by
+  rw [raw_halts_iff_mod7_reset]
+  apply exists_congr
+  intro n
+  have h6 := BB6.Agent24.Reset.resetA_mod6 (n+1)
+  omega
+
+#print axioms raw_halts_iff_mod42_reset
+
 #print axioms source_G_eq
 #print axioms source_iterG_eq
 #print axioms source_scalarA_eq
