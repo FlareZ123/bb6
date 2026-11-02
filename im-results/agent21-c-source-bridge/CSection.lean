@@ -78,6 +78,32 @@ theorem section_short (q k e : Nat) (h : 2*k=e+q+3) :
   change stepC (some (0,1+q,e+1+3)) = _
   simpa only [show 1+q=q+1 by omega, show e+1+3=e+4 by omega] using hx
 
+
+/-- An odd a below 2k follows the even-k zero-left branch. -/
+theorem section_short_odd (m k e : Nat) (h : 2*k=e+2*m+4) :
+    runN (2*m+3) (some (2*m+3,k,0)) = some (4*m+6,2,e+1) := by
+  have h' : 2*k=e+(2*m+1)+3 := by omega
+  have hs := section_short (2*m+1) k e h'
+  have htime : (2*m+1)+2 = 2*m+3 := by omega
+  have hpar : ((2*m+1)+1)%2=0 := by omega
+  rw [htime] at hs
+  simp only [hpar, ↓reduceIte] at hs
+  have hdiv : ((2*m+1)+1)/2=m+1 := by omega
+  rw [hdiv] at hs
+  simpa only [show 4*(m+1)+2=4*m+6 by omega] using hs
+
+/-- An even a below 2k follows the odd-k zero-left branch. -/
+theorem section_short_even (m k e : Nat) (h : 2*k=e+2*m+3) :
+    runN (2*m+2) (some (2*m+2,k,0)) = some (4*m+5,0,e+4) := by
+  have hs := section_short (2*m) k e (by omega)
+  have hpar : ((2*m)+1)%2≠0 := by omega
+  simp only [hpar, ↓reduceIte] at hs
+  have hdiv : ((2*m)+1)/2=m := by omega
+  rw [hdiv] at hs
+  exact hs
+
 #print axioms section_long
 #print axioms section_short
+#print axioms section_short_odd
+#print axioms section_short_even
 end BB6.CSection
