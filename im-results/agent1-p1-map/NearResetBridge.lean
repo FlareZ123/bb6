@@ -105,6 +105,32 @@ theorem blank_even_two_iff_shifted_reset :
     obtain ⟨b,hb,hpath⟩:=near_reaches_even_two 2 n (by decide)
     exact ⟨b,hb,even_route_is_reachable n 2 (near 2 n) b hpath hstart⟩
 
+/-- The complete even-c2 existence question is exactly a single quarter-class
+    sparse family of shifted reset indices. -/
+theorem blank_even_two_iff_quarter_shifted_reset :
+    (∃ b:Nat, b%2=0 ∧ Reach b 2) ↔
+      (∃ n:Nat, n%4=1 ∧ Reach 2 (14*2^n-2*n-12)) := by
+  constructor
+  · rintro ⟨b,hb,hr⟩
+    obtain ⟨j,hj,hmod⟩:=reachable_even_two_one_mod_four b hr hb
+    obtain ⟨k,s,hs,hk,hmass⟩:=even_two_has_near_critical_reset b hr hb
+    have hp:2^j=2^k:=by omega
+    have heq:j=k:=by
+      by_cases h:j<k
+      · have hl:=Nat.pow_lt_pow_right (show 1<(2:Nat) by decide) h
+        omega
+      · by_cases h':k<j
+        · have hl:=Nat.pow_lt_pow_right (show 1<(2:Nat) by decide) h'
+          omega
+        · omega
+    have hnear:=near_two_form j
+    have hss:s=14*2^j-2*j-12:=by omega
+    exact ⟨j,hmod,by simpa only [←hss] using hs⟩
+  · rintro ⟨n,hn,hr⟩
+    exact blank_even_two_iff_shifted_reset.mpr ⟨n,hr⟩
+
+#print axioms BB6.Agent1.blank_even_two_iff_quarter_shifted_reset
+
 #print axioms BB6.Agent1.blank_even_two_iff_shifted_reset
 #print axioms BB6.Agent1.near_reaches_even_two
 end BB6.Agent1
