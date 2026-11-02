@@ -68,3 +68,22 @@ with (HERE / ".reconstruct-side-generator.lock").open("w") as lock:
         if os.path.exists(filename):
             os.unlink(filename)
 print(f"Verified generate_c_side_inverse.py: {len(raw)} bytes, sha256={actual}")
+
+SIDE_V2_SHA256 = "c10149c96c657683367db89671c2cad4728f5659bbda2473f4cf89696a5b9553"
+with (HERE / ".reconstruct-side-generator-v2.lock").open("w") as lock:
+    fcntl.flock(lock, fcntl.LOCK_EX)
+    raw = lzma.decompress(base64.b64decode((HERE / "generate_c_side_inverse_v2.py.xz.b64").read_bytes()))
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != SIDE_V2_SHA256:
+        raise ValueError(f"Affine proof generator checksum mismatch: {actual}")
+    fd, filename = tempfile.mkstemp(prefix=".sidegenv2.", suffix=".tmp", dir=HERE)
+    try:
+        with os.fdopen(fd, "wb") as out:
+            out.write(raw)
+            out.flush()
+            os.fsync(out.fileno())
+        os.replace(filename, HERE / "generate_c_side_inverse_v2.py")
+    finally:
+        if os.path.exists(filename):
+            os.unlink(filename)
+print(f"Verified generate_c_side_inverse_v2.py: {len(raw)} bytes, sha256={actual}")
