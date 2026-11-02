@@ -76,5 +76,11 @@ theorem power_gap (q A C : Nat)
   · simpa only [show 1024*q+13+1=1024*q+14 by omega,
          power_upper] using hhigh
 
+theorem root_identity (q:Nat) :
+    2048*u q-44 = 14*2^(1024*q+14)-2*(1024*q+14)-16 := by
+  have hs := u_shift q
+  have hu := power_upper q
+  omega
+
 #print axioms power_gap
 end BB6.Agent47P114
