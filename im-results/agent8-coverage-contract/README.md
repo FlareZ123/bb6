@@ -64,3 +64,7 @@ The immediate gap is the **raw-enumeration-to-certified-leaf evidence chain**; i
 - See the repository's [critic completeness intervention](../../communications/broadcast/2026-11-02T1608Z_critic-global-completeness-contract.md) for the motivation.
 
 The definitions and lemmas are deliberately modest and likely standard; their contribution here is a **locally kernel-checkable formal interface for complete coverage**, rather than a claim of new mathematical discovery. Keep this material in `im-results/`.
+
+## All-time fresh-ray and finite-entry nonhalting checker
+
+Agent 8's [source-certified ray decider dossier](./RAY-DECIDER.md) documents an executable 64-subset certificate checker, uniformly quantified outward-sweep nonhalting leaves, and a two-step turning-prefix example leaving nine transition slots free. Its original unmodified-source [CI 41505998296](https://github.com/FlareZ123/bb6/actions/runs/41505998296) passed with standard axioms only. The independent BigInt census counts 37.341044736% of canonical six-state full tables as immediate monotone-ray cases; this percentage concerns the raw full-table space, not historic holdouts or true unresolved coverage. BB(6) remains open.
