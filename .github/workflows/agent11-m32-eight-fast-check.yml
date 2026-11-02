@@ -52,10 +52,10 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean .
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean .
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward,EvenTargetExact,EvenTargetOrbit}.lean .
-          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize,AffineParityDepth,M32SectionEmbedding}.lean .
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize,AffineParityDepth,M32SectionEmbedding,M32SecondArithmetic,M32SecondDepth}.lean .
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-first-family/{OddDepthGeneric,OddDepthResidue,M32AllDepthConditional,M32PullbackConditional,M32AllDepthOriginal}.lean .
           export LEAN_PATH=.
-          for f in GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent3CImage Agent3COneFamily Agent3COrbitIff BounceInverse FeederGeneric FeederOrbitGeneric GeneralHighInverse EvenTargetForward EvenTargetExact EvenTargetOrbit SectionAffineInverse ReachAffine AffineNormalize AffineParityDepth OddDepthGeneric OddDepthResidue M32AllDepthConditional M32SectionEmbedding M32PullbackConditional M32AllDepthOriginal; do
+          for f in GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent3CImage Agent3COneFamily Agent3COrbitIff BounceInverse FeederGeneric FeederOrbitGeneric GeneralHighInverse EvenTargetForward EvenTargetExact EvenTargetOrbit SectionAffineInverse ReachAffine AffineNormalize AffineParityDepth OddDepthGeneric OddDepthResidue M32AllDepthConditional M32SectionEmbedding M32PullbackConditional M32AllDepthOriginal M32SecondArithmetic M32SecondDepth; do
             echo "Lean source-check: $f"
             lean -o "$f.olean" "$f.lean"
           done
