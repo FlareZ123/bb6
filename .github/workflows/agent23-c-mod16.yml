@@ -1,0 +1,36 @@
+name: Agent 23 Machine C j=3 modulo 16 proof audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct source and verify SHA-256
+        run: |
+          python3 -m venv /tmp/a23-venv
+          /tmp/a23-venv/bin/python -m pip -q install filelock
+          /tmp/a23-venv/bin/python im-results/agent23-c-mod16/reconstruct.py
+      - name: Compile full, unmodified original CLine and Agent 23 proofs
+        run: |
+          mkdir -p /tmp/a23-lean
+          cp im-results/agent11-c-line/CLine.lean /tmp/a23-lean/CLine.lean
+          cp im-results/agent23-c-mod16/CM16.lean /tmp/a23-lean/CM16.lean
+          cp im-results/agent23-c-mod16/CMod16Bridge.lean /tmp/a23-lean/CMod16Bridge.lean
+          cd /tmp/a23-lean
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CM16.olean CM16.lean
+          lean CMod16Bridge.lean
