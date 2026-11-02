@@ -145,6 +145,44 @@ theorem sample_even_iff_reset_residue (n : Nat) :
       have hsurvive := odd_sample_reset_mod7 n hodd
       omega
 
+/-- The parity at the *penultimate* scalar iteration determines which
+    of the two possible modulo-six reset classes occurs. -/
+theorem next_reset_mod6_iff_pre_even (n : Nat) :
+    resetA (n+1)%6=1 ↔
+      (iterG (resetA n-1) 0)%2=0 := by
+  have hpos := resetA_pos n
+  obtain ⟨m,hm⟩ : ∃ m, resetA n=m+1 :=
+    ⟨resetA n-1, by omega⟩
+  have hm' : resetA n-1=m := by omega
+  have hstep : sampleZ n = G (iterG m 0) := by
+    dsimp [sampleZ]
+    rw [hm,iterG_succ]
+  have hg := G_mod3 (iterG m 0)
+  have hp := Nat.mod_lt (iterG m 0) (by omega : 0<2)
+  have hq := Nat.mod_lt (sampleZ n) (by omega : 0<2)
+  have hodd := resetA_odd (n+1)
+  have h3 : resetA (n+1)%3 = sampleZ n%3 := by
+    dsimp [resetA]
+    omega
+  rw [hstep] at h3
+  rw [hm']
+  constructor
+  · intro he
+    omega
+  · intro he
+    omega
+
+theorem next_reset_mod6_iff_pre_odd (n : Nat) :
+    resetA (n+1)%6=3 ↔
+      (iterG (resetA n-1) 0)%2=1 := by
+  have hh := next_reset_mod6_iff_pre_even n
+  have ha := resetA_mod6 (n+1)
+  have hb := Nat.mod_lt (iterG (resetA n-1) 0) (by omega : 0<2)
+  omega
+
+#print axioms next_reset_mod6_iff_pre_even
+#print axioms next_reset_mod6_iff_pre_odd
+
 #print axioms sample_odd_iff_reset_residue
 #print axioms sample_even_iff_reset_residue
 #print axioms odd_sample_reset_mod7
