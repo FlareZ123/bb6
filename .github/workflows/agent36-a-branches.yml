@@ -39,5 +39,6 @@ jobs:
           lean im-results/agent36-cryptid-trace/ESixPairs.lean
           lean -o im-results/agent35-cryptid-code/ABridgeTwo.olean im-results/agent35-cryptid-code/ABridgeTwo.lean
           lean -o im-results/agent36-cryptid-trace/AExtraBranches.olean im-results/agent36-cryptid-trace/AExtraBranches.lean
-          lean im-results/agent36-cryptid-trace/ABridgeEGeneral.lean
+          lean -o im-results/agent36-cryptid-trace/ABridgeEGeneral.olean im-results/agent36-cryptid-trace/ABridgeEGeneral.lean
+          lean im-results/agent36-cryptid-trace/ABridgeEPairs.lean
           lean im-results/agent36-cryptid-trace/ASixBoundary.lean
