@@ -36,7 +36,7 @@ theorem blank_no_c48_target (q time : Nat) :
         have hnorm :
             ((176*q+129)+(936*q+696)-2,((936*q+696)-2)/2) =
               (1112*q+823,468*q+347) := by
-          apply Prod.mk.injEq.mpr
+          apply Prod.ext <;> omega
         rw [hnorm] at hprev
         have hstart := BB6Agent38.blank_section_mod4 tp
           (1112*q+823) (468*q+347) hprev (by omega) (by omega)
