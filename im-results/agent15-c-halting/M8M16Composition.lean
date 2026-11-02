@@ -88,20 +88,20 @@ theorem blank_no_m8_cylinder (u v : Nat) :
 theorem blank_no_m16_one_two_cylinder (u v : Nat) :
     ¬ CReach (8*u+1) (16*v+2) := by
   intro h
-  exact CCert.published_no_one_two u v (section_reach_embeds h)
+  exact CCert16.published_no_one_two u v (section_reach_embeds h)
 
 /-- The M16 (9,15) cylinder is excluded in the exact blank section. -/
 theorem blank_no_m16_nine_fifteen_cylinder (u v : Nat) :
     ¬ CReach (16*u+9) (16*v+15) := by
   intro h
-  exact CCert.published_no_nine_fifteen u v (section_reach_embeds h)
+  exact CCert16.published_no_nine_fifteen u v (section_reach_embeds h)
 
 /-- The M16 (1,7) cylinder is excluded except for its explicit base point. -/
 theorem blank_no_m16_one_seven_cylinder (u v : Nat)
     (hpos : 0<u ∨ 0<v) :
     ¬ CReach (16*u+1) (16*v+7) := by
   intro h
-  exact CCert.published_no_one_seven_except u v hpos (section_reach_embeds h)
+  exact CCert16.published_no_one_seven_except u v hpos (section_reach_embeds h)
 
 /-- The M8 forbidden cylinder pulls back through the exact all-input
     affine predecessor theorem to another infinite section cylinder. -/
@@ -174,7 +174,7 @@ theorem blank_no_m16_even_odd_halt_params
     (hk : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     ¬ CReach (2*j+3) k := by
   intro h
-  exact CCert.published_no_even_odd_halt_params j m k hj hmj hk
+  exact CCert16.published_no_even_odd_halt_params j m k hj hmj hk
     (section_reach_embeds h)
 
 /-- Agent 41's source-verified M16 (9,15) stopping classes, transported
@@ -184,7 +184,7 @@ theorem blank_no_m16_nine_fifteen_halt_params
     (hk : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     ¬ CReach (2*j+3) k := by
   intro h
-  exact CCert.published_no_nine_fifteen_halt_params j m k hj hmj hk
+  exact CCert16.published_no_nine_fifteen_halt_params j m k hj hmj hk
     (section_reach_embeds h)
 
 /-- Agent 41's source-verified M16 (1,7) stopping classes, transported
@@ -194,7 +194,7 @@ theorem blank_no_m16_one_seven_halt_params
     (hk : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     ¬ CReach (2*j+3) k := by
   intro h
-  exact CCert.published_no_one_seven_halt_params j m k hj hmj hk
+  exact CCert16.published_no_one_seven_halt_params j m k hj hmj hk
     (section_reach_embeds h)
 
 /-- Agent 41's two source-verified M16 first-family stopping classes,
@@ -204,7 +204,7 @@ theorem blank_no_m16_first_halt_m7_or_14
     (hk : k+3*m+4=2^(2*m+3)) :
     ¬ CReach 1 k := by
   intro h
-  exact CCert.published_no_first_halt_m7_or_14 m k hm hk
+  exact CCert16.published_no_first_halt_m7_or_14 m k hm hk
     (section_reach_embeds h)
 
 #print axioms section_reach_embeds
