@@ -17,11 +17,8 @@ def prependEight (c : Cfg) : Cfg :=
 private theorem prependEight_finish (n : Nat) (ys : List Bool) :
     prependEight (⟨[],false,List.replicate n true ++ ys,5⟩ : Cfg) =
       (⟨[],false,List.replicate (n+8) true ++ ys,5⟩ : Cfg) := by
-  unfold prependEight
-  congr 1
-  rw [List.append_assoc, List.replicate_append_replicate]
-  congr 1
-  omega
+  simp only [prependEight, List.append_assoc,
+    List.replicate_append_replicate, Nat.add_comm 8 n]
 
 def costB (k : Nat) : Nat := 12*k*k+49*k+40
 def costEpair (k q : Nat) : Nat := 12*k*k+49*k+50+4*q
@@ -85,7 +82,8 @@ theorem B_shift (k : Nat) (ys : List Bool) :
       (init (List.replicate (3*(k+1)) true ++ false::ys)) =
     prependEight (run (costB k)
       (init (List.replicate (3*k) true ++ false::ys))) := by
-  rw [←costB_succ, costB]
+  rw [←costB_succ]
+  simp only [costB]
   rw [full_B (k+1) ys, full_B k ys, prependEight_finish]
   congr 1
   omega
@@ -97,7 +95,8 @@ theorem Epair_shift (k q : Nat) (ys : List Bool) :
     prependEight (run (costEpair k q)
       (init (List.replicate (3*k+2) true ++
         false :: (pairs q ++ (false::ys))))) := by
-  rw [←costEpair_succ, costEpair]
+  rw [←costEpair_succ]
+  simp only [costEpair]
   rw [full_E_pairs (k+1) q ys, full_E_pairs k q ys, prependEight_finish]
   congr 1
   omega
@@ -109,7 +108,8 @@ theorem Etriple_shift (k q : Nat) (ys : List Bool) :
     prependEight (run (costEtriple k q)
       (init (List.replicate (3*k+2) true ++
         false :: (pairs q ++ ([true,true,true] ++ ys))))) := by
-  rw [←costEtriple_succ, costEtriple]
+  rw [←costEtriple_succ]
+  simp only [costEtriple]
   rw [full_E_triple_pairs (k+1) q ys, full_E_triple_pairs k q ys,
     prependEight_finish]
   congr 1
@@ -122,7 +122,8 @@ theorem Acode_shift (k : Nat) (ws ys : List Bool) :
     prependEight (run (costA k ws)
       (init (List.replicate (3*k+1) true ++
         false :: (CryptidA.wordCode ws ++ (false::ys))))) := by
-  rw [←costA_succ, costA]
+  rw [←costA_succ]
+  simp only [costA]
   rw [BB6.Agent35.full_A_code (k+1) ws ys,
       BB6.Agent35.full_A_code k ws ys, prependEight_finish]
   congr 1
