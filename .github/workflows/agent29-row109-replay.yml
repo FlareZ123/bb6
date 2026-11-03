@@ -23,6 +23,15 @@ jobs:
           persist-credentials: false
       - name: Run independent raw-TM rewrite-rule and initial/terminal audit
         run: node workplace/im-results/agent2-row109-semantic-audit/macro_rule_audit.cjs
+      - name: Kernel-check all-natural left and right X-run proofs on authentic raw table
+        if: ${{ inputs.audit_only }}
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          base64 -d workplace/im-results/agent2-row109-semantic-audit/Row109Runs.lean.gz.b64 | gzip -d > "$RUNNER_TEMP/Row109Runs.lean"
+          echo "6fb55261920fc1864267559c33f0d8872af8bfc010d87531f691a85a17f299b6  $RUNNER_TEMP/Row109Runs.lean" | sha256sum -c -
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lean" "$RUNNER_TEMP/Row109Runs.lean"
       - name: Checkout J. Huang's original October 15 accelerator
         if: ${{ !inputs.audit_only }}
         uses: actions/checkout@v4
