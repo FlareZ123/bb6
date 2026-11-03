@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 11,
+  "revision": 12,
   "parallel_limit": 2,
   "grants": [
     {
@@ -180,7 +180,7 @@
       "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
       "task": "Close the missing original-source all-parameter physical F/0 first-return interface for the genuine D-root 11-case grammar, using source-authentic unmodified machine semantics and a strict generic E-triple-pairs guard as the most consequential obstruction; test whether this can certify actual blank-root grammar propagation, explicitly distinguishing all-tail synthetic return theorems from blank reachability.",
       "role": "integrate",
-      "state": "active",
+      "state": "interrupted",
       "evidence": [
         {
           "kind": "locally original-source-compiled Lean all-parameter first physical F0 return",
@@ -213,7 +213,8 @@
           "note": "Scope, source audit, original SHA, power form, closed-form primitive cost paper derivation and 1,404 exact arithmetic checks; no genuine blank reachability."
         }
       ],
-      "handoff": "Quantified strictly successive first E returns, exact original-source all-depth return times, power-form endpoints, prefix safety. All theorems locally Lean4.36 source-compiled. No true D blank-root entry or 11-case source contract. Exact-committed-byte CI pending runner recovery. See verification-note.md; source modules ETripleFullSource, ETripleLadderSource, ETripleLadderIndex, ETripleLadderSafe."
+      "handoff": "At measured 70-minute lease-age orderly release. Proven: all-parameter source-level strict E-triple first physical F0 return; arbitrary-depth synthetic exact consecutive F0 return times; source-level closed-form power endpoint and all-prefix nonhalt. Locally Lean4.36 kernel checked against original SHA-pinned Boundary, standard axioms only. Source files ETripleFullSource/ETripleLadderSource/ETripleLadderIndex/ETripleLadderSafe, verification-note.md; 9,444 raw tests. The 11-case authentic blank-root SourceContract, genuine blank reachability and exact BB(6) are open; independent exact committed-byte CI still pending runner recovery.",
+      "completed_at": "2026-11-03T15:30:28.230Z"
     },
     {
       "id": "agent36:agent36-6c6c609f-91a7-4b3f-82bc-2f80077b8e2a:R-20261103T0847Z-agent37-root-word-invariant",
