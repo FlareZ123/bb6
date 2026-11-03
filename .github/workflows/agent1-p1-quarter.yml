@@ -53,6 +53,11 @@ jobs:
           lean -o im-results/agent1-p1-quarter/L0OneResetBridge.olean im-results/agent1-p1-quarter/L0OneResetBridge.lean
           lean -o im-results/agent50-p1-l1-reset/L1OneResetArithmetic.olean im-results/agent50-p1-l1-reset/L1OneResetArithmetic.lean
           lean im-results/agent50-p1-l1-reset/L1OneResetBridge.lean
+          lean -o im-results/agent50-p1-l1-reset/L1UpperMass.olean im-results/agent50-p1-l1-reset/L1UpperMass.lean
+          lean -o im-results/agent50-p1-l1-reset/L1UpperPrefix.olean im-results/agent50-p1-l1-reset/L1UpperPrefix.lean
+          lean -o im-results/agent50-p1-l1-reset/L1AllPrefixArithmetic.olean im-results/agent50-p1-l1-reset/L1AllPrefixArithmetic.lean
+          lean -o im-results/agent50-p1-l1-reset/L1ScaledIdent.olean im-results/agent50-p1-l1-reset/L1ScaledIdent.lean
+          lean im-results/agent50-p1-l1-reset/L1AllPrefixBridge.lean
           for m in QuarterGap QuarterCone QuarterFinal SecondFeederValuation; do
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
           done
