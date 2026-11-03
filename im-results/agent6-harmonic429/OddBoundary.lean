@@ -101,4 +101,60 @@ theorem odd_boundary_trichotomy (u w:Nat) (hu:11≤u) (huodd:u%2=1)
 #print axioms odd_boundary_trichotomy
 #print axioms seam_two_step
 #print axioms overflow_two_step
+
+/-- Every U-ray coordinate is divisible by three, including the initial ray. -/
+theorem rayU_mod_three (k:Nat): BB429Ladder.rayU k % 3=0 := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    simp only [BB429Ladder.rayU]
+    omega
+
+/-- The exact seam is arithmetically impossible on every U-ray. -/
+theorem rayU_odd_dichotomy (k w:Nat) (hk:1≤k) (hw:w%4=3):
+    3*w≤2*BB429Ladder.rayU k+15 ∨
+      2*BB429Ladder.rayU k+22≤3*w := by
+  have huodd := BB429Ladder.rayU_odd k hk
+  rcases odd_seam_overflow_cases (BB429Ladder.rayU k) w huodd hw with h | h | h
+  · exact Or.inl h
+  · have hz := rayU_mod_three k
+    omega
+  · exact Or.inr h
+
+/-- A complete two-outcome transition theorem for the guarded odd U-rays. -/
+theorem rayU_odd_boundary (k w:Nat) (hk:3≤k) (hw:w%4=3)
+    (hcap:w+7≤2*BB429Ladder.rayU k):
+    (3*w≤2*BB429Ladder.rayU k+15 ∧
+      run 2 (BB429Ladder.rayU k,w) =
+        some (11,2*BB429Ladder.rayU k+w+9)) ∨
+    (2*BB429Ladder.rayU k+22≤3*w ∧
+      run 2 (BB429Ladder.rayU k,w) =
+        some (2*BB429Ladder.rayU k-w+18,
+          3*w-2*BB429Ladder.rayU k-22)) := by
+  have hlarge:11≤BB429Ladder.rayU k := by
+    have h:3≤k := hk
+    have h0: 11≤BB429Ladder.rayU 3 := by decide
+    have hmono : ∀ j:Nat, 11≤BB429Ladder.rayU (j+3) := by
+      intro j
+      induction j with
+      | zero => decide
+      | succ j ih =>
+        have hr: BB429Ladder.rayU (j+1+3) =
+            2*BB429Ladder.rayU (j+3)+3 := by
+          congr 1 <;> omega
+        omega
+    have hj: k=(k-3)+3 := by omega
+    rw [hj]
+    exact hmono (k-3)
+  have huodd:=BB429Ladder.rayU_odd k (by omega)
+  rcases rayU_odd_dichotomy k w (by omega) hw with hg | ho
+  · exact Or.inl ⟨hg,BB429ElevenOddExtension.odd_even_two_step
+      (BB429Ladder.rayU k) w huodd hlarge hw hg⟩
+  · exact Or.inr ⟨ho,overflow_two_step
+      (BB429Ladder.rayU k) w hlarge huodd hw hcap ho⟩
+
+#print axioms rayU_mod_three
+#print axioms rayU_odd_dichotomy
+#print axioms rayU_odd_boundary
+
 end BB429OddBoundary
