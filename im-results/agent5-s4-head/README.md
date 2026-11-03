@@ -175,3 +175,41 @@ reduced(b::c::R) = some((b/2+39)::(k+2)::bumpBy(k,R))
 The theorem covers empty R as well as unbounded nonempty R. Combined with the previously proved odd-head branch, **the sole unresolved potential halting cases after reduced step five are**: first digit 80 with **even** second digit; or first digit 82 with **odd** second digit. All 79 and 81 first-digit steps are unconditionally safe; the complementary 80-odd and 82-even steps also have exact unconditional successful return formulas. These are necessary hazard conditions, not proof that any such actual state halts.
 
 This additional result further partitions the authenticated blank-seed orbit in a second-digit parity test and provides explicitly computable updates where the parity permits a direct even exit. It remains a local proof in a source-mirrored model pending original module import.
+
+## 2026-11-03 strongest theorem: full blank halting iff two sparse exceptional sectors
+
+The last two new files strengthen the phase analysis to a complete **all-time halting equivalence** with two explicitly identified exceptional prefix phases. Both compile locally with Lean 4.36.0-rc2, no `sorry`, and all printed axioms exactly `[propext, Quot.sound]`. They remain proofs about the exact source-mirrored S4 high-level map, without an original-module kernel import.
+
+- [S4Pair.lean.xz.b64](S4Pair.lean.xz.b64), decoded SHA-256 `0246ce3a74f844239dda8397463e8f8ea65af47c0b037f18852dd4fb61ac5d49`. Import `S4Even`. A universal arbitrary-stack theorem `reduced_pair` computes the first two output digits from the first two input digits whenever the reduced step succeeds. Let
+```text
+P(b,c) = if b odd then (b/2+42, c+b/2+23)
+         else (b/2+39, floor((c+b/2+23)/2)
+                          + (if (c+b/2+23) even then 2 else 0))
+```
+Then `reduced(b::c::R) = some U` implies `U` begins with `P(b,c)`, for **all finite R**. The odd-even unfavorable case uses a new seven-suffix preservation theorem `epoch_pre7` for arbitrary-depth odd drains. The first nine authentic reduced steps reach `[80,147,228,133,28,25]`.
+- `S4.actual_pair_cycle` proves that **for every n**, if the modeled genuine reduced execution survives to index `9+n`, the first two digits follow this period-eight cycle:
+  
+| n mod 8 | First two digits | Next reduced step guaranteed? |
+| ---: | --- | --- |
+| 0 | (80,147) | Yes |
+| 1 | (79,107) | Yes |
+| 2 | (81,169) | Yes |
+| 3 | (82,232) | Yes |
+| 4 | (80,150) | **Unknown** |
+| 5 | (79,106) | Yes |
+| 6 | (81,168) | Yes |
+| 7 | (82,231) | **Unknown** |
+
+This is a true seed-dependent **all-time inductive result**. The theorem `actual_only_two_hazard_phases` establishes that a reduced transition can fail **only at n mod 8 = 4 or 7** after the first nine reductions, never at any other phase. The other six transitions are universally safe for all deeper stack tails, because of `S4Odd` and `S4Even`.
+- [S4Hazard.lean.xz.b64](S4Hazard.lean.xz.b64), decoded SHA-256 `3f706cc63a6361affe95fc47880aaa150e9b739a4a95f317a0af12c1983dba25`. Import `S4Pair`. Its theorem `S4.blank_halts_iff_two_exceptional_gates` proves the **exact universally quantified blank-halting biconditional** in the source-shaped model:
+```text
+(∃k, run k C(3,[0]) = none) ↔
+(∃n s, (n mod 8 = 4 or n mod 8 = 7)
+       and reducedRun (9+n) [42,12,8,5] = some s
+       and reduced s = none).
+```
+This accounts for every finite early step via the kernel-checked first-nine prefix and uses `none` absorption correctly. Each reduced step corresponds to exactly 32 original-shaped high-level steps after the 56-step prefix. At the **first** remaining two gates, the reduction starts from original modeled high-level indices `56+32*(9+4)=472` and `56+32*(9+7)=568`; later candidate gates recur at strides of eight reduced steps or **256** high-level steps.
+
+**Research consequence:** A genuine proof excluding failure at the two recursive tail families `(80,150)::R` and `(82,231)::R` sampled by the actual orbit would decide the S4 machine, provided the original-source import is certified. The synthetically possible failure cases remain, and neither an actual halting witness nor all-time nonhalting invariant has been established. This is a structural mathematical reduction, not a BB(6) bound or external publication novelty claim.
+
+**Verification:** Decode all eight `.lean.xz.b64` files in dependency order (Phase, Trap, Return, Head, Odd, Even, Pair, Hazard) and compile with matching Lean 4.36.0-rc2 modules on `LEAN_PATH`. The verified source bytes are documented by their SHA-256 fingerprints above.
