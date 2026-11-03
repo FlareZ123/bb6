@@ -1,0 +1,50 @@
+name: Agent 10 #746 original Cryptids source bridge (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-upstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Reclaim CI workspace
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+      - name: Checkout exact upstream Cryptids revision
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          persist-credentials: false
+      - name: Checkout persistent BB6 research proof
+        uses: actions/checkout@v4
+        with:
+          path: agent10
+          persist-credentials: false
+      - name: Build unmodified upstream original source (Lean 4.35.0-rc4)
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: BusyBeaver.BB6.M_1RB0LF_1LC1RA_0RE0RD_HHH1LE_1LF1RC_1LC1LA
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Compile rooted chain against unmodified upstream
+        run: |
+          set -eu
+          mkdir -p /tmp/bb6-agent10-source
+          a="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
+          b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
+          cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore}.lean /tmp/bb6-agent10-source/
+          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,OriginalNextBridge}.lean /tmp/bb6-agent10-source/
+          cd /tmp/bb6-agent10-source
+          export LEAN_PATH=".:$GITHUB_WORKSPACE/.lake/build/lib/lean"
+          lake env lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion; do
+            lake env lean -o "$m.olean" "$m.lean"
+          done
+          lake env lean OriginalNextBridge.lean
+          if grep -R -n --include='*.lean' 'sorry' . | grep -v 'sorryAx'; then
+            echo "Please inspect any occurrence of sorry above"
+            exit 1
+          fi
+          echo "Source-imported theorem verified with the pinned unmodified upstream highLevelNext."
