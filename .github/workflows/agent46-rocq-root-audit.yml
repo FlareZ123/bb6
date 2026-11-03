@@ -36,5 +36,5 @@ jobs:
         working-directory: upstream/verify
         run: |
           set -eu
-          coq_makefile -Q . BusyCoq -o Makefile.coq Others_v3.v Others_v4.v
+          coq_makefile -Q . BusyCoq -o Makefile.coq *.v
           make -f Makefile.coq -j 2 Others_v3.vo Others_v4.vo
