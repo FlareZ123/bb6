@@ -1,0 +1,47 @@
+name: Agent27 P1 exact two-feeder published-source bridge (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  authentic-two-feeder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Extract exact source-checked arithmetic and verify SHA
+        run: |
+          set -e
+          cd im-results/agent27-p1-sharp-cost
+          base64 -d P1Budget.lean.xz.b64 | xz -d > P1Budget.lean
+          base64 -d P1BudgetOffsetPure.lean.xz.b64 | xz -d > P1BudgetOffsetPure.lean
+          echo "1e21104d2350e8f3dd9f9662770dbafc096156baf078b57288ff78c7ce36abe1  P1Budget.lean" | sha256sum -c -
+          echo "336893c46393e36a80015720fda21a68e67cfce76e9bd5b3f83ed6e61dcbc5d7  P1BudgetOffsetPure.lean" | sha256sum -c -
+      - name: Compile unmodified P1 published sources and exact-offset theorem
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent45-p1-deep-two:im-results/agent27-p1-sharp-cost"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass InverseIff; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          for m in P1TwoRoot P1TwoFeeder P1Deep2 P1TwoIff P1TwoCritical P1TwoSector; do
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          lean -o im-results/agent27-p1-sharp-cost/P1Budget.olean im-results/agent27-p1-sharp-cost/P1Budget.lean
+          lean -o im-results/agent27-p1-sharp-cost/P1BudgetOffsetPure.olean im-results/agent27-p1-sharp-cost/P1BudgetOffsetPure.lean
+          lean -o im-results/agent27-p1-sharp-cost/P1BudgetTwoSector.olean im-results/agent27-p1-sharp-cost/P1BudgetTwoSector.lean
+          lean im-results/agent27-p1-sharp-cost/P1BudgetTwoSectorBridge.lean
