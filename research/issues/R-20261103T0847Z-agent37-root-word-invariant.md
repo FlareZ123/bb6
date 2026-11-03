@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 6,
+  "revision": 7,
   "parallel_limit": 2,
   "grants": [
     {
@@ -132,9 +132,35 @@
       "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
       "task": "Construct a source-authentic executable certificate layer for the eleven physical D F/0 L(a,q,b) section cases and audit the first true blank-origin E-escape from unary seed 5. Identify the smallest missing universal import/guard or prove the certificate; distinct from Agent31's two-return synthetic E escape.",
       "role": "integrate",
-      "state": "active",
-      "evidence": [],
-      "handoff": "Start by independently reproducing the algebraic 11-case return map, with exact terminal-zero normalization. Derive source import/dependency obligations and test earliest E-escape against root bridge; a modeled macro run is not a genuine original-root certificate."
+      "state": "finished",
+      "evidence": [
+        {
+          "kind": "local-lean-kernel",
+          "path": "im-results/agent35-d-regular-certificate/LeanSources.tar.xz.b64",
+          "note": "All-parameter modeled 11-row canonical closure/exponential growth, seed5 modeled first E exit index1711, and conditional source transport. Compiled Lean4.36 standard axioms; hOne remains source hypothesis."
+        },
+        {
+          "kind": "local-lean-kernel",
+          "path": "im-results/agent35-d-regular-certificate/DObservedTransport.lean",
+          "note": "Arbitrary-length physical-observation transport with source congruence and exact cost, no sorry; original universal hOne source import absent."
+        },
+        {
+          "kind": "local-lean-kernel",
+          "path": "im-results/agent35-d-regular-certificate/ELadderSources.tar.xz.b64",
+          "note": "Arbitrary-depth synthetic E packet ladder theorem, formal nonregular language for every packet, exact primitive macro times and explicit full_E_triple_pairs contract; 36 independent literal-machine cases, no actual blank reachability."
+        },
+        {
+          "kind": "local-lean-kernel",
+          "path": "im-results/agent35-d-regular-certificate/DETripleLadderObs.lean.xz.b64",
+          "note": "All-depth E ladder over physical observation (R reflexive/transitive and run congruence). Lean4.36 locally checked standard axioms, original macro and source bridge remain hypotheses."
+        },
+        {
+          "kind": "report",
+          "path": "im-results/agent35-d-regular-certificate/README.md",
+          "note": "Precise SHA256 manifests and locked restoration, case tables, limitations, overlap with Agent31 and unfilled original-root bridge."
+        }
+      ],
+      "handoff": "The 11-row original-source SourceContract (DObsSourceCandidate.lean) is unproved and must be imported against unchanged original source, with BoundaryPadding.ObsEq. New all-depth synthetic E ladder K0=3^m u−1 and suffix P_r 0 1^(3m+3)0 1^6 follows source E triple rule, with observed endpoint variant; source import and first-return minimality remain open. Original-blank reachability of any ladder input is unknown. Agent31 has finite deeper packet classes; coordinate to avoid duplicated endpoint arithmetic. No BB6 bound or exact score improved."
     }
   ],
   "review_requested": null
@@ -158,3 +184,8 @@ Initially a literal 12-rule sparse raw interpreter with a bounded 2,000,000 prim
 
 ## Next action and handoff
 Compare rooted seeds and first physical F/0 returns, identify exact candidate word language and falsifier, then formalize if the data supports a genuine induction. Keep original step counts and head offsets in logs; exact score and universal BB6 upper bound remain open.
+
+
+### Agent35 grant-2 integration outcome (2026-11-03, intermediate)
+
+The original eleven-case F/0 return arithmetic model has a locally kernel-verified transducer, exponential survivor growth, and a generic primitive-time composition theorem modulo actual tape observation. The **authentic source row import and blank-root state bridge remain open**. Independently, Agent35 obtained an **arbitrary-depth source-E-macro packet ladder** for synthetic F/0 inputs; the local Lean statement `DETripleLadder.triple_ladder_obs` requires the universal source `full_E_triple_pairs` as a quantified premise and proves that each of m designated return endpoints lies outside the naive `L(a,q,b)` language. This shows a structural obstruction to finite-depth naive L repair on synthetic inputs, without proving root orbit reachability or first-return minimality. Documentation, proof bytes, restoration procedures, raw primitive tests, and original-source caveats are at [agent35's D return certificate](../../im-results/agent35-d-regular-certificate/README.md). This is *intermediate work only*, not a published result or holdout decision. One grant-2 slot remains available to pursue authentic source connection, reachability, or genuinely closed extended language.
