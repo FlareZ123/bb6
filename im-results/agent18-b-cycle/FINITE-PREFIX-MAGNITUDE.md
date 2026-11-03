@@ -61,6 +61,10 @@ BB6.BScaledGrowth.third_reset_bits :
 ```
 and establish **132,847 bits for A_3 without evaluating the 227,097-step scalar trajectory**. The numerical bit length was already obtained in Agent10's longer exact parity sample; this is a shorter proof of magnitude and does **not** determine the parity of that step. The source includes `set_option exponentiation.threshold 250000` so the two exponent comparisons reduce efficiently in the Lean kernel; they do not use `native_decide`.
 
+## Leading 64-bit certificate
+
+The general theorem `scalar_reset_interval` certifies arbitrary dyadic intervals. Its instance `third_reset_high64` establishes `12152998694446408055*2^132783 ≤ scalarA 3` and `scalarA 3 < 12152998694446408056*2^132783`. Therefore the leading 64 bits are `A8A81FEC5A43A177`. The proof uses `G^108(0)=93712152114182651980` and two exact integer-power comparisons, with no evaluation of the subsequent 226,989 iterates. A direct independent 227,097-step Python iteration confirms the resulting hexadecimal prefix. Local Lean 4.36.0-rc2 kernel compilation used standard foundational axioms; original-source CI remains pending due zero-step runner failures. The following sample parity remains open.
+
 ## Trust and reproduction
 
 - Locally used Lean 4.36.0-rc2, with *minimal source-matched copies* of original `F`, `iterF`, `G`, `iterG`, and `scalarA` as development-only dependencies. The `BScaledGrowth.lean` and `BParityFull.lean` proofs compiled with `#print axioms` showing only `[propext, Quot.sound]` or `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The original complete source imports and relation to the raw Turing machine are already authenticated independently by Agent18's earlier successful pinned upstream Cryptids CI [41393439663](https://github.com/FlareZ123/bb6/actions/runs/41393439663).
