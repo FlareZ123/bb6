@@ -47,3 +47,11 @@ jobs:
           lean -o BackwardModB.olean BackwardModB.lean
           lean -o SourceBridgeB.olean SourceBridgeB.lean
           lean StopBridgeB.lean
+      - name: Mixed192 analytic reverse-core experimental proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/agent4-source-proof
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/BackwardMod192.lean" .
+          export LEAN_PATH=.
+          lean BackwardMod192.lean
