@@ -38,4 +38,5 @@ jobs:
           lean im-results/agent2-cryptid-continuity/BFirstReturn.lean
           lean im-results/agent2-cryptid-continuity/BoundaryShiftObstructions.lean
           lean im-results/agent2-cryptid-continuity/E6FirstReturn.lean
+          lean im-results/agent2-cryptid-continuity/ATenFirstReturn.lean
           lean im-results/agent2-cryptid-continuity/EOneTriplePairs.lean
