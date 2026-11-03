@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -50,9 +50,19 @@
           "kind": "reproducible crosscheck",
           "path": "im-results/agent37-root-language-pilot/check_macros.py",
           "note": "Fixed RNG 70837: 4897 supported synthetic starts matched exact source-macro times/full physical F0 endpoints or undefined-entry halts; includes frozen halt off-by-one correction."
+        },
+        {
+          "kind": "independent kernel-certified all-parameter E boundary theorem",
+          "path": "im-results/agent37-root-language-pilot/E110111Pairs-notes.md",
+          "note": "All m,q,y physical E(10)^q110111 return after 2m+4q+35 raw steps proved against literal 12-rule raw machine, Lean4.36 standalone archive with only propext/Quot.sound; all source scan/cwalk/sweep lemmas locally re-proved."
+        },
+        {
+          "kind": "pending authentic original-source import",
+          "path": "im-results/agent37-root-language-pilot/E110111Pairs.lean",
+          "note": "Original source-compatible proof combines all-q E boundary with Agent31 prefix_E to give F/0 12k²+49k+68+4q; typechecked locally with source signature-compatible model; full original-source CI pending runner recovery."
         }
       ],
-      "handoff": "The 11-branch physical grammar L = I_a((01)^q 1^b) is source-derived future-return-total and closed except E a≡1 mod3, q>=1,b=1; finite 98,624 inputs had exactly 588 such escapes. A more general source-macro interpreter traverses 20,000 conditional sections from each genuine unary root; still needs original Lean whole-chain proof. Seek quantified inductively closed reachable extension with E escape and suffix-state assumptions; avoid treating conditional traces as proved raw blank horizons."
+      "handoff": "The 11-branch physical grammar L = I_a((01)^q 1^b) is source-derived future-return-total and closed except E a≡1 mod3, q>=1,b=1; finite 98,624 inputs had exactly 588 such escapes. A more general source-macro interpreter traverses 20,000 conditional sections from each genuine unary root; still needs original Lean whole-chain proof. Seek quantified inductively closed reachable extension with E escape and suffix-state assumptions; avoid treating conditional traces as proved raw blank horizons. New all-q E 110111 theorem has a self-contained 4.36.0 kernel certificate under the literal table, archived SHA-verified; independent complete original-source CI needs to compile E110111Pairs.lean with CryptidPairs (Agent32) and Boundary (Agent31). No global blank-root nonhalting. Next priority: blank-reachable invariant and all-F first-return domain guard."
     }
   ],
   "review_requested": null
