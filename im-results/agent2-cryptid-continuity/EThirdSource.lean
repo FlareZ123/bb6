@@ -84,6 +84,84 @@ theorem three_returns_source (v h : Nat) :
     (two_returns_source (3*v+1) h)
     hthird
 
+
+/-- The complementary residue t=3v+2 takes a B branch after the first
+    two E exceptional sections, giving a regular one-pair packet ready
+    for the all-depth original-source E triple ladder. -/
+def thirdBCost (v : Nat) : Nat :=
+  let K := 64*v+53
+  12*K*K+49*K+40
+
+def thirdBFinish (v h : Nat) : Cfg :=
+  ⟨[],false,
+    List.replicate (512*v+434) true ++
+      (oppairs 1 ++ false :: (List.replicate (2*h+3) true ++
+        (false :: List.replicate 6 true))),5⟩
+
+theorem third_B_source (v h : Nat) :
+    run (thirdBCost v) (finish (3*v+2) h) = thirdBFinish v h := by
+  let K := 64*v+53
+  let ys := List.replicate (2*h+3) true ++ (false :: List.replicate 6 true)
+  have hlen : 8*(8*(3*v+2)+3)+9 = 3*K+2 := by
+    dsimp [K]
+    omega
+  have hone : List.replicate (3*K+2) true =
+      [true,true] ++ List.replicate (3*K) true := by
+    rw [show 3*K+2=2+3*K by omega]
+    rw [← List.replicate_append_replicate]
+    rfl
+  have hinput :
+      finish (3*v+2) h =
+        init (List.replicate (3*K) true ++
+          false :: ([true,false,true,false] ++ ys)) := by
+    change (⟨[],false,
+      List.replicate (8*(8*(3*v+2)+3)+9) true ++
+        (oppairs 2 ++ false :: (List.replicate (2*h+3) true ++
+          (false :: List.replicate 6 true))),5⟩ : Cfg) = _
+    rw [hlen,hone]
+    simp [init,ys,oppairs,List.append_assoc]
+  rw [hinput]
+  change run (12*K*K+49*K+40)
+      (init (List.replicate (3*K) true ++
+        false :: ([true,false,true,false] ++ ys))) = _
+  rw [full_B]
+  have hnum : 8*K+9 = 512*v+433 := by
+    dsimp [K]
+    omega
+  rw [hnum]
+  have hmerge :
+      List.replicate (512*v+433) true ++
+        ([true,false,true,false] ++ ys) =
+      List.replicate (512*v+434) true ++
+        (oppairs 1 ++ false :: ys) := by
+    rw [show 512*v+434=(512*v+433)+1 by omega]
+    rw [← List.replicate_append_replicate]
+    simp [oppairs,List.append_assoc]
+  simpa only [thirdBFinish,ys] using
+    congrArg (fun x : List Bool => (⟨[],false,x,5⟩ : Cfg)) hmerge
+
+theorem three_returns_B_source (v h : Nat) :
+    ObsEq
+      (run (firstCost (3*v+2) h + secondCost (3*v+2) + thirdBCost v)
+        (start (3*v+2) h))
+      (thirdBFinish v h) := by
+  have hthird : ObsEq
+      (run (thirdBCost v) (finish (3*v+2) h))
+      (thirdBFinish v h) := by
+    rw [third_B_source]
+    exact cfgEq_refl _
+  exact source_chain
+    (firstCost (3*v+2) h + secondCost (3*v+2))
+    (thirdBCost v)
+    (start (3*v+2) h)
+    (finish (3*v+2) h)
+    (thirdBFinish v h)
+    (two_returns_source (3*v+2) h)
+    hthird
+
+#print axioms third_B_source
+#print axioms three_returns_B_source
+
 #print axioms third_source
 #print axioms three_returns_source
 end BB6.EThirdSource
