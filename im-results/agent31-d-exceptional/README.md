@@ -63,3 +63,10 @@ The independently authored raw transition checker [check_all_E_second.py](./chec
 | 39 | 9,838 | 1 | 8 | 13,927 | `28384913d91f238f6838ec49371045d7fe50c24f04f3e0e5df312ce6b3844fd0` |
 
 The arithmetic code checks its own exact two-step exceptional map against all 144 raw-derived short cases. These large-index predictions are **conditional symbolic forecasts**, not individually source-certified authentic blank-run events. The table has no implied upper or lower bound for BB(6). The original-source composition and true-root reachability obligations remain open.
+
+
+## Third return and residue-sensitive closure (12:55 UTC)
+
+[third-return-classification.md](./third-return-classification.md) derives, from prior quantified original-machine source macros, the **third** exact physical F/0 checkpoint for the sole two-return-exception family `I_(9t+7)((01)^q1)` (q≥3). Write `k=3t+1`; the third output is again inside regular L for *every* q when `k≡1 (mod9)`; the other residues k≡4,7 (mod9) produce two explicitly described non-L packet families. This five-row case table and all elapsed primitive-step counts are in the linked report. The independent [third_conditional_orbit.py](./third_conditional_orbit.py) verifies **100/100** exact third physical returns on t=0..9, q=3..12 with the literal raw table.
+
+The same script gives the updated earliest **conditional** still-off-L milestones after allowing a third return for k≡1(mod9): seed5 index **19758** (q7, k mod9=4), seed9 index **31787** (q4, k mod9=7), seed15 index **20855** (q4, k mod9=4), seed39 index **18820** (q8, k mod9=4). All are conditional arithmetic projections with giant unary parameters and are **not** original blank-tape proof checkpoints. Source-composition Lean import and external novelty assessment remain necessary. The challenge shifts to the two new packet families at k mod9∈{4,7}.
