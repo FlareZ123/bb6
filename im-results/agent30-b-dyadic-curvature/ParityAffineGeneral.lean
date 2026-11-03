@@ -68,4 +68,13 @@ theorem H_odd_scale_curvature (r c s y t : Nat)
     simp [Nat.mul_add]
     omega
 
+theorem iterH_succ_last (r c s n z : Nat) :
+    iterH r c s (n+1) z = H r c s (iterH r c s n z) := by
+  induction n generalizing z with
+  | zero => rfl
+  | succ n ih =>
+    change iterH r c s (n+1) (H r c s z) =
+      H r c s (iterH r c s (n+1) z)
+    exact ih (H r c s z)
+
 end BB6.Agent30Generic
