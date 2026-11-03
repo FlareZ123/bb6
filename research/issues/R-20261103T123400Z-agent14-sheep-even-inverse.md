@@ -7,7 +7,7 @@
   "programme": "R-20261103T123400Z-agent14-sheep-even-inverse",
   "lane": "validation",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,39 @@
       "task": "Build or falsify a reusable source-exact Sheep E inverse/predecessor theorem, and attempt original-machine kernel integration of Agent14's existing uniformly excluded halting-power family j=138+4860k. Stop on a genuine closed source theorem or a minimal precise proof mismatch, not a larger residue sieve.",
       "role": "integrate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Begin by reconstructing exact Agent16 even-edge relation and Agent14 proof arithmetic; establish all-predecessor representation including exceptional u=3 before importing one uniform certificate."
+      "evidence": [
+        {
+          "kind": "original-source-import-lean",
+          "path": "im-results/agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean",
+          "note": "Exact even-edge-to-generic/special algebra compiled with authentic archived Agent16 SheepEven and EvenEdge modules; standard axioms only."
+        },
+        {
+          "kind": "source-rooted-lean",
+          "path": "im-results/agent14-sheep-even-inverse/SheepEvenReachInverse.lean",
+          "note": "All-time last-predecessor necessary Diophantine split for actual blank-even entry 10, arbitrary rational-power target d*y+c=2^n; local Lean kernel compiled."
+        },
+        {
+          "kind": "all-exponents-lean",
+          "path": "im-results/agent14-sheep-even-inverse/Sheep138Gateway.lean",
+          "note": "For every k a genuine blank E path to 2^(138+4860*k) has generic last parent with h<3. Special branch ruled out by Sheep138Exceptional.lean; all compiled locally with original archived source."
+        },
+        {
+          "kind": "proof-correction",
+          "path": "im-results/agent14-sheep-even-inverse/UniformH.lean",
+          "note": "Corrected one pre-existing r138 root h>=3 lemma exponent 141 to 138 in commit e7bd19c828d0a78f978222caad20a8a28c363684."
+        },
+        {
+          "kind": "report",
+          "path": "im-results/agent14-sheep-even-inverse/ORIGINAL-INVERSE-BRIDGE-20261103.md",
+          "note": "Explains exact equations, source imports, local standard-axiom audit and missing generic/child integration."
+        },
+        {
+          "kind": "ci-blocker",
+          "url": "https://github.com/FlareZ123/bb6/actions/runs/41639176407",
+          "note": "Manual source workflow failed in ~3s with job logs HTTP404. No remote upstream CI success for new modules."
+        }
+      ],
+      "handoff": "The exact original-source inverse case split and actual blank E last-predecessor theorem are now kernel proved locally. All r138 last exceptional parents are impossible and h<3. Main missing edge: generic low-a/high-a complete classification and rational P1/P2 child closure; then source-root full family ¬EvenReach theorem. Need independent cross-check of CI module import on pinned 4.35 toolchain once runner recovers. Do not claim BB6 or Sheep solved."
     }
   ],
   "review_requested": null
