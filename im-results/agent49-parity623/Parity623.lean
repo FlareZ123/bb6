@@ -1351,4 +1351,81 @@ theorem run_none_implies_gate (n : Nat) (h : run n=none) :
 
 #print axioms run_none_implies_gate
 
+
+/-- An entire arithmetic progression of B-block indices fails at its first evaluator. -/
+theorem drainB_direct_halt_cylinder (a b d : Nat) (hb : 0<b)
+    (h : (b-1)%3^(a+1)=ternaryOnes a) : drainB a b d=none := by
+  rw [drainB]
+  have hn : b≠0 := by omega
+  simp only [if_neg hn]
+  have he := (evalA_none_iff_ternaryCylinder a (b-1) (d+2*b+3)).mpr h
+  simp [he]
+
+theorem ternaryOnes_parity (n : Nat) : ternaryOnes n%2=n%2 := by
+  induction n with
+  | zero => simp [ternaryOnes]
+  | succ n ih =>
+    rw [ternaryOnes]
+    omega
+
+theorem pow_three_odd (n : Nat) : 3^n%2=1 := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [Nat.pow_succ]
+    omega
+
+/-- For every positive even n, an even-counter synthetic state halts at diagonal gap n+2. -/
+theorem even_halter_log_sharp (n : Nat) (hn : n%2=0) (hn2 : 2≤n) :
+    let t := ternaryOnes n
+    let q := 3^(n+1)
+    let d := t+q-1
+    let a := d+n+2
+    a%2=0 ∧ d%2=0 ∧ next (.D a d)=none ∧ a=d+n+2 := by
+  dsimp
+  let t := ternaryOnes n
+  let q := 3^(n+1)
+  let d := t+q-1
+  let a := d+n+2
+  have hqodd : q%2=1 := pow_three_odd (n+1)
+  have htpar : t%2=0 := by
+    have h:=ternaryOnes_parity n
+    dsimp [t]
+    omega
+  have hqpositive : 0<q := Nat.pow_pos (by omega)
+  have hd_even : d%2=0 := by
+    dsimp [d]
+    omega
+  have ha_even : a%2=0 := by
+    dsimp [a]
+    omega
+  have hdiff : a-d-2=n := by
+    dsimp [a]
+    omega
+  have ha : a≠0 := by
+    dsimp [a]
+    omega
+  have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+  have h2 : d%2=0 ∧ a≥d+3 := ⟨hd_even,by dsimp [a]; omega⟩
+  have hnext : next (.D a d)=none := by
+    rw [next]
+    simp only [if_neg ha, if_neg h1, if_pos h2]
+    rw [hdiff]
+    have hdplus : d+2=t+q+1 := by
+      dsimp [d]
+      omega
+    rw [hdplus]
+    apply drainB_direct_halt_cylinder n (t+q+1) 2 (by omega)
+    have hones : 2*t+1=3^n := twice_ones_add_one_eq_pow n
+    have heq : q=3^n*3 := by dsimp [q]; rw [Nat.pow_succ]
+    have hlt : t<q := by omega
+    calc
+      (t+q+1-1)%3^(n+1) = (t+q)%q := by congr 1 <;> omega
+      _ = t%q := Nat.add_mod_right t q
+      _ = t := Nat.mod_eq_of_lt hlt
+  exact ⟨ha_even,hd_even,hnext,rfl⟩
+
+#print axioms drainB_direct_halt_cylinder
+#print axioms even_halter_log_sharp
+
 end BB6.Agent49Parity
