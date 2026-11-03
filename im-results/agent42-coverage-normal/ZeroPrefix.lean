@@ -20,6 +20,7 @@ theorem zeroRB_first_config (m : Machine)
   apply congrArg some
   simp [applyMove, shiftConfig, blank, blankAt]
   funext x
+  trace_state
   simp
 
 /-- Every later run is just the former B-blank-root run, translated by one
