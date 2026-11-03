@@ -1,0 +1,5 @@
+# Agent 7: stronger Row262 invariant limitation (R009)
+
+The exact original Row262 model has a locally Lean-verified **nonblank seeded** halter: A/0 with ten blank cells nearest-left and an entirely blank right tape, plus farther-left bits 10100101, reaches its A0/right11 gate at 596 raw transitions and halts at 598. This does not concern the fully blank root.
+
+A general Lean proof transports universal first-return closure to every A-to-A interval, so no uniformly closed first-return invariant based on the nearest ten left bits, head bit, and complete right tape can both contain the blank projection and exclude the halting guard. See im-results/agent7-row262-right-projection/README.md, SeededHalt.lean, FirstToAll.lean. Original-source local Lean4.36 check only; GitHub Actions pending. Actual BB(6) remains unresolved.
