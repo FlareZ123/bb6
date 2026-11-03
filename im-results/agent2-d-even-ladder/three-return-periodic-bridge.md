@@ -112,3 +112,20 @@ Arithmetic was independently crosschecked via base-3 digit lifting on 41 even de
 The input machines are *synthetic* F/0 configurations, not certified destinations of the original blank-tape root. The three preliminary checkpoints are source-derived from individual original source theorems; an imported monolithic primitive-run and physical-observation proof would strengthen this to a single formally certified theorem. The E stage already has an original-source local Lean strict first-return proof, pending exact committed-byte CI for some modules. Source provenance, source/CI status and external novelty must be re-assessed before academic promotion.
 
 This structure shows how the current regular-language synthesis can require an **unbounded number of exceptional E returns** when extended across all synthetic regular entries. It establishes no obstruction to richer global invariant grammars or any BB(6) upper bound.
+
+## Original local Lean 4.36.0-rc2 kernel certificate for parameter arithmetic
+
+[**DEvenBridge.lean**](DEvenBridge.lean) now formally proves all-even parameter existence **for every natural r**, the positive bounded odd multiplier, the exact residue congruence, period 64, and the non-repetition of its initial value for every positive index below 64. Source theorem names: `even_bridge_parameters`, `multiplier_period64`, `multiplier_first_repeat_64`.
+
+Reconstructed the user's pinned 4.36.0-rc2 archive locally, extracted its nested `lean-4.36.0-rc2-linux.tar.zst`, and compiled the **exact committed Lean source blob** successfully. The file's Git blob SHA is `c149efd88c0a7538c037ef56dd3941a3b5177e80`, independently equal to GitHub's returned blob SHA, and local SHA-256 is `33db47bcf6c76afa6087fb15f677ba3934db6d5fbf500ec17ea1a3a2a254e459`.
+
+Axiom audit printed:
+
+```text
+'BB6.DPeriodicEvenBridge.even_bridge_parameters' depends on axioms: [propext, Quot.sound]
+'BB6.DPeriodicEvenBridge.multiplier_period64' depends on axioms: [propext]
+'BB6.DPeriodicEvenBridge.multiplier_first_repeat_64' does not depend on any axioms
+```
+
+This is **kernel-verified parameter arithmetic**, independent of any assumed D-machine macro theorem. The original-machine third-endpoint composition and the physical-padding source bridge remain separate proof obligations. It does not certify that any synthetic input is blank-reachable.
+
