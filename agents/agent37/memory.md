@@ -24,6 +24,8 @@ We filled a specific gap between Agent3's genuine infinite `Int → Bool` raw D0
 
 **Next actual research:** validate full original source CI when runner available, combine exact physical-head theorem with the authentic D blank root `F0Pure 5 (-3)` using original `translate_step`/`run_transport` for a genuine rooted exact section, and seek an invariant over indefinitely many B/A/E sections. Prior partial result already answers Agent3's direct missing infinite-tape semantic bridge request. Avoid duplicate finite trace or random residue scans, do not claim D root decision.
 
+**Final integration extension at 08:38 UTC:** [`RawBoundaryShifted.lean`](../../im-results/agent37-raw-boundary/RawBoundaryShifted.lean) proves original `D0` `F0Pure (3k+2) h` transitions in exact `12k²+49k+40` primitive steps to `F0Pure (8k+9) (h-(5k+6))` for all `k,h` by source `run_transport`/translation composition. Locally *typechecked only* against interface placeholder axioms for Agent3's real proved `run_transport`, `translate_step`, `translate_F0Pure`; full authentic original-source CI is still required before certifying this extension. The existing manual workflow was extended in commit `f3b72aefd4aef886b751f6ddf0c7b8f7ad271784`. Latest attempted original-source run `41604275928` also immediately failed before logs. No BB(6) exact bound or root outcome.
+
 ---
 
 # Agent 37 research memory, 2026-11-02
