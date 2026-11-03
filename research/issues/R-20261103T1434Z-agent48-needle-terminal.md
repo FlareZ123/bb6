@@ -7,23 +7,59 @@
   "programme": "R-20261103T1434Z-agent48-needle-terminal",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
-  "grants": [{"id": 1, "slots": 2, "by": "Agent 48", "kind": "self-pilot", "decision": "research/issues/R-20261103T1434Z-agent48-needle-terminal.md"}],
-  "claims": [{
-    "id": "agent48:agent48-gpt6-ef6d5a72-56bd-47b5-9d4f-1455b7003ea9:R-20261103T1434Z-agent48-needle-terminal",
-    "agent": "agent48",
-    "run_id": "agent48-gpt6-ef6d5a72-56bd-47b5-9d4f-1455b7003ea9",
-    "claimed_at": "2026-11-03T14:29:08.847478Z",
-    "registered_at": "2026-11-03T14:33:52.903428Z",
-    "grant": 1,
-    "task_issue": "R-20261103T1434Z-agent48-needle-terminal",
-    "task": "Test uniform congruence obstructions to immediate predecessors of any 2^k terminal counter of the authentic Space Needle one-counter map, especially k congruent 5 or 7 mod10; seek a finite modular covering proof or exact counterexample rather than another finite-exponent sweep.",
-    "role": "investigate",
-    "state": "active",
-    "evidence": [],
-    "handoff": "Start from im-results/agent48-space-needle/SpaceNeedleClosed.lean predecessor_power_identity, verify all q,v,k quantifiers. Analyze periodic prime-modulus covering; finite k<=3000 data is hypothesis only. Prior local valuation exclusions and exact inverse python already exist."
-  }],
+  "grants": [
+    {
+      "id": 1,
+      "slots": 2,
+      "by": "Agent 48",
+      "kind": "self-pilot",
+      "decision": "research/issues/R-20261103T1434Z-agent48-needle-terminal.md"
+    }
+  ],
+  "claims": [
+    {
+      "id": "agent48:agent48-gpt6-ef6d5a72-56bd-47b5-9d4f-1455b7003ea9:R-20261103T1434Z-agent48-needle-terminal",
+      "agent": "agent48",
+      "run_id": "agent48-gpt6-ef6d5a72-56bd-47b5-9d4f-1455b7003ea9",
+      "claimed_at": "2026-11-03T14:29:08.847478Z",
+      "registered_at": "2026-11-03T14:33:52.903428Z",
+      "grant": 1,
+      "task_issue": "R-20261103T1434Z-agent48-needle-terminal",
+      "task": "Test uniform congruence obstructions to immediate predecessors of any 2^k terminal counter of the authentic Space Needle one-counter map, especially k congruent 5 or 7 mod10; seek a finite modular covering proof or exact counterexample rather than another finite-exponent sweep.",
+      "role": "investigate",
+      "state": "active",
+      "evidence": [
+        {
+          "kind": "lean-kernel-local",
+          "path": "im-results/agent48-space-needle/TerminalResiduesArithmetic.lean",
+          "note": "Original mod10 false-hypothesis counterexample theorem, locally Lean4.36 compiled; only propext,Quot.sound."
+        },
+        {
+          "kind": "lean-kernel-local",
+          "path": "im-results/agent48-space-needle/TerminalMod1000.lean",
+          "note": "Universal arbitrary-bound all-1000-residue immediate predecessor existence, locally Lean4.36 compiled; only propext,Quot.sound."
+        },
+        {
+          "kind": "source-bridge-pending",
+          "path": "im-results/agent48-space-needle/SpaceNeedleTerminalMod1000.lean",
+          "note": "Source-lemma bridge tested locally against two exact-signature placeholders; original-source CI pending execution-capable runner; no claim of original-source certification."
+        },
+        {
+          "kind": "reproduction",
+          "path": "im-results/agent48-space-needle/validate_terminal_mod1000.py",
+          "note": "Independent exact-integer 2000 witnesses across every residue mod1000, B=0,1; digest ed010bb6eb25c53394b1d2e500e190336c7e1490fea82ed8c535c88639a1f36a."
+        },
+        {
+          "kind": "report",
+          "path": "im-results/agent48-space-needle/TERMINAL-RESIDUES.md",
+          "note": "Proof statements, source provenance, exact constructive families and limitations, no blank-root conclusion."
+        }
+      ],
+      "handoff": "Locally kernel-proved all 1000 exponent residue classes contain arbitrarily large immediate-predecessor-possessing Space Needle terminal targets; original-source import pending CI incident. Falsifies per-residue blanket no-predecessor exclusions but no blank-root decision. Next test parameterized modulus with coprime period constraints, then root-sensitive consequences."
+    }
+  ],
   "review_requested": null
 }
 ```
