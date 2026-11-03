@@ -30,4 +30,30 @@ theorem iterH_two_adic_shift (r c s n z d : Nat) :
     rw [Nat.pow_succ]
     ac_rfl
 
+theorem H_odd_scale_curvature (r c s y t : Nat)
+    (hr : r%2=1) (hs:t%2=1) (hgap:r≤2*s) :
+    (y%2=0 ∧ H r c s y+H r c s (y+2*t)+(2*s-r) =
+      2*H r c s (y+t)) ∨
+    (y%2=1 ∧ H r c s y+H r c s (y+2*t) =
+      2*H r c s (y+t)+(2*s-r)) := by
+  have ht : t=2*(t/2)+1 := by omega
+  have hdelta : r+(2*s-r)=2*s := by omega
+  have hrt : r*t=2*(r*(t/2))+r := by
+    calc
+      r*t = r*(2*(t/2)+1) := congrArg (fun u:Nat=>r*u) ht
+      _ = 2*(r*(t/2))+r := by
+        rw [Nat.mul_add]
+        simp
+        ac_rfl
+  by_cases hy : y%2=0
+  · left
+    refine ⟨hy, ?_⟩
+    have hmidDiv : (y+t)/2=y/2+t/2 := by omega
+    have hmidRem : (y+t)%2=1 := by omega
+    have hendDiv : (y+2*t)/2=y/2+t := by omega
+    have hendRem : (y+2*t)%2=0 := by omega
+    simp only [H,hy,hmidDiv,hmidRem,hendDiv,hendRem]
+    rw [Nat.mul_add r (y/2) t,hrt]
+    simp [Nat.mul_add]
+    omega
 end BB6.Agent30Generic
