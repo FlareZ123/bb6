@@ -27,6 +27,11 @@ jobs:
           cd /tmp/cryptids
           git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
           test "$(git rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+      - name: Reclaim unused hosted-runner tooling space for Mathlib cache
+        run: |
+          df -h
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          df -h
       - name: Restore authenticated mathlib dependencies
         working-directory: /tmp/cryptids
         run: lake exe cache get
