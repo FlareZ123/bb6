@@ -35,3 +35,7 @@ All 65,924 edge comparisons passed in a local Python 3 standard-library run. Ori
 If one could prove that the **actual blank-origin first-even orbit has unbounded 2-adic valuations**, this argument would extend to every positive finite modulus. Such a claim is currently entirely open. The finite observed valuation 17 cannot imply unboundedness.
 
 The all-odd and zero-fiber arithmetic theorems have complete conventional written arguments and exact checkers, but their general prime-factor induction awaits independent audit and full Lean formalization. The root `3^k` lifting lemma is separately kernel checked. None of the present conclusions proves halting or nonhalting of the Sheep Machine, and none determines BB(6).
+
+## Independent pure-power-of-two Lean certificate
+
+[PureTwo.lean](PureTwo.lean) locally compiled in Lean 4.36.0-rc2 and proves the all-k zero-fiber reachability theorem for moduli `2^k` by explicit construction, with only `[propext, Quot.sound]` axioms. The arbitrary odd-factor part of the uniform theorem uses the separate conventional CRT / prime-digit proof; its absence of a Lean file must not be concealed.
