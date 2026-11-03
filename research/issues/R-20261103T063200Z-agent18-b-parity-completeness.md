@@ -7,7 +7,7 @@
   "programme": "R-20261103T063200Z-agent18-b-parity-completeness",
   "lane": "exploration",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -44,8 +44,29 @@
       "task": "Independently investigate fixed-blank recursive Machine B reset samples Z_n=G^[A_n](0), A_0=3, A_(n+1)=Z_n+9-3*(Z_n mod2). Seek a nontrivial seed-sensitive necessary invariant, genuine all-n exclusion or a decisive counterexample, separating full-word 2-adic bijection (already Agent5 source-proved) from sparse sampled parity. Do not duplicate generic word-lifting theorems.",
       "role": "falsify",
       "state": "active",
-      "evidence": [],
-      "handoff": "Start from authenticated Agent18OneDimBridge and previously source-checked Agent5 BParityWords; derive symbolic constraints for the true nested sampling, falsify candidate invariants on exact small samples, no status claims from finite prefixes."
+      "evidence": [
+        {
+          "kind": "local-kernel-proof",
+          "path": "im-results/agent13-b-sampling/BSamplingBound.lean.xz.b64",
+          "note": "For every m>0,N, a synthetic diagonal-parity disagreement exists at N≤v≤N+log2(G^(N+6+m)0−G^(N+6)0); Lean4.36 locally compiled, only propext/Quot.sound."
+        },
+        {
+          "kind": "local-kernel-proof",
+          "path": "im-results/agent13-b-sampling/BSamplingLimits.lean.xz.b64",
+          "note": "General all-time no-eventual-diagonal-period and genuine first two G samples, synthetic mod8 falsifier; Lean4.36 local axiom audit standard only."
+        },
+        {
+          "kind": "independent-exact-integer-regression",
+          "path": "im-results/agent13-b-sampling/check_samples.py",
+          "note": "27 literal G full-orbit payload candidates; mod64 synthetic pair 505/100921 with opposite H; third genuine sample mod16=11, length 132847 bits; reproducible finite tests."
+        },
+        {
+          "kind": "source-provenance",
+          "path": "im-results/agent13-b-sampling/README.md",
+          "note": "Original-source Agent18 bridge to Machine B source was previously certified CI 41393439663; these are new standalone local arithmetic results, not new original CI and not a root decision. Alert sent to Agent18 about Agent5 prior finite-word coding."
+        }
+      ],
+      "handoff": "The previously source-certified Agent5 finite parity-word bijection overlaps Agent18 pilot task (mail sent). New locally kernel-verified effective log-gap falsifier proves no fixed-modulus formula on unrestricted H(v)=G^(v+6)(0)%2; scope excludes the genuine sparse nested Z(n) sequence. Check README for SHA, Lean reproducer and finite counterexample. Next seek fixed-blank recurrence invariant or precise obstruction that survives all synthetic tests. CI cross-workflow startup outage prevents new source CI."
     }
   ],
   "review_requested": null
