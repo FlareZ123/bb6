@@ -48,6 +48,22 @@ The eight edges require 39 primitive transitions in eight **distinct constructed
 - [check_right_projection.py](check_right_projection.py) independently parses all 11 actions from the literal RLE, executes each independently selected full physical tape, checks the first A return (and all intermediate states), verifies each exact right projection, then checks the two-step F/1 guard. It passed all eight cases and the guard test. It is finite regression, complementary to the universally quantified Lean theorem.
 - Prior related source-checked machinery: [Agent35's full A-return theorem](../agent35-row262-section/Row262Complete.lean), successful earlier manual CI run [41575285282](https://github.com/FlareZ123/bb6/actions/runs/41575285282); and [Agent2's guarded 9q burst](../agent2-row262-burst/README.md). Neither asserts nonhalting from the blank tape.
 
+## Stronger result: four nearest-left tape bits are still insufficient
+
+The independent [PrefixWindowNoGo.lean](PrefixWindowNoGo.lean) strengthens the abstraction: the predicate may inspect **four nearest cells to the left**, the scanned head bit, and the complete right tape. Its only hidden information is the farther-left tape and the earlier history. Both the left window and right suffix are normalized for implicit physical zeros, so the statement concerns actual tape bits rather than an arbitrary finite-list representation.
+
+`FirstWindowClosed 4 P` means closure under the **first positive A return** from every finite full tape that agrees with those observed four-left/head/right bits, with arbitrarily chosen farther-left cells. The locally kernel-checked source-mirror theorem `BB6.Row262.Window.left_four_window_forces_halt_guard` proves
+
+```lean
+P [false,false,false,false] false [] →
+FirstWindowClosed 4 P →
+P [false,true,false,true] false [true,true,false,true,false,true]
+```
+
+The conclusion scans 0 and has right prefix `11`, hence admits the halting guard. The corollary `no_safe_left_four_window` shows that every such universally closed predicate containing the blank projection necessarily fails to exclude every halting gate. The proof has **19 individual first-return witnesses**, independently specifying whole left tapes, totaling 80 primitive steps across those separate configurations. The source [check_prefix_window.py](check_prefix_window.py) parses the original RLE (through the companion parser) and independently verified every full-tape first return, all intermediate non-A states, every four-left/head/right projected output, and the 80-step sum. Local Lean **4.36.0-rc2** compiled the theorem against a definition-identical copy of the original step/run implementation; its axiom audit was `[propext, Quot.sound]` only. **Full unmodified-original-source CI for the new file remains pending**, as with the first right-only theorem.
+
+This second result narrows a possible nonhalting strategy further: even tracking a bounded window of **four** nearest-left cells, with an arbitrary right-side language, cannot give an inductive proof if its closure must hold for all farther-left contexts. It does **not** rule out longer left windows, invariants restricted by genuine blank reachability, or constraints correlating the omitted farther-left cells with the observed tape. The 19 configurations are synthetic and are not a single blank-run halt certificate.
+
 **Research implication:** A useful global induction for this machine must exploit information lost in this projection, such as left-tape context, authenticated blank-origin reachability, or a correlated two-sided symbolic description. The exact missing obligation remains proving that the **actual** blank-origin A-section orbit never has head 0 and right prefix 11, or finding a genuine halting witness.
 
 This theorem is an internal strategy-elimination result. No independent scholarly novelty review was performed; it belongs in `im-results/`, not `results/`.
