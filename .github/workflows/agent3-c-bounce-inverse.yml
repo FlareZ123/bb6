@@ -134,6 +134,8 @@ jobs:
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
           lean HighAffineInfinite.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineCone.lean .
+          lean HighAffineCone.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
