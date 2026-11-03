@@ -155,6 +155,50 @@ theorem scalar_reset_bits_from_prefix (idx k q : Nat)
   have heq : scalarA (idx+1)=z+9-3*(z%2) := rfl
   constructor <;> omega
 
+/-- A finite prefix certifies any integer interval containing the next B reset. -/
+theorem scalar_reset_interval (idx k L U : Nat)
+    (hk : k ≤ scalarA idx)
+    (hl : 2^(scalarA idx-k)*(L+8) <
+      3^(scalarA idx-k)*(iterG k 0+8))
+    (hu : 3^(scalarA idx-k)*(iterG k 0+15) <
+      2^(scalarA idx-k)*U) :
+    L ≤ scalarA (idx+1) ∧ scalarA (idx+1) < U := by
+  let a := scalarA idx
+  let z := iterG a 0
+  have hp : k+(a-k)=a := Nat.add_sub_of_le hk
+  have h := bound_from_prefix k (a-k)
+  rw [hp] at h
+  have hpow : 0<2^(a-k) := Nat.pow_pos (by decide)
+  have hlow : L+8 < z+8 :=
+    (Nat.mul_lt_mul_left hpow).mp (Nat.lt_of_lt_of_le hl h.1)
+  have hupp : z+15 < U :=
+    (Nat.mul_lt_mul_left hpow).mp (Nat.lt_of_le_of_lt h.2 hu)
+  have hreset : scalarA (idx+1)=z+9-3*(z%2) := rfl
+  have hpar : z%2≤1 := by omega
+  constructor <;> omega
+
+/-- Certify 64 leading bits of A3 after just 108 scalar iterations. -/
+theorem third_reset_high64 :
+    12152998694446408055*2^132783 ≤ scalarA 3 ∧
+    scalarA 3 < 12152998694446408056*2^132783 := by
+  have ha : scalarA 2=227097 := reset_two
+  have hz : iterG 108 0=93712152114182651980 := by decide
+  have hk : 108 ≤ scalarA 2 := by rw [ha]; decide
+  have hl : 2^(scalarA 2-108)*(12152998694446408055*2^132783+8) <
+    3^(scalarA 2-108)*(iterG 108 0+8) := by
+    rw [ha,hz]
+    decide
+  have hu : 3^(scalarA 2-108)*(iterG 108 0+15) <
+    2^(scalarA 2-108)*(12152998694446408056*2^132783) := by
+    rw [ha,hz]
+    decide
+  exact scalar_reset_interval 2 108
+    (12152998694446408055*2^132783)
+    (12152998694446408056*2^132783) hk hl hu
+
+#print axioms third_reset_high64
+#print axioms scalar_reset_interval
+
 #print axioms scalar_reset_bits_from_prefix
 #print axioms reset_bits_from_prefix
 #print axioms bound_from_prefix
