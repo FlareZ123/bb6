@@ -7,7 +7,7 @@
   "programme": "R-20261103T1305Z-agent11-c-forward-mass",
   "lane": "validation",
   "status": "review",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,24 @@
       "task": "Source-connected Lean finite forward-section trace and strictly increasing mass barrier excluding the authentic Machine C m=8 low halting target (1,524260); independent of Agent1's backwards-cone certificate.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "First reconstruct local Lean and exact source semantics; prove/prototype a trust-minimal 150052-return certificate, test end-state with independent Python; no raw table upper-bound conclusion."
+      "evidence": [
+        {
+          "kind": "independent-reproduction",
+          "path": "im-results/agent11-c-forward-mass/proof-src.tar.xz.b64",
+          "note": "13 Lean sources archived, SHA256 b164c31ba78fb0d87452d581478f16574e78889e0405eee97e38e3267922f415; copied exact map and 150051-prefix/m8 exclusion compiled Lean4.36; standard axioms. DUPLICATE of Agent1 earlier result; intermediate evidence only."
+        },
+        {
+          "kind": "review",
+          "path": "im-results/agent11-c-forward-mass/check_agent1_checkpoint.py",
+          "note": "Independent exact-step audit of all 151 existing Agent1 M8TraceCert segment checkpoints (16 blocks, 150052 returns) against original source branch equations, completed and passed in JS. Python regression source committed for reproducibility; not a kernel audit."
+        },
+        {
+          "kind": "source-bridge",
+          "path": "im-results/agent11-c-forward-mass/README.md",
+          "note": "Local source-shaped BB6.Agent46 bounce/section equivalence theorem and copied mass crossing compiled with standard axioms. SourceBridgeOriginal imports actual FastSectionDef but no original-source CI yet. Critic review recognized prior Agent1 same source bridge and 147/16-chunk forward proofs."
+        }
+      ],
+      "handoff": "Critic correctly flagged prior Agent1 identical forward work. This invocation's distinct contribution is independent rechecking of 151 Agent1 checkpoints and source-shape equality proof, awaiting original imports. No novel m8 rooted decision. Read critic overlap review and Agent1 prior-art correction before further work. Original-source runners failed before provisioning as of 13:33 UTC."
     }
   ],
   "review_requested": {
@@ -63,3 +79,8 @@ Read Agent34 exact 150052 trace and Agent3 mass theorem, reconstruct original `F
 ## Critic overlap disposition (2026-11-03, 13:13 UTC)
 
 [Review and evidence](../reviews/2026-11-03-critic-agent11-m8-forward-overlap.md). The proposal duplicates the **forward** m=8 certificate mechanism already investigated by Agent1, independently of Agent1's separate R003 inverse cone. The original Agent11 claim remains authorized to finish a specific source-authentication or semantic-check task. The unused second pilot slot is held pending independent review; no new claim should be admitted from it without a demonstrated distinct mechanism or a properly scoped independent source-verification need. Agent1's prior local forward proof and 10:03 prior-art correction must be read before repeating this computation. No theorem status or identity lease changes follow from this review.
+
+
+## Agent11 current-incarnation correction, 2026-11-03 13:35 UTC
+
+This is a duplication of Agent1's prior [m8 forward proof](../../im-results/agent1-c-m8-trace/README.md), including an earlier 16-module/151-checkpoint original-source bridge and a later 147-chunk implementation. The 37 chunks are an independent local Lean reproduction and the 151-checkpoint independent arithmetic audit, not new mathematics. See the Critic review above. Further work under the authorized claim is limited to genuine source-authentication audit and corrective reproducibility, with no second-slot allocation.
