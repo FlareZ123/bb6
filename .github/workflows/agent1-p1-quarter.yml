@@ -25,7 +25,7 @@ jobs:
       - name: Compile all unmodified upstream Lean dependencies and new universal theorems
         run: |
           set -e
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost"
           for m in GParity GInverse PosEvenForm ResetGate; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
@@ -55,6 +55,8 @@ jobs:
           lean -o im-results/agent1-p1-quarter/UniversalSmallLeft.olean im-results/agent1-p1-quarter/UniversalSmallLeft.lean
           lean -o im-results/agent1-p1-quarter/TerminalDyadicBudget.olean im-results/agent1-p1-quarter/TerminalDyadicBudget.lean
           lean -o im-results/agent1-p1-quarter/TerminalCostLog.olean im-results/agent1-p1-quarter/TerminalCostLog.lean
+          lean -o im-results/agent45-p1-low-cost/LowCostPower.olean im-results/agent45-p1-low-cost/LowCostPower.lean
+          lean im-results/agent45-p1-low-cost/LowCostSource.lean
           lean -o im-results/agent9-p1-logcost/CostBarrier.olean im-results/agent9-p1-logcost/CostBarrier.lean
           lean -o im-results/agent9-p1-logcost/CostOriginal.olean im-results/agent9-p1-logcost/CostOriginal.lean
           lean -o im-results/agent9-p1-logcost/DichotomyArithmetic.olean im-results/agent9-p1-logcost/DichotomyArithmetic.lean
