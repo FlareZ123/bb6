@@ -18,9 +18,12 @@ def advance (c : Packet) : Option Packet :=
     if c.q = 0 then none
     else some ⟨8 * ((c.a-2)/3) + 10, c.q-1, c.p⟩
   else if c.a % 3 = 1 then
-    if c.p < 3 then none
+    if c.a < 4 ∨ c.p < 3 then none
     else some ⟨8 * ((c.a-4)/3) + 9, c.q+2, c.p-3⟩
   else none
+
+/-- A state with one leading unary symbol is not a source-valid E packet. -/
+theorem one_is_terminal : advance ⟨1,0,3⟩ = none := by decide
 
 /-- Every B/E source-macro recurrence inside M reduces q+p by exactly one. -/
 theorem advance_rank {c d : Packet} (h : advance c = some d) :
@@ -37,7 +40,7 @@ theorem advance_rank {c d : Packet} (h : advance c = some d) :
   · split at h
     · split at h
       · contradiction
-      · have hp : ¬c.p < 3 := by assumption
+      · have hp : ¬(c.a < 4 ∨ c.p < 3) := by assumption
         injection h with heq
         subst d
         simp only [rank]
@@ -57,6 +60,7 @@ decreasing_by
   have hr := advance_rank h
   omega
 
+#print axioms one_is_terminal
 #print axioms advance_rank
 #print axioms normalizeWithCount
 end BB6.Agent31PacketRank
