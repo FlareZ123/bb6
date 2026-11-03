@@ -23,7 +23,7 @@ private theorem pow2_succ_double (n : Nat) :
     This is the exact original imported recursion, with arbitrary right stack. -/
 theorem empty_odd_halt_iff (q : Nat) (R : List Nat) :
     stepEpoch (2*q+1) [] R = none ↔ ∃ m, q+1 = 2^m := by
-  induction q using Nat.strong_induction_on with
+  induction q using Nat.strong_induction_on generalizing R with
   | h q ih =>
     by_cases hz : q = 0
     · subst q
@@ -31,14 +31,15 @@ theorem empty_odd_halt_iff (q : Nat) (R : List Nat) :
       · intro _
         exact ⟨0, by decide⟩
       · intro _
-        rfl
+        rw [stepEpoch]
+        simp
     · have hlarge : ¬(2*q+1 ≤ 1) := by omega
       have hhalf : (2*q+1)/2=q := by omega
       have hodd : (2*q+1)%2 ≠ 0 := by omega
       have hstep : stepEpoch (2*q+1) [] R =
           stepEpoch q [] (0 :: bumpHeadBy q R) := by
         rw [stepEpoch]
-        simp [hlarge, hhalf, hodd]
+        simp [hz, hhalf]
       rw [hstep]
       by_cases he : q % 2 = 0
       · have hq : 2 ≤ q := by omega
