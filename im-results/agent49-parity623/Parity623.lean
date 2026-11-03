@@ -288,6 +288,27 @@ theorem run_preserves_even (n a d : Nat)
       exact next_preserves_even aa dd a d (ih aa dd hr) h
 
 /-- Even first counter alone cannot guarantee survival. -/
+theorem run_grows_at_least_seven (n a d : Nat)
+    (h : run n = some (.D a d)) :
+    7 * (n + 1) ≤ a + d := by
+  induction n generalizing a d with
+  | zero =>
+    simp only [run] at h
+    cases h
+    omega
+  | succ n ih =>
+    simp only [run] at h
+    cases hr : run n with
+    | none => simp [hr] at h
+    | some s =>
+      rcases s with ⟨aa, dd⟩
+      simp only [hr, Option.bind_some] at h
+      have h1 := ih aa dd hr
+      have h2 := next_strict_mass aa dd a d h
+      omega
+
+theorem growth_constant_sharp : next (.D 0 0) = some (.D 0 7) := by rfl
+
 theorem synthetic_even_halter : next (.D 4 2) = none := by decide +kernel
 theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
 
@@ -295,6 +316,7 @@ theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
 #print axioms drainB_parity
 #print axioms next_preserves_even
 #print axioms run_preserves_even
+#print axioms run_grows_at_least_seven
 #print axioms synthetic_even_halter
 
 end BB6.Agent49Parity
