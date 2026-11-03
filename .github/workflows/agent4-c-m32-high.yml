@@ -19,6 +19,8 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Recompute exact original B8/M32 forward closure
         run: python3 tools/agent43_c32_certificate.py
+      - name: Independently reconstruct M16/M32 high halting-gateway comparison
+        run: python3 tools/agent4_c32_high_census.py
       - name: Retrieve previously verified 40 kernel proof blocks
         uses: actions/download-artifact@v4
         with:
