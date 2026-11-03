@@ -1,5 +1,5 @@
 import BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
-import ReturnLadder
+import OddVHigh
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -102,6 +102,15 @@ theorem source_v_odd_ladder (k n w : Nat) (hk4 : k%4=3) (hw4 : w%4=3)
 
 #print axioms source_v_even_ladder
 #print axioms source_v_odd_ladder
+
+/-- Native Cryptids exact accelerated source checkpoint from the true blank-origin state. -/
+theorem source_root_to_V5_745 :
+    sourceRun 322 highLevelStart =
+      some (.J (BB429ElevenExtension.rayV 5) 745) := by
+  have hh:=source_run_eq 322 (0,0)
+  simpa [lift,highLevelStart,BB429OddVHigh.rooted_to_V5_745] using hh
+
+#print axioms source_root_to_V5_745
 
 #print axioms source_step_eq
 #print axioms source_run_eq
