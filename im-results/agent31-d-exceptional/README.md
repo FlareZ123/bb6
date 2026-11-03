@@ -75,3 +75,19 @@ The same script gives the updated earliest **conditional** still-off-L milestone
 ## Original-source verification update (18:43 UTC)
 
 Both manual CI runs above completed successfully on GitHub-hosted runners, with the actual Lean compiler executing on the original checked-in dependency chain (`Boundary.lean` restored with the repository hash check, `CryptidSix`, `CryptidPairs`, `CryptidTriplePairs`, `EDouble`, `Generic`, and `BoundaryPadding`). In run 41693590232 the log printed `[propext, Quot.sound]` for `first_source`, `second_source` and `two_returns_source`, and `PASS 45 independent exact two-return checks`. This repairs the earlier CI-pending provenance of `ESecondSource.lean`. The exact source object uses observational equivalence of tapes at the combined endpoint and does not assert universal earliest-return minimality. The simulation sample additionally checked first-return minimality only for its 45 finite cases. The nonregular suffix statement is a separate universal Lean theorem. Neither source compilation nor that language theorem proves reachability of these inputs from the original blank-tape root.
+
+
+## Source-certified arbitrary-tail packet paths (18:54 UTC)
+
+The previously isolated B/E packet-rank argument has now been connected to the **original machine** by [PacketSource.lean](./PacketSource.lean) and [PacketPaths.lean](./PacketPaths.lean). [Manual original-source Lean CI 41698072765](https://github.com/FlareZ123/bb6/actions/runs/41698072765), job 126133788557, head `b502b36ed0c93b6434a26bb1442562ff0c00a5e0`, passed. The final theorem axiom reports were all `[propext, Quot.sound]` with no `sorryAx`.
+
+Write `M(a,q,p;Y)=I_a((01)^q 0 1^pY)`. For **every** k,q,p and arbitrary binary tail Y, original source theorems establish:
+
+* `b_packet`: `M(3k+2,q+1,p;Y) → M(8k+10,q,p;Y)` in `12k²+49k+40` primitive steps.
+* `e_packet`: `M(3k+4,q,p+3;Y) → M(8k+9,q+2,p;Y)` in `12k²+49k+58+6q` primitive steps.
+
+The source-level inductive `Edge` relation specifies exactly those valid B/E transitions with raw durations. `Path s count cost dst` composes arbitrary finite guarded runs; `path_sound` proves the **literal original-machine** configuration equality after their cumulative primitive time `cost`, for all Y. `path_rank_bound` proves `count + dst.q + dst.p ≤ s.q + s.p`. Therefore an uninterrupted segment of guarded B/E packet calls has at most `q+p` macro transitions. This is source-certified arbitrary-depth transport, stronger than a locally checked abstract rank calculation.
+
+**Critical guard:** E requires `a=3k+4≥4`. The earlier abstract `PacketRank.advance` uses only `a%3=1`, inadvertently admitting a fictitious state `a=1` via saturated subtraction on naturals. The source-level `Edge` deliberately excludes that invalid state; do not use the old abstract `advance` as source-sound for all natural states before repairing its guard. All reachable outputs of the source-valid B/E branches have `a≥4`.
+
+**Limit:** There is no source theorem covering a packet-language **exit** here (A, B with q=0, or E with p≤2), and no proof that the real blank run stays in a language closed under those exits. The source-certified finite-segment theorem is no D-root halting decision and does not bound BB(6).
