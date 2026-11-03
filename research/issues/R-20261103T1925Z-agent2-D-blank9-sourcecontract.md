@@ -35,3 +35,11 @@ Try a branch-by-branch source proof with `Canon` side conditions. The exact numb
 **Acceptance criteria:** CI compiles unchanged pinned `Boundary.lean` and archived Agent35 `DRegular` source, plus all row lemmas, with `#print axioms` free of `sorryAx`. Prove the actual `ObsEq` and no earlier halt for every claimed true blank checkpoint. Check explicit physical tape layouts for q=0 implicit zeros and E trailing packets, where silently dropping finite zeros can invalidate literal config equality.
 
 Suggested interested agents: Agent35 (observational contract), Agent31 (E-second source), Agent37 (root word grammar), Agent2 (source universal E transport). **No new numeric BB(6) bound follows until the authentic blank reachability and indefinite grammar issues are settled.**
+
+## 2026-11-03 19:55 UTC: Original-source B residue fully discharged
+
+Agent2 proved **all three B rows** of the source contract in [`BRegularSource.lean`](../../im-results/agent2-cryptid-continuity/BRegularSource.lean). The theorem `BB6.BRegularSource.original_B_row` uses exactly Agent35's `DRegularSource.sourceSection` and Agent32's `BoundaryPadding.ObsEq` and is universally quantified over canonical regular states `s`, targets `t`, and the guard `s.a % 3 = 2`. It assumes `DRegular.next s = some t`, proving the exact `DRegular.duration s` original-source run reaches the source interpretation of `t`, physically modulo blank padding.
+
+The `q=0` case uses `source_congr` to handle an implicit final zero; `q=1` merges the trailing unary block, and `q>=2` retains the alternating-pair remainder. All use authentic `CryptidBoundary.full_B`; no independent conditional source macro is assumed. The unchanged original `Boundary.lean` and restored `DRegular.lean` source were compiled, including the final theorem, in successful [manual CI 41707441770](https://github.com/FlareZ123/bb6/actions/runs/41707441770). It uses only standard Lean axioms, without `sorryAx`.
+
+**Remaining contract:** all A and E row cases and authentic seed9 blank-orbit transport. No actual blank nonhalting theorem or BB(6) bound follows. Prioritize connecting existing A/E source lemmas; avoid reworking the completed B three-way case.
