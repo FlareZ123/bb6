@@ -12,6 +12,7 @@ from urllib.request import Request, urlopen
 
 OCT16 = Path("resources/BB6_holdouts_663_2026-10-16.txt")
 OCT24_URL = "https://wiki.bbchallenge.org/w/images/4/4c/BB6_holdouts_623.txt"
+OCT30_URL = "https://wiki.bbchallenge.org/w/images/5/5e/BB6_holdouts_608.txt"
 TRANSITION = re.compile(r"(?:[01][LR][A-F]|---)\Z")
 
 
@@ -54,8 +55,34 @@ def main() -> None:
             print(f"{i}\t{machine}")
     print("END ADDED")
 
+
+    with urlopen(Request(OCT30_URL, headers={"User-Agent": "BB6-research-repro/1.0"}),
+                 timeout=35) as response:
+        assert response.status == 200
+        latest_raw = response.read()
+    latest = parse_roots(latest_raw, 608)
+    latest_set = set(latest)
+    print(f"October 30, 2026: {len(latest)} rooted entries, SHA256={sha256(latest_raw).hexdigest()}")
+    print(f"Source: {OCT30_URL}")
+    print(f"Oct24 retained: {len(new_set & latest_set)}")
+    print(f"Oct24 removed: {len(new_set - latest_set)}")
+    print(f"Oct30 added against Oct24: {len(latest_set - new_set)}")
+    print(f"Oct16 retained in Oct30: {len(old_set & latest_set)}")
+    print(f"Oct16 removed by Oct30: {len(old_set - latest_set)}")
+    print(f"Oct30 new against Oct16: {len(latest_set - old_set)}")
+    print("BEGIN OCT24 TO OCT30 REMOVED rooted entries (Oct24 1-based line number)")
+    for i, machine in enumerate(new, 1):
+        if machine not in latest_set:
+            print(f"{i}\\t{machine}")
+    print("END OCT24 TO OCT30 REMOVED")
+    print("BEGIN OCT24 TO OCT30 ADDED rooted entries (Oct30 1-based line number)")
+    for i, machine in enumerate(latest, 1):
+        if machine not in new_set:
+            print(f"{i}\\t{machine}")
+    print("END OCT24 TO OCT30 ADDED")
+
     # A live page query is deliberately provenance-only: the October 30
-    # claim requires an actual reachable 608-machine file before comparison.
+    # is cross-checked here against the original downloadable 608 roster.
     wiki_url = "https://wiki.bbchallenge.org/wiki/Holdouts_lists?action=raw"
     try:
         with urlopen(Request(wiki_url, headers={"User-Agent": "BB6-research-repro/1.0"}),
