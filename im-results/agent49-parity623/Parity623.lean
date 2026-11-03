@@ -469,4 +469,98 @@ theorem evalA_from_drain_strictly_reduces_b (a b d aa bb dd : Nat)
 
 #print axioms evalA_from_drain_strictly_reduces_b
 
+
+/-- Successful evaluator and a gap of two imply output a strictly exceeds b. -/
+theorem evalA_safe_gap (a : Nat) : ∀ k m : Nat, k + 2 ≤ a →
+    ∃ aa bb dd, evalA a k m = some (aa, bb, dd) ∧ bb < aa := by
+  induction a with
+  | zero =>
+    intro k m hb
+    omega
+  | succ a ih =>
+    intro k m hb
+    rw [evalA]
+    by_cases h2 : k % 3 = 2
+    · simp only [if_pos h2]
+      refine ⟨a + 2, k / 3, m, rfl, ?_⟩
+      omega
+    · by_cases h0 : k % 3 = 0
+      · simp only [if_neg h2, Nat.succ_ne_zero, if_pos h0]
+        refine ⟨a, k / 3, m + 2, rfl, ?_⟩
+        omega
+      · have hgap : k / 3 + 2 ≤ a := by omega
+        obtain ⟨aa, bb, dd, he, hlt⟩ := ih (k / 3) (m + 2 * (k / 3) + 3) hgap
+        simp only [if_neg h2, Nat.succ_ne_zero, if_neg h0]
+        exact ⟨aa, bb, dd, he, hlt⟩
+
+/-- Every positive-b B-drain with a>b returns safely and still has positive a. -/
+theorem drainB_safe_gap (b : Nat) : ∀ a d : Nat, b < a →
+    ∃ aa dd, drainB a b d = some (.D aa dd) ∧ 0 < aa := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d hg
+    rw [drainB]
+    by_cases hb : b = 0
+    · simp only [if_pos hb]
+      exact ⟨a, d, rfl, by omega⟩
+    · simp only [if_neg hb]
+      have hgap : b - 1 + 2 ≤ a := by omega
+      obtain ⟨a1, b1, d1, he, hlt⟩ := evalA_safe_gap a (b-1) (d+2*b+3) hgap
+      have hdec : b1 < b := evalA_from_drain_strictly_reduces_b a b d a1 b1 d1 (by omega) he
+      obtain ⟨aa, dd, hr, hp⟩ := ih b1 hdec a1 d1 hlt
+      simp only [he, Option.bind_some, if_pos hdec]
+      exact ⟨aa, dd, hr, hp⟩
+
+/-- Even, positive block counters permit the weaker one-unit input gap. -/
+theorem evalA_safe_gap_even (a : Nat) : ∀ k m : Nat,
+    2 ≤ k → k % 2 = 0 → k + 1 ≤ a →
+    ∃ aa bb dd, evalA a k m = some (aa, bb, dd) ∧ bb < aa := by
+  induction a with
+  | zero =>
+    intro k m hk he hg
+    omega
+  | succ a ih =>
+    intro k m hk he hg
+    rw [evalA]
+    by_cases h2 : k % 3 = 2
+    · simp only [if_pos h2]
+      refine ⟨a + 2, k / 3, m, rfl, ?_⟩
+      omega
+    · by_cases h0 : k % 3 = 0
+      · simp only [if_neg h2, Nat.succ_ne_zero, if_pos h0]
+        refine ⟨a, k / 3, m + 2, rfl, ?_⟩
+        omega
+      · have hgap : k / 3 + 2 ≤ a := by omega
+        obtain ⟨aa, bb, dd, hh, hlt⟩ := evalA_safe_gap a (k / 3) (m + 2 * (k / 3) + 3) hgap
+        simp only [if_neg h2, Nat.succ_ne_zero, if_neg h0]
+        exact ⟨aa, bb, dd, hh, hlt⟩
+
+/-- Uniform halting-free outer half-plane for the full high-level #623 step. -/
+theorem next_safe_outer_cone (a d : Nat)
+    (ha : 0 < a) (he : a % 2 = 0) (hd : 2 * a ≤ d) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬ (d % 2 = 1 ∧ a ≥ d + 5) := by omega
+  have h2 : ¬ (d % 2 = 0 ∧ a ≥ d + 3) := by omega
+  have hodd : a % 2 ≠ 1 := by omega
+  have h4 : a ≠ d + 2 := by omega
+  simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg h4]
+  by_cases hdodd : d % 2 = 1
+  · simp only [if_pos hdodd]
+    have hg : a - 1 < d + 4 - a := by omega
+    obtain ⟨aa, dd, hret, _⟩ := drainB_safe_gap (a - 1) (d + 4 - a) 3 hg
+    exact ⟨aa, dd, hret⟩
+  · simp only [if_neg hdodd]
+    have hk : 2 ≤ a := by omega
+    have hgap : a + 1 ≤ d + 1 - a := by omega
+    obtain ⟨p1, p2, p3, heval, hg⟩ :=
+      evalA_safe_gap_even (d + 1 - a) a (2 * a + 5) hk he hgap
+    simp only [heval, Option.bind_some]
+    obtain ⟨aa, dd, hret, _⟩ := drainB_safe_gap p2 p1 p3 hg
+    exact ⟨aa, dd, hret⟩
+
+#print axioms drainB_safe_gap
+#print axioms next_safe_outer_cone
+
 end BB6.Agent49Parity
