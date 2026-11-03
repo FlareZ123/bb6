@@ -23,9 +23,20 @@ with open(lock_path, "a+", encoding="utf-8") as guard:
             raise ValueError(f"Expected exactly one occurrence, found {n}: {before[:100]!r}")
         out = out.replace(before, after, 1)
 
+    # Reuse the identically quantified, already imported and kernel-proved
+    # BusyBeaver.Basic.list_pow_add, avoiding fragile local reconstruction.
     replace_once(
-        "rw [h, pow_succ_list, ih, pow_succ_list]",
-        "rw [h, pow_succ_list, ih]",
+        """omit [Inhabited Γ] in
+theorem list_pow_add (l : List Γ) (n m : Nat) : l^(n + m) = l^n ++ l^m := by
+  induction n with
+  | zero => simp [pow_zero_list]
+  | succ n ih =>
+    have h : (n + 1) + m = (n + m) + 1 := by omega
+    rw [h, pow_succ_list, ih, pow_succ_list]
+    simp only [List.append_assoc]""",
+        """omit [Inhabited Γ] in
+theorem list_pow_add (l : List Γ) (n m : Nat) : l^(n + m) = l^n ++ l^m :=
+  BusyBeaver.list_pow_add l n m""",
     )
 
     helper = """
