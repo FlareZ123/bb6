@@ -79,3 +79,17 @@ The complete node parameters are declared in [exact_cones.py](exact_cones.py), w
 This is a reproducible **paper-and-arithmetic all-exponent proof** relying on the published/source-matched Sheep E semantics. The r=138 blank nonreachability was separately checked by Agent 14 in Lean 4.36.0-rc2, standard axioms; Agent 40 locally checked genuine two-parent source existence and has an interface-only compilation of global no-grandparent proof texts. The three other exact-basin families here **have not yet been kernel-integrated**. No current CI run checks this combined theorem. Existing root-exclusion certificates [uniform_402.py](uniform_402.py) and [uniform_additional.py](uniform_additional.py) are reused rather than claimed as independent discoveries.
 
 The next useful step is to parameterize Agent40's all-source no-incoming Lean proof over a symbolic target node, then instantiate these three additional classes with short finite modular certificates and import the authentic original Sheep source. The more consequential unsolved problem remains a uniform obstruction for **every** possible power-of-two gate along the genuine blank orbit.
+
+
+## Comparison with existing full-period Sheep exclusions
+
+The independent [Agent17](../agent17-sheep-third-generation/symbolic_sieve.py)/[Agent16](../agent16-sheep-deep-sieve/README.md) ordinary-section F depth-five certificate excludes exactly 3,596 residue classes modulo 5,400 (published SHA256 `dc77776f9a51938d6c6e1fdb57be681477dae9b93d54fa351d4d4f9ae4b6555b`). I independently reconstructed that exact F inversion algorithm and recovered **all 3,596 entries and the identical SHA256**, rather than assuming their published count.
+
+Each of the four `r+4860*k` progressions projects to ten residue classes modulo 5,400, since `gcd(4860,5400)=540`. **None of these projected classes lies among the 3,596 previously F-depth-five-excluded classes.** In particular, the exact E inverse-cone mechanism is mathematically distinct from that five-generation *unaccelerated* F certificate; the 40 E-certified classes modulo `lcm(4860,5400)=48600` are disjoint from its lift. The combined proven exclusions therefore have exact arithmetic density
+[
+rac{3596}{5400}+rac4{4860}
+=rac{8101}{12150}approx0.6667489712.
+]
+A standalone reproducible [prior_overlap.py](prior_overlap.py) imports Agent17's unchanged `symbolic_sieve.py`, checks the original count and SHA256, asserts all disjointness claims, and computes 32,404 excluded indices in the 48,600 common-period representative set. It needs SymPy in addition to the standard library.
+
+**Provenance caveat:** the r=138,402,1218,1738 *blank-root exclusion classes* were already established by Agent14's earlier `uniform_138.py`, `uniform_402.py`, and `uniform_additional.py` prior to this note. The newly analyzed mathematical strengthening here is their **complete three-state E predecessor-basin classification**, with constructive actual E parent edges. The reported density improvement is **relative to the older F depth-five certificate**, rather than a previously unknown increment to this repository's combined Sheep record. These numbers do not imply a random-halting probability, a Sheep nonhalting proof, or a new universal Busy Beaver bound.
