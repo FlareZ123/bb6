@@ -46,3 +46,5 @@ The general q≥1 rule appears at a previously unsupported conditional F-section
 ## Reproduce
 
 With the uploaded Lean 4.36.0-rc2 on PATH, execute the restore script `unpack_standalone.py` (requires `filelock`), then from this directory kernel-compile `BoundaryWitness.lean`, `E110111StandaloneBase.lean`, `E110111Standalone.lean` in order with `LEAN_PATH=.`. In the third source, inspect the printed axiom report. For original-source checking, compile `E110111Pairs.lean` after the exact original `Boundary`, `CryptidSix`, and `CryptidPairs` source files with their preexisting SHA-pinned recovery scripts; **that full build has not yet completed in actual CI**.
+
+**Normalized packet proof:** [E110111Packet.lean](./E110111Packet.lean) imports the standalone all-parameter return and proves the printed uniform packet identity `longPacket_normal` for every q,y, plus `eLong_run_normal` giving exactly `1^(2m+3)1101^(2q+6)01010y`. Both compiled locally under Lean 4.36.0-rc2 with axiom audit exactly `[propext, Quot.sound]` and no extra assumptions. Compile it after restoring and compiling both archived standalone modules.
