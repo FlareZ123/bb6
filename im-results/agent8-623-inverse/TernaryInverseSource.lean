@@ -751,4 +751,107 @@ theorem allNone16_pulse (n : Nat) :
 
 #print axioms allNone16_pulse
 
+
+/-! Exact positive-density synthetic halting cylinder. -/
+
+theorem eva0_fail (r m : Nat) : evalA 0 (6*r+3) m = none := by
+  rw [evalA]
+  simp only [if_neg (by omega : (6*r+3)%3 ≠ 2),
+    if_pos (by decide : (0:Nat)=0),
+    if_pos (by omega : (6*r+3)%3=0), if_true]
+
+theorem eva2_fail (r m : Nat) : evalA 2 (54*r+31) m = none := by
+  calc
+    evalA 2 (54*r+31) m = evalA 1 (18*r+10) (m+2*(18*r+10)+3) := by
+      rw [evalA]
+      simp only [if_neg (by omega : (54*r+31)%3 ≠ 2),
+        if_neg (by decide : (2:Nat)≠0),
+        if_neg (by omega : (54*r+31)%3 ≠ 0)]
+      congr 1 <;> omega
+    _ = evalA 0 (6*r+3) ((m+2*(18*r+10)+3)+2*(6*r+3)+3) := by
+      rw [evalA]
+      simp only [if_neg (by omega : (18*r+10)%3 ≠ 2),
+        if_neg (by decide : (1:Nat)≠0),
+        if_neg (by omega : (18*r+10)%3 ≠ 0)]
+      congr 1 <;> omega
+    _ = none := eva0_fail r _
+
+theorem eva0_firstB (r m : Nat) :
+    evalA 0 (18*r+13) m = some (0, 6*r+4, m) := by
+  rw [evalA]
+  simp only [if_neg (by omega : (18*r+13)%3 ≠ 2),
+    if_pos (by decide : (0:Nat)=0),
+    if_neg (by omega : (18*r+13)%3≠0), if_true]
+  simp only [Option.some.injEq,Prod.mk.injEq,true_and,and_true]
+  omega
+
+theorem eva0_firstC (r m : Nat) :
+    evalA 0 (54*r+41) m = some (1, 18*r+13, m) := by
+  rw [evalA]
+  simp only [if_pos (by omega : (54*r+41)%3=2)]
+  simp only [Option.some.injEq,Prod.mk.injEq,true_and,and_true]
+  omega
+
+theorem eva1_middleC (r m : Nat) :
+    evalA 1 (18*r+12) m = some (0, 6*r+4, m+2) := by
+  rw [evalA]
+  simp only [if_neg (by omega : (18*r+12)%3≠2),
+    if_neg (by decide : (1:Nat)≠0),
+    if_pos (by omega : (18*r+12)%3=0)]
+  simp only [Option.some.injEq,Prod.mk.injEq,true_and,and_true]
+  omega
+
+theorem a_halt_residue (r : Nat) : pathA (27*r+16) = none := by
+  simp only [pathA]
+  rw [a_step]
+  rw [drainB]
+  simp only [if_neg (by omega : 2*(27*r+16) ≠ 0)]
+  have hk : 2*(27*r+16)-1 = 54*r+31 := by omega
+  rw [hk, eva2_fail]
+  simp only [Option.bind_none]
+
+theorem b_halt_residue (r : Nat) : pathB (9*r+7) = none := by
+  simp only [pathB]
+  rw [b_step]
+  rw [drainB]
+  simp only [if_neg (by omega : 2*(9*r+7)≠0)]
+  have hk : 2*(9*r+7)-1=18*r+13 := by omega
+  rw [hk, eva0_firstB]
+  simp only [Option.bind_some, if_pos (by omega : 6*r+4 < 2*(9*r+7))]
+  rw [drainB]
+  simp only [if_neg (by omega : 6*r+4≠0)]
+  have hk2 : 6*r+4-1=6*r+3 := by omega
+  rw [hk2, eva0_fail]
+  simp only [Option.bind_none]
+
+theorem c_halt_residue (r : Nat) : pathC (9*r+7) = none := by
+  simp only [pathC]
+  rw [c_step]
+  rw [drainB]
+  simp only [if_neg (by omega : 6*(9*r+7)≠0)]
+  have hk : 6*(9*r+7)-1=54*r+41 := by omega
+  rw [hk,eva0_firstC]
+  simp only [Option.bind_some, if_pos (by omega : 18*r+13 < 6*(9*r+7))]
+  rw [drainB]
+  simp only [if_neg (by omega : 18*r+13≠0)]
+  have hk2 : 18*r+13-1=18*r+12 := by omega
+  rw [hk2,eva1_middleC]
+  simp only [Option.bind_some, if_pos (by omega : 6*r+4 < 18*r+13)]
+  rw [drainB]
+  simp only [if_neg (by omega : 6*r+4≠0)]
+  have hk3 : 6*r+4-1=6*r+3 := by omega
+  rw [hk3,eva0_fail]
+  simp only [Option.bind_none]
+
+theorem four_halt_residue (r : Nat) :
+    pathA (27*r+16) = none ∧ pathB (27*r+16) = none ∧
+    pathC (27*r+16) = none ∧ pathD (27*r+16) = none := by
+  have hq : 27*r+16=9*(3*r+1)+7 := by omega
+  exact ⟨a_halt_residue r,
+    hq ▸ b_halt_residue (3*r+1),
+    hq ▸ c_halt_residue (3*r+1),
+    (pair_CD (27*r+16)).symm ▸ (hq ▸ c_halt_residue (3*r+1))⟩
+
+#print axioms four_halt_residue
+
 end BB6.Agent8InverseSource
