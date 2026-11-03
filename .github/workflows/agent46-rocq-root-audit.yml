@@ -43,7 +43,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent46-rocq-original-source/OriginalRootMirror.v" Agent46OriginalRootMirror.v
           if [ "${{ inputs.targeted_root }}" = "true" ]; then
             node "$GITHUB_WORKSPACE/im-results/agent46-rocq-original-source/targeted-root.cjs"
-            coq_makefile -Q . BusyCoq -native-compiler yes -o Makefile.coq *.v
+            coq_makefile -Q . BusyCoq -native-compiler no -o Makefile.coq *.v
             make -f Makefile.coq -j 2 Others_v3.vo Agent46OriginalRootMirror.vo
           else
             coq_makefile -Q . BusyCoq -o Makefile.coq *.v
