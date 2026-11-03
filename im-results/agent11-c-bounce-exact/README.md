@@ -48,3 +48,29 @@ Run `python reconstruct.py` from this directory. The standalone compilation is `
 The two affine equations parameterize every recursion depth. Because `2^n(2k+6)` or `2^n(2k+8)` equals a fixed nonnegative target sum up to a small constant, each target has finitely many candidate `n`. This enables an exact backward enumerator for all Machine C section outputs, including the odd, even and low-counter branches, avoiding lossy finite-depth guesses.
 
 **Next task:** compose these exact output images with `FastSectionDef.lean` to obtain a complete `secNext` predecessor theorem, inspect whether remaining Machine C stopping-gate families admit a well-founded finite inverse grammar, and test transfer to a second rooted machine. Those steps are open. No root, no halting-index family, and no BB(6) bound is decided by the present biconditionals.
+
+## 2026-11-03: all-section inverse grammar and exact finite enumerator
+
+The standalone `SectionFull.lean` imports the proved `BounceExact.lean`, copies the exact Agent46 section-output branches into `secCopy`, and proves `BB6.Agent11Research.section_exact_image`:
+
+```text
+forall a k x y : Nat,
+    secCopy a k = some(x,y)  iff  sectionImage a k x y
+```
+
+The **right-hand side contains no call to the recursive bounce function**. It consists of the nine explicit direct section branches, with each bounce branch replaced by a finite-depth arithmetic witness `oddImage` or `evenImage`. Local Lean 4.36.0-rc2 verification passed with only `[propext, Classical.choice, Quot.sound]`. The original-source version `SectionFullOriginal.lean` imports `FastSectionDef`, establishes `section_matches_source` by case-splitting, and derives `source_section_exact_image` for the actual `BB6.Agent46.secNext`. **This original-import bridge has not yet been compiled in full original-source CI**; keep the proof-status distinction clear.
+
+The Python library `inverse_section.py` computes the complete **finite set of arithmetic predecessors of a specified target (x,y)** without enumerating a bounded input square. It solves the dyadic sums `x+y`, `x+y+1`, or `x+6` for the recursion index n, then solves the linear cost identity for candidate source counters; the direct exceptional branches are included. Only logarithmically many exponent values need to be considered per branch (aside from integers' large-bit arithmetic costs).
+
+Deterministic tests of the generated predecessor set against a direct iterative translation of the original Agent46 section interpreter:
+
+- For every input pair `0≤a,k<200` (40,000 inputs), a successful output's predecessor set contained that exact input.
+- For each target `0≤x,y<180` (32,400 targets), every generated source candidate returned exactly the requested target.
+- The 100,000-step original blank-section orbit prefix starting at `(5,1)` had every forward transition reversed by the oracle; none stopped within that prefix. This is finite evidence, not a nonhalting proof.
+- The generator's first prototype missed input `(1,5)` producing `(9,6)` because of an off-by-two error in the exceptional `a=1` branch (`2k+11+3n=x+2y` is correct). The error was fixed before the above testing and is preserved here as a failure mode to test in future refinements.
+
+The local companion `BounceConsequences.lean` also kernel-checks that `bounce k c` is injective in its input height `c` when `k` and a successful output are fixed, and establishes the universal parity identity `(x+y+k)%2=1` for all successful bounce outputs. `BounceConsequencesOriginal.lean` is the corresponding original-import candidate, pending CI. Both are plain Lean source files in this directory.
+
+The Python engine has not itself been formally verified as executable code. Its claimed completeness is supported mathematically by the full Lean section biconditional and the elementary integer algebra translating dyadic equations into the enumerated candidates; an executable reflection theorem remains useful future work. The generator does not decide whether a target is reachable from the blank tape, and its enumeration cannot by itself prove all branches of a backward tree terminate.
+
+**Reconstruction**: `python reconstruct.py` checks hashes and recreates `BounceExact.lean`, `BounceOriginal.lean`, `SectionFull.lean`, `SectionFullOriginal.lean`, and `inverse_section.py`. The two `BounceConsequences*.lean` source files are stored directly. The standalone sequence is: compile `BounceExact.lean` to an `.olean`, then compile `BounceConsequences.lean` and `SectionFull.lean` with `LEAN_PATH` containing the working directory. The pinned original-source workflow [agent15-c-halting.yml](../../.github/workflows/agent15-c-halting.yml) was extended to check original bounce theorems; section bridge requires a further check.
