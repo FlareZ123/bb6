@@ -1,6 +1,6 @@
 # Machine C: a kernel-checkable forward mass-cutoff certificate
 
-**Status 2026-11-03:** An alternative reproduction of an earlier Agent1 m8 result plus a sharper positive-right mass-growth classification. Lean 4.36.0-rc2 local source-shaped proof and complete 147-chunk calculation succeeded, with original **unchanged-source integration pending**. This is a bounded-method/one-gate research pilot, not a complete Machine C nonhalting result or a BB(6) bound. The code and generator are reproducible. Keep this in `im-results/` pending original-source compilation and independent assessment.
+**Status 2026-11-03:** An alternative reproduction of an earlier Agent1 m8 result plus a sharper positive-right mass-growth classification. Lean 4.36.0-rc2 source-original verification of the sharp mass, blank-orbit growth and fixed-target decider **succeeded** in [manual CI 41670293123](https://github.com/FlareZ123/bb6/actions/runs/41670293123). The alternative 147-chunk forward trace has a local source-shape proof, while the prior 16-segment m8 trace is now independently **original-source CI-certified** in [run 41670233031](https://github.com/FlareZ123/bb6/actions/runs/41670233031). This is a bounded-method/one-gate research pilot, not a complete Machine C nonhalting result or a BB(6) bound. The code and generator are reproducible. Keep this in `im-results/` pending original-source compilation and independent assessment.
 
 ## Prior-art correction identified 2026-11-03 10:02 UTC
 
@@ -126,3 +126,18 @@ The complete correctness equivalence with *unbounded* existence is kernel-checke
 
 
 **Independent cross-certificate agreement:** the present 147-chunk trace was also replayed numerically at all **16 original 10,000-return milestones** (including the final 52-return segment), using the endpoint list from [the earlier Agent1 M8TraceCert.lean](../agent1-c-m8-trace/M8TraceCert.lean). All 16 independently regenerated states matched exactly. This is a reproducibility cross-check and strengthens confidence in the trace input data; it does not substitute for a source-authenticated theorem or make the repeated m8 decision novel.
+
+## 2026-11-03 16:04 UTC: authentic-original-source certification completed
+
+The previous caveats about **pending source verification of the sharp mass and fixed-target theorems** are superseded by successful [manual GitHub Actions 41670293123](https://github.com/FlareZ123/bb6/actions/runs/41670293123) (job 126036551654, source commit `a9f694f99b3b952792bc58338e162b53961da5a3`). The unchanged actual Lean source modules `BounceCalc`, `FastSectionDef`, `SectionMassStrict`, `Agent38SectionParity`, `GenericSection` and their original dependencies were compiled first under pinned Lean 4.36.0-rc2. The checked modules were:
+
+- [PositiveMassOriginal.lean](PositiveMassOriginal.lean): every defined positive-right edge increases weighted mass by at least 4; exact delta 2 iff `a≥2,k=0`.
+- [ExactDeltaFour.lean](ExactDeltaFour.lean): exact delta 4 iff `a≥2,k>0,2k≤a`.
+- [BlankMassFour.lean](BlankMassFour.lean): every genuine blank-origin section return at index n satisfies `7+4*n ≤ a+2*k`, hence `n≤(a+2*k-7)/4`.
+- [OriginalFiniteReach.lean](OriginalFiniteReach.lean): `reachableBool_correct`, an exact finite decider for **any fixed section target** with that improved cutoff.
+
+All printed final axiom audits are `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. This certifies the **original-source integration** of the structural theorems previously checked only against copied definitions. It does not certify any global machine halting or nonhalting claim, nor establish novelty over the full literature.
+
+The *older* [M8TraceBridge/M8TraceCert](../agent1-c-m8-trace/README.md) were independently compiled **against unchanged authentic imports** in successful [manual CI 41670233031](https://github.com/FlareZ123/bb6/actions/runs/41670233031), job 126036343299. This proves the all-time m8 blank-section exclusion and terminal rank cutoff. This is source verification of a previously locally kernel-checked mathematical result, not a new gate found by extending the 147-chunk duplicate. The alternative 147-chunk `ForwardOriginal.lean` remains a separate, optional source-bridge candidate; it is unnecessary for the now-proved m8 result.
+
+**Scientific next step:** derive a parameter-uniform restriction on the two infinite authentic halting families, particularly the unbounded dyadic gates where the fixed-target bound only furnishes a finite search for each individual target. Do not multiply isolated m8-style finite certificates without a genuine method for the full infinite locus.
