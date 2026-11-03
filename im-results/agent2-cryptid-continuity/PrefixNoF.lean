@@ -164,6 +164,48 @@ theorem prefixE_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
       rw [hu',run_add,pump_iter]
       exact boundaryENoF (4*k+3) ys (u-pumpTime k) (by omega)
 
+
+/-- The B delimiter scan contains no state F, uniformly in the alternating
+    stack length and arbitrary uninspected suffix. -/
+private theorem boundaryBNoF (m : Nat) (ys : List Bool) :
+    NoF (midM m (false::ys)) (2*m+1) := by
+  have hscan : NoF (scanStart m [true] (false::ys)) (2*m) :=
+    scanNoF m [true] (false::ys)
+  have hend : NoF (scanDone m [true] (false::ys)) 1 := by
+    intro t ht
+    have hzero : t=0 := by omega
+    subst t
+    simp [scanDone]
+  exact appendNoF
+    (scanStart m [true] (false::ys))
+    (scanDone m [true] (false::ys))
+    (2*m) 1 hscan (scan_run m [true] (false::ys)) hend
+
+/-- No source-machine F-state appears at positive times strictly before the
+    universal B first-delimiter boundary, for every k and right suffix. -/
+theorem prefixB_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
+    (hpos : 0<t) (ht : t<12*k*k+41*k+31) :
+    (run t (init (List.replicate (3*k) true ++ false::ys))).st ≠ 5 := by
+  have htime : 12*k*k+41*k+31 =
+      24+pumpTime k+(2*(4*k+3)+1) := by
+    rw [pumpTime_formula]
+    omega
+  rw [htime] at ht
+  by_cases hfirst : t<24
+  · exact setupPositiveNoF _ t hpos hfirst
+  · obtain ⟨u,hu⟩ : ∃ u, t=24+u := ⟨t-24,by omega⟩
+    rw [hu,run_add]
+    have hs : run 24 (init (List.replicate (3*k) true ++false::ys)) =
+        midM 3 (List.replicate (3*k) true ++ false::ys) := by
+      simpa [mid,midM] using
+        (setup24 (List.replicate (3*k) true ++false::ys))
+    rw [hs]
+    by_cases hpump : u<pumpTime k
+    · exact pumpIterNoF k (false::ys) u hpump
+    · have hu' : u=pumpTime k+(u-pumpTime k) := by omega
+      rw [hu',run_add,pump_iter]
+      exact boundaryBNoF (4*k+3) ys (u-pumpTime k) (by omega)
+
 #print axioms frontNoF
 #print axioms reverseNoF
 #print axioms scanNoF
@@ -171,5 +213,6 @@ theorem prefixE_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
 #print axioms pumpNoF
 #print axioms pumpIterNoF
 #print axioms prefixE_positive_noF
+#print axioms prefixB_positive_noF
 
 end BB6.CryptidPrefixFirstReturn
