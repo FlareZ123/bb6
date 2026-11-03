@@ -33,5 +33,5 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent7-s4-gate/S4Control.lean" Agent7S4Control.lean
           export LEAN_PATH=.:$LEAN_PATH
           lake env lean -o Agent7S4GateOriginal.olean Agent7S4GateOriginal.lean
-          lake env lean Agent7S4Control.lean
           lake env lean Agent7S4GateExact.lean
+          lake env lean Agent7S4Control.lean
