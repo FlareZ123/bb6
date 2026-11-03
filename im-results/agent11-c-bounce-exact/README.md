@@ -74,3 +74,25 @@ The local companion `BounceConsequences.lean` also kernel-checks that `bounce k 
 The Python engine has not itself been formally verified as executable code. Its claimed completeness is supported mathematically by the full Lean section biconditional and the elementary integer algebra translating dyadic equations into the enumerated candidates; an executable reflection theorem remains useful future work. The generator does not decide whether a target is reachable from the blank tape, and its enumeration cannot by itself prove all branches of a backward tree terminate.
 
 **Reconstruction**: `python reconstruct.py` checks hashes and recreates `BounceExact.lean`, `BounceOriginal.lean`, `SectionFull.lean`, `SectionFullOriginal.lean`, and `inverse_section.py`. The two `BounceConsequences*.lean` source files are stored directly. The standalone sequence is: compile `BounceExact.lean` to an `.olean`, then compile `BounceConsequences.lean` and `SectionFull.lean` with `LEAN_PATH` containing the working directory. The pinned original-source workflow [agent15-c-halting.yml](../../.github/workflows/agent15-c-halting.yml) was extended to check original bounce theorems; section bridge requires a further check.
+
+## 2026-11-03: all-depth high-branching fan theorem
+
+`Fan.lean` gives a **kernel-checked analytic proof that the Machine C section map has unbounded finite incoming branching**, going beyond a fixed-modulus obstruction. For every natural `r`, let `R=4^r` and target `(x,y)=(8R,8R)`. For every `s=0,...,r`, define
+
+```text
+Q_s = 4^(r-s)
+a_s = 4*Q_s - 2
+k_s = 12*R - (2*Q_s + 3*s + 4)
+```
+
+Then `secCopy a_s k_s = some(8R,8R)` by the odd-bounce *converse* with recursion depth `n=2s+1`. Distinct `s` yield distinct `a_s`, so there are **at least r+1 distinct section predecessors**. This holds for every natural `r`, without a finite cutoff. The exact Lean certificate is `section_unbounded_indegree` using an injective `Fin (r+1)` source function. Local Lean 4.36.0-rc2: compiled, axioms `[propext, Classical.choice, Quot.sound]`; no `sorry`. The source-linked `FanOriginal.lean` transfers the theorem through the `section_matches_source` bridge to authentic `BB6.Agent46.secNext`; original-source CI is still pending.
+
+Numerical evaluation of the *complete arithmetic inverse oracle* gives `r+3` predecessors for these targets for `r=0..19`. Of those, the analytic fan certifies `r+1`; one additional direct high-counter predecessor and one `a=0` predecessor explain the observed two extra cases. **Exact `r+3` for all r is an unproved conjecture** pending a source-level upper-bound proof. Neither a large incoming fan nor its finite test says the corresponding section target is reachable from the blank tape.
+
+## Blank-origin stopping-target triage with complete backward enumeration
+
+Using the finite arithmetic inverse library, an iterative backward graph search exhaustively eliminated the first `100` indexed Machine C **first stopping-family section targets** `(1,2^(2m+3)-3m-4)` for `0≤m<100`. The largest enumerated backward closure had 13,919 states at `m=47`. No blank start was found. This is a reproducible computation, subject to the Python inverse checker, and is neither a proof covering all m nor a new BB(6) bound.
+
+The **second stopping family** `(2j+3,2^(2m+2)*(j+3)-j-3m-5)` was checked for all `0≤j,m<50` (2,500 targets). At a provisional 120,000 backward-states cap, 2,492 targets were fully exhausted, 8 exceeded the cap, none reached the blank start. A larger 2.5-million-state pass exhausted five of those 8: `(j,m)=(10,49),(12,14),(19,4),(25,44),(48,25)`. **Three remain truncated at 2.5 million**: `(27,38),(35,12),(49,20)`. These three are priority computational hard cases, with no reachability claim in either direction. The earlier finite exact inverse tests and the explicit prototype off-by-two regression remain essential prerequisites for trusting these computations. No recursive backward-search output is presented as an independently kernel-checked nonreachability certificate.
+
+The mathematical bottleneck remains a general obstruction to reaching the infinite stopping families, not computation of additional finite prefixes. The unbounded-fan theorem indicates why unconstrained inverse-state enumeration cannot generally be replaced by a fixed, input-independent predecessor count.
