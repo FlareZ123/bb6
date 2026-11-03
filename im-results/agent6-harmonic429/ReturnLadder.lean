@@ -124,3 +124,84 @@ theorem root_to_189_356 : run 156 (0,0)=some (189,356) := by
 #print axioms ray_ladder
 #print axioms root_to_189_356
 end BB429Ladder
+
+namespace BB429OddExtension
+open BB429 BB429Ladder
+
+/-- Two non-first source transitions: odd-odd turn, then even-odd reset. -/
+theorem odd_odd_two_step (u w : Nat) (hu : u%2=1) (hu3 : 3≤u)
+    (hw : w%4=1) (hbound : 3*w≤2*u+1) :
+    run 2 (u,w)=some (0,2*u+w+17) := by
+  have hpar : w%2=1 := by omega
+  have hlt : w<2*u := by omega
+  have hd : 3≤u-w/2 := by omega
+  have hodd : (u-w/2)%2=1 := by omega
+  have hfirst : next (u,w)=some (u-w/2+3,2*w) := by
+    unfold next
+    have hh1 : ¬w ≥ 2*u+3 := by omega
+    have hh2 : w ≠ 2*u+2 := by omega
+    have hh3 : w ≠ 2*u+1 := by omega
+    have hh4 : w ≠ 2*u := by omega
+    simp [hh1,hh2,hh3,hh4,show w%2 ≠0 by omega,
+      show u-w/2 ≠1 by omega,show u-w/2 ≠2 by omega,
+      show ¬(u-w/2)%2=0 by omega]
+  have hsecond : next (u-w/2+3,2*w)=some (0,2*(u-w/2+3)+2*w+10) := by
+    apply reset_odd_even
+    · omega
+    · omega
+    · omega
+    · omega
+  have hcalc : 2*(u-w/2+3)+2*w+10=2*u+w+17 := by omega
+  change (run 1 (u,w)).bind next = _
+  simp [run,hfirst,hsecond,hcalc]
+
+theorem odd_ray_return (k w : Nat) (hk : 1≤k) (hw : w%4=1)
+    (hbound : 3*w≤2*rayU k+1) :
+    run (k+2) (rayU k,w) = some (rayU k,w+3*k+17) := by
+  have hUodd : rayU k%2=1 := rayU_odd k hk
+  have hU3 : 3≤rayU k := by cases k with
+    | zero => omega
+    | succ n => simp [rayU]
+  have htwo := odd_odd_two_step (rayU k) w hUodd hU3 hw hbound
+  have hbal := ray_balance k
+  have hbd : rayDemand k≤2*rayU k+w+17 := by omega
+  have hray := ray_run k (2*rayU k+w+17) hbd
+  have hsub : 2*rayU k+w+17-rayDemand k=w+3*k+17 := by omega
+  rw [show k+2=2+k by omega,BB429.run_add,htwo]
+  simpa only [Option.bind_some,hsub] using hray
+
+/-- Additional family: k=1 mod 4, w=1 mod 4 and an odd-odd entry. -/
+theorem odd_ray_ladder (k n w : Nat) (hk : 1≤k) (hk4 : k%4=1)
+    (hw4 : w%4=1) (hb : 3*(w+n*(3*k+17))≤2*rayU k+1) :
+    run (n*(k+2)) (rayU k,w) = some (rayU k,w+n*(3*k+17)) := by
+  have hdelta : (3*k+17)%4=0 := by omega
+  induction n with
+  | zero => simp [run]
+  | succ n ih =>
+    have hbn : 3*(w+n*(3*k+17))≤2*rayU k+1 := by
+      rw [Nat.succ_mul n (3*k+17)] at hb
+      omega
+    have hw4n : (w+n*(3*k+17))%4=1 := by
+      simp [Nat.add_mod,Nat.mul_mod,hw4,hdelta]
+    have hreturn := odd_ray_return k (w+n*(3*k+17)) hk hw4n hbn
+    rw [Nat.succ_mul,BB429.run_add,ih hbn]
+    simp only [Option.bind_some,hreturn]
+    have heq : w+n*(3*k+17)+3*k+17 = w+(n+1)*(3*k+17) := by
+      rw [Nat.succ_mul n (3*k+17)]
+      omega
+    exact congrArg (fun z : Nat => some (rayU k,z)) heq
+
+theorem rooted_odd_ladder_entry : run 33 (0,0)=some (93,13) := by decide
+
+theorem rooted_odd_ladder_exit : run 40 (0,0)=some (93,45) := by
+  have hk : rayU 5=93 := by decide
+  have hb : 3*(13+1*(3*5+17))≤2*rayU 5+1 := by decide
+  have hx := odd_ray_ladder 5 1 13 (by decide) (by decide) (by decide) hb
+  rw [show 40=33+7 by decide,BB429.run_add,rooted_odd_ladder_entry]
+  simpa [hk] using hx
+
+#print axioms odd_odd_two_step
+#print axioms odd_ray_return
+#print axioms odd_ray_ladder
+#print axioms rooted_odd_ladder_exit
+end BB429OddExtension
