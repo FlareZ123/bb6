@@ -44,7 +44,7 @@ jobs:
           export LEAN_PATH=.:${LEAN_PATH:-}
           lake env lean -o S4Phase.olean S4Phase.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-source-bridge/S4UpstreamBridge.lean" S4UpstreamBridge.lean
-          echo "ec7e962b3f5cde2084168af3af39499cc70729bc483d348b8bd31f27c8531130  S4UpstreamBridge.lean" | sha256sum -c -
+          echo "779fcefe0e81fde9e7b6d0f725ccad144d3eccbbc1911ad6eb6e7a0254bb02ab  S4UpstreamBridge.lean" | sha256sum -c -
           lake env lean -o S4UpstreamBridge.olean S4UpstreamBridge.lean
       - name: Check complete S4 two-sector raw halting criterion
         working-directory: /tmp/cryptids
