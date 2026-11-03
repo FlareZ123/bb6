@@ -31,6 +31,14 @@ SOURCES = {
         "349b1778028c024e4b1bb8d9f913c9d5944285cadf02f20cec71cbfb7f802056",
         "0e16ebfc402370c1b78c4ca77a011c038af53ec216d9e5d1b9fae1e3124d8ad9",
     ),
+    "Fan.lean": (
+        "cbc48711f1f2c42ce1f975ac8c2a062a9604e025b1b937361e13d0ca33654184",
+        "587c636e2c00c74c54ed564f74b4dd7a39bae9dad143f4af77bffb403b95a9af",
+    ),
+    "FanOriginal.lean": (
+        "23ca70b389b285102874f92f89e0e7210a0b672771411c2586b38414789f37d5",
+        "2df84f85bb28e306f978d35303465816cc257c087d2c8d6aa8a1ac54b7f07058",
+    ),
 }
 
 
