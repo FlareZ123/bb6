@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,29 @@
       "task": "Find a closed, genuine-blank-origin symbolic language for original D0 physical F/0 first-return states across four proved unary seeds (5,9,15,39), or produce an explicit source-table counterexample to an initially plausible grammar; prioritize invariant propagation rather than additional independent suffix-cylinder return rules.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Source: im-results/agent3-portfolio-raw-conjugacy/ DAllStarts and im-results/agent31-cryptid-boundary/ Boundary; first independent raw-table simulator check physical blank-left F/0 and identify a falsifiable regular-language closure candidate."
+      "evidence": [
+        {
+          "kind": "derived source-macro synthesis",
+          "path": "im-results/agent37-root-language-pilot/README.md",
+          "note": "Complete 11-case conditional source-connected L return table; not separately original-source Lean compiled; shows unique E b=1 escaping family."
+        },
+        {
+          "kind": "kernel-checked finite falsifier",
+          "path": "im-results/agent37-root-language-pilot/BoundaryWitness.lean",
+          "note": "Standalone literal-table Lean 4.36.0-rc2 strict first physically blank-left F/0 return at 157 from I7(011); no_earlier_return has no axioms, endpoint propext only; prior source already knew this case."
+        },
+        {
+          "kind": "reproducible experiment",
+          "path": "im-results/agent37-root-language-pilot/macro_engine.py",
+          "note": "Conservative source-macro interpreter on physical canonical finite suffix, 20,000 conditional macro returns per authentic unary seed without unsupported branch or observed halt; composition not kernel-proved."
+        },
+        {
+          "kind": "reproducible crosscheck",
+          "path": "im-results/agent37-root-language-pilot/check_macros.py",
+          "note": "Fixed RNG 70837: 4897 supported synthetic starts matched exact source-macro times/full physical F0 endpoints or undefined-entry halts; includes frozen halt off-by-one correction."
+        }
+      ],
+      "handoff": "The 11-branch physical grammar L = I_a((01)^q 1^b) is source-derived future-return-total and closed except E a≡1 mod3, q>=1,b=1; finite 98,624 inputs had exactly 588 such escapes. A more general source-macro interpreter traverses 20,000 conditional sections from each genuine unary root; still needs original Lean whole-chain proof. Seek quantified inductively closed reachable extension with E escape and suffix-state assumptions; avoid treating conditional traces as proved raw blank horizons."
     }
   ],
   "review_requested": null
