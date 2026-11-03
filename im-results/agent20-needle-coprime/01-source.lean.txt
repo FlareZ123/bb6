@@ -1,0 +1,62 @@
+import Init
+
+namespace SpaceNeedlePrime
+
+-- Closed-form preimage families of the published one-counter map.
+def oddQ : Nat → Nat
+  | 0 => 45
+  | t+1 => 1024 * oddQ t + 1581
+def evenQ : Nat → Nat
+  | 0 => 214
+  | t+1 => 262144 * evenQ t + 413910
+
+def oddExponent (t : Nat) := 9 + 10*t
+def evenExponent (t : Nat) := 12 + 18*t
+
+theorem odd_power_identity (t : Nat) :
+    2 ^ oddExponent t = 17 + 11 * oddQ t := by
+  induction t with
+  | zero => decide
+  | succ t ih =>
+    have he : oddExponent (t+1) = oddExponent t + 10 := by
+      simp only [oddExponent]
+      omega
+    rw [he, Nat.pow_add, ih]
+    change (17 + 11 * oddQ t) * 1024 = 17 + 11 * (1024 * oddQ t + 1581)
+    omega
+
+theorem even_power_identity (t : Nat) :
+    2 ^ evenExponent t = 30 + 19 * evenQ t := by
+  induction t with
+  | zero => decide
+  | succ t ih =>
+    have he : evenExponent (t+1) = evenExponent t + 18 := by
+      simp only [evenExponent]
+      omega
+    rw [he, Nat.pow_add, ih]
+    change (30 + 19 * evenQ t) * 262144 = 30 + 19 * (262144 * evenQ t + 413910)
+    omega
+
+def oddSource (q : Nat) := 8*q+10
+def evenSource (q : Nat) := 16*q+22
+
+theorem odd_source_decomposition (q : Nat) :
+    oddSource q + 2 = 2^2 * (2*q+3) := by
+  simp [oddSource]; omega
+
+theorem even_source_decomposition (q : Nat) :
+    evenSource q + 2 = 2^3 * (2*q+3) := by
+  simp [evenSource]; omega
+
+theorem odd_successor_counter (t : Nat) :
+    oddSource (oddQ t) + 2 + 3*(oddQ t+1) + 2 = 2 ^ oddExponent t := by
+  rw [odd_power_identity]
+  simp [oddSource]
+  omega
+
+theorem even_successor_counter (t : Nat) :
+    evenSource (evenQ t) + 3 + 3*(evenQ t+1) + 2 = 2 ^ evenExponent t := by
+  rw [even_power_identity]
+  simp [evenSource]
+  omega
+
