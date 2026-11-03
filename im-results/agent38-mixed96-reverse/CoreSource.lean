@@ -69,4 +69,22 @@ theorem no_coreB_czero_a1 (k : Nat) :
     unfold normX normY
     omega
 
+theorem no_coreA_lowmiddleone (a : Nat) : ¬coreA a 1 1 := by
+  simp [coreA, lowA1]
+
+theorem no_coreB_lowmiddleone (a : Nat) : ¬coreB a 1 1 := by
+  simp [coreB, lowB1]
+
+theorem source_czero_reset_A (a k : Nat) (hk : 1 ≤ k)
+    (h : coreA a 1 (2*k+1)) : coreA (a+2) k 0 := by
+  have he := (coreA_high a 1 (2*k+1) (by omega)).mp h
+  have hp := lowA0_of_high_reset a k hk he
+  simpa [coreA] using hp
+
+theorem source_czero_reset_B (a k : Nat) (hk : 1 ≤ k)
+    (h : coreB a 1 (2*k+1)) : coreB (a+2) k 0 := by
+  have he := (coreB_high a 1 (2*k+1) (by omega)).mp h
+  have hp := lowB0_of_high_reset a k hk he
+  simpa [coreB] using hp
+
 end A38Mixed96
