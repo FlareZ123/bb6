@@ -39,3 +39,11 @@ The tape identity is the primary proof; the scalar formula is a direct consequen
 Potential next use: count q-burst lengths along authentic blank-origin A checkpoints, instrument a checker-backed jump in a genuinely rooted simulator, and seek a cross-section invariant that excludes the **separate** A0/right11 halt gate. Do not promote a raw trace extension or a synthetic-burst acceleration to an undecided-machine outcome.
 
 **Novelty:** The all-q burst is a specialization of Agent35's existing complete A-return grammar; no claim of independent external novelty or new resolved root is made. It is preserved under `im-results/`, not `results/`.
+
+## All-prefix halting-safety certificate
+
+[PairBurstSafe.lean](PairBurstSafe.lean) imports the original-source 9q theorem and proves the actual frozen F/1 halting configuration is fixed by every original machine step. Its theorem `BB6.Row262.pair_burst_no_halt` states for every `q,t,ls,ys` with `0 ≤ t ≤ 9q` that **none** of the `t`-step original-source configurations inside the accelerated burst is the frozen F/1 halt. Proof: a hypothetical frozen midpoint would persist forever, contradicting the formally established final A state. The exact 9q shortcut therefore preserves original primitive-time halting semantics as well as its endpoint. The expanded original-source [manual Lean run 41580403032](https://github.com/FlareZ123/bb6/actions/runs/41580403032) **SUCCEEDED** (2026-11-03 04:51 UTC); the final theorem axiom audit is `[propext, Quot.sound]` only, no sorry.
+
+## Blank-rooted bounded utility experiment
+
+An independently written exact A-section simulator of the same rooted machine computed **10,000,000 actual A returns**, comprising **46,717,881 original primitive transitions**, without encountering the halting gate. A second independent bit-packed model using this theorem as a bulk jump reproduced at the 10-millionth A return the exact primitive count 46,717,881, head coordinate 2,741 and 2,722 nonblank cells. Its trace used **12,702 bulk bursts**, representing **3,292,741 pair iterations** of this theorem. This is empirical evidence of the accelerator's practical utility on the actual orbit; a finite run is no all-time nonhalting proof. The original source and Lean theorem do not depend on this experiment.
