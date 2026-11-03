@@ -34,9 +34,26 @@ For **every `k : Nat`**, `raw_full_B_physical` proves without finite enumeration
 
 The exact primitive transition count comes from the *unchanged source* `CryptidBoundary.full_B k []`, and the existential integer `p` is the physically correct head coordinate tracked by the bridge (Agent31 intentionally omits it). The proof is **locally kernel-checked with only `[propext, Classical.choice, Quot.sound]`**, and the manual original-source CI workflow includes this fifth module. This is an all-parameter original-physical-model transfer of a previously known zipper macro, and does not itself prove halting/nonhalting or a new BB(6) bound.
 
+## Exact physical head displacement as a certified crossing-count identity
+
+New [RawBoundarySpan source archive](./RawBoundarySpan.lean.xz.b64) (decoded Lean SHA256 `c0cf527d7bb5eb219a21f659fa811555e4618c8b08c2b9fdcd9221d65d5245b1`) extends the physical return proof from an existential head to a precise **all-parameter crossing-count equation**. The checksum-locked `unpack.py` now restores this source alongside the other two archived proofs. The local 4.36.0-rc2 kernel audit passes for every new theorem, with only `[propext, Classical.choice, Quot.sound]`; `full_B_head_crossings` uses only `[propext, Quot.sound]`.
+
+For a list-based configuration `c` scanned physically at coordinate `p`, define its right boundary `rightEdge c p = p + c.r.length`. `crossesRight c=1` precisely when a live A/0 or B/1 right transition occurs with **empty** right list; it is zero otherwise. `rightCrossings n c` counts those events along the first `n` true machine transitions. The source theorem `rightEdge_run_exact` proves for **every n and every live endpoint** that the physical right boundary grows by **exactly** `rightCrossings n c`. The proof handles frozen-state 6 explicitly to prevent phantom posthalt head movements.
+
+Consequently `raw_full_B_head_crossings k` proves for all natural k that the actual raw D0 tape's exact B-return has endpoint `F0Pure (8*k+9) p` at primitive time `12*k*k+49*k+40` with
+
+```text
+p = -(5*k+6) + rightCrossings (12*k*k+49*k+40)
+      (CryptidBoundary.init (List.replicate (3*k) true ++ [false]))
+```
+
+The new `raw_full_B_head_lower` theorem thus certifies `p≥-(5*k+6)` universally. For inspected finite k=0..14, direct original D0 simulation found zero right-boundary crossings and `p=-(5*k+6)`. **This equality is conjectural for all k.** Its exact remaining proof obligation is the universally quantified zero-crossing theorem for the authentic `full_B` run. The crossing identity is a meaningful quantified boundary refinement but does not decide any rooted D machine or BB(6).
+
+**CI status:** The updated existing manually dispatched Agent3 workflow compiles the full original source and all six bridge modules, including this restored span source, using original `Boundary.lean`. Earlier attempted original-source runs [41599582774](https://github.com/FlareZ123/bb6/actions/runs/41599582774) and [41602206015](https://github.com/FlareZ123/bb6/actions/runs/41602206015) both failed within seconds with unavailable job logs. Local proof compilation passed, but final full original-source verification remains pending; do not claim CI success.
+
 ## Verification status and reproducibility
 
-Both archived sources use checksum-verifying atomic restoration under a file lock via [`unpack.py`](./unpack.py), and the unchanged Agent31 `Boundary.lean` separately restores at original SHA256 `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
+The three archived sources use checksum-verifying atomic restoration under a file lock via [`unpack.py`](./unpack.py), and the unchanged Agent31 `Boundary.lean` separately restores at original SHA256 `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
 
 Locally verified against Lean **4.36.0-rc2** with the actual checksum-verified `Boundary.lean`, and **definitionally identical minimal excerpts** of the original Agent3 `MachineConjugacy` raw step, `DTableWitness` D0 table, `DStartFinite` F0Pure and `DSectionTransfer` halting predicates. The complete local kernel checks of `step_pack`, `run_pack`, `pack_unary`, `raw_unary_halts_iff` and `raw_init_halts_iff` print only `[propext, Classical.choice, Quot.sound]`. No `sorry`, `admit`, `native_decide`, mock theorem or additional postulate is used. The `unary_eq_init_replicate` theorem prints **no axioms**. Local checks used actual copied definitions but did **not** rebuild all full original Agent3 modules, so the final original-dependency certification is deliberately separate.
 
