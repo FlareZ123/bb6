@@ -793,4 +793,189 @@ theorem next_none_requires_tight_corridor (a d : Nat)
 
 #print axioms next_none_requires_tight_corridor
 
+/-- Under a power-of-three budget, evalA either exhausts the residual blocks or preserves a smaller power budget. -/
+theorem evalA_exp (a : Nat) : ∀ k m : Nat, k < 3^a →
+    ∃ aa bb dd, evalA (a+1) k m = some (aa,bb,dd) ∧
+      (bb=0 ∨ ∃ t, aa=t+1 ∧ bb<3^t) := by
+  induction a with
+  | zero =>
+    intro k m hk
+    have hz : k=0 := by simpa using hk
+    subst k
+    refine ⟨0,0,m+2,?_,Or.inl rfl⟩
+    simp [evalA]
+  | succ a ih =>
+    intro k m hk
+    have hkdiv : k/3 < 3^a := by
+      rw [Nat.pow_succ] at hk
+      omega
+    rw [evalA]
+    by_cases h2 : k%3=2
+    · simp only [if_pos h2]
+      have hp : 3^a ≤ 3^(a+2) := by
+        have hpos : 0 < 3^a := Nat.pow_pos (by omega)
+        have hpow : 3^(a+2) = (3^a)*9 := by
+          rw [show a+2 = (a+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
+          omega
+        omega
+      refine ⟨a+3,k/3,m,by congr 1 <;> omega,Or.inr ⟨a+2,by omega,?_⟩⟩
+      omega
+    · have hnonzero : a+1+1 ≠ 0 := by omega
+      by_cases h0 : k%3=0
+      · simp only [if_neg h2, if_neg hnonzero, if_pos h0]
+        refine ⟨a+1,k/3,m+2,by congr 1 <;> omega,Or.inr ⟨a,rfl,hkdiv⟩⟩
+      · obtain ⟨aa,bb,dd,he,hp⟩ := ih (k/3) (m+2*(k/3)+3) hkdiv
+        simp only [if_neg h2, if_neg hnonzero, if_neg h0]
+        exact ⟨aa,bb,dd,by simpa only [show a+1+1-1=a+1 by omega] using he,hp⟩
+
+/-- Exponential budget yields a universal halting-free B-drain. -/
+theorem drainB_exp (b : Nat) : ∀ a d : Nat, b ≤ 3^a →
+    ∃ aa dd, drainB (a+1) b d = some (.D aa dd) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d hpow
+    rw [drainB]
+    by_cases hb : b=0
+    · simp only [if_pos hb]
+      exact ⟨a+1,d,rfl⟩
+    · simp only [if_neg hb]
+      have hk : b-1 < 3^a := by omega
+      obtain ⟨a1,b1,d1,he,hp⟩ := evalA_exp a (b-1) (d+2*b+3) hk
+      have hdec : b1 < b := by
+        have hv := evalA_b_le_k (a+1) (b-1) (d+2*b+3) a1 b1 d1 he
+        omega
+      rcases hp with hz | ⟨t,ht,hp⟩
+      · subst b1
+        simp only [he, Option.bind_some, if_pos hdec]
+        exact ⟨a1,d1,by rw [drainB]; simp⟩
+      · subst a1
+        obtain ⟨aa,dd,hr⟩ := ih b1 hdec t d1 (by omega)
+        simp only [he, Option.bind_some, if_pos hdec]
+        exact ⟨aa,dd,hr⟩
+
+theorem evalA_then_drain_exp (a k m : Nat) (h : k<3^a) :
+    ∃ aa dd, (evalA (a+1) k m).bind (fun p => drainB p.1 p.2.1 p.2.2) = some (.D aa dd) := by
+  obtain ⟨a1,b1,d1,he,hp⟩ := evalA_exp a k m h
+  simp only [he, Option.bind_some]
+  rcases hp with hz | ⟨t,ht,hpow⟩
+  · subst b1
+    exact ⟨a1,d1,by rw [drainB]; simp⟩
+  · subst a1
+    obtain ⟨aa,dd,hr⟩ := drainB_exp b1 t d1 (by omega)
+    exact ⟨aa,dd,hr⟩
+
+theorem pow_three_plus_three (n : Nat) : 3^n ≤ 3^(n+3) := by
+  have hp : 0<3^n := Nat.pow_pos (by omega)
+  have hs : 3^(n+3) = 27 * 3^n := by
+    rw [show n+3=(n+2)+1 by omega,
+      show n+2=(n+1)+1 by omega, Nat.pow_succ, Nat.pow_succ, Nat.pow_succ]
+    omega
+  omega
+
+/-- Safe left region outside a logarithmic neighborhood of a=d. -/
+theorem next_safe_left_exp (a d : Nat)
+    (ha : 0<a) (he : a%2=0) (hd : a≤d) (hpow : a<3^(d-a)) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+  have h2 : ¬ (d%2=0 ∧ a≥d+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have h4 : a ≠ d+2 := by omega
+  simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg h4]
+  by_cases hdo : d%2=1
+  · simp only [if_pos hdo]
+    have hbound : a-1≤3^(d+3-a) := by
+      have hpowstep := pow_three_plus_three (d-a)
+      have eq : d+3-a=(d-a)+3 := by omega
+      rw [eq]
+      omega
+    have hr := drainB_exp (a-1) (d+3-a) 3 hbound
+    have heq : d+4-a=(d+3-a)+1 := by omega
+    rw [heq]
+    exact hr
+  · simp only [if_neg hdo]
+    have heq : d+1-a=(d-a)+1 := by omega
+    rw [heq]
+    exact evalA_then_drain_exp (d-a) a (2*a+5) hpow
+
+/-- Safe right region outside a logarithmic neighborhood of a=d. -/
+theorem next_safe_right_exp (a d : Nat)
+    (hodd : d%2=1 → d+6≤a ∧ d+3≤3^(a-d-6))
+    (heven : d%2=0 → d+3≤a ∧ d+2≤3^(a-d-3)) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by
+    by_cases hd : d%2=1
+    · have hh:=(hodd hd).1
+      omega
+    · have hd0 : d%2=0 := by omega
+      have hh:=(heven hd0).1
+      omega
+  simp only [if_neg h0]
+  by_cases hd : d%2=1
+  · have hh := hodd hd
+    have h1 : d%2=1 ∧ a≥d+5 := ⟨hd, by omega⟩
+    simp only [if_pos h1]
+    have heq : a-d-5=(a-d-6)+1 := by omega
+    rw [heq]
+    exact drainB_exp (d+3) (a-d-6) 5 hh.2
+  · have hd0 : d%2=0 := by omega
+    have hh:=heven hd0
+    have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+    have h2 : d%2=0 ∧ a≥d+3 := ⟨hd0,hh.1⟩
+    simp only [if_neg h1, if_pos h2]
+    have heq : a-d-2=(a-d-3)+1 := by omega
+    rw [heq]
+    exact drainB_exp (d+2) (a-d-3) 2 hh.2
+
+/-- A necessary logarithmic-width halting gateway for every even-a section. -/
+theorem next_none_requires_log_gate (a d : Nat)
+    (he : a%2=0) (h : next (.D a d) = none) :
+    0<a ∧ (a≤d → 3^(d-a) ≤ a) ∧
+    (d%2=1 → a<d+6 ∨ 3^(a-d-6)<d+3) ∧
+    (d%2=0 → a<d+3 ∨ 3^(a-d-3)<d+2) := by
+  have ha : 0<a := by
+    by_cases hz : a=0
+    · subst a
+      obtain ⟨aa,dd,hret⟩ := next_zero_total d
+      rw [hret] at h
+      contradiction
+    · omega
+  have hl : a≤d → 3^(d-a) ≤ a := by
+    intro hd
+    by_cases hp : a<3^(d-a)
+    · obtain ⟨aa,dd,hret⟩ := next_safe_left_exp a d ha he hd hp
+      rw [hret] at h
+      contradiction
+    · omega
+  have hodd : d%2=1 → a<d+6 ∨ 3^(a-d-6)<d+3 := by
+    intro hd
+    by_cases hsmall : a<d+6
+    · exact Or.inl hsmall
+    · right
+      by_cases hp : 3^(a-d-6)<d+3
+      · exact hp
+      · have hs : d+6≤a ∧ d+3≤3^(a-d-6) := by omega
+        have heven : d%2=0 → d+3≤a ∧ d+2≤3^(a-d-3) := by omega
+        obtain ⟨aa,dd,hret⟩ := next_safe_right_exp a d (by intro _; exact hs) heven
+        rw [hret] at h
+        contradiction
+  have heven : d%2=0 → a<d+3 ∨ 3^(a-d-3)<d+2 := by
+    intro hd
+    by_cases hsmall : a<d+3
+    · exact Or.inl hsmall
+    · right
+      by_cases hp : 3^(a-d-3)<d+2
+      · exact hp
+      · have hs : d+3≤a ∧ d+2≤3^(a-d-3) := by omega
+        have hodd : d%2=1 → d+6≤a ∧ d+3≤3^(a-d-6) := by omega
+        obtain ⟨aa,dd,hret⟩ := next_safe_right_exp a d hodd (by intro _; exact hs)
+        rw [hret] at h
+        contradiction
+  exact ⟨ha,hl,hodd,heven⟩
+
+#print axioms next_none_requires_log_gate
+#print axioms drainB_exp
+
 end BB6.Agent49ParitySource
