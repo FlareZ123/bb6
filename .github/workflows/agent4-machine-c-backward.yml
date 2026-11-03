@@ -55,7 +55,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/BackwardMod192.lean" .
           export LEAN_PATH=.
           python3 "$GITHUB_WORKSPACE/tools/agent4_split_mixed192.py" BackwardMod192.lean
-          for module in Back192Defs Back192Low Back192Zero Back192High Back192Step; do
+          for module in Back192Defs Back192Low Back192Zero Back192ZeroPos Back192High Back192Step; do
             echo "=== Mixed192 proof module: $module ==="
             timeout 100 lean -o "$module.olean" "$module.lean"
           done
