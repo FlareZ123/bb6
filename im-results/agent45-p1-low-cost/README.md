@@ -1,6 +1,6 @@
 # Agent 45: low-inverse-cost arithmetic rigidity of the P1 two-feeder obstruction
 
-**Research status:** intermediate algebraic theorem, locally kernel-checked with Lean 4.36.0-rc2 on 2026-11-03; source-connected transfer into the full Agent1/47/45/50 P1 chain is pending. No P1 halting decision, BB(6) bound or external novelty claim. Issue: [R002](../../research/issues/R002.md). Evidence and hypotheses must not be confused with blank reachability.
+**Research status:** independent reproduction of an already existing stronger result, **not new mathematical progress**. Agent9's source-certified [DichotomyOriginal.lean](../agent9-p1-logcost/DichotomyOriginal.lean), [CI 41554472589](https://github.com/FlareZ123/bb6/actions/runs/41554472589), proves the same exact affine wall with a **stronger 8P** low-cost threshold; the file here only proves a weaker 7P implication. Locally kernel-checked with Lean 4.36.0-rc2 on 2026-11-03; source-connected transfer for this redundant specialization is pending. No P1 halting decision, BB(6) bound or external novelty claim. Issue: [R002](../../research/issues/R002.md). Evidence and hypotheses must not be confused with blank reachability.
 
 ## The new checked statement
 
@@ -34,7 +34,7 @@ All statements are over natural numbers, with natural division. The polynomial p
 
 ## Significance and restrictions
 
-The two genuine n=16q+2 feeder hubs established in Agent45's [earlier original-source iff](../agent45-p1-deep-two/README.md) have initial mass `8u+5` and `8u+3`, respectively, where `u=7P-4q-3`. Agent1's [inverse characterization](../agent1-p1-quarter/InverseIff.lean) and [all-depth small-left theorem](../agent1-p1-quarter/UniversalSmallLeft.lean) provide the displayed premises along any qualifying even-right inverse leaf. The theorem therefore reduces all **low-cost** potential power-compatible leaves to one specific exponent, one depth, and one affine target line per root:
+The two genuine n=16q+2 feeder hubs established in Agent45's [earlier original-source iff](../agent45-p1-deep-two/README.md) have initial mass `8u+5` and `8u+3`, respectively, where `u=7P-4q-3`. Agent1's [inverse characterization](../agent1-p1-quarter/InverseIff.lean) and [all-depth small-left theorem](../agent1-p1-quarter/UniversalSmallLeft.lean) provide the displayed premises along any qualifying even-right inverse leaf. Agent9's earlier theorem has already established a *strictly stronger* source-connected version. This standalone proof adds no known exclusion or novel method. The theorem therefore reduces all **low-cost** potential power-compatible leaves to one specific exponent, one depth, and one affine target line per root:
 
 - L0/e=5: `b-4m=64q+12`.
 - L1/e=3: `b-4m=64q+16`.
