@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       balanced_only:
-        description: 'Stop after source-verifying the balanced-target proof; skip downstream experimental modules'
+        description: 'Stop after source-verifying the exact balanced and odd target fibers; skip downstream experimental modules'
         required: false
         type: boolean
         default: false
@@ -66,6 +66,10 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-balanced-fan/BalancedFanExact.lean.xz.b64" | xz -d > BalancedFanExact.lean
           echo "1b78e29a8aaec1befb189a2d8735c0e43c63f5eb6acded910279e5baa44bff82  BalancedFanExact.lean" | sha256sum -c -
           lean BalancedFanExact.lean
+          # Agent 20 exact odd-target fiber, including the authentic low stopping family.
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-odd-fiber/OddFan.lean.xz.b64" | xz -d > OddFan.lean
+          echo "19e417f9c0aa1f713a9b862358008b78609a6672698420f202f90d1cc4a1338b  OddFan.lean" | sha256sum -c -
+          lean OddFan.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
