@@ -44,3 +44,36 @@ Crucially the original `TM63.halt` and the intermediate `-->*` statements give e
 For an exact champion step score, strengthen the source macro chain `LC_Inc` / `Incs0` / `Rst2` / `Rst1` / `Rst0` / `Rst1'` / `Rsts1_v2` / `Rsts2H` to produce **primitive-step counts** alongside endpoint configurations. Compose these into an executable symbolic recurrence for the existing finite macro itinerary and check the start/root and final halting-query conventions against `BB6Coverage.HaltsAfter`. A source-certified finite numerical expression would supply an attainable lower bound, with global upper-bound completeness still separate. No such counted source proof is claimed here.
 
 All novelty, source integration and universality claims remain deliberately qualified; this file is under `im-results/`.
+
+## New primitive-step cost conjectures (finite evidence only)
+
+The executable [`verify_counted_macros.py`](verify_counted_macros.py) uses the literal original 12 TM63 transition entries with a finitely supported bi-infinite tape. It interprets the original `TM63.S1` convention carefully: in Coq, `l <{{D}} r` places the head on **the last cell of the physical left word**, whereas the first cell of `r` is its right neighbor. Getting that offset wrong causes spurious failed macro matches. With the corrected convention, the raw blank-root simulator reaches the published `S1(3,7,m2,6,0,63)` **exactly after 27,959 ordinary transitions**.
+
+Independent primitive-step simulation suggests three concise *all-parameter conjectures*. Let `v₂(n)` denote the number of trailing zero bits of positive `n`, and let `m=0,1,2` index the source's `Rst0/Rst1/Rst2` middle marker. For source transitions from `S1(L,n,m,a,0,b)`, with `1≤n<2^L`, to their exact published `S1` successor:
+
+```text
+C_increment(m,n,a,b) =
+    6*4^b + 42*2^b - 9*b + 15 + 4*m + 12*(a + v₂(n))
+
+C_reset_core(L,a,b) = 97 + 12*(L+a) + 3*b
+C_reset_drain(b)    = 6*(4^b-1) + 42*(2^b-1) - 12*b
+C_Rst1'(L,a,b)     = 12*(L+a) + 6*4^b + 42*2^b - 9*b + 49
+
+C_Rst0'_to_halt_query(L,a,b) = 59 + 12*(L+a)
+```
+
+The `Rst1'` decomposition follows the **actual intermediate configuration** visible in its pinned Rocq proof: `S1(L+a+2,R(L,a),m2,b,2^b-1,0)`. The first formula's target is `S1(L,n-1,m',a+b+δ,0,2^b−1)`, where `m'` cycles 2→1→0→2 and `δ=1` for `m=0`, `δ=2` otherwise. The final formula counts successful transitions **up to**, and excluding, the undefined halting query. One must separately reconcile whether the external Busy Beaver scoring convention counts the terminal halt action.
+
+All source-authentic endpoint configurations were compared by **complete finite set of marked cells relative to the head**, without fingerprints or approximate observations. Running the checked-in deterministic script locally on 2026-11-03 produced:
+
+```text
+INIT: 27,959 exact nonhalting blank-root moves to published S1
+INC: 2860 finite original-step trials
+RESET: 252 exact finite core/drain/composition trials
+TERMINAL: 300 finite halt-query trials
+ALL FINITE TESTS PASS; these do not establish quantified formulas.
+```
+
+The 2,860 increment checks cover all three markers, `L=1..6`, `1≤n<min(2^L,18)`, `a∈{0,1,3}`, `b=0..4`, and 160 pseudorandom extra instances with fixed seed `20261103`. The reset checks cover `L,a=0..5,b=0..6`; terminal checks `L,a=0..9,b∈{0,1,7}`. A separate exploratory experiment matched `Rst1'` for `b=0..11`, including a 25,251,790-step instance.
+
+**Evidence class: finite computational conjecture.** Endpoint agreement for 3,412 instances is a substantial hint about a reusable exact raw-step cost model, but proves nothing for unrestricted `n,L,a,b`. The Lean file above certifies the source's modular gating arithmetic only. The proposed time formulas have **no universally quantified Lean or Coq proof**, no verified cross-language semantics transport, and supply **no certified numerical champion score**. Future research should first prove the 59+12(L+a) terminal and 97+12(L+a)+3b reset-core macros symbolically; then prove the v₂(n) carry-law and the geometric drain-cost recurrence. The latter has observed difference `C_drain(b+1)-C_drain(b)=18*4^b+42*2^b-12`, a natural induction target. Only then should costs be composed over the champion's massive macro itinerary.
