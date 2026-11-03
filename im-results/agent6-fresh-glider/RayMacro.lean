@@ -488,7 +488,12 @@ theorem tail_pattern_ray_step (m : Machine) (s : Fin 6)
     · simp [origin, tailSeed]
     · intro x hx
       have hnonneg : 0 ≤ x-origin := by omega
-      simp [tailSeed, hnonneg, hq.2 x (by simpa [origin] using hx), origin]
+      have htape : q.tape x = pattern (x-origin) := by
+        simpa only [origin] using hq.2 x (by simpa only [origin] using hx)
+      change q.tape x =
+        (if 0 ≤ x-origin then pattern (x-origin) else false)
+      rw [if_pos hnonneg]
+      exact htape
   obtain ⟨qr, hqr, hagree⟩ :=
     ray_transfer m origin q (tailSeed s pattern)
       hstart n hwindow r hr
