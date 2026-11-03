@@ -36,8 +36,10 @@ jobs:
           python3 "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/unpack.py"
           cp "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/Boundary.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryHalt.lean" .
           lean -o Boundary.olean Boundary.lean
-          lean RawBoundaryBridge.lean
+          lean -o RawBoundaryBridge.olean RawBoundaryBridge.lean
+          lean RawBoundaryHalt.lean
   ledger-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
