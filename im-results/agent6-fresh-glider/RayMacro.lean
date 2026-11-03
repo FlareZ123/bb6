@@ -454,4 +454,117 @@ theorem entry_fresh_state_never_left (m : Machine) (s : Fin 6)
 
 #print axioms entry_fresh_state_never_left
 
+/-- Arbitrary fixed right-tail word, including a finitely marked word followed
+    by blank cells. The word is expressed in coordinates relative to the
+    moving head, and therefore preserves meaning under translation. -/
+def TailPatternRay (s : Fin 6) (pattern : Int → Bool) (q : Config) : Prop :=
+  q.state = s ∧ ∀ x, q.head ≤ x →
+    q.tape x = pattern (x-q.head)
+
+def tailSeed (s : Fin 6) (pattern : Int → Bool) : Config :=
+  { state := s, head := 0,
+    tape := fun x => if 0 ≤ x then pattern x else false }
+
+/-- A finite macro that recreates the same arbitrary ray word at a shifted
+    frontier is an all-time pumping step, independently of marks behind it. -/
+theorem tail_pattern_ray_step (m : Machine) (s : Fin 6)
+    (pattern : Int → Bool) (n delta : Nat) (hdelta : 0 < delta)
+    (htrace : ∃ r, run m n (tailSeed s pattern) = some r ∧
+      r.state = s ∧ r.head = (delta : Int) ∧
+      ∀ x, (delta : Int) ≤ x →
+        r.tape x = pattern (x-(delta : Int)))
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (tailSeed s pattern) = some d → 0 ≤ d.head) :
+    ∀ q, TailPatternRay s pattern q →
+      ∃ q', run m n q = some q' ∧
+        TailPatternRay s pattern q' ∧ q'.head = q.head + delta := by
+  intro q hq
+  obtain ⟨r, hr, hstate, hhead, htail⟩ := htrace
+  let origin := q.head
+  have hstart : RayAgree origin q (tailSeed s pattern) := by
+    constructor
+    · exact hq.1
+    constructor
+    · simp [origin, tailSeed]
+    · intro x hx
+      have hnonneg : 0 ≤ x-origin := by omega
+      simp [tailSeed, hnonneg, hq.2 x (by simpa [origin] using hx), origin]
+  obtain ⟨qr, hqr, hagree⟩ :=
+    ray_transfer m origin q (tailSeed s pattern)
+      hstart n hwindow r hr
+  refine ⟨qr, hqr, ?_, ?_⟩
+  · constructor
+    · exact hagree.1.trans hstate
+    · intro x hx
+      have hbase : origin ≤ x := by
+        rw [hagree.2.1, hhead] at hx
+        omega
+      have hshift : (delta : Int) ≤ x-origin := by
+        rw [hagree.2.1, hhead] at hx
+        omega
+      have hvalue := hagree.2.2 x hbase
+      rw [hvalue, htail (x-origin) hshift]
+      congr 1
+      rw [hagree.2.1, hhead]
+      omega
+  · rw [hagree.2.1, hhead]
+
+theorem tail_pattern_ray_never_from (m : Machine) (s : Fin 6)
+    (pattern : Int → Bool) (n delta : Nat)
+    (hn : 0 < n) (hdelta : 0 < delta)
+    (htrace : ∃ r, run m n (tailSeed s pattern) = some r ∧
+      r.state = s ∧ r.head = (delta : Int) ∧
+      ∀ x, (delta : Int) ≤ x →
+        r.tape x = pattern (x-(delta : Int)))
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (tailSeed s pattern) = some d → 0 ≤ d.head)
+    (q : Config) (hq : TailPatternRay s pattern q) :
+    ∀ t, (run m t q).isSome = true := by
+  have hm := tail_pattern_ray_step m s pattern n delta
+    hdelta htrace hwindow
+  have hall : ∀ j, ∃ r, run m (n*j) q = some r ∧
+      TailPatternRay s pattern r := by
+    intro j
+    induction j with
+    | zero => exact ⟨q, rfl, hq⟩
+    | succ j ih =>
+        obtain ⟨r, hr, hp⟩ := ih
+        obtain ⟨r', hr', hp', _⟩ := hm r hp
+        refine ⟨r', ?_, hp'⟩
+        have htime : n*(j+1) = n*j+n := by simp [Nat.mul_add]
+        rw [htime, run_add_macro, hr]
+        exact hr'
+  intro t
+  obtain ⟨r, hr, _⟩ := hall (t+1)
+  have hmul : 1*(t+1) ≤ n*(t+1) :=
+    Nat.mul_le_mul_right (t+1) (Nat.succ_le_of_lt hn)
+  exact run_prefix_macro m q (n*(t+1)) t (by omega) (by simp [hr])
+
+/-- A genuine blank-origin finite entry into a matching tail word makes the
+    arbitrary periodic-word macro usable for blank-start nonhalting. -/
+theorem entry_tail_pattern_never (m : Machine) (s : Fin 6)
+    (pattern : Int → Bool) (entrySteps n delta : Nat)
+    (hn : 0 < n) (hdelta : 0 < delta)
+    (hentry : ∃ q, run m entrySteps blank = some q ∧
+      TailPatternRay s pattern q)
+    (htrace : ∃ r, run m n (tailSeed s pattern) = some r ∧
+      r.state = s ∧ r.head = (delta : Int) ∧
+      ∀ x, (delta : Int) ≤ x →
+        r.tape x = pattern (x-(delta : Int)))
+    (hwindow : ∀ k, k < n → ∀ d,
+      run m k (tailSeed s pattern) = some d → 0 ≤ d.head) :
+    NeverHalts m := by
+  obtain ⟨q, hq, hp⟩ := hentry
+  have htail := tail_pattern_ray_never_from m s pattern n delta
+    hn hdelta htrace hwindow q hp
+  intro t
+  have htotal : (run m (entrySteps+t) blank).isSome = true := by
+    rw [run_add_macro, hq]
+    exact htail t
+  exact run_prefix_macro m blank (entrySteps+t) t (by omega) htotal
+
+#print axioms tail_pattern_ray_step
+#print axioms tail_pattern_ray_never_from
+#print axioms entry_tail_pattern_never
+
 end BB6Coverage
