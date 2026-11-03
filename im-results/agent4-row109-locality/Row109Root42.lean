@@ -26,6 +26,36 @@ theorem blank_root42 :
     simp [root42, wordTape]
   simpa [root42] using accepted_sound root42 root42_valid (fun _ => false) ht
 
+theorem word923_outside (p : Int) (hp : ¬(-3 ≤ p ∧ p ≤ 6)) :
+    wordTape 923 (p+3) = false := by
+  by_cases hleft : p < -3
+  · have hneg : p + 3 < 0 := by omega
+    simp [wordTape, hneg]
+  · have hhigh : 10 ≤ (p+3).toNat := by omega
+    have hpow : 923 < 2 ^ (p+3).toNat := by
+      have hle : 2^10 ≤ 2^(p+3).toNat :=
+        Nat.pow_le_pow_right (by decide) hhigh
+      omega
+    have hshift : 923 >>> (p+3).toNat = 0 :=
+      Nat.shiftRight_eq_zero 923 _ hpow
+    have hnonnegative : ¬ p+3 < 0 := by omega
+    simp [wordTape, hnonnegative, Nat.testBit, hshift]
+
+theorem blank_root42_exact_word :
+    let out := run 42 {st := 0, h := 0, tape := fun _ => false}
+    out.st = 2 ∧ out.h = 0 ∧
+    ∀ p, out.tape p = wordTape 923 (p+3) := by
+  have h := blank_root42
+  dsimp at h ⊢
+  rcases h with ⟨hs,hh,ht⟩
+  refine ⟨hs, hh, ?_⟩
+  intro p
+  rw [ht]
+  by_cases hp : -3 ≤ p ∧ p ≤ 6
+  · simp [hp]
+  · simp [hp, word923_outside p hp]
+
+#print axioms blank_root42_exact_word
 #print axioms root42_valid
 #print axioms blank_root42
 end BB6.Row109Locality
