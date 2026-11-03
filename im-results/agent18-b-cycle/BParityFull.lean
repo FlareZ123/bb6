@@ -222,6 +222,31 @@ theorem bits_unique (w : List Nat)
   intro e he
   exact bits_injective_small w.length p e d he.1 hd (he.2.trans hword.symm)
 
+/-- The parity encoder agrees exactly with congruence modulo 2^n. -/
+theorem bits_iff_mod (n p d e : Nat) :
+    bits n (p,d) = bits n (p,e) ↔ d % 2^n = e % 2^n := by
+  have hn : 0 < 2^n := Nat.pow_pos (by decide)
+  have hrepr (x : Nat) :
+      bits n (p,x) = bits n (p,x%2^n) := by
+    calc
+      bits n (p,x) = bits n (p,x%2^n + 2^n*(x/2^n)) := by
+        rw [Nat.mod_add_div]
+      _ = bits n (p,x%2^n) := bits_shift n p (x%2^n) (x/2^n)
+  constructor
+  · intro heq
+    have hr : bits n (p,d%2^n) = bits n (p,e%2^n) := by
+      rw [← hrepr d, ← hrepr e]
+      exact heq
+    exact bits_injective_small n p (d%2^n) (e%2^n)
+      (Nat.mod_lt _ hn) (Nat.mod_lt _ hn) hr
+  · intro heq
+    calc
+      bits n (p,d) = bits n (p,d%2^n) := hrepr d
+      _ = bits n (p,e%2^n) := by rw [heq]
+      _ = bits n (p,e) := (hrepr e).symm
+
+#print axioms bits_iff_mod
+
 #print axioms bits_unique
 #print axioms bits_injective_small
 #print axioms bits_surjective
