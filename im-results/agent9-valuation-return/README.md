@@ -72,6 +72,23 @@ q = 4^4 * u = 208596292082770133442964332173824
 
 Consequently `q%3=1`, the exact fatal gate `3^(c+6) | (4q-13)` holds, and the S-section **first transfers into T at accelerated step 69**. Local Lean 4.36.0-rc2 kernel checks `core_below_exponential`, `exact_exit`, and the universally quantified `no_earlier_exit` (all natural `n<69`), printing only standard axioms. The initial point is **synthetic**, so it is no evidence that either actual root transfers. The stronger and different candidate condition `q<3^c` is NOT refuted by this example: here `q>3^c`. A quantitative invariant proven specifically for the true rooted orbit remains an open task. This negative result helps prevent an unsound universal shortcut.
 
+## Infinite-family obstruction, formally certified
+
+The explicit counterexample extends to **infinitely many distinct synthetic initial S-states**, established in [CoreFamily.lean.gz.b64](./CoreFamily.lean.gz.b64), whose full source SHA-256 is `c4a8491206cf83b3de4ee5d080873611200fcf2cf8c429482e71ec5a7c0da58e`. For arbitrary `t∈ℕ`, define
+
+```text
+c_t = 63 + 256*t
+N_t = c_t + 6 = 69 + 256*t
+q_t = (3^N_t + 13) / 4
+u_t = (3^N_t + 13) / 1024
+```
+
+Theorem `infinitely_many_core_shield_counterexamples` proves simultaneously `q_t=4^4*u_t`, `u_t<3^c_t`, and `steps (c_t+6) (some (q_t,c_t))=none`. Theorem `no_earlier_family_exit` proves `steps k (some (q_t,c_t))` is `some` for **every** `k<c_t+6`. Theorem `distinct_heights` shows different parameters give different heights. Thus the failed global core shield is refuted by an actual infinitely parameterized family, rather than a single accident.
+
+The algebra hinges on the finite modular identities `3^256%1024=1` and `3^69%1024=1011`. Hence `3^N_t+13` is divisible by `1024`, `4q_t-13=3^N_t`, and `q_t%3=1`; the earlier proved necessary-and-sufficient fatal gate supplies exact first-transfer timing. The inequality follows from `1024u_t=729*3^c_t+13<1024*3^c_t`. Local Lean 4.36.0-rc2 compiled all three theorems and displayed only standard `[propext,Classical.choice,Quot.sound]` or fewer axioms, without sorry. Add `CoreFamily.lean` to the reconstruction before compiling it after `CoreCounter.lean`.
+
+**Scope:** this family comprises fabricated high-level states and provides no reachability evidence from either actual blank tape. It rules out only the stated broad factor-of-four-core shield. Neither the stronger literal condition `q<3^c`, any history-sensitive reachable-state invariant, the two rooted machines, nor BB(6) is decided. This is a rigorously checked *negative method-limit result*, with academic novelty unassessed; retaining it under `im-results/` is deliberate.
+
 ## Independent finite checking
 
 [burst_verify.py.gz.b64](burst_verify.py.gz.b64), restored Python SHA256 `014a416ca576dfa87757bbb6aa407067daad557cdf92ac89daf433e8c2f84ad6`, compares every maximal-burst macro to independently iterated direct S steps. The target entries `(141,3)` and `(17,3)` are respectively the published root and a separately authenticated S-root; they are distinct original-machine roots. Exact local 100,000 S-step checks per entry:
