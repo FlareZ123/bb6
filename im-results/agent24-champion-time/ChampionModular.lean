@@ -86,7 +86,7 @@ def tower : Nat → Nat → Nat
   | n+1, b => 2^(tower n b)-1
 
 def sumTower : Nat → Nat → Nat
-  | 0, _ => 0
+  | 0, b => b
   | n+1, b => sumTower n b + tower (n+1) b
 
 private theorem tower_positive (n b : Nat) (hb : 0 < b) : 0 < tower n b := by
@@ -110,11 +110,11 @@ theorem tower_succ_odd (n b : Nat) (hb : 0 < b) :
   omega
 
 theorem sumTower_parity (n b : Nat) (hb : 0 < b) :
-    sumTower n b % 2 = n % 2 := by
+    sumTower n b % 2 = (b+n) % 2 := by
   induction n with
   | zero => simp [sumTower]
   | succ n ih =>
-    change (sumTower n b + tower (n+1) b) % 2 = (n+1) % 2
+    change (sumTower n b + tower (n+1) b) % 2 = (b+(n+1)) % 2
     rw [Nat.add_mod, ih, tower_succ_odd n b hb]
     omega
 
