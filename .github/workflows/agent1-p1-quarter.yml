@@ -25,7 +25,7 @@ jobs:
       - name: Compile all unmodified upstream Lean dependencies and new universal theorems
         run: |
           set -e
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost:im-results/agent23-p1-root-wall:im-results/agent50-p1-l1-reset"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost:im-results/agent23-p1-root-wall:im-results/agent50-p1-l1-reset:im-results/agent33-p1-q1"
           for m in GParity GInverse PosEvenForm ResetGate; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
@@ -46,6 +46,8 @@ jobs:
           for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
             lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
           done
+          echo "Audit Agent 33 P1 n=18 full finite inverse cone on original Lean sources"
+          lean im-results/agent33-p1-q1/P1Q1.lean
           lean -o im-results/agent1-p1-quarter/RootWallArithmetic.olean im-results/agent1-p1-quarter/RootWallArithmetic.lean
           lean -o im-results/agent1-p1-quarter/WallReset.olean im-results/agent1-p1-quarter/WallReset.lean
           lean -o im-results/agent1-p1-quarter/DyadicDiff.olean im-results/agent1-p1-quarter/DyadicDiff.lean
