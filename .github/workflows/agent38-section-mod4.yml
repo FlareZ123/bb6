@@ -104,3 +104,4 @@ jobs:
 
           # Agent 34: independent reproducible bounded inverse-cone pilot.
           python ${GITHUB_WORKSPACE}/im-results/agent34-c-low-mod32/m8_reverse_certificate.py | tee /tmp/agent34-m8.txt
+          python ${GITHUB_WORKSPACE}/im-results/agent34-c-low-mod32/low_m8_class_scan.py
