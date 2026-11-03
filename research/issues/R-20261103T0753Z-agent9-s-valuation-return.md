@@ -7,7 +7,7 @@
   "programme": "R-20261103T0753Z-agent9-s-valuation-return",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,29 @@
       "task": "Derive and independently check an exact nonzero-core first-return acceleration of the source-authentic cryptid9 S map by grouping maximal 3-adic zero bursts; test a seed-specific height-versus-valuation survival barrier on q=141,c=3 and q=17,c=3, with explicit failure witnesses where relevant.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Prove exact burst law from q mod3 nonzero, including strict transfer and finite zero-run semantics. Test seed-specific valuation barrier and identify whether any new rigorous all-time invariant emerges; do not treat S→T as original halt."
+      "evidence": [
+        {
+          "kind": "standalone-kernel-proof",
+          "path": "im-results/agent9-valuation-return/ValuationReturn.lean.gz.b64",
+          "note": "Lean 4.36.0-rc2 no-sorry proof of zero-prefix, transfer and nonzero core maximal burst; source high-level map algebraically restated; standard axioms only."
+        },
+        {
+          "kind": "kernel-proof",
+          "path": "im-results/agent9-valuation-return/ValuationValidity.lean",
+          "note": "S-range validity and residue proof for synthetic all-height transfer witnesses; standard axioms only."
+        },
+        {
+          "kind": "finite-reproduction",
+          "path": "im-results/agent9-valuation-return/burst_verify.py.gz.b64",
+          "note": "Independent 100000 S-step exact direct-vs-macro checks at q141 and q17, both no transfer within tested horizon."
+        },
+        {
+          "kind": "synthesis",
+          "path": "im-results/agent9-valuation-return/README.md",
+          "note": "Exact statements, dependencies, no-go limitation, reproduction and unproved rooted obligation."
+        }
+      ],
+      "handoff": "Exact source-derived variable-length burst and synthetic all-height no-go are saved; the genuine rooted q=141/17 survival problem remains unresolved. Next seek root-specific valuation bound or source-connected import, avoid extension of prefixes."
     }
   ],
   "review_requested": null
