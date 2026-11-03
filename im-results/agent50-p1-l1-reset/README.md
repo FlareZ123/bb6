@@ -32,6 +32,18 @@ The all-q proof decomposes into reusable kernel-checked components:
 
 Write `P=2^(16q)`, prefix length r and reset depth t≥1, with `X=2^r`, `Y=2^t`. Define `J=(32q+12+2r)X-(12q+4)` and odd `V=56X-21`. The exact inverse power/mass equations give `XY(c+3)+J=VP` with `0<J<P`. Since V is odd, this forces `r+t≤16q`, so `Z=2^(r+t)` divides J and `Z≤608q²`. With `Q=P/Z`, `H=J/Z`, and `K=32q+12+2r+2t-H`, the source relation becomes `B+K+VQ=56P` for `B=2k+8`, `0<K≤76q`. The fourth-power exponential bound yields `Z*K<P`, hence `K<Q`. The wall suffix forces `B=2^n[4(r+t+1+n)+64q+28]`; dyadic divisibility then gives `2^n≤K≤76q` and `B≤17024q²`. Yet the mass relation implies `B+K≥28P`, contradicting `65536q^4≤P`. These are *all-natural* Lean-proved inequalities, not sample observations.
 
+## Combined theorem: the wall requires at least two positive-depth inversions
+
+**Fully original-source Lean proof, success 2026-11-03 04:53 UTC.** [Run 41580524771](https://github.com/FlareZ123/bb6/actions/runs/41580524771), source-certify job 125734030767, head revision `133353853f0d80f2acc71a79e4e35948a1a19aca`, **SUCCESS**. The exact final `#print axioms` for `authentic_wall_history_needs_two` is `[propext, Classical.choice, Quot.sound]` only, no `sorryAx`. The CI recompiled both the new L1 chain and the unmodified prior Agent 1 L0 proof.
+
+See [ResetCount.lean](./ResetCount.lean). The `CountCone` inductive relation annotates the source's `OddCone` with **exact positive-depth edge count**, using the unchanged `inverseAt` and source guards at every constructor. `odd_cone_has_count` proves every original `OddCone` witness admits this faithful count. The structural `cone_shape` theorem proves that a count-zero history is an arbitrary upper tail, and a count-one history is exactly an upper prefix, one positive-depth reset, and an upper suffix, with every original transition guard retained. `wall_requires_two_resets` applies the three original-source non-wall lemmas:
+
+- source `no_initial_upper_wall` (Agent 1, zero positive resets, either feeder);
+- source `l0_one_reset_cone_no_wall` (Agent 1, any one reset on L0);
+- newly source-proved `l1_one_reset_cone_no_wall` (Agent 50, any one reset on L1).
+
+The final `authentic_wall_history_needs_two` states: for any `q≥1`, either feeder root, any source `OddCone` witness at `b=4m+64q+(12 if L0 else 16)` has an exact-count `CountCone` witness with **count≥2**. The result concerns every finite history with arbitrary inverse depth and arbitrary parameter q. It closes the zero-reset and one-reset wall cases, while neither ruling out paths with two or more resets nor deciding the full blank-origin halting gate. See `research/issues/R002.md` for the remaining separate exponential-cost, c=1, and n≡14(mod16) obligations.
+
 ## Earlier direct-reset subtheorem
 
 The simpler `BB6.Agent50L1OneReset.l1_first_reset_no_wall` in [L1OneResetBridge.lean](./L1OneResetBridge.lean), with pure arithmetic [L1OneResetArithmetic.lean](./L1OneResetArithmetic.lean), already excludes one L1 reset **directly at the feeder** and an arbitrary upper suffix. Original-source [run 41577652633](https://github.com/FlareZ123/bb6/actions/runs/41577652633) succeeded, same standard axiom audit; its statement is a special case of the newer all-prefix theorem.
