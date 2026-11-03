@@ -1,0 +1,34 @@
+name: Agent 7 compact Machine C backward invariant (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore proof and verify original Machine C
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a7-proof
+          cd /tmp/a7-proof
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent7-mixed96-compact/CompactProof.tar.xz.b64" > CompactProof.tar.xz
+          echo "562b0532f7c4ea3775e9af01f637114f1a5c9760c6f9b53caa1df15444b37946  CompactProof.tar.xz" | sha256sum -c -
+          tar -xJf CompactProof.tar.xz
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o OddFinite.olean OddFinite.lean
+          lean -o OddPeriod.olean OddPeriod.lean
+          lean -o BackFinite.olean BackFinite.lean
+          lean -o BackTheorems.olean BackTheorems.lean
+          lean -o BackStep.olean BackStep.lean
+          lean -o BackGoal.olean BackGoal.lean
