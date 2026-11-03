@@ -20,11 +20,11 @@ Local Lean 4.36.0-rc2 checked `BB6Root119.shuttle` by induction against a litera
 theorem shuttle (n : Nat) (t : Int → Bool) (h : Int)
     (ones : ∀ j : Nat, j < 2*n+1 → t (h+(j:Int)) = true)
     (zero : t (h+(2*n+1:Int)) = false) :
-    run (4*n+3) ⟨.D,h,t⟩ =
-    some ⟨.F,h-1, fill t h (2*n+2)⟩
+    shuttleRun (4*n+3) ⟨.D,h,t⟩ =
+    some ⟨.F,h-1, shuttleFill t h (2*n+2)⟩
 ```
 
-Kernel-reported axioms: `[propext, Classical.choice, Quot.sound]`; no `sorry`, no `native_decide`. **Original upstream source-import CI is pending.** The complete locally checked source was retained as `/tmp/Root119Shuttle.lean` in this invocation, rather than claimed already kernel-built in the GitHub repository; the source-transfer attempt encountered a tool safeguard. Independent CI and a genuinely original-root import should precede promotion to `results/`.
+Kernel-reported axioms: `[propext, Classical.choice, Quot.sound]`; no `sorry`, no `native_decide`. **Original repository source-import CI PASSED:** [manual workflow run 41742631333](https://github.com/FlareZ123/bb6/actions/runs/41742631333), compiling the unchanged `Root119Gate.lean`, [support lemmas](Root119ShuttleSupport.lean), and [all-length theorem](Root119Shuttle.lean) with Lean 4.36.0-rc2. The log prints the same standard axioms and no `sorryAx`. The imported table is the authentic Agent42 auxiliary model. This establishes the stated conditional macro, while the birth-parity condition remains open. External peer review and an academically supported novelty assessment should precede any promotion to `results/`.
 
 ## Blank-orbit finite observation
 
