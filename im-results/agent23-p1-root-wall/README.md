@@ -88,6 +88,26 @@ The existing **manual-only** workflow [`.github/workflows/agent1-p1-quarter.yml`
 
 Local development also used bundled Lean 4.36.0-rc2. Temporary axiom-based stub modules were employed only for rapid syntax tests while building bridges; they were **never committed** or imported into the repository CI proof. Full source CI imports the actual original `Reach`, `G`, `inverseAt`, `OddCone`, and all original proof dependencies.
 
+## All-upper wall obstruction and the last-positive-reset decomposition
+
+A further independent kernel-checked theorem, `BB6.Agent23RootWall.no_root_upper_wall`, proves **for every n≥14 and every depth L** that
+
+```
+14*2^n ≠ 2^L * (4*(n+L)+12) + 2*n+4.
+```
+
+An all-depth-zero inverse chain of the exact P1 critical root would necessarily satisfy this identity if it ever landed on the affine wall `b=4*(n+m)`. The proof bounds `L<n`, uses divisibility `2^L ∣ 2*(n+2)` to show `2^L≤2n+4`, and the elementary induction `32*n*n≤2^n` to obtain a strict exponential-versus-polynomial contradiction. It holds uniformly across all n≥14, including the difficult n≡14(mod16) indices.
+
+The stronger source-connected `BB6.Agent23RootWall.critical_wall_requires_positive_inverse` uses the **authentic** Agent1Quarter `OddCone` and `BB6.Agent1UpperTail.odd_cone_last_reset` to show that **every occurrence of the critical affine wall in the entire odd inverse cone** contains an earlier positive-depth inverse step `t≥1`. It returns that step's actual parent in the original inverse grammar and the exact final all-upper tail equation
+
+```
+(2*k-4)+12 = 2^L*(4*(n+mp+t+1+L)+12).
+```
+
+This tightens the exceptional wall branch of the sharp theorem by requiring a genuine deeper inverse reset in its history. It does not exclude positive-depth reset paths or imply a halting decision.
+
+Verification: original-source Lean 4.36.0-rc2, manual [CI run 41578057833](https://github.com/FlareZ123/bb6/actions/runs/41578057833), dedicated `agent23-root-wall` job **success**, with `#print axioms` returning `[propext, Quot.sound]` on the arithmetic theorem and `[propext, Classical.choice, Quot.sound]` on the full-source bridge. Source files: `RootWallNoInitialUpper.lean` and `CriticalRootWallLastReset.lean`.
+
 ## Research follow-ups
 
 1. Develop an all-index bound on accumulated odd-cone inverse cost `m` strong enough to force the low-cost wall. An O(poly(n)) bound would be decisive for the nonwall branch, but is presently unproved. Arbitrarily deep synthetic inverse paths from Agents27/33 warn against unjustified bounded-depth assumptions.
