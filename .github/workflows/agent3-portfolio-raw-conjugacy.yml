@@ -31,6 +31,13 @@ jobs:
           lean -o DSourceCorollaries.olean DSourceCorollaries.lean
           lean DBlankFusion.lean
           lean STableWitness.lean
+          python3 -m pip install --quiet filelock
+          python3 "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/unpack.py"
+          python3 "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/Boundary.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryBridge.lean" .
+          lean -o Boundary.olean Boundary.lean
+          lean RawBoundaryBridge.lean
   ledger-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
