@@ -17,7 +17,21 @@ TRANSITION = re.compile(r"(?:[01][LR][A-F]|---)\Z")
 
 
 def parse_roots(raw: bytes, expected: int) -> list[str]:
-    roots = [line.strip() for line in raw.decode("utf-8-sig").splitlines() if line.strip()]
+    # The October 30 file contains a leading decimal index before some
+    # machine codes. Such labels are provenance, not part of a Turing table.
+    roots = []
+    indexes = []
+    for line in raw.decode("utf-8-sig").splitlines():
+        fields = line.split()
+        if not fields:
+            continue
+        if len(fields) == 2 and fields[0].isdigit():
+            indexes.append(int(fields[0]))
+            roots.append(fields[1])
+        elif len(fields) == 1:
+            roots.append(fields[0])
+        else:
+            raise AssertionError(f"unexpected roster line: {line!r}")
     assert len(roots) == expected, f"expected {expected} lines, got {len(roots)}"
     assert len(set(roots)) == len(roots), "duplicate rooted transition string"
     for number, root in enumerate(roots, 1):
@@ -25,6 +39,8 @@ def parse_roots(raw: bytes, expected: int) -> list[str]:
         assert len(states) == 6, (number, root)
         assert all(len(state) == 6 and TRANSITION.fullmatch(state[:3])
                    and TRANSITION.fullmatch(state[3:]) for state in states), (number, root)
+    if indexes:
+        print(f"Source-leading decimal indices: {len(indexes)}, first={indexes[:8]}, last={indexes[-8:]}")
     return roots
 
 
