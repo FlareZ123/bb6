@@ -40,6 +40,8 @@ jobs:
           LEAN_PATH: im-results/agent35-row262-section:im-results/agent7-row262-right-projection
         run: |
           lean im-results/agent7-row262-right-projection/RightProjectionNoGo.lean
-          lean im-results/agent7-row262-right-projection/PrefixWindowNoGo.lean
+          lean -o im-results/agent7-row262-right-projection/PrefixWindowNoGo.olean im-results/agent7-row262-right-projection/PrefixWindowNoGo.lean
+          lean -o im-results/agent7-row262-right-projection/SeededHalt.olean im-results/agent7-row262-right-projection/SeededHalt.lean
+          lean im-results/agent7-row262-right-projection/FirstToAll.lean
           python3 im-results/agent7-row262-right-projection/check_right_projection.py
           python3 im-results/agent7-row262-right-projection/check_prefix_window.py
