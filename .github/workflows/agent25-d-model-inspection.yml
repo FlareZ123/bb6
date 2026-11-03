@@ -1,0 +1,19 @@
+name: Agent 25 D regular model inspection (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore checksum-pinned regular model
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+      - name: Print executable model definitions for source-aligned orbit study
+        run: |
+          sed -n '1,220p' im-results/agent35-d-regular-certificate/DRegular.lean
+          sed -n '1,150p' im-results/agent35-d-regular-certificate/d_return_model.py
