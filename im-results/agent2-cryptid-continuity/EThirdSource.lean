@@ -137,7 +137,7 @@ theorem third_B_source (v h : Nat) :
     have hrep : List.replicate (512*v+434) true =
         List.replicate (512*v+433) true ++ [true] := by
       calc
-        _ = List.replicate (512*v+433+1) true := by congr 1; omega
+        _ = List.replicate (512*v+433+1) true := by congr 1
         _ = List.replicate (512*v+433) true ++ List.replicate 1 true :=
           (List.replicate_append_replicate).symm
         _ = _ := rfl
