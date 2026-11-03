@@ -84,6 +84,10 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-odd-fiber/LowM3.lean.xz.b64" | xz -d > LowM3.lean
           echo "554c93a6d05d776a628a8083ac1235ab0b54b6d4f919d6d66c3f2d7b0866ed5d  LowM3.lean" | sha256sum -c -
           lean LowM3.lean
+          # Agent 3 uniform genuine blank-orbit nonreachability, no modular sampling.
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{OneSevenGate,LowSeven}.lean .
+          lean -o OneSevenGate.olean OneSevenGate.lean
+          lean LowSeven.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
