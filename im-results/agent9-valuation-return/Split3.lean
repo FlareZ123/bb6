@@ -73,8 +73,35 @@ theorem nonzero_core_transfer_exact (q c : Nat) (hq : 16 ≤ q)
             simp [Nat.pow_add, Nat.mul_assoc]
   exact nonzero_then_transfer q c _ hnz heq
 
+theorem nonzero_core_pretransfer (q c t : Nat) (hq : 16 ≤ q)
+    (hnz : q%3≠0) (h : c+incr q < (split3 (onNZ q)).1)
+    (ht : t < c+incr q+2) :
+    ∃ state, steps t (some (q,c)) = some state := by
+  cases t with
+  | zero => exact ⟨(q,c),rfl⟩
+  | succ k =>
+    have hk : k ≤ c+incr q := by omega
+    have hkv : k ≤ (split3 (onNZ q)).1 := by omega
+    have hp := nonzero_output_positive q hq hnz
+    have hh := (split3_spec (onNZ q) hp).1
+    have heq : onNZ q = 3^(split3 (onNZ q)).1*(split3 (onNZ q)).2 := hh.symm
+    have hz := zero_prefix (split3 (onNZ q)).1 (split3 (onNZ q)).2 (c+incr q) k hkv hk
+    rw [← heq] at hz
+    refine ⟨(4 ^ k * (3 ^ ((split3 (onNZ q)).1 - k) * (split3 (onNZ q)).2), c + incr q - k), ?_⟩
+    change steps k (Sstep q c) = some _
+    rw [nonzero_step q c hnz]
+    exact hz
+
+theorem nonzero_core_first_transfer (q c : Nat) (hq : 16 ≤ q)
+    (hnz : q%3≠0) (h : c+incr q < (split3 (onNZ q)).1) :
+    steps (c+incr q+2) (some (q,c)) = none ∧
+    ∀ t, t < c+incr q+2 → ∃ state, steps t (some (q,c)) = some state := by
+  exact ⟨nonzero_core_transfer_exact q c hq hnz h,
+        fun t ht => nonzero_core_pretransfer q c t hq hnz h ht⟩
+
 #print axioms split3_spec
 #print axioms nonzero_core_exact
 #print axioms nonzero_core_transfer_exact
+#print axioms nonzero_core_first_transfer
 
 end Agent9Val
