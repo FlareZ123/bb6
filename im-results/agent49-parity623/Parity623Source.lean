@@ -400,4 +400,45 @@ theorem highLevel_last_evalA_safe_beyond_diagonal (a d : Nat)
 
 #print axioms highLevel_last_evalA_safe_beyond_diagonal
 
+
+/-- Intermediate evaluator cannot increase its residual 110-block index. -/
+theorem evalA_b_le_k (a : Nat) :
+    ∀ k m aa bb dd : Nat, evalA a k m = some (aa, bb, dd) → bb ≤ k := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases h2 : k % 3 = 2
+    · simp [h2] at h
+      cases h
+      omega
+    · by_cases h0 : k % 3 = 0
+      · simp [h2, h0] at h
+      · simp [h2, h0] at h
+        cases h
+        omega
+  | succ a ih =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases h2 : k % 3 = 2
+    · simp [h2] at h
+      cases h
+      omega
+    · by_cases h0 : k % 3 = 0
+      · simp [h2, h0] at h
+        cases h
+        omega
+      · simp [h2, h0] at h
+        have hi := ih (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+        omega
+
+/-- The decrease guard built into source drainB is automatically satisfied on success. -/
+theorem evalA_from_drain_strictly_reduces_b (a b d aa bb dd : Nat)
+    (hb : 0 < b)
+    (h : evalA a (b - 1) (d + 2 * b + 3) = some (aa, bb, dd)) : bb < b := by
+  have hi := evalA_b_le_k a (b - 1) (d + 2 * b + 3) aa bb dd h
+  omega
+
+#print axioms evalA_from_drain_strictly_reduces_b
+
 end BB6.Agent49ParitySource
