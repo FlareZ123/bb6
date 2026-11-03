@@ -56,6 +56,20 @@ theorem blank_root42_exact_word :
   · simp [hp, word923_outside p hp]
 
 #print axioms blank_root42_exact_word
+theorem blank_root42_prefixes_safe (k : Nat) (hk : k ≤ 42) :
+    (run k {st := 0, h := 0, tape := fun _ => false}).st ≠ 6 := by
+  have hs : (run 42 {st := 0, h := 0, tape := fun _ => false}).st = 2 :=
+    blank_root42_exact_word.1
+  intro hb
+  have hsticky := run_halt_sticky (42-k)
+    (run k {st := 0, h := 0, tape := fun _ => false}) hb
+  have hsum : k + (42-k) = 42 := by omega
+  rw [←hsum, run_add] at hs
+  rw [hsticky] at hs
+  omega
+
+#print axioms blank_root42_prefixes_safe
+
 #print axioms root42_valid
 #print axioms blank_root42
 end BB6.Row109Locality
