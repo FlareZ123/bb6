@@ -511,7 +511,7 @@ theorem evalA_safe_gap_even (a : Nat) : ∀ k m : Nat,
 theorem next_safe_outer_cone (a d : Nat)
     (ha : 0 < a) (he : a % 2 = 0) (hd : 2 * a ≤ d) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by omega
   have h1 : ¬ (d % 2 = 1 ∧ a ≥ d + 5) := by omega
   have h2 : ¬ (d % 2 = 0 ∧ a ≥ d + 3) := by omega
@@ -539,7 +539,7 @@ theorem next_safe_outer_cone (a d : Nat)
 /-- All zero-a high-level states survive one accelerated step. -/
 theorem next_zero_total (d : Nat) :
     ∃ aa dd, next (.D 0 d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   by_cases hodd : d % 2 = 1
   · simp only [if_pos hodd]
     by_cases h1 : d = 1
@@ -576,7 +576,7 @@ theorem next_none_requires_inner_wedge (a d : Nat)
 /-- Far-left half-plane is safe independently of parity. -/
 theorem next_safe_far_left (a d : Nat)
     (h : 2 * d + 10 ≤ a) : ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by omega
   simp only [if_neg h0]
   by_cases hodd : d % 2 = 1
