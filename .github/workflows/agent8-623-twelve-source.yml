@@ -1,0 +1,35 @@
+name: Agent 8 BB6 623 twelve-unit mass (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare Cryptids pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+      - name: Compile source dependencies and twelve-unit theorem
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMassSource.lean" Agent8SharpMassSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMass10Source.lean" Agent8SharpMass10Source.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMass12Source.lean" Agent8SharpMass12Source.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8SharpMassSource.olean Agent8SharpMassSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8SharpMass10Source.olean Agent8SharpMass10Source.lean
+          lake env lean Agent8SharpMass12Source.lean
