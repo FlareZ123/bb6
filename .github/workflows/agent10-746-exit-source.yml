@@ -21,10 +21,10 @@ jobs:
           a="im-results/agent7-cascade-odd-fibers"
           b="im-results/agent10-cascade"
           lean --version
-          for m in SourceMacro CascadeOdd ReverseResidue GapCore; do
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
           done
-          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion; do
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
-          echo "Compiled original repository dependencies and all four Agent10 modules."
+          echo "Compiled original repository dependencies and all Agent10 modules."
