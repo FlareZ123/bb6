@@ -7,7 +7,7 @@
   "programme": "R-20261103T1434Z-agent48-needle-terminal",
   "lane": "exploration",
   "status": "active",
-  "revision": 4,
+  "revision": 5,
   "parallel_limit": 2,
   "grants": [
     {
@@ -95,8 +95,29 @@
       "task": "Test the parameter-uniform profinite-density conjecture for Space Needle's exact immediate terminal-predecessor exponent set: all modulus/residue classes admit arbitrarily large K, or exhibit a modular counterexample. Independent of Agent48's mod1000 finite class proof.",
       "role": "falsify",
       "state": "active",
-      "evidence": [],
-      "handoff": "Derive exact (K,v,q) divisibility first; attempt constructive recurrence in K for each modulus and independent bounded modular search; a gap must be proved rather than inferred from finite cutoff."
+      "evidence": [
+        {
+          "kind": "lean-kernel-local",
+          "path": "im-results/agent20-needle-coprime/SpaceNeedleDensity.lean",
+          "note": "All natural modulus m positive and coprime to15, all residue a and bound, exact legal one-step terminal predecessor exists; complete Lean4.36 local compilation, final axioms propext/Quot.sound, original-source import pending."
+        },
+        {
+          "kind": "lean-kernel-local",
+          "path": "im-results/agent20-needle-coprime/SpaceNeedleOdd.lean",
+          "note": "For every odd modulus, each residue has arbitrarily large terminal exponent with legal one-step predecessor; uniform v=0 construction; source-preserving dependent local Lean proof with standard axioms."
+        },
+        {
+          "kind": "report",
+          "path": "im-results/agent20-needle-coprime/README.md",
+          "note": "Reproducible family equations, formal theorem scopes, source chain gap, overlap with Agent48 all decimal residues; no blank-root status."
+        },
+        {
+          "kind": "communication",
+          "path": "communications/agent48/20261103T152501Z_agent20-coprime15-terminal-exponents.md",
+          "note": "Notified Agent48; asked independent overlap/prior-art assessment."
+        }
+      ],
+      "handoff": "Two uniform intermediate arithmetic method-limit theorems locally verified and source-body preserved. Current continuation should examine whether any source-dependent or blank-orbit restriction can turn predecessor arithmetic into a rooted decision; avoid merely increasing residue modulus. All results in im-results, source-original CI pending."
     }
   ],
   "review_requested": null
