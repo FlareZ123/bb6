@@ -45,15 +45,30 @@ theorem high_to_low3 (a k : Nat) : bad a (k+2) 1 → bad a k 3 := by
   simp only [bad, show (1:Nat)<2 by omega, show ¬((3:Nat)<2) by omega, ↓reduceIte]
   intro h
   simp only [low, high] at *
-  omega
+  rcases h with h | h | h | h | h | h | h | h
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by omega))))))))))))))
+  · exact Or.inl (by omega)
+  · exact Or.inr (Or.inr (Or.inr (Or.inl (by omega))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by omega)))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by omega))))))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by omega)))))))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by omega))))))))))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (by omega)))))))))))))
+
+#print axioms high_to_low3
 
 theorem zero_a0 (k : Nat) : ¬bad 1 0 (2*k+2) := by
   have hc : ¬(2*k+2<2) := by omega
   simp only [bad,hc,↓reduceIte,high]
-  omega
+  intro h
+  rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+
+#print axioms zero_a0
 
 theorem zero_a1_empty : ¬bad 5 0 1 := by
   simp [bad,low]
+
+#print axioms zero_a1_empty
 
 theorem zero_a1_pos (k : Nat) (hk : k>0) : ¬bad 2 2 (2*k-1) := by
   by_cases hsmall : k=1
@@ -61,7 +76,10 @@ theorem zero_a1_pos (k : Nat) (hk : k>0) : ¬bad 2 2 (2*k-1) := by
     simp [bad,low]
   · have hc : ¬(2*k-1<2) := by omega
     simp only [bad,hc,↓reduceIte,high]
-    omega
+    intro h
+    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+
+#print axioms zero_a1_pos
 
 theorem zero_a_pos (a k : Nat) (ha : a≥2) :
     bad (a-2) 1 (2*k+1) → bad a k 0 := by
@@ -70,11 +88,13 @@ theorem zero_a_pos (a k : Nat) (ha : a≥2) :
   · subst k
     simp only [bad, show (1:Nat)<2 by omega, ↓reduceIte,low] at h
     simp only [bad, show (0:Nat)<2 by omega, ↓reduceIte,low]
-    omega
+    rcases h with h | h | h | h | h | h | h | h <;> omega
   · have hc : ¬(2*k+1<2) := by omega
     simp only [bad,hc,↓reduceIte,high] at h
     simp only [bad, show (0:Nat)<2 by omega, ↓reduceIte,low]
-    omega
+    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+
+#print axioms zero_a_pos
 
 theorem high_a0_even (k c : Nat) (hc : c≥4) (hk : k%2=0) :
     bad (2*k+2) 2 (c-3) → bad 0 k c := by
@@ -83,17 +103,21 @@ theorem high_a0_even (k c : Nat) (hc : c≥4) (hk : k%2=0) :
   · subst c
     simp only [bad,show (1:Nat)<2 by omega,↓reduceIte,low] at h
     simp only [bad,show ¬((4:Nat)<2) by omega,↓reduceIte,high]
-    omega
+    rcases h with h | h | h | h | h | h | h | h <;> omega
   · have hc2 : ¬(c-3<2) := by omega
     simp only [bad,hc2,↓reduceIte,high] at h
     simp only [bad,show ¬(c<2) by omega,↓reduceIte,high]
-    omega
+    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+
+#print axioms high_a0_even
 
 theorem high_a0_odd (k c : Nat) (hc : c≥4) (hk : k%2≠0) :
     bad (2*k+3) 0 c → bad 0 k c := by
   intro h
   simp only [bad,show ¬(c<2) by omega,↓reduceIte,high] at h ⊢
-  omega
+  rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+
+#print axioms high_a0_odd
 
 theorem high_a_pos (a k c : Nat) (ha : a>0) (hc : c≥4) :
     bad (a-1) (k+1) (c-1) → bad a k c := by
@@ -104,6 +128,8 @@ theorem high_a_pos (a k c : Nat) (ha : a>0) (hc : c≥4) :
   simp only [bad,hc2,show ¬(c<2) by omega,↓reduceIte,high] at h ⊢
   rw [hd,ht] at h
   exact h
+
+#print axioms high_a_pos
 
 theorem backward_step (a k c a' k' c' : Nat)
     (h : nextC (a,k,c)=some (a',k',c'))
