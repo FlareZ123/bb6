@@ -80,3 +80,32 @@ The progression covers one of every 27 natural parameter values in the synthetic
 The high-level transition is demonstrably noninjective on arbitrarily large surviving and halting inputs. The translation identity gives a uniform method to lift arbitrary inverse collisions and halting examples to infinitely many different input states. Consequently, reverse searches relying on uniqueness, one-to-one predecessor classes, or a finite cutoff without congruence controls are unsound.
 
 **BB(6) remains unsolved.** Neither collision family has been proved reachable from the genuine blank-origin start `D(0,7)`. In fact, source-checked Agent49 parity and mass-growth results confine any blank-origin halting event to a strict diagonal corridor without deciding whether that orbit ever enters the fatal gate. To approach an actual halting decision, the inverse grammar needs an invariant tied to *genuine blank-reachable* histories or a source-checked complementary upper-bound argument. Academic novelty and independent reviewer assessment are pending; retain this material in `im-results/` unless a mathematical advance is independently established.
+
+
+## Source-level first-coordinate translations and sharp ternary drain budget (2026-11-03, Agent 8)
+
+Both new modules refer directly to the original DeepMind [#623 source at commit c86f1586](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.lean). Their statements concern arbitrary accelerated configurations. They do **not** decide blank-root halting.
+
+### Affine translation identities
+
+[TernaryFirstSource.lean](TernaryFirstSource.lean) proves that for b<a, adding a natural t to the initial first counter of the B-drain adds exactly t to the terminal first counter, leaving the terminal third counter unchanged. The proof transports the first counter through every evaluator call and applies strong induction on the decreasing B-index.
+
+This yields two exact far-left rays of the complete transition T: for any t≥0 and odd d with a>2d+8, T(D(a+t,d)) equals the first-coordinate translation by t of T(D(a,d)); for even d, the same holds when a>2d+4. There is no first-counter parity assumption in these two statements.
+
+The module also contains two far-right rays, locally Lean 4.36.0-rc2 checked: if a is positive and even, then for odd d≥2a+1 or even d≥2a+2, changing the input from D(a,d) to D(a,d+2t) translates the output first counter by 2t and preserves its second counter. These last two theorems await the next successful source-pinned CI run.
+
+**Source certification:** [CI run 41716622142](https://github.com/FlareZ123/bb6/actions/runs/41716622142), job 126198203096, compiled the unchanged Cryptids accelerator and the first-source module with both far-left identities. The subsequent far-right additions were committed after the certified head.
+
+### Universal sharp B-drain growth
+
+[TernaryBudgetSource.lean](TernaryBudgetSource.lean) contains exact Lean proofs for the original source; a separately implemented source-matched Lean 4.36.0-rc2 file has compiled all statements with standard foundational axioms and no sorry.
+
+* Every successful evaluator E(a,k,m)=(a′,b′,d′) satisfies m+k≤d′+3b′+2.
+* Every successful drain B(a,b,d)=D(a′,d′) satisfies d′≥d+3b, without an input first-counter or parity assumption.
+* The third-coordinate bound has a **complete equality classification**. Define b₀=0 and bₙ₊₁=3bₙ+3; equivalently 2bₙ+3=3ⁿ⁺¹. For every a,d,n, the exact formula B(a,bₙ,d)=D(a+n,d+3bₙ) holds, including a=0. Conversely, if any successful drain attains d′=d+3b, its block index b necessarily equals bₙ for some n. The theorem drainB_d3_exact_iff states this equivalence without a finite cutoff.
+
+The equality indices are 0,3,12,39,120,363,1092,3279,...; in ternary they are 0,10,110,1110,... . A strict evaluator potential inequality for every non-2 final ternary digit proves that these are the only equality cases. Independent exact integer testing of the first 200,000 canonical safe drains was consistent with the full theorem, while the Lean proof itself is universal.
+
+The budget implies d′≥3d+14 on the odd far-left branch of T and d′≥3d+8 on the even far-left branch whenever these branches complete successfully. Along the far-left affine rays the output second counter depends only on the input d, reducing large-family inverse searches to a one-variable equation. These results do not exclude any blank-reachable terminal window by themselves.
+
+The equality indices are repeated ternary 1s followed by a zero, complementing the repeated-1-and-final-2 first-failure threshold in [Agent49's work](../agent49-parity623/README.md). Comparing these two exact languages may support a stronger rooted predecessor exclusion theorem. Keep both modules in intermediate results until relevance to the BB(6) frontier is established.
