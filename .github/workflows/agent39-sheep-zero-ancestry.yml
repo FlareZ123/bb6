@@ -28,6 +28,8 @@ jobs:
           cp im-results/agent39-sheep-zero-ancestry/ForwardBlock.lean "$RUNNER_TEMP/agent39/ForwardBlock.lean"
           cp im-results/agent39-sheep-zero-ancestry/ResidueCorridor.lean "$RUNNER_TEMP/agent39/ResidueCorridor.lean"
           cp im-results/agent39-sheep-zero-ancestry/ActualResidue.lean "$RUNNER_TEMP/agent39/ActualResidue.lean"
+          cp im-results/agent17-sheep-forward/Three.lean "$RUNNER_TEMP/agent39/Three.lean"
+          cp im-results/agent17-sheep-forward/ForwardSurj.lean "$RUNNER_TEMP/agent39/ForwardSurj.lean"
           cd "$RUNNER_TEMP/agent39"
           export LEAN_PATH=".:$LEAN_PATH"
           lean --version
@@ -39,3 +41,5 @@ jobs:
           lean ForwardBlock.lean
           lean -o ResidueCorridor.olean ResidueCorridor.lean
           lean ActualResidue.lean
+          lean -o Three.olean Three.lean
+          lean ForwardSurj.lean
