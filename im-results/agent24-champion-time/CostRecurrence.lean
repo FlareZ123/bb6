@@ -85,8 +85,46 @@ def proposedTM63Score : Nat := proposedTM63Moves + 1
     exact A9/E15 join. This is still only a proposed score, not a run theorem. -/
 def proposedChampionScore : Nat := proposedTM63Moves + 7
 
+
+/-- Number of parity flips in the successful-decrement exponent recurrence. -/
+def exponentFlipCount : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, m => (if m%3=0 then 0 else 1) + exponentFlipCount n (nextMarker m)
+
+theorem nextRight_odd (b : Nat) (hb : b%2=1) :
+    (nextRight b)%2=1 := by
+  have hp : 0 < b := by omega
+  obtain ⟨k,hk⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hp)
+  subst b
+  simp only [nextRight, Nat.pow_succ]
+  have hpow : 0 < 2^k := Nat.pow_pos (by decide)
+  omega
+
+theorem sectionResult_exponent_parity (n m a b : Nat) (hb : b%2=1) :
+    (sectionResult n m a b).exponent%2 = (a+exponentFlipCount n m)%2 := by
+  induction n generalizing m a b with
+  | zero => simp [sectionResult, exponentFlipCount]
+  | succ n ih =>
+    have hod := nextRight_odd b hb
+    simp only [sectionResult, exponentFlipCount]
+    change (sectionResult n (nextMarker m) (nextExponent m a b) (nextRight b)).exponent %2 = _
+    rw [ih _ _ _ hod]
+    unfold nextExponent
+    split <;> omega
+
+/-- Huge first-stage exponent parity without evaluating any giant tower. -/
+theorem first_stage_exponent_odd :
+    (sectionResult 7 2 6 63).exponent%2 = 1 := by
+  have h := sectionResult_exponent_parity 7 2 6 63 (by decide)
+  have hflip : exponentFlipCount 7 2 = 5 := by decide
+  rw [hflip] at h
+  have he : (6+5)%2=1 := by decide
+  rw [he] at h
+  exact h
+
 #print axioms sectionResult_marker
 #print axioms sectionResult_marker_one
 #print axioms sectionResult_marker_two
+#print axioms first_stage_exponent_odd
 
 end BB6ChampionArithmetic
