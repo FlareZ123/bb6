@@ -71,6 +71,51 @@ relative to wider published mathematics has not been established. Every
 new statement is conditional or finite, and all new work remains in
 `im-results/`. The original-source bridge is a separate open obligation.
 
+
+## Further source-shaped odd-V phase (2026-11-03 19:55 UTC)
+
+A complete 4-module extension of the conditional return grammar has now
+passed full standalone Lean 4.36.0-rc2 dependency-chain CI:
+[run 41707490415](https://github.com/FlareZ123/bb6/actions/runs/41707490415).
+The original-source native bridge is being separately audited.
+
+- [OddVSecondary.lean](OddVSecondary.lean) gives the exact second odd-V
+  overflow \`run 4 (V_k,w)=((6V_k+48)-5w,11w-10V_k-72)\` under its
+  two-step cap and overflow conditions. A further odd-odd reset and
+  demand guard returns to the U_(k+2) ray after \`k+8\` macro moves.
+  Rooted witness: \`run 275 (0,0)=(U_7,615)\`.
+- [OddVHigh.lean](OddVHigh.lean) proves a third V-one odd affine
+  sector: for \`k%4=1,w%4=1\`, \`w+7≤2V_k\`,
+  \`6V_k+33≤5w\`, \`9w≤14V_k+75\`,
+  the precise return is
+  \`run(k+4)(V_k,w)=(V_k,w+3k+33)\`.
+  Also provides an arbitrary finite bounded ladder, rooted
+  \`run 286(0,0)=(V_5,553)\` and a fourfold transfer to
+  \`run 322(0,0)=(V_5,745)\`.
+- [OddVThirdOverflow.lean](OddVThirdOverflow.lean) derives the
+  third-stage root-zero transition
+  \`run 6 (V_k,w)=(0,2V_k+w+33)\` when
+  \`14V_k+82≤9w\`, \`35w≤58V_k+345\`
+  and the preliminary cap/overflow guards hold. With the exact U ray
+  demand, \`run(k+9)(V_k,w)\` reaches U_(k+3).
+  Real blank-derived witness: \`run 336(0,0)=(U_8,162)\`.
+- [OddVHighReturn.lean](OddVHighReturn.lean) closes the latter
+  excursion by proving the **new complete conditional high-V return**:
+  \`run (2k+10) (V_k,w)=(V_k,w+6k+62)\`
+  when the explicit gates above, \`k%4=w%4=1\`, and
+  \`rayDemand(k+3)≤2V_k+w+33\` hold.
+  Its uniform margin
+  \`4V_k+30+3(k+3)≤4U_(k+3)\` guarantees the
+  U-to-V reset cap for all k≥1. The theorem proves the actual
+  blank-origin orbit satisfies \`run 342 (0,0)=(V_5,837)\`.
+
+These structural results are conditional and finite. None gives a
+nonhalting invariant for the original \`J(0,0)\` orbit or a universal
+six-state maximum. External novelty is not established; keep under
+\`im-results/\` pending outside review. The original-source bridge
+requires an independent successful native-source CI build before
+source-connected formal verification may be claimed.
+
 ## Reproduction and evidence quality
 
 - **Lean:** Local Lean `4.36.0-rc2`, original Agent 5 source-equivalent arithmetic `next/run` and preserved Agent 6 helper statement definitions, checked all new modules. `#print axioms` on the principal transfer theorems and rooted witnesses produced only standard kernel foundational axioms `propext`, `Quot.sound` (and `Classical.choice` where used), no `sorryAx` or `native_decide`. The **unchanged full original modules** have *not* been compiled with the new files in a successful CI/source environment, so this evidence is accurately described as **local source-mirror kernel checked; original-source CI pending**.
