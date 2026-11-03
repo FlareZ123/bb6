@@ -82,7 +82,7 @@ theorem even_crt (m a : Nat) (hm3 : m%3 ≠ 0) (ha2 : a%2=0) :
   have hm : m%9=1 ∨ m%9=2 ∨ m%9=4 ∨ m%9=5 ∨ m%9=7 ∨ m%9=8 := by omega
   have ha : a%18=0 ∨ a%18=2 ∨ a%18=4 ∨ a%18=6 ∨ a%18=8 ∨ a%18=10 ∨ a%18=12 ∨ a%18=14 ∨ a%18=16 := by omega
   rcases hm with hm | hm | hm | hm | hm | hm
-  all_goals rcases ha with ha | ha | ha | ha | ha | ha | ha | ha | ha | ha
+  all_goals rcases ha with ha | ha | ha | ha | ha | ha | ha | ha | ha
   all_goals first
     | exact ⟨0, by omega⟩
     | exact ⟨2, by omega⟩
