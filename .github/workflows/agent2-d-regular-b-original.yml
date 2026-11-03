@@ -37,4 +37,5 @@ jobs:
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
-          lean "$D/BRegularSource.lean"
+          lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
+          lean "$D/AZeroSource.lean"
