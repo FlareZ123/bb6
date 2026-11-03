@@ -99,4 +99,9 @@ jobs:
           lean -o im-results/agent1-p1-map/ResetGate.olean im-results/agent1-p1-map/ResetGate.lean
           lean -o im-results/agent1-p1-map/EvenSeed.olean im-results/agent1-p1-map/EvenSeed.lean
           lean -o im-results/agent23-p1-root-wall/RootWallOddCostArithmetic.olean im-results/agent23-p1-root-wall/RootWallOddCostArithmetic.lean
-          lean im-results/agent23-p1-root-wall/CriticalRootWallOddCost.lean
+          lean -o im-results/agent23-p1-root-wall/CriticalRootWallOddCost.olean im-results/agent23-p1-root-wall/CriticalRootWallOddCost.lean
+          for m in EvenMiss ResetOdd EvenFull EightThree ShiftOdd; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent23-p1-root-wall/RootWallEightThreeArithmetic.olean im-results/agent23-p1-root-wall/RootWallEightThreeArithmetic.lean
+          lean im-results/agent23-p1-root-wall/CriticalRootWallMod4.lean
