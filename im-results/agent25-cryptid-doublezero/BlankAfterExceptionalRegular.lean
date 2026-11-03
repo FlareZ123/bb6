@@ -27,7 +27,7 @@ theorem blank_regular_after_exception :
     · show 64*t+29 ≥ 2
       omega
     · left
-      norm_num
+      decide
   have ht : ObsEq
       (CryptidBoundary.run
         (DRegular.accumulated n ⟨64*t+29,1,5⟩)
