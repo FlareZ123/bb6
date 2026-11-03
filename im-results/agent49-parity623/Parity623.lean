@@ -1,0 +1,180 @@
+import Lean
+
+/-!
+Independent Lean 4 formal parity study of the exact counter recurrence displayed in
+google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b,
+BusyBeaver/BB6/M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.lean.
+The rule definitions follow that Apache-2.0 source. This standalone module proves
+properties of the copied arithmetic recurrence; it does not itself import the
+verified raw Turing-machine acceleration or decide its halting status.
+Lean 4.36.0-rc2. No sorry, no custom axioms, no native_decide.
+-/
+
+namespace BB6.Agent49Parity
+
+inductive State where
+  | D (a d : Nat)
+  deriving DecidableEq, Repr
+
+def evalA (a k m : Nat) : Option (Nat × Nat × Nat) :=
+  if k % 3 = 2 then some (a + 1, k / 3, m)
+  else if a = 0 then (if k % 3 = 0 then none else some (0, k / 3, m))
+  else if k % 3 = 0 then some (a - 1, k / 3, m + 2)
+  else evalA (a - 1) (k / 3) (m + 2 * (k / 3) + 3)
+termination_by a
+decreasing_by omega
+
+def drainB (a b d : Nat) : Option State :=
+  if b = 0 then some (.D a d)
+  else
+    (evalA a (b - 1) (d + 2 * b + 3)).bind fun p =>
+      if p.2.1 < b then drainB p.1 p.2.1 p.2.2 else none
+termination_by b
+decreasing_by omega
+
+def next : State → Option State
+  | .D a d =>
+    if a = 0 then
+      if d % 2 = 1 then drainB (d + 1) 2 2 else some (.D d 7)
+    else if d % 2 = 1 ∧ a ≥ d + 5 then drainB (a - d - 5) (d + 3) 5
+    else if d % 2 = 0 ∧ a ≥ d + 3 then drainB (a - d - 2) (d + 2) 2
+    else if a % 2 = 1 then none
+    else if a = d + 2 then drainB 0 a 2
+    else if d % 2 = 1 then drainB (d + 4 - a) (a - 1) 3
+    else (evalA (d + 1 - a) a (2 * a + 5)).bind fun p => drainB p.1 p.2.1 p.2.2
+
+/-- A successful A-transition preserves the parity of a + (k + 1). -/
+theorem evalA_parity (a : Nat) :
+    ∀ k m aa bb dd : Nat, evalA a k m = some (aa, bb, dd) →
+      (aa + bb) % 2 = (a + k + 1) % 2 := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+  | succ a ih =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+      · simp [hk2, hk0] at h
+        have hp := ih (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+        omega
+
+/-- Every successful B-drain returns with first counter parity a + b. -/
+theorem drainB_parity (b : Nat) :
+    ∀ a d aa dd : Nat, drainB a b d = some (.D aa dd) →
+      aa % 2 = (a + b) % 2 := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d aa dd h
+    rw [drainB] at h
+    by_cases hb : b = 0
+    · simp [hb] at h
+      cases h
+      omega
+    · simp only [if_neg hb] at h
+      cases he : evalA a (b - 1) (d + 2 * b + 3) with
+      | none => simp [he] at h
+      | some p =>
+        rcases p with ⟨a1, b1, d1⟩
+        simp only [he, Option.bind_some] at h
+        by_cases hlt : b1 < b
+        · simp only [if_pos hlt] at h
+          have hp := evalA_parity a (b - 1) (d + 2 * b + 3) a1 b1 d1 he
+          have hr := ih b1 hlt a1 d1 aa dd h
+          omega
+        · simp [hlt] at h
+
+/-- Every surviving return from an even-a section remains in even a. -/
+theorem next_preserves_even (a d aa dd : Nat)
+    (ha : a % 2 = 0)
+    (hstep : next (.D a d) = some (.D aa dd)) : aa % 2 = 0 := by
+  simp only [next] at hstep
+  by_cases h0 : a = 0
+  · simp only [if_pos h0] at hstep
+    by_cases hd : d % 2 = 1
+    · simp only [if_pos hd] at hstep
+      have hp := drainB_parity 2 (d + 1) 2 aa dd hstep
+      omega
+    · simp only [if_neg hd] at hstep
+      cases hstep
+      omega
+  · simp only [if_neg h0] at hstep
+    by_cases h1 : d % 2 = 1 ∧ a ≥ d + 5
+    · simp only [if_pos h1] at hstep
+      have hp := drainB_parity (d + 3) (a - d - 5) 5 aa dd hstep
+      omega
+    · simp only [if_neg h1] at hstep
+      by_cases h2 : d % 2 = 0 ∧ a ≥ d + 3
+      · simp only [if_pos h2] at hstep
+        have hp := drainB_parity (d + 2) (a - d - 2) 2 aa dd hstep
+        omega
+      · simp only [if_neg h2] at hstep
+        have heven : a % 2 ≠ 1 := by omega
+        simp only [if_neg heven] at hstep
+        by_cases h4 : a = d + 2
+        · simp only [if_pos h4] at hstep
+          have hp := drainB_parity a 0 2 aa dd hstep
+          omega
+        · simp only [if_neg h4] at hstep
+          by_cases h5 : d % 2 = 1
+          · simp only [if_pos h5] at hstep
+            have hp := drainB_parity (a - 1) (d + 4 - a) 3 aa dd hstep
+            omega
+          · simp only [if_neg h5] at hstep
+            cases he : evalA (d + 1 - a) a (2 * a + 5) with
+            | none => simp [he] at hstep
+            | some p =>
+              rcases p with ⟨p1, p2, p3⟩
+              simp only [he, Option.bind_some] at hstep
+              have hp := evalA_parity (d + 1 - a) a (2 * a + 5) p1 p2 p3 he
+              have hr := drainB_parity p2 p1 p3 aa dd hstep
+              omega
+
+def run : Nat → Option State
+  | 0 => some (.D 0 7)
+  | n + 1 => (run n).bind next
+
+/-- All surviving high-level blank-origin section visits have an even first counter. -/
+theorem run_preserves_even (n a d : Nat)
+    (h : run n = some (.D a d)) : a % 2 = 0 := by
+  induction n generalizing a d with
+  | zero =>
+    simp only [run] at h
+    cases h
+    decide
+  | succ n ih =>
+    simp only [run] at h
+    cases hr : run n with
+    | none => simp [hr] at h
+    | some s =>
+      rcases s with ⟨aa, dd⟩
+      simp only [hr, Option.bind_some] at h
+      exact next_preserves_even aa dd a d (ih aa dd hr) h
+
+/-- Even first counter alone cannot guarantee survival. -/
+theorem synthetic_even_halter : next (.D 4 2) = none := by decide +kernel
+theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
+
+#print axioms evalA_parity
+#print axioms drainB_parity
+#print axioms next_preserves_even
+#print axioms run_preserves_even
+#print axioms synthetic_even_halter
+
+end BB6.Agent49Parity
