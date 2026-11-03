@@ -49,6 +49,53 @@ const knownF287 = '1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LB---';
 assert.ok(retainedSet.has(knownF287));
 assert.ok(!retained.some((r) => r.code === knownF287));
 
+// Explore all 5! state renamings fixing the blank initial state A, and both tape directions.
+/** @type {number[][]} */
+const rootPermutations = [];
+/** @param {number[]} prefix @param {number[]} available */
+function enumerate(prefix, available) {
+  if (!available.length) {
+    rootPermutations.push([0, ...prefix]);
+    return;
+  }
+  for (let i = 0; i < available.length; i++) {
+    enumerate([...prefix, available[i]], available.filter((_, j) => i !== j));
+  }
+}
+enumerate([], [1, 2, 3, 4, 5]);
+assert.equal(rootPermutations.length, 120);
+
+/** @param {string} code @returns {string} */
+function rootedSymmetryCanonical(code) {
+  const rule = code.split('_').flatMap((pair) => [pair.slice(0, 3), pair.slice(3)]);
+  let minimum = '~';
+  for (const stateMap of rootPermutations) {
+    for (const reflect of [false, true]) {
+      const transformed = new Array(12);
+      for (let q = 0; q < 6; q++) {
+        for (let bit = 0; bit < 2; bit++) {
+          const action = rule[2 * q + bit];
+          const result = action === '---' ? '---'
+            : action[0] + (reflect ? (action[1] === 'R' ? 'L' : 'R') : action[1])
+              + String.fromCharCode(65 + stateMap[action.charCodeAt(2) - 65]);
+          transformed[2 * stateMap[q] + bit] = result;
+        }
+      }
+      const candidate = Array.from({length: 6}, (_, q) =>
+        transformed[2 * q] + transformed[2 * q + 1]).join('_');
+      if (candidate < minimum) minimum = candidate;
+    }
+  }
+  return minimum;
+}
+const proofCanonicals = new Set(records.map((r) => rootedSymmetryCanonical(r.code)));
+assert.equal(proofCanonicals.size, 181);
+const isomorphic = [...retainedSet].filter((code) =>
+  proofCanonicals.has(rootedSymmetryCanonical(code)));
+assert.equal(isomorphic.length, 9);
+assert.ok(isomorphic.every((code) => retained.some((r) => r.code === code)));
+console.log('PASS: all 240 A-preserving state/direction symmetries add zero further retained roots');
+
 console.log('PASS: all 663 Oct16 rooted RLEs validated; 55 exact rooted removals; 608 retained');
 console.log('PASS: pinned upstream Cryptids source manifest 181 entries, 31 halt and 150 nonhalt');
 console.log('PASS: exact rooted overlap Oct16 29, of which 9 survive Oct30 (4 halt, 5 nonhalt)');
