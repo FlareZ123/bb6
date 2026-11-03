@@ -21,6 +21,7 @@ private theorem cube_three (y : Nat) :
   have hc : 3*y+1=1+3*y := by omega
   rw [hc] at hs
   rw [hc] at hfactor
+  rw [hfactor] at hs
   have hh : 9*y*(1+3*y+y*(3*y)) =
       (3*y)*(3*(1+3*y+y*(3*y))) := by
     have hn : 9=3*3 := rfl
