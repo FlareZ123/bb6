@@ -59,6 +59,18 @@ theorem source_minimal_iff_guard (a k r : Nat) (hk : 0<k) :
     obtain ⟨x,y,hd⟩ := (direct_iff_last_guard a k r hk).mpr hl
     exact ⟨x,y,direct_to_minimal hd⟩
 
+/-- O(1)-expression for the precise source endpoint after any number of
+  authentic direct returns satisfying the single finite inequality. -/
+theorem source_direct_jump (a k r : Nat) (hk : 0<k)
+    (ha : Allowed a k r) :
+    BB6.Agent8Section.run secNext (r+1) (some (a,k)) =
+      some (directState a k (r+1)) := by
+  obtain ⟨x,y,hd⟩ := (direct_iff_last_guard a k r hk).mpr ha
+  rw [direct_state_exact hd]
+  exact direct_run_source hd
+
+#print axioms source_direct_jump
+
 /-- No positive-right Machine C source can sustain gain four indefinitely. -/
 theorem source_no_long_minimal (a k x y : Nat) :
     ¬ MinimalRun secNext (a+2*k+4) a k x y := by
