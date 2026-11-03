@@ -146,7 +146,36 @@ theorem high_a0_odd (k c : Nat) (hc : c≥4) (hk : k%2≠0) :
     bad (2*k+3) 0 c → bad 0 k c := by
   intro h
   simp only [bad,show ¬(c<2) by omega,↓reduceIte,high] at h ⊢
-  rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+  rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
+  · exfalso; omega
+  · exfalso; omega
+  · have hs : ((96-c%96)%96=32 ∧ (k%192)%48=39) ∨ ((96-c%96)%96=80 ∧ (k%192)%48=15) := by omega
+    rcases hs with hs | hs
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (⟨hs.1, Or.inl hs.2⟩)))))
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))))))))))
+  · exfalso; omega
+  · rcases h with ⟨hd, ht⟩
+    rcases ht with ht | ht
+    · exfalso; omega
+    · have hs : (96-c%96)%96=35 ∧ (k%192)%96=45 := by omega
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs))))))
+  · have hs : (96-c%96)%96=86 ∧ (k%192)%48=21 := by omega
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs))))))))))))))
+  · exfalso; omega
+  · exfalso; omega
+  · exfalso; omega
+  · exfalso; omega
+  · have hs : ((96-c%96)%96=8 ∧ (k%192)%48=27) ∨ ((96-c%96)%96=56 ∧ (k%192)%48=3) := by omega
+    rcases hs with hs | hs
+    · exact Or.inr (Or.inl (hs))
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs))))))))))
+  · exfalso; omega
+  · exfalso; omega
+  · have hs : ((96-c%96)%96=17 ∧ (k%192)%48=33) ∨ ((96-c%96)%96=65 ∧ (k%192)%48=9) := by omega
+    rcases hs with hs | hs
+    · exact Or.inr (Or.inr (Or.inl (hs)))
+    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))))))))
+  · exfalso; omega
 
 #print axioms high_a0_odd
 
