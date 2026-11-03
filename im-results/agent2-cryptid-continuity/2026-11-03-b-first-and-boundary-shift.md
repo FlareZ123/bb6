@@ -76,3 +76,22 @@ as its **strict first positive-time physical F/0 return**. It gives +3 input one
 The proof is entirely in the authentic original D-start transition model. It proves universal two-step A token rewriting, induction over q; an independent C-on-one cursor descent through every pair, with four-step close; and strict absence of F throughout both subruns. The original source prefix-A no-F lemma excludes any earlier F during the unary first-delimiter phase. No synthetic equality is substituted for a genuine blank-origin reachability claim.
 
 **Scientific significance and residual:** The A token family now comes with an authenticated first-return relation, but an arbitrary mixed code word in 10/111, E exceptions, and arbitrary right suffix are still open as universal first-outcome shifts. No blank-start holdout status or Busy Beaver bound follows from these local theorems.
+
+
+### Universal mixed-token A first-return theorem
+
+**Original raw-source Lean CI [41555037075](https://github.com/FlareZ123/bb6/actions/runs/41555037075) succeeded** with [ACodeFirstReturn.lean](ACodeFirstReturn.lean), compiling the checksum-pinned original Agent31 source, Agent25's alternate-halting-state A interpreter, Agent35's exact interpreter-to-original simulation, and our strict prefix-A/closing-cursor lemmas. The code file has no unproved placeholders and prints the axiom dependencies of its main theorem.
+
+Let w be an **arbitrary finite Boolean word**. Define Code(w) by replacing each false token with 10 and each true token with 111. Let inc(w) be the sum of 1 per false and 4 per true. Define cost(m,w) by consuming a 10 token in 2 steps and a 111 token in 6m+41 steps, updating m by +1 or +4 respectively before the next token. Put m=4k+3. The new theorem BB6.CryptidACodeFirstReturn.full_A_mixed_code_first_return proves for **all natural k, all finite w, all finite binary suffixes y**:
+
+    I_(3k+3)(0 Code(w) 0 y)
+      --[T]--> I_(2*(m+inc(w))+5)(y)
+
+where T = 12*k*k+41*k+32 + cost(m,w) + (2*(m+inc(w))+6). This endpoint is the **first positive-time physical F-on-zero return**. In particular, adding three unary 1s to the input increases the output unary length by eight, for the same token code and suffix. The time difference is generally code-dependent.
+
+Key proof structure:
+1. Prove **no F state anywhere** during the complete 6m+41-step triple (111) token, all m and suffixes. Induct over the intermediate B leftward 4m walk and A rightward 2(m+4) walk, filling every finite 8,8,10,7-step transition segment; all transitions are those of Agent25's alternate source model.
+2. Induct over **arbitrary interleavings** of the 10 and 111 tokens to obtain a no-F theorem for their complete decoding time. Transfer it through Agent35's universal source conjugacy to original raw machine, without assuming that the target halted state is injective.
+3. Compose with original-source A zero-close first return and original-source prefix-A noF; all three subruns are source-authenticated, and the final endpoint has completely blank left tape.
+
+This strictly strengthens the previous two-parameter (10)^q first-return certificate, whose arbitrary q is recovered by taking w to be q false tokens. It is not an all-suffix theorem: **110** begins an additional exceptional A branch outside Code(w)0. No assertion about the actual blank-origin right suffix entering the code grammar is made. Further source work should tackle the A 1100 exception and E suffix grammar instead of recertifying more individual code words.
