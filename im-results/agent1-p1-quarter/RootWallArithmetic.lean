@@ -21,7 +21,7 @@ private theorem growth (q : Nat) (hq:1≤q) : 256*q ≤ 2^(8*q) := by
       rw [hp]
       omega
 
-private theorem large_power (q : Nat) (hq:1≤q) : 65536*q*q ≤ 2^(16*q) := by
+theorem large_power (q : Nat) (hq:1≤q) : 65536*q*q ≤ 2^(16*q) := by
   have h := growth q hq
   have hp : 2^(16*q) = 2^(8*q)*2^(8*q) := by
     rw [show 16*q=8*q+8*q by omega, Nat.pow_add]
