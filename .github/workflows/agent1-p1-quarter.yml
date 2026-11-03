@@ -111,3 +111,6 @@ jobs:
           lean -o im-results/agent23-p1-root-wall/RootWallSharpOriginal.olean im-results/agent23-p1-root-wall/RootWallSharpOriginal.lean
           lean -o im-results/agent23-p1-root-wall/RootWallSharpGaps.olean im-results/agent23-p1-root-wall/RootWallSharpGaps.lean
           lean im-results/agent23-p1-root-wall/RootWallSharpMod4.lean
+          lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          lean -o im-results/agent23-p1-root-wall/RootWallNoInitialUpper.olean im-results/agent23-p1-root-wall/RootWallNoInitialUpper.lean
+          lean im-results/agent23-p1-root-wall/CriticalRootWallLastReset.lean
