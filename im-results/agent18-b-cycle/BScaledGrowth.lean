@@ -107,6 +107,58 @@ theorem third_reset_bits :
   have hpar : z%2≤1 := by omega
   constructor <;> omega
 
+/-- Split the original scalar orbit at any finite prefix. -/
+theorem iterG_add (m n z : Nat) :
+    iterG (m+n) z = iterG n (iterG m z) := by
+  induction m generalizing z with
+  | zero => simp [iterG]
+  | succ m ih =>
+    have heq : m+1+n = (m+n)+1 := by omega
+    rw [heq]
+    change iterG (m+n) (G z) = iterG n (iterG m (G z))
+    exact ih (G z)
+
+/-- Two-sided exponential bounds conditional on any finite scalar prefix. -/
+theorem bound_from_prefix (k n : Nat) :
+    3^n*(iterG k 0+8) ≤ 2^n*(iterG (k+n) 0+8) ∧
+    2^n*(iterG (k+n) 0+15) ≤ 3^n*(iterG k 0+15) := by
+  rw [iterG_add]
+  exact ⟨iter_lower n (iterG k 0), iter_upper n (iterG k 0)⟩
+
+/-- Two power comparisons certify bit size without simulating the remaining steps. -/
+theorem reset_bits_from_prefix (a k q : Nat) (hk : k≤a)
+    (hl : 2^(a-k)*(2^q+8) < 3^(a-k)*(iterG k 0+8))
+    (hu : 3^(a-k)*(iterG k 0+15) < 2^(a-k)*2^(q+1)) :
+    2^q ≤ iterG a 0+6 ∧ iterG a 0+9 < 2^(q+1) := by
+  let z := iterG a 0
+  have hp : k+(a-k)=a := Nat.add_sub_of_le hk
+  have h := bound_from_prefix k (a-k)
+  rw [hp] at h
+  have hpow : 0<2^(a-k) := Nat.pow_pos (by decide)
+  have hlow : 2^q+8 < z+8 :=
+    (Nat.mul_lt_mul_left hpow).mp (Nat.lt_of_lt_of_le hl h.1)
+  have hupp : z+15 < 2^(q+1) :=
+    (Nat.mul_lt_mul_left hpow).mp (Nat.lt_of_le_of_lt h.2 hu)
+  constructor <;> omega
+
+/-- The certificate applies uniformly to every recursively chosen reset length. -/
+theorem scalar_reset_bits_from_prefix (idx k q : Nat)
+    (hk : k ≤ scalarA idx)
+    (hl : 2^(scalarA idx-k)*(2^q+8) <
+      3^(scalarA idx-k)*(iterG k 0+8))
+    (hu : 3^(scalarA idx-k)*(iterG k 0+15) <
+      2^(scalarA idx-k)*2^(q+1)) :
+    2^q ≤ scalarA (idx+1) ∧ scalarA (idx+1) < 2^(q+1) := by
+  have h := reset_bits_from_prefix (scalarA idx) k q hk hl hu
+  let z := iterG (scalarA idx) 0
+  have hp : z%2 ≤ 1 := by omega
+  have heq : scalarA (idx+1)=z+9-3*(z%2) := rfl
+  constructor <;> omega
+
+#print axioms scalar_reset_bits_from_prefix
+#print axioms reset_bits_from_prefix
+#print axioms bound_from_prefix
+
 #print axioms third_reset_bits
 #print axioms reset_two
 
