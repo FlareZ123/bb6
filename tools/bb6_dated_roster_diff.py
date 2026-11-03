@@ -5,6 +5,7 @@ The October 24 URL is recorded in the Wiki's 2026-10-25 revision 9543,
 mirrored by Yeyito777/bbchallenge-corpus (pageid 36).
 """
 from hashlib import sha256
+from urllib.error import URLError
 from pathlib import Path
 import re
 from urllib.request import Request, urlopen
@@ -52,6 +53,23 @@ def main() -> None:
         if machine not in old_set:
             print(f"{i}\t{machine}")
     print("END ADDED")
+
+    # A live page query is deliberately provenance-only: the October 30
+    # claim requires an actual reachable 608-machine file before comparison.
+    wiki_url = "https://wiki.bbchallenge.org/wiki/Holdouts_lists?action=raw"
+    try:
+        with urlopen(Request(wiki_url, headers={"User-Agent": "BB6-research-repro/1.0"}),
+                     timeout=35) as response:
+            page = response.read().decode("utf-8-sig")
+        print(f"Live page: {wiki_url}, SHA256={sha256(page.encode()).hexdigest()}")
+        links = re.findall(
+            r"https://wiki\\.bbchallenge\\.org/w/images/[^\\s\\]<>]+/BB6_holdouts_(\\d+)\\.txt",
+            page)
+        print(f"Live page BB6 downloadable counts: {links[:12]}")
+        for match in re.finditer(r".{0,85}(?:608|October 30).{0,85}", page, re.IGNORECASE):
+            print("Live page latest-list hint:", match.group().replace("\\n", " ")[:180])
+    except (URLError, TimeoutError) as error:
+        print(f"Live page unavailable: {type(error).__name__}: {error}")
 
 
 if __name__ == "__main__":
