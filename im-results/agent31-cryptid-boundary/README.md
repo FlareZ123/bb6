@@ -73,3 +73,28 @@ run (12*k*k + 49*k + 40)
 Here `I_n(r)` denotes the same raw F-state entry as above. The delimiter zero is consumed and replaced by a longer unary run; the *entire* remaining suffix `ys` is carried through unchanged. The equation is an exact elapsed primitive-step count and raw configuration equality, rather than only a predicted macro outcome. For k=0,1,2 this says `I_2(0 ys) -> I_9(ys)` in 40 steps, `I_5(0 ys) -> I_17(ys)` in 101 steps, and `I_8(0 ys) -> I_25(ys)` in 186 steps.
 
 The new `#print axioms full_B` audit also reports only `[propext, Quot.sound]`. This is a complete symbolic macro for one third of the possible run lengths, but the other two congruence branches and global blank-orbit halting remain open. **Current verified SHA-256:** `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883` (supersedes the earlier hash above).
+
+## 2026-11-03 extension: strict first return on the exceptional A `1100` cylinder
+
+**Authentic original-source theorem, all parameters, no finite cutoff.** Write `I_n(r)` for the existing `init` configuration (F on zero, physically blank left, `n` ones on the right followed by `r`). For **all** `k : Nat` and **every** finite binary suffix `y`, the first *positive-time physical* F-on-zero return is exactly
+
+```
+I_(3k+3)(0 1100 y)
+   --[12k² + 49k + 54 primitive transitions]-->
+I_(8k+7)(0 111111 y)
+```
+
+Here `01100` is the literal five-bit string; `0111111` is one zero followed by **six** ones. The endpoint is a complete raw configuration equality, and there is no earlier F state with a physically blank left tape. The initial state at time zero is excluded by the positive-time requirement.
+
+The intermediate **17-step exact transformation**, for every `m` and `y`, maps an A-boundary with left `0 (10)^(m+2) 11` and right `1100y` to the original `sweepD m` configuration with right `110 1^6 y`. The existing `sweepD_run` consumes that left stack in exactly `2m+3` further transitions. The original `prefix_A` transports the arbitrary `k` entry to the boundary at `12k²+41k+32` steps, yielding the stated exact elapsed time and output.
+
+The strict-first-return proof distinguishes F-state visits from physical F/0 returns. At the boundary's intermediate step 13 the machine visits F, but its left tape still contains a `1`. The new quantified `a1100_prefix_nonPhysical` checks the full 17-step head passage symbolically for every `m,y`, while `sweepD_noF` inductively excludes all intermediate sweep F-states. The previously certified original-source `prefixA_positive_noF` of Agent 2 handles the entire variable-length initial prefix. The final theorem `BB6.CryptidA1100Strong.full_A_1100_first_return` combines these facts.
+
+### Reproducibility and proof dependencies
+
+- Direct source: [`A1100.lean`](A1100.lean), [`A1100First.lean`](A1100First.lean), [`A1100Strong.lean`](A1100Strong.lean).
+- Base original transition table: checksum-verified [`Boundary.lean.xz.b64`](Boundary.lean.xz.b64), decoded SHA-256 `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
+- Successful full original-source CI: [GitHub Actions run 41567328208](https://github.com/FlareZ123/bb6/actions/runs/41567328208), source revision `4c79dc2f738bbb2db9aee7dedebad207b9437fc6`. It compiles both new source files and the final theorem against unchanged Agent 2 `PrefixNoF` and exact original machine modules using Lean 4.36.0-rc2. A separate original-source workflow [41566685059](https://github.com/FlareZ123/bb6/actions/runs/41566685059) also successfully verifies the endpoint and repairs the previously unfinished composed blank trace.
+- Local Lean kernel audit of the direct and boundary-first sources: only standard `propext` and `Quot.sound`; the successful original-source CI prints the final theorem's axioms, with no `sorry`, `admit`, or `native_decide`.
+
+**Mathematical use and remaining obstacle.** Agent 2 had already established shift-compatible first returns for B and arbitrary mixed `10`/`111` A codes. The `1100` word begins with `11` followed by `0`, so it lies outside that code grammar. This new exceptional cylinder also has output shift `+8` when `k` increases by one (input unary length `+3`). It does not classify inputs with an arbitrary `110` continuation, establish that this particular cylinder occurs from the genuine all-zero starting tape, or settle the D-root halting question. It remains an **intermediate** result pending breadth and prior-art novelty assessment.
