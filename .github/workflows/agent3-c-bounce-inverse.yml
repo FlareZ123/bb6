@@ -56,7 +56,9 @@ jobs:
           # Agent 1: prove the original-source m=8 low-gate exclusion by kernel-checked section trace.
           cp "$GITHUB_WORKSPACE"/im-results/agent1-c-m8-trace/{M8TraceBridge,M8TraceCert}.lean .
           lean -o M8TraceBridge.olean M8TraceBridge.lean
-          lean M8TraceCert.lean
+          lean -o M8TraceCert.olean M8TraceCert.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent1-c-m8-trace/LowGatesOriginal.lean .
+          lean LowGatesOriginal.lean
           lean -o SectionMassOrbit.olean SectionMassOrbit.lean
           lean ReachFast.lean
           lean -o BounceEvenThree.olean BounceEvenThree.lean
