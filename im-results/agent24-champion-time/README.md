@@ -77,3 +77,26 @@ ALL FINITE TESTS PASS; these do not establish quantified formulas.
 The 2,860 increment checks cover all three markers, `L=1..6`, `1≤n<min(2^L,18)`, `a∈{0,1,3}`, `b=0..4`, and 160 pseudorandom extra instances with fixed seed `20261103`. The reset checks cover `L,a=0..5,b=0..6`; terminal checks `L,a=0..9,b∈{0,1,7}`. A separate exploratory experiment matched `Rst1'` for `b=0..11`, including a 25,251,790-step instance.
 
 **Evidence class: finite computational conjecture.** Endpoint agreement for 3,412 instances is a substantial hint about a reusable exact raw-step cost model, but proves nothing for unrestricted `n,L,a,b`. The Lean file above certifies the source's modular gating arithmetic only. The proposed time formulas have **no universally quantified Lean or Coq proof**, no verified cross-language semantics transport, and supply **no certified numerical champion score**. Future research should first prove the 59+12(L+a) terminal and 97+12(L+a)+3b reset-core macros symbolically; then prove the v₂(n) carry-law and the geometric drain-cost recurrence. The latter has observed difference `C_drain(b+1)-C_drain(b)=18*4^b+42*2^b-12`, a natural induction target. Only then should costs be composed over the champion's massive macro itinerary.
+
+## Formal closed form for the proposed binary drain and new micro-step test
+
+A narrower raw-step experiment extracts the original `Inc0` decrement from a general `S1(L,n,m,a,z,c)` with `1 ≤ z < 2^a`. Its apparent primitive-step cost is
+```text
+C_Inc0_micro(z,c) = 48 + 12*v₂(z) + 12*c
+```
+and its exact endpoint is `S1(L,n,m,a,z-1,c+1)`, with unchanged physical left context. This was tested against all twelve real TM63 raw actions on **1,000 additional seeded random finite configurations** with varying `L,n,m,a,z,c`, and all tests matched. The extended [Python harness](verify_counted_macros.py) now exercises 4,412 finite instances across the complete set of macro families.
+
+We also extracted the **fully proved arithmetic component** into [`CountPattern.lean`](CountPattern.lean). Its structural valuation word is
+```text
+carryPattern(0)   = []
+carryPattern(b+1) = carryPattern(b) ++ [b] ++ carryPattern(b).
+```
+For `charge([v₁,...,v_N],0)=Σᵢ[48+12*vᵢ+12*(i-1)]` and `drainPattern(b)=charge(carryPattern(b),0)`, Lean 4.36.0-rc2 proves **universally**, without `sorry` or nonstandard axioms:
+```text
+carryPattern(b).length + 1 = 2^b
+carryPattern(b).sum + b + 1 = 2^b
+drainPattern(b) + 12*b + 48 = 6*4^b + 42*2^b.
+```
+The last theorem is `BB6ChampionArithmetic.drainPattern_closed`, checked by the actual Lean kernel; `#print axioms` reports only `[propext, Quot.sound]`. This explains the observed exponential drain *arithmetically* as the binary carry pattern accumulated by sequential decrements. Its proof is independent of any machine-level assumption. **The missing theorem remains that each physical TM63 `Inc0` micro-transition obeys the proposed time formula and that its valuation sequence exactly matches `carryPattern(b)`.** The count is not yet source-certified as TM runtime.
+
+The micro-step conjecture suggests a particularly economical next formalization: prove a complete raw-machine `S1` binary-decrement lemma parameterized by a trailing run of zero digits, then obtain the general `Inc0` time by a case split on `v₂(z)`, and finally apply the Lean-proved `drainPattern_closed` to the already-known source decomposition `Rst1'` and `Rsts0/1/2`. This would turn the observed huge cost pattern into a rigorous primitive-step theorem with no astronomical simulation.
