@@ -30,6 +30,7 @@ jobs:
           mkdir -p /tmp/agent47-source
           cd /tmp/agent47-source
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent41-mixed96/SecondMod96.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/BackwardMod.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/SourceBridge.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent47-c-mixed96-newcore/"*.lean .
@@ -41,4 +42,7 @@ jobs:
           lean -o NewCoreC.olean NewCoreC.lean
           lean -o SourceC.olean SourceC.lean
           lean -o NewCoreD.olean NewCoreD.lean
-          lean SourceD.lean
+          lean -o SourceD.olean SourceD.lean
+          lean -o SecondMod96.olean SecondMod96.lean
+          lean -o GateArithmetic.olean GateArithmetic.lean
+          lean SourceStop.lean
