@@ -12,3 +12,4 @@ jobs:
       - name: Check deterministic Python sparse-prefix census
         run: |
           python im-results/agent6-fresh-glider/macro_benchmark.py
+          python im-results/agent6-fresh-glider/marker_benchmark.py
