@@ -50,6 +50,6 @@ The repository's existing **manual-only** [Lean workflow](../../.github/workflow
 - [41571694382 SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/41571694382): all-depth unique parent of `(1,16t+7)`, true blank exclusion and low `m≡7mod16`.
 - [41572388113 SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/41572388113): the complete two-dimensional blank-inaccessible wedge.
 - [41572544455 SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/41572544455): exact iff and unique genuine source for every point in the wedge.
-- [41572793538](https://github.com/FlareZ123/bb6/actions/runs/41572793538): the four higher stopping-family classes, pending status reconciliation at this writing.
+- [41572793538 SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/41572793538): all four higher stopping-family classes compiled against the original sources; axiom audit exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
 
 This is a reachability exclusion for subsets of the stopping locus, not a decision of the entire Machine C blank-root machine. It supplies no value or universal upper bound for BB(6). The next challenge is a global blank-orbit invariant treating the remaining normalized stopping parameters uniformly.
