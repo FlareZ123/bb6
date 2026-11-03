@@ -64,6 +64,23 @@ The conclusion scans 0 and has right prefix `11`, hence admits the halting guard
 
 This second result narrows a possible nonhalting strategy further: even tracking a bounded window of **four** nearest-left cells, with an arbitrary right-side language, cannot give an inductive proof if its closure must hold for all farther-left contexts. It does **not** rule out longer left windows, invariants restricted by genuine blank reachability, or constraints correlating the omitted farther-left cells with the observed tape. The 19 configurations are synthetic and are not a single blank-run halt certificate.
 
+## Strongest local obstruction: a single halting tape matching the blank's ten-cell left window
+
+[SeededHalt.lean](SeededHalt.lean) proves **from the original unmodified transition table** that the real physical configuration
+
+```
+state A; scanned bit 0; right side entirely blank;
+left nearest-first = 0000000000 10100101
+```
+
+reaches an **actual** state-A halting guard (head 0 and right prefix `11`) after **596 primitive steps** and reaches frozen F/1 after **598 primitive steps**. The finite left suffix starts with ten zeros followed by a one; the tape differs from the true fully blank root eleven cells to the left. It corresponds to scalar initial integer `337920 = 1320·2^8`. This is a genuine complete-tape halting computation from a **nonblank seeded input**, not the blank-origin BB(6) computation. The two certified statements `synthetic_seed_reaches_gate` and `synthetic_seed_halts` are proved by Lean's kernel-reduced `decide`; local original-source 4.36.0-rc2 axiom audit `[propext]`. An independent literal-RLE Python interpreter also reproduced the 598 transitions and the F/1 halt.
+
+[FirstToAll.lean](FirstToAll.lean) then proves the **general quantified lemma** `first_window_implies_all`: for any `k`, any `P` closed under the positive *first* state-A return from every full tape is also closed under **every** later A-to-A interval. The proof is strong induction on the primitive time interval: either a shorter intermediate A exists, allowing two shorter inductive intervals, or the full interval is the first return. The general proof uses only standard Lean axioms `[propext, Classical.choice, Quot.sound]`.
+
+Combined, `no_safe_ten_window_first_return` proves the stronger theorem: **every predicate using at most the ten nearest-left bits, the scanned bit, and the entire physical right tape, containing the blank projection, and universally closed under first A returns from all farther-left extensions must admit an A0/right11 halting projection.** The formal statement is for exactly ten left bits; smaller fixed windows inherit the obstruction by forgetting some of these bits. The same trace supplies a single authentic seeded full-tape run, removing the context-switching feature of the 19-edge four-cell certificate. It does **not** disprove a blank-reachability-conditioned invariant that constrains those farther-left cells; this distinction is central.
+
+Both new Lean proof modules were locally compiled against the byte-for-byte upstream `Row262.lean` Git blob `3e783c915fa388f8d118143fce5d86cf38519bb5`. The existing manual-only row262 GitHub Actions workflow now includes them, **without dispatching any runs during the known runner outage**. GitHub CI for these new files remains pending.
+
 **Research implication:** A useful global induction for this machine must exploit information lost in this projection, such as left-tape context, authenticated blank-origin reachability, or a correlated two-sided symbolic description. The exact missing obligation remains proving that the **actual** blank-origin A-section orbit never has head 0 and right prefix 11, or finding a genuine halting witness.
 
 This theorem is an internal strategy-elimination result. No independent scholarly novelty review was performed; it belongs in `im-results/`, not `results/`.
