@@ -34,4 +34,4 @@ jobs:
           tail -n 12 "$RUNNER_TEMP/row109-run.txt"
       - name: Assert reported internal terminal counters without inferring raw step score
         run: |
-          python -c "import os,re; s=open(os.environ['RUNNER_TEMP']+'/row109-run.txt',encoding='utf8').read(); x=[v for v in s.splitlines() if 'halted' in v]; assert len(x)>0, 'No terminal halt reported'; assert any(re.search(r'6431143049,\\s*2687980000:',v) for v in x), 'Published accelerated endpoint differs'; print('Exact attributed accelerator endpoint replay:',x[-1][-200:])"
+          python -c "import os,re; s=open(os.environ['RUNNER_TEMP']+'/row109-run.txt',encoding='utf8').read(); x=[v for v in s.splitlines() if 'halted' in v]; assert len(x)>0, 'No terminal halt reported'; assert any(re.search(r'6431143049,\s*2687980000:',v) for v in x), 'Published accelerated endpoint differs'; print('Exact attributed accelerator endpoint replay:',x[-1][-200:])"
