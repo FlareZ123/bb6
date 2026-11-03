@@ -48,3 +48,31 @@ All simulated boundary inputs are synthetic; they are not actual all-blank visit
 A guarded, phase-sensitive first-outcome conjugacy for **A and E** when m=4k+3; a proof that it composes with authentic prefix and return-domain guards for every suffix, including halt and divergence; and then a *blank-reachable right-suffix language* for the genuine seeds n=5,9,15,39. Existing universal halting extensions for each unary n demonstrate why unary-length-only invariants are insufficient. Any transfer to P1 or Machine C requires an independently derived relation for those exact rooted machines.
 
 This report belongs in im-results: it establishes neither a new exact Busy Beaver bound nor any rooted holdout decision.
+
+
+## Further source-certified first-return cylinders (03 November)
+
+### E six-ones, arbitrary k and suffix
+
+[Original-source Lean CI 41553239073](https://github.com/FlareZ123/bb6/actions/runs/41553239073) **succeeded**, compiling [E6FirstReturn.lean](E6FirstReturn.lean) with unmodified original Agent31 Boundary, Agent32 CryptidSix and Agent2 strict prefix. The theorem BB6.CryptidE6FirstReturn.full_E_six_first_return proves that, for every natural k and arbitrary finite binary suffix y, the physical F/0 input
+
+    I_(3k+4)(0 111111 0 y)
+
+has its **first** physical F/0 return at exactly 12*k²+49*k+58 source-machine steps, to
+
+    I_(8k+9)(0 10 10 1110 y).
+
+Here the output code is precisely the source-defined packetSix, the nine-bit list [0,1,0,1,0,1,1,1,0]. The symbolic proof checks every intermediate one of the 16 E-boundary entry transitions and reuses the previously source-verified B sweep's strict no-F property. This strengthens the older endpoint-only E6 return; it is a narrow cylinder, not a general E shift.
+
+### Two-parameter first A return with arbitrary number of 10 tokens
+
+[Original-source Lean CI 41554299319](https://github.com/FlareZ123/bb6/actions/runs/41554299319) **succeeded** against the entire original source chain, compiling [ATenFirstReturn.lean](ATenFirstReturn.lean) and the new prefixA_positive_noF in [PrefixNoF.lean](PrefixNoF.lean). The theorem BB6.CryptidATenFirstReturn.full_A_ten_first_return proves, for **all** natural k,q and arbitrary finite right suffix y,
+
+    I_(3k+3)(0 (10)^q 0 y)
+       --[12*k²+49*k+44+4*q]--> I_(8k+11+2*q)(y)
+
+as its **strict first positive-time physical F/0 return**. It gives +3 input ones to +8 output ones at the same q and y. This extends Agent35's previously source-checked general A-code endpoint with first-return minimality for the infinite two-parameter 10-only subfamily.
+
+The proof is entirely in the authentic original D-start transition model. It proves universal two-step A token rewriting, induction over q; an independent C-on-one cursor descent through every pair, with four-step close; and strict absence of F throughout both subruns. The original source prefix-A no-F lemma excludes any earlier F during the unary first-delimiter phase. No synthetic equality is substituted for a genuine blank-origin reachability claim.
+
+**Scientific significance and residual:** The A token family now comes with an authenticated first-return relation, but an arbitrary mixed code word in 10/111, E exceptions, and arbitrary right suffix are still open as universal first-outcome shifts. No blank-start holdout status or Busy Beaver bound follows from these local theorems.
