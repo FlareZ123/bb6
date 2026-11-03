@@ -63,7 +63,7 @@ def main() -> None:
             page = response.read().decode("utf-8-sig")
         print(f"Live page: {wiki_url}, SHA256={sha256(page.encode()).hexdigest()}")
         links = re.findall(
-            r"https://wiki\\.bbchallenge\\.org/w/images/[^\\s\\]<>]+/BB6_holdouts_(\\d+)\\.txt",
+            r"BB6_holdouts_([0-9]+)[.]txt",
             page)
         print(f"Live page BB6 downloadable counts: {links[:12]}")
         for match in re.finditer(r".{0,85}(?:608|October 30).{0,85}", page, re.IGNORECASE):
