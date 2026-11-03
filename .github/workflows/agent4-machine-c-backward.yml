@@ -66,4 +66,8 @@ jobs:
             timeout 100 lean -o "$module.olean" "$module.lean"
           done
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SourceBridge192.lean" .
-          lean SourceBridge192.lean
+          lean -o SourceBridge192.olean SourceBridge192.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-terminal-lifts/Agent46TerminalLifts.lean" .
+          lean -o Agent46TerminalLifts.olean Agent46TerminalLifts.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SourceBridge192Companion.lean" .
+          lean SourceBridge192Companion.lean
