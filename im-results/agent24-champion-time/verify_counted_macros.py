@@ -83,6 +83,15 @@ def reset_cost(L, a, b):
     return reset_core_cost(L, a, b) + drain_cost(b)
 
 
+def assert_right_increment(L, n, m, a, num, c):
+    """Source Inc0: shift one counter digit into the right unary counter."""
+    cost = 48 + 12*val2(num) + 12*c
+    assert_reaches(
+        s1(L, n, m, a, num, c), cost,
+        s1(L, n, m, a, num-1, c+1),
+    )
+
+
 def assert_incs(L, n, m, a, b):
     outmarker = (m+2) % 3
     outa = a+b+(1 if m == 0 else 2)
@@ -131,6 +140,18 @@ def main():
         assert_incs(L, n, m, a, b)
         ninc += 1
     print(f"INC: {ninc} finite original-step trials")
+
+    nright = 0
+    for _ in range(1000):
+        L = rng.randrange(5)
+        n = rng.randrange(2**L)
+        m = rng.randrange(3)
+        a = rng.randrange(1, 8)
+        num = rng.randrange(1, 2**a)
+        c = rng.randrange(9)
+        assert_right_increment(L, n, m, a, num, c)
+        nright += 1
+    print(f"RIGHT INC0: {nright} finite carry-law trials")
 
     nreset = 0
     for L in range(6):
