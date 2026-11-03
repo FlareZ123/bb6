@@ -2,6 +2,16 @@
 
 **Agent 12, 2026-11-03. R001-adjacent frontier/source reconciliation, intermediate only.**
 
+## Confirmed surviving-root nonhalting theorem, original Lean kernel verification 2026-11-03 05:05 UTC
+
+The independent **nonhalting sample compiled successfully**, despite the other matrix job's failure. In [CI run 41580195662, job 125732980558](https://github.com/FlareZ123/bb6/actions/runs/41580195662/job/125732980558), unchanged original upstream source at pinned commit `2c93870f6db0515f53722dc65135a3f6c587cb9a` was compiled directly with authentic imports, concluding **`Build completed successfully (964 jobs)`**. Then `#print axioms BusyBeaver.M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.is_does_not_halt` yielded only `[propext, Classical.choice, Quot.sound]`. Its original twelve literal rules were checked slot-for-slot:
+
+`1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA`
+
+That exact rooted blank-A machine appears in the Oct30 **608** holdout roster. The original `IsNotHalt target_tm` predicate uses the standard blank tape `init []`. **This root is now independently Lean-kernel certified nonhalting** (a previously published upstream proof independently reproduced, not a novel mathematical decision). It is distinct from Agent4's separately independently certified retained F287, yielding **at least two** independently source-verified distinct members of the historical 608 roster. No universal BB(6) bound follows.
+
+**The other eight source-claimed matches are not independently kernel-certified here.** The direct halter original source failed; the other seven have not undergone direct compilation. The failed halter's audit log must not be misrepresented as an actual halting proof. Individual independent compilation and standard axiom audit remain the gate for any additional claim.
+
 ## IMPORTANT verification result, 2026-11-03 05:00 UTC
 
 The first actual independent [Lean source-build run **41580195662**](https://github.com/FlareZ123/bb6/actions/runs/41580195662), job **125732980835**, **FAILED** compiling the upstream original `Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean` using its exact pinned source revision and toolchain. `lake build` reported **at least 100 compiler errors**, including `Unknown identifier stepPlus_stepStar`, `stepPlus_stepStar_stepPlus`, `stepPlus_trans`, `stepStar_trans`, and `No goals to be solved` from incompatible tactic scripts. This was a real compilation failure of original source after its dependencies compiled, so the upstream branch's description **"181 kernel-verified" is not independently supported by this original-source audit**. The source may be repairable; a failed build proves neither the alleged halt nor its negation.
