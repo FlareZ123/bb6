@@ -38,4 +38,6 @@ jobs:
           export LEAN_PATH=.
           lean --version
           lean -o CLine.olean CLine.lean
-          lean FirstM11.lean
+          lean -o FirstM11.olean FirstM11.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent21-c-first-m11-192/FirstM11Corollary.lean" .
+          lean FirstM11Corollary.lean
