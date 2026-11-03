@@ -22,3 +22,20 @@ Root119 1RB1LB_1RC---_1LD1LF_1LE0LD_0LA1RF_1LC0RE has an original-source halting
 Scientific caveat: source declarations with proof scripts are primary evidence of a claimed formal decision. We have not yet independently compiled source and dependencies or audited native_check_eq and kernel assumptions. They must not be called independently Rocq-certified here. The dated roster deletion was never itself a proof. This research is provenance integration, previously published mathematics, not a new BB(6) value, BB(6) upper bound, or novel root theorem.
 
 Next: compile original unmodified Sk1Machines_v2.v and SOMDCv10.v with associated dependencies and print assumptions of TM25.nonhalt, TM26.nonhalt, TM23.nonhalt, TM4.halt; independently check the exact root411 reflection. Trace the auxiliary TM2153 root as a separate potential status lead.
+
+## Reproducible independent audit of root119's equivalence
+
+The [source's own README](https://github.com/ccz181078/busycoq/blob/33209bc7dc282b38c8cd6be507bfc551fea56108/README.md) warns explicitly: halting equivalences can eliminate duplicate holdouts **even when no member of their equivalence class is decided**. Thus a disappearance from the roster may be a representative change alone.
+
+The standalone Node.js CJS single-file regression [test-root119-eqv.cjs](test-root119-eqv.cjs) independently simulates the two original blank roots in *raw* primitive steps and checks the full 12 transition table under state permutation `BCDEAF`. It verifies no halt before either checkpoint, and the **entire** tapes relative to the respective heads agree at the exact finite coalescence:
+- Auxiliary `1RB---_1LC1LF_1LD0LC_0LE1RF_1RA1LA_1LB0RD`: **315075** steps; state C, head -467.
+- Deleted #119: **337226** steps; state D, head -466.
+- Each has **280** ones, same relative tape positions between offsets **+1 and +512**, and states agree after `C -> D` under `BCDEAF`.
+
+The exact match supports the provenance of the already-written original `Eqv_v2.TM2153.eqv`, but by itself supplies **no** nonhalting/halting decision and therefore no new upper bound for BB(6). Never mark row119 decided merely because a finite equivalence check passes.
+
+The direct source-table reflection to original upstream `Sk1Machines_v2.TM26.tm`, including an all-time blank-A equivalence theorem, is also independently checked in the extended Lean module's `original_tm26_blank_halting_equiv`. It closes the source-code bridge for removed row411 while still depending on upstream kernel verification for the actual nonhalting theorem.
+
+## Reproducible source-build attempt
+
+A reusable, manual-only [Rocq original-source verification workflow](../../.github/workflows/shared-rocq-root-proofs.yml) was added with an exact upstream pin, `sk1`/`somdc` targets, and final theorem `Print Assumptions` audit. It specifically avoids the environment's unsupported `-native-compiler yes` precompile mode (which caused `Unbound module Nativevalues` in an earlier independent Agent46 attempt), allowing kernel VM conversion fallback. Its initial `sk1` run **41578398072** started 2026-11-03 04:29 UTC; record its *actual* final outcome before upgrading any source proof to independent compilation.
