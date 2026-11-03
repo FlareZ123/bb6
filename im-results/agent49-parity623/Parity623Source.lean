@@ -1341,7 +1341,9 @@ theorem target_halt_implies_ones_gate (hhalt : BusyBeaver.IsHalt target) :
   obtain ⟨n,hn⟩ := hc
   have hr : run n=none := by
     rw [run_eq_highLevel_iterate]
-    simpa only [highLevelStart] using hn
+    have hh : ((fun o : Option State => o.bind next)^[n] (some (.D 0 7))).isNone = true := by
+      simpa only [highLevelStart] using hn
+    exact Option.isNone_iff_eq_none.mp hh
   exact run_none_implies_gate n hr
 
 #print axioms target_halt_implies_ones_gate
