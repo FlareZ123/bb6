@@ -56,7 +56,8 @@ jobs:
           lean -o "$Q/DCostLower.olean" "$Q/DCostLower.lean"
           lean -o "$Q/DComplexity.olean" "$Q/DComplexity.lean"
           lean -o "$D/EAllDepthSource.olean" "$D/EAllDepthSource.lean"
-          lean "$D/EAllDepthSafe.lean"
+          lean -o "$D/EAllDepthSafe.olean" "$D/EAllDepthSafe.lean"
+          lean "$D/EInputLengthSafe.lean"
       - name: Independently simulate literal unaccelerated original six-state transitions
         shell: bash
         run: |
