@@ -102,4 +102,20 @@ theorem odd_four_reach_iff (x y : Nat)
 
 #print axioms section_odd_four_exact
 #print axioms odd_four_reach_iff
+theorem odd_four_unique_parent (x y : Nat)
+    (hx : x%2=1) (hy : y%2=1) (hy5 : 5≤y)
+    (hsum : (x+y)%8=4) :
+    ∃ p : Nat × Nat, secNext p=some (x,y) ∧
+      ∀ q : Nat × Nat, secNext q=some (x,y) → q=p := by
+  let a : Nat := (x+y-4)/2
+  let k : Nat := (a+y-3)/2
+  have heqa : 2*a+4=x+y := by dsimp [a]; omega
+  have heqk : 2*k+3=a+y := by dsimp [k]; omega
+  refine ⟨(a,k), (section_odd_four_exact a k x y hx hy hy5 hsum).mpr ⟨heqa,heqk⟩, ?_⟩
+  intro p hp
+  rcases p with ⟨b,c⟩
+  obtain ⟨hb,hc⟩ := (section_odd_four_exact b c x y hx hy hy5 hsum).mp hp
+  apply Prod.ext <;> omega
+
+#print axioms odd_four_unique_parent
 end BB6Agent34
