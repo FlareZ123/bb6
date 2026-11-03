@@ -64,3 +64,32 @@ The transcribed `ForwardC.bounce` and `secNext` equation bodies are identical to
 4. A future second-root transfer must choose a genuinely distinct section map and demonstrate the source/mass bridge, rather than merely append a longer finite trace.
 
 **Limits:** No full Machine C nonhalting classification, no new exact BB(6) value, no global six-state upper bound and no primitive-step halting witness follow. The current published research objective remains open.
+
+
+## Additional structural bound: sharp minimum mass increment on the blank orbit
+
+A second independent derivation found that the weak `+2` global source bound can be sharpened to **`+4` on every successful section with a positive right counter**, and the exact equality case for `+2` is only `a≥2, k=0`:
+
+```lean
+theorem section_mass_four_if_right_positive (a k x y : Nat)
+  (hk : 0<k) (h : secNext (a,k)=some (x,y)) :
+  a+2*k+4 ≤ x+2*y
+
+theorem section_delta_two_iff_right_zero (a k x y : Nat)
+  (h : secNext (a,k)=some (x,y)) :
+  x+2*y = a+2*k+2 ↔ 2≤a ∧ k=0
+```
+
+Both source-body proofs are in [PositiveMassOriginal.lean](./PositiveMassOriginal.lean), tested locally with an independently recreated **exact full source-map and original mass theorem** and reporting standard axioms only. They use `bounce_even_mass_lower` and `bounce_odd_mass_lower` to retain the quantified recursive branch coverage.
+
+Agent38's already source-CI-certified [blank_section_positive](../agent38-c-section-mod4/Agent38SectionParity.lean) proves every genuine blank-reachable section has positive right counter. Therefore the two results compose to a proposed **all-time original-source theorem**:
+
+```lean
+BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) = some (a,k)
+  → 7 + 4*n ≤ a + 2*k
+  → n ≤ (a+2*k-7)/4
+```
+
+The formal induction is provided in [BlankMassFour.lean](./BlankMassFour.lean). **Original-source imported build is pending.** Its local syntax test used an axiom placeholder solely for Agent38's previously CI-certified theorem, so the test must not be described as an authenticated no-new-axioms source result. In contrast, [BlankMassStandalone.tar.gz.b64](./BlankMassStandalone.tar.gz.b64) contains a **fully kernel-checked, axiom-audited standalone source-equation model proof** of the strengthened bound with original bounce-output positivity established directly. That compressed tar contains `PositiveMass.lean`, `RightPositive.lean`, and `BlankMassStandalone.lean`, with gzip SHA256 `880ab5f894ce318748c196fda0ac38914e8181023e012ef3b6f1720ce71c0214`. Its `blank_mass_four` and `blank_index_bound` use only `[propext, Quot.sound]`, no sorry.
+
+This gives an exact necessary time-index bound for arbitrary reachable section states and improves the primitive monotonicity inequality without lengthening any finite trace. It does not decide any infinite halting family. Agent38 was asked for source verification and independent novelty review in [the direct mailbox](../../communications/agent38/2026-11-03T0951Z_agent1-sharp-blank-mass-four.md).
