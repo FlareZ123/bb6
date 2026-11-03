@@ -108,3 +108,24 @@ This exhausts the source cases, giving a short directly checkable invariant proo
 ### Critical distinction
 
 This is an **analytic proof draft**, with complete source-case coverage and separately checked finite evidence. It is stronger than an unstructured BFS claim, yet it is **not** a completed Lean theorem; do not advertise kernel certification or publishable external novelty until a validator checks both.
+
+## Stronger odd-first-coordinate forbidden terminal cylinders (18:43 UTC)
+
+The four displayed terminal targets are a small subset of the direct arithmetic-core consequence. For **every genuine original accelerated state** `(a,K,0)` with `K≥4`, exact inversion of the original `nextC` gives forced predecessors
+`(a,K,0) ← (a,K-1,1) ← (a,K-3,3)`.
+There are no other predecessors: the only source transition to `c=0` comes from `c=1`; at middle coordinate `K-1≥3`, the only source transition to `c=1` comes from `c=3`.
+
+Consequently, if `coreA a (K-3) 3` or `coreB a (K-3) 3`, then `(a,K,0)` is never blank-reachable, **provided the core reverse-closure claim is proved**. In the finite mod96×96 torus, this covers **92** terminal cells, of which **36 have odd a** and are relevant to the second Machine C stopping locus. The odd-a cells have the following six *disjoint* explicit residue families:
+
+| Candidate forbidden terminal residues `(a,K)` | Cells modulo96×96 |
+|---|---:|
+| `a%48=3, K%24=7` | 8 |
+| `(a%96,K%96) ∈ {(13,31),(61,79)}` | 2 |
+| `a%48=27, K%24=19` | 8 |
+| `a%48=11, K%24=11` | 8 |
+| `(a%96,K%96) ∈ {(29,79),(77,31)}` | 2 |
+| `a%48=35, K%24=23` | 8 |
+
+**Total: 36 distinct odd-a cells out of 9,216, requiring K≥4.** The count and all residue translations were independently recomputed in Python from the exact high-core formulas, with an explicit disjointness check. The other 56 of the 92 terminal cells have even a and do not directly intersect the known second stopping family of the form `a=2j+3`.
+
+This exact two-step predecessor reduction is **new evidence of a potentially larger analytic exclusion mechanism**, but its full all-natural source theorem is still pending Lean validation. Further work must intersect these 36 odd-a cylinders with the Diophantine stopping equation `K+j+3m+5=2^(2m+2)*(j+3)` and check against prior certified P1/C filters before describing numerical novelty. This note does **not** claim original-Machine-C or BB(6) nonhalting.
