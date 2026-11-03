@@ -56,4 +56,17 @@ def coreB (a k c : Nat) : Prop :=
 theorem coreA_blank_false : ¬coreA 5 0 1 := by decide
 theorem coreB_blank_false : ¬coreB 5 0 1 := by decide
 
+theorem normX_shift (a c : Nat) (ha : 1 ≤ a) (hc : 4 ≤ c) :
+    normX (a - 1) (c - 1) = normX a c := by
+  unfold normX
+  omega
+
+theorem normY_shift (k c : Nat) (hc : 4 ≤ c) :
+    normY (k + 1) (c - 1) = normY k c := by
+  unfold normY
+  omega
+
+#print axioms normX_shift
+#print axioms normY_shift
+
 end A38Mixed96
