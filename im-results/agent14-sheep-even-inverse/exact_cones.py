@@ -20,7 +20,7 @@ CONES = {
         cert.P2: {},
     },
     1218: {
-        cert.ROOT: {(1, 1): cert.P1, (2, 2): cert.P2},
+        cert.ROOT: {(1, 1): cert.P1, (2, 2): cert.Node(5, -68, 81, 1, (11,), (16,))},
         cert.P1: {},
         cert.Node(5, -68, 81, 1, (11,), (16,)): {},
     },
@@ -52,6 +52,7 @@ def check_class(r, nodes):
     cert.M = 4860
     checks = 0
     representatives = 0
+    assert all(child in nodes for edges in nodes.values() for child in edges.values())
     for node, children in nodes.items():
         expected = {p: (n.s, n.b, n.d) for p, n in children.items()}
         cert.verify_node(node, expected)
