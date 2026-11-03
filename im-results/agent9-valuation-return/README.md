@@ -58,6 +58,20 @@ For strictly positive `onNZ q`, `split3_divisibility` checks the necessary prime
 
 Reconstruct the two additional files with `python reconstruct.py`; the source SHA-256 values are `3809a4183ff17559455091d6c773a47ff801341ca3c3c3b15c58953d42bb95d1` and `e1041f50e333dbcd8f68e1f930daaab642f449085e246bb3881a76fb0d216e4f` respectively. Compile in dependency order: `ValuationReturn`, `Split3`, `ValDvd`, `SafeStep`.
 
+## Kernel-checked limitation of a factor-of-four core invariant
+
+An appealing candidate nonhalting shield would be: if a positive S counter `q` has `q=4^v*u`, `u%4≠0`, and the stripped core `u<3^c`, then the S-section never transfers to T. **This global claim is false.** The exact 108-bit counterexample in [CoreCounter.lean](./CoreCounter.lean) is
+
+```text
+c = 63
+u = 814829265948320833761579422554
+q = 4^4 * u = 208596292082770133442964332173824
+3^63 = 1144561273430837494885949696427 > u
+4*q - 13 = 3^69
+```
+
+Consequently `q%3=1`, the exact fatal gate `3^(c+6) | (4q-13)` holds, and the S-section **first transfers into T at accelerated step 69**. Local Lean 4.36.0-rc2 kernel checks `core_below_exponential`, `exact_exit`, and the universally quantified `no_earlier_exit` (all natural `n<69`), printing only standard axioms. The initial point is **synthetic**, so it is no evidence that either actual root transfers. The stronger and different candidate condition `q<3^c` is NOT refuted by this example: here `q>3^c`. A quantitative invariant proven specifically for the true rooted orbit remains an open task. This negative result helps prevent an unsound universal shortcut.
+
 ## Independent finite checking
 
 [burst_verify.py.gz.b64](burst_verify.py.gz.b64), restored Python SHA256 `014a416ca576dfa87757bbb6aa407067daad557cdf92ac89daf433e8c2f84ad6`, compares every maximal-burst macro to independently iterated direct S steps. The target entries `(141,3)` and `(17,3)` are respectively the published root and a separately authenticated S-root; they are distinct original-machine roots. Exact local 100,000 S-step checks per entry:
