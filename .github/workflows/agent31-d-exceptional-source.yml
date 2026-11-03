@@ -34,6 +34,7 @@ jobs:
           lean -o im-results/agent31-d-exceptional/PacketSource.olean im-results/agent31-d-exceptional/PacketSource.lean
           lean -o im-results/agent31-d-exceptional/PacketPaths.olean im-results/agent31-d-exceptional/PacketPaths.lean
           lean im-results/agent31-d-exceptional/PacketNormalizer.lean
+          lean im-results/agent31-d-exceptional/PacketRank.lean
           lean im-results/agent31-d-exceptional/EscapeLanguage.lean
           lean im-results/agent31-d-exceptional/EscapeWitness.lean
           python3 im-results/agent31-d-exceptional/check_second_escape.py
