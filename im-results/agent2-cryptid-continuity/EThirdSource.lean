@@ -7,7 +7,7 @@ set_option maxRecDepth 4096
 set_option linter.unusedSimpArgs false
 
 namespace BB6.EThirdSource
-open CryptidBoundary BB6.BoundaryPadding
+open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 open BB6.Agent31SecondSource
 
 /-- Third E-branch duration after a two-return exception with t ≡ 1 mod 3. -/
