@@ -99,3 +99,6 @@ This is the mechanism: writing an E-index as `K_0=3^m u - 1`, the next E-index b
 Source bytes: `DETripleLadderObs.lean.xz.b64`; SHA256 of decoded XZ `56459ecbfdba283d27293da9bfe5bcaa6905769b2bafe7e522d505f250784d96`, restored through `restore_observed.py`. Compile after restoring `DETripleLadder.lean` and emitting its `.olean` module.
 
 **Minimality caveat:** The all-parameter macros prove that the stated F/0 configurations occur at the stated exact elapsed primitive steps. The ladder theorem itself does not prove the absence of additional physical F/0 checkpoints between these endpoints. Hence `m` counts composed **designated E macro endpoints**, not necessarily all first-return events. This strengthens the scope discipline for subsequent use in a blank-origin invariant.
+
+
+**Additional strict-check audit:** `check_strict_E_ladder.py` uses a distinct primitive-step interpreter loop that records *every* observed physical blank-left F/0 checkpoint in the sampled machine run. On all **36 synthetic ladder cases** (m=0..3,u=1..3,r=0..2), the observed F/0 timestamps coincide **exactly** with the designated E macro endpoints; no extra earlier F/0 events occurred in any tested interval. This is finite experimental evidence only. It provides a concrete target for proving universal macro first-return minimality in the unchanged original source.
