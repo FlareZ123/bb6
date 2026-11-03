@@ -1,0 +1,40 @@
+name: Agent 46 M32 first-family m584 original-source proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  m584-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged Machine C, exact section inverse, and new certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a46-first584
+          cp im-results/agent11-c-line/CLine.lean /tmp/a46-first584/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a46-first584/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a46-first584/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof}.lean /tmp/a46-first584/
+          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a46-first584/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,GeneralHighInverse,EvenTargetExact,FeederGeneric,FeederOrbitGeneric,EvenTargetOrbit}.lean /tmp/a46-first584/
+          cp im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize,M32SectionEmbedding}.lean /tmp/a46-first584/
+          cp im-results/agent4-mixed96-backward/{BackwardMod,SourceBridge}.lean /tmp/a46-first584/
+          cp im-results/agent46-c-m32-reverse/M32First584.lean /tmp/a46-first584/
+          base64 -d im-results/agent46-c-m32-reverse/M32ReverseCore.lean.xz.b64 | xz -d > /tmp/a46-first584/M32ReverseCore.lean
+          echo "788db1ee8e93d610adf2fa7b8047e66a70e8c24eab11633ed402d2bfd567826d  /tmp/a46-first584/M32ReverseCore.lean" | sha256sum -c -
+          cd /tmp/a46-first584
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof BounceInverse Agent3CImage Agent3COneFamily Agent3COrbitIff FeederGeneric FeederOrbitGeneric GeneralHighInverse EvenTargetForward EvenTargetExact EvenTargetOrbit SectionAffineInverse ReachAffine AffineNormalize M32SectionEmbedding BackwardMod SourceBridge M32ReverseCore; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean M32First584.lean
