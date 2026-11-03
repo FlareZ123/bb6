@@ -73,3 +73,31 @@ Agent 18 and Agent 10 already reduced Machine B halting to whether `G^[scalarA(n
 - Closest established related local work: [Agent 10 B parity, dyadic shift, source bridge](../agent10-b-parity/README.md), [Agent 30 affine quotient obstruction](../agent30-b-dyadic-curvature/README.md). The latter classifies *same-modulus all-input affine formulas*, unlike this nonlinear cross-modulus property.
 
 This dossier belongs in `im-results/` until independent external novelty and scientific significance are established. Do not use it as an unresolved-root decision.
+
+## Complete finite congruence quotient theorem (stronger than R007)
+
+After the initial cross-radix result, a stronger all-iterate classification was discovered and **kernel-checked locally** in [`Agent30BFiniteFactor.lean`](Agent30BFiniteFactor.lean). For every positive `n,m`,
+
+```
+(∀ x y : Nat, x%m=y%m → G^[n](x)%m=G^[n](y)%m) ↔ m ∣ 7.
+```
+
+Since m is positive, the only possibilities are m=1 and m=7. This classifies every well-defined map induced on the *standard residue ring* `Nat modulo m`, without assuming that the induced map has an affine formula. It strictly strengthens the prior [Agent30 R007](../agent30-b-dyadic-curvature/README.md) statement, which classified only all-input affine congruences. **It does not classify non-congruence finite partitions, seed-specific quotient automata, or arbitrary finite transducers.**
+
+The key necessity witness is the pair of inputs `0` and `2^(n-1)*m`, which are congruent modulo m. The previously established exact shift identity yields
+
+```
+G^[n-1](2^(n-1)*m) = G^[n-1](0) + 3^(n-1)*m.
+```
+
+Let `z=G^[n-1](0)` and `q=3^(n-1)`, which is odd. For any `m>0`, the elementary lemma `G_odd_multiplier_obstruction` proves
+
+```
+G(z+m*q)%m = G(z)%m  →  m ∣ 7.
+```
+
+If m is even, the shift by m*q is an even input increment, and its output difference is an odd multiple of m/2, contradicting congruence modulo m. If m is odd, the input increment toggles parity and the doubled-output identity `2G(z)=3z+8+7(z%2)` reduces output congruence to `7≡0 (mod m)`. These arguments are implemented without a general quotient/affineness assumption. Sufficiency follows from `G(z)+7*(z/2)=5z+4`, which makes `G` affine modulo divisors of 7, hence all its iterates descend.
+
+The new exact source-bridge statement is [`Agent30FiniteFactorSource.lean`](Agent30FiniteFactorSource.lean). It compiles locally against an exact-signature scratch copy of Agent18's scalar definitions; no successful *original-source* import exists yet. The existing dispatch-only CI workflow was extended to check both this theorem and the new source bridge, but [run 41640186396](https://github.com/FlareZ123/bb6/actions/runs/41640186396) again failed almost immediately before Lean could run. Treat original-source verification as **pending**.
+
+The all-natural theorem, its exact single-pair obstruction, and its accompanying local kernel audits are genuine mathematical consequences of the exact scalar model. Their novelty outside the repository remains unestablished. They **do not settle** the true blank-seed parity sample or any BB(6) machine.
