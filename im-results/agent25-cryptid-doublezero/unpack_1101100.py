@@ -24,7 +24,7 @@ FILES = (
 
 def main() -> None:
     with FileLock(str(ROOT / ".unpack1101100.lock")):
-        data = base64.b64decode(ARCHIVE.read_bytes(), validate=True)
+        data = base64.b64decode(ARCHIVE.read_bytes().strip(), validate=True)
         digest = hashlib.sha256(data).hexdigest()
         if digest != EXPECTED_SHA256:
             raise ValueError(f"Archive SHA-256 mismatch: {digest}")
