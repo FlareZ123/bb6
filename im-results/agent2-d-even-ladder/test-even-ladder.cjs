@@ -146,6 +146,75 @@ function verifyRawCases() {
   console.log('Exact two-stage primitive cost=' + exactCost + ': PASS');
 }
 
+/**
+ * Stronger three-preliminary-return parameterization. The bounded multiplier
+ * U has period 64 in r and exactly matches independently lifted parameters.
+ * @param {number} r Nonnegative half-depth.
+ * @returns {{m:number, q:number, v:bigint, k:bigint, U:bigint, N:bigint}}
+ */
+function threeReturnParameters(r) {
+  assert.ok(Number.isSafeInteger(r) && r >= 0);
+  let U = 315n;
+  for (let j = 0; j < r; j++) U = 57n * U % 512n;
+  const m = 2 * r;
+  const power = 3n ** BigInt(m + 1);
+  const numerator = power * U - 433n;
+  assert.equal(numerator % 512n, 0n);
+  const v = numerator / 512n;
+  assert.ok(v >= 0n && U > 0n && U < 512n);
+  const q = 3 * r + 3;
+  const N = 512n * v + 434n;
+  assert.equal(N, power * U + 1n);
+  assert.equal(2 * q - 3, 3 * m + 3);
+  return { m, q, v, k: 9n * v + 7n, U, N };
+}
+
+function verifyThreeReturnBridge() {
+  console.log('Three-return periodic bridge: checking 65 even depths');
+  for (let r = 0; r <= 64; r++) {
+    const row = threeReturnParameters(r);
+    // Independently solve (512v+433) mod 3^(m+1) by ternary lifting.
+    let v = 0n, power = 1n;
+    for (let j = 0; j <= row.m; j++) {
+      const c = (512n * v + 433n) / power;
+      assert.equal((512n * v + 433n) % power, 0n);
+      const digit = c % 3n; // 512 ≡ 2 modulo 3.
+      v += digit * power;
+      power *= 3n;
+    }
+    assert.equal(v, row.v);
+    assert.equal((512n * v + 433n) / power, row.U);
+    if (r < 5) console.log(
+      '  m=' + row.m + ' q=' + row.q + ' U=' + row.U +
+      ' v=' + row.v + ' k=' + row.k + ' thirdUnary=' + row.N
+    );
+  }
+  assert.equal(threeReturnParameters(0).U, threeReturnParameters(64).U);
+  console.log('  PERIOD-64 MULTIPLIER AND 65 EXACT TERNARY MATCHES: PASS');
+
+  const expectedTimes = [3936, 28289, 198330, 1396932, 9885171];
+  const expectedUnary = [133, 353, 946, 2521, 6721];
+  const expectedSuffixes = [
+    '0' + '1'.repeat(12) + '0' + '1'.repeat(6),
+    '01'.repeat(2) + '0' + '1'.repeat(9) + '0' + '1'.repeat(6),
+    '01' + '0' + '1'.repeat(9) + '0' + '1'.repeat(6),
+    '01'.repeat(3) + '0' + '1'.repeat(6) + '0' + '1'.repeat(6),
+    '01'.repeat(5) + '0' + '1'.repeat(3) + '0' + '1'.repeat(6)
+  ];
+  console.log('Raw run: X(16,6), five physical returns');
+  const records = rawReturns(16, 6, 5, 10000000);
+  assert.deepEqual(records.map(r => r.time), expectedTimes);
+  assert.deepEqual(records.map(r => r.unary), expectedUnary);
+  assert.deepEqual(records.map(r => r.suffix), expectedSuffixes);
+
+  const m = 2n, U = 35n, p = 1n;
+  const exactCost = 108n * U * U * ((64n ** m - 9n ** m) / 55n) +
+    15n * U * (8n ** m - 3n ** m) + 6n * m * m + (6n * p + 15n) * m;
+  assert.equal(exactCost, 9885171n - 198330n);
+  assert.equal(3n * 8n ** m * U + 1n, 6721n);
+  console.log('  EXACT FIVE RAW RETURNS AND E COST=' + exactCost + ': PASS');
+}
+
 function main() {
   console.log('D cryptid even-depth source-parameter / raw-TM SFT');
   const start = Date.now();
@@ -159,6 +228,7 @@ function main() {
   }
   console.log('21 CONSTRUCTIVE MODULAR PARAMETER CASES: PASS');
   verifyRawCases();
+  verifyThreeReturnBridge();
   console.log('ALL CHECKS PASSED in ' + (Date.now() - start) + ' ms');
 }
 
