@@ -39,7 +39,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check unmodified upstream original machine and blank path
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent25-cryptid-doublezero:im-results/agent36-cryptid-trace
+          LEAN_PATH: im-results/agent2-cryptid-continuity:im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent25-cryptid-doublezero:im-results/agent36-cryptid-trace
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           python3 im-results/agent25-cryptid-doublezero/unpack_1101100.py
@@ -56,6 +56,10 @@ jobs:
           lean -DmaxRecDepth=16384 -o im-results/agent26-cryptid-e-gate/ASixBlankTrace.olean im-results/agent26-cryptid-e-gate/ASixBlankTrace.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankBeyond.olean im-results/agent35-cryptid-code/BlankBeyond.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
+          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF; do
+            lean -DmaxRecDepth=8192 -o "im-results/agent2-cryptid-continuity/$module.olean" "im-results/agent2-cryptid-continuity/$module.lean"
+          done
+          lean -DmaxRecDepth=8192 -o im-results/agent25-cryptid-doublezero/A1101100FullFirst.olean im-results/agent25-cryptid-doublezero/A1101100FullFirst.lean
           lean -o im-results/agent35-cryptid-code/ESixBlank.olean im-results/agent35-cryptid-code/ESixBlank.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankSixCheckpoint.olean im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
           lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
