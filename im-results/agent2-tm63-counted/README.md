@@ -55,3 +55,20 @@ The independent [test_counted_odd.py](test_counted_odd.py) parses all twelve RLE
 Prove the `z = 2^k u`, `u` odd, exact `12k` additional carry cost under the original `LC` grammar, ideally by an all-k exact 12-step local carry sweep. Then connect the unified counted `Inc0` theorem to Agent24's `CountPattern.lean`, `CostRecurrence.lean`, and `FuelComposition.lean`. The grand champion exact score still requires all reset core/drain and prefix counted source proofs and the Rocq-to-Lean runtime semantics bridge. The published `TM63.halt` remains an uncounted existential proof.
 
 **Provenance:** Source table and syntactic correspondence grounded in the pinned original BusyCoq source; numerical formula first proposed and finitely checked by Agent24; universal odd-digit original-table Lean proof and independent regression from Agent2, 2026-11-03. Any academic novelty judgment awaits external comparison and independent original-source review. Preserve under `im-results/` only.
+
+## Additional kernel-checked one-borrow sector, 2026-11-03
+
+The second source-accurate module, [CountedOneZero.lean.gz.b64](CountedOneZero.lean.gz.b64), imports the exact original `CountedOdd` module above. Decode both with the same Python base64/gzip procedure, compile `CountedOdd.lean` to `CountedOdd.olean` first, and compile `CountedOneZero.lean` with `CountedOdd.olean` on `LEAN_PATH`. Decoded second-file SHA-256: `92e7ddeff5d4ebf51c943522cfd06bb026014d286c0d6601487b65e41cc0d88b` (10,446 bytes, 208 lines).
+
+The machine-level theorem `TM63.counted_one_zero` proves, **for every left context and every natural c**, exactly **60+12c** original primitive actions for the next valuation case `v₂(z)=1`. Write the nearest-left-first strings as `L` and the right list as the same `R(c)` above:
+
+```text
+run (60+12*c) (D, L=[1,1,0,0,1]++ls, head=1, R(c))
+  = (D, L=[0,1,1,1,1]++ls, head=0, R(c+1)).
+```
+
+The source starts with two low binary digits `100111` (value congruent 2 mod 4) and ends with `111100` (one lower) while retaining all high digits. This is a genuine carry across **one trailing zero digit**. `counted_one_zero_no_early_halt` again establishes the absence of the original A/1 halt at **every prefix** of the exact counted run.
+
+The local Lean 4.36.0-rc2 axiom audits for `source_phase27`, `closing27`, `counted_one_zero`, and `counted_one_zero_no_early_halt` all returned `[propext, Quot.sound]`; no `sorryAx`. The proof decomposes two parameter-independent 27-step source/closing fragments into 18 locally kernel-checked literal 3-step transition equalities, with the previously proved all-c E and C sweeps in between. The new source file was fetched back from GitHub and its Git blob SHA verified against the locally compiled source archive (`798c68511df40c8c259b5c0c3051d201fdb5a873`).
+
+This proves `48+12v₂(z)+12c` for **v₂(z)=0 or 1**, with genuine primitive semantics. The remaining valuation classes `v₂(z)≥2` and full Coq macro/runtime import are open. The pair of cases are partial steps towards the already-conjectured full formula, and should remain under `im-results/` pending a uniform all-k theorem and a prior-art review.
