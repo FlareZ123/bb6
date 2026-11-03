@@ -1,6 +1,6 @@
 # Original-source all-time Machine C affine-three forbidden cone
 
-**Agent 3, 2026-11-03 20:07 UTC.** This result excludes an infinite **two-dimensional set of genuine blank-section states**, without assuming they satisfy a halting equation. It does **not** decide Machine C or BB(6), and is retained in `im-results/` pending review of external novelty.
+**Agent 3, 2026-11-03 20:19 UTC.** This result excludes an infinite **two-dimensional set of genuine blank-section states**, without assuming they satisfy a halting equation. It does **not** decide Machine C or BB(6), and is retained in `im-results/` pending review of external novelty.
 
 ## Statement
 
@@ -35,6 +35,13 @@ The complete guard arithmetic is discharged by Lean `omega`; the proof does not 
 
 **Full unmodified-source manual CI succeeded:** [run 41708666534](https://github.com/FlareZ123/bb6/actions/runs/41708666534), [job 126170658126](https://github.com/FlareZ123/bb6/actions/runs/41708666534/job/126170658126), completed 2026-11-03 20:04:30 UTC. The workflow compiled unchanged original [FastSectionDef](../agent46-c-jump/FastSectionDef.lean), [Agent3CImage](../agent3-c-odd-image/Agent3CImage.lean), [ReachAffine](../agent15-c-halting/ReachAffine.lean), [OddOddLowVal](./OddOddLowVal.lean) and [OddSevenOrbit](./OddSevenOrbit.lean), then this theorem. Axiom audit for `affine_three_cone_unreachable` was exactly `[propext, Classical.choice, Quot.sound]`; no `sorryAx`.
 
+A second full-source manual CI [41710832581](https://github.com/FlareZ123/bb6/actions/runs/41710832581) (job [126178137128](https://github.com/FlareZ123/bb6/actions/runs/41710832581/job/126178137128)) **succeeded at 20:18 UTC** for the sharper all-start ancestry results in [HighConeAnyRoot.lean](./HighConeAnyRoot.lean), with only [propext, Classical.choice, Quot.sound]. This file proves:
+
+- **All-start universal exclusion:** For every section starting state `s`, every `n≥0`, and every `(x,y)` in the cone, `run secNext (n+4) (some s) != some (x,y)`. The result is independent of the blank origin and the stopping equation.
+- **Sharpness:** For each cone point, the exact uniquely determined third predecessor `C` above satisfies `run secNext 3 (some C)=some(x,y)`. In particular these targets have maximal finite incoming-path depth **exactly three**, even though no legal four-step predecessor exists. The generic predecessor lifting helper `run_succ_unique_predecessor` is also kernel-checked.
+
+A concrete witness is the exact legal source chain `(81,77) → (92,75) → (127,61) → (5,124)`. The first state has no incoming section edge because its right coordinate is odd≥5 and its sum is 2 modulo 4. Thus the target has exactly a depth-three ancestry path (from that special nonblank start), and no depth-four path from any start. This is a source-semantic structural theorem, stronger in quantifier scope than blank-only nonreachability.
+
 The source bridge from this repository's accelerated Machine C semantics to unmodified upstream DeepMind Cryptids is a separate proof obligation from this statement. The preceding repository section sources have source-level proofs, but this theorem itself is stated in terms of `secNext`, not raw primitive machine steps. A universal Busy Beaver upper bound does not follow.
 
 ## New comparison against mixed96 finite abstraction
@@ -50,3 +57,20 @@ For actual high-stopping parameters `m≥6`, `m%4=2`, `(j+127*m)%128=87`, and `k
 ## Remaining work
 
 Review overlap with source-certified inverse cones and external Machine C literature before promotion to `results/`. More importantly, seek a coverage argument over *all* remaining first- and second-stopping families, or a transferable symbolic invariant for their actual blank-root orbit. Excluding selected cylinders does not decide whether the machine ever halts.
+
+## Quotient-resolution boundary (additional independent experiment)
+
+Extending the same representative-closure computation to larger compatible moduli reveals a concrete limit to claims of independence from finite modular methods. With coordinates projected to `a,k mod M` and high counter to `2+(c-2) mod (M/2)`, preserving low `c=0,1` exactly:
+
+| M | Abstract vertices | BFS reached | Processed edges | Cone target cells reached |
+|---|---:|---:|---:|---:|
+| 64 | 139,264 | 74,372 | 568,552 | 8 / 8 |
+| 96 | 460,800 | 260,672 | 2,022,544 | 36 / 36 |
+| 128 | 1,081,344 | 528,374 | 4,130,504 | 16 / 16 |
+| 192 | 3,612,672 | 1,832,552 | 14,435,448 | 72 / 72 |
+| 256 | 8,519,680 | 3,810,502 | 30,131,488 | **0 / 64** |
+| 512 | 67,633,152 | 27,858,704 | 221,572,376 | **0 / 256** |
+
+These values came from an independently transcribed local C++17 exact quotient-edge enumerator, not from a source-certified Lean proof of these new (M) quotients. The original mixed96 census exactly matches independent Agent41 results. **At M=256 the abstract graph already excludes every cone target**: a sufficiently refined modular method *could* potentially recover the blank nonreachability by a separate soundness/closure certificate. The all-start sharp ancestry result remains a distinct exact-source theorem, and source verification does not rely on the quotient experiment. Avoid any implication that the cone is invisible to every finite residue quotient.
+
+A reusable quotient-scaling tester and checked numeric outputs should be preserved before citing the M256/M512 censuses as independent reproducible results outside this research note.
