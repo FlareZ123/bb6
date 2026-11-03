@@ -19,4 +19,12 @@ private theorem affine_mod7_from_shifted (n z f : Nat)
     _ = (5^n*(z+8)+6)%7 := hadded
     _ = (5^n*z+(8*5^n+6))%7 := by rw [htarget]
 
+private theorem divisors_of_seven (m : Nat) (hm:0<m) (hd:m∣7) :
+    m=1 ∨ m=7 := by
+  have hle : m≤7 := Nat.le_of_dvd (by decide) hd
+  have hc : m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 ∨ m=6 ∨ m=7 := by
+    omega
+  rcases hc with h | h | h | h | h | h | h <;>
+    subst m <;> simp_all
+
 end BB6.Agent30B
