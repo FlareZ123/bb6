@@ -42,4 +42,22 @@ The finite trace cannot establish that the last category is empty forever. Tests
 
 This is an exact all-time **reduction of the genuine blank auxiliary halting problem to a localized physical tape pattern**. It does not classify that root or historical #119, prove any BB(6) value, or create a global BB(6) bound. The transition rule itself is elementary; external novelty has not been established, and an independent source-import verification remains desirable.
 
-The decisive missing theorem is **`∀d, Reach d → ¬Gate d`** or a reachable gate witness, ideally from a closed symbolic language of genuine blank-origin D sections. A possible next technique is a guarded four-state B/C/D/F return map that collapses D→E→A into a three-instruction transition. It must preserve arbitrary outside tape and account for an undefined third query in the fatal case. Unrestricted fixed-head-window abstraction can synthesize false halts by forgetting previously visited cells; do not infer an inductive invariant from the finite observations.
+The decisive missing theorem is **`∀d, Reach d → ¬Gate d`** or a reachable gate witness, ideally from a closed symbolic language of genuine blank-origin D sections. A further reduction now exists below. A future guarded four-state B/C/D/F first-return map could collapse D→E→A into a three-instruction transition. It must preserve arbitrary outside tape and account for an undefined third query in the fatal case. Unrestricted fixed-head-window abstraction can synthesize false halts by forgetting previously visited cells; do not infer an inductive invariant from the finite observations.
+
+## Further original-auxiliary all-time gate refinements (same invocation)
+
+The separate [Root119CGate.lean](Root119CGate.lean), importing `Root119Gate`, proves `blank_halts_iff_C_gate` for **C reading 0** with the four physical cells immediately ending at its head equal to the word **1100**. The proof classifies the only two ways to enter D (C/0 or F/1); the F/1 transition writes zero at the immediate-left D cell and cannot satisfy the fatal D triple. Original table equality and reach semantics are unchanged.
+
+The further [Root119BRegular.lean](Root119BRegular.lean), importing `Root119CGate`, proves `blank_halts_iff_regular_B_gate` for **a genuinely reached B/0** reading a left-to-right physical word belonging to
+
+```text
+11 00 (1 repeated r times) 0,   r ∈ ℕ
+```
+
+The rightmost 0 is under B. Precisely: at a reached B/0 head `h`, there is a finite `r` with all `t(h-1-i)=1` for `0≤i<r`, and `t(h-1-r)=t(h-2-r)=0`, `t(h-3-r)=t(h-4-r)=1`. The proof shows by induction that an arbitrary-length C/1 erasure sweep preserves every original tape cell at and left of its moving head. Its first C/0 encounter triggers the earlier C gate exactly when the B-origin word matches. Conversely every reached C/0 descends through finitely many C/1 sweeps from a reached B/0; a prior B/0 always exists because C is initially absent and can enter only from B/0 or C/1.
+
+**Kernel checks:** `lean -o Root119Gate.olean Root119Gate.lean`, then `lean -o Root119CGate.olean Root119CGate.lean`, then `lean Root119BRegular.lean`, with the containing directory included in `LEAN_PATH`. All three compiled locally with Lean4.36.0-rc2. `#print axioms` on both additional final theorems returns exactly `[propext, Quot.sound]`; no `sorryAx`. These are stand-alone source-equation formalizations; the original external BusyCoq `TM2153.eqv` stays a separately published proof, with no kernel-level import bridge.
+
+**Independent finite cross-check:** in 2,000,000 actual auxiliary instructions, the 8,189 visited B/0 sections have C-sweep one-run lengths `r=0:164`, `r=1:2592`, `r=3:5421`, `r=4:12`. None matches the fatal prefix `1100 1^r 0`. These distributions are empirical and make no claim of a closed all-time B language.
+
+The remaining decision task is to prove the genuine B/0 language excludes `1100 1* 0` for **all** return times (or exhibit a reachable witness). Fixed finite memory around the head, or an enumeration of the 8,189 checked B sections, does not discharge it. The regular B-gate reduction is stronger as a *structural symbolic problem statement* but has no externally established research novelty or new BB(6) numerical bound. Keep intermediate classification.
