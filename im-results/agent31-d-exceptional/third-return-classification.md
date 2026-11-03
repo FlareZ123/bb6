@@ -40,3 +40,15 @@ These are **conditional model indices only**. They are stronger diagnostics for 
 ## Next scientific direction
 
 Introduce a finite collection of auxiliary word shapes `(01)^4 0 1^p 0 1^6` and `0101^p0 1^6`, prove a uniform source-derived next-section map for their leading unary residue, and test closure against physical F/1 halt gates. Alternatively, establish a mathematically precise limitation on bounded return-group regular-language closure. Preserve the distinction between a conditional source-rule chain and an authenticated all-time blank-root induction.
+
+
+## Fourth checkpoint: two exact infinite subfamilies
+
+The certified B-return, after the preceding E and B/A word transformations, gives two further parameter-unbounded fourth endpoints for every v≥0 and q≥3 (write P_r=(01)^r):
+
+* k=27v+4: the third F/0 section is I_(1536v+257)(P_4 0 1^(2q-6) 0 1^6). The fourth return costs 12K²+49K+40 with K=512v+85, and yields I_(4096v+690)(P_3 0 1^(2q-6) 0 1^6).
+* k=27v+7: the third F/0 section is I_(1536v+434)(0 1 0 1^(2q-3) 0 1^6). The fourth return costs 12K²+49K+40 with K=512v+144, and yields I_(4096v+1162)(0 1^(2q-3) 0 1^6).
+
+Both fourth right words remain outside L. Their universal language exclusions were checked locally in Lean 4.36.0-rc2: `fourth_escape_A_not_regular`, `fourth_escape_B_not_regular` in [EscapeLanguage.lean](./EscapeLanguage.lean), with axioms [propext, Quot.sound] only. The independent literal-machine [fourth_branch.py](./fourth_branch.py) verifies exact third and fourth full physical tapes and primitive times for 12 cases v=0..1, q=3..5.
+
+This is a finite-depth, source-derived 3-adic obstruction: two L checkpoints can fail for k≡1 mod3; three checkpoints can fail for k≡4,7 mod9; four checkpoints can fail for k≡4,7 mod27. No induction proves an obstruction for arbitrary depth, and the actual blank-root machine remains undecided. The composed fourth-return identity still awaits an end-to-end authentic original-source Lean check.
