@@ -39,7 +39,7 @@ jobs:
           set -euo pipefail
           [[ "$ORIGINAL_MODULE" =~ ^[A-Za-z0-9_.]+$ ]]
           for p in "$DEPENDENCY_PATH" "$BRIDGE_PATH"; do
-            [[ "$p" =~ ^im-results/[A-Za-z0-9_./-]+\\.lean$ ]]
+            [[ "$p" =~ ^im-results/[A-Za-z0-9_./-]+\.lean$ ]]
             [[ "$p" != *..* ]]
             test -f "$p"
           done
