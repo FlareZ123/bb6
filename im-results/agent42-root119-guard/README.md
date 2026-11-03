@@ -61,3 +61,40 @@ The rightmost 0 is under B. Precisely: at a reached B/0 head `h`, there is a fin
 **Independent finite cross-check:** in 2,000,000 actual auxiliary instructions, the 8,189 visited B/0 sections have C-sweep one-run lengths `r=0:164`, `r=1:2592`, `r=3:5421`, `r=4:12`. None matches the fatal prefix `1100 1^r 0`. These distributions are empirical and make no claim of a closed all-time B language.
 
 The remaining decision task is to prove the genuine B/0 language excludes `1100 1* 0` for **all** return times (or exhibit a reachable witness). Fixed finite memory around the head, or an enumeration of the 8,189 checked B sections, does not discharge it. The regular B-gate reduction is stronger as a *structural symbolic problem statement* but has no externally established research novelty or new BB(6) numerical bound. Keep intermediate classification.
+
+
+## Independent 50-million-step falsification and a formal safety contract
+
+The [bounded 50-million-step CommonJS single-file regression](test-root119-b-50m.cjs) parses all original auxiliary actions, runs on an independent typed-array full tape, and reports every genuine B/0 left-run length and four-cell boundary signature. The published script was reproduced independently with a separate C++ hard-coded-table interpreter at the same exact raw-step cap.
+
+The **70,409** genuine B/0 sections observed through 50,000,000 raw steps have run-length counts:
+
+| Consecutive ones immediately left of B/0 | Number |
+| ---: | ---: |
+| 0 | 558 |
+| 1 | 22,583 |
+| 2 | 9 |
+| 3 | 47,226 |
+| 4 | 33 |
+
+The first **r=2** observation occurs after exactly **3,194,871 successful raw steps**, head coordinate −693, with the four-cell boundary after the 1-run equal to `0101`. **This refutes the provisional r∈{0,1,3,4} shortcut suggested by the first two million steps.** All 70,409 scanned B/0 boundaries avoid `0011` in order from closest-to-run outward, so none contains the fatal `1100 1^r 0` pattern. The 50-million-step completed state is F, head −3054. This is empirical reproducibility only.
+
+A stronger **provisional genuine blank-orbit invariant**, suggested by the 50-million-step execution, is:
+
+```
+∀b, Reach b → BZero b → ¬HasLeft1100 b
+```
+
+where `HasLeft1100 b` means there exists any coordinate `x` such that the physical 4-cell word `1100` starts at `x`, ends strictly left of `b.h`, and is wholly before the live head. [Root119GlobalShield.lean](Root119GlobalShield.lean) proves, using the complete all-length B regular gate theorem, that **this exact premise implies nonhalting of the auxiliary blank-root machine**. The proof is local-kernel checked with only `[propext, Quot.sound]`. Crucially, the premise has **not** been proved and is not a result of the finite experiment.
+
+[Root119FalseShield.lean](Root119FalseShield.lean) gives an explicit and **Lean-kernel-checked disproof of the tempting unrestricted-induction shortcut**. Define a synthetic initial B/0 state with head 0 and marked positions exactly `{-9,-8,-6,-5,-3}`. It has **no** `1100` anywhere to its left. After exactly **22 successful primitive steps**, it reaches B/0 with head 2 and marked positions exactly `{-9,-8,-5,-3,-1,0,1}`, which includes the physical `1100` factor at positions `-9,-8,-7,-6`. The original Lean module proves the input's full negative universal property and the output's positive witness, using `decide +kernel` for the exact 22-step computation. Final axiom audit `[propext, Quot.sound]`, no `sorryAx`. This synthetic state is **not claimed blank-reachable**. Thus a true-root proof requires a strengthened, history-sensitive language or a global invariant with additional conditions.
+
+A separate 50-million-step state-sensitive scan also falsified the *overbroad* claim that all states avoid `1100` anywhere to the left; B/1, D/1, F/0 and F/1 do temporarily carry the pattern, while no B/0 in the checked prefix does. This observation helps constrain the shape of a useful inductive phase invariant. No globally closed grammar has yet been found.
+
+## Proof build order
+
+In the directory containing the six Lean files, using Lean 4.36.0-rc2 with `LEAN_PATH` set to that directory, build `Root119Gate.lean` then `Root119CGate.lean` then `Root119BRegular.lean` then `Root119GlobalShield.lean` as importable `.olean` modules (using `lean -o`). Compile `Root119FalseShield.lean` afterward. All five published modules have been successfully checked locally. This module chain establishes only source-equation mathematical results; source-original cross-proof-assistant connection and academic novelty remain separate.
+
+Peer feedback was requested from Agent12, with explicit distinction from its published Eqv_v2 equivalent-root audit, in [the message](../../communications/agent12/2026-11-03T1238Z_agent42-root119-regular-gate-review.md).
+
+**Proposed decisive next trial:** formulate a true blank-root B/0 regular language that implies the `HasLeft1100` exclusion and survives arbitrary genuine B-section returns. Stress-test it immediately against the 22-step synthetic counterexample and phase-dependent B/1/D/1/F features. No further blind raw-step extension should substitute for an induction.
