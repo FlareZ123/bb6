@@ -175,7 +175,7 @@ private theorem boundaryBNoF (m : Nat) (ys : List Bool) :
     intro t ht
     have hzero : t=0 := by omega
     subst t
-    simp [scanDone]
+    simp [scanDone,run]
   exact appendNoF
     (scanStart m [true] (false::ys))
     (scanDone m [true] (false::ys))
