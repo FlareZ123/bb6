@@ -189,4 +189,44 @@ theorem root_two_step_gain_17 (n a d c f : Nat)
 #print axioms small_even_escape
 #print axioms two_step_gain_17
 #print axioms root_two_step_gain_17
+
+/-- On surviving blank-origin returns at indices 2*k+2, the total
+counter mass is at least 37+17*k. This is a root-specific improvement
+over the previously known universal seven-per-return estimate. -/
+theorem root_even_mass_bound (k a d : Nat)
+    (h : run (2*k+2) = some (.D a d)) :
+    37 + 17*k ≤ a+d := by
+  induction k generalizing a d with
+  | zero =>
+    have h2 : run 2 = some (.D 6 31) := by decide +kernel
+    have hh : run 2 = some (.D a d) := by simpa using h
+    rw [h2] at hh
+    cases hh
+    omega
+  | succ k ih =>
+    let n : Nat := 2*k+2
+    have htarget : run (n+2) = some (.D a d) := by
+      have hre : n+2 = 2*(k+1)+2 := by dsimp [n]; omega
+      rw [hre]
+      exact h
+    cases hp : run n with
+    | none =>
+      have hp1 : run (n+1) = none := by
+        change (run n).bind highLevelNext = none
+        rw [hp]
+        rfl
+      have hz : run (n+2) = none := by
+        change (run (n+1)).bind highLevelNext = none
+        rw [hp1]
+        rfl
+      rw [hz] at htarget
+      contradiction
+    | some st =>
+      rcases st with ⟨ap,dp⟩
+      have hprev : run (2*k+2) = some (.D ap dp) := by simpa only [n] using hp
+      have hbound : 37+17*k ≤ ap+dp := ih ap dp hprev
+      have hstep := root_two_step_gain_17 n ap dp a d (by dsimp [n]; omega) hp htarget
+      omega
+
+#print axioms root_even_mass_bound
 end BB6.Agent8SharpSource
