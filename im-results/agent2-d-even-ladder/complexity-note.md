@@ -41,6 +41,12 @@ The initial length bound uses `U_r<=511`, `r<=3^(2r)`, and the explicit third-en
 Writing `α=log_3(64)≈3.785578521428744`, this entails the scale relationship
 `T_E >= (N/120)^α` on the explicit infinite family of **synthetically prepared** inputs, provided the cited original-machine third-endpoint source contracts and E-stage source proof are instantiated. This describes supercubic time on nonblank **input tapes**; Busy Beaver counts the original **entirely blank input**, hence no Busy Beaver lower bound follows.
 
+### Unified all-positive-depth Lean theorem
+
+The latest [DComplexity.lean](DComplexity.lean) now includes **`all_depth_synthetic (m : Nat) (hm : 0<m)`**, a **single, unconditional arithmetic theorem for every positive natural depth**. It provides natural witnesses `k,q,U,p` with `0<U<512`, right-support bound `3*k+4+2*q+1 <=120*3^m`, primitive E-stage arithmetic cost `64^m <= totalCost m (U-1) p`, and a fully quantified parity disjunction stating that its **third source endpoint** has exactly the unary size `3^(m+1)U+1` and the packet length needed to invoke the original-source E ladder. The cases are `k=9v+7,q=3r+3,p=1,m=2r` or `k=9v+4,q=3r+6,p=4,m=2r+1`; their exact source unary identities `512v+434` and `512v+257` are part of the proved disjunction. This removes any dependence on an informal odd/even case split in the paper's quantified arithmetic statement.
+
+The *exact GitHub committed source blob* `dab16557077e947e72f8c23936d680193ad14396` is equal to the locally Lean 4.36.0-rc2 compiled blob, SHA-256 `9f2784398b8abfdcc7bc453b3c1f6ce6fe07cfd9abd927b932d61c7caf6ce3e0`. The theorem's `#print axioms` is **`[propext, Quot.sound]`**; no additional axioms and no sorry. The source-third original-machine bridge is still separate and not established merely by this arithmetic theorem.
+
 ## Exact Lean verification and source files
 
 - [DEvenBridge.lean](DEvenBridge.lean): universal even-depth existence, period64, and no smaller positive repeat. Locally SHA-verified original exact blob `c149efd88c0a7538c037ef56dd3941a3b5177e80`; primary all-depth theorem axioms `[propext, Quot.sound]`, first-repeat theorem has no axioms.
