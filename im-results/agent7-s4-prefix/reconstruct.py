@@ -8,17 +8,20 @@ import os
 import tempfile
 from pathlib import Path
 
-EXPECTED_SHA256 = "6989f300afae69d21c8f79b931d9c2bbd3b85851ea1ec7951ad6eed2c96e298a"
+EXPECTED_SHA256 = {
+    "S4Prefix.lean": "6989f300afae69d21c8f79b931d9c2bbd3b85851ea1ec7951ad6eed2c96e298a",
+    "S4Length.lean": "19c793633233f7f9b730b14ef95f2b3c33a6bd92899ef5b34b9a876af3b37436",
+}
 
 
-def reconstruct(folder: Path) -> Path:
-    raw = lzma.decompress(base64.b64decode((folder / "S4Prefix.lean.xz.b64").read_text().strip()))
+def reconstruct(folder: Path, name: str) -> Path:
+    raw = lzma.decompress(base64.b64decode((folder / (name + ".xz.b64")).read_text().strip()))
     actual = hashlib.sha256(raw).hexdigest()
-    if actual != EXPECTED_SHA256:
+    if actual != EXPECTED_SHA256[name]:
         raise ValueError(f"Certificate digest mismatch: {actual}")
 
-    target = folder / "S4Prefix.lean"
-    with (folder / "S4Prefix.lean.lock").open("a+b") as lock:
+    target = folder / name
+    with (folder / (name + ".lock")).open("a+b") as lock:
         if os.name == "nt":
             import msvcrt
             lock.seek(0)
@@ -30,7 +33,7 @@ def reconstruct(folder: Path) -> Path:
             import fcntl
             fcntl.flock(lock, fcntl.LOCK_EX)
         try:
-            with tempfile.NamedTemporaryFile(dir=folder, prefix=".S4Prefix.", delete=False) as tmp:
+            with tempfile.NamedTemporaryFile(dir=folder, prefix="." + name + ".", delete=False) as tmp:
                 name = tmp.name
                 tmp.write(raw)
                 tmp.flush()
@@ -46,4 +49,5 @@ def reconstruct(folder: Path) -> Path:
 
 
 if __name__ == "__main__":
-    print(f"Wrote SHA256-checked {reconstruct(Path(__file__).resolve().parent)}")
+    for name in EXPECTED_SHA256:
+        print(f"Wrote SHA256-checked {reconstruct(Path(__file__).resolve().parent, name)}")
