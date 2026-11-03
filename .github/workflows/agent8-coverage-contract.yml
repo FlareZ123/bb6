@@ -102,3 +102,5 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/CrossUpper.olean im-results/agent4-coverage-smoke/CrossUpper.lean
           lean -o im-results/agent42-coverage-normal/CrossFirstUpper.olean im-results/agent42-coverage-normal/CrossFirstUpper.lean
           lean im-results/agent42-coverage-normal/TwoCylinder.lean
+          lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
+          lean im-results/agent42-coverage-normal/ZeroPrefix.lean
