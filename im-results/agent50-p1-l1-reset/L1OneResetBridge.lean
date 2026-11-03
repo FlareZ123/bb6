@@ -110,7 +110,7 @@ theorem l1_first_reset_no_wall
   have hmod4 : (6*u-2)%4=0 := by omega
   have hb8 : 8≤6*u-2 := by omega
   have hmass0 := inverseAt_odd_cost (6*u-2) (2*u+5) t k c
-    hb8 hmod4 (by omega) hi' hc
+    (by omega) hmod4 (by omega) hi' hc
   have hmass : (2*k-4)+12+32*q+12+2*t+(c+3)=56*P := by
     omega
   let B := (2*k-4)+12
