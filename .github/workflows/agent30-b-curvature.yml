@@ -23,3 +23,5 @@ jobs:
           cp im-results/agent10-b-parity/Agent10BSource.lean /tmp/agent30-b-curvature/Agent10BSource.lean
           cp im-results/agent30-b-dyadic-curvature/BModularCurvature.lean /tmp/agent30-b-curvature/BModularCurvature.lean
           cp im-results/agent30-b-dyadic-curvature/BModularSource.lean /tmp/agent30-b-curvature/BModularSource.lean
+      - name: Verify Lean availability
+        run: lean --version
