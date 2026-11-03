@@ -44,11 +44,13 @@ theorem first_source (t h : Nat) :
   let xs := List.replicate (3*k+2) true ++
     false :: (pairs (p+1) ++ [true,true])
   have hp := source_init_pad (12*k*k+49*k+64+4*p) 2 xs
+  have hl : 2*(p+1)+2 = 2*h+6 := by dsimp [p]; omega
   have heq :
       run (12*k*k+49*k+64+4*p)
         (init (xs ++ List.replicate 2 false)) = middle t h := by
-    simpa [xs, middle, k, p, List.append_assoc] using
-      (BB6.Agent35.full_E_double k p [])
+    have hx := BB6.Agent35.full_E_double k p []
+    rw [hl] at hx
+    simpa [xs, middle, k, p, List.append_assoc] using hx
   rw [heq] at hp
   simpa [start, firstCost, k, p, xs] using hp
 
@@ -63,8 +65,24 @@ theorem second_source (t h : Nat) :
         false :: (pairs 0 ++ ([true,true,true] ++ ys))) := by
     have hnum : 8*(3*t+1)+5 = 3*K+4 := by dsimp [K]; omega
     have hones : 2*h+6 = 3+(2*h+3) := by omega
-    simp [middle, init, K, ys, pairs, hnum, hones,
-      List.replicate_append_replicate, List.append_assoc]
+    have hrepl : List.replicate (3*K+4) true =
+        true::true::List.replicate (3*K+2) true := by
+      have hv : 3*K+4 = 2+(3*K+2) := by omega
+      rw [hv]
+      calc
+        _ = List.replicate 2 true ++ List.replicate (3*K+2) true :=
+          (List.replicate_append_replicate).symm
+        _ = _ := rfl
+    dsimp [middle]
+    rw [hnum, hones, hrepl]
+    have hthree : List.replicate (3+(2*h+3)) true =
+        [true,true,true] ++ List.replicate (2*h+3) true := by
+      calc
+        _ = List.replicate 3 true ++ List.replicate (2*h+3) true :=
+          (List.replicate_append_replicate).symm
+        _ = _ := rfl
+    rw [hthree]
+    rfl
   rw [hmid]
   simpa [secondCost, finish, K, ys, pairs, oppairs,
     List.append_assoc] using (full_E_triple_pairs K 0 ys)
