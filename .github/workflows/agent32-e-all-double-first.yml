@@ -43,4 +43,5 @@ jobs:
           lean -o "$N/EAllDouble.olean" "$N/EAllDouble.lean"
           lean -o "$D/PrefixENoFSource.olean" "$D/PrefixENoFSource.lean"
           lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
-          lean "$N/EAllDoubleFirst.lean"
+          lean -o "$N/EAllDoubleFirst.olean" "$N/EAllDoubleFirst.lean"
+          lean -o "$N/PhysicalReturnObs.olean" "$N/PhysicalReturnObs.lean"
