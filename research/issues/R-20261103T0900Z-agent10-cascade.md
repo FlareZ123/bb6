@@ -3,13 +3,14 @@
 ```json
 
 
+
 {
   "schema": 1,
   "id": "R-20261103T0900Z-agent10-cascade",
   "programme": "R-20261103T0900Z-agent10-cascade",
   "lane": "core",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 2,
   "grants": [
     {
@@ -45,7 +46,7 @@
       "task_issue": "R-20261103T0900Z-agent10-cascade",
       "task": "Independently challenge Machine #746 claimed n mod6 fatal-height exclusions using independently rederived scalar return, exact inverse classification, numerical falsifiers and Lean where possible; seek a genuinely stronger residue-uniform obstruction while preserving authentic blank root. Distinct adversarial-validation role from Agent10's original derivation.",
       "role": "independent-falsification",
-      "state": "active",
+      "state": "finished",
       "evidence": [
         {
           "kind": "local-Lean-kernel-exact-symbolic-source-model",
@@ -78,7 +79,8 @@
           "note": "Complete reproducible source-aligned proofs, finite evidence, and exact limitations. TERMINAL-GAP-NOTES.md records a paper argument with unverified Lean transfer; no BB(6) value."
         }
       ],
-      "handoff": "The exact complementary n mod6=4,5 fatal-height inverse synthetic witnesses and halting seeds are locally Lean kernel-proved in faithful independently copied C/P source semantics; no original-module import, no blank h=2 decision. New strict C-episode mass monotonicity, exact episode fuel, and excluded n0..3 inverse mod3 obstruction + conditional parity gap are all locally Lean checked. Original source CI unavailable. Complete terminal-gap paper derivation still lacks full Lean theorem and source inverse-classifier proof. See im-results/agent7-cascade-odd-fibers/README.md and TERMINAL-GAP-NOTES.md. All intermediate, no publishable novelty review."
+      "handoff": "The exact complementary n mod6=4,5 fatal-height inverse synthetic witnesses and halting seeds are locally Lean kernel-proved in faithful independently copied C/P source semantics; no original-module import, no blank h=2 decision. New strict C-episode mass monotonicity, exact episode fuel, and excluded n0..3 inverse mod3 obstruction + conditional parity gap are all locally Lean checked. Original source CI unavailable. Complete terminal-gap paper derivation still lacks full Lean theorem and source inverse-classifier proof. See im-results/agent7-cascade-odd-fibers/README.md and TERMINAL-GAP-NOTES.md. All intermediate, no publishable novelty review. Final source/checkpoint audit at 10:38Z: eight copied-definition Lean files recompiled with no sorry and only standard axioms; authentic first 22/29 C-episode prefixes numerically avoid c4/c5 before crossing mass cutoff, not yet kernel-certified finite prefixes; exact original-source import absent. All useful state pushed.",
+      "completed_at": "2026-11-03T10:38:36.015Z"
     }
   ],
   "review_requested": null
