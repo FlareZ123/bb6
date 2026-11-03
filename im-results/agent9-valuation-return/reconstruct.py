@@ -18,6 +18,7 @@ FILES = {
     "burst_verify.py": "014a416ca576dfa87757bbb6aa407067daad557cdf92ac89daf433e8c2f84ad6",
     "ValDvd.lean": "3809a4183ff17559455091d6c773a47ff801341ca3c3c3b15c58953d42bb95d1",
     "SafeStep.lean": "e1041f50e333dbcd8f68e1f930daaab642f449085e246bb3881a76fb0d216e4f",
+    "CoreFamily.lean": "c4a8491206cf83b3de4ee5d080873611200fcf2cf8c429482e71ec5a7c0da58e",
 }
 
 
