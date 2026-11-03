@@ -1,0 +1,54 @@
+name: Agent 6 BB429 complete source chain (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bb429-source-chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
+      ORIGINAL_MODULE: BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned upstream Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Checkout fixed original Cryptids source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
+      - name: Reclaim disk and fetch pinned Mathlib cache
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          lake exe cache get
+      - name: Build original raw-TM accelerator
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: lake build "$ORIGINAL_MODULE"
+      - name: Compile all unchanged local BB429 modules and source bridge
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Rank.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/"*.lean .
+          for module in BB429Rank ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn SourceLadder; do
+            echo "::group::Compile $module"
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+            echo "::endgroup::"
+          done
