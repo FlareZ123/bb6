@@ -73,3 +73,53 @@ The safe 6- and 8-head laws are exact affine updates on the next digit `b`: `(6,
 To reproduce: decode both Base64/XZ files; compile `S4Phase.lean` to `S4Phase.olean`; then compile `S4Trap.lean` with that compiled module on the Lean search path. The `#print axioms` audit covers the exact theorems `S4.first56`, `S4.actual_pair`, `S4.actual_seven_eighths_continue`, and `S4.actual_only_hazard_return`. Both source files are independently verified to match their committed compressed bytes via byte-length and FNV-1a fingerprints in addition to local SHA-256; a full original-source kernel import remains an open source-validation step.
 
 **No BB(6) value, bound improvement, or decided holdout is claimed.** The older Agent7 normalized first-register cycle and Agent34 ranked source proofs are reused as context; the two-digit eight-pulse trap is a new local derivation within this repository, without external novelty audit.
+
+## 2026-11-03 exact 32-step reduction and genuine-root halting equivalence
+
+**Strongest current local result:** [S4Return.lean.xz.b64](S4Return.lean.xz.b64), decoded SHA-256 `269cbc8e8792022e2ecfae11c893c0299c51b190fcb6db2e52f9c04681a3d9ba`, imports the two preceding Lean modules. Compiled locally with Lean 4.36.0-rc2; the complete theorem `S4.blank_halts_iff_reduced` reports only **`[propext, Quot.sound]`** and no `sorryAx`. The source model remains a *textually exact, locally proved mirror* of DeepMind's published accelerated definitions; original-source kernel import CI is still pending.
+
+The original-shaped accelerated six-state blank root has been rigorously reduced **within the standalone model** to a *single partial map on a list of natural numbers*. Define `bumpBy k` by the original `k`-fold stack-head increment (an empty list becomes `[k-1]` when `k>0`). Define
+
+```text
+dangerous(T) =
+  Option.map (fun state => state.leftStack.drop 4)
+    (epoch 27 T [0,6,5,3,1])
+
+reduced(T) = Option.map (bumpBy 17) (dangerous(bumpBy 31 T))
+
+initial_reduced_stack = [42,12,8,5]
+```
+
+The universal theorem **`S4.thirtytwo_exact`** states, for *every finite stack T*, including synthetic ones and arbitrary large numbers:
+
+```text
+run 32 (C(3,[5,7,7,19] ++ T))
+ = Option.map (fun U => C(3,[5,7,7,19] ++ U)) (reduced(T)).
+```
+
+This identity includes the halting case: if `dangerous(bumpBy31 T) = none`, the original-shaped high-level run fails during that 32-step block, and `run 32` is `none`. The proof factors its eight four-step returns into `sixteen_safe` and `sixteen_dangerous`; both are exact arbitrary-tail Lean equalities. The entire first half consists of safe stack-head increments `+13` then `+18`, totaling `+31`; the second half contains a single potentially failing `epoch 27` and a final head increment `+17`.
+
+**`S4.blank_conjugacy`** proves, for every natural `n`:
+
+```text
+run (56+32*n) (C(3,[0]))
+ = Option.map
+     (fun T => C(3,[5,7,7,19] ++ T))
+     (reducedRun n [42,12,8,5]).
+```
+
+Finally **`S4.blank_halts_iff_reduced`** proves the *full halting equivalence*, with correct quantifiers and no finite horizon:
+
+```text
+(there exists k such that run k (C(3,[0])) = none)
+  iff
+(there exists n such that reducedRun n [42,12,8,5] = none).
+```
+
+The reverse direction uses the absorbing property of a failed `Option` run and the fact that any eventual original failure must also be visible at a sufficiently later 32-step checkpoint. The forward direction follows by direct model conjugacy. **This is a strict exact reduction of the entire remaining blank-root problem**, rather than a trace extension or a classification of synthetic terminal cylinders.
+
+### Why this changes research priorities
+
+The previously published source S4 return map has an unbounded left digit stack and a right stack. The new `reduced` map has a single arbitrary finite list, with deterministic head increments by 31 and 17 around **one residual `epoch 27`**, and starts from the four-digit seed `[42,12,8,5]`. This provides a concrete candidate for a compact invariant, arithmetic conjugacy, inverse-image grammar, or optimized verified simulator. All halting possibilities in the resulting eight-pulse cycle pass through one conditional gate with the `7,20` head prefix. A proof of nonhalting of `reduced` from the seed would decide this single authentic DeepMind holdout, conditional on a completed original-source semantic bridge.
+
+**Limit:** the equivalence is proven against copied, inspected source equations and **not yet kernel-bridged to the unmodified DeepMind `highLevelNext`**. It does not resolve `reduced` from its seed, much less BB(6). Moving it into `results/` or claiming original-machine certification would be premature. To reproduce, first compile the decoded `S4Phase.lean` and `S4Trap.lean` to their matching `.olean` modules; then compile the decoded `S4Return.lean` with both import files available on the Lean module search path.
