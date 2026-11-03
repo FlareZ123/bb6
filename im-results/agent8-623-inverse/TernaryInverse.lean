@@ -49,6 +49,85 @@ theorem drainB_nine (x d : Nat) :
   congr 1
   omega
 
+
+/-- Source-matched evaluator residual bound (same argument as Agent49). -/
+theorem evalA_b_le_k (a : Nat) :
+    ∀ k m aa bb dd : Nat, evalA a k m = some (aa,bb,dd) → bb ≤ k := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases h2 : k%3 = 2
+    · simp [h2] at h
+      cases h
+      omega
+    · by_cases h0 : k%3 = 0
+      · simp [h2,h0] at h
+      · simp [h2,h0] at h
+        cases h
+        omega
+  | succ a ih =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases h2 : k%3 = 2
+    · simp [h2] at h
+      cases h
+      omega
+    · by_cases h0 : k%3 = 0
+      · simp [h2,h0] at h
+        cases h
+        omega
+      · simp [h2,h0] at h
+        have ht := ih (k/3) (m+2*(k/3)+3) aa bb dd h
+        omega
+
+theorem evalA_nine_minus_one (a b m : Nat) (hb : 0 < b) :
+    evalA a (9*b-1) m = some (a+1,3*b-1,m) := by
+  have hm : (9*b-1)%3 = 2 := by omega
+  have hd : (9*b-1)/3 = 3*b-1 := by omega
+  rw [evalA]
+  simp [hm,hd]
+
+theorem evalA_three_minus_two (a b m : Nat) (hb : 0 < b) :
+    evalA (a+1) (3*b-2) m = evalA a (b-1) (m+2*(b-1)+3) := by
+  have hm : (3*b-2)%3 = 1 := by omega
+  have hz : (3*b-2)%3 ≠ 0 := by omega
+  have hd : (3*b-2)/3 = b-1 := by omega
+  rw [evalA]
+  simp [hm,hz,hd]
+
+/-- Exact two-digit pumping for ALL positive block counts, including halting. -/
+theorem drainB_scale_nine (a b d : Nat) (hb : 0 < b) :
+    drainB a (9*b) d = drainB a b (d+24*b+2) := by
+  have h9 : 9*b ≠ 0 := by omega
+  have h3 : 3*b-1 ≠ 0 := by omega
+  have hfirst : 3*b-1 < 9*b := by omega
+  have h3sub : (3*b-1)-1=3*b-2 := by omega
+  have hm9 : d+2*(9*b)+3=d+18*b+3 := by omega
+  have hm3 : (d+18*b+3)+2*(3*b-1)+3=d+24*b+4 := by omega
+  have hm : (d+24*b+4)+2*(b-1)+3=(d+24*b+2)+2*b+3 := by omega
+  rw [drainB]
+  simp only [if_neg h9, hm9, evalA_nine_minus_one a b (d+18*b+3) hb,
+    Option.bind_some, if_pos hfirst]
+  rw [drainB]
+  simp only [if_neg h3, h3sub, hm3, evalA_three_minus_two a b (d+24*b+4) hb, hm]
+  have hright : drainB a b (d+24*b+2) =
+      (evalA a (b-1) ((d+24*b+2)+2*b+3)).bind (fun p =>
+         if p.2.1 < b then drainB p.1 p.2.1 p.2.2 else none) := by
+    rw [drainB]
+    simp only [if_neg (by omega : b ≠ 0)]
+  rw [hright]
+  cases he : evalA a (b-1) ((d+24*b+2)+2*b+3) with
+  | none => simp [he]
+  | some p =>
+    rcases p with ⟨aa,bb,dd⟩
+    have small := evalA_b_le_k a (b-1) ((d+24*b+2)+2*b+3) aa bb dd he
+    have hbb : bb < b := by omega
+    have hbb3 : bb < 3*b-1 := by omega
+    simp only [he, Option.bind_some, if_pos hbb, if_pos hbb3]
+
+#print axioms drainB_scale_nine
+
 theorem evalA_four (m : Nat) :
     evalA 3 4 m = some (0,0,m+10) := by
   simp [evalA, Nat.add_assoc]
