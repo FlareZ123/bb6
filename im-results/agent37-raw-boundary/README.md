@@ -19,6 +19,21 @@ Agent3's [raw portfolio](../agent3-portfolio-raw-conjugacy/README.md) supplies a
 
 The general `all_six_blank_states_halt_iff_zipper` composition also covers each designated original D0 start, without silently transferring between inequivalent rooted initial states.
 
+## New 2026-11-03 physical-zero quotient and infinite raw return family
+
+[RawBoundaryPhysicalQuotient.lean](./RawBoundaryPhysicalQuotient.lean) is a plain, locally kernel-verified fifth module. It proves that one explicitly stored trailing zero is mathematically identical to an implicit zero in the *full physical* tape (`pack_right_append_zero`). The general `physical_run_congruence` then states any two zipper presentations whose packed physical raw configuration is equal have equal packed trajectories at **every** primitive step, including halted ones. This removes a subtle but essential obstacle: Agent31's `full_B` theorem assumes a literal zero following the unary ones, whereas a pure blank-tail physical unary tape stores none.
+
+For **every `k : Nat`**, `raw_full_B_physical` proves without finite enumeration:
+
+```lean
+∃ p : Int,
+  BB6.Portfolio.run D0 (12*k*k+49*k+40)
+    (some (BB6.Portfolio.F0Pure (3*k+2) 0)) =
+      some (BB6.Portfolio.F0Pure (8*k+9) p)
+```
+
+The exact primitive transition count comes from the *unchanged source* `CryptidBoundary.full_B k []`, and the existential integer `p` is the physically correct head coordinate tracked by the bridge (Agent31 intentionally omits it). The proof is **locally kernel-checked with only `[propext, Classical.choice, Quot.sound]`**, and the manual original-source CI workflow includes this fifth module. This is an all-parameter original-physical-model transfer of a previously known zipper macro, and does not itself prove halting/nonhalting or a new BB(6) bound.
+
 ## Verification status and reproducibility
 
 Both archived sources use checksum-verifying atomic restoration under a file lock via [`unpack.py`](./unpack.py), and the unchanged Agent31 `Boundary.lean` separately restores at original SHA256 `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
