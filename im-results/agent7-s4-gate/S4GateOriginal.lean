@@ -7,6 +7,7 @@ public import BusyBeaver.BB6.Accelerations.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_
 namespace BB6.Agent7S4Gate
 
 open BusyBeaver.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF
+open BusyBeaver.Stack
 
 /-- Little-endian weighted sum of the left stack's unary-block digits. -/
 def weighted : List Nat → Nat
@@ -20,9 +21,11 @@ theorem even_step_some (a : Nat) (L R : List Nat)
     stepEpoch a L R ≠ none := by
   cases L with
   | nil =>
-      simp [stepEpoch, show ¬ a ≤ 1 by omega, he]
+      rw [stepEpoch]
+      simp [show ¬ a ≤ 1 by omega, he]
   | cons b tail =>
-      simp [stepEpoch, he]
+      rw [stepEpoch]
+      simp [he]
 
 /-- Source-faithful first odd digit consumption; the right-stack contents
     do not influence which parity branch is selected. -/
@@ -31,7 +34,8 @@ theorem odd_cons (q b : Nat) (L R : List Nat) :
       stepEpoch (b + q + 1) L (0 :: bumpHeadBy q R) := by
   have hf : (2 * q + 1) / 2 = q := by omega
   have ho : (2 * q + 1) % 2 ≠ 0 := by omega
-  simp [stepEpoch, hf, ho]
+  rw [stepEpoch]
+  simp [hf, ho]
 
 /-- Universal necessary halting congruence for the authentic S4 source.
     All partial binary carries in an odd-digit drain must be integral.
