@@ -1,0 +1,13 @@
+# Agent 7: compact backward invariant for Machine C mixed96 target
+
+2026-11-03 19:00 UTC. **Status: locally compiled Lean 4.36.0-rc2, exact copied CLine transition definitions; original repository CLine source CI pending; external novelty/overlap review pending.** No Machine C or BB(6) decision.
+
+The projected Machine C accelerator has root (5,0,1). Agent41's mixed96 abstract BFS had 260672 of 460800 vertices and excluded target (13,31,0), but huge generated PBlock certificates were not yet kernel-checked. We independently reproduced 260672 vertices and 2022544 explored transitions, and computed the complete 2258-state reverse ancestor set of (13,31,0). A compact formula over residues modulo 24,48,96 describes this set exactly, extending naturally to all unbounded counters.
+
+Let `b0(a,k)`, `b1(a,k)`, and `hb(a,k,c)` be the explicit Boolean formulas in the committed proof source. Define `bad(a,k,c)` by `b0` at c=0, `b1` at c=1, and `hb` for c>=2. The verified local Lean theorem `A7.bad_back` says that for *every* transition `BB6CLine.nextC s = some t`, if `bad(t)` then `bad(s)`. The root is good and every target (a,k,0) with a mod96=13,k mod96=31 is bad. Hence `A7.all_target_congruences_unreachable` shows this entire infinite target cylinder unreachable on the exact copied source CLine accelerated blank orbit.
+
+The six proof modules collectively use seven small finite exhaustive tables of at most 96x96, with `by decide` accepted by the local Lean kernel; separate all-natural modular-periodicity and branch proofs make the implication universal. The main theorem's axiom audit is exactly `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. Compile files in order OddFinite, OddPeriod, BackFinite, BackTheorems, BackStep, BackGoal. The source `CLine.lean` used in local compilation was a minimal byte-transcription of the repository's nextC and Reach declarations; this provenance limitation must be closed by a separate manual CI run importing the original `im-results/agent11-c-line/CLine.lean` verbatim.
+
+When source CI succeeds, combine this theorem with Agent41's `SecondMod96.second_target_5_29_mod96` and Agent15's authentic stopping criterion, and audit existing exclusions, before claiming new formal mathematical progress. The result does not decide every possible Machine C halting target.
+
+Local finite evidence: exact graph comparison at all 460800 abstract vertices and all 3575808 transitions; the backward set had 2258 vertices. A three-million-transition bounded raw falsification test also passed, but the fully quantified Lean theorem is the decisive object.
