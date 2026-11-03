@@ -156,5 +156,99 @@ theorem blank_halting_equiv :
     | none => rfl
     | some d => simp [hrun] at h
 
+
+-- Exact original BusyCoq Sk1Machines_v2.TM26.tm, the left-right reflection of row 411.
+def tm26 : Table
+| 0, false => some ⟨true, false, 1⟩
+| 0, true  => some ⟨false, false, 2⟩
+| 1, false => some ⟨true, true, 2⟩
+| 1, true  => some ⟨true, false, 2⟩
+| 2, false => some ⟨true, true, 3⟩
+| 2, true  => some ⟨false, false, 1⟩
+| 3, false => some ⟨true, true, 0⟩
+| 3, true  => some ⟨false, true, 4⟩
+| 4, false => some ⟨true, true, 5⟩
+| 4, true  => none
+| 5, false => some ⟨true, true, 2⟩
+| 5, true  => some ⟨true, false, 0⟩
+
+def mirrorInstr (i : Instr) : Instr := ⟨i.write, !i.right, i.next⟩
+
+theorem original_tm26_reflects_411 : ∀ s : Fin 6, ∀ bit : Bool,
+    (tm411 s bit).map mirrorInstr = tm26 s bit := by
+  decide
+
+def bareReflect (c : Config) : Config :=
+  ⟨c.state, -c.head, fun p => c.tape (-p)⟩
+
+theorem original_tm26_step_iso (c : Config) :
+    (step tm411 c).map bareReflect = step tm26 (bareReflect c) := by
+  have ht := original_tm26_reflects_411 c.state (c.tape c.head)
+  cases h : tm411 c.state (c.tape c.head) with
+  | none =>
+    simp only [h, Option.map_none] at ht
+    simp [step, h, ← ht, bareReflect]
+  | some i =>
+    simp only [h, Option.map_some] at ht
+    simp only [step, h, Option.map_some]
+    have ht' : tm26 (bareReflect c).state ((bareReflect c).tape (bareReflect c).head) = some (mirrorInstr i) := by
+      simpa [bareReflect] using ht.symm
+    rw [ht']
+    simp only [Option.map_some]
+    apply congrArg some
+    cases i with
+    | mk wr dir target =>
+      apply config_ext
+      · rfl
+      · cases dir <;> simp [bareReflect, mirrorInstr] <;> omega
+      · funext p
+        simp only [bareReflect, mirrorInstr]
+        by_cases hp : p = -c.head
+        · have hn : -p = c.head := (int_neg_eq_iff p c.head).2 hp
+          simp [hp, hn]
+        · have hn : -p ≠ c.head := by
+            intro heq
+            exact hp ((int_neg_eq_iff p c.head).1 heq)
+          simp [hp, hn]
+
+theorem original_tm26_run_iso (n : Nat) (c : Config) :
+    (run tm411 n c).map bareReflect = run tm26 n (bareReflect c) := by
+  induction n generalizing c with
+  | zero => rfl
+  | succ n ih =>
+    simp only [run]
+    rw [Option.map_bind]
+    cases hstep : step tm411 c with
+    | none =>
+      have hs : step tm26 (bareReflect c) = none := by
+        simpa [hstep] using (original_tm26_step_iso c).symm
+      simp [hstep, hs]
+    | some d =>
+      have hs : step tm26 (bareReflect c) = some (bareReflect d) := by
+        simpa [hstep] using (original_tm26_step_iso c).symm
+      simp [hstep, hs, ih]
+
+theorem original_tm26_blank_root : bareReflect (blank 0) = blank 0 := by
+  rfl
+
+theorem original_tm26_blank_halting_equiv :
+    (∃ n, run tm411 n (blank 0) = none) ↔
+    (∃ n, run tm26 n (blank 0) = none) := by
+  constructor
+  · rintro ⟨n, hn⟩
+    refine ⟨n, ?_⟩
+    have h := original_tm26_run_iso n (blank 0)
+    rw [hn, original_tm26_blank_root] at h
+    simpa using h.symm
+  · rintro ⟨n, hn⟩
+    refine ⟨n, ?_⟩
+    have h := original_tm26_run_iso n (blank 0)
+    rw [original_tm26_blank_root, hn] at h
+    cases hrun : run tm411 n (blank 0) with
+    | none => rfl
+    | some d => simp [hrun] at h
+
+#print axioms BB6.Agent12.RootPair.original_tm26_blank_halting_equiv
+
 #print axioms BB6.Agent12.RootPair.blank_halting_equiv
 end BB6.Agent12.RootPair
