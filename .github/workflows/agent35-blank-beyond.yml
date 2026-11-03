@@ -42,6 +42,12 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent25-cryptid-doublezero:im-results/agent36-cryptid-trace
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          python3 im-results/agent25-cryptid-doublezero/unpack_1101100.py
+          lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
+          lean -o im-results/agent31-cryptid-boundary/A1100First.olean im-results/agent31-cryptid-boundary/A1100First.lean
+          for module in A1101100 A1101100TraceDef A1101100TraceStep2 A1101100TraceNoPhysical; do
+            lean -DmaxRecDepth=8192 -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
+          done
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           lean -DmaxRecDepth=16384 -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
           lean -o im-results/agent26-cryptid-e-gate/EEmpty.olean im-results/agent26-cryptid-e-gate/EEmpty.lean
