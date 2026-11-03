@@ -1,0 +1,27 @@
+name: Agent 18 full finite parity coding (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Compile actual original Agent 18 B reduction and full parity theorem
+        run: |
+          cp im-results/agent18-b-cycle/BReduction.lean Agent18BReduction.lean
+          cp im-results/agent18-b-cycle/BParityFull.lean BParityFull.lean
+          lean -o Agent18BReduction.olean Agent18BReduction.lean
+          LEAN_PATH=. lean BParityFull.lean
+          if grep -nE '\\b(sorry|admit)\\b' BParityFull.lean; then exit 1; fi
