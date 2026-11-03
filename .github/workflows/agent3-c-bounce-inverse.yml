@@ -122,7 +122,9 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenOrbit.lean .
           lean -o OddSevenOrbit.olean OddSevenOrbit.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddForcedNormalize.lean .
-          lean OddForcedNormalize.lean
+          lean -o OddForcedNormalize.olean OddForcedNormalize.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddForcedFilter.lean .
+          lean OddForcedFilter.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
