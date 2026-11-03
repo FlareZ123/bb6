@@ -32,11 +32,14 @@ def census(q: int, root: int, max_resets: int = 2):
     seen = {(b0, d0, 0): 0}
     counts = Counter()
     closest = None
+    nonpositive = 0
     while queue:
         b, d, m, z = queue.popleft()
         assert b + d + 2 * m == mass, (q, root, b, d, m, z)
         counts[z] += 1
         gap = b - (4 * m + 64 * q + delta)
+        if gap <= 0:
+            nonpositive += 1
         if closest is None or abs(gap) < abs(closest[0]):
             closest = (gap, m, z)
         if b < 8 or b % 4 or d % 2 == 0:
@@ -55,19 +58,19 @@ def census(q: int, root: int, max_resets: int = 2):
                 continue
             seen[key] = m2
             queue.append((b2, d2, m2, nz))
-    return len(seen), counts, closest
+    return len(seen), counts, closest, nonpositive
 
 
 def main():
     total, gaps, counts = 0, Counter(), Counter()
     for q in range(1, 1001):
         for root in (0, 1):
-            nodes, sectors, closest = census(q, root)
+            nodes, sectors, closest, nonpositive = census(q, root)
             total += nodes
             counts.update(sectors)
-            gaps["positive" if closest[0] > 0 else ("zero" if closest[0] == 0 else "negative")] += 1
-            if closest[0] <= 0:
-                print("COUNTEREXAMPLE TO CANDIDATE GLOBAL GAP:", q, root, closest)
+            gaps["all_positive" if nonpositive == 0 else "some_nonpositive"] += 1
+            if nonpositive:
+                print("COUNTEREXAMPLE TO CANDIDATE GLOBAL GAP:", q, root, nonpositive, closest)
         if q % 200 == 0:
             print("checked q <=", q, "total nodes", total, "resets-count census", dict(counts), flush=True)
     print("FINAL nodes", total, "positive/zero/negative closest gaps", dict(gaps), "reset-count totals", dict(counts))
