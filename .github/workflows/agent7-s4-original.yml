@@ -35,6 +35,17 @@ jobs:
           lake env lean -o Agent7S4GateOriginal.olean Agent7S4GateOriginal.lean
           lake env lean Agent7S4GateExact.lean
           lake env lean Agent7S4Control.lean
+      - name: Check Agent 5 genuine S4 model source bridge
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-head/S4Phase.lean.xz.b64" | xz -dc > S4Phase.lean
+          echo "6f63cee92357a425db24131de7f43547503c06e982df2abc844e1d5c30ea293f  S4Phase.lean" | sha256sum -c -
+          export LEAN_PATH=.:${LEAN_PATH:-}
+          lake env lean -o S4Phase.olean S4Phase.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-source-bridge/S4UpstreamBridge.lean" S4UpstreamBridge.lean
+          echo "ec7e962b3f5cde2084168af3af39499cc70729bc483d348b8bd31f27c8531130  S4UpstreamBridge.lean" | sha256sum -c -
+          lake env lean S4UpstreamBridge.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
