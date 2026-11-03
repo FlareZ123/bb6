@@ -48,6 +48,9 @@ jobs:
           done
           lean -o im-results/agent1-p1-quarter/RootWallArithmetic.olean im-results/agent1-p1-quarter/RootWallArithmetic.lean
           lean -o im-results/agent1-p1-quarter/WallReset.olean im-results/agent1-p1-quarter/WallReset.lean
+          lean -o im-results/agent1-p1-quarter/DyadicDiff.olean im-results/agent1-p1-quarter/DyadicDiff.lean
+          lean -o im-results/agent1-p1-quarter/OneResetArithmetic.olean im-results/agent1-p1-quarter/OneResetArithmetic.lean
+          lean -o im-results/agent1-p1-quarter/L0OneResetBridge.olean im-results/agent1-p1-quarter/L0OneResetBridge.lean
           for m in QuarterGap QuarterCone QuarterFinal SecondFeederValuation; do
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
           done
