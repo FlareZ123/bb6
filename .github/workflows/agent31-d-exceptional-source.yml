@@ -47,3 +47,5 @@ jobs:
           lean -o im-results/agent35-d-regular-certificate/DObsSourceCandidate.olean im-results/agent35-d-regular-certificate/DObsSourceCandidate.lean
           lean im-results/agent31-d-exceptional/DRegularBSource.lean
           lean im-results/agent31-d-exceptional/DRegularESource.lean
+          lean -o im-results/agent32-cryptid-padding/PaddedApplications.olean im-results/agent32-cryptid-padding/PaddedApplications.lean
+          lean im-results/agent31-d-exceptional/DRegularELow.lean
