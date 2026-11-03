@@ -64,4 +64,5 @@ jobs:
           lean -o "$C/EDouble.olean" "$C/EDouble.lean"
           lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
           lean -o "$A/ExceptionalBRejoin.olean" "$A/ExceptionalBRejoin.lean"
-          lean "$A/BlankRootRejoin.lean"
+          lean -o "$A/BlankRootRejoin.olean" "$A/BlankRootRejoin.lean"
+          lean "$A/BlankAfterExceptionalRegular.lean"
