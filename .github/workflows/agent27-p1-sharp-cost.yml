@@ -24,6 +24,8 @@ jobs:
           echo "190f3310dc1e1ce55f644d20b94b512ea700488c33e4e6cd3b213a965c91f387  P1BudgetBridge.lean" | sha256sum -c -
           base64 -d P1SharpInfinite.lean.xz.b64 | xz -d > P1SharpInfinite.lean
           echo "3141b759bd9f1a88653b78d29b1cf1224384e4ed50033e132970557ecd7e3470  P1SharpInfinite.lean" | sha256sum -c -
+          base64 -d P1BudgetOffsetPure.lean.xz.b64 | xz -d > P1BudgetOffsetPure.lean
+          echo "336893c46393e36a80015720fda21a68e67cfce76e9bd5b3f83ed6e61dcbc5d7  P1BudgetOffsetPure.lean" | sha256sum -c -
       - name: Original source theorem and Lean axiom audit
         run: |
           set -e
@@ -41,3 +43,5 @@ jobs:
           lean im-results/agent27-p1-sharp-cost/P1BudgetBridge.lean
           lean -o im-results/agent27-p1-sharp-cost/P1SharpInfinite.olean im-results/agent27-p1-sharp-cost/P1SharpInfinite.lean
           lean im-results/agent27-p1-sharp-cost/P1SharpInfiniteBridge.lean
+          lean -o im-results/agent27-p1-sharp-cost/P1BudgetOffsetPure.olean im-results/agent27-p1-sharp-cost/P1BudgetOffsetPure.lean
+          lean im-results/agent27-p1-sharp-cost/P1BudgetTwoSector.lean
