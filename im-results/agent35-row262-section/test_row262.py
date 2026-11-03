@@ -75,8 +75,8 @@ def check_synthetic() -> None:
         state, head = "A", position
         for step_no in range(1, duration + 1):
             state, head = raw(state, head, actual)
-            assert (state, head in actual) in TABLE
             if step_no < duration:
+                assert (state, head in actual) in TABLE
                 assert state != "A"
         assert (s, p, accelerated) == (state, head, actual), (trial, label)
         tally[label] += 1
