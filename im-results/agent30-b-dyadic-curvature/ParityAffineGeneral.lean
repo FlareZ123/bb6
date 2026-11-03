@@ -120,4 +120,12 @@ private theorem affine_second_mod (m a b x t : Nat) (f : Nat → Nat)
     _ = (2%m * (f (x+t)%m))%m := by rw [h (x+t)]
     _ = (2*f (x+t))%m := (Nat.mul_mod _ _ _).symm
 
+private theorem mod_eq_gap_dvd (m u v d : Nat)
+    (h : u%m=v%m) (heq : u+d=v) : m∣d := by
+  obtain ⟨k1,k2,hk⟩ := Nat.mod_eq_mod_iff.mp h
+  have hd1 : m∣k1*m := ⟨k1, by simp [Nat.mul_comm]⟩
+  have hd2 : m∣k2*m := ⟨k2, by simp [Nat.mul_comm]⟩
+  have hs : k1*m-k2*m=d := by omega
+  simpa [hs] using Nat.dvd_sub hd1 hd2
+
 end BB6.Agent30Generic
