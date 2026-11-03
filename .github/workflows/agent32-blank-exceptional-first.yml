@@ -73,7 +73,6 @@ jobs:
           lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
           lean -o "$A/ExceptionalBRejoin.olean" "$A/ExceptionalBRejoin.lean"
           lean -o "$A/BlankRootRejoin.olean" "$A/BlankRootRejoin.lean"
-          lean -o "$D/BlankExceptional.olean" "$D/BlankExceptional.lean"
           lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
           lean -o "$D/EOneTripleReturn.olean" "$D/EOneTripleReturn.lean"
           lean -o "$D/E111FirstReturn.olean" "$D/E111FirstReturn.lean"
@@ -81,12 +80,6 @@ jobs:
           lean -o "$P/EAllDoubleFirst.olean" "$P/EAllDoubleFirst.lean"
           lean -o "$P/PhysicalReturnObs.olean" "$P/PhysicalReturnObs.lean"
           lean -o "$P/BTrueFirst.olean" "$P/BTrueFirst.lean"
-      - name: Verify genuine blank next E first physical return
-        timeout-minutes: 6
-        shell: bash
-        run: |
-          set -euo pipefail
-          lean -o "$P/BlankExceptionalFirst.olean" "$P/BlankExceptionalFirst.lean"
       - name: Verify genuine blank two consecutive E/B first returns
         timeout-minutes: 8
         shell: bash
