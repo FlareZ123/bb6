@@ -1,0 +1,60 @@
+{
+  "source_snapshot": "resources/BB6_holdouts_663_2026-10-16.txt",
+  "source_digest_oct24": "https://github.com/Yeyito777/bbchallenge-corpus/blob/32869adbaef967d9e43bc97f1ed13c076558a71d/knowledge/discord/bb6/chat/2026-10-21--2026-10-26.md",
+  "source_digest_oct27": "https://github.com/Yeyito777/bbchallenge-corpus/blob/32869adbaef967d9e43bc97f1ed13c076558a71d/knowledge/discord/bb6/chat/2026-10-27--2026-10-29.md",
+  "provenance_note": "The Discord digests are third-party automatically compiled summaries and not original Rocq proof files. Their report of mxdys's Rocq confirmations has not been independently kernel-checked here. Status records are dated external reports, not claims of newly established proof in this repository.",
+  "reported_halts": [
+    {
+      "rle": "1RB1RE_1LC0RD_1LD0LD_1RA0LC_0LB0RF_0RA---",
+      "reported_date": "2026-10-24",
+      "reported_verification": "mxdys Rocq confirmation; two different block-size reruns",
+      "steps": "15074368710199",
+      "ones": 2848561,
+      "source_digest": "oct24",
+      "source_message": "https://discord.com/channels/960643023006490684/1239205785913790465/1563597080176500877"
+    },
+    {
+      "rle": "1RB1LD_1RC0RB_0LA1RE_1LA0LB_0RA0RF_---0LC",
+      "reported_date": "2026-10-24",
+      "reported_verification": "mxdys Rocq confirmation; two different block-size reruns",
+      "steps": "28061938903302",
+      "ones": 56005,
+      "source_digest": "oct24",
+      "source_message": "https://discord.com/channels/960643023006490684/1239205785913790465/1563633821340012565"
+    },
+    {
+      "rle": "1RB1RE_1LC1LE_0RD0LB_1RF1RA_0RC0RE_0RA---",
+      "reported_date": "2026-10-27",
+      "reported_verification": "mxdys Rocq confirmation reported October 27",
+      "steps": "81681887106169",
+      "ones": 3026039,
+      "steps_source": "October 25 preliminary simulation, retained because matching Rocq confirmation report identified the same exact RLE, no primary proof-of-count checked",
+      "source_digest": "oct27",
+      "source_message": "https://discord.com/channels/960643023006490684/1239205785913790465/1564592221603495937"
+    },
+    {
+      "rle": "1RB0LC_1LA1RD_1LA0LC_0RE---_0RF1RF_0RA0LB",
+      "reported_date": "2026-10-27",
+      "reported_verification": "mxdys Rocq confirmation reported October 27",
+      "steps": "62819215114064",
+      "ones": 136392,
+      "steps_source": "October 25 preliminary simulation, retained because matching Rocq confirmation report identified the same exact RLE, no primary proof-of-count checked",
+      "source_digest": "oct27",
+      "source_message": "https://discord.com/channels/960643023006490684/1239205785913790465/1564618817127059597"
+    },
+    {
+      "rle": "1RB0RA_1LC0RA_1RB1LD_0LE---_0LF1LF_0LB0RC",
+      "reported_date": "2026-10-27",
+      "reported_verification": "mxdys Rocq confirmation reported October 27",
+      "steps": null,
+      "ones": null,
+      "source_digest": "oct27",
+      "source_message": "https://discord.com/channels/960643023006490684/1239205785913790465/1564960844679479431"
+    }
+  ],
+  "known_alias": {
+    "rle": "1RB1LC_1RD0RB_1LA0LB_0LA1RE_0RA0RF_---0LD",
+    "root_equivalent_to": "1RB1LD_1RC0RB_0LA1RE_1LA0LB_0RA0RF_---0LC",
+    "provenance": "October 27 Discord discussion corrected a falsely new halter via state relabeling; exact canonical normalized table and initial root are the same"
+  }
+}
