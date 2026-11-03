@@ -55,6 +55,35 @@ theorem V_margin (l:Nat) (hl:4≤l):
       subst l
       decide
 
+theorem U_strong (l:Nat) (hl:4≤l):18*l+126 ≤ 2*rayU (l+3):=by
+  induction l with
+  | zero => omega
+  | succ l ih =>
+    by_cases hp:4≤l
+    · have hh:=ih hp
+      have heq:l+1+3=(l+3)+1:=by omega
+      rw [heq]
+      change 18*(l+1)+126 ≤ 2*(2*rayU (l+3)+3)
+      omega
+    · have hh:l=3:=by omega
+      subst l
+      decide
+
+theorem V_margin_strong (l:Nat) (hl:4≤l):
+  2*rayU (l+3)+9*l+82 ≤ 4*rayV l := by
+  induction l with
+  | zero => omega
+  | succ l ih =>
+    by_cases hp:4≤l
+    · have hh:=ih hp
+      have heq:l+1+3=(l+3)+1:=by omega
+      rw [heq]
+      change 2*(2*rayU (l+3)+3)+9*(l+1)+82 ≤ 4*(2*rayV l+3)
+      omega
+    · have hh:l=3:=by omega
+      subst l
+      decide
+
 theorem typical_U_to_U (k w r z:Nat)
   (hk:6≤k) (hmod:k%4=2) (hwm:w%4=0)
   (hrm:r%4=2) (heq:w+r+4=2*rayU k)
@@ -78,13 +107,13 @@ theorem typical_U_to_U (k w r z:Nat)
   simpa only [hsub] using hrun
 
 theorem U_to_V (l u z:Nat) (hu:u=rayU (l+3))
-  (hl:4≤l) (hlm:l%4=0) (hz:z%4=3) (hzbd:z≤3*l+7):
+  (hl:4≤l) (hlm:l%4=0) (hz:z%4=3) (hzbd:z≤6*l+47):
   run (l+2) (u,z) =
     some (rayV l,(2*u+z+9)-demandV l) := by
   have hh:u%2=1:=by rw [hu];have h:=U_mod (l+3) (by omega);omega
   have hu11:11≤u:=by rw [hu];have h:=U_linear (l+3) (by omega);omega
   have hh2:3*z≤2*u+15:=by
-    have he:=U_linear (l+3) (by omega)
+    have he:=U_strong l hl
     rw [hu]
     omega
   have htwo:=BB429ElevenOddExtension.odd_even_two_step u z hh hu11 hz hh2
@@ -106,7 +135,7 @@ theorem typical_U_to_V (k w r z:Nat)
   have htime:2*k+2=(k+2)+((k-2)+2):=by omega
   have hu:= typical_U_to_U k w r z hk hmod hwm hrm heq hr hz
   have hzmod:z%4=3:=by omega
-  have hzb:z≤3*(k-2)+7:=by omega
+  have hzb:z≤6*(k-2)+47:=by omega
   have hv:=U_to_V (k-2) (rayU (k+1)) z (by rw [hl]) (by omega) (by omega) hzmod hzb
   rw [htime,BB429Escape.run_add,hu]
   simpa only [Option.bind_some] using hv
@@ -141,9 +170,9 @@ theorem typical_U_to_V_even (k w r z:Nat)
   have hzb:z≤3*l+7:=by dsimp [l];omega
   have hge: v≤u:=by dsimp [u,v];rw [←hl];exact U3_ge_V l
   have hbalance:=v_balance l
-  have hmargin:=V_margin l hlu
-  have hmarginUV:2*u+6*l+56≤4*v:=by
-    change 2*rayU (k+1)+6*l+56≤4*rayV l
+  have hmargin:=V_margin_strong l hlu
+  have hmarginUV:2*u+9*l+82≤4*v:=by
+    change 2*rayU (k+1)+9*l+82≤4*rayV l
     rw [←hl]
     exact hmargin
   have hdb:demandV l≤W:=by dsimp [W];omega
