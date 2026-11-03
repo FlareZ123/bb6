@@ -101,6 +101,21 @@ theorem bPop_step (q : Nat) (L ys : List Bool) :
   run 4 (bPop (q+1) L ys) = bPop q L (false::true::ys) := by
   simp [bPop,oppairs,run,step,goL,goR]
 
+theorem bPop_run (q : Nat) (L ys : List Bool) :
+  run (4*q) (bPop q L ys) = ⟨L,false,oppairs q ++ ys,1⟩ := by
+  induction q generalizing ys with
+  | zero => simp [bPop,run,oppairs]
+  | succ q ih =>
+    have ht : 4*(q+1) = 4+4*q := by omega
+    rw [ht,run_add,bPop_step,ih]
+    have hstack : oppairs q ++ (false::true::ys) =
+        oppairs (q+1) ++ ys := by
+      calc
+        _ = (oppairs q ++ [false,true]) ++ ys := by simp [List.append_assoc]
+        _ = ([false,true] ++ oppairs q) ++ ys := by rw [oppairs_comm_one]
+        _ = _ := by simp [oppairs]
+    exact congrArg (fun z : List Bool => Cfg.mk L false z 1) hstack
+
 theorem aTriple8 (L ys : List Bool) :
   run 8 (⟨L,false,[true,true,true]++ys,0⟩ : Cfg) =
     ⟨L,false,[false,true,false]++ys,1⟩ := by
@@ -208,5 +223,138 @@ theorem eTriplePairs_front_noF (m q : Nat) (ys : List Bool) :
   simpa only [hn] using hf
 
 
+/-- Exact E boundary endpoint and strict first F entry for all m,q,ys
+    under the independently implemented original six-state literal action table. -/
+def sweepB (m : Nat) (ys : List Bool) : Cfg :=
+  ⟨pairs m ++ [true,true],false,ys,1⟩
+
+private theorem eTriplePairs_front (m q : Nat) (ys : List Bool) :
+  run (6*q+16) (eTriplePairs m q ys) =
+    sweepB m (oppairs (q+2) ++ false::ys) := by
+  have ht : 6*q+16 = (2+2*(q+1)) + (8+4*(q+1)) := by omega
+  rw [ht, run_add (2+2*(q+1)) (8+4*(q+1)),
+    run_add 2 (2*(q+1)), eTriplePairs_two, scan_run]
+  change run (8+4*(q+1))
+    (⟨oppairs (q+1) ++ (pairs m ++ [true,true]), false,
+      [true,true,true] ++ ys, 0⟩ : Cfg) = _
+  rw [run_add 8 (4*(q+1)), aTriple8]
+  change run (4*(q+1))
+    (bPop (q+1) (pairs m ++ [true,true]) ([false,true,false] ++ ys)) = _
+  rw [bPop_run]
+  have hR : oppairs (q+1) ++ ([false,true,false] ++ ys) =
+      oppairs (q+2) ++ false::ys := by
+    calc
+      _ = (oppairs (q+1) ++ [false,true]) ++ false::ys := by
+        simp [List.append_assoc]
+      _ = ([false,true] ++ oppairs (q+1)) ++ false::ys := by
+        rw [oppairs_comm_one]
+      _ = _ := by simp [oppairs]
+  exact congrArg (fun z : List Bool => sweepB m z) hR
+
+def dMid (m : Nat) (ys : List Bool) : Cfg :=
+  ⟨pairs m ++ [true,true],false,ys,3⟩
+
+private theorem dMid_two (m : Nat) (ys : List Bool) :
+  run 2 (dMid (m+1) ys) = dMid m (true::true::ys) := by
+  simp [dMid,pairs,run,step,goL,goR]
+
+private theorem sweepB_two (m : Nat) (ys : List Bool) :
+  run 2 (sweepB (m+1) ys) = dMid m (true::true::ys) := by
+  simp [sweepB,dMid,pairs,run,step,goL,goR]
+
+private theorem dMid_run (m : Nat) (ys : List Bool) :
+  run (2*m+3) (dMid m ys) =
+    ⟨[],false,List.replicate (2*m+3) true ++ ys,5⟩ := by
+  induction m generalizing ys with
+  | zero => simp [dMid,run,step,goL,goR,pairs]
+  | succ m ih =>
+    have ht : 2*(m+1)+3 = 2+(2*m+3) := by omega
+    rw [ht,run_add,dMid_two,ih]
+    have hrep : List.replicate (2*m+3) true ++ (true::true::ys) =
+        List.replicate (2+(2*m+3)) true ++ ys := by
+      calc
+        _ = (List.replicate (2*m+3) true ++ List.replicate 2 true) ++ ys := by
+          simp [List.append_assoc]
+        _ = List.replicate ((2*m+3)+2) true ++ ys := by
+          rw [List.replicate_append_replicate]
+        _ = _ := by rw [show (2*m+3)+2=2+(2*m+3) by omega]
+    exact congrArg (fun z : List Bool => Cfg.mk [] false z 5) hrep
+
+private theorem sweepB_run (m : Nat) (ys : List Bool) :
+  run (2*m+3) (sweepB m ys) =
+    ⟨[],false,List.replicate (2*m+3) true ++ ys,5⟩ := by
+  cases m with
+  | zero => simp [sweepB,run,step,goL,goR,pairs]
+  | succ m =>
+    have ht : 2*(m+1)+3 = 2+(2*m+3) := by omega
+    rw [ht,run_add,sweepB_two,dMid_run]
+    have hrep : List.replicate (2*m+3) true ++ (true::true::ys) =
+        List.replicate (2+(2*m+3)) true ++ ys := by
+      calc
+        _ = (List.replicate (2*m+3) true ++ List.replicate 2 true) ++ ys := by
+          simp [List.append_assoc]
+        _ = List.replicate ((2*m+3)+2) true ++ ys := by
+          rw [List.replicate_append_replicate]
+        _ = _ := by rw [show (2*m+3)+2=2+(2*m+3) by omega]
+    exact congrArg (fun z : List Bool => Cfg.mk [] false z 5) hrep
+
+private theorem dMid_noF (m : Nat) (ys : List Bool) :
+    NoF (dMid m ys) (2*m+3) := by
+  induction m generalizing ys with
+  | zero =>
+    intro t ht
+    have hcases : t=0 ∨ t=1 ∨ t=2 := by omega
+    rcases hcases with rfl | rfl | rfl
+    all_goals simp [dMid,run,step,goL,goR,pairs]
+  | succ m ih =>
+    have htime : 2*(m+1)+3=2+(2*m+3) := by omega
+    rw [htime]
+    apply append_noF (dMid (m+1) ys) (dMid m (true::true::ys))
+      2 (2*m+3)
+    · intro t ht
+      have hcases : t=0 ∨ t=1 := by omega
+      rcases hcases with rfl | rfl
+      all_goals simp [dMid,run,step,goL,goR,pairs]
+    · exact dMid_two m ys
+    · exact ih (true::true::ys)
+
+private theorem sweepB_noF (m : Nat) (ys : List Bool) :
+    NoF (sweepB m ys) (2*m+3) := by
+  cases m with
+  | zero =>
+    intro t ht
+    have hcases : t=0 ∨ t=1 ∨ t=2 := by omega
+    rcases hcases with rfl | rfl | rfl
+    all_goals simp [sweepB,run,step,goL,goR,pairs]
+  | succ m =>
+    have htime : 2*(m+1)+3 = 2+(2*m+3) := by omega
+    rw [htime]
+    apply append_noF (sweepB (m+1) ys) (dMid m (true::true::ys))
+      2 (2*m+3)
+    · intro t ht
+      have hcases : t=0 ∨ t=1 := by omega
+      rcases hcases with rfl | rfl
+      all_goals simp [sweepB,run,step,goL,goR,pairs]
+    · exact sweepB_two m ys
+    · exact dMid_noF m (true::true::ys)
+
+/-- All parameters: exact endpoint and no earlier entry to F anywhere in the
+    full E-triple-pairs boundary, including the final variable B sweep. -/
+theorem eTriplePairs_firstF (m q : Nat) (ys : List Bool) :
+    run (2*m+6*q+19) (eTriplePairs m q ys) =
+      ⟨[],false,List.replicate (2*m+3) true ++ (oppairs (q+2) ++ false::ys),5⟩ ∧
+    NoF (eTriplePairs m q ys) (2*m+6*q+19) := by
+  have ht : 2*m+6*q+19=(6*q+16)+(2*m+3) := by omega
+  constructor
+  · rw [ht,run_add,eTriplePairs_front]
+    exact sweepB_run m (oppairs (q+2) ++ false::ys)
+  · rw [ht]
+    exact append_noF (eTriplePairs m q ys)
+      (sweepB m (oppairs (q+2) ++ false::ys))
+      (6*q+16) (2*m+3)
+      (eTriplePairs_front_noF m q ys) (eTriplePairs_front m q ys)
+      (sweepB_noF m (oppairs (q+2) ++ false::ys))
+
 #print axioms eTriplePairs_front_noF
+#print axioms eTriplePairs_firstF
 end DTripleStandalone
