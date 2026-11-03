@@ -1,17 +1,17 @@
 # Machine C odd–odd inverse wedge and a new high-halting gateway exclusion
 
-**Agent 3, 2026-11-03.** Intermediate research in the genuine blank-start Machine C section. Neither Machine C nonhalting nor BB(6) is decided. Original-source [manual Lean verification run 41689579194](https://github.com/FlareZ123/bb6/actions/runs/41689579194) was dispatched at 18:00 UTC; examine its final result before treating the theorems as source-certified.
+**Agent 3, 2026-11-03.** Intermediate research in the genuine blank-start Machine C section. Neither Machine C nonhalting nor BB(6) is decided. **Fully certified against original unchanged source** in manual [CI run 41689579194](https://github.com/FlareZ123/bb6/actions/runs/41689579194) at 18:03 UTC and strengthened-source [CI run 41690493736](https://github.com/FlareZ123/bb6/actions/runs/41690493736) at 18:08 UTC. Both actual runner jobs completed SUCCESS; the latter checked all five new theorems with axioms exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
 
 ## General inverse theorem
 
-For all natural coordinates `a,k,x,y`, with `x%2=y%2=1`, `y>=5`, and `(x+y)%16=4`, the original Machine C first-return section obeys
+For all natural coordinates `a,k,x,y`, with `x%2=y%2=1`, `y>=5`, and `(x+y)%8=4`, the original Machine C first-return section obeys
 
 ```
 secNext (a,k) = some (x,y)
   ↔ x+y=2*a+4 AND x+3*y=4*k+10.
 ```
 
-Thus the unique exact predecessor, when the displayed arithmetic has integral nonnegative solutions, is `a=(x+y-4)/2` and `k=(x+3*y-10)/4`. The proof `oddodd_parent_iff` in [OddOddWedge.lean](./OddOddWedge.lean) uses the pre-existing source-exact all-branch inverse theorem `BB6.Agent46.section_preimage_all_iff`; 2-adic parity eliminates every recursive depth except zero, while the converse validates the resulting true source edge. The `y>=5` guard handles the low exceptional transitions.
+Thus the unique exact predecessor, when the displayed arithmetic has integral nonnegative solutions, is `a=(x+y-4)/2` and `k=(x+3*y-10)/4`. The proof `oddodd_parent_iff` in [OddOddWedge.lean](./OddOddWedge.lean) uses the pre-existing source-exact all-branch inverse theorem `BB6.Agent46.section_preimage_all_iff`; 2-adic parity eliminates every recursive depth except zero, while the converse validates the resulting true source edge. The `y>=5` guard handles the low exceptional transitions. The stronger condition `(x+y)%8=4` exactly says the 2-adic valuation of the sum is two; it includes both `4` and `12` modulo 16. The constructive [OddOddOrbit.lean](./OddOddOrbit.lean) establishes that **every** such target has exactly one genuine predecessor, with the displayed coordinates, and that genuine blank-orbit reachability of a target is equivalent to that of its predecessor, for all natural times. The preceding file derives its specialized halting-family consequence using a particular parent family.
 
 ## Two-dimensional blank-unreachable family
 
@@ -50,6 +50,6 @@ To test whether the inference merely restated an existing finite-quotient exclus
 
 ## Reproduction and limitations
 
-[OddOddWedge.lean](./OddOddWedge.lean) imports the original [OddSevenSliver.lean](./OddSevenSliver.lean), thereby importing the complete original section and its exact predecessor calculus. The existing **manual-only** `.github/workflows/agent3-c-bounce-inverse.yml` now compiles both `OddSevenSliver.olean` and `OddOddWedge.lean`, with `balanced_only=true` skipping unrelated later jobs. A local Lean 4.36.0-rc2 check proved the new file under *explicit theorem-shaped assumptions* for `section_preimage_all_iff` and `odd_seven_slope_blank_unreachable`; this local check alone is not original-source certification. Its source job above establishes the decisive proof status.
+[OddOddWedge.lean](./OddOddWedge.lean) imports the original [OddSevenSliver.lean](./OddSevenSliver.lean), thereby importing the complete original section and its exact predecessor calculus. The existing **manual-only** `.github/workflows/agent3-c-bounce-inverse.yml` now compiles both `OddSevenSliver.olean` and `OddOddWedge.lean`, with `balanced_only=true` skipping unrelated later jobs. Before the successful original-source CI, a local Lean 4.36.0-rc2 check proved the new file under *explicit theorem-shaped assumptions* for `section_preimage_all_iff` and `odd_seven_slope_blank_unreachable`. The final pinned original-source CI 41690493736 compiled the actual full dependencies, both odd–odd modules, and all `#print axioms` audits with only the three standard Lean axioms.
 
 Next mathematical question: can the exact odd–odd predecessor wedge be lifted into a uniform backward-invariant obstruction for **all** surviving higher stopping parameters, rather than expanding parameter-wise congruence exclusions? Compare with all recent source-certified Machine C algebra before academic promotion. Keep this intermediate work in `im-results/`.
