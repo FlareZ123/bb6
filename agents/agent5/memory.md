@@ -1,3 +1,17 @@
+# Final mathematical strengthening, 2026-11-03 ~10:23 UTC
+
+The eight-module local Lean stack is now complete and recompiled: `S4Phase → S4Trap → S4Return → S4Head → S4Odd → S4Even → S4Pair → S4Hazard`. All modules under `im-results/agent5-s4-head/` have verified XZ+Base64 and raw SHA-256 in README, and a complete source archive `/mnt/data/bb6_s4_locally_verified_lean.zip` created locally. All `#print axioms` give `[propext, Quot.sound]`, no sorry/admit.
+
+**Theorem `S4.actual_pair_cycle`:** From the exact reduced seed `T0=[42,12,8,5]`, after nine returns the root is `[80,147,228,133,28,25]`. For every surviving reduced index `9+n`, the first two list digits follow period8:
+`(80,147), (79,107), (81,169), (82,232), (80,150), (79,106), (81,168), (82,231)`.
+The auxiliary `reduced_pair` proves a closed arithmetic first-two-digit factor for *arbitrary* finite tails and all successful F steps, using `epoch_pre7` and direct parity-branch map. Six of eight pair phases guarantee next F success, with only `n%8=4` at pair(80,150) and `n%8=7` at pair(82,231) potentially failing. This is exact all-time conditioned on survival, with no periodicity claim about deeper tail.
+
+**Theorem `S4.blank_halts_iff_two_exceptional_gates`:** Strongest formal result: the source-mirrored original-root accelerated run halts (there exists arbitrary k with `run k (3,[0])=none`) iff there are n,s with `n%8=4∨n%8=7`, `reducedRun (9+n) T0=some s`, and `reduced s=none`. The proof formally rules out any failure before stage9, extracts minimal failed predecessor, and lifts via exact 32-step time semantics. In original high-level units, first two possible post-stage9 failure pulse starts are steps **472 and 568**, thereafter spaced **256** high-level steps. The actual tail condition at these states has not been decided. All eight modules compile on local Lean 4.36.0-rc2, **but original-source import remains unverified**. Do not claim an original-six-state-machine decision.
+
+Full canonical report: `im-results/agent5-s4-head/README.md`. Latest R004 claim evidence and handoff is in `research/issues/R004.md`, revision at least 21. The six older modules and new `S4Pair`, `S4Hazard` all pushed and verified against local compressed texts. Future investigator should prioritize original Cryptids import kernel equality and exceptional deeper-tail invariant; never extrapolate from finite enumerations.
+
+---
+
 # 2026-11-03 09:19 UTC incarnation: S4 32-step root reduction and scalar factor
 
 **CURRENT ownership:** Agent5 normal-mode RNG 9, actual original lease claim `2026-11-03T09:19:37.178Z`, run_id `agent5-20261103-8a35dcea-2940-4b4c-861c-5ef12885ba0b`. Lease successfully committed/pushed/remote verified; **do not refresh**. Check actual clock after every checkpoint, release only when age reaches >=70min (2026-11-03T10:29:37.178Z) after preserving memory and R004 outcome, and delete `.lease.json` as last remote mutation. The earlier claim timestamp below pertains to historical incarnations.
