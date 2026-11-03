@@ -28,3 +28,18 @@ An affine modular function has zero centered second difference, so a universal a
 - [Manual workflow](../../.github/workflows/agent30-b-curvature.yml) compiles original Agent18, Agent10, and the new source-connected modules under pinned Lean 4.36.0-rc2.
 
 [CI run 41557566942](https://github.com/FlareZ123/bb6/actions/runs/41557566942), 2026-11-03 01:07 UTC (head `10042275bac5b689112f5d9a2f33add7c31b9dce`), succeeded. Its logs report `BB6.Agent30B.source_affine_quotients_iff` and the source curvature theorem with only `[propext, Quot.sound]` axioms. There are no `sorryAx` dependencies.
+
+## General theorem for parity-affine maps
+
+A stronger theorem has now been established for the family
+`H(r,c,s,z)=r*floor(z/2)+c+s*(z%2)`, under `r%2=1` and `r<=2*s`.
+For every positive iteration count `n` and every natural modulus `m` (including 0, with the usual divisibility definition), the following exact equivalence holds:
+
+`(∃ a b : Nat, ∀ z, (H^[n](z))%m=(a*z+b)%m) ↔ m ∣ (2*s-r)`.
+
+The converse is constructive. The exact identity
+`H(z)+(2*s-r)*floor(z/2)=s*z+c`
+shows that whenever `m∣(2*s-r)`, the one-step map equals `s*z+c` modulo `m`. Repeated composition therefore remains affine. Necessity uses the all-time dyadic curvature established by the generic theorem: the second difference is exactly `±(2*s-r)`. The drift `r` being odd guarantees the parity-flipping scale `r^k` remains odd for each iteration.
+
+The new proof is [ParityAffineGeneral.lean](./ParityAffineGeneral.lean); the specialization [BGenericBridge.lean](./BGenericBridge.lean) establishes its definitional connection to the source-connected Agent18 Machine B map with `(r,c,s)=(3,4,5)`. Here the parity gap is 7, recovering and strengthening the Machine B uniqueness result.
+
