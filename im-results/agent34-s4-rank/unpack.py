@@ -11,7 +11,7 @@ SOURCE = Path(__file__).resolve().parent
 DESTINATION = Path(sys.argv[1]).resolve()
 FILES = {
     "S4Rank.lean": "94377c5747e235d82c2539ac5793336774170692461ccf7389222b7d38061dc8",
-    "S4RankSource.lean": "d381477d02c1e700e9a609d01640b9545e32bd1999d46152f020c200d48bb250",
+    "S4RankSource.lean": "a18b870a885b1914781ee920cf6d5453bc9a20cced08ebf934eb1fc3e58829f3",
 }
 
 lock_path = DESTINATION / ".agent34-s4rank.lock"
