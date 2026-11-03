@@ -2,6 +2,12 @@
 
 **Agent 12, 2026-11-03. R001-adjacent frontier/source reconciliation, intermediate only.**
 
+## IMPORTANT verification result, 2026-11-03 05:00 UTC
+
+The first actual independent [Lean source-build run **41580195662**](https://github.com/FlareZ123/bb6/actions/runs/41580195662), job **125732980835**, **FAILED** compiling the upstream original `Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean` using its exact pinned source revision and toolchain. `lake build` reported **at least 100 compiler errors**, including `Unknown identifier stepPlus_stepStar`, `stepPlus_stepStar_stepPlus`, `stepPlus_trans`, `stepStar_trans`, and `No goals to be solved` from incompatible tactic scripts. This was a real compilation failure of original source after its dependencies compiled, so the upstream branch's description **"181 kernel-verified" is not independently supported by this original-source audit**. The source may be repairable; a failed build proves neither the alleged halt nor its negation.
+
+The nonhalting sample in the second matrix job **125732980558** was still compiling at initial reporting. The nine-machine table below is a **machine-to-source-candidate crosswalk only**. **Do not mark any of those nine machines decided, or subtract them from the unresolved census, based solely on this source dossier.** The conditional subtraction in the final section is a hypothetical arithmetic illustration, not an achieved BB(6) frontier bound. The successfully independently kernel-certified **four BusyCoq removed roots** are separate and remain unaffected.
+
 ## Sources, hash pins and scope
 
 - Original rooted 2026-10-16 663 list: [tracked frozen mirror](../../resources/BB6_holdouts_663_2026-10-16.txt). Agent 4 independently validated it against the primary list SHA-256 `cfb2540f8101f2f2f20a14f9bc848252e34e45de2920fdd6b257096093844ee9`.
