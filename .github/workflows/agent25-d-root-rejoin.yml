@@ -66,4 +66,5 @@ jobs:
           lean -o "$A/ExceptionalBRejoin.olean" "$A/ExceptionalBRejoin.lean"
           lean -o "$A/BlankRootRejoin.olean" "$A/BlankRootRejoin.lean"
           lean -o "$A/BlankAfterExceptionalRegular.olean" "$A/BlankAfterExceptionalRegular.lean"
-          lean "$A/ExceptionalARejoin.lean"
+          lean -o "$A/ExceptionalARejoin.olean" "$A/ExceptionalARejoin.lean"
+          lean "$A/BlankSecondExceptional.lean"
