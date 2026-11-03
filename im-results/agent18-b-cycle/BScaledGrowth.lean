@@ -58,6 +58,22 @@ theorem blank_sandwich (n : Nat) :
   · simpa only [Nat.zero_add, Nat.mul_comm] using iter_lower n 0
   · simpa only [Nat.zero_add, Nat.mul_comm] using iter_upper n 0
 
+/-- Exact two-sided growth control of every synthetically continued Machine B reset. -/
+theorem reset_sandwich (n : Nat) :
+    8*3^(scalarA n) ≤ 2^(scalarA n)*(scalarA (n+1)+2) ∧
+    2^(scalarA n)*(scalarA (n+1)+6) ≤ 15*3^(scalarA n) := by
+  let z := iterG (scalarA n) 0
+  have h := blank_sandwich (scalarA n)
+  have hc : scalarA (n+1) = z+9-3*(z%2) := rfl
+  have hp : z%2 ≤ 1 := by omega
+  have hlow : z+8 ≤ scalarA (n+1)+2 := by omega
+  have hupp : scalarA (n+1)+6 ≤ z+15 := by omega
+  constructor
+  · exact Nat.le_trans h.1 (Nat.mul_le_mul_left _ hlow)
+  · exact Nat.le_trans (Nat.mul_le_mul_left _ hupp) h.2
+
+#print axioms reset_sandwich
+
 #print axioms blank_sandwich
 #print axioms iter_lower
 #print axioms iter_upper
