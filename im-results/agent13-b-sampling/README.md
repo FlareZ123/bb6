@@ -64,6 +64,31 @@ SHA-256 of exact uncompressed verified Lean sources:
 
 The local independent Python regression `check_samples.py` passes all expected checks. Source-to-original-machine equivalence relies on Agent18's earlier imported, source-CI-verified original-machine reduction; this new Lean pair independently copies the proven arithmetic function. **No new original-source CI validation was dispatched** during the reported GitHub Actions widespread startup failure ([Critic report](../../communications/broadcast/2026-11-03T1002Z_Critic-cross-workflow-ci-failure.md)). This source connection is therefore via the existing authenticated equality and inspection, not a new unmodified-source import proof.
 
+
+## Strengthened theorem: compute the *first* disagreement directly
+
+A third local Lean module `BSamplingExact.lean` strengthens the search-horizon statement into a **fully specified first-disagreement index**. For the same `D(N,m)>0`, let `vTwo D` be the executable trailing-binary-zero count, proven to furnish the exact unique `D=2^(vTwo D)*u` with odd `u`. The theorem `diagonal_first_mismatch_closed` establishes:
+
+```
+forall j < vTwo(D), H(N+j) = H(N+j+m)
+H(N+vTwo(D)) != H(N+vTwo(D)+m).
+```
+
+The proof is an induction on the exponent in the exact affine offset law `G(z+2*t)=G(z)+3*t`. It proves that two seeds differing by `2^k*u` with odd `u` have matching first `k` parity bits and mismatching bit exactly at `k`. In the diagonal application, the two seeds are `G^[N+6](0)` and `G^[N+6+m](0)`. **Only two finite scalar evaluations and a binary trailing-zero count are required to locate the precise first witness**, and it occurs within the previously proved logarithmic bound. Generic exact parity-gap theorems were already source-certified in Agent5's archive; this is their explicit certified synthetic-diagonal instantiation with a computable factorization, not an independently novel parity theorem.
+
+`BSamplingExact.lean` uncompressed SHA-256:
+`71d1eea13489f8580bd9bcced2dc9c75340863153c07629459b77ebdc72b9cfe`.
+The unchanged Lean 4.36.0-rc2 kernel compiled it locally with no `sorry` or `native_decide`; `#print axioms` for `parity_gap_exact` and `diagonal_first_mismatch_at_v2` lists only `[propext, Quot.sound]`; the fully closed `diagonal_first_mismatch_closed` and its `vTwo_decomposes` helper use ordinary `[propext, Classical.choice, Quot.sound]`. There is no fresh original-machine source-import CI validation.
+
+To reproduce the full proof chain, additionally compile `BSamplingBound.lean` to an `.olean` in the same directory before checking `BSamplingExact.lean`:
+
+```text
+LEAN_PATH=. lean -o BSamplingBound.olean BSamplingBound.lean
+LEAN_PATH=. lean BSamplingExact.lean
+```
+
+The self-contained source is compressed and hash-checked by the same updated atomic locked `unpack.py`.
+
 ## Next discriminating question
 
 Can one establish a *true blank-sequence-sensitive* restriction on the inputs `Z(n)` that survives deliberately adversarial synthetic orbit values? In particular, prove or falsify a useful invariant of the two-scale diagonal map `z ↦ G^[z+6](0)` on the recursively generated `Z(n)` subset, beyond congruence classes of arbitrary synthetic `z`. Check preexisting Agent5/Agent18 parity results before attempting a duplicate all-word coding proof. A novel root decision still requires proving every `Z(n)` odd, or finding an even `Z(n)` with an authenticated raw halting runtime.
