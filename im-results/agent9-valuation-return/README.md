@@ -37,6 +37,27 @@ Axiom audits for all headline theorems list only `[propext, Quot.sound]`; no `so
 
 The additional kernel-checked [Split3.lean](./Split3.lean) supplies a terminating executable `split3(n)=(v,u)` with a complete positive-input factorization proof `3^v*u=n` and `u%3≠0`. For every `q>=16`, `q%3≠0`, set `(v,u)=split3(onNZ q)`. The theorems `nonzero_core_exact` and `nonzero_core_transfer_exact` discharge the earlier explicit decomposition hypothesis, giving the **unconditional parametric dichotomy** in the first section. `nonzero_core_first_transfer` also proves no transfer occurs on any earlier S step, thus certifying the *first* S→T transfer time. Local Lean 4.36.0-rc2 compiled all with axiom audits `[propext, Quot.sound]`, no sorry. These are reusable source-derived arithmetic results, not source-imported Cryptids raw Turing machine theorems. They repackage the existing zero-burst mechanism constructively, rather than resolve either fixed root.
 
+## Complete fatal congruence test for nonzero S inputs
+
+The additional Lean modules [ValDvd.lean.gz.b64](./ValDvd.lean.gz.b64) and [SafeStep.lean.gz.b64](./SafeStep.lean.gz.b64) prove a sharper, exact if-and-only-if criterion:
+
+Let `q>=16`, `q%3≠0`, `δ=incr q` (4 when q%3=1, 6 otherwise), and `p=penaltyNZ q` (13 when q%3=1, 5 otherwise). The theorem `exact_nonzero_fatal_gate` states
+
+```text
+3^(c+δ+2) ∣ (4*q - p)    ↔    steps (c+δ+2) (some(q,c)) = none
+```
+
+The proof of `nonzero_core_first_transfer` in `Split3.lean` shows that when the left side holds, **every earlier S-step remains inside S**. When it fails, `nonzero_guard_if_small_valuation` and the general `safe_height` theorem prove that the horizon is still in S. The proof is an actual algebraic classification of **first transfer out of S**, rather than a classification of original-machine halting. In particular, the two possible fatal residue cylinders are
+
+```text
+q%3 = 1:  3^(c+6) ∣ (4*q - 13)
+q%3 = 2:  3^(c+8) ∣ (4*q - 5)
+```
+
+For strictly positive `onNZ q`, `split3_divisibility` checks the necessary prime-power divisor characterization with the maximal valuation, and `safe_height` ensures later nonzero branches cannot cause premature transfer within the specified horizon. All these new lemmas compiled in local Lean 4.36.0-rc2, with `#print axioms` reporting only the standard `propext`, `Quot.sound` and, for the exact fatal congruence, `Classical.choice`. These are *standalone formal arithmetic consequences* of the externally published high-level S definition; they have **not** been imported into the original upstream raw-TM module or peer-validated as new academic research.
+
+Reconstruct the two additional files with `python reconstruct.py`; the source SHA-256 values are `3809a4183ff17559455091d6c773a47ff801341ca3c3c3b15c58953d42bb95d1` and `e1041f50e333dbcd8f68e1f930daaab642f449085e246bb3881a76fb0d216e4f` respectively. Compile in dependency order: `ValuationReturn`, `Split3`, `ValDvd`, `SafeStep`.
+
 ## Independent finite checking
 
 [burst_verify.py.gz.b64](burst_verify.py.gz.b64), restored Python SHA256 `014a416ca576dfa87757bbb6aa407067daad557cdf92ac89daf433e8c2f84ad6`, compares every maximal-burst macro to independently iterated direct S steps. The target entries `(141,3)` and `(17,3)` are respectively the published root and a separately authenticated S-root; they are distinct original-machine roots. Exact local 100,000 S-step checks per entry:
