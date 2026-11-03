@@ -700,7 +700,7 @@ theorem next_safe_right_third_two (a d : Nat)
     (hodd : d%2=1 → d+7+(d+2)/3 ≤ a)
     (heven : d%2=0 → d+4+(d+1)/3 ≤ a) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have ha : a ≠ 0 := by
     by_cases hd : d%2=1
     · have hb := hodd hd
@@ -735,7 +735,7 @@ theorem evalA_then_drain_safe_third_two (a k m : Nat) (h : k/3+2 ≤ a) :
 theorem next_safe_left_third_two (a d : Nat)
     (ha : 0<a) (he : a%2=0) (hd : a+a/3+1 ≤ d) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by omega
   have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
   have h2 : ¬ (d%2=0 ∧ a≥d+3) := by omega
@@ -876,7 +876,7 @@ theorem pow_three_plus_three (n : Nat) : 3^n ≤ 3^(n+3) := by
 theorem next_safe_left_exp (a d : Nat)
     (ha : 0<a) (he : a%2=0) (hd : a≤d) (hpow : a<3^(d-a)) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by omega
   have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
   have h2 : ¬ (d%2=0 ∧ a≥d+3) := by omega
@@ -904,7 +904,7 @@ theorem next_safe_right_exp (a d : Nat)
     (hodd : d%2=1 → d+6≤a ∧ d+3≤3^(a-d-6))
     (heven : d%2=0 → d+3≤a ∧ d+2≤3^(a-d-3)) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by
     by_cases hd : d%2=1
     · have hh:=(hodd hd).1
@@ -1117,7 +1117,7 @@ theorem evalA_then_drain_ones (a k m : Nat) (h : k<ternaryOnes a) :
 theorem next_safe_left_ones (a d : Nat) (ha : 0<a) (he : a%2=0)
     (hd : a≤d) (hbudget : a<ternaryOnes (d+1-a)) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by omega
   have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
   have h2 : ¬ (d%2=0 ∧ a≥d+3) := by omega
@@ -1139,7 +1139,7 @@ theorem next_safe_right_ones (a d : Nat)
     (hodd : d%2=1 → d+5≤a ∧ d+3≤ternaryOnes (a-d-5))
     (heven : d%2=0 → d+3≤a ∧ d+2≤ternaryOnes (a-d-2)) :
     ∃ aa dd, next (.D a d) = some (.D aa dd) := by
-  simp only [next]
+  simp only [next, highLevelNext]
   have h0 : a ≠ 0 := by
     by_cases hd : d%2=1
     · have hh := (hodd hd).1
