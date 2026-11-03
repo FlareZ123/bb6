@@ -160,6 +160,24 @@ theorem H_affine_mod_gap (r c s m z : Nat) (hgap:r≤2*s)
         rw [Nat.add_mul]
         ac_rfl
 
+      _ = (2*s)*(z/2)+s*(z%2)+c := by rw [hdelta]
+      _ = s*z+c := by
+        calc
+          (2*s)*(z/2)+s*(z%2)+c = s*(2*(z/2)+z%2)+c := by
+            rw [Nat.mul_add]
+            ac_rfl
+          _ = s*z+c := by rw [←hz]
+  have hmultiple : m∣(2*s-r)*(z/2) := by
+    obtain ⟨k,hk⟩ := hdvd
+    refine ⟨k*(z/2), ?_⟩
+    rw [hk]
+    ac_rfl
+  calc
+    (H r c s z)%m = (H r c s z+(2*s-r)*(z/2))%m := by
+      rw [Nat.add_mod, Nat.mod_eq_zero_of_dvd hmultiple]
+      simp
+    _ = (s*z+c)%m := by rw [heq]
+
 #print axioms iterH_affine_modulus_divides_gap
 #print axioms iterH_dyadic_curvature
 #print axioms iterH_two_adic_shift
