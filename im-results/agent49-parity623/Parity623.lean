@@ -219,6 +219,53 @@ theorem next_preserves_even (a d aa dd : Nat)
               have hr := drainB_parity p2 p1 p3 aa dd hstep
               omega
 
+theorem next_strict_mass (a d aa dd : Nat)
+    (hstep : next (.D a d) = some (.D aa dd)) :
+    a + d + 7 ≤ aa + dd := by
+  simp only [next] at hstep
+  by_cases h0 : a = 0
+  · simp only [if_pos h0] at hstep
+    by_cases hd : d % 2 = 1
+    · simp only [if_pos hd] at hstep
+      have hp := drainB_mass 2 (d + 1) 2 aa dd hstep
+      omega
+    · simp only [if_neg hd] at hstep
+      cases hstep
+      omega
+  · simp only [if_neg h0] at hstep
+    by_cases h1 : d % 2 = 1 ∧ a ≥ d + 5
+    · simp only [if_pos h1] at hstep
+      have hp := drainB_mass (d + 3) (a - d - 5) 5 aa dd hstep
+      omega
+    · simp only [if_neg h1] at hstep
+      by_cases h2 : d % 2 = 0 ∧ a ≥ d + 3
+      · simp only [if_pos h2] at hstep
+        have hp := drainB_mass (d + 2) (a - d - 2) 2 aa dd hstep
+        omega
+      · simp only [if_neg h2] at hstep
+        by_cases h3 : a % 2 = 1
+        · simp [h3] at hstep
+        · simp only [if_neg h3] at hstep
+          by_cases h4 : a = d + 2
+          · simp only [if_pos h4] at hstep
+            have hp := drainB_mass a 0 2 aa dd hstep
+            omega
+          · simp only [if_neg h4] at hstep
+            by_cases h5 : d % 2 = 1
+            · simp only [if_pos h5] at hstep
+              have hp := drainB_mass (a - 1) (d + 4 - a) 3 aa dd hstep
+              omega
+            · simp only [if_neg h5] at hstep
+              cases he : evalA (d + 1 - a) a (2 * a + 5) with
+              | none => simp [he] at hstep
+              | some p =>
+                rcases p with ⟨p1, p2, p3⟩
+                simp only [he, Option.bind_some] at hstep
+                have hpos : 0 < d + 1 - a := by omega
+                have hp := evalA_mass_positive (d + 1 - a) a (2 * a + 5) p1 p2 p3 hpos he
+                have hr := drainB_mass p2 p1 p3 aa dd hstep
+                omega
+
 def run : Nat → Option State
   | 0 => some (.D 0 7)
   | n + 1 => (run n).bind next
