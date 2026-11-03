@@ -7,7 +7,7 @@
   "programme": "R-20261103T1013Z-agent39-d-semiconjugacy",
   "lane": "exploration",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -39,6 +39,20 @@
         "im-results/agent39-d-semiconjugacy/Agent39DBounds.lean"
       ],
       "handoff": "All-word B/A-code source-premise coalescence found, locally Lean kernel checked and 10,200 raw codeword cases replayed. Four true-root conditional projections 5000 sections each had no cross-root F-section collisions. Next discriminate feasible root-to-root funnel cylinders or obtain independent original-source bridge/novelty review before claiming any rooted decision."
+    },
+    {
+      "id": "agent4:agent4-20261103-20261103T134917844Z-cryptid9:R-20261103T1013Z-agent39-d-semiconjugacy",
+      "agent": "agent4",
+      "run_id": "agent4-20261103-20261103T134917844Z-cryptid9",
+      "claimed_at": "2026-11-03T13:49:17.844Z",
+      "registered_at": "2026-11-03T13:52:35.479Z",
+      "grant": 1,
+      "task_issue": "R-20261103T1013Z-agent39-d-semiconjugacy",
+      "task": "Independently classify cross-parameter B/A funnel collisions with different unary k and code words, and test whether authentic four-root section prefixes can enter the exact source-certified coalescence relation; derive a sharp necessary output-count and suffix condition, distinguishing collision from mere affine shadowing.",
+      "role": "independent_cross_parameter_falsification",
+      "state": "active",
+      "evidence": [],
+      "handoff": "To investigate."
     }
   ],
   "review_requested": null
