@@ -6,7 +6,7 @@ open BB6.Agent46
 
 /-- Every genuine bounce with second output >=5 avoids sum residue 1 modulo 4. -/
 theorem bounce_no_sum_one_large (c k x y : Nat)
-    (h : (bounce k c).2 = some (x,y)) (hy : 5≤y) : (x+y)%4 ≠ 1 := by
+    (h : (bounce k c).2 = some (x,y)) (hy : 4≤y) : (x+y)%4 ≠ 1 := by
   induction c using Nat.strongRecOn generalizing k x y with
   | ind c ih =>
     by_cases hlow : c < 4
@@ -70,7 +70,7 @@ theorem section_no_sum_one_large_odd (a k x y : Nat)
         omega
       · have hb : (bounce 1 (2*k+1)).2=some (x,y) := by
           simpa only [secNext,exactSection,if_pos ha0,if_neg hk0,if_neg hk1] using h
-        exact bounce_no_sum_one_large _ _ _ _ hb hy
+        exact bounce_no_sum_one_large _ _ _ _ hb (by omega)
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
@@ -86,7 +86,7 @@ theorem section_no_sum_one_large_odd (a k x y : Nat)
               omega
             · have hb : (bounce 4 (2*k-3)).2=some (x,y) := by
                 simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] using h
-              exact bounce_no_sum_one_large _ _ _ _ hb hy
+              exact bounce_no_sum_one_large _ _ _ _ hb (by omega)
     · by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
         omega
@@ -95,7 +95,46 @@ theorem section_no_sum_one_large_odd (a k x y : Nat)
           omega
         · have hb : (bounce (a-1) (2*k-a+3)).2=some (x,y) := by
             simpa only [secNext,exactSection,if_neg ha0,if_neg ha1,if_neg hk0,if_neg hregion] using h
-          exact bounce_no_sum_one_large _ _ _ _ hb hy
+          exact bounce_no_sum_one_large _ _ _ _ hb (by omega)
+
+
+/-- Every (1,y) with y>=4 divisible by four has only the unique
+    possible direct-branch source. This holds for arbitrary source (a,k). -/
+theorem one_four_target_only_direct (a k y : Nat)
+    (h : secNext (a,k)=some (1,y)) (hy:4≤y) (hfour:y%4=0) :
+    a=y-1 ∧ 2*k+2=y := by
+  have hsum : (1+y)%4=1 := by omega
+  by_cases ha0 : a=0
+  · by_cases hk0 : k=0
+    · simp [secNext,exactSection,ha0,hk0] at h
+    · by_cases hk1 : k=1
+      · simp [secNext,exactSection,ha0,hk0,hk1] at h
+      · have hb : (bounce 1 (2*k+1)).2=some (1,y) := by
+          simpa only [secNext,exactSection,if_pos ha0,if_neg hk0,if_neg hk1] using h
+        exact False.elim ((bounce_no_sum_one_large _ _ _ _ hb hy) hsum)
+  · by_cases ha1 : a=1
+    · by_cases hk0 : k=0
+      · simp [secNext,exactSection,ha0,ha1,hk0] at h
+      · by_cases hk1 : k=1
+        · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h
+        · by_cases hk2 : k=2
+          · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
+          · by_cases hk3 : k=3
+            · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h
+            · have hb : (bounce 4 (2*k-3)).2=some (1,y) := by
+                simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] using h
+              exact False.elim ((bounce_no_sum_one_large _ _ _ _ hb hy) hsum)
+    · by_cases hk0 : k=0
+      · simp [secNext,exactSection,ha0,ha1,hk0] at h
+        omega
+      · by_cases hregion : 2*k≤a
+        · simp [secNext,exactSection,ha0,ha1,hk0,hregion] at h
+          omega
+        · have hb : (bounce (a-1) (2*k-a+3)).2=some (1,y) := by
+            simpa only [secNext,exactSection,if_neg ha0,if_neg ha1,if_neg hk0,if_neg hregion] using h
+          exact False.elim ((bounce_no_sum_one_large _ _ _ _ hb hy) hsum)
+
+#print axioms one_four_target_only_direct
 
 #print axioms bounce_no_sum_one_large
 #print axioms section_no_sum_one_large_odd
