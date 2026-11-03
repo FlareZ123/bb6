@@ -24,7 +24,7 @@ jobs:
           for m in SourceMacro CascadeOdd ReverseResidue GapCore; do
             lean -o "$a/$m.olean" "$a/$m.lean"
           done
-          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal; do
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
           echo "Compiled original repository dependencies and all four Agent10 modules."
