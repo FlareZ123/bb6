@@ -34,6 +34,9 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
           lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
           lean -o im-results/agent2-cryptid-continuity/PrefixNoF.olean im-results/agent2-cryptid-continuity/PrefixNoF.lean
+          lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
+          lean -o im-results/agent31-cryptid-boundary/A1100First.olean im-results/agent31-cryptid-boundary/A1100First.lean
+          lean im-results/agent31-cryptid-boundary/A1100Strong.lean
           lean im-results/agent2-cryptid-continuity/FullE111First.lean
           lean im-results/agent2-cryptid-continuity/BFirstReturn.lean
           lean im-results/agent2-cryptid-continuity/BoundaryShiftObstructions.lean
