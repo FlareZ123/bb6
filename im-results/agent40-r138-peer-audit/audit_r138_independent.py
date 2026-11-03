@@ -106,16 +106,66 @@ def audit_high_h():
     assert STRIDE % 324 == 0 and STRIDE % 486 == 0
 
 
+
+def audit_generic_high_cutoffs():
+    """Verify the six signed-gap induction bases, not a bounded-a sweep."""
+    rows = []
+    for name, d, c, _, limits in CHILDREN:
+        for h, start_a in enumerate(limits):
+            D = d * 3**h
+            K = (2 * start_a - 3) * D + 2**(h + 1) * (d + c)
+            assert K % 2 == 1 and 1 < K < 2**start_a
+            assert 2 * D < 2**start_a
+            # For a>=start_a, K(a+1)=K(a)+2D and 2D<2**a.
+            # Induction gives 1<K(a)<2**a for every larger a.
+            rows.append((name, h, start_a, D, K))
+    assert len(rows) == 6
+    return rows
+
+
+def audit_special_sandwich():
+    """Construct six exponential-vs-linear interval proofs."""
+    rows = []
+    for name, d, c, n0, limits in CHILDREN:
+        for h in range(len(limits)):
+            D = d * 3**h
+            coeff, slope, offset = 3*D, D, 2*D + 2**h * (d + c)
+            t = coeff.bit_length()-1
+            gap = 2**(t+1)-coeff
+            start_a = 1
+            while slope*start_a+offset >= gap*2**start_a:
+                start_a += 1
+            assert coeff > 2**t
+            assert slope*start_a+offset < gap*2**start_a
+            assert slope*start_a+offset > slope
+            assert all(
+                coeff*2**a+slope*a+offset < 2**n0
+                for a in range(1,start_a)
+            )
+            # At all a>=start_a, the expression is strictly between
+            # 2**(a+t) and 2**(a+t+1): the upper inequality persists
+            # because slope*a+offset>slope, so g(a+1)<2*g(a).
+            # At smaller a it is below 2**n0 and cannot equal
+            # the required power with exponent n0+4860*k+h.
+            rows.append((name,h,coeff,slope,offset,t,start_a))
+    assert len(rows) == 6
+    return rows
+
+
 def main():
     n = audit_source_algebra()
     cases, reps, max_period, negative_B = audit_residue_certificates()
     audit_high_h()
+    cutoffs = audit_generic_high_cutoffs()
+    sandwiches = audit_special_sandwich()
     print("PASS: independent even-return algebra identities:", n)
     print("PASS: all child-branch modular obstructions:", cases)
     print("PASS: all exponent-period representatives:", reps)
     print("PASS: maximum reconstructed period:", max_period)
     print("PASS: negative-B branches handled:", negative_B)
     print("PASS: both high-h base congruence obstructions")
+    print("PASS: six universal generic high-a induction cutoffs:", [r[2] for r in cutoffs])
+    print("PASS: six universal special-branch power sandwiches:", [r[-1] for r in sandwiches])
     print("LIMIT: arithmetic audit only; all-k high-a and Lean import not repeated")
 
 
