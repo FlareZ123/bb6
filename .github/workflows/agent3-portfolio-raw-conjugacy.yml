@@ -40,12 +40,14 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryInit.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryPhysicalQuotient.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryRoots.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundarySpan.lean" .
           lean -o Boundary.olean Boundary.lean
           lean -o RawBoundaryBridge.olean RawBoundaryBridge.lean
           lean -o RawBoundaryHalt.olean RawBoundaryHalt.lean
           lean -o RawBoundaryInit.olean RawBoundaryInit.lean
           lean RawBoundaryPhysicalQuotient.lean
           lean RawBoundaryRoots.lean
+          lean RawBoundarySpan.lean
   ledger-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
