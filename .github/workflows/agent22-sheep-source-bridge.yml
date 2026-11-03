@@ -102,7 +102,9 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/SecondExceptional.olean" SecondExceptional.lean
           lake env lean -o ".lake/build/lib/lean/OddPowerSource.olean" OddPowerSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/OddEvenGate.lean" OddEvenGate.lean
-          lake env lean OddEvenGate.lean
+          lake env lean -o ".lake/build/lib/lean/OddEvenGate.olean" OddEvenGate.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/SecondEvenGate.lean" SecondEvenGate.lean
+          lake env lean SecondEvenGate.lean
 
           # Agent22: original-source universal mixed-modulus outgoing hub.
           cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-mixed-hub/SheepMixedHub.lean" SheepMixedHub.lean
