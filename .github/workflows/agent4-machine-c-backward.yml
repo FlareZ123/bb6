@@ -65,3 +65,5 @@ jobs:
             echo "=== Mixed192 proof module: $module ==="
             timeout 100 lean -o "$module.olean" "$module.lean"
           done
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SourceBridge192.lean" .
+          lean SourceBridge192.lean
