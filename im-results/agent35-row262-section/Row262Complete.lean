@@ -145,7 +145,23 @@ theorem any_A_return_or_halt (left right : List Bool) (read : Bool) :
       obtain ⟨n, lower, upper, dest⟩ := a_one_returns_within left right
       exact ⟨n, by omega, by omega, Or.inl dest⟩
 
+
+theorem a_zero_halt_two_iff (left right : List Bool) :
+    ((run 2 ⟨0,left,false,right⟩).st = 5 ∧
+     (run 2 ⟨0,left,false,right⟩).head = true) ↔
+      right.headD false = true ∧ right.tail.headD false = true := by
+  cases right with
+  | nil => simp [run, step, moveR, moveL]
+  | cons b rest =>
+      cases b with
+      | false => simp [run, step, moveR, moveL]
+      | true =>
+          cases rest with
+          | nil => simp [run, step, moveR, moveL]
+          | cons b2 tail => cases b2 <;> simp [run, step, moveR, moveL]
+
 end BB6.Row262
 #print axioms BB6.Row262.a_one_all_ones
 #print axioms BB6.Row262.a_one_explicit_last_zero
 #print axioms BB6.Row262.any_A_return_or_halt
+#print axioms BB6.Row262.a_zero_halt_two_iff
