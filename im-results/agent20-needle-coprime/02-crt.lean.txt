@@ -1,0 +1,34 @@
+theorem odd_crt (m a : Nat) (hm5 : m%5 ≠ 0) (ha2 : a%2=1) :
+    ∃ t : Nat, (a+m*t)%10=9 := by
+  have hm_lt : m%5<5 := Nat.mod_lt _ (by decide)
+  have ha_lt : a%10<10 := Nat.mod_lt _ (by decide)
+  have hm : m%5=1 ∨ m%5=2 ∨ m%5=3 ∨ m%5=4 := by omega
+  have ha : a%10=1 ∨ a%10=3 ∨ a%10=5 ∨ a%10=7 ∨ a%10=9 := by omega
+  rcases hm with hm | hm | hm | hm
+  all_goals rcases ha with ha | ha | ha | ha | ha
+  all_goals first
+    | exact ⟨0, by omega⟩
+    | exact ⟨2, by omega⟩
+    | exact ⟨4, by omega⟩
+    | exact ⟨6, by omega⟩
+    | exact ⟨8, by omega⟩
+
+theorem even_crt (m a : Nat) (hm3 : m%3 ≠ 0) (ha2 : a%2=0) :
+    ∃ t : Nat, (a+m*t)%18=12 := by
+  have hm_lt : m%9<9 := Nat.mod_lt _ (by decide)
+  have ha_lt : a%18<18 := Nat.mod_lt _ (by decide)
+  have hm : m%9=1 ∨ m%9=2 ∨ m%9=4 ∨ m%9=5 ∨ m%9=7 ∨ m%9=8 := by omega
+  have ha : a%18=0 ∨ a%18=2 ∨ a%18=4 ∨ a%18=6 ∨ a%18=8 ∨ a%18=10 ∨ a%18=12 ∨ a%18=14 ∨ a%18=16 := by omega
+  rcases hm with hm | hm | hm | hm | hm | hm
+  all_goals rcases ha with ha | ha | ha | ha | ha | ha | ha | ha | ha | ha
+  all_goals first
+    | exact ⟨0, by omega⟩
+    | exact ⟨2, by omega⟩
+    | exact ⟨4, by omega⟩
+    | exact ⟨6, by omega⟩
+    | exact ⟨8, by omega⟩
+    | exact ⟨10, by omega⟩
+    | exact ⟨12, by omega⟩
+    | exact ⟨14, by omega⟩
+    | exact ⟨16, by omega⟩
+
