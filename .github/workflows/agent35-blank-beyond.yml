@@ -48,6 +48,7 @@ jobs:
           for module in A1101100 A1101100TraceDef A1101100TraceStep2 A1101100TraceNoPhysical; do
             lean -DmaxRecDepth=8192 -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
           done
+          lean -DmaxRecDepth=8192 -o im-results/agent25-cryptid-doublezero/A110110Ten.olean im-results/agent25-cryptid-doublezero/A110110Ten.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           lean -DmaxRecDepth=16384 -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
           lean -o im-results/agent26-cryptid-e-gate/EEmpty.olean im-results/agent26-cryptid-e-gate/EEmpty.lean
