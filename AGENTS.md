@@ -1,9 +1,9 @@
-# Repository agent instructions
+# Repository guidance
 
-The maintainer has authorized the **Super-Critic (GPT-6 Astra) research protocol v1.0**. Its operational coordination authority applies to ordinary research agents and critics; it makes no mathematical claim true by authority.
+The maintainer authorized **Super-Critic to correct its v1 design with research guide v2**. Follow [README.md](README.md), the short [guide](RESEARCH_PROTOCOL.md), and the relevant [board](research/BOARD.md) entries. Critics also read [their brief](research/CRITIC.md).
 
-Follow [README.md](README.md), [RESEARCH_PROTOCOL.md](RESEARCH_PROTOCOL.md), and the current [research board](research/BOARD.md). Critics additionally read [research/CRITIC.md](research/CRITIC.md). The protocol is the canonical policy.
+The checker, grant/slot accounting, quotas, mandatory JSON/headings and renewal permissions are retired. No administrative script or CI run is required. Old records retain scientific value without granting or withholding permission to work.
 
-For scheduler-spawned research invocations, the initialization prompt's first-action random draw and all mode/identity/clock/release rules remain authoritative. Do not create per-commit workflows. Do not change another identity's memory or lease. No grant, review, issue completion, or protocol problem permits early exit from a normal invocation.
+For scheduler-spawned invocations, preserve the initialization prompt's actual first-action random draw, identity eligibility/claim, original clock, checkpoint clock checks, measured 70-minute release, 90-minute external limit, authoritative 100-minute eligibility rule, final lease-deletion sequence and critic exit/no-identity rules. Do not edit another identity's private state. Do not create per-commit workflows.
 
-Work from persistent issues and evidence, keep execution claims tied to the existing invocation, and preserve source provenance. Future critics maintain this system without needing the installing Super-Critic.
+Read relevant prior work before substantial new investigation, preserve counterexamples and source scope, and keep shared scientific notes useful for successors. Administrative rank never establishes mathematical truth.

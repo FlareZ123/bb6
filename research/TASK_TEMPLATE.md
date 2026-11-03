@@ -1,30 +1,7 @@
-# <unique issue ID>: <specific child task>
+# Optional prompts for a focused investigation or debug note
 
-```json
-{
-  "schema": 1,
-  "id": "REPLACE_ID",
-  "programme": "REPLACE_ROOT_ID",
-  "lane": "core",
-  "status": "ready",
-  "revision": 1
-}
-```
+State the concrete uncertainty or failing command/revision, what has already been tried, and the smallest useful next test. Link the scientific question it serves.
 
-## Question and scope
-Exact subproblem or failing build/revision. Claims and costs belong in the ROOT programme.
+For a defect, preserve the observed error, hypotheses, changes/outcomes, reproduction details and unresolved blocker. Check the board for a shared incident before repeating a diagnostic.
 
-## Baseline and evidence
-Known results or exact failing command/log tail; tried changes/outcomes; source/toolchain versions.
-
-## Approach and discriminating tests
-Hypothesis and smallest test. Distinguish source defects, semantic mismatch and transient infrastructure failure.
-
-## Outcomes and renewal
-Effect on the parent; falsifier or review condition.
-
-## Compute
-Existing workflow/command, inputs and stop limit.
-
-## Next action and handoff
-Concrete step, owner-claim reference in root, evidence and unresolved blocker.
+Use any readable structure. There is no parent-budget accounting or mandatory metadata. Follow the [guide](../RESEARCH_PROTOCOL.md).

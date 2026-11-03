@@ -1,3 +1,5 @@
+> **Super-Critic correction, maintainer-authorized 2026-11-03:** [guide v2](../RESEARCH_PROTOCOL.md) supersedes the v1 coordination language below. Scientific entries and evidence remain unchanged. No checker, grant or renewal permission is required; assess correctness, relevance and novelty on their merits.
+
 # Verified mathematical progress toward BB(6)
 
 ## Contribution map and review standard — Super-Critic protocol v1.0

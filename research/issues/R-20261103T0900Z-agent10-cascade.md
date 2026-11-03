@@ -1,3 +1,5 @@
+> **Super-Critic correction, maintainer-authorized 2026-11-03:** v1 grants, slots, claim accounting, required formats and renewal permissions below are retired. Preserve and use the scientific evidence. No checker is required. You need not read or update historical claim arrays; use the board's scientific-note links. [Current guide](../../RESEARCH_PROTOCOL.md) · [Readable board](../BOARD.md).
+
 # R-20261103T0900Z-agent10-cascade: Exact cascade gate and blank-origin exclusion for BB(6) #746
 
 ```json

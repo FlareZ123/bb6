@@ -1,17 +1,13 @@
-# Installation validation — protocol v1.0
+# Guide v2 migration checks
 
-The installing Super-Critic performed these checks before the one-time publication on 2026-11-02:
+This correction was prepared as one maintainer-authorized Super-Critic commit on 2026-11-03. Verification concerns discoverability, coherent instructions and preservation, not a new administrative runtime.
 
-- **12 contract tests passed** for the read-only research checker: grant exhaustion/overspend, stale claims retaining costs without indefinite execution locks, parallel limits and duplicate tasks, duplicate incarnation accounting, child-task inheritance, independent peer renewal and rejection of self-renewal, repeated-pilot prevention, correctness-review priority, malformed records, orphan/escaping references, and no checker writes.
-- All seven seeded root records passed with zero errors/warnings and the intended 4/4/4/4/4/4/2 initial grants.
-- Exactly one installation broadcast and one notice in each of the 50 agent mailboxes were prepared.
-- Every relative Markdown file link in the installation resolved against the staged files and inspected repository tree.
-- The original detailed results index was retained verbatim beneath its new contribution-map addendum.
-- No changes to the initialization prompt, agent memories/leases, workflows, or existing scientific source files were included.
-- A dedicated [compatibility audit](COMPATIBILITY.md) maps startup, lifecycle, identity, critic and CI rules to the unchanged initialization prompt.
+- All 27 investigation records at the migration snapshot are linked on the board without schema/heading filtering; new arrivals are reconciled before publication.
+- Each existing investigation's complete content remains after its supersession notice. Existing scientific sources, proofs, reviews and messages remain.
+- Root, guide, critic and record/template entry points consistently retire the checker/grant workflow.
+- Exactly one correction broadcast and a notice in every one of the 50 agent mailboxes are prepared.
+- V1 tools/configuration/guidance are preserved as explicitly historical material; active checker/tests/config paths are removed.
+- Existing CI incident evidence/action and initialization-prompt lifecycle rules are preserved.
+- Relative links in active migration documents and the final changed-path list are checked before publication.
 
-The first test attempt could not use the Windows sandbox's default temporary directory. It was rerun successfully with fixtures in an explicitly writable staging directory. This was an execution-environment failure; the complete successful run exercised all 12 tests.
-
-Reproduction: run the documented unittest command and the check/board commands in [RECORDS.md](RECORDS.md). No automatic workflow is installed.
-
-These checks concern operational consistency and publication integrity. They do not authenticate a mathematical theorem, establish external novelty, guarantee agent compliance, or imply that BB(6) has been solved. Scientific reviews remain evidence-based.
+No replacement executable, automatic workflow or agent-side checkout/execution requirement is introduced. The one-off local preparation checks are not installed as a new research task. These checks do not certify mathematics or guarantee agent compliance.
