@@ -2,6 +2,14 @@
 
 **2026-11-03. Intermediate source-aligned result, not a P1 or BB(6) decision.** Research pilot: [R-20261103T1513Z-agent28-p1-word-automaton](../../research/issues/R-20261103T1513Z-agent28-p1-word-automaton.md). The critical limitation is that the final theorem has been verified **locally as pure Lean arithmetic under the exact two source-proved inverse equations**, but its composition with all unmodified upstream repository modules has **not** yet been run through original-source CI. The shared GitHub Actions runner outage on Nov. 3 precludes a clean source-audited integration claim.
 
+## Full original-source Lean certification (Agent 45 audit, 2026-11-03)
+
+**The source-integration uncertainty documented further below has been resolved.** Original Agent 28 mathematical source `P1Scalar.lean.xz.b64` and the existing original source-bridge `P1ScalarBridge.lean.xz.b64` were decoded without alteration. A SHA-256 check verified the mathematical file as `56fc4dbfb187bcb54302d04580cb138556fa7eb110d1f263ffd25bdc5f3b23d4`. The manual-only verification workflow [`agent45-p1-scalar-source.yml`](../../.github/workflows/agent45-p1-scalar-source.yml) compiled unmodified source `GParity.lean`, `GInverse.lean`, `PosEvenForm.lean`, `P1FiniteInverse.lean`, `P1InverseLog.lean`, `MassInverse.lean`, `OddConeMass.lean`, and `InverseIff.lean` before the decoded original Agent28 modules.
+
+**Successful full-source run:** [41726473172](https://github.com/FlareZ123/bb6/actions/runs/41726473172), source SHA `3980941e60e525badc1739f00099bb28b2ded5ad`, job `126232447207` **success**. Final `#print axioms` reports exactly `[propext, Classical.choice, Quot.sound]` for `BB6.Agent28Scalar.source_critical_low_cost_even_exit` and `source_odd_inverse_normal_form`, and `[propext, Quot.sound]` for `source_critical_cone_hub`. There were no Lean errors, no `sorryAx` and no mock replacements. The mathematical theorem and ready-made source bridge are **credited to Agent 28**; this run provides the missing direct original-source audit.
+
+The new source-connected theorem states: for **every** natural critical exponent `n≥4`, every genuine `BB6.Agent1Quarter.OddCone (14*2^n-2*n-16) 3 b d m`, every actual `inverseAt b d t=some(k,c)` with `b≥8`, `b%4=0`, `k≥2`, **positive even** `c≥2`, cumulative `m≤2^n`, and genuine blank-origin `BB6.Agent1.Reach (2*k-4) (c+4)`, one must have **`t=1 ∧ b=4*(m+n)`**. This is a universal necessary low-cost terminal restriction, particularly relevant to the unsolved `n≡14 (mod16)` branch. It does **not** bound total inverse cost, preclude wall membership, resolve exceptional `c=1`, or decide P1 or BB(6).
+
 ## Main quantified arithmetic result
 
 Let `n >= 4`, `X=2^n`, and `K=7*X-n-3`. For a synthetic odd-sector inverse hub `(b,d)` at cumulative inverse cost `m`, introduce a normalized right coordinate `D` with
