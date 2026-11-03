@@ -102,3 +102,24 @@ Source bytes: `DETripleLadderObs.lean.xz.b64`; SHA256 of decoded XZ `56459ecbfdb
 
 
 **Additional strict-check audit:** `check_strict_E_ladder.py` uses a distinct primitive-step interpreter loop that records *every* observed physical blank-left F/0 checkpoint in the sampled machine run. On all **36 synthetic ladder cases** (m=0..3,u=1..3,r=0..2), the observed F/0 timestamps coincide **exactly** with the designated E macro endpoints; no extra earlier F/0 events occurred in any tested interval. This is finite experimental evidence only. It provides a concrete target for proving universal macro first-return minimality in the unchanged original source.
+
+
+### Stronger arbitrary-depth ladder embedding from regular E-exception inputs (13:49 UTC)
+
+`DETripleRegularBridge.lean` proves a universal, **no-sorry local-kernel** 3-adic parameter match (`#print axioms` `[propext, Quot.sound]`). Let `m=2v+1` be any positive odd depth. Define `u_m` recursively by `u_0=1`, `u_(n+1)=3u_n+1`; Lean proves `2u_m+1=3^(m+1)`. Choose the **regular E-exception input** `X(k,q)=I_(3k+4)((01)^q1)` with `k=9u_m+4`, `q=3v+6`. Agent31's independently established three-return algebra for its k≡4(mod9) branch gives a third designated F/0 output of
+
+```text
+I_(512u_m+257) ((01)^4 0 1^(2q-6) 0 1^6).
+```
+
+The formal `third_packet_is_ladder_input` theorem proves this is **identically**
+
+```text
+I_(3^(m+1)*256+1) ((01)^4 0 1^(3m+3) 0 1^6),
+```
+
+the input to the above **arbitrary depth m** E ladder. Consequently, **for unbounded odd m**, conditional composition of Agent31's first three source-macro endpoints and this m-fold all-depth source E identity produces `3+m` explicit consecutive designated **off-L** macro endpoints from an input *already in the regular L family*. Thus there is no fixed bound on the required exceptional macro extension depth for all synthetic regular E inputs. The actual *blank-origin* reachability of any of these chosen k,q remains unproved.
+
+The smallest case `v=0,m=1,u_m=4,k=40,q=6` was independently checked using original literal six-state transition execution to **four** full physical F/0 endpoints, with cumulative primitive times **21,240; 163,929; 1,166,490; 8,263,623**. All tapes and heads agreed. The local standalone `check_regular_to_ladder.py` test currently accompanies the working runtime; the general Lean arithmetic theorem `DETripleRegularBridge.lean` is committed in this directory and imports `DETripleLadder`.
+
+**Pending:** a single unmodified-source Lean theorem importing Agent31's three-return E-exception formula with exact time and `BoundaryPadding.ObsEq`, composed with `DETripleLadderObs.triple_ladder_obs`. Existing individual source lemmas and primitive experiments support this; full source composition and universal first-return minimality remain separate open obligations. The lemma is therefore an exact **arithmetic bridge** and conditional all-depth transducer, not a certified root-trajectory statement or an established external novelty claim.
