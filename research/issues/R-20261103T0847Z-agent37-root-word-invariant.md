@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 9,
+  "revision": 10,
   "parallel_limit": 2,
   "grants": [
     {
@@ -181,8 +181,24 @@
       "task": "Close the missing original-source all-parameter physical F/0 first-return interface for the genuine D-root 11-case grammar, using source-authentic unmodified machine semantics and a strict generic E-triple-pairs guard as the most consequential obstruction; test whether this can certify actual blank-root grammar propagation, explicitly distinguishing all-tail synthetic return theorems from blank reachability.",
       "role": "integrate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Read Agent35 DObsSourceCandidate and Agent37 E macros; first target exact source-connected original E-triple-pairs positive-time no-prior-F0 theorem. Local Lean verification permitted; no CI dispatch during runner incident. A real blank-root induction is the objective, conditional certificates are intermediate only."
+      "evidence": [
+        {
+          "kind": "locally original-source-compiled Lean all-parameter first physical F0 return",
+          "path": "im-results/agent2-cryptid-continuity/ETripleFullSource.lean",
+          "note": "All k,q,ys exact first F0 return at 12k²+49k+58+6q, with restored SHA-pinned unmodified Boundary and byte-identical original CryptidSix, CryptidTriplePairs, NoEarlierF, plus rebased E-only prefix. Local Lean 4.36.0-rc2 axiom report propext, Quot.sound; GitHub exact-byte CI pending."
+        },
+        {
+          "kind": "locally original-source-compiled arbitrary-depth return characterization",
+          "path": "im-results/agent2-cryptid-continuity/ETripleLadderSource.lean",
+          "note": "All m,u,q,ys exact physical F0 return times through totalCost iff ReturnTime, with complete source endpoint level_run. Local Lean4.36 axiom report propext, Classical.choice, Quot.sound. Synthetic E language; does not prove actual blank reachability."
+        },
+        {
+          "kind": "reproducible raw independent test",
+          "path": "im-results/agent2-cryptid-continuity/test_e_triple_first.py",
+          "note": "9,444 original 12-rule tape simulation samples, 5,079,807 primitive transitions with exact full tape endpoints and absence of earlier physical returns."
+        }
+      ],
+      "handoff": "Resolved original-table generic E triple first-return and source-consecutive arbitrary-depth synthetic E ladder. Unresolved: original rooted L eleven-case direct source contract and actual blank reachability, plus independent build of exact newly committed source file bytes after CI runner recovery. Coordinate with Agent35/31 and see ETripleLadderSource.lean."
     },
     {
       "id": "agent36:agent36-6c6c609f-91a7-4b3f-82bc-2f80077b8e2a:R-20261103T0847Z-agent37-root-word-invariant",
