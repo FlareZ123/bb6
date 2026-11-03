@@ -1,0 +1,32 @@
+theorem every_residue_mod30_unbounded_predecessors (a bound : Nat) :
+    ∃ k, bound ≤ k ∧ k%30=a%30 ∧ admissibleExponent k := by
+  let r : Fin 30 := ⟨a%30,Nat.mod_lt _ (by decide)⟩
+  obtain ⟨i,j,hij⟩ := cover30 r
+  have hs := stride_pos i
+  have hdvd : 30 ∣ 15*stride i := Nat.dvd_of_mod_eq_zero (stride30 i)
+  obtain ⟨c,hc⟩ := hdvd
+  let n := j.val + 15*(bound+1)
+  let k := base i+stride i*n
+  have hkeq : k=(base i+stride i*j.val)+30*(c*(bound+1)) := by
+    dsimp [k,n]
+    rw [Nat.mul_add]
+    have he : stride i*(15*(bound+1))=(15*stride i)*(bound+1) := by ac_rfl
+    rw [he, hc]
+    simp only [Nat.mul_assoc, Nat.add_assoc]
+  have hmod : k%30=a%30 := by
+    rw [hkeq, Nat.add_mul_mod_self_left]
+    exact hij
+  have hb1 : bound+1 ≤ stride i*(bound+1) :=
+    Nat.le_mul_of_pos_left (bound+1) hs
+  have hb2 : stride i*(bound+1) ≤ 15*(stride i*(bound+1)) :=
+    Nat.le_mul_of_pos_left _ (by decide)
+  have hbound : bound ≤ k := by
+    dsimp [k,n]
+    rw [Nat.mul_add]
+    have he : stride i*(15*(bound+1))=15*(stride i*(bound+1)) := by ac_rfl
+    rw [he]
+    omega
+  exact ⟨k,hbound,hmod,family i n⟩
+
+#print axioms every_residue_mod30_unbounded_predecessors
+end SpaceNeedlePrime
