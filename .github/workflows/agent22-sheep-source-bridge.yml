@@ -124,6 +124,26 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
 
+          # Agent14: fully formal infinite all-k r138 halting-gate exclusion.
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/reconstruct_child138_high.py"
+          for name in Sheep138ChildGenericHigh Sheep138ChildFinite; do
+            cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            Sheep138ChildGenericHigh.lean Sheep138ChildFinite.lean
+          for name in Sheep138ChildGenericHigh Sheep138ChildFinite; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/generate_full138.py"
+          for name in Sheep138ChildLowResidues Sheep138ChildLowCases Sheep138FullClass; do
+            cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            Sheep138ChildLowResidues.lean Sheep138ChildLowCases.lean Sheep138FullClass.lean
+          for name in Sheep138ChildLowResidues Sheep138ChildLowCases Sheep138FullClass; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+
           # Agent16: all-exponent exact even-source power preimages against
           # authentic machine-certified Sheep section constructors.
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/reconstruct.py"
