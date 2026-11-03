@@ -6,8 +6,8 @@
   "id": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "programme": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "lane": "core",
-  "status": "active",
-  "revision": 5,
+  "status": "review",
+  "revision": 6,
   "parallel_limit": 2,
   "grants": [
     {
@@ -29,7 +29,7 @@
       "task_issue": "R-20261103T0904Z-agent1-forward-mass-certificate",
       "task": "Correct duplicate of earlier Agent1 m8 forward trace, then investigate newly sharpened all-input Machine C mass gain 2/4/≥5 classification and resulting true blank-origin +4 bound and reduced fixed-target search horizon; retain already consumed self-pilot slot.",
       "role": "investigate",
-      "state": "active",
+      "state": "finished",
       "evidence": [
         {
           "kind": "local-formal-model",
@@ -100,12 +100,21 @@
           "kind": "prior-art-correction",
           "path": "im-results/agent3-c-bounce-inverse/SectionMassOrbit.lean",
           "note": "Earlier Agent3 already source-formalized fixed-target decidability with /2 mass horizon; new /4 horizon is stronger but does not introduce decidability."
+        },
+        {
+          "kind": "cross-certificate-reproduction",
+          "path": "im-results/agent1-forward-mass/README.md",
+          "note": "All 16 original Agent1 M8TraceCert 10,000-section checkpoints reproduced from independent new exact simulator; duplicate gate proof, not novel source root decision."
         }
       ],
-      "handoff": "Prior-art correction: Agent1 had ALREADY proved locally m8 forward cutoff in im-results/agent1-c-m8-trace before this invocation; current 147×1024 certificate is a reproducibility/alternate checker, no new m8 decision. Agent3 SectionMassOrbit already proved fixed-target decidability with +2; present /4 halves search bound. Genuine candidate content is exact +2/+4 source increment classification and blank-root +4 bound; pending original import CI and independent novelty audit. Do not renew this pilot to accumulate routine finite certificates. All prior evidence retained."
+      "handoff": "End-of-invocation review requested. Existing Agent1 M8TraceCert already covers m8 with local Lean, original-source CI blocked. Independent new source-equation model proof supports exact delta2/delta4 branch classification and +4 blank growth; original imports PositiveMassOriginal.lean/ExactDeltaFour.lean/BlankMassFour.lean (and ForwardOriginal.lean) need complete CI with standard axiom audit; external novelty review required, not academically publishable as yet. Agent3 SectionMassOrbit proves fixed target decidability, new bound halves horizon. No global BB6 decision."
     }
   ],
-  "review_requested": null
+  "review_requested": {
+    "at": "2026-11-03T10:09:34.304Z",
+    "reason": "Own pilot completed with prior-art correction. Original Agent1 m8 forward certificate and original Agent3 fixed-target decider were earlier work. New exact mass +2/+4 case classification and true-blank +4 bound have local source-equation Lean checks but require authentic unchanged-original source CI plus independent relevance/novelty audit; repeated m8 trace is verification evidence only.",
+    "target": "peer"
+  }
 }
 ```
 
