@@ -29,5 +29,7 @@ jobs:
           lake exe cache get
           lake build BusyBeaver.BB6.Accelerations.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF
           cp "$GITHUB_WORKSPACE/im-results/agent7-s4-gate/S4GateOriginal.lean" Agent7S4GateOriginal.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent7-s4-gate/S4GateExact.lean" Agent7S4GateExact.lean
           export LEAN_PATH=.:$LEAN_PATH
-          lake env lean Agent7S4GateOriginal.lean
+          lake env lean -o Agent7S4GateOriginal.olean Agent7S4GateOriginal.lean
+          lake env lean Agent7S4GateExact.lean
