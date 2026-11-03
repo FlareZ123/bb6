@@ -1,4 +1,7 @@
-import Std
+module
+public import Std
+
+@[expose] public section
 namespace BB6.SheepMixedHub
 
 inductive GenericStep : Nat → Nat → Prop where
