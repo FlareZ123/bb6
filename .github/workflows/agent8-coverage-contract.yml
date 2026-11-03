@@ -41,6 +41,7 @@ jobs:
           lean -o im-results/agent6-fresh-glider/EntryMacroLeft.olean im-results/agent6-fresh-glider/EntryMacroLeft.lean
           lean -o im-results/agent6-fresh-glider/MarkerTailExample.olean im-results/agent6-fresh-glider/MarkerTailExample.lean
           lean -o im-results/agent6-fresh-glider/MarkerOracle.olean im-results/agent6-fresh-glider/MarkerOracle.lean
+          lean -o im-results/agent6-fresh-glider/MarkerMirror.olean im-results/agent6-fresh-glider/MarkerMirror.lean
           lean im-results/agent6-fresh-glider/ThreeSlotBounce.lean
           lean im-results/agent6-fresh-glider/FastMacro.lean
           lean im-results/agent6-fresh-glider/FiveFamily.lean
