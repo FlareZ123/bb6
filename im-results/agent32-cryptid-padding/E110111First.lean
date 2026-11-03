@@ -24,6 +24,29 @@ private theorem append_noF (c d : Cfg) (a b : Nat)
     rw [htime,run_add,he]
     exact hd (t-a) (by omega)
 
+/-- F/0 section requires a physically empty left half-tape. -/
+private def PhysicalF0 (c : Cfg) : Prop :=
+  c.st = 5 ∧ c.h = false ∧ c.l = []
+
+private def NoPhysical (c : Cfg) (n : Nat) : Prop :=
+  ∀ t, t<n → ¬ PhysicalF0 (run t c)
+
+private theorem noF_to_NoPhysical (c : Cfg) (n : Nat)
+    (h : NoF c n) : NoPhysical c n := by
+  intro t ht hp
+  exact h t ht hp.1
+
+private theorem append_noPhysical (c d : Cfg) (a b : Nat)
+    (hc : NoPhysical c a) (he : run a c = d)
+    (hd : NoPhysical d b) :
+    NoPhysical c (a+b) := by
+  intro t ht
+  by_cases hs : t < a
+  · exact hc t hs
+  · have htime : t = a+(t-a) := by omega
+    rw [htime,run_add,he]
+    exact hd (t-a) (by omega)
+
 private theorem scanner_noF (n : Nat) (L ys : List Bool) :
     NoF (scanStart n L ys) (2*n) := by
   induction n generalizing L ys with
@@ -96,19 +119,19 @@ private theorem walk_noF (n : Nat) (L ys : List Bool) :
         (ih (true::true::ys))
 
 /-- No visit to F before the six-step C-to-D join. -/
-private theorem tail6_noF (m q : Nat) (ys : List Bool) :
-    NoF
+private theorem tail6_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical
       (⟨pairs ((m+1)+2) ++ [true,true], true,
         List.replicate (2*(q+1)) true ++
           ([true,false,true,false,true,false] ++ ys),2⟩ : Cfg) 6 := by
-  intro t ht
+  intro t ht hp
   have hc : t = 0 ∨ t = 1 ∨ t = 2 ∨ t = 3 ∨ t = 4 ∨ t = 5 := by omega
   rcases hc with rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals simp [run,step,goL,goR,pairs]
+  all_goals simp [PhysicalF0,run,step,goL,goR,pairs] at hp
 
-/-- The entire 2q+28-step A/C turnaround after the E scan avoids F. -/
-private theorem aLong_noF (m q : Nat) (ys : List Bool) :
-    NoF
+/-- The A/C turnaround excludes physical blank-left F/0 returns. -/
+private theorem aLong_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical
       (⟨oppairs (q+1) ++ (pairs (m+3) ++ [true,true]),false,
         [true,true,false,true,true,true] ++ ys,0⟩ : Cfg)
       (2*q+28) := by
@@ -120,7 +143,8 @@ private theorem aLong_noF (m q : Nat) (ys : List Bool) :
     List.replicate (2*(q+1)) true ++
       ([true,false,true,false,true,false] ++ ys),2⟩
   have hturn : run 20 s = w := by
-    dsimp [s,w]
+    change run 20
+      (⟨oppairs (q+1) ++ L,false,[true,true,false,true,true,true] ++ ys,0⟩ : Cfg) = _
     rw [a110111_turn20]
     rfl
   have hwalk : run (2*(q+1)) w = d := by
@@ -128,32 +152,35 @@ private theorem aLong_noF (m q : Nat) (ys : List Bool) :
     rw [cWalk_run]
   have htail : run 6 d = sweepD m (longPacket q ys) := by
     dsimp [d,L]
-    simpa only [show (m+1)+2=m+3 by omega] using cTailSix m q ys
-  have h1 : NoF s 20 := by
+    simpa only [List.cons_append, show (m+1)+2=m+3 by omega] using cTailSix m q ys
+  have h1 : NoPhysical s 20 := by
+    apply noF_to_NoPhysical
     dsimp [s,L]
     exact turn20_noF (oppairs (q+1) ++ (pairs (m+3) ++ [true,true])) ys
-  have h2 : NoF w (2*(q+1)) :=
-    walk_noF (q+1) L ([true,false,true,false,true,false] ++ ys)
-  have h3 : NoF d 6 := by
+  have h2 : NoPhysical w (2*(q+1)) :=
+    noF_to_NoPhysical _ _ (walk_noF (q+1) L
+      ([true,false,true,false,true,false] ++ ys))
+  have h3 : NoPhysical d 6 := by
     dsimp [d,L]
-    simpa only [show (m+1)+2=m+3 by omega] using tail6_noF m q ys
-  have h : NoF s (20+(2*(q+1)+6)) :=
-    append_noF s w 20 (2*(q+1)+6) h1 hturn
-      (append_noF w d (2*(q+1)) 6 h2 hwalk h3)
+    simpa only [List.cons_append, show (m+1)+2=m+3 by omega]
+      using tail6_noPhysical m q ys
+  have h : NoPhysical s (20+(2*(q+1)+6)) :=
+    append_noPhysical s w 20 (2*(q+1)+6) h1 hturn
+      (append_noPhysical w d (2*(q+1)) 6 h2 hwalk h3)
   have ht : 20+(2*(q+1)+6) = 2*q+28 := by omega
   simpa only [s,L,ht] using h
 
-private theorem eFront_noF (m q : Nat) (ys : List Bool) :
-    NoF (eLong m q ys) (4*q+32) := by
+private theorem eFront_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical (eLong m q ys) (4*q+32) := by
   have ht : 4*q+32=(2*q+4)+(2*q+28) := by omega
   rw [ht]
-  exact append_noF
+  exact append_noPhysical
     (eLong m q ys)
     (⟨oppairs (q+1) ++ (pairs (m+3) ++ [true,true]),false,
       [true,true,false,true,true,true] ++ ys,0⟩ : Cfg)
     (2*q+4) (2*q+28)
-    (eScan_noF m q ys) (eLong_scan m q ys)
-    (aLong_noF m q ys)
+    (noF_to_NoPhysical _ _ (eScan_noF m q ys)) (eLong_scan m q ys)
+    (aLong_noPhysical m q ys)
 
 /-- The original D sweep and B sweep agree after one primitive step. -/
 private theorem sweepD_firstF (m : Nat) (ys : List Bool)
@@ -174,14 +201,15 @@ private theorem sweepD_firstF (m : Nat) (ys : List Bool)
     exact sweepB_firstF m ys t ht
 
 /-- Strict first state-F arrival of the entire E(10)^q110111 boundary. -/
-theorem eLong_firstF (m q : Nat) (ys : List Bool) :
-    NoF (eLong m q ys) (2*m+4*q+35) := by
+theorem eLong_firstPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical (eLong m q ys) (2*m+4*q+35) := by
   have ht : 2*m+4*q+35=(4*q+32)+(2*m+3) := by omega
   rw [ht]
-  exact append_noF (eLong m q ys) (sweepD m (longPacket q ys))
+  exact append_noPhysical (eLong m q ys) (sweepD m (longPacket q ys))
     (4*q+32) (2*m+3)
-    (eFront_noF m q ys) (eLong_front m q ys)
-    (fun t ht => sweepD_firstF m (longPacket q ys) t ht)
+    (eFront_noPhysical m q ys) (eLong_front m q ys)
+    (noF_to_NoPhysical _ _
+      (fun t ht => sweepD_firstF m (longPacket q ys) t ht))
 
 /-- Original D-start machine, exact first positive physical F/0 return
     from the full all-k,all-q,all-suffix E(10)^q110111 cylinder.
@@ -215,10 +243,12 @@ theorem full_E_110111_first_return (k q : Nat) (ys : List Bool) :
       have htime : t=(12*k*k+41*k+33)+(t-(12*k*k+41*k+33)) := by omega
       have hrest : t-(12*k*k+41*k+33) <
           2*(4*k)+4*q+35 := by omega
-      rw [htime,run_add,hprefix] at hphys
-      exact (eLong_firstF (4*k) q ys)
-        (t-(12*k*k+41*k+33)) hrest hphys.1
+      rw [htime,run_add] at hphys
+      simp only [List.cons_append] at hprefix
+      rw [hprefix] at hphys
+      exact (eLong_firstPhysical (4*k) q ys)
+        (t-(12*k*k+41*k+33)) hrest hphys
 
-#print axioms eLong_firstF
+#print axioms eLong_firstPhysical
 #print axioms full_E_110111_first_return
 end BB6.Agent32E110111First
