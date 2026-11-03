@@ -1,0 +1,47 @@
+name: Agent23 P1 n14 authentic one-reset proof (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode exact checked arithmetic and original-source bridge
+        run: |
+          set -e
+          cd im-results/agent23-p1-root-wall
+          base64 -d N14OneReset.lean.xz.b64 | xz -d > N14OneReset.lean
+          echo "be8e33727b51d1affeb106ea770e0d599dc949d01ed6f79e7b73bc9512b0cc42  N14OneReset.lean" | sha256sum -c -
+          base64 -d N14OneResetBridge.lean.xz.b64 | xz -d > N14OneResetBridge.lean
+          echo "7c2f0971e75f5d0e7f53bc513cf0144587b1686803138ebe823fa5109565455d  N14OneResetBridge.lean" | sha256sum -c -
+          if grep -nE "(sorry|admit|^axiom |^opaque |BridgeMock)" N14OneReset.lean N14OneResetBridge.lean; then
+            echo "Unexpected proof escape or mock dependency"
+            exit 1
+          fi
+      - name: Compile all unmodified P1 sources and n14 bridge
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent23-p1-root-wall"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
+          lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
+          lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
+          lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          lean -o im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.olean im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.lean
+          lean -o im-results/agent23-p1-root-wall/N14OneReset.olean im-results/agent23-p1-root-wall/N14OneReset.lean
+          lean -o im-results/agent23-p1-root-wall/N14OneResetBridge.olean im-results/agent23-p1-root-wall/N14OneResetBridge.lean
+          echo "Authentic P1 n=16q+14 one-positive-reset exclusion source audit passed."
