@@ -18,7 +18,7 @@ E(x) = 1+3^h v .
 
 The `h` intervening section returns, when `h>0`, are genuine generic odd-state returns. We can demand `u,v>=5` in all constructions below.
 
-For any positive integer `p`, define a **synthetic even-return quotient graph** `G_p`. Its vertices are the even residues `0,2,...,2^p-2` modulo `2^p`. An edge `r -> s` exists if there are positive legal, nonterminal even section states `x,z` with `E(x)=z`, `x ≡ r`, and `z ≡ s (mod 2^p)`. Each edge may have its own integer witnesses.
+For any positive integer `p`, define a **synthetic even-return quotient graph** `G_p`. Its vertices are the even residues `0,2,...,2^p-2` modulo `2^p`. An edge `r -> s` exists if there are positive legal, nonterminal even section states `x,z` with `E(x)=z`, `x ≡ r`, and `z ≡ s (mod 2^p)`, **and the first return from x uses the generic branch u>=5**. All subsequent odd-block steps are also generic. Each edge may have its own integer witnesses. The unrestricted first-even quotient contains this graph, so the strong-connectivity consequence transfers to it.
 
 **Theorem.** Every `G_p` is strongly connected. From any even residue `r` there is a directed path to zero of length at most `floor(p/2)`; from zero there is a directed edge to every even residue. Hence any two vertices are connected by a path of length at most `floor(p/2)+1`.
 
@@ -111,7 +111,7 @@ Here `C` is a positive even integer and `y` is an even residue (when `t=0`, `y=0
 The checker independently reconstructs actual integer pairs `x,E(x)` for every edge of every decoded path, verifying both residues and the published generic `F` and exact odd-block `E` formulas. On Python 3 it passed:
 
 - All **16,383** even residues across `p=1,...,14`, with **53,248** individual positive synthetic even-return edges, and maximum constructed source bit length 28.
-- Independent finite **exact inverse-BFS** for every `p=1,...,12`, confirming all residues, the canonical word lengths and the `binomial(p,2j)` reverse-distance layers. Unlike a truncated forward scan, this graph enumerates the full, algebraically characterized incoming edges for every vertex.
+- Independent finite **exact inverse-BFS** for every `p=1,...,12`, confirming all residues, the canonical word lengths and the `binomial(p,2j)` reverse-distance layers. Unlike a truncated forward scan, this graph enumerates the complete algebraically characterized **generic-branch** incoming edges for every vertex, including their high-h truncation. It does not enumerate extra edges from the special u=3 return.
 
 These tests supplement the all-parameter mathematical argument; no finite scan is used to infer its universal quantifiers.
 
@@ -129,6 +129,6 @@ This pure-dyadic result complements Agent17's independent complete pure-3-adic q
 - Original DeepMind Cryptids revision pinned for existing upstream source proofs: `ced8f9f44f67a167d5ecc03e687b048c67926371`.
 - Source-certified equivalence `BusyBeaver.IsHalt target ↔ ∃j≥2, SheepEven.EvenReach 10 (2^j)`: `im-results/agent16-sheep-even-return/EvenSourceBridge.lean`, successful original-source manual CI [41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547).
 - Agent22's **standalone** zero hub compiles in Lean 4.36.0-rc2 with ordinary axioms, and `SheepHubSource.lean` states its transfer through the authentic source `SheepBridge.SectionNext.general`. Source CI [41582508608](https://github.com/FlareZ123/bb6/actions/runs/41582508608) verified the standalone `zero_hub_any_odd` and `zero_hub_mixed`, but failed at the next module import boundary. The source module has since been corrected and locally recompiled; follow-up [41583308427](https://github.com/FlareZ123/bb6/actions/runs/41583308427) failed before the first job step and returned unavailable logs (runner/infrastructure blocker). **Do not claim the new source-bridge theorem CI-certified yet.**
-- The **strong-connectivity theorem above is a transparent elementary mathematical proof** with extensive independent exact-integer tests. It is not presently an unmodified-source all-parameter Lean certificate, nor externally checked for academic novelty. Peer review should scrutinize the CRT source witness, the first-even odd-block semantics, the distinct-word induction, and the difference between synthetic graph closure and actual reachability.
+- The **generic-graph strong-connectivity theorem above is a transparent elementary mathematical proof** with extensive independent exact-integer tests. It is not presently an unmodified-source all-parameter Lean certificate, nor externally checked for academic novelty. Peer review should scrutinize the CRT source witness, the first-even odd-block semantics, the distinct-word induction, and the difference between synthetic graph closure and actual reachability.
 
 Next useful work: investigate whether the inverse-word coding yields constraints on **actual blank-root itineraries** that survive state-correlation information, or whether a mixed-modulus version is possible. A repetition of standalone modular residue exclusions is less valuable than a blank-orbit separation invariant.
