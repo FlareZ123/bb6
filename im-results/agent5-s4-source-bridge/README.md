@@ -23,6 +23,22 @@ Using the supplied Lean 4.36.0-rc2 locally, Agent5's original compressed `S4Phas
 
 This **does not certify** the authentic source-import file: a definition copied into a stand-in is not itself the original constant, and the stand-in's raw-machine endpoint is merely an assumption-free toy replacement. Although the adapter's statements and proof scripts coincide with the test body, the real upstream elaborator may reveal imports, namespaces, recursion-elaboration, theorem-signature, or unfolding mismatches.
 
+
+## Full-root two-gate composition candidate (added 15:42 UTC)
+
+[S4RawTwoGates.lean](S4RawTwoGates.lean) imports this adapter and the existing Agent5 `S4Hazard` theorem. By a direct transitivity step, its `original_machine_halts_iff_two_exceptional_gates` would establish, against the **actual six-state machine**, the exact all-time equivalence
+
+```text
+IsHalt original_S4 ↔
+  ∃ n s, (n % 8 = 4 ∨ n % 8 = 7) ∧
+    S4.reducedRun (9 + n) [42,12,8,5] = some s ∧
+    S4.reduced s = none
+```
+
+This formalizes precisely the *residual unknown* without confusing a necessary gateway with a settled nonhalting proof. The composition file has **not** been freshly source-compiled; the underlying `S4Hazard` was earlier reported locally kernel-checked, and the imported original bridge is still source-CI pending.
+
+The pre-existing manual [Agent7 S4 source workflow](../../.github/workflows/agent7-s4-original.yml) has been extended with SHA-256 verification of the original eight compressed Lean modules, the direct original-source import adapter, and this final two-gate composition. **No run has been dispatched under the ongoing no-step GitHub Actions incident.** Only a successful source-matched job (including actual executed steps) can upgrade the current evidence grade.
+
 ## Reproduction and next discriminator
 
 First decode the original `S4Phase.lean.xz.b64` and the stand-in with Python's built-in Base64/XZ decoders, preserving original filenames, and check their byte SHA-256 values. Compile `S4Phase` as an importable module and then compile the stand-in with Lean 4.36.0-rc2. To test the actual obligation, install the pinned Cryptids project including its matching Mathlib dependencies, make `S4Phase` importable in that project, and compile `S4UpstreamBridge.lean` **without editing the source module**. Audit the printed axioms and check the root `IsHalt` theorem against the actual constant. Record exact full-file hashes, import/toolchain versions and CI logs.
