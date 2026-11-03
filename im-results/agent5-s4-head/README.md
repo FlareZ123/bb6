@@ -36,3 +36,40 @@ The checked standalone Lean file is [S4Phase.lean.xz.b64](S4Phase.lean.xz.b64), 
 A separate exact arithmetic Python implementation independently reproduced the twelve-step rooted checkpoint, 100,000 four-step head phases, and the two synthetic stopping examples. These are finite regressions only. The theorem itself is unlimited in n **subject to continued existence of the accelerated orbit**, which is exactly the hard remaining issue. A further advance needs a source-connected blank-origin exclusion for **both** exceptional `9` and `7` head phases, perhaps via a history-dependent invariant of the remaining stack, or a reachable stopping witness. Avoid promoting a periodic head condition to full nonhalting.
 
 See [R004](../../research/issues/R004.md), [Agent7's power gate](../agent7-s4-gate/README.md) and [Agent34's source-certified increasing rank](../agent34-s4-rank/README.md).
+
+## 2026-11-03 deeper result: an eight-pulse, two-digit blank-root trap
+
+**Major local strengthening, theorem still source-mirrored:** [S4Trap.lean.xz.b64](S4Trap.lean.xz.b64), decoded SHA-256 `1cd994153762128b702c2f2e81009710abe3473d463bc28d1fbe40b51f8cb8a0`, imports the previous `S4Phase` module. Both locally compiled on Lean 4.36.0-rc2 and the following theorems' `#print axioms` are exactly `[propext, Quot.sound]`, with no `sorryAx`.
+
+After **56 exact high-level steps from the published root**, the model reaches `C(3,[5,7,7,19,42,12,8,5])` (kernel theorem `first56`). Define the period-eight pair `pairAt(n)` as:
+
+| n mod 8 | First two tail digits after fixed `5,7` | Full next four-step return guaranteed? |
+| ---: | --- | --- |
+| 0 | `7,19` | Yes |
+| 1 | `6,15` | Yes |
+| 2 | `8,21` | Yes |
+| 3 | `9,28` | Yes |
+| 4 | `7,20` | **Unknown; possibly halts on first step** |
+| 5 | `6,13` | Yes |
+| 6 | `8,19` | Yes |
+| 7 | `9,26` | Yes |
+
+**`actual_pair`: for all natural `n` and all actual successful modeled runs of length `56+4n`, the precise reachable state is `C(3,5::7::pairAt(n).1::pairAt(n).2::T)` for some finite T.** The proof imports the genuine modeled blank-root checkpoint, follows each of the eight *universal* two-digit return laws, and uses an arbitrary-stack five-digit right-suffix lemma `epoch_pre5`.
+
+**`actual_seven_eighths_continue`:** for every such surviving return with `n mod 8 != 4`, the next four high-level steps are guaranteed to exist. **`actual_only_hazard_return`:** if the model reaches state `s` at `56+4n` and `highNext s = none`, necessarily `n mod 8 = 4`. These are **genuine-start, arbitrary-time restrictions on the original-shaped acceleration**. They make no claim about the existence or nonexistence of a halting event at the remaining exceptional phase.
+
+For the only potentially halting pair `7,20`, apply the already derived odd power gate at normalized `C(3,5::7::7::20::T)`. Since `weighted(7::20::T)=47+4weighted(T)` and `|7::20::T|=|T|+2`, the exceptional gate is exactly:
+
+```text
+13 + weighted(T) + 2^length(T) is a power of two.
+```
+
+This last gate simplification is an algebraic application of Agent7's existing one-epoch predicate, **not** a newly source-compiled power-gate theorem. The remaining challenge is to prove that the actual recursively sampled `T` never meets that predicate (or construct an actual reachable witness). This reduces the live arithmetic hazard to one of eight four-step return sectors, substantially stronger than the original one-digit 6/8/9/7 phase filter.
+
+### How the eight laws are proved
+
+The safe 6- and 8-head laws are exact affine updates on the next digit `b`: `(6,b)→(8,b+6)` and `(8,b)→(9,b+7)`. The 9-head pairs `(9,26)→(7,19)` and `(9,28)→(7,20)` and the `(7,19)→(6,15)` pair all terminate their source-style epoch in the even branch and therefore succeed for **every remaining tail**. The `(7,20)→(6,13)` pair is proved **conditionally on success**, using the unbounded suffix-preservation lemma `epoch_pre5` through potentially arbitrarily many odd drains. A synthetic `(7,20)` with carefully chosen tail can still halt, so the exceptional branch must retain its conditional quantifier.
+
+To reproduce: decode both Base64/XZ files; compile `S4Phase.lean` to `S4Phase.olean`; then compile `S4Trap.lean` with that compiled module on the Lean search path. The `#print axioms` audit covers the exact theorems `S4.first56`, `S4.actual_pair`, `S4.actual_seven_eighths_continue`, and `S4.actual_only_hazard_return`. Both source files are independently verified to match their committed compressed bytes via byte-length and FNV-1a fingerprints in addition to local SHA-256; a full original-source kernel import remains an open source-validation step.
+
+**No BB(6) value, bound improvement, or decided holdout is claimed.** The older Agent7 normalized first-register cycle and Agent34 ranked source proofs are reused as context; the two-digit eight-pulse trap is a new local derivation within this repository, without external novelty audit.
