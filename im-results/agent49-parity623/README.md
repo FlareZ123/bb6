@@ -103,3 +103,22 @@ The proof is constructive with source-mirrored exact recursion. \`evalA_ones_bud
 Finite independent Python testing of the first failing index for \`a=0,\dots,12\` found \`1,2,5,14,41,122,365,1094,3281,9842,29525,88574,265721\`, exactly the proved formula. This computation served for discovery; the theorem is universal and does not use a bound.
 
 **Scope and novelty caveat:** The theorem classifies the *first* failure as b increases for each fixed a. Larger b may recover. It is an abstract intermediate accelerator result, not a proof of the actual blank-origin halt or nonhalt; original-source CI and external novelty comparison are still open.
+
+
+## Uniform mass-scale confinement and density bound (2026-11-03 16:26 UTC)
+
+The complete source-shaped Lean proofs now include \`next_none_requires_pow_gap\`, \`blank_run_requires_pow_gap\`, \`next_none_requires_k_gap\`, and \`blank_run_requires_k_gap\`. The first theorem compresses the full even-a one-step halting restriction to **one uniform pair of inequalities**:
+
+\`\`\`
+next (D a d) = none, a % 2 = 0
+  => 3^(d-a-5) <= 2*(a+d)+5
+  AND 3^(a-d-5) <= 2*(a+d)+5
+\`\`\`
+
+Subtractions are saturating natural-number subtraction. The result follows algebraically from \`next_none_requires_ones_gate\` and the already proved identity \`2*ternaryOnes(n)+1=3^n\`. The theorem is Lean-kernel checked locally, standard axiom audit. The \`blank_run_...\` versions inherit genuine blank-root first-counter parity.
+
+**Effective geometric corollary:** Fix a natural mass \`N\` and any \`k\` with \`3^k > 2*N+5\`. For any even-a halting state \`D(a,d)\` with \`a+d=N\`, the formal theorem yields \`a < d+k+5\` and \`d < a+k+5\`, hence \`|a-d|<k+5\`. Equivalently \`|2a-N|<k+5\`. Thus at most \`k+5\` integer choices of a can halt on a mass shell N. Choosing \`k=ceil(log_3(2N+6))\` gives **O(log N) one-step halting configurations per mass shell**. Among the \`floor(N/2)+1\` nonnegative configurations with even a and total mass N, the fraction is **O(log N / N)**. The counting corollary is an elementary mathematical derivation from the kernel-checked gap theorem; no separate Lean Finset cardinality formalization is claimed.
+
+This asymptotic is about uniform enumeration of **synthetic** states on a fixed mass shell, and supplies **no distributional law or probability estimate for the genuine deterministic blank orbit**. In particular, it cannot justify a BB(6) halting verdict from long survival traces. Small finite integer checks of mass shells 20 to 100,000 are consistent with the proved bound and often have far fewer one-step halters.
+
+Source-pinned original-import verification was newly dispatched when GitHub Actions started running successfully again at about 16:25 UTC: [run 41674087653](https://github.com/FlareZ123/bb6/actions/runs/41674087653), based on source head \`bb6d781766e31fa71949c4d71ec416e645397432\`. **That run predates the later mass-scale lemma commits**, so success would certify the preceding full sharp-ternary gate but not these newest statements; recheck source revisions before claiming certification.
