@@ -152,10 +152,34 @@ def audit_special_sandwich():
     return rows
 
 
+def audit_two_exact_parents():
+    """Two explicit genuine generic E predecessors for 101 full exponent values.
+
+    This verifies constructive arithmetic at k=0..100; all-k existence uses
+    modular periods modulo 15 and 81 separately in the mathematical report.
+    """
+    total, max_exponent = 0, 0
+    for k in range(101):
+        j = 138 + STRIDE*k
+        R = 1 << j
+        x1, rem1 = divmod((R << 3) - 2, 15)
+        x2, rem2 = divmod((R << 5) - 68, 81)
+        assert rem1 == 0 and rem2 == 0 and 2 < x2 < x1 < R
+        for x, expected_a, expected_h in ((x1, 1, 1), (x2, 2, 2)):
+            a, v, h, u, z, y = even_successor(x)
+            assert (a, h) == (expected_a, expected_h)
+            assert v >= 5 and v % 2 == 1 and u % 2 == 1
+            assert y == R
+            total += 1
+        max_exponent = j
+    return total, max_exponent
+
+
 def main():
     n = audit_source_algebra()
     cases, reps, max_period, negative_B = audit_residue_certificates()
     audit_high_h()
+    n_predecessors, max_exponent = audit_two_exact_parents()
     cutoffs = audit_generic_high_cutoffs()
     sandwiches = audit_special_sandwich()
     print("PASS: independent even-return algebra identities:", n)
@@ -164,6 +188,8 @@ def main():
     print("PASS: maximum reconstructed period:", max_period)
     print("PASS: negative-B branches handled:", negative_B)
     print("PASS: both high-h base congruence obstructions")
+    print("PASS: two explicit E parents at 101 exponents:", n_predecessors)
+    print("PASS: largest independently replayed power exponent:", max_exponent)
     print("PASS: six universal generic high-a induction cutoffs:", [r[2] for r in cutoffs])
     print("PASS: six universal special-branch power sandwiches:", [r[-1] for r in sandwiches])
     print("LIMIT: arithmetic audit only; all-k high-a and Lean import not repeated")
