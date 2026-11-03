@@ -34,15 +34,15 @@ jobs:
           mkdir -p /tmp/bb6-agent10-source
           a="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
           b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
-          cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore}.lean /tmp/bb6-agent10-source/
-          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,OriginalNextBridge}.lean /tmp/bb6-agent10-source/
-          cd /tmp/bb6-agent10-source
-          export LEAN_PATH=".:$GITHUB_WORKSPACE/.lake/build/lib/lean"
+          cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass}.lean /tmp/bb6-agent10-source/
+          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,OriginalNextBridge}.lean /tmp/bb6-agent10-source/
+          cd "$GITHUB_WORKSPACE"
+          export LEAN_PATH="/tmp/bb6-agent10-source"
           lake env lean --version
-          for m in SourceMacro CascadeOdd ReverseResidue GapCore TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion; do
-            lake env lean -o "$m.olean" "$m.lean"
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary; do
+            lake env lean -o "/tmp/bb6-agent10-source/$m.olean" "/tmp/bb6-agent10-source/$m.lean"
           done
-          lake env lean OriginalNextBridge.lean
+          lake env lean /tmp/bb6-agent10-source/OriginalNextBridge.lean
           if grep -R -n --include='*.lean' 'sorry' . | grep -v 'sorryAx'; then
             echo "Please inspect any occurrence of sorry above"
             exit 1
