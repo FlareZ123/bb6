@@ -1,3 +1,4 @@
+import ChampionModular
 import Lean.Elab.Tactic.Omega
 
 namespace BB6ChampionArithmetic
@@ -54,9 +55,6 @@ theorem sectionResult_marker_two (k a b : Nat) :
     (sectionResult (3*k+2) 2 a b).marker = 0 := by
   rw [sectionResult_marker]
   omega
-
-def resetIndex (length exponent : Nat) : Nat :=
-  (4*2^length-1)*2^exponent-1
 
 def resetCost (length exponent right : Nat) : Nat :=
   12*(length+exponent) + 6*4^right + 42*2^right+49-9*right
@@ -122,9 +120,63 @@ theorem first_stage_exponent_odd :
   rw [he] at h
   exact h
 
+
+private theorem first_reset_length_even :
+    (3+(sectionResult 7 2 6 63).exponent+2)%2 = 0 := by
+  have h := first_stage_exponent_odd
+  omega
+
+/-- The actual first reset index is of type 3k+1. -/
+theorem first_reset_index_one :
+    resetIndex 3 (sectionResult 7 2 6 63).exponent %3 = 1 := by
+  have h := first_stage_exponent_odd
+  obtain ⟨k, hk⟩ : ∃ k, (sectionResult 7 2 6 63).exponent=2*k+1 := by
+    refine ⟨(sectionResult 7 2 6 63).exponent/2, ?_⟩
+    omega
+  rw [hk]
+  exact odd_length_odd_exponent_reset 1 k
+
+/-- After consuming the enormous first reset index, the marker is m1. -/
+theorem middle_stage_marker_one :
+    (sectionResult (resetIndex 3 (sectionResult 7 2 6 63).exponent)
+      2 (sectionResult 7 2 6 63).right
+      (nextRight (sectionResult 7 2 6 63).right)).marker = 1 := by
+  rw [sectionResult_marker]
+  have hr := first_reset_index_one
+  omega
+
+/-- The length after first reset is even, so the second reset index is 3k+2. -/
+theorem second_reset_index_two :
+    resetIndex (3+(sectionResult 7 2 6 63).exponent+2)
+      (sectionResult (resetIndex 3 (sectionResult 7 2 6 63).exponent)
+        2 (sectionResult 7 2 6 63).right
+        (nextRight (sectionResult 7 2 6 63).right)).exponent %3 = 2 := by
+  have he := first_reset_length_even
+  obtain ⟨k,hk⟩ : ∃ k, 3+(sectionResult 7 2 6 63).exponent+2=2*k := by
+    refine ⟨(3+(sectionResult 7 2 6 63).exponent+2)/2, ?_⟩
+    omega
+  rw [hk]
+  exact even_length_reset k _
+
+/-- Hence after the second counted decrement stage, the marker is m0. -/
+theorem final_stage_marker_zero :
+    (sectionResult
+      (resetIndex (3+(sectionResult 7 2 6 63).exponent+2)
+        (sectionResult (resetIndex 3 (sectionResult 7 2 6 63).exponent)
+          2 (sectionResult 7 2 6 63).right
+          (nextRight (sectionResult 7 2 6 63).right)).exponent)
+      2 0 1).marker=0 := by
+  rw [sectionResult_marker]
+  have hr := second_reset_index_two
+  omega
+
 #print axioms sectionResult_marker
 #print axioms sectionResult_marker_one
 #print axioms sectionResult_marker_two
 #print axioms first_stage_exponent_odd
+#print axioms first_reset_index_one
+#print axioms middle_stage_marker_one
+#print axioms second_reset_index_two
+#print axioms final_stage_marker_zero
 
 end BB6ChampionArithmetic
