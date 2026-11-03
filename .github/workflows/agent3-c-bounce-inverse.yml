@@ -104,7 +104,9 @@ jobs:
           lean EvenChild.lean
           # Source-exact full-depth odd second wedge with M32-invisible true-blank exclusion.
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenSliver.lean .
-          lean OddSevenSliver.lean
+          lean -o OddSevenSliver.olean OddSevenSliver.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddOddWedge.lean .
+          lean OddOddWedge.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
