@@ -7,7 +7,7 @@
   "programme": "R-20261103T1325Z-agent1-c-leftone",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,24 @@
       "task": "Test whether authentic blank-origin Machine C first-return sections can ever have left counter a=1; if a concrete counterexample exists, identify the exact failure and evaluate a non-modular reachable-branch invariant rather than another m8 finite-prefix proof.",
       "role": "falsify",
       "state": "active",
-      "evidence": [],
-      "handoff": "Start from original FastSectionDef/BounceCalc semantics, validate an exact interpreter on known 16 m8 prefix checkpoints, test earliest left-one visit with a strict section cap, and then decide if a general uniform invariant or a rigorous counterexample is available."
+      "evidence": [
+        {
+          "kind": "local-Lean-certificate",
+          "path": "im-results/agent1-c-leftone/LeftOneWitness.lean",
+          "note": "Standalone Lean4.36.0-rc2 by decide run 957=(1,3310), scan confirms no earlier a=1, #print axioms empty; faithful source formulas, original imports pending."
+        },
+        {
+          "kind": "deterministic-experiment",
+          "path": "im-results/agent1-c-leftone/check_leftone.py",
+          "note": "Exact Python 400000-return check, first three a=1 occurrences at 957/24232/397199; preexisting reference return150052=(621619,213453) matched."
+        },
+        {
+          "kind": "reproduction-notice",
+          "path": "im-results/agent1-c-leftone/README.md",
+          "note": "Scope, original source blob hashes, counterexample and CI limitation. Local C++ 200M screen reproduced same three a=1 visits and no stopping; no all-time assertion."
+        }
+      ],
+      "handoff": "The original all-time no-left-one conjecture is decisively falsified by the exact model run957=(1,3310) (earliest first). 200M copied-source section prefix shows only 3 left-one hits, none with k divisible by 4; this is speculative finite evidence. Test whether a stronger infinitely quantified k-congruence exclusion has a source-exact proof and whether prior Agent15/38 theorems already subsume it. No additional m8 trace."
     }
   ],
   "review_requested": null
