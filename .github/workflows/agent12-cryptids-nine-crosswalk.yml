@@ -1,0 +1,43 @@
+name: Agent 12 upstream Cryptids exact rooted proof audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-kernel:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - module: BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
+            theorem: BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.is_halt
+          - module: BusyBeaver.BB6.NonHalt.M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA
+            theorem: BusyBeaver.M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.is_does_not_halt
+    runs-on: ubuntu-latest
+    timeout-minutes: 48
+    steps:
+      - name: Reclaim CI build space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+          sudo apt-get update -qq >/dev/null
+          sudo apt-get install -y -qq bubblewrap >/dev/null
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Checkout pinned upstream original proof sources
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 2c93870f6db0515f53722dc65135a3f6c587cb9a
+          persist-credentials: false
+      - name: Compile original root declaration with Lean kernel
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: ${{ matrix.module }}
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Print theorem assumptions of original root
+        env:
+          MODULE: ${{ matrix.module }}
+          THEOREM: ${{ matrix.theorem }}
+        run: |
+          printf '%s\n' "import $MODULE" "#print axioms $THEOREM" > Agent12Audit.lean
+          lake env lean Agent12Audit.lean
