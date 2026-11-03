@@ -1320,4 +1320,30 @@ theorem run_none_implies_gate (n : Nat) (h : run n=none) :
 
 #print axioms run_none_implies_gate
 
+
+/-- Exact identification of this blank-section recursion with the iterate used by Cryptids CollatzHalts. -/
+theorem run_eq_highLevel_iterate (n : Nat) :
+    run n = (fun o : Option State => o.bind next)^[n] (some (.D 0 7)) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [run, Function.iterate_succ_apply']
+    exact congrArg (fun o : Option State => o.bind next) ih
+
+/-- Any halt of the original six-state, two-symbol machine must visit our proved ternary gateway. -/
+theorem target_halt_implies_ones_gate (hhalt : BusyBeaver.IsHalt target) :
+    ∃ m a d, run m=some (.D a d) ∧ next (.D a d)=none ∧
+      0<a ∧ (a≤d → ternaryOnes (d+1-a)≤a) ∧
+      (d%2=1 → a<d+5 ∨ ternaryOnes (a-d-5)<d+3) ∧
+      (d%2=0 → a<d+3 ∨ ternaryOnes (a-d-2)<d+2) := by
+  have hc : BusyBeaver.CollatzHalts highLevelNext highLevelStart :=
+    isHalt_iff_highLevel_acceleration.mp hhalt
+  obtain ⟨n,hn⟩ := hc
+  have hr : run n=none := by
+    rw [run_eq_highLevel_iterate]
+    simpa only [highLevelStart] using hn
+  exact run_none_implies_gate n hr
+
+#print axioms target_halt_implies_ones_gate
+
 end BB6.Agent49ParitySource
