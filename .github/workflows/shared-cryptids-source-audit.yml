@@ -13,6 +13,11 @@ on:
         required: true
         type: string
         default: 'im-results/agent5-429-rank/BB429Burst.lean'
+      extra_dependency_path:
+        description: 'Optional second repo-relative Lean dependency (compiled after the first)'
+        required: false
+        type: string
+        default: ''
       bridge_path:
         description: 'Repo-relative Lean source proof importing original module and dependency'
         required: true
@@ -30,6 +35,7 @@ jobs:
       ORIGINAL_MODULE: ${{ inputs.original_module }}
       DEPENDENCY_PATH: ${{ inputs.dependency_path }}
       BRIDGE_PATH: ${{ inputs.bridge_path }}
+      EXTRA_DEPENDENCY_PATH: ${{ inputs.extra_dependency_path }}
       UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +50,13 @@ jobs:
             test -f "$p"
           done
           test "$DEPENDENCY_PATH" != "$BRIDGE_PATH"
+          if [[ -n "$EXTRA_DEPENDENCY_PATH" ]]; then
+            [[ "$EXTRA_DEPENDENCY_PATH" =~ ^im-results/[A-Za-z0-9_./-]+\.lean$ ]]
+            [[ "$EXTRA_DEPENDENCY_PATH" != *..* ]]
+            test -f "$EXTRA_DEPENDENCY_PATH"
+            test "$EXTRA_DEPENDENCY_PATH" != "$DEPENDENCY_PATH"
+            test "$EXTRA_DEPENDENCY_PATH" != "$BRIDGE_PATH"
+          fi
       - name: Install original Cryptids Lean version
         shell: bash
         run: |
@@ -80,4 +93,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/$DEPENDENCY_PATH" "$dependency_base"
           cp "$GITHUB_WORKSPACE/$BRIDGE_PATH" "$bridge_base"
           lake env lean -o ".lake/build/lib/lean/${dependency_base%.lean}.olean" "$dependency_base"
+          if [[ -n "$EXTRA_DEPENDENCY_PATH" ]]; then
+            extra_base="$(basename "$EXTRA_DEPENDENCY_PATH")"
+            cp "$GITHUB_WORKSPACE/$EXTRA_DEPENDENCY_PATH" "$extra_base"
+            lake env lean -o ".lake/build/lib/lean/${extra_base%.lean}.olean" "$extra_base"
+          fi
           lake env lean "$bridge_base"
