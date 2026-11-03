@@ -1217,4 +1217,52 @@ theorem blank_run_requires_ones_gate (n a d : Nat)
 #print axioms next_none_requires_ones_gate
 #print axioms blank_run_requires_ones_gate
 
+
+/-- A single exponential estimate simultaneously encloses both sides of every even-a halting gateway. -/
+theorem next_none_requires_pow_gap (a d : Nat)
+    (he : a%2=0) (h : next (.D a d)=none) :
+    3^(d-a-5) ≤ 2*(a+d)+5 ∧ 3^(a-d-5) ≤ 2*(a+d)+5 := by
+  have hg := next_none_requires_ones_gate a d he h
+  constructor
+  · by_cases hd : a≤d
+    · have ht := hg.2.1 hd
+      have hp := twice_ones_add_one_eq_pow (d+1-a)
+      have hle : d-a-5 ≤ d+1-a := by omega
+      have hpow := Nat.pow_le_pow_right (by omega : 0<3) hle
+      omega
+    · have hzero : d-a-5=0 := by omega
+      rw [hzero]
+      simp
+  · by_cases hd : a≤d
+    · have hzero : a-d-5=0 := by omega
+      rw [hzero]
+      simp
+    · by_cases hodd : d%2=1
+      · have hr := hg.2.2.1 hodd
+        rcases hr with hs | ht
+        · have hz : a-d-5=0 := by omega
+          rw [hz]
+          simp
+        · have hp := twice_ones_add_one_eq_pow (a-d-5)
+          omega
+      · have heven : d%2=0 := by omega
+        have hr := hg.2.2.2 heven
+        rcases hr with hs | ht
+        · have hz : a-d-5=0 := by omega
+          rw [hz]
+          simp
+        · have hp := twice_ones_add_one_eq_pow (a-d-2)
+          have hex : a-d-5≤a-d-2 := by omega
+          have hm := Nat.pow_le_pow_right (by omega : 0<3) hex
+          omega
+
+/-- Every hypothetically terminal blank-origin section satisfies the uniform power-gap bound. -/
+theorem blank_run_requires_pow_gap (n a d : Nat)
+    (hseen : run n = some (.D a d)) (hhalt : next (.D a d)=none) :
+    3^(d-a-5) ≤ 2*(a+d)+5 ∧ 3^(a-d-5) ≤ 2*(a+d)+5 := by
+  exact next_none_requires_pow_gap a d (run_preserves_even n a d hseen) hhalt
+
+#print axioms next_none_requires_pow_gap
+#print axioms blank_run_requires_pow_gap
+
 end BB6.Agent49ParitySource
