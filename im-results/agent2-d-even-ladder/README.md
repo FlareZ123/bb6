@@ -4,6 +4,8 @@
 
 > **Stronger result:** [Three-return periodic bridge](three-return-periodic-bridge.md) eliminates the fourth preliminary section. Its bounded, period-64 multiplier construction embeds **every even depth** after only three prior source-macro checkpoints, matching Agent35's odd-depth three-checkpoint construction. This README preserves the earlier, independently derived four-section route for traceability.
 
+**Additional formal quantitative result:** [Uniform supercubic synthetic runtime](complexity-note.md) gives for *every* positive depth m a prepared regular input with finite right support `N<=120*3^m` and an E-ladder raw-time lower bound `T_E>=64^m`. Three checksum-verified Lean modules [DEvenBridge.lean](DEvenBridge.lean), [DCostLower.lean](DCostLower.lean), and [DComplexity.lean](DComplexity.lean) prove the universal arithmetic. The original third-return source composition and any blank-reachable relevance remain separate.
+
 ## Original machine and precise target
 
 The literal D-start six-state table is `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---`. Write `I_n(s)` for state F scanning a zero, the *entire tape left of the head blank*, and right physical tape `1^n s 0^infinity`. Let `P_r=(01)^r`. Consider the synthetic regular-language E inputs
