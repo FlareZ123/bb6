@@ -46,11 +46,10 @@ theorem b_shift_three (k : Nat) (ys : List Bool) :
     bEnd (k+1) ys =
       ⟨[], false, List.replicate 8 true ++
         (List.replicate (8*k+9) true ++ ys), 5⟩ := by
-  change List.replicate (8*(k+1)+9) true ++ ys =
-    List.replicate 8 true ++ (List.replicate (8*k+9) true ++ ys)
-  rw [← List.append_assoc, List.replicate_append_replicate]
+  unfold bEnd
   have hn : 8*(k+1)+9 = 8+(8*k+9) := by omega
   rw [hn]
+  rw [← List.append_assoc, List.replicate_append_replicate]
 
 #print axioms full_B_first_return
 #print axioms b_shift_three
