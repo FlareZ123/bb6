@@ -151,6 +151,58 @@ theorem highLevel_far_even_shift (a d t : Nat)
   rw [heq]
   exact drainB_first_shift (d+2) (a-d-2) 2 t (by omega)
 
+
+/-- Far-right odd-d rays become first-counter translations after two-unit input shifts. -/
+theorem highLevel_right_odd_shift (a d t : Nat)
+    (ha : 0 < a) (hae : a%2=0) (hd : d%2=1) (hg : 2*a+1 ≤ d) :
+    highLevelNext (.D a (d+2*t)) =
+      (highLevelNext (.D a d)).map (liftFirstState (2*t)) := by
+  conv => lhs; rw [highLevelNext]
+  conv => rhs; rw [highLevelNext]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬(d%2=1 ∧ a ≥ d+5) := by omega
+  have h1t : ¬((d+2*t)%2=1 ∧ a ≥ (d+2*t)+5) := by omega
+  have h2 : ¬(d%2=0 ∧ a ≥ d+3) := by omega
+  have h2t : ¬((d+2*t)%2=0 ∧ a ≥ (d+2*t)+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have heq : a ≠ d+2 := by omega
+  have heqt : a ≠ (d+2*t)+2 := by omega
+  have hdt : (d+2*t)%2=1 := by omega
+  simp only [if_neg h0,if_neg h1,if_neg h1t,if_neg h2,if_neg h2t,
+      if_neg hodd,if_neg heq,if_neg heqt,if_pos hd,if_pos hdt]
+  have he : d+2*t+4-a = (d+4-a)+2*t := by omega
+  rw [he]
+  exact drainB_first_shift (a-1) (d+4-a) 3 (2*t) (by omega)
+
+/-- Far-right even-d rays likewise become exact first-counter translations. -/
+theorem highLevel_right_even_shift (a d t : Nat)
+    (ha : 0 < a) (hae : a%2=0) (hd : d%2=0) (hg : 2*a+2 ≤ d) :
+    highLevelNext (.D a (d+2*t)) =
+      (highLevelNext (.D a d)).map (liftFirstState (2*t)) := by
+  conv => lhs; rw [highLevelNext]
+  conv => rhs; rw [highLevelNext]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬(d%2=1 ∧ a ≥ d+5) := by omega
+  have h1t : ¬((d+2*t)%2=1 ∧ a ≥ (d+2*t)+5) := by omega
+  have h2 : ¬(d%2=0 ∧ a ≥ d+3) := by omega
+  have h2t : ¬((d+2*t)%2=0 ∧ a ≥ (d+2*t)+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have heq : a ≠ d+2 := by omega
+  have heqt : a ≠ (d+2*t)+2 := by omega
+  have hdodd : d%2 ≠ 1 := by omega
+  have hdt : (d+2*t)%2 ≠ 1 := by omega
+  simp only [if_neg h0,if_neg h1,if_neg h1t,if_neg h2,if_neg h2t,
+      if_neg hodd,if_neg heq,if_neg heqt,if_neg hdodd,if_neg hdt]
+  have hevalGap : a+2 ≤ d+1-a := by omega
+  obtain ⟨aa,bb,dd,heval,hsafe⟩ := evalA_safe_gap (d+1-a) a (2*a+5) hevalGap
+  have hes : d+2*t+1-a = (d+1-a)+2*t := by omega
+  rw [hes,evalA_first_shift (d+1-a) a (2*a+5) (2*t) hevalGap,heval]
+  simp only [Option.map_some,liftFirstEval,Option.bind_some]
+  exact drainB_first_shift bb aa dd (2*t) hsafe
+
+#print axioms highLevel_right_odd_shift
+#print axioms highLevel_right_even_shift
+
 #print axioms evalA_first_shift
 #print axioms drainB_first_shift
 #print axioms highLevel_far_odd_shift
