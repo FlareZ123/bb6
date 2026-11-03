@@ -46,6 +46,13 @@ theorem source_no_cylinder_13_31 (a k : Nat)
   apply hh
   simp [bad,low,ha,hk]
 
+theorem source_no_cylinder_61_79 (a k : Nat)
+    (ha : a%96=61) (hk : k%96=79)
+    (h : BB6CLine.Reach (a,k,0)) : False := by
+  have hh := source_blank_never_bad (a,k,0) h
+  apply hh
+  simp [bad,low,ha,hk]
+
 theorem source_no_low_family_18_23 (a k : Nat)
     (ha : a%48=18) (hk : k%24=23)
     (h : BB6CLine.Reach (a,k,0)) : False := by
@@ -74,6 +81,7 @@ theorem source_no_13_31_0 (h : BB6CLine.Reach (13,31,0)) : False := by
 #print axioms nextC_source_equal
 #print axioms source_blank_never_bad
 #print axioms source_no_cylinder_13_31
+#print axioms source_no_cylinder_61_79
 #print axioms source_no_low_family_18_23
 #print axioms source_no_low_family_20_0
 #print axioms source_no_low_family_42_11
