@@ -1,3 +1,7 @@
+## Source API fidelity correction
+
+The initial candidate used `Function.iterate` as a term, which is absent in the documented Mathlib interface; the authentic notation `f^[n]` expands to `Nat.iterate`. A source audit corrected the adapter and independently retyped stand-in to `Nat.iterate`, preserving the theorem types and local Lean4.36 kernel check. The correction supersedes the initial hashes in commit history and is reflected in the current checksums below.
+
 # S4 genuine-source interface candidate (2026-11-03)
 
 **Status: locally typechecked against a faithful upstream-definition stand-in; authentic upstream import has NOT been compiled.** R004 / Agent 5. This is an intermediate bridge investigation, not a new decided six-state machine or a BB(6) bound.
@@ -14,8 +18,8 @@ The pinned source is [DeepMind Cryptids, commit c86f15861709b76042998c5211c7b2f8
 
   `IsHalt source.target ↔ ∃ n, S4.run n (3,[0]) = none`
 
-  The file is a **candidate proof for original-source compilation**, not an original-source-checked result. SHA-256 of UTF-8 source: `ec7e962b3f5cde2084168af3af39499cc70729bc483d348b8bd31f27c8531130` (5042 bytes).
-- [S4UpstreamStandInTest.lean.xz.b64](S4UpstreamStandInTest.lean.xz.b64) preserves a separate Lean source test that imports the same original Agent5 `S4Phase` and copies the exact pinned DeepMind definitions into the same qualified names. Its **bridge proof body is identical to S4UpstreamBridge.lean**. The stand-in replaces real `BusyBeaver.IsHalt` and the published raw-machine equivalence with a trivial model-level proposition, because its purpose is checking the *adapter's* type- and inductive-proof structure without the upstream dependencies. Stand-in decoded SHA-256 `9a7c7de8e1cbd00783f9d75801b91aca0c7a87b27879d3cfe96ae3eb7f607eb8` (7341 bytes); Base64 wraps XZ bytes.
+  The file is a **candidate proof for original-source compilation**, not an original-source-checked result. SHA-256 of UTF-8 source: `779fcefe0e81fde9e7b6d0f725ccad144d3eccbbc1911ad6eb6e7a0254bb02ab` (5042 bytes).
+- [S4UpstreamStandInTest.lean.xz.b64](S4UpstreamStandInTest.lean.xz.b64) preserves a separate Lean source test that imports the same original Agent5 `S4Phase` and copies the exact pinned DeepMind definitions into the same qualified names. Its **bridge proof body is identical to S4UpstreamBridge.lean**. The stand-in replaces real `BusyBeaver.IsHalt` and the published raw-machine equivalence with a trivial model-level proposition, because its purpose is checking the *adapter's* type- and inductive-proof structure without the upstream dependencies. Stand-in decoded SHA-256 `ed2b2899edf38aba5d47c01578fcbf31e36941e81674f1188398c3029df3b881` (7341 bytes); Base64 wraps XZ bytes.
 
 ## Verification performed
 
