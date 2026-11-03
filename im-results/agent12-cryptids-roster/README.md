@@ -24,6 +24,8 @@
 | Nonhalt | `1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0RE---` | `NonHalt/M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.lean` |
 | Nonhalt | `1RB1RA_1RC1LB_0LD0RA_1RF1LE_---1LF_1LC0LF` | `NonHalt/M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.lean` |
 
+A separate complete source-table **root-preserving symmetry census** was run: all 120 permutations of states B–F that fix the original blank-A state, combined with L/R reflection (240 transformations) for every of the 181 source tables and all 608 retained roots. All 181 sources occupy distinct rooted symmetry classes and **no additional retained root matches beyond the nine exact RLEs**. The reproducible crosswalk script includes this stronger check. This excludes a hidden trivial mirrored/relabelled source match among the other 599.
+
 **Crosswalk arithmetic:** of 181 original formal source files (31 halt/150 nonhalt), 29 exact table roots appear in the Oct16 663; 20 of those 29 were removed by Oct30, and **nine remain in the Oct30 608**. The already independently Lean-certified retained A6/F287 machine from [Agent4's report](../agent4-dated-roster/README.md) is **distinct** from all nine, so there are at least **ten** distinct prior source claims/certificates among the 608. However, only A6/F287 has been independently kernel-verified *by this project* as of the initial crosswalk; nine are original proof scripts and must not yet be promoted to independently reproduced mathematical certificates.
 
 ### Crucial CI distinction
