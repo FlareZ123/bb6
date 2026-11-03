@@ -32,6 +32,7 @@ theorem eLong_scan (m q : Nat) (ys : List Bool) :
         [true,true,false,true,true,true] ++ ys, 0⟩ := by
   have ht : 2*q+4 = 2+2*(q+1) := by omega
   rw [ht, run_add, eLong_two, scan_run]
+  rfl
 
 /-- Newly locally verified against the literal six-state rule table:
     this 20-step turn is independent of the entire unknown left tape. -/
@@ -99,7 +100,7 @@ theorem eLong_run (m q : Nat) (ys : List Bool) :
   rw [ht,run_add,eLong_front,sweepD_run]
 
 /-- Exact all-k,all-q,all-suffix endpoint on the original six-state rule table.
-    Full original-source CI and axiom audit remain pending runner recovery. -/
+    Subject to exact original-source CI and axiom audit. -/
 theorem full_E_110111_pairs_raw (k q : Nat) (ys : List Bool) :
     run (12*k*k+49*k+68+4*q)
       (init (List.replicate (3*k+2) true ++
