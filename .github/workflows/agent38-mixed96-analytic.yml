@@ -19,4 +19,7 @@ jobs:
           cd im-results/agent38-mixed96-reverse
           lean --version
           LEAN_PATH=. lean -o CoreAnalytic.olean CoreAnalytic.lean
+          cp ../agent41-mixed96/SecondMod96.lean .
+          LEAN_PATH=. lean -o SecondMod96.olean SecondMod96.lean
+          LEAN_PATH=. lean -o SecondWide.olean SecondWide.lean
           LEAN_PATH=. lean -o CoreCaseLemmas.olean CoreCaseLemmas.lean
