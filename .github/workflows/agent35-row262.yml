@@ -25,3 +25,9 @@ jobs:
         run: python3 im-results/agent35-row262-section/test_row262.py
       - name: Verify exact dyadic scalar conjugacy on seeded and blank trajectories
         run: python3 im-results/agent35-row262-section/test_scalar.py
+      - name: Verify exact universal row262 9q burst source theorem
+        env:
+          LEAN_PATH: im-results/agent35-row262-section
+        run: |
+          lean im-results/agent2-row262-burst/PairBurst.lean
+          python3 im-results/agent2-row262-burst/test_pair_burst.py
