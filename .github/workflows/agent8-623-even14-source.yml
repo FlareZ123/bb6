@@ -1,0 +1,36 @@
+name: Agent 8 BB6 623 even-d14 original-source theorem (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare original Cryptids
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          "$HOME/.elan/bin/lake" exe cache get
+          "$HOME/.elan/bin/lake" build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+      - name: Verify exact original source sharp fourteen-unit mass
+        working-directory: /tmp/cryptids
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMassSource.lean" Agent8SharpMassSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMass10Source.lean" Agent8SharpMass10Source.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMass12Source.lean" Agent8SharpMass12Source.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMass14AuxSource.lean" Agent8SharpMass14AuxSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpMass14EvenSource.lean" Agent8SharpMass14EvenSource.lean
+          for m in Agent49ParitySource Agent8BudgetSource Agent8SharpMassSource Agent8SharpMass10Source Agent8SharpMass12Source Agent8SharpMass14AuxSource; do
+            lake env lean -o ".lake/build/lib/lean/$m.olean" "$m.lean"
+          done
+          lake env lean Agent8SharpMass14EvenSource.lean
