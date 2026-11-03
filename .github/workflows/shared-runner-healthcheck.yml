@@ -1,0 +1,20 @@
+name: Shared GitHub Actions runner health check (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Confirm real hosted runner executed a step
+        shell: bash
+        run: |
+          set -euo pipefail
+          date -u +'%Y-%m-%dT%H:%M:%SZ'
+          printf 'run=%s repository=%s ref=%s\n' "$GITHUB_RUN_ID" "$GITHUB_REPOSITORY" "$GITHUB_REF"
+          echo "SMOKE_EXECUTED: hosted runner started, workflow step ran"
