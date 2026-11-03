@@ -7,7 +7,7 @@
   "programme": "R-20261103T1013Z-agent39-d-semiconjugacy",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,15 @@
       "task": "Test and prove or falsify a source-meaningful eventual cross-root semiconjugacy between D0's four genuinely different blank starts under their exact F-section grammar; seek an equivalence of unresolved rooted halting statuses beyond any short raw configuration collision.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Begin with Agent36's source-backed conditional macro grammar and four source-backed unary seeds; test semiconjugacy of (n,suffix) under one-step affine index transport, identify a specific pair and invariant or an exact small counterexample."
+      "evidence": [
+        "im-results/agent39-d-semiconjugacy/README.md",
+        "im-results/agent39-d-semiconjugacy/Agent39DCodeFunnel.lean",
+        "im-results/agent39-d-semiconjugacy/DFunnelCodedRaw.cjs",
+        "im-results/agent39-d-semiconjugacy/Agent39DShadow.lean",
+        "im-results/agent39-d-semiconjugacy/Agent39DPeriodic.lean",
+        "im-results/agent39-d-semiconjugacy/Agent39DBounds.lean"
+      ],
+      "handoff": "All-word B/A-code source-premise coalescence found, locally Lean kernel checked and 10,200 raw codeword cases replayed. Four true-root conditional projections 5000 sections each had no cross-root F-section collisions. Next discriminate feasible root-to-root funnel cylinders or obtain independent original-source bridge/novelty review before claiming any rooted decision."
     }
   ],
   "review_requested": null
