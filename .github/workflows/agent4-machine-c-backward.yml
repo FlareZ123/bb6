@@ -20,12 +20,13 @@ jobs:
         run: |
           git rev-parse HEAD
           sha256sum im-results/agent11-c-line/CLine.lean
-          echo "c4f7c6a9c6cdb93c9318fd31d71e1fd3e645164b1f8d470033163401f8923e02  im-results/agent4-mixed96-backward/BackwardMod.lean" | sha256sum -c -
-          echo "476c4fe1417e8820efebe78b92577e1067e577efa9bf553f018d19b46d329eb8  im-results/agent4-mixed96-backward/SourceBridge.lean" | sha256sum -c -
+          echo "0f216228d9400969b9354419016a3976bb9bc1e8a8a71c97f50db22e91dd0e1e  im-results/agent4-mixed96-backward/BackwardMod.lean" | sha256sum -c -
+          echo "f1bb383aa4438d913951c544f5b5a4cc6afc8c31627b00a11f875838abf9f6cb  im-results/agent4-mixed96-backward/SourceBridge.lean" | sha256sum -c -
           echo "1293c40a254d6d58b9d7a090c5eee0594b6e7370b6a1796f58465ba34c47acd9  im-results/agent4-mixed96-backward/StopBridge.lean" | sha256sum -c -
           echo "ee622955535e77a4dd0b36120a21627db5b2760c36cca190fdf675c458ae5611  im-results/agent4-mixed96-backward/BackwardModB.lean" | sha256sum -c -
           echo "10599ac5c90e3ed37f8646e38491efe98432e3985d6ca2d3d31dd5826e2fce3e  im-results/agent4-mixed96-backward/SourceBridgeB.lean" | sha256sum -c -
           echo "d24adac1db47606ac7fde8b979b75577e2c5acc375b9b6c270acb3588cdaeec5  im-results/agent4-mixed96-backward/StopBridgeB.lean" | sha256sum -c -
+          echo "4564211983282bb4a282c62aca8443f5c299cb936a94d1f23804a32ec832760b  im-results/agent4-mixed96-backward/StopBridgeAplus.lean" | sha256sum -c -
       - name: Kernel compile against unchanged Agent11 CLine and audit axioms
         shell: bash
         run: |
@@ -42,6 +43,7 @@ jobs:
           lean -o SourceBridge.olean SourceBridge.lean
           lean -o SecondMod96.olean SecondMod96.lean
           lean StopBridge.lean
+          lean StopBridgeAplus.lean
           lean -o BackwardModB.olean BackwardModB.lean
           lean -o SourceBridgeB.olean SourceBridgeB.lean
           lean StopBridgeB.lean
