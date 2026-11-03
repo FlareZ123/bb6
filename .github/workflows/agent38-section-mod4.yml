@@ -101,3 +101,6 @@ jobs:
           lean -o SectionAffineInverse.olean SectionAffineInverse.lean
           lean -o ReachAffine.olean ReachAffine.lean
           lean First24.lean
+
+          # Agent 34: independent reproducible bounded inverse-cone pilot.
+          python ${GITHUB_WORKSPACE}/im-results/agent34-c-low-mod32/m8_reverse_certificate.py | tee /tmp/agent34-m8.txt
