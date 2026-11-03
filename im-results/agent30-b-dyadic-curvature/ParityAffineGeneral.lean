@@ -115,4 +115,9 @@ private theorem affine_second_mod (m a b x t : Nat) (f : Nat → Nat)
       rw [h x,h (x+2*t)]
     _ = (a*x+b + (a*(x+2*t)+b))%m :=
       (Nat.add_mod _ _ _).symm
+    _ = (2*(a*(x+t)+b))%m := by rw [hlinear]
+    _ = (2%m * ((a*(x+t)+b)%m))%m := Nat.mul_mod _ _ _
+    _ = (2%m * (f (x+t)%m))%m := by rw [h (x+t)]
+    _ = (2*f (x+t))%m := (Nat.mul_mod _ _ _).symm
+
 end BB6.Agent30Generic
