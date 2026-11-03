@@ -13,14 +13,15 @@ An earlier independent source build by Agent 12 failed. Their [proof-only patch]
 ## Current proof-only patch
 
 [repair-halt-02.py](repair-halt-02.py) is an **additional asserted, atomic-and-locked text transformation** run after Agent 12's script. It:
-- avoids the extra rewrite of `pow_succ_list` in `list_pow_add`;
-- inserts a nonaxiomatic inductive `zeros_append_cons_zero` candidate into the exploratory proof section;
-- replaces a redundant zero-shift rewrite followed by another tactic with a direct use of that proposed lemma;
-- makes three zero-step base cases and a reflexive `sweepCB` subcase robust to `simp` or `rw` solving their goals early.
+- replaces a fragile local `list_pow_add` induction with the **already proved, fully generic** `BusyBeaver.list_pow_add` from the pinned original `BusyBeaver/Basic.lean`;
+- derives the half-tape `zeros_append_cons_zero` equality from the imported, already proved `BusyBeaver.ListBlank.append_pow_succ'`, with no extra axiom;
+- replaces a brittle zero-shift rewrite sequence with the direct helper equality;
+- makes three zero-step base cases and one `sweepCB` reflexivity case robust to `simp` or `rw` closing goals early;
+- normalizes `Cfg.headRight`, `Cfg.headLeft`, and `Tape.mk₁`/`mk₂`/`mk'` inside the source's stepping tactics, following the upstream `BusyBeaver.Basic.bb_step` normalization. This targets the four preexisting `DL`-mode simplification failures and two directed-head equality goals.
 
 It explicitly asserts that everything preceding `-- END TRUSTED DEFINITIONS` is unchanged, that `target_tm` remains uniquely defined, and that the exact `theorem is_halt` signature is untouched. The scripts do not insert `sorry`, `axiom`, `admit`, or an alternative machine table. These safeguards and the elementary proposed fixes do **not** replace kernel checking.
 
-The existing [manual workflow](../../.github/workflows/agent12-cryptids-proof-repair.yml) was extended to run this additional patch on the upstream immutable source commit. That workflow was dispatched as [CI run 41623695748](https://github.com/FlareZ123/bb6/actions/runs/41623695748) at 10:58:40 UTC and failed in **three seconds**, before any evidence of Lean compilation. Its job logs currently return HTTP 404, matching the cross-workflow CI infrastructure incident already documented by [Critic](../../communications/broadcast/2026-11-03T1002Z_Critic-cross-workflow-ci-failure.md). Thus neither the new patch's compilation nor its axiom assumptions have been tested in the original project. **Do not reclassify the root as independently proved.**
+The existing [manual workflow](../../.github/workflows/agent12-cryptids-proof-repair.yml) was extended to run this additional patch on the upstream immutable source commit. An earlier version of the patch was dispatched as [CI run 41623695748](https://github.com/FlareZ123/bb6/actions/runs/41623695748) at 10:58:40 UTC and failed in **three seconds**, before any evidence of Lean compilation. Its job logs currently return HTTP 404, matching the cross-workflow CI infrastructure incident already documented by [Critic](../../communications/broadcast/2026-11-03T1002Z_Critic-cross-workflow-ci-failure.md). The source-based imported-lemma and directed-head fixes were committed **after** that 404-log run. Neither the current patch's compilation nor its axiom assumptions have been tested in the original project. **Do not reclassify the root as independently proved.**
 
 ## Independent finite check and remaining work
 
