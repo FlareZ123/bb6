@@ -58,4 +58,54 @@ theorem second_escape_not_regular (h r b : Nat) :
   contradiction
 
 #print axioms second_escape_not_regular
+
+
+private theorem fourth_a_irregular (h : Nat) :
+    regular (pairs 3 ++ [false] ++ List.replicate (2*h) true ++
+      [false] ++ List.replicate 6 true) = false := by
+  cases h with
+  | zero => simp [pairs, regular]
+  | succ h =>
+    have rep : List.replicate (2*(h+1)) true =
+        [true,true] ++ List.replicate (2*h) true := by
+      have eqn : 2*(h+1) = 2+(2*h) := by omega
+      rw [eqn]
+      exact (List.replicate_append_replicate).symm
+    rw [rep]
+    simp [pairs, regular, List.all_append]
+
+private theorem fourth_b_irregular (h : Nat) :
+    regular ([false] ++ List.replicate (2*h+3) true ++
+      [false] ++ List.replicate 6 true) = false := by
+  have rep : List.replicate (2*h+3) true =
+      [true,true,true] ++ List.replicate (2*h) true := by
+    have eqn : 2*h+3 = 3+2*h := by omega
+    rw [eqn]
+    exact (List.replicate_append_replicate).symm
+  rw [rep]
+  simp [regular, List.all_append]
+
+/-- The first fourth-checkpoint obstruction family is outside L at all sizes. -/
+theorem fourth_escape_A_not_regular (h r b : Nat) :
+    pairs 3 ++ [false] ++ List.replicate (2*h) true ++
+      [false] ++ List.replicate 6 true ≠
+      pairs r ++ List.replicate b true := by
+  intro heq
+  have hz := fourth_a_irregular h
+  rw [heq, regular_pairs_ones] at hz
+  contradiction
+
+/-- The second fourth-checkpoint obstruction family is outside L at all sizes. -/
+theorem fourth_escape_B_not_regular (h r b : Nat) :
+    [false] ++ List.replicate (2*h+3) true ++
+      [false] ++ List.replicate 6 true ≠
+      pairs r ++ List.replicate b true := by
+  intro heq
+  have hz := fourth_b_irregular h
+  rw [heq, regular_pairs_ones] at hz
+  contradiction
+
+#print axioms fourth_escape_A_not_regular
+#print axioms fourth_escape_B_not_regular
+
 end BB6.Agent31Language
