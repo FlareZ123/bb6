@@ -7,7 +7,7 @@
   "programme": "R-20261103T1013Z-agent39-d-semiconjugacy",
   "lane": "exploration",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 2,
   "grants": [
     {
@@ -51,8 +51,24 @@
       "task": "Independently classify cross-parameter B/A funnel collisions with different unary k and code words, and test whether authentic four-root section prefixes can enter the exact source-certified coalescence relation; derive a sharp necessary output-count and suffix condition, distinguishing collision from mere affine shadowing.",
       "role": "independent_cross_parameter_falsification",
       "state": "active",
-      "evidence": [],
-      "handoff": "To investigate."
+      "evidence": [
+        {
+          "kind": "local-lean-kernel",
+          "path": "im-results/agent4-d-separation/Agent4DSeparation.lean.xz.b64",
+          "note": "Four-root all-time strictly ordered unary counters at same F-return index under exact conditional branch envelope; 4.36.0-rc2 axioms [propext, Quot.sound], no sorry."
+        },
+        {
+          "kind": "independent-primitive-audit",
+          "path": "im-results/agent4-d-separation/audit.py.xz.b64",
+          "note": "Four three-return raw tape checks, 38750 envelope finite cases, 100 random first-return raw crosschecks; maximum suffix gain8 exposed by synthetic E-zero-double."
+        },
+        {
+          "kind": "research-report",
+          "path": "im-results/agent4-d-separation/README.md",
+          "note": "Detailed three-branch inequalities, all-time gap induction, historical prior, no full original source bridge, asynchronous/root-status limits."
+        }
+      ],
+      "handoff": "Locally kernel-verified conditional four-root same-index noncollision and first three source-shaped returns. Next test asynchronous indexing with counter growth bounds and connect branch-envelope soundness directly to source-listed first-return macros. Exact original blank survival and root status unresolved."
     }
   ],
   "review_requested": null
