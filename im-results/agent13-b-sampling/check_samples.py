@@ -46,4 +46,21 @@ for k in [4, 8, 16, 32, 64]:
     opposites = [(r, group) for r, group in groups.items() if len({a[2] for a in group}) == 2]
     print(f'modulus={k}; opposites={len(opposites)}')
 
+# Independent executable check of the source-level first disagreement formula.
+# These pairs are positive differences of literal scalar-orbit values.
+seq_long = []
+cur = 0
+for _ in range(600):
+    seq_long.append(cur)
+    cur = g(cur)
+checked = 0
+for n in range(200):
+    for m in range(1, 31):
+        delta = seq_long[n+6+m] - seq_long[n+6]
+        assert delta > 0
+        k = (delta & -delta).bit_length() - 1
+        assert all((seq_long[n+6+j] & 1) == (seq_long[n+6+m+j] & 1) for j in range(k))
+        assert (seq_long[n+6+k] & 1) != (seq_long[n+6+m+k] & 1)
+        checked += 1
+print(f'exact_2adic_first_disagreement_pairs={checked}; all PASS')
 print('PASS; finite exact-integer regressions, no root verdict')
