@@ -56,3 +56,9 @@ jobs:
           lean -o "$Q/DCostLower.olean" "$Q/DCostLower.lean"
           lean -o "$Q/DComplexity.olean" "$Q/DComplexity.lean"
           lean "$D/EAllDepthSource.lean"
+      - name: Independently simulate literal unaccelerated original six-state transitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          g++ -std=c++20 -O2 im-results/agent2-cryptid-continuity/check_original_regular_depth.cpp -o /tmp/check-original-D
+          /tmp/check-original-D
