@@ -23,6 +23,24 @@ Files: `im-results/agent49-parity623/Parity623.lean` (exact self-contained map, 
 
 Theorem limitations: all rely on original source acceleration correctness (source has its own machine equivalence). All-growth is conditioned on successful steps; eventual halting is compatible. Empirical orbit for ~1500 or more section visits never entered a=0 postinitial; but synthetic even states often hit a=0 or halt, so a>0 is not an established invariant. Compare S4 second source file `BusyBeaver/BB6/Accelerations/M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF.lean` (stack/power trigger) for transfer; avoid asserting S4 mass law before checking true definition.
 
+## Second checkpoint: new two-sided safe corridor
+
+Further source-equivalent local Lean 4.36.0-rc2 verified (full code in `im-results/agent49-parity623/Parity623.lean`, imported-source clone in `Parity623Source.lean`):
+
+- `evalA_b_le_k` and `evalA_from_drain_strictly_reduces_b`: any successful evaluator output has new b≤input k. Hence the original `drainB` decrease guard is provably vacuous on successful evaluation.
+- `evalA_safe_gap`: input first counter ≥k+2 forces `evalA` success with output aa>bb.
+- `drainB_safe_gap`: any `drainB(a,b,d)` with a>b always succeeds and leaves positive first counter. Full recursion via strong induction on b, not a finite simulation.
+- `evalA_safe_gap_even`: input first counter ≥k+1 also suffices if k is even and ≥2.
+- `next_safe_outer_cone`: **positive even a and d≥2a always yield a nonhalting high-level transition**.
+- `next_zero_total`: **a=0 always yields a nonhalting high-level transition**.
+- `next_none_requires_inner_wedge`: any even-a halting high-level state must have positive a and d<2a.
+- `next_safe_far_left`: every high-level input with a≥2d+10 has a successful transition regardless of parity.
+- **`next_none_requires_corridor`**: any high-level halting transition on even first counter must satisfy `0<a ∧ d<2a ∧ a<2d+10`. Since original blank-origin accelerated orbit is parity-even, all hypothetical blank-origin halts lie in this diagonal corridor. This is a **necessary condition**, not nonhalting proof. In independent 1500-step exact simulation, approximately 480 section states visit this corridor, so no orbit avoidance established.
+
+CI: fifth intermediate run `41556569785` failed due **GitHub-hosted runner Mathlib cache disk quota**, before source Lean compilation. Added runner space reclamation to manual CI workflow. Sixth run `41557187408` was still in progress at 01:08Z (checks prior version including drain index). Seventh run `41557747372` was started against final source import including corridor. **Do not say source-certified until a final relevant CI run succeeds.** Source-matched standalone files compile without errors using local kernel.
+
+The original source's `IsHalt` iff `CollatzHalts` is already proved, so machine-level relevance is grounded in imported Lean source. Further research should focus on eliminating diagonal corridor visits or characterizing exact ternary preimages inside this cone. `results/` remains untouched because this is a partial root-classification.
+
 **Next research:** source-attached necessary halting-gateway characterization via complete `drainB` ternary failure trace, potentially narrowing dangerous regions across all branches. Parent results belong in `im-results/` until decisively new academically publishable root consequence proven. Finish active R004 registry and persistent memory at release, then delete lease as **last Git mutation**.
 
 ---
