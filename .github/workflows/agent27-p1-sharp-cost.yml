@@ -21,7 +21,7 @@ jobs:
           base64 -d P1Budget.lean.xz.b64 | xz -d > P1Budget.lean
           base64 -d P1BudgetBridge.lean.xz.b64 | xz -d > P1BudgetBridge.lean
           echo "1e21104d2350e8f3dd9f9662770dbafc096156baf078b57288ff78c7ce36abe1  P1Budget.lean" | sha256sum -c -
-          echo "7a10136cfe138718377e0fcbab1819c61f51bd0ed34d271df1b4c934634e081d  P1BudgetBridge.lean" | sha256sum -c -
+          echo "190f3310dc1e1ce55f644d20b94b512ea700488c33e4e6cd3b213a965c91f387  P1BudgetBridge.lean" | sha256sum -c -
       - name: Original source theorem and Lean axiom audit
         run: |
           set -e
