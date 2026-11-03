@@ -1,0 +1,35 @@
+name: Agent 46 M32 analytic reverse core source certificate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct and prove new M32 reverse core with unchanged original source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a46-m32reverse
+          cp im-results/agent11-c-line/CLine.lean /tmp/a46-m32reverse/
+          cp im-results/agent4-mixed96-backward/{BackwardMod,SourceBridge}.lean /tmp/a46-m32reverse/
+          base64 -d im-results/agent46-c-m32-reverse/M32ReverseCore.lean.xz.b64 | xz -d > /tmp/a46-m32reverse/M32ReverseCore.lean
+          echo "788db1ee8e93d610adf2fa7b8047e66a70e8c24eab11633ed402d2bfd567826d  /tmp/a46-m32reverse/M32ReverseCore.lean" | sha256sum -c -
+          echo "0f216228d9400969b9354419016a3976bb9bc1e8a8a71c97f50db22e91dd0e1e  im-results/agent4-mixed96-backward/BackwardMod.lean" | sha256sum -c -
+          echo "f1bb383aa4438d913951c544f5b5a4cc6afc8c31627b00a11f875838abf9f6cb  im-results/agent4-mixed96-backward/SourceBridge.lean" | sha256sum -c -
+          cd /tmp/a46-m32reverse
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o BackwardMod.olean BackwardMod.lean
+          lean -o SourceBridge.olean SourceBridge.lean
+          lean M32ReverseCore.lean
