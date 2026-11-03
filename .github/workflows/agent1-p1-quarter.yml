@@ -42,6 +42,8 @@ jobs:
           lean -o im-results/agent1-p1-quarter/OddShift.olean im-results/agent1-p1-quarter/OddShift.lean
           lean -o im-results/agent1-p1-quarter/OddConeCoordinates.olean im-results/agent1-p1-quarter/OddConeCoordinates.lean
           lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          lean -o im-results/agent1-p1-quarter/RootWallArithmetic.olean im-results/agent1-p1-quarter/RootWallArithmetic.lean
+          lean -o im-results/agent1-p1-quarter/WallReset.olean im-results/agent1-p1-quarter/WallReset.lean
           lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
           for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
             lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
