@@ -206,6 +206,53 @@ theorem prefixB_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
       rw [hu',run_add,pump_iter]
       exact boundaryBNoF (4*k+3) ys (u-pumpTime k) (by omega)
 
+
+/-- The A delimiter scan contains no F state, for any left-stack length
+    and any uninspected finite binary suffix. -/
+private theorem boundaryANoF (m : Nat) (ys : List Bool) :
+    NoF (midM m ([true,false]++ys)) (2*m+2) := by
+  have hscan : NoF (scanStart m [true] ([true,false]++ys)) (2*m) :=
+    scanNoF m [true] ([true,false]++ys)
+  have hend : NoF (scanDone m [true] ([true,false]++ys)) 2 := by
+    intro t ht
+    have hcases : t=0 ∨ t=1 := by omega
+    rcases hcases with rfl | rfl
+    all_goals simp [scanDone,run,step,goL,goR]
+  exact appendNoF
+    (scanStart m [true] ([true,false]++ys))
+    (scanDone m [true] ([true,false]++ys))
+    (2*m) 2 hscan (scan_run m [true] ([true,false]++ys)) hend
+
+/-- No source F visit occurs strictly after starting in F and before the
+    all-parameter A first-delimiter boundary. -/
+theorem prefixA_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
+    (hpos : 0<t) (ht : t<12*k*k+41*k+32) :
+    (run t (init (List.replicate (3*k+1) true ++ false::ys))).st ≠ 5 := by
+  have hrep : List.replicate (3*k+1) true ++ false::ys =
+      List.replicate (3*k) true ++ ([true,false]++ys) := by
+    rw [← List.replicate_append_replicate]
+    simp
+  have htime : 12*k*k+41*k+32 =
+      24+pumpTime k+(2*(4*k+3)+2) := by
+    rw [pumpTime_formula]
+    omega
+  rw [htime] at ht
+  by_cases hfirst : t<24
+  · exact setupPositiveNoF _ t hpos hfirst
+  · obtain ⟨u,hu⟩ : ∃ u, t=24+u := ⟨t-24,by omega⟩
+    rw [hu,run_add]
+    have hs : run 24 (init (List.replicate (3*k+1) true ++false::ys)) =
+        midM 3 (List.replicate (3*k) true ++ ([true,false]++ys)) := by
+      rw [hrep]
+      simpa [mid,midM] using
+        (setup24 (List.replicate (3*k) true ++ ([true,false]++ys)))
+    rw [hs]
+    by_cases hpump : u<pumpTime k
+    · exact pumpIterNoF k ([true,false]++ys) u hpump
+    · have hu' : u=pumpTime k+(u-pumpTime k) := by omega
+      rw [hu',run_add,pump_iter]
+      exact boundaryANoF (4*k+3) ys (u-pumpTime k) (by omega)
+
 #print axioms frontNoF
 #print axioms reverseNoF
 #print axioms scanNoF
@@ -214,5 +261,6 @@ theorem prefixB_positive_noF (k : Nat) (ys : List Bool) (t : Nat)
 #print axioms pumpIterNoF
 #print axioms prefixE_positive_noF
 #print axioms prefixB_positive_noF
+#print axioms prefixA_positive_noF
 
 end BB6.CryptidPrefixFirstReturn
