@@ -114,7 +114,6 @@ theorem l0_first_reset_no_wall
       _ = 2^n*(4*(t+1+n)+64*q+24) := by
         rw [hwall,htail'.2]
         congr 1
-        omega
   exact no_one_reset_l0_budget q t n p0 B K
     hq ht htbound hsmallt rfl hK hKmax hBalance hWall
 
