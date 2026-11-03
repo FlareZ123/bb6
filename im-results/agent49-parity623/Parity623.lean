@@ -1131,4 +1131,121 @@ theorem drainB_first_failure_iff (a b d : Nat) (hbound : b ≤ ternaryOnes a+1) 
 #print axioms drainB_first_halt
 #print axioms drainB_first_failure_iff
 
+
+theorem ones_le_plus_three (a : Nat) : ternaryOnes a ≤ ternaryOnes (a+3) := by
+  have heq : a+3 = ((a+1)+1)+1 := by omega
+  rw [heq, ternaryOnes, ternaryOnes, ternaryOnes]
+  omega
+
+/-- Under the exact ternary-ones budget, evaluator plus complete drain survives. -/
+theorem evalA_then_drain_ones (a k m : Nat) (h : k<ternaryOnes a) :
+    ∃ aa dd, (evalA a k m).bind (fun p => drainB p.1 p.2.1 p.2.2) = some (.D aa dd) := by
+  obtain ⟨a1,b1,d1,he,hp⟩ := evalA_ones_budget a k m h
+  simp only [he, Option.bind_some]
+  exact drainB_safe_ones b1 a1 d1 hp
+
+/-- Sharper universal safe left side using the exact first-drain failure threshold. -/
+theorem next_safe_left_ones (a d : Nat) (ha : 0<a) (he : a%2=0)
+    (hd : a≤d) (hbudget : a<ternaryOnes (d+1-a)) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+  have h2 : ¬ (d%2=0 ∧ a≥d+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have h4 : a ≠ d+2 := by omega
+  simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg h4]
+  by_cases hdo : d%2=1
+  · simp only [if_pos hdo]
+    have hi : d+4-a=(d+1-a)+3 := by omega
+    have ht := ones_le_plus_three (d+1-a)
+    rw [← hi] at ht
+    have hbudget2 : a-1 ≤ ternaryOnes (d+4-a) := by omega
+    exact drainB_safe_ones (a-1) (d+4-a) 3 hbudget2
+  · simp only [if_neg hdo]
+    exact evalA_then_drain_ones (d+1-a) a (2*a+5) hbudget
+
+/-- Sharper universal safe right side using the exact first-drain threshold. -/
+theorem next_safe_right_ones (a d : Nat)
+    (hodd : d%2=1 → d+5≤a ∧ d+3≤ternaryOnes (a-d-5))
+    (heven : d%2=0 → d+3≤a ∧ d+2≤ternaryOnes (a-d-2)) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by
+    by_cases hd : d%2=1
+    · have hh := (hodd hd).1
+      omega
+    · have hd0 : d%2=0 := by omega
+      have hh := (heven hd0).1
+      omega
+  simp only [if_neg h0]
+  by_cases hd : d%2=1
+  · have hh:=hodd hd
+    have h1 : d%2=1 ∧ a≥d+5 := ⟨hd,hh.1⟩
+    simp only [if_pos h1]
+    exact drainB_safe_ones (d+3) (a-d-5) 5 hh.2
+  · have hd0 : d%2=0 := by omega
+    have hh:=heven hd0
+    have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+    have h2 : d%2=0 ∧ a≥d+3 := ⟨hd0,hh.1⟩
+    simp only [if_neg h1, if_pos h2]
+    exact drainB_safe_ones (d+2) (a-d-2) 2 hh.2
+
+/-- A necessary even-a halting corridor stated with exact ternary budget cutoffs. -/
+theorem next_none_requires_ones_gate (a d : Nat)
+    (he : a%2=0) (h : next (.D a d)=none) :
+    0<a ∧ (a≤d → ternaryOnes (d+1-a) ≤ a) ∧
+    (d%2=1 → a<d+5 ∨ ternaryOnes (a-d-5)<d+3) ∧
+    (d%2=0 → a<d+3 ∨ ternaryOnes (a-d-2)<d+2) := by
+  have ha : 0<a := by
+    by_cases z : a=0
+    · subst a
+      obtain ⟨aa,dd,hret⟩ := next_zero_total d
+      rw [hret] at h
+      contradiction
+    · omega
+  have hl : a≤d → ternaryOnes (d+1-a)≤a := by
+    intro hd
+    by_cases hh : a<ternaryOnes (d+1-a)
+    · obtain ⟨aa,dd,hret⟩ := next_safe_left_ones a d ha he hd hh
+      rw [hret] at h
+      contradiction
+    · omega
+  have hr : d%2=1 → a<d+5 ∨ ternaryOnes (a-d-5)<d+3 := by
+    intro hd
+    by_cases hs : a<d+5
+    · exact Or.inl hs
+    · right
+      by_cases ht : ternaryOnes (a-d-5)<d+3
+      · exact ht
+      · have hh : d+5≤a ∧ d+3≤ternaryOnes (a-d-5) := by omega
+        have hf : d%2=0 → d+3≤a ∧ d+2≤ternaryOnes (a-d-2) := by omega
+        obtain ⟨aa,dd,hret⟩ := next_safe_right_ones a d (by intro _; exact hh) hf
+        rw [hret] at h
+        contradiction
+  have hr2 : d%2=0 → a<d+3 ∨ ternaryOnes (a-d-2)<d+2 := by
+    intro hd
+    by_cases hs : a<d+3
+    · exact Or.inl hs
+    · right
+      by_cases ht : ternaryOnes (a-d-2)<d+2
+      · exact ht
+      · have hh : d+3≤a ∧ d+2≤ternaryOnes (a-d-2) := by omega
+        have hf : d%2=1 → d+5≤a ∧ d+3≤ternaryOnes (a-d-5) := by omega
+        obtain ⟨aa,dd,hret⟩ := next_safe_right_ones a d hf (by intro _; exact hh)
+        rw [hret] at h
+        contradiction
+  exact ⟨ha,hl,hr,hr2⟩
+
+/-- The actual blank-origin orbit inherits the universal ternary budget terminal gate. -/
+theorem blank_run_requires_ones_gate (n a d : Nat)
+    (hseen : run n = some (.D a d)) (hhalt : next (.D a d)=none) :
+    0<a ∧ (a≤d → ternaryOnes (d+1-a) ≤ a) ∧
+    (d%2=1 → a<d+5 ∨ ternaryOnes (a-d-5)<d+3) ∧
+    (d%2=0 → a<d+3 ∨ ternaryOnes (a-d-2)<d+2) := by
+  exact next_none_requires_ones_gate a d (run_preserves_even n a d hseen) hhalt
+
+#print axioms next_none_requires_ones_gate
+#print axioms blank_run_requires_ones_gate
+
 end BB6.Agent49Parity
