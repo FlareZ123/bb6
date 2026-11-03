@@ -16,6 +16,8 @@ HERE = Path(__file__).resolve().parent
 FILES = {
     "ValuationReturn.lean": "c6eb9f6b9b7f5124a156b14c3fac299c97c38edd150fbcffe1f1a22e0a090d77",
     "burst_verify.py": "014a416ca576dfa87757bbb6aa407067daad557cdf92ac89daf433e8c2f84ad6",
+    "ValDvd.lean": "3809a4183ff17559455091d6c773a47ff801341ca3c3c3b15c58953d42bb95d1",
+    "SafeStep.lean": "e1041f50e333dbcd8f68e1f930daaab642f449085e246bb3881a76fb0d216e4f",
 }
 
 
