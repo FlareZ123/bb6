@@ -102,3 +102,17 @@ jobs:
         run: |
           lean -o Agent30CrossRadix.olean Agent30CrossRadix.lean
           lean Agent30CrossRadixSource.lean
+
+      - name: Copy additional cross-radix proofs
+        run: |
+          cp im-results/agent30-b-crossradix/Agent30CrossRadixCantor.lean /tmp/agent30-b-curvature/Agent30CrossRadixCantor.lean
+          cp im-results/agent30-b-crossradix/Agent30CrossRadixWord.lean /tmp/agent30-b-curvature/Agent30CrossRadixWord.lean
+          cp im-results/agent30-b-crossradix/Agent30CrossRadixParity.lean /tmp/agent30-b-curvature/Agent30CrossRadixParity.lean
+      - name: Verify all cross-radix source companion lemmas
+        working-directory: /tmp/agent30-b-curvature
+        env:
+          LEAN_PATH: .
+        run: |
+          lean Agent30CrossRadixCantor.lean
+          lean Agent30CrossRadixWord.lean
+          lean Agent30CrossRadixParity.lean
