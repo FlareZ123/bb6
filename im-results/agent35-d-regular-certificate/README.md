@@ -90,3 +90,12 @@ This is the mechanism: writing an E-index as `K_0=3^m u - 1`, the next E-index b
 `DObsSourceCandidate.lean` specializes the theorem to the names/signatures of the original `BoundaryPadding` library, leaving the sole eleven-row `SourceContract` as an explicit hypothesis. It was **type-checked only against a local signature-shaped mock of original modules**, not against unmodified original files. That mock's axioms are not evidence of source certification, and the candidate requires authentic original import before promotion.
 
 `DLanguageNoGo.lean` locally proves the fully quantified model theorem `no_safe_closed_regular_seed5`: no predicate P on the original regular language can contain the modeled unary seed5, be preserved by every defined return, and insist every next modeled section remain in that language. The reason is the `by decide`-checked 1711-return E-escape. The theorem uses `[propext]` only; it is explicitly about the arithmetic model, and original blank-source applicability is still unproved.
+
+
+### Physical-observation variant of the arbitrary-depth chain
+
+`DETripleLadderObs.triple_ladder_obs` is now separately checked locally against the same Lean 4.36.0-rc2 standard kernel, with `#print axioms` exactly `[propext, Quot.sound]`, no `sorry`. It generalizes the full m-fold E-ladder to an arbitrary relation `R` that is reflexive, transitive and preserved by primitive runs. It requires only **observational** single-step E-family source assertions `R (raw t section) nextSection`; thus source modules may retain equivalent but syntactically different finite trailing-zero half-tapes. Its unmodified original-module instance is an open proof integration obligation.
+
+Source bytes: `DETripleLadderObs.lean.xz.b64`; SHA256 of decoded XZ `56459ecbfdba283d27293da9bfe5bcaa6905769b2bafe7e522d505f250784d96`, restored through `restore_observed.py`. Compile after restoring `DETripleLadder.lean` and emitting its `.olean` module.
+
+**Minimality caveat:** The all-parameter macros prove that the stated F/0 configurations occur at the stated exact elapsed primitive steps. The ladder theorem itself does not prove the absence of additional physical F/0 checkpoints between these endpoints. Hence `m` counts composed **designated E macro endpoints**, not necessarily all first-return events. This strengthens the scope discipline for subsequent use in a blank-origin invariant.
