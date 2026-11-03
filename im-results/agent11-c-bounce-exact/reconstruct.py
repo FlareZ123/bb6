@@ -19,6 +19,10 @@ SOURCES = {
         "30206b9d1c90f951ffd5091addb3ff8236cb830164b7972ea86c45e5a679e4ae",
         "8bf6dcbe53d5b4a36fae385f63042410fc5218ab047652c5f4efdb1d58ac42f0",
     ),
+    "inverse_section.py": (
+        "a07d53884dd32df4144d6a2d637f5878b4fa2e0776b12141b902195e848c4c0a",
+        "0f3fa0447f54b6bbb01b49324607a3683bbc812647e591cf15059940bc3c5bdd",
+    ),
 }
 
 
