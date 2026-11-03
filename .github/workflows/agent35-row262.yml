@@ -27,7 +27,8 @@ jobs:
         run: python3 im-results/agent35-row262-section/test_scalar.py
       - name: Verify exact universal row262 9q burst source theorem
         env:
-          LEAN_PATH: im-results/agent35-row262-section
+          LEAN_PATH: im-results/agent35-row262-section:im-results/agent2-row262-burst
         run: |
-          lean im-results/agent2-row262-burst/PairBurst.lean
+          lean -o im-results/agent2-row262-burst/PairBurst.olean im-results/agent2-row262-burst/PairBurst.lean
+          lean im-results/agent2-row262-burst/PairBurstSafe.lean
           python3 im-results/agent2-row262-burst/test_pair_burst.py
