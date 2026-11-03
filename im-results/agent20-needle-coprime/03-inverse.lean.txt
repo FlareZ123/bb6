@@ -1,0 +1,39 @@
+theorem extend_progression (m a lower p r t : Nat)
+    (hm : 0 < m) (hp : 0 < p)
+    (ht : (a + m*t)%p = r) :
+    ∃ k : Nat, lower ≤ k ∧ k%m=a%m ∧ k%p=r := by
+  let k := a + m*(t+p*(lower+1))
+  have heq : k = (a+m*t) + p*(m*(lower+1)) := by
+    simp only [k, Nat.mul_add, Nat.mul_left_comm]
+    omega
+  have hlow : lower+1 ≤ m*(lower+1) :=
+    Nat.le_mul_of_pos_left (lower+1) hm
+  have hlow2 : m*(lower+1) ≤ p*(m*(lower+1)) :=
+    Nat.le_mul_of_pos_left (m*(lower+1)) hp
+  have hk : lower ≤ k := by omega
+  have hkm : k%m=a%m := by
+    dsimp [k]
+    rw [Nat.mul_comm m (t+p*(lower+1))]
+    exact Nat.add_mul_mod_self_right a (t+p*(lower+1)) m
+  have hkp : k%p=r := by
+    rw [heq, Nat.add_mul_mod_self_left]
+    exact ht
+  exact ⟨k,hk,hkm,hkp⟩
+
+def admissibleExponent (k : Nat) : Prop :=
+  ∃ v q : Nat, 2^v * (2*q+3) + v + 3*(q+1) = 2^k
+
+theorem odd_admissible (t : Nat) : admissibleExponent (oddExponent t) := by
+  unfold admissibleExponent
+  refine ⟨2, oddQ t, ?_⟩
+  rw [odd_power_identity]
+  change 4*(2*oddQ t+3)+2+3*(oddQ t+1) = 17+11*oddQ t
+  omega
+
+theorem even_admissible (t : Nat) : admissibleExponent (evenExponent t) := by
+  unfold admissibleExponent
+  refine ⟨3, evenQ t, ?_⟩
+  rw [even_power_identity]
+  change 8*(2*evenQ t+3)+3+3*(evenQ t+1) = 30+19*evenQ t
+  omega
+
