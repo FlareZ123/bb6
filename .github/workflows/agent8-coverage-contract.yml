@@ -104,3 +104,4 @@ jobs:
           lean im-results/agent42-coverage-normal/TwoCylinder.lean
           lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
           lean im-results/agent42-coverage-normal/ZeroPrefix.lean
+          node im-results/agent42-coverage-normal/zero_cycle_census.cjs
