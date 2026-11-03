@@ -120,8 +120,48 @@ theorem odd_support_and_cost (r : Nat) :
   · exact odd_support r
   · exact totalCost_ge_64pow (2*r+1) 255 4 (by omega)
 
+/-- For every positive depth, one of the two fully quantified source
+    grammars admits a synthetically prepared *regular* input of size
+    at most 120*3^m and an E-time of at least 64^m. The final disjunction
+    records the exact third-return source-template matching obligation. -/
+theorem all_depth_synthetic (m : Nat) (hm : 0 < m) :
+    ∃ k q U p, 0<U ∧ U<512 ∧
+      3*k+4+2*q+1 ≤ 120*3^m ∧
+      64^m ≤ totalCost m (U-1) p ∧
+      ((∃ r v, m=2*r ∧ k=9*v+7 ∧ q=3*r+3 ∧ p=1 ∧
+          512*v+434=3^(m+1)*U+1) ∨
+        (∃ r v, m=2*r+1 ∧ k=9*v+4 ∧ q=3*r+6 ∧ p=4 ∧
+          512*v+257=3^(m+1)*U+1)) := by
+  let r := m/2
+  have hdiv := Nat.mod_add_div m 2
+  rcases Nat.mod_two_eq_zero_or_one m with heven | hodd
+  · have hform : m=2*r := by dsimp [r]; omega
+    have hr : 0 < r := by omega
+    obtain ⟨v,U,hpos,hlt,hnum,hsize,htime⟩ := even_support_and_cost r hr
+    refine ⟨9*v+7,3*r+3,U,1,hpos,hlt,?_,?_,Or.inl ?_⟩
+    · rw [hform]
+      omega
+    · rw [hform]
+      exact htime
+    · refine ⟨r,v,hform,rfl,rfl,rfl,?_⟩
+      rw [hform]
+      simpa [show (2*r)+1=2*r+1 by omega] using hnum
+  · have hform : m=2*r+1 := by dsimp [r]; omega
+    have hh := odd_support_and_cost r
+    dsimp at hh
+    obtain ⟨hnum,hsize,htime⟩ := hh
+    refine ⟨9*oddV r+4,3*r+6,256,4,by decide,by decide,?_,?_,Or.inr ?_⟩
+    · rw [hform]
+      omega
+    · rw [hform]
+      exact htime
+    · refine ⟨r,oddV r,hform,rfl,rfl,rfl,?_⟩
+      rw [hform]
+      simpa [show (2*r+1)+1=2*r+2 by omega] using hnum
+
 #print axioms even_support
 #print axioms even_support_and_cost
 #print axioms odd_bridge_parameters
 #print axioms odd_support_and_cost
+#print axioms all_depth_synthetic
 end BB6.DComplexity
