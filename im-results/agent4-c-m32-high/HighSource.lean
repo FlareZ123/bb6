@@ -68,7 +68,15 @@ theorem additional36_source_unreachable (j m k : Nat)
       ((List.all_eq_true.mp additional36_all_absent) (j%32,m%32) hmem)
   exact high32_forbidden_source j m k hj hm heq hgood
 
+/-- Concrete previously omitted source-certified high stopping input,
+and a regression check of the exact halting-parameter equation. -/
+theorem example_21_748_unreachable :
+    ¬ BB6CLine.Reach (21,748,0) := by
+  exact additional36_source_unreachable 9 2 748
+    (by decide) (by decide) (by decide) (by decide)
+
 #print axioms high32_forbidden_source
 #print axioms additional36_source_unreachable
+#print axioms example_21_748_unreachable
 
 end BB6.Agent4M32
