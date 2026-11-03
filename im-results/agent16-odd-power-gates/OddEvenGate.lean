@@ -4,20 +4,28 @@ public import OddPowerSource
 @[expose] public section
 namespace BB6.Agent16OddEvenGate
 
+theorem authentic_even_edge_to_local {x y : Nat}
+    (he : SheepEven.EvenEdge x y) (hx : x%2=0) :
+    BB6.Agent16OddPower.FirstEvenEdge x y := by
+  obtain ⟨z,h,u,hs,hz5,ho,hz,hy⟩ := he
+  have hs' : BB6.Agent16OddPower.SectionStep x z :=
+    BB6.Agent16OddPowerSource.even_section_to_local
+      (BB6.Agent16.SheepEvenSource.even_to_section hs) hx
+  exact ⟨z,h,u,hs',ho,hz,hy⟩
+
+theorem even_odd_power_parent_shape {x j : Nat}
+    (hx : x%2=0) (hj : j%2=1) (he : SheepEven.EvenEdge x (2^j)) :
+    ∃ v, 5≤v ∧ v%2=1 ∧ x=2*v ∧ 5*v+1=2^(j+1) :=
+  BB6.Agent16OddPower.odd_power_parent_shape hj
+    (authentic_even_edge_to_local he hx)
+
 /-- Genuine E edges at odd-exponent powers, with genuine even sources. -/
 theorem even_odd_power_possible (j : Nat) (hj : j%2=1) :
   (∃ x, x%2=0 ∧ SheepEven.EvenEdge x (2^j)) ↔
     7≤j ∧ j%4=3 := by
   constructor
   · rintro ⟨x,hx,he⟩
-    obtain ⟨z,h,u,hs,hz5,ho,hz,hy⟩ := he
-    have hs' : BB6.Agent16OddPower.SectionStep x z :=
-      BB6.Agent16OddPowerSource.even_section_to_local
-        (BB6.Agent16.SheepEvenSource.even_to_section hs) hx
-    have hlocal : BB6.Agent16OddPower.FirstEvenEdge x (2^j) :=
-      ⟨z,h,u,hs',ho,hz,hy⟩
-    obtain ⟨v,hv,hvo,hxv,heq⟩ :=
-      BB6.Agent16OddPower.odd_power_parent_shape hj hlocal
+    obtain ⟨v,hv,hvo,hxv,heq⟩ := even_odd_power_parent_shape hx hj he
     have hdirect : BB6.Agent16OddPower.SectionStep x (2^j) :=
       (BB6.Agent16OddPower.section_power_iff).mpr ⟨v,hv,hvo,hxv,heq⟩
     exact (BB6.Agent16OddPower.even_section_power_possible j).mp ⟨x,hdirect⟩
@@ -42,5 +50,17 @@ theorem even_odd_power_possible (j : Nat) (hj : j%2=1) :
     · simp only [Nat.pow_zero, Nat.one_mul]
       exact hunit.symm
 
+/-- The true first-even graph has a single possible even source
+    for each odd power target, regardless of blank-root reachability. -/
+theorem even_odd_power_unique {x y j : Nat}
+    (hx : x%2=0) (hy : y%2=0) (hj : j%2=1)
+    (hex : SheepEven.EvenEdge x (2^j))
+    (hey : SheepEven.EvenEdge y (2^j)) : x=y := by
+  obtain ⟨u,hu,hou,hxu,heu⟩ := even_odd_power_parent_shape hx hj hex
+  obtain ⟨v,hv,hov,hyv,hev⟩ := even_odd_power_parent_shape hy hj hey
+  omega
+
+#print axioms even_odd_power_parent_shape
+#print axioms even_odd_power_unique
 #print axioms even_odd_power_possible
 end BB6.Agent16OddEvenGate
