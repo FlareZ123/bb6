@@ -59,3 +59,4 @@ jobs:
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean "$D/BlankRegular500.lean"
+          lean "$D/BlankRegular8394.lean"
