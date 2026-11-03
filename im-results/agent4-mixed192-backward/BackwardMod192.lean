@@ -127,18 +127,25 @@ theorem zero_a_pos (a k : Nat) (ha : a≥2) :
 
 #print axioms zero_a_pos
 
+private theorem high_no_sum_zero_mod4 (a k c : Nat)
+    (hsum : (a+k)%4=0) : ¬ high a k c := by
+  intro h
+  have ht : ((a+k)%192)%4=0 := by omega
+  simp only [high] at h
+  rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+
 theorem high_a0_even (k c : Nat) (hc : c≥4) (hk : k%2=0) :
     bad (2*k+2) 2 (c-3) → bad 0 k c := by
   intro h
   by_cases hs : c=4
   · subst c
-    simp only [bad,show (1:Nat)<2 by omega,↓reduceIte,low] at h
-    simp only [bad,show ¬((4:Nat)<2) by omega,↓reduceIte,high]
-    rcases h with h | h | h | h | h | h | h | h <;> omega
+    have hn : ¬ low (2*k+2) 2 1 := by simp [low]
+    exact False.elim (hn (by simpa [bad] using h))
   · have hc2 : ¬(c-3<2) := by omega
-    simp only [bad,hc2,↓reduceIte,high] at h
-    simp only [bad,show ¬(c<2) by omega,↓reduceIte,high]
-    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+    have he : high (2*k+2) 2 (c-3) := by
+      simpa only [bad,hc2,↓reduceIte] using h
+    have hs4 : ((2*k+2)+2)%4=0 := by omega
+    exact False.elim ((high_no_sum_zero_mod4 (2*k+2) 2 (c-3) hs4) he)
 
 #print axioms high_a0_even
 
