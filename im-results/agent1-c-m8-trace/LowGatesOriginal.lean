@@ -15,7 +15,7 @@ theorem low_gate_is_terminal (m : Nat) (hm : m <= 8) :
   have hc : m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨
             m=5 ∨ m=6 ∨ m=7 ∨ m=8 := by omega
   rcases hc with h | h | h | h | h | h | h | h | h <;>
-    subst m <;> decide
+    subst m <;> rw [← fastNext_eq_original] <;> decide
 
 theorem low_gate_below_mass_cutoff (m : Nat) (hm : m <= 8) :
     1 + 2 * lowGate m < 1048525 := by
