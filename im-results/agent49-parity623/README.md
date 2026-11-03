@@ -51,6 +51,8 @@ Write `D(a,d)` for a two-counter section state, `T` for `highLevelNext`, and let
    ```
    This holds for all natural a,d, irrespective of reachability. Since the actual blank-origin orbit has even a by `run_preserves_even`, **any future blank-origin halting transition must enter this strict inner wedge**. Empirical section traces regularly exit the safe outer region, so wedge exclusion by itself does not settle halting.
 
+7. **Two certified safe cones.** The lemma `next_safe_far_left` proves that every input with `a≥2d+10` has a successful full high-level transition. Combined with zero-axis and outer-cone safety, `next_none_requires_corridor` shows that a necessary condition for halting at an even first counter is `0<a`, `d<2a`, and `a<2d+10`. This restricts possible halting transitions to a diagonal corridor. It does not establish that the blank-origin orbit stays outside the corridor.
+
 ## Critical limitations / research direction
 
 The parity shield is insufficient to prove nonhalting: two *even-a* synthetic states `D(4,2)` and `D(6,1)` are formally demonstrated to map to `none`. Showing that the actual blank-origin orbit avoids all such dangerous states requires a stronger global invariant, potentially using the exact ternary failure congruence and upward mass drift together. The original source reports impressive finite horizons and heuristic probability estimates, which are useful for prioritization and **not valid universal bounds**.
