@@ -84,4 +84,11 @@ theorem iterH_dyadic_curvature (r c s n z : Nat)
       (2*s-r) = 2*iterH r c s (n+1) (z+2^n)) ∨
     (iterH r c s (n+1) z + iterH r c s (n+1) (z+2*2^n) =
       2*iterH r c s (n+1) (z+2^n)+(2*s-r)) := by
+  have h1 : iterH r c s n (z+2^n) =
+      iterH r c s n z+r^n := by
+    simpa using iterH_two_adic_shift r c s n z 1
+  have h2 : iterH r c s n (z+2*2^n) =
+      iterH r c s n z+2*r^n := by
+    simpa [Nat.mul_comm] using iterH_two_adic_shift r c s n z 2
+  have hp : (r^n)%2=1 := by simp [Nat.pow_mod,hodd]
 end BB6.Agent30Generic
