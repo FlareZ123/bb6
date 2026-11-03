@@ -35,3 +35,10 @@ jobs:
           lake env lean -o Agent7S4GateOriginal.olean Agent7S4GateOriginal.lean
           lake env lean Agent7S4GateExact.lean
           lake env lean Agent7S4Control.lean
+      - name: Verify Agent 34 weighted-rank source bridge
+        working-directory: /tmp/cryptids
+        run: |
+          python3 "$GITHUB_WORKSPACE/im-results/agent34-s4-rank/unpack.py" /tmp/cryptids
+          export LEAN_PATH=.:$LEAN_PATH
+          lake env lean -o S4Rank.olean S4Rank.lean
+          lake env lean S4RankSource.lean
