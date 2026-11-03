@@ -1,6 +1,8 @@
 import Lean.Elab.Tactic.Omega
 import BoundaryExtra
 
+set_option maxRecDepth 4096
+set_option maxHeartbeats 5000000
 namespace CryptidBoundary
 
 theorem blank226 : run 226 blank = init (List.replicate 25 true) := by
