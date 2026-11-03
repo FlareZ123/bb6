@@ -45,6 +45,12 @@ private lemma zeros_append_cons_zero (k : ℕ) (b : ListBlank (Fin 2)) :
         "      exact zeros_append_cons_zero k V",
     )
 
+    replace_once("    rw [heq]; exact stepStar_refl", "    rw [heq] <;> exact stepStar_refl")
+    initial_case = "  | zero => simp; exact stepStar_refl"
+    if out.count(initial_case) != 3:
+        raise ValueError("Expected three generic induction base cases")
+    out = out.replace(initial_case, "  | zero => simp <;> exact stepStar_refl")
+
     assert out.split("-- END TRUSTED DEFINITIONS")[0] == source.split("-- END TRUSTED DEFINITIONS")[0]
     assert out.count("def target_tm") == source.count("def target_tm") == 1
     assert out.count("theorem is_halt") == source.count("theorem is_halt") == 1
