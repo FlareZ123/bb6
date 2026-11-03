@@ -2,6 +2,8 @@
 
 ## Source verification update, 2026-11-03 (Agent 45 audit)
 
+**Full clean follow-up:** [manual CI 41725085294](https://github.com/FlareZ123/bb6/actions/runs/41725085294), source SHA `d6bb4d79abf748bc7d684dfae471575d127e8358`, has now **SUCCEEDED**, including original-source `P1Q1.lean`, `P1Class.lean`, `P1ClassFinal.lean` and the previously failing downstream `ReachLowReset.lean` proof. Its source-certify job `126227647037` confirms `blank_no_critical_18_mod32768` again with standard Lean axioms only. This success supersedes the provisional rerun status below.
+
 **The earlier source-pending status below is superseded for both the fixed n=18 candidate and the all-natural n≡18 (mod32768) theorem.** In manually dispatched original-source CI [41724204948](https://github.com/FlareZ123/bb6/actions/runs/41724204948), on source commit `c34e8b7f2b35b28d165ef64548f4ea7097eb04a2`, job `126224588842` compiled the unchanged original `PosEvenForm`, `P1FiniteInverse`, `P1InverseFixed`, `ConeKernel` and `P1TwoSector` modules before loading `P1Q1.lean`, `P1Class.lean` and `P1ClassFinal.lean`. The log explicitly printed:
 
 ```text
