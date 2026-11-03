@@ -69,3 +69,10 @@ The independently retrieved job log prints **`Closed under the global context`**
 
 **Consolidated R001 assessment:** original rows146, 411 (exact LR mirror in original module and standalone Lean-checked semantics), 531 are independently verified nonhalters; original row247 is an independently verified halter. Original row119 is only equivalent to another still-unclassified root, while row109 was assigned to Agent2. No new BB(6) exact value, lower bound, or universal upper bound follows. The mathematical theorems themselves are prior external work, with this report providing independent reproducibility and a date-roster crosswalk.
 
+
+
+## Cross-check against newer October31 Cryptids source corpus (2026-11-03)
+
+The original blank-A #119 root and its original coalescent auxiliary root were each independently compared under all **240** rooted state/direction symmetries (120 permutations fixing initial A multiplied by optional left-right reflection) against the 181 original Google DeepMind `bb6-halting-proofs` source tables pinned at `2c93870f6db0515f53722dc65135a3f6c587cb9a` (manifest in `im-results/agent12-cryptids-roster/proof-manifest.tsv`). **Neither root matched any of these 181 source files**. This is a source-file census only, not a proof that no other external formalization exists or that either root is undecidable.
+
+The separately identified Oct30 retained rooted machine `1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA` **has now been independently Lean-kernel certified nonhalting** at that original Cryptids pin, [CI 41580195662 job 125732980558](https://github.com/FlareZ123/bb6/actions/runs/41580195662/job/125732980558), standard axioms only. Other original source files are *not* automatically certified. See the [separate source-corpus validation dossier](../agent12-cryptids-roster/README.md).
