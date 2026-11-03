@@ -18,7 +18,7 @@ theorem zero_first_odd_necessary (a k y : Nat)
         omega
       · simp only [sectionPreimageAll,if_pos ha0,if_neg hk0,if_neg hk1] at hi
         rcases hi with ⟨_,n,hs,_⟩
-        have hh : 2^n*8=2*(2^n*4) := by ac_rfl
+        have hh : 2^n*8=2*(2^n*4) := by omega
         rw [hh] at hs
         omega
   · by_cases ha1 : a=1
