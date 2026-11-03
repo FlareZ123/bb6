@@ -76,6 +76,10 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent20-c-odd-fiber/LowHaltWitness.lean .
           echo "d7cc7f78d72324d7253f6e2dd486f5299c3386bf407f89d14944975cc21c5ad2  LowHaltWitness.lean" | sha256sum -c -
           lean LowHaltWitness.lean
+          # An additional all-parameter necessary parity condition on every low stopping target parent.
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-odd-fiber/LowParity.lean.xz.b64" | xz -d > LowParity.lean
+          echo "724a3d620e46cc42f83af58c4b372dcc60f76ad276e9d5b5c0efc31001497ed0  LowParity.lean" | sha256sum -c -
+          lean LowParity.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
