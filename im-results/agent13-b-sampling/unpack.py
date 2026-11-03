@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = {
     "BSamplingLimits": "190f39e449d2fa48427e1ba7063cd258bd44b923f639f10b9b325c04792c4423",
     "BSamplingBound": "1633d7e3454b4146c87af2d887ad2a49dc9a65b23466138439bab8fc84c84cea",
+    "BSamplingExact": "71d1eea13489f8580bd9bcced2dc9c75340863153c07629459b77ebdc72b9cfe",
 }
 
 
