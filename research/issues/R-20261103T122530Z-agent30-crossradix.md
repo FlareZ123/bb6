@@ -7,7 +7,7 @@
   "programme": "R-20261103T122530Z-agent30-crossradix",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -30,8 +30,49 @@
       "task": "Test whether the exact Machine B scalar G^n outputs modulo 3^n encode precisely input residues modulo 2^n, using source-consistent proofs; assess consequences for genuine blank reset gates.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Start from G(z)=3*(z/2)+4+5*(z%2) and Agent10 source checked parity/shift. Prove complete iff for all n; first independently test n≤14 and seek an explicit inverse/cylinder characterization."
+      "evidence": [
+        {
+          "kind": "kernel-proof",
+          "path": "im-results/agent30-b-crossradix/Agent30CrossRadix.lean",
+          "note": "All n,x,y,m cross-radix (3^n*m output iff 2^n*m input), locally Lean4.36 verified; no sorry"
+        },
+        {
+          "kind": "kernel-proof",
+          "path": "im-results/agent30-b-crossradix/Agent30BFiniteFactor.lean",
+          "note": "All n>0,m>0 complete arbitrary residue-quotient classification iff m divides7; strict extension of R007 affine-only classification; local Lean4.36 standard axioms"
+        },
+        {
+          "kind": "kernel-proof",
+          "path": "im-results/agent30-b-crossradix/Agent30CrossRadixCantor.lean",
+          "note": "Canonical 2^n input residues inject into 3^n output classes; exact cover"
+        },
+        {
+          "kind": "kernel-proof",
+          "path": "im-results/agent30-b-crossradix/Agent30CrossRadixParity.lean",
+          "note": "All-n dyadic output shift and same 3^n residue, opposite parity witness; limitation of sieve"
+        },
+        {
+          "kind": "kernel-proof",
+          "path": "im-results/agent30-b-crossradix/Agent30CrossRadixWord.lean",
+          "note": "Exact all-n weighted parity-word representation"
+        },
+        {
+          "kind": "source-bridge-pending",
+          "path": "im-results/agent30-b-crossradix/Agent30FiniteFactorSource.lean",
+          "note": "Local scratch-stub checked; full original Agent18 BOneDim CI 41640186396 failed before steps, verification still pending"
+        },
+        {
+          "kind": "reproducer",
+          "path": "im-results/agent30-b-crossradix/residue_membership.py",
+          "note": "O(n) reverse-radix sieve exhaustively agrees with true outputs n≤12; no kernel proof of algorithm"
+        },
+        {
+          "kind": "synthesis",
+          "path": "im-results/agent30-b-crossradix/README.md",
+          "note": "Scope, novelty caveat, exact source provenance and root limitation"
+        }
+      ],
+      "handoff": "Source-authentic original Agent18 bridge still pending CI runner availability (two consecutive 4s pre-step failures, log HTTP404). New locally kernel-proved all-iterate finite-congruence-factor iff m|7 extends earlier affine-only result, but no BB6 root decision and likely classical symbolic dynamics prior art; adversarially check significance and overlap. Further seed-zero parity-gate work needs a qualitatively new invariant; universal output residue sieves cannot determine bit because shifted seed 2^n flips bit at fixed mod3^n."
     }
   ],
   "review_requested": null
