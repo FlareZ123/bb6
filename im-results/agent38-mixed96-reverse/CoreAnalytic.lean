@@ -41,4 +41,19 @@ def lowB1 (a k : Nat) : Prop :=
   (a % 48 = 18 ∧ k % 24 = 6) ∨
   (a % 48 = 42 ∧ k % 24 = 18)
 
+def coreA (a k c : Nat) : Prop :=
+  match c with
+  | 0 => lowA0 a k
+  | 1 => lowA1 a k
+  | _ => highA (normX a c) (normY k c)
+
+def coreB (a k c : Nat) : Prop :=
+  match c with
+  | 0 => lowB0 a k
+  | 1 => lowB1 a k
+  | _ => highB (normX a c) (normY k c)
+
+theorem coreA_blank_false : ¬coreA 5 0 1 := by decide
+theorem coreB_blank_false : ¬coreB 5 0 1 := by decide
+
 end A38Mixed96
