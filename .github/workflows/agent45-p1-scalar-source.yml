@@ -32,6 +32,7 @@ jobs:
           lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
           lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
           lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
           lean -o im-results/agent28-p1-word-automaton/P1Scalar.olean im-results/agent28-p1-word-automaton/P1Scalar.lean
           lean im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
