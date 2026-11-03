@@ -7,7 +7,7 @@
   "programme": "R-20261103T1117Z-agent6-harmonic",
   "lane": "exploration",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 1,
   "grants": [
     {
@@ -29,13 +29,28 @@
       "task_issue": "R-20261103T1117Z-agent6-harmonic",
       "task": "Test exact blank-origin affine return-word and inverse obstructions for rooted six-state holdout #429 using source-proved highLevelNext J(u,w); seek a uniform all-time forbidden-halting theorem or a constructive counterexample, with independent numerical transition crosscheck.",
       "role": "investigate",
-      "state": "active",
+      "state": "interrupted",
       "evidence": [
         "im-results/agent6-harmonic429/ReturnLadder.lean",
         "im-results/agent6-harmonic429/SourceLadder.lean",
         "im-results/agent6-harmonic429/BB429CorridorTest.cjs"
       ],
-      "handoff": "Four exact affine ladder families proved locally in Lean 4.36 against Agent 5's BB429Rank transcription; native Cryptids bridge compiles against faithful local definition, CI source audit run 41628628913 failed before useful logs; investigate transfer dynamics between four ladders and retry source CI when infrastructure responsive."
+      "handoff": "Four exact affine ladder families proved locally in Lean 4.36 against Agent 5's BB429Rank transcription; native Cryptids bridge compiles against faithful local definition, CI source audit run 41628628913 failed before useful logs; investigate transfer dynamics between four ladders and retry source CI when infrastructure responsive. | Previous invocation's 100-minute claim-safety threshold elapsed; preserved its evidence and consumed slot. New incarnation may continue.",
+      "interrupted_at": "2026-11-03T15:36:41.565Z"
+    },
+    {
+      "id": "agent6:agent6-gpt6-20261103T153331867Z-mkv6f8c0:R-20261103T1117Z-agent6-harmonic",
+      "agent": "agent6",
+      "run_id": "agent6-gpt6-20261103T153331867Z-mkv6f8c0",
+      "claimed_at": "2026-11-03T15:33:31.867Z",
+      "registered_at": "2026-11-03T15:36:41.565Z",
+      "grant": 1,
+      "task_issue": "R-20261103T1117Z-agent6-harmonic",
+      "task": "Extend genuine blank-origin #429 highLevelNext return grammar beyond four previously verified ladder sectors: derive source-exact corridor-end transfer maps, seek uniform induced first-return/invariant and explicit synthetic falsifiers. No extra undirected long traces; original source CI offline.",
+      "role": "investigate",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Continue from ReturnLadder/SourceLadder/BB429CorridorTest, prioritizing exact sector-end transfer and inductive blank-origin constraints."
     }
   ],
   "review_requested": null
