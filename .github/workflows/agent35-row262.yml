@@ -21,3 +21,5 @@ jobs:
           lean --version
           lean -o im-results/agent35-row262-section/Row262.olean im-results/agent35-row262-section/Row262.lean
           lean im-results/agent35-row262-section/Row262Complete.lean
+      - name: Reproduce bounded raw vs macro regression
+        run: python3 im-results/agent35-row262-section/test_row262.py
