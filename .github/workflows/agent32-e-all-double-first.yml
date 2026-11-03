@@ -47,3 +47,4 @@ jobs:
           lean -o "$D/PrefixNoF.olean" "$D/PrefixNoF.lean"
           lean -o "$N/EAllDoubleFirst.olean" "$N/EAllDoubleFirst.lean"
           lean -o "$N/PhysicalReturnObs.olean" "$N/PhysicalReturnObs.lean"
+          lean -o "$N/BTrueFirst.olean" "$N/BTrueFirst.lean"
