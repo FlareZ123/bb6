@@ -203,6 +203,59 @@ theorem highLevel_right_even_shift (a d t : Nat)
 #print axioms highLevel_right_odd_shift
 #print axioms highLevel_right_even_shift
 
+
+/-- In the positive-gap cone, the evaluator preserves third-plus-residual parity. -/
+theorem evalA_safe_d_parity (a : Nat) : ∀ k m aa bb dd : Nat,
+    k+2 ≤ a → evalA a k m = some (aa,bb,dd) →
+    (dd+bb)%2 = (m+k)%2 := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd hg h
+    omega
+  | succ a ih =>
+    intro k m aa bb dd hg h
+    rw [evalA] at h
+    by_cases h2 : k%3=2
+    · simp [h2] at h
+      cases h
+      omega
+    · by_cases h0 : k%3=0
+      · simp [h2,h0] at h
+        cases h
+        omega
+      · simp [h2,h0] at h
+        have hp := ih (k/3) (m+2*(k/3)+3) aa bb dd (by omega) h
+        omega
+
+/-- A successful B-drain with b<a shifts third-counter parity by exactly b. -/
+theorem drainB_safe_d_parity (b : Nat) : ∀ a d aa dd : Nat,
+    b < a → drainB a b d = some (.D aa dd) →
+    dd%2 = (d+b)%2 := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d aa dd hgap h
+    rw [drainB] at h
+    by_cases hb : b=0
+    · simp [hb] at h
+      cases h
+      omega
+    · simp only [if_neg hb] at h
+      have hevalGap : (b-1)+2 ≤ a := by omega
+      obtain ⟨a1,b1,d1,heval,hlt⟩ :=
+        evalA_safe_gap a (b-1) (d+2*b+3) hevalGap
+      have hdec : b1 < b := by
+        have hle := evalA_b_le_k a (b-1) (d+2*b+3) a1 b1 d1 heval
+        omega
+      rw [heval] at h
+      simp only [Option.bind_some, if_pos hdec] at h
+      have hp := evalA_safe_d_parity a (b-1) (d+2*b+3)
+          a1 b1 d1 hevalGap heval
+      have hr := ih b1 hdec a1 d1 aa dd hlt h
+      omega
+
+#print axioms evalA_safe_d_parity
+#print axioms drainB_safe_d_parity
+
 #print axioms evalA_first_shift
 #print axioms drainB_first_shift
 #print axioms highLevel_far_odd_shift
