@@ -69,3 +69,42 @@ All possible original-source even incoming branches are therefore eliminated. Th
 Run \`python audit_r138_independent.py\` (Python standard library). It independently verifies 2,794 exact even-return algebra instances, all 62/221 finite constraints, both universal high-h congruences, six high-a signed gap induction bases, and six exceptional-power interval bases. One should still independently inspect Agent14's reconstructed Lean proof and validate its original-source imports and \`#print axioms\` after GitHub Actions can execute jobs again. The existing manual workflow uses upstream Cryptids at commit \`ced8f9f44f67a167d5ecc03e687b048c67926371\`; its workflow requests Lean 4.35.0-rc4, while Agent14's local successful audit used Lean 4.36.0-rc2. These are explicitly different verification environments.
 
 **Scientific status:** exact independent mathematical branch analysis with executable finite certificates; a seed-independent edge corollary on paper; no new original-source full Lean build by this reviewer; no outside-prior-art novelty certification; no exact BB(6) value or universal machine bound.
+
+
+## Stronger complete inverse-cone analysis, 15:18 UTC
+
+Let \(R_k=2^{138+4860k}\). Its two candidate even E-parents have **closed forms**
+
+\[
+x_{1,k}=\frac{8R_k-2}{15},\qquad
+x_{2,k}=\frac{32R_k-68}{81}.
+\]
+
+These are genuine integer generic first-even parents for every \(k\ge0\), not only formal solutions of their rational equations. In fact \(R_k\bmod15=4\) because \(138+4860k\equiv2\pmod4\), and \(R_k\bmod81=73\) because \(138+4860k\equiv30\pmod{54}\). Therefore \(v_1=(4R_k-1)/15\), \(u_1=(R_k-1)/3\), \(v_2=(8R_k-17)/81\), \(u_2=(R_k-1)/9\) are positive odd integers with \(v_i\ge5\). The source-generic equations are satisfied with \((a,h)=(1,1)\) and \((2,2)\), respectively. Both parents are distinct.
+
+**New actual local Lean theorem:** [Sheep138ExactParents.lean](Sheep138ExactParents.lean) proves
+
+\`\`\`lean
+theorem Sheep138ExactParents.two_generic_parents (k : Nat) :
+  ∃ x1 x2 : Nat,
+    x1 ≠ x2 ∧
+    SheepEvenInverseAlgebra.GenericEdge x1 (R k) ∧
+    SheepEvenInverseAlgebra.GenericEdge x2 (R k) ∧
+    15*x1+2=2^(141+4860*k) ∧
+    81*x2+68=2^(143+4860*k)
+\`\`\`
+
+The complete proof was compiled locally under Lean 4.36.0-rc2 with **no holes** and \`#print axioms\` equal to **\`[propext, Quot.sound]\`**. The local prerequisite is an independently copied, literal-equivalent \`GenericEdge\` *definition* from [Agent14's module](../agent14-sheep-even-inverse/SheepEvenInverseAlgebra.lean), with no axioms or assumed mathematics. The committed file imports the real module and awaits a full authentic-import rerun. The theorem explicitly proves generic algebraic source edges; the published source semantics provides the bridge from generic first-even equation to the actual E map, and finite literal E execution checks independently corroborate it.
+
+The [independent exact checker](audit_r138_independent.py) also reconstructs both parents and executes the literal genuine \(F,E\) return for **101** distinct values of \(k\), including \(k=100\) with exponent 486,138: **202** successful checks.
+
+**New source-shaped structural proof texts:**
+
+* [Sheep138NoIncoming.lean](Sheep138NoIncoming.lean) establishes in the original \`EvenEdge\` signature that both rational child families have in-degree zero from every even source.
+* [Sheep138RootShield.lean](Sheep138RootShield.lean) derives that every even E-parent of \(R_k\) satisfies one of the two child equations, derives that each genuine E-return lands on an even state, and excludes **any two consecutive E edges** into \(R_k\) from an arbitrary even source.
+
+Both files were individually compiled against **temporary exact-signature interface mirrors** for Agent14's already-published lemmas; the local stub environment naturally prints those upstream signatures as axioms. **This is an interface-level compilation only**, explicitly **not a complete kernel verification of the new claims**. The temporary mocked imports are absent from the committed repository. A full run with the original \`SheepEven\`, \`Sheep138ChildLowCases\`, and \`Sheep138RootCases\` dependency sources is still necessary. The algebraic and finite modular components are independently audited above.
+
+**Mathematical combined result (paper proof, upstream dependent):** Using Agent14's exhaustive source-correct root classification, the independently checked 62 child nonparent cases and the constructive Lean witness theorem, the *exact* incoming first-even-neighborhood of \(R_k\) consists of \(x_{1,k},x_{2,k}\), and both children have zero incoming E-neighbors. Thus its entire inverse E cone has depth one, including both roots and no grandchildren, for every \(k\). Any even-section E trajectory with at least two edges can never reach \(R_k\); the authentic blank start 10 is not equal to \(R_k\) or either child and hence never reaches \(R_k\). The latter global all-time conclusion was already established by Agent14's separately locally source-compiled Lean theorem. This audit now gives the stronger, seed-free structural explanation and the constructive exact two-preimage algebraic witness.
+
+This *complete inverse-cone structure* may be a more reusable presentation of the already-proved r138 family than the purely seed-reachable exclusion. Its standalone independent source-level formal verification and outside academic novelty remain pending.
