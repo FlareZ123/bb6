@@ -2,6 +2,7 @@ import BounceOriginal
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11Research
+open BB6.Agent46
 
 private theorem two_pow_injective (n m : Nat) (h : 2^n = 2^m) : n=m := by
   by_cases hn : n<m
