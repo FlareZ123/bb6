@@ -604,4 +604,128 @@ theorem four_pulses (n : Nat) :
 #print axioms c_step
 #print axioms d_step
 
+
+/-! Uniform 9-adic translation and inverse-collision transfer. -/
+
+def liftTriple (z : Nat) (p : Nat × Nat × Nat) : Nat × Nat × Nat :=
+  (p.1, p.2.1, p.2.2+z)
+
+def liftState (z : Nat) : HighLevelState → HighLevelState
+  | .D a d => .D a (d+z)
+
+theorem evalA_shift (a : Nat) : ∀ k m z,
+    evalA a k (m+z) = (evalA a k m).map (liftTriple z) := by
+  induction a with
+  | zero =>
+    intro k m z
+    conv =>
+      lhs
+      rw [evalA]
+    conv =>
+      rhs
+      arg 2
+      rw [evalA]
+    by_cases h2 : k%3=2
+    · simp [h2, liftTriple]
+    · by_cases h0 : k%3=0
+      · simp [h2,h0,liftTriple]
+      · simp [h2,h0,liftTriple]
+  | succ a ih =>
+    intro k m z
+    conv =>
+      lhs
+      rw [evalA]
+    conv =>
+      rhs
+      arg 2
+      rw [evalA]
+    by_cases h2 : k%3=2
+    · simp [h2,liftTriple]
+    · by_cases h0 : k%3=0
+      · simp [h2,h0,liftTriple,Nat.add_assoc]
+        omega
+      · simp only [h2,h0,if_false, Nat.succ_ne_zero, Nat.succ_sub_one]
+        have hm : m+z+2*(k/3)+3 = (m+2*(k/3)+3)+z := by omega
+        rw [hm, ih (k/3) (m+2*(k/3)+3) z]
+
+theorem drainB_shift (b : Nat) : ∀ a d z,
+    drainB a b (d+z) = (drainB a b d).map (liftState z) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d z
+    conv =>
+      lhs
+      rw [drainB]
+    conv =>
+      rhs
+      arg 2
+      rw [drainB]
+    by_cases hb : b=0
+    · simp [hb, liftState]
+    · simp only [if_neg hb]
+      have hm : d+z+2*b+3=(d+2*b+3)+z := by omega
+      rw [hm, evalA_shift]
+      cases he : evalA a (b-1) (d+2*b+3) with
+      | none => simp [he]
+      | some p =>
+        rcases p with ⟨aa,bb,dd⟩
+        simp only [he,Option.map_some,liftTriple,Option.bind_some]
+        by_cases hlt : bb<b
+        · simp only [if_pos hlt]
+          rw [ih bb hlt aa dd z]
+        · simp only [if_neg hlt,Option.map_none]
+
+def pathA (q : Nat) : Option HighLevelState := highLevelNext (.D (486*q+42) (486*q+45))
+def pathB (q : Nat) : Option HighLevelState := highLevelNext (.D (486*q+42) (486*q+46))
+def pathC (q : Nat) : Option HighLevelState := highLevelNext (.D (486*q+44) (486*q+40))
+def pathD (q : Nat) : Option HighLevelState := highLevelNext (.D (486*q+44) (486*q+44))
+
+theorem pair_CD (q : Nat) : pathC q = pathD q := by
+  rw [pathC,pathD,c_step,d_step]
+
+theorem scale_A (q : Nat) (hq : 0 < q) :
+    pathA (9*q) = (pathA q).map (liftState (11664*q+2)) := by
+  simp only [pathA]
+  rw [a_step (9*q), a_step q]
+  have hk : 2*(9*q) = 9*(2*q) := by omega
+  rw [hk, drainB_scale_nine 2 (2*q) (1452*(9*q)+138) (by omega)]
+  have hm : 1452*(9*q)+138+24*(2*q)+2=(1452*q+138)+(11664*q+2) := by omega
+  rw [hm, drainB_shift]
+
+theorem scale_B (q : Nat) (hq : 0 < q) :
+    pathB (9*q) = (pathB q).map (liftState (11664*q+2)) := by
+  simp only [pathB]
+  rw [b_step (9*q), b_step q]
+  have hk : 2*(9*q) = 9*(2*q) := by omega
+  rw [hk, drainB_scale_nine 0 (2*q) (1452*(9*q)+143) (by omega)]
+  have hm : 1452*(9*q)+143+24*(2*q)+2=(1452*q+143)+(11664*q+2) := by omega
+  rw [hm, drainB_shift]
+
+theorem scale_C (q : Nat) (hq : 0 < q) :
+    pathC (9*q) = (pathC q).map (liftState (11664*q+2)) := by
+  simp only [pathC]
+  rw [c_step (9*q), c_step q]
+  have hk : 6*(9*q) = 9*(6*q) := by omega
+  rw [hk, drainB_scale_nine 0 (6*q) (1440*(9*q)+140) (by omega)]
+  have hm : 1440*(9*q)+140+24*(6*q)+2=(1440*q+140)+(11664*q+2) := by omega
+  rw [hm, drainB_shift]
+
+theorem scale_D (q : Nat) (hq : 0 < q) :
+    pathD (9*q) = (pathD q).map (liftState (11664*q+2)) := by
+  rw [← pair_CD (9*q), ← pair_CD q]
+  exact scale_C q hq
+
+theorem pair_preserved_A_B (q : Nat) (hq : 0 < q)
+    (hab : pathA q = pathB q) : pathA (9*q) = pathB (9*q) := by
+  rw [scale_A q hq, scale_B q hq, hab]
+
+theorem pair_preserved_B_C (q : Nat) (hq : 0 < q)
+    (hbc : pathB q = pathC q) : pathB (9*q) = pathC (9*q) := by
+  rw [scale_B q hq, scale_C q hq, hbc]
+
+#print axioms pair_CD
+#print axioms scale_A
+#print axioms scale_C
+#print axioms pair_preserved_A_B
+
 end BB6.Agent8InverseSource
