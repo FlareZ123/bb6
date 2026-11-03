@@ -33,6 +33,10 @@ The second case is a source-model **S→T transfer** only. Its eventual raw-TM h
 
 Axiom audits for all headline theorems list only `[propext, Quot.sound]`; no `sorryAx`, custom axiom or unverified external theorem is used in these standalone statements. These extend existing **fixed-length** zero-burst lemmas in [Agent9's earlier work](../agent9-s-section/README.md) to a compositional nonzero-core certificate. The simple adversarial family demonstrates why arbitrary nonzero residues and an initially positive height do not give universal survival. The source contains no proof that either genuine rooted input satisfies the required all-time valuation inequality.
 
+## Constructive exact first-transfer compiler
+
+The additional kernel-checked [Split3.lean](./Split3.lean) supplies a terminating executable `split3(n)=(v,u)` with a complete positive-input factorization proof `3^v*u=n` and `u%3≠0`. For every `q>=16`, `q%3≠0`, set `(v,u)=split3(onNZ q)`. The theorems `nonzero_core_exact` and `nonzero_core_transfer_exact` discharge the earlier explicit decomposition hypothesis, giving the **unconditional parametric dichotomy** in the first section. `nonzero_core_first_transfer` also proves no transfer occurs on any earlier S step, thus certifying the *first* S→T transfer time. Local Lean 4.36.0-rc2 compiled all with axiom audits `[propext, Quot.sound]`, no sorry. These are reusable source-derived arithmetic results, not source-imported Cryptids raw Turing machine theorems. They repackage the existing zero-burst mechanism constructively, rather than resolve either fixed root.
+
 ## Independent finite checking
 
 [burst_verify.py.gz.b64](burst_verify.py.gz.b64), restored Python SHA256 `014a416ca576dfa87757bbb6aa407067daad557cdf92ac89daf433e8c2f84ad6`, compares every maximal-burst macro to independently iterated direct S steps. The target entries `(141,3)` and `(17,3)` are respectively the published root and a separately authenticated S-root; they are distinct original-machine roots. Exact local 100,000 S-step checks per entry:
