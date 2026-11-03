@@ -210,6 +210,8 @@ def main() -> None:
     print("SHA256 of canonical sorted reverse witness:", hashlib.sha256(digest_input).hexdigest())
     for state in sorted(seen):
         print("STATE", *state)
+    for node, parent in sorted(internal_edges):
+        print("EDGE", *node, "FROM", *parent)
     for node, parent, names in sorted(excluded_edges):
         print("GUARD", *node, "FROM", *parent, ",".join(names))
     print("STATUS: reproducible computational reverse witness; kernel proof pending")
