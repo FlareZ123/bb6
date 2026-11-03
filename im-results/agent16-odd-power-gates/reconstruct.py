@@ -13,8 +13,8 @@ from filelock import FileLock
 ROOT = Path(__file__).resolve().parent
 ARCHIVE = ROOT / "OddPredecessor.lean.xz.b64"
 DEST = ROOT / "OddPredecessor.lean"
-ARCHIVE_SHA256 = "a654cd1fb151fb8074ac0281b849ad170b04830d2e898c46226e5541450deff0"
-SOURCE_SHA256 = "db53115b1b0a6000fdf7bface4bd626e6e90221035fbfa13e8b8da3bef3d77d0"
+ARCHIVE_SHA256 = "11c726827b83f756cd1a86db32a9248a959450a373710be2f14cdfece4843235"
+SOURCE_SHA256 = "d1efc3e75d8002384dc079b4e68cc9229a56d7e566e2505954c16c761f7747a2"
 
 
 def checked(data: bytes, expected: str) -> None:
