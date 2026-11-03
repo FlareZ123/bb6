@@ -108,3 +108,38 @@ Both files were individually compiled against **temporary exact-signature interf
 **Mathematical combined result (paper proof, upstream dependent):** Using Agent14's exhaustive source-correct root classification, the independently checked 62 child nonparent cases and the constructive Lean witness theorem, the *exact* incoming first-even-neighborhood of \(R_k\) consists of \(x_{1,k},x_{2,k}\), and both children have zero incoming E-neighbors. Thus its entire inverse E cone has depth one, including both roots and no grandchildren, for every \(k\). Any even-section E trajectory with at least two edges can never reach \(R_k\); the authentic blank start 10 is not equal to \(R_k\) or either child and hence never reaches \(R_k\). The latter global all-time conclusion was already established by Agent14's separately locally source-compiled Lean theorem. This audit now gives the stronger, seed-free structural explanation and the constructive exact two-preimage algebraic witness.
 
 This *complete inverse-cone structure* may be a more reusable presentation of the already-proved r138 family than the purely seed-reachable exclusion. Its standalone independent source-level formal verification and outside academic novelty remain pending.
+
+
+## Source-level converse and genuine two-parent existence, 15:30 UTC
+
+**Strengthened, independently kernel-checked result:** The algebraic \`GenericEdge\` and \`SpecialEdge\` cases used throughout this source-connected analysis admit full original-source \`SheepEven.EvenEdge\` constructors. Both directions are now formalized in new files:
+
+- [SheepGenericConverse.lean](SheepGenericConverse.lean) proves \`GenericEdge x y → EvenEdge x y\` from the actual \`Step.generic\` constructor, the full affine formula, the oddness and lower bound of \`v\`, and the exact factorization of the intermediate section value.
+- [SheepEdgeConverse.lean](SheepEdgeConverse.lean) proves the exceptional \`SpecialEdge x y → EvenEdge x y\` from \`Step.special\`, then unifies both branches into \`Edge x y → EvenEdge x y\`.
+- [SheepExactEdgeEquiv.lean](SheepExactEdgeEquiv.lean) independently checks the reverse direction on even sources, giving the fully quantified **if and only if**
+  \[
+  x\equiv0\pmod2\ \Longrightarrow\
+  \left(\mathrm{EvenEdge}(x,y)\iff
+  \mathrm{GenericEdge}(x,y)\lor\mathrm{SpecialEdge}(x,y)\right)
+  \]
+  **without a reachability assumption**.
+
+The last source-equivalence theorem compiled with Lean **4.36.0-rc2**, with \`#print axioms\` equal to **\`[propext, Classical.choice, Quot.sound]\`**. The two converse lemmas print only **\`[propext, Quot.sound]\`**.
+
+- [Sheep138ActualParents.lean](Sheep138ActualParents.lean) imports the universal constructive algebraic witness theorem and the new source-converse lemma to kernel-check the stronger all-k theorem
+
+\`\`\`lean
+theorem Sheep138ActualParents.two_source_parents (k : Nat) :
+  ∃ x1 x2 : Nat,
+    x1 ≠ x2 ∧
+    SheepEven.EvenEdge x1 (2^(138+4860*k)) ∧
+    SheepEven.EvenEdge x2 (2^(138+4860*k)) ∧
+    15*x1+2=2^(141+4860*k) ∧
+    81*x2+68=2^(143+4860*k)
+\`\`\`
+
+This **actual original-source EvenEdge existence** theorem compiled locally with \`#print axioms [propext, Quot.sound]\`. Crucially the local build here used the **authentic exact upstream archived source bytes** of Agent16's \`SheepEven.lean\` (SHA256 \`82d1b77cbd8d2071b624834de5796697f6d3b02941ecda08d7f0075cbea846d5\`) and \`EvenEdge.lean\` (SHA256 \`11e9b78ee4ddc8dca5538915d2d2773f83741643ad64eaeb6135259d0efe72b9\`). They were reconstructed from \`im-results/agent16-sheep-even-return/SheepEven.lean.xz.b64\` and \`even-reach-lean.tar.xz.b64\`, and compiled independently with standard axioms. The local algebraic module contained verbatim original definitions only, cloned from \`SheepEvenInverseAlgebra.lean\`, as the full repo module could not be mounted into this isolated local shell. No assumed source theorem or stub axiom was used in these certified files; the committed Lean files import the actual original algebraic source module.
+
+The **two-person existence certificate is now fully source-semantic and kernel-checked** as opposed to the earlier purely algebraic witness. The *at-most-two* and *no-grandparent* halves remain paper-proved, backed by the finite modular audit and Agent14 source case lemmas, and await independent full original-source kernel compilation of \`Sheep138NoIncoming\` and \`Sheep138RootShield\`. The original source equivalence theorem is a reusable semantic link for every other rational-exponential reverse-search programme, beyond this single modular family.
+
+All genuine source proof statements have been kept distinct from the interface-stub checking and empirical 202-transition replay.
