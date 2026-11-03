@@ -1,0 +1,83 @@
+name: Shared pinned Cryptids source proof audit (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      original_module:
+        description: 'Original Cryptids module to build (Lean module path)'
+        required: true
+        type: string
+        default: 'BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA'
+      dependency_path:
+        description: 'Repo-relative standalone Lean dependency to compile first'
+        required: true
+        type: string
+        default: 'im-results/agent5-429-rank/BB429Burst.lean'
+      bridge_path:
+        description: 'Repo-relative Lean source proof importing original module and dependency'
+        required: true
+        type: string
+        default: 'im-results/agent5-429-rank/BB429SourceBridge.lean'
+
+permissions:
+  contents: read
+
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ORIGINAL_MODULE: ${{ inputs.original_module }}
+      DEPENDENCY_PATH: ${{ inputs.dependency_path }}
+      BRIDGE_PATH: ${{ inputs.bridge_path }}
+      UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate manual inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$ORIGINAL_MODULE" =~ ^[A-Za-z0-9_.]+$ ]]
+          for p in "$DEPENDENCY_PATH" "$BRIDGE_PATH"; do
+            [[ "$p" =~ ^im-results/[A-Za-z0-9_./-]+\\.lean$ ]]
+            [[ "$p" != *..* ]]
+            test -f "$p"
+          done
+          test "$DEPENDENCY_PATH" != "$BRIDGE_PATH"
+      - name: Install original Cryptids Lean version
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Clone exact upstream source
+        shell: bash
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
+      - name: Reclaim unused hosted-runner disk for Mathlib cache
+        shell: bash
+        run: |
+          df -h
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          df -h
+      - name: Restore upstream cache
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: lake exe cache get
+      - name: Compile original raw-TM acceleration
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: lake build "$ORIGINAL_MODULE"
+      - name: Prove against unchanged source definitions and audit axioms
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          dependency_base="$(basename "$DEPENDENCY_PATH")"
+          bridge_base="$(basename "$BRIDGE_PATH")"
+          cp "$GITHUB_WORKSPACE/$DEPENDENCY_PATH" "$dependency_base"
+          cp "$GITHUB_WORKSPACE/$BRIDGE_PATH" "$bridge_base"
+          lake env lean -o ".lake/build/lib/lean/${dependency_base%.lean}.olean" "$dependency_base"
+          lake env lean "$bridge_base"
