@@ -1,4 +1,5 @@
 import OneResetArithmetic
+import P1InverseLog
 
 namespace BB6.Agent1OneReset
 open BB6.Agent1RootWall
@@ -21,6 +22,13 @@ theorem l0_first_reset_no_wall
   have hpowerbound : 65536*q*q≤P := large_power q hq
   have hqq : q≤q*q := by
     have h:=Nat.mul_le_mul_right q hq
+    omega
+  have hpowq : 65536*(q*q)≤P := by
+    calc
+      65536*(q*q)=65536*q*q := by ac_rfl
+      _≤P := hpowerbound
+  have hqbig : 65536*q≤P := by
+    have hh := Nat.mul_le_mul_left 65536 hqq
     omega
   have hNsmall : 24*q+8<P := by omega
   have hu : u+4*q+3=7*P := by
