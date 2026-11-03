@@ -64,8 +64,11 @@ theorem zero_first_odd_necessary (a k y : Nat)
               if_neg hk0,if_neg hlow,if_neg haeven] at hi
             rcases hi with ⟨_,n,hs,_⟩ | ⟨hy,n,hs,_⟩
             · have hp : 1≤2^n := Nat.one_le_pow n 2 (by decide)
-              have hbound : 2*(a-1)+8≤2^n*(2*(a-1)+8) :=
-                Nat.le_mul_of_pos_right _ hp
+              have hbound : 2*(a-1)+8≤2^n*(2*(a-1)+8) := by
+                calc
+                  2*(a-1)+8 ≤ (2*(a-1)+8)*2^n :=
+                    Nat.le_mul_of_pos_right _ hp
+                  _ = 2^n*(2*(a-1)+8) := by ac_rfl
               omega
             · have hav : (a-1)%2=0 := by omega
               let v : Nat := (a-1)/2
