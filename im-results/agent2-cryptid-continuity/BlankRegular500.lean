@@ -41,3 +41,57 @@ theorem blank500 :
 
 #print axioms blank500
 end BB6.BlankRegular500
+
+
+namespace BB6.BlankRegular500
+open CryptidBoundary BB6.BoundaryPadding BB6.Padding
+
+private theorem stopped_step (c : CryptidBoundary.Cfg) (h : c.st=6) :
+    CryptidBoundary.step c = c := by
+  cases c with
+  | mk l bit r st =>
+    change st=6 at h
+    subst st
+    cases bit <;> rfl
+
+private theorem obs_state {c d : CryptidBoundary.Cfg} (h : ObsEq c d) :
+    c.st=d.st := h.2.2.2
+
+private theorem stopped_run (c : CryptidBoundary.Cfg) (n : Nat)
+    (h : c.st=6) : CryptidBoundary.run n c = c := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    change CryptidBoundary.run n (CryptidBoundary.step c) = c
+    rw [stopped_step c h]
+    exact ih
+
+/-- No configuration on the actual blank-tape trajectory up to the certified
+    500th regular return is the machine's frozen halt state. -/
+theorem no_halt_before_blank500 (n : Nat)
+    (hn : n ≤ 36 + DRegular.accumulated 500 seed9) :
+    (CryptidBoundary.run n CryptidBoundary.blank).st ≠ 6 := by
+  obtain ⟨t, hr, heq⟩ := blank500
+  have hlast : (CryptidBoundary.run
+       (36 + DRegular.accumulated 500 seed9) CryptidBoundary.blank).st = 5 := by
+    have hs := obs_state heq
+    simpa only [DRegularSource.sourceSection,CryptidBoundary.init] using hs
+  intro hst
+  have hrun : CryptidBoundary.run (36 + DRegular.accumulated 500 seed9)
+      CryptidBoundary.blank = CryptidBoundary.run
+      ((36 + DRegular.accumulated 500 seed9) - n)
+      (CryptidBoundary.run n CryptidBoundary.blank) := by
+    have ht : n + ((36 + DRegular.accumulated 500 seed9) - n) =
+        36 + DRegular.accumulated 500 seed9 := by omega
+    calc
+      _ = CryptidBoundary.run
+        (n + ((36 + DRegular.accumulated 500 seed9) - n))
+        CryptidBoundary.blank :=
+          congrArg (fun m => CryptidBoundary.run m CryptidBoundary.blank) ht.symm
+      _ = _ := CryptidBoundary.run_add _ _ _
+  rw [stopped_run _ _ hst] at hrun
+  rw [hrun] at hlast
+  omega
+
+#print axioms no_halt_before_blank500
+end BB6.BlankRegular500
