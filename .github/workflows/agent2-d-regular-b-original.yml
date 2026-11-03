@@ -1,0 +1,40 @@
+name: Agent 2 D-regular B-row original-source proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned original D sources and DRegular proof
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify all three B rows against unmodified original machine source
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          P=im-results/agent32-cryptid-padding
+          H=im-results/agent35-d-regular-certificate
+          D=im-results/agent2-cryptid-continuity
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$H/DRegular.olean" "$H/DRegular.lean"
+          lean -o "$H/DTransport.olean" "$H/DTransport.lean"
+          lean -o "$H/DObservedTransport.olean" "$H/DObservedTransport.lean"
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
+          lean "$D/BRegularSource.lean"
