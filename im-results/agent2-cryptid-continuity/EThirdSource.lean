@@ -134,8 +134,14 @@ theorem third_B_source (v h : Nat) :
         ([true,false,true,false] ++ ys) =
       List.replicate (512*v+434) true ++
         (oppairs 1 ++ false :: ys) := by
-    rw [show 512*v+434=(512*v+433)+1 by omega]
-    rw [← List.replicate_append_replicate]
+    have hrep : List.replicate (512*v+434) true =
+        List.replicate (512*v+433) true ++ [true] := by
+      calc
+        _ = List.replicate (512*v+433+1) true := by congr 1; omega
+        _ = List.replicate (512*v+433) true ++ List.replicate 1 true :=
+          (List.replicate_append_replicate).symm
+        _ = _ := rfl
+    rw [hrep]
     simp [oppairs,List.append_assoc]
   simpa only [thirdBFinish,ys] using
     congrArg (fun x : List Bool => (⟨[],false,x,5⟩ : Cfg)) hmerge
