@@ -68,4 +68,4 @@ jobs:
         working-directory: /tmp/agent30-b-curvature
         env:
           LEAN_PATH: .
-        run: lean  BModularSource.lean
+        run: lean -o BModularSource.olean BModularSource.lean
