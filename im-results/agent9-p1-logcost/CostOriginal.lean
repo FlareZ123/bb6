@@ -47,5 +47,25 @@ theorem reachable_even_terminal_near_full_cost
     q b d m t k c root hq hcone hb hb4 hd hi hc hk hr
   exact logarithmic_cost_lower q m r b hq hqr hdyadic hnarrow
 
+theorem reachable_even_terminal_logarithmic_cost
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4 * u2 q - 4 else 6 * u2 q - 2)
+      (if root then 4 * u2 q + 9 else 2 * u2 q + 5) b d m)
+    (hb : 8 ≤ b) (hb4 : b % 4 = 0) (hd : d % 2 = 1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : c % 2 = 0) (hk : 2 ≤ k)
+    (hreach : BB6.Agent1.Reach (2 * k - 4) (c + 4)) :
+    16 * q ≤ m + Nat.log2 q + 5 := by
+  have hqr : q ≤ 2 ^ (Nat.log2 q + 1) :=
+    Nat.le_of_lt (Nat.lt_log2_self)
+  have h := reachable_even_terminal_near_full_cost
+    q b d m t k c (Nat.log2 q + 1) root
+    hq hqr hcone hb hb4 hd hi hc hk hreach
+  omega
+
+#print axioms reachable_even_terminal_logarithmic_cost
+
 #print axioms reachable_even_terminal_near_full_cost
 end BB6.Agent9Cost
