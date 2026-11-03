@@ -61,3 +61,7 @@ COMPLETE 6240
 ```
 
 This exact finite test cannot certify the universal lemma; the written prime-power induction supplies that proof. Neither the general all-odd theorem nor this conditional zero-fiber theorem proves that any synthetic source comes from the true blank start `5→7→10`. The original machine halting question and BB(6) remain unsettled. Only the power-of-three lifting lemma is currently kernel certified; the additional stride reasoning is elementary but awaits separate formalization and independent review.
+
+## Additional Lean-checked pure-two factor
+
+The standalone [PureTwo.lean](PureTwo.lean) proves the explicit `m=2^k` case in Lean 4.36.0-rc2: for every `k≥1` and even `s`, set `b=2^k`, `u=1+2s+4·2^k`. Then `u≥5`, `u≡1 (mod4)`, `x=4^b u≡0 (mod2^k)`, and the genuine generic return `x+2b+(u−1)/2≡s (mod2^k)`. Its local `#print axioms zero_two_power_generic` is `[propext, Quot.sound]`. The factor `n>1` in the mixed-modulus theorem still relies on the written ascending-prime constrained-root argument, pending Lean formalization. Local compilation is confirmed; repeated GitHub workflow runs after an initial source-transcription fix experienced no-step infrastructure failures, so the latest file has not yet been independently compiled by remote CI.
