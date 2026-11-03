@@ -363,4 +363,41 @@ theorem evalA_none_iff_ternaryCongruence (a k m : Nat) :
 
 #print axioms evalA_none_iff_ternaryCongruence
 
+
+theorem ternaryOnes_ge (a : Nat) : a ≤ ternaryOnes a := by
+  induction a with
+  | zero => simp [ternaryOnes]
+  | succ a ih =>
+    simp only [ternaryOnes]
+    omega
+
+theorem evalA_none_requires_a_le_k (a k m : Nat)
+    (h : evalA a k m = none) : a ≤ k := by
+  have hc := (evalA_none_iff_ternaryCylinder a k m).mp h
+  have hbound : ternaryOnes a ≤ k := by
+    rw [← hc]
+    exact Nat.mod_le _ _
+  have hg := ternaryOnes_ge a
+  omega
+
+/-- Direct-halt evaluator gate is impossible if its first counter exceeds k. -/
+theorem evalA_succeeds_if_a_gt_k (a k m : Nat) (h : k < a) :
+    ∃ aa bb dd, evalA a k m = some (aa, bb, dd) := by
+  cases he : evalA a k m with
+  | none =>
+    have hab := evalA_none_requires_a_le_k a k m he
+    omega
+  | some p =>
+    rcases p with ⟨aa, bb, dd⟩
+    exact ⟨aa, bb, dd, rfl⟩
+
+/-- The last next branch's direct evaluator cannot halt when d >= 2a. -/
+theorem highLevel_last_evalA_safe_beyond_diagonal (a d : Nat)
+    (h : 2 * a ≤ d) : ∃ aa bb dd,
+    evalA (d + 1 - a) a (2 * a + 5) = some (aa, bb, dd) := by
+  apply evalA_succeeds_if_a_gt_k
+  omega
+
+#print axioms highLevel_last_evalA_safe_beyond_diagonal
+
 end BB6.Agent49ParitySource
