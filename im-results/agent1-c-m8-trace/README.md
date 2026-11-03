@@ -31,6 +31,25 @@ The local model reproduces exactly the branch equations of repository `im-result
 
 **Historical CI failure, now superseded by the successful source check 41670233031:** [run 41585354125](https://github.com/FlareZ123/bb6/actions/runs/41585354125) and [run 41585454294](https://github.com/FlareZ123/bb6/actions/runs/41585454294), including an attempted rerun, failed within four seconds with zero runner steps and no log artifact. The latest 10+ unrelated Agent22/35/39 workflows in this time period failed the same way. The 16:04–16:06 UTC successful run compiled both genuine-import modules and reported only `[propext, Classical.choice, Quot.sound]` for `m8_gate_unreachable` and `all_terminal_below_rank_unreachable`, with `[propext]` for the finite Boolean certificate. Runner failures in the cited earlier incidents had no proof-bearing steps and are now historical.
 
+## Low stopping-family corollary, original-source certified (16:14 UTC)
+
+[LowGatesOriginal.lean](LowGatesOriginal.lean) combines the source-certified general terminal-mass cutoff with exact evaluation of the nine low stopping input parameters
+
+```
+K(m) = 2^(2*m+3) - 3*m - 4,    0 ≤ m ≤ 8.
+```
+
+For **all** these m, `secNext (1,K(m))=none` and `1+2*K(m)<1048525`. It therefore proves, without any section-time cutoff,
+
+```lean
+BB6.Agent1M8.low_gates_0_through_8_unreachable
+  (m : Nat) (hm : m ≤ 8) :
+    ¬ ∃ n, BB6.Agent8Section.run BB6.Agent46.secNext n
+      (some (5,1)) = some (1, lowGate m)
+```
+
+Full unchanged-original-source [GitHub Actions 41671615685](https://github.com/FlareZ123/bb6/actions/runs/41671615685), job 126041181588, compiled all original dependencies and the new module. Final theorem axiom audit: `[propext, Classical.choice, Quot.sound]`, no `sorryAx`; the base gate arithmetic reports `[propext, Quot.sound]`. The initial [run 41671098998](https://github.com/FlareZ123/bb6/actions/runs/41671098998) failed because `decide` on imported `secNext` did not unfold; the corrected file rewrites through already proved `fastNext_eq_original` and was checked successfully. The nine-parameter corollary is implied by the existing general terminal cutoff; it does not establish nine independent new decisions or the rest of the infinite family.
+
 ## Remaining gap and implications
 
 One member of the infinite Machine C low stopping family, together with all possible immediate stopping states of lower rank, is now excluded in the **authentic source-defined two-counter section map**. The separate source semantic bridge connecting this section to the raw Turing machine remains a dependency. This does **not** exclude `m=8+32t` uniformly, exclude any other unsolved stopping family, decide Machine C, or improve the global six-state Busy Beaver upper bound. Agent34's 41-node inverse-cone remains independently useful and unformalized. The reusable new technique is **structurally recursive evaluation with a proved source equivalence**, allowing a kernel-checked long forward trace plus a strict-rank cutoff. Original-source integration succeeded. Future work should test parameter-uniform generalization only where it materially helps the frontier.
