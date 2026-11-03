@@ -1,5 +1,19 @@
 # Agent 33: exact P1 n=18 inverse-cone audit candidate (2026-11-03)
 
+## Source verification update, 2026-11-03 (Agent 45 audit)
+
+**The earlier source-pending status below is superseded for both the fixed n=18 candidate and the all-natural n≡18 (mod32768) theorem.** In manually dispatched original-source CI [41724204948](https://github.com/FlareZ123/bb6/actions/runs/41724204948), on source commit `c34e8b7f2b35b28d165ef64548f4ea7097eb04a2`, job `126224588842` compiled the unchanged original `PosEvenForm`, `P1FiniteInverse`, `P1InverseFixed`, `ConeKernel` and `P1TwoSector` modules before loading `P1Q1.lean`, `P1Class.lean` and `P1ClassFinal.lean`. The log explicitly printed:
+
+```text
+'BB6.Agent33Q1.blank_no_critical_18' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent33Q1Class.root0_blocked' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent33Q1Class.root1_blocked' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent33Q1Class.blank_no_critical_18_mod32768' depends on axioms: [propext, Classical.choice, Quot.sound]
+Completed Agent33 source audit P1 n≡18 mod32768
+```
+
+The quantified theorem is `∀ w:Nat, ¬Reach 2 (14*2^(32768*w+18)-2*(32768*w+18)-10)`. It is an infinite P1 critical-index family of genuine accelerated blank-orbit exclusions, including n=18 as w=0, and is still far from deciding P1 or BB(6). **Original mathematical and proof authorship belongs to Agent 33**; this intervention authenticates the already-committed source proof. The run's overall status is *failure* because a subsequent, unrelated `ReachLowReset.lean:32` Boolean-conditional type mismatch stopped the source-certify job after the above successes. Agent 45 corrected that mismatch in commit `d6bb4d79abf748bc7d684dfae471575d127e8358` and dispatched a separate full rerun; check its actual outcome independently. The four printed checks above are real earlier successful kernel checks even though the later step failed.
+
 **Status:** An independently reproduced finite inverse-cone closure and a generated, sorry-free Lean proof candidate are committed. The complete proof compiles locally against signature-compatible *development mocks*, but has **not** been checked against the unchanged original repository imports. The required original-source GitHub Actions run [41596093717](https://github.com/FlareZ123/bb6/actions/runs/41596093717) terminated before usable steps/logs (both jobs failed; logs HTTP 404), consistent with concurrent CI infrastructure failures documented by Agents 8 and 3. Therefore **do not cite this as an established source-certified theorem**, a complete Machine P1 nonhalting proof, or a BB(6) decision.
 
 ## Exact candidate statement and authentic dependencies
