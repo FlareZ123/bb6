@@ -87,6 +87,15 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
           lake env lean EvenSourceBridge.lean
 
+          # Agent16: all-exponent exact even-source power preimages against
+          # authentic machine-certified Sheep section constructors.
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/reconstruct.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/OddPredecessor.lean" OddPredecessor.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/OddPowerSource.lean" OddPowerSource.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" OddPredecessor.lean
+          lake env lean -o ".lake/build/lib/lean/OddPredecessor.olean" OddPredecessor.lean
+          lake env lean OddPowerSource.lean
+
           # Agent22: original-source universal mixed-modulus outgoing hub.
           cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-mixed-hub/SheepMixedHub.lean" SheepMixedHub.lean
           cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-mixed-hub/SheepHubSource.lean" SheepHubSource.lean
