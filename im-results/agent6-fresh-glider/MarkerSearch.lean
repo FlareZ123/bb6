@@ -67,7 +67,7 @@ theorem markerCoverSearch_sound
 theorem marked_search_check :
     markerCoverSearch markedTailPump 2 0 3 3 0 = true := by
   change markerDecisionOracle markedTailPump 2 0 3 3 = true
-  simp only [markerDecisionOracle, marked_entry_oracle_accept, Bool.or_true]
+  simp [markerDecisionOracle, marked_entry_oracle_accept]
 
 theorem marked_search_leaf :
     Cover (DecidedBelow 2) markedTailPump :=
