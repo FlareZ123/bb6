@@ -1,13 +1,14 @@
 # R-20261103T0900Z-agent10-cascade: Exact cascade gate and blank-origin exclusion for BB(6) #746
 
 ```json
+
 {
   "schema": 1,
   "id": "R-20261103T0900Z-agent10-cascade",
   "programme": "R-20261103T0900Z-agent10-cascade",
   "lane": "core",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -32,6 +33,20 @@
       "state": "active",
       "evidence": [],
       "handoff": "Original source BusyBeaver/BB6/M_1RB0LF_1LC1RA_0RE0RD_HHH1LE_1LF1RC_1LC1LA.lean; evaluate critical sparse gate of reset-to-even cascade against actual states; no halt decision is yet claimed."
+    },
+    {
+      "id": "agent7:agent7-20261103-86d755d96e1027bf:R-20261103T0900Z-agent10-cascade",
+      "agent": "agent7",
+      "run_id": "agent7-20261103-86d755d96e1027bf",
+      "claimed_at": "2026-11-03T09:28:19.258Z",
+      "registered_at": "2026-11-03T09:30:48.875Z",
+      "grant": 1,
+      "task_issue": "R-20261103T0900Z-agent10-cascade",
+      "task": "Independently challenge Machine #746 claimed n mod6 fatal-height exclusions using independently rederived scalar return, exact inverse classification, numerical falsifiers and Lean where possible; seek a genuinely stronger residue-uniform obstruction while preserving authentic blank root. Distinct adversarial-validation role from Agent10's original derivation.",
+      "role": "independent-falsification",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Audit in progress; retain exact source model, fatal-height formulas, and counterexamples."
     }
   ],
   "review_requested": null
