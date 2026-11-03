@@ -57,9 +57,21 @@ T(C(16*9^n)) = T(E(16*9^n)) = none.
 
 These are synthetic section states. The theorem does not say that the blank-origin orbit reaches any of them.
 
+## Stronger: positive-density halting cylinder
+
+The sparse four-way halting family above belongs to a **full arithmetic progression**. The local kernel theorem `four_halt_residue` proves, for every natural `r`:
+
+```text
+T(A(27r+16)) = T(B(27r+16)) = T(C(27r+16)) = T(E(27r+16)) = none.
+```
+
+More generally, `b_halt_residue` and `c_halt_residue` prove `T(B(9r+7)) = T(C(9r+7)) = none` for all `r`; `pair_CD` extends the same statement to `E`. The strict `A` failure is forced at `q=27r+16` by its direct `evalA 2 (54r+31)` term, which reads the ternary digit pattern `31 mod 27 = 4`. The `B,C,E` branches fail after one or two further `drainB` evaluations, with `evalA 0 (6r+3) = none`. All proofs are symbolic reductions using explicit residue equalities and quantified natural parameters, **without finite sampling**. The `#print axioms` audit for `four_halt_residue` is `[propext, Quot.sound]`.
+
+The progression covers one of every 27 natural parameter values in the synthetic four-state family, a positive natural density, and therefore strengthens the preceding ninefold halting pulse result. No claim is made that this proportion describes the blank-origin orbit. The source-imported copy is committed and remains pending working source-pinned CI.
+
 ## Verification and reproducibility
 
-- [TernaryCollision.lean](TernaryCollision.lean): fully self-contained Lean 4.36.0-rc2 definitions faithfully copied from the pinned original source, plus the complete collision and transport proofs. Tested by local Lean kernel with **no `sorry`, custom axioms, `native_decide`, or fuel cutoffs**. The `#print axioms` audit for `four_pulses`, `pair_CD`, `scale_A`, `scale_C`, `pair_preserved_A_B`, and `allNone16_pulse` lists only `[propext, Quot.sound]`.
+- [TernaryCollision.lean](TernaryCollision.lean): fully self-contained Lean 4.36.0-rc2 definitions faithfully copied from the pinned original source, plus the complete collision and transport proofs. Tested by local Lean kernel with **no `sorry`, custom axioms, `native_decide`, or fuel cutoffs**. The `#print axioms` audit for `four_pulses`, `pair_CD`, `scale_A`, `scale_C`, `pair_preserved_A_B`, and `allNone16_pulse`, plus `four_halt_residue`, lists only `[propext, Quot.sound]`.
 - [TernaryInverseSource.lean](TernaryInverseSource.lean): same new theorems restated directly on original Cryptids `evalA`, `drainB`, `highLevelNext`, and `HighLevelState`, alongside the source-anchored original pumping theorem. This file is compiled by the [existing manual source-pinned verifier](../../.github/workflows/agent49-623-parity-source.yml), which clones the exact SHA and builds its raw Turing-machine acceleration. Previous run [41562329111](https://github.com/FlareZ123/bb6/actions/runs/41562329111) passed **before the collision theorems were added**. The attempted new run [41592311563](https://github.com/FlareZ123/bb6/actions/runs/41592311563) failed in approximately two seconds before any visible job step or available logs; the second attempt failed similarly, concurrently with failures across unrelated workflows. **Do not count the newly appended original-source statements as CI certified until a complete new pinned run passes.** See [CI warning](../../communications/broadcast/2026-11-03T065600Z_agent8-ci-runner-failures.md).
 - The distinct families and constants were independently checked by an exact integer evaluator during discovery, then superseded by the universal Lean proofs. All claims above are about the accelerated arithmetic map; the original source contains the established raw-machine-to-`D(0,7)` halting equivalence.
 
