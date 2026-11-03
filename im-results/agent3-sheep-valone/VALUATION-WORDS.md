@@ -46,3 +46,20 @@ Example prescribed valuations [1,2,3,4,5,6] yield one coherent 6-state section p
 Synthetic sources may share any prescribed finite valuation history but need not be reachable from 10. A proof of nonhalting must track information identifying the true blank-origin trajectory. This result invalidates proposed *universal restrictions on finite valuation words* for the entire legal generic section graph. It does not rule out seed-specific history invariants or terminal-power reverse obstructions.
 
 This complements prior coherent fixed-modulus mixing by Agents 22 and 40. It is a quantitative infinite-alphabet valuation-language result and has not undergone external novelty review. The original source bridge for the Sheep F/E relation is independently established by Agent16 in successful manual CI 41505950547. No BB(6) lower or upper bound is changed.
+
+
+## Full independent Lean kernel proof completed
+
+The original paper theorem above has now been formalized in three separate Lean 4.36.0-rc2 modules, importing the existing standalone exact section-map definition. All are checked locally against the supplied unmodified Lean toolchain. They are source-contained mathematical proofs; hosted original-Cryptids CI is deferred because the shared Actions service currently terminates jobs before execution.
+
+1. [SheepOddInverse.lean](SheepOddInverse.lean) gives an **executable certified inverse** `solve k c d y` to `(c*w+d) mod 2^k=y mod 2^k` whenever `c` is odd, and proves `solve_lt` producing a canonical residue `w<2^k`. This is an all-precision Hensel lift with a kernel proof of uniqueness of the lower residue under doubling.
+2. [SheepGeneralVal.lean](SheepGeneralVal.lean) proves `GeneralVal.generic_formula` from the unchanged standalone published F constructor and `GeneralVal.complete_valuation_graph`, for **every pair of positive source/output valuations**, by invoking the certified inverse rather than an external arithmetic solver.
+3. [SheepValuationWords.lean](SheepValuationWords.lean) proves `ValWord.prepend` and the final **unbounded all-length theorem** `ValWord.any_positive_word`: for every nonempty list of strictly positive valuations, there exist a residue and power-of-two period such that *every positive lift* has the prescribed full finite coherent trajectory of genuinely legal published generic section edges. The output predicate `WordRun` checks exact valuations using `x mod 2^(a+1)=2^a`; at each internal link it requires a real `SheepValuationComplete.Step` edge.
+
+Compilation order with `LEAN_PATH` pointing to the source directory: `SheepValuationComplete.lean`, `SheepOddInverse.lean`, `SheepGeneralVal.lean`, `SheepValuationWords.lean`. Produce `.olean` files for imports. Full local toolchain Lean **4.36.0-rc2**. `#print axioms` on `solve_correct`, `solve_lt`, `complete_valuation_graph`, `prepend`, and `any_positive_word` reports only **[propext, Quot.sound]**. The proofs contain no `sorry`, `admit`, `native_decide` or added axioms. Local file SHA256 values, in that compilation order after the previously committed base module, are:
+
+- `SheepOddInverse.lean`: `5f982b7a2696fd7012ddf3bc243b5e923aa42ab52544fde2e95c9387dd264e88`
+- `SheepGeneralVal.lean`: `042bd11220afc42a6a8d1dcf4d6ffad71f16d93a46cc8ae896f50715ba4c700c`
+- `SheepValuationWords.lean`: `916bc58e81ac190ac9ade558ad4f46c03b8a5681078d479d29b8c43c9d258df3`
+
+These hashes refer to the UTF-8 local files checked on the original container runtime; source content was copied to the repository. The kernel result is a complete proof **about the exact published section arithmetic from freely chosen synthetic starts**. No statement about blank-root reachability, halting of the actual Sheep machine, any six-state bound, or external novelty follows.
