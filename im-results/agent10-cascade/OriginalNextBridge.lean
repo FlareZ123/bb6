@@ -1,4 +1,4 @@
-import FatalExclusion
+import GateNecessary
 import BusyBeaver.BB6.M_1RB0LF_1LC1RA_0RE0RD_HHH1LE_1LF1RC_1LC1LA
 
 namespace Agent10Original746
@@ -56,6 +56,44 @@ theorem upstream_no_fatal_post_initial (n k : Nat)
     run k ≠ some (.C (4*2^n-n-4) 0) := by
   intro h
   exact no_fatal_root n hn hc (run_reaches k _ _ h)
+
+/-- The original Cryptids high-level initial state takes one genuine step to
+    the post-initial root (2,0); the full run is traced from its true start. -/
+def startRun : Nat → Option HighLevelState
+  | 0 => some highLevelStart
+  | k+1 => (startRun k).bind highLevelNext
+
+theorem startRun_successor (k : Nat) : startRun (k+1)=run k := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+    change (startRun (k+1)).bind highLevelNext = (run k).bind highLevelNext
+    rw [ih]
+
+/-- Original upstream acceleration from its exact initial state excludes every
+    fatal index in the four full modulo-six residue classes, including n<6. -/
+theorem upstream_no_fatal_from_true_start (n k : Nat)
+    (hc : n%6=0∨n%6=1∨n%6=2∨n%6=3) :
+    startRun k ≠ some (.C (4*2^n-n-4) 0) := by
+  cases k with
+  | zero => simp [startRun, highLevelStart]
+  | succ k =>
+    rw [startRun_successor]
+    intro h
+    exact CascadeSmallFatal.all_four_class_indices n hc (run_reaches k _ _ h)
+
+/-- The first six excluded fatal indices of the true original acceleration. -/
+theorem upstream_no_fatal_small_start (n k : Nat) (hn : n<6) :
+    startRun k ≠ some (.C (4*2^n-n-4) 0) := by
+  cases k with
+  | zero => simp [startRun, highLevelStart]
+  | succ k =>
+    rw [startRun_successor]
+    intro h
+    exact CascadeSmallFatal.no_small_index n hn (run_reaches k _ _ h)
+
+#print axioms upstream_no_fatal_from_true_start
+#print axioms upstream_no_fatal_small_start
 
 #print axioms upstream_no_fatal_post_initial
 #print axioms exact_high_level_step
