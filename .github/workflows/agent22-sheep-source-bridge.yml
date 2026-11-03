@@ -87,6 +87,15 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
           lake env lean -o ".lake/build/lib/lean/EvenSourceBridge.olean" EvenSourceBridge.lean
 
+          # Agent14: recheck exact original even-source inverse arithmetic,
+          # including the exceptional odd-part-three branch.
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenInverseAlgebra.lean" SheepEvenInverseAlgebra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean" SheepEvenSourceAlgebra.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            SheepEvenInverseAlgebra.lean SheepEvenSourceAlgebra.lean
+          lake env lean -o ".lake/build/lib/lean/SheepEvenInverseAlgebra.olean" SheepEvenInverseAlgebra.lean
+          lake env lean SheepEvenSourceAlgebra.lean
+
           # Agent16: all-exponent exact even-source power preimages against
           # authentic machine-certified Sheep section constructors.
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/reconstruct.py"
