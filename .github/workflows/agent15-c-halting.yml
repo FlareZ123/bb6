@@ -77,6 +77,11 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{BounceOriginal,BounceConsequencesOriginal}.lean /tmp/agent15-c-check/
           lean -o BounceOriginal.olean BounceOriginal.lean
           lean BounceConsequencesOriginal.lean
+          # Agent 11: section image equivalence and unbounded indegree,
+          # now linked to genuine FastSectionDef.secNext source.
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{SectionFullOriginal,FanOriginal}.lean /tmp/agent15-c-check/
+          lean -o SectionFullOriginal.olean SectionFullOriginal.lean
+          lean FanOriginal.lean
           lean -o SectionHalting.olean SectionHalting.lean
           lean -o SectionPower.olean SectionPower.lean
           lean -o BlankHalting.olean BlankHalting.lean
