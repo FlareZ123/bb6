@@ -40,3 +40,8 @@ jobs:
         env:
           LEAN_PATH: .
         run: lean -o Agent10BParity.olean Agent10BParity.lean
+      - name: Compile published dyadic shift
+        working-directory: /tmp/agent30-b-curvature
+        env:
+          LEAN_PATH: .
+        run: lean -o Agent10Shift.olean Agent10Shift.lean
