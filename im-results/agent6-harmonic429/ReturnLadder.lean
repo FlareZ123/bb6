@@ -205,3 +205,156 @@ theorem rooted_odd_ladder_exit : run 40 (0,0)=some (93,45) := by
 #print axioms odd_ray_ladder
 #print axioms rooted_odd_ladder_exit
 end BB429OddExtension
+
+namespace BB429ElevenExtension
+open BB429 BB429Ladder
+
+/-- Exact doubling ray after a reset into first counter 11. -/
+def rayV : Nat → Nat
+ | 0 => 11
+ | k+1 => 2*rayV k+3
+
+def demandV : Nat → Nat
+ | 0 => 0
+ | k+1 => demandV k+rayV (k+1)
+
+theorem v_balance (k : Nat) : demandV k+3*k+22=2*rayV k := by
+  induction k with
+  | zero => rfl
+  | succ k ih => simp only [demandV,rayV]; omega
+
+theorem v_run (k W : Nat) (h : demandV k≤W) :
+    run k (11,W)=some (rayV k,W-demandV k) := by
+  induction k with
+  | zero => simp [run,rayV,demandV]
+  | succ k ih =>
+    have hk : demandV k≤W := by simp only [demandV] at h; omega
+    have hg : W-demandV k ≥ 2*rayV k+3 := by
+      simp only [demandV,rayV] at h
+      omega
+    simp only [run,ih hk,Option.bind_some]
+    simp only [next, ge_iff_le, if_pos hg,rayV,demandV]
+    simp only [Nat.sub_sub,Nat.add_assoc]
+
+theorem vU_odd (k:Nat):rayV k%2=1 := by
+  cases k with
+  | zero => decide
+  | succ k => simp [rayV]
+
+theorem vU_large (k:Nat):11≤rayV k := by
+  induction k with
+  | zero => decide
+  | succ k ih => simp only [rayV]; omega
+
+theorem reset_even2 (u w:Nat)(hu:u%2=1)(hw:w%4=2)
+    (hbound:w+4≤2*u):next (u,w)=some (11,2*u+w-2) := by
+  have hlt:w<2*u:=by omega
+  have hd:2≤u-w/2:=by omega
+  have heven:w%2=0:=by omega
+  have hdeven:(u-w/2)%2=0:=by omega
+  unfold next
+  have h1:¬w≥2*u+3:=by omega
+  have h2:w≠2*u+2:=by omega
+  have h3:w≠2*u+1:=by omega
+  have h4:w≠2*u:=by omega
+  simp [h1,h2,h3,h4,heven,show u-w/2 ≠1 by omega,hdeven]
+
+theorem v_even_return (k w:Nat)(hw:w%4=2)(hb:w+4≤2*rayV k):
+    run (k+1) (rayV k,w)=some (rayV k,w+3*k+20) := by
+  have hreset:=reset_even2 (rayV k) w (vU_odd k) hw hb
+  have hbal:=v_balance k
+  have hd:demandV k≤2*rayV k+w-2:=by omega
+  have hv:=v_run k (2*rayV k+w-2) hd
+  have hsub:2*rayV k+w-2-demandV k=w+3*k+20:=by omega
+  rw [run_succ_front,hreset]
+  simpa only [Option.bind_some,hsub] using hv
+
+theorem v_even_ladder (k n w:Nat)(hk4:k%4=0)(hw4:w%4=2)
+    (hb:w+n*(3*k+20)+4≤2*rayV k):
+    run (n*(k+1)) (rayV k,w)=some (rayV k,w+n*(3*k+20)) := by
+  have hdelta:(3*k+20)%4=0:=by omega
+  induction n with
+  | zero => simp [run]
+  | succ n ih =>
+    have hbn:w+n*(3*k+20)+4≤2*rayV k:=by
+      rw [Nat.succ_mul n (3*k+20)] at hb
+      omega
+    have hw4n:(w+n*(3*k+20))%4=2:=by
+      simp [Nat.add_mod,Nat.mul_mod,hw4,hdelta]
+    have hret:=v_even_return k (w+n*(3*k+20)) hw4n hbn
+    rw [Nat.succ_mul,BB429.run_add,ih hbn]
+    simp only [Option.bind_some,hret]
+    have heq:w+n*(3*k+20)+3*k+20=w+(n+1)*(3*k+20):=by
+      rw [Nat.succ_mul n (3*k+20)]
+      omega
+    exact congrArg (fun z:Nat=>some (rayV k,z)) heq
+
+#print axioms v_even_return
+#print axioms v_even_ladder
+end BB429ElevenExtension
+
+namespace BB429ElevenOddExtension
+open BB429 BB429Ladder BB429ElevenExtension
+
+/-- Two non-first resets, into first counter 11. -/
+theorem odd_even_two_step (u w:Nat) (hu:u%2=1)(hu11:11≤u)
+    (hw:w%4=3)(hb:3*w≤2*u+15):
+    run 2 (u,w)=some (11,2*u+w+9) := by
+  have hwodd:w%2=1:=by omega
+  have hw3:3≤w:=by omega
+  have hlt:w<2*u:=by omega
+  have hd:4≤u-w/2:=by omega
+  have hdeven:(u-w/2)%2=0:=by omega
+  have hfirst:next (u,w)=some (u-w/2+7,2*w-4) := by
+    unfold next
+    have h1:¬w≥2*u+3:=by omega
+    have h2:w≠2*u+2:=by omega
+    have h3:w≠2*u+1:=by omega
+    have h4:w≠2*u:=by omega
+    simp [h1,h2,h3,h4,show w%2≠0 by omega,
+      show u-w/2≠1 by omega,show u-w/2≠2 by omega,
+      hdeven,show w≠1 by omega]
+  have hsecond:next (u-w/2+7,2*w-4)=
+      some (11,2*(u-w/2+7)+(2*w-4)-2) := by
+    apply reset_even2
+    · omega
+    · omega
+    · omega
+  have hcalc:2*(u-w/2+7)+(2*w-4)-2=2*u+w+9:=by omega
+  change (run 1 (u,w)).bind next=_
+  simp [run,hfirst,hsecond,hcalc]
+
+theorem v_odd_return (k w:Nat)(hw:w%4=3)(hb:3*w≤2*rayV k+15):
+    run (k+2) (rayV k,w)=some (rayV k,w+3*k+31) := by
+  have htwo:=odd_even_two_step (rayV k) w (vU_odd k) (vU_large k) hw hb
+  have hbal:=v_balance k
+  have hbd:demandV k≤2*rayV k+w+9:=by omega
+  have hray:=v_run k (2*rayV k+w+9) hbd
+  have hsub:2*rayV k+w+9-demandV k=w+3*k+31:=by omega
+  rw [show k+2=2+k by omega,BB429.run_add,htwo]
+  simpa only [Option.bind_some,hsub] using hray
+
+theorem v_odd_ladder (k n w:Nat)(hk4:k%4=3)(hw4:w%4=3)
+    (hb:3*(w+n*(3*k+31))≤2*rayV k+15):
+    run (n*(k+2)) (rayV k,w)=some (rayV k,w+n*(3*k+31)) := by
+  have hdelta:(3*k+31)%4=0:=by omega
+  induction n with
+  | zero=>simp [run]
+  | succ n ih=>
+    have hbn:3*(w+n*(3*k+31))≤2*rayV k+15:=by
+      rw [Nat.succ_mul n (3*k+31)] at hb
+      omega
+    have hw4n:(w+n*(3*k+31))%4=3:=by
+      simp [Nat.add_mod,Nat.mul_mod,hw4,hdelta]
+    have hret:=v_odd_return k (w+n*(3*k+31)) hw4n hbn
+    rw [Nat.succ_mul,BB429.run_add,ih hbn]
+    simp only [Option.bind_some,hret]
+    have heq:w+n*(3*k+31)+3*k+31=w+(n+1)*(3*k+31):=by
+      rw [Nat.succ_mul n (3*k+31)]
+      omega
+    exact congrArg (fun z:Nat=>some (rayV k,z)) heq
+
+#print axioms odd_even_two_step
+#print axioms v_odd_return
+#print axioms v_odd_ladder
+end BB429ElevenOddExtension
