@@ -20,7 +20,7 @@ private theorem u27_balance (q : Nat) (hq : 1≤q) :
 result for the two authentic P1 feeders n=16q+2: every non-wall
 positive-even-right exit blank-reachable in the original P1 map requires
 m>9P. OddCone uses exact source inverseAt edges, with no cutoff. -/
-theorem authentic_two_feeder_nine_or_wall
+theorem authentic_two_feeder_precise_cost_or_wall
     (q b d m t k c : Nat) (root : Bool)
     (hq : 1≤q)
     (hcone : OddCone
@@ -31,7 +31,7 @@ theorem authentic_two_feeder_nine_or_wall
     (hc : 2≤c) (hce : c%2=0) (hk : 2≤k)
     (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
     (t=1 ∧ b=4*m+64*q+(if root then 12 else 16)) ∨
-      9*2^(16*q)<m := by
+      28*2^(16*q) ≤ 3*m+48*q+(if root then 16 else 19) := by
   have hu := u27_balance q hq
   have hpow4 : 2^(16*q+2)=4*2^(16*q) := by
     rw [Nat.pow_add]
@@ -72,9 +72,38 @@ theorem authentic_two_feeder_nine_or_wall
       | false => simp only [Bool.false_eq_true, ite_false] at hwall ⊢; omega
       | true => simp at hwall ⊢; omega
   · right
-    have hrle : (if root then 1 else 2) ≤ 2 := by cases root <;> decide
-    exact shifted_two_sector_nine_barrier q m
-      (if root then 1 else 2) hq hrle hcost
+    cases root with
+    | false =>
+        simp at hcost ⊢
+        rw [hpow4] at hcost
+        omega
+    | true =>
+        simp at hcost ⊢
+        rw [hpow4] at hcost
+        omega
 
+/-- Human-scale corollary: the non-wall cost exceeds 9*2^(16q). -/
+theorem authentic_two_feeder_nine_or_wall
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 1≤q)
+    (hcone : OddCone
+      (if root then 4*u27 q-4 else 6*u27 q-2)
+      (if root then 4*u27 q+9 else 2*u27 q+5) b d m)
+    (hb : 8≤b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hc : 2≤c) (hce : c%2=0) (hk : 2≤k)
+    (hr : BB6.Agent1.Reach (2*k-4) (c+4)) :
+    (t=1 ∧ b=4*m+64*q+(if root then 12 else 16)) ∨
+      9*2^(16*q)<m := by
+  rcases authentic_two_feeder_precise_cost_or_wall
+      q b d m t k c root hq hcone hb hb4 hd hi hc hce hk hr with hwall|hcost
+  · exact Or.inl hwall
+  · right
+    have hp := pow16_ge_linear_20 q hq
+    cases root with
+    | false => simp at hcost; omega
+    | true => simp at hcost; omega
+
+#print axioms authentic_two_feeder_precise_cost_or_wall
 #print axioms authentic_two_feeder_nine_or_wall
 end BB6.Agent27Budget
