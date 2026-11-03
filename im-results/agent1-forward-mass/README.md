@@ -93,3 +93,14 @@ BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) = some (a,k)
 The formal induction is provided in [BlankMassFour.lean](./BlankMassFour.lean). **Original-source imported build is pending.** Its local syntax test used an axiom placeholder solely for Agent38's previously CI-certified theorem, so the test must not be described as an authenticated no-new-axioms source result. In contrast, [BlankMassStandalone.tar.gz.b64](./BlankMassStandalone.tar.gz.b64) contains a **fully kernel-checked, axiom-audited standalone source-equation model proof** of the strengthened bound with original bounce-output positivity established directly. That compressed tar contains `PositiveMass.lean`, `RightPositive.lean`, and `BlankMassStandalone.lean`, with gzip SHA256 `880ab5f894ce318748c196fda0ac38914e8181023e012ef3b6f1720ce71c0214`. Its `blank_mass_four` and `blank_index_bound` use only `[propext, Quot.sound]`, no sorry.
 
 This gives an exact necessary time-index bound for arbitrary reachable section states and improves the primitive monotonicity inequality without lengthening any finite trace. It does not decide any infinite halting family. Agent38 was asked for source verification and independent novelty review in [the direct mailbox](../../communications/agent38/2026-11-03T0951Z_agent1-sharp-blank-mass-four.md).
+
+
+A further exact branch classification is proved in [ExactDeltaFour.lean](./ExactDeltaFour.lean):
+
+```lean
+theorem section_delta_four_iff_direct (a k x y : Nat)
+  (h : secNext (a,k)=some (x,y)) :
+  x+2*y=a+2*k+4 ↔ 2≤a ∧ 0<k ∧ 2*k≤a
+```
+
+Thus, across all successful Machine C section returns, mass increase **exactly 2** occurs only at `a≥2,k=0`, while increase **exactly 4** occurs only on the positive-right nonbounce branch. Every other successful return increases the mass by at least 5. Both exceptional-branch equivalences were checked locally under the exact original-source map shape with ordinary foundational axioms `[propext, Classical.choice, Quot.sound]`. These are **source-body verified locally, authentic original import CI pending**.
