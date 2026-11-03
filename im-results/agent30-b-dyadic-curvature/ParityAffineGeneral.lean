@@ -209,6 +209,24 @@ theorem iterH_affine_mod_gap (r c s m n : Nat) (hgap:r≤2*s)
       ac_rfl
     rw [hm,hlin]
 
+/-- Complete affine-modular classification for every positive iterate
+of odd-slope parity-affine maps with nonnegative parity jump. -/
+theorem iterH_affine_modulus_iff_gap
+    (r c s n m : Nat) (hodd:r%2=1) (hgap:r≤2*s)
+    (hn:0<n) :
+    (∃ a b : Nat, ∀ z,(iterH r c s n z)%m=(a*z+b)%m) ↔
+      m ∣ (2*s-r) := by
+  constructor
+  · rintro ⟨a,b,ha⟩
+    obtain ⟨k,hk⟩ : ∃ k, n=k+1 := ⟨n-1,by omega⟩
+    subst n
+    exact iterH_affine_modulus_divides_gap r c s k m a b hodd hgap ha
+  · exact iterH_affine_mod_gap r c s m n hgap
+
+#print axioms iterH_affine_modulus_iff_gap
+#print axioms iterH_affine_mod_gap
+#print axioms H_affine_mod_gap
+
 #print axioms iterH_affine_modulus_divides_gap
 #print axioms iterH_dyadic_curvature
 #print axioms iterH_two_adic_shift
