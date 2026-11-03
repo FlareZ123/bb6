@@ -1,0 +1,39 @@
+name: Agent27 P1 sharp inverse-cost source audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-sharp-cost:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode exact locally checked proof sources
+        run: |
+          set -e
+          cd im-results/agent27-p1-sharp-cost
+          base64 -d P1Budget.lean.xz.b64 | xz -d > P1Budget.lean
+          base64 -d P1BudgetBridge.lean.xz.b64 | xz -d > P1BudgetBridge.lean
+          echo "1e21104d2350e8f3dd9f9662770dbafc096156baf078b57288ff78c7ce36abe1  P1Budget.lean" | sha256sum -c -
+          echo "7a10136cfe138718377e0fcbab1819c61f51bd0ed34d271df1b4c934634e081d  P1BudgetBridge.lean" | sha256sum -c -
+      - name: Original source theorem and Lean axiom audit
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent27-p1-sharp-cost"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass InverseIff; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          lean -o im-results/agent27-p1-sharp-cost/P1Budget.olean im-results/agent27-p1-sharp-cost/P1Budget.lean
+          lean im-results/agent27-p1-sharp-cost/P1BudgetBridge.lean
