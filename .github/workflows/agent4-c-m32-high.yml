@@ -1,0 +1,43 @@
+name: Agent 4 Machine C original-source M32 high gateway audit
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-high-32:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Recompute exact original B8/M32 forward closure
+        run: python3 tools/agent43_c32_certificate.py
+      - name: Retrieve previously verified 40 kernel proof blocks
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 41538277695
+          github-token: ${{ github.token }}
+          pattern: a43-m32-olean-*
+          merge-multiple: true
+          path: tools
+      - name: Check full original transition semantics and new all-high certificates
+        run: |
+          cd tools
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighAll.lean" M32HighAll.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighSmall.lean" M32HighSmall.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent4-c-m32-high/HighSource.lean" HighSource.lean
+          export LEAN_PATH=.
+          lean --version
+          test "$(find . -maxdepth 1 -name 'P32Block*.olean' | wc -l)" -eq 40
+          for f in CCert32Pure CLine CQuotientSound32 CMapIf32 CGlobal32 CFull32 CExclusions32 CSourceBridge32 M32HighAll M32HighSmall HighSource; do
+            echo "Kernel-checking $f"
+            lean -o "$f.olean" "$f.lean"
+          done
