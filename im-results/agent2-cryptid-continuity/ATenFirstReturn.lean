@@ -140,8 +140,8 @@ theorem aClose_first (m : Nat) (ys : List Bool) :
   constructor
   · have htime : 2*m+6=2+(2*m+4) := by omega
     rw [htime,run_add,aClose_start,aCursor_run]
-    congr 1
-    omega
+    have hn : 1+2*m+4=2*m+5 := by omega
+    rw [hn]
   · have htime : 2*m+6=2+(2*m+4) := by omega
     rw [htime]
     exact appendNoF
@@ -192,7 +192,11 @@ theorem full_A_ten_first_return (k q : Nat) (ys : List Bool) :
       rw [prefix_A]
       rfl
     rw [hprefix]
-    simpa [aEnd] using (aTenClose_first (4*k+3) q ys).1
+    change run (2*q+(2*(4*k+3+q)+6))
+      (aBound (4*k+3) (pairs q ++ false::ys)) =
+        ⟨[], false, List.replicate (8*k+11+2*q) true ++ ys,5⟩
+    have hn : 2*(4*k+3+q)+5=8*k+11+2*q := by omega
+    simpa only [hn] using (aTenClose_first (4*k+3) q ys).1
   · intro t hpos ht hphys
     by_cases hpref : t<12*k*k+41*k+32
     · exact (prefixA_positive_noF k (pairs q ++ false::ys)
