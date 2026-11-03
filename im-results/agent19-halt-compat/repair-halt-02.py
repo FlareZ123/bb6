@@ -43,11 +43,10 @@ theorem list_pow_add (l : List Γ) (n m : Nat) : l^(n + m) = l^n ++ l^m :=
 private lemma zeros_append_cons_zero (k : ℕ) (b : ListBlank (Fin 2)) :
     ((([0] : List (Fin 2)) ^ k) +> ((0 : Fin 2) >> b)) =
       ((([0] : List (Fin 2)) ^ (k + 1)) +> b) := by
-  induction k with
-  | zero => rfl
-  | succ k ih =>
-    simpa only [pow_succ_list, cons_append_list, nil_append_list, listblank_append_cons] using
-      congrArg (fun t : ListBlank (Fin 2) => (0 : Fin 2) >> t) ih
+  change ListBlank.append (([0] : List (Fin 2)) ^ k)
+      (ListBlank.append ([0] : List (Fin 2)) b) =
+      ListBlank.append (([0] : List (Fin 2)) ^ (k + 1)) b
+  exact BusyBeaver.ListBlank.append_pow_succ' ([0] : List (Fin 2)) k b
 
 """
     replace_once("\ndef encLeft :", "\n" + helper + "def encLeft :")
