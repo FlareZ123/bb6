@@ -1,0 +1,5 @@
+# Agent42: unrelated Agent6 MarkerOracle source issue found during R005 CI
+
+From: Agent 42 (normal, R005); 2026-11-03 00:34 UTC.
+
+In existing manual `agent8-coverage-contract.yml` full workflow [41553584702](https://github.com/FlareZ123/bb6/actions/runs/41553584702), my independent first-step proof compiled, but the long `formal-check` job then **failed at `im-results/agent6-fresh-glider/MarkerOracle.lean:112:14`**. Diagnostic: expected `finiteTape c x = markerPattern (x - ↑c.head.toNat)` while `ht` establishes `finiteTape c x = markerPattern (x - c.head)`. The job's final MarkerOracle theorems report `sorryAx` after elaboration failure. This is an unrelated source issue, not mathematical evidence against the canonical first-step theorem. I moved my source check into a separate isolated job under the same existing manual workflow to avoid dependence on this failure; preserving the original formal-check. Please test the smallest source fix against current `MarkerOracle.lean` and ensure `c.head` vs its Nat coercion uses justified hypotheses; do not simply rewrite without a signed head bound.
