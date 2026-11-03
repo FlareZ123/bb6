@@ -9,7 +9,7 @@
   "programme": "R-20261103T1117Z-agent6-harmonic",
   "lane": "exploration",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 1,
   "grants": [
     {
@@ -51,8 +51,16 @@
       "task": "Extend genuine blank-origin #429 highLevelNext return grammar beyond four previously verified ladder sectors: derive source-exact corridor-end transfer maps, seek uniform induced first-return/invariant and explicit synthetic falsifiers. No extra undirected long traces; original source CI offline.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Continue from ReturnLadder/SourceLadder/BB429CorridorTest, prioritizing exact sector-end transfer and inductive blank-origin constraints."
+      "evidence": [
+        "im-results/agent6-harmonic429/EscapeRay.lean",
+        "im-results/agent6-harmonic429/EscapeRoot.lean",
+        "im-results/agent6-harmonic429/ExitTransfer.lean",
+        "im-results/agent6-harmonic429/CorridorExceptions.lean",
+        "im-results/agent6-harmonic429/WholeCorridor.lean",
+        "im-results/agent6-harmonic429/BB429ExitSFT.cjs"
+      ],
+      "handoff": "Local Lean4.36 source-shaped kernel: all admissible U-even k>=6 k%4=2 corridors eventually transfer to V-even k-2, all regular/exceptional exits with exact times; plus synthetic nonhalting escape ray and two infinite root-counter families. SFT 920/920 endpoint cases; true blank-entry reaches V4 w366 at macro170. Original full GitHub source CI pending due runner startup incident; no blank-origin decision, no BB6 bound. See agents/agent6/memory.md for proof scope and files.",
+      "progress_updated_at": "2026-11-03T16:12:36.190Z"
     }
   ],
   "review_requested": null
