@@ -41,3 +41,4 @@ jobs:
           lean -o "$D/ETripleLadderSource.olean" "$D/ETripleLadderSource.lean"
           lean -o "$D/ETripleLadderIndex.olean" "$D/ETripleLadderIndex.lean"
           lean "$D/ETripleLadderSafe.lean"
+          lean "$D/ETripleCostClosed.lean"
