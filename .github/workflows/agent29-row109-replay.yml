@@ -55,6 +55,20 @@ jobs:
           "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109GF2.olean" workplace/im-results/agent29-roster-six-audit/Row109GF2.lean
           LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Grid.olean" "$RUNNER_TEMP/Row109Grid.lean"
           LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" "$RUNNER_TEMP/Row109Direct.lean"
+      - name: Kernel-check original S3/T3 source generator and all-depth byte sweep semantics
+        if: ${{ inputs.audit_only }}
+        run: |
+          base64 -d workplace/im-results/agent4-row109-grid/Row109SourceByte.tar.gz.b64 > "$RUNNER_TEMP/Row109SourceByte.tar.gz"
+          echo "a45ffa3d0620f0afb1d59386e5fd9dc7542c58e25dceeca7f88afbc8261d2760  $RUNNER_TEMP/Row109SourceByte.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/Row109SourceByte.tar.gz" -C "$RUNNER_TEMP"
+          echo "c424aa8415270587a88dbc3c3d95c65a1e5bdd871b462ef16638c53391b26f04  $RUNNER_TEMP/Row109ByteTree.lean" | sha256sum -c -
+          echo "18b6f17062ae114e962051deff0eebbe690cf67aa678e209a8eecceaa04a49b9  $RUNNER_TEMP/Row109S3.lean" | sha256sum -c -
+          echo "25c2308a3271ac832d3aeb11c8a5f6be2aa9256ab61406af8ea41b7e071c5c67  $RUNNER_TEMP/Row109S3Proof.lean" | sha256sum -c -
+          echo "0017971930b4e420b8ba750543cf06be6a26177a535ba7349dcdb6e26160a48b  $RUNNER_TEMP/Row109SourceByte.lean" | sha256sum -c -
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109ByteTree.olean" "$RUNNER_TEMP/Row109ByteTree.lean"
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109S3.olean" "$RUNNER_TEMP/Row109S3.lean"
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109S3Proof.olean" "$RUNNER_TEMP/Row109S3Proof.lean"
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" "$RUNNER_TEMP/Row109SourceByte.lean"
       - name: Checkout external source separately for independent Rust arm semantics
         if: ${{ inputs.audit_only && inputs.rust_source_audit }}
         uses: actions/checkout@v4
