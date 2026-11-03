@@ -76,6 +76,79 @@ theorem evalA_parity (a : Nat) :
         omega
 
 /-- Every successful B-drain returns with first counter parity a + b. -/
+theorem evalA_mass (a : Nat) :
+    ∀ k m aa bb dd : Nat, evalA a k m = some (aa, bb, dd) →
+      a + m ≤ aa + bb + dd := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+  | succ a ih =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+      · simp [hk2, hk0] at h
+        have hm := ih (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+        omega
+
+theorem evalA_mass_positive (a k m aa bb dd : Nat)
+    (ha : 0 < a)
+    (h : evalA a k m = some (aa, bb, dd)) :
+    a + m + 1 ≤ aa + bb + dd := by
+  rw [evalA] at h
+  have hn : a ≠ 0 := by omega
+  by_cases hk2 : k % 3 = 2
+  · simp [hk2] at h
+    cases h
+    omega
+  · by_cases hk0 : k % 3 = 0
+    · simp [hk2, hn, hk0] at h
+      cases h
+      omega
+    · simp [hk2, hn, hk0] at h
+      have hm := evalA_mass (a - 1) (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+      omega
+
+theorem drainB_mass (b : Nat) :
+    ∀ a d aa dd : Nat, drainB a b d = some (.D aa dd) →
+      (a + b + d ≤ aa + dd) ∧ (0 < b → a + d + 2 * b + 3 ≤ aa + dd) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d aa dd h
+    rw [drainB] at h
+    by_cases hb : b = 0
+    · simp [hb] at h
+      cases h
+      constructor <;> omega
+    · simp only [if_neg hb] at h
+      cases he : evalA a (b - 1) (d + 2 * b + 3) with
+      | none => simp [he] at h
+      | some p =>
+        rcases p with ⟨a1, b1, d1⟩
+        simp only [he, Option.bind_some] at h
+        by_cases hlt : b1 < b
+        · simp only [if_pos hlt] at h
+          have hm := evalA_mass a (b - 1) (d + 2 * b + 3) a1 b1 d1 he
+          have hr := ih b1 hlt a1 d1 aa dd h
+          constructor <;> omega
+        · simp [hlt] at h
+
 theorem drainB_parity (b : Nat) :
     ∀ a d aa dd : Nat, drainB a b d = some (.D aa dd) →
       aa % 2 = (a + b) % 2 := by
