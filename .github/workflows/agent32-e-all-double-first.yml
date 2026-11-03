@@ -1,0 +1,46 @@
+name: Agent 32 all E1100 pairs strict first physical return audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore SHA-pinned original D machine source
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile strict first return from unchanged original source
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          S=im-results/agent32-cryptid-third
+          E=im-results/agent35-cryptid-code
+          D=im-results/agent2-cryptid-continuity
+          N=im-results/agent32-cryptid-padding
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$N/Generic.olean" "$N/Generic.lean"
+          lean -o "$N/BoundaryPadding.olean" "$N/BoundaryPadding.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$N/EZeroPair.olean" "$N/EZeroPair.lean"
+          lean -o "$E/EDouble.olean" "$E/EDouble.lean"
+          lean -o "$N/EAllDouble.olean" "$N/EAllDouble.lean"
+          lean -o "$D/PrefixENoFSource.olean" "$D/PrefixENoFSource.lean"
+          lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
+          lean "$N/EAllDoubleFirst.lean"
