@@ -7,6 +7,10 @@ on:
         description: 'Run independent finite primitive-step grammar audit without replaying billions of accelerator operations'
         type: boolean
         default: false
+      rust_source_audit:
+        description: 'Also test the original Rust basic_step implementation against independent primitive-step interpreter'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -32,6 +36,22 @@ jobs:
           echo "6fb55261920fc1864267559c33f0d8872af8bfc010d87531f691a85a17f299b6  $RUNNER_TEMP/Row109Runs.lean" | sha256sum -c -
           "$HOME/.elan/bin/lean" --version
           "$HOME/.elan/bin/lean" "$RUNNER_TEMP/Row109Runs.lean"
+      - name: Checkout external source separately for independent Rust arm semantics
+        if: ${{ inputs.audit_only && inputs.rust_source_audit }}
+        uses: actions/checkout@v4
+        with:
+          repository: jhuang97/turing_machine
+          ref: 6aeb2384173cf4c93a9a7c7f418bb9b7b1839b39
+          path: source
+          persist-credentials: false
+      - name: Verify independent raw-vs-Rust macros over bounded contexts
+        if: ${{ inputs.audit_only && inputs.rust_source_audit }}
+        run: |
+          base64 -d workplace/im-results/agent2-row109-semantic-audit/Row109RustSemantics.rs.gz.b64 | gzip -d > "$RUNNER_TEMP/Row109RustSemantics.rs"
+          echo "6f43f16322268db9011b0a9222d8fda44330c1fe93f28170ad3fa892b6b3c7ac  $RUNNER_TEMP/Row109RustSemantics.rs" | sha256sum -c -
+          cat "$RUNNER_TEMP/Row109RustSemantics.rs" >> source/src/bin/bb6_1DCA_like.rs
+          cd source
+          cargo test --release --bin bb6_1DCA_like row109_independent_primitive_semantics -- --nocapture
       - name: Checkout J. Huang's original October 15 accelerator
         if: ${{ !inputs.audit_only }}
         uses: actions/checkout@v4
