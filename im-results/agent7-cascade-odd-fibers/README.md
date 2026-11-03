@@ -1,6 +1,6 @@
 # Uniform odd-branch ancestors of the complementary #746 cascade fatal heights
 
-**Agent 7, 2026-11-03, R-20261103T0900Z-agent10-cascade. Status: locally kernel-checked arithmetic theorem; original-source operational connection derived on paper and independently checked by finite tests. No blank-origin machine decision or BB(6) bound. External novelty not reviewed.**
+**Agent 7, 2026-11-03, R-20261103T0900Z-agent10-cascade. Status: locally Lean-kernel-checked all-natural source-indexed C/P reachability theorem and global mass invariant. Exact original source transitions have been copied verbatim into a self-contained Lean module but the upstream DeepMind module has not been imported and source CI remains pending. No blank-origin machine decision or BB(6) bound. External novelty not reviewed.**
 
 ## Exact model and provenance
 
@@ -17,7 +17,7 @@ C(a,b) for b>=2, d=b-2:
                  (6a+d+[8 if d even else 5]) mod 4)
 ```
 
-These cases were independently tested against the literal C/P source-indexed rules in 20,000 synthetic episodes using [verify.py](verify.py); a full Lean theorem directly importing the upstream `next` is still missing.
+These cases were independently tested against the literal C/P source-indexed rules in 20,000 synthetic episodes using [verify.py](verify.py). The **all-input Lean proof** [SourceMacro.lean](SourceMacro.lean) defines the nine C/P clauses exactly as the original source and establishes `CascadeSource.C_step_sound` for their C-to-C elimination, including both exhaustive sweep regimes. In addition [EpisodeFuel.lean](EpisodeFuel.lean) establishes `CascadeSource.C_step_exact_fuel`: for every b≥2, the first subsequent C is at precisely a+2 source-indexed accelerated transitions. Original-source import and manual CI are still missing, so do not mislabel this as a compiled import of Google DeepMind's module.
 
 Let `R(h)` be the first return from C(h,0) to another state with second coordinate zero, or HALT if the initial return cascade encounters C(_,1). A fatal reset height has form
 
@@ -43,7 +43,9 @@ For n>=10 define `p=2^(n-1)`, `T_i=8p+n-1-(2n+3)*2^i`, `Q_j=2T_j+5`, `q=Q_j/9`, 
 
 For n=4,5, the finite witnesses `(j,a,h)=(0,23,13)` and `(0,51,36)` complete the statement.
 
-The [CascadeOdd.lean](CascadeOdd.lean) theorem `CascadeOdd.all_surviving_have_odd_parent` proves the six-way modular selection, integer bounds, exact valuation-one arithmetic, and every intermediate chain identity **for all natural n**. It compiles in Lean 4.36.0-rc2, importing `Std`, without `sorry` or extra axioms; `#print axioms` reports `[propext, Classical.choice, Quot.sound]`. The separate step interpreting the algebraic certificate as source-accurate `R` transitions is a paper derivation plus finite test, **not yet source-imported Lean**. No GitHub Actions source check was dispatched during the runner incident.
+The [CascadeOdd.lean](CascadeOdd.lean) theorem `CascadeOdd.all_surviving_have_odd_parent` proves the six-way modular selection, integer bounds, exact valuation-one arithmetic, and every intermediate chain identity **for all natural n**. It compiles in Lean 4.36.0-rc2, importing `Std`, without `sorry` or extra axioms; `#print axioms` reports `[propext, Classical.choice, Quot.sound]`. **Stronger source-model theorem:** [ResetChain.lean](ResetChain.lean) proves `CascadeChain.all_complementary_source_reachable`, for every n≥4 in the two complementary classes, `∃h, CascadeSource.Reach (C h 0) (C (4*2^n-n-4) 0)`. Its `Reach` is the reflexive-transitive closure of the literal original C/P `next` clauses copied into [SourceMacro.lean](SourceMacro.lean). All stage guards, the odd-exit phase, the even-return descent and both small n are proved by Lean; the theorem's only axioms are `[propext, Classical.choice, Quot.sound]`. The original third-party imported module is not part of the local compilation. No GitHub Actions source check was dispatched during the runner incident.
+
+**Further global theorem:** [Mass.lean](Mass.lean) proves that every successful C-to-C source-indexed episode strictly increases `M(a,b)=2a+b`, including the entire underflow branch. Its `orbit_mass_mono` and `future_target_exclusion` are kernel-checked all-time corollaries: after a source-indexed C orbit reaches mass greater than `2t`, that orbit cannot later visit reset `(t,0)`. This is a reusable finite-prefix plus monotone-cutoff tool. It does not exclude the infinitely many higher fatal targets.
 
 ## Independent reproduction
 
