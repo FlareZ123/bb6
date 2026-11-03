@@ -229,4 +229,29 @@ theorem root_even_mass_bound (k a d : Nat)
       omega
 
 #print axioms root_even_mass_bound
+
+/-- At every surviving blank-origin odd return starting at index three,
+the total mass is at least forty-four plus seventeen per pair. -/
+theorem root_odd_mass_bound (k a d : Nat)
+    (h : run (2*k+3) = some (.D a d)) :
+    44 + 17*k ≤ a+d := by
+  cases hp : run (2*k+2) with
+  | none =>
+    have hz : run (2*k+3) = none := by
+      change (run (2*k+2)).bind highLevelNext = none
+      rw [hp]
+      rfl
+    rw [hz] at h
+    contradiction
+  | some st =>
+    rcases st with ⟨ap,dp⟩
+    have hbound := root_even_mass_bound k ap dp hp
+    have hnext : next (.D ap dp) = some (.D a d) := by
+      change (run (2*k+2)).bind highLevelNext = some (.D a d) at h
+      rw [hp] at h
+      exact h
+    have h7 := next_strict_mass ap dp a d hnext
+    omega
+
+#print axioms root_odd_mass_bound
 end BB6.Agent8SharpSource
