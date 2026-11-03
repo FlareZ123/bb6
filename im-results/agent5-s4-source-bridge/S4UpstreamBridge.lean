@@ -93,7 +93,7 @@ theorem highLevelNext_eq (a : Nat) (L : List Nat) :
 
 theorem sourceRun_eq_iter (n : Nat) (s : BusyBeaver.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF.HighLevelState) :
     sourceRun n s =
-    Function.iterate (Option.bind · BusyBeaver.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF.highLevelNext) n (some s) := by
+    Nat.iterate (Option.bind · BusyBeaver.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF.highLevelNext) n (some s) := by
   induction n with
   | zero => rfl
   | succ n ih =>
