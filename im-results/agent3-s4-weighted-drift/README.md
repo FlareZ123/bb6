@@ -13,3 +13,10 @@ Core proof: H(a,L)=some(U) implies a+2W(L)+a/2+3<=W(U); initially a+2W(L)=W(T)+4
 The two attached `.lean.xz.b64` files are lzma/xz compressed, then base64 text. Decode with Python standard library lzma and base64, compile S4WeightedDrift first with Lean4.36.0-rc2 into S4WeightedDrift.olean, then compile S4SourceShape with LEAN_PATH pointing to that directory. Both local Lean audits show only standard axioms `[propext, Quot.sound]`, no sorryAx.
 
 Source reference: https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/Accelerations/M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF.lean . Independent Python exhaustive and seeded random comparisons (53,906 arbitrary stacks), plus 10,000 blank-tail transitions, agreed with the source-shaped map. Actual open task: exclude `45+W(T)` powers of two from genuine reduced blank tails or locate a genuine halter, then source-authenticate the composite theorem.
+
+## Exact source fingerprints and check
+
+- `S4WeightedDrift.lean.xz.b64`: decoded source SHA-256 `ab696fc6c6c27b6518cb78ffd0e9dda5292d39dbcea5fee98ae6b75f4735bba2` (3,209 bytes).
+- `S4SourceShape.lean.xz.b64`: decoded source SHA-256 `befc80875686ccc7e15ab0c02e114e7bbed86821b5d7442e35bb0ae19ee24539` (5,174 bytes). It includes `sourceRun_weight_growth` and `sourceRun_no_cycles`. The compressed content is 2,288 base64 characters before the terminal newline.
+
+At 2026-11-03 14:40 UTC both modules compiled with local Lean 4.36.0-rc2, with `#print axioms` reporting `[propext, Quot.sound]` for `compactNext_weight_growth`, `sourceReduced_eq_compactNext`, `sourceReduced_weight_growth`, and `sourceRun_no_cycles`. The linked original imported source module itself was inspected at upstream commit c86f158; the equivalence has not yet been independently compiled against unmodified source.
