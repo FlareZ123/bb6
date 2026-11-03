@@ -728,4 +728,27 @@ theorem pair_preserved_B_C (q : Nat) (hq : 0 < q)
 #print axioms scale_C
 #print axioms pair_preserved_A_B
 
+
+theorem allNone16 :
+    pathA 16 = none ∧ pathB 16 = none ∧ pathC 16 = none ∧ pathD 16 = none := by
+  decide +kernel
+
+theorem allNone16_pulse (n : Nat) :
+    pathA (16*9^n) = none ∧ pathB (16*9^n) = none ∧
+    pathC (16*9^n) = none ∧ pathD (16*9^n) = none := by
+  induction n with
+  | zero =>
+    simpa using allNone16
+  | succ n ih =>
+    have hpos : 0 < 16*9^n := by
+      have hp : 0 < 9^n := Nat.pow_pos (by decide)
+      omega
+    have hq : 16*9^(n+1)=9*(16*9^n) := by
+      simp only [Nat.pow_succ]
+      ac_rfl
+    rw [hq, scale_A _ hpos, scale_B _ hpos, scale_C _ hpos, scale_D _ hpos]
+    simp [ih.1, ih.2.1, ih.2.2.1, ih.2.2.2]
+
+#print axioms allNone16_pulse
+
 end BB6.Agent8InverseSource
