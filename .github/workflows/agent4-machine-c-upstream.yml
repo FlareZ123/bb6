@@ -1,0 +1,38 @@
+name: Agent 4 original Cryptids source bridge
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  upstream-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Clone pinned upstream
+        run: |
+          git clone https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout c86f15861709b76042998c5211c7b2f83991621b
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+      - name: Fetch upstream cache
+        working-directory: /tmp/cryptids
+        run: lake exe cache get
+      - name: Build original Machine C accelerator
+        working-directory: /tmp/cryptids
+        run: lake build BusyBeaver.BB6.M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC
+      - name: Verify original-source theorem transfer
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          for n in BackwardMod SourceBridge BackwardModB SourceBridgeB SourceUpstreamBridge; do
+            cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/$n.lean" "$n.lean"
+          done
+          for n in CLine BackwardMod SourceBridge BackwardModB SourceBridgeB; do
+            lake env lean -o ".lake/build/lib/lean/$n.olean" "$n.lean"
+          done
+          lake env lean SourceUpstreamBridge.lean
