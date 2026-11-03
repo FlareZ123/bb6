@@ -72,6 +72,44 @@ theorem reset_sandwich (n : Nat) :
   · exact Nat.le_trans h.1 (Nat.mul_le_mul_left _ hlow)
   · exact Nat.le_trans (Nat.mul_le_mul_left _ hupp) h.2
 
+set_option exponentiation.threshold 250000
+set_option maxRecDepth 4096
+set_option maxHeartbeats 10000000
+
+/-- The first two generated Machine B reset indices are 25 and 227097. -/
+theorem reset_two : scalarA 2 = 227097 := by decide
+
+theorem iterG_succ (n z : Nat) : iterG (n+1) z = iterG n (G z) := rfl
+
+/-- Certify the exact bit length of the THIRD reset using only the first scalar step. -/
+theorem third_reset_bits :
+    2^132846 ≤ scalarA 3 ∧ scalarA 3 < 2^132847 := by
+  let z := iterG 227097 0
+  have hsrc : iterG 227096 4 = z := by
+    dsimp [z]
+    calc
+      iterG 227096 4 = iterG 227096 (G 0) := by congr 1
+      _ = iterG (227096+1) 0 := (iterG_succ _ _).symm
+      _ = iterG 227097 0 := by rw [show 227096+1=227097 by decide]
+  have hlow : 12*3^227096 ≤ 2^227096*(z+8) := by
+    simpa only [hsrc, show 4+8=12 by decide] using iter_lower 227096 4
+  have hupp : 2^227096*(z+15) ≤ 19*3^227096 := by
+    simpa only [hsrc, show 4+15=19 by decide] using iter_upper 227096 4
+  have hchecklo : 2^227096*(2^132846+8) < 12*3^227096 := by decide
+  have hcheckhi : 19*3^227096 < 2^227096*2^132847 := by decide
+  have hpos : 0<2^227096 := Nat.pow_pos (by decide)
+  have hzl : 2^132846+8 < z+8 :=
+    (Nat.mul_lt_mul_left hpos).mp (Nat.lt_of_lt_of_le hchecklo hlow)
+  have hzu : z+15 < 2^132847 :=
+    (Nat.mul_lt_mul_left hpos).mp (Nat.lt_of_le_of_lt hupp hcheckhi)
+  have hreset : scalarA 3 = z+9-3*(z%2) := by
+    rw [show 3=2+1 by decide, scalarA, reset_two]
+  have hpar : z%2≤1 := by omega
+  constructor <;> omega
+
+#print axioms third_reset_bits
+#print axioms reset_two
+
 #print axioms reset_sandwich
 
 #print axioms blank_sandwich
