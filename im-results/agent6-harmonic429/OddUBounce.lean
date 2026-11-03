@@ -1,4 +1,4 @@
-import OddBoundary
+import CrossRayOverflow
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -71,12 +71,40 @@ theorem odd_U_ladder (k n w:Nat) (hk:3≤k) (hkm:k%4=3)
       omega
     exact congrArg (fun z:Nat=>some (rayU k,z)) hEq
 
+/-- A source-transcribed, genuine blank-origin entry to the new U-odd sector. -/
+theorem rooted_to_U7_319 : run 222 (0,0)=some (rayU 7,319) := by
+  have h0:=BB429CrossRayOverflow.rooted_to_513_17
+  have htwo:run 2 (513,17)=some (0,1060):=by
+    have hh:=BB429OddExtension.odd_odd_two_step 513 17 (by decide)
+      (by decide) (by decide) (by decide)
+    simpa only [show 2*513+17+17=1060 by decide] using hh
+  have hray:=ray_run 7 1060 (by decide)
+  have hR:run 7 (0,1060)=some (rayU 7,319):=by
+    simpa only [show rayDemand 7=741 by decide,
+      show 1060-741=319 by decide] using hray
+  have h9:run 9 (513,17)=some (rayU 7,319):=by
+    rw [show 9=2+7 by decide, BB429.run_add, htwo]
+    simpa only [Option.bind_some] using hR
+  rw [show 222=213+9 by decide,BB429.run_add,h0]
+  simpa only [Option.bind_some] using h9
+
+/-- The new parameter-uniform bounce is actually exercised by the blank orbit. -/
+theorem rooted_to_U7_371 : run 233 (0,0)=some (rayU 7,371) := by
+  have h0:=rooted_to_U7_319
+  have h1:=odd_U_bounce 7 319 (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide)
+  rw [show 233=222+11 by decide,BB429.run_add,h0]
+  simpa only [Option.bind_some,show 7+4=11 by decide,
+    show 319+3*7+31=371 by decide] using h1
+
 /-- The first genuine U-seven bounce is the next segment after macro 222. -/
 theorem actual_U7_bounce : run 11 (rayU 7,319)=some (rayU 7,371) := by
   have h:=odd_U_bounce 7 319 (by decide) (by decide) (by decide)
     (by decide) (by decide) (by decide)
   simpa using h
 
+#print axioms rooted_to_U7_319
+#print axioms rooted_to_U7_371
 #print axioms odd_U_bounce
 #print axioms odd_U_ladder
 #print axioms actual_U7_bounce
