@@ -39,4 +39,6 @@ jobs:
           lean -o BackwardMod.olean BackwardMod.lean
           lean -o SourceBridge.olean SourceBridge.lean
           lean -o NewCoreC.olean NewCoreC.lean
-          lean SourceC.lean
+          lean -o SourceC.olean SourceC.lean
+          lean -o NewCoreD.olean NewCoreD.lean
+          lean SourceD.lean
