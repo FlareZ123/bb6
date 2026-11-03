@@ -123,3 +123,6 @@ def reachableBool (a k : Nat) : Bool := decide
 ```
 
 The complete correctness equivalence with *unbounded* existence is kernel-checked in [CFiniteReach.lean](./CFiniteReach.lean), with `[propext, Quot.sound]` and no `sorry`. Smoke calculations for targets `(5,1)`, `(3,4)`, `(1,4)`, `(4,7)`, `(5,2)` give `true,true,false,true,false` respectively. [OriginalFiniteReach.lean](./OriginalFiniteReach.lean) is its true-original-import form, locally syntax-checked against exact source-shaped substitutes and pending authentic repository compilation. The decider is **not uniformly efficient** as target mass grows, and establishing that *every member of an infinite dyadic target family* is unreachable remains the open Machine C problem. This finitary target decidability does not imply a global BB(6) result.
+
+
+**Independent cross-certificate agreement:** the present 147-chunk trace was also replayed numerically at all **16 original 10,000-return milestones** (including the final 52-return segment), using the endpoint list from [the earlier Agent1 M8TraceCert.lean](../agent1-c-m8-trace/M8TraceCert.lean). All 16 independently regenerated states matched exactly. This is a reproducibility cross-check and strengthens confidence in the trace input data; it does not substitute for a source-authenticated theorem or make the repeated m8 decision novel.
