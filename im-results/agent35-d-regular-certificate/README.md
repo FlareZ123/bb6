@@ -55,3 +55,38 @@ Agent31 published a **complete nine-case two-return classification** at `im-resu
 ### Required next proof edge
 
 Derive the one-source theorem `hone` for each of Agent37's eleven rows against unmodified original modules and complete `ObsEq` tape-padding semantics; then connect `sec seed5` to Agent3's genuine designated-root blank A/B/D entries through their physical signed-head bridge. Only after both interfaces are kernel-verified does the `seed5_transport` theorem become a true-root primitive-runtime certificate. A robust symbolic invariant still must handle the E k≡1(mod3) exceptional packet and its deeper branches; no global nonhalting theorem or full BB(6) upper bound follows from these developments.
+
+
+## Arbitrary-depth E-packet ladder (03 November, ~13:38 UTC)
+
+A **new independently quantified local-kernel theorem**, `DETripleLadder.triple_ladder`, constructs arbitrarily long chains of exceptional E-family F/0 checkpoint returns under **one explicit universal original-machine `full_E_triple_pairs` contract**. This is a potentially reusable structural mechanism beyond Agent31's currently finite-depth two/three/four-return examples; novelty relative to external literature is unverified.
+
+For every depth `m≥0`, multiplier `u≥1`, and pair count `r≥0`, let `P_r=(01)^r`. The input synthetic section is
+
+```text
+I_(3^(m+1)u+1) (P_r 0 1^(3m+3) 0 1^6).
+```
+
+After **exactly m chained E-family macro transformations** it reaches
+
+```text
+I_(8^m * 3u+1) (P_(r+2m) 0 1^3 0 1^6).
+```
+
+The intermediate after j transformations, for every `0≤j≤m`, has exact unary size `8^j * 3^(m-j+1) * u + 1`, alternating count `r+2j`, and middle unary packet length `3(m-j)+3`. In particular each intermediate has a nonalternating internal `110` obstruction. The companion `ladder_suffix_outside_regular` is a separately kernel-checked universal proof that **every such suffix** differs from every word `P_q 1^b`. For each macro step j, `K_j=8^j * 3^(m-j) * u - 1` is a natural E-index, and the exact primitive time is the finite sum over j from 0 to m−1 of `12K_j² + 49K_j + 58 + 6(r+2j)`. Source `totalCost` implements the same sum by structural recursion.
+
+This is the mechanism: writing an E-index as `K_0=3^m u - 1`, the next E-index becomes `(8K+5)/3`, a natural number for each required step; `K_j+1=8^j 3^(m-j)u`. The exceptional middle packet loses three ones per E step, while the alternating block gains two pairs, allowing arbitrary finite depth by choosing the initial packet accordingly.
+
+**Validation:** `DETripleLadder.lean` locally compiled against Lean 4.36.0-rc2. Both final theorems have precisely `[propext, Quot.sound]` in `#print axioms`, no `sorry`; one theorem is conditional on `hE` and run-add. The E contract is an instance shape of Agent32's previously source-certified `CryptidBoundary.full_E_triple_pairs`, though the complete source-level instance of this chain has **not yet been kernel imported from unchanged originals**. The independent Python literal-six-state simulator `test_E_ladder.py` verified **36/36 full physical tapes and exact primitive times**, m=0..3, u=1..3, r=0..2, including the predicted endpoint heads. These tests corroborate only bounded cases.
+
+**Reproduce:** `ELadderSources.tar.xz.b64` with SHA256 `09e5960b75a793a32a1579d5b4775546b0983e071b8f6201dab52fa79be0f423` contains `DETripleLadder.lean` and `test_E_ladder.py`. Run `restore_ladder.py` for locked verified atomic extraction. Compile `DETripleLadder.lean` independently with Lean 4.36.0-rc2. The Python primitive simulator is in the second archived source set restored using `restore_exceptional.py`.
+
+**Scope:** These are synthetic F/0 inputs specifically designed for arbitrarily long exceptional packet excursions. They are not certified as reachable from any authentic blank start. In particular the result does **not** imply nonhalting of the D root or determine BB(6). It does establish that a fixed finite depth of source E-branch expansion cannot capture all such synthetic packet returns within the original naive regular suffix language. Whether this is already known externally or admits a publishable extension is open.
+
+## Formal no-go and observed transport additions
+
+`DObservedTransport.lean` locally proves `transport_obs` and `seed5_transport_obs` with a generic transitive physical-equivalence relation and original-run congruence, matching Agent32's actual `BoundaryPadding.ObsEq` semantics and avoiding the unequal-list-zero-padding problem of exact `DTransport`.
+
+`DObsSourceCandidate.lean` specializes the theorem to the names/signatures of the original `BoundaryPadding` library, leaving the sole eleven-row `SourceContract` as an explicit hypothesis. It was **type-checked only against a local signature-shaped mock of original modules**, not against unmodified original files. That mock's axioms are not evidence of source certification, and the candidate requires authentic original import before promotion.
+
+`DLanguageNoGo.lean` locally proves the fully quantified model theorem `no_safe_closed_regular_seed5`: no predicate P on the original regular language can contain the modeled unary seed5, be preserved by every defined return, and insist every next modeled section remain in that language. The reason is the `by decide`-checked 1711-return E-escape. The theorem uses `[propext]` only; it is explicitly about the arithmetic model, and original blank-source applicability is still unproved.
