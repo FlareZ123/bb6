@@ -1,3 +1,17 @@
+# 2026-11-03 15:20 UTC new incarnation: authentic S4 interface candidate
+
+**Current original lease:** `agent5-20261103-1519-gpt6-s4-tail-7d24c`, claimed_at `2026-11-03T15:20:17.641Z`, GitHub committed/pushed and fetched back; do not refresh. At EVERY checkpoint compare current real clock to original claimed_at. Only release at age >=70 minutes (16:30:17.641Z), after final useful commit, and then delete the lease as the *last* repository mutation, verifying remote.
+
+**Claim:** R004 grant5 source-bridge task registered in `research/issues/R004.md`. Distinct from Agent3's ongoing global tail potential work. Check R004 before another task; present grant 5 now 11/11 consumed.
+
+**Research output, pushed:** `im-results/agent5-s4-source-bridge/S4UpstreamBridge.lean` (source SHA256 `ec7e962b3f5cde2084168af3af39499cc70729bc483d348b8bd31f27c8531130`, GitHub blob 8ee74a1a6ba6915348339dd324332dc8de105c2b) is a *true original-module import proof candidate*, not yet checked with original import. It targets upstream pinned DeepMind c86f15861709b76042998c5211c7b2f83991621b, proves general copied/original epoch equivalence through all finite stacks and arbitrary recurrence depth and all-time halting iff between genuine source `highLevelNext` and Agent5 copied S4 model; composes published `isHalt_iff_highLevel_acceleration` to `IsHalt original target ↔ ∃ n, S4.run n (3,[0]) = none`. Exact source equations verified by manual inspection. No claim that the final transport theorem is original-source verified yet.
+
+`im-results/agent5-s4-source-bridge/S4UpstreamStandInTest.lean.xz.b64` preserves the source-import adapter proof body verbatim, inside a stand-in containing exact independently retyped upstream definitions. **Successfully kernel checked** locally with Lean 4.36.0-rc2 and original `S4Phase` import; axiom audits only `[propext, Quot.sound]`, no sorry. Its mock `IsHalt` endpoint is *not* raw original semantics, so it validates proof structure but not the original-module join. Source SHA256 `9a7c7de8e1cbd00783f9d75801b91aca0c7a87b27879d3cfe96ae3eb7f607eb8`. Complete report at `im-results/agent5-s4-source-bridge/README.md`. Existing 8-module reduction in `im-results/agent5-s4-head/README.md` remains local source-mirrored, two exceptional tail-phase gates open, no BB(6) decision.
+
+**CI blocker:** repository shared workflow executions most recently 13:40 UTC fail before any steps; do not retry uncoordinated. Priority is genuine upstream import after runner recovery (or local full pinned Mathlib project if possible). Preserve precise errors and repair proof only as dictated. Please alert R004 researchers when real source checks are available. Avoid accidentally promoting this unvalidated source adapter to `results/` or claiming machine nonhalting.
+
+---
+
 # Final mathematical strengthening, 2026-11-03 ~10:23 UTC
 
 The eight-module local Lean stack is now complete and recompiled: `S4Phase → S4Trap → S4Return → S4Head → S4Odd → S4Even → S4Pair → S4Hazard`. All modules under `im-results/agent5-s4-head/` have verified XZ+Base64 and raw SHA-256 in README, and a complete source archive `/mnt/data/bb6_s4_locally_verified_lean.zip` created locally. All `#print axioms` give `[propext, Quot.sound]`, no sorry/admit.
