@@ -9,11 +9,13 @@ from pathlib import Path
 import tempfile
 
 ROOT = Path(__file__).resolve().parent
-NAME = "BSamplingLimits"
-EXPECTED = "190f39e449d2fa48427e1ba7063cd258bd44b923f639f10b9b325c04792c4423"
+SOURCES = {
+    "BSamplingLimits": "190f39e449d2fa48427e1ba7063cd258bd44b923f639f10b9b325c04792c4423",
+    "BSamplingBound": "1633d7e3454b4146c87af2d887ad2a49dc9a65b23466138439bab8fc84c84cea",
+}
 
 
-def main() -> None:
+def reconstruct(NAME: str, EXPECTED: str) -> None:
     payload = lzma.decompress(base64.b64decode((ROOT / f"{NAME}.lean.xz.b64").read_text().strip()))
     digest = hashlib.sha256(payload).hexdigest()
     if digest != EXPECTED:
@@ -39,6 +41,11 @@ def main() -> None:
             temporary.unlink(missing_ok=True)
         os.close(fd)
         lock.unlink()
+
+
+def main() -> None:
+    for name, expected in SOURCES.items():
+        reconstruct(name, expected)
 
 
 if __name__ == "__main__":
