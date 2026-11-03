@@ -35,6 +35,11 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary
         run: |
           lean im-results/agent31-cryptid-boundary/A1100.lean
+      - name: Kernel check original-machine spatial frame and marker coupling
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary
+        run: |
+          lean im-results/agent31-cryptid-boundary/ProtectedMarker.lean
       - name: Kernel check composed authentic blank trace
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary
