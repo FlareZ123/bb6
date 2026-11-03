@@ -1,6 +1,6 @@
 # Agent 34 S4 strict weighted-rank theorem (R004)
 
-**Status 2026-11-03:** Lean 4.36.0-rc2 kernel-checked for a self-contained function reproducing the exact original `stepEpoch` branches. A separate bridge was checked against an independently defined source-shaped mock, **not yet against the unchanged upstream Cryptids module**. The original-source import must pass a manual upstream CI job before this can be called source-certified. No S4 root halting/nonhalting decision or BB(6) bound is claimed. External novelty has not been independently assessed.
+**Status 2026-11-03 04:58 UTC:** **Original-source Lean kernel certification succeeded** in [manual CI 41580750032](https://github.com/FlareZ123/bb6/actions/runs/41580750032), source revision `1d52237875c6bc5cefaa23f6b436d78dbe9020d9`. The job reconstructed both SHA-256-pinned sources, compiled the unmodified upstream pinned DeepMind S4 acceleration and both proofs with Lean 4.35.0-rc4, and audited standard axioms only. No S4 root halting/nonhalting decision or BB(6) bound is claimed. External novelty has not been independently assessed.
 
 ## Mathematics
 
@@ -18,7 +18,7 @@ The standalone theorem `S4Rank.step_strict` proves this for `S4Rank.epoch`, copi
 
 A stronger potential establishes the induction: `P(a,L,R) = foldl (fun z d => 2z+d) (ρ(a,L)) R`. If `epoch a L (b::R) = some s`, then `P(a,L,b::R)<2ρ(s)`. The generic right-suffix potential is monotone under every odd recursive call and is strictly dominated by twice the output rank in each positive even terminal case. An odd empty-left call with `a=3` fails, while all successful empty-left odd calls have `a≥5`. At the genuine high-level section `R=[0]`, `P=2ρ`, yielding strict growth.
 
-The proposed `BB6.Agent34S4Source.original_step_strict` transfers the theorem by explicitly proving `(stepEpoch a L R).map decode = S4Rank.epoch a L R` **for all a,L,R**, plus exact `bumpHeadBy` and `transferHL` correspondences. The bridge code was checked with a separately compiled source-shaped mock; it awaits original-source CI to validate imported names and definitions.
+The source-certified `BB6.Agent34S4Source.original_step_strict` transfers the theorem by explicitly proving `(stepEpoch a L R).map decode = S4Rank.epoch a L R` **for all a,L,R**, plus exact `bumpHeadBy` and `transferHL` correspondences. The bridge code was first checked with a source-shaped mock, then independently compiled against the pinned unmodified original source in successful CI 41580750032.
 
 ## Reproduction / provenance
 
@@ -29,9 +29,9 @@ Both Lean files are losslessly LZMA-compressed and base64-encoded in the repo, f
 | File | Decoded SHA-256 | Audit |
 | --- | --- | --- |
 | `S4Rank.lean.xz.b64` | `94377c5747e235d82c2539ac5793336774170692461ccf7389222b7d38061dc8` | Lean 4.36.0-rc2 local PASS, `step_strict` and `normalized_tail_growth`, axioms `[propext, Classical.choice, Quot.sound]` |
-| `S4RankSource.lean.xz.b64` | `d381477d02c1e700e9a609d01640b9545e32bd1999d46152f020c200d48bb250` | Source bridge signature reproduced in Lean 4.36.0-rc2 mock, axioms `[propext, Classical.choice, Quot.sound]`; original-source CI pending |
+| `S4RankSource.lean.xz.b64` | `d381477d02c1e700e9a609d01640b9545e32bd1999d46152f020c200d48bb250` | Authentic original source compiled in CI 41580750032 with only `[propext, Classical.choice, Quot.sound]` |
 
-No `sorry`, `admit` or added axioms occur in the two decoded sources. Compiled mock success is explicitly **not** original-source certification.
+No `sorry`, `admit` or added axioms occur in the two decoded sources. The source-connected theorem was subsequently rechecked with the actual upstream machine and standard axioms. The earlier mock preflight alone would not have been sufficient.
 
 ## Open consequence
 
