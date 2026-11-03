@@ -96,6 +96,8 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/OddPredecessor.olean" OddPredecessor.lean
           cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/GateExistence.lean" GateExistence.lean
           lake env lean -o ".lake/build/lib/lean/GateExistence.olean" GateExistence.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/SecondGateway.lean" SecondGateway.lean
+          lake env lean -o ".lake/build/lib/lean/SecondGateway.olean" SecondGateway.lean
           lake env lean -o ".lake/build/lib/lean/OddPowerSource.olean" OddPowerSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/OddEvenGate.lean" OddEvenGate.lean
           lake env lean OddEvenGate.lean
