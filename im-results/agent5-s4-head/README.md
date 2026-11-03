@@ -163,3 +163,15 @@ reduced(b::R) =
 Thus at two of every four *surviving* reduced-return positions after T5, with first digit 79 or 81, the entire next reduced step is unconditionally defined. The even-digit positions 80 and 82 remain the only possible residual halting gateways in that persistent period-four regime. The arithmetic is based on the original source-shaped `epoch` definitions. Both modules report solely standard Lean axioms and no `sorryAx`.
 
 These theorems provide a precise compact dynamical system with an explicit scalar factor and a separate partial tail update. **They do not prove survival at the even-digit gateways**, and they have not undergone original DeepMind source-module import validation.
+
+## 2026-11-03 partial exact even-head return
+
+The sixth local Lean module, [S4Even.lean.xz.b64](S4Even.lean.xz.b64), raw SHA-256 `5aab323784fccfeae01129f4b1a0258fdf9f90137f7337d579a133438aa0f0b7`, builds on `S4Odd`. Lean 4.36.0-rc2 prints only `[propext, Quot.sound]` and no `sorryAx` for `S4.reduced_even_favorable`.
+
+For every **even** first digit `b`, arbitrary second digit `c`, and arbitrary remaining list `R`, if `c+b/2+23` is even then the complete reduced step is provably safe and has the exact affine form, with `k=(c+b/2+23)/2`:
+```text
+reduced(b::c::R) = some((b/2+39)::(k+2)::bumpBy(k,R))
+```
+The theorem covers empty R as well as unbounded nonempty R. Combined with the previously proved odd-head branch, **the sole unresolved potential halting cases after reduced step five are**: first digit 80 with **even** second digit; or first digit 82 with **odd** second digit. All 79 and 81 first-digit steps are unconditionally safe; the complementary 80-odd and 82-even steps also have exact unconditional successful return formulas. These are necessary hazard conditions, not proof that any such actual state halts.
+
+This additional result further partitions the authenticated blank-seed orbit in a second-digit parity test and provides explicitly computable updates where the parity permits a direct even exit. It remains a local proof in a source-mirrored model pending original module import.
