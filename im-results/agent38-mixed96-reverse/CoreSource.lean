@@ -45,4 +45,28 @@ theorem no_coreB_czero_a0 (k : Nat) :
   unfold normX normY
   omega
 
+theorem no_coreA_czero_a1 (k : Nat) :
+    ¬coreA 2 2 (2*k+1) := by
+  by_cases hk : k = 0
+  · subst k
+    simp [coreA, lowA1]
+  · intro h
+    have hp := (coreA_high 2 2 (2*k+1) (by omega)).mp h
+    have bad := highA_no_sum_four _ _ hp
+    apply bad
+    unfold normX normY
+    omega
+
+theorem no_coreB_czero_a1 (k : Nat) :
+    ¬coreB 2 2 (2*k+1) := by
+  by_cases hk : k = 0
+  · subst k
+    simp [coreB, lowB1]
+  · intro h
+    have hp := (coreB_high 2 2 (2*k+1) (by omega)).mp h
+    have bad := highB_no_sum_four _ _ hp
+    apply bad
+    unfold normX normY
+    omega
+
 end A38Mixed96
