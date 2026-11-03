@@ -174,6 +174,46 @@ theorem direct_construct (r a k : Nat) (hk : 0<k)
         omega
       exact ⟨b-2*c,2*c+2,Direct.succ hb (by omega) hpos hguard⟩
 
+/-- Dyadic growth is superlinear from exponent two onward. -/
+private theorem pow_two_ge_step (n : Nat) (hn : 2≤n) :
+    n+2≤2^n := by
+  induction n with
+  | zero => omega
+  | succ n ih =>
+      by_cases h2 : 2≤n
+      · have hp := ih h2
+        rw [Nat.pow_succ]
+        omega
+      · have h1 : n=1 := by omega
+        subst n
+        decide
+
+/-- All nontrivial direct epochs have an exponential length barrier. -/
+theorem allowed_log_bound (a k r : Nat) (hk : 0<k)
+    (hr : 2≤r) (h : Allowed a k r) :
+    8*2^r ≤ a+2*k := by
+  have hp := pow_two_ge_step r hr
+  have hpow : 4*r+8 ≤4*2^r := by omega
+  have hprod := Nat.mul_le_mul_left (4*2^r) (show 3≤k+2 by omega)
+  have hthree : 12*2^r ≤4*2^r*(k+2) := by
+    have he : 12*2^r = (4*2^r)*3 := by omega
+    rw [he]
+    exact hprod
+  unfold Allowed at h
+  omega
+
+/-- A run of n≥3 direct returns needs mass at least 8·2^(n−1). -/
+theorem direct_log_bound {n a k x y : Nat} (hk : 0<k)
+    (hn : 3≤n) (h : Direct n a k x y) :
+    8*2^(n-1) ≤ a+2*k := by
+  have hn0 : 2≤n-1 := by omega
+  have hn1 : n-1+1=n := by omega
+  have hh : Direct (n-1+1) a k x y := by simpa [hn1] using h
+  exact allowed_log_bound a k (n-1) hk hn0 (direct_last_allowed hh)
+
+#print axioms allowed_log_bound
+#print axioms direct_log_bound
+
 /-- Necessary and sufficient single inequality for r+1 direct returns. -/
 theorem direct_iff_last_guard (a k r : Nat) (hk : 0<k) :
     (∃x y, Direct (r+1) a k x y) ↔ Allowed a k r := by
