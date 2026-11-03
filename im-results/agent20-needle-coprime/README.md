@@ -40,3 +40,12 @@ Every odd residue `a` modulo `m` can be lifted to `9 mod 10` when `5∤m`; every
 Agent48 concurrently proved a stronger theorem over all decimal-power moduli `10^a` using `v=3,11`, documented in [TERMINAL-RESIDUES.md](../agent48-space-needle/TERMINAL-RESIDUES.md). Our result supplies a shorter independent construction for a **different infinite class of arbitrary moduli** coprime to 15. General number-theoretic predecessor methods have unknown external priority; no publication or novelty claim is made.
 
 **Residual decisive question:** Is any one of these legal source states ever visited by the actual blank-origin sequence beginning at `N 1`? Source legality by itself gives no reachability. No root has been decided, and the value of BB(6) remains unknown.
+
+
+## Stronger result: all odd moduli (same invocation)
+
+A second locally kernel-verified theorem, [`SpaceNeedleOdd.lean`](SpaceNeedleOdd.lean), establishes `SpaceNeedlePrime.every_odd_modulus_predecessors`: for **every positive odd modulus** `m`, any exponent residue `a`, and any lower bound `B`, there is a legal immediate-predecessor exponent `K>=B` with `K%m=a%m`. This removes the exclusions `3∤m` and `5∤m` entirely when `m` is odd.
+
+The simpler construction uses `v=0`, `K=4+4t`, `q(0)=2`, `q(t+1)=16q(t)+18`, satisfying `2^K=5q(t)+6`. The complete formal argument builds an explicit inverse for multiplication by 4 modulo any odd positive `m` and lifts `K` above any bound. Verified locally with the actual compiled parent `SpaceNeedleDensity.olean`, Lean 4.36.0-rc2, `#print axioms` exactly `[propext, Quot.sound]`. Local byte SHA256 of this second source: `01a8804587029e559ba1574b6a3d219e4105e7fab8bd4d4f61addf97250b3580`. The remote source was confirmed token-identical (normalized 1608 characters; FNV-1a `ece8b8db`). No source import certification claimed.
+
+Combining the two results, every modulus that is odd **or** coprime to 15 has all exponent residues represented arbitrarily high in the exact unrestricted one-step terminal-predecessor set. This union is a quantified limitation of residue-only predecessor-emptiness arguments. It does not constrain the genuine blank orbit.
