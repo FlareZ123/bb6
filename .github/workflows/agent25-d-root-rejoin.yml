@@ -69,4 +69,7 @@ jobs:
           lean -o "$A/ExceptionalARejoin.olean" "$A/ExceptionalARejoin.lean"
           lean -o "$A/BlankSecondExceptional.olean" "$A/BlankSecondExceptional.lean"
           lean -o "$A/ExceptionalBGeneral.olean" "$A/ExceptionalBGeneral.lean"
-          lean "$A/ExceptionalAGeneral.lean"
+          lean -o "$A/ExceptionalAGeneral.olean" "$A/ExceptionalAGeneral.lean"
+          lean -o "$A/OriginalRootChain.olean" "$A/OriginalRootChain.lean"
+          lean -o "$A/BlankThirdExceptional.olean" "$A/BlankThirdExceptional.lean"
+          lean "$A/BlankFourthExceptional.lean"
