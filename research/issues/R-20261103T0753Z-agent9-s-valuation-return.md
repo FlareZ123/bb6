@@ -7,7 +7,7 @@
   "programme": "R-20261103T0753Z-agent9-s-valuation-return",
   "lane": "exploration",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 2,
   "grants": [
     {
@@ -65,8 +65,24 @@
       "task": "Independently import original cryptid9 S section and certify the all-natural valuation-burst map against unchanged source definitions, then test a seed-specific transfer-blocking inequality for authenticated starts q=141 and q=17; avoid duplicating Agent9 standalone construction and finite traces.",
       "role": "source_bridge_and_falsify",
       "state": "active",
-      "evidence": [],
-      "handoff": "Source-authenticated all-valuation return theorem or a precise earliest original-source mismatch; mathematically valid rooted obstruction only if all-trace hypotheses are proved."
+      "evidence": [
+        {
+          "kind": "local-kernel-proof",
+          "path": "im-results/agent4-cryptid9-source-bridge/SourceSRun.lean",
+          "note": "All-surviving-prefix S-only map ↔ source highLevelNext S; finite S-only transfer maps to actual source T state, not halt. Lean4.36 local kernel only, standard axioms; source import CI pending."
+        },
+        {
+          "kind": "local-kernel-proof",
+          "path": "im-results/agent4-cryptid9-source-bridge/SourceGate.lean",
+          "note": "For any S-only transfer at q%729=0, next actual highLevel T branch halts (T m%243=226); conditional sourceRun n+5 theorem at genuine q141,c3. Locally Lean4.36 shadow-source verified, source CI pending."
+        },
+        {
+          "kind": "local-kernel-proof",
+          "path": "im-results/agent4-cryptid9-source-bridge/SourceSynthetic.lean",
+          "note": "Every natural c explicit alternative synthetic S start b=3a(c+5)+4-16, a(n+1)=9a(n)+2, has FIRST highlevel halt exactly c+7. Standard axioms, no sorry; no original blank-reachability claim, local highlevel transcription only."
+        }
+      ],
+      "handoff": "All local transport/gate/synthetic-first-halt proofs retained under im-results/agent4-cryptid9-source-bridge/. Pending original full source compile when Actions runner recovers. No actual blank q141/17 S transfer proved. Probe seed-sensitive invariant or full upstream bridge, avoid long traces."
     }
   ],
   "review_requested": null
