@@ -95,4 +95,8 @@ jobs:
           lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
           lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
           lean -o im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.olean im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.lean
-          lean im-results/agent23-p1-root-wall/CriticalRootWallOriginal.lean
+          lean -o im-results/agent23-p1-root-wall/CriticalRootWallOriginal.olean im-results/agent23-p1-root-wall/CriticalRootWallOriginal.lean
+          lean -o im-results/agent1-p1-map/ResetGate.olean im-results/agent1-p1-map/ResetGate.lean
+          lean -o im-results/agent1-p1-map/EvenSeed.olean im-results/agent1-p1-map/EvenSeed.lean
+          lean -o im-results/agent23-p1-root-wall/RootWallOddCostArithmetic.olean im-results/agent23-p1-root-wall/RootWallOddCostArithmetic.lean
+          lean im-results/agent23-p1-root-wall/CriticalRootWallOddCost.lean
