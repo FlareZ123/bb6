@@ -31,3 +31,7 @@ The inputs `p` and `(m+1)*p=p+m*p` are congruent modulo m, so quotient compatibi
 The separately proved exact dyadic curvature identity states that the two sides of this final congruence differ in `Nat` by precisely δ, in one order or the other. Consequently `m∣δ`. This completes the elementary argument and avoids modular inverses, unbounded enumeration, and assumptions about a particular trajectory.
 
 **Machine B instance:** (r,c,s)=(3,4,5), δ=7, so a deterministic finite scalar residue quotient of ANY fixed positive iterate would exist only for m=1 or m=7. This is stronger than the already verified affine-modular classification because it excludes nonlinear lookup-table quotients as well.
+
+## Independent finite falsification screen
+
+A fresh Python simulator (outside Lean) checked all 17,856 parameter combinations with odd `r∈{1,3,5,7,9,11}`, `s` among eight consecutive integers starting at `ceil(r/2)`, `c∈{0,1,2}`, `t∈{1,2,3,4}`, and `1≤m≤31`. For each combination, it evaluated residue-compatibility on every input `0≤z<m*2^(t+2)`. **All 17,856 tests agreed** with `m∣2s-r`, and no counterexample was found. This is finite falsification evidence only; the preceding argument supplies the all-integer derivation. The stronger statement awaits independent scrutiny and Lean kernel verification.
