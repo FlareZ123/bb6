@@ -94,6 +94,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/OddPowerSource.lean" OddPowerSource.lean
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" OddPredecessor.lean
           lake env lean -o ".lake/build/lib/lean/OddPredecessor.olean" OddPredecessor.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/GateExistence.lean" GateExistence.lean
+          lake env lean -o ".lake/build/lib/lean/GateExistence.olean" GateExistence.lean
           lake env lean OddPowerSource.lean
 
           # Agent22: original-source universal mixed-modulus outgoing hub.
