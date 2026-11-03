@@ -85,7 +85,7 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
-          lake env lean EvenSourceBridge.lean
+          lake env lean -o ".lake/build/lib/lean/EvenSourceBridge.olean" EvenSourceBridge.lean
 
           # Agent16: all-exponent exact even-source power preimages against
           # authentic machine-certified Sheep section constructors.
@@ -96,7 +96,9 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/OddPredecessor.olean" OddPredecessor.lean
           cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/GateExistence.lean" GateExistence.lean
           lake env lean -o ".lake/build/lib/lean/GateExistence.olean" GateExistence.lean
-          lake env lean OddPowerSource.lean
+          lake env lean -o ".lake/build/lib/lean/OddPowerSource.olean" OddPowerSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-odd-power-gates/OddEvenGate.lean" OddEvenGate.lean
+          lake env lean OddEvenGate.lean
 
           # Agent22: original-source universal mixed-modulus outgoing hub.
           cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-mixed-hub/SheepMixedHub.lean" SheepMixedHub.lean
