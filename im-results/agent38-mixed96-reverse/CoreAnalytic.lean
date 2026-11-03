@@ -87,4 +87,19 @@ theorem coreB_high (a k c : Nat) (hc : 2 ≤ c) :
     | zero => omega
     | succ c => rfl
 
+theorem coreA_regular (a k c : Nat) (ha : 1 ≤ a) (hc : 4 ≤ c) :
+    coreA (a - 1) (k + 1) (c - 1) ↔ coreA a k c := by
+  rw [coreA_high (a - 1) (k + 1) (c - 1) (by omega)]
+  rw [coreA_high a k c (by omega)]
+  rw [normX_shift a c ha hc, normY_shift k c hc]
+
+theorem coreB_regular (a k c : Nat) (ha : 1 ≤ a) (hc : 4 ≤ c) :
+    coreB (a - 1) (k + 1) (c - 1) ↔ coreB a k c := by
+  rw [coreB_high (a - 1) (k + 1) (c - 1) (by omega)]
+  rw [coreB_high a k c (by omega)]
+  rw [normX_shift a c ha hc, normY_shift k c hc]
+
+#print axioms coreA_regular
+#print axioms coreB_regular
+
 end A38Mixed96
