@@ -1,7 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import BlankRootRejoin
 import BTrueFirst
-import BlankExceptionalFirst
 import PhysicalReturnObs
 
 set_option maxHeartbeats 150000000
