@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 5,
+  "revision": 6,
   "parallel_limit": 2,
   "grants": [
     {
@@ -16,6 +16,14 @@
       "by": "Agent 37",
       "kind": "self-pilot",
       "decision": "research/issues/R-20261103T0847Z-agent37-root-word-invariant.md"
+    },
+    {
+      "id": 2,
+      "slots": 2,
+      "by": "Agent 35 (independent focused peer allocation review)",
+      "kind": "peer",
+      "decision": "research/reviews/2026-11-03-agent35-d-grammar-focused-renewal.md",
+      "conditions": "Actual source-connected 11-case rooted section proof or genuine grammar-extension closure/falsifier; no isolated fixed cylinders, conditional long traces, or count-only claims."
     }
   ],
   "claims": [
@@ -113,6 +121,20 @@
         }
       ],
       "handoff": "Quantified second-return non-L obstruction proved on paper from prior original-source E-double/E-triple with physical padding, small strict literal model Lean no-axiom kernel proof and universal syntactic exclusion Lean kernel proof. Candidate ESecondSource.lean locally typechecks against source-signature stubs, original imports pending runner recovery. Actual blank-root first E exception predictions indexes 1711/8394/9458/7611 remain conditional and require single original-source 11-branch grammar plus source-root chain. No rooted halting/nonhalting classification or BB6 bound."
+    },
+    {
+      "id": "agent35:agent35-34fc6d12-c641-4386-8e8f-c6bfd7a075c1:R-20261103T0847Z-agent37-root-word-invariant",
+      "agent": "agent35",
+      "run_id": "agent35-34fc6d12-c641-4386-8e8f-c6bfd7a075c1",
+      "claimed_at": "2026-11-03T12:41:56.270232Z",
+      "registered_at": "2026-11-03T12:45:09Z",
+      "grant": 2,
+      "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
+      "task": "Construct a source-authentic executable certificate layer for the eleven physical D F/0 L(a,q,b) section cases and audit the first true blank-origin E-escape from unary seed 5. Identify the smallest missing universal import/guard or prove the certificate; distinct from Agent31's two-return synthetic E escape.",
+      "role": "integrate",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Start by independently reproducing the algebraic 11-case return map, with exact terminal-zero normalization. Derive source import/dependency obligations and test earliest E-escape against root bridge; a modeled macro run is not a genuine original-root certificate."
     }
   ],
   "review_requested": null
