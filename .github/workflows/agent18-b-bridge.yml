@@ -2,6 +2,12 @@ name: Agent 18 upstream Machine B semantic bridge (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      skip_long_sample:
+        description: Skip the expensive historical scalar parity sample
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -70,7 +76,15 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent10ModSeven.olean Agent10ModSeven.lean
           lake env lean -o .lake/build/lib/lean/Agent10SevenReset.olean Agent10SevenReset.lean
           lake env lean Agent10RootModSeven.lean
+      - name: Verify Agent 10 all-iterate affine modular obstruction against authentic B source
+        working-directory: /tmp/cryptids
+        run: |
+          for f in GBase Curvature AffineBarrier AffineBarrierSource; do
+            cp "$GITHUB_WORKSPACE/im-results/agent10-b-affine-iter/$f.lean" "$f.lean"
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
       - name: Kernel-certify exact parity after 227097 scalar iterations
+        if: ${{ !inputs.skip_long_sample }}
         working-directory: /tmp/cryptids
         run: |
           python -m pip install --quiet filelock
