@@ -88,7 +88,7 @@ theorem odd_U_secondary_overflow (k w:Nat) (hk:3≤k)
     (hscap:5*w≤6*rayU k+51)
     (hsecondary:10*rayU k+115≤11*w):
     run 4 (rayU k,w)=
-      some (6*rayU k-5*w+68,11*w-10*rayU k-112) := by
+      some ((6*rayU k+68)-5*w,11*w-10*rayU k-112) := by
   let u:=rayU k
   let x:=2*u-w+18
   let y:=3*w-2*u-22
@@ -104,7 +104,7 @@ theorem odd_U_secondary_overflow (k w:Nat) (hk:3≤k)
   have hcap2:y+7≤2*x:=by dsimp [x,y,u] at *;omega
   have hover2:2*x+13≤3*y:=by dsimp [x,y,u] at *;omega
   have hSecond:=odd_one_overflow_two_step x y hxodd hymod hcap2 hover2
-  have hX:2*x-y+10=6*u-5*w+68:=by dsimp [x,y];omega
+  have hX:2*x-y+10=(6*u+68)-5*w:=by dsimp [x,y];omega
   have hY:3*y-2*x-10=11*w-10*u-112:=by dsimp [x,y];omega
   rw [show 4=2+2 by decide,BB429.run_add,hFirst]
   simpa only [Option.bind_some,u,hX,hY] using hSecond
@@ -118,7 +118,7 @@ theorem odd_U_complete_two_level (k w:Nat) (hk:3≤k) (hkm:k%4=3)
       run (k+4) (rayU k,w)=some (rayU k,w+3*k+31)) ∨
     (10*rayU k+115≤11*w ∧
       run 4 (rayU k,w)=
-        some (6*rayU k-5*w+68,11*w-10*rayU k-112)) := by
+        some ((6*rayU k+68)-5*w,11*w-10*rayU k-112)) := by
   rcases odd_rayU_second_dichotomy k w hk hkm hw with h | h
   · exact Or.inl ⟨h,BB429OddUBounce.odd_U_bounce k w hk hkm hw
       hcap hfirstoverflow h⟩
@@ -191,7 +191,7 @@ theorem rooted_to_499_159 : run 237 (0,0)=some (499,159) := by
     (by decide) (by decide) (by decide) (by decide)
   have h7:rayU 7=381:=by decide
   have hRes:run 4 (rayU 7,371)=some (499,159):=by
-    simpa only [h7,show 6*381-5*371+68=499 by decide,
+    simpa only [h7,show (6*381+68)-5*371=499 by decide,
       show 11*371-10*381-112=159 by decide] using hFour
   rw [show 237=233+4 by decide,BB429.run_add,h233]
   simpa only [Option.bind_some] using hRes
