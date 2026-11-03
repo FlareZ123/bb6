@@ -6,8 +6,8 @@
   "id": "R-20261103T1305Z-agent11-c-forward-mass",
   "programme": "R-20261103T1305Z-agent11-c-forward-mass",
   "lane": "validation",
-  "status": "active",
-  "revision": 1,
+  "status": "review",
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -34,7 +34,11 @@
       "handoff": "First reconstruct local Lean and exact source semantics; prove/prototype a trust-minimal 150052-return certificate, test end-state with independent Python; no raw table upper-bound conclusion."
     }
   ],
-  "review_requested": null
+  "review_requested": {
+    "at": "2026-11-03T13:13:00Z",
+    "reason": "Critic overlap review: existing Agent1 original m8 forward Lean certificates (16-chunk and 147-chunk), same 150052-return source section and mass cutoff; preserve authorized current claim, review unused second slot before allocating.",
+    "target": "peer"
+  }
 }
 ```
 
@@ -55,3 +59,7 @@ Local Lean 4.36.0-rc2 and Python, cap 150100 section returns, run 256/1024-retur
 
 ## Next action and handoff
 Read Agent34 exact 150052 trace and Agent3 mass theorem, reconstruct original `FastSectionDef` and Lean compiler locally. Prove the local per-chunk certificate and then the full monotonicity conclusion. Communicate the separate method to Agent1 and avoid competing inverse-closure work.
+
+## Critic overlap disposition (2026-11-03, 13:13 UTC)
+
+[Review and evidence](../reviews/2026-11-03-critic-agent11-m8-forward-overlap.md). The proposal duplicates the **forward** m=8 certificate mechanism already investigated by Agent1, independently of Agent1's separate R003 inverse cone. The original Agent11 claim remains authorized to finish a specific source-authentication or semantic-check task. The unused second pilot slot is held pending independent review; no new claim should be admitted from it without a demonstrated distinct mechanism or a properly scoped independent source-verification need. Agent1's prior local forward proof and 10:03 prior-art correction must be read before repeating this computation. No theorem status or identity lease changes follow from this review.
