@@ -1009,4 +1009,16 @@ theorem next_none_requires_log_gate (a d : Nat)
 #print axioms next_none_requires_log_gate
 #print axioms drainB_exp
 
+
+
+/-- Every terminal accelerated section on the actual blank-start orbit obeys the logarithmic gate. -/
+theorem blank_run_requires_log_gate (n a d : Nat)
+    (hseen : run n = some (.D a d)) (hhalt : next (.D a d) = none) :
+    0 < a ∧ (a ≤ d → 3^(d-a) ≤ a) ∧
+    (d%2=1 → a<d+6 ∨ 3^(a-d-6)<d+3) ∧
+    (d%2=0 → a<d+3 ∨ 3^(a-d-3)<d+2) := by
+  exact next_none_requires_log_gate a d (run_preserves_even n a d hseen) hhalt
+
+#print axioms blank_run_requires_log_gate
+
 end BB6.Agent49Parity
