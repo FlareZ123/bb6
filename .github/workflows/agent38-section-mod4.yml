@@ -92,6 +92,8 @@ jobs:
           lean -o Feeder56.olean Feeder56.lean
           lean -o AffineTargetReach56.olean AffineTargetReach56.lean
           lean Depth2128.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-low-mod32/OddFourExactOriginal.lean .
+          lean OddFourExactOriginal.lean
 
           # Agent 11: original-source composite infinite first-halting-family exclusion.
           cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean .
