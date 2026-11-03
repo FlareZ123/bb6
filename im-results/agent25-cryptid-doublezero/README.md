@@ -37,3 +37,28 @@ The third return exercises Agent32's original-source `full_E_pairs_implicit_blan
 This rigorously promotes Agent32's previously *conditional* projected `I_482315923617` and `I_1286175796359` sections to actual blank-start theorems. It is **finite, intermediate progress**, and remains far below known BB(6) champion lower bounds. Neither this machine's halting problem nor BB(6) is decided. Do not migrate this document to `results/`.
 
 The [reused manual workflow](../../.github/workflows/agent35-blank-beyond.yml) restores SHA-pinned original sources, compiles the complete unmodified chain, checks both new modules, and prints axioms. No per-commit trigger was added. Continued frontier work should seek a forward-closed reachable-suffix invariant, authenticated original-source halting witness, or a scalable kernel certificate for genuinely large sequences of symbolic returns.
+
+## 2026-11-03: authentic 8394-return blank-root exception rejoins regular D language
+
+**Original-source Lean 4.36.0-rc2 certification: [two-checkpoint CI 41716055765](https://github.com/FlareZ123/bb6/actions/runs/41716055765), [true blank-root CI 41716508754](https://github.com/FlareZ123/bb6/actions/runs/41716508754).** All final theorem audits contain only standard axioms, no `sorryAx`: the conditional theorem has `[propext, Quot.sound]`; the true-blank theorem has `[propext, Classical.choice, Quot.sound]`.
+
+Agent2's authentic [8394-return certificate](../agent2-cryptid-continuity/BlankRegular8394.lean) reaches, from the real empty tape after an exact symbolic raw duration `T=36+DRegular.accumulated 8394 seed9`, a section `I_a((01)^6 1)` where **a=9t+4** for an actual (very large) natural t. The exact congruence, including q=6 and b=1, is checked by Lean evaluation of the previously source-authenticated regular model in `BlankRootRejoin.lean`.
+
+The source-certified E double macro of Agent32 followed by the genuine original-source B rule supplies the universally quantified **two-endpoint** source identity
+
+```text
+I_(9t+4)((01)^6 1)
+  --[ E cost 12(3t)^2+49(3t)+80 ]-->
+I_(24t+5)(0 1^12 0 1^6)
+  --[ B cost 12(8t+1)^2+49(8t+1)+40 ]-->
+I_(64t+29)(0 1^6)
+= L(64t+29,1,5).
+```
+
+The theorem `BB6.Agent25Rejoin.exceptional_EB_two_source`, in [ExceptionalBRejoin.lean](ExceptionalBRejoin.lean), holds **for every t** with physical `BoundaryPadding.ObsEq`. The physical input has **implicit** right-hand zeros, and the proof applies `Agent32EAll.all_e_double_implicit_blank` directly rather than incorrectly equating finite word `...11` with `...1100`. Source `full_B` then gives an **exact** second step `exceptional_B_rejoins_regular`.
+
+[BlankRootRejoin.lean](BlankRootRejoin.lean) imports the unchanged `BlankRegular8394.blank8394` and composes it with the two source steps. Its theorem `BB6.Agent25RootRejoin.blank_two_more_returns` proves an original **blank-origin** physical return to `L(64t+29,1,5)` at the explicitly quantified total raw time `T + Ecost + Bcost`. The original 8394-step regular model had deliberately returned `None` at this E exception. The machine has now been certified through that language exit and into its regular family again. These are specified physically correct F/0 checkpoints; universal absence of intermediate F/0 sections is not claimed.
+
+**Prior art and scope.** Agent31's [nine-case second-return classification](../agent31-d-exceptional/two-return-classification.md) already derived this k≡0(mod3) E/B return formula from earlier source macros, so the conditional algebra has **no originality claim**. The new contribution is direct all-parameter Lean `ObsEq` composition and transport to a **true blank-tape** witness of the source-certified 8394th section. This is still a finite D-machine computation, no exact BB(6), no full nonhalting proof, no champion bound. Retain under `im-results/`.
+
+**Next research obstacle:** exploit this physical reentry to transport the subsequent regular model interval and isolate the next true-root off-language packet (the model predicts around index 31,787, not yet source-certified here); then find a genuinely closed orbit language or halting obstruction. Do not interpret finite source composition as global nonhalting.
