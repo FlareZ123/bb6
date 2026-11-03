@@ -72,4 +72,21 @@ theorem lowB0_of_high_reset (a k : Nat) (hk : 1 ≤ k)
 #print axioms lowA0_of_high_reset
 #print axioms lowB0_of_high_reset
 
+theorem highA_odd_zero_predecessor (k c : Nat) (hc : 4 ≤ c)
+    (hk : k % 2 = 1)
+    (h : highA (normX (2*k+3) c) (normY 0 c)) :
+    highA (normX 0 c) (normY k c) := by
+  unfold highA normX normY at *
+  omega
+
+theorem highB_odd_zero_predecessor (k c : Nat) (hc : 4 ≤ c)
+    (hk : k % 2 = 1)
+    (h : highB (normX (2*k+3) c) (normY 0 c)) :
+    highB (normX 0 c) (normY k c) := by
+  unfold highB normX normY at *
+  omega
+
+#print axioms highA_odd_zero_predecessor
+#print axioms highB_odd_zero_predecessor
+
 end A38Mixed96
