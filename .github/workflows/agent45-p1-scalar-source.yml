@@ -1,0 +1,37 @@
+name: Agent45 P1 scalar source integration (manual audit)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode and hash Agent28 original arithmetic and bridge
+        run: |
+          set -e
+          base64 -d im-results/agent28-p1-word-automaton/P1Scalar.lean.xz.b64 | xz -d > im-results/agent28-p1-word-automaton/P1Scalar.lean
+          base64 -d im-results/agent28-p1-word-automaton/P1ScalarBridge.lean.xz.b64 | xz -d > im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
+          echo "56fc4dbfb187bcb54302d04580cb138556fa7eb110d1f263ffd25bdc5f3b23d4  im-results/agent28-p1-word-automaton/P1Scalar.lean" | sha256sum -c -
+          echo "==== Agent28 original bridge source ===="
+          sed -n '1,160p' im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
+      - name: Compile authentic inverse equations and scalar source theorem
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
+          lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
+          lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          lean -o im-results/agent28-p1-word-automaton/P1Scalar.olean im-results/agent28-p1-word-automaton/P1Scalar.lean
+          lean im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
