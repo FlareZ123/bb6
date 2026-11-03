@@ -20,6 +20,8 @@ jobs:
           mkdir -p /tmp/a7-proof
           cd /tmp/a7-proof
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent41-mixed96/SecondMod96.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent7-mixed96-compact/BackBridge.lean" .
           base64 -d "$GITHUB_WORKSPACE/im-results/agent7-mixed96-compact/CompactProof.tar.xz.b64" > CompactProof.tar.xz
           echo "562b0532f7c4ea3775e9af01f637114f1a5c9760c6f9b53caa1df15444b37946  CompactProof.tar.xz" | sha256sum -c -
           tar -xJf CompactProof.tar.xz
@@ -32,3 +34,5 @@ jobs:
           lean -o BackTheorems.olean BackTheorems.lean
           lean -o BackStep.olean BackStep.lean
           lean -o BackGoal.olean BackGoal.lean
+          lean -o SecondMod96.olean SecondMod96.lean
+          lean -o BackBridge.olean BackBridge.lean
