@@ -145,6 +145,21 @@ theorem iterH_affine_modulus_divides_gap
   · exact mod_eq_gap_dvd m _ _ (2*s-r) hmod hc
   · exact mod_eq_gap_dvd m _ _ (2*s-r) hmod.symm hc.symm
 
+/-- If the parity jump gap vanishes modulo m, the scalar map itself
+becomes the affine polynomial s*z+c on that quotient. -/
+theorem H_affine_mod_gap (r c s m z : Nat) (hgap:r≤2*s)
+    (hdvd:m∣2*s-r) :
+    (H r c s z)%m=(s*z+c)%m := by
+  have hdelta : r+(2*s-r)=2*s := by omega
+  have hz : z=2*(z/2)+z%2 := by omega
+  have heq : H r c s z+(2*s-r)*(z/2)=s*z+c := by
+    calc
+      H r c s z+(2*s-r)*(z/2) =
+          (r+(2*s-r))*(z/2)+s*(z%2)+c := by
+        simp only [H]
+        rw [Nat.add_mul]
+        ac_rfl
+
 #print axioms iterH_affine_modulus_divides_gap
 #print axioms iterH_dyadic_curvature
 #print axioms iterH_two_adic_shift
