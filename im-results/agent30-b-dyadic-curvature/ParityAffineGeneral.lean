@@ -196,6 +196,19 @@ theorem iterH_affine_mod_gap (r c s m n : Nat) (hgap:r≤2*s)
     rw [ha (H r c s z)]
     have hmod := H_affine_mod_gap r c s m z hgap hdvd
 
+    have hm : (a*(H r c s z)+b)%m = (a*(s*z+c)+b)%m := by
+      calc
+        (a*(H r c s z)+b)%m =
+            ((a%m)*((H r c s z)%m)+b%m)%m := by
+          simp [Nat.add_mod, Nat.mul_mod]
+        _ = ((a%m)*((s*z+c)%m)+b%m)%m := by rw [hmod]
+        _ = (a*(s*z+c)+b)%m := by
+          simp [Nat.add_mod, Nat.mul_mod]
+    have hlin : a*(s*z+c)+b=(a*s)*z+(a*c+b) := by
+      rw [Nat.mul_add]
+      ac_rfl
+    rw [hm,hlin]
+
 #print axioms iterH_affine_modulus_divides_gap
 #print axioms iterH_dyadic_curvature
 #print axioms iterH_two_adic_shift
