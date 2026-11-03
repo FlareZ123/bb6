@@ -31,7 +31,8 @@ jobs:
           lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
           lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
           lean im-results/agent31-d-exceptional/ESecondSource.lean
-          lean im-results/agent31-d-exceptional/PacketSource.lean
+          lean -o im-results/agent31-d-exceptional/PacketSource.olean im-results/agent31-d-exceptional/PacketSource.lean
+          lean im-results/agent31-d-exceptional/PacketPaths.lean
           lean im-results/agent31-d-exceptional/EscapeLanguage.lean
           lean im-results/agent31-d-exceptional/EscapeWitness.lean
           python3 im-results/agent31-d-exceptional/check_second_escape.py
