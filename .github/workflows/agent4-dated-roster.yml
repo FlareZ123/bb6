@@ -1,0 +1,16 @@
+name: Agent 4 R001 dated rooted holdout roster audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rooted-roster-diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare source-pinned rooted October 16 and October 24 lists
+        run: python tools/bb6_dated_roster_diff.py
