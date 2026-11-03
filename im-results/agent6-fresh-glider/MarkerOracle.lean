@@ -109,7 +109,8 @@ theorem finiteMarkerEntryCheck_sound (p : PartialMachine)
             · intro x hx
               have hge : c.head <= x := by omega
               have ht := finiteMarkerRight_sound c hmarker x hge
-              simpa only [embedFinRay] using ht
+              have hcast : (c.head.toNat : Int) = c.head := by omega
+              simpa only [embedFinRay, hcast] using ht
           · intro j hj d hrun
             have hflag :
                 (match finitePartialRun p j (finiteMarkerSeed entry.state) with
