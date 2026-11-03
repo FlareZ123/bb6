@@ -18,7 +18,18 @@ Two Lean 4.36.0-rc2 modules use the unmodified, source-certified `BB6Coverage` s
    - `positive_halter_two_first`: any `HaltsAfter m n` with `n>0` has a source-semantics equivalent six-state table with first A/0 action **either `0RB` or `1RB`**, retaining every halting time. The immediate halt case has only score one; both A-self-loop cases never halt.
    - `upper_from_two_first_actions B`: if `B ≥ 1` and every halter whose first action is `0RB` or `1RB` has score at most `B`, then every six-state halter has score at most `B`.
 
-This formally reduces the machine types needed for the universal runtime upper-bound question to two source-identical 11-free-slot cylinders, plus the immediate halt case. **It does not supply a bound for either cylinder**, does not build a global closed `Cover`, and does not assert the exponential many cases can actually be decided.
+This formally reduces the machine types needed for the universal runtime upper-bound question to two source-identical 11-free-slot cylinders, plus the immediate halt case.
+
+3. [CrossFirstUpper.lean](CrossFirstUpper.lean):
+   - `raw_upper_iff_two_first` combines the two-action normal form with the pre-existing original-source Agent13/Agent8 whole-machine bridge. For any `B ≥ 1`, a universal bound over **all raw 28-action six-state machines** is equivalent to a bound over all original 25-action machines whose first action is `0RB` or `1RB`.
+   - `exact_from_two_first_and_raw_witness` is a conditional source-level `BB6.Coverage.ExactBB6 B` theorem requiring a raw halting witness attaining B and the two-action universal bound.
+4. [TwoCylinder.lean](TwoCylinder.lean):
+   - Defines two genuinely sparse first-slot partial tables, `firstZeroCylinder` and `firstOneCylinder`, with the other 11 slots unassigned.
+   - `raw_upper_from_two_cylinder_covers` consumes actual `Cover (DecidedBelow B)` proof objects for precisely those two partial tables and proves the universal full raw 28-action upper bound.
+   - `exact_from_two_cylinder_covers` combines **only these two source-authentic sparse coverage certificates** with a raw champion witness to derive `ExactBB6 B`. This is a verified *conditional proof interface*; the two certificates and champion witness are missing.
+
+**Follow-up source CI:** [job 125650419159 in run 41554636763](https://github.com/FlareZ123/bb6/actions/runs/41554636763/job/125650419159), Lean 4.36.0-rc2, full unmodified original Agent8/Agent13 `CrossCoverage.lean` and `CrossUpper.lean` imports, compiled `CrossFirstUpper.lean` and `TwoCylinder.lean`; both direct `ExactBB6 B` theorems use only `[propext, Classical.choice, Quot.sound]`. No `sorryAx`. The overall workflow's other unrelated `formal-check` job still fails, so cite the isolated successful job. This is an actual first-branch *completeness contract* and a direct consumer of sparse `Cover`, while stopping short of closing either nontrivial root cylinder.
+ **It does not supply a bound for either cylinder**, does not build a global closed `Cover`, and does not assert the exponential many cases can actually be decided.
 
 ## Verification and reproducibility
 
