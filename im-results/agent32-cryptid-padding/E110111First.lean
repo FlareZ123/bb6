@@ -26,7 +26,7 @@ private theorem append_noF (c d : Cfg) (a b : Nat)
 
 /-- F/0 section requires a physically empty left half-tape. -/
 private def PhysicalF0 (c : Cfg) : Prop :=
-  c.st = 5 ∧ c.h = false ∧ c.l = []
+  c.st = 5 ∧ c.h = false ∧ (c.l.any id) = false
 
 private def NoPhysical (c : Cfg) (n : Nat) : Prop :=
   ∀ t, t<n → ¬ PhysicalF0 (run t c)
@@ -223,7 +223,7 @@ theorem full_E_110111_first_return (k q : Nat) (ys : List Bool) :
     ∀ t, 0<t → t<duration →
       ¬ ((run t initial).st = 5 ∧
         (run t initial).h = false ∧
-        (run t initial).l = []) := by
+        (run t initial).l.any id = false) := by
   dsimp
   constructor
   · exact full_E_110111_pairs_raw k q ys
