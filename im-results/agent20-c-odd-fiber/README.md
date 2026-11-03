@@ -38,3 +38,20 @@ m even: 1 + max(0, floor((v2(3m+2)-1)/2))
 Here `v2` is the 2-adic valuation of a positive integer. **This last all-m formula is experimental and not Lean-proved.** Derive it with exact exceptional branch and small-m handling before any claim; even a proven count will not by itself exclude genuine blank reachability. A promising successor aim is a global forward invariant or a uniform origin-infeasibility argument for the remaining halting target families.
 
 Do not promote this module to `results/` without independent relevance and external novelty review under the research protocol.
+
+
+## New source-certified all-time blank-orbit exclusion: low halting parameter m=3
+
+The low-family input `(1,K_3)=(1,499)` is proved **unreachable at every accelerated Machine C section time starting from the genuine blank section (5,1)**. This is stronger than a finite-depth absence observation and removes one nontrivial remaining low-family halting gateway. It does **not** settle any other parameter.
+
+The complete, exact reverse graph is:
+
+```text
+(1,499) <- (248,372) <- (618,185) <- (399,291) <- []
+```
+
+The first predecessor uniqueness follows from our earlier full `odd_target_preimages_iff` at `t=1,C=125`. The two following uniqueness theorems `m3_parent_248_372` and `m3_parent_618_185` are **original-source all-input theorems** proved directly from Agent3's exhaustive `section_preimage_all_iff`; they rule out arbitrarily deep bounce behavior using a rigorous finite exponent bound `n<=6` and case analysis. The final `(399,291)=(4*99+3,4*72+3)` is excluded from the blank orbit for all times by the previously source-certified Agent38 `blank_section_no_33` theorem. Exact deterministic section-run induction then yields `BB6.Agent20OddFan.m3_unreachable`.
+
+**[Original-source CI run 41567591797](https://github.com/FlareZ123/bb6/actions/runs/41567591797) passed** at commit `79d154e3645ae5d4235f10d8975f822997493081`, Lean 4.36.0-rc2. All three theorem axiom audits `m3_parent_248_372`, `m3_parent_618_185`, and `m3_unreachable` report exactly `[propext, Classical.choice, Quot.sound]`: no `sorryAx`, no source signature mocks. Certified complete proof is `LowM3.lean.xz.b64` (base64+XZ-encoded original Lean source), uncompressed SHA256 `554c93a6d05d776a628a8083ac1235ab0b54b6d4f919d6d66c3f2d7b0866ed5d`. The same CI also certified the **uniform all-m predecessor parity theorem** `low_gate_parent_parity`, where every source `(a,k)` with `secNext(a,k)=some(1,K_m)` satisfies `(a+m)%2=1`. Its original-source Lean certificate is `LowParity.lean.xz.b64`, source SHA256 `724a3d620e46cc42f83af58c4b372dcc60f76ad276e9d5b5c0efc31001497ed0` and CI [41566674344](https://github.com/FlareZ123/bb6/actions/runs/41566674344) plus [41567591797](https://github.com/FlareZ123/bb6/actions/runs/41567591797).
+
+The exact reverse graph was first observed with an independent small-integer Python enumerator; the quoted all-time exclusions are now kernel-checked source-based proofs. The global question remains open because `m=3` is one point in an **infinite** two-family halting locus.
