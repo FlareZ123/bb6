@@ -86,3 +86,37 @@ private theorem output_target (t p : Nat) :
     show (64*t+65+16*(p+1))-2=64*t+63+16*(p+1) by omega]
   rw [hrep,hfront]
 
+theorem rejoin (t p : Nat) :
+    run (aCost t p) (BB6.Agent32EAll.output (3*t+2) (3*p+2) []) =
+      DRegularSource.sourceSection ⟨64*t+65+16*(p+1),0,0⟩ := by
+  rw [output_input]
+  exact Eq.trans (BB6.Agent35.full_A_code (K t) (words p) ys) (output_target t p)
+
+theorem e_input (t p : Nat) :
+    DRegularSource.sourceSection ⟨9*t+10,3*(p+1),1⟩ =
+      init (List.replicate (3*(3*t+2)+2) true ++
+        false :: (pairs (3*p+2) ++ [true,true])) := by
+  have hn : (9*t+10)-2=3*(3*t+2)+2 := by omega
+  have hp : 3*(p+1)=(3*p+2)+1 := by omega
+  simp only [DRegularSource.sourceSection,init,hn,hp,List.replicate_one]
+  rw [List.append_assoc,BB6.Agent25BGeneral.oppairs_last]
+
+/-- Every k≡2 (mod3) E-exception with q divisible by 3 has an exact
+    two-return original-source reentry into the pure unary regular language. -/
+theorem exceptional_EA_general (t p : Nat) :
+    ObsEq
+      (run (BB6.Agent32EAll.duration (3*t+2) (3*p+2) + aCost t p)
+        (DRegularSource.sourceSection ⟨9*t+10,3*(p+1),1⟩))
+      (DRegularSource.sourceSection ⟨64*t+65+16*(p+1),0,0⟩) := by
+  have hi : ObsEq
+      (run (BB6.Agent32EAll.duration (3*t+2) (3*p+2))
+        (DRegularSource.sourceSection ⟨9*t+10,3*(p+1),1⟩))
+      (BB6.Agent32EAll.output (3*t+2) (3*p+2) []) := by
+    rw [e_input]
+    exact BB6.Agent32EAll.all_e_double_implicit_blank (3*t+2) (3*p+2)
+  have hA := source_congr (aCost t p) hi
+  rw [rejoin] at hA
+  simpa only [run_add] using hA
+
+#print axioms exceptional_EA_general
+end BB6.Agent25AGeneral
