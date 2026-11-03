@@ -1,0 +1,42 @@
+name: Agent 32 E110111 strict first-return original-source audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent37-root-language-pilot:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-padding
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore SHA-authenticated original D-start machine
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify full unmodified original-source theorem chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          S=im-results/agent32-cryptid-third
+          E=im-results/agent37-root-language-pilot
+          D=im-results/agent2-cryptid-continuity
+          N=im-results/agent32-cryptid-padding
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$E/E110111Pairs.olean" "$E/E110111Pairs.lean"
+          lean -o "$D/PrefixENoFSource.olean" "$D/PrefixENoFSource.lean"
+          lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
+          lean "$N/E110111First.lean"
