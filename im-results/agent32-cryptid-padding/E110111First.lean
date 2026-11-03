@@ -152,7 +152,7 @@ private theorem aLong_noPhysical (m q : Nat) (ys : List Bool) :
     rw [cWalk_run]
   have htail : run 6 d = sweepD m (longPacket q ys) := by
     dsimp [d,L]
-    simpa only [List.cons_append, show (m+1)+2=m+3 by omega] using cTailSix m q ys
+    simpa only [List.cons_append, List.nil_append, show (m+1)+2=m+3 by omega] using cTailSix m q ys
   have h1 : NoPhysical s 20 := by
     apply noF_to_NoPhysical
     dsimp [s,L]
@@ -162,7 +162,7 @@ private theorem aLong_noPhysical (m q : Nat) (ys : List Bool) :
       ([true,false,true,false,true,false] ++ ys))
   have h3 : NoPhysical d 6 := by
     dsimp [d,L]
-    simpa only [List.cons_append, show (m+1)+2=m+3 by omega]
+    simpa only [List.cons_append, List.nil_append, show (m+1)+2=m+3 by omega]
       using tail6_noPhysical m q ys
   have h : NoPhysical s (20+(2*(q+1)+6)) :=
     append_noPhysical s w 20 (2*(q+1)+6) h1 hturn
@@ -244,7 +244,7 @@ theorem full_E_110111_first_return (k q : Nat) (ys : List Bool) :
       have hrest : t-(12*k*k+41*k+33) <
           2*(4*k)+4*q+35 := by omega
       rw [htime,run_add] at hphys
-      simp only [List.cons_append] at hprefix
+      simp only [List.cons_append, List.nil_append] at hprefix
       rw [hprefix] at hphys
       exact (eLong_firstPhysical (4*k) q ys)
         (t-(12*k*k+41*k+33)) hrest hphys
