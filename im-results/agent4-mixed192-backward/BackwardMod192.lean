@@ -40,6 +40,8 @@ theorem low_transfer (a k : Nat) : bad a (k+1) 0 → bad a k 1 := by
   intro h
   simpa [bad, low] using h
 
+#print axioms low_transfer
+
 theorem high_to_low3 (a k : Nat) : bad a (k+2) 1 → bad a k 3 := by
   simp only [bad, show (1:Nat)<2 by omega, show ¬((3:Nat)<2) by omega, ↓reduceIte]
   intro h
