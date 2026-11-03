@@ -1,0 +1,62 @@
+name: Shared original BusyCoq rooted theorem source verifier (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Original-source theorem family to compile'
+        required: true
+        type: choice
+        default: sk1
+        options:
+          - sk1
+          - somdc
+          - both
+permissions:
+  contents: read
+jobs:
+  verify-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 43
+    steps:
+      - name: Install original-source proof compiler
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y coq
+          coqc --version
+          coqc -config
+      - name: Checkout exact original source revision
+        uses: actions/checkout@v4
+        with:
+          repository: ccz181078/busycoq
+          ref: 33209bc7dc282b38c8cd6be507bfc551fea56108
+          path: original
+          persist-credentials: false
+      - name: Generate project dependencies with VM fallback
+        working-directory: original/verify
+        run: |
+          coq_makefile -Q . BusyCoq -native-compiler no -o Makefile.coq *.v
+      - name: Compile requested original theorem source
+        working-directory: original/verify
+        env:
+          PROOF_TARGET: ${{ inputs.target }}
+        run: |
+          set -eu
+          case "$PROOF_TARGET" in
+            sk1) make -f Makefile.coq -j 2 Sk1Machines_v2.vo ;;
+            somdc) make -f Makefile.coq -j 2 SOMDCv10.vo ;;
+            both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
+          esac
+      - name: Print final original theorem assumptions
+        working-directory: original/verify
+        env:
+          PROOF_TARGET: ${{ inputs.target }}
+        run: |
+          set -eu
+          if [ "$PROOF_TARGET" = sk1 ] || [ "$PROOF_TARGET" = both ]; then
+            printf '%s\n' 'From BusyCoq Require Import Sk1Machines_v2.' 'Print Assumptions Sk1Machines_v2.TM25.nonhalt.' 'Print Assumptions Sk1Machines_v2.TM26.nonhalt.' 'Print Assumptions Sk1Machines_v2.TM23.nonhalt.' > Agent12Sk1Audit.v
+            coqc -Q . BusyCoq -native-compiler no Agent12Sk1Audit.v
+          fi
+          if [ "$PROOF_TARGET" = somdc ] || [ "$PROOF_TARGET" = both ]; then
+            printf '%s\n' 'From BusyCoq Require Import SOMDCv10.' 'Print Assumptions SOMDCv10.TM4.halt.' > Agent12SomdcAudit.v
+            coqc -Q . BusyCoq -native-compiler no Agent12SomdcAudit.v
+          fi
