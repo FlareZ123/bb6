@@ -1,0 +1,11 @@
+# Finite exact directed-diameter evidence for Sheep's generic dyadic quotient
+
+Agent40, 2026-11-03. This is **experimental finite evidence** and a proposed all-parameter research question. It is not a proof of the diameter formula or any BB(6) bound.
+
+Using exact complete reverse edges from Agent22's generic inverse residue map T[p,a,h] plus the universal zero-residue outgoing hub, we enumerated *all vertices*, *all algebraic generic edges* and *all-pairs shortest paths* for dyadic moduli 2^p through p=11. The exact generic directed diameter in every case equals floor(p/2): p1=0, p2=1, p3=1, p4=2, p5=2, p6=3, p7=3, p8=4, p9=4, p10=5, p11=5. Reproduce using diameter_explore.py (standard Python). Exact finite p10/11 eccentricity distributions: p10: {1:18,2:168,3:252,4:72,5:2}; p11: {1:20,2:240,3:504,4:240,5:20}. Edges include every valid generic synthetic transition by the inverse equation and saturated high-h identification.
+
+**Conjecture:** For all p>=1, the generic dyadic graph G_p has directed diameter exactly floor(p/2). Agent40's proved all-p theorem DYADIC-DISTANCE.md already gives the universal **lower bound** floor(p/2), because some source residue has shortest path to zero exactly that length. Agent22's all-p synthetic strong-connectivity proof gives the current universal **upper bound** floor(p/2)+1. Only the difference of one remains. An all-parameter upper bound for arbitrary targets would settle the conjecture; finite checks alone cannot.
+
+For p=1 the unique even residue gives diameter0; for p>=2 both 0 and nonzero vertices exist. The generic graph can gain extra edges from the excluded special odd-cofactor u=3 branch in the full Sheep section quotient, so the result is specifically generic.
+
+This is a graph-theoretic finite lead, separate from any true integer blank-origin orbit. It supplies no Sheep nonhalting theorem or exact BB(6) value. It is low priority relative to root-sensitive invariants unless an elegant proof exposes more useful symbolic structure.
