@@ -33,4 +33,5 @@ jobs:
           lean im-results/agent2-row262-burst/PairBurstSafe.lean
           lean -o im-results/agent2-row262-burst/Valuation.olean im-results/agent2-row262-burst/Valuation.lean
           lean im-results/agent2-row262-burst/BurstProduct.lean
+          lean im-results/agent2-row262-burst/GateValuation.lean
           python3 im-results/agent2-row262-burst/test_pair_burst.py
