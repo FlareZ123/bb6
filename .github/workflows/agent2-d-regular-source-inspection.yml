@@ -1,0 +1,28 @@
+name: Agent 2 D rooted regular transport original-source inspection (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact Agent35 regular arithmetic source
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+      - name: Print source declaration signatures and guards for original-source integration
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("im-results/agent35-d-regular-certificate/DRegular.lean")
+          print("BEGIN ORIGINAL DREGULAR SOURCE")
+          print(p.read_text())
+          print("END ORIGINAL DREGULAR SOURCE")
+          PY
