@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify original table, source macros and new physical composition
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent35-d-regular-certificate
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
@@ -39,3 +39,8 @@ jobs:
           lean im-results/agent31-d-exceptional/EscapeWitness.lean
           python3 im-results/agent31-d-exceptional/check_second_escape.py
           python3 im-results/agent31-d-exceptional/check_root_L_escape.py
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          lean -o im-results/agent35-d-regular-certificate/DRegular.olean im-results/agent35-d-regular-certificate/DRegular.lean
+          lean -o im-results/agent35-d-regular-certificate/DTransport.olean im-results/agent35-d-regular-certificate/DTransport.lean
+          lean -o im-results/agent35-d-regular-certificate/DObservedTransport.olean im-results/agent35-d-regular-certificate/DObservedTransport.lean
+          lean im-results/agent35-d-regular-certificate/DObsSourceCandidate.lean
