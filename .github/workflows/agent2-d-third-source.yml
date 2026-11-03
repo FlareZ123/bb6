@@ -50,12 +50,13 @@ jobs:
           lean -o "$D/ETripleLadderIndex.olean" "$D/ETripleLadderIndex.lean"
           lean -o "$D/EThirdSource.olean" "$D/EThirdSource.lean"
           lean -o "$D/ERegularLadderSource.olean" "$D/ERegularLadderSource.lean"
-          lean "$D/ERegularLadderSafe.lean"
+          lean -o "$D/ERegularLadderSafe.olean" "$D/ERegularLadderSafe.lean"
           Q=im-results/agent2-d-even-ladder
           lean -o "$Q/DEvenBridge.olean" "$Q/DEvenBridge.lean"
           lean -o "$Q/DCostLower.olean" "$Q/DCostLower.lean"
           lean -o "$Q/DComplexity.olean" "$Q/DComplexity.lean"
-          lean "$D/EAllDepthSource.lean"
+          lean -o "$D/EAllDepthSource.olean" "$D/EAllDepthSource.lean"
+          lean "$D/EAllDepthSafe.lean"
       - name: Independently simulate literal unaccelerated original six-state transitions
         shell: bash
         run: |
