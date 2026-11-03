@@ -62,3 +62,30 @@ A complete BB(6) argument still requires (i) an attained raw-table champion scor
 This is the first exact primitive-step link needed when studying a `0RB` prefix using TNF-1RB representatives, with the exact one-step loss tracked. It is a known observation, explained in the [BusyBeaverWiki Tree Normal Form, TNF-1RB section](https://wiki.bbchallenge.org/wiki/TNF#TNF-1RB). Our contribution is a local kernel-checked version in the shared semantics; there is **no claim of mathematical novelty** or completeness of an iterative 0RB-prefix elimination. In particular, a universal **exact steps** upper bound cannot simply discard `0RB` roots without accounting for these omitted prefix steps.
 
 Source proof verification: [run 41556778926, isolated job 125657500277](https://github.com/FlareZ123/bb6/actions/runs/41556778926/job/125657500277) **SUCCESS**, Lean 4.36.0-rc2, original `RootShift.lean` and `Symmetry.lean`; all four theorem axiom audits only `[propext, Classical.choice, Quot.sound]` (some use fewer), **no** `sorryAx`. The unrelated existing `formal-check` job continued to fail from Agent6's `MarkerOracle`, so only the new isolated job's result establishes source proof success.
+
+
+## Exact 0RB cylinder census of pure zero-writing recurrent control paths
+
+[zero_cycle_census.cjs](zero_cycle_census.cjs) independently exhausts **all `25^5=9,765,625`** assignments of the five unfixed *read-zero* transitions B/0 through F/0, with A/0 fixed to 0RB. Every read-one transition is arbitrary because any recognized zero-writing recurrent path keeps the tape pristine forever. The checker independently compares a primitive transition-path simulation with a symbolic first-repeat count, and fails if either total differs.
+
+For a first repeated state after exactly `k` distinct visited states, `2≤k≤6`, the number of assignments is
+
+```text
+C_k = (product_{j=2}^{k-1} 2*(6-j)) * (2*k) * 25^(6-k)
+k=2: 1,562,500
+k=3:   750,000
+k=4:   240,000
+k=5:    48,000
+k=6:     4,608
+sum: 2,605,108 / 9,765,625 = 26.67630592%.
+```
+
+Explanation: A's fixed transition visits B, yielding two visited states; each newly encountered state's read-zero instruction has exactly two directions and `6-j` unvisited successor choices if it expands the blank-only control path at `j` visited states, or two directions and `j` successor choices if it closes a cycle. Once a successor revisits a state, the same read-zero zero-writing instructions run forever on a pristine tape regardless of head movement. All remaining unvisited read-zero transitions and all six read-one transitions are free. Thus the exact number of classified *complete 25-action six-state tables* in the 0RB cylinder is
+
+```text
+2,605,108 * 25^6 = 636,012,695,312,500
+```
+
+This is an **exact finite computational/case-analysis census, not a new universally certified Busy Beaver upper bound or a new original-root decision**. Its all-time nonhalting semantic certificate is already provided by the existing `BB6Coverage.zeroMaskCheck_sound` / `zeroMaskOracle_sound` source theorems in [Agent8's ZeroMaskOracle.lean](../agent8-coverage-contract/ZeroMaskOracle.lean); this census does **not** itself construct an individual Lean `Cover` for all counted cases, and does **not** count additional nonhalting mechanisms such as positive-writer gliders. Under the fixed 0RB prefix, the direct state path criterion is equivalent to the presence of an initial-state-containing closed zero-writer mask, since only six states can be visited before repetition. The census quantifies this single existing decidable mechanism in the entire first-root cylinder and can guide traversal/branch ordering.
+
+Verified [GitHub Actions run 41557492548, isolated job 125659828562](https://github.com/FlareZ123/bb6/actions/runs/41557492548/job/125659828562), successful Node.js exhaustive+formula check alongside the previous successful Lean source-level theorems. The overall workflow still had an independent older job failure.
