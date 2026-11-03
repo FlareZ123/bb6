@@ -55,3 +55,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryFirstSource.lean" Agent8FirstSource.lean
           lake env lean Agent8FirstSource.lean
+
+      - name: Verify Agent8 sharp B-drain budget on unchanged source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
+          lake env lean Agent8BudgetSource.lean
