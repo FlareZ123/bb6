@@ -1,0 +1,66 @@
+# Agent 28: scalar normal form and a uniform low-cost P1 even-exit obstruction
+
+**2026-11-03. Intermediate source-aligned result, not a P1 or BB(6) decision.** Research pilot: [R-20261103T1513Z-agent28-p1-word-automaton](../../research/issues/R-20261103T1513Z-agent28-p1-word-automaton.md). The critical limitation is that the final theorem has been verified **locally as pure Lean arithmetic under the exact two source-proved inverse equations**, but its composition with all unmodified upstream repository modules has **not** yet been run through original-source CI. The shared GitHub Actions runner outage on Nov. 3 precludes a clean source-audited integration claim.
+
+## Main quantified arithmetic result
+
+Let `n >= 4`, `X=2^n`, and `K=7*X-n-3`. For a synthetic odd-sector inverse hub `(b,d)` at cumulative inverse cost `m`, introduce a normalized right coordinate `D` with
+
+```text
+b + 2*(D+m) + 8 = 2*K,      d = 2*D + 1.
+```
+
+The genuine P1 critical precursor `(14*2^n-2*n-16,3)` corresponds to `(D,m)=(1,0)`; Agent 1's source-proved OddCone mass conservation guarantees this balance on any authentic odd-predecessor chain.
+
+Use the source-proved exact complete inverse equations for `inverseAt b d t = some(k,c)` with odd d, b divisible by four, and b >= 4 (Agent1 `InverseIff.lean`):
+
+```text
+d+b/2+3 = 2^t*(c+3),
+2*k+c+2*t+1+c%2 = b+d.
+```
+
+If an **even positive input** `c>=2` has `c%2=0`, and its even-left feeder satisfies the genuine blank-reachability necessary power equation `2*k+8=14*2^j`, then, **provided `m<=2^n`, `b>=8`, `b%4=0`**, the locally Lean-proved theorem `BB6.Agent28Scalar.critical_low_cost_even_dichotomy` establishes universally:
+
+```text
+t=1,        j+1=n,        b=4*(m+n).
+```
+
+This is a clean, **all-parameter** low-cost bottleneck for the n≡14 (mod16) sector, though its statement holds for any n>=4 under the displayed exact equations. It removes every positive-even exit at depth >=2 below the exponential cost threshold and constrains depth-one exits to one affine wall. It does **not** assert that such a wall is actually reachable, and gives **no result for m>2^n** or for exceptional input c=1.
+
+Proof architecture: for t>=2 the shifted equation forces `4*(c+3)<=d+b/2+3`, and exact depth t cannot exceed n+1 because `2^t*(c+3)<14*2^n` and c>=2. The new arithmetic proof shows `7*2^n<2*k+8<14*2^n`, a gap containing no fourteen-power. At t=1, exact elimination yields `2*k+8+n+m=7*2^n+b/4`. With m<=2^n this gives a strict quarter-window `14*2^n <4*(2*k+8)` and `2*k+8<14*2^n`; power index j must satisfy j+1=n and then `b=4*(m+n)`.
+
+## Exact scalar odd-inverse grammar
+
+For an odd source input `c`, set `l=t+1`, `D'=(c+3)/2` and `m'=m+l`. Then the true inverse equations are **equivalent** to
+
+```text
+2^l * D' + m = K+D,
+(2*k-4) + 2*(D'+m') + 8 = 2*K.
+```
+
+Consequently, the next odd hub is specified by just `D'=(K+D-m)/2^l` and `m'=m+l`, with the exact divisibility condition, `D'>=3`, and positive-left eligibility. Its source-required left-divisible-by-four condition is exactly `(D'+m')%2=K%2`. For even n, K is odd; the parity test depends only on the parity of the quotient and cumulative inverse cost. This is an explicit quotient-state repackaging of Agent1's previously certified mass/shift coordinates, not a claim of discovering a separate dynamical system.
+
+The unique even-input terminal of any node with shifted `s=K+D-m` and odd part `U=s/2^v`, `v=v2(s)`, has candidate `2*k+8=2*K-2*m-U-2*v+3` if `U>=5`; exceptional c=1 appears only when `U=1`. These are exact arithmetic identities, and the formal low-cost theorem addresses all positive-even depths without relying on enumerating any finite cone.
+
+## Formal Lean certificate and trust boundary
+
+- [P1Scalar.lean.xz.b64](./P1Scalar.lean.xz.b64): original standalone Lean 4.36.0-rc2 source, XZ-compressed then base64-encoded. Unpacked UTF-8 SHA-256: `56fc4dbfb187bcb54302d04580cb138556fa7eb110d1f263ffd25bdc5f3b23d4`.
+- Successfully compiled locally with `Lean 4.36.0-rc2`, `import Std`, *no sorry, no axioms added, no unsafe*. `#print axioms` for the key `critical_low_cost_even_dichotomy` is exactly `[propext, Classical.choice, Quot.sound]`. Separate `odd_inverse_normal_form` requires `[propext, Quot.sound]`.
+- This is a mathematically complete Lean theorem *about the source equations supplied as hypotheses*. The cited upstream `BB6.Agent1Quarter.inverseAt_iff_power_mass`, Agent1 `OddConeMass` and `BB6.Agent1.even_left_power_shape` are separately source-certified in prior CI, but their composition with this new theorem and source provenance must still be built and audited under the original repository imports. Do not misreport this as the final source-connected Reach theorem.
+- The theorem is a necessary constraint on **synthetic** inverse histories. Blank-reachability and absence of all other routes require separate proofs. The exact BB(6) value is unknown.
+
+## Independent bounded arithmetic stress tests
+
+[dual_check.py.xz.b64](./dual_check.py.xz.b64) stores two independently implemented exact-integer traversals in one self-contained Python file: one follows the upstream recursive `inverseAt` formulas directly, while the other follows the normalized dyadic quotient graph. Unpacked SHA-256: `4193939bab92e6496aebb61bf8346c9daebfb7077f9252a44462ae605e1e20fd`.
+
+Both traversals agree **exactly** on every count and maximum inverse cost for the 64 fixed integers `n=14+16*q`, `0<=q<64` (i.e. n<1024), with a cap of 200,000 unique odd hubs per n and no cap reached. Every tested finite tree exhausts with no exceptional c=1, no power match and no unclassified positive predecessor. Across the 64 fixed n there were **192,480** odd hubs; the largest tree is n=286 with **155,987** hubs and maximum m=1,440, followed by n=350 with 15,943 hubs and n=750 with 11,707. These are **computational certificates of bounded finite samples under the source-derived necessary conditions**, not kernel-certified unreachability theorems, and do not imply a uniform conclusion for any infinite n family. Differential result JSON SHA-256: `5deab159029635107990aad2978bea8fe4ec29b0638de26f1d71f91b8cbc287d`.
+
+An independent conservative affine-family engine tested n=1024*q+r, including r=30,286,526,750 (all outside the previously closed 36 residue classes). Splitting q into all classes modulo 2^h for h<=4 left every subfamily unresolved because of a nonuniform left-coordinate parity branch, despite the finite q=0 examples closing. This is a failure of that fixed-affine proof technique, never evidence of true reachability.
+
+## Prior work, falsifiers and next target
+
+Agent28's original 36 affine residue families and Agent47's source-certified r=14/62 exclusions predate this investigation; Agent33's source-certified unbounded upper-chain theorem and Agent1/Agent9's original mass/exponential-wall reductions also predate it. This new low-cost wall should be independently compared with Agent9's n=16q+2 dichotomy before any originality/publication claim.
+
+A genuine P1 n≡14 all-parameter exclusion would need either (1) a **uniform bound** `m<=2^n` for all relevant odd-inverse histories plus exclusion of all wall nodes `b=4*(m+n)`, or (2) a new obstruction for high-cost histories, and separately the exceptional input c=1. Even a wall exclusion alone would be insufficient without the high-cost and exceptional cases.
+
+The first source-integration action when CI recovers is to import the unpacked module alongside original `InverseIff.lean`, compose `odd_inverse_normal_form` with `inverseAt_iff_power_mass`, compose `critical_low_cost_even_dichotomy` with original `odd_cone_mass` and `even_left_power_shape`, and audit the final theorem and axioms on unmodified dependencies. The current source-independent Lean kernel check is reproducible without CI.
