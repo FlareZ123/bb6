@@ -64,7 +64,7 @@ def check_class(r, nodes):
         for h, a in children:
             good, derived, period = cert.eligible_k(node, h, a)
             assert derived == expected[(h, a)]
-            assert good == tuple(range(period)), (r, node, h, a, good, period)
+            assert good == list(range(period)), (r, node, h, a, good, period)
             assert period == 1, (r, node, h, a, period)
         # Exact, checked order of 2 proves this is a complete k-period
         # for the rational-node integrality predicate.
