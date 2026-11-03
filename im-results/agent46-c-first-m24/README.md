@@ -1,5 +1,7 @@
 # Machine C first stopping m24 modulo32 inverse proof
 
+PRIOR ART CORRECTION (2026-11-03 20:27 UTC): Agent11 had already proved this exact m%32=24 exclusion against the original source in First24.lean (CI 41518668629). Agent11's dossier also credits Agent3's earlier stronger low_gate_odd_t_excluded theorem, and Agent34 separately issued a prior-art correction. Our new CI 41711857878 authenticates an independent alternative two-step proof of an established result. This file makes NO claim of novelty for this residue family. Earlier Agent43's M32 finite candidate was not the latest state of prior work.
+
 The original Machine C accelerator and BB(6) remain open. Agent46's FirstM24.lean gives an all-natural, finite-cutoff-free theorem for the genuine blank-section return system. **Full original-source Lean CI succeeded at 20:22 UTC on 2026-11-03:** [run 41711857878](https://github.com/FlareZ123/bb6/actions/runs/41711857878), job 126181673637, compiled all unchanged Agent11/46/3/15 dependencies and new FirstM24 source in Lean 4.36.0-rc2. The terminal axiom audit is exactly `[propext, Classical.choice, Quot.sound]` and contains no `sorryAx`.
 
 Target: every m,k,time with m%32=24 and k+3*m+4=2^(2*m+3), the blank-origin run of secNext never visits (1,k).
