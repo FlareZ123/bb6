@@ -102,6 +102,19 @@ def assert_incs(L, n, m, a, b):
     )
 
 
+def assert_multi_stage(L, n, m, a, b):
+    """Use the actual machine for the entire composed n-macro interval."""
+    start = s1(L, n, m, a, 0, b)
+    total = 0
+    for index in range(n, 0, -1):
+        total += inc_cost(m, index, a, b)
+        a += b + (1 if m == 0 else 2)
+        b = 2**b - 1
+        m = (m + 2) % 3
+    assert_reaches(start, total, s1(L, 0, m, a, 0, b))
+    return total
+
+
 def assert_reset(L, a, b):
     n = (4*2**L-1)*2**a-1
     new_length = L+a+2
@@ -140,6 +153,18 @@ def main():
         assert_incs(L, n, m, a, b)
         ninc += 1
     print(f"INC: {ninc} finite original-step trials")
+
+    nstage = 0
+    largest_stage = 0
+    for L in range(1, 7):
+        for b in range(5):
+            mx = {0: 6, 1: 6, 2: 3, 3: 2, 4: 1}[b]
+            for n in range(1, min(2**L, mx + 1)):
+                for m in range(3):
+                    for a in (0, 1, 3):
+                        largest_stage = max(largest_stage, assert_multi_stage(L, n, m, a, b))
+                        nstage += 1
+    print(f"COMPOSED: {nstage} full n-macro raw traces; largest {largest_stage:,} steps")
 
     nright = 0
     for _ in range(1000):
