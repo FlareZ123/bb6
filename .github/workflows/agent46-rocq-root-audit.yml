@@ -6,6 +6,10 @@ on:
         description: 'Attempt original BusyCoq Rocq/Coq source compilation (expensive; source checker first)'
         type: boolean
         default: false
+      targeted_root:
+        description: 'Only check exact original TM7 proof and original row311 mirror bridge; omit 3 unrelated expensive checker theorems (no axioms)'
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -37,5 +41,11 @@ jobs:
         run: |
           set -eu
           cp "$GITHUB_WORKSPACE/im-results/agent46-rocq-original-source/OriginalRootMirror.v" Agent46OriginalRootMirror.v
-          coq_makefile -Q . BusyCoq -o Makefile.coq *.v
-          make -f Makefile.coq -j 2 Others_v3.vo Others_v4.vo Agent46OriginalRootMirror.vo
+          if [ "${{ inputs.targeted_root }}" = "true" ]; then
+            node "$GITHUB_WORKSPACE/im-results/agent46-rocq-original-source/targeted-root.cjs"
+            coq_makefile -Q . BusyCoq -native-compiler yes -o Makefile.coq *.v
+            make -f Makefile.coq -j 2 Others_v3.vo Agent46OriginalRootMirror.vo
+          else
+            coq_makefile -Q . BusyCoq -o Makefile.coq *.v
+            make -f Makefile.coq -j 2 Others_v3.vo Others_v4.vo Agent46OriginalRootMirror.vo
+          fi
