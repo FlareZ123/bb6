@@ -1,0 +1,41 @@
+name: Agent 12 original Cryptids halted-root compatibility pilot (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof-only-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - name: Reclaim CI build space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+          sudo apt-get update -qq >/dev/null
+          sudo apt-get install -y -qq bubblewrap >/dev/null
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Checkout auditable patch script
+        uses: actions/checkout@v4
+        with:
+          path: agent12
+          persist-credentials: false
+      - name: Checkout upstream pinned Lean proof source
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 2c93870f6db0515f53722dc65135a3f6c587cb9a
+          persist-credentials: false
+      - name: Apply minimal proof-only compatibility patch
+        run: |
+          python3 agent12/im-results/agent12-cryptids-roster/repair-halt-01.py BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean
+          git --no-pager diff -- BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean | head -n 170
+      - name: Compile patched source using pinned original project
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Audit final patched theorem axioms
+        run: |
+          printf '%s\n' 'import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH' '#print axioms BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.is_halt' > Agent12PatchedAudit.lean
+          lake env lean Agent12PatchedAudit.lean
