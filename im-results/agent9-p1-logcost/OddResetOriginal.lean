@@ -88,6 +88,40 @@ theorem authentic_positive_depth_wall_cost
     have hlarge := hsource.2 htdeep
     rcases hdelta with h | h <;> omega
 
+theorem low_cost_wall_last_upper
+    (q b d m : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hwall : b=4*m+64*q+(if root then 12 else 16))
+    (hlow : 2*m < 9*2^(16*q)) :
+    m=0 ∨ ∃ bp dp mp k c,
+      OddCone (if root then 4*u2 q-4 else 6*u2 q-2)
+        (if root then 4*u2 q+9 else 2*u2 q+5) bp dp mp ∧
+      8≤bp ∧ bp%4=0 ∧ dp%2=1 ∧
+      inverseAt bp dp 0=some (k,c) ∧ 2≤k ∧ c%2=1 ∧
+      b=2*k-4 ∧ d=c+4 ∧ m=mp+1 := by
+  cases hcone with
+  | root => exact Or.inl rfl
+  | parent bp dp mp t k c hprev hb hb4 hd hi hk hc =>
+    right
+    have htzero : t=0 := by
+      by_cases ht0 : t=0
+      · exact ht0
+      · have htpos : 1≤t := by omega
+        have hp : 0<2^(16*q) := Nat.two_pow_pos _
+        have hbudget : mp+t+1<8*2^(16*q) := by omega
+        have hbound := authentic_positive_depth_wall_cost
+          q bp dp mp t k c root hq hprev hb hb4 hd hi hc hk
+          htpos hbudget hwall
+        omega
+    refine ⟨bp,dp,mp,k,c,hprev,hb,hb4,hd,?_,hk,hc,rfl,rfl,?_⟩
+    · simpa [htzero] using hi
+    · omega
+
+#print axioms low_cost_wall_last_upper
+
 #print axioms authentic_positive_depth_wall_cost
 
 #print axioms authentic_positive_depth_odd_large_left
