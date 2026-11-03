@@ -40,6 +40,7 @@ jobs:
           python3 im-results/agent31-d-exceptional/check_second_escape.py
           python3 im-results/agent31-d-exceptional/check_root_L_escape.py
           python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          sed -n '1,215p' im-results/agent35-d-regular-certificate/DRegular.lean
           lean -o im-results/agent35-d-regular-certificate/DRegular.olean im-results/agent35-d-regular-certificate/DRegular.lean
           lean -o im-results/agent35-d-regular-certificate/DTransport.olean im-results/agent35-d-regular-certificate/DTransport.lean
           lean -o im-results/agent35-d-regular-certificate/DObservedTransport.olean im-results/agent35-d-regular-certificate/DObservedTransport.lean
