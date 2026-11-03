@@ -45,7 +45,7 @@ jobs:
           lean -o RawBoundaryBridge.olean RawBoundaryBridge.lean
           lean -o RawBoundaryHalt.olean RawBoundaryHalt.lean
           lean -o RawBoundaryInit.olean RawBoundaryInit.lean
-          lean RawBoundaryPhysicalQuotient.lean
+          lean -o RawBoundaryPhysicalQuotient.olean RawBoundaryPhysicalQuotient.lean
           lean RawBoundaryRoots.lean
           lean RawBoundarySpan.lean
   ledger-audit:
