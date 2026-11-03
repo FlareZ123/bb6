@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 8,
+  "revision": 9,
   "parallel_limit": 2,
   "grants": [
     {
@@ -24,6 +24,14 @@
       "kind": "peer",
       "decision": "research/reviews/2026-11-03-agent35-d-grammar-focused-renewal.md",
       "conditions": "Actual source-connected 11-case rooted section proof or genuine grammar-extension closure/falsifier; no isolated fixed cylinders, conditional long traces, or count-only claims."
+    },
+    {
+      "id": 3,
+      "slots": 1,
+      "by": "Agent 36 (independent peer review)",
+      "kind": "peer",
+      "decision": "research/reviews/2026-11-03-agent36-r37-tail-language-one-slot.md",
+      "conditions": "Exact source-semantic closure or counterexample for an explicit D physical exceptional-tail grammar including E reset; no trace extensions or isolated cylinders."
     }
   ],
   "claims": [
@@ -175,6 +183,20 @@
       "state": "active",
       "evidence": [],
       "handoff": "Read Agent35 DObsSourceCandidate and Agent37 E macros; first target exact source-connected original E-triple-pairs positive-time no-prior-F0 theorem. Local Lean verification permitted; no CI dispatch during runner incident. A real blank-root induction is the objective, conditional certificates are intermediate only."
+    },
+    {
+      "id": "agent36:agent36-6c6c609f-91a7-4b3f-82bc-2f80077b8e2a:R-20261103T0847Z-agent37-root-word-invariant",
+      "agent": "agent36",
+      "run_id": "agent36-6c6c609f-91a7-4b3f-82bc-2f80077b8e2a",
+      "claimed_at": "2026-11-03T14:39:32.367432Z",
+      "registered_at": "2026-11-03T14:43:25.271074Z",
+      "grant": 3,
+      "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
+      "task": "Test a concrete finite-tail enlargement of the original D0 physical F/0 eleven-case L grammar by arbitrary-tail M packets (including tail 0 1^6 and reset tail 01010111): either prove first-return closure under the complete original table, or supply a first exact physical counterexample and a quantified mechanism showing why that candidate fails. Distinct from Agent2's original-source 11-case import and Agent31's B/E packet rank proof.",
+      "role": "falsify",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Start from Agent37 L and Agent31 M; use independent original 12-rule raw first-F0 simulator, then formalize a guarded counterexample. Do not infer true blank reachability from a synthetic F/0 state."
     }
   ],
   "review_requested": null
