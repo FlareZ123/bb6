@@ -94,7 +94,11 @@ jobs:
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
             SheepEvenInverseAlgebra.lean SheepEvenSourceAlgebra.lean
           lake env lean -o ".lake/build/lib/lean/SheepEvenInverseAlgebra.olean" SheepEvenInverseAlgebra.lean
-          lake env lean SheepEvenSourceAlgebra.lean
+          # Original-source inverse algebra and authentic blank-root reachability gateway.
+          lake env lean -o ".lake/build/lib/lean/SheepEvenSourceAlgebra.olean" SheepEvenSourceAlgebra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenReachInverse.lean" SheepEvenReachInverse.lean
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEvenReachInverse.lean
+          lake env lean SheepEvenReachInverse.lean
 
           # Agent16: all-exponent exact even-source power preimages against
           # authentic machine-certified Sheep section constructors.
