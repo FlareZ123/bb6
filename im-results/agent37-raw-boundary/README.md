@@ -32,7 +32,7 @@ For **every `k : Nat`**, `raw_full_B_physical` proves without finite enumeration
       some (BB6.Portfolio.F0Pure (8*k+9) p)
 ```
 
-The exact primitive transition count comes from the *unchanged source* `CryptidBoundary.full_B k []`, and the existential integer `p` is the physically correct head coordinate tracked by the bridge (Agent31 intentionally omits it). The proof is **locally kernel-checked with only `[propext, Classical.choice, Quot.sound]`**, and the manual original-source CI workflow includes this fifth module. This is an all-parameter original-physical-model transfer of a previously known zipper macro, and does not itself prove halting/nonhalting or a new BB(6) bound.
+The exact primitive transition count comes from the *unchanged source* `CryptidBoundary.full_B k []`, and the existential integer `p` is the physically correct head coordinate tracked by the bridge (Agent31 intentionally omits it). The proof is **locally kernel-checked with only `[propext, Classical.choice, Quot.sound]`**, and the manual original-source CI workflow includes this fifth module. This is an all-parameter original-physical-model transfer of a previously known zipper macro, now strengthened to an exact integer physical head coordinate in the new `RawBoundaryNoCross.lean` module. Neither theorem proves a root decision or a new BB(6) bound.
 
 ## Exact physical head displacement as a certified crossing-count identity
 
@@ -47,9 +47,26 @@ p = -(5*k+6) + rightCrossings (12*k*k+49*k+40)
       (CryptidBoundary.init (List.replicate (3*k) true ++ [false]))
 ```
 
-The new `raw_full_B_head_lower` theorem thus certifies `p≥-(5*k+6)` universally. For inspected finite k=0..14, direct original D0 simulation found zero right-boundary crossings and `p=-(5*k+6)`. **This equality is conjectural for all k.** Its exact remaining proof obligation is the universally quantified zero-crossing theorem for the authentic `full_B` run. The crossing identity is a meaningful quantified boundary refinement but does not decide any rooted D machine or BB(6).
+The new `raw_full_B_head_lower` theorem thus certifies `p≥-(5*k+6)` universally. For inspected finite k=0..14, direct original D0 simulation found zero right-boundary crossings and `p=-(5*k+6)`. **This equality was subsequently proved for all k in the new `RawBoundaryNoCross.lean` module, documented in the next section.** The crossing identity is a meaningful quantified boundary refinement but does not decide any rooted D machine or BB(6).
 
 **CI status:** The updated existing manually dispatched Agent3 workflow compiles the full original source and all six bridge modules, including this restored span source, using original `Boundary.lean`. Earlier attempted original-source runs [41599582774](https://github.com/FlareZ123/bb6/actions/runs/41599582774) and [41602206015](https://github.com/FlareZ123/bb6/actions/runs/41602206015) both failed within seconds with unavailable job logs. Local proof compilation passed, but final full original-source verification remains pending; do not claim CI success.
+
+## Completed, quantified exact original physical B-return head
+
+**New genuine source-level mathematical strengthening (local Lean kernel verified, final full-source CI pending):** [`RawBoundaryNoCross.lean.xz.b64`](./RawBoundaryNoCross.lean.xz.b64), decoded SHA256 `7b4eb1fa65b01501575383430ae8b0e934a84c0cde326a94c736d2a68d2e1f4c`, closes the earlier unproved universal right-boundary crossing condition, using a modular induction over *the exact original Agent31 source lemmas*. For **every natural k**:
+
+```lean
+theorem raw_full_B_exact_physical (k : Nat) :
+  BB6.Portfolio.run BB6.Portfolio.D0 (12*k*k+49*k+40)
+    (some (BB6.Portfolio.F0Pure (3*k+2) 0)) =
+    some (BB6.Portfolio.F0Pure (8*k+9) (-(5*(k:Int)+6)))
+```
+
+The theorem proves the precise **physical integer head coordinate** and **exact primitive-step elapsed time** for every unary input of length `3k+2`. In particular, the previous empirical observation `p=-(5k+6)` is now a formally proved, unbounded theorem in the local full-physical model; the earlier conjecture no longer applies. The independent constituent quantified theorems `setup24_no_cross`, `pump_generic_no_cross`, `pump_iter_no_cross`, `boundary_B_no_cross`, `preB_run_no_cross` and `full_B_no_cross` establish **zero rightward crossing of an implicit blank boundary** in every stage, for arbitrary symbolic suffixes. The decomposition follows unchanged source theorems `setup24`, `pump_generic`, `pump_iter`, `prefix_B`, `preB_run`, `full_B`; no finite enumeration, hypothetical simplification, trusted simulator or proof hole is used. Locally compiled with Lean 4.36.0-rc2, with `#print axioms raw_full_B_exact_physical` reporting exactly `[propext, Classical.choice, Quot.sound]`; crossing-free lemmas use only `propext` and `Quot.sound`.
+
+This establishes a sharper all-parameter **original raw-Turing-machine** section identity than the previous existential-head simulation theorem. It transfers and refines a previously proven symbolic return; it does **not** decide any D-root's infinite trajectory, improve the BB(6) bound, or claim a publishable new Busy Beaver classification. An original-source build with the *unmodified complete Agent3 portfolio* is still needed; local verification uses the exact original SHA-verified Agent31 `Boundary.lean` and only definitionally identical stand-in definitions of Agent3's core machine API.
+
+**Reproduce:** Run `python3 im-results/agent37-raw-boundary/unpack.py` after installing `filelock`, then compile original Agent31 `Boundary.lean`, original Agent3 source chain, `RawBoundaryBridge`, `RawBoundaryHalt`, `RawBoundaryInit`, `RawBoundaryPhysicalQuotient`, `RawBoundarySpan`, and `RawBoundaryNoCross` in dependency order. The existing manual Agent3 CI workflow does precisely this and also compiles `RawBoundaryRoots.lean`. Original-source CI has been unable to provide a successful run during the current GitHub Actions outage.
 
 ## Verification status and reproducibility
 
