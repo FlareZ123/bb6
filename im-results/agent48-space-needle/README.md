@@ -43,3 +43,11 @@ Independent exact-bigint Python implementation from `d₀=1` checked **30,000 hi
 **Unresolved decisive question:** does the particular recursively defined growing sequence `d₀=1`, `dₙ₊₁ = dₙ + v₂(dₙ+2) + 3((dₙ+2)/2^v-1)/2` ever land on `dₙ=2^k-2`? This exact arithmetic statement, combined with the original published machine/acceleration theorem, is equivalent to the genuine blank-tape halting problem for this holdout.
 
 Future work: investigate 2-adic restrictions on this specific blank orbit, search a closed invariant excluding power-of-two hits, or construct a genuine finite witness. Generic growth and finite prefix checks are insufficient to decide halting.
+
+
+## Later source-mirrored mathematical tools (2026-11-03)
+
+- [TERMINAL-RESIDUES.md](TERMINAL-RESIDUES.md): locally kernel-verified exact original high-level predecessor existence for every decimal suffix of the power-of-two terminal exponent. For any \`a,r,B\` with \`r<10^a\`, there is \`K≥B\`, \`K%10^a=r\`, and at least one **unrestricted high-level** immediate predecessor to \`N(2^K−2)\`. Quantification covers all a. This is a negative method result for unconditional all-state modular predecessor exclusions, and **does not imply blank-tape reachability**. Source-mirrored local Lean has only standard axioms; original-source CI bridge remains pending the runner incident.
+- [ODD-BLOCKS.md](ODD-BLOCKS.md): exact \`t\`-call high-level acceleration from \`N(2^t*m−1)\` to \`N(5^t*m−1)\` for positive m; if m odd, this is the complete maximal odd run. A terminal directly after this block requires \`5^t ∣ 2^K−1\`. Locally checked in Lean against literally pinned upstream high-level definitions with standard axioms. Full-source CI similarly pending.
+
+Neither tool closes Space Needle, certifies an actual blank-root halting runtime, or establishes BB(6).
