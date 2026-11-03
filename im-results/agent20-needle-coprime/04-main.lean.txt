@@ -1,0 +1,32 @@
+theorem every_coprime15_progression_has_unbounded_predecessors
+    (m a bound : Nat) (hm : 0 < m)
+    (hm3 : m%3 ≠ 0) (hm5 : m%5 ≠ 0) :
+    ∃ k, bound ≤ k ∧ k%m=a%m ∧ admissibleExponent k := by
+  by_cases ha : a%2=1
+  · obtain ⟨t, ht⟩ := odd_crt m a hm5 ha
+    obtain ⟨k, hbound, hmodm, hmod10⟩ :=
+      extend_progression m a bound 10 9 t hm (by decide) ht
+    refine ⟨k, hbound, hmodm, ?_⟩
+    have hk : oddExponent (k/10) = k := by
+      have h := Nat.mod_add_div k 10
+      unfold oddExponent
+      omega
+    simpa only [hk] using odd_admissible (k/10)
+  · have he : a%2=0 := by
+      have hlt := Nat.mod_lt a (by decide : 0<2)
+      omega
+    obtain ⟨t, ht⟩ := even_crt m a hm3 he
+    obtain ⟨k, hbound, hmodm, hmod18⟩ :=
+      extend_progression m a bound 18 12 t hm (by decide) ht
+    refine ⟨k, hbound, hmodm, ?_⟩
+    have hk : evenExponent (k/18) = k := by
+      have h := Nat.mod_add_div k 18
+      unfold evenExponent
+      omega
+    simpa only [hk] using even_admissible (k/18)
+
+#print axioms every_coprime15_progression_has_unbounded_predecessors
+#print axioms odd_admissible
+#print axioms even_admissible
+
+end SpaceNeedlePrime
