@@ -56,6 +56,16 @@ theorem next_edge {s dst : State} {t : Nat}
         simpa only [←heqa, ←heqp] using (Edge.e ((a-4)/3) q (p-3))
     · simp [he] at h
 
+/-- The executable classifier recognizes *every* legal guarded packet edge. -/
+theorem edge_next {s dst : State} {t : Nat}
+    (h : Edge s t dst) : next s = some (t, dst) := by
+  cases h with
+  | b k q p =>
+    have hdiv : (3*k+2)/3 = k := by omega
+    simp [next, hdiv]
+  | e k q p =>
+    simp [next]
+
 /-- Proof-producing normalization of all maximal guarded B/E phases. -/
 structure Certificate (s : State) where
   count : Nat
@@ -63,14 +73,20 @@ structure Certificate (s : State) where
   dst : State
   path : Path s count cost dst
   stop : next dst = none
+  terminal : ∀ (t : Nat) (d : State), ¬ Edge dst t d
 
 def normalize (s : State) : Certificate s :=
   match h : next s with
-  | none => ⟨0,0,s,Path.nil s,h⟩
+  | none =>
+      ⟨0,0,s,Path.nil s,h, by
+        intro t d he
+        have hh := edge_next he
+        rw [h] at hh
+        contradiction⟩
   | some (t,d) =>
       let recCert := normalize d
       ⟨recCert.count + 1, t + recCert.cost, recCert.dst,
-        Path.cons (next_edge h) recCert.path, recCert.stop⟩
+        Path.cons (next_edge h) recCert.path, recCert.stop, recCert.terminal⟩
 termination_by rank s
 decreasing_by
   have hr := edge_rank (next_edge h)
@@ -86,6 +102,7 @@ theorem normalize_bound (s : State) : (normalize s).count ≤ s.q+s.p :=
   path_count_bound (normalize s).path
 
 #print axioms next_edge
+#print axioms edge_next
 #print axioms normalize
 #print axioms normalize_sound
 #print axioms normalize_bound
