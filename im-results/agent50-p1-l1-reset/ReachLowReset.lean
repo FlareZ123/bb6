@@ -29,7 +29,9 @@ theorem authentic_lowcost_reachable_even_requires_two_resets
     q b d m t k c root hq hcone hb hb4 hdodd hi hceven hk hreach
   rcases hdich with hbig | ⟨ht,hwall⟩
   · omega
-  · exact ⟨z,hcount, wall_requires_two_resets q b d m z root hq hcount hwall⟩
+  · have hwall' : b = 4*m+64*q+(if root then 12 else 16) := by
+      cases root <;> simpa using hwall
+    exact ⟨z,hcount, wall_requires_two_resets q b d m z root hq hcount hwall'⟩
 
 #print axioms authentic_lowcost_reachable_even_requires_two_resets
 end BB6.Agent50ReachReset
