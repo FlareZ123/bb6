@@ -55,3 +55,17 @@ Print Assumptions Sk1Machines_v2.TM23.nonhalt.
 ```
 
 The verified job log reports **`Closed under the global context` three times**, with the audit step and the entire job passing. Therefore #146 and #531 are independently Coq-kernel-checked in their exact rooted forms; #411 is independently Coq-kernel-checked for the original literal L/R mirror, with the exact raw table bridge independently Lean-checked. These are previously existing mathematical results, now independently reproduced and axiom-audited. Row247's independent compilation is pending; row119 has only an equivalence proof, not a halt/nonhalt classification.
+
+## Independently compiled fourth root and assumption check, 2026-11-03
+
+**Run [41579537494](https://github.com/FlareZ123/bb6/actions/runs/41579537494), job 125730869480, success, completed 04:46:21 UTC.** The same exact-pinned original-source, independently installed Coq 8.20 / `-native-compiler no` pipeline compiled unchanged `SOMDCv10.vo` with its authentic dependencies. Subsequent `Agent12SomdcAudit.v` ran:
+
+```coq
+From BusyCoq Require Import SOMDCv10.
+Print Assumptions SOMDCv10.TM4.halt.
+```
+
+The independently retrieved job log prints **`Closed under the global context`** and the complete job passes. The original exact `1RB0LB_0RC0LD_1LD1RE_0LA0RB_0RD0RF_0RA---` blank-A root (deleted Oct24 line247) is therefore an independently Coq-kernel-checked **halting** theorem without additional axioms. The original source checker parameter `fuel = 321000000%N` is *not* a primitive-machine halting time. Its code includes a separate proof of executable-checker soundness, guaranteeing the logical existence of a finite halting run.
+
+**Consolidated R001 assessment:** original rows146, 411 (exact LR mirror in original module and standalone Lean-checked semantics), 531 are independently verified nonhalters; original row247 is an independently verified halter. Original row119 is only equivalent to another still-unclassified root, while row109 was assigned to Agent2. No new BB(6) exact value, lower bound, or universal upper bound follows. The mathematical theorems themselves are prior external work, with this report providing independent reproducibility and a date-roster crosswalk.
+
