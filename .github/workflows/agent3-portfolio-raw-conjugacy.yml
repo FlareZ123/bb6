@@ -49,7 +49,9 @@ jobs:
           lean -o RawBoundaryPhysicalQuotient.olean RawBoundaryPhysicalQuotient.lean
           lean RawBoundaryRoots.lean
           lean -o RawBoundarySpan.olean RawBoundarySpan.lean
-          lean RawBoundaryNoCross.lean
+          lean -o RawBoundaryNoCross.olean RawBoundaryNoCross.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryShifted.lean" .
+          lean RawBoundaryShifted.lean
   ledger-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
