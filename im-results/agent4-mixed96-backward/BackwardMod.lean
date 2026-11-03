@@ -20,6 +20,7 @@ def nextC (t : Nat × Nat × Nat) : Option (Nat × Nat × Nat) :=
 
 def low (a k c : Nat) : Prop :=
   (a % 96 = 13 ∧ (k+c)%96=31) ∨
+  (a % 96 = 61 ∧ (k+c)%96=79) ∨
   (a % 48 = 18 ∧ (k+c)%24=23) ∨
   (a % 48 = 20 ∧ (k+c)%24=0) ∨
   (a % 48 = 42 ∧ (k+c)%24=11)
@@ -48,7 +49,8 @@ theorem high_to_low3 (a k : Nat) :
   simp only [bad, show (1:Nat)<2 by omega, show ¬((3:Nat)<2) by omega, ↓reduceIte]
   intro h
   simp only [low,high] at *
-  rcases h with h | h | h | h
+  rcases h with h | h | h | h | h
+  · exact Or.inr (Or.inl (by omega))
   · exact Or.inr (Or.inl (by omega))
   · exact Or.inr (Or.inr (Or.inl (by omega)))
   · exact Or.inr (Or.inr (Or.inr (Or.inl (by omega))))
@@ -78,11 +80,24 @@ theorem zero_a_pos (a k : Nat) (ha : a≥2) :
   by_cases hk : k=0
   · subst k
     simp only [bad, show (1:Nat)<2 by omega, ↓reduceIte,low] at h
-    omega
+    rcases h with h | h | h | h | h <;> omega
   · have h2 : ¬(2*k+1<2) := by omega
     simp only [bad,h2, ↓reduceIte, high] at h
     simp only [bad, show (0:Nat)<2 by omega, ↓reduceIte,low]
-    omega
+    rcases h with h | h | h | h | h | h
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
+    · obtain ⟨hd,ht⟩ := h
+      rcases ht with ht | ht | ht
+      · have cases : (a%48=18 ∧ k%24=23) ∨ (a%48=42 ∧ k%24=11) := by omega
+        rcases cases with hh | hh
+        · exact Or.inr (Or.inr (Or.inl hh))
+        · exact Or.inr (Or.inr (Or.inr (Or.inr hh)))
+      · exact Or.inr (Or.inr (Or.inr (Or.inl (by omega))))
+      · exact Or.inr (Or.inr (Or.inr (Or.inl (by omega))))
+    · exfalso; omega
+    · exfalso; omega
 
 theorem high_a0_even (k c : Nat) (hc : c≥4) (hk : k%2=0) :
     bad (2*k+2) 2 (c-3) → bad 0 k c := by
@@ -90,7 +105,7 @@ theorem high_a0_even (k c : Nat) (hc : c≥4) (hk : k%2=0) :
   by_cases hs : c=4
   · subst c
     simp only [bad,show (1:Nat)<2 by omega, ↓reduceIte,low] at h
-    rcases h with h | h | h | h <;> omega
+    rcases h with h | h | h | h | h <;> omega
   · have hc2 : ¬(c-3<2) := by omega
     simp only [bad,hc2, ↓reduceIte,high] at h
     rcases h with h | h | h | h | h | h
