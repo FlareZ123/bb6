@@ -45,7 +45,29 @@ jobs:
           lake env lean -o S4Phase.olean S4Phase.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-source-bridge/S4UpstreamBridge.lean" S4UpstreamBridge.lean
           echo "ec7e962b3f5cde2084168af3af39499cc70729bc483d348b8bd31f27c8531130  S4UpstreamBridge.lean" | sha256sum -c -
-          lake env lean S4UpstreamBridge.lean
+          lake env lean -o S4UpstreamBridge.olean S4UpstreamBridge.lean
+      - name: Check complete S4 two-sector raw halting criterion
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=.:${LEAN_PATH:-}
+          SRC="$GITHUB_WORKSPACE/im-results/agent5-s4-head"
+          for pair in \
+            S4Trap:1cd994153762128b702c2f2e81009710abe3473d463bc28d1fbe40b51f8cb8a0 \
+            S4Return:269cbc8e8792022e2ecfae11c893c0299c51b190fcb6db2e52f9c04681a3d9ba \
+            S4Head:2556caac3ad0c90308779d50f4a78485c4770cbc3a360c3ceb6201fa951ee078 \
+            S4Odd:2110a4dfcbe4befe8016c3a8be6d2931b8b7df2afc9ec58260d79c83331d968c \
+            S4Even:5aab323784fccfeae01129f4b1a0258fdf9f90137f7337d579a133438aa0f0b7 \
+            S4Pair:0246ce3a74f844239dda8397463e8f8ea65af47c0b037f18852dd4fb61ac5d49 \
+            S4Hazard:3f706cc63a6361affe95fc47880aaa150e9b739a4a95f317a0af12c1983dba25; do
+            module="${pair%%:*}"
+            hash="${pair#*:}"
+            base64 -d "$SRC/$module.lean.xz.b64" | xz -dc > "$module.lean"
+            echo "$hash  $module.lean" | sha256sum -c -
+            lake env lean -o "$module.olean" "$module.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-source-bridge/S4RawTwoGates.lean" S4RawTwoGates.lean
+          lake env lean S4RawTwoGates.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
