@@ -27,6 +27,17 @@ where `Cgate x` means state C, scanned bit 0, three leftward bits `0,1,1` at hea
 
 **Finite observation:** independent Python sparse-tape literal interpreter checked 2,000,000 raw steps from the auxiliary blank configuration (no A/1, no D/0 with both left cells 1); 8344 A entries all saw 0. This finite prefix is neither a nonhalting proof nor a certified primitive runtime. A radius-16 nondeterministic boundary-window overapproximation admits a spurious 93-transition A/1 path, so such naive finite-window closure does not prove avoidance.
 
+## Exact unbounded C-sweep and synthetic fatal-word family (additional local Lean proof)
+
+[Root119Sweeps.lean.xz.b64](Root119Sweeps.lean.xz.b64) has decoded Lean-source SHA-256 `1d7480f36df69f95fc621622e81ebd5548209a1ebe5f4678cd90f85b41c2b8cc`. Decode using the same Python `base64` + `lzma` procedure and compile `Root119Gate.lean` to a `Root119Gate.olean` prerequisite before compiling `Root119Sweeps.lean` with that module on the Lean search path. Both compiled locally under Lean 4.36.0-rc2.
+
+- `C_one_sweep` proves for **every n** that a C-state scanning n consecutive 1-cells to its left exactly erases them, moves n cells left, and preserves every other physical tape cell. Full exact `eraseLeft` tape function, no execution cutoff.
+- `C_sweep_halts`: if the first n scanned C-cells are 1 and the next four symbols in the leftward direction are **0,0,1,1**, then the literal auxiliary machine halts after the next four actions. Valid for arbitrary n and other tape cells.
+- `A_zero_one_run_halts`: for every n>=1, an **arbitrary synthetic** A/0 entry with a zero right neighbor, n−1 consecutive 1s to the left, followed by **0,0,1,1**, runs directly to the undefined instruction and is halted by raw time **n+6**. Thus one cannot prove safety merely by asserting an A entry scans zero. The special synthetic case n=1 is fatal after seven attempted `run` transitions; its first undefined instruction is encountered at primitive index six.
+- All three final `#print axioms` outputs are exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. This source is locally source-table faithful, but has **not** been imported into original upstream Coq/Rocq; do not imply upstream theorem certification or a root decision.
+
+The sweeping family provides a quantified stress test for candidate true-blank A-entry language invariants. A real proof must exclude these **synthetic** fatal words from the actual fixed blank history, while also controlling the F-branch sources of C sections. Only the earlier `blank_halts_iff_Cgate` currently states a full necessary/sufficient genuine blank-halt criterion.
+
 ## Remaining obligations
 
 Prove genuine blank-run nonreachability of `Cgate`, or exhibit a true run reaching it. Ideally derive a closed source-connected return-language/inductive invariant, rather than extending finite traces or proving more synthetic local facts. If either rooted outcome is decided, transfer the result through the published `Eqv_v2.TM2153` equivalence after independently checking its actual blank-root semantics and assumptions. Original BusyCoq source pin: `ccz181078/busycoq@33209bc7dc282b38c8cd6be507bfc551fea56108`, `verify/Eqv_v2.v`.
