@@ -28,10 +28,12 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a1-mass/
           cp im-results/agent1-forward-mass/{PositiveMassOriginal,ExactDeltaFour,BlankMassFour,OriginalFiniteReach}.lean /tmp/a1-mass/
           cp im-results/agent1-c-direct-epoch/{DirectEpoch,DirectSource}.lean /tmp/a1-mass/
+          cp im-results/agent3-c-bounce-inverse/BounceInverse.lean /tmp/a1-mass/
+          cp im-results/agent1-c-bounce-spectrum/{EvenThree,DeltaSpectrum}.lean /tmp/a1-mass/
           cd /tmp/a1-mass
           export LEAN_PATH=.
           lean --version
-          for m in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef SectionMassStrict Agent38SectionParity PositiveMassOriginal ExactDeltaFour BlankMassFour OriginalFiniteReach DirectEpoch DirectSource; do
+          for m in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef SectionMassStrict Agent38SectionParity PositiveMassOriginal ExactDeltaFour BlankMassFour OriginalFiniteReach DirectEpoch DirectSource BounceInverse EvenThree DeltaSpectrum; do
             echo "Original-source Lean: $m"
             lean -o "$m.olean" "$m.lean"
           done
