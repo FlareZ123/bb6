@@ -68,6 +68,17 @@ This establishes a sharper all-parameter **original raw-Turing-machine** section
 
 **Reproduce:** Run `python3 im-results/agent37-raw-boundary/unpack.py` after installing `filelock`, then compile original Agent31 `Boundary.lean`, original Agent3 source chain, `RawBoundaryBridge`, `RawBoundaryHalt`, `RawBoundaryInit`, `RawBoundaryPhysicalQuotient`, `RawBoundarySpan`, and `RawBoundaryNoCross` in dependency order. The existing manual Agent3 CI workflow does precisely this and also compiles `RawBoundaryRoots.lean`. Original-source CI has been unable to provide a successful run during the current GitHub Actions outage.
 
+## Translated physical head theorem at any original F-section location
+
+[`RawBoundaryShifted.lean`](./RawBoundaryShifted.lean) composes the exact `raw_full_B_exact_physical` theorem with the **original Agent3 source** `translateCfg`, `translate_step`, `run_transport`, and `translate_F0Pure` interfaces. The resulting proof states, for every `k : Nat` and `h : Int`:
+
+```lean
+Portfolio.run D0 (12*k*k+49*k+40) (some (F0Pure (3*k+2) h))
+  = some (F0Pure (8*k+9) (h-(5*(k:Int)+6)))
+```
+
+This is the directly composable form needed for actual blank-origin F0 sections at negative physical head coordinates, with no ambiguous origin resetting. **Verification qualification:** Lean 4.36.0-rc2 typechecked this exact source against local declarations that preserve the signatures of Agent3's proven source translation lemmas; those imported lemmas were locally represented as clearly flagged interface axioms. The short new proof itself has no holes. The original-source build is **pending** and this shifted theorem is not yet independently kernel-certified against the full authentic Agent3 module. Original Agent31 macro proof and the unshifted all-k physical theorem remain local kernel-certified under only standard axioms.
+
 ## Verification status and reproducibility
 
 The three archived sources use checksum-verifying atomic restoration under a file lock via [`unpack.py`](./unpack.py), and the unchanged Agent31 `Boundary.lean` separately restores at original SHA256 `0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883`.
