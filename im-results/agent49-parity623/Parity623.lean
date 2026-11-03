@@ -601,4 +601,40 @@ theorem next_none_requires_inner_wedge (a d : Nat)
 
 #print axioms next_none_requires_inner_wedge
 
+
+/-- Far-left half-plane is safe independently of parity. -/
+theorem next_safe_far_left (a d : Nat)
+    (h : 2 * d + 10 ≤ a) : ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by omega
+  simp only [if_neg h0]
+  by_cases hodd : d % 2 = 1
+  · have h1 : d % 2 = 1 ∧ a ≥ d + 5 := ⟨hodd, by omega⟩
+    simp only [if_pos h1]
+    have hg : d + 3 < a - d - 5 := by omega
+    obtain ⟨aa, dd, hr, _⟩ := drainB_safe_gap (d + 3) (a - d - 5) 5 hg
+    exact ⟨aa, dd, hr⟩
+  · have h1 : ¬ (d % 2 = 1 ∧ a ≥ d + 5) := by omega
+    have h2 : d % 2 = 0 ∧ a ≥ d + 3 := by omega
+    simp only [if_neg h1, if_pos h2]
+    have hg : d + 2 < a - d - 2 := by omega
+    obtain ⟨aa, dd, hr, _⟩ := drainB_safe_gap (d + 2) (a - d - 2) 2 hg
+    exact ⟨aa, dd, hr⟩
+
+/-- Every even-a halting step is confined to a narrow, explicit diagonal corridor. -/
+theorem next_none_requires_corridor (a d : Nat)
+    (he : a % 2 = 0) (h : next (.D a d) = none) :
+    0 < a ∧ d < 2 * a ∧ a < 2 * d + 10 := by
+  have hw := next_none_requires_inner_wedge a d he h
+  have hc : a < 2 * d + 10 := by
+    by_cases hb : a < 2 * d + 10
+    · exact hb
+    · have hs : 2 * d + 10 ≤ a := by omega
+      obtain ⟨aa, dd, hr⟩ := next_safe_far_left a d hs
+      rw [hr] at h
+      contradiction
+  exact ⟨hw.1, hw.2, hc⟩
+
+#print axioms next_none_requires_corridor
+
 end BB6.Agent49Parity
