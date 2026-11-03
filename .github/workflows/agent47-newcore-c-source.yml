@@ -1,0 +1,42 @@
+name: Agent 47 Machine C new reverse core source proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify unchanged source dependencies
+        shell: bash
+        run: |
+          echo "27b3f177c3f6d774c1df3d2f1603d165fb726ff49198af652ec2ce7cb0a5c994  im-results/agent11-c-line/CLine.lean" | sha256sum -c -
+          echo "0f216228d9400969b9354419016a3976bb9bc1e8a8a71c97f50db22e91dd0e1e  im-results/agent4-mixed96-backward/BackwardMod.lean" | sha256sum -c -
+          echo "f1bb383aa4438d913951c544f5b5a4cc6afc8c31627b00a11f875838abf9f6cb  im-results/agent4-mixed96-backward/SourceBridge.lean" | sha256sum -c -
+          sha256sum im-results/agent47-c-mixed96-newcore/*.lean
+          git rev-parse HEAD
+      - name: Compile source and audit axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent47-source
+          cd /tmp/agent47-source
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/BackwardMod.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/SourceBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent47-c-mixed96-newcore/"*.lean .
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o BackwardMod.olean BackwardMod.lean
+          lean -o SourceBridge.olean SourceBridge.lean
+          lean -o NewCoreC.olean NewCoreC.lean
+          lean SourceC.lean
