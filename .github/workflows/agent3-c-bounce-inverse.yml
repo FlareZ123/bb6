@@ -63,3 +63,7 @@ jobs:
           lean -o ZeroOddRange.olean ZeroOddRange.lean
           lean ZeroOddForward.lean
           lean AffineTargetReach.lean
+          # Agent 20 balanced source fiber, reusing this exact original-source dependency build.
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-balanced-fan/BalancedFanExact.lean.xz.b64" | xz -d > BalancedFanExact.lean
+          echo "1b78e29a8aaec1befb189a2d8735c0e43c63f5eb6acded910279e5baa44bff82  BalancedFanExact.lean" | sha256sum -c -
+          lean BalancedFanExact.lean
