@@ -21,4 +21,9 @@ def highB (x y : Nat) : Prop :=
   (x % 48 = 34 ∧ y % 24 = 21) ∨
   (x % 48 = 41 ∧ y % 24 = 17)
 
+def lowA0 (a k : Nat) : Prop :=
+  (a % 48 = 18 ∧ k % 24 = 23) ∨
+  (a % 48 = 20 ∧ k % 24 = 0) ∨
+  (a % 48 = 42 ∧ k % 24 = 11)
+
 end A38Mixed96
