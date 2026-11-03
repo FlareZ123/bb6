@@ -13,7 +13,7 @@ private theorem old_iter_succ_front (n z : Nat) :
       BB6.Agent10B.G (BB6.Agent10B.iterG (n+1) z)
     exact ih (BB6.Agent10B.G z)
 
-private theorem F_eq_old_iter (n z : Nat) :
+theorem F_eq_old_iter (n z : Nat) :
     F n z = BB6.Agent10B.iterG n z := by
   induction n with
   | zero => rfl
