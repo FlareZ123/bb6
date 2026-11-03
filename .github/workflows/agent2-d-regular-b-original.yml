@@ -57,4 +57,5 @@ jobs:
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
-          lean "$D/ERemaining.lean"
+          lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
+          lean "$D/BlankRegular500.lean"
