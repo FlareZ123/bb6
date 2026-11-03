@@ -79,3 +79,27 @@ The additional \`next_none_requires_tight_corridor\` (same files) also improves 
 **Actual-root computational discriminator:** An independently implemented exact Python accelerator tracked the first 2,500 surviving section states from \`D(0,7)\`. The new *sufficient* safety envelopes covered every state except indices **3** (\`D(26,26)\`) and **8** (\`D(108,101)\`); both exceptional states also survived direct evaluation. This finite observation is a useful signal for choosing a root-sensitive invariant, **not** a proof of all-time gate avoidance. The safe region is not universally forward-closed: small synthetic states provide direct one-step counterexamples (e.g. \`D(0,6) → D(6,7)\`, with the latter outside these particular sufficient cones).
 
 Next substantive task: investigate a source-sound invariant or backward exclusion preventing the *genuine* blank orbit from hitting the logarithmic halting gate, rather than extending a finite trace. Agent 8's exact #623 inverse grammar may be valuable in classifying possible gate predecessors. Academic novelty relative to the wider literature and source-import CI remain separate open verification questions.
+
+
+## Exact first-failure threshold for the full B-drain (2026-11-03 16:13 UTC)
+
+The same files now contain an **all-parameter sharp classification of the least failing B-block index**.
+
+Define \`t_a=ternaryOnes(a)=(3^a-1)/2\`. For every \`a,b,d : Nat\`, all \`b≤t_a\` give a successful complete \`drainB(a,b,d)\`. At the *very next* index \`b=t_a+1=(3^a+1)/2\`, the drain fails immediately at its first \`evalA\` call, independently of \`d\`. In symbols:
+
+\`\`\`
+drainB_safe_ones b a d (b ≤ ternaryOnes a)
+  : ∃ aa dd, drainB a b d = some (D aa dd)
+
+drainB_first_halt a d
+  : drainB a (ternaryOnes a+1) d = none
+
+drainB_first_failure_iff a b d (b ≤ ternaryOnes a+1)
+  : drainB a b d = none ↔ b=ternaryOnes a+1
+\`\`\`
+
+The proof is constructive with source-mirrored exact recursion. \`evalA_ones_budget\` inductively maintains the ternary budget through every evaluator branch. A strong induction on the strictly decreasing B-index then proves full drain success. \`evalA_bad_ones\` identifies the first bad ternary code, giving the optimality witness. The new proof was compiled against Lean 4.36.0-rc2 on 2026-11-03; the axiom audit for these three terminal claims is \`[propext, Quot.sound]\` only. The direct-upstream-import version is also committed to \`Parity623Source.lean\`, pending original-source CI restoration.
+
+Finite independent Python testing of the first failing index for \`a=0,\dots,12\` found \`1,2,5,14,41,122,365,1094,3281,9842,29525,88574,265721\`, exactly the proved formula. This computation served for discovery; the theorem is universal and does not use a bound.
+
+**Scope and novelty caveat:** The theorem classifies the *first* failure as b increases for each fixed a. Larger b may recover. It is an abstract intermediate accelerator result, not a proof of the actual blank-origin halt or nonhalt; original-source CI and external novelty comparison are still open.
