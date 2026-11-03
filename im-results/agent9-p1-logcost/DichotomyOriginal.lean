@@ -95,7 +95,7 @@ theorem authentic_low_cost_even_exact_shape
   let u := u2 q
   have hdom := pow16_dom q hq
   have hu : u+4*q+3=7*2^(16*q) := by dsimp [u,u2]; omega
-  refine ⟨ht, ?_, ?_⟩
+  refine ⟨ht, ?_⟩
   cases root with
   | false =>
     have hcone' : OddCone (6*u-2) (2*u+5) b d m := by
