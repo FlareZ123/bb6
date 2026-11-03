@@ -37,6 +37,14 @@ theorem source_one_reset_no_wall
   let S := 7*2^n-n-2
   let Q := (bp+12)/2
   let D := (c+3)/2
+  have hp' : 512*(n*n*n)≤2^n := by simpa only [Nat.mul_assoc] using hp
+  have hn1 : 1≤n := by omega
+  have hn2 : n≤n*n := by
+    have hh := Nat.mul_le_mul_left n hn1
+    omega
+  have hn3 : n*n≤n*n*n := by
+    have hh := Nat.mul_le_mul_left (n*n) hn1
+    omega
   have hp1 : n+2≤7*2^n := by omega
   have hS : S+n+2=7*2^n := by dsimp [S]; omega
   have hroot : (14*2^n-2*n-16)+12=2*S := by dsimp [S]; omega
@@ -88,7 +96,9 @@ theorem source_one_reset_no_wall
     have hB : b+12=4*(n+r+(t+1)+h+3) := by omega
     rw [hB] at hpostpow'
     have he1 : H*(4*(n+r+(t+1)+h+3)) =
-       2*(2*H*(n+r+(t+1)+h+3)) := by ac_rfl
+       2*(2*H*(n+r+(t+1)+h+3)) := by
+      simp only [show (4:Nat)=2*2 by decide]
+      ac_rfl
     rw [he1] at hpostpow'
     omega
   have hWallNorm :
