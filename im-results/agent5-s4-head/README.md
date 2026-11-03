@@ -123,3 +123,43 @@ The reverse direction uses the absorbing property of a failed `Option` run and t
 The previously published source S4 return map has an unbounded left digit stack and a right stack. The new `reduced` map has a single arbitrary finite list, with deterministic head increments by 31 and 17 around **one residual `epoch 27`**, and starts from the four-digit seed `[42,12,8,5]`. This provides a concrete candidate for a compact invariant, arithmetic conjugacy, inverse-image grammar, or optimized verified simulator. All halting possibilities in the resulting eight-pulse cycle pass through one conditional gate with the `7,20` head prefix. A proof of nonhalting of `reduced` from the seed would decide this single authentic DeepMind holdout, conditional on a completed original-source semantic bridge.
 
 **Limit:** the equivalence is proven against copied, inspected source equations and **not yet kernel-bridged to the unmodified DeepMind `highLevelNext`**. It does not resolve `reduced` from its seed, much less BB(6). Moving it into `results/` or claiming original-machine certification would be premature. To reproduce, first compile the decoded `S4Phase.lean` and `S4Trap.lean` to their matching `.olean` modules; then compile the decoded `S4Return.lean` with both import files available on the Lean module search path.
+
+## 2026-11-03 scalar head factor and affine safe branch
+
+Two additional locally kernel-checked modules continue the above reduction:
+
+- [S4Head.lean.xz.b64](S4Head.lean.xz.b64), decoded SHA-256 `2556caac3ad0c90308779d50f4a78485c4770cbc3a360c3ceb6201fa951ee078`. It imports `S4Return` and proves a six-digit right-suffix preservation lemma, the universal *conditional* first-digit law, and the genuine-reduced-seed all-time cycle.
+- [S4Odd.lean.xz.b64](S4Odd.lean.xz.b64), decoded SHA-256 `2110a4dfcbe4befe8016c3a8be6d2931b8b7df2afc9ec58260d79c83331d968c`. It imports `S4Head` and proves the **unconditionally successful affine branch** for every odd first digit.
+
+Define `H(b) = floor(b/2) + 39 + 3*(b mod 2)`. `S4.reduced_head` proves, for **every** finite nonempty list `b::R`, if `reduced(b::R)=some U`, then `U = H(b)::T` for some T. The proof handles arbitrary-long odd drains on even b, via the new `epoch_pre6` right-suffix lemma. This is an exact *factor map on the first list digit*, conditional only on the one unresolved possibility that the reduced operation returns `none`.
+
+The kernel computes the first five genuine-seed reduced iterations exactly:
+```text
+T0 = [42,12,8,5]
+T1 = [60,30,36,5]
+T2 = [69,41,41,44]
+T3 = [76,98,41,44]
+T4 = [77,79,60,52,28,25]
+T5 = [80,140,60,52,28,25]
+```
+The `S4.reduced_first5` theorem certifies T5; the intermediate entries are independently computed exact arithmetic checks.
+
+Then `S4.actual_reduced_head_cycle` proves that for every `n`, if the genuine reduced run exists at index `5+n`, the first digit is the explicit period-four function:
+
+| n mod 4 | First digit of reduced list |
+| ---: | ---: |
+| 0 | 80 |
+| 1 | 79 |
+| 2 | 81 |
+| 3 | 82 |
+
+The periodicity follows from the *universal* `H` law, with `H(80)=79`, `H(79)=81`, `H(81)=82`, and `H(82)=80`.
+
+**Strongest unconditional case:** `S4.reduced_odd_exact` proves for every odd `b` and every finite `R`, with no success assumption:
+```text
+reduced(b::R) =
+  some ((floor(b/2)+42)::bumpBy(floor(b/2)+23, R)).
+```
+Thus at two of every four *surviving* reduced-return positions after T5, with first digit 79 or 81, the entire next reduced step is unconditionally defined. The even-digit positions 80 and 82 remain the only possible residual halting gateways in that persistent period-four regime. The arithmetic is based on the original source-shaped `epoch` definitions. Both modules report solely standard Lean axioms and no `sorryAx`.
+
+These theorems provide a precise compact dynamical system with an explicit scalar factor and a separate partial tail update. **They do not prove survival at the even-digit gateways**, and they have not undergone original DeepMind source-module import validation.
