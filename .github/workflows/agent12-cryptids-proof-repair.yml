@@ -14,16 +14,16 @@ jobs:
           sudo apt-get update -qq >/dev/null
           sudo apt-get install -y -qq bubblewrap >/dev/null
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-      - name: Checkout auditable patch script
-        uses: actions/checkout@v4
-        with:
-          path: agent12
-          persist-credentials: false
       - name: Checkout upstream pinned Lean proof source
         uses: actions/checkout@v4
         with:
           repository: google-deepmind/cryptids
           ref: 2c93870f6db0515f53722dc65135a3f6c587cb9a
+          persist-credentials: false
+      - name: Checkout auditable patch script
+        uses: actions/checkout@v4
+        with:
+          path: agent12
           persist-credentials: false
       - name: Apply minimal proof-only compatibility patch
         run: |
