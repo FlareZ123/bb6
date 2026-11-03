@@ -153,6 +153,7 @@ theorem high_a0_odd (k c : Nat) (hc : c≥4) (hk : k%2≠0) :
     bad (2*k+3) 0 c → bad 0 k c := by
   intro h
   simp only [bad,show ¬(c<2) by omega,↓reduceIte,high] at h ⊢
+  simp only [Nat.zero_add] at *
   rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
   · exfalso; omega
   · exfalso; omega
