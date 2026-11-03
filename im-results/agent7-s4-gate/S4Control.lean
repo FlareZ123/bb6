@@ -14,17 +14,17 @@ open BusyBeaver.Stack
 theorem one_to_zero (tail : List Nat) :
     highLevelNext (.C 1 (3 :: 5 :: tail)) =
       some (.C 0 (4 :: 7 :: tail)) := by
-  rfl
+  simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
 
 theorem zero_to_two (tail : List Nat) :
     highLevelNext (.C 0 (4 :: 7 :: tail)) =
       some (.C 2 (4 :: 7 :: tail)) := by
-  rfl
+  simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
 
 theorem two_to_three (tail : List Nat) :
     highLevelNext (.C 2 (4 :: 7 :: tail)) =
       some (.C 3 (5 :: 7 :: tail)) := by
-  rfl
+  simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
 
 /-- Exact three-step return from the restricted one-phase S4 section. -/
 theorem three_safe_phases (tail : List Nat) :
@@ -43,8 +43,8 @@ theorem normalized_six (tail : List Nat) :
     highLevelNext (.C 3 (5 :: 7 :: 6 :: tail)) =
       some (.C 1 (3 :: 5 :: 8 :: bumpHeadBy 6 tail)) := by
   cases tail with
-  | nil => rfl
-  | cons b rest => rfl
+  | nil => simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
+  | cons b rest => simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
 
 /-- The 8-prefix source epoch is universally safe and performs a distinct
     one-head carry. -/
@@ -52,8 +52,8 @@ theorem normalized_eight (tail : List Nat) :
     highLevelNext (.C 3 (5 :: 7 :: 8 :: tail)) =
       some (.C 1 (3 :: 5 :: 9 :: bumpHeadBy 7 tail)) := by
   cases tail with
-  | nil => rfl
-  | cons b rest => rfl
+  | nil => simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
+  | cons b rest => simp [highLevelNext, stepEpoch, transferHL, bumpHeadBy, bumpHead]
 
 #print axioms BB6.Agent7S4Control.normalized_six
 #print axioms BB6.Agent7S4Control.normalized_eight
