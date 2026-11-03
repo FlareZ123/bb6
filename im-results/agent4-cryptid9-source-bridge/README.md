@@ -39,3 +39,20 @@ Local SHA256: `SourceSRun.lean` c8396c224604c3b101c2ac696ad86741943de1309a8782d5
 ## Next genuine obstruction
 
 For the actual start `q=141,c=3` (and the distinct authenticated `q=17,c=3`), derive a seed-sensitive **all-time** invariant preventing S-to-T transfer, or prove a transfer and analyze its genuine T continuation. Agent9's standalone maximal-valuation and fatal-congruence certificates are available in `im-results/agent9-valuation-return/`. A 100,000-step finite survival observation is only a regression test. Additional congruence classes or longer finite traces alone would not settle the problem.
+
+## Kernel-checked infinite synthetic first-halt family
+
+[SourceSynthetic.lean](SourceSynthetic.lean) is a further all-natural local Lean 4.36.0-rc2 proof with no `sorry`, and only standard `[propext, Quot.sound]` axioms, under the same shadow-source limitation above. Set `a(0)=0`, `a(n+1)=9a(n)+2`, `Q(c)=3a(c+5)+4`, and `B(c)=Q(c)-16`. The key quantified theorem is:
+
+```lean
+synthetic_first_halt (c : Nat) :
+  sourceRun (c+7) (some (.S (syntheticInput c-16) c)) = none ∧
+  ∀ j, j<c+7 →
+    ∃ st, sourceRun j (some (.S (syntheticInput c-16) c)) = some st
+```
+
+The first source S-only scalar step maps `(Q(c),c)` to `(9^(c+5),c+4)`. Exactly `c+4` zero-residue steps then map this to `(4^(c+4)*3^(c+6),0)`, a 729-divisible S counter. The next high-level step transfers to T, and the subsequent T step halts. The proof separately checks every shorter prefix stays live, so `c+7` is the **exact number of high-level transitions from this synthetic S starting configuration**. It is not an original primitive-step count.
+
+This yields synthetic halting configurations at arbitrarily large S-section height, refuting any proposed global assertion that all high-height S states survive. These are deliberately constructed alternative starting configurations. **There is no proof that any belongs to the original blank-derived orbit**. This does not imply a new BB(6) score or a resolved original holdout.
+
+The complete source proof imports the preceding two modules. Source files may be locally checked in this order: `SourceSProjection` (Agent9), `SourceSRun`, `SourceGate`, `SourceSynthetic`. They were checked with Lean 4.36.0-rc2 against the exact high-level S and T branch transcription; full original pinned Cryptids compilation remains pending. The local file SHA256 before repository upload was `1164f25024a70e5a9184b9618d43d4a432dda5651b7c0dd061baaed118bc82b5`, with potential whitespace differences in the uploaded copy.
