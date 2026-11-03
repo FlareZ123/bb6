@@ -45,6 +45,25 @@ The author reports a final accelerated state, where `FastLongSim.halted` becomes
 
 **Best follow-up:** replay the raw-table-to-macro startup, independently verify every visited right-end cache rule and the terminal halt, and obtain a reproducible primitive-step count or certified halting witness. This is a plausible explanation for historical deletion of row109, **not independently established** as the reason.
 
+## Reproduced original accelerator and Lean-certified raw-step transport (2026-11-03)
+
+**Independent runtime reproduction (same published algorithm, not an independent semantic checker).** The manually dispatched [GitHub Actions run 41563779401](https://github.com/FlareZ123/bb6/actions/runs/41563779401) checked out J. Huang's **exact** October 15 Rust source commit `6aeb2384173cf4c93a9a7c7f418bb9b7b1839b39`, ran its release-mode unit tests successfully, then executed the accelerated simulator to its terminal state. The [replay workflow](../../.github/workflows/agent29-row109-replay.yml) asserts the exact published `FastLongSim` terminal counters: `self_steps = 6,431,143,049`, `n_heads = 2,687,980,000`, and its text output ends `MKKR [39546] halted`. Tape length was 1,380,279,297 logical digits. **This reproduces the source's result only, not an independent raw-TM halting witness or raw-step count.** Algorithmic soundness of its accelerated transitions still needs certification.
+
+**Machine-checked semantic bridge for the two removed W7-2 roots.** The self-contained [Row146Conjugacy.lean](Row146Conjugacy.lean) defines both original 12-entry machines on `State × Bool`, the left/right mirrored permutation A→B→C→D→A fixing E,F, raw `Int → Bool` tapes, one-cell `step`, `run`, and blank initial configurations. It kernel-checks:
+
+```lean
+theorem table_conjugacy (s : State) (b : Bool) :
+    row411 (rename s) b = (row146 s b).map renRule
+
+theorem rooted_halts_iff :
+    (∃ n, run row411 n (blank .A) = none) ↔
+    (∃ n, run row146 n (blank .D) = none)
+```
+
+The [GitHub Actions run 41564530412](https://github.com/FlareZ123/bb6/actions/runs/41564530412) successfully compiled this exact source under pinned **Lean 4.36.0-rc2** and checked axioms: `rooted_halts_iff` depends on `[propext, Quot.sound]`, and `table_conjugacy` on **no axioms**. There are **no `sorry` declarations**. This is a rigorously verified *root transport* theorem. It is **not** a nonhalting theorem; row 146 with blank start A remains a distinct proof obligation from its blank start D.
+
+**Additional independent historical provenance.** The archived [BB(6) forum discussion from July 23–October 12, 2026](https://github.com/Yeyito777/bbchallenge-corpus/blob/32869adbaef967d9e43bc97f1ed13c076558a71d/knowledge/discord/forum-individual-machines/threads/2026-07-23-Probviously-nonhalting-1DCA-like-1RB0LE_0RC-_1RD0LA_1RE0RF_1-1529659647823188008.md) reports a preexisting **informal halting proof based on an accelerated simulator** for row109, against an earlier speculative nonhalting claim; it supplies no certified raw step count. The [August 31 BB(6) forum excerpt](https://github.com/Yeyito777/bbchallenge-corpus/blob/32869adbaef967d9e43bc97f1ed13c076558a71d/knowledge/discord/bb6/chat/2026-08-15--2026-09-11.md) identifies row119 among twelve machines suggested for possible nonhalting proofs, **with no proof provided**. The [February 24 BB(6) report](https://github.com/Yeyito777/bbchallenge-corpus/blob/32869adbaef967d9e43bc97f1ed13c076558a71d/knowledge/discord/bb6/chat/2026-02-17--2026-02-25.md) says row247 was simulated without a halt for **10,598,823,128,239** raw steps using `quick_sim.cpp`, block size 26, `-p` (undocumented). That is a computational prefix, **not** a halting-time bound or proof of divergence. All three are community-source leads and predate the roster removals; none establishes why the October30 list omitted a machine.
+
 ## Other provenance and decisions
 
 - A root-sensitive comparison against all 89 named pinned Google DeepMind `BusyBeaver/BB6/` and `BusyBeaver/BB6/Accelerations/` Lean machine modules (commit `c86f15861709b76042998c5211c7b2f83991621b`), allowing all state renamings that keep the initial state and both tape orientations, did not find any of these six as a direct named-module match. This is a **limited filename/index comparison** and cannot establish that a proof does not exist elsewhere or under macro/halting equivalence.
