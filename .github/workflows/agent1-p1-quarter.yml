@@ -25,7 +25,7 @@ jobs:
       - name: Compile all unmodified upstream Lean dependencies and new universal theorems
         run: |
           set -e
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost:im-results/agent23-p1-root-wall"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost:im-results/agent23-p1-root-wall:im-results/agent50-p1-l1-reset"
           for m in GParity GInverse PosEvenForm ResetGate; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
@@ -51,6 +51,8 @@ jobs:
           lean -o im-results/agent1-p1-quarter/DyadicDiff.olean im-results/agent1-p1-quarter/DyadicDiff.lean
           lean -o im-results/agent1-p1-quarter/OneResetArithmetic.olean im-results/agent1-p1-quarter/OneResetArithmetic.lean
           lean -o im-results/agent1-p1-quarter/L0OneResetBridge.olean im-results/agent1-p1-quarter/L0OneResetBridge.lean
+          lean -o im-results/agent50-p1-l1-reset/L1OneResetArithmetic.olean im-results/agent50-p1-l1-reset/L1OneResetArithmetic.lean
+          lean im-results/agent50-p1-l1-reset/L1OneResetBridge.lean
           for m in QuarterGap QuarterCone QuarterFinal SecondFeederValuation; do
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
           done
