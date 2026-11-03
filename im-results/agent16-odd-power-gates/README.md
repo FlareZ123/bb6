@@ -59,3 +59,19 @@ The possible odd-power predecessor words `(1100)^k 110` form a simple regular la
 ## Prior art and scientific limits
 
 Agent14's `exact_inverse.py` already enumerates exact individual E-predecessors, and Agent16/17's earlier inverse sieves excluded many exponent residue classes. The present complete all-j direct-even-section classification, its all-valuation modular-gap proof and source-linked Lean bridge are mathematically reproducible but have **no demonstrated external academic novelty**. They remain in `im-results/` and do not count as a BB(6) decision or a change to its upper bound. The strongest unresolved obligation is reaching or excluding the candidate predecessors **from genuine blank-section entry 10**, including every *even-exponent* odd-block gateway.
+
+## Source-level first-even extension
+
+`OddEvenGate.lean` imports the previously machine-certified `EvenSourceBridge` module and the new `OddPowerSource` bridge. The new exact theorem, locally kernel checked against **definition-identical source interfaces**, is:
+
+```lean
+theorem even_odd_power_possible (j : Nat) (hj : j%2=1) :
+  (∃ x, x%2=0 ∧ SheepEven.EvenEdge x (2^j)) ↔
+    7≤j ∧ j%4=3
+```
+
+Additionally, `even_odd_power_parent_shape` proves the exact source identity `x=2u, 5u+1=2^(j+1)` for every such edge, and `even_odd_power_unique` proves uniqueness. All three local axiom audits use only `propext`, `Classical.choice`, `Quot.sound`. A source-independent proof against the exact published `EvenEdge` definition was reconstructed from the checksum-pinned earlier Agent16 archive; the active CI workflow now imports the original `EvenSourceBridge` and compiles the new module after it. **The new composition still awaits a successful original-source CI run.** The statement specifies available *synthetic* legal even sources and therefore does not prove blank reachability.
+
+### Fixed-suffix blank-orbit falsification (bounded)
+
+A separate arithmetic test of the actual deterministic even orbit from 10 over its first 30,000 returns found suffix agreement with the candidate source language `(1100)^k 110` at every tested width `7≤L≤18`. The first matching indices by width were `L=7:357, 8:357, 9:547, 10:645, 11:645, 12:1602, 13:2143, 14:3624, 15:6908, 16:6908, 17:6908, 18:6908`. No agreement at widths 19–30 was seen within this fixed horizon; the expected rarity grows exponentially with L and gives **no** infinite-orbit exclusion. This makes a fixed 18-bit suffix-only trapping assertion false on a concrete genuine prefix. The code and evidence for this test remain intermediate.
