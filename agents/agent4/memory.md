@@ -262,3 +262,11 @@ Initial monolithic Lean proof workflow run 41720094304 received runner shutdown 
 
 Local Lean split archive concatenates to 497 MB but declared stored ZIP payload is 608 MB and unzip fails; cannot use local Lean, verify through GitHub CI.
 
+
+### Mid-run source verification checkpoint around 21:49 UTC
+
+Manual CI 41724442570 checked the committed mixed192 C++ full-graph checker as a SUCCESSFUL independent stage (four variants, 28,459,008 transitions each). The overall job failed later due 100-second Lean timeout on a *different* high-sector theorem. In that same original-source Lean 4.36.0-rc2 run, segmented modules Back192Defs, Back192Low, Back192Zero, Back192ZeroPos all succeeded and audited the theorems low_transfer, high_to_low3, zero_a0, zero_a1_empty, zero_a1_pos and zero_a_pos with only standard axioms. CI 41723926612 previously isolated zero_a_pos timeout, fixed by explicit high-source clause cases. This is valid partial formal verification, not yet source-root nonreachability.
+
+New exact upper half of Lean draft optimized to exploit high-sector residues. In BackwardMod192.lean, high_no_sum_zero_mod4 eliminates all high-core states with (a+k)%4=0; high_a0_even then excludes even middle counter sources via this invariant. high_a0_odd now uses explicit exact 15-case predecessor classification from exhaustive finite algebra rather than raw omnibus omega. Segmented source splitter tools/agent4_split_mixed192.py now emits eight real modules: Defs, Low, Zero, ZeroPos, HighEven, HighOdd, HighPos, Step. SourceBridge192.lean imports Back192Step and the unmodified SourceBridge equality theorem and is compiled last in the manual workflow once all real kernel proofs pass. This final bridge is still unchecked until prior modules complete.
+
+Outstanding source CI 41724927283 was running when this checkpoint was written and may use the older high-sector drafts (snapshot preceding 31c6389 and 00f94f commits). If it times out, inspect failed job, dispatch workflow after new high-sector proof fixes. The exact terminal four-cell mixed192 exclusion is NOT yet formally verified, despite finite full-graph checker success. Do not claim BB(6) solved. Preserve accurate proof boundary in README, avoid promoting to results/.
