@@ -49,6 +49,14 @@ The [CascadeOdd.lean](CascadeOdd.lean) theorem `CascadeOdd.all_surviving_have_od
 
 **Further global theorem:** [Mass.lean](Mass.lean) proves that every successful C-to-C source-indexed episode strictly increases `M(a,b)=2a+b`, including the entire underflow branch. Its `orbit_mass_mono` and `future_target_exclusion` are kernel-checked all-time corollaries: after a source-indexed C orbit reaches mass greater than `2t`, that orbit cannot later visit reset `(t,0)`. This is a reusable finite-prefix plus monotone-cutoff tool. It does not exclude the infinitely many higher fatal targets.
 
+## Independent exclusion-side audit and partial uniform proof
+
+The companion [reverse_audit.py](reverse_audit.py) independently checked the opposite index classes, n mod6 in {0,1,2,3}, through n=2048: 1,367 candidate heights, 1,385,795 exact even-inverse edges, longest chain 2,036, all terminating in a non-image interval gap with no 2 mod3 odd-exit possibility. The fixed SHA256 terminal digest is `00562d6cd505e61d872d5868dd44b640121070475bdab08da8c8ddaa6dd7ca96`. This is finite evidence, not an all-index exclusion.
+
+The new [ReverseResidue.lean](ReverseResidue.lean) proves for *all* n≥4 with n mod6 in {0,1,2,3}, and any natural i satisfying the exact untruncated inverse height equation `T_i+(2n+3)2^i=8*2^(n-1)+n-1`, that `T_i mod3 ≠2`. It is a kernel-checked all-index obstruction to an odd-exit predecessor, using only standard axioms. The separate uniform proof that each even-inverse chain terminates in the gap between adjacent dyadic even-exit image intervals has not yet been Lean-verified.
+
+The auxiliary [GapCore.lean](GapCore.lean) proves a reusable parity unit-gap: if u is even, k odd, 2p=u s, n<s, and k s≤2p+n, then k s+s≤2p. Its derived `terminal_lower_gap` bounds the next inverse below-step above 4p−3, the upper endpoint of all smaller dyadic images. This is Lean-verified under its explicitly stated hypotheses. Translating the complete terminal-exit conditions to those hypotheses remains a separate obligation.
+
 ## Independent reproduction
 
 Run `python verify.py` for 20,000 independent C/P source episodes, plus all 100 complementary-class indices 4<=n<=300 and their complete forward witness chains. Output on the original local run:
