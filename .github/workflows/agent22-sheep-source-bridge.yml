@@ -87,6 +87,12 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
           lake env lean EvenSourceBridge.lean
 
+          # Agent22: original-source universal mixed-modulus outgoing hub.
+          cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-mixed-hub/SheepMixedHub.lean" SheepMixedHub.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-mixed-hub/SheepHubSource.lean" SheepHubSource.lean
+          lake env lean -o ".lake/build/lib/lean/SheepMixedHub.olean" SheepMixedHub.lean
+          lake env lean SheepHubSource.lean
+
           # Agent16: all-time exceptional-branch exclusions and exact
           # modular periods/finite-cycle nonmatches for 8 inverse families.
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-deep-sieve/reconstruct_gates.py"
