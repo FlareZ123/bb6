@@ -43,7 +43,8 @@ jobs:
           echo "c39529c59f5db109b2326ab55b4a5e5071c03e4827bb6eeef15eeb730e0841d9  $RUNNER_TEMP/Row109Locality.lean" | sha256sum -c -
           "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Locality.olean" "$RUNNER_TEMP/Row109Locality.lean"
           LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Rules.olean" workplace/im-results/agent4-row109-locality/Row109Rules.lean
-          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" workplace/im-results/agent4-row109-locality/Row109Safe.lean
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Safe.olean" workplace/im-results/agent4-row109-locality/Row109Safe.lean
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" workplace/im-results/agent4-row109-locality/Row109Gate.lean
       - name: Kernel-check full power-of-two head sweep against original Agent29 GF2 source
         if: ${{ inputs.audit_only }}
         run: |
