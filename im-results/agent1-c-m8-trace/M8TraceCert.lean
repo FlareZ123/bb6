@@ -299,7 +299,39 @@ theorem m8_gate_unreachable :
       (n-150052) 621619 213453 1 524260 hn
     omega
 
+/-- The single certified live endpoint excludes ALL genuine immediate-stopping
+    section states of smaller rank, for all times. The earlier-time case follows
+    because a `none` edge prevents any later live return. The later-time case
+    follows from the original strictly increasing source rank. -/
+theorem all_terminal_below_rank_unreachable (a k : Nat)
+    (hstop : secNext (a,k) = none)
+    (hrank : a+2*k < 1048525) :
+    ¬ ∃ n : Nat, BB6.Agent8Section.run secNext n (some (5,1)) =
+        some (a,k) := by
+  rintro ⟨n,hn⟩
+  have hend : BB6.Agent8Section.run secNext 150052 (some (5,1)) =
+      some (621619,213453) := by
+    rw [←runFast_eq_source]
+    exact certified_full_prefix.2
+  by_cases hbefore : n < 150052
+  · have hpositive : 0 < 150052-n := by omega
+    have hterminal : BB6.Agent8Section.run secNext (150052-n) (some (a,k)) = none := by
+      cases hdiff : 150052-n with
+      | zero => omega
+      | succ d =>
+          rw [BB6.Agent8Section.run_succ_head]
+          simpa [hstop] using BB6.Agent8Section.run_none secNext d
+    have hindex : n+(150052-n)=150052 := by omega
+    rw [←hindex,BB6.Agent8Section.run_add,hn,hterminal] at hend
+    contradiction
+  · have hindex : 150052+(n-150052)=n := by omega
+    rw [←hindex,BB6.Agent8Section.run_add,hend] at hn
+    have hmon := source_section_mass_mono
+      (n-150052) 621619 213453 a k hn
+    omega
+
 #print axioms chainCheckedAll
 #print axioms certified_full_prefix
 #print axioms m8_gate_unreachable
+#print axioms all_terminal_below_rank_unreachable
 end BB6.Agent1M8
