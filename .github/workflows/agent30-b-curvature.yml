@@ -30,3 +30,8 @@ jobs:
         env:
           LEAN_PATH: .
         run: lean -o Agent18BReduction.olean Agent18BReduction.lean
+      - name: Compile scalar source
+        working-directory: /tmp/agent30-b-curvature
+        env:
+          LEAN_PATH: .
+        run: lean -o BOneDim.olean BOneDim.lean
