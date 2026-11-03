@@ -1,6 +1,6 @@
 # R001: original BusyCoq proof-source audit of four removed BB(6) rooted machines
 
-Agent 12, 2026-11-03. Intermediate provenance result, no independent Rocq recompilation.
+Agent 12, 2026-11-03. Intermediate original-source provenance result; three independently recompiled original Rocq theorems, see verification update below.
 
 Original source: ccz181078/busycoq, branch BB6 commit 33209bc7dc282b38c8cd6be507bfc551fea56108.
 
@@ -19,7 +19,7 @@ Sk1Machines_v2.v has literal table TM25 for root146 and TM23 for root531. TM26 c
 
 Root119 1RB1LB_1RC---_1LD1LF_1LE0LD_0LA1RF_1LC0RE has an original-source halting equivalence in verify/Eqv_v2.v module TM2153, linking to the auxiliary rooted machine 1RB---_1LC1LF_1LD0LC_0LE1RF_1RA1LA_1LB0RD. No independent decision was found for either: root119 remains unknown here. Root109 was explicitly assigned to a different investigator.
 
-Scientific caveat: source declarations with proof scripts are primary evidence of a claimed formal decision. We have not yet independently compiled source and dependencies or audited native_check_eq and kernel assumptions. They must not be called independently Rocq-certified here. The dated roster deletion was never itself a proof. This research is provenance integration, previously published mathematics, not a new BB(6) value, BB(6) upper bound, or novel root theorem.
+Scientific caveat: source declarations with proof scripts are primary evidence of a claimed formal decision. We have not yet independently compiled source and dependencies or audited native_check_eq and kernel assumptions. Rows 146,411,531 are independently kernel-compiled and assumption-checked as documented below; row247 still awaits separate compilation. The dated roster deletion was never itself a proof. This research is provenance integration, previously published mathematics, not a new BB(6) value, BB(6) upper bound, or novel root theorem.
 
 Next: compile original unmodified Sk1Machines_v2.v and SOMDCv10.v with associated dependencies and print assumptions of TM25.nonhalt, TM26.nonhalt, TM23.nonhalt, TM4.halt; independently check the exact root411 reflection. Trace the auxiliary TM2153 root as a separate potential status lead.
 
@@ -38,4 +38,20 @@ The direct source-table reflection to original upstream `Sk1Machines_v2.TM26.tm`
 
 ## Reproducible source-build attempt
 
-A reusable, manual-only [Rocq original-source verification workflow](../../.github/workflows/shared-rocq-root-proofs.yml) was added with an exact upstream pin, `sk1`/`somdc` targets, and final theorem `Print Assumptions` audit. It specifically avoids the environment's unsupported `-native-compiler yes` precompile mode (which caused `Unbound module Nativevalues` in an earlier independent Agent46 attempt), allowing kernel VM conversion fallback. Its initial `sk1` run **41578398072** started 2026-11-03 04:29 UTC; record its *actual* final outcome before upgrading any source proof to independent compilation.
+A reusable, manual-only [Rocq original-source verification workflow](../../.github/workflows/shared-rocq-root-proofs.yml) was added with an exact upstream pin, `sk1`/`somdc` targets, and final theorem `Print Assumptions` audit. It specifically avoids the environment's unsupported `-native-compiler yes` precompile mode (which caused `Unbound module Nativevalues` in an earlier independent Agent46 attempt), allowing kernel VM conversion fallback. Its initial `sk1` run **41578398072** succeeded and independently compiled three original proof declarations with no nonstandard assumptions. The separate `somdc` run for row247 was dispatched 2026-11-03 04:41 UTC; record its final outcome before upgrading that proof.
+
+
+## Successful independent Coq source build and axiom audit, 2026-11-03
+
+**Run [41578398072](https://github.com/FlareZ123/bb6/actions/runs/41578398072), job 125727216550, success, completed 04:38:05 UTC.** Manual workflow checked out original public BusyCoq `BB6` at the exact pinned commit, installed Coq 8.20, generated the complete source dependency graph, and built unchanged `Sk1Machines_v2.vo` and its required original modules. `-native-compiler no` uses a documented VM reduction fallback, correctly avoiding a native-compiler installation mismatch; each original `native_cast_no_check` computational equality was still checked by Coq conversion at theorem closure.
+
+A distinct audited `Agent12Sk1Audit.v` imports the resulting original module and runs:
+
+```coq
+From BusyCoq Require Import Sk1Machines_v2.
+Print Assumptions Sk1Machines_v2.TM25.nonhalt.
+Print Assumptions Sk1Machines_v2.TM26.nonhalt.
+Print Assumptions Sk1Machines_v2.TM23.nonhalt.
+```
+
+The verified job log reports **`Closed under the global context` three times**, with the audit step and the entire job passing. Therefore #146 and #531 are independently Coq-kernel-checked in their exact rooted forms; #411 is independently Coq-kernel-checked for the original literal L/R mirror, with the exact raw table bridge independently Lean-checked. These are previously existing mathematical results, now independently reproduced and axiom-audited. Row247's independent compilation is pending; row119 has only an equivalence proof, not a halt/nonhalt classification.
