@@ -96,11 +96,16 @@ jobs:
           lean HighSliver.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenChild.lean .
           lean EvenChild.lean
-          if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
-          lean -o BounceLogBound.olean BounceLogBound.lean
-          lean SectionLogBound.lean
+          # Novel strict B8/M32 quotient escape: original section source-exact
+          # zero-first odd line (0,64t+23) is forbidden, unlike quotient support.
           lean -o ZeroEvenUniversal.olean ZeroEvenUniversal.lean
           lean -o ZeroEvenOrbit.olean ZeroEvenOrbit.lean
           lean -o ZeroOddRange.olean ZeroOddRange.lean
-          lean ZeroOddForward.lean
+          lean -o ZeroOddForward.olean ZeroOddForward.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{ZeroOddUniversal,ZeroOdd23}.lean .
+          lean -o ZeroOddUniversal.olean ZeroOddUniversal.lean
+          lean ZeroOdd23.lean
+          if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
+          lean -o BounceLogBound.olean BounceLogBound.lean
+          lean SectionLogBound.lean
           lean AffineTargetReach.lean
