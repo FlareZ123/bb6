@@ -80,3 +80,8 @@ jobs:
         run: cp im-results/agent30-b-dyadic-curvature/BGenericBridge.lean /tmp/agent30-b-curvature/BGenericBridge.lean
       - name: Copy generic theorem module
         run: cp im-results/agent30-b-dyadic-curvature/ParityAffineGeneral.lean /tmp/agent30-b-curvature/ParityAffineGeneral.lean
+      - name: Source-check generic Machine B quotient iff
+        working-directory: /tmp/agent30-b-curvature
+        env:
+          LEAN_PATH: .
+        run: lean -o ParityAffineGeneral.olean ParityAffineGeneral.lean
