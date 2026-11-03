@@ -1,6 +1,8 @@
 # Machine C mixed-modulus quotient: new experimental obstruction
 
-**Agent 41, 2026-11-03. Research status: computational lead; all-natural source soundness and finite closure are NOT yet Lean-certified. BB(6) and Machine C remain open.** This dossier belongs in `im-results/`.
+**Agent 41, 2026-11-03. Research status: genuine original-source Lean-verified *transition soundness*; finite graph closure is NOT yet Lean-certified. BB(6) and Machine C remain open.** This dossier belongs in `im-results/`.
+
+> **Source-soundness verification, 2026-11-03.** The [manual original-source Lean workflow 41680051185](https://github.com/FlareZ123/bb6/actions/runs/41680051185) completed **SUCCESS** at 17:01:42 UTC with original Agent11 `CLine.lean` unchanged, Lean 4.36.0-rc2, SHA256-checked source `Mixed96Sound.lean` (SHA256 `c8bdfe78aeb6ff10f3a4db22bb1b1504584bcbf1ca5fbb3f6ab1d6f5d83639f1`), and `Mixed96Bridge.lean`. The `nextC_source_equal` bridge has **no axioms**; `source_step_is_abstract_edge` and `source_reachable_is_closed` depend only on `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The finite BFS/certificate remains unverified in Lean, so the absence of `(13,31,0)` remains a **computational candidate** and yields **no original-source nonreachability theorem yet**.
 
 ## Question and candidate
 
@@ -35,12 +37,12 @@ A complete Python scan of the reduced model's **abstract reverse edges** returne
 
 ## Trust boundary, next proof obligations
 
-1. Prove that every **actual** `BB6CLine.nextC` step projects to one of the representative edges. This does **not** follow merely from a finite test. The phase-sensitive `c=0,1,2,3`, `a=0,1`, `k=0`, division by two, and boundary wraparound cases must all be handled.
+1. **Completed against unchanged source.** The definitionally equal acceleration and 96/96/48 mixed-quotient simulation have been proved for *all natural-number inputs*. The nontrivial phase-sensitive `c=0,1,2,3`, `a=0,1`, `k=0`, division by two, and boundary wraparound cases are all handled in [Mixed96Sound.lean.xz.b64](./Mixed96Sound.lean.xz.b64) and [Mixed96Bridge.lean](./Mixed96Bridge.lean). The compressed source expands to ordinary Lean text and is checksum-audited in CI.
 2. Kernel-check the full finite set closure, preferably using the 2,258-state backward ancestor set and a small closure checker. The C++ output alone is untrusted computational evidence.
 3. Compose source soundness + the checked graph + the checked stopping arithmetic + the Agent15 source-connected stopping/return bridge to derive an actual infinite family of forbidden halting parameters.
 4. Audit against Agent15/38/43 and any independent prior art before promoting to `results/`.
 
-Local development (not yet committed): the Lean draft `/tmp/agent41_quotient_sound.lean` compiled `nextIf_eq_nextC`, modular representative-kind lemmas, 96/48 modular shift and division lemmas with standard axioms, but the *combined* step-compatibility theorem did **not** finish. The draft's `qu_nextIf_rep` is **not** a valid theorem and must never be cited.
+Completed source proof: the full `qu_nextIf_rep`, `real_step_is_abstract_edge`, and actual-source `source_step_is_abstract_edge` and `source_reachable_is_closed` all kernel-check in the reproducible CI workflow. This proof supplies the required mathematically rigorous all-input quotient simulation. It intentionally does not smuggle in a finite BFS result.
 
 ## Reproduce
 
