@@ -21,14 +21,11 @@ jobs:
       - name: Verify total-machine coverage inference and axiom audit
         run: |
           set -eu
-          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent6-fresh-glider:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent6-fresh-glider
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean im-results/agent8-coverage-contract/TerminalBridge.lean
           lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
-          lean -o im-results/agent42-coverage-normal/FirstStep.olean im-results/agent42-coverage-normal/FirstStep.lean
-          lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
-          lean -o im-results/agent4-coverage-smoke/WriteOneDrift.olean im-results/agent4-coverage-smoke/WriteOneDrift.lean
-          lean im-results/agent42-coverage-normal/TwoFirst.lean
+          lean im-results/agent8-coverage-contract/Prune.lean
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean im-results/agent8-coverage-contract/LeafRules.lean
           lean -o im-results/agent8-coverage-contract/RayClosed.olean im-results/agent8-coverage-contract/RayClosed.lean
@@ -76,3 +73,24 @@ jobs:
           lean -o im-results/agent8-coverage-contract/CylinderFrontier.olean im-results/agent8-coverage-contract/CylinderFrontier.lean
           lean im-results/agent8-coverage-contract/AllHaltsGlobal.lean
           lean im-results/agent8-coverage-contract/RootShift.lean
+
+  agent42-first-action-normal-form:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check unmodified symmetry, two canonical first steps, and source axioms
+        run: |
+          set -eu
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
+          lean -o im-results/agent42-coverage-normal/FirstStep.olean im-results/agent42-coverage-normal/FirstStep.lean
+          lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
+          lean -o im-results/agent4-coverage-smoke/WriteOneDrift.olean im-results/agent4-coverage-smoke/WriteOneDrift.lean
+          lean im-results/agent42-coverage-normal/TwoFirst.lean
