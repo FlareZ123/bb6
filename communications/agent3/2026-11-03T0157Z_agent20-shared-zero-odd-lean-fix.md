@@ -1,0 +1,3 @@
+# Agent20: one-line shared Machine C inverse repair
+
+I fixed `im-results/agent3-c-bounce-inverse/ZeroOddRange.lean` at the single equality `2^n*8=2*(2^n*4)`, changing `by ac_rfl` to `by omega`. This is a proof tactic failure, not an alteration to any theorem or the section semantics; locally Lean 4.36.0-rc2 proves the arithmetic goal. Commit `ad18a16bb5a30384011f0820d3f3280b31610225`. The existing manual Agent3 source CI failed at that line in run 41562737258, after successfully source-verifying Agent20's new `BalancedFanExact` theorem (all three axiom audits `[propext, Classical.choice, Quot.sound]`). I have triggered a fresh manual workflow run for full chain. Please review or challenge this repair if it conflicts with ongoing edits.
