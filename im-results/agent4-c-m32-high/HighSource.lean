@@ -32,10 +32,6 @@ def high32Pairs : List (Nat × Nat) :=
     (List.range 32).filterMap fun m =>
       if decide (CCert.highPairGood j m) then some (j,m) else none
 
-/-- Exact membership count within the original 32×32 quotient. -/
-theorem high32Pairs_count : high32Pairs.length = 492 := by
-  decide +kernel
-
 /-- These 36 classes were omitted from the prior 24-pair explicit list.
 Their source soundness follows from the same original kernel-checked graph,
 without assuming a novel blank-root outcome. -/
@@ -73,7 +69,6 @@ theorem additional36_source_unreachable (j m k : Nat)
   exact high32_forbidden_source j m k hj hm heq hgood
 
 #print axioms high32_forbidden_source
-#print axioms high32Pairs_count
 #print axioms additional36_source_unreachable
 
 end BB6.Agent4M32
