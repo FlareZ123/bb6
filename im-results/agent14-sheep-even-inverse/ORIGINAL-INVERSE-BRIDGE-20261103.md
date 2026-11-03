@@ -55,3 +55,26 @@ The module `Sheep138GenericHigh.lean` contains the source-level finite-a theorem
 Archive SHA256 (compressed bytes): `7d04563403974f70067a496a51ddf2b77a23e06ba5bb8a9bda2a371ca7cfbb9a`. Individual Lean source hashes are pinned in the reconstruction script. Build in module order, after the original Sheep archive and our gateway modules. This construction stays under `im-results/` because neither child has been universally excluded in a complete source-level Lean proof. The original machine and BB(6) remain undecided. The independent original-machine pinned-version CI runner has not yet succeeded on these new modules.
 
 The two child families have also acquired a complete source-linked **exceptional-branch exclusion** and h-bounds (first child h<4; second h<2) via `Sheep138ChildHighH.lean`, `SheepExceptionalGap.lean`, `Sheep138ChildExceptional.lean`, and `Sheep138ChildGateway.lean`. The next mathematical work is to prove the remaining generic high-a and low-a modular disqualifications for the two children, then combine them with `root_reaches_one_child` to complete the r=138 class.
+
+## Final November 3 result: complete kernel-proved all-k r138 nonreachability
+
+The originally open proof-integration obligation described above **has now been discharged locally**. The exact theorem, against authentic blank-section reachability, is:
+
+```lean
+theorem Sheep138FullClass.root138_unreachable (k : Nat) :
+    ¬ SheepEven.EvenReach 10 (2^(138+4860*k))
+```
+
+Lean 4.36.0-rc2 compiled this theorem in [Sheep138FullClass.lean](Sheep138FullClass.lean), from the unmodified SHA-verified original Agent16 Sheep `Step`, `EvenEdge`, `EvenReach` modules and the checked mathematical chain described in this report. `#print axioms root138_unreachable` returned **`[propext, Classical.choice, Quot.sound]`**, with no `sorryAx`. Its dependent `child1_unreachable` and `child2_unreachable` have the same standard axiom audit. The proof is all-time and universal in k; no finite simulation cutoff or external untrusted oracle appears in the theorem.
+
+A new exact source-level bridge `Sheep138ChildFinite.lean` bounds generic last parents of the first rational child to h=0/a<8, h=1/a<10, h=2/a<12, h=3/a<14; the second child to h=0/a<11 or h=1/a<13. The proof of these strict bounds is `Sheep138ChildGenericHigh.lean`, which extends the signed odd-gap inequality and the existing high-a bounds to both child targets. These two modules are losslessly archived as [child138-high.tar.xz.b64](child138-high.tar.xz.b64), restored with hash verification and locked atomic file replacement using [reconstruct_child138_high.py](reconstruct_child138_high.py); archive SHA256 `f21beab20a4265cc54e7777423d334f9428cca36f5ca1c457a7055d077defc7e`.
+
+The 62 remaining child low-a pairs are excluded by 62 **uniform all-k parity-correct modulus-period certificates**, corresponding to 221 explicitly certified period representatives. Their `Sheep138ChildLowResidues.lean` module compiled with all 62 `#print axioms` reports `[propext, Quot.sound]`; `Sheep138ChildLowCases.lean` then establishes that each actual generic `Step` source contradicts its appropriate residue theorem, with the same audit. The final `Sheep138FullClass.lean` exhausts all these cases and combines two rational child unreachability proofs with the original-root two-child theorem. All three checked files are **deterministically regenerated and SHA256 verified** by [generate_full138.py](generate_full138.py), using the already hash-pinned upstream `Sheep138LowResidues.lean`. Expected generated SHA256 values:
+
+- `Sheep138ChildLowResidues.lean`: `7ce461415631229b433c9b0951081f5b4d7d2e2159e5f408857628d4b51f242a`
+- `Sheep138ChildLowCases.lean`: `caf6d6fd00e8ecdf8fd668800d4f9622073f5af9f9020ffd0a5ce5b34dc03339`
+- `Sheep138FullClass.lean`: `6312806560d958861720f016d9fd048faec7163f9fb1dc3d078fde62e72218dd`
+
+The existing [manual source-CI workflow](../../.github/workflows/agent22-sheep-source-bridge.yml) now restores, generates, and builds this entire chain. A **new CI success has not been obtained**, because the earlier source workflow dispatch [41639176407](https://github.com/FlareZ123/bb6/actions/runs/41639176407) failed in runner initialization with unreadable logs. Distinguish the **successful local Lean-kernel proof with original source imports** from pending pinned-version CI.
+
+This theorem is an infinite congruence-family exclusion within one hard machine, **not a proof that Sheep does not halt**, because the other possible power exponents remain. It does not establish a universal BB(6) upper bound or exact BB(6). External novelty and independent adversarial review remain to be assessed; the proof is kept in `im-results/` accordingly.
