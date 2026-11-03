@@ -1,1 +1,2 @@
-Proof probe. No executable code. Source arithmetic is in the dossier.
+def f(x):
+    return x + 1
