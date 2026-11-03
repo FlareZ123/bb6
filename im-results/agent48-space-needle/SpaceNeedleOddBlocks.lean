@@ -88,9 +88,25 @@ theorem odd_block_prefix_odd (j s m : Nat) (hm : 0<m) :
     omega
   omega
 
+
+/-- Any terminal counter reached precisely at the exit of a positive odd
+block has exponent K satisfying 2^K ≡ 1 (mod 5^t). -/
+theorem odd_block_terminal_condition (t m K : Nat) (ht : 0<t) (hm : 0<m)
+    (h : 5^t*m-1=2^K-2) : 5^t ∣ 2^K-1 := by
+  have h5 : 5 ≤ 5^t := by
+    have hh := Nat.pow_le_pow_right (by omega : 0<5) (show 1≤t by omega)
+    simpa using hh
+  have hmul : 5^t ≤ 5^t*m := by
+    have hh := Nat.mul_le_mul_left (5^t) (show 1≤m by omega)
+    simpa using hh
+  have hlarge : 5 ≤ 5^t*m := by omega
+  have heq : 5^t*m+1=2^K := by omega
+  exact ⟨m,by omega⟩
+
 end BB6.Agent48.SpaceNeedle
 #print axioms BB6.Agent48.SpaceNeedle.odd_step
 #print axioms BB6.Agent48.SpaceNeedle.odd_block
 #print axioms BB6.Agent48.SpaceNeedle.odd_block_prefix
 #print axioms BB6.Agent48.SpaceNeedle.odd_block_exits_even
 #print axioms BB6.Agent48.SpaceNeedle.odd_block_prefix_odd
+#print axioms BB6.Agent48.SpaceNeedle.odd_block_terminal_condition
