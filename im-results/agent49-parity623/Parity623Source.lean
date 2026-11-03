@@ -1,0 +1,153 @@
+import BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+
+/-!
+# Original-source BB(6) #623 high-level blank-orbit parity
+The following statements use DeepMind's *actual* Lean definitions of evalA,
+drainB, highLevelNext and HighLevelState. Compile in an upstream Cryptids
+checkout at the exact pinned commit using the repository's manual CI workflow.
+No rule definitions are copied or replaced in this file. No sorry.
+-/
+
+namespace BB6.Agent49ParitySource
+
+open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+
+private abbrev State := HighLevelState
+private abbrev next : State → Option State := highLevelNext
+
+/-- A successful A-transition preserves the parity of a + (k + 1). -/
+theorem evalA_parity (a : Nat) :
+    ∀ k m aa bb dd : Nat, evalA a k m = some (aa, bb, dd) →
+      (aa + bb) % 2 = (a + k + 1) % 2 := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+  | succ a ih =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+      · simp [hk2, hk0] at h
+        have hp := ih (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+        omega
+
+/-- Every successful B-drain returns with first counter parity a + b. -/
+theorem drainB_parity (b : Nat) :
+    ∀ a d aa dd : Nat, drainB a b d = some (.D aa dd) →
+      aa % 2 = (a + b) % 2 := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d aa dd h
+    rw [drainB] at h
+    by_cases hb : b = 0
+    · simp [hb] at h
+      cases h
+      omega
+    · simp only [if_neg hb] at h
+      cases he : evalA a (b - 1) (d + 2 * b + 3) with
+      | none => simp [he] at h
+      | some p =>
+        rcases p with ⟨a1, b1, d1⟩
+        simp only [he, Option.bind_some] at h
+        by_cases hlt : b1 < b
+        · simp only [if_pos hlt] at h
+          have hp := evalA_parity a (b - 1) (d + 2 * b + 3) a1 b1 d1 he
+          have hr := ih b1 hlt a1 d1 aa dd h
+          omega
+        · simp [hlt] at h
+
+/-- Every surviving return from an even-a section remains in even a. -/
+theorem next_preserves_even (a d aa dd : Nat)
+    (ha : a % 2 = 0)
+    (hstep : next (.D a d) = some (.D aa dd)) : aa % 2 = 0 := by
+  simp only [next, highLevelNext] at hstep
+  by_cases h0 : a = 0
+  · simp only [if_pos h0] at hstep
+    by_cases hd : d % 2 = 1
+    · simp only [if_pos hd] at hstep
+      have hp := drainB_parity 2 (d + 1) 2 aa dd hstep
+      omega
+    · simp only [if_neg hd] at hstep
+      cases hstep
+      omega
+  · simp only [if_neg h0] at hstep
+    by_cases h1 : d % 2 = 1 ∧ a ≥ d + 5
+    · simp only [if_pos h1] at hstep
+      have hp := drainB_parity (d + 3) (a - d - 5) 5 aa dd hstep
+      omega
+    · simp only [if_neg h1] at hstep
+      by_cases h2 : d % 2 = 0 ∧ a ≥ d + 3
+      · simp only [if_pos h2] at hstep
+        have hp := drainB_parity (d + 2) (a - d - 2) 2 aa dd hstep
+        omega
+      · simp only [if_neg h2] at hstep
+        have heven : a % 2 ≠ 1 := by omega
+        simp only [if_neg heven] at hstep
+        by_cases h4 : a = d + 2
+        · simp only [if_pos h4] at hstep
+          have hp := drainB_parity a 0 2 aa dd hstep
+          omega
+        · simp only [if_neg h4] at hstep
+          by_cases h5 : d % 2 = 1
+          · simp only [if_pos h5] at hstep
+            have hp := drainB_parity (a - 1) (d + 4 - a) 3 aa dd hstep
+            omega
+          · simp only [if_neg h5] at hstep
+            cases he : evalA (d + 1 - a) a (2 * a + 5) with
+            | none => simp [he] at hstep
+            | some p =>
+              rcases p with ⟨p1, p2, p3⟩
+              simp only [he, Option.bind_some] at hstep
+              have hp := evalA_parity (d + 1 - a) a (2 * a + 5) p1 p2 p3 he
+              have hr := drainB_parity p2 p1 p3 aa dd hstep
+              omega
+
+def run : Nat → Option State
+  | 0 => some (.D 0 7)
+  | n + 1 => (run n).bind next
+
+/-- All surviving high-level blank-origin section visits have an even first counter. -/
+theorem run_preserves_even (n a d : Nat)
+    (h : run n = some (.D a d)) : a % 2 = 0 := by
+  induction n generalizing a d with
+  | zero =>
+    simp only [run] at h
+    cases h
+    decide
+  | succ n ih =>
+    simp only [run] at h
+    cases hr : run n with
+    | none => simp [hr] at h
+    | some s =>
+      rcases s with ⟨aa, dd⟩
+      simp only [hr, Option.bind_some] at h
+      exact next_preserves_even aa dd a d (ih aa dd hr) h
+
+/-- Even first counter alone cannot guarantee survival. -/
+theorem synthetic_even_halter : next (.D 4 2) = none := by decide +kernel
+theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
+
+#print axioms evalA_parity
+#print axioms drainB_parity
+#print axioms next_preserves_even
+#print axioms run_preserves_even
+#print axioms synthetic_even_halter
+
+
+end BB6.Agent49ParitySource
