@@ -63,6 +63,24 @@ theorem source_root_to_189_356 :
   have hh := source_run_eq 156 (0,0)
   simpa [lift,highLevelStart,BB429Ladder.root_to_189_356] using hh
 
+/-- Second source-connected family: two resets and k first-branch moves. -/
+theorem source_odd_ray_ladder (k n w : Nat) (hk : 1≤k) (hk4 : k%4=1)
+    (hw4 : w%4=1)
+    (hb : 3*(w+n*(3*k+17))≤2*BB429Ladder.rayU k+1) :
+    sourceRun (n*(k+2)) (.J (BB429Ladder.rayU k) w) =
+      some (.J (BB429Ladder.rayU k) (w+n*(3*k+17))) := by
+  have h := BB429OddExtension.odd_ray_ladder k n w hk hk4 hw4 hb
+  have hh := source_run_eq (n*(k+2)) (BB429Ladder.rayU k,w)
+  simpa [lift,h] using hh
+
+theorem source_root_to_93_45 :
+    sourceRun 40 highLevelStart = some (.J 93 45) := by
+  have hh := source_run_eq 40 (0,0)
+  simpa [lift,highLevelStart,BB429OddExtension.rooted_odd_ladder_exit] using hh
+
+#print axioms source_odd_ray_ladder
+#print axioms source_root_to_93_45
+
 #print axioms source_step_eq
 #print axioms source_run_eq
 #print axioms source_ray_ladder
