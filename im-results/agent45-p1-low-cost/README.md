@@ -1,6 +1,6 @@
 # Agent 45: low-inverse-cost arithmetic rigidity of the P1 two-feeder obstruction
 
-**Research status:** independent reproduction of an already existing stronger result, **not new mathematical progress**. Agent9's source-certified [DichotomyOriginal.lean](../agent9-p1-logcost/DichotomyOriginal.lean), [CI 41554472589](https://github.com/FlareZ123/bb6/actions/runs/41554472589), proves the same exact affine wall with a **stronger 8P** low-cost threshold; the file here only proves a weaker 7P implication. Locally kernel-checked with Lean 4.36.0-rc2 on 2026-11-03; source-connected transfer for this redundant specialization is pending. No P1 halting decision, BB(6) bound or external novelty claim. Issue: [R002](../../research/issues/R002.md). Evidence and hypotheses must not be confused with blank reachability.
+**Research status:** independent reproduction of an already existing stronger result, **not new mathematical progress**. Agent9's source-certified [DichotomyOriginal.lean](../agent9-p1-logcost/DichotomyOriginal.lean), [CI 41554472589](https://github.com/FlareZ123/bb6/actions/runs/41554472589), proves the same exact affine wall with a **stronger 8P** low-cost threshold; the file here only proves a weaker 7P implication. Locally kernel-checked with Lean 4.36.0-rc2 on 2026-11-03; **original-source bridge also certified** by manual CI [41556866983](https://github.com/FlareZ123/bb6/actions/runs/41556866983), commit `c337df4f91a9adc86cbca34ffec8133d9004ffa7`. The redundant specialization remains non-novel. No P1 halting decision, BB(6) bound or external novelty claim. Issue: [R002](../../research/issues/R002.md). Evidence and hypotheses must not be confused with blank reachability.
 
 ## The new checked statement
 
@@ -32,6 +32,10 @@ All statements are over natural numbers, with natural division. The polynomial p
 
 **Reproduction:** reconstruct Lean 4.36.0-rc2 from the supplied archive, run `lean LowCostPower.lean` from this directory (with `Std` on its library path). Local check succeeded. The final `#print axioms` reported exactly `[propext, Quot.sound]`, and no `sorryAx`. The checked local file had SHA-256 `01a0e37ce9471a505d0f03b1ba96cd088d4bb2bba832d32ef606032c18b7dd03`.
 
+## Genuine-source verification
+
+[`LowCostSource.lean`](LowCostSource.lean) derives `BB6.Agent45LowCost.source_low_cost_even_target` for every authentic `OddCone`, every exact original `inverseAt` to an even-right source, and any originally blank-reachable even terminal input, under the extra `m<=7P` hypothesis. It is source-compilable against **unmodified** Agent1/47/45/50 modules. In successful existing manual CI 41556866983 (job `125657780653`), `#print axioms` was `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). The earlier Agent9 theorem is stronger (`m<8P`) and was built in the same run.
+
 ## Significance and restrictions
 
 The two genuine n=16q+2 feeder hubs established in Agent45's [earlier original-source iff](../agent45-p1-deep-two/README.md) have initial mass `8u+5` and `8u+3`, respectively, where `u=7P-4q-3`. Agent1's [inverse characterization](../agent1-p1-quarter/InverseIff.lean) and [all-depth small-left theorem](../agent1-p1-quarter/UniversalSmallLeft.lean) provide the displayed premises along any qualifying even-right inverse leaf. Agent9's earlier theorem has already established a *strictly stronger* source-connected version. This standalone proof adds no known exclusion or novel method. The theorem therefore reduces all **low-cost** potential power-compatible leaves to one specific exponent, one depth, and one affine target line per root:
@@ -58,7 +62,7 @@ The q=38,101,294 cases had been among the 13 **capped** at 10,000 hubs in Agent1
 
 ## Next decisive tasks
 
-1. Build and kernel-check the source-dependent wrapper importing unmodified Agent1/47/45 code: derive the standalone theorem's hypotheses from a real `OddCone`, `inverseAt` and positive-even reachable leaf. This would make the affine-line reduction a genuinely source-connected theorem.
+1. **Completed:** built and source-checked `LowCostSource.lean`; independent repeat confirms consistency with Agent9's stronger original-source proof. No further effort on reproducing the same dichotomy is warranted.
 2. Prove or falsify an **all-q** barrier excluding the two small-cost affine odd-cone lines, while explicitly accounting for arbitrarily deep synthetic inverse paths. This is a weaker necessary goal than claiming every odd hub has exponential first counter.
 3. Establish a uniform inverse-cost limit `m<=7P` or handle the high-cost remainder without presuming finite sample closure. Test any proposal against q=294's 321,678-node cone and the existing Agent45/27 deep synthetic witnesses.
 
