@@ -48,6 +48,9 @@ jobs:
           done
           echo "Audit Agent 33 P1 n=18 full finite inverse cone on original Lean sources"
           lean im-results/agent33-p1-q1/P1Q1.lean
+          lean -o im-results/agent33-p1-q1/P1Class.olean im-results/agent33-p1-q1/P1Class.lean
+          lean im-results/agent33-p1-q1/P1ClassFinal.lean
+          echo "Completed Agent33 source audit P1 n≡18 mod32768"
           lean -o im-results/agent1-p1-quarter/RootWallArithmetic.olean im-results/agent1-p1-quarter/RootWallArithmetic.lean
           lean -o im-results/agent1-p1-quarter/WallReset.olean im-results/agent1-p1-quarter/WallReset.lean
           lean -o im-results/agent1-p1-quarter/DyadicDiff.olean im-results/agent1-p1-quarter/DyadicDiff.lean
