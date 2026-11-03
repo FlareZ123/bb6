@@ -105,6 +105,7 @@ jobs:
           lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
           lean im-results/agent42-coverage-normal/ZeroPrefix.lean
           node im-results/agent42-coverage-normal/zero_cycle_census.cjs
+          node im-results/agent42-coverage-normal/path_mask_crosscheck.cjs
           export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent44-drift-closure
           lean -o im-results/agent8-coverage-contract/RayClosed.olean im-results/agent8-coverage-contract/RayClosed.lean
           lean -o im-results/agent8-coverage-contract/RayChecker.olean im-results/agent8-coverage-contract/RayChecker.lean
