@@ -1,6 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import EAllDouble
-import PrefixENoFSource
+import PrefixNoF
 import NoEarlierF
 
 set_option maxHeartbeats 30000000
