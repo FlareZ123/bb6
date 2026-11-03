@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections import Counter
 from hashlib import sha256
+from fractions import Fraction
 from random import Random
 
 RLE = "1RB1LC_1LA1RF_0RD1RD_0RA0LE_1LA0LE_0RC---"
@@ -63,6 +64,22 @@ def digest(state: str, pos: int, tape: set[int]) -> str:
                    ",".join(map(str, sorted(tape)))).encode("ascii")).hexdigest()
 
 
+
+COEFFICIENT = {
+    "A1-E-sweep": Fraction(1),
+    "A0-B0": Fraction(3, 2),
+    "A0-F1-halt": Fraction(1),
+    "A0-D0": Fraction(1),
+    "A0-D1-C0": Fraction(17, 16),
+    "A0-D1-C1": Fraction(17, 16),
+}
+
+
+def energy(tape: set[int]) -> Fraction:
+    """Positive dyadic tape potential in fixed integer coordinates."""
+    return sum((Fraction(2) ** (-pos) for pos in tape), Fraction(0))
+
+
 def check_synthetic() -> None:
     rng = Random(0xBB620262)
     tally = Counter()
@@ -79,6 +96,7 @@ def check_synthetic() -> None:
                 assert (state, head in actual) in TABLE
                 assert state != "A"
         assert (s, p, accelerated) == (state, head, actual), (trial, label)
+        assert energy(accelerated) - energy(tape) == COEFFICIENT[label] * (Fraction(2) ** (-position)), (trial, label)
         tally[label] += 1
     print("[synthetic] 10000 exact matches:", dict(sorted(tally.items())))
 
