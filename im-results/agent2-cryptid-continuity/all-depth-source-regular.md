@@ -44,6 +44,19 @@ The third endpoints are **identical** to the E-ladder input
 
 `EAllDepthSafe.lean` lifts this to every m≥1: for a prepared regular input of at most `120·3^m` bits, the machine is *provably nonhalting at every primitive time t≤64^m*. This is a source-level mathematical statement of a **supercubic input-size runtime lower bound** for infinitely many **nonblank prepared inputs** (exponent `log_3 64 ≈ 3.78558`). It does not imply any corresponding lower bound on the canonical blank-input Busy Beaver value.
 
+**Final directly physical formulation:** [`EInputLengthSafe.lean`](EInputLengthSafe.lean) removes the remaining shorthand between symbolic `k,q` and real initial tape size. It proves `start_is_regular` as exact configuration equality, `regular_right_length` as the exact list length, and the particularly simple theorem
+
+```lean
+BB6.EInputLengthSafe.bounded_tape_unbounded_raw_runtime
+  (m : Nat) (hm : 0 < m) :
+  ∃ c : CryptidBoundary.Cfg,
+    c.st = 5 ∧ c.l = [] ∧ c.h = false ∧
+    c.r.length ≤ 120 * 3^m ∧
+    ∀ t, t ≤ 64^m → (CryptidBoundary.run t c).st ≠ 6
+```
+
+This is an independently checked, **concrete original six-state machine configuration-size versus primitive runtime theorem**, with no implicit conversion from paper tape encoding. [Exact source CI 41702472297](https://github.com/FlareZ123/bb6/actions/runs/41702472297) **succeeded**, showing precisely `[propext, Quot.sound]` as axioms, with no `sorryAx`.
+
 ## Reproducibility and trust boundary
 
 - [Exact universal third F/0 E/B branch](EThirdSource.lean) imports original `ESecondSource`, `CryptidTriplePairs`, `BoundaryPadding`. Both congruence branches are independently proved for every parameter.
