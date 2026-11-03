@@ -36,7 +36,7 @@ theorem zero_first_odd_necessary (a k y : Nat)
               rcases hi with ⟨_,n,hs,_⟩ | ⟨hy,n,hs,_⟩
               · have hp : 1≤2^n := Nat.one_le_pow n 2 (by decide)
                 omega
-              · have heq : 2^n*16=4*(2^n*4) := by ac_rfl
+              · have heq : 2^n*16=4*(2^n*4) := by omega
                 rw [heq] at hs
                 omega
     · have ha2 : 2≤a := by omega
