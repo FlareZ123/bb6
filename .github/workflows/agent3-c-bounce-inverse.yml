@@ -135,7 +135,9 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
           lean HighAffineInfinite.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineCone.lean .
-          lean HighAffineCone.lean
+          lean -o HighAffineCone.olean HighAffineCone.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighFamilyConeBridge.lean .
+          lean HighFamilyConeBridge.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighConeAnyRoot.lean .
           lean HighConeAnyRoot.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
