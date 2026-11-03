@@ -132,18 +132,18 @@ theorem rayU_odd_boundary (k w:Nat) (hk:3≤k) (hw:w%4=3)
         some (2*BB429Ladder.rayU k-w+18,
           3*w-2*BB429Ladder.rayU k-22)) := by
   have hlarge:11≤BB429Ladder.rayU k := by
-    have h:3≤k := hk
-    have h0: 11≤BB429Ladder.rayU 3 := by decide
     have hmono : ∀ j:Nat, 11≤BB429Ladder.rayU (j+3) := by
       intro j
       induction j with
       | zero => decide
       | succ j ih =>
-        have hr: BB429Ladder.rayU (j+1+3) =
+        have hr:BB429Ladder.rayU (j+1+3)=
             2*BB429Ladder.rayU (j+3)+3 := by
-          congr 1 <;> omega
+          have hj:j+1+3=(j+3)+1:=by omega
+          rw [hj]
+          rfl
         omega
-    have hj: k=(k-3)+3 := by omega
+    have hj:k=(k-3)+3:=by omega
     rw [hj]
     exact hmono (k-3)
   have huodd:=BB429Ladder.rayU_odd k (by omega)
