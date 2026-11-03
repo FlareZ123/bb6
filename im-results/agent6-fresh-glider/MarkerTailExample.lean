@@ -15,13 +15,11 @@ def shiftedMarkedSeed : FinRayCfg :=
 
 theorem embed_markedSeed :
     embedFinRay markedSeed = tailSeed 2 markerPattern := by
-  change ({state := 2, head := 0,
-    tape := fun x : Int => ([0] : List Int).contains x} : Config) =
-    ({state := 2, head := 0,
-    tape := fun x : Int => if 0 <= x then markerPattern x else false} : Config)
   apply congrArg (fun tape : Int → Bool =>
     ({state := 2, head := 0, tape := tape} : Config))
   funext x
+  change ([0] : List Int).contains x =
+    (if 0 <= x then markerPattern x else false)
   by_cases hx : x = 0
   · subst x
     decide
@@ -36,7 +34,7 @@ theorem shifted_marked_tail (x : Int) (hx : 1 <= x) :
   by_cases hone : x = 1
   · subst x
     decide
-  · have hother : x-1 != 0 := by omega
+  · have hother : x-1 ≠ 0 := by omega
     simp [hone, hother]
 
 /-- Blank start enters marked state C after A0, B0; then C carries the
@@ -50,11 +48,11 @@ def markedTailPump : PartialMachine := fun slot =>
   else none
 
 theorem marked_entry_check :
-    finitePartialRun markedTailPump 2 finiteBlank = some markedSeed := by decide
+    finitePartialRun markedTailPump 2 finiteBlank = some markedSeed := by rfl
 
 theorem marked_macro_check :
     finitePartialRun markedTailPump 3 markedSeed =
-      some shiftedMarkedSeed := by decide
+      some shiftedMarkedSeed := by rfl
 
 theorem marked_window_check :
     (List.range 3).all (fun k =>
@@ -79,7 +77,8 @@ theorem markedTailPump_nonhalting (bound : Nat) :
       · intro x hx
         change (if 0 <= x then markerPattern x else false) =
           markerPattern (x-0)
-        simp [hx]
+        have hge : 0 ≤ x := by simpa only [tailSeed] using hx
+        simpa only [if_pos hge, Int.sub_zero]
   · refine ⟨embedFinRay shiftedMarkedSeed, ?_, ?_, ?_, ?_⟩
     · simpa only [embed_markedSeed] using
         (finitePartialRun_sound markedTailPump m hm
