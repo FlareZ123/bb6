@@ -126,3 +126,26 @@ I_(8k+11)(0 1010 y)
 For every `m,y`, an exact **27-step A-boundary prefix** from `A_(m+3)(110111y)` enters `sweepD m (1^8 01010y)`. Its `2m+3`-step universal leftward sweep yields the endpoint. The first-27-step physical exclusion and the general no-F sweep are kernel proven; Agent 2's original-prefix no-F lemma supplies the authentic F-entry side. This word also lies outside the `10`/`111` A-code grammar. It obeys the same input unary shift `+3` to output shift `+8` within its cylinder.
 
 Both new strict theorems concern **arbitrary synthetic F-section inputs** and do not assert that their word patterns occur on the actual all-blank trajectory, decide any six-state root, or change global Busy Beaver bounds. Full current priority is to determine a uniform first-return/halting mechanism on exceptional `110` continuations, or an actual blank-origin invariant, rather than accumulating unrelated narrow cylinders.
+
+### Universal source-checked terminal-certificate lifting (03 November)
+
+The proof is now organized around a general reusable **conditional original-source theorem**, [`AExceptionalClosure.lean`](AExceptionalClosure.lean), with its exact original-machine endpoint and *no-earlier-physical-return* hypotheses explicit. Its theorem `BB6.CryptidAGenericClosure.lift_first_return` takes **any** source-certified suffix transformer on A-boundaries for all left-stack lengths `m≥3`, with terminal time `cost(m)`, output unary length `outlen(m)`, packet `packet(y)`, and resulting tail `tail(y)`. It transports that certificate through every finite mixed `10`/`111` code `Code(w)` and through the genuine F/0-to-A first-delimiter prefix, for every `k,w,y`. The resulting exact first-positive-time physical return has time
+
+```
+12k² + 41k + 32 + wordCost(4k+3,w)
+     + cost(4k+3+wordInc(w))
+```
+
+and output unary length `outlen(4k+3+wordInc(w))`, followed by the same supplied `tail(y)`. This theorem makes no claim that the terminal certificate is universally available for an arbitrary unparsed word. Original-source [CI 41568853999 succeeded](https://github.com/FlareZ123/bb6/actions/runs/41568853999), with `[propext, Quot.sound]` as the only axioms.
+
+The independently compiled [`A110111CodeFirst.lean`](A110111CodeFirst.lean) instantiates the generic theorem using the `110111` terminal certificate, giving for **all k,w,y**:
+
+```
+I_(3k+3)(0 Code(w) 110111 y)
+  --[12k²+41k+32+wordCost(4k+3,w)+2*(4k+3+wordInc(w))+24]-->
+I_(8k+11+2*wordInc(w))(0 1010 y)
+```
+
+as the **strict first physical F-on-zero return**. The proof uses universal strong `a110111_run` and `a110111_first_physical` with `m-3` and the guard `m≥3`. [Original-source CI 41569350088 succeeded](https://github.com/FlareZ123/bb6/actions/runs/41569350088) after simplifying the explicit packet constructor; final axiom audit is `[propext, Quot.sound]`.
+
+Together with Agent 2's source-certified `Code(w)0` first return and the new `Code(w)1100` first return, this establishes three **infinite regular-language branches** of the genuine D F/0 return interpreter. Their output suffix and exact time are branch-dependent. Each fixes arbitrary trailing data and shifts output unary length by +8 when the input k increases by one with fixed `w,y`. The branch grammar is incomplete: the `11010...` and `11011...` continuations include other returns or halting patterns. Neither a complete language cover nor a blank-origin induction is proved.
