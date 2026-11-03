@@ -59,7 +59,7 @@ jobs:
           lean -o im-results/agent50-p1-l1-reset/L1ScaledIdent.olean im-results/agent50-p1-l1-reset/L1ScaledIdent.lean
           lean -o im-results/agent50-p1-l1-reset/L1AllPrefixBridge.olean im-results/agent50-p1-l1-reset/L1AllPrefixBridge.lean
           lean -o im-results/agent1-p1-quarter/L0OneResetCoverage.olean im-results/agent1-p1-quarter/L0OneResetCoverage.lean
-          lean im-results/agent50-p1-l1-reset/ResetCount.lean
+          lean -o im-results/agent50-p1-l1-reset/ResetCount.olean im-results/agent50-p1-l1-reset/ResetCount.lean
           for m in QuarterGap QuarterCone QuarterFinal SecondFeederValuation; do
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
           done
@@ -76,6 +76,7 @@ jobs:
           lean -o im-results/agent9-p1-logcost/CostOriginal.olean im-results/agent9-p1-logcost/CostOriginal.lean
           lean -o im-results/agent9-p1-logcost/DichotomyArithmetic.olean im-results/agent9-p1-logcost/DichotomyArithmetic.lean
           lean -o im-results/agent9-p1-logcost/DichotomyOriginal.olean im-results/agent9-p1-logcost/DichotomyOriginal.lean
+          lean im-results/agent50-p1-l1-reset/ReachLowReset.lean
           lean -o im-results/agent9-p1-logcost/OddResetArithmetic.olean im-results/agent9-p1-logcost/OddResetArithmetic.lean
           lean -o im-results/agent9-p1-logcost/OddResetOriginal.olean im-results/agent9-p1-logcost/OddResetOriginal.lean
           lean -o im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.olean im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.lean
