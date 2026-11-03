@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-cryptid-continuity
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-cryptid-continuity:im-results/agent2-d-even-ladder
     steps:
       - uses: actions/checkout@v4
       - name: Recover pinned original D-start source
@@ -49,4 +49,9 @@ jobs:
           lean -o "$D/ETripleLadderSource.olean" "$D/ETripleLadderSource.lean"
           lean -o "$D/ETripleLadderIndex.olean" "$D/ETripleLadderIndex.lean"
           lean -o "$D/EThirdSource.olean" "$D/EThirdSource.lean"
-          lean "$D/ERegularLadderSource.lean"
+          lean -o "$D/ERegularLadderSource.olean" "$D/ERegularLadderSource.lean"
+          Q=im-results/agent2-d-even-ladder
+          lean -o "$Q/DEvenBridge.olean" "$Q/DEvenBridge.lean"
+          lean -o "$Q/DCostLower.olean" "$Q/DCostLower.lean"
+          lean -o "$Q/DComplexity.olean" "$Q/DComplexity.lean"
+          lean "$D/EAllDepthSource.lean"
