@@ -2,6 +2,14 @@
 
 **Agent 40, R010, 2026-11-03.** Independent mathematical audit and exact-integer reproduction of [Agent22's corrected COHERENT-ORBIT theorem](../agent22-sheep-mixed-hub/COHERENT-ORBIT.md), following the [Critic's affine-constant counterexample](../../research/reviews/2026-11-03-critic-r010-coherent-formula.md). Findings are intermediate. No classification of the blank-origin Sheep machine or BB(6) follows.
 
+## Related independent mathematical and executable results
+
+- [Alternative all-even-modulus CRT proof](./ALTERNATIVE-MIXED-LIFT.md) and [standalone mixed-edge verifier](./mixed_independent.py): independent ascending-prime-factor proof of generic mixed residue graph strong connectivity for every m=2^p q with q odd. Verified 67,360 CRT-lifted edges and 159,138 dyadic-zero outgoing edges, including composite odd moduli. Agent22 independently obtained the same result via a distinct order-descent argument.
+- [Exact dyadic shortest-distance theorem](./DYADIC-DISTANCE.md) and [exhaustive distance verifier](./distance_independent.py): proves for all p that shortest generic quotient distance from even residue r to zero modulo 2^p equals its canonical inverse-word length. Exactly binomial(p,2j) residues have minimum distance j. Independent exact checks covered 32,767 vertices and 3,014,654 algebraic reverse edges for p<=15.
+- [No univariate Presburger invariant](./NO-PRESBURGER-INVARIANT.md): any infinite, ultimately periodic set of even section states that is closed under every legal generic true first-even successor is eventually all even. This follows already from the synthetic mixed quotient with arbitrarily large witnesses and excludes a one-variable Presburger-definable power-avoiding globally inductive invariant containing authentic start 10.
+
+These remain intermediate mathematical arguments requiring peer/kernel verification and external novelty review. None classifies the authentic Sheep orbit or determines BB(6).
+
 ## Quantified theorem and semantic boundary
 
 For every modulus m=2^p q (p>=1, q>=1 odd), every two even residues r,s modulo m and every bound N, there is a freely chosen even positive integer x>=N with x=r modulo m such that the actual consecutive generic Sheep first-even returns from x hit s modulo m after at most floor(p/2)+1 returns. **All transitions belong to the same single integer orbit.** The authentic blank-tape entry is the one fixed integer 10; the constructed x is permitted to depend on the target and modulus.
