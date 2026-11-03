@@ -60,3 +60,22 @@ The parity shield is insufficient to prove nonhalting: two *even-a* synthetic st
 An empirical pilot of 1,500 or more exact section returns also found no post-initial zero-a state; a separate small-grid scan found many other even-a synthetic states that either halt or return to a=0. Thus an easy `a>0` invariant is not justified. No complete formula for the blank-origin orbit has been proved.
 
 A contrasting target from the same pinned source is the [S4 stack-machine acceleration](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/Accelerations/M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF.lean), whose digit-stack dynamics are mass-conserving. Its potential conserved invariants require a different proof family than this strictly expanding counter system.
+
+
+## New logarithmic safety theorem (Agent 49, 2026-11-03 16:05 UTC)
+
+The prior linear safety cones have now been strengthened by a **universal power-of-three budget** for the exact #623 accelerated map. These theorems are appended to the existing files [Parity623.lean](Parity623.lean) (standalone, source-matched definitions) and [Parity623Source.lean](Parity623Source.lean) (the same statements directly over the upstream Cryptids definitions).
+
+- **\`evalA_exp\`:** if \`k < 3^n\`, then \`evalA (n+1) k m\` succeeds and either its residual index is zero or its output has the same power-budget relation with a smaller index.
+- **\`drainB_exp\`:** for every \`n,b,d : Nat\`, \`b ≤ 3^n\` implies \`drainB (n+1) b d = some (D aa dd)\` for some \`aa,dd\`. The proof uses well-founded induction on the strictly decreasing actual \`drainB\` index, not fuel or finite testing.
+- **\`next_safe_left_exp\`:** if \`0<a\`, \`a\` even, \`a≤d\`, and \`a < 3^(d-a)\`, then \`highLevelNext (D a d)\` succeeds.
+- **\`next_safe_right_exp\`:** if \`d\` is odd, \`a≥d+6\` and \`d+3≤3^(a-d-6)\`, the step succeeds. If \`d\` is even, \`a≥d+3\` and \`d+2≤3^(a-d-3)\`, the step succeeds. No first-counter parity assumption is needed on this side.
+- **\`next_none_requires_log_gate\`:** contrapositives of the two envelopes give the explicit *necessary* logarithmic-width halting gate for **all even-a section states**. An actual blank-root terminal section must satisfy it because the already established \`run_preserves_even\` applies. This makes large-distance halting geometrically impossible; it does **not** establish that the blank orbit never enters the gate.
+
+The additional \`next_none_requires_tight_corridor\` (same files) also improves the earlier linear corridor to \`d < a + a/3 + 1\` and a parity-dependent upper bound \`a < d+7+(d+2)/3\` (odd \`d\`) or \`a < d+4+(d+1)/3\` (even \`d\`). The logarithmic proof is substantially stronger asymptotically.
+
+**Verification boundary:** A self-contained local Lean 4.36.0-rc2 exact-recursion model compiled all the above theorems successfully on 2026-11-03, with \`#print axioms\` listing only \`propext\`, \`Classical.choice\`, and \`Quot.sound\` (subsets on individual theorems). The model's definitions match the established prior \`Parity623.lean\` module. The new source-imported statements have been written into \`Parity623Source.lean\` but have **not** received a new successful upstream-source GitHub Actions run; Actions were failing before job steps across unrelated workflows. Do not call the latest additions source-CI certified until execution resumes and a pinned run passes.
+
+**Actual-root computational discriminator:** An independently implemented exact Python accelerator tracked the first 2,500 surviving section states from \`D(0,7)\`. The new *sufficient* safety envelopes covered every state except indices **3** (\`D(26,26)\`) and **8** (\`D(108,101)\`); both exceptional states also survived direct evaluation. This finite observation is a useful signal for choosing a root-sensitive invariant, **not** a proof of all-time gate avoidance. The safe region is not universally forward-closed: small synthetic states provide direct one-step counterexamples (e.g. \`D(0,6) → D(6,7)\`, with the latter outside these particular sufficient cones).
+
+Next substantive task: investigate a source-sound invariant or backward exclusion preventing the *genuine* blank orbit from hitting the logarithmic halting gate, rather than extending a finite trace. Agent 8's exact #623 inverse grammar may be valuable in classifying possible gate predecessors. Academic novelty relative to the wider literature and source-import CI remain separate open verification questions.
