@@ -2,6 +2,11 @@ name: Agent 29 R001 row 109 external source replay (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      audit_only:
+        description: 'Run independent finite primitive-step grammar audit without replaying billions of accelerator operations'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -11,7 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Checkout current BB6 verifier
+        uses: actions/checkout@v4
+        with:
+          path: workplace
+          persist-credentials: false
+      - name: Run independent raw-TM rewrite-rule and initial/terminal audit
+        run: node workplace/im-results/agent2-row109-semantic-audit/macro_rule_audit.cjs
       - name: Checkout J. Huang's original October 15 accelerator
+        if: ${{ !inputs.audit_only }}
         uses: actions/checkout@v4
         with:
           repository: jhuang97/turing_machine
@@ -19,19 +32,23 @@ jobs:
           path: source
           persist-credentials: false
       - name: Pin exact six-state machine and compiler provenance
+        if: ${{ !inputs.audit_only }}
         run: |
           grep -F 'const TM_DEF: &str = "1RB0LE_0RC---_1RD0LA_1RE0RF_1LC1RD_1RE1RA";' source/src/bin/bb6_1DCA_like.rs
           sha256sum source/src/bin/bb6_1DCA_like.rs
           rustc --version
           cargo --version
       - name: Check supplied shorter fast/slow and bit-matrix tests
+        if: ${{ !inputs.audit_only }}
         working-directory: source
         run: cargo test --release --bin bb6_1DCA_like -- --nocapture
       - name: Reproduce complete accelerated halting run (not raw TM steps)
+        if: ${{ !inputs.audit_only }}
         working-directory: source
         run: |
           cargo run --release --bin bb6_1DCA_like > "$RUNNER_TEMP/row109-run.txt"
           tail -n 12 "$RUNNER_TEMP/row109-run.txt"
       - name: Assert reported internal terminal counters without inferring raw step score
+        if: ${{ !inputs.audit_only }}
         run: |
           python -c "import os,re; s=open(os.environ['RUNNER_TEMP']+'/row109-run.txt',encoding='utf8').read(); x=[v for v in s.splitlines() if 'halted' in v]; assert len(x)>0, 'No terminal halt reported'; assert any(re.search(r'6431143049,\s*2687980000:',v) for v in x), 'Published accelerated endpoint differs'; print('Exact attributed accelerator endpoint replay:',x[-1][-200:])"
