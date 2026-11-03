@@ -81,6 +81,20 @@ theorem zero_hub_mixed (p k s : Nat) (hp : 1 ≤ p)
   have hqodd : (3^k)%2=1 := pow_three_odd k
   exact zero_hub_any_odd p (3^k) s hp hq hqodd hs he
 
+/-- A residue predicate containing zero and globally closed under all legal
+even-to-even generic edges must contain every even residue. -/
+theorem zero_forces_even_residues (p q : Nat)
+    (hp : 1 ≤ p) (hq : 0<q) (hqodd : q%2=1)
+    (A : Nat → Prop) (hz : A 0)
+    (hclosed : ∀ x y, x%2=0 → y%2=0 → GenericStep x y →
+      A (x%(2^p*q)) → A (y%(2^p*q))) :
+    ∀ s, s<2^p*q → s%2=0 → A s := by
+  intro s hs he
+  obtain ⟨x,y,hx,hy,hxe,hye,hedge⟩ :=
+    zero_hub_any_odd p q s hp hq hqodd hs he
+  exact hy ▸ hclosed x y hxe hye hedge (hx ▸ hz)
+
 #print axioms zero_hub_any_odd
 #print axioms zero_hub_mixed
+#print axioms zero_forces_even_residues
 end BB6.SheepMixedHub
