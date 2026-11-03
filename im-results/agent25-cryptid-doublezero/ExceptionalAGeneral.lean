@@ -45,3 +45,44 @@ private theorem word_inc (p : Nat) :
   simp only [words,inc_repeat]
   omega
 
+private theorem output_input (t p : Nat) :
+    BB6.Agent32EAll.output (3*t+2) (3*p+2) [] =
+      init (List.replicate (3*(K t)+1) true ++
+        false :: (CryptidA.wordCode (words p) ++ (false :: ys))) := by
+  have hn : 8*(3*t+2)+5 = 2+(3*(K t)+1) := by dsimp [K]; omega
+  have hr : List.replicate (8*(3*t+2)+5) true =
+      true::true::List.replicate (3*(K t)+1) true := by
+    rw [hn]
+    calc
+      _ = List.replicate 2 true ++ List.replicate (3*(K t)+1) true :=
+        (List.replicate_append_replicate).symm
+      _ = _ := rfl
+  simp only [BB6.Agent32EAll.output, List.append_nil]
+  rw [hr]
+  have hq : 2*(3*p+2)+2 = 6*(p+1) := by omega
+  rw [hq,←word_shape p]
+  simp [init,ys,List.append_assoc]
+
+private theorem output_target (t p : Nat) :
+    (⟨[],false,
+      List.replicate (2*(4*(K t)+3+CryptidA.wordInc (words p))+5) true ++ ys, 5⟩ : Cfg) =
+      DRegularSource.sourceSection ⟨64*t+65+16*(p+1),0,0⟩ := by
+  have hi : CryptidA.wordInc (words p) = 8*(p+1) := word_inc p
+  have hn : (2*(4*(K t)+3+8*(p+1))+5)+6=64*t+65+16*(p+1) := by dsimp [K]; omega
+  have hrep : List.replicate (2*(4*(K t)+3+CryptidA.wordInc (words p))+5) true ++ ys =
+      List.replicate (64*t+65+16*(p+1)) true := by
+    rw [hi]
+    simp only [ys,List.replicate_append_replicate]
+    congr 1
+  have hfront : List.replicate (64*t+65+16*(p+1)) true =
+      true :: true :: List.replicate (64*t+63+16*(p+1)) true := by
+    calc
+      _ = List.replicate (2+(64*t+63+16*(p+1))) true := by congr 1; omega
+      _ = List.replicate 2 true ++ List.replicate (64*t+63+16*(p+1)) true :=
+        (List.replicate_append_replicate).symm
+      _ = _ := rfl
+  simp only [DRegularSource.sourceSection,init,oppairs,List.replicate_zero,
+    List.nil_append,List.append_nil,
+    show (64*t+65+16*(p+1))-2=64*t+63+16*(p+1) by omega]
+  rw [hrep,hfront]
+
