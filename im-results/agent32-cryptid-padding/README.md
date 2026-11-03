@@ -114,10 +114,27 @@ I_(3k+4)(0 (10)^q 110111 y)
 I_(8k+3)(longPacket(q,y)).
 ```
 
-The endpoint uses Agent37's original `longPacket` definition. The new theorem `BB6.Agent32E110111First.full_E_110111_first_return` additionally proves that at every positive primitive time strictly below the given duration, the machine is **not simultaneously** in state F, scanning zero, with its entire physical left tape empty. Its boundary lemma `eLong_firstPhysical` proves this for the entire unbounded E turnaround for all m,q,y, including the reverse C walk and final D sweep.
+The endpoint uses Agent37's original `longPacket` definition. The new theorem `BB6.Agent32E110111First.full_E_110111_first_return` additionally proves that at every positive primitive time strictly below the given duration, the machine is **not simultaneously** in state F, scanning zero, with no marked 1 anywhere on its physically blank-extended left half-tape. Its boundary lemma `eLong_firstPhysical` proves this for the entire unbounded E turnaround for all m,q,y, including the reverse C walk and final D sweep.
 
 The distinction is necessary: the six-step C-to-D turnaround can visit state F on an **interior** nonempty-left configuration. An initially attempted stronger no-F statement was false and was corrected using the exact physical-return predicate; the first CI run exposed the distinction. The proof reuses Agent2's strict original-source E prefix and B-sweep checks and Agent37's quantified E endpoint, proving the remaining first-return guard by induction and finite local checks.
 
-**Authentic original-source [GitHub Actions CI 41739674447](https://github.com/FlareZ123/bb6/actions/runs/41739674447) succeeded**, compiling original SHA-restored `Boundary.lean`, unchanged Agent32 `CryptidSix` and `CryptidPairs`, unchanged Agent37 `E110111Pairs`, unchanged Agent2 `PrefixENoFSource` and `NoEarlierF`, and the new module under Lean 4.36.0-rc2. The two printed theorem axiom audits are exactly `[propext, Quot.sound]`, with no `sorryAx`. Reproduce via the **manual-only** workflow [agent32-e110111-first.yml](../../.github/workflows/agent32-e110111-first.yml). No per-commit CI trigger was introduced.
+**Authentic original-source [GitHub Actions CI 41740117969](https://github.com/FlareZ123/bb6/actions/runs/41740117969) succeeded**, compiling original SHA-restored `Boundary.lean`, unchanged Agent32 `CryptidSix` and `CryptidPairs`, unchanged Agent37 `E110111Pairs`, unchanged Agent2 `PrefixENoFSource` and `NoEarlierF`, and the new module under Lean 4.36.0-rc2. The two printed theorem axiom audits are exactly `[propext, Quot.sound]`, with no `sorryAx`. Reproduce via the **manual-only** workflow [agent32-e110111-first.yml](../../.github/workflows/agent32-e110111-first.yml). No per-commit CI trigger was introduced.
 
 This source-certified theorem refines a genuine first-return transition rule and may be reused when composing symbolic F-section itineraries. No proof connects this entire cylinder to a true blank-origin visit, no complete D-machine decision follows, and BB(6) remains open. All findings remain intermediate.
+
+## All E-(10)^q1100 strict first returns, including q=0 and rooted-exception relevance (3 November 2026)
+
+[**EAllDoubleFirst.lean**](./EAllDoubleFirst.lean) proves, on the **unmodified authenticated original D-start transition table**, that every source-certified `BB6.Agent32EAll.all_e_double` transition is the **first** physically blank-left F/0 return. The parameter q covers all Nat, including the distinct q=0 `EZeroPair` regime and every q>=1 `Agent35.EDouble` regime, for arbitrary k and finite Boolean suffix y:
+
+- `q=0`: from `I_(3k+4)(0 1100 y)`, exactly `12k²+49k+96` primitive transitions;
+- `q=r+1`: from `I_(3k+4)(0 (10)^(r+1) 1100 y)`, exactly `12k²+49k+64+4r` primitive transitions.
+
+Output configurations are exactly `BB6.Agent32EAll.output k q y`. The conclusion excludes any earlier positive-time state F scanning zero with no 1 **anywhere** on the left, even when a finite left list retains explicit zero cells. The proof handles the special 60-step q=0 turn, the 26-step one-pair base, and the all-q scanner, A-turn, C reverse walk, and B sweep. Interior F visits are explicitly checked and have marked left cells.
+
+[**PhysicalReturnObs.lean**](./PhysicalReturnObs.lean) proves that the blank-left property and strict first-return exclusion are invariant under the repository's `BB6.BoundaryPadding.ObsEq` infinite-tape semantics. It derives this from the equivalence `(xs.any id)=false ↔ ∀n, bitAt xs n=false`, eliminating a subtle limitation of tests based only on the literal left list `[]`.
+
+[**BTrueFirst.lean**](./BTrueFirst.lean) independently strengthens the universal B return to the same genuine physical criterion for every k and suffix. It reuses Agent2's exact no-F B prefix and B-sweep original-source lemmas.
+
+**Authenticated original-source [GitHub Actions CI 41741789045](https://github.com/FlareZ123/bb6/actions/runs/41741789045) passed** for all three modules on Lean 4.36.0-rc2. Each printed theorem uses only `[propext, Quot.sound]`; there is no `sorryAx`. Reproduce with [manual-only workflow agent32-e-all-double-first.yml](../../.github/workflows/agent32-e-all-double-first.yml).
+
+The q=5 E section is independently known (from the existing `BlankExceptional.exceptional_section` source certificate) to occur after the certified 8394-section regular prefix of the genuine blank orbit, modulo `ObsEq`. The universal first-return theorem and `ObsEq` invariance now provide the ingredients to establish that the following E return is the actual **next** physical return. A combined rooted theorem is under [separate manual source audit](../../.github/workflows/agent32-blank-exceptional-first.yml); until that audit succeeds, this rooted strengthening remains a candidate. This is still an intermediate advance, not a global six-state BB proof.
