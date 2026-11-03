@@ -95,3 +95,17 @@ theorem no_halt_before_blank500 (n : Nat)
 
 #print axioms no_halt_before_blank500
 end BB6.BlankRegular500
+
+
+namespace BB6.BlankRegular500
+/-- A compact explicit decimal-order lower horizon for the genuine blank start. -/
+theorem source_time_ge_10pow427 :
+    10^427 ≤ 36 + DRegular.accumulated 500 seed9 := by decide
+
+theorem no_halt_10pow427 (n : Nat) (hn : n ≤ 10^427) :
+    (CryptidBoundary.run n CryptidBoundary.blank).st ≠ 6 :=
+  no_halt_before_blank500 n (Nat.le_trans hn source_time_ge_10pow427)
+
+#print axioms source_time_ge_10pow427
+#print axioms no_halt_10pow427
+end BB6.BlankRegular500
