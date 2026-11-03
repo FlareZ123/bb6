@@ -66,7 +66,7 @@ def terminalCost (length exponent : Nat) : Nat := 59+12*(length+exponent)
 /-- Candidate champion primitive step count from observed costs. NO RUNTIME PROOF:
     raw TM macro costs, full-source machine bridge and count remain unproved.
     The function is total but intentionally not evaluated at this huge input. -/
-def proposedChampionMoves : Nat :=
+def proposedTM63Moves : Nat :=
   let first := sectionResult 7 2 6 63
   let length1 := 3+first.exponent+2
   let index1 := resetIndex 3 first.exponent
@@ -79,7 +79,11 @@ def proposedChampionMoves : Nat :=
     last.cost + terminalCost length2 last.exponent
 
 /-- BB6Coverage counts the final undefined halting query as the last step. -/
-def proposedChampionScore : Nat := proposedChampionMoves + 1
+def proposedTM63Score : Nat := proposedTM63Moves + 1
+
+/-- Six more successful moves for the rooted champion, by Agent48's verified
+    exact A9/E15 join. This is still only a proposed score, not a run theorem. -/
+def proposedChampionScore : Nat := proposedTM63Moves + 7
 
 #print axioms sectionResult_marker
 #print axioms sectionResult_marker_one
