@@ -68,4 +68,5 @@ jobs:
           lean -o "$A/BlankAfterExceptionalRegular.olean" "$A/BlankAfterExceptionalRegular.lean"
           lean -o "$A/ExceptionalARejoin.olean" "$A/ExceptionalARejoin.lean"
           lean -o "$A/BlankSecondExceptional.olean" "$A/BlankSecondExceptional.lean"
-          lean "$A/ExceptionalBGeneral.lean"
+          lean -o "$A/ExceptionalBGeneral.olean" "$A/ExceptionalBGeneral.lean"
+          lean "$A/ExceptionalAGeneral.lean"
