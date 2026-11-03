@@ -42,4 +42,17 @@ theorem highB_no_sum_four (x y : Nat) (h : highB x y) :
 #print axioms highA_no_sum_four
 #print axioms highB_no_sum_four
 
+theorem highA_no_sum_one (x y : Nat) (h : highA x y) :
+    (x + y) % 24 ≠ 1 := by
+  unfold highA at h
+  omega
+
+theorem highB_no_sum_one (x y : Nat) (h : highB x y) :
+    (x + y) % 24 ≠ 1 := by
+  unfold highB at h
+  omega
+
+#print axioms highA_no_sum_one
+#print axioms highB_no_sum_one
+
 end A38Mixed96
