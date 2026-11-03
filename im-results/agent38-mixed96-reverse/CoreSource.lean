@@ -87,4 +87,28 @@ theorem source_czero_reset_B (a k : Nat) (hk : 1 ≤ k)
   have hp := lowB0_of_high_reset a k hk he
   simpa [coreB] using hp
 
+theorem no_coreA_high_even (k d : Nat) (hk : k % 2 = 0) :
+    ¬coreA (4*(k/2)+2) 2 (d+1) := by
+  by_cases hd : d = 0
+  · subst d
+    simp [coreA, lowA1]
+  · intro h
+    have hp := (coreA_high (4*(k/2)+2) 2 (d+1) (by omega)).mp h
+    have bad := highA_no_sum_four _ _ hp
+    apply bad
+    unfold normX normY
+    omega
+
+theorem no_coreB_high_even (k d : Nat) (hk : k % 2 = 0) :
+    ¬coreB (4*(k/2)+2) 2 (d+1) := by
+  by_cases hd : d = 0
+  · subst d
+    simp [coreB, lowB1]
+  · intro h
+    have hp := (coreB_high (4*(k/2)+2) 2 (d+1) (by omega)).mp h
+    have bad := highB_no_sum_four _ _ hp
+    apply bad
+    unfold normX normY
+    omega
+
 end A38Mixed96
