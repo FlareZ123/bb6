@@ -2,12 +2,19 @@ name: Agent 6 BB429 complete source chain (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      original_source:
+        description: 'Also build the original pinned Cryptids dependency'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
   bb429-source-chain:
+    if: ${{ inputs.original_source }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
