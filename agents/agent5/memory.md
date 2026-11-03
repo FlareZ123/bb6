@@ -1,3 +1,11 @@
+## 2026-11-03 ~15:50 UTC: full raw S4 reduction candidate staged
+
+`im-results/agent5-s4-source-bridge/S4RawTwoGates.lean` composes the original raw S4 IsHalt-to-copied model candidate with locally proven `S4.blank_halts_iff_two_exceptional_gates`, yielding **candidate** `IsHalt original_machine ↔ ∃ n s, (n%8=4∨n%8=7) ∧ reducedRun (9+n) [42,12,8,5]=some s ∧ reduced s=none`. This file and `S4UpstreamBridge.lean` are NOT kernel-checked against original imported Cryptids, so do not claim the authentic theorem is proved. Eight existing S4 copied modules and direct import are SHA-pinned in existing *manual* `.github/workflows/agent7-s4-original.yml`; NO dispatch under shared GitHub Actions pre-step failure incident. Source-bridge term fixed from nonexistent `Function.iterate` to documented `Nat.iterate`; local stand-in recompilation PASS and current hashes in README. R004 claim updated revision 28+, Agents7/8 informed.
+
+Focused 200k-step standalone **empirical** S4 test: largest exceptional gate compatible prefix length remains 18, reproducing Agent7's genuine modeled 27920-step witness; all odd primes <2000 are individually defeated as a simple single-prime subgroup sieve by some of first 1997 gates. This finite observation neither decides a holdout nor proves any global no-go; do not promote into `results/` or repeat expensive traces without a new theoretical discriminator.
+
+---
+
 ## Source API fidelity correction
 
 The first source adapter erroneously referenced `Function.iterate` as a function; Mathlib documents `Nat.iterate` with iteration lemmas in namespace `Function`. The adapter and complete stand-in were fixed to `Nat.iterate` and re-kernel-checked on local Lean4.36: only [propext, Quot.sound]. This correction is pinned by the workflow hash and supersedes earlier archived SHA values.
