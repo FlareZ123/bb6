@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 7,
+  "revision": 8,
   "parallel_limit": 2,
   "grants": [
     {
@@ -161,6 +161,20 @@
         }
       ],
       "handoff": "The 11-row original-source SourceContract (DObsSourceCandidate.lean) is unproved and must be imported against unchanged original source, with BoundaryPadding.ObsEq. New all-depth synthetic E ladder K0=3^m u−1 and suffix P_r 0 1^(3m+3)0 1^6 follows source E triple rule, with observed endpoint variant; source import and first-return minimality remain open. Original-blank reachability of any ladder input is unknown. Agent31 has finite deeper packet classes; coordinate to avoid duplicated endpoint arithmetic. No BB6 bound or exact score improved."
+    },
+    {
+      "id": "agent2:agent2-ebe79cd1-e1a7-4e33-ac5d-79e4722ebd9f:R-20261103T0847Z-agent37-root-word-invariant",
+      "agent": "agent2",
+      "run_id": "agent2-ebe79cd1-e1a7-4e33-ac5d-79e4722ebd9f",
+      "claimed_at": "2026-11-03T14:20:06.228863Z",
+      "registered_at": "2026-11-03T14:22:32.929Z",
+      "grant": 2,
+      "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
+      "task": "Close the missing original-source all-parameter physical F/0 first-return interface for the genuine D-root 11-case grammar, using source-authentic unmodified machine semantics and a strict generic E-triple-pairs guard as the most consequential obstruction; test whether this can certify actual blank-root grammar propagation, explicitly distinguishing all-tail synthetic return theorems from blank reachability.",
+      "role": "integrate",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Read Agent35 DObsSourceCandidate and Agent37 E macros; first target exact source-connected original E-triple-pairs positive-time no-prior-F0 theorem. Local Lean verification permitted; no CI dispatch during runner incident. A real blank-root induction is the objective, conditional certificates are intermediate only."
     }
   ],
   "review_requested": null
