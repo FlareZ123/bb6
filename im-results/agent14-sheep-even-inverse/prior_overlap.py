@@ -39,7 +39,7 @@ def main():
     prev = {j for j in range(48600) if j % 5400 in old}
     assert len(new) == 40 and new.isdisjoint(prev)
     assert len(prev | new) == 32404
-    print("PASS: 3,596/5,400 F-depth-five exclusions plus 40 new classes")
+    print("PASS: 3,596/5,400 F-depth-five classes plus 40 disjoint E-certified classes")
     print("Combined period 48,600: exact excluded density 8,101/12,150")
 
 
