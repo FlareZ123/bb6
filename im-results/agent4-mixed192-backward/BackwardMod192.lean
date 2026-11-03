@@ -93,13 +93,37 @@ theorem zero_a_pos (a k : Nat) (ha : a≥2) :
   intro h
   by_cases hk : k=0
   · subst k
-    simp only [bad, show (1:Nat)<2 by omega, ↓reduceIte,low] at h
-    simp only [bad, show (0:Nat)<2 by omega, ↓reduceIte,low]
-    rcases h with h | h | h | h | h | h | h | h <;> omega
+    have hn : ¬low (a-2) 1 1 := by simp [low]
+    exact False.elim (hn (by simpa [bad] using h))
   · have hc : ¬(2*k+1<2) := by omega
     simp only [bad,hc,↓reduceIte,high] at h
-    simp only [bad, show (0:Nat)<2 by omega, ↓reduceIte,low]
-    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+    simp only [bad,show (0:Nat)<2 by omega,↓reduceIte,low]
+    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : (a%96=34 ∧ k%48=7) ∨ (a%96=82 ∧ k%48=31) := by omega
+      rcases hs with hs | hs
+      · exact Or.inr (Or.inr (Or.inr (Or.inl (hs))))
+      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (hs)))))))
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : a%96=46 ∧ k%48=4 := by omega
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))
+    · have hs : (a%96=0 ∧ k%48=25) ∨ (a%96=48 ∧ k%48=1) := by omega
+      rcases hs with hs | hs
+      · exact Or.inr (Or.inl (hs))
+      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs))))))
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : (a%96=10 ∧ k%48=19) ∨ (a%96=58 ∧ k%48=43) := by omega
+      rcases hs with hs | hs
+      · exact Or.inr (Or.inr (Or.inl (hs)))
+      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))))
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
 
 #print axioms zero_a_pos
 
