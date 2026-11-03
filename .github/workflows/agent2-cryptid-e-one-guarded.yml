@@ -52,4 +52,5 @@ jobs:
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
           lean -o im-results/agent2-cryptid-continuity/ACodeFirstReturn.olean im-results/agent2-cryptid-continuity/ACodeFirstReturn.lean
           lean im-results/agent31-cryptid-boundary/A1100CodeFirst.lean
+          lean im-results/agent31-cryptid-boundary/AExceptionalClosure.lean
           lean im-results/agent2-cryptid-continuity/EOneTriplePairs.lean
