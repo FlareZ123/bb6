@@ -77,4 +77,11 @@ theorem iterH_succ_last (r c s n z : Nat) :
       H r c s (iterH r c s (n+1) z)
     exact ih (H r c s z)
 
+/-- Universal dyadic curvature for parity-affine maps with odd drift. -/
+theorem iterH_dyadic_curvature (r c s n z : Nat)
+    (hodd:r%2=1) (hgap:r≤2*s) :
+    (iterH r c s (n+1) z + iterH r c s (n+1) (z+2*2^n)+
+      (2*s-r) = 2*iterH r c s (n+1) (z+2^n)) ∨
+    (iterH r c s (n+1) z + iterH r c s (n+1) (z+2*2^n) =
+      2*iterH r c s (n+1) (z+2^n)+(2*s-r)) := by
 end BB6.Agent30Generic
