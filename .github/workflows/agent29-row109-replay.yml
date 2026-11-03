@@ -48,7 +48,7 @@ jobs:
         if: ${{ inputs.audit_only && inputs.rust_source_audit }}
         run: |
           base64 -d workplace/im-results/agent2-row109-semantic-audit/Row109RustSemantics.rs.gz.b64 | gzip -d > "$RUNNER_TEMP/Row109RustSemantics.rs"
-          echo "6f43f16322268db9011b0a9222d8fda44330c1fe93f28170ad3fa892b6b3c7ac  $RUNNER_TEMP/Row109RustSemantics.rs" | sha256sum -c -
+          echo "dd6eb5f1b2b913f51d7568170356cd10865b069aa8f22364501aa1dee0b32a75  $RUNNER_TEMP/Row109RustSemantics.rs" | sha256sum -c -
           cat "$RUNNER_TEMP/Row109RustSemantics.rs" >> source/src/bin/bb6_1DCA_like.rs
           cd source
           cargo test --release --bin bb6_1DCA_like row109_independent_primitive_semantics -- --nocapture
