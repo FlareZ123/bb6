@@ -24,4 +24,8 @@ jobs:
           cp im-results/agent18-b-cycle/BParityFull.lean BParityFull.lean
           lean -o Agent18BReduction.olean Agent18BReduction.lean
           LEAN_PATH=. lean BParityFull.lean
-          if grep -nE '\\b(sorry|admit)\\b' BParityFull.lean; then exit 1; fi
+          cp im-results/agent18-b-cycle/BOneDim.lean Agent18BOneDim.lean
+          cp im-results/agent18-b-cycle/BScaledGrowth.lean BScaledGrowth.lean
+          LEAN_PATH=. lean -o Agent18BOneDim.olean Agent18BOneDim.lean
+          LEAN_PATH=. lean BScaledGrowth.lean
+          if grep -nE '\\b(sorry|admit)\\b' BParityFull.lean BScaledGrowth.lean; then exit 1; fi
