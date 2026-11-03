@@ -37,4 +37,16 @@ theorem source_affine_quotients_iff (n m : Nat) (hn:0<n) (hm:0<m) :
     subst n
     exact divisors_of_seven m hm
       (source_affine_modulus_divides_seven k m a b h)
+  · intro h
+    rcases h with rfl | rfl
+    · exact ⟨0,0, by intro z; omega⟩
+    · refine ⟨5^n,8*5^n+6, ?_⟩
+      intro z
+      apply affine_mod7_from_shifted n z (BB6.OneDim.iterG n z)
+      have heq := BB6.Agent10B.iterG_eq_source n z
+      rw [←heq]
+      exact BB6.Agent10B.G_mod7_iter n z
+
+#print axioms source_affine_quotients_iff
+
 end BB6.Agent30B
