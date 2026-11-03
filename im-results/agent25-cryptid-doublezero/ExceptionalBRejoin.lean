@@ -54,5 +54,32 @@ theorem exceptional_B_rejoins_regular (t : Nat) :
     (Eq.trans (full_B (K t) (List.replicate 12 true ++
       (false :: List.replicate 6 true))) (special_target t))
 
+
+/-- The same E exception followed by a B rejoin, starting on a genuinely
+    implicit infinite-blank tape. The output is a canonical regular F/0
+    source section. It is a conditional two-checkpoint theorem for all t. -/
+theorem exceptional_EB_two_source (t : Nat) :
+    BB6.BoundaryPadding.ObsEq
+      (run (BB6.Agent32EAll.duration (3*t) 5 + bCost t)
+        (DRegularSource.sourceSection ⟨9*t+4,6,1⟩))
+      (DRegularSource.sourceSection ⟨64*t+29,1,5⟩) := by
+  have hin : DRegularSource.sourceSection ⟨9*t+4,6,1⟩ =
+      init (List.replicate (3*(3*t)+2) true ++
+        (false :: (pairs 5 ++ [true,true]))) := by
+    have hn : (9*t+4)-2=3*(3*t)+2 := by omega
+    simp [DRegularSource.sourceSection, hn, oppairs, pairs,
+      List.append_assoc]
+  have hE : BB6.BoundaryPadding.ObsEq
+      (run (BB6.Agent32EAll.duration (3*t) 5)
+        (DRegularSource.sourceSection ⟨9*t+4,6,1⟩))
+      (BB6.Agent32EAll.output (3*t) 5 []) := by
+    rw [hin]
+    exact BB6.Agent32EAll.all_e_double_implicit_blank (3*t) 5
+  have hB := BB6.BoundaryPadding.source_congr (bCost t) hE
+  rw [exceptional_B_rejoins_regular] at hB
+  simpa only [run_add] using hB
+
+#print axioms exceptional_EB_two_source
+
 #print axioms exceptional_B_rejoins_regular
 end BB6.Agent25Rejoin
