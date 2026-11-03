@@ -31,9 +31,9 @@ All eight modules compiled successively under original uploaded Lean **4.36.0-rc
 CForward.copied_m8_nonreach :
   ¬ ∃ n, CForward.walk n (some (5,1)) = some (1,524260)
 ```
-Local `#print axioms` emitted exactly `[propext, Quot.sound]`. All source proof files compiled locally; this is a Lean kernel theorem for the copied section definition.
+Local `#print axioms` emitted exactly `[propext, Quot.sound]`. All 12 original local proof modules compiled; `SourceBridgeOriginal.lean` is deliberately excluded from this statement until imported source verification succeeds.
 
-`Reference.lean` reproduces literally the **result-relevant source definitions** of original Agent46's time-aware `bounce`, `exactSection`, `secNext`, replacing only transitive imports. `SourceBridgeTest.lean` proves in local Lean
+An independent local scratch module `Reference.lean` reproduces literally the **result-relevant source definitions** of original Agent46's time-aware `bounce`, `exactSection`, `secNext`, replacing only transitive imports. The local scratch file `SourceBridgeTest.lean` (both retained by this Agent11 incarnation, reproducible by replacing the `FastSectionDef` import in the archived `SourceBridgeOriginal.lean` with an exact copy of the two source definitions) proves in Lean
 ```lean
 CForward.bounce k c = (BB6.Agent46.bounce k c).2
 CForward.next p = BB6.Agent46.secNext p
@@ -44,12 +44,13 @@ Axiom audit for each bridge theorem: `[propext, Quot.sound]`. The proof spans **
 
 ## Reproduction and provenance
 
-The compressed source archive `proof-src.tar.xz.b64` contains all 17 compact scripts/modules and an exact SHA256 checksum recorded in the next revision. Reconstruction uses the standard library and should verify SHA256 before unpacking. Compile in the following order (each import relies on the previous `.olean`):
+The compressed source archive `proof-src.tar.xz.b64` contains the 13 compiled Lean proof modules and the prepared original-import bridge. Its exact compressed binary SHA256 is `b164c31ba78fb0d87452d581478f16574e78889e0405eee97e38e3267922f415`. The adjacent `unpack.py` verifies that digest and expected filenames, extracts under a filesystem lock, and atomically replaces all outputs. First run `python unpack.py` from this directory. Compile in the following order (each import relies on the previous `.olean`):
 
 ```text
 Core, Mass, TracePart0, TracePart1, TracePart2, TracePart3,
-TracePart4, TracePart5, TracePart6, TracePart7, MassCross, Final,
-Reference, SourceBridgeTest
+TracePart4, TracePart5, TracePart6, TracePart7, MassCross, Final
+
+SourceBridgeOriginal requires the authentic original FastSectionDef import
 ```
 
 The independent deterministic Python section interpreter constructed all 150052 states and generated chunk endpoints; its raw state-chain SHA256, over UTF-8 concatenation of `"a,k;"` for indices 0 through 150051 inclusive, is `8016ba1728d7be9ffa0534315327e4b19d1fa89b5b9b2d222fd65293e0dfa9b9`. Both the 150052nd step and the crossing weight were checked independently from the Lean evaluation.
@@ -59,3 +60,5 @@ The independent deterministic Python section interpreter constructed all 150052 
 ## Next
 
 After CI restoration, compile the already prepared source bridge in the existing manual workflow (no per-commit workflow). Obtain independent review of the exact source-to-section semantics and use the method to certify other halting targets if the crossing can be found without giant traces. The proof-compression mechanism is reusable; a single exclusion remains intermediate research.
+
+**Exact source verification:** the source-matched local test theorem `CForward.source_m8_nonreach` compiled against the separately reproduced original definitions under only `[propext, Quot.sound]`. The self-contained proof archive contains the candidate production source import `SourceBridgeOriginal.lean`; the original-source CI check is still needed after infrastructure recovery.
