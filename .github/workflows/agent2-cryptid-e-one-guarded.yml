@@ -37,6 +37,9 @@ jobs:
           lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
           lean -o im-results/agent31-cryptid-boundary/A1100First.olean im-results/agent31-cryptid-boundary/A1100First.lean
           lean im-results/agent31-cryptid-boundary/A1100Strong.lean
+          lean -o im-results/agent31-cryptid-boundary/A110111.olean im-results/agent31-cryptid-boundary/A110111.lean
+          lean -o im-results/agent31-cryptid-boundary/A110111First.olean im-results/agent31-cryptid-boundary/A110111First.lean
+          lean im-results/agent31-cryptid-boundary/A110111Strong.lean
           lean im-results/agent2-cryptid-continuity/FullE111First.lean
           lean im-results/agent2-cryptid-continuity/BFirstReturn.lean
           lean im-results/agent2-cryptid-continuity/BoundaryShiftObstructions.lean
