@@ -41,6 +41,21 @@ d82b4a6b23f9f769c144400bebd51428050778bdc437bf17e6bb61561585e14a
 
 Local Lean 4.36.0-rc2 compiled all 15 fast chunk groups and all 15 prefix modules in the original proof run. The generic cutoff theorem, all-input fuel/section bridge against a full source-equation reconstruction, and exact terminal test likewise compiled with standard axioms only. This is **local verification**, not a successful full-repository source CI run.
 
+
+## Stronger self-contained local certification
+
+The compressed ASCII artifact [StandaloneLean.tar.gz.b64](./StandaloneLean.tar.gz.b64) contains five complete local Lean sources: `ForwardC.lean` (literal source-equation well-founded bounce/section), `FuelBridge.lean` (total proof of equivalence with the fuel evaluator), `ForwardTransfer.lean` (complete return-trace transfer and terminal test), `ForwardCSectionMass.lean` (direct structural proof that all successful source-equation sections increase weighted mass by at least 2), and `ForwardStandalone.lean` (all-time reachability exclusion). Decode base64, decompress gzip, and extract the tar members into the same working directory as the generated chunk modules. The compressed tar's SHA256 is `61e16189c7480447ee58d397b6c36e78da44d04f6db35e068296d2f0e5073392`.
+
+Under Lean 4.36.0-rc2, the following **self-contained mathematical model** theorems compile with the exact axiom audit `[propext, Quot.sound]`, with no `sorry`:
+
+- `ForwardC.section_mass_strict`: for all successful transcribed sections, `a+2*k+2≤x+2*y`.
+- `FuelBridge.next_correct`: the complete fuel-driven `FastC.next` equals the transcribed source-equation `ForwardC.secNext` **for all natural inputs**, with no finite domain restriction.
+- `ForwardTransfer.source_trace`: the full certified 150052-return trajectory under those transcribed equations.
+- `ForwardStandalone.model_m8_gate_unreachable`: all-time exclusion of the m=8 terminal input from the **transcribed** blank-start section orbit.
+- `ForwardStandalone.model_all_small_terminal_unreachable`: the corresponding exclusion for every terminal state of transcribed mass strictly below 1048525.
+
+The transcribed `ForwardC.bounce` and `secNext` equation bodies are identical to the observed published `BounceCalc.lean` and `FastSectionDef.lean` definitions at the time of this investigation. Establishing that connection via an imported-source Lean compilation remains a separate obligation; copied definitions alone must never be cited as an original-source kernel certificate. The standalone theorem greatly narrows that final obligation to a short semantic-identification bridge.
+
 ## Verification workflow and remaining obligations
 
 1. Reconstruct the generated proofs with `generate_fast_certificate.py`, compile `ForwardMass.lean`, `FastC.lean`, then each pair `FastChunksNN.lean`, `FastPrefixNN.lean` in increasing NN order using Lean 4.36.0-rc2. Set Lean's module search path to include the artifact directory.
