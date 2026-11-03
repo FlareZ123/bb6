@@ -1296,4 +1296,33 @@ theorem blank_run_requires_pow_gap (n a d : Nat)
 #print axioms next_none_requires_pow_gap
 #print axioms blank_run_requires_pow_gap
 
+
+/-- At mass scale 3^k, an even-a terminal step is within k+4 cells of the diagonal. -/
+theorem next_none_requires_k_gap (a d k : Nat)
+    (he : a%2=0) (h : next (.D a d)=none)
+    (hscale : 2*(a+d)+5 < 3^k) :
+    a < d+k+5 ∧ d < a+k+5 := by
+  have hp := next_none_requires_pow_gap a d he h
+  constructor
+  · by_cases hc : a < d+k+5
+    · exact hc
+    · have hi : k ≤ a-d-5 := by omega
+      have hm := Nat.pow_le_pow_right (by omega : 0<3) hi
+      omega
+  · by_cases hc : d < a+k+5
+    · exact hc
+    · have hi : k ≤ d-a-5 := by omega
+      have hm := Nat.pow_le_pow_right (by omega : 0<3) hi
+      omega
+
+/-- Mass-scale width for genuine blank-origin terminal sections. -/
+theorem blank_run_requires_k_gap (n a d k : Nat)
+    (hseen : run n = some (.D a d)) (hhalt : next (.D a d)=none)
+    (hscale : 2*(a+d)+5 < 3^k) :
+    a < d+k+5 ∧ d < a+k+5 := by
+  exact next_none_requires_k_gap a d k (run_preserves_even n a d hseen) hhalt hscale
+
+#print axioms next_none_requires_k_gap
+#print axioms blank_run_requires_k_gap
+
 end BB6.Agent49Parity
