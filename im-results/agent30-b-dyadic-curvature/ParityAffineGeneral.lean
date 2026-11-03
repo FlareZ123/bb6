@@ -128,4 +128,14 @@ private theorem mod_eq_gap_dvd (m u v d : Nat)
   have hs : k1*m-k2*m=d := by omega
   simpa [hs] using Nat.dvd_sub hd1 hd2
 
+/-- The parity-jump gap divides every modulus admitting an affine quotient
+of any positive iterate of the generalized odd-slope parity-affine map. -/
+theorem iterH_affine_modulus_divides_gap
+    (r c s n m a b : Nat) (hodd:r%2=1) (hgap:r≤2*s)
+    (h:∀ z,(iterH r c s (n+1) z)%m=(a*z+b)%m) :
+    m ∣ (2*s-r) := by
+  let p := (2:Nat)^n
+  let f := iterH r c s (n+1)
+  have hmod := affine_second_mod m a b 0 p f h
+  have hcurv := iterH_dyadic_curvature r c s n 0 hodd hgap
 end BB6.Agent30Generic
