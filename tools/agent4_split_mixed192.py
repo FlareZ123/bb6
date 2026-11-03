@@ -13,8 +13,9 @@ import tempfile
 
 STARTS = (
     ("Back192Defs", "import BackwardMod", "theorem low_transfer"),
-    ("Back192Low", "theorem low_transfer", "theorem zero_a0"),
-    ("Back192Zero", "theorem zero_a0", "theorem high_a0_even"),
+    ("Back192Low", "theorem low_transfer", "private theorem high_not_sum_one"),
+    ("Back192Zero", "private theorem high_not_sum_one", "theorem zero_a_pos"),
+    ("Back192ZeroPos", "theorem zero_a_pos", "theorem high_a0_even"),
     ("Back192High", "theorem high_a0_even", "theorem backward_step"),
     ("Back192Step", "theorem backward_step", "end A4Backward192"),
 )
