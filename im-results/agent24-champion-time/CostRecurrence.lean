@@ -165,7 +165,14 @@ theorem final_stage_marker_zero :
         (sectionResult (resetIndex 3 (sectionResult 7 2 6 63).exponent)
           2 (sectionResult 7 2 6 63).right
           (nextRight (sectionResult 7 2 6 63).right)).exponent)
-      2 0 1).marker=0 := by
+      2
+      (sectionResult (resetIndex 3 (sectionResult 7 2 6 63).exponent)
+        2 (sectionResult 7 2 6 63).right
+        (nextRight (sectionResult 7 2 6 63).right)).right
+      (nextRight
+        (sectionResult (resetIndex 3 (sectionResult 7 2 6 63).exponent)
+          2 (sectionResult 7 2 6 63).right
+          (nextRight (sectionResult 7 2 6 63).right)).right)).marker=0 := by
   rw [sectionResult_marker]
   have hr := second_reset_index_two
   omega
