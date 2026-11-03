@@ -27,4 +27,14 @@ private theorem divisors_of_seven (m : Nat) (hm:0<m) (hd:m∣7) :
   rcases hc with h | h | h | h | h | h | h <;>
     subst m <;> simp_all
 
+theorem source_affine_quotients_iff (n m : Nat) (hn:0<n) (hm:0<m) :
+    (∃ a b : Nat,
+       ∀ z, (BB6.OneDim.iterG n z)%m=(a*z+b)%m) ↔
+      m=1 ∨ m=7 := by
+  constructor
+  · rintro ⟨a,b,h⟩
+    obtain ⟨k,hk⟩ : ∃ k, n=k+1 := ⟨n-1, by omega⟩
+    subst n
+    exact divisors_of_seven m hm
+      (source_affine_modulus_divides_seven k m a b h)
 end BB6.Agent30B
