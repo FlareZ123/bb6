@@ -1,0 +1,46 @@
+name: Agent 47 Machine C original Cryptids new backward cores (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original-source Lean version
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Clone and pin the unmodified upstream Cryptids source
+        shell: bash
+        run: |
+          git clone https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout c86f15861709b76042998c5211c7b2f83991621b
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+      - name: Restore original source cache
+        working-directory: /tmp/cryptids
+        run: lake exe cache get
+      - name: Build unchanged original Machine C accelerator
+        working-directory: /tmp/cryptids
+        run: lake build BusyBeaver.BB6.M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC
+      - name: Build new C/D proofs through original upstream bridge
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "27b3f177c3f6d774c1df3d2f1603d165fb726ff49198af652ec2ce7cb0a5c994  $GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" | sha256sum -c -
+          echo "0f216228d9400969b9354419016a3976bb9bc1e8a8a71c97f50db22e91dd0e1e  $GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/BackwardMod.lean" | sha256sum -c -
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent41-mixed96/SecondMod96.lean" .
+          for n in BackwardMod SourceBridge BackwardModB SourceBridgeB SourceUpstreamBridge; do
+            cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/$n.lean" .
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent47-c-mixed96-newcore/"*.lean .
+          for n in CLine BackwardMod SourceBridge BackwardModB SourceBridgeB SourceUpstreamBridge NewCoreC SourceC NewCoreD SourceD SecondMod96 GateArithmetic SourceStop; do
+            lake env lean -o ".lake/build/lib/lean/$n.olean" "$n.lean"
+          done
+          lake env lean UpstreamNewCore.lean
