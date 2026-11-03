@@ -37,10 +37,12 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/Boundary.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryBridge.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryHalt.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryInit.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent37-raw-boundary/RawBoundaryRoots.lean" .
           lean -o Boundary.olean Boundary.lean
           lean -o RawBoundaryBridge.olean RawBoundaryBridge.lean
           lean -o RawBoundaryHalt.olean RawBoundaryHalt.lean
+          lean -o RawBoundaryInit.olean RawBoundaryInit.lean
           lean RawBoundaryRoots.lean
   ledger-audit:
     runs-on: ubuntu-latest
