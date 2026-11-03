@@ -48,6 +48,79 @@ theorem evalA_parity (a : Nat) :
         omega
 
 /-- Every successful B-drain returns with first counter parity a + b. -/
+theorem evalA_mass (a : Nat) :
+    ∀ k m aa bb dd : Nat, evalA a k m = some (aa, bb, dd) →
+      a + m ≤ aa + bb + dd := by
+  induction a with
+  | zero =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+  | succ a ih =>
+    intro k m aa bb dd h
+    rw [evalA] at h
+    by_cases hk2 : k % 3 = 2
+    · simp [hk2] at h
+      cases h
+      omega
+    · by_cases hk0 : k % 3 = 0
+      · simp [hk2, hk0] at h
+        cases h
+        omega
+      · simp [hk2, hk0] at h
+        have hm := ih (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+        omega
+
+theorem evalA_mass_positive (a k m aa bb dd : Nat)
+    (ha : 0 < a)
+    (h : evalA a k m = some (aa, bb, dd)) :
+    a + m + 1 ≤ aa + bb + dd := by
+  rw [evalA] at h
+  have hn : a ≠ 0 := by omega
+  by_cases hk2 : k % 3 = 2
+  · simp [hk2] at h
+    cases h
+    omega
+  · by_cases hk0 : k % 3 = 0
+    · simp [hk2, hn, hk0] at h
+      cases h
+      omega
+    · simp [hk2, hn, hk0] at h
+      have hm := evalA_mass (a - 1) (k / 3) (m + 2 * (k / 3) + 3) aa bb dd h
+      omega
+
+theorem drainB_mass (b : Nat) :
+    ∀ a d aa dd : Nat, drainB a b d = some (.D aa dd) →
+      (a + b + d ≤ aa + dd) ∧ (0 < b → a + d + 2 * b + 3 ≤ aa + dd) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d aa dd h
+    rw [drainB] at h
+    by_cases hb : b = 0
+    · simp [hb] at h
+      cases h
+      constructor <;> omega
+    · simp only [if_neg hb] at h
+      cases he : evalA a (b - 1) (d + 2 * b + 3) with
+      | none => simp [he] at h
+      | some p =>
+        rcases p with ⟨a1, b1, d1⟩
+        simp only [he, Option.bind_some] at h
+        by_cases hlt : b1 < b
+        · simp only [if_pos hlt] at h
+          have hm := evalA_mass a (b - 1) (d + 2 * b + 3) a1 b1 d1 he
+          have hr := ih b1 hlt a1 d1 aa dd h
+          constructor <;> omega
+        · simp [hlt] at h
+
 theorem drainB_parity (b : Nat) :
     ∀ a d aa dd : Nat, drainB a b d = some (.D aa dd) →
       aa % 2 = (a + b) % 2 := by
@@ -118,6 +191,53 @@ theorem next_preserves_even (a d aa dd : Nat)
               have hr := drainB_parity p2 p1 p3 aa dd hstep
               omega
 
+theorem next_strict_mass (a d aa dd : Nat)
+    (hstep : next (.D a d) = some (.D aa dd)) :
+    a + d + 7 ≤ aa + dd := by
+  simp only [next, highLevelNext] at hstep
+  by_cases h0 : a = 0
+  · simp only [if_pos h0] at hstep
+    by_cases hd : d % 2 = 1
+    · simp only [if_pos hd] at hstep
+      have hp := drainB_mass 2 (d + 1) 2 aa dd hstep
+      omega
+    · simp only [if_neg hd] at hstep
+      cases hstep
+      omega
+  · simp only [if_neg h0] at hstep
+    by_cases h1 : d % 2 = 1 ∧ a ≥ d + 5
+    · simp only [if_pos h1] at hstep
+      have hp := drainB_mass (d + 3) (a - d - 5) 5 aa dd hstep
+      omega
+    · simp only [if_neg h1] at hstep
+      by_cases h2 : d % 2 = 0 ∧ a ≥ d + 3
+      · simp only [if_pos h2] at hstep
+        have hp := drainB_mass (d + 2) (a - d - 2) 2 aa dd hstep
+        omega
+      · simp only [if_neg h2] at hstep
+        by_cases h3 : a % 2 = 1
+        · simp [h3] at hstep
+        · simp only [if_neg h3] at hstep
+          by_cases h4 : a = d + 2
+          · simp only [if_pos h4] at hstep
+            have hp := drainB_mass a 0 2 aa dd hstep
+            omega
+          · simp only [if_neg h4] at hstep
+            by_cases h5 : d % 2 = 1
+            · simp only [if_pos h5] at hstep
+              have hp := drainB_mass (a - 1) (d + 4 - a) 3 aa dd hstep
+              omega
+            · simp only [if_neg h5] at hstep
+              cases he : evalA (d + 1 - a) a (2 * a + 5) with
+              | none => simp [he] at hstep
+              | some p =>
+                rcases p with ⟨p1, p2, p3⟩
+                simp only [he, Option.bind_some] at hstep
+                have hpos : 0 < d + 1 - a := by omega
+                have hp := evalA_mass_positive (d + 1 - a) a (2 * a + 5) p1 p2 p3 hpos he
+                have hr := drainB_mass p2 p1 p3 aa dd hstep
+                omega
+
 def run : Nat → Option State
   | 0 => some (.D 0 7)
   | n + 1 => (run n).bind next
@@ -140,6 +260,27 @@ theorem run_preserves_even (n a d : Nat)
       exact next_preserves_even aa dd a d (ih aa dd hr) h
 
 /-- Even first counter alone cannot guarantee survival. -/
+theorem run_grows_at_least_seven (n a d : Nat)
+    (h : run n = some (.D a d)) :
+    7 * (n + 1) ≤ a + d := by
+  induction n generalizing a d with
+  | zero =>
+    simp only [run] at h
+    cases h
+    omega
+  | succ n ih =>
+    simp only [run] at h
+    cases hr : run n with
+    | none => simp [hr] at h
+    | some s =>
+      rcases s with ⟨aa, dd⟩
+      simp only [hr, Option.bind_some] at h
+      have h1 := ih aa dd hr
+      have h2 := next_strict_mass aa dd a d h
+      omega
+
+theorem growth_constant_sharp : next (.D 0 0) = some (.D 0 7) := by rfl
+
 theorem synthetic_even_halter : next (.D 4 2) = none := by decide +kernel
 theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
 
@@ -147,7 +288,7 @@ theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
 #print axioms drainB_parity
 #print axioms next_preserves_even
 #print axioms run_preserves_even
+#print axioms run_grows_at_least_seven
 #print axioms synthetic_even_halter
-
 
 end BB6.Agent49ParitySource
