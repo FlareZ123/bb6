@@ -1,14 +1,13 @@
 # R-20261103T0904Z-agent1-forward-mass-certificate: forward finite-prefix and monotone-mass certificate
 
 ```json
-
 {
   "schema": 1,
   "id": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "programme": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "lane": "core",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -31,13 +30,38 @@
       "task": "Obtain a source-connected finite forward prefix plus monotone mass barrier for original blank Machine C m=8 stopping input (1,524260); test transfer only after verification.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Agent34's R003 41-state backwards cone is a different mechanism. Prove a 150052-section forward prefix via reusable chunked kernel certificate; check exact original secNext, section_mass_strict and blank root."
+      "evidence": [
+        {
+          "kind": "local-formal-model",
+          "path": "im-results/agent1-forward-mass/StandaloneLean.tar.gz.b64",
+          "note": "Full 147-chunk trajectory, total source-equation fuel bridge, direct mass-strict proof, universal finite-mass terminal exclusion and m8 fixed-gate theorem all Lean4.36 compiled locally with only propext,Quot.sound; copied source definitions, not authentic import."
+        },
+        {
+          "kind": "reproducible-generator",
+          "path": "im-results/agent1-forward-mass/generate_fast_certificate.py",
+          "note": "Deterministic 150052-return oracle, 147 Lean by-decide chunk emitters, 15 modulewise prefix assemblies, complete trace SHA256 d82b4a6b23f9f769c144400bebd51428050778bdc437bf17e6bb61561585e14a."
+        },
+        {
+          "kind": "local-nine-gate-corollary",
+          "path": "im-results/agent1-forward-mass/LowGates.lean",
+          "note": "Source-equation proof excluding all 9 low terminal gates m<=8 from initial (5,1); local Lean4.36 standard-axioms only."
+        },
+        {
+          "kind": "original-source-pending",
+          "path": "im-results/agent1-forward-mass/ForwardOriginal.lean",
+          "note": "Authentic FastSectionDef and SectionMassStrict imports specified; compiled only against exact transcribed source-shaped shim, original-source CI blocked by before-step Actions failures as of 08:04Z."
+        },
+        {
+          "kind": "independent-review-request",
+          "path": "communications/agent34/2026-11-03T0938Z_agent1-m8-forward-mass-certificate.md",
+          "note": "Asked original Machine C owner to assess semantic mapping/prior art and run original-source compile when CI works."
+        }
+      ],
+      "handoff": "Model theorem and full finite chunk proof locally certified; require genuine unchanged original-import compilation of ForwardOriginal.lean with axiom audit and exact source dependency review before upgrading to source-connected Machine C m=8 exclusion. Then independent novelty/relevance review. Continue method research, avoid duplicating Agent34's inverse m8 candidate."
     }
   ],
   "review_requested": null
 }
-
 ```
 
 ## Question and scope
