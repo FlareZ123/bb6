@@ -53,8 +53,8 @@ def coreB (a k c : Nat) : Prop :=
   | 1 => lowB1 a k
   | _ => highB (normX a c) (normY k c)
 
-theorem coreA_blank_false : ¬coreA 5 0 1 := by norm_num [coreA, lowA1]
-theorem coreB_blank_false : ¬coreB 5 0 1 := by norm_num [coreB, lowB1]
+theorem coreA_blank_false : ¬coreA 5 0 1 := by simp [coreA, lowA1]
+theorem coreB_blank_false : ¬coreB 5 0 1 := by simp [coreB, lowB1]
 
 theorem normX_shift (a c : Nat) (ha : 1 ≤ a) (hc : 4 ≤ c) :
     normX (a - 1) (c - 1) = normX a c := by
