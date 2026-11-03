@@ -178,6 +178,24 @@ theorem H_affine_mod_gap (r c s m z : Nat) (hgap:r≤2*s)
       simp
     _ = (s*z+c)%m := by rw [heq]
 
+/-- Every divisor of the parity-jump gap yields an affine formula modulo m
+for every iterate of the parity-affine map. -/
+theorem iterH_affine_mod_gap (r c s m n : Nat) (hgap:r≤2*s)
+    (hdvd:m∣2*s-r) :
+    ∃ a b : Nat, ∀ z, (iterH r c s n z)%m=(a*z+b)%m := by
+  induction n with
+  | zero =>
+    refine ⟨1,0,?_⟩
+    intro z
+    simp [iterH]
+  | succ n ih =>
+    obtain ⟨a,b,ha⟩ := ih
+    refine ⟨a*s,a*c+b,?_⟩
+    intro z
+    change (iterH r c s n (H r c s z))%m = ((a*s)*z+(a*c+b))%m
+    rw [ha (H r c s z)]
+    have hmod := H_affine_mod_gap r c s m z hgap hdvd
+
 #print axioms iterH_affine_modulus_divides_gap
 #print axioms iterH_dyadic_curvature
 #print axioms iterH_two_adic_shift
