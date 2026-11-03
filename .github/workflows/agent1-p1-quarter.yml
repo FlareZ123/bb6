@@ -59,4 +59,6 @@ jobs:
           lean -o im-results/agent9-p1-logcost/CostOriginal.olean im-results/agent9-p1-logcost/CostOriginal.lean
           lean -o im-results/agent9-p1-logcost/DichotomyArithmetic.olean im-results/agent9-p1-logcost/DichotomyArithmetic.lean
           lean -o im-results/agent9-p1-logcost/DichotomyOriginal.olean im-results/agent9-p1-logcost/DichotomyOriginal.lean
+          lean -o im-results/agent9-p1-logcost/OddResetArithmetic.olean im-results/agent9-p1-logcost/OddResetArithmetic.lean
+          lean -o im-results/agent9-p1-logcost/OddResetOriginal.olean im-results/agent9-p1-logcost/OddResetOriginal.lean
           echo "Verified all q≥1 with q%4=0 or3 using genuine source Lean dependencies."
