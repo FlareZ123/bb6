@@ -140,6 +140,10 @@ jobs:
           lean HighFamilyConeBridge.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighConeAnyRoot.lean .
           lean HighConeAnyRoot.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddEvenOddCone.lean .
+          lean -o OddEvenOddCone.olean OddEvenOddCone.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/AffineOddEvenOddCone.lean .
+          lean -o AffineOddEvenOddCone.olean AffineOddEvenOddCone.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
