@@ -99,4 +99,13 @@ theorem iterH_dyadic_curvature (r c s n z : Nat)
   · exact Or.inl he
   · exact Or.inr he
 
+private theorem affine_second_mod (m a b x t : Nat) (f : Nat → Nat)
+    (h : ∀ z, f z % m = (a*z+b)%m) :
+    (f x + f (x+2*t)) % m = (2*f (x+t)) % m := by
+  have hlinear : a*x+b + (a*(x+2*t)+b) =
+      2*(a*(x+t)+b) := by
+    have htwice : a*(2*t)=2*(a*t) := by ac_rfl
+    rw [Nat.mul_add a x (2*t), htwice]
+    simp [Nat.mul_add]
+    omega
 end BB6.Agent30Generic
