@@ -1,0 +1,40 @@
+name: Agent 46 original Rocq root status and source audit (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      compile_rocq:
+        description: 'Attempt original BusyCoq Rocq/Coq source compilation (expensive; source checker first)'
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  original-root:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout BB6 source audit
+        uses: actions/checkout@v4
+      - name: Verify original source bytes, five root maps and primitive regressions
+        run: node im-results/agent46-rocq-original-source/audit.cjs
+      - name: Install Coq compiler for source-check attempt
+        if: ${{ inputs.compile_rocq }}
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y coq
+          coqc --version
+      - name: Checkout the pinned primary BusyCoq source
+        if: ${{ inputs.compile_rocq }}
+        uses: actions/checkout@v4
+        with:
+          repository: ccz181078/busycoq
+          ref: 33209bc7dc282b38c8cd6be507bfc551fea56108
+          path: upstream
+          persist-credentials: false
+      - name: Compile original two source files with authentic dependencies
+        if: ${{ inputs.compile_rocq }}
+        working-directory: upstream/verify
+        run: |
+          set -eu
+          coq_makefile -Q . BusyCoq -o Makefile.coq Others_v3.v Others_v4.v
+          make -f Makefile.coq -j 2 Others_v3.vo Others_v4.vo
