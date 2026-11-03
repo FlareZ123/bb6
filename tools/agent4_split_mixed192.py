@@ -16,7 +16,9 @@ STARTS = (
     ("Back192Low", "theorem low_transfer", "private theorem high_not_sum_one"),
     ("Back192Zero", "private theorem high_not_sum_one", "theorem zero_a_pos"),
     ("Back192ZeroPos", "theorem zero_a_pos", "theorem high_a0_even"),
-    ("Back192High", "theorem high_a0_even", "theorem backward_step"),
+    ("Back192HighEven", "theorem high_a0_even", "theorem high_a0_odd"),
+    ("Back192HighOdd", "theorem high_a0_odd", "theorem high_a_pos"),
+    ("Back192HighPos", "theorem high_a_pos", "theorem backward_step"),
     ("Back192Step", "theorem backward_step", "end A4Backward192"),
 )
 
