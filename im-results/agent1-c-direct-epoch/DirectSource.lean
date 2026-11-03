@@ -71,6 +71,17 @@ theorem source_direct_jump (a k r : Nat) (hk : 0<k)
 
 #print axioms source_direct_jump
 
+/-- For a run of n≥3 original-source minimum +4 mass edges,
+  the initial mass is at least 8·2^(n−1); burst lengths grow only
+  logarithmically in the starting rank. -/
+theorem source_minimal_log_bound {n a k x y : Nat}
+    (hk : 0<k) (hn : 3≤n)
+    (h : MinimalRun secNext n a k x y) :
+    8*2^(n-1) ≤ a+2*k :=
+  direct_log_bound hk hn (minimal_to_direct h)
+
+#print axioms source_minimal_log_bound
+
 /-- No positive-right Machine C source can sustain gain four indefinitely. -/
 theorem source_no_long_minimal (a k x y : Nat) :
     ¬ MinimalRun secNext (a+2*k+4) a k x y := by
