@@ -75,8 +75,8 @@ function parse(code) {
  * @param {number} count
  * @returns {{q: number, head: number, tape: Map<number,number>, halted: boolean}}
  */
-function simulate(table, count) {
-  let q = 0;
+function simulate(table, count, initialState = 0) {
+  let q = initialState;
   let head = 0;
   const tape = new Map();
   for (let step = 0; step < count; step++) {
@@ -127,6 +127,45 @@ for (const record of records) {
   }
   console.log(record.module, record.direction, 'exact 12-action match; 10,000-step blank-origin mirror regression PASS; observed halt:',x.halted);
 }
+/** @param {string} body @returns {number[]} */
+function parseStateMap(body) {
+  const match = body.match(/Definition state_map q := match q with ([^\n]+) end\./);
+  assert(match, 'missing original source state_map');
+  const entries = [...match[1].matchAll(/([A-F])=>([A-F])/g)];
+  assert.equal(entries.length, 6, 'state map must specify all six states');
+  return [...'ABCDEF'].map(q => {
+    const pair = entries.find(e => e[1] === q);
+    assert(pair, 'missing state ' + q);
+    return pair[2].charCodeAt(0) - 65;
+  });
+}
+for (const name of ['TM6', 'TM7', 'TM8']) {
+  const start = loaded.v3.indexOf('Module ' + name + '.');
+  const end = loaded.v3.indexOf('End ' + name + '.', start);
+  const sourceBody = loaded.v3.slice(start, end);
+  const stateMap = parseStateMap(sourceBody);
+  const source = parse(sourceMachine(loaded.v3, name));
+  const tm9 = parse(sourceMachine(loaded.v3, 'TM9'));
+  for (let q = 0; q < 6; q++) for (let symbol = 0; symbol < 2; symbol++) {
+    const a = source[q][symbol];
+    const b = tm9[stateMap[q]][symbol];
+    if (a === '---') assert.equal(b, '---');
+    else {
+      assert.notEqual(b, '---');
+      assert.equal(a.slice(0, 2), b.slice(0, 2), 'same write and direction');
+      assert.equal(stateMap[a.charCodeAt(2) - 65], b.charCodeAt(2) - 65, 'mapped target');
+    }
+  }
+  const first = simulate(source, 10000);
+  const mapped = simulate(tm9, 10000, stateMap[0]);
+  assert.equal(first.halted, mapped.halted);
+  assert.equal(stateMap[first.q], mapped.q);
+  assert.equal(first.head, mapped.head);
+  assert.equal(first.tape.size, mapped.tape.size);
+  for (const [pos, val] of first.tape) assert.equal(val, mapped.tape.get(pos));
+  console.log(name, 'pointwise root-preserving state-map to TM9: 12 transitions and 10,000 steps PASS; source TM9 initial state', 'ABCDEF'[stateMap[0]]);
+}
+
 assert.match(loaded.v3, /Lemma raw_spec c:\s*transfer c \(raw c\)/);
 assert.match(loaded.v3, /Lemma macro_spec c c':/);
 assert.match(loaded.v3, /Lemma check_spec n q:\s*check n q=true -> halts tm/);
