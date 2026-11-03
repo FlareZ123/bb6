@@ -138,4 +138,15 @@ theorem iterH_affine_modulus_divides_gap
   let f := iterH r c s (n+1)
   have hmod := affine_second_mod m a b 0 p f h
   have hcurv := iterH_dyadic_curvature r c s n 0 hodd hgap
+  change (f 0 + f (0+2*p)+(2*s-r)=2*f (0+p)) ∨
+    (f 0 + f (0+2*p)=2*f (0+p)+(2*s-r)) at hcurv
+  change (f 0 + f (0+2*p))%m = (2*f (0+p))%m at hmod
+  rcases hcurv with hc | hc
+  · exact mod_eq_gap_dvd m _ _ (2*s-r) hmod hc
+  · exact mod_eq_gap_dvd m _ _ (2*s-r) hmod.symm hc.symm
+
+#print axioms iterH_affine_modulus_divides_gap
+#print axioms iterH_dyadic_curvature
+#print axioms iterH_two_adic_shift
+#print axioms H_even_shift
 end BB6.Agent30Generic
