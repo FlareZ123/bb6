@@ -51,3 +51,41 @@ The proof factors `k+2=2^(2*r+2)*(2*Q+1)` with `Q=2^(2*m-2*r-1)*(j+3)-q-1≥1`; 
 The manual workflow `.github/workflows/agent11-m32-eight-fast-check.yml` downloads *pinned artifacts* from source-certified Agent43 CI 41538277695 and recompiles original CLine, Agent46/3/15 section source and the entire proof chain. Its final `#print axioms` reports only `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. No copied theorem signatures, synthetic oracles, or arbitrary depth cutoff is used in this final source check.
 
 **Open obligation:** the remaining infinite parameter families may contain genuine blank-origin halting inputs. Neither this result nor its prior modular exclusions decide Machine C nonhalting. Establishing BB(6) also needs exhaustive coverage of *every* 6-state candidate and a matching best lower bound. Independent novelty and significance review are needed before promotion to `results/`.
+
+
+## 23:59 UTC stronger source result: arbitrary source mass, all four odd-index sectors
+
+The preceding `m%16=11` theorem is now subsumed by the **32-class all-mass theorem** `BB6.Agent15.second_m32_all_mass_unreachable` in `M32SecondAllMass.lean`. The complete authentic original-source audit **[CI 41549361417](https://github.com/FlareZ123/bb6/actions/runs/41549361417)** succeeded on commit `7dd320c0d5f79f1f0f887e456178817fc18e1f0e` and compiled the exact checked files `M32MassDepth.lean`, `M32SecondMassCases.lean`, `M32SecondGeneralArithmetic.lean`, and `M32SecondAllMass.lean`. The principal theorem's axiom audit prints only `[propext, Classical.choice, Quot.sound]`; no `sorryAx` or copied source-declaration stubs were used.
+
+The all-natural statement is
+
+```
+m%4=3
+r+3 ≤ m
+q ≤ j
+j+3*m+3 = 2^(2*r+2)*(2*q+1)
+k+j+3*m+5 = 2^(2*m+2)*(j+3)
+m32SecondMassClass m r q
+-------------------------------------------------
+¬ CReach (2*j+3) k.
+```
+
+The exact predicate `m32SecondMassClass` comprises the following **32 residue triples**. In each cell the two listed values are permitted `q%8` values; row is `m%16`, column is `r%4`.
+
+| m mod16 | r mod4 = 0 | r mod4 = 1 | r mod4 = 2 | r mod4 = 3 |
+|---|---|---|---|---|
+| 3  | {3,4} | {6,7} | {0,3} | {2,7} |
+| 7  | {2,7} | {3,4} | {6,7} | {0,3} |
+| 11 | {0,3} | {2,7} | {3,4} | {6,7} |
+| 15 | {6,7} | {0,3} | {2,7} | {3,4} |
+
+The proof has a useful **uniform modular mass mechanism**. `odd_term_normalized_exact` in `M32MassDepth.lean` establishes for all `d,q≥1` and `a%4=3`, with `k=2^(d+1)*(2q+1)-2` and `p=affineNormalize(a,k)`, the exact integer identities
+
+```
+p.2 = 4*q
+p.1 + 8*q + 4*d = a + 2*k.
+```
+
+Thus `original_m32_mass_barrier` can test the original weighted mass `a+2k` against the eight certified M32 cylinders at **arbitrary depth and any source-mass residue**, avoiding the earlier requirement `(a+2k)%32=23`. The high-level universal theorem follows from one exact section-to-CLine reachability bridge, Agent43's M32 quotient certificate, and equality-preserving affine normalization. `M32SecondGeneralArithmetic` independently establishes the second family factorization `k+2=2^(2r+2)*(2Q+1)`, with `Q≥1`, `(Q+q+1)%8=0`, and `((2j+3)+2k+6m+7)%32=0`. Pure `M32SecondMassCases.lean` checks the 32 implications to the original eight forbidden cylinders. The final theorem composes these already-kernel-checked pieces.
+
+This covers each of the four `m≡3(mod4)` sectors at every odd affine inverse depth. **It does not eliminate the other two-thirds of the full two-parameter halting locus or prove any global Machine C nonhalting result.** The parameter-class fraction should never be interpreted as blank-orbit density. The earlier m=11 odd-depth theorem remains useful as an explicit independently verified special case; it is now subsumed by this stronger all-mass theorem. The even-depth Agent11 M8 result is separate and complementary.
