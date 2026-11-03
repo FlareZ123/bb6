@@ -54,3 +54,10 @@ This completes a **source-aligned raw prefix / initial macro anchor**. It does n
 
 
 **Stronger exact all-coordinate starting word:** The further theorem `blank_root42_exact_word` proves, for **every integer tape coordinate** `p` (with no finite-window restriction), that the blank-A 42-step state has tape bit `wordTape 923 (p + 3)`. It uses a formal shift-right bound `923 < 2^n` for all `n ≥ 10` to prove the predicted word is blank outside the 10 relevant cells. Local Lean `#print axioms`: `[propext, Classical.choice, Quot.sound]`, standard axioms only. Thus the source `L X c> D0 M K R` initial macro's infinite blank rays are exactly established from the real original blank-root run.
+
+
+## All-offset use in symbolic macro witnesses
+
+[Row109Offset.lean.gz.b64](Row109Offset.lean.gz.b64) (decompressed SHA256 `862d77831cee28e07654162b5847114c5b09de345686fe0d105ca5259d147745`) adds the exact missing **physical-coordinate translation** step. The theorem `shift_run` states for every raw configuration, tape, integer displacement and number of primitive steps that Turing-machine execution commutes with shifting the whole infinite tape and head by that displacement. Thus `all_rules_shifted` proves all 65 fixed source grammar clauses for **any absolute position**, with precise shifted input patterns, full-tape output equality and arbitrary external tape, and `all_rules_shifted_no_halt` proves no premature missing-B1 query for any intermediate primitive step. All proofs compiled locally Lean 4.36.0-rc2, `#print axioms` standard `[propext, Classical.choice, Quot.sound]`. It is included in the manual hash-pinned source workflow.
+
+The resulting composition interface applies each certified rule to a true full-tape configuration whenever its shifted input cylinder matches. Repeated application still needs a checked list of actual rule choices, positions, and valid input patterns (or a proved simulator refinement), and the optimized `FastLongSim` schedule remains unverified. This is a reusable proof-carrying macro-trace kernel, rather than a certified global halting trace.
