@@ -84,9 +84,33 @@ theorem reflected_marker_cover (bound : Nat) :
   finiteMarkerBiOracle_sound (reflectPartialMarker markedTailPump) 3 3 bound
     reflected_marker_accept
 
+/-- Three fixed entries suffice for a genuine blank-entered left-moving marker.
+    The right-marker and blank-ray finite tests reject the same sparse prefix,
+    whereas the reflected marker test accepts it. -/
+def simpleLeftMarker : PartialMachine := fun s =>
+  if s = (0,false) then some (some ⟨true,true,1⟩)
+  else if s = (0,true) then some (some ⟨false,false,0⟩)
+  else if s = (1,false) then some (some ⟨false,false,0⟩)
+  else none
+
+theorem simpleLeftMarker_accept :
+    finiteMarkerBiOracle simpleLeftMarker 3 3 = true := by decide
+
+theorem simpleLeftMarker_right_reject :
+    finiteMarkerEntryOracle simpleLeftMarker 3 3 = false := by decide
+
+theorem simpleLeftMarker_fresh_reject :
+    finiteEntryMacroBiOracle simpleLeftMarker 3 3 = false := by decide
+
+theorem simpleLeftMarker_cover (bound : Nat) :
+    Cover (DecidedBelow bound) simpleLeftMarker :=
+  finiteMarkerBiOracle_sound simpleLeftMarker 3 3 bound
+    simpleLeftMarker_accept
+
 #print axioms reflectPartialMarker_involution
 #print axioms compatible_reflectPartialMarker
 #print axioms decidedBelow_of_reflected
 #print axioms finiteMarkerBiOracle_sound
 #print axioms reflected_marker_cover
+#print axioms simpleLeftMarker_cover
 end BB6Coverage
