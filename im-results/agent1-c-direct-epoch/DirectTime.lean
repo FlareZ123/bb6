@@ -21,8 +21,39 @@ theorem direct_time_closed (k n : Nat) :
       have hb : 2≤2^n*(k+2) := by
         have hh := Nat.mul_le_mul_right (k+2) hn
         omega
-      simp only [directTime, Nat.pow_succ]
+      have hpow : 2^((n+1)+1)*(k+2) = 4*(2^n*(k+2)) := by
+        rw [Nat.pow_succ, Nat.pow_succ]
+        have h4 : (4:Nat) = 2*2 := by decide
+        rw [h4]
+        ac_rfl
+      have hpowprev : 2^(n+1)*(k+2) = 2*(2^n*(k+2)) := by
+        rw [Nat.pow_succ]
+        ac_rfl
+      simp only [directTime]
+      rw [hpow]
+      rw [hpowprev] at ih
       omega
+
+/-- The CLine time cost is determined by the right-counter gain. -/
+theorem direct_time_counter {n a k x y : Nat} (h : Direct n a k x y) :
+    directTime k n + 2*k + 3*n = 2*y := by
+  have ht := direct_time_closed k n
+  have hc := direct_counter h
+  have he : 2^(n+1)*(k+2)=2*(2^n*(k+2)) := by
+    rw [Nat.pow_succ]
+    ac_rfl
+  rw [he,←hc] at ht
+  omega
+
+/-- Exact potential: final first counter plus elapsed CLine calls
+    equals initial first counter plus the number of direct returns. -/
+theorem direct_time_potential {n a k x y : Nat} (h : Direct n a k x y) :
+    x + directTime k n = a+n := by
+  have ht := direct_time_counter h
+  have hm := direct_mass h
+  omega
+
+#print axioms direct_time_potential
 
 /-- Direct epoch costs are the sum of the true variable-length section
     excursions, with no formal shortcut or unproved shift in clock. -/
