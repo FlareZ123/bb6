@@ -1,7 +1,6 @@
 """Decode the pinned Lean source archive and verify its original bytes.
 
-The first GitHub upload lost one character on archive line 41, so the
-transcription repair below is intentional and SHA-256 checked.
+The source is SHA-256 verified before it is written.
 """
 import base64
 import gzip
@@ -11,8 +10,7 @@ from pathlib import Path
 import tempfile
 
 DIRECTORY = Path(__file__).resolve().parent
-encoded = (DIRECTORY / "UniformTM63.lean.gz.b64").read_text(encoding="ascii")
-encoded = encoded.replace("CvjJ3JaZ", "CvFjJ3JaZ")
+encoded = (DIRECTORY / "UniformTM63-verified.lean.gz.b64").read_text(encoding="ascii")
 raw = gzip.decompress(base64.b64decode(encoded))
 assert hashlib.sha256(raw).hexdigest() == (
     "ea3a8facf99464a982d56b8e46ab5f6391cffe092da566ae9402a97c9bfa3aa5"
