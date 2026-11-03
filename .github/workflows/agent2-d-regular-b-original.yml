@@ -1,4 +1,4 @@
-name: Agent 2 D-regular B-row original-source proof (manual)
+name: Agent 2 complete D-regular original-source proof (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -18,12 +18,13 @@ jobs:
           python3 im-results/agent35-d-regular-certificate/restore_sources.py
           python3 im-results/agent25-cryptid-doublezero/unpack.py
           python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
+          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Verify all three B rows against unmodified original machine source
+      - name: Verify all eleven D-regular return cases against original six-state source
         shell: bash
         run: |
           set -euo pipefail
@@ -51,4 +52,9 @@ jobs:
           lean -o "$D/AOneSource.olean" "$D/AOneSource.lean"
           lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
           lean -o "$D/ATwoSource.olean" "$D/ATwoSource.lean"
-          lean "$D/ARegularFull.lean"
+          lean -o "$D/ARegularFull.olean" "$D/ARegularFull.lean"
+          S=im-results/agent32-cryptid-third
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean "$D/ERemaining.lean"
