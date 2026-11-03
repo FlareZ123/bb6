@@ -44,6 +44,17 @@ jobs:
           "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Locality.olean" "$RUNNER_TEMP/Row109Locality.lean"
           LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Rules.olean" workplace/im-results/agent4-row109-locality/Row109Rules.lean
           LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" workplace/im-results/agent4-row109-locality/Row109Safe.lean
+      - name: Kernel-check full power-of-two head sweep against original Agent29 GF2 source
+        if: ${{ inputs.audit_only }}
+        run: |
+          base64 -d workplace/im-results/agent4-row109-grid/Row109SweepBridge.tar.gz.b64 > "$RUNNER_TEMP/Row109SweepBridge.tar.gz"
+          echo "0333d51126056824415709b25516cad1cf33a1099f4747e0f627d1c1d07d650d  $RUNNER_TEMP/Row109SweepBridge.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/Row109SweepBridge.tar.gz" -C "$RUNNER_TEMP"
+          echo "b5f53caba206c78c766e7e62fa58cc9d8a4bcdecd2f654b3c4f4afde6728e67b  $RUNNER_TEMP/Row109Grid.lean" | sha256sum -c -
+          echo "9a161ba2ec6d7ae4559a6dede4833883abaaff571ccfffed7238faf624fe8cf8  $RUNNER_TEMP/Row109Direct.lean" | sha256sum -c -
+          "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109GF2.olean" workplace/im-results/agent29-roster-six-audit/Row109GF2.lean
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Grid.olean" "$RUNNER_TEMP/Row109Grid.lean"
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" "$RUNNER_TEMP/Row109Direct.lean"
       - name: Checkout external source separately for independent Rust arm semantics
         if: ${{ inputs.audit_only && inputs.rust_source_audit }}
         uses: actions/checkout@v4
