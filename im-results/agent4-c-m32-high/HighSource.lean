@@ -2,6 +2,9 @@ import M32HighSmall
 import CSourceBridge32
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 20000
+set_option maxHeartbeats 0
+
 namespace BB6.Agent4M32
 
 /-- One authenticated source theorem for every high stopping-family input
