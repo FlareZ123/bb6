@@ -1325,4 +1325,30 @@ theorem blank_run_requires_k_gap (n a d k : Nat)
 #print axioms next_none_requires_k_gap
 #print axioms blank_run_requires_k_gap
 
+
+/-- Any first finite termination of the blank-section recursion has an actual surviving predecessor. -/
+theorem run_none_has_predecessor (n : Nat) (h : run n=none) :
+    ∃ m a d, run m=some (.D a d) ∧ next (.D a d)=none := by
+  induction n with
+  | zero => simp [run] at h
+  | succ n ih =>
+    cases hp : run n with
+    | none => exact ih hp
+    | some s =>
+      rcases s with ⟨a,d⟩
+      refine ⟨n,a,d,hp,?_⟩
+      simpa only [run,hp,Option.bind_some] using h
+
+/-- Any finite termination of the genuine section run has a predecessor in the proven ternary gate. -/
+theorem run_none_implies_gate (n : Nat) (h : run n=none) :
+    ∃ m a d, run m=some (.D a d) ∧ next (.D a d)=none ∧
+      0<a ∧ (a≤d → ternaryOnes (d+1-a)≤a) ∧
+      (d%2=1 → a<d+5 ∨ ternaryOnes (a-d-5)<d+3) ∧
+      (d%2=0 → a<d+3 ∨ ternaryOnes (a-d-2)<d+2) := by
+  obtain ⟨m,a,d,hseen,hhalt⟩ := run_none_has_predecessor n h
+  refine ⟨m,a,d,hseen,hhalt,?_⟩
+  exact blank_run_requires_ones_gate m a d hseen hhalt
+
+#print axioms run_none_implies_gate
+
 end BB6.Agent49Parity
