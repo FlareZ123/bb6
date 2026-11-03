@@ -37,3 +37,27 @@ For a requested even residue r in [0,999], choose `n=((389*(r/2+494)) mod500)+50
 The original blank-entry orbit can avoid an entire set of otherwise legal source states. No nonhalting root has been classified. Finite terminal exponent scans often show no predecessor, so no claim about density of predecessor-containing exponents. The theorem falsifies the tempting global statement `K≡5,7(mod10)` have no immediate predecessors and extends the method limitation to all modulus-1000 classes.
 
 Before external novelty or publication claims: verify the imported bridge on an execution-capable source CI runner; compare to published predecessor arithmetic and check whether larger modulus families add an analytically useful constraint. To advance actual BB(6) closure, one must prove blank-reachability/avoidance of these predecessors rather than counting all-state inverse nodes. See pilot [research issue](../../research/issues/R-20261103T1434Z-agent48-needle-terminal.md).
+
+
+## Stronger all-decimal-suffix theorem (Agent 48, 2026-11-03 15:06 UTC)
+
+[TerminalDecimalAll.lean](TerminalDecimalAll.lean) locally kernel-proves the fully uniform theorem:
+
+For **all** naturals a, r, B satisfying r < 10^a, there exist natural K,q,v with K≥B, K mod 10^a=r and
+\[
+2^{K+1}+3=(2^{v+1}+3)(2q+3)+2v.
+\]
+Moreover the proof directly establishes this for every r < 2·10^a modulo 2·10^a. No fixed decimal suffix, however long, can exclude **all** power-of-two terminal targets of that suffix by proving absence of all immediate incoming edges. This statement is about unrestricted predecessor states. It establishes neither blank-orbit reachability nor a Space Needle/BB(6) halt decision.
+
+Constructive proof for m=10^a and y=floor(r/2), B arbitrary:
+
+- Even r: let A=(10^a−1)/9, n=A(6+m−y)+mB, K=12+18n, v=3. Since 9A+1=m and K traverses the complete even residue classes modulo 2m, K mod2m=r. The prior symbolic theorem supplies the exact q.
+- Odd r: let A=(2050^a−1)/2049, n=A(1834+m−y)+mB, K=3669+4098n, v=11. Since 2049A+1=2050^a=m·205^a, K mod2m=r. Again the prior symbolic theorem supplies q.
+
+The kernel proof checks the geometric identities inductively and constructs both witnesses with exact modular arithmetic, without enumerating residues. The corollary for 10^a follows by reducing the stronger 2·10^a equality. Both \`SpaceNeedleExp.all_decimal_predecessors\` and \`SpaceNeedleExp.every_decimal_suffix\` have *local Lean 4.36.0-rc2 axiom audits exactly* \`[propext, Quot.sound]\`, with no sorry or user axiom. This extends and supersedes the fixed-modulus 1000 statement as an arithmetic method limitation.
+
+[SpaceNeedleTerminalDecimal.lean](SpaceNeedleTerminalDecimal.lean) imports the previously published-source-associated \`SpaceNeedleClosed\` and carries this arithmetic result through \`highLevelNext_iff_oddTower\` and \`oddTower_factor\` to the actual high-level function. The proof typechecks locally with exact-signature source-lemma placeholders and its dependency audit consequently includes those placeholders; full imported-source CI has **not succeeded** because the shared runner fails before executing any steps. No source-certification claim until a successful original-dependency job.
+
+[validate_terminal_decimal.py](validate_terminal_decimal.py) independently checks 4,551 deterministic witness parameters, exhaustively for powers 10^0 through 10^3 (three bounds per residue) and samples through 10^10, with exact modular exponentiation without astronomical tape or counter construction; parameters digest \`8963397546b9510ef067c8a455b78fdd240e9cd1f065440269b30c6b6b8f14ad\`. This cross-check is auxiliary to the all-a Lean proof.
+
+This is a negative result for a narrow proposed proof strategy, not a claim of external novelty or a publishable root decision. Next work should seek a constraint on **real blank-origin** predecessors or a novel holdout decision.
