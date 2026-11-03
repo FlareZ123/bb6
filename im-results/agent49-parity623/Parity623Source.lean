@@ -535,4 +535,42 @@ theorem next_safe_outer_cone (a d : Nat)
 #print axioms drainB_safe_gap
 #print axioms next_safe_outer_cone
 
+
+/-- All zero-a high-level states survive one accelerated step. -/
+theorem next_zero_total (d : Nat) :
+    ∃ aa dd, next (.D 0 d) = some (.D aa dd) := by
+  simp only [next]
+  by_cases hodd : d % 2 = 1
+  · simp only [if_pos hodd]
+    by_cases h1 : d = 1
+    · subst d
+      exact ⟨0, 14, by decide +kernel⟩
+    · have hd : 3 ≤ d := by omega
+      have hg : 2 < d + 1 := by omega
+      obtain ⟨aa, dd, hr, _⟩ := drainB_safe_gap 2 (d + 1) 2 hg
+      exact ⟨aa, dd, hr⟩
+  · simp only [if_neg hodd]
+    exact ⟨d, 7, rfl⟩
+
+/-- Any halting transition with even first counter must lie in the inner wedge. -/
+theorem next_none_requires_inner_wedge (a d : Nat)
+    (he : a % 2 = 0) (h : next (.D a d) = none) : 0 < a ∧ d < 2 * a := by
+  have hpos : 0 < a := by
+    by_cases h0 : a = 0
+    · subst a
+      obtain ⟨aa, dd, hr⟩ := next_zero_total d
+      rw [hr] at h
+      contradiction
+    · omega
+  have hinner : d < 2 * a := by
+    by_cases hz : d < 2 * a
+    · exact hz
+    · have hc : 2 * a ≤ d := by omega
+      obtain ⟨aa, dd, hr⟩ := next_safe_outer_cone a d hpos he hc
+      rw [hr] at h
+      contradiction
+  exact ⟨hpos, hinner⟩
+
+#print axioms next_none_requires_inner_wedge
+
 end BB6.Agent49ParitySource
