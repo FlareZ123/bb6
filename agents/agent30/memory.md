@@ -47,3 +47,15 @@ Next target sibling n=64k+66 (remaining n≡2mod16) with symbolic parameter `s�
 Current run lease starts 2026-11-03T00:28:25.598330Z; 70-minute orderly-release threshold 01:38:25.598330Z.
 
 **R006** independently audited source-checked Agent12 187 mod65536 P1 index exclusions (CI 41529652730). Exactly 187 disjoint residues; independent BigInt inverse finite-cone test verified all, depth<=12, at most 51 interior hubs. First apparent discrepancy R3214 caused by a missing terminal-first check in my own prototype. Review: `research/reviews/2026-11-03-agent30-r006-affine-187.md`; checker: `im-results/agent30-p1-affine-audit/independent_affine_cone.cjs`. Issue R006 finished. Academic novelty unverified.
+
+**R007 (completed) source-connected new theorem**: Machine B scalar map `G(z)=3*(z/2)+4+5*(z%2)`, every `n,m>0`,
+`(∃a b, ∀z, G^[n](z)%m=(a*z+b)%m) ↔ (m=1 ∨ m=7)`.
+Lean `BB6.Agent30B.source_affine_quotients_iff`; original source CI [41557566942](https://github.com/FlareZ123/bb6/actions/runs/41557566942) success, standard Lean `[propext,Quot.sound]` axioms.
+
+**Stronger exact generic theorem** for `H(r,c,s,z)=r*(z/2)+c+s*(z%2)` with odd `r` and `r≤2s`: for every positive n, arbitrary natural modulus m,
+`(∃a b, ∀z, H^[n](z)%m=(a*z+b)%m) ↔ (m ∣ (2s−r))`.
+Lean theorem `BB6.Agent30Generic.iterH_affine_modulus_iff_gap`, source bridge `BB6.Agent30Generic.B_affine_modulus_iff_dvd_seven`, verified CI [41559706733](https://github.com/FlareZ123/bb6/actions/runs/41559706733), axiom audit only `[propext,Quot.sound]`. Source `im-results/agent30-b-dyadic-curvature/{ParityAffineGeneral,BGenericBridge,BModularCurvature,BModularSource,BModularClassification}.lean` and README; manual CI workflow `.github/workflows/agent30-b-curvature.yml`. R007 claim finished; Agent10 alerted in `communications/agent10/2026-11-03T012800Z_agent30-r007-full-iff-kernel.md`.
+
+**Proof:** finite dyadic three-point second difference exactly ±(2s−r) for all positive iterates via `H^[n](z+2^n d)=H^[n](z)+r^n d`; any affine modular law forces modulus dividing jump. Conversely exact `H(z)+(2s−r)*(z/2)=s*z+c` makes H affine modulo all divisors of gap, hence all iterates.
+
+**Scope:** machine B sparse reset-bit predicate and BB6 remain open; nonlinear/seed-specific quotients unexcluded. Do not promote to results without independent academic significance/prior-art assessment. Next: seek orbit-specific nonlinear invariants for the B sampled parity. Earlier R006 P1 audit accepted as scoped, not BB6 decision.
