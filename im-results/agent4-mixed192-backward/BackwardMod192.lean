@@ -37,9 +37,8 @@ def bad (a k c : Nat) : Prop :=
   if c<2 then low a k c else high a k c
 
 theorem low_transfer (a k : Nat) : bad a (k+1) 0 → bad a k 1 := by
-  simp only [bad, show (0:Nat)<2 by omega, show (1:Nat)<2 by omega, ↓reduceIte]
-  simp only [low]
-  omega
+  intro h
+  simpa [bad, low] using h
 
 theorem high_to_low3 (a k : Nat) : bad a (k+2) 1 → bad a k 3 := by
   simp only [bad, show (1:Nat)<2 by omega, show ¬((3:Nat)<2) by omega, ↓reduceIte]
