@@ -20,7 +20,7 @@ private theorem oddodd_bounce_succ_div8 (a n : Nat)
     source predecessor. The bound y≥5 removes the exceptional (5,1) output. -/
 theorem oddodd_parent_equations (a k x y : Nat)
     (hx : x%2=1) (hy : y%2=1) (hy5 : 5≤y)
-    (hs : (x+y)%16=4)
+    (hs : (x+y)%8=4)
     (h : secNext (a,k)=some (x,y)) :
     x+y=2*a+4 ∧ x+3*y=4*k+10 := by
   have hp := (section_preimage_all_iff a k x y).mp h
@@ -28,7 +28,7 @@ theorem oddodd_parent_equations (a k x y : Nat)
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at hp
     · by_cases hk1 : k=1
-      · simp [sectionPreimageAll,ha0,ha0,hk0,hk1] at hp
+      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp
         omega
       · simp only [sectionPreimageAll,if_pos ha0,if_neg hk0,if_neg hk1] at hp
         obtain ⟨_,n,hpow,_⟩ := hp
@@ -84,7 +84,7 @@ theorem oddodd_parent_equations (a k x y : Nat)
     equations is automatically a genuine Machine C transition. -/
 theorem oddodd_parent_iff (a k x y : Nat)
     (hx : x%2=1) (hy : y%2=1) (hy5 : 5≤y)
-    (hs : (x+y)%16=4) :
+    (hs : (x+y)%8=4) :
     secNext (a,k)=some (x,y) ↔
       x+y=2*a+4 ∧ x+3*y=4*k+10 := by
   constructor
