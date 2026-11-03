@@ -25,6 +25,7 @@ jobs:
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean im-results/agent8-coverage-contract/TerminalBridge.lean
           lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
+          lean -o im-results/agent42-coverage-normal/FirstStep.olean im-results/agent42-coverage-normal/FirstStep.lean
           lean im-results/agent8-coverage-contract/Prune.lean
           lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
           lean im-results/agent8-coverage-contract/LeafRules.lean
