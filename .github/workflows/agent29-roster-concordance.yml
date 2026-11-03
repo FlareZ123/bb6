@@ -1,0 +1,19 @@
+name: Agent 29 R001 deleted-root table concordance (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  concordance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check six deleted root families from pinned original inventory
+        run: |
+          node --version
+          node tools/agent29_roster_removals.cjs > "$RUNNER_TEMP/agent29-concordance.json"
+          python -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/agent29-concordance.json', encoding='utf8')); assert d['deletionCount']==15 and len(d['deletedUnrootedGroups'])==10 and len(d['targets'])==6; print(json.dumps(d, indent=2))"
