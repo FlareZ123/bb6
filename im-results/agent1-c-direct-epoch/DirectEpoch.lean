@@ -78,6 +78,20 @@ theorem direct_left_closed {n a k x y : Nat} (h : Direct n a k x y) :
   rw [he, ←hc]
   omega
 
+/-- Closed-form jump after n direct updates, with Nat subtraction. -/
+def directState (a k n : Nat) : Nat × Nat :=
+  (a+2*k+4*n+4 - 2^(n+1)*(k+2), 2^n*(k+2)-2)
+
+theorem direct_state_exact {n a k x y : Nat}
+    (h : Direct n a k x y) : directState a k n = (x,y) := by
+  have hl := direct_left_closed h
+  have hr := direct_counter h
+  have hx : a+2*k+4*n+4-2^(n+1)*(k+2)=x := by omega
+  have hy : 2^n*(k+2)-2=y := by omega
+  simp [directState, hx, hy]
+
+#print axioms direct_state_exact
+
 theorem direct_unique {n a k x y x' y' : Nat}
     (h : Direct n a k x y) (h' : Direct n a k x' y') :
     x=x' ∧ y=y' := by
