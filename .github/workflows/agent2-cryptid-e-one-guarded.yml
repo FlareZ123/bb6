@@ -23,7 +23,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile unmodified original source and Agent 2 proof
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
         run: |
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
@@ -38,5 +38,11 @@ jobs:
           lean im-results/agent2-cryptid-continuity/BFirstReturn.lean
           lean im-results/agent2-cryptid-continuity/BoundaryShiftObstructions.lean
           lean im-results/agent2-cryptid-continuity/E6FirstReturn.lean
-          lean im-results/agent2-cryptid-continuity/ATenFirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/ATenFirstReturn.olean im-results/agent2-cryptid-continuity/ATenFirstReturn.lean
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
+          done
+          lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean im-results/agent2-cryptid-continuity/ACodeFirstReturn.lean
           lean im-results/agent2-cryptid-continuity/EOneTriplePairs.lean
