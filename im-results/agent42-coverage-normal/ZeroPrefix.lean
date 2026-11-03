@@ -20,8 +20,7 @@ theorem zeroRB_first_config (m : Machine)
   apply congrArg some
   simp [applyMove, shiftConfig, blank, blankAt]
   funext x
-  trace_state
-  simp
+  split_ifs <;> rfl
 
 /-- Every later run is just the former B-blank-root run, translated by one
     tape cell, with no run-time inflation or truncation. -/
