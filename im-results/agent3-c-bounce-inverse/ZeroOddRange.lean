@@ -53,7 +53,11 @@ theorem zero_first_odd_necessary (a k y : Nat)
               if_neg hk0,if_neg hlow,if_pos haeven] at hi
             rcases hi with ⟨_,n,hs,_⟩
             have heq : 2^n*(2*(a-1)+6)=
-                2*(2^n*((a-1)+3)) := by ring
+                2*(2^n*((a-1)+3)) := by
+              calc
+                2^n*(2*(a-1)+6) =
+                    2^n*(2*((a-1)+3)) := by congr 1 <;> omega
+                _ = 2*(2^n*((a-1)+3)) := by ac_rfl
             rw [heq] at hs
             omega
           · simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
