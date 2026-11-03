@@ -30,6 +30,11 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary
         run: |
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
+      - name: Kernel check exceptional A1100 universal return
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary
+        run: |
+          lean im-results/agent31-cryptid-boundary/A1100.lean
       - name: Kernel check composed authentic blank trace
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary
