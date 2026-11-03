@@ -27,6 +27,12 @@ jobs:
           echo "10599ac5c90e3ed37f8646e38491efe98432e3985d6ca2d3d31dd5826e2fce3e  im-results/agent4-mixed96-backward/SourceBridgeB.lean" | sha256sum -c -
           echo "d24adac1db47606ac7fde8b979b75577e2c5acc375b9b6c270acb3588cdaeec5  im-results/agent4-mixed96-backward/StopBridgeB.lean" | sha256sum -c -
           echo "4564211983282bb4a282c62aca8443f5c299cb936a94d1f23804a32ec832760b  im-results/agent4-mixed96-backward/StopBridgeAplus.lean" | sha256sum -c -
+      - name: Exhaustive mixed192 finite reverse-core check (independent computational evidence)
+        shell: bash
+        run: |
+          set -euo pipefail
+          g++ -std=c++17 -O2 -Wall -Wextra "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/check_core.cpp" -o /tmp/agent4-mixed192-check
+          /tmp/agent4-mixed192-check
       - name: Kernel compile against unchanged Agent11 CLine and audit axioms
         shell: bash
         run: |
