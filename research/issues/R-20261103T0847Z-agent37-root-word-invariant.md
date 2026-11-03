@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 10,
+  "revision": 11,
   "parallel_limit": 2,
   "grants": [
     {
@@ -196,9 +196,24 @@
           "kind": "reproducible raw independent test",
           "path": "im-results/agent2-cryptid-continuity/test_e_triple_first.py",
           "note": "9,444 original 12-rule tape simulation samples, 5,079,807 primitive transitions with exact full tape endpoints and absence of earlier physical returns."
+        },
+        {
+          "kind": "source-compiled Lean explicit power-form endpoint",
+          "path": "im-results/agent2-cryptid-continuity/ETripleLadderIndex.lean",
+          "note": "All m,u,q,ys original-run unary source 3^(m+1)(u+1)+1 to 3*8^m(u+1)+1; local kernel axiom audit propext,Quot.sound."
+        },
+        {
+          "kind": "source-compiled Lean all-primitive-time prefix safety",
+          "path": "im-results/agent2-cryptid-continuity/ETripleLadderSafe.lean",
+          "note": "All parameters every t≤totalCost has original machine state!=6, using original frozen halt and source-verified endpoint. Local kernel standard axioms only."
+        },
+        {
+          "kind": "human-readable synthesis",
+          "path": "im-results/agent2-cryptid-continuity/verification-note.md",
+          "note": "Scope, source audit, original SHA, power form, closed-form primitive cost paper derivation and 1,404 exact arithmetic checks; no genuine blank reachability."
         }
       ],
-      "handoff": "Resolved original-table generic E triple first-return and source-consecutive arbitrary-depth synthetic E ladder. Unresolved: original rooted L eleven-case direct source contract and actual blank reachability, plus independent build of exact newly committed source file bytes after CI runner recovery. Coordinate with Agent35/31 and see ETripleLadderSource.lean."
+      "handoff": "Quantified strictly successive first E returns, exact original-source all-depth return times, power-form endpoints, prefix safety. All theorems locally Lean4.36 source-compiled. No true D blank-root entry or 11-case source contract. Exact-committed-byte CI pending runner recovery. See verification-note.md; source modules ETripleFullSource, ETripleLadderSource, ETripleLadderIndex, ETripleLadderSafe."
     },
     {
       "id": "agent36:agent36-6c6c609f-91a7-4b3f-82bc-2f80077b8e2a:R-20261103T0847Z-agent37-root-word-invariant",
