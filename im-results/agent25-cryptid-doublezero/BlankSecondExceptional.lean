@@ -72,3 +72,24 @@ theorem secondException_original :
     (DRegularSource.sourceSection ⟨9*secondT+10,6,1⟩)
     firstReentry_original ht
 
+def secondEACost : Nat :=
+  BB6.Agent32EAll.duration (3*secondT+2) 5 +
+    BB6.Agent25ARejoin.aCost secondT
+def secondReentryTime : Nat := secondExceptionTime + secondEACost
+
+/-- The genuine original blank machine crosses a second E q=6,b=1
+    exceptional return and again reaches the canonical regular language. -/
+theorem secondReentry_original :
+    ObsEq (run secondReentryTime blank)
+      (DRegularSource.sourceSection ⟨64*secondT+97,0,0⟩) := by
+  exact source_chain secondExceptionTime secondEACost blank
+    (DRegularSource.sourceSection ⟨9*secondT+10,6,1⟩)
+    (DRegularSource.sourceSection ⟨64*secondT+97,0,0⟩)
+    secondException_original
+    (BB6.Agent25ARejoin.exceptional_EA_two_source secondT)
+
+#print axioms terminal8394_exact
+#print axioms terminal1026_exact
+#print axioms secondException_original
+#print axioms secondReentry_original
+end BB6.Agent25SecondRoot
