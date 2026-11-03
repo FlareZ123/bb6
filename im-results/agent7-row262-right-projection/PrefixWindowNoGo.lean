@@ -235,7 +235,56 @@ theorem no_safe_left_four_window
   exact hsafe [false, true, false, true] [false, true, false, true]
     (left_four_window_forces_halt_guard P hblank hclosed)
 
+/-- Truncating the four-bit physical left window preserves every shorter
+    left window; this elementary lemma transports the no-go to all k ≤ 4. -/
+private theorem left_small_k (k : Nat) (hk : k ≤ 4) (ls : List Bool) :
+    windowLeft k (windowLeft 4 ls) = windowLeft k ls := by
+  have hkcases : k = 0 ∨ k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 := by omega
+  rcases hkcases with h | h | h | h | h <;> subst k
+  all_goals
+    cases ls with
+    | nil => simp [windowLeft, List.replicate]
+    | cons a l1 =>
+      cases l1 with
+      | nil => simp [windowLeft, List.replicate]
+      | cons b l2 =>
+        cases l2 with
+        | nil => simp [windowLeft, List.replicate]
+        | cons c l3 =>
+          cases l3 with
+          | nil => simp [windowLeft, List.replicate]
+          | cons d l4 => simp [windowLeft, List.replicate]
+
+/-- For every k ≤ 4, no universal first-return invariant based on k
+    nearest-left bits, the head bit, and the full right tape can contain
+    blank and rule out every A0/right11 halting projection. -/
+theorem no_safe_window_le_four
+    (k : Nat) (hk : k ≤ 4)
+    (P : List Bool → Bool → List Bool → Prop)
+    (hblank : P (windowLeft k []) false [])
+    (hclosed : FirstWindowClosed k P)
+    (hsafe : ∀ ls rs, ¬ P ls false (true :: true :: rs)) : False := by
+  let Q : List Bool → Bool → List Bool → Prop :=
+    fun ls h rs => P (windowLeft k ls) h rs
+  have qblank : Q [false,false,false,false] false [] := by
+    dsimp [Q]
+    have h4 : windowLeft 4 ([] : List Bool) = [false,false,false,false] := by decide
+    rw [← h4, left_small_k k hk]
+    exact hblank
+  have qclosed : FirstWindowClosed 4 Q := by
+    intro ls h rs n hp hfirst
+    dsimp [Q] at hp ⊢
+    have hp0 : P (windowLeft k ls) h (trimRight rs) := by
+      simpa [left_small_k k hk] using hp
+    have hnext := hclosed ls h rs n hp0 hfirst
+    simpa [left_small_k k hk] using hnext
+  have qsafe : ∀ ls rs, ¬ Q ls false (true :: true :: rs) := by
+    intro ls rs hp
+    exact hsafe (windowLeft k ls) rs hp
+  exact no_safe_left_four_window Q qblank qclosed qsafe
+
 end BB6.Row262.Window
 
 #print axioms BB6.Row262.Window.left_four_window_forces_halt_guard
 #print axioms BB6.Row262.Window.no_safe_left_four_window
+#print axioms BB6.Row262.Window.no_safe_window_le_four
