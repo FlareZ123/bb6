@@ -3,6 +3,7 @@ import P1InverseLog
 
 namespace BB6.Agent50L1All
 open BB6.Agent47P1
+open BB6.Agent1Quarter
 open BB6.Agent1UpperTail
 
 /-- Authentic upper-tail preservation of the full odd-cone mass. -/
