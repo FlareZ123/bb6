@@ -319,4 +319,76 @@ theorem synthetic_even_halter_two : next (.D 6 1) = none := by decide +kernel
 #print axioms run_grows_at_least_seven
 #print axioms synthetic_even_halter
 
+
+/-- The evaluator fails exactly when the next base-three digit after a run of a ones is zero. -/
+def badDigits : Nat → Nat → Prop
+  | 0, k => k % 3 = 0
+  | a + 1, k => k % 3 = 1 ∧ badDigits a (k / 3)
+
+theorem evalA_none_iff_badDigits (a : Nat) :
+    ∀ k m : Nat, evalA a k m = none ↔ badDigits a k := by
+  induction a with
+  | zero =>
+    intro k m
+    rw [evalA, badDigits]
+    by_cases h2 : k % 3 = 2
+    · simp [h2]
+    · by_cases h0 : k % 3 = 0
+      · simp [h2, h0]
+      · simp [h2, h0]
+  | succ a ih =>
+    intro k m
+    rw [evalA, badDigits]
+    by_cases h2 : k % 3 = 2
+    · simp [h2]
+    · by_cases h0 : k % 3 = 0
+      · simp [h2, h0]
+      · have h1 : k % 3 = 1 := by omega
+        simp [h2, h0, h1, ih]
+
+/-- The integer with a least-significant base-three digits all one. -/
+def ternaryOnes : Nat → Nat
+  | 0 => 0
+  | a + 1 => 3 * ternaryOnes a + 1
+
+theorem twice_ones_add_one_eq_pow (a : Nat) :
+    2 * ternaryOnes a + 1 = 3 ^ a := by
+  induction a with
+  | zero => simp [ternaryOnes]
+  | succ a ih =>
+    simp only [ternaryOnes, Nat.pow_succ]
+    omega
+
+theorem badDigits_iff_ternaryCylinder (a : Nat) :
+    ∀ k : Nat, badDigits a k ↔ k % (3 ^ (a + 1)) = ternaryOnes a := by
+  induction a with
+  | zero =>
+    intro k
+    simp [badDigits, ternaryOnes]
+  | succ a ih =>
+    intro k
+    rw [badDigits, ternaryOnes]
+    have hp : 3 ^ (a + 1 + 1) = 3 * 3 ^ (a + 1) := by
+      rw [Nat.pow_succ]
+      omega
+    rw [hp, Nat.mod_mul, ih]
+    have hmod : k % 3 < 3 := Nat.mod_lt _ (by omega)
+    omega
+
+theorem evalA_none_iff_ternaryCylinder (a k m : Nat) :
+    evalA a k m = none ↔ k % 3 ^ (a + 1) = ternaryOnes a := by
+  rw [evalA_none_iff_badDigits, badDigits_iff_ternaryCylinder]
+
+theorem ternaryOnes_eq_half (a : Nat) :
+    ternaryOnes a = (3 ^ a - 1) / 2 := by
+  have h := twice_ones_add_one_eq_pow a
+  omega
+
+/-- All-a exact Diophantine criterion for intermediate evaluator halting. -/
+theorem evalA_none_iff_ternaryCongruence (a k m : Nat) :
+    evalA a k m = none ↔ k % 3 ^ (a + 1) = (3 ^ a - 1) / 2 := by
+  rw [evalA_none_iff_ternaryCylinder, ternaryOnes_eq_half]
+
+#print axioms evalA_none_iff_ternaryCongruence
+
 end BB6.Agent49Parity
