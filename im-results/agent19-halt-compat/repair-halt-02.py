@@ -55,6 +55,25 @@ private lemma zeros_append_cons_zero (k : ℕ) (b : ListBlank (Fin 2)) :
         "      exact zeros_append_cons_zero k V",
     )
 
+    # Explicitly normalize directed-head constructors as the imported bb_step
+    # tactic does. The four 2026-11-03 compiler's execution failures all
+    # involve DL-mode sources/targets; the original custom macro omits these.
+    replace_once(
+        "  simp only [pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,",
+        """  simp only [Cfg.headRight, Cfg.headLeft, Tape.mk₁, Tape.mk₂, Tape.mk',
+    pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,""",
+    )
+    replace_once(
+        "  try simp only [pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,",
+        """  try simp only [Cfg.headRight, Cfg.headLeft, Tape.mk₁, Tape.mk₂, Tape.mk',
+    pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,""",
+    )
+    replace_once(
+        "  simp only [Turing.Tape.move, pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,",
+        """  simp only [Cfg.headRight, Cfg.headLeft, Tape.mk₁, Tape.mk₂, Tape.mk',
+    Turing.Tape.move, pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,""",
+    )
+
     replace_once("    rw [heq]; exact stepStar_refl", "    rw [heq] <;> exact stepStar_refl")
     initial_case = "  | zero => simp; exact stepStar_refl"
     if out.count(initial_case) != 3:
