@@ -1,0 +1,42 @@
+name: Agent 46 Machine C terminal lift source proof (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-certificate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify source identity and compile complete kernel proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum im-results/agent11-c-line/CLine.lean
+          echo "0f216228d9400969b9354419016a3976bb9bc1e8a8a71c97f50db22e91dd0e1e  im-results/agent4-mixed96-backward/BackwardMod.lean" | sha256sum -c -
+          echo "f1bb383aa4438d913951c544f5b5a4cc6afc8c31627b00a11f875838abf9f6cb  im-results/agent4-mixed96-backward/SourceBridge.lean" | sha256sum -c -
+          echo "ee622955535e77a4dd0b36120a21627db5b2760c36cca190fdf675c458ae5611  im-results/agent4-mixed96-backward/BackwardModB.lean" | sha256sum -c -
+          echo "10599ac5c90e3ed37f8646e38491efe98432e3985d6ca2d3d31dd5826e2fce3e  im-results/agent4-mixed96-backward/SourceBridgeB.lean" | sha256sum -c -
+          mkdir -p /tmp/a46-terminal-lifts
+          cp im-results/agent11-c-line/CLine.lean /tmp/a46-terminal-lifts/
+          cp im-results/agent4-mixed96-backward/{BackwardMod,SourceBridge,BackwardModB,SourceBridgeB}.lean /tmp/a46-terminal-lifts/
+          cp im-results/agent46-c-terminal-lifts/Agent46TerminalLifts.lean /tmp/a46-terminal-lifts/
+          cd /tmp/a46-terminal-lifts
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o BackwardMod.olean BackwardMod.lean
+          lean -o SourceBridge.olean SourceBridge.lean
+          lean -o BackwardModB.olean BackwardModB.lean
+          lean -o SourceBridgeB.olean SourceBridgeB.lean
+          lean Agent46TerminalLifts.lean
