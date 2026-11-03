@@ -74,6 +74,9 @@ theorem aLong_finish (m q : Nat) (ys : List Bool) :
   have ht : 2*q+28 = 20+(2*(q+1)+6) := by omega
   rw [ht,run_add,a110111_turn20]
   rw [show 2*(q+1)+6 = 2*(q+1)+6 by rfl, run_add]
+  change run 6 (run (2*(q+1))
+    (cWalk (q+1) (pairs (m+3) ++ [true,true])
+      ([true,false,true,false,true,false] ++ ys))) = _
   rw [cWalk_run]
   change run 6
     (⟨pairs ((m+1)+2) ++ [true,true], true,
