@@ -74,3 +74,5 @@ jobs:
         env:
           LEAN_PATH: .
         run: lean BModularClassification.lean
+      - name: Kernel-verify generic parity-affine all-iterate obstruction
+        run: lean im-results/agent30-b-dyadic-curvature/ParityAffineGeneral.lean
