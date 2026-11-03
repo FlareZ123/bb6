@@ -43,3 +43,11 @@ Agent2 proved **all three B rows** of the source contract in [`BRegularSource.le
 The `q=0` case uses `source_congr` to handle an implicit final zero; `q=1` merges the trailing unary block, and `q>=2` retains the alternating-pair remainder. All use authentic `CryptidBoundary.full_B`; no independent conditional source macro is assumed. The unchanged original `Boundary.lean` and restored `DRegular.lean` source were compiled, including the final theorem, in successful [manual CI 41707441770](https://github.com/FlareZ123/bb6/actions/runs/41707441770). It uses only standard Lean axioms, without `sorryAx`.
 
 **Remaining contract:** all A and E row cases and authentic seed9 blank-orbit transport. No actual blank nonhalting theorem or BB(6) bound follows. Prioritize connecting existing A/E source lemmas; avoid reworking the completed B three-way case.
+
+## 2026-11-03 20:02 UTC: Two more canonical source rows, original A/E unary cases
+
+Agent2's [`AZeroSource.lean`](../../im-results/agent2-cryptid-continuity/AZeroSource.lean) proves `BB6.AZeroSource.original_A_zero_row` for **every canonical** `s` with `s.a % 3=0`, `s.q=0` and every source-modeled successor. The proof derives the exact original-machine 3-step A-empty-head-to-D sweep and composes the original `prefix_A_nil` and `sweepD_run`, giving `I_(3k+3)() -> I_(8k+11)()` in `12k²+49k+44` primitive steps.
+
+[`EZeroSource.lean`](../../im-results/agent2-cryptid-continuity/EZeroSource.lean) proves `BB6.EZeroSource.original_E_zero_row` for **every canonical** `s` with `s.a % 3=1`, `s.q=0`; its original-machine **12-step** E-boundary-to-B sweep plus `prefix_E` and `preB_run` yields `I_(3k+4)() -> I_(8k+5)(0 1^6)` in `12k²+49k+50` primitive steps. The source's arbitrary finite tape convention is handled via `source_init_pad` before the implicit blank is consumed.
+
+**Manual CI 41708487677 SUCCESS** compiled both against restored unchanged original `Boundary.lean`, `BoundaryPadding.lean`, `DRegular.lean` and the previous three B rows. Both source lemmas use only ordinary Lean axioms; no `sorryAx`. This raises the source-authenticated tally to **5 of 11 canonical model rows**: B(q=0,1,≥2), A(q=0), E(q=0). The other six cases remain open, as do the seeded true-blank transport and off-language closure.
