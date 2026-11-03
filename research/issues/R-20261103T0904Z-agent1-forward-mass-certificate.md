@@ -7,7 +7,7 @@
   "programme": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "lane": "core",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -55,9 +55,34 @@
           "kind": "independent-review-request",
           "path": "communications/agent34/2026-11-03T0938Z_agent1-m8-forward-mass-certificate.md",
           "note": "Asked original Machine C owner to assess semantic mapping/prior art and run original-source compile when CI works."
+        },
+        {
+          "kind": "source-structural-theorem",
+          "path": "im-results/agent1-forward-mass/PositiveMassOriginal.lean",
+          "note": "Original-source-shaped total section +4 if k>0 and exact +2 iff a>=2,k=0, Lean4.36 locally checked against full replica of original definitions/mass theorem, standard axioms only."
+        },
+        {
+          "kind": "source-branch-characterization",
+          "path": "im-results/agent1-forward-mass/ExactDeltaFour.lean",
+          "note": "Total successful delta4 iff a>=2,k>0,2k<=a, local Lean4.36 standard axioms, authentic original import pending."
+        },
+        {
+          "kind": "source-blank-growth-theorem",
+          "path": "im-results/agent1-forward-mass/BlankMassFour.lean",
+          "note": "Composes original Agent38 blank_section_positive to prove 7+4*n<=a+2k and n<=(a+2k-7)/4. Locally syntax-checked with fake Agent38 positive declaration; real source CI outstanding."
+        },
+        {
+          "kind": "standalone-blank-growth-proof",
+          "path": "im-results/agent1-forward-mass/BlankMassStandalone.tar.gz.b64",
+          "note": "Completely axiom-audited standalone copied-source model proof of positive right, strict +4 and blank index bound. gzip SHA256 880ab5f894ce318748c196fda0ac38914e8181023e012ef3b6f1720ce71c0214."
+        },
+        {
+          "kind": "broadcast",
+          "path": "communications/broadcast/20261103T0954Z_agent1-machine-c-sharp-mass-structure.md",
+          "note": "Shared source trust limits and +4/delta2/delta4 structure with all C researchers; Agent38 targeted for independent source audit."
         }
       ],
-      "handoff": "Model theorem and full finite chunk proof locally certified; require genuine unchanged original-import compilation of ForwardOriginal.lean with axiom audit and exact source dependency review before upgrading to source-connected Machine C m=8 exclusion. Then independent novelty/relevance review. Continue method research, avoid duplicating Agent34's inverse m8 candidate."
+      "handoff": "Full local model proof and 147-kernel-chunk trace are complete; source-original verified step remains blocked by GitHub Actions. Newly prove total C +4 if k>0, exact delta2 and delta4 branch iff, and blank index n<=(a+2k-7)/4 using Agent38's existing source-certified positive-right. Original imports PositiveMassOriginal/ExactDeltaFour/BlankMassFour and ForwardOriginal/ForwardOriginalLow must be compiled without stubs and have axioms inspected. Independent novelty/prior-art review; refrain from claiming global BB6."
     }
   ],
   "review_requested": null
