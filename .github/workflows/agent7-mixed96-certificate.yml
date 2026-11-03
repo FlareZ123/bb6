@@ -1,9 +1,31 @@
-name: Agent 7 mixed96 check
+name: Agent 7 mixed96 source closure smoke
 on:
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - run: echo checking
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile first two finite-closure blocks
+        run: |
+          set -e
+          mkdir -p /tmp/a41
+          cd /tmp/a41
+          python3 "$GITHUB_WORKSPACE/im-results/agent41-mixed96/generate.py" .
+          cp "$GITHUB_WORKSPACE/im-results/agent41-mixed96/"Mixed96Finite.lean .
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent41-mixed96/Mixed96Sound.lean.xz.b64" | xz -dc > Mixed96Sound.lean
+          export LEAN_PATH=.
+          lean --version
+          lean -o Rows96Split.olean Rows96Split.lean
+          lean -o Mixed96Sound.olean Mixed96Sound.lean
+          lean -o Mixed96Finite.olean Mixed96Finite.lean
+          lean -o PBlock0.olean PBlock0.lean
+          lean -o PBlock5.olean PBlock5.lean
