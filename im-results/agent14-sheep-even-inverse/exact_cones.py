@@ -51,12 +51,16 @@ def check_class(r, nodes):
     cert.R = r
     cert.M = 4860
     checks = 0
-    representatives = 0
+    period_representatives = 0
     assert all(child in nodes for edges in nodes.values() for child in edges.values())
     for node, children in nodes.items():
         expected = {p: (n.s, n.b, n.d) for p, n in children.items()}
         cert.verify_node(node, expected)
-        checks += sum(a - 1 for a in node.limits)
+        for h, bound in enumerate(node.limits):
+            for a in range(1, bound):
+                _, _, period = cert.eligible_k(node, h, a)
+                checks += 1
+                period_representatives += period
         for h, a in children:
             good, derived, period = cert.eligible_k(node, h, a)
             assert derived == expected[(h, a)]
@@ -68,7 +72,6 @@ def check_class(r, nodes):
         for k in range(p):
             assert (pow(2, r + 4860 * k + node.s, node.d) + node.b) % node.d == 0
         assert node_value(r, node, 0) > 10
-        representatives += p
         # Finite independent regression only; the all-k theorem follows
         # from the period and high-a/exceptional bounds in verify_node.
         for k in (0, 1):
@@ -84,7 +87,7 @@ def check_class(r, nodes):
     print(
         f"PASS r={r}: {len(nodes)}-state rooted inverse cone; "
         f"{checks} finite (h,a) families screened; "
-        f"{representatives} rational-integrality periods checked"
+        f"{period_representatives} complete k-period representatives checked"
     )
 
 
