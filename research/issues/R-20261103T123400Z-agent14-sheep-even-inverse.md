@@ -6,8 +6,8 @@
   "id": "R-20261103T123400Z-agent14-sheep-even-inverse",
   "programme": "R-20261103T123400Z-agent14-sheep-even-inverse",
   "lane": "validation",
-  "status": "active",
-  "revision": 2,
+  "status": "review",
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -29,7 +29,7 @@
       "task_issue": "R-20261103T123400Z-agent14-sheep-even-inverse",
       "task": "Build or falsify a reusable source-exact Sheep E inverse/predecessor theorem, and attempt original-machine kernel integration of Agent14's existing uniformly excluded halting-power family j=138+4860k. Stop on a genuine closed source theorem or a minimal precise proof mismatch, not a larger residue sieve.",
       "role": "integrate",
-      "state": "active",
+      "state": "completed",
       "evidence": [
         {
           "kind": "original-source-import-lean",
@@ -60,12 +60,36 @@
           "kind": "ci-blocker",
           "url": "https://github.com/FlareZ123/bb6/actions/runs/41639176407",
           "note": "Manual source workflow failed in ~3s with job logs HTTP404. No remote upstream CI success for new modules."
+        },
+        {
+          "kind": "all-k-source-lean",
+          "path": "im-results/agent14-sheep-even-inverse/generate_full138.py",
+          "note": "Generates SHA256-pinned Sheep138FullClass.lean. Local Lean 4.36.0-rc2 kernel proved ∀k, ¬ SheepEven.EvenReach 10 (2^(138+4860*k)); #print axioms only [propext, Classical.choice, Quot.sound]."
+        },
+        {
+          "kind": "high-a-source-lean",
+          "path": "im-results/agent14-sheep-even-inverse/reconstruct_child138_high.py",
+          "note": "Hash-pinned child high-a generic theorem and source-reachable child finite-a bounds compiled with standard Lean axioms."
+        },
+        {
+          "kind": "record",
+          "path": "im-results/agent14-sheep-even-inverse/ORIGINAL-INVERSE-BRIDGE-20261103.md",
+          "note": "Full proof equations, 62 modular child certificates, 221 period cases, source import details, checksums and limitations."
+        },
+        {
+          "kind": "CI-workflow",
+          "path": ".github/workflows/agent22-sheep-source-bridge.yml",
+          "note": "Updated manual source CI restores and builds entire chain; last runner dispatch failed infrastructure startup and needs independent rerun."
         }
       ],
-      "handoff": "The exact original-source inverse case split and actual blank E last-predecessor theorem are now kernel proved locally. All r138 last exceptional parents are impossible and h<3. Main missing edge: generic low-a/high-a complete classification and rational P1/P2 child closure; then source-root full family ¬EvenReach theorem. Need independent cross-check of CI module import on pinned 4.35 toolchain once runner recovers. Do not claim BB6 or Sheep solved."
+      "handoff": "COMPLETED locally in Lean 4.36.0-rc2: Sheep138FullClass.root138_unreachable (k) : ¬ EvenReach 10 (2^(138+4860*k)); standard axioms only, original Agent16 source imports and actual blank-root semantics. Report im-results/agent14-sheep-even-inverse/ORIGINAL-INVERSE-BRIDGE-20261103.md, deterministic SHA-pinned source script generate_full138.py, restorers reconstruct_root138.py and reconstruct_child138_high.py, manual CI workflow expanded; pinned Actions runner startup failure previously blocks external CI certificate. Independent reviewer required. Does not solve Sheep nor BB6."
     }
   ],
-  "review_requested": null
+  "review_requested": {
+    "by": "Agent 14",
+    "at": "2026-11-03T13:39:00Z",
+    "question": "Independent Lean 4.35 source-reproduction audit for full original Sheep r138 all-k nonreachability; verify generator hashes and source transport after Actions runner startup 404 recovers."
+  }
 }
 ```
 
