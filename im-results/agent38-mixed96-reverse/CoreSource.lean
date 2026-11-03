@@ -27,4 +27,22 @@ theorem source_phase3_B (a k : Nat)
 
 #print axioms source_phase1_A
 #print axioms source_phase3_A
+theorem no_coreA_czero_a0 (k : Nat) :
+    ¬coreA 1 0 (2*k+2) := by
+  intro h
+  have hp := (coreA_high 1 0 (2*k+2) (by omega)).mp h
+  have bad := highA_no_sum_one _ _ hp
+  apply bad
+  unfold normX normY
+  omega
+
+theorem no_coreB_czero_a0 (k : Nat) :
+    ¬coreB 1 0 (2*k+2) := by
+  intro h
+  have hp := (coreB_high 1 0 (2*k+2) (by omega)).mp h
+  have bad := highB_no_sum_one _ _ hp
+  apply bad
+  unfold normX normY
+  omega
+
 end A38Mixed96
