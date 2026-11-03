@@ -8,7 +8,10 @@ open BusyBeaver.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
 /-- Faithful source-level first-branch identity. -/
 theorem source_first_step (u w : Nat) (h : 2*u+3 ≤ w) :
     highLevelNext (.J u w) = some (.J (2*u+3) (w-2*u-3)) := by
-  simp [highLevelNext, h]
+  simp only [highLevelNext]
+  split
+  · rfl
+  · omega
 
 /-- Native source-accelerator halting gateway, independent of model-copy definitions. -/
 theorem source_none_iff (u w : Nat) :
@@ -46,7 +49,10 @@ theorem source_none_iff (u w : Nat) :
     have hw0 : w ≠ 2*u := by omega
     have hp : w % 2 ≠ 0 := by omega
     have hd : u-w/2=1 := by omega
-    simp [highLevelNext, hw, hw2, hw1, hw0, hp, hd]
+    simp only [highLevelNext]
+    split
+    · omega
+    · simp [hw2, hw1, hw0, hp, hd]
 
 /-- The source original accelerator's first-branch halting seeds are
     precisely the sparse exponential family. The first-run relation is the
@@ -98,10 +104,106 @@ theorem gate_gives_source_halt (u w : Nat)
   obtain ⟨n, a, b, hp, hg⟩ := (source_burst_gateway_iff u w).mpr h
   exact ⟨n, a, b, firstRun_source u w n a b hp, hg⟩
 
+
+/-- Every non-first, nonhalting source branch returns an even second counter. -/
+theorem exit_even (u w a b : Nat) (hexit : w < 2*u+3)
+    (hn : highLevelNext (.J u w) = some (.J a b)) : b%2 = 0 := by
+  simp only [highLevelNext] at hn
+  split at hn
+  · omega
+  · split at hn
+    · cases hn
+      omega
+    · split at hn
+      · cases hn
+        omega
+      · split at hn
+        · cases hn
+          omega
+        · split at hn
+          · split at hn
+            · cases hn
+              omega
+            · split at hn
+              · cases hn
+                omega
+              · cases hn
+                omega
+          · split at hn
+            · simp at hn
+            · split at hn
+              · cases hn
+                omega
+              · split at hn
+                · split at hn
+                  · cases hn
+                    omega
+                  · cases hn
+                    omega
+                · cases hn
+                  omega
+
+/-- Even second-counter burst seeds can only reach the gateway after odd many first steps. -/
+theorem even_seed_odd_burst (u w n : Nat)
+    (hw : w % 2 = 0)
+    (he : 2*u+w+3*n+13 = 4*((u+3)*2^n)) : n % 2 = 1 := by
+  omega
+
+/-- Uniform mod-six value of any positive odd power of two. -/
+theorem pow_two_odd_mod_six (k : Nat) : 2^(2*k+1) % 6 = 2 := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    have hpow : 2^(2*(k+1)+1) = 4 * 2^(2*k+1) := by
+      calc
+        2^(2*(k+1)+1) = 2^(2*k+1+2) := by congr 1 <;> omega
+        _ = 2^(2*k+1) * 2^2 := Nat.pow_add _ _ _
+        _ = 4 * 2^(2*k+1) := by omega
+    rw [hpow]
+    omega
+
+/-- Every dangerous even burst seed belongs to residue 2 modulo 6. -/
+theorem even_gateway_mod_six (u w n : Nat)
+    (hw : w%2=0)
+    (he : 2*u+w+3*n+13=4*((u+3)*2^n)) : w%6=2 := by
+  have hn := even_seed_odd_burst u w n hw he
+  obtain ⟨k,hk⟩ : ∃ k, n=2*k+1 := by
+    exact ⟨n/2, by omega⟩
+  subst n
+  have hpow := pow_two_odd_mod_six k
+  have hh : ((u+3)*2^(2*k+1))%6 = ((u+3)*2)%6 := by
+    calc
+      ((u+3)*2^(2*k+1))%6 = ((u+3)%6 * (2^(2*k+1)%6))%6 := Nat.mul_mod _ _ _
+      _ = ((u+3)%6 * 2)%6 := by rw [hpow]
+      _ = ((u+3)*2)%6 := by simp
+  have hm : (4*((u+3)*2^(2*k+1)))%6 = (8*(u+3))%6 := by
+    calc
+      (4*((u+3)*2^(2*k+1)))%6 = (4%6 * (((u+3)*2^(2*k+1))%6))%6 := Nat.mul_mod _ _ _
+      _ = (4%6 * (((u+3)*2)%6))%6 := by rw [hh]
+      _ = (4*((u+3)*2))%6 := (Nat.mul_mod _ _ _).symm
+      _ = (8*(u+3))%6 := by congr 1; omega
+  have hemod := congrArg (fun t : Nat => t%6) he
+  rw [hm] at hemod
+  omega
+
+/-- Native halting after a first-branch burst from an even seed forces
+    the unique unshielded even residue modulo six. -/
+theorem even_seed_source_gateway_mod_six (u w : Nat)
+    (hw : w%2=0)
+    (h : ∃ n a b, BB429Burst.firstRun n (u,w) = some (a,b) ∧
+      highLevelNext (.J a b) = none) : w%6=2 := by
+  obtain ⟨n,he⟩ := (source_burst_gateway_iff u w).mp h
+  exact even_gateway_mod_six u w n hw he
+
 #print axioms source_first_step
 #print axioms source_none_iff
 #print axioms source_burst_gateway_iff
 #print axioms firstRun_source
 #print axioms gate_gives_source_halt
+#print axioms exit_even
+#print axioms even_seed_odd_burst
+#print axioms pow_two_odd_mod_six
+#print axioms even_gateway_mod_six
+#print axioms even_seed_source_gateway_mod_six
 
 end BB429SourceBridge
