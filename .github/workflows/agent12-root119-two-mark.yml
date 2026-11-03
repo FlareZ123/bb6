@@ -1,0 +1,25 @@
+name: Agent 12 root119 sparse synthetic halter (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  two-mark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile source-original root119 table and two-mark witness
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent42-root119-guard:im-results/agent12-root119-two-mark"
+          lean -o im-results/agent42-root119-guard/Root119Gate.olean im-results/agent42-root119-guard/Root119Gate.lean
+          lean im-results/agent12-root119-two-mark/TwoMark.lean
