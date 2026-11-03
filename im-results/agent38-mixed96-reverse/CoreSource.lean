@@ -111,4 +111,22 @@ theorem no_coreB_high_even (k d : Nat) (hk : k % 2 = 0) :
     unfold normX normY
     omega
 
+theorem source_high_odd_A (k d : Nat) (hk : k % 2 = 1)
+    (h : coreA (4*(k/2)+5) 0 (d+4)) :
+    coreA 0 k (d+4) := by
+  have heq : 4*(k/2)+5 = 2*k+3 := by omega
+  rw [heq] at h
+  have hp := (coreA_high (2*k+3) 0 (d+4) (by omega)).mp h
+  exact (coreA_high 0 k (d+4) (by omega)).mpr
+    (highA_odd_zero_predecessor k (d+4) (by omega) hk hp)
+
+theorem source_high_odd_B (k d : Nat) (hk : k % 2 = 1)
+    (h : coreB (4*(k/2)+5) 0 (d+4)) :
+    coreB 0 k (d+4) := by
+  have heq : 4*(k/2)+5 = 2*k+3 := by omega
+  rw [heq] at h
+  have hp := (coreB_high (2*k+3) 0 (d+4) (by omega)).mp h
+  exact (coreB_high 0 k (d+4) (by omega)).mpr
+    (highB_odd_zero_predecessor k (d+4) (by omega) hk hp)
+
 end A38Mixed96
