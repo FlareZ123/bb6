@@ -25,7 +25,7 @@ jobs:
       - name: Compile all unmodified upstream Lean dependencies and new universal theorems
         run: |
           set -e
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent47-p1-finite-inverse:im-results/agent45-p1-deep-two:im-results/agent1-p1-quarter:im-results/agent9-p1-logcost:im-results/agent45-p1-low-cost:im-results/agent23-p1-root-wall"
           for m in GParity GInverse PosEvenForm ResetGate; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
@@ -69,4 +69,6 @@ jobs:
           lean -o im-results/agent9-p1-logcost/DichotomyOriginal.olean im-results/agent9-p1-logcost/DichotomyOriginal.lean
           lean -o im-results/agent9-p1-logcost/OddResetArithmetic.olean im-results/agent9-p1-logcost/OddResetArithmetic.lean
           lean -o im-results/agent9-p1-logcost/OddResetOriginal.olean im-results/agent9-p1-logcost/OddResetOriginal.lean
+          lean -o im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.olean im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.lean
+          lean im-results/agent23-p1-root-wall/CriticalRootWallOriginal.lean
           echo "Verified all q≥1 with q%4=0 or3 using genuine source Lean dependencies."
