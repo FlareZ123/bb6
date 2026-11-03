@@ -36,6 +36,13 @@ jobs:
           echo "6fb55261920fc1864267559c33f0d8872af8bfc010d87531f691a85a17f299b6  $RUNNER_TEMP/Row109Runs.lean" | sha256sum -c -
           "$HOME/.elan/bin/lean" --version
           "$HOME/.elan/bin/lean" "$RUNNER_TEMP/Row109Runs.lean"
+      - name: Kernel-check every fixed raw block rule in arbitrary exterior tapes
+        if: ${{ inputs.audit_only }}
+        run: |
+          base64 -d workplace/im-results/agent4-row109-locality/Row109Locality.lean.gz.b64 | gzip -d > "$RUNNER_TEMP/Row109Locality.lean"
+          echo "c39529c59f5db109b2326ab55b4a5e5071c03e4827bb6eeef15eeb730e0841d9  $RUNNER_TEMP/Row109Locality.lean" | sha256sum -c -
+          "$HOME/.elan/bin/lean" -o "$RUNNER_TEMP/Row109Locality.olean" "$RUNNER_TEMP/Row109Locality.lean"
+          LEAN_PATH="$RUNNER_TEMP" "$HOME/.elan/bin/lean" workplace/im-results/agent4-row109-locality/Row109Rules.lean
       - name: Checkout external source separately for independent Rust arm semantics
         if: ${{ inputs.audit_only && inputs.rust_source_audit }}
         uses: actions/checkout@v4
