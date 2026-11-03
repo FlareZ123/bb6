@@ -178,6 +178,20 @@ def twoMarkWordPump : PartialMachine := fun s =>
 theorem twoMark_word_check :
     finiteWordEntryCheck twoMarkWordPump 2 3 = true := by decide
 
+theorem twoMark_word_oracle_accept :
+    finiteWordEntryOracle twoMarkWordPump 3 3 = true := by
+  apply List.any_eq_true.mpr
+  refine ⟨2, by decide, ?_⟩
+  apply List.any_eq_true.mpr
+  exact ⟨2, by decide, twoMark_word_check⟩
+
+/-- The two-mark finite-word certificate is discovered with a smaller
+    entry cutoff than the one-marker certificate; this is a bounded
+    algorithmic distinction, not an assertion that the old calculus
+    cannot eventually recognize the same nonhalting machine. -/
+theorem twoMark_small_marker_reject :
+    finiteMarkerEntryOracle twoMarkWordPump 3 3 = false := by decide
+
 theorem twoMark_word_cover (bound : Nat) :
     Cover (DecidedBelow bound) twoMarkWordPump :=
   finiteWordEntryCheck_sound twoMarkWordPump 2 3 bound
