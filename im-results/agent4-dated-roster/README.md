@@ -29,6 +29,16 @@ The same first digest reports **Oct24 row 63**, `1RB0RB_1LC1RF_0RD0LB_0RA1LE_1LD
 
 The remaining **six** removed original Oct24 rows **109, 119, 146, 247, 411, 531** have **no verified cause in this audit**. One external October 14 snapshot explicitly labels row146 as “OPEN”, with a checked symbolic informal nonhalting argument awaiting independent and Rocq verification ([archived status](https://github.com/DennisKoshta/denniskoshta-portfolio/blob/b48bd32fab8b476135d47ffa4e5f9bfb9a80d8c7/public/busy-beaver/machines/1RB1LB_1RC0LA_1RD0RE_1LA0LB_1RF---_1RB1LD/status.json)). That older label **cannot** establish its later October30 status. Other six roots have search hits in historical lists and informal machine collections but no source-checked modern decisions here.
 
+## A source-certified already-decided root still retained in the October 30 list
+
+A crucial cross-check of the three dated lists against the existing original-source proof ledger finds the **A6/F287 blank-A rooted nonhalting machine**
+`1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LB---`
+at **October 16 line 363**. It appears in neither [40 removed](removed-663-to-623.tsv) nor [15 removed](removed-623-to-608.tsv), and the exact nested subset equalities established in [CI 41560920270](https://github.com/FlareZ123/bb6/actions/runs/41560920270) therefore prove that its identical original RLE is **still one of the 608** Oct30 roster entries.
+
+This particular rooted machine is already **proved nonhalting from blank A** by the original pinned [Google DeepMind Cryptids source](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH.lean). The original source theorem, the complete 12-action literal table, and the source semantics bridge were independently rebuilt and checked in [Agent 4's full original-source CI 41529738637](https://github.com/FlareZ123/bb6/actions/runs/41529738637), with standard Lean axioms only, source code in [CryptidsF287.lean](../agent4-coverage-smoke/CryptidsF287.lean) and the [full frontier report](../agent4-coverage-smoke/FRONTIER-AUDIT.md). This is pre-existing published mathematics; this audit's contribution is **provenance-correct reconciliation** with the newer community inventory.
+
+Thus the October 30 roster of **608** is an upper limit on *potentially* unresolved **listed** roots, while at least one listed exact rooted machine already has a source-certified nonhalting outcome. For the specific list, the number genuinely still unclassified against this identified original proof is **at most 607**. This statement is about the dated list's accuracy, **not** a bound on all six-state Turing machines or BB(6). Other root statuses and exhaustiveness of the list remain unverified. A root-sensitive status table should explicitly flag this F287 entry as *previously certified nonhalting* before allocating search compute.
+
 ## Critical distinctions and next decisions
 
 - A historical deletion may reflect a new proof, new simulation, newly identified equivalence, changed enumeration normal form, or an error. Do not silently equate “not in a newer list” with an established halting/nonhalting theorem.
