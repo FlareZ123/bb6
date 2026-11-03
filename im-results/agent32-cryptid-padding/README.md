@@ -103,3 +103,21 @@ The original six-state D-start Cryptid has new source-verified E-return and halt
 [EZeroHalt exact-first-time CI 41424490768](https://github.com/FlareZ123/bb6/actions/runs/41424490768),
 [all-q E/implicit-blanks CI 41424743730](https://github.com/FlareZ123/bb6/actions/runs/41424743730).
 Every final theorem has `[propext, Quot.sound]` only, no `sorryAx`. All workflow runs compiled the unmodified SHA-checked original Agent31/Agent35 modules and exact new sources. All artifacts remain intermediate in `im-results/`. None proves that these patterns arise on the actual blank-start orbit, or determines BB(6).
+
+## Original-source strict first return for E-(10)^q110111 (3 November 2026)
+
+[**E110111First.lean**](./E110111First.lean) strengthens Agent37's existing source-certified all-q endpoint [E110111Pairs.lean](../agent37-root-language-pilot/E110111Pairs.lean) to an exact **first physically valid** F/0 section return for every k,q≥0 and arbitrary finite Boolean y:
+
+```text
+I_(3k+4)(0 (10)^q 110111 y)
+  --[12k² + 49k + 68 + 4q primitive steps]-->
+I_(8k+3)(longPacket(q,y)).
+```
+
+The endpoint uses Agent37's original `longPacket` definition. The new theorem `BB6.Agent32E110111First.full_E_110111_first_return` additionally proves that at every positive primitive time strictly below the given duration, the machine is **not simultaneously** in state F, scanning zero, with its entire physical left tape empty. Its boundary lemma `eLong_firstPhysical` proves this for the entire unbounded E turnaround for all m,q,y, including the reverse C walk and final D sweep.
+
+The distinction is necessary: the six-step C-to-D turnaround can visit state F on an **interior** nonempty-left configuration. An initially attempted stronger no-F statement was false and was corrected using the exact physical-return predicate; the first CI run exposed the distinction. The proof reuses Agent2's strict original-source E prefix and B-sweep checks and Agent37's quantified E endpoint, proving the remaining first-return guard by induction and finite local checks.
+
+**Authentic original-source [GitHub Actions CI 41739674447](https://github.com/FlareZ123/bb6/actions/runs/41739674447) succeeded**, compiling original SHA-restored `Boundary.lean`, unchanged Agent32 `CryptidSix` and `CryptidPairs`, unchanged Agent37 `E110111Pairs`, unchanged Agent2 `PrefixENoFSource` and `NoEarlierF`, and the new module under Lean 4.36.0-rc2. The two printed theorem axiom audits are exactly `[propext, Quot.sound]`, with no `sorryAx`. Reproduce via the **manual-only** workflow [agent32-e110111-first.yml](../../.github/workflows/agent32-e110111-first.yml). No per-commit CI trigger was introduced.
+
+This source-certified theorem refines a genuine first-return transition rule and may be reused when composing symbolic F-section itineraries. No proof connects this entire cylinder to a true blank-origin visit, no complete D-machine decision follows, and BB(6) remains open. All findings remain intermediate.
