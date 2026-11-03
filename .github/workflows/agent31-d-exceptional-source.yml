@@ -46,3 +46,4 @@ jobs:
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           lean -o im-results/agent35-d-regular-certificate/DObsSourceCandidate.olean im-results/agent35-d-regular-certificate/DObsSourceCandidate.lean
           lean im-results/agent31-d-exceptional/DRegularBSource.lean
+          lean im-results/agent31-d-exceptional/DRegularESource.lean
