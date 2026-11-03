@@ -1,0 +1,41 @@
+name: Agent 46 Machine C first stopping m24 reverse proof (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check original source and kernel certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a46-first-m24
+          cp im-results/agent11-c-line/CLine.lean /tmp/a46-first-m24/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a46-first-m24/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a46-first-m24/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a46-first-m24/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a46-first-m24/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/a46-first-m24/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit,OddOddVal3,OddOddVal3Orbit,OddOddLowVal}.lean /tmp/a46-first-m24/
+          cp im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean /tmp/a46-first-m24/
+          cp im-results/agent46-c-first-m24/FirstM24.lean /tmp/a46-first-m24/
+          cd /tmp/a46-first-m24
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent3CImage BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal SectionAffineInverse ReachAffine; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean FirstM24.lean
