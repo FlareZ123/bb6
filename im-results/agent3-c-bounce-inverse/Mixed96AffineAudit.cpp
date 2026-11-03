@@ -81,5 +81,23 @@ int main() {
              <<depth[encode({a,k,0})]<<"\n";
   }
   if (instances!=288 || cells.size()!=12 || absent!=0) return 3;
+
+  // The more general source-exact 2D cone x%8=5, (2*x+y)%128=6.
+  // Exhaust all 384x384 fundamental pairs: every cone target projection
+  // belongs to one of 36 distinct mixed96 c=0 cells.
+  std::set<std::pair<int,int>> coneCells;
+  int coneInputs=0, coneMissing=0;
+  for (int x=0;x<384;x++)
+    for (int y=0;y<384;y++)
+      if (x%8==5 && (2*x+y)%128==6) {
+        ++coneInputs;
+        coneCells.emplace(x%96,y%96);
+      }
+  for (auto [a,k]:coneCells)
+    if (!reached[encode({a,k,0})]) ++coneMissing;
+  std::cout<<"2D cone instances="<<coneInputs
+           <<" projected cells="<<coneCells.size()
+           <<" abstract-missing="<<coneMissing<<"\n";
+  if (coneInputs!=144 || coneCells.size()!=36 || coneMissing!=0) return 4;
   return 0;
 }
