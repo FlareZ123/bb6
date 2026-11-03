@@ -70,7 +70,7 @@ For any k-edge path r=r0->r1->...->rk=0, applying Lemma 2 k times gives lambda_p
 
 Conversely, Agent22's inverse-word CRT construction gives a genuine generic synthetic path through successive word suffixes, of exactly lambda_p(r) edges from r to zero. This achieves the lower bound. Hence shortest distance equals lambda_p(r) for every p,r.
 
-Agent22's proven all-parameter stars-and-bars bijection counts words of length j as binomial(p,2j), proving the distance-layer formula. The maximal j with nonzero count is floor(p/2), so the bound is attained.
+For completeness, the word count has a direct stars-and-bars proof independent of numerical enumeration. A word of length j has variables a_i>=1 and h_i>=0, with total cost sum(a_i+h_i+1)<=p. Write b_i=a_i-1>=0. Then sum_i(b_i+h_i)<=p-2j, a condition on 2j nonnegative integers. Adjoin one slack variable to turn the inequality into an equality with sum p-2j. The number of such (2j+1)-tuples is binomial(p,2j). The canonical code bijection therefore gives exactly binomial(p,2j) residues at minimum distance j. The maximal j with nonzero count is floor(p/2), so the bound is attained.
 
 **Scope caution.** This uses the generic subgraph with odd cofactor u>=5. The unrestricted section quotient also contains the exceptional u=3 branch; those extra edges might shorten some distances, so we do not assert identical layers for the unrestricted graph. The theorem concerns **abstract residue vertices** with independently witnessed edges, and says nothing about a fixed blank tape orbit.
 
