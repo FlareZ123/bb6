@@ -69,5 +69,50 @@ theorem authentic_reachable_even_exponential_or_wall
       refine ⟨hone, ?_⟩
       simpa using (by rcases hwall with h | h <;> omega : b=4*m+64*q+12)
 
+theorem authentic_low_cost_even_exact_shape
+    (q b d m t k c : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hb : 8 ≤ b) (hb4 : b%4=0) (hdodd : d%2=1)
+    (hi : inverseAt b d t = some (k,c))
+    (hceven : c%2=0) (hk : 2 ≤ k)
+    (hreach : BB6.Agent1.Reach (2*k-4) (c+4))
+    (hlow : m < 8*2^(16*q)) :
+    t=1 ∧ 2*k+8=28*2^(16*q) ∧
+      (if root then c+4+2*m+32*q+10=28*2^(16*q)
+       else c+4+2*m+32*q+12=28*2^(16*q)) := by
+  have hdich := authentic_reachable_even_exponential_or_wall
+    q b d m t k c root hq hcone hb hb4 hdodd hi hceven hk hreach
+  rcases hdich with hlarge | ⟨ht,hw⟩
+  · omega
+  have hpower := inverseAt_power b d t k c hi
+  have hinverse1 : d+b/2+3=2*(c+3) := by
+    simpa [ht] using hpower
+  have hcost0 := inverseAt_exact_mass b d t k c (by omega) hb4 hdodd hi
+  have hcost : 2*k+c+3=b+d := by omega
+  let u := u2 q
+  have hdom := pow16_dom q hq
+  have hu : u+4*q+3=7*2^(16*q) := by dsimp [u,u2]; omega
+  refine ⟨ht, ?_, ?_⟩
+  cases root with
+  | false =>
+    have hcone' : OddCone (6*u-2) (2*u+5) b d m := by
+      simpa [u] using hcone
+    have hmass0 := odd_cone_mass (6*u-2) (2*u+5) b d m hcone'
+    have hmass : b+d+2*m=8*u+3 := by omega
+    simp only [Bool.false_eq_true, ↓reduceIte] at hw ⊢
+    constructor <;> omega
+  | true =>
+    have hcone' : OddCone (4*u-4) (4*u+9) b d m := by
+      simpa [u] using hcone
+    have hmass0 := odd_cone_mass (4*u-4) (4*u+9) b d m hcone'
+    have hmass : b+d+2*m=8*u+5 := by omega
+    simp only [↓reduceIte] at hw ⊢
+    constructor <;> omega
+
+#print axioms authentic_low_cost_even_exact_shape
+
 #print axioms authentic_reachable_even_exponential_or_wall
 end BB6.Agent9Dichotomy
