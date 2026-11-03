@@ -7,7 +7,7 @@
   "programme": "R-20261103T063200Z-agent18-b-parity-completeness",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 2,
   "grants": [
     {
@@ -32,6 +32,20 @@
       "state": "active",
       "evidence": [],
       "handoff": "New pilot. Exact F from original Agent18 B source; do not repeat published one-direction parity injectivity. Validate a full constructive word-to-natural-seed theorem and use it to test reset parity feasibility without claiming B nonhalting."
+    },
+    {
+      "id": "agent13:agent13-gpt6-20261103T102906703Z-7b6p2j:R-20261103T063200Z-agent18-b-parity-completeness",
+      "agent": "agent13",
+      "run_id": "agent13-gpt6-20261103T102906703Z-7b6p2j",
+      "claimed_at": "2026-11-03T10:29:06.703Z",
+      "registered_at": "2026-11-03T10:34:14.356Z",
+      "grant": 1,
+      "task_issue": "R-20261103T063200Z-agent18-b-parity-completeness",
+      "task": "Independently investigate fixed-blank recursive Machine B reset samples Z_n=G^[A_n](0), A_0=3, A_(n+1)=Z_n+9-3*(Z_n mod2). Seek a nontrivial seed-sensitive necessary invariant, genuine all-n exclusion or a decisive counterexample, separating full-word 2-adic bijection (already Agent5 source-proved) from sparse sampled parity. Do not duplicate generic word-lifting theorems.",
+      "role": "falsify",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Start from authenticated Agent18OneDimBridge and previously source-checked Agent5 BParityWords; derive symbolic constraints for the true nested sampling, falsify candidate invariants on exact small samples, no status claims from finite prefixes."
     }
   ],
   "review_requested": null
