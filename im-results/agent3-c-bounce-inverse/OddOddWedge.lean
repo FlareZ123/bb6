@@ -126,7 +126,7 @@ theorem oddodd_slope_blank_unreachable (p q time : Nat)
           exact odd_seven_slope_blank_unreachable p q n hparent
 
 /-- Growth of the halting-level power, uniform beyond the second level. -/
-private theorem halting_power_linear (n : Nat) :
+theorem halting_power_linear (n : Nat) :
     16*(n+3) ≤ 2^(2*n+6) := by
   induction n with
   | zero => decide
