@@ -608,4 +608,189 @@ theorem next_none_requires_corridor (a d : Nat)
 
 #print axioms next_none_requires_corridor
 
+/-- With k >= 2, a one-unit input gap forces a strict evaluator output gap. -/
+theorem evalA_safe_gap_one (a k m : Nat) (hk : 2 ≤ k) (h : k+1 ≤ a) :
+    ∃ aa bb dd, evalA a k m = some (aa, bb, dd) ∧ bb < aa := by
+  rw [evalA]
+  have ha : a ≠ 0 := by omega
+  by_cases h2 : k % 3 = 2
+  · simp only [if_pos h2]
+    refine ⟨a+1,k/3,m,rfl,?_⟩
+    omega
+  · by_cases h0 : k % 3 = 0
+    · simp only [if_neg h2, if_neg ha, if_pos h0]
+      refine ⟨a-1,k/3,m+2,rfl,?_⟩
+      omega
+    · have hk4 : 4 ≤ k := by omega
+      have hg : k/3+2 ≤ a-1 := by omega
+      obtain ⟨aa,bb,dd,he,hp⟩ := evalA_safe_gap (a-1) (k/3) (m+2*(k/3)+3) hg
+      simp only [if_neg h2, if_neg ha, if_neg h0]
+      exact ⟨aa,bb,dd,he,hp⟩
+
+theorem evalA_one (a m : Nat) (ha : 2 ≤ a) :
+    evalA a 1 m = some (a-2, 0, m+5) := by
+  have h0 : a ≠ 0 := by omega
+  have h1 : a-1 ≠ 0 := by omega
+  rw [evalA]
+  simp only [show 1%3 ≠ 2 by decide, if_neg, h0, show 1%3 ≠ 0 by decide]
+  rw [evalA]
+  simp only [show 0%3 ≠ 2 by decide, if_neg, h1, show 0%3 = 0 by decide, if_pos]
+  congr 1 <;> omega
+
+theorem evalA_four (a m : Nat) (ha : 3 ≤ a) :
+    evalA a 4 m = some (a-3,0,m+10) := by
+  have h0 : a ≠ 0 := by omega
+  rw [evalA]
+  simp only [show 4%3 ≠ 2 by decide, if_neg, h0, show 4%3 ≠ 0 by decide]
+  have h1 : 2 ≤ a-1 := by omega
+  rw [evalA_one (a-1) (m+2*(4/3)+3) h1]
+  congr 1 <;> omega
+
+/-- The evaluator either produces a strict first-counter advantage or zero remaining blocks. -/
+theorem evalA_safe_third_two (a k m : Nat) (h : k/3+2 ≤ a) :
+    ∃ aa bb dd, evalA a k m = some (aa,bb,dd) ∧ (bb<aa ∨ bb=0) := by
+  have ha : a ≠ 0 := by omega
+  by_cases h2 : k%3=2
+  · rw [evalA]
+    simp only [if_pos h2]
+    refine ⟨a+1,k/3,m,rfl,Or.inl ?_⟩
+    omega
+  · by_cases h0 : k%3=0
+    · rw [evalA]
+      simp only [if_neg h2, if_neg ha, if_pos h0]
+      refine ⟨a-1,k/3,m+2,rfl,Or.inl ?_⟩
+      omega
+    · have h1 : k%3=1 := by omega
+      by_cases hk : 2 ≤ k/3
+      · have hi : k/3+1 ≤ a-1 := by omega
+        obtain ⟨aa,bb,dd,he,hp⟩ := evalA_safe_gap_one (a-1) (k/3) (m+2*(k/3)+3) hk hi
+        rw [evalA]
+        simp only [if_neg h2, if_neg ha, if_neg h0]
+        exact ⟨aa,bb,dd,he,Or.inl hp⟩
+      · have hcase : k=1 ∨ k=4 := by omega
+        rcases hcase with hcase | hcase
+        · subst k
+          have h2a : 2 ≤ a := by omega
+          exact ⟨a-2,0,m+5,evalA_one a m h2a,Or.inr rfl⟩
+        · subst k
+          have h3a : 3 ≤ a := by omega
+          exact ⟨a-3,0,m+10,evalA_four a m h3a,Or.inr rfl⟩
+
+/-- A B-drain is safe whenever its first counter exceeds one-third of the initial block index by two. -/
+theorem drainB_safe_third_two (a b d : Nat) (hb : 0 < b)
+    (h : (b-1)/3+2 ≤ a) :
+    ∃ aa dd, drainB a b d = some (.D aa dd) := by
+  rw [drainB]
+  have hn : b ≠ 0 := by omega
+  simp only [if_neg hn]
+  obtain ⟨a1,b1,d1,he,hp⟩ := evalA_safe_third_two a (b-1) (d+2*b+3) h
+  have hdec : b1 < b := by
+    have hv := evalA_b_le_k a (b-1) (d+2*b+3) a1 b1 d1 he
+    omega
+  rcases hp with hlt | hz
+  · obtain ⟨aa,dd,hr,_⟩ := drainB_safe_gap b1 a1 d1 hlt
+    simp only [he, Option.bind_some, if_pos hdec]
+    exact ⟨aa,dd,hr⟩
+  · subst b1
+    simp only [he, Option.bind_some, if_pos hdec]
+    exact ⟨a1,d1,by rw [drainB]; simp⟩
+
+/-- Parity-dependent right-hand guaranteed-survival cones. -/
+theorem next_safe_right_third_two (a d : Nat)
+    (hodd : d%2=1 → d+7+(d+2)/3 ≤ a)
+    (heven : d%2=0 → d+4+(d+1)/3 ≤ a) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have ha : a ≠ 0 := by
+    by_cases hd : d%2=1
+    · have hb := hodd hd
+      omega
+    · have hd0 : d%2=0 := by omega
+      have hb := heven hd0
+      omega
+  simp only [if_neg ha]
+  by_cases hd : d%2=1
+  · have h1 : d%2=1 ∧ a ≥ d+5 := ⟨hd, by have hh:=hodd hd; omega⟩
+    simp only [if_pos h1]
+    have hgap : ((d+3)-1)/3+2 ≤ a-d-5 := by have hh:=hodd hd; omega
+    exact drainB_safe_third_two (a-d-5) (d+3) 5 (by omega) hgap
+  · have hd0 : d%2=0 := by omega
+    have h1 : ¬ (d%2=1 ∧ a ≥ d+5) := by omega
+    have h2 : d%2=0 ∧ a ≥ d+3 := ⟨hd0, by have hh:=heven hd0; omega⟩
+    simp only [if_neg h1, if_pos h2]
+    have hgap : ((d+2)-1)/3+2 ≤ a-d-2 := by have hh:=heven hd0; omega
+    exact drainB_safe_third_two (a-d-2) (d+2) 2 (by omega) hgap
+
+theorem evalA_then_drain_safe_third_two (a k m : Nat) (h : k/3+2 ≤ a) :
+    ∃ aa dd, (evalA a k m).bind (fun p => drainB p.1 p.2.1 p.2.2) = some (.D aa dd) := by
+  obtain ⟨a1,b1,d1,he,hp⟩ := evalA_safe_third_two a k m h
+  simp only [he, Option.bind_some]
+  rcases hp with hlt | hz
+  · obtain ⟨aa,dd,hr,_⟩ := drainB_safe_gap b1 a1 d1 hlt
+    exact ⟨aa,dd,hr⟩
+  · subst b1
+    exact ⟨a1,d1,by rw [drainB]; simp⟩
+
+/-- Positive even-a left-hand guaranteed-survival cone. -/
+theorem next_safe_left_third_two (a d : Nat)
+    (ha : 0<a) (he : a%2=0) (hd : a+a/3+1 ≤ d) :
+    ∃ aa dd, next (.D a d) = some (.D aa dd) := by
+  simp only [next]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+  have h2 : ¬ (d%2=0 ∧ a≥d+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have h4 : a ≠ d+2 := by omega
+  simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg h4]
+  by_cases hdo : d%2=1
+  · simp only [if_pos hdo]
+    have hbn : 0 < a-1 := by omega
+    have hgap : ((a-1)-1)/3+2 ≤ d+4-a := by omega
+    exact drainB_safe_third_two (d+4-a) (a-1) 3 hbn hgap
+  · simp only [if_neg hdo]
+    have hgap : a/3+2 ≤ d+1-a := by omega
+    exact evalA_then_drain_safe_third_two (d+1-a) a (2*a+5) hgap
+
+/-- Necessary halting corridor for every even-a section state, not a rooted decision. -/
+theorem next_none_requires_tight_corridor (a d : Nat)
+    (he : a%2=0) (h : next (.D a d) = none) :
+    0<a ∧ d<a+a/3+1 ∧
+      (if d%2=1 then a<d+7+(d+2)/3 else a<d+4+(d+1)/3) := by
+  have ha : 0<a := by
+    by_cases z : a=0
+    · subst a
+      obtain ⟨aa,dd,hret⟩ := next_zero_total d
+      rw [hret] at h
+      contradiction
+    · omega
+  have hl : d<a+a/3+1 := by
+    by_cases hh : d<a+a/3+1
+    · exact hh
+    have hs : a+a/3+1 ≤ d := by omega
+    obtain ⟨aa,dd,hr⟩ := next_safe_left_third_two a d ha he hs
+    rw [hr] at h
+    contradiction
+  have hr : (if d%2=1 then a<d+7+(d+2)/3 else a<d+4+(d+1)/3) := by
+    by_cases hd : d%2=1
+    · simp only [if_pos hd]
+      by_cases hh : a<d+7+(d+2)/3
+      · exact hh
+      have hs : d+7+(d+2)/3 ≤ a := by omega
+      have hf : d%2=0 → d+4+(d+1)/3≤a := by omega
+      obtain ⟨aa,dd,hret⟩ := next_safe_right_third_two a d (by intro _; exact hs) hf
+      rw [hret] at h
+      contradiction
+    · simp only [if_neg hd]
+      by_cases hh : a<d+4+(d+1)/3
+      · exact hh
+      have hd0 : d%2=0 := by omega
+      have hs : d+4+(d+1)/3 ≤ a := by omega
+      have hf : d%2=1 → d+7+(d+2)/3≤a := by omega
+      obtain ⟨aa,dd,hret⟩ := next_safe_right_third_two a d hf (by intro _; exact hs)
+      rw [hret] at h
+      contradiction
+  exact ⟨ha,hl,hr⟩
+
+#print axioms next_none_requires_tight_corridor
+
 end BB6.Agent49ParitySource
