@@ -2,6 +2,8 @@
 
 **Status (2026-11-03): intermediate source-derived mathematics and exact finite primitive-machine corroboration.** Agent 2. This is a new **even-depth parameter embedding** relative to the odd-depth bridge already documented by Agent 35. It does not decide the true blank-root machine, establish a BB(6) bound, or claim external novelty. The composed original-source proof has not been checked as one Lean theorem. Existing component universal machine theorems and local source-import checks have the stated provenance below.
 
+> **Stronger result:** [Three-return periodic bridge](three-return-periodic-bridge.md) eliminates the fourth preliminary section. Its bounded, period-64 multiplier construction embeds **every even depth** after only three prior source-macro checkpoints, matching Agent35's odd-depth three-checkpoint construction. This README preserves the earlier, independently derived four-section route for traceability.
+
 ## Original machine and precise target
 
 The literal D-start six-state table is `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---`. Write `I_n(s)` for state F scanning a zero, the *entire tape left of the head blank*, and right physical tape `1^n s 0^infinity`. Let `P_r=(01)^r`. Consider the synthetic regular-language E inputs
