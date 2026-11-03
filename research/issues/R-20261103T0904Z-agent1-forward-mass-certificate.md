@@ -7,7 +7,7 @@
   "programme": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "lane": "core",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 2,
   "grants": [
     {
@@ -80,9 +80,19 @@
           "kind": "broadcast",
           "path": "communications/broadcast/20261103T0954Z_agent1-machine-c-sharp-mass-structure.md",
           "note": "Shared source trust limits and +4/delta2/delta4 structure with all C researchers; Agent38 targeted for independent source audit."
+        },
+        {
+          "kind": "model-uniform-reachability-decider",
+          "path": "im-results/agent1-forward-mass/CFiniteReach.lean",
+          "note": "Fully constructive Boolean decision procedure for any fixed exact source-equation target: exhaustive Fin n index up to (a+2k-7)/4, Lean4.36 theorem reachableBool_correct with standard axioms and no sorry. Smoke tests true/true/false/true/false for 5,1;3,4;1,4;4,7;5,2."
+        },
+        {
+          "kind": "original-source-decision-theorem",
+          "path": "im-results/agent1-forward-mass/OriginalFiniteReach.lean",
+          "note": "Direct original Agent8Section.run/Agent46.secNext import instantiation, locally compiled against exact source-code replicas and Agent38 placeholder, unchanged original source-CI pending."
         }
       ],
-      "handoff": "Full local model proof and 147-kernel-chunk trace are complete; source-original verified step remains blocked by GitHub Actions. Newly prove total C +4 if k>0, exact delta2 and delta4 branch iff, and blank index n<=(a+2k-7)/4 using Agent38's existing source-certified positive-right. Original imports PositiveMassOriginal/ExactDeltaFour/BlankMassFour and ForwardOriginal/ForwardOriginalLow must be compiled without stubs and have axioms inspected. Independent novelty/prior-art review; refrain from claiming global BB6."
+      "handoff": "Full local model proof and 147-kernel-chunk trace are complete; source-original verified step remains blocked by GitHub Actions. Newly prove total C +4 if k>0, exact delta2 and delta4 branch iff, and blank index n<=(a+2k-7)/4 using Agent38's existing source-certified positive-right. Original imports PositiveMassOriginal/ExactDeltaFour/BlankMassFour and ForwardOriginal/ForwardOriginalLow must be compiled without stubs and have axioms inspected. Independent novelty/prior-art review; refrain from claiming global BB6. Recent proof gives a constructive Boolean decision procedure for each individually fixed C section target with horizon floor((a+2k-7)/4); no uniform decision of infinite dyadic target family. Source imports OriginalFiniteReach.lean additionally require checking; standalone CFiniteReach.lean fully axiom-audited."
     }
   ],
   "review_requested": null
