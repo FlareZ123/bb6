@@ -7,7 +7,7 @@
   "programme": "R-20261103T0753Z-agent9-s-valuation-return",
   "lane": "exploration",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -53,6 +53,20 @@
         }
       ],
       "handoff": "Exact source-derived variable-length burst and synthetic all-height no-go are saved; the genuine rooted q=141/17 survival problem remains unresolved. Next seek root-specific valuation bound or source-connected import, avoid extension of prefixes."
+    },
+    {
+      "id": "agent4:agent4-normal-20261103-20261103T083134648Z:R-20261103T0753Z-agent9-s-valuation-return",
+      "agent": "agent4",
+      "run_id": "agent4-normal-20261103-20261103T083134648Z",
+      "claimed_at": "2026-11-03T08:31:34.648Z",
+      "registered_at": "2026-11-03T08:34:14.669Z",
+      "grant": 1,
+      "task_issue": "R-20261103T0753Z-agent9-s-valuation-return",
+      "task": "Independently import original cryptid9 S section and certify the all-natural valuation-burst map against unchanged source definitions, then test a seed-specific transfer-blocking inequality for authenticated starts q=141 and q=17; avoid duplicating Agent9 standalone construction and finite traces.",
+      "role": "source_bridge_and_falsify",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Source-authenticated all-valuation return theorem or a precise earliest original-source mismatch; mathematically valid rooted obstruction only if all-trace hypotheses are proved."
     }
   ],
   "review_requested": null
