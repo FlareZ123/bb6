@@ -134,7 +134,8 @@ private theorem eDoubleFrontSucc_noPhysical (m q : Nat)
     ([true,false] ++ List.replicate 6 true ++ ys),2⟩
   have he0 : run 2 (eDouble m (q+1) ys) = scan := by
     dsimp [scan,L]
-    simpa only [show (q+1)+2=q+3 by omega] using
+    simpa only [List.cons_append, List.nil_append,
+      show (q+1)+2=q+3 by omega] using
       (eDouble_two m (q+1) ys)
   have he1 : run (2*(q+3)) scan = a := by
     dsimp [scan,a]
@@ -144,7 +145,6 @@ private theorem eDoubleFrontSucc_noPhysical (m q : Nat)
     change run 16
       (⟨oppairs (q+3) ++ L,false,[true,true,false,false] ++ ys,0⟩ : Cfg) = _
     rw [aFront16]
-    rfl
   have he3 : run (2*(q+1)) walk = c := by
     dsimp [walk,c]
     rw [cWalk_run]
