@@ -49,3 +49,25 @@ A second locally kernel-verified theorem, [`SpaceNeedleOdd.lean`](SpaceNeedleOdd
 The simpler construction uses `v=0`, `K=4+4t`, `q(0)=2`, `q(t+1)=16q(t)+18`, satisfying `2^K=5q(t)+6`. The complete formal argument builds an explicit inverse for multiplication by 4 modulo any odd positive `m` and lifts `K` above any bound. Verified locally with the actual compiled parent `SpaceNeedleDensity.olean`, Lean 4.36.0-rc2, `#print axioms` exactly `[propext, Quot.sound]`. Local byte SHA256 of this second source: `01a8804587029e559ba1574b6a3d219e4105e7fab8bd4d4f61addf97250b3580`. The remote source was confirmed token-identical (normalized 1608 characters; FNV-1a `ece8b8db`). No source import certification claimed.
 
 Combining the two results, every modulus that is odd **or** coprime to 15 has all exponent residues represented arbitrarily high in the exact unrestricted one-step terminal-predecessor set. This union is a quantified limitation of residue-only predecessor-emptiness arguments. It does not constrain the genuine blank orbit.
+
+
+## Generic certificate and whole modulus-30 coverage (new)
+
+[SpaceNeedleLift.lean](SpaceNeedleLift.lean) establishes `SpaceNeedlePrime.predecessor_period_lift` for arbitrary natural valuation `v` and exact one-step legal source parameters `q,K`. If `2^L=1+(2^(v+1)+3)c`, it constructs a valid incoming edge for **every** exponent `K+Ln`. Its explicit recurrence carries the actual odd quotient, so the theorem is an exact arithmetic identity over natural integers. Local Lean 4.36.0-rc2 passed without user axioms or sorry; audit `[propext, Quot.sound]`. Remote code was verified source-token identical to local compiled source (normalized 1444 characters, FNV-1a `d4b9d3fd`).
+
+The unusually large valuation-49 family is kernel certified in [SpaceNeedleVal49.lean](SpaceNeedleVal49.lean). It proves that for all `n` there is a legal predecessor at
+`K=5167997945245 + 6701783066148*n`.
+The denominator is `2^50+3=1125899906842627`, with offset `3*2^49+49+3=1688849860263988`. Lean kernel evaluation of modular exponentiation certifies the starting exponent and multiplicative period; the generic lift produces all unbounded exponents without constructing `2^K` explicitly. Local Lean passed with only `[propext, Quot.sound]`. Remote code token-identical to compiled file (1943 characters, FNV-1a `83ea46b4`).
+
+The main [SpaceNeedleMod30.lean](SpaceNeedleMod30.lean) proves the following **all-residue, unbounded statement**:
+
+```lean
+theorem every_residue_mod30_unbounded_predecessors (a bound : Nat) :
+    ∃ k, bound ≤ k ∧ k%30=a%30 ∧ admissibleExponent k
+```
+
+It assembles five explicit infinite families with valuations 0, 6, 11, 17, and 49. Their respective exponent bases/periods are `(4,4)`, `(13,130)`, `(3669,4098)`, `(42089,262146)`, and `(5167997945245,6701783066148)`. The proof uses a kernel-checked finite 30-residue coverage certificate over `Fin 5` family indices and `Fin 15` periods, followed by a symbolic bound-independent lift for arbitrary `a` and `bound`. This is an all-natural theorem, stronger in quantified scope than a finite list of witnesses.
+
+**Verification:** The actual combined `SpaceNeedleMod30.lean` source was independently compiled locally on Lean 4.36.0-rc2 against `SpaceNeedleOdd.olean` and `SpaceNeedleVal49.olean`. Its final axiom list is exactly `[propext, Quot.sound]`, no `sorry`, local original byte SHA256 `659f270b50bfbcd00a1b619b8bc6d04c781250ffb90c4fd1465d1dbc385745f7`. The committed source was reconstructed from three text fragments and checked token-identical to locally compiled proof (3365 Unicode codepoints, FNV-1a `2c069ac1`). This is local kernel verification of an arithmetic theorem. CI source-import verification of the entire unchanged original DeepMind machine remains unavailable due to the shared runner outage.
+
+**Scientific scope:** For every exponent residue modulo 30, there are arbitrarily large terminal powers with unrestricted legitimate one-step predecessors. This excludes a certain residue-only **incoming-edge-emptiness proof approach**. It says nothing about whether any such predecessor lies on the authentic blank-origin sequence `N1`. Earlier Agent48 source arithmetic and decimal-suffix results overlap; no external novelty claim, root decision, or improved BB(6) bound follows. We preserve this as an intermediate result.
