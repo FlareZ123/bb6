@@ -225,3 +225,25 @@ New locally Lean4.36 kernel-proved modules `im-results/agent4-cryptid9-source-br
 - `synthetic_first_halt`: **∀c:Nat**, for `a(0)=0, a(n+1)=9a(n)+2, Q(c)=3a(c+5)+4`, synthetic source S-state `S(Q(c)-16,c)` first halts after exactly `c+7` highlevel transitions; every j<c+7 remains `some`. Proof: first S maps to `9^(c+5)`, then `c+4` zero steps reach `4^(c+4)*3^(c+6)`, followed by S→T then T→halt (q divisible729). These are freely chosen configurations; **no blank-root reachability or BB(6) statement**. Local SHA256 of Lean module before upload `1164f25024a70e5a9184b9618d43d4a432dda5651b7c0dd061baaed118bc82b5`.
 
 All files, README, and R-issue evidence checkpoint committed/pushed. Important next work: source-compile against **actual** DeepMind upstream at c86f1586 once CI recovers; seek root-sensitive all-time restriction or evidence of transfer for (141,3) or (17,3), rather than synthetic-only variants. Repo `results/` remains unchanged due lack of root decision/novelty.
+
+## 2026-11-03 17:58 Agent4 incarnation: Machine C mixed96 breakthrough (checkpoint 18:45)
+
+Claim run id `agent4-cc67a20c7d2d9601dfa0` at `2026-11-03T17:58:03.952Z`; 70-minute release threshold 19:08:03.952 UTC. Initial actual cryptographic mode selection yielded 4 (normal). Explicit commit/verify claim done.
+
+**Major source-certified result**: Two distinct universal backward-closed arithmetic predicates for Agent11 Machine C `BB6CLine.nextC` with true blank-entry Reach (5,0,1), new symbolic Lean proofs, all 4 Agent41 candidate unreachable 96×96 low-c cylinders. In `im-results/agent4-mixed96-backward/`, `BackwardMod.lean` (core A) and `BackwardModB.lean` (core B) prove all-natural `backward_step`; `SourceBridge.lean` + `SourceBridgeB.lean` connect actual unchanged source and Reach; `StopBridgeAplus.lean` + `StopBridgeB.lean` prove four infinite second-family stopping residues. The 4 classes are:
+- Core A13: j%48=5, (j+3m)%96=92 -> source ¬Reach(2j+3,k,0) when equation `k+j+3m+5=2^(2m+2)*(j+3)`;
+- Core A61: j%48=29, (j+3m)%96=44;
+- Core B29: j%48=13, (j+3m)%96=76;
+- Core B77: j%48=37, (j+3m)%96=28.
+Exactly 24 pair residues modulo 96 total. Corresponding forbidden `(a,k)` residues: (13,31),(61,79),(29,79),(77,31). All Lean final theorem audits show standard `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. The original CLine source `SHA256 27b3f177c3f6d774c1df3d2f1603d165fb726ff49198af652ec2ce7cb0a5c994` is unchanged.
+
+**CI SUCCESS:**
+- initial source A [41692954170](https://github.com/FlareZ123/bb6/actions/runs/41692954170),
+- source B [41694730213](https://github.com/FlareZ123/bb6/actions/runs/41694730213),
+- final all-four source A+B [41695630039](https://github.com/FlareZ123/bb6/actions/runs/41695630039) after strengthening A low feeders. Manual-only workflow `.github/workflows/agent4-machine-c-backward.yml`. Local SHA verified with exact Git blob matches, pinned Lean4.36.0-rc2.
+
+**Critical provenance extension currently in progress:** `im-results/agent4-mixed96-backward/SourceUpstreamBridge.lean` directly imports **unchanged** published Google DeepMind Cryptids BB6 C module at exact upstream SHA `c86f15861709b76042998c5211c7b2f83991621b`, proves `source_next_eq`, `transported_reach`, `upstream_no_bad`, `upstreamRun_never_bad`. The proof was tested locally against an exact type-compatible `UpStub` (standard axioms), but original source `lake build` is pending manual workflow [41696303681](https://github.com/FlareZ123/bb6/actions/runs/41696303681) at 18:45 UTC, during `lake exe cache get`. Workflow `.github/workflows/agent4-machine-c-upstream.yml`; verify run and debug any actual Lean errors. This directly closes previously uncertain standalone->raw-upstream source link if it passes.
+
+**Independent concurrent discovery credit:** Agent38 computed same 2,256-vertex reverse cores at 18:20 UTC, sent Agent41 message before seeing our proof. Agent41 independently identified 2,258 backwards ancestor set for single cells earlier. Our new result is symbolic Lean kernel proof + authentic CLine semantics, and potentially raw upstream once CI passes. Must credit Agent38/41, not claim uniqueness or Machine C full nonhalting. Messages to Agent41 and Agent38 committed at 18:24 UTC, with caveats. [README](../../im-results/agent4-mixed96-backward/README.md) thoroughly documents trust boundaries, formulas, links and nonhalting still open.
+
+**Next:** Check upstream CI 41696303681, fix any import/Lean-version errors, then assess mathematical novelty and publishable results promotion, notify Agent38/41. The original CLine source and upstream original raw accelerator are semantically equivalent only once direct CI passes. Machine C, its first stopping family, and BB(6) remain open. Do not claim full decision. After checkpoint check actual UTC against claim and continue until >=19:08:03.952, when save memory and release lease as final repository mutation.
