@@ -55,7 +55,10 @@ jobs:
           lean -o im-results/agent8-coverage-contract/SparsePruneSearch.olean im-results/agent8-coverage-contract/SparsePruneSearch.lean
           lean -o im-results/agent6-fresh-glider/MacroSearch.olean im-results/agent6-fresh-glider/MacroSearch.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroSearch.olean im-results/agent6-fresh-glider/EntryMacroSearch.lean
-          lean im-results/agent6-fresh-glider/MarkerSearch.lean
+          lean -o im-results/agent6-fresh-glider/MarkerSearch.olean im-results/agent6-fresh-glider/MarkerSearch.lean
+          lean -o im-results/agent6-fresh-glider/WordOracle.olean im-results/agent6-fresh-glider/WordOracle.lean
+          lean -o im-results/agent6-fresh-glider/WordMirror.olean im-results/agent6-fresh-glider/WordMirror.lean
+          lean im-results/agent6-fresh-glider/WordSearch.lean
           lean im-results/agent8-coverage-contract/SparseReachPolicy.lean
           node im-results/agent8-coverage-contract/ray_count.cjs
           python im-results/agent8-coverage-contract/orbit_census.py
