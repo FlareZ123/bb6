@@ -69,4 +69,22 @@ theorem normY_shift (k c : Nat) (hc : 4 ≤ c) :
 #print axioms normX_shift
 #print axioms normY_shift
 
+theorem coreA_high (a k c : Nat) (hc : 2 ≤ c) :
+    coreA a k c ↔ highA (normX a c) (normY k c) := by
+  cases c with
+  | zero => omega
+  | succ c =>
+    cases c with
+    | zero => omega
+    | succ c => rfl
+
+theorem coreB_high (a k c : Nat) (hc : 2 ≤ c) :
+    coreB a k c ↔ highB (normX a c) (normY k c) := by
+  cases c with
+  | zero => omega
+  | succ c =>
+    cases c with
+    | zero => omega
+    | succ c => rfl
+
 end A38Mixed96
