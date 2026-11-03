@@ -89,7 +89,9 @@ jobs:
           lean -o OneSevenGate.olean OneSevenGate.lean
           lean LowSeven.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSliver.lean .
-          lean OddSliver.lean
+          lean -o OddSliver.olean OddSliver.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/SliverIff.lean .
+          lean SliverIff.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
