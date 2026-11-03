@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 4,
+  "revision": 5,
   "parallel_limit": 2,
   "grants": [
     {
@@ -75,8 +75,44 @@
       "task": "Independently classify and prove/falsify whether the exact exceptional E return family L(a,q,1), a≡1(mod3), re-enters the canonical L grammar after one additional genuine physical F/0 return; derive a quantified source-table two-return mechanism or smallest all-parameter failure, with true blank-entry constraints explicit. Distinct from Agent37's first-return 11-case table and E110111 cylinder.",
       "role": "independent-falsification",
       "state": "active",
-      "evidence": [],
-      "handoff": "Start with exact Agent37 eleven-case table and source-authorized machine; test all q≥1,k≥0 E exception endpoints after one physical F0 return, then derive arbitrary-parameter formula or prove a counterfamily. Avoid sampling longer blank orbits."
+      "evidence": [
+        {
+          "kind": "source-derived universal mathematical composition",
+          "path": "im-results/agent31-d-exceptional/README.md",
+          "note": "All t>=0,q>=3 original D F/0 exceptional E source macro followed by certified E triple; syntactically outside L. Individual original macros already source-CI verified; combined source proof pending complete import audit."
+        },
+        {
+          "kind": "locally kernel-checked Lean finite raw table witness",
+          "path": "im-results/agent31-d-exceptional/EscapeWitness.lean",
+          "note": "Strict first original literal D F0 returns at raw steps 129 and 442, all five proof audits no axioms, standalone local Lean 4.36.0-rc2."
+        },
+        {
+          "kind": "locally kernel-checked Lean unbounded language theorem",
+          "path": "im-results/agent31-d-exceptional/EscapeLanguage.lean",
+          "note": "All-parameter output right suffix excludes every (01)^r1^b; standard Lean axioms only."
+        },
+        {
+          "kind": "original-source proof candidate",
+          "path": "im-results/agent31-d-exceptional/ESecondSource.lean",
+          "note": "Combined source theorem locally typechecks against declaration/signature-compatible stub modules; stub uses explicit interface axioms, full authentic source CI pending/outage."
+        },
+        {
+          "kind": "independent raw reproducibility",
+          "path": "im-results/agent31-d-exceptional/check_second_escape.py",
+          "note": "45/45 literal raw full-tape tests for two return times and endpoints."
+        },
+        {
+          "kind": "conditional rooted grammar diagnostics",
+          "path": "im-results/agent31-d-exceptional/check_root_L_escape.py",
+          "note": "444/444 exact short synthetic L cases; first E exceptional predicted at indexes 1711,8394,9458,7611 from seeds 5,9,15,39, not root-certified."
+        },
+        {
+          "kind": "ci-infrastructure",
+          "url": "https://github.com/FlareZ123/bb6/actions/runs/41636988787",
+          "note": "Manual source CI failed at runner startup after five seconds, job logs unavailable 404; no evidence of Lean failure or successful complete import."
+        }
+      ],
+      "handoff": "Quantified second-return non-L obstruction proved on paper from prior original-source E-double/E-triple with physical padding, small strict literal model Lean no-axiom kernel proof and universal syntactic exclusion Lean kernel proof. Candidate ESecondSource.lean locally typechecks against source-signature stubs, original imports pending runner recovery. Actual blank-root first E exception predictions indexes 1711/8394/9458/7611 remain conditional and require single original-source 11-branch grammar plus source-root chain. No rooted halting/nonhalting classification or BB6 bound."
     }
   ],
   "review_requested": null
