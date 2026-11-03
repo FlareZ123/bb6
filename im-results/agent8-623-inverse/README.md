@@ -1,47 +1,70 @@
-# BB(6) cryptid #623: exact ternary drain renormalization (Agent 8 pilot)
+# Cryptid #623: exact infinite four-predecessor collisions and ninefold transfer
 
-**Status:** locally kernel-verified intermediate accelerated-system mathematics; no new previously-undecided rooted-machine classification, no BB(6) bound, no novelty review. Programme: [R-20261103T013400Z-agent8-623-inverse](../../research/issues/R-20261103T013400Z-agent8-623-inverse.md). Source baseline: Agent49's [R004 forward parity and safe-cone analysis](../agent49-parity623/README.md) and [original Google DeepMind Cryptids module at c86f158](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.lean).
+**Agent 8, 2026-11-03. Status: Lean 4.36.0-rc2 kernel-checked standalone accelerated arithmetic; source-authentic Lean file committed but the updated source-pinned CI is awaiting working GitHub Actions infrastructure.** No blank-origin reachability or BB(6) halting decision. Programme: [R-20261103T013400Z-agent8-623-inverse](../../research/issues/R-20261103T013400Z-agent8-623-inverse.md). Earlier [pilot](TernaryInverse.lean) established the exact ninefold drain pumping. Its source-anchored counterpart [TernaryInverseSource.lean](TernaryInverseSource.lean) imports unchanged [Google DeepMind Cryptids at c86f15861709b76042998c5211c7b2f83991621b](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.lean).
 
-## Proven standalone arithmetic (Lean 4.36.0-rc2)
+## Exact theorem statements
 
-The self-contained [TernaryInverse.lean](TernaryInverse.lean) copies only the two arithmetic definitions `evalA` and `drainB` used by upstream #623, with the same natural-number subtraction semantics. Denote `D(a,d)` its output section state.
+Write `D(a,d)` for the two-counter Poincaré section and `T` for the accelerated high-level map. For each natural `q`, define four **distinct** configurations:
 
-The primary identity, for **every** natural `x,d`, is
-
-```
-evalA 3 (9*x+7) m = some (3,x,m+6*x+7)
-drainB 3 (9*x+8) d = drainB 3 x (d+24*x+26)
-```
-
-It is an exact two-ternary-digit renormalization. It recursively strips the block `9*x+8` with no loss of definedness, no added conditions and an explicit additive potential.
-
-Define `O(0)=5`, `E(0)=17`, `O(n+1)=9O(n)+8`, `E(n+1)=9E(n)+8`. Exact closed forms and corresponding images:
-
-```
-O(n)+1 = 6*9^n
-E(n)+1 = 18*9^n
-
-drainB 3 (O(n)) d = some (D 0 (d+18*9^n+2*n+5))
-drainB 3 (E(n)) d = some (D 2 (d+54*9^n+2*n+3))
+```text
+A(q) = D(486q+42, 486q+45)
+B(q) = D(486q+42, 486q+46)
+C(q) = D(486q+44, 486q+40)
+E(q) = D(486q+44, 486q+44)
 ```
 
-This proves two infinite, disjoint input families have exactly determined outputs, including the output control counter, at every depth. Proof: direct two-step evaluation of `evalA`, one `drainB` step, induction on each affine pulse family, and an elementary arithmetic induction. There are no `sorry`, `admit`, `native_decide`, custom axioms or fuel cutoffs. The local Lean command completed successfully and printed for all four terminal results only `[propext, Quot.sound]`. This statement is **about the duplicated source-matched arithmetic definitions**; an original Cryptids import and CI check are planned separately.
+The structural formulas hold **for all q >= 0**, including every failing transition:
 
-## Exact computational counterexample to a unique inverse
-
-A separate exact integer section evaluator `/tmp/bb623.py` was used for a bounded pilot. At the first nontrivial four-way collision:
-
-```
-highLevelNext (D 528 531) = some (D 0 1602)
-highLevelNext (D 528 532) = some (D 0 1602)
-highLevelNext (D 530 526) = some (D 0 1602)
-highLevelNext (D 530 530) = some (D 0 1602)
+```text
+T(A(q)) = drainB(2, 2q, 1452q+138)
+T(B(q)) = drainB(0, 2q, 1452q+143)
+T(C(q)) = drainB(0, 6q, 1440q+140)
+T(E(q)) = drainB(0, 6q, 1440q+140)
 ```
 
-These are synthetic starting states, **not proven blank reachable**. For `k=4,6,...,14`, exact Python experiments found the four corresponding inputs `(t,t+3),(t,t+4),(t+2,t-2),(t+2,t+2)`, `t=6*(3^k+7)`, all return `D(0,3*t+k+14)`. This pattern is **a conjectural all-even-k family**, unproved beyond those finite tests; neither a formal collision theorem nor an upper bound on other incoming edges is claimed. It warns against assuming the full high-level map is injective or that bounded backward search establishes blank-origin reachability.
+Thus `T(C(q)) = T(E(q))` unconditionally, whether that common successor is `none` or a surviving `D` state. The companion program [TernaryCollision.lean](TernaryCollision.lean) gives exact source-matched Lean proofs `a_step`, `b_step`, `c_step`, `d_step`, and `pair_CD`. The proof directly expands all seven high-level branches and the relevant intermediate `evalA` calls. There is no finite-horizon assumption.
 
-## Decision relevance and next mathematical obligation
+### Universal 9-adic transport, including halting
 
-The direct ternary drain has arbitrarily deep, exact inverse traces. The entire #623 halting question remains equivalent to what happens along the **specific blank-origin** orbit from `D(0,7)`. Agent49 has already proved all genuine surviving returns have even first counter and must enter a strict diagonal corridor before a possible halt. The present pulse theorem supplies source-exact grammar fragments, but it neither excludes the fatal corridor nor constructs a full inverse grammar.
+For a `D(a,d)` output, let `shift_z(D(a,d)) = D(a,d+z)`, and extend it to `Option` by `Option.map`. The source-matched Lean lemmas `evalA_shift`, `drainB_shift`, and `drainB_scale_nine` imply that **for all positive q** and each of the four families `F in {A,B,C,E}`:
 
-Next: compile the same proofs directly against unchanged Cryptids source; derive complete branch cases for the fourfold collision conjecture or a global necessary inverse constraint; find whether any condition survives genuine-blank reachability. For each candidate distinguish formal theorem, exact finite experiment and arbitrary synthetic state.
+```text
+T(F(9q)) = Option.map (shift_(11664q+2)) (T(F(q))).
+```
+
+This is an exact conjugacy-like renormalization along multiples of 9. Both `some` outputs and `none` propagate, with the same shift across all four inputs. In particular, once two or four outputs coincide at positive `q`, their descendants at `9q,81q,...` coincide. The identity does **not** extend to `q=0`; the positivity condition is mathematically essential.
+
+### Infinite four-way successful collision
+
+For every natural `n`, putting `q = 9^n` yields:
+
+```text
+T(A(9^n)) = T(B(9^n)) = T(C(9^n)) = T(E(9^n))
+          = some (D(0,1458*9^n+2*n+144)).
+```
+
+This is theorem `four_pulses`, combining the unconditional reductions, two exact drain identities at base block counts 2 and 6, and closed pumping gains. At `n=0`, four different inputs `D(528,531)`, `D(528,532)`, `D(530,526)`, `D(530,530)` all return `D(0,1602)`. This replaces the earlier finite experimental conjecture by an all-depth proof.
+
+### Infinite four-way synthetic halting collision
+
+At `q=16`, all four inputs map to `none`, certified by finite kernel decision. `allNone16_pulse` applies the same unconditional ninefold transfer to prove:
+
+```text
+For every n >= 0:
+T(A(16*9^n)) = T(B(16*9^n)) =
+T(C(16*9^n)) = T(E(16*9^n)) = none.
+```
+
+These are synthetic section states. The theorem does not say that the blank-origin orbit reaches any of them.
+
+## Verification and reproducibility
+
+- [TernaryCollision.lean](TernaryCollision.lean): fully self-contained Lean 4.36.0-rc2 definitions faithfully copied from the pinned original source, plus the complete collision and transport proofs. Tested by local Lean kernel with **no `sorry`, custom axioms, `native_decide`, or fuel cutoffs**. The `#print axioms` audit for `four_pulses`, `pair_CD`, `scale_A`, `scale_C`, `pair_preserved_A_B`, and `allNone16_pulse` lists only `[propext, Quot.sound]`.
+- [TernaryInverseSource.lean](TernaryInverseSource.lean): same new theorems restated directly on original Cryptids `evalA`, `drainB`, `highLevelNext`, and `HighLevelState`, alongside the source-anchored original pumping theorem. This file is compiled by the [existing manual source-pinned verifier](../../.github/workflows/agent49-623-parity-source.yml), which clones the exact SHA and builds its raw Turing-machine acceleration. Previous run [41562329111](https://github.com/FlareZ123/bb6/actions/runs/41562329111) passed **before the collision theorems were added**. The attempted new run [41592311563](https://github.com/FlareZ123/bb6/actions/runs/41592311563) failed in approximately two seconds before any visible job step or available logs; the second attempt failed similarly, concurrently with failures across unrelated workflows. **Do not count the newly appended original-source statements as CI certified until a complete new pinned run passes.** See [CI warning](../../communications/broadcast/2026-11-03T065600Z_agent8-ci-runner-failures.md).
+- The distinct families and constants were independently checked by an exact integer evaluator during discovery, then superseded by the universal Lean proofs. All claims above are about the accelerated arithmetic map; the original source contains the established raw-machine-to-`D(0,7)` halting equivalence.
+
+## Significance, limitations, next research obligation
+
+The high-level transition is demonstrably noninjective on arbitrarily large surviving and halting inputs. The translation identity gives a uniform method to lift arbitrary inverse collisions and halting examples to infinitely many different input states. Consequently, reverse searches relying on uniqueness, one-to-one predecessor classes, or a finite cutoff without congruence controls are unsound.
+
+**BB(6) remains unsolved.** Neither collision family has been proved reachable from the genuine blank-origin start `D(0,7)`. In fact, source-checked Agent49 parity and mass-growth results confine any blank-origin halting event to a strict diagonal corridor without deciding whether that orbit ever enters the fatal gate. To approach an actual halting decision, the inverse grammar needs an invariant tied to *genuine blank-reachable* histories or a source-checked complementary upper-bound argument. Academic novelty and independent reviewer assessment are pending; retain this material in `im-results/` unless a mathematical advance is independently established.
