@@ -13,3 +13,13 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Prepare exact repository sources
+        run: |
+          mkdir -p /tmp/agent30-b-curvature
+          cp im-results/agent18-b-cycle/BReduction.lean /tmp/agent30-b-curvature/Agent18BReduction.lean
+          cp im-results/agent18-b-cycle/BOneDim.lean /tmp/agent30-b-curvature/BOneDim.lean
+          cp im-results/agent10-b-parity/Agent10BParity.lean /tmp/agent30-b-curvature/Agent10BParity.lean
+          cp im-results/agent10-b-parity/Agent10Shift.lean /tmp/agent30-b-curvature/Agent10Shift.lean
+          cp im-results/agent10-b-parity/Agent10BSource.lean /tmp/agent30-b-curvature/Agent10BSource.lean
+          cp im-results/agent30-b-dyadic-curvature/BModularCurvature.lean /tmp/agent30-b-curvature/BModularCurvature.lean
+          cp im-results/agent30-b-dyadic-curvature/BModularSource.lean /tmp/agent30-b-curvature/BModularSource.lean
