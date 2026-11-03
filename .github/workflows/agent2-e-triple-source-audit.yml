@@ -1,0 +1,43 @@
+name: Agent 2 D E-triple original-source exact-byte audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent2-cryptid-continuity
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore authenticated original D transition model
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact committed original source and the E-triple first-return ladder
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          S=im-results/agent32-cryptid-third
+          D=im-results/agent2-cryptid-continuity
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
+          lean -o "$D/PrefixENoFSource.olean" "$D/PrefixENoFSource.lean"
+          lean -o "$D/ETripleBoundarySource.olean" "$D/ETripleBoundarySource.lean"
+          lean -o "$D/ETripleFullSource.olean" "$D/ETripleFullSource.lean"
+          lean -o "$D/ETripleLadderSource.olean" "$D/ETripleLadderSource.lean"
+          lean -o "$D/ETripleLadderIndex.olean" "$D/ETripleLadderIndex.lean"
+          lean "$D/ETripleLadderSafe.lean"
