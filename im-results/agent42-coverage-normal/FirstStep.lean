@@ -34,7 +34,7 @@ theorem normal_first_other (m : Machine) (w r : Bool) (q : Fin 6)
     have h := normalized_haltsAt_iff e (!r) m 0 n
     have hroot : e.forward (0 : Fin 6) = 0 := swapToOne_root q hq
     rw [hroot] at h
-    simpa only [HaltsAfterAt, HaltsAfter, blankAt_zero] using h
+    simpa only [HaltsAfterAt, HaltsAfter, blankAt_zero, m'] using h
   · have hrootb : e.backward (0 : Fin 6) = 0 := by
       simpa [e, swapToOne] using swapToOne_root q hq
     have htarget : e.forward q = 1 := swapToOne_target q
