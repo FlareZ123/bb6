@@ -58,11 +58,18 @@ theorem high_to_low3 (a k : Nat) : bad a (k+2) 1 → bad a k 3 := by
 
 #print axioms high_to_low3
 
+private theorem high_not_sum_one (a k c : Nat) (ht : (a+k)%192=1) :
+    ¬ high a k c := by
+  simp [high, ht]
+
+private theorem high_not_sum_four (a k c : Nat) (ht : (a+k)%192=4) :
+    ¬ high a k c := by
+  simp [high, ht]
+
 theorem zero_a0 (k : Nat) : ¬bad 1 0 (2*k+2) := by
   have hc : ¬(2*k+2<2) := by omega
-  simp only [bad,hc,↓reduceIte,high]
-  intro h
-  rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+  simpa only [bad, hc, ↓reduceIte] using
+    (high_not_sum_one 1 0 (2*k+2) (by decide))
 
 #print axioms zero_a0
 
@@ -76,9 +83,8 @@ theorem zero_a1_pos (k : Nat) (hk : k>0) : ¬bad 2 2 (2*k-1) := by
   · subst k
     simp [bad,low]
   · have hc : ¬(2*k-1<2) := by omega
-    simp only [bad,hc,↓reduceIte,high]
-    intro h
-    rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h <;> omega
+    simpa only [bad, hc, ↓reduceIte] using
+      (high_not_sum_four 2 2 (2*k-1) (by decide))
 
 #print axioms zero_a1_pos
 
