@@ -24,3 +24,17 @@ At intermediate stage j (0<=j<m), `k_j+1=8^j*3^(m-j)*v`, `q_j=q+2j`. Thus the st
 ## Independent exact-committed-byte source CI now passed (2026-11-03 18:25 UTC)
 
 The previous CI-pending sentence above is superseded. [Manual source audit run 41693580884](https://github.com/FlareZ123/bb6/actions/runs/41693580884) **succeeded**, on the committed repository files with the original checksum-verified `Boundary.lean` recovered from Agent31's SHA-pinned archive. The job compiled the original `Boundary`, `CryptidSix`, `CryptidTriplePairs`, followed by `NoEarlierF`, `PrefixENoFSource`, `ETripleBoundarySource`, `ETripleFullSource`, `ETripleLadderSource`, `ETripleLadderIndex`, and `ETripleLadderSafe` in that order using Lean 4.36.0-rc2. The audit source is [manual workflow](../../.github/workflows/agent2-e-triple-source-audit.yml); all job steps completed successfully. The theorem files include their original `#print axioms` reports. This removes the earlier exact-GitHub-byte provenance gap for these ten locally compiled source files. It does not turn prepared E-ladder tapes into genuine blank-reachable states, settle the original D-root, or determine BB(6).
+
+## Newly kernel-proved exact closed cost, all depths (2026-11-03 18:40 UTC)
+
+The historical statement above that the rational closed-form cost was merely paper-checked is now superseded. New [`ETripleCostClosed.lean`](ETripleCostClosed.lean), imported against the original `ETripleLadderIndex` source, proves for **every** natural `m,u,q` and `U=u+1`:
+
+```text
+55*totalCost(m,u,q) + 108*U^2*9^m + 825*U*3^m
+  = 108*U^2*64^m + 825*U*8^m
+      + 330*m^2 + (330*q+825)*m.
+```
+
+This is exactly the previous geometric-progression formula after clearing denominator 55, expressed entirely with natural-number arithmetic so no truncating subtraction is assumed. The proof first derives the polynomial decomposition `totalCost = a(m) U^2 + b(m) U + 6*m^2+(6q+15)m` from the original recurrence, with `a(0)=b(0)=0`, `a(m+1)=108*9^m+64*a(m)`, `b(m+1)=75*3^m+8*b(m)`; it then proves `55a(m)+108*9^m=108*64^m` and `b(m)+15*3^m=15*8^m` by induction. No independent source assumption was introduced.
+
+**Source-committed-byte CI: [run 41695906401](https://github.com/FlareZ123/bb6/actions/runs/41695906401), success.** The new file compiled after the entire original D six-state `Boundary` + `CryptidTriplePairs` + strict E-triple ladder chain, using Lean 4.36.0-rc2. The job log prints `BB6.ETripleCostClosed.total_closed`, `total_poly`, `a_closed`, `b_closed` all with precisely **[propext, Quot.sound]**, no `sorryAx`. This is a universal **exact primitive-time theorem about synthetic prepared inputs** with original-machine transition semantics. It does not certify that any such input is reached from a blank tape and does not change BB(6) bounds.
