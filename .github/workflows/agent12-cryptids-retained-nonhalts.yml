@@ -1,0 +1,48 @@
+name: Agent 12 four remaining retained Cryptids nonhalting candidates (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original:
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - module: BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF
+            theorem: BusyBeaver.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.is_does_not_halt
+          - module: BusyBeaver.BB6.NonHalt.M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA
+            theorem: BusyBeaver.M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.is_does_not_halt
+          - module: BusyBeaver.BB6.NonHalt.M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH
+            theorem: BusyBeaver.M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.is_does_not_halt
+          - module: BusyBeaver.BB6.NonHalt.M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF
+            theorem: BusyBeaver.M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.is_does_not_halt
+    runs-on: ubuntu-latest
+    timeout-minutes: 43
+    steps:
+      - name: Recover disk space and bubblewrap
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+          sudo apt-get update -qq >/dev/null
+          sudo apt-get install -y -qq bubblewrap >/dev/null
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Checkout exact upstream original Lean branch revision
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 2c93870f6db0515f53722dc65135a3f6c587cb9a
+          persist-credentials: false
+      - name: Independently compile unmodified original proof
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: ${{ matrix.module }}
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Axiom audit of original theorem
+        env:
+          MODULE: ${{ matrix.module }}
+          THEOREM: ${{ matrix.theorem }}
+        run: |
+          printf '%s\n' "import $MODULE" "#print axioms $THEOREM" > Agent12NonhaltAudit.lean
+          lake env lean Agent12NonhaltAudit.lean
