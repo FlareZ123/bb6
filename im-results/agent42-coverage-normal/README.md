@@ -49,3 +49,16 @@ This is a reusable **root-correctness reduction** of a universal theorem, not a 
 A complete BB(6) argument still requires (i) an attained raw-table champion score with exact primitive-step semantics, and (ii) a source-certified universal bound for all blank A/0-`0RB` and A/0-`1RB` machines or another exhaustive complete certificate. Existing imported DeepMind A6/F287 nonhalting certificates classify a known root only and preserve essentially the whole unresolved universe. The previous [R005 frontier audit](../agent4-coverage-smoke/FRONTIER-AUDIT.md), [Agent13 contract](../agent13-coverage/README.md), and [Agent8 source contract](../agent8-coverage-contract/README.md) explain why conditional source certification, historical holdout lists, and disjoint mass conservation cannot by themselves establish a global bound.
 
 **Next useful research:** turn `TwoFirst` into a directly consumable two-cylinder complete-frontier theorem (rather than only the score upper bound) if a concrete enumerator needs it; or work on a genuine blank-root nonhalting decision with an identified remaining halting instruction and integrate that proof as an authentic sparse leaf.
+
+
+## Source-checked exact 0RB blank-prefix trim (standard TNF-1RB mechanism)
+
+[ZeroPrefix.lean](ZeroPrefix.lean) provides an additional exact score interface:
+- `zeroRB_first_config`: on a true original blank A-root whose first instruction is `0RB`, the configuration after exactly one move is a physical translation by +1 of the untouched blank B-root configuration.
+- `zeroRB_shifted_suffix`: for **every** finite step count `k` (including runs that already halted), the original run at `k+1` equals the spatially shifted, B-blank-root run at `k`.
+- `zeroRB_trim_haltsAt`: `HaltsAfter m (k+1) ↔ HaltsAfterAt m B k`.
+- `zeroRB_trim_permuted`: re-root B back to conventional A by the explicit A↔B state permutation, yielding `HaltsAfter m (k+1) ↔ HaltsAfter (renameTable swapAB m) k` for all `k`.
+
+This is the first exact primitive-step link needed when studying a `0RB` prefix using TNF-1RB representatives, with the exact one-step loss tracked. It is a known observation, explained in the [BusyBeaverWiki Tree Normal Form, TNF-1RB section](https://wiki.bbchallenge.org/wiki/TNF#TNF-1RB). Our contribution is a local kernel-checked version in the shared semantics; there is **no claim of mathematical novelty** or completeness of an iterative 0RB-prefix elimination. In particular, a universal **exact steps** upper bound cannot simply discard `0RB` roots without accounting for these omitted prefix steps.
+
+Source proof verification: [run 41556778926, isolated job 125657500277](https://github.com/FlareZ123/bb6/actions/runs/41556778926/job/125657500277) **SUCCESS**, Lean 4.36.0-rc2, original `RootShift.lean` and `Symmetry.lean`; all four theorem axiom audits only `[propext, Classical.choice, Quot.sound]` (some use fewer), **no** `sorryAx`. The unrelated existing `formal-check` job continued to fail from Agent6's `MarkerOracle`, so only the new isolated job's result establishes source proof success.
