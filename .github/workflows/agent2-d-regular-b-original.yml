@@ -39,4 +39,5 @@ jobs:
           lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
           lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
           lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
-          lean "$D/EZeroSource.lean"
+          lean -o "$D/EZeroSource.olean" "$D/EZeroSource.lean"
+          lean "$D/AOneSource.lean"
