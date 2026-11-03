@@ -41,7 +41,7 @@ theorem full_A_code_110111_first_return (k : Nat) (ws ys : List Bool) :
     have heq : (m-3)+3 = m := by omega
     have hs := a110111_first_physical (m-3) zs t
       (by simpa only [heq] using ht)
-    simpa only [heq] using hs
+    simpa [packet, heq] using hs
   exact lift_first_return packet tail (fun m => 2*m+24)
      (fun m => 2*m+5) hend hno k ws ys
 
