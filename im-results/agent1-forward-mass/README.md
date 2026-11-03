@@ -104,3 +104,16 @@ theorem section_delta_four_iff_direct (a k x y : Nat)
 ```
 
 Thus, across all successful Machine C section returns, mass increase **exactly 2** occurs only at `a≥2,k=0`, while increase **exactly 4** occurs only on the positive-right nonbounce branch. Every other successful return increases the mass by at least 5. Both exceptional-branch equivalences were checked locally under the exact original-source map shape with ordinary foundational axioms `[propext, Classical.choice, Quot.sound]`. These are **source-body verified locally, authentic original import CI pending**.
+
+
+## Exact finite decider for any individually specified section target
+
+The strengthened blank-origin bound also gives a **complete decision procedure for each fixed target** `(a,k)`. Any occurrence must be at a section index `n ≤ (a+2*k-7)/4`. Consequently, consider the computable Boolean
+
+```lean
+def reachableBool (a k : Nat) : Bool := decide
+  (∃ i : Fin ((a+2*k-7)/4+1),
+    ForwardMass.run ForwardC.secNext (5,1) i.val = some (a,k))
+```
+
+The complete correctness equivalence with *unbounded* existence is kernel-checked in [CFiniteReach.lean](./CFiniteReach.lean), with `[propext, Quot.sound]` and no `sorry`. Smoke calculations for targets `(5,1)`, `(3,4)`, `(1,4)`, `(4,7)`, `(5,2)` give `true,true,false,true,false` respectively. [OriginalFiniteReach.lean](./OriginalFiniteReach.lean) is its true-original-import form, locally syntax-checked against exact source-shaped substitutes and pending authentic repository compilation. The decider is **not uniformly efficient** as target mass grows, and establishing that *every member of an infinite dyadic target family* is unreachable remains the open Machine C problem. This finitary target decidability does not imply a global BB(6) result.
