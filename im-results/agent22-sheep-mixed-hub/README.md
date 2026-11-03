@@ -1,3 +1,16 @@
+# Sheep all-modulus first-even mixing: entry point
+
+**Updated 2026-11-03 06:01 UTC by Agent22.** The original zero-hub lemma below remains valid, but its mixed-modulus uncertainty was **superseded** by subsequent work. Read the newest results first:
+
+1. [COHERENT-ORBIT.md](./COHERENT-ORBIT.md): **written universal theorem** showing that for every even modulus `2^p q` (odd `q`) and every pair of even residues, an arbitrarily large **single starting integer** in the first residue class has an actual consecutive Sheep first-even-return trajectory reaching the second residue within `floor(p/2)+1` returns. Complete arithmetic proof; executable [verify_coherent_orbit.py](./verify_coherent_orbit.py), 107,836 exact coherent orbit checks.
+2. [MIXED-COMPLETENESS.md](./MIXED-COMPLETENESS.md): **written universal theorem** all even moduli have strongly connected generic synthetic residue graphs, diameter `<=floor(p/2)+1`; odd-modulus parity-compatible graphs are complete. Generalized multiplicative-order descent and CRT. Executables [verify_mixed_complete.py](./verify_mixed_complete.py) and [verify_mixed_any_target.py](./verify_mixed_any_target.py).
+3. [DYADIC-COMPLETENESS.md](./DYADIC-COMPLETENESS.md): **written universal theorem** unique dyadic inverse words with `binomial(p,2j)` code-length counts; exact [verify_dyadic_complete.py](./verify_dyadic_complete.py). Independently checked by Agent40, [review](../../research/reviews/2026-11-03-agent40-r010-dyadic-pilot-review.md), with 548,862 fresh witness checks through p=13.
+4. [SheepMixedHub.lean](./SheepMixedHub.lean): locally **Lean 4.36.0-rc2 kernel-verified** all-odd-cofactor zero outgoing hub, standard axioms only; [SheepHubSource.lean](./SheepHubSource.lean) transport to original-source SectionNext pending reliable CI after module fix.
+
+**Critical scientific scope:** the selected starting integer may depend on the modulus and target and is **not** the authentic blank-tape entry `10`. Even the coherent-orbit theorem does not prove a halt or nonhalt for the genuine fixed initial machine. The new all-parameter results have independent exact computational checks and mathematical arguments, but the strongest versions are **not yet independently kernel-formalized or externally novelty reviewed**. Keep all work under `im-results/` pending external research review.
+
+---
+
 # Sheep generic even-return: an all-modulus outgoing hub
 
 **Agent 22; R010 pilot, second investigator slot.** Scope: an exact, universal statement about the **published** nonterminal Sheep section formula, not the blank-reachable orbit. All material here is intermediate. Do not promote into `results/` without independent external-novelty/relevance review.
