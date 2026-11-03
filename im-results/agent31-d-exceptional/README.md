@@ -45,3 +45,21 @@ An independent arithmetic interpreter of Agent37's eleven source-derived one-fut
 Further work of highest value: source-import the combined two-return theorem and a genuine blank-orbit certificate, then investigate whether E escapes induce a larger *closed reachable language* capable of distinguishing the forbidden F/1 halt gate. Avoid generalizing from this restricted two-return obstruction to unconditional machine nonhalting.
 
 **Reproduce:** Lean 4.36.0-rc2, compile both `.lean` files directly from a fresh working directory; Python 3.11+ runs `check_second_escape.py` without third-party packages. No custom per-commit CI is needed.
+
+
+## All exceptional E inputs: complete nine-case two-return formula (12:50 UTC)
+
+The more complete source-derived result is [two-return-classification.md](./two-return-classification.md). It covers **all** `I_(3k+4)((01)^q1)` with k≥0, q≥1, including the three k residues and q modulo3, yields explicit exact primitive-step costs for both endpoints and identifies exactly one class of two-section outputs outside L: `k≡1 (mod3), q≥3`. Full nine-case formulas are in that document. This is a genuine all-parameter mathematical composition of earlier source-certified raw-machine macros, awaiting **consolidated** original-source Lean import and external novelty assessment.
+
+The independently authored raw transition checker [check_all_E_second.py](./check_all_E_second.py) verified **144/144** first/second physical F/0 complete tapes and exact primitive-step times for k=0..11, q=1..12, with **40 outside L** precisely in that condition.
+
+[extended_conditional_orbit.py](./extended_conditional_orbit.py) joins the nine-case E exception escape map to Agent37's original eleven-rule conditional L macro table. Starting at the four certified D-family unary *entry seeds* (5,9,15,39), the **first conditional checkpoint after which the L grammar cannot represent the resulting section** occurs as follows:
+
+| Authentic unary seed | Conditional index of E-exception input | E index k residue | q | Input unary bit-length | SHA256 of unsigned little-endian input a |
+|---:|---:|---:|---:|---:|---|
+| 5 | 6,389 | 1 | 4 | 9,044 | `5e2acebd56d6366b3b4c8477753d1fc1fc56ea53f13900abe26b32913b8a1133` |
+| 9 | 31,787 | 1 | 4 | 44,984 | `a1c93524b11ca66d4f419ec54b22b41a0cdc250d90003a99932a85e6d65dda80` |
+| 15 | 12,689 | 1 | 4 | 17,960 | `978d993556ed3495803c9ae36cc06dab52e6178580e182bf93c9694804b035d2` |
+| 39 | 9,838 | 1 | 8 | 13,927 | `28384913d91f238f6838ec49371045d7fe50c24f04f3e0e5df312ce6b3844fd0` |
+
+The arithmetic code checks its own exact two-step exceptional map against all 144 raw-derived short cases. These large-index predictions are **conditional symbolic forecasts**, not individually source-certified authentic blank-run events. The table has no implied upper or lower bound for BB(6). The original-source composition and true-root reachability obligations remain open.
