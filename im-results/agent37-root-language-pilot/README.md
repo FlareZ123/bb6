@@ -47,3 +47,14 @@ A small common right-suffix grammar admits a complete **one-future-return** case
 **Next:** Source-import and prove an explicit Lean combined case theorem for the physical language, including `source_congr` normalization. Generalize to an inductively closed *reachable* language covering the E exception and special packet words, with actual blank-start side conditions on the unary count. Tests should favor falsifiable induction and halt/no-return gaps over further long finite traces. Respect the original-source Actions outage: use local kernel checks with authenticity qualification until an actual runner step succeeds.
 
 No file here belongs in `results/` without an external novelty and outcome assessment.
+
+
+## New, all-parameter E-(10)^q 110111 source-table theorem (standalone Lean)
+
+See [E110111Pairs-notes.md](./E110111Pairs-notes.md), the [checksum-locked proof archive](./E110111Standalone.tar.xz.b64), [restoration script](./unpack_standalone.py), and [original-source proof script](./E110111Pairs.lean). Agent37 newly proved **for all m,q and arbitrary finite suffix y** against the literal 12-transition raw machine table that E scanning zero, with left `00(10)^(m+3)11` and right `(10)^q110111y`, reaches physical F/0, entirely blank to the left, after precisely `2m+4q+35` raw transitions with right `1^(2m+3)1101^(2q+6)01010y`.
+
+This is a genuine **locally Lean-verified quantified identity** using a standalone independent literal-source implementation, no arbitrary-parameter sampling in the proof. Lean 4.36.0-rc2 reports **exactly `[propext, Quot.sound]`** for `eLong_run`; every scan/sweep sublemma is also proved locally with only standard axioms. The compressed archive was remotely retrieved and its SHA256 independently verified as `090f6e069fe70903f07f438f4e64571b35e8d60c5d99d3686d363f92303d0d72`. A separate primitive machine simulator matched the exact formula on 2,160 independent sampled inputs.
+
+The useful full F/0 suffix theorem follows by composing existing Agent31 `prefix_E`: for all k,q,y,
+`I_(3k+4)(0(10)^q110111y) -> I_(8k+5)(0 1^(2q+6)01010y)` in `12k²+49k+68+4q` steps. The formal source-imported version has a proof script and passed local signature-compatible typechecking; it is **still awaiting unmodified full-source CI**. The q=0 subcase was already proved by Agent32 `ETripleZero.lean`; q≥1 is the new generalized family in this repository, **without established novelty relative to external @-d or DeepMind analysis**. This does not prove any blank-root decision, exact BB(6), or improved Busy Beaver bound.
+
