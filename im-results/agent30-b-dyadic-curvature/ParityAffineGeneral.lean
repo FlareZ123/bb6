@@ -91,4 +91,12 @@ theorem iterH_dyadic_curvature (r c s n z : Nat)
       iterH r c s n z+2*r^n := by
     simpa [Nat.mul_comm] using iterH_two_adic_shift r c s n z 2
   have hp : (r^n)%2=1 := by simp [Nat.pow_mod,hodd]
+  have hc := H_odd_scale_curvature r c s (iterH r c s n z) (r^n)
+    hodd hp hgap
+  simp only [iterH_succ_last]
+  rw [h1,h2]
+  rcases hc with ⟨_,he⟩ | ⟨_,he⟩
+  · exact Or.inl he
+  · exact Or.inr he
+
 end BB6.Agent30Generic
