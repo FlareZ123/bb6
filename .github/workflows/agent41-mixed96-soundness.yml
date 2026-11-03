@@ -1,0 +1,35 @@
+name: Agent 41 mixed96 original-source soundness
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore exactly checked standalone Lean source
+        run: |
+          mkdir -p /tmp/a41-mixed96
+          cd /tmp/a41-mixed96
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent41-mixed96/Mixed96Sound.lean.xz.b64" > Mixed96Sound.lean.xz
+          xz -dc Mixed96Sound.lean.xz > Mixed96Sound.lean
+          echo "c8bdfe78aeb6ff10f3a4db22bb1b1504584bcbf1ca5fbb3f6ab1d6f5d83639f1  Mixed96Sound.lean" | sha256sum -c -
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-mixed96/Mixed96Bridge.lean" Mixed96Bridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-mixed96/SecondMod96.lean" SecondMod96.lean
+      - name: Kernel-check actual original Machine C source bridge
+        run: |
+          cd /tmp/a41-mixed96
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o Mixed96Sound.olean Mixed96Sound.lean
+          lean -o Mixed96Bridge.olean Mixed96Bridge.lean
+          lean -o SecondMod96.olean SecondMod96.lean
