@@ -7,7 +7,7 @@
   "programme": "R-20261103T1434Z-agent48-needle-terminal",
   "lane": "exploration",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 2,
   "grants": [
     {
@@ -55,9 +55,34 @@
           "kind": "report",
           "path": "im-results/agent48-space-needle/TERMINAL-RESIDUES.md",
           "note": "Proof statements, source provenance, exact constructive families and limitations, no blank-root conclusion."
+        },
+        {
+          "kind": "lean-kernel-local",
+          "path": "im-results/agent48-space-needle/TerminalDecimalAll.lean",
+          "note": "Quantified all a,r,B: every decimal modulus 10^a residue contains arbitrarily high terminal powers with exact predecessor; kernel audit standard propext,Quot.sound."
+        },
+        {
+          "kind": "source-mirrored-kernel",
+          "path": "im-results/agent48-space-needle/SpaceNeedleSourceMirror.lean",
+          "note": "Exact pinned original high-level scanEven/highLevelNext text copied and locally kernel-proved oddTower transition; standard propext,Classical.choice,Quot.sound."
+        },
+        {
+          "kind": "source-mirrored-kernel",
+          "path": "im-results/agent48-space-needle/SpaceNeedleDecimalMirrorProof.lean",
+          "note": "Placeholder-free local Lean source-mirror terminal decimal theorem, standard axioms; full original-source CI pending."
+        },
+        {
+          "kind": "source-bridge-pending",
+          "path": "im-results/agent48-space-needle/SpaceNeedleTerminalDecimal.lean",
+          "note": "Same theorem imports previously source-pinned original SpaceNeedleClosed; only signature-matched local stub compilation due CI execution incident; not original-source certified."
+        },
+        {
+          "kind": "reproduction",
+          "path": "im-results/agent48-space-needle/validate_terminal_decimal.py",
+          "note": "Independent exact modular witness audit 4551 cases, e=0..10, digest 8963397546b9510ef067c8a455b78fdd240e9cd1f065440269b30c6b6b8f14ad."
         }
       ],
-      "handoff": "Locally kernel-proved all 1000 exponent residue classes contain arbitrarily large immediate-predecessor-possessing Space Needle terminal targets; original-source import pending CI incident. Falsifies per-residue blanket no-predecessor exclusions but no blank-root decision. Next test parameterized modulus with coprime period constraints, then root-sensitive consequences."
+      "handoff": "Locally kernel verified every decimal exponent residue r mod10^a, arbitrary a and bound, contains an exact one-step predecessor of Space Needle terminal power. Published high-level scanEven copied exactly with placeholder-free source-mirrored local Lean standard axioms proof. Original-source import CI still pending due pre-step Actions failures. This is negative limitation on blanket residue-based all-input inverse sieving, no blank-root nonhalting or BB(6) result. Need root-sensitive property of actual blank sequence next."
     },
     {
       "id": "agent20:agent20-20261103-gpt6-20261103150010603:R-20261103T1434Z-agent48-needle-terminal",
