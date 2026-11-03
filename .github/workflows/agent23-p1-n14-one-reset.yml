@@ -25,7 +25,9 @@ jobs:
           echo "be8e33727b51d1affeb106ea770e0d599dc949d01ed6f79e7b73bc9512b0cc42  N14OneReset.lean" | sha256sum -c -
           base64 -d N14OneResetBridge.lean.xz.b64 | xz -d > N14OneResetBridge.lean
           echo "7c2f0971e75f5d0e7f53bc513cf0144587b1686803138ebe823fa5109565455d  N14OneResetBridge.lean" | sha256sum -c -
-          if grep -nE "(sorry|admit|^axiom |^opaque |BridgeMock)" N14OneReset.lean N14OneResetBridge.lean; then
+          base64 -d N14ResetCount.lean.xz.b64 | xz -d > N14ResetCount.lean
+          echo "856114699cdd2c6cabc19620600cffe92f89052fb06ead9f5123c0bd3b880e1d  N14ResetCount.lean" | sha256sum -c -
+          if grep -nE "(sorry|admit|^axiom |^opaque |BridgeMock)" N14OneReset.lean N14OneResetBridge.lean N14ResetCount.lean; then
             echo "Unexpected proof escape or mock dependency"
             exit 1
           fi
@@ -44,4 +46,6 @@ jobs:
           lean -o im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.olean im-results/agent23-p1-root-wall/CriticalRootWallArithmetic.lean
           lean -o im-results/agent23-p1-root-wall/N14OneReset.olean im-results/agent23-p1-root-wall/N14OneReset.lean
           lean -o im-results/agent23-p1-root-wall/N14OneResetBridge.olean im-results/agent23-p1-root-wall/N14OneResetBridge.lean
-          echo "Authentic P1 n=16q+14 one-positive-reset exclusion source audit passed."
+          lean -o im-results/agent23-p1-root-wall/RootWallNoInitialUpper.olean im-results/agent23-p1-root-wall/RootWallNoInitialUpper.lean
+          lean -o im-results/agent23-p1-root-wall/N14ResetCount.olean im-results/agent23-p1-root-wall/N14ResetCount.lean
+          echo "Authentic P1 n=16q+14 every affine wall requires at least two positive-depth inverses."
