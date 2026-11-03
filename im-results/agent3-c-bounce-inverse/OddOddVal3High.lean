@@ -27,10 +27,11 @@ theorem oddodd_val3_forbidden_parent (x y time : Nat)
 /-- Infinite high halting family eliminated through the full original-source
     odd/odd valuation-three inverse, rather than finite quotient absence. -/
 theorem high_halt_oddodd_val3_unreachable (j m k time : Nat)
-    (hm : 7≤m) (hm4 : m%4=3)
+    (hm4 : m%4=3)
     (hjm : (j+13*m)%16=10)
     (hgate : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠ some (2*j+3,k) := by
+  have hm : 3≤m := by omega
   let P : Nat := 2^(2*m+2)
   have h16 : 16∣P := by
     dsimp [P]
