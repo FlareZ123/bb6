@@ -2,7 +2,7 @@ import Lean.Elab.Tactic.Omega
 import ERegularLadderSource
 
 namespace BB6.ERegularLadderSafe
-open CryptidBoundary BB6.BoundaryPadding BB6.Padding
+open CryptidBoundary BB6.BoundaryPadding
 open BB6.ERegularLadderSource BB6.EThirdSource
 open BB6.Agent31SecondSource BB6.ETripleLadderSource
 open BB6.ETripleLadderIndex
