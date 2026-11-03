@@ -125,6 +125,11 @@ jobs:
           lean -o OddForcedNormalize.olean OddForcedNormalize.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddForcedFilter.lean .
           lean OddForcedFilter.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean .
+          lean -o SectionAffineInverse.olean SectionAffineInverse.lean
+          lean -o ReachAffine.olean ReachAffine.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean .
+          lean FullForcedNormalize.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
