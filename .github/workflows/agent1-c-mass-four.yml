@@ -1,0 +1,37 @@
+name: Agent 1 Machine C sharp mass and genuine blank orbit (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sharp-mass-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact untouched source dependencies and mass classification
+        run: |
+          set -e
+          mkdir -p /tmp/a1-mass
+          cp im-results/agent11-c-line/CLine.lean /tmp/a1-mass/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a1-mass/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a1-mass/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a1-mass/
+          cp im-results/agent3-c-bounce-inverse/SectionMassStrict.lean /tmp/a1-mass/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a1-mass/
+          cp im-results/agent1-forward-mass/{PositiveMassOriginal,ExactDeltaFour,BlankMassFour}.lean /tmp/a1-mass/
+          cd /tmp/a1-mass
+          export LEAN_PATH=.
+          lean --version
+          for m in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef SectionMassStrict Agent38SectionParity PositiveMassOriginal ExactDeltaFour BlankMassFour; do
+            echo "Original-source Lean: $m"
+            lean -o "$m.olean" "$m.lean"
+          done
+          echo "Completed source-integrated proofs; inspect #print axioms above"
