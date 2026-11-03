@@ -118,7 +118,9 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddOddVal3High.lean .
           lean OddOddVal3High.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddOddLowVal.lean .
-          lean OddOddLowVal.lean
+          lean -o OddOddLowVal.olean OddOddLowVal.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenOrbit.lean .
+          lean OddSevenOrbit.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
