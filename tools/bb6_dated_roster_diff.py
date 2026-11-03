@@ -73,16 +73,15 @@ def main() -> None:
     print("BEGIN OCT24 TO OCT30 REMOVED rooted entries (Oct24 1-based line number)")
     for i, machine in enumerate(new, 1):
         if machine not in latest_set:
-            print(f"{i}\\t{machine}")
+            print(i, machine, sep=chr(9))
     print("END OCT24 TO OCT30 REMOVED")
     print("BEGIN OCT24 TO OCT30 ADDED rooted entries (Oct30 1-based line number)")
     for i, machine in enumerate(latest, 1):
         if machine not in new_set:
-            print(f"{i}\\t{machine}")
+            print(i, machine, sep=chr(9))
     print("END OCT24 TO OCT30 ADDED")
 
-    # A live page query is deliberately provenance-only: the October 30
-    # is cross-checked here against the original downloadable 608 roster.
+    # Cross-check the archive URLs against the live wiki index.
     wiki_url = "https://wiki.bbchallenge.org/wiki/Holdouts_lists?action=raw"
     try:
         with urlopen(Request(wiki_url, headers={"User-Agent": "BB6-research-repro/1.0"}),
