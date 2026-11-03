@@ -18,4 +18,5 @@ jobs:
         run: |
           cd im-results/agent38-mixed96-reverse
           lean --version
-          lean -o CoreAnalytic.olean CoreAnalytic.lean
+          LEAN_PATH=. lean -o CoreAnalytic.olean CoreAnalytic.lean
+          LEAN_PATH=. lean -o CoreCaseLemmas.olean CoreCaseLemmas.lean
