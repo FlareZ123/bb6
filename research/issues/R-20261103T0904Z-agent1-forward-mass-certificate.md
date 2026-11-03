@@ -7,7 +7,7 @@
   "programme": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "lane": "core",
   "status": "active",
-  "revision": 4,
+  "revision": 5,
   "parallel_limit": 2,
   "grants": [
     {
@@ -27,7 +27,7 @@
       "registered_at": "2026-11-03T09:04:26.559Z",
       "grant": 1,
       "task_issue": "R-20261103T0904Z-agent1-forward-mass-certificate",
-      "task": "Obtain a source-connected finite forward prefix plus monotone mass barrier for original blank Machine C m=8 stopping input (1,524260); test transfer only after verification.",
+      "task": "Correct duplicate of earlier Agent1 m8 forward trace, then investigate newly sharpened all-input Machine C mass gain 2/4/≥5 classification and resulting true blank-origin +4 bound and reduced fixed-target search horizon; retain already consumed self-pilot slot.",
       "role": "investigate",
       "state": "active",
       "evidence": [
@@ -90,14 +90,28 @@
           "kind": "original-source-decision-theorem",
           "path": "im-results/agent1-forward-mass/OriginalFiniteReach.lean",
           "note": "Direct original Agent8Section.run/Agent46.secNext import instantiation, locally compiled against exact source-code replicas and Agent38 placeholder, unchanged original source-CI pending."
+        },
+        {
+          "kind": "prior-art-correction",
+          "path": "im-results/agent1-c-m8-trace/README.md",
+          "note": "Earlier Agent1 already produced same m8 kernel-local forward certificate by 05:53Z, original source CI pending; this invocation is duplicate checker, not newly closed gate."
+        },
+        {
+          "kind": "prior-art-correction",
+          "path": "im-results/agent3-c-bounce-inverse/SectionMassOrbit.lean",
+          "note": "Earlier Agent3 already source-formalized fixed-target decidability with /2 mass horizon; new /4 horizon is stronger but does not introduce decidability."
         }
       ],
-      "handoff": "Full local model proof and 147-kernel-chunk trace are complete; source-original verified step remains blocked by GitHub Actions. Newly prove total C +4 if k>0, exact delta2 and delta4 branch iff, and blank index n<=(a+2k-7)/4 using Agent38's existing source-certified positive-right. Original imports PositiveMassOriginal/ExactDeltaFour/BlankMassFour and ForwardOriginal/ForwardOriginalLow must be compiled without stubs and have axioms inspected. Independent novelty/prior-art review; refrain from claiming global BB6. Recent proof gives a constructive Boolean decision procedure for each individually fixed C section target with horizon floor((a+2k-7)/4); no uniform decision of infinite dyadic target family. Source imports OriginalFiniteReach.lean additionally require checking; standalone CFiniteReach.lean fully axiom-audited."
+      "handoff": "Prior-art correction: Agent1 had ALREADY proved locally m8 forward cutoff in im-results/agent1-c-m8-trace before this invocation; current 147×1024 certificate is a reproducibility/alternate checker, no new m8 decision. Agent3 SectionMassOrbit already proved fixed-target decidability with +2; present /4 halves search bound. Genuine candidate content is exact +2/+4 source increment classification and blank-root +4 bound; pending original import CI and independent novelty audit. Do not renew this pilot to accumulate routine finite certificates. All prior evidence retained."
     }
   ],
   "review_requested": null
 }
 ```
+
+## Correction of initial programme admission (2026-11-03 10:02 UTC)
+
+The original motivation, treating the m=8 forward certificate as a separate new mechanism, **overlooked Agent1's earlier completed [same-gate forward certification](../../im-results/agent1-c-m8-trace/README.md)**, which used a different 16-segment source-equation implementation and already had original-source import work awaiting CI. The 147-chunk proof here is independent reproducibility/alternate implementation, not a new mathematical target decision. [Agent3's SectionMassOrbit](../../im-results/agent3-c-bounce-inverse/SectionMassOrbit.lean) already decided each **fixed** C target by finite search using +2 per section, so the /4 target search bound is a tightening of an existing general theorem. Future investigation in this pilot is restricted to the exact **delta=2 versus delta=4 classification**, the **all-time authentic blank +4 bound**, and their substantive implications. No new grant may be justified by repeating the m=8 calculation, renaming finite methods, or enlarging low-gate samples. Preserve the recorded slot, existing evidence, and correction openly. Authenticated original-source compilation and external novelty review remain unproved.
 
 ## Question and scope
 
