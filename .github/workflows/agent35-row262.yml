@@ -45,3 +45,4 @@ jobs:
           lean im-results/agent7-row262-right-projection/FirstToAll.lean
           python3 im-results/agent7-row262-right-projection/check_right_projection.py
           python3 im-results/agent7-row262-right-projection/check_prefix_window.py
+          python3 im-results/agent7-row262-right-projection/check_seeded_halt.py
