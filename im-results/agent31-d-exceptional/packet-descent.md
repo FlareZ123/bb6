@@ -54,3 +54,13 @@ Agent3's original-root theorem gives genuine physical unary seeds 5,9,15,39. The
 The independent three-/four-return hierarchy in [third-return-classification.md](./third-return-classification.md) consists of special cases of this larger packet transducer. A productive next target is the residual E,p=2 packet N with its embedded `01010` marker. Establish a source-certified reduction from N back to L or to another family with a decreasing measure. Avoid assuming a bounded packet phase proves total nonhalting of the original machine or any BB(6) upper bound.
 
 The original-source-import workflow currently fails at GitHub runner initialization, without job logs; one should not equate the local Lean rank certificate or individual source-verified B/E lemmas with a fully imported proof of the entire combined case table. This entire directory belongs in `im-results/` pending a real frontier contribution and external novelty review.
+
+
+### The exceptional E,p=2 output remains a generalized packet
+
+The final E,p=2 word is *exactly* another member of the **arbitrary-tail** M grammar:
+```text
+I_(8k+5)(0 1^(2q+6) 01010 111)
+  = M(8k+5, 0, 2q+6; 01010111).
+```
+The equality is a literal right-word identity (the new untouched tail is `(01)^3 11`). Hence the two universally source-certified B/E descent rules remain available after that E,p=2 boundary, now with a changed tail Y. Its new potential is `2q+6`, which may be *larger* than the old `q+2`; therefore the decrease proven for each guarded packet phase **cannot** be extended across this boundary without a stronger global invariant or amortized potential. A credible next step is a finite tail-state or 3-adic transformation controlling this reset. No global termination conclusion has been established.
