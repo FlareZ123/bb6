@@ -20,7 +20,6 @@ def run_sections(limit: int) -> tuple[Snapshot, dict[str, int]]:
     assert limit >= 0
     left = right = head = p = raw = sections = 0
     counts = {k: 0 for k in ("odd", "b0", "d0", "d1c0", "d1c1", "burst", "burst_pairs")}
-    patterns: dict[int, int] = {}
     while sections < limit:
         if head:
             e = ((left + 1) & (-left - 1)).bit_length() - 1
@@ -43,14 +42,10 @@ def run_sections(limit: int) -> tuple[Snapshot, dict[str, int]]:
             raise RuntimeError(f"blank-root frozen F1 halt at primitive time {raw+2}; A-index {sections}")
         # Right prefix 10 followed by the maximal number of 001 triples.
         if ((right >> 2) & 7) == 4 and limit - sections >= 2:
-            suffix = right >> 2
-            k = (suffix.bit_length() + 2)//3 + 1
-            mask = patterns.get(k)
-            if mask is None:
-                mask = 4 * ((1 << (3*k)) - 1) // 7
-                patterns[k] = mask
-            difference = suffix ^ mask
-            q = ((difference & -difference).bit_length() - 1)//3
+            # Lean-certified maximal burst count from v₂(7R+9).
+            numerator = 7*right + 9
+            valuation = (numerator & -numerator).bit_length() - 1
+            q = (valuation - 2)//3
             q = min(q, (limit-sections)//2)
             assert q >= 1
             left = (left << (3*q)) | (6 * ((1 << (3*q)) - 1) // 7)
