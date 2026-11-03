@@ -120,6 +120,44 @@ theorem low_cost_wall_last_upper
     · simpa [htzero] using hi
     · omega
 
+theorem root_not_wall (q : Nat) (root : Bool) (hq : 1≤q) :
+    (if root then 4*u2 q-4 else 6*u2 q-2) ≠
+       64*q+(if root then 12 else 16) := by
+  have hPsmall : 256*q ≤ 2^(8*q) := growth q hq
+  have hPpow : 2^(8*q) ≤ 2^(16*q) :=
+    Nat.pow_le_pow_right (by decide : 0<(2:Nat)) (by omega)
+  have hP : 256*q ≤ 2^(16*q) := Nat.le_trans hPsmall hPpow
+  have hdom := pow16_dom q hq
+  have hu : u2 q+4*q+3=7*2^(16*q) := by
+    dsimp [u2]
+    omega
+  cases root <;> simp_all <;> omega
+
+theorem low_cost_wall_has_upper_predecessor
+    (q b d m : Nat) (root : Bool)
+    (hq : 1 ≤ q)
+    (hcone : OddCone
+      (if root then 4*u2 q-4 else 6*u2 q-2)
+      (if root then 4*u2 q+9 else 2*u2 q+5) b d m)
+    (hwall : b=4*m+64*q+(if root then 12 else 16))
+    (hlow : 2*m < 9*2^(16*q)) :
+    ∃ bp dp mp k c,
+      OddCone (if root then 4*u2 q-4 else 6*u2 q-2)
+        (if root then 4*u2 q+9 else 2*u2 q+5) bp dp mp ∧
+      8≤bp ∧ bp%4=0 ∧ dp%2=1 ∧
+      inverseAt bp dp 0=some (k,c) ∧ 2≤k ∧ c%2=1 ∧
+      b=2*k-4 ∧ d=c+4 ∧ m=mp+1 := by
+  rcases low_cost_wall_last_upper q b d m root hq hcone hwall hlow with hzero | hpath
+  · cases hcone with
+    | root =>
+      exfalso
+      exact (root_not_wall q root hq) (by simpa using hwall)
+    | parent bp dp mp t k c hprev hb hb4 hd hi hk hc => omega
+  · exact hpath
+
+#print axioms root_not_wall
+#print axioms low_cost_wall_has_upper_predecessor
+
 #print axioms low_cost_wall_last_upper
 
 #print axioms authentic_positive_depth_wall_cost
