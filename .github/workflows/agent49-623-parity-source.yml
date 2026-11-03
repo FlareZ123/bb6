@@ -49,3 +49,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryInverseSource.lean" Agent8TernarySource.lean
           lake env lean Agent8TernarySource.lean
+
+      - name: Verify Agent8 first-counter transport on unchanged source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryFirstSource.lean" Agent8FirstSource.lean
+          lake env lean Agent8FirstSource.lean
