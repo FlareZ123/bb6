@@ -81,6 +81,27 @@ theorem source_root_to_93_45 :
 #print axioms source_odd_ray_ladder
 #print axioms source_root_to_93_45
 
+/-- Third affine ladder family on the ray from state 11, even return. -/
+theorem source_v_even_ladder (k n w : Nat) (hk4 : k%4=0) (hw4 : w%4=2)
+    (hb : w+n*(3*k+20)+4≤2*BB429ElevenExtension.rayV k) :
+    sourceRun (n*(k+1)) (.J (BB429ElevenExtension.rayV k) w) =
+      some (.J (BB429ElevenExtension.rayV k) (w+n*(3*k+20))) := by
+  have h := BB429ElevenExtension.v_even_ladder k n w hk4 hw4 hb
+  have hh := source_run_eq (n*(k+1)) (BB429ElevenExtension.rayV k,w)
+  simpa [lift,h] using hh
+
+/-- Fourth affine ladder family on the ray from state 11, odd return. -/
+theorem source_v_odd_ladder (k n w : Nat) (hk4 : k%4=3) (hw4 : w%4=3)
+    (hb : 3*(w+n*(3*k+31))≤2*BB429ElevenExtension.rayV k+15) :
+    sourceRun (n*(k+2)) (.J (BB429ElevenExtension.rayV k) w) =
+      some (.J (BB429ElevenExtension.rayV k) (w+n*(3*k+31))) := by
+  have h := BB429ElevenOddExtension.v_odd_ladder k n w hk4 hw4 hb
+  have hh := source_run_eq (n*(k+2)) (BB429ElevenExtension.rayV k,w)
+  simpa [lift,h] using hh
+
+#print axioms source_v_even_ladder
+#print axioms source_v_odd_ladder
+
 #print axioms source_step_eq
 #print axioms source_run_eq
 #print axioms source_ray_ladder
