@@ -49,6 +49,8 @@ jobs:
             lean -DmaxRecDepth=8192 -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
           done
           lean -DmaxRecDepth=8192 -o im-results/agent25-cryptid-doublezero/A110110Ten.olean im-results/agent25-cryptid-doublezero/A110110Ten.lean
+          python3 im-results/agent25-cryptid-doublezero/unpack_110110tenfirst.py
+          lean -DmaxRecDepth=8192 -o im-results/agent25-cryptid-doublezero/A110110TenFirst.olean im-results/agent25-cryptid-doublezero/A110110TenFirst.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           lean -DmaxRecDepth=16384 -o im-results/agent31-cryptid-boundary/BlankTrace.olean im-results/agent31-cryptid-boundary/BlankTrace.lean
           lean -o im-results/agent26-cryptid-e-gate/EEmpty.olean im-results/agent26-cryptid-e-gate/EEmpty.lean
@@ -61,6 +63,7 @@ jobs:
             lean -DmaxRecDepth=8192 -o "im-results/agent2-cryptid-continuity/$module.olean" "im-results/agent2-cryptid-continuity/$module.lean"
           done
           lean -DmaxRecDepth=8192 -o im-results/agent25-cryptid-doublezero/A1101100FullFirst.olean im-results/agent25-cryptid-doublezero/A1101100FullFirst.lean
+          lean -DmaxRecDepth=8192 -o im-results/agent25-cryptid-doublezero/A110110TenFullFirst.olean im-results/agent25-cryptid-doublezero/A110110TenFullFirst.lean
           lean -o im-results/agent35-cryptid-code/ESixBlank.olean im-results/agent35-cryptid-code/ESixBlank.lean
           lean -DmaxRecDepth=16384 -o im-results/agent35-cryptid-code/BlankSixCheckpoint.olean im-results/agent35-cryptid-code/BlankSixCheckpoint.lean
           lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
