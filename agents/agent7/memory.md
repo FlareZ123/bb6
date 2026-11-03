@@ -41,3 +41,19 @@ Lease run ID `agent7-aa47dc002cfb49dd820ff128846f1004` claimed 2026-11-02T19:49:
 Local Lean 4.36.0-rc2 kernel verified all 51 parametric `Blocked` proofs with a local definition-exact signature stub; the final source bridge was tested only against local axiom stubs matching actual theorem types, so source CI must be checked. The local final bridge proof avoids large-power simplifier timeouts by rewriting `(x-10)-6=x-16` via `Nat.sub_sub` and proving modular arithmetic in a universally quantified arithmetic helper, rather than unfolding enormous exponent expressions into `omega`.
 
 **Next:** Check r82 CI, investigate any failure via small job-log tail, repair source and rerun. If source succeeds, update `im-results/` and promote this genuine all-natural infinite critical-index exclusion to `results/` with explicit original source and prior-art credit (Agent4 sieve), and update results/README. Then investigate further independent r≡18/34(mod64) infinite closures, prioritizing new modulo-65536 residues and sound reusable generation rather than many fixed instances. Potential examples `r=98` (51 symbolic hubs), `r=226` (23 hubs). None of these decide P1 or BB(6).
+
+
+## 2026-11-03 incarnation (run agent7-20261103-4e147e5481db1a9646bdbac3)
+
+Original lease claimed_at: **2026-11-03T01:11:35.622Z**, successfully committed/verified. This is the sole authoritative clock for release at or beyond 02:21:35.622Z, and must never be refreshed. Mode draw 4 = normal.
+
+Adopted maintainer Super-Critic protocol. Registered R006 validation task (later finished), rather than duplicate two active R002 and R003 investigations. The complete source audit and independent raw tests are preserved:
+
+- `im-results/agent7-p1-bridge-audit/README.md` complete original-machine-to-sparse-gate theorem review, source and CI provenance.
+- `im-results/agent7-p1-bridge-audit/raw_bridge_audit.py` independent literal RLE physical tape checker for all P1(a,c), 0<=a,c<=39, each compared with recursive G/T macro, plus 100 genuine blank-start P1 transitions. All 1600 synthetic cases agreed, blank reaches P1(2,1) after six raw steps, 100 subsequent macro transitions ending (95,93), 112859 total raw steps (including six). Historical Agent1 112669 counts 100 hubs including initial blank transition; the 100th P1 transition adds 190.
+- `research/reviews/2026-11-03-agent7-r006-p1-bridge.md` accepts precise theorem `IsHalt Source.target ↔ ∃n, ReachT 2 1 2 (14*2^n-2*n-10)`. All nine relevant local Lean files SHA-identical between current and successful original-source GitHub Actions 41388451571 (head 78c81ed); pinned external Cryptids ced8f9f and Lean 4.35.0-rc4. Final theorem has standard axioms [propext, Classical.choice, Quot.sound], no sorry. Inspected upstream exact `IsValidAcceleration` witness and its `isHalt_iff`, standalone G_agree, T_agree, Option.bind trace equivalence, and even/odd criteria.
+- The finding is validation/integration, not a new holdout decision or publishable frontier result; nothing added to results/. No source discrepancy was detected.
+
+**Important correction to older memory:** the r82 all-natural theorem DID subsequently pass full source CI 41518209059; see `im-results/agent7-r82-inverse/README.md`. Multiple agents independently certified more residue classes, so avoid spending time generating routine additional r82-like certificates.
+
+Next productive research: reachability/nonreachability of *all surviving* blank-origin critical P1 indices using uniform invariant or novel reduction, or tackle distinct missing exact-BB6 coverage theorem. R002 initially fully occupied by Agent9/45, so check concurrency and grants before registering. If below 70m at checkpoint, continue substantial research. If at >=70m, finish all useful state, commit+verify, then delete own lease as final mutation and verify deletion.
