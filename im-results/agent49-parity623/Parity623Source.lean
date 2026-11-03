@@ -990,4 +990,114 @@ theorem blank_run_requires_log_gate (n a d : Nat)
 
 #print axioms blank_run_requires_log_gate
 
+
+/-- Two extra ternary digits only increase the all-ones budget. -/
+theorem ones_le_plus_two (a : Nat) : ternaryOnes a ≤ ternaryOnes (a+2) := by
+  have heq : a+2 = (a+1)+1 := by omega
+  rw [heq, ternaryOnes, ternaryOnes]
+  omega
+
+/-- A strict initial ternary-ones budget is preserved by every successful evaluator branch. -/
+theorem evalA_ones_budget (a : Nat) : ∀ k m : Nat, k < ternaryOnes a →
+    ∃ aa bb dd, evalA a k m = some (aa,bb,dd) ∧ bb ≤ ternaryOnes aa := by
+  induction a with
+  | zero =>
+    intro k m hk
+    simp [ternaryOnes] at hk
+  | succ a ih =>
+    intro k m hk
+    rw [evalA]
+    have ha : a+1 ≠ 0 := by omega
+    by_cases h2 : k%3=2
+    · simp only [if_pos h2]
+      have hbound : k/3 ≤ ternaryOnes a := by
+        simp only [ternaryOnes] at hk
+        omega
+      refine ⟨a+2,k/3,m,by congr 1 <;> omega,?_⟩
+      have hm := ones_le_plus_two a
+      omega
+    · by_cases h0 : k%3=0
+      · simp only [if_neg h2, if_neg ha, if_pos h0]
+        have hbound : k/3 ≤ ternaryOnes a := by
+          simp only [ternaryOnes] at hk
+          omega
+        exact ⟨a,k/3,m+2,by congr 1 <;> omega,hbound⟩
+      · have hnew : k/3 < ternaryOnes a := by
+          simp only [ternaryOnes] at hk
+          omega
+        obtain ⟨aa,bb,dd,he,hp⟩ := ih (k/3) (m+2*(k/3)+3) hnew
+        simp only [if_neg h2, if_neg ha, if_neg h0]
+        exact ⟨aa,bb,dd,he,hp⟩
+
+/-- Every drain below the exact first-bad base-three threshold survives. -/
+theorem drainB_safe_ones (b : Nat) : ∀ a d : Nat, b ≤ ternaryOnes a →
+    ∃ aa dd, drainB a b d = some (.D aa dd) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d hbound
+    rw [drainB]
+    by_cases hb : b=0
+    · simp only [if_pos hb]
+      exact ⟨a,d,rfl⟩
+    · simp only [if_neg hb]
+      have hk : b-1 < ternaryOnes a := by omega
+      obtain ⟨a1,b1,d1,he,hp⟩ := evalA_ones_budget a (b-1) (d+2*b+3) hk
+      have hdec : b1 < b := by
+        have hi := evalA_b_le_k a (b-1) (d+2*b+3) a1 b1 d1 he
+        omega
+      obtain ⟨aa,dd,hr⟩ := ih b1 hdec a1 d1 hp
+      simp only [he, Option.bind_some, if_pos hdec]
+      exact ⟨aa,dd,hr⟩
+
+/-- The first bad evaluator argument is exactly the base-three word of all ones. -/
+theorem evalA_bad_ones (a : Nat) : ∀ m : Nat, evalA a (ternaryOnes a) m=none := by
+  induction a with
+  | zero =>
+    intro m
+    simp [evalA,ternaryOnes]
+  | succ a ih =>
+    intro m
+    rw [evalA]
+    have ha : a+1 ≠ 0 := by omega
+    have h2 : ternaryOnes (a+1)%3 ≠ 2 := by simp [ternaryOnes]
+    have h0 : ternaryOnes (a+1)%3 ≠ 0 := by simp [ternaryOnes]
+    simp only [if_neg h2, if_neg ha, if_neg h0]
+    have hdiv : ternaryOnes (a+1)/3=ternaryOnes a := by
+      rw [ternaryOnes]
+      omega
+    rw [hdiv]
+    have hs : a+1-1=a := by omega
+    rw [hs]
+    exact ih (m+2*(ternaryOnes a)+3)
+
+/-- Every first-threshold B-drain fails, regardless of the third counter. -/
+theorem drainB_first_halt (a d : Nat) :
+    drainB a (ternaryOnes a+1) d = none := by
+  rw [drainB]
+  have hb : ternaryOnes a+1≠0 := by omega
+  simp only [if_neg hb]
+  have he : evalA a (ternaryOnes a+1-1) (d+2*(ternaryOnes a+1)+3)=none := by
+    simpa only [Nat.add_sub_cancel] using
+      (evalA_bad_ones a (d+2*(ternaryOnes a+1)+3))
+  simp only [show ternaryOnes a+1-1 = ternaryOnes a by omega, evalA_bad_ones, Option.bind_none]
+
+/-- Exact first-failure classification at and below the first threshold. -/
+theorem drainB_first_failure_iff (a b d : Nat) (hbound : b ≤ ternaryOnes a+1) :
+    drainB a b d = none ↔ b=ternaryOnes a+1 := by
+  constructor
+  · intro h
+    by_cases hb : b=ternaryOnes a+1
+    · exact hb
+    · have hl : b≤ternaryOnes a := by omega
+      obtain ⟨aa,dd,hr⟩ := drainB_safe_ones b a d hl
+      rw [hr] at h
+      contradiction
+  · intro hb
+    subst b
+    exact drainB_first_halt a d
+
+#print axioms drainB_safe_ones
+#print axioms drainB_first_halt
+#print axioms drainB_first_failure_iff
+
 end BB6.Agent49ParitySource
