@@ -69,7 +69,6 @@ theorem empty_odd_halt_iff (q : Nat) (R : List Nat) :
           cases m with
           | zero =>
               simp at hm
-              omega
           | succ m =>
               apply hi.mpr
               refine ⟨m, ?_⟩
