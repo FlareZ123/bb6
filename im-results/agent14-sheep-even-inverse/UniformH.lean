@@ -4,10 +4,10 @@ set_option exponentiation.threshold 10000
 namespace SheepEvenCert
 
 /-- No h above the listed uniform cutoff for case 138, node 0. -/
-theorem root138_node0_hstop (k : Nat) : 2^(141+4860*k)%27 ≠ 1 := by
+theorem root138_node0_hstop (k : Nat) : 2^(138+4860*k)%27 ≠ 1 := by
   have hp : 2^18%27=1 := by decide
-  have h := pow_mod_period 27 18 141 (270*k) (by decide) hp
-  have he : 141+4860*k=141+18*(270*k) := by omega
+  have h := pow_mod_period 27 18 138 (270*k) (by decide) hp
+  have he : 138+4860*k=138+18*(270*k) := by omega
   rw [he,h]
   decide
 
