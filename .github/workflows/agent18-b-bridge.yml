@@ -79,7 +79,7 @@ jobs:
       - name: Verify Agent 10 all-iterate affine modular obstruction against authentic B source
         working-directory: /tmp/cryptids
         run: |
-          for f in GBase Curvature AffineBarrier AffineBarrierSource; do
+          for f in GBase Curvature AffineBarrier AffineBarrierSource PeriodDiv PeriodMultiply OddIncrement CongruenceBarrier CongruenceBarrierSource; do
             cp "$GITHUB_WORKSPACE/im-results/agent10-b-affine-iter/$f.lean" "$f.lean"
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
