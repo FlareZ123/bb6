@@ -1,0 +1,41 @@
+name: Agent 21 Machine C first-family m11 mixed192 proof (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore SHA256-checked Lean theorem and preserve original source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/bb6-agent21-venv
+          /tmp/bb6-agent21-venv/bin/python -m pip -q install filelock
+          /tmp/bb6-agent21-venv/bin/python im-results/agent21-c-first-m11-192/reconstruct.py
+          mkdir -p /tmp/agent21-first-m11-192
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent21-first-m11-192/CLine.lean
+          cp im-results/agent21-c-first-m11-192/FirstM11.lean /tmp/agent21-first-m11-192/FirstM11.lean
+          echo "e12563a3f68b46167bd967df22afd5bc46c274652e37d7f17524ea2db154890b  /tmp/agent21-first-m11-192/FirstM11.lean" | sha256sum -c -
+          sha256sum /tmp/agent21-first-m11-192/CLine.lean
+      - name: Kernel-check full unchanged CLine source and original-source bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/agent21-first-m11-192
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean FirstM11.lean
