@@ -65,3 +65,31 @@ theorem rejoin (t p : Nat) :
   exact Eq.trans (full_B (K t) (List.replicate (2*p+4) true ++
     (false :: List.replicate 6 true))) (output_target t p)
 
+theorem e_input (t p : Nat) :
+    DRegularSource.sourceSection ⟨9*t+4,p+2,1⟩ =
+      init (List.replicate (3*(3*t)+2) true ++
+        false :: (pairs (p+1) ++ [true,true])) := by
+  have hn : (9*t+4)-2=3*(3*t)+2 := by omega
+  have hp : p+2=(p+1)+1 := by omega
+  simp only [DRegularSource.sourceSection,init,hn,hp,List.replicate_one]
+  rw [List.append_assoc,oppairs_last]
+
+/-- Genuine original-source two-return reentry for every k≡0 (mod3)
+    E-exception with q=p+2>=2 alternating pairs and b=1. -/
+theorem exceptional_EB_general (t p : Nat) :
+    ObsEq
+      (run (BB6.Agent32EAll.duration (3*t) (p+1) + bCost t)
+        (DRegularSource.sourceSection ⟨9*t+4,p+2,1⟩))
+      (DRegularSource.sourceSection ⟨64*t+21+2*p,1,5⟩) := by
+  have hi : ObsEq
+      (run (BB6.Agent32EAll.duration (3*t) (p+1))
+        (DRegularSource.sourceSection ⟨9*t+4,p+2,1⟩))
+      (BB6.Agent32EAll.output (3*t) (p+1) []) := by
+    rw [e_input]
+    exact BB6.Agent32EAll.all_e_double_implicit_blank (3*t) (p+1)
+  have hB := source_congr (bCost t) hi
+  rw [rejoin] at hB
+  simpa only [run_add] using hB
+
+#print axioms exceptional_EB_general
+end BB6.Agent25BGeneral
