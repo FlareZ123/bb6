@@ -43,3 +43,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean Agent49ParitySource.lean
+
+      - name: Compile Agent8 ternary drain proof against unmodified #623 source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryInverseSource.lean" Agent8TernarySource.lean
+          lake env lean Agent8TernarySource.lean
