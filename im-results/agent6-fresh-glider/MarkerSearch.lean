@@ -1,4 +1,4 @@
-import MarkerOracle
+import MarkerMirror
 import EntryMacroSearch
 
 namespace BB6Coverage
@@ -8,7 +8,7 @@ namespace BB6Coverage
 def markerDecisionOracle (p : PartialMachine)
     (bound rayLimit macroLimit entryLimit : Nat) : Bool :=
   entryDecisionOracle p bound rayLimit macroLimit entryLimit ||
-    finiteMarkerEntryOracle p entryLimit macroLimit
+    finiteMarkerBiOracle p entryLimit macroLimit
 
 theorem markerDecisionOracle_sound (p : PartialMachine)
     (bound rayLimit macroLimit entryLimit : Nat)
@@ -16,7 +16,7 @@ theorem markerDecisionOracle_sound (p : PartialMachine)
     Cover (DecidedBelow bound) p := by
   rcases (Bool.or_eq_true _ _).mp h with he | hm
   · exact entryDecisionOracle_sound p bound rayLimit macroLimit entryLimit he
-  · exact finiteMarkerEntryOracle_sound p entryLimit macroLimit bound hm
+  · exact finiteMarkerBiOracle_sound p entryLimit macroLimit bound hm
 
 /-- All 25 possible transition actions remain represented in a successful
     sparse search. Returning false leaves the branch open, and makes no
