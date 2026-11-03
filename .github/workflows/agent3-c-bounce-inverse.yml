@@ -68,8 +68,14 @@ jobs:
           lean BalancedFanExact.lean
           # Agent 20 exact odd-target fiber, including the authentic low stopping family.
           base64 -d "$GITHUB_WORKSPACE/im-results/agent20-c-odd-fiber/OddFan.lean.xz.b64" | xz -d > OddFan.lean
-          echo "19e417f9c0aa1f713a9b862358008b78609a6672698420f202f90d1cc4a1338b  OddFan.lean" | sha256sum -c -
-          lean OddFan.lean
+          echo "bf7f1c6366cc424aede82c4a4c38b77e3002f2b6c6c2dbcb62b8df798772ee8f  OddFan.lean" | sha256sum -c -
+          lean -o OddFan.olean OddFan.lean
+          # Connect the exact predecessor classification to Machine C's original halting criterion.
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,SectionParam}.lean .
+          for f in BounceHalting SectionHalting SectionPower SectionParam; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent20-c-odd-fiber/LowHaltWitness.lean .
+          echo "d7cc7f78d72324d7253f6e2dd486f5299c3386bf407f89d14944975cc21c5ad2  LowHaltWitness.lean" | sha256sum -c -
+          lean LowHaltWitness.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
