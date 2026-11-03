@@ -98,3 +98,31 @@ The strict-first-return proof distinguishes F-state visits from physical F/0 ret
 - Local Lean kernel audit of the direct and boundary-first sources: only standard `propext` and `Quot.sound`; the successful original-source CI prints the final theorem's axioms, with no `sorry`, `admit`, or `native_decide`.
 
 **Mathematical use and remaining obstacle.** Agent 2 had already established shift-compatible first returns for B and arbitrary mixed `10`/`111` A codes. The `1100` word begins with `11` followed by `0`, so it lies outside that code grammar. This new exceptional cylinder also has output shift `+8` when `k` increases by one (input unary length `+3`). It does not classify inputs with an arbitrary `110` continuation, establish that this particular cylinder occurs from the genuine all-zero starting tape, or settle the D-root halting question. It remains an **intermediate** result pending breadth and prior-art novelty assessment.
+
+### Broader checked first-return theorem for all mixed codes, and prior-art correction
+
+The [Agent 35 source-certified A-code result](../agent35-cryptid-code/README.md) **already proved** the exact endpoint for `Code(w)1100` for every finite mixed `10`/`111` code word `w`; the endpoint in our `A1100.lean` is an independent reproduction/special case of that earlier theorem. The new mathematical ingredient of this incarnation is **strict first physical return**, rather than endpoint existence alone.
+
+The stronger [`A1100CodeFirst.lean`](A1100CodeFirst.lean), [fully original-source certified in CI 41568312073](https://github.com/FlareZ123/bb6/actions/runs/41568312073), proves this for the **whole Agent 35 code family**, not merely the empty code. Define `Code(w)` by `false→10`, `true→111`, let `d(w)` be the sum of weights `1` and `4` respectively, and let `C(m,w)` be the exact source-verified primitive cost of decoding the word at left-stack length `m`. Then for **all** `k,w,y`:
+
+```
+I_(3k+3)(0 Code(w) 1100 y)
+  --[ (12k²+41k+32) + C(4k+3,w) + 2*(4k+3+d(w)) + 16 ]-->
+I_(8k+7+2*d(w))(0 111111 y)
+```
+
+and there is **no physical F-on-zero return at any positive intermediate primitive step**. The proof combines the original Agent 35 `a_code_return`, Agent 2's source-proved `original_word_noF` and `prefixA_positive_noF`, and this incarnation's `a1100_first_physical`, including physical blank-left and the transient nonblank-left F visit. All original source modules were reconstructed and compiled in the same manual CI, which finished successfully at revision `a38829c7db7ca4d5c4aa5d788eacde987b7287e9`.
+
+### Another strict exceptional A cylinder: `110111`
+
+A separate all-`k), all-arbitrary-tail original-machine theorem was [kernel-checked in CI 41567964840](https://github.com/FlareZ123/bb6/actions/runs/41567964840). Source [`A110111.lean`](A110111.lean), [`A110111First.lean`](A110111First.lean), and [`A110111Strong.lean`](A110111Strong.lean) prove:
+
+```
+I_(3k+3)(0 110111 y)
+  --[12k²+49k+62 primitive transitions; FIRST positive physical return]-->
+I_(8k+11)(0 1010 y)
+```
+
+For every `m,y`, an exact **27-step A-boundary prefix** from `A_(m+3)(110111y)` enters `sweepD m (1^8 01010y)`. Its `2m+3`-step universal leftward sweep yields the endpoint. The first-27-step physical exclusion and the general no-F sweep are kernel proven; Agent 2's original-prefix no-F lemma supplies the authentic F-entry side. This word also lies outside the `10`/`111` A-code grammar. It obeys the same input unary shift `+3` to output shift `+8` within its cylinder.
+
+Both new strict theorems concern **arbitrary synthetic F-section inputs** and do not assert that their word patterns occur on the actual all-blank trajectory, decide any six-state root, or change global Busy Beaver bounds. Full current priority is to determine a uniform first-return/halting mechanism on exceptional `110` continuations, or an actual blank-origin invariant, rather than accumulating unrelated narrow cylinders.
