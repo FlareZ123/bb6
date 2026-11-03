@@ -39,7 +39,7 @@ On the generic branch, if `x=2^a u`, `u` odd `>=5`, and `F(x)-1=2^h v` with `v` 
 
 ```
 E(x)= (3^h*(1+2^(a+1))*x +
-       2^a*3^h*(2^(h+1)+2a-3)) / 2^(a+h+1).
+       2^a*(2^(h+1)+3^h*(2a-3))) / 2^(a+h+1).
 ```
 
 The modular inverse congruence defining `Phi_P(W)` guarantees that, for any sufficiently large integer `x0` in its `2^P` class, the first return has exactly the prescribed pair `(a1,h1)` and the successor lies in the inverse-tail class at precision `P-(a1+h1+1)`. Why exact `h1`? The target tail is even; the inverse relation gives `F(x)-1 = 2^h*(odd)` modulo at least `2^(h+1)` with one extra precision bit since `P>=C+1`. Thus its valuation is exactly `h`. Repeat for the tail. Each step consumes `ai+hi+1` bits of guaranteed precision.
