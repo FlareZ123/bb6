@@ -6,8 +6,8 @@ set_option maxHeartbeats 3000000
 namespace BB6.Agent25Rejoin
 open CryptidBoundary
 
-private def K (t : Nat) : Nat := 8*t+1
-private def bCost (t : Nat) : Nat := 12*(K t)*(K t)+49*(K t)+40
+def K (t : Nat) : Nat := 8*t+1
+def bCost (t : Nat) : Nat := 12*(K t)*(K t)+49*(K t)+40
 
 private theorem special_input (t : Nat) :
     BB6.Agent32EAll.output (3*t) 5 [] =
