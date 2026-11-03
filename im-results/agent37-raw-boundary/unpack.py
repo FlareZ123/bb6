@@ -1,4 +1,4 @@
-"""Restore both checksum-verified Lean proofs of the raw/zipper semantic bridge."""
+"""Restore checksum-verified Lean proofs of the raw/zipper semantic bridge."""
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from filelock import FileLock
@@ -12,6 +12,7 @@ SOURCES = {
     "RawBoundaryBridge.lean": "fd2e8553d8efcd662208e231d5e12b2fd8efce9f78d6a6ff9ffc4c001df54892",
     "RawBoundaryHalt.lean": "9e931dc1726f209fa3e5b3bd5f65c17b59c02fde282ecb090fe42a6691605ac1",
     "RawBoundarySpan.lean": "c0cf527d7bb5eb219a21f659fa811555e4618c8b08c2b9fdcd9221d65d5245b1",
+    "RawBoundaryNoCross.lean": "7b4eb1fa65b01501575383430ae8b0e934a84c0cde326a94c736d2a68d2e1f4c",
 }
 
 for name, expected in SOURCES.items():
