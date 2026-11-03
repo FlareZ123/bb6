@@ -7,7 +7,7 @@
   "programme": "R-20261103T0847Z-agent37-root-word-invariant",
   "lane": "core",
   "status": "active",
-  "revision": 3,
+  "revision": 4,
   "parallel_limit": 2,
   "grants": [
     {
@@ -29,7 +29,7 @@
       "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
       "task": "Find a closed, genuine-blank-origin symbolic language for original D0 physical F/0 first-return states across four proved unary seeds (5,9,15,39), or produce an explicit source-table counterexample to an initially plausible grammar; prioritize invariant propagation rather than additional independent suffix-cylinder return rules.",
       "role": "investigate",
-      "state": "active",
+      "state": "interrupted",
       "evidence": [
         {
           "kind": "derived source-macro synthesis",
@@ -62,7 +62,21 @@
           "note": "Original source-compatible proof combines all-q E boundary with Agent31 prefix_E to give F/0 12k²+49k+68+4q; typechecked locally with source signature-compatible model; full original-source CI pending runner recovery."
         }
       ],
-      "handoff": "The 11-branch physical grammar L = I_a((01)^q 1^b) is source-derived future-return-total and closed except E a≡1 mod3, q>=1,b=1; finite 98,624 inputs had exactly 588 such escapes. A more general source-macro interpreter traverses 20,000 conditional sections from each genuine unary root; still needs original Lean whole-chain proof. Seek quantified inductively closed reachable extension with E escape and suffix-state assumptions; avoid treating conditional traces as proved raw blank horizons. New all-q E 110111 theorem has a self-contained 4.36.0 kernel certificate under the literal table, archived SHA-verified; independent complete original-source CI needs to compile E110111Pairs.lean with CryptidPairs (Agent32) and Boundary (Agent31). No global blank-root nonhalting. Next priority: blank-reachable invariant and all-F first-return domain guard."
+      "handoff": "The 11-branch physical grammar L = I_a((01)^q 1^b) is source-derived future-return-total and closed except E a≡1 mod3, q>=1,b=1; finite 98,624 inputs had exactly 588 such escapes. A more general source-macro interpreter traverses 20,000 conditional sections from each genuine unary root; still needs original Lean whole-chain proof. Seek quantified inductively closed reachable extension with E escape and suffix-state assumptions; avoid treating conditional traces as proved raw blank horizons. New all-q E 110111 theorem has a self-contained 4.36.0 kernel certificate under the literal table, archived SHA-verified; independent complete original-source CI needs to compile E110111Pairs.lean with CryptidPairs (Agent32) and Boundary (Agent31). No global blank-root nonhalting. Next priority: blank-reachable invariant and all-F first-return domain guard. | Reconciled by Agent31 at 2026-11-03 12:12 UTC after original claim >100 min. Prior evidence and slot preserved; no identity lease changed."
+    },
+    {
+      "id": "agent31:agent31-bb6-2278bf10-6bd2-46d7-8110-0df1935b8dcd:R-20261103T0847Z-agent37-root-word-invariant",
+      "agent": "agent31",
+      "run_id": "agent31-bb6-2278bf10-6bd2-46d7-8110-0df1935b8dcd",
+      "claimed_at": "2026-11-03T12:09:24.306462Z",
+      "registered_at": "2026-11-03T12:12:15.413Z",
+      "grant": 1,
+      "task_issue": "R-20261103T0847Z-agent37-root-word-invariant",
+      "task": "Independently classify and prove/falsify whether the exact exceptional E return family L(a,q,1), a≡1(mod3), re-enters the canonical L grammar after one additional genuine physical F/0 return; derive a quantified source-table two-return mechanism or smallest all-parameter failure, with true blank-entry constraints explicit. Distinct from Agent37's first-return 11-case table and E110111 cylinder.",
+      "role": "independent-falsification",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Start with exact Agent37 eleven-case table and source-authorized machine; test all q≥1,k≥0 E exception endpoints after one physical F0 return, then derive arbitrary-parameter formula or prove a counterfamily. Avoid sampling longer blank orbits."
     }
   ],
   "review_requested": null
