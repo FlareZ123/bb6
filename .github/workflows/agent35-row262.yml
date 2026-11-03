@@ -31,5 +31,6 @@ jobs:
         run: |
           lean -o im-results/agent2-row262-burst/PairBurst.olean im-results/agent2-row262-burst/PairBurst.lean
           lean im-results/agent2-row262-burst/PairBurstSafe.lean
-          lean im-results/agent2-row262-burst/Valuation.lean
+          lean -o im-results/agent2-row262-burst/Valuation.olean im-results/agent2-row262-burst/Valuation.lean
+          lean im-results/agent2-row262-burst/BurstProduct.lean
           python3 im-results/agent2-row262-burst/test_pair_burst.py
