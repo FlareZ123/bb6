@@ -1,0 +1,26 @@
+private def base (i : Fin 5) : Nat :=
+  if i.val=0 then 4 else if i.val=1 then 13 else if i.val=2 then 3669 else
+    if i.val=3 then 42089 else 5167997945245
+
+private def stride (i : Fin 5) : Nat :=
+  if i.val=0 then 4 else if i.val=1 then 130 else if i.val=2 then 4098 else
+    if i.val=3 then 262146 else 6701783066148
+
+private theorem family (i : Fin 5) (n : Nat) :
+    admissibleExponent (base i + stride i*n) := by
+  have hi : i.val=0 ∨ i.val=1 ∨ i.val=2 ∨ i.val=3 ∨ i.val=4 := by
+    have hlt:=i.isLt
+    omega
+  rcases hi with h0 | h1 | h2 | h3 | h4
+  · simpa [base,stride,h0,fourExponent] using four_admissible n
+  · simpa [base,stride,h1] using family6 n
+  · simpa [base,stride,h2] using family11 n
+  · simpa [base,stride,h3] using family17 n
+  · simpa [base,stride,h4] using family49 n
+
+private theorem cover30 : ∀r : Fin 30,
+    ∃ i : Fin 5, ∃ j : Fin 15, (base i+stride i*j.val)%30=r.val := by decide
+
+private theorem stride30 : ∀i : Fin 5, (15*stride i)%30=0 := by decide
+private theorem stride_pos : ∀i : Fin 5, 0<stride i := by decide
+
