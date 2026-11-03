@@ -35,3 +35,11 @@ jobs:
           lean im-results/agent2-row262-burst/BurstProduct.lean
           lean im-results/agent2-row262-burst/GateValuation.lean
           python3 im-results/agent2-row262-burst/test_pair_burst.py
+      - name: Verify four-left-window first-return projection no-go theorems
+        env:
+          LEAN_PATH: im-results/agent35-row262-section:im-results/agent7-row262-right-projection
+        run: |
+          lean im-results/agent7-row262-right-projection/RightProjectionNoGo.lean
+          lean im-results/agent7-row262-right-projection/PrefixWindowNoGo.lean
+          python3 im-results/agent7-row262-right-projection/check_right_projection.py
+          python3 im-results/agent7-row262-right-projection/check_prefix_window.py
