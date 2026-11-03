@@ -7,7 +7,7 @@
   "programme": "R-20261103T1117Z-agent6-harmonic",
   "lane": "exploration",
   "status": "active",
-  "revision": 1,
+  "revision": 2,
   "parallel_limit": 1,
   "grants": [
     {
@@ -30,8 +30,12 @@
       "task": "Test exact blank-origin affine return-word and inverse obstructions for rooted six-state holdout #429 using source-proved highLevelNext J(u,w); seek a uniform all-time forbidden-halting theorem or a constructive counterexample, with independent numerical transition crosscheck.",
       "role": "investigate",
       "state": "active",
-      "evidence": [],
-      "handoff": "Start with actual seed J(0,0), derive exact branch grammar and controlled synthetic comparisons, source pin via google-deepmind/cryptids blob 1ce1cc5d15c943cc9766e0780a859de64d2e9873."
+      "evidence": [
+        "im-results/agent6-harmonic429/ReturnLadder.lean",
+        "im-results/agent6-harmonic429/SourceLadder.lean",
+        "im-results/agent6-harmonic429/BB429CorridorTest.cjs"
+      ],
+      "handoff": "Four exact affine ladder families proved locally in Lean 4.36 against Agent 5's BB429Rank transcription; native Cryptids bridge compiles against faithful local definition, CI source audit run 41628628913 failed before useful logs; investigate transfer dynamics between four ladders and retry source CI when infrastructure responsive."
     }
   ],
   "review_requested": null
@@ -57,3 +61,21 @@ Initial cap 3 million accelerated steps or 120 seconds of arithmetic simulation,
 
 ## Next action and handoff
 Inspect exact original highLevelNext definition and 35-step entry; derive the first true blank turnarounds and compare with synthetic states that violate candidate phase rules. Record source checks and counterexamples under `im-results/agent6-harmonic429/`.
+
+
+## 2026-11-03 research update, source overlap and narrowed novelty
+
+**Correction to baseline:** Agent 5 had already placed BB429 first-branch/rank theorems, exact exponential halting gate, residue shield, source bridge, and 3,000,000 accelerated-step simulation in `im-results/agent5-429-rank/`. Those facts are prior local work and **must not** be attributed to this pilot. New scope is the complementary **non-first-branch return grammar** and safe affine loop compression across all four relevant parity sectors. The first-branch exact burst equation in that work is the preferred prior result.
+
+Our new standalone `ReturnLadder.lean` imports Agent 5's `BB429Rank.lean` and proves, with only Lean kernel foundational axioms, four safe finite ladder families. Put `U_k=3(2^k-1)` and `V_k=14\cdot2^k-3`, and let `T` be the exact standalone macro transition. All statements include sufficient endpoint guards, so every intermediate iterate is defined:
+
+- **U-even**: `k%4=2, w%4=0, w+n(3k+10)+4<=2U_k` implies `T^(n(k+1))(U_k,w)=(U_k,w+n(3k+10))`.
+- **U-odd**: `k%4=1, w%4=1, 3(w+n(3k+17))<=2U_k+1` implies `T^(n(k+2))(U_k,w)=(U_k,w+n(3k+17))`.
+- **V-even**: `k%4=0, w%4=2, w+n(3k+20)+4<=2V_k` implies `T^(n(k+1))(V_k,w)=(V_k,w+n(3k+20))`.
+- **V-odd**: `k%4=3, w%4=3, 3(w+n(3k+31))<=2V_k+15` implies `T^(n(k+2))(V_k,w)=(V_k,w+n(3k+31))`.
+
+Lean `SourceLadder.lean` proves total map equality plus all-time iterate equality with the **locally reconstructed** native Cryptids source signature, transporting all four formulas. A live original-source audit was dispatched to manual workflow `shared-cryptids-source-audit.yml` with correct dependencies, but run [41628628913](https://github.com/FlareZ123/bb6/actions/runs/41628628913) failed within 2 seconds without retrievable job logs, so **do not yet claim that the original repository imported these bridge proofs successfully**.
+
+Independent CJS SFT `BB429CorridorTest.cjs` validates each skipped block by uncompressed iteration and the full 3,000,000 macro-step trajectory, exact terminal J(45,11193578), with 15 skipped blocks (U-even 26,624 loops; U-odd 4,168; V-even 8,337; V-odd 2,475). A local Python macro simulator was extended under a 30,000,000-step cap after formal proof of these safe rewrites, reaching J(893,110318220) without accelerated halt. This finite observation is **strictly weaker than the published external nonhalt computation in terms of established BB6 status**; no universally valid halting conclusion follows.
+
+**Next discriminating task:** Derive and prove transfer maps between the four sectors, especially from the end of one long corridor to the next. Test whether a closed all-time rooted inductive domain exists; synthetic halting-gate counterexamples from Agent 5 must be respected. Avoid resimulating another undifferentiated million steps without a new invariant or method.
