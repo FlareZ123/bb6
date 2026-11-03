@@ -1,21 +1,7 @@
-import Std
+import NewCoreC
 set_option maxHeartbeats 0
 set_option maxRecDepth 4000
 namespace NewCore
-
-def nextC (t : Nat × Nat × Nat) : Option (Nat × Nat × Nat) :=
-  let (a,k,c) := t
-  if c = 1 then some (a,k+1,0)
-  else if c = 2 then none
-  else if c = 3 then some (a,k+2,1)
-  else if c = 0 then
-    if a = 0 then some (1,0,2*k+2)
-    else if a = 1 then
-      if k = 0 then some (5,0,1) else some (2,2,2*k-1)
-    else some (a-2,1,2*k+1)
-  else if a = 0 then
-    if k%2 = 0 then some (2*k+2,2,c-3) else some (2*k+3,0,c)
-  else some (a-1,k+1,c-1)
 
 def lowD (a k c : Nat) : Prop :=
   (a % 48 = 37 ∧ (a+k+c)%96 = 92) ∨
