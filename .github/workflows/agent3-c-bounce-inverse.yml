@@ -94,6 +94,8 @@ jobs:
           lean SliverIff.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighSliver.lean .
           lean HighSliver.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenChild.lean .
+          lean EvenChild.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
