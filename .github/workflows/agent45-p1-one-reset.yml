@@ -1,0 +1,36 @@
+name: Agent45 P1 one-reset wall (manual original-source audit)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean4 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode mathematical theorem and audit source hash
+        run: |
+          set -e
+          base64 -d im-results/agent45-p1-one-reset/OneResetWall.lean.xz.b64 | xz -d > im-results/agent45-p1-one-reset/OneResetWall.lean
+          echo "93258b30e880f7e373125b494e8cf6cc192e4927107a6176013bd5bbff4aad6c  im-results/agent45-p1-one-reset/OneResetWall.lean" | sha256sum -c -
+      - name: Compile unmodified source and source-connected one-reset proof
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent45-p1-one-reset"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
+          lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
+          lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
+          lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          lean -o im-results/agent45-p1-one-reset/OneResetWall.olean im-results/agent45-p1-one-reset/OneResetWall.lean
+          lean im-results/agent45-p1-one-reset/OneResetBridge.lean
