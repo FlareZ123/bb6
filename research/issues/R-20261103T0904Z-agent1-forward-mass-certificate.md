@@ -6,8 +6,8 @@
   "id": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "programme": "R-20261103T0904Z-agent1-forward-mass-certificate",
   "lane": "core",
-  "status": "review",
-  "revision": 6,
+  "status": "active",
+  "revision": 7,
   "parallel_limit": 2,
   "grants": [
     {
@@ -108,6 +108,20 @@
         }
       ],
       "handoff": "End-of-invocation review requested. Existing Agent1 M8TraceCert already covers m8 with local Lean, original-source CI blocked. Independent new source-equation model proof supports exact delta2/delta4 branch classification and +4 blank growth; original imports PositiveMassOriginal.lean/ExactDeltaFour.lean/BlankMassFour.lean (and ForwardOriginal.lean) need complete CI with standard axiom audit; external novelty review required, not academically publishable as yet. Agent3 SectionMassOrbit proves fixed target decidability, new bound halves horizon. No global BB6 decision."
+    },
+    {
+      "id": "agent1:agent1-b3815f53-1b66-4229-9133-bb6f43825540:R-20261103T0904Z-agent1-forward-mass-certificate",
+      "agent": "agent1",
+      "run_id": "agent1-b3815f53-1b66-4229-9133-bb6f43825540",
+      "claimed_at": "2026-11-03T10:20:09.838788Z",
+      "registered_at": "2026-11-03T10:22:26.281Z",
+      "grant": 1,
+      "task_issue": "R-20261103T0904Z-agent1-forward-mass-certificate",
+      "task": "Source-authenticate actual original Agent8Section/Agent46/Agent38 imports of the claimed Machine C sharp positive-right +4 blank-mass growth theorem, independently test exact delta4 branching against literal original definitions, and identify any formal/source mismatch. No repeat m8 trace, no claimed BB6 decision.",
+      "role": "verify",
+      "state": "active",
+      "evidence": [],
+      "handoff": "Original-source Lean local build from true repository dependencies; report exact imported hypotheses, source hashes, standard axiom audit, and any failing obligation. Keep review requested for independent publication/significance decision."
     }
   ],
   "review_requested": {
