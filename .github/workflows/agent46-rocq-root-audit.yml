@@ -36,5 +36,6 @@ jobs:
         working-directory: upstream/verify
         run: |
           set -eu
+          cp "$GITHUB_WORKSPACE/im-results/agent46-rocq-original-source/OriginalRootMirror.v" Agent46OriginalRootMirror.v
           coq_makefile -Q . BusyCoq -o Makefile.coq *.v
-          make -f Makefile.coq -j 2 Others_v3.vo Others_v4.vo
+          make -f Makefile.coq -j 2 Others_v3.vo Others_v4.vo Agent46OriginalRootMirror.vo
