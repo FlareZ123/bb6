@@ -1,0 +1,40 @@
+name: Agent 49 BB6 623 original-source parity (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install source-pinned Lean 4.35.0-rc4
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile independently source-matched counter theorem
+        run: |
+          lean --version
+          lean im-results/agent49-parity623/Parity623.lean
+      - name: Clone cryptids at the pinned source revision
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
+          test "$(git rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+      - name: Restore authenticated mathlib dependencies
+        working-directory: /tmp/cryptids
+        run: lake exe cache get
+      - name: Compile the unmodified original BB6 623 raw-TM acceleration
+        working-directory: /tmp/cryptids
+        run: lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+      - name: Compile parity theorem referring directly to original Lean definitions
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
+          lake env lean Agent49ParitySource.lean
