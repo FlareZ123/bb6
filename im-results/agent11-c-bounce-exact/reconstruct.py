@@ -23,6 +23,14 @@ SOURCES = {
         "a07d53884dd32df4144d6a2d637f5878b4fa2e0776b12141b902195e848c4c0a",
         "0f3fa0447f54b6bbb01b49324607a3683bbc812647e591cf15059940bc3c5bdd",
     ),
+    "SectionFull.lean": (
+        "c647c909662408ec6a2a32515d918897f187116a02ddaddfbee9a84f4f03b414",
+        "24ec98c4bd7420280451f88c99b0d90982179212e9a7a2e793d5e506e29f3eda",
+    ),
+    "SectionFullOriginal.lean": (
+        "349b1778028c024e4b1bb8d9f913c9d5944285cadf02f20cec71cbfb7f802056",
+        "0e16ebfc402370c1b78c4ca77a011c038af53ec216d9e5d1b9fae1e3124d8ad9",
+    ),
 }
 
 
