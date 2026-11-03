@@ -12,6 +12,7 @@ open BusyBeaver.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
 
 def lift (s : BB429.State) : HighLevelState := .J s.1 s.2
 
+set_option maxHeartbeats 5000000 in
 theorem source_step_eq (u w : Nat) :
     highLevelNext (.J u w) = (BB429.next (u,w)).map lift := by
   simp only [highLevelNext, BB429.next]
