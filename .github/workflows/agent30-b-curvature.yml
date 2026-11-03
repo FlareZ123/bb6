@@ -25,6 +25,8 @@ jobs:
           cp im-results/agent30-b-dyadic-curvature/BModularSource.lean /tmp/agent30-b-curvature/BModularSource.lean
       - name: Copy modulo seven proof
         run: cp im-results/agent10-b-parity/Agent10ModSeven.lean /tmp/agent30-b-curvature/Agent10ModSeven.lean
+      - name: Copy quotient classification
+        run: cp im-results/agent30-b-dyadic-curvature/BModularClassification.lean /tmp/agent30-b-curvature/BModularClassification.lean
       - name: Verify Lean availability
         run: lean --version
       - name: Compile BReduction
