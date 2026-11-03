@@ -2,13 +2,14 @@
 
 ```json
 
+
 {
   "schema": 1,
   "id": "R-20261103T0900Z-agent10-cascade",
   "programme": "R-20261103T0900Z-agent10-cascade",
   "lane": "core",
   "status": "active",
-  "revision": 2,
+  "revision": 3,
   "parallel_limit": 2,
   "grants": [
     {
@@ -45,8 +46,39 @@
       "task": "Independently challenge Machine #746 claimed n mod6 fatal-height exclusions using independently rederived scalar return, exact inverse classification, numerical falsifiers and Lean where possible; seek a genuinely stronger residue-uniform obstruction while preserving authentic blank root. Distinct adversarial-validation role from Agent10's original derivation.",
       "role": "independent-falsification",
       "state": "active",
-      "evidence": [],
-      "handoff": "Audit in progress; retain exact source model, fatal-height formulas, and counterexamples."
+      "evidence": [
+        {
+          "kind": "local-Lean-kernel-exact-symbolic-source-model",
+          "path": "im-results/agent7-cascade-odd-fibers/SourceMacro.lean",
+          "note": "Copied original DeepMind #746 nine C/P clauses; kernel-checked universal exact C-to-C semantics, no original module import; standard axioms."
+        },
+        {
+          "kind": "local-Lean-kernel-arithmetic-and-reachability",
+          "path": "im-results/agent7-cascade-odd-fibers/ResetChain.lean",
+          "note": "All n≥4 in complementary classes mod6=4,5 have explicit synthetic C(h,0) source-C/P predecessor paths to fatal indexed c_n. Combined with CascadeOdd.lean and CascadeFatal.lean synthetic halting theorem, standard axioms, no sorry. Does not prove actual blank root."
+        },
+        {
+          "kind": "local-Lean-kernel-general-results",
+          "path": "im-results/agent7-cascade-odd-fibers/Mass.lean",
+          "note": "All source-indexed C episodes strictly increase weighted mass 2a+b and all-time target cutoff; EpisodeFuel.lean proves exact a+2 accelerated source steps."
+        },
+        {
+          "kind": "local-Lean-kernel-residue-gap-partial",
+          "path": "im-results/agent7-cascade-odd-fibers/ReverseResidue.lean",
+          "note": "All index n mod6=0..3 inverse ancestors never 2 mod3 if untruncated; GapCore.lean proves parity unit gap and conditional last-step bound. Full terminal-gap bridge is open."
+        },
+        {
+          "kind": "independent-exact-computational-falsification",
+          "path": "im-results/agent7-cascade-odd-fibers/reverse_audit.py",
+          "note": "1367 candidate excluded indices n<=2048, 1385795 inverse edges, max depth2036, all terminate in gaps, no odd preimages; SHA256 00562d6cd505e61d872d5868dd44b640121070475bdab08da8c8ddaa6dd7ca96."
+        },
+        {
+          "kind": "reproduction-and-limitations",
+          "path": "im-results/agent7-cascade-odd-fibers/README.md",
+          "note": "Complete reproducible source-aligned proofs, finite evidence, and exact limitations. TERMINAL-GAP-NOTES.md records a paper argument with unverified Lean transfer; no BB(6) value."
+        }
+      ],
+      "handoff": "The exact complementary n mod6=4,5 fatal-height inverse synthetic witnesses and halting seeds are locally Lean kernel-proved in faithful independently copied C/P source semantics; no original-module import, no blank h=2 decision. New strict C-episode mass monotonicity, exact episode fuel, and excluded n0..3 inverse mod3 obstruction + conditional parity gap are all locally Lean checked. Original source CI unavailable. Complete terminal-gap paper derivation still lacks full Lean theorem and source inverse-classifier proof. See im-results/agent7-cascade-odd-fibers/README.md and TERMINAL-GAP-NOTES.md. All intermediate, no publishable novelty review."
     }
   ],
   "review_requested": null
