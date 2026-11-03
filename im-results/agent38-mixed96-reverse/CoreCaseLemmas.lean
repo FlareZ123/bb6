@@ -29,4 +29,17 @@ theorem highB_of_lowB1_c3 (a k : Nat) (h : lowB1 a (k+2)) :
 #print axioms highA_of_lowA1_c3
 #print axioms highB_of_lowB1_c3
 
+theorem highA_no_sum_four (x y : Nat) (h : highA x y) :
+    (x + y) % 4 ≠ 0 := by
+  unfold highA at h
+  omega
+
+theorem highB_no_sum_four (x y : Nat) (h : highB x y) :
+    (x + y) % 4 ≠ 0 := by
+  unfold highB at h
+  omega
+
+#print axioms highA_no_sum_four
+#print axioms highB_no_sum_four
+
 end A38Mixed96
