@@ -52,4 +52,10 @@ jobs:
           lake env lean -o S4LengthBridge.olean S4LengthBridge.lean
           lake env lean -o S4Suffix.olean S4Suffix.lean
           lake env lean -o S4SuffixBridge.olean S4SuffixBridge.lean
-          lake env lean S4NativeValuation.lean
+          lake env lean -o S4NativeValuation.olean S4NativeValuation.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4PowerGate.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4PowerBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4PowerNative.lean" .
+          lake env lean -o S4PowerGate.olean S4PowerGate.lean
+          lake env lean -o S4PowerBridge.olean S4PowerBridge.lean
+          lake env lean S4PowerNative.lean
