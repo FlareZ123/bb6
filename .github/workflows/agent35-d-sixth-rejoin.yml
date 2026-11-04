@@ -91,3 +91,5 @@ jobs:
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
           lean -o "$R/PacketNormalizer.olean" "$R/PacketNormalizer.lean"
           lean -DmaxRecDepth=55000 "$G/APacketNormalized.lean"
+          lean -o "$G/PacketEZero.olean" "$G/PacketEZero.lean"
+          lean "$G/PacketEOne.lean"
