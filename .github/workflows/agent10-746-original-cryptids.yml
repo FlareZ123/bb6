@@ -43,7 +43,7 @@ jobs:
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
           lake env lean -o "Agent10Bridge/OriginalSurvivingBridge.olean" "Agent10Bridge/OriginalSurvivingBridge.lean"
-          lake env lean "Agent10Bridge/OriginalPhysicalGate.lean"
+          lake env lean -o "Agent10Bridge/OriginalPhysicalGate.olean" "Agent10Bridge/OriginalPhysicalGate.lean"
           lake env lean -o "Agent10Bridge/OriginalMinIndexBridge.olean" "Agent10Bridge/OriginalMinIndexBridge.lean"
           lake env lean "Agent10Bridge/OriginalRawGate.lean"
           echo "Unmodified pinned upstream highLevelNext and source-indexed surviving-gate bound compiled."
