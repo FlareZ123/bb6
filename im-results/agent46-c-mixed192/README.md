@@ -1,6 +1,6 @@
 # Machine C: 192-counter-precision backward core and first-gate m≡38 (mod 64)
 
-**Agent 46, 2026-11-04. Status: two new local Lean theorems, unmodified-repository-source GitHub CI pending.** No Machine C nonhalting proof or exact BB(6) result. Theorems are preserved in `im-results/` pending source certification and independent novelty review.
+**Agent 46, 2026-11-04. Status: fully original-repository-source kernel checked on 2026-11-04; no whole Machine C nonhalting result.** No Machine C nonhalting proof or exact BB(6) result. Theorems are preserved in `im-results/` pending source certification and independent novelty review.
 
 ## Exact theorem and origin
 
@@ -47,8 +47,21 @@ Additional 384/192-precision first-family candidates m≡3 or 51 (mod128) remain
 
 ## Second all-natural source theorem: m≡58 (mod64), k≡142 (mod192)
 
-**Local Lean 4.36.0-rc2 source-declaration test completed at 00:30 UTC**, with the terminal axiom audit only `[propext, Quot.sound]`. `C58.lean` proves `BB6.Agent46C58.first_142_mod192_unreachable` for every natural `k%192=142` and every finite-time genuine `BB6CLine.Reach`. `C58Arithmetic.lean` proves the exact first-halt parameter corollary `first_halt_m58_mod64_unreachable` under `m%64=58` and `k+3m+4=2^(2m+3)`. The Lean proof uses exactly the original source nextC/Reach declaration bodies copied into the local test and case-by-case Presburger closure, with no finite-step cutoff or axiom mocks. The unmodified-full-source boundary is scheduled in [manual workflow run 41747474167](https://github.com/FlareZ123/bb6/actions/runs/41747474167), alongside the independent earlier m38-only run 41746834615; both were still queued at this checkpoint. Audit the actual run conclusions before claiming full source certification.
+**Local Lean 4.36.0-rc2 source-declaration test completed at 00:30 UTC, and unchanged-original-source manual CI later PASSED**, with the terminal axiom audit only `[propext, Quot.sound]`. `C58.lean` proves `BB6.Agent46C58.first_142_mod192_unreachable` for every natural `k%192=142` and every finite-time genuine `BB6CLine.Reach`. `C58Arithmetic.lean` proves the exact first-halt parameter corollary `first_halt_m58_mod64_unreachable` under `m%64=58` and `k+3m+4=2^(2m+3)`. The Lean proof uses exactly the original source nextC/Reach declaration bodies copied into the local test and case-by-case Presburger closure, with no finite-step cutoff or axiom mocks. The full unmodified-original CLine and both first-gate source theorems passed [manual run 41747474167](https://github.com/FlareZ123/bb6/actions/runs/41747474167). An independent earlier m38-only [run 41746834615](https://github.com/FlareZ123/bb6/actions/runs/41746834615) passed as well.
 
 The m58 reverse core has 39 low states at `c=0`, 39 at `c=1`, and 65 high states at each high-counter residue. It is compressed into 20 low clauses (19 w%96 half-planes plus one w%192 special), and 33 high clauses (32 t%96 pairs plus one t%192 special). Total **12,558** abstract states. The original-source-transcribed independent exhaustive C++17 representative check examined **56,918,016** representatives, **56,770,560** defined edges, and found **zero** closure violations, with root outside and target inside. This finite test is supplementary to the all-natural Lean backward theorem.
 
 An independently reconstructed Agent43 B8/M32 graph reaches the abstract cells of both `(1,10,0)` and `(1,142,0)`, reproducing the published **31,570 reachable / 189,834 edges**. Therefore these two exact source exclusions go beyond the *specific* already certified M32 quotient's ability to exclude those target classes; quotient presence never implies actual reachability. This is a distinct-method comparison, not a novelty audit against all source inverse theorems. Combined new first-family parameter congruences are `m%64∈{38,58}`, both outside Agent11's m≡8 mod64 all-depth hierarchy and Agent21's m≡11 mod64 condition. Machine C and BB(6) remain open.
+
+## Original-source complete CI SUCCESS and second-family corollaries (00:38 UTC)
+
+[Manual CI 41748189150](https://github.com/FlareZ123/bb6/actions/runs/41748189150), job 126306384449, **SUCCEEDED** on 2026-11-04 at 00:38 UTC. The runner installed Lean 4.36.0-rc2 and compiled the original **unchanged** CLine.lean with SHA256 `27b3f177c3f6d774c1df3d2f1603d165fb726ff49198af652ec2ce7cb0a5c994`, then the complete committed modules `C38V2`, `C38Arithmetic`, `C58`, `C58Arithmetic`, `SecondGateArithmetic`. Terminal theorems all had only `[propext, Classical.choice, Quot.sound]`; no `sorryAx`. This corrects the older CI-pending status in preceding text.
+
+The original source-certified second halting family has target `(2*j+3,k,0)` with `k+j+3m+5=2^(2m+2)*(j+3)`. Under `m>=2`, `2^(2m+2)%192=64`. The new `BB6.Agent46Mixed192.second_high_mixed38_excluded` and `second_high_mixed58_excluded` original-source CI proofs now rule out **four** two-parameter cylinders:
+
+- `(j%192,m%64)=(95,6),(191,38)` by C38.
+- `(j%192,m%64)=(95,26),(191,58)` by C58.
+
+Each theorem is quantified over all natural parameters satisfying the exact stopping equation and the indicated modular conditions. These pairs survive the older certified B8/M32 abstraction but might overlap other independently certified source-level exclusions. They do not prove the machine's global nonhalting.
+
+Potential new direction: a mixed384 abstraction (a,k mod384, high c mod192) yielded another first-family m%128=3 candidate; its separate Lean proof is in `../agent46-c-mixed384/` pending full source-CI. Numerical quotient evidence alone is not a theorem.
