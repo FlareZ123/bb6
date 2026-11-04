@@ -10,7 +10,7 @@ from filelock import FileLock
 ROOT = Path(__file__).resolve().parent
 ENCODED = ROOT / "EPairHalt.lean.xz.b64"
 DEST = ROOT / "EPairHalt.lean"
-EXPECTED_SHA256 = "53ac04b2ddbc330312774bee7a62e4b516a2b2e556c0c1ec339216e4fa2507e2"
+EXPECTED_SHA256 = "f88d195ca970879989428c5f9beda41700d045e36cea6b4df8b6005c25a79c1c"
 
 content = lzma.decompress(base64.b64decode(ENCODED.read_text(encoding="ascii")))
 actual = hashlib.sha256(content).hexdigest()
