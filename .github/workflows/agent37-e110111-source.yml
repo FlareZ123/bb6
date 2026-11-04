@@ -16,6 +16,7 @@ jobs:
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
       - name: Install pinned Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -24,7 +25,7 @@ jobs:
           "$HOME/.elan/bin/lean" --version
       - name: Compile unmodified source dependencies and new all-q E theorem
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent37-root-language-pilot
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent26-cryptid-e-gate:im-results/agent37-root-language-pilot
         run: |
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
@@ -34,3 +35,9 @@ jobs:
           lean -o im-results/agent26-cryptid-e-gate/E1101010111ThenB.olean im-results/agent26-cryptid-e-gate/E1101010111ThenB.lean
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o im-results/agent37-root-language-pilot/EThenE.olean im-results/agent37-root-language-pilot/EThenE.lean
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
+          done
+          lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean -o im-results/agent26-cryptid-e-gate/E1101010111ThenA.olean im-results/agent26-cryptid-e-gate/E1101010111ThenA.lean
+          lean -o im-results/agent37-root-language-pilot/EThenAGuarded.olean im-results/agent37-root-language-pilot/EThenAGuarded.lean
