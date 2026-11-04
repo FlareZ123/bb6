@@ -27,6 +27,7 @@ jobs:
           lean -o "$a/LowGates.olean" "$a/LowGates.lean"
           lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
           lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
+          lean -o "$a/PreimageCandidates.olean" "$a/PreimageCandidates.lean"
           for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
@@ -34,5 +35,6 @@ jobs:
           lean -o "$b/RootMinIndex.olean" "$b/RootMinIndex.lean"
           lean -o "$b/FastShield.olean" "$b/FastShield.lean"
           lean -o "$b/RootMin256.olean" "$b/RootMin256.lean"
+          lean -o "$a/ReverseCertificate.olean" "$a/ReverseCertificate.lean"
           lean -o "$a/SurvivingExactGate.olean" "$a/SurvivingExactGate.lean"
           echo "Compiled source-indexed dependencies, Agent10 modules, and Agent7 surviving-index bridge."
