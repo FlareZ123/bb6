@@ -54,3 +54,24 @@ Run the **manual-only** workflow [agent7-746-forward-cert.yml](../../.github/wor
 The improvement is a genuine fourfold extension of the finite source-model cutoff from 256 to 1024 indices, using forward evidence of length 1,329 rather than a separate inverse search for each fatal index. It is a **bounded family exclusion** and does not establish nonhalting for #746: infinitely many surviving `n>=1025` candidates remain. No global upper bound or exact value of BB(6) is obtained.
 
 A useful continuation is a memory-bounded multi-module certificate for `N>=2048`, or a uniform symbolic invariant that excludes the entire infinite surviving fatal family. Independent Python inverse cones are useful diagnostics but cannot replace a universal result or source-connected Lean proof.
+
+
+## 2026-11-04 19:27 UTC: modular 2048-index source-C cutoff certified
+
+**Verified:** [manual GitHub Lean 4.36.0-rc2 source-C CI 41896638169](https://github.com/FlareZ123/bb6/actions/runs/41896638169) **success**, compiling the entire unchanged checked-in first-reset proof chain and the new [ForwardSafe.lean](ForwardSafe.lean). The generator [generate_forward_modules.py](generate_forward_modules.py) produced **2,665 exact first-reset edges**, split into **167 independently compiled kernel-checked modules** at 16 edges each. These modules export source-proved `SafePath` proof values, composed using the general `SafePath.trans`, without constructing or reducing a huge combined trace.
+
+The important new all-time theorem checked in the generated `Forward2048Final.lean` is:
+
+```lean
+CascadeForwardCert.no_fatal_survivors_through_2048 :
+  ∀ n, 4 ≤ n → n ≤ 2048 → (n%6=4 ∨ n%6=5) →
+  ¬CascadeSweep.ReachC (2,0) (CascadeManyShield.fatal n,0)
+```
+
+The kernel's printed axioms for the completed theorem are **[propext, Classical.choice, Quot.sound]**, with no sorry or unsafe native evaluation. The exact path itself uses only `propext`. The predicate `badHeight` is source-linked to Agent10's already-proved `Nat.log2` characterization of the fatal family.
+
+[ForwardSafe.lean](ForwardSafe.lean) is a reusable proof interface: `SafePath` records a strictly chronological checked path that avoids a target predicate at every pre-terminal node; `segment_safe` produces such a path from a checked segment, `SafePath.trans` composes arbitrarily many modules, and `SafePath.excludes` proves a universal all-future exclusion once the final height exceeds the cap. `safePath_survivor_exclusion` specializes the general theorem to genuine source-C blank-reset reachability. This proof-carrying modular scheme fixes the original one-file Lean memory growth for very large finite reset traces.
+
+**Physical raw-machine transfer:** [OriginalForward2048Gate.lean](OriginalForward2048Gate.lean) is prepared to compose the previously **original pinned-source CI-proved raw iff n>=1025** ([41895284713](https://github.com/FlareZ123/bb6/actions/runs/41895284713)) with the newly source-verified n<=2048 exclusion, giving `IsHalt target ↔ ∃ n≥2049, n%6∈{4,5}, ReachC (2,0) (fatal n,0)`. The distinct [original Cryptids pinned-source CI](../../.github/workflows/agent7-746-original-2048.yml) was dispatched; **do not present the physical n>=2049 theorem as kernel-certified until that exact CI passes**. The source-C n<=2048 statement itself is already fully kernel checked.
+
+The infinite family n>=2049 remains unresolved; no nonhalting, global six-state upper bound, or exact BB(6) value is asserted. Further repeated finite cutoffs have diminishing scientific value compared with a uniform all-index root-sensitive invariant or an authentic halting witness.
