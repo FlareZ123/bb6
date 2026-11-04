@@ -67,7 +67,24 @@ jobs:
             lake env lean -o "$module.olean" "$module.lean"
           done
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-source-bridge/S4RawTwoGates.lean" S4RawTwoGates.lean
-          lake env lean S4RawTwoGates.lean
+          lake env lean -o S4RawTwoGates.olean S4RawTwoGates.lean
+          SRC3="$GITHUB_WORKSPACE/im-results/agent3-s4-weighted-drift"
+          for pair in \
+            S4WeightedDrift:ab696fc6c6c27b6518cb78ffd0e9dda5292d39dbcea5fee98ae6b75f4735bba2 \
+            S4SourceShape:befc80875686ccc7e15ab0c02e114e7bbed86821b5d7442e35bb0ae19ee24539; do
+            module="${pair%%:*}"
+            hash="${pair#*:}"
+            base64 -d "$SRC3/$module.lean.xz.b64" | xz -dc > "$module.lean"
+            echo "$hash  $module.lean" | sha256sum -c -
+            lake env lean -o "$module.olean" "$module.lean"
+          done
+          for module in S4NativeCompact S4Length S4LengthBridge S4Suffix S4SuffixBridge \
+            S4NativeValuation S4PowerGate S4PowerBridge S4PowerNative; do
+            cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/$module.lean" "$module.lean"
+            lake env lean -o "$module.olean" "$module.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4RawPowerGate.lean" S4RawPowerGate.lean
+          lake env lean S4RawPowerGate.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
