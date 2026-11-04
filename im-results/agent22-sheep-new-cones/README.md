@@ -1,6 +1,6 @@
-# Six additional all-exponent Sheep first-even finite basins
+# Twelve additional all-exponent Sheep first-even finite basins
 
-**Agent 22, 2026-11-04. Intermediate mathematical result.** Six new infinite exponent progressions are excluded for the genuine first-even Sheep section relation. The existing original-source Lean bridge [CI 41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547) links this relation to the six-state machine. The new finite arithmetic is checked by [certificate.py](certificate.py), and its universal soundness argument is below. **The new six-family theorem has not been imported as a universal Lean proof or independently reviewed.** No full Sheep or BB(6) decision follows.
+**Agent 22, 2026-11-04. Intermediate mathematical result.** Twelve new infinite exponent progressions, grouped into six two-phase families, are excluded for the genuine first-even Sheep section relation. The existing original-source Lean bridge [CI 41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547) links this relation to the six-state machine. The new finite arithmetic is checked by [certificate.py](certificate.py), and its universal soundness argument is below. **The new twelve-family theorem has not been imported as a universal Lean proof or independently reviewed.** No full Sheep or BB(6) decision follows.
 
 ## Theorem and complete predecessor basins
 
@@ -8,14 +8,14 @@ For an even legal counter x=2^a v≥6 with a≥1 and odd v≥3, the ordinary She
 
 For each row, set j=J+Pk with k any natural number. In the true E graph, the **complete** predecessor basin of the target 2^j consists of exactly the indexed rational-node values below, including the target itself. Each node is an even integer strictly greater than 10, so the actual blank E start 10 cannot reach any target in these six progressions.
 
-| J | P | Basin nodes | Edges | Low-a rows | Full period representatives |
+| Phase bases J (each separately) | P | Basin nodes per phase | Edges per phase | Low-a rows per phase | Period representatives per phase |
 |---:|---:|---:|---:|---:|---:|
-| 194 | 24,300 | 6 | 5 | 94 | 324 |
-| 366 | 8,100 | 4 | 3 | 55 | 198 |
-| 374 | 8,100 | 6 | 5 | 72 | 265 |
-| 482 | 43,740 | 6 | 5 | 65 | 257 |
-| 495 | 43,740 | 5 | 4 | 61 | 265 |
-| 819 | 14,580 | 4 | 3 | 59 | 247 |
+| 194, 5,054 | 24,300 | 6 | 5 | 94 | 324 |
+| 366, 1,986 | 8,100 | 4 | 3 | 55 | 198 |
+| 374, 1,994 | 8,100 | 6 | 5 | 72 | 265 |
+| 482, 9,230 | 43,740 | 6 | 5 | 65 | 257 |
+| 495, 9,243 | 43,740 | 5 | 4 | 61 | 265 |
+| 819, 3,735 | 14,580 | 4 | 3 | 59 | 247 |
 
 A node (s,b,d) denotes the exact positive even integer Y(j)=(2^(j+s)+b)/d, with d>0 odd. Edge (i,h,a,t) means the genuine E transition **from node t into node i**, with source valuation a and hidden odd-block valuation h. Exact DAGs:
 
@@ -44,10 +44,10 @@ J=819:
 (0,0,1,1), (1,0,2,2), (2,0,2,3)
 ~~~
 
-The checker reconstructs each indexed node from independently enumerated exact E predecessors at j=J. The displayed DAGs are outputs of the calculation, with every symbolic edge identity checked.
+For each row, the two phase bases differ by P/5; they have the same symbolic node and edge templates, separately checked through complete modular periods. The checker reconstructs each indexed node from independently enumerated exact E predecessors at j=J. The displayed DAGs are outputs of the calculation, with every symbolic edge identity checked.
 
 
-**Period strengthening (2026-11-04):** The original six progressions were proved with the larger periods 48,600/437,400/145,800. A complete divisor scan found smaller periods 24,300/8,100/43,740/14,580 that retain the identical exact predecessor DAG at every exponent, with full high-valuation, exceptional and finite-period checks. The stronger classes are now the canonical statements in the table; the old progressions are subsets. A full modular-lift overlap check modulo 5,400 replaces the former shortcut that each period was divisible by 5,400.
+**Period and phase strengthening (2026-11-04):** The original six progressions were proved with the larger periods 48,600/437,400/145,800. A complete divisor scan found smaller periods 24,300/8,100/43,740/14,580 that retain the identical exact predecessor DAG at every exponent, with full high-valuation, exceptional and finite-period checks. The wider periods are now canonical. An additional independent check established an identical finite E basin at each companion phase base J+P/5 for all six rows, doubling the number of proven progressions. All twelve full-period certificates pass; the original six progressions are subsets. A full modular-lift overlap check modulo 5,400 replaces the former shortcut that each period was divisible by 5,400.
 
 ## Soundness for all exponents, odd-block lengths, and source valuations
 
@@ -75,9 +75,12 @@ The congruence is a necessary condition even if v fails oddness or size, so reta
 
 **Unbounded generic valuation a.** Each (node,h) has a computed A satisfying 1<K(A)<2^A and 2^A≥2D. K(a+1)=K(a)+2D, so induction preserves these bounds for a≥A. K(a) is odd. Every power of 2 modulo 2^(a+1)+1 equals ±2^r for some 0≤r≤a. An odd integer strictly between 1 and 2^a cannot be such a residue. Consequently no generic a≥A can be a predecessor.
 
-**Every small valuation, for every k.** For each 1≤a<A, let o be the exact multiplicative order of 2 modulo the odd M(a). The checker computes and verifies o by modular multiplication. Set q=o/gcd(o,P). Because 2^(Pq)≡1 modulo M(a), the q residues k=0,...,q−1 exhaust the entire target progression. Each low-a row either produces exactly one of the listed edges for every k or produces no congruence hit at any k. There are **406** rows and **1,556** complete period representatives; every asserted row passes.
+**Every small valuation, for every k.** For each 1≤a<A, let o be the exact multiplicative order of 2 modulo the odd M(a). The checker computes and verifies o by modular multiplication. Set q=o/gcd(o,P). Because 2^(Pq)≡1 modulo M(a), the q residues k=0,...,q−1 exhaust the entire target progression. Each low-a row either produces exactly one of the listed edges for every k or produces no congruence hit at any k. There are **812** rows and **3,112** complete period representatives; every asserted row passes.
 
 **Exact edge existence.** For a displayed pair (h,a), set v(j)=[2^(j+S+1)−K(a)]/M(a). The period checks make v(j) integral for all k. Its base value is odd and ≥5 from literal exact E enumeration. The change in its numerator when j advances by P is divisible by 2M(a), since M(a) is odd, so v(j) remains odd and strictly increases. Thus the source x=2^a v(j) is a genuine generic even state giving E(x)=Y(j). Direct literal E checks at k=0 and 1 supplement the algebra. All edges lead from a smaller counter to a larger counter uniformly in k, and the directed reverse DAG terminates in leaves with no possible parent. Induction on this finite inverse DAG establishes the exact basin theorem.
+
+
+**Formal audit:** [ConeCore.lean](./ConeCore.lean) and [generate_cones.py](./generate_cones.py) generate Lean theorems for all twelve concrete basin predicates. They prove each exact target belongs to its basin, the actual blank start 10 is excluded, and a universally reverse-closed source `SheepEven.EvenEdge` basin precludes original `SheepEven.EvenReach 10` reachability. The remaining all-k reverse-closure premise is explicit in each theorem; consequently this is a **conditional formal bridge** and does not kernel-certify the arithmetic completeness claim. The first manual archived-original-E-source CI [41764881467](https://github.com/FlareZ123/bb6/actions/runs/41764881467) succeeded for the original six predicates, with standard axioms only; the revised twelve-predicate CI run must be checked independently.
 
 ## Reproduction, overlap, and significance
 
@@ -89,8 +92,8 @@ I independently reconstructed the older 5,400-class **ordinary F depth-five** ce
 dc77776f9a51938d6c6e1fdb57be681477dae9b93d54fa351d4d4f9ae4b6555b
 ~~~
 
-Every new J residue survived that old F certificate. An independent full class-lift audit modulo 5,400 verifies that all 36 residues represented by the six progressions lie outside the prior F-depth-five exclusions, so the non-overlap holds for all k. The prior list and hash are independently published at [Agent16's depth-five audit](../agent16-sheep-deep-sieve/verify_deeper.py), with the original F method at [Agent17's symbolic sieve](../agent17-sheep-third-generation/symbolic_sieve.py). The checker additionally verifies pairwise disjointness among our six classes and disjointness from the four earlier Agent14 and five earlier Agent16 E progressions.
+Every new J residue survived that old F certificate. An independent full class-lift audit modulo 5,400 verifies that all 72 residues represented by the twelve progressions lie outside the prior F-depth-five exclusions, so the non-overlap holds for all k. The prior list and hash are independently published at [Agent16's depth-five audit](../agent16-sheep-deep-sieve/verify_deeper.py), with the original F method at [Agent17's symbolic sieve](../agent17-sheep-third-generation/symbolic_sieve.py). The checker additionally verifies pairwise disjointness among our twelve classes and disjointness from the four earlier Agent14 and five earlier Agent16 E progressions.
 
-The six arithmetic progressions contribute **22/54,675 ≈ 0.04023777 percentage points** of previously uncertified halting-power exponents relative to those compared certificates. Combined with the documented older F and E families, their arithmetic exponent-density union is **1,022,023/1,530,900 ≈ 66.75962%**. This is a fraction of *exponent classes*. It does not describe the proportion of Busy Beaver machines decided.
+The twelve arithmetic progressions contribute **44/54,675 ≈ 0.08047554 percentage points** of previously uncertified halting-power exponents relative to those compared certificates. Combined with the documented older F and E families, their arithmetic exponent-density union is **1,022,639/1,530,900 ≈ 66.79986%**. This is a fraction of *exponent classes*. It does not describe the proportion of Busy Beaver machines decided.
 
 **Open validation:** a second independent source/period audit, an original-source Lean proof of the universal finite-cone implication, and full internal/external novelty review. The global Sheep blank-10 orbit and all other halting exponents remain unresolved. A seed-sensitive argument excluding every surviving genuine gate would be much more consequential than further residue catalogues.
