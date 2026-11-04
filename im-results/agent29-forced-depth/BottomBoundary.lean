@@ -50,10 +50,10 @@ theorem odd_four_only_direct_parent (a k x : Nat)
   all_goals
     first
     | omega
-    | (rcases hp with ⟨_,n,hs,_⟩
-       have h8 : (2^n*8)%2=0 := by omega
-       have hev := even_bounce_sum n a
-       omega)
+    | rcases hp with ⟨_,n,hs,_⟩
+      have h8 : (2^n*8)%2=0 := by omega
+      have hev := even_bounce_sum n a
+      omega
 
 /-- The sole odd-first/right-four state on the entire genuine
     blank section orbit is (3,4), and it occurs exactly at time one. -/
