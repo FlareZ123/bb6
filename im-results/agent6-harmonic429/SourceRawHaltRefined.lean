@@ -3,6 +3,7 @@ import BB429Deep17
 import BB429TwentyOne
 import BB429NoTwentyNine128
 import BB429NoNinetyThree128
+import BB429NoSixtyOne128
 import Lean.Elab.Tactic.Omega
 
 namespace BB429ActualHaltRefined
@@ -14,7 +15,7 @@ open BusyBeaver.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
 theorem source_halt_refined (n u w : Nat)
     (hr : BB429SourceLadder.sourceRun n highLevelStart = some (.J u w))
     (hn : highLevelNext (.J u w) = none) :
-    u%64=9 ∨ u%128=81 ∨ u%64=53 ∨ (u%32=29 ∧ u%128≠29 ∧ u%128≠93) := by
+    u%64=9 ∨ u%128=81 ∨ u%64=53 ∨ u%128=125 := by
   have hl : BB429.run n (0,0)=some (u,w) :=
     BB429SourceMod16.source_run_to_local n u w hr
   have hg : w+1=2*u :=
@@ -26,17 +27,18 @@ theorem source_halt_refined (n u w : Nat)
   have h21 := BB429TwentyOne.blank_no_twentyone_mod64 n u w hl hg
   have h29 := BB429NoTwentyNine128.blank_halt_not_29_mod128 n u w hl hg
   have h93 := BB429NoNinetyThree128.blank_halt_not_93_mod128 n u w hl hg
+  have h61 := BB429NoSixtyOne128.blank_halt_not_61_mod128 n u w hl hg
   by_cases h17 : u%32=17
   · exact Or.inr (Or.inl (BB429Deep17.blank_17_sector_must_81 n u w hl hg h17))
   · omega
 
-/-- Exact raw halting criterion with 7 modulo-128 residue lifts. -/
+/-- Exact raw halting criterion with 6 modulo-128 residue lifts. -/
 theorem raw_halts_iff_refined_gates :
     IsHalt target ↔
       ∃ n u w,
         BB429SourceLadder.sourceRun n highLevelStart = some (.J u w) ∧
         highLevelNext (.J u w) = none ∧
-        (u%64=9 ∨ u%128=81 ∨ u%64=53 ∨ (u%32=29 ∧ u%128≠29 ∧ u%128≠93)) := by
+        (u%64=9 ∨ u%128=81 ∨ u%64=53 ∨ u%128=125) := by
   constructor
   · intro h
     obtain ⟨n,u,w,hr,hn,_⟩ := BB429ActualHaltFour.raw_halts_iff_four_gates.mp h
