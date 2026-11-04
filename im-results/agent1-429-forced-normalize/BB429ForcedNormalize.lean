@@ -225,6 +225,74 @@ theorem blank_run_iff_normalized_at_shift (a b n : Nat) :
         · rw [dif_neg he,dif_neg he]
           simp
 
+
+/-- The forced predecessor chain is also an exact earliest-time lower bound:
+    the target cannot occur at an index shorter than its forced depth. -/
+theorem blank_run_impossible_before_depth (a b n : Nat)
+    (hn:n<forcedDepth a b) :
+    BB429.run n (0,0) ≠ some (a,b) := by
+  generalize hz : 2*a+b=z
+  induction z using Nat.strongRecOn generalizing a b n with
+  | ind z ih =>
+      unfold forcedDepth at hn
+      by_cases ho : 13≤a ∧ a%2=1 ∧ b%8≠2
+      · rw [dif_pos ho] at hn
+        rcases ho with ⟨ha,hodd,hb⟩
+        have hlt : 2*((a-3)/2)+(b+a)<z := by omega
+        cases n with
+        | zero => simp [BB429.run]; omega
+        | succ k =>
+          intro hr
+          have hs : BB429.run (k+1) (0,0)=some (a,b) := by
+            simpa only [Nat.succ_eq_add_one] using hr
+          have hpar := (root_odd_one_step_iff k a b ha hodd hb).mp hs
+          exact (ih _ hlt ((a-3)/2) (b+a) k (by omega) (by rfl)) hpar
+      · rw [dif_neg ho] at hn
+        by_cases he : 6≤a ∧ a%2=0 ∧ b%4=2
+        · rw [dif_pos he] at hn
+          rcases he with ⟨ha,hev,hb⟩
+          have hlt : 2*(a-3+(b-2)/4)+b/2<z := by omega
+          cases n with
+          | zero => simp [BB429.run]; omega
+          | succ k =>
+              intro hr
+              have hs : BB429.run (k+1) (0,0)=some (a,b) := by
+                simpa only [Nat.succ_eq_add_one] using hr
+              have hpar := (root_even_one_step_iff k a b ha hev hb).mp hs
+              exact (ih _ hlt (a-3+(b-2)/4) (b/2) k (by omega) (by rfl)) hpar
+        · rw [dif_neg he] at hn
+          omega
+
+/-- Complete fixed-time equivalence: a reached state occurs at time n iff
+    its normalized state occurs at the uniquely shifted time n-depth.
+    All small-time exceptions are ruled out by the previous theorem. -/
+theorem blank_run_iff_normalized_exact (a b n : Nat) :
+    BB429.run n (0,0)=some (a,b) ↔
+    forcedDepth a b ≤ n ∧
+      BB429.run (n-forcedDepth a b) (0,0)=some (forcedNormalize a b) := by
+  by_cases h : forcedDepth a b≤n
+  · constructor
+    · intro hr
+      constructor
+      · exact h
+      · have ht := (blank_run_iff_normalized_at_shift a b
+          (n-forcedDepth a b)).mp
+        have he : n-forcedDepth a b+forcedDepth a b=n := by omega
+        exact ht (by simpa only [he] using hr)
+    · rintro ⟨_,hr⟩
+      have ht := (blank_run_iff_normalized_at_shift a b
+          (n-forcedDepth a b)).mpr hr
+      have he : n-forcedDepth a b+forcedDepth a b=n := by omega
+      simpa only [he] using ht
+  · have hn : n<forcedDepth a b := by omega
+    constructor
+    · intro hr
+      exact False.elim ((blank_run_impossible_before_depth a b n hn) hr)
+    · intro hbad
+      exact False.elim (h hbad.1)
+
+#print axioms blank_run_iff_normalized_exact
+
 #print axioms blank_run_iff_normalized_at_shift
 
 #print axioms forcedExcluded_sound
