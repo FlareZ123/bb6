@@ -22,7 +22,7 @@ theorem source_critical_odd_d5_needs_n_plus_two
     source_oddcone_has_word (14*2^n-2*n-16) K b d m hroot hcone
   have hD : D=2 := by omega
   subst D
-  exact hword.exceptional_needs_n_plus_two n K m A T hn hK
+  exact OddWord.exceptional_needs_n_plus_two n K m A T hn hK hword
 
 #print axioms BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_two
 end BB6.Agent8Exceptional
