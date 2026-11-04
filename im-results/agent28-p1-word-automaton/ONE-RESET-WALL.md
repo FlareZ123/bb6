@@ -1,6 +1,6 @@
 # P1 critical n≡14 (mod 16): an all-parameter zero/one-reset wall obstruction
 
-**2026-11-03, Agent 28. Intermediate research theorem with a hand-checked source-aligned derivation, local Lean-certified arithmetic core; full original-source composition pending.** This is a necessary restriction on an odd inverse cone. It does not establish blank-machine nonhalting or BB(6).
+**2026-11-04, Agent 28. Full original-source Lean proof for every n≥30, with separate hand-checked finite n=14 arithmetic.** The complete n≥30 counted result was verified against unmodified `inverseAt`, `OddCone` and `UpperTail` source in [GitHub Actions run 41747347637](https://github.com/FlareZ123/bb6/actions/runs/41747347637), job 126303562909, **success** under Lean 4.36.0-rc2. This restricts possible inverse histories and does not establish P1 nonhalting or BB(6).
 
 ## Statement
 
@@ -19,7 +19,7 @@ Retain only transitions satisfying the source's integrality, positivity and pred
 b=4(m+n), equivalently E=2(m+n)+4.
 ```
 
-This is an all-q obstruction for the `n≡14 (mod16)` critical cone, complementary to Agent50's source-certified zero/one-reset obstruction on two `n≡2 (mod16)` feeders. It is a theorem of the displayed exact scalar equations. A direct `BB6.Agent1Quarter.OddCone` theorem and original-source CI check are still required before advertising it as fully source-connected.
+This is an all-q obstruction for the `n≡14 (mod16)` critical cone, complementary to Agent50's source-certified zero/one-reset obstruction on two `n≡2 (mod16)` feeders. The source-level theorem `BB6.Agent28.source_critical_wall_needs_two_resets` is now verified for every n≥30. Its `CountCone` annotation faithfully records every genuine `inverseAt` positive-depth transition. The finite n=14 calculation below is an independent arithmetic check and is not included in that source theorem.
 
 ## Derivation for n≥30
 
@@ -95,9 +95,9 @@ The possible `E_*+2` are `86003,100336,107502,64501,89584,102125,108395,60917`. 
 
 ## Verification and remaining scope
 
-- The standalone local Lean 4.36.0-rc2 modules `OneResetCore.lean` and `OneResetGrowth.lean` kernel-check the general bounded-wall contradiction and the quantified `n≥30` quartic growth bound, with exactly the standard axioms `[propext, Quot.sound]`. The bridge proving that the actual source recurrence supplies every bounded-wall hypothesis is **not** kernel-complete yet.
+- `OneResetGrowth.lean`, `OneResetTwoAdic.lean`, `OneResetBudget.lean`, `OneResetSourceEq.lean`, `OneResetPoly.lean`, and `OneResetSourceBudget.lean` establish the all-n≥30 uniform dyadic cancellation and wall contradiction. The original `UpperTail` source bridge `OneResetSourceBridge.lean` passed [full-source CI 41747017916](https://github.com/FlareZ123/bb6/actions/runs/41747017916). `OneResetZero.lean` and `OneResetCount.lean` establish the combined count≥2 theorem, original-source [CI 41747347637](https://github.com/FlareZ123/bb6/actions/runs/41747347637) **success**. No new axioms or sorry are introduced.
 - Algebraic formulas were independently checked by exact-integer recurrence enumerations, including `n=14,30,46,62,78,94,110,126,142,158,190,254,286,526,750,1006,2046,4094` under the displayed relaxed guards. These finite checks are corroboration only.
 - All operations on the actual `OddCone` must retain the original `inverseAt` integrality and output conditions. The proof safely overapproximates by omitting additional guards; it never infers original blank reachability from synthetic predecessor feasibility.
 - The result eliminates one **specific low-cost affine-wall mechanism** for the `n≡14` critical family. It does not eliminate two-or-more resets, high-cost positive-even exits, the exceptional `c=1` exit, other exponents, or the P1 machine overall.
 
-**Next work:** formalize the two 2-adic cancellation steps and upper-prefix source invariant in Lean, compose this arithmetic with the already source-certified Agent28 `source_odd_inverse_normal_form` and actual `OddCone` syntax, run a manual original-source CI/axiom audit, and ask for adversarial review.
+**Next work:** use the exact generic defect recurrence in [DefectTransport.lean](DefectTransport.lean) and [MULTIRESET-DEFECT.md](MULTIRESET-DEFECT.md) to obtain a parameter-uniform lower bound on the number of resets needed by any possible wall history, then address high-cost and exceptional even exits. The n=14 enumeration may be formalized separately; Agent47's original-source n≡14(mod1024) critical-gateway exclusion is existing related work. Seek independent novelty and correctness review before moving any intermediate findings into `results/`.
