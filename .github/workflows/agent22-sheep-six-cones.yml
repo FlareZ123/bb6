@@ -44,3 +44,6 @@ jobs:
       - name: Reproduce finite true blank-origin E residue coverage
         run: |
           python3 im-results/agent22-sheep-blank-prefix/blank_quotient.py
+      - name: Check universal special-target parent modular premises
+        run: |
+          python3 im-results/agent22-sheep-special-targets/certificate.py
