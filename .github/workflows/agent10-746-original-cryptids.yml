@@ -36,6 +36,7 @@ jobs:
           b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
           cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cd "$GITHUB_WORKSPACE"
           export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
           lake env lean --version
@@ -45,5 +46,9 @@ jobs:
           lake env lean -o "Agent10Bridge/OriginalSurvivingBridge.olean" "Agent10Bridge/OriginalSurvivingBridge.lean"
           lake env lean -o "Agent10Bridge/OriginalPhysicalGate.olean" "Agent10Bridge/OriginalPhysicalGate.lean"
           lake env lean -o "Agent10Bridge/OriginalMinIndexBridge.olean" "Agent10Bridge/OriginalMinIndexBridge.lean"
-          lake env lean "Agent10Bridge/OriginalRawGate.lean"
+          lake env lean -o "Agent10Bridge/OriginalRawGate.olean" "Agent10Bridge/OriginalRawGate.lean"
+          for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
+            lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+          done
+          lake env lean "Agent10Bridge/OriginalAlgorithmicGate.lean"
           echo "Unmodified pinned upstream highLevelNext and source-indexed surviving-gate bound compiled."
