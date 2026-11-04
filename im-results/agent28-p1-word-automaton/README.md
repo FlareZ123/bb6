@@ -72,3 +72,20 @@ Agent28's original 36 affine residue families and Agent47's source-certified r=1
 A genuine P1 n≡14 all-parameter exclusion would need either (1) a **uniform bound** `m<=2^n` for all relevant odd-inverse histories plus exclusion of all wall nodes `b=4*(m+n)`, or (2) a new obstruction for high-cost histories, and separately the exceptional input c=1. Even a wall exclusion alone would be insufficient without the high-cost and exceptional cases.
 
 The first source-integration action when CI recovers is to import the unpacked module alongside original `InverseIff.lean`, compose `odd_inverse_normal_form` with `inverseAt_iff_power_mass`, compose `critical_low_cost_even_dichotomy` with original `odd_cone_mass` and `even_left_power_shape`, and audit the final theorem and axioms on unmodified dependencies. The current source-independent Lean kernel check is reproducible without CI.
+
+## 2026-11-04: all-depth source-certified odd-word cost bound
+
+**New source-connected Lean theorem; P1 and BB(6) remain open.** The original `OddConeMass` and `InverseIff` modules, together with the new [OddWordCost.lean](OddWordCost.lean) and [OddWordSourceBridge.lean](OddWordSourceBridge.lean), compiled successfully on the unchanged repository sources under Lean 4.36.0-rc2 in [manual/one-shot CI run 41744759255](https://github.com/FlareZ123/bb6/actions/runs/41744759255) (job 126294854122, success). Before CI, the same bridge was compiled against mock signatures matching the two source theorem interfaces. The source CI eliminates that substitution risk for the original two bridge theorems. The further `source_critical_wall_cost_logarithmic_gap` convenience corollary was added **after** this CI and is not yet source-run audited.
+
+The essential new abstraction is the exact odd-inverse word recurrence `2^l*D' + m = K+D`, `m'=m+l`, `l=t+1≥1`. For any finite word of costs `l_i`, define prefix costs `m_0=0, m_{i+1}=m_i+l_i`, and coefficients `A=Σ_i 2^(m_i)` and `T=Σ_i m_i*2^(m_i)`. The pure kernel-proved invariants are `2^m D+T=1+K*A` and `A<2^m`. These are **all-word** identities rather than bounded-depth modular samples.
+
+At a hypothetical affine wall `b=4(m+n)`, the genuine source-normalized coordinates give `D+3m+2n+4=K` with `K+n+3=7*2^n`. The universal Lean theorem `source_oddcone_wall_cost_logarithmic_gap` consequently proves
+
+```
+2^(n-m) < n,      for every n≥14 and every finite OddCone on the wall.
+```
+
+Thus, when `m<n`, `m > n-log₂(n)`, and in particular `2m≥n`. This is an exact *necessary* cost threshold for a synthetic source inverse wall, independent of reset count. It does **not** prove the wall unreachable or constrain the exceptional `c=1` and high-cost even exits. Compare Agent9's already source-certified near-logarithmic cost bounds for the distinct `n≡2 mod16` feeder program before asserting originality.
+
+A separate [ONE-RESET-WALL.md](ONE-RESET-WALL.md) derives a stronger exclusion for **zero/one positive-depth inverse transitions** when `n≡14 mod16`, including the n14 exception and all n≥30. Its general numerical contradiction and dyadic lemma are kernel checked in [OneResetCore.lean](OneResetCore.lean), [OneResetGrowth.lean](OneResetGrowth.lean), and [OneResetTwoAdic.lean](OneResetTwoAdic.lean); the normalized-word-to-source bridge for the *one-reset shape* remains to be formalized and independently reviewed. Do not report the one-reset statement as source-certified yet. Review requested from Agent45 in `communications/agent45/2026-11-03T2357Z_agent28-one-reset-source-review.md`.
+
