@@ -187,3 +187,31 @@ d+2*j+3=10*2^j.
 The proof rules out `t<=j+1` using nonnegative odd right counter and rules out `t>=j+3` using b>=8 and `2*t<=2^t`. This completely classifies the **necessary** inverse depth and odd-hub coordinates of this specific genuine P1 even-exit branch; it does not prove any such even successor is actually reachable. Original-source CI 41871939625 verifies it with standard axioms only.
 
 **Caveats and next steps.** The results are necessary filters on source-defined finite inverse histories. No uniform upper bound on the number of resets exists, no entire P1 sector is thereby decided, and no BB(6) upper/lower bound is improved. The arithmetic classification suggests testing whether the rigid `b=4(2^j+j)` nodes can ever arise within the critical source cones, and generalizing the uniform reset obstruction to include c=0 alongside all positive-even outputs and the exceptional c=1 exit. Keep these intermediate results in `im-results/` unless an externally substantial machine decision is established.
+
+
+## Exact zero-even index/cost and first feeder exclusion (Agent 8, 2026-11-04 20:05 UTC)
+
+**Original-source kernel checks successful:** [manual CI 41901754258](https://github.com/FlareZ123/bb6/actions/runs/41901754258) and [manual CI 41903026710](https://github.com/FlareZ123/bb6/actions/runs/41903026710), compiling the unmodified source `OddConeMass`, `inverseAt_iff_power_mass`, `ZeroEvenRigiditySource`, and `BB6.Agent1.Reach` dependencies under Lean 4.36.0-rc2. These are necessary conditions for one actual-blank-compatible terminal class; they do **not** establish its reachability or a BB(6) decision.
+
+`ZeroEvenExactCost.lean` and `ZeroEvenExactSource.lean` strengthen the previously source-certified necessary inequality `3*2^n+6<=2*m`. For every critical `n>=14` and every zero-output inverse branch `inverseAt b d t = some(k,0)` with even successor `Reach (2*k-4) 4`, the original-source theorem `source_critical_zero_even_exact_cost` supplies an integer `j<n` such that
+
+```text
+t = j+2
+b = 4*(2^j+j)
+d+2*j+3 = 10*2^j
+7*2^j+n+m+j+5 = 7*2^n
+7*2^n <= 2*m+4*n+8
+3*2^n <= m
+```
+
+This is exact cost elimination from the original `OddCone` mass conservation, the original `inverseAt` depth equations, and genuine `even_left_power_shape`. The lower bound `m>=3*2^n` still allows high-cost inverse histories and is not a contradiction.
+
+`ZeroOnePredecessor.lean` and `ZeroOneSource.lean` additionally exclude **the entire rigid index `j=1`** from every critical `OddCone`, hence prove `2<=j<n` for any such candidate. The source-complete argument exhausts all-natural inverse depths:
+
+* The rigid `j=1` candidate is the odd hub `(b,d)=(12,15)`. Its unique admissible parent under the authentic `inverseAt` equations is `(12,19)`, at depth `t=1`.
+* The hub `(12,19)` has no admissible parent for any natural inverse depth. Any odd cone starting with first coordinate unequal to 12 therefore excludes both hubs by induction, regardless of total inverse cost or reset count.
+* `j=0` forces `b=4`, contrary to the verified source branch's `b>=8`.
+
+Both pure arithmetic theorems `only_odd_parent_of_12_15` and `no_odd_parent_of_12_19`, the all-length source cone exclusions `odd_cone_no_12_19`/`odd_cone_no_12_15`, and final `source_critical_zero_even_index_at_least_two` were certified together in 41903026710. This is a narrowly scoped whole-index exclusion; check overlap with earlier P1 modular barriers before treating it as externally novel.
+
+**Open obstacle:** the rigid indices `j>=2` remain, as do positive-even and exceptional terminal mechanisms. The same all-natural predecessor equations suggest seeking a reusable exact inverse-cone certificate for a *family* of `j`, rather than expending effort on ever more isolated small indices. No P1 nonhalting proof or BB(6) upper bound follows.
