@@ -12,6 +12,7 @@ survival; this is not a proof of #623 nonhalting or a BB(6) solution.
 
 namespace BB6.Agent49TwoStep27Source
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+open BB6.Agent49ParitySource
 private abbrev next : HighLevelState → Option HighLevelState := highLevelNext
 
 /-- Every two surviving transitions from any even-a mass≥100 state gain ≥27. -/
