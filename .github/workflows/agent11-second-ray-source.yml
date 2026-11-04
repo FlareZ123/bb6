@@ -48,4 +48,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent38-c-section-mod4/Agent38SectionParity.lean" .
           lean -o Agent38SectionParity.olean Agent38SectionParity.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayRootPrune.lean" .
-          lean SecondRayRootPrune.lean
+          lean -o SecondRayRootPrune.olean SecondRayRootPrune.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayOneEight.lean.xz.b64" | xz -d > SecondRayOneEight.lean
+          echo "cab1c6f6b2a16da04c412bd18c3f1efd36709b2c951ce37a87870a8df1413251  SecondRayOneEight.lean" | sha256sum -c -
+          lean SecondRayOneEight.lean
