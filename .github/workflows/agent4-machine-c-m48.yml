@@ -1,0 +1,37 @@
+name: Agent 4 compact M48 Machine C reverse core (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-m48:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check all-natural M48 reverse closure and authentic blank halt family
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent4-m48
+          cd /tmp/agent4-m48
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/BackwardMod.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/SourceBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed48-backward/"*.lean .
+          export LEAN_PATH=.
+          lean --version
+          sha256sum CLine.lean
+          lean -o CLine.olean CLine.lean
+          lean -o BackwardMod.olean BackwardMod.lean
+          lean -o SourceBridge.olean SourceBridge.lean
+          lean -o BackwardMod48.olean BackwardMod48.lean
+          lean -o SourceBridge48.olean SourceBridge48.lean
+          lean Stop48.lean
