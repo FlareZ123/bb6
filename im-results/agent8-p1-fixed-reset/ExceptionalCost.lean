@@ -20,25 +20,27 @@ theorem OddWord.moment_le {K D m A T : Nat} (h : OddWord K D m A T) :
     Its total inverse cost must already be large compared with the root. -/
 theorem OddWord.exceptional_cost_bound {K m A T : Nat}
     (h : OddWord K 2 m A T) : K ≤ m + 2^(m+1) := by
-  have hmom := h.moment_le
+  have hmom := OddWord.moment_le h
   have hmass := h.mass_identity
   have hA : 1 ≤ A := by
-    by_contra hnot
-    have hz : A=0 := by omega
-    simp [hz] at hmass
-    have hp : 1 ≤ (2:Nat)^m := Nat.one_le_pow m 2 (by decide)
-    omega
+    by_cases hpos : 1 ≤ A
+    · exact hpos
+    · have hz : A=0 := by omega
+      simp [hz] at hmass
+      have hp : 1 ≤ (2:Nat)^m := Nat.one_le_pow m 2 (by decide)
+      omega
   have hpow : 2^m*2 = (2:Nat)^(m+1) := by
     rw [Nat.pow_succ]
   have hKA : K*A ≤ 2^(m+1)+m*A := by omega
-  by_contra hnot
-  have hk : m+2^(m+1)+1 ≤ K := by omega
-  have hscaled := Nat.mul_le_mul_right A hk
-  have hsplit : (m+2^(m+1)+1)*A = m*A+2^(m+1)*A+A := by
-    simp [Nat.add_mul]
-  have hP : 2^(m+1) ≤ 2^(m+1)*A := by
-    simpa using Nat.mul_le_mul_left (2^(m+1)) hA
-  omega
+  by_cases hyes : K ≤ m+2^(m+1)
+  · exact hyes
+  · have hk : m+2^(m+1)+1 ≤ K := by omega
+    have hscaled := Nat.mul_le_mul_right A hk
+    have hsplit : (m+2^(m+1)+1)*A = m*A+2^(m+1)*A+A := by
+      simp [Nat.add_mul]
+    have hP : 2^(m+1) ≤ 2^(m+1)*A := by
+      simpa using Nat.mul_le_mul_left (2^(m+1)) hA
+    omega
 
 private theorem n_le_pow (n : Nat) : n ≤ 2^n := by
   induction n with
@@ -53,7 +55,7 @@ private theorem two_n_small (n : Nat) (hn : 14 ≤ n) :
   have hlin := n_le_pow n
   have h16 : (2:Nat)^4 ≤ 2^n :=
     Nat.pow_le_pow_right (by decide) (by omega)
-  norm_num at h16
+  have h16' : 16 ≤ (2:Nat)^n := by simpa using h16
   omega
 
 /-- Source-independent necessary cost for reaching the exceptional odd
@@ -62,16 +64,17 @@ theorem OddWord.exceptional_needs_n_plus_two
     (n K m A T : Nat) (hn : 14 ≤ n)
     (hK : K+n+3=7*2^n)
     (h : OddWord K 2 m A T) : n+2 ≤ m := by
-  have hbound := h.exceptional_cost_bound
-  by_contra hnot
-  have hm : m ≤ n+1 := by omega
-  have hp : (2:Nat)^(m+1) ≤ 4*2^n := by
-    calc
-      2^(m+1) ≤ 2^(n+2) :=
-        Nat.pow_le_pow_right (by decide) (by omega)
-      _ = 4*2^n := by simp [Nat.pow_add, Nat.mul_comm]
-  have hlin := two_n_small n hn
-  omega
+  have hbound := OddWord.exceptional_cost_bound h
+  by_cases hyes : n+2 ≤ m
+  · exact hyes
+  · have hm : m ≤ n+1 := by omega
+    have hp : (2:Nat)^(m+1) ≤ 4*2^n := by
+      calc
+        2^(m+1) ≤ 2^(n+2) :=
+          Nat.pow_le_pow_right (by decide) (by omega)
+        _ = 4*2^n := by simp [Nat.pow_add, Nat.mul_comm]
+    have hlin := two_n_small n hn
+    omega
 
 #print axioms BB6.Agent8Exceptional.OddWord.exceptional_needs_n_plus_two
 end BB6.Agent8Exceptional
