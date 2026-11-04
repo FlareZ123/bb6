@@ -73,6 +73,6 @@ jobs:
           lean -o "$root/BudgetGrowth.olean" "$root/BudgetGrowth.lean"
           lean "$root/SourceGrowth.lean"
           lean -o "$root/ExceptionalCost.olean" "$root/ExceptionalCost.lean"
-          lean "$root/ExceptionalSource.lean"
+          lean -o "$root/ExceptionalSource.olean" "$root/ExceptionalSource.lean"
           lean -o "$root/ExceptionalStrong.olean" "$root/ExceptionalStrong.lean"
           lean "$root/ExceptionalStrongSource.lean"
