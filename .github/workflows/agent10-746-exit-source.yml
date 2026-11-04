@@ -30,5 +30,6 @@ jobs:
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
           lean -o "$b/ManyShield.olean" "$b/ManyShield.lean"
+          lean -o "$b/RootMinIndex.olean" "$b/RootMinIndex.lean"
           lean -o "$a/SurvivingExactGate.olean" "$a/SurvivingExactGate.lean"
           echo "Compiled source-indexed dependencies, Agent10 modules, and Agent7 surviving-index bridge."
