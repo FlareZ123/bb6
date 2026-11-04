@@ -122,7 +122,7 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighTowerUnbounded.lean .
           lean HighTowerUnbounded.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighTowerTwoParam.lean .
-          lean HighTowerTwoParam.lean
+          lean -o HighTowerTwoParam.olean HighTowerTwoParam.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighTowerAllStart.lean .
           lean HighTowerAllStart.lean
           if [ "${{ inputs.seven_only }}" = "true" ]; then exit 0; fi
