@@ -131,3 +131,19 @@ As `A>=1`, `T>=0`, `P>0`, deduce `Q+1<=7*A`; hence `P<=(n+m+3)*A`. If `n+m+3<=P`
 ```
 
 The proof uses the stronger exponential necessity, exact natural-power cancellation, and the separately proved elementary inequality `n<2^(n/4+1)` for all n>=14. For a supposed `4*m<7*n`, put `q=2*n-m`, `r=m+1-n`: one derives both `2^q<=n` and `q>=n/4+1`, contradicting the elementary power bound. This is a useful all-parameter expression of the quantitative gap, but adds no actual P1 or BB(6) nonhalting decision. The prior source-verified exponential inequality is sharper and should be reused as the primary result.
+
+
+## Exceptional c=1 exit: near-double logarithmic cost (2026-11-04)
+
+**Original-source Lean verification passed:** manual [CI run 41837316502](https://github.com/FlareZ123/bb6/actions/runs/41837316502), job 126599467261, compiling the unmodified source `OddCone` and `OddWord` and the two new modules [ExceptionalNearDouble.lean](ExceptionalNearDouble.lean) and [ExceptionalNearDoubleSource.lean](ExceptionalNearDoubleSource.lean) with Lean 4.36.0-rc2. The source theorem `source_critical_odd_d5_near_double_log` has only `propext`, `Classical.choice`, and `Quot.sound` in its `#print axioms`, with no `sorryAx`.
+
+For every `n>=14` and every genuine source-defined critical `OddCone (14*2^n-2*n-16) 3 b d m` terminating at exceptional `d=5`, the total inverse cost satisfies
+
+```text
+2^(2*n-m) <= n+1
+2*n <= m + Nat.log2 (n+1)
+```
+
+Equivalently, `m >= 2*n - floor(log2(n+1))`. At `n=1502`, the theorem requires `m>=2994`; the earlier simpler seven-fourths theorem only implied `m>=2629`. Both bounds are necessary conditions and may be weak compared with the full source exponential inequality.
+
+**Proof:** The source already supplies `m>=n+4` and `6*2^n <= (n+m+3)*2^(m+1-n)`. If `m>=2*n`, the power inequality is trivial. Otherwise `n+m+3<=3*(n+1)`; cancel the positive factor `6*2^(m-n)` from the source inequality to derive `2^(2*n-m)<=n+1`. Lean's `Nat.le_log2` gives the equivalent logarithmic form. Both the pure implication and its exact original-source transport are kernel checked. This new theorem is an elementary strengthening/interpretation of the **previously established exponential constraint**, not a fresh BB(6) halting exclusion. No P1 or BB(6) final decision follows. Retain in `im-results/` pending independent novelty review and a root-wide cost cap.
