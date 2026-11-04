@@ -34,5 +34,5 @@ jobs:
           for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef BounceOriginal SectionFullOriginal FanOriginal; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean BounceConsequencesOriginal.lean
+          lean -o BounceConsequencesOriginal.olean BounceConsequencesOriginal.lean
           lean FanExactOriginal.lean
