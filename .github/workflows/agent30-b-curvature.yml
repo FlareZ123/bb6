@@ -89,7 +89,7 @@ jobs:
         working-directory: /tmp/agent30-b-curvature
         env:
           LEAN_PATH: .
-        run: lean BGenericBridge.lean
+        run: lean -o BGenericBridge.olean BGenericBridge.lean
 
       - name: Copy nonlinear cross-radix theorem
         run: |
@@ -131,3 +131,14 @@ jobs:
           lean -o Agent30BFiniteFactor.olean Agent30BFiniteFactor.lean
           lean -o Agent30CrossRadixSource.olean Agent30CrossRadixSource.lean
           lean Agent30FiniteFactorSource.lean
+
+      - name: Compile generalized all-iterate modular factor classification
+        working-directory: /tmp/agent30-b-curvature
+        env:
+          LEAN_PATH: .
+        run: |
+          python "${GITHUB_WORKSPACE}/im-results/agent30-b-generic-factors/unpack.py"
+          cp "${GITHUB_WORKSPACE}/im-results/agent30-b-generic-factors/ModularQuotient.lean" .
+          cp "${GITHUB_WORKSPACE}/im-results/agent30-b-generic-factors/BModularQuotient.lean" .
+          lean -o ModularQuotient.olean ModularQuotient.lean
+          lean BModularQuotient.lean
