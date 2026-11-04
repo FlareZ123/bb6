@@ -11,8 +11,9 @@ private theorem word_zero_pad (q : Nat) :
     oppairs q ++ [false,false] = false :: (pairs q ++ [false]) := by
   induction q with
   | zero => rfl
-  | succ q ih => simpa [oppairs, pairs, List.append_assoc] using
-      congrArg (List.cons false ∘ List.cons true) ih
+  | succ q ih =>
+      simpa [oppairs, pairs, List.append_assoc] using
+        (congrArg (fun zs : List Bool => false :: true :: zs) ih)
 
 /-- E with no terminal unary suffix, including the pure-unary q=0 case. -/
 theorem e_zero_suffix (k q : Nat) :
@@ -45,7 +46,7 @@ theorem e_zero_suffix (k q : Nat) :
       rw [show 2*q+6=(2*q+5)+1 by omega, List.replicate_succ]
     simp only [sourceSection,init,oppairs,List.cons_append]
     rw [show 8*k+5-2=8*k+3 by omega, hrep, hp]
-    rfl
+    simp [List.append_assoc]
   rw [hx, hout] at hpad
   simpa [n, sourceSection, xs] using hpad
 
