@@ -38,7 +38,8 @@ jobs:
           lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
           lean -o im-results/agent36-cryptid-trace/ESixPairs.olean im-results/agent36-cryptid-trace/ESixPairs.lean
           lean im-results/agent36-cryptid-trace/EAlternatingTail.lean
-          lean im-results/agent36-cryptid-trace/EDoubleTripleGeneral.lean
+          lean -o im-results/agent36-cryptid-trace/EDoubleTripleGeneral.olean im-results/agent36-cryptid-trace/EDoubleTripleGeneral.lean
+          lean im-results/agent36-cryptid-trace/EZeroPairs0.lean
           lean -o im-results/agent35-cryptid-code/ABridgeTwo.olean im-results/agent35-cryptid-code/ABridgeTwo.lean
           lean -o im-results/agent36-cryptid-trace/AExtraBranches.olean im-results/agent36-cryptid-trace/AExtraBranches.lean
           lean -o im-results/agent36-cryptid-trace/ABridgeEGeneral.olean im-results/agent36-cryptid-trace/ABridgeEGeneral.lean
