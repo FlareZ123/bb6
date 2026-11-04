@@ -26,7 +26,7 @@ private theorem high_pow_mod192 (m : Nat) (hm : 2≤m) :
   have ht := pow4_mod3 (m-2)
   omega
 
-private theorem high_halt_mod192 (j m k : Nat)
+theorem high_halt_mod192 (j m k : Nat)
     (hm : 2≤m)
     (heq : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     (k+j+3*m+5)%192 = (64*(j+3))%192 := by
