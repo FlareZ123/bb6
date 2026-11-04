@@ -114,3 +114,35 @@ The executable integer checks establish the finite modular and inequality hypoth
 This incarnation also corrected two missing proof arguments in [`ExceptionalEight.lean`](../agent16-sheep-deep-sieve/ExceptionalEight.lean) at `special_5` and `special_7` (commit [`be0fa8d`](https://github.com/FlareZ123/bb6/commit/be0fa8d2a61cafb840404f9f6c79e0f474e16fe9)). A direct pinned-source manual rerun [41755786111](https://github.com/FlareZ123/bb6/actions/runs/41755786111) failed **before compiling the changed module**: `lake exe cache get` exceeded the CI runner's filesystem quota while unpacking mathlib cache. This is a runner/disk failure, with no Lean conclusion for the corrected source. Its proof application still requires a clean compilation.
 
 **Next meaningful steps:** source-connected Lean proof for the inverse-DAG soundness abstraction and these five classes; independent residue/audit reproduction; examine blank-reachable surviving power exponents rather than treating additional periodic exclusions as a complete-machine classification.
+
+
+## Stronger conclusion: exact finite predecessor basins (2026-11-04 supplement)
+
+An additional exact-integer and symbolic check upgrades the five *blank-entry exclusions* to complete finite predecessor-basin classifications in the authentic `E` graph. For each listed `J,P`, define the set `B_{J,P}(k)` to contain the integer value of every displayed DAG node at `j=J+Pk`. Then, under the same original-source E semantics, for every even legal section state `x≥6`,
+
+```text
+EvenReach x (2^(J+P*k))  iff  x ∈ B_(J,P)(k).
+```
+
+This is a *paper theorem supported by complete modular certificates*, and has not yet been kernel-compiled as an imported Lean theorem. Its predecessor basins have respectively **3, 5, 4, 5, 4 distinct states**, including the target. Every displayed graph edge is a **genuine** first-even return for every k, and all omitted edges are impossible.
+
+The stronger direction, that the listed symbolic edges actually exist rather than merely over-approximate inverse candidates, follows from the same exact equations. For each listed generic edge `(h,a)`, put
+
+```text
+M=D*(2^(a+1)+1), K=D*(2a-1)-2C,
+v(j)=(2^(j+S+1)-K)/M.
+```
+
+The complete-period certificate establishes `M | 2^(j+S+1)-K` for **every** `j=J+Pk`. The literal base-state verification establishes `v(J)≥5` and odd. Since `2^P≡1 (mod M)`, increasing `j` by `P` changes the numerator by an integer multiple of `M`; the difference is in fact a multiple of **2M** because the power-of-two prefactor is even and `M` is odd. Hence `v(j)` stays odd. It strictly increases, so it remains at least five. The resulting `x=2^a v(j)` is a genuine generic Sheep section source with the prescribed `F(x)-1=2^h*((Y(j)-1)/3^h)`. As `Y(j)` is even and `3^h|Y(j)-1`, the quotient is odd. Thus exactly `E(x)=Y(j)`, for every k. The checker additionally performs direct literal E evaluations for each edge at **k=0 and k=1**.
+
+The enhanced checker also certifies that all node values are **pairwise different** for every k. Cross-multiplying two nodes gives the signed difference
+
+```text
+d₂*(2^(j+s₁)+b₁) - d₁*(2^(j+s₂)+b₂)
+  = A*2^j+B,
+A=2^s₁*d₂-2^s₂*d₁, B=b₁*d₂-b₂*d₁.
+```
+
+It verifies `A*2^J+B ≠ 0` and that its sign agrees with the sign of `A` whenever `A≠0`. The sign therefore cannot change for `j≥J`, and collisions are impossible.
+
+The reverse direction follows from exhaustive all-`h`, all-`a` inverse closure, already proved above: a predecessor of a listed node is itself one of the listed child nodes, and every path has a finite number of edges because the displayed acyclic graph is finite and its leaves have no predecessors. Every node also has a directed forward path to the root by the newly certified genuine edges. Consequently its full predecessor basin is exactly the listed set, with no ambiguity from duplicated nodes. The true blank section entry 10 lies outside every basin.
