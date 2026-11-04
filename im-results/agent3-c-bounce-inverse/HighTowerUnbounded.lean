@@ -141,6 +141,27 @@ theorem high_tower_normalized_cone (n : Nat) :
   dsimp
   omega
 
+/-- Exact coordinates of the normalizer, including the left counter. -/
+theorem high_tower_normalized_exact (n : Nat) :
+    BB6.Agent15.affineNormalize (2*highJ n+3) (15*highJ n+40) =
+    (32*highJ n-(33+16*n),52) := by
+  have hj := highJ_mod_four n
+  have ha : (2*highJ n+3)%4=3 := by omega
+  have hright : (BB6.Agent15.affineNormalize
+      (2*highJ n+3) (15*highJ n+40)).2=52 := by
+    rw [←high_right_eq n]
+    exact right_terminal (4*n+3) (2*highJ n+3) ha
+  have hdepth := high_tower_exact_depth n
+  have hmass := (BB6.Agent15.normalize_three_depth_invariants
+    (2*highJ n+3) (15*highJ n+40) ha).1
+  have heq : (BB6.Agent15.affineNormalize
+      (2*highJ n+3) (15*highJ n+40)).1+2*52+4*(4*n+3)=
+      (2*highJ n+3)+2*(15*highJ n+40) := by
+    simpa only [hright,hdepth] using hmass
+  apply Prod.ext
+  · omega
+  · exact hright
+
 /-- Every authentic immediate stopping input in an unbounded inverse
     tower is absent from the true blank-start orbit at all times. -/
 theorem high_tower_blank_unreachable (n : Nat) :
@@ -160,6 +181,7 @@ theorem high_tower_strict_step (n : Nat) : highJ n<highJ (n+1) := by
 
 #print axioms high_tower_halt_input
 #print axioms high_tower_exact_depth
+#print axioms high_tower_normalized_exact
 #print axioms high_tower_normalized_cone
 #print axioms high_tower_blank_unreachable
 #print axioms high_tower_strict_step
