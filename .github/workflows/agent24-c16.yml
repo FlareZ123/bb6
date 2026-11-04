@@ -94,3 +94,5 @@ jobs:
           lean -o UniformS25Inverse.olean UniformS25Inverse.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Reach.lean .
           lean -o UniformS25Reach.olean UniformS25Reach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Residual.lean .
+          lean UniformS25Residual.lean
