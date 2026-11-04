@@ -86,7 +86,7 @@ jobs:
           lean im-results/agent26-cryptid-e-gate/A1101010111First.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
-          lean im-results/agent26-cryptid-e-gate/E1101010111Pairs.lean
+          lean -o im-results/agent26-cryptid-e-gate/E1101010111Pairs.olean im-results/agent26-cryptid-e-gate/E1101010111Pairs.lean
 
       - name: Certify two shorter A closure terminals against the same pinned source
         env:
@@ -104,3 +104,11 @@ jobs:
           done
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
           lean im-results/agent26-cryptid-e-gate/A1101010111Code.lean
+
+      - name: Verify strict first-physical F return for the all-q E word
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity
+        run: |
+          lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
+          lean -o im-results/agent2-cryptid-continuity/PrefixENoFSource.olean im-results/agent2-cryptid-continuity/PrefixENoFSource.lean
+          lean im-results/agent26-cryptid-e-gate/E1101010111First.lean
