@@ -48,6 +48,11 @@ jobs:
         run: |
           set -eu
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent8-p1-fixed-reset"
+          # Compile the unchanged Agent28 source-level low-cost even feeder theorem.
+          scalar=im-results/agent28-p1-word-automaton
+          base64 --decode "$scalar/P1Scalar.lean.xz.b64" | xz --decompress --stdout > "$scalar/P1Scalar.lean"
+          base64 --decode "$scalar/P1ScalarBridge.lean.xz.b64" | xz --decompress --stdout > "$scalar/P1ScalarBridge.lean"
+          echo "56fc4dbfb187bcb54302d04580cb138556fa7eb110d1f263ffd25bdc5f3b23d4  $scalar/P1Scalar.lean" | sha256sum --check
           for m in GParity GInverse PosEvenForm; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
@@ -57,6 +62,8 @@ jobs:
           done
           lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          lean -o im-results/agent28-p1-word-automaton/P1Scalar.olean im-results/agent28-p1-word-automaton/P1Scalar.lean
+          lean -o im-results/agent28-p1-word-automaton/P1ScalarBridge.olean im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
           for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget; do
             lean -o "im-results/agent28-p1-word-automaton/$m.olean" "im-results/agent28-p1-word-automaton/$m.lean"
           done
@@ -89,7 +96,8 @@ jobs:
           lean -o "$root/ExceptionalSource.olean" "$root/ExceptionalSource.lean"
           lean -o "$root/ExceptionalStrong.olean" "$root/ExceptionalStrong.lean"
           lean -o "$root/ExceptionalStrongSource.olean" "$root/ExceptionalStrongSource.lean"
-          lean "$root/ExceptionalBudgetSource.lean"
+          lean -o "$root/ExceptionalBudgetSource.olean" "$root/ExceptionalBudgetSource.lean"
+          lean "$root/UnifiedFeederSource.lean"
           lean -o "$root/ExceptionalExp.olean" "$root/ExceptionalExp.lean"
           lean "$root/ExceptionalExpSource.lean"
           lean -o "$root/ExceptionalLinear.olean" "$root/ExceptionalLinear.lean"
