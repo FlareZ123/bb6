@@ -21,7 +21,7 @@ private theorem run_succ (n : Nat) :
   rfl
 
 private theorem root_run_12 :
-    rootRun 12 = some (.N 13098) := by decide
+    rootRun 12 = some (.N 13098) := by decide +kernel
 
 private theorem root_after_12 (j d : Nat)
     (h : rootRun (12+j) = some (.N d)) : 13098 ≤ d := by
@@ -58,13 +58,13 @@ theorem blank_never_7998 : ¬ ReachN 7998 := by
     rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 |
       h6 | h7 | h8 | h9 | h10 | h11
     all_goals subst n
-    all_goals decide
+    all_goals decide +kernel
   · have he : n=12+(n-12) := by omega
     rw [he] at hn
     have hg := root_after_12 (n-12) 7998 hn
     omega
 
-theorem exceptional_source_counter : oddTower 61 6 = 7998 := by decide
+theorem exceptional_source_counter : oddTower 61 6 = 7998 := by decide +kernel
 
 /-- The raw blank-tape machine can halt exactly if the genuine blank-root
 high-level orbit visits a feeder from the complete cubic inverse list,
