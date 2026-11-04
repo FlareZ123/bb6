@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
-import EAMultiplesSource
+import EAllDouble
+import AOneSource
 import CodeImplicitNil
 
 set_option maxHeartbeats 35000000
