@@ -41,7 +41,7 @@ theorem fatal_even_parent_exists (n : Nat) (hn : 4 ≤ n) :
     omega
   exact Or.inl ⟨n-1,⟨hlow,hhigh⟩,hrelation⟩
 
-private theorem reset_chain_last {s u : Nat}
+theorem reset_chain_last {s u : Nat}
     (hr : ResetChain s u) (hne : u ≠ s) :
     ∃ h, ResetChain s h ∧ ResetParent h u := by
   cases hr with
