@@ -165,3 +165,15 @@ backwardHit (x+2*y) (x,y) = true  ↔
 ```
 
 The final original-source job prints exactly `[propext, Quot.sound]` for both lemmas, no `sorryAx`. The first CI trial 41904116568 failed due ambiguous shorthand `run` in two source proof simplification lines; commit `6820ed4fb1cf39900ff64ba923435cb1a2d786ad` qualified the original imported section `run` and passed unchanged-source manual CI. This is a *correctness bridge* for global finite inverse searches, not a fast implementation or new infinite gate obstruction. The current `sourceCandidates` reference enumerator scans a quadratic area and uses original `secNext` rather than a primitive-recursive fuel evaluator, so large target computation remains a separate engineering challenge.
+
+### 2026-11-04 20:20 UTC: source-certified executable inverse enumerator
+
+[SectionBackwardFuelOriginal.lean](SectionBackwardFuelOriginal.lean) is now original-source Lean certified by **[CI run 41905293244](https://github.com/FlareZ123/bb6/actions/runs/41905293244)**, with standard axioms only `[propext, Quot.sound]`. The module supplies:
+
+- `sourceCandidatesFuel`, filtering a finite complete input rectangle through the structurally recursive **genuinely kernel-evaluable** `secNextFuel`, and theorem `sourceCandidatesFuel_eq` identifying it exactly with `SectionMassOriginal.sourceCandidates`, which uses original source `secNext`;
+- `backwardHitFuel`, structurally recursive inverse-tree search over those candidate lists, and `backwardHitFuel_eq` identifying its exact answer for **every** target and fuel with the prior original-source `backwardHit`;
+- `backwardHitFuelFull_iff`, equating an all-time reachability question to a concrete boolean computation on the actual section target.
+
+The resulting inverse and forward decision procedures are mathematically complete, have independently faithful source bridges, and compute their booleans in Lean's kernel. The naive complete inverse list examines quadratically many source pairs at each target, making it a correctness oracle rather than a competitive solver for the exponentially growing stopping parameter family. Neither this proof nor the current five fixed-target certificates proves all possible halting targets unreachable.
+
+**Sharper bound currently pending CI:** `SectionMassOriginal.section_reach_iff_half_bound` uses `7+2n≤x+2y` to replace `n≤x+2y` by `n≤(x+2y)/2`. Corollaries `SectionFuelOriginal.massStopHalfFull_iff`, `SectionBackwardOriginal.backwardHalfFull_iff` and `SectionBackwardFuelOriginal.backwardHitFuelHalfFull_iff` are queued on the dedicated manual original-source workflow [41905591436](https://github.com/FlareZ123/bb6/actions/runs/41905591436). Do not treat these last four as certified until that run succeeds and axiom output is inspected.
