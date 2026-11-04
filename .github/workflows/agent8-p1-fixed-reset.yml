@@ -107,6 +107,7 @@ jobs:
           lean "$root/ExceptionalLogDegreeSource.lean"
           lean -o "$root/UnifiedFeederSource.olean" "$root/UnifiedFeederSource.lean"
           lean -o "$root/AllEvenFeederSource.olean" "$root/AllEvenFeederSource.lean"
+          lean "$root/UniformAllEvenFeederSource.lean"
           lean "$root/UniformFeederSource.lean"
           lean -o "$root/ExceptionalExp.olean" "$root/ExceptionalExp.lean"
           lean "$root/ExceptionalExpSource.lean"
