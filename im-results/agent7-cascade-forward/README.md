@@ -104,3 +104,18 @@ IsHalt target ↔
 ```
 
 This is a universally certified **finite gate exclusion strengthening** from the previous (n≥257) raw iff; it **does not assert that the machine halts or fails to halt**, because infinitely many index candidates remain and their authentic reachability has not been decided. All evidence and source scripts stay in `im-results/` pending external novelty review and stronger all-index progress.
+
+
+## 2026-11-04 19:49 UTC: an all-index authentic-root iff in four index classes
+
+**Source-C Lean 4.36.0-rc2 manual [CI run 41900314347](https://github.com/FlareZ123/bb6/actions/runs/41900314347) SUCCESS.** [UniformRootGate.lean](UniformRootGate.lean) proves a strict exact predecessor existence and the following *uniform* equivalence for all n≥4 with n mod18∈{10,11,16,17}:
+
+```lean
+CascadeUniformFatal.genuine_fatal_iff_unique_even_parent :
+  ReachC (2,0) (fatal n,0) ↔
+  ReachC (2,0) (4*2^n-3*n-7,0)
+```
+
+The proof invokes the **complete first-reset source-C relation**, the universal unique-parent theorem, and the rooted reset-chain equivalence, so both implications concern the *actual* blank-derived C orbit, rather than merely algebraic paths from synthetic resets. The unique-parent predecessor is itself a source-certified first-reset edge. This is an all-index necessary-and-sufficient reduction of the remaining fatal question in four classes, and does not assert that the predecessor is unreachable. The Lean `#print axioms` check reported standard axioms only, with no sorry or native_decide.
+
+An extension `UniqueEvenBand.lean` plus `SecondEven.lean` is being tested to force an additional even step uniformly. **These extensions are provisional until their separate updated CI succeeds**. Earlier successful CI 41900314347 independently certifies the above root iff regardless of later attempts.
