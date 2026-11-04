@@ -146,6 +146,9 @@ jobs:
           lean -o AffineOddEvenOddCone.olean AffineOddEvenOddCone.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineOddEvenOddHalt.lean .
           lean HighAffineOddEvenOddHalt.lean
+          # Four original-source exact inverses exclude a new first-stopping parameter cylinder.
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FirstDeep512.lean .
+          lean FirstDeep512.lean
           if [ "${{ inputs.balanced_only }}" = "true" ]; then exit 0; fi
           lean -o BounceLogBound.olean BounceLogBound.lean
           lean SectionLogBound.lean
