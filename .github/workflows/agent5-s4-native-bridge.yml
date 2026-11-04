@@ -42,4 +42,14 @@ jobs:
           lake env lean -o S4WeightedDrift.olean S4WeightedDrift.lean
           lake env lean -o S4SourceShape.olean S4SourceShape.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4NativeCompact.lean" .
-          lake env lean S4NativeCompact.lean
+          lake env lean -o S4NativeCompact.olean S4NativeCompact.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4Length.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4LengthBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4Suffix.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4SuffixBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4NativeValuation.lean" .
+          lake env lean -o S4Length.olean S4Length.lean
+          lake env lean -o S4LengthBridge.olean S4LengthBridge.lean
+          lake env lean -o S4Suffix.olean S4Suffix.lean
+          lake env lean -o S4SuffixBridge.olean S4SuffixBridge.lean
+          lake env lean S4NativeValuation.lean
