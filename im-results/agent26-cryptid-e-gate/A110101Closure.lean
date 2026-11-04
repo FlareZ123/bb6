@@ -44,7 +44,9 @@ theorem a_ten_start (m : Nat) (ys : List Bool) :
     run 31 (aBoundary (m+1)
        ([true,true,false,true,false,true,false,true,false,true] ++ ys)) =
       sweepB m (false :: List.replicate 14 true ++ ys) := by
-  simp [aBoundary, sweepB, run, step, goL, goR, pairs, List.replicate]
+  cases m with
+  | zero => simp [aBoundary, sweepB, run, step, goL, goR, pairs, List.replicate]
+  | succ m => simp [aBoundary, sweepB, run, step, goL, goR, pairs, List.replicate]
 
 theorem a_ten_return (m : Nat) (ys : List Bool) :
     run (2*m+34) (aBoundary (m+1)
