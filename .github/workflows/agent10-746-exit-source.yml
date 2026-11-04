@@ -24,6 +24,7 @@ jobs:
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
           done
+          lean -o "$a/LowGates.olean" "$a/LowGates.lean"
           for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
