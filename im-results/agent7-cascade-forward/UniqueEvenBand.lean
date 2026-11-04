@@ -8,6 +8,8 @@ open CascadeResetInverse CascadeManyShield
 theorem even_band_scale_unique (u k j : Nat)
     (hb : 6*2^k-1 ≤ u ∧ u ≤ 8*2^k-3)
     (hj : 6*2^j-1 ≤ u ∧ u ≤ 8*2^j-3) : k=j := by
+  have hkpos : 1 ≤ 2^k := Nat.one_le_pow k 2 (by decide)
+  have hjpos : 1 ≤ 2^j := Nat.one_le_pow j 2 (by decide)
   by_cases heq : k=j
   · exact heq
   by_cases hlt : k<j
