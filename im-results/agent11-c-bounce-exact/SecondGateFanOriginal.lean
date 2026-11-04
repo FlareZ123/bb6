@@ -13,9 +13,8 @@ open BB6.Agent46
 theorem second_gate_incoming_edge (s t : Nat) :
   secNext (FanArithmetic.p s t, FanArithmetic.q s t) =
     some (FanArithmetic.x s t, FanArithmetic.y s t) := by
-  open FanArithmetic in
-    have hbound := FanArithmetic.bounds s t
-    have hA := FanArithmetic.a_ge_b s t
+  have hbound := FanArithmetic.bounds s t
+  have hA := FanArithmetic.a_ge_b s t
     have hB : FanArithmetic.b s t=3*FanArithmetic.m s t+4 := rfl
     have hp : FanArithmetic.p s t+3=4*FanArithmetic.a s t := by
       unfold FanArithmetic.p
@@ -29,7 +28,7 @@ theorem second_gate_incoming_edge (s t : Nat) :
       have hD := FanArithmetic.d_ge s t
       have heq := FanArithmetic.y_eq s t
       omega
-    have hbounce :
+  have hbounce :
       (bounce (FanArithmetic.p s t-1)
         (2*FanArithmetic.q s t-FanArithmetic.p s t+3)).2 =
         some (FanArithmetic.x s t,FanArithmetic.y s t) :=
@@ -38,7 +37,7 @@ theorem second_gate_incoming_edge (s t : Nat) :
         (2*FanArithmetic.q s t-FanArithmetic.p s t+3)
         (FanArithmetic.x s t) (FanArithmetic.y s t) heven).mpr
         (Or.inr ⟨2*s+1,hy,FanArithmetic.source_sum s t,FanArithmetic.source_cost s t⟩)
-    simpa [secNext, exactSection, h0, h1, hk0, hregion] using hbounce
+  simpa [secNext, exactSection, h0, h1, hk0, hregion] using hbounce
 
 theorem second_gate_fan (n : Nat) :
     ∃ f : Fin n → Nat × Nat,
