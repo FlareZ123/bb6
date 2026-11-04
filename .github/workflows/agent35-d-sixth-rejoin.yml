@@ -87,3 +87,4 @@ jobs:
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
           lean -DmaxRecDepth=55000 "$G/SeventhRejoin.lean"
+          lean -DmaxRecDepth=55000 "$G/APacketGeneral.lean"
