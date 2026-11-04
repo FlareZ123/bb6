@@ -1,16 +1,16 @@
 import FullForcedNormalize
-import EvenEvenReach
+import EvenRightUnique
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent15
 open BB6.Agent3 BB6.Agent46
 
 /-- Fourth exact Machine C inverse sector, disjoint from the old O/E/A gates. -/
-def evenEvenGate (x y : Nat) : Prop :=
-  x%2=0 ∧ y%2=0 ∧ 6≤y ∧ (x+y)%8≠0
+def evenRightGate (x y : Nat) : Prop :=
+  y%2=0 ∧ 6≤y ∧ (x+y)%8≠0 ∧ (x+y)%8≠7
 
-instance evenEvenGate_decidable (x y : Nat) : Decidable (evenEvenGate x y) := by
-  unfold evenEvenGate
+instance evenRightGate_decidable (x y : Nat) : Decidable (evenRightGate x y) := by
+  unfold evenRightGate
   infer_instance
 
 /-- A terminating exact backward normalizer containing O, E, A and B. -/
@@ -21,14 +21,14 @@ def fourForcedNormalize (x y : Nat) : Nat × Nat :=
     fourForcedNormalize ((x+y-5)/2) ((x+3*y-9)/4)
   else if hf : evenAffineGate x y then
     fourForcedNormalize (x+y-2) ((y-2)/2)
-  else if hb : evenEvenGate x y then
+  else if hb : evenRightGate x y then
     fourForcedNormalize (x+y-2) ((y-2)/2)
   else (x,y)
 termination_by x+2*y
 decreasing_by
   all_goals
     simp_wf
-    simp only [oddLowGate,evenSevenGate,evenAffineGate,evenEvenGate] at *
+    simp only [oddLowGate,evenSevenGate,evenAffineGate,evenRightGate] at *
     omega
 
 /-- Every reduction is a real, uniquely reversible section edge.
@@ -65,10 +65,10 @@ theorem blank_reach_iff_fourForcedNormalize (x y : Nat) :
             have hrec := ih _ hlt (x+y-2) ((y-2)/2) (by rfl)
             exact hh.trans hrec
           · rw [dif_neg hf]
-            by_cases hb : evenEvenGate x y
+            by_cases hb : evenRightGate x y
             · rw [dif_pos hb]
-              rcases hb with ⟨hx,hy,hy6,hs⟩
-              have hh := blank_reach_iff_even_even x y hx hy hy6 hs
+              rcases hb with ⟨hy,hy6,hs0,hs7⟩
+              have hh := blank_reach_iff_even_right x y hy6 hy hs0 hs7
               have hlt : x+y-2+2*((y-2)/2)<z := by omega
               have hrec := ih _ hlt (x+y-2) ((y-2)/2) (by rfl)
               exact hh.trans hrec
