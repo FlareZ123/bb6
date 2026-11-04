@@ -44,7 +44,7 @@ theorem thirdReentry_original :
     (DRegularSource.sourceSection ⟨9*t3+4,8,1⟩)
     (DRegularSource.sourceSection ⟨64*t3+33,1,5⟩)
     thirdException_original
-    (by simpa only [show 64*t3+21+2*6=64*t3+33 by omega]
+    (by simpa only [bCost3, show 64*t3+21+2*6=64*t3+33 by omega]
          using BB6.Agent25BGeneral.exceptional_EB_general t3 6)
 
 #print axioms terminal2665_exact
