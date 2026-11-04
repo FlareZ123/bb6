@@ -40,3 +40,17 @@ Future research: identify a global packet invariant or amortized rank surviving 
 **Stronger CI:** [manual run 41870397910](https://github.com/FlareZ123/bb6/actions/runs/41870397910) also SUCCEEDED for the complete E strict-first-return theorem. The audited dependencies of `e_front_firstPhysical`, `e_firstPhysical`, and `full_E_1101010111_first_return` are precisely `[propext, Quot.sound]`, without `sorryAx`.
 
 **All-code strict CI:** [manual run 41871559177](https://github.com/FlareZ123/bb6/actions/runs/41871559177) **SUCCEEDED** against the unmodified original table, including all `ACodeFirstReturn` / `AExceptionalClosure` imports and `#print axioms full_A_code_1101010111_first_return` = `[propext, Quot.sound]`. The same run independently executed all **2,311** literal-table first-physical-return regression cases with zero discrepancies.
+
+## 2026-11-04 follow-up: source-certified E-to-B two-return reentry for k divisible by 3
+
+Source [E1101010111ThenB.lean](./E1101010111ThenB.lean), [manual original-source CI 41872994675](https://github.com/FlareZ123/bb6/actions/runs/41872994675) **SUCCEEDED**, with `#print axioms e_then_b_simplified` exactly `[propext, Quot.sound]`. For all t,q≥0 and all arbitrary physical right suffix Z, it composes the E exceptional first return at k=3t with its subsequent B-delimiter return:
+
+```
+I_(9t+4)(0(10)^q 1101010111 Z)
+   --[876t² + 731t + 181 + 4q original primitive transitions]-->
+I_(64t+2q+23)((01)^4 0 Z).
+```
+
+The unnormalized original-source theorem literally returns `1^(64t+17) 1^(2q+6) 010101010 Z` at F/0 with physically blank left; the new count `64t+2q+23` only combines adjacent ones. **For Z empty**, the terminal zero is an implicit blank, so this output lies in the formerly known regular language `L(a,4,0)=I_a((01)^4)`. For arbitrary nonempty Z, the extra zero remains real and the output has the displayed changed right suffix. Consequently, this settles a *subfamily* of the synthetic E p=2 exceptional resets at `k≡0 (mod3)` with empty continuation, without asserting that these inputs occur on the actual blank-machine orbit.
+
+Independent literal machine [check_e_then_b.py](./check_e_then_b.py) covered **1,056** actual first-physical E-then-B pairs, with full tapes and both elapsed step counts, in the same successful CI run. This finite test is supplementary to the all-natural Lean endpoint proof. Cases k≡1,2 (mod3) and actual blank-root reachability remain open.
