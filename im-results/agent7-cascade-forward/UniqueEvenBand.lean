@@ -8,7 +8,8 @@ open CascadeResetInverse CascadeManyShield
 theorem even_band_scale_unique (u k j : Nat)
     (hb : 6*2^k-1 ≤ u ∧ u ≤ 8*2^k-3)
     (hj : 6*2^j-1 ≤ u ∧ u ≤ 8*2^j-3) : k=j := by
-  by_contra hne
+  by_cases heq : k=j
+  · exact heq
   by_cases hlt : k<j
   · have hpow : 2^(k+1) ≤ 2^j :=
       Nat.pow_le_pow_right (by decide : 0 < (2:Nat)) (by omega)
@@ -38,6 +39,8 @@ theorem any_parent_equals_even
       rw [Nat.pow_succ]
       omega
     rw [he] at hout
+    have hz : 2*u+5=3*(3^t*d) := by
+      simpa only [Nat.mul_assoc] using hout
     have hm : u%3=2 := by omega
     exact False.elim (hmod hm)
 
