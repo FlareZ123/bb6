@@ -40,7 +40,7 @@ theorem two_step_gain27_mass100 (a d b e c f : Nat)
       · have hfirst := BB6.Agent49LowStepSource.low_zero_odd d hodd (by omega)
         rw [hfirst] at h1
         cases h1
-        have h14 := BB6.Agent8SharpSource.next_even_positive_mass14
+        have h14 := BB6.Agent49TwoStep27HighSource.next_even_positive_mass14
           (d-1) 14 c f (by omega) (by omega) (by omega) (by omega) h2
         omega
       · have heven : d%2=0 := by omega
@@ -77,7 +77,7 @@ theorem two_step_gain27_mass100 (a d b e c f : Nat)
         have hfirst := BB6.Agent49LowStepSource.low_four_even d heven (by omega)
         rw [hfirst] at h1
         cases h1
-        have h14 := BB6.Agent8SharpSource.next_even_positive_mass14
+        have h14 := BB6.Agent49TwoStep27HighSource.next_even_positive_mass14
           (d-6) 23 c f (by omega) (by omega) (by omega) (by omega) h2
         omega
 
