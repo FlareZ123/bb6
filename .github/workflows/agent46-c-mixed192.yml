@@ -1,4 +1,4 @@
-name: Agent 46 Machine C mixed192 first-family m38 and m58 theorems (manual)
+name: Agent 46 Machine C mixed192 first and second gate mixed192 theorems (manual)
 
 on:
   workflow_dispatch:
@@ -24,13 +24,14 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/a46-c38-source
           cp im-results/agent11-c-line/CLine.lean /tmp/a46-c38-source/
-          cp im-results/agent46-c-mixed192/{C38V2,C38Arithmetic,C58,C58Arithmetic}.lean /tmp/a46-c38-source/
+          cp im-results/agent46-c-mixed192/{C38V2,C38Arithmetic,C58,C58Arithmetic,SecondGateArithmetic}.lean /tmp/a46-c38-source/
           cd /tmp/a46-c38-source
           export LEAN_PATH=.
           lean --version
-          sha256sum CLine.lean C38V2.lean C38Arithmetic.lean C58.lean C58Arithmetic.lean
+          sha256sum CLine.lean C38V2.lean C38Arithmetic.lean C58.lean C58Arithmetic.lean SecondGateArithmetic.lean
           lean -o CLine.olean CLine.lean
           lean -o C38V2.olean C38V2.lean
           lean C38Arithmetic.lean
           lean -o C58.olean C58.lean
           lean C58Arithmetic.lean
+          lean SecondGateArithmetic.lean
