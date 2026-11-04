@@ -89,4 +89,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/StopBridge192AB.lean" .
           lean -o StopBridge192AB.olean StopBridge192AB.lean
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/WideStop.lean" .
-          lean WideStop.lean
+          lean -o WideStop.olean WideStop.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SideStop.lean" .
+          lean SideStop.lean
