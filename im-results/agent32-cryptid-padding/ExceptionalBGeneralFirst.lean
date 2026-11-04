@@ -45,7 +45,7 @@ theorem exceptional_EB_general_first (t p : Nat) :
       (DRegularSource.sourceSection ⟨9*t+4,p+2,1⟩)
       (BB6.Agent32EAll.start (3*t) (p+1) []) := by
     rw [hsource,htarget]
-    simpa only [run] using
+    simpa only [CryptidBoundary.run] using
       (source_init_pad 0 2 xs)
   have hEmacro : ObsEq
       (run (BB6.Agent32EAll.duration (3*t) (p+1))
