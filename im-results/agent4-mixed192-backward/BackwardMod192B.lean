@@ -97,31 +97,31 @@ theorem zero_a_pos (a k : Nat) (ha : a≥2) :
     simp only [bad,hc,↓reduceIte,high] at h
     simp only [bad,show (0:Nat)<2 by omega,↓reduceIte,low]
     rcases h with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
-  · exfalso; omega
-  · exfalso; omega
-  · have hs : (a%96=10 ∧ k%48=43) ∨ (a%96=58 ∧ k%48=19) := by omega
-    rcases hs with hs | hs
-    · exact Or.inr (Or.inl (hs))
-    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs))))))
-  · exfalso; omega
-  · exfalso; omega
-  · exfalso; omega
-  · exfalso; omega
-  · have hs : (a%96=24 ∧ k%48=37) ∨ (a%96=72 ∧ k%48=13) := by omega
-    rcases hs with hs | hs
-    · exact Or.inr (Or.inr (Or.inl (hs)))
-    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))))
-  · exfalso; omega
-  · exfalso; omega
-  · have hs : (a%96=34 ∧ k%48=31) ∨ (a%96=82 ∧ k%48=7) := by omega
-    rcases hs with hs | hs
-    · exact Or.inr (Or.inr (Or.inr (Or.inl (hs))))
-    · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (hs)))))))
-  · exfalso; omega
-  · exfalso; omega
-  · exfalso; omega
-  · have hs : a%96=46 ∧ k%48=28 := by omega
-    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : (a%96=10 ∧ k%48=43) ∨ (a%96=58 ∧ k%48=19) := by omega
+      rcases hs with hs | hs
+      · exact Or.inr (Or.inl (hs))
+      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs))))))
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : (a%96=24 ∧ k%48=37) ∨ (a%96=72 ∧ k%48=13) := by omega
+      rcases hs with hs | hs
+      · exact Or.inr (Or.inr (Or.inl (hs)))
+      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))))
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : (a%96=34 ∧ k%48=31) ∨ (a%96=82 ∧ k%48=7) := by omega
+      rcases hs with hs | hs
+      · exact Or.inr (Or.inr (Or.inr (Or.inl (hs))))
+      · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (hs)))))))
+    · exfalso; omega
+    · exfalso; omega
+    · exfalso; omega
+    · have hs : a%96=46 ∧ k%48=28 := by omega
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (hs)))))
 
 #print axioms zero_a_pos
 
