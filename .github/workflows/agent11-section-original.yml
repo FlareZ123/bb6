@@ -36,3 +36,7 @@ jobs:
           done
           lean -o BounceConsequencesOriginal.olean BounceConsequencesOriginal.lean
           lean FanExactOriginal.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{SecondGateFanArithmetic,SecondGateFanInjective,SecondGateFanOriginal}.lean .
+          lean -o SecondGateFanArithmetic.olean SecondGateFanArithmetic.lean
+          lean -o SecondGateFanInjective.olean SecondGateFanInjective.lean
+          lean SecondGateFanOriginal.lean
