@@ -40,9 +40,10 @@ theorem halt_iff_surviving_index_ge_52 :
   · intro h
     obtain ⟨n,_,hc,hr⟩ := CascadeExactGate.halt_iff_complementary_reached.mp h
     have hn : 52≤n := by
-      by_contra hlow
-      have hsmall : n≤47 := by omega
-      exact no_surviving_reset_through_47 n hsmall hc hr
+      by_cases hg : 52≤n
+      · exact hg
+      · have hsmall : n≤47 := by omega
+        exact False.elim ((no_surviving_reset_through_47 n hsmall hc) hr)
     exact ⟨n,hn,hc,hr⟩
   · rintro ⟨n,hn,hc,hr⟩
     apply CascadeExactGate.halt_iff_complementary_reached.mpr
