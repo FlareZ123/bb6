@@ -18,9 +18,7 @@ theorem reachable_to_orbit {x y : Nat × Nat}
   induction h with
   | refl => exact Orbit.refl _
   | push hs he ih =>
-      rcases y with ⟨a,b⟩
-      rcases _ with ⟨c,d⟩
-      exact orbit_trans ih (Orbit.step he (Orbit.refl (c,d)))
+      exact orbit_trans ih (Orbit.step he (Orbit.refl _))
 
 /-- Genuine post-initial blank root cannot reach a surviving-class
     fatal reset with index at most 47. -/
