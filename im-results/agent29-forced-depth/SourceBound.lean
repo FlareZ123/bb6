@@ -25,13 +25,9 @@ theorem no_five_mass_one
     (h45 : forcedEdge x4 y4 x5 y5) : False := by
   simp only [forcedEdge, oddLowGate, evenSevenGate, evenAffineGate] at *
   rcases h01 with h01 | h01 | h01
-  all_goals try omega
   all_goals rcases h12 with h12 | h12 | h12
-  all_goals try omega
   all_goals rcases h23 with h23 | h23 | h23
-  all_goals try omega
   all_goals rcases h34 with h34 | h34 | h34
-  all_goals try omega
   all_goals rcases h45 with h45 | h45 | h45
   all_goals omega
 
