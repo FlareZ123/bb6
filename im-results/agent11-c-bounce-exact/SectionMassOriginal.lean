@@ -106,7 +106,7 @@ theorem run_weight_growth (n : Nat) : ∀ x y : Nat,
   induction n with
   | zero =>
     intro x y h
-    simp only [run] at h
+    simp only [BB6.Agent8Section.run] at h
     cases h
     omega
   | succ n ih =>
