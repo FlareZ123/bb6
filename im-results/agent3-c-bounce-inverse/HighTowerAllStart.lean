@@ -115,6 +115,38 @@ theorem tower_forward_d (q d a : Nat) (ha : a%4=3) :
       rw [ih (a+affineRight2 q (d+1)-2) ha']
       simpa only [Option.bind_some] using hstep
 
+/-- General sharp ancestry theorem for every source-exact affine
+    tower whose normalized pair lies in the seven-four cone. -/
+theorem affine_tower_general_sharp (q d a : Nat) (ha : a%4=3)
+    (hc : let p := BB6.Agent15.affineNormalize a (affineRight2 q d);
+      p.1%8=7 ∧ p.2%8=4 ∧ 12≤p.2) :
+    (∀ (start : Nat × Nat) (time : Nat),
+      BB6.Agent8Section.run secNext (time+d+2) (some start) ≠
+        some (a,affineRight2 q d)) ∧
+    (let p := BB6.Agent15.affineNormalize a (affineRight2 q d);
+      BB6.Agent8Section.run secNext (d+1)
+        (some (p.1+p.2-2,p.2/2-1))=some (a,affineRight2 q d)) := by
+  constructor
+  · intro start time hh
+    have hp0 : BB6.Agent8Section.run secNext ((time+2)+d) (some start)=
+        some (a,affineRight2 q d) := by
+      simpa only [show time+2+d=time+d+2 by omega] using hh
+    have hp := tower_pull_d start q d a (time+2) ha hp0
+    have hp2 : BB6.Agent8Section.run secNext (time+2) (some start)=
+        some ((BB6.Agent15.affineNormalize a (affineRight2 q d)).1,
+              (BB6.Agent15.affineNormalize a (affineRight2 q d)).2) := by
+      simpa only using hp
+    exact (seven_four_no_two start time _ _ hc.1 hc.2.1 hc.2.2) hp2
+  · let p := BB6.Agent15.affineNormalize a (affineRight2 q d)
+    have hsource : secNext (p.1+p.2-2,p.2/2-1)=some p := by
+      exact seven_four_one_witness p.1 p.2 hc.1 hc.2.1 hc.2.2
+    have hfwd := tower_forward_d q d a ha
+    change BB6.Agent8Section.run secNext (d+1)
+      (some (p.1+p.2-2,p.2/2-1))=some (a,affineRight2 q d)
+    rw [BB6.Agent8Section.run_succ_head]
+    simp only [Option.bind_some,hsource]
+    exact hfwd
+
 /-- Source-exact universal ancestry upper bound: at every q,n,
     there is no trajectory from ANY starting section state entering the
     high stopping target after 4n+5 or more section transitions. -/
@@ -169,6 +201,7 @@ theorem high2_max_incoming_witness (q n : Nat) :
 
 #print axioms tower_pull_d
 #print axioms tower_forward_d
+#print axioms affine_tower_general_sharp
 #print axioms high2_no_deeper_ancestry
 #print axioms high2_max_incoming_witness
 
