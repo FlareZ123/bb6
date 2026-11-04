@@ -1,0 +1,43 @@
+name: Agent 22 Sheep six-cone source semantics (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Rebuild unmodified original Agent16 Sheep E source
+        run: |
+          python3 -m venv /tmp/agent22-cone-venv
+          /tmp/agent22-cone-venv/bin/python -m pip -q install filelock
+          /tmp/agent22-cone-venv/bin/python im-results/agent16-sheep-even-return/reconstruct_all.py
+          mkdir -p /tmp/agent22-cone-build
+          for name in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            cp "im-results/agent16-sheep-even-return/$name.lean" /tmp/agent22-cone-build/
+          done
+          cd /tmp/agent22-cone-build
+          export LEAN_PATH=.
+          for name in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            lean -o "$name.olean" "$name.lean"
+          done
+      - name: Verify six generated conditional inverse-cone barriers
+        run: |
+          /tmp/agent22-cone-venv/bin/python im-results/agent22-sheep-new-cones/certificate.py
+          cd im-results/agent22-sheep-new-cones
+          /tmp/agent22-cone-venv/bin/python generate_cones.py
+          cp ConeCore.lean ConeCertificateBridge.lean /tmp/agent22-cone-build/
+          cd /tmp/agent22-cone-build
+          export LEAN_PATH=.
+          lean -o ConeCore.olean ConeCore.lean
+          lean ConeCertificateBridge.lean
