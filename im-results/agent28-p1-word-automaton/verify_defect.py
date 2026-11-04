@@ -16,7 +16,7 @@ for n in [30, 46, 62, 78, 94, 110, 126, 142, 158]:
     max_cost = 0
     while q:
         D, m, C, N, resets = q.popleft()
-        key = (D, m)
+        key = (D, m, C, N, resets)
         if key in seen:
             continue
         seen.add(key)
