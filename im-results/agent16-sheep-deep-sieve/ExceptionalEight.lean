@@ -43,7 +43,7 @@ theorem special_5 (j a : Nat) (hj : 426 ≤ j) :
     (2:Int)^(j+5)+(67:Int) ≠ 135*(3*(2:Int)^a+(a:Int)+3) := by
   exact uniform_special_parent_absent 135 (67:Int) 5 3 426
     (by decide) (by decide) (by decide) (by decide)
-    (by decide) (by decide) j hj a
+    (by decide) (by decide) (by decide) j hj a
 #print axioms special_5
 
 theorem special_6 (j a : Nat) (hj : 426 ≤ j) :
@@ -57,7 +57,7 @@ theorem special_7 (j a : Nat) (hj : 426 ≤ j) :
     (2:Int)^(j+7)+(133:Int) ≠ 675*(3*(2:Int)^a+(a:Int)+3) := by
   exact uniform_special_parent_absent 675 (133:Int) 7 3 426
     (by decide) (by decide) (by decide) (by decide)
-    (by decide) (by decide) j hj a
+    (by decide) (by decide) (by decide) j hj a
 #print axioms special_7
 
 end SheepExceptional
