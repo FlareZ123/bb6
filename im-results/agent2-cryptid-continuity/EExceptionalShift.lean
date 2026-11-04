@@ -29,7 +29,7 @@ private theorem plus_replicate (k p c : Nat) (tail : List Bool) :
       List.replicate (8*p) true ++
         (List.replicate (8*k+c) true ++ tail) := by
   have hn : 8*(k+p)+c = 8*p+(8*k+c) := by omega
-  rw [hn,List.replicate_add,List.append_assoc]
+  rw [hn, ←List.replicate_append_replicate, List.append_assoc]
 
 /-- The first nonregular E-exception return shifts its ENTIRE physical
     output word by 8p unary ones. The complete packet suffix is fixed,
