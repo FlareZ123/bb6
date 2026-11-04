@@ -36,8 +36,8 @@ jobs:
           done
           lean -o SecondRayShapeOriginal.olean SecondRayShapeOriginal.lean
           python3 "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/reconstruct.py"
-          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact"/{BounceOriginal,SecondGateFanArithmetic,SecondGateFanInjective,SecondGateFanOriginal,SecondRayPowerOdd,SecondRayOddComplete,SecondRayOddCount,SecondRayOddReach}.lean .
-          for f in BounceOriginal SecondGateFanArithmetic SecondGateFanInjective SecondGateFanOriginal SecondRayPowerOdd SecondRayOddComplete SecondRayOddCount; do
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact"/{BounceOriginal,SecondGateFanArithmetic,SecondGateFanInjective,SecondGateFanOriginal,SecondRayPowerOdd,SecondRayOddComplete,SecondRayOddCount,SecondRayOddReach,SecondRayAllList}.lean .
+          for f in BounceOriginal SecondGateFanArithmetic SecondGateFanInjective SecondGateFanOriginal SecondRayPowerOdd SecondRayOddComplete SecondRayOddCount SecondRayOddReach; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean SecondRayOddReach.lean
+          lean SecondRayAllList.lean
