@@ -80,6 +80,26 @@ theorem paired_original_run (s t : DRegular.L) (k p : Nat)
       BB6.ERemaining.source_contract k s t hc hr
   · exact lifted_original_run s t k p hc hr
 
+theorem lifted_original_timed (s t : DRegular.L) (k p : Nat)
+    (hc : DRegular.Canon s) (hr : DRegular.run k s = some t) :
+    ObsEq
+      (CryptidBoundary.run
+        (DRegular.accumulated k s +
+          BB6.DRegularTimedShift.linearCoeff k s*p +
+          BB6.DRegularTimedShift.quadCoeff k*p*p)
+        (DRegularSource.sourceSection (inputLift s k p)))
+      (DRegularSource.sourceSection (outputLift t k p)) := by
+  have h := lifted_original_run s t k p hc hr
+  have he : DRegular.accumulated k (inputLift s k p) =
+      DRegular.accumulated k s +
+        BB6.DRegularTimedShift.linearCoeff k s*p +
+        BB6.DRegularTimedShift.quadCoeff k*p*p := by
+    simpa only [inputLift] using
+      (BB6.DRegularTimedShift.accumulated_shift k s t p hc hr)
+  rw [he] at h
+  exact h
+
+#print axioms lifted_original_timed
 #print axioms lifted_model
 #print axioms lifted_original_run
 #print axioms paired_original_run
