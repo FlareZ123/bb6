@@ -41,4 +41,6 @@ jobs:
           lean -o SecondGateFanInjective.olean SecondGateFanInjective.lean
           lean SecondGateFanOriginal.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/SectionMassOriginal.lean .
-          lean SectionMassOriginal.lean
+          lean -o SectionMassOriginal.olean SectionMassOriginal.lean
+          cp im-results/agent11-c-bounce-exact/SectionFuelOriginal.lean .
+          lean SectionFuelOriginal.lean
