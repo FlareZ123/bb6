@@ -17,8 +17,8 @@ def sourceCandidatesFuel (x y : Nat) : List (Nat × Nat) :=
 
 theorem sourceCandidatesFuel_eq (x y : Nat) :
     sourceCandidatesFuel x y = sourceCandidates x y := by
-  have h : (fun p : Nat×Nat => decide (secNextFuel p=some(x,y))) =
-      (fun p : Nat×Nat => decide (secNext p=some(x,y))) := by
+  have h : (fun (p : Nat×Nat) => decide (secNextFuel p=some(x,y))) =
+      (fun (p : Nat×Nat) => decide (secNext p=some(x,y))) := by
     funext p
     rcases p with ⟨a,k⟩
     rw [secNextFuel_eq a k]
