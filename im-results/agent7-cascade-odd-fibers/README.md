@@ -80,3 +80,15 @@ The related original-source issue is [the Agent 10 cascade programme](../../rese
 ## Fixed low fatal gates: candidate finite-prefix mass proof
 
 The independent exact source-indexed blank-height C orbit beginning at (2,0), computed using [verify.py](verify.py)'s original C/P rules, reaches C(2,119) at the 21st compressed C episode with mass 123. This crosses the mass of c_4=56 (mass 112), and none of the 21 preceding C states equals C(56,0). It reaches C(218,0) at episode 28 with mass 436, crossing c_5=119 (mass 238); no preceding C state equals C(119,0). By the all-time proved [Mass.lean](Mass.lean) `future_target_exclusion`, a *separately kernel-checked* finite forward-prefix certificate through episodes 21 and 28 would upgrade these to source-indexed all-time blank reset exclusions. At this writing the prefix checks are independent executable computation, **not yet Lean certificates**, and therefore these exclusions must not be presented as formally proved. This offers a narrowly scoped transfer test for the source-valid monotone mass method, distinct from the synthetic ancestor family.
+
+
+## Two source-indexed genuine-root fatal reset exclusions (2026-11-04)
+
+[LowGates.lean](LowGates.lean) now gives reusable `CascadeSource.shield` and the proved general `shield_sound` theorem. The Boolean checker follows a finite source-C episode prefix, rejects the target at every visited prefix node, and accepts only when the last state's weighted mass exceeds the target's mass (or when `Cstep` terminates without touching it). Its soundness uses the previously proved all-time `orbit_mass_mono`, so a true certificate excludes the target across *every* future compressed transition, regardless of orbit length.
+
+From the authentic blank-derived post-initial source-indexed root `C(2,0)`:
+
+- After exactly 21 C episodes, `C(2,119)` has mass `123 > 2*56=112`; a kernel `decide` certificate checks the entire prefix never visits `C(56,0)`. Theorem: `blank_excludes_fatal_four : ¬Orbit (2,0) (56,0)`.
+- After exactly 28 C episodes, `C(218,0)` has mass `436 > 2*119=238`; likewise, `blank_excludes_fatal_five : ¬Orbit (2,0) (119,0)`.
+
+Both locally compile in Lean **4.36.0-rc2** against same-definition local `SourceMacro.Cstep` and `Mass` with standard kernel axioms `[propext, Classical.choice, Quot.sound]`, no `sorry`. This upgrades the earlier *finite-prefix numerical candidates* to **all-time Lean proofs in the exact copied source-indexed model**. The [manual shared #746 workflow](../../.github/workflows/agent10-746-exit-source.yml) was extended to compile LowGates against unchanged repository `SourceMacro.lean` and `Mass.lean`; report that separate CI outcome after checking it. The original DeepMind TM-to-accelerator module is still not imported by this local proof, and no BB(6) or entire-machine decision follows. The two classes are merely the first two complementary synthetic-ancestry fatal heights; infinitely many others remain.
