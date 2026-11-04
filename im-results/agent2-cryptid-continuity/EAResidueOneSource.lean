@@ -109,6 +109,11 @@ private theorem raw_after_A (k : Nat) (ws ys : List Bool) :
   dsimp
   rw [run_add,prefix_A,run_add]
   change run (2*(4*k+3+CryptidA.wordInc ws)+24)
+    (run (CryptidA.wordCost (4*k+3) ws)
+      (BB6.Agent35.aBoundary (4*k+3)
+        (CryptidA.wordCode ws ++ packet ys))) = _
+  rw [BB6.Agent35.a_code_return]
+  change run (2*(4*k+3+CryptidA.wordInc ws)+24)
     (BB6.Agent35.aBoundary (4*k+3+CryptidA.wordInc ws) (packet ys)) = _
   rw [show (BB6.Agent35.aBoundary (4*k+3+CryptidA.wordInc ws)
       (packet ys)) =
