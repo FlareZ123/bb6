@@ -66,3 +66,4 @@ jobs:
           lean "$root/UniformSourceCorollary.lean"
           lean -o "$root/UniformAny.olean" "$root/UniformAny.lean"
           lean "$root/UniformAnySource.lean"
+          lean "$root/SourceLower.lean"
