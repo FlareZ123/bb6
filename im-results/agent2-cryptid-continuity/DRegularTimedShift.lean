@@ -119,6 +119,15 @@ theorem quad_closed (n : Nat) :
       _ = 64*(12*64^n) := by rw [ih]
       _ = 12*64^(n+1) := by simp only [Nat.pow_succ]; ac_rfl
 
+/-- Alternate recurrence for appending an E exceptional source macro. -/
+theorem quad_right (n : Nat) :
+    quadCoeff (n+1) = 9*quadCoeff n+12*64^n := by
+  have h0 := quad_closed n
+  have h1 := quad_closed (n+1)
+  simp only [Nat.pow_succ] at h1
+  omega
+
+#print axioms quad_right
 #print axioms quad_closed
 #print axioms accumulated_shift
 end BB6.DRegularTimedShift
