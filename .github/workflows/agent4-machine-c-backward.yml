@@ -91,4 +91,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/WideStop.lean" .
           lean -o WideStop.olean WideStop.lean
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SideStop.lean" .
-          lean SideStop.lean
+          lean -o SideStop.olean SideStop.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/Nonparity120.lean" .
+          lean Nonparity120.lean
