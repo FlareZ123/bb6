@@ -1,0 +1,56 @@
+name: Agent43 P1 n55 three-reset necessity original-source audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode original Agent43 mathematical sources and audit SHA256
+        run: |
+          set -e
+          DIR=im-results/agent43-p1-two-reset
+          base64 -d "$DIR/two-reset-arithmetic.tar.xz.b64" > /tmp/agent43-arithmetic.tar.xz
+          echo "fe84098af7576ff7a0c6a128174a969ca5e8ca3bfe86c6880e3c1e2a288f858c  /tmp/agent43-arithmetic.tar.xz" | sha256sum -c -
+          base64 -d "$DIR/two-reset-bridge.tar.xz.b64" > /tmp/agent43-bridge.tar.xz
+          echo "321895ed10f828c73551f0af4614094b2ce56440eab17fd9b4c109fc6573793a  /tmp/agent43-bridge.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent43-arithmetic.tar.xz -C "$DIR"
+          tar -xJf /tmp/agent43-bridge.tar.xz -C "$DIR"
+      - name: Verify imported unchanged original source and exact two-reset theorem
+        run: |
+          set -e
+          P1=im-results/agent1-p1-quarter
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-two-reset
+          AG55="$AG43/n55"
+          export LEAN_PATH="$AG55:$MAP:$INV:$P1:$AG28:$AG43"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          lean -o "$P1/MassInverse.olean" "$P1/MassInverse.lean"
+          lean -o "$P1/OddConeMass.olean" "$P1/OddConeMass.lean"
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          lean -o "$P1/InverseIff.olean" "$P1/InverseIff.lean"
+          lean -o "$P1/UpperTail.olean" "$P1/UpperTail.lean"
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          lean -o "$AG43/TwoResetShape.olean" "$AG43/TwoResetShape.lean"
+          lean -o "$AG43/SourceInterfaces.olean" "$AG43/SourceInterfaces.lean"
+          python3 "$AG43/generate_n55.py"
+          for m in TwoResetGrowth TwoResetTailBudget TwoResetWall DefectPositive TwoResetRemainder TwoResetDefectBridge FirstBlockDefect TwoResetExactEquations; do
+            lean -o "$AG55/$m.olean" "$AG55/$m.lean"
+          done
+          lean -o "$AG55/SourceTwoReset.olean" "$AG55/SourceTwoReset.lean"
+          lean "$AG55/ThreeResets.lean"
