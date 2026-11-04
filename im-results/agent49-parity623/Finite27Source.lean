@@ -12,6 +12,7 @@ c86f15861709b76042998c5211c7b2f83991621b.
 
 namespace BB6.Agent49Finite27Source
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+open BB6.Agent49ParitySource
 private abbrev next : HighLevelState → Option HighLevelState := highLevelNext
 
 /-- Total, executable property over finite coordinates. Halting steps make
