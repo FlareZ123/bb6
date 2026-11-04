@@ -48,7 +48,9 @@ jobs:
       - name: Restore pinned mathlib cache and build source
         working-directory: /tmp/cryptids
         run: |
-          lake exe cache get
+          # The exact upstream dependency graph imports these ten Mathlib roots.
+          # Cache their transitive dependencies only, avoiding GitHub disk quota.
+          lake exe cache get Mathlib.Computability.TuringMachine.PostTuringMachine Mathlib.Data.List.Basic Mathlib.Data.Nat.Basic Mathlib.Data.Nat.Prime.Basic Mathlib.Algebra.GCDMonoid.Finset Mathlib.Order.Interval.Finset.Nat Mathlib.Order.SuccPred.Basic Mathlib.Algebra.Order.SuccPred Mathlib.NumberTheory.LSeries.RiemannZeta Mathlib.SetTheory.ZFC.Basic
           lake build BusyBeaver.BB6.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
       - name: Compile original-source bridge and audit axioms
         working-directory: /tmp/cryptids
