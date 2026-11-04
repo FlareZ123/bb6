@@ -42,7 +42,7 @@ theorem OddWord.exceptional_cost_bound {K m A T : Nat}
       simpa using Nat.mul_le_mul_left (2^(m+1)) hA
     omega
 
-private theorem n_le_pow (n : Nat) : n ≤ 2^n := by
+theorem n_le_pow (n : Nat) : n ≤ 2^n := by
   induction n with
   | zero => decide
   | succ n ih =>
