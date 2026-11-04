@@ -6,6 +6,15 @@ import Lean.Elab.Tactic.Omega
 namespace BB429NonFirstBurst
 
 set_option maxHeartbeats 5000000 in
+theorem nonfirst_successor_even (x y u w : Nat)
+    (hnot : y < 2*x+3)
+    (hs : BB429.next (x,y) = some (u,w)) : w%2=0 := by
+  simp only [BB429.next] at hs
+  repeat' (split at hs <;> try contradiction)
+  all_goals simp_all [Prod.mk.injEq, Option.some.injEq]
+  all_goals omega
+
+set_option maxHeartbeats 5000000 in
 /-- Every non-first successful macro transition entering a positive first
     counter has second counter 2 modulo 4. -/
 theorem nonfirst_positive_modfour (x y u w : Nat)
