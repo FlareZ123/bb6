@@ -119,8 +119,10 @@ private theorem raw_after_A (k : Nat) (ws ys : List Bool) :
       (packet ys)) =
         CryptidBoundary.aBoundary ((4*k+CryptidA.wordInc ws)+3)
           (true::true::false::true::true::true::ys) by
-            simp [BB6.Agent35.aBoundary,CryptidBoundary.aBoundary,packet,
-              List.append_assoc]]
+            have hi : 4*k+3+CryptidA.wordInc ws =
+                (4*k+CryptidA.wordInc ws)+3 := by omega
+            rw [hi]
+            rfl]
   have htime : 2*(4*k+3+CryptidA.wordInc ws)+24 =
       2*((4*k+CryptidA.wordInc ws)+3)+24 := by omega
   rw [htime, CryptidBoundary.a110111_run]
