@@ -89,3 +89,18 @@ The infinite family n>=2049 remains unresolved; no nonhalting, global six-state 
 [UniformFatalMod9.lean](UniformFatalMod9.lean) strengthens this to a **single possible first-reset parent** whenever `n mod18 ∈ {10,11,16,17}`: the even height above. Indeed the odd inverse with `t≥1` would force `9 | (2*fatal(n)+5)`, but the exact modulo9 computation contradicts this for all four index classes. These four index classes cover two-thirds of the six surviving mod18 classes of `n mod6 ∈ {4,5}` (the other two classes are n%18=4,5). The quantified theorem is `CascadeUniformFatal.fatal_only_even_parent`. The proof is source-indexed to the **complete** first-reset grammar already certified by Agent10; it does not rely on finite prefixes or guessed inverse edges.
 
 This structural result does **not** imply exclusion from the blank-derived root. The unique immediate even predecessor may itself be reachable by an earlier chain of resets, and the remaining two modulo18 classes admit genuine synthetic odd ancestors. Its value is a uniform, exact all-index restriction that can simplify a future induction on entire inverse cones. External novelty and subsumption against Agent7's older synthetic inverse grammar must still be reviewed. It remains in `im-results/` for that reason.
+
+
+## Final original-machine verification, 2026-11-04 19:41 UTC
+
+**Pinned original Cryptids source CI [41897279486](https://github.com/FlareZ123/bb6/actions/runs/41897279486) SUCCEEDED.** Original upstream project pin `c86f15861709b76042998c5211c7b2f83991621b` was built unchanged under Lean 4.35.0-rc4, while the repository's independently verified source-C finite 167-module certificate was checked against its exact source-linked raw-machine transport. Original [OriginalForward2048Gate.lean](OriginalForward2048Gate.lean) compiled and the audited theorem `Agent7OriginalForward746.original_machine_halts_iff_surviving_2049` uses only `[propext, Classical.choice, Quot.sound]` and no `sorryAx`.
+
+The **actual blank-tape six-state Turing machine** `1RB0LF_1LC1RA_0RE0RD_---1LE_1LF1RC_1LC1LA` now has the proved exact conditional characterization:
+
+```text
+IsHalt target ↔
+  ∃ n, 2049 ≤ n ∧ (n%6 = 4 ∨ n%6 = 5)
+     ∧ CascadeSweep.ReachC (2,0) (4*2^n-n-4,0)
+```
+
+This is a universally certified **finite gate exclusion strengthening** from the previous (n≥257) raw iff; it **does not assert that the machine halts or fails to halt**, because infinitely many index candidates remain and their authentic reachability has not been decided. All evidence and source scripts stay in `im-results/` pending external novelty review and stronger all-index progress.
