@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Full-lift overlap audit of six Sheep E families against prior F depth five.
+"""Full-lift overlap audit of twelve Sheep E families against prior F depth five.
 
 Reuses the independently implemented F-sieve arithmetic from the separate
 Agent16 audit and re-verifies its entire SHA256 before comparing all residues.
@@ -36,11 +36,11 @@ def main():
         print(f"PASS new {j}+{period}k: {len(lifted)} "
               f"F-quotient survivors {sorted(lifted)}")
 
-    assert newly == Fraction(22, 54675)
+    assert newly == Fraction(44, 54675)
     older = Fraction(3596, 5400) + sum(
         (Fraction(1, p) for _, p in PRIOR), Fraction(0))
     combined = older + newly
-    assert combined == Fraction(1022023, 1530900)
+    assert combined == Fraction(1022639, 1530900)
     print("PASS incremental exponent density", newly, float(newly * 100), "%")
     print("PASS combined nonoverlap density", combined,
           float(combined * 100), "%")
