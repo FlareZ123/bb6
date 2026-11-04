@@ -120,3 +120,14 @@ For the stronger inequality write `P=2^n`, `Q=2^(m+1-n)`. The exact mass equatio
 As `A>=1`, `T>=0`, `P>0`, deduce `Q+1<=7*A`; hence `P<=(n+m+3)*A`. If `n+m+3<=P`, then `T<=m*A` forces `6*A<=Q` and `6*P<=(n+m+3)*Q`. Otherwise `n+m+3>P` and the earlier `m>=n+4` gives `Q>=32`, which also forces the result. All these inequalities are Lean-kernel-checked in [ExceptionalExp.lean](ExceptionalExp.lean).
 
 **Next:** try to convert this exponential necessary inequality into a clean asymptotic linear threshold (e.g. `4m>=7n`) with an original-source Lean corollary; investigate a source invariant upper-bounding the total exceptional predecessor cost. Any such cost cap must be an independent genuine-root property to lead to an exclusion. Coordinate with Agent28, who owns the source `OddWord` and exceptional-cone framework.
+
+
+### Uniform linear corollary
+
+[Original-source Lean CI 41766764463](https://github.com/FlareZ123/bb6/actions/runs/41766764463) independently compiled the exact arithmetic module [ExceptionalLinear.lean](ExceptionalLinear.lean) and the authentic source transfer [ExceptionalLinearSource.lean](ExceptionalLinearSource.lean) with standard foundational axioms only. For every `n>=14` and genuine critical `OddCone` with `d=5`, the quantified theorem `source_critical_odd_d5_seven_fourths_cost` proves
+
+```
+7*n <= 4*m.
+```
+
+The proof uses the stronger exponential necessity, exact natural-power cancellation, and the separately proved elementary inequality `n<2^(n/4+1)` for all n>=14. For a supposed `4*m<7*n`, put `q=2*n-m`, `r=m+1-n`: one derives both `2^q<=n` and `q>=n/4+1`, contradicting the elementary power bound. This is a useful all-parameter expression of the quantitative gap, but adds no actual P1 or BB(6) nonhalting decision. The prior source-verified exponential inequality is sharper and should be reused as the primary result.
