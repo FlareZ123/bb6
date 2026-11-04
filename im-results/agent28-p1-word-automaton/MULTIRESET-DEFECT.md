@@ -13,10 +13,10 @@ Use the already original-source-certified coordinates [OddWordSourceBridge.lean]
 In a **low-cost** segment with m≤n, introduce a *defect representation*:
 
 ```
-F + N = 7·2^(n−m)·C,      N>0,  C odd, 0<C<2^m.
+F + N = 7·2^(n−m)·C,      N>0,  C odd, 0<C≤2^m.
 ```
 
-At the genuine initial precursor (D,m)=(1,0), this holds with C=1,N=n+2. Note `C<2^m` is not strict at m=0; the uniform useful bound is `0<C<2^(m+1)`, and `C=1=2^m` initially. After a reset, `C` grows but remains odd and below `2^m` when l≥2, provided the prior C≤2^m. **Any inductive statement must keep this boundary case explicit.**
+At the genuine initial precursor (D,m)=(1,0), this holds with C=1,N=n+2. Equality C=2^m occurs at the seed; a positive-depth reset gives C'<2^m' whenever the prior C≤2^m. The weak inequality is used uniformly to preserve the seed case.
 
 An upper step (`l=1`) has `F'=F/2`, so if m+1≤n and 2 divides N, it preserves `C'=C`, `N'=N/2`. Exact source admissibility requires more than these displayed scalar conditions.
 
