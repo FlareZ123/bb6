@@ -93,3 +93,14 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
         run: |
           lean im-results/agent26-cryptid-e-gate/A110101Closure.lean
+
+      - name: Audit arbitrary coded A1101010111 original source composition
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent26-cryptid-e-gate
+        run: |
+          python im-results/agent25-cryptid-doublezero/unpack.py
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
+          done
+          lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean im-results/agent26-cryptid-e-gate/A1101010111Code.lean
