@@ -28,3 +28,11 @@ The new [`TwoResetShape.lean`](TwoResetShape.lean) compiles against the **unchan
 `UpperTail ; inverseAt(t₁≥1) ; UpperTail ; inverseAt(t₂≥1) ; UpperTail`.
 
 All intervening zero-depth inverse edges are admitted and not omitted by this decomposition. The proof is entirely structural induction on original `CountCone`. This improves the source alignment of the candidate but **does not yet discharge the arithmetic-bridge hypotheses for those genuine histories**, so no new wall exclusion is claimed.
+
+## Full original-source theorem certified on 2026-11-04
+
+[Manual Lean 4.36.0-rc2 run 41761303380](https://github.com/FlareZ123/bb6/actions/runs/41761303380), job 126349385247 at commit 4e5752bdbaa6307a5b2b43f43793a2fb3b3ccdbb, **success**. Final theorem `BB6.Agent43.source_critical_exact_two_reset_no_wall` is kernel verified against the unchanged original P1 source, with exactly [propext, Classical.choice, Quot.sound] in its Lean axiom audit. For EVERY n>=70 and every genuine critical OddCone history counted as EXACTLY TWO positive-depth inverseAt transitions, the affine wall b=4*(m+n) is impossible. Arbitrary zero-depth transitions are included.
+
+The proof uses original-source [TwoResetShape.lean](TwoResetShape.lean), original Agent28 one-reset budget and defect transport, additional five-file archive [two-reset-bridge.tar.xz.b64](two-reset-bridge.tar.xz.b64) (binary SHA256 321895ed10f828c73551f0af4614094b2ce56440eab17fd9b4c109fc6573793a), and the original four-file arithmetic archive. Both archives have SHA256 checks in [the manual audit workflow](../../.github/workflows/agent43-p1-tworeset-full-source.yml). [SourceInterfaces.lean](SourceInterfaces.lean) contains imports only, with no substitute declarations. The original-source theorem's final axiom list contains no sorryAx.
+
+This upgrades Agent28's existing handwritten conjecture to an authentic source-connected theorem. **The exact BB(6) value, P1 nonhalting, high-cost exits, and three-or-more-reset histories remain open.** External literature-level novelty has not been audited. The optional [ThreeResets.lean](ThreeResets.lean) corollary requires a separate CI result.
