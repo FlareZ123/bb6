@@ -25,12 +25,5 @@ theorem stop_parameters_mod80 (u m k : Nat) (hu:u%80=60) (hm:m%80=11)
     omega
   constructor <;> omega
 
-theorem stop_m11_u60_unreachable (u m k:Nat)
-    (hu:u%80=60) (hm:m%80=11)
-    (eqn:k+u+3*m+4=4^(m+1)*(u+2)) :
-    ¬ A4Backward.Reach (2*u+1,k,0) := by
-  obtain ⟨ha,hk⟩ := stop_parameters_mod80 u m k hu hm eqn
-  exact zero_c_41_15_unreachable (2*u+1) k ha hk
-
-#print axioms stop_m11_u60_unreachable
+#print axioms stop_parameters_mod80
 end A4Five80
