@@ -76,3 +76,5 @@ jobs:
           lean -o "$root/ExceptionalSource.olean" "$root/ExceptionalSource.lean"
           lean -o "$root/ExceptionalStrong.olean" "$root/ExceptionalStrong.lean"
           lean "$root/ExceptionalStrongSource.lean"
+          lean -o "$root/ExceptionalExp.olean" "$root/ExceptionalExp.lean"
+          lean "$root/ExceptionalExpSource.lean"
