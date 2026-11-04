@@ -139,6 +139,21 @@ blank_no_s25_one_gate (q : Nat):
 
 For the authentic low stopping equation `k+3m+4=2^(2m+3)`, the condition `m%32768=30632` forces `k%32768=6404` by exact power-of-two divisibility, hence the Lean theorem **`blank_no_low_halt_depth30632`** eliminates all such candidate low-family stopping inputs at every actual blank section time, without finite simulation. In the alternate dyadic notation `d=2m`, the progression is `d≡61264 (mod65536)`. It is disjoint from Agent24's earlier excluded `m≡424(mod1024)` and `m≡4008(mod4096)` classes; external and cross-agent novelty beyond those particular classes has **not** been fully audited.
 
-Source artifacts: [UniformS25Inverse.lean](./UniformS25Inverse.lean), [UniformS25Reach.lean](./UniformS25Reach.lean). A proposed exact `RunHalts` iff after removing this third low-depth family is in [UniformS25Residual.lean](./UniformS25Residual.lean) and requires a separate completed source CI to be called verified.
+Source artifacts: [UniformS25Inverse.lean](./UniformS25Inverse.lean), [UniformS25Reach.lean](./UniformS25Reach.lean). The exact authentic `RunHalts` iff after removing this third low-depth family is proved in [UniformS25Residual.lean](./UniformS25Residual.lean) and **full original-source certified** by successful [manual Lean CI run 41898927430](https://github.com/FlareZ123/bb6/actions/runs/41898927430), job `126815832210`, on commit `671abe9bd63a78758e93bfe0139f13be78dd644d`. The final `blank_halts_iff_without_depth424_4008_30632` axiom audit is exactly `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
 
 **Scope:** this removes another infinite subset of potential Machine C halting inputs; the high-family alternatives and infinitely many low-family depths remain. **No whole-machine nonhalting theorem, upper bound, or exact BB(6) value is established.** The result remains in `im-results/` because its publication-level novelty has not been independently reviewed. For genuinely structural progress, seek a parametric inverse-cone argument covering substantial remaining 2-adic families rather than indefinitely generating individual congruence cases.
+
+### Genuine Machine C halting iff after all three low-depth classes
+
+The [verified proof file](./UniformS25Residual.lean) gives the source-level equivalence
+
+```
+BB6.CReachBridge.RunHalts ↔
+  ∃ time a k,
+    BB6.Agent8Section.run secNext time (some (5,1))=some (a,k) ∧
+    ((a=1 ∧ ∃m, k+3*m+4=2^(2*m+3) ∧
+        m%1024≠424 ∧ m%4096≠4008 ∧ m%32768≠30632) ∨
+     (∃j m, a=2*j+3 ∧ k+j+3*m+5=2^(2*m+2)*(j+3))).
+```
+
+This is **lossless** with respect to real original Machine C halting: every authentic halting computation must encounter one of the surviving classes, and every actual blank-orbit encounter of a residual candidate halts by the upstream exact bridge. It does not establish whether any residual candidate is encountered. This is a concrete improvement to the complete two-family stopping decision frontier, not a numerical running-time bound.
