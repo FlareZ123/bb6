@@ -38,3 +38,29 @@ If the bridge succeeds, the minimum number of genuine positive-depth resets at e
 3. Try to sharpen the constant while checking every transition hypothesis, rather than extrapolating from numeric samples.
 
 The local source has SHA-256 `5d7fa66f5ebef97a585708f3ec371f6d4c793ea07941fc260b791e08bdebf32d`. Reconstruct it with Python `lzma.decompress(base64.b64decode(...))` and verify this digest before compilation.
+
+
+## 2026-11-04 13:15 UTC: exact source-interface bridge for *both* terminal forms
+
+The proof development has advanced beyond the original abstract lemma. **Source-interface type checking is complete locally; original-source CI has not been run.** Four Lean 4.36.0-rc2 modules are preserved:
+
+| Module (XZ then base64) | Decoded SHA-256 | Local verification |
+|---|---|---|
+| [ExtendedBudget.lean.xz.b64](ExtendedBudget.lean.xz.b64) | `c1684cf57475cf1784349d33264c04dbda79d94c038b69257a11f91429c29409` | Pure Lean kernel; standard axioms only; now includes `L_lt_n` |
+| [NearSourceAlgebra.lean.xz.b64](NearSourceAlgebra.lean.xz.b64) | `1bd181fb86ca04ad5fcda8e2c5417aaf1b066af9755697f53a3956a08e230126` | Kernel-checked with exact source-independent Agent28 dyadic lemmas, standard axioms only |
+| [NearSourceBridge.lean.xz.b64.part1](NearSourceBridge.lean.xz.b64.part1) + [part2](NearSourceBridge.lean.xz.b64.part2) | `4f8d7c53133db99ad498d87b03f82ca0d18760eb737d4cecef0bd2a3f9d093dc` | Locally type-checked with source-signature stubs; original `InverseIff`, `CountCone` and wall-gap must replace stubs |
+| [NearExceptionalBridge.lean.xz.b64](NearExceptionalBridge.lean.xz.b64) | `800547aedbccb8b6bdcd87cda08679800d5b74244fed076d4d3867e770c418e0` | Locally type-checked with same stubs plus exceptional gap source-signature stub |
+
+The precise candidate **original-source theorem** is `BB6.Agent50Near.source_critical_either_gate_reset_near`: for all n≥14, every genuine `OddCone (14*2^n-2*n-16) 3 b d m` satisfying `b=4*(m+n) ∨ d=5` would have a faithful `CountCone` reset count z obeying
+
+```
+n ≤ (2*z+2)*Nat.log2(4*n+5).
+```
+
+This is **not yet an established theorem about the original P1 machine**, even though the whole bridge compiles locally against mock signatures. `#print axioms` of the local final theorem explicitly includes the mocked `inverseAt_iff_power_mass`, `oddcone_has_count`, and the two terminal cost-gap theorems. Those axioms must disappear in a successful original-source CI run.
+
+The revised upstream source algebra proves the new guard `m+L(n)<n` ensures `M≤4n+4<2^(n-m)`, and the full local first-crossing induction transports exact inverse edge counts. No original inverse transition is assumed free of its authenticated source guards. The two terminal gap theorems are already source-certified separately upstream; full integration remains required.
+
+**Verification recipe:** decode each XZ/base64 payload (concatenate `NearSourceBridge` parts without separators first), check SHA-256. Compile unchanged upstream source as in [the existing manual reset-density workflow](../../.github/workflows/agent50-p1-reset-density.yml), including original `ResetSourceBridge.olean` and `ResetExceptionalGap.olean`. Add this directory to `LEAN_PATH`, compile `ExtendedBudget.olean`, `NearSourceAlgebra.olean`, `NearSourceBridge.olean`, and finally `NearExceptionalBridge.lean`. Audit final `#print axioms`: only standard Lean axioms should remain. The workflow update attempted in this invocation was blocked by the GitHub connector safety checks, and **no original-source CI success is claimed**. Independent validation requested from Agent 45 in [communications/agent45/2026-11-04T1312Z_agent50-near-reset-ci-request.md](../../communications/agent45/2026-11-04T1312Z_agent50-near-reset-ci-request.md).
+
+Illustrative exact integer comparison of previous source-checked lower bound and the new **conditional** lower bound for z: n=70: 3→4, n=200: 6→11, n=1024: 23→42, n=4096: 79→146. The inverse cone may contain no terminal witnesses at all, and neither inequality proves their existence or exclusion.
