@@ -1,5 +1,6 @@
 import FastSectionDef
 import GenericSection
+import Std
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11Mass
@@ -133,6 +134,61 @@ theorem section_reach_iff_bounded (x y : Nat) :
 instance section_reach_decidable (x y:Nat) : Decidable (SectionReach x y) := by
   rw [section_reach_iff_bounded]
   infer_instance
+
+
+/-- The mass increase holds from every section input, not only the blank seed. -/
+theorem run_generic_weight_growth (n : Nat) : ∀ a k x y : Nat,
+  BB6.Agent8Section.run secNext n (some (a,k)) = some (x,y) →
+    a+2*k+2*n ≤ x+2*y := by
+  induction n with
+  | zero =>
+    intro a k x y h
+    simp only [BB6.Agent8Section.run] at h
+    cases h
+    omega
+  | succ n ih =>
+    intro a k x y h
+    change (BB6.Agent8Section.run secNext n (some (a,k))).bind secNext =
+      some (x,y) at h
+    cases hp : BB6.Agent8Section.run secNext n (some (a,k)) with
+    | none => simp [hp] at h
+    | some p =>
+      rcases p with ⟨b,l⟩
+      have hp0 := ih a k b l hp
+      simp only [hp, Option.bind_some] at h
+      have hp1 := secNext_weight_growth b l x y h
+      omega
+
+/-- The original source section is acyclic on all input states. -/
+theorem no_positive_cycle (a k n : Nat) (hn : 0<n) :
+  BB6.Agent8Section.run secNext n (some (a,k)) ≠ some (a,k) := by
+  intro h
+  have hg := run_generic_weight_growth n a k a k h
+  omega
+
+/-- Complete, executable finite predecessor enumeration for every fixed target.
+    Its range is justified by the proved mass inequality. -/
+def sourceCandidates (x y : Nat) : List (Nat × Nat) :=
+  let bound := x+2*y+1
+  ((List.range bound).flatMap
+    (fun a => (List.range bound).map (fun k => (a,k)))).filter
+    (fun p => decide (secNext p = some (x,y)))
+
+theorem sourceCandidates_correct (a k x y : Nat) :
+  (a,k) ∈ sourceCandidates x y ↔ secNext (a,k) = some (x,y) := by
+  simp only [sourceCandidates, List.mem_filter, List.mem_flatMap,
+    List.mem_map, List.mem_range, decide_eq_true_eq]
+  constructor
+  · rintro ⟨_,h⟩
+    exact h
+  · intro h
+    have hmass := secNext_weight_growth a k x y h
+    refine ⟨?_,h⟩
+    exact ⟨a,by omega,k,by omega,rfl⟩
+
+#print axioms run_generic_weight_growth
+#print axioms no_positive_cycle
+#print axioms sourceCandidates_correct
 
 #print axioms bounce_weight_growth
 #print axioms secNext_weight_growth
