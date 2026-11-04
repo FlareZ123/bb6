@@ -36,7 +36,7 @@ theorem second_gate_incoming_edge (s t : Nat) :
         (FanArithmetic.p s t-1)
         (2*FanArithmetic.q s t-FanArithmetic.p s t+3)
         (FanArithmetic.x s t) (FanArithmetic.y s t) heven).mpr
-        (Or.inr ⟨2*s+1,hy,FanArithmetic.source_sum s t,FanArithmetic.source_cost s t⟩)
+        (Or.inr ⟨2*s+1,hy,(FanArithmetic.source_sum s t).symm,FanArithmetic.source_cost s t⟩)
   simpa [secNext, exactSection, h0, h1, hk0, hregion] using hbounce
 
 theorem second_gate_fan (n : Nat) :
