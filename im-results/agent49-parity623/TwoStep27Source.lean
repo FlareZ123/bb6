@@ -1,4 +1,5 @@
 import Agent49LowStepSource
+import Agent8RootedMass19Source
 import Agent49FixedRaysSource
 import Agent49TwoStep27HighSource
 
@@ -21,6 +22,7 @@ theorem two_step_gain27_mass100 (a d b e c f : Nat)
     (h1 : next (.D a d)=some (.D b e))
     (h2 : next (.D b e)=some (.D c f)) :
     a+d+27≤c+f := by
+  change highLevelNext (.D a d)=some (.D b e) at h1
   by_cases hhigh : 6≤a
   · by_cases hz : d=0
     · subst d
