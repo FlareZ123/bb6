@@ -69,3 +69,10 @@ jobs:
         run: |
           lean -o im-results/agent26-cryptid-e-gate/ASix.olean im-results/agent26-cryptid-e-gate/ASix.lean
           lean im-results/agent26-cryptid-e-gate/ASixBlankTrace.lean
+
+      - name: Check new all-parameter A1101010111 branch against unchanged source
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent26-cryptid-e-gate
+        run: |
+          lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
+          lean im-results/agent26-cryptid-e-gate/A1101010111.lean
