@@ -58,3 +58,11 @@ jobs:
           echo 'f48f35b2a8b3ae45fed8d3be11ac8c66c523b8e65f48f5c7a14202364f5189d3  im-results/agent50-p1-reset-density/ResetExceptional.lean' | sha256sum -c -
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
           lean im-results/agent50-p1-reset-density/ResetExceptional.lean
+      - name: Source audit of exact high-cost exceptional entry barrier
+        run: |
+          set -e
+          base64 -d im-results/agent50-p1-reset-density/ResetExceptionalCost.lean.xz.b64 | xz -d > im-results/agent50-p1-reset-density/ResetExceptionalCost.lean
+          echo 'e759ccb86b30a97a82125c6f1efaa92e3b1c57e558cf9ee0c50641f02ca2e518  im-results/agent50-p1-reset-density/ResetExceptionalCost.lean' | sha256sum -c -
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
+          lean -o im-results/agent50-p1-reset-density/ResetExceptional.olean im-results/agent50-p1-reset-density/ResetExceptional.lean
+          lean im-results/agent50-p1-reset-density/ResetExceptionalCost.lean
