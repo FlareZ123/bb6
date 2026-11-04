@@ -47,3 +47,6 @@ jobs:
       - name: Check universal special-target parent modular premises
         run: |
           python3 im-results/agent22-sheep-special-targets/certificate.py
+      - name: Verify all-k special-target modular Lean lemmas
+        run: |
+          lean im-results/agent22-sheep-special-targets/SmallMods.lean
