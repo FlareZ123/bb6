@@ -136,6 +136,9 @@ jobs:
           lean -o ReachAffine.olean ReachAffine.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean .
           lean -o FullForcedNormalize.olean FullForcedNormalize.lean
+          # Agent29: exact finite-depth source gate bounds (manual only)
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
+          lean SourceBound.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
