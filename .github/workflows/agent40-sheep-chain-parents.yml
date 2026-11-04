@@ -58,3 +58,16 @@ jobs:
           /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" Fork1218.lean Fork1218Source.lean
           lake env lean -o ".lake/build/lib/lean/Fork1218.olean" Fork1218.lean
           lake env lean Fork1218Source.lean
+          # All-k generic inverse exclusion: source-independent full modular cycles
+          # plus the original existing kernel-proven odd-residue gap.
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-third-preimages/ResidueGap.lean" ResidueGap.lean
+          for name in SheepPeriodicGate SheepGenericHigh HighCases GenericHighNoParent; do
+            cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/$name.lean" "$name.lean"
+          done
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/generate_low.py" ChainLowCases.lean
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            ResidueGap.lean SheepPeriodicGate.lean ChainLowCases.lean SheepGenericHigh.lean HighCases.lean GenericHighNoParent.lean
+          for name in ResidueGap SheepPeriodicGate ChainLowCases SheepGenericHigh HighCases; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean GenericHighNoParent.lean
