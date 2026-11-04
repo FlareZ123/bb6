@@ -69,6 +69,24 @@ theorem two_families_iff_one_four_power (a k : Nat) :
   · rintro ⟨ha,hodd,m,hm⟩
     exact ⟨ha,hodd,m,by rwa [dyadic_power_eq_four]⟩
 
+/-- Halting levels with (u+m)%4=1 land in the odd-right,
+    sum-two image class of the original section map. -/
+theorem bad_level_residues (u k m : Nat)
+    (hm : (u+m)%4=1)
+    (heq : (2*u+1)+2*k+6*m+7 = 4^(m+1)*((2*u+1)+3)) :
+    k%2=1 ∧ ((2*u+1)+k)%4=2 := by
+  have hpow : 4^(m+1) = 4*4^m := by
+    rw [Nat.pow_succ]
+    omega
+  have hscale : 4^(m+1)*((2*u+1)+3)=8*(4^m*(u+2)) := by
+    rw [hpow,show 2*u+1+3=2*(u+2) by omega]
+    have h8 : (8:Nat)=4*2 := by decide
+    rw [h8]
+    ac_rfl
+  rw [hscale] at heq
+  omega
+
+#print axioms bad_level_residues
 #print axioms two_families_iff_unified
 #print axioms two_families_iff_one_four_power
 end BB6.Agent1Unified
