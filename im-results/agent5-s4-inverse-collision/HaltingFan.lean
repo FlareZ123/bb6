@@ -18,11 +18,11 @@ theorem H125_replicate62 (k : Nat) (S : List Nat) :
     simp [Option.map_map, Function.comp_def]
 
 theorem H125_end : H 125 [0] = none := by
-  simp [H]
+  simp [H, _root_.H]
 
 theorem H125_terminal62 (S : List Nat) :
   H 125 (57::2::S) = some (62::62::62::S) := by
-  simp [H]
+  simp [H, _root_.H]
 
 theorem H127_start (S : List Nat) :
   H 127 (61::S) = (H 125 S).map (63::·) := by
