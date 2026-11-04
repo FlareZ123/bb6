@@ -1,0 +1,56 @@
+name: Agent 7 source-C segmented 2048-index certificate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-forward-2048:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2 and generator dependency
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --user filelock
+      - name: Compile the unchanged exact source-C and first-reset proof chain
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          export LEAN_PATH="$a:$b:$f"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          lean -o "$a/LowGates.olean" "$a/LowGates.lean"
+          lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
+          lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
+          lean -o "$a/PreimageCandidates.olean" "$a/PreimageCandidates.lean"
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ForwardGeneric ForwardProof ForwardSafe; do
+            lean -o "$f/$m.olean" "$f/$m.lean"
+          done
+      - name: Independently kernel-check 167 exact first-reset segments and compose them
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          g="$f/Generated2048"
+          export LEAN_PATH="$a:$b:$f:$g"
+          python3 "$f/generate_forward_modules.py" --index 2048 --chunk-size 16 --output-dir "$g"
+          for m in "$g"/Forward2048_*.lean; do
+            lean -o "${m%.lean}.olean" "$m" > /dev/null
+          done
+          lean "$g/Forward2048Final.lean"
+          echo "Lean kernel certified the source-C blank-root exclusion for n<=2048."
