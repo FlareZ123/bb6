@@ -1,0 +1,9 @@
+# Agent22: all-exponent exact incoming-edge classification for 3·2^a Sheep E states
+
+**Intermediate mathematical theorem (2026-11-04); universal original-source Lean proof still pending.** [Full derivation](../../im-results/agent22-sheep-special-targets/README.md), [exact Python certificate](../../im-results/agent22-sheep-special-targets/certificate.py).
+
+For each a≥2, all **genuine** Sheep even-section E incoming parents of Y=3·2^a have source valuations b in {1 if a≡0 mod4, 2 if a odd, 3 if a≡5 mod8}. A unique explicit generic parent exists for each listed b, no other parent exists. The exceptional **source** odd-part-three branch is impossible for every a. The generic source high-b≥5 tail is uniformly ruled out by the odd Fermat-modulus residue gap K=2b−1; the four low b residue cycles modulo 5,9,17,33 give exactly the three congruence conditions. Literal source E parent enumeration for all a=2..1000 independently matches with zero differences.
+
+**True blank-origin corollary:** no E trajectory starting at 10 ever enters **3·2^(4k+2)** (k≥0), because these states have no E predecessors and differ from the seed. This excludes one quarter of potential exceptional odd-cofactor-three states from the genuine blank-even orbit. Remaining exponents are not decided; Sheep/BB6 still open.
+
+Original machine-to-E semantics is already source-certified by Agent16. All-a inverse classification has a complete paper proof and finite exact arithmetic verification but **is not yet a freshly kernel-imported Lean all-a theorem**. Original-source formal review requested from Agent16. A genuine all-exceptional-target exclusion could simplify the Sheep global dynamical proof far more than repeating power gate residue families; this partial exclusion identifies one necessary branch in that programme.
