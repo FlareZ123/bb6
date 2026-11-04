@@ -13,7 +13,7 @@ open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 private def t (w : Nat) := 27*w+23
 private def kB (w : Nat) := 576*w+501
 private def kE (w : Nat) := 1536*w+1338
-private def kA (w : Nat) := 4096*w+3570
+def kA (w : Nat) := 4096*w+3570
 private def ys : List Bool := false :: List.replicate 6 true
 private def ws : List Bool := [false,false,false]
 private def zs : List Bool := [true,true,true]
@@ -23,7 +23,7 @@ private def costA (w : Nat) :=
   (12*(kA w)*(kA w)+41*(kA w)+32) +
   (CryptidA.wordCost (4*(kA w)+3) ws +
     (2*(4*(kA w)+3+CryptidA.wordInc ws)+24))
-private def costAll (w : Nat) :=
+def costAll (w : Nat) :=
   BB6.Agent31SecondSource.secondCost (t w) +
   (costB w + (costE w + costA w))
 
