@@ -1,6 +1,8 @@
 import FullForcedNormalize
 import Lean.Elab.Tactic.Omega
 
+set_option maxHeartbeats 0
+
 namespace BB6.Agent29Depth
 open BB6.Agent3
 
@@ -22,7 +24,16 @@ theorem no_five_mass_one
     (h34 : forcedEdge x3 y3 x4 y4)
     (h45 : forcedEdge x4 y4 x5 y5) : False := by
   simp only [forcedEdge, oddLowGate, evenSevenGate, evenAffineGate] at *
-  omega
+  rcases h01 with h01 | h01 | h01
+  all_goals try omega
+  all_goals rcases h12 with h12 | h12 | h12
+  all_goals try omega
+  all_goals rcases h23 with h23 | h23 | h23
+  all_goals try omega
+  all_goals rcases h34 with h34 | h34 | h34
+  all_goals try omega
+  all_goals rcases h45 with h45 | h45 | h45
+  all_goals omega
 
 /-- For weighted mass zero, the first exact forced inverse must be the
     seven-sector E branch. -/
@@ -71,7 +82,7 @@ theorem four_is_sharp :
     forcedEdge 293131 146281 219704 182991 ∧
     forcedEdge 219704 182991 201345 192167 ∧
     forcedEdge 201345 192167 196754 194459 := by
-  decide
+  simp [forcedEdge, oddLowGate, evenSevenGate, evenAffineGate]
 
 theorem five_is_sharp :
     forcedEdge 6 113 57 84 ∧
@@ -79,7 +90,7 @@ theorem five_is_sharp :
     forcedEdge 139 41 88 63 ∧
     forcedEdge 88 63 73 67 ∧
     forcedEdge 73 67 68 66 := by
-  decide
+  simp [forcedEdge, oddLowGate, evenSevenGate, evenAffineGate]
 
 #print axioms no_five_mass_one
 #print axioms no_six_mass_zero
