@@ -1,7 +1,7 @@
 import OneResetCount
 
 namespace BB6.Agent43
-open BB6.Agent28 BB6.Agent1Quarter BB6.Agent1UpperTail
+open BB6.Agent28 BB6.Agent1Quarter BB6.Agent1UpperTail BB6.Agent47P1
 
 /-- Pure combinatorial decomposition of exactly two positive-depth inverse
     transitions, allowing arbitrary t=0 upper edges before/between/after. -/
