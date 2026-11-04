@@ -49,3 +49,23 @@ These are **different exact primitive runtimes**. The composed model gives *desi
 2. Seek synchronization **across an E exceptional packet**, with a complete physically blank-left first-return source bridge. Regular `DRegular.next` intentionally returns `none` at `q≥1,b=1,a%3=1`; the formula above alone says nothing about transitions following such a packet.
 3. Use inverse arithmetic or a closed physical packet grammar to distinguish an eventual halting feeder from an infinite blank orbit. Further finite exception chaining is weaker evidence than a closed invariant.
 4. Check independence from the preexisting @-d / DeepMind Cryptids 3-adic argument before presenting a publishable novelty claim.
+
+## Follow-up: source verification completed and universal runtime curvature
+
+The previously pending original-source transport CI **[41872968993](https://github.com/FlareZ123/bb6/actions/runs/41872968993) succeeded**. The final `DRegularSourceShift.paired_original_run` and `lifted_original_run` audits list exactly `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+Additionally, the unchanged-source-model Lean audit **[41875379548](https://github.com/FlareZ123/bb6/actions/runs/41875379548) succeeded** for [DRegularDurationShift.lean](./DRegularDurationShift.lean) and [DRegularTimedShift.lean](./DRegularTimedShift.lean). Every canonical regular input has the exact one-macro duration formula
+
+`duration(shift s (3p)) = duration(s) + slope(s)*p +12*p²`.
+
+For any `k` and defined base run `DRegular.run k s=some t`, the lifted exact primitive-step time is
+
+`accumulated k (shift s (3^k p)) = accumulated k s + linearCoeff k s*p + quadCoeff k*p²`.
+
+The source-model kernel proves the universal integer identity
+
+`55*quadCoeff k + 12*9^k = 12*64^k`,
+
+so the coefficient `quadCoeff k = 12*(64^k-9^k)/55` depends only on the number of designated regular returns, independent of the complete B/A/E branch history and suffix parameters. The linear coefficient is a total computable recurrence along the **base** trajectory. These claims are conditional on the k-return base run being defined and do not imply blanket nonhalting.
+
+Original six-state physically authenticated `DRegularSourceShift.lifted_original_timed` is in the new full-source workflow **[41875708707](https://github.com/FlareZ123/bb6/actions/runs/41875708707)**, pending completion at this note update. Independent Python [check_timed_shift.py](./check_timed_shift.py) reproduces 7,636 defined cases with seeded random integer suffixes and p=0,1,2,7, confirming full output and time polynomial; the statistical check is strictly ancillary to the Lean proof.
