@@ -43,7 +43,13 @@ jobs:
           lean -o "$b/ResetParentStrict.olean" "$b/ResetParentStrict.lean"
           lean -o "$b/ParentCheck.olean" "$b/ParentCheck.lean"
           lean -o "$b/Parents.olean" "$b/Parents.lean"
+          lean -o "$b/FastParents.olean" "$b/FastParents.lean"
           lean -o "$b/ClosedCert.olean" "$b/ClosedCert.lean"
+          lean -o "$b/FastClosedCert.olean" "$b/FastClosedCert.lean"
+          for n in 257 262 263; do
+            python3 "$b/generate_fast_cone.py" --index "$n" --chunk-size 16 --output "$b/FastCone$n.lean"
+            lean -o "$b/FastCone$n.olean" "$b/FastCone$n.lean"
+          done
           lean -o "$b/ReachDecide.olean" "$b/ReachDecide.lean"
           lean -o "$b/ManyShield.olean" "$b/ManyShield.lean"
           lean -o "$b/RootMinIndex.olean" "$b/RootMinIndex.lean"
