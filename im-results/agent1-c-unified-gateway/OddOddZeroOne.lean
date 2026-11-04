@@ -52,7 +52,7 @@ theorem high_depth_zero_3mod16_is_gate (t : Nat) :
   right
   right
   refine ⟨16*t+2,0,by omega,?_⟩
-  norm_num
+  simp only [show (2:Nat)^(2*0+2)=4 by decide]
   omega
 
 #print axioms oddodd_zeroone_parent_unreachable
