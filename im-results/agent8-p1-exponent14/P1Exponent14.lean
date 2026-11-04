@@ -20,7 +20,8 @@ private theorem power_growth (t : Nat) :
     omega
 
 theorem n_le_w_plus14 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) : n≤w+14 := by
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) : n≤w+14 := by
   have hx := power_growth (n-14)
   have hn14 : n-14+14=n := by omega
   rw [hn14] at hx
@@ -52,7 +53,8 @@ private theorem interval_not_power (n w a b : Nat)
   exact band_not_power n (a*w+b) hl hu
 
 private theorem cone_root_0_0_2_0_0_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (200*w+22384) (1848*w+206935) := by
   have h0 : inverseAt (200*w+22384) (1848*w+206935) 0 = some (50*w+5595, 1948*w+218127) := by
     simp [inverseAt]
@@ -103,7 +105,8 @@ private theorem cone_root_0_0_2_0_0_0 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0_0_2_0_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (400*w+44780) (1648*w+184541) := by
   have h0 : inverseAt (400*w+44780) (1648*w+184541) 0 = some (100*w+11194, 1848*w+206931) := by
     simp [inverseAt]
@@ -143,7 +146,7 @@ private theorem cone_root_0_0_2_0_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 200*w+22384 := by omega
       have hy : c+4 = 1848*w+206935 := by omega
       rw [hx,hy]
-      exact cone_root_0_0_2_0_0_0 n w hn hform
+      exact cone_root_0_0_2_0_0_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(562*w+62927, 924*w+103464) := (Option.some.inj hval).symm
@@ -154,7 +157,8 @@ private theorem cone_root_0_0_2_0_0 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0_0_2_0_1 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (1224*w+137048) (824*w+92271) := by
   have h0 : inverseAt (1224*w+137048) (824*w+92271) 0 = some (306*w+34261, 1436*w+160795) := by
     simp [inverseAt]
@@ -209,7 +213,8 @@ private theorem cone_root_0_0_2_0_1 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1330 148916 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0_0_2_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (800*w+89572) (1248*w+139751) := by
   have h0 : inverseAt (800*w+89572) (1248*w+139751) 0 = some (200*w+22392, 1648*w+184537) := by
     simp [inverseAt]
@@ -259,7 +264,7 @@ private theorem cone_root_0_0_2_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 400*w+44780 := by omega
       have hy : c+4 = 1648*w+184541 := by omega
       rw [hx,hy]
-      exact cone_root_0_0_2_0_0 n w hn hform
+      exact cone_root_0_0_2_0_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(612*w+68526, 824*w+92267) := (Option.some.inj hval).symm
@@ -267,7 +272,7 @@ private theorem cone_root_0_0_2_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 1224*w+137048 := by omega
       have hy : c+4 = 824*w+92271 := by omega
       rw [hx,hy]
-      exact cone_root_0_0_2_0_1 n w hn hform
+      exact cone_root_0_0_2_0_1 n w hn hform hw
     · subst t
       rw [h2] at hval
       have hp : (k,c)=(818*w+91593, 412*w+46132) := (Option.some.inj hval).symm
@@ -278,7 +283,8 @@ private theorem cone_root_0_0_2_0 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_2_0_0_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (224*w+25072) (1824*w+204251) := by
   have h0 : inverseAt (224*w+25072) (1824*w+204251) 0 = some (56*w+6267, 1936*w+216787) := by
     simp [inverseAt]
@@ -333,7 +339,8 @@ private theorem cone_root_2_0_0_0 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1080 120924 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0_0_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (256*w+28656) (1792*w+200673) := by
   have h0 : inverseAt (256*w+28656) (1792*w+200673) 0 = some (64*w+7163, 1920*w+215001) := by
     simp [inverseAt]
@@ -406,7 +413,8 @@ private theorem cone_root_0_0_0 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1568 175572 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0_0_2 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (1600*w+179156) (448*w+50169) := by
   have h0 : inverseAt (1600*w+179156) (448*w+50169) 0 = some (400*w+44788, 1248*w+139747) := by
     simp [inverseAt]
@@ -446,7 +454,7 @@ private theorem cone_root_0_0_2 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 800*w+89572 := by omega
       have hy : c+4 = 1248*w+139751 := by omega
       rw [hx,hy]
-      exact cone_root_0_0_2_0 n w hn hform
+      exact cone_root_0_0_2_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(712*w+79725, 624*w+69872) := (Option.some.inj hval).symm
@@ -457,7 +465,8 @@ private theorem cone_root_0_0_2 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_2_0_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (448*w+50156) (1600*w+179169) := by
   have h0 : inverseAt (448*w+50156) (1600*w+179169) 0 = some (112*w+12538, 1824*w+204247) := by
     simp [inverseAt]
@@ -497,7 +506,7 @@ private theorem cone_root_2_0_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 224*w+25072 := by omega
       have hy : c+4 = 1824*w+204251 := by omega
       rw [hx,hy]
-      exact cone_root_2_0_0_0 n w hn hform
+      exact cone_root_2_0_0_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(568*w+63600, 912*w+102122) := (Option.some.inj hval).symm
@@ -512,7 +521,8 @@ private theorem cone_root_2_0_0 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1136 127196 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_2_0_2 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (1648*w+184528) (400*w+44793) := by
   have h0 : inverseAt (1648*w+184528) (400*w+44793) 0 = some (412*w+46131, 1224*w+137057) := by
     simp [inverseAt]
@@ -581,7 +591,8 @@ private theorem cone_root_2_0_2 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (512*w+57324) (1536*w+172007) := by
   have h0 : inverseAt (512*w+57324) (1536*w+172007) 0 = some (128*w+14330, 1792*w+200669) := by
     simp [inverseAt]
@@ -661,7 +672,7 @@ private theorem cone_root_0_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 256*w+28656 := by omega
       have hy : c+4 = 1792*w+200673 := by omega
       rw [hx,hy]
-      exact cone_root_0_0_0 n w hn hform
+      exact cone_root_0_0_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(576*w+64497, 896*w+100333) := (Option.some.inj hval).symm
@@ -677,7 +688,7 @@ private theorem cone_root_0_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 1600*w+179156 := by omega
       have hy : c+4 = 448*w+50169 := by omega
       rw [hx,hy]
-      exact cone_root_0_0_2 n w hn hform
+      exact cone_root_0_0_2 n w hn hform hw
     · subst t
       rw [h3] at hval
       have hp : (k,c)=(912*w+102121, 224*w+25081) := (Option.some.inj hval).symm
@@ -708,7 +719,8 @@ private theorem cone_root_0_0 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1992 223048 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_2_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (896*w+100324) (1152*w+129003) := by
   have h0 : inverseAt (896*w+100324) (1152*w+129003) 0 = some (224*w+25080, 1600*w+179165) := by
     simp [inverseAt]
@@ -788,7 +800,7 @@ private theorem cone_root_2_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 448*w+50156 := by omega
       have hy : c+4 = 1600*w+179169 := by omega
       rw [hx,hy]
-      exact cone_root_2_0_0 n w hn hform
+      exact cone_root_2_0_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(624*w+69871, 800*w+89581) := (Option.some.inj hval).symm
@@ -804,7 +816,7 @@ private theorem cone_root_2_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 1648*w+184528 := by omega
       have hy : c+4 = 400*w+44793 := by omega
       rw [hx,hy]
-      exact cone_root_2_0_2 n w hn hform
+      exact cone_root_2_0_2 n w hn hform hw
     · subst t
       rw [h3] at hval
       have hp : (k,c)=(924*w+103463, 200*w+22393) := (Option.some.inj hval).symm
@@ -835,7 +847,8 @@ private theorem cone_root_2_0 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1998 223716 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_0 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (1024*w+114660) (1024*w+114673) := by
   have h0 : inverseAt (1024*w+114660) (1024*w+114673) 0 = some (256*w+28664, 1536*w+172003) := by
     simp [inverseAt]
@@ -875,7 +888,7 @@ private theorem cone_root_0 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 512*w+57324 := by omega
       have hy : c+4 = 1536*w+172007 := by omega
       rw [hx,hy]
-      exact cone_root_0_0 n w hn hform
+      exact cone_root_0_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(640*w+71665, 768*w+86000) := (Option.some.inj hval).symm
@@ -886,7 +899,8 @@ private theorem cone_root_0 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_2 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (1792*w+200660) (256*w+28669) := by
   have h0 : inverseAt (1792*w+200660) (256*w+28669) 0 = some (448*w+50164, 1152*w+128999) := by
     simp [inverseAt]
@@ -926,7 +940,7 @@ private theorem cone_root_2 (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 896*w+100324 := by omega
       have hy : c+4 = 1152*w+129003 := by omega
       rw [hx,hy]
-      exact cone_root_2_0 n w hn hform
+      exact cone_root_2_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(736*w+82414, 576*w+64498) := (Option.some.inj hval).symm
@@ -941,7 +955,8 @@ private theorem cone_root_2 (n w : Nat) (hn : 14≤n)
       · exact interval_not_power n w 1472 164824 hn hform (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root_3 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (1920*w+214992) (128*w+14335) := by
   have h0 : inverseAt (1920*w+214992) (128*w+14335) 0 = some (480*w+53747, 1088*w+121831) := by
     simp [inverseAt]
@@ -992,7 +1007,8 @@ private theorem cone_root_3 (n w : Nat) (hn : 14≤n)
       exact Blocked.modLeaf _ _ (by omega) (by omega) (by omega) (by omega)
 
 private theorem cone_root (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     Blocked (2048*w+229332) (3) := by
   have h0 : inverseAt (2048*w+229332) (3) 0 = some (512*w+57332, 1024*w+114669) := by
     simp [inverseAt]
@@ -1062,7 +1078,7 @@ private theorem cone_root (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 1024*w+114660 := by omega
       have hy : c+4 = 1024*w+114673 := by omega
       rw [hx,hy]
-      exact cone_root_0 n w hn hform
+      exact cone_root_0 n w hn hform hw
     · subst t
       rw [h1] at hval
       have hp : (k,c)=(768*w+85999, 512*w+57333) := (Option.some.inj hval).symm
@@ -1078,7 +1094,7 @@ private theorem cone_root (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 1792*w+200660 := by omega
       have hy : c+4 = 256*w+28669 := by omega
       rw [hx,hy]
-      exact cone_root_2 n w hn hform
+      exact cone_root_2 n w hn hform hw
     · subst t
       rw [h3] at hval
       have hp : (k,c)=(960*w+107498, 128*w+14331) := (Option.some.inj hval).symm
@@ -1086,7 +1102,7 @@ private theorem cone_root (n w : Nat) (hn : 14≤n)
       have hx : 2*k-4 = 1920*w+214992 := by omega
       have hy : c+4 = 128*w+14335 := by omega
       rw [hx,hy]
-      exact cone_root_3 n w hn hform
+      exact cone_root_3 n w hn hform hw
     · subst t
       rw [h4] at hval
       have hp : (k,c)=(992*w+111081, 64*w+7164) := (Option.some.inj hval).symm
@@ -1098,9 +1114,10 @@ private theorem cone_root (n w : Nat) (hn : 14≤n)
 
 
 theorem no_root_14mod1024 (n w : Nat) (hn : 14≤n)
-    (hform : n+114674+1024*w=7*2^n) :
+    (hform : n+114674+1024*w=7*2^n)
+    (hw : w%2=0) :
     ¬ BB6.Agent1.Reach (2048*w+229332) 3 :=
-  blocked_no_reach _ _ (cone_root n w hn hform)
+  blocked_no_reach _ _ (cone_root n w hn hform hw)
 
 
 private theorem critical_pow_nonneg (n : Nat) (hn : 14 ≤ n) :
@@ -1134,10 +1151,21 @@ theorem exists_w_at_critical_residue (n : Nat) (hn : 14≤n)
 
 /-- Uniform true-blank critical-hub nonreachability for infinitely many
     remaining n=14(mod 1024) exponents, using unchanged source Reach. -/
-theorem no_critical_14_mod1024 (n : Nat) (hn : 14 ≤ n)
-    (hmod : n%1024=14) :
+theorem no_critical_14_mod2048 (n : Nat) (hn : 14 ≤ n)
+    (hmod : n%2048=14) :
     ¬ BB6.Agent1.Reach 2 (14*2^n-2*n-10) := by
-  obtain ⟨w,hform⟩ := exists_w_at_critical_residue n hn hmod
+  have hmod1024 : n%1024=14 := by omega
+  obtain ⟨w,hform⟩ := exists_w_at_critical_residue n hn hmod1024
+  have hpowdiv : 2048 ∣ (2:Nat)^n := by
+    have hp : 2^11 ∣ (2:Nat)^n := Nat.pow_dvd_pow 2 (by omega)
+    simpa [show (2:Nat)^11=2048 by decide] using hp
+  have hpowmod : (7*2^n)%2048=0 := by
+    have hp : 2048 ∣ (7*(2:Nat)^n) := by
+      obtain ⟨q,hq⟩ := hpowdiv
+      exact ⟨7*q, by rw [hq]; omega⟩
+    exact Nat.dvd_iff_mod_eq_zero.mp hp
+  have humod : (n+114674)%2048=0 := by omega
+  have hw : w%2=0 := by omega
   let d := 14*2^n-2*n-10
   have hdform : d=229338+2048*w := by dsimp [d]; omega
   have hdlarge : 10≤d := by omega
@@ -1147,10 +1175,10 @@ theorem no_critical_14_mod1024 (n : Nat) (hn : 14 ≤ n)
     BB6.Agent50P1.critical_target_implies_three d hdlarge hdmod hreach
   have hdec : d-6=2048*w+229332 := by omega
   rw [hdec] at hthree
-  exact no_root_14mod1024 n w hn hform hthree
+  exact no_root_14mod1024 n w hn hform hw hthree
 
 #print axioms BB6.Agent8P1Exponent14.exists_w_at_critical_residue
-#print axioms BB6.Agent8P1Exponent14.no_critical_14_mod1024
+#print axioms BB6.Agent8P1Exponent14.no_critical_14_mod2048
 
 #print axioms BB6.Agent8P1Exponent14.no_root_14mod1024
 end BB6.Agent8P1Exponent14
