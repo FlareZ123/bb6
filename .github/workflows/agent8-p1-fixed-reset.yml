@@ -56,6 +56,7 @@ jobs:
           for m in GParity GInverse PosEvenForm; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
+          lean -o im-results/agent1-p1-map/EvenSeed.olean im-results/agent1-p1-map/EvenSeed.lean
           lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
           for m in MassInverse OddConeMass; do
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
@@ -101,6 +102,7 @@ jobs:
           lean -o "$root/ZeroOneSource.olean" "$root/ZeroOneSource.lean"
           lean -o "$root/ZeroThreePredecessor.olean" "$root/ZeroThreePredecessor.lean"
           lean "$root/ZeroThreeSource.lean"
+          lean "$root/ZeroEvenDescentSource.lean"
           lean -o "$root/BudgetGrowth.olean" "$root/BudgetGrowth.lean"
           lean "$root/SourceGrowth.lean"
           lean -o "$root/ExceptionalCost.olean" "$root/ExceptionalCost.lean"
