@@ -16,13 +16,13 @@ Equivalently, in the [unified complete nonzero stopping equation](../agent1-c-un
 a = 2*u+1
 k+u+3*m+4 = 4^(m+1)*(u+2)
 ```
-we have the genuine all-natural parameterized corollary `A4Five80.source_stop_m11_u60_unreachable`:
+we have two genuine all-natural, disjoint parameterized corollaries `source_stop_m11_u60_unreachable` and `source_stop_m51_u20_unreachable`:
 
 ```
-u % 80 = 60, m % 80 = 11  ==>  ¬Reach (2*u+1,k,0).
+(u % 80, m % 80) = (60,11) OR (20,51)  ==>  ¬Reach (2*u+1,k,0).
 ```
 
-The power congruence `4^(m+1)%80=16` in this sector and the induced `(a%80,k%80)=(41,15)` are kernel-proved in [Five80Stop.lean](Five80Stop.lean). This excludes infinitely many **candidate stopping inputs**, with no assumption that these candidates are encountered by the real trajectory. The entire remaining stopping family, Machine C and BB(6) are still unresolved.
+For every `m≥2` satisfying the exact stopping equation, **these are precisely the two parameter residue pairs mapping to this excluded cylinder**. [Five80OnlyTwo.lean](Five80OnlyTwo.lean) proves the arithmetic equivalence `stopping_m80_iff_two` for all natural inputs; in both sectors `4^(m+1)%80=16`, implying `(a%80,k%80)=(41,15)`. The individual arithmetic consequences are checked in [Five80Stop.lean](Five80Stop.lean) and the second source corollary in [Five80Second.lean](Five80Second.lean). All passed unchanged-source [manual CI 41891467952](https://github.com/FlareZ123/bb6/actions/runs/41891467952) with only standard axioms. This excludes infinitely many **candidate stopping inputs**, with no assumption that these candidates are encountered by the real trajectory. The entire remaining stopping family, Machine C and BB(6) are still unresolved.
 
 ## The compact predecessor-closed invariant
 
@@ -53,6 +53,6 @@ The pre-existing pinned original DeepMind Cryptids-to-CLine source transport was
 
 ## Reproduction and next useful problem
 
-The manual-only [GitHub Actions workflow](../../.github/workflows/agent4-machine-c-80.yml) checks the finite graph, reconstructs the hash-pinned Lean source, compiles original `CLine`, `BackwardMod`, `SourceBridge`, `Five80Compact`, `Five80Stop` and `Five80Source`, and prints the final axioms. Reproduction does not need a simulation cutoff.
+The manual-only [GitHub Actions workflow](../../.github/workflows/agent4-machine-c-80.yml) checks the finite graph, reconstructs the hash-pinned Lean source, compiles original `CLine`, `BackwardMod`, `SourceBridge`, the new `Five80Compact`, `Five80Stop`, `Five80Source`, `Five80Second` and `Five80OnlyTwo`, and prints the final axioms. Reproduction does not need a simulation cutoff.
 
 The best follow-up is to compare this exact source-gate cylinder against Agent3/38/43 and newer M512 and inverse-cone results on the **same original candidate family**, then seek a structural extension that covers a complete still-surviving stopping sector. Do not extrapolate a complete Machine C nonhalting proof from one cylinder.
