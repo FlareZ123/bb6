@@ -66,5 +66,13 @@ int main(int argc,char**argv) {
   std::cout<<"M="<<M<<" vertices="<<n<<" reached="<<queue.size()
     <<" edges="<<edges<<" cone-project="<<coneCount
     <<" cone-reached="<<coneReach<<" cone-missed="<<coneCount-coneReach<<"\n";
+
+  // The same authentic m=1 stopping tower used in HighTowerUnbounded.lean.
+  // Prints quotient membership; membership never proves concrete reachability.
+  for (int depth=0,j=26;depth<3;++depth,j=16*j+42) {
+    const int a=2*j+3, k=15*j+40;
+    std::cout<<"highTower depth="<<depth<<" j="<<j<<" projected=("
+      <<a%M<<","<<k%M<<",0) seen="<<int(seen[idx({a,k,0})])<<"\\n";
+  }
   return 0;
 }
