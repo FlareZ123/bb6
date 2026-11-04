@@ -60,10 +60,16 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
-          lake env lean Agent8BudgetSource.lean
+          lake env lean -o Agent8BudgetSource.olean Agent8BudgetSource.lean
 
       - name: Verify Agent49 weighted potential on original source
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/WeightedPotentialSource.lean" Agent49WeightedSource.lean
-          lake env lean Agent49WeightedSource.lean
+          lake env lean -o Agent49WeightedSource.olean Agent49WeightedSource.lean
+
+      - name: Verify Agent49 large-mass small-output gain
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/SmallOutputGainSource.lean" Agent49SmallOutputSource.lean
+          lake env lean Agent49SmallOutputSource.lean
