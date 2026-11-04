@@ -70,6 +70,40 @@ theorem no_six_mass_zero
   exact no_five_mass_one x1 y1 x2 y2 x3 y3 x4 y4 x5 y5 x6 y6
     hm1 h12 h23 h34 h45 h56
 
+/-- Class-two weighted mass forces the first step into the seven gate,
+    with no large-counter or positive-depth hypothesis. -/
+theorem mass_two_first_seven (x y u v : Nat)
+    (hm : (x+2*y)%4=2)
+    (h : forcedEdge x y u v) :
+    evenSevenGate x y ∧
+      u=(x+y-5)/2 ∧ v=(x+3*y-9)/4 := by
+  unfold forcedEdge at h
+  rcases h with ho | he | ha
+  · simp only [oddLowGate] at ho
+    omega
+  · exact he
+  · simp only [evenAffineGate] at ha
+    omega
+
+/-- Weighted mass congruent to two cannot admit three consecutive
+    source-exact forced inverse operations. -/
+theorem no_three_mass_two
+    (x0 y0 x1 y1 x2 y2 x3 y3 : Nat)
+    (hm : (x0+2*y0)%4=2)
+    (h01 : forcedEdge x0 y0 x1 y1)
+    (h12 : forcedEdge x1 y1 x2 y2)
+    (h23 : forcedEdge x2 y2 x3 y3) : False := by
+  simp only [forcedEdge,oddLowGate,evenSevenGate,evenAffineGate] at *
+  rcases h01 with h01 | h01 | h01
+  all_goals rcases h12 with h12 | h12 | h12
+  all_goals rcases h23 with h23 | h23 | h23
+  all_goals omega
+
+/-- Two is attained on an E O chain in the class-two sector. -/
+theorem two_is_sharp :
+    forcedEdge 32 7 17 11 ∧ forcedEdge 17 11 12 10 := by
+  simp [forcedEdge,oddLowGate,evenSevenGate,evenAffineGate]
+
 /-- Both universal bounds are attained by genuine, exact guarded inverse
     transitions, although these are synthetic section states rather than
     demonstrated points of the blank orbit. -/
@@ -90,6 +124,8 @@ theorem five_is_sharp :
 
 #print axioms no_five_mass_one
 #print axioms no_six_mass_zero
+#print axioms no_three_mass_two
+#print axioms two_is_sharp
 #print axioms four_is_sharp
 #print axioms five_is_sharp
 end BB6.Agent29Depth
