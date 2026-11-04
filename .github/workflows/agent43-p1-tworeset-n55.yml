@@ -48,6 +48,7 @@ jobs:
           done
           lean -o "$AG43/TwoResetShape.olean" "$AG43/TwoResetShape.lean"
           lean -o "$AG43/SourceInterfaces.olean" "$AG43/SourceInterfaces.lean"
+          lean "$AG43/ThreeResetShape.lean"
           python3 "$AG43/generate_n55.py"
           for m in TwoResetGrowth TwoResetTailBudget TwoResetWall DefectPositive TwoResetRemainder TwoResetDefectBridge FirstBlockDefect TwoResetExactEquations; do
             lean -o "$AG55/$m.olean" "$AG55/$m.lean"
