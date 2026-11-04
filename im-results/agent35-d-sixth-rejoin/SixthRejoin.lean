@@ -94,10 +94,10 @@ private theorem A_output (w : Nat) :
   have hn : 2*(4*(kA w)+3+3)+5 = 8*(kA w)+17 := by omega
   have hr : List.replicate (8*(kA w)+17) true =
       true :: true :: List.replicate (8*(kA w)+15) true := by
+    have hx : 8*(kA w)+17 = 2+(8*(kA w)+15) := by omega
     calc
-      _ = List.replicate (2+(8*(kA w)+15)) true := by
-        congr 1
-        omega
+      _ = List.replicate (2+(8*(kA w)+15)) true :=
+        congrArg (fun n : Nat => List.replicate n true) hx
       _ = List.replicate 2 true ++
           List.replicate (8*(kA w)+15) true :=
           (List.replicate_append_replicate).symm
@@ -114,7 +114,6 @@ private theorem A_to_regular (w : Nat) :
   rw [A_start]
   have h := (BB6.CryptidA110111CodeFirst.full_A_code_110111_first_return
      (kA w) ws zs).1
-  dsimp at h
   have hc : costA w =
     (12*(kA w)*(kA w)+41*(kA w)+32) +
       (CryptidA.wordCost (4*(kA w)+3) ws +
