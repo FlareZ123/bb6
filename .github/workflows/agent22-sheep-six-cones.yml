@@ -60,4 +60,6 @@ jobs:
           for name in SmallMods HighValuationGap SpecialSourceGap NoGenericTarget; do
             lean -o "$name.olean" "$name.lean"
           done
-          lean NoTarget.lean
+          lean -o NoTarget.olean NoTarget.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-special-targets/NoTargetReach.lean" .
+          lean NoTargetReach.lean
