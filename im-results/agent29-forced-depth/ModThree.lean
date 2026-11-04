@@ -34,7 +34,6 @@ theorem first_stopping_k_mod_three (m k : Nat)
   have hpower : (2^(2*m+3))%3=2 := by
     have he : 2*m+3=(2*m+2)+1 := by omega
     rw [he,Nat.pow_succ,Nat.mul_mod,pow_even_mod_three m]
-    omega
   have hrest : (k+3*m+4)%3=2 := by
     rw [hgate]
     exact hpower
