@@ -72,6 +72,7 @@ jobs:
           lean -o "$C/EDouble.olean" "$C/EDouble.lean"
           lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
           lean -o "$A/ExceptionalBRejoin.olean" "$A/ExceptionalBRejoin.lean"
+          lean -o "$A/ExceptionalBGeneral.olean" "$A/ExceptionalBGeneral.lean"
           lean -o "$A/BlankRootRejoin.olean" "$A/BlankRootRejoin.lean"
           lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
           lean -o "$D/EOneTripleReturn.olean" "$D/EOneTripleReturn.lean"
@@ -86,3 +87,9 @@ jobs:
         run: |
           set -euo pipefail
           lean "$P/BlankTwoConsecutiveFirst.lean"
+      - name: Verify universal E/B general two consecutive physical first returns
+        timeout-minutes: 6
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean "$P/ExceptionalBGeneralFirst.lean"
