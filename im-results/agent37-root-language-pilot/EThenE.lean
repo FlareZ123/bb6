@@ -45,7 +45,7 @@ theorem e_then_e_raw (t q : Nat) (ys : List Bool) :
         (oppairs 2 ++ (false :: List.replicate (2*q+3) true ++ tail ys)),5⟩ := by
   rw [run_add, full_E_1101010111_pairs (3*t+1) q ys]
   rw [e_to_e_section]
-  simpa only [Nat.zero_add, Nat.mul_zero, Nat.add_zero] using
+  simpa [pairs] using
     (full_E_triple_pairs (8*t+3) 0
       (List.replicate (2*q+3) true ++ tail ys))
 
