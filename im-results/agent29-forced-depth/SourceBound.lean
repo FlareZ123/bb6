@@ -104,6 +104,19 @@ theorem two_is_sharp :
     forcedEdge 32 7 17 11 ∧ forcedEdge 17 11 12 10 := by
   simp [forcedEdge,oddLowGate,evenSevenGate,evenAffineGate]
 
+/-- Any one-left target with odd right counter can admit at most one
+    exact source-forced predecessor, without any stopping equation.
+    A first O makes an even first counter; an E successor would
+    contradict the O sum modulo sixteen guard. -/
+theorem one_left_odd_no_two (y u v p q : Nat)
+    (hy : y%2=1)
+    (h1 : forcedEdge 1 y u v)
+    (h2 : forcedEdge u v p q) : False := by
+  simp only [forcedEdge,oddLowGate,evenSevenGate,evenAffineGate] at *
+  rcases h1 with h1 | h1 | h1
+  all_goals rcases h2 with h2 | h2 | h2
+  all_goals omega
+
 /-- Both universal bounds are attained by genuine, exact guarded inverse
     transitions, although these are synthetic section states rather than
     demonstrated points of the blank orbit. -/
@@ -126,6 +139,7 @@ theorem five_is_sharp :
 #print axioms no_six_mass_zero
 #print axioms no_three_mass_two
 #print axioms two_is_sharp
+#print axioms one_left_odd_no_two
 #print axioms four_is_sharp
 #print axioms five_is_sharp
 end BB6.Agent29Depth
