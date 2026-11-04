@@ -53,3 +53,8 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean ChainSourceWitnesses.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/Fork1218.lean" Fork1218.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/Fork1218Source.lean" Fork1218Source.lean
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" Fork1218.lean Fork1218Source.lean
+          lake env lean -o ".lake/build/lib/lean/Fork1218.olean" Fork1218.lean
+          lake env lean Fork1218Source.lean
