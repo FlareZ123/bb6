@@ -129,3 +129,9 @@ jobs:
       - name: Cross-check source transitions with independent literal-table first-return interpreter
         run: |
           python im-results/agent26-cryptid-e-gate/check_new_returns.py
+
+      - name: Original-source exact two-return E-to-B connector for k divisible by 3
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
+        run: |
+          lean im-results/agent26-cryptid-e-gate/E1101010111ThenB.lean
