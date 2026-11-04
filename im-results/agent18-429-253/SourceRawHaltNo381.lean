@@ -1,4 +1,5 @@
 import SourceRawHaltNo253
+import SourceRawHalt46
 import BB429No381
 import Lean.Elab.Tactic.Omega
 
@@ -34,6 +35,28 @@ theorem raw_halts_iff_six_lifts_without_253_381 :
     apply BB429SourceNo253.raw_halts_iff_six_lifts_without_253.mpr
     exact ⟨n,u,w,hr,hn,hcond,hnot253⟩
 
+
+/-- Collaborative 45-class exact raw halt reduction modulo 1024. All 45
+    remaining residues are necessary, and none is asserted reachable. -/
+theorem raw_halts_iff_45_gates :
+    IsHalt target ↔
+      ∃ n u w,
+        BB429SourceLadder.sourceRun n highLevelStart = some (.J u w) ∧
+        highLevelNext (.J u w) = none ∧
+        (u%64=9 ∨ u%128=81 ∨ u%64=53 ∨
+          (u%128=125 ∧ u%1024≠125)) ∧
+        u%1024≠253 ∧ u%1024≠381 := by
+  constructor
+  · intro h
+    obtain ⟨n,u,w,hr,hn,hmask,h253⟩ :=
+      BB429ActualHalt46.raw_halts_iff_46_gates.mp h
+    exact ⟨n,u,w,hr,hn,hmask,h253,
+      source_halting_not_381_mod1024 n u w hr hn⟩
+  · rintro ⟨n,u,w,hr,hn,hmask,h253,h381⟩
+    apply BB429ActualHalt46.raw_halts_iff_46_gates.mpr
+    exact ⟨n,u,w,hr,hn,hmask,h253⟩
+
+#print axioms raw_halts_iff_45_gates
 #print axioms source_halting_not_381_mod1024
 #print axioms raw_halts_iff_six_lifts_without_253_381
 end BB429SourceNo381
