@@ -36,7 +36,7 @@ jobs:
           D=im-results/agent36-sixth-packet
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
           lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
-          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversal TripleIteration TenPump SixOnes TokenCode; do
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump SixOnes TokenCode; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
