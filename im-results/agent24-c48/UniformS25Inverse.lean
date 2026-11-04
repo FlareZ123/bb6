@@ -23,7 +23,6 @@ theorem s25_first_inverse (q a k : Nat)
     · simp [secNext,exactSection,ha0,hk0] at h
     · by_cases hk1 : k=1
       · simp [secNext,exactSection,ha0,hk0,hk1] at h
-        omega
       · have hb : (bounce 1 (2*k+1)).2 =
             some (35584*q+6939,14976*q+2921) := by
           simpa only [secNext,exactSection,if_pos ha0,if_neg hk0,if_neg hk1] using h
@@ -35,16 +34,12 @@ theorem s25_first_inverse (q a k : Nat)
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
-        omega
       · by_cases hk1 : k=1
         · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h
-          omega
         · by_cases hk2 : k=2
           · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
-            omega
           · by_cases hk3 : k=3
             · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h
-              omega
             · have hb : (bounce 4 (2*k-3)).2 =
                   some (35584*q+6939,14976*q+2921) := by
                 simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,
@@ -58,7 +53,6 @@ theorem s25_first_inverse (q a k : Nat)
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
-        omega
       · by_cases hregion : 2*k≤a
         · simp [secNext,exactSection,ha0,ha1,hk0,hregion] at h
           omega
@@ -109,7 +103,6 @@ theorem s25_second_inverse (q a k : Nat)
     · simp [secNext,exactSection,ha0,hk0] at h
     · by_cases hk1 : k=1
       · simp [secNext,exactSection,ha0,hk0,hk1] at h
-        omega
       · have hb : (bounce 1 (2*k+1)).2 =
             some (25280*q+4928,20128*q+3923) := by
           simpa only [secNext,exactSection,if_pos ha0,if_neg hk0,if_neg hk1] using h
@@ -121,16 +114,12 @@ theorem s25_second_inverse (q a k : Nat)
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
-        omega
       · by_cases hk1 : k=1
         · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h
-          omega
         · by_cases hk2 : k=2
           · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
-            omega
           · by_cases hk3 : k=3
             · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h
-              omega
             · have hb : (bounce 4 (2*k-3)).2 =
                   some (25280*q+4928,20128*q+3923) := by
                 simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,
@@ -144,7 +133,6 @@ theorem s25_second_inverse (q a k : Nat)
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [secNext,exactSection,ha0,ha1,hk0] at h
-        omega
       · by_cases hregion : 2*k≤a
         · simp [secNext,exactSection,ha0,ha1,hk0,hregion] at h
           omega
