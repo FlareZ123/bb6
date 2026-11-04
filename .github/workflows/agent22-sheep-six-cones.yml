@@ -41,3 +41,6 @@ jobs:
           export LEAN_PATH=.
           lean -o ConeCore.olean ConeCore.lean
           lean ConeCertificateBridge.lean
+      - name: Reproduce finite true blank-origin E residue coverage
+        run: |
+          python3 im-results/agent22-sheep-blank-prefix/blank_quotient.py
