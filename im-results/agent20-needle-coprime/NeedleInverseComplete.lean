@@ -93,6 +93,12 @@ def allTerminalPredecessors (K : Nat) : List (Nat × Nat) :=
   (List.range ((K+1)/2)).filterMap fun v =>
     (candidate v K).map fun q => (v,q)
 
+theorem at_most_half_fanin (K : Nat) :
+    (allTerminalPredecessors K).length ≤ (K+1)/2 := by
+  simpa only [allTerminalPredecessors, List.length_range] using
+    (List.length_filterMap_le
+      (fun v => (candidate v K).map fun q => (v,q)) (List.range ((K+1)/2)))
+
 theorem allTerminalPredecessors_spec (q v K : Nat) :
     (v,q) ∈ allTerminalPredecessors K ↔ equation q v K := by
   constructor
@@ -117,6 +123,7 @@ theorem allTerminalPredecessors_spec (q v K : Nat) :
 #eval allTerminalPredecessors 9
 #eval allTerminalPredecessors 12
 #eval allTerminalPredecessors 13
+#print axioms at_most_half_fanin
 #print axioms allTerminalPredecessors_spec
 #print axioms exact_finite_search
 #print axioms unique_predecessor_at_valuation
