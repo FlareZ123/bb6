@@ -1,4 +1,4 @@
-name: Agent 30 #429 42-gate native source chain (manual)
+name: Agent 30 #429 38-gate native source chain (manual)
 
 on:
   workflow_dispatch:
@@ -42,7 +42,26 @@ jobs:
         run: |
           set -euo pipefail
           sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
-          lake exe cache get
+          df -h /
+          # The exact pinned upstream target imports these Mathlib roots via
+          # BusyBeaver.Defs and Cryptids.Machines. The documented targeted cache
+          # command downloads their transitive dependencies without the full
+          # approximately 9000-module Mathlib cache that exceeded runner quota.
+          for module in \
+            Mathlib.Computability.TuringMachine.PostTuringMachine \
+            Mathlib.Data.List.Basic \
+            Mathlib.Data.Nat.Basic \
+            Mathlib.Data.Nat.Prime.Basic \
+            Mathlib.Algebra.GCDMonoid.Finset \
+            Mathlib.Order.Interval.Finset.Nat \
+            Mathlib.Order.SuccPred.Basic \
+            Mathlib.Algebra.Order.SuccPred \
+            Mathlib.NumberTheory.LSeries.RiemannZeta \
+            Mathlib.SetTheory.ZFC.Basic; do
+            echo "::group::Mathlib targeted cache $module"
+            lake exe cache get "$module"
+            echo "::endgroup::"
+          done
           df -h /
       - name: Build original raw-TM accelerator
         working-directory: /tmp/cryptids
@@ -72,6 +91,7 @@ jobs:
           done
 
   standalone-proof:
+    if: ${{ !inputs.original_source }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
