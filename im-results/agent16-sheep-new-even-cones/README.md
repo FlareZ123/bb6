@@ -146,3 +146,8 @@ A=2^s₁*d₂-2^s₂*d₁, B=b₁*d₂-b₂*d₁.
 It verifies `A*2^J+B ≠ 0` and that its sign agrees with the sign of `A` whenever `A≠0`. The sign therefore cannot change for `j≥J`, and collisions are impossible.
 
 The reverse direction follows from exhaustive all-`h`, all-`a` inverse closure, already proved above: a predecessor of a listed node is itself one of the listed child nodes, and every path has a finite number of edges because the displayed acyclic graph is finite and its leaves have no predecessors. Every node also has a directed forward path to the root by the newly certified genuine edges. Consequently its full predecessor basin is exactly the listed set, with no ambiguity from duplicated nodes. The true blank section entry 10 lies outside every basin.
+
+
+### CI follow-up result
+
+The targeted manual workflow rerun [41758334467](https://github.com/FlareZ123/bb6/actions/runs/41758334467) completed successfully at repository commit `b09714e9a4a4b99cb0675ebbbc5b2454d67db0fe`, with the pinned original Sheep Cryptids build and the corrected `ExceptionalEight` file. The actual job log prints `[propext, Quot.sound]` for each of `SheepExceptional.special_0` through `special_7`; `FiniteGates0` through `FiniteGates7` also compiled. This source check authenticates **the earlier Agent16 special-branch/finite-modulus building blocks**, independently of the present five new exact-basin families. The new five remain paper-and-executable-integer certified; no imported Lean theorem for their complete basins has yet been attempted or passed.
