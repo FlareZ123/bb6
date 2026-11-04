@@ -44,6 +44,7 @@ jobs:
           lean -o "$b/ParentCheck.olean" "$b/ParentCheck.lean"
           lean -o "$b/Parents.olean" "$b/Parents.lean"
           lean -o "$b/ClosedCert.olean" "$b/ClosedCert.lean"
+          lean -o "$b/ReachDecide.olean" "$b/ReachDecide.lean"
           lean -o "$b/ManyShield.olean" "$b/ManyShield.lean"
           lean -o "$b/RootMinIndex.olean" "$b/RootMinIndex.lean"
           lean -o "$b/FastShield.olean" "$b/FastShield.lean"
