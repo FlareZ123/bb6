@@ -22,6 +22,8 @@ jobs:
           set -euo pipefail
           g++ -std=c++17 -O2 -Wall -Wextra im-results/agent4-mixed80-backward/check_core.cpp -o /tmp/agent4-m80-check
           /tmp/agent4-m80-check
+          g++ -std=c++17 -O2 -Wall -Wextra im-results/agent4-mixed80-backward/check_first.cpp -o /tmp/agent4-first80-check
+          /tmp/agent4-first80-check
       - name: Source-native Lean kernel check and axiom audit
         shell: bash
         run: |
