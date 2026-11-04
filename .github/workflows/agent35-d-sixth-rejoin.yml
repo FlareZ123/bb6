@@ -93,3 +93,4 @@ jobs:
           lean -DmaxRecDepth=55000 "$G/APacketNormalized.lean"
           lean -o "$G/PacketEZero.olean" "$G/PacketEZero.lean"
           lean "$G/PacketEOne.lean"
+          lean "$G/PacketAZero.lean"
