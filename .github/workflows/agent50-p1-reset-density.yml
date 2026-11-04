@@ -74,3 +74,12 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
           lean -o im-results/agent50-p1-reset-density/ResetExceptionalCost.olean im-results/agent50-p1-reset-density/ResetExceptionalCost.lean
           lean im-results/agent50-p1-reset-density/ResetExceptionalGap.lean
+      - name: Source audit of exceptional three-reset theorem
+        run: |
+          set -e
+          base64 -d im-results/agent50-p1-reset-density/ResetExceptionalResets.lean.xz.b64 | xz -d > im-results/agent50-p1-reset-density/ResetExceptionalResets.lean
+          echo '1bdb657e053db207222b53ebc15dbf585794fd4a7d01a154dcd1697f5c1f1328  im-results/agent50-p1-reset-density/ResetExceptionalResets.lean' | sha256sum -c -
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
+          lean -o im-results/agent50-p1-reset-density/ResetExceptionalGap.olean im-results/agent50-p1-reset-density/ResetExceptionalGap.lean
+          lean -o im-results/agent50-p1-reset-density/ResetStrictBridge.olean im-results/agent50-p1-reset-density/ResetStrictBridge.lean
+          lean im-results/agent50-p1-reset-density/ResetExceptionalResets.lean
