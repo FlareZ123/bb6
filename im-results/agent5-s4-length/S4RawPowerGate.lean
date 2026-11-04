@@ -28,7 +28,7 @@ theorem reduced_eq_native (T : List Nat) :
       | C a L =>
           simp only [h, Option.map_some, S4SourceBridge.unwrap,
             S4NativeCompact.unwrap, Prod.snd]
-          exact reduced_bump17_eq (L.drop 4)
+          exact congrArg some (reduced_bump17_eq (L.drop 4))
 
 /-- Raw halting iff a genuinely attained, exceptional-phase reduced stack
     meets the complete 2-adic power-of-two stopping equation. -/
