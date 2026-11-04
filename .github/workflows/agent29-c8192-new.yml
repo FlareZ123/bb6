@@ -1,0 +1,54 @@
+name: Agent 29 Machine C 86 new reset classes mod8192 (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof-batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: 1
+            residues: "107 512 1047 1250 1591 2662 3098 3371 3808 4287 4518 4994 5336 5414 5642 5952 6359 6610 6854 7154 7535 8018"
+          - shard: 2
+            residues: "298 674 1152 1423 1726 2850 3142 3424 4191 4312 4618 5026 5384 5432 5707 5994 6408 6648 7038 7338 7659 8066"
+          - shard: 3
+            residues: "360 906 1207 1439 1771 2886 3294 3630 4266 4390 4650 5150 5387 5438 5714 6046 6536 6711 7106 7342 7782"
+          - shard: 4
+            residues: "480 951 1215 1518 2418 3018 3330 3782 4270 4448 4850 5227 5402 5570 5768 6302 6592 6766 7138 7391 7962"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct SHA-verified generator and complete certificate corpus
+        run: |
+          python3 im-results/agent29-c31/reconstruct.py
+          python3 im-results/agent29-c4096/reconstruct.py
+          python3 im-results/agent29-c8192/generate8192.py
+      - name: Compile unchanged repository CLine and all source predecessor proofs
+        run: |
+          mkdir -p /tmp/a29-8192
+          cp im-results/agent11-c-line/CLine.lean /tmp/a29-8192/CLine.lean
+          for source in CReachBridge CRange CBack CHubSplit; do
+            cp "im-results/agent21-c-source-bridge/$source.lean" "/tmp/a29-8192/$source.lean"
+          done
+          cd /tmp/a29-8192
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CRange.olean CRange.lean
+          lean -o CBack.olean CBack.lean
+          lean -o CHubSplit.olean CHubSplit.lean
+          for residue in ${{ matrix.residues }}; do
+            lean "$GITHUB_WORKSPACE/im-results/agent29-c8192/C${residue}mod8192.lean"
+          done
