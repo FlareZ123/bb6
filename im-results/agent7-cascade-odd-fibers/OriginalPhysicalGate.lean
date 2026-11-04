@@ -38,7 +38,8 @@ private theorem before_none (n : Nat)
             rcases b with _ | _ | d
             · simp [highLevelNext] at h
             · rfl
-            · simp [highLevelNext] at h
+            · simp only [highLevelNext] at h
+              split_ifs at h <;> cases h
           exact ⟨n+1,a,by simpa only [hb] using hs⟩
 
 /-- The exact original Cryptids halting predicate means that its genuine
@@ -86,7 +87,7 @@ theorem exact_root_reach_has_original_run {x : Nat × Nat}
             change some (u,v) = some (c,d) at hh
             have huv : u=c ∧ v=d := by simpa using hh
             rcases huv with ⟨rfl,rfl⟩
-            exact hs
+            rfl
       exact ⟨k+1,by simpa [Agent10Original746.run,hk,hnext]⟩
 
 /-- Genuine *raw six-state Turing-machine* halting is equivalent to
