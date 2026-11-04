@@ -95,7 +95,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Reach.lean .
           lean -o UniformS25Reach.olean UniformS25Reach.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Residual.lean .
-          lean UniformS25Residual.lean
+          lean -o UniformS25Residual.olean UniformS25Residual.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/GeneralMod8Inverse.lean .
           lean -o GeneralMod8Inverse.olean GeneralMod8Inverse.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/GeneralMod8Section.lean .
