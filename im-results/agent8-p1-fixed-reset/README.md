@@ -215,3 +215,26 @@ This is exact cost elimination from the original `OddCone` mass conservation, th
 Both pure arithmetic theorems `only_odd_parent_of_12_15` and `no_odd_parent_of_12_19`, the all-length source cone exclusions `odd_cone_no_12_19`/`odd_cone_no_12_15`, and final `source_critical_zero_even_index_at_least_two` were certified together in 41903026710. This is a narrowly scoped whole-index exclusion; check overlap with earlier P1 modular barriers before treating it as externally novel.
 
 **Open obstacle:** the rigid indices `j>=2` remain, as do positive-even and exceptional terminal mechanisms. The same all-natural predecessor equations suggest seeking a reusable exact inverse-cone certificate for a *family* of `j`, rather than expending effort on ever more isolated small indices. No P1 nonhalting proof or BB(6) upper bound follows.
+
+
+## First-critical-index descent excludes the entire zero-output feeder at a minimal witness (2026-11-04 20:20 UTC)
+
+**All-natural, original-source Lean 4.36 verification successful:** [manual CI 41905298143](https://github.com/FlareZ123/bb6/actions/runs/41905298143). The new `ZeroEvenDescentSource.lean` imports unmodified original `EvenSeed.lean`, `InverseIff.lean`, and `OddConeMass.lean`. The workflow compiles and audits all theorems with ordinary foundational Lean axioms and no additional axioms.
+
+**Main theorem:** `BB6.Agent8Descent.source_zero_even_exit_forces_lower_critical`:
+
+If `n>=14`, `OddCone (14*2^n-2*n-16) 3 b d m` holds, `b>=8` and `b%4=0`, an actual `inverseAt b d t=some(k,0)` has `k>=2`, and the even successor `Reach (2*k-4) 4` holds in the *original blank-reachable* P1 map, then **there exists q<n with genuine blank reachability**
+
+```lean
+BB6.Agent1.Reach 2 (14*2^q-2*q-10)
+```
+
+for all natural n,m,t,k and all finite lengths of the source odd cone. The associated theorem `source_no_zero_even_exit_for_minimal_critical` refutes such a branch if n is a *least* genuinely reached critical reset exponent, as expressed by the explicit hypothesis `∀ q<n, ¬Reach 2 (14*2^q-2*q-10)`. This is an index-descent reduction for one entire original-source terminal mechanism. It does **not** disallow c=0 exits at nonminimal indices or by itself decide P1/BB(6).
+
+**Proof:** Source `even_hub_reset_seed` says any actual positive-even hub `(u,4)` descends from an *earlier actually reached* reset `(2,s)` with `u+12=14*2^q` and `s+2q+2=u+4`. Thus `s=14*2^q-2q-10`, itself an exact critical halting reset. Meanwhile original all-depth `inverseAt_iff_power_mass` and `odd_cone_mass` give `7*2^q+n+m+t+3=7*2^n`, and positivity forces q<n. The source proof has no polynomial budget, reset-count, finite depth or eventual asymptotic assumptions. All expressions use the original executable definitions.
+
+This result improves the logical scope of the previously established `m>=3*2^n` and `j>=2` zero-even necessary bounds **when the root n is minimal**. Those older bounds still apply at any n without minimality.
+
+**Additional finite-ancestry exclusion (source CI [41904521965](https://github.com/FlareZ123/bb6/actions/runs/41904521965)):** `ZeroThreePredecessor.lean`/`ZeroThreeSource.lean` exclude rigid j=2 via impossible parent of (24,33), and rigid j=3 via unique predecessor (100,17) of (44,71) followed by impossible ancestry. Together with earlier j=1, this establishes j>=4 for arbitrary critical n≥14, independent of minimality. It is an incremental finite-class consequence, not a machine decision. The all-index descent is the stronger research direction.
+
+**Coordination:** source provenance and review request sent to Agent1 and Agent28 mailboxes on 2026-11-04 20:20 UTC. Remaining full P1 obligations: positive-even `c>=2` exits, exceptional odd `c=1` paths, and the authentic blank-to-critical cone completeness/least-index arrangement. Retain under `im-results/` pending peer review and broader root closure.
