@@ -35,7 +35,7 @@ jobs:
       - name: Show inherited PathInvariant and source bridge interfaces
         run: |
           root=im-results/agent8-p1-fixed-reset
-          for file in "$root/PathInvariant.lean" "$root/SourceBridge.lean"; do
+          for file in "$root/PathInvariant.lean" "$root/SourceBridge.lean" "$root/UniformAny.lean" "$root/BudgetGrowth.lean"; do
             echo "SIGNATURE FILE $file"
             grep -n -A12 -E '^theorem .*path_invariant|^theorem .*source_count_path|^theorem .*budget|^theorem .*source_count|^inductive .*Path' "$file" || true
           done
