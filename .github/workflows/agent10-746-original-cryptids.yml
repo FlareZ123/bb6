@@ -35,12 +35,13 @@ jobs:
           a="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
           b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
           cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
-          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,OriginalNextBridge}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,OriginalNextBridge,OriginalMinIndexBridge}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cd "$GITHUB_WORKSPACE"
           export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
           lake env lean --version
-          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass SurvivingSmall TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate SurvivingExactGate OriginalNextBridge; do
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass SurvivingSmall TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate ManyShield RootMinIndex SurvivingExactGate OriginalNextBridge; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
           lake env lean "Agent10Bridge/OriginalSurvivingBridge.lean"
+          lake env lean "Agent10Bridge/OriginalMinIndexBridge.lean"
           echo "Unmodified pinned upstream highLevelNext and source-indexed surviving-gate bound compiled."
