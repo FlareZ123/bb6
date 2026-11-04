@@ -1,5 +1,31 @@
 # Agent 6: BB(6) #429 harmonic-gate and corridor transfer programme
 
+## 2026-11-04 16:13 UTC: entire 125(mod1024) halting sector excluded, all time
+
+**New source-shaped theorem:** [BB429No125mod1024.lean](BB429No125mod1024.lean) proves, for every natural time `n`, terminal counters `a,b`, and the exact copied 12-branch `BB429.next/run` from Agent5's source, that
+```lean
+BB429.run n (0,0)=some (a,b) →
+  b+1=2*a → a%1024≠125
+```
+The source-shaped Lean4.36.0-rc2 proof compiles **locally with standard logical axioms only** (`propext`, `Classical.choice`, `Quot.sound`), and no `sorry` or `native_decide`. A **full unchanged local source + pinned original Cryptids source** audit has been dispatched in [manual CI 41865169020](https://github.com/FlareZ123/bb6/actions/runs/41865169020), **queued** at recording time. Local copied-model verification is meaningful but distinct from successful original-source verification.
+
+This removes a complete eighth of the previously remaining `a%128=125` terminal cylinder: `a=1024t+125`, all `t≥0`. Expressed as a necessary modular condition, the earlier six possible residues modulo128 refine to the following **47 out of 128 potential residue subclasses modulo1024**: the previous `a%128∈{9,53,73,81,117,125}` with the one excluded subclass `a%1024=125`. All other surviving classes remain unresolved. The actual blank trajectory of #429 remains open; neither this exclusion nor earlier ones determine BB(6). External mathematical novelty is not yet independently established. Keep the work here in `im-results`.
+
+**Proof mechanism and reproducibility:** The halting line `b+1=2*a` has unique first-branch predecessor `(512t+61,3072t+374)`. The next four forced parents are, in order,
+```
+(256t+29,3584t+435)
+(128t+13,3840t+464)
+(64t+5,3968t+477)
+(32t+1,4032t+482)
+```
+The `t=0` case is impossible because positive first counter 5 has no genuinely blank-reachable predecessor. For positive `t`, the last state has exactly two source predecessors: `(16t-1,4064t+483)` and `(1040t+115,2016t+243)`. Exact source inversion and root parity reduce both to configurations with a *positive even first counter whose second counter is not 2(mod4)*. That contradicts the independently established all-time source-shaped parity lemma [BB429LowOddMod8.lean](BB429LowOddMod8.lean). Crucially this proof covers all `t`, with every alternative incoming transition exhausted by `BB429.next` case splits, rather than a finite search.
+
+**Reusable rooted restriction:** [BB429LowOddMod8.lean](BB429LowOddMod8.lean) independently proves at every actual blank time that `u=13 ⇒ w%8=2`, `u=29 ⇒ w%8∈{2,5}`, and `u=61 ⇒ w%8∈{0,2,5}`. This follows from the exact odd-output inverse dichotomy, no reachable `u=1,5`, and the positive-even parity invariant. It is locally Lean-checked with standard axioms. [BB429InverseRay.lean](BB429InverseRay.lean) proves arbitrary finite *synthetic* halting paths of depth `L+1` from `(61,512*2^L-3L-138)` ending on a 125(mod128) terminal. Every intermediate first counter in the first-only suffix is odd. Genuine blank reachability of those synthetic starting states would require `L%8∈{2,3,4}`; none was established. These rays reveal why fixed-depth inverse parity alone cannot close every 125(mod128) gateway.
+
+**Independent validation boundary:** Earlier six-family raw-TM equivalence was checked against the **unchanged pinned original Cryptids source** in [CI 41847807220](https://github.com/FlareZ123/bb6/actions/runs/41847807220), **completed successfully** at 14:40:49 UTC. This new 125(mod1024) theorem is currently a complete locally kernel-checked result for the exact copied source definition, with its original pinned-source bridge audit pending. Its mathematical content is separate from the prior six-family proof.
+
+---
+
 ## 2026-11-04 13:55 UTC: stronger rooted #429 inverse-halting barriers (Agent 6)
 
 **Exact theorem scope.** The genuinely blank-origin accelerated trajectory from `(0,0)`, with `BB429.next` as in unchanged `agent5-429-rank/BB429Rank.lean`, cannot encounter a terminal junction `b+1=2*a` with `a%64=41`, `a%64=49`, or **`a%64=21`**. The first two cases are in [BB429NewGate.lean](BB429NewGate.lean); the entire 21 sector, including its exceptional first value `a=21`, is in [BB429TwentyOne.lean](BB429TwentyOne.lean). The separate [BB429Deep17.lean](BB429Deep17.lean) proves every actual terminal with `a%32=17` must have `a%128=81`. This refines the original four-class modulus-32 criterion to a **six-residue modulo-128 necessary condition**:
