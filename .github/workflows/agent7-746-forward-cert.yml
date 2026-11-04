@@ -1,0 +1,51 @@
+name: Agent 7 source-C first-reset forward certificate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-forward:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2 and generator dependency
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --user filelock
+      - name: Compile unchanged original checked-in source dependency chain
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          export LEAN_PATH="$a:$b:$f"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          lean -o "$a/LowGates.olean" "$a/LowGates.lean"
+          lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
+          lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
+          lean -o "$a/PreimageCandidates.olean" "$a/PreimageCandidates.lean"
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          lean -o "$f/ForwardGeneric.olean" "$f/ForwardGeneric.lean"
+          lean -o "$f/ForwardProof.olean" "$f/ForwardProof.lean"
+      - name: Kernel-check 1024-index complete forward certificate
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          export LEAN_PATH="$a:$b:$f"
+          python3 "$f/generate_forward_certificate.py" --index 1024 --chunk-size 150 --output "$f/ForwardCheck1024.lean"
+          lean "$f/ForwardCheck1024.lean"
+          echo "Original checked-in C source: exact forward reset certificate through n<=1024 passed."
