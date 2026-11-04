@@ -50,3 +50,14 @@ jobs:
       - name: Verify all-k special-target modular Lean lemmas
         run: |
           lean im-results/agent22-sheep-special-targets/SmallMods.lean
+      - name: Verify original-source all-exponent special-target no-incoming theorem
+        run: |
+          for name in SmallMods HighValuationGap SpecialSourceGap NoGenericTarget NoTarget; do
+            cp "im-results/agent22-sheep-special-targets/$name.lean" /tmp/agent22-cone-build/
+          done
+          cd /tmp/agent22-cone-build
+          export LEAN_PATH=.
+          for name in SmallMods HighValuationGap SpecialSourceGap NoGenericTarget; do
+            lean -o "$name.olean" "$name.lean"
+          done
+          lean NoTarget.lean
