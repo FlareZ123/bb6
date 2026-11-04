@@ -76,6 +76,13 @@ theorem backwardFull_iff (x y : Nat) :
   backwardHit (x+2*y) (x,y) = true ↔ SectionReach x y := by
   rw [backwardHit_iff, section_reach_iff_bounded]
 
+
+theorem backwardHalfFull_iff (x y : Nat) :
+  backwardHit ((x+2*y)/2) (x,y)=true ↔ SectionReach x y := by
+  rw [backwardHit_iff, section_reach_iff_half_bound]
+
+#print axioms backwardHalfFull_iff
+
 #print axioms backwardHit_iff
 #print axioms backwardFull_iff
 end BB6.Agent11Backward
