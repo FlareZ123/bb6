@@ -23,14 +23,15 @@ theorem source_critical_d5_needs_exponential_reset_budget
     (hcone : CountCone (14*2^n-2*n-16) 3 b d m z)
     (hd : d=5) :
     2^n ≤ budget (n+2) z := by
-  by_contra h
-  have hsmall : budget (n+2) z < 2^n := by omega
-  have hbound := source_counted_cost_lt_exponent n b d m z hn hcone hsmall
-  have hodd : OddCone (14*2^n-2*n-16) 3 b d m :=
-    counted_is_odd _ _ _ _ _ _ hcone
-  have hcost := BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four
-    n b d m hn hodd hd
-  omega
+  by_cases hneed : 2^n ≤ budget (n+2) z
+  · exact hneed
+  · have hsmall : budget (n+2) z < 2^n := by omega
+    have hbound := source_counted_cost_lt_exponent n b d m z hn hcone hsmall
+    have hodd : OddCone (14*2^n-2*n-16) 3 b d m :=
+      counted_is_odd _ _ _ _ _ _ hcone
+    have hcost := BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four
+      n b d m hn hodd hd
+    omega
 
 #print axioms BB6.Agent8Reset.source_critical_d5_needs_exponential_reset_budget
 end BB6.Agent8Reset
