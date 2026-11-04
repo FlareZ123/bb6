@@ -92,3 +92,31 @@ This statement has no bounded-history, low-budget, or unproven seed assumption.
 This is an exact, fully quantified necessary relationship between the critical exponent n and the true count z of positive-depth inverse steps, holding at every proposed affine-wall witness. It makes the growing reset-complexity obstruction explicit without requiring a seed check. Its most important open connection is whether a second genuine-source invariant can cap the number or arrangement of resets and thereby force a contradiction. The two supplemental modules are in `growth.tar.xz.b64`, authenticated by their SHA-256 and CI workflow. Standard Lean axioms only.
 
 Mathematically the elementary inequality implies an asymptotic reset-count necessity `z = Ω(log n)` along any hypothetical infinite family of such wall witnesses. This logarithmic interpretation is a real-analysis consequence of the Lean statement and exponential dominance, rather than a separate Lean proof of a numerical-logarithm formula. No general P1 nonhalting claim follows.
+
+
+## Exceptional `c=1` successor: source-certified exponential cost obstruction (2026-11-04)
+
+**Original unchanged-source Lean 4.36.0-rc2 manual CI [41766193226](https://github.com/FlareZ123/bb6/actions/runs/41766193226) succeeded.** The source-connected theorem `BB6.Agent8Exceptional.source_critical_odd_d5_exponential_cost` is in [ExceptionalExpSource.lean](ExceptionalExpSource.lean). Its prerequisites are direct source-unmodified `OddCone` and `source_oddcone_has_word`; `#print axioms` used only standard axioms `propext`, `Classical.choice`, `Quot.sound`. `ExceptionalCost.lean`, `ExceptionalStrong.lean`, `ExceptionalExp.lean` provide the pure word theorem. [Earlier original source run 41764826943](https://github.com/FlareZ123/bb6/actions/runs/41764826943) established the initial `n+2` boundary; [run 41765872132](https://github.com/FlareZ123/bb6/actions/runs/41765872132) further verified `n+4`.
+
+For **every** natural `n>=14`, every genuine source-defined `OddCone (14*2^n-2*n-16) 3 b d m` with **`d=5`** obeys
+
+```
+n+4 <= m
+6*2^n <= (n+m+3)*2^(m+1-n).
+```
+
+The `d=5` condition is the exact odd successor of a source `inverseAt` predecessor with output `c=1` (as `d'=c+4`), one exceptional exit mechanism not included in the earlier affine-wall reset-count investigation. This is a **necessary** cost constraint and does not remove high-cost exceptional histories, prove blank nonreachability, exclude all other exits, or decide P1/BB(6). It is not an independent externally assessed novel holdout decision, so belongs in `im-results/`.
+
+### Proof mechanism
+
+The exact word abstraction `OddWord K D m A T` (Agent28's original [OddWordCost.lean](../agent28-p1-word-automaton/OddWordCost.lean)) has the source-proved identities `2^m*D+T=1+K*A` and `A<2^m`. Our additional induction gives `T<=m*A`. For the exceptional output `D=2`, this implies `K<=m+2^(m+1)` and, using `K+n+3=7*2^n`, `m>=n+2`. The prefix structure of `A` excludes `A=2`; a separate argument excludes `A=1`, hence `A>=3` and `m>=n+4`.
+
+For the stronger inequality write `P=2^n`, `Q=2^(m+1-n)`. The exact mass equation becomes
+
+```
+7*P*A + 1 = P*Q + (n+3)*A + T.
+```
+
+As `A>=1`, `T>=0`, `P>0`, deduce `Q+1<=7*A`; hence `P<=(n+m+3)*A`. If `n+m+3<=P`, then `T<=m*A` forces `6*A<=Q` and `6*P<=(n+m+3)*Q`. Otherwise `n+m+3>P` and the earlier `m>=n+4` gives `Q>=32`, which also forces the result. All these inequalities are Lean-kernel-checked in [ExceptionalExp.lean](ExceptionalExp.lean).
+
+**Next:** try to convert this exponential necessary inequality into a clean asymptotic linear threshold (e.g. `4m>=7n`) with an original-source Lean corollary; investigate a source invariant upper-bounding the total exceptional predecessor cost. Any such cost cap must be an independent genuine-root property to lead to an exclusion. Coordinate with Agent28, who owns the source `OddWord` and exceptional-cone framework.
