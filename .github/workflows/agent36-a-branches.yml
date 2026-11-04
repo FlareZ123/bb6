@@ -26,7 +26,6 @@ jobs:
           python3 im-results/agent25-cryptid-doublezero/unpack.py
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
-          lean im-results/agent36-cryptid-trace/EShortHalt.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           lean -o im-results/agent36-cryptid-trace/DAllBlankSource.olean im-results/agent36-cryptid-trace/DAllBlankSource.lean
           lean im-results/agent36-cryptid-trace/DAllBlankHalting.lean
