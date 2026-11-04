@@ -37,10 +37,16 @@ private theorem e_to_b_section (t q : Nat) (ys : List Bool) :
       init (List.replicate (3*(8*t+1)) true ++
         false :: (List.replicate (2*q+6) true ++ tail ys)) := by
   rw [bWord_shape]
-  simp [init,List.append_assoc]
-  have hn : 8*(3*t)+5 = 2+(3*(8*t+1)) := by omega
-  rw [hn]
-  simp [List.replicate_append_replicate, List.append_assoc]
+  have hrep : List.replicate (8*(3*t)+5) true =
+      true :: true :: List.replicate (3*(8*t+1)) true := by
+    have hn : 8*(3*t)+5 = 2+3*(8*t+1) := by omega
+    rw [hn]
+    calc
+      _ = List.replicate 2 true ++ List.replicate (3*(8*t+1)) true := by
+            rw [List.replicate_append_replicate]
+      _ = _ := by rfl
+  rw [hrep]
+  rfl
 
 /-- Source-original two consecutive exact return endpoints, from the
     E k=3t exceptional terminal to a B follow-up for any q and suffix. -/
@@ -67,7 +73,21 @@ theorem e_then_b_simplified (t q : Nat) (ys : List Bool) :
           (List.replicate (2*q+6) true ++ tail ys),5⟩ := by
   have ht : 876*t*t+731*t+181+4*q =
     (12*(3*t)*(3*t)+49*(3*t)+80+4*q) +
-    (12*(8*t+1)*(8*t+1)+49*(8*t+1)+40) := by omega
+    (12*(8*t+1)*(8*t+1)+49*(8*t+1)+40) := by
+    have h1 : 12*(3*t)*(3*t) = 108*(t*t) := by
+      calc
+        _ = (12*3*3)*(t*t) := by ac_rfl
+        _ = _ := by rfl
+    have h2 : 12*(8*t+1)*(8*t+1) = 768*(t*t)+192*t+12 := by
+      calc
+        _ = 12*(8*t)*(8*t)+2*12*(8*t)+12 := by
+              simp only [Nat.mul_add, Nat.add_mul]
+              omega
+        _ = (12*8*8)*(t*t)+(2*12*8)*t+12 := by ac_rfl
+        _ = _ := by rfl
+    rw [h1,h2]
+    simp only [Nat.mul_add,Nat.mul_assoc]
+    omega
   rw [ht]
   simpa only [show 9*t+2=3*(3*t)+2 by omega,
     show 64*t+17=8*(8*t+1)+9 by omega] using e_then_b t q ys
