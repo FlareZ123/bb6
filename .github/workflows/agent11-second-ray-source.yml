@@ -42,4 +42,6 @@ jobs:
           done
           base64 -d "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayEven0.lean.xz.b64" | xz -d > SecondRayEven0.lean
           echo "3534767dfcb3b0bdd60309ce5754de4c31d2aff6ab0ce06e5ea422c0e147fd3c  SecondRayEven0.lean" | sha256sum -c -
-          lean SecondRayEven0.lean
+          lean -o SecondRayEven0.olean SecondRayEven0.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayZero.lean" .
+          lean SecondRayZero.lean
