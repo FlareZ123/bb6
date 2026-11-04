@@ -189,3 +189,19 @@ For every `m,a,k : Nat`, write `D=4^(m+1)*(3*m+4)`, `X=6*m+5`, `Y=D-(6*m+6)`. Th
 3. High bounce `a>=3, a<2*k`: there is *odd* `n` with `D=2^(n+1)*(a+3)` and `2*k+a+7+3*n=X+2*Y`.
 
 It also proves every source to this odd-sum ray has odd first coordinate. The previous `SecondGateExactFiber.md` predicted a full exact predecessor cardinality `m+1+ceil(v2(3m+4)/2)` by arithmetic; **the new Lean theorem establishes the missing source-exhaustive classification**, but it has not yet formally counted its solutions or excluded them from the actual blank orbit. Exact cardinality and true-root reachability remain distinct tasks. No Machine C halting decision or BB(6) result follows.
+
+### 2026-11-04 23:02 UTC: exact `m+1` incoming cardinality for every odd stopping-ray parameter
+
+**Source-checked original Machine C result, manual pinned Lean CI [41930302660](https://github.com/FlareZ123/bb6/actions/runs/41930302660), SUCCESS at `9e0ed6a60d53de651fdf6174d817590997172ea8`.** The final theorem `BB6.Agent11Ray.odd_ray_exact_incoming_count` in [SecondRayOddCount.lean](SecondRayOddCount.lean), with [SecondRayOddComplete.lean](SecondRayOddComplete.lean) and [SecondRayPowerOdd.lean](SecondRayPowerOdd.lean), compiled against original unchanged Agent46 section map, Agent3 full inverse, and previously certified Agent11 incoming fan. All final axiom audits show exactly `[propext, Classical.choice, Quot.sound]` and no sorryAx.
+
+For **every odd natural `m`**, let `T_m=(6m+5,4^(m+1)*(3m+4)-6m-6)`. There is an explicit function `oddRayIndexed m : Fin (m+1) → Nat×Nat` which is injective and whose image is *exactly* the entire original `secNext` preimage of `T_m`:
+
+```lean
+∃ f : Fin (m+1) → Nat×Nat,
+  Function.Injective f ∧
+  ∀ a k, secNext (a,k) = some T_m ↔ ∃ i, f i = (a,k)
+```
+
+The index 0 is the unique direct predecessor `(D-3,(Y-2)/2)`; indices 1 through `m` are exactly the `m` high-bounce sources of previously proved `FanArithmetic.source m`. The `a=1` exceptional sector disappears because `3m+4` is odd and greater than one, so `D=4^(m+1)(3m+4)` cannot be a power of two. The high-source bounce depth is constrained to `2s+1` with `s<m`, which is proved by cancellation and parity, without a simulation cutoff. Direct/high disjointness uses an explicit rank factor inequality, and the high fan injectivity was already independently source certified.
+
+This **formally proves the odd-`m` specialization** of the general tentative cardinal formula in `SecondGateExactFiber.md` and improves previous source-certified `≥m` to **exactly `m+1`** for every odd `m`. The even-`m` valuation-dependent cardinality remains an arithmetic derivation awaiting formal enumeration. All these predecessors can be synthetic; nothing here proves `T_m` reachable from the genuine blank tape or settles Machine C or BB(6). Work next on a true-root predecessor reduction using this finite exact image and on the residual even-`m` family.
