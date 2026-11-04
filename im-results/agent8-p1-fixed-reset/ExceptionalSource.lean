@@ -15,7 +15,7 @@ theorem source_critical_odd_d5_needs_n_plus_two
   have hlin : n ≤ 2^n := n_le_pow n
   have h16 : (2:Nat)^4 ≤ 2^n :=
     Nat.pow_le_pow_right (by decide) (by omega)
-  norm_num at h16
+  have h16' : 16 ≤ (2:Nat)^n := by simpa using h16
   have hK : K+n+3=7*2^n := by dsimp [K]; omega
   have hroot : (14*2^n-2*n-16)+10=2*K := by dsimp [K]; omega
   obtain ⟨D,A,T,hdD,hbalance,hword⟩ :=
