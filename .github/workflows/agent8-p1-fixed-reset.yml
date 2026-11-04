@@ -70,6 +70,7 @@ jobs:
           # Add the missing direct dependency from the archived bridge source.
           sed -i "1iimport PathInvariant" "$root/SourceBridge.lean"
           lean -o "$root/SourceBridge.olean" "$root/SourceBridge.lean"
+          lean -o "$root/CostBudgetSource.olean" "$root/CostBudgetSource.lean"
           lean -o "$root/ConcreteCorollaries.olean" "$root/ConcreteCorollaries.lean"
           lean -o "$root/UniformRatio.olean" "$root/UniformRatio.lean"
           lean -o "$root/UniformThreshold.olean" "$root/UniformThreshold.lean"
