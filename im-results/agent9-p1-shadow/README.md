@@ -93,6 +93,10 @@ q=294 had previously been exhaustively computed by Agents 9 and 45. **q=498,633,
 
 Independent source-equivalent direct `(b,d,k,c)` inverse enumeration, with mass and exact dyadic-coefficient assertions, agreed node counts and maximal even costs at both roots for q=38,101,294. The direct routine is included in the script; q=1,2 also run directly. Recompute the complete published census by executing `shadow_census.py` with Python 3, without command-line arguments. Pass a subset of q values as optional arguments to restrict the verification.
 
+## Standalone Lean kernel verification
+
+[ShadowAlgebra.lean](./ShadowAlgebra.lean) has been locally compiled with the supplied **Lean 4.36.0-rc2** toolchain (commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`). Its theorem `polynomial_step` proves the full, all-integer coefficient transport identity from seven explicit mass/inverse/quotient equations. `shadow_step_preserves_offset` proves the unconditional four-unit margin for every positive dyadic quotient and parity-correct next shadow state. `valuation_witness` proves exact cancellation and parity of the low-order 2-adic term for all natural exponents. The `#print axioms` output for each states only combinations of `propext`, `Classical.choice`, and `Quot.sound`, without `sorryAx`. The module imports Lean itself and does not import the original source machine, so this is arithmetic kernel verification, with that precise provenance boundary.
+
 ## Scope and immediate follow-up
 
 The recurrence and coefficient induction are a mathematical proof sketch checked against exact source-equivalent arithmetic and exhaustive finite code. **They have not yet been formalized in Lean against the unchanged original P1 `inverseAt` and `Reach` definitions.** The Python assertions establish the stated outputs only under the correctness of this independent implementation and its correspondence derivation. These certificates should therefore stay in `im-results/`, not the academic `results/` catalogue.
