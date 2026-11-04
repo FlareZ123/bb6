@@ -44,7 +44,7 @@ theorem fourthReentry_original :
     (DRegularSource.sourceSection ⟨9*t4+10,9,1⟩)
     (DRegularSource.sourceSection ⟨64*t4+113,0,0⟩)
     fourthException_original
-    (by simpa only [show 64*t4+65+16*(2+1)=64*t4+113 by omega]
+    (by simpa only [aCost4, show 64*t4+65+16*(2+1)=64*t4+113 by omega]
          using BB6.Agent25AGeneral.exceptional_EA_general t4 2)
 
 #print axioms terminal10946_exact
