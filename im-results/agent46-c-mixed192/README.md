@@ -1,6 +1,6 @@
 # Machine C: 192-counter-precision backward core and first-gate m≡38 (mod 64)
 
-**Agent 46, 2026-11-04. Status: new local Lean theorem, unmodified-repository-source GitHub CI pending.** No Machine C nonhalting proof or exact BB(6) result. Theorems are preserved in `im-results/` pending source certification and independent novelty review.
+**Agent 46, 2026-11-04. Status: two new local Lean theorems, unmodified-repository-source GitHub CI pending.** No Machine C nonhalting proof or exact BB(6) result. Theorems are preserved in `im-results/` pending source certification and independent novelty review.
 
 ## Exact theorem and origin
 
@@ -43,4 +43,12 @@ The earlier mixed192 quotient with high-counter periodicity **96** instead of 19
 
 This class m≡38 (mod64) belongs to the prior Agent15 list of **first-family parameters that pass the original one-sided mod16 exclusion filter** (m%16=6). It is disjoint from the Agent11 all-depth first-gate hierarchy requiring m≡8 (mod64), and distinct in parameter from Agent21's recent m≡11 (mod64) core. These comparisons establish separateness from those **particular** results, not external or global mathematical novelty. Independently audit Agent3/11/15/43 and other higher-modulus barriers before any `results/` promotion.
 
-Other quotient-surviving-at-lower-precision first-family candidates include m≡58 (mod64) from the same 192/192 quotient, plus m≡3 or 51 (mod128) from 384/192 precision. They remain experimental until their own source proof, and may overlap existing theory. Next useful work: source-CI proof check, independent novelty/subsumption test, then a distinct surviving halt family or systematic mechanism covering both Machine C stopping families.
+Additional 384/192-precision first-family candidates m≡3 or 51 (mod128) remain experimental until a source proof, and may overlap existing theory. Next useful work: source-CI proof check, independent novelty/subsumption test, then a distinct surviving halt family or systematic mechanism covering both Machine C stopping families.
+
+## Second all-natural source theorem: m≡58 (mod64), k≡142 (mod192)
+
+**Local Lean 4.36.0-rc2 source-declaration test completed at 00:30 UTC**, with the terminal axiom audit only `[propext, Quot.sound]`. `C58.lean` proves `BB6.Agent46C58.first_142_mod192_unreachable` for every natural `k%192=142` and every finite-time genuine `BB6CLine.Reach`. `C58Arithmetic.lean` proves the exact first-halt parameter corollary `first_halt_m58_mod64_unreachable` under `m%64=58` and `k+3m+4=2^(2m+3)`. The Lean proof uses exactly the original source nextC/Reach declaration bodies copied into the local test and case-by-case Presburger closure, with no finite-step cutoff or axiom mocks. The unmodified-full-source boundary is scheduled in [manual workflow run 41747474167](https://github.com/FlareZ123/bb6/actions/runs/41747474167), alongside the independent earlier m38-only run 41746834615; both were still queued at this checkpoint. Audit the actual run conclusions before claiming full source certification.
+
+The m58 reverse core has 39 low states at `c=0`, 39 at `c=1`, and 65 high states at each high-counter residue. It is compressed into 20 low clauses (19 w%96 half-planes plus one w%192 special), and 33 high clauses (32 t%96 pairs plus one t%192 special). Total **12,558** abstract states. The original-source-transcribed independent exhaustive C++17 representative check examined **56,918,016** representatives, **56,770,560** defined edges, and found **zero** closure violations, with root outside and target inside. This finite test is supplementary to the all-natural Lean backward theorem.
+
+An independently reconstructed Agent43 B8/M32 graph reaches the abstract cells of both `(1,10,0)` and `(1,142,0)`, reproducing the published **31,570 reachable / 189,834 edges**. Therefore these two exact source exclusions go beyond the *specific* already certified M32 quotient's ability to exclude those target classes; quotient presence never implies actual reachability. This is a distinct-method comparison, not a novelty audit against all source inverse theorems. Combined new first-family parameter congruences are `m%64∈{38,58}`, both outside Agent11's m≡8 mod64 all-depth hierarchy and Agent21's m≡11 mod64 condition. Machine C and BB(6) remain open.
