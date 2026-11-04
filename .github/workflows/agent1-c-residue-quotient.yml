@@ -1,0 +1,45 @@
+name: Agent 1 Machine C residue quotient soundness (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore source and check SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/bb6-c-quotient-venv
+          /tmp/bb6-c-quotient-venv/bin/python -m pip -q install filelock
+          /tmp/bb6-c-quotient-venv/bin/python im-results/agent1-c-residue-quotient/reconstruct.py
+          mkdir -p /tmp/agent1-c-quotient
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent1-c-quotient/CLine.lean
+          cp im-results/agent1-c-residue-quotient/{Quotient.lean,Quotient192.lean,Bits8.lean,Orbit8.lean,SourceBridge.lean} /tmp/agent1-c-quotient/
+          sha256sum /tmp/agent1-c-quotient/CLine.lean
+      - name: Kernel-check copied-source finite pilot and unchanged original bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/agent1-c-quotient
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o Quotient.olean Quotient.lean
+          lean -o Bits8.olean Bits8.lean
+          lean Orbit8.lean
+          lean -o Quotient192.olean Quotient192.lean
+          lean SourceBridge.lean
