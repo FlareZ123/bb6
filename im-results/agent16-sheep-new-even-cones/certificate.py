@@ -107,6 +107,16 @@ def check_case(J, P, nodes, edges):
         assert a >= 1 and h >= 0 and parent < child
         assert child_node(nodes[parent], h, a) == nodes[child]
         expected[parent].add((h, a))
+    # Separate indexed nodes for every j>=J: crossed affine differences
+    # have a slope whose sign agrees with their exact value at the base.
+    for i, j in combinations(range(len(nodes)), 2):
+        si, bi, di = nodes[i]
+        sj, bj, dj = nodes[j]
+        slope = (1 << si) * dj - (1 << sj) * di
+        offset = bi * dj - bj * di
+        at_base = slope * (1 << J) + offset
+        assert at_base != 0
+        assert slope == 0 or (at_base > 0) == (slope > 0)
     low_rows, reps, max_order, specials = 0, 0, 0, 0
     for index, (s, b, d) in enumerate(nodes):
         assert d > 0 and d % 2 == 1 and b % 2 == 0
@@ -176,6 +186,30 @@ def check_case(J, P, nodes, edges):
             s2, b2, d2 = child
             assert d2 * x == (1 << (J + s2)) + b2
             assert x > 10 and x < y0
+    # Every declared edge is genuine for all k: its modular quotient is
+    # integral for every k (above), and its parity is constant since the
+    # change in numerator is divisible by twice the odd denominator.
+    for parent, h, a, child in edges:
+        s, b, d = nodes[parent]
+        D = d * pow(3, h)
+        C = (1 << h) * (b - d) + D
+        S = s + h
+        modulus = D * ((1 << (a + 1)) + 1)
+        initial = (1 << (J + S + 1)) - (D * (2 * a - 1) - 2 * C)
+        v0, remainder = divmod(initial, modulus)
+        assert remainder == 0 and v0 >= 5 and v0 % 2 == 1
+        assert pow(2, P, modulus) == 1
+        assert ((1 << (J + S + 1)) * (pow(2, P, modulus) - 1)) % (2 * modulus) == 0
+        for k in (0, 1):
+            exponent = J + P * k
+            xs, xb, xd = nodes[child]
+            ys, yb, yd = nodes[parent]
+            x = ((1 << (exponent + xs)) + xb) // xd
+            y = ((1 << (exponent + ys)) + yb) // yd
+            assert first_even(x) == y
+            assert ((x & -x).bit_length() - 1) == a
+            z = section_next(x)
+            assert (((z - 1) & -(z - 1)).bit_length() - 1) == h
     return (low_rows, reps, max_order, specials)
 
 
