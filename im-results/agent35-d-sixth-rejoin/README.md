@@ -32,3 +32,13 @@ A separate literal-transition regression [check_sixth.cpp](check_sixth.cpp) simu
 A subsequent arithmetic-model probe predicts a further regular-language E exception **34** model returns after `L(32768w+28577,3,2)` for the actual root w, at `q=3,b=1` and `k≡0 mod3`. That next exception may rejoin via preexisting Agent25 `exceptional_EB_general` with p=1. That follow-on root continuation remains a separate, unproved source theorem at the time of this report.
 
 **Scientific boundary:** a finite authenticated genuine-root return path would establish only further survival of one still-undecided six-state machine, not global nonhalting and not exact BB(6). Results should remain in `im-results/` absent independently established academic originality.
+
+
+## 2026-11-04 03:54 UTC: seventh original-blank exceptional episode source-certified
+
+**Original-source Lean CI success** [run 41769146068](https://github.com/FlareZ123/bb6/actions/runs/41769146068), job 126374483989, successful at 03:54:07 UTC with the complete original-source D table restored and the preceding sixth proof recompiled. [SeventhRejoin.lean](SeventhRejoin.lean) includes:
+- `terminal34_exact`: Lean-kernel computation establishes that 34 canonical DRegular steps from sixth reentry `L(32768w+28577,3,2)` reach a **seventh exceptional** section `L(9*t7+4,3,1)`; **axiom-free**.
+- `seventhException_original`: physically genuine all-blank machine reaches that section after its exact accumulated 34 macro durations, applying existing all-eleven-row source contract. Axiom audit `[propext, Classical.choice, Quot.sound]`.
+- `seventhReentry_original`: after the previously proved Agent25 universal E/B two-step return `exceptional_EB_general t7 1`, the physical all-blank machine is in canonical `L(64*t7+23,1,5)`, with an exact symbolic primitive-step timestamp. Axiom audit again `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+
+This strengthens the original-root finite path by one more exceptional episode and 34 regular sections; it remains intermediate, since the true D machine's infinite future or eventual halt is unknown. The same independent exact recurrence interpreter predicts the eighth exception 6046 regular steps beyond this new reentry, `L(9*t8+10,3,1)`, which would rejoin by Agent25's universal E/A source theorem. That further forecast is not a kernel-certified genuine blank section as of this writing.
