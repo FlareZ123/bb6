@@ -38,11 +38,11 @@ theorem a_eight_return (m : Nat) (ys : List Bool) :
       _ = _ := by rw [show 2*m+3+2=2*m+5 by omega]
   exact congrArg (fun z : List Bool => Cfg.mk [] false z 5) hp
 
-/-- Ten-symbol terminal with a 14-one intermediate output. The source
+/-- Twelve-symbol zero-delimited terminal with a 14-one intermediate output. The source
     stack has length m+1, making this statement valid for every m≥0. -/
 theorem a_ten_start (m : Nat) (ys : List Bool) :
     run 31 (aBoundary (m+1)
-       ([true,true,false,true,false,true,false,true,false,true] ++ ys)) =
+       ([true,true,false,true,false,true,false,true,false,true,false,false] ++ ys)) =
       sweepB m (false :: List.replicate 14 true ++ ys) := by
   cases m with
   | zero => simp [aBoundary, sweepB, run, step, goL, goR, pairs, List.replicate]
@@ -50,7 +50,7 @@ theorem a_ten_start (m : Nat) (ys : List Bool) :
 
 theorem a_ten_return (m : Nat) (ys : List Bool) :
     run (2*m+34) (aBoundary (m+1)
-       ([true,true,false,true,false,true,false,true,false,true] ++ ys)) =
+       ([true,true,false,true,false,true,false,true,false,true,false,false] ++ ys)) =
       ⟨[], false, List.replicate (2*m+3) true ++
         (false :: List.replicate 14 true ++ ys), 5⟩ := by
   have ht : 2*m+34 = 31+(2*m+3) := by omega
