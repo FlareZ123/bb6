@@ -167,3 +167,11 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity
         run: |
           lean im-results/agent26-cryptid-e-gate/E1111First.lean
+
+      - name: Verify remaining A packet residues by original machine source
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+        run: |
+          lean -o im-results/agent26-cryptid-e-gate/A110101Closure.olean im-results/agent26-cryptid-e-gate/A110101Closure.lean
+          lean -o im-results/agent26-cryptid-e-gate/E1101010111ThenA.olean im-results/agent26-cryptid-e-gate/E1101010111ThenA.lean
+          lean im-results/agent26-cryptid-e-gate/E1101010111ThenAExtras.lean
