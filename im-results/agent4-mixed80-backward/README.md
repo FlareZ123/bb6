@@ -51,6 +51,23 @@ The candidate sector has `a%4=1,k%4=3`, so it is outside the two `a,k` odd–odd
 
 The pre-existing pinned original DeepMind Cryptids-to-CLine source transport was separately checked in [CI 41696303681](https://github.com/FlareZ123/bb6/actions/runs/41696303681). This file's new CI checks the unchanged checked-in accelerator and its source-equality bridge; the older upstream transport remains a named separate dependency. No universal Busy Beaver upper bound or exact value follows.
 
+
+## Second independently certified M80 reverse core: first stopping family
+
+**New as of 2026-11-04 19:04 UTC:** A separate compact all-natural reverse-closed M80 core excludes every authentic accelerated state `(1,k,0)` with `k%80=71`. The genuine first-family stopping equation `k+3*m+4=2*4^(m+1)` intersects this cylinder **if and only if** `m%80=39` for all `m≥2`. The formal theorem `A4First80.first_m80_iff` proves this exact arithmetic iff, and `A4First80.source_first_m39_unreachable` proves that **all** resulting first-family halting candidates are unreachable from the genuine blank entry at any finite accelerated time.
+
+The entire source chain **passed unchanged-source Lean 4.36.0-rc2 [CI 41892845571](https://github.com/FlareZ123/bb6/actions/runs/41892845571)**. Full axioms of `backward_step`, `source_blank_never_bad80`, `source_no_first80`, and `source_first_m39_unreachable` were `[propext, Classical.choice, Quot.sound]`. `first_m80_iff` used only `[propext, Quot.sound]`. None contained `sorryAx`.
+
+The reverse core has these explicit predicates, with `w=k+c`:
+- For `c=2`, false; for `c<4` otherwise, `(a%80,w%80)=(1,71)` or `(a%80,w%40)=(34,11),(74,31)`.
+- For `c≥4`, take `d=(a+80-c%80)%80`, `t=(a+k)%80`; require `(d,t%40)=(9,33),(16,35),(31,2),(56,15),(71,22)` or exact `(d,t)=(78,69)`.
+
+The entire all-natural `A4First80.backward_step` is in [First80.lean.gz.b64](First80.lean.gz.b64), reconstructed via the manual CI workflow with SHA256 `ccbdee97223d0fb09899a3a72ac758aa9b3cce43c7ab20c326e972c4371e4036`; [First80Source.lean](First80Source.lean) imports the **unchanged** original CLine and first-family reach, while [First80Arithmetic.lean](First80Arithmetic.lean) and [First80Stop.lean](First80Stop.lean) prove exact parameter arithmetic and its root exclusion.
+
+An independent C++ implementation [check_first.cpp](check_first.cpp) exhaustively verifies reverse closure for all **4,172,800 representative edges**, **895** forbidden quotient states, with the genuine root outside. Both first/second finite checkers and the complete original-source Lean chain passed [follow-up CI 41893106291](https://github.com/FlareZ123/bb6/actions/runs/41893106291).
+
+**Novelty boundaries:** The new `m%80=39` first-depth class is disjoint from the previously specifically cited Agent46 `m%64=38,58`, `m%128=3,51`, and Agent21 `m%64=11` classes as *congruence conditions* only in part; arithmetic class intersections can occur at larger periods. Its witness candidate `(a,k,c)=(1,k_{m=39},0)` is admitted by the specified earlier low-precision forward quotient checks. Broader overlap against Agent3/11/15, Agent43 kernel quotient and published results is **not yet fully audited**. The two cores give an independently source-certified obstruction in **both** of Machine C's stopping sectors, but leave infinitely many halting candidates in each and do not decide the machine or BB(6).
+
 ## Reproduction and next useful problem
 
 The manual-only [GitHub Actions workflow](../../.github/workflows/agent4-machine-c-80.yml) checks the finite graph, reconstructs the hash-pinned Lean source, compiles original `CLine`, `BackwardMod`, `SourceBridge`, the new `Five80Compact`, `Five80Stop`, `Five80Source`, `Five80Second` and `Five80OnlyTwo`, and prints the final axioms. Reproduction does not need a simulation cutoff.
