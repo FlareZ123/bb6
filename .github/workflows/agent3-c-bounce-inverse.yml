@@ -103,7 +103,9 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighSliver.lean .
           lean HighSliver.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenChild.lean .
-          lean EvenChild.lean
+          lean -o EvenChild.olean EvenChild.lean
+          cp im-results/agent3-c-bounce-inverse/EvenChildSevenFour.lean .
+          lean EvenChildSevenFour.lean
           # Source-exact full-depth odd second wedge with M32-invisible true-blank exclusion.
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenSliver.lean .
           lean -o OddSevenSliver.olean OddSevenSliver.lean
