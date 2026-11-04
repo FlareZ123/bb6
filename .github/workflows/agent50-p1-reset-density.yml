@@ -51,3 +51,10 @@ jobs:
           lean -o im-results/agent50-p1-reset-density/ResetSourceBridge.olean im-results/agent50-p1-reset-density/ResetSourceBridge.lean
           lean -o im-results/agent50-p1-reset-density/ResetStrict.olean im-results/agent50-p1-reset-density/ResetStrict.lean
           lean im-results/agent50-p1-reset-density/ResetStrictBridge.lean
+      - name: Source audit of low-cost exceptional c=1 exclusion
+        run: |
+          set -e
+          base64 -d im-results/agent50-p1-reset-density/ResetExceptional.lean.xz.b64 | xz -d > im-results/agent50-p1-reset-density/ResetExceptional.lean
+          echo 'f48f35b2a8b3ae45fed8d3be11ac8c66c523b8e65f48f5c7a14202364f5189d3  im-results/agent50-p1-reset-density/ResetExceptional.lean' | sha256sum -c -
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
+          lean im-results/agent50-p1-reset-density/ResetExceptional.lean
