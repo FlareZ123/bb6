@@ -150,6 +150,8 @@ jobs:
           for f in AffineNormalize AffineParityDepth AffineHaltOneStep SecondDeepSector; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepSecondFinal.lean .
           lean DeepSecondFinal.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/BottomBoundary.lean .
+          lean -o BottomBoundary.olean BottomBoundary.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
