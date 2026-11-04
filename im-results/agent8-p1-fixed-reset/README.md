@@ -147,3 +147,43 @@ For every `n>=14` and every genuine source-defined critical `OddCone (14*2^n-2*n
 Equivalently, `m >= 2*n - floor(log2(n+1))`. At `n=1502`, the theorem requires `m>=2994`; the earlier simpler seven-fourths theorem only implied `m>=2629`. Both bounds are necessary conditions and may be weak compared with the full source exponential inequality.
 
 **Proof:** The source already supplies `m>=n+4` and `6*2^n <= (n+m+3)*2^(m+1-n)`. If `m>=2*n`, the power inequality is trivial. Otherwise `n+m+3<=3*(n+1)`; cancel the positive factor `6*2^(m-n)` from the source inequality to derive `2^(2*n-m)<=n+1`. Lean's `Nat.le_log2` gives the equivalent logarithmic form. Both the pure implication and its exact original-source transport are kernel checked. This new theorem is an elementary strengthening/interpretation of the **previously established exponential constraint**, not a fresh BB(6) halting exclusion. No P1 or BB(6) final decision follows. Retain in `im-results/` pending independent novelty review and a root-wide cost cap.
+
+
+## Source-true reset budgets and the missing zero-even case (Agent 8, 2026-11-04 16:15 UTC incarnation)
+
+**Scope and provenance.** Manual original-source Lean 4.36.0-rc2 [run 41869994650](https://github.com/FlareZ123/bb6/actions/runs/41869994650), [run 41871094190](https://github.com/FlareZ123/bb6/actions/runs/41871094190), and [run 41871939625](https://github.com/FlareZ123/bb6/actions/runs/41871939625) passed with all reported proof axioms confined to Lean's standard `propext`, `Classical.choice`, `Quot.sound` (no `sorryAx`). They compile the unchanged `inverseAt`, `OddCone`, `CountCone`, `Reach`, and the source bridges, with pinned Lean. New modules are readable, uncompressed `.lean` files adjacent to this README.
+
+**New source-wide cost ceiling at small budget.** `CostBudgetSource.lean` proves that for every genuine critical `CountCone` node `(b,d,m,z)` with `n>=14`,
+```
+H_z(n+2)<2^n  ->  m<n.
+```
+This is a direct consequence of the already certified dyadic defect invariant and `N>0`, transported to genuine inverse edges by `source_count_path`; it applies to the complete finite prefix ending at that node, without assuming a wall or an exit.
+
+**Exceptional c=1 budget and reset-degree bounds.** `ExceptionalBudgetSource.lean` combines the above with `source_critical_odd_d5_needs_n_plus_four`, proving for every genuine critical `CountCone` with `d=5`,
+```
+2^n <= H_z(n+2).
+```
+`ExceptionalGrowthSource.lean` and `ExceptionalLogDegreeSource.lean` further prove the all-natural source-true necessary bounds
+```
+2^n <= (20*(n+2))^e_z
+n < (Nat.log2 (20*(n+2))+1)*e_z,
+```
+where `e_0=1` and `e_(z+1)=4*e_z+1`. The logarithm step is proved in standalone `DegreeLogPure.lean`, verified locally and in the original-source CI.
+
+**Two terminal mechanisms, source-full uniform lower bound.** `UnifiedFeederSource.lean` combines the exceptional `d=5` case and original Agent28's positive-even `c>=2` input whose successor satisfies authentic blank-origin `Reach`. If `H_z(n+2)*(3H_z(n+2)+3n+8)<7*2^n`, neither terminal can occur. `UniformFeederSource.lean` upgrades this through the exact `budget_all_larger_exponents` seed-to-tail theorem and proves that **for every critical n>=1502**, an odd source cone reaching either terminal requires **at least four positive-depth resets**. All these statements passed source-verified CI 41869994650. This was a two-terminal result; the zero-output case was separately resolved next.
+
+**New c=0 source arithmetic, not restricted to a low-cost history.** `ZeroEvenCostArithmetic.lean` and `ZeroEvenCostSource.lean` prove that any genuine critical `OddCone` with `n>=14`, a source `inverseAt b d t=some(k,0)` (b>=8, b divisible by 4, k>=2), and a blank-reachable successor `Reach (2*k-4) 4` must obey
+```
+3*2^n+6 <= 2*m.
+```
+This is a substantially higher necessary cumulative inverse cost than the small-budget regime; it uses the exact source mass balance, all-depth dyadic inverse equation, and authentic even-left reachable power shape. Full original-source Lean CI 41871094190 succeeded.
+
+**Exact universal c=0 rigidity.** `ZeroEvenRigidity.lean` and `ZeroEvenRigiditySource.lean` remove even the critical-source root assumption. For any original `inverseAt b d t=some(k,0)` with b>=8 divisible by 4, d odd, k>=2 and `Reach (2*k-4) 4`, there exists j with
+```
+t=j+2
+b=4*(2^j+j)
+d+2*j+3=10*2^j.
+```
+The proof rules out `t<=j+1` using nonnegative odd right counter and rules out `t>=j+3` using b>=8 and `2*t<=2^t`. This completely classifies the **necessary** inverse depth and odd-hub coordinates of this specific genuine P1 even-exit branch; it does not prove any such even successor is actually reachable. Original-source CI 41871939625 verifies it with standard axioms only.
+
+**Caveats and next steps.** The results are necessary filters on source-defined finite inverse histories. No uniform upper bound on the number of resets exists, no entire P1 sector is thereby decided, and no BB(6) upper/lower bound is improved. The arithmetic classification suggests testing whether the rigid `b=4(2^j+j)` nodes can ever arise within the critical source cones, and generalizing the uniform reset obstruction to include c=0 alongside all positive-even outputs and the exceptional c=1 exit. Keep these intermediate results in `im-results/` unless an externally substantial machine decision is established.
