@@ -26,6 +26,9 @@ jobs:
           base64 --decode "$root/uniform.tar.xz.b64" > /tmp/agent8-p1-uniform.tar.xz
           echo "7f5af919950862fa2d1e0cab12ed2d90e211c3299933cb1fb60f81843291e045  /tmp/agent8-p1-uniform.tar.xz" | sha256sum --check
           tar -xJf /tmp/agent8-p1-uniform.tar.xz -C "$root"
+          base64 --decode "$root/uniform-any.tar.xz.b64" > /tmp/agent8-p1-uniform-any.tar.xz
+          echo "fbfac84564260a81ba6634799bc9f1bebdad930d1647c7a2355605868fed7ac6  /tmp/agent8-p1-uniform-any.tar.xz" | sha256sum --check
+          tar -xJf /tmp/agent8-p1-uniform-any.tar.xz -C "$root"
       - name: Compile original P1 source and finite-source reset words
         run: |
           set -eu
@@ -61,3 +64,5 @@ jobs:
           lean -o "$root/UniformRatio.olean" "$root/UniformRatio.lean"
           lean -o "$root/UniformThreshold.olean" "$root/UniformThreshold.lean"
           lean "$root/UniformSourceCorollary.lean"
+          lean -o "$root/UniformAny.olean" "$root/UniformAny.lean"
+          lean "$root/UniformAnySource.lean"
