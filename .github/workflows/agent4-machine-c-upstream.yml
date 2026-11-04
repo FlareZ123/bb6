@@ -56,9 +56,11 @@ jobs:
           for n in Back192BDefs Back192BLow Back192BZero Back192BZeroPos Back192BHighEven Back192BHighOdd Back192BHighPos Back192BStep; do
             lake env lean -o ".lake/build/lib/lean/$n.olean" "$n.lean"
           done
-          for n in SourceBridge192B StopBridge192AB WideStop SideStop; do
+          for n in SourceBridge192B StopBridge192AB WideStop SideStop TerminalNonparity; do
             cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/$n.lean" .
             lake env lean -o ".lake/build/lib/lean/$n.olean" "$n.lean"
           done
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/Upstream504.lean" .
           lake env lean Upstream504.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/UpstreamTerminal.lean" .
+          lake env lean UpstreamTerminal.lean
