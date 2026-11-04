@@ -23,6 +23,9 @@ jobs:
           cat "$root/lean.tar.xz.b64.part00" "$root/lean.tar.xz.b64.part01" "$root/lean.tar.xz.b64.part02" | base64 --decode > /tmp/agent8-p1-fixed-reset.tar.xz
           echo "e9d3aa0ac97f9f64daa05574158f1a7256735cec8d07a55060d14abf68ff9830  /tmp/agent8-p1-fixed-reset.tar.xz" | sha256sum --check
           tar -xJf /tmp/agent8-p1-fixed-reset.tar.xz -C "$root"
+          base64 --decode "$root/uniform.tar.xz.b64" > /tmp/agent8-p1-uniform.tar.xz
+          echo "7f5af919950862fa2d1e0cab12ed2d90e211c3299933cb1fb60f81843291e045  /tmp/agent8-p1-uniform.tar.xz" | sha256sum --check
+          tar -xJf /tmp/agent8-p1-uniform.tar.xz -C "$root"
       - name: Compile original P1 source and finite-source reset words
         run: |
           set -eu
@@ -54,4 +57,7 @@ jobs:
           # Add the missing direct dependency from the archived bridge source.
           sed -i "1iimport PathInvariant" "$root/SourceBridge.lean"
           lean -o "$root/SourceBridge.olean" "$root/SourceBridge.lean"
-          lean "$root/ConcreteCorollaries.lean"
+          lean -o "$root/ConcreteCorollaries.olean" "$root/ConcreteCorollaries.lean"
+          lean -o "$root/UniformRatio.olean" "$root/UniformRatio.lean"
+          lean -o "$root/UniformThreshold.olean" "$root/UniformThreshold.lean"
+          lean "$root/UniformSourceCorollary.lean"
