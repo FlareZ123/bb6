@@ -15,7 +15,7 @@ theorem source_no_low_budget_all_even_feeders
     (hSmall : budget (n+2) z*(3*budget (n+2) z+3*n+8)<7*2^n)
     (hgate : d=5 ∨
       ∃ t k c : Nat,
-        8≤b ∧ b%4=0 ∧ inverseAt b d t=some(k,c) ∧
+        8≤b ∧ b%4=0 ∧ inverseAt b d t = some (k,c) ∧
         2≤k ∧ c%2=0 ∧ BB6.Agent1.Reach (2*k-4) (c+4)) :
     False := by
   let T := budget (n+2) z
