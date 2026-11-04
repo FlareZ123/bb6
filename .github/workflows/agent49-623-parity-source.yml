@@ -78,7 +78,7 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FixedRaysSource.lean" Agent49FixedRaysSource.lean
-          lake env lean Agent49FixedRaysSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49FixedRaysSource.olean Agent49FixedRaysSource.lean
 
       - name: Verify universal 27-unit two-step high-sector gain on original source
         working-directory: /tmp/cryptids
@@ -88,4 +88,10 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/Agent8${name}Source.olean" "Agent8${name}Source.lean"
           done
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TwoStep27HighSource.lean" Agent49TwoStep27HighSource.lean
-          lake env lean Agent49TwoStep27HighSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TwoStep27HighSource.olean Agent49TwoStep27HighSource.lean
+
+      - name: Verify all six exact low-first-counter returns
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/LowStepSource.lean" Agent49LowStepSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49LowStepSource.olean Agent49LowStepSource.lean
