@@ -56,7 +56,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Rank.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Burst.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/"*.lean .
-          for module in BB429Rank BB429Burst BB429PowerBarrier BB429PowerBarrierBurst ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six SourceLadder SourceMod16 SourceMod32 SourceMod32Six SourceRawHaltFunnel; do
+          for module in BB429Rank BB429Burst BB429PowerBarrier BB429PowerBarrierBurst ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six SourceLadder SourceMod16 SourceMod32 SourceMod32Six SourceRawHaltFunnel SourceRawHaltIff; do
             echo "::group::Compile $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
