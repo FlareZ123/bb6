@@ -20,7 +20,7 @@ def duration (k q r : Nat) : Nat :=
     (wordCost (4*k+3) (ws q r) +
       (2*(4*k+3+q+4*r)+24))
 
-private theorem code_append (xs ys : List Bool) :
+theorem code_append (xs ys : List Bool) :
     wordCode (xs++ys) = wordCode xs ++ wordCode ys := by
   induction xs with
   | nil => rfl
@@ -54,7 +54,7 @@ theorem inc_ws (q r : Nat) :
     wordInc (ws q r) = q+4*r := by
   simp [ws,inc_append,inc_false,inc_true]
 
-private theorem oppairs_false (q : Nat) :
+theorem oppairs_false (q : Nat) :
     oppairs q ++ [false] = false :: wordCode (List.replicate q false) := by
   induction q with
   | zero => rfl
