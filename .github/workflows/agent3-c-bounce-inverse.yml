@@ -124,7 +124,9 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddForcedNormalize.lean .
           lean -o OddForcedNormalize.olean OddForcedNormalize.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddForcedDepth.lean .
-          lean OddForcedDepth.lean
+          lean -o OddForcedDepth.olean OddForcedDepth.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/DepthNormalizeBound.lean .
+          lean DepthNormalizeBound.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddForcedFilter.lean .
           lean OddForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean .
