@@ -46,3 +46,4 @@ jobs:
           lean -o im-results/agent37-root-language-pilot/EThenAQ1.olean im-results/agent37-root-language-pilot/EThenAQ1.lean
           lean -o im-results/agent37-root-language-pilot/AAlternatingTriple.olean im-results/agent37-root-language-pilot/AAlternatingTriple.lean
           lean -o im-results/agent37-root-language-pilot/EAlternatingTriple.olean im-results/agent37-root-language-pilot/EAlternatingTriple.lean
+          lean -o im-results/agent37-root-language-pilot/EAlternatingTriple.olean im-results/agent37-root-language-pilot/EAlternatingTriple.lean
