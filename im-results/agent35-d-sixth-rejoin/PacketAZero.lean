@@ -68,7 +68,7 @@ theorem source_a_packet_zero_raw (k q r : Nat) :
   rw [start,hc]
   have h := BB6.Agent35.full_A_code k (ws q r) (List.replicate 6 true)
   rw [inc_ws q r] at h
-  exact h
+  simpa only [Nat.add_assoc] using h
 
 #print axioms source_a_packet_zero_raw
 end BB6.Agent35PacketAZero
