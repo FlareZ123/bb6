@@ -54,22 +54,28 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryFirstSource.lean" Agent8FirstSource.lean
-          lake env lean Agent8FirstSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8FirstSource.olean Agent8FirstSource.lean
 
       - name: Verify Agent8 sharp B-drain budget on unchanged source
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
-          lake env lean -o Agent8BudgetSource.olean Agent8BudgetSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean
 
       - name: Verify Agent49 weighted potential on original source
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/WeightedPotentialSource.lean" Agent49WeightedSource.lean
-          lake env lean -o Agent49WeightedSource.olean Agent49WeightedSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49WeightedSource.olean Agent49WeightedSource.lean
 
       - name: Verify Agent49 large-mass small-output gain
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/SmallOutputGainSource.lean" Agent49SmallOutputSource.lean
           lake env lean Agent49SmallOutputSource.lean
+
+      - name: Verify five exact far-left rays from source-linked transport
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FixedRaysSource.lean" Agent49FixedRaysSource.lean
+          lake env lean Agent49FixedRaysSource.lean
