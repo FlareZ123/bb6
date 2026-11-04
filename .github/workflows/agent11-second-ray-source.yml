@@ -34,4 +34,10 @@ jobs:
           for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef BounceInverse EvenTargetForward BounceEvenExact BounceOddExact FullSectionInverse; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean SecondRayShapeOriginal.lean
+          lean -o SecondRayShapeOriginal.olean SecondRayShapeOriginal.lean
+          python3 "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/reconstruct.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact"/{BounceOriginal,SecondGateFanArithmetic,SecondGateFanInjective,SecondGateFanOriginal,SecondRayPowerOdd,SecondRayOddComplete}.lean .
+          for f in BounceOriginal SecondGateFanArithmetic SecondGateFanInjective SecondGateFanOriginal SecondRayPowerOdd; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean SecondRayOddComplete.lean
