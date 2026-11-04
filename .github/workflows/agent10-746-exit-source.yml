@@ -40,6 +40,7 @@ jobs:
           lean -o "$b/FirstOutcome.olean" "$b/FirstOutcome.lean"
           lean -o "$b/FirstInverseComplete.olean" "$b/FirstInverseComplete.lean"
           lean -o "$b/ResetChain.olean" "$b/ResetChain.lean"
+          lean -o "$b/ResetParentStrict.olean" "$b/ResetParentStrict.lean"
           lean -o "$b/ManyShield.olean" "$b/ManyShield.lean"
           lean -o "$b/RootMinIndex.olean" "$b/RootMinIndex.lean"
           lean -o "$b/FastShield.olean" "$b/FastShield.lean"
