@@ -61,7 +61,10 @@ theorem odd_even_val2_forces_direct (a k x y : Nat)
             obtain ⟨_,n,hpow,_⟩ := hi
             have hdiv : 2 ∣ 2^n*(2*(a-1)+6) := by
               refine ⟨2^n*((a-1)+3),?_⟩
-              omega
+              calc
+                2^n*(2*(a-1)+6) = 2^n*(2*((a-1)+3)) := by
+                  congr 1 <;> omega
+                _ = 2*(2^n*((a-1)+3)) := by ac_rfl
             have hmod : (x+y)%2=0 := by
               rw [hpow]
               exact Nat.mod_eq_zero_of_dvd hdiv
@@ -73,7 +76,7 @@ theorem odd_even_val2_forces_direct (a k x y : Nat)
             · have haOdd : a%2=1 := by omega
               cases n with
               | zero =>
-                  simp only [pow_zero,one_mul,mul_zero,add_zero] at hpow hcost
+                  simp at hpow hcost
                   omega
               | succ n =>
                   have hb : 4 ∣ 2*(a-1)+8 := by
@@ -82,8 +85,13 @@ theorem odd_even_val2_forces_direct (a k x y : Nat)
                   obtain ⟨b,hb⟩ := hb
                   have h8 : 8 ∣ 2^(n+1)*(2*(a-1)+8) := by
                     refine ⟨2^n*b,?_⟩
-                    rw [Nat.pow_succ,hb]
-                    omega
+                    calc
+                      2^(n+1)*(2*(a-1)+8) = (2^n*2)*(4*b) := by
+                        rw [Nat.pow_succ,hb]
+                      _ = 8*(2^n*b) := by
+                        have hprod : (8:Nat)=2*4 := by decide
+                        rw [hprod]
+                        ac_rfl
                   have hz : (x+y+1)%8=0 := by
                     rw [hpow]
                     exact Nat.mod_eq_zero_of_dvd h8
