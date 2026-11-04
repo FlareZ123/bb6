@@ -161,3 +161,9 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
         run: |
           lean im-results/agent26-cryptid-e-gate/E1111ThenE.lean
+
+      - name: Verify strict first F return for E1111 with unchanged source
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity
+        run: |
+          lean im-results/agent26-cryptid-e-gate/E1111First.lean
