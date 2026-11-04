@@ -1,7 +1,7 @@
 import Agent49TwoStep27Source
 
 /-!
-The finite 25..99 counter-mass strip is checked by Lean kernel reduction
+The finite 23..99 counter-mass strip is checked by Lean kernel reduction
 for the unchanged Cryptids #623 highLevelNext, and the unbounded sector is
 proved symbolically in Agent49TwoStep27Source. Together these give a sharp
 27-unit mass gain for *all* two surviving transitions with even first
@@ -17,7 +17,7 @@ private abbrev next : HighLevelState → Option HighLevelState := highLevelNext
 /-- Total, executable property over finite coordinates. Halting steps make
 the implication vacuous; only two successful steps impose the 27 bound. -/
 private def correct27 (a d : Nat) : Bool :=
-  if (a % 2 == 0) && decide (25 ≤ a + d) && decide (a + d < 100) then
+  if (a % 2 == 0) && decide (23 ≤ a + d) && decide (a + d < 100) then
     match next (.D a d) with
     | none => true
     | some (.D b e) =>
@@ -33,7 +33,7 @@ theorem finite_all_true : ∀ a d : Fin 100,
 
 /-- No finite simulations are trusted: finite-all is a kernel proof term. -/
 theorem small_gain27 (a d b e c f : Nat)
-    (he : a%2=0) (hm : 25≤a+d) (hu : a+d<100)
+    (he : a%2=0) (hm : 23≤a+d) (hu : a+d<100)
     (h1 : next (.D a d)=some (.D b e))
     (h2 : next (.D b e)=some (.D c f)) :
     a+d+27≤c+f := by
@@ -43,9 +43,9 @@ theorem small_gain27 (a d b e c f : Nat)
   simp [correct27,he,hm,hu,h1,h2] at hh
   omega
 
-/-- Sharp, fully quantified two-return mass lower bound from counter mass 25. -/
-theorem two_step_gain27_mass25 (a d b e c f : Nat)
-    (he : a%2=0) (hm : 25≤a+d)
+/-- Sharp, fully quantified two-return mass lower bound from counter mass 23. -/
+theorem two_step_gain27_mass23 (a d b e c f : Nat)
+    (he : a%2=0) (hm : 23≤a+d)
     (h1 : next (.D a d)=some (.D b e))
     (h2 : next (.D b e)=some (.D c f)) :
     a+d+27≤c+f := by
@@ -53,6 +53,13 @@ theorem two_step_gain27_mass25 (a d b e c f : Nat)
   · exact BB6.Agent49TwoStep27Source.two_step_gain27_mass100
       a d b e c f he hbig h1 h2
   · exact small_gain27 a d b e c f he hm (by omega) h1 h2
+
+/-- The threshold 23 is optimal: at mass 22 two surviving transitions
+grow from 22 to 47, a gain of only 25. -/
+theorem threshold22_counterexample :
+    next (.D 12 10)=some (.D 2 38) ∧
+    next (.D 2 38)=some (.D 38 9) := by
+  constructor <;> decide +kernel
 
 /-- The constant 27 is optimal: synthetic D(0,26) returns through
 D(26,7) and then D(14,39), realizing gain exactly 27. -/
@@ -67,7 +74,7 @@ theorem root_two_step_gain27_from2 (n a d c f : Nat)
     (hn : 2≤n) (hbefore : run n=some (.D a d))
     (hafter : run (n+2)=some (.D c f)) :
     a+d+27≤c+f := by
-  have hm : 25≤a+d := by
+  have hm : 23≤a+d := by
     by_cases heq : n=2
     · subst n
       have h2 : run 2=some (.D 6 31) := by decide +kernel
@@ -99,7 +106,7 @@ theorem root_two_step_gain27_from2 (n a d c f : Nat)
       change (run (n+1)).bind highLevelNext = some (.D c f) at hafter
       rw [hmidrun] at hafter
       exact hafter
-    exact two_step_gain27_mass25 a d b e c f ha hm hmid hstep2
+    exact two_step_gain27_mass23 a d b e c f ha hm hmid hstep2
 
 /-- For each k>=0, a surviving genuine return at section 2k+2 has
 total counter mass at least 37+27k. -/
@@ -178,7 +185,8 @@ theorem root_odd_mass_bound27 (k a d : Nat)
 
 #print axioms finite_all_true
 #print axioms small_gain27
-#print axioms two_step_gain27_mass25
+#print axioms two_step_gain27_mass23
+#print axioms threshold22_counterexample
 #print axioms gain27_sharp_example
 #print axioms root_two_step_gain27_from2
 #print axioms root_even_mass_bound27
