@@ -104,3 +104,23 @@ The mathematical bottleneck remains a general obstruction to reaching the infini
 In particular `BB6.Agent11Research.source_section_exact_image`, `original_source_unbounded_indegree`, `bounce_fixed_k_injective`, `bounce_output_odd_sum`, and `original_section_equal_target_exact_iff` now have a **successful unchanged-repository-source kernel audit** rather than the earlier local/copied-source-only verification. The exact equal-target classifier also verifies its low, zero and high-predecessor sublemmas. It supplies a mathematically exact preimage predicate for the target `(8*4^r,8*4^r)`, strengthening the initial lower-bound fan argument. An explicit for-all-`r` cardinality formula `r+3` has **not** separately been formally established, and must retain its conjectural status. The Python reverse enumerator remains independent experimental software, not an executable verified implementation. All results concern **the acceleration and its arbitrary inputs**, and do not settle whether any halting target is actually reachable from the true blank seed.
 
 The initial run [41754974275](https://github.com/FlareZ123/bb6/actions/runs/41754974275) successfully built the original bounce, section equivalence, unbounded-fan theorem and fixed-parameter consequences, then failed only on a missing compiled import `BounceConsequencesOriginal.olean` for `FanExactOriginal`. Commit `1a8b88b` corrects the workflow build order, and the succeeding run above certifies the full chain. This supersedes the earlier “original-source pending” language elsewhere in this older dossier.
+
+## 2026-11-04: source-certified strict section mass and fixed-target decidability
+
+[SectionMassOriginal.lean](SectionMassOriginal.lean), checked by the **successful original-source manual CI [41897160522](https://github.com/FlareZ123/bb6/actions/runs/41897160522)** (head `843bd73d1e4b5c05c63d7d45dcaaa3ec15b5cfab`), proves without `sorryAx` or nonstandard axioms that every successful original `BB6.Agent46.secNext(a,k)=some(x,y)` satisfies
+
+```text
+a+2*k+2 <= x+2*y.
+```
+
+The proof establishes `bounce_weight_growth` for the *authentic* recursive bounce by strong induction on its height and checks each source section branch. Inducting from the true section seed `(5,1)` yields the strictly stronger time-sensitive invariant
+
+```text
+run secNext n (some (5,1)) = some (x,y)
+    => 7+2*n <= x+2*y.
+```
+
+Thus `SectionReach x y` is logically equivalent to a finite search `∃n≤x+2*y, run secNext n ...=some(x,y)`, and `section_reach_decidable` constructs an actual Lean `Decidable` instance. The successful job printed only `[propext, Quot.sound]` for all five exported theorem/instance audits. Its first attempt [41896710718](https://github.com/FlareZ123/bb6/actions/runs/41896710718) failed solely from ambiguous unqualified `run` in a simplification; this was repaired by specifying `BB6.Agent8Section.run` before the successful audit. This is a general **fixed-section-target decidability** result, with no machine-wide halting decision and no universal BB(6) bound. It may support finite certified inverse closures; assess overlap with earlier mass monotonicity theorems before any publication claim.
+
+The new [SecondGateExactFiber.md](SecondGateExactFiber.md) derives, from already source-verified exact-image biconditionals, an arithmetic formula for the **complete one-step predecessor count** of a genuine second stopping family: `m+1+ceil(v₂(3m+4)/2)`. A literal simulator verified its constructed family for 75 parameter values and exhaustively enumerated all mass-bounded predecessors for `m=0,1,2`. The all-natural cardinality statement currently has a detailed symbolic proof in that note but **not yet a dedicated Lean kernel check**. No listed predecessor is claimed to be blank reachable.
+
