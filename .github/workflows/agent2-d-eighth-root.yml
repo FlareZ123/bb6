@@ -58,6 +58,8 @@ jobs:
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
+          lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
+          lean "$D/DRegularSourceShift.lean"
           lean "$D/BlankRegular500.lean"
           lean -o "$D/BlankRegular8394.olean" "$D/BlankRegular8394.lean"
           lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
