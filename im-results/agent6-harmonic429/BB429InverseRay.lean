@@ -1,5 +1,6 @@
 import BB429Rank
 import BB429Burst
+import BB429LowOddMod8
 import Lean.Elab.Tactic.Omega
 
 namespace BB429InverseRay
@@ -100,6 +101,17 @@ theorem synthetic_halt_after_arbitrary_depth (L : Nat) :
     omega
 
 #print axioms synthetic_halt_after_arbitrary_depth
+
+/-- If a synthetic ray's chosen seed comes from the genuine blank,
+    its length is in one of only three residue classes mod 8. -/
+theorem rooted_seed_length_restricted (n L : Nat)
+    (hr : BB429.run n (0,0)=some (61,seedW L)) :
+    L%8=2 ∨ L%8=3 ∨ L%8=4 := by
+  have hmod := BB429LowOddMod8.rooted_sixty_one n (seedW L) hr
+  have heq := seedW_identity L
+  omega
+
+#print axioms rooted_seed_length_restricted
 
 /-- A successful long first-branch run has a successful prefix of every
     shorter length. -/
