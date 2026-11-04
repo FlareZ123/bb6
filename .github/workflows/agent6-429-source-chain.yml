@@ -56,7 +56,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Rank.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Burst.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/"*.lean .
-          for module in BB429Rank BB429Burst BB429PowerBarrier BB429PowerBarrierBurst BB429ElevenSeed ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six BB429NoThree BB429NoTwentyFive SourceLadder SourceMod16 SourceMod32 SourceMod32Six SourceRawHaltFunnel SourceRawHaltIff SourceRawHaltFive SourceRawHaltFour; do
+          for module in BB429Rank BB429Burst BB429PowerBarrier BB429PowerBarrierBurst BB429NonFirstBurst BB429ElevenSeed ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six BB429NoThree BB429HaltFeeder BB429NoTwentyFive SourceLadder SourceMod16 SourceMod32 SourceMod32Six SourceRawHaltFunnel SourceRawHaltIff SourceRawHaltFive SourceRawHaltFour; do
             echo "::group::Compile $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
@@ -84,7 +84,7 @@ jobs:
           cp im-results/agent6-harmonic429/*.lean /tmp/bb429-check/
           cd /tmp/bb429-check
           export LEAN_PATH=".:$(lean --print-prefix)/lib/lean"
-          for module in BB429Rank BB429Burst BB429PowerBarrier BB429PowerBarrierBurst BB429ElevenSeed ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six BB429NoThree BB429NoTwentyFive; do
+          for module in BB429Rank BB429Burst BB429PowerBarrier BB429PowerBarrierBurst BB429NonFirstBurst BB429ElevenSeed ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six BB429NoThree BB429HaltFeeder BB429NoTwentyFive; do
             echo "::group::Kernel-check $module"
             lean -o "$module.olean" "$module.lean"
             echo "::endgroup::"
