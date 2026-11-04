@@ -24,4 +24,5 @@ jobs:
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
           lean -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
-          lean -DmaxRecDepth=8192 -DmaxHeartbeats=10000000 im-results/agent39-429-1021/BB429No12285mod16384.lean
+          lean -DmaxRecDepth=8192 -DmaxHeartbeats=10000000 -o im-results/agent39-429-1021/BB429No12285mod16384.olean im-results/agent39-429-1021/BB429No12285mod16384.lean
+          lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 im-results/agent39-429-1021/BB429No1021More.lean
