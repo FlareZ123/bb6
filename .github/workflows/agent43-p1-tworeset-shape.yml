@@ -1,0 +1,41 @@
+name: Agent43 P1 two-reset counted-shape source audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-shape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original P1 source and counted two-reset shape
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent43-p1-two-reset"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
+          lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
+          lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          lean -o im-results/agent28-p1-word-automaton/OddWordCost.olean im-results/agent28-p1-word-automaton/OddWordCost.lean
+          lean -o im-results/agent28-p1-word-automaton/OddWordSourceBridge.olean im-results/agent28-p1-word-automaton/OddWordSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetGrowth.olean im-results/agent28-p1-word-automaton/OneResetGrowth.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetTwoAdic.olean im-results/agent28-p1-word-automaton/OneResetTwoAdic.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetBudget.olean im-results/agent28-p1-word-automaton/OneResetBudget.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetSourceEq.olean im-results/agent28-p1-word-automaton/OneResetSourceEq.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetPoly.olean im-results/agent28-p1-word-automaton/OneResetPoly.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetSourceBudget.olean im-results/agent28-p1-word-automaton/OneResetSourceBudget.lean
+          lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetSourceBridge.olean im-results/agent28-p1-word-automaton/OneResetSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetZero.olean im-results/agent28-p1-word-automaton/OneResetZero.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetCount.olean im-results/agent28-p1-word-automaton/OneResetCount.lean
+          lean im-results/agent43-p1-two-reset/TwoResetShape.lean
