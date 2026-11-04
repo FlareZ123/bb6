@@ -177,3 +177,15 @@ The final original-source job prints exactly `[propext, Quot.sound]` for both le
 The resulting inverse and forward decision procedures are mathematically complete, have independently faithful source bridges, and compute their booleans in Lean's kernel. The naive complete inverse list examines quadratically many source pairs at each target, making it a correctness oracle rather than a competitive solver for the exponentially growing stopping parameter family. Neither this proof nor the current five fixed-target certificates proves all possible halting targets unreachable.
 
 **Sharpened bound source CI VERIFIED:** `SectionMassOriginal.section_reach_iff_half_bound` uses `7+2n≤x+2y` to replace the target-dependent fuel `n≤x+2y` by `n≤(x+2y)/2`. Corollaries `SectionFuelOriginal.massStopHalfFull_iff`, `SectionBackwardOriginal.backwardHalfFull_iff`, and `SectionBackwardFuelOriginal.backwardHitFuelHalfFull_iff` have all been compiled against unchanged original Machine C source in [successful manual CI 41905591436](https://github.com/FlareZ123/bb6/actions/runs/41905591436). The job's final audit confirms `backwardHitFuelHalfFull_iff` depends only on `[propext, Quot.sound]`. This nearly halves certified worst-case prefix length, while the inverse enumeration still remains quadratic in target numerical mass per candidate.
+
+### 2026-11-04 22:47 UTC: kernel-certified exact three-sector original-source inverse for second-stopping ray
+
+The genuinely original-source Lean 4.36.0-rc2 workflow [41928229911](https://github.com/FlareZ123/bb6/actions/runs/41928229911) **SUCCEEDED**, head `442f604ddebe1c1e22fcdfb6be3afc51be1eafdd`. It compiled `SecondRayShapeOriginal.lean` against the unchanged Agent46 section map, Agent3's already-certified `FullSectionInverse.lean` and its unchanged dependencies. Final `BB6.Agent11Ray.original_ray_parent_iff` axiom audit is exactly `[propext, Classical.choice, Quot.sound]`; no sorry or extra assumptions.
+
+For every `m,a,k : Nat`, write `D=4^(m+1)*(3*m+4)`, `X=6*m+5`, `Y=D-(6*m+6)`. Thus `(X,Y)` is a genuine *second-stopping-parameter family* member with `j=3*m+1`. The new theorem states that `secNext (a,k)=some (X,Y)` if and only if one of these three exhaustive and **sufficient** cases holds:
+
+1. Direct low/high sector: `a+3=D` and `2*k+2=Y`.
+2. Exceptional `a=1, k>=4`: there is `n` with `D=2^n*16` and `2*k+11+3*n=X+2*Y`.
+3. High bounce `a>=3, a<2*k`: there is *odd* `n` with `D=2^(n+1)*(a+3)` and `2*k+a+7+3*n=X+2*Y`.
+
+It also proves every source to this odd-sum ray has odd first coordinate. The previous `SecondGateExactFiber.md` predicted a full exact predecessor cardinality `m+1+ceil(v2(3m+4)/2)` by arithmetic; **the new Lean theorem establishes the missing source-exhaustive classification**, but it has not yet formally counted its solutions or excluded them from the actual blank orbit. Exact cardinality and true-root reachability remain distinct tasks. No Machine C halting decision or BB(6) result follows.
