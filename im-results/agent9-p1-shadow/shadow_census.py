@@ -35,7 +35,7 @@ def shadow(q: int, root: int) -> dict:
     # Sufficient source safety conditions, see README correspondence proof.
     assert edges == len(seen)-1
     assert maximum_m+maximum_v+3 <= n
-    assert (1 << (n-maximum_m)) >= 4*(L+maximum_m)+8
+    assert (1 << (n-maximum_m)) >= 4*(L+maximum_m)+16
     assert 28*(1 << n) > 2*(L+maximum_m)+6*(1 << maximum_v)
     assert maximum_even_cost <= 15*q
     return dict(q=q, root=root, nodes=len(seen), edges=edges,
