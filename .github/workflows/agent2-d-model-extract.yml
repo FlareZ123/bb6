@@ -1,4 +1,4 @@
-name: Agent 2 original D regular all-depth 3-adic model theorem (manual)
+name: Agent 2 D original regular all-depth affine and quadratic time (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -27,4 +27,7 @@ jobs:
           D=im-results/agent2-cryptid-continuity
           lean --version
           lean -o "$H/DRegular.olean" "$H/DRegular.lean"
-          lean "$D/DRegularShift.lean"
+          lean -o "$H/DTransport.olean" "$H/DTransport.lean"
+          lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
+          lean -o "$D/DRegularDurationShift.olean" "$D/DRegularDurationShift.lean"
+          lean "$D/DRegularTimedShift.lean"
