@@ -40,6 +40,7 @@ theorem source_counted_no_low_budget_feeder
         | zero => decide
         | succ u ih =>
             rw [Nat.pow_succ]
+            have hpos : 0 < (2:Nat)^u := Nat.pow_pos (by decide)
             omega
       have hlin : n ≤ (2:Nat)^n := hlin_all n
       omega
