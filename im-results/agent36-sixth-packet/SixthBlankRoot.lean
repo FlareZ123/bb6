@@ -18,9 +18,14 @@ private theorem entry_as_source (v : Nat) :
 
 private theorem exit_as_source (v : Nat) :
     regularExit v = DRegularSource.sourceSection ⟨32768*v+28577,3,2⟩ := by
-  have hn : 32768*v+28577 = 2+(32768*v+28577-2) := by omega
-  simp [regularExit, DRegularSource.sourceSection, init,
-    hn, List.replicate_add, List.append_assoc]
+  have hn : 32768*v+28577-2 = 32768*v+28575 := by omega
+  have hr : List.replicate (32768*v+28577) true =
+      true::true::List.replicate (32768*v+28575) true := by
+    rw [show 32768*v+28577 = ((32768*v+28575)+1)+1 by omega]
+    rw [List.replicate_succ, List.replicate_succ]
+  simp only [regularExit,DRegularSource.sourceSection,init,hn]
+  rw [hr]
+  simp [List.append_assoc]
 
 /-- A source-verified original blank root, past the sixth exceptional E
     input, returns to canonical regular language after five designated
