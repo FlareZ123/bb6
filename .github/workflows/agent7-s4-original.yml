@@ -86,7 +86,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4RawPowerGate.lean" S4RawPowerGate.lean
           lake env lean -o S4RawPowerGate.olean S4RawPowerGate.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4RawCompact.lean" S4RawCompact.lean
-          lake env lean S4RawCompact.lean
+          lake env lean -o S4RawCompact.olean S4RawCompact.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4RawTailGates.lean" S4RawTailGates.lean
+          lake env lean S4RawTailGates.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
