@@ -1,0 +1,38 @@
+name: Agent 11 Machine C exact section inverse source audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Exact original Machine C section and inverse image proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent11-section-original
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent11-section-original/
+          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/agent11-section-original/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/agent11-section-original/
+          python3 im-results/agent11-c-bounce-exact/reconstruct.py
+          cp im-results/agent11-c-bounce-exact/{BounceOriginal,SectionFullOriginal,FanOriginal,FanExactOriginal,BounceConsequencesOriginal}.lean /tmp/agent11-section-original/
+          cd /tmp/agent11-section-original
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef BounceOriginal SectionFullOriginal FanOriginal; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean BounceConsequencesOriginal.lean
+          lean FanExactOriginal.lean
