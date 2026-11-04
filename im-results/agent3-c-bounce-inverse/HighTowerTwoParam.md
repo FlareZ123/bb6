@@ -29,7 +29,7 @@ No claim here settles Machine C, any other six-state holdout, or an unconditiona
 The closed-form tower equation is
 `15*J(q,n)+42 = 16^(n+1)*(60q+27)`. Since `60q+27` is odd, this isolates a precise power of two in the stopping right counter plus two: `k+2=2^(4n+4)*(60q+27)`. This gives a direct arithmetic explanation for the inverse depth `4n+3`. The lemma `high2_power_identity` is in the Lean source; it passed a local Lean interface test and was added after the original successful two-parameter CI, awaiting a final full-source check.
 
-The formal `high2_joint_injective` theorem shows `J(q,n)=J(r,m)` implies both `q=r` and `n=m`, so the two-parameter family contains genuinely distinct targets without cross-index collisions. Its proof first recovers n from the exact odd affine inverse depth, then recovers q by cancellation of the index recurrence. A local Lean test checked this too; the final full-source audit is pending.
+The formal `high2_joint_injective` theorem shows `J(q,n)=J(r,m)` implies both `q=r` and `n=m`, so the two-parameter family contains genuinely distinct targets without cross-index collisions. Its proof first recovers n from the exact odd affine inverse depth, then recovers q by cancellation of the index recurrence. **Unchanged-source Lean [CI 41891307772](https://github.com/FlareZ123/bb6/actions/runs/41891307772) succeeded** with exactly standard axioms for this theorem.
 
 ## Sharp all-start predecessor ancestry
 
