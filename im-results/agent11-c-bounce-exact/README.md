@@ -154,3 +154,14 @@ Explicit source-checked **all-time** blank-section nonreachability certificates 
 | 4 | (29,16354) | [41903320825](https://github.com/FlareZ123/bb6/actions/runs/41903320825) |
 
 The final job audit explicitly reports `[propext, Quot.sound]` for `massStop_eq_hasHit`, `massStopFull_iff`, `no_second_gate_m3` and `no_second_gate_m4`. These are five individual targets in an **infinite** class; many other gates are left untouched. Prior finite target exclusions using arithmetic inverse enumeration exist in this same dossier and elsewhere, so these certificates are presented as verification and reusable *proof technology* without asserting new frontier target discoveries. The complete Machine C / BB(6) problem is still open.
+
+### 2026-11-04 20:13 UTC: complete original-source backward tree equivalence
+
+New [SectionBackwardOriginal.lean](SectionBackwardOriginal.lean), manually original-source Lean **SUCCESS in [41904368532](https://github.com/FlareZ123/bb6/actions/runs/41904368532)**, proves `BB6.Agent11Backward.backwardHit_iff`: the finite-depth recursive inverse tree, branching over the *complete* `SectionMassOriginal.sourceCandidates` list for each target, returns true if and only if the original `secNext` blank-root forward prefix of that depth reaches the target. The corollary `backwardFull_iff` uses the source-certified strict-rank bound to obtain an exact all-time decision:
+
+```text
+backwardHit (x+2*y) (x,y) = true  ↔
+    ∃n, run secNext n (some (5,1)) = some (x,y).
+```
+
+The final original-source job prints exactly `[propext, Quot.sound]` for both lemmas, no `sorryAx`. The first CI trial 41904116568 failed due ambiguous shorthand `run` in two source proof simplification lines; commit `6820ed4fb1cf39900ff64ba923435cb1a2d786ad` qualified the original imported section `run` and passed unchanged-source manual CI. This is a *correctness bridge* for global finite inverse searches, not a fast implementation or new infinite gate obstruction. The current `sourceCandidates` reference enumerator scans a quadratic area and uses original `secNext` rather than a primitive-recursive fuel evaluator, so large target computation remains a separate engineering challenge.
