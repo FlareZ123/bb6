@@ -49,21 +49,32 @@ theorem blank_two_consecutive_physical_first_returns :
       simp only [DRegular.L.mk.injEq]
       exact ⟨ha,hq,hb⟩
   rw [hs] at hobs
-  have hinput :
-      DRegularSource.sourceSection ⟨9*t+4,6,1⟩ =
-      BB6.Agent32EAll.start (3*t) 5 [] := by
+  let xs : List Bool :=
+    List.replicate (3*(3*t)+2) true ++
+      (false :: (pairs 5 ++ [true,true]))
+  have hsource : DRegularSource.sourceSection ⟨9*t+4,6,1⟩ =
+      init xs := by
     have hidx : 9*t+4=3*(3*t)+4 := by omega
     rw [hidx]
     have hn : (3*(3*t)+4)-2=3*(3*t)+2 := by omega
     have hl : oppairs 6 ++ List.replicate 1 true =
         false::(pairs 5 ++ [true,true]) := by decide
-    simp only [DRegularSource.sourceSection,BB6.Agent32EAll.start,hn,
+    simp only [DRegularSource.sourceSection,xs,hn,
       List.append_nil,List.replicate_one]
     simp only [List.replicate_one] at hl
     rw [List.append_assoc,hl]
+  have htarget : BB6.Agent32EAll.start (3*t) 5 [] =
+      init (xs ++ List.replicate 2 false) := by
+    simp [BB6.Agent32EAll.start,xs,pairs,List.append_assoc]
+  have hinput : ObsEq
+      (DRegularSource.sourceSection ⟨9*t+4,6,1⟩)
+      (BB6.Agent32EAll.start (3*t) 5 []) := by
+    rw [hsource,htarget]
+    simpa only [run] using
+      (source_init_pad 0 2 xs)
   have hstart : ObsEq (run T0 blank)
       (BB6.Agent32EAll.start (3*t) 5 []) := by
-    simpa only [T0,hinput] using hobs
+    exact cfgEq_trans hobs hinput
   have hEmacro : ObsEq
       (run (BB6.Agent32EAll.duration (3*t) 5)
         (BB6.Agent32EAll.start (3*t) 5 []))
