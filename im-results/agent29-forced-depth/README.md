@@ -42,7 +42,26 @@ Source audit: [CI 41767881009](https://github.com/FlareZ123/bb6/actions/runs/417
 
 Thus all genuine second stopping-family parameter sectors **except j even, m odd** have a uniform finite evaluator of length ≤4, and the entire first stopping-family locus also has length ≤4. The exceptional sector is the genuine 2-adic deep affine sector studied by Agent15; it is not settled by these results.
 
-[DeepAffine.lean](./DeepAffine.lean) separately proposes a constructive, genuinely arbitrary-length **synthetic** A-only source-forced path in mass class three. Its original-source CI check is pending; do not cite it as kernel-verified until successful. This long synthetic path has no established genuine blank-seed reachability.
+[DeepAffine.lean](./DeepAffine.lean) rigorously constructs arbitrary-length **synthetic** A-only exact source-forced paths in mass class three. Original-source [CI 41768727315](https://github.com/FlareZ123/bb6/actions/runs/41768727315) **SUCCEEDED**, printed axioms for both universal unbounded-depth theorems exactly `[propext, Quot.sound]`. The long paths are synthetic and have no established genuine blank-seed reachability.
+
+## New three-divisibility and source-boundary investigation (verification pending)
+
+The second stopping equation implies for every j,m,k that **k≡1 modulo 3**, since 2^(2m+2)≡1 modulo 3. In particular k+2 is divisible by three, while no power of two is. Its exact affine inverse invariant `2^d(y+2)=k+2` therefore forces `y+2≡0 modulo 3` for the affine-normalized residual. Agent15's source-certified deep sector says this residual has y=2 or y≡0 modulo4. Together these imply y≥4, y≡4 modulo12, excluding the previously viable y=2 endpoint. Proposed Lean modules: [ModThree.lean](./ModThree.lean) and [DeepSecondFinal.lean](./DeepSecondFinal.lean). Their source check is pending, so treat the strengthening as a mathematical argument awaiting the original-source audit.
+
+[BottomBoundary.lean](./BottomBoundary.lean) attempts a stronger, **genuine blank-section boundary theorem**, using the unchanged original-source complete preimage grammar from Agent3 `SectionAllInverse`: the only section return with right counter one is the exceptional `(1,0)→(5,1)`, whose parent is unavailable after the original blank state because all reached counters are positive. Every odd-first/right-four output `(x,4)` has a unique direct parent `(x+2,1)`, hence can only occur on the blank run at time one, as `(3,4)`. All odd-first/right-four points with x>3 are excluded forever. This is a proposed all-time **source-connected nonreachability** theorem, pending original-source CI.
+
+[DeepFourExclude.lean](./DeepFourExclude.lean) combines this boundary with Agent15's affine reach equivalence and exact potential identities: every genuine deep second halting input whose affine normalized residual has right coordinate 4 is unreachable from the blank seed. The residual's first coordinate cannot be 3 because the initial first coordinate is at least 3, and the exact mass identity increases it by the positive `2*k-8-4*d` amount. This theorem must be checked against original source before use.
+
+A fully explicit infinite immediate-stopping input family is proposed in [SecondOneInfinite.lean](./SecondOneInfinite.lean):
+
+```
+j(0)=10, j(r+1)=16*j(r)+42, m=1, k(r)=15*j(r)+40,
+(a,k)=(2*j(r)+3,k(r)).
+```
+
+Every member satisfies the exact original second stopping equation `k+j+3*m+5=2^(2*m+2)*(j+3)`. The first three pairs are `(23,190)`, `(407,3070)`, `(6551,49150)`. All have the explicit dyadic counter `k+2=6*2^(4r+5)`, so precisely `4r+5` source-exact affine inverse returns lead to right counter 4. Their initial first counters are 3 modulo4. The proposed proof composes this arithmetic with the true blank right-four obstruction to prove **all-time blank nonreachability of infinitely many legitimate immediate stopping section inputs**, with no simulation cutoff. Source CI was dispatched [41770469049](https://github.com/FlareZ123/bb6/actions/runs/41770469049) and is still pending. **No new infinite-family claim is certified until the original-source CI succeeds with ordinary axioms only.** The family may overlap previously established exclusions; conduct internal/external novelty review before any promotion to `results/`.
+
+The ongoing ultimate problem is the remaining deep sector with affine-normalized right ≥8 and genuine prior orbit paths through it, plus all other BB(6) holdouts. The finite-depth work and these infinite exceptions do not determine Machine C nonhalting or BB(6).
 
 ## Limits and next research action
 
