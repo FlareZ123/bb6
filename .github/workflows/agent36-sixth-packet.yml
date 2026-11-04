@@ -1,0 +1,58 @@
+name: Agent 36 original D sixth-packet five-return proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent35-cryptid-code:im-results/agent31-d-exceptional:im-results/agent37-cryptid-model-bridge:im-results/agent36-sixth-packet
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct verified original machine and auxiliary source
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged dependencies and all-parameter source composition
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          A=im-results/agent25-cryptid-doublezero
+          S=im-results/agent32-cryptid-third
+          P=im-results/agent32-cryptid-padding
+          C=im-results/agent35-cryptid-code
+          Q=im-results/agent31-d-exceptional
+          V=im-results/agent37-cryptid-model-bridge
+          D=im-results/agent36-sixth-packet
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversal TripleIteration TenPump SixOnes TokenCode; do
+            lean -o "$A/$module.olean" "$A/$module.lean"
+          done
+          lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
+          lean -o "$C/EDouble.olean" "$C/EDouble.lean"
+          lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
+          lean -o "$Q/PacketSource.olean" "$Q/PacketSource.lean"
+          lean -o "$Q/PacketPaths.olean" "$Q/PacketPaths.lean"
+          lean -o "$V/CrossModelBridge.olean" "$V/CrossModelBridge.lean"
+          lean -o "$V/CompleteAReturn.olean" "$V/CompleteAReturn.lean"
+          lean -o "$V/WordReturns.olean" "$V/WordReturns.lean"
+          lean -o "$V/ShortTripleGate.olean" "$V/ShortTripleGate.lean"
+          lean "$D/FiveReturn.lean"
