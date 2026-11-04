@@ -1,0 +1,18 @@
+name: Agent 2 inspect exact restored D regular model (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  show-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore checksum-verified source and print model definition
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          sha256sum im-results/agent35-d-regular-certificate/DRegular.lean
+          cat im-results/agent35-d-regular-certificate/DRegular.lean
