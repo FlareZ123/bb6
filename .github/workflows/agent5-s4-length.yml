@@ -31,4 +31,8 @@ jobs:
           lean --version
           lean -o S4WeightedDrift.olean S4WeightedDrift.lean
           lean -o S4Length.olean S4Length.lean
-          lean S4LengthBridge.lean
+          lean -o S4LengthBridge.olean S4LengthBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4Suffix.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4SuffixBridge.lean" .
+          lean -o S4Suffix.olean S4Suffix.lean
+          lean S4SuffixBridge.lean
