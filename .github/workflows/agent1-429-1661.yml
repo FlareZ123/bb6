@@ -1,4 +1,4 @@
-name: Agent 1 BB429 rooted 1661 modulo2048 source proof (manual)
+name: Agent 1 BB429 rooted 1661 and 893 modulo2048 source proof (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -32,3 +32,6 @@ jobs:
             lean -o "$module.olean" "$module.lean"
           done
           lean BB429No1661mod2048.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent1-429-893/BB429No893mod2048.lean.gz.b64" | gzip -d > BB429No893mod2048.lean
+          echo "7429ab3280d28d13f5e21702523ed750c9a2e61679ff10e9e9108534b5984b32  BB429No893mod2048.lean" | sha256sum -c -
+          lean BB429No893mod2048.lean
