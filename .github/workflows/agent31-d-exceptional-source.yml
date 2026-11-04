@@ -51,3 +51,6 @@ jobs:
           lean im-results/agent31-d-exceptional/DRegularELow.lean
 
           lean im-results/agent31-d-exceptional/EQuickHalt.lean
+
+          python3 im-results/agent31-d-exceptional/restore_pair_halt.py
+          lean im-results/agent31-d-exceptional/EPairHalt.lean
