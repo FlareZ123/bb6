@@ -79,7 +79,7 @@ jobs:
           for f in C48Inverse C48Reach C48Depth C48Residual C16Inverse C16Reach C16Depth; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean C16Residual.lean
+          lean -o C16Residual.olean C16Residual.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformInverse.lean .
           lean -o UniformInverse.olean UniformInverse.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformReach.lean .
