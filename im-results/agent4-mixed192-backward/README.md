@@ -1,6 +1,46 @@
-# Machine C mixed-192 backward cores: executable candidate certificate
+# Machine C mixed-192 source-certified backward cores and terminal gates
 
-**Status: experimental computational certificate, awaiting successful Lean proof.** Machine C and BB(6) remain open. This dossier contains no claimed new source-kernel theorem yet. It identifies all-natural candidate reverse invariants for the original Agent11 Machine C acceleration and checks them on a finite quotient, with a separate explicit transport argument still requiring a machine-checked audit.
+**Scientific status, 2026-11-04:** Both arithmetic reverse cores and all four terminal residue exclusions have now passed Lean 4.36.0-rc2 checks against the **unchanged checked-in Machine C CLine source**. A new theorem excludes 504 distinct second-halting parameter pairs modulo 192. The entire Machine C blank orbit and BB(6) remain undecided. These results stay in `im-results/` pending independent novelty review.
+
+## Validated proof chain and theorem scope
+
+The original accelerated blank root is `BB6CLine.Reach (5,0,1)`. For all natural `a,k`, the following source-root counter states `(a,k,0)` are mathematically unreachable whenever `(a mod192,k mod192)` equals one of
+
+| Source core | Terminal congruence | Source theorem |
+| --- | --- | --- |
+| A | (35,61) | `A4Backward192.source_no_35_61` |
+| A | (131,157) | `A4Backward192.source_no_131_157` |
+| B | (83,13) | `A4Backward192B.source_no_83_13` |
+| B | (179,109) | `A4Backward192B.source_no_179_109` |
+
+Core A's complete all-natural backward-step closure and original-source reachability transport passed [CI 41725820375](https://github.com/FlareZ123/bb6/actions/runs/41725820375). Core B's distinct all-natural arithmetic proof in [BackwardMod192B.lean](./BackwardMod192B.lean), split without replacing proof bodies into eight source-preserving compilation modules by [agent4_split_mixed192b.py](../../tools/agent4_split_mixed192b.py), and its [SourceBridge192B.lean](./SourceBridge192B.lean) reachability transport passed [CI 41753352264](https://github.com/FlareZ123/bb6/actions/runs/41753352264). Each companion terminal is proved through the original-source, uniquely forced `c=3` predecessor, using Agent46's previously verified `reach_c0_two_parent`. No unproven enlarged-core closure is assumed.
+
+The true second stopping-family equation from Agent15 is
+
+```text
+a = 2*j+3
+k+j+3*m+5 = 2^(2*m+2)*(j+3)
+```
+
+For every `m>=2`, the power has residue 64 modulo 192. The module [StopBridge192AB.lean](./StopBridge192AB.lean) converts the four forbidden terminal cells into eight explicit `(j mod192,m mod64)` parameter conditions, with theorem names `first_core_stops` and `second_core_stops`. Both passed source [CI 41754012415](https://github.com/FlareZ123/bb6/actions/runs/41754012415).
+
+A stronger two-core gate argument lifts each terminal input `(2*j+3,k,0)`, where `k>=4`, to its uniquely forced source ancestor `(2*j+3,k-3,3)`. [WideStop.lean](./WideStop.lean) then proves that every stopping parameter `j%12=4,m%8=4` lies in at least one excluded high-sector core. The all-natural theorem `A4Mixed192Wide.second_stop_j4_mod12_m4_mod8_excluded` passed [original-source CI 41754571383](https://github.com/FlareZ123/bb6/actions/runs/41754571383).
+
+Finally, [SideStop.lean](./SideStop.lean) combines two further all-depth high-core sectors and the eight terminal conditions. The final **source-certified theorem** is `A4Mixed192Side.second_stop_504_mod192_excluded`: for all `j,m,k:Nat` with `m>=2`, the exact stopping equation and any of the following **disjoint** parameter conditions imply `¬BB6CLine.Reach (2*j+3,k,0)`:
+
+| Parameter condition | Count of pairs `(j,m) mod192` |
+| --- | ---: |
+| `j%12=4, m%8=4` | 384 |
+| `j%48=43, m%16=11` | 48 |
+| `j%48=19, m%16=3` | 48 |
+| `(j%192,m%64)` in `{(16,58),(112,26),(64,10),(160,42)}` | 12 |
+| `(j%192,m%64)` in `{(40,2),(136,34),(88,18),(184,50)}` | 12 |
+
+Total: **504 of 36,864** parameter residue pairs, exactly **7/512**. The independent [residue_audit.py](./residue_audit.py) exhaustively checks that the five-way parameter partition equals membership in the two source-core predicates at the forced `c=3` ancestor, for all 192 by 192 residue pairs. This finite arithmetic audit supplements, and does not replace, the universally quantified Lean proof. Final [CI 41754885154](https://github.com/FlareZ123/bb6/actions/runs/41754885154) passed on the unchanged original checked-in CLine source, and the theorem axiom audit shows only `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+
+**Provenance boundary:** This is a genuine blank-root all-time claim about the checked-in `BB6CLine` acceleration. Agent4's separate [upstream source bridge](../agent4-mixed96-backward/SourceUpstreamBridge.lean) was independently original-Cryptids-source checked in [CI 41696303681](https://github.com/FlareZ123/bb6/actions/runs/41696303681); it transports upstream accelerated reachability into this source. The current 504-family proof has not itself been compiled as a combined upstream-raw-machine theorem. Some eliminated parameter examples were present in older source-certified B8/M32 quotient abstractions, but a larger computational B8/M512 quotient was already reported to exclude them, so *external novelty is not established*. No complete first-family exclusion, Machine C nonhalting proof, universal BB(6) bound or exact BB(6) value follows.
+
+## Historical experimental account and finite evidence
 
 ## Proposed mathematical statement
 
