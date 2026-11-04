@@ -1102,5 +1102,55 @@ theorem no_root_14mod1024 (n w : Nat) (hn : 14≤n)
     ¬ BB6.Agent1.Reach (2048*w+229332) 3 :=
   blocked_no_reach _ _ (cone_root n w hn hform)
 
+
+private theorem critical_pow_nonneg (n : Nat) (hn : 14 ≤ n) :
+    n+114674 ≤ 7*2^n := by
+  have hx := power_growth (n-14)
+  have hn14 : n-14+14=n := by omega
+  rw [hn14] at hx
+  omega
+
+/-- Each critical exponent n congruent to 14 modulo 1024 lies on the
+    explicit affine root line whose entire inverse tree is blocked. -/
+theorem exists_w_at_critical_residue (n : Nat) (hn : 14≤n)
+    (hmod : n%1024=14) :
+    ∃ w, n+114674+1024*w=7*2^n := by
+  have hlarge := critical_pow_nonneg n hn
+  have hpowdiv : 1024 ∣ (2:Nat)^n := by
+    have hp : 2^10 ∣ (2:Nat)^n := Nat.pow_dvd_pow 2 (by omega)
+    simpa [show (2:Nat)^10=1024 by decide] using hp
+  have hpowmod : (7*2^n)%1024=0 := by
+    have hp : 1024 ∣ (7*(2:Nat)^n) := by
+      obtain ⟨q,hq⟩ := hpowdiv
+      exact ⟨7*q, by rw [hq]; omega⟩
+    exact Nat.dvd_iff_mod_eq_zero.mp hp
+  have humod : (n+114674)%1024=0 := by omega
+  have hdiffmod : (7*2^n-(n+114674))%1024=0 := by omega
+  let w := (7*2^n-(n+114674))/1024
+  have hm := Nat.mod_add_div (7*2^n-(n+114674)) 1024
+  refine ⟨w, ?_⟩
+  dsimp [w]
+  omega
+
+/-- Uniform true-blank critical-hub nonreachability for infinitely many
+    remaining n=14(mod 1024) exponents, using unchanged source Reach. -/
+theorem no_critical_14_mod1024 (n : Nat) (hn : 14 ≤ n)
+    (hmod : n%1024=14) :
+    ¬ BB6.Agent1.Reach 2 (14*2^n-2*n-10) := by
+  obtain ⟨w,hform⟩ := exists_w_at_critical_residue n hn hmod
+  let d := 14*2^n-2*n-10
+  have hdform : d=229338+2048*w := by dsimp [d]; omega
+  have hdlarge : 10≤d := by omega
+  have hdmod : d%4=2 := by rw [hdform]; omega
+  intro hreach
+  have hthree : BB6.Agent1.Reach (d-6) 3 :=
+    BB6.Agent50P1.critical_target_implies_three d hdlarge hdmod hreach
+  have hdec : d-6=2048*w+229332 := by omega
+  rw [hdec] at hthree
+  exact no_root_14mod1024 n w hn hform hthree
+
+#print axioms BB6.Agent8P1Exponent14.exists_w_at_critical_residue
+#print axioms BB6.Agent8P1Exponent14.no_critical_14_mod1024
+
 #print axioms BB6.Agent8P1Exponent14.no_root_14mod1024
 end BB6.Agent8P1Exponent14
