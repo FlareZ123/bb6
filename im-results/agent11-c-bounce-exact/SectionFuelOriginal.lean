@@ -318,6 +318,16 @@ theorem no_second_gate_m4 : ¬ BB6.Agent11Mass.SectionReach 29 16354 := by
 #print axioms massStopFull_iff
 #print axioms no_second_gate_m4
 
+
+theorem massStopHalfFull_iff (x y : Nat) :
+  massStop x y ((x+2*y)/2) (some (5,1)) = true ↔
+  BB6.Agent11Mass.SectionReach x y := by
+  rw [massStop_eq_hasHit, hasHit_iff,
+    BB6.Agent11Mass.section_reach_iff_half_bound]
+  simp only [runFuel_eq]
+
+#print axioms massStopHalfFull_iff
+
 #print axioms runFuel_commute
 #print axioms runFuel_succ_head
 #print axioms hasHit_iff
