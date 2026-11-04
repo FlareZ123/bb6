@@ -25,11 +25,11 @@ jobs:
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent1-c-oddodd/
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit}.lean /tmp/agent1-c-oddodd/
           cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,SectionParam}.lean /tmp/agent1-c-oddodd/
-          cp im-results/agent1-c-unified-gateway/OddOddZeroOne.lean /tmp/agent1-c-oddodd/
+          cp im-results/agent1-c-unified-gateway/{OddOddZeroOne,OddEvenVal2}.lean /tmp/agent1-c-oddodd/
           cd /tmp/agent1-c-oddodd
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit BounceHalting SectionHalting SectionPower SectionParam OddOddZeroOne; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit BounceHalting SectionHalting SectionPower SectionParam OddOddZeroOne OddEvenVal2; do
             echo "::group::Compiling $f"
             lean -o "$f.olean" "$f.lean"
             echo "::endgroup::"
