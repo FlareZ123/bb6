@@ -20,22 +20,17 @@ theorem original_any_terminal_cubic_list (d k : Nat) :
     highLevelNext (.N d) = some (.N (haltTower k)) ↔
       ∃ q v, d=oddTower q v ∧
         (v,q) ∈ NeedleCubicEnum.cubicParents (k+1) := by
-  rw [highLevelNext_iff_oddTower]
   constructor
-  · rintro ⟨q,v,hd,he⟩
-    refine ⟨q,v,hd,?_⟩
-    apply (original_terminal_cubic_list_iff q v k).mpr
-    apply (highLevelNext_iff_oddTower (oddTower q v) (haltTower k)).mpr
-    exact ⟨q,v,rfl,by simpa only [hd] using he⟩
+  · intro hh
+    obtain ⟨q,v,hd,_⟩ :=
+      (highLevelNext_iff_oddTower d (haltTower k)).mp hh
+    have hh' : highLevelNext (.N (oddTower q v)) =
+        some (.N (haltTower k)) := by
+      simpa only [hd] using hh
+    exact ⟨q,v,hd,(original_terminal_cubic_list_iff q v k).mpr hh'⟩
   · rintro ⟨q,v,hd,hlist⟩
-    refine ⟨q,v,hd,?_⟩
-    have hs := (original_terminal_cubic_list_iff q v k).mp hlist
-    obtain ⟨q',v',heq,hsucc⟩ :=
-      (highLevelNext_iff_oddTower (oddTower q v) (haltTower k)).mp hs
-    rw [hd] at heq
-    -- The equality is only used to substitute the original matched source.
-    subst d
-    exact hsucc
+    have hh := (original_terminal_cubic_list_iff q v k).mp hlist
+    simpa only [hd] using hh
 
 #print axioms original_terminal_cubic_list_iff
 #print axioms original_any_terminal_cubic_list
