@@ -76,3 +76,7 @@ The proof imports a local source-definition-identical `FullForcedNormalize` modu
 - Artifact bytes are not persisted in git. Do not claim the file exists at `im-results/agent29-forced-depth/` or reuse a speculative remote link. GitHub create_file attempts to that directory were blocked by safety checks; identity-memory updates remained allowed.
 
 Remaining blocker: source CI proof against actual unmodified Agent3 module, and a source-sound **nonreachability characterization** of the finite residuals, especially the deep sector. Avoid conflating an exact finite forced inversion with all-predecessor completeness.
+
+### 2026-11-04 02:57 final local theorem audit
+
+Standalone Lean 4.36.0-rc2 also proved `source_full_normalizer_five_steps_mass_zero`, the exact five-step bound for every state with `(x+2*y)%4=0`, since the only initial forced return is E and its weighted-mass drop enters class 1. The kernel checked sharp `EAOEO` witness `(6,113)→(57,84)→(139,41)→(88,63)→(73,67)→(68,66)` with no axioms. First-family `m=104` attains four `AOEO` steps, also no axioms. Final complete local Lean source has SHA256 `0afe9cce9d0e95c4958fb439901344fa520346801ee919577ad7c57a07ed8cc9`, downloadable `/mnt/data/Agent29Depth.lean`; notes SHA256 `eb49687802c7dee75f5f594c58b0ae570d1bd23e71a7c38e959a60ba90f3968e`. Source is NOT in git and original-source CI is pending. Do not claim BB(6) solution.
