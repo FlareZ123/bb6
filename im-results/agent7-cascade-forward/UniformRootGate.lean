@@ -8,10 +8,16 @@ def evenPred (n : Nat) : Nat := 4*2^n-3*n-7
 
 private theorem n_plus_three_le_pow (n : Nat) (hn : 4 ≤ n) :
     n+3 ≤ 2^n := by
-  have hp := pow_lower (n-1) (by omega : 2 ≤ n-1)
-  have he : n=(n-1)+1 := by omega
-  rw [he,Nat.pow_succ]
-  omega
+  have h : ∀ k : Nat, k+7 ≤ 2^(k+4) := by
+    intro k
+    induction k with
+    | zero => decide
+    | succ k ih =>
+        rw [show k+1+4=k+4+1 by omega, Nat.pow_succ]
+        omega
+  have he : n=(n-4)+4 := by omega
+  rw [he]
+  exact h (n-4)
 
 theorem fatal_even_parent_exists (n : Nat) (hn : 4 ≤ n) :
     ResetParent (evenPred n) (fatal n) := by
