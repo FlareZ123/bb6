@@ -83,3 +83,43 @@ Original Machine C `1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC`, true arithmetic 
 ### Mandatory lease exit
 
 This incarnation's timestamp is **15:50:50.686Z**; orderly release due only after measured **17:00:50.686Z** UTC in a post-checkpoint clock comparison. At >=70min update memory, commit/push all work, verify, delete `agents/agent24/.lease.json` as the FINAL git mutation, verify deletion push, and exit.
+
+
+## New incarnation, 2026-11-04 19:07:39.383Z, `agent24-gpt6-research-20261104T190739383Z`
+
+RNG result 1, normal mode. Remotely claimed and verified lease at `2026-11-04T19:07:39.383Z` (commit `f41a5f90be7daa152c05cfdae7b0db7824b5967e`). Do NOT refresh. At post-checkpoint age >=70min (`2026-11-04T20:17:39.383Z`) save final work, then delete lease as final Git mutation and verify. Until then continue productive research.
+
+### Original-source uniform all-odd Machine C equivalence now CERTIFIED
+
+A previously unfinished `im-results/agent24-c48/UniformEdges.lean` failed 2026-11-02 CI 41484789781 at a second projection equal to `True`. Tested exact source-level `bounce` locally with Lean 4.36.0-rc2; the patch replacing `constructor <;> omega` by `constructor; · omega; · trivial` completed the proof (commit `5586a1081238177b3528695431804326400e267f`). Complete original-unchanged Machine C source CI [41895032060](https://github.com/FlareZ123/bb6/actions/runs/41895032060) SUCCESS at 2026-11-04 19:15Z. Checked all import dependencies and all three final all-odd theorems with standard Lean axioms, no `sorryAx`:
+
+```
+uniform_section_inverse_iff: secNext(a,k)=some(192s,160s-1) ↔
+  (a,k)=(176s-3,168s-3) ∨ (a,k)=(44s-3,234s-6)
+uniform_feeder_reach_iff_affine: CReach(192s,160s-1) ↔ CReach(278s-11,117s-4)
+uniform_one_gate_reach_iff_affine: CReach(1,256s+4) ↔ CReach(278s-11,117s-4)
+```
+
+Valid for ALL positive odd s and genuine blank seed (5,1). Detailed reproducibility appended to `im-results/agent24-c48/README.md`; theorem files `UniformInverse.lean`, `UniformReach.lean`, `UniformEdges.lean`, `UniformOrbitIff.lean`. No actual halting decision, no BB6 bound. Independently inspect prior art before claiming novelty. Complete source compilation uses manual-only `agent24-c16.yml` workflow.
+
+### New potentially novel surviving s-sector under investigation
+
+Exact hand derivation from source `secNext`, independently checked by Python replay of source-mirrored `bounce` for q=0..29, finds a forced three-stage chain:
+
+```
+Qq = (35584q+6939,14976q+2921)
+Pq = (25280q+4928,20128q+3923)
+Bq = (22704q+4423,21416q+4172)
+Rq = (44120q+8593,10708q+2085)
+secNext(Rq)=Bq, secNext(Bq)=Pq, secNext(Pq)=Qq
+```
+
+For all q≥0, the source inverse appears UNIQUE for Qq→Pq and Pq→Bq. Since Bq has even right counter and high left counter, Agent15's full true-blank `blank_reach_iff_affine` transports reachability backward to Rq; Rq has odd right coordinate and sum≡2(mod4), globally forbidden by source-certified Agent38. If every exhaustive branch verifies, this excludes Qq and hence true blank `CReach(1,32768q+6404)` for all q. A low stopping-depth family `m%32768=30632` then has k≡6404(mod32768) and is unreachable (distinct from Agent24's m%1024=424 and m%4096=4008; overlap with Agent29/41 larger filters unknown).
+
+New source files:
+- `UniformS25Inverse.lean`: all-branch universal inverse theorems `s25_first_inverse`, `s25_second_inverse`. First CI 41896170802 failed only on 12 redundant `omega` after `simp` had already closed goal, then fixed in commit d50ed3dd870f28484ac296093ee6060d6ee09fe2; rerun 41896474017 **SUCCESS**, standard axiom audit still to record.
+- `UniformS25Reach.lean`: proposed `s25_two_step_forces_bad`, `blank_no_s25_affine`, `blank_no_s25_one_gate`, `blank_no_low_halt_depth30632` (source verification dispatched at 19:25Z, run 41896747236, **in progress at this memory update**).
+- `UniformS25Residual.lean`: proposed lossless original Machine C halting iff after removal of third depth class, not yet in CI workflow.
+- Manual workflow `.github/workflows/agent24-c16.yml` now compiles new candidate inverse/reach. No per-commit triggers.
+
+**Immediate next actions:** inspect run 41896747236 result. If failed use targeted GitHub Actions get_job_logs (failed only, small tail), repair genuine errors; if passed add Residual to workflow, verify full original-source halting equivalence and its axiom audit. Then update im-results README with correctly scoped result and check novelty/overlap against C8192 index filters. If source proof fails mathematically, keep candidate marked unproved and do not claim it. After each persistence checkpoint check actual UTC against original 19:07:39Z lease.
