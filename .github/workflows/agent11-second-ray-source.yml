@@ -44,4 +44,8 @@ jobs:
           echo "3534767dfcb3b0bdd60309ce5754de4c31d2aff6ab0ce06e5ea422c0e147fd3c  SecondRayEven0.lean" | sha256sum -c -
           lean -o SecondRayEven0.olean SecondRayEven0.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayZero.lean" .
-          lean SecondRayZero.lean
+          lean -o SecondRayZero.olean SecondRayZero.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent38-c-section-mod4/Agent38SectionParity.lean" .
+          lean -o Agent38SectionParity.olean Agent38SectionParity.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayRootPrune.lean" .
+          lean SecondRayRootPrune.lean
