@@ -90,3 +90,9 @@ three power families still requires integrating and verifying those
 
 External publication novelty has not been evaluated. The exact BB(6)
 function remains unknown.
+
+## New finite-root modular completeness component
+
+A new reusable Lean module [SheepPeriodicGate.lean](SheepPeriodicGate.lean) proves that a complete finite modular cycle for `2^(base+4860*k)` rules out the corresponding generic predecessor equation for every natural `k` and **every natural odd-block coefficient `v`**, without requiring parity of `v`. Source: [generate_low.py](generate_low.py) generates 106 separate all-index Lean theorems for every unwanted small `(h,a)` generic candidate among the three nodes each of the 402 and 1738 chains. The four surviving cells are precisely `(402,node0,h1,a1)`, `(402,node1,h1,a4)`, `(1738,node0,h1,a1)`, and `(1738,node1,h0,a2)`, matching the constructive arrows above. It checks 106 complete cycles (maximum 17 `k`-classes) and independent precise odd-modulus periodicity before emitting each Lean theorem. All 106 theorems compiled locally under Lean 4.36.0-rc2, using `Nat.powMod_def` to make the finite modular witnesses kernel-efficient. Sample axiom audits returned `[propext, Quot.sound]`; no `sorryAx`. Exact low-valuation proof is now kernel-backed, pending genuine-source integration and high-valuation/exceptional completeness.
+
+**Pinned original-source verification of positive edges:** manual workflow [41934888623](https://github.com/FlareZ123/bb6/actions/runs/41934888623) SUCCESS for the two chains, and expanded run [41935472169](https://github.com/FlareZ123/bb6/actions/runs/41935472169) SUCCESS for the r1218 fork. The source checks were executed on upstream Cryptids and Lean 4.35.0-rc4, distinct from the local modular-gate compilation.
