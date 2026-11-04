@@ -68,3 +68,9 @@ Example: the modeled seed reaches an 18-digit stack at iteration 27,920 with `W(
 
 A potentially productive further step is to establish an exact all-input value for the **weighted deficit** after expansion, expressed in terms of `k,t` and the consumed digit quotients, and then test whether the actual blank-orbit's sequence of odd parts can ever equal 1. A length and suffix theorem alone does not exclude the root halt gate.
 
+
+## Original Cryptids source audit completed (2026-11-04, 04:44 UTC)
+
+The original-source import check described as pending in the earlier narrative **has succeeded**. Manual [GitHub Actions run 41774764780](https://github.com/FlareZ123/bb6/actions/runs/41774764780) at repository revision `96cfabc1440fbe25cde2974be6600964bb8c3f39` completed successfully. Its runner-executed step *Check exact original Cryptids epoch against existing compact map* succeeded, after pinning upstream Cryptids `c86f15861709b76042998c5211c7b2f83991621b`, building the unchanged original S4 accelerator, and checking SHA-256-pinned Agent 3 compact sources. It compiled `S4NativeCompact.lean` (including `compact_exact_native_epoch`) and `S4NativeValuation.lean` (including the length and terminal-pair transport). Job `126392440687` reports success for the actual source compilation step.
+
+Thus the exact compact epoch identity and both valuation theorems have now been **Lean checked with the original unchanged Cryptids high-level `stepEpoch` imported**. This is a *per-return* source statement: it does not by itself transport all blank raw-machine steps to the compact seed, close the two exceptional gates, prove S4 nonhalting, or determine BB(6). The original two-gate raw-halt equivalence is independently source-certified in [S4 source bridge](../agent5-s4-source-bridge/README.md). All novelty and rooted-reachability qualifications elsewhere in this dossier still apply.
