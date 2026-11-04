@@ -153,7 +153,9 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/BottomBoundary.lean .
           lean -o BottomBoundary.olean BottomBoundary.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepFourExclude.lean .
-          lean DeepFourExclude.lean
+          lean -o DeepFourExclude.olean DeepFourExclude.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SecondOneInfinite.lean .
+          lean SecondOneInfinite.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
