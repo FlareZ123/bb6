@@ -12,7 +12,7 @@ theorem source_run_to_local (n u w : Nat)
   have hh : (BB429.run n (0,0)).map BB429SourceLadder.lift =
       some (.J u w) := by
     rw [← heq]
-    simpa [highLevelStart] using h
+    simpa only [BB429SourceLadder.lift, highLevelStart] using h
   cases hr : BB429.run n (0,0) with
   | none => simp [hr] at hh
   | some s =>
@@ -21,7 +21,7 @@ theorem source_run_to_local (n u w : Nat)
     have he : a=u ∧ b=w := by
       simpa only [Option.some.injEq, HighLevelState.J.injEq] using hh
     rcases he with ⟨rfl,rfl⟩
-    exact hr
+    rfl
 
 theorem source_next_none_to_local (u w : Nat)
     (h : highLevelNext (.J u w) = none) :
@@ -29,7 +29,7 @@ theorem source_next_none_to_local (u w : Nat)
   have hh := BB429SourceLadder.source_step_eq u w
   rw [h] at hh
   cases hs : BB429.next (u,w) with
-  | none => exact hs
+  | none => rfl
   | some s => simp [hs] at hh
 
 /-- All genuine accelerated blank-origin halting sites lie in five u-residue
