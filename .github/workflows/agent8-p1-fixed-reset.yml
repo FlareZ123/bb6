@@ -91,6 +91,8 @@ jobs:
           lean "$root/UniformAnySource.lean"
           lean -o "$root/SourceLower.olean" "$root/SourceLower.lean"
           lean -o "$root/DegreeLogPure.olean" "$root/DegreeLogPure.lean"
+          lean -o "$root/ZeroEvenCostArithmetic.olean" "$root/ZeroEvenCostArithmetic.lean"
+          lean -o "$root/ZeroEvenCostSource.olean" "$root/ZeroEvenCostSource.lean"
           lean -o "$root/BudgetGrowth.olean" "$root/BudgetGrowth.lean"
           lean "$root/SourceGrowth.lean"
           lean -o "$root/ExceptionalCost.olean" "$root/ExceptionalCost.lean"
