@@ -17,12 +17,24 @@ def eFour (m : Nat) (ys : List Bool) : Cfg :=
 def restTail (ys : List Bool) : List Bool :=
   [true,false,true,false,true,false,true] ++ ys
 
+/-- Shift a 10-stack with one leading zero into an 01-stack. -/
+private theorem leftShift (m : Nat) :
+    false :: (pairs m ++ [true,true]) =
+      oppairs m ++ [false,true,true] := by
+  induction m with
+  | zero => rfl
+  | succ m ih =>
+      change false :: true :: (false :: (pairs m ++ [true,true])) =
+        false :: true :: (oppairs m ++ [false,true,true])
+      rw [ih]
+
 /-- Exactly seventeen original primitive transitions turn an E/1111 boundary
     into the source C-reverse-walk grammar, for arbitrary remaining tape. -/
 theorem eFour17 (m : Nat) (ys : List Bool) :
     run 17 (eFour m ys) =
       cWalk (m+1) [false,true,true] (restTail ys) := by
-  simp [eFour,cWalk,restTail,run,step,goL,goR,pairs,oppairs,List.append_assoc]
+  simp [eFour,cWalk,restTail,run,step,goL,goR,pairs,oppairs]
+  exact leftShift m
 
 /-- Four final left moves reach F on physical blank-left zero. -/
 theorem cFour4 (ys : List Bool) :
