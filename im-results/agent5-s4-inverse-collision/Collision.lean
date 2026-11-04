@@ -1,3 +1,4 @@
+import S4SourceShape
 import Lean
 import Lean.Elab.Tactic.Omega
 
@@ -7,36 +8,30 @@ def bumpBy (k : Nat) : List Nat → List Nat
   | [] => if k = 0 then [] else [k-1]
   | b::S => (b+k)::S
 
--- Exact compact transducer shape from the S4 source-mirrored reduced system.
-def H (a : Nat) (L : List Nat) : Option (List Nat) :=
-  let q := a / 2
-  if a % 2 = 0 then
-    if a ≤ 1 then none
-    else
-      match L with
-      | [] => some [q+2, q-1]
-      | b::S => some ((q+2)::(b+q)::S)
-  else
-    match L with
-    | [] => (H q []).map (q::·)
-    | b::S => (H (b+q+1) S).map (q::·)
-termination_by (L.length, a)
-decreasing_by
-  all_goals simp_wf
-  all_goals omega
+-- Reuse the prior source-shaped source H verbatim.
+def H (a : Nat) (L : List Nat) : Option (List Nat) := _root_.H a L
 
 def compactNext : List Nat → Option (List Nat)
   | [] => (H 44 []).map (bumpBy 17)
   | b::S => (H (b+45) S).map (bumpBy 17)
 
+theorem bumpBy17_eq_source (L : List Nat) :
+    bumpBy 17 L = _root_.bump17 L := by
+  cases L <;> rfl
+
+theorem compactNext_eq_source (T : List Nat) :
+    compactNext T = _root_.compactNext T := by
+  have he : bumpBy 17 = _root_.bump17 := funext bumpBy17_eq_source
+  cases T <;> simp [compactNext, _root_.compactNext, _root_.compactInitial, H, he]
+
 theorem odd_cons (q b : Nat) (S : List Nat) :
  H (2*q+1) (b::S) = (H (b+q+1) S).map (q::·) := by
  have hdiv : (2*q+1)/2=q := by omega
- simp [H, hdiv]
+ simp [H, _root_.H, hdiv]
 
 theorem even_cons (q b : Nat) (S : List Nat) (hq : 0 < q) :
  H (2*q) (b::S) = some ((q+2)::(b+q)::S) := by
- simp [H] <;> omega
+ simp [H, _root_.H] <;> omega
 
 theorem H_left (u v t : Nat) (S : List Nat) :
   H 125 ((150+2*u)::(481+u+2*v)::t::S) =
@@ -101,11 +96,11 @@ set_option maxRecDepth 10000
 set_option maxHeartbeats 0
 
 example : compactNext [42,12,8,5] = some [60,30,36,5] := by
-  simp [compactNext, H, bumpBy]
+  simp [compactNext, H, _root_.H, bumpBy]
 
 theorem actual_prefix_13 :
     run 13 (some [42,12,8,5]) = some [80,150,481,133,28,25] := by
-  simp [run, compactNext, H, bumpBy]
+  simp [run, compactNext, H, _root_.H, bumpBy]
 
 theorem actual_step_collision :
     compactNext [80,150,481,133,28,25] =
