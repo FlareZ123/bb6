@@ -71,3 +71,18 @@ jobs:
           lean -o Agent46TerminalLifts.olean Agent46TerminalLifts.lean
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SourceBridge192Companion.lean" .
           lean SourceBridge192Companion.lean
+
+      - name: Mixed192 companion B reverse-core source proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/agent4-source-proof
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/BackwardMod192B.lean" .
+          export LEAN_PATH=.
+          python3 "$GITHUB_WORKSPACE/tools/agent4_split_mixed192b.py" BackwardMod192B.lean
+          for module in Back192BDefs Back192BLow Back192BZero Back192BZeroPos Back192BHighEven Back192BHighOdd Back192BHighPos Back192BStep; do
+            echo "=== Mixed192 B proof module: $module ==="
+            timeout 100 lean -o "$module.olean" "$module.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SourceBridge192B.lean" .
+          lean SourceBridge192B.lean
