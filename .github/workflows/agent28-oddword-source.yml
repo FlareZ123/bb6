@@ -38,4 +38,6 @@ jobs:
           lean -o im-results/agent28-p1-word-automaton/OneResetPoly.olean im-results/agent28-p1-word-automaton/OneResetPoly.lean
           lean -o im-results/agent28-p1-word-automaton/OneResetSourceBudget.olean im-results/agent28-p1-word-automaton/OneResetSourceBudget.lean
           lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
-          lean im-results/agent28-p1-word-automaton/OneResetSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetSourceBridge.olean im-results/agent28-p1-word-automaton/OneResetSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetZero.olean im-results/agent28-p1-word-automaton/OneResetZero.lean
+          lean im-results/agent28-p1-word-automaton/OneResetCount.lean
