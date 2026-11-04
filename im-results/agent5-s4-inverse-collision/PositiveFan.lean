@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 namespace S4Collision
 
 theorem H125_end64 : H 125 [64] = none := by
-  simp [H]
+  simp [H, _root_.H]
 
 theorem danger_block64 (n : Nat) :
     compactNext ([80] ++ List.replicate n 62 ++ [64]) = none := by
