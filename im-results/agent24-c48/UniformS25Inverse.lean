@@ -174,6 +174,10 @@ theorem s25_second_inverse (q a k : Nat)
                   _ = 8*(u*v) := by rfl
               omega
 
+private theorem s25_third_cost_arithmetic (q : Nat) :
+    (22704*q+4423)+2*(21416*q+4172)+2=65536*q+12769 := by
+  omega
+
 /-- Source-complete third inverse: the even-right output has exactly
     one predecessor. Its other apparent high-bounce branches are ruled
     out by the parity of the exact bounce cost. -/
@@ -192,8 +196,11 @@ theorem s25_third_inverse (q a k : Nat)
           bounce_odd_output_invariants (2*k+1) 1
             (22704*q+4423) (21416*q+4172) (by decide) hb
         have hleft : (22704*q+4423)+(21416*q+4172)=44120*q+8595 := by omega
+        have hbase : 2*(1:Nat)+6=8 := by decide
         have hmod : 44120*q+8595=8*(2^n) := by
-          simpa only [hleft] using hsum
+          calc
+            44120*q+8595=2^n*8 := by simpa only [hleft,hbase] using hsum
+            _ = 8*(2^n) := by ac_rfl
         omega
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
@@ -214,8 +221,11 @@ theorem s25_third_inverse (q a k : Nat)
                   (by decide) (by omega) hb
               have hleft : (22704*q+4423)+(21416*q+4172)+1=
                   44120*q+8596 := by omega
+              have hbase : 2*(4:Nat)+8=16 := by decide
               have hpar : 44120*q+8596=16*(2^n) := by
-                simpa only [hleft] using hsum
+                calc
+                  44120*q+8596=2^n*16 := by simpa only [hleft,hbase] using hsum
+                  _ = 16*(2^n) := by ac_rfl
               omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
@@ -254,7 +264,7 @@ theorem s25_third_inverse (q a k : Nat)
               have hleft : (2*k-a+3)+(2*(a-1)+8)+3*n =
                   2*k+a+9+3*n := by omega
               have hright : (22704*q+4423)+2*(21416*q+4172)+2 =
-                  65536*q+12769 := by omega
+                  65536*q+12769 := s25_third_cost_arithmetic q
               rw [hleft,hright] at hcost
               exact hcost.symm
             by_cases hn : n=0
