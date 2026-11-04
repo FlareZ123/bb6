@@ -66,6 +66,8 @@ jobs:
           lean -o Agent38SectionParity.olean Agent38SectionParity.lean
           lean -o BounceAllExact.olean BounceAllExact.lean
           lean -o SectionAllInverse.olean SectionAllInverse.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
+          lean -o EvenOddFourExact.olean EvenOddFourExact.lean
           lean -o UnboundedInDegree.olean UnboundedInDegree.lean
           lean -o PowerDegreeExact.olean PowerDegreeExact.lean
           # Agent 20 balanced source fiber, reusing this exact original-source dependency build.
