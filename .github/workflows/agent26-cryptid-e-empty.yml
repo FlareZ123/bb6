@@ -87,3 +87,9 @@ jobs:
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
           lean im-results/agent26-cryptid-e-gate/E1101010111Pairs.lean
+
+      - name: Certify two shorter A closure terminals against the same pinned source
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
+        run: |
+          lean im-results/agent26-cryptid-e-gate/A110101Closure.lean
