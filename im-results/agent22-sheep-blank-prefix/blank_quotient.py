@@ -31,6 +31,7 @@ def main() -> None:
     covered = 0
     last = None
     for k in range(EXPECTED_LAST_INDEX + 1):
+        assert x & (x - 1), ("unexpected terminal power", k)
         residue = (x % MODULUS) // 2
         if first[residue] < 0:
             first[residue] = k
@@ -38,9 +39,9 @@ def main() -> None:
             if covered == len(first):
                 last = k
                 break
-        assert x & (x - 1), ("unexpected power-of-two terminal", k)
         x = first_even_return(x)
     assert last == EXPECTED_LAST_INDEX
+    assert x.bit_length() == 126782 and x.bit_count() == 63573
     assert len(set(first)) == MODULUS // 2
     assert max(first) == EXPECTED_LAST_INDEX
     digest = sha256(b"".join(pack("<I", i) for i in first)).hexdigest()
