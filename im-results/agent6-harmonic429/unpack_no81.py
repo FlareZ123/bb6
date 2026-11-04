@@ -10,7 +10,7 @@ from pathlib import Path
 directory = Path(__file__).resolve().parent
 encoded = directory / "BB429No81mod512.lean.xz.b64"
 source = directory / "BB429No81mod512.lean"
-expected = "6136100818994f4f645968baaa4cb511498bc838b665daf8fae064d793973cd4"
+expected = "dbb54fef717c7bceb4ebe73d2b3526aa3662e8da2608356be32ecf36d80d8930"
 raw = lzma.decompress(base64.b64decode(encoded.read_text().strip()))
 assert hashlib.sha256(raw).hexdigest() == expected
 with (directory / ".no81.lock").open("w") as lock:
