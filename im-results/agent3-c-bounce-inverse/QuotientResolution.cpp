@@ -72,7 +72,7 @@ int main(int argc,char**argv) {
   for (int depth=0,j=26;depth<3;++depth,j=16*j+42) {
     const int a=2*j+3, k=15*j+40;
     std::cout<<"highTower depth="<<depth<<" j="<<j<<" projected=("
-      <<a%M<<","<<k%M<<",0) seen="<<int(seen[idx({a,k,0})])<<"\\n";
+      <<a%M<<","<<k%M<<",0) seen="<<int(seen[idx({a,k,0})])<<"\n";
   }
   return 0;
 }
