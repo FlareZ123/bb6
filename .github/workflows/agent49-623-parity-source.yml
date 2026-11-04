@@ -95,3 +95,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/LowStepSource.lean" Agent49LowStepSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49LowStepSource.olean Agent49LowStepSource.lean
+
+      - name: Verify full 27-unit all-even two-step and blank-root slope
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TwoStep27Source.lean" Agent49TwoStep27Source.lean
+          lake env lean Agent49TwoStep27Source.lean
