@@ -190,6 +190,21 @@ theorem sourceCandidates_correct (a k x y : Nat) :
 #print axioms no_positive_cycle
 #print axioms sourceCandidates_correct
 
+
+/-- A sharper target-dependent universal time bound obtained from the
+    exact blank-origin mass seven and an increase of two per section step. -/
+theorem section_reach_iff_half_bound (x y : Nat) :
+  SectionReach x y ↔
+    ∃ n ≤ (x+2*y)/2, run secNext n (some (5,1)) = some (x,y) := by
+  constructor
+  · rintro ⟨n,h⟩
+    have hm := run_weight_growth n x y h
+    refine ⟨n,by omega,h⟩
+  · rintro ⟨n,_,h⟩
+    exact ⟨n,h⟩
+
+#print axioms section_reach_iff_half_bound
+
 #print axioms bounce_weight_growth
 #print axioms secNext_weight_growth
 #print axioms run_weight_growth
