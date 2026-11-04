@@ -61,4 +61,53 @@ theorem next_small_first_gain20 (a d b e : Nat)
             omega
 
 #print axioms next_small_first_gain20
+/-- Every successful high-level transition has output second counter at least 2. -/
+theorem next_output_second_two (a d b e : Nat)
+    (hstep : next (.D a d)=some (.D b e)) : 2 ≤ e := by
+  simp only [next, highLevelNext] at hstep
+  by_cases h0 : a=0
+  · simp only [if_pos h0] at hstep
+    by_cases hdo : d%2=1
+    · simp only [if_pos hdo] at hstep
+      have he := BB6.Agent8BudgetSource.drainB_d3 2 (d+1) 2 b e hstep
+      omega
+    · simp only [if_neg hdo] at hstep
+      cases hstep
+      omega
+  · simp only [if_neg h0] at hstep
+    by_cases h1 : d%2=1 ∧ a≥d+5
+    · simp only [if_pos h1] at hstep
+      have he := BB6.Agent8BudgetSource.drainB_d3 (d+3) (a-d-5) 5 b e hstep
+      omega
+    · simp only [if_neg h1] at hstep
+      by_cases h2 : d%2=0 ∧ a≥d+3
+      · simp only [if_pos h2] at hstep
+        have he := BB6.Agent8BudgetSource.drainB_d3 (d+2) (a-d-2) 2 b e hstep
+        omega
+      · simp only [if_neg h2] at hstep
+        by_cases hodd : a%2=1
+        · simp [hodd] at hstep
+        · simp only [if_neg hodd] at hstep
+          by_cases h4 : a=d+2
+          · simp only [if_pos h4] at hstep
+            have he := BB6.Agent8BudgetSource.drainB_d3 a 0 2 b e hstep
+            omega
+          · simp only [if_neg h4] at hstep
+            by_cases h5 : d%2=1
+            · simp only [if_pos h5] at hstep
+              have he := BB6.Agent8BudgetSource.drainB_d3 (a-1) (d+4-a) 3 b e hstep
+              omega
+            · simp only [if_neg h5] at hstep
+              cases hev : evalA (d+1-a) a (2*a+5) with
+              | none => simp [hev] at hstep
+              | some p =>
+                rcases p with ⟨a1,b1,d1⟩
+                simp only [hev,Option.bind_some] at hstep
+                have hd1 := BB6.Agent8BudgetSource.evalA_ternary_budget
+                  (d+1-a) a (2*a+5) a1 b1 d1 hev
+                have hd2 := BB6.Agent8BudgetSource.drainB_d3 b1 a1 d1 b e hstep
+                omega
+
+#print axioms next_output_second_two
+
 end BB6.Agent49SmallOutputSource
