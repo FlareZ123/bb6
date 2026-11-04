@@ -73,6 +73,34 @@ theorem source_arbitrary_inverse_depth (L : Nat) :
       some (64*2^L-3,384*2^L-10) := by
   exact firstRun_to_source L (61,seedW L) _ (arbitrary_inverse_depth L)
 
+/-- There are parity-compatible synthetic halting traces of unbounded length
+    whose terminal first counters are 125 modulo 128. Their chosen seed is
+    not asserted to be reachable from the genuine blank start. -/
+theorem synthetic_halt_after_arbitrary_depth (L : Nat) :
+    ∃ a b, BB429.run (L+1) (61,seedW L) = some (a,b) ∧
+      BB429.next (a,b) = none ∧ a%128=125 := by
+  let t := 2^L
+  have ht : 0<t := Nat.pow_pos (by decide)
+  have hr : BB429.run L (61,seedW L) =
+      some (64*t-3,384*t-10) := source_arbitrary_inverse_depth L
+  have hg : 2*(64*t-3)+3 ≤ 384*t-10 := by omega
+  have hs : BB429.next (64*t-3,384*t-10) =
+      some (128*t-3,256*t-7) := by
+    simp [BB429.next,hg]
+    omega
+  have hr' : BB429.run (L+1) (61,seedW L) =
+      some (128*t-3,256*t-7) := by
+    simp only [BB429.run,hr,Option.bind_some]
+    exact hs
+  refine ⟨128*t-3,256*t-7,hr',?_,?_⟩
+  · apply (BB429.next_none_iff_halt_line (128*t-3) (256*t-7)).mpr
+    omega
+  · have hdiv : 128*t-3 = 128*(t-1)+125 := by omega
+    rw [hdiv]
+    omega
+
+#print axioms synthetic_halt_after_arbitrary_depth
+
 /-- A successful long first-branch run has a successful prefix of every
     shorter length. -/
 theorem firstRun_prefix (s : BB429Burst.State) (n m : Nat)
