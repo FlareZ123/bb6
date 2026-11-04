@@ -22,7 +22,7 @@ EXPECTED = {
 
 with (HERE / ".reconstruct.lock").open("a") as lock:
     fcntl.flock(lock, fcntl.LOCK_EX)
-    packed = base64.b64decode((HERE / "C4096.tar.xz.b64").read_bytes(), validate=True)
+    packed = base64.b64decode((HERE / "C4096.tar.xz.b64").read_text().strip(), validate=True)
     assert hashlib.sha256(packed).hexdigest() == XZ_SHA256, "Compressed bundle checksum mismatch"
     with tarfile.open(fileobj=io.BytesIO(lzma.decompress(packed)), mode="r:") as archive:
         assert sorted(archive.getnames()) == sorted(EXPECTED), "Unexpected archive entries"
