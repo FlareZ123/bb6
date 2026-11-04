@@ -28,7 +28,7 @@ private theorem inc_append (xs ys : List Bool) :
     CryptidA.wordInc (xs ++ ys) =
       CryptidA.wordInc xs + CryptidA.wordInc ys := by
   induction xs with
-  | nil => rfl
+  | nil => simp [CryptidA.wordInc]
   | cons b xs ih =>
     cases b <;> simp [CryptidA.wordInc,ih, Nat.add_assoc]
 
