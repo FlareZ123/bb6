@@ -24,6 +24,8 @@ jobs:
           cp im-results/agent6-harmonic429/BB429No381mod1024.lean /tmp/agent30-429/
           cp im-results/agent30-429-393/BB429No393mod512.lean /tmp/agent30-429/
           cp im-results/agent30-429-393/BB429No265mod512.lean /tmp/agent30-429/
+          cp im-results/agent30-429-393/BB429No137mod1024.lean /tmp/agent30-429/
+          cp im-results/agent30-429-393/BB429No521mod1024.lean /tmp/agent30-429/
       - name: Compile authentic rooted 12-branch accelerator and universal exclusion
         working-directory: /tmp/agent30-429
         env:
@@ -36,3 +38,5 @@ jobs:
           lean -o BB429No381mod1024.olean BB429No381mod1024.lean
           lean BB429No393mod512.lean
           lean BB429No265mod512.lean
+          lean BB429No137mod1024.lean
+          lean BB429No521mod1024.lean
