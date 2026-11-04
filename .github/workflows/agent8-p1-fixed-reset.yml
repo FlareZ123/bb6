@@ -39,6 +39,11 @@ jobs:
             echo "SIGNATURE FILE $file"
             grep -n -A12 -E '^theorem .*path_invariant|^theorem .*source_count_path|^theorem .*budget|^theorem .*source_count|^inductive .*Path' "$file" || true
           done
+      - name: Inspect low-cost even exit source signature
+        run: |
+          root=im-results/agent28-p1-word-automaton
+          base64 --decode "$root/P1ScalarBridge.lean.xz.b64" | xz --decompress --stdout > /tmp/P1ScalarBridge.lean
+          grep -n -A35 -E '^theorem source_critical_low_cost_even_exit' /tmp/P1ScalarBridge.lean || true
       - name: Compile original P1 source and finite-source reset words
         run: |
           set -eu
