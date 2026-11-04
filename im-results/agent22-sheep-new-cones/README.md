@@ -6,7 +6,7 @@
 
 For an even legal counter x=2^a v≥6 with a≥1 and odd v≥3, the ordinary Sheep section map is F(x)=x+a+3 if v=3; otherwise F(x)=x+a+(v−1)/2. Set z=F(x), h=v₂(z−1), and E(x)=1+3^h(z−1)/2^h. E is the first even nonterminal return.
 
-For each row, set j=J+Pk with k any natural number. In the true E graph, the **complete** predecessor basin of the target 2^j consists of exactly the indexed rational-node values below, including the target itself. Each node is an even integer strictly greater than 10, so the actual blank E start 10 cannot reach any target in these six progressions.
+For each row, set j=J+Pk with k any natural number. In the true E graph, the **complete** predecessor basin of the target 2^j consists of exactly the indexed rational-node values below, including the target itself. Each node is an even integer strictly greater than 10, so the actual blank E start 10 cannot reach any target in these twelve progressions.
 
 | Phase bases J (each separately) | P | Basin nodes per phase | Edges per phase | Low-a rows per phase | Period representatives per phase |
 |---:|---:|---:|---:|---:|---:|
@@ -84,7 +84,7 @@ The congruence is a necessary condition even if v fails oddness or size, so reta
 
 ## Reproduction, overlap, and significance
 
-Run **python certificate.py** with Python 3.10 or newer. It uses only the standard library, has no network or randomness, and performs exact modular calculations with complete periods. Expected output: six PASS lines plus one final PASS line. This is an **executable arithmetic certificate plus paper proof**, with original E semantics coming from the earlier source-certified module; it is not a new kernel proof of the complete basins.
+Run **python certificate.py** with Python 3.10 or newer. It uses only the standard library, has no network or randomness, and performs exact modular calculations with complete periods. Expected output: twelve PASS lines plus one final PASS line. This is an **executable arithmetic certificate plus paper proof**, with original E semantics coming from the earlier source-certified module; it is not a new kernel proof of the complete basins.
 
 I independently reconstructed the older 5,400-class **ordinary F depth-five** certificate and exactly reproduced 3,596 excluded residues with SHA256
 
