@@ -244,6 +244,80 @@ theorem no_second_gate_m3 : ¬ BB6.Agent11Mass.SectionReach 23 3304 := by
 
 #print axioms no_second_gate_m3
 
+
+/-- If the faithful section reaches a larger weighted mass, the strictly
+    increasing rank makes every smaller target unreachable afterwards.
+    Exploit this for an early-exit *kernel-computable* one-pass search. -/
+theorem hasHit_none (x y n : Nat) : hasHit x y n none = false := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simpa [hasHit,ih]
+
+def massStop (x y : Nat) : Nat → Option (Nat×Nat) → Bool
+  | 0,s => decide (s=some (x,y))
+  | n+1,s =>
+      if s=some (x,y) then true else
+      match s with
+      | none => false
+      | some (a,k) =>
+        if x+2*y < a+2*k then false
+        else massStop x y n (secNextFuel (a,k))
+
+/-- Exact equivalence of the early-rank-stopped and complete prefix scans;
+    the decisive skip branch is justified by the genuine source-certified
+    global rank theorem, not a heuristic search cutoff. -/
+theorem massStop_eq_hasHit (fuel x y : Nat) :
+  ∀s, massStop x y fuel s = hasHit x y fuel s := by
+  induction fuel with
+  | zero =>
+    intro s
+    rfl
+  | succ fuel ih =>
+    intro s
+    cases s with
+    | none =>
+      simp [massStop,hasHit_none]
+    | some p =>
+      rcases p with ⟨a,k⟩
+      by_cases hsame : (some (a,k) : Option (Nat×Nat)) = some (x,y)
+      · simp [massStop,hasHit,hsame]
+      · by_cases hover : x+2*y < a+2*k
+        · have hnothit : hasHit x y (fuel+1) (some (a,k)) = false := by
+            cases hb : hasHit x y (fuel+1) (some (a,k)) with
+            | false => rfl
+            | true =>
+              obtain ⟨n,hn,hreach⟩ :=
+                (hasHit_iff (fuel+1) x y (some (a,k))).mp hb
+              have hsrc : BB6.Agent8Section.run secNext n (some (a,k)) =
+                  some (x,y) := by
+                simpa only [runFuel_eq] using hreach
+              have hmass :=
+                BB6.Agent11Mass.run_generic_weight_growth n a k x y hsrc
+              omega
+          simp [massStop,hsame,hover,hnothit]
+        · simp [massStop,hasHit,hsame,hover,ih]
+
+theorem massStopFull_iff (x y : Nat) :
+  massStop x y (x+2*y) (some (5,1)) = true ↔
+  BB6.Agent11Mass.SectionReach x y := by
+  rw [massStop_eq_hasHit,hasHitFull_iff]
+
+/-- m=4 (j=13) genuine second halting gate: kernel executes only until
+    the monotone rank exceeds the target, and the theorem makes the
+    negative answer universal across all future steps. -/
+theorem no_second_gate_m4 : ¬ BB6.Agent11Mass.SectionReach 29 16354 := by
+  intro hr
+  have h := (massStopFull_iff 29 16354).mpr hr
+  have hc : massStop 29 16354 (29+2*16354) (some (5,1)) = false := by
+    set_option maxRecDepth 80000 in
+      decide
+  simp [hc] at h
+
+#print axioms hasHit_none
+#print axioms massStop_eq_hasHit
+#print axioms massStopFull_iff
+#print axioms no_second_gate_m4
+
 #print axioms runFuel_commute
 #print axioms runFuel_succ_head
 #print axioms hasHit_iff
