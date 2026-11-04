@@ -79,3 +79,31 @@ The original `generic_one_gate_reach_iff` of Agent3 transports the result from t
 Source files: `C16Inverse.lean`, `C16Reach.lean`, `C16Depth.lean`, `C16Residual.lean`; manual verification [.github/workflows/agent24-c16.yml](../../.github/workflows/agent24-c16.yml). This workflow imports a SHA256-checked reconstruction of Agent38's bundled source, so the stronger blank image restriction is verified against its actual original proof, rather than an abstract assumption.
 
 **Structural consequence and next investigation:** for section feeder index `t=16s` with odd `s`, the two-parent inverse grammar has a uniform n=0 and n=2 decomposition, and the first parent is always forbidden by Agent38 mod4. The remaining parent has one forced affine predecessor `(278s-11,117s-4)`. When `s≡3 (mod4)`, that predecessor is eliminated by the mod4 invariant (our C48 case). When `s≡1 (mod16)`, Agent38's deeper odd-special invariant eliminates it (our C16 case). Remaining odd s classes demand a deeper structural inverse analysis. An all-parameter Lean theorem subsuming the two explicit affine source files may be a useful next reusable proof interface, but should not be confused with a machine decision.
+
+
+## Uniform positive odd feeder: original-source two-parent and blank-reachability iff (2026-11-04)
+
+**Verification status: SUCCESS, unmodified source dependencies.** Manual [Lean 4.36.0-rc2 CI run 41895032060](https://github.com/FlareZ123/bb6/actions/runs/41895032060), job 126802157556, checked the repository's original `CLine`, `BounceCalc`, `FastSectionDef`, the source-level blank-entry and halting bridges, Agent 3's bounce reversibility, Agent 15's forced affine reachability, Agent 38's global mod-four restriction, and the four files below. The final axiom audits show only `[propext, Classical.choice, Quot.sound]`, with some subsidiary theorems needing only `[propext, Quot.sound]`; none shows `sorryAx`. Previous 2026-11-02 [run 41484789781](https://github.com/FlareZ123/bb6/actions/runs/41484789781) had failed at an unclosed `True` goal in `UniformEdges.lean`; the 2026-11-04 commit `5586a1081238177b3528695431804326400e267f` correctly closes that goal with `trivial`. No mathematical definitions changed.
+
+With `secNext` the original exact arithmetic Machine C section map, for every `s ≥ 1` with `s % 2 = 1`, the source-linked theorem `uniform_section_inverse_iff` in [UniformEdges.lean](./UniformEdges.lean) proves the **complete genuine one-step predecessor iff**
+
+```
+secNext(a,k) = some (192*s,160*s-1)
+  ↔ (a=176*s-3 ∧ k=168*s-3)
+    ∨ (a=44*s-3 ∧ k=234*s-6).
+```
+
+`UniformInverse.lean` establishes necessity, and `UniformEdges.lean` constructs and source-proves both actual directed edges: an even-bounce terminal edge at recursion depth zero, and another with exactly two reverse even-bounce lifts. Therefore the classification is neither a finite scan nor a mere inverse overapproximation.
+
+Writing `CReach(a,k)` for membership in the **genuine** blank-start `secNext` orbit starting `(5,1)`, [UniformOrbitIff.lean](./UniformOrbitIff.lean) proves
+
+```
+CReach(192*s,160*s-1) ↔ CReach(278*s-11,117*s-4)
+CReach(1,256*s+4)     ↔ CReach(278*s-11,117*s-4).
+```
+
+The forward implication excludes the other parent via Agent 38's global blank-orbit invariant and transports the surviving parent to its forced affine ancestor using Agent 15's all-time theorem. The reverse implication constructs the actual n=2 source edge, transporting reachability forward, then uses Agent 3's exact two-step feeder iff. Thus it has no hidden assertion that arbitrary synthetic ancestors were visited.
+
+**Scope and limits.** These iff statements are general-purpose exact proof interfaces and reduce the infinite low-gateway family `t=16s` for odd `s` to reachability of `(278s-11,117s-4)`. Known all-time obstructions already exclude subfamilies `s%4=3` and `s%16=1`; the other odd classes remain unresolved. The reduced ancestor family is still infinite, and the complete Machine C halting criterion contains other families. Consequently **there is no Machine C nonhalting theorem and no numerical BB(6) value or upper bound**. External novelty relative to prior Machine C literature and proofs has not been independently reviewed, so this remains an intermediate result in `im-results/` rather than publication-ready `results/`.
+
+**Next decisive problem:** find a genuinely blank-reachability-sensitive invariant on the affine target `(278s-11,117s-4)` for all odd `s` remaining after the published mod-four/deeper-special exclusions, or exhibit a true blank-orbit witness. Avoid counting this source verification as a newly resolved root.
