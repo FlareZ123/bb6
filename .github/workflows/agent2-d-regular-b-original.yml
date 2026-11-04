@@ -69,4 +69,7 @@ jobs:
           lean -o "$A/TripleIteration.olean" "$A/TripleIteration.lean"
           lean -o "$A/SixOnes.olean" "$A/SixOnes.lean"
           lean -o "$P/CodeImplicitNil.olean" "$P/CodeImplicitNil.lean"
-          lean "$D/EAResidueTwoSource.lean"
+          lean -o "$D/EAResidueTwoSource.olean" "$D/EAResidueTwoSource.lean"
+          lean -o "$B/A1100.olean" "$B/A1100.lean"
+          lean -o "$B/A110111.olean" "$B/A110111.lean"
+          lean "$D/EAResidueOneSource.lean"
