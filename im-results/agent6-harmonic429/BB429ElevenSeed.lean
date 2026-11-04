@@ -4,9 +4,9 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429ElevenSeed
 
+set_option maxHeartbeats 3000000 in
 /-- Every genuine non-first accelerated transition which enters the
     u=11 reset ray has the second counter exactly 2 modulo 4. -/
-set_option maxHeartbeats 3000000 in
 theorem reset_to_eleven_mod4 (u w v : Nat)
     (hfirst : w < 2*u+3)
     (hs : BB429.next (u,w) = some (11,v)) :
@@ -20,7 +20,7 @@ theorem reset_to_eleven_mod4 (u w v : Nat)
     the halting gateway has burst length n≡1 (mod4). -/
 theorem eleven_burst_gateway_length (v n a b : Nat)
     (hv : v%4=2)
-    (hr : BB429Burst.firstRun n (11,v)=some(a,b))
+    (hr : BB429Burst.firstRun n (11,v)=some (a,b))
     (hg : b+1=2*a) : n%4=1 := by
   have he := (BB429Burst.gateway_iff_exponential 11 v n a b hr).mp hg
   omega
@@ -29,8 +29,8 @@ theorem eleven_burst_gateway_length (v n a b : Nat)
     first-only burst that reaches a halt, must have n≡1 (mod4). -/
 theorem reset_eleven_halting_burst (u w v n a b : Nat)
     (hfirst : w < 2*u+3)
-    (hs : BB429.next (u,w)=some(11,v))
-    (hr : BB429Burst.firstRun n (11,v)=some(a,b))
+    (hs : BB429.next (u,w)=some (11,v))
+    (hr : BB429Burst.firstRun n (11,v)=some (a,b))
     (hg : b+1=2*a) : n%4=1 :=
   eleven_burst_gateway_length v n a b (reset_to_eleven_mod4 u w v hfirst hs) hr hg
 
