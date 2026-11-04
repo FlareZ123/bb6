@@ -129,7 +129,7 @@ private theorem A_output (k q r : Nat) :
   have hi : wordInc (ws q r) = q+4*r := inc_ws q r
   have ht : BB6.CryptidA110111CodeFirst.tail zs =
       oppairs 3 ++ List.replicate 2 true := by decide
-  have hn : 2*(4*k+3+q+4*r)+5 = 8*k+11+2*q+8*r := by omega
+  have hn : 2*(4*k+3+(q+4*r))+5 = 8*k+11+2*q+8*r := by omega
   have hrepl : List.replicate (8*k+11+2*q+8*r) true =
       true :: true :: List.replicate (8*k+9+2*q+8*r) true := by
     have hx : 8*k+11+2*q+8*r = 2+(8*k+9+2*q+8*r) := by omega
