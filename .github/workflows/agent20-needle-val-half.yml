@@ -85,14 +85,14 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleCubicEnumerate.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleCubicEnumerate.olean NeedleCubicEnumerate.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleCubicEnumerateSource.lean" .
-          lake env lean NeedleCubicEnumerateSource.lean
+          lake env lean -o .lake/build/lib/lean/NeedleCubicEnumerateSource.olean NeedleCubicEnumerateSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleRawBridge.lean" .
           lake env lean -o .lake/build/lib/lean/SpaceNeedleRawBridge.olean SpaceNeedleRawBridge.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootCubic.lean" .
-          lake env lean NeedleRootCubic.lean
+          lake env lean -o .lake/build/lib/lean/NeedleRootCubic.olean NeedleRootCubic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleSharper.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleSharper.olean NeedleSharper.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleSharperSource.lean" .
-          lake env lean NeedleSharperSource.lean
+          lake env lean -o .lake/build/lib/lean/NeedleSharperSource.olean NeedleSharperSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootSharp.lean" .
           lake env lean NeedleRootSharp.lean
