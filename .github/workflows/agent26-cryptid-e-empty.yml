@@ -160,13 +160,13 @@ jobs:
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
         run: |
-          lean im-results/agent26-cryptid-e-gate/E1111ThenE.lean
+          lean -o im-results/agent26-cryptid-e-gate/E1111ThenE.olean im-results/agent26-cryptid-e-gate/E1111ThenE.lean
 
       - name: Verify strict first F return for E1111 with unchanged source
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity
         run: |
-          lean im-results/agent26-cryptid-e-gate/E1111First.lean
+          lean -o im-results/agent26-cryptid-e-gate/E1111First.olean im-results/agent26-cryptid-e-gate/E1111First.lean
 
       - name: Verify remaining A packet residues by original machine source
         env:
@@ -175,3 +175,12 @@ jobs:
           lean -o im-results/agent26-cryptid-e-gate/A110101Closure.olean im-results/agent26-cryptid-e-gate/A110101Closure.lean
           lean -o im-results/agent26-cryptid-e-gate/E1101010111ThenA.olean im-results/agent26-cryptid-e-gate/E1101010111ThenA.lean
           lean im-results/agent26-cryptid-e-gate/E1101010111ThenAExtras.lean
+
+      - name: Audit both earliest physical E returns and the three-return identity
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity
+        run: |
+          lean -o im-results/agent26-cryptid-e-gate/E1101010111First.olean im-results/agent26-cryptid-e-gate/E1101010111First.lean
+          lean im-results/agent26-cryptid-e-gate/E1111ThenEFirst.lean
+          lean -o im-results/agent32-cryptid-third/CryptidTriplePairs.olean im-results/agent32-cryptid-third/CryptidTriplePairs.lean
+          lean im-results/agent26-cryptid-e-gate/E1111Third.lean
