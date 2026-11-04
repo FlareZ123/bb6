@@ -49,3 +49,5 @@ jobs:
           lean im-results/agent31-d-exceptional/DRegularESource.lean
           lean -o im-results/agent32-cryptid-padding/PaddedApplications.olean im-results/agent32-cryptid-padding/PaddedApplications.lean
           lean im-results/agent31-d-exceptional/DRegularELow.lean
+
+          lean im-results/agent31-d-exceptional/EQuickHalt.lean
