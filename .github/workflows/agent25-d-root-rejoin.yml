@@ -72,4 +72,6 @@ jobs:
           lean -o "$A/ExceptionalAGeneral.olean" "$A/ExceptionalAGeneral.lean"
           lean -o "$A/OriginalRootChain.olean" "$A/OriginalRootChain.lean"
           lean -o "$A/BlankThirdExceptional.olean" "$A/BlankThirdExceptional.lean"
-          lean "$A/BlankFourthExceptional.lean"
+          lean -o "$A/BlankFourthExceptional.olean" "$A/BlankFourthExceptional.lean"
+          lean -o "$A/BlankFifthExceptional.olean" "$A/BlankFifthExceptional.lean"
+          lean "$A/BlankSixthExceptional.lean"
