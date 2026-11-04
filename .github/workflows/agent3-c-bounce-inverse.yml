@@ -145,6 +145,11 @@ jobs:
           lean DeepAffine.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/ModThree.lean .
           lean ModThree.lean
+          # Agent29: exact high stopping right-counter residue in the deep affine sector
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{AffineNormalize,AffineParityDepth,AffineHaltOneStep,SecondDeepSector}.lean .
+          for f in AffineNormalize AffineParityDepth AffineHaltOneStep SecondDeepSector; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepSecondFinal.lean .
+          lean DeepSecondFinal.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
