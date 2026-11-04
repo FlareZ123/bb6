@@ -112,3 +112,20 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
           lean -o im-results/agent2-cryptid-continuity/PrefixENoFSource.olean im-results/agent2-cryptid-continuity/PrefixENoFSource.lean
           lean im-results/agent26-cryptid-e-gate/E1101010111First.lean
+
+      - name: Source-certify earliest F return after arbitrary A token code and new terminal
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+        run: |
+          lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/PrefixNoF.olean im-results/agent2-cryptid-continuity/PrefixNoF.lean
+          lean -o im-results/agent2-cryptid-continuity/ATenFirstReturn.olean im-results/agent2-cryptid-continuity/ATenFirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/ACodeFirstReturn.olean im-results/agent2-cryptid-continuity/ACodeFirstReturn.lean
+          lean -o im-results/agent31-cryptid-boundary/A110111.olean im-results/agent31-cryptid-boundary/A110111.lean
+          lean -o im-results/agent31-cryptid-boundary/A110111First.olean im-results/agent31-cryptid-boundary/A110111First.lean
+          lean -o im-results/agent31-cryptid-boundary/AExceptionalClosure.olean im-results/agent31-cryptid-boundary/AExceptionalClosure.lean
+          lean im-results/agent26-cryptid-e-gate/A1101010111CodeFirst.lean
+      - name: Cross-check source transitions with independent literal-table first-return interpreter
+        run: |
+          python im-results/agent26-cryptid-e-gate/check_new_returns.py
