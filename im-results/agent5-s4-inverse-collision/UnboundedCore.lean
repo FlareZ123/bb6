@@ -19,11 +19,11 @@ theorem H201_replicate (k : Nat) (S : List Nat) :
 
 theorem H201_terminal (S : List Nat) :
     H 201 (95::2::S) = some (100::100::100::S) := by
-  simp [H]
+  simp [H, _root_.H]
 
 theorem H125_terminal (S : List Nat) :
     H 125 (133::2::S) = some (62::100::100::S) := by
-  simp [H]
+  simp [H, _root_.H]
 
 theorem H125_many (k : Nat) (S : List Nat) :
     H 125 (138::(List.replicate k 100 ++ (95::2::S))) =
