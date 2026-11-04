@@ -9,8 +9,11 @@ from functools import lru_cache
 from itertools import combinations
 from math import gcd
 
-CASES = ((194, 24300), (366, 8100), (374, 8100),
-         (482, 43740), (495, 43740), (819, 14580))
+BASE_CASES = ((194, 24300), (366, 8100), (374, 8100),
+              (482, 43740), (495, 43740), (819, 14580))
+# Both phases have the same complete symbolic E predecessor DAG.
+CASES = tuple((J + (P // 5) * phase, P)
+              for J, P in BASE_CASES for phase in (0, 1))
 PRIOR = tuple((r, 4860) for r in (138, 402, 1218, 1738)) + (
     (118, 14580), (246, 24300), (558, 8100), (846, 8100), (702, 11340))
 
@@ -189,7 +192,7 @@ def main():
         n,e,rows,reps,special=check(j,p)
         print(f"PASS {j}+{p}k: {n} nodes, {e} edges, {rows} low-a rows, "
               f"{reps} periodic representatives, {special} exceptional gaps")
-    print("PASS: all six exact inverse cones; pairwise disjoint, "
+    print("PASS: all twelve exact inverse cones; pairwise disjoint, "
           "disjoint from nine earlier E progressions")
 
 
