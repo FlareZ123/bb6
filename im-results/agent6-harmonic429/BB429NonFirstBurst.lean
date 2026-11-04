@@ -5,9 +5,9 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429NonFirstBurst
 
+set_option maxHeartbeats 5000000 in
 /-- Every non-first successful macro transition entering a positive first
     counter has second counter 2 modulo 4. -/
-set_option maxHeartbeats 5000000 in
 theorem nonfirst_positive_modfour (x y u w : Nat)
     (hnot : y < 2*x+3)
     (hs : BB429.next (x,y) = some (u,w))
@@ -59,7 +59,7 @@ theorem positive_nonfirst_burst_shape (x y u w n a b : Nat)
     · have h3 : n=3 := by omega
       subst n
       have he := (BB429Burst.prefix_formula u w 3 a b hr).1
-      norm_num at he
+      simp only [show (2 : Nat)^3 = 8 by decide] at he
       right
       left
       constructor
@@ -67,8 +67,7 @@ theorem positive_nonfirst_burst_shape (x y u w n a b : Nat)
       constructor
       · exact heven
       · omega
-  · right
-    right
+  · refine Or.inr (Or.inr ?_)
     have hl : 5 ≤ n := by omega
     exact ⟨hl, BB429PowerBarrierBurst.first_run_long_mod32 u w n a b hr hl⟩
 
