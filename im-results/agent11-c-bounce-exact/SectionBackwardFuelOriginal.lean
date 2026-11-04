@@ -47,6 +47,13 @@ theorem backwardHitFuelFull_iff (x y:Nat) :
     backwardHitFuel (x+2*y) (x,y)=true ↔ SectionReach x y := by
   rw [backwardHitFuel_eq, backwardFull_iff]
 
+
+theorem backwardHitFuelHalfFull_iff (x y : Nat) :
+  backwardHitFuel ((x+2*y)/2) (x,y)=true ↔ SectionReach x y := by
+  rw [backwardHitFuel_eq, backwardHalfFull_iff]
+
+#print axioms backwardHitFuelHalfFull_iff
+
 #print axioms sourceCandidatesFuel_eq
 #print axioms backwardHitFuel_eq
 #print axioms backwardHitFuelFull_iff
