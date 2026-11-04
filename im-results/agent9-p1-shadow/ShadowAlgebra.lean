@@ -79,3 +79,26 @@ theorem shadow_step_preserves_offset
 
 #print axioms shadow_step_preserves_offset
 end BB6.Shadow
+
+
+namespace BB6.Shadow
+
+/-- Prime-power cancellation: the high 2-adic contribution cannot change
+the exact odd core of twice z. No Mathlib imports or custom axioms. -/
+theorem valuation_witness (v : Nat) (Q r s z : Int)
+  (hz : z = (2:Int)^v*r)
+  (hs : s+2*z = (2:Int)^(v+2)*Q)
+  (hr : r%2=1) :
+  s = (2:Int)^(v+1)*(2*Q-r) ∧ (2*Q-r)%2=1 := by
+  constructor
+  · rw [Int.pow_add] at hs
+    rw [Int.pow_add]
+    have htwo : (2:Int)^2=4 := by decide
+    have hone : (2:Int)^1=2 := by decide
+    rw [htwo] at hs
+    rw [hone]
+    grind
+  · omega
+
+#print axioms valuation_witness
+end BB6.Shadow
