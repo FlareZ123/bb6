@@ -89,7 +89,7 @@ The final check T<=15q permits use of Agent 1's already source-proved [medium_ro
 | 633 | 10130 | 1,671,923 | 1,671,523 | 4,965 | 4,964 |
 | 774 | 12386 | 308,674 | 309,452 | 2,093 | 2,092 |
 
-q=294 had previously been exhaustively computed by Agents 9 and 45. **q=498,633,774 were previously capped**, so their full projected enumeration is the new computational coverage. The maximal risks M+V+3 across those roots are respectively below 3,516, 4,979 and 2,107, far below N=7,968, 10,128 and 12,384. The longest true even-branch cost is also well below 15q. Each shadow graph has exactly nodes-1 edges, giving a rooted tree in every checked case.
+q=294 had previously been exhaustively computed by Agents 9 and 45. **q=498,633,774 were previously capped**, so their full projected enumeration is the new computational coverage. The maximal risks M+V+3 across those roots are respectively at most 3,515, 4,979 and 2,106, far below N=7,968, 10,128 and 12,384. The longest true even-branch cost is also well below 15q. Each shadow graph has exactly nodes-1 edges, giving a rooted tree in every checked case.
 
 Independent source-equivalent direct `(b,d,k,c)` inverse enumeration, with mass and exact dyadic-coefficient assertions, agreed node counts and maximal even costs at both roots for q=38,101,294. The direct routine is included in the script; q=1,2 also run directly. Recompute the complete published census by executing `shadow_census.py` with Python 3, without command-line arguments. Pass a subset of q values as optional arguments to restrict the verification.
 
