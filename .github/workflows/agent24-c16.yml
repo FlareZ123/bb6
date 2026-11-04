@@ -89,4 +89,6 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformEdges.lean .
           lean -o UniformEdges.olean UniformEdges.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformOrbitIff.lean .
-          lean UniformOrbitIff.lean
+          lean -o UniformOrbitIff.olean UniformOrbitIff.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Inverse.lean .
+          lean -o UniformS25Inverse.olean UniformS25Inverse.lean
