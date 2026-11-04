@@ -136,6 +136,12 @@ jobs:
         run: |
           lean im-results/agent26-cryptid-e-gate/A1101010111CodePhysicalFirst.lean
 
+      - name: Original-source exact two-return E-to-A repeated-111 packet connector
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+        run: |
+          lean im-results/agent26-cryptid-e-gate/E1101010111ThenA.lean
+
       - name: Original-source exact two-return E-to-B connector for k divisible by 3
         env:
           LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
