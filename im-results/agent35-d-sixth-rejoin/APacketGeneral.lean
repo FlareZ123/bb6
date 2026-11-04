@@ -122,7 +122,7 @@ private theorem A_output (k q r : Nat) :
     (⟨[],false,
       List.replicate
         (2*(4*k+3+wordInc (ws q r))+5) true ++
-      BB6.CryptidA110111CodeFirst.tail zs,5⟩ : Cfg) =
+      BB6.CryptidA110111CodeFirst.tail zs,5⟩ : CryptidBoundary.Cfg) =
     DRegularSource.sourceSection ⟨8*k+11+2*q+8*r,3,2⟩ := by
   have hi : wordInc (ws q r) = q+4*r := inc_ws q r
   have ht : BB6.CryptidA110111CodeFirst.tail zs =
@@ -151,12 +151,17 @@ theorem source_a_packet_regular (k q r : Nat) :
     run (duration k q r)
       (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+2) ys) =
     DRegularSource.sourceSection ⟨8*k+11+2*q+8*r,3,2⟩ := by
-  rw [A_start]
-  have h := (BB6.CryptidA110111CodeFirst.full_A_code_110111_first_return
-     k (ws q r) zs).1
-  have hi : wordInc (ws q r) = q+4*r := inc_ws q r
-  rw [hi] at h
-  exact Eq.trans h (A_output k q r)
+  have hc : duration k q r =
+      (12*k*k+41*k+32) +
+        (wordCost (4*k+3) (ws q r) +
+          (2*(4*k+3+wordInc (ws q r))+24)) := by
+    rw [inc_ws q r]
+    simp [duration,Nat.add_assoc]
+  rw [A_start,hc]
+  exact Eq.trans
+    (BB6.CryptidA110111CodeFirst.full_A_code_110111_first_return
+      k (ws q r) zs).1
+    (A_output k q r)
 
 #print axioms inc_ws
 #print axioms source_a_packet_regular
