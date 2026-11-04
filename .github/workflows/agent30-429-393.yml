@@ -1,0 +1,36 @@
+name: Agent 30 #429 rooted 393-mod512 theorem (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-local-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore hash-checked new theorem and copy unmodified predecessors
+        run: |
+          set -e
+          python im-results/agent30-429-393/unpack.py
+          mkdir -p /tmp/agent30-429
+          cp im-results/agent5-429-rank/BB429Rank.lean /tmp/agent30-429/
+          cp im-results/agent6-harmonic429/BB429LowOddMod8.lean /tmp/agent30-429/
+          cp im-results/agent6-harmonic429/BB429No381mod1024.lean /tmp/agent30-429/
+          cp im-results/agent30-429-393/BB429No393mod512.lean /tmp/agent30-429/
+      - name: Compile authentic rooted 12-branch accelerator and universal exclusion
+        working-directory: /tmp/agent30-429
+        env:
+          LEAN_PATH: .
+        run: |
+          set -e
+          lean --version
+          lean -o BB429Rank.olean BB429Rank.lean
+          lean -o BB429LowOddMod8.olean BB429LowOddMod8.lean
+          lean -o BB429No381mod1024.olean BB429No381mod1024.lean
+          lean BB429No393mod512.lean
