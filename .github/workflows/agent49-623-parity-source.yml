@@ -107,3 +107,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Finite27Source.lean" Agent49Finite27Source.lean
           lake env lean Agent49Finite27Source.lean
+
+      - name: Verify three infinite exact sharpness rays
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Sharp27RaySource.lean" Agent49SharpRaySource.lean
+          lake env lean Agent49SharpRaySource.lean
