@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Rank.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/"*.lean .
-          for module in BB429Rank ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn SourceLadder; do
+          for module in BB429Rank ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 SourceLadder; do
             echo "::group::Compile $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
@@ -82,7 +82,7 @@ jobs:
           cp im-results/agent6-harmonic429/*.lean /tmp/bb429-check/
           cd /tmp/bb429-check
           export LEAN_PATH=".:$(lean --print-prefix)/lib/lean"
-          for module in BB429Rank ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn; do
+          for module in BB429Rank ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8; do
             echo "::group::Kernel-check $module"
             lean -o "$module.olean" "$module.lean"
             echo "::endgroup::"
