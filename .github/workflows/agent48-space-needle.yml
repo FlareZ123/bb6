@@ -37,3 +37,12 @@ jobs:
           lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleRawBridge.lean" SpaceNeedleRawBridge.lean
           lake env lean SpaceNeedleRawBridge.lean
+      - name: Compile pinned-source two-step odd-terminal grammar
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/NeedleTwoStepOdd.lean" NeedleTwoStepOdd.lean
+          lake env lean -o .lake/build/lib/lean/NeedleTwoStepOdd.olean NeedleTwoStepOdd.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleOddBlocksSource.lean" SpaceNeedleOddBlocksSource.lean
+          lake env lean -o .lake/build/lib/lean/SpaceNeedleOddBlocksSource.olean SpaceNeedleOddBlocksSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/NeedleTwoStepOddSource.lean" NeedleTwoStepOddSource.lean
+          lake env lean NeedleTwoStepOddSource.lean
