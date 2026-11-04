@@ -36,30 +36,14 @@ jobs:
           git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
           git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
           test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
-      - name: Reclaim disk and fetch pinned Mathlib cache
+      - name: Fetch original pinned Mathlib cache
         working-directory: /tmp/cryptids
         shell: bash
         run: |
           set -euo pipefail
           sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
-          lake build cache
-          test -d .lake/packages/mathlib
-          for module in \
-            Mathlib/Computability/TuringMachine/PostTuringMachine.lean \
-            Mathlib/Data/List/Basic.lean \
-            Mathlib/Data/Nat/Prime/Basic.lean \
-            Mathlib/Algebra/GCDMonoid/Finset.lean \
-            Mathlib/Order/Interval/Finset/Nat.lean \
-            Mathlib/Order/SuccPred/Basic.lean \
-            Mathlib/Algebra/Order/SuccPred.lean \
-            Mathlib/NumberTheory/LSeries/RiemannZeta.lean \
-            Mathlib/SetTheory/ZFC/Basic.lean; do
-            echo "::group::Cache targeted $module"
-            (cd .lake/packages/mathlib && lake exe cache get "$module")
-            rm -rf "$HOME/.cache/mathlib"
-            df -h /
-            echo "::endgroup::"
-          done
+          lake exe cache get
+          df -h /
       - name: Build original raw-TM accelerator
         working-directory: /tmp/cryptids
         shell: bash
