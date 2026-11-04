@@ -155,3 +155,9 @@ jobs:
       - name: Independent literal-machine E-to-B consecutive first-return regression
         run: |
           python im-results/agent26-cryptid-e-gate/check_e_then_b.py
+
+      - name: Check universal E1111 and third E-to-E source-connected packet return
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
+        run: |
+          lean im-results/agent26-cryptid-e-gate/E1111ThenE.lean
