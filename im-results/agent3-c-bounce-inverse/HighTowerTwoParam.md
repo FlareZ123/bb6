@@ -20,9 +20,20 @@ No truncation, finite trace, unproved parent branch, or partial predecessor gram
 
 The modular predecessor uniqueness is a direct application of [EvenChild.lean](./EvenChild.lean), `even_child_parent_iff`, valid for odd first/even right≥4, total sum `3 mod8`. Its unique parent has odd right≥5 and total sum `2 mod4`, contradicting [Agent3CImage.lean](../agent3-c-odd-image/Agent3CImage.lean), `section_odd_image`. The stopping equation is from [SectionParam.lean](../agent15-c-halting/SectionParam.lean), and the forced affine orbit equivalence and depth/mass identities from [AffineNormalize.lean](../agent15-c-halting/AffineNormalize.lean) and [AffineParityDepth.lean](../agent15-c-halting/AffineParityDepth.lean).
 
-The prerequisite `seven_four_*` and the one-parameter `high_tower_*` theorems have successfully compiled against the **unchanged** repository Machine C source in [manual CI 41887257726](https://github.com/FlareZ123/bb6/actions/runs/41887257726), with axiom audits exactly standard `propext`, `Classical.choice`, `Quot.sound`. The two-parameter file was independently checked locally with theorem-shaped imported interfaces, but requires successful source-integrated CI before being labeled source-verified. The full-source manual check is dispatched as an isolated `seven_only` path in [the existing workflow](../../.github/workflows/agent3-c-bounce-inverse.yml). Earlier generic default workflow [41884343320](https://github.com/FlareZ123/bb6/actions/runs/41884343320) successfully checked the cone then encountered unrelated, preexisting errors in Agent29 `BottomBoundary.lean`; the isolated path avoids conflating these errors.
+The complete two-parameter result is **fully source-integrated and Lean-kernel verified** in [successful manual CI 41888523251](https://github.com/FlareZ123/bb6/actions/runs/41888523251) on the unchanged repository Machine C source. The axiom audits of `high2_halt_input`, `high2_exact_depth`, `high2_normalized_exact`, `high2_normalized_cone`, `high2_blank_unreachable`, and `high2_strict_width` report only standard `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The independent one-parameter result passed [CI 41887257726](https://github.com/FlareZ123/bb6/actions/runs/41887257726). Both use the isolated `seven_only` path in [the manual workflow](../../.github/workflows/agent3-c-bounce-inverse.yml). Earlier generic default workflow [41884343320](https://github.com/FlareZ123/bb6/actions/runs/41884343320) successfully checked the cone then encountered unrelated preexisting errors in Agent29 `BottomBoundary.lean`.
 
 No claim here settles Machine C, any other six-state holdout, or an unconditional BB(6) bound. The separate primitive-machine bridge lives in Agent21's source chain and is not reproved by this theorem.
+
+## Sharp all-start predecessor ancestry
+
+A further theorem file [HighTowerAllStart.lean](./HighTowerAllStart.lean) proves a stronger, seed-independent property. For every `q,n` and **every** starting section state `s`, if `d=4n+3` and the high stopping target is `T(q,n)` above, then:
+
+- **Upper bound:** `run secNext (time+d+2) (some s) ≠ some T(q,n)`, for every `time≥0`.
+- **Attainment:** write `p=affineNormalize T(q,n)`, and let `s=(p.1+p.2-2,p.2/2-1)`. Then `run secNext (d+1) (some s)=some T(q,n)`.
+
+Consequently the maximum length of a genuine section-transition path *ending* at each such target is **exactly `d+1=4n+4`**, independently of the root. This is strictly stronger than forbidding those targets from the particular blank orbit. The source reasoning uses the unique affine section predecessor in every forced step and the exact one-step parent of the normalized seven-four cone.
+
+The reusable theorem `affine_tower_general_sharp` establishes the same upper bound and constructive sharpness for any `a%4=3` and `k=affineRight2(q,d)` whose normalizer lands in the cone, beyond the stopping-tower subfamily. At this stage this extension has compiled under theorem-interface local Lean tests and awaits its separate unchanged-source CI audit. Its boundary is mathematical, and should not be taken as a claim that arbitrary seeds are valid blank-tape six-state machines.
 
 ## Reproducible finite quotient contrast
 
