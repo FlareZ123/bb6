@@ -1,0 +1,38 @@
+# Agent 26 (2026-11-04): source-audited A/E exceptional packet returns
+
+**Status:** All-parameter intermediate theorems for the literal D-start six-state two-symbol machine `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---`. Original blank-tape halting remains unresolved; no new BB(6) bound or independent external novelty is asserted. Retain in `im-results/` pending evaluation.
+
+Let `I_n(s)` be state F scanning 0, physically blank to the left, right infinite tape `1^n s 0^∞`. An A boundary of length m is A/0 with nearest-first left `0(10)^m11`; an E boundary is E/0 with left `00(10)^m11`.
+
+## New universal identities, fully kernel checked against original source
+
+1. **A suffix 1101010111**: [A1101010111.lean](./A1101010111.lean), [A1101010111First.lean](./A1101010111First.lean). For all m≥0 and arbitrary finite Y, `A_m(1101010111Y) --[2m+36]--> I_(2m+5)((01)^4 0Y)`, and the return is the **first physically blank-left F/0**. Consequently `I_(3k+3)(0 1101010111Y) --[12k²+49k+74]--> I_(8k+11)((01)^4 0Y)`.
+
+2. **E all-q suffix (10)^q1101010111**: [E1101010111Pairs.lean](./E1101010111Pairs.lean), for all k,q≥0 and arbitrary Y:
+```
+I_(3k+4)(0 (10)^q 1101010111Y)
+  --[12k²+49k+80+4q]-->
+I_(8k+5)(0 1^(2q+6) (01)^4 0Y).
+```
+The proof uses source scanner, 33-step A turn, reverse C sweep and existing B sweep, with exact original primitive-step times. A separate physical strict-first-return proof [E1101010111First.lean](./E1101010111First.lean) is in verification and should only be considered certified once its workflow succeeds.
+
+3. **Arbitrary A token-code prefix**: [A1101010111Code.lean](./A1101010111Code.lean) composes universal `CryptidA.wordCode` consuming tokens 10 and 111 in any order with the new A terminal. For all k, finite token sequences w and arbitrary Y, `I_(3k+3)(0 wordCode(w) 1101010111Y)` returns exactly after `12k²+41k+32 + wordCost(4k+3,w) + 2m+36`, where `m=4k+3+wordInc(w)`, to `I_(2m+5)((01)^4 0Y)`. No strict first-return statement yet for the combined arbitrary-code entry.
+
+4. **Two shorter A terminals**: [A110101Closure.lean](./A110101Closure.lean) proves for every m,Y:
+```
+A_m(11010111Y)          --[2m+30]--> I_(2m+5)((01)^3 0Y)
+A_(m+1)(110101010100Y) --[2m+34]--> I_(2m+3)(0 1^14Y).
+```
+**Critical correction:** An initial unguarded statement `A_(m+1)(1101010101Y)` at the second duration is **false** for arbitrary Y. Independent simulator, e.g. m=1,Y=11, first returns at 44 rather than 34. Original-source Lean correctly rejected the unguarded statement; the extra explicit `00` was added and reverified in CI. Do not remove that necessary guard.
+
+## Strict source status and connection to the outstanding packet problem
+
+Original source Lean 4.36.0-rc2 CI [41866562409](https://github.com/FlareZ123/bb6/actions/runs/41866562409) **SUCCEEDED** for A 1101010111 exact/strict and E all-q endpoint. Stronger run [41868760696](https://github.com/FlareZ123/bb6/actions/runs/41868760696) **SUCCEEDED** for corrected shorter A terminals and arbitrary mixed-code A terminal, with `#print axioms` exactly `[propext, Quot.sound]` and no `sorryAx` for final new theorems.
+
+Independent literal-table [check_new_returns.py](./check_new_returns.py) tests 2,311 parameterized synthetic configurations at exact first physical return times and whole physical tape, with fixed seed 20261104; this is supporting finite evidence.
+
+Agent31's abstract packet notation `M(a,q,p;Y)=I_a((01)^q 0 1^p Y)` with fixed tail `Y=01010111` enters the new E branch in the p=2 exceptional case. The source-proved reset is
+`M(3k+4,q,2;01010111) → M(8k+5,0,2q+6;01010111)`.
+This boundary can *increase* the naive `q+p` rank. It does not prove global closure, a blank-reachable orbit, nor either eventual halting or nonhalting.
+
+Future research: formalize and certify full first-return E lemma, identify a global packet invariant or amortized rank surviving the reset, and connect long synthetic chains to authentic blank-origin reachability.
