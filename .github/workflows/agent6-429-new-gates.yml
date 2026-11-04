@@ -33,3 +33,5 @@ jobs:
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=12000000 im-results/agent6-harmonic429/BB429NewSix.lean
           python im-results/agent6-harmonic429/unpack_no81.py
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=12000000 im-results/agent6-harmonic429/BB429No81mod512.lean
+          python im-results/agent6-harmonic429/unpack_next_seven.py
+          lean -DmaxRecDepth=30000 -DmaxHeartbeats=20000000 im-results/agent6-harmonic429/BB429NextSeven.lean
