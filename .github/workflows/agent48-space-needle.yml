@@ -64,3 +64,14 @@ jobs:
           lake env lean -o .lake/build/lib/lean/FiveAdicExtra.olean FiveAdicExtra.lean
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicSource.lean" FiveAdicSource.lean
           lake env lean FiveAdicSource.lean
+      - name: Certify full multiplicative order and exact all-length terminal criterion
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicOrder.lean" FiveAdicOrder.lean
+          lake env lean -o .lake/build/lib/lean/FiveAdicOrder.olean FiveAdicOrder.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicAll.lean" FiveAdicAll.lean
+          lake env lean -o .lake/build/lib/lean/FiveAdicAll.olean FiveAdicAll.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicOrderFull.lean" FiveAdicOrderFull.lean
+          lake env lean -o .lake/build/lib/lean/FiveAdicOrderFull.olean FiveAdicOrderFull.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicOrderSource.lean" FiveAdicOrderSource.lean
+          lake env lean FiveAdicOrderSource.lean
