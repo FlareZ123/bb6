@@ -84,7 +84,8 @@ theorem original_machine_halts_iff_two_tail_powers :
   · intro hh
     obtain ⟨n,s,_,hr,hpow⟩ :=
       original_machine_halts_iff_compact_power_gate.mp hh
-    rcases (rooted_halt_gate_iff_two_tails n s hr).mp hpow with
+    have hcases := (rooted_halt_gate_iff_two_tails n s hr).mp hpow
+    rcases hcases with
     | inl ⟨h4,R,hs,hpow⟩ =>
         refine ⟨n,R,Or.inl ⟨h4,?_,hpow⟩⟩
         simpa [hs] using hr
