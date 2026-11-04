@@ -81,9 +81,9 @@ private theorem p4_input (v : Nat) :
   have hn : 12288*v+10713=3*(4096*v+3570)+3 := by omega
   have hr : List.replicate (3*(4096*v+3570)+3) true =
       true::true::List.replicate (3*(4096*v+3570)+1) true := by
-    rw [show 3*(4096*v+3570)+3 = 2+(3*(4096*v+3570)+1) by omega]
-    simp only [List.replicate_add, List.replicate_succ, List.replicate_zero,
-      List.nil_append, List.cons_append]
+    rw [show 3*(4096*v+3570)+3 =
+      ((3*(4096*v+3570)+1)+1)+1 by omega]
+    rw [List.replicate_succ, List.replicate_succ]
   simp [BB6.Agent31PacketSource.packet,BB6.Agent31PacketSource.word,
     hn, hr, init,tail,words,finalTail,oppairs,CryptidA.wordCode,
     List.append_assoc]
@@ -96,9 +96,15 @@ private theorem p4 (v : Nat) :
   have hinc : CryptidA.wordInc words = 3 := by decide
   have hn : 2*((4*(4096*v+3570)+3)+CryptidA.wordInc words)+5 =
       32768*v+28577 := by rw [hinc]; omega
+  have ht : CryptidBoundary.packetThree ++ finalTail =
+      oppairs 3 ++ [true,true] := by decide
+  have ho : (⟨[],false,
+      List.replicate (2*((4*(4096*v+3570)+3)+CryptidA.wordInc words)+5) true ++
+        (CryptidBoundary.packetThree ++ finalTail),5⟩ : Cfg) = regularExit v := by
+    rw [hn, ht]
+    rfl
   rw [p4_input]
-  simpa only [c4, regularExit, hn, words, finalTail, tail,
-    CryptidBoundary.packetThree] using h
+  simpa only [c4] using (Eq.trans h ho)
 
 /-- Five original-machine specified F/0 endpoints of the sixth-escape family,
     with implicit blank tape padding handled by observational equality. -/
