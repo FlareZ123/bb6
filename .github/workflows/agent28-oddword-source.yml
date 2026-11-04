@@ -30,4 +30,12 @@ jobs:
           lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
           lean -o im-results/agent28-p1-word-automaton/OddWordCost.olean im-results/agent28-p1-word-automaton/OddWordCost.lean
-          lean im-results/agent28-p1-word-automaton/OddWordSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/OddWordSourceBridge.olean im-results/agent28-p1-word-automaton/OddWordSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetGrowth.olean im-results/agent28-p1-word-automaton/OneResetGrowth.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetTwoAdic.olean im-results/agent28-p1-word-automaton/OneResetTwoAdic.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetBudget.olean im-results/agent28-p1-word-automaton/OneResetBudget.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetSourceEq.olean im-results/agent28-p1-word-automaton/OneResetSourceEq.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetPoly.olean im-results/agent28-p1-word-automaton/OneResetPoly.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetSourceBudget.olean im-results/agent28-p1-word-automaton/OneResetSourceBudget.lean
+          lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          lean im-results/agent28-p1-word-automaton/OneResetSourceBridge.lean
