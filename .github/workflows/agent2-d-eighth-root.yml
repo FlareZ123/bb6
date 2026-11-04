@@ -1,0 +1,90 @@
+name: Agent 2 eighth D blank-root E/A reentry proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned original D sources and DRegular proof
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
+          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify all eleven D-regular return cases against original six-state source
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          P=im-results/agent32-cryptid-padding
+          H=im-results/agent35-d-regular-certificate
+          D=im-results/agent2-cryptid-continuity
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          A=im-results/agent25-cryptid-doublezero
+          C=im-results/agent35-cryptid-code
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "$A/$module.olean" "$A/$module.lean"
+          done
+          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+          lean -o "$H/DRegular.olean" "$H/DRegular.lean"
+          lean -o "$H/DTransport.olean" "$H/DTransport.lean"
+          lean -o "$H/DObservedTransport.olean" "$H/DObservedTransport.lean"
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
+          lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
+          lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
+          lean -o "$D/EZeroSource.olean" "$D/EZeroSource.lean"
+          lean -o "$D/AOneSource.olean" "$D/AOneSource.lean"
+          lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
+          lean -o "$D/ATwoSource.olean" "$D/ATwoSource.lean"
+          lean -o "$D/ARegularFull.olean" "$D/ARegularFull.lean"
+          S=im-results/agent32-cryptid-third
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
+          lean "$D/BlankRegular500.lean"
+          lean -o "$D/BlankRegular8394.olean" "$D/BlankRegular8394.lean"
+          lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
+          lean -o "$C/EDouble.olean" "$C/EDouble.lean"
+          lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
+          lean -o "$A/ExceptionalBRejoin.olean" "$A/ExceptionalBRejoin.lean"
+          lean -o "$A/BlankRootRejoin.olean" "$A/BlankRootRejoin.lean"
+          lean -o "$A/BlankAfterExceptionalRegular.olean" "$A/BlankAfterExceptionalRegular.lean"
+          lean -o "$A/ExceptionalARejoin.olean" "$A/ExceptionalARejoin.lean"
+          lean -o "$A/BlankSecondExceptional.olean" "$A/BlankSecondExceptional.lean"
+          lean -o "$A/ExceptionalBGeneral.olean" "$A/ExceptionalBGeneral.lean"
+          lean -o "$A/ExceptionalAGeneral.olean" "$A/ExceptionalAGeneral.lean"
+          lean -o "$A/OriginalRootChain.olean" "$A/OriginalRootChain.lean"
+          lean -o "$A/BlankThirdExceptional.olean" "$A/BlankThirdExceptional.lean"
+          lean -o "$A/BlankFourthExceptional.olean" "$A/BlankFourthExceptional.lean"
+          lean -o "$A/BlankFifthExceptional.olean" "$A/BlankFifthExceptional.lean"
+          lean -o "$A/BlankSixthExceptional.olean" "$A/BlankSixthExceptional.lean"
+          R=im-results/agent31-d-exceptional
+          G=im-results/agent35-d-sixth-rejoin
+          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
+            lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
+          done
+          for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
+            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
+          done
+          lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
+          lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+          lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$G/SeventhRejoin.olean" "$G/SeventhRejoin.lean"
+          lean -DmaxRecDepth=55000 "$D/BlankEighthRejoin.lean"
