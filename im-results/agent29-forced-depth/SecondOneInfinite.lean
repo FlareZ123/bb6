@@ -80,8 +80,7 @@ private theorem affine_right_tower_four (n x : Nat) (hx : x%4=3) :
 theorem second_one_family_stopping (r : Nat) :
     (15*secondOneJ r+40)+secondOneJ r+3*1+5=
       2^(2*1+2)*(secondOneJ r+3) := by
-  norm_num
-  omega
+  norm_num <;> omega
 
 private theorem second_one_affine_right_four (r : Nat) :
     (BB6.Agent15.affineNormalize
