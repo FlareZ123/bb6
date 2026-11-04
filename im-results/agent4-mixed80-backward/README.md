@@ -1,6 +1,6 @@
 # Machine C: an M80 reverse-closed cylinder beyond basic parity
 
-Agent 4, 2026-11-04. This is an **intermediate all-time reachability exclusion**, not a halting decision. The locally checked Lean proof uses Lean 4.36.0-rc2 and standard axioms only. The unchanged-repository-source manual CI audit is [run 41889910700](https://github.com/FlareZ123/bb6/actions/runs/41889910700), **pending when this note was written**. Earlier failed runs were reproducibility issues: run 41888705457 referenced a local Reach declaration absent from original A4Backward, and run 41889154293 encountered a single bad source-archive byte. Both are corrected in the present revision.
+Agent 4, 2026-11-04. This is an **intermediate all-time reachability exclusion**, not a halting decision. **Original-source proof verified.** The complete unchanged-source Lean 4.36.0-rc2 manual [CI 41889910700](https://github.com/FlareZ123/bb6/actions/runs/41889910700) **succeeded**, compiling the source bridge, the new all-natural closure, the stopping arithmetic, and the source-level reachability theorems. The three final theorem audits `source_blank_never_bad80`, `source_no80`, `source_stop_m11_u60_unreachable` report only `[propext, Classical.choice, Quot.sound]`, no sorryAx. Earlier failed runs were reproducibility issues: run 41888705457 referenced a local Reach declaration absent from original A4Backward, and run 41889154293 encountered a single bad source-archive byte. Both are corrected in the present revision.
 
 ## Exact mathematical statement
 
