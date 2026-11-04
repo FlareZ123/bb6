@@ -1,0 +1,54 @@
+name: Agent 8 P1 fixed-reset source audit
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fixed-reset-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reassemble version-pinned source and validate integrity
+        run: |
+          set -eu
+          root=im-results/agent8-p1-fixed-reset
+          cat "$root/lean.tar.xz.b64.part00" "$root/lean.tar.xz.b64.part01" "$root/lean.tar.xz.b64.part02" | base64 --decode > /tmp/agent8-p1-fixed-reset.tar.xz
+          echo "e9d3aa0ac97f9f64daa05574158f1a7256735cec8d07a55060d14abf68ff9830  /tmp/agent8-p1-fixed-reset.tar.xz" | sha256sum --check
+          tar -xJf /tmp/agent8-p1-fixed-reset.tar.xz -C "$root"
+      - name: Compile original P1 source and finite-source reset words
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent8-p1-fixed-reset"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          for m in MassInverse OddConeMass; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
+          lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget; do
+            lean -o "im-results/agent28-p1-word-automaton/$m.olean" "im-results/agent28-p1-word-automaton/$m.lean"
+          done
+          lean -o im-results/agent1-p1-quarter/UpperTail.olean im-results/agent1-p1-quarter/UpperTail.lean
+          for m in OneResetSourceBridge OneResetZero OneResetCount; do
+            lean -o "im-results/agent28-p1-word-automaton/$m.olean" "im-results/agent28-p1-word-automaton/$m.lean"
+          done
+      - name: Kernel-check universal source-independent and original-source theorems
+        run: |
+          set -eu
+          root=im-results/agent8-p1-fixed-reset
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:$root"
+          for m in ResetBudget AbstractInverse DefectAlgebra PathInvariant; do
+            lean -o "$root/$m.olean" "$root/$m.lean"
+          done
+          lean "$root/SourceBridge.lean"
