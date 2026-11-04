@@ -39,3 +39,5 @@ jobs:
           sha256sum C51.lean C51Arithmetic.lean
           lean -o C51.olean C51.lean
           lean C51Arithmetic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-mixed384/Second384.lean" .
+          lean Second384.lean
