@@ -35,3 +35,5 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent1-429-893/BB429No893mod2048.lean.gz.b64" | gzip -d > BB429No893mod2048.lean
           echo "7429ab3280d28d13f5e21702523ed750c9a2e61679ff10e9e9108534b5984b32  BB429No893mod2048.lean" | sha256sum -c -
           lean BB429No893mod2048.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent1-429-forced-normalize/BB429ForcedNormalize.lean" .
+          lean BB429ForcedNormalize.lean
