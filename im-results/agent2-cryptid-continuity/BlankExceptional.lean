@@ -7,16 +7,29 @@ set_option maxRecDepth 55000
 namespace BB6.BlankExceptional
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 
-private theorem terminal_source (k : Nat) :
-    DRegularSource.sourceSection ⟨3*k+4,6,1⟩ =
-      BB6.Agent32EAll.start k 5 [] := by
-  have hn : (3*k+4)-2=3*k+2 := by omega
-  have hl : oppairs 6 ++ List.replicate 1 true =
-      false::(pairs 5 ++ [true,true]) := by decide
-  simp only [DRegularSource.sourceSection,BB6.Agent32EAll.start,hn,
-    List.append_nil, List.replicate_one]
-  simp only [List.replicate_one] at hl
-  rw [List.append_assoc, hl]
+/-- A regular section with q=6,b=1 differs from the corresponding explicit
+    E-1100 input by exactly two trailing physically blank cells. The source
+    configurations are intentionally NOT asserted equal as finite lists. -/
+private theorem terminal_obs (k : Nat) :
+    ObsEq (DRegularSource.sourceSection ⟨3*k+4,6,1⟩)
+      (BB6.Agent32EAll.start k 5 []) := by
+  let xs : List Bool :=
+    List.replicate (3*k+2) true ++
+      (false :: (pairs 5 ++ [true,true]))
+  have hsource : DRegularSource.sourceSection ⟨3*k+4,6,1⟩ =
+      init xs := by
+    have hn : (3*k+4)-2=3*k+2 := by omega
+    have hl : oppairs 6 ++ List.replicate 1 true =
+        false::(pairs 5 ++ [true,true]) := by decide
+    simp only [DRegularSource.sourceSection,xs,hn,
+      List.append_nil,List.replicate_one]
+    simp only [List.replicate_one] at hl
+    rw [List.append_assoc,hl]
+  have htarget : BB6.Agent32EAll.start k 5 [] =
+      init (xs ++ List.replicate 2 false) := by
+    simp [BB6.Agent32EAll.start,xs,pairs,List.append_assoc]
+  rw [hsource,htarget]
+  simpa only [CryptidBoundary.run] using (source_init_pad 0 2 xs)
 
 /-- The genuine blank orbit reaches the exceptional E q=6,b=1 return
     exactly at the last modeled regular section. -/
@@ -39,8 +52,8 @@ theorem exceptional_section :
     | mk a q b =>
       simp only [DRegular.L.mk.injEq]
       exact ⟨hform,hq,hb⟩
-  rw [hst,terminal_source] at hobs
-  exact hobs
+  rw [hst] at hobs
+  exact cfgEq_trans hobs (terminal_obs k)
 
 /-- A complete original-source exceptional E macro on the true blank orbit,
     extending its certified finite nonhalting horizon beyond the regular exit. -/
