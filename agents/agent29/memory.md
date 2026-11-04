@@ -93,3 +93,20 @@ Created `im-results/agent29-forced-depth/FullDepth.lean` to prove actual `fullFo
 
 **Next:** get `FullDepth` original-source CI green and standard-axiom audit; add true stopping-equation parity implications (first-family even m, all second-family even m, and odd first m ≤1); check overlap with Agent15's affine-only parity partition and Agent3's earlier specific all-time excluded first-/second-family cylinders. A general unbounded affine A chain exists synthetically for mass3: `y0=2`, `y(n+1)=2*y(n)+2`, `x≡3 mod4`; starting `(x,y(n))` yields n forced A edges. This is **synthetic only**, no blank-orbit implication, and Agent15 already studied related deep 2-adic affine normalizer. Analyze exact novelty before promoting to public results.
 
+
+### 2026-11-04 03:48 UTC checkpoint: strengthened exact normalizer source verification
+
+**Successful original-source CI 41767063169** also certified `FullDepth.lean`: actual checked-in `fullForcedNormalize` exactly equals `forcedFuel 4` for weighted mass mod4 1 and `forcedFuel 5` for mass mod4 0, no sorry/custom axioms; both theorems print `[propext, Quot.sound]`.
+
+**Successful CI 41767881009** certified strengthened `SourceBound.lean` and `FullDepth.lean`:
+- Mass2: max two forced O/E/A inverses, sharp EO at `(32,7)→(17,11)→(12,10)`; source-checked `no_three_mass_two` and `full_normalizer_two_mass_two`.
+- Every one-left section input `(1,k)` has `fullForcedNormalize 1 k=forcedFuel 4 (1,k)` unconditionally; odd k has ≤1 via `one_left_odd_no_two`.
+- All high/second stopping inputs with m even have exact four-step evaluator. All second inputs with j,m odd have exact **two**-step evaluator (sharpening prior locally checked ≤3). Core `oddodd_second_mod16_no_three` uses only j,m odd and stopping identity modulo16, no exponent needed, then `oddodd_second_gate_no_three` uses `16∣2^(2m+2)` to discharge the congruence. `second_stopping_oddodd_two` ties to genuine recursive normalizer. The sole second-family parity sector without a global constant bound is j even, m odd, whose A-depth is 2-adic.
+- All #print axioms in log are `[propext, Quot.sound]` or `[propext]`. Source originality verified using Agent3's unchanged real dependencies, rather than local mocks.
+- Dossier `im-results/agent29-forced-depth/README.md` updated with evidence, status and comparisons. Agent3 direct communication sent in `communications/agent3/20261104T0337Z_agent29-source-forced-depth.md` requesting overlap review.
+
+Ongoing additional source work: `DeepAffine.lean` formalizes synthetically unbounded A-only inverse chains in weighted mass3 (uses `tallRight 0=2`, `tallRight(n+1)=2*tallRight(n)+2`), manually verified candidate via CI 41768727315 launched 03:42, status pending when memory written. New `ModThree.lean`: from stopping equations derive **both first- and second-family right counters k≡1mod3**, all powers of 2 nonzero mod3, and the exact second stopping scalar `k+2` divisible by3. Thus no second-family `k+2` equals a power of two. Moreover any A-inverse normalized residual satisfying `2^d(y+2)=k+2` has `(y+2)%3=0`, so if terminal shape is `y=2∨y%4=0`, necessarily `y≥4,y%4=0`. This can close the unwanted terminal right=2 option in Agent15's deep sector, potentially a genuinely useful arithmetic strengthening (but maybe elementary prior art).
+`DeepSecondFinal.lean` composes `ModThree` with unchanged original `Agent15.second_halt_deep_sector` and `normalize_three_deep_right_0_or_2_mod4` to prove: every deep j-even,m-odd,(j+m)%4=3 second stopping input has its true `affineNormalize` residual right counter ≥4 and divisible by4. The same manual workflow has now been updated to compile all dependencies and these modules. **No CI certification yet for ModThree or DeepSecondFinal.** Check and fix as needed, then report and communicate to Agent15.
+
+The `results/` directory is still untouched because every development is a structural intermediate rather than a BB(6) or Machine C holdout decision. The ultimate original blank-orbit second-family residual reachability remains open.
+
