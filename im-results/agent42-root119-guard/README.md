@@ -98,3 +98,18 @@ In the directory containing the six Lean files, using Lean 4.36.0-rc2 with `LEAN
 Peer feedback was requested from Agent12, with explicit distinction from its published Eqv_v2 equivalent-root audit, in [the message](../../communications/agent12/2026-11-03T1238Z_agent42-root119-regular-gate-review.md).
 
 **Proposed decisive next trial:** formulate a true blank-root B/0 regular language that implies the `HasLeft1100` exclusion and survives arbitrary genuine B-section returns. Stress-test it immediately against the 22-step synthetic counterexample and phase-dependent B/1/D/1/F features. No further blind raw-step extension should substitute for an induction.
+
+
+## 2026-11-04: exact B/0 alternating sweep and suffix-shield preservation (Agent42)
+
+[Root119BShift.lean](Root119BShift.lean) formalizes an exact **all-natural** (10n)-primitive-step macro. For every (n\in\mathbb N) and *arbitrary* two-sided exterior tape, if a B configuration scans 0 and has the immediate left suffix `(10)^n111` (written from far left toward its head), then `run (10*n) c = some (shiftMany n c)`. Each individual 10-step block shifts the B head left two cells, writing 1 at old offsets -4 and 0 and 0 at -2 and -1. The next B remains on 0 and retains suffix `111` until the n pairs are consumed. The proof uses induction on n and exact source-table transitions, with no global assumption about the actual blank orbit.
+
+[Root119BShield.lean](Root119BShield.lean) adds a quantified preservation statement. `NoLeft4 p q r c` means no factor `p q r 0` lies *entirely left of the head*. For **any** three Boolean bits p,q,r, every such 10-step sweep preserves this property, since the only possibly new four-letter windows entirely left of the new B head both end in 1. `reached_sweep_preserves_noLeft4` also proves that if the starting configuration is genuinely `Reach`-reachable from blank, the macro endpoint is `Reach`-reachable under the exact original source-step semantics. The family includes the observed dangerous B-gate factor `1100`, plus `1000` and `1110`.
+
+**Source-original manual CI passed:**
+- [41777338183](https://github.com/FlareZ123/bb6/actions/runs/41777338183), source import `Root119Gate` and proof `ten_n_steps`;
+- [41777783148](https://github.com/FlareZ123/bb6/actions/runs/41777783148), unchanged original imported source, full `Root119BShift` and `Root119BShield` with all theorem axiom audits exactly `[propext, Quot.sound]`, no `sorryAx`.
+
+Both verifications used Lean 4.36.0-rc2 on manual workflow [agent42-root119-bshift.yml](../../.github/workflows/agent42-root119-bshift.yml). Local derivation was independently checked in a minimal literal transcribed table before source compilation. This is an **intermediate conditional transition and invariant-preservation theorem**, not an all-time global invariant: actual blank-root B/0 configurations can enter other return mechanisms, especially when the left prefix no longer matches a `10` pair. Previously documented synthetic B/0 counterexamples remain decisive against unrestricted closure. **Root119's actual blank halting status and BB(6) are still undetermined.**
+
+**Next direct target:** prove a source-sound return-and-shield lemma for the exceptional B/0 boundary with left `0000 111`, or find a concrete counterexample. Early blank-root trace at raw time 73 demonstrates a 16-step expansion to a B/0 beyond a fresh zero region (raw time 89). Treat this as a finite lead until a universal source theorem and genuinely linked return-language argument exist.
