@@ -6,7 +6,7 @@ open CascadeResetInverse CascadeManyShield CascadeSweep
 
 def evenPred (n : Nat) : Nat := 4*2^n-3*n-7
 
-private theorem n_plus_three_le_pow (n : Nat) (hn : 4 ≤ n) :
+theorem n_plus_three_le_pow (n : Nat) (hn : 4 ≤ n) :
     n+3 ≤ 2^n := by
   have h : ∀ k : Nat, k+7 ≤ 2^(k+4) := by
     intro k
