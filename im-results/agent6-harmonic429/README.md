@@ -1,5 +1,22 @@
 # Agent 6: BB(6) #429 harmonic-gate and corridor transfer programme
 
+## 2026-11-04 13:55 UTC: stronger rooted #429 inverse-halting barriers (Agent 6)
+
+**Exact theorem scope.** The genuinely blank-origin accelerated trajectory from `(0,0)`, with `BB429.next` as in unchanged `agent5-429-rank/BB429Rank.lean`, cannot encounter a terminal junction `b+1=2*a` with `a%64=41`, `a%64=49`, or **`a%64=21`**. The first two cases are in [BB429NewGate.lean](BB429NewGate.lean); the entire 21 sector, including its exceptional first value `a=21`, is in [BB429TwentyOne.lean](BB429TwentyOne.lean). The separate [BB429Deep17.lean](BB429Deep17.lean) proves every actual terminal with `a%32=17` must have `a%128=81`. This refines the original four-class modulus-32 criterion to a **nine-residue modulo-128 necessary condition**:
+
+```
+a%64=9 OR a%128=81 OR a%64=53 OR a%32=29
+```
+
+This filter represents 2+1+2+4=9 residues modulo128. It is a restriction on *possible halting accelerated states of this one rooted machine*, not a new six-state Busy Beaver bound or a decision of #429. The 29 sector includes all sufficiently long first-branch burst endpoints and remains open.
+
+**Proof mechanism.** The terminal incoming transition is always the first (doubling/subtraction) branch, so predecessor coordinates are exactly `(x,6*x+8)`, with terminal counter `a=2*x+3`. The 41 and 49 modulo64 exclusion files exhaust every affine predecessor branch and force eventual contradiction with the prior genuine blank-orbit invariant: positive even first counter implies second counter 2 modulo4. For the 21-mod64 family, a four-stage inverse chain passes through `(16*k+9,96*k+62)`, `(8*k+3,112*k+71)`, `(4*k,120*k+74)`, `(34*k+15,60*k+37)`, then its forced predecessor `(17*k+6,94*k+52)`. When `k≥2` is even, this final predecessor has positive even first counter and second counter divisible by four. An alternative immediate parent `(40*k+18,48*k+33)` is also forbidden by the same parity invariant. The exceptional `k=0` root is disposed of by direct 12-step kernel reduction and the monotone rank `2*u+w`: at step12 the genuine orbit is `(11,62)` of rank84, so it can never subsequently reach `(0,74)` of rank74. The 17-sector deeper exclusion uses additional disjoint complete affine predecessor branches and has an exact all-natural statement.
+
+**Evidence and provenance.** Local Lean **4.36.0-rc2** compiled all three new arithmetic files in the precise imported dependency order with `#print axioms` limited to `propext`, `Classical.choice`, and `Quot.sound`. The matching local `BB429Rank` and `BB429NoThree` input definitions were checked against the source text; locally copying a definition alone does not constitute unchanged-original-source verification. The [first full original-source manual CI 41839354284](https://github.com/FlareZ123/bb6/actions/runs/41839354284) **succeeded for `BB429NewGate`**, both unchanged pinned DeepMind Cryptids accelerator and standalone proof. Subsequent runs aim to compile `BB429Deep17`, `BB429TwentyOne`, and [SourceRawHaltRefined.lean](SourceRawHaltRefined.lean) directly against the original source. [Run 41841143365](https://github.com/FlareZ123/bb6/actions/runs/41841143365) failed during the upstream Mathlib cache extraction with **disk quota exceeded**, before any of the new Lean proof sources were compiled in the original-source job; this is infrastructure failure, not a refutation. The current manual source workflow includes the stronger theorem. Source-audit status for the newest two files should be read from the later runs rather than inferred.
+
+**Remaining question.** The refined condition still leaves infinitely many terminals. A priority is a genuinely root-specific obstruction for the 29 modulo32 long-burst family, an elimination of one complete residual sector, or a blank-root halt witness. A deeper finite quotient without new all-time logical implications has limited value. External novelty relative to ongoing BB6 research has not been established.
+
+
 ## 2026-11-04: two new all-time halting-sector exclusions (Agent 6 follow-up)
 
 **Mathematical statement (latest):** For the genuine blank-root orbit of the exact #429 high-level map, a halted state cannot have first counter congruent to **3 modulo 4** or **25 modulo 32**. Combining these with the prior six-class theorem reduces the necessary halting classes from `{3,9,17,21,25,29}` to **`{9,17,21,29}` modulo 32**. The four classes remain possible in the logical reduction, with no reachability witness or global machine decision.
