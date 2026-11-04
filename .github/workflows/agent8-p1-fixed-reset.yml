@@ -51,4 +51,5 @@ jobs:
           for m in ResetBudget AbstractInverse DefectAlgebra PathInvariant; do
             lean -o "$root/$m.olean" "$root/$m.lean"
           done
-          # Add the missing direct dependency from the archived bridge source.\n          sed -i "1iimport PathInvariant" "$root/SourceBridge.lean"\n          lean "$root/SourceBridge.lean"
+          # Add the missing direct dependency from the archived bridge source.\n          sed -i "1iimport PathInvariant" "$root/SourceBridge.lean"\n          lean -o "$root/SourceBridge.olean" "$root/SourceBridge.lean"
+          lean "$root/ConcreteCorollaries.lean"
