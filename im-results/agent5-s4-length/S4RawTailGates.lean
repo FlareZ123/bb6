@@ -91,7 +91,8 @@ theorem original_machine_halts_iff_two_tail_powers :
     | inr ⟨h7,R,hs,hpow⟩ =>
         refine ⟨n,R,Or.inr ⟨h7,?_,hpow⟩⟩
         simpa [hs] using hr
-  · rintro ⟨n,R,(⟨h4,hr,hpow⟩ | ⟨h7,hr,hpow⟩)⟩
+  · rintro ⟨n,R,hcases⟩
+    rcases hcases with ⟨h4,hr,hpow⟩ | ⟨h7,hr,hpow⟩
     · apply original_machine_halts_iff_compact_power_gate.mpr
       exact ⟨n,80::150::R,Or.inl h4,hr,(tail_gate_80 R).mpr hpow⟩
     · apply original_machine_halts_iff_compact_power_gate.mpr
