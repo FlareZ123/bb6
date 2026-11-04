@@ -1,0 +1,67 @@
+name: Agent 7 raw #746 n2049 segmented bridge to pinned Cryptids (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Reclaim CI workspace
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+      - name: Checkout exact original upstream Cryptids
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          persist-credentials: false
+      - name: Checkout persistent BB6 proof modules
+        uses: actions/checkout@v4
+        with:
+          path: agent7
+          persist-credentials: false
+      - name: Build untouched original six-state Cryptids module (Lean 4.35.0-rc4)
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: BusyBeaver.BB6.M_1RB0LF_1LC1RA_0RE0RD_HHH1LE_1LF1RC_1LC1LA
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Check source-bound complete forward reset proof and raw halting iff
+        run: |
+          set -eu
+          python3 -m pip install --user filelock
+          mkdir -p "$GITHUB_WORKSPACE/Agent7Bridge"
+          a="$GITHUB_WORKSPACE/agent7/im-results/agent7-cascade-odd-fibers"
+          b="$GITHUB_WORKSPACE/agent7/im-results/agent10-cascade"
+          f="$GITHUB_WORKSPACE/agent7/im-results/agent7-cascade-forward"
+          cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent7Bridge/"
+          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent7Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict}.lean "$GITHUB_WORKSPACE/Agent7Bridge/"
+          cp "$f"/{ForwardGeneric,ForwardProof,ForwardSafe,OriginalForwardGate,OriginalForward2048Gate}.lean "$GITHUB_WORKSPACE/Agent7Bridge/"
+          cd "$GITHUB_WORKSPACE"
+          export LEAN_PATH="$GITHUB_WORKSPACE/Agent7Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
+          lake env lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass SurvivingSmall TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate ManyShield RootMinIndex FastShield RootMin256 SurvivingExactGate OriginalNextBridge; do
+            lake env lean -o "Agent7Bridge/$m.olean" "Agent7Bridge/$m.lean"
+          done
+          for m in OriginalSurvivingBridge OriginalPhysicalGate OriginalMinIndexBridge OriginalRawGate; do
+            lake env lean -o "Agent7Bridge/$m.olean" "Agent7Bridge/$m.lean"
+          done
+          for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict; do
+            lake env lean -o "Agent7Bridge/$m.olean" "Agent7Bridge/$m.lean"
+          done
+          for m in ForwardGeneric ForwardProof ForwardSafe; do
+            lake env lean -o "Agent7Bridge/$m.olean" "Agent7Bridge/$m.lean"
+          done
+          python3 "$f/generate_forward_certificate.py" --index 1024 --chunk-size 150 --output "$GITHUB_WORKSPACE/Agent7Bridge/ForwardCheck1024.lean"
+          lake env lean -o "Agent7Bridge/ForwardCheck1024.olean" "Agent7Bridge/ForwardCheck1024.lean"
+          lake env lean -o "Agent7Bridge/OriginalForwardGate.olean" "Agent7Bridge/OriginalForwardGate.lean"
+          python3 "$f/generate_forward_modules.py" --index 2048 --chunk-size 16 --output-dir "$GITHUB_WORKSPACE/Agent7Bridge"
+          for m in "$GITHUB_WORKSPACE"/Agent7Bridge/Forward2048_*.lean; do
+            lake env lean -o "${m%.lean}.olean" "$m" > /dev/null
+          done
+          lake env lean -o "Agent7Bridge/Forward2048Final.olean" "Agent7Bridge/Forward2048Final.lean"
+          lake env lean "Agent7Bridge/OriginalForward2048Gate.lean"
+          echo "Unmodified Cryptids raw six-state machine #746 halting iff n>=2049 kernel checked."
