@@ -18,7 +18,10 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify remote mathematical proof
-        run: lean im-results/agent20-needle-valuation/A20NeedleGap.lean
+        run: |
+          export LEAN_PATH=im-results/agent20-needle-valuation
+          lean -o im-results/agent20-needle-valuation/A20NeedleGap.olean im-results/agent20-needle-valuation/A20NeedleGap.lean
+          lean im-results/agent20-needle-valuation/A20UniqueBoundary.lean
 
   verify:
     runs-on: ubuntu-latest
@@ -54,5 +57,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-valuation/A20NeedleGap.lean" A20NeedleGap.lean
           lake env lean -o .lake/build/lib/lean/A20NeedleGap.olean A20NeedleGap.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-valuation/A20UniqueBoundary.lean" A20UniqueBoundary.lean
+          lake env lean -o .lake/build/lib/lean/A20UniqueBoundary.olean A20UniqueBoundary.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-valuation/A20SourceBridge.lean" A20SourceBridge.lean
           lake env lean A20SourceBridge.lean
