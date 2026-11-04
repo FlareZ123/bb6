@@ -45,3 +45,4 @@ jobs:
           lean -o im-results/agent26-cryptid-e-gate/A110101Closure.olean im-results/agent26-cryptid-e-gate/A110101Closure.lean
           lean -o im-results/agent37-root-language-pilot/EThenAQ1.olean im-results/agent37-root-language-pilot/EThenAQ1.lean
           lean -o im-results/agent37-root-language-pilot/AAlternatingTriple.olean im-results/agent37-root-language-pilot/AAlternatingTriple.lean
+          lean -o im-results/agent37-root-language-pilot/EAlternatingTriple.olean im-results/agent37-root-language-pilot/EAlternatingTriple.lean
