@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = {
     "BB429No393mod512.lean": "205eb810e98022eb2641dcd8ebce07fedc564064dc00dfec01faca0c68fa280e",
     "BB429No265mod512.lean": "ea2cac2c571fcc26f25f32bf37d025ae55dd85f404afb4395913422c1d9bbe3a",
+    "BB429No137mod1024.lean": "e5b007e4372467d9f7d9f2d72e064b70bf551ee4b7bc23d9fae796fc9cdbd3d8",
+    "BB429No521mod1024.lean": "d306d4e562d64e96777cd13b32c1ae767783b09f0783d667bb9283657f8e2e59",
 }
 
 with (ROOT / ".unpack.lock").open("w") as lock:
