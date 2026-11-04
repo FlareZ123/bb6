@@ -32,7 +32,7 @@ theorem raw_halts_iff_refined_gates :
       ∃ n u w,
         BB429SourceLadder.sourceRun n highLevelStart = some (.J u w) ∧
         highLevelNext (.J u w) = none ∧
-        (u%64=9 ∨ u%128=81 ∨ u%32=21 ∨ u%32=29) := by
+        (u%64=9 ∨ u%128=81 ∨ u%64=53 ∨ u%32=29) := by
   constructor
   · intro h
     obtain ⟨n,u,w,hr,hn,_⟩ := BB429ActualHaltFour.raw_halts_iff_four_gates.mp h
