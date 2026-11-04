@@ -150,6 +150,92 @@ theorem no_second_gate_m1 : ¬ BB6.Agent11Mass.SectionReach 11 100 := by
   have hc : reachableFastBool 11 100 = false := by decide
   simp [hc] at h
 
+
+/-- Single-pass prefix scan, avoiding the quadratic repeated-run work of
+    reachableFastBool. Faithful by a direct induction on prefix length. -/
+theorem runFuel_commute (n : Nat) : ∀ s : Option (Nat×Nat),
+  runFuel n (s.bind secNextFuel) = (runFuel n s).bind secNextFuel := by
+  induction n with
+  | zero =>
+    intro s
+    rfl
+  | succ n ih =>
+    intro s
+    change (runFuel n (s.bind secNextFuel)).bind secNextFuel =
+      ((runFuel n s).bind secNextFuel).bind secNextFuel
+    rw [ih]
+
+theorem runFuel_succ_head (n : Nat) (s : Option (Nat×Nat)) :
+  runFuel (n+1) s = runFuel n (s.bind secNextFuel) := by
+  exact (runFuel_commute n s).symm
+
+def hasHit (x y : Nat) : Nat → Option (Nat×Nat) → Bool
+  | 0,s => decide (s=some (x,y))
+  | n+1,s => if s=some (x,y) then true else hasHit x y n (s.bind secNextFuel)
+
+theorem hasHit_iff (fuel x y : Nat) :
+  ∀ s : Option (Nat×Nat),
+    hasHit x y fuel s = true ↔
+      ∃ n ≤ fuel, runFuel n s = some (x,y) := by
+  induction fuel with
+  | zero =>
+    intro s
+    simp only [hasHit, decide_eq_true_eq]
+    constructor
+    · intro h
+      exact ⟨0,by omega,by simpa only [runFuel] using h⟩
+    · rintro ⟨n,hn,h⟩
+      have hn0 : n=0 := by omega
+      subst n
+      simpa only [runFuel] using h
+  | succ fuel ih =>
+    intro s
+    by_cases hstart : s=some (x,y)
+    · simp only [hasHit, hstart, ite_true]
+      constructor
+      · intro _
+        exact ⟨0,by omega,by simpa only [runFuel] using hstart⟩
+      · intro _
+        trivial
+    · simp only [hasHit,hstart,ite_false]
+      rw [ih (s.bind secNextFuel)]
+      constructor
+      · rintro ⟨n,hn,h⟩
+        refine ⟨n+1,by omega,?_⟩
+        simpa only [runFuel_succ_head] using h
+      · rintro ⟨n,hn,h⟩
+        cases n with
+        | zero =>
+          have hs : s=some (x,y) := by simpa only [runFuel] using h
+          exact False.elim (hstart hs)
+        | succ n =>
+          refine ⟨n,by omega,?_⟩
+          simpa only [runFuel_succ_head] using h
+
+/-- Sound and complete source-checked blank target decision using a linear
+    orbit scan and the independent all-time rank upper bound. -/
+theorem hasHitFull_iff (x y : Nat) :
+  hasHit x y (x+2*y) (some (5,1)) = true ↔
+  BB6.Agent11Mass.SectionReach x y := by
+  rw [hasHit_iff,BB6.Agent11Mass.section_reach_iff_bounded]
+  simp only [runFuel_eq]
+
+/-- Entire all-time exclusion for the genuine second-gate m=2 target
+    (j=7,m=2), from finite kernel reduction plus the universal rank lemma. -/
+theorem no_second_gate_m2 : ¬ BB6.Agent11Mass.SectionReach 17 622 := by
+  intro hr
+  have h := (hasHitFull_iff 17 622).mpr hr
+  have hc : hasHit 17 622 (17+2*622) (some (5,1)) = false := by
+    set_option maxRecDepth 4096 in
+      decide
+  simp [hc] at h
+
+#print axioms runFuel_commute
+#print axioms runFuel_succ_head
+#print axioms hasHit_iff
+#print axioms hasHitFull_iff
+#print axioms no_second_gate_m2
+
 #print axioms bounceFuel_correct
 #print axioms secNextFuel_eq
 #print axioms runFuel_eq
