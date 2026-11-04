@@ -37,7 +37,9 @@ jobs:
           lean -o SecondRayShapeOriginal.olean SecondRayShapeOriginal.lean
           python3 "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/reconstruct.py"
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact"/{BounceOriginal,SecondGateFanArithmetic,SecondGateFanInjective,SecondGateFanOriginal,SecondRayPowerOdd,SecondRayOddComplete,SecondRayOddCount,SecondRayOddReach,SecondRayAllList,SecondRayEven2,SecondRayEven2Count}.lean .
-          for f in BounceOriginal SecondGateFanArithmetic SecondGateFanInjective SecondGateFanOriginal SecondRayPowerOdd SecondRayOddComplete SecondRayOddCount SecondRayOddReach SecondRayAllList SecondRayEven2; do
+          for f in BounceOriginal SecondGateFanArithmetic SecondGateFanInjective SecondGateFanOriginal SecondRayPowerOdd SecondRayOddComplete SecondRayOddCount SecondRayOddReach SecondRayAllList SecondRayEven2 SecondRayEven2Count; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean SecondRayEven2Count.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SecondRayEven0.lean.xz.b64" | xz -d > SecondRayEven0.lean
+          echo "3534767dfcb3b0bdd60309ce5754de4c31d2aff6ab0ce06e5ea422c0e147fd3c  SecondRayEven0.lean" | sha256sum -c -
+          lean SecondRayEven0.lean
