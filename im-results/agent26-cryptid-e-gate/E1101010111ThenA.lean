@@ -77,6 +77,66 @@ theorem e_then_a (t u : Nat) (ys : List Bool) :
   exact BB6.Agent35.full_A_code (8*t+6)
      (List.replicate (2*u+2) true) (afterTail ys)
 
+/-- Pure 111 token words add exactly four stack pairs per token. -/
+theorem tripleInc (r : Nat) :
+    CryptidA.wordInc (List.replicate r true) = 4*r := by
+  induction r with
+  | zero => rfl
+  | succ r ih =>
+    change 4 + CryptidA.wordInc (List.replicate r true) = 4*(r+1)
+    rw [ih]
+    omega
+
+/-- Closed all-natural primitive cost of r consecutive 111 token expansions. -/
+theorem tripleCost (m r : Nat) :
+    CryptidA.wordCost m (List.replicate r true) =
+      6*m*r+29*r+12*r*r := by
+  induction r generalizing m with
+  | zero => simp [CryptidA.wordCost]
+  | succ r ih =>
+    change 6*m+41 + CryptidA.wordCost (m+4) (List.replicate r true) =
+      6*m*(r+1)+29*(r+1)+12*(r+1)*(r+1)
+    rw [ih]
+    simp only [Nat.mul_add,Nat.add_mul,Nat.mul_assoc]
+    omega
+
+/-- Fully explicit polynomial primitive duration and physical terminal tape
+    for the E-to-A source-composed return at indices k=3t+2, q=3u. -/
+theorem e_then_a_polynomial (t u : Nat) (ys : List Bool) :
+    run (876*t*t+384*t*u+2219*t+48*u*u+506*u+1442)
+      (init (List.replicate (9*t+8) true ++
+        false :: (pairs (3*u) ++ wordE ys))) =
+      ⟨[],false,List.replicate (64*t+16*u+75) true ++
+        afterTail ys,5⟩ := by
+  have ht :
+    (12*(3*t+2)*(3*t+2)+49*(3*t+2)+80+4*(3*u)) +
+    ((12*(8*t+6)*(8*t+6)+41*(8*t+6)+32)+
+      (CryptidA.wordCost (4*(8*t+6)+3) (List.replicate (2*u+2) true)+
+      (2*((4*(8*t+6)+3)+
+        CryptidA.wordInc (List.replicate (2*u+2) true))+6))) =
+      876*t*t+384*t*u+2219*t+48*u*u+506*u+1442 := by
+    rw [tripleCost,tripleInc]
+    have h3 : t*(3*t)=3*(t*t) := by ac_rfl
+    have h8 : t*(8*t)=8*(t*t) := by ac_rfl
+    have h2 : t*(2*u)=2*(t*u) := by ac_rfl
+    have hu : u*(2*u)=2*(u*u) := by ac_rfl
+    simp only [Nat.mul_add,Nat.add_mul,Nat.mul_assoc,h3,h8,h2,hu]
+    omega
+  have hn : 2*(4*(8*t+6)+3+
+      CryptidA.wordInc (List.replicate (2*u+2) true))+5 =
+      64*t+16*u+75 := by
+    rw [tripleInc]
+    omega
+  have hstart : 9*t+8=3*(3*t+2)+2 := by omega
+  have hs := e_then_a t u ys
+  dsimp at hs
+  rw [←ht]
+  simpa only [hstart, ←hn] using hs
+
+#print axioms tripleInc
+#print axioms tripleCost
+#print axioms e_then_a_polynomial
+
 #print axioms tripleCode
 #print axioms e_then_a
 
