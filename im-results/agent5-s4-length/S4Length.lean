@@ -9,7 +9,7 @@ def W : List Nat → Nat
 
 inductive Done : Nat → List Nat → List Nat → Prop where
   | evenNil (q : Nat) (hq : 0 < q) : Done (2*q) [] [q+2,q-1]
-  | evenCons (q b : Nat) (T : List Nat) (hq : 0 < q) :
+  | evenCons (q b : Nat) (T : List Nat) :
       Done (2*q) (b::T) ((q+2)::(b+q)::T)
   | oddNil (q : Nat) (T : List Nat) :
       Done q [] T → Done (2*q+1) [] (q::T)
@@ -17,18 +17,15 @@ inductive Done : Nat → List Nat → List Nat → Prop where
       Done (b+q+1) S U → Done (2*q+1) (b::S) (q::U)
 
 def H (a : Nat) (L : List Nat) : Option (List Nat) :=
-  if a % 2 = 0 then
-    if a = 0 then none
-    else
-      match L with
-      | [] => some [a/2+2,a/2-1]
-      | b::S => some ((a/2+2)::(b+a/2)::S)
-  else
-    match L with
-    | [] =>
-        if a = 1 then none
-        else (H (a/2) []).map (a/2::·)
-    | b::S => (H (b+a/2+1) S).map (a/2::·)
+  match L with
+  | [] =>
+      if a % 2 = 0 then
+        if a = 0 then none else some [a/2+2,a/2-1]
+      else
+        if a ≤ 1 then none else (H (a/2) []).map (a/2::·)
+  | b::S =>
+      if a % 2 = 0 then some ((a/2+2)::(b+a/2)::S)
+      else (H (b+a/2+1) S).map (a/2::·)
 termination_by (L.length, a)
 decreasing_by
   all_goals simp_wf
@@ -64,25 +61,22 @@ theorem H_to_done : ∀ (L : List Nat) (a : Nat) (U : List Nat),
           · have ha : a = 2*(a/2)+1 := by omega
             have hlt : a/2 < a := by omega
             cases hsub : H (a/2) [] with
-            | none => simp [H,he,ho,hsub] at hs
+            | none => simp [H,he,hsub] at hs
             | some V =>
                 have hu : U = (a/2)::V := by
-                  simpa [H,he,ho,hsub] using hs.symm
+                  simpa [H,he, show ¬a ≤ 1 by omega, hsub] using hs.symm
                 subst U
                 simpa only [←ha]
                   using Done.oddNil (a/2) V (ih (a/2) hlt V hsub)
   | cons b S ih =>
       intro a U hs
       by_cases he : a%2=0
-      · by_cases hz : a=0
-        · simp [H,hz] at hs
-        · have hq : 0 < a/2 := by omega
-          have ha : a=2*(a/2) := by omega
-          have hu : U = (a/2+2)::(b+a/2)::S := by
-            simpa [H,he,hz] using hs.symm
-          subst U
-          simpa only [←ha]
-            using Done.evenCons (a/2) b S hq
+      · have ha : a=2*(a/2) := by omega
+        have hu : U = (a/2+2)::(b+a/2)::S := by
+          simpa [H,he] using hs.symm
+        subst U
+        simpa only [←ha]
+          using Done.evenCons (a/2) b S
       · have ha : a=2*(a/2)+1 := by omega
         cases hsub : H (b+a/2+1) S with
         | none => simp [H,he,hsub] at hs
@@ -115,7 +109,7 @@ theorem done_length (a : Nat) (L U : List Nat) (h : Done a L U) :
       have hk : k=0 := even_factor_zero q 0 k t (by simpa [W] using hp)
       subst k
       simp
-  | evenCons q b T hq =>
+  | evenCons q b T =>
       intro k t hp
       have hk : k=0 := even_factor_zero q (W (b::T)) k t hp
       subst k
