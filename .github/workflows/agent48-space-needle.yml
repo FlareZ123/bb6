@@ -75,3 +75,12 @@ jobs:
           lake env lean -o .lake/build/lib/lean/FiveAdicOrderFull.olean FiveAdicOrderFull.lean
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicOrderSource.lean" FiveAdicOrderSource.lean
           lake env lean FiveAdicOrderSource.lean
+      - name: Certify two infinite odd-terminal feeder sector exclusions
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/NeedleNoVOne.lean" NeedleNoVOne.lean
+          lake env lean -o .lake/build/lib/lean/NeedleNoVOne.olean NeedleNoVOne.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/NeedleNoVTwo.lean" NeedleNoVTwo.lean
+          lake env lean -o .lake/build/lib/lean/NeedleNoVTwo.olean NeedleNoVTwo.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/NeedleNoVOneTwoSource.lean" NeedleNoVOneTwoSource.lean
+          lake env lean NeedleNoVOneTwoSource.lean
