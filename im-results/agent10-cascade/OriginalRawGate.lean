@@ -35,8 +35,7 @@ private theorem iterate_eq_startRun (k : Nat) :
   | zero => rfl
   | succ k ih =>
       rw [show k+1 = 1+k by omega, Function.iterate_add_apply]
-      change (startRun k).bind highLevelNext = startRun (k+1)
-      rw [←ih]
+      rw [ih]
       rfl
 
 /-- If the physical blank-tape six-state machine halts, an authentic
