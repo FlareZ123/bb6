@@ -55,3 +55,12 @@ jobs:
           lake env lean TerminalOddInverseSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleOddMacroCertifiedSource.lean" SpaceNeedleOddMacroCertifiedSource.lean
           lake env lean SpaceNeedleOddMacroCertifiedSource.lean
+      - name: Prove exact five-adic order and source-valid arbitrarily long odd terminal paths
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicLift.lean" FiveAdicLift.lean
+          lake env lean -o .lake/build/lib/lean/FiveAdicLift.olean FiveAdicLift.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicExtra.lean" FiveAdicExtra.lean
+          lake env lean -o .lake/build/lib/lean/FiveAdicExtra.olean FiveAdicExtra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/FiveAdicSource.lean" FiveAdicSource.lean
+          lake env lean FiveAdicSource.lean
