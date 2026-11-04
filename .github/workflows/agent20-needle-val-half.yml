@@ -94,3 +94,5 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleSharper.olean NeedleSharper.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleSharperSource.lean" .
           lake env lean NeedleSharperSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootSharp.lean" .
+          lake env lean NeedleRootSharp.lean
