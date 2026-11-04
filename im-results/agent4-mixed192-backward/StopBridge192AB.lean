@@ -1,4 +1,4 @@
-import SourceBridge192
+import SourceBridge192Companion
 import SourceBridge192B
 import Lean.Elab.Tactic.Omega
 
