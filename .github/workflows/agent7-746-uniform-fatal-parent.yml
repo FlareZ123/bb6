@@ -36,5 +36,6 @@ jobs:
           for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
-          lean "$f/UniformFatalParent.lean"
-          echo "Lean kernel validated the uniform all-natural exact fatal-parent normal form."
+          lean -o "$f/UniformFatalParent.olean" "$f/UniformFatalParent.lean"
+          lean "$f/UniformFatalMod9.lean"
+          echo "Lean kernel validated complete n>=4 fatal-parent normal form and mod18 unique even-parent classes."
