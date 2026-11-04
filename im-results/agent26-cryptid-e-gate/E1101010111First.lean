@@ -195,7 +195,7 @@ theorem full_E_1101010111_first_return (k q : Nat) (ys : List Bool) :
       false::(pairs q ++ wordE ys))
     run duration initial =
       ⟨[],false,List.replicate (8*k+5) true ++ bWord q ys,5⟩ ∧
-    ∀ t, 0<t → t<duration → ¬ IsPhysicalReturn (run t initial) := by
+    ∀ t, 0<t → t<duration → ¬ Physical (run t initial) := by
   dsimp
   constructor
   · exact full_E_1101010111_pairs k q ys
@@ -215,7 +215,7 @@ theorem full_E_1101010111_first_return (k q : Nat) (ys : List Bool) :
       rw [htime,run_add,hprefix] at hphys
       apply (e_firstPhysical (4*k+1) q ys)
         (t-(12*k*k+41*k+33)) hrest
-      exact ⟨hphys.1,by simp [hphys.2.2]⟩
+      exact hphys
 
 #print axioms e_front_firstPhysical
 #print axioms e_firstPhysical
