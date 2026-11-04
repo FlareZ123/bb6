@@ -93,8 +93,11 @@ theorem next_e (t q : Nat) (ys : List Bool) :
       List.replicate (2*q+6) true =
         [true,true,true,true] ++ List.replicate (2*q+2) true := by
     have hn : 2*q+6=4+(2*q+2) := by omega
-    rw [hn,List.replicate_append_replicate]
-    rfl
+    rw [hn]
+    calc
+      _ = List.replicate 4 true ++ List.replicate (2*q+2) true := by
+        rw [List.replicate_append_replicate]
+      _ = _ := by rfl
   rw [hone,htwo]
   rfl
 
