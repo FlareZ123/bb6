@@ -28,7 +28,7 @@ returns twice, gaining exactly 27 units of first+second counter mass. -/
 theorem zero_even_ray_two_returns (d : Nat) (hd : d%2=0) (hl : 24≤d) :
     highLevelNext (.D 0 d)=some (.D d 7) ∧
     highLevelNext (.D d 7)=some (.D (d-12) 39) := by
-  exact ⟨BB6.Agent49LowStepSource.low_zero_even d hd, ray_seven_exact d hl⟩
+  exact ⟨BB6.Agent49LowStepSource.low_zero_even d hd, ray_seven_exact d (by omega)⟩
 
 theorem zero_even_ray_sharp (d : Nat) (hd : d%2=0) (hl : 24≤d) :
     ((d-12)+39)-(0+d)=27 := by omega
