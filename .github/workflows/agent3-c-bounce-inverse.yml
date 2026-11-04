@@ -2,6 +2,11 @@ name: Agent 3 Machine C bounce inverse arithmetic (manual)
 on:
   workflow_dispatch:
     inputs:
+      seven_only:
+        description: 'Verify exact seven-four ancestry and M32-admitted stopping family, then stop'
+        required: false
+        type: boolean
+        default: false
       balanced_only:
         description: 'Stop after source-verifying the exact balanced and odd target fibers; skip downstream experimental modules'
         required: false
@@ -105,7 +110,12 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenChild.lean .
           lean -o EvenChild.olean EvenChild.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenChildSevenFour.lean .
-          lean EvenChildSevenFour.lean
+          lean -o EvenChildSevenFour.olean EvenChildSevenFour.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize}.lean .
+          for f in SectionAffineInverse ReachAffine AffineNormalize; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighM1Tower.lean .
+          lean HighM1Tower.lean
+          if [ "${{ inputs.seven_only }}" = "true" ]; then exit 0; fi
           # Source-exact full-depth odd second wedge with M32-invisible true-blank exclusion.
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenSliver.lean .
           lean -o OddSevenSliver.olean OddSevenSliver.lean
