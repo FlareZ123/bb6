@@ -24,6 +24,7 @@ jobs:
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
           done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
           lean -o "$a/LowGates.olean" "$a/LowGates.lean"
           lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
           lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
