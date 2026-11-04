@@ -14,7 +14,7 @@ I_(3k+4)(0 (10)^q 1101010111Y)
   --[12k²+49k+80+4q]-->
 I_(8k+5)(0 1^(2q+6) (01)^4 0Y).
 ```
-The proof uses source scanner, 33-step A turn, reverse C sweep and existing B sweep, with exact original primitive-step times. A separate physical strict-first-return proof [E1101010111First.lean](./E1101010111First.lean) is in verification and should only be considered certified once its workflow succeeds.
+The proof uses source scanner, 33-step A turn, reverse C sweep and existing B sweep, with exact original primitive-step times. The strict first *physically blank-left F/0* return is also proved in [E1101010111First.lean](./E1101010111First.lean), using a source-preserving scanner, C-walk, C/B handoff and B-sweep no-return decomposition. An earlier state-F visit with nonblank left tape is correctly excluded from the return criterion.
 
 3. **Arbitrary A token-code prefix**: [A1101010111Code.lean](./A1101010111Code.lean) composes universal `CryptidA.wordCode` consuming tokens 10 and 111 in any order with the new A terminal. For all k, finite token sequences w and arbitrary Y, `I_(3k+3)(0 wordCode(w) 1101010111Y)` returns exactly after `12k²+41k+32 + wordCost(4k+3,w) + 2m+36`, where `m=4k+3+wordInc(w)`, to `I_(2m+5)((01)^4 0Y)`. No strict first-return statement yet for the combined arbitrary-code entry.
 
@@ -35,4 +35,6 @@ Agent31's abstract packet notation `M(a,q,p;Y)=I_a((01)^q 0 1^p Y)` with fixed t
 `M(3k+4,q,2;01010111) → M(8k+5,0,2q+6;01010111)`.
 This boundary can *increase* the naive `q+p` rank. It does not prove global closure, a blank-reachable orbit, nor either eventual halting or nonhalting.
 
-Future research: formalize and certify full first-return E lemma, identify a global packet invariant or amortized rank surviving the reset, and connect long synthetic chains to authentic blank-origin reachability.
+Future research: identify a global packet invariant or amortized rank surviving the reset, and connect long synthetic chains to authentic blank-origin reachability.
+
+**Stronger CI:** [manual run 41870397910](https://github.com/FlareZ123/bb6/actions/runs/41870397910) also SUCCEEDED for the complete E strict-first-return theorem. The audited dependencies of `e_front_firstPhysical`, `e_firstPhysical`, and `full_E_1101010111_first_return` are precisely `[propext, Quot.sound]`, without `sorryAx`.
