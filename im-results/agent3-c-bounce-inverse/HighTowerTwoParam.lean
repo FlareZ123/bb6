@@ -195,11 +195,41 @@ theorem high2_strict_width (q n : Nat) : highJ2 q n<highJ2 (q+1) n := by
       change 16*highJ2 q n+42<16*highJ2 (q+1) n+42
       omega
 
+private theorem high2_fixed_q_injective (q r : Nat) :
+    ∀ n : Nat, highJ2 q n=highJ2 r n → q=r := by
+  intro n
+  induction n with
+  | zero =>
+      intro h
+      change 64*q+26=64*r+26 at h
+      omega
+  | succ n ih =>
+      intro h
+      apply ih
+      change 16*highJ2 q n+42=16*highJ2 r n+42 at h
+      omega
+
+/-- The two indices encode genuinely distinct stopping states.
+    Exact affine inverse depth recovers n, then recurrence injectivity
+    recovers the independently free q. -/
+theorem high2_joint_injective (q r n m : Nat)
+    (h : highJ2 q n=highJ2 r m) : q=r ∧ n=m := by
+  have hd : 4*n+3=4*m+3 := by
+    calc
+      4*n+3 = BB6.Agent15.oddDepth (15*highJ2 q n+40) :=
+        (high2_exact_depth q n).symm
+      _ = BB6.Agent15.oddDepth (15*highJ2 r m+40) := by rw [h]
+      _ = 4*m+3 := high2_exact_depth r m
+  have hn : n=m := by omega
+  subst m
+  exact ⟨high2_fixed_q_injective q r n h,rfl⟩
+
 #print axioms high2_halt_input
 #print axioms high2_exact_depth
 #print axioms high2_normalized_exact
 #print axioms high2_normalized_cone
 #print axioms high2_blank_unreachable
 #print axioms high2_strict_width
+#print axioms high2_joint_injective
 
 end BB6.Agent3
