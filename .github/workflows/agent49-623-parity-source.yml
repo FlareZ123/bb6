@@ -42,7 +42,7 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
-          lake env lean Agent49ParitySource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
 
       - name: Compile Agent8 ternary drain proof against unmodified #623 source
         working-directory: /tmp/cryptids
@@ -72,10 +72,20 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/SmallOutputGainSource.lean" Agent49SmallOutputSource.lean
-          lake env lean Agent49SmallOutputSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49SmallOutputSource.olean Agent49SmallOutputSource.lean
 
       - name: Verify five exact far-left rays from source-linked transport
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FixedRaysSource.lean" Agent49FixedRaysSource.lean
           lake env lean Agent49FixedRaysSource.lean
+
+      - name: Verify universal 27-unit two-step high-sector gain on original source
+        working-directory: /tmp/cryptids
+        run: |
+          for name in SharpMass SharpMass10 SharpMass12 RootedMass RootedMass19 SharpMass14Aux SharpMass14Even SharpMass14OddAux SharpMass14OddFive SharpMass14Odd SharpMass21Low SharpMass21Pair; do
+            cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/${name}Source.lean" "Agent8${name}Source.lean"
+            lake env lean -o ".lake/build/lib/lean/Agent8${name}Source.olean" "Agent8${name}Source.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TwoStep27HighSource.lean" Agent49TwoStep27HighSource.lean
+          lake env lean Agent49TwoStep27HighSource.lean
