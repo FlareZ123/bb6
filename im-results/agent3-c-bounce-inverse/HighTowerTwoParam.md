@@ -24,6 +24,13 @@ The complete two-parameter result is **fully source-integrated and Lean-kernel v
 
 No claim here settles Machine C, any other six-state holdout, or an unconditional BB(6) bound. The separate primitive-machine bridge lives in Agent21's source chain and is not reproved by this theorem.
 
+## Exact power identity and parameter distinctness
+
+The closed-form tower equation is
+`15*J(q,n)+42 = 16^(n+1)*(60q+27)`. Since `60q+27` is odd, this isolates a precise power of two in the stopping right counter plus two: `k+2=2^(4n+4)*(60q+27)`. This gives a direct arithmetic explanation for the inverse depth `4n+3`. The lemma `high2_power_identity` is in the Lean source; it passed a local Lean interface test and was added after the original successful two-parameter CI, awaiting a final full-source check.
+
+The formal `high2_joint_injective` theorem shows `J(q,n)=J(r,m)` implies both `q=r` and `n=m`, so the two-parameter family contains genuinely distinct targets without cross-index collisions. Its proof first recovers n from the exact odd affine inverse depth, then recovers q by cancellation of the index recurrence. A local Lean test checked this too; the final full-source audit is pending.
+
 ## Sharp all-start predecessor ancestry
 
 A further theorem file [HighTowerAllStart.lean](./HighTowerAllStart.lean) proves a stronger, seed-independent property. For every `q,n` and **every** starting section state `s`, if `d=4n+3` and the high stopping target is `T(q,n)` above, then:
@@ -33,7 +40,7 @@ A further theorem file [HighTowerAllStart.lean](./HighTowerAllStart.lean) proves
 
 Consequently the maximum length of a genuine section-transition path *ending* at each such target is **exactly `d+1=4n+4`**, independently of the root. This is strictly stronger than forbidding those targets from the particular blank orbit. The source reasoning uses the unique affine section predecessor in every forced step and the exact one-step parent of the normalized seven-four cone.
 
-The reusable theorem `affine_tower_general_sharp` establishes the same upper bound and constructive sharpness for any `a%4=3` and `k=affineRight2(q,d)` whose normalizer lands in the cone, beyond the stopping-tower subfamily. At this stage this extension has compiled under theorem-interface local Lean tests and awaits its separate unchanged-source CI audit. Its boundary is mathematical, and should not be taken as a claim that arbitrary seeds are valid blank-tape six-state machines.
+The reusable theorem `affine_tower_general_sharp` establishes the same upper bound and constructive sharpness for any `a%4=3` and `k=affineRight2(q,d)` whose normalizer lands in the cone, beyond the stopping-tower subfamily. **This entire stronger all-start proof passed unchanged-source Lean CI [41890701375](https://github.com/FlareZ123/bb6/actions/runs/41890701375), with all five theorem axiom audits exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.** Its boundary is mathematical, and should not be taken as a claim that arbitrary seeds are valid blank-tape six-state machines.
 
 ## Reproducible finite quotient contrast
 
