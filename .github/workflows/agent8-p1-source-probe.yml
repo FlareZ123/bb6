@@ -1,0 +1,23 @@
+name: Agent 8 P1 compressed-source signature probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode and print research theorem interfaces
+        run: |
+          set -eu
+          root=im-results/agent8-p1-fixed-reset
+          cat "$root/lean.tar.xz.b64.part00" "$root/lean.tar.xz.b64.part01" "$root/lean.tar.xz.b64.part02" | base64 --decode > /tmp/agent8-source.tar.xz
+          echo "e9d3aa0ac97f9f64daa05574158f1a7256735cec8d07a55060d14abf68ff9830  /tmp/agent8-source.tar.xz" | sha256sum --check
+          tar -xJf /tmp/agent8-source.tar.xz -C "$root"
+          for file in "$root/PathInvariant.lean" "$root/SourceBridge.lean"; do
+            echo "==== $file ===="
+            grep -n -E '^(inductive|def|theorem|private theorem|namespace|end) ' "$file" || true
+            echo '==== relevant proof segment ===='
+            grep -n -A35 -B5 -E '^theorem (path_invariant|source_count_path)|^theorem .*budget|^theorem .*source_count' "$file" || true
+          done
