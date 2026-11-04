@@ -26,6 +26,11 @@ jobs:
           /tmp/agent4-first80-check
           g++ -std=c++17 -O2 -Wall -Wextra im-results/agent4-mixed80-backward/forward80.cpp -o /tmp/agent4-forward80
           /tmp/agent4-forward80
+      - name: Independent M512 prior-exclusion overlap audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 im-results/agent4-mixed80-backward/audit_m512.py
       - name: Source-native Lean kernel check and axiom audit
         shell: bash
         run: |
