@@ -78,7 +78,8 @@ private theorem critical_root_gt_100 (n : Nat) (hn : 14≤n) :
   have hpow : (2:Nat)^14 ≤ 2^n :=
     Nat.pow_le_pow_right (by decide) hn
   have hp : n < (2:Nat)^n := Nat.lt_pow_self (by decide)
-  norm_num at hpow
+  have h14 : (2:Nat)^14=16384 := by decide
+  rw [h14] at hpow
   omega
 
 /-- The first three rigid zero-even feeder indices are universally impossible
