@@ -52,6 +52,11 @@ private theorem high2_right_eq (q n : Nat) :
       rw [ih]
       omega
 
+/-- Export the exact two-dimensional right-counter identity. -/
+theorem high2_right_tower (q n : Nat) :
+    affineRight2 q (4*n+3)=15*highJ2 q n+40 :=
+  high2_right_eq q n
+
 private theorem right2_lower (q d : Nat) : 52≤affineRight2 q d := by
   induction d with
   | zero =>
