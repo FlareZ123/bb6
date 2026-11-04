@@ -100,4 +100,10 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TwoStep27Source.lean" Agent49TwoStep27Source.lean
-          lake env lean Agent49TwoStep27Source.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TwoStep27Source.olean Agent49TwoStep27Source.lean
+
+      - name: Verify sharp 27-unit source-universal and genuine blank-root slope
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Finite27Source.lean" Agent49Finite27Source.lean
+          lake env lean Agent49Finite27Source.lean
