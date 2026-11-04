@@ -35,7 +35,7 @@ These rays use Agent8's original-source first-counter transport. The `next_outpu
 
 ## Proposed full two-step theorem (pending full CI)
 
-The current files `TwoStep27HighSource.lean`, `LowStepSource.lean`, `TwoStep27Source.lean`, and `Finite27Source.lean` aim to prove, for **every** even `a` and every `d`, with `a+d>=25`, that any two successful transitions
+The current files `TwoStep27HighSource.lean`, `LowStepSource.lean`, `TwoStep27Source.lean`, and `Finite27Source.lean` aim to prove, for **every** even `a` and every `d`, with `a+d>=23`, that any two successful transitions
 
 ```
 T(D(a,d))=some(D(b,e)),
@@ -46,7 +46,9 @@ satisfy `a+d+27<=c+f`. The proof splits at mass 100.
 
 For mass at least 100: if `a>=6,d>0`, a successor with first counter `b<=4` gains at least 20 on the first step and at least 7 on the second. If `b>=6`, the two original-source Agent8 14-unit bounds each contribute, giving at least 28. The `d=0` ray and all `a=0,2,4` inputs reduce to explicit source-checked one-step formulas and existing affine rays; see `LowStepSource.lean`.
 
-For `25<=a+d<100`: an independently executed Lean 4.36.0-rc2 kernel certificate for the exact source-matched recurrence, with `Fin 100` coordinates and `by decide +kernel`, proved every relevant two-step pair obeys 27. `Finite27Source.lean` repeats the certificate against direct imported source and still needs original-source CI.
+For `23<=a+d<100`: an independently executed Lean 4.36.0-rc2 kernel certificate for the exact source-matched recurrence, with `Fin 100` coordinates and `by decide +kernel`, proved every relevant two-step pair obeys 27. `Finite27Source.lean` repeats the certificate against direct imported source and still needs original-source CI.
+
+The finite-strip threshold 23 is sharp as well: from `D(12,10)` (mass 22), the exact two-step orbit is `D(12,10) -> D(2,38) -> D(38,9)`, gaining only 25. The revised `Finite27Source.lean` includes this source-reflection counterexample and a local Lean4.36 kernel verification of the enlarged mass 23–99 strip, pending full pinned-source CI.
 
 The constant is **sharp on the actual blank-origin orbit** according to exact model computation:
 
