@@ -138,7 +138,9 @@ jobs:
           lean -o FullForcedNormalize.olean FullForcedNormalize.lean
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
-          lean SourceBound.lean
+          lean -o SourceBound.olean SourceBound.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/FullDepth.lean .
+          lean FullDepth.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
