@@ -1,0 +1,30 @@
+name: Agent 7 #746 experimental finite fatal gate 512 certificate
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-512:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-check the 159,000 episode finite surviving-gate certificate
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          export LEAN_PATH="$a:$b"
+          lean --version
+          for m in SourceMacro Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/ManyShield.olean" "$b/ManyShield.lean"
+          lean -o "$b/FastShield.olean" "$b/FastShield.lean"
+          lean "$a/RootMin512.lean"
+          echo "Lean kernel validated the n<=512 surviving fatal gate cutoff."
