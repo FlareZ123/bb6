@@ -90,12 +90,7 @@ reasoning, with no unproved primality or external arithmetic oracle.
   [GitHub workflow](../../.github/workflows/agent20-needle-valuation.yml),
   importing unchanged Agent48 source and pinned upstream Cryptids commit
   `ced8f9f44f67a167d5ecc03e687b048c67926371`.
-- The first full-source [CI 41764201552](https://github.com/FlareZ123/bb6/actions/runs/41764201552)
-  **failed before compilation** while extracting Mathlib due runner
-  `Quota exceeded (os error 122)`. This is infrastructure, **not**
-  a Lean proof result. The revised workflow clears unused preinstalled
-  toolchains and runs an independent remote Lean arithmetic job.
-  Inspect its latest actual run status before asserting original-source success.
+- **Full original-source CI [41765478125](https://github.com/FlareZ123/bb6/actions/runs/41765478125) SUCCEEDED** on the exact checked-in original Cryptids source, including source recompilation, all three new source theorems, and `#print axioms` of every theorem: only `[propext, Classical.choice, Quot.sound]`. A separate independent Lean 4.36 arithmetic job also succeeded on the committed sources. The older runs [41764201552](https://github.com/FlareZ123/bb6/actions/runs/41764201552) and [41764927601](https://github.com/FlareZ123/bb6/actions/runs/41764927601) failed **before source compilation** because exhaustive Mathlib cache extraction exceeded runner storage; a selective transitive cache download resolved the infrastructure issue.
 
 Closest repository prior work: Agent48's
 [Space Needle source dossier](../agent48-space-needle/README.md)
@@ -115,3 +110,7 @@ bound, no proven Space Needle halting/nonhalting classification, and no claim
 that this known holdout is resolved. A useful next step would combine the
 all-source valuation ceiling with an authentic blank-reachable valuation
 invariant, or derive deeper multi-step predecessor restrictions.
+
+## Stronger asymptotic result
+
+The companion [SUPERLINEAR.md](SUPERLINEAR.md) now gives a fully written elementary proof that for every fixed positive integer `c`, any legal incoming edge with `v>=4*(3^c+1)` must have terminal exponent `K>c*v`. Hence the terminal exponent grows faster than every fixed multiple of the input valuation, and asymptotically `K=Omega(v log v)` along the unrestricted predecessor set as `v→∞`. This result is a **hand mathematical proof, not a Lean theorem** yet; the finite modular cross-check reports zero counterexamples among 965,856 eligible `(v,K)` pairs. It does not imply anything about actual blank-start reachability.
