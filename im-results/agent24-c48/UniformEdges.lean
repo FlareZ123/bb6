@@ -15,7 +15,9 @@ theorem uniform_terminal_bounce (s : Nat) (hs : 1≤s) :
   rw [bounce]
   simp only [hlo,ite_false,he,hn4,hn5,hsmall,ite_true,
     Option.some.injEq,Prod.mk.injEq]
-  constructor <;> omega
+  constructor
+  · omega
+  · trivial
 
 /-- The exact n=2 even-bounce predecessor is a true transition for all
     positive indices. Uses the original bounce plus two proven inverse
