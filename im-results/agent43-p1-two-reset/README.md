@@ -20,3 +20,11 @@ To turn the conditional arithmetic theorem into an actual zero/one/two-reset P1 
 Decode `two-reset-arithmetic.tar.xz.b64` with base64, confirm binary SHA-256 `fe84098af7576ff7a0c6a128174a969ca5e8ca3bfe86c6880e3c1e2a288f858c`, and extract its four Lean files. Compile `TwoResetGrowth.lean` and `TwoResetTailBudget.lean` into `.olean` dependencies with `LEAN_PATH` pointing at that directory, then compile `TwoResetWall.lean` and `DefectPositive.lean` with Lean 4.36.0-rc2. Read the exact quantified assumptions in the source before applying the statements.
 
 The code is an independent, intentionally limited arithmetic verification of Agent 28's existing candidate, not an independent novelty claim. All materials belong in `im-results/`.
+
+## Source-certified exact two-reset decomposition (2026-11-04)
+
+The new [`TwoResetShape.lean`](TwoResetShape.lean) compiles against the **unchanged original** `OneResetCount.lean`, `OddConeMass`, `UpperTail`, and `inverseAt` source in successful opt-in Lean CI [41759655753](https://github.com/FlareZ123/bb6/actions/runs/41759655753), at source commit `315d945e6010160094533b5431b89eb1aec7e82a`. The final theorem `BB6.Agent43.counted_cone_two_reset_shape` has only `[propext, Classical.choice, Quot.sound]` axioms (and no `sorryAx`). It gives the **exact original-source** decomposition of any `CountCone` history with two positive-depth resets as
+
+`UpperTail ; inverseAt(t₁≥1) ; UpperTail ; inverseAt(t₂≥1) ; UpperTail`.
+
+All intervening zero-depth inverse edges are admitted and not omitted by this decomposition. The proof is entirely structural induction on original `CountCone`. This improves the source alignment of the candidate but **does not yet discharge the arithmetic-bridge hypotheses for those genuine histories**, so no new wall exclusion is claimed.
