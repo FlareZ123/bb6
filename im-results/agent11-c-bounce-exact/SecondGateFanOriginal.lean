@@ -15,19 +15,19 @@ theorem second_gate_incoming_edge (s t : Nat) :
     some (FanArithmetic.x s t, FanArithmetic.y s t) := by
   have hbound := FanArithmetic.bounds s t
   have hA := FanArithmetic.a_ge_b s t
-    have hB : FanArithmetic.b s t=3*FanArithmetic.m s t+4 := rfl
-    have hp : FanArithmetic.p s t+3=4*FanArithmetic.a s t := by
-      unfold FanArithmetic.p
-      omega
-    have h0 : FanArithmetic.p s t≠0 := by omega
-    have h1 : FanArithmetic.p s t≠1 := by omega
-    have hk0 : FanArithmetic.q s t≠0 := by omega
-    have hregion : ¬(2*FanArithmetic.q s t≤FanArithmetic.p s t) := by omega
-    have heven : (FanArithmetic.p s t-1)%2=0 := by omega
-    have hy : 5≤FanArithmetic.y s t := by
-      have hD := FanArithmetic.d_ge s t
-      have heq := FanArithmetic.y_eq s t
-      omega
+  have hB : FanArithmetic.b s t=3*FanArithmetic.m s t+4 := rfl
+  have hp : FanArithmetic.p s t+3=4*FanArithmetic.a s t := by
+    unfold FanArithmetic.p
+    omega
+  have h0 : FanArithmetic.p s t≠0 := by omega
+  have h1 : FanArithmetic.p s t≠1 := by omega
+  have hk0 : FanArithmetic.q s t≠0 := by omega
+  have hregion : ¬(2*FanArithmetic.q s t≤FanArithmetic.p s t) := by omega
+  have heven : (FanArithmetic.p s t-1)%2=0 := by omega
+  have hy : 5≤FanArithmetic.y s t := by
+    have hD := FanArithmetic.d_ge s t
+    have heq := FanArithmetic.y_eq s t
+    omega
   have hbounce :
       (bounce (FanArithmetic.p s t-1)
         (2*FanArithmetic.q s t-FanArithmetic.p s t+3)).2 =
