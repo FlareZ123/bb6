@@ -28,7 +28,7 @@ theorem backwardHit_iff (fuel : Nat) : ∀ p : Nat × Nat,
     · rintro ⟨n,hn,h⟩
       have hn0 : n=0 := by omega
       subst n
-      simp only [run, Option.some.injEq] at h
+      simp only [BB6.Agent8Section.run, Option.some.injEq] at h
       exact h.symm
   | succ fuel ih =>
     intro p
@@ -55,7 +55,7 @@ theorem backwardHit_iff (fuel : Nat) : ∀ p : Nat × Nat,
         cases n with
         | zero =>
           have hp : p=(5,1) := by
-            simp only [run, Option.some.injEq] at htrace
+            simp only [BB6.Agent8Section.run, Option.some.injEq] at htrace
             exact htrace.symm
           exact False.elim (hroot hp)
         | succ n =>
