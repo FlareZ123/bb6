@@ -205,3 +205,17 @@ For **every odd natural `m`**, let `T_m=(6m+5,4^(m+1)*(3m+4)-6m-6)`. There is an
 The index 0 is the unique direct predecessor `(D-3,(Y-2)/2)`; indices 1 through `m` are exactly the `m` high-bounce sources of previously proved `FanArithmetic.source m`. The `a=1` exceptional sector disappears because `3m+4` is odd and greater than one, so `D=4^(m+1)(3m+4)` cannot be a power of two. The high-source bounce depth is constrained to `2s+1` with `s<m`, which is proved by cancellation and parity, without a simulation cutoff. Direct/high disjointness uses an explicit rank factor inequality, and the high fan injectivity was already independently source certified.
 
 This **formally proves the odd-`m` specialization** of the general tentative cardinal formula in `SecondGateExactFiber.md` and improves previous source-certified `≥m` to **exactly `m+1`** for every odd `m`. The even-`m` valuation-dependent cardinality remains an arithmetic derivation awaiting formal enumeration. All these predecessors can be synthetic; nothing here proves `T_m` reachable from the genuine blank tape or settles Machine C or BB(6). Work next on a true-root predecessor reduction using this finite exact image and on the residual even-`m` family.
+
+### 2026-11-04 23:05 UTC: exact all-time blank-origin reduction with linear-sized inverse list
+
+**Full source CI [41930762408](https://github.com/FlareZ123/bb6/actions/runs/41930762408) SUCCESS**, head `bad418645d7e19495480c1b5f17e26be81ee77e7`; `BB6.Agent11Ray.odd_ray_root_reduction`, `oddRayParentList_exact` print only `[propext, Classical.choice, Quot.sound]` and no sorryAx. File [SecondRayOddReach.lean](SecondRayOddReach.lean) builds on the proven exact odd-`m` predecessor count. It proves the genuine blank-seed equivalence:
+
+```lean
+m%2=1 →
+  (∃ n, run secNext n (some (5,1)) = some T_m)
+  ↔
+  (∃ i : Fin (m+1),
+    ∃ n, run secNext n (some (5,1)) = some (oddRayIndexed m i))
+```
+
+The same file constructs the full exact `oddRayParentList m`, proves `length = m+1`, and source-proves `(a,k)∈oddRayParentList m ↔ secNext(a,k)=some T_m`. This replaces the old brute `O((X+2Y)^2)` predecessor candidate enumeration for this entire odd-`m` target family with a list of exactly `m+1` entries, independently of exponentially large target coordinates. The result is an **all-time genuine blank-section reachability equivalence**, while the truth of either side remains unresolved in general. It is a promising frontend for stronger residual-root invariants or efficient backward proof searches, but is not a stopping-exclusion theorem.
