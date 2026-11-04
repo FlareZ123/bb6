@@ -10,14 +10,13 @@ namespace BB6.Agent46
 
 /-- Two source-authenticated backward section links force the affine
     mod-four-forbidden ancestor from every genuine blank Q(q) visit. -/
-theorem s25_two_step_forces_bad (q : Nat) :
+theorem s25_three_step_forces_bad (q : Nat) :
     BB6.Agent3.CReach (35584*q+6939) (14976*q+2921) →
       BB6.Agent3.CReach (44120*q+8593) (10708*q+2085) := by
   rintro ⟨time,hr⟩
   cases time with
   | zero =>
     simp [BB6.Agent8Section.run] at hr
-    omega
   | succ t =>
     cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
     | none =>
@@ -34,7 +33,6 @@ theorem s25_two_step_forces_bad (q : Nat) :
       cases t with
       | zero =>
         simp [BB6.Agent8Section.run] at hparent
-        omega
       | succ u =>
         cases hp2 : BB6.Agent8Section.run secNext u (some (5,1)) with
         | none =>
@@ -49,24 +47,28 @@ theorem s25_two_step_forces_bad (q : Nat) :
               BB6.Agent8Section.run secNext u (some (5,1)) =
                 some (22704*q+4423,21416*q+4172) := by
             simpa only [hb,hc] using hp2
-          obtain ⟨v,hv⟩ :=
-            (BB6.Agent15.blank_reach_iff_affine
-              (22704*q+4423) (21416*q+4172)
-              (by omega) (by omega) (by omega)).mp ⟨u,hparent2⟩
-          have heq :
-              ((22704*q+4423)+(21416*q+4172)-2,
-                ((21416*q+4172)-2)/2) =
-                (44120*q+8593,10708*q+2085) := by
-            apply Prod.ext <;> omega
-          rw [heq] at hv
-          exact ⟨v,hv⟩
+          cases u with
+          | zero =>
+            simp [BB6.Agent8Section.run] at hparent2
+          | succ v =>
+            cases hp3 : BB6.Agent8Section.run secNext v (some (5,1)) with
+            | none =>
+              simp [BB6.Agent8Section.run,hp3] at hparent2
+            | some p =>
+              rcases p with ⟨d,e⟩
+              have hed3 : secNext (d,e) =
+                  some (22704*q+4423,21416*q+4172) := by
+                simpa [BB6.Agent8Section.run,hp3] using hparent2
+              obtain ⟨hd,he⟩ := s25_third_inverse q d e hed3
+              refine ⟨v,?_⟩
+              simpa only [hd,he] using hp3
 
 /-- A new all-time exclusion of the surviving s=25 modulo 128
     Machine C affine low feeder class, under authentic blank reachability. -/
 theorem blank_no_s25_affine (q : Nat) :
     ¬ BB6.Agent3.CReach (35584*q+6939) (14976*q+2921) := by
   intro h
-  obtain ⟨t,ht⟩ := s25_two_step_forces_bad q h
+  obtain ⟨t,ht⟩ := s25_three_step_forces_bad q h
   have hforbidden := BB6Agent38.blank_section_mod4 t
       (44120*q+8593) (10708*q+2085) ht (by omega) (by omega)
   have hfirst := (Prod.mk.inj hforbidden).1
@@ -105,7 +107,7 @@ theorem blank_no_low_halt_depth30632 (m k : Nat)
   rw [hk] at h
   exact blank_no_s25_one_gate (k/32768) h
 
-#print axioms s25_two_step_forces_bad
+#print axioms s25_three_step_forces_bad
 #print axioms blank_no_s25_affine
 #print axioms blank_no_s25_one_gate
 #print axioms blank_no_low_halt_depth30632
