@@ -137,6 +137,96 @@ theorem forcedExcluded_sound (a b : Nat)
     (forcedNormalize a b).1 (forcedNormalize a b).2 hk hpos heven
   exact hbad hh
 
+
+private theorem root_odd_one_step_iff (n a b : Nat)
+    (ha:13≤a) (ho:a%2=1) (hb:b%8≠2) :
+    BB429.run (n+1) (0,0)=some (a,b) ↔
+    BB429.run n (0,0)=some ((a-3)/2,b+a) := by
+  constructor
+  · intro hn
+    change (BB429.run n (0,0)).bind BB429.next=some (a,b) at hn
+    cases hp : BB429.run n (0,0) with
+    | none => simp [hp] at hn
+    | some p =>
+      simp only [hp,Option.bind_some] at hn
+      rcases BB429LowOddMod8.admissible_odd_predecessor p.1 p.2 a b hn ho ha
+        (fun hx he => BB429LowOddMod8.rooted_even_parity n p.1 p.2 hp hx he)
+          with hfirst | hbad
+      · obtain ⟨hx,hy⟩ := hfirst
+        have he : p=((a-3)/2,b+a) := Prod.ext (by omega) (by omega)
+        simpa only [he] using hp
+      · exact False.elim (hb hbad)
+  · intro hn
+    change (BB429.run n (0,0)).bind BB429.next=some (a,b)
+    simp only [hn,Option.bind_some]
+    exact odd_forward a b ha ho
+
+private theorem root_even_one_step_iff (n a b : Nat)
+    (ha:6≤a) (he:a%2=0) (hb:b%4=2) :
+    BB429.run (n+1) (0,0)=some (a,b) ↔
+    BB429.run n (0,0)=some (a-3+(b-2)/4,b/2) := by
+  constructor
+  · intro hn
+    change (BB429.run n (0,0)).bind BB429.next=some (a,b) at hn
+    cases hp : BB429.run n (0,0) with
+    | none => simp [hp] at hn
+    | some p =>
+      simp only [hp,Option.bind_some] at hn
+      obtain ⟨_,_,hx,hy⟩ := even_parent p.1 p.2 a b hn ha he
+      have heq : p=(a-3+(b-2)/4,b/2) := Prod.ext hx hy
+      simpa only [heq] using hp
+  · intro hn
+    change (BB429.run n (0,0)).bind BB429.next=some (a,b)
+    simp only [hn,Option.bind_some]
+    exact even_forward a b ha he hb
+
+/-- Number of strictly forced inverse macro-transitions, a total computable
+    function, independent of any unknown blank-tape halting question. -/
+def forcedDepth : (a b : Nat) → Nat
+ | a,b =>
+   if ho : 13≤a ∧ a%2=1 ∧ b%8≠2 then
+     forcedDepth ((a-3)/2) (b+a)+1
+   else if he : 6≤a ∧ a%2=0 ∧ b%4=2 then
+     forcedDepth (a-3+(b-2)/4) (b/2)+1
+   else 0
+termination_by a b => 2*a+b
+decreasing_by
+  all_goals
+    simp_wf
+    omega
+
+/-- Exact indexed time-transport, stronger than existence equivalence:
+    the target at time n+depth is equivalent to its normalized ancestor
+    at exactly time n, not merely at some unspecified time. -/
+theorem blank_run_iff_normalized_at_shift (a b n : Nat) :
+    BB429.run (n+forcedDepth a b) (0,0)=some (a,b) ↔
+    BB429.run n (0,0)=some (forcedNormalize a b) := by
+  generalize hz : 2*a+b=z
+  induction z using Nat.strongRecOn generalizing a b n with
+  | ind z ih =>
+      unfold forcedDepth forcedNormalize
+      by_cases ho : 13≤a ∧ a%2=1 ∧ b%8≠2
+      · rw [dif_pos ho,dif_pos ho]
+        rcases ho with ⟨ha,hodd,hb⟩
+        have hlt : 2*((a-3)/2)+(b+a)<z := by omega
+        rw [Nat.add_succ]
+        exact (root_odd_one_step_iff (n+forcedDepth ((a-3)/2) (b+a))
+          a b ha hodd hb).trans
+          (ih _ hlt ((a-3)/2) (b+a) n (by rfl))
+      · rw [dif_neg ho,dif_neg ho]
+        by_cases he : 6≤a ∧ a%2=0 ∧ b%4=2
+        · rw [dif_pos he,dif_pos he]
+          rcases he with ⟨ha,hev,hb⟩
+          have hlt : 2*(a-3+(b-2)/4)+b/2<z := by omega
+          rw [Nat.add_succ]
+          exact (root_even_one_step_iff (n+forcedDepth (a-3+(b-2)/4) (b/2))
+            a b ha hev hb).trans
+            (ih _ hlt (a-3+(b-2)/4) (b/2) n (by rfl))
+        · rw [dif_neg he,dif_neg he]
+          simp
+
+#print axioms blank_run_iff_normalized_at_shift
+
 #print axioms forcedExcluded_sound
 
 #print axioms blank_reach_iff_normalized
