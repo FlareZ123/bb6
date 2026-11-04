@@ -21,18 +21,9 @@ theorem even_band_scale_unique (u k j : Nat)
     rw [he] at hpow
     omega
 
-/-- If a target reset is in one even-return image band and has residue
-    different from 2 mod3, every possible genuine first-reset parent is
-    the unique even predecessor. This applies to general reset heights,
-    independently of the special #746 fatal family. -/
-theorem unique_even_parent_of_nonodd_residue
-    (u k h : Nat)
-    (hb : 6*2^k-1 ≤ u ∧ u ≤ 8*2^k-3)
-    (heq : 2*u = 8*2^k+h+k)
-    (hmod : u%3 ≠ 2)
-    (hp : ResetParent h u) : True := by
-  exact True.intro
-
+/-- If a reset target belongs to a given even-return dyadic image band
+    and has residue different from 2 mod3, any genuine first-reset parent
+    is its unique even predecessor, determined by the band's scale. -/
 theorem any_parent_equals_even
     (u k h q : Nat)
     (hb : 6*2^k-1 ≤ u ∧ u ≤ 8*2^k-3)
