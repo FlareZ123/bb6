@@ -87,7 +87,15 @@ theorem original_odd_ray_fibre_iff (m a k : Nat) (hm:m%2=1) :
         have hsm : FanArithmetic.m s t=m := by
           dsimp [FanArithmetic.m]
           omega
-        simpa only [rayX,rayY,rayD,hsm] using hedge
+        have hx : FanArithmetic.x s t=rayX m := by
+          dsimp [FanArithmetic.x,rayX]
+          rw [hsm]
+        have hy : FanArithmetic.y s t=rayY m := by
+          dsimp [FanArithmetic.y,rayY,rayD,FanArithmetic.d]
+          rw [hsm]
+          simp only [FanArithmetic.b]
+          rw [hsm]
+        simpa only [hx,hy] using hedge
       simpa only [ha,hk] using htarget
 
 #print axioms fan_from_normalized
