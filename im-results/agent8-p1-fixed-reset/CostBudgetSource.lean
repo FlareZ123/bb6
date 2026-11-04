@@ -11,7 +11,17 @@ theorem source_counted_cost_lt_exponent
     (hSmall : budget (n+2) z < 2^n) :
     m < n := by
   let K : Nat := 7*2^n-n-3
-  have hdom : n+4 ≤ 2^n := source_pow_beats_linear n (by omega)
+  have hdom_all : ∀ i : Nat, i+4+4 ≤ 2^(i+4) := by
+    intro i
+    induction i with
+    | zero => decide
+    | succ i ih =>
+        have hidx : (i+1)+4=(i+4)+1 := by omega
+        rw [hidx, Nat.pow_succ]
+        omega
+  have hidx : (n-4)+4=n := by omega
+  have hdom : n+4 ≤ 2^n := by
+    simpa only [hidx] using hdom_all (n-4)
   have hK : K+n+3 = 7*2^n := by dsimp [K]; omega
   have hroot : (14*2^n-2*n-16)+10 = 2*K := by dsimp [K]; omega
   obtain ⟨D,F,_,_,hpath,_⟩ :=
@@ -21,12 +31,12 @@ theorem source_counted_cost_lt_exponent
   have hmul : (2:Nat)^m ≤ 2^m*N := by
     have h := Nat.mul_le_mul_left (2^m) hNpos
     simpa only [Nat.mul_one] using h
-  have hpow : (2:Nat)^m < 2^n :=
-    lt_of_le_of_lt (Nat.le_trans hmul hBudget) hSmall
-  by_contra h
-  have hnm : n ≤ m := by omega
-  have hp : (2:Nat)^n ≤ 2^m := Nat.pow_le_pow_right (by decide) hnm
-  omega
+  have hpow : (2:Nat)^m < 2^n := by omega
+  by_cases hmn : m < n
+  · exact hmn
+  · have hnle : n ≤ m := by omega
+    have hp : (2:Nat)^n ≤ 2^m := Nat.pow_le_pow_right (by decide) hnle
+    omega
 
 #print axioms BB6.Agent8Reset.source_counted_cost_lt_exponent
 end BB6.Agent8Reset
