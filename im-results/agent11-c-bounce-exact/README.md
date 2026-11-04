@@ -124,3 +124,13 @@ Thus `SectionReach x y` is logically equivalent to a finite search `∃n≤x+2*y
 
 The new [SecondGateExactFiber.md](SecondGateExactFiber.md) derives, from already source-verified exact-image biconditionals, an arithmetic formula for the **complete one-step predecessor count** of a genuine second stopping family: `m+1+ceil(v₂(3m+4)/2)`. A literal simulator verified its constructed family for 75 parameter values and exhaustively enumerated all mass-bounded predecessors for `m=0,1,2`. The all-natural cardinality statement currently has a detailed symbolic proof in that note but **not yet a dedicated Lean kernel check**. No listed predecessor is claimed to be blank reachable.
 
+
+### 2026-11-04 19:40 UTC: globally finite inverse cone and acyclicity source-certified
+
+The successful follow-up [original-source CI 41899037396](https://github.com/FlareZ123/bb6/actions/runs/41899037396) (head `b52df986115fdf111016f477a1003123c448bb1b`) extends `SectionMassOriginal.lean` with three original-source theorems:
+
+- `run_generic_weight_growth`: from **any** initial section pair `(a,k)`, a successful `n`-step run ending at `(x,y)` implies `a+2k+2n≤x+2y`.
+- `no_positive_cycle`: there is no positive-length return to the same exact pair from **any** starting section pair.
+- `sourceCandidates_correct`: the executable list `sourceCandidates x y`, formed by filtering every pair in `[0,x+2y]^2` against the true `secNext`, contains **exactly all** immediate predecessors of `(x,y)`. Completeness relies on the proved rank growth, with no arbitrary counter cutoff.
+
+The CI job compiled against unchanged original `CLine`, `BounceCalc` and `FastSectionDef` definitions. The distinct `#print axioms` audits contain standard axioms only; inspect the job for the exact output. This is a general, kernel-checked decidable inverse-candidate interface. Its naive quadratic list is intentionally a correctness reference, while the earlier dyadic inverse grammar remains preferable for large targets. No nonhalting or bound claim follows.
