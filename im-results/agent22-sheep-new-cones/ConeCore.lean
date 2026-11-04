@@ -21,4 +21,14 @@ theorem not_10_at_node (j s d c : Nat) (hj : 20 ≤ j)
 
 #print axioms no_reach_if_reverse_closed
 #print axioms not_10_at_node
+theorem no_reach_without_incoming {start target : Nat}
+    (hdifferent : start ≠ target)
+    (hno : ∀ x, ¬ SheepEven.EvenEdge x target) :
+    ¬ SheepEven.EvenReach start target := by
+  apply no_reach_if_reverse_closed (B := fun x => x = target) rfl hdifferent
+  intro x y edge hy
+  subst y
+  exact False.elim (hno x edge)
+
+#print axioms no_reach_without_incoming
 end Agent22SheepCones
