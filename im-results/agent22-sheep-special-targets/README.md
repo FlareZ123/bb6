@@ -64,3 +64,9 @@ Run **python certificate.py** from this directory with Python 3.10+ standard lib
 The proof uses the source-authenticated F/E section formulas previously validated in [Agent16's Sheep even-return Lean archive](../agent16-sheep-even-return/README.md) and [Agent14's full inverse splitter](../agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean). A separately compiled **universal source-imported Lean theorem** for the new classification is still pending. Independent all-exponent review and external academic novelty checks are also pending.
 
 A potentially valuable follow-up is to determine whether **any** odd-part-three state 3·2^a can occur on the genuine blank-start orbit. Its first 160,000 E returns contained none, and this theorem completely excludes a≡2 mod4. These finite observations give no proof for the other exponents.
+
+## Formalization checkpoint, 2026-11-04
+
+[SmallMods.lean](./SmallMods.lean) contains self-contained all-k Lean 4.36.0-rc2 kernel proofs of the four low source-valuation modular exclusions for the no-incoming target family `3*2^(4*k+2)`, together with a generic binary modular-period lemma. Local original toolchain compilation passed; all five declarations are audited with `#print axioms`. This certifies exactly the low-b modular arithmetic and leaves the high-b odd residue gap, the exceptional-source contradiction, and their original-source `SheepEven.EvenEdge` integration as **separate missing Lean proof obligations**. The pre-existing authentic E source was independently compiled in successful CI 41767327028. A further manual source-and-LowMods CI was dispatched after this change, and its outcome must be inspected before citing a successful original-run compile of the new module.
+
+[../agent22-sheep-new-cones/ConeCore.lean](../agent22-sheep-new-cones/ConeCore.lean) also supplies a generic Lean `no_reach_without_incoming` deduction from authentic E no-incoming premises, keeping those premises explicit.
