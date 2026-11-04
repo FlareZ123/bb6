@@ -19,7 +19,7 @@ theorem nativeReduced_exact_length (T U : List Nat)
     (hp : _root_.W T + 45 = 2^k*(2*t+1)) :
     U.length = max T.length (k+2) := by
   exact S4Length.source_compact_length T U
-    ((nativeReduced_eq_compactNext T).symm ▸ hs) k t hp
+    ((nativeReduced_eq_compactNext T) ▸ hs) k t hp
 
 theorem nativeReduced_exact_tail (T U : List Nat)
     (hs : nativeReduced T = some U) (k t : Nat)
@@ -27,7 +27,7 @@ theorem nativeReduced_exact_tail (T U : List Nat)
     (hk : 1 ≤ k) (hlen : T.length ≤ k+1) :
     S4Length.Tail2 t U := by
   exact S4Length.source_compact_terminal_tail T U
-    ((nativeReduced_eq_compactNext T).symm ▸ hs) k t hp hk hlen
+    ((nativeReduced_eq_compactNext T) ▸ hs) k t hp hk hlen
 
 #print axioms nativeReduced_eq_compactNext
 #print axioms nativeReduced_exact_length
