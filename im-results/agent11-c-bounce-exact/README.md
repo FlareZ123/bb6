@@ -134,3 +134,23 @@ The successful follow-up [original-source CI 41899037396](https://github.com/Fla
 - `sourceCandidates_correct`: the executable list `sourceCandidates x y`, formed by filtering every pair in `[0,x+2y]^2` against the true `secNext`, contains **exactly all** immediate predecessors of `(x,y)`. Completeness relies on the proved rank growth, with no arbitrary counter cutoff.
 
 The CI job compiled against unchanged original `CLine`, `BounceCalc` and `FastSectionDef` definitions. The distinct `#print axioms` audits contain standard axioms only; inspect the job for the exact output. This is a general, kernel-checked decidable inverse-candidate interface. Its naive quadratic list is intentionally a correctness reference, while the earlier dyadic inverse grammar remains preferable for large targets. No nonhalting or bound claim follows.
+
+### 2026-11-04 20:07 UTC: source-certified fuel evaluator and rank-stopped search
+
+The original-source [manual CI 41903320825](https://github.com/FlareZ123/bb6/actions/runs/41903320825), on commit `cd282783f4d6816a34e95e5ede73225d52970b13`, succeeds and prints only standard Lean axioms for the entire new [SectionFuelOriginal.lean](SectionFuelOriginal.lean) proof chain.
+
+The new `bounceFuel` is a genuinely structurally recursive evaluator, and `bounceFuel_correct` proves it equal to the original well-founded `bounce` on every input when explicit fuel covers the height. `secNextFuel_eq` gives equality with the original `BB6.Agent46.secNext`; `runFuel_eq` connects its finite iteration with the original section dynamics. Unlike the original noncomputable-reduction path through source `bounce`, the fuel interpreter permits `by decide` to check individual exact section trajectories in Lean's kernel.
+
+The first direct `reachableFastBool_correct` characterizes all-time fixed-target reachability by a bounded scan. `hasHit_iff` verifies an equivalent single-pass trajectory scan, and `massStop_eq_hasHit` justifies an exact optimization: on an unsuccessful orbit, if the current weighted rank `a+2k` exceeds the target `x+2y`, subsequent visits to that target are mathematically impossible. `massStopFull_iff` proves the rank-stopped checker decides every fixed target, with no heuristic cap.
+
+Explicit source-checked **all-time** blank-section nonreachability certificates in this file use true members of the second stopping-parameter family `j=3m+1`:
+
+| parameter `m` | halting-parameter target `(x,y)` | proving manual source CI |
+|---:|---|---|
+| 0 | (5,10) | [41900737314](https://github.com/FlareZ123/bb6/actions/runs/41900737314) |
+| 1 | (11,100) | [41900737314](https://github.com/FlareZ123/bb6/actions/runs/41900737314) |
+| 2 | (17,622) | [41901631971](https://github.com/FlareZ123/bb6/actions/runs/41901631971) |
+| 3 | (23,3304) | [41902611570](https://github.com/FlareZ123/bb6/actions/runs/41902611570) |
+| 4 | (29,16354) | [41903320825](https://github.com/FlareZ123/bb6/actions/runs/41903320825) |
+
+The final job audit explicitly reports `[propext, Quot.sound]` for `massStop_eq_hasHit`, `massStopFull_iff`, `no_second_gate_m3` and `no_second_gate_m4`. These are five individual targets in an **infinite** class; many other gates are left untouched. Prior finite target exclusions using arithmetic inverse enumeration exist in this same dossier and elsewhere, so these certificates are presented as verification and reusable *proof technology* without asserting new frontier target discoveries. The complete Machine C / BB(6) problem is still open.
