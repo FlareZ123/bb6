@@ -76,3 +76,19 @@ Three reproducible text-archive bundles are stored here: `lean.tar.xz.b64.part00
 **Analytic consequence:** For every fixed k, the function `H_k(x)` is an explicit polynomial of degree `4^k` with nonnegative coefficients. Therefore `H_k(n+2)(3H_k(n+2)+3n+8)` grows polynomially and is eventually less than `7*2^n`. The adjacent-power growth test also eventually holds since its exponent is the fixed integer `2*4^k`. Thus the minimum number of positive-depth resets in a hypothetical critical affine-wall inverse history must diverge as the exponent n tends to infinity. This last **eventual-existence argument is elementary mathematical analysis, not separately formalized as a Lean quantifier over all k**. The general conditional tail theorem and its exhibited 4-/5-reset cases are fully kernel verified against source.
 
 This remains a **restricted P1 inverse-wall obstruction**; it does not decide high-cost exits, exceptional `c=1`, P1 nonhalting, or BB(6). It belongs in `im-results/` pending external originality review and larger reachability results.
+
+## Unconditional source-certified exponential-versus-reset-degree bound
+
+[Successful original-source Lean run 41760402128](https://github.com/FlareZ123/bb6/actions/runs/41760402128), on the unchanged P1 inverse definition. `SourceLower.lean` proves the **unconditional** source-side necessary inequality for every actual critical `CountCone` wall witness at `n>=14`, for *all* reset counts z:
+```
+7*2^n <= H_z(n+2) * (3*H_z(n+2)+3*n+8).
+```
+This statement has no bounded-history, low-budget, or unproven seed assumption.
+
+`BudgetGrowth.lean` (source-independent kernel verified) proves the explicit recursion `e_0=1`, `e_(z+1)=4*e_z+1` satisfies `H_z(x) <= (20*x)^e_z` for all x>0 and z. `SourceGrowth.lean` combines the source lower bound with the pure-growth upper bound, proving against authentic original P1 source:
+```
+7*2^n <= 8 * (20*(n+2))^(2*e_z).
+```
+This is an exact, fully quantified necessary relationship between the critical exponent n and the true count z of positive-depth inverse steps, holding at every proposed affine-wall witness. It makes the growing reset-complexity obstruction explicit without requiring a seed check. Its most important open connection is whether a second genuine-source invariant can cap the number or arrangement of resets and thereby force a contradiction. The two supplemental modules are in `growth.tar.xz.b64`, authenticated by their SHA-256 and CI workflow. Standard Lean axioms only.
+
+Mathematically the elementary inequality implies an asymptotic reset-count necessity `z = Ω(log n)` along any hypothetical infinite family of such wall witnesses. This logarithmic interpretation is a real-analysis consequence of the Lean statement and exponential dominance, rather than a separate Lean proof of a numerical-logarithm formula. No general P1 nonhalting claim follows.
