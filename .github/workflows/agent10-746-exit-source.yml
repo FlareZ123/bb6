@@ -37,6 +37,7 @@ jobs:
           lean -o "$b/FastShield.olean" "$b/FastShield.lean"
           lean -o "$b/RootMin256.olean" "$b/RootMin256.lean"
           lean -o "$b/SecondGap.olean" "$b/SecondGap.lean"
+          lean -o "$b/MiddleGap.olean" "$b/MiddleGap.lean"
           lean -o "$a/ReverseCertificate.olean" "$a/ReverseCertificate.lean"
           lean -o "$a/ReverseComplete.olean" "$a/ReverseComplete.lean"
           lean -o "$a/SurvivingExactGate.olean" "$a/SurvivingExactGate.lean"
