@@ -117,6 +117,46 @@ theorem one_left_odd_no_two (y u v p q : Nat)
   all_goals rcases h2 with h2 | h2 | h2
   all_goals omega
 
+/-- An odd/odd second-family input with the necessary stopping equation
+    modulo sixteen can never have three exact forced inverse steps.
+    No upper bound on the parameters is imposed. -/
+theorem oddodd_second_mod16_no_three
+    (j m k x1 y1 x2 y2 x3 y3 : Nat)
+    (hj : j%2=1) (hm : m%2=1)
+    (hmod : (k+j+3*m+5)%16=0)
+    (h01 : forcedEdge (2*j+3) k x1 y1)
+    (h12 : forcedEdge x1 y1 x2 y2)
+    (h23 : forcedEdge x2 y2 x3 y3) : False := by
+  simp only [forcedEdge,oddLowGate,evenSevenGate,evenAffineGate] at *
+  rcases h01 with h01 | h01 | h01
+  all_goals rcases h12 with h12 | h12 | h12
+  all_goals rcases h23 with h23 | h23 | h23
+  all_goals omega
+
+/-- Every odd-j / odd-m member of the genuine second stopping equation
+    has forced inverse depth at most two. -/
+theorem oddodd_second_gate_no_three
+    (j m k x1 y1 x2 y2 x3 y3 : Nat)
+    (hj : j%2=1) (hm : m%2=1)
+    (hgate : k+j+3*m+5 = 2^(2*m+2)*(j+3))
+    (h01 : forcedEdge (2*j+3) k x1 y1)
+    (h12 : forcedEdge x1 y1 x2 y2)
+    (h23 : forcedEdge x2 y2 x3 y3) : False := by
+  have hPdiv : 16∣2^(2*m+2) := by
+    change 2^4∣2^(2*m+2)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  obtain ⟨z,hz⟩ := hPdiv
+  have hd : 16∣k+j+3*m+5 := by
+    refine ⟨z*(j+3),?_⟩
+    calc
+      k+j+3*m+5 = 2^(2*m+2)*(j+3) := hgate
+      _ = (16*z)*(j+3) := by rw [hz]
+      _ = 16*(z*(j+3)) := by ac_rfl
+  have hmod : (k+j+3*m+5)%16=0 :=
+    Nat.mod_eq_zero_of_dvd hd
+  exact oddodd_second_mod16_no_three j m k x1 y1 x2 y2 x3 y3
+    hj hm hmod h01 h12 h23
+
 /-- Both universal bounds are attained by genuine, exact guarded inverse
     transitions, although these are synthetic section states rather than
     demonstrated points of the blank orbit. -/
@@ -140,6 +180,8 @@ theorem five_is_sharp :
 #print axioms no_three_mass_two
 #print axioms two_is_sharp
 #print axioms one_left_odd_no_two
+#print axioms oddodd_second_mod16_no_three
+#print axioms oddodd_second_gate_no_three
 #print axioms four_is_sharp
 #print axioms five_is_sharp
 end BB6.Agent29Depth
