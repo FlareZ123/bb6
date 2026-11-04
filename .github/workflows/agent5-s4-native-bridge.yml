@@ -1,0 +1,45 @@
+name: Agent 5 original Cryptids S4 compact epoch bridge (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch verified original source
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
+          test "$(git rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+      - name: Check exact original Cryptids epoch against existing compact map
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake exe cache get
+          lake build BusyBeaver.BB6.Accelerations.M_1RB0LD_1LC1RD_0LE1LA_0RB1RD_HHH0LF_1RA1LF
+          for pair in \
+            S4WeightedDrift:ab696fc6c6c27b6518cb78ffd0e9dda5292d39dbcea5fee98ae6b75f4735bba2 \
+            S4SourceShape:befc80875686ccc7e15ab0c02e114e7bbed86821b5d7442e35bb0ae19ee24539; do
+            module="${pair%%:*}"
+            hash="${pair#*:}"
+            base64 -d "$GITHUB_WORKSPACE/im-results/agent3-s4-weighted-drift/$module.lean.xz.b64" | xz -dc > "$module.lean"
+            echo "$hash  $module.lean" | sha256sum -c -
+          done
+          export LEAN_PATH=.:${LEAN_PATH:-}
+          lake env lean -o S4WeightedDrift.olean S4WeightedDrift.lean
+          lake env lean -o S4SourceShape.olean S4SourceShape.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-length/S4NativeCompact.lean" .
+          lake env lean S4NativeCompact.lean
