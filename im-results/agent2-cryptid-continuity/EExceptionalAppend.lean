@@ -46,3 +46,20 @@ theorem lifted_exception_source (s : DRegular.L) (k m q p : Nat)
     (DRegularSource.sourceSection ⟨3*(m+8^k*p)+4,q+1,1⟩)
     (BB6.Agent32EAll.output (m+8^k*p) q [])
     hroot (BB6.EExceptionalShift.e_source (m+8^k*p) q)
+
+/-- The exceptional source output preserves its full suffix under all
+    3^(k+1) unary lifts, including exceptional q=0 packets. -/
+theorem lifted_exception_output (k m q p : Nat) :
+    (BB6.Agent32EAll.output (m+8^k*p) q []).r =
+       List.replicate (8^(k+1)*p) true ++
+         (BB6.Agent32EAll.output m q []).r := by
+  have h := BB6.EExceptionalShift.output_shift m q (8^k*p)
+  have hp : 8^(k+1)*p=8*(8^k*p) := by
+    simp only [Nat.pow_succ]
+    ac_rfl
+  rw [hp]
+  exact h
+
+#print axioms lifted_exception_source
+#print axioms lifted_exception_output
+end BB6.EExceptionalAppend
