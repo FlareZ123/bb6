@@ -49,3 +49,22 @@ A correction during development matters: a first local transcription incorrectly
 This supplies an exact infinite-input link between the 2-adic near-halt statistic and the list depth. It is more precise than the already-known strict **weight** growth of the compact return transducer, and complements the prefix-compatible synthetic halting completions. It does not bound the number of steps spent at a fixed depth, and it does not rule out a future **exact power-of-two** value of `W(T)+45` on the true seeded orbit.
 
 Most useful follow-ups: formalize the suffix emitted at a length-expansion event in terms of the odd part `2t+1`; determine whether any genuine-seed history-sensitive invariant controls those odd parts; and, for stronger provenance, compose the existing source-shaped compact transport with the previously source-CI-verified original Cryptids S4 return equivalence in one unchanged-source verification job. Avoid duplicating Agent 3's weighted-growth theorem, Agent 7's fixed-prefix obstruction, or the existing general power-of-two gate.
+
+## Exact final two digits at length expansion (second proved theorem)
+
+The source-matched theorem [`S4SuffixBridge.lean`](S4SuffixBridge.lean), `S4Length.source_compact_terminal_tail`, strengthens the length result. Suppose `compactNext T = some U`, and `W(T)+45 = 2^k(2t+1)`, with `k≥1` and `T.length≤k+1`. Then there exists a list `V` such that
+
+```text
+U = V ++ [t+2, t-1].
+```
+
+Thus the two final digits at every successful growth by valuation `k≥max(1,|T|-1)` are completely determined by the odd part of `W(T)+45`, including all input zero digits and arbitrarily deep odd drains. They differ by exactly 3. The formula is defined for successful steps; no conclusion about the first failure is smuggled into it. In particular `t=0` cannot arise under these hypotheses, because that would require the power-of-two terminal failure. The `k=0` low-valuation case is excluded since final `bump17` then changes the first of the two output digits.
+
+Proof: [`S4Suffix.lean`](S4Suffix.lean) proves `done_terminal_tail` by induction on the exact `Done` evaluation derivation. The potential `a+1+2W(L)` halves under every odd branch, and when the initial valuation `k` is at least the input list length, every original stack digit is consumed before the positive-even terminal pair. At that point `a=2t` and the pair is `[t+2,t-1]`. `F_terminal_tail` shows the final `bump17` modifies only the leading digit, provided `k≥1`; [`S4SuffixBridge.lean`](S4SuffixBridge.lean) transports the result to Agent 3's unchanged source-shaped compact function. All source files compiled with Lean 4.36.0-rc2 and all final axiom audits contain exactly `[propext, Classical.choice, Quot.sound]`; no `sorry`.
+
+**Manual CI** [41773571439](https://github.com/FlareZ123/bb6/actions/runs/41773571439) **succeeded** against unchanged SHA-pinned original Agent 3 compact helper source and the new theorem sources. This establishes local source-shaped equivalence, not a direct unchanged-upstream Cryptids raw-machine import. External novelty remains unreviewed.
+
+Example: the modeled seed reaches an 18-digit stack at iteration 27,920 with `W(T)+45=2^19·70271`. The next successful output has 21 digits, ending in `[35137,35134]` because `t=(70271-1)/2=35135`. This one finite example is independent numeric illustration only.
+
+A potentially productive further step is to establish an exact all-input value for the **weighted deficit** after expansion, expressed in terms of `k,t` and the consumed digit quotients, and then test whether the actual blank-orbit's sequence of odd parts can ever equal 1. A length and suffix theorem alone does not exclude the root halt gate.
+
