@@ -50,6 +50,33 @@ theorem source_oddcone_wall_cost_logarithmic_gap
   have hwallD : D+3*m+2*n+4=K := by omega
   exact hword.wall_cost_logarithmic_gap hn hK hwallD
 
+private theorem source_dom_pow (n : Nat) (hn : 4 ≤ n) : n+4 ≤ 2^n := by
+  have hb : ∀ t:Nat, (t+4)+4 ≤ 2^(t+4) := by
+    intro t
+    induction t with
+    | zero => decide
+    | succ t ih =>
+        have hidx : (t+1)+4 = (t+4)+1 := by omega
+        rw [hidx, Nat.pow_succ]
+        omega
+  have heq : (n-4)+4 = n := by omega
+  simpa only [heq] using hb (n-4)
+
+/-- Direct instantiation for the n-critical genuine source odd inverse cone.
+    This includes every n=16*q+14. -/
+theorem source_critical_wall_cost_logarithmic_gap
+    (n b d m : Nat) (hn : 14 ≤ n)
+    (hcone : OddCone (14*2^n-2*n-16) 3 b d m)
+    (hwall : b=4*(m+n)) : 2^(n-m)<n := by
+  let K : Nat := 7*2^n-n-3
+  have hdom : n+4 ≤ 2^n := source_dom_pow n (by omega)
+  have hK : K+n+3=7*2^n := by dsimp [K]; omega
+  have hroot : (14*2^n-2*n-16)+10=2*K := by dsimp [K]; omega
+  exact source_oddcone_wall_cost_logarithmic_gap
+    (14*2^n-2*n-16) K n b d m hroot hn hK hcone hwall
+
+#print axioms BB6.Agent28.source_critical_wall_cost_logarithmic_gap
+
 #print axioms BB6.Agent28.source_oddcone_has_word
 #print axioms BB6.Agent28.source_oddcone_wall_cost_logarithmic_gap
 end BB6.Agent28
