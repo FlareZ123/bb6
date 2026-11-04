@@ -38,8 +38,7 @@ private theorem before_none (n : Nat)
             rcases b with _ | _ | d
             · simp [highLevelNext] at h
             · rfl
-            · simp only [highLevelNext] at h
-              split_ifs at h <;> cases h
+            · split_ifs at h <;> cases h
           exact ⟨n+1,a,by simpa only [hb] using hs⟩
 
 /-- The exact original Cryptids halting predicate means that its genuine
