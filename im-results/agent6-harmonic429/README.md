@@ -1,6 +1,18 @@
 # Agent 6: BB(6) #429 harmonic-gate and corridor transfer programme
 
-**Status (2026-11-03): substantive intermediate mathematics, locally Lean-kernel checked. No original blank-root halting decision, BB(6) exact value or universal BB(6) bound.** The full original DeepMind/Cryptids source-import chain remains unverified in GitHub CI because Actions jobs currently fail before executing.
+## 2026-11-04: original-source verification repaired, new infinite modular gates
+
+**Native pinned source verification is now successful:** manual [CI 41765557427](https://github.com/FlareZ123/bb6/actions/runs/41765557427), source job 126362985268, built the unchanged original DeepMind Cryptids `c86f15861709b76042998c5211c7b2f83991621b` accelerator under pinned Lean 4.35.0-rc4, then compiled the original checked-in Agent5/Agent6 local module chain and `SourceLadder.lean` with the actual `highLevelNext`. This includes `source_step_eq`, `source_run_eq` and source-connected return/finite blank checkpoint theorems with standard Lean axioms only. The previous CI blocker was a wrong targeted Mathlib-cache path. Changing the manually dispatched job to the established `lake exe cache get` workflow, without changing upstream mathematics, repaired it. The separate [CI 41766575228](https://github.com/FlareZ123/bb6/actions/runs/41766575228) standalone job also compiled the new `BB429Mod8.lean` against unchanged checked-in `BB429Rank.lean`.
+
+**New all-time accelerated blank-orbit modular restriction.** [BB429Mod8.lean](BB429Mod8.lean) proves `Allowed (u,w)` is preserved by every successful exact `BB429.next` from genuine accelerated start `(0,0)`. Its modular predicate admits 17 of the 32 possible pairs `(u%8,w%4)`. The universal theorem `blank_halting_u_residue` requires every actual accelerated halting configuration to satisfy `u%8∈{1,3,5}`, excluding five u classes mod8. [BB429Extra11.lean](BB429Extra11.lean) sharpens the modular requirement to `u%16∈{1,3,5,9,13}`: for every allowed predecessor, a successor with `u%16=11` cannot have `w%4=1`, while every halt has `w+1=2u`. This is a derived necessary condition with unconditional all-natural quantified hypotheses; it does not prove Machine #429 nonhalting.
+
+[SourceMod16.lean](SourceMod16.lean) transports that mod16 result to the unchanged Cryptids source accelerator using `SourceLadder.source_step_eq` and `source_run_eq`; at this documentation checkpoint, **the new source-native SourceMod16 module remains under the manual audit run** and must not be called native-source-certified before a successful job. The standalone BB429Extra11 Lean certificate uses standard foundation axioms, no `sorryAx` or `native_decide`; definitive GitHub CI provenance should be added after inspection. More limited finite-modulus BFS suggestions are computational proposals and not proven all-time results.
+
+These are **intermediate internal advances**, not a six-state universal census or an exact BB(6) value. Keep them under `im-results/`; external novelty remains unevaluated. The next mathematical step is to rule out a surviving genuine halt gate or produce a real blank-root halting witness rather than repeatedly increasing moduli.
+
+
+
+**Status update (2026-11-04): substantive intermediate mathematics, native original-source bridge successfully checked in CI 41765557427. No blank-root halting decision, BB(6) exact value or universal bound.** The historical 2026-11-03 report below predates this source verification.
 
 ## Machine and mathematical semantics
 
