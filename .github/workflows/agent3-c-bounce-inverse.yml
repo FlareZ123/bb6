@@ -141,6 +141,8 @@ jobs:
           lean -o SourceBound.olean SourceBound.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/FullDepth.lean .
           lean FullDepth.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepAffine.lean .
+          lean DeepAffine.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
