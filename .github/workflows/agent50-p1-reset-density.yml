@@ -1,0 +1,42 @@
+name: Agent50 P1 reset-density original-source Lean audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode and authenticate original Agent50 sources
+        run: |
+          set -e
+          for m in ResetBudget ResetSourceAlgebra ResetSourceBridge; do
+            base64 -d "im-results/agent50-p1-reset-density/$m.lean.xz.b64" | xz -d > "im-results/agent50-p1-reset-density/$m.lean"
+          done
+          printf '%s\n'             'cfc5104ae546ee196995dbff7bb7e46082244f65dde07a1ffb86eb151d1bd0da  im-results/agent50-p1-reset-density/ResetBudget.lean'             'f145e33a241d46568e175266f6c238e20a6d286764eb015a4219911dbee7fe1b  im-results/agent50-p1-reset-density/ResetSourceAlgebra.lean'             '7c5afd006bacb644465390fe3d1b02805995ea0631f1ef848b5e17e95de814d2  im-results/agent50-p1-reset-density/ResetSourceBridge.lean' | sha256sum -c -
+      - name: Compile original upstream inverse grammar and authentic density theorem
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          lean -o im-results/agent47-p1-finite-inverse/P1FiniteInverse.olean im-results/agent47-p1-finite-inverse/P1FiniteInverse.lean
+          lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
+          lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
+          lean -o im-results/agent47-p1-finite-inverse/P1InverseLog.olean im-results/agent47-p1-finite-inverse/P1InverseLog.lean
+          lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
+          lean -o im-results/agent28-p1-word-automaton/OddWordCost.olean im-results/agent28-p1-word-automaton/OddWordCost.lean
+          lean -o im-results/agent28-p1-word-automaton/OddWordSourceBridge.olean im-results/agent28-p1-word-automaton/OddWordSourceBridge.lean
+          lean -o im-results/agent28-p1-word-automaton/DefectTransport.olean im-results/agent28-p1-word-automaton/DefectTransport.lean
+          lean -o im-results/agent28-p1-word-automaton/OneResetTwoAdic.olean im-results/agent28-p1-word-automaton/OneResetTwoAdic.lean
+          lean -o im-results/agent50-p1-reset-density/ResetBudget.olean im-results/agent50-p1-reset-density/ResetBudget.lean
+          lean -o im-results/agent50-p1-reset-density/ResetSourceAlgebra.olean im-results/agent50-p1-reset-density/ResetSourceAlgebra.lean
+          lean im-results/agent50-p1-reset-density/ResetSourceBridge.lean
