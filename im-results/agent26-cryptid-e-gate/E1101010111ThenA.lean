@@ -1,11 +1,12 @@
 import Lean.Elab.Tactic.Omega
-import E1101010111Pairs
+import E1101010111ThenB
 import ABridgeCode
 
 namespace BB6.Agent26EThenA
 
 open CryptidBoundary
 open BB6.Agent26E1101010111
+open BB6.Agent26EThenB
 
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 4096
