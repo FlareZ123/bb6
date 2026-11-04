@@ -67,6 +67,45 @@ theorem source_blank_halts_iff_filtered :
 
 #print axioms bad_level_unreachable
 #print axioms source_blank_halts_iff_filtered
+/-- The complete true-blank stopping gateway is a single family of
+    affine rays in u, indexed by dyadic depth m, minus one
+    source-certified forbidden residue class. -/
+theorem source_blank_halts_iff_affine_rays :
+    BB6.CReachBridge.RunHalts ↔
+      ∃ time u k m : Nat,
+        BB6.Agent8Section.run secNext time (some (5,1)) =
+          some (2*u+1,k) ∧
+        k+u+3*m+4 = 4^(m+1)*(u+2) ∧
+        (u+m)%4 ≠ 1 := by
+  rw [source_blank_halts_iff_filtered]
+  constructor
+  · rintro ⟨time,u,k,m,hr,he,hmod⟩
+    have hs : 4^(m+1)*(2*u+1+3)=2*(4^(m+1)*(u+2)) := by
+      rw [show 2*u+1+3=2*(u+2) by omega]
+      ac_rfl
+    rw [hs] at he
+    exact ⟨time,u,k,m,hr,by omega,hmod⟩
+  · rintro ⟨time,u,k,m,hr,he,hmod⟩
+    have hs : 4^(m+1)*(2*u+1+3)=2*(4^(m+1)*(u+2)) := by
+      rw [show 2*u+1+3=2*(u+2) by omega]
+      ac_rfl
+    refine ⟨time,u,k,m,hr,?_,hmod⟩
+    rw [hs]
+    omega
+
+/-- Any nonzero source stopping input has right counter 1 modulo 3. -/
+theorem source_positive_stopping_right_mod3 (a k : Nat)
+    (ha : 0<a) (h : secNext (a,k)=none) : k%3=1 := by
+  have hp := (source_section_halts_iff_one_equation a k).mp h
+  rcases hp with h0 | ⟨_,hodd,m,hm⟩
+  · omega
+  · obtain ⟨u,m,he,hr⟩ :=
+      (one_four_power_iff_affine_rays a k).mp ⟨ha,hodd,m,hm⟩
+    exact affine_ray_right_mod3 u k m hr
+
+#print axioms source_blank_halts_iff_affine_rays
+#print axioms source_positive_stopping_right_mod3
+
 #print axioms source_section_halts_iff_one_equation
 #print axioms source_blank_halts_iff_one_equation
 end BB6.Agent1Unified
