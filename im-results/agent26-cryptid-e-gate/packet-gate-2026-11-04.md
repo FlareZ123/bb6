@@ -31,9 +31,9 @@ Original source Lean 4.36.0-rc2 CI [41866562409](https://github.com/FlareZ123/bb
 
 Independent literal-table [check_new_returns.py](./check_new_returns.py) tests 2,311 parameterized synthetic configurations at exact first physical return times and whole physical tape, with fixed seed 20261104; this is supporting finite evidence.
 
-Agent31's abstract packet notation `M(a,q,p;Y)=I_a((01)^q 0 1^p Y)` with fixed tail `Y=01010111` enters the new E branch in the p=2 exceptional case. The source-proved reset is
-`M(3k+4,q,2;01010111) → M(8k+5,0,2q+6;01010111)`.
-This boundary can *increase* the naive `q+p` rank. It does not prove global closure, a blank-reachable orbit, nor either eventual halting or nonhalting.
+Agent31's abstract packet notation `M(a,q,p;Y)=I_a((01)^q 0 1^p Y)` with fixed tail `Y=01010111` enters the new E branch in the p=2 exceptional case. The source-proved reset, with **the marker changing**, is
+`M(3k+4,q,2;01010111 Z) → M(8k+5,0,2q+6;010101010 Z)`.
+The extra final zero in `010101010` is a *physical tape cell* whenever arbitrary suffix `Z` is nonempty; for `Z=[]` only, it can be erased as an implicit right blank. Critically, an earlier draft claimed the output retains the original suffix `01010111`; **that claim was false** and is explicitly withdrawn. The correct source theorem outputs `0 1^(2q+6) (01)^4 0 Z`. Since the tail marker changes and the new `p` may increase, a single fixed-tail rank argument is insufficient. This result does not establish a global closure, blank-orbit reachability or a halt decision.
 
 Future research: identify a global packet invariant or amortized rank surviving the reset, and connect long synthetic chains to authentic blank-origin reachability.
 
