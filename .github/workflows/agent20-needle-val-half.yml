@@ -23,7 +23,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          lean im-results/agent20-needle-coprime/NeedleValHalf.lean
+          export LEAN_PATH=".:$(lean --print-prefix)/lib/lean"
+          cd im-results/agent20-needle-coprime
+          lean -o NeedleValHalf.olean NeedleValHalf.lean
+          lean NeedleInverseComplete.lean
 
   original-source:
     runs-on: ubuntu-latest
@@ -63,3 +66,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleValHalf.olean NeedleValHalf.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleValHalfSource.lean" .
           lake env lean NeedleValHalfSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleInverseComplete.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleInverseComplete.olean NeedleInverseComplete.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleInverseCompleteSource.lean" .
+          lake env lean NeedleInverseCompleteSource.lean
