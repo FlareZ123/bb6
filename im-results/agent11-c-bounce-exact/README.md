@@ -219,3 +219,25 @@ m%2=1 →
 ```
 
 The same file constructs the full exact `oddRayParentList m`, proves `length = m+1`, and source-proves `(a,k)∈oddRayParentList m ↔ secNext(a,k)=some T_m`. This replaces the old brute `O((X+2Y)^2)` predecessor candidate enumeration for this entire odd-`m` target family with a list of exactly `m+1` entries, independently of exponentially large target coordinates. The result is an **all-time genuine blank-section reachability equivalence**, while the truth of either side remains unresolved in general. It is a promising frontend for stronger residual-root invariants or efficient backward proof searches, but is not a stopping-exclusion theorem.
+
+### 2026-11-04 23:18 UTC: exact `m+2` incoming fibre for all `m ≡ 2 (mod 4)`, original-source Lean certified
+
+**Pinned original-source Lean [CI 41932492362](https://github.com/FlareZ123/bb6/actions/runs/41932492362) SUCCESS**, at `c7d0818e26ed64cf06b758af299368e7faad8db8`, compiled [SecondRayEven2.lean](./SecondRayEven2.lean) and [SecondRayEven2Count.lean](./SecondRayEven2Count.lean) with the unchanged Agent46 section and previously source-checked Agent3/Agent11 dependency chain. Both `BB6.Agent11Ray.original_even2_ray_fibre_iff` and `even2_exact_incoming_count` have axiom sets exactly `[propext, Classical.choice, Quot.sound]`, no sorryAx.
+
+For **all** `m%4=2`, all possible incoming sources to genuine second-gate ray `T_m=(X,Y)`, `D=4^(m+1)(3m+4)`, have an **exact iff** decomposition:
+- direct parent `(D-3,(Y-2)/2)`;
+- the `m` previously published high-bounce fan parents `FanArithmetic.source m s`, `0≤s<m`;
+- exactly one additional high-bounce boundary source `even2Boundary m=(3m+1,D-(15m+18)/2)`.
+
+The exceptional one-left sector is impossible since `3m+4 ≡2 (mod4)` and `3m+4>2`; each high source has exact recursion-depth form `2s+1` and `s≤m`. The new boundary is source-valid and distinct from direct and every fan source. The `Fin(m+2)` indexing is injective and exhausts the entire genuine section preimage, yielding **exactly `m+2` distinct immediate incoming edges** at every such `m`. This does not decide genuine blank-root reachability.
+
+### 2026-11-04 23:24 UTC: exact `m+2` for all positive `m ≡ 0 (mod 8)`
+
+**Source-checked [CI 41933286907](https://github.com/FlareZ123/bb6/actions/runs/41933286907) SUCCESS** at `968a41c15b96cc6dae65a3da1f66b108d2693775`. [SecondRayEven0.lean.xz.b64](./SecondRayEven0.lean.xz.b64) is the compressed Lean original proof; manually reproducible using `base64 -d | xz -d`, SHA256 of the decompressed file `3534767dfcb3b0bdd60309ce5754de4c31d2aff6ab0ce06e5ea422c0e147fd3c`. The manual CI workflow verifies the checksum and then compiles the reconstructed file against the **unchanged genuine source**. All final theorem axiom audits `[propext, Classical.choice, Quot.sound]`, no sorryAx.
+
+For every `m%8=0` with `0<m`, `3m+4` is divisible by 4 and has *exactly two factors of 2*, and its quotient `(3m+4)/4` is odd and greater than 1. Therefore the exceptional one-left sector is impossible; the high branch's depth `n=2s+1` has `s≤m`, giving the same exhaustive direct + m-old-fan + one-high-boundary iff as the 2-mod-4 ray. In `even0_exact_incoming_count`, `even2Indexed m` is a one-to-one and onto listing with **exactly `m+2` predecessors**. This covers a further infinite disjoint parameter cylinder, now giving explicit exact counts for all odd `m`, all 2-mod-4 `m`, and all positive 0-mod-8 `m`. Pending 0 base parameter source proof in [SecondRayZero.lean](./SecondRayZero.lean), the only unresolved residue of this particular exact cardinal program is `m≡4 (mod8)`, which has unbounded two-adic valuation of `3m+4`. None of these synthetic predecessor counts is a proof of the true blank section stopping or nonstopping.
+
+### General source-exact root-graph frontend for **every** stopping-family parameter (all m)
+
+[SecondRayAllList.lean](./SecondRayAllList.lean), fully original-source Lean verified [CI 41931342207](https://github.com/FlareZ123/bb6/actions/runs/41931342207), proves the exact reverse source list for **every natural m**. The generated candidate list has at most `2*Nat.log2(D)+3` entries, where `D=4^(m+1)(3m+4)`; it enumerates direct, a=1, and high sources via bounded recursion depths, filtering with the faithful source `secNext`. `rayAllParents_exact` establishes iff with source transition; `all_ray_root_reduction` establishes genuine unbounded blank-root reachability of `T_m` iff at least one source in that list is genuinely root-reachable. The list's count scales `O(log D)`, hence linear in `m` for these exponentially sized targets, unlike the previously brute quadratic rank-bounded candidate construction. It is a syntactic exhaustive enumeration and proof-usable all-time reduction, not a root-outcome classifier.
+
