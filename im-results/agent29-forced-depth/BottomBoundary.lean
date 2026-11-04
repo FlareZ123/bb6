@@ -12,7 +12,8 @@ theorem right_one_only_special (a k x : Nat)
     a=1 ∧ k=0 ∧ x=5 := by
   have hp := (section_preimage_all_iff a k x 1).mp h
   unfold sectionPreimageAll at hp
-  split_ifs at hp <;> omega
+  repeat (split at hp)
+  all_goals omega
 
 /-- The blank-start section visits right counter one only at time zero. -/
 theorem no_post_blank_right_one (n x : Nat) :
@@ -45,12 +46,14 @@ theorem odd_four_only_direct_parent (a k x : Nat)
     a=x+2 ∧ k=1 := by
   have hp := (section_preimage_all_iff a k x 4).mp h
   unfold sectionPreimageAll at hp
-  split_ifs at hp <;> try omega
+  repeat (split at hp)
   all_goals
-    rcases hp with ⟨_,n,hs,_⟩
-    have h8 : (2^n*8)%2=0 := by omega
-    have hev := even_bounce_sum n a
-    omega
+    first
+    | omega
+    | (rcases hp with ⟨_,n,hs,_⟩
+       have h8 : (2^n*8)%2=0 := by omega
+       have hev := even_bounce_sum n a
+       omega)
 
 /-- The sole odd-first/right-four state on the entire genuine
     blank section orbit is (3,4), and it occurs exactly at time one. -/
