@@ -41,6 +41,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed80-backward/First80Source.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed80-backward/First80Arithmetic.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed80-backward/First80Stop.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed80-backward/Both80Source.lean" .
           python3 -c "import os,hashlib,base64,gzip,tempfile,fcntl; from pathlib import Path; src=Path(os.environ['GITHUB_WORKSPACE'])/'im-results/agent4-mixed80-backward/First80.lean.gz.b64'; data=gzip.decompress(base64.b64decode(src.read_text().strip())); assert hashlib.sha256(data).hexdigest()=='ccbdee97223d0fb09899a3a72ac758aa9b3cce43c7ab20c326e972c4371e4036'; lock=open('First80.lean.lock','w'); fcntl.flock(lock,fcntl.LOCK_EX); tmp=tempfile.NamedTemporaryFile(dir='.',delete=False); tmp.write(data); tmp.close(); os.replace(tmp.name,'First80.lean')"
           export LEAN_PATH=.
           lean --version
@@ -55,4 +56,5 @@ jobs:
           lean -o First80.olean First80.lean
           lean -o First80Source.olean First80Source.lean
           lean -o First80Arithmetic.olean First80Arithmetic.lean
-          lean First80Stop.lean
+          lean -o First80Stop.olean First80Stop.lean
+          lean Both80Source.lean
