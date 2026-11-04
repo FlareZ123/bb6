@@ -44,7 +44,7 @@ theorem actual_machine_halt_requires_six_gate (h : IsHalt target) :
   obtain ⟨n, hn⟩ := isHalt_iff_highLevel_acceleration.mp h
   have hiter : ((Option.bind · highLevelNext)^[n] (some highLevelStart)) = none := by
     cases hi : ((Option.bind · highLevelNext)^[n] (some highLevelStart)) with
-    | none => exact hi
+    | none => rfl
     | some t => simp [hi] at hn
   have hrun : BB429SourceLadder.sourceRun n highLevelStart = none := by
     rw [source_run_eq_iterate]
