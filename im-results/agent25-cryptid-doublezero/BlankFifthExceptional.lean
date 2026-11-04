@@ -43,7 +43,7 @@ theorem fifthReentry_original :
     (DRegularSource.sourceSection ⟨9*t5+4,5,1⟩)
     (DRegularSource.sourceSection ⟨64*t5+27,1,5⟩)
     fifthException_original
-    (by simpa only [show 64*t5+21+2*3=64*t5+27 by omega]
+    (by simpa only [bCost5, show 64*t5+21+2*3=64*t5+27 by omega]
          using BB6.Agent25BGeneral.exceptional_EB_general t5 3)
 
 #print axioms terminal4252_exact
