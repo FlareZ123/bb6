@@ -75,3 +75,17 @@ The kernel's printed axioms for the completed theorem are **[propext, Classical.
 **Physical raw-machine transfer:** [OriginalForward2048Gate.lean](OriginalForward2048Gate.lean) is prepared to compose the previously **original pinned-source CI-proved raw iff n>=1025** ([41895284713](https://github.com/FlareZ123/bb6/actions/runs/41895284713)) with the newly source-verified n<=2048 exclusion, giving `IsHalt target ↔ ∃ n≥2049, n%6∈{4,5}, ReachC (2,0) (fatal n,0)`. The distinct [original Cryptids pinned-source CI](../../.github/workflows/agent7-746-original-2048.yml) was dispatched; **do not present the physical n>=2049 theorem as kernel-certified until that exact CI passes**. The source-C n<=2048 statement itself is already fully kernel checked.
 
 The infinite family n>=2049 remains unresolved; no nonhalting, global six-state upper bound, or exact BB(6) value is asserted. Further repeated finite cutoffs have diminishing scientific value compared with a uniform all-index root-sensitive invariant or an authentic halting witness.
+
+
+## 2026-11-04 19:40 UTC: uniform all-index first-parent obstruction
+
+**Entire unchanged repository source-C dependency chain and two new quantified Lean proofs PASSED** in manual [Lean CI 41898993932](https://github.com/FlareZ123/bb6/actions/runs/41898993932). The more primitive all-index theorem had already separately passed [CI 41898336470](https://github.com/FlareZ123/bb6/actions/runs/41898336470). All of the final theorems use standard Lean axioms only, with no sorry or native_decide.
+
+[UniformFatalParent.lean](UniformFatalParent.lean) proves, for **every natural n≥4** and any genuine exact first-reset parent of `fatal(n)`, the following complete disjunction:
+
+- The even branch has the **unique explicit** predecessor height `h = 4*2^n - 3*n - 7`, with dyadic exponent exactly `k=n-1`.
+- Every odd branch has **positive** 2-adic valuation exponent `t≥1`. An odd inverse with `t=0` is ruled out for every fatal height.
+
+[UniformFatalMod9.lean](UniformFatalMod9.lean) strengthens this to a **single possible first-reset parent** whenever `n mod18 ∈ {10,11,16,17}`: the even height above. Indeed the odd inverse with `t≥1` would force `9 | (2*fatal(n)+5)`, but the exact modulo9 computation contradicts this for all four index classes. These four index classes cover two-thirds of the six surviving mod18 classes of `n mod6 ∈ {4,5}` (the other two classes are n%18=4,5). The quantified theorem is `CascadeUniformFatal.fatal_only_even_parent`. The proof is source-indexed to the **complete** first-reset grammar already certified by Agent10; it does not rely on finite prefixes or guessed inverse edges.
+
+This structural result does **not** imply exclusion from the blank-derived root. The unique immediate even predecessor may itself be reachable by an earlier chain of resets, and the remaining two modulo18 classes admit genuine synthetic odd ancestors. Its value is a uniform, exact all-index restriction that can simplify a future induction on entire inverse cones. External novelty and subsumption against Agent7's older synthetic inverse grammar must still be reviewed. It remains in `im-results/` for that reason.
