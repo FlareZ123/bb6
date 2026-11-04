@@ -71,3 +71,58 @@ It assembles five explicit infinite families with valuations 0, 6, 11, 17, and 4
 **Verification:** The actual combined `SpaceNeedleMod30.lean` source was independently compiled locally on Lean 4.36.0-rc2 against `SpaceNeedleOdd.olean` and `SpaceNeedleVal49.olean`. Its final axiom list is exactly `[propext, Quot.sound]`, no `sorry`, local original byte SHA256 `659f270b50bfbcd00a1b619b8bc6d04c781250ffb90c4fd1465d1dbc385745f7`. The committed source was reconstructed from three text fragments and checked token-identical to locally compiled proof (3365 Unicode codepoints, FNV-1a `2c069ac1`). This is local kernel verification of an arithmetic theorem. CI source-import verification of the entire unchanged original DeepMind machine remains unavailable due to the shared runner outage.
 
 **Scientific scope:** For every exponent residue modulo 30, there are arbitrarily large terminal powers with unrestricted legitimate one-step predecessors. This excludes a certain residue-only **incoming-edge-emptiness proof approach**. It says nothing about whether any such predecessor lies on the authentic blank-origin sequence `N1`. Earlier Agent48 source arithmetic and decimal-suffix results overlap; no external novelty claim, root decision, or improved BB(6) bound follows. We preserve this as an intermediate result.
+
+
+## Exact terminal inverse valuation wedge and certified enumeration (2026-11-04, Agent 20)
+
+**Scope: all original Space Needle high-level states, including synthetic predecessor sources; no true-blank orbit conclusion.** Exact source is `google-deepmind/cryptids@ced8f9f44f67a167d5ecc03e687b048c67926371`. Here a terminal is the power-of-two counter `d'=2^K-2` with `K≥1`, a potential preceding source is `d+2=2^v(2q+3)`, and its incoming edge exists exactly when
+
+```text
+2^K = 2^v (2q+3) + v + 3(q+1)
+    = (2^(v+1)+3) q + (3*2^v+v+3).
+```
+
+### Strongest bound and the one exception
+
+[NeedleCubicBound.lean](NeedleCubicBound.lean) is an *all-natural* Lean theorem:
+
+```lean
+theorem cubic_valuation_bound (q v K : Nat)
+    (h : NeedleInverse.equation q v K) :
+    (q=61 ∧ v=6 ∧ K=13) ∨ 3*v ≤ K+2
+```
+
+In particular **every** immediate terminal predecessor satisfies `v ≤ (K+2)/3`, except the *unique triple* `(q,v,K)=(61,6,13)`. Earlier [NeedleValHalf.lean](NeedleValHalf.lean) proves the sharper low-threshold preliminary bound `2v<K` universally; equality `K=2v` never occurs. The exception is an actual legal one-step source, witnessed by `2^6*(2*61+3)+6+3*(61+1)=2^13`, without any assertion of blank-root reachability.
+
+**Proof mechanism, no finite cutoffs:** the exact inverse equation forces the modular identity
+
+```text
+D = 2^(v+1)+3,
+4v ≡ 9*2^s+6 (mod D)   whenever K=2v+s.
+```
+
+The half-bound implies `s≥1`. If `K+2 < 3v`, then `s+3≤v`; both sides of the congruence are strictly below `D`, so `4v=9*2^s+6`. This equation has the one possible solution `s=1,v=6`, and the inverse equation uniquely forces `q=61`. These statements are proved for all natural parameters by the kernel-checked Lean lemmas `terminal_modular_gate`, `wedge_unique`, `cubic_valuation_bound`. No candidate-computation cutoff, empirically sampled trajectory or auxiliary assumption is used.
+
+[NeedleCubicEnumerate.lean](NeedleCubicEnumerate.lean) converts the theorem to a **complete executable inverse list**:
+
+```lean
+def cubicParents (K : Nat) : List (Nat × Nat) :=
+  (if K=13 then [(6,61)] else []) ++
+    (List.range ((K+2)/3+1)).filterMap fun v =>
+      (NeedleInverse.candidate v K).map fun q => (v,q)
+
+theorem cubicParents_spec (q v K : Nat) :
+    (v,q) ∈ cubicParents K ↔ NeedleInverse.equation q v K
+```
+
+For each tested valuation, `candidateQ v K=(2^K-bias v)/den v` is the **only** possible q; [NeedleInverseComplete.lean](NeedleInverseComplete.lean) proves candidate correctness and uniqueness by exact integer algebra. The reduced list searches at most `⌊(K+2)/3⌋+1` valuation slots plus a single explicit exceptional entry (counting also failed candidates); it gives all actual incoming one-step edges to a chosen terminal. The [source bridge](NeedleCubicEnumerateSource.lean) transfers the iff verbatim to `highLevelNext (.N (oddTower q v)) = some (.N (haltTower k))` with `K=k+1`.
+
+A complementary [NeedleGeneralInverse.lean](NeedleGeneralInverse.lean) proves a complete inverse enumeration for **every** ordinary destination counter `e`, using at most `⌊log₂(e+2)⌋+1` valuation candidates, with no terminal restriction. Its original-source bridge is [NeedleGeneralInverseSource.lean](NeedleGeneralInverseSource.lean). This is a reusable exact backward-search kernel, not a bound on an actual blank-root time.
+
+### Verification and research significance
+
+- **Original unchanged-source verification passed**, [manual GitHub Actions 41885221047](https://github.com/FlareZ123/bb6/actions/runs/41885221047): both standalone Lean 4.36.0-rc2 and pinned original DeepMind-source job compiled `NeedleCubicBound.lean`, `NeedleCubicBoundSource.lean`, and the earlier half-bound and general-inverse chain. A previous pinned source check for full general inverse succeeded at [41883568806](https://github.com/FlareZ123/bb6/actions/runs/41883568806). Kernel-reported axioms are only the standard Lean axioms, no sorry.
+- **Cubic executable-list/source verification:** a separate updated manual CI run is being checked. The local `NeedleCubicEnumerate.lean` compiled against real `NeedleCubicBound.olean` in Lean 4.36.0-rc2, only standard logical axioms; preserve this distinction pending pinned-source compilation.
+- Source-dependent theorem `NeedleCubicBoundSource.original_terminal_cubic_bound` states, for an original terminal `haltTower k`, the exact exception `(q,v,k)=(61,6,12)` or `3v≤k+3`. There is **no** result proving a given source is visited by blank N1, no root nonhalting theorem, no exact Busy Beaver bound, and no external-priority claim. These are intermediate methods in `im-results/`.
+
+**Next discriminating research:** combine the exhaustive predecessor generator with source-*reachable* predicates and an invariant of the actual blank N1 sequence, including maximal odd-run packets from Agent 48. Elimination of a whole surviving true-blank feeder family, or a genuine halt, is what can resolve Space Needle. Further arithmetic-only sharpening may improve proof-search efficiency but cannot classify the machine by itself.
