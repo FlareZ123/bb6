@@ -20,3 +20,18 @@ The original source module import and the raw physical Turing-machine semantics 
 The earlier proposed exclusion for n mod6 in 0,1,2,3 remains a **candidate full fatal-gate exclusion**, pending this precise chain bridge and source provenance. Complementary classes n mod6 in {4,5} admit source-C synthetic predecessor paths by [Agent 7's ResetChain.lean](../agent7-cascade-odd-fibers/ResetChain.lean); none of these proves blank reachability.
 
 No root-machine halting verdict, new BB(6) bound, or BB(6) exact value is established. Preserve intermediate findings under `im-results/`; external novelty is unreviewed.
+
+## 2026-11-04: Simultaneous blank-root fatal-index shielding through n=100
+
+**Scope:** The checked-in original-copy source-indexed `CascadeSource.Cstep` acceleration, with genuine post-initial root `(2,0)`. This is an all-time exclusion for the accelerated orbit, while the original third-party Cryptids high-level import is a separate proof obligation. Original six-state nonhalting and BB(6) remain open.
+
+[ManyShield.lean](ManyShield.lean) proves a general finite-prefix/monotone-cutoff inference rule `shieldMany_sound`: any finite exact C-step prefix avoiding a Boolean target predicate, followed by a state of mass `2a+b` strictly exceeding a common target-mass cap, excludes *all* targets selected by the predicate from the whole future orbit. A `none` transition also terminates this check soundly. This builds on Agent 7's `Mass.lean` and `LowGates.lean` finite-list/mass technique, independently generalized to a symbolic indexed family. The specific certificate checks up to 7,000 C episodes with common cap `2*(4*2^100-104)`; `badThrough 100` captures all fatal `c_n=4*2^n-n-4` for 4≤n≤100, n mod6∈{4,5}. Two finite `decide` coverage and mass bounds quantify the conclusion universally over n within this finite range.
+
+[RootMinIndex.lean](RootMinIndex.lean) converts `ReachC` to `Orbit`, combines this certificate with the existing all-natural four-class theorem `CascadeSmallFatal.all_four_class_indices` and the six small indices, and proves:
+
+- `no_fatal_through_100`: for **every** natural n≤100, `¬ReachC (2,0) (c_n,0)`;
+- `halt_requires_index_ge_101`: any reached `(a,1)` entails a reached fatal `(c_n,0)` at **n≥101** and n mod6∈{4,5}.
+
+The manual **unchanged checked-in dependency** [Lean CI run 41769574780](https://github.com/FlareZ123/bb6/actions/runs/41769574780) compiled `SourceMacro, Mass, SweepInvariant, RootTerminal, ResetAncestry, FatalExclusion, SmallFatal, GateNecessary, ExactGate, ManyShield, RootMinIndex` with Lean 4.36.0-rc2. It printed standard Lean axioms only and no `sorryAx`. [OriginalMinIndexBridge.lean](OriginalMinIndexBridge.lean) is prepared to import the pinned *unmodified upstream Cryptids* original high-level machine and transport the n≤100 cutoff; this additional import must be reported only when its own CI succeeds. A previous attempt of `OriginalNextBridge` failed on an external-to-workspace source-file path before Lean elaboration, not on a mathematical counterexample.
+
+**Novelty/overlap:** Agent 7 independently established the same shield strategy with an explicit finite list for surviving indices n≤47 and a bound n≥52 in [SurvivingSmall.lean](../agent7-cascade-odd-fibers/SurvivingSmall.lean) and [SurvivingExactGate.lean](../agent7-cascade-odd-fibers/SurvivingExactGate.lean). The n≤100 certificate is a stronger finite cutoff and a general reusable Boolean predicate checker, but a deeper structural advancement is required to eliminate the infinitely many n≥101 candidates. These facts are intermediate, without external novelty review, and stay under `im-results/`.
