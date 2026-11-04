@@ -195,6 +195,26 @@ theorem high2_strict_width (q n : Nat) : highJ2 q n<highJ2 (q+1) n := by
       change 16*highJ2 q n+42<16*highJ2 (q+1) n+42
       omega
 
+/-- Closed source-exact Diophantine parameterization of the high tower:
+    right counter plus two is an explicit power of sixteen times
+    an odd quantity, giving a direct 2-adic depth certificate. -/
+theorem high2_power_identity (q n : Nat) :
+    15*highJ2 q n+42 = 16^(n+1)*(60*q+27) := by
+  induction n with
+  | zero =>
+      change 15*(64*q+26)+42=16^(0+1)*(60*q+27)
+      simp only [show 16^(0+1)=16 by decide]
+      omega
+  | succ n ih =>
+      calc
+        15*highJ2 q (n+1)+42 = 16*(15*highJ2 q n+42) := by
+          change 15*(16*highJ2 q n+42)+42 = 16*(15*highJ2 q n+42)
+          omega
+        _ = 16*(16^(n+1)*(60*q+27)) := by rw [ih]
+        _ = 16^((n+1)+1)*(60*q+27) := by
+          simp only [Nat.pow_succ]
+          ac_rfl
+
 private theorem high2_fixed_q_injective (q r : Nat) :
     ∀ n : Nat, highJ2 q n=highJ2 r n → q=r := by
   intro n
@@ -231,5 +251,6 @@ theorem high2_joint_injective (q r n m : Nat)
 #print axioms high2_blank_unreachable
 #print axioms high2_strict_width
 #print axioms high2_joint_injective
+#print axioms high2_power_identity
 
 end BB6.Agent3
