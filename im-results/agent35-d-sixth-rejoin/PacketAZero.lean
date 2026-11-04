@@ -70,5 +70,40 @@ theorem source_a_packet_zero_raw (k q r : Nat) :
   rw [inc_ws q r] at h
   simpa only [Nat.add_assoc] using h
 
+
+private theorem zero_output (k q r : Nat) :
+    (⟨[],false,List.replicate (2*(4*k+3+q+4*r)+5) true ++
+      List.replicate 6 true,5⟩ : CryptidBoundary.Cfg) =
+    DRegularSource.sourceSection ⟨8*k+17+2*q+8*r,0,0⟩ := by
+  have htape : List.replicate (2*(4*k+3+q+4*r)+5) true ++
+      List.replicate 6 true =
+      List.replicate (8*k+17+2*q+8*r) true := by
+    rw [List.replicate_append_replicate]
+    congr 1
+    omega
+  have hfront : List.replicate (8*k+17+2*q+8*r) true =
+      true :: true :: List.replicate (8*k+15+2*q+8*r) true := by
+    have hx : 8*k+17+2*q+8*r=2+(8*k+15+2*q+8*r) := by omega
+    calc
+      _ = List.replicate (2+(8*k+15+2*q+8*r)) true :=
+        congrArg (fun n : Nat => List.replicate n true) hx
+      _ = List.replicate 2 true ++ List.replicate (8*k+15+2*q+8*r) true :=
+        (List.replicate_append_replicate).symm
+      _ = _ := rfl
+  rw [htape,hfront]
+  simp [DRegularSource.sourceSection,init,oppairs,
+    show (8*k+17+2*q+8*r)-2=8*k+15+2*q+8*r by omega,
+    List.append_assoc]
+
+/-- Every A-terminal p congruent zero modulo three source-returns
+    into the regular pure-unary L family for every k,q,r. -/
+theorem source_a_packet_zero (k q r : Nat) :
+    run (duration k q r)
+      (packet (3*k+3) q (3*r) ys) =
+      DRegularSource.sourceSection ⟨8*k+17+2*q+8*r,0,0⟩ := by
+  exact Eq.trans (source_a_packet_zero_raw k q r) (zero_output k q r)
+
+#print axioms source_a_packet_zero
+
 #print axioms source_a_packet_zero_raw
 end BB6.Agent35PacketAZero
