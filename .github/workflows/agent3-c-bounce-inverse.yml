@@ -143,6 +143,8 @@ jobs:
           lean FullDepth.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepAffine.lean .
           lean DeepAffine.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/ModThree.lean .
+          lean ModThree.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
