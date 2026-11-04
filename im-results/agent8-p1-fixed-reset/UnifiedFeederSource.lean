@@ -34,7 +34,14 @@ theorem source_counted_no_low_budget_feeder
     have hcost : m<n :=
       source_counted_cost_lt_exponent n b d m z hn hcone hT
     have hm : m ≤ 2^n := by
-      have hlin : n ≤ (2:Nat)^n := n_le_pow n
+      have hlin_all : ∀ u : Nat, u ≤ (2:Nat)^u := by
+        intro u
+        induction u with
+        | zero => decide
+        | succ u ih =>
+            rw [Nat.pow_succ]
+            omega
+      have hlin : n ≤ (2:Nat)^n := hlin_all n
       omega
     have hodd : OddCone (14*2^n-2*n-16) 3 b d m :=
       counted_is_odd _ _ _ _ _ _ hcone
