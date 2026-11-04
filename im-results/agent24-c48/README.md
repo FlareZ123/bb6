@@ -107,3 +107,38 @@ The forward implication excludes the other parent via Agent 38's global blank-or
 **Scope and limits.** These iff statements are general-purpose exact proof interfaces and reduce the infinite low-gateway family `t=16s` for odd `s` to reachability of `(278s-11,117s-4)`. Known all-time obstructions already exclude subfamilies `s%4=3` and `s%16=1`; the other odd classes remain unresolved. The reduced ancestor family is still infinite, and the complete Machine C halting criterion contains other families. Consequently **there is no Machine C nonhalting theorem and no numerical BB(6) value or upper bound**. External novelty relative to prior Machine C literature and proofs has not been independently reviewed, so this remains an intermediate result in `im-results/` rather than publication-ready `results/`.
 
 **Next decisive problem:** find a genuinely blank-reachability-sensitive invariant on the affine target `(278s-11,117s-4)` for all odd `s` remaining after the published mod-four/deeper-special exclusions, or exhibit a true blank-orbit witness. Avoid counting this source verification as a newly resolved root.
+
+
+## Third disjoint low halting-depth exclusion: m≡30632 (mod 32768) (2026-11-04)
+
+**Source-certified, all-parameter global blank nonreachability.** Original-source manual Lean 4.36.0-rc2 [CI run 41898329462](https://github.com/FlareZ123/bb6/actions/runs/41898329462), job `126813734366`, completed successfully. The job rebuilt the unchanged `CLine`, original blank-entry and `secNext` source, exact bounce invariants, and all earlier cited Machine C formal dependencies. All seven named new theorem axiom audits show **only `[propext, Classical.choice, Quot.sound]`**, without `sorryAx`, `native_decide`, or new axioms.
+
+The source `UniformS25Inverse.lean` proves three **complete** one-step predecessor classifications, for all natural `q,a,k`:
+
+```
+Q(q) = (35584q+6939, 14976q+2921)
+P(q) = (25280q+4928, 20128q+3923)
+B(q) = (22704q+4423, 21416q+4172)
+R(q) = (44120q+8593, 10708q+2085)
+
+secNext(a,k)=some Q(q)  ⇒ (a,k)=P(q)   [s25_first_inverse]
+secNext(a,k)=some P(q)  ⇒ (a,k)=B(q)   [s25_second_inverse]
+secNext(a,k)=some B(q)  ⇒ (a,k)=R(q)   [s25_third_inverse]
+```
+
+The arithmetic source also directly executes `secNext(R(q))=some B(q)`, `secNext(B(q))=some P(q)`, and `secNext(P(q))=some Q(q)`. The unique-inverse theorems inspect the entire source case split: all exceptional small-counter branches, both nonbounce branches, both bounce parity types, and arbitrarily deep bounce recursion. Their key depth obstruction is exact low 2-adic valuation of the output sum, combined with exact counter cost. The third inverse is essential: `B(q)` has even right counter but coordinate sum 3 (mod 4), so the older Agent 15 `blank_reach_iff_affine` lemma **cannot** be applied there. An initial attempt to invoke it failed in CI; the final proof replaces it with a genuinely exhaustive third original-source inverse.
+
+For every `q`, `R(q)` has odd second coordinate and coordinate sum 2 modulo 4, excluded from the authentic section blank orbit by Agent 38's previously source-certified global result (including the only exceptional start point). Thus `UniformS25Reach.lean` contains the true all-time theorems `s25_three_step_forces_bad` and `blank_no_s25_affine`: **`CReach(Q(q))` is false for every q**.
+
+Transport via the new source-verified `uniform_one_gate_reach_iff_affine` at `s=128q+25` proves
+
+```
+blank_no_s25_one_gate (q : Nat):
+  ¬ CReach 1 (32768*q+6404).
+```
+
+For the authentic low stopping equation `k+3m+4=2^(2m+3)`, the condition `m%32768=30632` forces `k%32768=6404` by exact power-of-two divisibility, hence the Lean theorem **`blank_no_low_halt_depth30632`** eliminates all such candidate low-family stopping inputs at every actual blank section time, without finite simulation. In the alternate dyadic notation `d=2m`, the progression is `d≡61264 (mod65536)`. It is disjoint from Agent24's earlier excluded `m≡424(mod1024)` and `m≡4008(mod4096)` classes; external and cross-agent novelty beyond those particular classes has **not** been fully audited.
+
+Source artifacts: [UniformS25Inverse.lean](./UniformS25Inverse.lean), [UniformS25Reach.lean](./UniformS25Reach.lean). A proposed exact `RunHalts` iff after removing this third low-depth family is in [UniformS25Residual.lean](./UniformS25Residual.lean) and requires a separate completed source CI to be called verified.
+
+**Scope:** this removes another infinite subset of potential Machine C halting inputs; the high-family alternatives and infinitely many low-family depths remain. **No whole-machine nonhalting theorem, upper bound, or exact BB(6) value is established.** The result remains in `im-results/` because its publication-level novelty has not been independently reviewed. For genuinely structural progress, seek a parametric inverse-cone argument covering substantial remaining 2-adic families rather than indefinitely generating individual congruence cases.
