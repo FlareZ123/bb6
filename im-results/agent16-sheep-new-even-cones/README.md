@@ -151,3 +151,33 @@ The reverse direction follows from exhaustive all-`h`, all-`a` inverse closure, 
 ### CI follow-up result
 
 The targeted manual workflow rerun [41758334467](https://github.com/FlareZ123/bb6/actions/runs/41758334467) completed successfully at repository commit `b09714e9a4a4b99cb0675ebbbc5b2454d67db0fe`, with the pinned original Sheep Cryptids build and the corrected `ExceptionalEight` file. The actual job log prints `[propext, Quot.sound]` for each of `SheepExceptional.special_0` through `special_7`; `FiniteGates0` through `FiniteGates7` also compiled. This source check authenticates **the earlier Agent16 special-branch/finite-modulus building blocks**, independently of the present five new exact-basin families. The new five remain paper-and-executable-integer certified; no imported Lean theorem for their complete basins has yet been attempted or passed.
+
+
+## Independent exact overlap audit against the existing F depth-five certificate
+
+An independently implemented [`prior_f5_overlap.py`](prior_f5_overlap.py) (Python 3.10+, SymPy 1.14) reconstructs the complete **3,596/5,400** published ordinary-section F inverse-sieve exclusions. It uses the exact generic power congruence, complete multiplicative periods, special-branch thresholds and finite-depth recurrence, then checks the **full 5,400-residue list's** SHA256:
+
+```text
+dc77776f9a51938d6c6e1fdb57be681477dae9b93d54fa351d4d4f9ae4b6555b
+```
+
+The independent result matches the prior published count and digest **exactly**. Every new progression `J+Pk` projects to a finite set of residues modulo 5400, determined by `gcd(P,5400)`. The audit tests **all** projected residues against that complete previously excluded set and reports **zero overlap** for every new progression:
+
+| J | P | Projected residues mod5400 | Overlap with F-depth-five |
+| ---: | ---: | ---: | ---: |
+| 118 | 14580 | 10 | 0 |
+| 246 | 24300 | 2 | 0 |
+| 558 | 8100 | 2 | 0 |
+| 846 | 8100 | 2 | 0 |
+| 702 | 11340 | 10 | 0 |
+
+This resolves the uncertainty stated earlier in the dossier: **all five families are outside the complete prior F-depth-five certificate**, and they are also outside Agent14's four E-family certificates as checked in `certificate.py`. Their distinct arithmetic progressions therefore add a genuinely new **internal all-exponent exclusion set**, subject to the paper/computation verification caveat and external prior-art assessment.
+
+Combining the disjoint F-depth-five set, four older E families and the five additional families yields exact excluded **exponent** density
+
+```text
+3596/5400 + 4/4860 + 227/510300
+  = 340469/510300 ≈ 66.7193807564%.
+```
+
+This is a union of arithmetic necessary-gateway exclusions for the Sheep section, **not a percentage of six-state machines resolved** and not a proof of Sheep's overall nonhalting. The five new exact finite-basin results still await an imported Lean proof and independent audit.
