@@ -183,4 +183,90 @@ theorem root_odd_mass_bound27 (k a d : Nat)
 #print axioms root_two_step_gain27_from2
 #print axioms root_even_mass_bound27
 #print axioms root_odd_mass_bound27
+/-- Exact genuinely blank-root sharpness witness, at section returns
+four and six: mass 85 rises to 112, exactly 27 in two steps. -/
+theorem blank_gain27_sharp :
+    run 4=some (.D 2 83) ∧ run 6=some (.D 74 38) := by
+  constructor <;> decide +kernel
+
+/-- A refined rooted two-step bound anchored on the exact D(2,83) state.
+This bound is attained by the genuine return at n=6. -/
+theorem root_even_mass27_from4 (k a d : Nat)
+    (h : run (4+2*k)=some (.D a d)) :
+    85+27*k≤a+d := by
+  induction k generalizing a d with
+  | zero =>
+    have h4 := blank_gain27_sharp.1
+    have hh : run 4=some (.D a d) := by simpa using h
+    rw [h4] at hh
+    cases hh
+    omega
+  | succ k ih =>
+    let n : Nat := 4+2*k
+    have htarget : run (n+2)=some (.D a d) := by
+      have heq : n+2=4+2*(k+1) := by dsimp [n]; omega
+      rw [heq]
+      exact h
+    cases hp : run n with
+    | none =>
+      have hnone : run (n+1)=none := by
+        change (run n).bind highLevelNext = none
+        rw [hp]
+        rfl
+      have hnone2 : run (n+2)=none := by
+        change (run (n+1)).bind highLevelNext = none
+        rw [hnone]
+        rfl
+      rw [hnone2] at htarget
+      contradiction
+    | some st =>
+      rcases st with ⟨ap,dp⟩
+      have hprev : run (4+2*k)=some (.D ap dp) := by simpa only [n] using hp
+      have hbound := ih ap dp hprev
+      have hgain := root_two_step_gain27_from2 n ap dp a d
+        (by dsimp [n]; omega) hp htarget
+      omega
+
+/-- A refined odd-index rooted mass lower bound from the exact fifth
+return D(84,10), mass 94. -/
+theorem root_odd_mass27_from5 (k a d : Nat)
+    (h : run (5+2*k)=some (.D a d)) :
+    94+27*k≤a+d := by
+  induction k generalizing a d with
+  | zero =>
+    have h5 : run 5=some (.D 84 10) := by decide +kernel
+    have hh : run 5=some (.D a d) := by simpa using h
+    rw [h5] at hh
+    cases hh
+    omega
+  | succ k ih =>
+    let n : Nat := 5+2*k
+    have htarget : run (n+2)=some (.D a d) := by
+      have heq : n+2=5+2*(k+1) := by dsimp [n]; omega
+      rw [heq]
+      exact h
+    cases hp : run n with
+    | none =>
+      have hnone : run (n+1)=none := by
+        change (run n).bind highLevelNext = none
+        rw [hp]
+        rfl
+      have hnone2 : run (n+2)=none := by
+        change (run (n+1)).bind highLevelNext = none
+        rw [hnone]
+        rfl
+      rw [hnone2] at htarget
+      contradiction
+    | some st =>
+      rcases st with ⟨ap,dp⟩
+      have hprev : run (5+2*k)=some (.D ap dp) := by simpa only [n] using hp
+      have hbound := ih ap dp hprev
+      have hgain := root_two_step_gain27_from2 n ap dp a d
+        (by dsimp [n]; omega) hp htarget
+      omega
+
+#print axioms blank_gain27_sharp
+#print axioms root_even_mass27_from4
+#print axioms root_odd_mass27_from5
+
 end BB6.Agent49Finite27Source
