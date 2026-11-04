@@ -22,4 +22,5 @@ jobs:
           set -e
           export LEAN_PATH="im-results/agent42-root119-guard"
           lean -o im-results/agent42-root119-guard/Root119Gate.olean im-results/agent42-root119-guard/Root119Gate.lean
-          lean im-results/agent42-root119-guard/Root119BShift.lean
+          lean -o im-results/agent42-root119-guard/Root119BShift.olean im-results/agent42-root119-guard/Root119BShift.lean
+          lean im-results/agent42-root119-guard/Root119BShield.lean
