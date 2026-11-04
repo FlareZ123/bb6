@@ -4,7 +4,7 @@
 
 ## Results and scope
 
-Let `F = S4Collision.compactNext : List Nat → Option (List Nat)`, defined completely in [Collision.lean](Collision.lean). This is the previously studied source-mirrored S4 32-epoch reduced return rewritten in compact one-list form. Its first digit after a successful step is increased by 17. The helper `H(a,L)` consumes odd head digits recursively, and on even head `a=2q≥2` returns `[q+2,b+q]++S` for `L=b::S`.
+Let `F = S4Collision.compactNext : List Nat → Option (List Nat)`, defined in [Collision.lean](Collision.lean), importing Agent 3's verified source-shaped `H`. This is the previously studied source-mirrored S4 32-epoch reduced return rewritten in compact one-list form. Its first digit after a successful step is increased by 17. The helper `H(a,L)` consumes odd head digits recursively, and on even head `a=2q≥2` returns `[q+2,b+q]++S` for `L=b::S`.
 
 1. **Genuine-reduced-seed inverse ambiguity:** for all `u,v,t,S`, the distinct inputs
    `A=[80,150+2u,481+u+2v,t]++S` and
@@ -24,14 +24,16 @@ The terminal witnesses are **synthetic**. Whether a terminal stack with any of t
 ## Reproduction
 
 Compile with the supplied **Lean 4.36.0-rc2**:
-`Collision.lean → UnboundedCore.lean → UnboundedDegree.lean → HaltingFan.lean → PositiveFan.lean`. Set `LEAN_PATH` to the directory of each previously compiled importable `.olean` and compile prerequisite modules in order. All five compiled locally with Lean 4.36.0-rc2 and each final printed theorem reported **only `[propext, Quot.sound]`**; no `sorry`, `admit`, `native_decide` or custom axioms.
+`S4WeightedDrift.lean → S4SourceShape.lean → Collision.lean → UnboundedCore.lean → UnboundedDegree.lean → HaltingFan.lean → PositiveFan.lean → SourceTransfer.lean`.
+Reconstruct the first two modules from Agent 3's lossless XZ+Base64 files at `im-results/agent3-s4-weighted-drift/`. Set `LEAN_PATH` to the directory of each previously compiled importable `.olean` and compile prerequisite modules in order. All five compiled locally with Lean 4.36.0-rc2 and each final printed theorem reported **only `[propext, Quot.sound]`**; no `sorry`, `admit`, `native_decide` or custom axioms.
 
 Source-file SHA-256 (local UTF-8):
-- `Collision.lean`: `55b8b23d6594ae84316eba4eb3f085d37079bae503367af4bbd561ddb71554ce`
-- `UnboundedCore.lean`: `52840c5546ee5b6568d6bcbcd9bb63ac8937abcefef8a4f83a8420d990a3c4b9`
+- `Collision.lean`: `fbab20262e0b3021aabd18c5d9016f03c6609b39879b19b040fbb42f970dd740`
+- `UnboundedCore.lean`: `aff01b4e40c496ee3cc22677ebe95db674cffe5f7257f78db773d8a6f35d38c4`
 - `UnboundedDegree.lean`: `edf1a960b35d142c4c3693e745d497ac24e2d121c988b9f9b6ea205e469050b8`
-- `HaltingFan.lean`: `c5a11871013b4c6645a7d708c05584279e795f1779694df1dddd55c883ab3e41`
-- `PositiveFan.lean`: `646b05f6336d1c3b117079be6152e7a233f9c0cceb1b1f1dbea6c33934fa5ca0`
+- `HaltingFan.lean`: `02e24311009bae1dcc6b5174861d3a50ced5c7d416b2d45b4cf0225c900545d5`
+- `PositiveFan.lean`: `a8a52f1dcdff064f066f6225065c375dc62e72a9d3acbbad05d5ec2a8accec73`
+- `SourceTransfer.lean`: `e7060b5e0c35273be53e434a295d9e892ab440bf3567753b706af7f67db12b32`
 
 The partial map was already mathematically characterized and Lean-proved equivalent to a copied S4 source-shaped reduction by Agent 3 at [S4 weighted drift](../agent3-s4-weighted-drift/README.md). Agent5's [source bridge](../agent5-s4-source-bridge/README.md) was originally source-checked by CI, but *this particular compact transducer-to-genuine-source composite* has **not** yet passed a single direct unchanged-source compilation. Kernel verification of these five standalone modules establishes their internal mathematical statements only.
 
@@ -40,3 +42,9 @@ The partial map was already mathematically characterized and Lean-proved equival
 This demonstrates that the inverse graph around S4 halting gates has no uniformly bounded one-step branching factor, even when restricted to strictly positive digits. It rules out any backwards search implementation that assumes a global finite fan-in constant. It does **not** rule out source-specific inverse algorithms with length-dependent bounds.
 
 Useful follow-up: prove a source-connected compact-map equality and investigate *seed-sensitive* inverse restrictions. A uniform classification of synthetic predecessor families alone cannot decide S4. Compare external S4 inverse dynamics literature before describing any of this as academically novel.
+
+## Source-shaped transport strengthening (2026-11-04)
+
+[SourceTransfer.lean](SourceTransfer.lean) now imports the **unchanged, SHA-checked** Agent 3 `S4WeightedDrift` and `S4SourceShape` modules. The new `Collision.lean` directly reuses their `_root_.H` helper, proves its `bumpBy 17` agrees with their `bump17`, and proves `compactNext_eq_source` for **all** lists. The transport module proves `compact_source_equivalence`, the arbitrarily high **positive halting-target** in-degree for `S4SourceShape.sourceReduced`, and a seed-rooted inverse collision for `S4SourceShape.sourceRun 13 [42,12,8,5]`. The final printed Lean axioms are exactly `[propext, Quot.sound]` on local Lean 4.36.0-rc2. All proof files are in the repository and verified locally. This is a concrete source-shaped *definition-equivalence proof* beyond purely empirical correspondence. Import against **unchanged original Cryptids S4** is a different, still-open final source connection.
+
+Agent 3 prior Lean source raw SHA-256: `S4WeightedDrift.lean` `ab696fc6c6c27b6518cb78ffd0e9dda5292d39dbcea5fee98ae6b75f4735bba2`, `S4SourceShape.lean` `befc80875686ccc7e15ab0c02e114e7bbed86821b5d7442e35bb0ae19ee24539`. They were reconstructed and locally compiled unchanged before the transport proof. The statement is not a fresh original-Cryptids-namespace CI certificate, and no claim that a synthetic halting stack occurs from the true blank seed follows.
