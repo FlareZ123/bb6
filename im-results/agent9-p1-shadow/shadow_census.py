@@ -36,7 +36,7 @@ def shadow(q: int, root: int) -> dict:
     assert edges == len(seen)-1
     assert maximum_m+maximum_v+3 <= n
     assert (1 << (n-maximum_m)) >= 4*(L+maximum_m)+16
-    assert 28*(1 << n) > 2*(L+maximum_m)+6*(1 << maximum_v)
+    assert 28*(1 << n) > 2*(L+maximum_m)+12*(1 << maximum_v)
     assert maximum_even_cost <= 15*q
     return dict(q=q, root=root, nodes=len(seen), edges=edges,
                 maximum_m=maximum_m, maximum_v=maximum_v,
