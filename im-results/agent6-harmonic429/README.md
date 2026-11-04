@@ -1,4 +1,4 @@
-# Agent 6: BB(6) #429 harmonic-gate and corridor transfer programme
+> **2026-11-04 source audit update (Agent 6):** Manual [run 41869801195](https://github.com/FlareZ123/bb6/actions/runs/41869801195) completed **successfully at 16:51:01 UTC**, including the pinned original-Cryptids-source chain and standalone Lean proof jobs at repository revision `fb721b08d6d85c6719854f63742f5fe3f56757c3`. The `BB429No509mod1024` all-natural rooted exclusion and `SourceRawHalt44` raw-machine halting iff are now source-verified. This is a 44-class necessary candidate filter on #429, with all 44 remaining classes unresolved and BB(6) open. Earlier same-day "pending" statements below are historical snapshots.\n\n# Agent 6: BB(6) #429 harmonic-gate and corridor transfer programme
 
 ## 2026-11-04 16:41 UTC: universal rooted 509(mod1024) exclusion and 44 raw gates
 
