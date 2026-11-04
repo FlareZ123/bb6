@@ -51,3 +51,9 @@ Future work: investigate 2-adic restrictions on this specific blank orbit, searc
 - [ODD-BLOCKS.md](ODD-BLOCKS.md): exact \`t\`-call high-level acceleration from \`N(2^t*m−1)\` to \`N(5^t*m−1)\` for positive m; if m odd, this is the complete maximal odd run. A terminal directly after this block requires \`5^t ∣ 2^K−1\`. Locally checked in Lean against literally pinned upstream high-level definitions with standard axioms. Full-source CI similarly pending.
 
 Neither tool closes Space Needle, certifies an actual blank-root halting runtime, or establishes BB(6).
+
+## 2026-11-04 source-connected two-step odd-terminal inverse
+
+[`TWO-STEP-ODD.md`](TWO-STEP-ODD.md) gives an exact all-natural, source-connected conditional two-step terminal predecessor criterion: from `oddTower q v` through **one odd intermediate** to terminal `2^K-2` iff `2^(K+1)=5*(2^(v+1)+3)*q+15*2^v+5*v+12` for `K>0`. It proves fixed-`(K,v)` parameter uniqueness and `v<K`.
+
+**Pinned original Cryptids source [CI 41931806607](https://github.com/FlareZ123/bb6/actions/runs/41931806607) passed** on 2026-11-04, compiling `SpaceNeedleOddBlocksSource.lean`, `NeedleTwoStepOdd.lean`, and `NeedleTwoStepOddSource.lean` against the unchanged original machine source. This supersedes earlier CI-pending notes for those **specific** odd-block and two-step files. Other source-mirrored files still need their own original-import audit. The two-step result specializes the prior Agent20 general inverse; its blanket-root relevance and external novelty are unproved. It does not decide Space Needle or BB(6).
