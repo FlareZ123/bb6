@@ -27,6 +27,7 @@ theorem two_step_gain27_mass100 (a d b e c f : Nat)
   · by_cases hz : d=0
     · subst d
       have hzero := BB6.Agent8SharpSource.high_zero_exact a (by omega)
+      change highLevelNext (.D a 0) = some (.D (a-4) 14) at hzero
       rw [hzero] at h1
       cases h1
       have h28 := BB6.Agent49FixedRaysSource.ray_14_gain28
