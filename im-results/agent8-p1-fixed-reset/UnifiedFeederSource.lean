@@ -2,7 +2,7 @@ import ExceptionalBudgetSource
 import P1ScalarBridge
 
 namespace BB6.Agent8Reset
-open BB6.Agent28 BB6.Agent1Quarter
+open BB6.Agent28 BB6.Agent1Quarter BB6.Agent47P1
 
 /-- Genuine critical P1 odd inverse histories with small dyadic budgets
 cannot contain either a c=1 exceptional odd terminal or a positive-even
@@ -34,7 +34,7 @@ theorem source_counted_no_low_budget_feeder
     have hcost : m<n :=
       source_counted_cost_lt_exponent n b d m z hn hcone hT
     have hm : m ≤ 2^n := by
-      have hp : 0 < (2:Nat)^n := Nat.pow_pos (by decide)
+      have hlin : n ≤ (2:Nat)^n := n_le_pow n
       omega
     have hodd : OddCone (14*2^n-2*n-16) 3 b d m :=
       counted_is_odd _ _ _ _ _ _ hcone
