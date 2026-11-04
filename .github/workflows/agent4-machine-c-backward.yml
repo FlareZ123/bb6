@@ -70,7 +70,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent46-c-terminal-lifts/Agent46TerminalLifts.lean" .
           lean -o Agent46TerminalLifts.olean Agent46TerminalLifts.lean
           cp "$GITHUB_WORKSPACE/im-results/agent4-mixed192-backward/SourceBridge192Companion.lean" .
-          lean SourceBridge192Companion.lean
+          lean -o SourceBridge192Companion.olean SourceBridge192Companion.lean
 
       - name: Mixed192 companion B reverse-core source proof
         shell: bash
