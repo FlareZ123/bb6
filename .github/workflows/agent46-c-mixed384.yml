@@ -1,4 +1,4 @@
-name: Agent 46 Machine C mixed384 first-stopping m3 source proof (manual)
+name: Agent 46 Machine C mixed384 first-stopping m3 and m51 source proofs (manual)
 
 on:
   workflow_dispatch:
@@ -32,3 +32,10 @@ jobs:
           lean -o CLine.olean CLine.lean
           lean -o C3.olean C3.lean
           lean C3Arithmetic.lean
+          cd "$GITHUB_WORKSPACE/im-results/agent46-c-mixed384"
+          python3 reconstruct51.py
+          cp C51.lean C51Arithmetic.lean /tmp/a46-c384/
+          cd /tmp/a46-c384
+          sha256sum C51.lean C51Arithmetic.lean
+          lean -o C51.olean C51.lean
+          lean C51Arithmetic.lean
