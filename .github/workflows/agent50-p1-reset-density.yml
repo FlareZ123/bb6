@@ -66,3 +66,11 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
           lean -o im-results/agent50-p1-reset-density/ResetExceptional.olean im-results/agent50-p1-reset-density/ResetExceptional.lean
           lean im-results/agent50-p1-reset-density/ResetExceptionalCost.lean
+      - name: Source audit of exceptional c=1 logarithmic cost gap
+        run: |
+          set -e
+          base64 -d im-results/agent50-p1-reset-density/ResetExceptionalGap.lean.xz.b64 | xz -d > im-results/agent50-p1-reset-density/ResetExceptionalGap.lean
+          echo 'dcfbb9baafdc9c015f99ff4306f7b1369664c10f905b99c6e1c94221f6761a28  im-results/agent50-p1-reset-density/ResetExceptionalGap.lean' | sha256sum -c -
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
+          lean -o im-results/agent50-p1-reset-density/ResetExceptionalCost.olean im-results/agent50-p1-reset-density/ResetExceptionalCost.lean
+          lean im-results/agent50-p1-reset-density/ResetExceptionalGap.lean
