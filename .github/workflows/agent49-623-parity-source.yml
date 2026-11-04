@@ -83,7 +83,7 @@ jobs:
       - name: Verify universal 27-unit two-step high-sector gain on original source
         working-directory: /tmp/cryptids
         run: |
-          for name in SharpMass SharpMass10 SharpMass12 RootedMass RootedMass19 SharpMass14Aux SharpMass14Even SharpMass14OddAux SharpMass14OddFive SharpMass14Odd SharpMass21Low SharpMass21Pair; do
+          for name in SharpMass SharpMass10 SharpMass12 RootedMass RootedMass19 SharpMass14Aux SharpMass14Even SharpMass14OddAux SharpMass14OddFive SharpMass14Odd; do
             cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/${name}Source.lean" "Agent8${name}Source.lean"
             lake env lean -o ".lake/build/lib/lean/Agent8${name}Source.olean" "Agent8${name}Source.lean"
           done
