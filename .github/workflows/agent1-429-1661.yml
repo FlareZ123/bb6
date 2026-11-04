@@ -1,0 +1,34 @@
+name: Agent 1 BB429 rooted 1661 modulo2048 source proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile actual repository source, exact predecessor modules, and new theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent1-429-1661
+          cp im-results/agent5-429-rank/BB429Rank.lean /tmp/agent1-429-1661/
+          cp im-results/agent6-harmonic429/{BB429LowOddMod8,BB429No381mod1024}.lean /tmp/agent1-429-1661/
+          cd /tmp/agent1-429-1661
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent1-429-1661/BB429No1661mod2048.lean.gz.b64" | gzip -d > BB429No1661mod2048.lean
+          echo "05576abaf58d8b62f97e2390b017bc1e5086693512339fc6abdb3f386c6a9793  BB429No1661mod2048.lean" | sha256sum -c -
+          export LEAN_PATH="."
+          lean --version
+          for module in BB429Rank BB429LowOddMod8 BB429No381mod1024; do
+            lean -o "$module.olean" "$module.lean"
+          done
+          lean BB429No1661mod2048.lean
