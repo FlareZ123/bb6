@@ -1,4 +1,4 @@
-"""Restore exact #429 Lean certificate under a local exclusive file lock."""
+"""Restore both exact #429 Lean certificates under a local exclusive file lock."""
 import base64
 import fcntl
 import hashlib
@@ -8,23 +8,26 @@ from pathlib import Path
 import tempfile
 
 ROOT = Path(__file__).resolve().parent
-NAME = "BB429No393mod512.lean"
-SHA256 = "205eb810e98022eb2641dcd8ebce07fedc564064dc00dfec01faca0c68fa280e"
+SOURCES = {
+    "BB429No393mod512.lean": "205eb810e98022eb2641dcd8ebce07fedc564064dc00dfec01faca0c68fa280e",
+    "BB429No265mod512.lean": "ea2cac2c571fcc26f25f32bf37d025ae55dd85f404afb4395913422c1d9bbe3a",
+}
 
 with (ROOT / ".unpack.lock").open("w") as lock:
     fcntl.flock(lock, fcntl.LOCK_EX)
-    raw = lzma.decompress(base64.b64decode((ROOT / (NAME + ".xz.b64")).read_text().strip()))
-    digest = hashlib.sha256(raw).hexdigest()
-    if digest != SHA256:
-        raise ValueError(f"Lean source SHA256 mismatch: {digest}")
-    fd, temporary = tempfile.mkstemp(prefix=".lean393-", dir=ROOT)
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(raw)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, ROOT / NAME)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
-print(f"Verified {NAME}: {len(raw)} bytes, sha256={digest}")
+    for name, expected in SOURCES.items():
+        raw = lzma.decompress(base64.b64decode((ROOT / (name + ".xz.b64")).read_text().strip()))
+        digest = hashlib.sha256(raw).hexdigest()
+        if digest != expected:
+            raise ValueError(f"Lean source SHA256 mismatch for {name}: {digest}")
+        fd, temporary = tempfile.mkstemp(prefix=".lean429-", dir=ROOT)
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(raw)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, ROOT / name)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        print(f"Verified {name}: {len(raw)} bytes, sha256={digest}")
