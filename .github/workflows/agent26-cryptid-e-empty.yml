@@ -103,7 +103,7 @@ jobs:
             lean -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
           done
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
-          lean im-results/agent26-cryptid-e-gate/A1101010111Code.lean
+          lean -o im-results/agent26-cryptid-e-gate/A1101010111Code.olean im-results/agent26-cryptid-e-gate/A1101010111Code.lean
 
       - name: Verify strict first-physical F return for the all-q E word
         env:
@@ -129,6 +129,12 @@ jobs:
       - name: Cross-check source transitions with independent literal-table first-return interpreter
         run: |
           python im-results/agent26-cryptid-e-gate/check_new_returns.py
+
+      - name: Source-certify strong all-code physically blank-left F first return
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+        run: |
+          lean im-results/agent26-cryptid-e-gate/A1101010111CodePhysicalFirst.lean
 
       - name: Original-source exact two-return E-to-B connector for k divisible by 3
         env:
