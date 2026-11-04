@@ -1,0 +1,44 @@
+name: Agent 4 Machine C M80 reverse invariant (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Exhaustive finite M80 representative-edge cross-check
+        shell: bash
+        run: |
+          set -euo pipefail
+          g++ -std=c++17 -O2 -Wall -Wextra im-results/agent4-mixed80-backward/check_core.cpp -o /tmp/agent4-m80-check
+          /tmp/agent4-m80-check
+      - name: Source-native Lean kernel check and axiom audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent4-m80-source
+          cd /tmp/agent4-m80-source
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/BackwardMod.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed96-backward/SourceBridge.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed80-backward/Five80Stop.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent4-mixed80-backward/Five80Source.lean" .
+          python3 -c "import os,hashlib,base64,gzip,tempfile,fcntl; from pathlib import Path; src=Path(os.environ['GITHUB_WORKSPACE'])/'im-results/agent4-mixed80-backward/Five80Compact.lean.gz.b64'; data=gzip.decompress(base64.b64decode(src.read_text().strip())); assert hashlib.sha256(data).hexdigest()=='dc60dc31e315a46770a5dbfc9d7cdebe8449f907feb5566910a06e56d202b9d2'; lock=open('Five80Compact.lean.lock','w'); fcntl.flock(lock,fcntl.LOCK_EX); tmp=tempfile.NamedTemporaryFile(dir='.',delete=False); tmp.write(data); tmp.close(); os.replace(tmp.name,'Five80Compact.lean')"
+          export LEAN_PATH=.
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o BackwardMod.olean BackwardMod.lean
+          lean -o SourceBridge.olean SourceBridge.lean
+          lean -o Five80Compact.olean Five80Compact.lean
+          lean -o Five80Stop.olean Five80Stop.lean
+          lean Five80Source.lean
