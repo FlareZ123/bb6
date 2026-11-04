@@ -89,6 +89,66 @@ theorem fan_blank_forbidden (s t time:Nat)
   have heq:FanArithmetic.p s t=5 := (Prod.mk.inj hseed).1
   omega
 
+
+/-- Every second stopping ray mass D has 16 as a divisor. -/
+theorem rayD_mod16_zero (m:Nat) : rayD m%16=0 := by
+  cases m with
+  | zero => decide
+  | succ m =>
+      have he:4^(Nat.succ m+1)=16*4^m := by
+        calc
+          4^(Nat.succ m+1)=4^(2+m) :=
+            congrArg (fun n=>4^n) (by omega)
+          _=4^2*4^m := Nat.pow_add 4 2 m
+          _=16*4^m := by simp
+      have hd:rayD (Nat.succ m)=16*(4^m*(3*(Nat.succ m)+4)) := by
+        unfold rayD
+        rw [he]
+        ac_rfl
+      rw [hd]
+      omega
+
+/-- Exact modular parity of the direct source when m=1 mod4. -/
+theorem direct_forbidden_parity (m:Nat) (hm:m%4=1) :
+  ((oddRayDirect m).2)%2=1 ∧
+  (((oddRayDirect m).1+(oddRayDirect m).2)%4)=2 ∧
+  5<(oddRayDirect m).1 := by
+  let p:=rayD m-3
+  let q:=(rayY m-2)/2
+  have hY:=rayFacts m
+  have hD16:=rayD_mod16_zero m
+  have hYeven:=oddRayYeven m
+  have hDgt : 16≤rayD m := by
+    have hh:=hY.2.1
+    omega
+  have hq:2*q+2=rayY m := by dsimp [q];omega
+  have hp:p+3=rayD m := by dsimp [p];omega
+  have hX : (p+q)%4=2 := by
+    omega
+  change q%2=1 ∧ (p+q)%4=2 ∧ 5<p
+  constructor
+  · omega
+  constructor
+  · exact hX
+  · omega
+
+/-- No genuine section iterate reaches the direct incoming source of any
+    second stopping target whose index m is one modulo four. -/
+theorem direct_blank_forbidden (m time:Nat) (hm:m%4=1) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (oddRayDirect m) := by
+  intro h
+  obtain ⟨hkodd,hbad,hbig⟩:=direct_forbidden_parity m hm
+  let p:=rayD m-3
+  let q:=(rayY m-2)/2
+  change BB6.Agent8Section.run secNext time (some (5,1))=some (p,q) at h
+  have heq:=BB6Agent38.blank_section_mod4 time p q h hkodd hbad
+  have hp:= (Prod.mk.inj heq).1
+  change 5<p at hbig
+  omega
+
+#print axioms direct_blank_forbidden
+#print axioms rayD_mod16_zero
 #print axioms fan_forbidden_parity
 #print axioms fan_blank_forbidden
 end BB6.Agent11Ray
