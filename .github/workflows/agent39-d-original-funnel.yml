@@ -1,0 +1,34 @@
+name: Agent 39 original-source D coded-funnel theorem (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore source with pinned hashes
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged authentic original-machine dependencies and new theorem
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+        run: |
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -DmaxRecDepth=8192 -o "im-results/agent25-cryptid-doublezero/$module.olean" "im-results/agent25-cryptid-doublezero/$module.lean"
+          done
+          lean -DmaxRecDepth=8192 -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean -DmaxRecDepth=8192 im-results/agent39-d-semiconjugacy/Agent39DOriginalFunnel.lean
