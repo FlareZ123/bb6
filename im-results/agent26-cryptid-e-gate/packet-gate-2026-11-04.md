@@ -56,3 +56,17 @@ The unnormalized original-source theorem literally returns `1^(64t+17) 1^(2q+6) 
 Independent literal machine [check_e_then_b.py](./check_e_then_b.py) covered **1,056** actual first-physical E-then-B pairs, with full tapes and both elapsed step counts, in the same successful CI run. This finite test is supplementary to the all-natural Lean endpoint proof. Cases k≡1,2 (mod3) and actual blank-root reachability remain open.
 
 **Strict physically blank-left code audit:** [manual source CI 41873417571](https://github.com/FlareZ123/bb6/actions/runs/41873417571) also compiled `full_A_code_1101010111_firstPhysical` and printed only `[propext, Quot.sound]`. This is the authoritative whole-code first-physical-return theorem; use this stronger statement when composing machine F-sections.
+
+## 2026-11-04 follow-up: distinct E-to-A coded reentry sector (also source-certified)
+
+[Original-source Lean theorem E1101010111ThenA.lean](./E1101010111ThenA.lean) and [source CI 41874308655](https://github.com/FlareZ123/bb6/actions/runs/41874308655) **SUCCEEDED** with standard axiom list `[propext, Quot.sound]`. This theorem composes the exceptional E terminal with the source-certified universal `111` A-code consumer, for all t,u≥0 and arbitrary right suffix Z, under guards k=3t+2 and q=3u:
+
+```
+I_(9t+10)(0 (10)^(3u) 1101010111 Z)
+     --[876t²+384tu+2219t+48u²+506u+1442 primitive steps]-->
+I_(64t+16u+75)(10101010 Z).
+```
+
+The checked Lean theorem states the duration exactly via `CryptidA.wordCost (4*(8t+6)+3) (replicate(2u+2) true)` and `wordInc`, under a `let`-bound expression; the displayed polynomial is the independently algebraically simplified form (matching direct source simulation). The output tape is literal, with right suffix `10101010Z` and entirely blank left. **For Z empty** the final zero is physically implicit and the leading one joins the unary prefix, yielding `I_(64t+16u+76)((01)^3)`, another ordinary L-family reentry. For arbitrary Z the exact trailing zero remains represented. This supplements the previously source-certified E→B subfamily k divisible by 3, leaving many parameter sectors and true blank-root reachability unresolved.
+
+Independent original 12-rule primitive simulator [check_e_then_a.py](./check_e_then_a.py) verified **432** exact *two first physical returns*, including both elapsed times and complete physical tapes, in the same successful CI. Original-source `e_then_a` theorem checks at all k,q under the specified congruence parameterization and at arbitrary right suffixes, unlike this finite regression.
