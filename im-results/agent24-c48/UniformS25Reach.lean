@@ -88,8 +88,26 @@ theorem blank_no_s25_one_gate (q : Nat) :
   rw [hfirst,hsecond] at hparent
   exact blank_no_s25_affine q hparent
 
+/-- A third disjoint infinite low stopping-parameter progression is
+    blank-inaccessible, using the complete original two-level inverse. -/
+theorem blank_no_low_halt_depth30632 (m k : Nat)
+    (hm : m%32768=30632)
+    (heq : k+3*m+4=2^(2*m+3)) :
+    ¬ BB6.Agent3.CReach 1 k := by
+  have hlarge : 6≤m := by omega
+  have hpow : 32768 ∣ 2^(2*m+3) := by
+    change 2^15 ∣ 2^(2*m+3)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  obtain ⟨w,hw⟩ := hpow
+  have hmod : k%32768=6404 := by omega
+  have hk : k=32768*(k/32768)+6404 := by omega
+  intro h
+  rw [hk] at h
+  exact blank_no_s25_one_gate (k/32768) h
+
 #print axioms s25_two_step_forces_bad
 #print axioms blank_no_s25_affine
 #print axioms blank_no_s25_one_gate
+#print axioms blank_no_low_halt_depth30632
 
 end BB6.Agent46
