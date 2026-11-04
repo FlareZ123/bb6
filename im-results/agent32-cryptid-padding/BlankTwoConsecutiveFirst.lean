@@ -70,7 +70,7 @@ theorem blank_two_consecutive_physical_first_returns :
       (DRegularSource.sourceSection ⟨9*t+4,6,1⟩)
       (BB6.Agent32EAll.start (3*t) 5 []) := by
     rw [hsource,htarget]
-    simpa only [run] using
+    simpa only [CryptidBoundary.run] using
       (source_init_pad 0 2 xs)
   have hstart : ObsEq (run T0 blank)
       (BB6.Agent32EAll.start (3*t) 5 []) := by
