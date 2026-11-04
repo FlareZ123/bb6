@@ -126,3 +126,22 @@ A complementary [NeedleGeneralInverse.lean](NeedleGeneralInverse.lean) proves a 
 - Source-dependent theorem `NeedleCubicBoundSource.original_terminal_cubic_bound` states, for an original terminal `haltTower k`, the exact exception `(q,v,k)=(61,6,12)` or `3v≤k+3`. There is **no** result proving a given source is visited by blank N1, no root nonhalting theorem, no exact Busy Beaver bound, and no external-priority claim. These are intermediate methods in `im-results/`.
 
 **Next discriminating research:** combine the exhaustive predecessor generator with source-*reachable* predicates and an invariant of the actual blank N1 sequence, including maximal odd-run packets from Agent 48. Elimination of a whole surviving true-blank feeder family, or a genuine halt, is what can resolve Space Needle. Further arithmetic-only sharpening may improve proof-search efficiency but cannot classify the machine by itself.
+
+
+### Sharp improvement: (3v+3≤K) outside a unique synthetic exception (2026-11-04, later result)
+
+The cubic inequality `3v≤K+2` above was sharpened by [NeedleSharper.lean](NeedleSharper.lean) to the **optimal exact all-natural bound**
+
+```lean
+theorem NeedleSharper.sharper_valuation_bound (q v K : Nat)
+    (h : NeedleInverse.equation q v K) :
+    (q=61 ∧ v=6 ∧ K=13) ∨ 3*v+3 ≤ K
+```
+
+This is **strictly stronger** than the preceding cubic lemma. Two independent exact witnesses meet equality: `(q,v,K)=(45,2,9)` and `(214,3,12)`. The lone synthetic exception `(61,6,13)` is exact and legal, with source counter `d=7998` and terminal counter `8190`.
+
+The proof partitions `s=K-2v` in the only unexcluded five-diagonal strip `v-2≤s≤v+2`. For `v≤9` it performs a Lean-kernel exhaustive finite case split of the modular gate; for all `v≥10` an inductive all-natural exponential dominance lemma `4v+50≤2^(v-2)` and five exact symbolic remainders contradict the gate. The uniformly quantified theorem was **locally compiled against the actual Lean 4.36.0-rc2 parent proof**; `#print axioms` reports exactly `[propext, Quot.sound]`, no user axioms, no sorry. Remote committed source and locally checked source were compared by deleting comments/whitespace; normalized 3924 Unicode codepoints, FNV-1a32 `a691a1ee`. The source-specific bridge [NeedleSharperSource.lean](NeedleSharperSource.lean) is pending the separate pinned Cryptids CI audit.
+
+A further *genuine-root* candidate [NeedleRootSharp.lean](NeedleRootSharp.lean) shows that blank-start `N1` passes from `d=7484` at high-level call 11 to `d=13098` at call 12 without visiting `7998`. Since the original-source [high-level map increases strictly](../agent48-space-needle/SpaceNeedleClosed.lean) on every successor call, the root can never subsequently visit `7998`. If its unchanged-source proof passes, the **exception is removed for all actually blank-reachable terminal feeders**, yielding an exact *raw-machine halting iff to a genuine blank-root feeder from a finite complete inverse list satisfying `3v+3≤K`*. This remains a proposed source bridge pending original-source CI, not a Space Needle halt decision.
+
+No empty inverse feeder condition is being claimed for any terminal exponent. New or improved arithmetic cutoffs should be used in a genuinely seeded backward proof rather than mistaken for all-time nonhalting.
