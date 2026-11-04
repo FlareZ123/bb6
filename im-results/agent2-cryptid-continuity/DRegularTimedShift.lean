@@ -83,3 +83,41 @@ theorem accumulated_shift (n : Nat) : ∀ (s t : L) (p : Nat), Canon s →
           (12*3^n*3^n+64*quadCoeff n)*p*p
       exact combine (duration s) (3^n) (slope s) (accumulated n u)
         (linearCoeff n u) (quadCoeff n) p
+
+private theorem three_square (n : Nat) : 3^n*3^n=9^n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    calc
+      3^(n+1)*3^(n+1) = (3^n*3^n)*(3*3) := by
+        simp only [Nat.pow_succ]
+        ac_rfl
+      _ = 9^(n+1) := by rw [ih]; simp only [Nat.pow_succ]
+
+/-- Closed integer identity for universal quadratic coefficient:
+    55*Q_n+12*9^n=12*64^n, hence Q_n=12*(64^n-9^n)/55. -/
+theorem quad_closed (n : Nat) :
+    55*quadCoeff n + 12*9^n = 12*64^n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    have hthree : 12*3^n*3^n = 12*9^n := by
+      calc
+        12*3^n*3^n = 12*(3^n*3^n) := by ac_rfl
+        _ = 12*9^n := by rw [three_square]
+    have hrec : quadCoeff (n+1) = 12*9^n+64*quadCoeff n := by
+      change 12*3^n*3^n+64*quadCoeff n=_
+      rw [hthree]
+    calc
+      55*quadCoeff (n+1)+12*9^(n+1) =
+          64*(55*quadCoeff n+12*9^n) := by
+        rw [hrec]
+        simp only [Nat.pow_succ]
+        simp only [Nat.mul_add, Nat.add_mul, Nat.mul_assoc]
+        omega
+      _ = 64*(12*64^n) := by rw [ih]
+      _ = 12*64^(n+1) := by simp only [Nat.pow_succ]; ac_rfl
+
+#print axioms quad_closed
+#print axioms accumulated_shift
+end BB6.DRegularTimedShift
