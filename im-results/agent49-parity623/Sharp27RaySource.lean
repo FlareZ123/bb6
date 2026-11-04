@@ -36,4 +36,51 @@ theorem zero_even_ray_sharp (d : Nat) (hd : d%2=0) (hl : 24≤d) :
 #print axioms ray_seven_exact
 #print axioms zero_even_ray_two_returns
 #print axioms zero_even_ray_sharp
+
+/-- The second exact affine ray accounting for all large even-d equality
+states with first counter 2. -/
+theorem ray_nine_exact (a : Nat) (ha : 27≤a) :
+    highLevelNext (.D a 9)=some (.D (a-12) 41) := by
+  let t := a-27
+  have ht : 27+t=a := by dsimp [t]; omega
+  have hr : 15+t=a-12 := by dsimp [t]; omega
+  have hb : highLevelNext (.D 27 9)=some (.D 15 41) := by decide +kernel
+  have hs := highLevel_far_odd_shift 27 9 t (by decide) (by decide)
+  rw [hb] at hs
+  simpa only [ht,hr,Option.map_some,liftFirstState] using hs
+
+/-- The third exact affine ray for all large odd-d equality states with
+first counter 2. -/
+theorem ray_ten_exact (a : Nat) (ha : 25≤a) :
+    highLevelNext (.D a 10)=some (.D (a-10) 38) := by
+  let t := a-25
+  have ht : 25+t=a := by dsimp [t]; omega
+  have hr : 15+t=a-10 := by dsimp [t]; omega
+  have hb : highLevelNext (.D 25 10)=some (.D 15 38) := by decide +kernel
+  have hs := highLevel_far_even_shift 25 10 t (by decide) (by decide)
+  rw [hb] at hs
+  simpa only [ht,hr,Option.map_some,liftFirstState] using hs
+
+/-- A second source-exact infinite 27-unit family, a=2 and d even. -/
+theorem two_even_ray_two_returns (d : Nat) (hd : d%2=0) (hl : 28≤d) :
+    highLevelNext (.D 2 d)=some (.D d 9) ∧
+    highLevelNext (.D d 9)=some (.D (d-12) 41) := by
+  exact ⟨BB6.Agent49LowStepSource.low_two_even d hd (by omega),
+    ray_nine_exact d (by omega)⟩
+
+/-- A third source-exact infinite 27-unit family, a=2 and d odd. -/
+theorem two_odd_ray_two_returns (d : Nat) (hd : d%2=1) (hl : 25≤d) :
+    highLevelNext (.D 2 d)=some (.D (d+1) 10) ∧
+    highLevelNext (.D (d+1) 10)=some (.D (d-9) 38) := by
+  constructor
+  · exact BB6.Agent49LowStepSource.low_two_odd d hd (by omega)
+  · have hs := ray_ten_exact (d+1) (by omega)
+    have heq : d+1-10=d-9 := by omega
+    simpa only [heq] using hs
+
+#print axioms ray_nine_exact
+#print axioms ray_ten_exact
+#print axioms two_even_ray_two_returns
+#print axioms two_odd_ray_two_returns
+
 end BB6.Agent49SharpRaySource
