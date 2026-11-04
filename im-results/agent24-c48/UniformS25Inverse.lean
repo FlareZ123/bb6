@@ -191,7 +191,9 @@ theorem s25_third_inverse (q a k : Nat)
         obtain ⟨n,hsum,_⟩ :=
           bounce_odd_output_invariants (2*k+1) 1
             (22704*q+4423) (21416*q+4172) (by decide) hb
-        have hmod : 44120*q+8595=8*(2^n) := by omega
+        have hleft : (22704*q+4423)+(21416*q+4172)=44120*q+8595 := by omega
+        have hmod : 44120*q+8595=8*(2^n) := by
+          simpa only [hleft] using hsum
         omega
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
@@ -210,7 +212,10 @@ theorem s25_third_inverse (q a k : Nat)
                 bounce_even_output_invariants (2*k-3) 4
                   (22704*q+4423) (21416*q+4172)
                   (by decide) (by omega) hb
-              have hpar : 44120*q+8596=16*(2^n) := by omega
+              have hleft : (22704*q+4423)+(21416*q+4172)+1=
+                  44120*q+8596 := by omega
+              have hpar : 44120*q+8596=16*(2^n) := by
+                simpa only [hleft] using hsum
               omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
@@ -230,7 +235,10 @@ theorem s25_third_inverse (q a k : Nat)
             have hpar : 2*(a-1)+6=2*(a+2) := by omega
             have heven : 44120*q+8595=2*(2^n*(a+2)) := by
               calc
-                44120*q+8595=2^n*(2*(a-1)+6) := by omega
+                44120*q+8595=2^n*(2*(a-1)+6) := by
+                  have hleft : (22704*q+4423)+(21416*q+4172)=
+                      44120*q+8595 := by omega
+                  simpa only [hleft] using hsum
                 _ = 2^n*(2*(a+2)) := by rw [hpar]
                 _ = 2*(2^n*(a+2)) := by ac_rfl
             omega
@@ -238,8 +246,17 @@ theorem s25_third_inverse (q a k : Nat)
             obtain ⟨n,hsum,hcost⟩ :=
               bounce_even_output_invariants (2*k-a+3) (a-1)
                 (22704*q+4423) (21416*q+4172) hodd (by omega) hb
-            have hsum' : 44120*q+8596=2^n*(2*(a-1)+8) := by omega
-            have hcost' : 65536*q+12769=2*k+a+9+3*n := by omega
+            have hsum' : 44120*q+8596=2^n*(2*(a-1)+8) := by
+              have hleft : (22704*q+4423)+(21416*q+4172)+1=
+                  44120*q+8596 := by omega
+              simpa only [hleft] using hsum
+            have hcost' : 65536*q+12769=2*k+a+9+3*n := by
+              have hleft : (2*k-a+3)+(2*(a-1)+8)+3*n =
+                  2*k+a+9+3*n := by omega
+              have hright : (22704*q+4423)+2*(21416*q+4172)+2 =
+                  65536*q+12769 := by omega
+              rw [hleft,hright] at hcost
+              exact hcost.symm
             by_cases hn : n=0
             · subst n
               simp at hsum' hcost'
