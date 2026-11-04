@@ -25,6 +25,7 @@ jobs:
           lean -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
           lean -DmaxRecDepth=8192 -DmaxHeartbeats=10000000 -o im-results/agent39-429-1021/BB429No12285mod16384.olean im-results/agent39-429-1021/BB429No12285mod16384.lean
-          lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 im-results/agent39-429-1021/BB429No1021More.lean
+          lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 -o im-results/agent39-429-1021/BB429No1021More.olean im-results/agent39-429-1021/BB429No1021More.lean
           lean -DmaxRecDepth=16000 -DmaxHeartbeats=15000000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
-          lean -DmaxRecDepth=16000 -DmaxHeartbeats=15000000 im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxRecDepth=16000 -DmaxHeartbeats=15000000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxRecDepth=32768 -DmaxHeartbeats=10000000 im-results/agent39-429-1021/BB429No1021Five.lean
