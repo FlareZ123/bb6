@@ -48,4 +48,5 @@ jobs:
           for m in TwoResetGrowth TwoResetTailBudget TwoResetWall DefectPositive TwoResetRemainder TwoResetDefectBridge FirstBlockDefect TwoResetExactEquations TwoResetShape SourceInterfaces; do
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
-          lean "$AG43/SourceTwoReset.lean"
+          lean -o "$AG43/SourceTwoReset.olean" "$AG43/SourceTwoReset.lean"
+          lean "$AG43/ThreeResets.lean"
