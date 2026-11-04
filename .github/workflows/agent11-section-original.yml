@@ -43,6 +43,8 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/SectionMassOriginal.lean .
           lean -o SectionMassOriginal.olean SectionMassOriginal.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/SectionFuelOriginal.lean .
-          lean SectionFuelOriginal.lean
+          lean -o SectionFuelOriginal.olean SectionFuelOriginal.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/SectionBackwardOriginal.lean .
-          lean SectionBackwardOriginal.lean
+          lean -o SectionBackwardOriginal.olean SectionBackwardOriginal.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/SectionBackwardFuelOriginal.lean .
+          lean SectionBackwardFuelOriginal.lean
