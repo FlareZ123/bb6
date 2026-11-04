@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import DRegularShift
+import DRegularTimedShift
 import ERemaining
 
 set_option maxHeartbeats 100000000
