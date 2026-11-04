@@ -46,3 +46,37 @@ The manual **unchanged checked-in dependency** [Lean CI run 41769574780](https:/
 The general `fast_root_excludes N fuel n` theorem proves a transfer for *any* index upper bound `N`, given a successful exact `shieldMany` certificate, while `blank_excludes_surviving_through_256` checks the specific bound. [RootMin256.lean](RootMin256.lean) composes this all-time exclusion with the previously proved four mod-six disallowed classes and the first six exceptions. Its theorem `no_fatal_through_256` excludes every indexed fatal height `c_n`, regardless of residue, for `n≤256`; `halt_requires_index_ge_257` requires a reached `c_n` at `n≥257, n mod 6 in {4,5}` for any source-compressed halt.
 
 The [unmodified Cryptids original-source bridge workflow](../../.github/workflows/agent10-746-original-cryptids.yml) separately compiles against pinned upstream commit `c86f15861709b76042998c5211c7b2f83991621b`, Lean 4.35.0-rc4. The [OriginalRawGate.lean](OriginalRawGate.lean) theorem is intended to strengthen the *original raw six-state machine* halting iff from Agent 7's `n≥52` gate to `n≥257`. **Original-source check PASSED:** [GitHub Actions run 41772098475](https://github.com/FlareZ123/bb6/actions/runs/41772098475), pinned unmodified upstream Lean 4.35.0-rc4. The complete original checked-in proof chain, original high-level next relation, Agent 7 physical raw halting iff, and Agent 10 strengthened raw iff all compiled successfully. The emitted `#print axioms` for `Agent10Raw746.original_machine_halts_iff_surviving_257` was exactly `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. **Now proved for the actual six-state blank-tape TM:** `IsHalt target ↔ ∃ n≥257, n mod6∈{4,5}, ReachC (2,0) (c_n,0)`. This is a completed exact reduction to an unresolved infinite candidate family, not a halting verdict. These findings still leave infinitely many candidate fatal resets and do not decide this holdout or BB(6); they belong to intermediate `im-results/` rather than externally reviewed `results/`.
+
+## 2026-11-04: first-return inverse closed form and reduced backward search (new experiment)
+
+[reset_inverse_fast.py](reset_inverse_fast.py) eliminates all intermediate C/P sweep states from the existing source-indexed #746 search and enumerates the **complete first-reset predecessor set** of a given reset height under the closed first-return formulas. This is an independent, symbolic derivation plus a Python experiment, **not yet a Lean-certified theorem for the inverse algorithm**. It should not be used as a substitute for Agent 7's source-proven [C-episode reverse certificate](../agent7-cascade-odd-fibers/ReverseCertificate.lean) until the closed-form inverse relation has a source-connected proof. The prior Agent 7 [reverse_audit.py](../agent7-cascade-odd-fibers/reverse_audit.py) already exploits the unique even-return inverse, and [reverse_well.py](../agent7-cascade-odd-fibers/reverse_well.py) exhaustively handles full C-state predecessors. The contribution here is the direct handling of **both** even and arbitrary valuation-length odd return predecessors without materializing C-episode states.
+
+### Derivation of the exact source-indexed reset map
+
+Write `R(h)` for the first next C-state `(u,0)` after `(h,0)`, or no reset if the source machine instead halts. For `p=2^k`, the sweep after the initial C(2,2h+1) episode has, after k large-branch transitions,
+`A_k=4p-2`, `B_k=2h+2k+9-8p`.
+The large guard is equivalent to `h+k+5>=8p`. Let k be the **first** index at which the guard fails. Such a k exists because powers of two eventually dominate h+k. For k>=1, the previous guard is `h+k+4>=4p`; for k=0, h>=0. If `h+k+4=4p`, then `B_k=1` and the return halts, precisely the known fatal height `h=4*2^k-k-4`.
+
+Otherwise the first underflow produces
+`a0=4p+floor((h+k)/2)`, with second coordinate zero if h+k is even and two if h+k is odd. In the even case `R(h)=a0`. In the odd case, set `q=a0+3` and `t=v2(q)`. Every C-state `(a,2)` with odd a effects `a+3 -> 3*(a+3)/2`; after exactly t such steps, a is even. The final `(a,2)` step resets at
+`R(h)=(3^(t+1)*(q/2^t)-5)/2`.
+No halting transition occurs in this B=2 chain.
+
+### Complete inverse formula
+
+For a proposed reset target u, there are exactly these predecessor forms:
+
+1. **Direct even-phase predecessor.** For some unique `p=2^k`, `6p-1<=u<=8p-3`; the predecessor is `h=2u-8p-k`. Candidate p is the largest power of two at most `(u+1)//6`. For k=0 the band contains only u=5 and returns h=2.
+2. **Odd-phase predecessor.** Necessarily `3|(2u+5)`. For each `0<=t<v3(2u+5)`, put `q=2^t*(2u+5)/3^(t+1)`. Either `q=7`, giving the unique k=0 predecessor h=1; or there is a unique k>=1 with `6*2^k+1<=q<=8*2^k-1`, giving `h=2q-8*2^k-k-5`. Candidate p is the largest power of two at most `(q-1)//6`.
+
+Both directions follow by substituting these expressions into the first-failure inequalities and the above source-C episode formulas. Each returned predecessor satisfies `0<=h<u`. Thus the reverse graph from any finite u is finite and the complete ancestor set is enumerable without an arbitrary fuel cutoff. Each input produces at most one even candidate and at most `v3(2u+5)` odd candidates. The Python function filters by the exact dyadic bands; it never guesses the reset scale by simulating all intervening C sweeps.
+
+### Reproducible experimental results and limits
+
+The script's `self_test()` validates h<100000 against inverse membership, compares all target u<10000 against all h<500, and conducts 2,500 seeded random large-integer round trips (seed 74620261104, widths 32,64,256,1024,8192 bits). In a separate independent simulator, the direct R formula agreed with actual `SourceMacro.Cstep` episodes for every h<100000. These tests confirm implementation consistency; they are not a replacement for mathematical/Lean source proof.
+
+Its `audit(257,2048)` exhaustively expanded every reset parent of each **597** h-index candidates `n in [257,2048], n%6 in {4,5}`, under the derived inverse. All reverse cones ended without h=2. A total of **1,036,567** reverse nodes were visited across the 597 targets; largest was **3,106** nodes at n=2039. Deterministic digest (ASCII lines `n:nodes:edges:0\n` in increasing n, SHA256):
+`6483385549d25f3b540ad45d9edf40fa1bf6432b8126e07a6767782ea2573984`.
+Examples: n=257 has 380 reverse nodes, n=263 has 378; n=10000 has 15,194 and n=10001 has 15,126. For comparison the existing unoptimized C-state inverse reports 14,148 nodes for n=100, where the reset inverse has 141. These are finite computational results for a copied source model, **not formally certified exclusions**, not a universal argument for all candidate n, and not a BB(6) upper bound.
+
+**High-value next step:** Encode the complete first-reset semantics and the two inverse cases in Lean, reusing exact `SourceMacro.Cstep` / `ResetAncestry` / `CascadeSource.C_step_sound` and the original pinned Cryptids source bridge. Then use the finite reverse certificates to certify an entire new bounded candidate interval. A deeper target is a symbolic invariant in the inverse reset graph applying to all n mod6 in {4,5}, avoiding an ever-growing finite cutoff. Document exact first-return source proof before advertising any kernel-certified extension.
