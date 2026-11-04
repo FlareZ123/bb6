@@ -130,11 +130,11 @@ theorem e_front_firstPhysical (m q : Nat) (ys : List Bool) :
   have h2 : run (2*(q+1)) s = a := by
     dsimp [s,a]
     rw [scan_run]
+    rfl
   have h3 : run 33 a = d := by
     change run 33
       (⟨false::true::(oppairs q++L),false,wordE ys,0⟩ : Cfg) = d
     rw [a_turn]
-    rfl
   have h4 : run 1 d = c := by
     dsimp [d,c,L]
     exact d_to_c m q ys
