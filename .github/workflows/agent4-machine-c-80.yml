@@ -24,6 +24,8 @@ jobs:
           /tmp/agent4-m80-check
           g++ -std=c++17 -O2 -Wall -Wextra im-results/agent4-mixed80-backward/check_first.cpp -o /tmp/agent4-first80-check
           /tmp/agent4-first80-check
+          g++ -std=c++17 -O2 -Wall -Wextra im-results/agent4-mixed80-backward/forward80.cpp -o /tmp/agent4-forward80
+          /tmp/agent4-forward80
       - name: Source-native Lean kernel check and axiom audit
         shell: bash
         run: |
@@ -51,7 +53,7 @@ jobs:
           lean -o Five80Compact.olean Five80Compact.lean
           lean -o Five80Stop.olean Five80Stop.lean
           lean -o Five80Source.olean Five80Source.lean
-          lean Five80Second.lean
+          lean -o Five80Second.olean Five80Second.lean
           lean Five80OnlyTwo.lean
           lean -o First80.olean First80.lean
           lean -o First80Source.olean First80Source.lean
