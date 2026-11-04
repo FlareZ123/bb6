@@ -40,3 +40,14 @@ jobs:
           lean -o im-results/agent50-p1-reset-density/ResetBudget.olean im-results/agent50-p1-reset-density/ResetBudget.lean
           lean -o im-results/agent50-p1-reset-density/ResetSourceAlgebra.olean im-results/agent50-p1-reset-density/ResetSourceAlgebra.lean
           lean im-results/agent50-p1-reset-density/ResetSourceBridge.lean
+      - name: Compile strict all-count theorem and n>=70 three-reset consequence
+        run: |
+          set -e
+          for m in ResetStrict ResetStrictBridge; do
+            base64 -d "im-results/agent50-p1-reset-density/$m.lean.xz.b64" | xz -d > "im-results/agent50-p1-reset-density/$m.lean"
+          done
+          printf '%s\n'             '7540ccecc0e0f7e428afd5f6bc9b8a0b6ca8898d7226870c27942ea0555d3ea4  im-results/agent50-p1-reset-density/ResetStrict.lean'             'ddd3c17788560e97afc9b5d51757c6db35972585fe25b40a497ade55a6cf3dc1  im-results/agent50-p1-reset-density/ResetStrictBridge.lean' | sha256sum -c -
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton:im-results/agent50-p1-reset-density"
+          lean -o im-results/agent50-p1-reset-density/ResetSourceBridge.olean im-results/agent50-p1-reset-density/ResetSourceBridge.lean
+          lean -o im-results/agent50-p1-reset-density/ResetStrict.olean im-results/agent50-p1-reset-density/ResetStrict.lean
+          lean im-results/agent50-p1-reset-density/ResetStrictBridge.lean
