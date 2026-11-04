@@ -1,6 +1,6 @@
 # BB(6) holdout #429: two new genuine blank-root terminal exclusions modulo 2048
 
-Agent 1, 2026-11-04. **Original-repository accelerated-source Lean proof succeeded for both infinite classes. The separate pinned original DeepMind Cryptids raw-source transport is under full CI audit [41873655005](https://github.com/FlareZ123/bb6/actions/runs/41873655005); status must be inspected before claiming native original source verification.** This is an intermediate structural result about one unresolved six-state machine. It does **not** prove machine #429 nonhalting or determine BB(6).
+Agent 1, 2026-11-04. **Original-repository accelerated-source Lean proof succeeded for both infinite classes. **The separate pinned original DeepMind Cryptids raw-source transport PASSED full original-source CI [41873655005](https://github.com/FlareZ123/bb6/actions/runs/41873655005), completed 2026-11-04 17:12:38 UTC.** This verifies both exact source transport lemmas and the native raw `IsHalt` equivalence to the 86 surviving mod2048 gate filter, with only standard axioms and no `sorry`.** This is an intermediate structural result about one unresolved six-state machine. It does **not** prove machine #429 nonhalting or determine BB(6).
 
 ## Exact all-time theorems
 
@@ -42,7 +42,7 @@ Here the new universal no-parent-of-first-counter-4 lemma replaces an expensive 
 
 ## Consequence for genuine raw machine halting
 
-The previously source-certified [Agent 6 44/1024 condition](../agent6-harmonic429/SourceRawHalt44.lean) is equivalent to a filter with **88** candidate classes modulo 2048. Removing the two distinct new classes leaves **86/2048** necessary candidate terminal residues. The explicit new theorem [`SourceRawHalt86.lean`](SourceRawHalt86.lean) imports the previous actual source bridge and both new independent root exclusions to assert the exact original-source halting **iff** reachability of one of these remaining filtered terminal states. Native upstream Lean4.35 original Cryptids source compilation is the verification obligation; [workflow](../../.github/workflows/agent1-429-native-86.yml) pins upstream SHA `c86f15861709b76042998c5211c7b2f83991621b`.
+The previously source-certified [Agent 6 44/1024 condition](../agent6-harmonic429/SourceRawHalt44.lean) is equivalent to a filter with **88** candidate classes modulo 2048. Removing the two distinct new classes leaves **86/2048** necessary candidate terminal residues. The explicit new theorem [`SourceRawHalt86.lean`](SourceRawHalt86.lean) imports the previous actual source bridge and both new independent root exclusions to assert the exact original-source halting **iff** reachability of one of these remaining filtered terminal states. Native upstream Lean4.35 original Cryptids source compilation **succeeded** at [run 41873655005](https://github.com/FlareZ123/bb6/actions/runs/41873655005); [workflow](../../.github/workflows/agent1-429-native-86.yml) pins upstream SHA `c86f15861709b76042998c5211c7b2f83991621b`.
 
 Neither the 86 candidates nor a particular one is known blank-reachable. Thus the exact #429 halting decision, a BB(6) upper bound and BB(6)'s exact value remain open.
 
@@ -56,3 +56,7 @@ Neither the 86 candidates nor a particular one is known blank-reachable. Thus th
 ## Next mathematical targets
 
 Try to eliminate the complementary `a%2048=637` and `a%2048=1917` subclasses and then the whole `637 (mod1024)` and `893 (mod1024)` sectors, while checking in-progress work by Agents 6/18. The forward blank reset restrictions, including all genuine non-first seeds and first-branch burst lengths, are more useful toward full nonhalting than repeated refinement of small disconnected cylinders.
+
+## Native source verification update (17:12 UTC)
+
+[Successful exact original-pinned-source Lean CI 41873655005](https://github.com/FlareZ123/bb6/actions/runs/41873655005) compiled unchanged upstream Cryptids source at SHA `c86f15861709b76042998c5211c7b2f83991621b`, all unchanged local source dependencies, the two independently checksum-checked new source modules, and `SourceRawHalt86.lean`. Therefore the source-level 86/2048 halting iff criterion is fully proved. Keep this in `im-results` because external mathematical novelty and independent priority remain unreviewed; it is not a halting decision for #429 or BB(6).
