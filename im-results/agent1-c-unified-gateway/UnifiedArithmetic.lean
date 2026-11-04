@@ -86,6 +86,46 @@ theorem bad_level_residues (u k m : Nat)
   rw [hscale] at heq
   omega
 
+/-- Uniform halting locus as a single affine family in parameters
+    u (odd-state index) and m (dyadic bounce depth). -/
+theorem one_four_power_iff_affine_rays (a k : Nat) :
+    (0 < a ∧ a%2=1 ∧ ∃ m : Nat,
+       a+2*k+6*m+7 = 4^(m+1)*(a+3)) ↔
+    (∃ u m : Nat, a=2*u+1 ∧
+       k+u+3*m+4 = 4^(m+1)*(u+2)) := by
+  constructor
+  · rintro ⟨ha,ho,m,heq⟩
+    let u := (a-1)/2
+    have hh : a=2*u+1 := by dsimp [u]; omega
+    refine ⟨u,m,hh,?_⟩
+    rw [hh] at heq
+    have hs : 4^(m+1)*(2*u+1+3)=2*(4^(m+1)*(u+2)) := by
+      rw [show 2*u+1+3=2*(u+2) by omega]
+      ac_rfl
+    rw [hs] at heq
+    omega
+  · rintro ⟨u,m,ha,hm⟩
+    subst a
+    refine ⟨by omega,by omega,m,?_⟩
+    have hs : 4^(m+1)*(2*u+1+3)=2*(4^(m+1)*(u+2)) := by
+      rw [show 2*u+1+3=2*(u+2) by omega]
+      ac_rfl
+    rw [hs]
+    omega
+
+/-- Every nonzero Machine C halting input has right counter 1 mod 3. -/
+theorem affine_ray_right_mod3 (u k m : Nat)
+    (heq : k+u+3*m+4=4^(m+1)*(u+2)) : k%3=1 := by
+  have h4 : (4:Nat)%3=1 := by decide
+  have hp : 4^(m+1)%3=1 := by simp [Nat.pow_mod, h4]
+  have hr : (4^(m+1)*(u+2))%3=(u+2)%3 := by
+    rw [Nat.mul_mod,hp]
+    omega
+  omega
+
+#print axioms one_four_power_iff_affine_rays
+#print axioms affine_ray_right_mod3
+
 #print axioms bad_level_residues
 #print axioms two_families_iff_unified
 #print axioms two_families_iff_one_four_power
