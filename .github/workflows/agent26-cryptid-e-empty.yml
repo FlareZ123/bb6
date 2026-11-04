@@ -83,7 +83,7 @@ jobs:
         run: |
           lean -o im-results/agent31-cryptid-boundary/A1100First.olean im-results/agent31-cryptid-boundary/A1100First.lean
           lean -o im-results/agent26-cryptid-e-gate/A1101010111.olean im-results/agent26-cryptid-e-gate/A1101010111.lean
-          lean im-results/agent26-cryptid-e-gate/A1101010111First.lean
+          lean -o im-results/agent26-cryptid-e-gate/A1101010111First.olean im-results/agent26-cryptid-e-gate/A1101010111First.lean
           lean -o im-results/agent32-cryptid-third/CryptidSix.olean im-results/agent32-cryptid-third/CryptidSix.lean
           lean -o im-results/agent32-cryptid-third/CryptidPairs.olean im-results/agent32-cryptid-third/CryptidPairs.lean
           lean -o im-results/agent26-cryptid-e-gate/E1101010111Pairs.olean im-results/agent26-cryptid-e-gate/E1101010111Pairs.lean
