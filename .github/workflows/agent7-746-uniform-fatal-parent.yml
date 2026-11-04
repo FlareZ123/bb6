@@ -37,5 +37,6 @@ jobs:
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
           lean -o "$f/UniformFatalParent.olean" "$f/UniformFatalParent.lean"
-          lean "$f/UniformFatalMod9.lean"
+          lean -o "$f/UniformFatalMod9.olean" "$f/UniformFatalMod9.lean"
+          lean "$f/UniformRootGate.lean"
           echo "Lean kernel validated complete n>=4 fatal-parent normal form and mod18 unique even-parent classes."
