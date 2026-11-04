@@ -28,7 +28,8 @@ jobs:
           lean -o NeedleValHalf.olean NeedleValHalf.lean
           lean -o NeedleInverseComplete.olean NeedleInverseComplete.lean
           lean NeedleGeneralInverse.lean
-          lean NeedleCubicBound.lean
+          lean -o NeedleCubicBound.olean NeedleCubicBound.lean
+          lean NeedleCubicEnumerate.lean
 
   original-source:
     runs-on: ubuntu-latest
@@ -80,3 +81,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleCubicBound.olean NeedleCubicBound.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleCubicBoundSource.lean" .
           lake env lean NeedleCubicBoundSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleCubicEnumerate.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleCubicEnumerate.olean NeedleCubicEnumerate.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleCubicEnumerateSource.lean" .
+          lake env lean NeedleCubicEnumerateSource.lean
