@@ -230,6 +230,20 @@ theorem no_second_gate_m2 : ¬ BB6.Agent11Mass.SectionReach 17 622 := by
       decide
   simp [hc] at h
 
+
+/-- Original-source all-time exclusion for genuine second gate (j=10,m=3),
+    now checkable by one linear pass through the faithful primitive-recursive
+    interpreter. This is a single parameter instance, not a uniform proof. -/
+theorem no_second_gate_m3 : ¬ BB6.Agent11Mass.SectionReach 23 3304 := by
+  intro hr
+  have h := (hasHitFull_iff 23 3304).mpr hr
+  have hc : hasHit 23 3304 (23+2*3304) (some (5,1)) = false := by
+    set_option maxRecDepth 22000 in
+      decide
+  simp [hc] at h
+
+#print axioms no_second_gate_m3
+
 #print axioms runFuel_commute
 #print axioms runFuel_succ_head
 #print axioms hasHit_iff
