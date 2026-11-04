@@ -23,7 +23,8 @@ theorem fatal_even_parent_exists (n : Nat) (hn : 4 ≤ n) :
     ResetParent (evenPred n) (fatal n) := by
   have hp : n+3 ≤ 2^n := n_plus_three_le_pow n hn
   have he : 2^n = 2*2^(n-1) := by
-    rw [show n=(n-1)+1 by omega, Nat.pow_succ]
+    have he0 : 2^n = 2^((n-1)+1) := congrArg (fun m : Nat => 2^m) (by omega)
+    rw [Nat.pow_succ] at he0
     omega
   have hbig : 3*n+7 ≤ 4*2^n := by omega
   have hlow : 6*2^(n-1)-1 ≤ fatal n := by
@@ -39,6 +40,13 @@ theorem fatal_even_parent_exists (n : Nat) (hn : 4 ≤ n) :
     rw [he]
     omega
   exact Or.inl ⟨n-1,⟨hlow,hhigh⟩,hrelation⟩
+
+private theorem reset_chain_last {s u : Nat}
+    (hr : ResetChain s u) (hne : u ≠ s) :
+    ∃ h, ResetChain s h ∧ ResetParent h u := by
+  cases hr with
+  | root => exact False.elim (hne rfl)
+  | @append h u hr hp => exact ⟨h,hr,hp⟩
 
 /-- A genuine blank-root fatal reset in these four mod18 classes
     is reachable iff its forced unique lower even predecessor is reachable.
@@ -57,13 +65,10 @@ theorem genuine_fatal_iff_unique_even_parent
   constructor
   · intro hr
     have hc : ResetChain 2 (fatal n) := (root_reset_chain_iff (fatal n)).mp hr
-    cases hc with
-    | root =>
-        exact False.elim (hnsmall rfl)
-    | @append h u hchain hp =>
-        have hforced : h=evenPred n := fatal_only_even_parent h n hn hres hp
-        rw [hforced] at hchain
-        exact (root_reset_chain_iff (evenPred n)).mpr hchain
+    obtain ⟨h,hchain,hp⟩ := reset_chain_last hc hnsmall
+    have hforced : h=evenPred n := fatal_only_even_parent h n hn hres hp
+    rw [hforced] at hchain
+    exact (root_reset_chain_iff (evenPred n)).mpr hchain
   · intro hr
     have hc : ResetChain 2 (evenPred n) :=
       (root_reset_chain_iff (evenPred n)).mp hr
