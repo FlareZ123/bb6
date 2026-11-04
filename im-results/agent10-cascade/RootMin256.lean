@@ -26,9 +26,10 @@ theorem halt_requires_index_ge_257 (a : Nat)
       ReachC (2,0) (fatal n,0) := by
   obtain ⟨n,_,hmod,hr⟩ := halt_requires_index_ge_101 a h
   have hn : 257≤n := by
-    by_contra hb
-    have hs : n≤256 := by omega
-    exact no_fatal_through_256 n hs hr
+    by_cases hb : 257≤n
+    · exact hb
+    · have hs : n≤256 := by omega
+      exact False.elim (no_fatal_through_256 n hs hr)
   exact ⟨n,hn,hmod,hr⟩
 
 #print axioms no_fatal_through_256
