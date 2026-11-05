@@ -101,7 +101,7 @@ S_18 = 336766596987601117645591 / 654227323046073897192215
      = 0.514754711588046...
 ```
 
-The full generic parent density lies between `S_18` and `S_18+3/2^19`. Taking complements gives the rational interval above. The calculator uses exact `fractions.Fraction`; no floating-point values enter the proof assertions. It independently asserts the finite rational numerator and denominator, the number of classes and compatible subsets.
+The full generic parent density lies between `S_18` and `S_18+3/2^19`. Taking complements gives the rational interval above. The upper endpoint is strict: a genuine b=19 predecessor has t=1660250, corresponding to x=9961472 and E(x)=9961500. This t lies in the b=19 progression and outside all twelve b<=18 residue progressions, as directly checked by density_certificate.py. The resulting residue cylinder has positive density, so the true parent density is strictly larger than S_18. The lower endpoint is strict because each reciprocal modulus in the omitted tail is strictly below its geometric upper estimate. The calculator uses exact `fractions.Fraction`; no floating-point values enter the proof assertions. It independently asserts the finite rational numerator and denominator, the number of classes and compatible subsets.
 
 As an **independent finite sanity check**, enumerating all legal even sources `x\\le10^6` and marking their outputs divisible by six gives **80,880 no-incoming targets out of 166,666 multiples of six**, ratio `0.48528194...`, consistent with but not a premise of the asymptotic theorem. Finite fluctuations need not lie inside the limiting interval.
 
