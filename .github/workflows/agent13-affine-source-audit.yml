@@ -1,0 +1,36 @@
+name: Agent13 original-source affine shadow verification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original modules
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification"
+          for m in GParity GInverse; do lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"; done
+          for m in P1FiniteInverse P1InverseLog; do lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"; done
+          for m in MassInverse OddConeMass; do lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"; done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowGraphBridge; do
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+      - name: Audit source adapter
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification"
+          for m in AffineStability AffineGraphTheorem FiniteToCylinder AffineSourceAdapter; do
+            lean -o "im-results/agent13-p1-affine-amplification/$m.olean" "im-results/agent13-p1-affine-amplification/$m.lean"
+          done
+          lean im-results/agent13-p1-affine-amplification/AffineSourceAdapter.lean | tee /tmp/source.log
+          grep -F 'source_shadow_finite_lift' /tmp/source.log
+          if grep -Fq sorryAx /tmp/source.log; then exit 1; fi
