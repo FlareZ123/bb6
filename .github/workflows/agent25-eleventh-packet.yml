@@ -55,4 +55,5 @@ jobs:
           lean -o "$V/CompleteAReturn.olean" "$V/CompleteAReturn.lean"
           lean -o "$V/WordReturns.olean" "$V/WordReturns.lean"
           lean -o "$V/ShortTripleGate.olean" "$V/ShortTripleGate.lean"
+          lean "$A/ETripleAllDepthA.lean"
           lean "$A/EleventhPacketFive.lean"
