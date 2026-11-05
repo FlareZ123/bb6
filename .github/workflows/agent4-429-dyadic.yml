@@ -25,7 +25,8 @@ jobs:
           set -euo pipefail
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
           lean -o im-results/agent5-429-rank/BB429Burst.olean im-results/agent5-429-rank/BB429Burst.lean
-          lean -DmaxHeartbeats=15000000 im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.lean | tee /tmp/dyadic-axioms.log
+          lean -DmaxHeartbeats=15000000 -o im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.olean im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.lean | tee /tmp/dyadic-axioms.log
+          lean -DmaxHeartbeats=15000000 im-results/agent4-bb429-dyadic-barrier/BB429EveryDyadicClass.lean | tee -a /tmp/dyadic-axioms.log
           if grep -q 'sorryAx' /tmp/dyadic-axioms.log; then
             echo "FAIL: sorryAx in Lean axiom audit"
             exit 1
