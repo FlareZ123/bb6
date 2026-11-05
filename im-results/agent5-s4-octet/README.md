@@ -72,3 +72,37 @@ This is a condition-on-survival theorem with no finite-horizon cutoff, and does 
 All new scripts are deliberately incorporated into the existing **manual-only** `.github/workflows/agent7-s4-original.yml` rather than a per-commit workflow. The original import is Cryptids revision `c86f15861709b76042998c5211c7b2f83991621b`; successful CI is the boundary for direct-source verification. The previous S4 tail-gate arithmetic, stack-length laws and weighted-growth theorems are reused, not claimed as new discoveries.
 
 The remaining decisive task is an all-time, **history-sensitive whole-tail** exclusion or actual hit for one of the exact `G` power gates on the genuine `P` orbit. A 16-period prefix is too little on its own because matching finite prefixes can admit synthetic terminal suffixes. Avoid repeating finite traces or conflating a necessary gate with its reachability. Rigorous completion of this individual root would still leave universal six-state BB(6) coverage open.
+
+
+## Three-digit causal map, exact 32-phase invariant and sharp safety (2026-11-05)
+
+The new [S4TripleHead.lean](S4TripleHead.lean) formalizes the fact that a successful `G(c,b::d::e::S)` always emits a leading triple determined *entirely* by `c,b,d,e`, independently of `S`. The three additive-head drains composing `P` preserve this causal property. The genuine initial `P` stack has the kernel-evaluated exact 23-step synchronization:
+
+```text
+prun 23 [301,650,645,322,163,160]
+  = some [280,397,1158,1914,8071,6823,3573,1786,895,892].
+```
+
+For every `n≥0` such that the true `P` orbit survives through `23+n`, the leading three digits are `tripleRun n`, an explicit total three-counter map initialized at `(280,397,1158)`. The theorem `tripleRun_period32` proves `tripleRun (n+32)=tripleRun n` for **every n**; `tripleRun_mod32` allows direct finite residue checks in downstream theorems. The proof gives a genuine-root *conditional on survival* 32-cycle of triples, with no full-stack periodicity claim.
+
+The [S4TripleResidue.lean](S4TripleResidue.lean) all-input residue lemma computes
+
+```text
+(W(a::b::d::S) + c) % 8 = (a + 2b + 4d + 7 + c) % 8.
+```
+
+Since a binary power strictly greater than eight is divisible by eight, this one equality certifies a successful `G(c, a::b::d::S)` whenever the right-hand residue is nonzero. Using the *exact* successive three-digit outputs of each `G` drain, the single-source 32-class [S4TripleSharp.lean](S4TripleSharp.lean) establishes a sharp quantified result:
+
+```text
+(∀ suffix S, P (tripleRun(n).1 :: tripleRun(n).2.1 ::
+                  tripleRun(n).2.2 :: S) ≠ none)
+ ↔ n % 32 ∈ {0,1,2,4,5,8,9,13,14,16,17,18,19,20,21,22,24,27,29,30}.
+```
+
+The remaining **12 classes**, `{3,6,7,10,11,12,15,23,25,26,28,31}`, each have a one-digit suffix explicitly computed and proved in Lean to trigger `P=none`. These witnesses show **sharpness against all possible finite suffixes**. They are synthetic counterexamples to any stronger prefix-only universal safety claim, not evidence of true-root halting.
+
+[S4TripleRoot.lean](S4TripleRoot.lean) proves from the authentic `P` seed that any *first* unsuccessful step has index `23+n` in precisely these 12 danger classes. [S4RawTripleRoot.lean](S4RawTripleRoot.lean) composes the statement with the earlier original-source certified raw S4-to-`P` equivalence, obtaining the exact mathematical equivalence between the original machine's blank-tape halting and reaching one of these twelve full-tail failure gates. The closure still quantifies over infinitely many deeper stacks. No whole-root halting conclusion follows.
+
+**Verification boundary.** All three-digit and 32-phase mathematical modules were locally compiled with Lean 4.36.0-rc2, no `sorry`, no `sorryAx` for the three-digit/finite classifier. The local `G` source-shaped stand-in imports its `G_none_iff_power` equation as a placeholder axiom; that equation is a genuine existing `S4Octet` theorem in the repository and is compiled in the independent successful original-source run [41965231342](https://github.com/FlareZ123/bb6/actions/runs/41965231342). The new combined original-source audit is dispatched in the existing manual workflow; **pending successful CI, treat the 12/32 statement as locally compiled and carefully source-shaped, not yet independently original-source checked**. A later successful run must compile all dependencies and report standard axioms only before its provenance is upgraded.
+
+The previous two-digit theorem's 10/16 danger classes and this three-digit theorem's 12/32 danger classes use different synchronized index origins and should not be compared by their raw residue labels. In each case the physical root reachability obligation remains unresolved. Further depth analysis should test novelty against the earlier complete original machine accelerations, and prioritize a whole-tail obstruction or actual counterexample rather than extrapolating periodic prefixes.
