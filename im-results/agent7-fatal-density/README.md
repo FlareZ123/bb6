@@ -112,7 +112,7 @@ The first 15 summands have exact rational sum `18606775304835163/500315450989997
 
 ## Uniform odd-depth inverse ray, genuine-root lemma
 
-Additional theorem file: [OddRayForced.lean](OddRayForced.lean), checked **locally** with Lean 4.36.0-rc2 against explicit signatures of the unchanged source imports, no sorry. The full original-source compilation has been dispatched through [issue #29](https://github.com/FlareZ123/bb6/issues/29) and [the same manual workflow](../../.github/workflows/agent7-746-uniform-fatal-parent.yml); **source CI pending** at this note's writing, so do not yet call the lemma source-certified.
+Additional theorem file: [OddRayForced.lean](OddRayForced.lean). Its local Lean 4.36.0-rc2 stub-interface test was followed by **successful full unchanged-original-source Lean CI**, [run 42121009702](https://github.com/FlareZ123/bb6/actions/runs/42121009702), triggered via [issue #29](https://github.com/FlareZ123/bb6/issues/29). The module imports unchanged `UniqueEvenBand` source and checks genuine `ResetParent` and `ReachC` propositions, with no `sorry`. The separate [OddRayDeep.lean](OddRayDeep.lean) proves explicit unbounded eligible depths locally; its full-source check is underway via [issue #31](https://github.com/FlareZ123/bb6/issues/31) and [run 42122191076](https://github.com/FlareZ123/bb6/actions/runs/42122191076) after correcting an import-path workflow error.
 
 Define a canonical sequence of hypothetical even inverse ancestors for fatal index `n` by
 
@@ -136,3 +136,8 @@ The all-depth true blank-derived source-C consequence is
 The mechanism is an alternating congruence phenomenon: `D_(j+2)%3=D_j%3`, and for **odd** `j`, `D_j%3=1`. Therefore `U_j%3` is either 0 or 1. Every odd-arm first-return parent of any target requires its height congruent to 2 modulo 3. The explicit dyadic margin ensures `U_j` stays within the single high even-image band at scale `n-1`, so Agent7's previously source-verified `any_parent_equals_even` uniquely forces `U_(j+1)`. The existing exact reset-chain transport yields the genuine blank-root equivalence. The index `j` is arbitrary, subject to the explicit band margin; this expands earlier finite-depth odd-step observations in `FourEven.lean` and `SecondEven.lean` into a quantified symbolic family.
 
 This is a **conditional branch compression** for reset targets. Even-indexed levels may still admit multiple inverse parents; no uniform nonreachability, no resolved six-state halting status and no BB6 value follows.
+
+
+## Further paper derivation: alternating 3-adic towers at every ray depth
+
+See [AlternatingRayValuation.md](AlternatingRayValuation.md) for a generalized signed-numerator Hensel argument at arbitrary symbolic inverse depth. Even depths have exactly one ternary high-valuation index residue class at each power and share the fatal source's limiting synthetic odd fan-in law. Odd depths have no odd-arm predecessors at all. The generalized **even-depth** 3-adic statement is an explicit *mathematical proof awaiting independent formal Lean implementation*; its dependence on genuine source parents is described precisely in the note. Do not confuse this paper derivation with the source-verified odd-depth first-reset equivalence.
