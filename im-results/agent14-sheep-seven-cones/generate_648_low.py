@@ -19,7 +19,7 @@ def create_source() -> tuple[str, int, int]:
     assert J == 648 and P == 122472
     assert len(nodes) == 2 and len(edges) == 1
     lines = [
-        'import EvenPeriod',
+        'import Sheep648Period',
         'set_option maxRecDepth 32768',
         'set_option maxHeartbeats 0',
         'set_option exponentiation.threshold 100000',
@@ -53,7 +53,7 @@ def create_source() -> tuple[str, int, int]:
                     f'/-- Complete all-k inverse congruence: target node {i}, h={h}, a={a}. -/',
                     f'theorem {name} (k : Nat) :',
                     f'    (2^({R}+{P}*k)+{B})%{m} ≠ 0 := by',
-                    f'  apply SheepEvenCert.no_mod_zero_from_period {m} {period} {R} {P} {q} {B}',
+                    f'  apply Sheep648Period.no_mod_zero_from_period {m} {period} {R} {P} {q} {B}',
                     '  · decide',
                     '  · decide',
                     '  · decide',
@@ -75,7 +75,7 @@ def create_source() -> tuple[str, int, int]:
                     lines += [
                         f'{indent}have he : 2^({R}+{P}*{t})%{m} = 2^{reduced}%{m} := by',
                         f'{indent}  simpa only [show {reduced}+{period}*{w}={R}+{P}*{t} by decide] using',
-                        f'{indent}    (SheepEvenCert.pow_mod_period {m} {period} {reduced} {w}',
+                        f'{indent}    (Sheep648Period.pow_mod_period {m} {period} {reduced} {w}',
                         f'{indent}      (by decide) (by decide))',
                         f'{indent}have hc : (2^({R}+{P}*{t})+{B})%{m}=(2^{reduced}+{B})%{m} := by',
                         f'{indent}  rw [Nat.add_mod, he, ← Nat.add_mod]',
