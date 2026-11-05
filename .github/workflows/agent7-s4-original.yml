@@ -104,9 +104,15 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixGate64.lean.xz.b64" | xz -dc > S4PrefixGate64.lean
           echo "5a0dba9b3dbc8a0bca50c7ae9e9aba6a9bf8ed652780c132d80bb78e32046065  S4PrefixGate64.lean" | sha256sum -c -
           lake env lean -o S4PrefixGate64.olean S4PrefixGate64.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixGeneralGate.lean.xz.b64" | xz -dc > S4PrefixGeneralGate.lean
+          echo "b49dcbb0beed94ef97b739d354c5c138b8a363d257576142cbfd99084c485b5e  S4PrefixGeneralGate.lean" | sha256sum -c -
+          lake env lean -o S4PrefixGeneralGate.olean S4PrefixGeneralGate.lean
           base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixSeven.lean.xz.b64" | xz -dc > S4PrefixSeven.lean
           echo "c4602d569435a0aea4674752e84a1c830576263be3d2712982479e1832da13d9  S4PrefixSeven.lean" | sha256sum -c -
           lake env lean -o S4PrefixSeven.olean S4PrefixSeven.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixSevenGate.lean.xz.b64" | xz -dc > S4PrefixSevenGate.lean
+          echo "2fe6a92eab557fb3e1f3cf2459efbc560d358209f7cd8dfbc3df2db27e866665  S4PrefixSevenGate.lean" | sha256sum -c -
+          lake env lean -o S4PrefixSevenGate.olean S4PrefixSevenGate.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4ToggleHead.lean" S4ToggleHead.lean
           lake env lean -o S4ToggleHead.olean S4ToggleHead.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TogglePhases.lean" S4TogglePhases.lean
