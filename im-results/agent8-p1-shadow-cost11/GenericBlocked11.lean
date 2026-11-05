@@ -63,4 +63,4 @@ theorem blocked_of_uniform_cone_exit11
   exact haux 12 b0 d0 0 (by omega) OddCone.root hroot4 hrootodd
 
 #print axioms blocked_of_uniform_cone_exit11
-end BB6.Agent8Generic
+end BB6.Agent8Generic11

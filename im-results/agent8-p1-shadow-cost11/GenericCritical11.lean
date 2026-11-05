@@ -55,4 +55,4 @@ theorem critical_unreachable_of_shadow11
   · exact (blocked_no_reach _ _ hblocked1) h1
 
 #print axioms critical_unreachable_of_shadow11
-end BB6.Agent8Generic
+end BB6.Agent8Generic11
