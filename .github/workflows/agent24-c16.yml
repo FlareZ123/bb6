@@ -114,3 +114,5 @@ jobs:
           lean -o OneTenGate.olean OneTenGate.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/SixCone.lean .
           lean -o SixCone.olean SixCone.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/SixResidual.lean .
+          lean -o SixResidual.olean SixResidual.lean
