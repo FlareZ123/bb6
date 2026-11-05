@@ -46,3 +46,4 @@ jobs:
           lean -o "$P/EAltBoundaryFirst.olean" "$P/EAltBoundaryFirst.lean"
           lean -o im-results/agent2-cryptid-continuity/PrefixENoFSource.olean im-results/agent2-cryptid-continuity/PrefixENoFSource.lean
           lean "$P/EAltFullFirst.lean"
+          lean "$P/EGenericFullFirst.lean"
