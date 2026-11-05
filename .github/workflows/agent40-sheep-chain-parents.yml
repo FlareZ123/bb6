@@ -94,3 +94,17 @@ jobs:
             SheepSpecialNormalize.lean SpecialSourceCases.lean
           lake env lean -o ".lake/build/lib/lean/SheepSpecialNormalize.olean" SheepSpecialNormalize.lean
           lake env lean -o ".lake/build/lib/lean/SpecialSourceCases.olean" SpecialSourceCases.lean
+          # Authenticate complete inverse cone nonreachability against the
+          # genuine blank-even source graph, including all last-edge witnesses.
+          for name in OddPrefix EvenReach; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/$name.lean" "$name.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean" SheepEvenSourceAlgebra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenReachInverse.lean" SheepEvenReachInverse.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/SheepChainRoot.lean" SheepChainRoot.lean
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            OddPrefix.lean EvenReach.lean SheepEvenSourceAlgebra.lean SheepEvenReachInverse.lean SheepChainRoot.lean
+          for name in OddPrefix EvenReach SheepEvenSourceAlgebra SheepEvenReachInverse; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean SheepChainRoot.lean
