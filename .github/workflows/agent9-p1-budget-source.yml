@@ -1,12 +1,15 @@
 name: Agent 9 P1 arbitrary-budget source cone and shadow induction audit
 on:
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   verify:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[P1CAP41]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -81,3 +84,10 @@ jobs:
           lean -o im-results/agent9-p1-k10-budget12/GenericCritical12K.olean im-results/agent9-p1-k10-budget12/GenericCritical12K.lean | tee -a /tmp/agent9-k10-12.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-k10-12.log; then exit 1; fi
           grep -F "critical_unreachable_of_shadow12K' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-k10-12.log
+      - name: Audit experimental high-cost 41 source shadow condition
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12"
+          lean -o im-results/agent9-p1-k10-budget12/GenericShadow41K.olean im-results/agent9-p1-k10-budget12/GenericShadow41K.lean | tee /tmp/agent9-cap41.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-cap41.log; then exit 1; fi
+          grep -F 'g1_blocked' /tmp/agent9-cap41.log
