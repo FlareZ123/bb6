@@ -30,3 +30,9 @@ The cost-budget and binary cutoff **source abstractions** are arbitrary, but the
 Fixed q shadows with greater M (e.g., q33 shadow budget41; [fixed-q census](../agent9-p1-fixed-cone/README.md)) suggest a productive extension: strengthen the width proof with the true exponential lower bound at the fixed q rather than the conservative linear `65536q` bound. The full original-source terminal cases and all affine successor closure remain necessary. Entire classes not accepted by an affine finite-list certificate may still be unreachable by other arguments.
 
 The other source-certified results and proof provenance are summarized in [the 700/1024 P1 gateway theorem](../../results/2026-11-05-p1-700-source-gateway-density-agent9.md).
+
+## Last original-source cost-41 feeder audit
+
+[Original-source CI 42122339015](https://github.com/FlareZ123/bb6/actions/runs/42122339015) **succeeded** compiling the additional [GenericShadow41K.lean](../agent9-p1-k10-budget12/GenericShadow41K.lean) against unchanged original P1 and all the generic cost/K dependencies. This proves the individual authentic feeder `g0_blocked` and `g1_blocked` implications under explicit two-root closed shadow assumptions for `m≤41` and `1024∤z`, with a stronger source-safe width bound from the genuine exponential q≥29 lower bound.
+
+**Scope:** The file is an original-source *generic feeder lemma*. No `GenericCritical41K` final critical-reset theorem was constructed in this run, and no fixed q33 source blank-reachability exclusion was established. The fixed-q q33 two-feeder shadow closure remains merely a computed 118/116-node candidate, awaiting Lean kernel checking of complete finite-list invariants and the final source critical-target bridge. The workflow was restored to manual-only and the audit issue #32 closed following the successful CI.
