@@ -49,8 +49,9 @@ private theorem onesShift (v r : Nat) (ys : List Bool) :
        show 2*r+1=(2*r)+1 by omega,
        ←List.replicate_append_replicate]
     rfl
+  simp only [out]
   rw [h,hr]
-  simp [out,List.append_assoc,List.replicate_succ]
+  simp [List.append_assoc,List.replicate_succ]
 
 /-- Exact, unbounded, literal original six-state A/0 to C/1 turnaround:
     (10)^(v+2) 110 (10)^r 0 Y is consumed for every v,r,Y and any
@@ -74,9 +75,9 @@ theorem a_double_zero_turn (v r : Nat) (L ys : List Bool) :
   have hstart : run (2*(v+2))
       (⟨L,false,front v r ++ ys,0⟩ : Cfg) =
       (⟨U,false,[true,true,false]++zs,0⟩ : Cfg) := by
-    dsimp [U,zs,front]
-    rw [List.append_assoc]
-    exact aTenOppIter (v+2) L ([true,true,false]++(pairs r++(false::ys)))
+    simpa only [front,U,zs,List.append_assoc,List.cons_append,
+      List.nil_append] using
+      (aTenOppIter (v+2) L ([true,true,false]++(pairs r++(false::ys))))
   have hseven : run 7
       (⟨U,false,[true,true,false]++zs,0⟩ : Cfg) =
       afterSeven := by
@@ -93,13 +94,17 @@ theorem a_double_zero_turn (v r : Nat) (L ys : List Bool) :
     dsimp [afterZero,afterR,R]
     exact cWalk_run r V (true::ys)
   have hc7 : run 7 afterR = afterC7 := by
-    dsimp [afterR,afterC7,V]
+    dsimp [afterR,afterC7,V,U]
     rw [opSplit]
     exact cSeven (oppairs v++L)
       (List.replicate (2*r) true ++ true::ys)
   have hlast : run (2*v) afterC7 =
       (⟨L,true,out v r ++ ys,2⟩ : Cfg) := by
     dsimp [afterC7]
+    change run (2*v)
+      (cWalk v L
+        ([true,false,true,true,true,true,true] ++
+          (List.replicate (2*r) true ++ true::ys))) = _
     rw [cWalk_run]
     exact congrArg (fun xs : List Bool => (⟨L,true,xs,2⟩ : Cfg))
       (onesShift v r ys)
