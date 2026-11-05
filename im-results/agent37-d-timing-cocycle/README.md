@@ -40,3 +40,32 @@ Even a fully established first-event cocycle would be an intermediate structural
 ## Next discriminating action
 
 Try adversarially structured, long irregular E/A packets for an actual counterexample, especially the source-certified E p=2 marker-mutating branch. If the rule survives, develop an original-source guarded alternating-stack simulation with exact halt/return timing. A useful eventual consequence must constrain an **entire actual blank-root feeder**, not merely produce another synthetic cylinder. Keep this evidence in `im-results/` until that mathematical gap is closed.
+
+
+## Source-kernel-certified mixed-token halting first-event theorem (2026-11-05)
+
+**Original six-state source proof now fully verified** in [manual CI run 42088127688](https://github.com/FlareZ123/bb6/actions/runs/42088127688). The two Lean modules [CodeHalt.lean](CodeHalt.lean) and [CodeHaltFirst.lean](CodeHaltFirst.lean) compile from the repository’s existing SHA-pinned, original Cryptid source using the expanded [agent37 manual workflow](../../.github/workflows/agent37-cryptid-halt-model-bridge.yml). Every new theorem has only standard Lean axioms; main exact first-physical-event theorem audit: \`[propext, Classical.choice, Quot.sound]\`, no \`sorryAx\`.
+
+This theorem is a **universal infinite family of deliberately prepared synthetic F/0 initial tapes**. Let \`w\` be any finite Boolean token list, \`Code(w)\` map each false to \`10\` and each true to \`111\`, and let \`Y\` be any finite binary suffix. Define the original-machine configuration
+
+\`H(k,w,Y)=I_(3k+3)(0 Code(w) 1101101100 Y)\`.
+
+The fixed ten-bit \`1101101100\` is Agent2's previously source-proven A-boundary halting word. For every \`k,w,Y\` the actual original machine first enters state F scanning **1**, the undefined transition, at exactly
+
+\`P(k,w)=12k²+41k+100+wordCost(4k+3,w)\`
+
+defined transitions and enters the absorbing state 6 on the next transition, at exactly
+
+\`T(k,w)=12k²+41k+101+wordCost(4k+3,w)\`.
+
+**No halt occurs earlier**: \`BB6.Agent37CodeHalt.full_code_exact_first_halt\`. **No positive physically blank-left F-on-zero return occurs earlier**, even when a zipper left list contains explicit blank zero cells: \`BB6.Agent37CodeHaltFirst.full_code_first_physical_event\`, using \`c.l.all (!·) = true\`, not the overly restrictive syntactic condition \`c.l=[]\`. The fixed A terminal has a transient F/0 visit at local step 27 with nonzero cells to the left, correctly excluded. The all-parameter \`terminal_no_physical\` statement checks every local time \`0≤t<69\` for **arbitrary** left and right tails; the full theorem composes source-verified no-F initial prefix and no-F code consumption.
+
+The strict first-event duration satisfies the exact *original-source* quadratic shift:
+
+\`T(k+h,w) = T(k,w) + h(24k+12h+41+24#111(w))\`.
+
+\`BB6.Agent37CodeHalt.codeTime_shift\` uses Agent37's prior unbounded source-certified \`wordCost_shift4h\`, and \`#111(w)\` is the number of \`111\` tokens in \`w\`. Taking \`h=1\` gives \`T(k+1,w)-T(k,w)=24k+53+24#111(w)\`, exactly the empirically seen **halt** side of the proposed arbitrary-suffix first-event cocycle. This checks a general difficult *halting* sector of that conjecture **rigorously**; the return-side and arbitrary other halting suffixes remain open.
+
+**Novelty/provenance:** This extends earlier Agent2's \`AHaltCylinder.lean\` single fixed terminal cylinder and Agent35/25's unbounded A mixed-token consumer, by composing an arbitrary mixed code with the terminal, proving exact first halt, proving *strict physical first-event minimality*, and proving an all-h one-parameter timing cocycle. It shares key ingredients with existing source theorems, and independent external novelty is **not established**. Such input cylinders can deliberately be constructed to halt for any k; no theorem here says the original blank orbit produces one. It belongs in \`im-results/\`, not \`results/\`; no new BB(6) bound or resolved holdout follows.
+
+Further useful goal: prove the all-suffix four-extra-pair first-event simulation, with exact time curvature, **including E exceptional and halting branches**; then apply any resulting source theorem to a genuine root-ancestry restriction. The arbitrary-suffix first-event conjecture itself remains purely computational outside the certified prepared families.
