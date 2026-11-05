@@ -26,7 +26,7 @@ theorem blank_no_one_115_mod128 (r : Nat) :
   have hP : BB6.Agent3.CReach (64*r+56) (96*r+84) := by
     have hx : (1+(128*r+115)-4)/2=64*r+56 := by omega
     have hy : (1+3*(128*r+115)-10)/4=96*r+84 := by omega
-    simpa only [hx,hy] using hP0
+    simpa only [BB6.Agent3.CReach, hx,hy] using hP0
   have hQ0 := (BB6.Agent46.six_even_right_blank_reach_iff
     (64*r+56) (96*r+84) (by omega) (by omega)
     (by omega) (by omega)).mp hP
@@ -40,7 +40,7 @@ theorem blank_no_one_115_mod128 (r : Nat) :
   have hR : BB6.Agent3.CReach (104*r+87) (76*r+63) := by
     have hx : ((160*r+138)+(48*r+41)-5)/2=104*r+87 := by omega
     have hy : ((160*r+138)+3*(48*r+41)-9)/4=76*r+63 := by omega
-    simpa only [hx,hy] using hR0
+    simpa only [BB6.Agent3.CReach, hx,hy] using hR0
   rcases hR with ⟨n,hn⟩
   cases n with
   | zero => simp [BB6.Agent8Section.run] at hn
