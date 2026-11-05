@@ -1,11 +1,7 @@
 import ShadowSourceStep
-
 namespace BB6.Shadow
 open BB6.Agent1Quarter
 
-/-- Every authentic bounded-cost odd inverse-cone hub with b divisible
-    by four has an exact dyadic-shadow representation. The result holds
-    by induction over the unmodified source OddCone constructors. -/
 theorem bounded_odd_cone_has_shadow
     (N L b0 d0 w0 z0 alpha0 : Nat)
     (hrootmass : b0+d0+2*L+3=56*2^N)
@@ -32,7 +28,7 @@ theorem bounded_odd_cone_has_shadow
         original_odd_shadow_step N L mp t bp dp w z alpha k c b0 d0
           hprev hrootmass hL hoff hw4 hzpos hscaled hb hb4p hd hi hc
           hk hb4child (by omega)
-      exact ⟨wp,zp,alphap,hzp,hwp,hwoff,hscaledp⟩
+      exact ⟨wp,zp,alphap,hzp,hwp,by omega,hscaledp⟩
 
 #print axioms bounded_odd_cone_has_shadow
 end BB6.Shadow
