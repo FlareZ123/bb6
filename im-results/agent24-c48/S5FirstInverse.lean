@@ -37,7 +37,6 @@ theorem s5_first_inverse (q a k : Nat)
         by_cases hn0 : n=0
         · subst n
           simp at hsum'
-          omega
         · obtain ⟨u,hu⟩ := s5_pow_two_even n (by omega)
           have hdiv : 25280*q+1960=16*u := by
             calc
@@ -92,7 +91,8 @@ theorem s5_first_inverse (q a k : Nat)
                 calc
                   25280*q+1960=2^n*(2*(a-1)+6) := hsum'
                   _=(4*u)*(4*v) := by rw [hu,hv]
-                  _=16*(u*v) := by ring
+                  _=(4*4)*(u*v) := by ac_rfl
+                  _=16*(u*v) := by rfl
               omega
           · have hkEven : (a-1)%2=0 := by omega
             obtain ⟨n,hsum,_⟩ :=
