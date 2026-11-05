@@ -197,7 +197,6 @@ theorem a_turn_all_noF (r : Nat) (L ys : List Bool) :
       (⟨true::L,false,oppairs n++([false,true,false]++ys),1⟩ : Cfg) := by
     dsimp [b]
     rw [bPop_run]
-    rfl
   apply appendNoF b
     (⟨true::L,false,oppairs n++([false,true,false]++ys),1⟩ : Cfg)
     (4*n) 1
