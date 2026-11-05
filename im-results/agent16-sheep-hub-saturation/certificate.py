@@ -6,8 +6,8 @@ original-source Lean bridge; this script checks a finite authentic prefix.
 
 from hashlib import sha256
 
-TARGET_INDEX = 283344
-EXPECTED_SHA = "25377f0e14c813245479e15bcc9a26b1ff75384bbf9417c4e00da0b5b6c289fe"
+TARGET_INDEX = 441323
+EXPECTED_SHA = "94e089549afb02dcc8098cde8e1a1ac0ca241a1ac7bf595d76b4f7492c488e29"
 
 
 def valuation_two(x: int) -> int:
@@ -64,14 +64,14 @@ def verify_hubs(x: int, z: int, a: int, h: int) -> None:
             assert new_source % (modulus * n) == x % (modulus * n)
             assert actual_h == L
             assert y % modulus == 0
-    print("PASS: 2-adic hub lifts for all k=1..24 and odd n=1,3,5,17,255")
+    print("PASS: 2-adic hub lifts for all k=1..27 and odd n=1,3,5,17,255")
 
 
 def main() -> None:
     assert section_return(5) == 7 and section_return(7) == 10
     x = 10
     records = {}
-    interesting = {0, 1, 20, 121, 646, 989, 1283, 24884, 81103, 87123, TARGET_INDEX}
+    interesting = {0, 1, 20, 121, 646, 989, 1283, 24884, 81103, 87123, 283344, TARGET_INDEX}
     for index in range(TARGET_INDEX + 1):
         a = valuation_two(x)
         u = x >> a
@@ -85,10 +85,10 @@ def main() -> None:
             digest = sha256(x.to_bytes((x.bit_length() + 7) // 8, "big")).hexdigest()
             records[index] = (a, h, a + h + 1, x.bit_length(), digest, x % 1_000_000_007)
         if index == TARGET_INDEX:
-            assert (a, h, x.bit_length(), x % 1_000_000_007) == (8, 15, 227515, 989231211)
+            assert (a, h, x.bit_length(), x % 1_000_000_007) == (19, 7, 354071, 882768040)
             assert records[index][4] == EXPECTED_SHA
             assert x >> a >= 5
-            assert (z - 1) % (2**15) == 0 and (z - 1) % (2**16) != 0
+            assert (z - 1) % (2**7) == 0 and (z - 1) % (2**8) != 0
             verify_hubs(x, z, a, h)
         x = y
     for index, (a, h, cap, bits, digest, residue) in records.items():
