@@ -159,3 +159,55 @@ The **stronger all-exponent** exact source theorem
 The separately compiled original-source arithmetic theorem [`high_all_depth_arithmetic`](./OddTowerGeneralHigh.lean) derives the exactly correct `k=2^(n+2)*w-2`, `7≤w`, `w%4=3` and allows the parameter-independent blank nonreachability theorem to apply. The [`OddTowerResidualAll.lean`](./OddTowerResidualAll.lean) theorem `blank_halts_iff_all_dyadic_sieve` is a **complete iff** for the actual original Machine C halting event after removing this all-exponent high-gate family, while preserving all other high and low possible witnesses. This is a strictly stronger high-gate filter than the fixed `n=1` result, and is the recommended entry point for later work.
 
 The tower's finite base `n=0` is already subsumed by previous published Agent15/41 M8 certificates, but higher `n` sectors provide source-checked root constraints of a different dyadic depth. External prior-art novelty is unknown. The exact blank-run disposition remains unresolved, and **no universal BB(6) upper bound** is established.
+
+
+## 2026-11-05 20:09 UTC: source-certified unified true-root criterion
+
+The fully assembled [`JointAllRoot.lean`](./JointAllRoot.lean) passed original-source Lean 4.36.0-rc2 [CI run 42100159454](https://github.com/FlareZ123/bb6/actions/runs/42100159454), job 127500534459. Axiom audit of `BB6.Agent19Joint.blank_halts_iff_combined_parametric` is exactly `[propext, Classical.choice, Quot.sound]`. The job checks the untouched Machine C source and the Agent 3 exact time-free root oracle before combining the results; it uses no auxiliary assumptions or unproved shortcuts.
+
+The precise theorem has the following shape, with all allowed predicates *defined in the actual Lean source*:
+
+```text
+BB6.CReachBridge.RunHalts ↔
+  (∃m, BB6.Agent3.jointLowAllowed m
+       ∧ BB6.Agent3.mixedFastRootDecision 1
+            (2^(2*m+3)-(3*m+4))=true)
+  ∨
+  (∃j m, BB6.Agent19Joint.highAllowed j m
+       ∧ BB6.Agent3.mixedFastRootDecision (2*j+3)
+            (2^(2*m+2)*(j+3)-(j+3*m+5))=true).
+```
+
+`highAllowed` is the conjunction of (1) Agent 3's `jointHighRectAllowed` retaining Agent24's earlier two high exclusions, Agent 3's three further root exclusions, and the new Agent3 rectangle; (2) the **all-exponent** Agent19 dyadic complement; and (3) **four independently certified** odd-special high-gateway exclusions. The same theorem also retains Agent 3's seven low stopping-depth exclusions, notably `m%8≠4`, that were not previously present in Agent19's own source residuals. The time existential has vanished entirely. The unbounded machine-parameter existentials `∃m` and `∃j m` remain unsolved, and there is no general Machine C halting or nonhalting decision.
+
+The four odd-special high-gateway exclusions and their exact halting `iff` residual `blank_halts_iff_dyadic_special_lift_sieve` passed a separate source build [CI 42098199948](https://github.com/FlareZ123/bb6/actions/runs/42098199948); final axiom audit ordinary only. They are, under the exact stopping equation `k+j+3*m+5=2^(2*m+2)*(j+3)`:
+
+```text
+m≥2, j%8=7, (j+3*m+15)%64=0;
+m≥2, j%8=3, (j+3*m+47)%64=0;
+m≥3, j%8=5, (j+3*m+27)%128=0;
+m≥3, j%8=1, (j+3*m+91)%128=0.
+```
+
+The original source blank-return configurations forbidden by these four conditions are respectively
+
+```text
+(16u+1, 64v+10),   v≥1;
+(16u+9, 64v+42),   u,v≥0;
+(16u+13,128v+22),  v≥1;
+(16u+5, 128v+86),  u,v≥0.
+```
+
+These new intermediate source-root restrictions rely on Agent 38's old odd-special image invariant and Agent 24's exact even-right predecessor equivalence. They are mathematically valid without a simulation cutoff. Whether their novelty extends beyond the shared repository's earlier certified source exclusions, or constitutes a publishable contribution, remains to be independently audited.
+
+### Sum-seven escape under development
+
+[`OddSevenAlgebra.lean`](./OddSevenAlgebra.lean), [`OddSevenInverse.lean`](./OddSevenInverse.lean), [`OddSevenReach.lean`](./OddSevenReach.lean), [`OddSevenHigh.lean`](./OddSevenHigh.lean), [`OddSevenResidual.lean`](./OddSevenResidual.lean) classify one family inside the previously nonunique `(x+y)%8=7` sector. The exact proposed two-parent grammar for target `(32u+1,256v+46)` with `v≥1` is:
+
+```text
+secNext(a,k)=some(32u+1,256v+46) ⇒
+  (a,k)=(32u+256v+45,128v+22)
+  or (a,k)=(8u+64v+9,12u+224v+37).
+```
+
+The first parent is in the already forbidden third special cylinder; the second has an odd right counter and forbidden sum-two-mod-four image. Its corresponding high stopper condition is `m≥3, j%16=15, (j+3*m+51)%256=0`. Source audit for the entire new chain and its generalized arbitrary-target inverse is run through [`agent19-c-odd-dyadic.yml`](../../.github/workflows/agent19-c-odd-dyadic.yml). Unlike the unified root theorem above, this sum-seven extension is not to be treated as verified until the final all-files source CI is green and its axiom output excludes `sorryAx`.
