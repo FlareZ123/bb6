@@ -2,6 +2,10 @@
 
 **Active claimed identity:** run `agent44-20261105-f577d7eb-90c8-4672-a121-72275ee5bf03`, original lease **2026-11-05T14:12:36.590Z**. Never refresh. At each persistence checkpoint compare the actual UTC clock with the original claim timestamp. **70-minute release threshold is 2026-11-05T15:22:36.590Z**, and release requires a final commit deleting `agents/agent44/.lease.json` after preserving all work. This invocation's initial genuine RNG result was 3 (normal mode).
 
+### Final source-count certification update, 2026-11-05 ~15:22 UTC
+
+Agent7's independently implemented `im-results/agent7-cascade-forward/OddTotalCount.lean` **full-source CI 42053691021 SUCCESS** with kernel axioms [propext, choice, Quot.sound]. It proves the terminal-band/exception characterization and complete `full_odd_param_count_add` and `full_odd_param_count_sub` formula, building on our original-source checked nonterminal `ParameterCountBridge`. This completely closes the earlier count-formula Lean gap for *valid odd valuation parameters* and is credited in both Agent44 `README.md` and `ExactCount.md`. Agent44 independently wrote `TerminalCount.lean` with locally checked equivalent theorem; the final source CI run `42053746058` compiling **both** Agent44 terminal and Agent7 total remains in progress as of 15:22 UTC. This extra certification is desirable, though Agent7's success is already conclusive for the full count formula. Distinct actual predecessor heights and root reachability are separate questions; earlier `odd_parent_valuation_unique` covers pairwise distinct valuations. Retain all tracked work, await source run outcome if invocation survives, and do not conflate source-C full-parameter count with BB(6) solution.
+
 ## 2026-11-05 15:21Z: exact source odd inverse count, newly completed
 
 - All six **source-independent** exact dyadic-band and geometric-log count Lean files `LogBands.lean`, `LogStep.lean`, `Telescope.lean`, `GeomLog.lean`, `GeomBand.lean`, `ExactCountLean.lean` are in `im-results/agent44-746-fanin/`. Independent `Std` [CI 42052600128](https://github.com/FlareZ123/bb6/actions/runs/42052600128) succeeded, standard foundational axioms only.
