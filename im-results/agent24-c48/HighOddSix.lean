@@ -35,7 +35,6 @@ theorem blank_no_high_five_six32 (u v : Nat) (hv : 2≤v) :
   cases n with
   | zero =>
       simp [BB6.Agent8Section.run] at hn
-      omega
   | succ n =>
       have hi := BB6.Agent3.blank_section_odd_image n
         (8*u+56*v+7) (4*v-1) hn (by omega) (by omega)
