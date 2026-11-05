@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -103,4 +103,7 @@ jobs:
           lean -o "$V/WordReturns.olean" "$V/WordReturns.lean"
           lean -o "$V/ShortTripleGate.olean" "$V/ShortTripleGate.lean"
           lean -o "$A/EleventhPacketFive.olean" "$A/EleventhPacketFive.lean"
-          lean -DmaxRecDepth=55000 "$A/BlankEleventhRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$A/BlankEleventhRejoin.olean" "$A/BlankEleventhRejoin.lean"
+          T=im-results/agent37-d-timing-cocycle
+          lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
+          lean -DmaxRecDepth=55000 "$T/BlankTwelfthRejoin.lean"
