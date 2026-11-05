@@ -26,11 +26,12 @@ theorem lifted_exception_source (s : DRegular.L) (k m q p : Nat)
   have hmid :
       BB6.DRegularSourceShift.outputLift (⟨3*m+4,q+1,1⟩ : DRegular.L) k (3*p) =
       (⟨3*(m+8^k*p)+4,q+1,1⟩ : DRegular.L) := by
-    apply DRegular.L.mk.injEq.mpr
-    constructor
-    · simp only [BB6.DRegularSourceShift.outputLift,shiftNat]
-      omega
-    constructor <;> rfl
+    change (⟨3*m+4+8^k*(3*p),q+1,1⟩ : DRegular.L) =
+      ⟨3*(m+8^k*p)+4,q+1,1⟩
+    congr 1
+    have hmul : 8^k*(3*p) = 3*(8^k*p) := by ac_rfl
+    rw [hmul]
+    omega
   have hroot : ObsEq
       (run (DRegular.accumulated k (shiftNat s (3^(k+1)*p)))
         (DRegularSource.sourceSection (shiftNat s (3^(k+1)*p))))
