@@ -34,7 +34,7 @@ def affine_cone(q: int, period: int, side: int) -> Cone | None:
 
     while pending:
         m, z, slope = pending.pop()
-        if z <= 0 or m > 10 or z % 256 == 0 or slope % 256 != 0:
+        if z <= 0 or m > 10 or z % 256 == 0 :
             return None
         key = (m, z)
         if key in seen:
