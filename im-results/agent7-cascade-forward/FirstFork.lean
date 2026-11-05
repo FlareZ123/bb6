@@ -209,6 +209,24 @@ theorem near_top_has_two_parents (n u A:Nat) (hn:4≤n)
   refine ⟨oddPre n u, evenPre n A, ?_,ho,he⟩
   omega
 
+/-- Both first-reset arms exist for these full fatal families. -/
+theorem fatal_forks (n:Nat) (hn:4≤n)
+    (hres:n%18=4 ∨ n%18=5) :
+    ∃ x y, x≠y ∧ ResetParent x (fatal n) ∧ ResetParent y (fatal n) :=
+  near_top_has_two_parents n (fatal n) (n+4) hn (by omega)
+    (fatal_close n hn) (fatal_size n hn) (fatal_divnine n hn hres)
+
+/-- After the forced two levels, both branches exist for these families. -/
+theorem second_forks (n:Nat) (hn:10≤n)
+    (hres:n%18=11 ∨ n%18=16) :
+    ∃ x y, x≠y ∧ ResetParent x (secondPred n) ∧
+      ResetParent y (secondPred n) :=
+  near_top_has_two_parents n (secondPred n) (7*n+13) (by omega)
+    (by omega) (second_close n hn) (second_size n hn) (second_divnine n hn hres)
+
+#print axioms near_top_has_two_parents
+#print axioms fatal_forks
+#print axioms second_forks
 #print axioms odd_parent_near_top
 
 #print axioms fatal_has_odd_parent
