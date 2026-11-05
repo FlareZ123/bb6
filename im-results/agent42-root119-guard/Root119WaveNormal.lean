@@ -155,6 +155,27 @@ theorem waveB_tape_normal (n : Nat) (c : Conf) (hv : waveValid n c) :
         simpa using e
       simp [setBit,hH,he]
 
+
+/-- Compact fully explicit 4n+5-step source-machine rewrite, no nested phase tapes. -/
+theorem wave_explicit (n : Nat) (c : Conf) (hv : waveValid n c) :
+    run (4*n+5) c = some (⟨.B,c.h-1,setBit c.tape (c.h+2*(n:Int)+2) true⟩ : Conf) := by
+  have hh := waveB_head n c
+  have ht := waveB_tape_normal n c hv
+  have hq := (waveB_zero n c hv).1
+  have heq : waveB n c = (⟨.B,c.h-1,setBit c.tape (c.h+2*(n:Int)+2) true⟩ : Conf) := by
+    cases hc : waveB n c with
+    | mk q h t =>
+      have hq' : q = .B := by simpa [hc] using hq
+      have hh' : h = c.h-1 := by simpa [hc] using hh
+      have ht' : t = setBit c.tape (c.h+2*(n:Int)+2) true := by simpa [hc] using ht
+      subst q
+      subst h
+      subst t
+      rfl
+  simpa only [heq] using wave_full_run n c hv
+
+#print axioms BB6Root119.wave_explicit
+
 #print axioms BB6Root119.waveB_tape_normal
 #print axioms BB6Root119.df_many_unvisited
 #print axioms BB6Root119.fb_many_unvisited
