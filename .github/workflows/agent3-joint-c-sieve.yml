@@ -131,3 +131,15 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean -o JointResidual.olean JointResidual.lean
+          # Convert the exact rooted stopping criteria to executable
+          # parameter predicates through Agent11's original-source
+          # fixed-target backward reachability oracle.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/FullSectionInverse.lean .
+          lean -o FullSectionInverse.olean FullSectionInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal,SectionBackwardOriginal,SectionFuelOriginal,SectionBackwardFuelOriginal,FastRootBackward,FastRootFuel}.lean .
+          for f in SectionMassOriginal SectionFastInverseOriginal SectionBackwardOriginal SectionFuelOriginal SectionBackwardFuelOriginal FastRootBackward FastRootFuel; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedFastRoot,JointRootQuantifier}.lean .
+          lean -o MixedFastRoot.olean MixedFastRoot.lean
+          lean -o JointRootQuantifier.olean JointRootQuantifier.lean
