@@ -186,3 +186,5 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedOdd16TwoConstruct,MixedOdd16TwoOrbit}.lean .
           lean -o MixedOdd16TwoConstruct.olean MixedOdd16TwoConstruct.lean
           lean -o MixedOdd16TwoOrbit.olean MixedOdd16TwoOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/MixedOdd16DoubleForbidden.lean .
+          lean -o MixedOdd16DoubleForbidden.olean MixedOdd16DoubleForbidden.lean
