@@ -13,7 +13,7 @@ def FiniteClosed (q side K : Nat) (nodes : List (Nat × Nat)) : Prop :=
       n % 2 = 1 →
       (p.1+t+1, (n-1)/2) ∈ nodes))
 
-private theorem all_mem {α : Type} {P : α → Prop} (xs : List α)
+theorem all_mem {α : Type} {P : α → Prop} (xs : List α)
     (hall : xs.Forall P) (x : α) (hx : x ∈ xs) : P x := by
   induction hall with
   | nil => cases hx
