@@ -9,13 +9,13 @@ def q33L0 : List (Nat × Nat) := [(0,400),(2,368),(4,294),(4,361),(5,282),(5,450
 def q33L1 : List (Nat × Nat) := [(0,334),(1,435),(2,352),(2,486),(3,445),(3,512),(4,391),(4,492),(5,314),(5,398),(5,516),(7,282),(7,303),(7,400),(8,277),(8,336),(8,423),(9,280),(9,372),(9,440),(11,275),(11,298),(11,315),(11,343),(11,366),(11,383),(12,286),(12,320),(12,411),(12,431),(12,445),(12,465),(13,417),(13,434),(14,346),(14,483),(15,315),(15,448),(16,362),(16,433),(17,286),(17,388),(17,457),(18,367),(18,505),(19,305),(19,374),(20,326),(20,430),(21,285),(21,441),(21,493),(22,282),(22,360),(22,386),(22,421),(22,499),(22,525),(23,420),(23,459),(23,472),(24,350),(24,376),(24,509),(25,325),(25,385),(25,398),(25,455),(25,468),(26,303),(26,333),(26,368),(26,443),(26,473),(26,508),(27,328),(27,398),(27,465),(27,535),(28,305),(28,340),(28,514),(28,549),(29,328),(29,364),(29,452),(29,539),(30,411),(30,552),(31,365),(31,374),(31,396),(31,559),(32,329),(32,340),(32,466),(32,563),(33,353),(33,383),(33,454),(33,517),(34,319),(34,334),(34,401),(34,461),(34,476),(34,543),(35,452),(35,523),(36,369),(36,547),(37,399),(38,343),(38,486),(39,530),(40,409)]
 
 theorem q33_l0_nodes_bounded :
-    q33L0.Forall (fun p => p.1≤41 ∧ 0<p.2 ∧ p.2<1024) := by decide
+    q33L0.all (fun p => decide (p.1≤41 ∧ 0<p.2 ∧ p.2<1024)) = true := by decide
 
 theorem q33_l1_nodes_bounded :
-    q33L1.Forall (fun p => p.1≤41 ∧ 0<p.2 ∧ p.2<1024) := by decide
+    q33L1.all (fun p => decide (p.1≤41 ∧ 0<p.2 ∧ p.2<1024)) = true := by decide
 
-theorem q33_l0_closed : FiniteClosed 33 8 10 q33L0 := by decide
-theorem q33_l1_closed : FiniteClosed 33 9 10 q33L1 := by decide
+theorem q33_l0_closed : FiniteClosed 33 8 10 q33L0 = true := by decide
+theorem q33_l1_closed : FiniteClosed 33 9 10 q33L1 = true := by decide
 
 /-- Generic kernel-generated finite graph eliminates manual branch reasoning. -/
 theorem q33_l0_original_shadow_amplified (r m z : Nat)
@@ -25,10 +25,8 @@ theorem q33_l0_original_shadow_amplified (r m z : Nat)
   have hb : ∀ m z, (m,z)∈q33L0 →
       m≤41 ∧ 0<z ∧ z<1024 := by
     intro m z hmem
-    exact all_mem q33L0 q33_l0_nodes_bounded (m,z) hmem
-  have hbound : q33L0.Forall (fun p => 0<p.2 ∧ p.2<2^10) := by
-    simpa only [show (2:Nat)^10=1024 by decide] using
-      q33_l0_nodes_bounded.imp (fun _ h => ⟨h.2.1,h.2.2⟩)
+    exact of_decide_true (all_mem q33L0 (fun p => decide (p.1≤41 ∧ 0<p.2 ∧ p.2<1024)) q33_l0_nodes_bounded (m,z) hmem)
+  have hbound : q33L0.all (fun p => decide (0<p.2 ∧ p.2<2^10)) = true := by decide
   have hc : ∀ m z t v zp, (m,z)∈q33L0 →
        z=2^t*v → 2*zp+1=16*33+8+m+t+v →
        (m+t+1,zp)∈q33L0 :=
@@ -46,10 +44,8 @@ theorem q33_l1_original_shadow_amplified (r m z : Nat)
   have hb : ∀ m z, (m,z)∈q33L1 →
       m≤41 ∧ 0<z ∧ z<1024 := by
     intro m z hmem
-    exact all_mem q33L1 q33_l1_nodes_bounded (m,z) hmem
-  have hbound : q33L1.Forall (fun p => 0<p.2 ∧ p.2<2^10) := by
-    simpa only [show (2:Nat)^10=1024 by decide] using
-      q33_l1_nodes_bounded.imp (fun _ h => ⟨h.2.1,h.2.2⟩)
+    exact of_decide_true (all_mem q33L1 (fun p => decide (p.1≤41 ∧ 0<p.2 ∧ p.2<1024)) q33_l1_nodes_bounded (m,z) hmem)
+  have hbound : q33L1.all (fun p => decide (0<p.2 ∧ p.2<2^10)) = true := by decide
   have hc : ∀ m z t v zp, (m,z)∈q33L1 →
        z=2^t*v → 2*zp+1=16*33+9+m+t+v →
        (m+t+1,zp)∈q33L1 :=
