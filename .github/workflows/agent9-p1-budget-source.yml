@@ -66,3 +66,11 @@ jobs:
           lean -o im-results/agent9-param-budget/ShadowFiniteBudget.olean im-results/agent9-param-budget/ShadowFiniteBudget.lean | tee /tmp/agent9-budget-shadow.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-shadow.log; then exit 1; fi
           grep -F 'finite_shadow_invariant_lifts_full_cone_budget' /tmp/agent9-budget-shadow.log
+      - name: Compile original-source arbitrary 2-adic inverse-depth bound
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
+          lean -o im-results/agent9-param-budget/ShadowDepthBudgetArithmetic.olean im-results/agent9-param-budget/ShadowDepthBudgetArithmetic.lean | tee /tmp/agent9-depth-k.log
+          lean -o im-results/agent9-param-budget/ShadowDepthBudgetSource.olean im-results/agent9-param-budget/ShadowDepthBudgetSource.lean | tee -a /tmp/agent9-depth-k.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-depth-k.log; then exit 1; fi
+          grep -F 'source_depth_le_K' /tmp/agent9-depth-k.log
