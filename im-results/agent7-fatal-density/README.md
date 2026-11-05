@@ -150,3 +150,12 @@ The fully quantified **paper** theorem in [RayForkPeriodicity.md](RayForkPeriodi
 The more general [RayDepthHensel.md](RayDepthHensel.md) establishes a **dual Hensel residue tower in ray depth**: at each precision k≥1 and for *every fixed* fatal index n in the surviving sectors, there is exactly one j residue modulo 2*3^(k-1) with 3^k dividing the signed Z_j. Its proof uses the elementary exact lifting 2^(2*3^(k-1)) = 1+3^k*c_k with 3 not dividing c_k. This yields an exact limiting valuation law over all **formal signed ray depths**: mass 1/2 at v3=0 and mass 3^(-k) at v3=k for k≥1. Only finitely many ray depths have nonnegative physical reset heights for fixed n, so the signed limit **does not describe a true blank-orbit frequency**. The duality with the already source-certified Hensel theorem in fatal-index direction is mathematically useful for inverse-graph compression.
 
 The modular Python diagnostic [ray_tower.py](ray_tower.py) verifies complete small residue periods and computes 256 ternary lifts in ordinary integer modular arithmetic without constructing astronomical powers of two. The direct independent modular tests in the two new notes help check their formulas. Formalize the dual ray-depth tower and source-root five-of-six corollary next; all remain **intermediate results** without a #746 blank-root halting decision or a BB(6) bound.
+
+
+## Kernel-checked six-step periodicity subtheorem
+
+[SignedRayPeriod.lean](SignedRayPeriod.lean) defines the signed formal ray numerator `signedZ n j = 8*2^n + 2*n+3 - 2^(j+1)*(2*n+3)` as an integer and proves the exact fully quantified **six-step period modulo nine**, for all natural n and j:
+
+`CascadeRayPeriod.signed_ray_six_period : signedZ n (j+6)%9 = signedZ n j%9`.
+
+This proof typechecked **locally with Lean 4.36.0-rc2**, no sorry, no native_decide, axiom audit exactly `[propext, Quot.sound]`. It is included in the existing manual full-original-source workflow and was dispatched for source checking through [issue #33](https://github.com/FlareZ123/bb6/issues/33), [CI 42124540499](https://github.com/FlareZ123/bb6/actions/runs/42124540499). **At this note's update the latest run was still in progress.** The per-block 0/3/6 exact residue permutation and rooted five-of-six forced parent corollary are still paper-derived; their complete Lean formalizations are separate and must not be inferred from the period-only theorem.
