@@ -41,5 +41,5 @@ theorem blank_halts_iff_joint_three_quarters_sieve :
     · exact ⟨time,a,k,hr,Or.inl hlow⟩
     · exact ⟨time,a,k,hr,Or.inr ⟨j,m,ha,heq,h1,h2,h3,h4,h5⟩⟩
 
-#print axioms blank_halts_iff_joint_six_high_sieve
+#print axioms blank_halts_iff_joint_three_quarters_sieve
 end BB6.Agent3
