@@ -96,10 +96,19 @@ theorem rooted_five_strong (n a b : Nat)
         (fun hx he => BB429RootEven8.rooted_positive_even_eight n p.1 p.2 hp hx he)
         (fun he => rooted_one_strong n p.1 p.2 hp he)
 
+/-- Direct full-cylinder corollary. This previously known exclusion follows
+    immediately from the new stronger low-counter section invariant. -/
+theorem no_halt_five_mod32 (n a b : Nat)
+    (hr : BB429.run n (0,0)=some (a,b))
+    (hg : b+1=2*a) (ha : a%32=5) : False := by
+  have h := rooted_five_strong n a b hr ha
+  omega
+
 #print axioms incoming_seven_strong
 #print axioms rooted_seven_strong
 #print axioms incoming_one_strong
 #print axioms rooted_one_strong
 #print axioms incoming_five_strong
 #print axioms rooted_five_strong
+#print axioms no_halt_five_mod32
 end BB429SevenStrong
