@@ -76,7 +76,7 @@ theorem fourth_not_div27 (n:Nat) (hn:10≤n)
     · omega
     · omega
 
-private theorem odd_band_scale_unique (v k j:Nat)
+theorem odd_band_scale_unique (v k j:Nat)
     (hb:6*2^k+1≤v ∧ v≤8*2^k-1)
     (hj:6*2^j+1≤v ∧ v≤8*2^j-1) : k=j := by
   by_cases heq:k=j
