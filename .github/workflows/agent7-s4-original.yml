@@ -118,6 +118,10 @@ jobs:
           lake env lean -o S4TripleResidue.olean S4TripleResidue.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TripleSharp.lean" S4TripleSharp.lean
           lake env lean -o S4TripleSharp.olean S4TripleSharp.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TripleRoot.lean" S4TripleRoot.lean
+          lake env lean -o S4TripleRoot.olean S4TripleRoot.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4RawTripleRoot.lean" S4RawTripleRoot.lean
+          lake env lean S4RawTripleRoot.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4RawToggle.lean" S4RawToggle.lean
           lake env lean -o S4RawToggle.olean S4RawToggle.lean
       - name: Verify Agent 34 weighted-rank source bridge
