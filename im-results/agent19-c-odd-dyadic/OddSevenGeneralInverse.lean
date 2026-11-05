@@ -13,7 +13,7 @@ private theorem odd_bounce_sum_even_general (c b x y:Nat)
   have hs : x+y=2*(2^n*(b+3)) := by
     calc
       x+y=2^n*(2*b+6) := hsum
-      _=2^n*(2*(b+3)) := by congr 1; omega
+      _=2^n*(2*(b+3)) := by omega
       _=2*(2^n*(b+3)) := by ac_rfl
   omega
 
@@ -27,20 +27,20 @@ theorem section_sumseven_mod32_inverse (a k x y:Nat)
     (4*a+12=x+y+1 ∧ 2*k+a+10=x+2*y) := by
   by_cases ha0 : a=0
   · by_cases hk0:k=0
-    · simp [secNext,exactSection,ha0,hk0] at h
+    · simp [secNext,exactSection,ha0,hk0] at h <;> omega
     · by_cases hk1:k=1
-      · simp [secNext,exactSection,ha0,hk0,hk1] at h
+      · simp [secNext,exactSection,ha0,hk0,hk1] at h <;> omega
       · have hb:(bounce 1 (2*k+1)).2=some (x,y) := by
           simpa only [secNext,exactSection,if_pos ha0,if_neg hk0,if_neg hk1] using h
         have he := odd_bounce_sum_even_general (2*k+1) 1 x y hb (by decide)
         omega
   · by_cases ha1:a=1
     · by_cases hk0:k=0
-      · simp [secNext,exactSection,ha0,ha1,hk0] at h
+      · simp [secNext,exactSection,ha0,ha1,hk0] at h <;> omega
       · by_cases hk1:k=1
-        · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h
+        · simp [secNext,exactSection,ha0,ha1,hk0,hk1] at h <;> omega
         · by_cases hk2:k=2
-          · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
+          · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h <;> omega
           · by_cases hk3:k=3
             · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h <;> omega
             · have hb:(bounce 4 (2*k-3)).2=some (x,y) := by
