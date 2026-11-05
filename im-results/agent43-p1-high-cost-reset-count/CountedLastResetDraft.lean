@@ -45,7 +45,7 @@ theorem counted_last_positive_reset
       refine ⟨bp,dp,mp,zp,tp,kp,cp,s+1,
         hpre,?_,hbp,hbp4,hdp,hip,hkp,hcp,htp,?_⟩
       · simpa [ht] using hcount
-      · simpa only [ht, Nat.zero_add] using htaily
+      · simpa [ht] using htaily
     · have htp : 1 ≤ t := by omega
       refine ⟨b,d,m,z,t,k,c,0,
         hp,?_,hb,hb4,hd,hi,hk,hc,htp,UpperTail.root⟩
