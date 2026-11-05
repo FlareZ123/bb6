@@ -74,7 +74,8 @@ theorem section_eveneven_sum_four_mod8_inverse (a k x y : Nat)
                 calc
                   x+y=2^n*(2*(a-1)+6) := hsum'
                   _ = (2*u)*(4*v) := by rw [hu,hv]
-                  _ = 8*(u*v) := by ring
+                  _ = (2*4)*(u*v) := by ac_rfl
+                  _ = 8*(u*v) := by rfl
               omega
           · have heven : (a-1)%2=0 := by omega
             obtain ⟨n,hn,_⟩ :=
