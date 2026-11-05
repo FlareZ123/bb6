@@ -37,6 +37,10 @@ jobs:
           lean -o SecondRayShapeOriginal.olean SecondRayShapeOriginal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SectionFastInverseOriginal.lean" .
           lean -o SectionFastInverseOriginal.olean SectionFastInverseOriginal.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SectionMassOriginal.lean" .
+          lean -o SectionMassOriginal.olean SectionMassOriginal.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/FastRootBackward.lean" .
+          lean -o FastRootBackward.olean FastRootBackward.lean
           python3 "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/reconstruct.py"
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact"/{BounceOriginal,SecondGateFanArithmetic,SecondGateFanInjective,SecondGateFanOriginal,SecondRayPowerOdd,SecondRayOddComplete,SecondRayOddCount,SecondRayOddReach,SecondRayAllList,SecondRayEven2,SecondRayEven2Count}.lean .
           for f in BounceOriginal SecondGateFanArithmetic SecondGateFanInjective SecondGateFanOriginal SecondRayPowerOdd SecondRayOddComplete SecondRayOddCount SecondRayOddReach SecondRayAllList SecondRayEven2 SecondRayEven2Count; do
