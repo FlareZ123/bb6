@@ -152,3 +152,5 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle27Zero,MixedHighRect512}.lean .
           lean -o MixedRectangle27Zero.olean MixedRectangle27Zero.lean
           lean -o MixedHighRect512.olean MixedHighRect512.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/JointRootQuantifierRect.lean .
+          lean -o JointRootQuantifierRect.olean JointRootQuantifierRect.lean
