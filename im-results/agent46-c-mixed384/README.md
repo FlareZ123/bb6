@@ -1,5 +1,27 @@
 # Machine C mixed384/192 original-source reverse invariant: first gate m≡3 (mod128)
 
+## Verification correction and exact 384/192 quotient saturation audit (Agent 46, 2026-11-05)
+
+**The previously pending C51 CI has succeeded.** [Manual unchanged-repository-source Lean CI 41749730569](https://github.com/FlareZ123/bb6/actions/runs/41749730569), completed 2026-11-04 00:50 UTC, compiled the unchanged [CLine.lean](../agent11-c-line/CLine.lean) and C3/C51 reverse-core proofs, both first-gate arithmetic corollaries, and `Second384.lean`. The job log explicitly prints **only [propext, Quot.sound]** for all six Agent46 terminal theorems, with no sorryAx. Its pinned reconstructed C51 SHA256 is `77dfc0a2cf8d8d86bbb75385ef1062f1d98a13cc8049f2420f7d3ba6685fe809`. This corrects the earlier C51 **pending** status below; no new machine-wide conclusion follows.
+
+An independent finite reverse-audit of the *same abstract precision* is now reproducible in [reverse384.cpp](reverse384.cpp), with [verify_reverse384.py](verify_reverse384.py) checking each constructed positive path against a separate literal translation of original `BB6CLine.nextC`. The abstract state space has 384²·194 = 28,606,464 nodes: (a mod 384,k mod 384), low c=0,1 kept exact; all c≥2 represented by c mod 192 with a special high tag. Edges existentially overapproximate every source transition. **An abstract path is not a consistent natural-counter orbit.**
+
+For the first stopping equation `k+3m+4=2^(2m+3)` and m≥3, k mod384 = (124−3m) mod384. The following exhausts the eight m mod128 cases lying in m mod16=3:
+
+| m mod128 | k mod384 | Reverse BFS outcome | First abstract path length (edges) |
+|---:|---:|---|---:|
+| 3 | 115 | Component 27,442; genuine blank abstract root absent | — |
+| 19 | 67 | Blank abstract root present | 1,395 |
+| 35 | 19 | Blank abstract root present | 2,085 |
+| 51 | 355 | Component 27,442; genuine blank abstract root absent | — |
+| 67 | 307 | Blank abstract root present | 1,616 |
+| 83 | 259 | Blank abstract root present | 1,644 |
+| 99 | 211 | Blank abstract root present | 2,653 |
+| 115 | 163 | Blank abstract root present | 1,691 |
+
+The absent classes exactly reproduce the earlier source-Lean exclusions. For all six positive cases, the independent Python checker found a concrete source-state representative for **each** abstract edge in the generated path. This constitutes a **finite-method saturation result**: this exact coarse finite abstraction alone cannot exclude the six other classes. It does *not* show that any such original stopping input is actually blank-reachable, and it does not establish the novelty of C3/C51 against other analytic inverse methods. Meaningful further work should add genuine blank ancestry/size/history information rather than merely rerunning this quotient.
+
+
 **Agent 46, 4 November 2026.** This is research toward BB(6), and **does not decide Machine C or BB(6)**. The new symbolic certificate compiles in local Lean 4.36.0-rc2 against exact copied `BB6CLine.nextC`/`Reach` declaration bodies with no `sorryAx`, axioms `[propext, Quot.sound]`. **Full unchanged-repository-source CI PASSED for C3** at [manual run 41749073025](https://github.com/FlareZ123/bb6/actions/runs/41749073025), 2026-11-04, with ordinary Lean axioms. A separate full-source CI for C51 is pending (see below).
 
 ## Exact all-time claim
