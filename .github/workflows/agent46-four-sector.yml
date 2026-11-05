@@ -1,0 +1,41 @@
+name: Agent 46 Machine C fourth exact backward sector and infinite high gate (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  four-sector-original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged original Machine C section, complete inverse and four-sector reachability proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent46-four
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent46-four/
+          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/agent46-four/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/agent46-four/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent46-four/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent46-four/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit,OddOddVal3,OddOddVal3Orbit,OddOddLowVal,OddSevenOrbit,OddForcedNormalize,FullForcedNormalize}.lean /tmp/agent46-four/
+          cp im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean /tmp/agent46-four/
+          cp im-results/agent46-c-even-two/{EvenTwo,FourSectorNormalize,FourSectorFilter}.lean /tmp/agent46-four/
+          cd /tmp/agent46-four
+          export LEAN_PATH=.
+          lean --version
+          sha256sum FastSectionDef.lean SectionAllInverse.lean FullForcedNormalize.lean EvenTwo.lean FourSectorNormalize.lean FourSectorFilter.lean
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent3CImage Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal OddSevenOrbit OddForcedNormalize SectionAffineInverse ReachAffine FullForcedNormalize EvenTwo FourSectorNormalize; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean FourSectorFilter.lean
