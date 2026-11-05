@@ -7,6 +7,11 @@ on:
         required: false
         type: boolean
         default: false
+      mixed_only:
+        description: 'Compile the four-sector mixed original-source inverse normalizer and stopping family'
+        required: false
+        type: boolean
+        default: false
       balanced_only:
         description: 'Stop after source-verifying the exact balanced and odd target fibers; skip downstream experimental modules'
         required: false
@@ -186,6 +191,12 @@ jobs:
           lean -o ReachAffine.olean ReachAffine.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean .
           lean -o FullForcedNormalize.olean FullForcedNormalize.lean
+          # Joint original-source check: Agent3 odd inverses plus Agent24 six-residue even-right inverse.
+          cp "$GITHUB_WORKSPACE"/im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean .
+          for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne}.lean .
+          for f in MixedFourNormalize MixedFourFilter MixedHighOne; do lean -o "$f.olean" "$f.lean"; done
+          if [ "${{ inputs.mixed_only }}" = "true" ]; then exit 0; fi
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
           lean -o SourceBound.olean SourceBound.lean
