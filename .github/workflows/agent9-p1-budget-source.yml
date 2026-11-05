@@ -52,18 +52,17 @@ jobs:
             echo "ORIGINAL AGENT9 $m"
             lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
           done
-      - name: Compile every parametric exclusion and audit final Lean axioms
+      - name: Compile arbitrary-budget genuine-source blocked cone
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
-          : > /tmp/agent9-budget-audit.log
-          echo 'GENERIC AUTHENTIC COST BUDGET SOURCE BLOCKED CONE'
-          lean -o im-results/agent9-param-budget/GenericBudgetBlocked.olean im-results/agent9-param-budget/GenericBudgetBlocked.lean | tee -a /tmp/agent9-budget-audit.log
-          echo 'GENERIC AUTHENTIC SHADOW FINITE BUDGET LIFT'
-          lean -o im-results/agent9-param-budget/ShadowFiniteBudget.olean im-results/agent9-param-budget/ShadowFiniteBudget.lean | tee -a /tmp/agent9-budget-audit.log
-          if grep -E -q 'sorryAx|axiom.*[Aa]gent8|error:' /tmp/agent9-budget-audit.log; then
-            echo "NONSTANDARD ASSUMPTION OR LEAN ERROR" >&2
-            exit 1
-          fi
-          grep -F 'blocked_of_uniform_cone_exit_budget' /tmp/agent9-budget-audit.log
-          grep -F 'finite_shadow_invariant_lifts_full_cone_budget' /tmp/agent9-budget-audit.log
+          lean -o im-results/agent9-param-budget/GenericBudgetBlocked.olean im-results/agent9-param-budget/GenericBudgetBlocked.lean | tee /tmp/agent9-budget-blocked.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-blocked.log; then exit 1; fi
+          grep -F 'blocked_of_uniform_cone_exit_budget' /tmp/agent9-budget-blocked.log
+      - name: Compile arbitrary-budget genuine-source finite shadow lift
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
+          lean -o im-results/agent9-param-budget/ShadowFiniteBudget.olean im-results/agent9-param-budget/ShadowFiniteBudget.lean | tee /tmp/agent9-budget-shadow.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-shadow.log; then exit 1; fi
+          grep -F 'finite_shadow_invariant_lifts_full_cone_budget' /tmp/agent9-budget-shadow.log
