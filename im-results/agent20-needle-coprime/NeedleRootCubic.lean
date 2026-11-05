@@ -34,10 +34,8 @@ private theorem reached_noninitial_has_parent (d : Nat)
       simpa [ReachN, highLevelStart, Function.iterate_zero] using hn.symm
     exact False.elim (hd hstart)
   | succ n =>
-    change Nat.iterate
-      (fun z : Option HighLevelState => z.bind highLevelNext)
-      (n+1) (some highLevelStart) = some (.N d) at hn
-    rw [iterate_step] at hn
+    unfold CollatzReachesIn at hn
+    rw [Nat.add_comm n 1, Function.iterate_add_apply] at hn
     cases hp : Nat.iterate
       (fun z : Option HighLevelState => z.bind highLevelNext)
       n (some highLevelStart) with
@@ -83,10 +81,9 @@ theorem raw_halts_iff_reaches_cubic_feeder :
     obtain ⟨n,hr⟩ := hparent
     have htarget : ReachN (haltTower k) := by
       refine ⟨n+1, ?_⟩
-      change Nat.iterate
-        (fun z : Option HighLevelState => z.bind highLevelNext)
-        (n+1) (some highLevelStart) = some (.N (haltTower k))
-      rw [iterate_step]
+      change CollatzReachesIn highLevelNext (n+1) highLevelStart (.N (haltTower k))
+      unfold CollatzReachesIn
+      rw [Nat.add_comm n 1, Function.iterate_add_apply]
       rw [hr]
       exact hstep
     exact ⟨haltTower k,k,htarget,haltTower_power k⟩
