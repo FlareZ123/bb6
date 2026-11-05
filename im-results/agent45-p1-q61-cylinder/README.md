@@ -72,3 +72,35 @@ This second archive decodes to 11,587 bytes of exact source; SHA256:
 ```
 
 Both proofs define the same theorem names in namespace `BB6.Agent45Q61`; **compile only one version into any single Lean environment**. Prefer the stronger step-256 file for source lifting and any subsequent original-blank-root closure. The larger q=61+1024 archive remains for audit history only. All source-integration and existing-family-overlap cautions above still apply, with the stronger proposed original critical index `n=978+4096r`.
+
+## Additional kernel-checked affine cylinder families, period 256 (17:43 UTC)
+
+The same method has generated **twelve further quantified Lean arithmetic certificates** for `q=q0+256r`, uniformly for all natural `r`. Combined with the earlier `q0=61` certificate, these cover 13 candidate critical-index residue classes `n=16q0+2 (mod 4096)`, listed below. Each has a source-compatible finite **11-node L0 and 11-node L1** shadow graph, certified `m≤9`, `z>0`, `¬256∣z`, and genuine natural-number closure for all dyadic depths. Local Lean 4.36.0-rc2 (import `Lean` alone, no mock interfaces, no `sorry`) compiled all 12 sources, with `#print axioms` for both closure theorems showing only `[propext, Classical.choice, Quot.sound]`.
+
+| q0 modulo 256 | n=16q0+2 modulo 4096 | Lean source |
+| ---: | ---: | --- |
+| 61 | 978 | `CylinderQ61Step256Fast.lean.xz.b64` |
+| 73 | 1170 | `ExtraQ61Batch1.tar.xz.b64: Q73.lean` |
+| 77 | 1234 | `ExtraQ61Batch1.tar.xz.b64: Q77.lean` |
+| 106 | 1698 | `ExtraQ61Batch1.tar.xz.b64: Q106.lean` |
+| 138 | 2210 | `ExtraQ61Batch1.tar.xz.b64: Q138.lean` |
+| 173 | 2770 | `ExtraQ61Batch2.tar.xz.b64: Q173.lean` |
+| 217 | 3474 | `ExtraQ61Batch2.tar.xz.b64: Q217.lean` |
+| 218 | 3490 | `ExtraQ61Batch2.tar.xz.b64: Q218.lean` |
+| 221 | 3538 | `ExtraQ61Batch2.tar.xz.b64: Q221.lean` |
+| 233 | 3730 | `ExtraQ61Batch3.tar.xz.b64: Q233.lean` |
+| 238 | 3810 | `ExtraQ61Batch3.tar.xz.b64: Q238.lean` |
+| 250 | 4002 | `ExtraQ61Batch3.tar.xz.b64: Q250.lean` |
+| 254 | 4066 | `ExtraQ61Batch3.tar.xz.b64: Q254.lean` |
+
+The three archives are XZ-compressed TARs, themselves Base64 encoded. First Base64-decode and XZ-decompress; then extract the `Q*.lean` proof files. Each generated Lean module has namespace `BB6.Agent45CylinderQ<q0>` and theorem names `l0_closed`, `l1_closed`, `l0_positive`, `l1_positive`, `l0_no256`, `l1_no256`, `l0_small`, `l1_small`. Exact archive SHA256 (computed over the XZ-compressed bytes):
+
+- Batch1 q0 = 73, 77, 106, 138: `d9915be644341446d7aac6a87a0cb4e4ce7ea5635acf4828ee83f9db9bc48494`.
+- Batch2 q0 = 173, 217, 218, 221: `6cb1ff310311295d68391a490c07141a020695f39843a2498496f76bca02dcce`.
+- Batch3 q0 = 233, 238, 250, 254: `fa0e73947a9398f6a19621d37e3e151ac8c059dae8cf5dd5641b10b2b31fa336`.
+
+All three GitHub text blobs were re-fetched after commit and matched the exact original local Git hashes; Batch3 required correction of one transfer typo before its final byte-for-byte verified state.
+
+The search over q0 in 1..256, restricted to q0%4=1 or2, also found bounded shadow graphs for `q0=14,30,57` corresponding to `n=226,482,914 (mod4096)`, **already source-certified by Agent50**. We therefore omitted those redundant certificates and preserve only the 13 candidates above. The exact source progress from Agents 8/9 and older published P1 classes must be reviewed for further overlap before claiming any novelty in actual machine reachability.
+
+**Precise mathematical boundary:** These are **complete, quantified arithmetic graph closure theorems** for the stated recurrence. The original-source `OddCone` lift, both original feeder unreachability statements, and the end-to-end `¬BB6.Agent1.Reach 2 (14*2^n-2*n-10)` propositions are not included in these 13 arithmetic certificates. Agent8's source-connected `GenericShadow`, `GenericBlocked` and Agent45's `two_sector_critical_iff_feeders` supply a clear intended integration path. A successful full source Lean CI, and comparison to prior P1 exclusions, remain necessary before treating the 13 candidate residues as rigorous blank-gateway exclusions or promoting them to `results/`. No claim about BB(6) follows without further holdout decisions.
