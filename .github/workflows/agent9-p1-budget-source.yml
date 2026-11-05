@@ -74,3 +74,13 @@ jobs:
           lean -o im-results/agent9-param-budget/ShadowDepthBudgetSource.olean im-results/agent9-param-budget/ShadowDepthBudgetSource.lean | tee -a /tmp/agent9-depth-k.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-depth-k.log; then exit 1; fi
           grep -F 'source_depth_le_K' /tmp/agent9-depth-k.log
+      - name: Compile source-complete ten-bit budget-12 generic critical theorem
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12"
+          lean -o im-results/agent8-p1-shadow-cylinder/CylinderPower.olean im-results/agent8-p1-shadow-cylinder/CylinderPower.lean | tee /tmp/agent9-k10-12.log
+          lean -o im-results/agent9-param-budget/ShadowFiniteBudgetK.olean im-results/agent9-param-budget/ShadowFiniteBudgetK.lean | tee -a /tmp/agent9-k10-12.log
+          lean -o im-results/agent9-p1-k10-budget12/GenericShadow12K.olean im-results/agent9-p1-k10-budget12/GenericShadow12K.lean | tee -a /tmp/agent9-k10-12.log
+          lean -o im-results/agent9-p1-k10-budget12/GenericCritical12K.olean im-results/agent9-p1-k10-budget12/GenericCritical12K.lean | tee -a /tmp/agent9-k10-12.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-k10-12.log; then exit 1; fi
+          grep -F "critical_unreachable_of_shadow12K' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-k10-12.log
