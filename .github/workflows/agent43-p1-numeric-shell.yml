@@ -1,0 +1,22 @@
+name: Agent43 P1 all-natural numeric dyadic shell (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  numeric-source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile dyadic shell arithmetic
+        run: |
+          set -e
+          N=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$N"
+          lean -o "$N/NumericShell.olean" "$N/NumericShell.lean"
