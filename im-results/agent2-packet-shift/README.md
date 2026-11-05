@@ -37,3 +37,36 @@ The universal `Q_n` polynomial already appeared in [Agent2 regular D path theore
 ## Unresolved decisive question
 
 The real blank orbit can leave regular `L` at an E exception. A B/E packet phase of at most q+p edges is source-certified, but its **exits** (A, B q=0, E p=0,1,2) are not controlled by this theorem. A globally closed source-connected physical word language or full halt-gate obstruction is still missing. It is not valid to deduce nonhalting from path synchrony, from a long finite blank-root certificate, or from a synthetic source path. Future work should compose the packet exit rules into an invariant for the genuine rooted orbit and audit external originality.
+
+
+## 2026-11-05 exceptional E suffix rotation, two independently certified boundaries
+
+The first low-p exception has now been source-composed with **arbitrary preceding guarded B/E paths** in [PacketEscape.lean](./PacketEscape.lean), [successful full original-source CI 42083875759](https://github.com/FlareZ123/bb6/actions/runs/42083875759), with [propext, Quot.sound] only and no admitted axioms.
+
+For all k,q,Y the extra E boundary is the **exact** source equality
+
+```
+M(3k+4,q,2; 0111Y)
+  --[12k²+49k+68+4q]-->
+M(8k+5,0,2q+6; 01010Y).
+```
+
+Appending this gate to **any** n-edge guarded packet path (ending at `M(3k+4,q,2;0111Y)`) preserves the complete source execution after input unary lift `3^(n+1)*x` and output unary lift `8^(n+1)*x`. The total elapsed primitive time again has universal quadratic `Q_(n+1)`, even though this exceptional gate increases packet rank and changes the tail.
+
+**New second tail theorem** [ELowSecond.lean](./ELowSecond.lean), independently source-checked by [CI 42084654996](https://github.com/FlareZ123/bb6/actions/runs/42084654996), states an additional universal source rule for **all k,q,Y**:
+
+```
+I_(3k+4)(0 (10)^q 1101010111 Y)
+  --[12k²+49k+80+4q]-->
+I_(8k+5)(0 1^(2q+6) 010101010 Y).
+```
+
+The proof is a 32-step A-on-0 `1101010111` turnaround that holds for *any* unknown left tape, followed by previously source-certified arbitrary-q C reverse scan, two-step B handoff, and D closing sweep. It is an exact quantified raw source equality, not numerical interpolation. It specializes to the second relevant tail reset
+
+```
+M(3k+4,q,2; 01010111Y)
+  --[12k²+49k+80+4q]-->
+M(8k+5,0,2q+6; 010101010Y).
+```
+
+These are **synthetic E-section rules** and do not establish that the genuine blank root reaches any chosen packet input. A numerical observation about a potential *third* tail reset remains unproved: for q≥1 the apparent right tape becomes `0 1^(2q+2) 0 1^14` at F/0; q=0 follows a different branch. Do not promote this observation to a theorem without a source-connected proof. No result here settles BB(6) or even this D holdout.
