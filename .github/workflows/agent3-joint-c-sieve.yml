@@ -143,3 +143,8 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedFastRoot,JointRootQuantifier}.lean .
           lean -o MixedFastRoot.olean MixedFastRoot.lean
           lean -o JointRootQuantifier.olean JointRootQuantifier.lean
+          # New exact source-checked two-dimensional rectangle and
+          # disjoint infinite high stopping class.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle25Four,MixedHighRect411}.lean .
+          lean -o MixedRectangle25Four.olean MixedRectangle25Four.lean
+          lean -o MixedHighRect411.olean MixedHighRect411.lean
