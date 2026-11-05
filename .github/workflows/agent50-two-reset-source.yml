@@ -1,4 +1,4 @@
-name: Agent50 P1 arbitrary-reset arithmetic (manual original-source audit)
+name: Agent50 P1 arbitrary-reset original-source audit (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -6,7 +6,7 @@ permissions:
 jobs:
   source-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -14,22 +14,37 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Validate and extract the exact source-normal-form proofs
+      - name: Verify and extract exact Agent50 mathematical source
         run: |
           set -e
           target="im-results/agent50-p1-two-reset"
           base64 -d "$target/three-reset-source.tar.xz.b64" > /tmp/agent50-three-reset-source.tar.xz
           echo "be550c5b326d27c459197cf81858fd8ecad95abe657d0a9f269c65bbbb12b97f  /tmp/agent50-three-reset-source.tar.xz" | sha256sum -c -
           tar -xJf /tmp/agent50-three-reset-source.tar.xz -C "$target"
-      - name: Compile unchanged Agent28 predecessors and all Agent50 theorems
+          base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/agent50-count-bridge.tar.xz
+          echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/agent50-count-bridge.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent50-count-bridge.tar.xz -C "$target"
+      - name: Compile original P1 inverse sources and Agent50 arbitrary-reset proof
         run: |
           set -e
-          root="im-results/agent28-p1-word-automaton"
-          target="im-results/agent50-p1-two-reset"
-          export LEAN_PATH="$root:$target"
-          for m in OddWordCost OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget DefectTransport; do
-            lean -o "$root/$m.olean" "$root/$m.lean"
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG50=im-results/agent50-p1-two-reset
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG50"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
           done
-          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations; do
-            lean -o "$target/$m.olean" "$target/$m.lean"
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          lean -o "$P1/MassInverse.olean" "$P1/MassInverse.lean"
+          lean -o "$P1/OddConeMass.olean" "$P1/OddConeMass.lean"
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          lean -o "$P1/InverseIff.olean" "$P1/InverseIff.lean"
+          lean -o "$P1/UpperTail.olean" "$P1/UpperTail.lean"
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal; do
+            lean -o "$AG50/$m.olean" "$AG50/$m.lean"
           done
