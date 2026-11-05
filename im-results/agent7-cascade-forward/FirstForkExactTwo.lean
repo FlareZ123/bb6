@@ -93,6 +93,46 @@ theorem near_top_exact_two (n u A q:Nat) (hn:4≤n)
   have odd_eq:2*(2*d0)=8*2^(n-2)+oddPre n u+(n-2)+5 := by
     dsimp [oddPre,d0]
     omega
+  constructor
+  · intro hp
+    rcases hp with ⟨k,hband,heq⟩|⟨k,t,d,hd,hband,hout,heq⟩
+    · have hk : k=n-1 := even_band_scale_unique u k (n-1) hband hbandE
+      right
+      rw [hk] at heq
+      omega
+    · by_cases ht:t=0
+      · subst t
+        have hprod : 2*u+5=3*d := by simpa using hout
+        exact False.elim (odd_tzero_in_dyadic_gap n u hn hbiglo hbighi
+          ⟨k,d,by simpa using hband,hprod⟩)
+      · have ht1 : t=1 := by
+          by_cases hte:t=1
+          · exact hte
+          have ht2 : 2≤t := by omega
+          have he:t+1=3+(t-2) := by omega
+          have hp:3^(t+1)%27=0 := by
+            rw [he,Nat.pow_add]
+            simp
+          have hu:(2*u+5)%27=0 := by
+            rw [hout,Nat.mul_mod,hp]
+            simp
+          exact False.elim (hnot27 hu)
+        subst t
+        have hdd:d=d0 := by
+          have hp:3^(1+1)=9 := by decide
+          rw [hp] at hout
+          omega
+        have hk : k=n-2 := odd_band_scale_unique (2*d0) k (n-2)
+          (by simpa [hdd] using hband) odd_band
+        left
+        rw [hdd,hk] at heq
+        omega
+  · rintro (rfl|rfl)
+    · exact ho
+    · exact he
+
+#print axioms near_top_exact_two
+
 STAGED_EXACT_TWO
 -/
 end CascadeFirstFork
