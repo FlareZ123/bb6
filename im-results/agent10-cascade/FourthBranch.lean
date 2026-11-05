@@ -33,7 +33,7 @@ private theorem band_growth (n:Nat) (hn:10≤n) :
   rw [he]
   exact h (n-10)
 
-private theorem fifth_growth (n:Nat) (hn:10≤n) :
+theorem fifth_growth (n:Nat) (hn:10≤n) :
     63*n+97 ≤ 2^n := by
   have h : ∀ k:Nat, 63*(k+10)+97 ≤ 2^(k+10) := by
     intro k
@@ -64,12 +64,12 @@ theorem fourth_divnine (n:Nat) (hn:10≤n)
     have hm9:2^n%9=5 := by rw [hp,hm]
     omega
 
-private def d (n:Nat) := (2*fourthPred n+5)/9
-private def oddPre (n:Nat) :=
+def d (n:Nat) := (2*fourthPred n+5)/9
+def oddPre (n:Nat) :=
   4*d n-8*2^(n-2)-(n-2)-5
-private def evenPre (n:Nat) := 4*2^n-63*n-97
+def evenPre (n:Nat) := 4*2^n-63*n-97
 
-private theorem odd_factor (n:Nat) (hn:10≤n)
+theorem odd_factor (n:Nat) (hn:10≤n)
     (hres:n%18=10 ∨ n%18=17) :
     9*d n=2*fourthPred n+5 ∧ (d n)%2=1 := by
   have hmod := fourth_divnine n hn hres
@@ -81,7 +81,7 @@ private theorem odd_factor (n:Nat) (hn:10≤n)
   · exact heq
   · omega
 
-private theorem odd_band (n:Nat) (hn:10≤n)
+theorem odd_band (n:Nat) (hn:10≤n)
     (hres:n%18=10 ∨ n%18=17) :
     6*2^(n-2)+1 ≤ 2*d n ∧ 2*d n ≤ 8*2^(n-2)-1 := by
   have hg := band_growth n hn
