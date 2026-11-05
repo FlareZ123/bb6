@@ -25,11 +25,11 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent1-c-unified/
           cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam}.lean /tmp/agent1-c-unified/
           cp im-results/agent1-c-unified-gateway/{UnifiedArithmetic,UnifiedGateway}.lean /tmp/agent1-c-unified/
-          cp im-results/agent4-c-dyadic-barrier/CDyadicImmediateHalts.lean /tmp/agent1-c-unified/
+          cp im-results/agent4-c-dyadic-barrier/{CDyadicImmediateHalts,CDyadicMod6}.lean /tmp/agent1-c-unified/
           cd /tmp/agent1-c-unified
           export LEAN_PATH="."
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam UnifiedArithmetic UnifiedGateway CDyadicImmediateHalts; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam UnifiedArithmetic UnifiedGateway CDyadicImmediateHalts CDyadicMod6; do
             echo "::group::Lean $f"
             lean -o "$f.olean" "$f.lean"
             echo "::endgroup::"
