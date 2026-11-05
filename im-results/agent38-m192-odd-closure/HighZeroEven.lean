@@ -5,8 +5,8 @@ namespace Agent38M192
 open Agent41M192
 
 theorem high_no_sum0 (a k c:Nat) (hz:(a+k)%4=0) : ¬ high a k c := by
-  simp only [high]
   intro hh
+  simp only [high] at hh
   have ht : ((a+k)%192)%4=0 := by omega
   have hu : (((a+k)%192+48*((a+192-c%192)%192/96))%96)%4=0 := by omega
   rcases hh with h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
