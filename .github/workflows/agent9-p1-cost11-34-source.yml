@@ -1,15 +1,12 @@
 name: Agent 9 P1 34 additional cost11 q1024 original-source critical proofs
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[P1COST11-34]')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
