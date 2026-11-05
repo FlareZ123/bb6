@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify complete original source chain and packet path synchrony
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent2-cryptid-continuity
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace
         run: |
           set -euo pipefail
           python3 -m pip install --quiet filelock
@@ -47,3 +47,5 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/PrefixENoFSource.olean im-results/agent2-cryptid-continuity/PrefixENoFSource.lean
           lean "$P/EAltFullFirst.lean"
           lean "$P/EGenericFullFirst.lean"
+          lean -o im-results/agent36-cryptid-trace/EDoubleTripleGeneral.olean im-results/agent36-cryptid-trace/EDoubleTripleGeneral.lean
+          lean "$P/AIterDoubleZero.lean"
