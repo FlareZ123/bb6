@@ -17,7 +17,7 @@ jobs:
       - name: Compile original modules
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification:im-results/agent13-p1-482-cylinder"
           for m in GParity GInverse; do lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"; done
           for m in P1FiniteInverse P1InverseLog; do lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"; done
           for m in MassInverse OddConeMass; do lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"; done
@@ -27,10 +27,11 @@ jobs:
       - name: Audit source adapter
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification"
-          for m in AffineStability AffineGraphTheorem FiniteToCylinder AffineSourceAdapter AffineSourceList; do
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification:im-results/agent13-p1-482-cylinder"
+          lean -o "im-results/agent13-p1-482-cylinder/P130Arithmetic.olean" "im-results/agent13-p1-482-cylinder/P130Arithmetic.lean"
+          for m in AffineStability AffineGraphTheorem FiniteToCylinder AffineSourceAdapter AffineSourceList P130AmplifiedShadow; do
             lean -o "im-results/agent13-p1-affine-amplification/$m.olean" "im-results/agent13-p1-affine-amplification/$m.lean"
           done
-          lean im-results/agent13-p1-affine-amplification/AffineSourceList.lean | tee /tmp/source.log
-          grep -F 'finite_list_source_amplifies' /tmp/source.log
+          lean im-results/agent13-p1-affine-amplification/P130AmplifiedShadow.lean | tee /tmp/source.log
+          grep -F 'q30_l0_original_shadow_amplified' /tmp/source.log
           if grep -Fq sorryAx /tmp/source.log; then exit 1; fi
