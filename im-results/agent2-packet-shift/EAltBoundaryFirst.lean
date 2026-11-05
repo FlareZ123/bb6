@@ -35,6 +35,18 @@ private theorem appendNoPhysical (c d : Cfg) (a b : Nat)
     rw [heq,run_add,he]
     exact hd (t-a) (by omega)
 
+private theorem appendNoF (c d : Cfg) (a b : Nat)
+    (hc : BB6.Agent2ATurnFamily.NoF c a)
+    (he : run a c = d)
+    (hd : BB6.Agent2ATurnFamily.NoF d b) :
+    BB6.Agent2ATurnFamily.NoF c (a+b) := by
+  intro t ht
+  by_cases hs : t<a
+  · exact hc t hs
+  · have heq : t=a+(t-a) := by omega
+    rw [heq,run_add,he]
+    exact hd (t-a) (by omega)
+
 private theorem initial_noF (m q : Nat) (zs : List Bool) :
     BB6.Agent2ATurnFamily.NoF (eStart m q zs) 2 := by
   intro t ht
@@ -51,7 +63,7 @@ private theorem scan_noF (n : Nat) (L zs : List Bool) :
   | succ n ih =>
       have ht : 2*(n+1)=2+2*n := by omega
       rw [ht]
-      apply BB6.Agent2ATurnFamily.appendNoF
+      apply appendNoF
         (scanStart (n+1) L zs)
         (scanStart n ([false,true]++L) zs) 2 (2*n)
       · intro t hlt
@@ -70,7 +82,7 @@ private theorem cWalk_noF (n : Nat) (L zs : List Bool) :
   | succ n ih =>
       have ht : 2*(n+1)=2+2*n := by omega
       rw [ht]
-      apply BB6.Agent2ATurnFamily.appendNoF
+      apply appendNoF
         (cWalk (n+1) L zs)
         (cWalk n L (true::true::zs)) 2 (2*n)
       · intro t hlt
