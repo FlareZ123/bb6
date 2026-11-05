@@ -98,3 +98,14 @@ jobs:
           lean im-results/agent9-p1-q33/Q33Final.lean | tee -a /tmp/agent9-q33.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-q33.log; then exit 1; fi
           grep -F 'blank_no_critical_530' /tmp/agent9-q33.log
+      - name: Certify infinite q33 plus 2pow64r authentic P1 gateway exclusion
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
+          python im-results/agent9-p1-q33/generate_affine_nodes.py
+          for m in AffineGeneric Q33AffineNodes Q33Affine; do
+            lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean" | tee -a /tmp/agent9-infinite-q33.log
+          done
+          lean im-results/agent9-p1-q33/Q33CylinderFinal.lean | tee -a /tmp/agent9-infinite-q33.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-infinite-q33.log; then exit 1; fi
+          grep -F 'blank_no_critical_530_plus_2pow68' /tmp/agent9-infinite-q33.log
