@@ -29,4 +29,5 @@ jobs:
           lean -DmaxHeartbeats=10000000 im-results/agent6-429-coprime-moduli/Agent6TwoBurstZero.lean
           lean -DmaxHeartbeats=10000000 im-results/agent6-429-coprime-moduli/Agent6TwoBurstEvenOne.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent6-429-affine-pump/Agent6Pump.olean im-results/agent6-429-affine-pump/Agent6Pump.lean
-          lean -DmaxHeartbeats=10000000 im-results/agent6-429-affine-pump/Agent6Pump15.lean
+          lean -DmaxHeartbeats=10000000 -o im-results/agent6-429-affine-pump/Agent6Pump15.olean im-results/agent6-429-affine-pump/Agent6Pump15.lean
+          lean -DmaxHeartbeats=10000000 im-results/agent6-429-affine-pump/Agent6PumpTail.lean
