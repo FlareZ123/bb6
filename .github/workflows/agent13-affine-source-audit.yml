@@ -28,9 +28,9 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow:im-results/agent13-p1-affine-amplification"
-          for m in AffineStability AffineGraphTheorem FiniteToCylinder AffineSourceAdapter; do
+          for m in AffineStability AffineGraphTheorem FiniteToCylinder AffineSourceAdapter AffineSourceList; do
             lean -o "im-results/agent13-p1-affine-amplification/$m.olean" "im-results/agent13-p1-affine-amplification/$m.lean"
           done
-          lean im-results/agent13-p1-affine-amplification/AffineSourceAdapter.lean | tee /tmp/source.log
-          grep -F 'source_shadow_finite_lift' /tmp/source.log
+          lean im-results/agent13-p1-affine-amplification/AffineSourceList.lean | tee /tmp/source.log
+          grep -F 'finite_list_source_amplifies' /tmp/source.log
           if grep -Fq sorryAx /tmp/source.log; then exit 1; fi
