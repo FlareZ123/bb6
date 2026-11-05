@@ -1,4 +1,4 @@
-"""Generate two exact finite affine dyadic-shadow certificates for q=33+2^64*r.
+"""Generate two exact finite affine dyadic-shadow certificates for q=33+2^49*r.
 
 The emitted Lean source is kernel-checked via by decide; the generator is not
 trusted as a proof oracle. Deterministic, atomically replaced under a file lock.
@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import tempfile
 
-P = 1 << 64
+P = 1 << 49
 OUTPUT = Path("im-results/agent9-p1-q33/Q33AffineNodes.lean")
 
 
@@ -41,7 +41,7 @@ def generate() -> str:
         "set_option maxHeartbeats 100000000",
         "set_option maxRecDepth 8192",
         "namespace BB6.Agent9Affine",
-        "def P : Nat := 18446744073709551616",
+        "def P : Nat := 562949953421312",
     ]
     for feeder in (0, 1):
         nodes = compute(feeder)
