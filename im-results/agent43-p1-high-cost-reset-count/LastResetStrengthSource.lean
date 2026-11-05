@@ -50,7 +50,7 @@ theorem source_last_positive_large_left
   have hpowlt : (2:Nat)^0 < 2^t :=
     Nat.pow_lt_pow_right (by decide) (by omega)
   have htwo : 2 ≤ (2:Nat)^t := by
-    simp only [pow_zero] at hpowlt
+    simp only [Nat.pow_zero] at hpowlt
     omega
   have hpowBound : 2*(c+3) ≤ 2^t*(c+3) :=
     Nat.mul_le_mul_right (c+3) htwo
