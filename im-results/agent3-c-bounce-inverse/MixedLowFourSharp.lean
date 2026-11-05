@@ -46,6 +46,8 @@ theorem mixed_low_m_four_mod8_sharp (m k : Nat)
           a b 1 k (by omega) (by omega) (by omega)).mp he
         rcases huni with ⟨ha,hb⟩
         rw [ha,hb] at hparent
+        have hx : 1+k-2=k-1 := by omega
+        rw [hx] at hparent
         change (BB6.Agent8Section.run secNext time (some start)).bind secNext =
           some (k-1,(k-2)/2) at hparent
         cases hprev : BB6.Agent8Section.run secNext time (some start) with
