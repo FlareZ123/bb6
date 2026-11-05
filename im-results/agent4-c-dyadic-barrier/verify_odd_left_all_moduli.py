@@ -8,7 +8,16 @@ The checker is corroborating evidence, not a formal proof or a blank-root halt.
 from math import gcd
 from random import Random
 
-from verify_all_moduli import factor, order4, phi
+from verify_all_moduli import factor, phi
+
+
+def order4(p: int) -> int:
+    """Compute the multiplicative order of 4 modulo prime p efficiently."""
+    order = p - 1
+    for q, _ in factor(order):
+        while order % q == 0 and pow(4, order // q, p) == 1:
+            order //= q
+    return order
 
 
 def root_mod(u: int, n: int, modulus: int) -> int:
