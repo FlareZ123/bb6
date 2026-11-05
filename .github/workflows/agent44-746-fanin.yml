@@ -53,6 +53,7 @@ jobs:
           r="im-results/agent44-746-rank"
           lean -o "$r/ReverseRank.olean" "$r/ReverseRank.lean"
           lean -o "$r/ResetRank.olean" "$r/ResetRank.lean"
+          lean -o "$r/FatalRank.olean" "$r/FatalRank.lean"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
           echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
