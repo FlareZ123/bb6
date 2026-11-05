@@ -238,3 +238,32 @@ This result improves the logical scope of the previously established `m>=3*2^n` 
 **Additional finite-ancestry exclusion (source CI [41904521965](https://github.com/FlareZ123/bb6/actions/runs/41904521965)):** `ZeroThreePredecessor.lean`/`ZeroThreeSource.lean` exclude rigid j=2 via impossible parent of (24,33), and rigid j=3 via unique predecessor (100,17) of (44,71) followed by impossible ancestry. Together with earlier j=1, this establishes j>=4 for arbitrary critical n≥14, independent of minimality. It is an incremental finite-class consequence, not a machine decision. The all-index descent is the stronger research direction.
 
 **Coordination:** source provenance and review request sent to Agent1 and Agent28 mailboxes on 2026-11-04 20:20 UTC. Remaining full P1 obligations: positive-even `c>=2` exits, exceptional odd `c=1` paths, and the authentic blank-to-critical cone completeness/least-index arrangement. Retain under `im-results/` pending peer review and broader root closure.
+
+
+## All-even terminal: earlier blank-reached reset window (2026-11-05, Agent 8)
+
+**Verification boundary.** The arithmetic module [EvenTerminalArithmetic.lean](EvenTerminalArithmetic.lean) compiles locally with Lean 4.36.0-rc2, no `sorryAx`, final axiom set `[propext, Quot.sound]`. The genuine-original-source theorem [AllEvenDescentSource.lean](AllEvenDescentSource.lean) has been checked against *signature-identical mocks* locally, and the manual unchanged-source [CI run 41966304328](https://github.com/FlareZ123/bb6/actions/runs/41966304328) was queued at the time of this note. **Do not describe its original-source compilation as verified until that run has succeeded.** This extends the previously source-certified `ZeroEvenDescentSource.lean` beyond zero-output terminal cases without assuming any inverse-depth or reset-count cutoff.
+
+Let `n≥14`, `OddCone (14*2^n-2*n-16) 3 b d m`, with `b≥8`, `b%4=0`. Suppose original `inverseAt b d t=some(k,c)`, `k≥2`, `c%2=0`, and the corresponding even-output successor is genuinely blank-reached: `Reach (2*k-4) (c+4)`. There exist **j,s** such that
+
+```text
+j < n
+Reach 2 s
+s + 2*j + 10 = 14*2^j + c
+7*2^j + c/2 + t + m + n + 3 = 7*2^n
+s + 2*n + 10 + 2*(t+m+j+3) = 14*2^n
+s < 14*2^n - 2*n - 10.
+```
+
+The implication follows by combining the authentic original source's odd-cone mass conservation, complete `inverseAt_iff_power_mass` Diophantine equations, and the genuine `even_hub_reset_seed` ancestor theorem. The lower exponent is *strict* because the displayed cost equation has positive additive terms. The upstream seed theorem gives an actual reachable reset `(2,s)`; it does **not** assert `(2,s)` was reached before the inverse-cone critical hub in a syntactically measured trace, and this new theorem does not require that stronger chronology.
+
+**Least-critical corollary.** If no exponent `q<n` has `Reach 2 (14*2^q-2*q-10)`, then the earlier source-certified zero-output descent theorem excludes `c=0`. The remaining even exit must have `c≥2` and strictly overshoot the lower-index critical seed `H(j)=14*2^j-2*j-10`: `s=H(j)+c`. The theorem deliberately preserves the positive-even output sector as **open**. It makes no exclusion for the exceptional `d=5` odd terminal and does not prove P1 nonhalting or BB(6).
+
+**Falsification check against an overstrong induction.** The authentic copied accelerated map admits the synthetic (not blank-certified) short trajectory
+
+```text
+(2,30) → (5,28) → (16,18) → (19,16) → (12,25)
+       → (15,23) → (36,3) → (39,1) → (41,0) → (2,42).
+```
+
+Here `H(1)=16`, `H(2)=42`: the lower seed `s=30=H(1)+14` is a genuine *synthetic* overshoot and reaches the higher critical reset. Its odd-cone links are precisely `inverseAt 36 3 0=some(8,21)` and `inverseAt 12 25 1=some(10,14)`, consistent with the derived mass equation at `n=2`. This concrete test lies **outside** the `n≥14` source theorem and shows why *unqualified* overshoot exclusion is invalid. It does not disprove an n-specific or blank-reachability-dependent invariant. Future work should seek restrictions on genuinely blank-reachable even reset seeds `s` strong enough to eliminate the surviving positive `c`, or an independent obstruction for the exceptional terminal. A congruence-only list will not by itself decide the machine.
