@@ -24,7 +24,7 @@ jobs:
           python3 im-results/agent25-cryptid-doublezero/unpack.py
       - name: Compile independent source and verify cross-model bridge
         run: |
-          export LEAN_PATH="$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary:$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero:$GITHUB_WORKSPACE/im-results/agent32-cryptid-third:$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding:$GITHUB_WORKSPACE/im-results/agent37-cryptid-model-bridge"
+          export LEAN_PATH="$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary:$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero:$GITHUB_WORKSPACE/im-results/agent32-cryptid-third:$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding:$GITHUB_WORKSPACE/im-results/agent37-cryptid-model-bridge:$GITHUB_WORKSPACE/im-results/agent35-cryptid-code:$GITHUB_WORKSPACE/im-results/agent2-cryptid-continuity:$GITHUB_WORKSPACE/im-results/agent37-d-timing-cocycle"
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
           cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
@@ -45,3 +45,6 @@ jobs:
           lean -o im-results/agent37-cryptid-model-bridge/ReturnShift.olean im-results/agent37-cryptid-model-bridge/ReturnShift.lean
           lean -o im-results/agent37-cryptid-model-bridge/ShortTripleGate.olean im-results/agent37-cryptid-model-bridge/ShortTripleGate.lean
           lean im-results/agent37-cryptid-model-bridge/A110Portal.lean
+          lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
+          lean -o im-results/agent2-cryptid-continuity/AHaltCylinder.olean im-results/agent2-cryptid-continuity/AHaltCylinder.lean
+          lean im-results/agent37-d-timing-cocycle/CodeHalt.lean
