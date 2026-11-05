@@ -1,0 +1,29 @@
+name: Agent 12 P1 two-reset dyadic budget source audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lean-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      LEAN_PATH: im-results/agent28-p1-word-automaton:im-results/agent12-p1-two-reset
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check full source imported two-reset theorem and axiom audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          D=im-results/agent28-p1-word-automaton
+          A=im-results/agent12-p1-two-reset
+          lean -o "$D/OneResetTwoAdic.olean" "$D/OneResetTwoAdic.lean"
+          lean -o "$D/DefectTransport.olean" "$D/DefectTransport.lean"
+          lean -o "$A/TwoResetPolynomial.olean" "$A/TwoResetPolynomial.lean"
+          lean "$A/SecondResetBudget.lean"
