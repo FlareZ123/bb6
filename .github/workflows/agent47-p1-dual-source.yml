@@ -1,0 +1,45 @@
+name: Agent 47 P1 dual inverse-depth original-source audit (manual)
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  p1-dual-source:
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent47-p1-dual-source-audit]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify original recursive G, all-original two-feeder source, and new dual depth result
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent45-p1-deep-two:im-results/agent47-p1-dual-valuation"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          for m in P1TwoRoot P1TwoFeeder P1Deep2 P1TwoIff P1TwoCritical P1TwoSector; do
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          lean -o im-results/agent47-p1-dual-valuation/P1DualValuation.olean im-results/agent47-p1-dual-valuation/P1DualValuation.lean | tee /tmp/dual-arithmetic-axioms.log
+          lean im-results/agent47-p1-dual-valuation/P1DualSource.lean | tee /tmp/dual-source-axioms.log
+          grep -q "odd_second_feeder_inverse_depth.*depends on axioms:" /tmp/dual-source-axioms.log
+          if grep -q "sorryAx" /tmp/dual-arithmetic-axioms.log /tmp/dual-source-axioms.log; then
+            echo "Source axiom audit failed: sorryAx" >&2
+            exit 1
+          fi
