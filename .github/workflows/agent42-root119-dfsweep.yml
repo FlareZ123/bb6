@@ -24,5 +24,7 @@ jobs:
           lean -o im-results/agent42-root119-guard/Root119Gate.olean im-results/agent42-root119-guard/Root119Gate.lean
           lean -o im-results/agent42-root119-guard/Root119BShift.olean im-results/agent42-root119-guard/Root119BShift.lean
           lean -o im-results/agent42-root119-guard/Root119BShield.olean im-results/agent42-root119-guard/Root119BShield.lean
-          lean im-results/agent42-root119-guard/Root119DFSweep.lean
-          lean im-results/agent42-root119-guard/Root119FBSweep.lean
+          lean -o im-results/agent42-root119-guard/Root119DFSweep.olean im-results/agent42-root119-guard/Root119DFSweep.lean
+          lean -o im-results/agent42-root119-guard/Root119FBSweep.olean im-results/agent42-root119-guard/Root119FBSweep.lean
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119Wave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('wave-source-sha256',h); assert h=='715e5512da53986da896ea05d68d28869fc8489b6ad3e1e49e26459545299930'; p.with_name('Root119Wave.lean').write_bytes(b)"
+          lean im-results/agent42-root119-guard/Root119Wave.lean
