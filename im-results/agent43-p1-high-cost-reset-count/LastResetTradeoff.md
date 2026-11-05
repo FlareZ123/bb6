@@ -57,7 +57,7 @@ This proves (E), with no finite cutoff in z and without assuming any intermediat
 ### Corollaries
 
 - For every `n≥62`, the **original-source** Agent50 theorem supplies `z≥4` and `2^n≤24^z(n+2)^(2z+2)`; combining these with (E) and the [power proof](WallBelowN.md) excludes all `m≤n`.
-- For `n≥256`, the [dyadic shell lemma](WallAboveNPlusZ.md) excludes all `m≤n+z`; hence the genuine low-cost wall requires `m>n+z`.
+- For `n≥194`, the [dyadic shell lemma](WallAboveNPlusZ.md) excludes all `m≤n+z`; hence the genuine low-cost wall requires `m>n+z`.
 - For any fixed constant `C≥1`, if `m≤n^C` for large n, (E) forces `m≥n+2z−O_C(log n)`. This asymptotic is a consequence of logarithm bounds, not a separately machine-verified numerical threshold.
 - If `m≥P`, the premise `m≤P` fails; consult [StrongEnergy](StrongEnergy.md) for the complementary high-cost necessary reset density. The missing `m>P` territory remains unresolved.
 
