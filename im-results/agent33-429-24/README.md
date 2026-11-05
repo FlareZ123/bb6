@@ -48,3 +48,53 @@ The **complete original-repository accelerator-source audit passed** [manual CI 
 A uniform obstruction of the whole surviving true-blank halting locus is still needed; infinitely many terminal configurations survive this 24/2048 necessary mask. Further lifting to finer moduli without eliminating a whole infinite family will not settle nonhalting. Possible next work: genuine-root inverse and forward invariants that eliminate an entire residual feeder cone, or a real original-source halting witness. Also compare this intersection to newer overlapping external formal and informal work before considering publication novelty.
 
 This dossier belongs in `im-results/`; `results/` is reserved for independently justified original academic advances.
+
+## New exact whole-cylinder inverse certificates (2026-11-05)
+
+[BB429New9Lift.lean](BB429New9Lift.lean) derives two **new entire families** on the genuine blank-root accelerator:
+
+```lean
+BB429New9Lift.no_halting_2_mod8192 : ∀ n a b,
+  BB429.run n (0,0) = some (a,b) → b+1=2*a → a%8192≠4105
+
+BB429New9Lift.no_halting_3_mod8192 : ∀ n a b,
+  BB429.run n (0,0) = some (a,b) → b+1=2*a → a%8192≠6153
+```
+
+Both are **formally proved with no `sorryAx`**, verified in [manual source audit 41961249321](https://github.com/FlareZ123/bb6/actions/runs/41961249321). Exact printed dependencies: `[propext, Classical.choice, Quot.sound]`. They cover all `a=8192q+4105` and `a=8192q+6153` for any natural `q`, hence exclude entire unbounded families rather than a finite prefix. There are still infinitely many live classes.
+
+### Generalizable method
+
+For the local accelerated `BB429.next` function, Agent 6's certified `odd_back` lemma implies that any genuinely reachable odd first counter `a≥13` with second counter `b` must have an actual reachable predecessor satisfying one of
+
+```text
+F:  a = 2*x + 3;             y = b+a
+S:  4*x + 26 = 4*a+b;       2*y=b+4;    b mod 4=2
+```
+
+An even `a≥6` has one necessary predecessor
+
+```text
+E:  4*x + 14 = 4*a+b;       2*y=b;      b mod 4=2
+```
+
+These formulas are necessary conditions on *real reachability*, not guessed reverse simulator transitions. For each entire affine terminal cylinder `a=8192q+r, b=2a-1`, substitute the formulas and split **all** possible inverse branches, checking the congruences uniformly for arbitrary `q`. At each ancestor, immediately reject a branch when its affine counters violate the already formally proved true-root invariant `BB429Mod8.Allowed` or `BB429RootMod16.rooted_not_7_7`. All noncontradictory branches require further inverse proofs. The new 4105 and 6153 certificates have a full binary-branch analysis of maximal predecessor depth **ten**, with every leaf ruled out.
+
+Common branching tree for both cases:
+
+```text
+root --F--> F --F--> FF [forbidden Allowed]
+                   --S--> FS --F--> FSF --E--> FSFE --F--> FSFEF
+                                           FSFEF --F--> FSFEFF [forbidden Allowed]
+                                                 --S--> FSFEFS --F--> FSFEFSF
+                                                                --E--> FSFEFSFE
+                                                                --F--> FSFEFSFEF
+                                                                --F--> FSFEFSFEFF [forbidden Allowed]
+                                                                --S--> FSFEFSFEFS [forbidden invariant]
+```
+
+Here `FSFEFSFEFS` has `a%8=7,b%8=7` for the 4105 family, violating Agent 39's source theorem; the 6153 family violates `Allowed` directly. The tree display is conceptual; the checked Lean file spells out each affine coefficient and proves all necessary inverse cases and leaf contradictions.
+
+**Methodological caution:** A finite reverse search at a few sample `q` values is never enough to prove an infinite cylinder. The Lean proof quantifies over `q : Nat`, uses exact arithmetic `omega` at every predecessor branch, and checks every possible inverse case. Other 8192 lifts can need arbitrarily deeper inverse trees; the approach is a conditional semidecision method rather than a complete algorithm. It is useful where a *uniform* finite inverse contradiction can be found.
+
+[BB429Source9Lift.lean](BB429Source9Lift.lean) transports these new gates into the unchanged original six-state Cryptids machine and composes the exact 24-class gate to get `raw_halts_iff_94_candidates` (a nominal 94/8192 count before integrating other agents' independent fine-modulus exclusions). The full raw-machine CI is **pending** at this writing; this statement must only be called source-authenticated after the original Cryptids workflow succeeds.
