@@ -50,7 +50,7 @@ theorem original_odd_shadow_step
   have hpoly := original_odd_edge_polynomial
     N L m t b d w z alpha k c r zp b0 d0 hcone hrootmass
     hoff hcoord hb hb4 hd hi hcodd hr hnext
-  have hnat := shadow_poly_cast N L m t k zp alpha hk hmargin.2 hpoly
+  have hnat := shadow_poly_cast N L m t k zp alpha hk (by omega) hpoly
   refine ⟨r,zp,wp,alphap,hr,hnext,hmargin.1,hwbound,hwoff,rfl,?_⟩
   simpa only [wp, alphap] using hnat
 
