@@ -120,3 +120,5 @@ jobs:
           lean -o HighOddTwo.olean HighOddTwo.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/SevenResidual.lean .
           lean -o SevenResidual.olean SevenResidual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/HighOddSix.lean .
+          lean -o HighOddSix.olean HighOddSix.lean
