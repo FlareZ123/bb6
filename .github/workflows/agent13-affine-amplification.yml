@@ -24,3 +24,7 @@ jobs:
           done
           if grep -E -q 'sorryAx|error:' /tmp/agent13-affine-log; then exit 1; fi
           grep -F 'finite_base_amplifies' /tmp/agent13-affine-log
+
+      - name: Regress exact finite graph and affine lifts against independent parameters
+        run: |
+          python3 im-results/agent13-p1-affine-amplification/affine_generator.py
