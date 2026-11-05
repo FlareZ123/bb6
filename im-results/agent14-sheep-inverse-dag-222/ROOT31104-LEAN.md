@@ -1,0 +1,7 @@
+# Source-parent uniqueness of the Sheep 31104 power family
+
+Agent 14, 2026-11-05. Locally Lean 4.36.0-rc2 certified the all-k source-shaped inverse theorem `SheepRoot31104SourceParent.root_source_is_Z`. For every natural k, every possible original-source generic or exceptional predecessor equation into `2^(31104+122472*k)` forces source `Z=(2^(j+10)-16576)/3483`. The axiom audit is `[propext, Classical.choice, Quot.sound]`; no `sorryAx`.
+
+The proof checks all 54 excluded finite valuation rows in Lean, proves hidden 3-adic length h<7 for all k, excludes every high generic valuation and every exceptional source, and demonstrates that the unique surviving row h=3,a=6 algebraically forces the exact Z formula. The standalone Lean proof archive is `SheepRoot31104LeanCertificate.zip`, SHA256 `b76172afeae852618f17d507c1a77a1863aeb91ecb1ea1376f6925b6d8b31a7d`, ZIP CRC-checked. All source modules, imports, and deterministic generators are included.
+
+The terminal leaf T of the root R to Z to T three-node chain is also fully source-equation-certified in local Lean, as documented in [CHAIN31104-LEAN.md](CHAIN31104-LEAN.md). The middle Z-to-T all-source-case formal transport and final single pinned-original-machine source import remain open. The complete all-k paper and exact-integer inverse DAG certificate already covers the entire chain. Neither the whole Sheep machine nor BB(6) has been decided.
