@@ -14,7 +14,7 @@ open BB6.Agent2EAltBoundaryFirst
 
 def sourceStart (k q r : Nat) (ys : List Bool) : Cfg :=
   init (List.replicate (3*k+2) true ++
-    false::(pairs q ++ (front (r+1)++ys)))
+    false::(pairs q ++ (BB6.Agent2ATurnFamily.front (r+1)++ys)))
 
 def sourceEnd (k q r : Nat) (ys : List Bool) : Cfg :=
   ⟨[],false,List.replicate (8*k+3) true ++
@@ -34,14 +34,15 @@ theorem full_E_alternating_first_physical (k q r : Nat)
     ∀ t, 0<t → t<duration k q r →
       ¬ Physical (run t (sourceStart k q r ys)) := by
   constructor
-  · exact BB6.Agent2ATurnFamily.full_E_alternating_family k q r ys
+  · simpa [duration,sourceStart,sourceEnd] using
+      (BB6.Agent2ATurnFamily.full_E_alternating_family k q r ys)
   · intro t hpos hlt hp
     by_cases hpref : t<12*k*k+41*k+33
     · exact (BB6.CryptidPrefixFirstReturn.prefixE_positive_noF
-        k (pairs q ++ (front (r+1)++ys)) t hpos hpref) hp.1
+        k (pairs q ++ (BB6.Agent2ATurnFamily.front (r+1)++ys)) t hpos hpref) hp.1
     · have hprefix : run (12*k*k+41*k+33)
           (sourceStart k q r ys) =
-        eStart (4*k) q (front (r+1)++ys) := by
+        BB6.Agent2EGenericTurn.eStart (4*k) q (BB6.Agent2ATurnFamily.front (r+1)++ys) := by
         dsimp [sourceStart]
         rw [prefix_E]
         rfl
