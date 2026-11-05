@@ -16,13 +16,15 @@ theorem no_root_h0_high (k a v : Nat) (ha : 2 ≤ a)
     SheepIndependentGenericHigh.high_all 1 2 (0:Int) (by decide) a ha
   have hK : SheepIndependentGenericHigh.K 1 (0:Int) a=(2*a-1:Int) := by
     simp [SheepIndependentGenericHigh.K]
-    omega
   rw [hK] at hbase
   rcases hbase with ⟨hlo,hodd,hhi,_⟩
   have hgap := (SheepOddGap.no_power_signed_small_odd a (2*a-1:Int)
     hlo hodd hhi (648+122472*k+1)).1
-  have hcast : ((2:Int)^(a+1)+1)*(v:Int)+(2*a-1:Int) =
+  have hcast0 : ((2:Int)^(a+1)+1)*(v:Int)+((2*a-1:Nat):Int) =
       (2:Int)^(648+122472*k+1) := by exact_mod_cast hlin
+  have hsub : ((2*a-1:Nat):Int)=(2*a-1:Int) := by omega
+  have hcast : ((2:Int)^(a+1)+1)*(v:Int)+(2*a-1:Int) =
+      (2:Int)^(648+122472*k+1) := by rw [← hsub]; exact hcast0
   have hdiv : ((2:Int)^(a+1)+1) ∣
       (2:Int)^(648+122472*k+1)-(2*a-1:Int) := by
     refine ⟨(v:Int),?_⟩
