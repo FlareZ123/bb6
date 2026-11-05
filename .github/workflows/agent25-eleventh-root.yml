@@ -106,4 +106,5 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$A/BlankEleventhRejoin.olean" "$A/BlankEleventhRejoin.lean"
           T=im-results/agent37-d-timing-cocycle
           lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
-          lean -DmaxRecDepth=55000 "$T/BlankTwelfthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwelfthRejoin.olean" "$T/BlankTwelfthRejoin.lean"
+          lean -DmaxRecDepth=55000 "$T/BlankThirteenthRejoin.lean"
