@@ -194,8 +194,8 @@ jobs:
           # Joint original-source check: Agent3 odd inverses plus Agent24 six-residue even-right inverse.
           cp "$GITHUB_WORKSPACE"/im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean .
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
-          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedHighResidual,MixedLowFour,MixedLowFourSharp,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
-          for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd MixedHighResidual MixedLowFour MixedLowFourSharp MixedTwoSharp MixedHighSharp MixedUniversalAncestry MixedUniversalSharp MixedUniversalAB; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedHighResidual,MixedLowFour,MixedLowFourSharp,MixedFullResidual,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
+          for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd MixedHighResidual MixedLowFour MixedLowFourSharp MixedFullResidual MixedTwoSharp MixedHighSharp MixedUniversalAncestry MixedUniversalSharp MixedUniversalAB; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal,SectionBackwardOriginal,SectionFuelOriginal,SectionBackwardFuelOriginal,FastRootBackward,FastRootFuel}.lean .
           for f in SectionMassOriginal SectionFastInverseOriginal SectionBackwardOriginal SectionFuelOriginal SectionBackwardFuelOriginal FastRootBackward FastRootFuel; do
             lean -o "$f.olean" "$f.lean"
