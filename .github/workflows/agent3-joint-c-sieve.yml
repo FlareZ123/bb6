@@ -172,3 +172,6 @@ jobs:
           # at-most-two-parent inverse criterion for mod16 sum-seven.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/MixedMod16SevenInverse.lean .
           lean -o MixedMod16SevenInverse.olean MixedMod16SevenInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedMod16SevenBounce,MixedMod16SevenFull}.lean .
+          lean -o MixedMod16SevenBounce.olean MixedMod16SevenBounce.lean
+          lean -o MixedMod16SevenFull.olean MixedMod16SevenFull.lean
