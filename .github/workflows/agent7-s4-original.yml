@@ -116,6 +116,8 @@ jobs:
           lake env lean -o S4ToggleSafe.olean S4ToggleSafe.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4ToggleRoot.lean" S4ToggleRoot.lean
           lake env lean -o S4ToggleRoot.olean S4ToggleRoot.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4RawToggle.lean" S4RawToggle.lean
+          lake env lean -o S4RawToggle.olean S4RawToggle.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4RawToggleRoot.lean" S4RawToggleRoot.lean
           lake env lean S4RawToggleRoot.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TripleHead.lean" S4TripleHead.lean
@@ -128,8 +130,6 @@ jobs:
           lake env lean -o S4TripleRoot.olean S4TripleRoot.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4RawTripleRoot.lean" S4RawTripleRoot.lean
           lake env lean S4RawTripleRoot.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4RawToggle.lean" S4RawToggle.lean
-          lake env lean -o S4RawToggle.olean S4RawToggle.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
