@@ -9,7 +9,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean compiler
@@ -35,3 +35,6 @@ jobs:
           lean -DmaxRecDepth=16384 -DmaxHeartbeats=15000000 -o im-results/agent39-429-1021/BB429RootMod64R0.olean im-results/agent39-429-1021/BB429RootMod64R0.lean
           lean -DmaxRecDepth=16384 -DmaxHeartbeats=20000000 -o im-results/agent39-429-1021/BB429RootMod64R2.olean im-results/agent39-429-1021/BB429RootMod64R2.lean
           lean -DmaxRecDepth=32768 -DmaxHeartbeats=15000000 im-results/agent39-429-1021/BB429No1021Eight.lean
+          lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 -o im-results/agent39-429-1021/BB429A39Basic.olean im-results/agent39-429-1021/BB429A39Basic.lean
+          lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 -o im-results/agent39-429-1021/BB429A39Mod32.olean im-results/agent39-429-1021/BB429A39Mod32.lean
+          lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 im-results/agent39-429-1021/BB429A39Deep.lean
