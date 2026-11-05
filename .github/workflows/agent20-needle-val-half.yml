@@ -31,6 +31,7 @@ jobs:
           lean -o NeedleCubicBound.olean NeedleCubicBound.lean
           lean -o NeedleCubicEnumerate.olean NeedleCubicEnumerate.lean
           lean NeedleSharper.lean
+          lean NeedleRootDecisionCore.lean
 
   original-source:
     runs-on: ubuntu-latest
