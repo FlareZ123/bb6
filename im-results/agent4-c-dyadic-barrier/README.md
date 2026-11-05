@@ -40,3 +40,18 @@ The supplementary [CDyadicMod6.lean](CDyadicMod6.lean) proves for **all** `e:Nat
 using the previous `2^e` construction, the existing *source-verified* `source_positive_stopping_right_mod3` theorem (`K%3=1` for any positive-left source stop), and elementary coprimality `Nat.Coprime 3 (2^e)`. Thus adjoining a *single factor of three* to an arbitrarily fine dyadic residue quotient still cannot decide actual blank-root nonhalting by classifying its initial cylinder. The claim is specifically for `3*2^e`; higher powers of 3 or arbitrary moduli are **not** covered by this theorem. The real blank origin is not asserted to halt.
 
 Both modules have been checked locally against precisely matching, pre-existing theorem signatures, without `sorryAx`. A manual source CI run of both modules and the complete unchanged C source import chain is queued as [41970586436](https://github.com/FlareZ123/bb6/actions/runs/41970586436); an earlier run checking only the first module is [41970212167](https://github.com/FlareZ123/bb6/actions/runs/41970212167). Update this dossier if source CI succeeds or finds a mismatch.
+
+
+## 2026-11-05 05:20 UTC: general all-positive-modulus paper theorem
+
+The strongest new method obstruction is now [AllFiniteModuliBarrier.md](AllFiniteModuliBarrier.md), a complete elementary **paper proof for every positive finite modulus M**, including arbitrary prime factors ≥5. It asserts
+
+```text
+∀M≥1, ∃K≥1: K≡1 (modM) and secNext(5,K)=none.
+```
+
+The proof starts with the previous all-`2^e 3^j` CRT congruence and adjoins higher prime powers in **ascending prime order**. To adjoin `p^a` to `M0=2^eB` where all prime factors of `B` are below p, use the period `R=M0·φ(B)·ord_p(4)`, which is **coprime to p**. If `p^k | F(n)` for `F(n)=4^n−3n−1`, the shifts `n ↦ n+Rp^k z` preserve all earlier roots and yield `F(n+Rp^k z)≡F(n)−3Rp^k z (modp^(k+1))`. Choose z modp using the unit `3R`, then iterate. This is fully parameter-uniform mathematical reasoning and removes any restriction to particular prime factors. Full details and evidence limits are in the linked proof.
+
+The executable independent [verify_all_moduli.py](verify_all_moduli.py) constructs exact modular witnesses for **1,302** deterministic finite cases (every `1≤M≤1000`, plus 300 seed-fixed random moduli below 10 million and two large products). It passed locally with Python, including independent checks after each lifting stage. These checks do not constitute a proof, and a uniformly quantified Lean proof for arbitrary M remains **unwritten**. The previously proved source stopping iff is authentically verified; the new full prime-lifting derivation uses standard number theory rather than a Lean kernel check.
+
+A pure two-counter congruence quotient with any fixed positive modulus is thus intrinsically contaminated with synthetic immediate halts at the blank section's initial residue class. This does not say a **real blank run** halts. Other information such as exact inverse ancestry, source constraints, and nonperiodic invariants may still distinguish authentic reachability.
