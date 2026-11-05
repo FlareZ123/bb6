@@ -39,7 +39,7 @@ theorem source_wall_near_cost_has_reset_bound
     calc
       2*(2^s*(2*(m+n+3))) =
         2^s*((2*2)*(m+n+3)) := by ac_rfl
-      _ = 2^s*(4*(m+n+3)) := by norm_num
+      _ = 2^s*(4*(m+n+3)) := by simp
   have htailF : 2^s*(2*(m+n+3))=k+4 := by
     have h2 : 2*(2^s*(2*(m+n+3)))=2*(k+4) :=
       hscale.trans htailPow
