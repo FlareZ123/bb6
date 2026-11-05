@@ -59,7 +59,7 @@ theorem rooted_eleven_even (n b : Nat)
           have heq : p=(4,p.2) := Prod.ext hx rfl
           rw [heq] at hp
           exact hp
-        exact rooted_no_four n p.2 hf
+        exact False.elim (rooted_no_four n p.2 hf)
 
 #print axioms no_parent_four
 #print axioms incoming_eleven_odd
