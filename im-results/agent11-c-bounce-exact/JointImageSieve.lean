@@ -1,3 +1,4 @@
+import HighInverseSumOne
 import JointAllRoot
 import LowOneModFour
 import HighSumTwo
@@ -9,7 +10,8 @@ def lowAllowed (m : Nat) : Prop :=
   BB6.Agent3.jointLowAllowed m ∧ m%4≠1
 
 def highAllowed (j m : Nat) : Prop :=
-  BB6.Agent19Joint.highAllowed j m ∧ (j+m)%4≠0
+  BB6.Agent19Joint.highAllowed j m ∧ (j+m)%4≠0 ∧
+  ¬(2≤m ∧ (j+m)%16=6 ∧ m%4≠1)
 
 private theorem low_bound (m : Nat) :
     3*m+4 ≤ 2^(2*m+3) := by
@@ -41,8 +43,8 @@ private theorem high_bound (j m : Nat) :
   omega
 
 /-- Lossless source-exact Machine C blank-halting criterion after
-    excluding the whole low m=1 mod4 missing-image family and the
-    whole high (j+m)=0 mod4 missing-image family. The unbounded
+    excluding the low m=1 mod4 family, high (j+m)=0 mod4, and the
+    two-step high (j+m)=6 mod16, m mod4 != 1 family. The unbounded
     existential parameters remain unresolved. -/
 theorem blank_halts_iff_joint_image :
     BB6.CReachBridge.RunHalts ↔
@@ -74,8 +76,17 @@ theorem blank_halts_iff_joint_image :
           have hc := Nat.sub_add_cancel (high_bound j m)
           omega
         exact (BB6.Agent11High.blank_no_high_jplusm_zero_modfour j m k hjm hstop).2 hr
-      exact Or.inr ⟨j,m,⟨hhigh,hnon⟩,hroot⟩
-  · rintro (⟨m,⟨hlow,_⟩,hroot⟩ | ⟨j,m,⟨hhigh,_⟩,hroot⟩)
+      have hnon2 : ¬(2≤m ∧ (j+m)%16=6 ∧ m%4≠1) := by
+        rintro ⟨hm,hjm,hm4⟩
+        let k := 2^(2*m+2)*(j+3)-(j+3*m+5)
+        have hr := (BB6.Agent3.mixedFastRootDecision_iff (2*j+3) k).mp hroot
+        have hstop : k+j+3*m+5=2^(2*m+2)*(j+3) := by
+          dsimp [k]
+          have hc := Nat.sub_add_cancel (high_bound j m)
+          omega
+        exact (BB6.Agent11High.blank_no_high_jplusm_six_mod16 j m k hm hjm hm4 hstop) hr
+      exact Or.inr ⟨j,m,⟨hhigh,hnon,hnon2⟩,hroot⟩
+  · rintro (⟨m,⟨hlow,_⟩,hroot⟩ | ⟨j,m,⟨hhigh,_,_⟩,hroot⟩)
     · exact Or.inl ⟨m,hlow,hroot⟩
     · exact Or.inr ⟨j,m,hhigh,hroot⟩
 
