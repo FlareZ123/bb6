@@ -29,3 +29,7 @@ jobs:
           lean -DmaxHeartbeats=20000000 -DmaxRecDepth=32768 im-results/agent1-429-181/BB429No181mod2048.lean
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-2048/BB429Auto329.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429AutoGroup1.olean im-results/agent1-429-2048/BB429AutoGroup1.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429AutoGroup2.olean im-results/agent1-429-2048/BB429AutoGroup2.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429AutoGroup3.olean im-results/agent1-429-2048/BB429AutoGroup3.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429AutoGroup4.olean im-results/agent1-429-2048/BB429AutoGroup4.lean
