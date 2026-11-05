@@ -5,7 +5,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent3
 open BB6.Agent46
 
-private theorem low_four_pow_extra (n : Nat) :
+theorem low_four_pow_extra (n : Nat) :
     3*(n+1)+24≤2^(2*(n+1)+3) := by
   induction n with
   | zero => decide
