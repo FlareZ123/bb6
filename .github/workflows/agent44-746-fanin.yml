@@ -46,7 +46,7 @@ jobs:
           for m in BandTriple OddGroup ExactOdd ManyParents UnboundedFatal; do
             lean -o "$c/$m.olean" "$c/$m.lean"
           done
-          for m in LogBands LogStep Telescope GeomLog GeomBand ExactCountLean ParameterCountBridge; do
+          for m in LogBands LogStep Telescope GeomLog GeomBand ExactCountLean ParameterCountBridge TerminalCount; do
             lean -o "$c/$m.olean" "$c/$m.lean"
           done
           lean -o "$f/OddTotalCount.olean" "$f/OddTotalCount.lean"
