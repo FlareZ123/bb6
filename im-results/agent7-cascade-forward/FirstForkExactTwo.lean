@@ -201,6 +201,39 @@ theorem fatal_parents_exactly_two (q n:Nat) (hn:4≤n)
     (fatal_close n hn) (fatal_size n hn) (fatal_divnine n hn h18)
     (fatal_not_div27 n hn hres)
 
+theorem second_parents_exactly_two (q n:Nat) (hn:10≤n)
+    (hres:n%54=11 ∨ n%54=34 ∨ n%54=47 ∨ n%54=52) :
+    ResetParent q (secondPred n) ↔
+      q=oddPre n (secondPred n) ∨ q=evenPre n (7*n+13) := by
+  have h18:n%18=11 ∨ n%18=16:=by omega
+  exact near_top_exact_two n (secondPred n) (7*n+13) q (by omega)
+    (by omega) (second_close n hn) (second_size n hn)
+    (second_divnine n hn h18) (second_not_div27 n hn hres)
+
+/-- Every reached nonroot reset has a last source-certified edge. -/
+theorem rooted_two_parents (u a b:Nat) (hu:u≠2)
+    (ha:ResetParent a u) (hb:ResetParent b u)
+    (hall:∀ q, ResetParent q u ↔ q=a∨q=b) :
+    CascadeSweep.ReachC (2,0) (u,0) ↔
+      CascadeSweep.ReachC (2,0) (a,0) ∨ CascadeSweep.ReachC (2,0) (b,0) := by
+  constructor
+  · intro hroot
+    have hc:ResetChain 2 u := (root_reset_chain_iff u).mp hroot
+    obtain ⟨q,hchain,hparent⟩:=reset_chain_last hc hu
+    rcases (hall q).mp hparent with h|h
+    · left
+      rw [h] at hchain
+      exact (root_reset_chain_iff a).mpr hchain
+    · right
+      rw [h] at hchain
+      exact (root_reset_chain_iff b).mpr hchain
+  · intro h
+    rcases h with h|h
+    · have hc:ResetChain 2 a := (root_reset_chain_iff a).mp h
+      exact (root_reset_chain_iff u).mpr (hc.append ha)
+    · have hc:ResetChain 2 b := (root_reset_chain_iff b).mp h
+      exact (root_reset_chain_iff u).mpr (hc.append hb)
+
 STAGED_SECOND_PHASE
 -/
 end CascadeFirstFork
