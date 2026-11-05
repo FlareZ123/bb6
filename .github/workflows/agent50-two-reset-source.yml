@@ -45,6 +45,6 @@ jobs:
           for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
             lean -o "$AG28/$m.olean" "$AG28/$m.lean"
           done
-          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal; do
+          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound; do
             lean -o "$AG50/$m.olean" "$AG50/$m.lean"
           done
