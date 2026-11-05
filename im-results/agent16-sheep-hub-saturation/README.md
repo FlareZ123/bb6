@@ -67,15 +67,18 @@ The logical dependence on the full-residue-class induction hypothesis is crucial
 
 ## Kernel-checked all-index hub lifting
 
-The standalone [`Hub.lean`](Hub.lean) imports only Lean 4.36.0-rc2 `Std` and establishes two unrestricted, all-natural theorems:
+The standalone [`Hub.lean`](Hub.lean) imports only Lean 4.36.0-rc2 `Std` and establishes four unrestricted, all-natural theorems:
 
 - `SheepHubs.odd_affine_root_unbounded`: for every `k,A,C,N` with `C` odd, there is a `t>=N` making `2^k` divide `A+C*t`, via a constructive binary-digit lifting proof.
 - `SheepHubs.generic_hub_lift`: for every `a,L,n,u,W,N` with `u>=5` odd, `n` odd, and the exact generic Sheep first-return equation
   `2*(1+2^L*W)+1=(2^(a+1)+1)*u+2*a`, a `t>=N` yields a legal lifted odd cofactor `V=u+2^(L+1)*n*t`, odd return quotient `Q=W+(2^(a+1)+1)*n*t`, the genuine generic transition equation for `(V,Q)`, `2^(a+L+1) | 1+3^L*Q`, and the exact source congruence `2^a*V=2^a*u+2^(a+L+1)*n*t`.
 
+- `SheepHubs.generic_equation_to_return`: algebraically derives the **literal published generic Sheep return** `2^a*u+a+(u-1)/2=1+2^L*Q` from its Diophantine equation for odd source cofactor `u`.
+- `SheepHubs.generic_hub_literal_return`: upgrades every constructed lift to a source satisfying that exact published `F` formula, while preserving arbitrarily large source, odd cofactor, and zero-fiber outcome.
+
 These quantified conditions are precisely the constructive hub proof above. Their connection to the existing `SheepEven.EvenEdge` is by the already certified F/E semantics and the displayed generic equation; the new standalone Lean module itself does not import or reprove original-machine semantics. The 283344th source reachability remains an exact-computational certificate.
 
-**Verification:** locally compiled the committed source verbatim with Lean 4.36.0-rc2. `#print axioms odd_affine_root` and `#print axioms generic_hub_lift` both report `[propext, Quot.sound]`; no `sorry`, `admit`, `native_decide`, additional postulates, or hidden oracle. Git blob SHA of the locally compiled file and the remotely committed file both equal `3a9f3753d41862cb98f27f31d189e5bfcad79b0a`.
+**Verification:** locally compiled the exact committed source with Lean 4.36.0-rc2. `#print axioms` reports `[propext, Quot.sound]` for `odd_affine_root`, `generic_hub_lift`, `generic_equation_to_return`, and `generic_hub_literal_return`; no `sorry`, `admit`, `native_decide`, additional postulates, or hidden oracle. Git blob SHA of the locally compiled file and the remotely committed file both equal `3f630200ceefdf5540fc94d92f57106309ccaf32`.
 
 ## Exact finite witness and reproducibility
 
