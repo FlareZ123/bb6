@@ -96,10 +96,11 @@ private theorem p4 (v : Nat) :
   have hout : (⟨[],false,
       List.replicate (2*(4*(4096*v+682)+3+CryptidA.wordInc words)+5) true ++ ys, 5⟩ : Cfg) =
       regularExit v := by
-    rw [hinc]
-    simp only [regularExit, ys, List.replicate_append_replicate]
-    congr 1
-    omega
+    change List.replicate
+      (2*(4*(4096*v+682)+3+CryptidA.wordInc words)+5) true ++
+        List.replicate 6 true =
+      List.replicate (32768*v+5493) true
+    rw [List.replicate_append_replicate, hinc, hn]
   rw [p4_input]
   simpa only [c4] using (Eq.trans h hout)
 
