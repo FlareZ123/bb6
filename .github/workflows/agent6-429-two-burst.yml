@@ -27,3 +27,4 @@ jobs:
           lean -o im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.olean im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.lean
           lean -DmaxHeartbeats=10000000 im-results/agent6-429-coprime-moduli/Agent6TwoBurstOne.lean
           lean -DmaxHeartbeats=10000000 im-results/agent6-429-coprime-moduli/Agent6TwoBurstZero.lean
+          lean -DmaxHeartbeats=10000000 im-results/agent6-429-coprime-moduli/Agent6TwoBurstEvenOne.lean
