@@ -18,16 +18,20 @@ jobs:
         run: |
           set -e
           set -o pipefail
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent9-p1-shadow"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent9-p1-shadow"
           for m in GParity GInverse; do
             lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
           done
           for m in P1FiniteInverse P1InverseLog; do
             lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
           done
+          lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
+          lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
           lean -o im-results/agent9-p1-shadow/ShadowDepthArithmetic.olean im-results/agent9-p1-shadow/ShadowDepthArithmetic.lean
-          lean im-results/agent9-p1-shadow/ShadowDepthSource.lean | tee /tmp/agent9-axioms.log
-          if grep -Eq "sorryAx|sorryAx" /tmp/agent9-axioms.log; then
+          lean -o im-results/agent9-p1-shadow/ShadowAlgebra.olean im-results/agent9-p1-shadow/ShadowAlgebra.lean
+          lean -o im-results/agent9-p1-shadow/ShadowDepthSource.olean im-results/agent9-p1-shadow/ShadowDepthSource.lean
+          lean im-results/agent9-p1-shadow/ShadowSourceTransport.lean | tee /tmp/agent9-axioms.log
+          if grep -Fq "sorryAx" /tmp/agent9-axioms.log; then
             echo "Rejected: sorryAx in resulting theorem"
             exit 1
           fi
