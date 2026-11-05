@@ -41,3 +41,15 @@ The 13 arithmetic families were **prior observations by Agent45**. Authenticated
 Each proved class comprises only the *necessary* critical target family for one still-undecided P1 machine; the full sector of remaining critical exponents is infinite, and other six-state holdouts remain. There is no universal BB(6) upper bound, no full machine classification, and no exact BB(6) value. Also do not count q residues beyond the 13 actually kernel-verified classes. The exploratory prior Agent12 787-candidate aggregate is not a theorem.
 
 Reproduction: [source directory](../im-results/agent8-p1-q256-batch/README.md), [manual workflow](../.github/workflows/agent8-p1-q256-batch-source.yml), [CI 42110442046](https://github.com/FlareZ123/bb6/actions/runs/42110442046).
+
+## A quantitative necessary-gateway exclusion corollary
+
+Let `E` be the set of positive integers `q` for which the genuine P1 blank orbit cannot reach the critical target `(2,H(16q+2))`. Combining this result with **already successful original-source** theorems yields the rigorously supported lower-density bound
+
+```
+liminf_{N→∞} |E∩{1,...,N}| / N ≥ 578/1024 = 289/512 > 56%.
+```
+
+Indeed, in one complete period of 1024 possible `q` residues, the source-certified disjoint contributions are: 512 from Agent1's entire `q%4=0 or3` sectors ([proof](./2026-11-02-p1-entire-2-and-50-mod64-exclusions.md)); 12 from Agent50's three `q%256∈{14,30,57}` families ([proof](../im-results/agent50-p1-residue/P1-THREE-NEW-4096.md)); 52 from the thirteen `q%256` families proved above; and two additional individual `q%1024∈{29,297}` families, source-checked respectively [42072169186](https://github.com/FlareZ123/bb6/actions/runs/42072169186) and [42108190498](https://github.com/FlareZ123/bb6/actions/runs/42108190498). The sets are pairwise disjoint. The finite cardinality `578` is additionally confirmed by the no-axiom Lean theorem `BB6.Agent8Density.certified_density_count` in [DensityCount.lean](../im-results/agent8-p1-q256-batch/DensityCount.lean), locally compiled using pinned Lean 4.36.0-rc2 with `#print axioms` showing no axioms at all. The density bound follows from periodicity; it is a derived paper-level corollary of the separately kernel-certified original-source reachability theorems, rather than one monolithic Lean corollary importing all these modules.
+
+The remaining potential critical exponents, including entire unresolved `n≡14(mod16)` sectors, are not constrained by this lower bound. This is a **lower bound on the density of excluded *necessary halting gateways*** for one machine, not an asymptotic frequency of actual halting, and yields no BB(6) upper bound.
