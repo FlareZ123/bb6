@@ -1,0 +1,75 @@
+name: Agent 17 Sheep exceptional-source original-bridge (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean toolchain
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Checkout certified upstream Cryptids source
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet ced8f9f44f67a167d5ecc03e687b048c67926371
+          test "$(git rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+      - name: Reclaim runner disk capacity
+        run: |
+          for dir in /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/share/powershell; do
+            if test -d "$dir"; then sudo rm -rf "$dir"; fi
+          done
+      - name: Compile certified source machine
+        working-directory: /tmp/cryptids
+        run: |
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_HHH1LE
+      - name: Compile exact original-source first-even power-parent theorem
+        working-directory: /tmp/cryptids
+        run: |
+          python3 -m venv /tmp/agent17-venv
+          /tmp/agent17-venv/bin/pip -q install filelock
+          export LEAN_PATH=".:$LEAN_PATH"
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-preimages/CounterBridge.lean" CounterBridge.lean
+          for name in DeterministicMacro SheepPowerBridge SheepBlankCriterion SheepSourceBridge; do
+            cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/$name.lean" "$name.lean"
+          done
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" CounterBridge.lean DeterministicMacro.lean SheepPowerBridge.lean SheepBlankCriterion.lean
+          for name in CounterBridge DeterministicMacro SheepPowerBridge SheepBlankCriterion; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean -o ".lake/build/lib/lean/SheepSourceBridge.olean" SheepSourceBridge.lean
+
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/reconstruct_all.py"
+          for name in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/$name.lean" "$name.lean"
+          done
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEven.lean EvenEdge.lean OddPrefix.lean EvenReach.lean BlankEven.lean
+          for name in SheepEven EvenEdge OddPrefix EvenReach BlankEven; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/EvenSourceBridge.lean" EvenSourceBridge.lean
+          lake env lean -o ".lake/build/lib/lean/EvenSourceBridge.olean" EvenSourceBridge.lean
+
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenInverseAlgebra.lean" SheepEvenInverseAlgebra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean" SheepEvenSourceAlgebra.lean
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEvenInverseAlgebra.lean SheepEvenSourceAlgebra.lean
+          for name in SheepEvenInverseAlgebra SheepEvenSourceAlgebra; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-geometric-rays/SpecialSourceNoPower.lean" SpecialSourceNoPower.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-geometric-rays/SheepPowerSourceGeneric.lean" SheepPowerSourceGeneric.lean
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SpecialSourceNoPower.lean SheepPowerSourceGeneric.lean
+          lake env lean -o ".lake/build/lib/lean/SpecialSourceNoPower.olean" SpecialSourceNoPower.lean
+          lake env lean SheepPowerSourceGeneric.lean
