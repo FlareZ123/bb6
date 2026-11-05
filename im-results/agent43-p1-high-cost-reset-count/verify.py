@@ -6,11 +6,13 @@ The all-parameter mathematical derivation is in WallAboveNPlusZ.md.
 
 
 def verify_numeric_lemma() -> None:
-    for n in range(256, 4096):
+    for n in range(194, 4096):
         z = 0
         while (1 << z) <= 4 * n:
             assert 24**z * (n + 2)**(2 * z + 2) < (1 << n), (n, z)
             z += 1
+
+    assert 24**9 * 195**20 >= 2**193  # sharp arithmetic counterexample n=193, z=9
 
     # q(u)=2u²+15u+22, q(9)=319<512, q(u+1)=q(u)+4u+17.
     q9 = 2 * 9**2 + 15 * 9 + 22
