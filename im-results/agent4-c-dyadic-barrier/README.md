@@ -64,3 +64,10 @@ A pure two-counter congruence quotient with any fixed positive modulus is thus i
 This authentication concerns the actual, unchanged **repository Machine C section source**. It does **not** kernel-check the later, stronger mathematical all-positive-modulus prime-lifting argument in [AllFiniteModuliBarrier.md](AllFiniteModuliBarrier.md). The all-M theorem is a fully worked **paper proof** with a separate 1,302-case reproducible exact-integer witness check. Do not conflate the two evidence grades.
 
 The redundant earlier first-module-only queued CI run `41970212167` was cancelled before starting to conserve resources; the combined source run is the definitive evidence.
+
+
+## 2026-11-05 19:39 UTC: uniform odd-first extension
+
+The newer [AllOddFirstModuliBarrier.md](AllOddFirstModuliBarrier.md) strengthens the paper-level all-positive-modulus result from the fixed blank-section first coordinate `a=5` to **every odd first coordinate `a=2u+1`**, all `u≥0`. For every positive modulus `M`, a synthetic input `(2u+1,K)` satisfies `K≡1 (mod M)` and `secNext(2u+1,K)=none`. The stopping formula uses `F_u(n)=(u+2)(4^n−1)−3n`, with `K=F_u(n)+1`.
+
+Two independent elementary proofs are recorded: the original ascending-prime CRT/lifting construction and a shorter **Euler-totient-period strong induction on `q=M/(2^e3^j)`**. The latter requires no prime-power lifting and is the preferred basis for any future formalization. The companion modular algorithms [verify_odd_left_all_moduli.py](verify_odd_left_all_moduli.py) and [verify_odd_left_totient.py](verify_odd_left_totient.py) independently confirm 10,702 and 43,000 parameter pairs, respectively; 168 small examples also execute the exact source bounce branches to `none`. These are reproducible finite checks and an explanatory paper proof, **not** new unrestricted Lean kernel theorems. The previously source-verified stopping equation remains the exact formal-machine dependency. This result does not decide actual blank reachability or BB(6), and stays in `im-results/`.
