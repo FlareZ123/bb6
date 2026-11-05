@@ -1,0 +1,30 @@
+name: Agent14 Sheep 648 source large-a root h0 theorem
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  root-high0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check universal source-shaped root h0 generic high-a theorem
+        run: |
+          mkdir -p /tmp/agent14-sheep648-h0
+          cp im-results/agent14-sheep-even-inverse/SheepOddGap.lean /tmp/agent14-sheep648-h0/
+          cp im-results/agent14-sheep-even-inverse/IndependentGenericHigh.lean /tmp/agent14-sheep648-h0/
+          cp im-results/agent14-sheep-seven-cones/Sheep648RootHigh0.lean /tmp/agent14-sheep648-h0/
+          cd /tmp/agent14-sheep648-h0
+          export LEAN_PATH=.
+          lean -o SheepOddGap.olean SheepOddGap.lean
+          lean -o IndependentGenericHigh.olean IndependentGenericHigh.lean
+          lean Sheep648RootHigh0.lean
