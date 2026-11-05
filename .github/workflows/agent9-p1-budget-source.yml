@@ -1,15 +1,12 @@
 name: Agent 9 P1 arbitrary-budget source cone and shadow induction audit
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[P1BUDGET]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
