@@ -177,3 +177,5 @@ jobs:
           lean -o MixedMod16SevenFull.olean MixedMod16SevenFull.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/MixedMod16SevenOrbit.lean .
           lean -o MixedMod16SevenOrbit.olean MixedMod16SevenOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/JointThreeQuarterResidual.lean .
+          lean -o JointThreeQuarterResidual.olean JointThreeQuarterResidual.lean
