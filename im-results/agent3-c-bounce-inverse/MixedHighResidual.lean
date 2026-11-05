@@ -37,7 +37,8 @@ theorem blank_halts_iff_mixed_high_sieve :
         have hjform : j=32*(j/32)+1 := by omega
         have hkform : k=480*(j/32)+55 := by
           rw [hm,hjform] at hstop
-          norm_num at hstop
+          have h16 : (2:Nat)^(2*1+2)=16 := by decide
+          rw [h16] at hstop
           omega
         have haform : 2*j+3=64*(j/32)+5 := by omega
         subst a
