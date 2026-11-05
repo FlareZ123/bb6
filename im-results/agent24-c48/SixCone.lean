@@ -35,7 +35,7 @@ theorem six_cone_seven_four (u v : Nat) (hv : 1≤v) :
   · omega
   · omega
   · omega
-  · left
+  · right
     omega
 
 theorem six_cone_two_four (u v : Nat) (hv : 1≤v) :
