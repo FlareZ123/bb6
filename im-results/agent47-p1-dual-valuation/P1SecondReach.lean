@@ -41,5 +41,21 @@ theorem odd_second_reach_requires_two (q : Nat) (hq : 1≤q) (hodd : q%2=1)
       (by omega) (by omega) (by omega)
     exact False.elim ((odd_last_power_gap q j hq hodd) (by omega))
 
+/-- The actual blank-root critical reset at every odd q must enter one
+    of three sparse predecessor feeder lines. -/
+theorem odd_critical_requires_three (q : Nat) (hq : 1≤q) (hodd : q%2=1)
+    (hr : BB6.Agent1.Reach 2
+      (14*2^(16*q+2)-2*(16*q+2)-10)) :
+    BB6.Agent1.Reach (4*u2 q-4) (4*u2 q+9) ∨
+    BB6.Agent1.Reach (24*w2 q-4) (40*w2 q+13) ∨
+    BB6.Agent1.Reach (44*w2 q) (20*w2 q+7) := by
+  rcases (BB6.Agent45TwoRoot.two_sector_critical_iff_feeders q hq).mp hr with
+      hfirst | hsecond
+  · exact Or.inl hfirst
+  · rcases odd_second_reach_requires_two q hq hodd hsecond with ha | hb
+    · exact Or.inr (Or.inl ha)
+    · exact Or.inr (Or.inr hb)
+
+#print axioms odd_critical_requires_three
 #print axioms odd_second_reach_requires_two
 end BB6.P1SecondFan
