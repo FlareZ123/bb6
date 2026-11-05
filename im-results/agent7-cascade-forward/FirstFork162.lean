@@ -98,6 +98,36 @@ theorem rooted_fatal_extra (n:Nat) (hn:4≤n)
       (fatal_close n hn) (fatal_size n hn))
     (fun q => fatal_extra_parents_exactly_two q n hn hres)
 
+theorem rooted_fatal_after_second_extra (n:Nat) (hn:10≤n)
+    (hres:n%162=16 ∨ n%162=29 ∨ n%162=70 ∨ n%162=137) :
+    CascadeSweep.ReachC (2,0) (fatal n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n (secondPred n),0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n (7*n+13),0) := by
+  have h18:n%18=11 ∨ n%18=16:=by omega
+  have h18all:n%18=10 ∨ n%18=11 ∨ n%18=16 ∨ n%18=17:=by
+    rcases h18 with h|h
+    · exact Or.inr (Or.inl h)
+    · exact Or.inr (Or.inr (Or.inl h))
+  have hno:secondPred n≠2:=by
+    have hp:=second_size n hn
+    dsimp [secondPred]
+    omega
+  have hroot: CascadeSweep.ReachC (2,0) (secondPred n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n (secondPred n),0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n (7*n+13),0) := by
+    exact rooted_two_parents (secondPred n) (oddPre n (secondPred n))
+      (evenPre n (7*n+13)) hno
+      (second_has_odd_parent n hn h18)
+      (even_parent_near_top n (secondPred n) (7*n+13) (by omega)
+        (by omega) (second_close n hn) (second_size n hn))
+      (fun q => second_extra_parents_exactly_two q n hn hres)
+  exact (genuine_fatal_iff_second_even n hn h18all).trans hroot
+
+#print axioms fatal_extra_parents_exactly_two
+#print axioms second_extra_parents_exactly_two
+#print axioms rooted_fatal_extra
+#print axioms rooted_fatal_after_second_extra
+
 #print axioms fatal_extra_not_div81
 #print axioms second_extra_not_div81
 end CascadeFirstFork
