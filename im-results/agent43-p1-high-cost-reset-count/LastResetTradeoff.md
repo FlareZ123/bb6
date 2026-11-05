@@ -62,7 +62,7 @@ This proves (E), with no finite cutoff in z and without assuming any intermediat
 - If `m≥P`, the premise `m≤P` fails; consult [StrongEnergy](StrongEnergy.md) for the complementary high-cost necessary reset density. The missing `m>P` territory remains unresolved.
 
 
-## Exact integer feasibility frontiers for the physical residue class n≡14 (mod 16)
+## Exact integer feasibility frontiers for a surviving subfamily n≡14 (mod 16)
 
 Combining the source-CI-certified Agent50 wall count lower bound with paper (E) gives explicit necessary minima. For each `n≥62`, define `zmin` as the least `z≥4` with `2^n≤24^z(n+2)^(2z+2)`; then define `mmin` as the least `m≥2*zmin` satisfying `2^(n+2*zmin)≤2^m(m+n+3)`. The two constraints are monotone in z and m in the relevant directions, so every hypothetical genuine wall witness has `z≥zmin` and `m≥mmin` **provided (E) has been source-composed**. The table uses Python's exact arbitrary-precision integers, and is a derived necessary frontier rather than a reachability result.
 
