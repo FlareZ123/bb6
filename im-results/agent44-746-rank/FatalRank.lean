@@ -2,7 +2,7 @@ import ResetRank
 import FastShield
 set_option maxHeartbeats 0
 namespace CascadeRank
-open CascadeSource
+open CascadeManyShield
 
 /-- The #746 candidate fatal reset heights have uniformly quadratic maximal
     inverse path length in their fatal-index parameter n. -/
