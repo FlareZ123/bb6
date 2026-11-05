@@ -39,3 +39,5 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429AutoGroup6.olean im-results/agent1-429-2048/BB429AutoGroup6.lean
           lean -DmaxHeartbeats=10000000 -DmaxRecDepth=30000 -o im-results/agent1-429-2048/BB429No11Odd.olean im-results/agent1-429-2048/BB429No11Odd.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429Shift53And721.olean im-results/agent1-429-2048/BB429Shift53And721.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-2048/BB429New49.olean im-results/agent1-429-2048/BB429New49.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-2048/BB429GateArithmetic25.lean
