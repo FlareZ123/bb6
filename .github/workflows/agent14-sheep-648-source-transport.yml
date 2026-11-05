@@ -1,0 +1,39 @@
+name: Agent14 Sheep 648 original-source generic inverse transport
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-equations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact full-period and source-equation proofs
+        run: |
+          python3 -m venv /tmp/agent14-source-venv
+          /tmp/agent14-source-venv/bin/pip -q install filelock
+          /tmp/agent14-source-venv/bin/python im-results/agent14-sheep-seven-cones/generate_648_low.py
+          /tmp/agent14-source-venv/bin/python im-results/agent14-sheep-seven-cones/generate_648_source_low.py
+      - name: Kernel-check all 56 independent source inverse equations
+        run: |
+          mkdir -p /tmp/agent14-sheep-source
+          cp im-results/agent14-sheep-seven-cones/Sheep648Period.lean /tmp/agent14-sheep-source/
+          cp im-results/agent14-sheep-seven-cones/Sheep648LowResidues.lean /tmp/agent14-sheep-source/
+          cp im-results/agent14-sheep-seven-cones/generated-648-source/*.lean /tmp/agent14-sheep-source/
+          cd /tmp/agent14-sheep-source
+          export LEAN_PATH=.
+          lean -o Sheep648Period.olean Sheep648Period.lean
+          lean -o Sheep648LowResidues.olean Sheep648LowResidues.lean
+          for file in Sheep648SourceLow*.lean; do
+            echo "Checking $file"
+            lean "$file"
+          done
