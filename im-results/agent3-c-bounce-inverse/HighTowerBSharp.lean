@@ -123,6 +123,7 @@ private theorem highB_normalized_coordinates (q n : Nat) :
   let v := (p.2-32)/32
   have h1 : p.1%16=11 := hc.1
   have h2 : p.2%32=0 := hc.2.1
+  have h3 : 32≤p.2 := hc.2.2
   have hx : p.1=16*u+11 := by dsimp [u]; omega
   have hy : p.2=32*v+32 := by dsimp [v]; omega
   exact ⟨u,v,Prod.ext hx hy⟩
