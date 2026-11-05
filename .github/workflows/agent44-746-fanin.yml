@@ -1,0 +1,49 @@
+name: Agent 44 #746 unbounded reset-parent fan-in (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original checked-in C-first-return grammar and valuation source
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          c="im-results/agent44-746-fanin"
+          export LEAN_PATH="$a:$b:$f:$c"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          lean -o "$a/LowGates.olean" "$a/LowGates.lean"
+          lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
+          lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
+          lean -o "$a/PreimageCandidates.olean" "$a/PreimageCandidates.lean"
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in UniformFatalParent UniformFatalMod9 UniformRootGate UniqueEvenBand SecondEven FirstFork FirstForkExactTwo FirstForkOddT2 FirstForkModulo54 FirstForkAt81 FirstFork162 FirstForkT3 FirstForkThree FirstForkOddT45 FirstForkOddValuation FirstForkExactThree FirstForkRootThree FirstForkFatalThree FirstForkSix FirstForkSixResidues FirstForkOddValuationSix FirstForkExactFour FirstForkRootFour FirstForkFourDistinct FirstForkFourResidues FatalValuationPower FatalValuationUnbounded FatalValuationBeyond; do
+            lean -o "$f/$m.olean" "$f/$m.lean"
+          done
+          for m in BandTriple OddGroup ExactOdd ManyParents UnboundedFatal; do
+            lean -o "$c/$m.olean" "$c/$m.lean"
+          done
+          echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
