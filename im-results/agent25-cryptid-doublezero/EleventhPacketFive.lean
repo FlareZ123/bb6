@@ -93,14 +93,18 @@ private theorem p4 (v : Nat) :
   have h := BB6.Agent35.full_A_code (4096*v+682) words ys
   have hinc : CryptidA.wordInc words = 10 := by decide
   have hn : 2*(4*(4096*v+682)+3+10)+5+6=32768*v+5493 := by omega
-  have hout : (⟨[],false,
-      List.replicate (2*(4*(4096*v+682)+3+CryptidA.wordInc words)+5) true ++ ys, 5⟩ : Cfg) =
-      regularExit v := by
+  have hrep : List.replicate
+      (2*(4*(4096*v+682)+3+CryptidA.wordInc words)+5) true ++ ys =
+      List.replicate (32768*v+5493) true := by
     change List.replicate
       (2*(4*(4096*v+682)+3+CryptidA.wordInc words)+5) true ++
         List.replicate 6 true =
       List.replicate (32768*v+5493) true
     rw [List.replicate_append_replicate, hinc, hn]
+  have hout : (⟨[],false,
+      List.replicate (2*(4*(4096*v+682)+3+CryptidA.wordInc words)+5) true ++ ys, 5⟩ : Cfg) =
+      regularExit v := by
+    exact congrArg (fun r : List Bool => (⟨[],false,r,5⟩ : Cfg)) hrep
   rw [p4_input]
   simpa only [c4] using (Eq.trans h hout)
 
