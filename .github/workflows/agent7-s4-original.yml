@@ -104,6 +104,9 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixGate64.lean.xz.b64" | xz -dc > S4PrefixGate64.lean
           echo "5a0dba9b3dbc8a0bca50c7ae9e9aba6a9bf8ed652780c132d80bb78e32046065  S4PrefixGate64.lean" | sha256sum -c -
           lake env lean -o S4PrefixGate64.olean S4PrefixGate64.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixSeven.lean.xz.b64" | xz -dc > S4PrefixSeven.lean
+          echo "c4602d569435a0aea4674752e84a1c830576263be3d2712982479e1832da13d9  S4PrefixSeven.lean" | sha256sum -c -
+          lake env lean -o S4PrefixSeven.olean S4PrefixSeven.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4ToggleHead.lean" S4ToggleHead.lean
           lake env lean -o S4ToggleHead.olean S4ToggleHead.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TogglePhases.lean" S4TogglePhases.lean
