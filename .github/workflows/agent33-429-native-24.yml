@@ -1,0 +1,114 @@
+name: Agent 33 BB429 native 24/2048 raw-TM source equivalence (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-cryptids-native-24:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
+      ORIGINAL_MODULE: BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original Cryptids Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Obtain exact pinned upstream source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
+      - name: Retrieve targeted original Mathlib closure without exceeding runner quota
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          for module in \
+            Mathlib.Computability.TuringMachine.PostTuringMachine \
+            Mathlib.Data.List.Basic \
+            Mathlib.Data.Nat.Basic \
+            Mathlib.Data.Nat.Prime.Basic \
+            Mathlib.Algebra.GCDMonoid.Finset \
+            Mathlib.Order.Interval.Finset.Nat \
+            Mathlib.Order.SuccPred.Basic \
+            Mathlib.Algebra.Order.SuccPred \
+            Mathlib.NumberTheory.LSeries.RiemannZeta \
+            Mathlib.SetTheory.ZFC.Basic; do
+            lake exe cache get "$module"
+          done
+          df -h /
+      - name: Build unchanged original raw Turing machine and section bridge
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build "$ORIGINAL_MODULE"
+      - name: Verify exact new root proofs and original raw-source transport
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/"BB429Rank.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/"BB429Burst.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/"*.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent18-429-253/"*.lean .
+          python "$GITHUB_WORKSPACE/im-results/agent30-429-393/unpack.py"
+          for f in BB429No393mod512 BB429No265mod512 BB429No137mod1024 BB429No521mod1024 SourceRawHalt42 SourceRawHalt40 SourceRawHalt38; do
+            cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/$f.lean" .
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent1-429-1661/SourceRawHalt86.lean" .
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent1-429-1661/BB429No1661mod2048.lean.gz.b64" | gzip -d > BB429No1661mod2048.lean
+          echo "05576abaf58d8b62f97e2390b017bc1e5086693512339fc6abdb3f386c6a9793  BB429No1661mod2048.lean" | sha256sum -c -
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent1-429-893/BB429No893mod2048.lean.gz.b64" | gzip -d > BB429No893mod2048.lean
+          echo "7429ab3280d28d13f5e21702523ed750c9a2e61679ff10e9e9108534b5984b32  BB429No893mod2048.lean" | sha256sum -c -
+          cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootEven8.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootMod16.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootMod32.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent1-429-181/"BB429No181mod2048.lean .
+          for f in BB429Auto329 BB429AutoGroup1 BB429AutoGroup2 BB429AutoGroup3 BB429AutoGroup4 BB429New34 BB429Source40Mod2048; do
+            cp "$GITHUB_WORKSPACE/im-results/agent1-429-2048/$f.lean" .
+          done
+          for module in BB429Rank BB429Burst BB429LowOddMod8 BB429InverseRay BB429No125mod1024 BB429No381mod1024 BB429No393mod512 BB429No265mod512 BB429No137mod1024 BB429No521mod1024 BB429No509mod1024 BB429No1661mod2048 BB429No893mod2048 BB429PowerBarrier BB429PowerBarrierBurst BB429NonFirstBurst BB429LastReset BB429FirstRunEq BB429TerminalReset BB429ElevenSeed ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six BB429NoThree BB429HaltFeeder BB429NoTwentyFive BB429NewGate BB429Deep17 BB429TwentyOne BB429InverseParity BB429NoTwentyNine128 BB429NoNinetyThree128 BB429NoSixtyOne128 BB429No253 BB429No381 SourceLadder SourceMod16 SourceMod32 SourceMod32Six SourceRawHaltFunnel SourceRawHaltIff SourceRawHaltFive SourceRawHaltFour SourceRawHaltRefined SourceRawHaltNo253 SourceRawHalt1024 SourceRawHalt46 SourceRawHaltNo381 SourceRawHalt45 SourceRawHalt44 SourceRawHalt86 SourceRawHalt42 SourceRawHalt40 SourceRawHalt38 BB429NewResidue BB429RootEven8 BB429RootMod16 BB429RootMod32 BB429No181mod2048 BB429Auto329 BB429AutoGroup1 BB429AutoGroup2 BB429AutoGroup3 BB429AutoGroup4 BB429New34 BB429Source40Mod2048; do
+            echo "::group::Source-check $module"
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+            echo "::endgroup::"
+          done
+      - name: Verify strengthened 49-ray root exclusions against unchanged native raw source
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in BB429AutoGroup5 BB429AutoGroup6 BB429No11Odd BB429Shift53And721 BB429New49 BB429GateArithmetic BB429GateArithmetic25 BB429Source25Mod2048; do
+            cp "$GITHUB_WORKSPACE/im-results/agent1-429-2048/$f.lean" .
+          done
+          for module in BB429AutoGroup5 BB429AutoGroup6 BB429No11Odd BB429Shift53And721 BB429New49 BB429GateArithmetic BB429GateArithmetic25 BB429Source25Mod2048; do
+            echo "::group::Native-source check $module"
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+            echo "::endgroup::"
+          done
+      - name: Authenticate the merged Agent1 and Agent6 raw-machine gate and exact count
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          python "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/unpack_no81.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/BB429No81mod512.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429GateArithmetic24.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429Source24Mod2048.lean" .
+          for module in BB429No81mod512 BB429GateArithmetic24 BB429Source24Mod2048; do
+            echo "::group::Original-source check $module"
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+            echo "::endgroup::"
+          done
