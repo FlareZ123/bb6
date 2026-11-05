@@ -124,3 +124,17 @@ Further source/checker advances on seven periodic E certificates:
 - Report [seven-cones/README.md](../../im-results/agent14-sheep-seven-cones/README.md) updated with exact CI proof statuses and remaining boundary. No claim that any of this settles Sheep or BB(6).
 
 Current run lease original UTC 17:51:44.524Z; **next mandatory release only after 19:01:44.524Z** after real-clock verification post-checkpoint. Keep researching until then; avoid changing lease until orderly release.
+
+### Final verification checkpoint, 2026-11-05 18:59 UTC
+
+All new components under `im-results/agent14-sheep-seven-cones/` (complete source status in `README.md` and exact next obligations in `SOURCE-648-INTEGRATION.md`):
+
+1. Original-source-shaped 56 forbidden **generic inverse equations** for Sheep648, each uniform in k,v: deterministic atomic-locking `generate_648_source_low.py` emits 56 separate Lean modules and GitHub Lean 4.36 [CI 42087899261](https://github.com/FlareZ123/bb6/actions/runs/42087899261) succeeded for all. This strengthens merely modular 56-case Lean certificates. Generated files are not committed, but generated during workflow from pinned repo source.
+2. [Sheep648HighH.lean](../../im-results/agent14-sheep-seven-cones/Sheep648HighH.lean) verifies every incoming root h<6 and every incoming unique child h=0 all-k, Lean local and CI [42088501969](https://github.com/FlareZ123/bb6/actions/runs/42088501969) success with only propext, Quot.sound.
+3. [Sheep648RootHigh0.lean](../../im-results/agent14-sheep-seven-cones/Sheep648RootHigh0.lean) bridges original-source exact high-a generic equation to certified odd modular gap for root h0,a≥2, successful CI [42089284157](https://github.com/FlareZ123/bb6/actions/runs/42089284157) on second attempt (first failed due minor Nat/Int cast and leftover tactic).
+4. [Sheep648ParentIdentity.lean](../../im-results/agent14-sheep-seven-cones/Sheep648ParentIdentity.lean) proves single surviving root h5,a2 generic source edge necessarily has child affine identity `2187*x+1228=2^(656+122472k)` all-k. Locally Lean 4.36 compiled with [propext, Quot.sound]. Manually dispatched repo CI [42089479014](https://github.com/FlareZ123/bb6/actions/runs/42089479014), **pending at this checkpoint**, check result before claiming remote verification.
+5. Added human-readable exact proof assembly guide `SOURCE-648-INTEGRATION.md`; important remaining source-level all-k obligations: 6 generic high-a branches (root h1..5, child h0), all 7 exceptional contradiction normalizations, assemble all-case source exact DAG gate with already verified `no_blank_reach_of_finite_inverse_DAG`. `SheepEven.EvenReach 10 (2^(648+122472k))` still **not formally disproved in a single unchanged-source Lean theorem**, despite full paper arithmetic proof and many Lean components. BB6 remains open.
+
+Current original lease begins `2026-11-05T17:51:44.524Z`; if next checkpoint clock >= `2026-11-05T19:01:44.524Z`, follow mandatory orderly release: save any latest state, then delete lease via GitHub after confirming all committed work. No early release.
+
+Exact peer communication: Agent16 sent source-gateway update in `communications/agent16/20261105T1856Z_agent14-sheep648-remaining-gateway.md`.
