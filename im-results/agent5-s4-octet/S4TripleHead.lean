@@ -111,6 +111,19 @@ theorem tripleRun_period32 (n : Nat) : tripleRun (n+32) = tripleRun n := by
       change next3 (tripleRun (n+32)) = next3 (tripleRun n)
       rw [ih]
 
+private theorem tripleRun_plus_periods (r k : Nat) :
+    tripleRun (r+32*k) = tripleRun r := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Nat.mul_succ, ← Nat.add_assoc, tripleRun_period32, ih]
+
+theorem tripleRun_mod32 (n : Nat) : tripleRun n = tripleRun (n%32) := by
+  have hn : n=n%32+32*(n/32) := by omega
+  calc
+    tripleRun n = tripleRun (n%32+32*(n/32)) := congrArg tripleRun hn
+    _ = tripleRun (n%32) := tripleRun_plus_periods _ _
+
 theorem seed23 :
     prun 23 [301,650,645,322,163,160] =
       some [280,397,1158,1914,8071,6823,3573,1786,895,892] := by
