@@ -86,3 +86,11 @@ jobs:
           /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/generate_reflected.py" ReflectedGeneric.lean
           /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" ReflectedGeneric.lean
           lake env lean -o ".lake/build/lib/lean/ReflectedGeneric.olean" ReflectedGeneric.lean
+          # Finish exhaustive special odd-part-three branches, and combine
+          # both branches into all-index source-arithmetic inverse fibers.
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/SheepSpecialNormalize.lean" SheepSpecialNormalize.lean
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/generate_special_source.py" SpecialSourceCases.lean
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            SheepSpecialNormalize.lean SpecialSourceCases.lean
+          lake env lean -o ".lake/build/lib/lean/SheepSpecialNormalize.olean" SheepSpecialNormalize.lean
+          lake env lean -o ".lake/build/lib/lean/SpecialSourceCases.olean" SpecialSourceCases.lean
