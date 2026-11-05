@@ -13,3 +13,10 @@ This module family instantiates the previously source-certified Agent8 q29 mecha
 ## Reproduction and limits
 
 Manual-only source compilation workflow: `.github/workflows/agent8-p1-q297-all-source.yml`. It compiles unchanged original Agent1/4/9/45/47/50 dependencies, followed by all ten new modules; it prints final theorem axioms. Full Lean 4.36.0-rc2 checks are required before the candidate becomes an established theorem. Keep this investigation under im-results pending independent novelty and end-to-end review.
+
+
+## Original-source verification, 2026-11-05 20:59 UTC
+
+**SUCCESS: [manual unchanged-source Lean 4.36.0-rc2 CI 42108190498](https://github.com/FlareZ123/bb6/actions/runs/42108190498)**. All ten Q297 modules compiled after the unchanged Agent1/4/9/45/47/50 original dependencies. The final theorem `BB6.Agent8Q297.critical_4754_mod16384_unreachable` reports exactly `[propext, Classical.choice, Quot.sound]`, without `sorryAx`. Source files and theorem are in this directory. The first trial was not used; the cited run is the successful original-source audit.
+
+Thus the **genuine original P1 Reach predicate** satisfies `∀r : Nat, ¬ Reach 2 (14*2^(4754+16384*r)-2*(4754+16384*r)-10)`. It excludes four whole mod-65536 critical exponent classes `4754, 21138, 37522, 53906`. These do not coincide with Agent12's eight `[226,418,466,482,546,674,802,914]` source-certified classes, nor with the Agent8 q29 family `466 mod16384`. The mathematical method is a new q297 instantiation of an existing authenticated proof mechanism. A wider external-prior-art review remains outstanding. This is an all-time necessary-gateway exclusion and does **not** establish P1 or BB(6) nonhalting.
