@@ -87,3 +87,20 @@ For `u=0`, every direct first-burst halting seed of the displayed exponential fo
 [The deterministic BigInt SFT](CoprimeModuliSFT.cjs) implements the induction as an explicit modular witness algorithm: factor out powers of two, compute the order of two modulo the odd factor, solve the smaller-gcd instance recursively, and lift using a modular inverse of `−3p/g`. It independently follows the **entire twelve-branch `next`** from each constructed synthetic start and verifies every intermediate step uses the real first branch and that the final state halts. It also checks known blank-root checkpoints. The finite tests corroborate the theorem but are not used as its proof.
 
 **Evidence boundary:** The general all-moduli congruence lemma and its inductive proof above are a handwritten adaptation of a known broad surjectivity principle (Sun 2014), applied to the machine-specific coefficient, **not yet Lean-kernel checked**. The source-level first-burst and halting bridge are previously Lean-certified repository results; the SFT reproduces concrete instances against an independent transcription. This method result does not furnish any actual-blank halting witness or nonhalting invariant. It shows that a *purely fixed finite modulus* counter-state forward invariant cannot possibly finish #429's nonhalting proof for any `m` coprime to 3. Invariant constructions with nonperiodic history, root-sensitive reachability, or restrictions to genuine subsection states remain viable.
+
+
+## 2026-11-05 15:40 UTC: all-parameter two-burst families formally source-verified
+
+**This update supersedes the earlier 'sample-tested/paper proof only' status for the *two families themselves*; the all-3-adic lifting induction remains a separate paper proof.** [Manual source CI 42057234115](https://github.com/FlareZ123/bb6/actions/runs/42057234115) passed on original repository commit `81b885ef7faff63a2f9051bfaca1c21403cab67e` at 15:40 UTC. The job built, without altering their source, `BB429Rank.lean`, `BB429Burst.lean`, and `BB429DyadicStarts.lean`, then compiled both new theorem sources:
+
+- [`Agent6TwoBurstOne.lean`](Agent6TwoBurstOne.lean): `Agent6TwoBurstOne.full_source_synthetic_halt (q : Nat)`, for every `q≥0`, witnesses an actual finite `BB429.run` halting prefix from `(0,12*2^(4*q+5)-(24*q+53))` with first-burst, genuine even-second-counter/odd-gap reset, and second-burst semantics. These initial counters are `1 mod3`.
+- [`Agent6TwoBurstZero.lean`](Agent6TwoBurstZero.lean): `Agent6TwoBurstZero.full_source_synthetic_halt (q : Nat)`, for every `q≥0`, with `c=q+2`, `p=2^c`, `k=4p-11`, `n=k+c+1`, and `W=12*2^n-24*p+39-3*c`, witnesses genuine first-burst, odd-second-counter/even-gap non-first transition, and second-burst halting semantics. Initial counters are `0 mod3`.
+
+The CI job `127348853689` printed these exact axiom audits:
+
+```text
+'Agent6TwoBurstOne.full_source_synthetic_halt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Agent6TwoBurstZero.full_source_synthetic_halt' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+The [manual-only verification workflow](../../.github/workflows/agent6-429-two-burst.yml) is reproducible; it is not a per-commit runner. This closes the **source provenance gap of both parametric synthetic trajectories** and removes any dependency on earlier copied-model checks for these two theorems. The derivation that they and the previously source-proved direct-burst family cover *every* second-counter class modulo `3^E` for all `E` remains [proved on paper](AllThreeAdicCylinders.md), without all-`E` Lean compilation. Neither result proves true-blank reachability or raw-machine nonhalting; no BB(6) bound follows.
