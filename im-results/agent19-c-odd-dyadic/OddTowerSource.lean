@@ -36,7 +36,9 @@ theorem blank_no_high_three_mod32 (u v:Nat) (hv : 1≤v) :
     ¬ BB6.Agent3.CReach (8*u+3) (32*v+22) := by
   have hw : 7≤4*v+3 := by omega
   have hw4 : (4*v+3)%4=3 := by omega
-  have hx : (8*u+3)%8=(if (1:Nat)%2=0 then 7 else 3) := by omega
+  have hx : (8*u+3)%8=(if (1:Nat)%2=0 then 7 else 3) := by
+    have hh : (8*u+3)%8=3 := by omega
+    simpa using hh
   have hh:=blank_no_alternating_dyadic 1 (8*u+3) (4*v+3) hw hw4 hx
   have hy : 2^(1+2)*(4*v+3)-2=32*v+22 := by
     change 8*(4*v+3)-2=32*v+22
