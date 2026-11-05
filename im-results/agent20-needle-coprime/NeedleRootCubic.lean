@@ -40,13 +40,13 @@ private theorem reached_noninitial_has_parent (d : Nat)
       (fun z : Option HighLevelState => z.bind highLevelNext)
       n (some highLevelStart) with
     | none =>
-      simp only [hp, Option.none_bind] at hn
+      simp only [hp, Option.bind_none] at hn
       contradiction
     | some ps =>
       cases ps with
       | N p =>
         have hstep : highLevelNext (.N p) = some (.N d) := by
-          simpa only [hp, Option.some_bind] using hn
+          simpa only [hp, Option.bind_some] using hn
         exact ⟨p,⟨n,hp⟩,hstep⟩
 
 /-- An exact blank-origin raw-machine halting criterion in which every
