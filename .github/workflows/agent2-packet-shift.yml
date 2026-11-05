@@ -39,3 +39,4 @@ jobs:
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean "$P/PacketEscape.lean"
           lean "$P/ELowSecond.lean"
+          lean "$P/EGenericTurn.lean"
