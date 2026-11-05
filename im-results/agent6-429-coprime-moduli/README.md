@@ -14,7 +14,7 @@ BB429.next (a,b) = none.
 
 One may moreover require `W≥w`. This extends Agent 4's [all-dyadic-cylinder result](../agent4-bb429-dyadic-barrier/README.md) from powers of two to **every modulus not divisible by three**, including odd prime powers and mixed composite moduli.
 
-**Corollary.** Fix such an `m`. No nonempty predicate `P(u,w)` that (i) depends only on `(u mod m,w mod m)`, (ii) is forward invariant under every successful full-source `BB429.next` transition, and (iii) excludes every halting state, can exist. From any `P(u,w)`, choose the congruent synthetically halting `(u,W)`. Saturation implies `P(u,W)`; induction along its finite real accelerated trace implies `P(a,b)`, contradicting (iii).
+**Stronger corollary.** Fix such an `m`. No nonempty predicate `P(u,w)` that (i) is saturated under `w ≡ W (mod m)` **for each fixed exact first coordinate `u`**, (ii) is forward invariant under every successful full-source `BB429.next` transition, and (iii) excludes every halting state, can exist. From any `P(u,w)`, choose the synthetically halting `(u,W)` with the **same exact `u`**. Saturation implies `P(u,W)`; induction along its finite real accelerated trace implies `P(a,b)`, contradicting (iii). In particular, the result rules out every fixed-modulus two-counter invariant, while allowing `P` to depend arbitrarily on the unbounded exact first counter. This strengthens the prior dyadic barrier at both modulus and predicate levels.
 
 ## Complete arithmetic argument
 
