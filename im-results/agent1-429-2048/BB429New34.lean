@@ -49,7 +49,7 @@ def NewGate (a : Nat) : Prop :=
 /-- Every real blank-root halting-line state avoids all 34 residues.
     Each conjunct is an unchanged-accelerator-source-certified theorem. -/
 theorem blank_halt_not_thirtyfour (n a b : Nat)
-    (hr : BB429.run n (0,0)=some(a,b)) (hg : b+1=2*a) :
+    (hr : BB429.run n (0,0)=some (a,b)) (hg : b+1=2*a) :
     a%2048≠181 ∧
     a%2048≠309 ∧
     a%2048≠329 ∧
@@ -120,7 +120,7 @@ theorem blank_halt_not_thirtyfour (n a b : Nat)
       BB429AutoGroup4.blank_halt_not_2037_mod2048 n a b hr hg⟩
 
 theorem blank_halt_not_newGate (n a b : Nat)
-    (hr : BB429.run n (0,0)=some(a,b)) (hg : b+1=2*a) :
+    (hr : BB429.run n (0,0)=some (a,b)) (hg : b+1=2*a) :
     ¬ NewGate a := by
   simpa only [NewGate, not_or] using
     blank_halt_not_thirtyfour n a b hr hg
