@@ -37,7 +37,7 @@ theorem near_top_has_tthree (n u A:Nat) (hn:4≤n)
     omega
   exact Or.inr ⟨n-3,3,d,hodd,⟨hlow,hhigh⟩,hout,heq⟩
 
-private theorem tight_fatal (n:Nat) (hn:10≤n) :
+theorem tight_fatal (n:Nat) (hn:10≤n) :
     64*(n+4)+164≤13*2^n := by
   have h:∀ k:Nat,64*(k+10+4)+164≤13*2^(k+10):=by
     intro k
@@ -50,7 +50,7 @@ private theorem tight_fatal (n:Nat) (hn:10≤n) :
   rw [he]
   exact h (n-10)
 
-private theorem tight_second (n:Nat) (hn:10≤n) :
+theorem tight_second (n:Nat) (hn:10≤n) :
     64*(7*n+13)+164≤13*2^n := by
   have h:∀ k:Nat,64*(7*(k+10)+13)+164≤13*2^(k+10):=by
     intro k
@@ -63,7 +63,7 @@ private theorem tight_second (n:Nat) (hn:10≤n) :
   rw [he]
   exact h (n-10)
 
-private theorem fatal_div81_bad (n:Nat) (hn:10≤n)
+theorem fatal_div81_bad (n:Nat) (hn:10≤n)
     (hres:n%162=5 ∨ n%162=130) :
     (2*fatal n+5)%81=0 := by
   have hf:=fatal_close n (by omega)
@@ -76,7 +76,7 @@ private theorem fatal_div81_bad (n:Nat) (hn:10≤n)
     have hm81:2^n%81=2^22%81:=by rw [hp,hm]
     omega
 
-private theorem second_div81_bad (n:Nat) (hn:10≤n)
+theorem second_div81_bad (n:Nat) (hn:10≤n)
     (hres:n%162=83 ∨ n%162=124) :
     (2*secondPred n+5)%81=0 := by
   have hf:=second_close n hn
