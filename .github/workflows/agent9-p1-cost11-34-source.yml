@@ -1,0 +1,96 @@
+name: Agent 9 P1 34 additional cost11 q1024 original-source critical proofs
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[P1COST11-34]')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard_group: [ABC, DEF]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate deterministic cost11 certificates
+        run: |
+          set -euo pipefail
+          python3 im-results/agent9-p1-q1024-cost11/generate11.py
+      - name: Compile completely unchanged original P1 and shadow sources
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent8-p1-shadow-cost11:im-results/agent9-p1-q1024-cost11/generated"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            echo "ORIGINAL AGENT1 $m"
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            echo "ORIGINAL AGENT47 $m"
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass; do
+            echo "ORIGINAL AGENT1-QUARTER $m"
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "ORIGINAL AGENT50 $m"
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
+            echo "ORIGINAL AGENT45 $m"
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          for m in QuarterGap ShortConeGap ShortConeBridge MediumConeGap MediumConeReach; do
+            echo "ORIGINAL AGENT1-QUARTER $m"
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders ShadowQ29Finite ShadowQ29No256 ShadowQ29Graph ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant ShadowNoExceptionalGeneral; do
+            echo "ORIGINAL AGENT9 $m"
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+      - name: Compile every parametric exclusion and audit final Lean axioms
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent8-p1-shadow-cost11:im-results/agent9-p1-q1024-cost11/generated"
+          : > /tmp/agent9-cost11-34-audit.log
+          for m in CylinderPower GenericBlocked GenericShadow GenericCritical; do
+            echo "AUTHENTIC AGENT8 $m"
+            lean -o "im-results/agent8-p1-shadow-cylinder/$m.olean" "im-results/agent8-p1-shadow-cylinder/$m.lean" | tee -a /tmp/agent9-cost11-34-audit.log
+          done
+          for m in ShadowFiniteInvariant11 GenericBlocked11 GenericShadow11 GenericCritical11; do
+            echo "AUTHENTIC COST11 $m"
+            lean -o "im-results/agent8-p1-shadow-cost11/$m.olean" "im-results/agent8-p1-shadow-cost11/$m.lean" | tee -a /tmp/agent9-cost11-34-audit.log
+          done
+          case "${{ matrix.shard_group }}" in
+            ABC) shards=(A B C) ;;
+            DEF) shards=(D E F) ;;
+            *) echo 'Bad shard group' >&2; exit 1 ;;
+          esac
+          for m in "${shards[@]}"; do
+            echo "AGENT9 COST11 SHARD $m ARITHMETIC"
+            lean -o "im-results/agent9-p1-q1024-cost11/generated/Batch${m}Arithmetic.olean" "im-results/agent9-p1-q1024-cost11/generated/Batch${m}Arithmetic.lean" | tee -a /tmp/agent9-cost11-34-audit.log
+            echo "AGENT9 COST11 SHARD $m REAL ROOT"
+            lean "im-results/agent9-p1-q1024-cost11/generated/Batch${m}Final.lean" | tee -a /tmp/agent9-cost11-34-audit.log
+          done
+          if grep -E -q 'sorryAx|axiom.*[Aa]gent8|error:' /tmp/agent9-cost11-34-audit.log; then
+            echo "NONSTANDARD ASSUMPTION OR LEAN ERROR" >&2
+            exit 1
+          fi
+          count=$(grep -E -c "q[0-9]+_critical_unreachable' depends on axioms: \[propext, Classical.choice, Quot.sound\]" /tmp/agent9-cost11-34-audit.log)
+          echo "AUTHENTIC SOURCE CERTIFICATES: $count"
+          case "${{ matrix.shard_group }}" in
+            ABC) test "$count" -eq 18 ;;
+            DEF) test "$count" -eq 16 ;;
+          esac
