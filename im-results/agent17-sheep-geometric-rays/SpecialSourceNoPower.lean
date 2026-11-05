@@ -1,4 +1,6 @@
 import Std
+
+namespace Agent17SheepSpecial
 private theorem poly_next (n : Nat) (hn : 4 ≤ n) :
     (n+1)^3+(n+1) ≤ 2*(n^3+n) := by
   have h1 : 4*n ≤ n^2 := by
@@ -188,3 +190,5 @@ theorem special_no_even_power (a h w j : Nat) (ha : 1 ≤ a)
 
 #print axioms special_no_even_power_small
 #print axioms special_no_even_power
+
+end Agent17SheepSpecial
