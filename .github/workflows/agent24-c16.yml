@@ -102,3 +102,5 @@ jobs:
           lean -o S5FirstInverse.olean S5FirstInverse.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/S5Reach.lean .
           lean -o S5Reach.olean S5Reach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/ExtraEvenOrbit.lean .
+          lean -o ExtraEvenOrbit.olean ExtraEvenOrbit.lean
