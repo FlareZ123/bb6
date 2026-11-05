@@ -62,7 +62,7 @@ jobs:
             echo "CERTIFIED Q$q ARITHMETIC"
             lean -o "im-results/agent8-p1-q256-batch/BatchQ$q.olean" "im-results/agent8-p1-q256-batch/BatchQ$q.lean" | tee -a /tmp/agent8-q256-batch-audit.log
             echo "AUTHENTIC Q$q CRITICAL ROOT"
-            lean -o "im-results/agent8-p1-q256-batch/BatchQ$qFinal.olean" "im-results/agent8-p1-q256-batch/BatchQ$qFinal.lean" | tee -a /tmp/agent8-q256-batch-audit.log
+            lean -o "im-results/agent8-p1-q256-batch/BatchQ${q}Final.olean" "im-results/agent8-p1-q256-batch/BatchQ${q}Final.lean" | tee -a /tmp/agent8-q256-batch-audit.log
           done
           if grep -E -q 'sorryAx|axiom.*[Aa]gent8|error:' /tmp/agent8-q256-batch-audit.log; then
             echo "NONSTANDARD ASSUMPTION OR LEAN ERROR" >&2
