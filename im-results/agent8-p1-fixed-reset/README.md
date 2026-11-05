@@ -267,3 +267,18 @@ The implication follows by combining the authentic original source's odd-cone ma
 ```
 
 Here `H(1)=16`, `H(2)=42`: the lower seed `s=30=H(1)+14` is a genuine *synthetic* overshoot and reaches the higher critical reset. Its odd-cone links are precisely `inverseAt 36 3 0=some(8,21)` and `inverseAt 12 25 1=some(10,14)`, consistent with the derived mass equation at `n=2`. This concrete test lies **outside** the `n≥14` source theorem and shows why *unqualified* overshoot exclusion is invalid. It does not disprove an n-specific or blank-reachability-dependent invariant. Future work should seek restrictions on genuinely blank-reachable even reset seeds `s` strong enough to eliminate the surviving positive `c`, or an independent obstruction for the exceptional terminal. A congruence-only list will not by itself decide the machine.
+
+
+### Exact synthetic reconstruction of every genuinely reached even hub
+
+[EvenSectorLift.lean](EvenSectorLift.lean) proves against the *literal P1 `G` and `T` definitions* an exact all-natural converse to the algebraic reset arithmetic. Let `E(0)=2`, `E(j+1)=2E(j)+12` and define `seed(0,c)=c+4`, `seed(j+1,c)=seed(j,c+E(j)+10)`. For every `j,c≥0` with even c,
+
+```text
+E(j) + 12 = 14*2^j
+seed(j,c) + 2*j + 10 = c + 14*2^j
+Run (2*j) (2,seed(j,c)) (E(j),c+4).
+```
+
+Here `Run` is an actual `2j`-step relation using source `BB6.Agent1.T` alone, with no derivative approximation: every two calls in the proof have the exact affine doubling `(a,r)→(a+3,r-2)→(2a+12,r-a-10)`. Local Lean4.36 kernel verification using textually identical original `PosEvenForm` definitions passed with only standard axioms and no `sorryAx`; independent unchanged-repository import CI remains pending.
+
+[EvenSourceCanonical.lean](EvenSourceCanonical.lean) combines this constructive forward run with the already source-authenticated `even_hub_reset_seed`. For **every genuinely blank-reached hub** `Reach b d` with `b` even, `d≥4` even, it exhibits `j,c,s` with `b=E(j)`, `d=c+4`, a genuinely blank-reached reset `Reach 2 s`, `s=seed(j,c)`, and an exact source `Run (2j) (2,s) (b,d)`. Local compiler checked the source bridge against signature-identical `even_hub_reset_seed`; original-source audit is still pending. This generalizes the earlier equality-only reset seed witness to a constructive exact-time route and shows the *synthetic* requirement is automatically satisfiable at every power-shaped even hub. It is a composition of previously established building blocks, not an assertion of new external priority or of P1 root nonhalting.
