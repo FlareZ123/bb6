@@ -29,8 +29,9 @@ theorem source_no_exceptional_with_carry_gap
   have hsmallz : 2*z<2^J := by omega
   have hpowle : 2^J≤2^N :=
     Nat.pow_le_pow_right (by decide) (by omega)
-  have hshift : 2^J<d+b/2+3 :=
-    lt_of_le_of_lt hpowle (shifted_gt_power N L m b d hmass hmasssmall hb)
+  have hshift : 2^J<d+b/2+3 := by
+    have hbig := shifted_gt_power N L m b d hmass hmasssmall hb
+    omega
   exact no_one_after_binary_gap J t (d+b/2+3) z hz hsmallz hdiv
     (inverseAt_power b d t k 1 hi) hshift
 
