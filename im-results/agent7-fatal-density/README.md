@@ -27,7 +27,7 @@ b_{s,0}=0,\qquad
 b_{s,k+1}=b_{s,k}+3^k\left(\frac{Z(s+6b_{s,k})}{3^{k+1}}\bmod3\right).
 \]
 
-The quotient is integral because the previous lift satisfies (1). **This is a source-linked all-index result**, invoking earlier independently proved [FatalValuationExact.lean](../agent7-cascade-forward/FatalValuationExact.lean) lemmas `fatal_shift_balance`, `fatal_shift_exact` and `fatal_shift_keeps_divisibility`. The local Lean 4.36.0-rc2 test with *exact theorem-signature stubs* passed the new proofs, but the dependency stubs in the local test make this **not yet an unchanged-source verification**. An original-source check was requested through the manual [agent7-746-uniform-fatal-parent workflow](../../.github/workflows/agent7-746-uniform-fatal-parent.yml) via [issue #23](https://github.com/FlareZ123/bb6/issues/23). Upgrade this provenance only after the corresponding CI succeeds, with standard-axiom audit.
+The quotient is integral because the previous lift satisfies (1). **This is a source-linked all-index result**, invoking earlier independently proved [FatalValuationExact.lean](../agent7-cascade-forward/FatalValuationExact.lean) lemmas `fatal_shift_balance`, `fatal_shift_exact` and `fatal_shift_keeps_divisibility`. The new theorems first passed local Lean 4.36.0-rc2 checks against exact theorem-signature stubs. The subsequent **unchanged checked-in original-source Lean 4.36.0-rc2 CI succeeded** in [run 42118974269](https://github.com/FlareZ123/bb6/actions/runs/42118974269), triggered via [issue #23](https://github.com/FlareZ123/bb6/issues/23). Its checked head contains this source file and the complete preceding `FatalValuationExact` dependency chain. `#print axioms` for the new theorem is compiled as part of the source file. No `sorry` or `native_decide` occurs in the new file.
 
 ### Derivation of the density, from (1)
 
@@ -104,7 +104,35 @@ The first 15 summands have exact rational sum `18606775304835163/500315450989997
 
 ## Boundaries and next research use
 
-- (1) is a local Lean 4.36.0-rc2 theorem whose real-source integration is awaiting its CI verdict. (2), (3), (4), and (5) are mathematical deductions and require separate full formalization if advertised as Lean-verified statements.
+- (1) is kernel-verified against the unchanged full original-source dependency chain in successful CI 42118974269. (2), (3), (4), and (5) are mathematical deductions and require separate full formalization if advertised as Lean-verified statements.
 - A first-reset inverse parent is algebraically source-genuine, but may be unreachable from the original blank-root reset `(2,0)`. The density here is over **hypothetical fatal indices**, not a distribution over the actual deterministic orbit.
 - The formula supplies a complexity prior for inverse search and a way to allocate resources by arithmetical rarity. It is not an exclusion of any complete fatal-index class, a nonhalting theorem, or a Busy Beaver bound.
 - Next high-value step: consume this exact residue class theorem in a genuinely root-sensitive argument, e.g., prove a uniform backward-closed blank-disjoint language for one whole infinite surviving family. Avoid treating low density as proof of nonreachability.
+
+
+## Uniform odd-depth inverse ray, genuine-root lemma
+
+Additional theorem file: [OddRayForced.lean](OddRayForced.lean), checked **locally** with Lean 4.36.0-rc2 against explicit signatures of the unchanged source imports, no sorry. The full original-source compilation has been dispatched through [issue #29](https://github.com/FlareZ123/bb6/issues/29) and [the same manual workflow](../../.github/workflows/agent7-746-uniform-fatal-parent.yml); **source CI pending** at this note's writing, so do not yet call the lemma source-certified.
+
+Define a canonical sequence of hypothetical even inverse ancestors for fatal index `n` by
+
+\[
+D_0(n)=n+4,\qquad D_{j+1}(n)=2D_j(n)+(n-1),\qquad U_j(n)=4\cdot2^n-D_j(n).
+\]
+
+Whenever `n>=4`, `j` is odd and `D_j(n)<=2^n+1`, the lemma establishes the **complete source-genuine first-return inverse iff**
+
+\[
+\operatorname{ResetParent}(q,U_j(n))\quad\Longleftrightarrow\quad q=U_{j+1}(n).
+\]
+
+The all-depth true blank-derived source-C consequence is
+
+\[
+\operatorname{ReachC}((2,0),(U_j(n),0)) \iff
+\operatorname{ReachC}((2,0),(U_{j+1}(n),0)).
+\]
+
+The mechanism is an alternating congruence phenomenon: `D_(j+2)%3=D_j%3`, and for **odd** `j`, `D_j%3=1`. Therefore `U_j%3` is either 0 or 1. Every odd-arm first-return parent of any target requires its height congruent to 2 modulo 3. The explicit dyadic margin ensures `U_j` stays within the single high even-image band at scale `n-1`, so Agent7's previously source-verified `any_parent_equals_even` uniquely forces `U_(j+1)`. The existing exact reset-chain transport yields the genuine blank-root equivalence. The index `j` is arbitrary, subject to the explicit band margin; this expands earlier finite-depth odd-step observations in `FourEven.lean` and `SecondEven.lean` into a quantified symbolic family.
+
+This is a **conditional branch compression** for reset targets. Even-indexed levels may still admit multiple inverse parents; no uniform nonreachability, no resolved six-state halting status and no BB6 value follows.
