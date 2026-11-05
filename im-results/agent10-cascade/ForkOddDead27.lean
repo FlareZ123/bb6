@@ -32,7 +32,7 @@ private theorem pow_shift_one (n : Nat) (hn : 1≤n) :
   rw [Nat.pow_succ] at hp
   omega
 
-private theorem odd_linear (n : Nat) (hn : 13 ≤ n)
+theorem odd_linear (n : Nat) (hn : 13 ≤ n)
     (hres : n%54=17 ∨ n%54=28 ∨ n%54=35 ∨ n%54=46) :
     9*oddPre n+257*n+399=14*2^n := by
   have h18 : n%18=10 ∨ n%18=17 := by omega
