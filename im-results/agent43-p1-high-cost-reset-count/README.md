@@ -1,5 +1,15 @@
 # A reset-count lower bound for high-cost P1 odd inverse histories
 
+## Original-source kernel verification: 2026-11-05 22:29 UTC
+
+The exact counted last-positive-reset decomposition and cost bound now pass original-source Lean CI [42120115832](https://github.com/FlareZ123/bb6/actions/runs/42120115832), with standard axioms only. Stronger source theorems also pass [CI 42121823464](https://github.com/FlareZ123/bb6/actions/runs/42121823464):
+
+- [LastResetStrengthSource.lean](LastResetStrengthSource.lean): source-connected outgoing left mass bound `3*2^n <= k+4` for a final positive reset of a candidate with cost `m<=n+z`.
+- [CountedWallStrongGateSource.lean](CountedWallStrongGateSource.lean): **unconditional original-source theorem** `BB6.Agent43WallStrongGate.source_wall_near_cost_has_reset_bound` proving `3*2^z <= 2*(m+n+3)` for any genuine counted affine-wall history with `n>=14`, `z>=1`, and `m<=n+z`. The proof preserves the witnessed exact counter and handles arbitrary zero-depth suffixes.
+- [WallAboveNPlusZ148.md](WallAboveNPlusZ148.md): new **paper-level** universal numeric inequality combines this original-source theorem with Agent50's already original-source-verified count lower bound to derive `m>n+z` for **n>=148**. The final numeric lemma and composite theorem are **not yet Lean-certified**. Earlier 194 bound is superseded at the paper level.
+
+These are genuine mathematical restrictions on a P1 inverse feeder, not a halt/nonhalt verdict for the machine. Keep in `im-results/` pending source-level composition of the n148 theorem, novelty review and substantial relevance assessment.
+
 ## Later stronger results and current strongest frontier
 
 The coarse envelope in this original note has since been sharpened, and a different last-reset method now gives the strongest new information. All new composites are **paper-level**, awaiting a combined unchanged-source Lean CI and novelty review:
