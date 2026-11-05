@@ -95,9 +95,17 @@ theorem a_double_zero_turn (v r : Nat) (L ys : List Bool) :
     exact cWalk_run r V (true::ys)
   have hc7 : run 7 afterR = afterC7 := by
     dsimp [afterR,afterC7,V,U]
-    rw [opSplit]
-    exact cSeven (oppairs v++L)
-      (List.replicate (2*r) true ++ true::ys)
+    have hswap :
+        (⟨[false,true,true] ++ (oppairs (v+2) ++ L),true,
+          List.replicate (2*r) true ++ true::ys,2⟩ : Cfg) =
+        (⟨[false,true,true,false,true,false,true] ++ (oppairs v ++ L),true,
+          List.replicate (2*r) true ++ true::ys,2⟩ : Cfg) :=
+      congrArg (fun xs : List Bool =>
+        (⟨xs,true,List.replicate (2*r) true ++ true::ys,2⟩ : Cfg))
+        (opSplit v L)
+    exact (congrArg (run 7) hswap).trans
+      (cSeven (oppairs v++L)
+        (List.replicate (2*r) true ++ true::ys))
   have hlast : run (2*v) afterC7 =
       (⟨L,true,out v r ++ ys,2⟩ : Cfg) := by
     dsimp [afterC7]
