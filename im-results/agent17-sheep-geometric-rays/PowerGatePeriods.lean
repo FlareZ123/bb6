@@ -35,6 +35,14 @@ theorem high_k_gap_bound (a : Nat) (ha : 5 ≤ a) :
   have heq : a-5+5=a := by omega
   simpa only [heq] using high_k_gap_shift (a-5)
 
+theorem pow9_eq1 (n : Nat) : (2:Nat)^n % 9 = 1 ↔ n % 6 = 0 := by
+  have hperiod : (2:Nat)^6 % 9 = 1 := by decide
+  have hred := pow_mod_reduce 9 6 n (by decide) (by decide) hperiod
+  have hlt : n%6 <6 := Nat.mod_lt _ (by omega)
+  have hsmall : ∀ r : Fin 6, ((2:Nat)^r.val % 9 = 1 ↔ r.val = 0) := by decide
+  rw [hred]
+  exact hsmall ⟨n%6,hlt⟩
+
 theorem pow15_eq1 (n : Nat) : (2:Nat)^n % 15 = 1 ↔ n % 4 = 0 := by
   have hperiod : (2:Nat)^4 % 15 = 1 := by decide
   have hred := pow_mod_reduce 15 4 n (by decide) (by decide) hperiod
@@ -68,6 +76,7 @@ theorem pow99_ne19 (n : Nat) : (2:Nat)^n % 99 ≠ 19 := by
   exact hsmall ⟨n%30,hlt⟩
 
 #print axioms high_k_gap_bound
+#print axioms pow9_eq1
 #print axioms pow15_eq1
 #print axioms pow27_eq7
 #print axioms pow51_eq13
