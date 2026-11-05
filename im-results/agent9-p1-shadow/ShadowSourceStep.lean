@@ -1,4 +1,5 @@
 import ShadowCast
+import ShadowDepthSource
 import ShadowParitySource
 import ShadowSourceTransport
 
@@ -6,9 +7,6 @@ namespace BB6.Shadow
 open BB6.Agent1Quarter
 open BB6.Agent47P1
 
-/-- Every genuine safely encoded odd P1 predecessor has a faithfully
-    encoded dyadic-shadow successor. The quotient, integral-child test,
-    margin and coefficient update are all exact. -/
 theorem original_odd_shadow_step
     (N L m t b d w z alpha k c b0 d0 : Nat)
     (hcone : OddCone b0 d0 b d m)
