@@ -52,7 +52,6 @@ private theorem odd_tzero_in_dyadic_gap (n u:Nat) (hn:4≤n)
     rw [he] at hpow
     omega
 
-/-
 /-- If the odd parameter has exactly 3-adic valuation two, the
     near-top target has precisely two source first-reset parents. -/
 theorem near_top_exact_two (n u A q:Nat) (hn:4≤n)
@@ -133,6 +132,5 @@ theorem near_top_exact_two (n u A q:Nat) (hn:4≤n)
 
 #print axioms near_top_exact_two
 
-STAGED_EXACT_TWO
--/
+
 end CascadeFirstFork
