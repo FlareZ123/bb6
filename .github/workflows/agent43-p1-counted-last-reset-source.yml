@@ -58,3 +58,4 @@ jobs:
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
           lean "$AG43/CountedWall148Source.lean"
+          lean "$AG43/ExceptionalLastResetSource.lean"
