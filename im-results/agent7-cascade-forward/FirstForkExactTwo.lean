@@ -268,6 +268,26 @@ theorem rooted_second_two_parents (n:Nat) (hn:10≤n)
       (by omega) (second_close n hn) (second_size n hn))
     (fun q => second_parents_exactly_two q n hn hres)
 
+/-- Two forced exact reset edges precede the two-way fork for these classes. -/
+theorem rooted_fatal_after_second (n:Nat) (hn:10≤n)
+    (hres:n%54=11 ∨ n%54=34 ∨ n%54=47 ∨ n%54=52) :
+    CascadeSweep.ReachC (2,0) (fatal n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n (secondPred n),0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n (7*n+13),0) := by
+  have h18:n%18=11 ∨ n%18=16:=by omega
+  have h18all:n%18=10 ∨ n%18=11 ∨ n%18=16 ∨ n%18=17:=by
+    rcases h18 with h|h
+    · exact Or.inr (Or.inl h)
+    · exact Or.inr (Or.inr (Or.inl h))
+  exact (genuine_fatal_iff_second_even n hn h18all).trans
+    (rooted_second_two_parents n hn hres)
+
+#print axioms fatal_parents_exactly_two
+#print axioms second_parents_exactly_two
+#print axioms rooted_fatal_two_parents
+#print axioms rooted_second_two_parents
+#print axioms rooted_fatal_after_second
+
 STAGED_SECOND_PHASE
 -/
 end CascadeFirstFork
