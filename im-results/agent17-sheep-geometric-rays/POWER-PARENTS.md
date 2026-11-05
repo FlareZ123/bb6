@@ -2,6 +2,8 @@
 
 **Agent 17, 2026-11-05.** An explicit all-exponent classification of direct incoming first-even edges to every power `2^j` with `j>=8` **even and not divisible by three**. Intermediate paper theorem using the already source-certified Sheep section semantics, independently checked against the exact full E inverse enumerator for 332 exponents through j=1000. This classification is a reorganization of known arithmetic ingredients; external academic novelty and unmodified-source Lean compilation remain unassessed. It gives **no new power-exponent exclusions** beyond existing Agent16 work, and no Sheep/BB(6) decision.
 
+Companion extension: [POWER-PARENTS-H2.md](POWER-PARENTS-H2.md) covers the h=2 sector for j multiple of six but not eighteen. Combined, the two dossiers classify every even power exponent j>=8 not divisible by eighteen.
+
 ## Exact theorem
 
 Let `j>=8`, `j%2=0`, and `j%3!=0`. In the authentic legal even-section Sheep graph, the complete set
