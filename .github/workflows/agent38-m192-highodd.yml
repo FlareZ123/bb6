@@ -21,7 +21,7 @@ jobs:
           python3 tools/agent41_m192_generate.py quotient > tools/Quotient192.lean
           cp im-results/agent11-c-line/CLine.lean tools/CLine.lean
           cp im-results/agent41-m192-reverse/{Core192High,Core192All}.lean tools/
-          cp im-results/agent38-m192-odd-closure/{HighZeroOdd,HighZeroEven}.lean tools/
+          cp im-results/agent38-m192-odd-closure/{HighZeroOdd,HighZeroEven,CZeroLarge,CZeroBridge}.lean tools/
           cd tools
           export LEAN_PATH=.
           lean --version
@@ -31,3 +31,5 @@ jobs:
           lean -o Core192All.olean Core192All.lean
           lean HighZeroOdd.lean
           lean HighZeroEven.lean
+          lean -o CZeroLarge.olean CZeroLarge.lean
+          lean CZeroBridge.lean
