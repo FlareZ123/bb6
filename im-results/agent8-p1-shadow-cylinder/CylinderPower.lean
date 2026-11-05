@@ -30,6 +30,27 @@ theorem pow16_dominates_hub (q m side : Nat)
   have hg := pow16_ge_linear q (by omega)
   omega
 
+
+theorem l0_root_wide (r u : Nat)
+  (hu : u+4*(29+1024*r)+3=7*2^(16*(29+1024*r))) :
+  2^10*36 < 4*u+8 := by
+  let q := 29+1024*r
+  have hg := pow16_ge_linear q (by omega)
+  have hq : 29≤q := by omega
+  dsimp [q] at hg
+  omega
+
+theorem l1_root_wide (r u : Nat)
+  (hu : u+4*(29+1024*r)+3=7*2^(16*(29+1024*r))) :
+  2^10*36 < 6*u+10 := by
+  let q := 29+1024*r
+  have hg := pow16_ge_linear q (by omega)
+  have hq : 29≤q := by omega
+  dsimp [q] at hg
+  omega
+
 #print axioms pow16_ge_linear
+#print axioms l0_root_wide
+#print axioms l1_root_wide
 #print axioms pow16_dominates_hub
 end BB6.Agent8Cylinder
