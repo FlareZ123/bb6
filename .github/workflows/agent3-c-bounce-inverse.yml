@@ -111,6 +111,8 @@ jobs:
           lean -o EvenChild.olean EvenChild.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/EvenChildSevenFour.lean .
           lean -o EvenChildSevenFour.olean EvenChildSevenFour.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/ChildATwoDepth.lean .
+          lean -o ChildATwoDepth.olean ChildATwoDepth.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize}.lean .
           for f in SectionAffineInverse ReachAffine AffineNormalize; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/AffineParityDepth.lean .
