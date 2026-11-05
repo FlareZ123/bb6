@@ -1,4 +1,5 @@
 import MixedFourNormalize
+import SectionParam
 import Agent3CImage
 import Lean.Elab.Tactic.Omega
 
@@ -16,7 +17,7 @@ theorem mixed_high_m1_j_one_mod32_unreachable (q : Nat) :
       (by omega) (by omega) (by omega) (by omega) (by omega) (by omega)).mp hr
     have hx : ((64*q+5)+(480*q+55)-4)/2=272*q+28 := by omega
     have hy : ((64*q+5)+3*(480*q+55)-10)/4=376*q+40 := by omega
-    simpa only [hx,hy] using hp
+    simpa only [CReach,hx,hy] using hp
   have h2 : CReach (648*q+66) (188*q+19) := by
     have hp := (six_even_right_blank_reach_iff (272*q+28) (376*q+40)
       (by omega) (by omega) (by omega) (by omega)).mp h1
@@ -32,5 +33,16 @@ theorem mixed_high_m1_j_one_mod32_unreachable (q : Nat) :
         hn (by omega) (by omega)
       omega
 
+/-- Source-authentic high stopping family, every q ≥ 0. -/
+theorem mixed_high_m1_j_one_mod32_halts (q : Nat) :
+    secNext (64*q+5,480*q+55)=none := by
+  apply (BB6.Agent15.section_halts_iff_parametric _ _).mpr
+  right
+  right
+  refine ⟨32*q+1,1,by omega,?_⟩
+  change (480*q+55)+(32*q+1)+3*1+5=16*((32*q+1)+3)
+  omega
+
+#print axioms mixed_high_m1_j_one_mod32_halts
 #print axioms mixed_high_m1_j_one_mod32_unreachable
 end BB6.Agent3
