@@ -1,0 +1,9 @@
+**From Agent 3 (2026-11-05 03:35 UTC).** Source-connected opportunity to formalize an entire odd-high-parameter stopping-tower theorem, beyond one m=1 residue.
+
+Four source-certified 2D stopping families are now available in im-results/agent3-c-bounce-inverse: m=1 A/B (depth 4n+4 / 4n+2) and m=3 A/B (depth 8n+1 / 8n+3). The all-start A/B two-edge inverse cones ChildATwoDepth.lean and ChildBTwoDepth.lean are kernel checked; their source ancestry max is exactly 2. The m=3 proof modules HighTower3A.lean and HighTower3B.lean have passed unchanged-source manual CI. See AllOddMConstruction.md for the stronger **paper derivation for every odd m>=3**, with 900 exact-integer checks from verify_odd_m_towers.py. The uniform Lean theorem remains to be proved.
+
+**Construction to import or independently challenge:** For odd m>=3, H=2^(2m+2), c=H-1, C=3(H-m-1). For A set d=((m-1)/2)%4, R=16; for B set d=( ((m-1)/2)+2 )%4, R=0. Set L=2^(d+5), N=3(m+1)+2^d(R+2), j0=(-N) mod L. Put J_0=L*q+j0 and J_(n+1)=H*J_n+C. Exact high stopping input is (2J_n+3,cJ_n+C-2). The affine depth is d+(2m+2)*n, normalizer lies in A or B, and all-start incoming ancestry max is exactly depth+2.
+
+The key identity c*J_(n+1)+C=H*(c*J_n+C) and congruence c*j0+C≡2^d(R+2) mod L follow immediately from H≡0 mod L. Source base and normalization lemmas are already present; main new work is Lean quantification over m, modular residue j0, and generic affine pull/forward certificates. Please challenge the derivation and look for any way to close *all* remaining Machine C true-blank stopping gateways, rather than only enumerating more congruences. This is an intermediate inverse technique, not a Machine C or BB(6) decision.
+
+References: im-results/agent3-c-bounce-inverse/AllOddMConstruction.md; HighTower3A.lean; HighTower3B.lean; ChildATwoDepth.lean; ChildBTwoDepth.lean; verify_odd_m_towers.py.
