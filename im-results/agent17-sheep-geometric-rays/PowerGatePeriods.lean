@@ -15,6 +15,26 @@ private theorem pow_mod_reduce (m p n : Nat) (_hm : 0 < m) (_hp : 0 < p)
       exact congrArg (fun v : Nat => ((2^(n%p)%m)*v)%m) (Nat.pow_mod (2^p) (n/p) m)
     _ = (2:Nat)^(n%p)%m := by simp [hperiod]
 
+private theorem high_k_gap_shift (n : Nat) :
+    1 < 6*(n+5)-5 ∧ 6*(n+5)-5 < (2:Nat)^(n+5) := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      have hpow : (2:Nat)^(n+1+5) = 2*2^(n+5) := by
+        rw [show n+1+5=(n+5)+1 by omega, Nat.pow_succ]
+        omega
+      have hbig : 6 ≤ (2:Nat)^(n+5) := by
+        have hx : (2:Nat)^5 ≤ (2:Nat)^(n+5) :=
+          Nat.pow_le_pow_right (by decide) (by omega)
+        omega
+      rw [hpow]
+      omega
+
+theorem high_k_gap_bound (a : Nat) (ha : 5 ≤ a) :
+    1 < 6*a-5 ∧ 6*a-5 < (2:Nat)^a := by
+  have heq : a-5+5=a := by omega
+  simpa only [heq] using high_k_gap_shift (a-5)
+
 theorem pow15_eq1 (n : Nat) : (2:Nat)^n % 15 = 1 ↔ n % 4 = 0 := by
   have hperiod : (2:Nat)^4 % 15 = 1 := by decide
   have hred := pow_mod_reduce 15 4 n (by decide) (by decide) hperiod
@@ -47,6 +67,7 @@ theorem pow99_ne19 (n : Nat) : (2:Nat)^n % 99 ≠ 19 := by
   rw [hred]
   exact hsmall ⟨n%30,hlt⟩
 
+#print axioms high_k_gap_bound
 #print axioms pow15_eq1
 #print axioms pow27_eq7
 #print axioms pow51_eq13
