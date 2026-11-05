@@ -55,3 +55,12 @@ The proof starts with the previous all-`2^e 3^j` CRT congruence and adjoins high
 The executable independent [verify_all_moduli.py](verify_all_moduli.py) constructs exact modular witnesses for **1,302** deterministic finite cases (every `1≤M≤1000`, plus 300 seed-fixed random moduli below 10 million and two large products). It passed locally with Python, including independent checks after each lifting stage. These checks do not constitute a proof, and a uniformly quantified Lean proof for arbitrary M remains **unwritten**. The previously proved source stopping iff is authentically verified; the new full prime-lifting derivation uses standard number theory rather than a Lean kernel check.
 
 A pure two-counter congruence quotient with any fixed positive modulus is thus intrinsically contaminated with synthetic immediate halts at the blank section's initial residue class. This does not say a **real blank run** halts. Other information such as exact inverse ancestry, source constraints, and nonperiodic invariants may still distinguish authentic reachability.
+
+
+## 2026-11-05 05:23 UTC: complete original-source CI SUCCESS for both narrow Lean modules
+
+**Authoritative source audit:** manual [GitHub Actions run 41970586436](https://github.com/FlareZ123/bb6/actions/runs/41970586436), job `127057644214`, head SHA `48c998da006f430e706e79f7d9c5a5a236621b49`, **SUCCESS** at 05:22:37 UTC. Lean 4.36.0-rc2 compiled the 26 unchanged Machine C source and gateway dependencies and the new `CDyadicImmediateHalts.lean` and `CDyadicMod6.lean` from the repository. The printed Lean kernel axiom lists for `every_odd_dyadic_class_has_immediate_halt`, `blank_class_has_synthetic_halt`, and `blank_mod_three_times_power_two_synthetic_stop` are **exactly** `[propext, Classical.choice, Quot.sound]` with no `sorryAx`. The earlier local theorem-signature-stub checks are superseded for these three theorems.
+
+This authentication concerns the actual, unchanged **repository Machine C section source**. It does **not** kernel-check the later, stronger mathematical all-positive-modulus prime-lifting argument in [AllFiniteModuliBarrier.md](AllFiniteModuliBarrier.md). The all-M theorem is a fully worked **paper proof** with a separate 1,302-case reproducible exact-integer witness check. Do not conflate the two evidence grades.
+
+The redundant earlier first-module-only queued CI run `41970212167` was cancelled before starting to conserve resources; the combined source run is the definitive evidence.
