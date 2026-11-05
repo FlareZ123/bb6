@@ -1,0 +1,103 @@
+name: Agent 9 P1 five new 10-bit original-source critical cylinders
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[P1K10FIVE]')
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [A, B, C, D, E]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate explicit parametric Lean 10-bit cylinders
+        run: |
+          set -euo pipefail
+          python3 im-results/agent9-p1-k10-budget12/generateK10.py
+      - name: Compile completely unchanged original P1 and shadow sources
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            echo "ORIGINAL AGENT1 $m"
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            echo "ORIGINAL AGENT47 $m"
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass; do
+            echo "ORIGINAL AGENT1-QUARTER $m"
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "ORIGINAL AGENT50 $m"
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
+            echo "ORIGINAL AGENT45 $m"
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          for m in QuarterGap ShortConeGap ShortConeBridge MediumConeGap MediumConeReach; do
+            echo "ORIGINAL AGENT1-QUARTER $m"
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders ShadowQ29Finite ShadowQ29No256 ShadowQ29Graph ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant ShadowNoExceptionalGeneral; do
+            echo "ORIGINAL AGENT9 $m"
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+      - name: Compile arbitrary-budget genuine-source blocked cone
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
+          lean -o im-results/agent9-param-budget/GenericBudgetBlocked.olean im-results/agent9-param-budget/GenericBudgetBlocked.lean | tee /tmp/agent9-budget-blocked.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-blocked.log; then exit 1; fi
+          grep -F 'blocked_of_uniform_cone_exit_budget' /tmp/agent9-budget-blocked.log
+      - name: Compile arbitrary-budget genuine-source finite shadow lift
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
+          lean -o im-results/agent9-param-budget/ShadowFiniteBudget.olean im-results/agent9-param-budget/ShadowFiniteBudget.lean | tee /tmp/agent9-budget-shadow.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-shadow.log; then exit 1; fi
+          grep -F 'finite_shadow_invariant_lifts_full_cone_budget' /tmp/agent9-budget-shadow.log
+      - name: Compile original-source arbitrary 2-adic inverse-depth bound
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget"
+          lean -o im-results/agent9-param-budget/ShadowDepthBudgetArithmetic.olean im-results/agent9-param-budget/ShadowDepthBudgetArithmetic.lean | tee /tmp/agent9-depth-k.log
+          lean -o im-results/agent9-param-budget/ShadowDepthBudgetSource.olean im-results/agent9-param-budget/ShadowDepthBudgetSource.lean | tee -a /tmp/agent9-depth-k.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-depth-k.log; then exit 1; fi
+          grep -F 'source_depth_le_K' /tmp/agent9-depth-k.log
+      - name: Compile source-complete ten-bit budget-12 generic critical theorem
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12"
+          lean -o im-results/agent8-p1-shadow-cylinder/CylinderPower.olean im-results/agent8-p1-shadow-cylinder/CylinderPower.lean | tee /tmp/agent9-k10-12.log
+          lean -o im-results/agent9-param-budget/ShadowFiniteBudgetK.olean im-results/agent9-param-budget/ShadowFiniteBudgetK.lean | tee -a /tmp/agent9-k10-12.log
+          lean -o im-results/agent9-p1-k10-budget12/GenericShadow12K.olean im-results/agent9-p1-k10-budget12/GenericShadow12K.lean | tee -a /tmp/agent9-k10-12.log
+          lean -o im-results/agent9-p1-k10-budget12/GenericCritical12K.olean im-results/agent9-p1-k10-budget12/GenericCritical12K.lean | tee -a /tmp/agent9-k10-12.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-k10-12.log; then exit 1; fi
+          grep -F "critical_unreachable_of_shadow12K' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-k10-12.log
+      - name: Certify a new parametric original P1 critical residue class
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-k10-budget12/generated"
+          m="${{ matrix.shard }}"
+          lean -o "im-results/agent9-p1-k10-budget12/generated/Batch${m}Arithmetic.olean" "im-results/agent9-p1-k10-budget12/generated/Batch${m}Arithmetic.lean" | tee /tmp/agent9-k10-five.log
+          lean -o "im-results/agent9-p1-k10-budget12/generated/Batch${m}Final.olean" "im-results/agent9-p1-k10-budget12/generated/Batch${m}Final.lean" | tee -a /tmp/agent9-k10-five.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-k10-five.log; then exit 1; fi
+          grep -E "q[0-9]+_critical_unreachable' depends on axioms: \[propext, Classical.choice, Quot.sound\]" /tmp/agent9-k10-five.log
