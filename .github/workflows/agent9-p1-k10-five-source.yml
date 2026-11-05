@@ -1,15 +1,12 @@
 name: Agent 9 P1 five new 10-bit original-source critical cylinders
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[P1K10FIVE]')
     strategy:
       fail-fast: false
       matrix:
