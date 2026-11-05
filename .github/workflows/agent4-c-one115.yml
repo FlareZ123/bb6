@@ -26,6 +26,7 @@ jobs:
           cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/agent4-c-one115/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent4-c-one115/
           cp im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean /tmp/agent4-c-one115/
+          cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/agent4-c-one115/
           cp im-results/agent4-c-dyadic-barrier/One115Source.lean /tmp/agent4-c-one115/
           cd /tmp/agent4-c-one115
           export LEAN_PATH="."
@@ -39,6 +40,7 @@ jobs:
           for f in OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal; do
             lean -o "$f.olean" "$f.lean"
           done
+          lean -o SectionAffineInverse.olean SectionAffineInverse.lean
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do
             lean -o "$f.olean" "$f.lean"
           done
