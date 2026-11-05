@@ -3,7 +3,7 @@ import ShadowQ29DepthSource
 import OddConeMass
 
 namespace BB6.Agent9Budget
-open BB6.Agent1Quarter
+open BB6.Agent1Quarter BB6.Shadow
 
 /-- A budget-parametric finite closed shadow invariant
     automatically traps the entire original P1 odd inverse cone,
