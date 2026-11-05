@@ -1,0 +1,26 @@
+name: Agent13 finite P1 shadow cone to infinite cylinders (Lean)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  finite-to-infinite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact abstract shadow stability and finite-family amplification
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent13-p1-affine-amplification"
+          : > /tmp/agent13-affine-log
+          for m in AffineStability AffineGraphTheorem FiniteToCylinder; do
+            lean -o "im-results/agent13-p1-affine-amplification/$m.olean" "im-results/agent13-p1-affine-amplification/$m.lean" | tee -a /tmp/agent13-affine-log
+          done
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-affine-log; then exit 1; fi
+          grep -F 'finite_base_amplifies' /tmp/agent13-affine-log
