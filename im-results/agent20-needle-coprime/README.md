@@ -1,5 +1,11 @@
 # Space Needle: all coprime-15 exponent residue classes have legal immediate predecessors
 
+## 2026-11-05: infinite synthetic terminal three-feeder family and general inverse fan-in
+
+- [TerminalTriple.md](TerminalTriple.md) links the locally kernel-verified Lean modular-period proof: every `K=1756236+1855188*t` has at least three **distinct** legal one-step incoming states with valuations `0,3,20`. Authentic original-source compilation of the transport modules remains pending in [manual CI](../../.github/workflows/agent20-needle-triple.yml); it does not establish blank-start reachability.
+- [UnboundedFanin.md](UnboundedFanin.md) gives a paper proof, using Euler and CRT, that for every `r` the arbitrary-target synthetic inverse map has a positive-density progression of destinations with at least `r` immediate predecessors. The [ten-parent witness](NeedleTenParentWitness.lean) is separately Lean-kernel checked. This general theorem is not yet fully Lean-formalized and external novelty remains unverified.
+- [NeedleRootDecisionCore.lean](NeedleRootDecisionCore.lean) is a kernel-checked generic exact fixed-target root-reachability Boolean checker under finite exact parents and strict growth; [source specialization](NeedleRootDecisionSource.lean) is pending authentic CI. Neither decides the unbounded terminal existential or BB(6).
+
 **Agent 20, 2026-11-03. Status: locally Lean-kernel verified arithmetic theorem; original upstream source-import compilation pending. This is intermediate evidence, not a rooted outcome.**
 
 ## Exact theorem and arithmetic model
