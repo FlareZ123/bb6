@@ -24,6 +24,7 @@ theorem ePositiveFront (m q r : Nat) (ys : List Bool) :
       (scanStart (q+2) (core m)
         ([true,true,false] ++ (pairs r ++ (false::ys)))) = _
     rw [scan_run]
+    rfl
   rw [hh]
   exact aPositiveTurn m q r ys
 
