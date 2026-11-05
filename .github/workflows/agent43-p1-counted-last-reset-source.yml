@@ -1,0 +1,38 @@
+name: Agent43 P1 counted last-reset source check (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact original P1 sources and Agent28 CountCone
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          lean -o "$P1/MassInverse.olean" "$P1/MassInverse.lean"
+          lean -o "$P1/OddConeMass.olean" "$P1/OddConeMass.lean"
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          lean -o "$P1/InverseIff.olean" "$P1/InverseIff.lean"
+          lean -o "$P1/UpperTail.olean" "$P1/UpperTail.lean"
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          lean "$AG43/CountedLastResetDraft.lean"
