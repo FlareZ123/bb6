@@ -157,3 +157,8 @@ BB6.CReachBridge.RunHalts ↔
 ```
 
 This is **lossless** with respect to real original Machine C halting: every authentic halting computation must encounter one of the surviving classes, and every actual blank-orbit encounter of a residual candidate halts by the upstream exact bridge. It does not establish whether any residual candidate is encountered. This is a concrete improvement to the complete two-family stopping decision frontier, not a numerical running-time bound.
+
+
+## 2026-11-05: six-residue exact source normalizer and lossless six-depth halting sieve
+
+The subsequent [source-verified research synthesis](./SIX-SOURCE-2026-11-05.md) gives a general even-right unique-predecessor theorem across six sum residues modulo eight, a terminating reachability-preserving normalization algorithm with sound exclusion filter, four two-parameter forbidden section cylinders, and three additional independently certified infinite low stopping-depth classes. It integrates all six disjoint low-depth exclusions into an exact original-blank Machine C `RunHalts` biconditional, preserving the full high stopping family. Full source-level Lean verification: [CI 42078072846](https://github.com/FlareZ123/bb6/actions/runs/42078072846). These are intermediate structural results; Machine C nonhalting and BB(6) remain open.
