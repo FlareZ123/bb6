@@ -159,3 +159,5 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedEven16TwentyTwo,MixedHighOneMod4Seven}.lean .
           lean -o MixedEven16TwentyTwo.olean MixedEven16TwentyTwo.lean
           lean -o MixedHighOneMod4Seven.olean MixedHighOneMod4Seven.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/JointSixHighResidual.lean .
+          lean -o JointSixHighResidual.olean JointSixHighResidual.lean
