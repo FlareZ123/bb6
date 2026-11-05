@@ -14,7 +14,6 @@ theorem blank_no_sumseven_new (u v : Nat) (hv : 1≤v) :
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at hr
-      omega
   | succ t =>
       cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
       | none => simp [BB6.Agent8Section.run,hp] at hr
@@ -36,7 +35,6 @@ theorem blank_no_sumseven_new (u v : Nat) (hv : 1≤v) :
             cases t with
             | zero =>
                 simp [BB6.Agent8Section.run] at hp
-                omega
             | succ t' =>
                 have hi := BB6.Agent3.blank_section_odd_image t'
                   (8*u+64*v+9) (12*u+224*v+37) hp (by omega) (by omega)
