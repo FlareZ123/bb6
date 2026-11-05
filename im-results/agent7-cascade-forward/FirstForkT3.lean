@@ -63,5 +63,31 @@ private theorem tight_second (n:Nat) (hn:10≤n) :
   rw [he]
   exact h (n-10)
 
+private theorem fatal_div81_bad (n:Nat) (hn:10≤n)
+    (hres:n%162=5 ∨ n%162=130) :
+    (2*fatal n+5)%81=0 := by
+  have hf:=fatal_close n (by omega)
+  have hp:=pow_mod_fiftyfour n
+  rcases hres with h|h
+  · have hm:n%54=5:=by omega
+    have hm81:2^n%81=2^5%81:=by rw [hp,hm]
+    omega
+  · have hm:n%54=22:=by omega
+    have hm81:2^n%81=2^22%81:=by rw [hp,hm]
+    omega
+
+private theorem second_div81_bad (n:Nat) (hn:10≤n)
+    (hres:n%162=83 ∨ n%162=124) :
+    (2*secondPred n+5)%81=0 := by
+  have hf:=second_close n hn
+  have hp:=pow_mod_fiftyfour n
+  rcases hres with h|h
+  · have hm:n%54=29:=by omega
+    have hm81:2^n%81=2^29%81:=by rw [hp,hm]
+    omega
+  · have hm:n%54=16:=by omega
+    have hm81:2^n%81=2^16%81:=by rw [hp,hm]
+    omega
+
 #print axioms near_top_has_tthree
 end CascadeFirstFork
