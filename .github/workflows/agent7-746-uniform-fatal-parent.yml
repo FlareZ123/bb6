@@ -67,6 +67,7 @@ jobs:
           lean -o "$f/FatalValuationPower.olean" "$f/FatalValuationPower.lean"
           lean -o "$f/FatalValuationUnbounded.olean" "$f/FatalValuationUnbounded.lean"
           lean -o "$f/FatalValuationBeyond.olean" "$f/FatalValuationBeyond.lean"
+          lean -o "$f/FatalValuationExact.olean" "$f/FatalValuationExact.lean"
           lean -o "$b/FourEven.olean" "$b/FourEven.lean"
           lean -o "$b/FourthBranch.olean" "$b/FourthBranch.lean"
           lean -o "$b/FourthExactTwo.olean" "$b/FourthExactTwo.lean"
