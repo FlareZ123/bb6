@@ -61,6 +61,82 @@ theorem lifted_exception_output (k m q p : Nat) :
   rw [hp]
   exact h
 
+/-- Exponential offset conversion used at the irregular exit. -/
+private theorem eight_square (k : Nat) : 8^k*8^k=64^k := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    calc
+      8^(k+1)*8^(k+1) = (8^k*8^k)*(8*8) := by
+        simp only [Nat.pow_succ]
+        ac_rfl
+      _ = 64^(k+1) := by rw [ih]; simp only [Nat.pow_succ]
+
+private theorem cost_join (D U L Q m k p : Nat) :
+    (D+L*(3*p)+Q*(3*p)*(3*p))+
+    (U+(24*m+49)*(8^k*p)+12*(8^k*p)*(8^k*p)) =
+    (D+U)+(3*L+(24*m+49)*8^k)*p+
+      (9*Q+12*64^k)*p*p := by
+  have h1 : L*(3*p)=(3*L)*p := by ac_rfl
+  have h2 : (24*m+49)*(8^k*p)=((24*m+49)*8^k)*p := by ac_rfl
+  have h3 : Q*(3*p)*(3*p)=(9*Q)*p*p := by
+    calc
+      Q*(3*p)*(3*p) = (3*3*Q)*p*p := by ac_rfl
+      _ = (9*Q)*p*p := by rfl
+  have h4 : 12*(8^k*p)*(8^k*p)=(12*64^k)*p*p := by
+    calc
+      12*(8^k*p)*(8^k*p) = (12*(8^k*8^k))*p*p := by ac_rfl
+      _ = (12*64^k)*p*p := by rw [eight_square]
+  rw [h1,h2,h3,h4]
+  simp only [Nat.add_mul, Nat.mul_assoc]
+  omega
+
+/-- Exact original six-state runtime after k regular source returns plus one
+    exceptional E return. The universal quadratic curvature remains
+    quadCoeff (k+1), even though DRegular.next itself is undefined at E. -/
+theorem lifted_exception_timed (s : DRegular.L) (k m q p : Nat)
+    (hc : DRegular.Canon s)
+    (hr : DRegular.run k s = some ⟨3*m+4,q+1,1⟩) :
+    ObsEq
+      (run
+        (DRegular.accumulated k s + BB6.Agent32EAll.duration m q +
+          (3*BB6.DRegularTimedShift.linearCoeff k s+(24*m+49)*8^k)*p +
+          BB6.DRegularTimedShift.quadCoeff (k+1)*p*p)
+        (DRegularSource.sourceSection (shiftNat s (3^(k+1)*p))))
+      (BB6.Agent32EAll.output (m+8^k*p) q []) := by
+  have hsource := lifted_exception_source s k m q p hc hr
+  have hacc := BB6.DRegularTimedShift.accumulated_shift k s
+    (⟨3*m+4,q+1,1⟩ : DRegular.L) (3*p) hc hr
+  have hpow : 3^k*(3*p)=3^(k+1)*p := by
+    simp only [Nat.pow_succ]
+    ac_rfl
+  rw [hpow] at hacc
+  have he := BB6.EExceptionalShift.duration_shift m q (8^k*p)
+  have htime :
+      DRegular.accumulated k (shiftNat s (3^(k+1)*p)) +
+        BB6.Agent32EAll.duration (m+8^k*p) q =
+      DRegular.accumulated k s + BB6.Agent32EAll.duration m q +
+        (3*BB6.DRegularTimedShift.linearCoeff k s+(24*m+49)*8^k)*p +
+        BB6.DRegularTimedShift.quadCoeff (k+1)*p*p := by
+    calc
+      _ = (DRegular.accumulated k s +
+              BB6.DRegularTimedShift.linearCoeff k s*(3*p) +
+              BB6.DRegularTimedShift.quadCoeff k*(3*p)*(3*p)) +
+          (BB6.Agent32EAll.duration m q +
+              (24*m+49)*(8^k*p) +12*(8^k*p)*(8^k*p)) := by rw [hacc, he]
+      _ = (DRegular.accumulated k s+BB6.Agent32EAll.duration m q) +
+            (3*BB6.DRegularTimedShift.linearCoeff k s+(24*m+49)*8^k)*p +
+            (9*BB6.DRegularTimedShift.quadCoeff k+12*64^k)*p*p := by
+              exact cost_join (DRegular.accumulated k s)
+                (BB6.Agent32EAll.duration m q)
+                (BB6.DRegularTimedShift.linearCoeff k s)
+                (BB6.DRegularTimedShift.quadCoeff k) m k p
+      _ = _ := by rw [BB6.DRegularTimedShift.quad_right]
+  rw [htime] at hsource
+  exact hsource
+
+#print axioms lifted_exception_timed
+
 #print axioms lifted_exception_source
 #print axioms lifted_exception_output
 end BB6.EExceptionalAppend
