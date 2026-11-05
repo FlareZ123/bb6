@@ -55,5 +55,46 @@ theorem full_E_from_noF_turn_first (k q N : Nat)
         (4*k) q N front out ys hTurn hTurnNoF)
         (t-(12*k*k+41*k+33)) hrest hp
 
+/-- More general source compiler allowing marked interior F visits. -/
+theorem full_E_from_noPhysical_turn_first (k q N : Nat)
+    (front out ys : List Bool)
+    (hTurn : ∀ L : List Bool,
+      run N (⟨L,false,front++ys,0⟩ : Cfg) =
+        ⟨L,true,out++ys,2⟩)
+    (hTurnNoPhysical : ∀ L : List Bool,
+      NoPhysical
+        (⟨L,false,front++ys,0⟩ : Cfg) N) :
+    let elapsed := 12*k*k+49*k+N+48+4*q
+    let start := init (List.replicate (3*k+2) true ++
+      false :: (pairs q ++ (front ++ ys)))
+    run elapsed start =
+      ⟨[],false,List.replicate (8*k+3) true ++
+        outPacket q out ys,5⟩ ∧
+    ∀ t, 0<t → t<elapsed →
+      ¬ Physical (run t start) := by
+  dsimp
+  constructor
+  · exact full_E_from_turn k q N front out ys hTurn
+  · intro t hpos hlt hp
+    by_cases hpre : t<12*k*k+41*k+33
+    · exact (BB6.CryptidPrefixFirstReturn.prefixE_positive_noF
+        k (pairs q ++ (front++ys)) t hpos hpre) hp.1
+    · have hprefix : run (12*k*k+41*k+33)
+          (init (List.replicate (3*k+2) true ++
+            false :: (pairs q ++ (front++ys)))) =
+        eStart (4*k) q (front++ys) := by
+        rw [prefix_E]
+        rfl
+      have ht : t=(12*k*k+41*k+33)+(t-(12*k*k+41*k+33)) := by
+        omega
+      have hrest : t-(12*k*k+41*k+33) <
+          2*(4*k)+4*q+N+15 := by omega
+      rw [ht,run_add,hprefix] at hp
+      exact (boundary_first_from_local_noPhysical_turn
+        (4*k) q N front out ys hTurn hTurnNoPhysical)
+        (t-(12*k*k+41*k+33)) hrest hp
+
+#print axioms full_E_from_noPhysical_turn_first
+
 #print axioms full_E_from_noF_turn_first
 end BB6.Agent2EGenericFullFirst
