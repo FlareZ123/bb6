@@ -30,10 +30,10 @@ jobs:
           for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic; do
             lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
           done
-          for m in ShadowDepthSource ShadowSourceTransport ShadowParitySource; do
+          for m in ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep; do
             lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
           done
-          lean im-results/agent9-p1-shadow/ShadowSourceStep.lean | tee /tmp/agent9-axioms.log
+          lean im-results/agent9-p1-shadow/ShadowConeLift.lean | tee /tmp/agent9-axioms.log
           if grep -Fq "sorryAx" /tmp/agent9-axioms.log; then
             echo "Rejected: sorryAx in resulting theorem"
             exit 1
