@@ -1,4 +1,4 @@
-name: Agent50 P1 two-reset arithmetic (manual source audit)
+name: Agent50 P1 arbitrary-reset arithmetic (manual original-source audit)
 on:
   workflow_dispatch:
 permissions:
@@ -6,7 +6,7 @@ permissions:
 jobs:
   source-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -14,15 +14,22 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile unchanged Agent28 source and Agent50 sharp budget
+      - name: Validate and extract the exact source-normal-form proofs
         run: |
           set -e
-          export LEAN_PATH="im-results/agent28-p1-word-automaton:im-results/agent50-p1-two-reset"
+          target="im-results/agent50-p1-two-reset"
+          base64 -d "$target/three-reset-source.tar.xz.b64" > /tmp/agent50-three-reset-source.tar.xz
+          echo "be550c5b326d27c459197cf81858fd8ecad95abe657d0a9f269c65bbbb12b97f  /tmp/agent50-three-reset-source.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent50-three-reset-source.tar.xz -C "$target"
+      - name: Compile unchanged Agent28 predecessors and all Agent50 theorems
+        run: |
+          set -e
           root="im-results/agent28-p1-word-automaton"
           target="im-results/agent50-p1-two-reset"
-          lean -o "$root/OneResetTwoAdic.olean" "$root/OneResetTwoAdic.lean"
-          lean -o "$root/DefectTransport.olean" "$root/DefectTransport.lean"
-          lean -o "$target/TwoResetSharp.olean" "$target/TwoResetSharp.lean"
-          lean -o "$target/TwoResetDefectSharp.olean" "$target/TwoResetDefectSharp.lean"
-          lean -o "$target/UniformDefectStep.olean" "$target/UniformDefectStep.lean"
-          lean "$target/UniformResetChain.lean"
+          export LEAN_PATH="$root:$target"
+          for m in OddWordCost OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget DefectTransport; do
+            lean -o "$root/$m.olean" "$root/$m.lean"
+          done
+          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations; do
+            lean -o "$target/$m.olean" "$target/$m.lean"
+          done
