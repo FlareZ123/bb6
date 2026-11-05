@@ -62,7 +62,6 @@ theorem high_m0_j6_mod32_unreachable (q time : Nat) :
   cases n2 with
   | zero =>
       simp [BB6.Agent8Section.run] at h2
-      omega
   | succ n =>
       have hi := BB6.Agent3.blank_section_odd_image n
         (168*q+36) (44*q+9) h2 (by omega) (by omega)
