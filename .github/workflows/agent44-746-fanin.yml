@@ -46,4 +46,8 @@ jobs:
           for m in BandTriple OddGroup ExactOdd ManyParents UnboundedFatal; do
             lean -o "$c/$m.olean" "$c/$m.lean"
           done
+          for m in LogBands LogStep Telescope GeomLog GeomBand ExactCountLean ParameterCountBridge; do
+            lean -o "$c/$m.olean" "$c/$m.lean"
+          done
+          echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
           echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
