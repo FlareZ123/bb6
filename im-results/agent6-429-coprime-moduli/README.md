@@ -64,6 +64,14 @@ Thus `W` is a natural number, `W≡w (mod m)`, and
 
 The established [Agent 5 exact first-branch criterion](../agent5-429-rank/BB429Burst.lean), theorem `BB429Burst.burst_gateway_iff`, converts this identity into an actual finite first-branch run ending at `b+1=2a`. Agent 4's `BB429DyadicStarts.first_prefix_is_source` transfers that run to the **complete** `BB429.next/run` map; Agent 5's `BB429.next_none_iff_halt_line` proves termination at the endpoint. These final steps use the source semantics rather than an unverified arithmetic surrogate.
 
+## Additional Lean-checked obstruction at modulus 27 (outside coprime-to-3 range)
+
+The separate source [`BB429Full27.lean`](BB429Full27.lean) proves, for **every** `r<27`, the existence of a concrete synthetic `(0,w)` with `w%27=r` that runs to an actual `BB429.next=none` terminal. Its 27 finite certificates use only 27 exact `BB429.run` reductions, with the longest sample 190 macro steps and largest initial `w=1346`. Thus any forward-invariant, halt-free predicate that includes **some** state with first coordinate `0` cannot be saturated under `w%27` for that fixed exact first coordinate. In particular, no such periodic invariant can include the real blank seed `(0,0)`.
+
+This gives a finite, explicit exclusion of a candidate nonhalting method at `m=27`, which is **divisible by three** and is *not* covered by the new general coprime-to-three induction. The modulo-27 theorem also gives examples for moduli `3` and `9` by reduction, without a claim for all higher powers of three.
+
+**Proof status:** All 27 cases and the resulting universal predicate obstruction compiled locally with Lean **4.36.0-rc2**, importing an exact independently transcribed copy of the checked-in `BB429Rank.next/run` definition. Local `#print axioms` of both final theorems reports `[propext, Quot.sound]`; neither uses `sorry` nor `native_decide`. The checked-in Lean source imports the actual unchanged `BB429Rank`; an end-to-end CI compilation against that original repository module is still outstanding. No pinned external raw Cryptids source was imported in this test. The 27 starts are synthetic and do not give a genuine blank-root halt or a BB(6) bound.
+
 ## Why the factor 3 matters
 
 For `u=0`, every direct first-burst halting seed of the displayed exponential form satisfies `W≡−13≡2 (mod 3)`. Hence this particular construction cannot establish surjectivity for moduli divisible by three. This is a limitation of this *first-burst construction*, not a claim that all other residue classes are nonhalting. For example, an independent exact branch simulation shows synthetic `(0,60)` reaches the halting line `(93,185)` after 58 macro steps, although `60≡0 (mod 3)`.
