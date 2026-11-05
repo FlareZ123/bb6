@@ -72,11 +72,11 @@ theorem even4_twenty_two_sharp (x y : Nat)
     have ht2 : BB6.Agent8Section.run secNext ((time+2)+1) (some start)=
         some (x,y) := by
       simpa only [show (time+2)+1=time+3 by omega] using ht
-    have h1 := one_exact_parent_any_start x y a k huni1 (time+2) start ht2
+    have h1 := one_exact_parent_any_start_broad x y a k huni1 (time+2) start ht2
     have ht1 : BB6.Agent8Section.run secNext ((time+1)+1) (some start)=
         some (a,k) := by
       simpa only [show (time+1)+1=time+2 by omega] using h1
-    have h2 := one_exact_parent_any_start a k b c huni2 (time+1) start ht1
+    have h2 := one_exact_parent_any_start_broad a k b c huni2 (time+1) start ht1
     change (BB6.Agent8Section.run secNext time (some start)).bind secNext =
       some (b,c) at h2
     cases hp : BB6.Agent8Section.run secNext time (some start) with
@@ -87,5 +87,5 @@ theorem even4_twenty_two_sharp (x y : Nat)
         have hi := section_odd_image u v b c he hbad.1 hbad.2.1
         omega
 
-#print axioms even16_twenty_two_sharp
+#print axioms even4_twenty_two_sharp
 end BB6.Agent3
