@@ -86,3 +86,17 @@ M(8k+5,0,2q+6; (01)^(r+2)0Y).
 **Novelty correction:** This equation is *literally equivalent* to Agent37's earlier `im-results/agent37-root-language-pilot/EAlternatingTriple.lean` theorem `full_E_alternating_triple`: its input `I_(3k+4)(0(10)^q 110(10)^r111Y)` and output `I_(8k+5)(0 1^(2q+6)(01)^(r+2)0Y)` represent the same physical configurations with the identical time. Therefore `EAltPacket` is an independent source-checked derivation and packet-calculus integration, with **no distinct new halting exclusion, root decision, or BB(6) bound**. Keep in `im-results/`. For this exact family, reuse Agent37's prior work instead of counting a new frontier theorem.
 
 An unbounded arbitrary-local-turn E compiler may assist other suffix-sensitive packet exits, but source first-event minimality and genuine blank-orbit applicability remain open.
+
+## 2026-11-05: verified marked-F return compiler and two-index 110(10)^r0 gate
+
+The original-source `EAltBoundaryFirst.boundary_first_from_local_noF_turn` and `EGenericFullFirst.full_E_from_noF_turn_first` have succeeded in manual Lean CI [42104742759](https://github.com/FlareZ123/bb6/actions/runs/42104742759). They turn any left/suffix-preserving, F-free A0->C1 local turn into a complete exact-first-physical E branch.
+
+Stronger lemmas `boundary_first_from_local_noPhysical_turn` and `full_E_from_noPhysical_turn_first` passed the unchanged-source Lean CI [42106984785](https://github.com/FlareZ123/bb6/actions/runs/42106984785). They allow interior F/0 visits with a marked, physically nonblank left side. Standard Lean axioms only; no `sorryAx`.
+
+The new two-index local turn `AIterDoubleZero.a_double_zero_turn` passed [CI 42106130346](https://github.com/FlareZ123/bb6/actions/runs/42106130346): for every v,r,L,Y, A0 on `(10)^(v+2)110(10)^r0Y` reaches C1 on `1^(2v+1)0 1^(2r+6)Y` in `4v+4r+20` original transitions. `AIterDoubleZeroFirst.a_double_zero_turn_noPhysical` passed [CI 42106756345](https://github.com/FlareZ123/bb6/actions/runs/42106756345).
+
+Composing this with the stronger first-event compiler, [CI 42106984785](https://github.com/FlareZ123/bb6/actions/runs/42106984785) certified `EIterDoubleZeroFullFirst.full_E_double_zero_first_physical` for every k,q,v,r,Y: canonical input `I_(3k+4)(0(10)^(q+v+2)110(10)^r0Y)` first physically blank-left F0 returns in `12k²+49k+4(q+v+2)+4r+60` transitions to `I_(8k+5)(0 1^(2(q+v+2)+2)0 1^(2r+6)Y)`. `EIterDoubleZeroPacket.lean` is a separate ongoing Lean normalization of the canonical words, not a requirement for the already certified raw-list theorem.
+
+Prior work: r=0 overlaps the already formalized E-1100 branch. Agent37 had independently conjectured this general `110(10)^r0` A-turn in an earlier incarnation and documented a locally checked mock (see agents/agent37/memory.md); this contribution is original-source certification with strict physical minimality, not priority to the conjecture. Agent37 was informed through communications/agent37/20261105T2053Z_agent2-110-ten-r-zero-certified.md.
+
+No result claims authentic blank-root reachability, a BB6 bound, or a halt decision. Preserve these synthetic first-return tools in `im-results/`.
