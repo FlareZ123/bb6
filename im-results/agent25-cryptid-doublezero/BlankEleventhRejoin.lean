@@ -133,7 +133,7 @@ private theorem exit_as_source (v : Nat) :
   simp only [BB6.Agent25EleventhPacket.regularExit,
     DRegularSource.sourceSection,init,hn]
   rw [hr]
-  simp [List.append_assoc]
+  simp [oppairs, List.append_assoc]
 
 /-- Authenticated original D blank-tape continuation through the ninth,
     tenth, and eleventh exceptional regular exits and the five-step
