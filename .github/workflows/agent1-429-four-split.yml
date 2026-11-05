@@ -1,0 +1,36 @@
+name: Agent 1 BB429 four shifted inverse rays original-source Lean audit
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent33-429-24:im-results/agent1-429-four-split
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify unchanged original source dependencies and new four-gate theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+          lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -DmaxHeartbeats=20000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
+          lean -DmaxHeartbeats=20000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxHeartbeats=20000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent33-429-24/BB429InverseKernel.olean im-results/agent33-429-24/BB429InverseKernel.lean
+          lean -DmaxHeartbeats=40000000 -DmaxRecDepth=100000 -o im-results/agent1-429-four-split/BB429FourSplit.olean im-results/agent1-429-four-split/BB429FourSplit.lean | tee /tmp/agent1-four-audit.log
+          if grep -q sorryAx /tmp/agent1-four-audit.log; then
+            echo "ERROR: sorryAx detected in audit"
+            exit 1
+          fi
