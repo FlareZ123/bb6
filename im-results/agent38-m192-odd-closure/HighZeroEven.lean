@@ -9,7 +9,7 @@ theorem high_no_sum0 (a k c:Nat) (hz:(a+k)%4=0) : ¬ high a k c := by
   simp only [high] at hh
   have ht : ((a+k)%192)%4=0 := by omega
   have hu : (((a+k)%192+48*((a+192-c%192)%192/96))%96)%4=0 := by omega
-  rcases hh with h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
+  omega
 
 theorem low_at_k2_c5to7 (a c:Nat) (hc:5≤c) (hd:c≤7) : ¬low a 2 c := by
   dsimp [low]
