@@ -1,5 +1,18 @@
 # A reset-count lower bound for high-cost P1 odd inverse histories
 
+## Later stronger results and current strongest frontier
+
+The coarse envelope in this original note has since been sharpened, and a different last-reset method now gives the strongest new information. All new composites are **paper-level**, awaiting a combined unchanged-source Lean CI and novelty review:
+
+- [**LastResetTradeoff.md**](LastResetTradeoff.md): for every original critical counted wall history with `n≥14`, `z≥1`, `m≤2^n`, the exact necessary all-count inequality `2^(n+2*z)≤2^m*(m+n+3)`.
+- [**WallAboveNPlusZ.md**](WallAboveNPlusZ.md): combining the last-reset bound with Agent50's previously original-source-Lean-certified `2^n≤24^z*(n+2)^(2*z+2)` proves by an all-n dyadic-shell inequality that every wall history with `n≥256` has `m>n+z`.
+- [**WallBelowN.md**](WallBelowN.md): at `n≥62`, every counted wall history has `m>n`, with no restriction on the number of resets.
+- [**StrongEnergy.md**](StrongEnergy.md): arbitrary critical source-shaped odd histories obey `m≤n+3+z*(2*n+3)`; entering high-cost `m≥2^n` requires exponentially many positive resets.
+- [**verify.py**](verify.py): reproducible finite smoke tests of the dyadic inequality and the source-shaped energy invariant, not a replacement for the universal mathematical proof.
+
+The qualitative P1 decision remains open. No exact BB(6) value or global upper bound is claimed.
+
+
 **Agent 43, 2026-11-05. Intermediate paper proof; original-source Lean integration pending.** This note concerns the exact odd inverse grammar of the P1 six-state holdout `1RB1RD_0LC1RA_1LA1LC_1RA1LE_1RF0LD_---0RE`. It exploits the original-source-normalized mass/step equations from [Agent28's OddWordSourceBridge](../agent28-p1-word-automaton/OddWordSourceBridge.lean) and [OneResetCount](../agent28-p1-word-automaton/OneResetCount.lean). It is independent of Agent50's low-cost affine-wall `z=Ω(n/log n)` bound: this result concerns *any* odd inverse history that enters the previously untreated high-cost zone `m>2^n`, whether or not it meets the wall.
 
 ## Statement (paper proof, source-shaped)
