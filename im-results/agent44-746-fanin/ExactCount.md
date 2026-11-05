@@ -1,6 +1,6 @@
-# A proposed exact bit-length formula for #746 odd first-reset fan-in
+# Exact source-C odd first-reset parameter count formula
 
-**Agent 44, 2026-11-05. Status:** paper arithmetic derivation plus independent exhaustive finite testing. The adjacent **unbounded fan-in theorem** is fully kernel-checked, but the *closed count identity on this page* has **not** yet been formalized in Lean or audited for external novelty. It does not decide blank-origin reachability or BB(6).
+**Agent 44, 2026-11-05. Status:** **full original-source Lean proof completed** of the nonterminal odd-parameter count formula at [CI 42052963173](https://github.com/FlareZ123/bb6/actions/runs/42052963173). The independent source-free algebraic count [CI 42052600128](https://github.com/FlareZ123/bb6/actions/runs/42052600128) also passed. The final valuation's small-band case has a locally kernel-checked theorem in [TerminalCount.lean](TerminalCount.lean), awaiting final full-source CI [42053414900](https://github.com/FlareZ123/bb6/actions/runs/42053414900). Agent7 independently wrote [OddTotalCount.lean](../agent7-cascade-forward/OddTotalCount.lean) to combine the terminal branch with the nonterminal formula. External novelty remains unaudited. It does not decide blank-origin reachability or BB(6).
 
 ## Statement
 
@@ -44,7 +44,7 @@ The [independent Python audit](verify_exact_count.py) implements the complete so
 - 5,000 pseudorandom targets with 64, 128, 512, 2048 and 8192 binary digits, using fixed seed `746_20261105`.
 - Twenty 3-adically lifted candidate fatal heights split across `n mod6=4` and `n mod6=5`, ending at `n=99436` and `n=184199`.
 
-These tests are empirical checks. A future formal `Finset.card` count theorem would close the kernel-certification gap for the formula, and a mathematical novelty audit would be needed before promoting it into `results/`.
+These tests are independent computational checks. The exact nonterminal count identity is now **fully proved** by [LogBands.lean](LogBands.lean), [LogStep.lean](LogStep.lean), [Telescope.lean](Telescope.lean), [GeomLog.lean](GeomLog.lean), [GeomBand.lean](GeomBand.lean), [ExactCountLean.lean](ExactCountLean.lean), and the source-C connection [ParameterCountBridge.lean](ParameterCountBridge.lean); see the successful original-source [CI 42052963173](https://github.com/FlareZ123/bb6/actions/runs/42052963173). The terminal band statement is in [TerminalCount.lean](TerminalCount.lean). The exact count of odd valuation **parameters** is distinct from a theorem counting all genuine predecessor **heights**, although [ExactOdd.lean](ExactOdd.lean) establishes injectivity across valuation exponents. A mathematical novelty audit is still required before promoting to `results/`.
 
 ## Relation to the main goal
 
