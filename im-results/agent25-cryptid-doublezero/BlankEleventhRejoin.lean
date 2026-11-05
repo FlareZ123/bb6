@@ -165,6 +165,36 @@ theorem blank_eleventh_reentry :
     (DRegularSource.sourceSection ⟨32768*v+5493,0,0⟩)
     hin hout
 
+
+/-- Explicit, computable 11th source-section witness. The earlier existential
+    statement hides the selected v, obstructing a subsequent DRegular check. -/
+theorem blank_eleventh_reentry_exact :
+    ObsEq
+      (run (eleventhExceptionTime +
+        BB6.Agent25EleventhPacket.fiveCost (t11/27)) blank)
+      (DRegularSource.sourceSection ⟨32768*(t11/27)+5493,0,0⟩) := by
+  let v := t11/27
+  have hv : t11 = 27*v+4 := by
+    dsimp [v]
+    have h := t11_mod27
+    omega
+  have hin : ObsEq (run eleventhExceptionTime blank)
+      (BB6.Agent25EleventhPacket.entry v) := by
+    rw [entry_as_source]
+    simpa only [hv] using eleventh_exception_original
+  have hout : ObsEq
+      (run (BB6.Agent25EleventhPacket.fiveCost v)
+        (BB6.Agent25EleventhPacket.entry v))
+      (DRegularSource.sourceSection ⟨32768*v+5493,0,0⟩) := by
+    rw [←exit_as_source]
+    exact BB6.Agent25EleventhPacket.five_return v
+  exact source_chain eleventhExceptionTime
+    (BB6.Agent25EleventhPacket.fiveCost v) blank
+    (BB6.Agent25EleventhPacket.entry v)
+    (DRegularSource.sourceSection ⟨32768*v+5493,0,0⟩)
+    hin hout
+
+#print axioms blank_eleventh_reentry_exact
 #print axioms terminal6090_exact
 #print axioms terminal41_exact
 #print axioms terminal1708_exact
