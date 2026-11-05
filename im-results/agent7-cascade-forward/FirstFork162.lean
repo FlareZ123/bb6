@@ -62,6 +62,25 @@ theorem second_extra_not_div81 (n:Nat) (hn:10≤n)
     have hm81:2^n%81=2^29%81:=by rw [hp,hm]
     omega
 
+/-- Four additional classes have exactly the two explicit parents. -/
+theorem fatal_extra_parents_exactly_two (q n:Nat) (hn:4≤n)
+    (hres:n%162=22 ∨ n%162=59 ∨ n%162=76 ∨ n%162=113) :
+    ResetParent q (fatal n) ↔
+      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+  have h18:n%18=4 ∨ n%18=5:=by omega
+  exact near_top_exact_two_at81 n (fatal n) (n+4) q hn (by omega)
+    (fatal_close n hn) (fatal_size n hn) (fatal_divnine n hn h18)
+    (fatal_extra_not_div81 n hn hres)
+
+theorem second_extra_parents_exactly_two (q n:Nat) (hn:10≤n)
+    (hres:n%162=16 ∨ n%162=29 ∨ n%162=70 ∨ n%162=137) :
+    ResetParent q (secondPred n) ↔
+      q=oddPre n (secondPred n) ∨ q=evenPre n (7*n+13) := by
+  have h18:n%18=11 ∨ n%18=16:=by omega
+  exact near_top_exact_two_at81 n (secondPred n) (7*n+13) q (by omega)
+    (by omega) (second_close n hn) (second_size n hn)
+    (second_divnine n hn h18) (second_extra_not_div81 n hn hres)
+
 #print axioms fatal_extra_not_div81
 #print axioms second_extra_not_div81
 end CascadeFirstFork
