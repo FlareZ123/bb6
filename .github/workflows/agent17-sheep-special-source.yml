@@ -73,3 +73,10 @@ jobs:
           /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SpecialSourceNoPower.lean SheepPowerSourceGeneric.lean
           lake env lean -o ".lake/build/lib/lean/SpecialSourceNoPower.olean" SpecialSourceNoPower.lean
           lake env lean SheepPowerSourceGeneric.lean
+
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/SheepEvenReachInverse.lean" SheepEvenReachInverse.lean
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEvenReachInverse.lean
+          lake env lean -o ".lake/build/lib/lean/SheepEvenReachInverse.olean" SheepEvenReachInverse.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-geometric-rays/SheepPowerRootGeneric.lean" SheepPowerRootGeneric.lean
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepPowerRootGeneric.lean
+          lake env lean SheepPowerRootGeneric.lean
