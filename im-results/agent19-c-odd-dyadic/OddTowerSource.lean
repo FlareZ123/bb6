@@ -1,4 +1,5 @@
 import OddTowerGeneric
+import OddTowerArithmetic
 import EvenRightSixOrbit
 import Lean.Elab.Tactic.Omega
 
@@ -37,8 +38,11 @@ theorem blank_no_high_three_mod32 (u v:Nat) (hv : 1≤v) :
   have hw4 : (4*v+3)%4=3 := by omega
   have hx : (8*u+3)%8=(if (1:Nat)%2=0 then 7 else 3) := by omega
   have hh:=blank_no_alternating_dyadic 1 (8*u+3) (4*v+3) hw hw4 hx
-  have hy : 2^(1+2)*(4*v+3)-2=32*v+22 := by norm_num; omega
-  simpa only [hy] using hh
+  have hy : 2^(1+2)*(4*v+3)-2=32*v+22 := by
+    change 8*(4*v+3)-2=32*v+22
+    omega
+  rw [hy] at hh
+  exact hh
 
 /-- High stopping family with j divisible by four. -/
 theorem blank_no_high_stop_depth_three (j m k:Nat)
@@ -46,36 +50,10 @@ theorem blank_no_high_stop_depth_three (j m k:Nat)
     (hpair : (j+3*m+3)%32=8)
     (heq : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     ¬ BB6.Agent3.CReach (2*j+3) k := by
-  have hpow : 32 ∣ 2^(2*m+2) := by
-    change 2^5 ∣ 2^(2*m+2)
-    exact Nat.pow_dvd_pow 2 (by omega)
-  have hprodmod : 32 ∣ 2^(2*m+2)*(j+3) := by
-    rcases hpow with ⟨z,hz⟩
-    refine ⟨z*(j+3),?_⟩
-    rw [hz]
-    ac_rfl
-  have hmod : (k+j+3*m+5)%32=0 := by
-    rw [heq]
-    exact Nat.mod_eq_zero_of_dvd hprodmod
-  have hkmod : (k+2)%32=24 := by omega
-  have hb256 : 256 ≤ 2^(2*m+2) := by
-    have hh := Nat.pow_le_pow_right (by decide : 0<2)
-      (show 8≤2*m+2 by omega)
-    norm_num at hh ⊢
-    exact hh
-  have hlin := BB6.Agent46.pow_two_linear m
-  have hblin : 2*m+4 ≤ 2^(2*m+2) := by omega
-  have hJ : 256*j ≤ 2^(2*m+2)*j :=
-    Nat.mul_le_mul_right j hb256
-  have hprod : 2^(2*m+2)*(j+3) = 2^(2*m+2)*j+3*2^(2*m+2) := by
-    simp [Nat.mul_add,Nat.mul_comm]
-  have hkbig : 54≤k := by omega
-  have huform : 2*j+3=8*(j/4)+3 := by omega
-  have hvform : k=32*((k+2)/32)+22 := by omega
-  have hv : 1≤(k+2)/32 := by omega
+  obtain ⟨u,v,hv,hu,hk⟩ := high_three_arithmetic j m k hm hj hpair heq
   intro hr
-  rw [huform,hvform] at hr
-  exact blank_no_high_three_mod32 (j/4) ((k+2)/32) hv hr
+  rw [hu,hk] at hr
+  exact blank_no_high_three_mod32 u v hv hr
 
 #print axioms blank_no_alternating_dyadic
 #print axioms blank_no_high_three_mod32
