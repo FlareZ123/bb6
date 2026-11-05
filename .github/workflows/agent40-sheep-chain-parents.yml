@@ -71,3 +71,14 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean GenericHighNoParent.lean
+          # Complete original-source-shaped 3-adic h cutoffs and exceptional
+          # inverse cases for the two chain families, with no unproved premises.
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/IndependentExceptionalGap.lean" IndependentExceptionalGap.lean
+          for name in SheepHBound HCases SpecialCases; do
+            cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/$name.lean" "$name.lean"
+          done
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            IndependentExceptionalGap.lean SheepHBound.lean HCases.lean SpecialCases.lean
+          for name in IndependentExceptionalGap SheepHBound HCases SpecialCases; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
