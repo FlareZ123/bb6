@@ -65,8 +65,8 @@ private theorem output_shape (k q v r : Nat) (ys : List Bool) :
         ←List.replicate_append_replicate]
     rfl
   rw [h8,h2]
-  simp [outPacket,BB6.Agent2AIterDoubleZero.out,
-    List.append_assoc,List.replicate_append_replicate]
+  simp [outPacket,BB6.Agent2AIterDoubleZero.out,List.append_assoc]
+  rw [← List.append_assoc,List.replicate_append_replicate]
 
 /-- Canonically normalized strict-first physical F/0 E return for every
     k,q,v,r and arbitrary tail Y. Input suffix starts
