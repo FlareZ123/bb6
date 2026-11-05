@@ -13,3 +13,11 @@ The finite parametric graph was independently checked in Python at r=0,1,2 and t
 ## Proof files and provenance
 
 Ten Lean modules `P130Arithmetic`, `P130Source`, `P130Depth`, `P130Power`, `P130Width`, `P130Exception`, `P130NoEven`, `P130Blocked`, `P130Root`, `P130Final` mirror the existing successful original-source Agent8 cylinder proof strategy, while replacing the base q29+1024r with q30+256r and the original affine graph with the independently computed 22-node graph. Adapted statements must be checked by the full workflow `.github/workflows/agent13-p1-482-source.yml`. This is a proof attempt until that succeeds. External novelty has not been assessed.
+
+## Final original-source verification, 2026-11-05 17:36 UTC
+
+**PASSED: [manual Lean CI 42076124797](https://github.com/FlareZ123/bb6/actions/runs/42076124797).** The successful run compiled unchanged original repository dependencies from Agent1, Agent47, Agent50, Agent45, Agent9 and Agent4, then all ten new P130 modules. The final theorem `critical_482_mod4096_unreachable` is now original-source kernel-certified; `#print axioms` in the source audit is limited to Lean's standard logical axioms. No assumed `Blocked` leaf, incomplete root connection, or custom source substitution is used in this CI. Note the result concerns the exact authenticated P1 accelerated `Reach` map; the upstream Google DeepMind source proves its connection to the original literal TM. The derivation is a genuine blank-root nonreachability proof for this critical sector, not a full P1 nonhalting theorem.
+
+The earlier provisional language in this file describes the state **before** the completed CI result and is superseded by this verification paragraph. The successful CI run used source commit `877f61db4f6331996998ff64f60965c300cdee0d`.
+
+The r=0,1,2,3,7,99,1000,100000 exact shadow graph regressions also agree with the 13+9 listed affine nodes, all with inverse cost at most nine and nonzero remainders modulo 256. The finite regressions are secondary evidence; the all-r conclusion is Lean-proved.
