@@ -61,7 +61,7 @@ Once (R) is proved, the entirely source-independent dyadic lemma in [WallAboveNP
 
 ### (4) The zero-reset subwall case is separately excluded at low cost
 
-For `z=0`, every original counted edge has depth zero. The unchanged source theorem `upper_tail_dyadic` gives `2^m F=F_0=7P−n−2`. Under the contradiction hypothesis `m≤n+z=n`, this implies `2^m | F_0` and `2^m | 7P`, hence `2^m | (n+2)` and `2^m≤n+2`. A subwall endpoint gives `F≤2(m+n+3)≤2(2n+3)`, so `7P−n−2≤2(n+2)(2n+3)`, false for every `n≥256` by a one-base exponential-vs-quadratic induction. Thus the proposed n≥256 half-plane result does not require treating z=0 as a positive-reset history.
+For `z=0`, every original counted edge has depth zero. The unchanged source theorem `upper_tail_dyadic` gives `2^m F=F_0=7P−n−2`. Under the contradiction hypothesis `m≤n+z=n`, this implies `2^m | F_0` and `2^m | 7P`, hence `2^m | (n+2)` and `2^m≤n+2`. A subwall endpoint gives `F≤2(m+n+3)≤2(2n+3)`, so `7P−n−2≤2(n+2)(2n+3)`, false already for every `n≥5` by a one-base exponential-vs-quadratic induction. Indeed, the contradiction is equivalent to `7·2^n>4n²+15n+14`; the base n=5 reads 224>189, and the polynomial q(n)=4n²+15n+14 satisfies `q(n+1)≤2q(n)` for every n≥1 because `2q(n)−q(n+1)=4n²+7n−5>0`. Thus the proposed n≥256 half-plane result does not require treating z=0 as a positive-reset history.
 
 ## Boundary / next action
 
