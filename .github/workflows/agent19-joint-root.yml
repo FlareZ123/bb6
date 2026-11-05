@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   source-section-mod4:
-    if: github.event_name != 'pull_request' || github.head_ref == 'audit-agent11-image-20261105'
+    if: github.event_name != 'pull_request' || (github.head_ref == 'audit-agent11-image-20261105' || github.head_ref == 'audit-agent11-low7-20261105')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -165,8 +165,9 @@ jobs:
           done
           lean -o JointAllRoot.olean JointAllRoot.lean
           # Agent11 exact missing-image source exclusions and combined iff.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/{LowOneModFour,HighSumTwo,HighInverseSumOne,JointImageSieve}.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/{LowOneModFour,LowInverseOne,HighSumTwo,HighInverseSumOne,JointImageSieve}.lean .
           lean -o LowOneModFour.olean LowOneModFour.lean
+          lean -o LowInverseOne.olean LowInverseOne.lean
           lean -o HighSumTwo.olean HighSumTwo.lean
           lean -o HighInverseSumOne.olean HighInverseSumOne.lean
           lean JointImageSieve.lean
