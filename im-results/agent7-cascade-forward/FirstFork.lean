@@ -146,6 +146,7 @@ theorem second_has_odd_parent (n:Nat) (hn:10≤n)
     (second_close n hn) (second_size n hn) (second_divnine n hn hres)
 
 #print axioms odd_parent_near_top
+
 #print axioms fatal_has_odd_parent
 #print axioms second_has_odd_parent
 end CascadeFirstFork
