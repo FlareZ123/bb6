@@ -1,5 +1,6 @@
 import ShadowAlgebra
 import OddConeMass
+import P1InverseLog
 
 namespace BB6.Shadow
 open BB6.Agent47P1
