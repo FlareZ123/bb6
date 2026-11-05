@@ -86,4 +86,11 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-hub-saturation/Hub.lean" Hub.lean
           cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-hub-saturation/HubSource.lean" HubSource.lean
           lake env lean -o ".lake/build/lib/lean/Hub.olean" Hub.lean
-          lake env lean HubSource.lean
+          lake env lean -o ".lake/build/lib/lean/HubSource.olean" HubSource.lean
+
+          # Agent 16: pure 2-adic zero-fiber saturation using Agent17's
+          # existing Lean-certified explicit zero-fiber construction.
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-forward/PureTwo.lean" PureTwo.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-hub-saturation/HubInvariant.lean" HubInvariant.lean
+          lake env lean -o ".lake/build/lib/lean/PureTwo.olean" PureTwo.lean
+          lake env lean HubInvariant.lean
