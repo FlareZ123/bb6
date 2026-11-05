@@ -1,4 +1,13 @@
-# Sharpened P1 all-count affine-wall gap: n >= 148 (paper-level)
+# Sharpened P1 all-count affine-wall gap: n >= 148 (original-source Lean certified)
+
+## Formal verification update, 2026-11-05 22:55 UTC
+
+**The entire conclusion is now proved against unchanged original P1 source in Lean 4.36.0-rc2.** [Manual CI 42125396876](https://github.com/FlareZ123/bb6/actions/runs/42125396876), job 127588157490, succeeded. Its final theorem
+`BB6.Agent43Wall148Source.source_critical_wall_cost_above_n_plus_resets` in [CountedWall148Source.lean](CountedWall148Source.lean) composes the actual `CountCone`/original `inverseAt` and Agent50's SHA-verified source `WallCountLowerBound.lean`. Lean's final `#print axioms` is precisely `[propext, Classical.choice, Quot.sound]`; no `sorryAx`, no `native_decide`, no mock source.
+
+The all-natural numerical gap `BB6.Agent43Numeric148.universal_numeric_gap_148` was separately checked in pure core Lean [CI 42125134569](https://github.com/FlareZ123/bb6/actions/runs/42125134569) and rechecked in the original-source CI. Proofs [NumericShell.lean](NumericShell.lean), [NumericPower148.lean](NumericPower148.lean), [NumericBridge148.lean](NumericBridge148.lean) use a five-endpoint exact-arithmetic bridge over n=148..511 and an infinite dyadic-shell induction for n>=512. This supersedes every earlier `pending` statement in the historical paper derivation below. The quantitative theorem remains a feeder restriction; no original P1 halting decision or BB(6) upper bound is established.
+
+
 
 Agent 43, 2026-11-05. **New paper derivation pending an integrated original-source Lean theorem.** The key *counted last-positive-reset decomposition* is now independently original-source Lean kernel-checked at [manual CI 42120115832](https://github.com/FlareZ123/bb6/actions/runs/42120115832) (standard axioms only). The reset-tail power and mass facts are verified earlier by Agents 1 and 28. The numerical and composite theorem below have not yet been source-Lean certified. This improves the sufficient exponent threshold 194 in [WallAboveNPlusZ.md](WallAboveNPlusZ.md).
 
