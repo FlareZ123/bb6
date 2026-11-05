@@ -9,6 +9,13 @@ import ShortConeBridge
 import P1TwoSector
 
 namespace BB6.Agent8Generic11
+
+private theorem pow16_dominates_hub11 (q m side : Nat)
+    (hq:29≤q) (hm:m≤11) (hside:side≤9) :
+    m+(16*q+side) ≤ 2^(16*q) ∧ 1024 < 2^(16*q) := by
+  have hg := BB6.Agent8Cylinder.pow16_ge_linear q (by omega)
+  omega
+
 open BB6.Agent47P1 BB6.Agent1Quarter BB6.Shadow
 open BB6.Agent1ShortCone BB6.Agent45TwoRoot BB6.Agent4Cone BB6.Agent8Cylinder
 
@@ -108,7 +115,7 @@ theorem g0_no_one
   have hmass0 := odd_cone_mass (4*u-4) (4*u+9) b d m hcone
   have hroot := two_feeder_root_arithmetic q u (2^(16*q)) hu hu1
   have hmass : b+d+2*m+2*(16*q+8)+3=56*2^(16*q) := by omega
-  have hbig := pow16_dominates_hub q m 8 hq hm (by omega)
+  have hbig := pow16_dominates_hub11 q m 8 hq hm (by omega)
   have hshift := shifted_gt_power (16*q) (16*q+8) m b d
      hmass (by exact hbig.1) (by omega)
   have hpow := inverseAt_power b d t k 1 hi
@@ -258,7 +265,7 @@ theorem g1_no_one
   have hmass0 := odd_cone_mass (6*u-2) (2*u+5) b d m hcone
   have hroot := two_feeder_root_arithmetic q u (2^(16*q)) hu hu1
   have hmass : b+d+2*m+2*(16*q+9)+3=56*2^(16*q) := by omega
-  have hbig := pow16_dominates_hub q m 9 hq hm (by omega)
+  have hbig := pow16_dominates_hub11 q m 9 hq hm (by omega)
   have hshift := shifted_gt_power (16*q) (16*q+9) m b d
      hmass (by exact hbig.1) (by omega)
   have hpow := inverseAt_power b d t k 1 hi

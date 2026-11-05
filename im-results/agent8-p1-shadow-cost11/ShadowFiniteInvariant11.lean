@@ -36,7 +36,7 @@ theorem finite_shadow_invariant_lifts_full_cone11
   | @parent bp dp mp t k c hprev hb hb4p hd hi hk hc ih =>
       intro hchild
       obtain ⟨w,z,alpha,hmember,hz,hw,hoff,hscaled⟩ := ih hb4p
-      have hm10 : mp≤10 := hsmall mp z hmember
+      have hm11 : mp≤11 := hsmall mp z hmember
       have hmass0 := odd_cone_mass b0 d0 bp dp mp hprev
       have hmass : bp+dp+2*mp+2*L+3=56*2^N := by omega
       have hdepth := source_depth_le8_mod256
