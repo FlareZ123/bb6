@@ -52,4 +52,7 @@ private theorem odd_tzero_in_dyadic_gap (n u:Nat) (hn:4≤n)
     rw [he] at hpow
     omega
 
+/-
+STAGED_EXACT_TWO
+-/
 end CascadeFirstFork
