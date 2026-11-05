@@ -58,8 +58,9 @@ theorem mixed_high_m04_pair_unreachable
     omega
   rcases hfirst with ⟨hx,hy,hy5,h4,h16,hsize⟩
   intro hr
-  have h1 : CReach a1 k1 :=
-    (oddodd_lowval_blank_reach_iff (2*j+3) k hx hy hy5 h4 h16 hsize).mp hr
+  have h1 : CReach a1 k1 := by
+    simpa only [CReach] using
+      (oddodd_lowval_blank_reach_iff (2*j+3) k hx hy hy5 h4 h16 hsize).mp hr
   have hsecond : BB6.Agent46.sixEvenRightGate a1 k1 := by
     simp only [BB6.Agent46.sixEvenRightGate]
     dsimp [a1,k1]
