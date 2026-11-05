@@ -1,0 +1,32 @@
+name: Agent41 Machine C M192 compact reverse core source checks
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct exact M192 source and check original CLine coupling
+        run: |
+          python3 tools/agent41_m192_generate.py quotient > tools/Quotient192.lean
+          python3 tools/agent41_m192_generate.py bridge > tools/CMapBridge192.lean
+          cp im-results/agent11-c-line/CLine.lean tools/CLine.lean
+          cp im-results/agent41-m192-reverse/{Core192High,Core192All}.lean tools/
+          cd tools
+          export LEAN_PATH=.
+          lean --version
+          lean -o Quotient192.olean Quotient192.lean
+          lean -o CLine.olean CLine.lean
+          lean -o CMapBridge192.olean CMapBridge192.lean
+          lean -o Core192High.olean Core192High.lean
+          lean Core192All.lean
