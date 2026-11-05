@@ -3,11 +3,11 @@ import FirstFork
 namespace CascadeFirstFork
 open CascadeResetInverse CascadeUniformFatal CascadeManyShield
 
-private theorem pow_at_least_16 (n:Nat) (hn:4≤n) : 16 ≤ 2^n := by
+theorem pow_at_least_16 (n:Nat) (hn:4≤n) : 16 ≤ 2^n := by
   have hp:2^4≤2^n:=Nat.pow_le_pow_right (by decide) hn
   exact hp
 
-private theorem two_n_le_pow (n:Nat) (hn:4≤n) : 2*n ≤ 2^n := by
+theorem two_n_le_pow (n:Nat) (hn:4≤n) : 2*n ≤ 2^n := by
   have h:∀ k:Nat, 2*(k+4)≤2^(k+4):=by
     intro k
     induction k with
@@ -19,7 +19,7 @@ private theorem two_n_le_pow (n:Nat) (hn:4≤n) : 2*n ≤ 2^n := by
   rw [he]
   exact h (n-4)
 
-private theorem odd_band_scale_unique (v k j:Nat)
+theorem odd_band_scale_unique (v k j:Nat)
     (hb:6*2^k+1≤v ∧ v≤8*2^k-1)
     (hj:6*2^j+1≤v ∧ v≤8*2^j-1) : k=j := by
   by_cases heq:k=j
@@ -34,7 +34,7 @@ private theorem odd_band_scale_unique (v k j:Nat)
     rw [he] at hpow
     omega
 
-private theorem odd_tzero_in_dyadic_gap (n u:Nat) (hn:4≤n)
+theorem odd_tzero_in_dyadic_gap (n u:Nat) (hn:4≤n)
     (hl:3*2^n≤u) (hu:u≤4*2^n) :
     ¬ ∃ k d, (6*2^k+1≤d ∧ d≤8*2^k-1) ∧ 2*u+5=3*d := by
   rintro ⟨k,d,⟨hlo,hhi⟩,heq⟩
