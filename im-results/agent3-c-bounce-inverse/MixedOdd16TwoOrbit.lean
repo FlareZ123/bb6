@@ -1,4 +1,5 @@
 import MixedOdd16TwoConstruct
+import Agent3CImage
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent3
