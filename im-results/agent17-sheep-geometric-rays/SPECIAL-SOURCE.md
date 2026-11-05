@@ -51,10 +51,10 @@ None of these ten distinct E outputs is a power of two. The exhaustive Lean proo
 
 ## Executable formal certificate and scope
 
-[SpecialSourceNoPower.lean](SpecialSourceNoPower.lean) is the **full, human-readable Lean source**, fetched back and verified against the exact compiled local Git blob `ac4a2a7447c8ce60a91534c23b096338eb0285db`. It compiled successfully under `Lean 4.36.0-rc2` with `import Std` only. The final theorem, with no admitted steps, is
+[SpecialSourceNoPower.lean](SpecialSourceNoPower.lean) is the **full, human-readable Lean source**, fetched back and verified against the exact compiled local Git blob `fd0de7ed62457533d605c6e869a81ca397b70d58`. It compiled successfully under `Lean 4.36.0-rc2` with `import Std` only. The final theorem, with no admitted steps, is
 
 ```lean
-theorem special_no_even_power (a h w j : Nat) (ha : 1 <= a)
+theorem Agent17SheepSpecial.special_no_even_power (a h w j : Nat) (ha : 1 <= a)
     (hfactor : 3*2^a+a+2=2^h*w) (hwodd : w%2=1) :
     1+3^h*w != (2:Nat)^j
 ```
