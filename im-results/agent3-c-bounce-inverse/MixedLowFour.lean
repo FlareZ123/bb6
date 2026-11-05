@@ -5,12 +5,12 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent3
 open BB6.Agent46
 
-private theorem low_four_pow_large (m : Nat) :
-    3*m+8≤2^(2*m+3) := by
-  induction m with
+private theorem low_four_pow_extra (n : Nat) :
+    3*(n+1)+24≤2^(2*(n+1)+3) := by
+  induction n with
   | zero => decide
-  | succ m ih =>
-      have h : 2*(m+1)+3=(2*m+3)+2 := by omega
+  | succ n ih =>
+      have h : 2*(n+1+1)+3=(2*(n+1)+3)+2 := by omega
       rw [h,Nat.pow_add]
       have hf : (2:Nat)^2=4 := by decide
       rw [hf]
@@ -31,9 +31,12 @@ theorem mixed_low_m_four_mod8_stops_unreachable (m k : Nat)
     rw [hstop]
     exact Nat.mod_eq_zero_of_dvd hpow
   have hk8 : k%8=0 := by omega
-  have hk4 : 4≤k := by
-    have hb := low_four_pow_large m
-    omega
+  have hbig : 3*m+24≤2^(2*m+3) := by
+    obtain ⟨q,hq⟩ : ∃ q : Nat, m=q+1 := ⟨m-1,by omega⟩
+    subst m
+    exact low_four_pow_extra q
+  have hk20 : 20≤k := by omega
+  have hk4 : 4≤k := by omega
   constructor
   · apply (BB6.Agent15.section_halts_iff_parametric _ _).mpr
     right
@@ -45,10 +48,6 @@ theorem mixed_low_m_four_mod8_stops_unreachable (m k : Nat)
         (by omega) (by omega)).mp hr
     have hbad : 5≤(k-2)/2 ∧ ((k-2)/2)%2=1 ∧
         ((k-1)+(k-2)/2)%4=2 := by
-      have hb := low_four_pow_large m
-      have hm4 : 4≤m := by omega
-      have hpowlow : 2^11 ≤ 2^(2*m+3) := by
-        exact Nat.pow_le_pow_right (by decide) (by omega)
       omega
     rcases hparent with ⟨time,hn⟩
     cases time with
