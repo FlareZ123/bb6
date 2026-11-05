@@ -29,3 +29,5 @@ jobs:
           python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119Wave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('wave-source-sha256',h); assert h=='715e5512da53986da896ea05d68d28869fc8489b6ad3e1e49e26459545299930'; p.with_name('Root119Wave.lean').write_bytes(b)"
           lean -o im-results/agent42-root119-guard/Root119Wave.olean im-results/agent42-root119-guard/Root119Wave.lean
           lean im-results/agent42-root119-guard/Root119WaveNormal.lean
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119B14.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('b14-source-sha256',h); assert h=='9342f4f4d8dbf47efceb7ce1876b69f320745fa32f2f531a7b6d81ebf4a4956d'; p.with_name('Root119B14.lean').write_bytes(b)"
+          lean im-results/agent42-root119-guard/Root119B14.lean
