@@ -15,20 +15,20 @@ def out (v r : Nat) : List Bool :=
   List.replicate (2*v+1) true ++
     (false :: List.replicate (2*r+6) true)
 
-private theorem aZeroTwo (L zs : List Bool) :
+theorem aZeroTwo (L zs : List Bool) :
     run 2 (⟨L,false,false::zs,0⟩ : Cfg) =
       ⟨L,true,true::zs,2⟩ := by
   simp [run,step,goL,goR]
 
 /-- Crossing the literal 0110101 pattern from C/1 has a fixed seven-step
     action regardless of the untouched left and right contexts. -/
-private theorem cSeven (L zs : List Bool) :
+theorem cSeven (L zs : List Bool) :
     run 7
       (⟨[false,true,true,false,true,false,true]++L,true,zs,2⟩ : Cfg) =
     ⟨L,true,[true,false,true,true,true,true,true]++zs,2⟩ := by
   simp [run,step,goL,goR]
 
-private theorem opSplit (v : Nat) (L : List Bool) :
+theorem opSplit (v : Nat) (L : List Bool) :
     [false,true,true] ++ (oppairs (v+2) ++ L) =
     [false,true,true,false,true,false,true] ++ (oppairs v ++ L) := by
   simp [oppairs,List.append_assoc]
