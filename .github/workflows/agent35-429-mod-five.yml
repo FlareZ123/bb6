@@ -1,0 +1,33 @@
+name: Agent 35 BB429 modulo-five synthetic halting obstruction (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unchanged-accelerator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify against unchanged BB429Rank and BB429Burst
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent4-bb429-dyadic-barrier:im-results/agent35-bb429-coprime-moduli
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -o im-results/agent5-429-rank/BB429Burst.olean im-results/agent5-429-rank/BB429Burst.lean
+          lean -DmaxHeartbeats=15000000 -o im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.olean im-results/agent4-bb429-dyadic-barrier/BB429DyadicStarts.lean
+          lean -DmaxHeartbeats=15000000 im-results/agent35-bb429-coprime-moduli/BB429ModFive.lean | tee /tmp/agent35-mod5-axioms.log
+          if grep -q 'sorryAx' /tmp/agent35-mod5-axioms.log; then
+            echo "FAIL: sorryAx in Lean axiom audit"
+            exit 1
+          fi
