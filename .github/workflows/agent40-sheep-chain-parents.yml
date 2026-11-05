@@ -82,3 +82,7 @@ jobs:
           for name in IndependentExceptionalGap SheepHBound HCases SpecialCases; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
+          # Reflected all-k classification of authentic generic inverse arrows.
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent40-sheep-chain-witnesses/generate_reflected.py" ReflectedGeneric.lean
+          /tmp/agent40-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" ReflectedGeneric.lean
+          lake env lean -o ".lake/build/lib/lean/ReflectedGeneric.olean" ReflectedGeneric.lean
