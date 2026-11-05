@@ -42,7 +42,7 @@ theorem section_sumseven_mod32_inverse (a k x y:Nat)
         · by_cases hk2:k=2
           · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2] at h
           · by_cases hk3:k=3
-            · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h
+            · simp [secNext,exactSection,ha0,ha1,hk0,hk1,hk2,hk3] at h <;> omega
             · have hb:(bounce 4 (2*k-3)).2=some (x,y) := by
                 simpa only [secNext,exactSection,if_neg ha0,if_pos ha1,
                   if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] using h
@@ -62,7 +62,7 @@ theorem section_sumseven_mod32_inverse (a k x y:Nat)
                   omega
     · have ha2:2≤a := by omega
       by_cases hk0:k=0
-      · simp [secNext,exactSection,ha0,ha1,hk0] at h
+      · simp [secNext,exactSection,ha0,ha1,hk0] at h <;> omega
       · by_cases hregion:2*k≤a
         · simp [secNext,exactSection,ha0,ha1,hk0,hregion] at h
           exact Or.inl (by constructor <;> omega)
@@ -76,7 +76,7 @@ theorem section_sumseven_mod32_inverse (a k x y:Nat)
           · have hao:a%2=1 := by omega
             obtain ⟨n,hsum,hcost⟩ :=
               bounce_even_output_invariants (2*k-a+3) (a-1)
-                x y (by omega) hy6 hb
+                x y (by omega) (by omega) hb
             obtain ⟨_,ha,hk⟩ := general_source_bounce_depth_one
               x y a k n hx hy hao (by omega) hmod hsum hcost
             exact Or.inr ⟨ha,hk⟩
