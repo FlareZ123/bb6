@@ -108,3 +108,5 @@ jobs:
           lean -o OddEvenInverse.olean OddEvenInverse.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/EvenRightSixOrbit.lean .
           lean -o EvenRightSixOrbit.olean EvenRightSixOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/OneTwoGate.lean .
+          lean -o OneTwoGate.olean OneTwoGate.lean
