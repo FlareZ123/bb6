@@ -71,6 +71,28 @@ theorem near_top_exact_two (n u A q:Nat) (hn:4≤n)
     have hh:=two_n_le_pow n hn
     dsimp [evenPre]
     omega
+  have hbiglo:3*2^n≤u := by omega
+  have hbighi:u≤4*2^n := by omega
+  let d0 := (2*u+5)/9
+  have hd0:9*d0=2*u+5 := by
+    have hm:=Nat.mod_add_div (2*u+5) 9
+    dsimp [d0]
+    omega
+  have hpow4:2^n=4*2^(n-2) := by
+    have hh:2^n=2^((n-2)+2):=congrArg (fun m:Nat=>2^m) (by omega)
+    rw [Nat.pow_add] at hh
+    omega
+  have hlarge : 4 ≤ 2^(n-2) := by
+    have hp := pow_at_least_16 n hn
+    omega
+  have odd_band : 6*2^(n-2)+1≤2*d0 ∧ 2*d0≤8*2^(n-2)-1 := by
+    constructor <;> omega
+  have hlinear : n+3 ≤ 4*2^(n-2) := by
+    have hp := n_plus_three_le_pow n hn
+    omega
+  have odd_eq:2*(2*d0)=8*2^(n-2)+oddPre n u+(n-2)+5 := by
+    dsimp [oddPre,d0]
+    omega
 STAGED_EXACT_TWO
 -/
 end CascadeFirstFork
