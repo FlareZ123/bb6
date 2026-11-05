@@ -56,7 +56,7 @@ jobs:
           lean -o "$r/FatalRank.olean" "$r/FatalRank.lean"
           lean -o "$r/RootDepth.olean" "$r/RootDepth.lean"
           lean -o "$r/ForwardRun.olean" "$r/ForwardRun.lean"
-          for m in ScanFail StripTwos ExecutableReturn FastForward FastDecision NewFiniteGates; do
+          for m in ScanFail StripTwos ExecutableReturn FastForward FastDecision NewFiniteGates Gates270to281 Gates282to299 GatesTo299; do
             lean -o "$r/$m.olean" "$r/$m.lean"
           done
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
