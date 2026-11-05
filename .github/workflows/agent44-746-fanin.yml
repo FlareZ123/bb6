@@ -24,7 +24,7 @@ jobs:
           b="im-results/agent10-cascade"
           f="im-results/agent7-cascade-forward"
           c="im-results/agent44-746-fanin"
-          export LEAN_PATH="$a:$b:$f:$c"
+          export LEAN_PATH="$a:$b:$f:$c:im-results/agent44-746-rank"
           lean --version
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
@@ -50,5 +50,9 @@ jobs:
             lean -o "$c/$m.olean" "$c/$m.lean"
           done
           lean -o "$f/OddTotalCount.olean" "$f/OddTotalCount.lean"
+          r="im-results/agent44-746-rank"
+          lean -o "$r/ReverseRank.olean" "$r/ReverseRank.lean"
+          lean -o "$r/ResetRank.olean" "$r/ResetRank.lean"
+          echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
           echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
