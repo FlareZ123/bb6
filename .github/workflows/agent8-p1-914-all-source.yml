@@ -32,7 +32,7 @@ jobs:
             echo "ORIGINAL AGENT1-QUARTER $m"
             lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
           done
-          for m in P1Triple P1ResidualArithmetic P1ResidualReach; do
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
             echo "ORIGINAL AGENT50 $m"
             lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
           done
