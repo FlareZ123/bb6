@@ -47,3 +47,22 @@ The output `n` can be chosen beyond any prescribed threshold by increasing the i
 For a *fixed exact odd first counter* `a=2u+1`, no halt-excluding predicate `P(a,k)` can simultaneously include `P(a,1)`, be saturated under congruence of the right counter modulo a fixed `M`, and exclude every immediately stopping input. In particular `a=5` recovers the previous blank-section congruence obstruction. The argument makes **no assertion that any synthetic stopping input lies on the actual blank orbit**. It does not rule out reachability proofs carrying ancestry or noncongruential information.
 
 The earlier all-modulus proof gave the `a=5` case. This note makes the first-coordinate quantifier explicit. It is a structural strengthening of a method limitation, with no claim of external mathematical novelty or improved BB(6) bound. The companion [verify_odd_left_all_moduli.py](verify_odd_left_all_moduli.py) independently constructs modular witnesses, checks every intermediate lift, and source-interprets small examples. Computational tests corroborate the proof and are not substituted for it.
+
+
+## Shorter uniform proof: totient-period strong induction without prime-power lifting
+
+The prime-by-prime construction above can be replaced by a shorter proof, and this version is preferable for a future all-parameter Lean formalization. It avoids a prime-power ordering, discrete multiplicative orders and binomial lifting. The statement also holds at the arithmetic level for *any* coefficient `A≥0` in `F_A(n)=A(4^n-1)-3n`; the Machine C specialization is `A=u+2`.
+
+Put `B=2^e 3^j`, `q=M/B`; thus `gcd(q,6)=1`. Fix `A` and a lower bound `L`. Choose an arbitrarily large base index `n_0≥max(L,e,1)` satisfying `3n_0≡-A (mod2^e)` and `n_0≡0 (mod3^j)`, as before. Every index `n=n_0+B t` (`t≥0`) satisfies `B|F_A(n)` by exactly the same base argument.
+
+Prove by **strong induction on `q≥1`**, with fixed `A,B,n_0`, that there exists `n=n_0+Bt` satisfying `q|F_A(n)`. When `q=1` take `n_0`. When `q>1`, let `h=φ(q)` and `g=gcd(q,h)`. Euler's theorem applies because `q` is odd: `4^h≡1 (modq)`. Since `1≤h<q`, we have `1≤g<q`; also `gcd(g,6)=1`, so the induction applies to `g`. It supplies an index `n=n_0+Bt` with `g|F_A(n)`.
+
+Put `R=B h`. Then `4^R≡1 (modq)` by Euler, and
+```text
+F_A(n+R v) ≡ F_A(n)-3 R v (mod q)      for every v≥0.
+```
+Because `gcd(q,3R)=gcd(q,h)=g` (using `gcd(q,6B)=1`), the ordinary linear-congruence theorem gives a `v≥0` with `3R v≡F_A(n) (modq)`. The new `n'=n+Rv=n_0+B(t+hv)` stays in the base progression, keeps `B|F_A(n')`, and satisfies `q|F_A(n')`. Since `gcd(B,q)=1`, `M=Bq|F_A(n')`. This completes the theorem for arbitrary `A,M,L`.
+
+The independent executable recurrence in [verify_odd_left_totient.py](verify_odd_left_totient.py) uses precisely the smaller-`g` recursion, with no prime-power lifting. It passed 43,000 parameter pairs in an initial independent local check. A formal proof may replace Euler's totient by **any** positive period `h<q` of `4^n (modq)`, allowing a finite pigeonhole argument instead of constructing totients.
+
+This short proof is mathematically equivalent in final scope to the longer prime-lifting proof above; it improves conceptual economy and machine-checking prospects rather than changing BB(6)'s unresolved root questions.
