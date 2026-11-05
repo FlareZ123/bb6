@@ -36,7 +36,7 @@ These theorems imply **no unrestricted survival**: synthetic tails can still pro
 
 [Lean source, XZ+Base64](S4PrefixCausal.lean.xz.b64). Decode using ordinary `base64` and `xz` tools. The decoded exact UTF-8 Lean 4.36.0-rc2 file has SHA256 `81400697e2e0dc35f9193c637eff49e0e1df8344986899a58fa121621a78ffef`. It imports unchanged repository `S4Toggle`, which imports `S4Octet` and `S4PowerGate`; these themselves are source-linked to the unchanged pinned Cryptids machine via the prior chain.
 
-Local Lean 4.36.0-rc2 compilation of the mathematical proofs against **definitionally identical local stand-ins** succeeded with only `[propext, Quot.sound]` axioms (the two closed computational prefix equalities have no axioms). This is **not yet equivalent to an unchanged-original-module import audit**. The manual [Agent 7 original-source workflow](../../.github/workflows/agent7-s4-original.yml) will compile the new file after `S4Toggle.olean`. Record the specific successful CI run before upgrading verification scope.
+The proofs passed original-source [manual CI run 42091626268](https://github.com/FlareZ123/bb6/actions/runs/42091626268), importing the pinned unmodified Cryptids acceleration and all intermediate exact-map modules. Axiom audits: `prun_prefix`, `root_six_period`, `root_six_conditional` need only `[propext, Quot.sound]`; the period-1024 equality and 143-step finite prefix are axiom-free. The same manually dispatched workflow(../../.github/workflows/agent7-s4-original.yml) will compile the new file after `S4Toggle.olean`. Record the specific successful CI run before upgrading verification scope.
 
 ## Next decisive test
 
@@ -57,6 +57,21 @@ The proof uses `W(xs++S)=W xs+2^6 W S` and the existing original-source theorem 
 
 A separate **kernel-evaluated, axiom-free** finite calculation establishes that precisely **956 of the 1,024** cyclic six-digit phases satisfy `guard6`. Consequently, a first failure of the *genuine seeded P recurrence* after the 143-step prefix transient requires one of the **68** remaining phase residues modulo 1024. This is a **necessary condition only**. The guard-unknown phases may be safe for other reasons, and even a synthetically stopping completion does not imply actual-root reachability.
 
-The theorem `rooted_failure_implies_bad_guard` and `safeCount1024` compiled locally under Lean 4.36.0-rc2. The local imports were definitionally matching stand-ins; one stand-in declared `G_none_iff_power` as an axiom, whose genuine theorem is already implemented and verified in [S4Octet.lean](../agent5-s4-octet/S4Octet.lean). The full original-source check compiles *both* modules inside the existing [manual S4 workflow](../../.github/workflows/agent7-s4-original.yml), with explicit SHA256 checks. Successful CI and a clean axioms audit are required before describing the new composite as native-source-certified.
+The theorem `rooted_failure_implies_bad_guard` and `safeCount1024` compiled locally under Lean 4.36.0-rc2. The local imports were definitionally matching stand-ins; one stand-in declared `G_none_iff_power` as an axiom, whose genuine theorem is already implemented and verified in [S4Octet.lean](../agent5-s4-octet/S4Octet.lean). The complete source-level source-to-gate audit passed [run 42091626268](https://github.com/FlareZ123/bb6/actions/runs/42091626268): the SHA256 checks matched, both Lean modules compiled with unmodified pinned Cryptids imports, `safeCount1024` had no axioms, and `P_safe64` and `rooted_failure_implies_bad_guard` reported only `[propext, Classical.choice, Quot.sound]`.
 
 The potentially fatal modulo-1024 phases are completely periodic **after synchronization**, whereas the actual suffix retains unbounded information. Extending the prefix depth could sharpen the finite guard but does not by itself close the stopping condition. The same binary-power tail-completion obstruction studied by [Agent 7](../agent7-s4-prefix/README.md) warns against treating any fixed-depth guard as a complete nonhalting proof.
+
+## Seven-digit root certificate and the first odd cycle factor
+
+The third module [S4PrefixSeven.lean.xz.b64](S4PrefixSeven.lean.xz.b64), decoded SHA256 `c4602d569435a0aea4674752e84a1c830576263be3d2712982479e1832da13d9`, extends the exact finite-prefix projection to a concrete genuine seventh stack entry. It kernel-certifies the full actual root at recurrence step 143:
+
+```
+prun 143 [301,650,645,322,163,160]
+  = some [280,398,1257,5171,3976,3776,20445,38331,53457,21578].
+```
+
+That *finite* statement was proved using nine separate source-shaped 16/15-step computations and a proved associative run-composition lemma. It gives a real rooted 7-prefix `phase7=[280,398,1257,5171,3976,3776,20445]` at step143. After 194 additional **total prefix** transformations, the seven-digit projection reaches `cycle7=[283,906,982,3490,3734,5935,13580]`, and `prefixRun 5120 cycle7=cycle7`. The latter equality was verified by 20 individually kernel-checked 256-step chunks, composed by the general `prefixRun_add` theorem. Conversely, `prefixRun 1024 cycle7≠cycle7` is kernel-checked, so this 5120-period witness cannot be an accidental reuse of the six-digit period.
+
+For every `n` and every **surviving genuine** recurrence stack at time `337+n`, the first seven digits therefore equal `prefixRun (194+(n%5120)) phase7`. The true root's survival for all `n` is **not asserted**. Seven-digit projected periodicity includes an additional factor `5` beyond the previous 1024-period six-digit projection. This is an internal mathematical structural discovery, with no external novelty audit and no claim of a universal root decision.
+
+The complete theorem file locally compiled with Lean 4.36.0-rc2 and only `[propext, Quot.sound]` axioms; all finite cycle equalities used no axioms. An unchanged-original-Cryptids import is added to the same manual workflow and its successful outcome should be checked before upgrading its original-source provenance.
