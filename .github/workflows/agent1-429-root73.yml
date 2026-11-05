@@ -1,0 +1,30 @@
+name: Agent 1 BB429 rooted terminal 73 proof (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel check original source and parameter-uniform 73 exclusion
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent1-429-inverse-tower
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+          lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
+          lean -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxRecDepth=30000 -DmaxHeartbeats=30000000 im-results/agent1-429-inverse-tower/BB429No73.lean
