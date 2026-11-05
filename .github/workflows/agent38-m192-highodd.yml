@@ -1,4 +1,4 @@
-name: Agent38 Machine C M192 odd-source closure
+name: Agent38 Machine C M192 zero-input source closures
 on:
   workflow_dispatch:
 
@@ -16,16 +16,18 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Source-build original Agent41 high predicate and odd-branch theorem
+      - name: Source-build exact M192 high/low core and zero-input lemmas
         run: |
           python3 tools/agent41_m192_generate.py quotient > tools/Quotient192.lean
           cp im-results/agent11-c-line/CLine.lean tools/CLine.lean
-          cp im-results/agent41-m192-reverse/Core192High.lean tools/Core192High.lean
-          cp im-results/agent38-m192-odd-closure/HighZeroOdd.lean tools/HighZeroOdd.lean
+          cp im-results/agent41-m192-reverse/{Core192High,Core192All}.lean tools/
+          cp im-results/agent38-m192-odd-closure/{HighZeroOdd,HighZeroEven}.lean tools/
           cd tools
           export LEAN_PATH=.
           lean --version
           lean -o Quotient192.olean Quotient192.lean
           lean -o CLine.olean CLine.lean
           lean -o Core192High.olean Core192High.lean
+          lean -o Core192All.olean Core192All.lean
           lean HighZeroOdd.lean
+          lean HighZeroEven.lean
