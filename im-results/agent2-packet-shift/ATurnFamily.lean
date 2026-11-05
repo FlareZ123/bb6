@@ -86,6 +86,129 @@ theorem full_E_alternating_family (k q r : Nat) (ys : List Bool) :
   intro L
   simpa [aStart] using a_turn_all r L ys
 
+
+/-- No state-F visit in the first n primitive transitions. Since a return
+    requires state F, this implies absence of physical first returns. -/
+def NoF (c : Cfg) (n : Nat) : Prop :=
+  ∀ t, t<n → (run t c).st ≠ 5
+
+private theorem appendNoF (c d : Cfg) (a b : Nat)
+    (hc : NoF c a) (he : run a c = d) (hd : NoF d b) :
+    NoF c (a+b) := by
+  intro t ht
+  by_cases hshort : t<a
+  · exact hc t hshort
+  · have heq : t=a+(t-a) := by omega
+    rw [heq,run_add,he]
+    exact hd (t-a) (by omega)
+
+private theorem aStart_five_noF (r : Nat) (L ys : List Bool) :
+    NoF (aStart (r+1) L ys) 5 := by
+  intro t ht
+  have cases : t=0 ∨ t=1 ∨ t=2 ∨ t=3 ∨ t=4 := by omega
+  rcases cases with rfl | rfl | rfl | rfl | rfl
+  all_goals simp [aStart,front,oppairs,run,step,goL,goR]
+
+private theorem aScan_two_noF (i r : Nat) (L ys : List Bool) :
+    NoF (aScan i (r+1) L ys) 2 := by
+  intro t ht
+  have cases : t=0 ∨ t=1 := by omega
+  rcases cases with rfl | rfl
+  all_goals simp [aScan,run,step,goL,goR,oppairs]
+
+private theorem aScan_run_noF (i r : Nat) (L ys : List Bool) :
+    NoF (aScan i r L ys) (2*r) := by
+  induction r generalizing i with
+  | zero =>
+      intro t ht
+      omega
+  | succ r ih =>
+      have htime : 2*(r+1)=2+2*r := by omega
+      rw [htime]
+      exact appendNoF
+        (aScan i (r+1) L ys) (aScan (i+1) r L ys)
+        2 (2*r)
+        (aScan_two_noF i r L ys)
+        (aScan_two i r L ys) (ih (i+1))
+
+private theorem tripleEight_noF (L ys : List Bool) :
+    NoF (⟨L,false,[true,true,true]++ys,0⟩ : Cfg) 8 := by
+  intro t ht
+  have cases :
+      t=0 ∨ t=1 ∨ t=2 ∨ t=3 ∨ t=4 ∨ t=5 ∨ t=6 ∨ t=7 := by omega
+  rcases cases with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  all_goals
+    cases L with
+    | nil => simp [run,step,goL,goR]
+    | cons v L => cases v <;> simp [run,step,goL,goR]
+
+private theorem bPop_four_noF (n : Nat) (L ys : List Bool) :
+    NoF (bPop (n+1) L ys) 4 := by
+  intro t ht
+  have cases : t=0 ∨ t=1 ∨ t=2 ∨ t=3 := by omega
+  rcases cases with rfl | rfl | rfl | rfl
+  all_goals simp [bPop,oppairs,run,step,goL,goR]
+
+private theorem bPop_run_noF (n : Nat) (L ys : List Bool) :
+    NoF (bPop n L ys) (4*n) := by
+  induction n generalizing ys with
+  | zero =>
+      intro t ht
+      omega
+  | succ n ih =>
+      have htime : 4*(n+1)=4+4*n := by omega
+      rw [htime]
+      exact appendNoF
+        (bPop (n+1) L ys) (bPop n L (false::true::ys))
+        4 (4*n)
+        (bPop_four_noF n L ys)
+        (bPop_step n L ys) (ih (false::true::ys))
+
+/-- The unbounded A/0 alternating-tail source turn never visits F, for
+    every unknown left tape and every unknown right suffix. -/
+theorem a_turn_all_noF (r : Nat) (L ys : List Bool) :
+    NoF (aStart (r+1) L ys) (6*(r+1)+14) := by
+  let n := r+1
+  have ht : 6*(r+1)+14=5+(2*n+(8+(4*n+1))) := by
+    dsimp [n]
+    omega
+  rw [ht]
+  have hs : run 5 (aStart (r+1) L ys) = aScan 0 n L ys := by
+    simpa only [n] using aStart_five r L ys
+  apply appendNoF (aStart (r+1) L ys)
+    (aScan 0 n L ys) 5 (2*n+(8+(4*n+1)))
+    (aStart_five_noF r L ys) hs
+  have hscan : run (2*n) (aScan 0 n L ys) =
+      (⟨oppairs n++(true::L),false,[true,true,true]++ys,0⟩ : Cfg) := by
+    rw [aScan_run]
+    rfl
+  apply appendNoF (aScan 0 n L ys)
+    (⟨oppairs n++(true::L),false,[true,true,true]++ys,0⟩ : Cfg)
+    (2*n) (8+(4*n+1))
+    (aScan_run_noF 0 n L ys) hscan
+  let a : Cfg := ⟨oppairs n++(true::L),false,[true,true,true]++ys,0⟩
+  let b : Cfg := bPop n (true::L) ([false,true,false]++ys)
+  have h8 : run 8 a = b := by
+    dsimp [a,b]
+    exact aTriple8 (oppairs n++(true::L)) ys
+  apply appendNoF a b 8 (4*n+1)
+    (tripleEight_noF (oppairs n++(true::L)) ys) h8
+  have hpop : run (4*n) b =
+      (⟨true::L,false,oppairs n++([false,true,false]++ys),1⟩ : Cfg) := by
+    dsimp [b]
+    rw [bPop_run]
+    rfl
+  apply appendNoF b
+    (⟨true::L,false,oppairs n++([false,true,false]++ys),1⟩ : Cfg)
+    (4*n) 1
+    (bPop_run_noF n (true::L) ([false,true,false]++ys))
+    hpop
+  intro t hlt
+  have hzero : t=0 := by omega
+  subst t
+  simp [run]
+
+#print axioms a_turn_all_noF
 #print axioms aStart_five
 #print axioms aScan_two
 #print axioms aScan_run
