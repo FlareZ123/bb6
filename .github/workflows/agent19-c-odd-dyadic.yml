@@ -38,3 +38,5 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean OddSevenResidual.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/LowOneModFour.lean .
+          lean LowOneModFour.lean
