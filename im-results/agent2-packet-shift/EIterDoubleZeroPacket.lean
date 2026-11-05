@@ -26,7 +26,7 @@ def duration (k q v r : Nat) : Nat :=
 private theorem pairs_add (m n : Nat) :
     pairs (m+n) = pairs m ++ pairs n := by
   induction m with
-  | zero => rfl
+  | zero => simp [pairs]
   | succ m ih =>
     simp [Nat.succ_add,pairs,ih,List.append_assoc]
 
@@ -37,7 +37,8 @@ private theorem input_shape (k q v r : Nat) (ys : List Bool) :
     source k q v r ys := by
   apply congrArg init
   simp only [source,BB6.Agent2AIterDoubleZero.front]
-  rw [show q+v+2=q+(v+2) by omega,pairs_add]
+  rw [show q+v+2=q+(v+2) by omega]
+  rw [pairs_add q (v+2)]
   simp [List.append_assoc]
 
 private theorem output_shape (k q v r : Nat) (ys : List Bool) :
@@ -64,7 +65,8 @@ private theorem output_shape (k q v r : Nat) (ys : List Bool) :
         ←List.replicate_append_replicate]
     rfl
   rw [h8,h2]
-  simp [outPacket,BB6.Agent2AIterDoubleZero.out,List.append_assoc]
+  simp [outPacket,BB6.Agent2AIterDoubleZero.out,
+    List.append_assoc,List.replicate_append_replicate]
 
 /-- Canonically normalized strict-first physical F/0 E return for every
     k,q,v,r and arbitrary tail Y. Input suffix starts
