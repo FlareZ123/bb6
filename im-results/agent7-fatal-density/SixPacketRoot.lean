@@ -21,7 +21,7 @@ private theorem deficit_shift_le (n j i:Nat):
     rw[he]
     omega
 
-private theorem deficit_packet_bound (n j i:Nat)
+theorem deficit_packet_bound (n j i:Nat)
     (hi:i≤5) (hm:deficit n (j+5)≤2^n):
     deficit n (j+i)≤2^n:=by
   have h:=deficit_shift_le n (j+i) (5-i)
