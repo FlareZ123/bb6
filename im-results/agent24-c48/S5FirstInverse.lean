@@ -11,6 +11,12 @@ private theorem s5_pow_four (n : Nat) (hn : 2≤n) : ∃ u : Nat, 2^n=4*u := by
   simp only [show (2:Nat)^2=4 by decide]
   omega
 
+private theorem s5_pow_two_even (n : Nat) (hn : 1≤n) : ∃ u : Nat, 2^n=2*u := by
+  obtain ⟨m,hm⟩ : ∃ m, n=m+1 := ⟨n-1,by omega⟩
+  refine ⟨2^m,?_⟩
+  rw [hm,Nat.pow_succ]
+  omega
+
 /-- The odd-odd valuation-three target has one exact predecessor,
     uniformly across all q and every bounce recursion depth. -/
 theorem s5_first_inverse (q a k : Nat)
@@ -32,7 +38,7 @@ theorem s5_first_inverse (q a k : Nat)
         · subst n
           simp at hsum'
           omega
-        · obtain ⟨u,hu⟩ := pow_two_even_new n (by omega)
+        · obtain ⟨u,hu⟩ := s5_pow_two_even n (by omega)
           have hdiv : 25280*q+1960=16*u := by
             calc
               25280*q+1960=8*(2^n) := hsum'
