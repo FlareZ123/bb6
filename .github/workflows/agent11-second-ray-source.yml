@@ -42,6 +42,8 @@ jobs:
           lean -o BounceLowRangeOriginal.olean BounceLowRangeOriginal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/LowThreeImageOriginal.lean" .
           lean -o LowThreeImageOriginal.olean LowThreeImageOriginal.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/LowFourImageOriginal.lean" .
+          lean -o LowFourImageOriginal.olean LowFourImageOriginal.lean
           lean -o SectionFastInverseOriginal.olean SectionFastInverseOriginal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/FastArithmetic.lean" .
           lean -o FastArithmetic.olean FastArithmetic.lean
