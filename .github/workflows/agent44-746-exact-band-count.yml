@@ -1,0 +1,29 @@
+name: Agent 44 #746 exact odd inverse band count Lean proof (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-count:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check all exact odd band-count algebraic proofs
+        run: |
+          set -eu
+          c="im-results/agent44-746-fanin"
+          export LEAN_PATH="$c"
+          lean --version
+          for m in LogBands LogStep Telescope GeomLog GeomBand ExactCountLean; do
+            lean -o "$c/$m.olean" "$c/$m.lean"
+          done
+          echo "PASS: exact dyadic geometric band-count identity; standard kernel axioms only"
