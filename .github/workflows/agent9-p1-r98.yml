@@ -1,0 +1,45 @@
+name: Agent 9 P1 r98 all-natural source certificate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged original P1 map and predecessor-reachability facts
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent9-r98"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+      - name: Compile uniform exponential and coefficient-gap lemmas
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent9-r98"
+          lean -o im-results/agent9-r98/R98Gap.olean im-results/agent9-r98/R98Gap.lean
+          lean -o im-results/agent9-r98/R98Param.olean im-results/agent9-r98/R98Param.lean
+      - name: Generate and compile the 51-hub parametric inverse certificate
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent9-r98"
+          python im-results/agent9-r98/gen_r98.py
+          sha256sum im-results/agent9-r98/R98Root.lean
+          lean -o im-results/agent9-r98/R98Root.olean im-results/agent9-r98/R98Root.lean
+      - name: Compose original-machine blank-start reachability exclusion
+        run: |
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent9-r98"
+          lean im-results/agent9-r98/R98Final.lean
+          echo "All q proven: P1 blank never reaches H(65536*q+98)"
