@@ -31,7 +31,7 @@ theorem blank_no_one_two_mod16 (t : Nat) (ht : 1≤t) :
   rw [ha,hk] at hn
   exact BB6Agent38.blank_section_no_33 n (6*t-1) (t-1) hn
 
-private theorem pow_two_linear (m : Nat) :
+theorem pow_two_linear (m : Nat) :
     4*m+8 ≤ 2^(2*m+3) := by
   induction m with
   | zero => decide
