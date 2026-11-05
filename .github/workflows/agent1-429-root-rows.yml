@@ -20,10 +20,15 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Original repository source proof, no stubs
         env:
-          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent1-429-root-rows
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent1-429-root-rows:im-results/agent33-429-24
         run: |
           set -euo pipefail
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429NewRootRows.olean im-results/agent1-429-root-rows/BB429NewRootRows.lean
+          lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent1-429-root-rows/BB429InverseKernelExtended.olean im-results/agent1-429-root-rows/BB429InverseKernelExtended.lean
+          lean -DmaxHeartbeats=20000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-rows/BB429NewRootGate16.olean im-results/agent1-429-root-rows/BB429NewRootGate16.lean
