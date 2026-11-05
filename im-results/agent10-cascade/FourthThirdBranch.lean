@@ -53,7 +53,7 @@ theorem fourth_div81 (n:Nat) (hn:64≤n)
 def d3 (n:Nat) : Nat := (2*fourthPred n+5)/81
 def oddPre3 (n:Nat) : Nat := 16*d3 n -8*2^(n-3)-(n-3)-5
 
-private theorem div81_factor (n:Nat) (hn:64≤n)
+theorem div81_factor (n:Nat) (hn:64≤n)
     (hres:n%162=64 ∨ n%162=107) :
     81*d3 n=2*fourthPred n+5 ∧ (d3 n)%2=1 := by
   have hm := fourth_div81 n hn hres
@@ -72,7 +72,7 @@ private theorem third_band_arith (n P R D : Nat)
     6*R+1 ≤ 8*D ∧ 8*D ≤ 8*R-1 := by
   omega
 
-private theorem third_band (n:Nat) (hn:64≤n)
+theorem third_band (n:Nat) (hn:64≤n)
     (hres:n%162=64 ∨ n%162=107) :
     6*2^(n-3)+1 ≤ 8*d3 n ∧ 8*d3 n≤8*2^(n-3)-1 := by
   have hg := n_growth n (by omega)
@@ -87,7 +87,7 @@ private theorem third_band (n:Nat) (hn:64≤n)
   have hfactor : 81*d3 n+62*n+93=8*2^n := by omega
   exact third_band_arith n (2^n) (2^(n-3)) (d3 n) hg hfactor hp
 
-private theorem n_small (n:Nat) (hn:10≤n) : n+10≤2^(n-3) := by
+theorem n_small (n:Nat) (hn:10≤n) : n+10≤2^(n-3) := by
   have h : ∀ k:Nat, k+20≤2^(k+7) := by
     intro k
     induction k with
@@ -100,7 +100,7 @@ private theorem n_small (n:Nat) (hn:10≤n) : n+10≤2^(n-3) := by
   have hh:=h (n-10)
   omega
 
-private theorem pre3_identity (n R D:Nat) (hn:3≤n)
+theorem pre3_identity (n R D:Nat) (hn:3≤n)
     (hsmall:n+10≤R) (hl:6*R+1≤8*D) :
     16*D=8*R+(16*D-8*R-(n-3)-5)+(n-3)+5 := by
   omega
