@@ -1,5 +1,18 @@
 # A reset-count lower bound for high-cost P1 odd inverse histories
 
+## Source-kernel verified 2026-11-05: the arbitrary-history energy theorem
+
+The previously paper-only high-cost energy mechanism now has a true unchanged-original-source Lean proof in [CountedEnergySource.lean](CountedEnergySource.lean) and its cost consequences in [CountedEnergyCostSource.lean](CountedEnergyCostSource.lean). The source builds succeeded in manual [CI 42122986713](https://github.com/FlareZ123/bb6/actions/runs/42122986713) and [CI 42123746362](https://github.com/FlareZ123/bb6/actions/runs/42123746362), respectively; every terminal `#print axioms` shows only `propext, Classical.choice, Quot.sound` (or subsets). No replacement model, `sorry`, or `native_decide`.
+
+For **all** `n>=14` and genuine source `CountCone (14*2^n-2*n-16) 3 b d m z`, with no wall and no cost cap, the source theorem gives
+
+```
+2^m*(b+12) <= (16*2^n)*(8*2^n*2^n)^z,
+m <= n+1+(2*n+3)*z.
+```
+
+Thus high-cost histories with `m>=2^n` require `2^n<=n+1+(2*n+3)*z`. The n=62 numerical specialization is kernel-certified as **`z>=36,312,488,334,073,921`**. This improves the older [StrongEnergy.md](StrongEnergy.md) paper bound on the additive constant by exploiting `b+12>=8`; the exact bound is stronger than `m<=n+3+z*(2*n+3)`. This still does not bound z absolutely and does not prove P1 nonhalting. The current source-verified P1 affine wall restriction `3*2^z<=2*(m+n+3)` under `m<=n+z` is independently checked in [CI 42121823464](https://github.com/FlareZ123/bb6/actions/runs/42121823464). All material remains intermediate pending mathematical novelty and full-root impact review.
+
 ## Original-source kernel verification: 2026-11-05 22:29 UTC
 
 The exact counted last-positive-reset decomposition and cost bound now pass original-source Lean CI [42120115832](https://github.com/FlareZ123/bb6/actions/runs/42120115832), with standard axioms only. Stronger source theorems also pass [CI 42121823464](https://github.com/FlareZ123/bb6/actions/runs/42121823464):
