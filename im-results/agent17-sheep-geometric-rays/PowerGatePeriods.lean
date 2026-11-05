@@ -75,6 +75,61 @@ theorem pow99_ne19 (n : Nat) : (2:Nat)^n % 99 ≠ 19 := by
   rw [hred]
   exact hsmall ⟨n%30,hlt⟩
 
+theorem pow45_ne44 (n : Nat) : (2:Nat)^n % 45 ≠ 44 := by
+  have hp : (2:Nat)^12 % 45 = 1 := by decide
+  have hred := pow_mod_reduce 45 12 n (by decide) (by decide) hp
+  have hlt : n%12 < 12 := Nat.mod_lt _ (by omega)
+  have hfinite : ∀ r : Fin 12, (2:Nat)^r.val % 45 ≠ 44 := by decide
+  rw [hred]
+  exact hfinite ⟨n%12,hlt⟩
+
+theorem pow153_ne35 (n : Nat) : (2:Nat)^n % 153 ≠ 35 := by
+  have hp : (2:Nat)^24 % 153 = 1 := by decide
+  have hred := pow_mod_reduce 153 24 n (by decide) (by decide) hp
+  have hlt : n%24 < 24 := Nat.mod_lt _ (by omega)
+  have hfinite : ∀ r : Fin 24, (2:Nat)^r.val % 153 ≠ 35 := by decide
+  rw [hred]
+  exact hfinite ⟨n%24,hlt⟩
+
+theorem pow297_ne53 (n : Nat) : (2:Nat)^n % 297 ≠ 53 := by
+  have hp : (2:Nat)^90 % 297 = 1 := by decide
+  have hred := pow_mod_reduce 297 90 n (by decide) (by decide) hp
+  have hlt : n%90 < 90 := Nat.mod_lt _ (by omega)
+  have hfinite : ∀ r : Fin 90, (2:Nat)^r.val % 297 ≠ 53 := by decide
+  rw [hred]
+  exact hfinite ⟨n%90,hlt⟩
+
+theorem pow585_ne71 (n : Nat) : (2:Nat)^n % 585 ≠ 71 := by
+  have hp : (2:Nat)^12 % 585 = 1 := by decide
+  have hred := pow_mod_reduce 585 12 n (by decide) (by decide) hp
+  have hlt : n%12 < 12 := Nat.mod_lt _ (by omega)
+  have hfinite : ∀ r : Fin 12, (2:Nat)^r.val % 585 ≠ 71 := by decide
+  rw [hred]
+  exact hfinite ⟨n%12,hlt⟩
+
+theorem pow1161_ne89 (n : Nat) : (2:Nat)^n % 1161 ≠ 89 := by
+  have hp : (2:Nat)^126 % 1161 = 1 := by decide
+  have hred := pow_mod_reduce 1161 126 n (by decide) (by decide) hp
+  have hlt : n%126 < 126 := Nat.mod_lt _ (by omega)
+  have hfinite : ∀ r : Fin 126, (2:Nat)^r.val % 1161 ≠ 89 := by decide
+  rw [hred]
+  exact hfinite ⟨n%126,hlt⟩
+
+theorem pow81_eq17 (n : Nat) : (2:Nat)^n % 81 = 17 ↔ n % 54 = 33 := by
+  have hp : (2:Nat)^54 % 81 = 1 := by decide
+  have hred := pow_mod_reduce 81 54 n (by decide) (by decide) hp
+  have hlt : n%54 <54 := Nat.mod_lt _ (by omega)
+  have hfinite : ∀ r : Fin 54, ((2:Nat)^r.val % 81 = 17 ↔ r.val = 33) := by decide
+  rw [hred]
+  exact hfinite ⟨n%54,hlt⟩
+
+#print axioms pow45_ne44
+#print axioms pow81_eq17
+#print axioms pow153_ne35
+#print axioms pow297_ne53
+#print axioms pow585_ne71
+#print axioms pow1161_ne89
+
 #print axioms high_k_gap_bound
 #print axioms pow9_eq1
 #print axioms pow15_eq1
