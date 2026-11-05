@@ -63,7 +63,9 @@ theorem blank_no_high_halt_mod16pair (j m k : Nat)
     simp [Nat.mul_add,Nat.mul_comm]
   have hkbig : 34≤k := by omega
   have hprodmod : 16 ∣ 2^(2*m+2)*(j+3) := by
-    exact dvd_mul_of_dvd_left hpower (j+3)
+    refine ⟨p*(j+3),?_⟩
+    rw [hp]
+    ac_rfl
   have hmod : (k+j+3*m+5)%16=0 := by
     rw [heq]
     exact Nat.mod_eq_zero_of_dvd hprodmod
