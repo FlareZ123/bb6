@@ -1,6 +1,7 @@
 import CylinderPower
 import GenericBlocked
 import ShadowFiniteInvariant
+import ShadowFeederRoots
 import ShadowQ29DepthSource
 import ShadowNoExceptionalGeneral
 import MediumConeReach
