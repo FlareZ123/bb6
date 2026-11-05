@@ -4,7 +4,7 @@
 
 ## Statement
 
-For every natural `n≥256`, every genuine `CountCone` from original P1 critical source
+For every natural `n≥194`, every genuine `CountCone` from original P1 critical source
 
 ```
 CountCone (14*2^n-2*n-16) 3 b d m z
@@ -30,7 +30,7 @@ Agent50's unchanged-source theorem `source_critical_wall_needs_four_resets` give
 2F_1 ≥ 7·2^n−n−2m_1.
 ```
 
-Suppose for contradiction `m≤n+z`. Since `m≥2z`, we have `z≤n` and hence `m_1≤m≤2n`. As `2^n≥5n/3` for n≥256, this yields `2F_1≥4·2^n`, so `F_1≥2^(n+1)`.
+Suppose for contradiction `m≤n+z`. Since `m≥2z`, we have `z≤n` and hence `m_1≤m≤2n`. As `2^n≥5n/3` for n≥194, this yields `2F_1≥4·2^n`, so `F_1≥2^(n+1)`.
 
 The final zero-depth suffix has `2^sF_{end}=F_1`; the wall has `F_{end}=2(m+n+3)`. Therefore
 
@@ -49,11 +49,13 @@ On the other hand `s=m−m_1≤m−2z≤n−z`, so
 **Elementary numerical theorem:**
 
 ```
-∀ n z : Nat, 256≤n → 2^z≤4*n →
+∀ n z : Nat, 194≤n → 2^z≤4*n →
    24^z * (n+2)^(2*z+2) < 2^n.
 ```
 
-Prove by partition into dyadic shells: write `2^u≤n<2^(u+1)` with `u≥8`. From `2^z≤4n<2^(u+3)`, we obtain `z≤u+2`. Since `24<2^5`, we can replace `24^z` by `2^(5(u+2))`.
+First handle the finite-size bridge **`194≤n≤255`** uniformly: `2^z≤4n<1024` implies `z≤9`. At `n=194`, exact integer arithmetic gives `24^9·196^20<2^194`. For every `n≥194`, `(n+3)^20<2(n+2)^20` (compare its ratio with the exact base `197^20<2·196^20`), so induction propagates `24^9(n+2)^20<2^n` through `n=255`.
+
+For **`n≥256`**, partition into dyadic shells: write `2^u≤n<2^(u+1)` with `u≥8`. From `2^z≤4n<2^(u+3)`, we obtain `z≤u+2`. Since `24<2^5`, we can replace `24^z` by `2^(5(u+2))`.
 
 - **First shell `u=8`**, i.e. `256≤n≤511`: if `n≤509`, then `n+2<2^9` and
   ```
@@ -68,7 +70,7 @@ Prove by partition into dyadic shells: write `2^u≤n<2^(u+1)` with `u≥8`. Fro
   ```
   The integer inequality `2u²+15u+22<2^u` holds at `u=9` (319<512) and persists by induction: the polynomial increases by `4u+17` per step whereas `2^u` at least doubles. Thus the preceding power is `<2^(2^u)≤2^n`.
 
-This proves the numerical theorem for every natural n≥256 and z satisfying (★), with no analytic logarithms or approximations.
+This proves the numerical theorem for **every natural n≥194** and z satisfying (★), with no analytic logarithms or approximations. The threshold **194 is sharp for this numerical lemma**: at n=193,z=9, the hypothesis `2^9≤4·193` holds but `24^9·195^20≥2^193`. This sharpness says nothing about existence of a genuine P1 wall witness at n=193.
 
 ## Step 3: contradiction with a source-CI-proved universal inequality
 
@@ -78,7 +80,7 @@ Agent50's [original-source Lean theorem](../agent50-p1-two-reset/WallCountLowerB
 2^n ≤ 24^z*(n+2)^(2z+2).
 ```
 
-Our (★) and the numerical theorem force the strict reverse inequality, contradiction. Hence the asserted `m>n+z`.
+Our (★) and the numerical theorem force the strict reverse inequality, contradiction. Hence the asserted `m>n+z` for every n≥194.
 
 ## Scope and reproducibility
 
