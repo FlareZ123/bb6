@@ -102,3 +102,20 @@ Independent source-equivalent direct `(b,d,k,c)` inverse enumeration, with mass 
 The recurrence and coefficient induction are a mathematical proof sketch checked against exact source-equivalent arithmetic and exhaustive finite code. **They have not yet been formalized in Lean against the unchanged original P1 `inverseAt` and `Reach` definitions.** The Python assertions establish the stated outputs only under the correctness of this independent implementation and its correspondence derivation. These certificates should therefore stay in `im-results/`, not the academic `results/` catalogue.
 
 The most useful follow-up is to kernel-check a general shadow abstraction simulation theorem against `P1FiniteInverse`, plus a finite-graph inductive closure certificate for q=498,633,774. Then combine the original source's complete odd/left-mod4/small-source inverse cases, its `medium_root_even_not_reachable` theorem and the two-feeder iff into certified `¬Reach` statements for critical n=7970,10130,12386. This would be finite genuine blank-root exclusions, still far from a uniform P1 nonhalting proof or BB(6).
+
+
+## New source-level Lean certification (2026-11-05)
+
+The earlier source-correspondence and finite-certification gaps are now partly discharged. The original-source [manual Lean CI 42040254226](https://github.com/FlareZ123/bb6/actions/runs/42040254226) proved:
+- `source_odd_iff_offset_dvd`: a genuine `inverseAt` odd output occurs precisely at depths with `2^t∣z` for a safely encoded hub;
+- `source_odd_child_iff_integral`: the original next left counter is divisible by four precisely when the compressed numerator is even;
+- `original_odd_shadow_step`: the complete exact natural-number coefficient and offset update at each authentic source odd edge;
+- `bounded_l0_cone_in_shadow_graph`, `bounded_l1_cone_in_shadow_graph`: every original `OddCone` node with left counter divisible by four and accumulated cost `m+2≤16q` is in the exact two-integer `ShadowReach` graph of the earlier computational census, for either original critical feeder root.
+
+The proof source and dependency chain is in `ShadowDepthArithmetic.lean`, `ShadowDepthSource.lean`, `ShadowSourceTransport.lean`, `ShadowParityArithmetic.lean`, `ShadowParitySource.lean`, `ShadowCast.lean`, `ShadowSourceStep.lean`, `ShadowConeLift.lean`, `ShadowFeederRoots.lean`, `ShadowGraphBridge.lean`, and `ShadowGraphFeeders.lean`. Every claimed theorem imports unmodified original `inverseAt`, `OddCone`, and the original G map through established source lemmas. Kernel axiom reports contain only standard axioms.
+
+An independently kernel-checked special case at `q=29` was verified in [manual CI 42042463934](https://github.com/FlareZ123/bb6/actions/runs/42042463934). `ShadowQ29Finite.lean` proves exact inductive graph closure at L0 (12 nodes) and L1 (14 nodes), both with maximum odd inverse cost m=10, and `ShadowQ29Graph.lean` connects these closed graphs to the original bounded-cost source cones. Thus `m+2≤464` implies `m≤10` for any authentic left-divisible-by-four odd-inverse node at these roots.
+
+A further modular lemma observes that none of these 26 listed shadow nodes has z divisible by 256. If an authentic inverse input depth were at least 9, the original source's exact binary power equation and the shadow mass identity force `256∣z`, contradicting the finite invariant. This is formalized in `ShadowQ29No256.lean`, `ShadowQ29DepthArithmetic.lean`, and `ShadowQ29DepthSource.lean`. The anticipated full-cone induction without any prior cost cutoff is in `ShadowFiniteInvariant.lean` and `ShadowQ29FullCone.lean`; its final status must be checked against the latest source-level CI run, rather than inferred from the existence of files.
+
+The source-to-shadow theorem certifies forward containment of authentic *odd* inverse paths. A P1 halting exclusion still needs to handle every authentic non-odd terminal source including even-right exits, exceptional c=1 and other special cases. The finite q29 graph and large q498/633/774 graphs are not a universal BB(6) bound. All these intermediate certificates remain in `im-results/`.
