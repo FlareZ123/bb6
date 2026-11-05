@@ -178,6 +178,37 @@ theorem even_parent_near_top (n u A : Nat) (hn:4≤n)
     omega
   exact Or.inl ⟨n-1,hb,hrelation⟩
 
+/-- A genuine odd inverse lies below 2^(n+1), while the simultaneous
+    even inverse lies above it; these are distinct exact first parents. -/
+theorem near_top_has_two_parents (n u A:Nat) (hn:4≤n)
+    (hA:3≤A) (hclose:u+A=4*2^n)
+    (hsize:8*A≤5*2^n)
+    (hdiv:(2*u+5)%9=0) :
+    ∃ x y, x≠y ∧ ResetParent x u ∧ ResetParent y u := by
+  have ho := odd_parent_near_top n u A hn hclose hsize hdiv
+  have he := even_parent_near_top n u A hn hA hclose hsize
+  let d := (2*u+5)/9
+  let p := 2^(n-2)
+  have hd : 9*d=2*u+5 := by
+    have hmod := Nat.mod_add_div (2*u+5) 9
+    dsimp [d]
+    omega
+  have hp : 2^n=4*p := by
+    have hh : 2^n=2^((n-2)+2) := congrArg (fun m:Nat => 2^m) (by omega)
+    rw [Nat.pow_add] at hh
+    dsimp [p]
+    omega
+  have hodd_low : oddPre n u < 2*2^n := by
+    dsimp [oddPre,d,p]
+    omega
+  have heven_high : 2*2^n < evenPre n A := by
+    have h2n := two_n_le_pow n hn
+    have hP := pow_at_least_16 n hn
+    dsimp [evenPre]
+    omega
+  refine ⟨oddPre n u, evenPre n A, ?_,ho,he⟩
+  omega
+
 #print axioms odd_parent_near_top
 
 #print axioms fatal_has_odd_parent
