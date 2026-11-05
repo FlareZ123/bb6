@@ -101,8 +101,8 @@ theorem every_mod27_synthetic_halt (r : Nat) (hr : r < 27) :
   · subst r
     exact ⟨863, 180, 445, 889, by decide, by decide, by decide⟩
 
-/-- A complete global invariant cannot be periodic only in the second
-    counter modulo 27 while remaining nonempty and halt-free. -/
+/-- No halt-free forward invariant periodic in the second counter modulo 27
+    can contain a state with first counter zero (in particular the blank seed). -/
 theorem no_vertical_mod27_nonhalting_invariant
     (P : Nat × Nat → Prop) (w : Nat)
     (hseed : P (0,w))
