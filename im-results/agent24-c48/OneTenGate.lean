@@ -91,7 +91,7 @@ theorem one_ten_third_inverse (u a k : Nat) (hu : 1≤u)
                 (96*u+11) (16*u+1) heven (by omega) hb
             have hm : 112*u+13=2*(2^n*(a+3)) := by
               calc
-                112*u+13=2^n*(2*(a-1)+8) := hsum
+                112*u+13=2^n*(2*(a-1)+8) := by omega
                 _=2^n*(2*(a+3)) := by congr 1 <;> omega
                 _=2*(2^n*(a+3)) := by ac_rfl
             omega
@@ -120,6 +120,7 @@ theorem blank_no_one_ten_mod64 (u : Nat) (hu : 1≤u) :
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at ht
+      omega
   | succ n =>
       have hh := BB6.Agent3.blank_section_odd_image n
         (56*u+4) (36*u+1) ht (by omega) (by omega)
