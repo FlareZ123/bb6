@@ -23,4 +23,6 @@ jobs:
           lean -o "$root/OneResetTwoAdic.olean" "$root/OneResetTwoAdic.lean"
           lean -o "$root/DefectTransport.olean" "$root/DefectTransport.lean"
           lean -o "$target/TwoResetSharp.olean" "$target/TwoResetSharp.lean"
-          lean "$target/TwoResetDefectSharp.lean"
+          lean -o "$target/TwoResetDefectSharp.olean" "$target/TwoResetDefectSharp.lean"
+          lean -o "$target/UniformDefectStep.olean" "$target/UniformDefectStep.lean"
+          lean "$target/UniformResetChain.lean"
