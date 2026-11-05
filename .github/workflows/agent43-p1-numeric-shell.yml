@@ -21,3 +21,4 @@ jobs:
           export LEAN_PATH="$N"
           lean -o "$N/NumericShell.olean" "$N/NumericShell.lean"
           lean -o "$N/NumericPower148.olean" "$N/NumericPower148.lean"
+          lean -o "$N/NumericBridge148.olean" "$N/NumericBridge148.lean"
