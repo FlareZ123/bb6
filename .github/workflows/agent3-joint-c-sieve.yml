@@ -148,3 +148,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle25Four,MixedHighRect411}.lean .
           lean -o MixedRectangle25Four.olean MixedRectangle25Four.lean
           lean -o MixedHighRect411.olean MixedHighRect411.lean
+          # Stronger source-inverse rectangle including cells M512 admits.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle27Zero,MixedHighRect512}.lean .
+          lean -o MixedRectangle27Zero.olean MixedRectangle27Zero.lean
+          lean -o MixedHighRect512.olean MixedHighRect512.lean
