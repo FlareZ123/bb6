@@ -81,6 +81,23 @@ theorem second_extra_parents_exactly_two (q n:Nat) (hn:10≤n)
     (by omega) (second_close n hn) (second_size n hn)
     (second_divnine n hn h18) (second_extra_not_div81 n hn hres)
 
+theorem rooted_fatal_extra (n:Nat) (hn:4≤n)
+    (hres:n%162=22 ∨ n%162=59 ∨ n%162=76 ∨ n%162=113) :
+    CascadeSweep.ReachC (2,0) (fatal n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n (fatal n),0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n (n+4),0) := by
+  have h18:n%18=4 ∨ n%18=5:=by omega
+  have hno:fatal n≠2:=by
+    have hpow:=n_plus_three_le_pow n hn
+    dsimp [fatal]
+    omega
+  exact rooted_two_parents (fatal n) (oddPre n (fatal n))
+    (evenPre n (n+4)) hno
+    (fatal_has_odd_parent n hn h18)
+    (even_parent_near_top n (fatal n) (n+4) hn (by omega)
+      (fatal_close n hn) (fatal_size n hn))
+    (fun q => fatal_extra_parents_exactly_two q n hn hres)
+
 #print axioms fatal_extra_not_div81
 #print axioms second_extra_not_div81
 end CascadeFirstFork
