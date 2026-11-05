@@ -35,7 +35,19 @@ All five new proof files typechecked **locally** with **Lean 4.36.0-rc2** agains
 
 The final fatal specialization was **initially** checked locally with a temporary signature stub for Agent7's high-valuation theorem. That staging check alone did not establish source compatibility. The subsequent **full original-checked-in-source Lean 4.36.0-rc2 CI succeeded** at [run 42048293246](https://github.com/FlareZ123/bb6/actions/runs/42048293246), commit `6a6fef529e8d1eeff5f5da18100ead1f39df27c5`. The manual-only [workflow](../../.github/workflows/agent44-746-fanin.yml) compiled the unchanged Agent10 first-return grammar, all Agent7 preceding fork and high-valuation dependencies, and the five new Agent44 modules, with no signature stubs. The final `#print axioms` audits for `fatal_unbounded_odd_fanin_four` and `fatal_unbounded_odd_fanin_five` reported exactly **[`propext`, `Classical.choice`, `Quot.sound`]**. All intermediate source modules also passed. The first CI attempt failed on an unrelated, syntactically invalid documentation comment preceding a namespace in Agent7's `FatalValuationPower.lean`; a one-character comment-opening correction (commit `6dee75fdaa3262667fc40b645add7ba302bd9cad`) fixed that parser issue without changing mathematical code, after which the full source CI passed. Upstream physical-machine semantic transport was previously independently audited for the C acceleration. This theorem is directly about source-C first-return resets and does not assert new original-raw-machine halting behavior.
 
-See also the [closed odd predecessor-count derivation and independent finite check](ExactCount.md). Its logarithmic counting identity remains a separately **unformalized** paper argument; successful source CI covers the five mathematical proof modules listed above.
+## Exact odd inverse count (second theorem)
+
+The [closed count derivation](ExactCount.md) is now **Lean-kernel proved** for every nonterminal odd inverse valuation position, against the original first-return source grammar. With `2u+5=3^(n+1)*d` and odd `d`, let `oddParameterCount u n` be the number of source-valid `OddParam u t` for `t<n`. [ParameterCountBridge.lean](ParameterCountBridge.lean) proves
+
+```lean
+oddParameterCount u n + Nat.log2 (3^n*d) +
+  (if 0<n ∧ d=1 then 1 else 0) = 2*n + Nat.log2 d
+```
+
+The complete original-source [CI 42052963173](https://github.com/FlareZ123/bb6/actions/runs/42052963173) succeeded; final `#print axioms` used only `propext`, `Classical.choice`, and `Quot.sound`. Six algebraic modules [LogBands.lean](LogBands.lean), [LogStep.lean](LogStep.lean), [Telescope.lean](Telescope.lean), [GeomLog.lean](GeomLog.lean), [GeomBand.lean](GeomBand.lean), [ExactCountLean.lean](ExactCountLean.lean) also passed independent [CI 42052600128](https://github.com/FlareZ123/bb6/actions/runs/42052600128).
+
+For the terminal position `t=n`, [TerminalCount.lean](TerminalCount.lean) proves it contributes exactly when `2^n*d=7` or its dyadic-band predicate is true; a full-source check is under way at [CI 42053746058](https://github.com/FlareZ123/bb6/actions/runs/42053746058). Agent7 independently developed closely overlapping total-count formalizations in [OddTotalCount.lean](../agent7-cascade-forward/OddTotalCount.lean). Exact valuation `n+1` requires additionally `3∤d` to rule out higher positions. These formulas count valid *valuation parameters*; uniqueness/injectivity of actual parent heights is handled by [ExactOdd.lean](ExactOdd.lean). They remain intermediate because external novelty and blank-root reachability are unresolved.
+
 
 ## Reproduction and overlap
 
