@@ -37,6 +37,14 @@ print('parent density finite',S,float(S))
 print('zero density within multiples of6 lower',L,float(L),'upper',U,float(U),'width',float(tail))
 print('lower density among all even integers at least', L/3)
 print('lower density among all integers at least', L/6)
+# Strict upper-bound witness: the b=19 progression has an element outside
+# every b<=18 progression, hence adds positive asymptotic parent density.
+t=1660250
+assert t%1048577 == 611673
+assert (12*t-37)%1048577 == 0
+assert all(t%m != r for _,m,r in classes)
+assert (12*t-37)//1048577 == 19
+print('PASS strict upper interval: E(2^19*19)=6*1660250; all earlier congruences fail')
 assert L>Fraction(317,840)
 assert S == Fraction(336766596987601117645591,654227323046073897192215)
 assert len(classes)==12 and accepted==287
