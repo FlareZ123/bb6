@@ -3,7 +3,6 @@ import ShadowDepthArithmetic
 import NoC1Arithmetic
 
 namespace BB6.Agent45Exception
-open BB6.Agent1
 open BB6.P1Reduction
 open BB6.Shadow
 
