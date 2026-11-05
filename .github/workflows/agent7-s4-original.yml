@@ -98,6 +98,9 @@ jobs:
           lake env lean S4RawTailGates.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4Toggle.lean" S4Toggle.lean
           lake env lean -o S4Toggle.olean S4Toggle.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixCausal.lean.xz.b64" | xz -dc > S4PrefixCausal.lean
+          echo "81400697e2e0dc35f9193c637eff49e0e1df8344986899a58fa121621a78ffef  S4PrefixCausal.lean" | sha256sum -c -
+          lake env lean -o S4PrefixCausal.olean S4PrefixCausal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4ToggleHead.lean" S4ToggleHead.lean
           lake env lean -o S4ToggleHead.olean S4ToggleHead.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TogglePhases.lean" S4TogglePhases.lean
