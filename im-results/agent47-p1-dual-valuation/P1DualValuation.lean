@@ -98,6 +98,9 @@ theorem shift_all_powers (q t:Nat) (hq:1≤q):
   have hnright:=shift_no_big_rhs q t hq hn
   simp [hnleft,hnright]
 
+theorem feeder_power_large (q : Nat) (hq : 1 ≤ q) :
+    4*(5*q+2) < 2^(16*q) := big16 q hq
+
 theorem feeder_u_lower (q : Nat) (hq : 1 ≤ q) :
     3 ≤ 7*2^(16*q)-4*q-3 := by
   have hb := big16 q hq
