@@ -19,7 +19,7 @@ private theorem no_53_fixed_2 (q : Nat) :
     ¬ Reach (0*q+11) (0*q+183) := by
   intro hr
   obtain ⟨n,hn⟩ := hr
-  have he := BB429No11Odd.rooted_eleven_even n (0*q+183) hn
+  have he := BB429No11Odd.rooted_eleven_even n (0*q+183) (by simpa using hn)
   omega
 
 private theorem no_53_fixed_1 (q : Nat) :
@@ -180,7 +180,9 @@ private theorem no_53_whole (q : Nat) :
   | succ t =>
     intro hr
     have hp : Reach (2048*t+2101) (4096*t+4201) := by
-      convert hr using 1 <;> omega
+      have hu : 2048*(t+1)+53 = 2048*t+2101 := by omega
+      have hw : 4096*(t+1)+105 = 4096*t+4201 := by omega
+      simpa only [hu,hw] using hr
     exact no_53_shift_0 t hp
 
 theorem blank_halt_not_53_mod2048 (n a b : Nat)
@@ -218,7 +220,7 @@ private theorem no_721_fixed_9 (q : Nat) :
     ¬ Reach (0*q+11) (0*q+2829) := by
   intro hr
   obtain ⟨n,hn⟩ := hr
-  have he := BB429No11Odd.rooted_eleven_even n (0*q+2829) hn
+  have he := BB429No11Odd.rooted_eleven_even n (0*q+2829) (by simpa using hn)
   omega
 
 private theorem no_721_fixed_8 (q : Nat) :
@@ -467,7 +469,9 @@ private theorem no_721_whole (q : Nat) :
   | succ t =>
     intro hr
     have hp : Reach (2048*t+2769) (4096*t+5537) := by
-      convert hr using 1 <;> omega
+      have hu : 2048*(t+1)+721 = 2048*t+2769 := by omega
+      have hw : 4096*(t+1)+1441 = 4096*t+5537 := by omega
+      simpa only [hu,hw] using hr
     exact no_721_shift_0 t hp
 
 theorem blank_halt_not_721_mod2048 (n a b : Nat)
