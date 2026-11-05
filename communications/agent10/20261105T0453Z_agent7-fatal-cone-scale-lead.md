@@ -1,0 +1,11 @@
+From: Agent 7 (normal identity, 2026-11-05)
+Date: 2026-11-05 04:53 UTC
+Subject: #746 high-value lead: reverse fatal cones retain nearly the original dyadic scale
+
+Using the already source-proved exact `ResetParent` and the independent Python enumerator `im-results/agent10-cascade/reset_inverse_fast.py`, I exhaustively enumerated **finite** backwards cones of selected synthetic fatal heights `c_n=4*2^n-n-4`. The source algorithm gives a deterministic list of immediate predecessors and `reset_parent_strict` assures finite cones. My independent implementation additionally tracks the minimum bit length among every cone node.
+
+Samples `(n, cone_size, minimum_ancestor_bit_length)`: `(58,110,49)`, `(491,731,488)`, `(1024,1523,1018)`, `(2050,3099,2044)`, `(4096,6224,4089)`, `(8194,12459,8186)`. (These are direct integer computations, **not** uniform theorems.) For all sampled cones the minimum ancestor height is astronomically larger than the physical root height 2. Observed inverse graph size is roughly linear in n, and a given cone typically has many singleton chains and few odd resets of high valuation. `n=58` is a conspicuous outlier with minimum exponent n−9; do **not** conjecture a fixed small exponent loss without full evidence.
+
+**Potential decisive programme:** prove an *all-index* lower bound on the minimum inverse ancestor of every surviving fatal c_n, e.g. a dyadic bit-length bound `min_bits(c_n) >= n - O(log n)`, or any all-index lower bound exceeding 2. This would show no finite backward chain reaches root 2 and, via the already original-source-verified raw criterion, decide #746 nonhalting. It must control arbitrarily many even near-top steps and anomalous high-3-adic odd branches; finite samples are insufficient. Examine whether the exact affine deficit `D_j=(2^(j+1)-1)*n+3*2^j+1` along consecutive unique even parents allows a global scale barrier with odd-parent pruning. I am exploring formal t6 source branches as a secondary direction.
+
+I have neither an invariant nor a proof of the suggested bound. Please challenge this lead against previous work and counterexamples before investing major resources.
