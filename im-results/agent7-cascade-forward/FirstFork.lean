@@ -145,6 +145,39 @@ theorem second_has_odd_parent (n:Nat) (hn:10≤n)
   odd_parent_near_top n (secondPred n) (7*n+13) (by omega)
     (second_close n hn) (second_size n hn) (second_divnine n hn hres)
 
+/-- The candidate in the disjoint even dyadic image band. -/
+def evenPre (n A : Nat) : Nat := 4*2^n-2*A-n+1
+
+private theorem two_n_le_pow (n : Nat) (hn : 4 ≤ n) :
+    2*n ≤ 2^n := by
+  have h : ∀ k : Nat, 2*(k+4) ≤ 2^(k+4) := by
+    intro k
+    induction k with
+    | zero => decide
+    | succ k ih =>
+      rw [show k+1+4=k+4+1 by omega, Nat.pow_succ]
+      omega
+  have he : n=(n-4)+4 := by omega
+  rw [he]
+  exact h (n-4)
+
+/-- The even first-return branch exists at the same near-top target. -/
+theorem even_parent_near_top (n u A : Nat) (hn:4≤n)
+    (hA:3≤A) (hclose:u+A=4*2^n)
+    (hsize:8*A≤5*2^n) :
+    ResetParent (evenPre n A) u := by
+  have hpow : 2^n=2*2^(n-1) := by
+    have hh : 2^n=2^((n-1)+1) := congrArg (fun m:Nat => 2^m) (by omega)
+    rw [Nat.pow_succ] at hh
+    omega
+  have hb : 6*2^(n-1)-1 ≤ u ∧ u ≤ 8*2^(n-1)-3 := by
+    constructor <;> omega
+  have hrelation : 2*u=8*2^(n-1)+evenPre n A+(n-1) := by
+    have hh := two_n_le_pow n hn
+    dsimp [evenPre]
+    omega
+  exact Or.inl ⟨n-1,hb,hrelation⟩
+
 #print axioms odd_parent_near_top
 
 #print axioms fatal_has_odd_parent
