@@ -163,3 +163,8 @@ jobs:
           lean -o JointSixHighResidual.olean JointSixHighResidual.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/MixedEven16Sharp.lean .
           lean -o MixedEven16Sharp.olean MixedEven16Sharp.lean
+          # All twelve two-step inverse rectangles and three quarters of
+          # the parameterized high m-depth class.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedEven4TwentyTwo,MixedHighThreeQuarterSeven}.lean .
+          lean -o MixedEven4TwentyTwo.olean MixedEven4TwentyTwo.lean
+          lean -o MixedHighThreeQuarterSeven.olean MixedHighThreeQuarterSeven.lean
