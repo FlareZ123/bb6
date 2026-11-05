@@ -306,6 +306,96 @@ theorem boundary_first_from_local_noF_turn
       2*m+4*q+N+15 := by omega
   simpa only [ht] using hjoined
 
+/-- Stronger physical-safety compiler: a local A turn may transiently
+    visit F while its left tape retains a nonzero marker. Only physically
+    blank-left F/0 visits are excluded. -/
+theorem boundary_first_from_local_noPhysical_turn
+    (m q N : Nat) (front out ys : List Bool)
+    (hTurn : ∀ L : List Bool,
+      run N (⟨L,false,front++ys,0⟩ : Cfg) =
+        ⟨L,true,out++ys,2⟩)
+    (hTurnNoPhysical : ∀ L : List Bool,
+      NoPhysical
+        (⟨L,false,front++ys,0⟩ : Cfg) N) :
+    NoPhysical (eStart m q (front++ys))
+      (2*m+4*q+N+15) := by
+  let L : List Bool := pairs (m+3)++[true,true]
+  let s : Cfg := scanStart (q+1) L (front++ys)
+  let a : Cfg := ⟨oppairs (q+1)++L,false,front++ys,0⟩
+  let c : Cfg := cWalk (q+1) L (out++ys)
+  let d : Cfg := ⟨L,true,
+    List.replicate (2*(q+1)) true ++ (out++ys),2⟩
+  let b : Cfg := sweepB (m+1)
+    ([false,true,true,true] ++
+      List.replicate (2*(q+1)) true ++ (out++ys))
+  let fin : Cfg := sweepD m (outPacket q out ys)
+  have h1 : run 2 (eStart m q (front++ys)) = s := by
+    dsimp [s,L]
+    exact eStart_two m q (front++ys)
+  have h2 : run (2*(q+1)) s = a := by
+    dsimp [s,a]
+    rw [scan_run]
+    rfl
+  have h3 : run N a = c := by
+    dsimp [a,c]
+    rw [hTurn]
+    rfl
+  have h4 : run (2*(q+1)) c = d := by
+    dsimp [c,d]
+    exact cWalk_run (q+1) L (out++ys)
+  have h5 : run 4 d = b := by
+    dsimp [d,b,L]
+    exact cBase (m+1)
+      (List.replicate (2*(q+1)) true ++ (out++ys))
+  have h6 : run 2 b = fin := by
+    dsimp [b,fin,outPacket]
+    rw [sweepB_two]
+    rfl
+  have hn0 : NoPhysical (eStart m q (front++ys)) 2 :=
+    noF_to_noPhysical _ _
+      (initial_noF m q (front++ys))
+  have hns : NoPhysical s (2*(q+1)) :=
+    noF_to_noPhysical _ _
+      (scan_noF (q+1) L (front++ys))
+  have hna : NoPhysical a N :=
+    hTurnNoPhysical (oppairs (q+1)++L)
+  have hnc : NoPhysical c (2*(q+1)) :=
+    noF_to_noPhysical _ _
+      (cWalk_noF (q+1) L (out++ys))
+  have hnd : NoPhysical d 4 :=
+    cBase_noPhysical (m+1)
+      (List.replicate (2*(q+1)) true ++ (out++ys))
+  have hnb : NoPhysical b 2 :=
+    noF_to_noPhysical _ _
+      (sweepB_two_noF m
+        ([false,true,true,true] ++
+          List.replicate (2*(q+1)) true ++ (out++ys)))
+  have hnf : NoPhysical fin (2*m+3) :=
+    noF_to_noPhysical _ _
+      (sweepD_noF m (outPacket q out ys))
+  have hjoined : NoPhysical (eStart m q (front++ys))
+      (2+(2*(q+1)+(N+(2*(q+1)+(4+(2+(2*m+3))))))) :=
+    appendNoPhysical (eStart m q (front++ys)) s 2
+      (2*(q+1)+(N+(2*(q+1)+(4+(2+(2*m+3))))))
+      hn0 h1
+      (appendNoPhysical s a (2*(q+1))
+        (N+(2*(q+1)+(4+(2+(2*m+3)))))
+        hns h2
+        (appendNoPhysical a c N
+          (2*(q+1)+(4+(2+(2*m+3))))
+          hna h3
+          (appendNoPhysical c d (2*(q+1)) (4+(2+(2*m+3)))
+            hnc h4
+            (appendNoPhysical d b 4 (2+(2*m+3))
+              hnd h5
+              (appendNoPhysical b fin 2 (2*m+3)
+                hnb h6 hnf)))))
+  have ht : 2+(2*(q+1)+(N+(2*(q+1)+(4+(2+(2*m+3)))))) =
+      2*m+4*q+N+15 := by omega
+  simpa only [ht] using hjoined
+
+#print axioms boundary_first_from_local_noPhysical_turn
+
 #print axioms boundary_first_from_local_noF_turn
 
 #print axioms boundary_first_physical
