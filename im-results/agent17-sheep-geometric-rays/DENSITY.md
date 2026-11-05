@@ -55,7 +55,7 @@ Conversely, whenever `t` belongs to this progression and is sufficiently large (
 v=(12t-2b+1)/M_b
 ```
 
-is a positive odd integer at least five. This gives a genuine legal source `x=2^b v` with `F(x)=E(x)=6t`. Oddness is automatic because the numerator and denominator are odd. Each progression thus equals a genuine generic-source incoming family apart from finitely many small `t`.
+is a positive odd integer at least five. This gives a genuine legal source `x=2^b v` with `F(x)=E(x)=6t`. Oddness is automatic because the numerator and denominator are odd. Each progression thus equals a genuine generic-source incoming family apart from finitely many small `t`. **Uniformity of the small exceptions matters:** shifting `t` by its progression modulus `m_b` increases the integer cofactor `v` by exactly `12/g_b`, which is either 12 or 4. Since `2b-1<M_b`, the first nonnegative representative has cofactor at least -1; consequently at most two terms of any individual progression fail `v>=5`. With only O(log X) possible source valuations for outputs below X, these losses collectively have size O(log X) and cannot secretly accumulate positive density.
 
 Exceptional `v=3` sources contribute at most `O(log X)` targets `6t\\le X`: the output `3\\cdot2^b+b+3\\le X` forces `b=O(log X)`. They have natural density zero and do not affect the theorem.
 
