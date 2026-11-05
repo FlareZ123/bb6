@@ -106,3 +106,81 @@ remaining even first-reset predecessor across these classes and all
 other unclassified fatal-index classes, or a different root-closed
 invariant, is necessary. The other globally surviving index
 classes remain unaffected.
+
+## 2026-11-05 16:51 UTC: broader 34-of-36 modular fork reduction
+
+The initial n%54=35,46 exclusion has now been extended via
+[ForkOddDead27.lean](ForkOddDead27.lean) and
+[ForkOddDead486.lean](ForkOddDead486.lean).
+These files passed **local Lean 4.36.0-rc2** compilation with unchanged
+upstream theorem signatures represented as explicit axioms in a small
+test harness. The source dependency workflow has been updated and
+dispatched at [run 42068546506](https://github.com/FlareZ123/bb6/actions/runs/42068546506).
+At the time of writing GitHub listed this and the earlier run as
+**queued**, so the original-source audit remains **pending**.
+
+The new full quantified result states:
+
+```lean
+theorem rooted_odd_fork_dead_34_of_36 (n:Nat) (hn:13≤n)
+    (hres:n%54=17 ∨ n%54=28 ∨ n%54=35 ∨ n%54=46)
+    (h395:n%486≠395) (h460:n%486≠460) :
+    ¬ReachC (2,0) (oddPre n,0)
+
+theorem fatal_iff_even_34_of_36 (n:Nat) (hn:13≤n)
+    (hres:n%54=17 ∨ n%54=28 ∨ n%54=35 ∨ n%54=46)
+    (h395:n%486≠395) (h460:n%486≠460) :
+    ReachC (2,0) (fatal n,0) ↔ ReachC (2,0) (evenPre n,0)
+```
+
+**Interpretation:** all nine modulo-486 subdivisions of each of the
+n%54=35,46 classes are covered, plus eight of the nine subdivisions
+of each n%54=17,28 class. Exactly **34 of 36** source-verified
+previously two-parent fork sectors have their entire odd branch
+excluded from the **authentic post-initial C(2,0) root**. The two
+uncovered residue classes are n%486=395 and n%486=460. This does
+not establish absence of the remaining even branch, nor conclude
+the original six-state machine is nonhalting.
+
+### Strengthened argument
+
+For all four n%54 classes, the unique *even* potential predecessor
+of the odd branch target v is
+
+$$w=(10\cdot2^n-523n-780)/9$$
+
+with w in the universal even-image gap and w%3 in {0,1},
+which excludes w from the genuine root. When v%3=1, the old
+proof already shows that v has no odd predecessor.
+
+For v%3=2 in n%54=17,28, analyze every actual odd first-reset
+parent using the full **untruncated** exact inverse grammar.
+Valuation exponent t=0 is impossible by the source-proved
+`near_top_no_odd_tzero` dyadic gap at n-1.
+Valuation exponent t=1 is impossible because the input 2d
+lies in the distinct dyadic middle gap
+`2^(n-1)<2*d` and `2*(2*d)+2<3*2^(n-1)`,
+outside all odd inverse-image bands.
+Every remaining t≥2 requires `27 | (2*v+5)`.
+Thus whenever this secondary divisibility fails, all true
+predecessors of v are forced to the same unreachable w.
+
+The affine identity `9*v+257*n+399=14*2^n` implies
+`9*(2*v+5)+514*n+753=28*2^n`.
+Periodicity `2^162 ≡ 1 (mod 243)` and the coefficient
+`486 ≡ 0 (mod 243)` reduce this secondary 27-divisibility
+to n%486. An ordinary **kernel-decided** exhaustive table
+over the finite type `Fin 486` proves that 27-divisibility is
+impossible for the 16 target residues within n%54=17,28
+except 395 and 460. This uses `decide` in the Lean kernel,
+with no `native_decide`, external trace or random sampling.
+
+[Source checker workflow](../../.github/workflows/agent7-746-uniform-fatal-parent.yml)
+compiles both new files after the previously checked
+source lemmas. The earlier source run
+[42065041818](https://github.com/FlareZ123/bb6/actions/runs/42065041818)
+checks the original two-class theorem; the latest
+[42068546506](https://github.com/FlareZ123/bb6/actions/runs/42068546506)
+checks the full 34/36 theorem as well. Report these as
+original-source certified **only after checking a successful run
+and the new theorem's axiom audit**.
