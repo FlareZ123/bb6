@@ -1,0 +1,27 @@
+name: Agent 42 root119 D/F rightward sweep (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  df-sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check unchanged original auxiliary source and quantified right sweep
+        run: |
+          set -e
+          export LEAN_PATH="im-results/agent42-root119-guard"
+          lean -o im-results/agent42-root119-guard/Root119Gate.olean im-results/agent42-root119-guard/Root119Gate.lean
+          lean -o im-results/agent42-root119-guard/Root119BShift.olean im-results/agent42-root119-guard/Root119BShift.lean
+          lean -o im-results/agent42-root119-guard/Root119BShield.olean im-results/agent42-root119-guard/Root119BShield.lean
+          lean im-results/agent42-root119-guard/Root119DFSweep.lean
