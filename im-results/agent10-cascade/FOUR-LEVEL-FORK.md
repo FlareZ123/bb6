@@ -45,3 +45,17 @@ Local source SHA256 values:
 The exact-content GitHub files were entered through the repository connector; their hash should be compared to these local values before regarding the local check as a source-file reproduction.
 
 **Why it matters:** This refines an infinite family of the *genuine* #746 reset-root problem and identifies the earliest provably necessary branching node of two surviving arithmetic sectors. It is a structural simplification, not an all-index obstruction. Existing finite forward proof excludes all fatal indices up to 2048, so no new finite halting exclusions or BB(6) upper bound follow. External academic novelty remains unassessed. The next consequential mathematical task is to constrain the two authentic `u4` parent branches uniformly in the blank-root inverse graph; further forced-even lifting cannot alone finish these sectors.
+
+
+## Further refinement: complete two-branch grammar in four modulo-54 classes
+
+The new [FourthExactTwo.lean](FourthExactTwo.lean) locally proves two stronger uniform statements for every (n\ge10) with (n\bmod54\in\{17,28,35,46\}):
+
+1. `fourth_not_div27`: (27\nmid(2u_4+5)), via the exact multiplicative period 18 of (2^n\pmod{27}). The older result already gives divisibility by 9, so the 3-adic valuation is exactly 2.
+2. `fourth_parents_exactly_two`: for **every** (q\in\mathbb N), `ResetParent q u4 ↔ q=oddPre n ∨ q=evenPre n`. Completeness uses the full two-arm source inverse. Even-band exponent uniqueness forces (k=n-1). Odd (t=0) is excluded by the dyadic gap; (t\ge2) would imply divisibility by 27; (t=1) forces the unique dyadic scale (k=n-2), quotient and parent height.
+
+The derived `genuine_fatal_iff_two_parent_roots` composes this with the actual-root source `ResetChain` bridge: **genuine blank-derived reachability** of fatal(n) is equivalent to reachability of at least one of the two explicit parent heights. This is a complete iff of the two-branch interface, still conditional on unchanged-source checking.
+
+The new file compiled locally under Lean 4.36.0-rc2 with the same explicitly stubbed prior source interface. The modulo27 arithmetic theorem's kernel axiom list is only `[propext, Quot.sound]`. The final exact-parent iff also lists `even_band_scale_unique`, which is a stub of Agent 7's existing proved theorem, plus standard Lean axioms. The final rooted iff additionally lists stubbed `root_reset_chain_iff`, `genuine_fatal_iff_second_even` and `reset_chain_last`. **These stub dependency names explicitly prevent describing the local run as complete unmodified-source verification.** Updated existing manual-only workflow now compiles the actual full source chain and all three new files; source check remains to be run.
+
+Local newest source sha256: `FourthExactTwo.lean` `6b38661bc5abbbbda1c1b2af918b03446761b0f089bcb2b4e6c2571285fb0d58` before appending its rooted theorem; this digest is historical and should be recalculated for the final local proof. 
