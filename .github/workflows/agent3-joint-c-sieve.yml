@@ -154,3 +154,8 @@ jobs:
           lean -o MixedHighRect512.olean MixedHighRect512.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/JointRootQuantifierRect.lean .
           lean -o JointRootQuantifierRect.olean JointRootQuantifierRect.lean
+          # Unified original-source two-edge forbidden region and
+          # its four-sector all-m=1(mod4) high stopping family.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedEven16TwentyTwo,MixedHighOneMod4Seven}.lean .
+          lean -o MixedEven16TwentyTwo.olean MixedEven16TwentyTwo.lean
+          lean -o MixedHighOneMod4Seven.olean MixedHighOneMod4Seven.lean
