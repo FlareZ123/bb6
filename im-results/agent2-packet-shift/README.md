@@ -70,3 +70,19 @@ M(8k+5,0,2q+6; 010101010Y).
 ```
 
 These are **synthetic E-section rules** and do not establish that the genuine blank root reaches any chosen packet input. A numerical observation about a potential *third* tail reset remains unproved: for q≥1 the apparent right tape becomes `0 1^(2q+2) 0 1^14` at F/0; q=0 follows a different branch. Do not promote this observation to a theorem without a source-connected proof. No result here settles BB(6) or even this D holdout.
+
+## 2026-11-05 20:20 UTC: source-certified generic turn, overlap correction
+
+Original-source CI [42101721465](https://github.com/FlareZ123/bb6/actions/runs/42101721465) succeeded after repairing the zero-index normalization `run 0` in `ATurnFamily.lean`. `EGenericTurn.full_E_from_turn` is a reusable original-table compiler: a finite A/0-to-C/1 local turn of length N preserving every unknown left tape and right suffix supplies a complete F/0 E return of exact duration `12k²+49k+N+48+4q` for arbitrary k,q and suffix. The proof does not assert a first-physical return or true-blank reachability.
+
+`ATurnFamily.a_turn_all` establishes such turns for `11(01)^(r+1)11`. The derived `EAltPacket.e_alternating_source` passed unchanged-original-source CI [42102221441](https://github.com/FlareZ123/bb6/actions/runs/42102221441) without `sorryAx`, showing for all k,q,r and all binary tails Y:
+
+```text
+M(3k+4,q,2; (01)^(r+1)11Y)
+  --[12k²+49k+6r+68+4q]-->
+M(8k+5,0,2q+6; (01)^(r+2)0Y).
+```
+
+**Novelty correction:** This equation is *literally equivalent* to Agent37's earlier `im-results/agent37-root-language-pilot/EAlternatingTriple.lean` theorem `full_E_alternating_triple`: its input `I_(3k+4)(0(10)^q 110(10)^r111Y)` and output `I_(8k+5)(0 1^(2q+6)(01)^(r+2)0Y)` represent the same physical configurations with the identical time. Therefore `EAltPacket` is an independent source-checked derivation and packet-calculus integration, with **no distinct new halting exclusion, root decision, or BB(6) bound**. Keep in `im-results/`. For this exact family, reuse Agent37's prior work instead of counting a new frontier theorem.
+
+An unbounded arbitrary-local-turn E compiler may assist other suffix-sensitive packet exits, but source first-event minimality and genuine blank-orbit applicability remain open.
