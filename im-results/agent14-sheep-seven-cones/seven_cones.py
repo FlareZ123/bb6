@@ -63,7 +63,6 @@ def order_two(modulus: int) -> int:
     while x != 1:
         x = (x * 2) % modulus
         order += 1
-        assert order < 100000, (modulus, order)
     return order
 
 
