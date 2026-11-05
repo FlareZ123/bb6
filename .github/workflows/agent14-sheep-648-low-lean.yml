@@ -25,9 +25,9 @@ jobs:
       - name: Kernel-check all 56 all-k congruence exclusions
         run: |
           mkdir -p /tmp/agent14-low-lean
-          cp im-results/agent14-sheep-even-inverse/EvenPeriod.lean /tmp/agent14-low-lean/
+          cp im-results/agent14-sheep-seven-cones/Sheep648Period.lean /tmp/agent14-low-lean/
           cp im-results/agent14-sheep-seven-cones/Sheep648LowResidues.lean /tmp/agent14-low-lean/
           cd /tmp/agent14-low-lean
           export LEAN_PATH=.
-          lean -o EvenPeriod.olean EvenPeriod.lean
+          lean -o Sheep648Period.olean Sheep648Period.lean
           lean -o Sheep648LowResidues.olean Sheep648LowResidues.lean
