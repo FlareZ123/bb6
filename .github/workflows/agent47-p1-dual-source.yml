@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   p1-dual-source:
-    if: github.event_name == 'workflow_dispatch' || (github.event.issue.title == '[agent47-p1-dual-source-audit]' || github.event.issue.title == '[agent47-p1-second-fan-audit]')
+    if: github.event_name == 'workflow_dispatch' || (github.event.issue.title == '[agent47-p1-dual-source-audit]' || github.event.issue.title == '[agent47-p1-second-fan-audit]' || github.event.issue.title == '[agent47-p1-three-iff-audit]')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -39,10 +39,12 @@ jobs:
           lean -o im-results/agent47-p1-dual-valuation/P1DualValuation.olean im-results/agent47-p1-dual-valuation/P1DualValuation.lean | tee /tmp/dual-arithmetic-axioms.log
           lean im-results/agent47-p1-dual-valuation/P1DualSource.lean | tee /tmp/dual-source-axioms.log
           lean -o im-results/agent47-p1-dual-valuation/P1SecondFan.olean im-results/agent47-p1-dual-valuation/P1SecondFan.lean | tee /tmp/second-fan-axioms.log
-          lean im-results/agent47-p1-dual-valuation/P1SecondReach.lean | tee /tmp/second-reach-axioms.log
+          lean -o im-results/agent47-p1-dual-valuation/P1SecondReach.olean im-results/agent47-p1-dual-valuation/P1SecondReach.lean | tee /tmp/second-reach-axioms.log
+          lean im-results/agent47-p1-dual-valuation/P1SecondPairs.lean | tee /tmp/second-pairs-axioms.log
           grep -q "odd_second_feeder_inverse_depth.*depends on axioms:" /tmp/dual-source-axioms.log
           grep -q "odd_second_reach_requires_two.*depends on axioms:" /tmp/second-reach-axioms.log
-          if grep -q "sorryAx" /tmp/dual-arithmetic-axioms.log /tmp/dual-source-axioms.log /tmp/second-fan-axioms.log /tmp/second-reach-axioms.log; then
+          grep -q "odd_critical_iff_three.*depends on axioms:" /tmp/second-pairs-axioms.log
+          if grep -q "sorryAx" /tmp/dual-arithmetic-axioms.log /tmp/dual-source-axioms.log /tmp/second-fan-axioms.log /tmp/second-reach-axioms.log /tmp/second-pairs-axioms.log; then
             echo "Source axiom audit failed: sorryAx" >&2
             exit 1
           fi
