@@ -177,7 +177,7 @@ theorem special_no_even_power_small (a h w j : Nat) (ha1 : 1 ≤ a) (ha12 : a < 
     rcases hc_a with ca1|ca2|ca3|ca4|ca5|ca6|ca7|ca8|ca9|ca10|ca11 <;> subst a <;>
       rcases hc_h with ch0|ch1|ch2|ch3|ch4|ch5|ch6|ch7|ch8|ch9|ch10|ch11|ch12 <;> subst h <;> simp [Nat.pow_succ] at * <;> omega
   rcases small_outputs_are_not_power j with ⟨h10,h82,h30,h104,h676,h394,h1168,h1548,h6940,h6158⟩
-  rcases heval with H|H|H|H|H|H|H|H|H|H|H|H <;> omega
+  rcases heval with H|H|H|H|H|H|H|H|H|H <;> omega
 
 theorem special_no_even_power (a h w j : Nat) (ha : 1 ≤ a)
     (hfactor : 3*2^a+a+2=2^h*w) (hwodd : w%2=1) :
