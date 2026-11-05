@@ -196,9 +196,10 @@ theorem a_double_zero_turn_noPhysical (v r : Nat) (L ys : List Bool) :
         (⟨xs,true,List.replicate (2*r) true ++ true::ys,2⟩ : Cfg))
         (opSplit v L)
     dsimp [e,V,U]
-    rw [hswap]
-    exact cSeven_noPhysical (oppairs v++L)
-      (List.replicate (2*r) true ++ true::ys)
+    exact Eq.mp
+      (congrArg (fun cc : Cfg => NoPhysical cc 7) hswap.symm)
+      (cSeven_noPhysical (oppairs v++L)
+        (List.replicate (2*r) true ++ true::ys))
   have hf : NoPhysical f (2*v) :=
     noF_to_noPhysical f (2*v)
       (cWalkAll_noF v L
