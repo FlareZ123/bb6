@@ -137,6 +137,8 @@ jobs:
           lean -o HighTowerB.olean HighTowerB.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighTowerBSharp.lean .
           lean -o HighTowerBSharp.olean HighTowerBSharp.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighTower3A.lean .
+          lean -o HighTower3A.olean HighTower3A.lean
           if [ "${{ inputs.seven_only }}" = "true" ]; then exit 0; fi
           # Source-exact full-depth odd second wedge with M32-invisible true-blank exclusion.
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenSliver.lean .
