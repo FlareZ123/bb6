@@ -20,7 +20,7 @@ theorem section_eveneven_nonzero_mod8_inverse (a k x y : Nat)
   · exact section_eveneven_sum_four_mod8_inverse a k x y hy hx he h4 h
   · exact section_even_sum_two_mod4_inverse a k x y hy he (by omega) h
 
-private theorem direct_even_section (x y : Nat)
+theorem direct_even_section (x y : Nat)
     (hy : 6≤y) (he : y%2=0) :
     secNext (x+y-2,(y-2)/2)=some (x,y) := by
   have ha0 : x+y-2≠0 := by omega
