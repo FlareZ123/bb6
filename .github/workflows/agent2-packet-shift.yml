@@ -48,4 +48,5 @@ jobs:
           lean "$P/EAltFullFirst.lean"
           lean "$P/EGenericFullFirst.lean"
           lean -o im-results/agent36-cryptid-trace/EDoubleTripleGeneral.olean im-results/agent36-cryptid-trace/EDoubleTripleGeneral.lean
-          lean "$P/AIterDoubleZero.lean"
+          lean -o "$P/AIterDoubleZero.olean" "$P/AIterDoubleZero.lean"
+          lean "$P/AIterDoubleZeroFirst.lean"
