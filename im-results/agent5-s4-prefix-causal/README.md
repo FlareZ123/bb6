@@ -43,3 +43,20 @@ Local Lean 4.36.0-rc2 compilation of the mathematical proofs against **definitio
 The period-1024 prefix can be used as a finite sound guard against a large fraction of the possible `W+c=2^k` stopping gates by checking residues modulo 64 at the three successive G substeps, but it cannot on its own exclude every possible synthetic suffix. A full root decision requires a history-sensitive whole-stack or all-depth argument controlling the surviving stopping sectors. Distinguish such an argument from merely making the prefix deeper.
 
 Prior related results: [Agent 7 finite-prefix compatibility theorem](../agent7-s4-prefix/README.md) is a power-gate completion criterion; [Agent 5 three-digit theorem](../agent5-s4-octet/README.md) established the analogous dynamics only for the first three digits. The present contribution is a general all-depth *dynamical semiconjugacy*, plus a six-digit genuinely seeded cycle.
+
+
+## Uniform power-gate sieve from the rooted six-digit cycle
+
+[Second Lean module](S4PrefixGate64.lean.xz.b64), decoded UTF-8 SHA256 `5a0dba9b3dbc8a0bca50c7ae9e9aba6a9bf8ed652780c132d80bb78e32046065`, formalizes an all-suffix modular sieve for each of the three source-exact odd-drain operations in `P`. Let `guard6 xs` assert the nonzero remainders modulo 64 of `W xs+509`, `W(gp 509 xs)+290`, and `W(gp 290 (gp 509 xs))+219`. For any six-digit `xs` and arbitrary `S`:
+
+```
+xs.length=6 and guard6 xs=true  ⇒  P(xs++S)≠none.
+```
+
+The proof uses `W(xs++S)=W xs+2^6 W S` and the existing original-source theorem `G c R=none ↔ W R+c` is a power of two. Powers strictly above 64 vanish modulo 64; every `c∈{509,290,219}` already exceeds that threshold. The exact prefix projection transports this guard through all three successive drains and is valid even if the deeper stack changes unpredictably.
+
+A separate **kernel-evaluated, axiom-free** finite calculation establishes that precisely **956 of the 1,024** cyclic six-digit phases satisfy `guard6`. Consequently, a first failure of the *genuine seeded P recurrence* after the 143-step prefix transient requires one of the **68** remaining phase residues modulo 1024. This is a **necessary condition only**. The guard-unknown phases may be safe for other reasons, and even a synthetically stopping completion does not imply actual-root reachability.
+
+The theorem `rooted_failure_implies_bad_guard` and `safeCount1024` compiled locally under Lean 4.36.0-rc2. The local imports were definitionally matching stand-ins; one stand-in declared `G_none_iff_power` as an axiom, whose genuine theorem is already implemented and verified in [S4Octet.lean](../agent5-s4-octet/S4Octet.lean). The full original-source check compiles *both* modules inside the existing [manual S4 workflow](../../.github/workflows/agent7-s4-original.yml), with explicit SHA256 checks. Successful CI and a clean axioms audit are required before describing the new composite as native-source-certified.
+
+The potentially fatal modulo-1024 phases are completely periodic **after synchronization**, whereas the actual suffix retains unbounded information. Extending the prefix depth could sharpen the finite guard but does not by itself close the stopping condition. The same binary-power tail-completion obstruction studied by [Agent 7](../agent7-s4-prefix/README.md) warns against treating any fixed-depth guard as a complete nonhalting proof.
