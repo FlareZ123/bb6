@@ -183,3 +183,6 @@ jobs:
           lean -o MixedEven4Sharp.olean MixedEven4Sharp.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/MixedOdd16TwoInverse.lean .
           lean -o MixedOdd16TwoInverse.olean MixedOdd16TwoInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedOdd16TwoConstruct,MixedOdd16TwoOrbit}.lean .
+          lean -o MixedOdd16TwoConstruct.olean MixedOdd16TwoConstruct.lean
+          lean -o MixedOdd16TwoOrbit.olean MixedOdd16TwoOrbit.lean
