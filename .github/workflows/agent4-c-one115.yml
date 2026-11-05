@@ -27,7 +27,7 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent4-c-one115/
           cp im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean /tmp/agent4-c-one115/
           cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/agent4-c-one115/
-          cp im-results/agent4-c-dyadic-barrier/One115Source.lean /tmp/agent4-c-one115/
+          cp im-results/agent4-c-dyadic-barrier/{One115Source,One51Source}.lean /tmp/agent4-c-one115/
           cd /tmp/agent4-c-one115
           export LEAN_PATH="."
           lean --version
@@ -45,4 +45,5 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean One115Source.lean
-          echo "Source-checked Machine C 115-mod-128 ancestry proof complete at $(git -C $GITHUB_WORKSPACE rev-parse HEAD)"
+          lean One51Source.lean
+          echo "Source-checked Machine C 115-mod-128 and 51-mod-512 ancestry proofs complete at $(git -C $GITHUB_WORKSPACE rev-parse HEAD)"
