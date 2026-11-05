@@ -35,7 +35,7 @@ private theorem reached_noninitial_has_parent (d : Nat)
     exact False.elim (hd hstart)
   | succ n =>
     unfold CollatzReachesIn at hn
-    rw [Nat.add_comm n 1, Function.iterate_add_apply] at hn
+    rw [iterate_step] at hn
     cases hp : Nat.iterate
       (fun z : Option HighLevelState => z.bind highLevelNext)
       n (some highLevelStart) with
