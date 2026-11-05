@@ -68,5 +68,26 @@ theorem near_top_has_three_parents (n u A:Nat) (hn:4≤n)
   · omega
   · omega
 
+theorem fatal_bad_has_three_parents (n:Nat) (hn:10≤n)
+    (hres:n%162=5 ∨ n%162=130) :
+    ∃ a b c, a≠b ∧ a≠c ∧ b≠c ∧
+      ResetParent a (fatal n) ∧ ResetParent b (fatal n) ∧
+      ResetParent c (fatal n) :=
+  near_top_has_three_parents n (fatal n) (n+4) (by omega)
+    (by omega) (fatal_close n (by omega)) (tight_fatal n hn)
+    (fatal_div81_bad n hn hres)
+
+theorem second_bad_has_three_parents (n:Nat) (hn:10≤n)
+    (hres:n%162=83 ∨ n%162=124) :
+    ∃ a b c, a≠b ∧ a≠c ∧ b≠c ∧
+      ResetParent a (secondPred n) ∧ ResetParent b (secondPred n) ∧
+      ResetParent c (secondPred n) :=
+  near_top_has_three_parents n (secondPred n) (7*n+13) (by omega)
+    (by omega) (second_close n hn) (tight_second n hn)
+    (second_div81_bad n hn hres)
+
+#print axioms fatal_bad_has_three_parents
+#print axioms second_bad_has_three_parents
+
 #print axioms near_top_has_three_parents
 end CascadeFirstFork
