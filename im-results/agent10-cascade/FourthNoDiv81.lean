@@ -7,7 +7,7 @@ private theorem pow_period_fiftyfour (n : Nat) : 2^(n+54)%81 = 2^n%81 := by
   rw [Nat.pow_add]
   simp [Nat.mul_mod]
 
-private theorem pow_mod_fiftyfour (n : Nat) : 2^n%81 = 2^(n%54)%81 := by
+theorem pow_mod_fiftyfour (n : Nat) : 2^n%81 = 2^(n%54)%81 := by
   induction n using Nat.strongRecOn with
   | ind n ih =>
     by_cases hn : n < 54
