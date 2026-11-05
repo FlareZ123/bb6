@@ -172,6 +172,35 @@ theorem fatal_not_div27 (n:Nat) (hn:4≤n)
     have hm27:2^n%27=2^5%27:=by rw [hp,hm]
     omega
 
+/-- Four mod54 second-predecessor subclasses have exactly two factors 3. -/
+theorem second_not_div27 (n:Nat) (hn:10≤n)
+    (hres:n%54=11 ∨ n%54=34 ∨ n%54=47 ∨ n%54=52) :
+    (2*secondPred n+5)%27≠0 := by
+  have hf:=second_close n hn
+  have hp:=pow_mod_eighteen n
+  rcases hres with h|h|h|h
+  · have hm:n%18=11:=by omega
+    have hm27:2^n%27=2^11%27:=by rw [hp,hm]
+    omega
+  · have hm:n%18=16:=by omega
+    have hm27:2^n%27=2^16%27:=by rw [hp,hm]
+    omega
+  · have hm:n%18=11:=by omega
+    have hm27:2^n%27=2^11%27:=by rw [hp,hm]
+    omega
+  · have hm:n%18=16:=by omega
+    have hm27:2^n%27=2^16%27:=by rw [hp,hm]
+    omega
+
+theorem fatal_parents_exactly_two (q n:Nat) (hn:4≤n)
+    (hres:n%54=4 ∨ n%54=23 ∨ n%54=40 ∨ n%54=41) :
+    ResetParent q (fatal n) ↔
+      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+  have h18:n%18=4 ∨ n%18=5:=by omega
+  exact near_top_exact_two n (fatal n) (n+4) q hn (by omega)
+    (fatal_close n hn) (fatal_size n hn) (fatal_divnine n hn h18)
+    (fatal_not_div27 n hn hres)
+
 STAGED_SECOND_PHASE
 -/
 end CascadeFirstFork
