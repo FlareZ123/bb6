@@ -177,6 +177,52 @@ theorem all_depth_E_then_A (m u d : Nat) (hu : 0<u)
   rw [run_add, e_ladder m u 0 d hu (false::ys)]
   simpa only [Nat.zero_add] using final_A m u d hu hmod
 
+private theorem wordInc_append (a b : List Bool) :
+    CryptidA.wordInc (a ++ b) =
+      CryptidA.wordInc a + CryptidA.wordInc b := by
+  induction a with
+  | nil => simp [CryptidA.wordInc]
+  | cons x xs ih =>
+    cases x <;> simp only [List.cons_append,CryptidA.wordInc,ih]
+    all_goals omega
+
+private theorem wordInc_false (q : Nat) :
+    CryptidA.wordInc (List.replicate q false) = q := by
+  induction q with
+  | zero => rfl
+  | succ q ih =>
+    simp only [List.replicate_succ, CryptidA.wordInc,ih]
+    omega
+
+private theorem wordInc_true (q : Nat) :
+    CryptidA.wordInc (List.replicate q true) = 4*q := by
+  induction q with
+  | zero => rfl
+  | succ q ih =>
+    simp only [List.replicate_succ,CryptidA.wordInc,ih]
+    omega
+
+theorem wordInc_words (m d : Nat) :
+    CryptidA.wordInc (words m d) = 2*m+4*d := by
+  simp only [words,wordInc_append,wordInc_false,wordInc_true]
+
+def unaryOut (m u d : Nat) : Nat := 8*finalK m u+17+4*m+8*d
+
+theorem output_is_pure (m u d : Nat) :
+    output m u d =
+      (⟨[],false,List.replicate (unaryOut m u d) true,5⟩ : Cfg) := by
+  have hlen : 2*(4*finalK m u+3+CryptidA.wordInc (words m d))+5+6 =
+      unaryOut m u d := by
+    rw [wordInc_words]
+    dsimp [unaryOut]
+    omega
+  unfold output
+  simp only [ys,List.replicate_append_replicate]
+  rw [hlen]
+
+#print axioms wordInc_words
+#print axioms output_is_pure
+
 #print axioms e_ladder
 #print axioms all_depth_E_then_A
 end BB6.Agent25AllDepthA
