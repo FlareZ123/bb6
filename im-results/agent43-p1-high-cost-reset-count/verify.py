@@ -31,6 +31,8 @@ def verify_source_shaped_words() -> None:
                 F = K + 2 - D - m
                 assert F >= 6 and D >= 1
                 assert (1 << m) * F <= 1 << (n + 3 + z * (2 * n + 3))
+                if z >= 1 and m <= (1 << n):
+                    assert (1 << m) * F >= 1 << (n + 2*z + 1), (n, D, m, z)
                 x = K + D - m
                 for l in range(1, x.bit_length()):
                     if x % (1 << l):
@@ -42,6 +44,8 @@ def verify_source_shaped_words() -> None:
                         continue
                     zp = z + (l >= 2)
                     assert (1 << mp) * Fp <= 1 << (n + 3 + zp * (2 * n + 3))
+                    if zp >= 1 and mp <= (1 << n):
+                        assert (1 << mp) * Fp >= 1 << (n + 2*zp + 1), (n, Dp, mp, zp)
                     if l == 1:
                         assert 2 * Fp == F
                     else:
