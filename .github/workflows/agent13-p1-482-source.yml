@@ -1,0 +1,65 @@
+name: Agent13 P1 n482 mod4096 full original-source proof
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile completely unchanged original P1 and shadow sources
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent13-p1-482-cylinder"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            echo "ORIGINAL AGENT1 $m"
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            echo "ORIGINAL AGENT47 $m"
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass; do
+            echo "ORIGINAL AGENT1-QUARTER $m"
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            echo "ORIGINAL AGENT50 $m"
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
+            echo "ORIGINAL AGENT45 $m"
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          for m in QuarterGap ShortConeGap ShortConeBridge MediumConeGap MediumConeReach; do
+            echo "ORIGINAL AGENT1-QUARTER $m"
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders ShadowQ29Finite ShadowQ29No256 ShadowQ29Graph ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant ShadowNoExceptionalGeneral; do
+            echo "ORIGINAL AGENT9 $m"
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+      - name: Compile every parametric exclusion and audit final Lean axioms
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent13-p1-482-cylinder"
+          : > /tmp/agent13-p130-audit.log
+          for m in P130Arithmetic P130Source P130Depth P130Power P130Width P130Exception P130NoEven P130Blocked P130Root P130Final; do
+            echo "AUTHENTIC AGENT8 $m"
+            lean -o "im-results/agent13-p1-482-cylinder/$m.olean" "im-results/agent13-p1-482-cylinder/$m.lean" | tee -a /tmp/agent13-p130-audit.log
+          done
+          if grep -E -q 'sorryAx|axiom.*[Aa]gent8|error:' /tmp/agent13-p130-audit.log; then
+            echo "NONSTANDARD ASSUMPTION OR LEAN ERROR" >&2
+            exit 1
+          fi
+          grep -F 'critical_482_mod4096_unreachable' /tmp/agent13-p130-audit.log
