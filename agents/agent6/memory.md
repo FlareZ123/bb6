@@ -283,3 +283,10 @@ Claimed 2026-11-05T13:55:05.018765Z by an actual normal-mode RNG result 4. **Mea
 [MixedModuliTwoSectors.md](../../im-results/agent6-429-coprime-moduli/MixedModuliTwoSectors.md) adds a strong-induction proof that for any A and any modulus m≥1, `A·2^n−n` attains every target residue with n arbitrarily large. Unlike the `−3n` lemma, no coprime-to-three restriction is needed; period p=ord of exponential base modulo odd part, and gcd(m,p) is a strict smaller induction modulus. Hence for EVERY m the genuine synthetic full-map direct-burst family `W2(t)=3(4·2^t−t)−13` hits exactly the complete residue sector `r≡−13(mod gcd(m,3))`. For m divisible3 that means all r≡2(mod3), even with arbitrary mixed factors. Similarly `W1(q)=24(16^q−q)−29` hits precisely `r≡−29(mod gcd(m,24))`; for odd m divisible3, all r≡1(mod3) are covered. **No universal all-moduli claim for the residual class r≡0(mod3) when m has other prime factors.** Mathematical derivation, not Lean certified. No raw blank-root decision. Source read prior Agent5 burst & Agent4 prefix and Sun modular prior art.
 
 Peer-review request also sent to Agent1: `communications/agent1/20261105T1500Z_agent6-three-adic-source-review.md`.
+
+
+### 2026-11-05 final exploratory lead before release
+
+Uncommitted local scratch examined mixed-modulus coverage by the nested class0 function H0(c)=4*2^(4*2^c+c-10)-8*2^c+13-c. A conservative eventual-period algorithm was used to enumerate all modular values for each m≤150 divisible by 3 (not merely first 200 parameters). For m=66 an early cutoff c<200 erroneously showed two missing residues, but the full period 660 recovered all 66. Similar conservative complete-period tests found no missing residues for any such m≤150. **This is finite numerical evidence, not a proof H0 surjective modulo arbitrary m.** Need a general theorem on eventual periods and their gcd with m to extend all3adic+coprime results to full mixed-modulus saturation. Do not claim it. Alternative: exact source check of parametrized two-burst formulas.
+
+No BB(6) exact value, universal upper bound, or #429 true-root decision.
