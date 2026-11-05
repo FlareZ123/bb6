@@ -20,3 +20,4 @@ jobs:
           N=im-results/agent43-p1-high-cost-reset-count
           export LEAN_PATH="$N"
           lean -o "$N/NumericShell.olean" "$N/NumericShell.lean"
+          lean -o "$N/NumericPower148.olean" "$N/NumericPower148.lean"
