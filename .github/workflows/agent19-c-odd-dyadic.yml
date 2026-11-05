@@ -42,3 +42,5 @@ jobs:
           lean OddSevenResidual.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/LowOneModFour.lean .
           lean LowOneModFour.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/HighSumTwo.lean .
+          lean HighSumTwo.lean
