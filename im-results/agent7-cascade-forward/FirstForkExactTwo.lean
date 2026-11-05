@@ -251,6 +251,23 @@ theorem rooted_fatal_two_parents (n:Nat) (hn:4≤n)
       (fatal_close n hn) (fatal_size n hn))
     (fun q => fatal_parents_exactly_two q n hn hres)
 
+theorem rooted_second_two_parents (n:Nat) (hn:10≤n)
+    (hres:n%54=11 ∨ n%54=34 ∨ n%54=47 ∨ n%54=52) :
+    CascadeSweep.ReachC (2,0) (secondPred n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n (secondPred n),0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n (7*n+13),0) := by
+  have h18:n%18=11 ∨ n%18=16:=by omega
+  have hno:secondPred n≠2:=by
+    have hp:=second_size n hn
+    dsimp [secondPred]
+    omega
+  exact rooted_two_parents (secondPred n) (oddPre n (secondPred n))
+    (evenPre n (7*n+13)) hno
+    (second_has_odd_parent n hn h18)
+    (even_parent_near_top n (secondPred n) (7*n+13) (by omega)
+      (by omega) (second_close n hn) (second_size n hn))
+    (fun q => second_parents_exactly_two q n hn hres)
+
 STAGED_SECOND_PHASE
 -/
 end CascadeFirstFork
