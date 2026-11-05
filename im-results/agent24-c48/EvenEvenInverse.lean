@@ -1,4 +1,5 @@
-import GeneralMod8Section
+import BounceInverse
+import FastSectionDef
 import Agent38SectionParity
 import Lean.Elab.Tactic.Omega
 
