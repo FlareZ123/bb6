@@ -98,6 +98,11 @@ theorem shift_all_powers (q t:Nat) (hq:1≤q):
   have hnright:=shift_no_big_rhs q t hq hn
   simp [hnleft,hnright]
 
+theorem feeder_u_lower (q : Nat) (hq : 1 ≤ q) :
+    3 ≤ 7*2^(16*q)-4*q-3 := by
+  have hb := big16 q hq
+  omega
+
 /-- Exact arithmetic coupling of the two feeder parameters. -/
 theorem feeder_factors_coprime (q : Nat) :
     Nat.Coprime (3*q+1) (5*q+2) := by
