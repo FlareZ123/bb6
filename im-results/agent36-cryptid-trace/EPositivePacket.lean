@@ -27,8 +27,8 @@ theorem packetSimplified (q r : Nat) (ys : List Bool) :
   calc
     _ = false :: (([true,true,true] ++
         (List.replicate (2*q) true ++ [true])) ++
-        (false :: ([true,true] ++
-          (List.replicate (2*r+4) true ++ ys)))) := by
+        (false :: (([true,true] ++
+          List.replicate (2*r+4) true) ++ ys))) := by
           simp [List.append_assoc]
     _ = _ := by rw [hq,hr]
 #print axioms packetSimplified
