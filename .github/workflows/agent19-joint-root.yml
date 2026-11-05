@@ -160,4 +160,9 @@ jobs:
           for f in OddTowerGeneric OddTowerArithmetic OddTowerGeneralHigh OddTowerSource OddTowerResidual OddTowerResidualAll OddSpecialCylinders OddSpecialHigh OddSpecialLift OddSpecialHighLift; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean JointAllRoot.lean
+          lean -o JointAllRoot.olean JointAllRoot.lean
+          # Agent11 exact missing-image source exclusions and combined iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/{LowOneModFour,HighSumTwo,JointImageSieve}.lean .
+          lean -o LowOneModFour.olean LowOneModFour.lean
+          lean -o HighSumTwo.olean HighSumTwo.lean
+          lean JointImageSieve.lean
