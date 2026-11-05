@@ -27,12 +27,13 @@ jobs:
           done
           lean -o im-results/agent1-p1-quarter/MassInverse.olean im-results/agent1-p1-quarter/MassInverse.lean
           lean -o im-results/agent1-p1-quarter/OddConeMass.olean im-results/agent1-p1-quarter/OddConeMass.lean
-          lean -o im-results/agent9-p1-shadow/ShadowDepthArithmetic.olean im-results/agent9-p1-shadow/ShadowDepthArithmetic.lean
-          lean -o im-results/agent9-p1-shadow/ShadowAlgebra.olean im-results/agent9-p1-shadow/ShadowAlgebra.lean
-          lean -o im-results/agent9-p1-shadow/ShadowParityArithmetic.olean im-results/agent9-p1-shadow/ShadowParityArithmetic.lean
-          lean -o im-results/agent9-p1-shadow/ShadowDepthSource.olean im-results/agent9-p1-shadow/ShadowDepthSource.lean
-          lean -o im-results/agent9-p1-shadow/ShadowSourceTransport.olean im-results/agent9-p1-shadow/ShadowSourceTransport.lean
-          lean im-results/agent9-p1-shadow/ShadowParitySource.lean | tee /tmp/agent9-axioms.log
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic; do
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+          for m in ShadowDepthSource ShadowSourceTransport ShadowParitySource; do
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+          lean im-results/agent9-p1-shadow/ShadowSourceStep.lean | tee /tmp/agent9-axioms.log
           if grep -Fq "sorryAx" /tmp/agent9-axioms.log; then
             echo "Rejected: sorryAx in resulting theorem"
             exit 1
