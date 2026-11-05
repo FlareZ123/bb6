@@ -20,7 +20,7 @@ private theorem pow_mod_six (n : Nat) : 2^n%9 = 2^(n%6)%9 := by
       have hemod : ((n-6)+6)%6=(n-6)%6 := by omega
       rw [hemod]
 
-private theorem band_growth (n:Nat) (hn:10≤n) :
+theorem band_growth (n:Nat) (hn:10≤n) :
     8*(31*n+49) ≤ 5*2^n := by
   have h : ∀ k:Nat, 8*(31*(k+10)+49) ≤ 5*2^(k+10) := by
     intro k
