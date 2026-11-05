@@ -61,7 +61,7 @@ jobs:
           lean -o BounceEvenExact.olean BounceEvenExact.lean
           lean SectionOddInverse.lean
           lean -o BounceOddExact.olean BounceOddExact.lean
-          lean FullSectionInverse.lean
+          lean -o FullSectionInverse.olean FullSectionInverse.lean
           lean -o SectionMassStrict.olean SectionMassStrict.lean
           # Agent 1: prove the original-source m=8 low-gate exclusion by kernel-checked section trace.
           cp "$GITHUB_WORKSPACE"/im-results/agent1-c-m8-trace/{M8TraceBridge,M8TraceCert}.lean .
@@ -196,6 +196,12 @@ jobs:
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedHighResidual,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
           for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd MixedHighResidual MixedTwoSharp MixedHighSharp MixedUniversalAncestry MixedUniversalSharp MixedUniversalAB; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal,SectionBackwardOriginal,SectionFuelOriginal,SectionBackwardFuelOriginal,FastRootBackward,FastRootFuel}.lean .
+          for f in SectionMassOriginal SectionFastInverseOriginal SectionBackwardOriginal SectionFuelOriginal SectionBackwardFuelOriginal FastRootBackward FastRootFuel; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/MixedFastRoot.lean .
+          lean -o MixedFastRoot.olean MixedFastRoot.lean
           if [ "${{ inputs.mixed_only }}" = "true" ]; then exit 0; fi
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
