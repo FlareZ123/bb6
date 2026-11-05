@@ -80,3 +80,10 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-geometric-rays/SheepPowerRootGeneric.lean" SheepPowerRootGeneric.lean
           /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepPowerRootGeneric.lean
           lake env lean SheepPowerRootGeneric.lean
+
+          # Agent 16's unrestricted congruent generic hub theorem, now tied
+          # directly to the already compiled original-source EvenEdge model.
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-hub-saturation/Hub.lean" Hub.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-hub-saturation/HubSource.lean" HubSource.lean
+          lake env lean -o ".lake/build/lib/lean/Hub.olean" Hub.lean
+          lake env lean HubSource.lean
