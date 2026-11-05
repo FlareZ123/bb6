@@ -71,3 +71,20 @@ The redundant earlier first-module-only queued CI run `41970212167` was cancelle
 The newer [AllOddFirstModuliBarrier.md](AllOddFirstModuliBarrier.md) strengthens the paper-level all-positive-modulus result from the fixed blank-section first coordinate `a=5` to **every odd first coordinate `a=2u+1`**, all `u≥0`. For every positive modulus `M`, a synthetic input `(2u+1,K)` satisfies `K≡1 (mod M)` and `secNext(2u+1,K)=none`. The stopping formula uses `F_u(n)=(u+2)(4^n−1)−3n`, with `K=F_u(n)+1`.
 
 Two independent elementary proofs are recorded: the original ascending-prime CRT/lifting construction and a shorter **Euler-totient-period strong induction on `q=M/(2^e3^j)`**. The latter requires no prime-power lifting and is the preferred basis for any future formalization. The companion modular algorithms [verify_odd_left_all_moduli.py](verify_odd_left_all_moduli.py) and [verify_odd_left_totient.py](verify_odd_left_totient.py) independently confirm 10,702 and 43,000 parameter pairs, respectively; 168 small examples also execute the exact source bounce branches to `none`. These are reproducible finite checks and an explanatory paper proof, **not** new unrestricted Lean kernel theorems. The previously source-verified stopping equation remains the exact formal-machine dependency. This result does not decide actual blank reachability or BB(6), and stays in `im-results/`.
+
+
+## 2026-11-05 20:02 UTC: all-time source-certified 115-mod-128 no-reachability
+
+The new Lean theorem [One115Source.lean](One115Source.lean) establishes, for every natural `r`, **`¬ BB6.Agent3.CReach 1 (128*r+115)`**, where `CReach` is reachability from the genuine blank Machine C zero-high section `(5,1)` at any finite section-return time. This uniform theorem uses three **exact source-certified predecessor iff lemmas**, with a final source-image impossibility:
+```text
+(1,128r+115)
+   <- (64r+56,96r+84)
+   <- (160r+138,48r+41)
+   <- (104r+87,76r+63)
+   <- no section source (odd-right>=5, sum=2 mod4)
+```
+The arrows are the complete source-predecessor fibers in these numeric regions. The final state cannot occur after a successful source section step; it is also different from the actual initial section point.
+
+**Full unchanged-repository-source Lean 4.36.0-rc2 CI [run 42099366325](https://github.com/FlareZ123/bb6/actions/runs/42099366325) PASSED** on commit `e85cf41f7853d7fc6229a2a2d673f36766d73560`. The manual workflow [agent4-c-one115.yml](../../.github/workflows/agent4-c-one115.yml) compiles unchanged original Machine C `CLine`, `FastSectionDef`, `BounceCalc`, Agent3 exact inverse sources and Agent24 even-right inference, then the new theorem. Its `#print axioms` excludes `sorryAx` and reports only `[propext, Classical.choice, Quot.sound]`. Two earlier workflow attempts failed on ordinary dependency/proof-script issues; they do not affect the successful verification.
+
+**Novelty boundary:** Agent46 previously Lean-certified `¬BB6CLine.Reach(1,k,0)` for `k%384=115`, equivalent to low-halting depth `m%128=3`. Our `k%128=115` family includes `k%384=115,243,371` and is all-time in the two-counter section semantics. For genuine low stopping inputs `k+3m+4=2^(2m+3)` with `m>=2`, this new cylinder intersects only the **already excluded** parameter class `m%128=3`. It therefore strengthens the structural reachability statement without yielding an additional unresolved low-gateway class. No complete Machine C halt decision or BB(6) improvement follows.
