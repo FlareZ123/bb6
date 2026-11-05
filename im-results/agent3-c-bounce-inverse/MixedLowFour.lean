@@ -43,9 +43,11 @@ theorem mixed_low_m_four_mod8_stops_unreachable (m k : Nat)
     left
     exact ⟨rfl,m,hstop⟩
   · intro hr
-    have hparent : CReach (k-1) ((k-2)/2) :=
-      (BB6.Agent15.blank_reach_iff_affine 1 k hk4
+    have hparent : CReach (k-1) ((k-2)/2) := by
+      have hp := (BB6.Agent15.blank_reach_iff_affine 1 k hk4
         (by omega) (by omega)).mp hr
+      have hx : 1+k-2=k-1 := by omega
+      simpa only [hx] using hp
     have hbad : 5≤(k-2)/2 ∧ ((k-2)/2)%2=1 ∧
         ((k-1)+(k-2)/2)%4=2 := by
       omega
