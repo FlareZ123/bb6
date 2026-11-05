@@ -36,14 +36,14 @@ jobs:
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
           cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a3-bounce/
           cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a3-bounce/
-          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a3-bounce/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/a3-bounce/
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,AffineTarget,AffineTargetReach,AffineTargetExact,FeederGeneric,FeederOrbitGeneric,GeneralHighInverse,EvenTargetForward,EvenTargetExact,EvenTargetOrbit,BounceEvenExact,SectionOddInverse,BounceOddExact,FullSectionInverse,SectionMassStrict,SectionMassOrbit,ReachFast,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,UnboundedInDegree,PowerDegreeExact,BounceLogBound,SectionLogBound,ZeroEvenUniversal,ZeroEvenOrbit,ZeroOddRange,ZeroOddForward}.lean /tmp/a3-bounce/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a3-bounce/
           cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a3-bounce/
           cd /tmp/a3-bounce
           export LEAN_PATH="."
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge; do
             lean -o "$f.olean" "$f.lean"
           done
           lean -o BounceInverse.olean BounceInverse.lean
@@ -89,8 +89,8 @@ jobs:
           echo "bf7f1c6366cc424aede82c4a4c38b77e3002f2b6c6c2dbcb62b8df798772ee8f  OddFan.lean" | sha256sum -c -
           lean -o OddFan.olean OddFan.lean
           # Connect the exact predecessor classification to Machine C's original halting criterion.
-          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,SectionParam}.lean .
-          for f in BounceHalting SectionHalting SectionPower SectionParam; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,SectionParam,BlankHalting,BlankParam}.lean .
+          for f in BounceHalting SectionHalting SectionPower SectionParam BlankHalting BlankParam; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent20-c-odd-fiber/LowHaltWitness.lean .
           echo "d7cc7f78d72324d7253f6e2dd486f5299c3386bf407f89d14944975cc21c5ad2  LowHaltWitness.lean" | sha256sum -c -
           lean LowHaltWitness.lean
@@ -194,8 +194,8 @@ jobs:
           # Joint original-source check: Agent3 odd inverses plus Agent24 six-residue even-right inverse.
           cp "$GITHUB_WORKSPACE"/im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean .
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
-          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
-          for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd MixedTwoSharp MixedHighSharp MixedUniversalAncestry MixedUniversalSharp MixedUniversalAB; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedHighResidual,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
+          for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd MixedHighResidual MixedTwoSharp MixedHighSharp MixedUniversalAncestry MixedUniversalSharp MixedUniversalAB; do lean -o "$f.olean" "$f.lean"; done
           if [ "${{ inputs.mixed_only }}" = "true" ]; then exit 0; fi
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
