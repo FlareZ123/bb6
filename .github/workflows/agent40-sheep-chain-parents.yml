@@ -70,7 +70,7 @@ jobs:
           for name in ResidueGap SheepPeriodicGate ChainLowCases SheepGenericHigh HighCases; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
-          lake env lean GenericHighNoParent.lean
+          lake env lean -o ".lake/build/lib/lean/GenericHighNoParent.olean" GenericHighNoParent.lean
           # Complete original-source-shaped 3-adic h cutoffs and exceptional
           # inverse cases for the two chain families, with no unproved premises.
           cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/IndependentExceptionalGap.lean" IndependentExceptionalGap.lean
