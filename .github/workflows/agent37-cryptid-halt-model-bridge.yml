@@ -47,4 +47,11 @@ jobs:
           lean im-results/agent37-cryptid-model-bridge/A110Portal.lean
           lean -o im-results/agent35-cryptid-code/ABridgeCode.olean im-results/agent35-cryptid-code/ABridgeCode.lean
           lean -o im-results/agent2-cryptid-continuity/AHaltCylinder.olean im-results/agent2-cryptid-continuity/AHaltCylinder.lean
-          lean im-results/agent37-d-timing-cocycle/CodeHalt.lean
+          lean -o im-results/agent37-d-timing-cocycle/CodeHalt.olean im-results/agent37-d-timing-cocycle/CodeHalt.lean
+          lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
+          lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/PrefixNoF.olean im-results/agent2-cryptid-continuity/PrefixNoF.lean
+          lean -o im-results/agent2-cryptid-continuity/ATenFirstReturn.olean im-results/agent2-cryptid-continuity/ATenFirstReturn.lean
+          lean -o im-results/agent2-cryptid-continuity/ACodeFirstReturn.olean im-results/agent2-cryptid-continuity/ACodeFirstReturn.lean
+          lean im-results/agent37-d-timing-cocycle/CodeHaltFirst.lean
