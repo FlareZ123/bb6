@@ -58,6 +58,7 @@ theorem shell_large_numeric (n z : Nat)
   have hpolyEq :
       5*(u+2)+(u+2)*(2*(u+2)+2) = poly u := by
     simp only [poly,Nat.add_mul,Nat.mul_add,Nat.mul_one,Nat.one_mul]
+    rw [Nat.mul_comm u (2*u)]
     omega
   have hmul : (u+2)*(2*z+2) ≤
       (u+2)*(2*(u+2)+2) :=
