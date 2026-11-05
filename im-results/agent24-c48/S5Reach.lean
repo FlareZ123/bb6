@@ -6,7 +6,7 @@ import Lean.Elab.Tactic.Omega
 set_option maxRecDepth 8192
 namespace BB6.Agent46
 
-private theorem reach_forced_parent (x y u v : Nat) (hx : 5<x)
+theorem reach_forced_parent (x y u v : Nat) (hx : 5<x)
     (hp : ∀ a k, secNext (a,k)=some (x,y) → a=u ∧ k=v)
     (hr : BB6.Agent3.CReach x y) : BB6.Agent3.CReach u v := by
   rcases hr with ⟨time,ht⟩
