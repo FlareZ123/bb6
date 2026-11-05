@@ -29,7 +29,7 @@ private theorem power_halve (n:Nat) (hn:4≤n):
     2^n = 2^((n-1)+1):=congrArg (fun t:Nat=>2^t) he
     _ = 2*2^(n-1):=by rw[Nat.pow_succ];omega
 
-private theorem ray_band (n j:Nat) (hn:4≤n)
+theorem ray_band (n j:Nat) (hn:4≤n)
     (hmargin:deficit n j≤2^n):
     3*2^n≤ray n j ∧ ray n j≤4*2^n ∧
     6*2^(n-1)-1≤ray n j ∧ ray n j≤8*2^(n-1)-3:=by
@@ -38,7 +38,7 @@ private theorem ray_band (n j:Nat) (hn:4≤n)
   dsimp[ray]
   omega
 
-private theorem ray_next_eq (n j:Nat) (hn:4≤n)
+theorem ray_next_eq (n j:Nat) (hn:4≤n)
     (hmargin:deficit n j≤2^n):
     2*ray n j=8*2^(n-1)+ray n (j+1)+(n-1):=by
   have hmin:=deficit_min n j
@@ -51,7 +51,7 @@ private theorem ray_next_eq (n j:Nat) (hn:4≤n)
   have h1:ray n (j+1)+deficit n (j+1)=4*2^n:=by dsimp[ray];omega
   omega
 
-private theorem signed_ray_eq_numerator (n j:Nat) (hn:4≤n)
+theorem signed_ray_eq_numerator (n j:Nat) (hn:4≤n)
     (hmargin:deficit n j≤2^n):
     signedZ n j=(2*ray n j+5:Int):=by
   have hclosed:=deficit_closed n j (by omega:1≤n)
