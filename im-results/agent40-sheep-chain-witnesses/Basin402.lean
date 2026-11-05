@@ -1,7 +1,7 @@
 import SheepFullBasinCore
 namespace SheepFullBasin
 
-private theorem pow_scale (r c k : Nat) :
+theorem pow_scale (r c k : Nat) :
     2^(r+c+4860*k) = 2^c*2^(r+4860*k) := by
   rw [show r+c+4860*k=c+(r+4860*k) by omega, Nat.pow_add]
 
