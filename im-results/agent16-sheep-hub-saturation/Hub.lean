@@ -137,3 +137,44 @@ theorem generic_hub_lift (a L n u W N : Nat)
 
 #print axioms generic_hub_lift
 end SheepHubs
+
+namespace SheepHubs
+
+/-- The generic-edge polynomial equation is equivalent to the literal
+Sheep first-return formula when the source odd cofactor is odd. -/
+theorem generic_equation_to_return (a L u Q : Nat) (huodd : u%2=1)
+    (heq : 2*(1+2^L*Q)+1=(2^(a+1)+1)*u+2*a) :
+    2^a*u+a+(u-1)/2=1+2^L*Q := by
+  have hhalf : 2*((u-1)/2)+1=u := by omega
+  have hpow : 2^(a+1)=2*2^a := by rw [Nat.pow_succ]; omega
+  have hpoly : 2*(2^a*u+a+(u-1)/2)+1=(2^(a+1)+1)*u+2*a := by
+    have hterm : (2^(a+1)+1)*u=2*(2^a*u)+u := by
+      rw [hpow, Nat.add_mul]
+      ac_rfl
+    rw [hterm]
+    omega
+  omega
+
+/-- Source-independent, fully quantified version of the hub result using
+the literal published Sheep generic first-return formula. -/
+theorem generic_hub_literal_return (a L n u W N : Nat)
+    (hu : 5 ≤ u) (huodd : u%2=1) (hnodd : n%2=1)
+    (heq : 2*(1+2^L*W)+1 = (2^(a+1)+1)*u+2*a) :
+    ∃ t : Nat,
+      N≤t ∧
+      let V := u+2^(L+1)*n*t
+      let Q := W+(2^(a+1)+1)*n*t
+      5≤V ∧ V%2=1 ∧ Q%2=1 ∧
+      2^a*V+a+(V-1)/2=1+2^L*Q ∧
+      2^(a+L+1) ∣ 1+3^L*Q ∧
+      2^a*V=2^a*u+2^(a+L+1)*n*t := by
+  obtain ⟨t,hN,hVmin,hVodd,hQodd,hpoly,hdiv,hsource⟩ :=
+    generic_hub_lift a L n u W N hu huodd hnodd heq
+  exact ⟨t,hN,hVmin,hVodd,hQodd,
+    generic_equation_to_return a L (u+2^(L+1)*n*t)
+      (W+(2^(a+1)+1)*n*t) hVodd hpoly,
+    hdiv,hsource⟩
+
+#print axioms generic_equation_to_return
+#print axioms generic_hub_literal_return
+end SheepHubs
