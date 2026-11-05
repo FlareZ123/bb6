@@ -111,7 +111,7 @@ footer=f'''\n
 theorem root_blocked (q:Nat) :
     BB6.Agent4Cone.Blocked {expression(ROOT[0]).replace('t','(paramT q)')} {expression(ROOT[1])} := by
   have ht : 223≤paramT q := by
-    have hX : 32*(q+1) ≤ expX q := X_ge_32_succ q
+    have hX : 64*(q+1) ≤ expX q := X_ge_64_succ q
     have he := param_eq q
     omega
   exact block_{ids[ROOT]} q (paramT q) ht rfl
