@@ -8,7 +8,7 @@ open CascadeResetInverse CascadeUniformFatal CascadeManyShield
 def oddPre6 (n u : Nat) : Nat :=
   128*((2*u+5)/2187)-8*2^(n-5)-(n-5)-5
 
-private theorem sixth_linear (n:Nat) (hn:10≤n) :
+theorem sixth_linear (n:Nat) (hn:10≤n) :
     n+3 ≤ 4*2^(n-5) := by
   have h : ∀ k:Nat, k+13 ≤ 4*2^(k+5) := by
     intro k
