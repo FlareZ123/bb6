@@ -2,7 +2,7 @@ import FirstForkFourResidues
 set_option maxHeartbeats 0
 set_option maxRecDepth 16384
 
-/-- Exact elementary 3-adic power lifting needed to show that no finite
+/- Exact elementary 3-adic power lifting needed to show that no finite
     bound on the fatal-input valuation can be valid. -/
 namespace CascadeFatalValuation
 
