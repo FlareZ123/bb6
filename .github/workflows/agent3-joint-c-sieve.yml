@@ -168,3 +168,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedEven4TwentyTwo,MixedHighThreeQuarterSeven}.lean .
           lean -o MixedEven4TwentyTwo.olean MixedEven4TwentyTwo.lean
           lean -o MixedHighThreeQuarterSeven.olean MixedHighThreeQuarterSeven.lean
+          # Hard leftover m=3(mod4) sector: fully source-complete
+          # at-most-two-parent inverse criterion for mod16 sum-seven.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/MixedMod16SevenInverse.lean .
+          lean -o MixedMod16SevenInverse.olean MixedMod16SevenInverse.lean
