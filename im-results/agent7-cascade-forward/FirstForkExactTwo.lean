@@ -234,6 +234,23 @@ theorem rooted_two_parents (u a b:Nat) (hu:u≠2)
     · have hc:ResetChain 2 b := (root_reset_chain_iff b).mp h
       exact (root_reset_chain_iff u).mpr (hc.append hb)
 
+theorem rooted_fatal_two_parents (n:Nat) (hn:4≤n)
+    (hres:n%54=4 ∨ n%54=23 ∨ n%54=40 ∨ n%54=41) :
+    CascadeSweep.ReachC (2,0) (fatal n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n (fatal n),0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n (n+4),0) := by
+  have h18:n%18=4 ∨ n%18=5:=by omega
+  have hno:fatal n≠2:=by
+    have hpow:=n_plus_three_le_pow n hn
+    dsimp [fatal]
+    omega
+  exact rooted_two_parents (fatal n) (oddPre n (fatal n))
+    (evenPre n (n+4)) hno
+    (fatal_has_odd_parent n hn h18)
+    (even_parent_near_top n (fatal n) (n+4) hn (by omega)
+      (fatal_close n hn) (fatal_size n hn))
+    (fun q => fatal_parents_exactly_two q n hn hres)
+
 STAGED_SECOND_PHASE
 -/
 end CascadeFirstFork
