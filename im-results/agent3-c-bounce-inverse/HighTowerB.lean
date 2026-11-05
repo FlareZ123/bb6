@@ -144,6 +144,7 @@ theorem highB_blank_unreachable (q n : Nat) :
   let v := (p.2-32)/32
   have hc1 : p.1%16=11 := hc.1
   have hc2 : p.2%32=0 := hc.2.1
+  have hc3 : 32≤p.2 := hc.2.2
   have hx : p.1=16*u+11 := by dsimp [u]; omega
   have hy : p.2=32*v+32 := by dsimp [v]; omega
   rw [hx,hy] at ht
@@ -154,7 +155,6 @@ theorem highB_power_identity (q n : Nat) :
   induction n with
   | zero =>
       change 15*(128*q+66)+42=16^0*(1920*q+1032)
-      simp only [pow_zero,one_mul]
       omega
   | succ n ih =>
       calc
