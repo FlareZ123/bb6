@@ -1,0 +1,13 @@
+name: Agent14 Sheep seven periodic even-cone arithmetic certificate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  arithmetic-certificate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify seven complete periodic inverse cones
+        run: python3 im-results/agent14-sheep-seven-cones/seven_cones.py
