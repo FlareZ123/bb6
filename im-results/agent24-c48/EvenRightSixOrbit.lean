@@ -118,7 +118,9 @@ theorem sixEvenRightExcluded_sound (x y : Nat)
   rcases hh with ⟨hy,ho,hbad⟩
   cases n with
   | zero =>
-      have heq : sixEvenRightNormalize x y=(5,1) := by
+      have heq : ((sixEvenRightNormalize x y).1,
+          (sixEvenRightNormalize x y).2)=(5,1) := by
+        apply Option.some.inj
         simpa [BB6.Agent8Section.run] using hn.symm
       have hp := congrArg Prod.snd heq
       omega
