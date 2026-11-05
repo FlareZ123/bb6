@@ -31,7 +31,7 @@ private theorem aScan_two (i r : Nat) (L ys : List Bool) :
 private theorem aScan_run (i r : Nat) (L ys : List Bool) :
     run (2*r) (aScan i r L ys) = aScan (r+i) 0 L ys := by
   induction r generalizing i with
-  | zero => simp
+  | zero => simp [run]
   | succ r ih =>
       have ht : 2*(r+1) = 2+2*r := by omega
       rw [ht,run_add,aScan_two,ih (i+1)]
