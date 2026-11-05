@@ -57,6 +57,28 @@ The proposed original-source statement is `source_critical_exact_three_reset_no_
 
 The theorem concerns the **affine wall** in one inverse feeder family. Even a source-certified exclusion of three reset counts leaves histories with four or more positive resets, high-cost exits, and exceptional `c=1` exits. A complete P1 machine halt/nonhalt decision, global BB(6) upper bound, and exact BB(6) value remain open.
 
+## General source-connected quantitative lower bound (2026-11-05 17:25 UTC)
+
+**Original-source Lean CI passed:** [run 42074258493](https://github.com/FlareZ123/bb6/actions/runs/42074258493), job [127410112494](https://github.com/FlareZ123/bb6/actions/runs/42074258493/job/127410112494). Final axioms for both new theorems are exactly `[propext, Classical.choice, Quot.sound]`. The workflow rebuilds original `CountCone`, `OddCone`, `UpperTail`, and `inverseAt` definitions with no mock imports or `sorryAx`.
+
+[WallCountLowerBound.lean](WallCountLowerBound.lean) certifies the closed form
+
+```
+budget n j = 24^(j+1)*(n+2)^(2*j+3)
+```
+
+and proves the **necessary all-count inequality** for every genuine critical `CountCone` affine-wall history of positive-depth reset count `z≥1`, for `n≥42`:
+
+```
+2^n ≤ 24^z*(n+2)^(2*z+2).
+```
+
+This is an unconditional quantified restriction for all finite positive `z`; unlike fixed-j exclusion corollaries, its theorem statement contains no auxiliary budget hypothesis. Its elementary logarithmic consequence is `z≥(n−2log₂(n+2))/(log₂24+2log₂(n+2))`, so wall histories require `z=Ω(n/log n)` as n increases.
+
+[WallNeedsFour.lean.xz.b64](WallNeedsFour.lean.xz.b64) preserves the source-derived full `OddCone` theorem `source_critical_wall_needs_four_resets`: for **every n≥62**, if a genuine critical odd inverse cone hits the affine wall, it has a genuine `CountCone` witness of at least **four** positive-depth `inverseAt` transitions. This covers the zero-reset case using the original `source_critical_zero_reset_no_wall` theorem. The compressed source has binary SHA256 `f7d4d159179e4054eb3424f71edc98174729ce236a1364f39623c0b0f8f67fc2` and is verified and compiled by the same successful CI run.
+
+**Research boundary:** The source wall itself is a low-cost even-exit necessary condition. An unbounded positive-reset count is still possible under this inequality; high-cost positive-even terminals and exceptional `c=1` exits remain open. No global P1 or BB(6) decision is implied.
+
 ## Next research actions
 
 The full-source CI and final axiom audit have passed. Next, compose `CountFinal.lean` with Agent43's `n≥55` results in a single named Lean `z≥4` wall requirement for every `n≥62`. For a full P1 decision, devise a source-connected method controlling all remaining reset histories and all terminal exits.
