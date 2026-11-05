@@ -179,6 +179,43 @@ theorem fourth_parents_exactly_two (q n:Nat) (hn:10≤n)
     · exact ho
     · exact he
 
+/-- Four forced source-reset levels followed by the *complete* genuine-root
+    two-branch disjunction in four unbounded mod54 index classes. -/
+theorem genuine_fatal_iff_two_parent_roots (n:Nat) (hn:10≤n)
+    (hres:n%54=17 ∨ n%54=28 ∨ n%54=35 ∨ n%54=46) :
+    CascadeSweep.ReachC (2,0) (CascadeManyShield.fatal n,0) ↔
+      CascadeSweep.ReachC (2,0) (oddPre n,0) ∨
+      CascadeSweep.ReachC (2,0) (evenPre n,0) := by
+  have h18 : n%18=10 ∨ n%18=17 := by omega
+  have hcore := genuine_fatal_iff_fourth n hn h18
+  rw [hcore]
+  have hne:fourthPred n ≠2 := by
+    have hb:=fifth_growth n hn
+    dsimp [fourthPred]
+    omega
+  constructor
+  · intro hr
+    have hc : ResetChain 2 (fourthPred n) :=
+      (root_reset_chain_iff (fourthPred n)).mp hr
+    obtain ⟨p,hchain,hparent⟩ := reset_chain_last hc hne
+    have hp := (fourth_parents_exactly_two p n hn hres).mp hparent
+    rcases hp with hp|hp
+    · left
+      rw [hp] at hchain
+      exact (root_reset_chain_iff (oddPre n)).mpr hchain
+    · right
+      rw [hp] at hchain
+      exact (root_reset_chain_iff (evenPre n)).mpr hchain
+  · intro hr
+    rcases hr with hr|hr
+    · have hc := (root_reset_chain_iff (oddPre n)).mp hr
+      exact (root_reset_chain_iff (fourthPred n)).mpr
+        (hc.append (fourth_odd_parent n hn h18))
+    · have hc := (root_reset_chain_iff (evenPre n)).mp hr
+      exact (root_reset_chain_iff (fourthPred n)).mpr
+        (hc.append (fourth_even_parent n hn))
+
 #print axioms fourth_not_div27
 #print axioms fourth_parents_exactly_two
+#print axioms genuine_fatal_iff_two_parent_roots
 end CascadeAgent10ExactlyTwo
