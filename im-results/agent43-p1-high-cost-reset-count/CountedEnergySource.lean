@@ -72,12 +72,13 @@ theorem source_counted_energy_bound
       have hhalve := (inv0_halve bp dp k c (by simpa [ht] using hi) hk).1
       have hE : 2^(mp+t+1)*((2*k-4)+12)=
           2^mp*(bp+12) := by
-        rw [ht, Nat.zero_add, Nat.pow_succ]
+        rw [ht, Nat.add_zero, Nat.pow_succ]
         calc
           (2^mp*2)*((2*k-4)+12) =
             2^mp*(2*((2*k-4)+12)) := by ac_rfl
           _ = 2^mp*(bp+12) := by rw [hhalve]
-      simpa only [hz0] using (hE ▸ ih)
+      rw [hz0, hE]
+      exact ih
     · have htpos : 1 ≤ t := by omega
       have hpreOdd : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
         counted_to_odd_cone _ _ _ _ _ _ hp
