@@ -46,7 +46,8 @@ jobs:
           lean -o "$P/EAltBoundaryFirst.olean" "$P/EAltBoundaryFirst.lean"
           lean -o im-results/agent2-cryptid-continuity/PrefixENoFSource.olean im-results/agent2-cryptid-continuity/PrefixENoFSource.lean
           lean "$P/EAltFullFirst.lean"
-          lean "$P/EGenericFullFirst.lean"
+          lean -o "$P/EGenericFullFirst.olean" "$P/EGenericFullFirst.lean"
           lean -o im-results/agent36-cryptid-trace/EDoubleTripleGeneral.olean im-results/agent36-cryptid-trace/EDoubleTripleGeneral.lean
           lean -o "$P/AIterDoubleZero.olean" "$P/AIterDoubleZero.lean"
-          lean "$P/AIterDoubleZeroFirst.lean"
+          lean -o "$P/AIterDoubleZeroFirst.olean" "$P/AIterDoubleZeroFirst.lean"
+          lean "$P/EIterDoubleZeroFullFirst.lean"
