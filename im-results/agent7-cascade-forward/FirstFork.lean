@@ -64,13 +64,13 @@ theorem odd_parent_near_top (n u A : Nat) (hn : 4 ≤ n)
   exact Or.inr ⟨n-2,1,d,hodd,⟨hbandlo,hbandhi⟩,
     hfactor,hrelation⟩
 
-private theorem fatal_close (n:Nat) (hn:4≤n) :
+theorem fatal_close (n:Nat) (hn:4≤n) :
     fatal n+(n+4)=4*2^n := by
   have hp := n_plus_three_le_pow n hn
   dsimp [fatal]
   omega
 
-private theorem fatal_size (n:Nat) (hn:4≤n) :
+theorem fatal_size (n:Nat) (hn:4≤n) :
     8*(n+4) ≤ 5*2^n := by
   have h : ∀ k:Nat, 8*((k+4)+4) ≤ 5*2^(k+4) := by
     intro k
@@ -104,7 +104,7 @@ theorem fatal_has_odd_parent (n:Nat) (hn:4≤n)
   odd_parent_near_top n (fatal n) (n+4) hn
     (fatal_close n hn) (fatal_size n hn) (fatal_divnine n hn hres)
 
-private theorem second_size (n:Nat) (hn:10≤n) :
+theorem second_size (n:Nat) (hn:10≤n) :
     8*(7*n+13) ≤ 5*2^n := by
   have h : ∀ k:Nat, 8*(7*(k+10)+13) ≤ 5*2^(k+10) := by
     intro k
@@ -117,7 +117,7 @@ private theorem second_size (n:Nat) (hn:10≤n) :
   rw [he]
   exact h (n-10)
 
-private theorem second_close (n:Nat) (hn:10≤n) :
+theorem second_close (n:Nat) (hn:10≤n) :
     secondPred n+(7*n+13)=4*2^n := by
   have hsize := second_size n hn
   have hp : 7*n+13 ≤ 2^n := by omega
