@@ -69,6 +69,22 @@ The source-root reset-chain equivalence in [ResetChain.lean](../agent10-cascade/
 
 For each fixed depth (j), as (n	oinfty) in either surviving sector, the dyadic band condition eventually holds. Moreover, at the unique (9)-divisible even level of a fixed six-block, the (t=1) odd candidate eventually lies in the admissible band, by the strict scaled dyadic inequality already analyzed in [README.md](README.md). Thus for sufficiently large (n) at a given fixed six-block, exactly one of the six nodes actually has two or more source-genuine predecessors. The block length cannot be held fixed while (j	oinfty) without increasing (n) to retain the high-band condition.
 
+
+## First possible fork phase: an exact mod-18 table
+
+The six surviving fatal-index classes modulo 18 completely determine the first possible 9-divisible *even* ray-depth phase. Direct modular reduction (a six-case hand check following (2)) gives:
+
+| Fatal index `n mod 18` | `Z_0 mod9` | `Z_2 mod9` | `Z_4 mod9` | Unique potential odd-fork depth `j mod6` |
+|---:|---:|---:|---:|---:|
+| 4 | 0 | 6 | 3 | 0 |
+| 5 | 0 | 3 | 6 | 0 |
+| 10 | 6 | 3 | 0 | 4 |
+| 11 | 6 | 0 | 3 | 2 |
+| 16 | 3 | 0 | 6 | 2 |
+| 17 | 3 | 6 | 0 | 4 |
+
+The relative phases agree with the earlier exact source-parent arguments: n%18=10,17 have four forced even inverse predecessors (Agent10 `FourEven.lean`), and n%18=11,16 have two forced levels (Agent7 `SecondEven.lean`). Thus the six-step modular theorem **explains and extends** those earlier finite-depth arithmetic patterns in one formula. A potential odd fork at a phase is only an arithmetic *necessary* condition; actual parent existence still requires the dyadic band. No blank-root reachability conclusion follows from the phase table.
+
 ## Independent modular diagnostics
 
 A direct integer calculation of (Z_j(n)mod9) (not a proof) for (j=0,2,4,6,8,10,12,ldots) gives:
