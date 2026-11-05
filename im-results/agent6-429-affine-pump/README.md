@@ -65,3 +65,16 @@ The difference `314392-275343=39049=2297*17` matches the symbolic Lean theorem. 
 The observed 39,106-step gap between two zero-first-counter visits is mostly accounted for by this 39,049-step guarded affine pump. Such large false-plateau phases complicate arguments that every short window contains a zero-first reset. The general pump lemma gives an exact guard for stopping the apparent 17-step cycle. This is potentially reusable in a root-sensitive phase decomposition and for accelerated symbolic reachability, although no globally valid blank invariant or genuine halt decision has yet followed.
 
 A valuable follow-up is to formalize the **root-to-entry** finite macro certificate via a verified accelerated evaluator or a chain of compact symbolic burst certificates, and to find a **structural invariant governing all pump entries** rather than lengthening a finite rollout. This dossier belongs in `im-results/` until it yields a genuinely open-problem-relevant new mathematical theorem.
+
+
+## 2026-11-05 16:20 UTC: entire 39,068-step section to next zero-first reset locally kernel-checked
+
+The additional [Agent6PumpTail.lean](Agent6PumpTail.lean) proves directly by kernel `decide` that `BB429.run 19 (11,1223294)=some(0,1223392)`; `#print axioms tail_19` reports **no axioms**. Combining with the above `run_cycles_2297` and `BB429.run_add`, its `run_39068` theorem proves
+
+```text
+BB429.run 39068 (11,1048722) = some (0,1223392).
+```
+
+The full theorem locally compiles against signature-matched, previously source-verified imports with no `sorry`; the final `#print axioms run_39068` reports only standard logical axioms **plus the named temporary interface declarations** `BB429.run_add`, `BB429Burst.prefix_exists_iff`, `BB429Burst.prefix_formula`, and `BB429DyadicStarts.first_prefix_is_source`. The original repository sources define these as already source-verified theorems. **The new pump modules' own unchanged-source CI run is still pending**, so this is not yet a fresh complete CI provenance certificate. The manual-only workflow `agent6-429-two-burst.yml` now includes all three pump modules for future source audit.
+
+The [reproducible 12-branch Python trace](root_pump_trace.py) directly checks the observed `(0,0)` root reaches `(11,1048722)` after 275,343 accelerated macros and then reaches `(0,1223392)` at 314,411 macros. The entire intervening 39,068-step segment now has a symbolic Lean proof; **the initial 275,343 blank-root transitions remain finite computation only**. An attempt to expand 28 separate `by decide` source segments for a kernel-certified blank-to-entry theorem was generated locally but not source-certified, and exceeded this invocation's short local compilation runtime. It is not committed as a result and should not be cited as proven.
