@@ -2,7 +2,7 @@ import FatalRank
 import ResetChain
 set_option maxHeartbeats 0
 namespace CascadeRank
-open CascadeResetInverse CascadeSource CascadeManyShield
+open CascadeResetInverse CascadeSweep CascadeManyShield
 
 /-- Convert any genuine forward reset chain into an exact backward chain,
     retaining an explicit number of first-reset edges. -/
