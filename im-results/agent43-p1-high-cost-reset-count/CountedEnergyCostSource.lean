@@ -11,14 +11,15 @@ theorem counted_energy_rhs_power (n z : Nat) :
       2^(n+4+(2*n+3)*z) := by
   have hbase : 8*2^n*2^n = 2^(2*n+3) := by
     calc
-      8*2^n*2^n = (2^3)*(2^n)*(2^n) := by decide
+      8*2^n*2^n = (2^3)*(2^n)*(2^n) := by
+        rw [show (8:Nat)=2^3 by decide]
       _ = 2^((3+n)+n) := by
         rw [Nat.pow_add, Nat.pow_add]
-        ac_rfl
       _ = 2^(2*n+3) := by congr 1; omega
   have htop : 16*2^n = 2^(n+4) := by
     calc
-      16*2^n = 2^4*2^n := by decide
+      16*2^n = 2^4*2^n := by
+        rw [show (16:Nat)=2^4 by decide]
       _ = 2^(4+n) := (Nat.pow_add 2 4 n).symm
       _ = 2^(n+4) := by congr 1; omega
   rw [hbase, htop]
@@ -42,16 +43,18 @@ theorem source_counted_cost_linear_in_resets
   have hsmall : 2^(m+3) ≤ 2^m*(b+12) := by
     calc
       2^(m+3) = 2^m*2^3 := Nat.pow_add 2 m 3
-      _ = 2^m*8 := by decide
+      _ = 2^m*8 := by rw [show (2:Nat)^3=8 by decide]
       _ ≤ 2^m*(b+12) :=
         Nat.mul_le_mul_left (2^m) (by omega)
-  have hpow : 2^(m+3) ≤ 2^(n+4+(2*n+3)*z) :=
-    hsmall.trans hscaled
-  by_contra hfail
-  have hm : n+4+(2*n+3)*z < m+3 := by omega
-  have hpStrict : (2:Nat)^(n+4+(2*n+3)*z) < 2^(m+3) :=
-    Nat.pow_lt_pow_right (by decide) hm
-  omega
+  have hpow : 2^(m+3) ≤ 2^(n+4+(2*n+3)*z) := by
+    exact Nat.le_trans hsmall hscaled
+  by_cases hcost : m ≤ n+1+(2*n+3)*z
+  · exact hcost
+  ·
+    have hm : n+4+(2*n+3)*z < m+3 := by omega
+    have hpStrict : (2:Nat)^(n+4+(2*n+3)*z) < 2^(m+3) :=
+      Nat.pow_lt_pow_right (by decide) hm
+    omega
 
 /-- Source-certified high-cost escape must carry a correspondingly large
     count of positive resets. -/
@@ -60,7 +63,7 @@ theorem source_high_cost_requires_resets
     (h : CountCone (14*2^n-2*n-16) 3 b d m z)
     (hhigh : 2^n ≤ m) :
     2^n ≤ n+1+(2*n+3)*z := by
-  exact (hhigh.trans (source_counted_cost_linear_in_resets n b d m z hn h))
+  exact Nat.le_trans hhigh (source_counted_cost_linear_in_resets n b d m z hn h)
 
 /-- An exact numerical instance at the genuine n=62 critical P1 precursor. -/
 theorem source_high_cost_n62_many_resets
