@@ -104,6 +104,7 @@ jobs:
           lean "$root/ZeroThreeSource.lean"
           lean -o "$root/ZeroEvenDescentSource.olean" "$root/ZeroEvenDescentSource.lean"
           lean -o "$root/EvenTerminalArithmetic.olean" "$root/EvenTerminalArithmetic.lean"
+          lean "$root/EvenSectorLift.lean"
           lean "$root/AllEvenDescentSource.lean"
           lean -o "$root/BudgetGrowth.olean" "$root/BudgetGrowth.lean"
           lean "$root/SourceGrowth.lean"
