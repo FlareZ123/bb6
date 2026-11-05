@@ -37,6 +37,8 @@ jobs:
           lean -o SecondRayShapeOriginal.olean SecondRayShapeOriginal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SectionFastInverseOriginal.lean" .
           lean -o SectionFastInverseOriginal.olean SectionFastInverseOriginal.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/FastArithmetic.lean" .
+          lean -o FastArithmetic.olean FastArithmetic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/SectionMassOriginal.lean" .
           lean -o SectionMassOriginal.olean SectionMassOriginal.lean
           cp "$GITHUB_WORKSPACE/im-results/agent11-c-bounce-exact/FastRootBackward.lean" .
