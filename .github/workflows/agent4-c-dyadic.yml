@@ -1,0 +1,36 @@
+name: Agent 4 Machine C dyadic halting cylinders (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged source and unified theorem
+        run: |
+          mkdir -p /tmp/agent1-c-unified
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent1-c-unified/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/agent1-c-unified/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/agent1-c-unified/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent1-c-unified/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent1-c-unified/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent1-c-unified/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam}.lean /tmp/agent1-c-unified/
+          cp im-results/agent1-c-unified-gateway/{UnifiedArithmetic,UnifiedGateway}.lean /tmp/agent1-c-unified/
+          cp im-results/agent4-c-dyadic-barrier/CDyadicImmediateHalts.lean /tmp/agent1-c-unified/
+          cd /tmp/agent1-c-unified
+          export LEAN_PATH="."
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge Agent38SectionParity Agent3CImage BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam UnifiedArithmetic UnifiedGateway CDyadicImmediateHalts; do
+            echo "::group::Lean $f"
+            lean -o "$f.olean" "$f.lean"
+            echo "::endgroup::"
+          done
