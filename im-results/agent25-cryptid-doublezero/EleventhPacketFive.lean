@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import EAllDouble
 import PacketPaths
 import ShortTripleGate
+import ABridgeCode
 import BoundaryPadding
 
 set_option maxHeartbeats 100000000
