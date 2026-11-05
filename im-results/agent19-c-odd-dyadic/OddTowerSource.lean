@@ -1,5 +1,6 @@
 import OddTowerGeneric
 import OddTowerArithmetic
+import OddTowerGeneralHigh
 import EvenRightSixOrbit
 import Lean.Elab.Tactic.Omega
 
@@ -57,7 +58,23 @@ theorem blank_no_high_stop_depth_three (j m k:Nat)
   rw [hu,hk] at hr
   exact blank_no_high_three_mod32 u v hv hr
 
+/-- All-exponent exclusion of authentic Machine C high stopping gateways.
+    The stopping parameter's dyadic order forces a forbidden blank section
+    at whatever exponent n occurs, without fixing a finite modulus. -/
+theorem blank_no_high_stop_all_depth (n j m k:Nat)
+    (hm : n+4≤2*m+2)
+    (hpair : (j+3*m+3)%2^(n+4)=2^(n+2))
+    (hj : (2*j+3)%8=(if n%2=0 then 7 else 3))
+    (heq : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    ¬ BB6.Agent3.CReach (2*j+3) k := by
+  obtain ⟨w,hw,hw4,hk⟩ :=
+    high_all_depth_arithmetic n j m k hm hpair heq
+  intro hr
+  rw [hk] at hr
+  exact blank_no_alternating_dyadic n (2*j+3) w hw hw4 hj hr
+
 #print axioms blank_no_alternating_dyadic
 #print axioms blank_no_high_three_mod32
 #print axioms blank_no_high_stop_depth_three
+#print axioms blank_no_high_stop_all_depth
 end BB6.Agent19Tower
