@@ -195,7 +195,7 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean .
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighAllOdd}.lean .
-          for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighAllOdd; do lean -o "$f.olean" "$f.lean"; done
+          for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd; do lean -o "$f.olean" "$f.lean"; done
           if [ "${{ inputs.mixed_only }}" = "true" ]; then exit 0; fi
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
