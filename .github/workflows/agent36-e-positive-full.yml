@@ -1,0 +1,29 @@
+name: Agent 36 complete E double-zero theorem audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify all original-machine source and normalized theorem
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent36-cryptid-trace
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          for x in CryptidSix CryptidPairs CryptidTriplePairs; do lean -o im-results/agent32-cryptid-third/$x.olean im-results/agent32-cryptid-third/$x.lean; done
+          for x in EDoubleTripleGeneral EZeroPairs0 EPositiveCore0 EPositiveCore1 EPositiveDoubleZero EPositivePacket; do lean -o im-results/agent36-cryptid-trace/$x.olean im-results/agent36-cryptid-trace/$x.lean; done
+          lean im-results/agent36-cryptid-trace/EPositiveSimplified.lean
