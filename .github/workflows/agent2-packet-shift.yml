@@ -40,4 +40,5 @@ jobs:
           lean "$P/PacketEscape.lean"
           lean "$P/ELowSecond.lean"
           lean -o "$P/EGenericTurn.olean" "$P/EGenericTurn.lean"
-          lean "$P/ATurnFamily.lean"
+          lean -o "$P/ATurnFamily.olean" "$P/ATurnFamily.lean"
+          lean "$P/EAltPacket.lean"
