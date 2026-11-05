@@ -19,3 +19,6 @@ The 47 normalized pairs compress to twelve high-phase residue clauses. Let `d=(a
 3. Audit the resulting gateway family against existing M512/M1024 finite filters, Agent4 mixed96/mixed192 cores, Agent29 reset source classes, Agent11/15 all-depth affine barriers and other current source invariants; no new academic result is claimed yet.
 
 The present calculation is useful chiefly because it identifies a short *structured* proof target beyond M1024 rather than another gigantic quotient enumeration.
+
+
+**Correction, 05:13 UTC:** The earlier simplified high formula involving only `(d%96,t%48)` was an overapproximation of the 47 exact inverse classes and was NOT backward closed. A corrected 47-class formula uses `u=(t+48*(d/96))%96` with pairs `(d%96,u)` in `{(0,63),(7,66),(24,75),(31,78),(33,81),(33,83),(48,87),(55,90),(72,3),(79,6),(81,9)}` or `(d,t)=(6,73)` or `d=125,t%96=35`. The corrected predicate plus 13 exact coupled low clauses passed the full representative closure test. Ignore the earlier incorrect simplification.
