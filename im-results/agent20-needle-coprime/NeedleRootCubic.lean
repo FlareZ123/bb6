@@ -83,7 +83,7 @@ theorem raw_halts_iff_reaches_cubic_feeder :
       refine ⟨n+1, ?_⟩
       change CollatzReachesIn highLevelNext (n+1) highLevelStart (.N (haltTower k))
       unfold CollatzReachesIn
-      rw [Nat.add_comm n 1, Function.iterate_add_apply]
+      rw [iterate_step]
       rw [hr]
       exact hstep
     exact ⟨haltTower k,k,htarget,haltTower_power k⟩
