@@ -107,7 +107,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/BB429No81mod512.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429GateArithmetic24.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429Source24Mod2048.lean" .
-          for module in BB429No81mod512 BB429GateArithmetic24 BB429Source24Mod2048; do
+          cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429Gate24Class.lean" .
+          for module in BB429No81mod512 BB429GateArithmetic24 BB429Source24Mod2048 BB429Gate24Class; do
             echo "::group::Original-source check $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
