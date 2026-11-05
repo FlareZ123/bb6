@@ -1,6 +1,6 @@
 namespace BB6.Agent43Numeric148
 
-private def poly (u : Nat) : Nat := 2*u*u+15*u+22
+def poly (u : Nat) : Nat := 2*u*u+15*u+22
 
 private theorem linear_below_pow (u : Nat) (hu : 9 ≤ u) :
     4*u+17 ≤ 2^u := by
@@ -20,7 +20,7 @@ private theorem poly_increment (u : Nat) :
   simp only [poly, Nat.add_mul, Nat.mul_add, Nat.mul_one, Nat.one_mul]
   omega
 
-private theorem poly_below_pow (u : Nat) (hu : 9 ≤ u) :
+theorem poly_below_pow (u : Nat) (hu : 9 ≤ u) :
     poly u < 2^u := by
   have h : ∀ k : Nat, poly (k+9) < 2^(k+9) := by
     intro k
@@ -36,7 +36,7 @@ private theorem poly_below_pow (u : Nat) (hu : 9 ≤ u) :
   have heq : (u-9)+9=u := by omega
   simpa only [heq] using h (u-9)
 
-private theorem shell_ge_9 (n : Nat) (hn : 512 ≤ n) :
+theorem shell_ge_9 (n : Nat) (hn : 512 ≤ n) :
     ∃ u : Nat, 9 ≤ u ∧ 2^u ≤ n ∧ n < 2^(u+1) := by
   have h : ∀ n : Nat, 512 ≤ n →
       ∃ u : Nat, 9 ≤ u ∧ 2^u ≤ n ∧ n < 2^(u+1) := by
