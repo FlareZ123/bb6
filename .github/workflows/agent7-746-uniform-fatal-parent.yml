@@ -47,5 +47,6 @@ jobs:
           lean -o "$b/FourthExactTwo.olean" "$b/FourthExactTwo.lean"
           lean -o "$b/FourthOddGap.olean" "$b/FourthOddGap.lean"
           lean -o "$b/FourthNoDiv81.olean" "$b/FourthNoDiv81.lean"
-          lean "$b/FourthGeneralTwo.lean"
+          lean -o "$b/FourthGeneralTwo.olean" "$b/FourthGeneralTwo.lean"
+          lean "$b/FourthThirdBranch.lean"
           echo "Lean kernel validated complete n>=4 fatal-parent normal form and mod18 unique even-parent classes."
