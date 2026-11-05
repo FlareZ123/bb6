@@ -7,8 +7,8 @@ import os
 import sys
 
 def generate():
-    z=['import SheepEvenInverseAlgebra','import SheepHCases',
-       'import SheepHighCases','import SheepPeriodicGate',
+    z=['import SheepEvenInverseAlgebra','import HCases',
+       'import HighCases','import SheepPeriodicGate',
        'import GenericHighNoParent','',
        'set_option maxRecDepth 16384','set_option maxHeartbeats 0','',
        'namespace SheepReflectedGeneric','']
