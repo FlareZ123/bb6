@@ -35,4 +35,5 @@ jobs:
           for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount; do
             lean -o "$AG28/$m.olean" "$AG28/$m.lean"
           done
-          lean "$AG43/CountedLastResetDraft.lean"
+          lean -o "$AG43/CountedLastResetDraft.olean" "$AG43/CountedLastResetDraft.lean"
+          lean "$AG43/LastResetStrengthSource.lean"
