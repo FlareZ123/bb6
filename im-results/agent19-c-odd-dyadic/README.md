@@ -138,3 +138,24 @@ to characterize all high-gate parameters whose odd part of `k+2`
 falls in this forbidden residue and find a uniform closure for the
 remaining residue classes, including branches where the forced
 predecessor mechanism stops at section sum residue seven modulo eight.
+
+
+## 2026-11-05 19:39 UTC: successful full original-source verification and all-exponent extension
+
+**Source-verified.** [Full original-source Lean 4.36.0-rc2 CI run 42095680806](https://github.com/FlareZ123/bb6/actions/runs/42095680806), job 127484971442, completed successfully. It compiled the original Machine C `CLine`, unmodified Agent46 `secNext` and first-return bridge, Agent3 odd-image theorem, Agent24 exact even-right inverse, and all files in this directory. Axioms for final theorem `blank_halts_iff_all_dyadic_sieve` and `blank_no_high_stop_all_depth` are exactly `[propext, Classical.choice, Quot.sound]`; arithmetic theorem `high_all_depth_arithmetic` needs only `[propext, Quot.sound]`. No `sorryAx`. The earlier failed tactic-repair runs are superseded; [CI 42094740809](https://github.com/FlareZ123/bb6/actions/runs/42094740809) separately certified the fixed-modulus case.
+
+The **stronger all-exponent** exact source theorem
+[`OddTowerSource.lean`](./OddTowerSource.lean) is:
+
+```text
+∀ n j m k : Nat,
+  n+4 ≤ 2*m+2
+  ∧ (j+3*m+3) % 2^(n+4) = 2^(n+2)
+  ∧ (2*j+3) % 8 = (if n%2=0 then 7 else 3)
+  ∧ k+j+3*m+5 = 2^(2*m+2)*(j+3)
+    ⇒ ¬ BB6.Agent3.CReach (2*j+3) k.
+```
+
+The separately compiled original-source arithmetic theorem [`high_all_depth_arithmetic`](./OddTowerGeneralHigh.lean) derives the exactly correct `k=2^(n+2)*w-2`, `7≤w`, `w%4=3` and allows the parameter-independent blank nonreachability theorem to apply. The [`OddTowerResidualAll.lean`](./OddTowerResidualAll.lean) theorem `blank_halts_iff_all_dyadic_sieve` is a **complete iff** for the actual original Machine C halting event after removing this all-exponent high-gate family, while preserving all other high and low possible witnesses. This is a strictly stronger high-gate filter than the fixed `n=1` result, and is the recommended entry point for later work.
+
+The tower's finite base `n=0` is already subsumed by previous published Agent15/41 M8 certificates, but higher `n` sectors provide source-checked root constraints of a different dyadic depth. External prior-art novelty is unknown. The exact blank-run disposition remains unresolved, and **no universal BB(6) upper bound** is established.
