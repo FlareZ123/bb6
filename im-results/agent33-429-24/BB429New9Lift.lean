@@ -90,16 +90,6 @@ private theorem no_2_FSFE (q : Nat) :
     rw [he1,he2] at hp
     exact no_2_FSFEF q hp
   · omega
-private theorem no_2_ROOT (q : Nat) :
-    ¬ Reach (8192*q+4105) (16384*q+8209) := by
-  intro hr
-  rcases odd_back (8192*q+4105) (16384*q+8209) (by omega) (by omega) hr with
-      ⟨x,y,hp,hx,hy⟩ | ⟨x,y,hp,hx,hy,hw⟩
-  · have he1 : x=(4096*q+2051) := by omega
-    have he2 : y=(24576*q+12314) := by omega
-    rw [he1,he2] at hp
-    exact no_2_F q hp
-  · omega
 private theorem no_2_FSF (q : Nat) :
     ¬ Reach (5120*q+2560) (22528*q+11282) := by
   intro hr
@@ -141,6 +131,16 @@ private theorem no_2_F (q : Nat) :
 
 /-- An entire genuine blank-root terminal cylinder excluded by an inverse
     tree of at most ten steps, for every natural parameter. -/
+private theorem no_2_ROOT (q : Nat) :
+    ¬ Reach (8192*q+4105) (16384*q+8209) := by
+  intro hr
+  rcases odd_back (8192*q+4105) (16384*q+8209) (by omega) (by omega) hr with
+      ⟨x,y,hp,hx,hy⟩ | ⟨x,y,hp,hx,hy,hw⟩
+  · have he1 : x=(4096*q+2051) := by omega
+    have he2 : y=(24576*q+12314) := by omega
+    rw [he1,he2] at hp
+    exact no_2_F q hp
+  · omega
 theorem no_halting_2_mod8192 (n a b : Nat)
     (hr : BB429.run n (0,0)=some (a,b)) (hg : b+1=2*a) :
     a%8192≠4105 := by
@@ -237,16 +237,6 @@ private theorem no_3_FSFE (q : Nat) :
     rw [he1,he2] at hp
     exact no_3_FSFEF q hp
   · omega
-private theorem no_3_ROOT (q : Nat) :
-    ¬ Reach (8192*q+6153) (16384*q+12305) := by
-  intro hr
-  rcases odd_back (8192*q+6153) (16384*q+12305) (by omega) (by omega) hr with
-      ⟨x,y,hp,hx,hy⟩ | ⟨x,y,hp,hx,hy,hw⟩
-  · have he1 : x=(4096*q+3075) := by omega
-    have he2 : y=(24576*q+18458) := by omega
-    rw [he1,he2] at hp
-    exact no_3_F q hp
-  · omega
 private theorem no_3_FSF (q : Nat) :
     ¬ Reach (5120*q+3840) (22528*q+16914) := by
   intro hr
@@ -288,6 +278,16 @@ private theorem no_3_F (q : Nat) :
 
 /-- An entire genuine blank-root terminal cylinder excluded by an inverse
     tree of at most ten steps, for every natural parameter. -/
+private theorem no_3_ROOT (q : Nat) :
+    ¬ Reach (8192*q+6153) (16384*q+12305) := by
+  intro hr
+  rcases odd_back (8192*q+6153) (16384*q+12305) (by omega) (by omega) hr with
+      ⟨x,y,hp,hx,hy⟩ | ⟨x,y,hp,hx,hy,hw⟩
+  · have he1 : x=(4096*q+3075) := by omega
+    have he2 : y=(24576*q+18458) := by omega
+    rw [he1,he2] at hp
+    exact no_3_F q hp
+  · omega
 theorem no_halting_3_mod8192 (n a b : Nat)
     (hr : BB429.run n (0,0)=some (a,b)) (hg : b+1=2*a) :
     a%8192≠6153 := by
