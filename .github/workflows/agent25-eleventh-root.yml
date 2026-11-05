@@ -36,7 +36,7 @@ jobs:
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
           A=im-results/agent25-cryptid-doublezero
           C=im-results/agent35-cryptid-code
-          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode; do
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode SixOnes; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
