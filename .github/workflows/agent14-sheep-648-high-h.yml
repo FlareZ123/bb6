@@ -1,0 +1,28 @@
+name: Agent14 Sheep 648 all-k h-bounds Lean source
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  high-h:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel audit both quantified 3-adic gates
+        run: |
+          mkdir -p /tmp/agent14-sheep-high-h
+          cp im-results/agent14-sheep-seven-cones/Sheep648Period.lean /tmp/agent14-sheep-high-h/
+          cp im-results/agent14-sheep-seven-cones/Sheep648HighH.lean /tmp/agent14-sheep-high-h/
+          cd /tmp/agent14-sheep-high-h
+          export LEAN_PATH=.
+          lean -o Sheep648Period.olean Sheep648Period.lean
+          lean Sheep648HighH.lean
