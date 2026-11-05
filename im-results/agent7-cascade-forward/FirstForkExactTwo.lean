@@ -134,6 +134,44 @@ theorem near_top_exact_two (n u A q:Nat) (hn:4≤n)
 
 
 /-
+private theorem pow_period_eighteen (n : Nat) :
+    2^(n+18)%27=2^n%27 := by
+  rw [Nat.pow_add]
+  simp [Nat.mul_mod]
+
+private theorem pow_mod_eighteen (n : Nat) :
+    2^n%27=2^(n%18)%27 := by
+  induction n using Nat.strongRecOn with
+  | ind n ih =>
+    by_cases hn:n<18
+    · simp [Nat.mod_eq_of_lt hn]
+    · have hm:n-18<n:=by omega
+      have he:n=(n-18)+18:=by omega
+      rw [he,pow_period_eighteen]
+      rw [ih (n-18) hm]
+      have hmod:((n-18)+18)%18=(n-18)%18:=by omega
+      rw [hmod]
+
+/-- Four mod54 fatal subclasses have precisely v3(2fatal(n)+5)=2. -/
+theorem fatal_not_div27 (n:Nat) (hn:4≤n)
+    (hres:n%54=4 ∨ n%54=23 ∨ n%54=40 ∨ n%54=41) :
+    (2*fatal n+5)%27≠0 := by
+  have hf:=fatal_close n hn
+  have hp:=pow_mod_eighteen n
+  rcases hres with h|h|h|h
+  · have hm:n%18=4:=by omega
+    have hm27:2^n%27=2^4%27:=by rw [hp,hm]
+    omega
+  · have hm:n%18=5:=by omega
+    have hm27:2^n%27=2^5%27:=by rw [hp,hm]
+    omega
+  · have hm:n%18=4:=by omega
+    have hm27:2^n%27=2^4%27:=by rw [hp,hm]
+    omega
+  · have hm:n%18=5:=by omega
+    have hm27:2^n%27=2^5%27:=by rw [hp,hm]
+    omega
+
 STAGED_SECOND_PHASE
 -/
 end CascadeFirstFork
