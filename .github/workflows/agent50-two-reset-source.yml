@@ -24,6 +24,9 @@ jobs:
           base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/agent50-count-bridge.tar.xz
           echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/agent50-count-bridge.tar.xz" | sha256sum -c -
           tar -xJf /tmp/agent50-count-bridge.tar.xz -C "$target"
+          base64 -d "$target/WallNeedsFour.lean.xz.b64" > /tmp/agent50-wall-needs-four.lean.xz
+          echo "f7d4d159179e4054eb3424f71edc98174729ce236a1364f39623c0b0f8f67fc2  /tmp/agent50-wall-needs-four.lean.xz" | sha256sum -c -
+          xz -dc /tmp/agent50-wall-needs-four.lean.xz > "$target/WallNeedsFour.lean"
       - name: Compile original P1 inverse sources and Agent50 arbitrary-reset proof
         run: |
           set -e
@@ -45,6 +48,6 @@ jobs:
           for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
             lean -o "$AG28/$m.olean" "$AG28/$m.lean"
           done
-          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound; do
+          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound WallNeedsFour; do
             lean -o "$AG50/$m.olean" "$AG50/$m.lean"
           done
