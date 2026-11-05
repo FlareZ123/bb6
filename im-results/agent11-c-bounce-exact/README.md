@@ -241,3 +241,24 @@ For every `m%8=0` with `0<m`, `3m+4` is divisible by 4 and has *exactly two fact
 
 [SecondRayAllList.lean](./SecondRayAllList.lean), fully original-source Lean verified [CI 41931342207](https://github.com/FlareZ123/bb6/actions/runs/41931342207), proves the exact reverse source list for **every natural m**. The generated candidate list has at most `2*Nat.log2(D)+3` entries, where `D=4^(m+1)(3m+4)`; it enumerates direct, a=1, and high sources via bounded recursion depths, filtering with the faithful source `secNext`. `rayAllParents_exact` establishes iff with source transition; `all_ray_root_reduction` establishes genuine unbounded blank-root reachability of `T_m` iff at least one source in that list is genuinely root-reachable. The list's count scales `O(log D)`, hence linear in `m` for these exponentially sized targets, unlike the previously brute quadratic rank-bounded candidate construction. It is a syntactic exhaustive enumeration and proof-usable all-time reduction, not a root-outcome classifier.
 
+
+
+### 2026-11-05: complete logarithmic inverse candidates for arbitrary original section targets
+
+**New all-natural original-source Lean theorem, manually checked successfully in [CI 42078729440](https://github.com/FlareZ123/bb6/actions/runs/42078729440)** (job 127425809387, main commit 74f816c30f628bdfcb3893194245cb0715cbd2d1). The file [SectionFastInverseOriginal.lean](SectionFastInverseOriginal.lean) imports **unchanged** `FullSectionInverse` from Agent3, the unchanged Agent46 section and bounce definitions through that dependency, and `Lean.Elab.Tactic.Omega`. The CI log prints:
+
+```
+'BB6.Agent11Fast.fastCandidates_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent11Fast.fastCandidates_length_le' depends on axioms: [propext, Quot.sound]
+```
+
+There is no `sorryAx`, added axiom, or isolated model shim in the committed source. For all natural `a,k,x,y`, if `5≤y`:
+
+```lean
+(a,k) ∈ BB6.Agent11Fast.fastCandidates x y ↔
+  BB6.Agent46.secNext (a,k) = some (x,y)
+```
+
+The complete candidate list has length bounded by `4*(Nat.log2 (x+y+1)+1)+4`. It enumerates four arithmetic inputs for every recursion depth from zero through `Nat.log2(x+y+1)`, plus four exceptional/direct inputs, then filters by the exact source `secNext`. The proof derives all cases from Agent3's original-source exact section image criterion, proves every possible power-of-two witness lies within the logarithmic depth range, and solves the remaining linear arithmetic equations. It works for **arbitrary original section targets**, not solely the second halting-parameter ray. Unlike the already proved `SectionMassOriginal.sourceCandidates_correct`, it never constructs a quadratic mass rectangle. The distinct previous `SecondRayAllList` uses similar logarithmic inverse ideas but applies only to one ray of halting targets; the present theorem provides the general reusable frontend.
+
+**Scope:** this is a mathematical *exactness and candidate-count* certificate for one-step inverse enumeration; it is not yet a proved runtime bound for evaluating the source `secNext` filter. No actual blank-root halting family has been settled by this theorem. Prior existence of source-certified fast inverse grammar means external novelty beyond an integrated executable interface requires separate review. A productive next step is to connect the structurally recursive `SectionFuelOriginal.secNextFuel` interpreter and build a finite ranked backwards search that uses this candidate set at each recursive node; the existing `SectionBackwardFuelOriginal.backwardHitFuelHalfFull_iff` supplies the known-correct specification.
