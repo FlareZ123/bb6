@@ -58,6 +58,11 @@ for every genuine small-left history with z≥1, n≥42. **This is the specific 
 
 Once (R) is proved, the entirely source-independent dyadic lemma in [WallAboveNPlusZ.md](WallAboveNPlusZ.md) uses (L) to show `m>n+z` for n≥256; similarly [WallBelowN.md](WallBelowN.md) provides the n≥62 lower cost exclusion once zero-reset cases are treated.
 
+
+### (4) The zero-reset subwall case is separately excluded at low cost
+
+For `z=0`, every original counted edge has depth zero. The unchanged source theorem `upper_tail_dyadic` gives `2^m F=F_0=7P−n−2`. Under the contradiction hypothesis `m≤n+z=n`, this implies `2^m | F_0` and `2^m | 7P`, hence `2^m | (n+2)` and `2^m≤n+2`. A subwall endpoint gives `F≤2(m+n+3)≤2(2n+3)`, so `7P−n−2≤2(n+2)(2n+3)`, false for every `n≥256` by a one-base exponential-vs-quadratic induction. Thus the proposed n≥256 half-plane result does not require treating z=0 as a positive-reset history.
+
 ## Boundary / next action
 
 An effective source-Lean next action is to replace the final `hwall:b=4(m+n)` of Agent50's source lower-count theorem with a weaker `hle:b≤4(m+n)`, proving (W) from the exact `OddWord` mass identity and reusing the original budget proof. Then compose this with the counted last-reset factorization in [CountedLastResetDraft.lean](CountedLastResetDraft.lean), currently uncompiled.
