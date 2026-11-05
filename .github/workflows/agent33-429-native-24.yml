@@ -2,12 +2,15 @@ name: Agent 33 BB429 native 24/2048 raw-TM source equivalence (manual)
 
 on:
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   original-cryptids-native-24:
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == 'AGENT33_VERIFY_58_20261105'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -110,7 +113,10 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429Gate24Class.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429New9Lift.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/BB429Source9Lift.lean" .
-          for module in BB429No81mod512 BB429GateArithmetic24 BB429Source24Mod2048 BB429Gate24Class BB429New9Lift BB429Source9Lift; do
+          for file in BB429InverseKernel BB429Inverse38 BB429Count58 BB429Source58; do
+            cp "$GITHUB_WORKSPACE/im-results/agent33-429-24/$file.lean" .
+          done
+          for module in BB429No81mod512 BB429GateArithmetic24 BB429Source24Mod2048 BB429Gate24Class BB429New9Lift BB429Source9Lift BB429InverseKernel BB429Inverse38 BB429Count58 BB429Source58; do
             echo "::group::Original-source check $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
