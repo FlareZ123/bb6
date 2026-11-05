@@ -111,7 +111,7 @@ theorem pairRun_head (n : Nat) :
           · subst a; simp [pairRun,hp,step]
           · subst a; simp [pairRun,hp,step]
 
-private theorem seedSeven :
+theorem seedSeven :
     prun 7 [301,650,645,322,163,160] =
       some [280,397,1227,3564,1195,2422,323] := by
   set_option maxRecDepth 10000 in
