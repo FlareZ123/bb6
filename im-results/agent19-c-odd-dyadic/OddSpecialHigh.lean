@@ -29,7 +29,11 @@ theorem high_special_a_coordinates (j m k : Nat)
     rw [heq]
     exact Nat.mod_eq_zero_of_dvd hprodmod
   have hkmod : k%64=10 := by omega
-  have hlin : 2*m+4≤2^(2*m+2) := BB6.Agent46.pow_two_linear m
+  have hhlin := BB6.Agent46.pow_two_linear m
+  have hpstep : 2^(2*m+3)=2*2^(2*m+2) := by
+    rw [show 2*m+3=(2*m+2)+1 by omega,Nat.pow_succ]
+    omega
+  have hlin : 2*m+4≤2^(2*m+2) := by omega
   have hJ : 64*j≤2^(2*m+2)*j :=
     Nat.mul_le_mul_right j hB64
   have hprod : 2^(2*m+2)*(j+3)=2^(2*m+2)*j+3*2^(2*m+2) := by
