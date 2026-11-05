@@ -36,3 +36,10 @@ All new Lean modules were checked locally with Lean **4.36.0-rc2**, ordinary ker
 The existing manual workflow `.github/workflows/agent7-746-uniform-fatal-parent.yml` compiled the first six new modules in the initial one-shot issue-triggered run [41966512900](https://github.com/FlareZ123/bb6/actions/runs/41966512900), if that run eventually succeeds. **At writing, the run is queued; no success is claimed.** It is pinned at an earlier commit and does **not** cover the later `FirstForkT3`, `FirstForkThree`, `FirstForkOddT45`, `FirstForkOddValuation`, `FirstForkExactThree`, or `FirstForkRootThree` additions. A subsequent manual source-check of those files is needed.
 
 Most valuable next research is an invariant distinguishing the genuine blank-derived reset root from every member of the remaining infinite fatal family. Exact local parent grammar alone is an intermediate algebraic reduction.
+
+
+## Direct exact-inverse numerical cross-check
+
+An independent integer-arithmetic enumeration of all dyadic even and odd inverse bands at each finite target (not a Lean theorem) confirms that the nondivisibility-by-2187 condition is meaningful. The exceptional second-predecessor index `n=83` has **four** distinct candidate source reset parents (one even, odd valuation exponents `t=1,3,6`). The exceptional immediate fatal index `n=491` likewise has four candidates with odd valuations `1,3,6`. By contrast `n=124` at the exceptional second target and `n=130` at the exceptional immediate fatal target each have three (even plus odd `1,3`). This finite numerical evidence guards against the incorrect unconditional claim of exactly three parents in every exceptional residue class. The abstract `near_top_exact_three` theorem correctly requires `(2u+5)%2187 != 0`.
+
+Two additional locally checked specializations are in [FirstForkFatalThree.lean](FirstForkFatalThree.lean): complete true blank-reset-root iff statements for fatal n%162 in `{5,130}` and for second-ancestor fatal n%162 in `{83,124}`, both conditional on nondivisibility by2187. These also remain pending untouched-source CI.
