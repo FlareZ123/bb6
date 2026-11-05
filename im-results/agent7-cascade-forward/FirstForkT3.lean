@@ -89,5 +89,22 @@ private theorem second_div81_bad (n:Nat) (hn:10≤n)
     have hm81:2^n%81=2^16%81:=by rw [hp,hm]
     omega
 
+theorem fatal_bad_has_tthree (n:Nat) (hn:10≤n)
+    (hres:n%162=5 ∨ n%162=130) :
+    ResetParent (oddPre3 n (fatal n)) (fatal n) :=
+  near_top_has_tthree n (fatal n) (n+4) (by omega)
+    (fatal_close n (by omega)) (tight_fatal n hn)
+    (fatal_div81_bad n hn hres)
+
+theorem second_bad_has_tthree (n:Nat) (hn:10≤n)
+    (hres:n%162=83 ∨ n%162=124) :
+    ResetParent (oddPre3 n (secondPred n)) (secondPred n) :=
+  near_top_has_tthree n (secondPred n) (7*n+13) (by omega)
+    (second_close n hn) (tight_second n hn)
+    (second_div81_bad n hn hres)
+
+#print axioms fatal_bad_has_tthree
+#print axioms second_bad_has_tthree
+
 #print axioms near_top_has_tthree
 end CascadeFirstFork
