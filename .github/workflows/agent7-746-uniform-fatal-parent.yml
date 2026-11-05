@@ -63,6 +63,7 @@ jobs:
           lean -o "$f/FirstForkExactFour.olean" "$f/FirstForkExactFour.lean"
           lean -o "$f/FirstForkRootFour.olean" "$f/FirstForkRootFour.lean"
           lean -o "$f/FirstForkFourDistinct.olean" "$f/FirstForkFourDistinct.lean"
+          lean -o "$f/FirstForkFourResidues.olean" "$f/FirstForkFourResidues.lean"
           lean -o "$b/FourEven.olean" "$b/FourEven.lean"
           lean -o "$b/FourthBranch.olean" "$b/FourthBranch.lean"
           lean -o "$b/FourthExactTwo.olean" "$b/FourthExactTwo.lean"
