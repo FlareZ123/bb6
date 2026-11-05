@@ -12,14 +12,13 @@ def live56 : List Nat :=
 theorem live56_count : live56.length = 56 := by decide
 
 theorem live56_nodup : live56.Nodup := by
-  unfold live56
-  exact List.Nodup.filter _ BB429Count58.live58_nodup
+  decide
 
 theorem live56_iff (u : Nat) :
     u%8192 ∈ live56 ↔
       u%8192 ∈ BB429Count58.live58 ∧
       u%8192 ≠ 1021 ∧ u%8192 ≠ 3069 := by
-  simp [live56, additional, List.mem_filter, and_assoc]
+  simp [live56, additional, List.mem_filter]
 
 #print axioms live56_count
 #print axioms live56_iff
