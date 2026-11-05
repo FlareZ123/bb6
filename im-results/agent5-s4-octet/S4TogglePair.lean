@@ -127,6 +127,19 @@ theorem pairRun_period16 (n : Nat) : pairRun (n+16) = pairRun n := by
       change step (pairRun (n+16)) = step (pairRun n)
       rw [ih]
 
+private theorem pairRun_plus_periods (r k : Nat) :
+    pairRun (r+16*k) = pairRun r := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Nat.mul_succ, ← Nat.add_assoc, pairRun_period16, ih]
+
+theorem pairRun_mod16 (n : Nat) : pairRun n = pairRun (n%16) := by
+  have hn : n=n%16+16*(n/16) := by omega
+  calc
+    pairRun n = pairRun (n%16+16*(n/16)) := congrArg pairRun hn
+    _ = pairRun (n%16) := pairRun_plus_periods _ _
+
 theorem prun_pair_cycle (n : Nat) (U : List Nat)
     (hr : prun (7+n) [301,650,645,322,163,160]=some U) :
     ∃ T, U=(pairRun n).1::(pairRun n).2::T := by
