@@ -38,6 +38,7 @@ jobs:
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump SixOnes TokenCode; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
+          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
