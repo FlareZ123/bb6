@@ -10,6 +10,7 @@ open BB6.Agent46
     length for any input having a forced affine seed and terminal A/B cone. -/
 theorem high_gate_affine_AB (j m k seed d : Nat)
     (hgate : k+j+3*m+5=2^(2*m+2)*(j+3))
+    (hj : j%2=0)
     (hmod : seed%4=0) (hl : 32≤seed)
     (hright : k=affineRightSeed seed d)
     (hzone : affineConeAB
