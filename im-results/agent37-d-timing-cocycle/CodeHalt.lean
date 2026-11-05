@@ -81,6 +81,50 @@ theorem codeTime_shift (k h : Nat) (ws : List Bool) :
   simp only [Nat.mul_add]
   omega
 
+
+/-- The original table's explicit state 6 is a frozen halt. -/
+theorem terminal_step (c : Cfg) (hc : c.st = 6) : step c = c := by
+  cases c with
+  | mk l h r st =>
+    change st = 6 at hc
+    subst st
+    cases h <;> rfl
+
+theorem terminal_run (c : Cfg) (hc : c.st = 6) (n : Nat) :
+    run n c = c := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [show n+1=n+1 by rfl, run_add n 1, ih]
+    exact terminal_step c hc
+
+/-- Any explicit F/1 predecessor excludes all preceding frozen halts. -/
+theorem no_prior_halt {c : Cfg} {t : Nat}
+    (h : (run t c).st = 5) (s : Nat) (hs : s ≤ t) :
+    (run s c).st ≠ 6 := by
+  intro h6
+  have hr : run t c = run (t-s) (run s c) := by
+    calc
+      run t c = run (s+(t-s)) c := by congr 1; omega
+      _ = run (t-s) (run s c) := by rw [run_add]
+  rw [hr, terminal_run _ h6 (t-s)] at h
+  omega
+
+/-- Source-authenticated *first halting time* for arbitrary finite mixed
+    10/111 codewords. This does not separately exclude earlier F/0 returns. -/
+theorem full_code_exact_first_halt (k : Nat) (ws ys : List Bool)
+    (t : Nat) (ht : t < codeTime k ws) :
+    (run t (codeInput k ws ys)).st ≠ 6 := by
+  have htime : codeTime k ws = codePreTime k ws + 1 := by
+    dsimp [codeTime, codePreTime]
+    omega
+  have hsmall : t ≤ codePreTime k ws := by omega
+  exact no_prior_halt (full_code_before_halt k ws ys).1 t hsmall
+
+#print axioms terminal_step
+#print axioms terminal_run
+#print axioms no_prior_halt
+#print axioms full_code_exact_first_halt
 #print axioms full_code_halts
 #print axioms full_code_before_halt
 #print axioms codeTime_shift
