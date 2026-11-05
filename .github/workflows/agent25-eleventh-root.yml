@@ -34,6 +34,7 @@ jobs:
           H=im-results/agent35-d-regular-certificate
           D=im-results/agent2-cryptid-continuity
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
           A=im-results/agent25-cryptid-doublezero
           C=im-results/agent35-cryptid-code
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode SixOnes; do
