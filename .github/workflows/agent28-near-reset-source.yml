@@ -59,4 +59,12 @@ jobs:
           for m in OddWordCost OddWordSourceBridge DefectTransport OneResetTwoAdic; do lean -o "$b/$m.olean" "$b/$m.lean"; done
           for m in ResetBudget ResetSourceAlgebra ResetSourceBridge ResetExceptional ResetExceptionalCost ResetExceptionalGap; do lean -o "$d/$m.olean" "$d/$m.lean"; done
           for m in ExtendedBudget NearSourceAlgebra NearSourceBridge; do lean -o "$n/$m.olean" "$n/$m.lean"; done
-          lean "$n/NearExceptionalBridge.lean"
+          lean -o "$n/NearExceptionalBridge.olean" "$n/NearExceptionalBridge.lean"
+          cat > "$n/Agent28SignatureProbe.lean" <<'LEAN'
+          import NearExceptionalBridge
+          #check BB6.Agent50Near.source_countcone_near_n_reset_bound
+          #check BB6.Agent50Near.source_critical_wall_reset_near
+          #check BB6.Agent50Near.source_critical_exceptional_reset_near
+          #check BB6.Agent50Near.source_critical_either_gate_reset_near
+          LEAN
+          lean "$n/Agent28SignatureProbe.lean"
