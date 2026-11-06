@@ -100,3 +100,24 @@ Composing this with the stronger first-event compiler, [CI 42106984785](https://
 Prior work: r=0 overlaps the already formalized E-1100 branch. Agent37 had independently conjectured this general `110(10)^r0` A-turn in an earlier incarnation and documented a locally checked mock (see agents/agent37/memory.md); this contribution is original-source certification with strict physical minimality, not priority to the conjecture. Agent37 was informed through communications/agent37/20261105T2053Z_agent2-110-ten-r-zero-certified.md.
 
 No result claims authentic blank-root reachability, a BB6 bound, or a halt decision. Preserve these synthetic first-return tools in `im-results/`.
+
+
+## 2026-11-06: all-initial-pair-count exceptional E boundary endpoints
+
+**New source-authenticated original-machine endpoint theorems**, independently compiled under the unchanged six-state transition table using Lean 4.36.0-rc2:
+
+- [EZeroPump.lean](./EZeroPump.lean), [successful original-source CI 42144177148](https://github.com/FlareZ123/bb6/actions/runs/42144177148): for all k,r≥0 and every finite binary Y,
+  **I_(3k+4)(0 110 (10)^r 0 Y) → I_(8k+3)(0 1111 0 101010 1^(2r) Y)**
+  in exactly **12k²+49k+96+4r** original primitive transitions. The theorem full_exceptional_pump generalizes Agent32's full_E_zero_pairs (r=0), using an A forward / C reverse scan and a source-checked 13-step synchronization with Agent32's unchanged boundary.
+- [EOneZero.lean](./EOneZero.lean), [successful original-source CI 42145329321](https://github.com/FlareZ123/bb6/actions/runs/42145329321): for all k,r,Y,
+  **I_(3k+4)(0 10 110 (10)^r 0 Y) → I_(8k+5)(0 1^4 0 1^(2r+6) Y)**
+  in exactly **12k²+49k+64+4r** primitive transitions. Its new a_one_zero_turn is an all-context A/0-to-E/1 rule for 10110(10)^r0 Y taking 16+4r steps and preserving every left tape and Y. A fixed E/1-to-D/0 eight-step rule completes the source return.
+- [EIterDoubleZeroFullFirst.lean](./EIterDoubleZeroFullFirst.lean) and [EIterDoubleZeroPacket.lean](./EIterDoubleZeroPacket.lean), previously source-certified [CI 42107775516](https://github.com/FlareZ123/bb6/actions/runs/42107775516), handle every q≥2, r≥0, Y:
+  **I_(3k+4)(0 (10)^q 110 (10)^r 0 Y) → I_(8k+5)(0 1^(2q+2) 0 1^(2r+6) Y)**
+  at **12k²+49k+60+4q+4r** raw steps, with formal exact first physically blank-left F/0 return.
+
+Together these three source-connected formulas supply **every q≥0** for the exceptional suffix family 0(10)^q110(10)^r0Y, with separate q=0 and q≥1 regimes. They share the input unary lift k→k+1 with output unary +8 and return-time difference **24k+61**, for fixed q,r,Y. Each new theorem's axiom audit is exactly [propext, Quot.sound], with no sorry or additional evaluation axioms.
+
+[check_e_zero_family.py](./check_e_zero_family.py) is a separate literal twelve-transition sparse-tape first-event simulator. It tested **4,992** deterministic instances across k=0..7, q=0..5, r=0..12, and eight binary suffixes. Every instance reached its predicted source endpoint and time at the first *physically blank-left F/0* event, without an earlier halt. This finite observation motivates proving first-event minimality for q=0 and q=1. Those two minimality claims are **not yet Lean-certified**; q≥2 minimality is certified.
+
+This completes an all-initial-pair-count special-word gate **for synthetic F/0 sections**. The actual blank-tape trajectory has not been shown to visit any arbitrary member of this family. There is no nonhalting conclusion, new champion bound, exact BB(6), or externally established novelty. Keep these lemmas and regression in intermediate storage pending a rooted application. A useful next task is incorporation into Agent31's arbitrary-tail packet transducer and Agent37's proposed irregular first-event 3-adic coupling, particularly E,p=2 exits from decreasing-rank packet phases.
