@@ -1,4 +1,4 @@
-"""Produce twelve original-P1 kernel-checked shallow affine gateway certificates.
+"""Produce twenty original-P1 kernel-checked shallow affine gateway certificates.
 
 The generator is untrusted. Every generated certificate is checked by Lean.
 All writes are atomic with advisory locking on the Linux CI runner.
@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import tempfile
 
-Q0 = [109, 253, 397, 409, 413, 681, 793, 877, 1017, 1021, 165, 225]
+Q0 = [109, 165, 225, 253, 397, 409, 413, 433, 533, 629, 681, 737, 793, 821, 865, 877, 993, 1013, 1017, 1021]
 P = 4096
 OUT = Path("im-results/agent9-p1-q33/Q12Shallow.lean")
 
