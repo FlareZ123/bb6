@@ -41,4 +41,41 @@ private theorem n_plus_four_le_pow (n : Nat) (hn : 4 ≤ n) : n+4 ≤ 2^n := by
   have heq : (n-4)+4 = n := by omega
   simpa only [heq] using hb (n-4)
 
+/-- Every genuine inverse word below the wall retains the same
+    strict logarithmic minimum cost as an exact-wall inverse word. -/
+theorem word_subwall_logarithmic_gap
+    {n K D m A T : Nat}
+    (hn : 14 ≤ n) (hK : K+n+3=7*2^n)
+    (hword : OddWord K D m A T)
+    (hsub : K ≤ D+3*m+2*n+4) :
+    2^(n-m) < n := by
+  by_cases hm : n ≤ m
+  · have hzero : n-m=0 := by omega
+    simp only [hzero]
+    simp
+    omega
+  · have hless : m < n := by omega
+    let k := n-m
+    have hnk : n = m+k := by dsimp [k]; omega
+    have hP : 2^n = 2^m*2^k := by
+      rw [hnk]
+      exact Nat.pow_add 2 m k
+    have hlin : n+4 ≤ 2^n := n_plus_four_le_pow n (by omega)
+    have hcoeff : 3*m+2*n+4 ≤ 5*n+1 := by omega
+    have hc := word_subwall_cost_necessary hword hsub
+    have hbound : 7*2^n ≤ 2^n+2^m*(5*n+1) := by
+      have hcoeffmul : 2^m*(3*m+2*n+4) ≤ 2^m*(5*n+1) :=
+        Nat.mul_le_mul_left (2^m) hcoeff
+      omega
+    have hc6 : 6*2^n ≤ 2^m*(5*n+1) := by omega
+    have hmult : 2^m*(6*2^k) ≤ 2^m*(5*n+1) := by
+      calc
+        _ = 6*2^n := by rw [hP]; ac_rfl
+        _ ≤ _ := hc6
+    have hpos : 0 < 2^m := Nat.pow_pos (by decide)
+    have hkbound : 6*2^k ≤ 5*n+1 :=
+      Nat.le_of_mul_le_mul_left hmult hpos
+    have hkn : 2^k < n := by omega
+    simpa only [show n-m=k by rfl] using hkn
+
 end BB6.Agent50SubwallLog
