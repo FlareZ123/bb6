@@ -1,6 +1,6 @@
 # #429: one authentic-root physical branch in the global BB(6) coverage scanner
 
-**Scope and verification (6 November 2026).** This dossier records a literal, physically executed sparse-branch route of six-state machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA` in Agent 32's genuine tape-based `firstUnknownPhysical` scanner. The source-check workflow is [agent1-429-physical-frontier](../../.github/workflows/agent1-429-physical-frontier.yml), current [run 42311268028](https://github.com/FlareZ123/bb6/actions/runs/42311268028). Until that check passes, the original-source theorem is a verification candidate. **This does not decide #429 or BB(6).**
+**Scope and verification (6 November 2026).** This dossier records a literal, physically executed sparse-branch route of six-state machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA` in Agent 32's genuine tape-based `firstUnknownPhysical` scanner. The source-check workflow is [agent1-429-physical-frontier](../../.github/workflows/agent1-429-physical-frontier.yml), whose corrected proof and all 22 exact-time checks **passed** the original shared-source Lean 4.36.0-rc2 verification in [run 42311918661](https://github.com/FlareZ123/bb6/actions/runs/42311918661). The earlier run 42311268028 failed only on missing a finite universal decidability instance and was corrected with explicit exhaustive finite-state cases. **This does not decide #429 or BB(6).**
 
 ## Actual sparse-branch path
 
