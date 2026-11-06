@@ -94,4 +94,5 @@ jobs:
           lean -o "$b/RayThirdGate.olean" "$b/RayThirdGate.lean"
           lean -o "$b/RayThirdNoRoot.olean" "$b/RayThirdNoRoot.lean"
           lean -o "$b/RayTwoTierSelector.olean" "$b/RayTwoTierSelector.lean"
-          echo "Agent 10 source-verified all-depth third generation and exact two-tier source fork selector."
+          lean -o "$b/RayTwoTierPacket.olean" "$b/RayTwoTierPacket.lean"
+          echo "Agent 10 source-verified exact two-tier six-packet root reduction."
