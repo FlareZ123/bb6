@@ -472,7 +472,7 @@ theorem source_exceptional_last_reset_depth_window
     have hdepthExact : 2^(t+3)=2*k+dp+2*t+9 := by
       rw [hpowStep, ← hpow1]
       omega
-    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,hdepthExact,rfl,htUpper⟩
+    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepthExact,htUpper⟩
 
 #print axioms BB6.Agent50ExceptionalDepth.source_exceptional_last_reset_depth_window
 
