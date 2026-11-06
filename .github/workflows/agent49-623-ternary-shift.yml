@@ -8,6 +8,7 @@ on:
       - im-results/agent49-parity623/TernaryBufferSource.lean
       - im-results/agent49-parity623/AffinePredecessorBoundsSource.lean
       - im-results/agent8-623-inverse/GatePredecessorSource.lean
+      - im-results/agent8-623-inverse/NegativeGapResidue.lean
 permissions:
   contents: read
 jobs:
@@ -62,3 +63,8 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/GatePredecessorSource.lean" Agent8GatePredecessorSource.lean
           lake env lean Agent8GatePredecessorSource.lean
+      - name: Prove negative-gap residue exponent separation
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/NegativeGapResidue.lean" Agent8NegativeGapResidue.lean
+          lake env lean Agent8NegativeGapResidue.lean
