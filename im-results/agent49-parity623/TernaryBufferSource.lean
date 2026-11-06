@@ -68,4 +68,38 @@ theorem drainB_first3 (b : Nat) : ∀ a d aa dd : Nat,
 
 #print axioms evalA_first3
 #print axioms drainB_first3
+
+/-- A successful near-left odd-d return from even a lies in the
+old strongly safe right cone whenever it is outside the old left cone. -/
+theorem far_left_odd_to_safe_right (a d b e : Nat)
+    (ha : a%2=0) (hd : d%2=1) (hleft : d+5≤a)
+    (hnotold : a≤2*d+8) (hnext : next (.D a d)=some (.D b e)) :
+    b%2=0 ∧ 2*b+2≤e := by
+  have hfirst : drainB (a-d-5) (d+3) 5=some (.D b e) := by
+    have hz : a≠0 := by omega
+    have hbranch : d%2=1 ∧ a≥d+5 := ⟨hd,hleft⟩
+    simpa only [next,highLevelNext,if_neg hz,if_pos hbranch] using hnext
+  have hf:=drainB_first3 (d+3) (a-d-5) 5 b e hfirst
+  have hg:=BB6.Agent8BudgetSource.drainB_d3 (d+3) (a-d-5) 5 b e hfirst
+  have hp:=BB6.Agent49ParitySource.drainB_parity (d+3) (a-d-5) 5 b e hfirst
+  constructor <;> omega
+
+/-- Even-d near-left branch has the same strong-right conclusion. -/
+theorem far_left_even_to_safe_right (a d b e : Nat)
+    (ha : a%2=0) (hd : d%2=0) (hleft : d+3≤a)
+    (hnotold : a≤2*d+4) (hnext : next (.D a d)=some (.D b e)) :
+    b%2=0 ∧ 2*b+2≤e := by
+  have hfirst : drainB (a-d-2) (d+2) 2=some (.D b e) := by
+    have hz : a≠0 := by omega
+    have hno : ¬(d%2=1 ∧ a≥d+5) := by omega
+    have hyes : d%2=0 ∧ a≥d+3 := ⟨hd,hleft⟩
+    simpa only [next,highLevelNext,if_neg hz,if_neg hno,if_pos hyes] using hnext
+  have hf:=drainB_first3 (d+2) (a-d-2) 2 b e hfirst
+  have hg:=BB6.Agent8BudgetSource.drainB_d3 (d+2) (a-d-2) 2 b e hfirst
+  have hp:=BB6.Agent49ParitySource.drainB_parity (d+2) (a-d-2) 2 b e hfirst
+  constructor <;> omega
+
+#print axioms far_left_odd_to_safe_right
+#print axioms far_left_even_to_safe_right
+
 end BB6.Agent49TernaryBufferSource
