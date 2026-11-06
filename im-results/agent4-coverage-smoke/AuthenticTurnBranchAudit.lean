@@ -42,8 +42,8 @@ theorem authenticF287_root_disjoint_synthetic (m : Machine)
     hroot initialSlot _ (by simp [rootCylinder])
   have hsA : m initialSlot = some turnA := by
     rcases hs with ht | hh
-    · exact ht initialSlot _ (by simp [turnTable])
-    · exact hh initialSlot _ (by simp [twoStepHaltTable, turnA])
+    · exact ht initialSlot _ (by simp [turnTable, initialSlot])
+    · exact hh initialSlot _ (by simp [twoStepHaltTable, initialSlot, turnA])
   rw [original_eq_expectedRLE] at hrootA
   have hsource : expectedRLE initialSlot =
       some ⟨true, true, ⟨1, by decide⟩⟩ := by decide
