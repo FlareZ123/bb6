@@ -45,7 +45,7 @@ f_q(z):=4^{-1}(5z+2)\pmod q.
 \[
 F(x)=2u+1+(u-1)/2=(5u+1)/2=10w+8,
 \]
-which is even. Therefore no odd-section continuation is needed, \(h=0\) and \(E(x)=F(x)\). Substituting \(x=2u\) gives \(4E(x)=5x+2\), proving (2). The divisibility and odd-\(q\) congruence follow. This is a true conditional identity for every legal source, with no finite cutoff. QED. The symbolic source value `x=8*w+6` with `w>=1`, its exact generic first section successor `10*w+8`, its immediate evenness, and equality (2) are kernel-checked in [SheepCorridor.lean](SheepCorridor.lean), theorem `forced_from_residue_eight` with axioms `[propext, Quot.sound]`.
+which is even. Therefore no odd-section continuation is needed, \(h=0\) and \(E(x)=F(x)\). Substituting \(x=2u\) gives \(4E(x)=5x+2\), proving (2). The divisibility and odd-\(q\) congruence follow. This is a true conditional identity for every legal source, with no finite cutoff. QED. The symbolic source value `x=8*w+6` with `w>=1`, its exact generic first section successor `10*w+8`, its immediate evenness, and equality (2) are kernel-checked in [SheepCorridor.lean](SheepCorridor.lean), theorem `forced_from_residue_eight` with axioms `[propext, Quot.sound]`. The stronger `forced_unbounded_drop` imports no finite cutoff: for arbitrary `b>=1`, `2^(b+2) | x+2` and `x>=14`, it constructs the authentic-formula immediate-even next section value and proves `2^b` divides its successor-plus-two. Its axiom audit is exactly `[propext, Quot.sound]`, and the auxiliary `affine_divisor_drop` uses `[propext]`.
 
 **Lemma 2 (entire forced prefix).** Start with any sequence of legal consecutive generic first-even returns \(x_0\to x_1\to\cdots\), or any sequence of quotient edges whose first residue is
 \[
