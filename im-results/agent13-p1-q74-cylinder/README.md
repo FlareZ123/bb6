@@ -1,6 +1,6 @@
 # P1: a new q=74 affine critical-gateway cylinder
 
-**Research status (6 November 2026): original-source CI is running, so the final all-time P1 reachability claim is a candidate pending its exact GitHub Actions result.** The finite graph has been checked independently and the identical finite Boolean certificate was compiled locally by Lean 4.36.0-rc2. The candidate theorem concerns the authentic P1 accelerated blank-entry relation; it does not decide P1 halting or BB(6).
+**Research status (6 November 2026): successful original-source Lean 4.36.0-rc2 proof of an all-time P1 blank-root exclusion for one new infinite critical-index cylinder.** The exact full import chain and final theorem compiled in [successful CI 42310575677](https://github.com/FlareZ123/bb6/actions/runs/42310575677) at commit `db50f17cd337191501973605254d715261af418f`. The proof uses only Lean standard axioms and no `sorryAx`. It does not decide P1 halting or BB(6).
 
 ## Claim and source boundary
 
@@ -38,10 +38,10 @@ This `2^18` cylinder is sharper than the generic `2^(B+K)` conservative period, 
 
 - The two graphs were exhaustively generated from the exact scalar successor equation. Independent complete graph enumerations of `q=74+262144*r` at `r=0,1,2,5,17,1000` agree exactly with the projected 25/29-node affine lists. This is finite corroboration, not the all-parameter theorem.
 - A local Lean 4.36.0-rc2 source-identical Boolean checker independently compiled `checked0` and `checked1` using `by decide`, with axioms `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. This did not compile the entire original-source proof.
-- A dedicated manual-only workflow [agent13-p1-q74-source.yml](../../.github/workflows/agent13-p1-q74-source.yml) compiles the unchanged original P1/Agent9 imports, the complete affine checker, and the final true-root theorem with an axiom audit. **Pending run:** [42310575677](https://github.com/FlareZ123/bb6/actions/runs/42310575677), initially at commit `db50f17cd337191501973605254d715261af418f`. The final status must be checked before promoting the claim.
+- A dedicated manual-only workflow [agent13-p1-q74-source.yml](../../.github/workflows/agent13-p1-q74-source.yml) compiles the unchanged original P1/Agent9 imports, the complete affine checker, and the final true-root theorem with an axiom audit. **Successful full source audit:** [42310575677](https://github.com/FlareZ123/bb6/actions/runs/42310575677), source commit `db50f17cd337191501973605254d715261af418f`. Both original-source modules and the final `#print axioms` declaration passed in the manual-only workflow.
 
 ## Comparison and unresolved question
 
-The q-residue 74 lies outside Agent9's earlier source-certified 700/1024 density sieve and its twenty new q mod4096 shallow classes. It also differs from the explicitly source-certified q37,41,53,65,70,89 cylinders. This establishes a previously unrecorded repository candidate; external originality has not been evaluated.
+The q-residue 74 lies outside Agent9's earlier source-certified 700/1024 density sieve and its twenty new q mod4096 shallow classes. It also differs from the explicitly source-certified q37,41,53,65,70,89 cylinders. This establishes a previously unrecorded repository infinite-cylinder exclusion now certified against unchanged original source; external originality has not been evaluated.
 
 The actual research bottleneck remains untouched: the P1 blank-entry orbit must be separated from **every surviving** critical parameter, including gateway residue classes outside all currently proved cylinders. The finite affine certificate does not construct a global invariant ruling out that entire infinite union. Prefer parameter-uniform closure of remaining exits or a genuine halting witness over extending an unbounded list of isolated residues.
