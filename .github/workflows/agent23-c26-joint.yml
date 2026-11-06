@@ -1,0 +1,181 @@
+name: Agent 23 source-verified unified C26 low/high root sieve (manuon:
+  workflow_dispatch:
+
+ed]
+
+permissions:
+  contents: read
+
+jobs:
+  agent23-c26-joint:
+    if: github.event_name != 'pull_request' || (github.head_ref == 'audit-agent11-image-20261105' || github.head_ref == 'audit-agent11-low7-20261105')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build complete authentic Machine C source and C26 refined joint criterion
+        run: |
+          mkdir -p /tmp/a38-section
+          cp im-results/agent11-c-line/CLine.lean /tmp/a38-section/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a38-section/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a38-section/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,BounceHaltClosed,OddSectionExponential,SectionHaltingBasin,SectionCompleteBasin,Agent46CBridge,BlankDyadicGate}.lean /tmp/a38-section/
+          cp im-results/agent38-c-section-mod4/{Agent38SectionParity,DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor,FurtherDyadicMod16}.lean /tmp/a38-section/
+          cp im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 /tmp/a38-section/
+          cd /tmp/a38-section
+          base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
+          echo '48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  ThirdStageOddDepth.lean' | sha256sum -c -
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o GenericSection.olean GenericSection.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CPhaseRank.olean CPhaseRank.lean
+          lean -o CSectionTotal.olean CSectionTotal.lean
+          lean -o JumpHigh.olean JumpHigh.lean
+          lean -o JumpMacro.olean JumpMacro.lean
+          lean -o JumpSection.olean JumpSection.lean
+          lean -o JumpBounce.olean JumpBounce.lean
+          lean -o JumpOneReturn.olean JumpOneReturn.lean
+          lean -o JumpBounceSections.olean JumpBounceSections.lean
+          lean -o BounceCalc.olean BounceCalc.lean
+          lean -o BounceProof.olean BounceProof.lean
+          lean -o FastSectionDef.olean FastSectionDef.lean
+          lean -o FastSectionProof.olean FastSectionProof.lean
+          lean -o FastSectionHalting.olean FastSectionHalting.lean
+          lean -o BounceParity.olean BounceParity.lean
+          lean -o BounceHaltLevel.olean BounceHaltLevel.lean
+          lean -o BounceHaltingInputs.olean BounceHaltingInputs.lean
+          lean -o BounceHaltBasin.olean BounceHaltBasin.lean
+          lean -o BounceHaltClosed.olean BounceHaltClosed.lean
+          lean -o Agent38SectionParity.olean Agent38SectionParity.lean
+          lean -o DyadicDepthPrune.olean DyadicDepthPrune.lean
+          lean -o SectionHaltingBasin.olean SectionHaltingBasin.lean
+          lean -o OddSectionExponential.olean OddSectionExponential.lean
+          lean -o SectionCompleteBasin.olean SectionCompleteBasin.lean
+          lean -o Agent46CBridge.olean Agent46CBridge.lean
+          lean -o BlankDyadicGate.olean BlankDyadicGate.lean
+          lean -o DyadicResidualCriterion.olean DyadicResidualCriterion.lean
+          lean -o SectionMod8Predecessor.olean SectionMod8Predecessor.lean
+          lean -o FurtherDyadicMod16.olean FurtherDyadicMod16.lean
+          lean -o ThirdStageOddDepth.olean ThirdStageOddDepth.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean .
+          for f in Agent3CImage Agent3COneFamily Agent3COrbitIff; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionAffineInverse,ReachAffine}.lean .
+          for f in BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam SectionAffineInverse ReachAffine; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric}.lean .
+          for f in BounceInverse FeederGeneric FeederOrbitGeneric; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/{C48Inverse,C48Reach,C48Depth,C48Residual,C16Inverse,C16Reach,C16Depth,C16Residual}.lean .
+          for f in C48Inverse C48Reach C48Depth C48Residual C16Inverse C16Reach C16Depth; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean -o C16Residual.olean C16Residual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformInverse.lean .
+          lean -o UniformInverse.olean UniformInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformReach.lean .
+          lean -o UniformReach.olean UniformReach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/BounceReverse.lean .
+          lean -o BounceReverse.olean BounceReverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformEdges.lean .
+          lean -o UniformEdges.olean UniformEdges.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformOrbitIff.lean .
+          lean -o UniformOrbitIff.olean UniformOrbitIff.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Inverse.lean .
+          lean -o UniformS25Inverse.olean UniformS25Inverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Reach.lean .
+          lean -o UniformS25Reach.olean UniformS25Reach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Residual.lean .
+          lean -o UniformS25Residual.olean UniformS25Residual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/EvenEvenInverse.lean .
+          lean -o EvenEvenInverse.olean EvenEvenInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/S5FirstInverse.lean .
+          lean -o S5FirstInverse.olean S5FirstInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/S5Reach.lean .
+          lean -o S5Reach.olean S5Reach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/ExtraEvenOrbit.lean .
+          lean -o ExtraEvenOrbit.olean ExtraEvenOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/OddEvenInverse.lean .
+          lean -o OddEvenInverse.olean OddEvenInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/EvenRightSixOrbit.lean .
+          lean -o EvenRightSixOrbit.olean EvenRightSixOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/OneTwoGate.lean .
+          lean -o OneTwoGate.olean OneTwoGate.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/OneTenGate.lean .
+          lean -o OneTenGate.olean OneTenGate.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/SixCone.lean .
+          lean -o SixCone.olean SixCone.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/SixResidual.lean .
+          lean -o SixResidual.olean SixResidual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/HighOddTwo.lean .
+          lean -o HighOddTwo.olean HighOddTwo.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/SevenResidual.lean .
+          lean -o SevenResidual.olean SevenResidual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/HighOddSix.lean .
+          lean -o HighOddSix.olean HighOddSix.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/EightResidual.lean .
+          lean -o EightResidual.olean EightResidual.lean
+
+          # Agent3 exact odd/odd inverse and unique mixed-four ancestor chain.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit,OddOddVal3,OddOddVal3Orbit,OddOddLowVal,OddSevenOrbit,OddForcedNormalize,FullForcedNormalize,MixedFourNormalize,MixedLowFour,MixedHighOne,MixedHighBoth,MixedEvenEightSharp,MixedHighEightSharp,JointResidual}.lean .
+          for f in EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal OddSevenOrbit OddForcedNormalize FullForcedNormalize MixedFourNormalize MixedLowFour MixedHighOne MixedHighBoth MixedEvenEightSharp MixedHighEightSharp; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean -o JointResidual.olean JointResidual.lean
+          # Convert the exact rooted stopping criteria to executable
+          # parameter predicates through Agent11's original-source
+          # fixed-target backward reachability oracle.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/FullSectionInverse.lean .
+          lean -o FullSectionInverse.olean FullSectionInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal,SectionBackwardOriginal,SectionFuelOriginal,SectionBackwardFuelOriginal,FastRootBackward,FastRootFuel}.lean .
+          for f in SectionMassOriginal SectionFastInverseOriginal SectionBackwardOriginal SectionFuelOriginal SectionBackwardFuelOriginal FastRootBackward FastRootFuel; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedFastRoot,JointRootQuantifier}.lean .
+          lean -o MixedFastRoot.olean MixedFastRoot.lean
+          lean -o JointRootQuantifier.olean JointRootQuantifier.lean
+          # New exact source-checked two-dimensional rectangle and
+          # disjoint infinite high stopping class.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle25Four,MixedHighRect411}.lean .
+          lean -o MixedRectangle25Four.olean MixedRectangle25Four.lean
+          lean -o MixedHighRect411.olean MixedHighRect411.lean
+          # Stronger source-inverse rectangle including cells M512 admits.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle27Zero,MixedHighRect512}.lean .
+          lean -o MixedRectangle27Zero.olean MixedRectangle27Zero.lean
+          lean -o MixedHighRect512.olean MixedHighRect512.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/JointRootQuantifierRect.lean .
+          lean -o JointRootQuantifierRect.olean JointRootQuantifierRect.lean
+
+          # Agent19's all-exponent and four odd-special source-proven high filters.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{OddTowerGeneric,OddTowerArithmetic,OddTowerGeneralHigh,OddTowerSource,OddTowerResidual,OddTowerResidualAll,OddSpecialCylinders,OddSpecialHigh,OddSpecialLift,OddSpecialHighLift,JointAllRoot}.lean .
+          for f in OddTowerGeneric OddTowerArithmetic OddTowerGeneralHigh OddTowerSource OddTowerResidual OddTowerResidualAll OddSpecialCylinders OddSpecialHigh OddSpecialLift OddSpecialHighLift; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean -o JointAllRoot.olean JointAllRoot.lean
+          # Agent11 exact missing-image source exclusions and combined iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/{LowOneModFour,LowInverseOne,HighSumTwo,HighInverseSumOne,JointImageSieve}.lean .
+          lean -o LowOneModFour.olean LowOneModFour.lean
+          lean -o LowInverseOne.olean LowInverseOne.lean
+          lean -o HighSumTwo.olean HighSumTwo.lean
+          lean -o HighInverseSumOne.olean HighInverseSumOne.lean
+          lean -o JointImageSieve.olean JointImageSieve.lean
+          # Fifth authenticated blank-root inverse sector and exact decision.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{OddSevenGeneralAlgebra,OddSevenGeneralInverse,OddSevenForcedRoot,OddSevenSecondRoot,OddSevenSecondCylinder,OddSevenFourLink,OddSevenHighFourLink,MixedFiveNormalize,JointFiveSieve}.lean .
+          for f in OddSevenGeneralAlgebra OddSevenGeneralInverse OddSevenForcedRoot OddSevenSecondRoot OddSevenSecondCylinder OddSevenFourLink OddSevenHighFourLink MixedFiveNormalize JointFiveSieve; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/{LowC26,C26Rectangle,C26High,JointC26}.lean .
+          lean -o LowC26.olean LowC26.lean
+          lean -o C26Rectangle.olean C26Rectangle.lean
+          lean -o C26High.olean C26High.lean
+          lean JointC26.lean
