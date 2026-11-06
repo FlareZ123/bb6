@@ -52,7 +52,7 @@ theorem ray28_depth16_odd_root_absent : ¬oddRootAt 28 16 := by
     have hp26:2^26=67108864:=by decide
     have hqval:q=414129261:=by
       rw[hk,hdval,hp26] at heq
-      norm_num at heq
+      simp only [show (2:Nat)^1=2 by decide] at heq
       omega
     rw[hqval] at hroot
     exact offray_28_16_unreachable hroot
@@ -70,7 +70,7 @@ theorem ray28_depth16_odd_root_absent : ¬oddRootAt 28 16 := by
   have hex:t+1=4+(t-3):=by omega
   have hpow:3^(t+1)=81*3^(t-3):=by
     rw[hex,Nat.pow_add]
-    norm_num
+    simp only [show (3:Nat)^4=81 by decide]
   have hmod:(3^(t+1)*d)%81=0:=by
     rw[hpow]
     simp [Nat.mul_mod]
