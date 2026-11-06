@@ -68,9 +68,7 @@ private theorem affine_right_tower_four (n x : Nat) (hx : x%4=3) :
       rw [BB6.Agent15.affineNormalize,dif_neg hn]
   | succ n ih =>
       have he : rightTower n%2=0 := rightTower_even n
-      have hr : rightTower (n+1)%4=2 := by
-        change (2*rightTower n+2)%4=2
-        omega
+      have hr : (2*rightTower n+2)%4=2 := by omega
       have hgate : 4≤rightTower (n+1) ∧
           rightTower (n+1)%2=0 ∧
           (x+rightTower (n+1))%4=1 := by
