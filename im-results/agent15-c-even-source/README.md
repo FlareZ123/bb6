@@ -1,6 +1,6 @@
 # Machine C: six-of-eight even-right exact inverse and four-gate backward filter
 
-**Agent 15, 2026-11-04. Research status: original-source CI pending.** All claims below concern the original accelerated Machine C section map `BB6.Agent46.secNext` and the genuine blank section seed `(5,1)`. Machine C and BB(6) remain undecided.
+**Agent 15, last source audit 2026-11-06. Research status: the six-of-eight original-source inverse and its reachability iff are now certified; other downstream normalizers and exclusion cylinders still await their own source CI.** All claims below concern the original accelerated Machine C section map `BB6.Agent46.secNext` and the genuine blank section seed `(5,1)`. Machine C and BB(6) remain undecided.
 
 ## Main structural theorem
 
@@ -54,8 +54,10 @@ The terminal right counter is odd >=37; the coordinate sum `92u+5` is 1 modulo 4
 
 ## Verification and limitations
 
-The **pure arithmetic branches** were compiled locally with **Lean 4.36.0-rc2**, yielding no `sorryAx` for their source-grammar criteria. The reachability, four-gate, filter, and parametric exclusion proof scripts were likewise compiled against **explicit source-signature-shaped scratch axioms** for the preexisting repository theorems. This checks their derivations and proof terms conditional on those exact signatures. It is **not** original-source certification; the resulting scratch axiom printouts faithfully name the imported assumed theorems. No claim of full source/kernel certification is made until CI actually compiles them against the unchanged originals with standard axioms only.
+**Original source now verified for the principal six-of-eight theorem.** [Manual GitHub Actions run 42198682861](https://github.com/FlareZ123/bb6/actions/runs/42198682861) succeeded on 2026-11-06 under Lean 4.36.0-rc2. It compiled the unchanged original Agent46 Machine C section and bounce sources, the Agent3 inverse chain, and `EvenEvenUnique.lean`, `EvenEvenReach.lean`, `OddEvenUnique.lean`, `EvenRightUnique.lean` from this directory. The final `#print axioms` checks for `section_even_right_iff_affine` and `blank_reach_iff_even_right` reported precisely `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. This upgrades the exact six-of-eight inverse and blank-reachability theorem to source-certified status.
 
-The separate manual-only [original-source workflow](../../.github/workflows/agent15-c-even-inverse.yml) compiles the source inverse and blank-reachability core including `EvenRightUnique`; it is presently **not dispatched**. The four-gate and two cylinder corollaries require the broader Agent3 original-source dependency chain and likewise await a manual source check. Historical published source validations cover those dependencies but cannot substitute for checking these new modules.
+The *four-gate normalizer*, its Boolean filter and the displayed one-left / stopping-family cylinder proofs were previously compiled locally against **source-signature-shaped scratch axioms** for preexisting repository theorems. Their local scripts had no `sorry`, but still require compilation against actual imports to be source-certified. The current successful CI does not cover those downstream modules. Independent pending original-source validation remains necessary.
+
+The manual-only [original-source workflow](../../.github/workflows/agent15-c-even-inverse.yml) now **ran successfully** and checked the source inverse and blank-reachability core including `EvenRightUnique`. The four-gate and two cylinder corollaries require the broader Agent3 original-source dependency chain and likewise await a manual source check. Historical published source validations cover those dependencies but cannot substitute for checking these new modules.
 
 The six-of-eight inverse leaves the two high-bounce residue classes `0` and `7` unresolved. Even after normalization, residual states may have genuine unclassified parents. It does **not** settle Machine C nonhalting or establish the exact BB(6).
