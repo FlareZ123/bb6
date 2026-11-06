@@ -74,7 +74,12 @@ private theorem first_to_A (t u : Nat) (ys : List Bool) :
             rw [List.replicate_append_replicate]
       _ = _ := by rfl
   rw [hp]
-  simp [tripleTokens,CryptidBoundary.init,List.append_assoc]
+  have hpad : List.replicate (3*(2*u+2)+2) true =
+      List.replicate (3*(2*u+2)) true ++ [true,true] := by
+    rw [←List.replicate_append_replicate]
+    rfl
+  rw [hpad]
+  simp [CryptidBoundary.init,List.append_assoc]
 
 /-- For k=3t+2 and L exception q=3u+4, second return recovers
     exactly an L word, including arbitrary tail beyond the sixth one. -/
@@ -89,12 +94,11 @@ theorem double_q1_then_A (t u : Nat) (ys : List Bool) :
       (CryptidA.wordCost base ws+(2*m+24))
     run (timeE+timeA)
       (init (List.replicate (3*ke+2) true ++
-        false :: (pairs (3*u+3) ++
+        false :: (pairs ((3*u+2)+1) ++
           ([true,true,false,false] ++ ys)))) =
       ⟨[],false,List.replicate (2*m+5) true ++
         ([false,true,false,true,false,true,true,true] ++ ys),5⟩ := by
   dsimp
-  rw [show 3*u+3=(3*u+2)+1 by omega]
   rw [run_add,BB6.Agent35.full_E_double (3*t+2) (3*u+2) ys]
   rw [first_to_A]
   exact a_code_110111 (8*t+6) (tripleTokens u)
