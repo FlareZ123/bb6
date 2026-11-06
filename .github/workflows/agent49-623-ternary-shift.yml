@@ -1,14 +1,6 @@
 name: BB6 #623 affine gate-parent envelope (manual)
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - .github/workflows/agent49-623-ternary-shift.yml
-      - im-results/agent49-parity623/TernaryShiftSource.lean
-      - im-results/agent49-parity623/TernaryBufferSource.lean
-      - im-results/agent49-parity623/AffinePredecessorBoundsSource.lean
-      - im-results/agent8-623-inverse/GatePredecessorSource.lean
-      - im-results/agent8-623-inverse/NegativeGapResidue.lean
 permissions:
   contents: read
 jobs:
