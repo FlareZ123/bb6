@@ -1,0 +1,48 @@
+name: Agent 26 guarded E-to-A five-token proof (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore SHA-authenticated original D-machine components
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+      - name: Install pinned Lean compiler
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check original source, composite theorems, and Lean axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          B=im-results/agent31-cryptid-boundary
+          P=im-results/agent25-cryptid-doublezero
+          S=im-results/agent32-cryptid-third
+          A=im-results/agent35-cryptid-code
+          E=im-results/agent26-cryptid-e-gate
+          lean --version
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "$P/$module.olean" "$P/$module.lean"
+          done
+          lean -o "$A/ABridgeCode.olean" "$A/ABridgeCode.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$E/E1101010111Pairs.olean" "$E/E1101010111Pairs.lean"
+          lean -o "$E/E1101010111ThenB.olean" "$E/E1101010111ThenB.lean"
+          lean -o "$E/E1101010111ThenA.olean" "$E/E1101010111ThenA.lean"
+          lean -o "$E/E1101010111ThenAFive.olean" "$E/E1101010111ThenAFive.lean"
+          lean "$E/E1101010111ThenAFivePolynomial.lean"
