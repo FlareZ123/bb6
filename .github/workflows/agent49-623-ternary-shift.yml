@@ -70,6 +70,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SixBudgetSource.lean" Agent8SixBudgetSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8SixBudgetSource.olean Agent8SixBudgetSource.lean
+      - name: Prove five-per-block plus two full-drain upper gain
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/FiveBudgetSource.lean" Agent8FiveBudgetSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8FiveBudgetSource.olean Agent8FiveBudgetSource.lean
       - name: Prove all-finite-depth right-ray tail survival
         working-directory: /tmp/cryptids
         run: |
