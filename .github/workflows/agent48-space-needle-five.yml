@@ -75,3 +75,11 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/SuperlinearOptimized.olean" SuperlinearOptimized.lean
           cp "$base48/SuperlinearOptimizedSource.lean" .
           lake env lean SuperlinearOptimizedSource.lean
+          cp "$base48/SpaceNeedleRawBridge.lean" .
+          lake env lean -o ".lake/build/lib/lean/SpaceNeedleRawBridge.olean" SpaceNeedleRawBridge.lean
+          for f in NeedleCubicEnumerate NeedleCubicEnumerateSource NeedleRootCubic; do
+            cp "$base20/$f.lean" .
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
+          cp "$base48/SuperlinearRoot.lean" .
+          lake env lean SuperlinearRoot.lean
