@@ -95,3 +95,11 @@ jobs:
           lean im-results/agent13-p1-adaptive-param/Q70NarrowFinal.lean | tee -a /tmp/agent13-q70-narrow.log
           grep -F 'critical_1122_mod_2pow60_unreachable' /tmp/agent13-q70-narrow.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-q70-narrow.log; then exit 1; fi
+      - name: Verify all-positive-fixed-depth original scalar inverse obstruction
+        run: |
+          set -euo pipefail
+          lean im-results/agent13-p1-adaptive-param/ConstantDepth.lean | tee /tmp/agent13-fixed-depth.log
+          lean im-results/agent13-p1-adaptive-param/FixedDepthGeneral.lean | tee -a /tmp/agent13-fixed-depth.log
+          grep -F 'no_unbounded_run1' /tmp/agent13-fixed-depth.log
+          grep -F 'no_infinite_fixed_depth' /tmp/agent13-fixed-depth.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-fixed-depth.log; then exit 1; fi
