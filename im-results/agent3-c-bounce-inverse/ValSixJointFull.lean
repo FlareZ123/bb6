@@ -1,24 +1,32 @@
 import ValSixJointM1
 import JointFiveSieve
 import AffineFourGlobal
+import Low124SharpBlank
+import OddSevenSecondCylinder
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent3ValSix
 
-/-- Low parameters after merging Agent11's two source-certified
-    exclusions with the Agent3 low stopping criterion. -/
+/-- Low parameters after merging Agent11's two image exclusions and
+    Agent3's independent mod-128 blank-origin rectangle. -/
 def lowAllowedValSixFull (m : Nat) : Prop :=
-  BB6.Agent11Joint.lowAllowed m
+  BB6.Agent11Joint.lowAllowed m ∧
+  ¬(128≤m ∧ m%128=0)
 
-/-- Complete currently known high-parameter sieve: Agent29's four
-    mod-128 families and Agent3's three valuation-six families are in
-    highAllowedValSixThree; Agent11's two missing-image families and
-    Agent19's sum-seven four-link family are in Agent19Five.highAllowed;
-    the final condition removes every affine-normalized right-four
-    candidate. -/
+/-- Complete currently integrated high sieve:
+    * Agent19/29's joint dyadic and modular restrictions;
+    * Agent11's missing-image restrictions;
+    * Agent19's sum-seven four-link cylinder;
+    * Agent29's four mod-128 families;
+    * Agent3's three valuation-six families;
+    * Agent3's sharp blank-origin mod-128 rectangle;
+    * Agent19's second sum-seven inverse cylinder;
+    * the general affine terminal-right-four exclusion. -/
 def highAllowedValSixFull (j m : Nat) : Prop :=
   highAllowedValSixThree j m ∧
   BB6.Agent19Five.highAllowed j m ∧
+  ¬(j%32=31 ∧ 3≤m ∧ (j+3*m)%128=127) ∧
+  ¬(j%8=5 ∧ m%8=4 ∧ (9*j+39)%128=(3*m)%128) ∧
   (BB6.Agent15.affineNormalize (2*j+3)
     (2^(2*m+2)*(j+3)-(j+3*m+5))).2 ≠ 4
 
@@ -42,10 +50,81 @@ private theorem high_score_nonnegative_full (j m : Nat) :
   rw [Nat.mul_add]
   omega
 
+/-- Agent19's second sum-seven inverse cylinder, pulled back through
+    the exact high stopping equation. The parameter congruence is
+    (9*j+39) == 3*m (mod 128), with j == 5 and m == 4 (mod 8). -/
+private theorem high_second_slope_no_root
+    (j m k : Nat)
+    (hj : j%8=5) (hm : m%8=4)
+    (hpair : (9*j+39)%128=(3*m)%128)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3))
+    (hr : BB6.Agent3.CReach (2*j+3) k) : False := by
+  have hj5 : 5≤j := by omega
+  have hm4 : 4≤m := by omega
+  have hpow128 : 128 ∣ (2:Nat)^(2*m+2) := by
+    have hpow' : (2:Nat)^7 ∣ (2:Nat)^(2*m+2) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    simpa using hpow'
+  have hprod128 : 128 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+    rcases hpow128 with ⟨q,hq⟩
+    refine ⟨q*(j+3),?_⟩
+    rw [hq]
+    ac_rfl
+  have hstopmod128 : (k+j+3*m+5)%128=0 := by
+    rw [hstop]
+    exact Nat.mod_eq_zero_of_dvd hprod128
+  have hmod : (k+10*j+44)%128=0 := by omega
+  have hpow16 : 16 ∣ (2:Nat)^(2*m+2) := by
+    have hpow' : (2:Nat)^4 ∣ (2:Nat)^(2*m+2) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    simpa using hpow'
+  have hprod16 : 16 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+    rcases hpow16 with ⟨q,hq⟩
+    refine ⟨q*(j+3),?_⟩
+    rw [hq]
+    ac_rfl
+  have hstopmod16 : (k+j+3*m+5)%16=0 := by
+    rw [hstop]
+    exact Nat.mod_eq_zero_of_dvd hprod16
+  have hkmod16 : k%16=2 := by omega
+  have hP : 4*m+4 ≤ 2^(2*m+2) :=
+    BB6.Agent29New.power_linear_bound m
+  have hP1 : 1 ≤ 2^(2*m+2) := by omega
+  have hjP : j ≤ 2^(2*m+2)*j := by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hP1
+  have h3P : 3*(4*m+4) ≤ 3*2^(2*m+2) :=
+    Nat.mul_le_mul_left 3 hP
+  have hmul : 2^(2*m+2)*(j+3)=
+      2^(2*m+2)*j+3*2^(2*m+2) := by
+    rw [Nat.mul_add,Nat.mul_comm]
+  have hstopExpanded := hstop
+  rw [hmul] at hstopExpanded
+  have hk34 : 34≤k := by omega
+  let u := (j-5)/8
+  let v := (k-2)/16
+  have hju : j=8*u+5 := by
+    dsimp [u]
+    omega
+  have hkv : k=16*v+2 := by
+    dsimp [v]
+    omega
+  have hv : 2≤v := by
+    dsimp [v]
+    omega
+  have hres : (5*u+v)%8=2 := by
+    rw [hju,hkv] at hmod
+    omega
+  have hreach : BB6.Agent3.CReach (16*u+13) (16*v+2) := by
+    have hleft : 2*j+3=16*u+13 := by
+      rw [hju]
+      omega
+    rw [hleft,hkv] at hr
+    exact hr
+  exact BB6.Agent19Second.blank_no_second_slope u v hv hres hreach
+
 /-- Lossless original-source Machine C halting criterion after merging
-    every currently certified low/high parameter restriction used by
-    Agents 3, 11, 19, and 29, plus the general affine terminal-right-four
-    exclusion. The fixed-target root decision is exact; the remaining
+    the currently established low/high restrictions from Agents 3, 11,
+    19, and 29. The fixed-target root decision is exact; the remaining
     parameter existentials are unbounded and undecided. -/
 theorem blank_halts_iff_joint_val_six_full :
     BB6.CReachBridge.RunHalts ↔
@@ -72,7 +151,18 @@ theorem blank_halts_iff_joint_val_six_full :
         intro hm
         exact (BB6.Agent11Low.blank_no_low_m_seven_mod16
           m k hm hstop).2 hr
-      exact Or.inl ⟨m,⟨hlow,hnon1,hnon2⟩,hroot⟩
+      have hnon124 : ¬(128≤m ∧ m%128=0) := by
+        rintro ⟨hm128,hmod⟩
+        have hpow' : (2:Nat)^7 ∣ (2:Nat)^(2*m+3) :=
+          Nat.pow_dvd_pow 2 (by omega)
+        have hpow : 128 ∣ (2:Nat)^(2*m+3) := by
+          simpa using hpow'
+        have hstopmod : (k+3*m+4)%128=0 := by
+          rw [hstop]
+          exact Nat.mod_eq_zero_of_dvd hpow
+        have hkmod : k%128=124 := by omega
+        exact BB6.Agent3.blank_no_rectangle_124 1 k (by decide) hkmod hr
+      exact Or.inl ⟨m,⟨⟨hlow,hnon1,hnon2⟩,hnon124⟩,hroot⟩
     · let k := 2^(2*m+2)*(j+3)-(j+3*m+5)
       have hr : BB6.Agent3.CReach (2*j+3) k :=
         (valSixMixedRootDecision_iff (2*j+3) k).mp hroot
@@ -101,6 +191,29 @@ theorem blank_halts_iff_joint_val_six_full :
       have h19 : BB6.Agent19Five.highAllowed j m := by
         unfold BB6.Agent19Five.highAllowed
         exact ⟨h11,hfourlink⟩
+      have hnon124 :
+          ¬(j%32=31 ∧ 3≤m ∧ (j+3*m)%128=127) := by
+        rintro ⟨hj31,hm3,hpair⟩
+        have hpow' : (2:Nat)^7 ∣ (2:Nat)^(2*m+2) :=
+          Nat.pow_dvd_pow 2 (by omega)
+        have hpow : 128 ∣ (2:Nat)^(2*m+2) := by
+          simpa using hpow'
+        have hprod : 128 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+          rcases hpow with ⟨q,hq⟩
+          refine ⟨q*(j+3),?_⟩
+          rw [hq]
+          ac_rfl
+        have hstopmod : (k+j+3*m+5)%128=0 := by
+          rw [hstop]
+          exact Nat.mod_eq_zero_of_dvd hprod
+        have hkmod : k%128=124 := by omega
+        have hxmod : (2*j+3)%64=1 := by omega
+        exact BB6.Agent3.blank_no_rectangle_124
+          (2*j+3) k hxmod hkmod hr
+      have hnonSecond :
+          ¬(j%8=5 ∧ m%8=4 ∧ (9*j+39)%128=(3*m)%128) := by
+        rintro ⟨hj5,hm4,hpair⟩
+        exact high_second_slope_no_root j m k hj5 hm4 hpair hstop hr
       have hr15 : BB6.Agent15.CReach (2*j+3) k := hr
       have hright4 :
           (BB6.Agent15.affineNormalize (2*j+3) k).2≠4 := by
@@ -110,10 +223,11 @@ theorem blank_halts_iff_joint_val_six_full :
             (2*j+3) k (by omega) hfour).mp hr15
         have hk7 := BB6.Agent15.second_halt_k_ge_seven j m k hstop
         omega
-      exact Or.inr ⟨j,m,⟨hhigh,h19,hright4⟩,hroot⟩
+      exact Or.inr
+        ⟨j,m,⟨hhigh,h19,hnon124,hnonSecond,hright4⟩,hroot⟩
   · rintro (⟨m,hallow,hroot⟩ |
-      ⟨j,m,⟨hhigh,_,_⟩,hroot⟩)
-    · exact Or.inl ⟨m,hallow.1,hroot⟩
+      ⟨j,m,⟨hhigh,_,_,_,_⟩,hroot⟩)
+    · exact Or.inl ⟨m,hallow.1.1,hroot⟩
     · exact Or.inr ⟨j,m,hhigh,hroot⟩
 
 /-- The explicit m=1 tower is admitted by both prior high sieves,
@@ -136,8 +250,8 @@ theorem second_one_family_previous_sieves (r : Nat) :
     exact ⟨h11, by omega⟩
   exact ⟨h3,h19⟩
 
-/-- The prior-admitted infinite m=1 tower is removed by the general
-    affine terminal-right-four predicate. -/
+/-- The m=1 tower is removed by the general affine terminal-right-four
+    predicate. -/
 theorem second_one_family_removed_by_affine_four (r : Nat) :
     ¬ highAllowedValSixFull (BB6.Agent29Depth.secondOneJ r) 1 := by
   intro h
@@ -156,10 +270,78 @@ theorem second_one_family_removed_by_affine_four (r : Nat) :
           (BB6.Agent29Depth.secondOneJ r+3*1+5))).2=4 := by
     simpa [hk] using
       BB6.Agent29Depth.second_one_family_normalizes_four r
-  exact h.2.2 hfour
+  exact h.2.2.2.2 hfour
+
+/-- The mod-128 low family is admitted by the older Agent3/11 low
+    sieve, so its removal is a genuinely additional restriction. -/
+theorem low_124_family_previous_sieve (m : Nat)
+    (hm : 128≤m) (hmod : m%128=0) :
+    BB6.Agent11Joint.lowAllowed m := by
+  unfold BB6.Agent11Joint.lowAllowed BB6.Agent3.jointLowAllowed
+  omega
+
+/-- The second sum-seven cylinder also survives the previous
+    Agent19/29/3 high sieve; it is a genuinely new high restriction. -/
+theorem second_slope_family_previous_sieves (j m : Nat)
+    (hj : j%8=5) (hm : m%8=4)
+    (hpair : (9*j+39)%128=(3*m)%128) :
+    highAllowedValSixThree j m ∧
+      BB6.Agent19Five.highAllowed j m := by
+  have hjoint : BB6.Agent3.jointHighRectAllowed j m := by
+    unfold BB6.Agent3.jointHighRectAllowed
+    constructor
+    · unfold BB6.Agent3.jointHighAllowed
+      refine ⟨?_,?_,?_,?_,?_⟩ <;> omega
+    · omega
+  have hdy : ∀ n, ¬
+      (n+4≤2*m+2 ∧ (j+3*m+3)%2^(n+4)=2^(n+2) ∧
+        (2*j+3)%8=(if n%2=0 then 7 else 3)) := by
+    intro n
+    rintro ⟨_,_,hres⟩
+    have hx : (2*j+3)%8=5 := by omega
+    by_cases hn : n%2=0
+    · simp [hn] at hres
+      omega
+    · simp [hn] at hres
+      omega
+  have hbase : BB6.Agent19Joint.highAllowed j m := by
+    unfold BB6.Agent19Joint.highAllowed
+    have hodd1 :
+        ¬(3≤m ∧ j%8=7 ∧ (j+3*m+15)%64=0) := by omega
+    have hodd2 :
+        ¬(3≤m ∧ j%8=3 ∧ (j+3*m+21)%64=0) := by omega
+    have hodd3 :
+        ¬(3≤m ∧ j%8=5 ∧ (j+3*m+27)%128=0) := by
+      rintro ⟨_,_,hzero⟩
+      have hmod8 : (j+3*m+27)%8=4 := by omega
+      omega
+    have hodd4 :
+        ¬(3≤m ∧ j%8=1 ∧ (j+3*m+9)%128=0) := by omega
+    exact ⟨hjoint,hdy,hodd1,hodd2,hodd3,hodd4⟩
+  have hplus : BB6.Agent29Joint.highAllowedPlus j m := by
+    unfold BB6.Agent29Joint.highAllowedPlus
+    refine ⟨hbase,?_,?_,?_,?_⟩
+    · rintro ⟨_,_,heq⟩
+      have h16 : j%16=15 := by omega
+      omega
+    · omega
+    · omega
+    · omega
+  have hval : highAllowedValSixThree j m := by
+    unfold highAllowedValSixThree highAllowedValSix
+    exact ⟨⟨hplus,by omega,by omega⟩,by omega⟩
+  have h11 : BB6.Agent11Joint.highAllowed j m := by
+    unfold BB6.Agent11Joint.highAllowed
+    exact ⟨hbase,by omega,by omega⟩
+  have h19 : BB6.Agent19Five.highAllowed j m := by
+    unfold BB6.Agent19Five.highAllowed
+    exact ⟨h11,by omega⟩
+  exact ⟨hval,h19⟩
 
 #print axioms blank_halts_iff_joint_val_six_full
 #print axioms second_one_family_previous_sieves
 #print axioms second_one_family_removed_by_affine_four
+#print axioms low_124_family_previous_sieve
+#print axioms second_slope_family_previous_sieves
 
 end BB6.Agent3ValSix
