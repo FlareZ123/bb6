@@ -44,7 +44,14 @@ private theorem pair_pump (r : Nat) (L ys : List Bool) :
   rw [h2]
   change run (2*r) (cWalk r L (true::ys)) = _
   rw [cWalk_run]
-  rfl
+
+private theorem ones_shuffle (n : Nat) (ys : List Bool) :
+    List.replicate n true ++ (true::ys) =
+      true :: (List.replicate n true ++ ys) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simpa [List.replicate_succ] using congrArg (List.cons true) ih
 
 private theorem compare13 (m r : Nat) (ys : List Bool) :
     run (4*r+13) (extended m r ys) =
@@ -54,7 +61,7 @@ private theorem compare13 (m r : Nat) (ys : List Bool) :
   have h3 := pair_pump r (left11 m) ys
   rw [show 4*r+13 = 11+(4*r+2) by omega,run_add,h1,h3]
   rw [show 13 = 11+2 by omega,run_add,h2]
-  simp [run,step,goL,goR]
+  simpa [run,step,goL,goR] using (ones_shuffle (2*r) ys)
 
 /-- General exceptional source gate. All r produce the same fixed
     packetZero, followed by exactly 2r additional ones. -/
