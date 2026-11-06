@@ -173,8 +173,10 @@ jobs:
           for f in OddSevenGeneralAlgebra OddSevenGeneralInverse OddSevenForcedRoot OddSevenSecondRoot OddSevenSecondCylinder OddSevenFourLink OddSevenHighFourLink MixedFiveNormalize JointFiveSieve; do
             lean -o "$f.olean" "$f.lean"
           done
-          cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/{LowC26,C26Rectangle,C26High,JointC26}.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/{LowC26,C26Rectangle,C26High,C26Oblique,C26ObliqueHigh,JointC26}.lean .
           lean -o LowC26.olean LowC26.lean
           lean -o C26Rectangle.olean C26Rectangle.lean
           lean -o C26High.olean C26High.lean
+          lean -o C26Oblique.olean C26Oblique.lean
+          lean -o C26ObliqueHigh.olean C26ObliqueHigh.lean
           lean JointC26.lean
