@@ -16,12 +16,13 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Reconstruct exact M192 source and check original CLine coupling
+      - name: Reconstruct quotient and compile the original-source bridge
         run: |
           python3 tools/agent41_m192_generate.py quotient > tools/Quotient192.lean
           python3 tools/agent41_m192_generate.py bridge > tools/CMapBridge192.lean
           cp im-results/agent11-c-line/CLine.lean tools/CLine.lean
-          cp im-results/agent41-m192-reverse/{Core192High,Core192All}.lean tools/
+          cp im-results/agent41-m192-reverse/{Core192High,Core192All,Core192Source}.lean tools/
+          cp im-results/agent38-m192-odd-closure/{HighZeroOdd,HighZeroEven,CZeroLarge,CZeroBridge}.lean tools/
           cd tools
           export LEAN_PATH=.
           lean --version
@@ -29,4 +30,9 @@ jobs:
           lean -o CLine.olean CLine.lean
           lean -o CMapBridge192.olean CMapBridge192.lean
           lean -o Core192High.olean Core192High.lean
-          lean Core192All.lean
+          lean -o Core192All.olean Core192All.lean
+          lean -o HighZeroOdd.olean HighZeroOdd.lean
+          lean -o HighZeroEven.olean HighZeroEven.lean
+          lean -o CZeroLarge.olean CZeroLarge.lean
+          lean -o CZeroBridge.olean CZeroBridge.lean
+          lean Core192Source.lean
