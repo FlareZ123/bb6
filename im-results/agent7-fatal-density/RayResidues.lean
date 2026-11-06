@@ -88,7 +88,7 @@ private theorem signed_even_mod3 (n j:Nat)
     dsimp [signedZ]
     omega
 
-private theorem step_d_nonzero (n j:Nat)
+theorem step_d_nonzero (n j:Nat)
     (hn:n%6=4 ∨ n%6=5) :
     (((2:Int)^j*(2*(n:Int)+3))%3)=1 ∨
     (((2:Int)^j*(2*(n:Int)+3))%3)=2 := by
