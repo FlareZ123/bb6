@@ -211,3 +211,65 @@ secNext(a,k)=some(32u+1,256v+46) ⇒
 ```
 
 The first parent is in the already forbidden third special cylinder; the second has an odd right counter and forbidden sum-two-mod-four image. Its corresponding high stopper condition is `m≥3, j%16=15, (j+3*m+51)%256=0`. Source audit for the entire new chain and its generalized arbitrary-target inverse is run through [`agent19-c-odd-dyadic.yml`](../../.github/workflows/agent19-c-odd-dyadic.yml). Unlike the unified root theorem above, this sum-seven extension is not to be treated as verified until the final all-files source CI is green and its axiom output excludes `sorryAx`.
+
+## 2026-11-06 01:52 UTC: verified general sum-seven branch and four-link source-root cylinder
+
+All of the following are theorems about the original unmodified Machine C
+section map and the **actual** blank-entry section orbit `(5,1)`. No theorem
+here decides whether that orbit eventually halts.
+
+1. In [`OddSevenGeneralInverse.lean`](./OddSevenGeneralInverse.lean),
+   `section_sumseven_mod32_inverse` gives a universal **two-branch necessary**
+   immediate predecessor grammar for **every** odd/even output `(x,y)`
+   with `y≥6`, `(x+y+1)%32=16`, and `x+y+1≥48`. A prior arithmetic
+   normalization bug introducing `sorryAx` was repaired in commit
+   [eee4876](https://github.com/FlareZ123/bb6/commit/eee487672af7098a896f2043cbd2bc23a1698d94).
+   [CI run 42143592308](https://github.com/FlareZ123/bb6/actions/runs/42143592308)
+   passed, printing only the three ordinary Lean axioms.
+
+2. [`OddSevenForcedRoot.lean`](./OddSevenForcedRoot.lean) proves that
+   for `x%2=1, y%8=6, (x+y+1)%32=16, x+y+1≥48`:
+   `CReach x y ↔ CReach (x+y-2) ((y-2)/2)`.
+   The genuine alternative bounce predecessor is excluded from the
+   **blank-rooted orbit**, using Agent 3's original-section odd-image
+   theorem, even though other starting configurations could enter it.
+   [CI run 42144110837](https://github.com/FlareZ123/bb6/actions/runs/42144110837)
+   passed. This resolves a previously branching inverse sector
+   **without asserting unique predecessors for arbitrary starts**.
+
+3. [`MixedNormalize.lean`](./MixedNormalize.lean) combines the
+   above gate with Agent24's even-right source-exact normalization into a
+   terminating root-equivalent recurrence and a sound Boolean exclusion.
+   [CI run 42144506977](https://github.com/FlareZ123/bb6/actions/runs/42144506977)
+   passed. [`MixedFiveNormalize.lean`](./MixedFiveNormalize.lean) is
+   the unified **five-region** normalization, incorporating the existing
+   four-region Agent3 system and the fifth gate. Its
+   `mixedFiveFastRootDecision_iff` is an exact fixed-target Boolean
+   original-blank reachability test, built from the source-authentic
+   backward finite-fuel oracle. [CI run 42145901932](https://github.com/FlareZ123/bb6/actions/runs/42145901932)
+   passed; the missing `Agent3COrbitIff` import in Agent11's
+   `LowInverseOne.lean` was corrected to permit this complete build.
+
+4. [`OddSevenFourLink.lean`](./OddSevenFourLink.lean) proves the
+   **infinite two-parameter source-root forbidden cylinder**
+   `∀ u v, 2≤v → ¬ CReach (32*u+1) (64*v+14)`. The four exact
+   inverse edges from `(32u+1,64v+14)` lead to
+   `(32u+120v+15,4v-1)`, an odd-right count ≥7 whose sum is
+   2 modulo 4, contradicting the source odd-image theorem.
+   [`OddSevenHighFourLink.lean`](./OddSevenHighFourLink.lean)
+   proves that every high stopping parameter `(j,m,k)` satisfying
+   `m%16=10`, `(j+3m+19)%64=0`, and
+   `k+j+3m+5=2^(2m+2)*(j+3)` belongs to this impossible cylinder.
+   The two source theorems passed [CI run 42146325853](https://github.com/FlareZ123/bb6/actions/runs/42146325853),
+   with only `[propext, Classical.choice, Quot.sound]` for the final
+   nonreachability theorems. A sample is `m=10,j=15`; the full
+   result has no parameter cutoff.
+
+The residual global halting criterion still has an **infinite**
+low-parameter existential and an **infinite** two-dimensional high
+existential. The new cylinder excludes one previously uncovered
+arithmetic family from the latter; the rest of Machine C's halting
+status is unchanged. Prior-art overlap beyond the shared source
+theorems has not been fully assessed. Nothing gives a BB(6) upper
+bound.
+
