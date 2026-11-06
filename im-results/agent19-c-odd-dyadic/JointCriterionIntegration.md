@@ -91,6 +91,16 @@ The parameter-family cycles give:
 
 For the new 27/0 branch, `j = 28, m = 85` projects to `(59,224,0)`, which the M512 quotient admits. The Lean source rectangle theorem excludes the actual blank-origin reachability. This is the clearest demonstrated improvement beyond the M512 quotient.
 
+Concrete quotient-admitted stopping targets (the right coordinate is shown in closed form):
+
+| Family | Parameters | Original-source target `(x,k)` | `k mod 512` |
+|---|---|---|---:|
+| Low 124 | `m=128` | `(1, 2^259 - 388)` | 124 |
+| High 124 | `j=31,m=160` | `(65, 34*2^322 - 516)` | 508 |
+| Second slope | `j=5,m=284` | `(13, 2^573 - 862)` | 162 |
+| New 27/0 branch | `j=28,m=85` | `(59, 31*2^172 - 288)` | 224 |
+
+
 The 25/4 rectangle was deliberately omitted from the final predicate. The independent census excludes all 256 of its quotient cells, so adding that source theorem would duplicate an existing stronger barrier.
 
 To reproduce the quotient census:
