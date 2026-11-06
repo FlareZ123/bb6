@@ -55,6 +55,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/GatePredecessorSource.lean" Agent8GatePredecessorSource.lean
           lake env lean Agent8GatePredecessorSource.lean
+      - name: Check #623 right-ray two-step tail on authentic source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RightTailTwoStepSource.lean" Agent8RightTailTwoStepSource.lean
+          lake env lean Agent8RightTailTwoStepSource.lean
       - name: Prove negative-gap residue exponent separation
         working-directory: /tmp/cryptids
         run: |
