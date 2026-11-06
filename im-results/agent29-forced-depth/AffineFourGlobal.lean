@@ -39,6 +39,42 @@ theorem blank_no_affine_four_odd_ge_five (a k : Nat)
   exact blank_odd_four_gt_three_unreachable time
     (BB6.Agent15.affineNormalize a k).1 hn.1 (by omega) htarget
 
+/-- Complete true-blank reachability classification inside the entire
+    odd-left >=3, affine-residual-right-four sector. The unique reachable
+    member is precisely the authentic first return (3,4). -/
+theorem blank_affine_four_odd_ge_three_iff (a k : Nat)
+    (ha : a%2=1) (hbig : 3≤a)
+    (hfour : (BB6.Agent15.affineNormalize a k).2=4) :
+    BB6.Agent15.CReach a k ↔ a=3 ∧ k=4 := by
+  constructor
+  · intro hr
+    by_cases hfive : 5≤a
+    · exact False.elim
+        ((blank_no_affine_four_odd_ge_five a k ha hfive hfour) hr)
+    · have ha3 : a=3 := by omega
+      subst a
+      by_cases hgate : 4≤k ∧ k%2=0 ∧ ((3:Nat)+k)%4=1
+      · have hparity : (3+k-2)%2=1 := by omega
+        have hlarge : 5≤3+k-2 := by omega
+        have hn : (BB6.Agent15.affineNormalize
+            (3+k-2) ((k-2)/2)).2=4 := by
+          simpa only [BB6.Agent15.affineNormalize, dif_pos hgate] using hfour
+        have hparent : BB6.Agent15.CReach (3+k-2) ((k-2)/2) :=
+          (BB6.Agent15.blank_reach_iff_affine 3 k
+            hgate.1 hgate.2.1 hgate.2.2).mp hr
+        exact False.elim
+          ((blank_no_affine_four_odd_ge_five (3+k-2)
+              ((k-2)/2) hparity hlarge hn) hparent)
+      · have hright : k=4 := by
+          simpa only [BB6.Agent15.affineNormalize, dif_neg hgate] using hfour
+        exact ⟨rfl,hright⟩
+  · rintro ⟨haeq,hkeq⟩
+    subst a
+    subst k
+    have hstep : BB6.Agent46.secNext (5,1)=some (3,4) := by decide
+    exact ⟨1,by simpa [BB6.Agent8Section.run] using hstep⟩
+
+#print axioms blank_affine_four_odd_ge_three_iff
 #print axioms affine_normalize_odd_ge_five
 #print axioms blank_no_affine_four_odd_ge_five
 end BB6.Agent29Bottom
