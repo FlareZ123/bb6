@@ -7,7 +7,7 @@ open NeedleInverse
 /-- Number of valuations tested for the chosen positive slope, before
 potentially adding the isolated K13 exception. -/
 def cutoff (K c : Nat) : Nat :=
-  min ((K+2)/4+1) (max (4*((3:Nat)^c+1)) (K/c+1))
+  min ((K+2)/4+1) (max (((3:Nat)^c+1)) (K/c+1))
 
 /-- Choose the least-cost positive slope among the first log2(K)+1 choices;
 computational complexity is logarithmic in the terminal exponent K. -/
