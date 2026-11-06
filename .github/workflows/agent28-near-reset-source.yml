@@ -69,3 +69,19 @@ jobs:
           #check BB6.Agent50Near.source_critical_either_gate_reset_near
           LEAN
           lean "$n/Agent28SignatureProbe.lean"
+          p23="im-results/agent23-p1-root-wall"
+          p28="im-results/agent28-p1-near-source-audit"
+          export LEAN_PATH="$LEAN_PATH:$p23:$p28"
+          lean -o "$p23/CriticalRootWallArithmetic.olean" "$p23/CriticalRootWallArithmetic.lean"
+          lean -o "$p23/CriticalRootWallOriginal.olean" "$p23/CriticalRootWallOriginal.lean"
+          lean -o "$p/ResetGate.olean" "$p/ResetGate.lean"
+          lean -o "$p/EvenSeed.olean" "$p/EvenSeed.lean"
+          lean -o "$p23/RootWallOddCostArithmetic.olean" "$p23/RootWallOddCostArithmetic.lean"
+          lean -o "$p23/CriticalRootWallOddCost.olean" "$p23/CriticalRootWallOddCost.lean"
+          for m in EvenMiss ResetOdd EvenFull EightThree ShiftOdd; do lean -o "$p/$m.olean" "$p/$m.lean"; done
+          lean -o "$p23/RootWallEightThreeArithmetic.olean" "$p23/RootWallEightThreeArithmetic.lean"
+          lean -o "$p23/RootWallSharpArithmetic.olean" "$p23/RootWallSharpArithmetic.lean"
+          lean -o "$p23/RootWallSharpOriginal.olean" "$p23/RootWallSharpOriginal.lean"
+          lean -o "$p23/RootWallSharpGaps.olean" "$p23/RootWallSharpGaps.lean"
+          lean -o "$p23/RootWallSharpMod4.olean" "$p23/RootWallSharpMod4.lean"
+          lean "$p28/EvenGateNear.lean"
