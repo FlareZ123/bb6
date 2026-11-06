@@ -97,4 +97,6 @@ jobs:
           lean -o "$b/RayTwoTierPacket.olean" "$b/RayTwoTierPacket.lean"
           lean -o "$b/RayTwoTierNoTwo.olean" "$b/RayTwoTierNoTwo.lean"
           lean -o "$b/RayExceptionalDisjoint.olean" "$b/RayExceptionalDisjoint.lean"
-          echo "Agent 10 source-verified two-tier packet, no-t2 theorem and disjoint high gates."
+          lean -o "$b/RayTThreeGap.olean" "$b/RayTThreeGap.lean"
+          lean -o "$b/RayTwoTierTThreeSelector.olean" "$b/RayTwoTierTThreeSelector.lean"
+          echo "Agent 10 source-verified exact source t1,t2,t3 rooted classification."
