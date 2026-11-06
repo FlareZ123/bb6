@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - .github/workflows/agent49-623-ternary-shift.yml
+      - im-results/agent49-parity623/TernaryShiftSource.lean
       - im-results/agent49-parity623/TernaryBufferSource.lean
+      - im-results/agent49-parity623/AffinePredecessorBoundsSource.lean
 permissions:
   contents: read
 jobs:
@@ -49,4 +51,9 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
-          lake env lean Agent49TernaryBufferSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryBufferSource.olean Agent49TernaryBufferSource.lean
+      - name: Prove finite affine predecessor envelopes
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/AffinePredecessorBoundsSource.lean" Agent49AffinePredecessorBoundsSource.lean
+          lake env lean Agent49AffinePredecessorBoundsSource.lean
