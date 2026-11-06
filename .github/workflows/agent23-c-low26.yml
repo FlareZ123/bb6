@@ -136,3 +136,6 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/{C26Rectangle,C26High}.lean .
           lean -o C26Rectangle.olean C26Rectangle.lean
           lean C26High.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/{C26Oblique,C26ObliqueHigh}.lean .
+          lean -o C26Oblique.olean C26Oblique.lean
+          lean C26ObliqueHigh.lean
