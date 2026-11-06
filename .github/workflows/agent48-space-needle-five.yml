@@ -47,3 +47,7 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/FiveTerminal.olean" FiveTerminal.lean
           cp "$base48/FiveTerminalSource.lean" .
           lake env lean FiveTerminalSource.lean
+          cp "$base48/BoundaryExact.lean" .
+          lake env lean -o ".lake/build/lib/lean/BoundaryExact.olean" BoundaryExact.lean
+          cp "$base48/BoundaryExactSource.lean" .
+          lake env lean BoundaryExactSource.lean
