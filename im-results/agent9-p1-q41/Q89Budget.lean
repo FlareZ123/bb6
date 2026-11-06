@@ -1,9 +1,9 @@
-import QBudgetFinite
-import UniformUniversalBudget
+import QBudgetFiniteK
+import UniformUniversalParamK
 set_option maxRecDepth 8192
 set_option maxHeartbeats 0
 namespace BB6.Agent9Q89
-open BB6.Agent9BudgetFinite
+open BB6.Agent9BudgetFiniteK
 def nodes0 : List (Nat×Nat) := [
   (0,1072), (2,984), (4,784), (4,963), (5,751), (5,1199),
   (6,914), (8,768), (9,744), (10,912), (10,1092), (12,769),
@@ -50,17 +50,17 @@ def nodes0 : List (Nat×Nat) := [
   (49,1236), (50,945), (50,1130), (50,1358), (51,843), (51,1213)
 ]
 theorem root0 : (0,1072)∈nodes0 := by decide
-theorem check0 : BB6.Agent9Q33.checkGraph 1432 nodes0 = true := by decide
+theorem check0 : BB6.Agent9BudgetFiniteK.checkGraphK 11 1432 nodes0 = true := by decide
 theorem boundCheck0 :
-  nodes0.all (fun p => decide (p.1≤51 ∧ ¬1024∣p.2)) = true := by decide
+  nodes0.all (fun p => decide (p.1≤51 ∧ ¬2^11∣p.2)) = true := by decide
 theorem closed0 (m z t v zp : Nat) (hm : (m,z)∈nodes0)
     (hd:z=2^t*v) (hn:2*zp+1=1432+m+t+v) :
     (m+t+1,zp)∈nodes0 :=
-  closed_of_check 51 1432 nodes0 check0 boundCheck0 m z t v zp hm hd hn
+  closed_of_checkK 11 51 1432 nodes0 check0 boundCheck0 m z t v zp hm hd hn
 theorem small0 (m z : Nat) (hm : (m,z)∈nodes0) : m≤51 := by
   have h := (List.all_eq_true.mp boundCheck0) (m,z) hm
   exact (of_decide_eq_true h).1
-theorem no1024_0 (m z : Nat) (hm : (m,z)∈nodes0) : ¬1024∣z := by
+theorem no1024_0 (m z : Nat) (hm : (m,z)∈nodes0) : ¬2^11∣z := by
   have h := (List.all_eq_true.mp boundCheck0) (m,z) hm
   exact (of_decide_eq_true h).2
 def nodes1 : List (Nat×Nat) := [
@@ -113,26 +113,26 @@ def nodes1 : List (Nat×Nat) := [
   (50,801), (50,915), (50,1171), (50,1285)
 ]
 theorem root1 : (0,894)∈nodes1 := by decide
-theorem check1 : BB6.Agent9Q33.checkGraph 1433 nodes1 = true := by decide
+theorem check1 : BB6.Agent9BudgetFiniteK.checkGraphK 11 1433 nodes1 = true := by decide
 theorem boundCheck1 :
-  nodes1.all (fun p => decide (p.1≤51 ∧ ¬1024∣p.2)) = true := by decide
+  nodes1.all (fun p => decide (p.1≤51 ∧ ¬2^11∣p.2)) = true := by decide
 theorem closed1 (m z t v zp : Nat) (hm : (m,z)∈nodes1)
     (hd:z=2^t*v) (hn:2*zp+1=1433+m+t+v) :
     (m+t+1,zp)∈nodes1 :=
-  closed_of_check 51 1433 nodes1 check1 boundCheck1 m z t v zp hm hd hn
+  closed_of_checkK 11 51 1433 nodes1 check1 boundCheck1 m z t v zp hm hd hn
 theorem small1 (m z : Nat) (hm : (m,z)∈nodes1) : m≤51 := by
   have h := (List.all_eq_true.mp boundCheck1) (m,z) hm
   exact (of_decide_eq_true h).1
-theorem no1024_1 (m z : Nat) (hm : (m,z)∈nodes1) : ¬1024∣z := by
+theorem no1024_1 (m z : Nat) (hm : (m,z)∈nodes1) : ¬2^11∣z := by
   have h := (List.all_eq_true.mp boundCheck1) (m,z) hm
   exact (of_decide_eq_true h).2
-theorem blank_no_critical_1426_plus_2pow65 (r : Nat) :
+theorem blank_no_critical_1426_plus_2pow66 (r : Nat) :
     ¬ BB6.Agent1.Reach 2
-      (14*2^(16*(89+2^(10+51)*r)+2) -
-       2*(16*(89+2^(10+51)*r)+2)-10) := by
-  exact BB6.Agent9UniformBudget.universal_blank_critical_cylinder_budget
-    51 89 (by decide) (by decide)
+      (14*2^(16*(89+2^(11+51)*r)+2) -
+       2*(16*(89+2^(11+51)*r)+2)-10) := by
+  exact BB6.Agent9UniformParamK.universal_blank_critical_cylinder_param_K
+    11 51 89 (by decide) (by decide)
     nodes0 nodes1 root0 root1
     closed0 closed1 small0 small1 no1024_0 no1024_1 r
-#print axioms blank_no_critical_1426_plus_2pow65
+#print axioms blank_no_critical_1426_plus_2pow66
 end BB6.Agent9Q89
