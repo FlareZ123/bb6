@@ -92,4 +92,5 @@ jobs:
           lean -o "$b/ForkOddDead486.olean" "$b/ForkOddDead486.lean"
           lean -o "$g/RayForkPrune.olean" "$g/RayForkPrune.lean"
           lean -o "$g/OddCandidate.olean" "$g/OddCandidate.lean"
+          lean -o "$g/NineForkDead.olean" "$g/NineForkDead.lean"
           echo "Lean kernel validated complete n>=4 fatal-parent normal form and mod18 unique even-parent classes."
