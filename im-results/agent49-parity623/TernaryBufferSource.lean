@@ -155,4 +155,71 @@ theorem right_even_to_safe_right_large (a d b e : Nat)
 #print axioms right_odd_to_safe_right_large
 #print axioms right_even_to_safe_right_large
 
+
+/-- The only small odd near-right exceptions to a strongly right-safe
+successor are D(4,5) and D(4,7), checked by Lean kernel reduction. -/
+private def rightOddSmallSafe (a d : Nat) : Bool :=
+  if a%2=0 ∧ 0<a ∧ a≤d ∧ d%2=1 ∧ d<2*a+1 ∧
+      ¬(a=4 ∧ (d=5 ∨ d=7)) then
+    match next (.D a d) with
+    | none => true
+    | some (.D b e) => decide (b%2=0 ∧ 2*b+1≤e)
+  else true
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+theorem rightOddSmallAll : ∀ a d : Fin 44,
+    rightOddSmallSafe a.val d.val=true := by decide +kernel
+
+theorem right_odd_to_safe_right (a d b e : Nat)
+    (ha : a%2=0) (ha0:0<a) (hd : d%2=1) (hside : a≤d)
+    (hnotold : d<2*a+1)
+    (hn : ¬(a=4 ∧ (d=5 ∨ d=7)))
+    (hnext : next (.D a d)=some (.D b e)) :
+    b%2=0 ∧ 2*b+1≤e := by
+  by_cases hbig : 22≤a
+  · have hh:=right_odd_to_safe_right_large a d b e ha ha0 hd hside hnotold hbig hnext
+    omega
+  · have hma : a<44 := by omega
+    have hmd : d<44 := by omega
+    have hcert:=rightOddSmallAll ⟨a,hma⟩ ⟨d,hmd⟩
+    simp only [rightOddSmallSafe,if_pos (show a%2=0 ∧ 0<a ∧ a≤d ∧
+      d%2=1 ∧ d<2*a+1 ∧ ¬(a=4 ∧ (d=5 ∨ d=7)) by
+      exact ⟨ha,ha0,hside,hd,hnotold,hn⟩), hnext, decide_eq_true_eq] at hcert
+    exact hcert
+
+/-- Even-d low-counter boundary is exhausted by a finite Lean certificate. -/
+private def rightEvenSmallSafe (a d : Nat) : Bool :=
+  if a%2=0 ∧ 0<a ∧ a≤d ∧ d%2=0 ∧ d<2*a+2 then
+    match next (.D a d) with
+    | none => true
+    | some (.D b e) => decide (b%2=0 ∧ 2*b+1≤e)
+  else true
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 0 in
+theorem rightEvenSmallAll : ∀ a d : Fin 14,
+    rightEvenSmallSafe a.val d.val=true := by decide +kernel
+
+theorem right_even_to_safe_right (a d b e : Nat)
+    (ha : a%2=0) (ha0:0<a) (hd : d%2=0) (hside : a≤d)
+    (hnotold : d<2*a+2)
+    (hnext : next (.D a d)=some (.D b e)) :
+    b%2=0 ∧ 2*b+1≤e := by
+  by_cases hbig : 6≤a
+  · have hh:=right_even_to_safe_right_large a d b e ha ha0 hd hside hnotold hbig hnext
+    omega
+  · have hma : a<14 := by omega
+    have hmd : d<14 := by omega
+    have hcert:=rightEvenSmallAll ⟨a,hma⟩ ⟨d,hmd⟩
+    simp only [rightEvenSmallSafe,if_pos (show a%2=0 ∧ 0<a ∧ a≤d ∧
+      d%2=0 ∧ d<2*a+2 by exact ⟨ha,ha0,hside,hd,hnotold⟩),
+      hnext,decide_eq_true_eq] at hcert
+    exact hcert
+
+#print axioms rightOddSmallAll
+#print axioms rightEvenSmallAll
+#print axioms right_odd_to_safe_right
+#print axioms right_even_to_safe_right
+
 end BB6.Agent49TernaryBufferSource
