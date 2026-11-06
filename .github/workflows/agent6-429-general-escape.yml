@@ -24,4 +24,5 @@ jobs:
           set -euo pipefail
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
           lean -o im-results/agent6-harmonic429/EscapeRay.olean im-results/agent6-harmonic429/EscapeRay.lean
-          lean -DmaxHeartbeats=10000000 im-results/agent6-harmonic429/GeneralEscape.lean
+          lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/GeneralEscape.olean im-results/agent6-harmonic429/GeneralEscape.lean
+          lean -DmaxHeartbeats=10000000 im-results/agent6-harmonic429/HaltVsEscape.lean
