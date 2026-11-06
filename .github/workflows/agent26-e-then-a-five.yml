@@ -54,4 +54,5 @@ jobs:
           lean -o "$Z/EZeroPair.olean" "$Z/EZeroPair.lean"
           lean -o "$E/EFourAlternating.olean" "$E/EFourAlternating.lean"
           lean -o "$E/EOnePairTwoReturnsA.olean" "$E/EOnePairTwoReturnsA.lean"
-          lean "$E/EOnePairTwoReturnsBE.lean"
+          lean -o "$E/EOnePairTwoReturnsBE.olean" "$E/EOnePairTwoReturnsBE.lean"
+          lean "$E/EOnePairTwoReturnsPolynomial.lean"
