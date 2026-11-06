@@ -24,7 +24,7 @@ theorem even_burst_affine_return (n W : Nat)
   have hnsub : n-1+1=n := by omega
   have hpow' : 12*2^(n-1)=6*2^n := by
     calc
-      12*2^(n-1)=6*(2^(n-1)*2) := by ring
+      12*2^(n-1)=6*(2^(n-1)*2) := by omega
       _=6*2^n := by rw [←hpow]
   have hcond :
       4*((0+3)*2^(n-1)) ≤ 2*0+W+3*(n-1)+9 := by
