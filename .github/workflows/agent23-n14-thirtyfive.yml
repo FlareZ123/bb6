@@ -57,7 +57,7 @@ jobs:
           for m in N14Bounds N14GenericSource N14GenericDecision; do
             lean -o "im-results/agent23-n14-sparse/$m.olean" "im-results/agent23-n14-sparse/$m.lean" | tee -a /tmp/agent23-n14-35-audit.log
           done
-          case "$"+"{{ matrix.shard }}" in
+          case "${{ matrix.shard }}" in
             A) ids=(0 3 5 6 9) ;;
             B) ids=(11 12 15 18 22) ;;
             C) ids=(25 26 27 28 29) ;;
