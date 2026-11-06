@@ -1,6 +1,7 @@
 import JointC26
 import Low14Source
 import Low58Source
+import Rect58Source
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11C58
@@ -9,7 +10,8 @@ def lowAllowed (m : Nat) : Prop :=
   BB6.Agent23C26.lowAllowed m ∧ m%64≠58 ∧ m%256≠150
 
 def highAllowed (j m : Nat) : Prop :=
-  BB6.Agent23C26.highAllowed j m
+  BB6.Agent23C26.highAllowed j m ∧
+    ¬(3≤m ∧ j%32=31 ∧ (j+3*m+5)%256=198)
 
 private theorem low_bound (m : Nat) :
     3*m+4 ≤ 2^(2*m+3) := by
@@ -20,6 +22,25 @@ private theorem low_bound (m : Nat) :
     rw [he,Nat.pow_add]
     simp only [show (2:Nat)^2=4 by decide]
     omega
+
+private theorem high_margin_any (m : Nat) :
+    3*m+5 ≤ 3*2^(2*m+2) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+    have he : 2*(m+1)+2=(2*m+2)+2 := by omega
+    rw [he,Nat.pow_add]
+    simp only [show (2:Nat)^2=4 by decide]
+    omega
+
+private theorem high_bound (j m : Nat) :
+    j+3*m+5 ≤ 2^(2*m+2)*(j+3) := by
+  have hp : 1≤2^(2*m+2) := Nat.pow_pos (by decide)
+  have hj : j≤2^(2*m+2)*j := by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hp
+  have hm := high_margin_any m
+  rw [Nat.mul_add]
+  omega
 
 /-- Machine C's exact blank-halting criterion with two new disjoint
     low-index infinite sectors removed. Both remaining parameter
@@ -48,8 +69,19 @@ theorem blank_halts_iff_c58_five_root : BB6.CReachBridge.RunHalts ↔
         intro hm150
         exact BB6.Agent11C58.blank_no_low_m_150 m k hm150 hstop hr
       exact Or.inl ⟨m,⟨hm,hnot58,hnot150⟩,hroot⟩
-    · exact Or.inr ⟨j,m,hm,hroot⟩
-  · rintro (⟨m,⟨hm,_,_⟩,hroot⟩ | ⟨j,m,hm,hroot⟩)
+    · let k := 2^(2*m+2)*(j+3)-(j+3*m+5)
+      have hr : BB6.Agent3.CReach (2*j+3) k :=
+        (BB6.Agent19Five.mixedFiveFastRootDecision_iff (2*j+3) k).mp hroot
+      have hstop : k+j+3*m+5=2^(2*m+2)*(j+3) := by
+        dsimp [k]
+        have hc := Nat.sub_add_cancel (high_bound j m)
+        omega
+      have hnot : ¬(3≤m ∧ j%32=31 ∧ (j+3*m+5)%256=198) := by
+        rintro ⟨hm3,hj31,hpair⟩
+        exact BB6.Agent11C58Rect.blank_no_high_rect_58 j m k
+          hm3 hj31 hpair hstop hr
+      exact Or.inr ⟨j,m,⟨hm,hnot⟩,hroot⟩
+  · rintro (⟨m,⟨hm,_,_⟩,hroot⟩ | ⟨j,m,⟨hm,_⟩,hroot⟩)
     · exact Or.inl ⟨m,hm,hroot⟩
     · exact Or.inr ⟨j,m,hm,hroot⟩
 
