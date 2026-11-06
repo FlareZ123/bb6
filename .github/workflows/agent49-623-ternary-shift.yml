@@ -69,7 +69,12 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RightTailAllDepthSource.lean" Agent8RightTailAllDepthSource.lean
-          lake env lean Agent8RightTailAllDepthSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RightTailAllDepthSource.olean Agent8RightTailAllDepthSource.lean
+      - name: Prove explicit all-depth left/right cone thresholds
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/ExplicitConeSource.lean" Agent8ExplicitConeSource.lean
+          lake env lean Agent8ExplicitConeSource.lean
       - name: Prove negative-gap residue exponent separation
         working-directory: /tmp/cryptids
         run: |
