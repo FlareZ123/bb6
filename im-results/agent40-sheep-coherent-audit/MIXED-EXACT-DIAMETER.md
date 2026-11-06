@@ -94,7 +94,7 @@ For \(p=1\), the graph has \(q>1\) distinct even vertices, so its diameter is at
 
 ## Strengthening to all legal first-even return branches
 
-The published Sheep section relation has exactly one other **nonterminal** branch: if \(x=3\cdot2^a\) (\(a\ge0\)), then \(F(x)=x+a+3\). The section halts on the remaining odd-part-one powers. For even-section inputs \(a\ge1\). The only exceptional even input of valuation \(a=1\) is \(x=6\), whose first section successor is \(F(6)=10\), already even. Thus its full first-even return is **exactly \(6\to10\)**.
+The published Sheep section relation has exactly one other **nonterminal** branch: if \(x=3\cdot2^a\) (\(a\ge0\)), then \(F(x)=x+a+3\). The section halts on the remaining odd-part-one powers. For even-section inputs \(a\ge1\). The only exceptional even input of valuation \(a=1\) is \(x=6\), whose first section successor is \(F(6)=10\), already even. Thus its full first-even return is **exactly \(6\to10\)**. Standalone [SheepCorridor.lean](SheepCorridor.lean) additionally checks `special_at_one: specialFirst 1 = 10` (no axioms) and `ten_not_dyadic_zero: ∀ p≥2, 10%2^p ≠0` (axioms `[propext]`). These are source-formula-compatible arithmetic certificates, with no claimed import of the original Cryptids Step relation.
 
 Let \(H_m\) be the **unrestricted synthetic even-return quotient graph** with every genuinely legal nonhalting first-even return (both generic and odd-part-three branches) as an edge. We claim the same exact diameter (1), and the same sharp **unrestricted coherent free-start** maximum path length, hold in \(H_m\).
 
