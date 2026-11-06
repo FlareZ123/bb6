@@ -63,3 +63,4 @@ jobs:
           lean -o "$A/EDouble.olean" "$A/EDouble.lean"
           lean "$E/EAllDoubleThenB.lean"
           lean "$E/EDoubleThenAThree.lean"
+          lean "$E/EDoubleThenAZero.lean"
