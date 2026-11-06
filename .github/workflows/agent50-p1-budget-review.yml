@@ -1,0 +1,24 @@
+name: Agent50 inspect archived P1 reset-budget proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract and print existing source budget proof
+        run: |
+          set -eu
+          target="im-results/agent50-p1-two-reset"
+          base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/agent50-count-bridge.tar.xz
+          echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/agent50-count-bridge.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/agent50-count-bridge.tar.xz -C "$target"
+          echo "===== SOURCE CountFinal.lean ====="
+          cat "$target/CountFinal.lean"
+          echo "===== SOURCE ResetSkeleton.lean ====="
+          cat "$target/ResetSkeleton.lean"
+          echo "===== SOURCE CountSourceBridge.lean ====="
+          cat "$target/CountSourceBridge.lean"
