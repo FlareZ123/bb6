@@ -1,0 +1,40 @@
+name: Agent 33 BB429 five shifted genuine-root terminal exclusions (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged original BB429 accelerator and full inverse chain
+        shell: bash
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent30-429-even16:im-results/agent33-429-five-shift
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
+          lean -DmaxHeartbeats=5000000 -o im-results/agent6-harmonic429/BB429NoThree.olean im-results/agent6-harmonic429/BB429NoThree.lean
+          lean -DmaxHeartbeats=10000000 -o im-results/agent30-429-even16/BB429Even16.olean im-results/agent30-429-even16/BB429Even16.lean
+          lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent30-429-even16/BB429InverseKernel16.olean im-results/agent30-429-even16/BB429InverseKernel16.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent33-429-five-shift/BB429FiveShift.olean im-results/agent33-429-five-shift/BB429FiveShift.lean | tee /tmp/agent33-five-audit.log
+          if grep -q sorryAx /tmp/agent33-five-audit.log; then
+            echo "ERROR: sorryAx in audit"
+            exit 1
+          fi
