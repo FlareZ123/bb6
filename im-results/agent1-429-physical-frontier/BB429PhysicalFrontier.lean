@@ -1,4 +1,5 @@
 import LassoTraceAudit
+import Lean.Elab.Tactic.Omega
 
 namespace BB429PhysicalFrontier
 open BB6Coverage
@@ -67,7 +68,12 @@ theorem no_hole_within_25 :
     twelve actual state-symbol slots. -/
 theorem unique_remaining_slot :
     ∀ slot : Slot, prefix11 slot = none ↔
-      slot = (⟨3, by decide⟩, true) := by decide
+      slot = (⟨3, by decide⟩, true) := by
+  intro ⟨q,b⟩
+  have h : q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5 := by
+    have hlt := q.isLt
+    omega
+  rcases h with h|h|h|h|h|h <;> subst q <;> cases b <;> decide
 
 /-- Canonical exact total #429 transition table: the eleven ordinary
     actions above and the unique final D/1 halt. -/
