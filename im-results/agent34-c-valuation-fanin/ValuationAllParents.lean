@@ -237,7 +237,7 @@ theorem even_sum_parent_mem_fullCandidates (a k x y v u : Nat)
     right
     apply List.mem_append.mpr
     left
-    exact direct_parent_mem_candidates a k x y ha0 ▸ ?_
+    exact direct_parent_mem_candidates a k x y (by omega) (by omega) hbelow hedge
   · by_cases heven : a%2=0
     · apply List.mem_append.mpr
       left
