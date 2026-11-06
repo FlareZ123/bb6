@@ -1,0 +1,35 @@
+name: Agent 15 Machine C logarithmic inverse for all outputs (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original Machine C sources, complete inverse grammar, and new oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a15-total-fast
+          cp im-results/agent11-c-line/CLine.lean /tmp/a15-total-fast/
+          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a15-total-fast/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a15-total-fast/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a15-total-fast/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse,BounceAllExact,SectionAllInverse}.lean /tmp/a15-total-fast/
+          cp im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal}.lean /tmp/a15-total-fast/
+          cp im-results/agent15-c-total-fast/{TotalFastInverse,TotalFastRoot}.lean /tmp/a15-total-fast/
+          cd /tmp/a15-total-fast
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse SectionMassOriginal SectionFastInverseOriginal TotalFastInverse TotalFastRoot; do
+            echo "Compiling $f"
+            lean -o "$f.olean" "$f.lean"
+          done
