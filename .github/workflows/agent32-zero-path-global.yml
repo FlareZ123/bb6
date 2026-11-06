@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+      prove_lasso_mass:
+        description: 'Use native_decide to prove the depth-three and depth-four report equalities'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -82,6 +87,11 @@ jobs:
         run: |
           node im-results/agent32-zero-prefix-global/scan-holdout-lasso.cjs --self-test
           node im-results/agent32-zero-prefix-global/scan-holdout-lasso.cjs
+      - name: Prove depth-three and depth-four frontier report counts (explicitly requested only)
+        if: ${{ inputs.prove_lasso_mass }}
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
+          lean -o im-results/agent32-zero-prefix-global/LassoTraceMassProof.olean im-results/agent32-zero-prefix-global/LassoTraceMassProof.lean
 
   fresh-ray-entry-proof:
     runs-on: ubuntu-latest
