@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
         run: |
-          curl -sSf https://elan-init.sh -o /tmp/elan-init.sh
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile original source, valuation inverse, and total-root integration
