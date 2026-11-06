@@ -1,7 +1,7 @@
 import ShadowFiniteBudgetK
 
 namespace Agent23N14K9
-open BB6.Shadow BB6.Agent1Quarter
+open BB6.Shadow BB6.Agent1Quarter BB6.Agent9Budget
 
 private theorem two_pow_ge_succ (k : Nat) : k+1 ≤ 2^k := by
   induction k with
