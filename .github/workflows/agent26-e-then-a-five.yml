@@ -55,4 +55,7 @@ jobs:
           lean -o "$E/EFourAlternating.olean" "$E/EFourAlternating.lean"
           lean -o "$E/EOnePairTwoReturnsA.olean" "$E/EOnePairTwoReturnsA.lean"
           lean -o "$E/EOnePairTwoReturnsBE.olean" "$E/EOnePairTwoReturnsBE.lean"
-          lean "$E/EOnePairTwoReturnsPolynomial.lean"
+          lean -o "$E/EOnePairTwoReturnsPolynomial.olean" "$E/EOnePairTwoReturnsPolynomial.lean"
+          lean -o "$Z/Generic.olean" "$Z/Generic.lean"
+          lean -o "$Z/BoundaryPadding.olean" "$Z/BoundaryPadding.lean"
+          lean "$E/EOnePairPhysical.lean"
