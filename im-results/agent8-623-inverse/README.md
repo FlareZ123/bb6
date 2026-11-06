@@ -111,49 +111,40 @@ The budget implies d′≥3d+14 on the odd far-left branch of T and d′≥3d+8 
 The equality indices are repeated ternary 1s followed by a zero, complementing the repeated-1-and-final-2 first-failure threshold in [Agent49's work](../agent49-parity623/README.md). Comparing these two exact languages may support a stronger rooted predecessor exclusion theorem. Keep both modules in intermediate results until relevance to the BB(6) frontier is established.
 
 
-## 2026-11-06: gate-parent envelope and ray-residue reductions
+## 6 November 2026: source-certified gate parents, 3-adic residues, all-finite-depth tails
 
-The new `GatePredecessorSource.lean` imports the original #623 parity
-transition and the affine predecessor bounds. It proves
-`blank_run_gate_parent_finite_envelope`: apart from the two small states
-(D(4,5)) and (D(4,7)), any state in the logarithmic gate that halts must
-have its immediate predecessor in one of four explicit old-cone affine
-sectors. The source-level theorem passes the pinned
-`agent49-623-ternary-shift.yml` CI (run 17).
+### Root-sensitive necessary halting predecessors
 
-The same Lean file contains
-`positive_gap_residue_exponent_unique`. For a fixed odd base constant (N),
-there cannot be two exponents (A<B) with
-(N\bmod3^{A+1}=3^A) and (N\bmod3^{B+1}=3^B). This formalizes the
-positive-gap uniqueness reduction.
+[GatePredecessorSource.lean](GatePredecessorSource.lean) imports the unchanged original #623 accelerated transition, Agent49's exact affine-buffer theorem and four source-certified predecessor envelopes. Its `blank_run_gate_parent_finite_envelope` states: if a **genuine blank-root** section state `D(a,d)` is in `newAffineCone`, returns `D(b,e)`, and `D(b,e)` halts, then the predecessor is in one of four explicit bounded old-cone sectors:
+```
+(a <= b+2*d+8  and 3*d+14 <= e) OR
+(a <= b+2*d+4  and 3*d+8  <= e) OR
+(d <= b+2*a+1  and 3*a    <= e) OR
+(d <= b+2*a+2  and 2*a+5 <= e).
+```
+The two small universal buffer exceptions `D(4,5)`, `D(4,7)` cannot occur on the true run, from the source-proved strict mass growth. The theorem itself is **conditional** on the predecessor lying in the newer affine cone, which is not yet proved for all blank-origin visits. [Source CI 42257465325](https://github.com/FlareZ123/bb6/actions/runs/42257465325) compiled this chain with ordinary Lean axioms.
 
-`NegativeGapResidue.lean` formalizes the complementary negative-gap
-separation lemma: if
-[
-(C-2A)\bmod3^{A+1}=3^A,\qquad
-(C-2B)\bmod3^{B+1}=3^B,
-\]
-with (A<B) and (2B\le C), then (B-A\ge2\cdot3^A). The proof was
-checked locally with Lean 4.36.0-rc2; repository CI verification was added
-in run 18 and is pending at the time of this note.
+### Exact first-evaluator residue barriers
 
-`FirstEvalRayResidues.md` gives the exact five first-evaluator cases for
-even first coordinate (b), including the positive-gap 3-adic valuation
-criterion and the negative-gap exponent-spacing argument. These are
-**first-call** conditions only. A successful first evaluator does not imply
-that the remaining `drainB` recursion succeeds; for example, (D(12,12))
-passes `evalA 1 12 29) and then fails at `evalA 0 3 42).
+The same gate-parent module proves `positive_gap_residue_exponent_unique`: no natural number `N` has ternary-ones residues `N % 3^(A+1)=3^A` at two distinct exponents `A<B`. [NegativeGapResidue.lean](NegativeGapResidue.lean) proves its complementary exponent separation: if `(C-2A)%3^(A+1)=3^A` and `(C-2B)%3^(B+1)=3^B`, with `A<B` and `2B<=C`, then `B-A>=2*3^A`. Both were source-CI checked, with the independent arithmetic module compiled in [run 42257465325](https://github.com/FlareZ123/bb6/actions/runs/42257465325). [FirstEvalRayResidues.md](FirstEvalRayResidues.md) contains the five first-evaluator branch formulas and the independent finite orbit audit. These classify only the **first evaluator call**, not later B-drain failures.
 
-A separate BigInt translation of the source transition audited the first
-1,000 blank-root states. It found 419 right-ray and 259 left-ray old-cone
-states, with 222 candidate first-call failure shifts and no equality between
-an actual root parameter and a candidate. The closest candidate distances
-were 38 on a right ray at index 13 and 126 on a left ray at index 11. This
-is computational evidence from an independent translation, not a
-kernel-checked 1,000-state proof.
+### Eventual two-step survival on certified affine right rays
 
-The next root-specific proof target is to derive a separation invariant
-between the actual ray parameter and every first-call failure candidate
-directly from the preceding `drainB` digit updates. A complete proof must
-also control later drain iterations after a successful first call. These
-reductions do not determine BB(6).
+[RightTailTwoStepSource.lean](RightTailTwoStepSource.lean) proves `farLeftSafe`: if `2e+8<=b` then the original source `T(D(b,e))` succeeds. Consequently, on **any** positive-even-first-counter right ray satisfying Agent49's exact exponential ternary budget, `rightOddTwoStepTail` and `rightEvenTwoStepTail` give a finite bound `N` such that for every `t>=N`, both `T(D(a,d+2t))` and its immediate successor survive. The base ray has a successful output `D(b0,e0)` by the genuine source `drainB_safe_ones`, and its shift is exactly `D(b0+2t,e0)`. Taking `N=e0+4` forces the latter output into the far-left safe sector. This works for all ray parameters, not a finite trace. Original source Lean 4.35.0-rc4 verification [run 42292242317](https://github.com/FlareZ123/bb6/actions/runs/42292242317) **SUCCESS**, with only standard axioms.
+
+### All finite depths on every far-left and fixed even-first-counter tail
+
+[RightTailAllDepthSource.lean](RightTailAllDepthSource.lean) strengthens this via exact source translation and induction over **every natural number of complete accelerated steps**. Write `Continues k s` for the existence of a successful chain of exactly `k` calls to `highLevelNext`. The authentic theorem `leftTailAllDepth` states
+```
+forall k e, exists B, forall b >= B, Continues k (D(b,e)).
+```
+From this, source-authentic `rightOddAllDepth` and `rightEvenAllDepth` prove the same result for right affine ray parameters. `evenFirstAllDepth` combines both parities without the affine-budget premise:
+```
+forall k a, 0<a -> a%2=0 ->
+    exists D, forall d >= D, Continues (k+1) (D(a,d)).
+```
+The proof uses only upstream source laws that were themselves checked against the unchanged Cryptids machine, with a fixed base `2a+1` for odd inputs and `2a+2` for even ones. **Original source-pinned [CI 42292991495](https://github.com/FlareZ123/bb6/actions/runs/42292991495) SUCCESS**, including `#print axioms` for all four theorems. This is an unbounded-depth mathematical theorem: **for every finite k there is a threshold D(k)**. It does **not** assert a single fixed initial input that survives all k. It neither decides the true `D(0,7)` root nor gives BB(6) a new bound.
+
+### What remains open
+
+The immediate question is whether the *genuine blank-origin* ray parameter ever enters a finite exceptional region for its current base, or reaches one of the logarithmic halting-gate residues. There is no proven all-time root invariant or globally finite inverse search. For the five first-call residues, later drain recursions can still halt after an initially successful evaluator call; `D(12,12)` is an explicit synthetic counterexample. Source-certified all-depth **tail** safety is compatible with the existence of arbitrarily large synthetic halting configurations elsewhere. Avoid promoting these conditional/pointwise results to a whole-machine nonhalting decision.
