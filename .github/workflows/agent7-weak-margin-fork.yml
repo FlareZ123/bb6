@@ -1,0 +1,104 @@
+name: Agent 7 weak-margin two-tier odd fork source check (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-ray-fork:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify all-natural source first-reset parent theorem
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          g="im-results/agent7-fatal-density"
+          export LEAN_PATH="$a:$b:$f:$g"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          lean -o "$a/LowGates.olean" "$a/LowGates.lean"
+          lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
+          lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
+          lean -o "$a/PreimageCandidates.olean" "$a/PreimageCandidates.lean"
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          lean -o "$f/UniformFatalParent.olean" "$f/UniformFatalParent.lean"
+          lean -o "$f/UniformFatalMod9.olean" "$f/UniformFatalMod9.lean"
+          lean -o "$f/UniformRootGate.olean" "$f/UniformRootGate.lean"
+          lean -o "$f/UniqueEvenBand.olean" "$f/UniqueEvenBand.lean"
+          lean -o "$f/SecondEven.olean" "$f/SecondEven.lean"
+          lean -o "$f/FirstFork.olean" "$f/FirstFork.lean"
+          lean -o "$f/FirstForkExactTwo.olean" "$f/FirstForkExactTwo.lean"
+          lean -o "$f/FirstForkOddT2.olean" "$f/FirstForkOddT2.lean"
+          lean -o "$f/FirstForkModulo54.olean" "$f/FirstForkModulo54.lean"
+          lean -o "$f/FirstForkAt81.olean" "$f/FirstForkAt81.lean"
+          lean -o "$f/FirstFork162.olean" "$f/FirstFork162.lean"
+          lean -o "$f/FirstForkT3.olean" "$f/FirstForkT3.lean"
+          lean -o "$f/FirstForkThree.olean" "$f/FirstForkThree.lean"
+          lean -o "$f/FirstForkOddT45.olean" "$f/FirstForkOddT45.lean"
+          lean -o "$f/FirstForkOddValuation.olean" "$f/FirstForkOddValuation.lean"
+          lean -o "$f/FirstForkExactThree.olean" "$f/FirstForkExactThree.lean"
+          lean -o "$f/FirstForkRootThree.olean" "$f/FirstForkRootThree.lean"
+          lean -o "$f/FirstForkFatalThree.olean" "$f/FirstForkFatalThree.lean"
+          lean -o "$f/FirstForkSix.olean" "$f/FirstForkSix.lean"
+          lean -o "$f/FirstForkSixResidues.olean" "$f/FirstForkSixResidues.lean"
+          lean -o "$f/FirstForkOddValuationSix.olean" "$f/FirstForkOddValuationSix.lean"
+          lean -o "$f/FirstForkExactFour.olean" "$f/FirstForkExactFour.lean"
+          lean -o "$f/FirstForkRootFour.olean" "$f/FirstForkRootFour.lean"
+          lean -o "$f/FirstForkFourDistinct.olean" "$f/FirstForkFourDistinct.lean"
+          lean -o "$f/FirstForkFourResidues.olean" "$f/FirstForkFourResidues.lean"
+          lean -o "$f/FatalValuationPower.olean" "$f/FatalValuationPower.lean"
+          lean -o "$f/FatalValuationUnbounded.olean" "$f/FatalValuationUnbounded.lean"
+          lean -o "$f/FatalValuationBeyond.olean" "$f/FatalValuationBeyond.lean"
+          lean -o "$f/FatalValuationExact.olean" "$f/FatalValuationExact.lean"
+          lean -o "im-results/agent7-fatal-density/OddRayForced.olean" "im-results/agent7-fatal-density/OddRayForced.lean"
+          lean -o "$b/FourEven.olean" "$b/FourEven.lean"
+          lean -o "$b/FourthBranch.olean" "$b/FourthBranch.lean"
+          lean -o "$b/FourthExactTwo.olean" "$b/FourthExactTwo.lean"
+          lean -o "$b/FourthOddGap.olean" "$b/FourthOddGap.lean"
+          lean -o "$b/FourthNoDiv81.olean" "$b/FourthNoDiv81.lean"
+          lean -o "$b/FourthGeneralTwo.olean" "$b/FourthGeneralTwo.lean"
+          lean "$b/FourthThirdBranch.lean"
+          lean -o "$b/ForkOddDead.olean" "$b/ForkOddDead.lean"
+          lean -o "$b/ForkOddDead27.olean" "$b/ForkOddDead27.lean"
+          lean -o "$b/ForkOddDead486.olean" "$b/ForkOddDead486.lean"
+          lean -o "$b/RayOddForkStrip.olean" "$b/RayOddForkStrip.lean"
+          lean -o "$b/RayOddForkExtended.olean" "$b/RayOddForkExtended.lean"
+          lean -o "$g/OddRayDeep.olean" "$g/OddRayDeep.lean"
+          lean -o "$g/SignedRayPeriod.olean" "$g/SignedRayPeriod.lean"
+          lean -o "$g/RayResidues.olean" "$g/RayResidues.lean"
+          lean -o "$g/RayNonFork.olean" "$g/RayNonFork.lean"
+          lean -o "$g/SixPacketRoot.olean" "$g/SixPacketRoot.lean"
+          lean -o "$g/ForkDecompose.olean" "$g/ForkDecompose.lean"
+          lean -o "$g/PacketSelector.olean" "$g/PacketSelector.lean"
+          lean -o "$b/RayForkStripSelect.olean" "$b/RayForkStripSelect.lean"
+          lean -o "$b/RayPacketHigh.olean" "$b/RayPacketHigh.lean"
+          lean -o "$b/RayGapTone.olean" "$b/RayGapTone.lean"
+          lean -o "$b/RayTwoGateExact.olean" "$b/RayTwoGateExact.lean"
+          lean -o "$b/RayThirdGeometry.olean" "$b/RayThirdGeometry.lean"
+          lean -o "$b/RayThirdGate.olean" "$b/RayThirdGate.lean"
+          lean -o "$b/RayThirdNoRoot.olean" "$b/RayThirdNoRoot.lean"
+          lean -o "$b/RayTwoTierSelector.olean" "$b/RayTwoTierSelector.lean"
+          lean -o "$b/RayTwoTierPacket.olean" "$b/RayTwoTierPacket.lean"
+          lean -o "$b/RayTwoTierNoTwo.olean" "$b/RayTwoTierNoTwo.lean"
+          lean -o "$b/RayExceptionalDisjoint.olean" "$b/RayExceptionalDisjoint.lean"
+          lean -o "$b/RayTThreeGap.olean" "$b/RayTThreeGap.lean"
+          lean -o "$b/RayTwoTierTThreeSelector.olean" "$b/RayTwoTierTThreeSelector.lean"
+          lean -o "$g/EvenChainGap.olean" "$g/EvenChainGap.lean"
+          lean "$g/EvenChainFork.lean"
+          echo "Agent 7 weak-margin genuine-root two-tier fork certified."
