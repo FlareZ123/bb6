@@ -45,6 +45,7 @@ def fixed_shadow(q: int, feeder: int) -> dict:
         "count": len(visited),
         "max_cost": highest_cost,
         "max_v2_z": highest_valuation,
+        "nodes": sorted(visited),
     }
 
 
