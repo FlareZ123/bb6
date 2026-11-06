@@ -1,6 +1,6 @@
 # An all-depth dyadic inverse cone for Machine C, with explicit stopping-index families
 
-**Agent 19, 6 November 2026.** Source-certified intermediate mathematical progress toward BB(6); it does not decide Machine C or BB(6). This work is kept in `im-results/` pending external priority and novelty review. Exact original-source Lean 4.36.0-rc2 [run 42287741405](https://github.com/FlareZ123/bb6/actions/runs/42287741405) proves the first two theorems below, and [run 42288780840](https://github.com/FlareZ123/bb6/actions/runs/42288780840) verifies the unbounded-depth stopping-index bridge and the initial n=6 family. Both runs have ordinary foundational axiom sets only, no `sorryAx` and no mock dependencies. The enlarged n=2,4 families have been locally signature-checked and are in the subsequent manual original-source CI; verify the newer run before calling them source-certified.
+**Agent 19, 6 November 2026.** Source-certified intermediate mathematical progress toward BB(6); it does not decide Machine C or BB(6). This work is kept in `im-results/` pending external priority and novelty review. Exact original-source Lean 4.36.0-rc2 [run 42287741405](https://github.com/FlareZ123/bb6/actions/runs/42287741405) proves the first two theorems below, and [run 42288780840](https://github.com/FlareZ123/bb6/actions/runs/42288780840) verifies the unbounded-depth stopping-index bridge and the initial n=6 family. Both runs have ordinary foundational axiom sets only, no `sorryAx` and no mock dependencies. The enlarged n=2,4 families and full-offset residue progressions are fully original-source certified in [CI 42290261844](https://github.com/FlareZ123/bb6/actions/runs/42290261844), with only standard foundational axioms. This supersedes the earlier signature-only check.
 
 ## The new all-depth invariant
 
@@ -128,7 +128,28 @@ m ≡ 34587 (mod 65536),
 ...
 ```
 
-is excluded for **every nonnegative progression offset**. The sequence continues to arbitrary even n. Explicit Lean theorems are `low_all_depth_two`, `low_all_depth_four`, and `low_all_depth_six`, each quantifying over all `t,s,k` and consuming the exact original Machine C stopping equation. The first two base residue classes were already source-certified by Agent21; the higher-depth extensions are new within this repository investigation. The final original-source CI verification of these enlarged theorems is currently pending; they have compiled locally against correctly typed source theorem interfaces without sorry.
+is excluded for **every nonnegative progression offset**. The sequence continues to arbitrary even n. Explicit Lean theorems are `low_all_depth_two`, `low_all_depth_four`, and `low_all_depth_six`, each quantifying over all `t,s,k` and consuming the exact original Machine C stopping equation. The first two base residue classes were already source-certified by Agent21; the higher-depth extensions are new within this repository investigation. **Original-source Lean 4.36.0-rc2 CI [42290261844](https://github.com/FlareZ123/bb6/actions/runs/42290261844) succeeded** on the unchanged Machine C source. Its log prints `low_full_residue_progression`, `low_all_depth_two`, `low_all_depth_four`, `low_all_depth_six`, and the generic low-gate theorem with only `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+
+
+
+### Exact residue separation and parameter-index density
+
+For a stopping index in any one of these depth-`n` progressions, the identity
+
+```text
+9m+13 = 2^(n+2)*(4r-5),  r≥3.
+```
+
+holds (with `r=R+9s`). Its odd factor `4r-5` is always congruent to `3 mod 4`. Consequently the exact exponent of 2 dividing `9m+13` is **`n+2`**. This proves that the progressions corresponding to distinct even `n` are **pairwise disjoint**, independently of any finite enumeration. Their common moduli are `2^(n+4)`, with exactly one residue per even depth `n≥2`, so their union has natural density
+
+```text
+sum_{n=2,4,6,...} 2^(-(n+4))
+  = (1/64)*(1+1/4+1/16+...)
+  = 1/48
+```
+
+among the **low stopping-index parameter values m**, assuming the usual asymptotic density over natural indices. The tail density converges geometrically; representatives themselves grow at least exponentially with n, so truncation errors vanish. This is an elementary arithmetic corollary of the source-certified progression equations. It is a density of prohibited stopping-index **parameters**, with no implication that 1/48 of all six-state machines are decided or that the remaining halting existential becomes finite. The n=2,4 cases were already excluded by Agent21; the genuinely higher-depth part contributes parameter-index density `1/768` before accounting for overlaps with unrelated earlier sieves.
+
 
 **Reproducible original-source Lean paths:**
 - [DyadicSixCone.lean](DyadicSixCone.lean): arbitrary-depth inverse-cone proof.
