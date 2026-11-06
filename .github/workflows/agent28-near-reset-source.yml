@@ -1,0 +1,62 @@
+name: Agent28 near-exponent P1 bridge original-source audit (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lean-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -e
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode and hash-check original source bridge
+        run: |
+          set -e
+          d="im-results/agent50-p1-reset-density"
+          for m in ResetBudget ResetSourceAlgebra ResetSourceBridge ResetExceptional ResetExceptionalCost ResetExceptionalGap; do
+            base64 -d "$d/$m.lean.xz.b64" | xz -d > "$d/$m.lean"
+          done
+          n="im-results/agent50-p1-reset-nearn"
+          for m in ExtendedBudget NearSourceAlgebra NearExceptionalBridge; do
+            base64 -d "$n/$m.lean.xz.b64" | xz -d > "$n/$m.lean"
+          done
+          cat "$n/NearSourceBridge.lean.xz.b64.part1" "$n/NearSourceBridge.lean.xz.b64.part2" | base64 -d | xz -d > "$n/NearSourceBridge.lean"
+          cd "$GITHUB_WORKSPACE"
+          sha256sum -c <<'HASHES'
+          cfc5104ae546ee196995dbff7bb28b2ded5ad  im-results/agent50-p1-reset-density/ResetBudget.lean
+          f145e33a241d46568e175266f6c238e20a6d286764eb015a4219911dbee7fe1b  im-results/agent50-p1-reset-density/ResetSourceAlgebra.lean
+          7c5afd006bacb644465390fe3d1b02805995ea0631f1ef848b5e17e95de814d2  im-results/agent50-p1-reset-density/ResetSourceBridge.lean
+          f48f35b2a8b3ae45fed8d3be11ac8c66c523b8e65f48f5c7a14202364f5189d3  im-results/agent50-p1-reset-density/ResetExceptional.lean
+          e759ccb86b30a97a82125c6f1efaa92e3b1c57e558cf9ee0c50641f02ca2e518  im-results/agent50-p1-reset-density/ResetExceptionalCost.lean
+          dcfbb9baafdc9c015f99ff4306f7b1369664c10f905b99c6e1c94221f6761a28  im-results/agent50-p1-reset-density/ResetExceptionalGap.lean
+          c1684cf57475cf1784349d33264c04dbda79d94c038b69257a11f91429c29409  im-results/agent50-p1-reset-nearn/ExtendedBudget.lean
+          1bd181fb86ca04ad5fcda8e2c5417aaf1b066af9755697f53a3956a08e230126  im-results/agent50-p1-reset-nearn/NearSourceAlgebra.lean
+          4f8d7c53133db99ad498d87b03f82ca0d18760eb737d4cecef0bd2a3f9d093dc  im-results/agent50-p1-reset-nearn/NearSourceBridge.lean
+          800547aedbccb8b6bdcd87cda08679800d5b74244fed076d4d3867e770c418e0  im-results/agent50-p1-reset-nearn/NearExceptionalBridge.lean
+          HASHES
+      - name: Compile unmodified original P1 definitions and bridges
+        run: |
+          set -e
+          p="im-results/agent1-p1-map"
+          f="im-results/agent47-p1-finite-inverse"
+          a="im-results/agent1-p1-quarter"
+          b="im-results/agent28-p1-word-automaton"
+          d="im-results/agent50-p1-reset-density"
+          n="im-results/agent50-p1-reset-nearn"
+          export LEAN_PATH="$p:$f:$a:$b:$d:$n"
+          for m in GParity GInverse PosEvenForm; do lean -o "$p/$m.olean" "$p/$m.lean"; done
+          lean -o "$f/P1FiniteInverse.olean" "$f/P1FiniteInverse.lean"
+          lean -o "$a/MassInverse.olean" "$a/MassInverse.lean"
+          lean -o "$a/OddConeMass.olean" "$a/OddConeMass.lean"
+          lean -o "$f/P1InverseLog.olean" "$f/P1InverseLog.lean"
+          lean -o "$a/InverseIff.olean" "$a/InverseIff.lean"
+          for m in OddWordCost OddWordSourceBridge DefectTransport OneResetTwoAdic; do lean -o "$b/$m.olean" "$b/$m.lean"; done
+          for m in ResetBudget ResetSourceAlgebra ResetSourceBridge ResetExceptional ResetExceptionalCost ResetExceptionalGap; do lean -o "$d/$m.olean" "$d/$m.lean"; done
+          for m in ExtendedBudget NearSourceAlgebra NearSourceBridge; do lean -o "$n/$m.olean" "$n/$m.lean"; done
+          lean "$n/NearExceptionalBridge.lean"
