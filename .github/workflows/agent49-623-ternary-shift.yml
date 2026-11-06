@@ -26,10 +26,9 @@ jobs:
           cd /tmp/cryptids
           git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
           test "$(git rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
-      - name: Free disk and restore mathlib cache
+      - name: Restore mathlib cache
         working-directory: /tmp/cryptids
         run: |
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
           lake exe cache get
       - name: Compile source #623 and authentic parity budget
         working-directory: /tmp/cryptids
