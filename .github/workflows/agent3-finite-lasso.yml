@@ -41,3 +41,5 @@ jobs:
             lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean"
           done
           lean im-results/agent3-finite-lasso/Agent3LassoFrontier.lean
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent3-finite-lasso/check-lasso-disjoint.cpp -o /tmp/agent3-lasso-disjoint
+          /tmp/agent3-lasso-disjoint
