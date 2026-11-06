@@ -9,7 +9,12 @@ on:
         type: boolean
         default: false
       evaluate_lasso_mass:
-        description: 'Evaluate the depth-three physical lasso frontier report'
+        description: 'Evaluate the depth-three and depth-four physical lasso frontier reports'
+        required: false
+        type: boolean
+        default: false
+      scan_holdouts:
+        description: 'Screen the 663 normalized holdouts for short exact lassos and fresh-ray entry macros'
         required: false
         type: boolean
         default: false
@@ -67,11 +72,16 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
           lean im-results/agent32-zero-prefix-global/ControlPathMassEval.lean
-      - name: Evaluate depth-three physical lasso frontier mass (explicitly requested only)
+      - name: Evaluate depth-three and depth-four physical lasso frontier mass (explicitly requested only)
         if: ${{ inputs.evaluate_lasso_mass }}
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
           lean im-results/agent32-zero-prefix-global/LassoTraceMassEval.lean
+      - name: Screen the normalized 663 holdouts (explicitly requested only)
+        if: ${{ inputs.scan_holdouts }}
+        run: |
+          node im-results/agent32-zero-prefix-global/scan-holdout-lasso.cjs --self-test
+          node im-results/agent32-zero-prefix-global/scan-holdout-lasso.cjs
 
   fresh-ray-entry-proof:
     runs-on: ubuntu-latest
