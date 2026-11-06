@@ -176,7 +176,7 @@ jobs:
           # Agent29 original-source valuation-five exact inverse and all new
           # all-time high stopping restrictions, merged without dropping
           # any prior low/high original-blank allowed filter.
-          cp ${GITHUB_WORKSPACE}/im-results/agent29-mod128-root/{RootMod128Arithmetic,RootMod128Inverse,RootMod128Source,RootMod128High,RootMod128HighSource,RootMod128ThreeArithmetic,RootMod128ThreeSource,RootMod128ThreeHigh,RootMod128FourArithmetic,RootMod128FourSource,RootMod128FourHigh,RootMod128AfterSevenHigh,JointMod128Root,JointNonredundant,JointExplicitFamilies}.lean .
-          for f in RootMod128Arithmetic RootMod128Inverse RootMod128Source RootMod128High RootMod128HighSource RootMod128ThreeArithmetic RootMod128ThreeSource RootMod128ThreeHigh RootMod128FourArithmetic RootMod128FourSource RootMod128FourHigh RootMod128AfterSevenHigh JointMod128Root JointNonredundant JointExplicitFamilies; do
+          cp ${GITHUB_WORKSPACE}/im-results/agent29-mod128-root/{RootMod128Arithmetic,RootMod128Inverse,RootMod128Source,RootMod128High,RootMod128HighSource,RootMod128ThreeArithmetic,RootMod128ThreeSource,RootMod128ThreeHigh,RootMod128FourArithmetic,RootMod128FourSource,RootMod128FourHigh,RootMod128AfterSevenHigh,JointMod128Root,JointNonredundant,JointExplicitFamilies,RootMod128Sharp}.lean .
+          for f in RootMod128Arithmetic RootMod128Inverse RootMod128Source RootMod128High RootMod128HighSource RootMod128ThreeArithmetic RootMod128ThreeSource RootMod128ThreeHigh RootMod128FourArithmetic RootMod128FourSource RootMod128FourHigh RootMod128AfterSevenHigh JointMod128Root JointNonredundant JointExplicitFamilies RootMod128Sharp; do
             lean -o "$f.olean" "$f.lean"
           done
