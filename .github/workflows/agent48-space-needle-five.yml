@@ -63,3 +63,7 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/NeedleQuarticEnumerate.olean" NeedleQuarticEnumerate.lean
           cp "$base48/NeedleQuarticEnumerateSource.lean" .
           lake env lean NeedleQuarticEnumerateSource.lean
+          cp "$base48/SuperlinearAll.lean" .
+          lake env lean -o ".lake/build/lib/lean/SuperlinearAll.olean" SuperlinearAll.lean
+          cp "$base48/SuperlinearAllSource.lean" .
+          lake env lean SuperlinearAllSource.lean
