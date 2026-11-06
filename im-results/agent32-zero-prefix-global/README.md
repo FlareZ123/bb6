@@ -1,55 +1,74 @@
-# Global rooted zero-prefix classification
+# Global raw-table frontier from the first read-zero control path
 
-**Status:** intermediate exact combinatorial census and source-oriented proof-carrying partial frontier. BB(6) remains unknown. The exact correspondence between the census and the *decided mass* emitted by the Lean partial audit has not yet been kernel-proved. Elementary finite-control mathematics, no assertion of external novelty or a newly solved historical holdout.
+**Current status:** original-source Lean-verified certified-or-open partial frontier, plus an exact combinatorial and exhaustive-computational count of **52.786874368%** of raw six-state/two-symbol tables with a sound short-halt or nonhalt certificate. This is intermediate infrastructure. BB(6) remains unresolved. Agent44 previously established the entire nonhalting portion, so no novelty claim is made for it.
 
-## Exact raw-table theorem
+## Mathematical statement
 
-Use the canonical six-state two-symbol universe with 12 entries and 25 actions per entry: one halt, 12 write-zero moves (two directions times six next states), and 12 write-one moves. The blank tape stays uniformly zero throughout any prefix of write-zero instructions, regardless of head motion. Thus it suffices to follow the deterministic read-zero transition of the current state, starting from A.
+Adopt Agent8's source formalization: a machine has 12 input rows, each with 25 possible actions (one halt, 12 write-zero ordinary moves, 12 write-one ordinary moves); an unassigned sparse input is distinct from an actual halt. Every run starts on a two-way all-zero tape in state A. Its Busy Beaver score includes the final attempted halting instruction.
 
-Stop at the first of three disjoint events: (C) a state is revisited after only write-zero instructions, implying perpetual nonhalting; (H) a halt is attempted after at most five prior moves, giving exact step score 1 through 6; (U) a first write-one instruction occurs, leaving all later evolution genuinely unknown.
+Starting at A, follow the six read-zero control rows until their first halt or first repeated state. Record two separate sufficient properties of the successful transitions: (Z) every action writes zero, preserving a physically blank tape even if directions change; (D) every action moves in one fixed direction, preserving a fresh blank ray even if the machine writes ones. If Z **or** D holds through the first repeated control state, the actual blank-start machine never halts. If Z **or** D holds until a first encountered halt, that halt is physically reached, after at most five successful moves, and has exact step score k between one and six. All other cases remain unclassified by this argument. In particular, following read-zero transitions after a write-one and a reversal is only an enumeration choice; it is **not** treated as a valid machine simulation without a separate physical source certificate.
 
-For k distinct control states reached before the first event, where 1 <= k <= 6, define P_k = product over j=1,...,k-1 of 2(6-j). Every earlier transition must write zero and move to an unseen state, giving P_k directed control-path choices. On the kth state the terminal action has 2k returning write-zero choices, one halt choice, or twelve first-write-one choices. The other 6-k read-zero rows are arbitrary; all six read-one rows are arbitrary. Therefore the numbers of full tables in each class are:
+The first-repeat and first-halt cylinders are disjoint, and no path can visit seven new states. The raw-table counts, before any state renaming or tree-normal-form quotient, are:
 
-- C_k = P_k * 2k * 25^(12-k);
-- H_k = P_k * 25^(12-k);
-- U_k = P_k * 12 * 25^(12-k).
-
-These classes are disjoint, and no path can visit a seventh unseen state. The identity 25 = 2k + 1 + 12 + 2(6-k) yields a telescoping exhaustive partition of all 25^12 tables. No symmetry-quotient, dated cryptid census, one-halt normalization, or sparse-enumerator assumption enters the argument.
-
-## Exact six-state census
-
-Counts in these columns cover all SIX read-zero entries; multiply each entry by 25^6 to obtain all TWELVE-entry tables.
-
-| Distinct states k | Cycle C | Halt H | First-one U |
+| Distinct visited control states k | Nonhalting (Z or D) | Exact short halts (Z or D) | Unclassified |
 | --- | ---: | ---: | ---: |
-| 1 | 19,531,250 | 9,765,625 | 117,187,500 |
-| 2 | 15,625,000 | 3,906,250 | 46,875,000 |
-| 3 | 7,500,000 | 1,250,000 | 15,000,000 |
-| 4 | 2,400,000 | 300,000 | 3,600,000 |
-| 5 | 480,000 | 48,000 | 576,000 |
-| 6 | 46,080 | 3,840 | 46,080 |
-| **Total** | **45,582,330** | **15,273,715** | **183,284,580** |
+| 1 | 39,062,500 | 9,765,625 | 0 |
+| 2 | 39,062,500 | 7,812,500 | 23,437,500 |
+| 3 | 20,625,000 | 3,125,000 | 41,250,000 |
+| 4 | 6,900,000 | 825,000 | 33,075,000 |
+| 5 | 1,410,000 | 138,000 | 14,580,000 |
+| 6 | 136,800 | 11,280 | 2,923,920 |
+| **Total** | **107,196,800** | **21,677,405** | **115,266,420** |
 
-Across all complete raw tables:
+Each entry counts assignments of the six read-zero input rows. Multiply by 25^6 for all completions of the six unread symbol-one rows. The exact full-table totals follow:
 
-- **Nonhalting zero cycles:** 11,128,498,535,156,250 = 18.670522368%.
-- **Halts with exact step score at most 6:** 3,728,934,326,171,875 = 6.256113664%.
-- **Decided by this zero-prefix argument:** 14,857,432,861,328,125 = 24.926636032%.
-- **First-write-one unresolved:** 44,747,211,914,062,500 = 75.073363968%.
-- **Full raw universe:** 59,604,644,775,390,625 = 25^12.
+- Nonhalters: **26,171,093,750,000,000** (43.907809280%), all previously counted by Agent44.
+- Exact score-at-most-six halters: **5,292,335,205,078,125** (8.879065088%).
+- Disjoint decided family: **31,463,428,955,078,125** (52.786874368%).
+- Unclassified in this conservative census: **28,141,215,820,312,500** (47.213125632%).
+- Whole raw universe: **25^12 = 59,604,644,775,390,625**.
 
-## Reproducibility and formal scope
+The percentage is a conservative, rigorously reasoned table classification. It does not provide a universal score upper bound or the number of rooted hard holdouts.
 
-The C++17 checker [check-all.cpp](check-all.cpp) independently enumerates all 244,140,625 possible six-digit base-25 read-zero tables. It follows the actual path from state A, records the terminal event and distinct-state count, and compares all 18 counters with the symbolic formula above. In local testing a release g++ -O3 build completed the full exhaustive check in approximately 1.1 seconds. Read-one entries never affect the first event, so their 25^6 multiplier is exact.
+## Exact counting derivation
 
-The adaptive source module [ZeroPathAudit.lean](ZeroPathAudit.lean) imports the unmodified Agent8 finite-halt and zero-mask soundness oracles, and Agent4's genuine 25-way FrontierAudit and mass-conservation theorems. Unlike a fixed-slot enumerator it follows the current fully assigned write-zero path and branches at the first unassigned read-zero slot. It uses a formal theorem proving that slot is really unassigned. A branch can be certified only by the preexisting original-machine source oracle; all other leaves are explicitly open. It proves an all-table certified-or-open theorem and conserves total mass 25^12.
+Define Q_k as the product of (6-j) for j=1,...,k-1, and Q_1=1. An earlier successful control edge must reach a previously unseen state. The first repeated state has k possible targets; the terminal halt has one outcome. All remaining 6-k read-zero rows are arbitrary.
 
-**Important boundary:** The exact census is a paper counting proof independently checked by exhaustive C++ enumeration. The Lean audit's theorem currently proves *total* mass conservation, plus soundness of whatever leaves it certifies. The stronger statement that this particular executable audit certifies exactly C+H full-table completions still requires a separate kernel-checked report evaluation or abstract coverage lemma. Until then, do not present the numeric decided fraction as a kernel-certified audit output.
+For first-repeat nonhalters, the number of read-zero assignments with k visited states is Z_k+D_k-I_k, with:
 
-This extends Agent42's previously counted A/0=0RB zero-only-cycle sector (2,605,108 of 25^5 residual read-zero rows) to the entire raw A-root universe and adds the exact early-halting sector. The underlying zero-mask soundness was already original-source proved by Agents8/44; this work provides a global census and an adaptive explicit-open partial audit. Neither result is an academically established new contribution to BB(6), so it belongs only in im-results.
+    Z_k = 2^(k-1)*Q_k * (2*k) * 25^(6-k),
+    D_k = (2*2^k*Q_k) * k * 25^(6-k),
+    I_k = (2*Q_k) * k * 25^(6-k).
 
-For source verification use [manual workflow](../../.github/workflows/agent32-zero-path-global.yml), Lean 4.36.0-rc2, and review the actual run's head SHA and standard-axiom audit. The only local surrogate check was of Lean declaration interfaces; original-source compilation is the authoritative evidence.
+Z enforces zero writes with arbitrary directions; D enforces one common direction with arbitrary writes; I is their intersection. This is exactly the union census already documented in [Agent44's dossier](../agent44-drift-closure/README.md).
 
-## Remaining BB(6) gap
+For first-halt cylinders, the additional **disjoint** family of exact short halts has:
 
-The 75.07% first-write-one sector retains all potentially complex blank-orbit behavior. This analysis does not decide those machines, establish an exact champion runtime, or close the universal bounded-score frontier. The existing original source bridges and sparse enumerator completeness still require end-to-end closure.
+    HZ_k = 2^(k-1)*Q_k * 25^(6-k),
+    HD_k = (k=1 ? 1 : 2^k*Q_k) * 25^(6-k),
+    HI_k = (k=1 ? 1 : 2*Q_k) * 25^(6-k),
+
+and per-k union HZ_k+HD_k-HI_k. At k=1 the condition on previous successful transitions is vacuous. Summing k=1,...,6 and multiplying by 25^6 gives the raw totals above. Every table has one first event, so no event class overlaps another.
+
+Both [check-all.cpp](check-all.cpp) and [check-union.cpp](check-union.cpp) independently enumerate **all 244,140,625** possible read-zero assignment vectors, following the state control graph to its first event. The latter tests Z and D directly per assignment and checks all category counts against the independent closed formulas. The source checks completed successfully in [manual CI 42291433782](https://github.com/FlareZ123/bb6/actions/runs/42291433782).
+
+## Actual source-proof-carrying frontier
+
+[ZeroPathAudit.lean](ZeroPathAudit.lean) defines the narrower global sparse frontier that follows known zero-writing actions only. Its first-free-input scanner is formally sound, and the raw-table frontier is exhausted by certified or explicitly open cases. [Source CI 42290328171](https://github.com/FlareZ123/bb6/actions/runs/42290328171) checked standard-only Lean axioms and computed the executable report:
+
+    certified 14,857,432,861,328,125
+    open      44,747,211,914,062,500.
+
+[ControlPathAudit.lean](ControlPathAudit.lean) improves this to a global original-machine partial frontier incorporating three sound preexisting proof schemas: finite halting, arbitrary-direction zero-writer closure, and fixed-direction blank-ray closure. The scanner can follow a hypothetical read-zero control path after any assigned action, but it never infers halting or nonhalting from that hypothetical path. Each certified leaf is created only through Agent8/44's source-sound Boolean oracle. All other leaves are marked open.
+
+Formally compiled theorems include scanControlPath_sound, directionalMaskOracle_sound, controlDecisionOracle_sound, globalControlPathAudit_exhaustive, and globalControlPathAudit_conserves, the last asserting certified mass plus open mass equals **exactly 25^12**. All passed full unmodified-source Lean 4.36.0-rc2 CI [42291051949](https://github.com/FlareZ123/bb6/actions/runs/42291051949), with only standard Lean axiom dependencies and no sorryAx. The globally exhaustive but **partial** Lean search tree is a real source proof object, not a search log.
+
+**Verification boundary:** This exact 52.786874368% comes from a mathematical bijective count plus exhaustive C++ computation of a guaranteed decidable subfamily. [ControlPathMassEval.lean](ControlPathMassEval.lean) separately evaluates the Lean audit's *own* exact certified/open mass, which may be larger because the sound finite halting oracle detects additional cases. Until that evaluation is inspected and its relation to the closed count audited, 52.786874368% must not be claimed as the audit report's exact output or a kernel-checked cardinality theorem. Source-level soundness and total mass conservation are already kernel-checked.
+
+## Prior art, next proof obligations, and BB(6) gap
+
+Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/README.md) already gives the 43.907809280% nonhalting union and source-checked individual certificate schemas. Agent42 independently counted a special normalized zero cycle. Agent8 constructed the 25-way source Cover contract; Agent4 proved disjoint frontier mass accounting and authentic-root integration. This investigation adds a disjoint short-halting union and a concrete fully source-checked adaptive global frontier applying existing sound oracles. It is under im-results because external novelty has not been established.
+
+The hard sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
+
+**Next:** obtain a source-audited numeric report for the combined audit, investigate finite-prefix clean-ray entry or formally checked lasso leaves that expand genuine original-machine coverage, and connect the surviving sparse search to nontrivial rooted six-state machines. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
