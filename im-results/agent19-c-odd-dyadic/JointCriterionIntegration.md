@@ -110,6 +110,10 @@ Do not use `Low124SharpBlank.lean` as a certified proof. Its attempted `decide` 
 
 The final refined joint build succeeded in CI run `42252457830` at 16:31:29 UTC. This run includes the removal of the quotient-redundant 25/4 condition, the isolated new 27/0 branch, the high-124 prior-sieve theorem, and the concrete 27/0 nonredundancy witness. Earlier successful run `42248919012` checked the preceding version with the full 25/4 and 27/0 parameter rectangles.
 
+## External BB(6) context
+
+The public Busy Beaver community tracker still lists BB(6) as unsolved. It records the June 2025 champion lower bound `S(6) > Σ(6) > 2↑↑↑5` and reports roughly 1,100 informal holdouts as of August 2026. This is background context only; none of the public lower-bound claims is used in the Lean proofs above. See [BusyBeaverWiki: BB(6)](https://wiki.bbchallenge.org/wiki/BB%286%29) and [bbchallenge's definition/status page](https://bbchallenge.org/story).
+
 ## Remaining mathematical gap
 
 The existential parameter branches in `blank_halts_iff_joint_val_six_full` remain unbounded. No upper bound on `m` or `j` has been established, and no exact BB(6) value follows. The next useful work is to derive stronger symbolic restrictions on the surviving parameter domain, identify further source cylinders that eliminate M512-admitted states, or prove a finite bound for the remaining search.
