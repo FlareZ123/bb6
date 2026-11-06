@@ -20,7 +20,8 @@ jobs:
           a="im-results/agent7-cascade-odd-fibers"
           b="im-results/agent10-cascade"
           g="im-results/agent7-fatal-density"
-          export LEAN_PATH="$a:$b:$g"
+          f="im-results/agent7-cascade-forward"
+          export LEAN_PATH="$a:$b:$f:$g"
           lean --version
           for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
             lean -o "$a/$m.olean" "$a/$m.lean"
@@ -33,3 +34,10 @@ jobs:
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
           lean "$g/ResetEnvelope.lean"
+          for m in ResetChain ResetParentStrict ManyShield FastShield; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in UniformFatalParent UniformFatalMod9 UniformRootGate UniqueEvenBand; do
+            lean -o "$f/$m.olean" "$f/$m.lean"
+          done
+          lean "$g/EvenChainGap.lean"
