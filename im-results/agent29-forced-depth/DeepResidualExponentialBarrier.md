@@ -83,6 +83,22 @@ Y = 3*v-2 >= 3*(2B-2m+1)-2
 
 This completes the paper proof.
 
+## Arithmetic classification of the entire odd-m residual-four stopping locus
+
+Combining the theorem with the verified `SecondOneInfinite.lean` tower gives a stronger **paper-level if-and-only-if** statement:
+
+For every natural `j,m,k` with `m≥1` odd, satisfying the genuine second stopping equation, and with `Y` the exact Agent15 normalized right counter, `Y=4` **if and only if** `m=1` and `j=secondOneJ(r)` for some natural `r`, where `secondOneJ(0)=10` and `secondOneJ(r+1)=16*secondOneJ(r)+42`. In this case `k=15j+40` and the exact inverse depth is `d=4r+5`.
+
+For necessity, the exponential lower bound excludes `Y=4` whenever odd `m≥3`, as its right side is at least 13. Thus `m=1`. In the stopping equation, `k=15j+40`; the affine scale `2^d(4+2)=k+2` reduces to
+
+```
+5*j+14 = 2^(d+1).
+```
+
+Reducing modulo five, `2^(d+1)%5=4`. Powers of two have multiplicative order four modulo five, so `d+1=4r+2` for some `r≥0`; nonnegativity `j≥0` forces `d≥5` and hence `d=4r+5`. Substitution gives `j=(2^(4r+6)-14)/5`. This starts at 10 and obeys `j(r+1)=16j(r)+42`. Sufficiency and source-exact inverse depth for every such `r` are already established in `SecondOneInfinite.lean` by the authentic affine normalizer, and the stopping relation is directly certified.
+
+**Evidence:** The sufficiency direction, recurrence, stopping equation and blank-root exclusion are Lean source certified. The all-odd-m **necessity** uses the above new exponential paper theorem, which still needs a complete Lean translation. Do not treat the if-and-only-if itself as kernel certified.
+
 ## Source chain, reproducibility and limits
 
 The exact second-family equation is the original Machine C stopping identity in `im-results/agent15-c-halting/`. The affine-scale equation `2^d(Y+2)=k+2` is `normalize_three_depth_invariants` in `AffineParityDepth.lean`, imported by the genuine-root theorem `second_halt_deep_sector` in `SecondDeepSector.lean`. The factor-three lemma and real residual `Y%12=4` are `ModThree.lean` and `DeepSecondFinal.lean`, respectively; both were compiled successfully before the later failure in original-source CI 42194394835. This new exponential theorem itself has **not yet** been represented as a kernel-checked Lean theorem.
