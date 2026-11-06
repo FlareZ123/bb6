@@ -36,3 +36,4 @@ jobs:
           lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
           lean -o im-results/agent12-marked-return/MarkedHaltBranch.olean im-results/agent12-marked-return/MarkedHaltBranch.lean
           lean im-results/agent12-marked-return/MarkedSourceAudit.lean
+          lean im-results/agent12-marked-return/MarkedReadOneLocalAudit.lean
