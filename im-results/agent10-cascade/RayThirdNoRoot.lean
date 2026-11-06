@@ -123,6 +123,39 @@ theorem offray_third_gate_dead_auto (n D h w d g:Nat) (hn:20≤n)
   exact offray_third_gate_dead n D h w d g hn hsector hm hl hw
     hdiv wdiv hz hg hgmod
 
+
+/-- Full blank-root exclusion without assuming any independently supplied
+    second odd parent. A hypothetical root path constructs that parent
+    by the source-exact inverse iff, and four forced even returns
+    exclude it in the second dyadic gap. -/
+theorem offray_fork_dead_both_valuation_one (n D h w:Nat) (hn:20≤n)
+  (hsector:n%6=4 ∨ n%6=5)
+  (hm:2048*D+16384*n+16384≤2^n)
+  (hl:9*h+8*D+9*n+7=14*2^n)
+  (hw:2*h=2*2^n+w+(n-2))
+  (hdiv:(2*h+5)%27≠0)
+  (wdiv:(2*w+5)%27≠0):
+  ¬ReachC (2,0) (h,0):=by
+  have hm0:32*D+64*n+128≤2^n:=by omega
+  intro hr
+  have hrw:(ReachC (2,0) (w,0)):=
+    (offray_fork_root_iff_even n D h w (by omega) hm0 hl hw hdiv).mp hr
+  obtain ⟨hb,hnear,hodd,hgap⟩:=
+    CascadeRayOddStrip.ray_offfork_geometry n D h w (by omega) hm0 hl hw
+  have hu:8*w+32<9*2^n:=by omega
+  have hroot:∃(q k d:Nat), ReachC (2,0) (q,0) ∧
+      d%2=1 ∧ (6*2^k+1≤2*d ∧ 2*d≤8*2^k-1) ∧
+      2*w+5=9*d ∧ 4*d=8*2^k+q+k+5:=
+    (CascadeRayGapTone.narrow_gap_root_iff_tone n w (by omega)
+      hgap.1 hu wdiv).mp hrw
+  obtain ⟨q,k,d,hq,hd,hband,hz,heq⟩:=hroot
+  have hk:k=n-4:=third_scale n D h w d k hn hm hl hw hz hband
+  have heqg:4*d=8*2^(n-4)+q+(n-4)+5:=by rw[hk] at heq;omega
+  exact (offray_third_gate_dead_auto n D h w d q hn hsector
+    hm hl hw hdiv wdiv hz heqg) hr
+
+#print axioms offray_fork_dead_both_valuation_one
+
 #print axioms offray_third_gate_dead_auto
 
 #print axioms offray_third_gate_dead
