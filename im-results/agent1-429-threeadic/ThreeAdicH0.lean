@@ -98,7 +98,7 @@ private theorem H0_shift (e c : Nat) (hc : 2≤c) :
     have hm : (8*2^(c+p))%M=(8*2^c)%M := by
       calc
        _ = (8%M*(2^(c+p)%M))%M := Nat.mul_mod _ _ _
-       _ = (8%M*(2^c)%M))%M := by rw [hpc]
+       _ = (8%M*(2^c%M))%M := by rw [hpc]
        _ = _ := (Nat.mul_mod _ _ _).symm
     calc
       _ = ((8*2^(c+p))%M+c%M)%M := Nat.add_mod _ _ _
