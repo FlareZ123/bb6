@@ -38,7 +38,7 @@ The following universal theorems exclude genuinely reachable Machine C section p
 
 Each chain ends at a section pair with an odd right counter at least five and forbidden coordinate sum 1 or 2 modulo 4, contradicting the authentic blank image invariant. Every source transformation is a prior, independently certified true-blank reachability **equivalence**, rather than a heuristic simulation or an affine analogy.
 
-Arithmetic and source proofs: [RootMod128ThreeArithmetic.lean](RootMod128ThreeArithmetic.lean), [RootMod128ThreeSource.lean](RootMod128ThreeSource.lean), [RootMod128FourArithmetic.lean](RootMod128FourArithmetic.lean), [RootMod128FourSource.lean](RootMod128FourSource.lean). The congruences in the three- and four-link rows already force `y≥58` and `y≥106` respectively. [RootMod128Sharp.lean](RootMod128Sharp.lean) records the corresponding size-guard-free corollaries, pending separate source CI at the time this dossier was written.
+Arithmetic and source proofs: [RootMod128ThreeArithmetic.lean](RootMod128ThreeArithmetic.lean), [RootMod128ThreeSource.lean](RootMod128ThreeSource.lean), [RootMod128FourArithmetic.lean](RootMod128FourArithmetic.lean), [RootMod128FourSource.lean](RootMod128FourSource.lean). The congruences in the three- and four-link rows already force `y≥58` and `y≥106` respectively. [RootMod128Sharp.lean](RootMod128Sharp.lean) proves the size-guard-free congruence-only corollaries `blank_no_three_mod_only` and `blank_no_four_mod_only`, certified against the unchanged original section in [CI 42154109552](https://github.com/FlareZ123/bb6/actions/runs/42154109552), ordinary Lean axioms only.
 
 ## Consequences for the exact high halting locus
 
