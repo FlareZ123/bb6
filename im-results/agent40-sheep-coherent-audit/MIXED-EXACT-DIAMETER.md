@@ -92,6 +92,22 @@ Shorter paths were already excluded by their dyadic coordinate. Therefore \(d_{G
 
 For \(p=1\), the graph has \(q>1\) distinct even vertices, so its diameter is at least one. Agent 22's original zero-hub/coherent construction gives the matching one-step upper bound.
 
+## Strengthening to all legal first-even return branches
+
+The published Sheep section relation has exactly one other **nonterminal** branch: if \(x=3\cdot2^a\) (\(a\ge0\)), then \(F(x)=x+a+3\). The section halts on the remaining odd-part-one powers. For even-section inputs \(a\ge1\). The only exceptional even input of valuation \(a=1\) is \(x=6\), whose first section successor is \(F(6)=10\), already even. Thus its full first-even return is **exactly \(6\to10\)**. Standalone [SheepCorridor.lean](SheepCorridor.lean) additionally checks `special_at_one: specialFirst 1 = 10` (no axioms) and `ten_not_dyadic_zero: ∀ p≥2, 10%2^p ≠0` (axioms `[propext]`). These are source-formula-compatible arithmetic certificates, with no claimed import of the original Cryptids Step relation.
+
+Let \(H_m\) be the **unrestricted synthetic even-return quotient graph** with every genuinely legal nonhalting first-even return (both generic and odd-part-three branches) as an edge. We claim the same exact diameter (1), and the same sharp **unrestricted coherent free-start** maximum path length, hold in \(H_m\).
+
+**Proof.** Since the generic graph \(G_m\) is a subgraph, the established generic diameter/coherent upper bounds apply unchanged. We need only retain the lower witness \(r,s\) from the previous sections when extra exceptional edges are permitted.
+
+In all constructed lower witnesses with \(p\ge2\), the initial dyadic coordinate is \(r_2=-2\bmod2^p\), and the target's dyadic coordinate is \(s_2=0\bmod2^p\). At every stage \(i<k=\lfloor p/2\rfloor\), the forced-prefix congruence is \(x_i+2\equiv0\bmod2^{p-2i}\), with exponent \(p-2i\ge2\). Such an \(x_i\) has exact 2-adic valuation **one**, so a special branch could only arise at \(x_i=6\). But \(6+2=8\) cannot be divisible by \(16\). Consequently the **first \(k-1\) outgoing edges** must remain generic (the required exponent is at least 4 for these edges), and the entire previous forced affine calculation still applies.
+
+At the possible **last \(k\)th edge**, an exceptional source \(x_{k-1}=6\) would return \(10\). Since \(10\not\equiv0\bmod2^p\) for every \(p\ge2\), that edge cannot reach the selected lower-bound target \(s\). All genuine remaining final branches obey the generic formula and the previously proved odd-\(q\) obstruction. Hence the same source and target remain distance at least \(k+1\) for \(q>1\). For \(q=1\), all paths with fewer than \(k\) edges were already excluded by the forced dyadic nonzero corridor, so the exact lower bound \(k\) survives too.
+
+For \(p=1\), the graph has one even residue if \(q=1\), and \(q>1\) distinct even residues otherwise, forcing respective lower bounds 0 and 1. The generic upper constructions attain both. Thus (1) holds for the **full legal first-even quotient** and for its coherent free-start counterpart. QED.
+
+**Verification scope:** [mixed_diameter_certificate.py](mixed_diameter_certificate.py) fully enumerates the *generic* finite graphs; a separate bounded exploratory audit added the exceptional edges from all sources \(3\cdot2^a\) for \(1\le a\le300\) on representative small moduli, finding no diameter change. The **all-index theorem above is mathematical**, using an exhaustive exceptional-source *classification by valuation* rather than the finite audit. This full-branch corollary still makes no assertion that any arbitrary chosen start is actually reached from the true blank section \(10\).
+
 ## Stronger result: the entire \(-2\) fiber consists of diameter sources
 
 The lower-witness construction above can be made **uniform in its source's odd residue**, producing an exact eccentricity classification rather than one example.
@@ -113,22 +129,6 @@ For \(q>1\) and even \(p=2k\), the final block's odd residue is still given by (
 Both corresponding upper bounds apply from every vertex, so each source in the entire \(-2\) fiber has maximal eccentricity. Since there are \(q\) sources among \(2^{p-1}q\) even residues, their fraction is \(2^{1-p}\). Every coherent path is also a synthetic path, while established coherent upper constructions attain the same universal bound. QED.
 
 The [finite complete graph regression](mixed_diameter_certificate.py) can additionally verify the corollary for every \(-2\)-fiber source at all tested moduli; the original standalone finite implementation separately checked 409 such sources across its 51 complete graphs. The universal corollary follows from the displayed prime-residue argument, not those tests.
-
-## Strengthening to all legal first-even return branches
-
-The published Sheep section relation has exactly one other **nonterminal** branch: if \(x=3\cdot2^a\) (\(a\ge0\)), then \(F(x)=x+a+3\). The section halts on the remaining odd-part-one powers. For even-section inputs \(a\ge1\). The only exceptional even input of valuation \(a=1\) is \(x=6\), whose first section successor is \(F(6)=10\), already even. Thus its full first-even return is **exactly \(6\to10\)**. Standalone [SheepCorridor.lean](SheepCorridor.lean) additionally checks `special_at_one: specialFirst 1 = 10` (no axioms) and `ten_not_dyadic_zero: ∀ p≥2, 10%2^p ≠0` (axioms `[propext]`). These are source-formula-compatible arithmetic certificates, with no claimed import of the original Cryptids Step relation.
-
-Let \(H_m\) be the **unrestricted synthetic even-return quotient graph** with every genuinely legal nonhalting first-even return (both generic and odd-part-three branches) as an edge. We claim the same exact diameter (1), and the same sharp **unrestricted coherent free-start** maximum path length, hold in \(H_m\).
-
-**Proof.** Since the generic graph \(G_m\) is a subgraph, the established generic diameter/coherent upper bounds apply unchanged. We need only retain the lower witness \(r,s\) from the previous sections when extra exceptional edges are permitted.
-
-In all constructed lower witnesses with \(p\ge2\), the initial dyadic coordinate is \(r_2=-2\bmod2^p\), and the target's dyadic coordinate is \(s_2=0\bmod2^p\). At every stage \(i<k=\lfloor p/2\rfloor\), the forced-prefix congruence is \(x_i+2\equiv0\bmod2^{p-2i}\), with exponent \(p-2i\ge2\). Such an \(x_i\) has exact 2-adic valuation **one**, so a special branch could only arise at \(x_i=6\). But \(6+2=8\) cannot be divisible by \(16\). Consequently the **first \(k-1\) outgoing edges** must remain generic (the required exponent is at least 4 for these edges), and the entire previous forced affine calculation still applies.
-
-At the possible **last \(k\)th edge**, an exceptional source \(x_{k-1}=6\) would return \(10\). Since \(10\not\equiv0\bmod2^p\) for every \(p\ge2\), that edge cannot reach the selected lower-bound target \(s\). All genuine remaining final branches obey the generic formula and the previously proved odd-\(q\) obstruction. Hence the same source and target remain distance at least \(k+1\) for \(q>1\). For \(q=1\), all paths with fewer than \(k\) edges were already excluded by the forced dyadic nonzero corridor, so the exact lower bound \(k\) survives too.
-
-For \(p=1\), the graph has one even residue if \(q=1\), and \(q>1\) distinct even residues otherwise, forcing respective lower bounds 0 and 1. The generic upper constructions attain both. Thus (1) holds for the **full legal first-even quotient** and for its coherent free-start counterpart. QED.
-
-**Verification scope:** [mixed_diameter_certificate.py](mixed_diameter_certificate.py) fully enumerates the *generic* finite graphs; a separate bounded exploratory audit added the exceptional edges from all sources \(3\cdot2^a\) for \(1\le a\le300\) on representative small moduli, finding no diameter change. The **all-index theorem above is mathematical**, using an exhaustive exceptional-source *classification by valuation* rather than the finite audit. This full-branch corollary still makes no assertion that any arbitrary chosen start is actually reached from the true blank section \(10\).
 
 ## Exact equality, coherent version, and proof status
 
