@@ -139,3 +139,10 @@ jobs:
           lean im-results/agent9-p1-q33/DensityCount2820.lean | tee -a /tmp/agent9-q2812.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-q2812.log; then exit 1; fi
           grep -F 'certified_density_2820' /tmp/agent9-q2812.log
+      - name: Check general cost-weighted dyadic precision step in Lean kernel
+        run: |
+          set -euo pipefail
+          lean im-results/agent9-p1-q33/UniformPrecisionStep.lean | tee /tmp/agent9-general-precision.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-general-precision.log; then exit 1; fi
+          grep -F "BB6.Precision.precision_step' depends on axioms: [propext, Quot.sound]" /tmp/agent9-general-precision.log
+          grep -F "BB6.Precision.depth_lt_K' depends on axioms: [propext, Quot.sound]" /tmp/agent9-general-precision.log
