@@ -58,6 +58,43 @@ theorem forbidden_mod_five (h : Nat) : (1+2*4^h)%5 ≠ 1 := by
   · rw [Nat.add_mod, Nat.mul_mod, h4]
     decide
 
+/-! Divisibility propagation at an arbitrary, unbounded dyadic precision. -/
+theorem affine_divisor_drop (b x y : Nat)
+    (hx : 2^(b+2) ∣ x+2)
+    (hxy : 4*(y+2) = 5*(x+2)) : 2^b ∣ y+2 := by
+  obtain ⟨t,ht⟩ := hx
+  have hp : 2^(b+2) = 4*2^b := by
+    rw [Nat.pow_add]
+    simp only [show (2:Nat)^2=4 by decide]
+    ac_rfl
+  have heq : 4*(y+2) = 4*(5*2^b*t) := by
+    calc
+      4*(y+2) = 5*(x+2) := hxy
+      _ = 5*(2^(b+2)*t) := by rw [ht]
+      _ = 4*(5*2^b*t) := by rw [hp]; ac_rfl
+  have hy : y+2 = 5*2^b*t := Nat.mul_left_cancel (by decide : 0<4) heq
+  refine ⟨5*t, ?_⟩
+  simpa only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using hy
+
+theorem forced_unbounded_drop (x b : Nat)
+    (hb : 1 ≤ b) (hx : 2^(b+2) ∣ x+2) (hlarge : 14 ≤ x) :
+    ∃ w y : Nat, 1≤w ∧ x=8*w+6 ∧
+        y=genericFirst 1 (4*w+3) ∧
+        y%2=0 ∧ 2^b ∣ y+2 := by
+  have hdiv8 : 8 ∣ x+2 := by
+    have hd : 8 ∣ 2^(b+2) := by
+      simpa using (Nat.pow_dvd_pow 2 (by omega : 3 ≤ b+2))
+    exact Nat.dvd_trans hd hx
+  have hm : x%8=6 := by
+    have hm0 : (x+2)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
+    omega
+  obtain ⟨w,hw,hxw,he,hcon⟩ := forced_from_residue_eight x hm hlarge
+  refine ⟨w,genericFirst 1 (4*w+3),hw,hxw,rfl,he,?_⟩
+  exact affine_divisor_drop b x (genericFirst 1 (4*w+3)) hx hcon
+
+#print axioms affine_divisor_drop
+#print axioms forced_unbounded_drop
+
 #print axioms forced_first
 #print axioms forced_from_residue_eight
 #print axioms forbidden_mod_five
