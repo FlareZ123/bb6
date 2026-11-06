@@ -32,7 +32,7 @@ theorem even_burst_affine_return (n W : Nat)
   have hn_eq : n=(n-1)+1 := by omega
   have hexists : ∃ a b, BB429Burst.firstRun n (0,W)=some (a,b) := by
     rw [hn_eq, BB429Burst.prefix_exists_iff 0 W (n-1)]
-    exact ⟨by omega,hcond⟩
+    exact hcond
   rcases hexists with ⟨a,b,hp⟩
   have hprefix : BB429.run n (0,W)=some (a,b) :=
     BB429DyadicStarts.first_prefix_is_source (0,W) (a,b) n hp
