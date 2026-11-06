@@ -89,4 +89,5 @@ jobs:
           lean -o "$b/RayForkStripSelect.olean" "$b/RayForkStripSelect.lean"
           lean -o "$b/RayPacketHigh.olean" "$b/RayPacketHigh.lean"
           lean -o "$b/RayGapTone.olean" "$b/RayGapTone.lean"
-          echo "Agent 10 source-verified odd-fork strip, high packet and second-level gap iff."
+          lean -o "$b/RayTwoGateExact.olean" "$b/RayTwoGateExact.lean"
+          echo "Agent 10 source-verified uniform strip and two-generation exact root gates."
