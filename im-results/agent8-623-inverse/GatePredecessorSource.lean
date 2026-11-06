@@ -131,11 +131,15 @@ theorem positive_gap_residue_exponent_unique
   have hdiv1 : 3^(A+1) ∣ 3^(B+1) := by
     refine ⟨3^(B-A), ?_⟩
     have hpow : B+1 = (A+1)+(B-A) := by omega
-    rw [hpow, Nat.pow_add]
+    calc
+      3^(B+1) = 3^((A+1)+(B-A)) := congrArg (fun n : Nat => 3^n) hpow
+      _ = 3^(A+1) * 3^(B-A) := by rw [Nat.pow_add]
   have hdiv2 : 3^(A+1) ∣ 3^B := by
     refine ⟨3^(B-A-1), ?_⟩
     have hpow : B = (A+1)+(B-A-1) := by omega
-    rw [hpow, Nat.pow_add]
+    calc
+      3^B = 3^((A+1)+(B-A-1)) := congrArg (fun n : Nat => 3^n) hpow
+      _ = 3^(A+1) * 3^(B-A-1) := by rw [Nat.pow_add]
   have hmod : N % 3^(A+1) = (N % 3^(B+1)) % 3^(A+1) := by
     rw [Nat.mod_mod_of_dvd N hdiv1]
   rw [hB, Nat.mod_eq_zero_of_dvd hdiv2] at hmod
