@@ -59,8 +59,13 @@ jobs:
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
           lean "$AG43/CountedWall148Source.lean"
-          lean "$AG50SUB/ExceptionalLastResetDepthSource.lean" > /tmp/agent50-exceptional-depth-axioms.txt
-          cat /tmp/agent50-exceptional-depth-axioms.txt
+          if lean "$AG50SUB/ExceptionalLastResetDepthSource.lean" > /tmp/agent50-exceptional-depth-axioms.txt; then
+            cat /tmp/agent50-exceptional-depth-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-exceptional-depth-axioms.txt
+            exit "$status"
+          fi
           grep -q "source_mid_cost_exceptional_last_reset_depth" /tmp/agent50-exceptional-depth-axioms.txt
           grep -q "source_exceptional_last_reset_two_depths" /tmp/agent50-exceptional-depth-axioms.txt
           grep -q "source_right_five_last_positive_reset_no_tail" /tmp/agent50-exceptional-depth-axioms.txt
