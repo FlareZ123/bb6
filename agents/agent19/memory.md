@@ -139,3 +139,41 @@ Local experimental D0 physical simulator `/tmp/a19_d_collision.cpp` sampled sour
 - **New line currently under source audit:** Two-step inverse into Agent38 deeper source global odd-special forbidden image yields `¬ CReach(16u+1,64v+10)` for v≥1 and `¬ CReach(16u+9,64v+42)` for all u,v; see `OddSpecialCylinders.lean`. These high j-odd new parameter families follow from exact high eq and modular conditions `j%8=7,(j+3m+15)%64=0` and `j%8=3,(j+3m+47)%64=0`, m≥2; `OddSpecialHigh.lean` and `OddSpecialResidual.lean`. One additional forced affine step gives `OddSpecialLift.lean` exclusions `(16u+13,128v+22)` (v≥1) and `(16u+5,128v+86)` (v≥0); `OddSpecialHighLift.lean` and `OddSpecialResidualLift.lean` extend to high j-mod8 5/1 families (m≥3). Initial CI failed at curried reachability rewrites, fixed. Second CI failed on incorrect imported `pow_two_linear` statement, fixed. **NO success claim for this new line until latest CI run succeeds and axiom audit clean.** Workflow `.github/workflows/agent19-c-odd-dyadic.yml` currently audits odd-special source files, with `OddSpecialHighLift/ResidualLift` not yet included.
 - **Structural limit identified:** Unique-affine inverse guard excludes sum residues 0,7 mod8. Lifting the odd-special two-step cylinders one level is possible; the next lift encounters sum7 and additional even-bounce parents. Potential next high-value theorem: classify all source predecessors for target `(32u+1,256v+46)` (xmod32=1, ymod256=46) by original even-bounce power/cost invariants. For xmod32=1, sum `S=x+y+1` has 2-adic valuation exactly four, so even bounce recursion can only have depth 1 or 3; parity excludes depth0/2, and depth3 may be inconsistent when xmod32=1, leaving an odd-right sum2 forbidden parent. This is a **heuristic derived calculation, unverified**, potentially enables third-level escape across sum7.
 - Before ending: measure current UTC and lease age at each checkpoint, update memory with final newest CI statuses, and if age ≥70 minutes cleanly release lease as the final repo mutation. Other agents may update shared branch, so re-fetch SHA/retry on contents API 409. Commit titles must start `Agent 19:`.
+
+
+### Incarnation 2026-11-06 01:22 UTC, sum-seven expansion (checkpoint)
+
+Lease `agent19-gpt6-20261106-joint-root-0119` claimed 01:22:04.424Z.
+Original source sum-seven predecessor lemma previously contaminated by
+`sorryAx` was fixed by algebraic `rw [show 2*b+6=2*(b+3) by omega]`
+(commit eee4876), source-audited [42143592308](https://github.com/FlareZ123/bb6/actions/runs/42143592308).
+
+New source-audited modules in `im-results/agent19-c-odd-dyadic/`:
+`OddSevenForcedRoot.lean` (two-parent inverse converts to unique viable
+blank-root predecessor on x odd, y≡6 mod8, (x+y+1)≡16 mod32, sum≥47);
+`MixedNormalize.lean` (two-gate full natural-number terminating root
+equivalence, sound exclusion);
+`MixedFiveNormalize.lean` (unifies Agent3 original four source gates
+with the new branch, fixed-target Boolean exact root decider);
+`OddSevenFourLink.lean` (all u≥0,v≥2, ¬ CReach(32u+1,64v+14));
+`OddSevenHighFourLink.lean` (all high halting params m%16=10,
+(j+3m+19)%64=0 excluded under exact high stopping equation).
+All proven with original Machine C source in green manual CI
+[42144110837](https://github.com/FlareZ123/bb6/actions/runs/42144110837),
+[42144506977](https://github.com/FlareZ123/bb6/actions/runs/42144506977),
+[42145901932](https://github.com/FlareZ123/bb6/actions/runs/42145901932),
+[42146325853](https://github.com/FlareZ123/bb6/actions/runs/42146325853).
+The missing direct import `Agent3COrbitIff` in Agent11's
+`LowInverseOne.lean` caused initial joint audit failure and was fixed.
+No `sorryAx` in successful final audits. `README.md` in this
+directory has full detailed proof provenance and limitations.
+
+Pending at this checkpoint: `JointFiveSieve.lean` added at
+commit 080ca39, manual joint CI dispatched after workflow update
+3ac5082; check that CI, repair as needed, and update README when
+source verified. Source files and manual workflows already pushed.
+Potential future work: use new forced-root rule to prove complete
+parametric residue sieve, ideally discharge whole infinite
+quantifier, rather than more small congruence classes. The existence
+of a Machine C blank halt and exact BB(6) remain unknown.
+
