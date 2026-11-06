@@ -32,6 +32,49 @@ theorem lift_feeder_bounds (K B qbase side c : Nat)
       (c*qbase+4) r c S hroot hsmall hnodiv hclosed m z hpath'
   exact hh
 
+/-- Predicate-based form of the arbitrary-cutoff source cylinder.
+    This accepts any inductive or computationally represented finite invariant,
+    so large certificates need not be encoded as linear List membership. -/
+theorem universal_blank_critical_cylinder_param_K_of_predicates
+    (K B qbase : Nat) (hqbase : 29≤qbase) (hB:B+K+3≤15*qbase)
+    (S0 S1 : Nat → Nat → Prop)
+    (hroot0 : S0 0 (12*qbase+4))
+    (hroot1 : S1 0 (10*qbase+4))
+    (hclosed0 : ∀ m z t v zp, S0 m z →
+        z=2^t*v → 2*zp+1=16*qbase+8+m+t+v → S0 (m+t+1) zp)
+    (hclosed1 : ∀ m z t v zp, S1 m z →
+        z=2^t*v → 2*zp+1=16*qbase+9+m+t+v → S1 (m+t+1) zp)
+    (hsmall0 : ∀ m z, S0 m z → m≤B)
+    (hsmall1 : ∀ m z, S1 m z → m≤B)
+    (hnodiv0 : ∀ m z, S0 m z → ¬2^K∣z)
+    (hnodiv1 : ∀ m z, S1 m z → ¬2^K∣z)
+    (r : Nat) :
+    ¬ BB6.Agent1.Reach 2
+      (14*2^(16*(qbase+2^(K+B)*r)+2) -
+       2*(16*(qbase+2^(K+B)*r)+2)-10) := by
+  let q := qbase+2^(K+B)*r
+  have hq : 29≤q := by dsimp [q]; omega
+  have hs0 : ∀ m z, ShadowReach (16*q+8) (12*q+4) m z → m≤B := by
+    intro m z hp
+    exact (lift_feeder_bounds K B qbase 8 12 S0
+      hroot0 hsmall0 hnodiv0 hclosed0 r m z hp).1
+  have hs1 : ∀ m z, ShadowReach (16*q+9) (10*q+4) m z → m≤B := by
+    intro m z hp
+    exact (lift_feeder_bounds K B qbase 9 10 S1
+      hroot1 hsmall1 hnodiv1 hclosed1 r m z hp).1
+  have hn0 : ∀ m z, ShadowReach (16*q+8) (12*q+4) m z → ¬2^K∣z := by
+    intro m z hp
+    exact (lift_feeder_bounds K B qbase 8 12 S0
+      hroot0 hsmall0 hnodiv0 hclosed0 r m z hp).2
+  have hn1 : ∀ m z, ShadowReach (16*q+9) (10*q+4) m z → ¬2^K∣z := by
+    intro m z hp
+    exact (lift_feeder_bounds K B qbase 9 10 S1
+      hroot1 hsmall1 hnodiv1 hclosed1 r m z hp).2
+  exact BB6.Agent9GenericReachParamK.critical_unreachable_of_reach_param_K
+    K B q hq (by dsimp [q]; omega) hs0 hs1 hn0 hn1
+
+#print axioms universal_blank_critical_cylinder_param_K_of_predicates
+
 /-- UNIVERSAL ORIGINAL-SOURCE P1 gateway cylinder.
     Any authentic finite base shadow certificates of cost at most 41,
     avoiding 1024 divisibility, automatically exclude all parameter
