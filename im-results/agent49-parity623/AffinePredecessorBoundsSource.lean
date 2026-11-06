@@ -106,7 +106,7 @@ private theorem extractFirstShift (a d t x y : Nat)
             simpa [hbase] using hshift
           simp [liftFirstState] at hval
           rcases hval with ⟨hx,hy⟩
-          exact ⟨x0,y0,hbase,hx,hy⟩
+          exact ⟨x0,y0,rfl,hx,hy⟩
 
 private theorem extractRightShift (a d t x y : Nat)
     (hshift : highLevelNext (.D a (d+2*t)) =
@@ -125,7 +125,7 @@ private theorem extractRightShift (a d t x y : Nat)
             simpa [hbase] using hshift
           simp [liftFirstState] at hval
           injection hval with hx hy
-          exact ⟨x0,y0,hbase,hx,hy⟩
+          exact ⟨x0,y0,rfl,hx,hy⟩
 
 /-- A successful far-left odd predecessor has bounded d and bounded a
 in terms of the target (x,y). -/
