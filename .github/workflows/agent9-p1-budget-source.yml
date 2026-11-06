@@ -120,3 +120,12 @@ jobs:
           lean im-results/agent9-p1-q33/Q33AdaptiveFinal.lean | tee -a /tmp/agent9-adaptive-q33.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-adaptive-q33.log; then exit 1; fi
           grep -F 'blank_no_critical_530_plus_2pow44' /tmp/agent9-adaptive-q33.log
+      - name: Audit twelve previously uncertified shallow P1 q-residue cylinders
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
+          python im-results/agent9-p1-q33/generate_shallow_12.py
+          lean im-results/agent9-p1-q33/Q12Shallow.lean | tee /tmp/agent9-q12-shallow.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-q12-shallow.log; then exit 1; fi
+          grep -F 'no_critical_q109' /tmp/agent9-q12-shallow.log
+          grep -F 'no_critical_q225' /tmp/agent9-q12-shallow.log
