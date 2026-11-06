@@ -207,3 +207,11 @@ jobs:
           done
           if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-generalization.log; then exit 1; fi
           grep -F 'critical_unreachable_of_reach_budget' /tmp/agent9-budget-generalization.log
+
+      - name: Authenticate uniform fixed-shadow-to-P1 theorem at arbitrary budget
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
+          lean -o im-results/agent9-p1-q33/UniformUniversalBudget.olean im-results/agent9-p1-q33/UniformUniversalBudget.lean | tee /tmp/agent9-universal-budget.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-universal-budget.log; then exit 1; fi
+          grep -F 'universal_blank_critical_cylinder_budget' /tmp/agent9-universal-budget.log
