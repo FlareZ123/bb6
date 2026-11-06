@@ -58,6 +58,67 @@ theorem firstUnknown9 :
 theorem firstUnknown10 :
     firstUnknownPhysical prefix10 25 finiteBlank = some (⟨4, by decide⟩, true) := by decide
 
+
+/-- Each entry below is the *first* raw query of the next missing
+    state-symbol slot: the shorter scanner interval finds no hole, while
+    adding the specified final raw query encounters the exact slot.
+    Both claims are independently kernel-computed on physical tapes. -/
+theorem firstInputAt0 :
+    firstUnknownPhysical prefix0 1 finiteBlank =
+      some (⟨0, by decide⟩, false) := by decide
+theorem firstInputNoEarlier0 :
+    firstUnknownPhysical prefix0 0 finiteBlank = none := by decide
+theorem firstInputAt1 :
+    firstUnknownPhysical prefix1 2 finiteBlank =
+      some (⟨1, by decide⟩, false) := by decide
+theorem firstInputNoEarlier1 :
+    firstUnknownPhysical prefix1 1 finiteBlank = none := by decide
+theorem firstInputAt2 :
+    firstUnknownPhysical prefix2 3 finiteBlank =
+      some (⟨2, by decide⟩, false) := by decide
+theorem firstInputNoEarlier2 :
+    firstUnknownPhysical prefix2 2 finiteBlank = none := by decide
+theorem firstInputAt3 :
+    firstUnknownPhysical prefix3 4 finiteBlank =
+      some (⟨3, by decide⟩, false) := by decide
+theorem firstInputNoEarlier3 :
+    firstUnknownPhysical prefix3 3 finiteBlank = none := by decide
+theorem firstInputAt4 :
+    firstUnknownPhysical prefix4 5 finiteBlank =
+      some (⟨4, by decide⟩, false) := by decide
+theorem firstInputNoEarlier4 :
+    firstUnknownPhysical prefix4 4 finiteBlank = none := by decide
+theorem firstInputAt5 :
+    firstUnknownPhysical prefix5 6 finiteBlank =
+      some (⟨0, by decide⟩, true) := by decide
+theorem firstInputNoEarlier5 :
+    firstUnknownPhysical prefix5 5 finiteBlank = none := by decide
+theorem firstInputAt6 :
+    firstUnknownPhysical prefix6 7 finiteBlank =
+      some (⟨5, by decide⟩, true) := by decide
+theorem firstInputNoEarlier6 :
+    firstUnknownPhysical prefix6 6 finiteBlank = none := by decide
+theorem firstInputAt7 :
+    firstUnknownPhysical prefix7 9 finiteBlank =
+      some (⟨1, by decide⟩, true) := by decide
+theorem firstInputNoEarlier7 :
+    firstUnknownPhysical prefix7 8 finiteBlank = none := by decide
+theorem firstInputAt8 :
+    firstUnknownPhysical prefix8 12 finiteBlank =
+      some (⟨2, by decide⟩, true) := by decide
+theorem firstInputNoEarlier8 :
+    firstUnknownPhysical prefix8 11 finiteBlank = none := by decide
+theorem firstInputAt9 :
+    firstUnknownPhysical prefix9 18 finiteBlank =
+      some (⟨5, by decide⟩, false) := by decide
+theorem firstInputNoEarlier9 :
+    firstUnknownPhysical prefix9 17 finiteBlank = none := by decide
+theorem firstInputAt10 :
+    firstUnknownPhysical prefix10 20 finiteBlank =
+      some (⟨4, by decide⟩, true) := by decide
+theorem firstInputNoEarlier10 :
+    firstUnknownPhysical prefix10 19 finiteBlank = none := by decide
+
 /-- The machine's first 25 raw queries never consult the last unassigned
     D/1 halting row. This bounded statement does not imply nonhalting. -/
 theorem no_hole_within_25 :
@@ -106,6 +167,8 @@ theorem prefix5_genuine_read_one_branch (m : Machine)
 theorem prefix11_oracle_open :
     lassoDecisionOracle prefix11 6 6 12 2 4 = false := by decide
 
+#print axioms firstInputAt10
+#print axioms firstInputNoEarlier10
 #print axioms firstUnknown5
 #print axioms firstUnknown10
 #print axioms no_hole_within_25
