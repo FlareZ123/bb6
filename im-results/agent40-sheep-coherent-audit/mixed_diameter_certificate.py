@@ -119,6 +119,7 @@ def distances(outgoing: dict[int,set[int]], start: int) -> dict[int,int]:
 def verify() -> None:
     total_vertices = 0
     total_moduli = 0
+    total_extremal_sources = 0
     for p in range(1,9):
         for q in (1,3,5,7,9,11,15,21):
             if q*2**(p-1) > 400:
@@ -130,14 +131,21 @@ def verify() -> None:
                 r,s = witness
                 observed = distances(graph,r)[s]
                 assert observed == expected, (p,q,r,s,observed)
-            diameter = max(max(distances(graph,r).values()) for r in graph)
+            diameter = 0
+            for r in graph:
+                eccentricity = max(distances(graph,r).values())
+                diameter = max(diameter,eccentricity)
+                if r%(2**p) == (2**p-2)%(2**p):
+                    assert eccentricity == expected, (p,q,r,eccentricity,expected)
+                    total_extremal_sources += 1
             assert diameter == expected, (p,q,diameter,expected)
             total_vertices += len(graph)
             total_moduli += 1
             print(f"PASS p={p}, q={q}, diameter={diameter}, lower={witness}",flush=True)
     print(
         f"PASS {total_moduli} complete finite generic quotient graphs, "
-        f"{total_vertices} cumulative vertices",
+        f"{total_vertices} cumulative vertices, "
+        f"{total_extremal_sources} extremal -2-fiber sources",
         flush=True,
     )
 
