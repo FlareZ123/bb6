@@ -4,7 +4,6 @@ import AffineFourGlobal
 import Low124Stop
 import High124Stop
 import OddSevenSecondCylinder
-import MixedRectangle25Four
 import MixedRectangle27Zero
 import Lean.Elab.Tactic.Omega
 
@@ -22,8 +21,8 @@ def lowAllowedValSixFull (m : Nat) : Prop :=
     * Agent19's sum-seven four-link family;
     * Agent29's four mod-128 families;
     * Agent3's three valuation-six families;
-    * Agent3's sharp mod-128, mod-32/mod-32, and mod-32/mod-32
-      blank-origin rectangles;
+    * Agent3's low/high-124 stopping exclusions and the new branch of
+      the 27/0 blank-origin rectangle not already covered by M512;
     * Agent19's second sum-seven inverse cylinder;
     * the general affine terminal-right-four exclusion. -/
 def highAllowedValSixFull (j m : Nat) : Prop :=
@@ -31,8 +30,7 @@ def highAllowedValSixFull (j m : Nat) : Prop :=
   BB6.Agent19Five.highAllowed j m ∧
   ¬(j%32=31 ∧ 3≤m ∧ (j+3*m)%128=127) ∧
   ¬(j%8=5 ∧ m%8=4 ∧ (9*j+39)%128=(3*m)%128) ∧
-  ¬(1≤m ∧ j%16=11 ∧ (j+3*m+9)%32=0) ∧
-  ¬(2≤m ∧ j%16=12 ∧ (j+3*m+5)%32=0) ∧
+  ¬(m%32=21 ∧ j%32=28) ∧
   (BB6.Agent15.affineNormalize (2*j+3)
     (2^(2*m+2)*(j+3)-(j+3*m+5))).2 ≠ 4
 
@@ -127,49 +125,6 @@ private theorem high_second_slope_no_root
     rw [hleft,hkv] at hr
     exact hr
   exact BB6.Agent19Second.blank_no_second_slope u v hv hres hreach
-
-/-- High targets in the 25/4 rectangle are blank-unreachable after
-    pulling the stopping equation back to the exact rectangle. -/
-private theorem high_rectangle25_no_root
-    (j m k : Nat)
-    (hm : 1≤m) (hj : j%16=11)
-    (hpair : (j+3*m+9)%32=0)
-    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3))
-    (hr : BB6.Agent3.CReach (2*j+3) k) : False := by
-  have hpow16 : 16 ∣ (2:Nat)^(2*m+2) := by
-    have hpow' : (2:Nat)^4 ∣ (2:Nat)^(2*m+2) :=
-      Nat.pow_dvd_pow 2 (by omega)
-    simpa using hpow'
-  have hEven : 2 ∣ j+3 := by omega
-  have hprod32 : 32 ∣ (2:Nat)^(2*m+2)*(j+3) := by
-    rcases hpow16 with ⟨q,hq⟩
-    rcases hEven with ⟨r,hr⟩
-    refine ⟨q*r,?_⟩
-    rw [hq,hr]
-    ac_rfl
-  have hstopmod : (k+j+3*m+5)%32=0 := by
-    rw [hstop]
-    exact Nat.mod_eq_zero_of_dvd hprod32
-  have hkmod : k%32=4 := by omega
-  have hxmod : (2*j+3)%32=25 := by omega
-  have hP : 4*m+4 ≤ 2^(2*m+2) :=
-    BB6.Agent29New.power_linear_bound m
-  have h8P : 8 ≤ 2^(2*m+2) := by omega
-  have h8j : 8*j ≤ 2^(2*m+2)*j :=
-    Nat.mul_le_mul_right j h8P
-  have h3P : 12*m+12 ≤ 3*2^(2*m+2) := by
-    have h := Nat.mul_le_mul_left 3 hP
-    omega
-  have hmul : 2^(2*m+2)*(j+3)=
-      2^(2*m+2)*j+3*2^(2*m+2) := by
-    rw [Nat.mul_add]
-    exact congrArg (fun z => 2^(2*m+2)*j+z)
-      (Nat.mul_comm (2^(2*m+2)) 3)
-  have hstopExpanded := hstop
-  rw [hmul] at hstopExpanded
-  have hsize : 36≤k := by omega
-  exact BB6.Agent3.blank_no_rectangle_25_four
-    (2*j+3) k hxmod hkmod hsize hr
 
 /-- High targets in the 27/0 rectangle are blank-unreachable after
     pulling the stopping equation back to the exact rectangle. -/
@@ -287,10 +242,12 @@ theorem blank_halts_iff_joint_val_six_full :
           ¬(1≤m ∧ j%16=11 ∧ (j+3*m+9)%32=0) := by
         rintro ⟨hm1,hj11,hpair⟩
         exact high_rectangle25_no_root j m k hm1 hj11 hpair hstop hr
-      have hnon27 :
-          ¬(2≤m ∧ j%16=12 ∧ (j+3*m+5)%32=0) := by
-        rintro ⟨hm2,hj12,hpair⟩
-        exact high_rectangle27_no_root j m k hm2 hj12 hpair hstop hr
+      have hnon27 : ¬(m%32=21 ∧ j%32=28) := by
+        rintro ⟨hm21,hj28⟩
+        have hm2 : 2≤m := by omega
+        have hj16 : j%16=12 := by omega
+        have hpair : (j+3*m+5)%32=0 := by omega
+        exact high_rectangle27_no_root j m k hm2 hj16 hpair hstop hr
       have hr15 : BB6.Agent15.CReach (2*j+3) k := hr
       have hright4 :
           (BB6.Agent15.affineNormalize (2*j+3) k).2≠4 := by
@@ -301,9 +258,9 @@ theorem blank_halts_iff_joint_val_six_full :
         have hk7 := BB6.Agent15.second_halt_k_ge_seven j m k hstop
         omega
       exact Or.inr
-        ⟨j,m,⟨hhigh,h19,hnon124,hnonSecond,hnon25,hnon27,hright4⟩,hroot⟩
+        ⟨j,m,⟨hhigh,h19,hnon124,hnonSecond,hnon27,hright4⟩,hroot⟩
   · rintro (⟨m,hallow,hroot⟩ |
-      ⟨j,m,⟨hhigh,_,_,_,_,_,_⟩,hroot⟩)
+      ⟨j,m,⟨hhigh,_,_,_,_,_⟩,hroot⟩)
     · exact Or.inl ⟨m,hallow.1.1,hroot⟩
     · exact Or.inr ⟨j,m,hhigh,hroot⟩
 
@@ -347,7 +304,7 @@ theorem second_one_family_removed_by_affine_four (r : Nat) :
           (BB6.Agent29Depth.secondOneJ r+3*1+5))).2=4 := by
     simpa [hk] using
       BB6.Agent29Depth.second_one_family_normalizes_four r
-  rcases h with ⟨_,_,_,_,_,_,hright⟩
+  rcases h with ⟨_,_,_,_,_,hright⟩
   exact hright hfour
 
 /-- The mod-128 low family is admitted by the older Agent3/11 low
@@ -357,6 +314,65 @@ theorem low_124_family_previous_sieve (m : Nat)
     BB6.Agent11Joint.lowAllowed m := by
   unfold BB6.Agent11Joint.lowAllowed BB6.Agent3.jointLowAllowed
   omega
+
+/-- The high-124 family survives all prior Agent3/11/19/29
+    high restrictions, so the new source rectangle removes a genuinely
+    additional infinite family. -/
+theorem high_124_family_previous_sieves (j m : Nat)
+    (hj : j%32=31) (hm : 3≤m)
+    (hpair : (j+3*m)%128=127) :
+    highAllowedValSixThree j m ∧
+      BB6.Agent19Five.highAllowed j m := by
+  have hm32 : m%32=0 := by omega
+  have hjoint : BB6.Agent3.jointHighRectAllowed j m := by
+    unfold BB6.Agent3.jointHighRectAllowed
+    constructor
+    · unfold BB6.Agent3.jointHighAllowed
+      refine ⟨?_,?_,?_,?_,?_⟩ <;> omega
+    · omega
+  have hdy : ∀ n, ¬
+      (n+4≤2*m+2 ∧ (j+3*m+3)%2^(n+4)=2^(n+2) ∧
+        (2*j+3)%8=(if n%2=0 then 7 else 3)) := by
+    intro n
+    rintro ⟨_,_,hres⟩
+    have hx : (2*j+3)%8=1 := by omega
+    by_cases hn : n%2=0
+    · simp [hn] at hres
+      omega
+    · simp [hn] at hres
+      omega
+  have hbase : BB6.Agent19Joint.highAllowed j m := by
+    unfold BB6.Agent19Joint.highAllowed
+    have hodd1 :
+        ¬(2≤m ∧ j%8=7 ∧ (j+3*m+15)%64=0) := by omega
+    have hodd2 :
+        ¬(2≤m ∧ j%8=3 ∧ (j+3*m+47)%64=0) := by omega
+    have hodd3 :
+        ¬(3≤m ∧ j%8=5 ∧ (j+3*m+27)%128=0) := by omega
+    have hodd4 :
+        ¬(3≤m ∧ j%8=1 ∧ (j+3*m+91)%128=0) := by omega
+    exact ⟨hjoint,hdy,hodd1,hodd2,hodd3,hodd4⟩
+  have hplus : BB6.Agent29Joint.highAllowedPlus j m := by
+    unfold BB6.Agent29Joint.highAllowedPlus
+    exact ⟨hbase,by omega,by omega,by omega,by omega⟩
+  have hval : highAllowedValSixThree j m := by
+    unfold highAllowedValSixThree highAllowedValSix
+    exact ⟨⟨hplus,by omega,by omega⟩,by omega⟩
+  have h11 : BB6.Agent11Joint.highAllowed j m := by
+    unfold BB6.Agent11Joint.highAllowed
+    exact ⟨hbase,by omega,by omega⟩
+  have h19 : BB6.Agent19Five.highAllowed j m := by
+    unfold BB6.Agent19Five.highAllowed
+    exact ⟨h11,by omega⟩
+  exact ⟨hval,h19⟩
+
+/-- The explicit infinite high-124 family is admitted by the previous
+    high sieve before the new 124 exclusion. -/
+theorem high124_infinite_family_previous_sieves (r : Nat) :
+    highAllowedValSixThree 31 (32+128*r) ∧
+      BB6.Agent19Five.highAllowed 31 (32+128*r) := by
+  exact high_124_family_previous_sieves 31 (32+128*r)
+    (by omega) (by omega) (by omega)
 
 /-- The second sum-seven cylinder also survives the previous
     Agent19/29/3 high sieve; it is a genuinely new high restriction. -/
@@ -443,15 +459,8 @@ theorem second_slope_infinite_family_removed (r : Nat) :
 theorem rectangle25_infinite_family_removed (r : Nat) :
     ¬ highAllowedValSixFull 11 (4+32*r) := by
   intro h
-  rcases h with ⟨_,_,_,_,hfilter,_,_⟩
-  exact hfilter ⟨by omega,by omega,by omega⟩
-
-/-- Infinite 27/0 rectangle family removed by the merged high sieve. -/
-theorem rectangle27_infinite_family_removed (r : Nat) :
-    ¬ highAllowedValSixFull 28 (21+32*r) := by
-  intro h
-  rcases h with ⟨_,_,_,_,_,hfilter,_⟩
-  exact hfilter ⟨by omega,by omega,by omega⟩
+  rcases h with ⟨_,_,_,_,hfilter,_⟩
+  exact hfilter ⟨by omega,by omega⟩
 
 /-- The explicit infinite second-slope family is admitted by the
     previous high sieve before the new cylinder exclusion. -/
@@ -468,8 +477,9 @@ theorem second_slope_infinite_family_previous_sieves (r : Nat) :
 #print axioms second_slope_family_previous_sieves
 #print axioms low124_infinite_family_removed
 #print axioms high124_infinite_family_removed
+#print axioms high_124_family_previous_sieves
+#print axioms high124_infinite_family_previous_sieves
 #print axioms second_slope_infinite_family_removed
-#print axioms rectangle25_infinite_family_removed
 #print axioms rectangle27_infinite_family_removed
 #print axioms second_slope_infinite_family_previous_sieves
 
