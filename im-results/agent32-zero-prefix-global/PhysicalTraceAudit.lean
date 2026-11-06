@@ -39,6 +39,26 @@ theorem firstUnknownPhysical_sound (p : PartialMachine) (n : Nat)
                 simpa [firstUnknownPhysical, hp] using h
               exact ih (finiteMove c mv) hn
 
+/-- A concrete true blank run: A/0 writes a one and moves right to B,
+    B/0 moves back left to A, and the next *physical input* is A/1.
+    Only A/0 and B/0 are assigned; the new scanner targets the first
+    genuinely missing read-one transition. -/
+def readOneReturnTable : PartialMachine := fun slot =>
+  if slot = (⟨0, by decide⟩, false) then
+    some (some ⟨true, true, ⟨1, by decide⟩⟩)
+  else if slot = (⟨1, by decide⟩, false) then
+    some (some ⟨false, false, ⟨0, by decide⟩⟩)
+  else none
+
+theorem readOneReturnTable_actual_first_unknown :
+    firstUnknownPhysical readOneReturnTable 3 finiteBlank =
+      some (⟨0, by decide⟩, true) := by decide
+
+theorem readOneReturnTable_first_unknown_is_free :
+    readOneReturnTable (⟨0, by decide⟩, true) = none :=
+  firstUnknownPhysical_sound readOneReturnTable 3 finiteBlank _
+    readOneReturnTable_actual_first_unknown
+
 /-- The same authentic original-source terminal oracles as before.
     The new policy explores read-one transitions when actually needed.
     Termination of the proof object is by finite branch depth, never a
