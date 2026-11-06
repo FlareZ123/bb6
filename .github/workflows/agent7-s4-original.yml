@@ -125,6 +125,8 @@ jobs:
           lake env lean -o S4ToggleHead.olean S4ToggleHead.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-drift-ray/S4FixedTriple.lean" S4FixedTriple.lean
           lake env lean -o S4FixedTriple.olean S4FixedTriple.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-drift-ray/S4HeadAttractor.lean" S4HeadAttractor.lean
+          lake env lean -o S4HeadAttractor.olean S4HeadAttractor.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4TogglePhases.lean" S4TogglePhases.lean
           lake env lean -o S4TogglePhases.olean S4TogglePhases.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4ToggleGates.lean" S4ToggleGates.lean
