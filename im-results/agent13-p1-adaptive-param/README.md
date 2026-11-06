@@ -66,6 +66,12 @@ The q74 theorem `critical_1186_mod_4194304_unreachable` passed source [CI 423105
 
 These new exact original blank-source exclusions concern one **necessary** halting gateway for the P1 accelerated model. Other critical index families remain and the complete P1 halting question remains open. The largest value of the six-state Busy Beaver function remains unknown. External academic novelty has not been investigated; the comparisons here refer to specific previously committed repository proofs.
 
+## New source-proved all-fixed-depth inverse-ray obstruction
+
+[FixedDepthDossier.md](FixedDepthDossier.md) records the all-natural structural theorem proved against the **unchanged** original source [CI 42314919290](https://github.com/FlareZ123/bb6/actions/runs/42314919290): from any authentic P1 feeder shadow node, there can be no infinite suffix of inverse edges that all have the same dyadic depth `t`, for any fixed `t≥0`. For `t≥1`, [FixedDepthGeneral.lean](FixedDepthGeneral.lean) constructs an integer potential `Phi_t` that never vanishes and is divided by `2^(t+1)` on every exact depth-`t` edge. Consequently `2^((t+1)*N)≤|Phi_t|` for an `N`-step homogeneous suffix. For `t=0`, the unconditional claim is false: the abstract scalar recurrence admits a zero-depth fixed wall. [ZeroDepth.lean](ZeroDepth.lean), [ZeroDepthSource.lean](ZeroDepthSource.lean) and [SourceHomogeneous.lean](SourceHomogeneous.lean) prove that both **genuine source P1 feeder** graphs remain four units away from that wall and give a corresponding `2^N` bound.
+
+This does **not** exclude infinite paths with changing dyadic depths. It supplies a new exact structural restriction, rather than a full blank-start P1 decision.
+
 ## Next high-leverage steps
 
 The derived period criterion makes whole families of high-budget finite graphs cheaper to certify, but **serial additions to a sparse residue list do not establish P1 nonhalting**. Prioritize a true blank-source obstruction covering all remaining P1 gateway indices, or reuse the generalized finite checker as one component of a stronger global invariant. For q37 and any genuinely infinite scalar inverse cone, use the finite-graph existence test as a gate before generating enormous Lean constants.
