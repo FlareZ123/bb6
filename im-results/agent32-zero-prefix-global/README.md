@@ -1,6 +1,6 @@
-# Global raw-table frontier from the first read-zero control path
+# Global raw-table frontier from physical traces and read-zero control paths
 
-**Current status:** a source-verified global certified-or-open partial proof tree, an exact combinatorial **54.386874368%** conservative sufficient-condition family, and a broader **58.597775360%** exhaustive computational read-zero-row certificate census. The final percentage is a reproducible algorithmic result whose equality to the Lean search tree's numerical report has not been kernel-proved. This is intermediate infrastructure. BB(6) remains unresolved. The previously known 43.907809280% zero-writer/directional nonhalting family comes from Agent44.
+**Current status:** source-verified global certified-or-open partial proof trees; a **58.597775360%** exhaustive computational six-read-zero sufficient-certificate census; and a broader **68.066560000%** interpreted depth-four physical-trace frontier using exact finite lassos and finite-entry fresh-ray macros. The 68.06656% numerical count is a reproducible Lean VM report, while its source soundness and total-mass conservation are kernel checked; the numerical cardinality itself is not yet a separate kernel theorem. This remains intermediate infrastructure. BB(6) is unresolved. The previously known 43.907809280% zero-writer/directional nonhalting family comes from Agent44.
 
 ## Mathematical statement
 
@@ -127,10 +127,59 @@ The companion [ReadOneLeaf.lean](ReadOneLeaf.lean) specializes the same true bla
 
 This new source interface was verified with unmodified imported original Lean dependencies in [CI 42296568542](https://github.com/FlareZ123/bb6/actions/runs/42296568542) for the base physical scanner and [CI 42296717066](https://github.com/FlareZ123/bb6/actions/runs/42296717066) for the stronger actual-prefix bridge. The numeric certified mass of this larger physical-trace audit has **not** been evaluated; enumeration could in principle branch deeply into the 25^12 universe, and its generic exhaustive-or-open theorem by itself does not quantify how many leaves are decided.
 
+## Exact finite lasso and finite-entry macro augmentation
+
+[FiniteLassoOracle.lean](FiniteLassoOracle.lean) adds a source-sound exact recurrence test to the Agent8 finite-support simulator. It compares state, head, and the *represented infinite tape*, proving finite-support equality extensionally rather than comparing lists syntactically. A repeated full configuration in a fully assigned physical prefix implies a deterministic infinite run. The proof is connected to the original machine semantics through the existing `finitePartialRun_sound` theorem.
+
+The concrete read-one-dependent witness is:
+
+```text
+A/0 = 1RB
+B/0 = 0LA
+A/1 = 0RB
+```
+
+After four ordinary moves, the machine returns to its exact initial configuration with blank tape. The existing finite halt / clean-ray / zero-writer decision oracle rejects this partial table; the new exact-lasso oracle accepts it. The three assigned entries define a nonhalting cylinder of exact mass **25^9 = 381,469,726,562,500**. The cylinder-mass equality is proved by Lean computation. This is a small regression witness for genuine read-one-dependent recurrence, not a hard-holdout resolution.
+
+[LassoTraceAudit.lean](LassoTraceAudit.lean) combines three already sound decision mechanisms:
+
+1. Agent8's finite halt, clean-ray, and zero-writer oracle;
+2. the new exact finite-configuration lasso oracle;
+3. Agent6's existing bidirectional `finiteEntryMacroBiOracle`, which detects a finite blank-origin prefix entering a fresh ray followed by a same-state translating macro.
+
+The entry-macro theorem itself is reused from [Agent6's source](../agent6-fresh-glider/EntryMacroLeft.lean); this work integrates it into Agent32's *actual physical first-unknown* branching policy rather than claiming a new macro theorem. The global audit parameters are bound 6, finite ray limit 6, physical scan limit 12, exact lasso limit 12, entry limit 2, macro limit 4, and global tree depth 12. The source-checked example `entryToBExample_new_oracle_accepts` confirms that the combined oracle accepts Agent6's existing B-entry witness.
+
+The combined audit has kernel-checked:
+- `lassoDecisionOracle_sound`, combining the three source-sound oracle proofs;
+- `globalLassoPhysicalTraceAudit_exhaustive`, proving every complete raw table is either `DecidedBelow 6` or belongs to an explicitly open leaf;
+- `globalLassoPhysicalTraceAudit_conserves`, proving certified plus open report mass is exactly **25^12**.
+
+Full unmodified-source Lean 4.36.0-rc2 verification passed after modular separation in [CI 42305551466](https://github.com/FlareZ123/bb6/actions/runs/42305551466). The combined macro integration and interpreted mass evaluation passed in [CI 42305017481](https://github.com/FlareZ123/bb6/actions/runs/42305017481). The numerical report at depth three is:
+
+    certified 33,855,438,232,421,875
+    open      25,749,206,542,968,750
+    share     56.800000%
+
+At depth four it is:
+
+    certified 40,570,831,298,828,125
+    open      19,033,813,476,562,500
+    share     68.066560%
+
+Both pairs sum exactly to **25^12 = 59,604,644,775,390,625**. The lasso-only depth-four audit had 38,071,441,650,390,625 certified tables (63.873280%); adding Agent6's entry-macro certificates contributes another **2,499,389,648,437,500** raw tables, or **4.193280 percentage points**. The integrated depth-four report exceeds the earlier six-read-zero C++ sufficient-certificate census (58.597775360%) by **9.468784640 percentage points**, and the earlier control-path interpreted report (53.333215232%) by **14.733344768 points**. These are different enumeration policies over the same raw universe; compare their certified raw-table masses, not their per-machine or holdout resolution rates.
+
+### Integration with the authentic F287 root
+
+[AuthenticLassoIntegration.lean](AuthenticLassoIntegration.lean) uses Agent4's existing authentic F287 + turn + two-step global audit and applies its `addCertificate` graft to the new read-one lasso cylinder at the same `DecidedBelow 2` bound. It preserves the existing F287 root and earlier certificates while adding the independently source-proved lasso family. The combined `authenticLassoAudit_exhaustive` and `authenticLassoAudit_conserves` theorems compile in the pinned upstream Cryptids / Lean 4.35.0-rc4 environment. Successful source verification: [CI 42305562265](https://github.com/FlareZ123/bb6/actions/runs/42305562265). The optional interpreted combined-report evaluation is tracked separately in [CI 42306317211](https://github.com/FlareZ123/bb6/actions/runs/42306317211).
+
+This graft is a proof-tree composition with an already established F287 result; it is not a new proof of the F287 root. Likewise, the exact lasso principle is prior art in Agent13's finite-tape work, and the finite-entry macro theorem is prior art in Agent6's work. The contribution here is the Agent8-semantic finite-support adapter, the strict read-one lasso witness, and their integration into Agent32's physical search and Agent4's authentic global audit.
+
+**Verification boundary:** the global soundness and mass-conservation theorems are kernel checked. The 56.8% and 68.06656% exact numeric report pairs are interpreted Lean VM output, not yet separate kernel-proved cardinality equalities. The new methods do not resolve the 663 historical holdouts, establish a universal score upper bound, or determine BB(6).
+
 ## Prior art, next proof obligations, and BB(6) gap
 
 Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/README.md) already gives the 43.907809280% nonhalting union and source-checked individual certificate schemas. Agent42 independently counted a special normalized zero cycle. Agent8 constructed the 25-way source Cover contract; Agent4 proved disjoint frontier mass accounting and authentic-root integration. This investigation adds a disjoint short-halting union and a concrete fully source-checked adaptive global frontier applying existing sound oracles. It is under im-results because external novelty has not been established.
 
 The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
-**Next:** prove the C++-to-Lean oracle correspondence for the six-row census, investigate genuinely new finite-prefix or formal lasso leaves beyond the current 58.597775360% sufficient-condition family, and connect source-certified survivors to authentic rooted six-state holdouts. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
+**Next:** complete the 663-root lasso/macro screen; investigate stronger certificates for the residual physical-trace open leaves; consider a kernel-checked proof of the depth-four numeric report; and connect survivors to authentic unresolved six-state roots. Do not treat an empirical negative screen or an open leaf as a halting/nonhalting verdict. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
