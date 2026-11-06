@@ -100,7 +100,9 @@ private theorem high_second_slope_no_root
     Nat.mul_le_mul_left 3 hP
   have hmul : 2^(2*m+2)*(j+3)=
       2^(2*m+2)*j+3*2^(2*m+2) := by
-    rw [Nat.mul_add,Nat.mul_comm]
+    rw [Nat.mul_add]
+    exact congrArg (fun z => 2^(2*m+2)*j+z)
+      (Nat.mul_comm (2^(2*m+2)) 3)
   have hstopExpanded := hstop
   rw [hmul] at hstopExpanded
   have hk34 : 34≤k := by omega
@@ -160,7 +162,9 @@ private theorem high_rectangle25_no_root
     omega
   have hmul : 2^(2*m+2)*(j+3)=
       2^(2*m+2)*j+3*2^(2*m+2) := by
-    rw [Nat.mul_add,Nat.mul_comm]
+    rw [Nat.mul_add]
+    exact congrArg (fun z => 2^(2*m+2)*j+z)
+      (Nat.mul_comm (2^(2*m+2)) 3)
   have hstopExpanded := hstop
   rw [hmul] at hstopExpanded
   have hsize : 36≤k := by omega
@@ -199,7 +203,9 @@ private theorem high_rectangle27_no_root
     omega
   have hmul : 2^(2*m+2)*(j+3)=
       2^(2*m+2)*j+3*2^(2*m+2) := by
-    rw [Nat.mul_add,Nat.mul_comm]
+    rw [Nat.mul_add]
+    exact congrArg (fun z => 2^(2*m+2)*j+z)
+      (Nat.mul_comm (2^(2*m+2)) 3)
   have hstopExpanded := hstop
   rw [hmul] at hstopExpanded
   have hsize : 64≤k := by omega
@@ -379,16 +385,16 @@ theorem second_slope_family_previous_sieves (j m : Nat)
   have hbase : BB6.Agent19Joint.highAllowed j m := by
     unfold BB6.Agent19Joint.highAllowed
     have hodd1 :
-        ¬(3≤m ∧ j%8=7 ∧ (j+3*m+15)%64=0) := by omega
+        ¬(2≤m ∧ j%8=7 ∧ (j+3*m+15)%64=0) := by omega
     have hodd2 :
-        ¬(3≤m ∧ j%8=3 ∧ (j+3*m+21)%64=0) := by omega
+        ¬(2≤m ∧ j%8=3 ∧ (j+3*m+47)%64=0) := by omega
     have hodd3 :
         ¬(3≤m ∧ j%8=5 ∧ (j+3*m+27)%128=0) := by
       rintro ⟨_,_,hzero⟩
       have hmod8 : (j+3*m+27)%8=4 := by omega
       omega
     have hodd4 :
-        ¬(3≤m ∧ j%8=1 ∧ (j+3*m+9)%128=0) := by omega
+        ¬(3≤m ∧ j%8=1 ∧ (j+3*m+91)%128=0) := by omega
     exact ⟨hjoint,hdy,hodd1,hodd2,hodd3,hodd4⟩
   have hplus : BB6.Agent29Joint.highAllowedPlus j m := by
     unfold BB6.Agent29Joint.highAllowedPlus
