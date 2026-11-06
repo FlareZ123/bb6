@@ -31,7 +31,7 @@ def returnReadOneC : FinRayCfg :=
 
 theorem returnReadOneTwoSteps :
     finitePartialRun returnReadOneHalter 2 finiteBlank =
-      some returnReadOneC := by decide
+      some returnReadOneC := by rfl
 
 /-- An exact primitive three-step halting proof for *every* compatible
     total six-state transition table, with the read-one final query. -/
@@ -46,7 +46,10 @@ theorem returnReadOneHalter_exact (m : Machine)
     hm _ _ (by decide)
   constructor
   · simp [hr]
-  · simp [run, hr, rawStep, readSlot, embedFinRay, hnone]
+  · change run m 3 blank = none
+    rw [show run m 3 blank = (run m 2 blank).bind (rawStep m) by rfl, hr]
+    change rawStep m (embedFinRay returnReadOneC) = none
+    simp [rawStep, readSlot, embedFinRay, hnone]
 
 theorem returnReadOneHalter_mass :
     cylinderMass returnReadOneHalter = 25^9 := by decide
