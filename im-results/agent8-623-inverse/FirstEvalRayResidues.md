@@ -181,6 +181,29 @@ than a kernel-checked computation. A useful next step is to reproduce the
 candidate enumeration from the Lean source and prove a root-specific
 separation invariant.
 
+## Later drain failures are a separate obstruction
+
+A finite scan of gate states with even (2\le b\le500) and
+(0\le e\le500) found 2,943 states outside the old/new cones. Of these,
+248 failed on the first evaluator and 2,695 passed it. The full `drainB`
+failed on 571 states, so 323 states passed the first evaluator and failed
+later in the drain.
+
+For example, (D(12,12)) has
+[
+\operatorname{evalA}(1,12,29)=\operatorname{some}(0,4,31),
+]
+but its next drain call is
+[
+\operatorname{evalA}(0,3,42)=\operatorname{none},
+]
+because (3\bmod3=0=u_0).
+
+This is a synthetic gate state, not a blank-root state. It demonstrates that
+the first-call candidate audit alone cannot prove full drain survival. A
+complete root argument must track later evaluator calls or prove a suitable
+post-first-call safe budget on the actual root rays.
+
 ## Next proof target
 
 Formalize the five first-call cases in Lean using
