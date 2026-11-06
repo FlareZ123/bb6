@@ -222,4 +222,58 @@ theorem right_even_to_safe_right (a d b e : Nat)
 #print axioms right_odd_to_safe_right
 #print axioms right_even_to_safe_right
 
+
+/-- Precisely the four improved logarithmic affine sectors. -/
+def newAffineCone (a d : Nat) : Prop :=
+  (d%2=1 ∧ d+5≤a ∧ d+3≤ternaryOnes (a-d-5)) ∨
+  (d%2=0 ∧ d+3≤a ∧ d+2≤ternaryOnes (a-d-2)) ∨
+  (0<a ∧ a%2=0 ∧ a≤d ∧ d%2=1 ∧ a-1≤ternaryOnes (d+4-a)) ∨
+  (0<a ∧ a%2=0 ∧ a≤d ∧ d%2=0 ∧ a<ternaryOnes (d+1-a))
+
+/-- Exactly the four pre-existing linear affine sectors. -/
+def oldAffineCone (a d : Nat) : Prop :=
+  (d%2=1 ∧ 2*d+8<a) ∨
+  (d%2=0 ∧ 2*d+4<a) ∨
+  (0<a ∧ a%2=0 ∧ d%2=1 ∧ 2*a+1≤d) ∨
+  (0<a ∧ a%2=0 ∧ d%2=0 ∧ 2*a+2≤d)
+
+/-- Main geometric buffer theorem. Every successful return from an even-a
+state newly covered by the sharp affine sectors returns to the old strongly
+safe right cone, apart from two explicit small synthetic exceptions. -/
+theorem newAffine_to_oldRight (a d b e : Nat)
+    (ha : a%2=0) (hn : newAffineCone a d)
+    (ho : ¬oldAffineCone a d)
+    (hx : ¬(a=4 ∧ (d=5 ∨ d=7)))
+    (hnext : next (.D a d)=some (.D b e)) :
+    b%2=0 ∧ 2*b+1≤e := by
+  rcases hn with hl | hl | hr | hr
+  · rcases hl with ⟨hd,hbranch,hbudget⟩
+    have hnot : a≤2*d+8 := by
+      by_cases hc : a≤2*d+8
+      · exact hc
+      · exact False.elim (ho (Or.inl ⟨hd,by omega⟩))
+    have h := far_left_odd_to_safe_right a d b e ha hd hbranch hnot hnext
+    omega
+  · rcases hl with ⟨hd,hbranch,hbudget⟩
+    have hnot : a≤2*d+4 := by
+      by_cases hc : a≤2*d+4
+      · exact hc
+      · exact False.elim (ho (Or.inr (Or.inl ⟨hd,by omega⟩)))
+    have h := far_left_even_to_safe_right a d b e ha hd hbranch hnot hnext
+    omega
+  · rcases hr with ⟨ha0,he,hside,hd,hbudget⟩
+    have hnot : d<2*a+1 := by
+      by_cases hc : d<2*a+1
+      · exact hc
+      · exact False.elim (ho (Or.inr (Or.inr (Or.inl ⟨ha0,ha,hd,by omega⟩))))
+    exact right_odd_to_safe_right a d b e ha ha0 hd hside hnot hx hnext
+  · rcases hr with ⟨ha0,he,hside,hd,hbudget⟩
+    have hnot : d<2*a+2 := by
+      by_cases hc : d<2*a+2
+      · exact hc
+      · exact False.elim (ho (Or.inr (Or.inr (Or.inr ⟨ha0,ha,hd,by omega⟩))))
+    exact right_even_to_safe_right a d b e ha ha0 hd hside hnot hnext
+
+#print axioms newAffine_to_oldRight
+
 end BB6.Agent49TernaryBufferSource
