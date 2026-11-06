@@ -80,3 +80,18 @@ jobs:
           lean im-results/agent13-p1-adaptive-param/Q89NarrowFinal.lean | tee -a /tmp/agent13-narrow-q89.log
           grep -F 'critical_1426_mod_2pow54_unreachable' /tmp/agent13-narrow-q89.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-narrow-q89.log; then exit 1; fi
+      - name: Audit exact pathwise 2-adic slope period characterization
+        run: |
+          set -euo pipefail
+          lean im-results/agent13-p1-adaptive-param/SlopePeriod.lean | tee /tmp/agent13-slope-period.log
+          grep -F 'feeder12_slope_exact' /tmp/agent13-slope-period.log
+          grep -F 'feeder10_slope_exact' /tmp/agent13-slope-period.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-slope-period.log; then exit 1; fi
+      - name: Certify q70 narrower original P1 infinite cylinder
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param"
+          lean -o im-results/agent13-p1-adaptive-param/Q70NarrowNodes.olean im-results/agent13-p1-adaptive-param/Q70NarrowNodes.lean | tee /tmp/agent13-q70-narrow.log
+          lean im-results/agent13-p1-adaptive-param/Q70NarrowFinal.lean | tee -a /tmp/agent13-q70-narrow.log
+          grep -F 'critical_1122_mod_2pow60_unreachable' /tmp/agent13-q70-narrow.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-q70-narrow.log; then exit 1; fi
