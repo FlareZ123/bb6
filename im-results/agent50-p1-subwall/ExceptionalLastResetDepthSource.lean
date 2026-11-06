@@ -126,6 +126,8 @@ theorem source_mid_cost_exceptional_last_reset_depth
       (14*2^n-2*n-16) 3 b d m z h hz
   have hoddEnd : OddCone (14*2^n-2*n-16) 3 b d m :=
     counted_to_odd_cone _ _ _ _ _ _ h
+  have hcostFour : n+4≤m :=
+    BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four n b d m hn hoddEnd hd
   have hmassEnd := odd_cone_mass
     (14*2^n-2*n-16) 3 b d m hoddEnd
   have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by
@@ -256,7 +258,7 @@ theorem source_exceptional_last_reset_two_depths
           bp+4*m+16=20*2^n ∧
           dp+6*2^n=2*m+5 ∧
           mp+n+1=m ∧
-          3*2^n-2≤m)
+          3*2^n≤m)
         ∨
         (inverseAt bp dp (n+1)=some (k,1) ∧
           bp+4*m+12=12*2^n ∧
@@ -327,6 +329,10 @@ theorem source_exceptional_last_reset_two_depths
       have hexp : t+2<n+4 :=
         (Nat.pow_lt_pow_iff_right (show 1<(2:Nat) from by decide)).mp hpowLt
       omega
+    have hdpFive : 5≤dp := by
+      cases hoddPre with
+      | root => omega
+      | parent b d m t0 k0 c hcone hb hb4 hd hi hk hc => omega
     have hbudgetPrefix : 2*mp+2*n+7≤10*2^n := by omega
     have hdpPos : 1≤dp := by omega
     have hdpFormula : dp+14*2^n=2^(t+3)+2*mp+2*n+7 := by omega
@@ -358,7 +364,7 @@ theorem source_exceptional_last_reset_two_depths
         omega
       have hmpExact : mp+n+1=mp+t+1 := by
         rw [htN]
-      have hmLower : 3*2^n-2≤mp+t+1 := by
+      have hmLower : 3*2^n≤mp+t+1 := by
         rw [htN]
         omega
       have hipExact : inverseAt bp dp n=some (k,1) := by
