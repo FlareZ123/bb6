@@ -179,7 +179,7 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
     have hcond : x=2 ∧ y=5 ∧ secNext (1,2)=some (x,y) :=
       ⟨hx,hy5,h2⟩
     unfold oneExactCandidates
-    simp [hcond,hv,hu]
+    simp [hcond,hv,hu,hk2]
   by_cases hk3 : k=3
   · have h3 : secNext (1,3)=some (x,y) := by simpa [hk3] using hedge
     have hp := (section_preimage_all_iff 1 3 x y).mp h3
@@ -194,7 +194,7 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
     have hcond : x=0 ∧ y=7 ∧ secNext (1,3)=some (x,y) :=
       ⟨hx,hy7,h3⟩
     unfold oneExactCandidates
-    simp [hcond,hv,hu]
+    simp [hcond,hv,hu,hk3]
   have hp := (section_preimage_all_iff 1 k x y).mp hedge
   simp only [sectionPreimageAll,if_neg (by decide : (1:Nat)≠0),
     if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
@@ -227,8 +227,6 @@ theorem even_sum_parent_mem_fullCandidates (a k x y v u : Nat)
   · subst a
     apply List.mem_append.mpr
     right
-    apply List.mem_append.mpr
-    right
     exact zero_parent_mem_candidates k x y v u hy hfact hedge
   by_cases ha1 : a=1
   · subst a
@@ -241,12 +239,14 @@ theorem even_sum_parent_mem_fullCandidates (a k x y v u : Nat)
     omega
   by_cases hbelow : 2*k≤a
   · apply List.mem_append.mpr
-    right
-    apply List.mem_append.mpr
     left
+    apply List.mem_append.mpr
+    right
     exact direct_parent_mem_candidates a k x y (by omega) (by omega) hbelow hedge
   · by_cases heven : a%2=0
     · apply List.mem_append.mpr
+      left
+      apply List.mem_append.mpr
       left
       exact even_high_parent_mem_exact_candidates a k x y v u
         (by omega) (by omega) (by omega) heven hy hfact hedge
@@ -272,8 +272,6 @@ theorem odd_sum_parent_mem_fullCandidates (a k x y v u : Nat)
   · subst a
     apply List.mem_append.mpr
     right
-    apply List.mem_append.mpr
-    right
     exact one_parent_mem_candidates k x y v u hy hfact hedge
   by_cases hk0 : k=0
   · have h0 : secNext (a,0)=some (x,y) := by simpa [hk0] using hedge
@@ -282,9 +280,9 @@ theorem odd_sum_parent_mem_fullCandidates (a k x y v u : Nat)
     omega
   by_cases hbelow : 2*k≤a
   · apply List.mem_append.mpr
-    right
-    apply List.mem_append.mpr
     left
+    apply List.mem_append.mpr
+    right
     exact direct_parent_mem_candidates a k x y (by omega) (by omega) hbelow hedge
   · by_cases heven : a%2=0
     · obtain ⟨n,hsum,_⟩ :=
@@ -295,6 +293,8 @@ theorem odd_sum_parent_mem_fullCandidates (a k x y v u : Nat)
     · have hodd : a%2=1 := by
         have hmod := Nat.mod_two_eq_zero_or_one a
         omega
+      apply List.mem_append.mpr
+      left
       apply List.mem_append.mpr
       left
       exact odd_high_parent_mem_exact_candidates a k x y v u
