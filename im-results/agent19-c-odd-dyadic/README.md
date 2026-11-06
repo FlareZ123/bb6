@@ -42,6 +42,8 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 
 ## Next research
 
+- [HighDyadicConeCandidate.md](HighDyadicConeCandidate.md) records a **provisional, not source-certified** infinite high stopping candidate derived by applying the source-proved dyadic cone after an original odd/odd inverse. Its sample `j=263,m=3` projects to an **M512-admitted** target cell. Agent3 has been asked to check the high-family derivation and novelty against the existing combined high sieve; do not cite this candidate as a proven high exclusion yet.
+
 - Close the remaining unbounded low and high parameter domains.
 - Search for further source inverse cylinders or rectangles that eliminate M512-admitted states.
 - Derive symbolic bounds on the surviving parameters, or establish that no surviving fixed target is blank-reachable.
