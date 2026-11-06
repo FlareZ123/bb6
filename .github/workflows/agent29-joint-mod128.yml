@@ -218,5 +218,10 @@ jobs:
           # Agent19's second sum-seven inverse cylinder.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/OddSevenSecondCylinder.lean .
           lean -o OddSevenSecondCylinder.olean OddSevenSecondCylinder.lean
+          # Agent3's two additional original-source mixed rectangles.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedRectangle25Four,MixedRectangle27Zero}.lean .
+          for f in MixedRectangle25Four MixedRectangle27Zero; do
+            lean -o "$f.olean" "$f.lean"
+          done
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/ValSixJointFull.lean .
           lean ValSixJointFull.lean
