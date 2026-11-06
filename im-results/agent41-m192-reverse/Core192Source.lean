@@ -164,13 +164,13 @@ theorem second_stop_residues (j m k : Nat)
       | succ n ih =>
           calc
             (64*4^(n+1))%192 = ((64*4^n)%192 * 4)%192 := by
-              rw [pow_succ, Nat.mul_mod]
-              simp
-            _ = 64 := by rw [ih]; simp
+              rw [Nat.pow_succ]
+              rw [show 64 * (4^n * 4) = (64*4^n)*4 by ac_rfl]
+              rw [Nat.mul_mod]
+            _ = 64 := by rw [ih]
     have hexp : 2*m+2=6+2*(m-2) := by omega
     have hpow : 2^(2*m+2)=64*4^(m-2) := by
       rw [hexp, Nat.pow_add, Nat.pow_mul]
-      simp
     rw [hpow]
     exact hmul (m-2)
   have hj3 : (j+3)%192=6 := by omega
