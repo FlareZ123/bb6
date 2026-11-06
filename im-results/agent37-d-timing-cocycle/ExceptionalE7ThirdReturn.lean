@@ -17,9 +17,42 @@ private def suffix2 (r : Nat) : List Bool :=
   List.replicate (6*r-1) true ++ (false :: List.replicate 6 true)
 
 private def codeWords (r : Nat) : List Bool :=
-  [false,false] ++ List.replicate (2*r-1) true
+  [false,false] ++ List.replicate (2*(r-1)+1) true
 
 private def suffix3 : List Bool := List.replicate 3 true
+
+private theorem wordInc_append (xs ys : List Bool) :
+    CryptidA.wordInc (xs ++ ys) =
+      CryptidA.wordInc xs + CryptidA.wordInc ys := by
+  induction xs with
+  | nil => simp [CryptidA.wordInc]
+  | cons b xs ih => cases b <;> simp [CryptidA.wordInc,ih,Nat.add_assoc]
+
+private theorem wordCode_append (xs ys : List Bool) :
+    CryptidA.wordCode (xs ++ ys) =
+      CryptidA.wordCode xs ++ CryptidA.wordCode ys := by
+  induction xs with
+  | nil => simp [CryptidA.wordCode]
+  | cons b xs ih => cases b <;> simp [CryptidA.wordCode,ih]
+
+private theorem wordInc_replicate_true (n : Nat) :
+    CryptidA.wordInc (List.replicate n true) = 4*n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp [List.replicate,CryptidA.wordInc,ih]
+    omega
+
+private theorem wordCode_replicate_true (n : Nat) :
+    CryptidA.wordCode (List.replicate n true) =
+      List.replicate (3*n) true := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [List.replicate_succ,CryptidA.wordCode,ih]
+    rw [show 3*(n+1)=3+3*n by omega,
+      ←List.replicate_append_replicate]
+    rfl
 
 def sourceStart (u r : Nat) : Cfg :=
   DRegularSource.sourceSection ⟨27*u+7,3*r+1,1⟩
@@ -87,7 +120,11 @@ private theorem second_a_shape (u r : Nat) (hr : 1 ≤ r) :
   have hn : 8*(24*u+3)+9=3*(64*u+10)+3 := by omega
   have hw : CryptidA.wordCode (codeWords r) =
       [true,false,true,false] ++ List.replicate (6*r-3) true := by
-    simp [codeWords,CryptidA.wordCode,List.replicate_append_replicate]
+    unfold codeWords
+    rw [wordCode_append]
+    simp [CryptidA.wordCode,wordCode_replicate_true]
+    have hn : 3*(2*(r-1)+1)=6*r-3 := by omega
+    rw [hn]
   rw [hn,hw]
   simp [secondOutput,init,CryptidBoundary.packetThree,suffix2,suffix3,
     codeWords,CryptidA110111CodeFirst.packet,List.append_assoc]
@@ -99,7 +136,9 @@ private theorem a_end_shape (u r : Nat) (hr : 1 ≤ r) :
         CryptidA110111CodeFirst.tail suffix3,5⟩ : Cfg) =
       sourceEnd u r := by
   have hi : CryptidA.wordInc (codeWords r) = 8*r-2 := by
-    simp [codeWords,CryptidA.wordInc]
+    unfold codeWords
+    rw [wordInc_append]
+    simp [CryptidA.wordInc,wordInc_replicate_true]
     omega
   have ht :
       CryptidA110111CodeFirst.tail suffix3 =
