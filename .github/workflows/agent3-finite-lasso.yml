@@ -20,7 +20,7 @@ jobs:
       - name: Prove source-sound all-time finite lasso cylinders
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent3-finite-lasso"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent44-drift-closure:im-results/agent32-zero-prefix-global:im-results/agent3-finite-lasso"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -29,4 +29,15 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
           base64 -d im-results/agent3-finite-lasso/Agent3FiniteLasso.lean.gz.b64 | gzip -d > im-results/agent3-finite-lasso/Agent3FiniteLasso.lean
           echo "84966fde79e909dd47607380577ed9eb50ac014f8bc857824d1cdec770873c10  im-results/agent3-finite-lasso/Agent3FiniteLasso.lean" | sha256sum --check
-          lean im-results/agent3-finite-lasso/Agent3FiniteLasso.lean
+          lean -o im-results/agent3-finite-lasso/Agent3FiniteLasso.olean im-results/agent3-finite-lasso/Agent3FiniteLasso.lean
+          for m in RayTurnExample RayFiniteOracle FiniteHalting; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean"
+          done
+          lean im-results/agent3-finite-lasso/Agent3LassoFrontier.lean
