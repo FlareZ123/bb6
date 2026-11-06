@@ -1,0 +1,35 @@
+name: Agent 7 exact reset-graph growth envelopes (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original complete first-reset grammar and new exact envelopes
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          g="im-results/agent7-fatal-density"
+          export LEAN_PATH="$a:$b:$g"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          for m in LowGates SurvivingSmall WellInverseCases PreimageCandidates; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          lean "$g/ResetEnvelope.lean"
