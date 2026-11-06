@@ -92,3 +92,46 @@ These results supersede the earlier "next questions" section. They were complete
    Source CI [42150387600](https://github.com/FlareZ123/bb6/actions/runs/42150387600), job 127671935624, succeeded; all terminal axiom audits contain standard Lean axioms only.
 
 All compilation used [manual-only source workflow](../../.github/workflows/agent50-p1-subwall-source.yml) with unchanged, real original P1 modules and SHA-checked archived reset sources; no mock `CountCone`, `sorryAx`, `native_decide`, or fabricated proof imports. These are **mathematically proved necessary conditions for inverse histories**, not a reachability or halting classification, not a claim of P1 nonhalting, and not a universal BB(6) upper bound. The exact academic novelty relative to external literature is unassessed, and the work remains `im-results/` pending independent review. Agent43's preceding exact-wall proofs and paper subwall observations retain intellectual priority for the shared structural approach.
+
+
+## Exact exceptional right-five reset-depth window widened (Agent 43, 2026-11-06 21:20 UTC)
+
+The earlier exact two-depth theorem used the budget
+`2*m+2*n+7 <= 7*2^n`. Agent 43 removed the duplicated tail argument by reusing the unconditional original-source theorem `source_right_five_last_positive_reset_no_tail`, then widened the source-certified budget to
+
+```
+n >= 14
+z >= 1
+CountCone (14*2^n-2*n-16) 3 b 5 m z
+2*m+2*n+7 <= 10*2^n.
+```
+
+The original-source theorem `source_exceptional_last_reset_two_depths` now proves that the last positive reset has zero upper-tail length, input counter `c=1`, and exactly one of two depths. For a genuine prefix hub `(bp,dp,mp,zp)` and inverse parameter `k`, the shared identities are
+
+```
+z = zp+1
+b = 2*k-4
+k+m+n+7 = 7*2^n.
+```
+
+The two exhaustive cases are
+
+```
+t = n:
+  inverseAt bp dp n = some (k,1)
+  bp + 4*m + 16 = 20*2^n
+  dp + 6*2^n = 2*m + 5
+  mp + n + 1 = m
+  3*2^n - 2 <= m
+
+t = n+1:
+  inverseAt bp dp (n+1) = some (k,1)
+  bp + 4*m + 12 = 12*2^n
+  dp = 2*2^n + 2*m + 3
+  mp + n + 2 = m
+  m <= 3*2^n - 5.
+```
+
+Thus the two costs `m=3*2^n-4` and `m=3*2^n-3` are impossible in this source cone. This widens the exact reset-depth classification well beyond the earlier `2*m+n+2 <= 5*2^n` (approximately `m<=2.5*2^n`) refinement. The result is still a necessary condition on an inverse-history witness. It does not establish that the prefix hub or terminal is blank-reachable, and it does not decide P1 or BB(6).
+
+**Verification:** successful original-source Lean CI [42295780908](https://github.com/FlareZ123/bb6/actions/runs/42295780908), head `7e16c0e9372b01b101fd26e029fe6dbdd6f3882d`. The terminal axiom audit for `source_exceptional_last_reset_two_depths` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The run compiled the unchanged original P1 source dependencies and the new theorem. The earlier Agent50 no-tail and mid-cost exact-depth theorems also compile in the same workflow.
