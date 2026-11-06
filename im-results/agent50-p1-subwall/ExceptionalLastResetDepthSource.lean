@@ -116,36 +116,35 @@ theorem source_mid_cost_exceptional_last_reset_depth
       rw [← hpow1]
       have hhalf : bp/2≤bp := by omega
       omega
-    have htUpper : t≤n+1 := by
-      by_contra hnot
-      have hle : n+4≤t+2 := by omega
-      have hmono : 2^(n+4)≤2^(t+2) :=
-        Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hle
-      rw [hpow4] at hmono
-      omega
     have hcostDouble : 4*(mp+t+1)+2*n+4≤10*2^n := by omega
-    have hk4 : 18*2^n≤4*k+2*n+24 := by omega
     have hdpPos : 1≤dp := by omega
+    have hbpUpper : bp+2*n+14≤14*2^n := by omega
+    have hpowLower : 4*2^n+4*t+2≤2^(t+3) := by omega
+    have hpowN2lt : 2^(n+2)<2^(t+3) := by
+      rw [hpow2]
+      omega
     have htLower : n≤t := by
-      by_contra hnot
-      have hle : t+3≤n+2 := by omega
-      have hmono : 2^(t+3)≤2^(n+2) :=
-        Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hle
-      have hmono' : 2^(t+3)≤4*2^n := by
-        rw [hpow2] at hmono
-        exact hmono
-      have hbpLower : 14*2^n≤bp+2*n+12 := by omega
-      have hbpUpper : bp+2*n+14≤14*2^n := by omega
+      have hexp : n+2<t+3 :=
+        (Nat.pow_lt_pow_iff_right (show 1<(2:Nat) from by decide)).mp hpowN2lt
+      omega
+    have htUpper : t≤n+1 := by
+      have hpowLt : 2^(t+2)<2^(n+4) := by
+        rw [hpow4]
+        exact hpowUpper
+      have hexp : t+2<n+4 :=
+        (Nat.pow_lt_pow_iff_right (show 1<(2:Nat) from by decide)).mp hpowLt
       omega
     have htEq : t=n+1 := by
-      by_contra hnot
-      have htN : t=n := by omega
-      have hbpAtN : bp+8*2^n=4*k+4*n+12 := by
-        rw [htN,hpow3] at hbpEq
-        exact hbpEq
-      have hbpAtN' : bp+4*(mp+n+1)+16=20*2^n := by omega
-      have hdpAtN : dp+6*2^n=2*mp+2*n+7 := by omega
-      omega
+      by_cases htN : t=n
+      · have hbpAtN : bp+8*2^n=4*k+4*n+12 := by
+          rw [htN,hpow3] at hbpEq
+          exact hbpEq
+        have hbpAtN' : bp+4*(mp+n+1)+16=20*2^n := by omega
+        have hdpAtN : dp+6*2^n=2*mp+2*n+7 := by omega
+        have hcostN : 2*(mp+n+1)+n+2≤5*2^n := by
+          simpa [htN] using hcost
+        omega
+      · omega
     have hbpAtN1 : bp+16*2^n=4*k+4*n+16 := by
       rw [htEq,hpow4] at hbpEq
       omega
