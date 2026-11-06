@@ -151,7 +151,7 @@ theorem zero_exception_direct_parity (x y v u : Nat)
     simp [sectionPreimageAll] at hp
     omega
   have hp := (section_preimage_all_iff 0 k x y).mp hkedge
-  simp only [sectionPreimageAll,if_pos rfl,if_neg hk0,if_neg hk1] at hp
+  simp only [sectionPreimageAll,if_neg hk0,if_neg hk1] at hp
   obtain ⟨_,n,hs,hc⟩ := hp
   have hpow : 2^(n+3)=2^v*(2*u+1) := by
     calc
@@ -189,13 +189,12 @@ theorem one_exception_direct_parity (x y v u : Nat)
     · exact h1
     · simp [h1] at hone
       by_cases h2 : x=2 ∧ y=5 ∧ secNext (1,2)=some (x,y)
-      · simp [h2] at hone
+      · rcases h2 with ⟨_,hy5,_⟩
         omega
-      · simp [h2] at hone
-        by_cases h3 : x=0 ∧ y=7 ∧ secNext (1,3)=some (x,y)
-        · simp [h3] at hone
+      · by_cases h3 : x=0 ∧ y=7 ∧ secNext (1,3)=some (x,y)
+        · rcases h3 with ⟨_,hy7,_⟩
           omega
-        · simp [h3] at hone
+        · simp [h1,h2,h3] at hone
   let k := (x+2*y-11-3*(v-4))/2
   have hkedge : secNext (1,k)=some (x,y) := by
     simpa [k,oneParentAtValuation] using hhigh.2.2
@@ -225,8 +224,7 @@ theorem one_exception_direct_parity (x y v u : Nat)
     omega
   have hp := (section_preimage_all_iff 1 k x y).mp hkedge
   simp only [sectionPreimageAll,if_neg (by decide : (1:Nat)≠0),
-    if_pos (by decide : (1:Nat)=1),if_neg hk0,if_neg hk1,
-    if_neg hk2,if_neg hk3] at hp
+    if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
   rcases hp with ⟨hy3,_⟩ | ⟨_,n,hs,hc⟩
   · omega
   · have hpow : 2^(n+4)=2^v*(2*u+1) := by
