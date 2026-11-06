@@ -39,13 +39,23 @@ theorem backwardTotalHalfFull_iff (x y : Nat) :
     BB6.Agent11Mass.SectionReach x y
 ```
 
-The rank-based finite depth bound is Agent11's existing original-source theorem. The new backward branching is logarithmic at **every** visited node. No finite parameter cutoff is used in these mathematical iff statements.
+The inherited half-mass depth bound is Agent11's existing original-source theorem. The new backward branching is logarithmic at **every** visited node. No finite parameter cutoff is used in these mathematical iff statements.
+
+A further integration with Agent1's already original-source-certified [BlankMassFour.lean](../agent1-forward-mass/BlankMassFour.lean) sharpens the fixed-target fuel to the **optimal linear mass-growth cutoff**:
+
+```lean
+theorem backwardTotalQuarterFull_iff (x y : Nat) :
+  backwardTotal ((x+2*y-7)/4) (x,y) = true ↔
+    BB6.Agent11Mass.SectionReach x y
+```
+
+[TotalFastQuarter.lean](TotalFastQuarter.lean) composes Agent1's authentic blank-source rank `7+4*n ≤ x+2*y` with the complete logarithmic predecessor oracle; the source step is sharp at gain four, but this does not assert that the complete reachability search has logarithmic runtime. It improves the **root depth cutoff** by nearly a factor two on large inputs, with no extra assumptions. This depth bound was already known separately in Agent1's research; the contribution here is its rigorously checked combination with the new logarithmic all-output inverse.
 
 ## Source integrity and verification
 
 The manually dispatched [agent15-c-total-fast.yml](../../.github/workflows/agent15-c-total-fast.yml) compiles the unchanged full Machine C bounce, section, complete all-output inverse and Agent11 fast inverse, then both new modules under **Lean 4.36.0-rc2**.
 
-[**Original-source CI 42196614039 PASSED**](https://github.com/FlareZ123/bb6/actions/runs/42196614039) (2026-11-06 09:40 UTC, source head `4aaaaba65c98049e685ff706ea1759c0db8a2936`). The final `#print axioms` outputs for `totalFastCandidates_exact`, `backwardTotal_iff`, and `backwardTotalHalfFull_iff` were exactly `[propext, Classical.choice, Quot.sound]`; `totalFastUnfiltered_length` reported `[propext, Quot.sound]`. There are no `sorryAx`, custom axioms, or stub dependencies in this CI. During development the source theorem interfaces were mimicked by local stubs; those experiments do not replace the successful original-source audit.
+[**Original-source CI 42197944716 PASSED**](https://github.com/FlareZ123/bb6/actions/runs/42197944716) (2026-11-06 09:50 UTC, source head `cb95c28567599e2c1717f5047a680291ca9dda3f`). Earlier [CI 42196614039](https://github.com/FlareZ123/bb6/actions/runs/42196614039) independently verified the two initial modules. The final `#print axioms` outputs for `totalFastCandidates_exact`, `backwardTotal_iff`, `backwardTotalHalfFull_iff`, and `backwardTotalQuarterFull_iff` were exactly `[propext, Classical.choice, Quot.sound]`; `totalFastUnfiltered_length` reported `[propext, Quot.sound]`. There are no `sorryAx`, custom axioms, or stub dependencies in this CI. During development the source theorem interfaces were mimicked by local stubs; those experiments do not replace the successful original-source audit.
 
 Independent exact-integer finite reproduction tested all 21,025 source pairs `0≤a,k<145` for candidate inclusion, and exhaustively compared exact candidates with all mass-admissible source predecessors for 450 targets `0≤x<75`, `0≤y<6`. Both checks passed. Examples of **unfiltered** list sizes versus dense old grid positions:
 
