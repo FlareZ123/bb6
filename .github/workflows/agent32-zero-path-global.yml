@@ -68,4 +68,6 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
           lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
-          lean im-results/agent32-zero-prefix-global/EntryControlAudit.lean
+          lean -o im-results/agent32-zero-prefix-global/EntryControlAudit.olean im-results/agent32-zero-prefix-global/EntryControlAudit.lean
+          lean -o im-results/agent44-drift-closure/PrefixDrift.olean im-results/agent44-drift-closure/PrefixDrift.lean
+          lean im-results/agent32-zero-prefix-global/OneTurnSource.lean
