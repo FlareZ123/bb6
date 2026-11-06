@@ -53,7 +53,7 @@ private theorem ones_shuffle (n : Nat) (ys : List Bool) :
   | succ n ih =>
     simpa [List.replicate_succ] using congrArg (List.cons true) ih
 
-private theorem compare13 (m r : Nat) (ys : List Bool) :
+theorem compare13 (m r : Nat) (ys : List Bool) :
     run (4*r+13) (extended m r ys) =
       run 13 (eZero m (List.replicate (2*r) true ++ ys)) := by
   have h1 := extended11 m r ys
