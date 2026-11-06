@@ -70,17 +70,17 @@ theorem blank_seventeenth_reentry :
       (DRegularSource.sourceSection
         ⟨8*(64*u17+10)+39,3,2⟩) := by
   have hstart :
-      BB6.Agent2E7ThirdReturn.sourceStart u17 =
+      BB6.Agent2E7ThirdReturn.sourceStart u17 2 =
         DRegularSource.sourceSection ⟨9*t17+7,7,1⟩ := by
     unfold BB6.Agent2E7ThirdReturn.sourceStart
     congr 1
     omega
   have hpacket :=
-    BB6.Agent2E7ThirdReturn.exceptional_EEA_rejoin u17
+    BB6.Agent2E7ThirdReturn.exceptional_EEA_rejoin u17 2 (by omega)
   rw [hstart] at hpacket
   exact source_chain exception17Time packet17Time blank
     (DRegularSource.sourceSection ⟨9*t17+7,7,1⟩)
-    (BB6.Agent2E7ThirdReturn.sourceEnd u17)
+    (BB6.Agent2E7ThirdReturn.sourceEnd u17 2)
     blank_seventeenth_exception
     (by simpa only [packet17Time] using hpacket)
 
