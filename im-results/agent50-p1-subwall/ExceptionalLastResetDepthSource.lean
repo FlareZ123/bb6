@@ -273,6 +273,8 @@ theorem source_exceptional_last_reset_two_depths
     source_right_five_last_positive_reset_no_tail n b m z hz h5
   have hoddEnd : OddCone (14*2^n-2*n-16) 3 b d m :=
     counted_to_odd_cone _ _ _ _ _ _ h
+  have hcostFour : n+4≤m :=
+    BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four n b d m hn hoddEnd hd
   have hmassEnd := odd_cone_mass
     (14*2^n-2*n-16) 3 b d m hoddEnd
   have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by
