@@ -31,6 +31,13 @@ private theorem rightTower_even (n : Nat) :
       change (2*rightTower n+2)%2=0
       omega
 
+private theorem rightTower_ge_four (n : Nat) : 4 ≤ rightTower n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      change 4≤2*rightTower n+2
+      omega
+
 private theorem rightTower_four (n : Nat) :
     rightTower (n+4)=16*rightTower n+30 := by
   have hi : n+4=n+1+1+1+1 := by omega
@@ -61,14 +68,17 @@ private theorem affine_right_tower_four (n x : Nat) (hx : x%4=3) :
       rw [BB6.Agent15.affineNormalize,dif_neg hn]
   | succ n ih =>
       have he : rightTower n%2=0 := rightTower_even n
-      have hgate : 4≤rightTower (n+1) ∧
-          rightTower (n+1)%2=0 ∧
-          (x+rightTower (n+1))%4=1 := by
-        simp only [rightTower]
-        omega
       have hr : rightTower (n+1)%4=2 := by
         change (2*rightTower n+2)%4=2
         omega
+      have hgate : 4≤rightTower (n+1) ∧
+          rightTower (n+1)%2=0 ∧
+          (x+rightTower (n+1))%4=1 := by
+        refine ⟨rightTower_ge_four (n+1), ?_, ?_⟩
+        · change (2*rightTower n+2)%2=0
+          omega
+        · change (x+(2*rightTower n+2))%4=1
+          rw [Nat.add_mod,hx,hr]
       have hnext : (x+rightTower (n+1)-2)%4=3 := by omega
       have hright : (rightTower (n+1)-2)/2=rightTower n := by
         simp only [rightTower]
