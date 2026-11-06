@@ -74,7 +74,12 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/ExplicitConeSource.lean" Agent8ExplicitConeSource.lean
-          lake env lean Agent8ExplicitConeSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8ExplicitConeSource.olean Agent8ExplicitConeSource.lean
+      - name: Check closed-form geometric cone bounds and finite-horizon corridor
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/ConeClosedFormsSource.lean" Agent8ConeClosedFormsSource.lean
+          lake env lean Agent8ConeClosedFormsSource.lean
       - name: Prove negative-gap residue exponent separation
         working-directory: /tmp/cryptids
         run: |
