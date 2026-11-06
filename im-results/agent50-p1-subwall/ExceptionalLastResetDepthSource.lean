@@ -102,16 +102,19 @@ theorem source_mid_cost_exceptional_last_reset_depth
     have hbpEq : bp+2^(t+3)=4*k+4*t+12 := by
       rw [hpowStep, ← hpow1]
       omega
-    have hkm : k+m+n+7=7*2^n := by omega
+    have hkm : k+(mp+t+1)+n+7=7*2^n := by omega
     have hpow4 : 2^(n+4)=16*2^n := by
       rw [Nat.pow_add]
       norm_num
+      omega
     have hpow3 : 2^(n+3)=8*2^n := by
       rw [Nat.pow_add]
       norm_num
+      omega
     have hpow2 : 2^(n+2)=4*2^n := by
       rw [Nat.pow_add]
       norm_num
+      omega
     have hpowUpper : 2^(t+2)<16*2^n := by
       rw [← hpow1]
       have hhalf : bp/2≤bp := by omega
@@ -123,7 +126,7 @@ theorem source_mid_cost_exceptional_last_reset_depth
         Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hle
       rw [hpow4] at hmono
       omega
-    have hcostDouble : 4*m+2*n+4≤10*2^n := by omega
+    have hcostDouble : 4*(mp+t+1)+2*n+4≤10*2^n := by omega
     have hk4 : 18*2^n≤4*k+2*n+24 := by omega
     have hdpPos : 1≤dp := by omega
     have htLower : n≤t := by
@@ -143,19 +146,18 @@ theorem source_mid_cost_exceptional_last_reset_depth
       have hbpAtN : bp+8*2^n=4*k+4*n+12 := by
         rw [htN,hpow3] at hbpEq
         exact hbpEq
-      have hbpAtN' : bp+4*m+16=20*2^n := by omega
-      have hmpAtN : mp+n+1=m := by omega
-      have hdpAtN : dp+6*2^n=2*m+5 := by omega
+      have hbpAtN' : bp+4*(mp+n+1)+16=20*2^n := by omega
+      have hdpAtN : dp+6*2^n=2*mp+2*n+7 := by omega
       omega
     have hbpAtN1 : bp+16*2^n=4*k+4*n+16 := by
       rw [htEq,hpow4] at hbpEq
       omega
-    have hbpExact : bp+4*m+12=12*2^n := by omega
-    have hbpdpExact : bp+dp+2*m=14*2^n-9 := by
+    have hbpExact : bp+4*(mp+t+1)+12=12*2^n := by omega
+    have hbpdpExact : bp+dp+2*(mp+t+1)=14*2^n-9 := by
       rw [htEq] at hmass1
       omega
-    have hdpExact : dp=2*2^n+2*m+3 := by omega
-    have hmpExact : mp+n+2=m := by omega
+    have hdpExact : dp=2*2^n+2*(mp+t+1)+3 := by omega
+    have hmpExact : mp+n+2=mp+t+1 := by omega
     have hipExact : inverseAt bp dp (n+1)=some (k,1) := by
       simpa [htEq,hc1] using hip
     exact ⟨bp,dp,mp,zp,k,hpre,hzEq,hipExact,rfl,hkm,
