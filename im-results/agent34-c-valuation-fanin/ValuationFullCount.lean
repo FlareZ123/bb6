@@ -137,14 +137,8 @@ theorem zero_exception_direct_parity (x y v u : Nat)
     · exact h
     · simp [h] at hzero
   let k := (x+2*y-9-3*(v-3))/2
-  have hcoord : zeroParentAtValuation x y v=(0,k) := by
-    simp [zeroParentAtValuation,hv]
-    omega
   have hkedge : secNext (0,k)=some (x,y) := by
-    calc
-      secNext (0,k)=secNext (zeroParentAtValuation x y v) :=
-        (congrArg secNext hcoord).symm
-      _=some (x,y) := hz.2.2
+    simpa [k,zeroParentAtValuation] using hz.2.2
   have hk0 : k≠0 := by
     intro hk
     have hkedge0 : secNext (0,0)=some (x,y) := by simpa [k,hk] using hkedge
@@ -204,14 +198,8 @@ theorem one_exception_direct_parity (x y v u : Nat)
           omega
         · simp [h1,h2,h3] at hone
   let k := (x+2*y-11-3*(v-4))/2
-  have hcoord : oneParentAtValuation x y v=(1,k) := by
-    simp [oneParentAtValuation,hv]
-    omega
   have hkedge : secNext (1,k)=some (x,y) := by
-    calc
-      secNext (1,k)=secNext (oneParentAtValuation x y v) :=
-        (congrArg secNext hcoord).symm
-      _=some (x,y) := hhigh.2.2
+    simpa [k,oneParentAtValuation] using hhigh.2.2
   have hk0 : k≠0 := by
     intro hk
     have hkedge0 : secNext (1,0)=some (x,y) := by simpa [k,hk] using hkedge
