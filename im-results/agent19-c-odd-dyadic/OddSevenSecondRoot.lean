@@ -11,8 +11,8 @@ open BB6.Agent46
     authentic blank orbit odd-image invariant. -/
 private theorem second_branch_arithmetic (a k x y:Nat)
     (hx:x%2=1) (hy:y%8=2) (hmod:(x+y+1)%32=16)
-    (hcyl:(5*x+9*y)%128=115) (hbig:256≤x+y+1)
-    (ha:4*a+12=x+y+1) (hk:2*k+a+10=x+2*y) :
+    (hcyl:(5*x+9*y)%128=115) (hbig:48≤x+y+1)
+    (hy6:6≤y) (ha:4*a+12=x+y+1) (hk:2*k+a+10=x+2*y) :
     a%2=1 ∧ k%2=1 ∧ (a+k)%16=8 ∧ 5≤k ∧ 24≤a+k ∧
     5≤((a+3*k-10)/4) ∧ ((a+3*k-10)/4)%2=1 ∧
     (((a+k-4)/2)+((a+3*k-10)/4))%4=1 := by
@@ -24,7 +24,7 @@ private theorem second_branch_arithmetic (a k x y:Nat)
 theorem second_sumseven_forced_root_iff (x y : Nat)
     (hx:x%2=1) (hy:y%8=2) (hy6:6≤y)
     (hmod:(x+y+1)%32=16)
-    (hcyl:(5*x+9*y)%128=115) (hbig:256≤x+y+1) :
+    (hcyl:(5*x+9*y)%128=115) (hbig:48≤x+y+1) :
     BB6.Agent3.CReach x y ↔
     BB6.Agent3.CReach (x+y-2) ((y-2)/2) := by
   constructor
@@ -49,7 +49,7 @@ theorem second_sumseven_forced_root_iff (x y : Nat)
               simpa only [ha,hkeq] using hp
             · rcases hbd with ⟨ha,hk⟩
               obtain ⟨haa,hkk,hsum16,hk5,hsumBig,hp5,hpodd,hpbad⟩ :=
-                second_branch_arithmetic a k x y hx hy hmod hcyl hbig ha hk
+                second_branch_arithmetic a k x y hx hy hmod hcyl hbig hy6 ha hk
               have h4 : (a+k)%4=0 := by omega
               have hn16 : (a+k)%16≠0 := by omega
               have hroot : BB6.Agent3.CReach
