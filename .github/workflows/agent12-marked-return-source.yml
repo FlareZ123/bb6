@@ -1,0 +1,34 @@
+name: Agent 12 marked-return source certificate (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  marked-return-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unmodified original source modules and marked-return theorem
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent12-marked-return"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
+          lean im-results/agent12-marked-return/MarkedReturnSource.lean
