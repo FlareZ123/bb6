@@ -59,4 +59,10 @@ jobs:
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
           lean "$AG43/CountedWall148Source.lean"
-          lean "$AG50SUB/ExceptionalLastResetDepthSource.lean"
+          lean "$AG50SUB/ExceptionalLastResetDepthSource.lean" > /tmp/agent50-exceptional-depth-axioms.txt
+          cat /tmp/agent50-exceptional-depth-axioms.txt
+          grep -q "source_mid_cost_exceptional_last_reset_depth" /tmp/agent50-exceptional-depth-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-exceptional-depth-axioms.txt; then
+            echo "The exact last-reset theorem depends on sorryAx" >&2
+            exit 1
+          fi
