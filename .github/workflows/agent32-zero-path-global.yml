@@ -71,3 +71,5 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/EntryControlAudit.olean im-results/agent32-zero-prefix-global/EntryControlAudit.lean
           lean -o im-results/agent44-drift-closure/PrefixDrift.olean im-results/agent44-drift-closure/PrefixDrift.lean
           lean im-results/agent32-zero-prefix-global/OneTurnSource.lean
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-one-turn.cpp -o /tmp/one-turn-count
+          /tmp/one-turn-count
