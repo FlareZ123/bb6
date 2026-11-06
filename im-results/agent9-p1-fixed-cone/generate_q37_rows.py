@@ -58,16 +58,11 @@ def render_proof(feeder: int, L: int, root: int) -> str:
     parts.extend([
         "",
         f"theorem {check_all} (m : Nat) (hm : m≤{B}) : checkRow {B} {K} {L} m {rows_name} = true := by",
+        "  match m with",
     ])
-    indent = "  "
     for m in range(B + 1):
-        parts.append(indent + "cases m with")
-        indent += "  "
-        parts.append(indent + f"| zero => exact checkRow_{m}")
-        indent += "  "
-        parts.append(indent + "| succ m =>")
-        indent += "  "
-    parts.append(indent + "omega")
+        parts.append(f"  | {m} => exact checkRow_{m}")
+    parts.append(f"  | n+{B + 1} => omega")
     parts.extend([
         "",
         f"def S{suffix} (m z : Nat) : Prop := m≤{B} ∧ z∈{rows_name}[m]!",
