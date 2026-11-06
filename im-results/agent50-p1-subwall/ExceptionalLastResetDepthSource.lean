@@ -133,7 +133,7 @@ theorem source_mid_cost_exceptional_last_reset_depth
       by_contra hnot
       have hle : t+3≤n+2 := by omega
       have hmono : 2^(t+3)≤2^(n+2) :=
-        Nat.pow_le_pow_right (by decide) hle
+        Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hle
       have hmono' : 2^(t+3)≤4*2^n := by
         rw [hpow2] at hmono
         exact hmono
