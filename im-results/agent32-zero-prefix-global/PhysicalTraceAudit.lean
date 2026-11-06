@@ -39,6 +39,69 @@ theorem firstUnknownPhysical_sound (p : PartialMachine) (n : Nat)
                 simpa [firstUnknownPhysical, hp] using h
               exact ih (finiteMove c mv) hn
 
+/-- A one-move prefix can be pulled out of the original finite sparse
+    simulator exactly when its first state-symbol instruction is assigned.
+    This lemma is about actual finite-support tapes, not guessed zero rows. -/
+theorem finitePartialRun_one_prefix (p : PartialMachine) (c : FinRayCfg)
+    (mv : Move)
+    (hp : p (c.state, finiteTape c c.head) = some (some mv)) (n : Nat) :
+    finitePartialRun p (n+1) c = finitePartialRun p n (finiteMove c mv) := by
+  induction n with
+  | zero =>
+      simp [finitePartialRun, finitePartialStep, hp]
+  | succ n ih =>
+      calc
+        finitePartialRun p (n+1+1) c =
+            (finitePartialRun p (n+1) c).bind (finitePartialStep p) := rfl
+        _ = (finitePartialRun p n (finiteMove c mv)).bind
+            (finitePartialStep p) := by rw [ih]
+        _ = finitePartialRun p (n+1) (finiteMove c mv) := rfl
+
+/-- The first unknown physical input is witnessed at a unique actual
+    finite-prefix state, with every preceding consulted instruction
+    successfully assigned by the partial table. -/
+theorem firstUnknownPhysical_has_prefix (p : PartialMachine) (n : Nat)
+    (c : FinRayCfg) (slot : Slot)
+    (h : firstUnknownPhysical p n c = some slot) :
+    ∃ k, k < n ∧ ∃ d : FinRayCfg,
+      finitePartialRun p k c = some d ∧
+      slot = (d.state, finiteTape d d.head) ∧ p slot = none := by
+  induction n generalizing c with
+  | zero => simp [firstUnknownPhysical] at h
+  | succ n ih =>
+      cases hp : p (c.state, finiteTape c c.head) with
+      | none =>
+          have hs : slot = (c.state, finiteTape c c.head) := by
+            simpa [firstUnknownPhysical, hp] using h.symm
+          exact ⟨0, Nat.zero_lt_succ n, c, rfl, hs, by rw [hs]; exact hp⟩
+      | some t =>
+          cases t with
+          | none => simp [firstUnknownPhysical, hp] at h
+          | some mv =>
+              have hnext :
+                  firstUnknownPhysical p n (finiteMove c mv) = some slot := by
+                simpa [firstUnknownPhysical, hp] using h
+              obtain ⟨k, hk, d, hd, hs, hfree⟩ :=
+                ih (finiteMove c mv) hnext
+              refine ⟨k+1, Nat.succ_lt_succ hk, d, ?_, hs, hfree⟩
+              rw [finitePartialRun_one_prefix p c mv hp k]
+              exact hd
+
+/-- Most importantly, the chosen split exists at a physically reachable
+    position in the raw six-state two-symbol Turing machine itself, for
+    *every* total table extending the current sparse node. The
+    original-source finitePartialRun_sound theorem supplies the bridge. -/
+theorem firstUnknownPhysical_is_raw_prefix (p : PartialMachine)
+    (m : Machine) (hm : compatible p m) (n : Nat) (c : FinRayCfg)
+    (slot : Slot)
+    (h : firstUnknownPhysical p n c = some slot) :
+    ∃ k, k < n ∧ ∃ d : FinRayCfg,
+      run m k (embedFinRay c) = some (embedFinRay d) ∧
+      slot = (d.state, finiteTape d d.head) ∧ p slot = none := by
+  obtain ⟨k, hk, d, hd, hs, hfree⟩ :=
+    firstUnknownPhysical_has_prefix p n c slot h
+  exact ⟨k, hk, d, finitePartialRun_sound p m hm c d k hd, hs, hfree⟩
+
 /-- A concrete true blank run: A/0 writes a one and moves right to B,
     B/0 moves back left to A, and the next *physical input* is A/1.
     Only A/0 and B/0 are assigned; the new scanner targets the first
