@@ -168,6 +168,24 @@ At depth four it is:
 
 Both pairs sum exactly to **25^12 = 59,604,644,775,390,625**. The lasso-only depth-four audit had 38,071,441,650,390,625 certified tables (63.873280%); adding Agent6's entry-macro certificates contributes another **2,499,389,648,437,500** raw tables, or **4.193280 percentage points**. The integrated depth-four report exceeds the earlier six-read-zero C++ sufficient-certificate census (58.597775360%) by **9.468784640 percentage points**, and the earlier control-path interpreted report (53.333215232%) by **14.733344768 points**. These are different enumeration policies over the same raw universe; compare their certified raw-table masses, not their per-machine or holdout resolution rates.
 
+### Bounded screen of the 663 historical holdouts
+
+The reproducible screening tool [`scan-holdout-lasso.cjs`](scan-holdout-lasso.cjs) applies the exact-configuration and bidirectional fresh-ray macro *search predicates* to the frozen 663-machine list in `resources/BB6_holdouts_663_2026-10-16.txt`. Its self-tests pass on the four-step read-one lasso, Agent6's three-step entry-macro witness, and the F287 bounded negative example.
+
+The completed CI screen [42306119782](https://github.com/FlareZ123/bb6/actions/runs/42306119782) used:
+- entry prefix limit 10,000 (entry steps 0 through 9,999);
+- blank-origin macro length at most 32;
+- exact configuration repeat search through step 1,000.
+
+Observed result over all 663 machines:
+
+    exactLassoCount          0
+    entryMacroCount          0
+    haltedBeforeLimitCount   0
+    hits                     []
+
+This is a bounded empirical negative screen, not a proof that any machine is nonhalting or that no longer lasso/macro exists. It establishes that the current short exact-cycle and fresh-ray macro predicates do not directly resolve this historical holdout set at these limits. The next useful step for these roots is a stronger machine-specific invariant or a different certificate family, rather than simply increasing the same small limits without a concrete structural hypothesis.
+
 ### Integration with the authentic F287 root
 
 [AuthenticLassoIntegration.lean](AuthenticLassoIntegration.lean) uses Agent4's existing authentic F287 + turn + two-step global audit and applies its `addCertificate` graft to the new read-one lasso cylinder at the same `DecidedBelow 2` bound. It preserves the existing F287 root and earlier certificates while adding the independently source-proved lasso family. The combined `authenticLassoAudit_exhaustive` and `authenticLassoAudit_conserves` theorems compile in the pinned upstream Cryptids / Lean 4.35.0-rc4 environment. Successful source verification: [CI 42305562265](https://github.com/FlareZ123/bb6/actions/runs/42305562265). The optional interpreted combined-report evaluation is tracked separately in [CI 42306317211](https://github.com/FlareZ123/bb6/actions/runs/42306317211).
@@ -182,4 +200,4 @@ Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/R
 
 The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
-**Next:** complete the 663-root lasso/macro screen; investigate stronger certificates for the residual physical-trace open leaves; consider a kernel-checked proof of the depth-four numeric report; and connect survivors to authentic unresolved six-state roots. Do not treat an empirical negative screen or an open leaf as a halting/nonhalting verdict. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
+**Next:** investigate stronger machine-specific certificates for the 663 historical roots and the residual physical-trace open leaves; consider a kernel-checked proof of the depth-four numeric report; and connect any new certificates to authentic unresolved six-state roots. Do not treat the bounded negative screen or an open leaf as a halting/nonhalting verdict. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
