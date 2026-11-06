@@ -34,3 +34,4 @@ jobs:
           done
           lean -o ValuationSource.olean ValuationSource.lean
           python "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/valuation_fanin.py"
+          # The valuation-one source theorem is hash-pinned separately.
