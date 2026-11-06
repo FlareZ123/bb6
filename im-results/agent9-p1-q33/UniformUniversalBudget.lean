@@ -77,5 +77,5 @@ theorem universal_blank_critical_cylinder_budget
     B q hq (by dsimp [q]; omega) hs0 hs1 hn0 hn1
 
 #print axioms lift_feeder_bounds
-#print axioms universal_blank_critical_cylinder
+#print axioms universal_blank_critical_cylinder_budget
 end BB6.Agent9UniformBudget
