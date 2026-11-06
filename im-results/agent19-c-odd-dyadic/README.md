@@ -6,7 +6,7 @@ The strongest current Machine C integration is documented in [JointCriterionInte
 
 The central theorem, `blank_halts_iff_joint_val_six_full`, is an exact equivalence for Machine C. It combines the existing Agent3/11/19/29 high and low restrictions with four additional source-certified infinite exclusions. The fixed-target root decision remains exact. The existential parameter domains remain unbounded, so this does not determine BB(6).
 
-The refined joint CI verification is currently pending in run `42252457830`.
+The refined joint CI verification succeeded in [run `42252457830`](https://github.com/FlareZ123/bb6/actions/runs/42252457830).
 
 ## Main research artifacts
 
