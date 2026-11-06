@@ -51,3 +51,5 @@ jobs:
           done
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/Low622Source.lean .
           lean Low622Source.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/Low427Source.lean .
+          lean Low427Source.lean
