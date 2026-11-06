@@ -232,3 +232,33 @@ Together with existing q>=2 strictly-first-source-certified [EIterDoubleZeroPack
 - Until q0/q1 full strict certificates and real blank trajectory membership, no nonhalting result, new champion bound, or BB(6) solution.
 
 Avoid redundant finite enumeration; prioritize real-root packet-gate closure, strict q1 physical return and marker successor steps. Only genuine publishable math belongs in results/, so intermediate stays in im-results/.
+
+
+## 2026-11-06 23:07Z: D blank-root continuation through the seventeenth exception
+
+Continued the Agent37 DRegular timing-cocycle root chain from the twelfth reentry.
+
+**Verified milestone:** [BlankThirteenthRejoin.lean](../../im-results/agent37-d-timing-cocycle/BlankThirteenthRejoin.lean) passed unchanged-source CI in [run 42306192563](https://github.com/FlareZ123/bb6/actions/runs/42306192563), success at 22:56Z. This authenticates the thirteenth exception after 3,679 regular sections and the Agent25 BGeneral \(p=4\) return to \(L(64t_{13}+29,1,5)\). The Agent37 dossier README was updated to distinguish this verified result from later candidates.
+
+**Provisional arithmetic candidates after the thirteenth reentry** (all reproduced by [check_root17.py](../../im-results/agent37-d-timing-cocycle/check_root17.py), not yet source-CI verified):
+- 14: 5,169 regular sections to \(L(9t_{14}+4,5,1)\), \(t_{14}\bmod27=3\), 79,720-bit unary parameter; BGeneral \(p=3\).
+- 15: 6,821 to \(L(9t_{15}+4,8,1)\), \(t_{15}\bmod27=14\), 89,375 bits; BGeneral \(p=6\).
+- 16: 2,077 to \(L(9t_{16}+4,5,1)\), \(t_{16}\bmod27=26\), 92,317 bits; BGeneral \(p=3\).
+- 17: 2,656 to \(L(9t_{17}+7,7,1)\), \(t_{17}\bmod27=6\), 96,078 bits. Thus \(t_{17}=3u\).
+
+Files:
+- [BlankFourteenthRejoin.lean](../../im-results/agent37-d-timing-cocycle/BlankFourteenthRejoin.lean)
+- [BlankFifteenthRejoin.lean](../../im-results/agent37-d-timing-cocycle/BlankFifteenthRejoin.lean)
+- [BlankSixteenthRejoin.lean](../../im-results/agent37-d-timing-cocycle/BlankSixteenthRejoin.lean)
+- [ExceptionalE7ThirdReturn.lean](../../im-results/agent37-d-timing-cocycle/ExceptionalE7ThirdReturn.lean)
+- [BlankSeventeenthRejoin.lean](../../im-results/agent37-d-timing-cocycle/BlankSeventeenthRejoin.lean)
+
+Important q-index correction: the 17th DRegular source is \(L(9t+7,7,1)\), with suffix \((01)^7 1\). In Agent31's \(X(k,q)\) notation, \(q=7\); the EAllDouble helper parameter is \(6\), since \(\operatorname{oppairs}(7)++[1]=0::\operatorname{pairs}(6)++[1,1]\). The source return is **not pure unary**. The generalized theorem handles all \(t=3u\), \(q=3r+1\), \(r\ge1\), by EAllDouble, full_E_three, and full_A_code_110111_first_return with word code \(10,10,111^{2r-1}\) and tail \(111\). It rejoins at \(L(8(64u+10)+16r+7,3,2)\); the actual root has \(r=2\), endpoint \(L(8(64u+10)+39,3,2)\).
+
+The expanded source workflow [agent25-eleventh-root.yml](../../.github/workflows/agent25-eleventh-root.yml) was reordered to compile the generalized E/E/A lemma before expensive DRegular candidate proofs. The first expanded run [42308627134](https://github.com/FlareZ123/bb6/actions/runs/42308627134) was deliberately cancelled early after a local Lean shape test exposed an incomplete word-code proof. The current expanded run [42309626231](https://github.com/FlareZ123/bb6/actions/runs/42309626231) was queued at commit 0bb47f7; check status before treating any 14–17 theorem as verified.
+
+Lean 4.36.0-rc2 is locally installed at /tmp/lean/lean-4.36.0-rc2-linux/bin. The supplied zip contained a nested tar.zst, so after joining the split files and unzipping, extract with tar --zstd -xf. A scratch Lean test /tmp/test-e7-shapes.lean validated the generalized source-section list-shape lemmas after adding induction lemmas for wordCode and wordInc on replicated true tokens. The Git clone attempt failed due unavailable network; source-level integration remains delegated to CI.
+
+**Arithmetic lookahead only, not source-proven:** from the proposed 17th endpoint \(L(512u+119,3,2)\), the DRegular replay predicts an 18th exception after 2,902 sections, \(L(9t_{18}+4,3,1)\); BGeneral \(p=1\) returns to \(L(64t_{18}+23,1,5)\). Then 9,780 sections reach a 19th exception \(L(9t_{19}+10,9,1)\); EAGeneral \(p=2\) returns to pure unary \(L(64t_{19}+113,0,0)\). Then 2,040 sections reach a 20th exception \(L(9t_{20}+7,5,1)\), with \(t_{20}\bmod27=4\), which enters the \(k\equiv1,t\equiv1\pmod3\) off-L third-return family. Recompute from the corrected 17th endpoint before extending the arithmetic script or making source claims.
+
+No results/ file was added: all 14–17 work is still pending original-source CI and remains in im-results.
