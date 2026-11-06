@@ -1,7 +1,7 @@
 import EPositiveFirstFour
 
 namespace BB6.Agent36PositiveFirst
-open CryptidBoundary BB6.Agent36PositiveDoubleZero BB6.Agent36EZeroPairs0
+open CryptidBoundary BB6.Agent36PositiveDoubleZero BB6.Agent36EZeroPairs0 BB6.CryptidFirstReturn
 
 set_option maxHeartbeats 12000000
 set_option maxRecDepth 8192
@@ -54,29 +54,36 @@ theorem aPositiveFirst (m q r : Nat) (ys : List Bool) :
   let i := s8 m q r ys
   have hab : run 7 a = b := by
     dsimp [a,b,s0,s1]
-    rw [aDoubleSeven]
+    exact aDoubleSeven (q+1) (core m) (pairs r ++ (false::ys))
   have hbc : run (2*r) b = c := by
     dsimp [b,c,s1,s2]
     rw [aTenOppIter]
   have hcd : run 3 c = d := by
     dsimp [c,d,s2,s3]
-    rw [a_three]
+    exact a_three r (oppairs (q+2) ++ core m) ys
   have hde : run (2*r) d = e := by
     dsimp [d,e,s3,s4]
     rw [d_pair_run]
   have hef : run 2 e = f := by
     dsimp [e,f,s4,s5]
-    rw [d_two]
+    exact d_two (oppairs (q+2) ++ core m)
+      (List.replicate (2*r) true ++ ([true,true] ++ ys))
   have hfg : run 4 f = g := by
-    dsimp [f,g,s5,s6]
-    rw [fourOnes]
+    change run 4 (s5 m q r ys) = s6 m q r ys
+    have hp : s5 m q r ys =
+        (⟨oppairs (q+2) ++ core m,true,
+          List.replicate (2*r+4) true ++ ys,3⟩ : Cfg) := by
+      simp [s5, fourOnes]
+    rw [hp]
     exact dBridge q (core m) (List.replicate (2*r+4) true ++ ys)
   have hgh : run (2*q) g = h := by
     dsimp [g,h,s6,s7]
     rw [cWalk_run]
   have hhi : run 4 h = i := by
-    dsimp [h,i,s7,s8]
-    rw [cBase]
+    change run 4 (s7 m q r ys) = s8 m q r ys
+    exact cBase m
+      (List.replicate (2*q) true ++
+        ([true,false,true,true] ++ (List.replicate (2*r+4) true ++ ys)))
   have ha : NoPhysical a 7 :=
     aSevenNoPhysical (oppairs (q+2) ++ core m)
       (pairs r ++ (false::ys))
@@ -96,13 +103,14 @@ theorem aPositiveFirst (m q r : Nat) (ys : List Bool) :
     walkNoPhysical q (core m)
       ([true,false,true,true] ++ (List.replicate (2*r+4) true ++ ys))
   have hh : NoPhysical h 4 := cBaseNoPhysical m q r ys
-  have hi : NoPhysical i (2*m+3) :=
-    noF_noPhysical i (2*m+3)
-      (by intro t ht; exact sweepB_firstF m
-        ([false,true,true,true] ++
-          (List.replicate (2*q) true ++
-            ([true,false,true,true] ++
-              (List.replicate (2*r+4) true ++ ys)))) t ht)
+  have hi : NoPhysical i (2*m+3) := by
+    apply noF_noPhysical i (2*m+3)
+    intro t ht
+    exact sweepB_firstF m
+      ([false,true,true,true] ++
+        (List.replicate (2*q) true ++
+          ([true,false,true,true] ++
+            (List.replicate (2*r+4) true ++ ys)))) t ht
   have h7 : NoPhysical h (4+(2*m+3)) :=
     join h i 4 (2*m+3) hh hhi hi
   have h6 : NoPhysical g (2*q+(4+(2*m+3))) :=
@@ -124,7 +132,8 @@ theorem aPositiveFirst (m q r : Nat) (ys : List Bool) :
   have htime :
       7+(2*r+(3+(2*r+(2+(4+(2*q+(4+(2*m+3)))))))) =
         20+2*q+4*r+(2*m+3) := by omega
-  simpa only [a, htime] using h0
+  change NoPhysical a (20+2*q+4*r+(2*m+3))
+  rwa [htime] at h0
 
 #print axioms aPositiveFirst
 end BB6.Agent36PositiveFirst
