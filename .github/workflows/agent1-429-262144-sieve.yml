@@ -35,7 +35,12 @@ jobs:
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod32.olean im-results/agent39-429-1021/BB429RootMod32.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent30-429-even16/BB429InverseKernel16.olean im-results/agent30-429-even16/BB429InverseKernel16.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-262144-sieve/BB429SplitSieve.olean im-results/agent1-429-262144-sieve/BB429SplitSieve.lean | tee /tmp/agent1-429-sieve-check.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-262144-sieve/BB429Distinct.olean im-results/agent1-429-262144-sieve/BB429Distinct.lean | tee /tmp/agent1-429-distinct-check.log
           if grep -q sorryAx /tmp/agent1-429-sieve-check.log; then
             echo "ERROR: unproved axiom in sieve"
+            exit 1
+          fi
+          if grep -q sorryAx /tmp/agent1-429-distinct-check.log; then
+            echo "ERROR: unproved axiom in exact count"
             exit 1
           fi
