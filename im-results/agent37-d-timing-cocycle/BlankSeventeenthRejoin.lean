@@ -17,13 +17,20 @@ def terminal2656 : DRegular.L :=
 
 def t17 : Nat := (terminal2656.a-7)/9
 
-/-- Exact DRegular computation after the sixteenth E/B reentry. -/
+/-- One kernel computation certifies both the exact seventeenth
+    exceptional state and the residue needed by its three-return source proof. -/
+theorem terminal2656_certificate :
+    DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ ∧
+      t17 % 27 = 6 := by decide
+
 theorem terminal2656_exact :
-    DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ := by decide
+    DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ :=
+  terminal2656_certificate.1
 
 /-- The exceptional parameter lies in the k≡1, t≡0 (mod 3), q=6
     three-return subfamily. -/
-theorem t17_mod27 : t17 % 27 = 6 := by decide
+theorem t17_mod27 : t17 % 27 = 6 :=
+  terminal2656_certificate.2
 
 def u17 : Nat := t17/3
 
