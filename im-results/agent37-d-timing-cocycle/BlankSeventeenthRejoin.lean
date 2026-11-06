@@ -68,7 +68,7 @@ def reentry17Time : Nat := exception17Time+packet17Time
 theorem blank_seventeenth_reentry :
     ObsEq (run reentry17Time blank)
       (DRegularSource.sourceSection
-        ⟨8*(64*u17+10)+45,0,0⟩) := by
+        ⟨8*(64*u17+10)+39,3,2⟩) := by
   have hstart :
       BB6.Agent2E7ThirdReturn.sourceStart u17 =
         DRegularSource.sourceSection ⟨9*t17+7,7,1⟩ := by
@@ -80,7 +80,7 @@ theorem blank_seventeenth_reentry :
   rw [hstart] at hpacket
   exact source_chain exception17Time packet17Time blank
     (DRegularSource.sourceSection ⟨9*t17+7,7,1⟩)
-    (DRegularSource.sourceEnd u17)
+    (BB6.Agent2E7ThirdReturn.sourceEnd u17)
     blank_seventeenth_exception
     (by simpa only [packet17Time] using hpacket)
 
