@@ -51,12 +51,12 @@ theorem twoAdicSplit_spec : ∀ n, 0<n →
       · have hmul : m+1=2*(m/2)+1 := by
           have hdiv := Nat.mod_add_div (m+1) 2
           omega
-        simpa [twoAdicSplit,hodd] using hmul
+        simp [twoAdicSplit,hodd]
       · simp [twoAdicSplit,hodd]
 
 theorem twoAdicSplit_factor (n : Nat) (hn : 0<n) :
     n=2^(twoAdicSplit n).1*
-      (2*((twoAdicSplit n).2-1)/2+1) := by
+      (2*(((twoAdicSplit n).2-1)/2)+1) := by
   obtain ⟨hdecomp,hodd⟩ := twoAdicSplit_spec n hn
   have hfactor : (twoAdicSplit n).2=
       2*(((twoAdicSplit n).2-1)/2)+1 := by omega
