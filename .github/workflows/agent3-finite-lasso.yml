@@ -9,7 +9,7 @@ permissions:
 jobs:
   source-proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -48,3 +48,8 @@ jobs:
           lean im-results/agent3-finite-lasso/Agent3Lasso90.lean
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent3-finite-lasso/check-lasso90-disjoint.cpp -o /tmp/agent3-lasso90-disjoint
           /tmp/agent3-lasso90-disjoint
+          python im-results/agent3-finite-lasso/generate-lasso4510-batches.py
+          test "$(cat im-results/agent3-finite-lasso/Agent3Lasso4510Batch*.lean | sha256sum | cut -d' ' -f1)" = "db50ea4aec4dee0b55c19258f728ae0eb5fbb7af9b358600c387dd2d963487dd"
+          for src in im-results/agent3-finite-lasso/Agent3Lasso4510Batch*.lean; do
+            lean "$src"
+          done
