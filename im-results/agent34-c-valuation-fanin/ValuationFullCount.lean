@@ -162,7 +162,9 @@ theorem zero_exception_direct_parity (x y v u : Nat)
   obtain ⟨hv,huzero⟩ := pow2_odd_factor_unique (n+3) v u hpow
   have hsumEven : 2∣x+y := by
     rw [hfact,huzero]
-    simpa using Nat.pow_dvd_pow 2 (by omega)
+    have hvpos : 1≤v := by omega
+    have hpowdvd : 2^1∣2^v := Nat.pow_dvd_pow (m:=1) (n:=v) 2 hvpos
+    simpa using hpowdvd
   obtain ⟨w,hw⟩ := hsumEven
   have hx : x%2=0 := by omega
   have hn : n%2=1 := by omega
@@ -236,7 +238,9 @@ theorem one_exception_direct_parity (x y v u : Nat)
     obtain ⟨hv,huzero⟩ := pow2_odd_factor_unique (n+4) v u hpow
     have hsumOdd : 2∣x+y+1 := by
       rw [hfact,huzero]
-      simpa using Nat.pow_dvd_pow 2 (by omega)
+      have hvpos : 1≤v := by omega
+      have hpowdvd : 2^1∣2^v := Nat.pow_dvd_pow (m:=1) (n:=v) 2 hvpos
+      simpa using hpowdvd
     obtain ⟨w,hw⟩ := hsumOdd
     have hx : x%2=1 := by omega
     have hn : n%2=0 := by omega
