@@ -153,7 +153,7 @@ theorem zero_parent_mem_candidates (k x y v u : Nat)
         congrArg secNext hcoord
       _=some (x,y) := hedge
   unfold zeroExactCandidates
-  simp [hcond]
+  simp [hcond,hcoord]
 
 theorem one_parent_mem_candidates (k x y v u : Nat)
     (hy : 5≤y) (hfact : x+y+1=2^v*(2*u+1))
@@ -224,7 +224,7 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
           congrArg secNext hcoord
         _=some (x,y) := hedge
     unfold oneExactCandidates
-    simp [hcond]
+    simp [hcond,hcoord]
 
 theorem even_sum_parent_mem_fullCandidates (a k x y v u : Nat)
     (hy : 5≤y) (hS : (x+y)%2=0)
