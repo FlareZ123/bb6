@@ -2,7 +2,7 @@ import S4ToggleHead
 import Lean.Elab.Tactic.Omega
 
 namespace S4HeadAttractor
-open S4ToggleHead
+open S4Power S4Octet S4Toggle S4ToggleHead
 set_option maxHeartbeats 0
 
 /-- Heads below the absorbing band move strictly toward it. -/
@@ -63,6 +63,40 @@ theorem eventually_band (a : Nat) :
 theorem dynamics_on_band :
     f 280=281 ∧ f 281=283 ∧ f 283=282 ∧ f 282=280 ∧ f 284=284 := by
   decide
+
+
+/-- Any successful actual P orbit has the total head recurrence, for every
+    suffix and for every finite number of returns. -/
+theorem prun_head (n a : Nat) (S U : List Nat)
+    (hr : prun n (a::S)=some U) :
+    ∃ T, U=hrun n a::T := by
+  induction n generalizing U with
+  | zero =>
+      exact ⟨S, by simpa [prun,hrun] using (Option.some.inj hr.symm)⟩
+  | succ n ih =>
+      change (prun n (a::S)).bind P=some U at hr
+      cases hprev : prun n (a::S) with
+      | none => simp [hprev] at hr
+      | some V =>
+          obtain ⟨T,hV⟩ := ih V hprev
+          subst V
+          have hp : P (hrun n a::T)=some U := by simpa [hprev] using hr
+          obtain ⟨V,hU⟩ := P_head (hrun n a) T U hp
+          refine ⟨V, ?_⟩
+          simpa [hrun] using hU
+
+/-- All surviving genuine P configurations reach the absorbing head band
+    by the explicit Lyapunov horizon. Earlier halting is still possible. -/
+theorem rooted_survivor_head_band (a : Nat) (S U : List Nat)
+    (hr : prun (delta a) (a::S)=some U) :
+    ∃ b T, U=b::T ∧ 280≤b ∧ b≤284 := by
+  obtain ⟨T,hU⟩ := prun_head (delta a) a S U hr
+  refine ⟨hrun (delta a) a,T,hU,?_ , ?_⟩
+  · exact (eventually_band a).1
+  · exact (eventually_band a).2
+
+#print axioms prun_head
+#print axioms rooted_survivor_head_band
 
 #print axioms low_move
 #print axioms high_move
