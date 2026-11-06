@@ -1,0 +1,117 @@
+name: Agent 11 source-authentic Machine C low-58 inverse (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  agent11-low58-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build authentic Machine C source and infinite low-58 root exclusion
+        run: |
+          mkdir -p /tmp/a38-section
+          cp im-results/agent11-c-line/CLine.lean /tmp/a38-section/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a38-section/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a38-section/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,BounceHaltClosed,OddSectionExponential,SectionHaltingBasin,SectionCompleteBasin,Agent46CBridge,BlankDyadicGate}.lean /tmp/a38-section/
+          cp im-results/agent38-c-section-mod4/{Agent38SectionParity,DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor,FurtherDyadicMod16}.lean /tmp/a38-section/
+          cp im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 /tmp/a38-section/
+          cd /tmp/a38-section
+          base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
+          echo '48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  ThirdStageOddDepth.lean' | sha256sum -c -
+          export LEAN_PATH="."
+          lean --version
+          lean -o CLine.olean CLine.lean
+          lean -o GenericSection.olean GenericSection.lean
+          lean -o CReachBridge.olean CReachBridge.lean
+          lean -o CPhaseRank.olean CPhaseRank.lean
+          lean -o CSectionTotal.olean CSectionTotal.lean
+          lean -o JumpHigh.olean JumpHigh.lean
+          lean -o JumpMacro.olean JumpMacro.lean
+          lean -o JumpSection.olean JumpSection.lean
+          lean -o JumpBounce.olean JumpBounce.lean
+          lean -o JumpOneReturn.olean JumpOneReturn.lean
+          lean -o JumpBounceSections.olean JumpBounceSections.lean
+          lean -o BounceCalc.olean BounceCalc.lean
+          lean -o BounceProof.olean BounceProof.lean
+          lean -o FastSectionDef.olean FastSectionDef.lean
+          lean -o FastSectionProof.olean FastSectionProof.lean
+          lean -o FastSectionHalting.olean FastSectionHalting.lean
+          lean -o BounceParity.olean BounceParity.lean
+          lean -o BounceHaltLevel.olean BounceHaltLevel.lean
+          lean -o BounceHaltingInputs.olean BounceHaltingInputs.lean
+          lean -o BounceHaltBasin.olean BounceHaltBasin.lean
+          lean -o BounceHaltClosed.olean BounceHaltClosed.lean
+          lean -o Agent38SectionParity.olean Agent38SectionParity.lean
+          lean -o DyadicDepthPrune.olean DyadicDepthPrune.lean
+          lean -o SectionHaltingBasin.olean SectionHaltingBasin.lean
+          lean -o OddSectionExponential.olean OddSectionExponential.lean
+          lean -o SectionCompleteBasin.olean SectionCompleteBasin.lean
+          lean -o Agent46CBridge.olean Agent46CBridge.lean
+          lean -o BlankDyadicGate.olean BlankDyadicGate.lean
+          lean -o DyadicResidualCriterion.olean DyadicResidualCriterion.lean
+          lean -o SectionMod8Predecessor.olean SectionMod8Predecessor.lean
+          lean -o FurtherDyadicMod16.olean FurtherDyadicMod16.lean
+          lean -o ThirdStageOddDepth.olean ThirdStageOddDepth.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean .
+          for f in Agent3CImage Agent3COneFamily Agent3COrbitIff; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionAffineInverse,ReachAffine}.lean .
+          for f in BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam SectionAffineInverse ReachAffine; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric}.lean .
+          for f in BounceInverse FeederGeneric FeederOrbitGeneric; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/{C48Inverse,C48Reach,C48Depth,C48Residual,C16Inverse,C16Reach,C16Depth,C16Residual}.lean .
+          for f in C48Inverse C48Reach C48Depth C48Residual C16Inverse C16Reach C16Depth; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean -o C16Residual.olean C16Residual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformInverse.lean .
+          lean -o UniformInverse.olean UniformInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformReach.lean .
+          lean -o UniformReach.olean UniformReach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-odd-image/BounceReverse.lean .
+          lean -o BounceReverse.olean BounceReverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformEdges.lean .
+          lean -o UniformEdges.olean UniformEdges.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformOrbitIff.lean .
+          lean -o UniformOrbitIff.olean UniformOrbitIff.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Inverse.lean .
+          lean -o UniformS25Inverse.olean UniformS25Inverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Reach.lean .
+          lean -o UniformS25Reach.olean UniformS25Reach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/UniformS25Residual.lean .
+          lean -o UniformS25Residual.olean UniformS25Residual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/EvenEvenInverse.lean .
+          lean -o EvenEvenInverse.olean EvenEvenInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/S5FirstInverse.lean .
+          lean -o S5FirstInverse.olean S5FirstInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/S5Reach.lean .
+          lean -o S5Reach.olean S5Reach.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/ExtraEvenOrbit.lean .
+          lean -o ExtraEvenOrbit.olean ExtraEvenOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/OddEvenInverse.lean .
+          lean -o OddEvenInverse.olean OddEvenInverse.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent24-c48/EvenRightSixOrbit.lean .
+          lean -o EvenRightSixOrbit.olean EvenRightSixOrbit.lean
+          # Unchanged full bounce inverse bridge, including every exceptional parent.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse}.lean .
+          for f in EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/Low58Source.lean .
+          lean Low58Source.lean
