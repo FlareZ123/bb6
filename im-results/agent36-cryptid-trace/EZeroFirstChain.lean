@@ -79,8 +79,7 @@ theorem eZeroBoundaryNoPhysical (m r : Nat) (ys : List Bool) :
     exact d_tail44 m (List.replicate (2*r) true ++ ys)
   have ha : NoPhysical a 4 := eFourNoPhysical m r ys
   have hb : NoPhysical b 7 :=
-    aSevenNoPhysical
-      (true::(pairs (m+3) ++ [true,true]))
+    aSevenNoPhysical (leftCarrier m)
       (pairs r ++ (false::ys))
   have hc : NoPhysical c (2*r) :=
     aTenNoPhysical r ([false,true,true] ++ leftCarrier m) (false::ys)
