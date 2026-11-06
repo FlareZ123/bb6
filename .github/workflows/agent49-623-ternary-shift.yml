@@ -29,7 +29,7 @@ jobs:
       - name: Free disk and restore mathlib cache
         working-directory: /tmp/cryptids
         run: |
-          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
           lake exe cache get
       - name: Compile source #623 and authentic parity budget
         working-directory: /tmp/cryptids
