@@ -62,4 +62,5 @@ jobs:
           lean -o "$P/EZeroFirst.olean" "$P/EZeroFirst.lean"
           lean -o "$P/EThirdTailPhysical.olean" "$P/EThirdTailPhysical.lean"
           lean -o "$P/ThirdTailFirst.olean" "$P/ThirdTailFirst.lean"
-          lean "$P/ThirdTailPositive.lean"
+          lean -o "$P/ThirdTailPositive.olean" "$P/ThirdTailPositive.lean"
+          lean "$P/ThirdTailSecondBE.lean"
