@@ -59,3 +59,5 @@ jobs:
           lean -o "$Z/Generic.olean" "$Z/Generic.lean"
           lean -o "$Z/BoundaryPadding.olean" "$Z/BoundaryPadding.lean"
           lean "$E/EOnePairPhysical.lean"
+          lean -o "$A/EDouble.olean" "$A/EDouble.lean"
+          lean "$E/EAllDoubleThenB.lean"
