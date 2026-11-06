@@ -3,6 +3,11 @@ import NumericPower148
 namespace BB6.Agent50OffsetNumeric
 open BB6.Agent43Numeric148
 
+private theorem offset_poly_increment (u : Nat) :
+    poly (u+1)=poly u+(4*u+17) := by
+  simp only [poly, Nat.add_mul, Nat.mul_add, Nat.mul_one, Nat.one_mul]
+  omega
+
 /-- A fixed factor 32 in the shell argument costs only five exponent bits.
     The large-shell induction has enough spare margin for it. -/
 theorem poly_plus_five_below_pow (u : Nat) (hu : 9 ≤ u) :
@@ -15,7 +20,7 @@ theorem poly_plus_five_below_pow (u : Nat) (hu : 9 ≤ u) :
       have hlin : 4*(k+9)+17 ≤ poly (k+9) := by
         simp only [poly]
         omega
-      have hinc := poly_increment (k+9)
+      have hinc := offset_poly_increment (k+9)
       have hidx : (k+1)+9=(k+9)+1 := by omega
       rw [hidx, hinc, Nat.pow_succ]
       omega
@@ -46,8 +51,11 @@ theorem shell_large_numeric_triple (n z : Nat)
         have h := Nat.mul_le_mul_right ((2^5)^z) (show (3:Nat)≤32 by decide)
         simpa only [Nat.mul_comm] using h
       _ = (2^5)^(z+1) := by
-        rw [Nat.pow_succ]
-        simp only [show (2:Nat)^5=32 by decide]
+        calc
+          (2^5)^z*32=(2^5)^z*(2^5) := by
+            congr 1
+            decide
+          _=(2^5)^(z+1) := (Nat.pow_succ (2^5) z).symm
   have hright : (n+2)^(2*z+2) ≤
       (2^(u+2))^(2*z+2) :=
     Nat.pow_le_pow_left hbase (2*z+2)
