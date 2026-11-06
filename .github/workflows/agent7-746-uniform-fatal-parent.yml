@@ -78,6 +78,7 @@ jobs:
           lean -o "$g/RayNonFork.olean" "$g/RayNonFork.lean"
           lean -o "$g/SixPacketRoot.olean" "$g/SixPacketRoot.lean"
           lean -o "$g/ForkDecompose.olean" "$g/ForkDecompose.lean"
+          lean -o "$g/PacketSelector.olean" "$g/PacketSelector.lean"
           lean -o "$b/FourthBranch.olean" "$b/FourthBranch.lean"
           lean -o "$b/FourthExactTwo.olean" "$b/FourthExactTwo.lean"
           lean -o "$b/FourthOddGap.olean" "$b/FourthOddGap.lean"
