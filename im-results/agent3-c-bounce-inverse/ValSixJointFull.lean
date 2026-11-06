@@ -1,7 +1,8 @@
 import ValSixJointM1
 import JointFiveSieve
 import AffineFourGlobal
-import Low124SharpBlank
+import Low124Stop
+import High124Stop
 import OddSevenSecondCylinder
 import MixedRectangle25Four
 import MixedRectangle27Zero
@@ -236,15 +237,8 @@ theorem blank_halts_iff_joint_val_six_full :
           m k hm hstop).2 hr
       have hnon124 : ¬(128≤m ∧ m%128=0) := by
         rintro ⟨hm128,hmod⟩
-        have hpow' : (2:Nat)^7 ∣ (2:Nat)^(2*m+3) :=
-          Nat.pow_dvd_pow 2 (by omega)
-        have hpow : 128 ∣ (2:Nat)^(2*m+3) := by
-          simpa using hpow'
-        have hstopmod : (k+3*m+4)%128=0 := by
-          rw [hstop]
-          exact Nat.mod_eq_zero_of_dvd hpow
-        have hkmod : k%128=124 := by omega
-        exact BB6.Agent3.blank_no_rectangle_124 1 k (by decide) hkmod hr
+        exact (BB6.Agent3.blank_no_low_m_zero_mod128
+          m k hmod hm128 hstop) hr
       exact Or.inl ⟨m,⟨⟨hlow,hnon1,hnon2⟩,hnon124⟩,hroot⟩
     · let k := 2^(2*m+2)*(j+3)-(j+3*m+5)
       have hr : BB6.Agent3.CReach (2*j+3) k :=
@@ -277,22 +271,8 @@ theorem blank_halts_iff_joint_val_six_full :
       have hnon124 :
           ¬(j%32=31 ∧ 3≤m ∧ (j+3*m)%128=127) := by
         rintro ⟨hj31,hm3,hpair⟩
-        have hpow' : (2:Nat)^7 ∣ (2:Nat)^(2*m+2) :=
-          Nat.pow_dvd_pow 2 (by omega)
-        have hpow : 128 ∣ (2:Nat)^(2*m+2) := by
-          simpa using hpow'
-        have hprod : 128 ∣ (2:Nat)^(2*m+2)*(j+3) := by
-          rcases hpow with ⟨q,hq⟩
-          refine ⟨q*(j+3),?_⟩
-          rw [hq]
-          ac_rfl
-        have hstopmod : (k+j+3*m+5)%128=0 := by
-          rw [hstop]
-          exact Nat.mod_eq_zero_of_dvd hprod
-        have hkmod : k%128=124 := by omega
-        have hxmod : (2*j+3)%64=1 := by omega
-        exact BB6.Agent3.blank_no_rectangle_124
-          (2*j+3) k hxmod hkmod hr
+        exact (BB6.Agent3.blank_no_high_124
+          j m k hj31 hm3 hpair hstop) hr
       have hnonSecond :
           ¬(j%8=5 ∧ m%8=4 ∧ (9*j+39)%128=(3*m)%128) := by
         rintro ⟨hj5,hm4,hpair⟩
