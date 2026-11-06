@@ -119,3 +119,25 @@ theorem blank_run_gate_parent_finite_envelope (n a d b e : Nat)
 #print axioms blank_run_gate_parent_finite_envelope
 
 end BB6.Agent8GatePredecessorSource
+
+
+/-- A fixed positive-gap base output has at most one exponent at which its
+first evaluator can hit the ternary-ones residue. -/
+theorem positive_gap_residue_exponent_unique
+    {N A B : Nat}
+    (hAB : A < B)
+    (hA : N % 3^(A+1) = 3^A)
+    (hB : N % 3^(B+1) = 3^B) : False := by
+  have hdiv1 : 3^(A+1) ∣ 3^(B+1) := by
+    obtain ⟨k, hk⟩ : B+1 = (A+1)+k := by omega
+    refine ⟨3^k, ?_⟩
+    rw [hk, Nat.pow_add]
+  have hdiv2 : 3^(A+1) ∣ 3^B := by
+    obtain ⟨k, hk⟩ : B = (A+1)+k := by omega
+    refine ⟨3^k, ?_⟩
+    rw [hk, Nat.pow_add]
+  have hmod : N % 3^(A+1) = (N % 3^(B+1)) % 3^(A+1) := by
+    rw [Nat.mod_mod_of_dvd N hdiv1]
+  rw [hB, Nat.mod_eq_zero_of_dvd hdiv2] at hmod
+  have hpos : 0 < 3^A := Nat.pow_pos (by decide)
+  omega
