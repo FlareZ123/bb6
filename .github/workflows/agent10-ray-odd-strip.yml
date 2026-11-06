@@ -78,4 +78,5 @@ jobs:
           lean -o "$b/ForkOddDead27.olean" "$b/ForkOddDead27.lean"
           lean -o "$b/ForkOddDead486.olean" "$b/ForkOddDead486.lean"
           lean -o "$b/RayOddForkStrip.olean" "$b/RayOddForkStrip.lean"
-          echo "Agent 10 source-genuine all-ray-depth fork strip verified."
+          lean -o "$b/RayOddForkExtended.olean" "$b/RayOddForkExtended.lean"
+          echo "Agent 10 source-genuine all-ray-depth fork strip and extension verified."
