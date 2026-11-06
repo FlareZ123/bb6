@@ -135,3 +135,45 @@ t = n+1:
 Thus the two costs `m=3*2^n-4` and `m=3*2^n-3` are impossible in this source cone. This widens the exact reset-depth classification well beyond the earlier `2*m+n+2 <= 5*2^n` (approximately `m<=2.5*2^n`) refinement. The result is still a necessary condition on an inverse-history witness. It does not establish that the prefix hub or terminal is blank-reachable, and it does not decide P1 or BB(6).
 
 **Verification:** successful original-source Lean CI [42295780908](https://github.com/FlareZ123/bb6/actions/runs/42295780908), head `7e16c0e9372b01b101fd26e029fe6dbdd6f3882d`. The terminal axiom audit for `source_exceptional_last_reset_two_depths` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The run compiled the unchanged original P1 source dependencies and the new theorem. The earlier Agent50 no-tail and mid-cost exact-depth theorems also compile in the same workflow.
+
+
+## Unconditional exact depth identity for the exceptional right-five reset (Agent 43, 2026-11-06)
+
+The same original-source file now contains `source_exceptional_last_reset_depth_window`, with **no cost hypothesis**. For every `n>=14`, `z>=1`, and genuine
+
+```
+CountCone (14*2^n-2*n-16) 3 b 5 m z,
+```
+
+it produces a genuine prefix `CountCone ... bp dp mp zp`, a final inverse reset `inverseAt bp dp t = some (k,1)`, and the exact equations
+
+```
+z = zp+1
+b = 2*k-4
+k+m+n+7 = 7*2^n
+bp + 2^(t+3) = 4*k+4*t+12
+dp + 14*2^n = 2^(t+3) + 2*mp + 2*n + 7
+m = mp+t+1
+2^(t+3) = 2*k + dp + 2*t + 9
+t <= n+1.
+```
+
+Equivalently, the final identity is `2^(t+3)=b+dp+2*t+13`. Since `dp>=1` and `t>=1`, it implies
+
+```
+b+16 <= 2^(t+3).
+```
+
+The terminal mass equation `b+5+2*m=14*2^n-2*n-13` therefore gives the cost-dependent lower-depth consequences:
+
+| Cost cap | Forced final reset depth |
+|---|---|
+| `2*m+2*n+7 <= 10*2^n` | `n <= t <= n+1` |
+| `2*m+2*n+7 <= 12*2^n` | `n-1 <= t <= n+1` |
+| `2*m+2*n+7 <= 13*2^n` | `n-2 <= t <= n+1` |
+
+The first line also has the sharper two-case affine classification above. The latter two lines are arithmetic corollaries of the unconditional source theorem and the mass identity; they are not separate named Lean theorems in this file.
+
+**Verification:** successful original-source Lean CI [42296908772](https://github.com/FlareZ123/bb6/actions/runs/42296908772), head `779a99a6b454511070fef9c0b06caa1a7fd678a4`. The axiom audit for `source_exceptional_last_reset_depth_window` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+This closes a broad range of possible final-reset depths for the synthetic inverse cone. The remaining high-cost sector and the actual blank-start `Reach` status of the prefix hub are still unresolved.
