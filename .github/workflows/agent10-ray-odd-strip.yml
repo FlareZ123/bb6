@@ -93,4 +93,5 @@ jobs:
           lean -o "$b/RayThirdGeometry.olean" "$b/RayThirdGeometry.lean"
           lean -o "$b/RayThirdGate.olean" "$b/RayThirdGate.lean"
           lean -o "$b/RayThirdNoRoot.olean" "$b/RayThirdNoRoot.lean"
-          echo "Agent 10 source-verified all-depth third generation off-ray gate."
+          lean -o "$b/RayTwoTierSelector.olean" "$b/RayTwoTierSelector.lean"
+          echo "Agent 10 source-verified all-depth third generation and exact two-tier source fork selector."
