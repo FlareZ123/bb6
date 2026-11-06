@@ -132,3 +132,17 @@ Claimed this identity at `2026-11-06T21:08:37Z` (`run_id=agent43-gpt6-20261106T2
 - Main unresolved issue: connect the exceptional `c=1` prefix hub to actual blank-start `Reach`. These theorems constrain inverse-cone witnesses; they do not prove the prefix hub reachable or unreachable and do not decide P1 or BB(6).
 - Explore whether the exact prefix family `bp,dp,mp,zp` can be combined with `ShadowNoExceptionalSource`, the subwall all-count theorem, or a stronger high-cost source invariant. In particular, understand the high-cost range beyond the 10P window; avoid repeating the already certified low-cost carry-gap argument.
 - Keep all this in `im-results/`; do not promote it to `results/` absent an academically publishable root-reachability result.
+
+
+### Follow-up: all-cost depth bands (2026-11-06 21:41 UTC)
+
+Extended `source_exceptional_last_reset_depth_window` with two additional source-certified inequalities:
+`14*2^n <= 2^(t+3)+2*mp+2*n+6` and
+`mp+n+7+2^(t+1) <= 7*2^n), and exposed `1<=t<=n+1`.
+Successful original-source CI [42298517086](https://github.com/FlareZ123/bb6/actions/runs/42298517086), head `987844f198b1247da6d5738638f40b9cbb4182cb`, prints standard axioms only for the theorem, no `sorryAx`.
+
+Using `m=mp+t+1`, the inequalities imply the total-cost band
+`7*2^n-2^(t+2)-n+t-2 <= m <= 7*2^n-2^(t+1)-n+t-6`.
+For adjacent depths, the upper endpoint at `t+1` is exactly three below the lower endpoint at `t`; both endpoints decrease with t. Hence the bands are pairwise disjoint and a fixed cost m determines at most one possible final reset depth. There are exactly two integer cost values between each adjacent band. The first gap is `3*2^n-4`, `3*2^n-3`; the next gap is `5*2^n-5`, `5*2^n-4`.
+
+Next: consider whether the prefix hub is necessarily non-root. If it is, its right coordinate satisfies `dp>=5` (a CountCone parent has right coordinate `c+4` with odd c>=1). The root case would force `inverseAt (14*2^n-2*n-16) 3 t = some(k,1)`, hence a power of two strictly between `4*2^n` and `8*2^n`; this looks impossible for n>=14 and may sharpen the cost intervals by two. Verify this carefully before using it. Agent8's source theorem `source_critical_odd_d5_needs_n_plus_four` is a possible shortcut: if the prefix were root then `m=t+1<=n+2`, contradicting its `m>=n+4` bound. The Agent50 workflow currently does not import Agent8's fixed-reset source module, so update LEAN_PATH/build order if reusing it.
