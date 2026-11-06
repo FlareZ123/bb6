@@ -116,11 +116,12 @@ def new_affine_cone(a: int, d: int) -> bool:
 
 
 def predecessors(target: tuple[int, int]) -> list[tuple[int, int]]:
-    """Candidate complete inverse search using affine ray representatives.
+    """Candidate inverse search using affine ray representatives.
 
-    Each unbounded ray is reduced to its least convenient budget-satisfying
-    base, with the finite prefix checked directly. A candidate is always
-    rechecked by high_level_next before being returned.
+    Each unbounded ray is reduced to a budget-satisfying base, with the finite
+    prefix checked directly. Every candidate is rechecked by high_level_next.
+    Completeness of this full enumerator remains exploratory; the Lean module
+    proves the four sector envelopes, not this Python search procedure.
     """
     x, y = target
     found: set[tuple[int, int]] = set()
@@ -230,7 +231,7 @@ def check_small_grid(limit: int = 60) -> bool:
 
 
 def backward_tree(target: tuple[int, int], max_nodes: int = 100_000):
-    """Finite reverse closure; strict mass growth makes the tree acyclic."""
+    """Candidate reverse tree; strict mass growth makes exact edges acyclic."""
     frontier = [target]
     seen = {target}
     parent_map = {}
@@ -267,9 +268,9 @@ def main() -> None:
     print("Ray inverse vs brute force, targets 0..60:", check_small_grid(60))
     b7 = (486 * 7 + 42, 486 * 7 + 46)
     nodes, parents, closed = backward_tree(b7)
-    print("B(7) reverse tree closed:", closed)
-    print("B(7) reverse tree nodes:", len(nodes))
-    print("Blank root in B(7) reverse tree:", (0, 7) in nodes)
+    print("B(7) candidate tree exhausted:", closed)
+    print("B(7) candidate tree nodes:", len(nodes))
+    print("Blank root in B(7) candidate tree:", (0, 7) in nodes)
     for state in sorted(nodes, key=lambda p: p[0] + p[1]):
         print(" ", state, "parents:", parents.get(state, []))
     exceptions, checked, halted = root_cone_exceptions(10_000)
