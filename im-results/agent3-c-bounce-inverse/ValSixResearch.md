@@ -100,3 +100,30 @@ These congruence families are absent from prior Agent3, Agent19, and Agent29 lis
 ## Scope and next mathematically productive directions
 
 The complement `x%16=5, y%16=10, (x+y+1)%256=192` outside `y%256=26` remains partly unresolved, despite its exact one-parent blank-root reduction. The infinite surviving low and high halting parameter families remain unsolved. Integrating this second source-certified inverse into an exact repeatedly-normalizing root solver may expose additional no-root families. The route to BB(6) still requires resolving all outstanding machines and a global proof of maximality; these Machine C partial obstructions alone do not establish nonhalting.
+
+
+## New third valuation-six source-root obstruction (source certified 14:14 UTC)
+
+The complementary true-root iff from `ValSixSecondSource.lean` supports a **strictly larger three-link all-time empty blank cylinder**, independent of the earlier four-link `x%256=165,y%256=26` condition:
+
+```text
+y % 64 = 58, (x+y+1) % 256 = 192   ==>   not CReach x y.
+```
+
+[ValSixThirdConeArithmetic.lean](ValSixThirdConeArithmetic.lean) proves the exact modular preconditions for three original-source inverses. [ValSixThirdConeSource.lean](ValSixThirdConeSource.lean) applies (i) the new source-exact sum-192 root iff, (ii) Agent15 exact affine reachability iff, (iii) Agent3 low-valuation odd/odd unique-root equivalence. The forced terminal counter is odd, at least five, with sum 1 mod4, excluded globally by the authentic blank odd-image invariant. The arithmetic includes the full low boundary; no simulation horizon or unproved parent is assumed.
+
+The resulting **third disjoint infinite high stopping candidate exclusion** is proved by [ValSixThirdHighArithmetic.lean](ValSixThirdHighArithmetic.lean), [ValSixThirdHighSource.lean](ValSixThirdHighSource.lean):
+
+```text
+m >= 4, j % 32 = 1, (j+63)%256=(3*m)%256,
+k+j+3*m+5=2^(2*m+2)*(j+3)
+    ==> not CReach (2*j+3) k
+```
+
+The unbounded explicit index progression `(j,m)=(33+256*n,32+256*n)` satisfies these arithmetic restrictions for every natural n. **Original unchanged Machine C source CI [42231672498](https://github.com/FlareZ123/bb6/actions/runs/42231672498) SUCCESS** compiled all four third-cone modules and printed only standard Lean axioms for `third_cone_blank_unreachable` and `high_third_cone_blank_unreachable`.
+
+[ValSixJointThree.lean](ValSixJointThree.lean) strengthens the previous exact source-root halting iff by excluding this third infinite family, retaining every earlier high and low restriction; [ValSixThirdNovel.lean](ValSixThirdNovel.lean) establishes independent universal prior-sieve nonredundancy and explicit unbounded previous admissibility. Both have separate manual source CI validation pending at the writing of this note; confirm latest `agent29-joint-mod128.yml` run before calling them certified.
+
+[ValSixMixedNormalize.lean](ValSixMixedNormalize.lean) is a further proposed reusable integration: it combines all four prior source-exact forced inverse normalization gates with the new second valuation-six forced gate, terminates on weighted rank `x+2*y`, and composes a source-exact fixed-target Boolean blank-reachability oracle with the normalized state. Its novel value is possible additional repeated inverse pruning beyond the current three cylinders. It is **pending original-source CI** and should not be treated as certified until compiled and axiom-audited.
+
+The general Machine C nonhalting question remains open. The strongest immediate program is to exploit the new source-exact normalizer on surviving *unbounded* low/high halting loci, aiming for a semantic invariant that rules out every candidate, rather than accumulating disconnected residue exclusions.
