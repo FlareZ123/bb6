@@ -84,3 +84,14 @@ jobs:
           lean im-results/agent8-p1-precision-source/Q41Adaptive26.lean | tee -a /tmp/agent8-adaptive.log
           if grep -E -q 'sorryAx|error:' /tmp/agent8-adaptive.log; then exit 1; fi
           grep -F "BB6.Agent8Q41Adaptive26.blank_no_critical_658_plus_2pow30' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent8-adaptive.log
+
+      - name: Verify nine additional 2pow18 source-authentic P1 gateway classes
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent8-p1-precision-source"
+          python im-results/agent8-p1-precision-source/generate_qbatch18.py
+          lean im-results/agent8-p1-precision-source/QBatch18.lean | tee /tmp/agent8-qbatch18.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent8-qbatch18.log; then exit 1; fi
+          for q in 117 309 425 446 566 670 710 726 990; do
+            grep -F "BB6.Agent8Batch18.q${q}_source_gateway_excluded' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent8-qbatch18.log
+          done
