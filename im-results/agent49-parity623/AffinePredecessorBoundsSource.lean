@@ -54,6 +54,7 @@ private theorem highLevel_far_odd_eq (a d : Nat)
   have ha : a ≠ 0 := by omega
   have hbranch : d%2=1 ∧ a≥d+5 := ⟨hd,by omega⟩
   simp [highLevelNext,ha,hbranch]
+  omega
 
 private theorem highLevel_far_even_eq (a d : Nat)
     (hd : d%2=0) (hside : d+3≤a) :
@@ -62,6 +63,7 @@ private theorem highLevel_far_even_eq (a d : Nat)
   have hodd : ¬ (d%2=1 ∧ a≥d+5) := by omega
   have heven : d%2=0 ∧ a≥d+3 := ⟨hd,by omega⟩
   simp [highLevelNext,ha,hodd,heven]
+  omega
 
 private theorem highLevel_right_odd_eq (a d : Nat)
     (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hside : a≤d) :
@@ -72,6 +74,7 @@ private theorem highLevel_right_odd_eq (a d : Nat)
   have h3 : a%2 ≠ 1 := by omega
   have h4 : a ≠ d+2 := by omega
   simp [highLevelNext,h0,h1,h2,h3,h4,hd]
+  omega
 
 private theorem highLevel_right_even_eq (a d : Nat)
     (ha : 0<a) (he : a%2=0) (hd : d%2=0) (hside : a≤d) :
@@ -84,6 +87,7 @@ private theorem highLevel_right_even_eq (a d : Nat)
   have h4 : a ≠ d+2 := by omega
   have h5 : d%2 ≠ 1 := by omega
   simp [highLevelNext,h0,h1,h2,h3,h4,h5]
+  omega
 
 private theorem extractFirstShift (a d t x y : Nat)
     (hshift : highLevelNext (.D (a+t) d) =
@@ -101,7 +105,7 @@ private theorem extractFirstShift (a d t x y : Nat)
           have hval : HighLevelState.D x y = liftFirstState t (.D x0 y0) := by
             simpa [hbase] using hshift
           simp [liftFirstState] at hval
-          injection hval with hx hy
+          rcases hval with ⟨hx,hy⟩
           exact ⟨x0,y0,hbase,hx,hy⟩
 
 private theorem extractRightShift (a d t x y : Nat)
