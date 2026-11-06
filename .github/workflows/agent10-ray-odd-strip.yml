@@ -87,4 +87,5 @@ jobs:
           lean -o "$g/ForkDecompose.olean" "$g/ForkDecompose.lean"
           lean -o "$g/PacketSelector.olean" "$g/PacketSelector.lean"
           lean -o "$b/RayForkStripSelect.olean" "$b/RayForkStripSelect.lean"
-          echo "Agent 10 source-verified odd-fork strip and exact packet selector."
+          lean -o "$b/RayPacketHigh.olean" "$b/RayPacketHigh.lean"
+          echo "Agent 10 source-verified odd-fork strip and exact high-margin six-packet."
