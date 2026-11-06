@@ -29,14 +29,13 @@ theorem even_burst_affine_return (n W : Nat)
   have hcond :
       4*((0+3)*2^(n-1)) ≤ 2*0+W+3*(n-1)+9 := by
     omega
-  have hnon : BB429Burst.firstRun n (0,W) ≠ none := by
-    rw [BB429Burst.prefix_exists_iff]
-    exact ⟨hn1,hcond⟩
-  rcases Option.ne_none_iff_exists'.mp hnon with ⟨p,hp⟩
-  rcases p with ⟨a,b⟩
+  have hexists : ∃ a b, BB429Burst.firstRun n (0,W)=some (a,b) := by
+    rw [BB429Burst.prefix_exists_iff (n-1) 0 W]
+    exact ⟨by omega,hcond⟩
+  rcases hexists with ⟨a,b,hp⟩
   have hprefix : BB429.run n (0,W)=some (a,b) :=
-    BB429DyadicStarts.first_prefix_is_source n 0 W a b hp
-  have hformula := BB429Burst.prefix_formula n 0 W a b hp
+    BB429DyadicStarts.first_prefix_is_source (0,W) n a b hp
+  have hformula := BB429Burst.prefix_formula n (0,W) a b hp
   have ha : a+3=3*2^n := by simpa using hformula.1
   have hab : 2*a+b=W+3*n := by simpa using hformula.2
   have hpow4 : 2^n%4=0 := by
