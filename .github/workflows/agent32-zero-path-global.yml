@@ -40,12 +40,15 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
           lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
+          lean im-results/agent32-zero-prefix-global/ZeroRowAudit.lean
       - name: Independently exhaust the six read-zero rows
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-union.cpp -o /tmp/zero-union-check
           /tmp/zero-union-check
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-six-rows.cpp -o /tmp/zero-six-check
+          /tmp/zero-six-check
       - name: Evaluate exact combined frontier mass (explicitly requested only)
         if: ${{ inputs.evaluate_mass }}
         run: |
