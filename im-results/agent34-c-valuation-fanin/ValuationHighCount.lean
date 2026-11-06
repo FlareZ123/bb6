@@ -7,28 +7,49 @@ open BB6.Agent46
 /-- The permitted even-input bounce depths, encoded by half-depths.
 The source valuation theorem fixes the parity, so one half-depth
 parameter enumerates each possible recursive depth. -/
+def evenDepthLimit (v x : Nat) : Nat :=
+  if x%2=0 ∧ v%2=0 then v/2-1 else v/2
+
+def oddDepthLimit (v x : Nat) : Nat :=
+  if x%2=1 ∧ v%2=0 then v/2-1 else v/2
+
 def evenDepthCandidates (v x : Nat) : List Nat :=
   let p := if x%2=0 then 1 else 0
-  ((List.range (v/2)).filter (fun i => decide (2*i+p+2≤v))).map
-    (fun i => 2*i+p)
+  (List.range (evenDepthLimit v x)).map (fun i => 2*i+p)
 
-/-- The permitted odd-input bounce depths, encoded by half-depths. -/
 def oddDepthCandidates (v x : Nat) : List Nat :=
   let p := x%2
-  ((List.range (v/2)).filter (fun i => decide (2*i+p+2≤v))).map
-    (fun i => 2*i+p)
+  (List.range (oddDepthLimit v x)).map (fun i => 2*i+p)
 
 theorem evenDepthCandidates_length (v x : Nat) :
     (evenDepthCandidates v x).length ≤ v/2 := by
-  unfold evenDepthCandidates
-  rw [List.length_map]
-  exact Nat.le_trans (List.length_filter_le _ _) (by simp)
+  unfold evenDepthCandidates evenDepthLimit
+  rw [List.length_map,List.length_range]
+  by_cases h : x%2=0 ∧ v%2=0
+  · simp [h]
+  · simp [h]
 
 theorem oddDepthCandidates_length (v x : Nat) :
     (oddDepthCandidates v x).length ≤ v/2 := by
-  unfold oddDepthCandidates
-  rw [List.length_map]
-  exact Nat.le_trans (List.length_filter_le _ _) (by simp)
+  unfold oddDepthCandidates oddDepthLimit
+  rw [List.length_map,List.length_range]
+  by_cases h : x%2=1 ∧ v%2=0
+  · simp [h]
+  · simp [h]
+
+theorem evenDepthCandidates_length_sharp (v x : Nat)
+    (hv : v%2=0) (hx : x%2=0) :
+    (evenDepthCandidates v x).length ≤ v/2-1 := by
+  unfold evenDepthCandidates evenDepthLimit
+  rw [List.length_map,List.length_range]
+  simp [hv,hx]
+
+theorem oddDepthCandidates_length_sharp (v x : Nat)
+    (hv : v%2=0) (hx : x%2=1) :
+    (oddDepthCandidates v x).length ≤ v/2-1 := by
+  unfold oddDepthCandidates oddDepthLimit
+  rw [List.length_map,List.length_range]
+  simp [hv,hx]
 
 theorem evenDepthCandidates_mem (v x n : Nat)
     (hbound : n+2≤v) (hpar : (n+1)%2=x%2) :
@@ -43,19 +64,14 @@ theorem evenDepthCandidates_mem (v x n : Nat)
     · have hn : n%2=0 := by omega
       simp [p,hx]
       omega
-  have hi : n/2 < v/2 := by omega
-  have hfilter : n/2 ∈ (List.range (v/2)).filter
-      (fun i => decide (2*i+p+2≤v)) := by
-    apply List.mem_filter.mpr
-    constructor
-    · exact List.mem_range.mpr hi
-    · have hcond : 2*(n/2)+p+2≤v := by
-        rw [← hrepr]
-        exact hbound
-      simp [hcond]
+  have hi : n/2 < evenDepthLimit v x := by
+    unfold evenDepthLimit
+    rcases Nat.mod_two_eq_zero_or_one x with hx | hx <;>
+      rcases Nat.mod_two_eq_zero_or_one v with hv | hv <;>
+      simp [hx,hv] <;> omega
   unfold evenDepthCandidates
   apply List.mem_map.mpr
-  exact ⟨n/2,hfilter,hrepr.symm⟩
+  exact ⟨n/2,List.mem_range.mpr hi,hrepr.symm⟩
 
 theorem oddDepthCandidates_mem (v x n : Nat)
     (hbound : n+2≤v) (hpar : n%2=x%2) :
@@ -63,28 +79,21 @@ theorem oddDepthCandidates_mem (v x n : Nat)
   let p := x%2
   have hrepr : n=2*(n/2)+p := by
     have hdiv := Nat.div_add_mod n 2
-    have hx := Nat.mod_two_eq_zero_or_one x
-    have hn : n%2=x%2 := hpar
-    rcases hx with hx | hx
-    · have hn' : n%2=0 := by omega
+    rcases Nat.mod_two_eq_zero_or_one x with hx | hx
+    · have hn : n%2=0 := by omega
       simp [p,hx]
       omega
-    · have hn' : n%2=1 := by omega
+    · have hn : n%2=1 := by omega
       simp [p,hx]
       omega
-  have hi : n/2 < v/2 := by omega
-  have hfilter : n/2 ∈ (List.range (v/2)).filter
-      (fun i => decide (2*i+p+2≤v)) := by
-    apply List.mem_filter.mpr
-    constructor
-    · exact List.mem_range.mpr hi
-    · have hcond : 2*(n/2)+p+2≤v := by
-        rw [← hrepr]
-        exact hbound
-      simp [hcond]
+  have hi : n/2 < oddDepthLimit v x := by
+    unfold oddDepthLimit
+    rcases Nat.mod_two_eq_zero_or_one x with hx | hx <;>
+      rcases Nat.mod_two_eq_zero_or_one v with hv | hv <;>
+      simp [hx,hv] <;> omega
   unfold oddDepthCandidates
   apply List.mem_map.mpr
-  exact ⟨n/2,hfilter,hrepr.symm⟩
+  exact ⟨n/2,List.mem_range.mpr hi,hrepr.symm⟩
 
 /-- Reconstruct the unique even-first, even-right source candidate
 at a given recursive bounce depth from its target coordinates. -/
