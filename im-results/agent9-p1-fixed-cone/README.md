@@ -1,6 +1,6 @@
 # Exact finite-q dyadic shadow closure: intermediate frontier data
 
-**Agent 9, 2026-11-05.** Purely *shadow-graph* computations, **not** authentic P1 `Reach` exclusions or machine-halting decisions. Use these as candidate finite inverse certificates for source-level proof. This dossier stays in `im-results/` by design.
+**Agent 9, 2026-11-05 to 2026-11-06.** This dossier records exact finite-q shadow graph computations. A shadow closure alone is not an authentic P1 `Reach` exclusion; three cases below have since been lifted through the unchanged original source relation. The remaining rows are computational candidates only. This technical data and its generators stay in `im-results/` by design.
 
 ## What is computed
 
@@ -32,10 +32,20 @@ over all nonnegative `t` for which `2^t∣z` and the required parity makes `z'` 
 | 101 | 29882 | 29856 | 769 / 768 | 11 / 11 |
 | 113 | 2348 | 2410 | 227 / 226 | 10 / 10 |
 
-Every finite closure shown is a **computational mathematical candidate only**. It does not demonstrate that the original predecessor cone is finite with source verification, nor does it rule out positive-even right-counter exits, exceptional `c=1`, or original blank-root reachability. Source lifting via [Agent 9's budget-parametric core](../agent9-param-budget/ShadowFiniteBudgetK.lean) requires the exact two-feeder encoding, proper exponent gap `budget+K+3≤N`, source terminal obstructions, and a credible width inequality.
+## Source-lifted fixed-q cases
 
-## Strategic implication
+Three of the high-cost finite shadows have now been lifted to the original P1 `Reach` relation by the arbitrary-`K`, arbitrary-budget source bridge in [the q-base cylinder dossier](../agent9-p1-q41/README.md):
 
-Several still-uncovered indices have complete *fixed-q* finite shadows but cumulative costs much greater than the m≤12 criterion used for parametric q modulo1024. For example, q33 requires m≤41 and at most 9 binary factors for its right-coordinate z, while q37 needs m≤250 and at most 9. These may be approachable with specialized source-certified inequalities using the genuine lower bound `2^(16q)`, rather than the weaker global linear lower bound `2^(16q)≥65536q` used for q≥29 and small cost. The extra work is to prove original terminal barriers, and kernel-check thousands of finite graph edges efficiently (potentially by `decide`/reflection).
+| q0 | K | B | Source-certified family | CI |
+|---:|---:|---:|---|---|
+| 37 | 10 | 250 | `q=37+2^260 r`, `n=594+2^264 r` | [42258300305](https://github.com/FlareZ123/bb6/actions/runs/42258300305) |
+| 70 | 10 | 57 | `q=70+2^67 r`, `n=1122+2^71 r` | [42253385501](https://github.com/FlareZ123/bb6/actions/runs/42253385501) |
+| 89 | 11 | 51 | `q=89+2^62 r`, `n=1426+2^66 r` | [42253385501](https://github.com/FlareZ123/bb6/actions/runs/42253385501) |
 
-This numerical census is **not new BB(6) progress until one of those cases is lifted through unmodified original source and every predecessor exit is discharged**. The source-certified infinite-class result and 700/1024 density remain in [the proper academic synthesis](../../results/2026-11-05-p1-700-source-gateway-density-agent9.md). Future agents should check prior fixed-index source results before claiming a new excluded value.
+Each statement excludes only the necessary original-source critical gateway `BB6.Agent1.Reach 2 (H(16q+2))` throughout the indicated infinite q cylinder. None decides the P1 machine or establishes a BB(6) bound.
+
+The q37 graph required a scalable kernel certificate. [QBudgetRows.lean](./QBudgetRows.lean) checks one cost row at a time: each row's z values are verified against all t<K, and every valid successor is required to lie in the next row. The 251 row theorems per feeder are individually reduced by `decide`; a nested case proof assembles them into a uniform row-check theorem. The predicate-based source bridge then lifts the two closed invariants without a global linear List-membership reduction. [generate_q37_rows.py](./generate_q37_rows.py) deterministically regenerates the data and proof modules.
+
+## Remaining shadow-only candidates
+
+The other rows in the census remain finite computational candidates. In particular, q45 needs B=401, q101 needs B=769, and q113 needs B=227; no original-source lift is claimed here. The earlier list-based global checker was too expensive for q37, and the row-grouped certificate is the currently validated route for larger graphs. Future work should prioritize the remaining source exits and budget inequalities, while checking prior exact source families before claiming new coverage.
