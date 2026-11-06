@@ -1,6 +1,6 @@
 # S4 uniform infinite drifting cylinder
 
-**Claim and status (6 November 2026).** For the exact finite-list S4 three-drain map `P` from [S4 triple-drain reduction](../agent5-s4-octet/README.md), every list in the four-digit cylinder
+**Claim and status (6 November 2026; source-checked).** For the exact finite-list S4 three-drain map `P` from [S4 triple-drain reduction](../agent5-s4-octet/README.md), every list in the four-digit cylinder
 
 ```text
 [284,1646,1026,x] ++ S,     x ∈ ℕ, S any finite list of natural digits
@@ -38,7 +38,7 @@ This is a parameter-uniform, infinite nonhalting cylinder rather than a single l
 
 - `S4DriftRay.lean` imports the repository's unchanged `S4Toggle` and uses the same `P` and `prun` definitions as the existing source-certified S4 reduction; it adds no axioms or new semantics.
 - Local Lean **4.36.0-rc2** compiled the proofs against a definition-matching copy of the three-drain interface, with `#print axioms` yielding only `[propext, Quot.sound]`. The source proof uses `simp [P,G,H]` and an arithmetic induction.
-- The exact checked-in theorem is included in the existing **manual-only** [original-Cryptids source CI workflow](../../.github/workflows/agent7-s4-original.yml) after the original `S4Toggle` import. **Until a successful full-source CI is recorded, local checking does not establish that this exact file compiled against the unmodified upstream modules.** The established original raw-machine to `P` connection was separately certified in [run 41965231342](https://github.com/FlareZ123/bb6/actions/runs/41965231342).
+- The exact checked-in theorem passed the existing **manual-only** [original-Cryptids source CI workflow](../../.github/workflows/agent7-s4-original.yml), [run 42287516418](https://github.com/FlareZ123/bb6/actions/runs/42287516418), at pinned repository revision `1cffc9fc95cc16cf93bfde8c4cce28878cf713cc`. The run built the unmodified original Cryptids machine acceleration at `c86f15861709b76042998c5211c7b2f83991621b`, compiled the complete S4 adapter chain, then compiled `S4DriftRay.lean` immediately after the real `S4Toggle.olean`; the job's full source-check step and all other steps succeeded. This validates compilation and axioms against the genuine imported source, beyond the local stand-in check. The established original raw-machine to `P` connection was separately certified in [run 41965231342](https://github.com/FlareZ123/bb6/actions/runs/41965231342).
 - The source of `H` is [S4PowerGate.lean](../agent5-s4-length/S4PowerGate.lean); the original public Cryptids revision is `c86f15861709b76042998c5211c7b2f83991621b`.
 
 ## Scientific boundary and next test
