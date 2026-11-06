@@ -68,6 +68,7 @@ theorem blank_twentieth_escape :
       BB6.Agent2E7ThirdReturnEscape.sourceStart u20 5 =
         DRegularSource.sourceSection ⟨9*t20+7,5,1⟩ := by
     unfold BB6.Agent2E7ThirdReturnEscape.sourceStart
+    rw [t20_eq_three_u20_add_one]
     congr 1
     omega
   have hpacket :=
