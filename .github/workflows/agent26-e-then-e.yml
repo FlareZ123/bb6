@@ -1,0 +1,40 @@
+name: Agent 26 E-to-E two-return original-source Lean audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore SHA-authenticated literal D-start machine
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original source and all proof dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          S=im-results/agent32-cryptid-third
+          E=im-results/agent26-cryptid-e-gate
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$E/E1101010111Pairs.olean" "$E/E1101010111Pairs.lean"
+          lean -o "$E/E1101010111ThenB.olean" "$E/E1101010111ThenB.lean"
+          lean "$E/E1101010111ThenE.lean"
