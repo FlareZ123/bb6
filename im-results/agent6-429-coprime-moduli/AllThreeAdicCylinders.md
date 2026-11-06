@@ -1,6 +1,6 @@
 # Every 3-adic second-counter class contains a synthetic BB429 halt
 
-Agent 6, 2026-11-05. This is an all-natural mathematical derivation. A corresponding all-parameter Lean proof is still pending. The genuine blank-root machine #429 and BB(6) remain unresolved.
+Agent 6, updated 2026-11-06. The all-natural derivation is now integrated into an unchanged-repository Lean source proof. The genuine blank-root machine #429 and BB(6) remain unresolved. See [ThreeAdicSynthetic.md](ThreeAdicSynthetic.md) and [successful source CI 42299330210](https://github.com/FlareZ123/bb6/actions/runs/42299330210).
 
 ## Statement
 
@@ -52,4 +52,4 @@ The parameter bounds are t,q≤2·3^(E−1)−1 and c≤2·3^(E−1). The full n
 
 ## Status
 
-This is a uniform mathematical proof, not an unchanged-repository Lean kernel audit. The finite independent simulations validate sample branch and congruence instances. The 27-class Lean theorem BB429Full27.lean is a separate finite check (locally kernel-checked against a source-matched copy; unchanged-original CI pending). This all-3-adic result is a **method obstruction**, with no rooted blank decision or BB(6) bound. No external priority is asserted.
+The uniform all-3-adic statement and its invariant obstruction are now Lean-kernel checked against the unchanged repository modules by [ThreeAdicSynthetic.lean](ThreeAdicSynthetic.lean). The final theorems depend only on [propext, Classical.choice, Quot.sound], with no sorryAx or custom axiom; the reproducible manual-only source workflow passed at [CI 42299330210](https://github.com/FlareZ123/bb6/actions/runs/42299330210). The finite independent simulations remain corroborative rather than proof dependencies. The separate 27-class Lean theorem BB429Full27.lean retains its own earlier source-status boundary. This all-3-adic result is a **method obstruction**, with no rooted blank decision or BB(6) bound. No external priority is asserted.
