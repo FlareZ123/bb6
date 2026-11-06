@@ -83,7 +83,7 @@ private theorem source_wall_gap (q b d m : Nat) (hq : 1≤q)
 
 private theorem source_depth (q b d m t k c : Nat) (hq : 1≤q)
     (cfg : Certificate q) (hcone : OddCone (rootB q) 3 b d m)
-    (hmod : b%4=0) (hi : inverseAt b d t=some (k,c)) : t≤8 := by
+    (hmod : b%4=0) (hi : inverseAt b d t=some (k,c)) : t≤9 := by
   obtain ⟨w,z,alpha,hmem,hz,hw,hoff,hscaled⟩ :=
     cone_encoded q hq cfg.nodes cfg.root cfg.closed cfg.small cfg.nodiv
       b d m (by simpa [rootB,nn] using hcone) hmod
