@@ -1,14 +1,13 @@
-name: Agent 23 source-verified unified C26 low/high root sieve (manuon:
-  workflow_dispatch:
+name: Agent 23 source-verified unified C26 low/high root sieve (manual)
 
-ed]
+on:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   agent23-c26-joint:
-    if: github.event_name != 'pull_request' || (github.head_ref == 'audit-agent11-image-20261105' || github.head_ref == 'audit-agent11-low7-20261105')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
