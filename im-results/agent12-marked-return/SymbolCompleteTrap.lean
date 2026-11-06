@@ -113,7 +113,7 @@ theorem bothSymbolClosedCheck_sound (p : PartialMachine)
       cases outcome with
       | none => simp [bothSymbolStepCheck, hp] at hstep
       | some mv =>
-          exact ⟨mv, hp, by simpa [bothSymbolStepCheck, hp] using hstep⟩
+          exact ⟨mv, rfl, by simpa [bothSymbolStepCheck, hp] using hstep⟩
 
 def bothSymbolPrefixCheck (p : PartialMachine) (n : Nat)
     (mask : Fin 6 → Bool) : Bool :=
