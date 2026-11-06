@@ -38,7 +38,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
           lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
           base="$GITHUB_WORKSPACE/im-results/agent20-needle-coprime"
-          for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedlePeriodCore NeedlePeriodTriple NeedleAffineParent NeedleThreeTerminalParents NeedleTerminalAffineSource NeedleTripleDistinctSource NeedleThreeTerminalSource; do
+          for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedlePeriodCore NeedlePeriodTriple NeedleAffineParent NeedleThreeTerminalParents NeedleTerminalAffineSource NeedleTripleDistinctSource NeedleThreeTerminalSource NeedleVariableValuation NeedleVariableValuationSource; do
             cp "$base/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
