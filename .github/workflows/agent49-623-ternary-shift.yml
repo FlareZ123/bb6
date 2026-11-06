@@ -59,7 +59,12 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RightTailTwoStepSource.lean" Agent8RightTailTwoStepSource.lean
-          lake env lean Agent8RightTailTwoStepSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RightTailTwoStepSource.olean Agent8RightTailTwoStepSource.lean
+      - name: Prove all-finite-depth right-ray tail survival
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RightTailAllDepthSource.lean" Agent8RightTailAllDepthSource.lean
+          lake env lean Agent8RightTailAllDepthSource.lean
       - name: Prove negative-gap residue exponent separation
         working-directory: /tmp/cryptids
         run: |
