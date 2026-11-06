@@ -108,7 +108,7 @@ The combined Lean file prints axioms for the central iff and each new family the
 
 Do not use `Low124SharpBlank.lean` as a certified proof. Its attempted `decide` reductions fail, and its emitted theorem depends on `sorryAx`. This integration intentionally uses the older parameter-specific source proofs.
 
-The final refined joint build is pending in CI run `42252457830`. Earlier successful run `42248919012` checked the preceding version before the quotient-redundant 25/4 condition was removed and before the concrete 27/0 nonredundancy witness was added.
+The final refined joint build succeeded in CI run `42252457830` at 16:31:29 UTC. This run includes the removal of the quotient-redundant 25/4 condition, the isolated new 27/0 branch, the high-124 prior-sieve theorem, and the concrete 27/0 nonredundancy witness. Earlier successful run `42248919012` checked the preceding version with the full 25/4 and 27/0 parameter rectangles.
 
 ## Remaining mathematical gap
 
