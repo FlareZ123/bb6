@@ -31,7 +31,8 @@ jobs:
           done
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
-          lean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
+          lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
+          lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
       - name: Independently exhaust the six read-zero rows
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
