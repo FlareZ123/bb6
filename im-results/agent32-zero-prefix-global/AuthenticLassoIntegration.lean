@@ -91,8 +91,9 @@ theorem authenticLasso_known_cylinder_mass_numeric :
     cylinderMass rootCylinder + cylinderMass turnTable +
       cylinderMass twoStepHaltTable + cylinderMass readOneLassoTable =
         102996826171876 := by
-  rw [authenticLasso_known_cylinder_mass]
-  decide
+  calc
+    _ = 1 + 2 * 25^9 + 25^10 := authenticLasso_known_cylinder_mass
+    _ = 102996826171876 := by decide
 
 #print axioms authenticLasso_known_cylinder_mass
 #print axioms authenticLasso_known_cylinder_mass_numeric

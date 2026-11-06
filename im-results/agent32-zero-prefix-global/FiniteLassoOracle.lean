@@ -54,7 +54,7 @@ theorem lasso_run_add (m : Machine) (c : Config) (n k : Nat) :
   | zero => simp [run]
   | succ k ih =>
     rw [Nat.add_succ, run, ih]
-    cases h : run m n c <;> simp [h, run]
+    cases h : run m n c <;> simp [run]
 
 theorem lasso_run_periodic (m : Machine) (c : Config) (k : Nat)
     (hcycle : run m k c = some c) :
@@ -71,7 +71,7 @@ theorem lasso_run_prefix_exists (m : Machine) (c : Config) (k : Nat)
   | zero =>
     have : n = 0 := by omega
     subst n
-    simpa [run] using h
+    simp [run]
   | succ k ih =>
     by_cases heq : n = k+1
     · subst n
@@ -208,8 +208,9 @@ theorem readOneLasso_mass :
 
 theorem readOneLasso_mass_numeric :
     cylinderMass readOneLassoTable = 3814697265625 := by
-  rw [readOneLasso_mass]
-  decide
+  calc
+    cylinderMass readOneLassoTable = 25^9 := readOneLasso_mass
+    _ = 3814697265625 := by decide
 
 theorem readOneLasso_works (m : Machine)
     (hm : compatible readOneLassoTable m) : DecidedBelow 6 m :=
