@@ -41,3 +41,4 @@ jobs:
           lean ValuationOneOrbit.lean
           cp "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/ValuationSmall.lean" .
           lean ValuationSmall.lean
+          python "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/low_y34.py"
