@@ -2,12 +2,6 @@ name: Agent 32 authentic F287 plus finite-lasso integration (manual)
 
 on:
   workflow_dispatch:
-    inputs:
-      evaluate_report:
-        description: 'Evaluate the combined authentic-root and lasso frontier report'
-        required: false
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -90,9 +84,3 @@ jobs:
           lake env lean -o BB6Agent4/AuthenticTurnBranchAudit.olean BB6Agent4/AuthenticTurnBranchAudit.lean
           lake env lean -o BB6Agent4/AuthenticLassoIntegration.olean BB6Agent4/AuthenticLassoIntegration.lean
 
-      - name: Evaluate the integrated authentic lasso report (explicitly requested only)
-        if: ${{ inputs.evaluate_report }}
-        working-directory: cryptids
-        run: |
-          export LEAN_PATH="BB6Agent4"
-          lake env lean BB6Agent4/AuthenticLassoMassEval.lean
