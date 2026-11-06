@@ -39,7 +39,7 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
-          lake env lean Agent49TernaryShiftSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryShiftSource.olean Agent49TernaryShiftSource.lean
       - name: Compile source-certified B-drain third-coordinate budget
         working-directory: /tmp/cryptids
         run: |
