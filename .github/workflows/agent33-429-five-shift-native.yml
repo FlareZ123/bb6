@@ -88,7 +88,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootMod32.lean .
           cp "$GITHUB_WORKSPACE/im-results/agent30-429-even16/"*.lean .
           cp "$GITHUB_WORKSPACE/im-results/agent33-429-five-shift/"*.lean .
-          for module in BB429RootEven8 BB429Even16 BB429NewResidue BB429RootMod16 BB429RootMod32 BB429InverseKernel16 BB429No11473mod16384 BB429ManyLifts SourceRawHalt11473 SourceRawHaltManyLifts BB429FiveShift SourceRawHaltFive; do
+          for module in BB429RootEven8 BB429Even16 BB429NewResidue BB429RootMod16 BB429RootMod32 BB429InverseKernel16 BB429No11473mod16384 BB429ManyLifts SourceRawHalt11473 SourceRawHaltManyLifts BB429FiveShift SourceRawHaltFiveShift; do
             echo "::group::Pinned Cryptids check $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
