@@ -99,5 +99,31 @@ theorem offray_third_gate_dead (n D h w d g:Nat) (hn:20≤n)
   subst q
   exact hnotg hqroot
 
+
+/-- For the surviving fatal-index sectors, the second t=1 odd-parent
+    residue condition follows automatically from its exact 3-adic
+    valuation one. All high-margin two-tier valuation-one forks die. -/
+theorem offray_third_gate_dead_auto (n D h w d g:Nat) (hn:20≤n)
+  (hsector:n%6=4 ∨ n%6=5)
+  (hm:2048*D+16384*n+16384≤2^n)
+  (hl:9*h+8*D+9*n+7=14*2^n)
+  (hw:2*h=2*2^n+w+(n-2))
+  (hdiv:(2*h+5)%27≠0)
+  (wdiv:(2*w+5)%27≠0)
+  (hz:2*w+5=9*d)
+  (hg:4*d=8*2^(n-4)+g+(n-4)+5):
+  ¬ReachC (2,0) (h,0):=by
+  have hemod:=coefficient_mod n hn hsector
+  have hdmod:d%3≠0:=by
+    intro hdzero
+    have hzero:(9*d)%27=0:=by omega
+    rw[←hz] at hzero
+    exact wdiv hzero
+  have hgmod:g%3≠2:=by omega
+  exact offray_third_gate_dead n D h w d g hn hsector hm hl hw
+    hdiv wdiv hz hg hgmod
+
+#print axioms offray_third_gate_dead_auto
+
 #print axioms offray_third_gate_dead
 end CascadeRayThirdNoRoot
