@@ -23,6 +23,11 @@ on:
         required: false
         type: boolean
         default: false
+      evaluate_strong_lasso:
+        description: 'Evaluate a depth-three frontier with larger lasso and entry-macro limits'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -92,6 +97,11 @@ jobs:
         run: |
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
           lean -o im-results/agent32-zero-prefix-global/LassoTraceMassProof.olean im-results/agent32-zero-prefix-global/LassoTraceMassProof.lean
+      - name: Evaluate stronger depth-three lasso and entry-macro limits (explicitly requested only)
+        if: ${{ inputs.evaluate_strong_lasso }}
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider"
+          lean im-results/agent32-zero-prefix-global/LassoTraceStrongEval.lean
 
   fresh-ray-entry-proof:
     runs-on: ubuntu-latest
