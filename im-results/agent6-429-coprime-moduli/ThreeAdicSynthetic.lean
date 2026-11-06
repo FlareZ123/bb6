@@ -353,7 +353,78 @@ theorem no_three_power_cylinder_invariant (E : Nat) (hE : 1≤E)
     invariant_of_run P hstep n (0,W) (a,b) hrun hstart
   exact hhalt (a,b) hh hend
 
+/-- Every transition whose destination has first counter zero gives an
+even second counter. -/
+private theorem next_zero_even (s : BB429.State) (w : Nat)
+    (h : BB429.next s=some (0,w)) : w%2=0 := by
+  rcases s with ⟨u,v⟩
+  simp only [BB429.next] at h
+  split at h
+  · simp at h
+  · split at h
+    · simp only [Option.some.injEq, Prod.mk.injEq] at h
+      omega
+    · split at h
+      · simp at h
+      · split at h
+        · simp only [Option.some.injEq, Prod.mk.injEq] at h
+          omega
+        · split at h
+          · split at h
+            · simp only [Option.some.injEq, Prod.mk.injEq] at h
+              omega
+            · split at h
+              · simp at h
+              · simp only [Option.some.injEq, Prod.mk.injEq] at h
+                omega
+          · split at h
+            · simp at h
+            · split at h
+              · simp only [Option.some.injEq, Prod.mk.injEq] at h
+                omega
+              · split at h
+                · split at h
+                  · simp at h
+                  · simp only [Option.some.injEq, Prod.mk.injEq] at h
+                    omega
+                · simp only [Option.some.injEq, Prod.mk.injEq] at h
+                  omega
+
+/-- Blank-root runs can only visit even second counters at exact first
+counter zero. -/
+private theorem blank_zero_row_even (n w : Nat)
+    (h : BB429.run n (0,0)=some (0,w)) : w%2=0 := by
+  let P : BB429.State → Prop := fun s => s.1=0 → s.2%2=0
+  have hroot : P (0,0) := by simp [P]
+  have hstep : ∀ s t, P s → BB429.next s=some t → P t := by
+    intro s t _ ht
+    intro hzero
+    cases t with
+    | mk u' w' =>
+      simp at hzero
+      subst u'
+      exact next_zero_even s w' ht
+  have hp := invariant_of_run P hstep n (0,0) (0,w) h hroot
+  exact hp rfl
+
+/-- The first two-burst synthetic family always starts at an odd counter. -/
+theorem demand_one_is_odd (q : Nat) (hq : 1≤q) :
+    Agent6TwoBurstOne.demand (q-1)%2=1 := by
+  have h := demand_one_relation q hq
+  omega
+
+/-- Consequently no member of the odd W1 source family is a blank-root
+reachable state with first counter zero. -/
+theorem no_blank_root_reaches_family_one (q : Nat) (hq : 1≤q) (n : Nat) :
+    BB429.run n (0,0) ≠ some (0,Agent6TwoBurstOne.demand (q-1)) := by
+  intro h
+  have heven := blank_zero_row_even n (Agent6TwoBurstOne.demand (q-1)) h
+  have hodd := demand_one_is_odd q hq
+  omega
+
 #print axioms synthetic_halt_every_three_power
 #print axioms no_three_power_periodic_invariant
+#print axioms no_three_power_cylinder_invariant
+#print axioms no_blank_root_reaches_family_one
 
 end Agent6ThreeAdic
