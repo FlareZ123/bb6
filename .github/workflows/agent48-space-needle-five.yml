@@ -59,3 +59,5 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/OffsetStrip.olean" OffsetStrip.lean
           cp "$base48/OffsetStripSource.lean" .
           lake env lean OffsetStripSource.lean
+          cp "$base48/NeedleQuarticEnumerate.lean" .
+          lake env lean NeedleQuarticEnumerate.lean
