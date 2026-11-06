@@ -1,0 +1,37 @@
+name: Agent 3 Machine C valuation-indexed exact root search (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original source, valuation inverse, and total-root integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent3-valuation-root
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent3-valuation-root/
+          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/agent3-valuation-root/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/agent3-valuation-root/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent3-valuation-root/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse,BounceAllExact,SectionAllInverse,SectionMassStrict}.lean /tmp/agent3-valuation-root/
+          cp im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal}.lean /tmp/agent3-valuation-root/
+          cp im-results/agent1-forward-mass/{PositiveMassOriginal,BlankMassFour}.lean /tmp/agent3-valuation-root/
+          cp im-results/agent15-c-total-fast/{TotalFastInverse,TotalFastRoot,TotalFastQuarter}.lean /tmp/agent3-valuation-root/
+          cp im-results/agent34-c-valuation-fanin/{ValuationArithmetic,ValuationSource,ValuationHighCount,ValuationFullCount,ValuationAllParents,ValuationDegreeBound,ValuationTwoAdicSplit,ValuationRootIntegration}.lean /tmp/agent3-valuation-root/
+          cd /tmp/agent3-valuation-root
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse SectionMassOriginal SectionFastInverseOriginal SectionMassStrict PositiveMassOriginal BlankMassFour TotalFastInverse TotalFastRoot TotalFastQuarter ValuationArithmetic ValuationSource ValuationHighCount ValuationFullCount ValuationAllParents ValuationDegreeBound ValuationTwoAdicSplit ValuationRootIntegration; do
+            echo "Compiling $f"
+            lean -o "$f.olean" "$f.lean"
+          done
