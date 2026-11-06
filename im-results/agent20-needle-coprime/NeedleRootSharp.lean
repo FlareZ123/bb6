@@ -35,13 +35,14 @@ private theorem root_after_12 (j d : Nat)
     rw [hj,run_succ] at h
     cases hr : rootRun (12+j) with
     | none =>
-      simp only [hr,Option.none_bind] at h
-      contradiction
+      simp [hr] at h
     | some st =>
       cases st with
       | N p =>
         have hh : highLevelNext (.N p) = some (.N d) := by
-          simpa only [hr,Option.some_bind] using h
+          simp only [hr] at h
+          change highLevelNext (.N p) = some (.N d) at h
+          exact h
         have hp := ih p hr
         have hstep := highLevelNext_strict p d hh
         omega
@@ -52,13 +53,17 @@ theorem blank_never_7998 : ¬ ReachN 7998 := by
   rintro ⟨n,hn⟩
   change rootRun n = some (.N 7998) at hn
   by_cases hlow : n < 12
-  · have hcases :
-      n=0 ∨ n=1 ∨ n=2 ∨ n=3 ∨ n=4 ∨ n=5 ∨ n=6 ∨
-      n=7 ∨ n=8 ∨ n=9 ∨ n=10 ∨ n=11 := by omega
-    rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 |
-      h6 | h7 | h8 | h9 | h10 | h11
-    all_goals subst n
-    all_goals decide +kernel
+  · have hprefix : ∀ j : Nat, j < 12 →
+        rootRun j ≠ some (.N 7998) := by
+      intro j hj
+      have hcases :
+        j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 ∨ j=6 ∨
+        j=7 ∨ j=8 ∨ j=9 ∨ j=10 ∨ j=11 := by omega
+      rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 |
+        h6 | h7 | h8 | h9 | h10 | h11
+      all_goals subst j
+      all_goals decide +kernel
+    exact (hprefix n hlow) hn
   · have he : n=12+(n-12) := by omega
     rw [he] at hn
     have hg := root_after_12 (n-12) 7998 hn
