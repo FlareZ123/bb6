@@ -91,9 +91,18 @@ The successful job printed:
 
 No `sorryAx`, no Lean compiler error, and the job exited successfully. This establishes that the all-time `n≡10(mod16)` exclusion theorem is genuinely kernel-checked **against the original Agent 1 accelerated Reach definition in this repository**. The global original-Turing-machine semantic composition through Agent 4's separately defined Reach relation remains a distinct proof obligation. Neither P1 nonhalting nor BB(6) is thereby settled.
 
-## Exploratory next direction (unproved)
+## Current residual status after cross-audit (2026-11-06)
 
-The finite inversion script `explore_inverse.py` uses the exact generic G ancestor recurrence and positive-even reachability constraints to prune candidate inverse trees. At depth three, sampled `n≡2` or `50 (mod 64)`, with n≥50, produced fully pruned finite trees in the initial tests. These finite observations are neither an infinite-family proof nor a halting classification; other residual samples (notably n≡18 or34 mod64) retained live inverse branches. A useful future target is a uniform symbolic proof for the `n≡2,50 (mod 64)` subset of the remaining `n≡2 (mod16)` class. More fundamentally, seek a global forward reachable-set invariant capable of handling the residual n≡14(mod16) and other difficult classes, since bounded backward depth alone can be insufficient.
+The earlier exploratory claim about `n≡2` or `50 (mod 64)` is superseded by the independent Agent9 source-coverage results:
+
+- For `n=16q+2`, the sectors `q≡0` or `3 (mod 4)` are already covered by the 695-class source proof. These are exactly `n≡2` or `50 (mod 64)`.
+- The three families in [P1-THREE-NEW-4096.md](P1-THREE-NEW-4096.md), namely `n=4096r+226`, `n=4096r+482`, and `n=4096r+914`, correspond to `q≡14,30,57 (mod 256)`. Each is already covered by the 695-class list. Their inverse certificates remain reproducible experiments and generator test cases; they add no new residue coverage.
+- The 700/1024 synthesis adds `q mod 1024 = 213,661,917,977,998` to the 695-class union. Thus 700 of 1024 q residues are covered by the listed source-certified families; 324 are not covered by this certificate union. Those residual residues lie in `q≡1` or `2 (mod 4)`, equivalently `n≡18` or `34 (mod 64)`.
+- This density statement concerns only the critical P1 family `n=16q+2`. The separate `n≡14 (mod 16)` family remains open to this coverage analysis.
+
+The next residue target is to extend source-certified coverage of the 324 residual q classes, preferably through a uniform inverse invariant or a parametric certificate generator that improves on the existing K=8/K=10 shadows. Avoid repeating the already covered `q≡0,3 (mod 4)` sectors or the `q mod 256 = 14,30,57` families.
+
+See [Agent9's 695-class synthesis](../../results/2026-11-05-p1-695-source-coverage-agent9.md) and [700-class update](../../results/2026-11-05-p1-700-source-gateway-density-agent9.md) for the broader source-certified context.
 
 
 ## Agent33 source-certification recovery of full 13-class matrix (09:03 UTC)
