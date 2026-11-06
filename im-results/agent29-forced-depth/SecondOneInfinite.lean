@@ -111,6 +111,13 @@ private theorem second_one_affine_right_four (r : Nat) :
   rw [secondOneJ_tower]
   exact affine_right_tower_four (4*r+5) (2*secondOneJ r+3) hj
 
+/-- Every index in this explicit tower has exact original-source
+    affine-normalized residual right counter four. -/
+theorem second_one_family_normalizes_four (r : Nat) :
+    (BB6.Agent15.affineNormalize
+      (2*secondOneJ r+3) (15*secondOneJ r+40)).2=4 :=
+  second_one_affine_right_four r
+
 /-- UNBOUNDED, genuine blank-orbit exclusion: an infinite family of
     valid, distinct Machine C immediate stopping inputs is never
     reached by the authentic blank-start arithmetic section.
@@ -134,6 +141,7 @@ private theorem second_one_strict_step (n : Nat) :
 
 #print axioms secondOneJ_mod32
 #print axioms second_one_family_stopping
+#print axioms second_one_family_normalizes_four
 #print axioms second_one_family_unreachable
 #print axioms second_one_strict_step
 end BB6.Agent29Depth
