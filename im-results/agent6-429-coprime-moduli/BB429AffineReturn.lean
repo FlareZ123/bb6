@@ -21,11 +21,14 @@ theorem even_burst_affine_return (n W : Nat)
     calc
       2^n=2^((n-1)+1) := by congr 1 <;> omega
       _=2^(n-1)*2 := by rw [Nat.pow_succ]
+  have hnsub : n-1+1=n := by omega
+  have hpow' : 12*2^(n-1)=6*2^n := by
+    calc
+      12*2^(n-1)=6*(2^(n-1)*2) := by ring
+      _=6*2^n := by rw [←hpow]
   have hcond :
       4*((0+3)*2^(n-1)) ≤ 2*0+W+3*(n-1)+9 := by
-    rw [show 0+3=3 by omega, show 2*0=0 by omega]
-    rw [show 3*(n-1)+9=3*n+6 by omega]
-    nlinarith [hpow, hlo]
+    omega
   have hnon : BB429Burst.firstRun n (0,W) ≠ none := by
     rw [BB429Burst.prefix_exists_iff]
     exact ⟨hn1,hcond⟩
@@ -43,8 +46,7 @@ theorem even_burst_affine_return (n W : Nat)
   have ha4 : a%4=1 := by omega
   have hb4 : b%4=0 := by omega
   have hb2 : b%2=0 := by omega
-  have hbound : b+6≤2*a := by
-    nlinarith [ha,hab,hhi]
+  have hbound : b+6≤2*a := by omega
   have hdge : 3≤a-b/2 := by omega
   have hdne : a-b/2≠1 := by omega
   have hdodd : (a-b/2)%2≠0 := by omega
