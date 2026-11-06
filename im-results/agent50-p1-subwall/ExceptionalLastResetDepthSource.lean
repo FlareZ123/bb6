@@ -477,7 +477,7 @@ theorem source_exceptional_last_reset_depth_window
     have hcostLowerPrefix : 14*2^n≤2^(t+3)+2*mp+2*n+6 := by omega
     have hpow3 : 2^(t+3)=4*2^(t+1) := by
       rw [show t+3=t+1+2 by omega, Nat.pow_add]
-      norm_num
+      rw [show (2:Nat)^2=4 by decide]
       exact Nat.mul_comm _ _
     have hbpBound : 8+2^(t+3)≤4*k+4*t+12 := by omega
     have hcostUpperPrefix : mp+n+7+2^(t+1)≤7*2^n := by
