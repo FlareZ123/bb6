@@ -2,6 +2,7 @@ import ValuationDegreeBound
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent34Valuation
+open BB6.Agent46
 
 /-- Computable decomposition of a natural number into its 2-adic
 valuation and its remaining odd factor. The second component is the
