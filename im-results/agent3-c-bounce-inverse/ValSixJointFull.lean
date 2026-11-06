@@ -383,7 +383,7 @@ theorem rectangle27_sample_previous_sieves :
     unfold BB6.Agent3.jointHighRectAllowed
     constructor
     · unfold BB6.Agent3.jointHighAllowed
-      refine ⟨?_,?_,?_,?_,?_⟩ <;> norm_num
+      refine ⟨?_,?_,?_,?_,?_⟩ <;> decide
     · norm_num
   have hdy : ∀ n, ¬
       (n+4≤2*85+2 ∧ (28+3*85+3)%2^(n+4)=2^(n+2) ∧
@@ -392,11 +392,11 @@ theorem rectangle27_sample_previous_sieves :
     rintro ⟨_,hres,hx⟩
     by_cases heven : n%2=0
     · simp [heven] at hx
-      norm_num at hx
+      omega
     · have hnodd : n%2=1 := by omega
       have hnCases : n=1 ∨ 3≤n := by omega
       rcases hnCases with rfl | hn3
-      · norm_num at hres
+      · omega
       · have hdiv : 32 ∣ (2:Nat)^(n+4) := by
           have hpow : (2:Nat)^5 ∣ (2:Nat)^(n+4) :=
             Nat.pow_dvd_pow 2 (by omega)
@@ -416,26 +416,26 @@ theorem rectangle27_sample_previous_sieves :
   have hbase : BB6.Agent19Joint.highAllowed 28 85 := by
     unfold BB6.Agent19Joint.highAllowed
     have hodd1 :
-        ¬(2≤85 ∧ 28%8=7 ∧ (28+3*85+15)%64=0) := by norm_num
+        ¬(2≤85 ∧ 28%8=7 ∧ (28+3*85+15)%64=0) := by decide
     have hodd2 :
-        ¬(2≤85 ∧ 28%8=3 ∧ (28+3*85+47)%64=0) := by norm_num
+        ¬(2≤85 ∧ 28%8=3 ∧ (28+3*85+47)%64=0) := by decide
     have hodd3 :
-        ¬(3≤85 ∧ 28%8=5 ∧ (28+3*85+27)%128=0) := by norm_num
+        ¬(3≤85 ∧ 28%8=5 ∧ (28+3*85+27)%128=0) := by decide
     have hodd4 :
-        ¬(3≤85 ∧ 28%8=1 ∧ (28+3*85+91)%128=0) := by norm_num
+        ¬(3≤85 ∧ 28%8=1 ∧ (28+3*85+91)%128=0) := by decide
     exact ⟨hjoint,hdy,hodd1,hodd2,hodd3,hodd4⟩
   have hplus : BB6.Agent29Joint.highAllowedPlus 28 85 := by
     unfold BB6.Agent29Joint.highAllowedPlus
-    exact ⟨hbase,by norm_num,by norm_num,by norm_num,by norm_num⟩
+    exact ⟨hbase,by decide,by decide,by decide,by decide⟩
   have hval : highAllowedValSixThree 28 85 := by
     unfold highAllowedValSixThree highAllowedValSix
-    exact ⟨⟨hplus,by norm_num,by norm_num⟩,by norm_num⟩
+    exact ⟨⟨hplus,by decide,by decide⟩,by decide⟩
   have h11 : BB6.Agent11Joint.highAllowed 28 85 := by
     unfold BB6.Agent11Joint.highAllowed
-    exact ⟨hbase,by norm_num,by norm_num⟩
+    exact ⟨hbase,by decide,by decide⟩
   have h19 : BB6.Agent19Five.highAllowed 28 85 := by
     unfold BB6.Agent19Five.highAllowed
-    exact ⟨h11,by norm_num⟩
+    exact ⟨h11,by decide⟩
   exact ⟨hval,h19⟩
 
 /-- The second sum-seven cylinder also survives the previous
