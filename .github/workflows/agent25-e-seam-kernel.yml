@@ -1,0 +1,37 @@
+name: Agent25 D E-seam complete Lean kernel certificate (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2 and certificate generator dependencies
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --quiet filelock
+      - name: Generate independently checked finite-tree proof obligations
+        run: |
+          python3 im-results/agent31-d-exceptional/verify_e_seam_certificate.py
+          python3 im-results/agent25-e-seam-kernel/make_e_seam_kernel.py "$RUNNER_TEMP/e-seam-kernel"
+      - name: Compile and combine all 200 proof leaves in the Lean kernel
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
+        working-directory: ${{ runner.temp }}/e-seam-kernel
+        run: |
+          lean --version
+          lean -o ESeamTreeBase.olean ESeamTreeBase.lean
+          seq 0 199 | xargs -P 4 -I{} sh -c 'lean -o "ESeamTreeBlock{}.olean" "ESeamTreeBlock{}.lean" >/dev/null'
+          lean -o ESeamTreeMaster.olean ESeamTreeMaster.lean | tee master-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' master-axioms.log; then exit 1; fi
+          grep 'root_good.*\[propext\]' master-axioms.log
+          grep 'all_seeds.*does not depend on any axioms' master-axioms.log
+          grep 'successor_closed.*\[propext, Classical.choice, Quot.sound\]' master-axioms.log
