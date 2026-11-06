@@ -24,7 +24,8 @@ theorem second_odd_right_four_complete (j m k : Nat)
       rw [Nat.mul_mod,hpowmod]
       omega
     have hj : j%2=0 := by
-      by_contra hj0
+      by_cases hj0 : j%2=0
+      · exact hj0
       have hjodd : j%2=1 := by omega
       have hkodd : k%2=1 := by omega
       have hnot : ¬(4≤k ∧ k%2=0 ∧ ((2*j+3)+k)%4=1) := by omega
@@ -34,7 +35,8 @@ theorem second_odd_right_four_complete (j m k : Nat)
       omega
     have ha : (2*j+3)%4=3 := by omega
     have hk2 : k%4=2 := by
-      by_contra hn
+      by_cases hn : k%4=2
+      · exact hn
       have hnot : ¬(4≤k ∧ k%2=0 ∧ ((2*j+3)+k)%4=1) := by omega
       have hnorm : BB6.Agent15.affineNormalize (2*j+3) k=(2*j+3,k) := by
         rw [BB6.Agent15.affineNormalize, dif_neg hnot]
@@ -51,7 +53,6 @@ theorem second_odd_right_four_complete (j m k : Nat)
       have hscale := (BB6.Agent15.normalize_three_depth_invariants
         (2*j+3) k ha).2.1
       have hscale4 : 2^(BB6.Agent15.oddDepth k)*6=k+2 := by
-        dsimp at hscale
         rw [hfour] at hscale
         simpa using hscale
       have hpow : 2^(BB6.Agent15.oddDepth k+1)=5*j+14 := by
