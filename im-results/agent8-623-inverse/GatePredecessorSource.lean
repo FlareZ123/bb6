@@ -68,11 +68,13 @@ theorem blank_run_avoids_buffer_exceptions (n a d : Nat)
     (hseen : run n = some (.D a d)) :
     ¬(a=4 ∧ (d=5 ∨ d=7)) := by
   intro hx
-  rcases hx with ⟨rfl, hd⟩
+  rcases hx with ⟨ha, hd⟩
   by_cases hn : n=0
   · subst n
     simp [run] at hseen
+    omega
   · have hmass := run_grows_at_least_seven n a d hseen
+    have hsmall : a+d≤11 := by omega
     have hnpos : 1≤n := Nat.one_le_iff_ne_zero.mpr hn
     omega
 
