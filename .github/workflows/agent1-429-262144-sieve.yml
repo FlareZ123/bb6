@@ -44,7 +44,7 @@ jobs:
             echo "ERROR: unproved axiom in exact count"
             exit 1
           fi
-          for module in BB429SurvivorBase BB429SurvivorCount0 BB429SurvivorCount1 BB429SurvivorCount2 BB429SurvivorCount3 BB429SurvivorMask; do
+          for module in BB429SurvivorBase BB429SurvivorCount0 BB429SurvivorCount1 BB429SurvivorCount2 BB429SurvivorCount3 BB429SurvivorMask BB429SurvivorDistinct; do
             echo "::group::Source-kernel survivor mask $module"
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o "im-results/agent1-429-262144-sieve/$module.olean" "im-results/agent1-429-262144-sieve/$module.lean" 2>&1 | tee "/tmp/agent1-$module.log"
             if grep -q sorryAx "/tmp/agent1-$module.log"; then echo "ERROR: sorryAx in $module"; exit 1; fi
