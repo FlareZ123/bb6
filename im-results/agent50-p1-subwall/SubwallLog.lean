@@ -29,7 +29,7 @@ theorem word_subwall_cost_necessary
     simpa only [Nat.mul_comm K (2^m)] using hmul
   omega
 
-private theorem n_plus_four_le_pow (n : Nat) (hn : 4 ≤ n) : n+4 ≤ 2^n := by
+theorem n_plus_four_le_pow (n : Nat) (hn : 4 ≤ n) : n+4 ≤ 2^n := by
   have hb : ∀ t : Nat, (t+4)+4 ≤ 2^(t+4) := by
     intro t
     induction t with
