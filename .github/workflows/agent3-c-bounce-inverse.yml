@@ -242,6 +242,9 @@ jobs:
           lean -o DeepFourExclude.olean DeepFourExclude.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SecondOneInfinite.lean .
           lean SecondOneInfinite.lean
+          # Agent29: arbitrary affine inverse depth, all odd-left inputs >=5.
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/AffineFourGlobal.lean .
+          lean AffineFourGlobal.lean
           if [ "${{ inputs.boundary_only }}" = "true" ]; then exit 0; fi
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
           lean -o FullForcedFilter.olean FullForcedFilter.lean
