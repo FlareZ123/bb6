@@ -6,7 +6,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle
     steps:
@@ -107,5 +107,9 @@ jobs:
           T=im-results/agent37-d-timing-cocycle
           lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwelfthRejoin.olean" "$T/BlankTwelfthRejoin.lean"
-          lean -DmaxRecDepth=55000 "$T/BlankThirteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 "$T/BlankFourteenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankThirteenthRejoin.olean" "$T/BlankThirteenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankFourteenthRejoin.olean" "$T/BlankFourteenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankFifteenthRejoin.olean" "$T/BlankFifteenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
+          lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturn.olean" "$T/ExceptionalE7ThirdReturn.lean"
+          lean -DmaxRecDepth=55000 "$T/BlankSeventeenthRejoin.lean"
