@@ -113,15 +113,20 @@ theorem backward_step (a k c a' k' c' : Nat)
           have hnext := high_zero_odd k c hk1 hhi
           simpa only [bad,show ¬(c<8) by omega,↓reduceIte] using hnext
         · have hw : (0+c)%192 ≠ 11 := by omega
-          exact False.elim (low_small_k (2*k+3) 0 c (by decide) hw hb)
+          have hlow : low (2*k+3) 0 c := by
+            simpa only [bad,show c<8 by omega,↓reduceIte] using hb
+          exact False.elim (low_small_k (2*k+3) 0 c (by decide) hw hlow)
     · have ha : 0<a := by omega
+      simp [nextC,hc1,hc2,hc3,hc0,ha0] at h
+      obtain ⟨rfl,rfl,rfl⟩ := h
       by_cases hc7 : c≤7
       · have hlow : low (a-1) (k+1) (c-1) := by
           simpa only [bad,show c-1<8 by omega,↓reduceIte] using hb
         have hnext := low_step_mid a k c ha hc4 hc7 hlow
         simpa only [bad,show c<8 by omega,↓reduceIte] using hnext
       · by_cases hc8 : c=8
-        · have hlow : low (a-1) (k+1) 7 := by
+        · subst c
+          have hlow : low (a-1) (k+1) 7 := by
             simpa only [bad,show (7:Nat)<8 by omega,↓reduceIte] using hb
           have hnext := low7_to_high8 a k ha hlow
           simpa only [bad,show ¬(8:Nat)<8 by omega,↓reduceIte] using hnext
