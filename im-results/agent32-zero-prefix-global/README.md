@@ -168,6 +168,16 @@ At depth four it is:
 
 Both pairs sum exactly to **25^12 = 59,604,644,775,390,625**. The lasso-only depth-four audit had 38,071,441,650,390,625 certified tables (63.873280%); adding Agent6's entry-macro certificates contributes another **2,499,389,648,437,500** raw tables, or **4.193280 percentage points**. The integrated depth-four report exceeds the earlier six-read-zero C++ sufficient-certificate census (58.597775360%) by **9.468784640 percentage points**, and the earlier control-path interpreted report (53.333215232%) by **14.733344768 points**. These are different enumeration policies over the same raw universe; compare their certified raw-table masses, not their per-machine or holdout resolution rates.
 
+### Parameter sensitivity
+
+A stronger depth-three probe increased the exact-lasso limit from 12 to 16, the entry-prefix limit from 2 to 4, and the macro limit from 4 to 6 (physical scan limit remained 12). [CI 42306843287](https://github.com/FlareZ123/bb6/actions/runs/42306843287) returned:
+
+    certified 33,931,732,177,734,375
+    open      25,672,912,597,656,250
+    share     56.928000%
+
+This improves on the default depth-three 56.800000% by only **0.128 percentage points**. The stronger search is therefore a modest marginal gain at increased per-node cost. Do not scale these limits to depth four without a new structural reason or a cost model.
+
 ### Bounded screen of the 663 historical holdouts
 
 The reproducible screening tool [`scan-holdout-lasso.cjs`](scan-holdout-lasso.cjs) applies the exact-configuration and bidirectional fresh-ray macro *search predicates* to the frozen 663-machine list in `resources/BB6_holdouts_663_2026-10-16.txt`. Its self-tests pass on the four-step read-one lasso, Agent6's three-step entry-macro witness, and the F287 bounded negative example.
