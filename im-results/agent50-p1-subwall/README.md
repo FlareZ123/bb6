@@ -137,15 +137,15 @@ Thus the two costs `m=3*2^n-4` and `m=3*2^n-3` are impossible in this source con
 **Verification:** successful original-source Lean CI [42295780908](https://github.com/FlareZ123/bb6/actions/runs/42295780908), head `7e16c0e9372b01b101fd26e029fe6dbdd6f3882d`. The terminal axiom audit for `source_exceptional_last_reset_two_depths` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The run compiled the unchanged original P1 source dependencies and the new theorem. The earlier Agent50 no-tail and mid-cost exact-depth theorems also compile in the same workflow.
 
 
-## Unconditional exact depth identity for the exceptional right-five reset (Agent 43, 2026-11-06)
+## Unconditional exact depth identity and root-exclusion refinement (Agent 43, 2026-11-06)
 
-The same original-source file now contains `source_exceptional_last_reset_depth_window`, with **no cost hypothesis**. For every `n>=14`, `z>=1`, and genuine
+The original-source file `ExceptionalLastResetDepthSource.lean` contains `source_exceptional_last_reset_depth_window`, with **no cost hypothesis**. For every `n>=14`, `z>=1`, and genuine
 
 ```
 CountCone (14*2^n-2*n-16) 3 b 5 m z,
 ```
 
-it produces a genuine prefix `CountCone ... bp dp mp zp`, a final inverse reset `inverseAt bp dp t = some (k,1)`, and the exact equations
+it produces a genuine prefix `CountCone ... bp dp mp zp` and a final inverse reset `inverseAt bp dp t = some (k,1)`. Its exact source equations and strengthened bounds are
 
 ```
 z = zp+1
@@ -154,17 +154,23 @@ k+m+n+7 = 7*2^n
 bp + 2^(t+3) = 4*k+4*t+12
 dp + 14*2^n = 2^(t+3) + 2*mp + 2*n + 7
 m = mp+t+1
+n+4 <= m
+5 <= dp
 2^(t+3) = 2*k + dp + 2*t + 9
-t <= n+1.
+14*2^n <= 2^(t+3) + 2*mp + 2*n + 2
+mp+n+7+2^(t+1) <= 7*2^n
+2 <= t <= n+1.
 ```
 
-Equivalently, the final identity is `2^(t+3)=b+dp+2*t+13`. Since `dp>=1` and `t>=1`, it implies
+Equivalently, the exact depth identity is `2^(t+3)=b+dp+2*t+13`. The `n+4<=m` input is Agent8's source theorem `source_critical_odd_d5_needs_n_plus_four`. If the prefix were the root, then `mp=0` and `m=t+1<=n+2` by `t<=n+1`, a contradiction. Thus the prefix is a genuine non-root `CountCone`; every `OddCone.parent` has right endpoint `c+4` with odd `c>=1`, giving `dp>=5`. Combining `dp>=5`, `k>=2`, and the exact identity rules out `t=1`, hence `t>=2`.
+
+In particular, `b+22<=2^(t+3)`. The terminal mass equation `b+5+2*m=14*2^n-2*n-13` gives
 
 ```
-b+16 <= 2^(t+3).
+b+22 = 14*2^n - 2*m - 2*n + 4.
 ```
 
-The terminal mass equation `b+5+2*m=14*2^n-2*n-13` therefore gives the cost-dependent lower-depth consequences:
+Therefore the following depth windows hold by direct arithmetic:
 
 | Cost cap | Forced final reset depth |
 |---|---|
@@ -172,40 +178,30 @@ The terminal mass equation `b+5+2*m=14*2^n-2*n-13` therefore gives the cost-depe
 | `2*m+2*n+7 <= 12*2^n` | `n-1 <= t <= n+1` |
 | `2*m+2*n+7 <= 13*2^n` | `n-2 <= t <= n+1` |
 
-The first line also has the sharper two-case affine classification above. The latter two lines are arithmetic corollaries of the unconditional source theorem and the mass identity; they are not separate named Lean theorems in this file.
-
-**Verification:** successful original-source Lean CI [42296908772](https://github.com/FlareZ123/bb6/actions/runs/42296908772), head `779a99a6b454511070fef9c0b06caa1a7fd678a4`. The axiom audit for `source_exceptional_last_reset_depth_window` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
-
-This closes a broad range of possible final-reset depths for the synthetic inverse cone. The remaining high-cost sector and the actual blank-start `Reach` status of the prefix hub are still unresolved.
-
+The first line is accompanied by the sharper two-case affine classification above. The all-cost theorem also strengthens the `t=n` branch's lower cost bound to `m>=3*2^n`.
 
 ### Full cost bands and unique final reset depth
 
-The unconditional theorem also returns the source-certified prefix-cost inequalities
+The source theorem's two prefix-cost inequalities, together with `m=mp+t+1`, imply the total-cost band
 
 ```
-14*2^n <= 2^(t+3) + 2*mp + 2*n + 6
-mp + n + 7 + 2^(t+1) <= 7*2^n
-1 <= t <= n+1
-m = mp+t+1.
+7*P - 2^(t+2) - n + t <= m
+m <= 7*P - 2^(t+1) - n + t - 6
 ```
 
-Writing `P=2^n` and substituting `mp=m-t-1`, every genuine right-five cone therefore has its total cost in the depth-indexed interval
-
-```
-7*P - 2^(t+2) - n + t - 2 <= m
-m <= 7*P - 2^(t+1) - n + t - 6.
-```
-
-For each `t>=1`, the interval width is `2^(t+1)-4`. Adjacent depth bands are separated by exactly two integer costs: the upper endpoint for depth `t+1` is three less than the lower endpoint for depth `t`. Both endpoints decrease as `t` increases, so the bands are ordered and pairwise disjoint. Thus, within this exceptional d=5 cone family, a fixed total cost `m` determines at most one possible final reset depth `t`. Every actual witness lies in one of these bands.
+where `P=2^n` and `2<=t<=n+1`. Its width is `2^(t+1)-6`. Adjacent depth bands have exactly four integer costs between them: the upper endpoint for depth `t+1` is five below the lower endpoint for depth `t`. Both endpoints decrease with `t`, so the bands are ordered and pairwise disjoint. Thus a fixed total cost `m` determines at most one possible final reset depth `t` within this exceptional d=5 cone family. Every actual witness lies in one of these bands.
 
 The bands nearest the high-cost end are:
 
 | Final depth | Necessary total-cost interval |
 |---|---|
 | `t=n+1` | `0 <= m <= 3*P-5` |
-| `t=n` | `3*P-2 <= m <= 5*P-6` |
-| `t=n-1` | `5*P-3 <= m <= 6*P-7` |
-| `t=n-2` | `6*P-4 <= m <= 13*P/2-8` |
+| `t=n` | `3*P <= m <= 5*P-6` |
+| `t=n-1` | `5*P-1 <= m <= 6*P-7` |
+| `t=n-2` | `6*P-2 <= m <= 13*P/2-8` |
 
-For example, the first adjacent gap is exactly `m=3*P-4` and `m=3*P-3`, matching the explicit 10P two-depth theorem. Further gaps occur at every subsequent depth transition. These are necessary cost bands, not sufficiency or reachability results.
+The first four-cost gap is `3*P-4` through `3*P-1`; the next is `5*P-5` through `5*P-2`. The former strengthens the two-cost gap stated by the explicit 10P theorem. At the opposite end, `t=1` is impossible and the cost bound at `t=2` gives `m<=7*P-n-12`.
+
+**Verification:** successful original-source Lean CI [42299526508](https://github.com/FlareZ123/bb6/actions/runs/42299526508), head `fa4ee895bc0afa0bbee353365433f6c5c4dec0b9`. The workflow compiled Agent8's `ExceptionalStrongSource` dependency, the unchanged original P1 source dependencies, and this theorem. The axiom audit for `source_exceptional_last_reset_depth_window` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+These are necessary conditions for inverse-history witnesses. They do not establish that the prefix hub or terminal is blank-reachable, do not decide P1, and do not give a universal BB(6) upper bound. The remaining task is to connect the exceptional `c=1` prefix to actual blank-start `Reach`, especially in the high-cost bands.
