@@ -40,4 +40,6 @@ jobs:
           lean -o "$C/NoEarlierF.olean" "$C/NoEarlierF.lean"
           lean -o "$P/EAltBoundaryFirst.olean" "$P/EAltBoundaryFirst.lean"
           lean -o "$P/EOneZero.olean" "$P/EOneZero.lean"
-          lean "$P/EOneZeroLocalFirst.lean"
+          lean -o "$P/EOneZeroLocalFirst.olean" "$P/EOneZeroLocalFirst.lean"
+          lean -o "$C/PrefixENoFSource.olean" "$C/PrefixENoFSource.lean"
+          lean "$P/EOneZeroFullFirst.lean"
