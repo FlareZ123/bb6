@@ -97,3 +97,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleSharperSource.olean NeedleSharperSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootSharp.lean" .
           lake env lean NeedleRootSharp.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootDecisionCore.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleRootDecisionCore.olean NeedleRootDecisionCore.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleRootDecisionSource.lean" .
+          lake env lean NeedleRootDecisionSource.lean
