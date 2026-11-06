@@ -170,3 +170,12 @@ Next:
 4. Investigate whether a prefix with `dp=5` recursively satisfies the same d=5 hypotheses, and whether repeated last-reset decomposition yields a stronger reset-count/cost restriction.
 5. Consider formally upgrading the existing 10P theorem's `t=n` branch lower bound from `3P-2` to `3P`; the generic theorem already implies it, so the change is an optional API refinement.
 6. The central unresolved issue remains a source-to-trace proof that the exceptional prefix hub is or is not blank-reachable. Do not claim P1 or BB(6) is decided.
+
+
+### Explicit 10P branch sharpened (2026-11-06 21:54 UTC)
+
+Also strengthened `source_exceptional_last_reset_two_depths` itself: in the `t=n` branch, the lower bound is now `3*2^n<=m` (previously `3*2^n-2<=m`). The proof reuses Agent8's `n+4<=m` theorem to rule out a root prefix, obtains `dp>=5`, and applies the exact branch identity `dp+6*2^n=2*m+5`. Therefore the explicit 10P theorem itself excludes all four costs `3*2^n-4` through `3*2^n-1` between its `t=n+1` and `t=n` branches.
+
+Successful original-source CI [42300310421](https://github.com/FlareZ123/bb6/actions/runs/42300310421), head `ee7a6f87fd7e421bbc72433498c55d57920e5800`; the axiom audit for `source_exceptional_last_reset_two_depths` is `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. Updated the Agent50 README's explicit two-depth summary.
+
+Next research direction: the exact depth/cost relation gives a prefix hub that is a subwall whenever t<=n, at least for n>=148, by combining the prefix lower-cost inequality with the explicit `bp` equation. If this is formally established, apply Agent50's `source_subwall_allcount_cost_above_n_plus_resets` to the prefix to obtain `mp>n+zp), hence `m>n+z+t`. The current Agent50 workflow does not compile/import `SubwallAllCount`; its dependencies are `SubwallLog`, `SubwallBudget`, `SubwallNear`, `ZeroArithmetic`, and `SubwallAllCount`. Check the exact subwall algebra and theorem signature before extending the workflow.
