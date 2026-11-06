@@ -51,6 +51,8 @@ static inline bool freshRay(unsigned ones, int head, bool direction) {
 int main() {
   constexpr std::uint32_t total = 244140625;
   std::array<std::uint64_t, 4> count{};
+  std::array<std::uint64_t, 7> rayAt{}, haltScore{};
+  std::uint64_t openNeedsReadOne = 0, openAtPrefixLimit = 0;
   for (std::uint32_t code = 0; code < total; ++code) {
     std::uint32_t rows[6], n = code;
     for (int j = 0; j < 6; ++j) {
@@ -66,19 +68,27 @@ int main() {
     bool classified = false;
     for (unsigned step = 0; step <= 6; ++step) {
       const unsigned bit = 1u << (head + 6);
-      if (ones & bit) break;
+      if (ones & bit) {
+        ++openNeedsReadOne;
+        break;
+      }
       if ((freshRay(ones, head, true) &&
            closedRayCycle(rows, state, true)) ||
           (freshRay(ones, head, false) &&
            closedRayCycle(rows, state, false))) {
         ++count[2];
+        ++rayAt[step];
         classified = true;
         break;
       }
-      if (step == 6) break;
+      if (step == 6) {
+        ++openAtPrefixLimit;
+        break;
+      }
       const auto action = rows[state];
       if (action == 0) {
         ++count[1];
+        ++haltScore[step + 1];
         classified = true;
         break;
       }
@@ -97,7 +107,14 @@ int main() {
   const std::uint64_t certified = count[0] + count[1] + count[2];
   std::cout << "certified-readzero=" << certified << "/" << total
             << " certified-full=" << certified * total << '\n';
+  for (std::size_t step = 0; step <= 6; ++step) {
+    std::cout << "step=" << step << " ray-entries=" << rayAt[step]
+              << " halts-score=" << haltScore[step] << '\n';
+  }
+  std::cout << "open-first-unknown-read-one=" << openNeedsReadOne
+            << " open-prefix-limit-six=" << openAtPrefixLimit << '\n';
   constexpr std::array<std::uint64_t, 4> expected =
       {45582330, 23011245, 74467400, 101079650};
-  return count == expected && certified == 143060975 ? 0 : 1;
+  return count == expected && certified == 143060975 &&
+         openNeedsReadOne == 95287330 && openAtPrefixLimit == 5792320 ? 0 : 1;
 }
