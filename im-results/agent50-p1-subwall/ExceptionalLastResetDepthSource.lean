@@ -263,10 +263,11 @@ theorem source_exceptional_last_reset_two_depths
           mp+n+2=m ∧
           m≤3*2^n-5)
       ) := by
-  obtain ⟨bp,dp,mp,zp,t,k,c,s,
+  have h5 : CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+    simpa [hd] using h
+  obtain ⟨bp,dp,mp,zp,t,k,c,
       hpre,hzEq,hbp,hbp4,hdp,hip,hkp,hcp,htp,htail⟩ :=
-    counted_last_positive_reset
-      (14*2^n-2*n-16) 3 b d m z h hz
+    source_right_five_last_positive_reset_no_tail n b m z hz h5
   have hoddEnd : OddCone (14*2^n-2*n-16) 3 b d m :=
     counted_to_odd_cone _ _ _ _ _ _ h
   have hmassEnd := odd_cone_mass
@@ -274,8 +275,6 @@ theorem source_exceptional_last_reset_two_depths
   have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by
     rw [hd] at hmassEnd
     omega
-  have hbigEnd : 7*2^n < b+12 := by omega
-
   have hoddPre : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
     counted_to_odd_cone _ _ _ _ _ _ hpre
   have hmassPre := odd_cone_mass
@@ -288,20 +287,6 @@ theorem source_exceptional_last_reset_two_depths
   have hmassReset := odd_cone_mass
     (14*2^n-2*n-16) 3 (2*k-4) (c+4) (mp+t+1) hoddReset
   have hsmallReset : (2*k-4)+12 ≤ 14*2^n := by omega
-  have hdyadic := upper_tail_dyadic
-    (2*k-4) (c+4) (mp+t+1) b d m s htail
-  have hspow : 2^s*(b+12)=(2*k-4)+12 := hdyadic.1
-  have hsZero : s=0 := by
-    by_cases hs : s=0
-    · exact hs
-    · have hsp : 1≤s := by omega
-      have hpow : (2:Nat)^1 ≤ 2^s :=
-        Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hsp
-      simp only [Nat.pow_one] at hpow
-      have hmult : 2*(b+12) ≤ 2^s*(b+12) :=
-        Nat.mul_le_mul_right (b+12) hpow
-      omega
-  subst s
   cases htail with
   | root =>
     have hc1 : c=1 := by omega
