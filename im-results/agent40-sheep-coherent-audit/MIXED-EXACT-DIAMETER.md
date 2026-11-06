@@ -13,7 +13,7 @@
 
 The same formula holds for the maximum **coherent free-start directed distance**, where each source-to-target path must be realized by consecutive genuine generic first-even returns from **one suitably selected positive integer**. These are mathematical statements about arbitrarily chosen starting integers and independent synthetic edge witnesses. The actual Sheep blank-entry integer \(10\) is fixed and is not shown to realize any such route. **Sheep and BB(6) remain unresolved.**
 
-The upper bounds are previous written all-parameter arithmetic theorems, with extensive exact checks: [Agent 22's inverse-word and mixed-CRT graph](../agent22-sheep-mixed-hub/MIXED-COMPLETENESS.md) proves \(\operatorname{diam}\le \lfloor p/2\rfloor+1\) for any odd \(q\), and [his coherent source theorem](../agent22-sheep-mixed-hub/COHERENT-ORBIT.md) proves the same bound for a **single freely chosen actual integer trajectory**. For \(q=1\), the stronger bound \(\lfloor p/2\rfloor\) and matching lower bound are [proved in the companion note](DYADIC-DIAMETER.md). The **new result here is a matching all-\(p\), all-odd-\(q>1\) lower bound**, established directly from residue forcing in the original section map. The prerequisite all-parameter upper constructions and the present lower proof have **not** been combined into a complete source-importing Lean certificate or independently externally reviewed for academic novelty.
+The upper bounds are previous written all-parameter arithmetic theorems, with extensive exact checks: [Agent 22's inverse-word and mixed-CRT graph](../agent22-sheep-mixed-hub/MIXED-COMPLETENESS.md) proves \(\operatorname{diam}\le \lfloor p/2\rfloor+1\) for any odd \(q\), and [his coherent source theorem](../agent22-sheep-mixed-hub/COHERENT-ORBIT.md) proves the same bound for a **single freely chosen actual integer trajectory**. For \(q=1\), the stronger bound \(\lfloor p/2\rfloor\) and matching lower bound are [proved in the companion note](DYADIC-DIAMETER.md). The **new result here is a matching all-\(p\), all-odd-\(q>1\) lower bound**, established directly from residue forcing in the original section map. The prerequisite all-parameter upper constructions and the present lower proof have **not** been combined into a complete source-importing Lean certificate or independently externally reviewed for academic novelty. The key forced-corridor identity and the all-valuation modulo-five obstruction are separately verified in standalone [SheepCorridor.lean](SheepCorridor.lean), compiled locally with Lean 4.36.0-rc2 and only standard axioms.
 
 ## Exact section semantics
 
@@ -45,7 +45,7 @@ f_q(z):=4^{-1}(5z+2)\pmod q.
 \[
 F(x)=2u+1+(u-1)/2=(5u+1)/2=10w+8,
 \]
-which is even. Therefore no odd-section continuation is needed, \(h=0\) and \(E(x)=F(x)\). Substituting \(x=2u\) gives \(4E(x)=5x+2\), proving (2). The divisibility and odd-\(q\) congruence follow. This is a true conditional identity for every legal source, with no finite cutoff. QED.
+which is even. Therefore no odd-section continuation is needed, \(h=0\) and \(E(x)=F(x)\). Substituting \(x=2u\) gives \(4E(x)=5x+2\), proving (2). The divisibility and odd-\(q\) congruence follow. This is a true conditional identity for every legal source, with no finite cutoff. QED. The symbolic source value `x=8*w+6` with `w>=1`, its exact generic first section successor `10*w+8`, its immediate evenness, and equality (2) are kernel-checked in [SheepCorridor.lean](SheepCorridor.lean), theorem `forced_from_residue_eight` with axioms `[propext, Quot.sound]`.
 
 **Lemma 2 (entire forced prefix).** Start with any sequence of legal consecutive generic first-even returns \(x_0\to x_1\to\cdots\), or any sequence of quotient edges whose first residue is
 \[
@@ -86,7 +86,7 @@ Two disjoint cases give an explicitly missing residue:
 \[
 s_q\equiv1+2(-1)^h\in\{3,4\}\pmod5.
 \]
-Choose \(s_q=1\bmod q\). This would require \(s_q=1\bmod5\), a contradiction.
+Choose \(s_q=1\bmod q\). This would require \(s_q=1\bmod5\), a contradiction. The all-h residue exclusion `(1+2*4^h)%5 !=1` is kernel-checked in `SheepCorridor.forbidden_mod_five`, which uses `[propext]` alone.
 
 Shorter paths were already excluded by their dyadic coordinate. Therefore \(d_{G_m}(r,s)\ge k+1\) in either case.
 
@@ -98,4 +98,4 @@ The previous mixed CRT and coherent all-parameter constructions provide the univ
 
 [The independent verifier](mixed_diameter_certificate.py) reconstructs the exact inverse dyadic gate and odd-coordinate E action, computes a provably sufficient finite \(h\)-period cutoff for each fixed modulus, enumerates all generic quotient edges and all-pairs distances for sample moduli, and verifies the constructed lower witnesses. Its finite cases corroborate, but are not used to infer, the all-\(p,q\) theorem.
 
-**Unresolved global quantifier:** Nothing here constrains which residue words are visited by the original blank-start Sheep orbit from \(10\). Both the mixed diameter theorem and its single-free-start strengthening leave the authentic halting question open. The mathematical proof relies on existing all-parameter **paper** upper bounds and has no completed source-integrated all-parameter Lean theorem; independent adversarial review and outside novelty checking are warranted. This work remains under \`im-results/\`.
+**Unresolved global quantifier:** Nothing here constrains which residue words are visited by the original blank-start Sheep orbit from \(10\). Both the mixed diameter theorem and its single-free-start strengthening leave the authentic halting question open. The mathematical proof relies on existing all-parameter **paper** upper bounds. Two key arithmetic lemmas have separate standalone Lean4.36.0-rc2 certificates, but there is no completed source-integrated all-parameter Lean diameter theorem; independent adversarial review and outside novelty checking are warranted. This work remains under \`im-results/\`.
