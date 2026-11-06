@@ -28,3 +28,4 @@ jobs:
           lean -o im-results/agent42-root119-guard/Root119BShield.olean im-results/agent42-root119-guard/Root119BShield.lean
           lean -o im-results/agent42-root119-guard/Root119BFull.olean im-results/agent42-root119-guard/Root119BFull.lean
           lean im-results/agent42-root119-guard/Root119BFullShield.lean
+          lean im-results/agent42-root119-guard/Root119DoubleShieldFalse.lean
