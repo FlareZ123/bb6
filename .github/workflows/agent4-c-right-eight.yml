@@ -1,0 +1,37 @@
+name: Agent 4 Machine C source right-eight inverse certificate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-certificate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify genuine section predecessor inverse and blank-root theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a4-c-right-eight
+          cp im-results/agent11-c-line/CLine.lean /tmp/a4-c-right-eight/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a4-c-right-eight/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a4-c-right-eight/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/a4-c-right-eight/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse}.lean /tmp/a4-c-right-eight/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a4-c-right-eight/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/a4-c-right-eight/
+          cp im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize}.lean /tmp/a4-c-right-eight/
+          cp im-results/agent4-c-right-eight/RightEight.lean /tmp/a4-c-right-eight/
+          cd /tmp/a4-c-right-eight
+          export LEAN_PATH="."
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity Agent3CImage BounceAllExact SectionAllInverse SectionAffineInverse ReachAffine AffineNormalize; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean RightEight.lean
