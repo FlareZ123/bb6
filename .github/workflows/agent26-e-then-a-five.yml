@@ -47,6 +47,7 @@ jobs:
           lean -o "$E/E1101010111ThenAFive.olean" "$E/E1101010111ThenAFive.lean"
           lean "$E/E1101010111ThenAFivePolynomial.lean"
           lean -o "$B/A1100.olean" "$B/A1100.lean"
+          lean -o "$B/A110111.olean" "$B/A110111.lean"
           lean -o "$E/A110101Closure.olean" "$E/A110101Closure.lean"
           lean -o "$E/E1101010111ThenAQ1.olean" "$E/E1101010111ThenAQ1.lean"
           lean "$E/E1101010111ThenAQ1Polynomial.lean"
@@ -61,3 +62,4 @@ jobs:
           lean "$E/EOnePairPhysical.lean"
           lean -o "$A/EDouble.olean" "$A/EDouble.lean"
           lean "$E/EAllDoubleThenB.lean"
+          lean "$E/EDoubleThenAThree.lean"
