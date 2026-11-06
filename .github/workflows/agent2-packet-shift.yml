@@ -30,6 +30,8 @@ jobs:
           R=im-results/agent31-d-exceptional
           P=im-results/agent2-packet-shift
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
+          lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o im-results/agent32-cryptid-padding/EZeroPair.olean im-results/agent32-cryptid-padding/EZeroPair.lean
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
@@ -52,5 +54,7 @@ jobs:
           lean -o "$P/AIterDoubleZero.olean" "$P/AIterDoubleZero.lean"
           lean -o "$P/AIterDoubleZeroFirst.olean" "$P/AIterDoubleZeroFirst.lean"
           lean -o "$P/EIterDoubleZeroFullFirst.olean" "$P/EIterDoubleZeroFullFirst.lean"
-          lean "$P/EZeroPump.lean"
-          lean "$P/EOneZero.lean"
+          lean -o "$P/EIterDoubleZeroPacket.olean" "$P/EIterDoubleZeroPacket.lean"
+          lean -o "$P/EZeroPump.olean" "$P/EZeroPump.lean"
+          lean -o "$P/EOneZero.olean" "$P/EOneZero.lean"
+          lean "$P/EThirdTailPhysical.lean"
