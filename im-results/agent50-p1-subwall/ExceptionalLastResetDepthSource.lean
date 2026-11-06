@@ -1,4 +1,5 @@
 import CountedWallStrongGateSource
+import CountedEnergyCostSource
 import ExceptionalStrongSource
 
 namespace BB6.Agent50ExceptionalDepth
@@ -421,6 +422,8 @@ theorem source_exceptional_last_reset_depth_window
       bp+2^(t+3)=4*k+4*t+12 ∧
       dp+14*2^n=2^(t+3)+2*mp+2*n+7 ∧
       m=mp+t+1 ∧
+      m+n+1≤(2*n+3)*z+t ∧
+      m≤(2*n+3)*z ∧
       n+4≤m ∧
       5≤dp ∧
       2^(t+3)=2*k+dp+2*t+9 ∧
@@ -436,6 +439,9 @@ theorem source_exceptional_last_reset_depth_window
     counted_to_odd_cone _ _ _ _ _ _ h5
   have hcostFour : n+4≤m :=
     BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four n b 5 m hn hoddEnd rfl
+  have hprefixEnergy : mp≤n+1+(2*n+3)*zp :=
+    BB6.Agent43CountedEnergy.source_counted_cost_linear_in_resets
+      n bp dp mp zp hn hpre
   have hmassEnd := odd_cone_mass
     (14*2^n-2*n-16) 3 b 5 m hoddEnd
   have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by omega
@@ -504,7 +510,9 @@ theorem source_exceptional_last_reset_depth_window
     have hcostUpperPrefix : mp+n+7+2^(t+1)≤7*2^n := by
       rw [hpow3] at hbpBound
       omega
-    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hcostFour,hdpFive,hdepthExact,hcostLowerPrefix,hcostUpperPrefix,htTwo,htUpper⟩
+    have hdepthEnergy : m+n+1≤(2*n+3)*z+t := by omega
+    have henergyUniform : m≤(2*n+3)*z := by omega
+    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepthEnergy,henergyUniform,hcostFour,hdpFive,hdepthExact,hcostLowerPrefix,hcostUpperPrefix,htTwo,htUpper⟩
 
 #print axioms BB6.Agent50ExceptionalDepth.source_exceptional_last_reset_depth_window
 
