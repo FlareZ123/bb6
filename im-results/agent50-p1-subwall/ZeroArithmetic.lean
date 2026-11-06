@@ -57,4 +57,17 @@ theorem quadratic_below_power (n : Nat)
 #print axioms BB6.Agent50SubwallZero.zero_arith
 #print axioms BB6.Agent50SubwallZero.quadratic_below_power
 
+theorem six_quadratic_below_power (n : Nat)
+    (ho : 13824*(n+2)^8<2^n) :
+    6*(n+2)^2<2^n := by
+  have hpow : (n+2)^2 ≤ (n+2)^8 :=
+    Nat.pow_le_pow_right (by omega) (by decide)
+  have hbound : 6*(n+2)^2 ≤ 13824*(n+2)^8 := by
+    calc
+      6*(n+2)^2 ≤ 6*(n+2)^8 := Nat.mul_le_mul_left 6 hpow
+      _ ≤ 13824*(n+2)^8 := Nat.mul_le_mul_right _ (by decide)
+  omega
+
+#print axioms BB6.Agent50SubwallZero.six_quadratic_below_power
+
 end BB6.Agent50SubwallZero
