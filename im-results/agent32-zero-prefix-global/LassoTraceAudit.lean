@@ -1,4 +1,5 @@
 import PhysicalTraceAudit
+import EntryMacroLeft
 
 namespace BB6Coverage
 
@@ -178,29 +179,36 @@ theorem finiteLassoOracle_sound (p : PartialMachine) (maxSteps bound : Nat)
   obtain ⟨n, _, hn⟩ := List.any_eq_true.mp h
   exact finiteLassoCheck_sound p n bound hn
 
-def lassoDecisionOracle (p : PartialMachine) (bound rayLimit lassoLimit : Nat) : Bool :=
-  finiteDecisionOracle p bound rayLimit || finiteLassoOracle p lassoLimit
+def lassoDecisionOracle (p : PartialMachine)
+    (bound rayLimit lassoLimit entryLimit macroLimit : Nat) : Bool :=
+  (finiteDecisionOracle p bound rayLimit || finiteLassoOracle p lassoLimit) ||
+    finiteEntryMacroBiOracle p entryLimit macroLimit
 
 theorem lassoDecisionOracle_sound (p : PartialMachine)
-    (bound rayLimit lassoLimit : Nat)
-    (h : lassoDecisionOracle p bound rayLimit lassoLimit = true) :
+    (bound rayLimit lassoLimit entryLimit macroLimit : Nat)
+    (h : lassoDecisionOracle p bound rayLimit lassoLimit entryLimit macroLimit = true) :
     Cover (DecidedBelow bound) p := by
-  have hor : finiteDecisionOracle p bound rayLimit = true ∨
-      finiteLassoOracle p lassoLimit = true := by
+  have hor :
+      (finiteDecisionOracle p bound rayLimit = true ∨
+        finiteLassoOracle p lassoLimit = true) ∨
+      finiteEntryMacroBiOracle p entryLimit macroLimit = true := by
     simpa only [lassoDecisionOracle, Bool.or_eq_true] using h
-  rcases hor with hbase | hlasso
-  · exact finiteDecisionOracle_sound p bound rayLimit hbase
-  · exact finiteLassoOracle_sound p lassoLimit bound hlasso
+  rcases hor with hbase | hentry
+  · rcases hbase with hdecision | hlasso
+    · exact finiteDecisionOracle_sound p bound rayLimit hdecision
+    · exact finiteLassoOracle_sound p lassoLimit bound hlasso
+  · exact finiteEntryMacroBiOracle_sound p entryLimit macroLimit bound hentry
 
-def lassoPhysicalTraceAudit (p : PartialMachine) (bound rayLimit scanLimit lassoLimit : Nat) :
+def lassoPhysicalTraceAudit (p : PartialMachine)
+    (bound rayLimit scanLimit lassoLimit entryLimit macroLimit : Nat) :
     (depth : Nat) → FrontierAudit (DecidedBelow bound) p
   | 0 =>
-      if h : lassoDecisionOracle p bound rayLimit lassoLimit = true then
-        .certified p (lassoDecisionOracle_sound p bound rayLimit lassoLimit h)
+      if h : lassoDecisionOracle p bound rayLimit lassoLimit entryLimit macroLimit = true then
+        .certified p (lassoDecisionOracle_sound p bound rayLimit lassoLimit entryLimit macroLimit h)
       else .unresolved p
   | depth+1 =>
-      if h : lassoDecisionOracle p bound rayLimit lassoLimit = true then
-        .certified p (lassoDecisionOracle_sound p bound rayLimit lassoLimit h)
+      if h : lassoDecisionOracle p bound rayLimit lassoLimit entryLimit macroLimit = true then
+        .certified p (lassoDecisionOracle_sound p bound rayLimit lassoLimit entryLimit macroLimit h)
       else
         match hs : firstUnknownPhysical p scanLimit finiteBlank with
         | none => .unresolved p
@@ -208,11 +216,11 @@ def lassoPhysicalTraceAudit (p : PartialMachine) (bound rayLimit scanLimit lasso
             .branch p slot
               (firstUnknownPhysical_sound p scanLimit finiteBlank slot hs)
               (fun t _ => lassoPhysicalTraceAudit
-                (refine p slot t) bound rayLimit scanLimit lassoLimit depth)
+                (refine p slot t) bound rayLimit scanLimit lassoLimit entryLimit macroLimit depth)
 
 def globalLassoPhysicalTraceAudit :
     FrontierAudit (DecidedBelow 6) emptyTable :=
-  lassoPhysicalTraceAudit emptyTable 6 6 12 12 12
+  lassoPhysicalTraceAudit emptyTable 6 6 12 12 2 4 12
 
 theorem globalLassoPhysicalTraceAudit_exhaustive (m : Machine) :
     DecidedBelow 6 m ∨ globalLassoPhysicalTraceAudit.open m :=
@@ -247,8 +255,17 @@ theorem readOneLasso_old_oracle_misses :
   decide
 
 theorem readOneLasso_new_oracle_accepts :
-    lassoDecisionOracle readOneLassoTable 6 6 12 = true := by
+    lassoDecisionOracle readOneLassoTable 6 6 12 2 4 = true := by
   decide
+
+theorem entryToBExample_new_oracle_accepts :
+    lassoDecisionOracle entryToBExample 6 6 12 2 4 = true := by
+  have he : finiteEntryMacroOracle entryToBExample 2 4 = true := by
+    apply List.any_eq_true.mpr
+    refine ⟨1, by decide, ?_⟩
+    apply List.any_eq_true.mpr
+    exact ⟨2, by decide, entryToB_check⟩
+  simp [lassoDecisionOracle, finiteEntryMacroBiOracle, he]
 
 theorem readOneLasso_cover :
     Cover (DecidedBelow 6) readOneLassoTable :=
@@ -267,6 +284,7 @@ theorem readOneLasso_works (m : Machine)
 #print axioms finiteLassoCheck_sound
 #print axioms finiteLassoOracle_sound
 #print axioms lassoDecisionOracle_sound
+#print axioms entryToBExample_new_oracle_accepts
 #print axioms globalLassoPhysicalTraceAudit_exhaustive
 #print axioms globalLassoPhysicalTraceAudit_conserves
 #print axioms readOneLasso_four_moves
