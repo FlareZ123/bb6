@@ -31,9 +31,13 @@ theorem certificate_for_mem (r : Nat) (hr : r ∈ newLifts) :
 theorem no_reach_cylinder (q r : Nat) (hr : r ∈ newLifts) :
     ¬ Reach (16384*q+r) (32768*q+2*r-1) := by
   have hrpos : 0<r := by simp [newLifts] at hr; omega
-  have hcert := cert_sound 12 ⟨16384,r,32768,2*r-1⟩ q
-    (certificate_for_mem r hr)
-  convert hcert using 1 <;> simp [va, vb] <;> omega
+  let s : Affine := ⟨16384,r,32768,2*r-1⟩
+  have hcert := cert_sound 12 s q (certificate_for_mem r hr)
+  have hA : va s q = 16384*q+r := by rfl
+  have hB : vb s q = 32768*q+2*r-1 := by
+    dsimp [vb,s]
+    omega
+  simpa [hA,hB] using hcert
 
 /-- The exact BB429 blank-root orbit avoids all forty additional terminal
     residues. No finite-time cutoff is assumed. -/
