@@ -145,13 +145,11 @@ theorem zero_parent_mem_candidates (k x y v u : Nat)
   have hcoord : zeroParentAtValuation x y v=(0,k) := by
     simp [zeroParentAtValuation,hv]
     omega
+  have hsource : secNext (zeroParentAtValuation x y v)=some (x,y) :=
+    (congrArg secNext hcoord).trans hedge
   have hcond : u=0 ∧ 3≤v ∧
-      secNext (zeroParentAtValuation x y v)=some (x,y) := by
-    refine ⟨hu,by omega,?_⟩
-    calc
-      secNext (zeroParentAtValuation x y v)=secNext (0,k) :=
-        congrArg secNext hcoord
-      _=some (x,y) := hedge
+      secNext (zeroParentAtValuation x y v)=some (x,y) :=
+    ⟨hu,by omega,hsource⟩
   unfold zeroExactCandidates
   simp [hcond,hcoord]
 
@@ -216,13 +214,11 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
     have hcoord : oneParentAtValuation x y v=(1,k) := by
       simp [oneParentAtValuation,hv]
       omega
+    have hsource : secNext (oneParentAtValuation x y v)=some (x,y) :=
+      (congrArg secNext hcoord).trans hedge
     have hcond : u=0 ∧ 4≤v ∧
-        secNext (oneParentAtValuation x y v)=some (x,y) := by
-      refine ⟨hu,by omega,?_⟩
-      calc
-        secNext (oneParentAtValuation x y v)=secNext (1,k) :=
-          congrArg secNext hcoord
-        _=some (x,y) := hedge
+        secNext (oneParentAtValuation x y v)=some (x,y) :=
+      ⟨hu,by omega,hsource⟩
     unfold oneExactCandidates
     simp [hcond,hcoord]
 
