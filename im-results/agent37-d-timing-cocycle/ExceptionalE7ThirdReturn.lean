@@ -188,7 +188,7 @@ private theorem third_return (u r : Nat) (hr : 1 ≤ r) :
   rw [second_a_shape u r hr]
   simpa only [aTime,sourceEnd,a_end_shape u r hr] using
     (BB6.CryptidA110111CodeFirst.full_A_code_110111_first_return
-      (64*u+10) (codeWords r) suffix3)
+      (64*u+10) (codeWords r) suffix3).1
 
 private theorem first_return (u r : Nat) :
     BB6.BoundaryPadding.ObsEq
