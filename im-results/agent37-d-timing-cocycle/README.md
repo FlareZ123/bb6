@@ -99,4 +99,17 @@ The twelfth packet's proposed quadratic leading coefficient is **876**. It match
 
 **Actual blank-origin theorem:** for `t12 = ((DRegular.run 1759 seed12).getD default).a-10` divided by 9 as defined in [BlankTwelfthRejoin.lean](BlankTwelfthRejoin.lean), and exact symbolic `reentry12Time` defined in that file, the all-blank original D0 machine has a physical F/0 section `L(64*t12+91,3,2)`. This is the twelfth exceptional episode, regular-model section index 47,485 (first exceptional section index 47,483); the incoming exceptional source `L(9*t12+10,7,1)` is reached after precisely 1,759 regular returns from the eleventh certified blank-root reentry. The universal transition [TwelfthPacket.lean](TwelfthPacket.lean) gives `876*t12²+2603*t12+2006` original primitive transitions for the exceptional E then A macro. Every source step is proved in the original six-state machine, with physical `ObsEq` handling implicit terminal blanks.
 
-This is a **new finite genuine blank-ancestry checkpoint within this repository**; it neither determines the D-machine's eventual behavior nor any value of BB(6). External mathematical novelty is not claimed; keep under `im-results/`, not `results/`. Next proposed arithmetic extension: 3,679 regular sections lead to a thirteenth E exception `L(a,6,1)`, `a%9=4`; authenticate via the previously proved general E/B exceptional source theorem and record an explicit source transport into the true blank root. Independent arithmetic regression is [check_root12.py](check_root12.py).
+This is a **new finite genuine blank-ancestry checkpoint within this repository**; it neither determines the D-machine's eventual behavior nor any value of BB(6). External mathematical novelty is not claimed; keep under `im-results/`, not `results/`. **Thirteenth extension: ORIGINAL-SOURCE CI VERIFIED 2026-11-06.** From the twelfth reentry `L(64*t12+91,3,2)`, exactly 3,679 regular sections reach `L(9*t13+4,6,1)`; the universal Agent25 E/B family with `p=4` returns to `L(64*t13+29,1,5)`. The proof is [BlankThirteenthRejoin.lean](BlankThirteenthRejoin.lean). Workflow run [42306192563](https://github.com/FlareZ123/bb6/actions/runs/42306192563) completed successfully on 2026-11-06, including the restored original-source dependencies and all eleven D-regular return cases.
+
+The arithmetic replay now predicts four further exceptional sections from this thirteenth reentry:
+
+| Episode | DRegular sections | Exceptional source | `t mod 27` | Unary parameter bits |
+|---:|---:|---|---:|---:|
+| 14 | 5,169 | `L(9*t14+4,5,1)` | 3 | 79,720 |
+| 15 | 6,821 | `L(9*t15+4,8,1)` | 14 | 89,375 |
+| 16 | 2,077 | `L(9*t16+4,5,1)` | 26 | 92,317 |
+| 17 | 2,656 | `L(9*t17+7,7,1)` | 6 | 96,078 |
+
+The arithmetic and little-endian SHA-256 fingerprints are reproducible with [check_root17.py](check_root17.py). These four candidates are **not yet original-source CI verified**. Episodes 14, 15, and 16 use the universal Agent25 E/B theorem with parameters 3, 6, and 3. Episode 17 has `t17=3u) and uses [ExceptionalE7ThirdReturn.lean](ExceptionalE7ThirdReturn.lean), a source theorem generalized to all `q=3r+1` and `t=3u`: EAllDouble, then `full_E_three`, then `full_A_code_110111_first_return` with code `10,10,111,...,111` and tail `111`. At the root's `r=2), the endpoint is `L(8*(64*u+10)+39,3,2)). The root transport is [BlankSeventeenthRejoin.lean](BlankSeventeenthRejoin.lean).
+
+The intermediate proofs are [BlankFourteenthRejoin.lean](BlankFourteenthRejoin.lean), [BlankFifteenthRejoin.lean](BlankFifteenthRejoin.lean), and [BlankSixteenthRejoin.lean](BlankSixteenthRejoin.lean). The expanded workflow compiles them in sequence after the thirteenth theorem. Treat the 14–17 extension as provisional until that run succeeds.
