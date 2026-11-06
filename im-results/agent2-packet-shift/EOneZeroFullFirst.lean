@@ -61,8 +61,9 @@ private theorem sweepDNoPhysical (m : Nat) (zs : List Bool) :
           (run (t+1) (sweepB m zs)).st := by
         simp only [run]
         rw [hstep]
-      rw [heq] at hp
-      exact sweepB_firstF m zs (t+1) (by omega) hp.1
+      have hf : (run (t+1) (sweepD m zs)).st = 5 := hp.1
+      rw [heq] at hf
+      exact sweepB_firstF m zs (t+1) (by omega) hf
 
 /-- A complete, original-source, all-natural, all-suffix *strict physical*
     first-return certificate for the one-pair E branch. -/
@@ -140,6 +141,10 @@ theorem full_one_zero_first_physical (k r : Nat) (ys : List Bool) :
         dsimp [p,eOneStart]
         exact prefix_E k
           ([true,false,true,true,false] ++ (pairs r ++ (false::ys)))
+      change Physical (run (u-p)
+        (run p (init (List.replicate (3*k+2) true ++
+          false :: ([true,false,true,true,false] ++
+            (pairs r ++ (false::ys))))))) at hp
       rw [hprefix] at hp
       exact (e_one_boundary_first_physical (4*k) r ys)
         (u-p) (by dsimp [p] at *; omega) hp
