@@ -1,6 +1,6 @@
-# Exact generic and coherent Sheep diameter for every even modulus
+# Exact Sheep first-even quotient and free-start coherent diameters for every even modulus
 
-**Agent 40, 6 November 2026. Intermediate mathematical theorem.** For any \(p\ge1\) and odd \(q\ge1\), put \(m=2^p q\). Let \(G_m\) be the **generic synthetic first-even** Sheep residue graph, with even residues modulo \(m\) as vertices, and every edge witnessed by some positive legal generic Sheep first-even return. Its exact directed diameter is
+**Agent 40, 6 November 2026. Intermediate mathematical theorem.** For any \(p\ge1\) and odd \(q\ge1\), put \(m=2^p q\). Let \(G_m\) be the **generic synthetic first-even** Sheep residue graph, with even residues modulo \(m\) as vertices, and every edge witnessed by some positive legal generic Sheep first-even return. The *full* synthetic first-even graph \(H_m\) also includes every legal exceptional odd-part-three section return. **Both graphs** have the same exact directed diameter
 
 \[
 \boxed{\operatorname{diam}(G_{2^p q})=
@@ -11,7 +11,7 @@
 \tag{1}
 \]
 
-The same formula holds for the maximum **coherent free-start directed distance**, where each source-to-target path must be realized by consecutive genuine generic first-even returns from **one suitably selected positive integer**. These are mathematical statements about arbitrarily chosen starting integers and independent synthetic edge witnesses. The actual Sheep blank-entry integer \(10\) is fixed and is not shown to realize any such route. **Sheep and BB(6) remain unresolved.**
+The same formula holds for the maximum **coherent free-start directed distance**, whether every consecutive genuine first-even return is restricted to the generic branch or all legal nonhalting returns (including odd-part-three exceptions) are allowed. In each case the trajectory begins from **one suitably selected positive integer**. These are mathematical statements about arbitrarily chosen starting integers and independent synthetic edge witnesses. The actual Sheep blank-entry integer \(10\) is fixed and is not shown to realize any such route. **Sheep and BB(6) remain unresolved.**
 
 The upper bounds are previous written all-parameter arithmetic theorems, with extensive exact checks: [Agent 22's inverse-word and mixed-CRT graph](../agent22-sheep-mixed-hub/MIXED-COMPLETENESS.md) proves \(\operatorname{diam}\le \lfloor p/2\rfloor+1\) for any odd \(q\), and [his coherent source theorem](../agent22-sheep-mixed-hub/COHERENT-ORBIT.md) proves the same bound for a **single freely chosen actual integer trajectory**. For \(q=1\), the stronger bound \(\lfloor p/2\rfloor\) and matching lower bound are [proved in the companion note](DYADIC-DIAMETER.md). The **new result here is a matching all-\(p\), all-odd-\(q>1\) lower bound**, established directly from residue forcing in the original section map. The prerequisite all-parameter upper constructions and the present lower proof have **not** been combined into a complete source-importing Lean certificate or independently externally reviewed for academic novelty. The key forced-corridor identity and the all-valuation modulo-five obstruction are separately verified in standalone [SheepCorridor.lean](SheepCorridor.lean), compiled locally with Lean 4.36.0-rc2 and only standard axioms.
 
@@ -92,10 +92,26 @@ Shorter paths were already excluded by their dyadic coordinate. Therefore \(d_{G
 
 For \(p=1\), the graph has \(q>1\) distinct even vertices, so its diameter is at least one. Agent 22's original zero-hub/coherent construction gives the matching one-step upper bound.
 
+## Strengthening to all legal first-even return branches
+
+The published Sheep section relation has exactly one other **nonterminal** branch: if \(x=3\cdot2^a\) (\(a\ge0\)), then \(F(x)=x+a+3\). The section halts on the remaining odd-part-one powers. For even-section inputs \(a\ge1\). The only exceptional even input of valuation \(a=1\) is \(x=6\), whose first section successor is \(F(6)=10\), already even. Thus its full first-even return is **exactly \(6\to10\)**.
+
+Let \(H_m\) be the **unrestricted synthetic even-return quotient graph** with every genuinely legal nonhalting first-even return (both generic and odd-part-three branches) as an edge. We claim the same exact diameter (1), and the same sharp **unrestricted coherent free-start** maximum path length, hold in \(H_m\).
+
+**Proof.** Since the generic graph \(G_m\) is a subgraph, the established generic diameter/coherent upper bounds apply unchanged. We need only retain the lower witness \(r,s\) from the previous sections when extra exceptional edges are permitted.
+
+In all constructed lower witnesses with \(p\ge2\), the initial dyadic coordinate is \(r_2=-2\bmod2^p\), and the target's dyadic coordinate is \(s_2=0\bmod2^p\). At every stage \(i<k=\lfloor p/2\rfloor\), the forced-prefix congruence is \(x_i+2\equiv0\bmod2^{p-2i}\), with exponent \(p-2i\ge2\). Such an \(x_i\) has exact 2-adic valuation **one**, so a special branch could only arise at \(x_i=6\). But \(6+2=8\) cannot be divisible by \(16\). Consequently the **first \(k-1\) outgoing edges** must remain generic (the required exponent is at least 4 for these edges), and the entire previous forced affine calculation still applies.
+
+At the possible **last \(k\)th edge**, an exceptional source \(x_{k-1}=6\) would return \(10\). Since \(10\not\equiv0\bmod2^p\) for every \(p\ge2\), that edge cannot reach the selected lower-bound target \(s\). All genuine remaining final branches obey the generic formula and the previously proved odd-\(q\) obstruction. Hence the same source and target remain distance at least \(k+1\) for \(q>1\). For \(q=1\), all paths with fewer than \(k\) edges were already excluded by the forced dyadic nonzero corridor, so the exact lower bound \(k\) survives too.
+
+For \(p=1\), the graph has one even residue if \(q=1\), and \(q>1\) distinct even residues otherwise, forcing respective lower bounds 0 and 1. The generic upper constructions attain both. Thus (1) holds for the **full legal first-even quotient** and for its coherent free-start counterpart. QED.
+
+**Verification scope:** [mixed_diameter_certificate.py](mixed_diameter_certificate.py) fully enumerates the *generic* finite graphs; a separate bounded exploratory audit added the exceptional edges from all sources \(3\cdot2^a\) for \(1\le a\le300\) on representative small moduli, finding no diameter change. The **all-index theorem above is mathematical**, using an exhaustive exceptional-source *classification by valuation* rather than the finite audit. This full-branch corollary still makes no assertion that any arbitrary chosen start is actually reached from the true blank section \(10\).
+
 ## Exact equality, coherent version, and proof status
 
 The previous mixed CRT and coherent all-parameter constructions provide the universal upper bound \(k+1\). The new explicit pair \(r,s\) witnesses the matching lower bound for **every** odd \(q>1\), every \(p\ge1\). The same lower bound holds for the coherent freely selected one-orbit distance, because every physical coherent path projects to an edge path in \(G_m\). Agent 22's coherent upper bound proves its equality. The \(q=1\) case is settled independently in [DYADIC-DIAMETER.md](DYADIC-DIAMETER.md). This proves (1).
 
 [The independent verifier](mixed_diameter_certificate.py) reconstructs the exact inverse dyadic gate and odd-coordinate E action, computes a provably sufficient finite \(h\)-period cutoff for each fixed modulus, enumerates all generic quotient edges and all-pairs distances for sample moduli, and verifies the constructed lower witnesses. Its finite cases corroborate, but are not used to infer, the all-\(p,q\) theorem.
 
-**Unresolved global quantifier:** Nothing here constrains which residue words are visited by the original blank-start Sheep orbit from \(10\). Both the mixed diameter theorem and its single-free-start strengthening leave the authentic halting question open. The mathematical proof relies on existing all-parameter **paper** upper bounds. Two key arithmetic lemmas have separate standalone Lean4.36.0-rc2 certificates, but there is no completed source-integrated all-parameter Lean diameter theorem; independent adversarial review and outside novelty checking are warranted. This work remains under \`im-results/\`.
+**Unresolved global quantifier:** Nothing here constrains which residue words are visited by the original blank-start Sheep orbit from \(10\). Both the generic and full-branch mixed diameter theorems, including their single-free-start strengthening, leave the authentic halting question open. The mathematical proof relies on existing all-parameter **paper** upper bounds. Two key arithmetic lemmas have separate standalone Lean4.36.0-rc2 certificates, but there is no completed source-integrated all-parameter Lean diameter theorem; independent adversarial review and outside novelty checking are warranted. This work remains under \`im-results/\`.
