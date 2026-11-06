@@ -40,19 +40,8 @@ theorem direct_parent_mem_candidates (a k x y : Nat)
     if_neg hk0,if_pos hbelow] at hp
   rcases hp with ⟨hx,hy⟩
   have hpar : y%2=0 := by omega
-  have hxsum : x+2*k=a := by
-    rw [hx]
-    exact Nat.sub_add_cancel hbelow
-  have hsum : x+y=a+2 := by
-    rw [hy]
-    omega
-  have haeq : a=x+y-2 := by
-    rw [hsum]
-    omega
-  have hy2 : y-2=2*k := by omega
-  have hkeq : k=(y-2)/2 := by
-    rw [hy2]
-    exact (Nat.mul_div_cancel_left k (by decide : 0<2)).symm
+  have haeq : a=x+y-2 := by omega
+  have hkeq : k=(y-2)/2 := by omega
   have hcoord : a=x+y-2 ∧ k=(y-2)/2 := ⟨haeq,hkeq⟩
   have hsource : secNext (x+y-2,(y-2)/2)=some (x,y) := by
     simpa [hcoord.1,hcoord.2] using hedge
