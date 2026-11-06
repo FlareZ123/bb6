@@ -46,3 +46,5 @@ jobs:
           python im-results/agent3-finite-lasso/generate-lasso90.py
           echo "d39796e3bc5f4c93013ab088bf325a79033d906b5e24b9259c8b2e5163082512  im-results/agent3-finite-lasso/Agent3Lasso90.lean" | sha256sum --check
           lean im-results/agent3-finite-lasso/Agent3Lasso90.lean
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent3-finite-lasso/check-lasso90-disjoint.cpp -o /tmp/agent3-lasso90-disjoint
+          /tmp/agent3-lasso90-disjoint
