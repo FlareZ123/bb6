@@ -37,3 +37,19 @@ jobs:
           lean -o im-results/agent8-p1-precision-source/ShadowPredicateBudgetK.olean im-results/agent8-p1-precision-source/ShadowPredicateBudgetK.lean | tee /tmp/agent8-predicate-audit.log
           if grep -E -q 'sorryAx|error:' /tmp/agent8-predicate-audit.log; then exit 1; fi
           grep -F "source_oddcone_predicate_shadow' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent8-predicate-audit.log
+
+      - name: Verify original-source uniform P1 critical-gateway lift
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent8-p1-precision-source"
+          lean -o im-results/agent8-p1-shadow-cylinder/CylinderPower.olean im-results/agent8-p1-shadow-cylinder/CylinderPower.lean
+          lean -o im-results/agent9-param-budget/GenericBudgetBlocked.olean im-results/agent9-param-budget/GenericBudgetBlocked.lean
+          lean -o im-results/agent9-p1-k10-budget12/GenericShadow41K.olean im-results/agent9-p1-k10-budget12/GenericShadow41K.lean
+          lean -o im-results/agent9-p1-q33/GenericCritical41K.olean im-results/agent9-p1-q33/GenericCritical41K.lean
+          lean -o im-results/agent9-p1-q33/UniformPrecisionStep.olean im-results/agent9-p1-q33/UniformPrecisionStep.lean
+          for m in PredicateList PrecisionLanguage FiniteTransfer; do
+            lean -o "im-results/agent8-p1-precision-source/$m.olean" "im-results/agent8-p1-precision-source/$m.lean" | tee -a /tmp/agent8-final-source.log
+          done
+          lean im-results/agent8-p1-precision-source/UniformP1Gate.lean | tee -a /tmp/agent8-final-source.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent8-final-source.log; then exit 1; fi
+          grep -F "all_lifted_gateways_excluded' depends on axioms:" /tmp/agent8-final-source.log
