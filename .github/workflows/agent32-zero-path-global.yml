@@ -38,3 +38,5 @@ jobs:
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-union.cpp -o /tmp/zero-union-check
+          /tmp/zero-union-check
