@@ -6,6 +6,7 @@ import CZeroBridge
 set_option maxRecDepth 16000
 set_option maxHeartbeats 0
 namespace Agent41M192
+open Agent38M192
 
 private theorem low_small_k (a k c : Nat) (hk : k < 8)
     (hw : (k+c)%192 ≠ 11) : ¬ low a k c := by
