@@ -56,4 +56,8 @@ jobs:
           for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound; do
             lean -o "$AG50T/$m.olean" "$AG50T/$m.lean"
           done
-          lean "$AG50/SubwallBudget.lean"
+          lean -o "$AG50/SubwallBudget.olean" "$AG50/SubwallBudget.lean"
+          for m in NumericShell NumericPower148 NumericBridge148; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          lean "$AG50/SubwallNear.lean"
