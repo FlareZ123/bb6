@@ -29,8 +29,9 @@ theorem even_burst_affine_return (n W : Nat)
   have hcond :
       4*((0+3)*2^(n-1)) ≤ 2*0+W+3*(n-1)+9 := by
     omega
+  have hn_eq : n=(n-1)+1 := by omega
   have hexists : ∃ a b, BB429Burst.firstRun n (0,W)=some (a,b) := by
-    rw [BB429Burst.prefix_exists_iff (n-1) 0 W]
+    rw [hn_eq, BB429Burst.prefix_exists_iff (n-1) 0 W]
     exact ⟨by omega,hcond⟩
   rcases hexists with ⟨a,b,hp⟩
   have hprefix : BB429.run n (0,W)=some (a,b) :=
