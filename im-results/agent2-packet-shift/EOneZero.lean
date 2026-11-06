@@ -27,7 +27,7 @@ private theorem ones_normalize (r : Nat) (ys : List Bool) :
     _ = (List.replicate (5+2*r) true ++
         List.replicate 1 true) ++ ys := by
       rw [List.replicate_append_replicate]
-      rfl
+      simp [List.append_assoc]
     _ = List.replicate ((5+2*r)+1) true ++ ys := by
       rw [List.replicate_append_replicate]
     _ = _ := by rw [show (5+2*r)+1=2*r+6 by omega]
@@ -74,8 +74,7 @@ theorem a_one_zero_turn (r : Nat) (L ys : List Bool) :
       ⟨L,true,List.replicate (2*r+6) true ++ ys,4⟩ := by
     have hs := cFive L (List.replicate (2*r) true ++ (true::ys))
     have hl : L2=[false,true,true,false,true] ++ L := by rfl
-    rw [hl] at hs
-    rw [hs]
+    rw [hl,hs]
     exact congrArg (fun zs : List Bool => (⟨L,true,zs,4⟩ : Cfg))
       (ones_normalize r ys)
   have ht : 4*r+16 = 2+(7+(2*r+(2+(2*r+5)))) := by omega
@@ -110,10 +109,8 @@ theorem e_one_zero_boundary (m r : Nat) (ys : List Bool) :
   change run ((4*r+16)+(8+(2*m+3)))
     (⟨oppairs 1 ++ (pairs (m+3) ++ [true,true]),false,
       [true,false,true,true,false] ++ (pairs r ++ (false::ys)),0⟩ : Cfg) = _
-  · rw [run_add,a_one_zero_turn]
-    rw [run_add,eFinishEight,sweepD_run]
-  · rw [eOneStart,eStart_scan]
-    rfl
+  rw [run_add,a_one_zero_turn]
+  rw [run_add,eFinishEight,sweepD_run]
 
 /-- Original source exact F/0 endpoint on
     I_(3k+4)(0 10110 (10)^r 0 Y), with arbitrary tail Y.
