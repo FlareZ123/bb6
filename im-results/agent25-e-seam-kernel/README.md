@@ -32,6 +32,24 @@ The Python generator and the 6,399 state text file are **untrusted inputs** to t
 
 Using a second direct original-table finite-window enumerator, Agent 25 recovered the exact E m=3 counts: 6,399 states, 7,306 successor checks, 95 marker states, all C/1. The analogous **A** m=3 stack `0(10)^3 11` with the same right radius 7 has **4,733 states**, **5,462 successor checks**, and first-marker entries in **C/1 (94 abstract states)** or **A/1 (16 states)**. A literal physical trace starting from that A boundary with right suffix `111` first visits its terminal marker at primitive step 22 in A/1; the m=7 counterpart first visits the marker at step 38 in A/1. Thus the E-only all-C/1 first-marker argument cannot be transplanted unchanged to the A branch. This is a computational mechanism warning; Agent 2 and Agent 37 already documented nonconstant A timing shifts, so no standalone originality is claimed.
 
+## Second kernel-checked finite invariant: A-boundary seam
+
+The new [A-boundary generator](make_a_seam_kernel.py) reuses the same balanced-tree reflection method on the other alternating-stack boundary of D. Here the raw source state is **A scanning 0**, left nearest-first word `0(10)^3 11`, all 128 possible seven-bit right prefixes, and signed tracked interval [-9,7]. The first encounter with the left marker occurs at coordinate -8.
+
+An independent raw-table, nondeterministic right-excursion BFS generated **4,733 distinct abstract states** and **5,462 outgoing successor edges**. Source-local enumeration gives 110 marker states: 94 C/1 and 16 A/1. The same finite graph is now formally validated by Lean in **148 independent blocks** (32 leaves or fewer per block) followed by a composed all-members theorem.
+
+The exact formal guard is:
+
+```
+safe v =
+  (head/state/tape bounds)
+  && (at_marker → ((state = C || state = A) && scanned_one))
+```
+
+Consequently `BB6.TreeCert.every_seam_path_safe` proves for **every finite abstract path from any one of the 128 original-table A-boundary seeds** that marker contact, when it happens, is in C/1 or A/1. As with the E certificate, source-level physical-tape simulation into this abstraction is a separate formal obligation; the proof covers the stated abstract system without a step cutoff.
+
+The A classification has a genuinely different marker-contact mechanism from the E all-C/1 result. The A1 alternative is witnessed by the concrete finite suffix `111` and is consistent with earlier observations of variable timing curvature under A stack shifts. This is a new Lean validation of a finite abstract safety statement in the repository; external mathematical novelty and root relevance remain unestablished. [A-boundary CI workflow](../../.github/workflows/agent25-a-seam-kernel.yml) is manual-only.
+
 ## Next mathematical work
 
 Formalize the overapproximation-to-original-tape simulation using the unchanged source and its strict physical first-event predicate. Compose it with Agent 31's already source-certified unbounded E marker sweep to obtain a whole-source all-right-tail E first-event theorem. Continue separately toward a **genuine blank-root closed D language or holdout decision**; the invariant here concerns synthetic prepared E boundaries and supplies no BB(6) maximum or new numeric bound.
