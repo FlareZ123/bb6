@@ -1,6 +1,6 @@
 # A complete fourth-linear terminal inverse enumerator for Space Needle
 
-**Status (6 November 2026).** The exact all-natural arithmetic enumerator has been locally typechecked with Lean 4.36.0-rc2 against declared signatures of its upstream theorems. Its original-source bridge is committed as Lean source. The source verification for these *new* files is pending a manual GitHub Actions run. The underlying sharp bound and the more restrictive fourth-linear theorem, however, have now been fully original-source checked by [CI 42296731159](https://github.com/FlareZ123/bb6/actions/runs/42296731159). No actual blank-root reachability assertion is proved.
+**Status (6 November 2026).** The exact all-natural arithmetic enumerator and its original-source bridge have been kernel checked against the unchanged original Cryptids Space Needle acceleration. [Manual original-source CI 42298248203](https://github.com/FlareZ123/bb6/actions/runs/42298248203) succeeded; all source modules compiled, with no admitted lemma and only standard axiom dependencies. The underlying sharp bound and the more restrictive fourth-linear theorem, however, have now been fully original-source checked by [CI 42296731159](https://github.com/FlareZ123/bb6/actions/runs/42296731159). No actual blank-root reachability assertion is proved.
 
 ## Exact statement
 
@@ -26,7 +26,7 @@ This is **source-complete for one-step terminal feeders**. It does not enumerate
 
 ## Reproduction and limitations
 
-Lean version for local signature test: 4.36.0-rc2, from the user's uploaded archive. It compiled `quartic_valuation_bound` and `quarticParents_spec` against **temporary declared signatures**, so that local test is a *typechecking diagnostic* rather than independent validation of the upstream proofs. A full original-source CI job [agent48-space-needle-five.yml](../../.github/workflows/agent48-space-needle-five.yml) is dispatched separately and should be cited here only after successful completion.
+Lean: local version 4.36.0-rc2; successful pinned-original-source CI [42298248203](https://github.com/FlareZ123/bb6/actions/runs/42298248203) used the upstream Cryptids Lean toolchain 4.35.0-rc4, pinned Cryptids SHA `ced8f9f44f67a167d5ecc03e687b048c67926371`, and the [manual workflow](../../.github/workflows/agent48-space-needle-five.yml). It compiles `NeedleQuarticEnumerate.lean` to an `.olean`, imports that exact module in `NeedleQuarticEnumerateSource.lean`, and checks both original-source completeness iff theorems. The earlier CI run [42297403200](https://github.com/FlareZ123/bb6/actions/runs/42297403200) kernel-checked the arithmetic spec, then failed from a missing `.olean` output path. That was a workflow wiring defect and was corrected before the successful run.
 
 Finite arithmetic spot-checks by exact Python big integers gave:
 - K=9: [(2,45)]
