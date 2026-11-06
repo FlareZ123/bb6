@@ -67,6 +67,10 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/SuperlinearAll.olean" SuperlinearAll.lean
           cp "$base48/SuperlinearAllSource.lean" .
           lake env lean SuperlinearAllSource.lean
+          cp "$base48/SuperlinearOne.lean" .
+          lake env lean -o ".lake/build/lib/lean/SuperlinearOne.olean" SuperlinearOne.lean
+          cp "$base48/SuperlinearOneSource.lean" .
+          lake env lean SuperlinearOneSource.lean
           cp "$base48/SuperlinearEnumerate.lean" .
           lake env lean -o ".lake/build/lib/lean/SuperlinearEnumerate.olean" SuperlinearEnumerate.lean
           cp "$base48/SuperlinearEnumerateSource.lean" .
