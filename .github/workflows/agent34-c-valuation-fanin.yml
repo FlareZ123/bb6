@@ -39,3 +39,5 @@ jobs:
           lean -o ValuationOne.olean ValuationOne.lean
           cp "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/ValuationOneOrbit.lean" .
           lean ValuationOneOrbit.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/ValuationSmall.lean" .
+          lean ValuationSmall.lean
