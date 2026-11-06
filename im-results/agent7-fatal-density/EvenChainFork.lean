@@ -66,6 +66,7 @@ theorem offray_28_16_unreachable:
   apply weak_margin_two_tier_gap_dead 28 3866597
     414129261 291387584 124793431 64752797 2
   all_goals try decide
+  all_goals try (unfold SafeResidue; decide)
   · intro i hi
     have h:i=0∨i=1:=by omega
     rcases h with rfl|rfl <;> decide
