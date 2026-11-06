@@ -68,6 +68,10 @@ theorem e_then_a_q1 (t u : Nat) (ys : List Bool) :
     (2*((4*(8*t+6)+3+CryptidA.wordInc (tripleTokens u))-1)+34))
     (⟨false :: pairs (4*(8*t+6)+3) ++ [true,true], false,
       CryptidA.wordCode (tripleTokens u) ++ tenTerminal ys,0⟩ : Cfg) = _
+  change run (CryptidA.wordCost (4*(8*t+6)+3) (tripleTokens u) +
+    (2*((4*(8*t+6)+3+CryptidA.wordInc (tripleTokens u))-1)+34))
+    (BB6.Agent35.aBoundary (4*(8*t+6)+3)
+      (CryptidA.wordCode (tripleTokens u) ++ tenTerminal ys)) = _
   rw [run_add, BB6.Agent35.a_code_return]
   have hm : ((4*(8*t+6)+3+CryptidA.wordInc (tripleTokens u))-1)+1 =
       (4*(8*t+6)+3+CryptidA.wordInc (tripleTokens u)) := by omega
