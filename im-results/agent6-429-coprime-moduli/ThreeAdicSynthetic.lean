@@ -329,6 +329,30 @@ theorem no_three_power_periodic_invariant (E : Nat) (hE : 1≤E)
     invariant_of_run P hstep n (0,W) (a,b) hrun hstart
   exact hhalt (a,b) hh hend
 
+/-- The authentic blank run reaches (0,44), whose second counter is
+2 modulo 3. -/
+theorem blank_reaches_two_residue_zero_row :
+    BB429.run 7 (0,0) = some (0,44) := by decide
+
+/-- Even a single 3^E cylinder around the root-reachable state (0,44)
+cannot be included in a forward-invariant halt-free predicate. -/
+theorem no_three_power_cylinder_invariant (E : Nat) (hE : 1≤E)
+    (P : BB429.State → Prop)
+    (hroot : P (0,0))
+    (hsat : ∀ y, 44%3^E=y%3^E → P (0,44) → P (0,y))
+    (hstep : ∀ s t, P s → BB429.next s=some t → P t)
+    (hhalt : ∀ s, BB429.next s=none → ¬P s) : False := by
+  obtain ⟨W,n,a,b,hmod,hrun,hh⟩ :=
+    synthetic_halt_every_three_power E 44 hE
+  have hmod44 : 44%3^E=W%3^E := by simpa using hmod.symm
+  have hroot44 : P (0,44) :=
+    invariant_of_run P hstep 7 (0,0) (0,44)
+      blank_reaches_two_residue_zero_row hroot
+  have hstart : P (0,W) := hsat W hmod44 hroot44
+  have hend : P (a,b) :=
+    invariant_of_run P hstep n (0,W) (a,b) hrun hstart
+  exact hhalt (a,b) hh hend
+
 #print axioms synthetic_halt_every_three_power
 #print axioms no_three_power_periodic_invariant
 
