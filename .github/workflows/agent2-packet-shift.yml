@@ -53,3 +53,4 @@ jobs:
           lean -o "$P/AIterDoubleZeroFirst.olean" "$P/AIterDoubleZeroFirst.lean"
           lean -o "$P/EIterDoubleZeroFullFirst.olean" "$P/EIterDoubleZeroFullFirst.lean"
           lean "$P/EZeroPump.lean"
+          lean "$P/EOneZero.lean"
