@@ -129,9 +129,7 @@ theorem g0_no_one
       have hz : 0 < (2:Nat)^(K+2) := Nat.pow_pos (by decide)
       omega
     have he : 4*2^K=(2:Nat)^(K+2) := by
-      rw [Nat.pow_add]
-      norm_num
-      simp [Nat.mul_comm]
+      simp [Nat.pow_add, Nat.mul_comm]
     omega
   omega
 
@@ -267,9 +265,7 @@ theorem g1_no_one
       have hz : 0 < (2:Nat)^(K+2) := Nat.pow_pos (by decide)
       omega
     have he : 4*2^K=(2:Nat)^(K+2) := by
-      rw [Nat.pow_add]
-      norm_num
-      simp [Nat.mul_comm]
+      simp [Nat.pow_add, Nat.mul_comm]
     omega
   omega
 
