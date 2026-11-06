@@ -13,18 +13,14 @@ private theorem high_margin (n : Nat) :
       simp only [show (2:Nat)^2=4 by decide]
       omega
 
-/-- Both two-dimensional high stopping parameter classes fall into the
+/-- An infinite two-parameter high stopping congruence class falls into the
     uniform original-blank forbidden section rectangle. -/
 theorem blank_no_high_pair (j m k : Nat)
-    (hpair : (j%256=127 ∧ m%256=118) ∨
-             (j%256=255 ∧ m%256=246))
+    (hj : j%32=31) (hpair : (j+3*m+5)%256=230)
     (hgate : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     ¬ BB6.Agent3.CReach (2*j+3) k := by
-  have hm3 : 3≤m := by rcases hpair with h|h <;> omega
-  have hsum : (j+3*m+5)%256=230 := by
-    rcases hpair with h|h <;> omega
-  have hxmod : (2*j+3)%256=1 := by
-    rcases hpair with h|h <;> omega
+  have hm3 : 3≤m := by omega
+  have hxmod : (2*j+3)%64=1 := by omega
   have hpower : 256 ∣ 2^(2*m+2) := by
     change 2^8 ∣ 2^(2*m+2)
     exact Nat.pow_dvd_pow 2 (by omega)
@@ -49,11 +45,11 @@ theorem blank_no_high_pair (j m k : Nat)
     rw [hn] at hgate hj
     omega
   have hv : 1≤k/256 := by omega
-  have hxform : 2*j+3=256*((2*j+3)/256)+1 := by omega
+  have hxform : 2*j+3=64*((2*j+3)/64)+1 := by omega
   have hyform : k=256*(k/256)+26 := by omega
   intro hr
   rw [hxform,hyform] at hr
-  exact blank_no_rectangle ((2*j+3)/256) (k/256) hv hr
+  exact blank_no_rectangle ((2*j+3)/64) (k/256) hv hr
 
 #print axioms blank_no_high_pair
 end BB6.Agent23C26
