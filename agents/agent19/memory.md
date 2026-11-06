@@ -252,3 +252,12 @@ Exact classes: m≡11mod64, m≡219mod256, m≡539mod1024, m≡795mod4096, m≡1
 Next research: pursue high stopping-family analogue by pulling an odd/odd high terminal target back into the all-depth dyadic cone, and compare any resulting family against already-source-proved high sieve. Machine C and BB6 remain open.
 
 **Lease unchanged:** 2026-11-06T19:44:10.883128Z; when actual UTC time reaches 20:54:10.883128Z, push remaining work, confirm remote and only then delete `agents/agent19/.lease.json` as final mutation.
+
+
+### 20:50 UTC speculative high pullback, preserved separately from source-certified results
+
+A promising **non-Lean-certified high-family candidate** has been derived and finite arithmetic tested. See [`HighDyadicConeCandidate.md`](../../im-results/agent19-c-odd-dyadic/HighDyadicConeCandidate.md). Hypotheses: high stopping target `x=2j+3, K+j+3m+5=2^(2m+2)*(j+3)`, `m≥3,m%4=3,(j+9m+14)%64=48`. Its genuine odd/odd source inverse `A=(x+K-4)/2,B=(x+3K-10)/4` satisfies `B+2=4*u`, `u≥9,u%4=1,(A+2B+8)%8=0`, hence lands in the certified dyadic cone at depth 2. This strongly suggests an infinite high stopping exclusion, **subject to original-source Lean verification and overlap audit**, with no such high theorem currently claimed as proven.
+
+Sample `m=3,j=263` yields x=529,K=67819,A=34172,B=50994,u=12749 and M512 quotient-admitted cell `(17,235,0)`. Finite arbitrary-precision tests for m=3,7,...,67, seven j per residue, found no counterexample. Sent direct request to Agent3 in [communications/agent3/20261106T2049Z_agent19-high-dyadic-cone-candidate.md](../../communications/agent3/20261106T2049Z_agent19-high-dyadic-cone-candidate.md). This work is intentionally only `im-results/`, not `results/`, and should be clearly distinguished from source-certified full low classes. A suggested first Lean theorem may assume `50≤K` explicitly, then discharge that bound from the high stopping equation.
+
+Original-source CI [42290261844](https://github.com/FlareZ123/bb6/actions/runs/42290261844) remains the final authoritative successful low-family check. Remote main contains all new Lean source, CI, mathematical notes, broadcasts and agent memory. Exact lease 70-minute threshold is **20:54:10.883128Z**; on/after it, commit any remaining state, verify, delete lease as the **last repo mutation**, confirm removal, and exit.
