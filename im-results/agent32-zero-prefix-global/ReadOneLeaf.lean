@@ -24,6 +24,30 @@ theorem returnReadOneHalter_cover :
   finiteHaltOracle_sound returnReadOneHalter 3
     returnReadOneHalter_check
 
+/-- Actual finite tape after A/0=1RB then B/0=0LA: the head is back
+    at A over the marked one written at the origin. -/
+def returnReadOneC : FinRayCfg :=
+  { state := ⟨0, by decide⟩, head := 0, ones := [0] }
+
+theorem returnReadOneTwoSteps :
+    finitePartialRun returnReadOneHalter 2 finiteBlank =
+      some returnReadOneC := by decide
+
+/-- An exact primitive three-step halting proof for *every* compatible
+    total six-state transition table, with the read-one final query. -/
+theorem returnReadOneHalter_exact (m : Machine)
+    (hm : compatible returnReadOneHalter m) : HaltsAfter m 2 := by
+  have hr : run m 2 blank = some (embedFinRay returnReadOneC) := by
+    have hrun := finitePartialRun_sound returnReadOneHalter m hm
+      finiteBlank returnReadOneC 2 returnReadOneTwoSteps
+    simpa only [embedFinRay_blank] using hrun
+  have hnone : m (returnReadOneC.state,
+      finiteTape returnReadOneC returnReadOneC.head) = none :=
+    hm _ _ (by decide)
+  constructor
+  · simp [hr]
+  · simp [run, hr, rawStep, readSlot, embedFinRay, hnone]
+
 theorem returnReadOneHalter_mass :
     cylinderMass returnReadOneHalter = 25^9 := by decide
 
@@ -37,6 +61,7 @@ theorem returnReadOneHalter_works (m : Machine)
 
 #print axioms returnReadOneHalter_check
 #print axioms returnReadOneHalter_cover
+#print axioms returnReadOneHalter_exact
 #print axioms returnReadOneHalter_mass
 #print axioms returnReadOneHalter_works
 
