@@ -24,16 +24,16 @@ while queue:
    nodes.add(child);queue.append(child)
 nodes=sorted(nodes);index={p:i for i,p in enumerate(nodes)}
 assert max(m for m,z,e in nodes)<=8
-assert s!=31
+assert 0<=s<64
 for m,z,e in nodes:
  assert v2(e)>v2(z)
- assert v2(z)<8
+ assert v2(z)<(9 if s==31 else 8)
 expr=' ∨\n'.join(f'  (m = {m} ∧ z = {z} + {e}*r)' for m,z,e in nodes)
 proof=' | '.join('⟨hm, hz⟩' for _ in nodes)
 branches=[]
 for m,z,e in nodes:
  steps=[]
- for t in range(8):
+ for t in range(9 if s==31 else 8):
   lines=['    ·']
   if z%(1<<t)!=0:
    lines.append('      omega')
@@ -129,6 +129,19 @@ end Agent23N14Residue{s}
 '''
 if s==0:
  code=code.replace('theorem critical_unreachable (r : Nat) :','theorem critical_unreachable (r : Nat) (hr : 1≤r) :')
+if s==31:
+ code=code.replace("import N14GenericDecision", "import N14K9Decision")
+ code=code.replace("Agent23N14Generic", "Agent23N14K9")
+ code=code.replace("no256", "no512")
+ code=code.replace("¬256 ∣ z", "¬512 ∣ z")
+ code=code.replace("have hle : 8≤t", "have hle : 9≤t")
+ code=code.replace("(2:Nat)^8 ∣ 2^t", "(2:Nat)^9 ∣ 2^t")
+ code=code.replace("have h256 : 256 ∣ z", "have h512 : 512 ∣ z")
+ code=code.replace("h256)", "h512)")
+ code=code.replace("t < 8", "t < 9")
+ code=code.replace("t<8", "t<9")
+ code=code.replace("t=7 := by omega", "t=7∨t=8 := by omega")
+ code=code.replace("h5 | h6 | h7", "h5 | h6 | h7 | h8")
 target=Path(sys.argv[2]) if len(sys.argv)>2 else Path(__file__).parent/'generated'/f'N14Residue{s}.lean'
 target.parent.mkdir(parents=True,exist_ok=True)
 with FileLock(str(target)+'.lock'):
