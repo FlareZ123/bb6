@@ -1,6 +1,6 @@
 # Machine C deep affine stopping inputs: exponential residual barrier
 
-**Status:** A complete paper proof from the exact checked-in section stopping and affine-scale equations, awaiting independent Lean kernel certification as a combined theorem. The original-source prerequisite equations are separately certified in the Machine C source chain. This is a bound for *hypothetical stopping inputs*, not a blanket exclusion or a halt/nonhalt decision of Machine C or BB(6).
+**Status, 6 November 2026:** The exponential theorem is **Lean 4.36.0-rc2 kernel certified against unchanged original Machine C source** in [CI 42210080956](https://github.com/FlareZ123/bb6/actions/runs/42210080956). The stronger uniform 220 lower wall, including exact low-index modular cases, is likewise source certified in [CI 42211050978](https://github.com/FlareZ123/bb6/actions/runs/42211050978). Both show only standard Lean axioms. These concern hypothetical stopping inputs; neither gives a Machine C halt/nonhalt proof or BB(6) exact value.
 
 ## Theorem
 
@@ -20,7 +20,7 @@ Y >= 2^(m+2) - 6*m - 1.
 
 The statement is meaningful independently of the initial section's parity. For the source-certified *deep affine sector*, `Y` is precisely the genuine `BB6.Agent15.affineNormalize (2*j+3) k` residual right counter and `d=BB6.Agent15.oddDepth k`. In the genuine sector, existing `DeepSecondFinal.lean` also requires `Y>=4` and `Y%12=4`. For `m=3`, the new numeric lower bound is 13; it grows exponentially with odd `m`, in contrast to a fixed lower bound of 4.
 
-This rules out residual right counter four for every odd `m>=3` under the exact stopping equation. It does **not** settle source reachability for any residual right counter above the bound.
+This excludes residual right counter four for every odd `m>=3` under the exact stopping equation. The source-certified strengthening `odd_residual_ge_220` in [ResidualLowOdd.lean](ResidualLowOdd.lean) establishes **`Y>=220`** uniformly whenever `m>=3` is odd and `Y%12=4`. It checks the two exceptional small depths by finite modular arithmetic: `m=3` gives the exact lower limit 220 and `m=5` gives 508. For every odd `m>=7`, the now-certified exponential theorem implies at least 220. [ResidualSource.lean](ResidualSource.lean) composes these results with the original unbounded `affineNormalize`, `second_halt_deep_sector`, and `second_deep_affine_terminal_four_mod_twelve`. No result here settles blank-root reachability beyond the excluded region.
 
 ## Proof
 
@@ -101,8 +101,8 @@ Reducing modulo five, `2^(d+1)%5=4`. Powers of two have multiplicative order fou
 
 ## Source chain, reproducibility and limits
 
-The exact second-family equation is the original Machine C stopping identity in `im-results/agent15-c-halting/`. The affine-scale equation `2^d(Y+2)=k+2` is `normalize_three_depth_invariants` in `AffineParityDepth.lean`, imported by the genuine-root theorem `second_halt_deep_sector` in `SecondDeepSector.lean`. The factor-three lemma and real residual `Y%12=4` are `ModThree.lean` and `DeepSecondFinal.lean`, respectively; both were compiled successfully before the later failure in original-source CI 42194394835. This new exponential theorem itself has **not yet** been represented as a kernel-checked Lean theorem.
+The exact second-family equation is the original Machine C stopping identity in `im-results/agent15-c-halting/`. The affine-scale equation `2^d(Y+2)=k+2` is `normalize_three_depth_invariants` in `AffineParityDepth.lean`, imported by `second_halt_deep_sector` in `SecondDeepSector.lean`. The factor-three lemma and genuine residual `Y%12=4` are in `ModThree.lean` and `DeepSecondFinal.lean`. New [ResidualPeriod.lean](ResidualPeriod.lean), [ResidualCore.lean](ResidualCore.lean), [ResidualExponential.lean](ResidualExponential.lean), [ResidualLowOdd.lean](ResidualLowOdd.lean), and [ResidualSource.lean](ResidualSource.lean) close the entire proof chain. Unchanged-source CI runs [42210080956](https://github.com/FlareZ123/bb6/actions/runs/42210080956) and [42211050978](https://github.com/FlareZ123/bb6/actions/runs/42211050978) both succeeded. The final source-linked theorem is `BB6.Agent29Barrier.second_deep_affine_residual_ge_220`.
 
-Numerical checks of the exact source normalization at even `j` with `(j+m)%4=3` for `m=1,3,5,7,9,11`, sampling `j<200000`, found no violations. Minimum observed residuals for those depths were `4,220,508,45052,327676,16252924`; these are illustrations, not part of the proof. The proof quantifies over every natural stopping parameter and every valid affine-scale exponent.
+Finite checks at even `j` with `(j+m)%4=3`, `m=1,3,5,7,9,11`, and `j<200000` found minima `4,220,508,45052,327676,16252924`. The `m=3,5` lower limits are now Lean theorems for all indices and inverse depths; the other finite entries are listed as paper-level findings in [OddDepthExactModularMinimum.md](OddDepthExactModularMinimum.md). The exponential and uniform-220 theorems quantify over arbitrary natural stopping parameters and inverse depths.
 
 The next valuable application is to combine this depth-dependent obstruction with exact source inverse ancestors of the surviving residuals. It remains unknown whether any stopping input is reached from the authentic blank section at all.
