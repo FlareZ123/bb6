@@ -1,6 +1,7 @@
 import JointFiveSieve
 import LowC26
 import C26High
+import C26ObliqueHigh
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent23C26
@@ -8,9 +9,12 @@ namespace BB6.Agent23C26
 def lowAllowed (m : Nat) : Prop :=
   BB6.Agent11Joint.lowAllowed m ∧ m%256≠246
 
+def highForbidden (j m : Nat) : Prop :=
+  3≤m ∧ (((j+3*m+5)%32=6 ∧ (7*j+233)%256=(3*m)%256) ∨
+          ((j+3*m+5)%32=14 ∧ (7*j+41)%256=(3*m)%256))
+
 def highAllowed (j m : Nat) : Prop :=
-  BB6.Agent19Five.highAllowed j m ∧
-  ¬(j%32=31 ∧ (j+3*m+5)%256=230)
+  BB6.Agent19Five.highAllowed j m ∧ ¬ highForbidden j m
 
 private theorem low_bound (m : Nat) :
     3*m+4 ≤ 2^(2*m+3) := by
@@ -64,8 +68,8 @@ theorem blank_halts_iff_c26_five_root : BB6.CReachBridge.RunHalts ↔
           omega
         exact blank_no_low_m_246_mod256 m k hm heq hr
       exact Or.inl ⟨m,⟨hlow,hn⟩,hroot⟩
-    · have hn : ¬(j%32=31 ∧ (j+3*m+5)%256=230) := by
-        rintro ⟨hj,hm⟩
+    · have hn : ¬ highForbidden j m := by
+        rintro ⟨hm,hpair⟩
         let k := 2^(2*m+2)*(j+3)-(j+3*m+5)
         have hr : BB6.Agent3.CReach (2*j+3) k :=
           (BB6.Agent19Five.mixedFiveFastRootDecision_iff (2*j+3) k).mp hroot
@@ -73,11 +77,18 @@ theorem blank_halts_iff_c26_five_root : BB6.CReachBridge.RunHalts ↔
           dsimp [k]
           have hc := Nat.sub_add_cancel (high_bound j m)
           omega
-        exact blank_no_high_pair j m k hj hm heq hr
+        exact blank_no_high_oblique j m k hm hpair heq hr
       exact Or.inr ⟨j,m,⟨hhigh,hn⟩,hroot⟩
   · rintro (⟨m,⟨hlow,_⟩,hroot⟩ | ⟨j,m,⟨hhigh,_⟩,hroot⟩)
     · exact Or.inl ⟨m,hlow,hroot⟩
     · exact Or.inr ⟨j,m,hhigh,hroot⟩
 
+/-- The earlier single residue rectangle is subsumed by the oblique sector. -/
+theorem old_high_sieve_in_new (j m : Nat)
+    (hj : j%32=31) (hs : (j+3*m+5)%256=230) :
+    highForbidden j m := by
+  refine ⟨by omega, Or.inl ⟨by omega, by omega⟩⟩
+
+#print axioms old_high_sieve_in_new
 #print axioms blank_halts_iff_c26_five_root
 end BB6.Agent23C26
