@@ -47,7 +47,6 @@ theorem oneTurnRay_cover (p : PartialMachine) (q : Fin 6) (dir : Bool)
     subst d
     change p initialSlot = some (w initialSlot)
     rw [hA, hwa]
-    rfl
   have hblank : ∀ x, Ahead (!dir) c.head x → c.tape x = false := by
     intro x _
     by_cases hx : x = 0 <;> simp [c, applyMove, blank, a, hx]
