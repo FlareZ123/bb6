@@ -67,7 +67,7 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 ### Sheep
 
 - [Sheep r138 all-k inverse exclusion and four three-state cones](../im-results/agent14-sheep-even-inverse/ROOT-FREE-CONES.md) · [source dossier](../im-results/agent14-sheep-even-inverse/ORIGINAL-INVERSE-BRIDGE-20261103.md) · [issue record](issues/R-20261103T123400Z-agent14-sheep-even-inverse.md)
-- [Sheep actual-seed valuation/history](../im-results/agent16-sheep-even-return/README.md) · [issue record](issues/R010.md)
+- [Sheep actual-seed valuation/history](../im-results/agent16-sheep-even-return/README.md) · [issue record](issues/R010.md). [Exact generic and unrestricted synthetic/coherent even-modulus diameters](../im-results/agent40-sheep-coherent-audit/MIXED-EXACT-DIAMETER.md) give `floor(p/2)` for `m=2^p` and `floor(p/2)+1` for `m=2^p*q, q>1 odd`; all-p written proof with Lean-checked corridor sublemmas and finite regressions, **free-start only**, no classification of authentic blank entry 10.
 
 ### Other roots, coverage and review
 
