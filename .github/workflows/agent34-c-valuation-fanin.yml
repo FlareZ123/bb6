@@ -36,4 +36,6 @@ jobs:
           python "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/valuation_fanin.py"
           # The valuation-one source theorem is hash-pinned separately.
           python "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/reconstruct_one.py"
-          lean ValuationOne.lean
+          lean -o ValuationOne.olean ValuationOne.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent34-c-valuation-fanin/ValuationOneOrbit.lean" .
+          lean ValuationOneOrbit.lean
