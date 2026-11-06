@@ -1,11 +1,21 @@
-# Finite exact directed-diameter evidence for Sheep's generic dyadic quotient
+# Historical finite-diameter census, now explained by a universal theorem
 
-Agent40, 2026-11-03. This is **experimental finite evidence** and a proposed all-parameter research question. It is not a proof of the diameter formula or any BB(6) bound.
+**Current status (6 November 2026):** The former conjecture in this note is now **proved for all dyadic precisions** in [DYADIC-DIAMETER.md](DYADIC-DIAMETER.md). The exact generic quotient diameter is floor(p/2) for every p>=1. The same note establishes that the **freely chosen, single-real-orbit** coherent generic dyadic diameter is also floor(p/2), improving the earlier general coherent upper bound by one return in the pure-dyadic case. Neither theorem classifies the genuine blank-origin Sheep machine.
 
-Using exact complete reverse edges from Agent22's generic inverse residue map T[p,a,h] plus the universal zero-residue outgoing hub, we enumerated *all vertices*, *all algebraic generic edges* and *all-pairs shortest paths* for dyadic moduli 2^p through p=11. The exact generic directed diameter in every case equals floor(p/2): p1=0, p2=1, p3=1, p4=2, p5=2, p6=3, p7=3, p8=4, p9=4, p10=5, p11=5. Reproduce using diameter_explore.py (standard Python). Exact finite p10/11 eccentricity distributions: p10: {1:18,2:168,3:252,4:72,5:2}; p11: {1:20,2:240,3:504,4:240,5:20}. Edges include every valid generic synthetic transition by the inverse equation and saturated high-h identification.
+## Original independent finite evidence
 
-**Conjecture:** For all p>=1, the generic dyadic graph G_p has directed diameter exactly floor(p/2). Agent40's proved all-p theorem DYADIC-DISTANCE.md already gives the universal **lower bound** floor(p/2), because some source residue has shortest path to zero exactly that length. Agent22's all-p synthetic strong-connectivity proof gives the current universal **upper bound** floor(p/2)+1. Only the difference of one remains. An all-parameter upper bound for arbitrary targets would settle the conjecture; finite checks alone cannot.
+The pre-theorem program [diameter_explore.py](diameter_explore.py) enumerates the complete generic dyadic inverse graph through p=11 and computes every ordered-pair shortest distance. It uses Agent 22's exact complete modular inverse map, not a bounded Turing machine run, and it includes the universal zero-hub edges. Its observed diameters were:
 
-For p=1 the unique even residue gives diameter0; for p>=2 both 0 and nonzero vertices exist. The generic graph can gain extra edges from the excluded special odd-cofactor u=3 branch in the full Sheep section quotient, so the result is specifically generic.
+| p | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| diameter | 0 | 1 | 1 | 2 | 2 | 3 | 3 | 4 | 4 | 5 | 5 |
 
-This is a graph-theoretic finite lead, separate from any true integer blank-origin orbit. It supplies no Sheep nonhalting theorem or exact BB(6) value. It is low priority relative to root-sensitive invariants unless an elegant proof exposes more useful symbolic structure.
+Exact eccentricity distributions: p=10 has {1:18,2:168,3:252,4:72,5:2}; p=11 has {1:20,2:240,3:504,4:240,5:20}. The prior note identified the formula floor(p/2) only as a conjecture because finite enumerations cannot prove it for all p.
+
+## Complete answer and provenance
+
+The new proof shows that canonical inverse words of maximum length k=floor(p/2) consume at least p-1 binary digits. Their associated inverse-map composition therefore forgets **every even terminal target**, permitting a k-edge route to any desired residue. Shorter canonical words route to zero and use the known outgoing-zero hub within k edges. The existing shortest-to-zero theorem supplies the sharp lower bound.
+
+The [Lean 4.36.0-rc2 affine saturation kernel](AffineSaturation.lean) checks the new algebraic core with no sorryAx. [diameter_certificate.py](diameter_certificate.py) checks all maximal-code source/target pairs through p=15; [coherent_diameter_certificate.py](coherent_diameter_certificate.py) checks genuine consecutive return trajectories through p=15 (maximal shell), plus p=9 (shorter shells). The previous all-pairs BFS is independent evidence.
+
+All proofs and computations concern legal *generic synthetic* residue paths or arbitrarily chosen coherent positive starting integers. The machine-source original blank entry is fixed at even section 10, and its fate remains unknown; no complete BB(6) solution follows. External novelty has not been established.
