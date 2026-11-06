@@ -375,7 +375,6 @@ theorem source_exceptional_last_reset_two_depths
         omega
       have hmpExact : mp+n+1=mp+t+1 := by
         rw [htN]
-        rfl
       have hmLower : 3*2^n-2≤mp+t+1 := by
         rw [htN]
         omega
@@ -399,7 +398,6 @@ theorem source_exceptional_last_reset_two_depths
         omega
       have hmpExact : mp+n+2=mp+t+1 := by
         rw [htN1]
-        rfl
       have hmUpper : mp+t+1≤3*2^n-5 := by
         rw [htN1]
         omega
