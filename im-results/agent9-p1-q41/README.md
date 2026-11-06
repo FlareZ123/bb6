@@ -32,12 +32,15 @@ The corrected [Q70Budget.lean](Q70Budget.lean) and [Q89Budget.lean](Q89Budget.le
 
 | q0 | K | B | Feeder nodes | Max costs | q cylinder | Critical index n |
 | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| 37 | 10 | 250 | 3927 / 3823 | 250 / 250 | `q=37+2^260 r` | `n=594+2^264 r` |
 | 70 | 10 | 57 | 195 / 199 | 57 / 56 | `q=70+2^67 r` | `n=1122+2^71 r` |
 | 89 | 11 | 51 | 258 / 280 | 51 / 50 | `q=89+2^62 r` | `n=1426+2^66 r` |
 
-For q=70, every base shadow coordinate avoids `1024∣z`. For q=89, the h=8 feeder contains a coordinate equal to 1024, so K=10 would be invalid; the checked K=11 certificate instead proves `¬2048∣z` throughout both closures. The exponent shifts are exactly K+B, and the source inequality is checked for both bases.
+The q=37 graph is the large-cost case: 3927/3823 states, with maximum cost 250 in both feeders. Its proof uses [QBudgetRows.lean](../agent9-p1-fixed-cone/QBudgetRows.lean) and a row-partitioned checker. Each of the 251 cost rows is checked separately by kernel reduction, then a nested natural-number case proof assembles the row certificates into the arbitrary-cost invariant. This avoids the memory blow-up of a single global `List.contains`/membership reduction. The generated row data and per-row proofs are in [Q37Rows0/1.lean](../agent9-p1-fixed-cone/Q37Rows0.lean) and [Q37Proof0/1.lean](../agent9-p1-fixed-cone/Q37Proof0.lean); [Q37Budget.lean](../agent9-p1-fixed-cone/Q37Budget.lean) lifts them through the predicate-based source bridge.
 
-The q=70 and q=89 residues are absent from the inspected repository census lists `DensityCount695`, `DensityCount700`, and the twenty new q classes in `DensityCount2820`; their corresponding base indices 1122 and 1426 were also absent from the inspected Agent12 187-class source list. This is an internal overlap audit, not a claim of external priority. These are two additional infinite **necessary critical-gateway exclusions**. They do not decide the P1 machine, eliminate its other halting mechanisms, or establish a BB(6) upper bound.
+For q=70, every base shadow coordinate avoids `1024∣z`. For q=89, the h=8 feeder contains a coordinate equal to 1024, so K=10 would be invalid; the checked K=11 certificate instead proves `¬2048∣z` throughout both closures. All exponent shifts are exactly K+B, and the source inequality is checked for each base. The q37 source lift passed [CI 42258300305](https://github.com/FlareZ123/bb6/actions/runs/42258300305); q70 and q89 passed [CI 42253385501](https://github.com/FlareZ123/bb6/actions/runs/42253385501).
+
+The q=37,70,89 residues are absent from the inspected repository census lists `DensityCount695`, `DensityCount700`, and the twenty new q classes in `DensityCount2820`. Their corresponding base indices 594,1122,1426 are outside Agent12's 187-family n≡14 (mod 16) sector and the eight exact residues `{226,418,466,482,546,674,802,914}`; they are also outside Agent1's n≡2 or 50 (mod 64) families. This is an internal overlap audit, not a claim of external priority. These are three additional infinite **necessary critical-gateway exclusions**. They do not decide the P1 machine, eliminate its other halting mechanisms, or establish a BB(6) upper bound.
 
 ## Research value and limitations
 
