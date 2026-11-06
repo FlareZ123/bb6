@@ -205,4 +205,10 @@ jobs:
           # Final strengthened Machine C iff: remove the infinite m=1
           # family while preserving the exact five-gate root oracle.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/ValSixJointM1.lean .
-          lean ValSixJointM1.lean
+          lean -o ValSixJointM1.olean ValSixJointM1.lean
+          # Agent19/29 exact affine terminal-right-four boundary and the
+          # full cross-agent merge of all established parameter exclusions.
+          cp ${GITHUB_WORKSPACE}/im-results/agent29-forced-depth/AffineFourGlobal.lean .
+          lean -o AffineFourGlobal.olean AffineFourGlobal.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/ValSixJointFull.lean .
+          lean ValSixJointFull.lean
