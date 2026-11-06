@@ -412,7 +412,7 @@ theorem source_exceptional_last_reset_depth_window
       bp+2^(t+3)=4*k+4*t+12 ∧
       dp+14*2^n=2^(t+3)+2*mp+2*n+7 ∧
       m=mp+t+1 ∧
-      2^(t+3)=b+dp+2*t+13 ∧
+      2^(t+3)=2*k+dp+2*t+9 ∧
       t≤n+1 := by
   have h5 : CountCone (14*2^n-2*n-16) 3 b 5 m z := by
     simpa [hd] using h
@@ -469,7 +469,7 @@ theorem source_exceptional_last_reset_depth_window
       omega
     have hdpPos : 1≤dp := by omega
     have hdpFormula : dp+14*2^n=2^(t+3)+2*mp+2*n+7 := by omega
-    have hdepthExact : 2^(t+3)=b+dp+2*t+13 := by
+    have hdepthExact : 2^(t+3)=2*k+dp+2*t+9 := by
       rw [hpowStep, ← hpow1]
       omega
     exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,hdepthExact,rfl,htUpper⟩
