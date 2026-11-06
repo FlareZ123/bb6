@@ -45,6 +45,7 @@ theorem blank_no_one_622_mod1024 (q : Nat) :
     have h := (BB6.Agent3.oddodd_lowval_blank_reach_iff
       (1920*q+1155) (64*q+37)
       (by omega) (by omega) (by omega) (by omega) (by omega) (by omega)).mp hr4
+    change BB6.Agent3.CReach _ _ at h
     have ha : ((1920*q+1155)+(64*q+37)-4)/2=992*q+594 := by omega
     have hk : ((1920*q+1155)+3*(64*q+37)-10)/4=528*q+314 := by omega
     simpa only [ha, hk] using h
