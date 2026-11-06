@@ -39,7 +39,11 @@ theorem source_subwall_near_cost_has_reset_bound
   have htailBound : 2*(k+4) ≤ 2^s*(4*(m+n+3)) := by
     rw [←htailPow]
     exact Nat.mul_le_mul_left (2^s) hsubNorm
-  have hscale : 2^s*(4*(m+n+3))=2*(2^s*(2*(m+n+3))) := by ac_rfl
+  have hscale : 2^s*(4*(m+n+3))=2*(2^s*(2*(m+n+3))) := by
+    calc
+      _ = 2^s*((2*2)*(m+n+3)) := by
+        rw [show (4:Nat)=2*2 by decide]
+      _ = 2*(2^s*(2*(m+n+3))) := by ac_rfl
   rw [hscale] at htailBound
   have hpositive : 3*2^n ≤ 2^s*(2*(m+n+3)) := by omega
   have hsBound : s+z ≤ n := by omega
