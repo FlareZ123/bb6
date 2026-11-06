@@ -89,7 +89,7 @@ Combining the theorem with the verified `SecondOneInfinite.lean` tower gives a s
 
 For every natural `j,m,k` with `m≥1` odd, satisfying the genuine second stopping equation, and with `Y` the exact Agent15 normalized right counter, `Y=4` **if and only if** `m=1` and `j=secondOneJ(r)` for some natural `r`, where `secondOneJ(0)=10` and `secondOneJ(r+1)=16*secondOneJ(r)+42`. In this case `k=15j+40` and the exact inverse depth is `d=4r+5`.
 
-For necessity, the exponential lower bound excludes `Y=4` whenever odd `m≥3`, as its right side is at least 13. Thus `m=1`. In the stopping equation, `k=15j+40`; the affine scale `2^d(4+2)=k+2` reduces to
+For necessity, first note that with m odd the stopping equation modulo two gives `k%2=j%2`. If `j` were odd, so would `k`; the original affine normalizer has no eligible first step and would terminate at `Y=k≥7` (Agent15's source-certified `second_halt_k_ge_seven`), contradicting `Y=4`. Thus `j` is even, the first coordinate is 3 modulo four, and Agent15's exact scale law applies. The exponential lower bound excludes `Y=4` whenever odd `m≥3`, since its right side is at least 13. Hence `m=1`. In the stopping equation, `k=15j+40`; the affine scale `2^d(4+2)=k+2` reduces to
 
 ```
 5*j+14 = 2^(d+1).
