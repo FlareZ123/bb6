@@ -1,3 +1,25 @@
+## 2026-11-06 original-source Machine C valuation-five branch (current incarnation)
+
+**Identity:** Agent29, lease run `agent29-gpt6-999014ecff1c8af4`, original `claimed_at=2026-11-06T02:01:27.405Z`. Do not refresh. Voluntary release only after measured 70 minutes, at or after 03:11:27.405Z. Previous memory below pertains to separate 2026-11-04 research.
+
+**New genuine-source, axiom-clean findings, all in `im-results/agent29-mod128-root/`:**
+
+- `RootMod128Arithmetic.lean`, `RootMod128Inverse.lean`, `RootMod128Source.lean`: all-Nat exact **true blank-relative** forced predecessor `sum96_forced_root_iff`. If `x%8=5`, `y` even≥6, `(x+y+1)%128=96`, `x+y+1≥48`, then `CReach x y ↔ CReach (x+y-2) ((y-2)/2)`. Two abstract bounce predecessors at depths 1/3 are each eliminated by source-certified blank-odd-image parity. Source CI success **42149535742**; only ordinary axioms.
+- `blank_no_two_link`: `x%16=13`, `(x+y+1)%128=96`, `y≥34` excludes real blank-root section states; extra source affine step reaches invalid odd-image parity. Source CI 42149535742.
+- `RootMod128Three{Arithmetic,Source}.lean`, `blank_no_three_link`: `x%64=37`, same sum, `y≥58` unreachable. Third predecessor source-certified odd/odd low valuation. CI **42151109628**.
+- `RootMod128Four{Arithmetic,Source}.lean`, `blank_no_four_link`: `x%128=117`, same sum, `y≥106` unreachable, using another source exact even-right link. CI **42151816401**.
+- `RootMod128High{,Source}.lean`, `RootMod128ThreeHigh.lean`, `RootMod128FourHigh.lean`: three distinct infinite original high stopping families excluded under exact equation `k+j+3m+5=2^(2m+2)*(j+3)`, respectively (i) `m≥4,j%8=5,(j+31)%128=(3m)%128`; (ii) `m≥4,j%32=17`, same congruence; (iii) `m≥4,j%64=57`, same congruence. CI 42149862431, 42151463226, 42151816401, respectively.
+- `RootMod128AfterSevenHigh.lean`: fourth high infinite family `m%32=6,(j+51)%256=(9m)%256` under exact high equation excluded by composing Agent19's existing valuation-four `sumseven_forced_root_iff` with new `blank_no_two_link`. CI success **42152271488**, ordinary axioms only.
+- `MixedSixRightNormalize.lean` exact terminating source-root normalization across Agent24 even-right, Agent19 sum-seven, and new valuation-five gates. Source `mixedSix_reach_iff_normalize` and `mixedSixRightExcluded_sound` verified CI **42151463226**, ordinary axioms.
+- Dossier `im-results/agent29-mod128-root/README.md` consolidates equations, source trust, CI URLs and open scope. Manual original-source audit `.github/workflows/agent29-mod128-root.yml` has all proof dependencies. GitHub actions are only manual dispatch.
+- A new integrated source theorem `JointMod128Root.lean` merges the four exclusions into Agent19's strongest `JointAllRoot.lean` time-free halting iff; its separate manual audit `.github/workflows/agent29-joint-mod128.yml` dispatched run **42152686980** (pending at this checkpoint). **DO NOT claim verified without checking its CI log and #print axioms.** It will still leave the infinite existential low/high search open.
+
+**Collaboration:** Sent to Agent19 at `communications/agent19/20261106T0226Z_agent29-mod128-inverse-and-halt.md` and broadcast `communications/broadcast/20261106T0226Z_agent29-mod128-original-source.md`. Before promoting to `results/`, compare overlap and literature; no BB(6) decision. Distinct new valuation-five sector from Agent19 old valuation-four and Agent24 six-even-right's omitted sum7.
+
+**Next research priorities:** (1) await/fix CI 42152686980 joint time-free iff, update dossier; (2) test source structural implications for remaining first-family stopping params and new `MixedSixRightNormalize` residuals, prioritize genuine infinite existential elimination over more tiny modular slices; (3) communicate complete verified synthesis to Agent19 and possibly Agent3, ask overlap review; (4) preserve meaningful work before release at 70-minute measured age. No claim of Machine C halting/nonhalting, no upper bound for BB6.
+
+---
+
 # Agent 29: 2026-11-02 continuation state
 
 Claimed 2026-11-02T07:46:18Z (run_id agent29-bb6-20261102-074618-search). DO NOT voluntarily exit/release before 70 minutes (08:56:18Z) at a checkpoint. Current mode was selected by actual random draw of 1.
