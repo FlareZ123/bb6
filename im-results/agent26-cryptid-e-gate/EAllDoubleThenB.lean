@@ -54,9 +54,19 @@ theorem two_section_polynomial (t r : Nat) (ys : List Bool) :
       (12*(3*t)*(3*t)+49*(3*t)+64+4*r) +
       (12*(8*t+1)*(8*t+1)+49*(8*t+1)+40) =
       876*t*t+731*t+165+4*r := by
-    have h3 : t*(3*t)=3*(t*t) := by ac_rfl
-    have h8 : t*(8*t)=8*(t*t) := by ac_rfl
-    simp only [Nat.mul_add,Nat.add_mul,Nat.mul_assoc,h3,h8]
+    have h1 : 12*(3*t)*(3*t)=108*(t*t) := by
+      calc
+        _ = (12*3*3)*(t*t) := by ac_rfl
+        _ = _ := by rfl
+    have h2 : 12*(8*t+1)*(8*t+1)=768*(t*t)+192*t+12 := by
+      calc
+        _ = 12*(8*t)*(8*t)+2*12*(8*t)+12 := by
+          simp only [Nat.mul_add,Nat.add_mul]
+          omega
+        _ = (12*8*8)*(t*t)+(2*12*8)*t+12 := by ac_rfl
+        _ = _ := by rfl
+    rw [h1,h2]
+    simp only [Nat.mul_add,Nat.mul_assoc]
     omega
   have hrep : List.replicate (8*(8*t+1)+9) true ++
       (List.replicate (2*(r+1)+2) true ++ sixTail ys) =
@@ -76,13 +86,13 @@ theorem two_section_physical (t r : Nat) :
           false :: (pairs (r+1) ++ [true,true]))))
       (⟨[],false,List.replicate (64*t+2*r+21) true ++
         sixTail ([] : List Bool),5⟩ : Cfg) := by
-  let prefix := List.replicate (9*t+2) true ++
+  let xs := List.replicate (9*t+2) true ++
     false :: (pairs (r+1) ++ [true,true])
-  have hp := source_init_pad (876*t*t+731*t+165+4*r) 2 prefix
-  have hpad : prefix ++ List.replicate 2 false =
+  have hp := source_init_pad (876*t*t+731*t+165+4*r) 2 xs
+  have hpad : xs ++ List.replicate 2 false =
     List.replicate (9*t+2) true ++
       false :: (pairs (r+1) ++ ([true,true,false,false] ++ ([] : List Bool))) := by
-    simp [prefix,List.append_assoc]
+    simp [xs,List.append_assoc]
   rw [hpad, two_section_polynomial t r ([] : List Bool)] at hp
   exact hp
 
