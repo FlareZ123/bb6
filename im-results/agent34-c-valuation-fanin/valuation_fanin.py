@@ -46,3 +46,32 @@ def candidates(x,y):
     return out
 
 def parents(x,y):return {p for p in candidates(x,y) if section(*p)==(x,y)}
+
+def test():
+    from collections import defaultdict
+    forward=defaultdict(set)
+    for a in range(225):
+        for k in range(225):
+            p=section(a,k)
+            if p and p[1]>=5:forward[p].add((a,k))
+    for (x,y),ps in forward.items():
+        assert ps<=parents(x,y),(x,y,ps-parents(x,y))
+    print("Forward source pairs:",225*225,"verified edges:",sum(map(len,forward.values())))
+    count=0
+    for s in range(5,1250):
+        for y in range(5,s+1):
+            x=s-y
+            q=s if s%2==0 else s+1
+            ps=parents(x,y)
+            assert len(ps)<=v2(q)//2+1,(x,y,ps)
+            count+=1
+    print("Valuation-checked targets:",count)
+    for v in range(3,25):
+        x,y=(2**v-5,5) if v%2 else (2**v-6,6)
+        ps=parents(x,y)
+        assert len(ps)==v//2+1,(v,ps)
+        print("Sharp witness valuation",v,"target",(x,y),"degree",len(ps))
+    print("PASS: source-shaped inverse and sharpness regression")
+
+if __name__=="__main__":
+    test()
