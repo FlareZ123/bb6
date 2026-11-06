@@ -51,3 +51,11 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/BoundaryExact.olean" BoundaryExact.lean
           cp "$base48/BoundaryExactSource.lean" .
           lake env lean BoundaryExactSource.lean
+          for f in NeedleCubicBound NeedleSharper; do
+            cp "$base20/$f.lean" .
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
+          cp "$base48/OffsetStrip.lean" .
+          lake env lean -o ".lake/build/lib/lean/OffsetStrip.olean" OffsetStrip.lean
+          cp "$base48/OffsetStripSource.lean" .
+          lake env lean OffsetStripSource.lean
