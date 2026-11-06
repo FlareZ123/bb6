@@ -2,6 +2,7 @@ import ValuationAllParents
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent34Valuation
+open BB6.Agent46
 
 theorem evenFullCandidates_length_eq (x y v u : Nat) :
     (evenFullCandidates x y v u).length =
