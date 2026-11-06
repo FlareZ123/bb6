@@ -129,13 +129,13 @@ theorem positive_gap_residue_exponent_unique
     (hA : N % 3^(A+1) = 3^A)
     (hB : N % 3^(B+1) = 3^B) : False := by
   have hdiv1 : 3^(A+1) ∣ 3^(B+1) := by
-    obtain ⟨k, hk⟩ : ∃ k, B+1 = (A+1)+k := by omega
-    refine ⟨3^k, ?_⟩
-    rw [hk, Nat.pow_add]
+    refine ⟨3^(B-A), ?_⟩
+    have hpow : B+1 = (A+1)+(B-A) := by omega
+    rw [hpow, Nat.pow_add]
   have hdiv2 : 3^(A+1) ∣ 3^B := by
-    obtain ⟨k, hk⟩ : ∃ k, B = (A+1)+k := by omega
-    refine ⟨3^k, ?_⟩
-    rw [hk, Nat.pow_add]
+    refine ⟨3^(B-A-1), ?_⟩
+    have hpow : B = (A+1)+(B-A-1) := by omega
+    rw [hpow, Nat.pow_add]
   have hmod : N % 3^(A+1) = (N % 3^(B+1)) % 3^(A+1) := by
     rw [Nat.mod_mod_of_dvd N hdiv1]
   rw [hB, Nat.mod_eq_zero_of_dvd hdiv2] at hmod
