@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Reproduce DRegular arithmetic candidates 14 through 17.
+"""Reproduce DRegular arithmetic candidates 14 through 17 and 18-20 lookahead.
 
 This imports the checked-in transition formulas used by check_root12.py.
-It is an arithmetic replay of the DRegular abstraction, not an independent
-raw-tape simulation and not a substitute for the original-source Lean proof.
+The 18-20 lookahead assumes the proposed seventeenth E/E/A source reentry.
+This is an arithmetic replay of the DRegular abstraction, not an independent
+raw-tape simulation and not a substitute for original-source Lean proofs.
 """
 
 from __future__ import annotations
