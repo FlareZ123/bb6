@@ -45,3 +45,7 @@ jobs:
           lean LowOneModFour.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/HighSumTwo.lean .
           lean HighSumTwo.lean
+
+          # Agent 3: valuation-six genuine-root source theorem and high stopping family.
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{ValSixArithmetic,ValSixInverse,ValSixSource,ValSixHighArithmetic,ValSixHighSource}.lean .
+          for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource; do lean -o "$f.olean" "$f.lean"; done
