@@ -16,6 +16,18 @@ The complete arithmetic preimage grammar eliminates all recursive bounce parents
 
 The result is disjoint from the earlier [Agent 15 right-multiple-of-eight exclusion](../agent15-c-halting/SectionMod8.lean), which excludes all `(4u+1,8(v+1))` on the same blank orbit. Together, they exclude every odd-left/right-eight configuration except the left residue `7 mod 8`. The remaining residue is an open authentic-root question, and the statement does not cover larger right multiples of eight with left coordinate `3 mod 8`.
 
+## Exact unbounded affine pullback
+
+The separately checked [RightEightTower.lean](RightEightTower.lean) uses the original `blank_reach_iff_affine` equivalence to propagate this exclusion arbitrarily far up the unique affine inverse spine. Define `R(n)=10·2^(n+1)−2`, beginning `18,38,78,158,…`. For every natural `n,a`:
+
+```lean
+(a%8 = (if n%2=0 then 3 else 7)) → ¬ BB6.Agent15.CReach a (R(n))
+```
+
+The parity of the admissible first-coordinate residue alternates because the exact affine predecessor changes it by 4 modulo 8 on every pullback beyond the base. This unbounded statement is **source-kernel certified** by [CI 42231631384](https://github.com/FlareZ123/bb6/actions/runs/42231631384) against unchanged definitions, with the axiom audit `[propext, Classical.choice, Quot.sound]`.
+
+**Crucial prioritization limit:** Every *immediate Machine C stopping input* in the established low and high Diophantine families has right counter `k≡1 (mod3)`: reduce their respective equations modulo 3, observing `2^(2m+3)≡2` and `2^(2m+2)≡1`. The right-eight base counter has `8≡2 (mod3)`, and the pulled-back right counters `R(n)≡0` or `2 (mod3)`. **Therefore this entire excluded tower is disjoint from the stopping locus**. The tower is structurally sound, but by itself cannot remove any surviving stopping parameter. To advance the global objective, future efforts should prioritize root-sensitive restrictions that intersect `k≡1 (mod3)`; extending this tower with more low right counters is a lower priority.
+
 ## Evidence boundary and reproduction
 
 The proof imports the genuine independently established `section_preimage_all_iff` from [SectionAllInverse.lean](../agent3-c-bounce-inverse/SectionAllInverse.lean). This original-source predecessor equivalence was already certified in [CI 41515256605](https://github.com/FlareZ123/bb6/actions/runs/41515256605), and the original `CReach` definition is imported from [AffineNormalize.lean](../agent15-c-halting/AffineNormalize.lean).
@@ -24,4 +36,4 @@ The [manual CI workflow](../../.github/workflows/agent4-c-right-eight.yml) compi
 
 This is a narrowly scoped structural exclusion and has no established independent external novelty or BB(6) numerical implication. Preserve in `im-results/` and compare against other stronger all-right-sector invariants before promotion to `results/`.
 
-The next higher-value direction is to investigate the surviving odd-left `7 mod 8`, right-eight target family using exhaustive original-source inverse parents, and to seek a parametrically closed authentic-root invariant rather than another finite modular filter.
+The next higher-value direction is to seek a parametrically closed authentic-root invariant for **the genuine low/high stopping families**, necessarily with right counter `1 mod3`. Source-exact inverse parents and the complete Agent19 combined true-root criterion are available; any deeper right-eight fibre work should first demonstrate an actual intersection with the stopping locus.
