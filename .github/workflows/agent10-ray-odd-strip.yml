@@ -90,4 +90,7 @@ jobs:
           lean -o "$b/RayPacketHigh.olean" "$b/RayPacketHigh.lean"
           lean -o "$b/RayGapTone.olean" "$b/RayGapTone.lean"
           lean -o "$b/RayTwoGateExact.olean" "$b/RayTwoGateExact.lean"
-          echo "Agent 10 source-verified uniform strip and two-generation exact root gates."
+          lean -o "$b/RayThirdGeometry.olean" "$b/RayThirdGeometry.lean"
+          lean -o "$b/RayThirdGate.olean" "$b/RayThirdGate.lean"
+          lean -o "$b/RayThirdNoRoot.olean" "$b/RayThirdNoRoot.lean"
+          echo "Agent 10 source-verified all-depth third generation off-ray gate."
