@@ -38,7 +38,7 @@ The following universal theorems exclude genuinely reachable Machine C section p
 
 Each chain ends at a section pair with an odd right counter at least five and forbidden coordinate sum 1 or 2 modulo 4, contradicting the authentic blank image invariant. Every source transformation is a prior, independently certified true-blank reachability **equivalence**, rather than a heuristic simulation or an affine analogy.
 
-Arithmetic and source proofs: [RootMod128ThreeArithmetic.lean](RootMod128ThreeArithmetic.lean), [RootMod128ThreeSource.lean](RootMod128ThreeSource.lean), [RootMod128FourArithmetic.lean](RootMod128FourArithmetic.lean), [RootMod128FourSource.lean](RootMod128FourSource.lean).
+Arithmetic and source proofs: [RootMod128ThreeArithmetic.lean](RootMod128ThreeArithmetic.lean), [RootMod128ThreeSource.lean](RootMod128ThreeSource.lean), [RootMod128FourArithmetic.lean](RootMod128FourArithmetic.lean), [RootMod128FourSource.lean](RootMod128FourSource.lean). The congruences in the three- and four-link rows already force `y≥58` and `y≥106` respectively. [RootMod128Sharp.lean](RootMod128Sharp.lean) records the corresponding size-guard-free corollaries, pending separate source CI at the time this dossier was written.
 
 ## Consequences for the exact high halting locus
 
@@ -74,7 +74,16 @@ The [manual-only source-audit workflow](../../.github/workflows/agent29-mod128-r
 
 The final original-source reachability theorems each print **only** `[propext, Classical.choice, Quot.sound]` under `#print axioms`, with no `sorryAx`, extra hypotheses on unreachable synthetic starts, or finite-time extrapolation.
 
-The combined [JointMod128Root.lean](JointMod128Root.lean) **has also been original-source certified** as theorem `BB6.Agent29Joint.blank_halts_iff_joint_mod128`, merging all four new high families with Agent19's previously source-certified time-free halting iff. The complete separate source-audit [CI 42152686980](https://github.com/FlareZ123/bb6/actions/runs/42152686980) succeeded with final axiom list `[propext, Classical.choice, Quot.sound]`. Its infinite parameter existentials remain open. [JointNonredundant.lean](JointNonredundant.lean) proposes the stronger audit claim that every parameter pair in the union of the four new families satisfies all previous Agent19 combined high filters, so the new exclusions are globally nonredundant; its verification is pending separate CI.
+The combined [JointMod128Root.lean](JointMod128Root.lean) **has also been original-source certified** as theorem `BB6.Agent29Joint.blank_halts_iff_joint_mod128`, merging all four new high families with Agent19's previously source-certified time-free halting iff. The complete separate source-audit [CI 42152686980](https://github.com/FlareZ123/bb6/actions/runs/42152686980) succeeded with final axiom list `[propext, Classical.choice, Quot.sound]`. Its infinite parameter existentials remain open. [JointNonredundant.lean](JointNonredundant.lean) **proves universally** that every pair of high stopping indices in the union of the four new families satisfies **all** of Agent19's previously combined high filters (including the unbounded dyadic restriction). Thus none of the four exclusions was already contained in that prior high sieve. [JointExplicitFamilies.lean](JointExplicitFamilies.lean) proves four separate, explicit unbounded families of such previously allowed indices:
+
+```
+(j,m) = (109+24*n, 4+8*n)
+(j,m) = (17+96*n, 16+32*n)
+(j,m) = (121+192*n, 8+64*n)
+(j,m) = (3+288*n, 6+32*n), for every n : Nat.
+```
+
+[CI 42153832992](https://github.com/FlareZ123/bb6/actions/runs/42153832992) source-certified both `new_high_class_previously_allowed` and `four_progressions_prior_allowed` with exactly `[propext, Classical.choice, Quot.sound]` axioms. These progressions are **arithmetic stopping-input indices**, not proof of any actual blank-orbit visit or halt.
 
 ## Scientific scope and next directions
 
