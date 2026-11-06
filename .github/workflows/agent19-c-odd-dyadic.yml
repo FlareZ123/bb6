@@ -56,4 +56,6 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/DyadicSixCone.lean .
           lean -o DyadicSixCone.olean DyadicSixCone.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/DyadicLowTower.lean .
-          lean DyadicLowTower.lean
+          lean -o DyadicLowTower.olean DyadicLowTower.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/LowTowerFamilies.lean .
+          lean LowTowerFamilies.lean
