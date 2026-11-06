@@ -149,6 +149,38 @@ Both first evaluators succeed. This is consistent with the observed root
 transitions, but the nonfailure of the first call alone is not a proof that
 the remaining drain succeeds.
 
+## Finite root-ray candidate audit (computational evidence)
+
+An independent BigInt translation of the source transition was used to enumerate
+the first 1,000 states of the blank-root orbit. For each old-cone state after
+index 9, I reconstructed the corresponding boundary-ray output and enumerated
+the first-evaluator failure shifts from the congruences above. The search
+included exponents through
+\(\lceil\log_3(e_0+10)\rceil+5\), a deliberately generous finite cap; the
+exact relationship between this cap and the source logarithmic gate should
+still be formalized.
+
+| Quantity | Count |
+|---|---:|
+| Right-ray old-cone states | 419 |
+| Left-ray old-cone states | 259 |
+| Total candidate first-call failure shifts | 222 |
+| Actual root parameters equal to a candidate | 0 |
+
+The closest candidate separations in this finite audit were:
+- right ray, index 13: (a=122), actual (t=96), candidate (t=134);
+  separation (38), with (38^2-122=1322);
+- left ray, index 11: (d=38), actual (t=231), candidate (t=105);
+  separation (126), with (126^2-38=15838).
+
+Thus the finite trace exhibits a stronger pattern than mere non-equality:
+the actual ray parameter is at least the square root of the smaller boundary
+coordinate away from every enumerated first-call failure candidate. This is
+not yet a theorem, and the simulator is an independent translation rather
+than a kernel-checked computation. A useful next step is to reproduce the
+candidate enumeration from the Lean source and prove a root-specific
+separation invariant.
+
 ## Next proof target
 
 Formalize the five first-call cases in Lean using
