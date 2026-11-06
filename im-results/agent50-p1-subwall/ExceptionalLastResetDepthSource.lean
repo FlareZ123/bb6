@@ -487,8 +487,7 @@ theorem source_exceptional_last_reset_depth_window
       by_contra hnot
       have htEq : t=1 := by omega
       subst t
-      have hpow16 : 2^(1+3)=16 := by decide
-      rw [hpow16] at hdepthExact
+      have hEq : 16=2*k+dp+11 := by simpa using hdepthExact
       omega
     have hpow3 : 2^(t+3)=4*2^(t+1) := by
       rw [show t+3=t+1+2 by omega, Nat.pow_add]
