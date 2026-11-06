@@ -29,3 +29,9 @@ The genuine original-source [GenericCritical41K.lean](GenericCritical41K.lean) f
 The stronger modulus 2^39 does not support the same simple cost-41 graph: a fixed q=33+2^39 numerical shadow closure has 2862/2844 states with max costs 283/281. This is computational evidence about the shadow abstraction only; it is not proof of reachability or halting.
 
 Publication classification: intermediate pending independent external novelty review. **BB(6) remains open**.
+
+## Expanded 20-family source result and generic precision lemma (2026-11-06)
+
+Beyond the base q33 cylinder, [shallow-20.md](shallow-20.md) records twenty disjoint new original-blank-root q modulo4096 critical gateway classes in the n=16q+2 sector. All twenty original-source theorems and the exact 2820/4096 combined gateway count passed [CI 42134251589](https://github.com/FlareZ123/bb6/actions/runs/42134251589), with standard theorem axioms and zero axioms respectively. This is an exclusion count for a *necessary gateway family*, not a fraction of machines whose halting has been decided.
+
+[UniformPrecisionLift.md](UniformPrecisionLift.md) derives a general all-depth arithmetic mechanism: at source inverse cost m, a lifted shadow z can retain base-state congruence modulo 2^(K+M-m) when q shifts by 2^(K+M). The exact depth cutoff and one-step compatibility are now separately kernel-checked in [UniformPrecisionStep.lean](UniformPrecisionStep.lean) against Lean 4.36.0-rc2, standard axioms only. The full abstract-state induction and connection to the original source OddCone remain paper-level, not a verified new P1 theorem.
