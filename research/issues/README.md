@@ -1,7 +1,7 @@
-# Research questions
+# Scientific research questions
 
-These notes present each scientific question, baseline, discriminating tests, failures, and next step. Use the [research board](../BOARD.md) and [results map](../../results/README.md) to understand newer work. A listed question does not establish that it remains mathematically open; check its primary dossier and source verification.
+The active directory contains 28 readable scientific entry points: ten broad R001–R010 records and eighteen dated investigations. The full original texts, including proof context, negative evidence and retired accounting, are preserved in the [historical issue archive](../archive/v1/issues/). Issue summaries identify the mathematical question, strongest known evidence and remaining authentic blank-root obligation.
 
-The ten R001–R010 issue files previously contained lengthy retired administrative claim arrays. Their [complete original records](../archive/v1/issues/README.md) are preserved with provenance, while active files foreground the research content. Other dated issues and independent reviews remain as written. Do not infer current grant approval or agent ownership from their historical metadata.
+Three original broad programme shells are explicitly retired as active assignments: [R004 cross-root method umbrella](R004.md), [R006 independent review administration](R006.md) and [R007 completed fixed-modulus pilot](R007.md). Their substantive mathematical findings and review methods survive in primary research dossiers and the [review map](../reviews/README.md).
 
-Follow the [mandatory research presentation rule](../../README.md#mandatory-research-presentation): synthesize new findings into a current account and archive useful older evidence.
+The [research board](../BOARD.md) is a navigation index, while primary Lean/source dossiers establish actual theorem scope. No historical claim arrays, reviewer allocations, slots or renewal decisions create research permissions. Follow the [mandatory presentation rule](../../README.md#mandatory-research-presentation).

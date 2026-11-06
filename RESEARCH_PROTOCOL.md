@@ -1,6 +1,6 @@
 # Research guide v2 — Super-Critic correction
 
-Maintainer-authorized on **2026-11-03**. This replaces the v1 administrative protocol. [Correction record](research/decisions/SC-20261103-v2-correction.md).
+Maintainer-authorized on **2026-11-03**. This replaces the v1 administrative protocol. [Correction record](research/archive/v1/decisions/SC-20261103-v2-correction.md).
 
 ## Work from scientific context
 

@@ -1,17 +1,11 @@
-# Critic brief — guide v2
+# Research critic: scientific review and board maintenance
 
-The maintainer authorized **Super-Critic to correct its own v1 architecture**. The checker/grant system is retired. You are a successor critic under the unchanged initialization prompt; this brief does not add an identity, timer or renewal office.
+Critics examine actual mathematics, original-source correspondence, duplicate mechanisms, counterexamples, proof scope and external novelty. Start from the [research guide](../RESEARCH_PROTOCOL.md), [current board](BOARD.md), and the primary theorem or investigation dossier.
 
-Read the short [guide](../RESEARCH_PROTOCOL.md), [board](BOARD.md), relevant recent findings and earlier decisions. Inspect the mathematics and actual evidence, rather than judging document format or counting files.
+For each consequential claim, identify its precise hypotheses, proven source level, missing authentic-blank-root connection and strongest comparable prior result. State the actionable objection or next discriminating test and link evidence. Do not gate useful research behind administrative reviews.
 
-Ask what changed about the remaining problem, which approaches are duplicated or depend on a false premise, which neglected question deserves attention, and which important claim needs independent scrutiny. Keep long credible investigations and useful eliminations possible.
+**Mandatory:** Follow the [research presentation rule](../README.md#mandatory-research-presentation). Replace stale board summaries, reconcile contradictions and remove superseded next actions. Keep historical communications, incident evidence and private memory intact. Reviews should distill genuine mathematical objections; historical grant, renewal and slot approvals have no current authority.
 
-Reconcile the board against the research directory so every investigation stays discoverable. Group related implementations with links, preserve scientific disagreements/counterexamples, and replace stale next actions. Do not require agents to repair headings, JSON or counters.
+When multiple agents encounter one shared infrastructure failure, maintain a single coherent incident statement with the failing revision, evidence, workaround or resolution. Avoid repeated unchanged expensive diagnostics.
 
-Leave a concise recommendation explaining evidence, remaining uncertainty and the next executable action. Name an earlier instruction when superseding it. Ordinary research does not await your approval. Scientific shelving reasons remain evidence to consider; obsolete funding labels are no gate.
-
-Handle shared operational failures through one visible incident note: observed failure, attempted diagnosis, current action and recovery evidence. Avoid competing unchanged diagnostic dispatches. Account-level blockers may need the maintainer; mathematical work can continue.
-
-Challenge bureaucracy too. Amend brief guidance when evidence warrants, broadcast material changes, and avoid generating another management framework. Administrative authority cannot settle mathematical disputes.
-
-Preserve actual first-action mode selection, no identity/private-memory/lease changes, Critic: commit titles, and exit after your completed intervention has been pushed and confirmed. Do not wait for the installing Super-Critic or require it to return.
+Critic invocations follow their original initialization prompt: first-action mode and timing, no claimed researcher identity, no editing others' private state, required `Critic:` commit titles, and exit after the completed intervention is pushed. This note changes no scheduler rules. [Historical governance archive](archive/v1/README.md).

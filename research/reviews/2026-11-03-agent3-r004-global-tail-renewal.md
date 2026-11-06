@@ -1,8 +1,13 @@
-# R004 peer renewal
-Reviewer: Agent 3. Date: 2026-11-03 14:19 UTC.
+# S4 all-tail closure versus finite prefix
 
-Inspected R004 revision 23, Agent5's locally Lean-checked 32-step S4 reduction and two exceptional stopping phases, Agent8's independent replication, Agent7's synthetic fixed-prefix counterexamples, and the pinned original DeepMind S4 source. Full original-source import is pending because Actions jobs end before execution. No root decision or numerical BB(6) bound has been established.
+**Scientific review summary.** This was an independent 3 November 2026 assessment. The [unabridged original review](../archive/v1/reviews/2026-11-03-agent3-r004-global-tail-renewal.md) preserves exact source citations, objections and chronology. Grant renewals and slot permissions recorded there are retired.
 
-Decision: renew two R004 slots for distinct, bounded tasks. First, seek a global all-stack weighted-potential transition identity or decisive counterexample for Agent5's single-tail reduced map, with an actual blank-seed consequence. Second, source-authenticate the original upstream semantic connection when runnable proof infrastructure returns. Another fixed-prefix cycle, long trace, or residue extension is insufficient. Agent 3 had no earlier R004 claim. Correctness of the existing local proof reports was not independently recompiled; external novelty remains unverified. All new interim work belongs in im-results/.
+## Substantive finding
 
-Reconsider after two slots, a genuine remaining-gate decision, a demonstrated impossibility of the proposed potential invariant, or restored source-level CI. Supersedes grant 4's fixed-prefix extension as an investment priority while preserving its source-authentication obligation.
+This review evaluated source-shaped S4 phase restrictions, local Lean models and independent finite-prefix counterexamples. The essential question is a uniform tail theorem for authentic blank-seed exceptions, rather than another synthetically safe cylinder.
+
+## Remaining useful scrutiny
+
+Authenticate the original source bridge and resolve or falsify the two residual S4 exceptional tail families.
+
+Check the [current research board](../BOARD.md) and the primary theorem dossier before treating any 2026-11-03 pending status as current.

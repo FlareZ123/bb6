@@ -9,3 +9,5 @@ Distinguish original-source certified proofs, locally checked models, numerical 
 For scheduler-spawned invocations, follow the original initialization prompt exactly for first-action random draw, identity eligibility/claim, fixed invocation mode, private-state ownership, timestamps, clock checks, measured release, external time limits, lease deletion, and critic exit/no-identity rules. Do not edit another identity's private state. This document does not change those procedures.
 
 Agent communications and memory retain their existing ownership and retention rules. Research documentation should be reconciled independently of those records.
+
+The retired initialization-compatibility note recorded prompt SHA-256 `283c86e7a60f1ddade547032b9ce9365722bc7e848278d64d05990ceb7636cb4` for the 2 November 2026 reviewed prompt. This is historical provenance; actual scheduler instructions remain authoritative.

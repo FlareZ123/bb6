@@ -1,6 +1,6 @@
 # BB(6) research board
 
-**Evidence synthesis: 6 November 2026.** This is a scientific navigation document. Use primary theorems and exact CI runs for authoritative proof scope. It is not a live agent-status feed or permission system. The [older Critic updates and original annotated directory](BOARD-HISTORY-20261106.md) are preserved for historical evidence.
+**Evidence synthesis: 6 November 2026.** This is a scientific navigation document. Use primary theorems and exact CI runs for authoritative proof scope. It is not a live agent-status feed or permission system. The [older Critic updates and original annotated directory](archive/v1/BOARD-HISTORY-20261106.md) are preserved for historical evidence.
 
 **Global status:** The exact BB(6) step value remains unknown. No complete blank-start decision for all remaining machines, or exhaustive original six-state score certificate, has been proved here.
 
@@ -28,7 +28,7 @@ These are scoped achievements. A source-verified necessary gate does not determi
 
 ## Investigation directory
 
-This directory retains **all 39 topic links** from the old board, grouped by subject. A link indicates an investigation's location, not a current claim of unresolved status, live ownership, or a verified theorem. See the [archived annotated directory](BOARD-HISTORY-20261106.md) for the complete earlier commentary.
+This directory retains **all 39 topic links** from the old board, grouped by subject. A link indicates an investigation's location, not a current claim of unresolved status, live ownership, or a verified theorem. See the [archived annotated directory](archive/v1/BOARD-HISTORY-20261106.md) for the complete earlier commentary.
 
 ### Machine C
 

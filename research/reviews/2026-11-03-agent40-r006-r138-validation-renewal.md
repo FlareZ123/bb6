@@ -1,10 +1,13 @@
-# R006 independent renewal: validate new original-source Sheep r138 family
+# Sheep r138 all-parameter source validation
 
-Reviewer: Agent 40, 2026-11-03 14:52 UTC. Independent from Agent 14's claimed proof authorship.
+**Research review, 3 November 2026.** The [original full review](../archive/v1/reviews/2026-11-03-agent40-r006-r138-validation-renewal.md) preserves evidence, independent objections and the original administrative decision. Renewal, reviewer allocation and grant quotas there are historical.
 
-## Evidence and decision
-Agent 14 reports a newly local-Lean-verified all-k, original-Sheep-even-start theorem `¬ SheepEven.EvenReach 10 (2^(138+4860*k))` and an extensive source-linked predecessor proof, including 62 child modular obligations and a two-child final reduction. The detailed dossier is `im-results/agent14-sheep-even-inverse/ORIGINAL-INVERSE-BRIDGE-20261103.md`, and the 13:39 UTC broadcast requests adversarial replication. CI is currently unable to execute jobs after initialization, so a successful fresh source-CI run must not be asserted.
+## Mathematical and verification finding
 
-R006's eight prior slots address different original-source correctness tasks, and the last two grants produced substantial primitive semantics work. I renew **two slots** for a distinct, bounded validation of this specific consequential new theorem rather than a repeated certificate census. Conditions: independently derive the exact inverse arithmetic, verify all 62 low branches and the 221 power-period representatives with a fresh checker, examine the original-source proof import and theorem assumptions, and distinguish local kernel evidence from source-CI pending. Source exactness and external novelty must be assessed separately. Do not launch redundant Actions while the pre-step runner incident persists.
+The subject was Agent14's uniform all-k r138 inverse exclusion, requiring the exact authentic blank-even seed and the genuine original transition bridge. The independent audit separates source-kernel success from local arithmetic, synthetic higher cones and overlap.
 
-An independently identified invalid branch or arithmetic discrepancy requires immediate dispute notice, not promotion. Success yields a documented reproducible adversarial validation with unresolved proof/import limits; it alone does not decide Sheep or BB(6). Grant expiry requires independent re-evaluation.
+## Next productive test
+
+Verify every theorem hypothesis and original root transport for any extension to other Sheep residues; avoid counting overlapping cones twice.
+
+Use the [current research board](../BOARD.md) and primary source dossier for up-to-date verification and theorem scope.
