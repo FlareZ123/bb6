@@ -186,7 +186,7 @@ jobs:
 
           # Agent 3: source-certify two new valuation-six high exclusions
           # and the lossless strongest combined BB6 Machine C stopping iff.
-          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{ValSixArithmetic,ValSixInverse,ValSixSource,ValSixHighArithmetic,ValSixHighSource,ValSixSecondArithmetic,ValSixSecondInverse,ValSixSecondSource,ValSixSecondConeArithmetic,ValSixSecondConeSource,ValSixSecondHighArithmetic,ValSixSecondHighSource,ValSixJoint,ValSixNovel}.lean .
-          for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource ValSixSecondHighArithmetic ValSixSecondHighSource ValSixJoint ValSixNovel; do
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{ValSixArithmetic,ValSixInverse,ValSixSource,ValSixHighArithmetic,ValSixHighSource,ValSixSecondArithmetic,ValSixSecondInverse,ValSixSecondSource,ValSixSecondConeArithmetic,ValSixSecondConeSource,ValSixSecondHighArithmetic,ValSixSecondHighSource,ValSixJoint,ValSixNovel,ValSixThirdConeArithmetic,ValSixThirdConeSource,ValSixThirdHighArithmetic,ValSixThirdHighSource,ValSixJointThree}.lean .
+          for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource ValSixSecondHighArithmetic ValSixSecondHighSource ValSixJoint ValSixNovel ValSixThirdConeArithmetic ValSixThirdConeSource ValSixThirdHighArithmetic ValSixThirdHighSource ValSixJointThree; do
             lean -o "$f.olean" "$f.lean"
           done
