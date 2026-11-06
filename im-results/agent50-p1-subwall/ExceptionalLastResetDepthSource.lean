@@ -1,4 +1,5 @@
 import CountedWallStrongGateSource
+import ExceptionalStrongSource
 
 namespace BB6.Agent50ExceptionalDepth
 
@@ -412,10 +413,12 @@ theorem source_exceptional_last_reset_depth_window
       bp+2^(t+3)=4*k+4*t+12 ∧
       dp+14*2^n=2^(t+3)+2*mp+2*n+7 ∧
       m=mp+t+1 ∧
+      n+4≤m ∧
+      5≤dp ∧
       2^(t+3)=2*k+dp+2*t+9 ∧
-      14*2^n≤2^(t+3)+2*mp+2*n+6 ∧
+      14*2^n≤2^(t+3)+2*mp+2*n+2 ∧
       mp+n+7+2^(t+1)≤7*2^n ∧
-      1≤t ∧ t≤n+1 := by
+      2≤t ∧ t≤n+1 := by
   have h5 : CountCone (14*2^n-2*n-16) 3 b 5 m z := by
     simpa [hd] using h
   obtain ⟨bp,dp,mp,zp,t,k,c,
@@ -423,6 +426,8 @@ theorem source_exceptional_last_reset_depth_window
     source_right_five_last_positive_reset_no_tail n b m z hz h5
   have hoddEnd : OddCone (14*2^n-2*n-16) 3 b 5 m :=
     counted_to_odd_cone _ _ _ _ _ _ h5
+  have hcostFour : n+4≤m :=
+    BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four n b 5 m hn hoddEnd rfl
   have hmassEnd := odd_cone_mass
     (14*2^n-2*n-16) 3 b 5 m hoddEnd
   have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by omega
@@ -469,12 +474,22 @@ theorem source_exceptional_last_reset_depth_window
       have hexp : t+2<n+4 :=
         (Nat.pow_lt_pow_iff_right (show 1<(2:Nat) from by decide)).mp hpowLt
       omega
-    have hdpPos : 1≤dp := by omega
+    have hdpFive : 5≤dp := by
+      cases hoddPre with
+      | root => omega
+      | parent b d m t0 k0 c hcone hb hb4 hd hi hk hc => omega
     have hdpFormula : dp+14*2^n=2^(t+3)+2*mp+2*n+7 := by omega
     have hdepthExact : 2^(t+3)=2*k+dp+2*t+9 := by
       rw [hpowStep, ← hpow1]
       omega
-    have hcostLowerPrefix : 14*2^n≤2^(t+3)+2*mp+2*n+6 := by omega
+    have hcostLowerPrefix : 14*2^n≤2^(t+3)+2*mp+2*n+2 := by omega
+    have htTwo : 2≤t := by
+      by_contra hnot
+      have htEq : t=1 := by omega
+      subst t
+      have hpow16 : 2^(1+3)=16 := by decide
+      rw [hpow16] at hdepthExact
+      omega
     have hpow3 : 2^(t+3)=4*2^(t+1) := by
       rw [show t+3=t+1+2 by omega, Nat.pow_add]
       rw [show (2:Nat)^2=4 by decide]
@@ -483,7 +498,7 @@ theorem source_exceptional_last_reset_depth_window
     have hcostUpperPrefix : mp+n+7+2^(t+1)≤7*2^n := by
       rw [hpow3] at hbpBound
       omega
-    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepthExact,hcostLowerPrefix,hcostUpperPrefix,htp,htUpper⟩
+    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hcostFour,hdpFive,hdepthExact,hcostLowerPrefix,hcostUpperPrefix,htTwo,htUpper⟩
 
 #print axioms BB6.Agent50ExceptionalDepth.source_exceptional_last_reset_depth_window
 
