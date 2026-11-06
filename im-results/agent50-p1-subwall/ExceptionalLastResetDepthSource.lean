@@ -76,7 +76,7 @@ theorem source_mid_cost_exceptional_last_reset_depth
     · exact hs
     · have hsp : 1≤s := by omega
       have hpow : (2:Nat)^1 ≤ 2^s :=
-        Nat.pow_le_pow_right (by decide) hsp
+        Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hsp
       simp only [Nat.pow_one] at hpow
       have hmult : 2*(b+12) ≤ 2^s*(b+12) :=
         Nat.mul_le_mul_right (b+12) hpow
@@ -91,12 +91,14 @@ theorem source_mid_cost_exceptional_last_reset_depth
     have hpow1 : dp+bp/2+3=2^(t+2) := by
       simpa [hc1, Nat.pow_add] using hpow
     have hmass1 : 2*k+2*t+3=bp+dp := by
-      simpa [hc1] using hmass
+      have hmass' : 2*k+1+2*t+1+1=bp+dp := by
+        simpa [hc1] using hmass
+      omega
     have hbpEven : bp%2=0 := by omega
     have hbpDiv : 2*(bp/2)=bp := by omega
     have hpowStep : 2^(t+3)=2*2^(t+2) := by
       rw [show t+3=t+2+1 by omega, Nat.pow_succ]
-      ring
+      omega
     have hbpEq : bp+2^(t+3)=4*k+4*t+12 := by
       rw [hpowStep, ← hpow1]
       omega
@@ -118,7 +120,7 @@ theorem source_mid_cost_exceptional_last_reset_depth
       by_contra hnot
       have hle : n+4≤t+2 := by omega
       have hmono : 2^(n+4)≤2^(t+2) :=
-        Nat.pow_le_pow_right (by decide) hle
+        Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) hle
       rw [hpow4] at hmono
       omega
     have hcostDouble : 4*m+2*n+4≤10*2^n := by omega
