@@ -1,0 +1,45 @@
+name: Agent 29 Machine C valuation-five original-source verification (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-certification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build authentic Machine C section prerequisites and new source theorem
+        run: |
+          mkdir -p /tmp/a19-c-odd-tower
+          cp im-results/agent11-c-line/CLine.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,BounceParity,BounceHaltLevel,BounceHaltingInputs,BounceHaltBasin,BounceHaltClosed,OddSectionExponential,SectionHaltingBasin,SectionCompleteBasin,Agent46CBridge,BlankDyadicGate}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent38-c-section-mod4/{Agent38SectionParity,DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor,FurtherDyadicMod16}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 /tmp/a19-c-odd-tower/
+          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff,BounceReverse}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam,SectionAffineInverse,ReachAffine}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,FeederGeneric,FeederOrbitGeneric}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent24-c48/{C48Inverse,C48Reach,C48Depth,C48Residual,C16Inverse,C16Reach,C16Depth,C16Residual,UniformInverse,UniformReach,UniformEdges,UniformOrbitIff,UniformS25Inverse,UniformS25Reach,UniformS25Residual,EvenEvenInverse,S5FirstInverse,S5Reach,ExtraEvenOrbit,OddEvenInverse,EvenRightSixOrbit}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent24-c48/{OneTwoGate,OneTenGate,SixCone,SixResidual,HighOddTwo,SevenResidual,HighOddSix,EightResidual}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent19-c-odd-dyadic/{OddTowerGeneric,OddTowerArithmetic,OddTowerGeneralHigh,OddTowerSource,OddTowerResidual,OddTowerResidualAll,OddSpecialCylinders,OddSpecialHigh,OddSpecialLift,OddSpecialResidual,OddSpecialHighLift,OddSpecialResidualLift,OddSevenAlgebra,OddSevenInverse,OddSevenReach,OddSevenHigh,OddSevenResidual,OddSevenGeneralAlgebra,OddSevenGeneralInverse,OddSevenForcedRoot,MixedNormalize,OddSevenFourLink,OddSevenHighFourLink}.lean /tmp/a19-c-odd-tower/
+          cp im-results/agent29-mod128-root/{RootMod128Arithmetic,RootMod128Inverse,RootMod128Source}.lean /tmp/a19-c-odd-tower/
+          cd /tmp/a19-c-odd-tower
+          base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
+          echo '48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  ThirdStageOddDepth.lean' | sha256sum -c -
+          export LEAN_PATH="."
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting BounceParity BounceHaltLevel BounceHaltingInputs BounceHaltBasin BounceHaltClosed Agent38SectionParity DyadicDepthPrune SectionHaltingBasin OddSectionExponential SectionCompleteBasin Agent46CBridge BlankDyadicGate DyadicResidualCriterion SectionMod8Predecessor FurtherDyadicMod16 ThirdStageOddDepth Agent3CImage Agent3COneFamily Agent3COrbitIff BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam SectionAffineInverse ReachAffine BounceInverse FeederGeneric FeederOrbitGeneric C48Inverse C48Reach C48Depth C48Residual C16Inverse C16Reach C16Depth C16Residual UniformInverse UniformReach BounceReverse UniformEdges UniformOrbitIff UniformS25Inverse UniformS25Reach UniformS25Residual EvenEvenInverse S5FirstInverse S5Reach ExtraEvenOrbit OddEvenInverse EvenRightSixOrbit OneTwoGate OneTenGate SixCone SixResidual HighOddTwo SevenResidual HighOddSix EightResidual OddTowerGeneric OddTowerArithmetic OddTowerGeneralHigh OddTowerSource OddTowerResidual OddTowerResidualAll OddSpecialCylinders OddSpecialHigh OddSpecialLift OddSpecialResidual OddSpecialHighLift OddSpecialResidualLift OddSevenAlgebra OddSevenInverse OddSevenReach OddSevenHigh OddSevenGeneralAlgebra OddSevenGeneralInverse OddSevenForcedRoot MixedNormalize OddSevenFourLink OddSevenHighFourLink RootMod128Arithmetic RootMod128Inverse RootMod128Source; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          lean OddSevenResidual.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/LowOneModFour.lean .
+          lean LowOneModFour.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/HighSumTwo.lean .
+          lean HighSumTwo.lean
