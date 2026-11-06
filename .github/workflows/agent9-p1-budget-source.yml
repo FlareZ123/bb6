@@ -197,3 +197,13 @@ jobs:
           if grep -E -q 'sorryAx|error:' /tmp/agent9-q5365.log; then exit 1; fi
           grep -F 'blank_no_critical_850_plus_2pow55' /tmp/agent9-q5365.log
           grep -F 'blank_no_critical_1042_plus_2pow55' /tmp/agent9-q5365.log
+
+      - name: Audit new arbitrary-cost original P1 shadow and gateway theorem
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
+          for m in GenericShadowReachBudget GenericCriticalReachBudget; do
+            lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean" | tee -a /tmp/agent9-budget-generalization.log
+          done
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-budget-generalization.log; then exit 1; fi
+          grep -F 'critical_unreachable_of_reach_budget' /tmp/agent9-budget-generalization.log
