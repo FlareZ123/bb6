@@ -25,7 +25,7 @@ theorem farLeftSafe (b e : Nat)
       Nat.le_trans harg (ternaryOnes_ge _)
     obtain ⟨c,f,hdr⟩ := drainB_safe_ones (e+3) (b-e-5) 5 hbudget
     have hstep : highLevelNext (.D b e) = drainB (b-e-5) (e+3) 5 := by
-      simp [highLevelNext,hb,hbranch]
+      simp only [highLevelNext, if_neg hb, if_pos hbranch]
     exact ⟨c,f,hstep.trans hdr⟩
   · have hpar : e%2=0 := by omega
     have hnot : ¬(e%2=1 ∧ b≥e+5) := by omega
@@ -35,7 +35,7 @@ theorem farLeftSafe (b e : Nat)
       Nat.le_trans harg (ternaryOnes_ge _)
     obtain ⟨c,f,hdr⟩ := drainB_safe_ones (e+2) (b-e-2) 2 hbudget
     have hstep : highLevelNext (.D b e) = drainB (b-e-2) (e+2) 2 := by
-      simp [highLevelNext,hb,hnot,hbranch]
+      simp only [highLevelNext, if_neg hb, if_neg hnot, if_pos hbranch]
     exact ⟨c,f,hstep.trans hdr⟩
 
 /-- On an odd right ray in the source's certified translation domain,
