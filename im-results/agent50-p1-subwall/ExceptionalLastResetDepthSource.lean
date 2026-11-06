@@ -412,7 +412,7 @@ theorem source_exceptional_last_reset_depth_window
       bp+2^(t+3)=4*k+4*t+12 ∧
       dp+14*2^n=2^(t+3)+2*mp+2*n+7 ∧
       m=mp+t+1 ∧
-      b+12≤2^(t+3) ∧
+      2^(t+3)=b+dp+2*t+13 ∧
       t≤n+1 := by
   have h5 : CountCone (14*2^n-2*n-16) 3 b 5 m z := by
     simpa [hd] using h
@@ -424,7 +424,6 @@ theorem source_exceptional_last_reset_depth_window
   have hmassEnd := odd_cone_mass
     (14*2^n-2*n-16) 3 b 5 m hoddEnd
   have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by omega
-  have hmassEnd'' : b+2*m+2*n+18=14*2^n := by omega
   have hoddPre : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
     counted_to_odd_cone _ _ _ _ _ _ hpre
   have hmassPre := odd_cone_mass
@@ -470,9 +469,10 @@ theorem source_exceptional_last_reset_depth_window
       omega
     have hdpPos : 1≤dp := by omega
     have hdpFormula : dp+14*2^n=2^(t+3)+2*mp+2*n+7 := by omega
-    have hprefixLe : 2*mp+2*n+7≤2*m+2*n+7 := by omega
-    have hdepth : b+12≤2^(t+3) := by omega
-    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepth,htUpper⟩
+    have hdepthExact : 2^(t+3)=b+dp+2*t+13 := by
+      rw [hpowStep, ← hpow1]
+      omega
+    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,hdepthExact,rfl,htUpper⟩
 
 #print axioms BB6.Agent50ExceptionalDepth.source_exceptional_last_reset_depth_window
 
