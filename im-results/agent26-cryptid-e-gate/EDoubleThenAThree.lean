@@ -60,6 +60,7 @@ private theorem first_to_A (t u : Nat) (ys : List Bool) :
       false :: (CryptidA.wordCode (tripleTokens u) ++
         ([true,true,false,true,true,true] ++
           ([true,true,true] ++ ys)))) := by
+  unfold tripleTokens
   rw [BB6.Agent26EThenA.tripleCode]
   have hn : 2*((3*u+2)+1)+2=3*(2*u+2)+2 := by omega
   rw [hn]
@@ -93,6 +94,7 @@ theorem double_q1_then_A (t u : Nat) (ys : List Bool) :
       ⟨[],false,List.replicate (2*m+5) true ++
         ([false,true,false,true,false,true,true,true] ++ ys),5⟩ := by
   dsimp
+  rw [show 3*u+3=(3*u+2)+1 by omega]
   rw [run_add,BB6.Agent35.full_E_double (3*t+2) (3*u+2) ys]
   rw [first_to_A]
   exact a_code_110111 (8*t+6) (tripleTokens u)
