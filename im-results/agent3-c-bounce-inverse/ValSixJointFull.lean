@@ -384,7 +384,7 @@ theorem rectangle27_sample_previous_sieves :
     constructor
     · unfold BB6.Agent3.jointHighAllowed
       refine ⟨?_,?_,?_,?_,?_⟩ <;> decide
-    · norm_num
+    · decide
   have hdy : ∀ n, ¬
       (n+4≤2*85+2 ∧ (28+3*85+3)%2^(n+4)=2^(n+2) ∧
         (2*28+3)%8=(if n%2=0 then 7 else 3)) := by
@@ -412,7 +412,7 @@ theorem rectangle27_sample_previous_sieves :
           Nat.mod_eq_zero_of_dvd hdivR
         have hcong := congrArg (fun z : Nat => z%32) hres
         rw [hleft,hright] at hcong
-        norm_num at hcong
+        omega
   have hbase : BB6.Agent19Joint.highAllowed 28 85 := by
     unfold BB6.Agent19Joint.highAllowed
     have hodd1 :
