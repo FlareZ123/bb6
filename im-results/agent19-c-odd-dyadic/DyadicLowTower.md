@@ -54,7 +54,7 @@ The actual Machine C first stopping family is the **independent exact equation**
 k + 3m + 4 = 2^(2m+3).
 ```
 
-For any `n≥2` even, `m≥n+4`, `r≤9`, the additional integer identity
+For any `n≥2` even, `m≥n+4`, `r≤m`, the additional integer identity
 
 ```text
 9m + 13 + 5*2^(n+2) = r*2^(n+4)
@@ -66,7 +66,7 @@ forces that stopping counter into the forbidden tower. Indeed, write `Q=2^(n+2)`
 3k = Q*(3T + 5 - 4r) + 1.
 ```
 
-The natural integer `u=3T+5-4r` is at least nine, with `u≡1(mod 4)`, because `m≥n+4` makes `T` a sufficiently large power of two. The original-source Lean lemma in [LowTowerFamilies.lean](LowTowerFamilies.lean) is `BB6.Agent19SixCone.low_linear_stop_no_root`. [Original-source CI 42288780840](https://github.com/FlareZ123/bb6/actions/runs/42288780840) verified this lemma with only `[propext, Classical.choice, Quot.sound]` axioms.
+The natural integer `u=3T+5-4r` is at least nine, with `u≡1(mod 4)`: from `m≥n+4`, one has `2^(m+5)≤T`, while induction proves `4m+4≤2^(m+5)`; hence `r≤m` suffices. This generalizes the initial fixed `r≤9` bound. The original-source Lean lemma in [LowTowerFamilies.lean](LowTowerFamilies.lean) is `BB6.Agent19SixCone.low_linear_stop_no_root`. [Original-source CI 42288780840](https://github.com/FlareZ123/bb6/actions/runs/42288780840) verified this lemma with only `[propext, Classical.choice, Quot.sound]` axioms.
 
 The identity has three convenient constructive seed triples `(n,m,r)`:
 
@@ -96,6 +96,39 @@ Therefore the source theorem excludes every exact low stopping gateway at each i
 | 14 | 50971 | 109227 mod 262144 | New all-depth family |
 
 The three original index seeds generate every even depth `n≥2` by selecting the appropriate residue modulo six and taking `t≥0`. The recurrence has strictly increasing natural terms; thus this supplies infinitely many distinct excluded stopping indices. The parameterized `odd_gate_dyadic_tower_no_blank` theorem is broader because it excludes **every** target satisfying its explicit divisibility equation, beyond these representative low stopping indices.
+
+
+
+### Entire infinite residue classes at every even depth
+
+A stronger extension now in [LowTowerFamilies.lean](LowTowerFamilies.lean) proves **all offsets**, rather than only the single representative `m_t` shown above. For any fixed seed `(n_0,m_0,R)` from the three base rows, let
+
+```text
+n_t = n_0+6t,
+M_0 = m_0,  M_(t+1) = 64*M_t+91,
+m_(t,s) = M_t + 2^(n_t+4)*s,  t,s ≥ 0.
+```
+
+The theorem `low_full_residue_progression` upgrades `low_linear_stop_no_root` to all `s`, because the integer index relation holds with `r=R+9s`:
+
+```text
+9*m_(t,s)+13+5*2^(n_t+2)
+  =(R+9s)*2^(n_t+4).
+```
+
+Since the modulus `2^(n_t+4)` is at least 64, `R+9s≤M_t+2^(n_t+4)*s=m_(t,s)`. The generalized `r≤m` theorem applies uniformly. Thus every stopping parameter
+
+```text
+m ≡ 11   (mod 64),
+m ≡ 219  (mod 256),
+m ≡ 539  (mod 1024),
+m ≡ 795  (mod 4096),
+m ≡ 14107 (mod 16384),
+m ≡ 34587 (mod 65536),
+...
+```
+
+is excluded for **every nonnegative progression offset**. The sequence continues to arbitrary even n. Explicit Lean theorems are `low_all_depth_two`, `low_all_depth_four`, and `low_all_depth_six`, each quantifying over all `t,s,k` and consuming the exact original Machine C stopping equation. The first two base residue classes were already source-certified by Agent21; the higher-depth extensions are new within this repository investigation. The final original-source CI verification of these enlarged theorems is currently pending; they have compiled locally against correctly typed source theorem interfaces without sorry.
 
 **Reproducible original-source Lean paths:**
 - [DyadicSixCone.lean](DyadicSixCone.lean): arbitrary-depth inverse-cone proof.
