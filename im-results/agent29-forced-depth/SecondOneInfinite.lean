@@ -23,6 +23,16 @@ private theorem secondOneJ_mod_four (n : Nat) :
       change (16*secondOneJ n+42)%4=2
       omega
 
+/-- Every stopping index in the new right-four tower lies at residue
+    ten modulo thirty-two. This identifies the still-admitted parameter
+    cylinder in the original combined high sieve. -/
+theorem secondOneJ_mod32 (n : Nat) : secondOneJ n%32=10 := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      change (16*secondOneJ n+42)%32=10
+      omega
+
 private theorem rightTower_even (n : Nat) :
     rightTower n%2=0 := by
   cases n with
@@ -122,6 +132,7 @@ private theorem second_one_strict_step (n : Nat) :
   change secondOneJ n < 16*secondOneJ n+42
   omega
 
+#print axioms secondOneJ_mod32
 #print axioms second_one_family_stopping
 #print axioms second_one_family_unreachable
 #print axioms second_one_strict_step
