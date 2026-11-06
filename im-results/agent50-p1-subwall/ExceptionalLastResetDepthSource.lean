@@ -484,11 +484,10 @@ theorem source_exceptional_last_reset_depth_window
       omega
     have hcostLowerPrefix : 14*2^n≤2^(t+3)+2*mp+2*n+2 := by omega
     have htTwo : 2≤t := by
-      by_contra hnot
-      have htEq : t=1 := by omega
-      subst t
-      have hEq : 16=2*k+dp+11 := by simpa using hdepthExact
-      omega
+      by_cases h : t=1
+      · have hEq : 16=2*k+dp+11 := by simpa [h] using hdepthExact
+        omega
+      · omega
     have hpow3 : 2^(t+3)=4*2^(t+1) := by
       rw [show t+3=t+1+2 by omega, Nat.pow_add]
       rw [show (2:Nat)^2=4 by decide]
