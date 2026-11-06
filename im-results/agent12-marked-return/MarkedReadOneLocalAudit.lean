@@ -39,7 +39,7 @@ theorem markedReturnPhysicalSlot (q : Fin 6) (dir w0 : Bool)
   cases hr : finitePartialRun (markedReturnPrefix q dir w0) 2 finiteBlank with
   | none => simp [markedReturnPhysicalSlotCheck, hr] at hc
   | some c =>
-      exact ⟨c, hr, of_decide_eq_true
+      exact ⟨c, rfl, of_decide_eq_true
         (by simpa [markedReturnPhysicalSlotCheck, hr] using hc)⟩
 
 /-- One exact source-certified-or-open q/1 branch, not a
