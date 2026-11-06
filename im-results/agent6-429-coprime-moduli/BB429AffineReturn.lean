@@ -59,4 +59,57 @@ theorem even_burst_affine_return (n W : Nat)
   rw [BB429.run_add]
   simp [hprefix,BB429.run,hnext]
 
+
+/-- Iteration of the affine return map gives a long exact zero-row block. -/
+theorem even_burst_affine_iter (n W k : Nat)
+    (hn : n%4=2) (hW : W%4=0)
+    (hlo : 6*2^n ≤ W+3*n+6)
+    (hhi : W+k*(3*n+10)+3*n+18 ≤ 12*2^n) :
+    BB429.run (k*(n+1)) (0,W)=some (0,W+k*(3*n+10)) := by
+  induction k with
+  | zero =>
+    simp [BB429.run]
+  | succ k ih =>
+    have hc : (3*n+10)%4=0 := by omega
+    have hWk : (W+k*(3*n+10))%4=0 := by
+      rw [Nat.add_mod, Nat.mul_mod, hW, hc]
+      simp
+    have hlo_k : 6*2^n ≤ (W+k*(3*n+10))+3*n+6 := by omega
+    have hhi_k : (W+k*(3*n+10))+3*n+18 ≤ 12*2^n := by
+      have hhi' : W+(k*(3*n+10)+(3*n+10))+3*n+18 ≤ 12*2^n := by
+        simpa [Nat.succ_mul, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hhi
+      omega
+    have hstep := even_burst_affine_return n (W+k*(3*n+10)) hn hWk hlo_k hhi_k
+    have hprev := ih hhi_k
+    rw [Nat.succ_mul, BB429.run_add]
+    simp [hprev,hstep]
+    have hmul : (k+1)*(3*n+10)=k*(3*n+10)+(3*n+10) := by
+      simpa [Nat.succ_eq_add_one] using (Nat.succ_mul k (3*n+10))
+    rw [hmul]
+    omega
+
+/-- The n=22 affine block is an exact 7,615,921-step source segment,
+conditional only on its displayed entry state. -/
+theorem n22_zero_row_segment (k : Nat) (hk : k≤331127) :
+    BB429.run (k*23) (0,25165912)=some (0,25165912+76*k) := by
+  have hn : 22%4=2 := by norm_num
+  have hW : 25165912%4=0 := by norm_num
+  have hlo : 6*2^22≤25165912+3*22+6 := by norm_num
+  have hk' : k*76≤331127*76 := Nat.mul_le_mul_right 76 hk
+  have hhi : 25165912+k*76+3*22+18≤12*2^22 := by
+    norm_num at hk'
+    omega
+  simpa using even_burst_affine_iter 22 25165912 k hn hW hlo hhi
+
+theorem n22_zero_row_block_end :
+    BB429.run (331127*23) (0,25165912)=some (0,50331564) := by
+  have h := n22_zero_row_segment 331127 (by omega)
+  norm_num at h ⊢
+  exact h
+
+#print axioms even_burst_affine_return
+#print axioms even_burst_affine_iter
+#print axioms n22_zero_row_segment
+#print axioms n22_zero_row_block_end
+
 end Agent6AffineReturn
