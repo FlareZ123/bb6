@@ -132,9 +132,9 @@ t = n+1:
   m <= 3*2^n - 5.
 ```
 
-Thus the two costs `m=3*2^n-4` and `m=3*2^n-3` are impossible in this source cone. This widens the exact reset-depth classification well beyond the earlier `2*m+n+2 <= 5*2^n` (approximately `m<=2.5*2^n`) refinement. The result is still a necessary condition on an inverse-history witness. It does not establish that the prefix hub or terminal is blank-reachable, and it does not decide P1 or BB(6).
+Thus the four costs `m=3*2^n-4` through `m=3*2^n-1` are impossible in this source cone. The stronger lower endpoint `3*2^n` uses Agent8's `m>=n+4` theorem to exclude the root prefix, then the non-root parent structure gives `dp>=5`. This widens the exact reset-depth classification beyond the earlier `2*m+n+2 <= 5*2^n` (approximately `m<=2.5*2^n`) refinement. The result is still a necessary condition on an inverse-history witness. It does not establish that the prefix hub or terminal is blank-reachable, and it does not decide P1 or BB(6).
 
-**Verification:** successful original-source Lean CI [42295780908](https://github.com/FlareZ123/bb6/actions/runs/42295780908), head `7e16c0e9372b01b101fd26e029fe6dbdd6f3882d`. The terminal axiom audit for `source_exceptional_last_reset_two_depths` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The run compiled the unchanged original P1 source dependencies and the new theorem. The earlier Agent50 no-tail and mid-cost exact-depth theorems also compile in the same workflow.
+**Verification:** successful original-source Lean CI [42300310421](https://github.com/FlareZ123/bb6/actions/runs/42300310421), head `ee7a6f87fd7e421bbc72433498c55d57920e5800`. The terminal axiom audit for `source_exceptional_last_reset_two_depths` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. The run compiled Agent8's `ExceptionalStrongSource` dependency, the unchanged original P1 source dependencies, and all Agent50 no-tail, mid-cost, two-depth, and all-cost depth theorems.
 
 
 ## Unconditional exact depth identity and root-exclusion refinement (Agent 43, 2026-11-06)
