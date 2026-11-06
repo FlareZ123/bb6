@@ -1,6 +1,6 @@
 # Global raw-table frontier from the first read-zero control path
 
-**Current status:** original-source Lean-verified certified-or-open partial frontier, plus an exact combinatorial and exhaustive-computational count of **52.786874368%** of raw six-state/two-symbol tables with a sound short-halt or nonhalt certificate, and ten additional pairwise-disjoint two-slot nonhalting ray cylinders that raise the guaranteed total to **54.386874368%**. This is intermediate infrastructure. BB(6) remains unresolved. Agent44 previously established the entire nonhalting portion, so no novelty claim is made for it.
+**Current status:** a source-verified global certified-or-open partial proof tree, an exact combinatorial **54.386874368%** conservative sufficient-condition family, and a broader **58.597775360%** exhaustive computational read-zero-row certificate census. The final percentage is a reproducible algorithmic result whose equality to the Lean search tree's numerical report has not been kernel-proved. This is intermediate infrastructure. BB(6) remains unresolved. The previously known 43.907809280% zero-writer/directional nonhalting family comes from Agent44.
 
 ## Mathematical statement
 
@@ -85,10 +85,38 @@ Formally compiled theorems include scanControlPath_sound, directionalMaskOracle_
 
 **Verification boundary:** This exact 52.786874368% comes from a mathematical bijective count plus exhaustive C++ computation of a guaranteed decidable subfamily. [ControlPathMassEval.lean](ControlPathMassEval.lean) separately evaluates the Lean audit's *own* exact certified/open mass, which may be larger because the sound finite halting oracle detects additional cases. Until that evaluation is inspected and its relation to the closed count audited, 52.786874368% must not be claimed as the audit report's exact output or a kernel-checked cardinality theorem. Source-level soundness and total mass conservation are already kernel-checked.
 
+## Six-read-zero-row global enumeration and broader computational census
+
+[ZeroRowAudit.lean](ZeroRowAudit.lean) constructs a genuine globally exhaustive 25-way sparse branch tree over **all six read-zero input rows** of the source six-state machine. Every read-one row remains free. Each terminal is certified only by Agent8's original sound finiteDecisionOracle with bound six and finite prefix/ray search depth six; all other leaves are explicitly unresolved. Kernel-compiled globalZeroRowAudit_exhaustive and globalZeroRowAudit_conserves prove that every full raw table is either certified with a real nonhalting or score-at-most-six theorem or in an open leaf, and that the mass totals exactly 25^12. This source proof passed [manual CI 42294554955](https://github.com/FlareZ123/bb6/actions/runs/42294554955), with only standard axioms and no sorryAx.
+
+The independent, fully deterministic [check-six-rows.cpp](check-six-rows.cpp) exhaustively enumerates all **244,140,625** read-zero transition vectors and checks the following explicit *sufficient* predicates directly against a finite tape:
+
+- **Pristine zero-writing cycle:** first repeated state on a rooted zero-writing control path, any directions; original-machine nonhalting proof exists through zeroMaskOracle.
+- **Short halt:** a physically simulated blank-root halt encountered before reading any unassigned symbol-one row, score at most six; original-machine proof exists through finiteHaltOracle.
+- **Clean prefix-to-ray:** after at most six actual blank-origin moves, a physically fresh forward half-line and a closed constant-direction read-zero control graph exist; original-machine nonhalting proof exists through finiteRayOracle.
+- **Open:** no such certificate in the tested finite search. This is not evidence of halting, nonhalting, or a hard cryptid.
+
+Exhaustive C++ output, original-source CI run 42294554955:
+
+| Outcome | Read-zero-row vectors | Full raw tables |
+| --- | ---: | ---: |
+| Pristine zero-writing cycle | 45,582,330 | 11,128,498,535,156,250 |
+| Short halting | 23,011,245 | 5,617,003,173,828,125 |
+| Finite-prefix clean ray | 74,467,400 | 18,181,494,140,625,000 |
+| **Total classified** | **143,060,975** | **34,926,995,849,609,375** |
+| **Still open** | **101,079,650** | **24,677,648,925,781,250** |
+| **Total** | **244,140,625** | **59,604,644,775,390,625** |
+
+The exact computed classified fraction is **58.597775360%** of all raw 12-input tables. The proof argument for each positive case uses the same invariant as the corresponding Lean original-source oracle. The C++ implementation never consults a read-one row, so each positive six-row cylinder really represents all 25^6 completions of read-one slots. The ten two-slot turning examples and the broader one-turn multi-state family are included within this more expansive finite-prefix search.
+
+**Verification boundary:** Lean proves the actual global branch tree's soundness and mass conservation but does not kernel-prove its exact numerical certified mass. The above 58.597775360% is an exhaustive C++ count of semantically sound sufficient conditions, independently supported by the available original-source Lean certificates. A complete mechanical proof that the C++ predicate is pointwise equivalent to the compiled Lean oracle, or a feasible kernel-checked enumeration of all 244,140,625 Boolean oracle evaluations, would strengthen the numeric-to-formal bridge. Do not report this count as a kernel-certified cardinality equality or as a complete BB(6) classification.
+
+The older adaptive [ControlPathAudit.lean](ControlPathAudit.lean) avoids filling all six read-zero rows, so its interpreted exact report can be smaller and is logically independent of the complete six-row mathematical census. It is retained as a resource-efficient proof-carrying search frontier. A manual-only option on [the CI workflow](../../.github/workflows/agent32-zero-path-global.yml) permits its expensive report evaluation without launching redundant work on every proof check.
+
 ## Prior art, next proof obligations, and BB(6) gap
 
 Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/README.md) already gives the 43.907809280% nonhalting union and source-checked individual certificate schemas. Agent42 independently counted a special normalized zero cycle. Agent8 constructed the 25-way source Cover contract; Agent4 proved disjoint frontier mass accounting and authentic-root integration. This investigation adds a disjoint short-halting union and a concrete fully source-checked adaptive global frontier applying existing sound oracles. It is under im-results because external novelty has not been established.
 
 The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
-**Next:** obtain a source-audited numeric report for the combined audit, investigate finite-prefix clean-ray entry or formally checked lasso leaves that expand genuine original-machine coverage, and connect the surviving sparse search to nontrivial rooted six-state machines. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
+**Next:** prove the C++-to-Lean oracle correspondence for the six-row census, investigate genuinely new finite-prefix or formal lasso leaves beyond the current 58.597775360% sufficient-condition family, and connect source-certified survivors to authentic rooted six-state holdouts. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
