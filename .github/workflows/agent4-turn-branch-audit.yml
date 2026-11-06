@@ -1,0 +1,31 @@
+name: Agent 4 two-leaf BB6 frontier branch (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original six-state semantics and both cylinder certificates
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          for m in RayClosed RayChecker RayEntry RayFinite FiniteHalting RayTurnExample; do
+            echo "Checking original Agent8 source module $m"
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
+          lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
+          lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
+          lean -o im-results/agent4-coverage-smoke/TurnBranchAudit.olean im-results/agent4-coverage-smoke/TurnBranchAudit.lean

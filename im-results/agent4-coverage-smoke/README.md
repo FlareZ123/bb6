@@ -1,4 +1,4 @@
-# Actual 25-way sparse-coverage proof tree: A/0 right drift, A/1 arbitrary
+# Proof-carrying six-state coverage: concrete A/0 branch and turning sweep
 
 **Status:** source-certified *coverage machinery smoke test*, not an original BB(6) machine decision, not a new lower/upper bound, and not a globally complete enumerator. Prepared by Agent 4, 2026-11-02.
 
@@ -17,7 +17,20 @@ It constructs an **actual `Cover.branch`** at the otherwise-unassigned A/1 slot,
 
 The external 2026-11-02 Critic [coverage-integration direction](../../communications/broadcast/2026-11-02T1643Z_critic-unify-coverage-certificate-pipeline.md) asked for precisely such a concrete finite branch as a smoke test. This closes that **mechanical test** only. It is intentionally redundant with the simpler existing `driftLeaf_certificate`, so its significance lies in source-verified certificate *composition*. A final global `Cover (DecidedBelow B) emptyTable`, actual authenticated rooted holdout leaves, proof of all external normal-form enumerator reductions, a champion runtime and matched universal bound are still missing. In particular this result covers only the A/0=0RA cylinder and supplies zero additional real machine decisions.
 
-Next valuable integration: consume one existing source-authentic rooted original-TM nonhalt/halt theorem as a `Cover` leaf, preserving its table, start state, full tape, and exact attempted-halt step convention; agree on a verified conversion between the independent Agent8 and Agent13 coverage representations.
+Next valuable integration: replace these elementary synthetic cylinders with a source-authenticated, genuinely difficult holdout or a larger parameterized branch. The current branch validates the end-to-end frontier path and exact scoring convention; it does not classify a historic holdout or close any other A/0 child.
+
+## A concrete two-leaf branch in the full enumeration (6 November 2026)
+
+`TurnBranchAudit.lean` composes the existing exact source certificates with Agent 8's `IncrementalAudit` machinery. Its root is the genuinely unassigned A/0 input of the canonical six-state table space. The branch fixes A/0 to `0RB`, then distinguishes two disjoint B/0 outcomes:
+
+- **B/0 = halt:** one ordinary move reaches B on a blank cell, followed by the halting query. The exact Busy Beaver score is **2**. Ten table slots remain free, so this cylinder has exactly `25^10` full-table completions.
+- **B/0 = 1LC and C/0 = 1LC:** the run moves right once, turns left, then enters a perpetual leftward blank sweep. It never halts. Nine table slots remain free, giving exactly `25^9` completions.
+
+The two cylinders are disjoint because their B/0 transitions differ. All other A/0, B/0, and C/0 alternatives remain explicitly unresolved. `turnAndHaltAudit_exhaustive` gives the certified-or-open disposition for every one of the `25^12` canonical tables, and `turnAndHaltAudit_conserves` verifies exact total mass. The two classified cylinders have combined mass `25^10 + 25^9`.
+
+The exact score convention is important: `HaltsAfter n` means n successful ordinary moves followed by the final attempted halting transition, whose score is n+1. The B/0 halt branch therefore has one ordinary move and score 2. The turning branch is a genuine infinite-tape proof, not a finite simulation cutoff.
+
+This is a **partial branch of the real six-state table enumeration**, not a holdout decision or a BB(6) bound. It classifies two simple low-score cylinders and leaves the rest open. The targeted original-source Lean 4.36.0-rc2 check is `.github/workflows/agent4-turn-branch-audit.yml`; its result is pending until the workflow succeeds.
 
 ## Original-source equivalence of both complete six-state semantics (17:13 UTC)
 

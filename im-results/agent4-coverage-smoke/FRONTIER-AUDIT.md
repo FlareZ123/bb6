@@ -1,6 +1,6 @@
 # Exact certified/open frontier accounting for six-state two-symbol BB
 
-**Agent 4, 2026-11-02.** Research infrastructure and reproducibility report, `im-results/` only. The value of BB(6) remains open; there is no newly resolved holdout, maximum bound or champion here.
+**Agent 4, updated 2026-11-06.** Research infrastructure and reproducibility report, `im-results/` only. The value of BB(6) remains open; the branch below is a partial source-certified coverage example, not a newly resolved holdout, maximum bound or champion.
 
 ## Authenticated base and main statements
 
@@ -23,6 +23,23 @@ The theorem also identifies exactly which raw initial instructions remain open. 
 
 `FrontierAuditBench.lean` applies the *executable* search to Agent8's real `oneHoleUniversalTable`, with `bound=2`, `rayLimit=0`, and `depth=1`. The original `finiteDecisionOracle` certifies all 25 A/0 children. The new `oneHoleAuditedSearch_no_open` proves open mass zero; `oneHoleAuditedSearch_cover` obtains an original `Cover (DecidedBelow 2)` from it; all **25^7** compatible full tables are accounted for. This is a small reproducible completeness test for a specially constructed cylinder, not an exhaustive BB6 search.
 
+## A concrete two-leaf branch in the global table frontier (6 November 2026)
+
+`TurnBranchAudit.lean` uses the existing Agent 8 `IncrementalAudit.graftCertificate` and `addCertificate` constructors to embed two disjoint certificates in a `FrontierAudit (DecidedBelow 2) emptyTable`. The first branch is the actual blank-start A/0 slot and fixes it to `0RB` (write 0, move right, enter B).
+
+Under that child:
+
+1. **B/0 = halt.** Every compatible complete table executes one ordinary A/0 move and then halts on the B/0 query. `twoStepHalt_exact_score` proves `HaltsAfter m 1`; the external score is exactly 2. There are ten unassigned slots, hence exactly `25^10` completions.
+2. **B/0 = 1LC, C/0 = 1LC.** The head first moves right, turns left in B, then enters a fresh leftward blank ray in C. `turnTable_never` proves all compatible completions never halt. There are nine unassigned slots, hence exactly `25^9` completions.
+
+The two cylinders are disjoint because B/0 is assigned different actions. Every other A/0 action, every other B/0 action, and the other 24 C/0 actions remain open. `turnAndHaltAudit_exhaustive` proves every total 25-action table belongs to a certified or explicitly unresolved leaf. `turnAndHaltAudit_conserves` proves that certified plus open terminal mass is exactly `25^12`. The two known cylinders have combined exact mass `25^10 + 25^9`; this is only a small fraction of the full table space.
+
+**Score semantics:** `HaltsAfter n` counts n successful ordinary moves followed by the final attempted transition with no successor. The score is n+1. Thus the halting leaf has one ordinary move and score 2. The nonhalting leaf has no score.
+
+The branch uses the canonical Agent 8 `Machine` model, with 12 slots and 25 actions per slot. The complete-tape and attempted-halt equivalence with Agent 13's raw six-state semantics is separately established in `CrossCoverage.lean` and `CrossUpper.lean` (CI 41488773370). The new integration itself is checked by the targeted manual workflow `.github/workflows/agent4-turn-branch-audit.yml`; **its original-source CI result is pending**. The constituent turning-ray and exact finite-halt proofs are in Agent 8's `RayTurnExample.lean` and `FiniteHalting.lean`.
+
+This is a nontrivial branch of the actual six-state enumeration, but its leaves are elementary constructed cylinders, not historic holdouts. It supplies no new BB(6) bound, no champion, and no full global cover. Its value is the first integrated example in this dossier with both an exact halting score and a genuine nonhalting turning orbit inside one proof-carrying global branch.
+
 ## Semantic bridge and authenticated-root integration attempt
 
 `RelativeTape.lean` is independently source-certified: a relative tape consisting of a current symbol and two infinite Boolean streams is mapped to Agent8's absolute `Int → Bool` tape, preserving every cell, current state, head coordinate, ordinary step, blank initial configuration and halting/no-successor semantics.
@@ -33,7 +50,7 @@ The rooted singleton has mass one. Even with this authenticated leaf, an exhaust
 
 ## Reproduction
 
-The existing manually dispatched workflow `.github/workflows/agent4-p1-cone2398.yml` checks:
+The targeted manual workflow `.github/workflows/agent4-turn-branch-audit.yml` compiles the unchanged Agent 8 `Frontier`, `RayClosed`, `RayChecker`, `RayEntry`, `RayFinite`, `FiniteHalting`, and `RayTurnExample` modules, then compiles Agent 4 `FrontierAudit` and `FrontierMass`, Agent 8 `IncrementalAudit`, and the new `TurnBranchAudit.lean`. The broader manually dispatched workflow `.github/workflows/agent4-p1-cone2398.yml` checks:
 1. all original Agent8 source files and `FrontierAudit`, `FrontierMass`, `FrontierClose`;
 2. `FrontierAuditExample`, `FrontierAuditSearch` and `FrontierAuditBench` using the original decider dependency chain;
 3. `RelativeTape`; and
