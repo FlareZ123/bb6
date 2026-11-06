@@ -9,6 +9,14 @@ def indexShift (m : Nat) : Nat → Nat
   | 0 => m
   | t+1 => 64*indexShift m t+91
 
+private theorem indexShift_base (m t : Nat) :
+    m≤indexShift m t := by
+  induction t with
+  | zero => simp [indexShift]
+  | succ t ih =>
+      simp only [indexShift]
+      omega
+
 private theorem indexShift_lower (m n t : Nat) (hbase : n+4≤m) :
     n+6*t+4 ≤ indexShift m t := by
   induction t with
@@ -45,8 +53,17 @@ private theorem indexShift_linear (m n r t : Nat)
 
 /-- An exact low-family stopping equation plus a dyadic index relation
 is impossible on Machine C's authentic blank section orbit. -/
+private theorem four_linear_power (m : Nat) :
+    4*m+4 ≤ (2:Nat)^(m+5) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      have he : m+1+5=(m+5)+1 := by omega
+      rw [he,Nat.pow_succ]
+      omega
+
 theorem low_linear_stop_no_root (n m k r : Nat)
-    (hn : 2≤n) (hne : n%2=0) (hm : n+4≤m) (hr : r≤9)
+    (hn : 2≤n) (hne : n%2=0) (hm : n+4≤m) (hr : r≤m)
     (hlin : 9*m+13+5*(2:Nat)^(n+2)=r*2^(n+4))
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
@@ -73,6 +90,14 @@ theorem low_linear_stop_no_root (n m k r : Nat)
     change (2:Nat)^5 ∣ 2^(2*m-n+1)
     exact Nat.pow_dvd_pow 2 (by omega)
   have ht32 : 32≤T := Nat.le_of_dvd hTpos hd32
+  have hpDiv : (2:Nat)^(m+5) ∣ T := by
+    dsimp [T]
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have htpow : (2:Nat)^(m+5) ≤ T :=
+    Nat.le_of_dvd hTpos hpDiv
+  have hTlinear : 4*m+4≤T := by
+    have h := four_linear_power m
+    omega
   let u := 3*T+5-4*r
   have hdiff : 4*r≤3*T+5 := by omega
   have hu : 9≤u := by dsimp [u]; omega
@@ -111,8 +136,11 @@ theorem low_shifted_depth_unreachable (t k : Nat)
   have hm : 6+6*t+4 ≤ indexShift 539 t :=
     indexShift_lower 539 6 t (by decide)
   have hne : (6+6*t)%2=0 := by omega
+  have hr : 6 ≤ indexShift 539 t := by
+    have h := indexShift_base 539 t
+    omega
   exact low_linear_stop_no_root (6+6*t) (indexShift 539 t) k 6
-    (by omega) hne hm (by decide) hlin hstop
+    (by omega) hne hm hr hlin hstop
 
 
 /-- Covers every second even dyadic depth from n=2. The base t=0
@@ -127,8 +155,11 @@ theorem low_shifted_depth_two (t k : Nat)
   have hm : 2+6*t+4 ≤ indexShift 11 t :=
     indexShift_lower 11 2 t (by decide)
   have hne : (2+6*t)%2=0 := by omega
+  have hr : 3 ≤ indexShift 11 t := by
+    have h := indexShift_base 11 t
+    omega
   exact low_linear_stop_no_root (2+6*t) (indexShift 11 t) k 3
-    (by omega) hne hm (by decide) hlin hstop
+    (by omega) hne hm hr hlin hstop
 
 /-- Covers every second even dyadic depth from n=4. The base t=0
 reproduces the earlier m=219 congruence representative. -/
@@ -142,8 +173,11 @@ theorem low_shifted_depth_four (t k : Nat)
   have hm : 4+6*t+4 ≤ indexShift 219 t :=
     indexShift_lower 219 4 t (by decide)
   have hne : (4+6*t)%2=0 := by omega
+  have hr : 9 ≤ indexShift 219 t := by
+    have h := indexShift_base 219 t
+    omega
   exact low_linear_stop_no_root (4+6*t) (indexShift 219 t) k 9
-    (by omega) hne hm (by decide) hlin hstop
+    (by omega) hne hm hr hlin hstop
 
 #print axioms low_shifted_depth_two
 #print axioms low_shifted_depth_four
