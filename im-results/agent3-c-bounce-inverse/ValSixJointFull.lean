@@ -410,10 +410,61 @@ theorem second_slope_family_previous_sieves (j m : Nat)
     exact ⟨h11,by omega⟩
   exact ⟨hval,h19⟩
 
+/-- Infinite low-124 parameter family removed by the merged low sieve. -/
+theorem low124_infinite_family_removed (r : Nat) :
+    ¬ lowAllowedValSixFull (128*(r+1)) := by
+  intro h
+  rcases h with ⟨_,hfilter⟩
+  exact hfilter ⟨by omega,by omega⟩
+
+/-- Infinite high-124 parameter family removed by the merged high sieve. -/
+theorem high124_infinite_family_removed (r : Nat) :
+    ¬ highAllowedValSixFull 31 (32+128*r) := by
+  intro h
+  rcases h with ⟨_,_,hfilter,_,_,_,_⟩
+  exact hfilter ⟨by omega,by omega,by omega⟩
+
+/-- Infinite second-slope family removed by the new Agent19 cylinder
+    pullback; the prior-sieve theorem below shows this family survived
+    the previous Agent3/11/19/29 restrictions. -/
+theorem second_slope_infinite_family_removed (r : Nat) :
+    ¬ highAllowedValSixFull 5 (28+128*r) := by
+  intro h
+  rcases h with ⟨_,_,_,hfilter,_,_,_⟩
+  exact hfilter ⟨by omega,by omega,by omega⟩
+
+/-- Infinite 25/4 rectangle family removed by the merged high sieve. -/
+theorem rectangle25_infinite_family_removed (r : Nat) :
+    ¬ highAllowedValSixFull 11 (4+32*r) := by
+  intro h
+  rcases h with ⟨_,_,_,_,hfilter,_,_⟩
+  exact hfilter ⟨by omega,by omega,by omega⟩
+
+/-- Infinite 27/0 rectangle family removed by the merged high sieve. -/
+theorem rectangle27_infinite_family_removed (r : Nat) :
+    ¬ highAllowedValSixFull 28 (21+32*r) := by
+  intro h
+  rcases h with ⟨_,_,_,_,_,hfilter,_⟩
+  exact hfilter ⟨by omega,by omega,by omega⟩
+
+/-- The explicit infinite second-slope family is admitted by the
+    previous high sieve before the new cylinder exclusion. -/
+theorem second_slope_infinite_family_previous_sieves (r : Nat) :
+    highAllowedValSixThree 5 (28+128*r) ∧
+      BB6.Agent19Five.highAllowed 5 (28+128*r) := by
+  exact second_slope_family_previous_sieves 5 (28+128*r)
+    (by omega) (by omega) (by omega)
+
 #print axioms blank_halts_iff_joint_val_six_full
 #print axioms second_one_family_previous_sieves
 #print axioms second_one_family_removed_by_affine_four
 #print axioms low_124_family_previous_sieve
 #print axioms second_slope_family_previous_sieves
+#print axioms low124_infinite_family_removed
+#print axioms high124_infinite_family_removed
+#print axioms second_slope_infinite_family_removed
+#print axioms rectangle25_infinite_family_removed
+#print axioms rectangle27_infinite_family_removed
+#print axioms second_slope_infinite_family_previous_sieves
 
 end BB6.Agent3ValSix
