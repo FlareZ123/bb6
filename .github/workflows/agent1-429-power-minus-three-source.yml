@@ -31,3 +31,4 @@ jobs:
           lean -o im-results/agent1-429-power-minus-three/PowerMinusThreeArithmetic.olean im-results/agent1-429-power-minus-three/PowerMinusThreeArithmetic.lean
           lean -DmaxHeartbeats=10000000 -DmaxRecDepth=16000 -o im-results/agent1-429-power-minus-three/PowerMinusThreeSource.olean im-results/agent1-429-power-minus-three/PowerMinusThreeSource.lean
           lean -DmaxHeartbeats=10000000 -DmaxRecDepth=16000 -o im-results/agent1-429-power-minus-three/PowerMinusThreeDeeper.olean im-results/agent1-429-power-minus-three/PowerMinusThreeDeeper.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-power-minus-three/PowerMinusThreeSeven.olean im-results/agent1-429-power-minus-three/PowerMinusThreeSeven.lean
