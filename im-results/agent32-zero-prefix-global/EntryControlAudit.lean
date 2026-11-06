@@ -25,6 +25,10 @@ def reverseTurnCases : List PartialMachine :=
 
 theorem reverseTurnCases_length : reverseTurnCases.length = 10 := by decide
 
+/-- Disjoint first actions make the ten full-table cylinders pairwise disjoint. -/
+theorem reverseTurnCases_initial_actions_nodup :
+    (reverseTurnCases.map (fun p => p initialSlot)).Nodup := by decide
+
 /-- Full original-source finite-tape ray checker certifies each of these
     ten two-slot sparse machines after *one* ordinary blank-root move.
     This is an evaluated finite theorem, not an assumed pattern. -/
