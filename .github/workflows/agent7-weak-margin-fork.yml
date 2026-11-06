@@ -100,5 +100,6 @@ jobs:
           lean -o "$b/RayTThreeGap.olean" "$b/RayTThreeGap.lean"
           lean -o "$b/RayTwoTierTThreeSelector.olean" "$b/RayTwoTierTThreeSelector.lean"
           lean -o "$g/EvenChainGap.olean" "$g/EvenChainGap.lean"
-          lean "$g/EvenChainFork.lean"
+          lean -o "$g/EvenChainFork.olean" "$g/EvenChainFork.lean"
+          lean "$g/EvenChainForkSpecial.lean"
           echo "Agent 7 weak-margin genuine-root two-tier fork certified."
