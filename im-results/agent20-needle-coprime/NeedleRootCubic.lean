@@ -46,7 +46,9 @@ private theorem reached_noninitial_has_parent (d : Nat)
       cases ps with
       | N p =>
         have hstep : highLevelNext (.N p) = some (.N d) := by
-          simpa only [hp, Option.bind_some] using hn
+          simp only [hp] at hn
+          change highLevelNext (.N p) = some (.N d) at hn
+          exact hn
         exact ⟨p,⟨n,hp⟩,hstep⟩
 
 /-- An exact blank-origin raw-machine halting criterion in which every
