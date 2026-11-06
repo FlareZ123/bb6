@@ -81,8 +81,10 @@ int main(int argc,char**argv) {
   std::cout<<"rect25 cells="<<rect25
            <<" quotient-admitted="<<rect25Seen
            <<" excluded="<<rect25-rect25Seen<<"\n";
-  std::cout<<"sample rect27 (59,480,0)="
+  std::cout<<"sample rect27 r=10 (j=28,m=341) (59,480,0)="
            <<int(seen[idx({59,480,0})])<<"\n";
+  std::cout<<"sample rect27 r=0 (j=28,m=21) (59,416,0)="
+           <<int(seen[idx({59,416,0})])<<"\n";
   std::cout<<"sample rect25 (25,484,0)="
            <<int(seen[idx({25,484,0})])<<"\n";
   // Complete residue cycles for four high/low parameter families.
