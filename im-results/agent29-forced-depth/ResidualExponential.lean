@@ -100,9 +100,43 @@ theorem second_stop_odd_residual_exponential
   rw [he,hpow]
   omega
 
+/-- Exponential growth dominates the linear correction for m at least three. -/
+theorem power_six_linear (m : Nat) (hm : 3≤m) :
+    6*m+14 ≤ 2^(m+2) := by
+  have hall : ∀ n:Nat, 6*(n+3)+14 ≤ 2^(n+5) := by
+    intro n
+    induction n with
+    | zero => decide
+    | succ n ih =>
+        have hpow : 2^((n+1)+5) = 2*2^(n+5) := by
+          have he:(n+1)+5=(n+5)+1 := by omega
+          rw [he,Nat.pow_succ]
+          omega
+        rw [hpow]
+        omega
+  have h := hall (m-3)
+  have he1:m-3+3=m := by omega
+  have he2:m-3+5=m+2 := by omega
+  rw [he1,he2] at h
+  exact h
+
+/-- No odd-index high stopping input with m>=3 can have residual below 13
+    under the exact affine power scale. -/
+theorem second_stop_odd_residual_ge_thirteen
+    (j m k d Y : Nat)
+    (hpos : 3≤m) (hodd : m%2=1)
+    (hstop : k+j+3*m+5 = 2^(2*m+2)*(j+3))
+    (hscale : 2^d*(Y+2)=k+2) : 13≤Y := by
+  have hb := second_stop_odd_residual_exponential j m k d Y
+    (by omega) hodd hstop hscale
+  have hp := power_six_linear m hpos
+  omega
+
 #print axioms oddRepunit
 #print axioms repunit_pow
 #print axioms repunit_odd
 #print axioms repunit_ge
 #print axioms second_stop_odd_residual_exponential
+#print axioms power_six_linear
+#print axioms second_stop_odd_residual_ge_thirteen
 end BB6.Agent29Barrier
