@@ -92,6 +92,28 @@ Shorter paths were already excluded by their dyadic coordinate. Therefore \(d_{G
 
 For \(p=1\), the graph has \(q>1\) distinct even vertices, so its diameter is at least one. Agent 22's original zero-hub/coherent construction gives the matching one-step upper bound.
 
+## Stronger result: the entire \(-2\) fiber consists of diameter sources
+
+The lower-witness construction above can be made **uniform in its source's odd residue**, producing an exact eccentricity classification rather than one example.
+
+**Corollary (universal maximal-eccentricity fiber).** Fix \(p\ge1\), odd \(q\ge1\), and *any* even source residue \(r\pmod{2^p q}\) satisfying
+\[
+r\equiv-2\pmod{2^p}.
+\]
+Its eccentricity in both the generic graph \(G_m\) and unrestricted legal graph \(H_m\) equals the diameter in (1). There are exactly \(q\) such source vertices, an exact fraction \(2^{1-p}\) of the total even-residue vertices. The same statement is true for the coherent free-start distance function.
+
+**Proof.** For \(q=1\) and \(p\ge2\), the forced corridor cannot hit any dyadic-zero residue before \(k=\lfloor p/2\rfloor\) returns, and the already proved diameter upper bound is \(k\). For \(p=1,q=1\), the sole vertex has eccentricity zero.
+
+For \(q>1,p=1\), every even source residue belongs to the dyadic-zero fiber; the known outgoing-zero hub realizes all targets in one step, and each source has another distinct target.
+
+For \(q>1\) and odd \(p=2k+1\ge3\), let \(r_q\) be **arbitrary**. The first \(k\) returns are forced to have odd coordinate \(f_q^k(r_q)\). Choose any target with dyadic coordinate zero and odd coordinate \(f_q^k(r_q)+1\pmod q\). The original lower argument applies with no restriction on \(r_q\).
+
+For \(q>1\) and even \(p=2k\), the final block's odd residue is still given by (4) for **any** \(r_q\). Choose an odd prime \(\ell\mid q\), and set \(z=f_\ell^k(r_q\bmod\ell)\). If \(\ell=3\), the final odd residue modulo three lies in \(\{z,1\}\): \(h=0\) gives \(z\), while every \(h\ge1\) yields \(1\). Since this set has size at most two, choose a missing residue \(w\pmod3\). If \(\ell\ne3\), the multiplier \((3/2)^h\) is a unit modulo \(\ell\) for every \(h\). If \(z=1\), every final residue equals \(1\pmod\ell\), so take \(w=0\). If \(z\ne1\), no final residue is \(1\pmod\ell\), so take \(w=1\). In all cases choose a target \(s\) with \(s\equiv0\pmod{2^p}\) and \(s\equiv w\pmod\ell\), possible by CRT. No path of at most \(k\) returns reaches \(s\). The earlier full-branch exceptional-source argument leaves this unchanged.
+
+Both corresponding upper bounds apply from every vertex, so each source in the entire \(-2\) fiber has maximal eccentricity. Since there are \(q\) sources among \(2^{p-1}q\) even residues, their fraction is \(2^{1-p}\). Every coherent path is also a synthetic path, while established coherent upper constructions attain the same universal bound. QED.
+
+The [finite complete graph regression](mixed_diameter_certificate.py) can additionally verify the corollary for every \(-2\)-fiber source at all tested moduli; the original standalone finite implementation separately checked 409 such sources across its 51 complete graphs. The universal corollary follows from the displayed prime-residue argument, not those tests.
+
 ## Strengthening to all legal first-even return branches
 
 The published Sheep section relation has exactly one other **nonterminal** branch: if \(x=3\cdot2^a\) (\(a\ge0\)), then \(F(x)=x+a+3\). The section halts on the remaining odd-part-one powers. For even-section inputs \(a\ge1\). The only exceptional even input of valuation \(a=1\) is \(x=6\), whose first section successor is \(F(6)=10\), already even. Thus its full first-even return is **exactly \(6\to10\)**. Standalone [SheepCorridor.lean](SheepCorridor.lean) additionally checks `special_at_one: specialFirst 1 = 10` (no axioms) and `ten_not_dyadic_zero: ∀ p≥2, 10%2^p ≠0` (axioms `[propext]`). These are source-formula-compatible arithmetic certificates, with no claimed import of the original Cryptids Step relation.
