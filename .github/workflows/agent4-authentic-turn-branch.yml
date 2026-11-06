@@ -1,0 +1,64 @@
+name: Agent 4 authentic-root and exact-score BB6 branch (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+      - name: Install pinned upstream Lean 4.35.0-rc4
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify the pinned Cryptids source and A6 machine
+        working-directory: cryptids
+        run: |
+          test "$(git rev-parse HEAD)" = "c86f15861709b76042998c5211c7b2f83991621b"
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH
+      - name: Compile the authentic-root and exact-score global branch
+        working-directory: cryptids
+        run: |
+          mkdir -p BB6Agent4
+          cp ../im-results/agent8-coverage-contract/Frontier.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/RayClosed.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/RayChecker.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/RayEntry.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/RayFinite.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/FiniteHalting.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/RayTurnExample.lean BB6Agent4/
+          cp ../im-results/agent8-coverage-contract/IncrementalAudit.lean BB6Agent4/
+          for m in RelativeTape FrontierAudit FrontierMass FrontierClose CryptidsTapeAdapter SingletonFrontier CryptidsF287 CryptidsF287Global TurnBranchAudit AuthenticTurnBranchAudit; do
+            cp "../im-results/agent4-coverage-smoke/$m.lean" BB6Agent4/
+          done
+          export LEAN_PATH="BB6Agent4"
+          lake env lean -o BB6Agent4/Frontier.olean BB6Agent4/Frontier.lean
+          lake env lean -o BB6Agent4/RelativeTape.olean BB6Agent4/RelativeTape.lean
+          lake env lean -o BB6Agent4/FrontierAudit.olean BB6Agent4/FrontierAudit.lean
+          lake env lean -o BB6Agent4/FrontierMass.olean BB6Agent4/FrontierMass.lean
+          lake env lean -o BB6Agent4/FrontierClose.olean BB6Agent4/FrontierClose.lean
+          lake env lean -o BB6Agent4/CryptidsTapeAdapter.olean BB6Agent4/CryptidsTapeAdapter.lean
+          lake env lean -o BB6Agent4/SingletonFrontier.olean BB6Agent4/SingletonFrontier.lean
+          lake env lean -o BB6Agent4/CryptidsF287.olean BB6Agent4/CryptidsF287.lean
+          lake env lean -o BB6Agent4/CryptidsF287Global.olean BB6Agent4/CryptidsF287Global.lean
+          for m in RayClosed RayChecker RayEntry RayFinite; do
+            lake env lean -o "BB6Agent4/$m.olean" "BB6Agent4/$m.lean"
+          done
+          lake env lean -o BB6Agent4/FiniteHalting.olean BB6Agent4/FiniteHalting.lean
+          lake env lean -o BB6Agent4/RayTurnExample.olean BB6Agent4/RayTurnExample.lean
+          lake env lean -o BB6Agent4/IncrementalAudit.olean BB6Agent4/IncrementalAudit.lean
+          lake env lean -o BB6Agent4/TurnBranchAudit.olean BB6Agent4/TurnBranchAudit.lean
+          lake env lean -o BB6Agent4/AuthenticTurnBranchAudit.olean BB6Agent4/AuthenticTurnBranchAudit.lean
