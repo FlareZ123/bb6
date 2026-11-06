@@ -66,9 +66,13 @@ theorem oneExactCandidates_length (x y v u : Nat) :
       secNext (oneParentAtValuation x y v)=some (x,y)
   · simp [h1]
   · by_cases h2 : x=2 ∧ y=5 ∧ secNext (1,2)=some (x,y)
-    · simp [h1,h2]
+    · have h1' : ¬(u=0 ∧ 4≤v ∧ secNext (oneParentAtValuation 2 5 v)=some (2,5)) := by
+        simpa [h2.1,h2.2.1] using h1
+      simp [h1',h2]
     · by_cases h3 : x=0 ∧ y=7 ∧ secNext (1,3)=some (x,y)
-      · simp [h1,h2,h3]
+      · have h1' : ¬(u=0 ∧ 4≤v ∧ secNext (oneParentAtValuation 0 7 v)=some (0,7)) := by
+          simpa [h3.1,h3.2.1] using h1
+        simp [h1',h2,h3]
       · simp [h1,h2,h3]
 
 theorem pow2_odd_factor_unique (n v u : Nat)
@@ -137,13 +141,13 @@ theorem zero_exception_direct_parity (x y v u : Nat)
     simpa [k,zeroParentAtValuation] using hz.2.2
   have hk0 : k≠0 := by
     intro hk
-    subst k
-    have hp := (section_preimage_all_iff 0 0 x y).mp hkedge
+    have hkedge0 : secNext (0,0)=some (x,y) := by simpa [k,hk] using hkedge
+    have hp := (section_preimage_all_iff 0 0 x y).mp hkedge0
     simp [sectionPreimageAll] at hp
   have hk1 : k≠1 := by
     intro hk
-    subst k
-    have hp := (section_preimage_all_iff 0 1 x y).mp hkedge
+    have hkedge1 : secNext (0,1)=some (x,y) := by simpa [k,hk] using hkedge
+    have hp := (section_preimage_all_iff 0 1 x y).mp hkedge1
     simp [sectionPreimageAll] at hp
     omega
   have hp := (section_preimage_all_iff 0 k x y).mp hkedge
@@ -152,14 +156,13 @@ theorem zero_exception_direct_parity (x y v u : Nat)
   have hpow : 2^(n+3)=2^v*(2*u+1) := by
     calc
       2^(n+3)=2^n*2^3 := by rw [Nat.pow_add]
-      _=2^n*8 := by decide
+      _=2^n*8 := by rw [show (2:Nat)^3=8 by decide]
       _=x+y := hs.symm
       _=2^v*(2*u+1) := hfact
   obtain ⟨hv,huzero⟩ := pow2_odd_factor_unique (n+3) v u hpow
   have hsumEven : 2∣x+y := by
     rw [hfact,huzero]
-    change 2∣2^v
-    exact Nat.pow_dvd_pow 2 (by omega)
+    simpa using Nat.pow_dvd_pow 2 (by omega)
   obtain ⟨w,hw⟩ := hsumEven
   have hx : x%2=0 := by omega
   have hn : n%2=1 := by omega
@@ -198,26 +201,26 @@ theorem one_exception_direct_parity (x y v u : Nat)
     simpa [k,oneParentAtValuation] using hhigh.2.2
   have hk0 : k≠0 := by
     intro hk
-    subst k
-    have hp := (section_preimage_all_iff 1 0 x y).mp hkedge
+    have hkedge0 : secNext (1,0)=some (x,y) := by simpa [k,hk] using hkedge
+    have hp := (section_preimage_all_iff 1 0 x y).mp hkedge0
     simp [sectionPreimageAll] at hp
     omega
   have hk1 : k≠1 := by
     intro hk
-    subst k
-    have hp := (section_preimage_all_iff 1 1 x y).mp hkedge
+    have hkedge1 : secNext (1,1)=some (x,y) := by simpa [k,hk] using hkedge
+    have hp := (section_preimage_all_iff 1 1 x y).mp hkedge1
     simp [sectionPreimageAll] at hp
     omega
   have hk2 : k≠2 := by
     intro hk
-    subst k
-    have hp := (section_preimage_all_iff 1 2 x y).mp hkedge
+    have hkedge2 : secNext (1,2)=some (x,y) := by simpa [k,hk] using hkedge
+    have hp := (section_preimage_all_iff 1 2 x y).mp hkedge2
     simp [sectionPreimageAll] at hp
     omega
   have hk3 : k≠3 := by
     intro hk
-    subst k
-    have hp := (section_preimage_all_iff 1 3 x y).mp hkedge
+    have hkedge3 : secNext (1,3)=some (x,y) := by simpa [k,hk] using hkedge
+    have hp := (section_preimage_all_iff 1 3 x y).mp hkedge3
     simp [sectionPreimageAll] at hp
     omega
   have hp := (section_preimage_all_iff 1 k x y).mp hkedge
@@ -229,14 +232,13 @@ theorem one_exception_direct_parity (x y v u : Nat)
   · have hpow : 2^(n+4)=2^v*(2*u+1) := by
       calc
         2^(n+4)=2^n*2^4 := by rw [Nat.pow_add]
-        _=2^n*16 := by decide
+        _=2^n*16 := by rw [show (2:Nat)^4=16 by decide]
         _=x+y+1 := hs.symm
         _=2^v*(2*u+1) := hfact
     obtain ⟨hv,huzero⟩ := pow2_odd_factor_unique (n+4) v u hpow
     have hsumOdd : 2∣x+y+1 := by
       rw [hfact,huzero]
-      change 2∣2^v
-      exact Nat.pow_dvd_pow 2 (by omega)
+      simpa using Nat.pow_dvd_pow 2 (by omega)
     obtain ⟨w,hw⟩ := hsumOdd
     have hx : x%2=1 := by omega
     have hn : n%2=0 := by omega
