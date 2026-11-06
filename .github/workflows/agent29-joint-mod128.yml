@@ -180,3 +180,6 @@ jobs:
           for f in RootMod128Arithmetic RootMod128Inverse RootMod128Source RootMod128High RootMod128HighSource RootMod128ThreeArithmetic RootMod128ThreeSource RootMod128ThreeHigh RootMod128FourArithmetic RootMod128FourSource RootMod128FourHigh RootMod128AfterSevenHigh JointMod128Root JointNonredundant JointExplicitFamilies RootMod128Sharp; do
             lean -o "$f.olean" "$f.lean"
           done
+          # Agent29: prior-filter admissibility of all m=1, j=10 modulo32 indices.
+          cp ${GITHUB_WORKSPACE}/im-results/agent29-forced-depth/JointM1PriorAllowed.lean .
+          lean JointM1PriorAllowed.lean
