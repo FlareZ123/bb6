@@ -105,15 +105,12 @@ theorem source_mid_cost_exceptional_last_reset_depth
     have hkm : k+(mp+t+1)+n+7=7*2^n := by omega
     have hpow4 : 2^(n+4)=16*2^n := by
       rw [Nat.pow_add]
-      norm_num
       omega
     have hpow3 : 2^(n+3)=8*2^n := by
       rw [Nat.pow_add]
-      norm_num
       omega
     have hpow2 : 2^(n+2)=4*2^n := by
       rw [Nat.pow_add]
-      norm_num
       omega
     have hpowUpper : 2^(t+2)<16*2^n := by
       rw [← hpow1]
