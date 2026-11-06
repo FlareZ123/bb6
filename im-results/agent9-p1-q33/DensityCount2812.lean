@@ -1,4 +1,6 @@
 import DensityCount700
+set_option maxRecDepth 32768
+set_option maxHeartbeats 0
 
 namespace BB6.Agent9ShallowDensity
 
