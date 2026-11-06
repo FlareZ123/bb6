@@ -102,7 +102,7 @@ theorem n22_zero_row_segment (k : Nat) (hk : k≤331127) :
       k*76≤331127*76 := Nat.mul_le_mul_right 76 hk
       _=25165652 := hmul
   have hhi : 25165912+k*(3*22+10)+3*22+18≤12*2^22 := by
-    rw [show 3*22+10=76 by decide, show 3*22+18=84 by decide, hpow]
+    rw [show 3*22+10=76 by decide, hpow]
     omega
   simpa [show 22+1=23 by decide,
     show 3*22+10=76 by decide, Nat.mul_comm] using
