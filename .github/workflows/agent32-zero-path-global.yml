@@ -2,6 +2,12 @@ name: Agent 32 global zero-prefix frontier (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      evaluate_mass:
+        description: 'Run expensive interpreted exact combined-frontier mass report'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -34,13 +40,17 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
           lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
-          lean im-results/agent32-zero-prefix-global/ControlPathMassEval.lean
       - name: Independently exhaust the six read-zero rows
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-union.cpp -o /tmp/zero-union-check
           /tmp/zero-union-check
+      - name: Evaluate exact combined frontier mass (explicitly requested only)
+        if: ${{ inputs.evaluate_mass }}
+        run: |
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global"
+          lean im-results/agent32-zero-prefix-global/ControlPathMassEval.lean
 
   fresh-ray-entry-proof:
     runs-on: ubuntu-latest
