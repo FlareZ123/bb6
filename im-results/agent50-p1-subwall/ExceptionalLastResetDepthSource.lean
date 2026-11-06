@@ -413,6 +413,8 @@ theorem source_exceptional_last_reset_depth_window
       dp+14*2^n=2^(t+3)+2*mp+2*n+7 ∧
       m=mp+t+1 ∧
       2^(t+3)=2*k+dp+2*t+9 ∧
+      14*2^n≤2^(t+3)+2*mp+2*n+6 ∧
+      mp+n+7+2^(t+1)≤7*2^n ∧
       t≤n+1 := by
   have h5 : CountCone (14*2^n-2*n-16) 3 b 5 m z := by
     simpa [hd] using h
@@ -472,7 +474,15 @@ theorem source_exceptional_last_reset_depth_window
     have hdepthExact : 2^(t+3)=2*k+dp+2*t+9 := by
       rw [hpowStep, ← hpow1]
       omega
-    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepthExact,htUpper⟩
+    have hcostLowerPrefix : 14*2^n≤2^(t+3)+2*mp+2*n+6 := by omega
+    have hpow3 : 2^(t+3)=4*2^(t+1) := by
+      rw [show t+3=t+1+2 by omega, Nat.pow_add]
+      norm_num
+    have hbpBound : 8+2^(t+3)≤4*k+4*t+12 := by omega
+    have hcostUpperPrefix : mp+n+7+2^(t+1)≤7*2^n := by
+      rw [hpow3] at hbpBound
+      omega
+    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepthExact,hcostLowerPrefix,hcostUpperPrefix,htUpper⟩
 
 #print axioms BB6.Agent50ExceptionalDepth.source_exceptional_last_reset_depth_window
 
