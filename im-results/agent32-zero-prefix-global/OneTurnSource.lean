@@ -32,7 +32,9 @@ theorem oneTurnRay_cover (p : PartialMachine) (q : Fin 6) (dir : Bool)
   have hwa : w initialSlot = some a := by
     simpa [w, a, oneTurnWitness, hA]
   have hentry : run w 1 blank = some c := by
-    simp [run, rawStep, readSlot, blank, c, hwa]
+    change (w initialSlot).map (applyMove blank) = some c
+    rw [hwa]
+    rfl
   have hknown :
       ∀ i, i < 1 → ∀ d, run w i blank = some d →
         p (readSlot d) = some (w (readSlot d)) := by
@@ -43,10 +45,12 @@ theorem oneTurnRay_cover (p : PartialMachine) (q : Fin 6) (dir : Bool)
       have hs : some blank = some d := by simpa [run] using hd
       exact (Option.some.inj hs).symm
     subst d
-    simpa [readSlot, blank, initialSlot, w, oneTurnWitness, hA, a]
+    change p initialSlot = some (w initialSlot)
+    rw [hA, hwa]
+    rfl
   have hblank : ∀ x, Ahead (!dir) c.head x → c.tape x = false := by
     intro x _
-    simp [c, applyMove, blank, a]
+    by_cases hx : x = 0 <;> simp [c, applyMove, blank, a, hx]
   exact prefix_drift_cover p w states (!dir) 1 c B
     hw hknown hentry hq hblank hclosed
 
