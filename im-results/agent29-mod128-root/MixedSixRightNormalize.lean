@@ -28,7 +28,7 @@ termination_by x+2*y
 decreasing_by
   all_goals
     simp_wf
-    simp only [mixedSixRightGate,sixEvenRightGate] at *
+    simp only [mixedSixRightGate, BB6.Agent19Seven.mixedEvenRightGate, sixEvenRightGate] at *
     omega
 
 theorem mixedSix_reach_iff_normalize (x y : Nat) :
