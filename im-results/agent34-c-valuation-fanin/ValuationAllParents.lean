@@ -57,7 +57,7 @@ theorem direct_parent_mem_candidates (a k x y : Nat)
   have hsource : secNext (x+y-2,(y-2)/2)=some (x,y) := by
     simpa [hcoord.1,hcoord.2] using hedge
   unfold directExactCandidates
-  simp [hpar,hsource]
+  simp [hpar,hsource,hcoord.1,hcoord.2]
 
 theorem zero_parent_sum_even (k x y : Nat)
     (hy : 5≤y) (hedge : secNext (0,k)=some (x,y)) :
