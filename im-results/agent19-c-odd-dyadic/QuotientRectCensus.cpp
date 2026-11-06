@@ -85,4 +85,32 @@ int main(int argc,char**argv) {
            <<int(seen[idx({59,480,0})])<<"\n";
   std::cout<<"sample rect25 (25,484,0)="
            <<int(seen[idx({25,484,0})])<<"\n";
+  // Complete residue cycles for four high/low parameter families.
+  int low124Cycle=0, high124Cycle=0, secondSlopeCycle=0, rect27NewCycle=0;
+  for(int r=0;r<4;r++){
+    const int yl=(124-(384*r)%512+512)%512;
+    const int yh=(380-(384*r)%512+512)%512;
+    const int ys=(418-(384*r)%512+512)%512;
+    const int al=seen[idx({1,yl,0})];
+    const int ah=seen[idx({65,yh,0})];
+    const int as=seen[idx({13,ys,0})];
+    low124Cycle+=al;
+    high124Cycle+=ah;
+    secondSlopeCycle+=as;
+    std::cout<<"cycle r="<<r<<" low124="<<yl<<":"<<al
+             <<" high124="<<yh<<":"<<ah
+             <<" secondSlope="<<ys<<":"<<as<<"\n";
+  }
+  for(int r=0;r<16;r++){
+    const int y=(416-(96*r)%512+512)%512;
+    const int admitted=seen[idx({59,y,0})];
+    rect27NewCycle+=admitted;
+    std::cout<<"rect27-new r="<<r<<" y="<<y
+             <<" admitted="<<admitted<<"\n";
+  }
+  std::cout<<"family cycle admissions: low124="<<low124Cycle<<"/4"
+           <<" high124="<<high124Cycle<<"/4"
+           <<" secondSlope="<<secondSlopeCycle<<"/4"
+           <<" rect27new="<<rect27NewCycle<<"/16\n";
+
 }
