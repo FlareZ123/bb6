@@ -24,11 +24,11 @@ jobs:
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/agent3-valuation-high-count/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent3-valuation-high-count/
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse,BounceAllExact,SectionAllInverse}.lean /tmp/agent3-valuation-high-count/
-          cp im-results/agent34-c-valuation-fanin/{ValuationArithmetic,ValuationSource,ValuationHighCount,ValuationFullCount,ValuationAllParents,ValuationDegreeBound}.lean /tmp/agent3-valuation-high-count/
+          cp im-results/agent34-c-valuation-fanin/{ValuationArithmetic,ValuationSource,ValuationHighCount,ValuationFullCount,ValuationAllParents,ValuationDegreeBound,ValuationTwoAdicSplit}.lean /tmp/agent3-valuation-high-count/
           cd /tmp/agent3-valuation-high-count
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse ValuationArithmetic ValuationSource ValuationHighCount ValuationFullCount ValuationAllParents ValuationDegreeBound; do
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse ValuationArithmetic ValuationSource ValuationHighCount ValuationFullCount ValuationAllParents ValuationDegreeBound ValuationTwoAdicSplit; do
             echo "Compiling $f"
             lean -o "$f.olean" "$f.lean"
           done
