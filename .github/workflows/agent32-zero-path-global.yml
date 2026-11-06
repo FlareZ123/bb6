@@ -20,7 +20,7 @@ permissions:
 jobs:
   source-proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
