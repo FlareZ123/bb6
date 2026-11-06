@@ -34,7 +34,7 @@ theorem source_low_cost_exceptional_ends_in_positive_reset
     (14*2^n-2*n-16) 3 b d m hoddEnd
   have hnP : n ≤ 2^n := n_le_two_pow n
   have hP4 : 4 ≤ (2:Nat)^n :=
-    Nat.pow_le_pow_right (by decide) (by omega)
+    Nat.pow_le_pow_right (show 0 < (2:Nat) from by decide) (by omega)
   have hroot : (14*2^n-2*n-16)+2*n+16=14*2^n := by omega
   have hbigEnd : 7*2^n < b+12 := by omega
   have hoddPre : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
