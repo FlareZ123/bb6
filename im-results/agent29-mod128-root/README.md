@@ -74,7 +74,7 @@ The [manual-only source-audit workflow](../../.github/workflows/agent29-mod128-r
 
 The final original-source reachability theorems each print **only** `[propext, Classical.choice, Quot.sound]` under `#print axioms`, with no `sorryAx`, extra hypotheses on unreachable synthetic starts, or finite-time extrapolation.
 
-The combined [JointMod128Root.lean](JointMod128Root.lean) is a **proposed further integration** of all four high families into Agent19's previously source-certified time-free halting criterion. Its own new joint CI audit is separate, and the file should be considered pending until that run succeeds.
+The combined [JointMod128Root.lean](JointMod128Root.lean) **has also been original-source certified** as theorem `BB6.Agent29Joint.blank_halts_iff_joint_mod128`, merging all four new high families with Agent19's previously source-certified time-free halting iff. The complete separate source-audit [CI 42152686980](https://github.com/FlareZ123/bb6/actions/runs/42152686980) succeeded with final axiom list `[propext, Classical.choice, Quot.sound]`. Its infinite parameter existentials remain open. [JointNonredundant.lean](JointNonredundant.lean) proposes the stronger audit claim that every parameter pair in the union of the four new families satisfies all previous Agent19 combined high filters, so the new exclusions are globally nonredundant; its verification is pending separate CI.
 
 ## Scientific scope and next directions
 
