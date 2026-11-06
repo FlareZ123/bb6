@@ -56,3 +56,26 @@ Agent43 previously gave the last-reset cost tradeoff on paper for exact wall equ
 3. Investigate the complementary `m>2^n` sector and the exceptional-right-coordinate exit. The present theorem does not constrain them.
 
 **Research status:** a new source-verified, fully quantified necessary obstruction; no six-state machine classified, no exact BB(6) value.
+
+## Additional certified original-source results, 2026-11-06 02:29 UTC
+
+These results supersede the earlier "next questions" section. They were completed, kernel-checked and source-audited after the first tradeoff theorem. All formulas refer to **exact source `BB6.Agent28.CountCone (14*2^n-2*n-16) 3 b d m z`**, unrestricted inverse history depth, finite positive-reset count `z` preserved faithfully, and natural counters.
+
+1. **All-cost subwall logarithmic obstruction** [SubwallLog.lean](SubwallLog.lean): for `n>=14`, every genuine `OddCone` ending at `b<=4(m+n)` satisfies `2^(n-m)<n`. This generalizes the original exact-wall theorem. The weaker condition `K<=D+3m+2n+4`, rather than exact equality, suffices for the dyadic word invariant. Original-source CI [42148404771](https://github.com/FlareZ123/bb6/actions/runs/42148404771) succeeded.
+2. **All-reset polynomial count obstruction for the full subwall** [SubwallBudget.lean](SubwallBudget.lean): for `n>=42,z>=1`, `b<=4(m+n)` implies `2^n<=24^z*(n+2)^(2z+2)`, independent of `m`. The actual [CountFinal source](../agent50-p1-two-reset/WallCountLowerBound.lean) and `ResetSkeleton` were recompiled from SHA-256 checked archives. CI [42148943487](https://github.com/FlareZ123/bb6/actions/runs/42148943487) succeeded.
+3. **Source-certified n>=148 all-count strict cost gap throughout the subwall**: [SubwallNear.lean](SubwallNear.lean) proves `3*2^z<=2*(m+n+3)` if `n>=14,z>=1,m<=n+z,b<=4(m+n)`; this combines with the original n>=148 exact universal numeric bridge and (2) to exclude `m<=n+z` whenever `z>=1`. [ZeroArithmetic.lean](ZeroArithmetic.lean) proves separately that a zero-positive-reset upper tail with `m<=n` has `2^m<=2*(n+2)`. [SubwallAllCount.lean](SubwallAllCount.lean) combines that divisibility bound, original source logarithmic gap and the original octic growth bound to handle `z=0`. Consequently the final original-source theorem
+   ```
+   n>=148, CountCone critical b d m z, b<=4*(m+n) => n+z<m
+   ```
+   holds for **all natural z including zero**. Original-source CI [42149985248](https://github.com/FlareZ123/bb6/actions/runs/42149985248), job 127670590246, succeeded; the final `#print axioms` audit has only `propext, Classical.choice, Quot.sound` and no other axioms. This directly strengthens Agent43's originally proved `b=4(m+n)` cost gap to the entire below-wall region.
+4. **All-width, all-reset necessary polynomial count bound** [OffsetLog.lean](OffsetLog.lean), [OffsetBudget.lean](OffsetBudget.lean): for `n>=42, r>=0, z>=1`, every genuine `CountCone` with `b<=4*(m+n+r)` must satisfy
+   ```
+   2^n <= 24^z*(n+2)^(2*z+1)*(n+r).
+   ```
+   The source odd-word cost gap is `2^(n-m)<n+r`. This proof reuses the original exact `ResetSkeleton.invariant` and carries its polynomial cost envelope through the offset parameter with no bound on `m`. The explicit P1 small-left specialization for `n=16q+2,q>=3`, `b<=4*m+192*q+40`, is
+   ```
+   2^(16*q+2) <= 24^z*(16*q+4)^(2*z+1)*(48*q+10).
+   ```
+   Source CI [42150387600](https://github.com/FlareZ123/bb6/actions/runs/42150387600), job 127671935624, succeeded; all terminal axiom audits contain standard Lean axioms only.
+
+All compilation used [manual-only source workflow](../../.github/workflows/agent50-p1-subwall-source.yml) with unchanged, real original P1 modules and SHA-checked archived reset sources; no mock `CountCone`, `sorryAx`, `native_decide`, or fabricated proof imports. These are **mathematically proved necessary conditions for inverse histories**, not a reachability or halting classification, not a claim of P1 nonhalting, and not a universal BB(6) upper bound. The exact academic novelty relative to external literature is unassessed, and the work remains `im-results/` pending independent review. Agent43's preceding exact-wall proofs and paper subwall observations retain intellectual priority for the shared structural approach.
