@@ -24,22 +24,20 @@ theorem nat_lt_three_pow_succ (n : Nat) : n < 3^(n+1) := by
       have hle : n+1 ≤ 3^(n+1) := by omega
       have hpos : 0 < 3^(n+1) := Nat.pow_pos (by decide)
       have hstep : 3^(n+1) < 3^(n+2) := by
-        rw [Nat.pow_succ]
-        nlinarith
+        conv_rhs => rw [Nat.pow_succ]
+        nlinarith [Nat.pow_pos (by decide : 0 < 3) (n+1)]
       omega
 
 /-- Powers of three are monotone in their natural-number exponent. -/
 theorem three_pow_mono {m n : Nat} (h : m ≤ n) : 3^m ≤ 3^n := by
-  obtain ⟨k, hk⟩ : ∃ k, n = m+k := by omega
-  rw [hk, Nat.pow_add]
-  have hp : 1 ≤ 3^k := by
-    induction k with
-    | zero => simp
-    | succ k ih =>
-        rw [Nat.pow_succ]
-        omega
-  have hmul := Nat.mul_le_mul_left (3^m) hp
-  simpa using hmul
+  induction h with
+  | refl => rfl
+  | step h ih =>
+      calc
+        3^m ≤ 3^_ := ih
+        _ ≤ 3^(_+1) := by
+          conv_rhs => rw [Nat.pow_succ]
+          nlinarith [Nat.pow_pos (by decide : 0 < 3) _]
 
 /-- A new-cone predecessor of a state satisfying the necessary halting
 logarithmic gate must already lie in the old affine cone. -/
@@ -54,19 +52,8 @@ theorem gate_parent_oldAffine (a d b e : Nat)
   have hbuffer := newAffine_to_oldRight a d b e ha hn ho hx hnext
   rcases hbuffer with ⟨hb, hside⟩
   have hgap : b+1≤e-b := by omega
-  have hpow : b < 3^(e-b) := by
-    obtain ⟨k, hk⟩ : ∃ k, e-b = (b+1)+k := by omega
-    rw [hk, Nat.pow_add]
-    have hp : 1 ≤ 3^k := by
-      induction k with
-      | zero => simp
-      | succ k ih =>
-          rw [Nat.pow_succ]
-          omega
-    have hmul : 3^(b+1) ≤ 3^(b+1)*3^k := by
-      have hmul' := Nat.mul_le_mul_left (3^(b+1)) hp
-      simpa using hmul'
-    exact lt_of_lt_of_le (nat_lt_three_pow_succ b) hmul
+  have hpow : b < 3^(e-b) :=
+    lt_of_lt_of_le (nat_lt_three_pow_succ b) (three_pow_mono hgap)
   have hbe : b≤e := by omega
   exact (not_lt_of_ge (hgate hbe)) hpow
 
