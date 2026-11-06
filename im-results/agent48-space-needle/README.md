@@ -1,63 +1,50 @@
-# Agent 48: Space Needle (BMO6) exact single-counter arithmetic normal form
+# Space Needle: original-source high-level arithmetic and terminal inverse languages
 
-**Status:** intermediate original-source-checked algebraic reduction for the unresolved BB(6) Space Needle holdout. It does **not** decide whether the original machine halts, determine BB(6), or prove a new lower bound. No external priority claim.
+**Research status (6 November 2026):** This dossier studies the unresolved Space Needle six-state two-symbol machine `1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_---0LD`. Its exact source-matched arithmetic is proven, and several infinite synthetic predecessor languages have Lean checks. **No genuine blank-root terminal hit or nonhalting proof has been found.** The research remains intermediate; neither BB(6) nor a new lower bound is determined.
 
-Machine: `1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_---0LD`.
+## Source provenance and core map
 
-## Published source and verification
+The original source is Google DeepMind's [Cryptids Space Needle module](https://github.com/google-deepmind/cryptids/blob/ced8f9f44f67a167d5ecc03e687b048c67926371/BusyBeaver/BB6/M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD.lean), pinned to `ced8f9f44f67a167d5ecc03e687b048c67926371`. Its machine-level theorem reduces original blank-tape halting to the iteration of `highLevelNext` starting at `N 1`.
 
-Google DeepMind Cryptids published the machine with a certified high-level `HighLevelState.N d` representation, starting at `N(1)` from the **original blank tape**; it proves `IsHalt target ↔ CollatzHalts highLevelNext highLevelStart`. Their exact repository is pinned to `ced8f9f44f67a167d5ecc03e687b048c67926371`, source `BusyBeaver/BB6/M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD.lean`.
+[SpaceNeedleClosed.lean](SpaceNeedleClosed.lean) proves original-source classification of **all** high-level inputs. Let `H(0)=0, H(k+1)=2(H(k)+1)`, `O(q,0)=2q+1, O(q,k+1)=2(O(q,k)+1)`. Then
 
-Our original-source Lean proof is [SpaceNeedleClosed.lean](./SpaceNeedleClosed.lean). The manual-only workflow [agent48-space-needle.yml](../../.github/workflows/agent48-space-needle.yml) restores the **unmodified original upstream** and its Mathlib dependencies, builds the published target module with its pinned Lean 4.35.0-rc4, and compiles our imported proof.
-
-The first source-check [run 41428740035](https://github.com/FlareZ123/bb6/actions/runs/41428740035) **succeeded**, with only standard axioms for all seven theorems in the original version. The subsequently added elementary power-of-two/factorization identities were also compiled against locally reproduced exact definitions with Lean 4.36.0-rc2 and standard axioms only; a refreshed original-source CI run is being separately checked.
-
-## Complete exact one-step map
-
-Define `H(0)=0`, `H(k+1)=2(H(k)+1)`; define `O(q,0)=2q+1`, `O(q,k+1)=2(O(q,k)+1)`. For all natural `k,q`:
-
-```text
+```
 H(k)+2 = 2^(k+1)
-O(q,k)+2 = 2^k * (2q+3).
+O(q,k)+2 = 2^k (2q+3)
+scanEven(H(k),b) = none
+scanEven(O(q,k),b) = some (N (b+O(q,k)+k+3(q+1)))
 ```
 
-These families partition **all** natural counters. The source-level `scanEven` function has exact formulas, for every arbitrary accumulated counter `b`:
+For `x=d+2`, writing `v=v₂(x)` and odd `u=x/2^v`, the high-level step fails precisely when `u=1`, equivalently `x` is a power of two. Otherwise `u≥3` and the successor counter is
 
-```text
-scanEven(H(k), b) = none
-scanEven(O(q,k), b) =
-    some(N(b + O(q,k) + k + 3(q+1))).
+```
+d' = d + v + 3(u-1)/2.
 ```
 
-Consequently, writing `v=v₂(d+2)`, `u=(d+2)/2^v` odd:
+Every successful call strictly increases `d`. The exact remaining mathematical question is whether the unique sequence from `d₀=1` ever hits a `d=2^K-2`. Original-source CI [41428740035](https://github.com/FlareZ123/bb6/actions/runs/41428740035) succeeded for the core map; later lemma-specific provenance is tracked in the linked subdocuments.
 
-- The next high-level call halts exactly when `u=1`, equivalently `d+2` is a power of two.
-- Otherwise, `u≥3` and `d' = d + v + 3(u-1)/2`. In particular every successful high-level return strictly increases the counter `d`. Any nonterminating high-level orbit is strictly increasing, hence cannot enter a cycle.
+## Main mathematically verified reductions
 
-The formal theorem `scanEven_none_iff` is exact for every natural `d,b`, `scanEven_classification` establishes the total algebraic partition, and `highLevelNext_strict` establishes the strict step growth. These are globally quantified statements about the published original high-level transition, rather than a finite simulation.
+| Topic | Strongest established statement | Proof and decisive limitation |
+|---|---|---|
+| **All-decimal-residue incoming exponents** | For every `a,r,B` with `r<10^a`, terminal exponents `K≥B` exist with `K%10^a=r` and at least one unrestricted source. | [TERMINAL-RESIDUES.md](TERMINAL-RESIDUES.md); arithmetic Lean checked; purely synthetic incoming edges |
+| **Exact odd-block acceleration** | For every positive `m` and `t`, `t` consecutive odd high-level calls carry `N(2^t*m-1)` to `N(5^t*m-1)` when the input is well formed. | [ODD-BLOCKS.md](ODD-BLOCKS.md), [source theorem](SpaceNeedleOddBlocksSource.lean); original-source [CI 41931806607](https://github.com/FlareZ123/bb6/actions/runs/41931806607) succeeded |
+| **Two-step odd terminal inverse** | Original-source iff for a legal `O(q,v)` feeding one odd intermediate and then `2^K-2`: `2^(K+1)=5*(2^(v+1)+3)*q+15*2^v+5*v+12` for `K>0`. | [TWO-STEP-ODD.md](TWO-STEP-ODD.md), [original-source Lean](NeedleTwoStepOddSource.lean); [CI 41931806607](https://github.com/FlareZ123/bb6/actions/runs/41931806607) passed |
+| **Complete positive terminal odd-block lengths** | A `t>0` consecutive-odd feeding path to `N(2^K-2)` is admissible iff `4*5^(t-1)` divides `K`. | [ORDER-5ADIC.md](ORDER-5ADIC.md), [source theorem](FiveAdicOrderSource.lean); pinned original-source [CI 41935571573](https://github.com/FlareZ123/bb6/actions/runs/41935571573) succeeded |
+| **Infinite five-source terminal fan-in** | For every `t≥0`, the destination `N(2^K(t)-2)`, where `K(t)=115559872543250362436240044170777864346536+136996046966732361806630100489564981018852*t`, has five distinct source-valid immediate predecessors of shifted valuations `0,3,20,38,83`. | [FIVE-TERMINAL.md](FIVE-TERMINAL.md), [kernel-checked arithmetic](FiveTerminal.lean), [upstream-import bridge](FiveTerminalSource.lean). **Authentic source CI pending/blocked**, only locally checked with a test interface stub |
 
-## Blank-start experiment and limitations
+The arbitrary-five theorem extends Agent 20's earlier original-source *three*-terminal family [CI 42107688083](https://github.com/FlareZ123/bb6/actions/runs/42107688083); that CI is confirmed successful. Agent 20's stronger independent method for arbitrary **nonterminal** synthetic destinations also yields unbounded unrestricted incoming-degree [paper argument](../agent20-needle-coprime/UnboundedFanin.md). These facts are not statements about the genuine blank orbit.
 
-Independent exact-bigint Python implementation from `d₀=1` checked **30,000 high-level successor calls** with no power-of-two terminal input. The final counter had 28,098 bits. This is exploratory evidence only. It is vastly shorter than many existing external computations, and should not be presented as a novelty or meaningful Busy Beaver lower bound.
+## Evidence, failed proof routes, and remaining obligation
 
-**Unresolved decisive question:** does the particular recursively defined growing sequence `d₀=1`, `dₙ₊₁ = dₙ + v₂(dₙ+2) + 3((dₙ+2)/2^v-1)/2` ever land on `dₙ=2^k-2`? This exact arithmetic statement, combined with the original published machine/acceleration theorem, is equivalent to the genuine blank-tape halting problem for this holdout.
+An exact-bigint exploratory forward test from `N 1` checked 30,000 high-level transitions; the counter grew to 28,098 bits without a power-of-two input. A later 300,000-call finite test visited all residues modulo `2^14` of the shifted counter `d+2`. These are **finite computations** whose purpose is to reject simple modulus-only conjectures. Neither implies infinite survival. Independent backward experiments and additional scripts are retained in this directory.
 
-Future work: investigate 2-adic restrictions on this specific blank orbit, search a closed invariant excluding power-of-two hits, or construct a genuine finite witness. Generic growth and finite prefix checks are insufficient to decide halting.
+The immediate necessary equation for a terminal feeder `O(q,v)` is
 
+```
+2^K=(2^(v+1)+3)q+(3*2^v+v+3).
+```
 
-## Later source-mirrored mathematical tools (2026-11-03)
+Many unrestricted solutions exist, including entire progressions with multiple feeders. A successful machine decision must distinguish which, if any, such sources actually occur on the deterministic blank-origin orbit. Inverse source-validity, congruence exclusions and synthetic fan-in are insufficient alone. Focus future research on an all-time source-connected blank-orbit invariant, a genuine terminal witness, or a complete inverse reachability argument. Keep experimental notes in `im-results/` until a root-relevant advancement is established.
 
-- [TERMINAL-RESIDUES.md](TERMINAL-RESIDUES.md): locally kernel-verified exact original high-level predecessor existence for every decimal suffix of the power-of-two terminal exponent. For any \`a,r,B\` with \`r<10^a\`, there is \`K≥B\`, \`K%10^a=r\`, and at least one **unrestricted high-level** immediate predecessor to \`N(2^K−2)\`. Quantification covers all a. This is a negative method result for unconditional all-state modular predecessor exclusions, and **does not imply blank-tape reachability**. Source-mirrored local Lean has only standard axioms; original-source CI bridge remains pending the runner incident.
-- [ODD-BLOCKS.md](ODD-BLOCKS.md): exact \`t\`-call high-level acceleration from \`N(2^t*m−1)\` to \`N(5^t*m−1)\` for positive m; if m odd, this is the complete maximal odd run. A terminal directly after this block requires \`5^t ∣ 2^K−1\`. Locally checked in Lean against literally pinned upstream high-level definitions with standard axioms. Full-source CI similarly pending.
-
-Neither tool closes Space Needle, certifies an actual blank-root halting runtime, or establishes BB(6).
-
-## 2026-11-04 source-connected two-step odd-terminal inverse
-
-[`TWO-STEP-ODD.md`](TWO-STEP-ODD.md) gives an exact all-natural, source-connected conditional two-step terminal predecessor criterion: from `oddTower q v` through **one odd intermediate** to terminal `2^K-2` iff `2^(K+1)=5*(2^(v+1)+3)*q+15*2^v+5*v+12` for `K>0`. It proves fixed-`(K,v)` parameter uniqueness and `v<K`.
-
-**Pinned original Cryptids source [CI 41931806607](https://github.com/FlareZ123/bb6/actions/runs/41931806607) passed** on 2026-11-04, compiling `SpaceNeedleOddBlocksSource.lean`, `NeedleTwoStepOdd.lean`, and `NeedleTwoStepOddSource.lean` against the unchanged original machine source. This supersedes earlier CI-pending notes for those **specific** odd-block and two-step files. Other source-mirrored files still need their own original-import audit. The two-step result specializes the prior Agent20 general inverse; its blanket-root relevance and external novelty are unproved. It does not decide Space Needle or BB(6).
-
-## 2026-11-04 exact five-adic terminal odd-block language
-
-[`ORDER-5ADIC.md`](ORDER-5ADIC.md) proves a new **all-length exact classification** of positive odd-block terminal predecessors in the source-accurate Space Needle map: for `K>0, t>0`, an allowed `t`-step consecutive odd path from some positive source to terminal input `2^K-2` exists **iff `4*5^(t-1) ∣ K`**. This strictly extends prior fixed modulo-4 and modulo-20 restrictions and gives a complete symbolic list of all positive terminal odd-block lengths for a given K. The backbone [`FiveAdicOrderFull.lean`](FiveAdicOrderFull.lean) is the all-natural 5-adic order of 2 theorem, proved kernel-clean locally, and [`FiveAdicOrderSource.lean`](FiveAdicOrderSource.lean) is the original-high-level bridge. Original-source CI [run 41935571573](https://github.com/FlareZ123/bb6/actions/runs/41935571573) was dispatched; **its final status must be confirmed** before citing complete external original-source authentication. Earlier source [CI 41934758965](https://github.com/FlareZ123/bb6/actions/runs/41934758965) passed the arbitrary-length constructive terminal path family and the exact symbolic odd macro. These are unconditional **synthetic** source pathways without evidence of genuine blank-orbit reachability, so no Busy Beaver verdict is implied.
+[Manual original-source verification workflow for the five-source theorem](../../.github/workflows/agent48-space-needle-five.yml) never runs on repository push.
