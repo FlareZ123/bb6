@@ -96,7 +96,21 @@ theorem terminal_threshold_exact (q v K : Nat)
   rcases hcases with hv | hv | hv | hv | hv
   all_goals subst v <;> simp [equation,den,bias] at h ⊢ <;> omega
 
+theorem terminal_threshold_iff (q v K : Nat) :
+    equation q v K ∧ K=3*v+3 ↔
+      (q=45 ∧ v=2 ∧ K=9) ∨ (q=214 ∧ v=3 ∧ K=12) := by
+  constructor
+  · rintro ⟨he,hK⟩
+    exact terminal_threshold_exact q v K he hK
+  · intro hh
+    rcases hh with hh | hh
+    · rcases hh with ⟨rfl,rfl,rfl⟩
+      simp [equation,den,bias]
+    · rcases hh with ⟨rfl,rfl,rfl⟩
+      simp [equation,den,bias]
+
 #print axioms model_eq
+#print axioms terminal_threshold_iff
 #print axioms terminal_threshold_exact
 #print axioms boundary_divides
 #print axioms exponential_dominates
