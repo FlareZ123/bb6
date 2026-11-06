@@ -92,6 +92,23 @@ theorem forced_unbounded_drop (x b : Nat)
   refine ⟨w,genericFirst 1 (4*w+3),hw,hxw,rfl,he,?_⟩
   exact affine_divisor_drop b x (genericFirst 1 (4*w+3)) hx hcon
 
+/-! The only odd-part-three section source of 2-adic valuation one is x=6. -/
+def specialFirst (a : Nat) : Nat := 3*2^a + a + 3
+
+theorem special_at_one : specialFirst 1 = 10 := by decide
+
+theorem ten_not_dyadic_zero (p : Nat) (hp : 2 ≤ p) : 10 % 2^p ≠ 0 := by
+  intro h
+  have hpow : 4 ∣ 2^p := by
+    simpa using (Nat.pow_dvd_pow 2 hp)
+  have hx : 2^p ∣ 10 := Nat.dvd_of_mod_eq_zero h
+  have hbad : 4 ∣ 10 := Nat.dvd_trans hpow hx
+  have : ¬ (4 ∣ 10) := by decide
+  exact this hbad
+
+#print axioms special_at_one
+#print axioms ten_not_dyadic_zero
+
 #print axioms affine_divisor_drop
 #print axioms forced_unbounded_drop
 
