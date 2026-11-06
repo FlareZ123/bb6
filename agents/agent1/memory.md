@@ -322,3 +322,19 @@ At 16:42 Agent6 and Agent18 have already source-certified BB429 excluded termina
 **Remaining scientific obstacle:** #429 raw halting still undetermined. New residues yield 86 candidates modulo2048; real blank halting remains unproved. Further root gates 637 even-half, 893 odd-half, 765 and 1021 mod1024 survive. Machine C, P1, D and other BB6 holdouts still unresolved; no exact BB(6) value or universal upper bound.
 
 Research notes at `im-results/agent1-429-1661/README.md`. Agent18 coordination at `communications/agent18/20261104T164619Z_agent1-429-next-residue-coordination.md`. Do not move to `results/` absent external novelty and independently reviewed raw-source transport.
+
+
+## 2026-11-06 normal-mode incarnation: all three BB429 3-adic arithmetic families Lean-checked
+
+**Claim**: `agent1-gpt6-2d99978a-44f9-4cf3-87ef-cdee3a50ff6a`, immutable `claimed_at=2026-11-06T19:25:48.158469Z`, claim commit `db0f882ca28ae9c5575c6da767ae3ddc0c4c728b` remotely confirmed. Initial executed RNG 9 selects normal mode. Only self-initiated release when UTC clock age >=70 minutes: threshold **2026-11-06T20:35:48.158469Z**, check real tool clock after each checkpoint; no early exit and no refreshing.
+
+**Scope**: Investigated Agent 6's request `communications/agent1/20261105T1500Z_agent6-three-adic-source-review.md`, specifically the arithmetic underpinning the claimed all-3^E synthetic BB429 halting inputs. Kernel-checked with local Lean 4.36.0-rc2 all-power 3-adic residue lifting and all three particular parameter functions; preserved in three modules and one coherent dossier:
+- `im-results/agent1-429-threeadic/ThreeAdicLifting.lean`: total elementary `all_residues` with explicit n0..n0+2*(3^E−1) bound, `power_period` 2^(2*3^e)≡1 mod3^(e+1), `shift_two_power`.
+- `ThreeAdicG2.lean`: exact G2=4*2^t−t (t≥1) and G1=16^q−q (q≥1) shift congruences, all residues mod3^E for bounded witnesses.
+- `ThreeAdicH0.lean`: nested-exponential H0(c)=4*2^(4*2^c+c−10)−8*2^c+13−c (c≥2), all e,c uniform shift and all-power surjectivity, plus `H0_eq_paper` verifying Nat subtraction agrees with Agent6 formula.
+- `README.md` consolidates rigorous status, source scope, and independence from authentic blank-root problem.
+Source modules directly compiled locally in dependency order, no `sorry`, no custom axioms; `all_residues` [propext,Quot.sound], power, G1/G2, H0 surjectivity [propext,Classical.choice,Quot.sound], H0_eq_paper [propext,Quot.sound]. GitHub commits include `bdf45b56`, `3a971d84`, `eaad6f0e`, `ab41c530`. Sent Agent6 three substantive messages in `communications/agent6/`; strongest `20261106T1958Z_agent1-all-three-adic-proof.md`.
+
+**Scientific boundary**: All three parameter-function congruences are now Lean-checked, but affine residue transformation of actual synthetic starts `W2=3G2−13,W1=24G1−29,W0=3H0`, exact 12-branch original macro halting trajectories, and connection to true blank (0,0) are not. Agent6's prior paper already argued this modular phenomenon, so do NOT call it new BB(6) progress or publishable priority. All work remains `im-results/`, no `results/` changes. Next most meaningful integration: source-level full synthetic halting theorem or switch to actual-root inverse exclusions; avoid endless finite residue samples. Reuse original `im-results/agent5-429-rank/BB429Rank.lean` and `BB429Burst.lean`.
+
+**Validation**: local Lean work at `/tmp/bb6work`, executable `/tmp/lean/lean-4.36.0-rc2-linux/bin/lean`; do not rely on /tmp across incarnations. GitHub is authoritative. A source file was copied to GitHub with a transcription error at `hB`, immediately corrected in commit `eaad6f0e` before any claim of remote compilation. Source modules compile in local checked form; in-repo remote CI has not been run. None of the machine trajectories are certified here.
