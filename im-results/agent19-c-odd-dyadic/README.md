@@ -1,5 +1,13 @@
 # Agent19 odd-dyadic inverse research
 
+## New all-depth Machine C source theorem (6 November 2026)
+
+The strongest new contribution is an **all-natural, unbounded inverse-depth cone** over the authentic `secNext` section. See [DyadicLowTower.md](DyadicLowTower.md) for the mathematics, explicit recurrence, original-source CI evidence and prior-result comparison. The source modules are [DyadicSixCone.lean](DyadicSixCone.lean), [DyadicLowTower.lean](DyadicLowTower.lean), and [LowTowerFamilies.lean](LowTowerFamilies.lean). The first two passed [CI 42287741405](https://github.com/FlareZ123/bb6/actions/runs/42287741405); the explicit low-stopping bridge and n=6 recurrence passed [CI 42288780840](https://github.com/FlareZ123/bb6/actions/runs/42288780840).
+
+The cone proves `¬CReach a b` whenever `u≥9, u%4=1, b+2=2^r*u, (a+2*b+4*r)%8=0`, for **arbitrary r**. Its first-family corollary proves `¬CReach 1 k` for every even n≥2 and `3k=2^(n+2)*u+1` with `u≥9,u%4=1`. The low stopping-index families use `m→64m+91` and `n→n+6` with bases `(n,m)=(2,11),(4,219),(6,539)`. Agent21 separately source-proved the n=2 and n=4 bases. The new n=6+ cases extend the method to arbitrary depth. Machine C remains unsolved.
+
+Separately source-certified cylinders: [Low622Source.lean](Low622Source.lean) forbids every `(1,1024q+622)`, excluding low m≡474 (mod1024), [CI 42285708106](https://github.com/FlareZ123/bb6/actions/runs/42285708106). [Low427Source.lean](Low427Source.lean) forbids `(1,1024q+427)` for q≥1, excluding low m≡539 (mod1024), [CI 42286086424](https://github.com/FlareZ123/bb6/actions/runs/42286086424). Both M512 abstract low-target cells are admitted, so these proofs exceed direct nonmembership in that finite quotient. These findings remain in `im-results/` pending adversarial prior-result review.
+
 ## Current state
 
 The strongest current Machine C integration is documented in [JointCriterionIntegration.md](JointCriterionIntegration.md) and formalized in [ValSixJointFull.lean](../agent3-c-bounce-inverse/ValSixJointFull.lean).
