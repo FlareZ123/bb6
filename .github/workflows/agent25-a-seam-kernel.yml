@@ -1,0 +1,36 @@
+name: Agent25 D A-boundary marker-state invariant (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2 and Python filelock
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --quiet filelock
+      - name: Discover the A-boundary graph and generate kernel-checkable proof
+        run: |
+          python3 im-results/agent25-e-seam-kernel/make_a_seam_kernel.py "$RUNNER_TEMP/a-seam-kernel"
+      - name: Verify complete A-boundary closure and all-time marker safety
+        env:
+          LEAN_PATH: ${{ runner.temp }}/a-seam-kernel
+        working-directory: ${{ runner.temp }}/a-seam-kernel
+        run: |
+          lean --version
+          lean -o ESeamTreeBase.olean ESeamTreeBase.lean
+          seq 0 147 | xargs -P 4 -I{} sh -c 'lean -o "ESeamTreeBlock{}.olean" "ESeamTreeBlock{}.lean" >/dev/null'
+          lean -o ESeamTreeMaster.olean ESeamTreeMaster.lean | tee master-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' master-axioms.log; then exit 1; fi
+          grep 'root_good.*\[propext\]' master-axioms.log
+          grep 'all_seeds.*does not depend on any axioms' master-axioms.log
+          grep 'every_seam_path_safe.*\[propext, Classical.choice, Quot.sound\]' master-axioms.log
