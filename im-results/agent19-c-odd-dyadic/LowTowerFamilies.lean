@@ -114,6 +114,40 @@ theorem low_shifted_depth_unreachable (t k : Nat)
   exact low_linear_stop_no_root (6+6*t) (indexShift 539 t) k 6
     (by omega) hne hm (by decide) hlin hstop
 
+
+/-- Covers every second even dyadic depth from n=2. The base t=0
+reproduces the earlier m=11 congruence representative. -/
+theorem low_shifted_depth_two (t k : Nat)
+    (hstop : k+3*(indexShift 11 t)+4=
+      2^(2*(indexShift 11 t)+3)) :
+    ¬ BB6.Agent3.CReach 1 k := by
+  have hlin : 9*indexShift 11 t+13+5*(2:Nat)^(2+6*t+2) =
+      3*2^(2+6*t+4) :=
+    indexShift_linear 11 2 3 t (by decide)
+  have hm : 2+6*t+4 ≤ indexShift 11 t :=
+    indexShift_lower 11 2 t (by decide)
+  have hne : (2+6*t)%2=0 := by omega
+  exact low_linear_stop_no_root (2+6*t) (indexShift 11 t) k 3
+    (by omega) hne hm (by decide) hlin hstop
+
+/-- Covers every second even dyadic depth from n=4. The base t=0
+reproduces the earlier m=219 congruence representative. -/
+theorem low_shifted_depth_four (t k : Nat)
+    (hstop : k+3*(indexShift 219 t)+4=
+      2^(2*(indexShift 219 t)+3)) :
+    ¬ BB6.Agent3.CReach 1 k := by
+  have hlin : 9*indexShift 219 t+13+5*(2:Nat)^(4+6*t+2) =
+      9*2^(4+6*t+4) :=
+    indexShift_linear 219 4 9 t (by decide)
+  have hm : 4+6*t+4 ≤ indexShift 219 t :=
+    indexShift_lower 219 4 t (by decide)
+  have hne : (4+6*t)%2=0 := by omega
+  exact low_linear_stop_no_root (4+6*t) (indexShift 219 t) k 9
+    (by omega) hne hm (by decide) hlin hstop
+
+#print axioms low_shifted_depth_two
+#print axioms low_shifted_depth_four
+
 #print axioms low_linear_stop_no_root
 #print axioms low_shifted_depth_unreachable
 end BB6.Agent19SixCone
