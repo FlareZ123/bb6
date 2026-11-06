@@ -133,3 +133,6 @@ jobs:
           lean -o JointResidual.olean JointResidual.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/LowC26.lean .
           lean LowC26.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent23-c-low26/{C26Rectangle,C26High}.lean .
+          lean -o C26Rectangle.olean C26Rectangle.lean
+          lean C26High.lean
