@@ -146,3 +146,27 @@ Using `m=mp+t+1`, the inequalities imply the total-cost band
 For adjacent depths, the upper endpoint at `t+1` is exactly three below the lower endpoint at `t`; both endpoints decrease with t. Hence the bands are pairwise disjoint and a fixed cost m determines at most one possible final reset depth. There are exactly two integer cost values between each adjacent band. The first gap is `3*2^n-4`, `3*2^n-3`; the next gap is `5*2^n-5`, `5*2^n-4`.
 
 Next: consider whether the prefix hub is necessarily non-root. If it is, its right coordinate satisfies `dp>=5` (a CountCone parent has right coordinate `c+4` with odd c>=1). The root case would force `inverseAt (14*2^n-2*n-16) 3 t = some(k,1)`, hence a power of two strictly between `4*2^n` and `8*2^n`; this looks impossible for n>=14 and may sharpen the cost intervals by two. Verify this carefully before using it. Agent8's source theorem `source_critical_odd_d5_needs_n_plus_four` is a possible shortcut: if the prefix were root then `m=t+1<=n+2`, contradicting its `m>=n+4` bound. The Agent50 workflow currently does not import Agent8's fixed-reset source module, so update LEAN_PATH/build order if reusing it.
+
+
+### Root-exclusion and sharpened all-cost bands (2026-11-06 21:48 UTC)
+
+The Agent50 depth workflow now compiles Agent8's `ExceptionalStrongSource` chain and the new `source_exceptional_last_reset_depth_window` reuses `BB6.Agent8Exceptional.source_critical_odd_d5_needs_n_plus_four`. The source theorem is now stronger:
+- `n+4<=m`;
+- the extracted prefix hub is non-root, hence `5<=dp`;
+- the exact identity `2^(t+3)=2*k+dp+2*t+9` then gives `2<=t<=n+1`;
+- the lower prefix-cost inequality sharpens to `14*2^n <= 2^(t+3)+2*mp+2*n+2`, while `mp+n+7+2^(t+1)<=7*2^n` remains.
+
+The root exclusion is rigorous: if the prefix CountCone were root, then `mp=0`; the cost relation gives `m=t+1<=n+2`, contradicting Agent8's `m>=n+4`. A non-root `OddCone.parent` has right endpoint `c+4` with odd `c>=1`, so `dp>=5`. Since `k>=2`, t=1 would force `16=2*k+dp+11>=20`, impossible.
+
+With `P=2^n`, the source inequalities and `m=mp+t+1` give the sharpened total-cost interval
+`7*P-2^(t+2)-n+t <= m <= 7*P-2^(t+1)-n+t-6`, with `2<=t<=n+1`. Its width is `2^(t+1)-6`; adjacent depth bands have four forbidden integer costs between them and are pairwise disjoint. Thus the final reset depth is uniquely determined by total cost whenever a witness exists. The first bands are `t=n+1: m<=3P-5`, `t=n: 3P<=m<=5P-6`, `t=n-1: 5P-1<=m<=6P-7`, `t=n-2: 6P-2<=m<=13P/2-8`. The t=1 band is impossible; t=2 yields `m<=7P-n-12`.
+
+Successful original-source CI [42299526508](https://github.com/FlareZ123/bb6/actions/runs/42299526508), head `fa4ee895bc0afa0bbee353365433f6c5c4dec0b9`, compiled Agent8's source dependency, the unchanged P1 source dependencies, and the strengthened theorem. Axiom audit: `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. Updated `im-results/agent50-p1-subwall/README.md` with the result and cost bands.
+
+Next:
+1. Notify Agent8 that their n+4 theorem now excludes the root prefix and strengthens the depth/cost bands; ask for review of the composition.
+2. Send the sharpened cost bands to Agent50, Agent9 and Agent45, asking whether the high-cost c=1 branch can be attacked using their source shadow/precision machinery.
+3. Ask Agent28 whether the OddWord final coefficient bit `2^mp` and moment invariant can sharpen the high-cost bands.
+4. Investigate whether a prefix with `dp=5` recursively satisfies the same d=5 hypotheses, and whether repeated last-reset decomposition yields a stronger reset-count/cost restriction.
+5. Consider formally upgrading the existing 10P theorem's `t=n` branch lower bound from `3P-2` to `3P`; the generic theorem already implies it, so the change is an optional API refinement.
+6. The central unresolved issue remains a source-to-trace proof that the exceptional prefix hub is or is not blank-reachable. Do not claim P1 or BB(6) is decided.
