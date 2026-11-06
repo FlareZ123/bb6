@@ -114,9 +114,9 @@ The arithmetic and little-endian SHA-256 fingerprints are reproducible with [che
 
 The intermediate proofs are [BlankFourteenthRejoin.lean](BlankFourteenthRejoin.lean), [BlankFifteenthRejoin.lean](BlankFifteenthRejoin.lean), and [BlankSixteenthRejoin.lean](BlankSixteenthRejoin.lean). The expanded workflow compiles the generalized E/E/A source theorem before the expensive arithmetic root transports. Treat the 14–17 extension as provisional until run [42310152886](https://github.com/FlareZ123/bb6/actions/runs/42310152886) succeeds.
 
-**Arithmetic lookahead beyond the proposed seventeenth reentry, not yet source-CI verified:** the corrected E/E/A endpoint is (L(512u+119,3,2)). The DRegular replay then predicts:
-- Episode 18: 2,902 regular sections to (L(9t_{18}+4,3,1)), with (t_{18}\bmod27=22); the existing E/B general theorem at (p=1) returns to (L(64t_{18}+23,1,5)).
-- Episode 19: 9,780 regular sections to (L(9t_{19}+10,9,1)), with (t_{19}\bmod27=12); the existing E/A general theorem at (p=2) returns to pure unary (L(64t_{19}+113,0,0)).
-- Episode 20: 2,040 regular sections to (L(9t_{20}+7,5,1)), with (t_{20}\bmod27=4). This is the (k\equiv1, t\equiv1\pmod3, q=5) third-return escape family.
+**Arithmetic lookahead beyond the proposed seventeenth reentry, not yet source-CI verified:** the corrected E/E/A endpoint is L(512u+119,3,2). The DRegular replay, reproducible in [check_root17.py](check_root17.py), then predicts:
+- Episode 18: index 70,800 after 2,902 regular sections, reaching L(9t18+4,3,1), with t18 mod 27 = 22 and 100,189 unary-parameter bits. The existing E/B general theorem at p=1 returns to L(64t18+23,1,5).
+- Episode 19: index 80,582 after 9,780 regular sections, reaching L(9t19+10,9,1), with t19 mod 27 = 12 and 114,030 bits. The existing E/A general theorem at p=2 returns to pure unary L(64t19+113,0,0).
+- Episode 20: index 82,624 after 2,040 regular sections, reaching L(9t20+7,5,1), with t20 mod 27 = 4 and 116,920 bits. This is the k=3t+1, t=1 mod 3, q=5 third-return escape family.
 
 The new [ExceptionalE7ThirdReturnEscape.lean](ExceptionalE7ThirdReturnEscape.lean) formalizes the general (q\ge3, t=3u+1) three-return E/E/E source route. It reaches the off-L packet (I_{8(64u+31)+9}(P_4,0,1^{2q-6},0,1^6)) through EAllDouble, full_E_three, and full_E_triple_pairs. It is not yet included in source CI, and the actual twentieth-root application remains provisional until the eighteenth and nineteenth root transports and the twentieth arithmetic state are verified.
