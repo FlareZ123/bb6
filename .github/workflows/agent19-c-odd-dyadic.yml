@@ -1,12 +1,10 @@
 name: Agent 19 Machine C unbounded dyadic high-cylinder source verification (manual)
 on:
   workflow_dispatch:
-  create:
 permissions:
   contents: read
 jobs:
   source-certification:
-    if: github.event_name != 'create' || github.ref == 'refs/heads/ci-agent11-low-20261105'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -44,3 +42,12 @@ jobs:
           lean LowOneModFour.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/HighSumTwo.lean .
           lean HighSumTwo.lean
+
+          # Agent19's new seven-link inverse class uses the original
+          # Agent3 valuation-three odd/odd theorem and its full dependency chain.
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse,OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit,OddOddVal3,OddOddVal3Orbit,OddOddLowVal}.lean .
+          for f in EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour BounceAllExact SectionAllInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/Low622Source.lean .
+          lean Low622Source.lean
