@@ -89,6 +89,102 @@ theorem drainB_shift_ones_sharp (a d : Nat) :
   rw [hn,hs]
   simp
 
+
+/-- The first-coordinate translation extends to a logarithmic-width
+far-left odd sector: the block count may be exponentially larger than
+the initial first-counter slack. -/
+theorem highLevel_far_odd_shift_ones (a d t : Nat)
+    (hd : d%2=1) (hbranch : d+5≤a)
+    (hbudget : d+3≤ternaryOnes (a-d-5)) :
+    highLevelNext (.D (a+t) d) =
+      (highLevelNext (.D a d)).map (liftFirstState t) := by
+  conv => lhs; rw [highLevelNext]
+  conv => rhs; rw [highLevelNext]
+  have hz : a ≠ 0 := by omega
+  have hzt : a+t ≠ 0 := by omega
+  have hbase : d%2=1 ∧ a≥d+5 := ⟨hd,hbranch⟩
+  have hnew : d%2=1 ∧ a+t≥d+5 := ⟨hd,by omega⟩
+  simp only [if_neg hz, if_neg hzt, if_pos hbase, if_pos hnew]
+  have heq : a+t-d-5 = (a-d-5)+t := by omega
+  rw [heq]
+  exact drainB_shift_ones (d+3) (a-d-5) 5 t hbudget
+
+/-- Same exponential improvement in the far-left even sector. -/
+theorem highLevel_far_even_shift_ones (a d t : Nat)
+    (hd : d%2=0) (hbranch : d+3≤a)
+    (hbudget : d+2≤ternaryOnes (a-d-2)) :
+    highLevelNext (.D (a+t) d) =
+      (highLevelNext (.D a d)).map (liftFirstState t) := by
+  conv => lhs; rw [highLevelNext]
+  conv => rhs; rw [highLevelNext]
+  have hz : a ≠ 0 := by omega
+  have hzt : a+t ≠ 0 := by omega
+  have hnot0 : ¬ (d%2=1 ∧ a≥d+5) := by omega
+  have hnotT : ¬ (d%2=1 ∧ a+t≥d+5) := by omega
+  have hbase : d%2=0 ∧ a≥d+3 := ⟨hd,hbranch⟩
+  have hnew : d%2=0 ∧ a+t≥d+3 := ⟨hd,by omega⟩
+  simp only [if_neg hz, if_neg hzt, if_neg hnot0, if_neg hnotT,
+     if_pos hbase, if_pos hnew]
+  have heq : a+t-d-2 = (a-d-2)+t := by omega
+  rw [heq]
+  exact drainB_shift_ones (d+2) (a-d-2) 2 t hbudget
+
+/-- The far-right odd second-counter sector is likewise affine under
+an exact ternary ones budget, replacing the old linear gap assumption. -/
+theorem highLevel_right_odd_shift_ones (a d t : Nat)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hg : a≤d)
+    (hbudget : a-1≤ternaryOnes (d+4-a)) :
+    highLevelNext (.D a (d+2*t)) =
+      (highLevelNext (.D a d)).map (liftFirstState (2*t)) := by
+  conv => lhs; rw [highLevelNext]
+  conv => rhs; rw [highLevelNext]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have h1t : ¬((d+2*t)%2=1 ∧ a≥(d+2*t)+5) := by omega
+  have h2 : ¬(d%2=0 ∧ a≥d+3) := by omega
+  have h2t : ¬((d+2*t)%2=0 ∧ a≥(d+2*t)+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have heq : a ≠ d+2 := by omega
+  have heqt : a ≠ (d+2*t)+2 := by omega
+  have hdt : (d+2*t)%2=1 := by omega
+  simp only [if_neg h0,if_neg h1,if_neg h1t,if_neg h2,if_neg h2t,
+      if_neg hodd,if_neg heq,if_neg heqt,if_pos hd,if_pos hdt]
+  have hshift : d+2*t+4-a = (d+4-a)+2*t := by omega
+  rw [hshift]
+  exact drainB_shift_ones (a-1) (d+4-a) 3 (2*t) hbudget
+
+/-- The even far-right branch transfers both the evaluator and full
+drain through the same exponentially large certified budget. -/
+theorem highLevel_right_even_shift_ones (a d t : Nat)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=0) (hg : a≤d)
+    (hbudget : a<ternaryOnes (d+1-a)) :
+    highLevelNext (.D a (d+2*t)) =
+      (highLevelNext (.D a d)).map (liftFirstState (2*t)) := by
+  conv => lhs; rw [highLevelNext]
+  conv => rhs; rw [highLevelNext]
+  have h0 : a ≠ 0 := by omega
+  have h1 : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have h1t : ¬((d+2*t)%2=1 ∧ a≥(d+2*t)+5) := by omega
+  have h2 : ¬(d%2=0 ∧ a≥d+3) := by omega
+  have h2t : ¬((d+2*t)%2=0 ∧ a≥(d+2*t)+3) := by omega
+  have hodd : a%2 ≠ 1 := by omega
+  have heq : a ≠ d+2 := by omega
+  have heqt : a ≠ (d+2*t)+2 := by omega
+  have hdodd : d%2 ≠ 1 := by omega
+  have hdt : (d+2*t)%2 ≠ 1 := by omega
+  simp only [if_neg h0,if_neg h1,if_neg h1t,if_neg h2,if_neg h2t,
+      if_neg hodd,if_neg heq,if_neg heqt,if_neg hdodd,if_neg hdt]
+  obtain ⟨aa,bb,dd,heval,hp⟩ := evalA_ones_budget (d+1-a) a (2*a+5) hbudget
+  have hes : d+2*t+1-a = (d+1-a)+2*t := by omega
+  rw [hes,evalA_shift_ones (d+1-a) a (2*a+5) (2*t) hbudget,heval]
+  simp only [Option.map_some,liftFirstEval,Option.bind_some]
+  exact drainB_shift_ones bb aa dd (2*t) hp
+
+#print axioms highLevel_far_odd_shift_ones
+#print axioms highLevel_far_even_shift_ones
+#print axioms highLevel_right_odd_shift_ones
+#print axioms highLevel_right_even_shift_ones
+
 #print axioms evalA_shift_ones
 #print axioms drainB_shift_ones
 #print axioms drainB_shift_ones_sharp
