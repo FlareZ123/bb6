@@ -30,7 +30,7 @@ Write `L=m+1`. Since `m` is odd, `L` is positive even. Set
 B = (2^L-1)/3,  A = 2^L+1,  Q = A*B = (2^(2*L)-1)/3.
 ```
 
-Here `B` is a positive odd integer and `2^L=3B+1`.
+Here `B` is a positive odd integer, `2^L=3B+1`, and `m≤B<A`. To verify every size/parity assertion, write `m=2r+1` and `B_r=(2^(2r+2)-1)/3`. Direct algebra gives `B_0=1` and `B_(r+1)=4B_r+1`. Induction makes every `B_r` positive and odd; it also proves `B_r≥2r+1`, because `4B_r+1≥4(2r+1)+1≥2(r+1)+1`. Finally `A=3B+2>B≥m`.
 
 From the stopping equation,
 
