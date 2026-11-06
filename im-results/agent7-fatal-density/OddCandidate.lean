@@ -55,6 +55,25 @@ theorem quotient_one_genuine_branch_dead (n j d:Nat) (hn:6≤n)
   exact ⟨q,hodd,odd_tone_quotient_one_dead n j q d hn hsector
     hmargin hd hq hmodd⟩
 
+/-- At the second valuation-two quotient residue, a genuine first-reset odd
+    candidate exists; genuine blank-root reachability forces a new 9-adic
+    divisibility at that predecessor. This is an exact recursive obstruction. -/
+theorem quotient_two_genuine_requires_secondary_nine (n j d:Nat)
+    (hn:6≤n) (hsector:n%6=4∨n%6=5)
+    (hmargin:16*deficit n j+27*n+16≤2^n)
+    (hd:9*d+2*deficit n j=8*2^n+5)
+    (hmodd:d%3=2):
+    ∃q, OddParent q (ray n j) ∧
+      (CascadeSweep.ReachC (2,0) (q,0) → (2*q+5)%9=0):=by
+  obtain ⟨q,hodd,hq⟩:=one_odd_parent_exists n j d hn hmargin hd
+  refine ⟨q,hodd,?_⟩
+  intro hroot
+  by_cases hnew:(2*q+5)%9=0
+  · exact hnew
+  · exact False.elim ((odd_tone_quotient_two_dead_no9 n j q d hn
+      hsector hmargin hd hq hmodd hnew) hroot)
+
 #print axioms one_odd_parent_exists
 #print axioms quotient_one_genuine_branch_dead
+#print axioms quotient_two_genuine_requires_secondary_nine
 end CascadeOddCandidate
