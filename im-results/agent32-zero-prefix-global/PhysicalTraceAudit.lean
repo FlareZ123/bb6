@@ -54,6 +54,12 @@ theorem readOneReturnTable_actual_first_unknown :
     firstUnknownPhysical readOneReturnTable 3 finiteBlank =
       some (⟨0, by decide⟩, true) := by decide
 
+/-- The older read-zero control-graph-only split policy sees no free
+    slot on this very same partial table, even though the physical tape
+    run genuinely demands the unassigned A/1 transition. -/
+theorem readOneReturnTable_zero_only_scan_misses :
+    scanControlPath readOneReturnTable 6 ⟨0, by decide⟩ = none := by decide
+
 theorem readOneReturnTable_first_unknown_is_free :
     readOneReturnTable (⟨0, by decide⟩, true) = none :=
   firstUnknownPhysical_sound readOneReturnTable 3 finiteBlank _
