@@ -59,6 +59,10 @@ jobs:
           for m in ScanFail StripTwos ExecutableReturn FastForward FastDecision NewFiniteGates Gates270to281 Gates282to299 GatesTo299 FullThrough299; do
             lean -o "$r/$m.olean" "$r/$m.lean"
           done
+          for m in HalfRank HalfResetRank HalfDepth HalfFatal; do
+            lean -o "$r/$m.olean" "$r/$m.lean"
+          done
+          echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
           echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
