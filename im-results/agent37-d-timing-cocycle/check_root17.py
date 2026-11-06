@@ -143,8 +143,59 @@ def main() -> None:
 
     assert index == 67895
     print("PASS: DRegular arithmetic replay through the seventeenth exception.")
-    print("The seventeenth case has t mod 3 = 0 and q-1 = 6,")
-    print("matching the all-parameter three-return E/E/A source family.")
+    print("The seventeenth case has t mod 3 = 0, q = 7, and EAllDouble parameter 6.")
+
+    # Provisional lookahead: assume the proposed seventeenth E/E/A source
+    # theorem returns to L(8*(64*u17+10)+39,3,2). The following root transports
+    # are arithmetic predictions until their source-level Lean chain is added.
+    t17 = (state.a - 7) // 9
+    assert t17 % 27 == 6
+    u17 = t17 // 3
+    state = L(8 * (64 * u17 + 10) + 39, 3, 2)
+    index += 3
+
+    lookahead = (
+        (2902, 4, 3, 22, 100189, 40,
+         "9e243d9b93114e44802052832ec31474654f0b102cc3bb6f560aa3a53b81e5e0"),
+        (9780, 1, 9, 12, 114030, 37,
+         "a1a269cbba34f375f7dd0b253daa0aec8cfd3c68de2e6a6cd453e18364ff3eb5"),
+        (2040, 7, 5, 4, 116920, 43,
+         "a6f7923f597dff19cebe20c4ee6552be60eed28736dbec6ae944072cb10bbdef"),
+    )
+    print("LOOKAHEAD (assumes the proposed seventeenth source reentry):")
+    print("episode,index,regular_steps,a_mod9,q,t_mod27,bits,a_mod81,sha256_le")
+    for episode, (steps, residue, q, t_mod27, bits, mod81, digest) in enumerate(
+        lookahead, 18
+    ):
+        state = advance(state, steps)
+        index += steps
+        offset = 7 if residue == 7 else 4 if residue == 4 else 10
+        t = (state.a - offset) // 9
+        actual = (
+            state.a % 9,
+            state.q,
+            t % 27,
+            state.a.bit_length(),
+            state.a % 81,
+            fingerprint(state.a),
+        )
+        target = (residue, q, t_mod27, bits, mod81, digest)
+        assert actual == target, (episode, index, actual, target)
+        assert next_regular_is_exception(state)
+        print(
+            f"{episode},{index},{steps},{residue},{q},{t_mod27},"
+            f"{bits},{mod81},{digest}"
+        )
+        if episode == 18:
+            state = L(64 * t + 23, 1, 5)  # Agent25 BGeneral, p=1
+            index += 2
+        elif episode == 19:
+            state = L(64 * t + 113, 0, 0)  # Agent25 EAGeneral, p=2
+            index += 2
+
+    assert index == 82624
+    print("PASS: arithmetic lookahead through the twentieth exception.")
+    print("The twentieth candidate is in the k=3t+1, t=1 mod 3, q=5 off-L family.")
 
 
 def next_regular_is_exception(state: L) -> bool:
