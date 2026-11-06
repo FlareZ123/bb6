@@ -44,7 +44,7 @@ theorem new_high_class_previously_allowed (j m : Nat)
   dsimp [BB6.Agent19Joint.highAllowed,
     BB6.Agent3.jointHighRectAllowed, BB6.Agent3.jointHighAllowed]
   rcases hfin with ⟨h1,h2,h3,h4,h5,h6,h7,h8,h9,h10⟩
-  exact ⟨⟨h1,h2,h3,h4,h5⟩,h6,hdy,h7,h8,h9,h10⟩
+  exact ⟨⟨⟨h1,h2,h3,h4,h5⟩,h6⟩,hdy,h7,h8,h9,h10⟩
 
 #print axioms new_high_class_previously_allowed
 end BB6.Agent29Joint
