@@ -123,7 +123,7 @@ theorem zero_exception_direct_parity (x y v u : Nat)
     (hy : 5≤y) (hfact : x+y=2^v*(2*u+1))
     (hdirect : directExactCandidates x y ≠ [])
     (hzero : zeroExactCandidates x y v u ≠ []) :
-    v%2=0 ∧ x%2=0 := by
+    v%2=0 ∧ x%2=0 ∧ 3≤v := by
   have hdir : y%2=0 ∧ secNext (x+y-2,(y-2)/2)=some (x,y) := by
     unfold directExactCandidates at hdirect
     by_cases h : y%2=0 ∧ secNext (x+y-2,(y-2)/2)=some (x,y)
@@ -177,7 +177,7 @@ theorem one_exception_direct_parity (x y v u : Nat)
     (hy : 5≤y) (hfact : x+y+1=2^v*(2*u+1))
     (hdirect : directExactCandidates x y ≠ [])
     (hone : oneExactCandidates x y v u ≠ []) :
-    v%2=0 ∧ x%2=1 := by
+    v%2=0 ∧ x%2=1 ∧ 4≤v := by
   have hdir : y%2=0 ∧ secNext (x+y-2,(y-2)/2)=some (x,y) := by
     unfold directExactCandidates at hdirect
     by_cases h : y%2=0 ∧ secNext (x+y-2,(y-2)/2)=some (x,y)
