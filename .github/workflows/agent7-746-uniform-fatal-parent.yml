@@ -94,4 +94,5 @@ jobs:
           lean -o "$g/RayForkPrune.olean" "$g/RayForkPrune.lean"
           lean -o "$g/OddCandidate.olean" "$g/OddCandidate.lean"
           lean -o "$g/NineForkDead.olean" "$g/NineForkDead.lean"
+          lean -o "$g/ResetEnvelope.olean" "$g/ResetEnvelope.lean"
           echo "Lean kernel validated the complete n>=4 fatal-parent normal form, mod18 unique even-parent classes, and all-precision ray depth period/unit coefficient."
