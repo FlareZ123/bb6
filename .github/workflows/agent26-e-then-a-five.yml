@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent26-cryptid-e-gate:im-results/agent32-cryptid-padding
     steps:
       - uses: actions/checkout@v4
       - name: Restore SHA-authenticated original D-machine components
@@ -50,3 +50,8 @@ jobs:
           lean -o "$E/A110101Closure.olean" "$E/A110101Closure.lean"
           lean -o "$E/E1101010111ThenAQ1.olean" "$E/E1101010111ThenAQ1.lean"
           lean "$E/E1101010111ThenAQ1Polynomial.lean"
+          Z=im-results/agent32-cryptid-padding
+          lean -o "$Z/EZeroPair.olean" "$Z/EZeroPair.lean"
+          lean -o "$E/EFourAlternating.olean" "$E/EFourAlternating.lean"
+          lean -o "$E/EOnePairTwoReturnsA.olean" "$E/EOnePairTwoReturnsA.lean"
+          lean "$E/EOnePairTwoReturnsBE.lean"
