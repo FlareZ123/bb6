@@ -25,19 +25,24 @@ theorem nat_lt_three_pow_succ (n : Nat) : n < 3^(n+1) := by
       have hpos : 0 < 3^(n+1) := Nat.pow_pos (by decide)
       have hstep : 3^(n+1) < 3^(n+2) := by
         conv_rhs => rw [Nat.pow_succ]
-        nlinarith [Nat.pow_pos (by decide : 0 < 3) (n+1)]
+        nlinarith
       omega
 
 /-- Powers of three are monotone in their natural-number exponent. -/
 theorem three_pow_mono {m n : Nat} (h : m ≤ n) : 3^m ≤ 3^n := by
-  induction h with
-  | refl => rfl
-  | step h ih =>
-      calc
-        3^m ≤ 3^_ := ih
-        _ ≤ 3^(_+1) := by
-          conv_rhs => rw [Nat.pow_succ]
-          nlinarith [Nat.pow_pos (by decide : 0 < 3) _]
+  have hp : ∀ k : Nat, 1 ≤ 3^k := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+        conv_rhs => rw [Nat.pow_succ]
+        nlinarith
+  have hmul := Nat.mul_le_mul_left (3^m) (hp (n-m))
+  calc
+    3^m = 3^m * 1 := by simp
+    _ ≤ 3^m * 3^(n-m) := hmul
+    _ = 3^(m+(n-m)) := by rw [Nat.pow_add]
+    _ = 3^n := by rw [Nat.add_sub_of_le h]
 
 /-- A new-cone predecessor of a state satisfying the necessary halting
 logarithmic gate must already lie in the old affine cone. -/
