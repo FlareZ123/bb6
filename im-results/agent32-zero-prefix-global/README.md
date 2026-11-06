@@ -1,12 +1,12 @@
 # Global raw-table frontier from the first read-zero control path
 
-**Current status:** original-source Lean-verified certified-or-open partial frontier, plus an exact combinatorial and exhaustive-computational count of **52.786874368%** of raw six-state/two-symbol tables with a sound short-halt or nonhalt certificate. This is intermediate infrastructure. BB(6) remains unresolved. Agent44 previously established the entire nonhalting portion, so no novelty claim is made for it.
+**Current status:** original-source Lean-verified certified-or-open partial frontier, plus an exact combinatorial and exhaustive-computational count of **52.786874368%** of raw six-state/two-symbol tables with a sound short-halt or nonhalt certificate, and ten additional pairwise-disjoint two-slot nonhalting ray cylinders that raise the guaranteed total to **54.386874368%**. This is intermediate infrastructure. BB(6) remains unresolved. Agent44 previously established the entire nonhalting portion, so no novelty claim is made for it.
 
 ## Mathematical statement
 
 Adopt Agent8's source formalization: a machine has 12 input rows, each with 25 possible actions (one halt, 12 write-zero ordinary moves, 12 write-one ordinary moves); an unassigned sparse input is distinct from an actual halt. Every run starts on a two-way all-zero tape in state A. Its Busy Beaver score includes the final attempted halting instruction.
 
-Starting at A, follow the six read-zero control rows until their first halt or first repeated state. Record two separate sufficient properties of the successful transitions: (Z) every action writes zero, preserving a physically blank tape even if directions change; (D) every action moves in one fixed direction, preserving a fresh blank ray even if the machine writes ones. If Z **or** D holds through the first repeated control state, the actual blank-start machine never halts. If Z **or** D holds until a first encountered halt, that halt is physically reached, after at most five successful moves, and has exact step score k between one and six. All other cases remain unclassified by this argument. In particular, following read-zero transitions after a write-one and a reversal is only an enumeration choice; it is **not** treated as a valid machine simulation without a separate physical source certificate.
+Starting at A, follow the six read-zero control rows until their first halt or first repeated state. Record two separate sufficient properties of the successful transitions: (Z) every action writes zero, preserving a physically blank tape even if directions change; (D) every action moves in one fixed direction, preserving a fresh blank ray even if the machine writes ones. If Z **or** D holds through the first repeated control state, the actual blank-start machine never halts. If Z **or** D holds until a first encountered halt, that halt is physically reached, after at most five successful moves, and has exact step score k between one and six. All other cases remain unclassified by this particular first-event argument. The separate reversing-ray proof below handles a disjoint additional family. In particular, following read-zero transitions after a write-one and a reversal is only an enumeration choice; it is **not** treated as a valid machine simulation without a separate physical source certificate.
 
 The first-repeat and first-halt cylinders are disjoint, and no path can visit seven new states. The raw-table counts, before any state renaming or tree-normal-form quotient, are:
 
@@ -28,7 +28,7 @@ Each entry counts assignments of the six read-zero input rows. Multiply by 25^6 
 - Unclassified in this conservative census: **28,141,215,820,312,500** (47.213125632%).
 - Whole raw universe: **25^12 = 59,604,644,775,390,625**.
 
-The percentage is a conservative, rigorously reasoned table classification. It does not provide a universal score upper bound or the number of rooted hard holdouts.
+The 52.786874368% figure is the conservative first-event partition. Adding the independently source-certified reversing-ray sector below yields **32,417,103,271,484,375** classified tables (54.386874368%) and **27,187,541,503,906,250** tables outside these specified families. These are conservative classification counts, with no universal score upper bound or claim about the number of rooted hard holdouts.
 
 ## Exact counting derivation
 
@@ -52,6 +52,26 @@ and per-k union HZ_k+HD_k-HI_k. At k=1 the condition on previous successful tran
 
 Both [check-all.cpp](check-all.cpp) and [check-union.cpp](check-union.cpp) independently enumerate **all 244,140,625** possible read-zero assignment vectors, following the state control graph to its first event. The latter tests Z and D directly per assignment and checks all category counts against the independent closed formulas. The source checks completed successfully in [manual CI 42291433782](https://github.com/FlareZ123/bb6/actions/runs/42291433782).
 
+## A disjoint two-transition reversing-ray sector
+
+A sharper genuine-root proof uses a one-move finite prefix to enter an oppositely directed fresh ray. Let q be any of B,C,D,E,F and let dir be either right or left. Fix exactly two read-zero actions:
+
+    A/0: write 0, move dir, enter q
+    q/0: write 1, move opposite(dir), stay in q.
+
+After the first ordinary move the machine is in state q at a fresh blank head cell, with its entire opposite-direction half-line still blank because A wrote zero. The assigned q/0 action then sweeps into that half-line forever, writing ones on cells it never revisits. All ten other input rows are unconstrained, so each certificate covers exactly 25^10 raw full-table completions. There are exactly ten such q/dir pairs; their A/0 actions are distinct, so the ten cylinders are pairwise disjoint and cover
+
+    10 * 25^10 = 953,674,316,406,250 raw tables = 1.600000000%.
+
+They lie entirely outside the first-event Z-or-D classification above: their rooted read-zero graph first revisits q after two transitions of opposite directions and mixed write bits. The previous first-event halt family is disjoint as these machines never halt. Consequently the mathematical guaranteed classified mass is
+
+    31,463,428,955,078,125 + 953,674,316,406,250
+    = 32,417,103,271,484,375 raw tables (54.386874368%).
+
+[EntryControlAudit.lean](EntryControlAudit.lean) defines the ten exact two-slot tables, verifies each via the **original-source finiteRayOracle at prefix length one**, kernel-checks each cylinder mass 25^10, and constructs a stronger global certified-or-open frontier with an additional sound prefix-ray entry oracle. Its all-table exhaustiveness and total-mass conservation are Lean theorems; no unknown leaf is converted into a guessed halting verdict. A source CI job [run 42292636823, job 128149734164](https://github.com/FlareZ123/bb6/actions/runs/42292636823/job/128149734164) compiled the actual original Agent8/44/4 dependencies and these new theorems with only standard Lean axioms, no sorryAx. The exact first-action disjointness test is also source-formalized.
+
+The finite-prefix ray mechanism is established prior infrastructure in [Agent44's prefix-drift theorem](../agent44-drift-closure/PrefixDrift.lean) and [Agent8's ray checker](../agent8-coverage-contract/RayFiniteOracle.lean). The ten-cylinder counting and global integration are intermediate applications; external novelty has not been established.
+
 ## Actual source-proof-carrying frontier
 
 [ZeroPathAudit.lean](ZeroPathAudit.lean) defines the narrower global sparse frontier that follows known zero-writing actions only. Its first-free-input scanner is formally sound, and the raw-table frontier is exhausted by certified or explicitly open cases. [Source CI 42290328171](https://github.com/FlareZ123/bb6/actions/runs/42290328171) checked standard-only Lean axioms and computed the executable report:
@@ -69,6 +89,6 @@ Formally compiled theorems include scanControlPath_sound, directionalMaskOracle_
 
 Agent44's prior [directed-drift and zero-writer work](../agent44-drift-closure/README.md) already gives the 43.907809280% nonhalting union and source-checked individual certificate schemas. Agent42 independently counted a special normalized zero cycle. Agent8 constructed the 25-way source Cover contract; Agent4 proved disjoint frontier mass accounting and authentic-root integration. This investigation adds a disjoint short-halting union and a concrete fully source-checked adaptive global frontier applying existing sound oracles. It is under im-results because external novelty has not been established.
 
-The hard sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
+The remaining open sector retains genuine long-halting and possible nonhalting machines, including the historical undecided roots. No complete universal upper bound, exact champion runtime, or exhaustive global closure exists. Closing BB(6) requires a finished all-table certificate with a proved attained score in the standard step semantics.
 
 **Next:** obtain a source-audited numeric report for the combined audit, investigate finite-prefix clean-ray entry or formally checked lasso leaves that expand genuine original-machine coverage, and connect the surviving sparse search to nontrivial rooted six-state machines. Avoid treating a hypothetical read-zero graph path after write-one reversal as a real blank-tape orbit.
