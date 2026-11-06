@@ -216,18 +216,6 @@ jobs:
           if grep -E -q 'sorryAx|error:' /tmp/agent9-universal-budget.log; then exit 1; fi
           grep -F 'universal_blank_critical_cylinder_budget' /tmp/agent9-universal-budget.log
 
-      - name: Audit difficult q70 and q89 high-cost P1 infinite cylinders
-        run: |
-          set -euo pipefail
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q41"
-          lean -o im-results/agent9-p1-q41/QBudgetFinite.olean im-results/agent9-p1-q41/QBudgetFinite.lean | tee /tmp/agent9-large-cylinders.log
-          for m in Q70Budget Q89Budget; do
-            lean "im-results/agent9-p1-q41/$m.lean" | tee -a /tmp/agent9-large-cylinders.log
-          done
-          if grep -E -q 'sorryAx|error:' /tmp/agent9-large-cylinders.log; then exit 1; fi
-          grep -F 'blank_no_critical_1122_plus_2pow71' /tmp/agent9-large-cylinders.log
-          grep -F 'blank_no_critical_1426_plus_2pow65' /tmp/agent9-large-cylinders.log
-
       - name: Source-audit independent arbitrary dyadic cutoff K and cost budget B
         run: |
           set -euo pipefail
@@ -237,3 +225,17 @@ jobs:
           done
           if grep -E -q 'sorryAx|error:' /tmp/agent9-paramK.log; then exit 1; fi
           grep -F 'universal_blank_critical_cylinder_param_K' /tmp/agent9-paramK.log
+
+      - name: Audit difficult q70 and q89 high-cost P1 infinite cylinders
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q41"
+          lean -o im-results/agent9-p1-q41/QBudgetFinite.olean im-results/agent9-p1-q41/QBudgetFinite.lean | tee /tmp/agent9-large-cylinders.log
+          lean -o im-results/agent9-p1-q41/QBudgetFiniteK.olean im-results/agent9-p1-q41/QBudgetFiniteK.lean | tee -a /tmp/agent9-large-cylinders.log
+          for m in Q70Budget Q89Budget; do
+            lean "im-results/agent9-p1-q41/$m.lean" | tee -a /tmp/agent9-large-cylinders.log
+          done
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-large-cylinders.log; then exit 1; fi
+          grep -F 'blank_no_critical_1122_plus_2pow71' /tmp/agent9-large-cylinders.log
+          grep -F 'blank_no_critical_1426_plus_2pow66' /tmp/agent9-large-cylinders.log
+
