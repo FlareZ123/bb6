@@ -287,12 +287,23 @@ theorem source_exceptional_last_reset_two_depths
     · have hbpAtN : bp+8*2^n=4*k+4*n+12 := by
         rw [htN,hpow3] at hbpEq
         exact hbpEq
-      have hbpExact : bp+4*(mp+t+1)+16=20*2^n := by omega
-      have hdpExact : dp+6*2^n=2*(mp+t+1)+5 := by
-        rw [htN] at hdpFormula
+      have hkmN : k+(mp+n+1)+n+7=7*2^n := by
+        rw [htN] at hkm
+        exact hkm
+      have hbpExact : bp+4*(mp+t+1)+16=20*2^n := by
+        rw [htN]
         omega
-      have hmpExact : mp+n+1=mp+t+1 := by omega
-      have hmLower : 3*2^n-2≤mp+t+1 := by omega
+      have hdpFormulaN := hdpFormula
+      rw [htN,hpow3] at hdpFormulaN
+      have hdpExact : dp+6*2^n=2*(mp+t+1)+5 := by
+        rw [htN]
+        omega
+      have hmpExact : mp+n+1=mp+t+1 := by
+        rw [htN]
+        rfl
+      have hmLower : 3*2^n-2≤mp+t+1 := by
+        rw [htN]
+        omega
       have hipExact : inverseAt bp dp n=some (k,1) := by
         simpa [htN,hc1] using hip
       exact ⟨bp,dp,mp,zp,k,hpre,hzEq,rfl,hkm,
@@ -300,12 +311,23 @@ theorem source_exceptional_last_reset_two_depths
     · have hbpAtN1 : bp+16*2^n=4*k+4*n+16 := by
         rw [htN1,hpow4] at hbpEq
         omega
-      have hbpExact : bp+4*(mp+t+1)+12=12*2^n := by omega
-      have hdpExact : dp=2*2^n+2*(mp+t+1)+3 := by
-        rw [htN1] at hdpFormula
+      have hkmN1 : k+(mp+n+2)+n+7=7*2^n := by
+        rw [htN1] at hkm
+        exact hkm
+      have hbpExact : bp+4*(mp+t+1)+12=12*2^n := by
+        rw [htN1]
         omega
-      have hmpExact : mp+n+2=mp+t+1 := by omega
-      have hmUpper : mp+t+1≤3*2^n-5 := by omega
+      have hdpFormulaN1 := hdpFormula
+      rw [htN1,show n+1+3=n+4 by omega,hpow4] at hdpFormulaN1
+      have hdpExact : dp=2*2^n+2*(mp+t+1)+3 := by
+        rw [htN1]
+        omega
+      have hmpExact : mp+n+2=mp+t+1 := by
+        rw [htN1]
+        rfl
+      have hmUpper : mp+t+1≤3*2^n-5 := by
+        rw [htN1]
+        omega
       have hipExact : inverseAt bp dp (n+1)=some (k,1) := by
         simpa [htN1,hc1] using hip
       exact ⟨bp,dp,mp,zp,k,hpre,hzEq,rfl,hkm,
