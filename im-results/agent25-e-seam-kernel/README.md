@@ -48,7 +48,9 @@ safe v =
 
 Consequently `BB6.TreeCert.every_seam_path_safe` proves for **every finite abstract path from any one of the 128 original-table A-boundary seeds** that marker contact, when it happens, is in C/1 or A/1. As with the E certificate, source-level physical-tape simulation into this abstraction is a separate formal obligation; the proof covers the stated abstract system without a step cutoff.
 
-The A classification has a genuinely different marker-contact mechanism from the E all-C/1 result. The A1 alternative is witnessed by the concrete finite suffix `111` and is consistent with earlier observations of variable timing curvature under A stack shifts. This is a new Lean validation of a finite abstract safety statement in the repository; external mathematical novelty and root relevance remain unestablished. [A-boundary CI workflow](../../.github/workflows/agent25-a-seam-kernel.yml) is manual-only.
+Additional **finite computational evidence** for m=3..12 at right radius 7 gives exactly 4,733+252*(m-3) visited states and 5,462+252*(m-3) abstract edges, while the 94 C/1 and 16 A/1 marker-state counts remain fixed. This is a tested finite range, with no quantified all-m theorem.
+
+The A classification has a genuinely different marker-contact mechanism from the E all-C/1 result. The A1 alternative is witnessed by the concrete finite suffix `111` and is consistent with earlier observations of variable timing curvature under A stack shifts. This is a new Lean validation of a finite abstract safety statement in the repository; external mathematical novelty and root relevance remain unestablished. [A-boundary CI workflow](../../.github/workflows/agent25-a-seam-kernel.yml) is manual-only. **[GitHub Actions run 42150279323](https://github.com/FlareZ123/bb6/actions/runs/42150279323) SUCCESS**, confirming the independent original-table A graph and all 148 generated kernel proof blocks against unmodified repository sources.
 
 ## Next mathematical work
 
