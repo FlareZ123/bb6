@@ -13,7 +13,7 @@ private theorem odd_bounce_sum_even_general (c b x y:Nat)
   have hs : x+y=2*(2^n*(b+3)) := by
     calc
       x+y=2^n*(2*b+6) := hsum
-      _=2^n*(2*(b+3)) := by omega
+      _=2^n*(2*(b+3)) := by rw [show 2*b+6=2*(b+3) by omega]
       _=2*(2^n*(b+3)) := by ac_rfl
   omega
 
