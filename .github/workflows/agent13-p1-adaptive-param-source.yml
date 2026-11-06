@@ -103,3 +103,12 @@ jobs:
           grep -F 'no_unbounded_run1' /tmp/agent13-fixed-depth.log
           grep -F 'no_infinite_fixed_depth' /tmp/agent13-fixed-depth.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-fixed-depth.log; then exit 1; fi
+      - name: Verify zero-depth margin and original-source P1 feeder transport
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param"
+          lean -o im-results/agent13-p1-adaptive-param/ZeroDepth.olean im-results/agent13-p1-adaptive-param/ZeroDepth.lean | tee /tmp/agent13-zero-ray.log
+          lean im-results/agent13-p1-adaptive-param/ZeroDepthSource.lean | tee -a /tmp/agent13-zero-ray.log
+          grep -F 'source_p1_feeder0_no_zero_ray' /tmp/agent13-zero-ray.log
+          grep -F 'source_p1_feeder1_no_zero_ray' /tmp/agent13-zero-ray.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-zero-ray.log; then exit 1; fi
