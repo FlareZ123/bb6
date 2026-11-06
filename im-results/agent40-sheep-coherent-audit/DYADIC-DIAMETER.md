@@ -1,71 +1,77 @@
 # Exact generic dyadic diameter of the Sheep first-even quotient
 
-**Agent 40, 6 November 2026.** Mathematical theorem, extending the previously finite diameter observation in [DIAMETER-FINITE.md](DIAMETER-FINITE.md). For every integer (p\ge1), the directed diameter of the **synthetic generic** Sheep even-return graph (G_p) modulo (2^p) is exactly
+**Agent 40, 6 November 2026.** For every integer \(p\ge1\), the directed diameter of the **synthetic generic** Sheep first-even return graph \(G_p\) modulo \(2^p\) is exactly
 
-[
+\[
 \boxed{\operatorname{diam}(G_p)=\lfloor p/2\rfloor.}
-]
+\]
 
-This is an all-parameter written proof composed from Agent 22's previously established inverse-word bijection and genuine-edge realization, plus Agent 40's previously established exact shortest-to-zero theorem, with a new short **saturation lemma**. An independent Lean 4.36.0-rc2 kernel certificate proves the saturation property in its abstract affine-gate form; the entire machine-source diameter theorem has **not** been kernel checked end-to-end. This is a structural result about synthetic residue paths. It proves no reachability statement for the fixed blank-origin integer 10 and makes no BB(6) bound or holdout decision.
+This proves the all-parameter conjecture recorded in [the previous finite census](DIAMETER-FINITE.md). It combines a new target-saturation lemma with Agent 22's published-in-repository inverse-word bijection, CRT edge-realizability and outgoing-zero-hub results, and Agent 40's earlier exact shortest-to-zero theorem. It has a rigorous mathematical argument and independent Lean verification of its abstract affine core; an end-to-end original-machine Lean certificate is **not** claimed. The result concerns a **synthetic quotient graph**, with different positive integer witnesses allowed for different edges. It is not a genuine blank-orbit reachability theorem, does not close the Sheep holdout, and does not determine BB(6).
 
-## Definitions and established prerequisites
+## Precise graph, original semantic boundary, and dependencies
 
-The original machine and its reduction are described by [Agent 16's pinned source bridge](../agent16-sheep-even-return/README.md), CI [41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547). (G_p), defined precisely in [Agent 22's dyadic theorem](../agent22-sheep-mixed-hub/DYADIC-COMPLETENESS.md), has one vertex for each even residue modulo (M=2^p). An edge (r\to s) means **there exists** a legal positive generic first-even Sheep section return with those source/target residues; different edges are allowed different integer witnesses. This is deliberately weaker than an orbit from one prescribed starting integer.
+The original Sheep machine is \`1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_---1LE\`. Agent 16's [original-source even-section bridge](../agent16-sheep-even-return/README.md), [successful CI 41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547), reduces its halting to the genuine even-section orbit from the fixed state \(10\) reaching a power \(2^j\), \(j\ge2\). Our graph \(G_p\), defined in [Agent 22's dyadic theorem](../agent22-sheep-mixed-hub/DYADIC-COMPLETENESS.md), has one vertex for each even residue modulo \(M=2^p\). An edge \(r\to s\) exists when a **legal, positive generic first-even section return** maps some source with residue \(r\) to a target with residue \(s\). A quotient path need not lift to a single physical orbit.
 
-For (1\le a<p), (0\le h<p-a), put (c=a+h+1), (D_a=1+2^{a+1}). Agent 22's complete genuine generic inverse edge family is
+For \(1\le a<p\) and \(0\le h<p-a\), set \(c=a+h+1\), \(D_a=1+2^{a+1}\). Agent 22's source-realizable inverse-residue map is
 
-[
+\[
 T_{p,a,h}(s)\equiv
 2^aD_a^{-1}\bigl(3-2a+2^{h+1}3^{-h}(s-1)\bigr)\pmod {2^p}.
-	ag{1}
-]
+\tag{1}
+\]
 
-All inverses of odd integers exist modulo powers of two. Every even (s) gives a real (freely chosen) integer witness for (T_{p,a,h}(s)\to s).
+The inverses of the odd integers \(D_a,3\) exist modulo powers of two. For **every even** target \(s\), \(T_{p,a,h}(s)\to s\) is a genuine generic quotient edge, witnessed by arbitrarily large positive inputs via Agent 22's CRT construction.
 
-Agent 22's all-(p) canonical-code theorem establishes: every even residue (r) has a unique word (W=((a_1,h_1),\ldots,(a_j,h_j))) with **total cost** (C(W)=\sum_i(a_i+h_i+1)\le p), such that
+The same earlier work proves a bijection between even residues \(r\) and admissible words \(W=((a_1,h_1),\ldots,(a_j,h_j))\) of total cost
 
-[
-r=\Phi_p(W;0):=
-T_{p,a_1,h_1}\bigl(\cdots T_{p,a_j,h_j}(0)\cdots\bigr).
-]
+\[
+C(W)=\sum_{i=1}^{j}(a_i+h_i+1)\le p,
+\]
 
-Its length (\lambda_p(r)=j\) is at most (k=\lfloor p/2\rfloor), since each letter costs at least 2. The already proved [shortest-to-zero theorem](DYADIC-DISTANCE.md) states (d_{G_p}(r,0)=\lambda_p(r)), and that the maximum (\lambda_p\) equals (k). Finally, the explicit generic zero hub has an edge (0\to s) for **every** even (s).
+whose inverse nesting from zero is \(r=\Phi_p(W;0)\), where
 
-## New universal saturation lemma
+\[
+\Phi_p(W;s)=T_{p,a_1,h_1}(\cdots T_{p,a_j,h_j}(s)\cdots).
+\]
 
-**Lemma.** For any admissible word (W) and any two even residues (s,t), if (C(W)\ge p-1), then
+Write \(\lambda_p(r)=j\). Each letter costs at least two, hence \(\lambda_p(r)\le k:=\lfloor p/2\rfloor\). Agent 40's earlier [all-parameter shortest-to-zero argument](DYADIC-DISTANCE.md) establishes \(d_{G_p}(r,0)=\lambda_p(r)\) and shows the maximum code length is \(k\). The established zero hub gives one edge \(0\to s\) for every even \(s\).
 
-[
-\Phi_p(W;s)=\Phi_p(W;t)\pmod {2^p}.
-	ag{2}
-]
+## New saturation lemma
 
-**Proof.** Rewrite (1) as (T_{p,a,h}(s)\equiv b_{a,h}+2^c u_{a,h}s\pmod {2^p}), for a constant (b_{a,h}) and an odd unit (u_{a,h}=D_a^{-1}3^{-h}). Every letter therefore multiplies a change in its target residue by (2^c) times an odd unit. Composing the letters gives the exact modular affine difference identity
+**Lemma.** For any admissible word \(W\) with \(C(W)\ge p-1\), and any even residues \(s,t\),
 
-[
+\[
+\Phi_p(W;s)\equiv\Phi_p(W;t)\pmod {2^p}.
+\tag{2}
+\]
+
+**Proof.** Formula (1) has the modular affine form
+\[
+T_{p,a,h}(s)\equiv b_{a,h}+2^c u_{a,h}s\pmod {2^p},
+\qquad u_{a,h}=D_a^{-1}3^{-h}\ \text{odd}.
+\]
+Composing these affine maps multiplies all input differences by the product of their slopes. Thus
+\[
 \Phi_p(W;s)-\Phi_p(W;t)
 \equiv 2^{C(W)}U_W(s-t)\pmod {2^p},
-\quad U_W\text{ odd}.
-	ag{3}
-]
+\]
+where \(U_W\) is odd. Since both \(s,t\) are even, \(2\mid(s-t)\). Together with \(C(W)+1\ge p\), this makes the right side divisible by \(2^p\). QED.
 
-Both targets are even, hence (2\mid(s-t)). If (C(W)\ge p-1), the right side is divisible by (2^p), proving (2). This argument includes (C(W)\ge p), where all target information is already lost. QED.
-
-The independently compiled [AffineSaturation.lean](AffineSaturation.lean) proves the corresponding exact affine-composition shift and all-even-target modular saturation for arbitrary natural gate coefficients and any (p\le C+1). This captures the arithmetic core of the lemma without assuming an original-machine Lean import; applying it to (1) uses the displayed elementary modular rewriting. The Lean axiom audit reports only `[propext]` and no `sorryAx`.
+The standalone [AffineSaturation.lean](AffineSaturation.lean) proves the affine-composition shift identity for arbitrary gate biases, factors, and costs, followed by the general even-target saturation statement for every \(p\le C+1\). It was compiled locally under Lean 4.36.0-rc2, and both theorems report **only** \`[propext]\` as an axiom, with no \`sorryAx\`. This certificate isolates the new arithmetic core; it does not itself import (1) or Agent 22's word-bijection proof.
 
 ## Exact diameter theorem
 
-Set (k=\lfloor p/2\rfloor), and take arbitrary even source (r) and even target (s).
+Fix \(p\ge1\), put \(k=\lfloor p/2\rfloor\), and let \(r,s\) be arbitrary even residue vertices.
 
-* If (\lambda_p(r)\le k-1), follow the canonical (\lambda_p(r))-edge route (r\to0) and then the genuine generic hub edge (0\to s). Its length is at most (k).
-* If (\lambda_p(r)=k), its canonical word (W) has (k) letters. Therefore (C(W)\ge2k\ge p-1). By the lemma, (\Phi_p(W;s)=\Phi_p(W;0)=r). Starting from (s) and applying the letters of (W) in reverse order gives (k) legitimate inverse generic edges, which read forwards as a **(k)-edge synthetic path** (r\to s). Here every intermediate residue is even and each inverse edge is witnessed by the established CRT realization.
+1. If \(\lambda_p(r)<k\), take the canonical path \(r\to0\) of \(\lambda_p(r)\) generic edges, then the zero-hub edge \(0\to s\). This has length at most \(k\).
+2. If \(\lambda_p(r)=k\), let \(W\) be the canonical word of \(r\). Its \(k\) letters give \(C(W)\ge 2k\ge p-1\). Saturation yields \(\Phi_p(W;s)=\Phi_p(W;0)=r\). Apply the letters of \(W\) in reverse order starting at the chosen target \(s\). The intermediate residues are even and every inverse letter represents a genuine generic quotient edge; reading these backwards gives a **\(k\)-edge directed path from \(r\) to \(s\)**.
 
-Consequently (d_{G_p}(r,s)\le k) for all pairs. If (p=1), there is only the zero vertex and the same assertion gives diameter zero. For the opposite inequality, the proven shortest-to-zero code-length theorem supplies an (r) with (d_{G_p}(r,0)=k). Thus (\operatorname{diam}(G_p)=k). QED.
+The upper bound holds for all pairs. For \(p=1\), the only vertex is zero and the diameter is zero. The shortest-to-zero theorem supplies an \(r\) at distance exactly \(k\) from zero, giving the matching lower bound. Therefore \(\operatorname{diam}(G_p)=k\). QED.
 
-**Additional useful corollary.** Every residue whose canonical word has cost at least (p-1) can reach *every* even target in at most its code length, by retaining precisely the same inverse-word letters and replacing terminal zero with the chosen target. This sharpened statement is target-uniform in the synthetic graph only.
+**Stronger constructive corollary:** Any residue whose canonical word has \(C(W)\ge p-1\) reaches every even target within \(\lambda_p(r)\) quotient edges using the **same sequence of inverse letters**. The integer witnesses remain independently chosen for each edge.
 
-## Independent tests and scope
+## Reproduction, novelty, and remaining task
 
-[diameter_certificate.py](diameter_certificate.py) independently reconstructs canonical words and the inverse map and checks **every even target for every maximum-length source** for (1\le p\le15). In particular the p=15 case includes 15 maximal-length sources and 16,384 targets. This is a finite arithmetic regression of the general saturation argument, distinct from its proof. The older [all-pairs BFS census](DIAMETER-FINITE.md) establishes the diameters for (p\le11) by an independent exact graph method.
+The independent [diameter_certificate.py](diameter_certificate.py) reconstructs the inverse map and canonical decoder from the displayed arithmetic and exhaustively checks **every even target for every maximal-code source** for \(1\le p\le15\). The earlier [independent complete graph BFS](DIAMETER-FINITE.md) verified the entire all-pairs diameter for \(p\le11\). Neither finite computation supplies the proof's all-parameter quantifiers.
 
-**Scientific status.** Equation (1), word uniqueness/exhaustiveness, edge-realizability, zero hub, and shortest-to-zero theorem are cited mathematical prerequisites; the new proof is conditional on their correctness, with the Lean kernel covering the affine saturation sublemma only. The comprehensive original-machine source bridge applies to the return semantics, but the claim here concerns the freely witnessed generic quotient, never the true blank-root trajectory. Prior-art novelty outside this repository has not been established. Keep this under `im-results/`, not `results/`. For BB(6), the decisive remaining question is whether the genuine even orbit from 10 reaches any power of two.
+The precise scope of this advancement is a synthetic graph-theoretic theorem, building on documented all-parameter **mathematical** prerequisites. The kernel verifies the new algebraic saturation abstraction; a complete Lean proof of the actual inverse-word bijection and its original-machine transport remains open. External academic novelty has not been established. Keep this note under \`im-results/\`, not \`results/\`. The authentic Sheep holdout still requires a global invariant or real witness for the **single** even orbit from \(10\).
