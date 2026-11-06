@@ -73,7 +73,8 @@ theorem aPositiveFirst (m q r : Nat) (ys : List Bool) :
     have hp : s5 m q r ys =
         (⟨oppairs (q+2) ++ core m,true,
           List.replicate (2*r+4) true ++ ys,3⟩ : Cfg) := by
-      simp [s5, fourOnes]
+      exact congrArg (fun z : List Bool =>
+        (⟨oppairs (q+2) ++ core m,true,z,3⟩ : Cfg)) (fourOnes r ys)
     rw [hp]
     exact dBridge q (core m) (List.replicate (2*r+4) true ++ ys)
   have hgh : run (2*q) g = h := by
