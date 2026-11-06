@@ -50,7 +50,6 @@ theorem blank_no_four_link_slope (u v : Nat) (hv : 2≤v) :
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at hr
-      omega
   | succ t =>
       have hi := BB6.Agent3.blank_section_odd_image t
         (32*u+120*v+15) (4*v-1) hr (by omega) (by omega)
