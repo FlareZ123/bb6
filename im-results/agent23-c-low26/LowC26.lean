@@ -26,7 +26,7 @@ theorem blank_no_one_mod256_26 (t : Nat) (ht : 1 ≤ t) :
       (by omega) (by omega) (by omega) (by omega) (by omega) (by omega)).mp h2
     have hx : ((384*t+35)+(64*t+5)-4)/2=224*t+18 := by omega
     have hy : ((384*t+35)+3*(64*t+5)-10)/4=144*t+10 := by omega
-    simpa only [hx,hy] using hh
+    simpa only [hx,hy, BB6.Agent3.CReach] using hh
   have h4 : BB6.Agent3.CReach (368*t+26) (72*t+4) := by
     have hh := (six_even_right_blank_reach_iff (224*t+18) (144*t+10)
       (by omega) (by omega) (by omega) (by omega)).mp h3
