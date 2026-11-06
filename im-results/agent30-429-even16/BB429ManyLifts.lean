@@ -30,8 +30,9 @@ theorem certificate_for_mem (r : Nat) (hr : r ∈ newLifts) :
     reachability relation, uniformly for every natural q. -/
 theorem no_reach_cylinder (q r : Nat) (hr : r ∈ newLifts) :
     ¬ Reach (16384*q+r) (32768*q+2*r-1) := by
-  exact cert_sound 12 ⟨16384,r,32768,2*r-1⟩ q
-    (certificate_for_mem r hr)
+  simpa [va, vb] using
+    (cert_sound 12 ⟨16384,r,32768,2*r-1⟩ q
+      (certificate_for_mem r hr))
 
 /-- The exact BB429 blank-root orbit avoids all forty additional terminal
     residues. No finite-time cutoff is assumed. -/
