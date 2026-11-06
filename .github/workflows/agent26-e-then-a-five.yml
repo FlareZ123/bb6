@@ -46,3 +46,6 @@ jobs:
           lean -o "$E/E1101010111ThenA.olean" "$E/E1101010111ThenA.lean"
           lean -o "$E/E1101010111ThenAFive.olean" "$E/E1101010111ThenAFive.lean"
           lean "$E/E1101010111ThenAFivePolynomial.lean"
+          lean -o "$B/A1100.olean" "$B/A1100.lean"
+          lean -o "$E/A110101Closure.olean" "$E/A110101Closure.lean"
+          lean "$E/E1101010111ThenAQ1.lean"
