@@ -1,4 +1,4 @@
-name: Agent 49 BB6 623 sharp ternary translation (manual)
+name: BB6 #623 affine gate-parent envelope (manual)
 on:
   workflow_dispatch:
   push:
@@ -7,6 +7,7 @@ on:
       - im-results/agent49-parity623/TernaryShiftSource.lean
       - im-results/agent49-parity623/TernaryBufferSource.lean
       - im-results/agent49-parity623/AffinePredecessorBoundsSource.lean
+      - im-results/agent8-623-inverse/GatePredecessorSource.lean
 permissions:
   contents: read
 jobs:
@@ -55,4 +56,9 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/AffinePredecessorBoundsSource.lean" Agent49AffinePredecessorBoundsSource.lean
-          lake env lean Agent49AffinePredecessorBoundsSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49AffinePredecessorBoundsSource.olean Agent49AffinePredecessorBoundsSource.lean
+      - name: Prove blank-root logarithmic-gate predecessor envelope
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/GatePredecessorSource.lean" Agent8GatePredecessorSource.lean
+          lake env lean Agent8GatePredecessorSource.lean
