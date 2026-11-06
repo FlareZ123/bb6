@@ -1,37 +1,54 @@
-# Source-certified marked-return ray cylinders
+# Source-certified physical read-one branches and all-symbol traps
 
-**Status (6 November 2026):** Forty pairwise disjoint genuine blank-root nonhalting cylinders in the original six-state, two-symbol source model. Original unmodified source dependencies and [MarkedReturnSource.lean](MarkedReturnSource.lean) compiled successfully in [manual Lean CI 42304709471](https://github.com/FlareZ123/bb6/actions/runs/42304709471), job 128191002496. The certificates use only the standard Lean axioms `propext`, `Classical.choice`, and `Quot.sound`. This is an intermediate global coverage improvement, not a determination of any hard BB(6) holdout, universal upper bound, or exact BB(6).
+**Status (6 November 2026):** Original-source Lean 4.36.0-rc2 verification of **80 pairwise-disjoint nonhalting full-table cylinders**, a complementary **20 exact-three-step halting cylinders**, and a general finite-prefix all-symbol trap rule. Every partial table leaves nine of twelve transition rows completely unrestricted. All theorems compiled with only standard axioms in [manual CI 42306505800](https://github.com/FlareZ123/bb6/actions/runs/42306505800), which rebuilt the original Agent8 and Agent4 source modules. This is intermediate proof infrastructure; no historically difficult blank-root machine is decided, and BB(6) remains open.
 
-## Exact physical theorem
+## Mathematical outcome: a real marked-cell return
 
-Let `q` be any one of B,C,D,E,F, choose an initial direction `d`, and choose arbitrary write bits `u,v`. Fix just three state-symbol rules:
+Take an arbitrary state `q` in B..F, an initial direction `d`, and an arbitrary zero-read write bit `u`. Fix two transitions:
 
-- `A/0 = (write 1, move d, q)`.
-- `q/0 = (write u, move opposite d, q)`.
-- `q/1 = (write v, move opposite d, q)`.
+1. `A/0 = (write 1, direction d, state q)`;
+2. `q/0 = (write u, direction opposite d, state q)`.
 
-The other nine rules are arbitrary, including halts. Starting on the true blank tape, A marks the origin, moves into the fresh neighbor in state q, and q reads 0. That move reverses onto the marked origin, where q necessarily reads 1. The assigned q/1 move takes the head to the previously untouched cell in direction opposite d. From there q/0 advances into fresh zeros forever in the same direction; nothing else can be consulted. This is an infinite valid original-source run, independent of all nine omitted entries.
+The true blank-root run first writes a one at the origin and moves to the adjacent blank cell in state q; it then reverses to the origin. Its third physical input is precisely **q/1**, regardless of the value of `u`, because the origin still holds the marked one. The other nine table slots have no bearing on this three-event prefix.
 
-The [Lean theorem `markedReturn_source_cover`](MarkedReturnSource.lean) proves `Cover (DecidedBelow bound) (markedReturnTable q d u v)` for every parameter tuple in the exact forty-element list and for every natural bound. It invokes the original finite-support tape semantics and `finiteRayCheck_sound` after three *actual* steps, including the read-one step. The source check is kernel-evaluated (`by decide`) in `markedReturnParams_ray`; no post-reversal read-zero approximation is used.
+Complete this genuine read-one input in either of the following two source-certified ways:
 
-## Mass and pairwise disjointness
+- **All-symbol trap:** choose any write bit `v` and either direction `e`, and fix `q/1 = (write v, direction e, state q)`. Both q/0 and q/1 now execute ordinary transitions back to q on every possible symbol, so all subsequent transitions are defined and the machine never halts. This yields `5 × 2 × 2 × 2 × 2 = 80` pairwise-disjoint nonhalting sparse cylinders.
+- **Exact short halt:** fix `q/1 = halt`. The third attempted transition halts, so the **exact Busy Beaver step score is 3** in every full completion. This yields `5 × 2 × 2 = 20` pairwise-disjoint halting sparse cylinders.
 
-There are exactly `5 * 2 * 2 * 2 = 40` tuples. Every sparse table fixes exactly three of the twelve independent machine input rows; hence it has exactly `25^9` compatible full tables. The theorem `markedReturnCases_mass` kernel-checks this for every listed table. The theorem `markedReturn_unique` proves that one full machine cannot extend two parameter-distinct tables: A/0 determines q and d, while the q/0 and q/1 rules determine u and v. The finite parameter list is proved length 40 with no duplicates. Thus the union contains exactly
+The ten-way originally known A/0-zero-write turning-ray classes do not overlap either family. The new all-symbol trap also subsumes the **40** independently source-certified ray-turning cases where `e = opposite d`, documented in [MarkedReturnSource.lean](MarkedReturnSource.lean). The all-symbol argument additionally covers the `e=d` cases, where a fresh-ray proof need not apply because the head may revisit nonblank tape.
 
-```
-40 * 25^9 = 152,587,890,625,000
-```
+## Complete source-proof statements
 
-of the `25^12 = 59,604,644,775,390,625` raw tables, or exactly 0.256% of the full space.
+[SymbolCompleteTrap.lean](SymbolCompleteTrap.lean) defines `BothSymbolClosed` and `PartialBothSymbolClosed`: every transition on both symbols from any state in a closed set is a nonhalting move to another state in that set. The original `run` semantics proves `bothSymbolPrefix_never` from a genuine finite prefix followed by a closed set. `bothSymbolPrefix_cover` lifts it to **all compatible full tables** when that prefix is checked on the original finite-support physical tape. `bothSymbolPrefixCheck_sound` and the reusable `bothSymbolFiniteOracle_sound` are fully proved Boolean source checkers for arbitrary state masks and bounded proof-search prefix lengths. The finite cutoff bounds **certificate discovery** only; the resulting statement is all-time nonhalting.
 
-These forty cylinders are disjoint from Agent32's existing analytically enumerated 52.786874368% first-event Z-or-D class because the root transition writes one and q's read-zero transition immediately reverses. They are disjoint from the ten reversing-ray cylinders in [EntryControlAudit.lean](../agent32-zero-prefix-global/EntryControlAudit.lean) because those fix A/0 to write zero. Consequently the already justified 54.386874368% conservative family increases to **54.642874368%**, representing `32,569,691,162,109,375` distinct raw full machines, by an elementary disjoint union. The new material is contained in `im-results/` because this does not yet close any difficult root.
+The same file defines `markedSinkTable`, proves `markedSinkParams_length = 80`, parameter `Nodup`, the source check `markedSinkParams_source`, and universal sparse certification `markedSink_source_cover`. The genuine original semantics is used, with no imaginary post-reversal read-zero simulation. `markedSink_unique` proves that a single complete table cannot extend distinct parameter tuples.
 
-## Relationship to the broader six-zero-row census
+[MarkedHaltBranch.lean](MarkedHaltBranch.lean) provides the independent original-source physical halt proof. It proves `finiteHaltCheck_exact` for every accepted finite halt check; `markedHaltParams_check` verifies all 20 marked-cell trajectories by Lean kernel `decide`; `markedHalt_exact` proves `HaltsAfter m 2` for **every** compatible total machine; and `markedHalt_source_cover` constructs the corresponding `Cover (DecidedBelow 3)`. `markedHalt_unique` proves no two of the 20 families overlap, and `markedHalt_sink_disjoint` proves there is no full machine in both families.
 
-The independent exhaustive C++ census in [Agent32's dossier](../agent32-zero-prefix-global/README.md) reports 143,060,975 classified assignments of the six read-zero input rows out of 244,140,625 (58.597775360% of raw full tables). This is a **different**, broader computational classification; the current repository does not yet have a kernel theorem equating that count with the complete Lean zero-row audit mass. For any zero-row assignment extending our fixed A/0 and q/0, the C++ classifier cannot recognize a pristine zero-write cycle, cannot recognize a closed fresh directed ray before the second step, and encounters the marked read-one slot at its next step. It therefore records that zero-row assignment as open. Thus the new class is disjoint from the C++-reported classification *as a predicate*, yielding a conditional combined computational count `35,079,583,740,234,375` raw machines (58.853775360%) if the C++ count is taken as accurate. This conditional numeric comparison is kept separate from the unconditional 54.642874368% combinatorial union above.
+[MarkedReturnSource.lean](MarkedReturnSource.lean), the first chronological proof, directly uses the original `finiteRayCheck_sound` after three genuine steps, providing a second independent nonhalting proof for its 40-case subfamily. Its `markedReturn_unique` and `markedReturnCases_mass` likewise prove disjointness and the per-cylinder mass.
 
-## Verification boundary and next task
+## Raw-table mass and separation from prior classifications
 
-CI [42304709471](https://github.com/FlareZ123/bb6/actions/runs/42304709471) checked exact theorem names `markedReturnParams_ray`, `markedReturn_source_cover`, `markedReturnCases_mass`, and `markedReturn_unique` against unchanged source modules. The pairwise witness semantics and each sparse-cylinder mass are source-proved. The closed-form union counting uses the certified length, uniqueness theorem, and elementary 25-way independent-completion combinatorics.
+Each sparse family fixes three of the 12 two-symbol control slots; thus each contains exactly `25^9` full tables. Both `markedSinkCases_mass` and `markedHaltCases_mass` are source-checked Lean theorems. Pairwise uniqueness and cross-family incompatibility yield the exact union:
 
-The highest-value follow-up is to compose this physical read-one branch into a global source-carrying residual-tree audit and connect it to an authentic unresolved root, rather than optimizing the raw-table percentage by adding more easy local patterns. A separate exact source-kernel equality for the broader six-zero-row census remains open.
+| Outcome | Sparse cases | Fully specified tables | Full raw-space share |
+| --- | ---: | ---: | ---: |
+| Never halts | 80 | 305,175,781,250,000 | 0.512% |
+| Exact step score 3 | 20 | 76,293,945,312,500 | 0.128% |
+| **Combined** | **100** | **381,469,726,562,500** | **0.640%** |
+
+The reference universe is the full raw `25^12 = 59,604,644,775,390,625` table set, before any state/symmetry quotient. The existing conservative first-event Z/D certificate family covers 52.786874368%; Agent32's ten reversing-ray classes, whose A/0 writes zero, add a disjoint 1.6%. Our 100 new cylinders all have A/0 write one and a reversing q/0, so they satisfy neither first-event Z/D condition. Therefore the **conservative analytic certified-or-decided union** increases from **54.386874368%** to **55.026874368%**, or exactly **32,798,572,998,046,875** raw complete tables. This is a simple disjoint combinatorial union of source-sound cylinder families, not a numerical evaluation of the adaptive Lean frontier.
+
+The more comprehensive six-read-zero-row C++ census in [Agent32's dossier](../agent32-zero-prefix-global/README.md) reports 143,060,975 / 244,140,625 zero-row assignments classified, equivalent to 58.597775360% of raw tables. On the current 100 cylinder templates its independent classifier cannot reach a read-zero cycle, a physical short read-zero halt, or a pristine infinite outward ray: the marker at the origin prevents the reverse-direction ray check, and the physical scanner encounters the assigned read-one q/1 before its next zero-row action. Consequently these cases are outside that **specific C++ classified predicate** and, *conditional on its reported exact count*, add to **59.237775360%** (35,308,465,576,171,875 raw tables). An exact Lean theorem equating the C++ classified cardinality with the separate Lean `globalZeroRowAudit.report` has **not** been proved. This conditional comparative percentage is not promoted to a kernel-proved frontier mass.
+
+## Reproducibility and limits
+
+- [CI 42304709471](https://github.com/FlareZ123/bb6/actions/runs/42304709471) originally checked the forty authentic turning-ray cylinders.
+- [CI 42306027519](https://github.com/FlareZ123/bb6/actions/runs/42306027519) verified the general all-symbol prefix invariant and 80 marked sink cylinders.
+- [CI 42306505800](https://github.com/FlareZ123/bb6/actions/runs/42306505800) additionally checked the exact score-three siblings, their mass and pairwise disjointness. The final `#print axioms` output of all named theorems contains at most `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or mock imports.
+- The selective manual workflow is [agent12-marked-return-source.yml](../../.github/workflows/agent12-marked-return-source.yml). No automatically triggered workflow was introduced.
+
+**Authentic-root relevance check:** a deterministic examination of the 663 exact rooted RLE entries in [the October 16 holdout mirror](../../resources/BB6_holdouts_663_2026-10-16.txt) found **zero direct matches** to these 100 marked-return families and zero machines with any nonempty, globally closed all-symbol control-state subset (checking both symbols and iterating successor closure). This is an auxiliary finite file audit, not a Lean kernel theorem and not a decision about any holdout. No claim of resolving a difficult root is made.
+
+**Next high-value direction:** compose the original `bothSymbolFiniteOracle` with the genuine physical read-one branch selection in [PhysicalTraceAudit.lean](../agent32-zero-prefix-global/PhysicalTraceAudit.lean), and seek a source-authenticated *difficult* rooted residual witness or another quantified invariant beyond finite control closure. More trivial raw-table mass alone will not prove the global upper bound or champion score.
