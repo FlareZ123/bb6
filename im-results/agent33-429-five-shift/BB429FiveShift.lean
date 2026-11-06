@@ -594,7 +594,7 @@ theorem no_reach_1233 (q : Nat) :
   | succ q =>
       have h1 : 16384*(q+1)+1233 = 16384*q+17617 := by omega
       have h2 : 32768*(q+1)+2465 = 32768*q+35233 := by omega
-      rw [Nat.succ_eq_add_one, h1, h2]
+      rw [h1,h2]
       exact tail_1233 q
 
 private theorem tail_5117 (q : Nat) :
@@ -609,7 +609,7 @@ theorem no_reach_5117 (q : Nat) :
   | succ q =>
       have h1 : 16384*(q+1)+5117 = 16384*q+21501 := by omega
       have h2 : 32768*(q+1)+10233 = 32768*q+43001 := by omega
-      rw [Nat.succ_eq_add_one, h1, h2]
+      rw [h1,h2]
       exact tail_5117 q
 
 private theorem tail_7165 (q : Nat) :
@@ -624,7 +624,7 @@ theorem no_reach_7165 (q : Nat) :
   | succ q =>
       have h1 : 16384*(q+1)+7165 = 16384*q+23549 := by omega
       have h2 : 32768*(q+1)+14329 = 32768*q+47097 := by omega
-      rw [Nat.succ_eq_add_one, h1, h2]
+      rw [h1,h2]
       exact tail_7165 q
 
 private theorem tail_8189 (q : Nat) :
@@ -642,7 +642,7 @@ theorem no_reach_8189 (q : Nat) :
       | succ q =>
           have h1 : 16384*((q+1)+1)+8189 = 16384*q+40957 := by omega
           have h2 : 32768*((q+1)+1)+16377 = 32768*q+81913 := by omega
-          rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, h1, h2]
+          rw [h1,h2]
           exact tail_8189 q
 
 private theorem tail_14333 (q : Nat) :
@@ -657,7 +657,7 @@ theorem no_reach_14333 (q : Nat) :
   | succ q =>
       have h1 : 16384*(q+1)+14333 = 16384*q+30717 := by omega
       have h2 : 32768*(q+1)+28665 = 32768*q+61433 := by omega
-      rw [Nat.succ_eq_add_one, h1, h2]
+      rw [h1,h2]
       exact tail_14333 q
 
 /-- Five new complete source-root terminal cylinders. -/
