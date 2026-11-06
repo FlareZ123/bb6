@@ -146,3 +146,13 @@ jobs:
           if grep -E -q 'sorryAx|error:' /tmp/agent9-general-precision.log; then exit 1; fi
           grep -F "BB6.Precision.precision_step' depends on axioms: [propext, Quot.sound]" /tmp/agent9-general-precision.log
           grep -F "BB6.Precision.depth_lt_K' depends on axioms: [propext, Quot.sound]" /tmp/agent9-general-precision.log
+
+      - name: Audit original P1 odd-cone to exact unbounded shadow-path transport
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
+          for m in UniformPrecisionStep UniformPrecisionPath UniformSourceCone; do
+            lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean" | tee -a /tmp/agent9-original-source-shadow-reach.log
+          done
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-original-source-shadow-reach.log; then exit 1; fi
+          grep -F 'genuine_cone_shadow_reach' /tmp/agent9-original-source-shadow-reach.log
