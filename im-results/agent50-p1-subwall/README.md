@@ -49,11 +49,24 @@ Multiplying by `2^(2z)`, using `2z<=mp+t+1` and the exact source cost equality, 
 
 Agent43 previously gave the last-reset cost tradeoff on paper for exact wall equality; see [LastResetTradeoff.md](../agent43-p1-high-cost-reset-count/LastResetTradeoff.md) and [SubwallExtension.md](../agent43-p1-high-cost-reset-count/SubwallExtension.md) for related ideas and priority. This source certification makes the offset-uniform argument independently reusable.
 
+5. **Exact final-reset classification for the exceptional right-five terminal under a 5/2 exponential budget** [ExceptionalLastResetDepthSource.lean](ExceptionalLastResetDepthSource.lean): for `n>=14,z>=1`, a genuine source `CountCone (14*2^n-2*n-16) 3 b 5 m z` satisfying `2*m+n+2<=5*2^n` has a last positive reset with zero upper-tail length and exact depth `t=n+1`, with source counter `c=1`. If `(bp,dp,mp,zp)` is the prefix hub and `k` is the inverse parameter, the exact identities are
+   ```
+   z = zp+1
+   b = 2*k-4
+   k+m+n+7 = 7*2^n
+   bp+4*m+12 = 12*2^n
+   dp = 2*2^n+2*m+3
+   mp+n+2 = m.
+   ```
+   This is a structural theorem about the source inverse cone. It does not assert that the terminal state is actually blank-reachable or close the exceptional branch. The manual source CI [42252893616](https://github.com/FlareZ123/bb6/actions/runs/42252893616) recompiles the original dependencies and explicitly rejects `sorryAx` in the theorem's axiom audit.
+
+All compilation used [manual-only source workflow](../../.github/workflows/agent50-p1-subwall-source.yml) with unchanged, real original P1 modules and SHA-checked archived reset sources; no mock `CountCone`, `sorryAx`, `native_decide`, or fabricated proof imports. The exact-depth proof imports the already compiled `CountedWallStrongGateSource` directly and reconstructs the last-reset argument; it deliberately does not depend on Agent43's currently non-elaborating `ExceptionalLastResetSource.lean` draft. These are **mathematically proved necessary conditions for inverse histories**, not a reachability or halting classification, not a claim of P1 nonhalting, and not a universal BB(6) upper bound. The exact academic novelty relative to external literature is unassessed, and the work remains `im-results/` pending independent review. Agent43's preceding exact-wall proofs and paper subwall observations retain intellectual priority for the shared structural approach.
+
 ## Next questions
 
-1. Combine the bound with source-authenticated necessary gates for the real **entire** even-exit branch to exclude a whole infinite family, rather than merely lower-bound its cost.
-2. Derive a quantitative reset-count lower bound for arbitrary `b<=4(m+n+r)`, analogous to the original exact-wall Agent50 inequality `2^n<=24^z(n+2)^(2z+2)`. That exact-wall proof uses equality essentially; do not assume it already transfers.
-3. Investigate the complementary `m>2^n` sector and the exceptional-right-coordinate exit. The present theorem does not constrain them.
+1. Extend the exact right-five last-reset classification beyond `2*m+n+2<=5*2^n`; above this budget a zero-depth tail may reappear and the final inverse depth need not be `n+1`.
+2. Find a source-to-trace bridge for the exceptional `c=1` branch. The exact-depth theorem classifies a `CountCone` witness and must not be mistaken for reachability of its endpoint.
+3. Combine the all-width subwall inequalities with authenticated gates for the full even-exit branch, then investigate the complementary high-cost `m>2^n` sector.
 
 **Research status:** a new source-verified, fully quantified necessary obstruction; no six-state machine classified, no exact BB(6) value.
 
