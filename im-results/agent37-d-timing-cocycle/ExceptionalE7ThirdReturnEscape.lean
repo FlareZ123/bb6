@@ -106,11 +106,11 @@ private theorem third_return (u q : Nat) (hq : 3 ≤ q) :
   exact BB6.CryptidTriplePairs.full_E_triple_pairs
     (64*u+31) 2 (suffix3 q)
 
-private theorem first_return (u q : Nat) :
+private theorem first_return (u q : Nat) (hq : 3 ≤ q) :
     BB6.BoundaryPadding.ObsEq
       (run (eTime u q) (sourceStart u q))
       (BB6.Agent32EAll.output (9*u+4) (q-1) []) := by
-  rw [e_start_shape u q (by omega)]
+  rw [e_start_shape u q hq]
   exact BB6.Agent32EAll.all_e_double_implicit_blank (9*u+4) (q-1)
 
 /-- For k=3t+1 with t=3u+1 and q≥3, three exact original-source
@@ -119,7 +119,7 @@ theorem exceptional_EEE_escape (u q : Nat) (hq : 3 ≤ q) :
     BB6.BoundaryPadding.ObsEq
       (run (totalTime u q) (sourceStart u q))
       (sourceEnd u q) := by
-  have h1 := first_return u q
+  have h1 := first_return u q hq
   have h2 : BB6.BoundaryPadding.ObsEq
       (run (middleTime u) (BB6.Agent32EAll.output (9*u+4) (q-1) []))
       (secondOutput u q) := by
