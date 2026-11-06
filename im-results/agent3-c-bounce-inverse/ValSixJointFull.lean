@@ -238,10 +238,6 @@ theorem blank_halts_iff_joint_val_six_full :
           ¬(j%8=5 ∧ m%8=4 ∧ (9*j+39)%128=(3*m)%128) := by
         rintro ⟨hj5,hm4,hpair⟩
         exact high_second_slope_no_root j m k hj5 hm4 hpair hstop hr
-      have hnon25 :
-          ¬(1≤m ∧ j%16=11 ∧ (j+3*m+9)%32=0) := by
-        rintro ⟨hm1,hj11,hpair⟩
-        exact high_rectangle25_no_root j m k hm1 hj11 hpair hstop hr
       have hnon27 : ¬(m%32=21 ∧ j%32=28) := by
         rintro ⟨hm21,hj28⟩
         have hm2 : 2≤m := by omega
