@@ -59,7 +59,7 @@ theorem pow_depth_period (k : Nat) :
             rw [show 2*k+1=(k+1)+k by omega,Nat.pow_add]
           simp only [depthCoeff]
           rw [hp1,hp2]
-          simp [Nat.pow_succ,Nat.mul_add,Nat.mul_assoc,
+          simp [Nat.pow_succ,Nat.mul_add,Nat.add_mul,Nat.mul_assoc,
             Nat.mul_comm,Nat.mul_left_comm]
           omega
 
