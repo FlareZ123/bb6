@@ -92,20 +92,27 @@ theorem even_burst_affine_iter (n W k : Nat)
 conditional only on its displayed entry state. -/
 theorem n22_zero_row_segment (k : Nat) (hk : k≤331127) :
     BB429.run (k*23) (0,25165912)=some (0,25165912+76*k) := by
-  have hn : 22%4=2 := by norm_num
-  have hW : 25165912%4=0 := by norm_num
-  have hlo : 6*2^22≤25165912+3*22+6 := by norm_num
-  have hk' : k*76≤331127*76 := Nat.mul_le_mul_right 76 hk
-  have hhi : 25165912+k*76+3*22+18≤12*2^22 := by
-    norm_num at hk'
+  have hn : 22%4=2 := by decide
+  have hW : 25165912%4=0 := by decide
+  have hpow : 2^22=4194304 := by decide
+  have hlo : 6*2^22≤25165912+3*22+6 := by rw [hpow]; omega
+  have hmul : 331127*76=25165652 := by decide
+  have hbound : k*76≤25165652 := by
+    calc
+      k*76≤331127*76 := Nat.mul_le_mul_right 76 hk
+      _=25165652 := hmul
+  have hhi : 25165912+k*(3*22+10)+3*22+18≤12*2^22 := by
+    rw [show 3*22+10=76 by decide, show 3*22+18=84 by decide, hpow]
     omega
-  simpa using even_burst_affine_iter 22 25165912 k hn hW hlo hhi
+  simpa [show 22+1=23 by decide,
+    show 3*22+10=76 by decide, Nat.mul_comm] using
+      even_burst_affine_iter 22 25165912 k hn hW hlo hhi
 
 theorem n22_zero_row_block_end :
     BB429.run (331127*23) (0,25165912)=some (0,50331564) := by
   have h := n22_zero_row_segment 331127 (by omega)
-  norm_num at h ⊢
-  exact h
+  have hval : 25165912+76*331127=50331564 := by decide
+  simpa [hval] using h
 
 #print axioms even_burst_affine_return
 #print axioms even_burst_affine_iter
