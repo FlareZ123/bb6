@@ -2,7 +2,7 @@
 
 **Evidence synthesis: 6 November 2026.** This is a scientific navigation document. Use primary theorems and exact CI runs for authoritative proof scope. It is not a live agent-status feed or permission system. The [older Critic updates and original annotated directory](archive/v1/BOARD-HISTORY-20261106.md) are preserved for historical evidence.
 
-**Global status:** The exact BB(6) step value remains unknown. No complete blank-start decision for all remaining machines, or exhaustive original six-state score certificate, has been proved here.
+**Global status:** BB(6) remains unsolved. The published champion gives the external lower bound `S(6) > 2 ↑↑↑ 5`; its exact primitive step count is not known here, and the external Rocq proof has not been imported as an unconditional Lean halting theorem. The repository now has a source-verified partial 25^12 frontier containing one authentic F287 nonhalting root and two elementary exact-score/nonhalting cylinders. No complete blank-start decision or exhaustive maximum certificate has been proved.
 
 ## Established leverage and decisive remaining questions
 
@@ -14,7 +14,7 @@
 | **#429** | [Source-connected 44/1024 necessary halting-gate criterion](../im-results/agent6-harmonic429/README.md), [CI 41869801195](https://github.com/FlareZ123/bb6/actions/runs/41869801195) | Prove every remaining fatal feeder is blank-unreachable or find a genuine halt; terminal congruence classes are necessary, not witnesses. |
 | **Cryptid D** | [Source-proved regular shift and exact time structure](../im-results/agent2-cryptid-continuity/README.md), with specific original-root reentries | Establish a physically valid forward-closed blank-root suffix language through every exception, or a true halt witness. |
 | **Sheep, S4 and other roots** | [Sheep inverse cones](../im-results/agent14-sheep-even-inverse/README.md), [S4 original-source two-exception reduction](../im-results/agent5-s4-source-bridge/README.md) | A uniform genuine-root exclusion or closure for the remaining branches, with physical tape and seed history. |
-| **Global coverage** | [Sound coverage interface and finite examples](../im-results/agent8-coverage-contract/README.md) | Exhaustive original six-state table coverage together with exact champion score/semantics. |
+| **Global coverage** | [Authentic-root plus exact-score partial frontier](../im-results/agent4-coverage-smoke/FRONTIER-AUDIT.md), [Lean audit](../im-results/agent4-coverage-smoke/AuthenticTurnBranchAudit.lean), [source CI 42260217683](https://github.com/FlareZ123/bb6/actions/runs/42260217683) | One source-authenticated F287 root, one exact score-2 cylinder, and one nonhalting turning cylinder are certified inside a mass-conserving 25^12 frontier. All other branches remain open; exact champion score and exhaustive upper bound remain missing. |
 
 These are scoped achievements. A source-verified necessary gate does not determine a machine. A synthetic ancestor does not prove that the authentic blank orbit reaches it. See the [results map](../results/README.md) for a fuller view.
 
@@ -24,7 +24,7 @@ These are scoped achievements. A source-verified necessary gate does not determi
 2. For P1, close the complete source inverse exit grammar for a surviving infinite family, or convert certified reset-cost bounds into an actual-root exclusion.
 3. For #746 and #429, derive all-index blank-origin restrictions from exact certified predecessor grammars rather than extending another finite cutoff.
 4. For D, Sheep, S4 and other roots, prove history-sensitive, physical-tape invariants across every exceptional return, or provide original-machine counterexamples.
-5. Independently close the original six-state global coverage and exact score proof chain.
+5. Import or independently reconstruct the current champion's halting proof and exact step semantics in Lean, then extend the source-authenticated partial frontier beyond F287 and the two elementary cylinders.
 
 ## Investigation directory
 

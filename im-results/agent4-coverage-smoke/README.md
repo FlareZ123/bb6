@@ -19,18 +19,19 @@ The external 2026-11-02 Critic [coverage-integration direction](../../communicat
 
 Next valuable integration: replace these elementary synthetic cylinders with a source-authenticated, genuinely difficult holdout or a larger parameterized branch. The current branch validates the end-to-end frontier path and exact scoring convention; it does not classify a historic holdout or close any other A/0 child.
 
-## A concrete two-leaf branch in the full enumeration (6 November 2026)
+## An authentic-root and exact-score branch in the full enumeration (6 November 2026)
 
-`TurnBranchAudit.lean` composes the existing exact source certificates with Agent 8's `IncrementalAudit` machinery. Its root is the genuinely unassigned A/0 input of the canonical six-state table space. The branch fixes A/0 to `0RB`, then distinguishes two disjoint B/0 outcomes:
+`AuthenticTurnBranchAudit.lean` starts from the source-authenticated F287 root audit and adds two disjoint cylinders using Agent 8's `IncrementalAudit` machinery:
 
-- **B/0 = halt:** one ordinary move reaches B on a blank cell, followed by the halting query. The exact Busy Beaver score is **2**. Ten table slots remain free, so this cylinder has exactly `25^10` full-table completions.
-- **B/0 = 1LC and C/0 = 1LC:** the run moves right once, turns left, then enters a perpetual leftward blank sweep. It never halts. Nine table slots remain free, giving exactly `25^9` completions.
+- **Historic F287 root:** `1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LB---`, present in the 663-root snapshot at `resources/BB6_holdouts_663_2026-10-16.txt:363`. The pinned Google DeepMind Cryptids A6 theorem `original_never` proves it never halts. Its A/0 action is 1RB, so it is disjoint from the two cylinders below.
+- **A/0 = 0RB, B/0 = halt:** every completion halts after one ordinary move and the final attempted halting query. The exact Busy Beaver score is **2**. Ten slots remain free, giving exactly `25^10` complete tables.
+- **A/0 = 0RB, B/0 = 1LC, C/0 = 1LC:** every completion turns left into a fresh blank ray and then moves left forever. It never halts. Nine slots remain free, giving exactly `25^9` complete tables.
 
-The two cylinders are disjoint because their B/0 transitions differ. All other A/0, B/0, and C/0 alternatives remain explicitly unresolved. `turnAndHaltAudit_exhaustive` gives the certified-or-open disposition for every one of the `25^12` canonical tables, and `turnAndHaltAudit_conserves` verifies exact total mass. The two classified cylinders have combined mass `25^10 + 25^9`.
+The three cylinders are pairwise disjoint. Their combined exact mass is `1 + 25^9 + 25^10`. `authenticTurnBranchAudit_exhaustive` gives every one of the `25^12` canonical tables a certified-or-open disposition, while `authenticTurnBranchAudit_mass` proves exact total mass conservation. Every other branch remains explicitly unresolved.
 
-The exact score convention is important: `HaltsAfter n` means n successful ordinary moves followed by the final attempted halting transition, whose score is n+1. The B/0 halt branch therefore has one ordinary move and score 2. The turning branch is a genuine infinite-tape proof, not a finite simulation cutoff.
+**Verification:** the canonical branch and exact score proof passed Lean 4.36.0-rc2 in [CI 42256263057](https://github.com/FlareZ123/bb6/actions/runs/42256263057). The combined F287-root audit passed against the pinned original Cryptids source commit `c86f15861709b76042998c5211c7b2f83991621b`, Lean 4.35.0-rc4, in [CI 42260217683](https://github.com/FlareZ123/bb6/actions/runs/42260217683). The final named theorems use only standard Lean axioms; no `sorryAx` appears. The independent Agent8/Agent13 full-tape and attempted-halt semantics bridge is in [CI 41488773370](https://github.com/FlareZ123/bb6/actions/runs/41488773370).
 
-This is a **partial branch of the real six-state table enumeration**, not a holdout decision or a BB(6) bound. It classifies two simple low-score cylinders and leaves the rest open. The targeted original-source Lean 4.36.0-rc2 check is `.github/workflows/agent4-turn-branch-audit.yml`; its result is pending until the workflow succeeds.
+This is a genuine partial branch of the actual six-state enumeration, with one authentic historic holdout root and two universal low-score cylinders. F287 was already externally proved nonhalting; this run does not newly discover that fact. The score-2 cylinder is deliberately elementary. No other holdout is decided, no champion score is proved, and no global upper bound or exact BB(6) value follows.
 
 ## Original-source equivalence of both complete six-state semantics (17:13 UTC)
 

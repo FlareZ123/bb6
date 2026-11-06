@@ -23,22 +23,22 @@ The theorem also identifies exactly which raw initial instructions remain open. 
 
 `FrontierAuditBench.lean` applies the *executable* search to Agent8's real `oneHoleUniversalTable`, with `bound=2`, `rayLimit=0`, and `depth=1`. The original `finiteDecisionOracle` certifies all 25 A/0 children. The new `oneHoleAuditedSearch_no_open` proves open mass zero; `oneHoleAuditedSearch_cover` obtains an original `Cover (DecidedBelow 2)` from it; all **25^7** compatible full tables are accounted for. This is a small reproducible completeness test for a specially constructed cylinder, not an exhaustive BB6 search.
 
-## A concrete two-leaf branch in the global table frontier (6 November 2026)
+## An authentic-root and exact-score branch in the global table frontier (6 November 2026)
 
-`TurnBranchAudit.lean` uses the existing Agent 8 `IncrementalAudit.graftCertificate` and `addCertificate` constructors to embed two disjoint certificates in a `FrontierAudit (DecidedBelow 2) emptyTable`. The first branch is the actual blank-start A/0 slot and fixes it to `0RB` (write 0, move right, enter B).
+`AuthenticTurnBranchAudit.lean` constructs one `FrontierAudit (DecidedBelow 2) emptyTable` from three pairwise-disjoint certified cylinders.
 
-Under that child:
+**1. Authentic historical root.** The base audit is `BB6.F287.globalAudit 2`. Its complete 12-slot table is the F287 A6 machine
+`1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LB---`, listed in the 663-root snapshot at `resources/BB6_holdouts_663_2026-10-16.txt:363`. `CryptidsF287.lean` imports the original upstream A6 machine and proves the canonical table equality; `CryptidsF287Global.lean` converts the upstream `original_never` theorem into a `Cover` leaf. The upstream source is pinned at `c86f15861709b76042998c5211c7b2f83991621b`. This is an existing source-authenticated nonhalting root, not a new holdout discovery.
 
-1. **B/0 = halt.** Every compatible complete table executes one ordinary A/0 move and then halts on the B/0 query. `twoStepHalt_exact_score` proves `HaltsAfter m 1`; the external score is exactly 2. There are ten unassigned slots, hence exactly `25^10` completions.
-2. **B/0 = 1LC, C/0 = 1LC.** The head first moves right, turns left in B, then enters a fresh leftward blank ray in C. `turnTable_never` proves all compatible completions never halt. There are nine unassigned slots, hence exactly `25^9` completions.
+**2. Exact-score halting cylinder.** A/0 = `0RB`, B/0 = halt. Every compatible complete table makes one ordinary move from A to B and then halts on the B/0 query. `twoStepHalt_exact_score` proves `HaltsAfter m 1`; since the Busy Beaver score includes the final attempted halting transition, the exact score is **2**. Ten slots are free, so the cylinder has exactly `25^10` completions.
 
-The two cylinders are disjoint because B/0 is assigned different actions. Every other A/0 action, every other B/0 action, and the other 24 C/0 actions remain open. `turnAndHaltAudit_exhaustive` proves every total 25-action table belongs to a certified or explicitly unresolved leaf. `turnAndHaltAudit_conserves` proves that certified plus open terminal mass is exactly `25^12`. The two known cylinders have combined exact mass `25^10 + 25^9`; this is only a small fraction of the full table space.
+**3. Nonhalting turning cylinder.** A/0 = `0RB`, B/0 = `1LC`, C/0 = `1LC). The machine moves right once, turns left in B, and then repeatedly enters fresh blank cells in state C while moving left. `turnTable_never` proves all compatible completions never halt. Nine slots are free, so this cylinder has exactly `25^9` completions.
 
-**Score semantics:** `HaltsAfter n` counts n successful ordinary moves followed by the final attempted transition with no successor. The score is n+1. Thus the halting leaf has one ordinary move and score 2. The nonhalting leaf has no score.
+The F287 root is disjoint from both A/0 = 0RB cylinders because its source-verified A/0 action is 1RB. The two latter cylinders are disjoint because their B/0 actions differ. The three cylinders therefore contain exactly `1 + 25^9 + 25^10` distinct complete tables. Every other branch remains open. `authenticTurnBranchAudit_exhaustive` gives a certified-or-open disposition for every one of the `25^12` canonical tables; `authenticTurnBranchAudit_mass` proves that certified plus open terminal mass is exactly `25^12`.
 
-The branch uses the canonical Agent 8 `Machine` model, with 12 slots and 25 actions per slot. The complete-tape and attempted-halt equivalence with Agent 13's raw six-state semantics is separately established in `CrossCoverage.lean` and `CrossUpper.lean` (CI 41488773370). The new integration itself is checked by the targeted manual workflow `.github/workflows/agent4-turn-branch-audit.yml`; **its original-source CI result is pending**. The constituent turning-ray and exact finite-halt proofs are in Agent 8's `RayTurnExample.lean` and `FiniteHalting.lean`.
+**Verification and source semantics.** The exact-score and turning-cylinder audit compiled under Lean 4.36.0-rc2 in [CI 42256263057](https://github.com/FlareZ123/bb6/actions/runs/42256263057). The combined F287 root and global branch compiled against the unmodified pinned Cryptids source under Lean 4.35.0-rc4 in [CI 42260217683](https://github.com/FlareZ123/bb6/actions/runs/42260217683). Axiom output for the final named theorems contains only `propext`, `Classical.choice`, and `Quot.sound`; there is no `sorryAx`. The complete-tape and attempted-halt equivalence between the canonical Agent 8 model and Agent 13 raw six-state semantics is separately source-verified in [CI 41488773370](https://github.com/FlareZ123/bb6/actions/runs/41488773370).
 
-This is a nontrivial branch of the actual six-state enumeration, but its leaves are elementary constructed cylinders, not historic holdouts. It supplies no new BB(6) bound, no champion, and no full global cover. Its value is the first integrated example in this dossier with both an exact halting score and a genuine nonhalting turning orbit inside one proof-carrying global branch.
+This is a concrete partial global branch with a genuine historic source root and an exact-score halting leaf. It does **not** close the remaining 25^12 search: the overwhelming majority of the frontier remains open, the two synthetic cylinders are elementary, and neither a champion score nor a universal upper bound is proved.
 
 ## Semantic bridge and authenticated-root integration attempt
 
@@ -50,7 +50,7 @@ The rooted singleton has mass one. Even with this authenticated leaf, an exhaust
 
 ## Reproduction
 
-The targeted manual workflow `.github/workflows/agent4-turn-branch-audit.yml` compiles the unchanged Agent 8 `Frontier`, `RayClosed`, `RayChecker`, `RayEntry`, `RayFinite`, `FiniteHalting`, and `RayTurnExample` modules, then compiles Agent 4 `FrontierAudit` and `FrontierMass`, Agent 8 `IncrementalAudit`, and the new `TurnBranchAudit.lean`. The broader manually dispatched workflow `.github/workflows/agent4-p1-cone2398.yml` checks:
+The targeted canonical-branch workflow `.github/workflows/agent4-turn-branch-audit.yml` passed as [run 42256263057](https://github.com/FlareZ123/bb6/actions/runs/42256263057). The combined source-authentic workflow `.github/workflows/agent4-authentic-turn-branch.yml` passed as [run 42260217683](https://github.com/FlareZ123/bb6/actions/runs/42260217683): it rebuilds the pinned Cryptids source and checks the F287 root, all ray/finite-halt dependencies, and the combined audit under Lean 4.35.0-rc4. The broader manually dispatched workflow `.github/workflows/agent4-p1-cone2398.yml` checks:
 1. all original Agent8 source files and `FrontierAudit`, `FrontierMass`, `FrontierClose`;
 2. `FrontierAuditExample`, `FrontierAuditSearch` and `FrontierAuditBench` using the original decider dependency chain;
 3. `RelativeTape`; and
