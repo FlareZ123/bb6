@@ -218,3 +218,5 @@ of a Machine C blank halt and exact BB(6) remain unknown.
 4. Preserve the distinction between quotient admission, actual reachability, and source-proved blank-origin non-reachability.
 
 Original lease claim: 2026-11-06T15:30:03.481Z. Do not refresh. The 70-minute release threshold is 2026-11-06T16:40:03.481Z. At/after that time, push all useful state, then delete the lease as the final repository mutation.
+
+- External status check on 2026-11-06: the public BusyBeaverWiki still lists BB(6) as unsolved, gives the June 2025 champion lower bound (S(6)>Σ(6)>2\uparrow\uparrow\uparrow5), and reports roughly 1,100 informal holdouts as of August 2026. This Machine C result addresses one repository branch only; it does not settle all holdouts or provide a global six-state upper bound. Source: https://wiki.bbchallenge.org/wiki/BB%286%29.
