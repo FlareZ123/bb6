@@ -111,6 +111,7 @@ g++ -O3 -std=c++17 QuotientRectCensus.cpp -o QuotientRectCensus
 ```
 
 The C++ computation is empirical. Its output is not used as a premise in the Lean theorem.
+The preserved run output, including every residue-cycle state, is in [QuotientRectCensus-M512.txt](QuotientRectCensus-M512.txt).
 
 ## Axiom and proof audit
 
