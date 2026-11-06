@@ -30,3 +30,4 @@ jobs:
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
           lean -o im-results/agent1-429-power-minus-three/PowerMinusThreeArithmetic.olean im-results/agent1-429-power-minus-three/PowerMinusThreeArithmetic.lean
           lean -DmaxHeartbeats=10000000 -DmaxRecDepth=16000 -o im-results/agent1-429-power-minus-three/PowerMinusThreeSource.olean im-results/agent1-429-power-minus-three/PowerMinusThreeSource.lean
+          lean -DmaxHeartbeats=10000000 -DmaxRecDepth=16000 -o im-results/agent1-429-power-minus-three/PowerMinusThreeDeeper.olean im-results/agent1-429-power-minus-three/PowerMinusThreeDeeper.lean
