@@ -1,0 +1,100 @@
+name: Agent 1 #429 673 true-root inverse cylinders original raw bridge (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bb429-source-chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
+      ORIGINAL_MODULE: BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned upstream Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Checkout fixed original Cryptids source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
+      - name: Fetch original pinned Mathlib cache
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          df -h /
+          for module in \
+            Mathlib.Computability.TuringMachine.PostTuringMachine \
+            Mathlib.Data.List.Basic \
+            Mathlib.Data.Nat.Basic \
+            Mathlib.Data.Nat.Prime.Basic \
+            Mathlib.Algebra.GCDMonoid.Finset \
+            Mathlib.Order.Interval.Finset.Nat \
+            Mathlib.Order.SuccPred.Basic \
+            Mathlib.Algebra.Order.SuccPred \
+            Mathlib.NumberTheory.LSeries.RiemannZeta \
+            Mathlib.SetTheory.ZFC.Basic; do
+            echo "::group::Mathlib targeted cache $module"
+            lake exe cache get "$module"
+            echo "::endgroup::"
+          done
+          df -h /
+      - name: Build original raw-TM accelerator
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: lake build "$ORIGINAL_MODULE"
+      - name: Compile all unchanged local BB429 modules and source bridge
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Rank.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent5-429-rank/BB429Burst.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent6-harmonic429/"*.lean .
+          python "$GITHUB_WORKSPACE/im-results/agent30-429-393/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/BB429No393mod512.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/SourceRawHalt42.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/BB429No265mod512.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/SourceRawHalt40.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/BB429No137mod1024.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/BB429No521mod1024.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-393/SourceRawHalt38.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent18-429-253/"*.lean .
+          for module in BB429Rank BB429Burst BB429LowOddMod8 BB429InverseRay BB429No125mod1024 BB429No381mod1024 BB429No393mod512 BB429No265mod512 BB429No137mod1024 BB429No521mod1024 BB429No509mod1024 BB429PowerBarrier BB429PowerBarrierBurst BB429NonFirstBurst BB429LastReset BB429FirstRunEq BB429TerminalReset BB429ElevenSeed ReturnLadder EscapeRay EscapeRoot ExitTransfer CorridorExceptions WholeCorridor VExitTransfer VWholeCorridor CrossRayReturn OddBoundary CrossRayOverflow OddUBounce OddCascade OddVSecondary OddVHigh OddVThirdOverflow OddVHighReturn BB429Mod8 BB429Extra11 BB429Extra19 BB429OneGate BB429Thirteen BB429Depth4 BB429Mod32Six BB429NoThree BB429HaltFeeder BB429NoTwentyFive BB429NewGate BB429Deep17 BB429TwentyOne BB429InverseParity BB429NoTwentyNine128 BB429NoNinetyThree128 BB429NoSixtyOne128 BB429No253 BB429No381 SourceLadder SourceMod16 SourceMod32 SourceMod32Six SourceRawHaltFunnel SourceRawHaltIff SourceRawHaltFive SourceRawHaltFour SourceRawHaltRefined SourceRawHaltNo253 SourceRawHalt1024 SourceRawHalt46 SourceRawHaltNo381 SourceRawHalt45 SourceRawHalt44 SourceRawHalt42 SourceRawHalt40 SourceRawHalt38; do
+            echo "::group::Compile $module"
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+            echo "::endgroup::"
+          done
+      - name: Verify 673 terminal ray exclusions against unchanged original Cryptids machine
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootEven8.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootMod16.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent39-429-1021/"BB429RootMod32.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-even16/"BB429Even16.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent30-429-even16/"BB429InverseKernel16.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent1-429-262144-sieve/"BB429SplitSieve.lean .
+          cp "$GITHUB_WORKSPACE/im-results/agent1-429-262144-sieve/"SourceRawHaltSplit.lean .
+          for module in BB429RootEven8 BB429Even16 BB429NewResidue BB429RootMod16 BB429RootMod32 BB429InverseKernel16 BB429SplitSieve SourceRawHaltSplit; do
+            echo "::group::Native source-check $module"
+            lake env lean -DmaxHeartbeats=50000000 -DmaxRecDepth=32768 -o ".lake/build/lib/lean/$module.olean" "$module.lean" 2>&1 | tee "/tmp/agent1-native-$module.log"
+            if grep -q sorryAx "/tmp/agent1-native-$module.log"; then
+              echo "ERROR: unexpected sorryAx in $module"; exit 1
+            fi
+            echo "::endgroup::"
+          done
