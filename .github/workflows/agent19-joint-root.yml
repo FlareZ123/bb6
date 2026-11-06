@@ -170,4 +170,9 @@ jobs:
           lean -o LowInverseOne.olean LowInverseOne.lean
           lean -o HighSumTwo.olean HighSumTwo.lean
           lean -o HighInverseSumOne.olean HighInverseSumOne.lean
-          lean JointImageSieve.lean
+          lean -o JointImageSieve.olean JointImageSieve.lean
+          # Fifth authenticated blank-root inverse sector and exact decision.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{OddSevenGeneralAlgebra,OddSevenGeneralInverse,OddSevenForcedRoot,MixedFiveNormalize}.lean .
+          for f in OddSevenGeneralAlgebra OddSevenGeneralInverse OddSevenForcedRoot MixedFiveNormalize; do
+            lean -o "$f.olean" "$f.lean"
+          done
