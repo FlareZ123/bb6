@@ -1,16 +1,10 @@
-# S4 uniform infinite drifting cylinder
+# S4 head dynamics: a global attractor and a stationary-triple dichotomy
 
-**Claim and status (6 November 2026; source-checked).** For the exact finite-list S4 three-drain map `P` from [S4 triple-drain reduction](../agent5-s4-octet/README.md), every list in the four-digit cylinder
+**Agent 5, 6 November 2026. Intermediate original-source mathematical research.** The exact three-drain map below is connected to the six-state, two-symbol S4 machine `1RB0LD_1LC1RD_0LE1LA_0RB1RD_---0LF_1RA1LF` through the existing [original-source reduction](../agent5-s4-octet/README.md). These new theorems classify several *synthetic input* families. They do not decide the authentic blank-tape machine or the six-state Busy Beaver value, and no external novelty review has occurred. The authentic reduced blank seed is `[301,650,645,322,163,160]`.
 
-```text
-[284,1646,1026,x] ++ S,     x ∈ ℕ, S any finite list of natural digits
-```
+## The exact source map
 
-survives indefinitely. Each return leaves the first three digits and entire suffix `S` unchanged while increasing the fourth digit by exactly 1024. This is a genuine **all-input, all-time symbolic nonhalting result for the reduced transducer**. It is **synthetic**: the known authentic S4 blank-tape reduced seed is `[301,650,645,322,163,160]`, and no reachability of the displayed cylinder from that seed has been established. Neither this theorem nor the preceding reduction decides S4 from blank tape or BB(6). Its external novelty remains to be assessed.
-
-## Exact theorem
-
-Define `G(c,[]) = H(c-1,[])` and `G(c,b::S)=H(b+c,S)`, where the original compact S4 odd-drain `H` is given in [S4PowerGate.lean](../agent5-s4-length/S4PowerGate.lean). Define
+Let `W([])=0`, `W(a::S)=a+1+2W(S)`. The source's all-depth odd-drain `G(c,·)` is defined in [S4Octet.lean](../agent5-s4-octet/S4Octet.lean) and [S4PowerGate.lean](../agent5-s4-length/S4PowerGate.lean). Its exact stopping condition for positive `c` is `G(c,T)=none ↔ W(T)+c=2^k` for some natural `k`. Define
 
 ```text
 P(T) = G(509,T) >>= G(290) >>= G(219).
@@ -18,31 +12,63 @@ prun(0,T)=some T;
 prun(n+1,T)=prun(n,T) >>= P.
 ```
 
-The new [Lean module](S4DriftRay.lean) proves, for **all** `n,x : Nat` and `S : List Nat`:
+For a successful `P` return, its first digit depends exclusively on the previous first digit by `f(a)=h(219,h(290,h(509,a)))`, where `h(c,a)=⌊(a+c)/2⌋+2` if `a+c` is even, and `h(c,a)=⌊(a+c)/2⌋` otherwise. The original-source theorem `S4ToggleHead.P_head` already validates this relationship.
+
+## 1. Infinite uniform drifting cylinder
+
+[S4DriftRay.lean](S4DriftRay.lean) establishes for **every** `x,n : Nat` and every finite suffix `S`:
 
 ```text
 P ([284,1646,1026,x] ++ S)
   = some ([284,1646,1026,x+1024] ++ S),
 
 prun n ([284,1646,1026,x] ++ S)
-  = some ([284,1646,1026,x+1024*n] ++ S),
-
-¬∃n, prun n ([284,1646,1026,x] ++ S) = none.
+  = some ([284,1646,1026,x+1024*n] ++ S).
 ```
 
-The first identity follows by finite unfolding of the three deterministic odd-drain stages. None of those stages needs to inspect beyond the fourth digit, regardless of `x` and the suffix. Induction gives the second identity; the third follows from the explicit `some` result.
+Thus the entire cylinder continues forever, preserves the arbitrary suffix, and increases its fourth digit by exactly 1024 every return. The full state is nonperiodic, even though its three-digit prefix is stationary. This theorem holds without a finite simulation cutoff. Original-source [manual CI 42287516418](https://github.com/FlareZ123/bb6/actions/runs/42287516418) **SUCCESS**, checked-in revision `1cffc9fc95cc16cf93bfde8c4cce28878cf713cc`, compiled the source after importing the unchanged pinned Cryptids acceleration.
 
-This is a parameter-uniform, infinite nonhalting cylinder rather than a single long finite simulation. The fourth digit grows without bound; the complete stack also changes without ever repeating, although every suffix `S` is preserved. It complements the [all-depth prefix projection](../agent5-s4-prefix-causal/README.md), which gives conditional finite-prefix dynamics without guaranteeing survival.
+## 2. Exact classification of all stationary three-digit prefixes
 
-## Reproducibility and provenance boundary
+[S4FixedTriple.lean](S4FixedTriple.lean) defines a total finite-prefix projection `C(c,·)` of the odd-drain and `D=C(219)∘C(290)∘C(509)`. The theorem `P_causal` directly proves, against the exact source `G` and `P`, that every successful source return beginning with an arbitrary finite prefix `xs` also begins with `D(xs)`.
 
-- `S4DriftRay.lean` imports the repository's unchanged `S4Toggle` and uses the same `P` and `prun` definitions as the existing source-certified S4 reduction; it adds no axioms or new semantics.
-- Local Lean **4.36.0-rc2** compiled the proofs against a definition-matching copy of the three-drain interface, with `#print axioms` yielding only `[propext, Quot.sound]`. The source proof uses `simp [P,G,H]` and an arithmetic induction.
-- The exact checked-in theorem passed the existing **manual-only** [original-Cryptids source CI workflow](../../.github/workflows/agent7-s4-original.yml), [run 42287516418](https://github.com/FlareZ123/bb6/actions/runs/42287516418), at pinned repository revision `1cffc9fc95cc16cf93bfde8c4cce28878cf713cc`. The run built the unmodified original Cryptids machine acceleration at `c86f15861709b76042998c5211c7b2f83991621b`, compiled the complete S4 adapter chain, then compiled `S4DriftRay.lean` immediately after the real `S4Toggle.olean`; the job's full source-check step and all other steps succeeded. This validates compilation and axioms against the genuine imported source, beyond the local stand-in check. The established original raw-machine to `P` connection was separately certified in [run 41965231342](https://github.com/FlareZ123/bb6/actions/runs/41965231342).
-- The source of `H` is [S4PowerGate.lean](../agent5-s4-length/S4PowerGate.lean); the original public Cryptids revision is `c86f15861709b76042998c5211c7b2f83991621b`.
+The new quantified fixed-point classification is:
 
-## Scientific boundary and next test
+```text
+D([a,b,c]) = [a,b,c]
+  ↔ a=284 and b=1646 and (c=1021 or c=1026).
+```
 
-This cylinder is separated from the authentic reduced seed by different leading digits. The existing [rooted 32-phase triple theorem](../agent5-s4-octet/README.md) fixes the authentic surviving orbit's first digit inside `{280,281,282,283}` after its transient. Thus that authentic phase cannot enter this `284`-leading cylinder. The new result does not bridge the unresolved halting gates.
+The theorem `actual_stationary_three` carries this conclusion to **every source `P) return that preserves its first three digits**. The proof solves the head fixed-point equation, the two possible second-digit fixed equations, then eliminates one second-digit branch and classifies the third; all symbolic cases are resolved by Lean integer arithmetic. Original-source [manual CI 42289302941](https://github.com/FlareZ123/bb6/actions/runs/42289302941) **SUCCESS**, revision `428ca9c16456b6e60c4fb2213a401a5f7c20baa2`, verified the complete adapter and this module with standard axioms only.
 
-The useful next question is whether this drift pattern belongs to a wider structural class of forward-closed parametric cylinders, and whether any analogous **history-respecting** invariant controls the authentic `280..283` phases. Prior inverse-collision work already shows that general synthetic reachability has large branching, so only seed-sensitive proofs can decide the genuine root. See [S4 inverse collisions](../agent5-s4-inverse-collision/README.md) and the [S4 research board](../../research/BOARD.md).
+The second stationary triple has a different possible fate. [S4DriftBad.lean](S4DriftBad.lean) proves `P([284,1646,1021,1])=none` by direct evaluation. More generally, for all `x,S`, if `x+1023+2W(S)` is an exact binary power, then `P([284,1646,1021,x]++S)=none`. This follows from the exact identity
+
+```text
+W([284,1646,1021,x]++S)+509 = 8*(x+1023+2W(S)).
+```
+
+The theorem is locally Lean-checked against a definition-matching source interface, with the already source-certified `G_none_iff_power` imported as a temporary *local test axiom*. The combined original-source audit is **pending**; its new standalone file is included in the manually dispatched workflow.
+
+## 3. Global five-head absorbing band
+
+[S4HeadAttractor.lean](S4HeadAttractor.lean) proves a strict natural-number Lyapunov descent for the total head map. Define
+
+```text
+δ(a)=(280-a)+(a-284)    (natural-number truncated subtraction).
+```
+
+Outside the band `{280,281,282,283,284}`, each application of `f` strictly decreases `δ`; inside, it stays zero. Consequently, **every natural-number head** enters that five-element band within `δ(a)` total head returns. Its exact internal dynamics are
+
+```text
+280→281→283→282→280,       284→284.
+```
+
+The attached `prun_head` and `rooted_survivor_head_band` theorems connect this total map to successful arbitrary-tail returns of the actual `P` map. This is **conditional on surviving until the stated horizon**; earlier halting remains possible. The local arithmetic and induction compiled with Lean 4.36.0-rc2. The local source-matched stand-in for `S4ToggleHead.P_head` was a temporary test axiom; the original-source CI for this new combined file is **pending**.
+
+## Reproduction, provenance, and what remains
+
+All three new Lean modules import existing repository S4 definitions; the original-source manual job [agent7-s4-original.yml](../../.github/workflows/agent7-s4-original.yml) builds pinned unchanged Cryptids `c86f15861709b76042998c5211c7b2f83991621b` and the complete S4 source bridge before checking new modules. The committed proof sources contain no `sorry` or new axiom declarations. Locally checked proof audits show only standard axioms in the source-independent portions; the pending complete job is the decisive original-import provenance test for the new head-attractor and bad-gate files.
+
+The authentic S4 reduced seed enters the separately source-proved `280..283` four-head cycle after the transient. It cannot subsequently enter either stationary triple, both of which require first digit 284. This gives an exact obstruction to treating these synthetic families as a blank-root decision. The practical next target is a history-sensitive whole-tail invariant or a genuine reached stopping gate within the real four-head cycle. The already verified [all-depth prefix projection](../agent5-s4-prefix-causal/README.md) provides a reusable finite-dimensional interface; the [inverse-collision dossier](../agent5-s4-inverse-collision/README.md) warns that synthetic stopping completions persist at arbitrary depth.
+
+**Publication boundary:** these are internally new exact dynamical lemmas and real synthetic nonhalting/halting families. Neither an all-time result about the genuine blank S4 orbit nor a global BB(6) bound follows.
