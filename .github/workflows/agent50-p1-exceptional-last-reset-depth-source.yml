@@ -31,10 +31,11 @@ jobs:
           INV=im-results/agent47-p1-finite-inverse
           P1=im-results/agent1-p1-quarter
           AG28=im-results/agent28-p1-word-automaton
+          AG8=im-results/agent8-p1-fixed-reset
           AG43=im-results/agent43-p1-high-cost-reset-count
           AG50=im-results/agent50-p1-two-reset
           AG50SUB=im-results/agent50-p1-subwall
-          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG50SUB"
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG8:$AG43:$AG50:$AG50SUB"
           for m in GParity GInverse PosEvenForm; do
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
           done
@@ -46,6 +47,9 @@ jobs:
           lean -o "$P1/UpperTail.olean" "$P1/UpperTail.lean"
           for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
             lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          for m in ExceptionalCost ExceptionalSource ExceptionalStrong ExceptionalStrongSource; do
+            lean -o "$AG8/$m.olean" "$AG8/$m.lean"
           done
           lean -o "$AG43/CountedLastResetDraft.olean" "$AG43/CountedLastResetDraft.lean"
           lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
