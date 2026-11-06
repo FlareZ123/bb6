@@ -243,7 +243,12 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q41:im-results/agent9-p1-fixed-cone"
-          python im-results/agent9-p1-fixed-cone/generate_q37_budget.py
+          python im-results/agent9-p1-fixed-cone/generate_q37_rows.py
+          lean -o im-results/agent9-p1-fixed-cone/QBudgetRows.olean im-results/agent9-p1-fixed-cone/QBudgetRows.lean
+          lean -o im-results/agent9-p1-fixed-cone/Q37Rows0.olean im-results/agent9-p1-fixed-cone/Q37Rows0.lean
+          lean -o im-results/agent9-p1-fixed-cone/Q37Proof0.olean im-results/agent9-p1-fixed-cone/Q37Proof0.lean
+          lean -o im-results/agent9-p1-fixed-cone/Q37Rows1.olean im-results/agent9-p1-fixed-cone/Q37Rows1.lean
+          lean -o im-results/agent9-p1-fixed-cone/Q37Proof1.olean im-results/agent9-p1-fixed-cone/Q37Proof1.lean
           lean im-results/agent9-p1-fixed-cone/Q37Budget.lean | tee /tmp/agent9-q37.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-q37.log; then exit 1; fi
           grep -F 'blank_no_critical_594_plus_2pow264' /tmp/agent9-q37.log
