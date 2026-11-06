@@ -57,7 +57,7 @@ theorem backward_step (a k c a' k' c' : Nat)
         · simp only [bad, hc, ↓reduceIte]
           exact low_small_k 1 0 (2*k+2) (by omega) (by omega)
         · simp only [bad, hc, ↓reduceIte]
-          exact high_not_sum_one 1 0 (2*k+2) (by norm_num)
+          exact high_not_sum_one 1 0 (2*k+2) (by simp)
       exact False.elim (hfalse hb)
     by_cases ha1 : a=1
     · subst a
@@ -72,7 +72,7 @@ theorem backward_step (a k c a' k' c' : Nat)
           by_cases hk5 : 5≤k
           · have hc : ¬(2*k-1<8) := by omega
             simp only [bad, hc, ↓reduceIte]
-            exact high_not_sum_four 2 2 (2*k-1) (by norm_num)
+            exact high_not_sum_four 2 2 (2*k-1) (by simp)
           · have hrange : k=1 ∨ k=2 ∨ k=3 ∨ k=4 := by omega
             rcases hrange with h1|h2|h3|h4 <;> subst k <;> simp [bad,low,lowCore]
         exact False.elim (hfalse hb)
@@ -160,23 +160,23 @@ theorem second_stop_residues (j m k : Nat)
     have hmul : ∀ n : Nat, (64*4^n)%192=64 := by
       intro n
       induction n with
-      | zero => norm_num
+      | zero => simp
       | succ n ih =>
           calc
             (64*4^(n+1))%192 = ((64*4^n)%192 * 4)%192 := by
               rw [pow_succ, Nat.mul_mod]
-              norm_num
-            _ = 64 := by rw [ih]; norm_num
+              simp
+            _ = 64 := by rw [ih]; simp
     have hexp : 2*m+2=6+2*(m-2) := by omega
     have hpow : 2^(2*m+2)=64*4^(m-2) := by
       rw [hexp, Nat.pow_add, Nat.pow_mul]
-      norm_num
+      simp
     rw [hpow]
     exact hmul (m-2)
   have hj3 : (j+3)%192=6 := by omega
   have hR : (2^(2*m+2)*(j+3))%192=0 := by
     rw [Nat.mul_mod, hp, hj3]
-    norm_num
+    simp
   have hL : (k+j+3*m+5)%192=0 := by rw [hstop]; exact hR
   constructor
   · omega
