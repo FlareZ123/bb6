@@ -14,8 +14,9 @@ The certificate contains **6,399 distinct encoded states** and its exact success
 - `BB6.TreeCert.all_seeds`: all 128 abstract seeds are members;
 - `BB6.TreeCert.safe_member`: all tree members satisfy legal bounds and C/1 marker safety;
 - `BB6.TreeCert.successor_closed`: all explicit successors of every member also belong to the tree.
+- `BB6.TreeCert.every_seam_path_safe`: every finite path, of arbitrary length, from each of the 128 certified E-boundary seeds remains safe under the abstract transition relation; this additional corollary compiled locally after the first CI run and is awaiting its own CI check.
 
-**Local independent Lean compilation passed** on 2026-11-06 under 4.36.0-rc2. Exactly 200 separate leaf-block proofs were compiled, then the master imported and combined every block. `#print axioms root_good` returned `[propext]`, `all_seeds` returned no axioms, and `successor_closed` returned `[propext, Classical.choice, Quot.sound]`. No `sorry`, `admit`, `sorryAx`, or `native_decide` occurs in the proofs.
+**Local independent Lean compilation passed** on 2026-11-06 under 4.36.0-rc2. **Unmodified-repository manual [GitHub Actions run 42149481751](https://github.com/FlareZ123/bb6/actions/runs/42149481751) SUCCEEDED**, rebuilding the 200 proof leaves and master with the pinned Lean toolchain. Exactly 200 separate leaf-block proofs were compiled, then the master imported and combined every block. `#print axioms root_good` returned `[propext]`, `all_seeds` returned no axioms, and `successor_closed` returned `[propext, Classical.choice, Quot.sound]`. No `sorry`, `admit`, `sorryAx`, or `native_decide` occurs in the proofs.
 
 Each Lean check uses `by decide` on at most 32 leaf values. The proof graph is a balanced binary tree rather than one giant array reduction, avoiding the memory blow-up observed when attempting a monolithic `by decide` on 6,399 states.
 
