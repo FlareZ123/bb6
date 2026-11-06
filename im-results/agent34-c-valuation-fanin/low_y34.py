@@ -54,3 +54,22 @@ def test():
 
 if __name__=="__main__":
     test()
+
+def test_exact():
+    for x in range(100000):
+        q=x+6;v=v2(q)
+        predicted=v//2 - int(q.bit_count()==1 and v>=4 and v%2==0)
+        assert predicted==len(low_parents(x,3)),("y3",x,predicted)
+        if x%2:
+            predicted4=1
+        else:
+            q=x+4;v=v2(q)
+            if v%2:
+                predicted4=(v+1)//2-int(q.bit_count()==1)
+            else:
+                predicted4=v//2+int(q.bit_count()==1)
+        assert predicted4==len(low_parents(x,4)),("y4",x,predicted4)
+    print("PASS: exact closed-form indegrees for 200000 low-right target pairs")
+
+if __name__=="__main__":
+    test_exact()
