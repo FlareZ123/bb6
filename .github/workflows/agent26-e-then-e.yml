@@ -38,3 +38,4 @@ jobs:
           lean -o "$E/E1101010111Pairs.olean" "$E/E1101010111Pairs.lean"
           lean -o "$E/E1101010111ThenB.olean" "$E/E1101010111ThenB.lean"
           lean "$E/E1101010111ThenE.lean"
+          lean "$E/EFourAlternating.lean"
