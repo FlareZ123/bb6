@@ -29,4 +29,5 @@ jobs:
           lean -o im-results/agent36-cryptid-trace/EPositiveSimplified.olean im-results/agent36-cryptid-trace/EPositiveSimplified.lean
           lean -o im-results/agent2-cryptid-continuity/NoEarlierF.olean im-results/agent2-cryptid-continuity/NoEarlierF.lean
           for x in EPositiveFirstPrelude EPositiveFirstScans EPositiveFirstWalk EPositiveFirstATen EPositiveFirstDPair EPositiveFirstFixed1; do lean -o im-results/agent36-cryptid-trace/$x.olean im-results/agent36-cryptid-trace/$x.lean; done
-          lean im-results/agent36-cryptid-trace/EPositiveFirstFour.lean
+          lean -o im-results/agent36-cryptid-trace/EPositiveFirstFour.olean im-results/agent36-cryptid-trace/EPositiveFirstFour.lean
+          lean im-results/agent36-cryptid-trace/EPositiveFirstChain.lean
