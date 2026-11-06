@@ -173,11 +173,34 @@ theorem successor_closed (v w : Nat) (h : member root v = true)
       (members_validAndClosed v h)
   exact (List.all_eq_true.mp hp.2) w hw
 
+theorem seed_member (r : Nat) (hr : r < 128) :
+    member root (encode 10 4 (171+2048*r)) = true := by
+  have h : (List.range 128).all (fun k =>
+      member root (encode 10 4 (171+2048*k))) = true := all_seeds
+  exact (List.all_eq_true.mp h) r (List.mem_range.mpr hr)
+
+inductive Path (start : Nat) : Nat → Prop where
+  | zero : Path start start
+  | next {u v : Nat} : Path start u → v ∈ successors u → Path start v
+
+theorem path_member (start v : Nat) (hseed : member root start = true)
+    (p : Path start v) : member root v = true := by
+  induction p with
+  | zero => exact hseed
+  | next hpath hstep ih => exact successor_closed _ _ ih hstep
+
+/-- All finite abstract original-table paths from all 128 possible right
+    seven-bit seeds satisfy legal bounds and safe C/1 marker contact. -/
+theorem every_seam_path_safe (r v : Nat) (hr : r < 128)
+    (p : Path (encode 10 4 (171+2048*r)) v) : safe v = true :=
+  safe_member v (path_member _ v (seed_member r hr) p)
+
 #print axioms root_good
 #print axioms all_seeds
 #print axioms members_validAndClosed
 #print axioms safe_member
 #print axioms successor_closed
+#print axioms every_seam_path_safe
 end BB6.TreeCert
 '''
 
