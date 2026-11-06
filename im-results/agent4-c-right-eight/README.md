@@ -1,6 +1,6 @@
 # Machine C: exact right-eight predecessor and authentic-root exclusion
 
-**Status, 6 November 2026:** Intermediate theorem. The new proof compiled locally in Lean 4.36.0-rc2 against an exact-signature temporary interface for an already source-certified inverse theorem, and the new [original-repository manual CI](../../.github/workflows/agent4-c-right-eight.yml) was dispatched for the unchanged-source audit. Neither Machine C's blank-origin halt question nor BB(6) is decided. The temporary interface is not included here and introduced no custom axiom into the source file.
+**Status, 6 November 2026:** **Original-source Lean 4.36.0-rc2 kernel certified** in [CI 42230385040](https://github.com/FlareZ123/bb6/actions/runs/42230385040), successful 14:03:05 UTC, commit `417e63d138c1a69bed66bdc244af1155b2fb46fc`. The new proof imports the unchanged exact source inverse theorem and genuine blank-section reachability definition. Final theorem axioms are exactly `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. Neither Machine C's blank-origin halt question nor BB(6) is decided.
 
 ## Source-level statements
 
@@ -20,7 +20,7 @@ The result is disjoint from the earlier [Agent 15 right-multiple-of-eight exclus
 
 The proof imports the genuine independently established `section_preimage_all_iff` from [SectionAllInverse.lean](../agent3-c-bounce-inverse/SectionAllInverse.lean). This original-source predecessor equivalence was already certified in [CI 41515256605](https://github.com/FlareZ123/bb6/actions/runs/41515256605), and the original `CReach` definition is imported from [AffineNormalize.lean](../agent15-c-halting/AffineNormalize.lean).
 
-Local Lean 4.36.0-rc2 compiled `RightEight.lean` without errors, using a temporary exact-signature declaration of `section_preimage_all_iff` as the only additional axiom. The actual proof terms contain no `sorry` or `admit`; this temporary declaration disappears when the unchanged original inverse module is built. The manual CI workflow compiles the original CLine source, original accelerated source and bridge, exact inverse and genuine blank reachability, then prints final theorem axioms. **Do not label this specific adapter an original-source kernel certificate until its workflow completes successfully with no `sorryAx`.**
+The [manual CI workflow](../../.github/workflows/agent4-c-right-eight.yml) compiled the original `CLine`, accelerated source, all exact bounce and section inverse dependencies, and genuine blank reachability, then verified `RightEight.lean` without changing the source. The [successful job 127934463420](https://github.com/FlareZ123/bb6/actions/runs/42230385040) prints `[propext, Classical.choice, Quot.sound]` for each of `target_three_eight_unique_parent`, `section_right_three_even`, `blank_no_odd_three`, and `blank_no_three_eight`, with no `sorryAx`, custom axiom, or `native_decide`. A separate local interface-only test before CI was subsequently superseded by this full source audit.
 
 This is a narrowly scoped structural exclusion and has no established independent external novelty or BB(6) numerical implication. Preserve in `im-results/` and compare against other stronger all-right-sector invariants before promotion to `results/`.
 
