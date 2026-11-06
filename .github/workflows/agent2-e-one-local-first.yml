@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify original six-state all-context A turn first physical safety
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent2-packet-shift:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent2-packet-shift:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace:im-results/agent32-cryptid-padding
         run: |
           set -euo pipefail
           python3 -m pip install --quiet filelock
@@ -31,6 +31,7 @@ jobs:
           D=im-results/agent36-cryptid-trace
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o im-results/agent32-cryptid-padding/EZeroPair.olean im-results/agent32-cryptid-padding/EZeroPair.lean
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o "$P/EGenericTurn.olean" "$P/EGenericTurn.lean"
@@ -43,3 +44,5 @@ jobs:
           lean -o "$P/EOneZeroLocalFirst.olean" "$P/EOneZeroLocalFirst.lean"
           lean -o "$C/PrefixENoFSource.olean" "$C/PrefixENoFSource.lean"
           lean "$P/EOneZeroFullFirst.lean"
+          lean -o "$P/EZeroPump.olean" "$P/EZeroPump.lean"
+          lean "$P/EZeroFirst.lean"
