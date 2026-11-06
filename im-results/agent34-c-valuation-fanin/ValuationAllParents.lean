@@ -78,15 +78,13 @@ theorem one_parent_sum_odd (k x y : Nat)
   · have h0 : secNext (1,0)=some (x,y) := by simpa [hk0] using hedge
     have hp := (section_preimage_all_iff 1 0 x y).mp h0
     simp [sectionPreimageAll] at hp
-    rcases hp with ⟨_,hy1⟩
-    rcases hp with ⟨hx,hy1⟩
     rcases hp with ⟨hx,hy1⟩
     omega
   by_cases hk1 : k=1
   · have h1 : secNext (1,1)=some (x,y) := by simpa [hk1] using hedge
     have hp := (section_preimage_all_iff 1 1 x y).mp h1
     simp [sectionPreimageAll] at hp
-    rcases hp with ⟨_,hy3⟩
+    rcases hp with ⟨hx,hy3⟩
     omega
   by_cases hk2 : k=2
   · have h2 : secNext (1,2)=some (x,y) := by simpa [hk2] using hedge
@@ -214,8 +212,7 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
     have hcond : u=0 ∧ 4≤v ∧
         secNext (oneParentAtValuation x y v)=some (x,y) := by
       refine ⟨hu,by omega,?_⟩
-      rw [hcoord]
-      exact hedge
+      simpa [hcoord] using hedge
     unfold oneExactCandidates
     simp [hcond]
 
