@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile unchanged BB429 source, both synthetic families, all 3-adic lemmas and integration
         env:
-          LEAN_PATH: im-results/agent5-429-rank:im-results/agent4-bb429-dyadic-barrier:im-results/agent6-429-coprime-moduli:im-results/agent1-429-threeadic
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent4-bb429-dyadic-barrier:im-results/agent6-429-coprime-moduli:im-results/agent6-harmonic429:im-results/agent1-429-threeadic
         run: |
           set -euo pipefail
           lean -DmaxHeartbeats=10000000 -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
@@ -30,5 +30,7 @@ jobs:
           lean -DmaxHeartbeats=10000000 -o im-results/agent1-429-threeadic/ThreeAdicLifting.olean im-results/agent1-429-threeadic/ThreeAdicLifting.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent1-429-threeadic/ThreeAdicG2.olean im-results/agent1-429-threeadic/ThreeAdicG2.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent1-429-threeadic/ThreeAdicH0.olean im-results/agent1-429-threeadic/ThreeAdicH0.lean
+          lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+          lean -DmaxHeartbeats=10000000 -o im-results/agent6-429-coprime-moduli/BB429RootOddRows.olean im-results/agent6-429-coprime-moduli/BB429RootOddRows.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent6-429-coprime-moduli/BB429AffineReturn.olean im-results/agent6-429-coprime-moduli/BB429AffineReturn.lean
           lean -DmaxHeartbeats=10000000 im-results/agent6-429-coprime-moduli/ThreeAdicSynthetic.lean
