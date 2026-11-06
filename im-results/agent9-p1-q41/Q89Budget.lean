@@ -60,7 +60,7 @@ theorem closed0 (m z t v zp : Nat) (hm : (m,z)∈nodes0)
 theorem small0 (m z : Nat) (hm : (m,z)∈nodes0) : m≤51 := by
   have h := (List.all_eq_true.mp boundCheck0) (m,z) hm
   exact (of_decide_eq_true h).1
-theorem no1024_0 (m z : Nat) (hm : (m,z)∈nodes0) : ¬2^11∣z := by
+theorem no2048_0 (m z : Nat) (hm : (m,z)∈nodes0) : ¬2^11∣z := by
   have h := (List.all_eq_true.mp boundCheck0) (m,z) hm
   exact (of_decide_eq_true h).2
 def nodes1 : List (Nat×Nat) := [
@@ -123,7 +123,7 @@ theorem closed1 (m z t v zp : Nat) (hm : (m,z)∈nodes1)
 theorem small1 (m z : Nat) (hm : (m,z)∈nodes1) : m≤51 := by
   have h := (List.all_eq_true.mp boundCheck1) (m,z) hm
   exact (of_decide_eq_true h).1
-theorem no1024_1 (m z : Nat) (hm : (m,z)∈nodes1) : ¬2^11∣z := by
+theorem no2048_1 (m z : Nat) (hm : (m,z)∈nodes1) : ¬2^11∣z := by
   have h := (List.all_eq_true.mp boundCheck1) (m,z) hm
   exact (of_decide_eq_true h).2
 theorem blank_no_critical_1426_plus_2pow66 (r : Nat) :
@@ -133,6 +133,6 @@ theorem blank_no_critical_1426_plus_2pow66 (r : Nat) :
   exact BB6.Agent9UniformParamK.universal_blank_critical_cylinder_param_K
     11 51 89 (by decide) (by decide)
     nodes0 nodes1 root0 root1
-    closed0 closed1 small0 small1 no1024_0 no1024_1 r
+    closed0 closed1 small0 small1 no2048_0 no2048_1 r
 #print axioms blank_no_critical_1426_plus_2pow66
 end BB6.Agent9Q89
