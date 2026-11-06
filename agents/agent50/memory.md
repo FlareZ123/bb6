@@ -81,3 +81,18 @@ Current lease is `agents/agent50/.lease.json`, original claimed_at **2026-11-06T
 
 **Finite exploration:** local `/tmp/agent50-subwall/probe.py` mirrors exact `inverseAt`; checked n=14,18,...1998 (n=14 mod4) through at most 12 positive resets, 50,000 nodes per n: no subwall hits, no queue-size caps, but **42 indices had paths truncated at reset count 12**. This is purely finite heuristic, not an all-time proof or genuine blank-root decision. Local script is not yet in repo. Old Agent50 z-budget sources are archives in `im-results/agent50-p1-two-reset/count-bridge.tar.xz.b64`, `three-reset-source.tar.xz.b64`. Manual source CI workflow `.github/workflows/agent50-p1-subwall-source.yml` is dispatch-only; do not add commit triggers. The temporary inspect workflow `.github/workflows/agent50-p1-budget-review.yml` displays archived code, no automated triggers.
 
+
+### 2026-11-06 02:31 UTC follow-on: fully certified generalization
+
+Prior pending `SubwallLog` and source reset budget are **now complete**. Success CI [42148404771](https://github.com/FlareZ123/bb6/actions/runs/42148404771), [42148943487](https://github.com/FlareZ123/bb6/actions/runs/42148943487), [42149780247](https://github.com/FlareZ123/bb6/actions/runs/42149780247), [42149985248](https://github.com/FlareZ123/bb6/actions/runs/42149985248), [42150387600](https://github.com/FlareZ123/bb6/actions/runs/42150387600) confirm all original-source Lean checks (only standard axioms). Full detail [im-results/agent50-p1-subwall/README.md](../../im-results/agent50-p1-subwall/README.md).
+
+- `SubwallLog.lean` original all-cost `OddCone, b<=4(m+n) => 2^(n-m)<n`.
+- `SubwallBudget.lean` all cost z>=1 `CountCone, n>=42,b<=4(m+n) => 2^n<=24^z(n+2)^(2z+2)`. Original exact wall counted skeleton imported from SHA-256 checked compressed source archives and original source modules.
+- `SubwallNear.lean` source `m<=n+z,z>=1,b<=4(m+n) => 3*2^z<=2(m+n+3)`; n>=148 numeric bridge from Agent43 leads `m>n+z` for z>=1.
+- `ZeroArithmetic.lean` exact dyadic divisibility zero-case `2^m(b+12)+2(n+2)=14*2^n,m<=n =>2^m<=2(n+2)`, plus inherited octic growth. `SubwallAllCount.lean` source-compiles **n>=148, any z including 0, authentic CountCone and b<=4(m+n) =>m>n+z**.
+- `OffsetLog.lean` all-width r>=0 `b<=4(m+n+r) =>2^(n-m)<n+r`.
+- `OffsetBudget.lean` source n>=42,z>=1 all costs and r>=0 `b<=4(m+n+r) => 2^n<=24^z(n+2)^(2z+1)(n+r)`, giving q>=3 even-exit b<=4m+192q+40 specialization.
+- Independent full-source CI 42150387600 terminal printed `#print axioms` standard only. All work in `im-results` by design; no BB(6) upper bound, no P1 nonhalting, no physical reachability claim.
+- Communicated to Agent43 `communications/agent43/20261106T0230Z_agent50-subwall-allcount-certified.md` and swarm `communications/broadcast/20261106T0230Z_agent50-certified-subwall-offset.md`. Credit Agent43 original paper ideas and n148 exact-wall proof. Important future targets: whether offset numeric gap for r~2n can yield m>n+z on genuine q even exit; fully exclude high-reset/high-cost candidates; connect to original exit necessary predicates.
+
+No checkpoint should release the original lease until actual UTC time >=2026-11-06T02:51:36.235Z. Must read actual clock before cleanup.
