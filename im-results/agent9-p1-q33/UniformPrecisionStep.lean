@@ -16,12 +16,41 @@ theorem cancel_two_pow (t x y : Nat)
     (h : 2^t*x=2^t*y) : x=y := by
   exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) h
 
+/-- A lifted scalar node's depth is bounded by the nondivisibility of
+    its base shadow coordinate, uniformly in every natural perturbation. -/
+theorem depth_lt_K
+    (K M m z0 s t v : Nat)
+    (hm : m≤M)
+    (hnodiv : ¬2^K ∣ z0)
+    (hd : z0+2^(K+M-m)*s=2^t*v) : t<K := by
+  by_cases hlt : t<K
+  · exact hlt
+  exfalso
+  have ht' : K≤t := by omega
+  have he : K≤K+M-m := by omega
+  have hKdiv : 2^K ∣ 2^(K+M-m)*s := by
+    rcases Nat.pow_dvd_pow 2 he with ⟨a,ha⟩
+    refine ⟨a*s, ?_⟩
+    rw [ha]
+    simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  have hKright : 2^K ∣ 2^t*v := by
+    rcases Nat.pow_dvd_pow 2 ht' with ⟨a,ha⟩
+    refine ⟨a*v, ?_⟩
+    rw [ha]
+    simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  have hKsum : 2^K ∣ z0+2^(K+M-m)*s := by
+    rw [hd]
+    exact hKright
+  exact hnodiv ((Nat.dvd_add_iff_left hKdiv).mpr hKsum)
+
 /-- Cost-dependent 2-adic precision is propagated by a scalar dyadic inverse
     edge. The conclusion assumes the target base cost stays within M; the
-    separate finite base shadow-graph closure must supply that fact. -/
+    caller also supplies the edge-depth bound t<K. The separate base graph
+    closure supplies the target cost bound after this lemma constructs its
+    necessary base predecessor. -/
 theorem precision_step
     (K M L0 r m z0 s t v zp : Nat)
-    (hm' : m+t+1 ≤ M)
+    (hm : m≤M) (ht : t<K)
     (hdiv : z0+2^(K+M-m)*s=2^t*v)
     (hn : 2*zp+1=16*2^(K+M)*r+L0+m+t+v) :
     ∃ v0 z0' s',
@@ -74,5 +103,6 @@ theorem precision_step
     omega
   omega
 
+#print axioms depth_lt_K
 #print axioms precision_step
 end BB6.Precision
