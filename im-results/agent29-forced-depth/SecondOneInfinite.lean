@@ -66,9 +66,10 @@ private theorem affine_right_tower_four (n x : Nat) (hx : x%4=3) :
           (x+rightTower (n+1))%4=1 := by
         simp only [rightTower]
         omega
-      have hnext : (x+rightTower (n+1)-2)%4=3 := by
-        simp only [rightTower]
+      have hr : rightTower (n+1)%4=2 := by
+        change (2*rightTower n+2)%4=2
         omega
+      have hnext : (x+rightTower (n+1)-2)%4=3 := by omega
       have hright : (rightTower (n+1)-2)/2=rightTower n := by
         simp only [rightTower]
         omega
@@ -80,7 +81,8 @@ private theorem affine_right_tower_four (n x : Nat) (hx : x%4=3) :
 theorem second_one_family_stopping (r : Nat) :
     (15*secondOneJ r+40)+secondOneJ r+3*1+5=
       2^(2*1+2)*(secondOneJ r+3) := by
-  norm_num <;> omega
+  change 15*secondOneJ r+40+secondOneJ r+3+5=16*(secondOneJ r+3)
+  omega
 
 private theorem second_one_affine_right_four (r : Nat) :
     (BB6.Agent15.affineNormalize
