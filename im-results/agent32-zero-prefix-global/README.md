@@ -101,8 +101,8 @@ Exhaustive C++ output, original-source CI run 42294554955:
 | Outcome | Read-zero-row vectors | Full raw tables |
 | --- | ---: | ---: |
 | Pristine zero-writing cycle | 45,582,330 | 11,128,498,535,156,250 |
-| Short halting | 23,011,245 | 5,617,003,173,828,125 |
-| Finite-prefix clean ray | 74,467,400 | 18,181,494,140,625,000 |
+| Short halting | 23,011,245 | 5,617,979,736,328,125 |
+| Finite-prefix clean ray | 74,467,400 | 18,180,517,578,125,000 |
 | **Total classified** | **143,060,975** | **34,926,995,849,609,375** |
 | **Still open** | **101,079,650** | **24,677,648,925,781,250** |
 | **Total** | **244,140,625** | **59,604,644,775,390,625** |
