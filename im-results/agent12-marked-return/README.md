@@ -28,6 +28,10 @@ The same file defines `markedSinkTable`, proves `markedSinkParams_length = 80`, 
 
 [MarkedReturnSource.lean](MarkedReturnSource.lean), the first chronological proof, directly uses the original `finiteRayCheck_sound` after three genuine steps, providing a second independent nonhalting proof for its 40-case subfamily. Its `markedReturn_unique` and `markedReturnCases_mass` likewise prove disjointness and the per-cylinder mass.
 
+## Composition into one globally exhaustive partial audit
+
+[MarkedSourceAudit.lean](MarkedSourceAudit.lean) combines **all 100 individual certificates** into one original-source `FrontierAudit (DecidedBelow 3) emptyTable` using the preexisting `addCertificate` proof-preserving graft. The theorem `markedSourceCover` supplies the concrete source proof for every member of the 100-element list; `markedSourceGlobal_exhaustive` certifies that every raw complete machine either has a `DecidedBelow 3` proof or is explicitly recorded open; and `markedSourceGlobal_conserves` proves total certified-plus-open mass exactly `25^12`, with no unsound discard. The entire original-source audit including `IncrementalAudit.lean` passed [CI 42307014541](https://github.com/FlareZ123/bb6/actions/runs/42307014541), standard Lean axioms only. This source theorem proves exhaustive **partition/accounting**, while the 100 family union's mass is separately proved by parameter uniqueness and three fixed slots. The audit is partial, and its open frontier remains enormous.
+
 ## Raw-table mass and separation from prior classifications
 
 Each sparse family fixes three of the 12 two-symbol control slots; thus each contains exactly `25^9` full tables. Both `markedSinkCases_mass` and `markedHaltCases_mass` are source-checked Lean theorems. Pairwise uniqueness and cross-family incompatibility yield the exact union:
