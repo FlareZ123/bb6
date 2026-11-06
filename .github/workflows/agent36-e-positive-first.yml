@@ -1,4 +1,4 @@
-name: Agent 36 E positive first physical return four-step guards (manual)
+name: Agent 36 all-110-pairs E strict physical first returns (manual)
 
 on:
   workflow_dispatch:
@@ -37,4 +37,5 @@ jobs:
           lean -o im-results/agent36-cryptid-trace/EPositiveFirstComplete.olean im-results/agent36-cryptid-trace/EPositiveFirstComplete.lean
           lean -o im-results/agent36-cryptid-trace/EZeroFirstLocal.olean im-results/agent36-cryptid-trace/EZeroFirstLocal.lean
           lean -o im-results/agent36-cryptid-trace/EZeroFirstChain.olean im-results/agent36-cryptid-trace/EZeroFirstChain.lean
-          lean im-results/agent36-cryptid-trace/EZeroFirstComplete.lean
+          lean -o im-results/agent36-cryptid-trace/EZeroFirstComplete.olean im-results/agent36-cryptid-trace/EZeroFirstComplete.lean
+          lean im-results/agent36-cryptid-trace/EAllPairsFirst.lean
