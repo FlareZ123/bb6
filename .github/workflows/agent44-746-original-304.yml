@@ -1,0 +1,67 @@
+name: Agent 44 #746 original raw-machine gate 304 (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-upstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Reclaim CI workspace
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+      - name: Checkout exact upstream Cryptids revision
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          persist-credentials: false
+      - name: Checkout persistent BB6 research proof
+        uses: actions/checkout@v4
+        with:
+          path: agent10
+          persist-credentials: false
+      - name: Build unmodified upstream original source (Lean 4.35.0-rc4)
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: BusyBeaver.BB6.M_1RB0LF_1LC1RA_0RE0RD_HHH1LE_1LF1RC_1LC1LA
+        env:
+          LEAN_NUM_THREADS: "1"
+      - name: Compile rooted chain against unmodified upstream
+        run: |
+          set -eu
+          mkdir -p "$GITHUB_WORKSPACE/Agent10Bridge"
+          a="$GITHUB_WORKSPACE/agent10/im-results/agent7-cascade-odd-fibers"
+          b="$GITHUB_WORKSPACE/agent10/im-results/agent10-cascade"
+          c="$GITHUB_WORKSPACE/agent10/im-results/agent44-746-rank"
+          cp "$a"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$c"/{ReverseRank,ResetRank,FatalRank,RootDepth,ForwardRun,ScanFail,StripTwos,ExecutableReturn,FastForward,FastDecision,NewFiniteGates,Gates270to281,Gates282to299,GatesTo299,FullThrough299,OriginalGate304}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cd "$GITHUB_WORKSPACE"
+          export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
+          lake env lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass SurvivingSmall TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate ManyShield RootMinIndex FastShield RootMin256 SurvivingExactGate OriginalNextBridge; do
+            lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+          done
+          lake env lean -o "Agent10Bridge/OriginalSurvivingBridge.olean" "Agent10Bridge/OriginalSurvivingBridge.lean"
+          lake env lean -o "Agent10Bridge/OriginalPhysicalGate.olean" "Agent10Bridge/OriginalPhysicalGate.lean"
+          lake env lean -o "Agent10Bridge/OriginalMinIndexBridge.olean" "Agent10Bridge/OriginalMinIndexBridge.lean"
+          lake env lean -o "Agent10Bridge/OriginalRawGate.olean" "Agent10Bridge/OriginalRawGate.lean"
+          for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
+            lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+          done
+          lake env lean -o "Agent10Bridge/OriginalAlgorithmicGate.olean" "Agent10Bridge/OriginalAlgorithmicGate.lean"
+          lake env lean -o "Agent10Bridge/FastParents.olean" "Agent10Bridge/FastParents.lean"
+          lake env lean -o "Agent10Bridge/FastClosedCert.olean" "Agent10Bridge/FastClosedCert.lean"
+          for n in 257 262 263; do
+            python3 "$b/generate_fast_cone.py" --index "$n" --chunk-size 16 --output "$GITHUB_WORKSPACE/Agent10Bridge/FastCone$n.lean"
+            lake env lean -o "Agent10Bridge/FastCone$n.olean" "Agent10Bridge/FastCone$n.lean"
+          done
+          lake env lean -o "Agent10Bridge/OriginalGate268.olean" "Agent10Bridge/OriginalGate268.lean"
+          for m in ReverseRank ResetRank FatalRank RootDepth ForwardRun ScanFail StripTwos ExecutableReturn FastForward FastDecision NewFiniteGates Gates270to281 Gates282to299 GatesTo299 FullThrough299; do
+            lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+          done
+          lake env lean "Agent10Bridge/OriginalGate304.lean"
+          echo "PASS: original-machine #746 halting iff a surviving n>=304 source-root fatal candidate."
