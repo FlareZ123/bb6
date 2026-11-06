@@ -1,0 +1,43 @@
+name: Agent 2 one-pair original A first-physical audit (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify original six-state all-context A turn first physical safety
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent2-packet-shift:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          B=im-results/agent31-cryptid-boundary
+          S=im-results/agent32-cryptid-third
+          P=im-results/agent2-packet-shift
+          C=im-results/agent2-cryptid-continuity
+          D=im-results/agent36-cryptid-trace
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$P/EGenericTurn.olean" "$P/EGenericTurn.lean"
+          lean -o "$D/EDoubleTripleGeneral.olean" "$D/EDoubleTripleGeneral.lean"
+          lean -o "$P/AIterDoubleZero.olean" "$P/AIterDoubleZero.lean"
+          lean -o "$P/ATurnFamily.olean" "$P/ATurnFamily.lean"
+          lean -o "$C/NoEarlierF.olean" "$C/NoEarlierF.lean"
+          lean -o "$P/EAltBoundaryFirst.olean" "$P/EAltBoundaryFirst.lean"
+          lean -o "$P/EOneZero.olean" "$P/EOneZero.lean"
+          lean "$P/EOneZeroLocalFirst.lean"
