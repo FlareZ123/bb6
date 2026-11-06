@@ -27,8 +27,8 @@ theorem terminal2656_exact :
     DRegular.run 2656 seed17 = some ⟨9*t17+7,7,1⟩ :=
   terminal2656_certificate.1
 
-/-- The exceptional parameter lies in the k≡1, t≡0 (mod 3), q=6
-    three-return subfamily. -/
+/-- The exceptional parameter lies in the k≡1, t≡0 (mod 3), q=7
+    third-return subfamily; EAllDouble uses parameter 6. -/
 theorem t17_mod27 : t17 % 27 = 6 :=
   terminal2656_certificate.2
 
@@ -59,12 +59,12 @@ theorem blank_seventeenth_exception :
   · exact BB6.Agent2SixteenthRoot.blank_sixteenth_reentry
 
 def packet17Time : Nat :=
-  BB6.Agent2E7ThirdReturn.totalTime u17
+  BB6.Agent2E7ThirdReturn.totalTime u17 2
 
 def reentry17Time : Nat := exception17Time+packet17Time
 
 /-- The genuine blank D orbit passes the seventeenth exceptional E input,
-    uses its exact three-return E/E/A source packet, and rejoins pure unary. -/
+    uses its exact three-return E/E/A source packet, and rejoins L(a,3,2). -/
 theorem blank_seventeenth_reentry :
     ObsEq (run reentry17Time blank)
       (DRegularSource.sourceSection
