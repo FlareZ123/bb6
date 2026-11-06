@@ -393,4 +393,97 @@ theorem source_exceptional_last_reset_two_depths
 
 #print axioms BB6.Agent50ExceptionalDepth.source_mid_cost_exceptional_last_reset_depth
 
+
+/-- A wider cost window still pins the final exceptional right-five reset
+to a three-depth interval. The exact inverse and mass equations are retained,
+so this statement can be composed with source-root restrictions on the prefix. -/
+theorem source_exceptional_last_reset_depth_window
+    (n b d m z : Nat)
+    (hn : 14 ≤ n)
+    (hbudget : 2*m+2*n+7 ≤ 12*2^n)
+    (hz : 1 ≤ z)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z)
+    (hd : d=5) :
+    ∃ bp dp mp zp t k,
+      CountCone (14*2^n-2*n-16) 3 bp dp mp zp ∧
+      z=zp+1 ∧
+      inverseAt bp dp t=some (k,1) ∧
+      b=2*k-4 ∧
+      k+m+n+7=7*2^n ∧
+      bp+2^(t+3)=4*k+4*t+12 ∧
+      dp+14*2^n=2^(t+3)+2*mp+2*n+7 ∧
+      m=mp+t+1 ∧
+      n-1≤t ∧ t≤n+1 := by
+  have h5 : CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+    simpa [hd] using h
+  obtain ⟨bp,dp,mp,zp,t,k,c,
+      hpre,hzEq,hbp,hbp4,hdp,hip,hkp,hcp,htp,htail⟩ :=
+    source_right_five_last_positive_reset_no_tail n b m z hz h5
+  have hoddEnd : OddCone (14*2^n-2*n-16) 3 b 5 m :=
+    counted_to_odd_cone _ _ _ _ _ _ h5
+  have hmassEnd := odd_cone_mass
+    (14*2^n-2*n-16) 3 b 5 m hoddEnd
+  have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by omega
+  have hoddPre : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
+    counted_to_odd_cone _ _ _ _ _ _ hpre
+  have hmassPre := odd_cone_mass
+    (14*2^n-2*n-16) 3 bp dp mp hoddPre
+  have hmassPre' : bp+dp+2*mp=14*2^n-2*n-13 := by omega
+  cases htail with
+  | root =>
+    have hoddReset : OddCone (14*2^n-2*n-16) 3
+        (2*k-4) 5 (mp+t+1) :=
+      OddCone.parent bp dp mp t k 1
+        hoddPre hbp hbp4 hdp hip hkp (by decide)
+    have hmassReset := odd_cone_mass
+      (14*2^n-2*n-16) 3 (2*k-4) 5 (mp+t+1) hoddReset
+    have hsmallReset : (2*k-4)+12 ≤ 14*2^n := by omega
+    have hpowerMass := (inverseAt_iff_power_mass bp dp t k 1
+      (by omega) hbp4 hdp).mp hip
+    rcases hpowerMass with ⟨hpow,hmass⟩
+    have hpow1 : dp+bp/2+3=2^(t+2) := by
+      simpa [Nat.pow_add] using hpow
+    have hmass1 : 2*k+2*t+3=bp+dp := by omega
+    have hbpEven : bp%2=0 := by omega
+    have hbpDiv : 2*(bp/2)=bp := by omega
+    have hpowStep : 2^(t+3)=2*2^(t+2) := by
+      rw [show t+3=t+2+1 by omega, Nat.pow_succ]
+      omega
+    have hbpEq : bp+2^(t+3)=4*k+4*t+12 := by
+      rw [hpowStep, ← hpow1]
+      omega
+    have hkm : k+(mp+t+1)+n+7=7*2^n := by omega
+    have hpow4 : 2^(n+4)=16*2^n := by
+      rw [Nat.pow_add]
+      omega
+    have hpowN1 : 2^(n+1)=2*2^n := by
+      rw [Nat.pow_succ]
+      omega
+    have h5n : 5*n≤2^n := five_mul_le_pow n (by omega)
+    have hpowUpper : 2^(t+2)<16*2^n := by
+      rw [← hpow1]
+      have hhalf : bp/2≤bp := by omega
+      omega
+    have htUpper : t≤n+1 := by
+      have hpowLt : 2^(t+2)<2^(n+4) := by
+        rw [hpow4]
+        exact hpowUpper
+      have hexp : t+2<n+4 :=
+        (Nat.pow_lt_pow_iff_right (show 1<(2:Nat) from by decide)).mp hpowLt
+      omega
+    have hbudgetPrefix : 2*mp+2*n+7≤12*2^n := by omega
+    have hdpPos : 1≤dp := by omega
+    have hdpFormula : dp+14*2^n=2^(t+3)+2*mp+2*n+7 := by omega
+    have htLower : n-1≤t := by
+      by_contra hnot
+      have hle : t+3≤n+1 := by omega
+      have hmono : 2^(t+3)≤2^(n+1) :=
+        Nat.pow_le_pow_right (show 0<(2:Nat) from by decide) hle
+      rw [hpowN1] at hmono
+      have hdpBound : dp+14*2^n≤14*2^n := by omega
+      omega
+    exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,htLower,htUpper⟩
+
+#print axioms BB6.Agent50ExceptionalDepth.source_exceptional_last_reset_depth_window
+
 end BB6.Agent50ExceptionalDepth
