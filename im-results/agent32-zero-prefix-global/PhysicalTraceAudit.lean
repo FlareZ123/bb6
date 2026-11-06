@@ -168,6 +168,11 @@ theorem globalPhysicalTraceAudit_conserves :
     _ = 25^12 := by decide
 
 #print axioms firstUnknownPhysical_sound
+#print axioms finitePartialRun_one_prefix
+#print axioms firstUnknownPhysical_has_prefix
+#print axioms firstUnknownPhysical_is_raw_prefix
+#print axioms readOneReturnTable_actual_first_unknown
+#print axioms readOneReturnTable_zero_only_scan_misses
 #print axioms globalPhysicalTraceAudit_exhaustive
 #print axioms globalPhysicalTraceAudit_conserves
 
