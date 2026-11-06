@@ -124,7 +124,7 @@ private theorem extractRightShift (a d t x y : Nat)
           have hval : HighLevelState.D x y = liftFirstState (2*t) (.D x0 y0) := by
             simpa [hbase] using hshift
           simp [liftFirstState] at hval
-          injection hval with hx hy
+          rcases hval with ⟨hx,hy⟩
           exact ⟨x0,y0,rfl,hx,hy⟩
 
 /-- A successful far-left odd predecessor has bounded d and bounded a
