@@ -241,7 +241,7 @@ exists. -/
 theorem source_exceptional_last_reset_two_depths
     (n b d m z : Nat)
     (hn : 14 ≤ n)
-    (hbudget : 2*m+2*n+7 ≤ 7*2^n)
+    (hbudget : 2*m+2*n+7 ≤ 10*2^n)
     (hz : 1 ≤ z)
     (h : CountCone (14*2^n-2*n-16) 3 b d m z)
     (hd : d=5) :
@@ -344,7 +344,7 @@ theorem source_exceptional_last_reset_two_depths
       have hexp : t+2<n+4 :=
         (Nat.pow_lt_pow_iff_right (show 1<(2:Nat) from by decide)).mp hpowLt
       omega
-    have hbudgetPrefix : 2*mp+2*n+7≤7*2^n := by omega
+    have hbudgetPrefix : 2*mp+2*n+7≤10*2^n := by omega
     have hdpPos : 1≤dp := by omega
     have hdpFormula : dp+14*2^n=2^(t+3)+2*mp+2*n+7 := by omega
     have htLower : n≤t := by
@@ -354,7 +354,7 @@ theorem source_exceptional_last_reset_two_depths
             Nat.pow_le_pow_right (show 0<(2:Nat) from by decide) hle
           rw [hpow2] at hmono
           exact hmono
-        have hdpBound : dp+14*2^n≤11*2^n := by omega
+        have hdpBound : dp+14*2^n≤14*2^n := by omega
         omega
       · omega
     have htCases : t=n ∨ t=n+1 := by omega
