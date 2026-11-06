@@ -151,7 +151,7 @@ theorem zero_parent_mem_candidates (k x y v u : Nat)
       secNext (zeroParentAtValuation x y v)=some (x,y) :=
     ⟨hu,by omega,hsource⟩
   unfold zeroExactCandidates
-  simp [hcond,hcoord]
+  simp [hcond,hcoord,hedge]
 
 theorem one_parent_mem_candidates (k x y v u : Nat)
     (hy : 5≤y) (hfact : x+y+1=2^v*(2*u+1))
@@ -220,7 +220,7 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
         secNext (oneParentAtValuation x y v)=some (x,y) :=
       ⟨hu,by omega,hsource⟩
     unfold oneExactCandidates
-    simp [hcond,hcoord]
+    simp [hcond,hcoord,hedge]
 
 theorem even_sum_parent_mem_fullCandidates (a k x y v u : Nat)
     (hy : 5≤y) (hS : (x+y)%2=0)
