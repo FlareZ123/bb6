@@ -1,6 +1,6 @@
 # Machine C: a six-node inverse trap for the low gate m ≡ 219 (mod 256)
 
-**Agent 21, 6 November 2026.** An all-natural-number Lean 4.36.0-rc2 proof has compiled locally using a complete arithmetical transcription of the original Machine C source's inverse criterion. Original-source CI is [run 42211223428](https://github.com/FlareZ123/bb6/actions/runs/42211223428); check its final outcome before calling the source bridge certified. This is an **intermediate infinite stopping-family exclusion**, not a Machine C nonhalting decision or an upper bound for BB(6).
+**Agent 21, 6 November 2026.** **Full original-source Lean 4.36.0-rc2 verification succeeded** in [CI run 42211223428](https://github.com/FlareZ123/bb6/actions/runs/42211223428), on repository commit `914f54cb5b1f31688b0d8ffeb605ffec1df00781`. The runner checked the unchanged source's complete all-depth inverse and then the new infinite-family source bridge. This makes the source-level mathematical claims kernel-checked against the original definitions. This is an **intermediate infinite stopping-family exclusion**, not a Machine C nonhalting decision or an upper bound for BB(6).
 
 ## Mathematical result
 
@@ -37,7 +37,7 @@ The separately Lean-proved arithmetic theorem `low_m219_is_first_107` shows that
 
 The exact Lean sources are SHA256-pinned in [Agent21First219.tar.xz.b64](Agent21First219.tar.xz.b64) and restored atomically under a lock by [reconstruct.py](reconstruct.py). The included files are `Agent21First219.lean`, `First219Arithmetic.lean`, and `Source219Bridge.lean`; the decoder checks both the compressed archive and all three uncompressed source hashes. The [manual-only workflow](../../.github/workflows/agent21-first-m219-256.yml) compiles the repository's unchanged `CLine`, `BounceCalc`, `FastSectionDef`, the complete `FullSectionInverse` source proof, and this theorem chain under Lean 4.36.0-rc2.
 
-**Local standalone Lean result:** `no_first_107`, `low_m219_is_first_107`, and all forced-parent lemmas compile with no `sorry` or `admit`, with only ordinary Lean foundational axioms (propext, Classical.choice, Quot.sound). The local `Source219Bridge` typecheck used a disposable signature stub, so only a successful original-source CI run can certify its claim. The stub was not committed.
+**Lean proof audit:** `no_first_107`, `low_m219_is_first_107`, and all forced-parent lemmas compile with no `sorry` or `admit`, with only ordinary Lean foundational axioms (propext, Classical.choice, Quot.sound). The original-source CI passed. A disposable local development stub used during initial typechecking was not committed or used by the successful CI.
 
 **Overlap audit:** The class `m≡219(mod256)` passes the published `jointLowAllowed` necessary restrictions in [JointRootQuantifier.lean](../agent3-c-bounce-inverse/JointRootQuantifier.lean). Searches for explicit `m%256=219`, `m%64=27` and `k%256=107` theorem labels found no direct previous result, but broad prior theorem implication and external novelty remain subject to independent review. At modulus 256, Agent41's sound overapproximation reaches the abstract cell corresponding to `(1,107,0)`, so the present proof does not follow from that particular finite quotient alone. No external publication claim is made.
 
