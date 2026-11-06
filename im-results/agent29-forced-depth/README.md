@@ -1,6 +1,6 @@
 # Machine C exact forced-inverse depth by weighted mass residue
 
-**Research synthesis, 6 November 2026.** The sharp forced-depth theorems, genuine blank-root right-four boundary, deep stopping-sector exclusion and a separate infinite authentic stopping-input family are source-certified. The exact Machine C halting question, all other six-state holdouts, and BB(6) remain open. An additional exponential normalized-residual bound has a complete paper proof awaiting Lean certification.
+**Research synthesis, 6 November 2026.** The sharp forced-depth theorems, genuine blank-root right-four boundary, deep stopping-sector exclusion and a separate infinite authentic stopping-input family are source-certified. The exact Machine C halting question, all other six-state holdouts, and BB(6) remain open. The exponential and uniform-220 normalized-residual bounds are now original-source Lean certified (CI 42210080956, 42211050978).
 
 ## Exact scope
 
