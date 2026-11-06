@@ -71,3 +71,17 @@ All parent constructions satisfy the source-certified if-and-only-if grammar, wh
 This is an all-target strengthening of the logarithmic candidate-slot bound in [Agent 11's inverse list](../agent11-c-bounce-exact/SectionFastInverseOriginal.lean); the current V-controlled bound can be tiny even for enormous targets. The exact unbounded family count at (0,16·4^t) from [Agent 3](../agent3-c-bounce-inverse/UnboundedInDegree.md) is a consistent special case. Originality relative to external research remains unassessed.
 
 **Open obligation:** put the eight-case cardinality and all-V constructions into Lean itself, then exploit the new inverse budget to close an entire surviving *genuine blank-root* stopping branch. Even a sharp general inverse degree theorem is not a halt/nonhalt decision of Machine C and does not establish BB(6).
+
+## Full original-source classification at valuation one
+
+[ValuationOne.lean.xz.b64](ValuationOne.lean.xz.b64) and [ValuationOneOrbit.lean](ValuationOneOrbit.lean) prove the exact source-level result below for every target with y>=5 and either x+y=2*(2*u+1) or x+y+1=2*(2*u+1):
+
+```text
+secNext(a,k)=some(x,y)  <->  a=x+y-2 and 2*k+2=y.
+```
+
+An odd-right target in these valuation-one sectors has no incoming source edge. Every even-right target has a unique direct predecessor (x+y-2,(y-2)/2), and its authentic blank-origin reachability is equivalent to reachability of that predecessor. The exact statements are `val1_parent_iff`, `val1_odd_right_no_parent`, and `val1_blank_reach_iff`.
+
+**Full original-source [CI 42199785348](https://github.com/FlareZ123/bb6/actions/runs/42199785348) succeeded** on unchanged original Machine C definitions. All five new theorems audited only [propext, Classical.choice, Quot.sound], with no sorryAx or native_decide. [reconstruct_one.py](reconstruct_one.py) restores the compressed source under SHA256 check 91200189350056af75c83cf433b3233cba91298ab6b36a3fd107103227ddba1d.
+
+The all-valuation indegree count above remains a written derivation, pending its own Lean cardinality proof. The odd-right valuation-one obstruction overlaps existing modular odd-image results and is not an additional BB6 holdout decision.
