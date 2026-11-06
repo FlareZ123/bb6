@@ -62,6 +62,7 @@ jobs:
           lean -o "$n/NearExceptionalBridge.olean" "$n/NearExceptionalBridge.lean"
           cat > "$n/Agent28SignatureProbe.lean" <<'LEAN'
           import NearExceptionalBridge
+          #print BB6.Agent50Density.CountCone
           #check BB6.Agent50Near.source_countcone_near_n_reset_bound
           #check BB6.Agent50Near.source_critical_wall_reset_near
           #check BB6.Agent50Near.source_critical_exceptional_reset_near
