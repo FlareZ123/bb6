@@ -1,0 +1,3 @@
+import RayResidues
+namespace CascadeRayPeriod
+end CascadeRayPeriod
