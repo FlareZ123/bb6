@@ -12,9 +12,20 @@ theorem right_one_only_special (a k x : Nat)
     a=1 ∧ k=0 ∧ x=5 := by
   have hp := (section_preimage_all_iff a k x 1).mp h
   unfold sectionPreimageAll at hp
-  repeat (split at hp)
-  all_goals omega
-
+  by_cases ha0 : a=0
+  · simp [ha0] at hp
+  · by_cases ha1 : a=1
+    · by_cases hk0 : k=0
+      · simp [ha0,ha1,hk0] at hp
+        omega
+      · simp [ha0,ha1,hk0] at hp
+    · by_cases hk0 : k=0
+      · simp [ha0,ha1,hk0] at hp
+      · by_cases hlow : 2*k≤a
+        · simp [ha0,ha1,hk0,hlow] at hp
+        · by_cases heven : a%2=0
+          · simp [ha0,ha1,hk0,hlow,heven] at hp
+          · simp [ha0,ha1,hk0,hlow,heven] at hp
 /-- The blank-start section visits right counter one only at time zero. -/
 theorem no_post_blank_right_one (n x : Nat) :
     BB6.Agent8Section.run secNext (n+1) (some (5,1)) ≠ some (x,1) := by
@@ -46,15 +57,37 @@ theorem odd_four_only_direct_parent (a k x : Nat)
     a=x+2 ∧ k=1 := by
   have hp := (section_preimage_all_iff a k x 4).mp h
   unfold sectionPreimageAll at hp
-  repeat (split at hp)
-  all_goals
-    first
-    | omega
-    | rcases hp with ⟨_,n,hs,_⟩
-      have h8 : (2^n*8)%2=0 := by omega
-      have hev := even_bounce_sum n a
-      omega
-
+  by_cases ha0 : a=0
+  · by_cases hk0 : k=0
+    · simp [ha0,hk0] at hp
+    · by_cases hk1 : k=1
+      · simp [ha0,hk0,hk1] at hp
+        omega
+      · simp [ha0,hk0,hk1] at hp
+        obtain ⟨n,hs,_⟩ := hp
+        have hev : (2^n*8)%2=0 := by omega
+        omega
+  · by_cases ha1 : a=1
+    · by_cases hk0 : k=0
+      · simp [ha0,ha1,hk0] at hp
+      · by_cases hk1 : k=1
+        · simp [ha0,ha1,hk0,hk1] at hp
+        · by_cases hk2 : k=2
+          · simp [ha0,ha1,hk0,hk1,hk2] at hp
+          · by_cases hk3 : k=3
+            · simp [ha0,ha1,hk0,hk1,hk2,hk3] at hp
+            · simp [ha0,ha1,hk0,hk1,hk2,hk3] at hp
+    · by_cases hk0 : k=0
+      · simp [ha0,ha1,hk0] at hp
+      · by_cases hlow : 2*k≤a
+        · simp [ha0,ha1,hk0,hlow] at hp
+          omega
+        · by_cases heven : a%2=0
+          · simp [ha0,ha1,hk0,hlow,heven] at hp
+            obtain ⟨n,hs,_⟩ := hp
+            have hev : (2^n*(2*(a-1)+6))%2=0 := even_bounce_sum n a
+            omega
+          · simp [ha0,ha1,hk0,hlow,heven] at hp
 /-- The sole odd-first/right-four state on the entire genuine
     blank section orbit is (3,4), and it occurs exactly at time one. -/
 theorem blank_odd_four_exact_time (n x : Nat)
