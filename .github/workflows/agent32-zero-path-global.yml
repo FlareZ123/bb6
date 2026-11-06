@@ -51,6 +51,7 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
           lean -o im-results/agent32-zero-prefix-global/ZeroRowAudit.olean im-results/agent32-zero-prefix-global/ZeroRowAudit.lean
           lean -o im-results/agent32-zero-prefix-global/PhysicalTraceAudit.olean im-results/agent32-zero-prefix-global/PhysicalTraceAudit.lean
+          lean -o im-results/agent32-zero-prefix-global/FiniteLassoOracle.olean im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
       - name: Independently exhaust the six read-zero rows
