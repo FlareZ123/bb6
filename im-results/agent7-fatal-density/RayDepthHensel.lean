@@ -183,9 +183,255 @@ theorem signedZ_mod_three_even_iff (n j : Nat)
     · intro hz
       omega
 
+
+/-- The quadratic error in the three-digit shift expansion. -/
+def depthError (k t : Nat) : Nat :=
+  if t=2 then 3^k*(depthCoeff k)^2 else 0
+
+/-- The exact three-candidate expansion of a depth-period shift. -/
+theorem pow_period_digit (k t : Nat) (ht:t<3) :
+    2^(t*depthPeriod k) =
+      1+t*3^(k+1)*depthCoeff k+3^(k+2)*depthError k t := by
+  have htcase:t=0 ∨ t=1 ∨ t=2 := by omega
+  rcases htcase with h|h|h
+  · subst t
+    simp [depthPeriod,depthError]
+  · subst t
+    simpa [depthPeriod,depthError] using pow_depth_period k
+  · subst t
+    have htwo:2^(2*depthPeriod k)=(2^depthPeriod k)^2:=by
+      rw [show 2*depthPeriod k=depthPeriod k+depthPeriod k by omega,
+        Nat.pow_add,Nat.pow_two]
+    rw [htwo,pow_depth_period]
+    simp [depthError,Nat.pow_succ,Nat.mul_add,
+      Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+    omega
+
+/-- Modulo the next power of three, the three depth candidates differ
+    by the expected linear digit term. -/
+theorem signedZ_shift_digit_mod (n b k t : Nat) (ht:t<3) :
+    signedZ n (b+t*depthPeriod k)%(3:Int)^(k+2)=
+      (signedZ n b-(3:Int)^(k+1)*
+        ((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t))%(3:Int)^(k+2) := by
+  have hidx:b+t*depthPeriod k+1=(b+1)+t*depthPeriod k:=by omega
+  have hpowNat:(2:Nat)^(b+t*depthPeriod k+1)=
+      (2:Nat)^(b+1)*(2:Nat)^(t*depthPeriod k):=by
+    rw [hidx,Nat.pow_add]
+  have hpowInt:(2:Int)^(b+t*depthPeriod k+1)=
+      (2:Int)^(b+1)*(1+t*(3:Int)^(k+1)*depthCoeff k+
+        (3:Int)^(k+2)*depthError k t):=by
+    have hh:=congrArg (fun x:Nat=>(2:Nat)^(b+1)*x) (pow_period_digit k t ht)
+    have hn:(2:Nat)^(b+1)*(2:Nat)^(t*depthPeriod k)=
+        (2:Nat)^(b+1)*(1+t*3^(k+1)*depthCoeff k+3^(k+2)*depthError k t):=hh
+    rw [←hpowNat] at hn
+    exact_mod_cast hn
+  have hz:signedZ n (b+t*depthPeriod k)=
+      signedZ n b-(3:Int)^(k+1)*
+        ((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)-
+        (3:Int)^(k+2)*((2*n+3:Int)*(2:Int)^(b+1)*depthError k t):=by
+    dsimp [signedZ]
+    rw [hpowInt]
+    push_cast
+    simp [Int.mul_add,Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+    omega
+  apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
+  apply Int.emod_eq_zero_of_dvd
+  refine ⟨-((2*n+3:Int)*(2:Int)^(b+1)*depthError k t),?_⟩
+  have hneg2 : (3:Int)^(k+2)*
+      (-((2*n+3:Int)*(2:Int)^(b+1)*depthError k t)) =
+      -((3:Int)^(k+2)*((2*n+3:Int)*(2:Int)^(b+1)*depthError k t)) := by
+    exact Int.mul_neg _ _
+  rw [hz,hneg2]
+  omega
+
+/-- Divisibility at precision k+2 is reduced to one linear congruence
+    for the next ternary digit. -/
+theorem signedZ_lift_criterion (n b k t:Nat) (ht:t<3)
+    (hbase:(3:Int)^(k+1)∣signedZ n b) :
+    (3:Int)^(k+2)∣signedZ n (b+t*depthPeriod k) ↔
+      (3:Int)∣(signedZ n b/(3:Int)^(k+1)-
+        ((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)*t) := by
+  let m:(Int):=(3:Int)^(k+1)
+  have hmne:m≠0:=by
+    change (3:Int)^(k+1)≠0
+    exact_mod_cast (Nat.ne_of_gt (Nat.pow_pos (by decide : 0<3)))
+  have hM:(3:Int)^(k+2)=(3:Int)*m:=by
+    dsimp [m]
+    rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
+    exact Int.mul_comm _ _
+  have hmod:=signedZ_shift_digit_mod n b k t ht
+  have hmod' : signedZ n (b+t*depthPeriod k)%(3:Int)^(k+2)=
+      (signedZ n b-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t))%(3:Int)^(k+2) := by
+    simpa [m,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hmod
+  have hdiviff : (3:Int)^(k+2)∣signedZ n (b+t*depthPeriod k) ↔
+      (3:Int)^(k+2)∣(signedZ n b-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)) := by
+    rw [Int.dvd_iff_emod_eq_zero,Int.dvd_iff_emod_eq_zero,hmod']
+  have hquot : m*(signedZ n b/m)=signedZ n b :=
+    Int.mul_ediv_cancel_of_dvd hbase
+  have hfactor : signedZ n b-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)=
+      m*(signedZ n b/m-((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)*t) := by
+    calc
+      _ = m*(signedZ n b/m)-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t) := by
+        exact congrArg (fun x:Int => x-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)) hquot
+      _ = m*(signedZ n b/m-((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)) := by
+        rw [Int.mul_sub]
+  have hcomm:(3:Int)*m=m*3:=Int.mul_comm _ _
+  rw [hdiviff,hfactor,hM,hcomm]
+  exact Int.mul_dvd_mul_iff_left hmne
+
+/-- The unique digit solving q-a*t = 0 modulo three, for a unit a. -/
+def henselDigit (q a:Int):Nat :=
+  Int.toNat (((q%3)*(a%3))%3)
+
+theorem henselDigit_lt (q a:Int):henselDigit q a<3:=by
+  have hnon:0≤((q%3)*(a%3))%3:=Int.emod_nonneg _ (by decide)
+  have hcast:(henselDigit q a:Int)=((q%3)*(a%3))%3:=
+    Int.toNat_of_nonneg hnon
+  have hlt:((q%3)*(a%3))%3<3:=Int.emod_lt_of_pos _ (by decide)
+  have hlt' : (henselDigit q a:Int)<3:=by rw [hcast]; exact hlt
+  exact_mod_cast hlt'
+
+theorem henselDigit_mod (q a:Int) (ha:a%3≠0) :
+    (a*(henselDigit q a:Int))%3=q%3:=by
+  have hA : a%3=1 ∨ a%3=2 := by
+    have hnon:0≤a%3:=Int.emod_nonneg _ (by decide)
+    have hlt:a%3<3:=Int.emod_lt_of_pos _ (by decide)
+    by_cases hzero:a%3=0
+    · omega
+    · omega
+  have hnon:0≤((q%3)*(a%3))%3:=Int.emod_nonneg _ (by decide)
+  have htcast:(henselDigit q a:Int)=((q%3)*(a%3))%3:=
+    Int.toNat_of_nonneg hnon
+  have hqnon:0≤q%3:=Int.emod_nonneg _ (by decide)
+  have hqlt:q%3<3:=Int.emod_lt_of_pos _ (by decide)
+  rw [Int.mul_emod,htcast]
+  rcases hA with h|h
+  · rw [h]
+    omega
+  · rw [h]
+    omega
+
+theorem henselDigit_div (q a:Int) (ha:a%3≠0) (t:Nat)
+    (ht:t<3) (hdiv:(3:Int)∣q-a*t) :
+    t=henselDigit q a:=by
+  have hA : a%3=1 ∨ a%3=2 := by
+    have hnon:0≤a%3:=Int.emod_nonneg _ (by decide)
+    have hlt:a%3<3:=Int.emod_lt_of_pos _ (by decide)
+    omega
+  have hzero:(q-a*t)%3=0:=Int.dvd_iff_emod_eq_zero.mp hdiv
+  have hqmod : q%3=(a*(t:Int))%3 :=
+    (Int.emod_eq_emod_iff_emod_sub_eq_zero).2 hzero
+  have htarget : q%3=(a*(henselDigit q a:Int))%3 :=
+    (henselDigit_mod q a ha).symm
+  have hmul:(a*(t:Int))%3=(a*(henselDigit q a:Int))%3 :=
+    hqmod.symm.trans htarget
+  rcases hA with h|h
+  · have hteq:(t:Int)%3=(henselDigit q a:Int)%3 := by
+      simpa [Int.mul_emod,h] using hmul
+    have htr : (t:Int)%3=t:=by
+      have : (t:Int)≥0:=by omega
+      have : (t:Int)<3:=by exact_mod_cast ht
+      omega
+    have hdr : (henselDigit q a:Int)%3=henselDigit q a:=by
+      have : (henselDigit q a:Int)≥0:=by omega
+      have : (henselDigit q a:Int)<3:=by exact_mod_cast henselDigit_lt q a
+      omega
+    exact_mod_cast (by omega)
+  · have hteq:(2*(t:Int))%3=(2*(henselDigit q a:Int))%3:=by
+      simpa [Int.mul_emod,h] using hmul
+    have htr : (t:Int)%3=t:=by
+      have : (t:Int)≥0:=by omega
+      have : (t:Int)<3:=by exact_mod_cast ht
+      omega
+    have hdr : (henselDigit q a:Int)%3=henselDigit q a:=by
+      have : (henselDigit q a:Int)≥0:=by omega
+      have : (henselDigit q a:Int)<3:=by exact_mod_cast henselDigit_lt q a
+      omega
+    have hsmall : t=henselDigit q a:=by omega
+    exact hsmall
+
+theorem henselDigit_divides (q a:Int) (ha:a%3≠0) :
+    (3:Int)∣q-a*(henselDigit q a:Int):=by
+  have hmod:(a*(henselDigit q a:Int))%3=q%3:=henselDigit_mod q a ha
+  have hzero:(q-a*(henselDigit q a:Int))%3=0:=
+    (Int.emod_eq_emod_iff_emod_sub_eq_zero).1 hmod.symm
+  exact Int.dvd_iff_emod_eq_zero.mpr hzero
+
+private theorem int_two_pow_mod_three_ne (b:Nat):
+    ((2:Int)^(b+1))%3≠0:=by
+  induction b with
+  | zero => decide
+  | succ b ih =>
+    have hp:(2:Int)^(b+2)=(2:Int)^(b+1)*2:=by
+      rw [show b+2=(b+1)+1 by omega,Int.pow_succ]
+    rw [hp,Int.mul_emod]
+    have hrem:((2:Int)^(b+1))%3=1 ∨ ((2:Int)^(b+1))%3=2:=by
+      have hnon:0≤((2:Int)^(b+1))%3:=Int.emod_nonneg _ (by decide)
+      have hlt:((2:Int)^(b+1))%3<3:=Int.emod_lt_of_pos _ (by decide)
+      omega
+    rcases hrem with h|h <;> rw [h] <;> decide
+
+/-- The coefficient of the lift digit is always a unit modulo three
+    in the surviving n mod 6 sectors. -/
+theorem rayCoeff_unit (n b k:Nat) (hn:n%6=4 ∨ n%6=5):
+    ((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)%3≠0:=by
+  have hn3:n%3=1 ∨ n%3=2:=by rcases hn with h|h <;> omega
+  have hfirst:((2*n+3:Int)%3)=1 ∨ (2*n+3:Int)%3=2:=by
+    rcases hn3 with h|h
+    · have hnI:(n:Int)%3=1:=by exact_mod_cast h
+      have hh:(2*n+3:Int)%3=2:=by omega
+      exact Or.inr hh
+    · have hnI:(n:Int)%3=2:=by exact_mod_cast h
+      have hh:(2*n+3:Int)%3=1:=by omega
+      exact Or.inl hh
+  have hsecond:((2:Int)^(b+1))%3=1 ∨ ((2:Int)^(b+1))%3=2:=by
+    have hnon:0≤((2:Int)^(b+1))%3:=Int.emod_nonneg _ (by decide)
+    have hlt:((2:Int)^(b+1))%3<3:=Int.emod_lt_of_pos _ (by decide)
+    have hne:=int_two_pow_mod_three_ne b
+    omega
+  have hthird:((depthCoeff k:Int)%3)=1 ∨ ((depthCoeff k:Int)%3)=2:=by
+    have hcast:((depthCoeff k:Int)%3)=((depthCoeff k%3:Int)):=by
+      simpa using (Int.natCast_emod (depthCoeff k) 3).symm
+    rw [hcast]
+    have hnon:0≤depthCoeff k%3:=Nat.zero_le _
+    have hlt:depthCoeff k%3<3:=Nat.mod_lt _ (by decide)
+    have hne:=depthCoeff_unit k
+    omega
+  rcases hfirst with h1|h1 <;> rcases hsecond with h2|h2 <;>
+    rcases hthird with h3|h3 <;>
+    simp [Int.mul_emod,h1,h2,h3]
+
+/-- For every n in the surviving sectors and every already-divisible
+    depth b, exactly one of the three next packets lifts divisibility
+    from 3^(k+1) to 3^(k+2). This is the local Hensel step. -/
+theorem signedZ_unique_lift (n b k:Nat)
+    (hn:n%6=4 ∨ n%6=5)
+    (hbase:(3:Int)^(k+1)∣signedZ n b):
+    ∃ t:Nat, t<3 ∧ (3:Int)^(k+2)∣signedZ n (b+t*depthPeriod k) ∧
+      ∀ t', t'<3 ∧ (3:Int)^(k+2)∣signedZ n (b+t'*depthPeriod k) → t'=t:=by
+  let a:(Int):=(2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k
+  let q:(Int):=signedZ n b/(3:Int)^(k+1)
+  have ha:a%3≠0:=by simpa [a] using rayCoeff_unit n b k hn
+  let t:=henselDigit q a
+  have ht:t<3:=by exact henselDigit_lt q a
+  have hdiv:(3:Int)∣q-a*t:=by
+    simpa [t,q,a] using henselDigit_divides q a ha
+  have hcrit:=signedZ_lift_criterion n b k t ht hbase
+  have hgood:(3:Int)^(k+2)∣signedZ n (b+t*depthPeriod k):=
+    hcrit.mpr (by simpa [q,a] using hdiv)
+  refine ⟨t,ht,hgood,?_⟩
+  intro t' ht'
+  have hcrit' := signedZ_lift_criterion n b k t' ht'.1 hbase
+  have hdiv':(3:Int)∣q-a*t':=by
+    exact hcrit'.mp ht'.2
+  have heq:t'=t:=by
+    simpa [t,q,a] using henselDigit_div q a ha t' ht'.1 hdiv'
+  exact heq
+
 #print axioms depthCoeff_unit
 #print axioms pow_depth_period
 #print axioms signedZ_period
 #print axioms signedZ_period_mul
 #print axioms signedZ_mod_three_even_iff
+#print axioms signedZ_unique_lift
 end CascadeRayDepthHensel
