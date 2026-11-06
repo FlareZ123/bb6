@@ -1,0 +1,53 @@
+Command:
+  g++ -O3 -std=c++17 QuotientRectCensus.cpp -o QuotientRectCensus
+  ./QuotientRectCensus 512
+
+Observed output from the independent M512 quotient run:
+
+M=512 vertices=67633152 reached=27858704 edges=221572376
+rect27 cells=256 quotient-admitted=60 excluded=196
+rect25 cells=256 quotient-admitted=0 excluded=256
+
+Family residue-cycle counts:
+  low124:       2/4 admitted
+  high124:      2/4 admitted
+  secondSlope:  1/4 admitted
+  rect27new:    4/16 admitted
+
+Low-124 cycle:
+  r=0 m=128  -> (1,124,0) admitted
+  r=1 m=256  -> (1,252,0) excluded
+  r=2 m=384  -> (1,380,0) admitted
+  r=3 m=512  -> (1,508,0) excluded
+
+High-124 cycle:
+  r=0 j=31,m=32   -> (65,380,0) excluded
+  r=1 j=31,m=160  -> (65,508,0) admitted
+  r=2 j=31,m=288  -> (65,124,0) excluded
+  r=3 j=31,m=416  -> (65,252,0) admitted
+
+Second-slope cycle:
+  r=0 j=5,m=28   -> (13,418,0) excluded
+  r=1 j=5,m=156  -> (13,34,0) excluded
+  r=2 j=5,m=284  -> (13,162,0) admitted
+  r=3 j=5,m=412  -> (13,290,0) excluded
+
+New 27/0 branch cycle:
+  r=0  j=28,m=21   -> (59,416,0) excluded
+  r=1  j=28,m=53   -> (59,320,0) excluded
+  r=2  j=28,m=85   -> (59,224,0) admitted
+  r=3  j=28,m=117  -> (59,128,0) excluded
+  r=4  j=28,m=149  -> (59,32,0) excluded
+  r=5  j=28,m=181  -> (59,448,0) admitted
+  r=6  j=28,m=213  -> (59,352,0) excluded
+  r=7  j=28,m=245  -> (59,256,0) excluded
+  r=8  j=28,m=277  -> (59,160,0) excluded
+  r=9  j=28,m=309  -> (59,64,0) excluded
+  r=10 j=28,m=341  -> (59,480,0) admitted
+  r=11 j=28,m=373  -> (59,384,0) excluded
+  r=12 j=28,m=405  -> (59,288,0) excluded
+  r=13 j=28,m=437  -> (59,192,0) admitted
+  r=14 j=28,m=469  -> (59,96,0) excluded
+  r=15 j=28,m=501  -> (59,0,0) excluded
+
+The quotient is an overapproximation. "Admitted" means only that the finite quotient does not exclude the residue state; it does not prove actual reachability. The Lean source theorems separately prove blank-origin non-reachability for the corresponding parameter families.
