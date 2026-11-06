@@ -13,6 +13,7 @@ theorem even_source_sum_parity (a x y n : Nat)
     calc
       2^n*(2*a+4)=2^n*(2*(a+2)) := by congr 1 <;> omega
       _=2*(2^n*(a+2)) := by ac_rfl
+  obtain ⟨w,hw⟩ := hdiv
   omega
 
 theorem odd_source_sum_parity (a x y n : Nat)
@@ -24,6 +25,7 @@ theorem odd_source_sum_parity (a x y n : Nat)
     calc
       2^n*(2*a+6)=2^n*(2*(a+3)) := by congr 1 <;> omega
       _=2*(2^n*(a+3)) := by ac_rfl
+  obtain ⟨w,hw⟩ := hdiv
   omega
 
 theorem direct_parent_mem_candidates (a k x y : Nat)
