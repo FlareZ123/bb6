@@ -1,6 +1,9 @@
 name: Agent 49 BB6 623 sharp ternary translation (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/agent49-623-ternary-shift.yml
 permissions:
   contents: read
 jobs:
