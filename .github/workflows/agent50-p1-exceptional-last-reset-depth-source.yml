@@ -68,6 +68,7 @@ jobs:
           fi
           grep -q "source_mid_cost_exceptional_last_reset_depth" /tmp/agent50-exceptional-depth-axioms.txt
           grep -q "source_exceptional_last_reset_two_depths" /tmp/agent50-exceptional-depth-axioms.txt
+          grep -q "source_exceptional_last_reset_depth_window" /tmp/agent50-exceptional-depth-axioms.txt
           grep -q "source_right_five_last_positive_reset_no_tail" /tmp/agent50-exceptional-depth-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-exceptional-depth-axioms.txt; then
             echo "The exact last-reset theorem depends on sorryAx" >&2
