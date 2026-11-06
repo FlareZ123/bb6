@@ -1,19 +1,38 @@
-# BB(6) research workplace
+# BB(6) research
 
-The objective is an exact, rigorously proved value of the six-state, two-symbol blank-tape Busy Beaver step function.
+Collaborative research toward a rigorous determination of the six-state, two-symbol, blank-tape Busy Beaver **step** value. This repository contains original-machine formalizations, mathematical reductions, inverse and forward invariants, finite checks, and experimental leads.
 
-**Maintainer rule: do not create workflows that run per commit.**
+**Research state (6 November 2026): BB(6) is unresolved.** No complete blank-start halt/nonhalt decision for all remaining machines, exhaustive six-state maximality certificate, or exact maximal runtime proof has been established here. Individual source-verified reductions have narrower mathematical scope than a machine decision.
 
-## Super-Critic correction — research guide v2
+## Start here
 
-The maintainer approved **Super-Critic's correction of its own v1 design** on 2026-11-03. The grant/checker system is retired. Read the short [research guide](RESEARCH_PROTOCOL.md) and the readable [board](research/BOARD.md) through the GitHub connector. Critics also read [their brief](research/CRITIC.md). [Authority and correction record](research/decisions/SC-20261103-v2-correction.md).
+| Document | Purpose |
+| --- | --- |
+| [Results map](results/README.md) | Established statements, verification scope, and missing global proof obligations |
+| [Research board](research/BOARD.md) | Research questions, bottlenecks, and primary dossiers |
+| [Research guide](RESEARCH_PROTOCOL.md) | Scientific practice and continuity |
+| [Investigation notes](research/issues/README.md) | Research questions with historical context |
+| [Reference resources](resources/START_HERE.md) | Source context and orientation |
+| [Agent guidance](AGENTS.md) | Repository-specific agent instructions |
 
-**No administrative code, checkout, CI run, JSON claim, grant, slot count, allocation quota or renewal approval is required.** Old funding/format restrictions in notes, broadcasts and memories are superseded. Their scientific evidence, counterexamples and scope limitations remain relevant.
+## Main proof gaps
 
-Normal agents follow the initialization prompt's real first-action mode draw, identity claim, memory/inbox reading and clock/release rules. At task selection, read the relevant research context, check whether the same target and mechanism have already been investigated, and choose useful work. Keep substantive findings, failed approaches and the next useful action in an existing shared note and your own memory.
+- **Machine C:** Exact original-source predecessor rules and fixed-target blank-root deciders exist. The combined true-root stopping criterion still has infinite low/high parameter branches. [Combined criterion](im-results/agent19-c-odd-dyadic/JointAllRoot.lean) · [inverse methods](im-results/agent11-c-bounce-exact/README.md).
+- **P1:** Original-source critical-gateway exclusions, reset-count bounds, and affine-wall cost barriers constrain infinite families. Surviving inverse exits and actual blank-root reachability remain unresolved. [P1 results](results/README.md) · [cost wall](im-results/agent43-p1-high-cost-reset-count/README.md).
+- **#429 and #746:** Source-connected halting-gate reductions and inverse grammars narrow the questions while leaving unbounded blank-root reachability open. [#429](im-results/agent6-harmonic429/README.md) · [#746](im-results/agent10-cascade/README.md).
+- **Cryptid D, Sheep, and other roots:** Conditional return grammars, source-proved local branches, and finite continuations require a complete physical blank-root invariant, witness, or exclusion. [D](im-results/agent2-cryptid-continuity/README.md) · [Sheep](im-results/agent22-sheep-mixed-hub/README.md).
+- **Global completeness:** Formal coverage interfaces have not produced exhaustive original six-state closure coupled to a proved exact champion score. [Coverage dossier](im-results/agent8-coverage-contract/README.md).
 
-Critics inspect the actual mathematics and remaining obstacles, reconcile the board, challenge duplication, and leave concise actionable decisions. Routine research never waits for a critic to be online.
+## Mandatory research presentation
 
-Already-running agents adopt at the next safe substantial-task boundary. Preserve the current coherent step; do not redraw, restart, reset a clock or end early. Checkpoints remain persistence events, not mandatory task switches.
+**NON-NEGOTIABLE PRESENTATION RULE:** Every research-facing README, board, index and note MUST give a coherent, self-contained account of the strongest established findings and remaining unknowns. **NEVER** make append-only progress logs, one-off execution or migration details, stale “pending” statuses, obsolete inventories, or superseded assertions the reader-facing account. **Whenever evidence changes, REWRITE and CONSOLIDATE the existing document in that same commit**, reconciling all contradictory claims and proof-status labels. Preserve useful derivations, counterexamples and provenance in a clearly labeled historical section or linked archive. **A chronological dump is a documentation defect and must be fixed before committing.**
 
-The initialization prompt, private identity ownership and lifecycle are unchanged. The [compatibility note](research/COMPATIBILITY.md) explains this. Earlier v1 administrative instructions are [historical material](research/archive/v1/README.md), not current policy.
+Each active dossier should state its mathematical claim, exact original-source/proof status, evidence, unresolved quantifier, and next useful test near the top. Distinguish copied-model Lean checks, original-source certification, finite computation, paper argument, and conjecture. Preserve reproducibility and falsifiers when consolidating; link their durable archive.
+
+## Working rules
+
+Read the primary note and closest prior proof mechanism before starting substantial overlapping work. Prefer one maintained research dossier per coherent question. Check originality and dependencies before promoting a result. See the [research guide](RESEARCH_PROTOCOL.md) for scientific review and continuity.
+
+**Maintainer rule: NEVER create a workflow that runs on every commit.** Invoke justified formal checks selectively with pinned source revisions.
+
+Scheduler initialization, private identity ownership, memory boundaries, clock and release procedures remain governed by their original instructions. The [retired administrative design](research/archive/v1/README.md) and one-time migration records are historical material and impose no current grant, slot, checker, or renewal requirement.

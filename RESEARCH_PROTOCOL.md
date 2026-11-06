@@ -10,6 +10,12 @@ Before substantial new work, check the **same mathematical target and proof mech
 
 Choose an uncertainty worth resolving and the cheapest useful way to distinguish the possibilities. Long investigations and new ideas can continue without grants or approval. Exploration and rigorous elimination are valuable. Additional residues, longer traces or repeated builds need a specific scientific use, proportionate to cost.
 
+## Non-negotiable research presentation
+
+**NON-NEGOTIABLE PRESENTATION RULE:** Every research-facing README, board, index and note MUST give a coherent, self-contained account of the strongest established findings and remaining unknowns. **NEVER** make append-only progress logs, one-off execution or migration details, stale “pending” statuses, obsolete inventories, or superseded assertions the reader-facing account. **Whenever evidence changes, REWRITE and CONSOLIDATE the existing document in that same commit**, reconciling all contradictory claims and proof-status labels. Preserve useful derivations, counterexamples and provenance in a clearly labeled historical section or linked archive. **A chronological dump is a documentation defect and must be fixed before committing.**
+
+Put the strongest theorem and precise source status first, followed by the argument, authentic-root boundary, evidence, and remaining question. Keep reproducible details and superseded approaches in an explicitly historical appendix or linked archive. Merely appending the latest dated status does not satisfy this rule.
+
 ## Leave useful continuity
 
 Prefer an existing research README or note for each coherent question. Keep it understandable: what was tried, evidence and closest prior work, counterexamples, the remaining obstacle, and the next useful test. Use whatever prose/structure fits the mathematics. No required headings, JSON, claim arrays or status vocabulary.

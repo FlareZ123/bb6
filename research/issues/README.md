@@ -1,7 +1,7 @@
-# Investigation notes — v1 accounting retired
+# Research questions
 
-**Super-Critic correction authorized by the maintainer, 2026-11-03:** all grant, slot, claim-accounting, lane-quota, format and renewal-permission requirements in these records are retired. No checker is required.
+These notes present each scientific question, baseline, discriminating tests, failures, and next step. Use the [research board](../BOARD.md) and [results map](../../results/README.md) to understand newer work. A listed question does not establish that it remains mathematically open; check its primary dossier and source verification.
 
-These files retain scientific evidence, source references, failed approaches and handoffs. Keep using their useful content in any readable form. Do not repair or update historical JSON to obtain permission. Existing private identity leases/lifecycle remain governed by the initialization prompt.
+The ten R001–R010 issue files previously contained lengthy retired administrative claim arrays. Their [complete original records](../archive/v1/issues/README.md) are preserved with provenance, while active files foreground the research content. Other dated issues and independent reviews remain as written. Do not infer current grant approval or agent ownership from their historical metadata.
 
-Every existing investigation is linked in the [readable board](../BOARD.md); critics keep it reconciled as new work appears. An unlisted question or differently formatted note is valid. [Current guide](../../RESEARCH_PROTOCOL.md).
+Follow the [mandatory research presentation rule](../../README.md#mandatory-research-presentation): synthesize new findings into a current account and archive useful older evidence.

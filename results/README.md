@@ -1,6 +1,6 @@
 # BB(6): mathematical result map and open proof obligations
 
-**Status, 2026-11-05:** The exact six-state, two-symbol Busy Beaver step value is **unknown**. This repository has not established a complete blank-start decision for the remaining holdouts, a global six-state upper bound, or a complete maximum-attaining certificate. A source-verified *necessary gateway exclusion* for one machine is not a decision of that machine.
+**Research synthesis, 2026-11-06:** The exact six-state, two-symbol Busy Beaver step value is **unknown**. This repository has not established a complete blank-start decision for the remaining holdouts, a global six-state upper bound, or a complete maximum-attaining certificate. A source-verified *necessary gateway exclusion* for one machine is not a decision of that machine.
 
 ## What the preserved research actually establishes
 
@@ -12,11 +12,11 @@
 | **D and Sheep** | [Physical D section-language pilot](../im-results/agent37-root-language-pilot/README.md), [Sheep inverse programme](../im-results/agent22-sheep-mixed-hub/README.md) | Macro families and inverse properties require quantified, authentic blank-root closure, with physical tape and first-return semantics. |
 | **Global coverage/score** | [Original six-state coverage contract](../im-results/agent8-coverage-contract/README.md), [frontier audit](../im-results/agent4-coverage-smoke/FRONTIER-AUDIT.md) | The sound coverage *interface* is verified, but an exhaustive closed certificate for all six-state machines and an exact champion score edge are missing. |
 
-For changing statuses and primary evidence links, see the [research board](../research/BOARD.md) and [research guide](../RESEARCH_PROTOCOL.md).
+For the [source-certified P1 n≥148 reset-wall theorem](../im-results/agent43-p1-high-cost-reset-count/README.md), [Machine C combined genuine-root criterion](../im-results/agent19-c-odd-dyadic/JointAllRoot.lean), and [#746 n≥268 raw-source bridge](../im-results/agent10-cascade/README.md), consult primary dossiers and successful CI referenced there. For changing statuses and primary evidence links, see the [research board](../research/BOARD.md) and [research guide](../RESEARCH_PROTOCOL.md).
 
 ## Historical result notes and publication status
 
-The 22 existing standalone notes in this directory (12 Machine C and 10 P1 entries) record particular congruence-gateway certificates, often with explicit original-source CI and useful reusable proofs. They are preserved as evidence. Some notes reprove classes already excluded by earlier quotient methods; other notes overlap broader later certificates. **Their presence here is not an independent judgment that each is externally novel or a standalone publishable result.** An inclusion criterion of academically publishable mathematical advancement requires an explicit theorem-level comparison with strongest prior and external work, a coherent contribution, and traceable verification.
+The 27 standalone notes currently in this directory (12 Machine C and 15 P1 entries) record particular congruence-gateway certificates, often with explicit original-source CI and useful reusable proofs. They are preserved as evidence. Some notes reprove classes already excluded by earlier quotient methods; other notes overlap broader later certificates. **Their presence here is not an independent judgment that each is externally novel or a standalone publishable result.** An inclusion criterion of academically publishable mathematical advancement requires an explicit theorem-level comparison with strongest prior and external work, a coherent contribution, and traceable verification.
 
 The former approximately 19-kB, certificate-by-certificate index is preserved without loss in the [historical catalogue](../im-results/legacy-results-index-20261105-critic.md). Its older promotion language is superseded by this scoped map. Researchers reviewing individual notes can migrate overlapping or routine atomic reports into `im-results/` after confirming backlinks; preserve proofs and source data. Larger results worth promotion should be synthesized into papers or dossiers with the new method, existing baselines, exact remaining quantifier, and source chain plainly stated.
 

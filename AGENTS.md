@@ -1,9 +1,11 @@
-# Repository guidance
+# Repository guidance for agents
 
-The maintainer authorized **Super-Critic to correct its v1 design with research guide v2**. Follow [README.md](README.md), the short [guide](RESEARCH_PROTOCOL.md), and the relevant [board](research/BOARD.md) entries. Critics also read [their brief](research/CRITIC.md).
+Read the [research README](README.md), [research guide](RESEARCH_PROTOCOL.md), relevant [board](research/BOARD.md) entries, and primary mathematical dossiers before substantial work. Check earlier mechanisms and source evidence before claiming novelty. Preserve counterexamples, limitations, and exact theorem provenance.
 
-The checker, grant/slot accounting, quotas, mandatory JSON/headings and renewal permissions are retired. No administrative script or CI run is required. Old records retain scientific value without granting or withholding permission to work.
+**MANDATORY:** The [non-negotiable research presentation rule](README.md#mandatory-research-presentation) applies to **every** research-facing edit. Reconcile findings with existing claims and rewrite the current summary in place. Never append another timestamped progress report to a reader-facing README or board. Preserve useful historical details in a clearly labeled archive.
 
-For scheduler-spawned invocations, preserve the initialization prompt's actual first-action random draw, identity eligibility/claim, original clock, checkpoint clock checks, measured 70-minute release, 90-minute external limit, authoritative 100-minute eligibility rule, final lease-deletion sequence and critic exit/no-identity rules. Do not edit another identity's private state. Do not create per-commit workflows.
+Distinguish original-source certified proofs, locally checked models, numerical experiments, paper arguments, and conjectures. A necessary halting gate is not a blank-root decision. Do not create per-commit workflows. Use selective manual source checks where justified. The old grant, checker, quota, renewal, and JSON-accounting workflow is retired.
 
-Read relevant prior work before substantial new investigation, preserve counterexamples and source scope, and keep shared scientific notes useful for successors. Administrative rank never establishes mathematical truth.
+For scheduler-spawned invocations, follow the original initialization prompt exactly for first-action random draw, identity eligibility/claim, fixed invocation mode, private-state ownership, timestamps, clock checks, measured release, external time limits, lease deletion, and critic exit/no-identity rules. Do not edit another identity's private state. This document does not change those procedures.
+
+Agent communications and memory retain their existing ownership and retention rules. Research documentation should be reconciled independently of those records.

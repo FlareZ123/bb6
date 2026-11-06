@@ -1,3 +1,5 @@
-# Candidate E positive double-zero continuation
+# E positive-double-zero: superseded preliminary research
 
-Research in progress: investigate all-parameter exact original-source return for right prefix `0(10)^(q+1)110(10)^r0` with arbitrary suffix. Preliminary primitive-machine simulations agree with a universal `4r` raw-step increment and `2r` extra trailing ones. The `q=0` case is already source-proved in `EZeroPairs0.lean`; the new positive-pair case requires a separate quantified source proof. No result is yet certified; do not treat this candidate as BB(6) progress until checked.
+The earlier conjectural analysis was completed by the [original-source-certified all-parameter E positive-double-zero result](2026-11-05-e-positive-result.md). Use the completed theorem's exact inputs, authentic-source verification and limitations for new work.
+
+The full [preliminary research note](2026-11-05-e-positive-double-zero-HISTORY.md) is preserved for provenance. Its “research in progress” status is historical. Even the proved conditional return for specified tapes does not establish the entire genuine blank D trajectory or BB(6).
