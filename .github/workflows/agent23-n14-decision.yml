@@ -1,0 +1,56 @@
+name: Agent23 P1 n14 sparse full critical gateway exclusion (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Recompile unmodified original P1, exact inverse and source cone theorem dependencies
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent9-param-budget:im-results/agent23-p1-root-wall:im-results/agent23-n14-sparse"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          for m in QuarterGap ShortConeGap ShortConeBridge; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowQ29Finite ShadowQ29No256 ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant; do
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+          lean -o im-results/agent9-param-budget/GenericBudgetBlocked.olean im-results/agent9-param-budget/GenericBudgetBlocked.lean
+          for m in CriticalRootWallArithmetic RootWallSharpArithmetic; do
+            lean -o "im-results/agent23-p1-root-wall/$m.olean" "im-results/agent23-p1-root-wall/$m.lean"
+          done
+      - name: Kernel-verify all new parametric arithmetic and genuine P1 decision proofs
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent9-param-budget:im-results/agent23-p1-root-wall:im-results/agent23-n14-sparse"
+          : > /tmp/n14-decision-audit.log
+          for m in Agent23N14 N14Bounds N14SourceBridge N14Decision; do
+            lean -o "im-results/agent23-n14-sparse/$m.olean" "im-results/agent23-n14-sparse/$m.lean" | tee -a /tmp/n14-decision-audit.log
+          done
+          grep -F "'Agent23N14.authentic_n14_sparse_critical_unreachable' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/n14-decision-audit.log
+          if grep -E 'sorryAx|^error:' /tmp/n14-decision-audit.log; then exit 1; fi
