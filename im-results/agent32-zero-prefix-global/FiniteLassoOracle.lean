@@ -206,6 +206,11 @@ theorem readOneLasso_mass :
     cylinderMass readOneLassoTable = 25^9 := by
   decide
 
+theorem readOneLasso_mass_numeric :
+    cylinderMass readOneLassoTable = 3814697265625 := by
+  rw [readOneLasso_mass]
+  decide
+
 theorem readOneLasso_works (m : Machine)
     (hm : compatible readOneLassoTable m) : DecidedBelow 6 m :=
   readOneLasso_cover.sound m hm
@@ -219,6 +224,7 @@ theorem readOneLasso_works (m : Machine)
 #print axioms readOneLasso_old_oracle_misses
 #print axioms readOneLasso_cover
 #print axioms readOneLasso_mass
+#print axioms readOneLasso_mass_numeric
 #print axioms readOneLasso_works
 
 end BB6Coverage

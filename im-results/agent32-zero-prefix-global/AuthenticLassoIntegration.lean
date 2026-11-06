@@ -87,6 +87,14 @@ theorem authenticLasso_known_cylinder_mass :
 #print axioms authenticLasso_new_cylinder_disjoint_from_previous
 #print axioms authenticLassoAudit_exhaustive
 #print axioms authenticLassoAudit_conserves
+theorem authenticLasso_known_cylinder_mass_numeric :
+    cylinderMass rootCylinder + cylinderMass turnTable +
+      cylinderMass twoStepHaltTable + cylinderMass readOneLassoTable =
+        102996826171876 := by
+  rw [authenticLasso_known_cylinder_mass]
+  decide
+
 #print axioms authenticLasso_known_cylinder_mass
+#print axioms authenticLasso_known_cylinder_mass_numeric
 
 end BB6.F287
