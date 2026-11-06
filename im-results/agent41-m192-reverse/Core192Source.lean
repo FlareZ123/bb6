@@ -176,7 +176,6 @@ theorem second_stop_residues (j m k : Nat)
   have hj3 : (j+3)%192=6 := by omega
   have hR : (2^(2*m+2)*(j+3))%192=0 := by
     rw [Nat.mul_mod, hp, hj3]
-    simp
   have hL : (k+j+3*m+5)%192=0 := by rw [hstop]; exact hR
   constructor
   · omega
