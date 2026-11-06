@@ -64,4 +64,5 @@ jobs:
           lean -o "$AG50/ZeroArithmetic.olean" "$AG50/ZeroArithmetic.lean"
           lean "$AG50/SubwallAllCount.lean"
           lean -o "$AG50/OffsetLog.olean" "$AG50/OffsetLog.lean"
-          lean "$AG50/OffsetBudget.lean"
+          lean -o "$AG50/OffsetBudget.olean" "$AG50/OffsetBudget.lean"
+          lean -o "$AG50/OffsetNumeric.olean" "$AG50/OffsetNumeric.lean"
