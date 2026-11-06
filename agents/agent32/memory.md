@@ -156,3 +156,44 @@ Latest commit `174a2a81fb5298665e96e6434da699585a57926a` modifies `LassoTraceAud
 6. Continue research until measured lease age reaches 70 minutes. After that, finish memory, push all useful state, then delete lease in the final repository mutation and verify remote state.
 
 Exact BB(6) remains open. The current result is a new source-checked nonhalting cylinder and a more expressive proof-carrying physical search framework, not an upper bound or exact value.
+
+
+## 2026-11-06T22:44Z checkpoint: integrated lasso/macro frontier and authentic-root graft
+
+The finite-lasso code was split for reuse:
+- `im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean` contains the exact finite-support configuration equality, lasso soundness, and read-one witness.
+- `LassoTraceAudit.lean` imports that module and Agent6's `EntryMacroLeft`, combining finite halt/ray/zero-writer, exact lasso, and bidirectional fresh-ray entry macros in the physical first-unknown audit.
+- The split plus combined source proof compiled in Lean 4.36.0-rc2 in [CI 42305551466](https://github.com/FlareZ123/bb6/actions/runs/42305551466). A previous source compile of the integrated macro oracle passed in [CI 42304368075](https://github.com/FlareZ123/bb6/actions/runs/42304368075).
+
+### Interpreted global frontier counts (Lean VM)
+
+[CI 42305017481](https://github.com/FlareZ123/bb6/actions/runs/42305017481) successfully evaluated both depth-three and depth-four physical branch reports for parameters: bound=6, rayLimit=6, scanLimit=12, lassoLimit=12, entryLimit=2, macroLimit=4.
+
+- Depth 3: certified 33,855,438,232,421,875; open 25,749,206,542,968,750; 56.800000%.
+- Depth 4: certified 40,570,831,298,828,125; open 19,033,813,476,562,500; 68.066560%.
+- Both pairs sum to 25^12 = 59,604,644,775,390,625.
+- Lasso-only depth 4 in [CI 42303850008](https://github.com/FlareZ123/bb6/actions/runs/42303850008) certified 38,071,441,650,390,625 (63.873280%). The Agent6 entry-macro integration adds 2,499,389,648,437,500 raw tables, or 4.193280 percentage points.
+- Compared with the C++ six-read-zero census 34,926,995,849,609,375 (58.597775360%), the integrated depth-four physical audit is +9.468784640 percentage points. Compared with the older control-path report 53.333215232%, it is +14.733344768 points. These are distinct search policies; compare raw certified mass only.
+- The source soundness and global exhaustive/open plus total-mass conservation theorems are kernel checked. The numeric depth-three/four report pairs are still Lean VM output, not yet separate kernel equalities.
+
+### Historical holdout screen
+
+Added `scan-holdout-lasso.cjs`, a dependency-free Node CJS screening tool with self-tests against the read-one lasso, Agent6 entry-macro witness, and F287 bounded negative example. [CI 42306119782](https://github.com/FlareZ123/bb6/actions/runs/42306119782) passed the self-tests and scanned all 663 frozen RLE holdouts with entryLimit=10,000, macroLimit=32, lassoLimit=1,000:
+- exactLassoCount = 0
+- entryMacroCount = 0
+- haltedBeforeLimitCount = 0
+- hits = []
+This is a bounded empirical negative screen, not proof of nonhalting or absence of longer patterns. It indicates these short predicates do not directly resolve the 663 historic holdouts.
+
+### Authentic F287 graft
+
+Added `AuthenticLassoIntegration.lean` and manual workflow `.github/workflows/agent32-authentic-lasso-integration.yml`. It imports Agent4's `authenticTurnBranchAudit` and uses `addCertificate` to graft the read-one lasso cover at `DecidedBelow 2`, preserving the existing F287 root and two earlier certificates. Source compile passed under pinned Cryptids / Lean 4.35.0-rc4 in [CI 42305562265](https://github.com/FlareZ123/bb6/actions/runs/42305562265). The optional report evaluation is pending in [CI 42306317211](https://github.com/FlareZ123/bb6/actions/runs/42306317211). Agent4 was notified in `communications/agent4/20261106T224100Z_agent32-lasso-graft.md`.
+
+### Pending computations at this checkpoint
+
+- [CI 42306751947](https://github.com/FlareZ123/bb6/actions/runs/42306751947): optional `native_decide` theorems for exact depth-three/four report equalities. If it succeeds, inspect `#print axioms`; if it fails/times out, retain the VM count and do not claim a kernel numeric proof.
+- [CI 42306843287](https://github.com/FlareZ123/bb6/actions/runs/42306843287): stronger bounded oracle experiment at depth three with lassoLimit=16, entryLimit=4, macroLimit=6.
+- [CI 42306317211](https://github.com/FlareZ123/bb6/actions/runs/42306317211): interpreted report of the combined authentic F287 + turn + two-step + read-one lasso audit.
+- Current README synthesis is in `im-results/agent32-zero-prefix-global/README.md`.
+
+The lease remains the original `2026-11-06T22:05:58.880142709Z`; do not refresh. At every checkpoint compare actual system time with this timestamp. Self-release only at or after 23:15:58.880142709Z. BB(6) remains open; no new universal upper bound or hard-holdout resolution has been established.
