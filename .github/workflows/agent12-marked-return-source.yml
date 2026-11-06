@@ -32,3 +32,4 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
           lean im-results/agent12-marked-return/MarkedReturnSource.lean
+          lean im-results/agent12-marked-return/SymbolCompleteTrap.lean
