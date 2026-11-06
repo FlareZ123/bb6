@@ -31,12 +31,12 @@ theorem even_burst_affine_return (n W : Nat)
     omega
   have hn_eq : n=(n-1)+1 := by omega
   have hexists : ∃ a b, BB429Burst.firstRun n (0,W)=some (a,b) := by
-    rw [hn_eq, BB429Burst.prefix_exists_iff (n-1) 0 W]
+    rw [hn_eq, BB429Burst.prefix_exists_iff 0 W (n-1)]
     exact ⟨by omega,hcond⟩
   rcases hexists with ⟨a,b,hp⟩
   have hprefix : BB429.run n (0,W)=some (a,b) :=
-    BB429DyadicStarts.first_prefix_is_source (0,W) n a b hp
-  have hformula := BB429Burst.prefix_formula n (0,W) a b hp
+    BB429DyadicStarts.first_prefix_is_source (0,W) (a,b) n hp
+  have hformula := BB429Burst.prefix_formula 0 W n a b hp
   have ha : a+3=3*2^n := by simpa using hformula.1
   have hab : 2*a+b=W+3*n := by simpa using hformula.2
   have hpow4 : 2^n%4=0 := by
