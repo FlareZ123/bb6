@@ -1,0 +1,38 @@
+name: Agent 49 BB6 623 sharp ternary translation (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source-ternary-shift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.35.0-rc4
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check source commit
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet c86f15861709b76042998c5211c7b2f83991621b
+          test "$(git rev-parse HEAD)" = c86f15861709b76042998c5211c7b2f83991621b
+      - name: Free disk and restore mathlib cache
+        working-directory: /tmp/cryptids
+        run: |
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          lake exe cache get
+      - name: Compile source #623 and authentic parity budget
+        working-directory: /tmp/cryptids
+        run: |
+          lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
+      - name: Prove sharp first-counter shift on unmodified original machine
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
+          lake env lean Agent49TernaryShiftSource.lean
