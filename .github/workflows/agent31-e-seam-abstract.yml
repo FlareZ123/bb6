@@ -28,6 +28,7 @@ jobs:
       - name: Independently close the finite-window overapproximation
         run: |
           python3 im-results/agent31-d-exceptional/abstract_e_seam.py 3 7
+          python3 im-results/agent31-d-exceptional/verify_e_seam_certificate.py
           python3 im-results/agent31-d-exceptional/abstract_e_seam.py 7 7
           g++ -std=c++17 -O2 -Wall -Wextra -Werror im-results/agent31-d-exceptional/check_e_seam.cpp -o /tmp/check_e_seam
           /tmp/check_e_seam
