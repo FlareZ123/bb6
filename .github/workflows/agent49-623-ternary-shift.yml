@@ -65,6 +65,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpCounterBoundsSource.lean" Agent8SharpCounterBoundsSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8SharpCounterBoundsSource.olean Agent8SharpCounterBoundsSource.lean
+      - name: Prove tighter six-per-block full-drain upper gain
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SixBudgetSource.lean" Agent8SixBudgetSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8SixBudgetSource.olean Agent8SixBudgetSource.lean
       - name: Prove all-finite-depth right-ray tail survival
         working-directory: /tmp/cryptids
         run: |
