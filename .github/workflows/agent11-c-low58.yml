@@ -118,4 +118,6 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/SectionDyadic.lean .
           lean -o SectionDyadic.olean SectionDyadic.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/Low14Source.lean .
-          lean Low14Source.lean
+          lean -o Low14Source.olean Low14Source.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/Rect58Source.lean .
+          lean Rect58Source.lean
