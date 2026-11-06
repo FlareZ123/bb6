@@ -40,8 +40,7 @@ theorem direct_parent_mem_candidates (a k x y : Nat)
   have hpar : y%2=0 := by omega
   have hcoord : a=x+y-2 ∧ k=(y-2)/2 := by omega
   have hsource : secNext (x+y-2,(y-2)/2)=some (x,y) := by
-    rw [←hcoord.1,←hcoord.2]
-    exact hedge
+    simpa [hcoord.1,hcoord.2] using hedge
   unfold directExactCandidates
   simp [hpar,hsource]
 
@@ -58,6 +57,7 @@ theorem zero_parent_sum_even (k x y : Nat)
     have h1 : secNext (0,1)=some (x,y) := by simpa [hk] using hedge
     have hp := (section_preimage_all_iff 0 1 x y).mp h1
     simp [sectionPreimageAll] at hp
+    rcases hp with ⟨hx,hy4⟩
     omega
   have hp := (section_preimage_all_iff 0 k x y).mp hedge
   simp only [sectionPreimageAll,if_neg hk0,if_neg hk1] at hp
@@ -68,6 +68,7 @@ theorem zero_parent_sum_even (k x y : Nat)
     calc
       2^n*8=2^n*(2*4) := by congr 1 <;> omega
       _=2*(2^n*4) := by ac_rfl
+  obtain ⟨w,hw⟩ := hdiv
   omega
 
 theorem one_parent_sum_odd (k x y : Nat)
@@ -77,21 +78,27 @@ theorem one_parent_sum_odd (k x y : Nat)
   · have h0 : secNext (1,0)=some (x,y) := by simpa [hk0] using hedge
     have hp := (section_preimage_all_iff 1 0 x y).mp h0
     simp [sectionPreimageAll] at hp
+    rcases hp with ⟨_,hy1⟩
+    rcases hp with ⟨hx,hy1⟩
+    rcases hp with ⟨hx,hy1⟩
     omega
   by_cases hk1 : k=1
   · have h1 : secNext (1,1)=some (x,y) := by simpa [hk1] using hedge
     have hp := (section_preimage_all_iff 1 1 x y).mp h1
     simp [sectionPreimageAll] at hp
+    rcases hp with ⟨_,hy3⟩
     omega
   by_cases hk2 : k=2
   · have h2 : secNext (1,2)=some (x,y) := by simpa [hk2] using hedge
     have hp := (section_preimage_all_iff 1 2 x y).mp h2
     simp [sectionPreimageAll] at hp
+    rcases hp with ⟨hx,hy5⟩
     omega
   by_cases hk3 : k=3
   · have h3 : secNext (1,3)=some (x,y) := by simpa [hk3] using hedge
     have hp := (section_preimage_all_iff 1 3 x y).mp h3
     simp [sectionPreimageAll] at hp
+    rcases hp with ⟨hx,hy7⟩
     omega
   have hp := (section_preimage_all_iff 1 k x y).mp hedge
   simp only [sectionPreimageAll,if_neg (by decide : (1:Nat)≠0),
@@ -104,6 +111,7 @@ theorem one_parent_sum_odd (k x y : Nat)
       calc
         2^n*16=2^n*(2*8) := by congr 1 <;> omega
         _=2*(2^n*8) := by ac_rfl
+    obtain ⟨w,hw⟩ := hdiv
     omega
 
 theorem zero_parent_mem_candidates (k x y v u : Nat)
@@ -138,8 +146,7 @@ theorem zero_parent_mem_candidates (k x y v u : Nat)
   have hcond : u=0 ∧ 3≤v ∧
       secNext (zeroParentAtValuation x y v)=some (x,y) := by
     refine ⟨hu,by omega,?_⟩
-    rw [hcoord]
-    exact hedge
+    simpa [hcoord] using hedge
   unfold zeroExactCandidates
   simp [hcond]
 
@@ -156,6 +163,7 @@ theorem one_parent_mem_candidates (k x y v u : Nat)
   · have h1 : secNext (1,1)=some (x,y) := by simpa [hk1] using hedge
     have hp := (section_preimage_all_iff 1 1 x y).mp h1
     simp [sectionPreimageAll] at hp
+    rcases hp with ⟨hx,hy3⟩
     omega
   by_cases hk2 : k=2
   · have h2 : secNext (1,2)=some (x,y) := by simpa [hk2] using hedge
