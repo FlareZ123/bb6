@@ -78,4 +78,24 @@ theorem word_subwall_logarithmic_gap
     have hkn : 2^k < n := by omega
     simpa only [show n-m=k by rfl] using hkn
 
+/-- Original P1 critical OddCone, all depths, exact source transitions. -/
+theorem source_critical_subwall_cost_logarithmic_gap
+    (n b d m : Nat) (hn : 14 ≤ n)
+    (hcone : OddCone (14*2^n-2*n-16) 3 b d m)
+    (hb : b ≤ 4*(m+n)) : 2^(n-m) < n := by
+  let K : Nat := 7*2^n-n-3
+  have hdom : n+4 ≤ 2^n := n_plus_four_le_pow n (by omega)
+  have hK : K+n+3=7*2^n := by dsimp [K]; omega
+  have hroot : (14*2^n-2*n-16)+10=2*K := by
+    dsimp [K]
+    omega
+  obtain ⟨D,A,T,hdD,hbalance,hword⟩ :=
+    source_oddcone_has_word (14*2^n-2*n-16) K b d m hroot hcone
+  have hsub : K ≤ D+3*m+2*n+4 := by omega
+  exact word_subwall_logarithmic_gap hn hK hword hsub
+
+#print axioms BB6.Agent50SubwallLog.word_subwall_cost_necessary
+#print axioms BB6.Agent50SubwallLog.word_subwall_logarithmic_gap
+#print axioms BB6.Agent50SubwallLog.source_critical_subwall_cost_logarithmic_gap
+
 end BB6.Agent50SubwallLog
