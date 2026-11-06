@@ -53,3 +53,5 @@ jobs:
           for src in im-results/agent3-finite-lasso/Agent3Lasso4510Batch*.lean; do
             lean "$src"
           done
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent3-finite-lasso/check-lasso4600-disjoint.cpp -o /tmp/agent3-lasso4600-disjoint
+          /tmp/agent3-lasso4600-disjoint
