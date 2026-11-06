@@ -31,5 +31,5 @@ jobs:
           lean im-results/agent42-root119-guard/Root119WaveNormal.lean
           python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119B14.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('b14-source-sha256',h); assert h=='9342f4f4d8dbf47efceb7ce1876b69f320745fa32f2f531a7b6d81ebf4a4956d'; p.with_name('Root119B14.lean').write_bytes(b)"
           lean im-results/agent42-root119-guard/Root119B14.lean
-          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119LeftOneWave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('leftone-source-sha256',h); assert h=='f99f5c723e080ef0675125952b5aa8a6b64b2f1597c7ca5c6931770939183c9d'; p.with_name('Root119LeftOneWave.lean').write_bytes(b)"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119LeftOneWave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('leftone-source-sha256',h); assert h=='bf413c80b82598fd2da0a6343d1d58632ee4b9f098fff174fa225bd64c2ea809'; p.with_name('Root119LeftOneWave.lean').write_bytes(b)"
           lean im-results/agent42-root119-guard/Root119LeftOneWave.lean
