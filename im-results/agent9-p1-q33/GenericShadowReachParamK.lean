@@ -126,8 +126,11 @@ theorem g0_no_one
       Nat.pow_le_pow_right (by decide) hgap
     have hstep : (2:Nat)^(K+2) < 2^(K+3) := by
       rw [Nat.pow_succ]
-      have hz : 0 < (2:Nat)^(K+2) := Nat.pow_pos (by decide)
-      omega
+      calc
+        (2:Nat)^(K+2) = (2:Nat)^(K+2) * 1 := by simp
+        _ < (2:Nat)^(K+2) * 2 :=
+          Nat.mul_lt_mul_of_pos_left (by decide : 1 < 2)
+            (Nat.pow_pos (by decide : 0 < (2:Nat)))
     have he : 4*2^K=(2:Nat)^(K+2) := by
       simp [Nat.pow_add, Nat.mul_comm]
     omega
@@ -262,8 +265,11 @@ theorem g1_no_one
       Nat.pow_le_pow_right (by decide) hgap
     have hstep : (2:Nat)^(K+2) < 2^(K+3) := by
       rw [Nat.pow_succ]
-      have hz : 0 < (2:Nat)^(K+2) := Nat.pow_pos (by decide)
-      omega
+      calc
+        (2:Nat)^(K+2) = (2:Nat)^(K+2) * 1 := by simp
+        _ < (2:Nat)^(K+2) * 2 :=
+          Nat.mul_lt_mul_of_pos_left (by decide : 1 < 2)
+            (Nat.pow_pos (by decide : 0 < (2:Nat)))
     have he : 4*2^K=(2:Nat)^(K+2) := by
       simp [Nat.pow_add, Nat.mul_comm]
     omega
