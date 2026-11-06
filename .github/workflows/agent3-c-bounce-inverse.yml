@@ -202,6 +202,8 @@ jobs:
           done
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/MixedFastRoot.lean .
           lean -o MixedFastRoot.olean MixedFastRoot.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/Low124Cone.lean .
+          lean -o Low124Cone.olean Low124Cone.lean
           if [ "${{ inputs.mixed_only }}" = "true" ]; then exit 0; fi
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
