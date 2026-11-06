@@ -210,6 +210,8 @@ jobs:
           lean -o Low124Rectangle.olean Low124Rectangle.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/High124Stop.lean .
           lean -o High124Stop.olean High124Stop.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/Low124Sharp.lean .
+          lean -o Low124Sharp.olean Low124Sharp.lean
           if [ "${{ inputs.mixed_only }}" = "true" ]; then exit 0; fi
           # Agent29: exact finite-depth source gate bounds (manual only)
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SourceBound.lean .
