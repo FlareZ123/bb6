@@ -71,8 +71,9 @@ theorem two_section_polynomial (t r : Nat) (ys : List Bool) :
       (List.replicate (2*(r+1)+2) true ++ sixTail ys) =
       List.replicate (64*t+2*r+21) true ++ sixTail ys := by
     rw [←List.append_assoc,List.replicate_append_replicate]
-    congr 1
-    omega
+    have hn : 8*(8*t+1)+9 + (2*(r+1)+2) =
+        64*t+2*r+21 := by omega
+    rw [hn]
   rw [ht]
   simpa only [show 9*t+2=3*(3*t)+2 by omega,hrep] using two_section t r ys
 
