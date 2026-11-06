@@ -26,9 +26,18 @@ The three base q residues are absent from the prior Agent9 700/1024 source gatew
 
 ## Parametric high-cost extension
 
-[GenericShadowReachBudget.lean](../agent9-p1-q33/GenericShadowReachBudget.lean) and [GenericCriticalReachBudget.lean](../agent9-p1-q33/GenericCriticalReachBudget.lean) proved original-source source cone exclusion for an arbitrary budget `B` whenever `29≤q` and `B+13≤15q`; [CI 42139284957](https://github.com/FlareZ123/bb6/actions/runs/42139284957) **SUCCEEDED**. A new abstract [UniformUniversalBudget.lean](../agent9-p1-q33/UniformUniversalBudget.lean) specializes the all-path precision transfer to `q=q0+2^(10+B)r`, retaining dyadic cutoff 1024. Its explicit full original-source CI check is underway and should be verified before use as an established theorem.
+[GenericShadowReachBudget.lean](../agent9-p1-q33/GenericShadowReachBudget.lean) and [GenericCriticalReachBudget.lean](../agent9-p1-q33/GenericCriticalReachBudget.lean) proved original-source source-cone exclusion for an arbitrary budget `B` whenever `29≤q` and `B+13≤15q`; [CI 42139284957](https://github.com/FlareZ123/bb6/actions/runs/42139284957) **SUCCEEDED**. The stronger [UniformUniversalParamK.lean](../agent9-p1-q33/UniformUniversalParamK.lean) now allows an arbitrary dyadic cutoff `K` and budget `B`, provided `B+K+3≤15q0`. Any two exact base feeder invariants then exclude the original-source critical gateway throughout `q=q0+2^(K+B)r`. This is a proof about the unchanged `BB6.Agent1.Reach 2` relation, not a synthetic shadow-only statement.
 
-[Q70Budget.lean](Q70Budget.lean) and [Q89Budget.lean](Q89Budget.lean) are candidate full source certificates with respective feeder graph sizes 195/199 and 258/280, budgets B=57 and B=51. Their source CI is pending; they should not be promoted as proved P1 results until successful original-source validation.
+The corrected [Q70Budget.lean](Q70Budget.lean) and [Q89Budget.lean](Q89Budget.lean) both passed the end-to-end original-source Lean workflow [CI 42253385501](https://github.com/FlareZ123/bb6/actions/runs/42253385501), including the generic bridge, finite graph closure, budget bounds, and axiom audit. The exact families are:
+
+| q0 | K | B | Feeder nodes | Max costs | q cylinder | Critical index n |
+| ---: | ---: | ---: | ---: | ---: | --- | --- |
+| 70 | 10 | 57 | 195 / 199 | 57 / 56 | `q=70+2^67 r` | `n=1122+2^71 r` |
+| 89 | 11 | 51 | 258 / 280 | 51 / 50 | `q=89+2^62 r` | `n=1426+2^66 r` |
+
+For q=70, every base shadow coordinate avoids `1024∣z`. For q=89, the h=8 feeder contains a coordinate equal to 1024, so K=10 would be invalid; the checked K=11 certificate instead proves `¬2048∣z` throughout both closures. The exponent shifts are exactly K+B, and the source inequality is checked for both bases.
+
+The q=70 and q=89 residues are absent from the inspected repository census lists `DensityCount695`, `DensityCount700`, and the twenty new q classes in `DensityCount2820`; their corresponding base indices 1122 and 1426 were also absent from the inspected Agent12 187-class source list. This is an internal overlap audit, not a claim of external priority. These are two additional infinite **necessary critical-gateway exclusions**. They do not decide the P1 machine, eliminate its other halting mechanisms, or establish a BB(6) upper bound.
 
 ## Research value and limitations
 
