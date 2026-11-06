@@ -169,7 +169,7 @@ theorem zero_exception_direct_parity (x y v u : Nat)
   have hx : x%2=0 := by omega
   have hn : n%2=1 := by omega
   have hvEven : v%2=0 := by omega
-  exact ⟨hvEven,hx⟩
+  exact ⟨hvEven,hx,by omega⟩
 
 /-- If the direct and one-first high exceptional parents both exist, the
 valuation is even and the target's first coordinate is odd. -/
@@ -245,7 +245,7 @@ theorem one_exception_direct_parity (x y v u : Nat)
     have hx : x%2=1 := by omega
     have hn : n%2=0 := by omega
     have hvEven : v%2=0 := by omega
-    exact ⟨hvEven,hx⟩
+    exact ⟨hvEven,hx,by omega⟩
 
 #print axioms pow2_odd_factor_unique
 #print axioms zero_exception_direct_parity
