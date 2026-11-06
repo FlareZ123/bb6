@@ -290,7 +290,7 @@ theorem source_exceptional_last_reset_two_depths
       (14*2^n-2*n-16) 3 (2*k-4) 5 (mp+t+1) hoddReset
     have hsmallReset : (2*k-4)+12 ≤ 14*2^n := by omega
     have hpowerMass := (inverseAt_iff_power_mass bp dp t k 1
-      hkp hbp4 hdp).mp hip
+      (by omega) hbp4 hdp).mp hip
     rcases hpowerMass with ⟨hpow,hmass⟩
     have hpow1 : dp+bp/2+3=2^(t+2) := by
       simpa [Nat.pow_add] using hpow
