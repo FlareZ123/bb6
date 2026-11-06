@@ -22,12 +22,22 @@ theorem turnAndHaltAudit_exhaustive (m : Machine) :
     after one ordinary move and the final attempted halt. -/
 theorem twoStepHalt_exact_score (m : Machine)
     (hm : compatible twoStepHaltTable m) : HaltsAfter m 1 := by
-  have hA : m (⟨0, by decide⟩, false) =
-      some ⟨false, true, ⟨1, by decide⟩⟩ :=
-    hm _ _ (by simp [twoStepHaltTable])
+  let moveA : Move := ⟨false, true, ⟨1, by decide⟩⟩
+  have hA : m (⟨0, by decide⟩, false) = some moveA :=
+    hm _ _ (by simp [twoStepHaltTable, moveA])
   have hB : m (⟨1, by decide⟩, false) = none :=
     hm _ _ (by simp [twoStepHaltTable])
-  simp [HaltsAfter, run, rawStep, readSlot, blank, applyMove, hA, hB]
+  have hA' : m (readSlot blank) = some moveA := by
+    simpa [readSlot, blank, moveA] using hA
+  have hB' : m (readSlot (applyMove blank moveA)) = none := by
+    simpa [readSlot, applyMove, blank, moveA] using hB
+  have hfirst : run m 1 blank = some (applyMove blank moveA) := by
+    simp [run, rawStep, hA']
+  have hsecond : run m 2 blank = none := by
+    rw [show run m 2 blank = (run m 1 blank).bind (rawStep m) by rfl, hfirst]
+    simp [rawStep, hB']
+  change (run m 1 blank).isSome = true ∧ run m 2 blank = none
+  exact ⟨by rw [hfirst]; rfl, hsecond⟩
 
 /-- The raw Busy Beaver score counts the final halting query, so this
     cylinder has exact score 2. -/
