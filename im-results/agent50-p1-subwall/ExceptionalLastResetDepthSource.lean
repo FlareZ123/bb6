@@ -280,24 +280,21 @@ theorem source_exceptional_last_reset_two_depths
   have hmassPre := odd_cone_mass
     (14*2^n-2*n-16) 3 bp dp mp hoddPre
   have hmassPre' : bp+dp+2*mp=14*2^n-2*n-13 := by omega
-  have hoddReset : OddCone (14*2^n-2*n-16) 3
-      (2*k-4) (c+4) (mp+t+1) :=
-    OddCone.parent bp dp mp t k c
-      hoddPre hbp hbp4 hdp hip hkp hcp
-  have hmassReset := odd_cone_mass
-    (14*2^n-2*n-16) 3 (2*k-4) (c+4) (mp+t+1) hoddReset
-  have hsmallReset : (2*k-4)+12 ≤ 14*2^n := by omega
   cases htail with
   | root =>
-    have hc1 : c=1 := by omega
-    have hpowerMass := (inverseAt_iff_power_mass bp dp t k c
-      (by omega) hbp4 hdp).mp hip
+    have hoddReset : OddCone (14*2^n-2*n-16) 3
+        (2*k-4) 5 (mp+t+1) :=
+      OddCone.parent bp dp mp t k 1
+        hoddPre hbp hbp4 hdp hip hkp (by decide)
+    have hmassReset := odd_cone_mass
+      (14*2^n-2*n-16) 3 (2*k-4) 5 (mp+t+1) hoddReset
+    have hsmallReset : (2*k-4)+12 ≤ 14*2^n := by omega
+    have hpowerMass := (inverseAt_iff_power_mass bp dp t k 1
+      hkp hbp4 hdp).mp hip
     rcases hpowerMass with ⟨hpow,hmass⟩
     have hpow1 : dp+bp/2+3=2^(t+2) := by
-      simpa [hc1, Nat.pow_add] using hpow
+      simpa [Nat.pow_add] using hpow
     have hmass1 : 2*k+2*t+3=bp+dp := by
-      have hmass' : 2*k+1+2*t+1+1=bp+dp := by
-        simpa [hc1] using hmass
       omega
     have hbpEven : bp%2=0 := by omega
     have hbpDiv : 2*(bp/2)=bp := by omega
@@ -364,7 +361,7 @@ theorem source_exceptional_last_reset_two_depths
         rw [htN]
         omega
       have hipExact : inverseAt bp dp n=some (k,1) := by
-        simpa [htN,hc1] using hip
+        simpa [htN] using hip
       exact ⟨bp,dp,mp,zp,k,hpre,hzEq,rfl,hkm,
         Or.inl ⟨hipExact,hbpExact,hdpExact,hmpExact,hmLower⟩⟩
     · have hbpAtN1 : bp+16*2^n=4*k+4*n+16 := by
@@ -388,7 +385,7 @@ theorem source_exceptional_last_reset_two_depths
         rw [htN1]
         omega
       have hipExact : inverseAt bp dp (n+1)=some (k,1) := by
-        simpa [htN1,hc1] using hip
+        simpa [htN1] using hip
       exact ⟨bp,dp,mp,zp,k,hpre,hzEq,rfl,hkm,
         Or.inr ⟨hipExact,hbpExact,hdpExact,hmpExact,hmUpper⟩⟩
 
