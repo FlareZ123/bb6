@@ -49,5 +49,5 @@ jobs:
           # Agent 3: valuation-six genuine-root source theorem and high stopping family.
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/OddSevenOrbit.lean .
           lean -o OddSevenOrbit.olean OddSevenOrbit.lean
-          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{ValSixArithmetic,ValSixInverse,ValSixSource,ValSixHighArithmetic,ValSixHighSource,ValSixSecondArithmetic,ValSixSecondInverse,ValSixSecondSource,ValSixSecondConeArithmetic,ValSixSecondConeSource}.lean .
-          for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{ValSixArithmetic,ValSixInverse,ValSixSource,ValSixHighArithmetic,ValSixHighSource,ValSixSecondArithmetic,ValSixSecondInverse,ValSixSecondSource,ValSixSecondConeArithmetic,ValSixSecondConeSource,ValSixSecondHighArithmetic,ValSixSecondHighSource}.lean .
+          for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource ValSixSecondHighArithmetic ValSixSecondHighSource; do lean -o "$f.olean" "$f.lean"; done
