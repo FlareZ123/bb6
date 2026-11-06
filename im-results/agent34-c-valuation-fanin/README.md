@@ -85,3 +85,9 @@ An odd-right target in these valuation-one sectors has no incoming source edge. 
 **Full original-source [CI 42199785348](https://github.com/FlareZ123/bb6/actions/runs/42199785348) succeeded** on unchanged original Machine C definitions. All five new theorems audited only [propext, Classical.choice, Quot.sound], with no sorryAx or native_decide. [reconstruct_one.py](reconstruct_one.py) restores the compressed source under SHA256 check 91200189350056af75c83cf433b3233cba91298ab6b36a3fd107103227ddba1d.
 
 The all-valuation indegree count above remains a written derivation, pending its own Lean cardinality proof. The odd-right valuation-one obstruction overlaps existing modular odd-image results and is not an additional BB6 holdout decision.
+
+## Complete low-right boundary extension
+
+[SMALL-BOUNDARY.md](SMALL-BOUNDARY.md) extends the degree-budget derivation to **all right counters**, including the exceptional y=3 and y=4 outcomes. For y=3 the sharper bound is floor(v2(x+6)/2), sharp for every valuation v>=2 at x=3*2^v-6. For y=4 the direct, zero-first and even-source branches give floor(v2(Q)/2)+1 with Q=x+4 if x is even and Q=x+5 otherwise; this bound is also sharp for each v>=2. The y=0,1,2 complete fibres are explicitly characterized.
+
+[ValuationSmall.lean](ValuationSmall.lean) establishes the original-source y=3 high-recursion valuation and parity restriction. The extended source manual [CI 42201145636](https://github.com/FlareZ123/bb6/actions/runs/42201145636) passed both the Lean theorem and [low_y34.py](low_y34.py) differential regression. The new *small-boundary cardinality formulas* are mathematical derivations from the already-proved all-source predecessor iff, and have not themselves been formalized as separate Lean cardinality theorems.
