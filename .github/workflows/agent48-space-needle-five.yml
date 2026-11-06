@@ -61,3 +61,5 @@ jobs:
           lake env lean OffsetStripSource.lean
           cp "$base48/NeedleQuarticEnumerate.lean" .
           lake env lean NeedleQuarticEnumerate.lean
+          cp "$base48/NeedleQuarticEnumerateSource.lean" .
+          lake env lean NeedleQuarticEnumerateSource.lean
