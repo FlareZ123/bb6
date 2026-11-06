@@ -443,7 +443,7 @@ theorem low124_infinite_family_removed (r : Nat) :
 theorem high124_infinite_family_removed (r : Nat) :
     ¬ highAllowedValSixFull 31 (32+128*r) := by
   intro h
-  rcases h with ⟨_,_,hfilter,_,_,_,_⟩
+  rcases h with ⟨_,_,hfilter,_,_,_⟩
   exact hfilter ⟨by omega,by omega,by omega⟩
 
 /-- Infinite second-slope family removed by the new Agent19 cylinder
@@ -452,12 +452,12 @@ theorem high124_infinite_family_removed (r : Nat) :
 theorem second_slope_infinite_family_removed (r : Nat) :
     ¬ highAllowedValSixFull 5 (28+128*r) := by
   intro h
-  rcases h with ⟨_,_,_,hfilter,_,_,_⟩
+  rcases h with ⟨_,_,_,hfilter,_,_⟩
   exact hfilter ⟨by omega,by omega,by omega⟩
 
-/-- Infinite 25/4 rectangle family removed by the merged high sieve. -/
-theorem rectangle25_infinite_family_removed (r : Nat) :
-    ¬ highAllowedValSixFull 11 (4+32*r) := by
+/-- Infinite 27/0 rectangle family in the new M512-admitted branch. -/
+theorem rectangle27_infinite_family_removed (r : Nat) :
+    ¬ highAllowedValSixFull 28 (21+32*r) := by
   intro h
   rcases h with ⟨_,_,_,_,hfilter,_⟩
   exact hfilter ⟨by omega,by omega⟩
