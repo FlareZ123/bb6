@@ -1,61 +1,81 @@
-# An unbounded five-link inverse obstruction in Machine C
+# Machine C: a five-link inverse obstruction and a stronger exact blank-halting sieve
 
-**Agent 23, 6 November 2026.** This is a source-certified intermediate Machine C result. It does not decide whether Machine C halts or determine BB(6).
+**Agent 23, 6 November 2026.** These are unconditional theorems about the original six-state Machine C's blank-entry section map. They do **not** decide whether Machine C halts, determine BB(6), or supply a BB(6) upper bound. This directory belongs in `im-results/`, pending wider mathematical synthesis and external prior-art assessment.
 
-## Exact original-blank theorem
+## Main result: two oblique forbidden families
 
-Let `secNext` be the **unmodified** Machine C two-counter section map from `im-results/agent46-c-jump/FastSectionDef.lean`. Define `CReach a k` as reachability of `(a,k)` at any section time from the actual blank-entry section `(5,1)`, as in `Agent3COrbitIff.lean`.
+Let `CReach x y` mean reachability of the genuine original-section state `(x,y)` at any number of section steps, starting from the authenticated blank-entry `(5,1)`. The original map is `BB6.Agent46.secNext` from `FastSectionDef.lean`.
 
-The Lean theorem [`blank_no_rectangle`](C26Rectangle.lean) proves, for **all** natural `u,v` with `v≥1`,
-
-```text
-¬ CReach (64*u+1) (256*v+26).
-```
-
-This is a two-dimensional, infinite cylinder, without search depth, numeric fuel, or finite parameter restrictions. The proof reverses the following five **source-exact** section edges:
+[`C26Oblique.lean`](C26Oblique.lean) proves the following all-time source theorem for any natural counters `x,y` with `y≥34`:
 
 ```text
-(64u+1,         256v+26)
-   <- (64u+256v+25,  128v+12)    even-right exact inverse
-   <- (64u+384v+35,   64v+5)     even-right exact inverse
-   <- (32u+224v+18, 16u+144v+10) odd/odd exact inverse
-   <- (48u+368v+26,  8u+72v+4)  even-right exact inverse
-   <- (56u+440v+28,  4u+36v+1)  even-right exact inverse
+if (y%32=26 and (4*x+y)%256=30)
+or (y%32=18 and (4*x+y)%256=222),
+then ¬ CReach x y.
 ```
 
-The displayed arrows point from a section target to its uniquely forced original-blank predecessor. Every even-right edge uses `BB6.Agent46.six_even_right_blank_reach_iff` from Agent24's unchanged source-certified `EvenRightSixOrbit.lean`. The middle odd/odd edge uses `BB6.Agent3.oddodd_lowval_blank_reach_iff` from Agent3's `OddOddLowVal.lean`. Their hypotheses are proved arithmetically for all `u≥0,v≥1`.
+The two sets are oblique infinite congruence cylinders. Neither requires a bound on the first counter or on elapsed machine time.
 
-The final state has odd right counter `4u+36v+1 ≥ 37`, while its counter sum `60u+476v+29` is congruent to **1 modulo 4**. Agent3's original `blank_section_odd_image` proves that a post-initial section output with odd right counter at least five must instead have sum congruent to **0 or 3 modulo 4**. The final state is distinct from the true initial state `(5,1)`, so this contradiction closes every possible blank-rooted trajectory.
-
-## Stopping-family consequences
-
-The full original-source [`LowC26.lean`](LowC26.lean) proves the previously unexcluded first stopping parameter class
+The core proof uses integers `q,z≥0` satisfying `x+2*z=16*q+7`, `z≥4`, and either `(z%4,q%4)=(3,0)` or `(2,3)`. It forces five consecutive original-source inverse transitions:
 
 ```text
-m % 256 = 246
-k + 3*m + 4 = 2^(2*m+3)
---------------------------------
-¬ CReach 1 k
+(x,              8z+2)
+   <- (x+8z,          4z)           E
+   <- (x+12z-2,       2z-1)         E
+   <- (8q+6z,         4q+4z-2)      O
+   <- (12q+10z-4,     2q+2z-2)      E
+   <- (14q+12z-8,     q+z-2)        E
 ```
 
-because `k % 256 = 26` and `k ≥ 282`. This proof was completed independently using the narrower `(1,256v+26)` instance, and remains a standalone verified corollary.
+Here **E** is Agent24's exact original-source `six_even_right_blank_reach_iff`; **O** is Agent3's exact `oddodd_lowval_blank_reach_iff`. All their guard conditions are discharged for the two infinite parameter sectors, without a simulator shortcut. The last state has odd right counter at least five and sum `15q+13z-10 ≡ 1 (mod 4)`. The original blank-orbit image invariant `BB6.Agent3.blank_section_odd_image` allows only sums 0 or 3 modulo 4 at such a post-initial state; the true initial state is also excluded. Thus every such putative blank-root ancestor is impossible.
 
-The source-certified [`C26High.lean`](C26High.lean) proves a coupled, two-parameter obstruction for the **high** stopping family:
+The rectangular theorem [`blank_no_rectangle`](C26Rectangle.lean),
 
 ```text
-j % 32 = 31
-(j + 3*m + 5) % 256 = 230
-k + j + 3*m + 5 = 2^(2*m+2)*(j+3)
-----------------------------------
-¬ CReach (2*j+3) k
+∀u v≥0, 1≤v → ¬ CReach (64*u+1) (256*v+26),
 ```
 
-The congruences force `m≥22`, make the high right-hand power divisible by 256, and imply `(2j+3)%64=1`, `k%256=26`, and `k≥256`. Thus the supposed high stopping source falls inside the forbidden rectangle. In conventional pairs of residues modulo 256, the eight excluded `(j,m)` pairs are `(31,150)`, `(63,54)`, `(95,214)`, `(127,118)`, `(159,22)`, `(191,182)`, `(223,86)`, and `(255,246)`.
+is an independently Lean-checked subfamily of the first oblique congruence, with its explicit affine reverse chain in `C26Rectangle.lean`. `LowC26.lean` additionally retains a standalone five-link proof for the one-dimensional root `(1,256v+26)`.
 
-[`JointC26.lean`](JointC26.lean) incorporates these two exclusions into the current exact **time-free** blank-halting iff of Agent19's `JointFiveSieve.lean`. It tightens the low admissibility predicate with `m%256≠246` and the high admissibility predicate with `¬(j%32=31 ∧ (j+3*m+5)%256=230)`, retaining exact `mixedFiveFastRootDecision` for each individual parameter. Both remaining existential domains are infinite. This is a lossless arithmetical reduction, not a global halting decision.
+## Original stopping-source consequences
 
-## Verification and research boundary
+The complete original-source low stopping equation is
 
-The original CLine, jump, bounce, true section, exact inverses, and genuine blank-orbit image invariant are compiled unchanged by [the manual source workflow](../../.github/workflows/agent23-c-low26.yml), with Lean **4.36.0-rc2**. The widened rectangle and high parameter theorem passed [CI run 42211247750](https://github.com/FlareZ123/bb6/actions/runs/42211247750), with `#print axioms` recording only `propext`, `Classical.choice`, and `Quot.sound`, and no `sorryAx`. The standalone low theorem passed [run 42209795855](https://github.com/FlareZ123/bb6/actions/runs/42209795855). The combined exact-iff theorem is checked separately by [the joint source workflow](../../.github/workflows/agent23-c26-joint.yml).
+```text
+k + 3*m + 4 = 2^(2*m+3),  first counter = 1.
+```
 
-The originality claim is limited to the shared repository's currently inspected source results. These theorems combine established original-source inverse maps with a newly identified symbolic five-link sector. External prior-art comparison is incomplete. They supply a new infinite excluded low family and a coupled infinite high family, and no upper bound for BB(6).
+[`LowC26.lean`](LowC26.lean) proves that **every** candidate with `m%256=246` is unreachable from the blank source. Such candidates necessarily satisfy `k%256=26` and `k≥282`, so they lie in the first oblique region at first counter 1.
+
+The high stopping equation is
+
+```text
+k + j + 3*m + 5 = 2^(2*m+2)*(j+3),  first counter = 2*j+3.
+```
+
+[`C26ObliqueHigh.lean`](C26ObliqueHigh.lean) proves that, for every `m≥3`, the stopping candidate is unreachable whenever either of the following coupled modular conditions holds:
+
+```text
+A: (j+3*m+5)%32=6  and (7*j+233)%256=(3*m)%256
+B: (j+3*m+5)%32=14 and (7*j+41)%256=(3*m)%256.
+```
+
+These are exactly **128 ordered residue pairs** of `(j mod256,m mod256)` in total: 64 in A and 64 in B. Equivalently, A requires `j%4=3` and its displayed mod256 equality, while B requires `j%4=0` and its displayed mod256 equality. The two families are disjoint. The original-source proof derives the actual stopping right counter's appropriate oblique modular condition using divisibility of `2^(2*m+2)` by 256, and proves `k≥34` uniformly. [`C26High.lean`](C26High.lean) retains the earlier eight-pair subcase `j%32=31 ∧ (j+3*m+5)%256=230`, now formally shown to be contained in A by [`old_high_sieve_in_new`](JointC26.lean).
+
+## Updated exact time-free Machine C stopping criterion
+
+[`JointC26.lean`](JointC26.lean) composes the new proofs with Agent19's source-verified `JointFiveSieve.blank_halts_iff_five_root` (including Agent3, Agent11, Agent19 and Agent24's earlier restrictions). It establishes `blank_halts_iff_c26_five_root`, an exact **if and only if** for genuine blank halting in terms of the existing `mixedFiveFastRootDecision` on only:
+
+- low parameters admitted by `BB6.Agent11Joint.lowAllowed m` **and** `m%256≠246`;
+- high parameters admitted by `BB6.Agent19Five.highAllowed j m` **and** outside the A/B obstruction for `m≥3`.
+
+Both permitted domains are still infinite. The Boolean root predicate is source-equivalent to fixed-target reachability, and the equivalence has no existential runtime variable. The remaining parameter existence problem is **undecided**.
+
+## Verification, scope, and reproduction
+
+The original CLine, Machine C transition definition, section construction, exact inverse identities, and true blank-root invariant are compiled unchanged with **Lean 4.36.0-rc2**. All proofs print only the standard axioms `propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx`:
+
+- [CI run 42212769191](https://github.com/FlareZ123/bb6/actions/runs/42212769191) successfully recompiles the original sources and proves `blank_no_oblique_mod256` and `blank_no_high_oblique`, together with the narrower prior certificates. Workflow: [`agent23-c-low26.yml`](../../.github/workflows/agent23-c-low26.yml).
+- [CI run 42212940315](https://github.com/FlareZ123/bb6/actions/runs/42212940315) successfully rebuilds the entire existing Machine C five-sector joint source sieve, then proves `blank_halts_iff_c26_five_root` and `old_high_sieve_in_new`. Workflow: [`agent23-c26-joint.yml`](../../.github/workflows/agent23-c26-joint.yml).
+
+These are full general theorems, as distinct from bounded numerical search. Newness is assessed relative to the repository's source files inspected in this invocation; independent literature and other unexamined paths might contain overlapping results. The unresolved mathematical bottleneck remains the **infinite root-existence problem** in the combined criterion, alongside the other Busy Beaver six-state candidates.
