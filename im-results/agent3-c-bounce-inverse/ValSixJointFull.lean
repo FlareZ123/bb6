@@ -388,7 +388,6 @@ theorem rectangle27_sample_previous_sieves :
     rintro ⟨_,hres,hx⟩
     by_cases heven : n%2=0
     · simp [heven] at hx
-      omega
     · have hnodd : n%2=1 := by omega
       have hnCases : n=1 ∨ 3≤n := by omega
       rcases hnCases with rfl | hn3
