@@ -5,10 +5,9 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent29New
 open BB6.Agent46
 
-/-- On the full odd/even 2-adic sum-seven sector with right counter 6
-mod 8, the authentic blank orbit can reach a target exactly when it
-reaches its unique viable direct-section parent. The alternative
-bounce predecessor is impossible on the actual blank orbit. -/
+/-- For odd/even outputs with sum plus one congruent to 96 modulo 128
+and first counter 5 modulo 8, both possible bounce parents violate
+the authentic blank orbit's odd-right image invariant. -/
 theorem sum96_forced_root_iff (x y : Nat)
     (hx : x%8=5) (hy : y%2=0)
     (hmod : (x+y+1)%128=96) (hbig : 48≤x+y+1) :
@@ -32,8 +31,7 @@ theorem sum96_forced_root_iff (x y : Nat)
               refine ⟨t,?_⟩
               have ht : k=(y-2)/2 := by omega
               simpa only [ha,ht] using hp
-            · rcases hbd with ⟨ha,hk⟩
-              obtain ⟨hodd,hbad,hlarge⟩ :=
+            · obtain ⟨hodd,hbad,hlarge⟩ :=
                 bounce_parents_forbidden x y a k hx hy hmod hbd
               cases t with
               | zero =>
