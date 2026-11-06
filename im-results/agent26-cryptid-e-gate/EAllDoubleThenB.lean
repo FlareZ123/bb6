@@ -50,10 +50,9 @@ theorem two_section_polynomial (t r : Nat) (ys : List Bool) :
       (init (List.replicate (9*t+2) true ++
         false :: (pairs (r+1) ++ ([true,true,false,false] ++ ys)))) =
       ⟨[],false,List.replicate (64*t+2*r+21) true ++ sixTail ys,5⟩ := by
-  have ht :
+  have ht : 876*t*t+731*t+165+4*r =
       (12*(3*t)*(3*t)+49*(3*t)+64+4*r) +
-      (12*(8*t+1)*(8*t+1)+49*(8*t+1)+40) =
-      876*t*t+731*t+165+4*r := by
+      (12*(8*t+1)*(8*t+1)+49*(8*t+1)+40) := by
     have h1 : 12*(3*t)*(3*t)=108*(t*t) := by
       calc
         _ = (12*3*3)*(t*t) := by ac_rfl
@@ -74,7 +73,7 @@ theorem two_section_polynomial (t r : Nat) (ys : List Bool) :
     rw [←List.append_assoc,List.replicate_append_replicate]
     congr 1
     omega
-  rw [←ht]
+  rw [ht]
   simpa only [show 9*t+2=3*(3*t)+2 by omega,hrep] using two_section t r ys
 
 /-- In the genuine infinite-blank tape, the source input needs only
