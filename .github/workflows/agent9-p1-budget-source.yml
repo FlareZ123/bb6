@@ -120,7 +120,7 @@ jobs:
           lean im-results/agent9-p1-q33/Q33AdaptiveFinal.lean | tee -a /tmp/agent9-adaptive-q33.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-adaptive-q33.log; then exit 1; fi
           grep -F 'blank_no_critical_530_plus_2pow44' /tmp/agent9-adaptive-q33.log
-      - name: Audit twelve previously uncertified shallow P1 q-residue cylinders
+      - name: Audit twenty previously uncertified shallow P1 q-residue cylinders
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
@@ -129,12 +129,13 @@ jobs:
           if grep -E -q 'sorryAx|error:' /tmp/agent9-q12-shallow.log; then exit 1; fi
           grep -F 'no_critical_q109' /tmp/agent9-q12-shallow.log
           grep -F 'no_critical_q225' /tmp/agent9-q12-shallow.log
-      - name: Kernel-check exact 2812 over 4096 source-certified P1 q-gateway census
+      - name: Kernel-check exact 2820 over 4096 source-certified P1 q-gateway census
         run: |
           set -euo pipefail
           export LEAN_PATH="im-results/agent9-p1-q1024-cost11:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33"
           lean -o im-results/agent9-p1-q1024-cost11/DensityCount695.olean im-results/agent9-p1-q1024-cost11/DensityCount695.lean | tee /tmp/agent9-q2812.log
           lean -o im-results/agent9-p1-k10-budget12/DensityCount700.olean im-results/agent9-p1-k10-budget12/DensityCount700.lean | tee -a /tmp/agent9-q2812.log
           lean im-results/agent9-p1-q33/DensityCount2812.lean | tee -a /tmp/agent9-q2812.log
+          lean im-results/agent9-p1-q33/DensityCount2820.lean | tee -a /tmp/agent9-q2812.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-q2812.log; then exit 1; fi
-          grep -F 'certified_density_2812' /tmp/agent9-q2812.log
+          grep -F 'certified_density_2820' /tmp/agent9-q2812.log
