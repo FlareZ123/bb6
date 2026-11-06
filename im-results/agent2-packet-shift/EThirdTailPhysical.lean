@@ -31,7 +31,7 @@ private theorem padded_shape (k q : Nat) :
         (false :: (pairs q ++ ([true,true,false] ++
           (pairs 4 ++ [false]))))) := by
   apply congrArg init
-  simp [thirdWord,tail_decomp,List.append_assoc]
+  simp [thirdWord,thirdTail,pairs,List.append_assoc]
 
 /-- Convert an explicit exact original-machine endpoint into a true physical
     section theorem for the omitted final blank, using source bisimulation. -/
@@ -82,8 +82,13 @@ theorem third_qge2 (k q : Nat) :
     dsimp [BB6.Agent2EIterDoubleZeroPacket.duration]
     omega
   rw [ht]
-  change run (BB6.Agent2EIterDoubleZeroPacket.duration k 0 q 4)
-    (BB6.Agent2EIterDoubleZeroPacket.source k 0 q 4 []) = _
+  have hsource :
+      init (List.replicate (3*k+2) true ++
+        (false :: (pairs (q+2) ++ ([true,true,false] ++
+          (pairs 4 ++ [false]))))) =
+      BB6.Agent2EIterDoubleZeroPacket.source k 0 q 4 [] := by
+    simp [BB6.Agent2EIterDoubleZeroPacket.source]
+  rw [hsource]
   exact h
 
 #print axioms third_q0
