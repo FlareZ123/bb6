@@ -60,4 +60,6 @@ jobs:
           for m in NumericShell NumericPower148 NumericBridge148; do
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
-          lean "$AG50/SubwallNear.lean"
+          lean -o "$AG50/SubwallNear.olean" "$AG50/SubwallNear.lean"
+          lean -o "$AG50/ZeroArithmetic.olean" "$AG50/ZeroArithmetic.lean"
+          lean "$AG50/SubwallAllCount.lean"
