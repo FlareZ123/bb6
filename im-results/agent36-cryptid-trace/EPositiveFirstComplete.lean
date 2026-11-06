@@ -56,7 +56,7 @@ theorem originalEPositiveFirst (k q r : Nat) (ys : List Bool) :
         ¬ PhysicalF0
           (run t (init (List.replicate (3*k+2) true ++
             false :: (pairs (q+1) ++ ([true,true,false] ++
-              (pairs r ++ (false::ys))))))))) := by
+              (pairs r ++ (false::ys)))))))) := by
   constructor
   · exact full_E_positive_double_zero_clean k q r ys
   · intro t hpos ht
