@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - .github/workflows/agent49-623-ternary-shift.yml
+      - im-results/agent49-parity623/TernaryBufferSource.lean
 permissions:
   contents: read
 jobs:
@@ -39,3 +40,13 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
           lake env lean Agent49TernaryShiftSource.lean
+      - name: Compile source-certified B-drain third-coordinate budget
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean
+      - name: Prove new-to-old affine source buffer universally
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
+          lake env lean Agent49TernaryBufferSource.lean
