@@ -109,3 +109,51 @@ The equality indices are 0,3,12,39,120,363,1092,3279,...; in ternary they are 0,
 The budget implies d′≥3d+14 on the odd far-left branch of T and d′≥3d+8 on the even far-left branch whenever these branches complete successfully. Along the far-left affine rays the output second counter depends only on the input d, reducing large-family inverse searches to a one-variable equation. These results do not exclude any blank-reachable terminal window by themselves.
 
 The equality indices are repeated ternary 1s followed by a zero, complementing the repeated-1-and-final-2 first-failure threshold in [Agent49's work](../agent49-parity623/README.md). Comparing these two exact languages may support a stronger rooted predecessor exclusion theorem. Keep both modules in intermediate results until relevance to the BB(6) frontier is established.
+
+
+## 2026-11-06: gate-parent envelope and ray-residue reductions
+
+The new `GatePredecessorSource.lean` imports the original #623 parity
+transition and the affine predecessor bounds. It proves
+`blank_run_gate_parent_finite_envelope`: apart from the two small states
+(D(4,5)) and (D(4,7)), any state in the logarithmic gate that halts must
+have its immediate predecessor in one of four explicit old-cone affine
+sectors. The source-level theorem passes the pinned
+`agent49-623-ternary-shift.yml` CI (run 17).
+
+The same Lean file contains
+`positive_gap_residue_exponent_unique`. For a fixed odd base constant (N),
+there cannot be two exponents (A<B) with
+(N\bmod3^{A+1}=3^A) and (N\bmod3^{B+1}=3^B). This formalizes the
+positive-gap uniqueness reduction.
+
+`NegativeGapResidue.lean` formalizes the complementary negative-gap
+separation lemma: if
+[
+(C-2A)\bmod3^{A+1}=3^A,\qquad
+(C-2B)\bmod3^{B+1}=3^B,
+\]
+with (A<B) and (2B\le C), then (B-A\ge2\cdot3^A). The proof was
+checked locally with Lean 4.36.0-rc2; repository CI verification was added
+in run 18 and is pending at the time of this note.
+
+`FirstEvalRayResidues.md` gives the exact five first-evaluator cases for
+even first coordinate (b), including the positive-gap 3-adic valuation
+criterion and the negative-gap exponent-spacing argument. These are
+**first-call** conditions only. A successful first evaluator does not imply
+that the remaining `drainB` recursion succeeds; for example, (D(12,12))
+passes `evalA 1 12 29) and then fails at `evalA 0 3 42).
+
+A separate BigInt translation of the source transition audited the first
+1,000 blank-root states. It found 419 right-ray and 259 left-ray old-cone
+states, with 222 candidate first-call failure shifts and no equality between
+an actual root parameter and a candidate. The closest candidate distances
+were 38 on a right ray at index 13 and 126 on a left ray at index 11. This
+is computational evidence from an independent translation, not a
+kernel-checked 1,000-state proof.
+
+The next root-specific proof target is to derive a separation invariant
+between the actual ray parameter and every first-call failure candidate
+directly from the preceding `drainB` digit updates. A complete proof must
+also control later drain iterations after a successful first call. These
+reductions do not determine BB(6).
