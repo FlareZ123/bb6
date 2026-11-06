@@ -34,4 +34,5 @@ jobs:
           lean -o im-results/agent36-cryptid-trace/EPositiveFirstBoundary.olean im-results/agent36-cryptid-trace/EPositiveFirstBoundary.lean
           D=im-results/agent2-cryptid-continuity
           for x in EOneTripleReturn E111FirstReturn PrefixNoF; do lean -o "$D/$x.olean" "$D/$x.lean"; done
-          lean im-results/agent36-cryptid-trace/EPositiveFirstComplete.lean
+          lean -o im-results/agent36-cryptid-trace/EPositiveFirstComplete.olean im-results/agent36-cryptid-trace/EPositiveFirstComplete.lean
+          lean im-results/agent36-cryptid-trace/EZeroFirstLocal.lean
