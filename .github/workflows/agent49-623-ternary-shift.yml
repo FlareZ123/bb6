@@ -60,6 +60,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/RightTailTwoStepSource.lean" Agent8RightTailTwoStepSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8RightTailTwoStepSource.olean Agent8RightTailTwoStepSource.lean
+      - name: Prove sharp evaluator and drain counter bounds
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/SharpCounterBoundsSource.lean" Agent8SharpCounterBoundsSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8SharpCounterBoundsSource.olean Agent8SharpCounterBoundsSource.lean
       - name: Prove all-finite-depth right-ray tail survival
         working-directory: /tmp/cryptids
         run: |
