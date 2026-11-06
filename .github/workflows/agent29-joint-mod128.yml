@@ -182,7 +182,7 @@ jobs:
           done
           # Agent29: prior-filter admissibility of all m=1, j=10 modulo32 indices.
           cp ${GITHUB_WORKSPACE}/im-results/agent29-forced-depth/JointM1PriorAllowed.lean .
-          lean JointM1PriorAllowed.lean
+          lean -o JointM1PriorAllowed.olean JointM1PriorAllowed.lean
 
           # Agent 3: source-certify two new valuation-six high exclusions
           # and the lossless strongest combined BB6 Machine C stopping iff.
@@ -190,3 +190,19 @@ jobs:
           for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource ValSixSecondHighArithmetic ValSixSecondHighSource ValSixJoint ValSixNovel ValSixThirdConeArithmetic ValSixThirdConeSource ValSixThirdHighArithmetic ValSixThirdHighSource ValSixJointThree ValSixThirdNovel ValSixMixedNormalize ValSixJointFast; do
             lean -o "$f.olean" "$f.lean"
           done
+
+          # Agent29's infinite m=1 right-four tower: compile its exact
+          # affine normalizer and true blank-root exclusion into this same
+          # original-source dependency chain before integrating the sieve.
+          cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/{AffineNormalize,AffineParityDepth,AffineHaltOneStep,SecondDeepSector}.lean .
+          for f in AffineNormalize AffineParityDepth AffineHaltOneStep SecondDeepSector; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent29-forced-depth/{ModThree,DeepSecondFinal,BottomBoundary,DeepFourExclude,SecondOneInfinite}.lean .
+          for f in ModThree DeepSecondFinal BottomBoundary DeepFourExclude SecondOneInfinite; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          # Final strengthened Machine C iff: remove the infinite m=1
+          # family while preserving the exact five-gate root oracle.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/ValSixJointM1.lean .
+          lean ValSixJointM1.lean
