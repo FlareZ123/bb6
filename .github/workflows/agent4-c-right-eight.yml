@@ -27,11 +27,12 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a4-c-right-eight/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/a4-c-right-eight/
           cp im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine,AffineNormalize}.lean /tmp/a4-c-right-eight/
-          cp im-results/agent4-c-right-eight/RightEight.lean /tmp/a4-c-right-eight/
+          cp im-results/agent4-c-right-eight/{RightEight,RightEightTower}.lean /tmp/a4-c-right-eight/
           cd /tmp/a4-c-right-eight
           export LEAN_PATH="."
           lean --version
           for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity Agent3CImage BounceAllExact SectionAllInverse SectionAffineInverse ReachAffine AffineNormalize; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean RightEight.lean
+          lean -o RightEight.olean RightEight.lean
+          lean RightEightTower.lean
