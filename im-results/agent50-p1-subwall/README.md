@@ -177,3 +177,35 @@ The first line also has the sharper two-case affine classification above. The la
 **Verification:** successful original-source Lean CI [42296908772](https://github.com/FlareZ123/bb6/actions/runs/42296908772), head `779a99a6b454511070fef9c0b06caa1a7fd678a4`. The axiom audit for `source_exceptional_last_reset_depth_window` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
 
 This closes a broad range of possible final-reset depths for the synthetic inverse cone. The remaining high-cost sector and the actual blank-start `Reach` status of the prefix hub are still unresolved.
+
+
+### Full cost bands and unique final reset depth
+
+The unconditional theorem also returns the source-certified prefix-cost inequalities
+
+```
+14*2^n <= 2^(t+3) + 2*mp + 2*n + 6
+mp + n + 7 + 2^(t+1) <= 7*2^n
+1 <= t <= n+1
+m = mp+t+1.
+```
+
+Writing `P=2^n` and substituting `mp=m-t-1`, every genuine right-five cone therefore has its total cost in the depth-indexed interval
+
+```
+7*P - 2^(t+2) - n + t - 2 <= m
+m <= 7*P - 2^(t+1) - n + t - 6.
+```
+
+For each `t>=1`, the interval width is `2^(t+1)-4`. Adjacent depth bands are separated by exactly two integer costs: the upper endpoint for depth `t+1` is three less than the lower endpoint for depth `t`. Both endpoints decrease as `t` increases, so the bands are ordered and pairwise disjoint. Thus, within this exceptional d=5 cone family, a fixed total cost `m` determines at most one possible final reset depth `t`. Every actual witness lies in one of these bands.
+
+The bands nearest the high-cost end are:
+
+| Final depth | Necessary total-cost interval |
+|---|---|
+| `t=n+1` | `0 <= m <= 3*P-5` |
+| `t=n` | `3*P-2 <= m <= 5*P-6` |
+| `t=n-1` | `5*P-3 <= m <= 6*P-7` |
+| `t=n-2` | `6*P-4 <= m <= 13*P/2-8` |
+
+For example, the first adjacent gap is exactly `m=3*P-4` and `m=3*P-3`, matching the explicit 10P two-depth theorem. Further gaps occur at every subsequent depth transition. These are necessary cost bands, not sufficiency or reachability results.
