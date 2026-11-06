@@ -246,7 +246,7 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepFourExclude.lean .
           lean -o DeepFourExclude.olean DeepFourExclude.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/SecondOneInfinite.lean .
-          lean SecondOneInfinite.lean
+          lean -o SecondOneInfinite.olean SecondOneInfinite.lean
           # Agent 29: exact all-odd-m right-four stopping locus classification.
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/{ResidualModFive,ResidualOneComplete,ResidualRightFourComplete}.lean .
           for f in ResidualModFive ResidualOneComplete ResidualRightFourComplete; do lean -o "$f.olean" "$f.lean"; done
