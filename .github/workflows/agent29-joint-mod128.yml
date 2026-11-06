@@ -183,3 +183,10 @@ jobs:
           # Agent29: prior-filter admissibility of all m=1, j=10 modulo32 indices.
           cp ${GITHUB_WORKSPACE}/im-results/agent29-forced-depth/JointM1PriorAllowed.lean .
           lean JointM1PriorAllowed.lean
+
+          # Agent 3: source-certify two new valuation-six high exclusions
+          # and the lossless strongest combined BB6 Machine C stopping iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{ValSixArithmetic,ValSixInverse,ValSixSource,ValSixHighArithmetic,ValSixHighSource,ValSixSecondArithmetic,ValSixSecondInverse,ValSixSecondSource,ValSixSecondConeArithmetic,ValSixSecondConeSource,ValSixSecondHighArithmetic,ValSixSecondHighSource,ValSixJoint}.lean .
+          for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource ValSixSecondHighArithmetic ValSixSecondHighSource ValSixJoint; do
+            lean -o "$f.olean" "$f.lean"
+          done
