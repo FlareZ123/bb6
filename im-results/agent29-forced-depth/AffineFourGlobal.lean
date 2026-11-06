@@ -58,7 +58,8 @@ theorem blank_affine_four_odd_ge_three_iff (a k : Nat)
         have hlarge : 5≤3+k-2 := by omega
         have hn : (BB6.Agent15.affineNormalize
             (3+k-2) ((k-2)/2)).2=4 := by
-          simpa only [BB6.Agent15.affineNormalize, dif_pos hgate] using hfour
+          rw [BB6.Agent15.affineNormalize, dif_pos hgate] at hfour
+          exact hfour
         have hparent : BB6.Agent15.CReach (3+k-2) ((k-2)/2) :=
           (BB6.Agent15.blank_reach_iff_affine 3 k
             hgate.1 hgate.2.1 hgate.2.2).mp hr
@@ -66,7 +67,8 @@ theorem blank_affine_four_odd_ge_three_iff (a k : Nat)
           ((blank_no_affine_four_odd_ge_five (3+k-2)
               ((k-2)/2) hparity hlarge hn) hparent)
       · have hright : k=4 := by
-          simpa only [BB6.Agent15.affineNormalize, dif_neg hgate] using hfour
+          rw [BB6.Agent15.affineNormalize, dif_neg hgate] at hfour
+          exact hfour
         exact ⟨rfl,hright⟩
   · rintro ⟨haeq,hkeq⟩
     subst a
