@@ -22,6 +22,81 @@ private theorem five_mul_le_pow (n : Nat) (hn : 5 ≤ n) :
   have heq : (n-5)+5 = n := by omega
   simpa only [heq] using hb (n-5)
 
+/-- Every counted right-five endpoint has zero depth-zero tail after
+its last positive reset. This is unconditional in n and in the endpoint cost:
+the OddCone mass identity and the exact dyadic tail identity are incompatible
+with even one zero-depth tail step. -/
+theorem source_right_five_last_positive_reset_no_tail
+    (n b m z : Nat)
+    (hz : 1 ≤ z)
+    (h : CountCone (14*2^n-2*n-16) 3 b 5 m z) :
+    ∃ bp dp mp zp t k c,
+      CountCone (14*2^n-2*n-16) 3 bp dp mp zp ∧
+      z=zp+1 ∧
+      8≤bp ∧ bp%4=0 ∧ dp%2=1 ∧
+      inverseAt bp dp t=some (k,c) ∧
+      2≤k ∧ c%2=1 ∧ 1≤t ∧
+      UpperTail (2*k-4) (c+4) (mp+t+1) b 5 m 0 := by
+  obtain ⟨bp,dp,mp,zp,t,k,c,s,
+      hpre,hzEq,hbp,hbp4,hdp,hip,hkp,hcp,htp,htail⟩ :=
+    counted_last_positive_reset
+      (14*2^n-2*n-16) 3 b 5 m z h hz
+  have hoddEnd : OddCone (14*2^n-2*n-16) 3 b 5 m :=
+    counted_to_odd_cone _ _ _ _ _ _ h
+  have hmassEnd := odd_cone_mass
+    (14*2^n-2*n-16) 3 b 5 m hoddEnd
+  have hmassEnd' : b+5+2*m=14*2^n-2*n-13 := by omega
+  have hoddPre : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
+    counted_to_odd_cone _ _ _ _ _ _ hpre
+  have hoddReset : OddCone (14*2^n-2*n-16) 3
+      (2*k-4) (c+4) (mp+t+1) :=
+    OddCone.parent bp dp mp t k c
+      hoddPre hbp hbp4 hdp hip hkp hcp
+  have hmassReset := odd_cone_mass
+    (14*2^n-2*n-16) 3 (2*k-4) (c+4) (mp+t+1) hoddReset
+  have hdyadic := upper_tail_dyadic
+    (2*k-4) (c+4) (mp+t+1) b 5 m s htail
+  have hspow : 2^s*(b+12)=2*k+8 := by omega
+  have hcost : m=mp+t+1+s := hdyadic.2
+  have hmassEq : 2*k+c+2*(mp+t+1)=b+5+2*m := by omega
+  have hreset : 2*k+c=b+5+2*s := by
+    rw [hcost] at hmassEq
+    omega
+  have hrel : 2^s*(b+12)=b+13+2*s-c := by omega
+  have hsZero : s=0 := by
+    by_cases hs : s=0
+    · exact hs
+    · have hsp : 1≤s := by omega
+      have hcpos : 1≤c := by omega
+      have hlin : ∀ q : Nat, q+1≤2^q := by
+        intro q
+        induction q with
+        | zero => decide
+        | succ q ih =>
+          rw [Nat.pow_succ]
+          omega
+      have hpos : 12≤b+12 := by omega
+      have hmul : 12*s≤s*(b+12) := by
+        have hmul' := Nat.mul_le_mul_left s hpos
+        omega
+      have hstrict : 2*s<12*s := by omega
+      have hprod : b+12+s*(b+12)=(s+1)*(b+12) := by
+        rw [Nat.add_mul]
+        omega
+      have hpowmul : (s+1)*(b+12)≤2^s*(b+12) :=
+        Nat.mul_le_mul_right (b+12) (hlin s)
+      have hlarge : b+12+2*s<2^s*(b+12) := by
+        calc
+          b+12+2*s < b+12+12*s := by omega
+          _ ≤ b+12+s*(b+12) := by omega
+          _ = (s+1)*(b+12) := hprod
+          _ ≤ 2^s*(b+12) := hpowmul
+      omega
+  subst s
+  exact ⟨bp,dp,mp,zp,t,k,c,hpre,hzEq,hbp,hbp4,hdp,hip,hkp,hcp,htp,htail⟩
+
+#print axioms BB6.Agent50ExceptionalDepth.source_right_five_last_positive_reset_no_tail
+
 /-- An exceptional right-five terminal in the original P1 counted inverse
 history, below the explicit 2.5*2^n cost threshold, has a uniquely determined
 last positive reset depth. The final inverseAt is exactly n+1, its source
