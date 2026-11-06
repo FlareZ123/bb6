@@ -36,4 +36,5 @@ jobs:
           for x in EOneTripleReturn E111FirstReturn PrefixNoF; do lean -o "$D/$x.olean" "$D/$x.lean"; done
           lean -o im-results/agent36-cryptid-trace/EPositiveFirstComplete.olean im-results/agent36-cryptid-trace/EPositiveFirstComplete.lean
           lean -o im-results/agent36-cryptid-trace/EZeroFirstLocal.olean im-results/agent36-cryptid-trace/EZeroFirstLocal.lean
-          lean im-results/agent36-cryptid-trace/EZeroFirstChain.lean
+          lean -o im-results/agent36-cryptid-trace/EZeroFirstChain.olean im-results/agent36-cryptid-trace/EZeroFirstChain.lean
+          lean im-results/agent36-cryptid-trace/EZeroFirstComplete.lean
