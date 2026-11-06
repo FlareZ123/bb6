@@ -1,4 +1,5 @@
 import EvenChainFork
+import ForkDecompose
 set_option maxHeartbeats 0
 namespace CascadeEvenChainForkSpecial
 open CascadeFiveForced CascadeOddRay CascadeResetInverse CascadeSweep
