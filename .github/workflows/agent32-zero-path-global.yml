@@ -41,7 +41,8 @@ jobs:
           lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
           lean -o im-results/agent32-zero-prefix-global/ZeroRowAudit.olean im-results/agent32-zero-prefix-global/ZeroRowAudit.lean
-          lean im-results/agent32-zero-prefix-global/PhysicalTraceAudit.lean
+          lean -o im-results/agent32-zero-prefix-global/PhysicalTraceAudit.olean im-results/agent32-zero-prefix-global/PhysicalTraceAudit.lean
+          lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
       - name: Independently exhaust the six read-zero rows
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
