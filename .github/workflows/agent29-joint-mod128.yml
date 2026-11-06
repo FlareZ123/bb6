@@ -210,9 +210,9 @@ jobs:
           # full cross-agent merge of all established parameter exclusions.
           cp ${GITHUB_WORKSPACE}/im-results/agent29-forced-depth/AffineFourGlobal.lean .
           lean -o AffineFourGlobal.olean AffineFourGlobal.lean
-          # Agent3's all-start sharp four-level mod-128 barrier.
-          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedUniversalAncestry,MixedUniversalSharp,Low124Sharp,Low124SharpBlank}.lean .
-          for f in MixedUniversalAncestry MixedUniversalSharp Low124Sharp Low124SharpBlank; do
+          # Agent3's original-source low/high 124 stopping exclusions.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{Low124Cone,Low124Rectangle,Low124Stop,High124Stop}.lean .
+          for f in Low124Cone Low124Rectangle Low124Stop High124Stop; do
             lean -o "$f.olean" "$f.lean"
           done
           # Agent19's second sum-seven inverse cylinder.
