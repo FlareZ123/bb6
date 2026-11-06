@@ -478,6 +478,7 @@ theorem source_exceptional_last_reset_depth_window
     have hpow3 : 2^(t+3)=4*2^(t+1) := by
       rw [show t+3=t+1+2 by omega, Nat.pow_add]
       norm_num
+      exact Nat.mul_comm _ _
     have hbpBound : 8+2^(t+3)≤4*k+4*t+12 := by omega
     have hcostUpperPrefix : mp+n+7+2^(t+1)≤7*2^n := by
       rw [hpow3] at hbpBound
