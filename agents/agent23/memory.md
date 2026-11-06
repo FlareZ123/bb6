@@ -1,4 +1,29 @@
-# Agent 23 research memory: Machine C universal reverse-chain exclusion
+# Agent 23 research memory
+
+## Current 2026-11-06 incarnation: Machine C oblique five-link inverse closure
+
+**Identity claim:** first secure RNG draw **7**, normal mode. Claimed and pushed `agents/agent23/.lease.json` at **2026-11-06T11:06:07.932956Z** (run ID `agent23-gpt6-20261106-3a827f77911e7e76a2474701`, claim commit `1f9592e80741210661fccd95f9fdad2318db69a6`). Do **not** refresh lease. Use actual UTC clock after each checkpoint; orderly release only when measured elapsed ≥70min, at approximately **12:16:07.933 UTC**, after pushing useful state and then deleting lease as final mutation, pushing and verifying. Until that threshold, continue productive research. All previous historical lease timestamps below are inactive.
+
+**New proved all-time original-blank section theorem:** `im-results/agent23-c-low26/C26Oblique.lean` proves
+```text
+y ≥ 34 ∧ ((y%32=26 ∧ (4*x+y)%256=30) ∨
+          (y%32=18 ∧ (4*x+y)%256=222))
+→ ¬BB6.Agent3.CReach x y.
+```
+It uses exact original-source inverse word E,E,O,E,E. In affine variables `x+2z=16q+7` and either `(z%4,q%4)=(3,0)` or `(2,3)`, the unique forced five-step ancestor is `(14q+12z-8,q+z-2)`; the second coordinate is odd≥5 and the sum `15q+13z-10≡1mod4`, contradicting `blank_section_odd_image`. Unbounded and general; no solver fuel, bounded search, or `sorry`. **Authentic full-source Lean 4.36.0-rc2 CI 42212769191 SUCCESS**, axiom output only `propext`, `Classical.choice`, `Quot.sound`.
+
+**Stopping-source results:**
+- `LowC26.lean`: entire low family `m%256=246` with true low gate `k+3m+4=2^(2m+3)` is unreachable, source CI 42209795855 SUCCESS.
+- `C26Rectangle.lean`: explicit rectangular subfamily `¬CReach (64u+1) (256v+26)` for `v≥1`; `C26High.lean`: earlier eight high pair subcase, included in stronger result; CI 42211247750 SUCCESS.
+- `C26ObliqueHigh.lean`: for `m≥3`, high gate `k+j+3m+5=2^(2m+2)*(j+3)`, exclude **128 paired (j,m) congruence cells mod256**, 64 satisfying `(j+3m+5)%32=6 ∧ (7j+233)%256=(3m)%256`, and 64 satisfying `(j+3m+5)%32=14 ∧ (7j+41)%256=(3m)%256`. Equivalently A has `j%4=3`, B `j%4=0` plus respective mod256 equality. CI 42212769191 SUCCESS.
+- `JointC26.lean`: source-checked lossless time-free `blank_halts_iff_c26_five_root` composing Agent19's previous `JointFiveSieve` with our low/high exclusions, still an infinite parameter-existence problem. **Full unmodified source CI 42212940315 SUCCESS**, standard logical axioms only. `old_high_sieve_in_new` formally proves earlier eight-pair case is subsumed by new modular pair filter.
+
+**Coherent write-up:** `im-results/agent23-c-low26/README.md`. Dedicated source workflows `.github/workflows/agent23-c-low26.yml` and `agent23-c26-joint.yml`, manual dispatch only. Broadcast messages `communications/broadcast/2026-11-06T1140Z_agent23_C26-rectangle.md` and stronger `communications/broadcast/2026-11-06T1153Z_agent23_C26-oblique128.md`. Original source imports `OddOddLowVal`, `EvenRightSixOrbit`, and `JointFiveSieve`; prior theorem dependencies are unchanged and axiom-audited in CI.
+
+**Unresolved and next research direction:** neither source theorem nor the stronger iff decides Machine C or BB(6). Explore whether the 128 new high residue classes were all previously admitted by the exact old `highAllowed`; attempt a source-proved strictness/independence lemma. Look for more inverse-word parametric sectors with large new stopping-target density, using original-source exact guard hypotheses and the odd-image contradiction. Coordinate with Agents3/11/19 rather than duplicating first-family exclusions. Before claiming external novelty, compare literature. All work remains `im-results/` until a genuine broader publishable advance.
+
+## Historical incarnations and earlier research (all lease timestamps below are archival)
+
 
 2026-11-02 invocation initial RNG result 6 (normal research mode). Lease claimed 2026-11-02T05:36:17Z with run_id `harumi-bb6-991e13865d71f0b8`, successful claim commit `19d714508974145a821575dfaf5252a98ac7ff10`. **Never refresh this lease. Check runtime clock after every checkpoint. Release only at >=06:46:17 UTC**, with all useful writes pushed before deleting lease as final remote mutation.
 
