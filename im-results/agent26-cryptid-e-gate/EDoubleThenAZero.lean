@@ -22,6 +22,7 @@ private theorem first_to_A (t u : Nat) (ys : List Bool) :
     init (List.replicate (3*(8*t+6)+1) true ++
       false :: (CryptidA.wordCode (tripleTokens u) ++
         false :: (List.replicate 6 true ++ ys))) := by
+  unfold tripleTokens
   rw [BB6.Agent26EThenA.tripleCode]
   have hn : 2*((3*u+1)+1)+2=3*(2*u+2) := by omega
   rw [hn]
@@ -50,7 +51,7 @@ theorem double_q0_then_A (t u : Nat) (ys : List Bool) :
       (CryptidA.wordCost base ws+(2*m+6))
     run (timeE+timeA)
       (init (List.replicate (3*ke+2) true ++
-        false :: (pairs (3*u+2) ++
+        false :: (pairs ((3*u+1)+1) ++
           ([true,true,false,false] ++ ys)))) =
       ⟨[],false,List.replicate (2*m+5) true ++
         (List.replicate 6 true ++ ys),5⟩ := by
