@@ -239,6 +239,8 @@ jobs:
           # Agent 29: complete Lean proof of the odd-depth exponential residual barrier.
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/{ResidualPeriod,ResidualCore,ResidualExponential,ResidualLowOdd,ResidualSource}.lean .
           for f in ResidualPeriod ResidualCore ResidualExponential ResidualLowOdd ResidualSource; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/ResidualSharp.lean .
+          lean ResidualSharp.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/BottomBoundary.lean .
           lean -o BottomBoundary.olean BottomBoundary.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/DeepFourExclude.lean .
