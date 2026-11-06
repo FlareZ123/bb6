@@ -63,3 +63,5 @@ jobs:
           lean -o "$AG50/SubwallNear.olean" "$AG50/SubwallNear.lean"
           lean -o "$AG50/ZeroArithmetic.olean" "$AG50/ZeroArithmetic.lean"
           lean "$AG50/SubwallAllCount.lean"
+          lean -o "$AG50/OffsetLog.olean" "$AG50/OffsetLog.lean"
+          lean "$AG50/OffsetBudget.lean"
