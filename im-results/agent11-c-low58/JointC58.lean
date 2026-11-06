@@ -99,6 +99,50 @@ theorem old_128_filter_admits_150 (r : Nat) :
     ¬(128≤256*r+150 ∧ (256*r+150)%128=0) := by
   omega
 
+/-- Every member of an infinite genuine high stopping family passes all
+    earlier Agent23/19/11/3 high parameter filters. Its removal by the
+    new C58 rectangle is therefore genuinely additional to C26. -/
+theorem old_high_admits_31_54 (r : Nat) :
+    BB6.Agent23C26.highAllowed 31 (54+256*r) := by
+  have hbase : BB6.Agent3.jointHighAllowed 31 (54+256*r) := by
+    unfold BB6.Agent3.jointHighAllowed
+    refine ⟨?_,?_,?_,?_,?_⟩ <;> omega
+  have hrect : BB6.Agent3.jointHighRectAllowed 31 (54+256*r) := by
+    unfold BB6.Agent3.jointHighRectAllowed
+    exact ⟨hbase, by omega⟩
+  have hdy : ∀ n, ¬(n+4≤2*(54+256*r)+2 ∧
+      (31+3*(54+256*r)+3)%2^(n+4)=2^(n+2) ∧
+      (2*31+3)%8=(if n%2=0 then 7 else 3)) := by
+    intro n
+    rintro ⟨_,_,hx⟩
+    by_cases heven : n%2=0
+    · simp [heven] at hx
+    · simp [heven] at hx
+  have h19 : BB6.Agent19Joint.highAllowed 31 (54+256*r) := by
+    unfold BB6.Agent19Joint.highAllowed
+    exact ⟨hrect,hdy,by omega,by omega,by omega,by omega⟩
+  have h11 : BB6.Agent11Joint.highAllowed 31 (54+256*r) := by
+    unfold BB6.Agent11Joint.highAllowed
+    exact ⟨h19,by omega,by omega⟩
+  have hfive : BB6.Agent19Five.highAllowed 31 (54+256*r) := by
+    unfold BB6.Agent19Five.highAllowed
+    exact ⟨h11,by omega⟩
+  unfold BB6.Agent23C26.highAllowed
+  refine ⟨hfive,?_⟩
+  unfold BB6.Agent23C26.highForbidden
+  omega
+
+/-- All members of that previously allowed infinite high family are
+    rejected by the new original-source rectangle condition. -/
+theorem new_high_excludes_31_54 (r : Nat) :
+    ¬ highAllowed 31 (54+256*r) := by
+  intro h
+  have hn := h.2
+  apply hn
+  omega
+
 #print axioms blank_halts_iff_c58_five_root
+#print axioms old_high_admits_31_54
+#print axioms new_high_excludes_31_54
 #print axioms old_low_admits_150
 end BB6.Agent11C58
