@@ -125,9 +125,25 @@ private theorem second_a_shape (u r : Nat) (hr : 1 ≤ r) :
     simp [CryptidA.wordCode,wordCode_replicate_true]
     have hn : 3*(2*(r-1)+1)=6*r-3 := by omega
     rw [hn]
+  simp only [secondOutput]
   rw [hn,hw]
-  simp [secondOutput,init,CryptidBoundary.packetThree,suffix2,suffix3,
-    codeWords,CryptidA110111CodeFirst.packet,List.append_assoc]
+  have hfront :
+      List.replicate (3*(64*u+10)+3) true =
+        true::true::List.replicate (3*(64*u+10)+1) true := by
+    rw [show 3*(64*u+10)+3 =
+      2+(3*(64*u+10)+1) by omega,
+      ←List.replicate_append_replicate]
+    simp [List.replicate]
+  have hones : List.replicate (6*r-1) true =
+      List.replicate (6*r-3) true ++ [true,true] := by
+    rw [show 6*r-1=(6*r-3)+2 by omega,
+      ←List.replicate_append_replicate]
+    simp [List.replicate]
+  rw [hfront]
+  simp only [suffix2]
+  rw [hones]
+  simp [init,CryptidBoundary.packetThree,suffix3,
+    CryptidA110111CodeFirst.packet,List.append_assoc]
 
 private theorem a_end_shape (u r : Nat) (hr : 1 ≤ r) :
     (⟨[],false,
@@ -150,19 +166,22 @@ private theorem a_end_shape (u r : Nat) (hr : 1 ≤ r) :
       List.replicate (8*(64*u+10)+16*r+7) true ++
           (BB6.Agent25BGeneral.oppairs 3 ++ [true,true]) := by
     rw [hi,ht]
-    congr 1
-    omega
+    have hlen :
+        2*(4*(64*u+10)+3+(8*r-2))+5 =
+          8*(64*u+10)+16*r+7 := by omega
+    rw [hlen]
+    rfl
   have hfront :
       List.replicate (8*(64*u+10)+16*r+7) true =
         true::true::List.replicate (8*(64*u+10)+16*r+5) true := by
     rw [show 8*(64*u+10)+16*r+7 =
       2+(8*(64*u+10)+16*r+5) by omega,
       ←List.replicate_append_replicate]
-    rfl
-  simp only [sourceEnd,DRegularSource.sourceSection,init,oppairs,
-    List.replicate_one,
+    simp [List.replicate]
+  simp only [sourceEnd,DRegularSource.sourceSection,init,
     show (8*(64*u+10)+16*r+7)-2=8*(64*u+10)+16*r+5 by omega]
   rw [hrep,hfront]
+  simp [List.replicate]
 
 private theorem third_return (u r : Nat) (hr : 1 ≤ r) :
     run (aTime u r) (secondOutput u r) = sourceEnd u r := by
