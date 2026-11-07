@@ -55,7 +55,7 @@ For \(d\bmod3=0\), [TThreeHighTTwoZero.lean](TThreeHighTTwoZero.lean) establishe
 d\bmod9=6\quad\lor\quad
 (128d)\bmod27=(30(8\cdot2^{n-8}+n-8)+75)\bmod27.
 \]
-[TThreeHighTTwoResidues.lean](TThreeHighTTwoResidues.lean) classifies the second case by \(n\bmod18\): indices \(4,17\) require \(d\bmod27=12\); indices \(5,10\) require \(d\bmod27=21\); indices \(11,16\) require \(d\bmod27=3\). The new zero-quotient and indexed residue modules have local Lean checks and are undergoing complete-source CI verification; check the latest manual workflow conclusion before upgrading this status.
+[TThreeHighTTwoResidues.lean](TThreeHighTTwoResidues.lean) classifies the second case by \(n\bmod18\): indices \(4,17\) require \(d\bmod27=12\); indices \(5,10\) require \(d\bmod27=21\); indices \(11,16\) require \(d\bmod27=3\). Both the quotient-zero and indexed period-18 residue proofs passed complete, unchanged-source Lean 4.36.0-rc2 CI [42413863136](https://github.com/FlareZ123/bb6/actions/runs/42413863136). The audited theorems depend only on standard logical axioms (propext, Classical.choice, Quot.sound), without source stubs or sorry. [TThreeHighTTwoFinalSelector.lean](TThreeHighTTwoFinalSelector.lean) packages these cases together with the d%3=2 exclusion as a single necessary 13-of-27 rooted residue selector; its full-source CI audit is separately dispatched, not yet presumed successful.
 
 The \(d\bmod3=1\) branch, surviving modulo-27 gates, valuations \(t\ge3\), other \(q\)-selector arms, and the continuing inverse ray remain open. The source-root restrictions do not establish that machine #746 halts or never halts. They are neither a BB(6) upper bound nor an exact BB(6) value.
 
