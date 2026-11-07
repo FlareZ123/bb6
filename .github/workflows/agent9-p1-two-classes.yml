@@ -2,15 +2,13 @@ name: Agent9 P1 two inverse-cone source audit (one-shot issue or manual)
 
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   source-audit:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent9-source-audit-20261102]'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:

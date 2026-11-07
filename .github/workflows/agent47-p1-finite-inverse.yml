@@ -2,15 +2,13 @@ name: Agent 47 P1 finite inverse source verification (manual)
 
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   lean-check:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent47-p114-source-audit]' || github.event.issue.title == '[agent47-p162-source-audit]'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:

@@ -1,13 +1,11 @@
 name: Agent 47 aggregate 36-family original-source Lean theorem
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 permissions:
   contents: read
 jobs:
   aggregate-audit:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent47-p1-mod1024-aggregate-audit]'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:

@@ -2,15 +2,13 @@ name: Agent 33 BB429 native 24/2048 raw-TM source equivalence (manual)
 
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   original-cryptids-native-24:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == 'AGENT33_VERIFY_58_20261105'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:

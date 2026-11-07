@@ -1,13 +1,11 @@
 name: Agent 7 uniform fatal reset parent normal form (manual)
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
 permissions:
   contents: read
 jobs:
   verify-uniform:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[agent7-cascade-fork-audit-20261105]'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
