@@ -18,7 +18,6 @@ const prefixShieldAudit = {
 };
 const prefixLeftSixAudit = { evenPrefix: {}, oddEvenPrefix: {} };
 const b0Left101Audit = { count: 0, boundaryUnsafe: 0, leftSix: {}, unsafe: [] };
-const prefixUnmatchedAudit = [];
 const counts = {
   oldWave: 0,
   leftOneWave: 0,
@@ -107,18 +106,6 @@ for (let time = 0; time < LIMIT; time++) {
     bZeros++;
     const prefix = prefixAtBZero(head, time);
     const cphase = cphaseD1AtBZero(head, time);
-    if (prefix?.type === 'prefixUnmatched') {
-      const m = prefix.m;
-      prefixUnmatchedAudit.push({
-        time,
-        head,
-        m,
-        leftSix: Array.from({ length: 6 }, (_, i) =>
-          tape.has(head - 6 + i) ? '1' : '0').join(''),
-        rightTail: Array.from({ length: 6 }, (_, i) =>
-          tape.has(head + m + i) ? '1' : '0').join(''),
-      });
-    }
     if (tape.has(head - 1) && !tape.has(head - 2) && tape.has(head - 3)) {
       const leftSix = Array.from({ length: 6 }, (_, i) =>
         tape.has(head - 6 + i) ? '1' : '0').join('');
@@ -230,5 +217,4 @@ console.log(JSON.stringify({
   prefixShieldAudit,
   prefixLeftSixAudit,
   b0Left101Audit,
-  prefixUnmatchedAudit,
 }, null, 2));
