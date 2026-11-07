@@ -193,3 +193,32 @@ New intermediate Lean source modules:
 The three source files were locally checked with Lean 4.36.0-rc2 against the copied exact normalizer definition. The final reachability theorem was checked using explicit source-signature-shaped scratch axioms, so **its source-connected status is still pending**. All three modules have been added to the existing manually dispatched Agent 15 source workflow for genuine unmodified-source checking. Do not conflate local scratch compilation with an original-source certification.
 
 The prior combined CI [41496155633](https://github.com/FlareZ123/bb6/actions/runs/41496155633) failed after successfully compiling M8/M16 quotient chains: an Agent 46 iterator and `Agent8Section.run` were not definitional equals in `M8M16Composition.lean:77`. This concrete source bridge has been corrected by rewriting with the already source-certified `BB6.Agent46.run_eq`; commit `8db9e24dc7a19e1747a1e3cece7b1b650bb40bf0`. Combined source replay [41500523568](https://github.com/FlareZ123/bb6/actions/runs/41500523568) was started at 18:26 UTC, pending at the time of this note. That run predates the three new modules and cannot certify them. No Machine C or BB(6) holdout decision has been obtained.
+
+## 2026-11-07 audit: M192 invariant coverage and Machine C residuals
+
+A source audit found that the prior blanket theorem source_no_c0_right_ge8
+was not justified by the M192 invariant. In Core192All.lean, low contains
+lowCore x w as a conjunct; the hypothesis 8 ≤ k only discharges the final
+disjunction. It does not prove the finite residue condition. The attempted
+simp [bad, low, hk] therefore cannot establish bad a k 0 for arbitrary a,k.
+
+Two exact stopping-family points demonstrate the gap:
+- First family m=1: (a,k)=(1,25), where 25+3+4=2^5 and lowCore(1,25) is false.
+- Second family j=0,m=1: (a,k)=(3,40), where 40+3+5=2^4·3 and lowCore(3,40) is false.
+
+These are not reachability counterexamples. They show only that the current
+M192 backward invariant does not exclude these stopping-family points.
+M192GeneralBound.lean was corrected to retain the valid arithmetic bounds
+and prove a conditional source exclusion requiring the actual lowCore residue
+hypothesis. NoMachineCHalt.lean was corrected to state the exact remaining
+nontrivial stopping families after the two small feeder exclusions; no
+machine-wide nonhalting conclusion is established.
+
+The six-state C-line first-return work was also strengthened:
+BounceFirstReturn.lean now proves a prefix invariant that every positive
+pre-return step has positive third coordinate. The first CI attempt compiled
+that module, then stopped at a duplicate CState alias in
+SectionFirstReturn.lean; that alias was renamed to SectionState.
+SectionReachEquivalence.lean adds the converse reachability direction and
+an iff theorem. The next CI run is required before treating these latter
+modules as source-verified.
