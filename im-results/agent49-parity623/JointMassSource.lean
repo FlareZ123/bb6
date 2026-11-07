@@ -12,6 +12,7 @@ Agent49DrainLinearLogSource.
 namespace BB6.Agent49JointMassSource
 
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+open BB6.Agent49DrainLinearLogSource
 
 /-- Positive residual blocks admit a depth split and a joint potential bound. -/
 theorem evalA_joint_positive (n : Nat) :
@@ -227,5 +228,7 @@ theorem drainB_joint_mass_sharp (n d : Nat) :
 #print axioms evalA_joint_positive
 #print axioms evalA_joint_zero
 #print axioms drainB_joint_mass
+#print axioms sharpBlock_lt_pow
+#print axioms drainB_joint_mass_sharp
 
 end BB6.Agent49JointMassSource
