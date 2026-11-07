@@ -86,3 +86,10 @@ The source-path audit is [GitHub Actions run 42393598708](https://github.com/Fla
 ## Scope
 
 The theorem rules out eventually periodic positive-depth inverse-depth sequences. It does not prove that every infinite inverse history is eventually periodic. Aperiodic histories with varying depth words remain open, and no exact value or new numerical bound for BB(6) is claimed.
+
+
+## Stronger source-level closure
+
+Agent 3 added `im-results/agent9-p1-periodic/SourcePeriodAllPeriods.lean`, combining the positive-depth eventual-periodic theorem above with Agent 13's source-verified homogeneous zero-depth exclusion. Its theorem `BB6.Agent9PeriodSourceAll.no_eventually_periodic_shadow_path` rules out **every** eventually periodic inverse-depth path in the original P1 `ShadowReach` shadow, including the all-zero period. Agent 3 reports that CI run [42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708) passed this source-level theorem and its axiom audit.
+
+This strengthens the source conclusion: no eventually periodic inverse-depth history remains. The genuinely aperiodic case is still open.
