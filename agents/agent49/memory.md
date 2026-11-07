@@ -244,3 +244,84 @@ exclude terminal daughters. The even-right `b=0` algebraic case is no
 longer open. Continue to distinguish the finite Python scan from proof.
 `results/` remains untouched because no complete root nonhalting theorem
 or exact BB(6) value has been established.
+
+
+## 2026-11-07 11:15Z checkpoint: sharp joint mass and terminal ratio-4 reduction
+
+The evaluator joint-depth claim from the earlier work was corrected. The
+all-output version is false: evalA(2,1,0) = some (0,0,5). The valid split is
+now formalized in im-results/agent49-parity623/JointMassSource.lean:
+- positive residual b'>0: a depth split r+s=n, r>0, b'<3^s and
+  a'+d'+3b'≤a+m+k+r;
+- zero residual b'=0: a'+d'≤a+m+k+n+1.
+
+Combining these gives the source-level theorem drainB_joint_mass: if b<3^n
+and drainB(a,b,d)=D(a',d'), then a'+d'≤a+d+3b+3n+1. The bound is sharp
+on the existing sharpBlock family; sharpBlock_lt_pow and
+drainB_joint_mass_sharp are in the same source module. The local exact model
+at /tmp/JointPositive.lean compiled with Lean 4.36.0-rc2; its axiom audit
+had no sorryAx. More importantly, CI run #24 compiled Agent49JointMassSource
+against the pinned upstream import and printed only standard Lean axioms.
+The overall run failed later in DrainLinearTerminalSource because three new
+ray corollaries needed arithmetic normalization after applying the generic
+joint-mass interval theorem.
+
+Related durable files:
+- im-results/agent49-parity623/JointMassSource.lean
+- im-results/agent49-parity623/JointMass.md
+- im-results/agent49-parity623/joint_mass_check.py
+- im-results/agent49-parity623/TerminalRatio4.md
+- im-results/agent49-parity623/RootRayBridgeArithmetic.lean
+- im-results/agent49-parity623/RootRayBridge.md
+- im-results/agent49-parity623/root_ray_bridge_check.py
+
+The terminal source now imports both the joint-mass theorem and the root-ray
+arithmetic module. It contains joint-mass versions of the generic terminal
+interval and the even-right, odd-left, even-left and odd-right corollaries.
+CI run #25 is currently in progress after replacing the three ray-wrapper
+exact calls by a generic interval hypothesis followed by omega. Run #24
+verified the joint-mass module, root-ray arithmetic module, and pre-existing
+terminal/bridge theorems; its only remaining errors were the three wrapper
+result-type mismatches.
+
+A further algebraic synthesis is recorded in
+im-results/agent49-parity623/TerminalRatio4.md and communicated to Agent 8
+in communications/agent8/20261107T111000Z_agent49-terminal-ratio4-synthesis.md.
+If a drain output D(a',d') is terminal and its mass is below 3^K/2, then
+|d'-a'|≤K+4. Subtracting the two root-ray bridge gaps cancels a',d' and
+gives a necessary predecessor ratio-4 window:
+- odd far-left: |4y-x|≤K+5n+29;
+- even far-left: |4y-x|≤K+5n+20;
+- odd near-left: |4x-y|≤K+5n+12;
+- even near-left: |4x-y|≤K+8n+17.
+The even-near composite evaluator/drain mass is bounded by y+2x+5+3n.
+These four inequalities are algebraically derived but not yet source-formalized.
+
+Finite diagnostics (not proof): the first 10,000 root states yield 9,991
+final drains. The ratio-4 necessary window has one candidate, index 13,
+right-even D(122,438), with gap 50 and bound 64; its output D(314,385)
+has successor D(74,950). Index 16, far-left-odd, has gap 64 versus bound
+62 and is excluded. There are no later candidates in the scanned prefix.
+After index 17, minimum margins by branch are 1,196 (right-odd), 674
+(right-even), 425 (far-left-odd), and 2,838 (far-left-even). The reproducible
+script is joint_mass_check.py.
+
+Next actions:
+1. Check CI run #25. If the ray wrappers pass, update the source-module header
+   and README, then consider promoting the sharp joint-mass theorem to
+   results/ as a standalone pure mathematical result.
+2. Formalize the generic terminal output-balance lemma from
+   next_none_requires_pow_gap plus the joint mass bound:
+   |d'-a'|≤K+4.
+3. Formalize the four ratio-4 bounds by subtracting the paired root-ray gap
+   estimates. For even-near, first formalize the composite evaluator/drain
+   mass a'+d'≤y+2x+5+3n.
+4. Investigate an all-time invariant excluding the logarithmic ratio-4
+   windows along the blank-root orbit. The finite scan is not an all-time
+   proof.
+5. Preserve the correction: do not reuse the false all-residual evaluator
+   joint-depth lemma. The zero-residual case must remain separate.
+
+results/ is still untouched pending successful source verification and a
+clear publication-quality synthesis. No BB(6) exact value or all-time
+nonhalting proof has been established.
