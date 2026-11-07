@@ -50,7 +50,7 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
     have hI : ((2^(cost w)-1:Nat):Int)*(Q:Int)=
         ((cost w*weight w:Nat):Int) := by
       rw [hBcast,hQcast]
-      simpa using hSlope
+      simpa [Int.mul_comm] using hSlope
     exact_mod_cast hI
   have hBpos : 0<2^(cost w)-1 := by
     have hpw : 1<2^(cost w) := Nat.one_lt_two_pow (Nat.ne_of_gt hSpos)
