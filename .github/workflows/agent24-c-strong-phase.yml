@@ -294,6 +294,12 @@ jobs:
           lean -o InfiniteStrictB.olean InfiniteStrictB.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/TrueStoppingFamilyB.lean .
           lean TrueStoppingFamilyB.lean
+          # Kernel-evaluable replacement for the old well-founded source
+          # affine normalizer, with an all-source-conjunct fast Boolean.
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/FastAffineNormalize.lean .
+          lean -o FastAffineNormalize.olean FastAffineNormalize.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/FastFullBoolean.lean .
+          lean FastFullBoolean.lean
 
           # Agent20: source-audit the full exact mod16=7 inverse and three-level
           # blank-root closure of the 70(mod128) cylinder. These imports use
