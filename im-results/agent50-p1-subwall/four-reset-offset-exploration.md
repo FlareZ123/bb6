@@ -41,7 +41,7 @@ There are two tail cases.
 
 Then `c1+3=d1-1`, so `C1=2P+1170*m1+1170*n+13542`.
 
-Useful bounds are `2P+1170n+15882 <= C1 <= 2P+4680n+18222`. Also `L<=14P` and `C1>=2P`, so `u<=2`. Thus only exact equalities `L=2*C1` and `L=4*C1` need to be excluded.
+Since a one-reset prefix has `m1>=2`, useful bounds are `2P+1170n+15882 <= C1 <= 2P+4680n+18222`. Also `L<=14P` and `C1>=2P`, so `u<=2`. Thus only exact equalities `L=2*C1` and `L=4*C1` need to be excluded.
 
 The root equations give:
 - `r=0`: `L=7P-n-2`. Equality `L=2*C1` reduces to `3P=2340*m1+2341*n+27086`; `L=4*C1` is impossible by sign.
@@ -52,7 +52,7 @@ The root equations give:
 
 The one-step `UpperTail` transition gives `d1=c1+j+6`, while the root dyadic equation gives `2j+8=14P-2n-4`, hence `j=7P-n-6`. Therefore `C1=c1+3=-5P+1170*m1+1171*n+13546`.
 
-For n>=15, the bound `m1<=3n+4` makes this negative, so s1=1 is impossible. At n=14, positivity forces `m1 in {45,46}`. Here `P=16384`, and `B+12` divides `14P-2n-4=229344=2^5*3*2389`. Together with `B%4=0`, this forces `r<=3`.
+For n>=15, the bound `m1<=3n+4` gives `C1<=-5P+4681n+18226<0`, so s1=1 is impossible. At n=14, positivity forces `m1 in {45,46}`. At n=14, positivity forces `m1 in {45,46}`. Here `P=16384`, and `B+12` divides `14P-2n-4=229344=2^5*3*2389`. Together with `B%4=0`, this forces `r<=3`.
 
 The four possible root lengths for r=0,1,2,3 are `114672, 172006, 200672, 215004`. For `m1=45`, `C1=670`; the only power-of-two multiple of 670 in this length range is `256*670=171520`, which is absent. For `m1=46`, `C1=1840`; the only power-of-two multiple in the length range is `64*1840=117760`, which is absent. This finite exact check still needs to be formalized in Lean.
 
