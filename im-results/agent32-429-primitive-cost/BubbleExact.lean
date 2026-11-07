@@ -4,9 +4,9 @@ import Lean.Elab.Tactic.Omega
 namespace BB6Bubble
 open BB6Coverage
 
-private def A : Fin 6 := ⟨0, by decide⟩
-private def B : Fin 6 := ⟨1, by decide⟩
-private def F : Fin 6 := ⟨5, by decide⟩
+def A : Fin 6 := ⟨0, by decide⟩
+def B : Fin 6 := ⟨1, by decide⟩
+def F : Fin 6 := ⟨5, by decide⟩
 
 def zeroTest (h x : Int) (k : Nat) : Prop :=
   0 ≤ h - x ∧ h - x < 2 * (k : Int) ∧ (h - x) % 2 = 0
