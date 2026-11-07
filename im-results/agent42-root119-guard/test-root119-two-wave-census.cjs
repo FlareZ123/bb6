@@ -23,11 +23,14 @@ const counts = {
   leftOneWave: 0,
   evenPrefix: 0,
   oddEvenPrefix: 0,
+  twoWaveRoot: 0,
   prefixUnmatched: 0,
   cphaseD1: 0,
   other: 0,
 };
 const cphaseRuns = {};
+const twoWavePairs = {};
+const twoWaveShieldAudit = { inputs: 0, outputs: 0 };
 
 /** @param {number} h */
 function positiveRunLength(h) {
@@ -73,6 +76,29 @@ function cphaseD1AtBZero(h, time) {
   return { r, returnTime: time + r + 7, returnHead: h - r + 1 };
 }
 
+/** Exact hypotheses of b0_two_wave_root_interval_to_b0. */
+function twoWaveRootAtBZero(h, time) {
+  if (!(tape.has(h - 1) && !tape.has(h - 2) &&
+      tape.has(h - 3) && tape.has(h - 4))) return null;
+  const run = rightRunLength(h + 1);
+  if (run < 2 || run % 2 !== 0) return null;
+  const n1 = run / 2;
+  if (tape.has(h + 2 * n1 + 1) ||
+      !tape.has(h + 2 * n1 + 2) ||
+      tape.has(h + 2 * n1 + 3)) return null;
+  let r = 0;
+  while (!tape.has(h - 5 - 2 * r) &&
+      tape.has(h - 6 - 2 * r)) r++;
+  if (tape.has(h - 5 - 2 * r) ||
+      tape.has(h - 6 - 2 * r)) return null;
+  return {
+    n1,
+    r,
+    returnTime: time + 8 * n1 + 2 * r + 30,
+    returnHead: h - 2 * r - 6,
+  };
+}
+
 for (let time = 0; time < LIMIT; time++) {
   const symbol = Number(tape.has(head));
 
@@ -106,6 +132,8 @@ for (let time = 0; time < LIMIT; time++) {
     bZeros++;
     const prefix = prefixAtBZero(head, time);
     const cphase = cphaseD1AtBZero(head, time);
+    const twoWave = twoWaveRootAtBZero(head, time);
+    const twoWaveShield = twoWave === null ? null : noLeft1100(head);
     if (tape.has(head - 1) && !tape.has(head - 2) && tape.has(head - 3)) {
       const leftSix = Array.from({ length: 6 }, (_, i) =>
         tape.has(head - 6 + i) ? '1' : '0').join('');
@@ -139,10 +167,13 @@ for (let time = 0; time < LIMIT; time++) {
       const validPrefix = previousBZero.prefix &&
         previousBZero.prefix.type !== 'prefixUnmatched';
       const validCphase = previousBZero.cphase !== null;
-      assert(!(expected && (validPrefix || validCphase)),
-        'A wave prediction overlaps a prefix return');
+      const validTwoWave = previousBZero.twoWave !== null;
+      assert(!(expected && (validPrefix || validCphase || validTwoWave)),
+        'A wave prediction overlaps a macro return');
       assert(!(validPrefix && validCphase),
         'The even-wave and C-phase macro hypotheses overlap');
+      assert(!(validTwoWave && (validPrefix || validCphase)),
+        'The two-wave root and another macro hypothesis overlap');
 
       if (expected) {
         assert.equal(head, expected.head, 'Wave theorem endpoint disagrees with raw machine');
@@ -163,6 +194,23 @@ for (let time = 0; time < LIMIT; time++) {
         const familyPatterns = prefixLeftSixAudit[previousBZero.prefix.type];
         familyPatterns[previousBZero.prefixLeftSix] =
           (familyPatterns[previousBZero.prefixLeftSix] || 0) + 1;
+      } else if (validTwoWave) {
+        assert(previousBZero.prefix &&
+          previousBZero.prefix.type === 'prefixUnmatched',
+          'Two-wave root candidate was not in the unmatched prefix class');
+        assert.equal(time, previousBZero.twoWave.returnTime,
+          'Two-wave root theorem return time disagrees with raw machine');
+        assert.equal(head, previousBZero.twoWave.returnHead,
+          'Two-wave root theorem return head disagrees with raw machine');
+        assert.equal(previousBZero.twoWaveShield, true,
+          'Two-wave root input does not satisfy the 1100 exclusion');
+        assert.equal(noLeft1100(head), true,
+          'Two-wave root return did not preserve the 1100 exclusion');
+        counts.twoWaveRoot++;
+        const key = previousBZero.twoWave.n1 + ',' + previousBZero.twoWave.r;
+        twoWavePairs[key] = (twoWavePairs[key] || 0) + 1;
+        twoWaveShieldAudit.inputs++;
+        twoWaveShieldAudit.outputs++;
       } else if (previousBZero.prefix &&
           previousBZero.prefix.type === 'prefixUnmatched') {
         counts.prefixUnmatched++;
@@ -184,7 +232,10 @@ for (let time = 0; time < LIMIT; time++) {
         counts.other++;
       }
     }
-    previousBZero = { time, prefix, cphase, cphaseShield, prefixShield, oddEvenBoundarySafe, prefixLeftSix };
+    previousBZero = {
+      time, prefix, cphase, twoWave, cphaseShield, prefixShield,
+      twoWaveShield, oddEvenBoundarySafe, prefixLeftSix,
+    };
   }
 
   const rule = RULES[state.charCodeAt(0) - 65].slice(symbol * 3, symbol * 3 + 3);
@@ -201,7 +252,8 @@ assert.deepEqual(counts, {
   leftOneWave: 177,
   evenPrefix: 21,
   oddEvenPrefix: 22,
-  prefixUnmatched: 8,
+  twoWaveRoot: 8,
+  prefixUnmatched: 0,
   cphaseD1: 15_198,
   other: 49,
 });
@@ -209,6 +261,14 @@ assert.deepEqual(cphaseRuns, { 2: 1, 3: 15_176, 4: 21 });
 assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
 assert.equal(cphaseShieldInputs, counts.cphaseD1);
 assert.equal(cphaseShieldOutputs, counts.cphaseD1);
+assert.deepEqual(Object.keys(twoWavePairs).sort(), [
+  '1,17', '2,46', '3,1', '4,2', '5,109', '6,15', '7,73', '8,194',
+]);
+assert.deepEqual(twoWavePairs, {
+  '6,15': 1, '1,17': 1, '2,46': 1, '4,2': 1,
+  '5,109': 1, '7,73': 1, '8,194': 1, '3,1': 1,
+});
+assert.deepEqual(twoWaveShieldAudit, { inputs: 8, outputs: 8 });
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
 console.log(JSON.stringify({
   rawSteps: LIMIT,
@@ -218,5 +278,6 @@ console.log(JSON.stringify({
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
   prefixShieldAudit,
   prefixLeftSixAudit,
+  twoWaveRootAudit: { pairs: twoWavePairs, shield: twoWaveShieldAudit },
   b0Left101Audit,
 }, null, 2));
