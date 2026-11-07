@@ -71,8 +71,8 @@ theorem fastNormalize_eq (a k : Nat) :
   exact fastNormalizeFuel_correct ((k+1).log2+1) a k (log_fuel_bound k)
 
 /-- Test both distinct phase families at their smallest indices. -/
-#guard (fastNormalize 4515 9702331119358).2 == 75799461868
-#guard (fastNormalize 6587 55280923390).2 == 431882212
+example : (fastNormalize 4515 9702331119358).2 = 75799461868 := by decide
+example : (fastNormalize 6587 55280923390).2 = 431882212 := by decide
 
 #print axioms fastNormalize_eq
 end BB6.Agent27FastNorm
