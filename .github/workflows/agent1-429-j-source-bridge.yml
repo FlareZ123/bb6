@@ -21,11 +21,15 @@ jobs:
           ref: c86f15861709b76042998c5211c7b2f83991621b
           path: cryptids
 
+      - name: Select upstream Lean toolchain
+        run: echo "leanprover/lean4:v4.35.0-rc4" > lean-toolchain
+
       - uses: leanprover/lean-action@v1
         with:
-          lean-version: leanprover/lean4:v4.35.0-rc4
-          use-mathlib-cache: true
-          working-directory: cryptids
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
 
       - name: Build pinned Cryptids source
         working-directory: cryptids
