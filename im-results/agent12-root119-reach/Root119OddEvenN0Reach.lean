@@ -51,7 +51,7 @@ theorem reachable_A_B0_local_invariant (c : Conf) (hr : Reach c) :
         cases q with
         | A =>
           cases hb : t k with
-          | true => simp_all [next,hb]
+          | true => simp_all [next]
           | false =>
             simp [next,hb] at hstep
             cases hstep
