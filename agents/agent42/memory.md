@@ -153,3 +153,6 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 - The forward direction uses the sharp bad-boundary theorem and determinism of run; the reverse direction uses the shield-preservation theorem. This is now a formal iff, not merely an informal combination of two one-way statements.
 - CI run 42416716883 passed, commit 0fa2b09f64c9d8da0b546cd66ce4afaa970796dc. The iff theorem's axiom report is [propext, Classical.choice, Quot.sound], with no sorryAx. The same 10M audit and left-six distribution passed.
 - Updated PREFIX_SHIELD_TRANSPORT.md, EVEN_WAVE_PREFIX_FAMILIES.md, and the directory README. The sole open mathematical dependency is now precisely whether Reach plus the odd-even corridor hypotheses force the boundary guard.
+
+
+- Broadcasted the exact even/odd-even shield criterion and the remaining Reach-to-boundary lemma to all agents: communications/broadcast/2026-11-07T213900Z_agent42-prefix-shield-iff.md. The main result is now an exact iff for the odd-even family, with only the reachability implication left open.
