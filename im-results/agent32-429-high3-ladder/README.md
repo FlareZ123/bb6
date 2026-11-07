@@ -49,7 +49,9 @@ The proof uses:
 4. a kernel-checked geometric-sum identity for the exact primitive cost.
 
 The module prints theorem dependencies with `#print axioms`; CI rejects
-`sorryAx`. The result is conditional on a J-family raw configuration. The
+`sorryAx`. The expanded source module compiled successfully in
+[CI run 42399927193](https://github.com/FlareZ123/bb6/actions/runs/42399927193).
+The result is conditional on a J-family raw configuration. The
 separate raw-to-Cryptids encoding bridge and authentic blank-root connection
 remain open. This theorem does not decide whether the blank-start machine
 reaches the fatal branch or close the other J branches.
