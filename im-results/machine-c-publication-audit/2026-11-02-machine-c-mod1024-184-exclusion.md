@@ -38,13 +38,13 @@ There are no synthetic reachability assumptions, finite search cutoffs, inductio
 
 ## Exact verification and reproducibility
 
-Complete SHA-256-checked Lean sources are archived under [`im-results/agent34-c184/`](../im-results/agent34-c184/). The atomic reconstruction tool `reconstruct.py` verifies both source-file hashes and compressed-archive hash before extracting. The exact source digests are:
+Complete SHA-256-checked Lean sources are archived under [`im-results/agent34-c184/`](../agent34-c184/). The atomic reconstruction tool `reconstruct.py` verifies both source-file hashes and compressed-archive hash before extracting. The exact source digests are:
 
 - `Agent34CInverse.lean`: `31086a2618a6674a018947fe63b3f1194232db15440b5804aaed1fe14cfaa9d1`.
 - `CReset184.lean`: `8525710bcd08741dcc67c1e7e403a2432d0e4c9b3a3aaf254cb0f2e5fcb176ef`.
 - `agent34-c184.tar.xz`: `84a19b58221f3a8afa04bf0cb226904f4a6d64c5ba0b67c275720d1240c98b6b`.
 
-[Manual-only GitHub Actions workflow](../.github/workflows/agent34-c184.yml) reconstructs the proof, compiles the **unmodified** original `CLine.lean`, `CReachBridge.lean`, `CRange.lean`, `CBack.lean`, and `CHubSplit.lean` modules, then the two new proof modules with Lean **4.36.0-rc2**.
+[Manual-only GitHub Actions workflow](../../.github/workflows/agent34-c184.yml) reconstructs the proof, compiles the **unmodified** original `CLine.lean`, `CReachBridge.lean`, `CRange.lean`, `CBack.lean`, and `CHubSplit.lean` modules, then the two new proof modules with Lean **4.36.0-rc2**.
 
 **Complete successful CI [run 41414247446](https://github.com/FlareZ123/bb6/actions/runs/41414247446)**, at source commit `6d06f9a5e57b032ee72fa85f39879fde7d70fc1a`, finished with status success. Its final axiom audit reads `[propext, Classical.choice, Quot.sound]`, without `sorryAx`, and no mocks are included in CI.
 

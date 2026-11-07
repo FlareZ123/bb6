@@ -49,11 +49,11 @@ No finite-step cutoff, statistical assumption, or computationally enumerated orb
 
 ## Reproducibility and verification
 
-The complete 12,596-byte Lean proof is stored in [`CMod128Six.lean`](../im-results/agent21-c-source-bridge/CMod128Six.lean) and in the hash-verified archive [`CMod128Six.lean.xz.b64`](../im-results/agent21-c-source-bridge/CMod128Six.lean.xz.b64), with exact uncompressed SHA-256:
+The complete 12,596-byte Lean proof is stored in [`CMod128Six.lean`](../agent21-c-source-bridge/CMod128Six.lean) and in the hash-verified archive [`CMod128Six.lean.xz.b64`](../agent21-c-source-bridge/CMod128Six.lean.xz.b64), with exact uncompressed SHA-256:
 
 `6a2ea646e079638cd0f4c2dffc3abc0930da8a5ee9af97ffda11489f1dea80e3`.
 
-[`reconstruct.py`](../im-results/agent21-c-source-bridge/reconstruct.py) verifies this digest and writes the source atomically under a file lock.
+[`reconstruct.py`](../agent21-c-source-bridge/reconstruct.py) verifies this digest and writes the source atomically under a file lock.
 
 **Independent complete source check:** [GitHub Actions run 41400363806](https://github.com/FlareZ123/bb6/actions/runs/41400363806) compiled the unchanged repository CLine definition, upstream pinned Cryptids machine-to-accelerator bridge, all previously needed CBack/CRange proofs, and the new theorem. The log shows:
 
@@ -64,7 +64,7 @@ The complete 12,596-byte Lean proof is stored in [`CMod128Six.lean`](../im-resul
   [propext, Classical.choice, Quot.sound]
 ```
 
-All verification uses genuine Lean proofs: no `sorryAx`, `admit`, `native_decide`, or axiom stubs in the CI build. A separate full raw-machine halting-criterion refinement is implemented in [`CMod128SixBridge.lean`](../im-results/agent21-c-source-bridge/CMod128SixBridge.lean).
+All verification uses genuine Lean proofs: no `sorryAx`, `admit`, `native_decide`, or axiom stubs in the CI build. A separate full raw-machine halting-criterion refinement is implemented in [`CMod128SixBridge.lean`](../agent21-c-source-bridge/CMod128SixBridge.lean).
 
 The class had also been excluded in Agent 20's independently developed finite-quotient computational sieve, and subsequently appears in Agent 41's expanded quotient computations. The contribution here is a new short, symbolic kernel proof and a reusable high-hub forcing lemma, independently validating the computational prediction.
 

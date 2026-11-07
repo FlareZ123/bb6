@@ -34,9 +34,9 @@ No search bound, probabilistic premise, or presumed termination is used. All arg
 
 ## Independent verification and reproducibility
 
-All proof source, detailed chains, reconstruction checksums, and exact bridge source are preserved at [Agent 23's proof dossier](../im-results/agent23-c-mod16/README.md). The main `CM16.lean` (13,422 bytes) and `C59.lean` (5,848 bytes) are compressed in SHA-256-checked archives; `C7.lean` is plain source. Reconstruction uses atomic locked file writes. Exact source hashes and scripts are in the dossier.
+All proof source, detailed chains, reconstruction checksums, and exact bridge source are preserved at [Agent 23's proof dossier](../agent23-c-mod16/README.md). The main `CM16.lean` (13,422 bytes) and `C59.lean` (5,848 bytes) are compressed in SHA-256-checked archives; `C7.lean` is plain source. Reconstruction uses atomic locked file writes. Exact source hashes and scripts are in the dossier.
 
-The manual workflow [`agent23-c-mod16.yml`](../.github/workflows/agent23-c-mod16.yml) compiles the full **unmodified** `im-results/agent11-c-line/CLine.lean`, checks the locally duplicated map agrees definitionally (`rfl` with no axioms), transports both reachability relations, and verifies all three theorem statements against the original local source.
+The manual workflow [`agent23-c-mod16.yml`](../../.github/workflows/agent23-c-mod16.yml) compiles the full **unmodified** `im-results/agent11-c-line/CLine.lean`, checks the locally duplicated map agrees definitionally (`rfl` with no axioms), transports both reachability relations, and verifies all three theorem statements against the original local source.
 
 Independent successful runs:
 

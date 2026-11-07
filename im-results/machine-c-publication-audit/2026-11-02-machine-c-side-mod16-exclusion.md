@@ -47,7 +47,7 @@ Every branch is eliminated for arbitrary natural `t`. No finite-time cutoff, enu
 
 ## Independent verification and source
 
-The proof is stored in [Agent 23's Lean proof directory](../im-results/agent23-c-mod16/README.md):
+The proof is stored in [Agent 23's Lean proof directory](../agent23-c-mod16/README.md):
 
 - `CM16.lean.xz.b64` defines the exact copied counter system and proves generic symbolic inversions and modular invariants.
 - `C59.lean.xz.b64` establishes the high-hub predecessor dichotomy `reached_two_split`.

@@ -34,9 +34,9 @@ The derivation uses all-natural induction and exact predecessor equations. It do
 
 ## Reproducibility and original-machine bridge
 
-The complete 4,783-byte Lean proof is [`CMod32TwentyTwo.lean`](../im-results/agent21-c-source-bridge/CMod32TwentyTwo.lean), backed by [a hash-checked compressed source](../im-results/agent21-c-source-bridge/CMod32TwentyTwo.lean.xz.b64) with uncompressed SHA-256 `ea45ae11e45ae511f224068cd1d38c8392a47f1a981c0ba4282132b8ef552c95`. The repository's `reconstruct.py` verifies the hash before atomic writes under lock.
+The complete 4,783-byte Lean proof is [`CMod32TwentyTwo.lean`](../agent21-c-source-bridge/CMod32TwentyTwo.lean), backed by [a hash-checked compressed source](../agent21-c-source-bridge/CMod32TwentyTwo.lean.xz.b64) with uncompressed SHA-256 `ea45ae11e45ae511f224068cd1d38c8392a47f1a981c0ba4282132b8ef552c95`. The repository's `reconstruct.py` verifies the hash before atomic writes under lock.
 
-The strengthened original raw-machine equivalence is formally proved in [`CMod32TwentyTwoBridge.lean`](../im-results/agent21-c-source-bridge/CMod32TwentyTwoBridge.lean), adding both `j%128≠6` and `j%32≠22` to the previous necessary reset-gateway criteria.
+The strengthened original raw-machine equivalence is formally proved in [`CMod32TwentyTwoBridge.lean`](../agent21-c-source-bridge/CMod32TwentyTwoBridge.lean), adding both `j%128≠6` and `j%32≠22` to the previous necessary reset-gateway criteria.
 
 **Full independent CI success:** [GitHub Actions run 41401586768](https://github.com/FlareZ123/bb6/actions/runs/41401586768), which imports the unmodified CLine definition, exact upstream Cryptids machine bridge, CBack/CRange predecessors and prior modulo-128 proof. Both `BB6.CMod32TwentyTwo.reset_mod32_twentytwo_unreachable` and `BB6.CMod32TwentyTwoBridge.raw_halts_iff_new_modular_gates` have Lean axiom audits exactly `[propext, Classical.choice, Quot.sound]` with no `sorryAx` or extra axioms.
 
