@@ -1,9 +1,35 @@
 # Machine C as an exact physical open path in the six-state global frontier
 
-**Status, 7 November 2026.** Machine C itself remains undecided. The eleven-fixed-input authentic source cylinder has exactly 24 syntactically nonhalting alternative completions and one original unresolved machine, as verified below. This is an intermediate global-enumeration case study. The historical Machine C holdout, and therefore BB(6), remain unresolved. The complete original raw table is
+**Status, 7 November 2026.** Machine C itself remains undecided. The eleven-fixed-input authentic source cylinder has exactly 24 syntactically nonhalting alternative completions and one original unresolved machine. This is an intermediate global-enumeration case study; BB(6) remains open. The complete original raw table is
 `1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC` (suspect_46, holdout #39). The table agrees cell-by-cell with the recorded original Cryptids machine; the published reduction and its original-root counter model are [documented separately](../../resources/2026-11-02-deepmind-cryptids-machine-c.md).
 
 ## Current classification: one true holdout among 25 completions
+
+The strongest original-source integrated theorem,
+[`machineC_cylinder_raw_halts_iff_counter`](CryptidsPhysicalC.lean),
+applies to **every full machine** `m` compatible with the actual
+eleven-row physical Machine C prefix:
+
+```lean
+(∃ n, run m n blank = none) ↔
+  (m machineCSourceHaltSlot = none ∧ BB6.CReachBridge.RunHalts)
+```
+
+Thus all possible halting within this 25-machine cylinder is **exactly**
+equivalent to the single original Machine C three-counter stop question,
+provided the free F/0 input is assigned its original HALT outcome.
+It is source-verified in one Lean4.35.0-rc4 kernel check against pinned,
+unchanged Google DeepMind Cryptids revision
+`ced8f9f44f67a167d5ecc03e687b048c67926371`:
+[manual CI **42338146301**](https://github.com/FlareZ123/bb6/actions/runs/42338146301).
+The proof checks all 12 literal raw rows, transports physical halting
+through the [generic Cryptids adapter](../agent4-coverage-smoke/CryptidsHaltIff.lean)
+and published original-root source acceleration, and uses the existing
+source-proved single-halt freedom lemmas. Its exact theorem's axiom audit
+is `[propext, Classical.choice, Quot.sound]`, without `sorryAx`.
+The source counter stopping predicate `BB6.CReachBridge.RunHalts`
+remains unclassified; the theorem supplies a genuinely unbounded,
+source-checked reduction, with no new BB(6) upper or lower bound.
 
 **Source verification, 7 November 2026.** The original all-time primitive-step
 question is whether the genuine blank run ever *consults* the sole halting
