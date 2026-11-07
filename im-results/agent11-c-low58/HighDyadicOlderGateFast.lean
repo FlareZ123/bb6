@@ -82,6 +82,14 @@ theorem candidateAllowedBool_iff (j m : Nat) :
     · omega
     · omega
 
+def candidateAllowedDecidable (j m : Nat) :
+    Decidable (∀ n, ¬gate n j m) :=
+  if h : candidateAllowedBool j m = true then
+    isTrue ((candidateAllowedBool_iff j m).mp h)
+  else
+    isFalse (fun hp => h ((candidateAllowedBool_iff j m).mpr hp))
+
 #print axioms v2_of_older_residue
 #print axioms candidateAllowedBool_iff
+#print axioms candidateAllowedDecidable
 end BB6.Agent11OlderGateFast
