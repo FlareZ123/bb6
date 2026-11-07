@@ -58,3 +58,75 @@ To turn the conditional head-record theorem into a machine decision, establish *
 A direct falsifier is a reachable C/0 whose current head lies strictly left of an earlier head, even if the next right cell is zero. A decisive affirmative proof must control the actual history-sensitive tape through every exceptional accelerated return. Because the C/01 event is an **exact** halt gate, another useful route is to prove it reachable with a genuine blank-origin witness. Avoid extrapolating from a finite cutoff or treating a synthetic right-tape pattern as an authentic visit.
 
 The new causal theorem may help translate the original accelerated `J(u,w)` return language into a geometric condition. It supplies no universal score upper bound and no exact BB(6) value.
+
+
+## Agent 32 addition: E/1 shift and finite blank-prefix closure
+
+These results complement the conditional physical C/01 reduction above. They are
+intermediate and do not decide the unbounded orbit.
+
+### Exact `shift_E_11` prefix
+
+The pinned Cryptids helper `shift_E_11` at commit
+[`c86f15861709b76042998c5211c7b2f83991621b`](https://github.com/google-deepmind/cryptids/tree/c86f15861709b76042998c5211c7b2f83991621b)
+has, in the local nearest-first zipper convention, start shape
+
+```text
+state = E, current = 1
+left  = 1^(2k) ++ tail
+right = 1^6 ++ suffix
+```
+
+`BB429E1ShiftDelta.e1_left_prefix` proves that every prefix `j ≤ 2k`
+has state E/current 1, left `1^(2k-j) ++ tail`, right
+`1^(j+6) ++ suffix`, and exact head displacement `-j`.
+`shift_E11_total` gives displacement `-2k`.
+
+`BB429E1ShiftPhysical.physical_E1_step` uses the literal raw `target429`
+row and `BB429PhysicalBridge.leftRep`. The theorem
+`physical_left_prefix` lifts the result to
+`BB6Coverage.run target429` for every raw configuration satisfying
+`Represents`. The corollary `physical_shift_E11_mark_persists` proves
+that the original E/1 cell still contains one after every positive prefix.
+
+This proves one-sided motion inside the helper. It does not prove that the
+later orbit never returns to those cells.
+
+### Blank-origin finite witnesses
+
+`BB429E1ShiftRootWitness` computes directly from the raw blank configuration:
+
+- At step 122, the head is at coordinate 4 in E/1, with eleven ones to the
+  left and six ones followed by `01` to the right. This is the local k=3
+  start shape of the E/1 shift.
+- The next six E/1 instructions have head positions
+  `4, 3, 2, 1, 0, -1, -2`.
+- The head later returns to coordinate 4 at step 192, so those six writes
+  are not global last writers.
+- A single-pass raw trace through pre-instruction step 2678 classifies every
+  D/0, E/1 and F/1 left-writing instruction. Every such write is at a
+  coordinate at most 29, and the head is at coordinate 29 at step 2679.
+  Therefore every possible left-writer source in this finite prefix is
+  crossed by a later head before any possible halt after step 2679.
+
+The last statement is a finite computation checked by Lean `native_decide`.
+It is not an all-time theorem.
+
+### Additional CI
+
+The exact zipper prefix passed [Agent32 E/1 CI run 42376334499](https://github.com/FlareZ123/bb6/actions/runs/42376334499).
+The raw physical prefix and persistent-mark theorem passed
+[Agent18 workflow run 42376526145](https://github.com/FlareZ123/bb6/actions/runs/42376526145).
+The blank-origin finite witnesses and the 2679-step left-writer closure passed
+[Agent18 workflow run 42377735415](https://github.com/FlareZ123/bb6/actions/runs/42377735415).
+All modules contain `#print axioms` audits; these CI runs completed without
+`sorryAx` findings.
+
+### Remaining question
+
+The finite prefix closes all candidate D/0, E/1 and F/1 writes only through
+step 2678. The global last-writer theorem still requires a uniform
+source-connected criterion for every high-level J transition. The local
+E/1 sweep is one-sided, while subsequent macros can return across it. A
+proof must compose those later returns with the raw head history; neither
+the helper theorem nor a finite prefix settles the unbounded orbit.
