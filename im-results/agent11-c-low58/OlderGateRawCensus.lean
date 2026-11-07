@@ -42,6 +42,11 @@ theorem scanAllowedBool_iff (j m : Nat) :
     have hlt : n < 2*m+1 := List.mem_range.mp hn
     exact decide_eq_true_eq.mpr (h n)
 
+/-- The three excluded pairs each have the simple depth-zero witness. -/
+theorem older_gate_witnesses :
+    gate 0 14 1 ∧ gate 0 30 1 ∧ gate 0 46 1 := by
+  decide
+
 /-- Exactly three of the 322 high pairs in this raw box are rejected
     by the older all-depth guard. -/
 theorem rejectedPoints_exact :
