@@ -122,7 +122,7 @@ theorem finishC_ScanE_delta (u p k : Nat) :
 /-- Lift the exact zipper displacement to the physical `target429` interpreter. -/
 theorem physical_finishC_ScanE_delta (u p k : Nat) (c : Config)
     (hrep : Represents (finishCStart u p k) c) :
-    ∃ c', BB6Coverage.run target429 (12+2*p) c = some c' ∧
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 (12+2*p) c = some c' ∧
       Represents (junc u (p+2) (2*k+1)) c' ∧
       c'.head = c.head + -((2*p : Nat) : Int) := by
   obtain ⟨c', hrun, hrep', hhead⟩ :=
