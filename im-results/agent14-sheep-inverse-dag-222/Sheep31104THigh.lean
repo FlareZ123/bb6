@@ -20,12 +20,12 @@ private theorem K_lt_pow (a : Nat) (ha : 21 ≤ a) :
 /-- All generic sources of 2-adic valuation at least 21 are impossible. -/
 theorem T_generic_high (k a v : Nat) (ha : 21 ≤ a)
     (hs : 31347*(2^(a+1)+1)*v + 2*a*31347 + 2*31347 + 2*174404 =
-      2^(31118+122472*k) + 3*31347) : False := by
+      2^(31118+40824*k) + 3*31347) : False := by
   have hfactor : 31347*(2^(a+1)+1)*v=(2^(a+1)+1)*(31347*v) := by ac_rfl
   rw [hfactor] at hs
-  have hEqNat : 2^(31118+122472*k) =
+  have hEqNat : 2^(31118+40824*k) =
       ((2:Nat)^(a+1)+1)*(31347*v)+(62694*a+317461) := by omega
-  have hEqInt : (2:Int)^(31118+122472*k) =
+  have hEqInt : (2:Int)^(31118+40824*k) =
       ((2:Int)^(a+1)+1)*(31347*(v:Int))+(62694*(a:Int)+317461) := by
     have ht := congrArg (fun z : Nat => (z:Int)) hEqNat
     simpa only [Int.natCast_pow, Int.natCast_add, Int.natCast_mul,
@@ -35,7 +35,7 @@ theorem T_generic_high (k a v : Nat) (ha : 21 ≤ a)
       show ((62694:Nat):Int)=(62694:Int) by decide,
       show ((317461:Nat):Int)=(317461:Int) by decide] using ht
   have hdiv : ((2:Int)^(a+1)+1) ∣
-      (2:Int)^(31118+122472*k)-(62694*(a:Int)+317461) := by
+      (2:Int)^(31118+40824*k)-(62694*(a:Int)+317461) := by
     refine ⟨31347*(v:Int),?_⟩
     omega
   have hK : 1 < (62694:Int)*(a:Int)+317461 := by omega
@@ -48,7 +48,7 @@ theorem T_generic_high (k a v : Nat) (ha : 21 ≤ a)
       show ((62694:Nat):Int)=(62694:Int) by decide,
       show ((317461:Nat):Int)=(317461:Int) by decide] using ht
   exact (SheepOddGap.no_power_signed_small_odd a
-    (62694*(a:Int)+317461) hK hodd hhigh (31118+122472*k)).1 hdiv
+    (62694*(a:Int)+317461) hK hodd hhigh (31118+40824*k)).1 hdiv
 
 #print axioms K_lt_pow
 #print axioms T_generic_high

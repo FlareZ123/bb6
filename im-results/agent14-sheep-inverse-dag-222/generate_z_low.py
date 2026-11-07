@@ -2,7 +2,7 @@ from pathlib import Path
 import os, fcntl, tempfile
 
 ROOT = Path(__file__).resolve().parent
-P = 122472
+P = 40824
 ROWS = {
     1:(5,4,1), 3:(17,8,1), 4:(243,162,1), 5:(5,4,1),
     6:(243,162,1), 7:(257,16,2), 8:(19,18,1), 9:(41,20,5),
@@ -27,14 +27,14 @@ def generate(rows):
         cases = " ∨ ".join(f"t={i}" for i in range(q))
         phase_proofs = "\n".join(
             f"    · rw [Sheep31104ZLowPeriod.pow_mod_remainder {m} {p} "
-            f"(31115+122472*{t}) (by decide) (by decide) (by decide)]\n"
+            f"(31115+40824*{t}) (by decide) (by decide) (by decide)]\n"
             f"      decide"
             for t in range(q)
         )
         out.append(f'''/-- Every k excludes generic source valuation a={a}, modulo {m}. -/
 theorem a{a}_mod (k : Nat) :
-    2^(31115+122472*k)%{m} ≠ ({K}:Nat)%{m} := by
-  apply Sheep31104ZLowPeriod.no_mod_eq_from_period {m} {p} 31115 122472 {q} {K}
+    2^(31115+40824*k)%{m} ≠ ({K}:Nat)%{m} := by
+  apply Sheep31104ZLowPeriod.no_mod_eq_from_period {m} {p} 31115 40824 {q} {K}
   · decide
   · decide
   · decide
@@ -47,13 +47,13 @@ theorem a{a}_mod (k : Nat) :
 /-- Every k,v excludes the exact original-source generic equation at a={a}. -/
 theorem a{a}_source (k v : Nat)
     (hs : 3483*(2^({a}+1)+1)*v + 2*{a}*3483 + 2*3483 + 2*16576 =
-      2^(31115+122472*k) + 3*3483) : False := by
-  have he : 2^(31115+122472*k) =
+      2^(31115+40824*k) + 3*3483) : False := by
+  have he : 2^(31115+40824*k) =
       (3483*(2^({a}+1)+1))*v + {K} := by
     have hp : (2:Nat)^({a}+1) = {1 << (a+1)} := by decide
     rw [hp] at hs ⊢
     omega
-  have hc : 2^(31115+122472*k)%{m} = {K}%{m} := by
+  have hc : 2^(31115+40824*k)%{m} = {K}%{m} := by
     rw [he,Nat.add_mod]
     have hz : ((3483*(2^({a}+1)+1))*v)%{m}=0 := by
       have hm : (3483*(2^({a}+1)+1))%{m}=0 := by decide

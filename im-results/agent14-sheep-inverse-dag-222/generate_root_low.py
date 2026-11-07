@@ -2,7 +2,7 @@ from pathlib import Path
 from math import gcd
 import os, fcntl, tempfile, sys
 ROOT=Path(__file__).resolve().parent
-P=122472
+P=40824
 
 def order(m):
  x=2%m
@@ -39,10 +39,10 @@ def gen(h):
   assert M%m==0 and pow(2,p,m)==1 and (P*q)%p==0
   assert all(pow(2,Nexp+P*t,m)!=K for t in range(q)),(h,a,m,p,q)
   cases=' ∨ '.join(f't={i}' for i in range(q))
-  phase_proofs='\n'.join(f'    · rw [Sheep31104ZLowPeriod.pow_mod_remainder {m} {p} ({Nexp}+122472*{t}) (by decide) (by decide) (by decide)]\n      decide' for t in range(q))
+  phase_proofs='\n'.join(f'    · rw [Sheep31104ZLowPeriod.pow_mod_remainder {m} {p} ({Nexp}+40824*{t}) (by decide) (by decide) (by decide)]\n      decide' for t in range(q))
   out += [f'''theorem a{a}_mod (k : Nat) :
-    2^({Nexp}+122472*k)%{m} ≠ {K}%{m} := by
-  apply Sheep31104ZLowPeriod.no_mod_eq_from_period {m} {p} {Nexp} 122472 {q} {K}
+    2^({Nexp}+40824*k)%{m} ≠ {K}%{m} := by
+  apply Sheep31104ZLowPeriod.no_mod_eq_from_period {m} {p} {Nexp} 40824 {q} {K}
   · decide
   · decide
   · decide
@@ -54,21 +54,21 @@ def gen(h):
 
 theorem a{a}_source (k v : Nat)
     (hs : {D}*(2^({a}+1)+1)*v + 2*{a}*{D} + 2^({h}+1) =
-      2^((31104+122472*k)+{h}+1) + 3*{D}) : False := by
-  have he : (31104+122472*k)+{h}+1={Nexp}+122472*k := by omega
+      2^((31104+40824*k)+{h}+1) + 3*{D}) : False := by
+  have he : (31104+40824*k)+{h}+1={Nexp}+40824*k := by omega
   rw [he] at hs
-  have hs' : {M}*v+{N}=2^({Nexp}+122472*k)+{C} := by
+  have hs' : {M}*v+{N}=2^({Nexp}+40824*k)+{C} := by
     have hp : (2:Nat)^({a}+1)={2**(a+1)} := by decide
     rw [hp] at hs
     omega
-  have hmod : (2^({Nexp}+122472*k)+{C})%{m} = {N}%{m} := by
+  have hmod : (2^({Nexp}+40824*k)+{C})%{m} = {N}%{m} := by
     calc
-      (2^({Nexp}+122472*k)+{C})%{m} = ({M}*v+{N})%{m} :=
+      (2^({Nexp}+40824*k)+{C})%{m} = ({M}*v+{N})%{m} :=
         congrArg (fun z:Nat=>z%{m}) hs'.symm
       _ = {N}%{m} := by simp [Nat.add_mod,Nat.mul_mod]
-  have hr : 2^({Nexp}+122472*k)%{m}={K}%{m} := by
+  have hr : 2^({Nexp}+40824*k)%{m}={K}%{m} := by
     rw [Nat.add_mod] at hmod
-    have hlt : 2^({Nexp}+122472*k)%{m}<{m} :=
+    have hlt : 2^({Nexp}+40824*k)%{m}<{m} :=
       Nat.mod_lt _ (by decide)
     omega
   exact (a{a}_mod k) hr

@@ -18,23 +18,23 @@ theorem root_parent_is_Z (k x : Nat)
   (hCases :
     (∃ a h v u : Nat,
       1 ≤ a ∧ 5 ≤ v ∧ v%2=1 ∧ u%2=1 ∧
-      x=2^a*v ∧ 2^(31104+122472*k)=1+3^h*u ∧
+      x=2^a*v ∧ 2^(31104+40824*k)=1+3^h*u ∧
       (1*3^h)*(2^(a+1)+1)*v + 2*a*(1*3^h) +
         2^(h+1)*1 + 2^(h+1)*0 =
-          2^((31104+122472*k)+h+1) + 3*(1*3^h)) ∨
+          2^((31104+40824*k)+h+1) + 3*(1*3^h)) ∨
     (∃ a h u : Nat,
       1 ≤ a ∧ u%2=1 ∧ x=3*2^a ∧
-      2^(31104+122472*k)=1+3^h*u ∧
+      2^(31104+40824*k)=1+3^h*u ∧
       (1*3^h)*(3*2^a+a+2)+2^h*1+2^h*0 =
-        2^((31104+122472*k)+h))) :
-  3483*x+16576=2^(31114+122472*k) := by
+        2^((31104+40824*k)+h))) :
+  3483*x+16576=2^(31114+40824*k) := by
   rcases hCases with
     ⟨a,h,v,u,ha,hv,hvodd,hu,hx,hy,hs⟩ |
     ⟨a,h,u,ha,hu,hx,hy,hs⟩
   · have hh : h<7 :=
       Sheep31104RootBound.root_h_lt_seven k h u hy
     have hs0 : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)=
-        2^((31104+122472*k)+h+1)+3*3^h := by
+        2^((31104+40824*k)+h+1)+3*3^h := by
       simpa only [Nat.one_mul, Nat.mul_one, Nat.mul_zero, Nat.add_zero] using hs
     by_cases hhigh : 15≤a
     · exact False.elim (Sheep31104RootHigh.no_high k a h v hhigh hh hs0)
@@ -149,11 +149,11 @@ theorem root_parent_is_Z (k x : Nat)
           exact False.elim (Sheep31104RootLow3.a5_source k v hs0)
         · subst a
           have hraw : (1*3^3)*(2^(6+1)+1)*v + 2*6*(1*3^3) + 2^(3+1)*1+2^(3+1)*0 =
-              2^((31104+122472*k)+3+1)+3*(1*3^3) := by
+              2^((31104+40824*k)+3+1)+3*(1*3^3) := by
             simpa only [Nat.one_mul, Nat.mul_one, Nat.mul_zero, Nat.add_zero] using hs0
-          have hZ : 3483*x+16576=2^((31104+122472*k)+10) :=
-            SheepEdgeIdentities.root_h3_a6_to_Z (31104+122472*k) x v hx hraw
-          simpa only [show (31104+122472*k)+10=31114+122472*k by omega] using hZ
+          have hZ : 3483*x+16576=2^((31104+40824*k)+10) :=
+            SheepEdgeIdentities.root_h3_a6_to_Z (31104+40824*k) x v hx hraw
+          simpa only [show (31104+40824*k)+10=31114+40824*k by omega] using hZ
         · subst a
           exact False.elim (Sheep31104RootLow3.a7_source k v hs0)
         · subst a
@@ -265,7 +265,7 @@ theorem root_parent_is_Z (k x : Nat)
           exact False.elim (Sheep31104RootLow6.a14_source k v hs0)
   · have hh : h<7 :=
       Sheep31104RootBound.root_h_lt_seven k h u hy
-    have hs0 : 3^h*(3*2^a+a+2)+2^h=2^((31104+122472*k)+h) := by
+    have hs0 : 3^h*(3*2^a+a+2)+2^h=2^((31104+40824*k)+h) := by
       simpa only [Nat.one_mul, Nat.mul_one, Nat.mul_zero, Nat.add_zero] using hs
     exact False.elim (Sheep31104RootSpecial.root_no_special k h a hh hs0)
 

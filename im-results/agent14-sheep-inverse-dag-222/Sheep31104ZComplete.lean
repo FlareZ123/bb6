@@ -8,29 +8,29 @@ namespace Sheep31104ZComplete
 /-- Every genuine source inverse alternative into this affine Z target has
 the same parent T. Uniform over all k and all source valuations. -/
 theorem Z_parent_is_T (k x y : Nat)
-  (hTarget : 3483*y+16576=2^(31114+122472*k))
+  (hTarget : 3483*y+16576=2^(31114+40824*k))
   (hCases :
     (∃ a h v u : Nat,
       1 ≤ a ∧ 5 ≤ v ∧ v%2=1 ∧ u%2=1 ∧
       x=2^a*v ∧ y=1+3^h*u ∧
       (3483*3^h)*(2^(a+1)+1)*v + 2*a*(3483*3^h) +
         2^(h+1)*3483 + 2^(h+1)*16576 =
-          2^((31114+122472*k)+h+1) + 3*(3483*3^h)) ∨
+          2^((31114+40824*k)+h+1) + 3*(3483*3^h)) ∨
     (∃ a h u : Nat,
       1 ≤ a ∧ u%2=1 ∧ x=3*2^a ∧ y=1+3^h*u ∧
       (3483*3^h)*(3*2^a+a+2)+2^h*3483+2^h*16576 =
-        2^((31114+122472*k)+h))) :
-  31347*x+174404=2^(31117+122472*k) := by
+        2^((31114+40824*k)+h))) :
+  31347*x+174404=2^(31117+40824*k) := by
   rcases hCases with
     ⟨a,h,v,u,ha,hv,hvodd,hu,hx,hy,hs⟩ |
     ⟨a,h,u,ha,hu,hx,hy,hs⟩
   · have hh : h=0 :=
       Sheep31104ZBound.Z_hidden_h_zero k y h u hTarget hy
     subst h
-    have he : (31114+122472*k)+0+1=31115+122472*k := by omega
+    have he : (31114+40824*k)+0+1=31115+40824*k := by omega
     have hs0 :
       3483*(2^(a+1)+1)*v + 2*a*3483 + 2*3483 + 2*16576 =
-      2^(31115+122472*k)+3*3483 := by
+      2^(31115+40824*k)+3*3483 := by
       simpa only [show (3:Nat)^0=1 by decide, Nat.mul_one,
         show (2:Nat)^(0+1)=2 by decide,he] using hs
     have hnotHigh : a<18 := by
@@ -104,27 +104,27 @@ theorem Z_parent_is_T (k x y : Nat)
       exact Sheep31104ZLow.a17_source k v hs0
     have ha2 : a=2 := by omega
     subst a
-    have hepower : (31104+122472*k)+10 = 31114+122472*k := by omega
-    have hp : (31104+122472*k)+13 = 31117+122472*k := by omega
+    have hepower : (31104+40824*k)+10 = 31114+40824*k := by omega
+    have hp : (31104+40824*k)+13 = 31117+40824*k := by omega
     have hsForEdge :
         (3483*3^0)*(2^(2+1)+1)*v + 2*2*(3483*3^0) +
         2^(0+1)*3483 + 2^(0+1)*16576 =
-        2^(((31104+122472*k)+10)+0+1)+3*(3483*3^0) := by
+        2^(((31104+40824*k)+10)+0+1)+3*(3483*3^0) := by
       simpa only [show (3:Nat)^0=1 by decide, Nat.mul_one,
         show (2:Nat)^(0+1)=2 by decide,
-        hepower, show (31114+122472*k)+0+1=31115+122472*k by omega]
+        hepower, show (31114+40824*k)+0+1=31115+40824*k by omega]
         using hs0
     have hparent := SheepEdgeIdentities.Z_h0_a2_to_T
-      (31104+122472*k) x v hx hsForEdge
+      (31104+40824*k) x v hx hsForEdge
     rw [hp] at hparent
     exact hparent
   · have hh : h=0 :=
       Sheep31104ZBound.Z_hidden_h_zero k y h u hTarget hy
     subst h
-    have hepower : (31114+122472*k)+0=31114+122472*k := by omega
+    have hepower : (31114+40824*k)+0=31114+40824*k := by omega
     have hs0 :
       3483*(3*2^a+a+2)+2^0*3483+2^0*16576 =
-      2^(31114+122472*k) := by
+      2^(31114+40824*k) := by
       simpa only [show (3:Nat)^0=1 by decide,Nat.mul_one,hepower] using hs
     exact False.elim (Sheep31104ZSpecial.Z_no_exceptional k a hs0)
 #print axioms Z_parent_is_T
