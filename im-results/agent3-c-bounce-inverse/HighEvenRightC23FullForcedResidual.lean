@@ -12,6 +12,17 @@ def highTargetX (j : Nat) : Nat := 2*j+3
 def highTargetY (j m : Nat) : Nat :=
   2^(2*m+2)*(j+3)-(j+3*m+5)
 
+/-- The sum-seven residue family is already a subfamily of the C23
+    high exclusion. It is an independent source proof, not a new residual
+    exclusion beyond C23. -/
+theorem sum7_family_subset_c23_gate (j m : Nat)
+    (hm5 : 5≤m) (hm4 : m%4=1)
+    (hrel : (j+8)%32=(3*m+1)%32) :
+    2≤m ∧ j%4=0 ∧ (j+7)%32=(3*m)%32 := by
+  omega
+
+#print axioms sum7_family_subset_c23_gate
+
 /-- Existing exact high predicate before the four-sector forced filter. -/
 def highAllowedC23WithEvenRightBool (j m : Nat) : Bool :=
   BB6.Agent27FastBool.fastHighAllowedFullBool j m &&
