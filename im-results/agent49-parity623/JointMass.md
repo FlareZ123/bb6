@@ -98,3 +98,16 @@ This theorem preserves correlation between the first and third counters and
 reduces the universal drain overhead. It can tighten the terminal mass
 thresholds used in the #623 root-ray analysis. It does not by itself prove
 that the blank-root orbit avoids every terminal ray.
+
+
+## Finite root-balance comparison
+
+A 10,000-state blank-root scan checked 9,991 final B-drain inputs. The
+componentwise mass envelope and the joint-mass envelope both leave zero
+terminal balance candidates. The joint bound reduces the required K at one
+transition: index 10, state D(322,10), far-left-even input (310,12,2),
+where K falls from 7 to 6 and the interval narrows from [-14,29] to
+[-13,28]. The closest miss remains at index 13, state D(122,438), with
+input (318,40,249), balance value -51 and interval [-15,34], a margin of
+36. This is finite diagnostic evidence only. The reproducible check is
+joint_mass_check.py.
