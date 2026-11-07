@@ -221,7 +221,7 @@ theorem sharpBlock_lt_pow (n : Nat) : sharpBlock n < 3^(n+1) := by
       have hle : 3*(sharpBlock n + 1) ≤ 3*3^(n+1) :=
         Nat.mul_le_mul_left 3 (Nat.succ_le_of_lt ih)
       have hbound : 3*sharpBlock n + 1 < 3*3^(n+1) := by omega
-      simpa [sharpBlock, Nat.pow_succ] using hbound
+      simpa [sharpBlock, Nat.pow_succ, Nat.mul_comm] using hbound
 
 /-- The joint-mass upper bound is attained by the existing sharp-block family. -/
 theorem drainB_joint_mass_sharp (n d : Nat) :
