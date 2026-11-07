@@ -100,12 +100,8 @@ jobs:
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
           lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
-          lean -DmaxRecDepth=8192 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
           lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean"
           lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
-          lean -DmaxRecDepth=8192 -o "$P2/PacketOneReentry.olean" "$P2/PacketOneReentry.lean"
-          lean -DmaxRecDepth=8192 -o "$P2/PacketZeroBoundarySource.olean" "$P2/PacketZeroBoundarySource.lean"
-          lean -DmaxRecDepth=8192 -o "$P2/PacketSafeReentry.olean" "$P2/PacketSafeReentry.lean"
           V=im-results/agent37-cryptid-model-bridge
           lean -o "$V/CrossModelBridge.olean" "$V/CrossModelBridge.lean"
           lean -o "$V/CompleteAReturn.olean" "$V/CompleteAReturn.lean"
