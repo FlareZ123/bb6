@@ -99,6 +99,10 @@ jobs:
           lean -o BounceFirstReturn.olean BounceFirstReturn.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/SectionFirstReturn.lean /tmp/agent15-c-check/
           lean -o SectionFirstReturn.olean SectionFirstReturn.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/M32SectionEmbedding.lean /tmp/agent15-c-check/
+          lean -o M32SectionEmbedding.olean M32SectionEmbedding.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/SectionReachEquivalence.lean /tmp/agent15-c-check/
+          lean -o SectionReachEquivalence.olean SectionReachEquivalence.lean
           lean -o AffineQuotientExclusion.olean AffineQuotientExclusion.lean
           lean -o AffineParityDepth.olean AffineParityDepth.lean
           lean -o AffineHaltOneStep.olean AffineHaltOneStep.lean
