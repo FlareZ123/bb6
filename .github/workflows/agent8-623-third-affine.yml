@@ -90,7 +90,9 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent8TerminalIntervalSource.olean Agent8TerminalIntervalSource.lean
           cp "../im-results/agent49-parity623/DrainLinearLogSource.lean" Agent49DrainLinearLogSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49DrainLinearLogSource.olean Agent49DrainLinearLogSource.lean
+          cp "../im-results/agent49-parity623/RootRayBridgeArithmetic.lean" Agent49RootRayBridgeArithmetic.lean
+          lake env lean -o .lake/build/lib/lean/Agent49RootRayBridgeArithmetic.olean Agent49RootRayBridgeArithmetic.lean
           cp "../im-results/agent49-parity623/DrainLinearTerminalSource.lean" Agent49DrainLinearTerminalSource.lean
-          lake env lean Agent49DrainLinearTerminalSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49DrainLinearTerminalSource.olean Agent49DrainLinearTerminalSource.lean
           cp "../im-results/agent8-623-inverse/MachineFullGateSource.lean" Agent8MachineFullGateSource.lean
           lake env lean Agent8MachineFullGateSource.lean
