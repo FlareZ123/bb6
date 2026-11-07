@@ -50,6 +50,7 @@ jobs:
           lean -o im-results/agent32-429-raw-parent/BB429E1ShiftDelta.olean im-results/agent32-429-raw-parent/BB429E1ShiftDelta.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429E1ShiftPhysical.olean im-results/agent32-429-raw-parent/BB429E1ShiftPhysical.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.olean im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.lean | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.olean im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.lean | tee -a /tmp/agent6-429-one-sided.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429E1ShiftRootWitness.olean im-results/agent32-429-raw-parent/BB429E1ShiftRootWitness.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JPhysicalPrefix.olean im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean | tee -a /tmp/agent32-bubble.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JF0Prefix.olean im-results/agent32-429-primitive-cost/JF0Prefix.lean | tee -a /tmp/agent32-bubble.log
