@@ -355,8 +355,7 @@ lemma f0_local (u w : Nat) :
     apply baseTape_even_zero u w <;> simp
     omega
   have hodd3 : baseTape u w (-2*(u:Int)-3)=true := by
-    apply baseTape_odd u w (by omega) <;> simp
-    omega
+    apply baseTape_odd u w _ <;> omega
   unfold f0Tape
   simp [writeAt,hblank7,hblank8,hblank9,hodd5,heven4,hodd3]
   omega
