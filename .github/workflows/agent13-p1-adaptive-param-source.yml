@@ -102,6 +102,8 @@ jobs:
           lean -o im-results/agent13-p1-adaptive-param/Q853NarrowNodes.olean im-results/agent13-p1-adaptive-param/Q853NarrowNodes.lean | tee /tmp/agent13-q853-nodes.log
           lean im-results/agent13-p1-adaptive-param/Q853NarrowFinal.lean | tee -a /tmp/agent13-q853-nodes.log
           grep -F 'critical_13650_mod_16384_unreachable' /tmp/agent13-q853-nodes.log
+          grep -F 'q853_feeder0_no_infinite_shadow_path' /tmp/agent13-q853-nodes.log
+          grep -F 'q853_feeder1_no_infinite_shadow_path' /tmp/agent13-q853-nodes.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-q853-nodes.log; then exit 1; fi
       - name: Count 701 source-certified P1 q residues modulo 1024
         run: |
