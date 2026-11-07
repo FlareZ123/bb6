@@ -30,7 +30,7 @@ theorem original_power_generic_cutoffs {x j : Nat}
         have hmin : 30 ≤ cutoff h := by unfold cutoff; omega
         omega
       have eq := generic_source_diophantine a h v j a3 heq'
-      exact (no_power_generic_three j h a v hh15 hcut) eq
+      exact False.elim ((no_power_generic_three j h a v hh15 hcut) eq)
     have hfive : h < 100 ∨ a < cutoffFive h := by
       by_cases hh : h < 100 ∨ a < cutoffFive h
       · exact hh
@@ -40,7 +40,7 @@ theorem original_power_generic_cutoffs {x j : Nat}
         have hmin : 168 ≤ cutoffFive h := by unfold cutoffFive; omega
         omega
       have eq := generic_source_diophantine a h v j a3 heq'
-      exact (no_power_generic_five j h a v hh100 hcut) eq
+      exact False.elim ((no_power_generic_five j h a v hh100 hcut) eq)
     exact ⟨a,h,v,u,ha,hv,ho,hu,hx',hy,hthree,hfive⟩
   · obtain ⟨a,h,u,ha,hu,hx',hz,hy⟩ := hs
     have hfactor : 3*2^a+a+2=2^h*u := by omega
