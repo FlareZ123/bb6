@@ -60,6 +60,17 @@ The exact list specification says membership in `parents(K)` is equivalent to `E
 
 The detailed derivation and exception audit are in [SIXTH-BOUND.md](SIXTH-BOUND.md). The complete manual original-source workflow passed in [CI run 42374851305](https://github.com/FlareZ123/bb6/actions/runs/42374851305). It compiles the fifth-root bridge, sixth-linear arithmetic, exact inverse list, root exclusions, and modular obstruction module against the pinned Cryptids source.
 
+## Quadratic terminal-valuation bound outside the cancellation family
+
+The new all-natural theorem in [NeedleTerminalDichotomy.lean](NeedleTerminalDichotomy.lean) proves that every terminal feeder satisfying E(q,v,K), with v≥11, falls into exactly the following necessary disjunction. Put n=floor((K+1)/(v+1)) and s=(K+1) mod (v+1):
+
+- s=0, n even, and 2v=3^n+3; or
+- v²≤8(K+1).
+
+The first branch is the existing synthetic variable-valuation family from [Agent20's NeedleVariableValuation.lean](../agent20-needle-coprime/NeedleVariableValuation.lean). Writing n=2r gives v=(9^r+3)/2 and K+1=r(9^r+5). For fixed K, this exceptional family has at most one candidate r because r(9^r+5) is strictly increasing. Every other valuation v≥11 is at most sqrt(8(K+1)). Thus the ordinary valuation scan can be reduced to O(sqrt K), with a separate logarithmic-time exceptional-family check.
+
+The source-linked theorem [NeedleTerminalDichotomySource.lean](NeedleTerminalDichotomySource.lean) applies the arithmetic result directly to the pinned highLevelNext predecessor relation in SpaceNeedleClosed.lean. The standalone proof was kernel-checked locally with Lean 4.36.0-rc2 and has no custom axioms. Original-source CI was dispatched after adding both files to the manual workflow; its result remains pending. This is a one-step predecessor theorem and does not establish blank-root reachability or a BB(6) value.
+
 ## Modular terminal-feeder exclusions
 
 The current Lean source explicitly proves these ten infinite valuation progressions impossible for terminal feeders:
@@ -105,6 +116,7 @@ The external [final integer hash record](https://github.com/oohzaim1-afk/space-n
 ## Main artifacts
 
 - [SpaceNeedleClosed.lean](SpaceNeedleClosed.lean): original high-level counter dynamics and exact transition identities.
+- [NeedleTerminalDichotomy.lean](NeedleTerminalDichotomy.lean), [NeedleTerminalDichotomySource.lean](NeedleTerminalDichotomySource.lean): quadratic valuation bound outside the exact synthetic cancellation family, with a source-linked predecessor theorem.
 - [SpaceNeedleRawBridge.lean](SpaceNeedleRawBridge.lean): raw-machine halting bridge and genuine blank-start reachability.
 - [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean): fifth-linear root reduction and exclusion of its two exceptional feeders.
 - [FifthHigh.lean](FifthHigh.lean), [NeedleQuinticRegular.lean](NeedleQuinticRegular.lean): fifth-linear bound and exact inverse list.
