@@ -6,7 +6,9 @@ DRAFT: sharper terminal-parent interval obtained by combining the
 linear-logarithmic B-drain upper bound and the logarithmic first-counter
 loss bound with the existing source one-step terminal gate.
 
-This is an intermediate source draft awaiting Lean CI.
+The interval arithmetic has compiled locally with Lean 4.36.0-rc2 against the
+exact recursion model and abstract one-step gate inequalities. Full pinned
+source-import compilation remains pending.
 -/
 
 namespace BB6.Agent49DrainLinearTerminalSource
