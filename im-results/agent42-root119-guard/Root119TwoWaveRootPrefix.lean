@@ -305,6 +305,7 @@ theorem b0_two_wave_root_interval_to_b0
   have hfinalF2 : t2 ((H-2)-2-2*(m:Int)) = false := by
     have hidx : (H-2)-2-2*(m:Int) = b.h-5-2*(m:Int) := by dsimp [H]; omega
     rw [hidx]
+    dsimp [t2]
     have ha := twoWaveAfterFirst_left n1 t1 H (b.h-5-2*(m:Int)) (by dsimp [H]; omega)
     rw [ha]
     have hp := twoWavePrefixTape_left b.tape b.h (b.h-5-2*(m:Int)) (by omega)
@@ -313,6 +314,7 @@ theorem b0_two_wave_root_interval_to_b0
   have hfinalB2 : t2 ((H-2)-3-2*(m:Int)) = false := by
     have hidx : (H-2)-3-2*(m:Int) = b.h-6-2*(m:Int) := by dsimp [H]; omega
     rw [hidx]
+    dsimp [t2]
     have ha := twoWaveAfterFirst_left n1 t1 H (b.h-6-2*(m:Int)) (by dsimp [H]; omega)
     rw [ha]
     have hp := twoWavePrefixTape_left b.tape b.h (b.h-6-2*(m:Int)) (by omega)
