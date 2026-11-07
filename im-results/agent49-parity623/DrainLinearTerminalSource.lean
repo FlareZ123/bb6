@@ -41,5 +41,28 @@ theorem drainB_terminal_interval_linear (a b d n aa dd : Nat)
     have hp := Nat.pow_le_pow_right (by omega : 0<3) hr
     omega
 
+/-- If K dominates the terminal mass by 3^K, a terminal daughter
+forces the final drain input balance into the following sharp interval. -/
+theorem drainB_terminal_balance_interval (a b d n K aa dd : Nat)
+    (hs : drainB a b d = some (.D aa dd))
+    (hb : b<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(a+d+3*b+5*n+2)+5 < 3^K) :
+    d+3*b ≤ a+n+K+4 ∧ a ≤ d+3*b+5*n+K+7 := by
+  have hi := drainB_terminal_interval_linear a b d n aa dd hs hb he hhalt
+  constructor
+  · by_cases h : d+3*b ≤ a+n+K+4
+    · exact h
+    · have hexp : K ≤ (d+3*b)-(a+n)-5 := by omega
+      have hp := Nat.pow_le_pow_right (by omega : 0<3) hexp
+      omega
+  · by_cases h : a ≤ d+3*b+5*n+K+7
+    · exact h
+    · have hexp : K ≤ a-d-3*b-5*n-8 := by omega
+      have hp := Nat.pow_le_pow_right (by omega : 0<3) hexp
+      omega
+
 #print axioms drainB_terminal_interval_linear
+#print axioms drainB_terminal_balance_interval
 end BB6.Agent49DrainLinearTerminalSource
