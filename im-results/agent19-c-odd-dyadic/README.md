@@ -8,9 +8,17 @@ The cone proves `¬CReach a b` whenever `u≥9, u%4=1, b+2=2^r*u, (a+2*b+4*r)%8=
 
 Separately source-certified cylinders: [Low622Source.lean](Low622Source.lean) forbids every `(1,1024q+622)`, excluding low m≡474 (mod1024), [CI 42285708106](https://github.com/FlareZ123/bb6/actions/runs/42285708106). [Low427Source.lean](Low427Source.lean) forbids `(1,1024q+427)` for q≥1, excluding low m≡539 (mod1024), [CI 42286086424](https://github.com/FlareZ123/bb6/actions/runs/42286086424). Both M512 abstract low-target cells are admitted, so these proofs exceed direct nonmembership in that finite quotient. These findings remain in `im-results/` pending adversarial prior-result review.
 
+## Source-certified high stopping obstruction at every dyadic depth (7 November 2026)
+
+The former [high-cone candidate](HighDyadicConeCandidate.md) is **source-certified**. The depth-two theorem is [HighDyadicLowVal.lean](HighDyadicLowVal.lean), [successful CI 42333928553](https://github.com/FlareZ123/bb6/actions/runs/42333928553). Its more general successor, [HighDyadicAllDepth.lean](HighDyadicAllDepth.lean) with [HighDyadicAllDepthArithmetic.lean](HighDyadicAllDepthArithmetic.lean), was **successfully original-source checked in CI 42334843728** on 7 November 2026. Both final theorems print only `propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx`.
+
+For arbitrary `r,j,m` with `2≤r`, `3≤m`, `r+4≤2*m+2`, `m%4=(2*r+3)%4` and `(j+9*m+14)%2^(r+4)=3*2^(r+2)`, the exact original-source stopping target `(2*j+3, 2^(2*m+2)*(j+3)-(j+3*m+5))` is not reachable from Machine C's blank-derived section. The proof pulls the exact odd/odd inverse into the pre-existing all-depth `DyadicSixCone`. The quantification ranges over **every** compatible inverse depth, rather than a fixed finite enumeration.
+
+A constructive parameter family and explicit cross-agent `ValSixC58AllDepth` merger are now being checked separately. Their source-verification status should be read from the corresponding CI runs rather than assumed from the original high theorem. This advance does not determine whether Machine C or BB(6) halts.
+
 ## Current state
 
-The strongest current Machine C integration is documented in [JointCriterionIntegration.md](JointCriterionIntegration.md) and formalized in [ValSixJointFull.lean](../agent3-c-bounce-inverse/ValSixJointFull.lean).
+The established ValSixFull integration is documented in [JointCriterionIntegration.md](JointCriterionIntegration.md) and formalized in [ValSixJointFull.lean](../agent3-c-bounce-inverse/ValSixJointFull.lean). The later exact C58 refinement is in [ValSixC58.lean](../agent11-c-low58/ValSixC58.lean), successful in [CI 42333769024](https://github.com/FlareZ123/bb6/actions/runs/42333769024). The proposed all-depth merge is [ValSixC58AllDepth.lean](../agent11-c-low58/ValSixC58AllDepth.lean), requiring its separate integration audit.
 
 The central theorem, `blank_halts_iff_joint_val_six_full`, is an exact equivalence for Machine C. It combines the existing Agent3/11/19/29 high and low restrictions with four additional source-certified infinite exclusions. The fixed-target root decision remains exact. The existential parameter domains remain unbounded, so this does not determine BB(6).
 
@@ -42,7 +50,7 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 
 ## Next research
 
-- [HighDyadicConeCandidate.md](HighDyadicConeCandidate.md) records a **provisional, not source-certified** infinite high stopping candidate derived by applying the source-proved dyadic cone after an original odd/odd inverse. Its sample `j=263,m=3` projects to an **M512-admitted** target cell. Agent3 has been asked to check the high-family derivation and novelty against the existing combined high sieve; do not cite this candidate as a proven high exclusion yet.
+- [HighDyadicConeCandidate.md](HighDyadicConeCandidate.md) now records the **completed source-certified** high stopping theorem, its proof structure, CI audit, and an **M512-admitted** sample `j=263,m=3`. The generalized arbitrary-depth proof and its source certification are linked above. Establish separate prior-sieve novelty and complete the strongest exact halting-iff integration.
 
 - Close the remaining unbounded low and high parameter domains.
 - Search for further source inverse cylinders or rectangles that eliminate M512-admitted states.
