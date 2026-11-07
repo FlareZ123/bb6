@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import ABridgeCode
 import BoundaryPadding
 import PacketSource
+import CryptidPairs
 import BoundaryBZero
 
 set_option maxRecDepth 4096
@@ -79,7 +80,7 @@ private theorem aZeroInput (k q r : Nat) :
         (List.replicate (3*r) true ++
           (false :: List.replicate 6 true)) := by
           simp [List.append_assoc]
-      _ = _ := by rw [oppairsFalse]; rfl
+      _ = _ := by rw [oppairsFalse]; simp [List.append_assoc]
   simp only [packet,word,init,hn,hw,List.cons_append]
 
 def aZeroCost (k q r : Nat) : Nat :=
@@ -104,9 +105,7 @@ theorem a_zero_boundary (k q r : Nat) :
         List.replicate 6 true =
       List.replicate (aZeroUnary k q r) true := by
     rw [List.replicate_append_replicate]
-    congr 1
-    dsimp [aZeroUnary]
-    omega
+    congr 1 <;> omega
   rw [show aZeroCost k q r =
     (12*k*k+41*k+32) +
       (CryptidA.wordCost (4*k+3) (aZeroWords q r) +
@@ -133,16 +132,21 @@ theorem e_zero_boundary (k q : Nat) :
         false :: (pairs q ++ (false::ys))) := by
     simp only [packet,word,init,hn,List.replicate_zero,List.nil_append,
       List.cons_append]
-    rw [←List.append_assoc,hpair]
-    simp [List.append_assoc]
+    simp only [List.append_assoc]
+    have hword : oppairs q ++ (false :: (false :: ys)) =
+        false :: (pairs q ++ (false :: ys)) := by
+      calc
+        _ = (oppairs q ++ [false]) ++ false :: ys := by
+          simp [List.append_assoc]
+        _ = _ := by rw [hpair]; rfl
+    rw [hword]
   have hraw := CryptidBoundary.full_E_pairs k q ys
   rw [hin,hraw]
   have hlen : List.replicate (2*q+6) true ++ ys =
       List.replicate (2*q+12) true := by
     dsimp [ys]
     rw [List.replicate_append_replicate]
-    congr 1
-    omega
+    congr 1 <;> omega
   simp only [BB6.Agent2BoundaryBZero.regularSection,oppairs,ys]
   rw [hlen]
   have hh : List.replicate (2*q+12) true =
