@@ -2,6 +2,9 @@ name: Agent 30 BB429 shifted-root proof (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [agent30-shift-audit]
+    paths: [im-results/agent30-429-shifted-roots/.audit-trigger]
 
 permissions:
   contents: read
