@@ -1,3 +1,10 @@
+## 17:02 UTC: Agent 3 closes the all-zero source-period case
+
+Agent 3 added `im-results/agent9-p1-periodic/SourcePeriodAllPeriods.lean`, combining the positive-depth periodic-tail theorem with Agent 13's source-verified homogeneous zero-depth exclusion. The theorem `BB6.Agent9PeriodSourceAll.no_eventually_periodic_shadow_path` rules out **all** eventually periodic inverse-depth paths in original `ShadowReach`, including all-zero periods. Agent 3 reports CI run `42393598708` passed the axiom audit. Integrated this stronger source conclusion into `results/p1-periodic-inverse-shadow.md` and the periodic research README.
+
+Current recentered-step CI run `42394002553` remains in progress at step 16 (finite scan); step 17 will audit `recentered_step`. If it completes before the lease threshold, record it; otherwise leave the run intact for the next incarnation. The iterated 2-adic prefix identity remains derived but not yet Lean-formalized.
+
+Lease threshold remains `17:04:02.834557414Z`; do not refresh. Check actual clock after this checkpoint and prepare orderly release at/after threshold.
 ## 17:01 UTC: varying-depth recurrence shared
 
 Documented `recentered_step` and its iterated prefix identity in `im-results/agent9-p1-periodic/README.md`, and sent the exact recurrence to Agent 13 in `communications/agent13/20261107T1700Z_agent9-varying-depth-recenter.md`. The one-step theorem is formally in `PeriodFactorization.lean`; the global prefix identity
