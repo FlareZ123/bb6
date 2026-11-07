@@ -208,7 +208,7 @@ theorem evenSweep_to_B_exact (n : Nat) (t : Int → Bool) (h : Int)
 /-- A nine-step B/0 prefix followed by an even F/1 sweep returns to B/0.
     The run-length and two terminal-zero hypotheses are the complete tape
     conditions; all exterior tape is arbitrary. -/
-theorem b0_even_prefix_to_b0 (b : Conf) (n : Nat)
+theorem b0_even_prefix_to_b0_exact (b : Conf) (n : Nat)
     (hb : Reach b) (hb0 : BZero b)
     (hleft : b.tape (b.h-1) = true)
     (hzero : b.tape (b.h-2) = false)
@@ -218,7 +218,10 @@ theorem b0_even_prefix_to_b0 (b : Conf) (n : Nat)
     (hterminal : b.tape (b.h+(2*(n+1):Int)) = false)
     (hfinal : b.tape (b.h+(2*(n+1):Int)+1) = false) :
     ∃ bout : Conf, run (2*n+15) b = some bout ∧
-      Reach bout ∧ BZero bout := by
+      Reach bout ∧ BZero bout ∧
+      bout.h = b.h+2*(n+1)+1 ∧
+      bout.tape = evenSweepBResultTape n
+        (setBit (twoWavePrefixTape b.tape b.h) (b.h-1) false) b.h := by
   let f : Conf := ⟨.F,b.h-1,twoWavePrefixTape b.tape b.h⟩
   let tD : Int → Bool :=
     setBit (twoWavePrefixTape b.tape b.h) (b.h-1) false
@@ -284,11 +287,32 @@ theorem b0_even_prefix_to_b0 (b : Conf) (n : Nat)
       _ = (run 1 f).bind (run (2*(n+1)+3)) := by rw [run_add]
       _ = run (2*(n+1)+3) d := by simp [hfstep]
       _ = some bout := hrunD
-  exact ⟨bout,hrun,reachable_of_run (2*n+15) b bout hb hrun,hboutZero⟩
+  have hhead : bout.h = b.h+2*(n+1)+1 := rfl
+  have htape : bout.tape = evenSweepBResultTape n
+      (setBit (twoWavePrefixTape b.tape b.h) (b.h-1) false) b.h := rfl
+  exact ⟨bout,hrun,reachable_of_run (2*n+15) b bout hb hrun,hboutZero,hhead,htape⟩
+
+
+/-- Backwards-compatible existential form of the exact even-prefix result. -/
+theorem b0_even_prefix_to_b0 (b : Conf) (n : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true)
+    (hones : ∀ j : Nat, j < 2*n+1 →
+      b.tape (b.h+1+(j:Int)) = true)
+    (hterminal : b.tape (b.h+(2*(n+1):Int)) = false)
+    (hfinal : b.tape (b.h+(2*(n+1):Int)+1) = false) :
+    ∃ bout : Conf, run (2*n+15) b = some bout ∧
+      Reach bout ∧ BZero bout := by
+  obtain ⟨bout,hrun,hreach,hBzero,_,_⟩ :=
+    b0_even_prefix_to_b0_exact b n hb hb0 hleft hzero hone hones hterminal hfinal
+  exact ⟨bout,hrun,hreach,hBzero⟩
+
 
 /-- An odd F/1 sweep followed by the B/1-F/1 transition and an even sweep
     also returns to B/0.  This is the second residual prefix family. -/
-theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
+theorem b0_odd_even_chain_to_b0_exact (b : Conf) (n : Nat)
     (hb : Reach b) (hb0 : BZero b)
     (hleft : b.tape (b.h-1) = true)
     (hzero : b.tape (b.h-2) = false)
@@ -299,7 +323,11 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
     (hterminal2 : b.tape (b.h+(2*n+2:Int)) = false)
     (hfinal : b.tape (b.h+(2*n+3:Int)) = false) :
     ∃ bout : Conf, run (6*n+23) b = some bout ∧
-      Reach bout ∧ BZero bout := by
+      Reach bout ∧ BZero bout ∧
+      bout.h = b.h+(2*n+3:Int) ∧
+      bout.tape = evenSweepBResultTape (n+1)
+        (setBit (setBit (oddWaveTape n (twoWavePrefixTape b.tape b.h) (b.h-1))
+          (b.h-2) true) (b.h-3) false) (b.h-2) := by
   let H : Int := b.h-1
   let t1 : Int → Bool := twoWavePrefixTape b.tape b.h
   let f1 : Conf := ⟨.F,H,t1⟩
@@ -466,7 +494,36 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
       _ = (run 1 f2).bind (run (2*((n+1)+1)+3)) := by rw [run_add]
       _ = run (2*((n+1)+1)+3) d2 := by simp [hF2step]
       _ = some bout := hrunD2
-  exact ⟨bout,hrun,reachable_of_run (6*n+23) b bout hb hrun,hboutZero⟩
+  have hhead : bout.h = b.h+(2*n+3:Int) := by
+    dsimp [bout,H]
+    omega
+  have htape : bout.tape = evenSweepBResultTape (n+1)
+      (setBit (setBit (oddWaveTape n (twoWavePrefixTape b.tape b.h) (b.h-1))
+        (b.h-2) true) (b.h-3) false) (b.h-2) := by
+    dsimp [bout,H,tD2,f2Tape,b1Tape,t1]
+    have hidx1 : b.h-1-1 = b.h-2 := by omega
+    have hidx2 : b.h-1-2 = b.h-3 := by omega
+    rw [hidx1,hidx2]
+  exact ⟨bout,hrun,reachable_of_run (6*n+23) b bout hb hrun,hboutZero,hhead,htape⟩
+
+
+/-- Backwards-compatible existential form of the exact odd-even result. -/
+theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true)
+    (hones : ∀ j : Nat, j < 2*n →
+      b.tape (b.h+1+(j:Int)) = true)
+    (hterminal1 : b.tape (b.h+(2*n+1:Int)) = false)
+    (hterminal2 : b.tape (b.h+(2*n+2:Int)) = false)
+    (hfinal : b.tape (b.h+(2*n+3:Int)) = false) :
+    ∃ bout : Conf, run (6*n+23) b = some bout ∧
+      Reach bout ∧ BZero bout := by
+  obtain ⟨bout,hrun,hreach,hBzero,_,_⟩ :=
+    b0_odd_even_chain_to_b0_exact b n hb hb0 hleft hzero hone hones
+      hterminal1 hterminal2 hfinal
+  exact ⟨bout,hrun,hreach,hBzero⟩
 
 #print axioms BB6Root119.evenSweep_to_B_exact
 #print axioms BB6Root119.twoWavePrefixTape
@@ -476,6 +533,8 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
 #print axioms BB6Root119.run_add
 #print axioms BB6Root119.evenSweepBResultTape_finalCell
 #print axioms BB6Root119.odd_f1_to_b
+#print axioms BB6Root119.b0_even_prefix_to_b0_exact
+#print axioms BB6Root119.b0_odd_even_chain_to_b0_exact
 #print axioms BB6Root119.b0_even_prefix_to_b0
 #print axioms BB6Root119.b0_odd_even_chain_to_b0
 
