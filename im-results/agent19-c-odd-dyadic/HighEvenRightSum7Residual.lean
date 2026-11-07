@@ -189,7 +189,7 @@ theorem sum7_family_prior_allowed (j m : Nat)
 def highAllowedWithSum7 (j m : Nat) : Prop :=
   BB6.Agent24Phase.highAllowed j m ∧
   ¬(3≤m ∧ m%4=3 ∧ j%8=(m+3)%8) ∧
-  ¬(5≤m ∧ m%32=5 ∧ j%32=8)
+  ¬(5≤m ∧ m%4=1 ∧ (j+8)%32=(3*m+1)%32)
 
 theorem blank_halts_iff_high_even_right_and_sum7 :
     BB6.CReachBridge.RunHalts ↔
@@ -209,44 +209,26 @@ theorem blank_halts_iff_high_even_right_and_sum7 :
       have hnotEvenRight : ¬(3≤m ∧ m%4=3 ∧ j%8=(m+3)%8) := by
         rintro ⟨hm,hm4,hj8⟩
         exact high_even_right_blank_unreachable j m hm hm4 hj8 hreach
-      have hnotSum7 : ¬(5≤m ∧ m%32=5 ∧ j%32=8) := by
-        rintro ⟨hm5,hm32,hj32⟩
-        have hjEq : j=32*(j/32)+8 := by
-          have h:=Nat.mod_add_div j 32
-          rw [hj32] at h
-          omega
-        have hmEq : m=32*(m/32)+5 := by
-          have h:=Nat.mod_add_div m 32
-          rw [hm32] at h
-          omega
-        have hreach' : BB6.Agent3.CReach
-            (2*(32*(j/32)+8)+3)
-            (highK (32*(j/32)+8) (32*(m/32)+5)) := by
-          simpa [hjEq,hmEq,BB6.Agent19HighEvenRight.highK] using hreach
-        exact sum7_high_blank_unreachable (j/32) (m/32) hreach'
+      have hnotSum7 : ¬(5≤m ∧ m%4=1 ∧ (j+8)%32=(3*m+1)%32) := by
+        rintro ⟨hm5,hm4,hrel⟩
+        exact sum7_high_blank_unreachable_of_congruence j m hm5 hm4 hrel hreach
       exact Or.inr ⟨j,m,⟨hprior,hnotEvenRight,hnotSum7⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_,_⟩,hroot⟩)
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
 
-theorem sum7_family_new (q r : Nat) :
-    BB6.Agent24Phase.highAllowed (32*q+8) (32*r+5) ∧
-    ¬ highAllowedWithSum7 (32*q+8) (32*r+5) := by
-  refine ⟨sum7_family_prior_allowed q r,?_⟩
+theorem sum7_family_new (j m : Nat)
+    (hm5 : 5≤m) (hm4 : m%4=1)
+    (hrel : (j+8)%32=(3*m+1)%32) :
+    BB6.Agent24Phase.highAllowed j m ∧
+    ¬ highAllowedWithSum7 j m := by
+  refine ⟨sum7_family_prior_allowed j m hm5 hm4 hrel,?_⟩
   intro h
-  exact h.2.2 ⟨by omega,by omega,by omega⟩
-
-theorem sum7_family_indices_injective :
-    Function.Injective (fun p : Nat×Nat => (32*p.1+8,32*p.2+5)) := by
-  intro a b h
-  rcases a with ⟨q₁,r₁⟩
-  rcases b with ⟨q₂,r₂⟩
-  simp only [Prod.mk.injEq] at h
-  rcases h with ⟨hq,hr⟩
-  apply Prod.ext <;> omega
+  exact h.2.2 ⟨hm5,hm4,hrel⟩
 
 #print axioms sum7_family_prior_allowed
 #print axioms sum7_every_parent_odd_image
+#print axioms sum7_high_blank_unreachable_of_congruence
 #print axioms sum7_high_blank_unreachable
 #print axioms blank_halts_iff_high_even_right_and_sum7
 #print axioms sum7_family_new
