@@ -78,7 +78,7 @@ finishCStart u p k :=
     (1^6 ++ 1^(2k) ++ 01)
 ```
 
-where the current symbol is shown separately and the right list begins immediately to its right. This is exactly the source entry `C)-state with left stack `1 ++ (11)^p ++ (01)^u ++ 1^5` and full right stack `1^7 ++ (11)^k ++ 01`.
+where the current symbol is shown separately and the right list begins immediately to its right. This is exactly the source C/1-state entry with left stack `1 ++ (11)^p ++ (01)^u ++ 1^5` and full right stack `1^7 ++ (11)^k ++ 01`.
 
 The source path decomposes into two exact pieces:
 
@@ -96,7 +96,20 @@ The companion `physical_finishC_ScanE_delta` instantiates Agent 32's generic `so
 
 **Scope:** this is an exact endpoint/head-displacement certificate for the source macro, not a proof that the later path crosses the entire earlier `shift_E_11` interval. The remaining global argument must connect the parameters of the post-shift S_E return to this C/1 entry and prove the required coordinate inequality for the full swept block. The theorem by itself does not eliminate all E/1 last-writer candidates and does not establish any blank-origin halting result.
 
-**Verification status:** the source-level theorem and its proof were compiled locally with Lean 4.36.0-rc2 against a matching zipper/delta interface. The module imports the actual repository `BB429DeltaPhysicalBridge`; the physical corollary has been added to the existing manual original-source workflow `.github/workflows/agent18-429-lastwriter.yml`. That CI run has not yet been triggered, so original-source integration verification remains pending.
+**Verification status:** the source-level proof core was compiled locally with Lean 4.36.0-rc2 against matching interfaces; the local harness used a stub for the imported physical-bridge theorem. The actual-source workflow compiles this module after the real `BB429DeltaPhysicalBridge` dependency and audits the axiom report for `sorryAx`. That manual CI run has not yet been triggered, so original-source integration verification remains pending.
+
+## Composed S_E return and later Junc head excursion
+
+[`BB429JuncHeadExcursion.lean`](BB429JuncHeadExcursion.lean) composes the E/1 return, the C/1 `finish_C_ScanE` path, and the next Junc macro. It proves the two parity cases for every right parameter (k):
+
+- If (b=2r), the E/1 return lands at `finishCStart 2 b k`; `finish_C_ScanE` reaches `Junc(2,b+2,2k+1)) with displacement (-2b). The first Junc macro reaches its intermediate A configuration after (2(b+2)+6) steps, with displacement (2b+6) from that Junc entry. The combined path therefore reaches a physical head exactly **6 cells right** of the post-shift S_E boundary.
+- If (b=2r+1) and (k\ge1), the return lands at `finishCStart 0 b k`; the next Junc macro reaches `Junc(b+5,0,2k-2)). Its displacement (2b+7) cancels the preceding (-2b), giving a physical head exactly **7 cells right** of the post-shift S_E boundary.
+
+The physical corollaries use Agent 32's generic `source_runWithDelta_rep` theorem. In the concrete (b=0,k=3) case, the segment takes (42+12+10=64) steps from the post-shift S_E boundary. Thus a shift ending at global step 128 reaches the later head at step 192, six cells to the right of the post-shift head at (-2), reproducing the observed return to head (4).
+
+**Important limitation:** these composite offsets are (+6) and (+7), independent of (k). Since the `shift_E_11 k` interval spans (2k) cells, this chain proves a complete crossing when (k\le3). It does not establish the requested arbitrary-(k) crossing. For (k>3), the proof needs a further Junc iteration or a genuine-root parameter invariant that supplies a larger later head coordinate. The new theorems explain the observed (k=3) exclusion exactly, while leaving the unbounded case open.
+
+**Verification status:** both new Lean modules were proof-checked locally with Lean 4.36.0-rc2 against matching interfaces; the local harness used stubs for the imported source-return and physical-bridge theorems. The actual-source workflow now compiles `BB429FinishScanEDelta.lean` and `BB429JuncHeadExcursion.lean` after their real dependencies and audits their axiom reports for `sorryAx`. That manual CI run has not yet been triggered, so original-source integration verification remains pending.
 
 ## Connection to the hard blank-origin question
 
