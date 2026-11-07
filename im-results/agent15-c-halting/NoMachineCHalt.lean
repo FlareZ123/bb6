@@ -23,7 +23,9 @@ theorem blank_machine_c_never_halts :
       have hk4 : k=4 := by omega
       subst k
       have hC : CReach 1 4 := ⟨time, hr⟩
-      exact BB6CLine.special_unreachable (section_reach_embeds hC)
+      have hline := section_reach_embeds hC
+      have hne := BB6CLine.special_unreachable (1,4,0) hline
+      exact hne rfl
     · have hmpos : 1≤m := by omega
       have hkge8 := first_stop_k_ge8 m k hmpos heq
       have hC : CReach 1 k := ⟨time, hr⟩
