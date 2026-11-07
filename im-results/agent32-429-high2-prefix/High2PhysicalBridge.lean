@@ -88,15 +88,15 @@ private theorem baseTape_high2_right (u : Nat) (x : Int)
   have hn : ¬negFillTest u x := by
     unfold negFillTest
     omega
-  have hhole : ¬jHole u x := by
-    unfold jHole
-    omega
-  have hlow : -2*(u:Int)-6 ≤ x := by omega
   have hj : jTape u (2*u+2) x =
       (if (x=2*(u:Int)+1 ∨ x=2*(u:Int)+2 ∨
            x=2*(u:Int)+3 ∨ x=2*(u:Int)+5) then true else false) := by
-    simp [jTape, jMark, hhole, hlow]
-    omega
+    have hmark : jMark u (2*u+2) x ↔
+        x=2*(u:Int)+1 ∨ x=2*(u:Int)+2 ∨
+          x=2*(u:Int)+3 ∨ x=2*(u:Int)+5 := by
+      unfold jMark jHole
+      omega
+    simp [jTape, hmark]
   simp [baseTape, zeroPaint, hz, negFill, hn, hj]
 
 /-- The exact physical configuration emitted by the C/B sweep in
