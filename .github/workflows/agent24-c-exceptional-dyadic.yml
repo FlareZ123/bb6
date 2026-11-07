@@ -26,7 +26,7 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a24-exceptional/
           cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/a24-exceptional/
           cp im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean /tmp/a24-exceptional/
-          cp im-results/agent24-c-exceptional-dyadic/{TerminalCone,TerminalBroad,AlternateDyadic,ExpandedDyadic,AllDepthPhases,HighAllDepth,HighOtherBranch,HighOtherExplicit,HighExplicitFamily,HighResidual,HighActualStates}.lean /tmp/a24-exceptional/
+          cp im-results/agent24-c-exceptional-dyadic/{TerminalCone,TerminalBroad,AlternateDyadic,ExpandedDyadic,AllDepthPhases,HighAllDepth,HighOtherBranch,HighAllPhases,HighOtherExplicit,HighExplicitFamily,HighResidual,PhaseResidual,HighActualStates}.lean /tmp/a24-exceptional/
           cd /tmp/a24-exceptional
           export LEAN_PATH="."
           lean --version
@@ -40,9 +40,11 @@ jobs:
           lean -o AllDepthPhases.olean AllDepthPhases.lean
           lean -o HighAllDepth.olean HighAllDepth.lean
           lean -o HighOtherBranch.olean HighOtherBranch.lean
+          lean -o HighAllPhases.olean HighAllPhases.lean
           lean -o HighOtherExplicit.olean HighOtherExplicit.lean
           lean -o HighExplicitFamily.olean HighExplicitFamily.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{BounceHalting,SectionHalting,SectionPower,BlankHalting,SectionParam,BlankParam}.lean .
           for f in BounceHalting SectionHalting SectionPower BlankHalting SectionParam BlankParam; do lean -o "$f.olean" "$f.lean"; done
           lean -o HighResidual.olean HighResidual.lean
+          lean -o PhaseResidual.olean PhaseResidual.lean
           lean -o HighActualStates.olean HighActualStates.lean
