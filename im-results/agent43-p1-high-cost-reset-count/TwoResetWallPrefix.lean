@@ -1,6 +1,8 @@
 import DepthIndexedResetFloor
 import RightFiveThreeSource
 
+set_option maxHeartbeats 2000000
+
 namespace BB6.Agent43DepthResetFloor
 
 open BB6.Agent28 BB6.Agent1UpperTail BB6.Agent1Quarter
@@ -28,11 +30,101 @@ private theorem two_hundred_mul_le_pow (n : Nat) (hn : 14 ≤ n) :
   have heq : 14+(n-14)=n := by omega
   simpa [heq] using hrec (n-14)
 
+private theorem two_le_of_one_le_ne_one (u : Nat) (hu : 1≤u) (hne : u≠1) : 2≤u := by
+  omega
+
+private theorem three_le_of_not_le_two (u : Nat) (h : ¬u≤2) : 3≤u := by
+  omega
+
+private theorem source_c1_relation
+    (bp dp mp n P t2 c2 c1 : Nat)
+    (hMass : bp+dp+2*mp+2*n+13=14*P)
+    (hPow : dp+bp/2+3=2^t2*(c2+3))
+    (hBpHalf : 2*(bp/2)=bp)
+    (hDp : dp=c1+4)
+    (hPowRel : 2^(t2+1)=2*2^t2) :
+    c1+3+14*P=2^(t2+1)*(c2+3)+2*n+2*mp+6 := by
+  rw [hPowRel]
+  omega
+
+private theorem source_predecessor_wall_relation
+    (bp dp mp n P t2 c2 : Nat)
+    (hMass : bp+dp+2*mp+2*n+13=14*P)
+    (hPow : dp+bp/2+3=2^t2*(c2+3))
+    (hBpHalf : 2*(bp/2)=bp)
+    (hPowRel : 2^(t2+1)=2*2^t2) :
+    bp+4*mp+4*n+20+2^(t2+1)*(c2+3)=28*P := by
+  rw [hPowRel]
+  omega
+
+private theorem two_reset_wall_dyadic_gap
+    (n P mp m t u r B D C1 C2 L : Nat)
+    (hn : 14≤n) (hP200 : 200*n≤P)
+    (hmp : mp≤3*n+4) (hr : r≤mp)
+    (hm : m=mp+t+1)
+    (hC2 : C2=2*P+2*m+2*n+6)
+    (hC1Eq : C1+14*P=2^(t+1)*C2+2*n+2*mp+6)
+    (hC1pos : 4≤C1)
+    (hL : L=D+B/2+3 ∧ L=2^u*C1)
+    (hu : 1≤u) (ht : t=1 ∨ t=2)
+    (hMass : B+D+2*r+2*n+13=14*P)
+    (hRoot : 2^r*(B+12)+2*n+4=14*P)
+    (hBeven : 2*(B/2)=B) : False := by
+  have hC1Eq' := hC1Eq
+  rw [hC2] at hC1Eq'
+  rcases ht with ht1 | ht2
+  · subst t
+    have hpow : 2^(1+1)=4 := by decide
+    rw [hpow] at hC1Eq'
+    have hC1small : C1+6*P≤40*n+86 := by omega
+    omega
+  · subst t
+    have hpow : 2^(2+1)=8 := by decide
+    rw [hpow] at hC1Eq'
+    have hC1exact : C1+14*P=16*P+18*mp+18*n+102 := by omega
+    have hC1lower : 2*P+18*n+102≤C1 := by omega
+    have hC1upper : C1≤2*P+72*n+174 := by omega
+    rcases hL with ⟨hLdef,hLpow⟩
+    by_cases hr0 : r=0
+    · have hLdouble : 2*L+2*n+4=14*P := by omega
+      have hgapLow : 4*C1<2*L := by omega
+      have hgapHigh : 2*L<8*C1 := by omega
+      by_cases hu1 : u=1
+      · rw [hu1] at hLpow
+        omega
+      · have hu2 : 2≤u := two_le_of_one_le_ne_one u hu hu1
+        have hpowU : 4≤2^u := by
+          have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hu2
+          simpa using hh
+        have hmul : 4*C1≤2^u*C1 := Nat.mul_le_mul_right C1 hpowU
+        omega
+    · have hrpos : 1≤r := by omega
+      have hpowr : 2≤2^r := by
+        have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hrpos
+        simpa using hh
+      have hmulB : 2*(B+12)≤2^r*(B+12) := Nat.mul_le_mul_right (B+12) hpowr
+      have hBbound : 2*(B+12)+2*n+4≤14*P := by omega
+      have hLlow : 42*P≤4*L+30*n+44 := by omega
+      have hgapLow : 16*C1<4*L := by omega
+      have hLupper : L<14*P := by omega
+      have hgapHigh : L<8*C1 := by omega
+      by_cases hu2 : u≤2
+      · have hpowU : 2^u≤4 := by
+          have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hu2
+          simpa using hh
+        have hmul : 2^u*C1≤4*C1 := Nat.mul_le_mul_right C1 hpowU
+        omega
+      · have hu3 : 3≤u := three_le_of_not_le_two u hu2
+        have hpowU : 8≤2^u := by
+          have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hu3
+          simpa using hh
+        have hmul : 8*C1≤2^u*C1 := Nat.mul_le_mul_right C1 hpowU
+        omega
+
 /-- No genuine two-positive-reset CountCone can lie on the shifted 12*2^n wall.
     The proof peels the last two positive resets, removes their zero-depth
     suffixes using large-left bounds, and traps the first reset's power
     strictly between consecutive dyadic multiples. -/
-set_option maxHeartbeats 1000000 in
 theorem source_no_two_reset_shifted_wall
     (n b d m : Nat) (hn : 14≤n)
     (h : CountCone (14*2^n-2*n-16) 3 b d m 2)
@@ -107,9 +199,9 @@ theorem source_no_two_reset_shifted_wall
   have hmulPow : 2^(t2+1)*(c2+3)=2*(2^t2*(c2+3)) := by
     rw [hpowrel2]
     simp [Nat.mul_assoc]
-  have hB1wall : bp+4*mp+4*n+20+2^(t2+1)*(c2+3)=28*P := by
-    have hbpHalf : 2*(bp/2)=bp := by omega
-    omega
+  have hbpHalf : 2*(bp/2)=bp := by omega
+  have hB1wall := source_predecessor_wall_relation bp dp mp n P t2 c2
+    hpreOneMassExact hInv2.1 hbpHalf hpowrel2
   have hbpLarge : 11*P≤bp := by
     by_cases ht2eq : t2=1
     · have hpow : 2^(t2+1)=4 := by simp [ht2eq]
@@ -153,56 +245,14 @@ theorem source_no_two_reset_shifted_wall
   have hrmp : r≤mp := by omega
   have hBeven : 2*(B/2)=B := by omega
   have hL : D+B/2+3=2^u*(c1+3) := hInv1.1
-  have hC1Eq : c1+3+14*P=2^(t2+1)*(c2+3)+2*n+2*mp+6 := by
-    have hbpHalf : 2*(bp/2)=bp := by omega
-    omega
+  have hC1Eq := source_c1_relation bp dp mp n P t2 c2 c1
+    hpreOneMassExact hInv2.1 hbpHalf hpost1Right hpowrel2
   have hC1pos : 4≤c1+3 := by omega
-  by_cases ht2eq : t2=1
-  · have hpow : 2^(t2+1)=4 := by simp [ht2eq]
-    rw [hpow] at hC1Eq
-    have hC1small : c1+3+6*P≤40*n+86 := by omega
-    omega
-  · have ht2eq2 : t2=2 := by omega
-    have hpow : 2^(t2+1)=8 := by simp [ht2eq2]
-    rw [hpow] at hC1Eq
-    have hC1Exact : c1+3+14*P=16*P+18*mp+18*n+102 := by omega
-    have hC1Lower : 2*P+18*n+102≤c1+3 := by omega
-    have hC1Upper : c1+3≤2*P+72*n+174 := by omega
-    by_cases hr0 : r=0
-    · have hLdouble : 2*(D+B/2+3)+2*n+4=14*P := by omega
-      have hgapLow : 4*(c1+3)<2*(D+B/2+3) := by omega
-      have hgapHigh : 2*(D+B/2+3)<8*(c1+3) := by omega
-      by_cases hu1 : u=1
-      · rw [hu1] at hL
-        omega
-      · have hu2 : 2≤u := by omega
-        have hpowU : 4≤2^u := by
-          have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hu2
-          simpa using hh
-        have hmul : 4*(c1+3)≤2^u*(c1+3) := Nat.mul_le_mul_right (c1+3) hpowU
-        omega
-    · have hrpos : 1≤r := by omega
-      have hpowr : 2≤2^r := by
-        have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hrpos
-        simpa using hh
-      have hmulB : 2*(B+12)≤2^r*(B+12) := Nat.mul_le_mul_right (B+12) hpowr
-      have hBbound : 2*(B+12)+2*n+4≤14*P := by omega
-      have hLlow : 42*P≤4*(D+B/2+3)+30*n+44 := by omega
-      have hgapLow : 16*(c1+3)<4*(D+B/2+3) := by omega
-      have hLupper : D+B/2+3<14*P := by omega
-      have hgapHigh : D+B/2+3<8*(c1+3) := by omega
-      by_cases hu2 : u≤2
-      · have hpowU : 2^u≤4 := by
-          have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hu2
-          simpa using hh
-        have hmul : 2^u*(c1+3)≤4*(c1+3) := Nat.mul_le_mul_right (c1+3) hpowU
-        omega
-      · have hu3 : 3≤u := by omega
-        have hpowU : 8≤2^u := by
-          have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hu3
-          simpa using hh
-        have hmul : 8*(c1+3)≤2^u*(c1+3) := Nat.mul_le_mul_right (c1+3) hpowU
-        omega
+  have hLpair : (D+B/2+3 = D+B/2+3) ∧ D+B/2+3=2^u*(c1+3) :=
+    ⟨rfl,hL⟩
+  exact two_reset_wall_dyadic_gap n P mp m t2 u r B D (c1+3) (c2+3)
+    (D+B/2+3) hn hP200 hcostPrefixBound hrmp hpost2Cost hC2 hC1Eq
+    hC1pos hLpair hu (by omega) hpre1MassExact hrootEq hBeven
 
 #print axioms BB6.Agent43DepthResetFloor.source_no_two_reset_shifted_wall
 
