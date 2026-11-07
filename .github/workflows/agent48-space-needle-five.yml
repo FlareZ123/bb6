@@ -39,6 +39,8 @@ jobs:
           base20="$GITHUB_WORKSPACE/im-results/agent20-needle-coprime"
           cp "$base48/SpaceNeedleClosed.lean" .
           lake env lean -o ".lake/build/lib/lean/SpaceNeedleClosed.olean" SpaceNeedleClosed.lean
+          cp "$base48/SpaceNeedleObstructionFamilies.lean" .
+          lake env lean SpaceNeedleObstructionFamilies.lean
           for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedleTerminalAffineSource; do
             cp "$base20/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
