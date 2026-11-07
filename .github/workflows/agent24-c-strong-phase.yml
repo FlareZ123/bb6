@@ -277,4 +277,10 @@ jobs:
           # Complete executable per-parameter high/low filters, with
           # constructive Decidable instances for each previous unbounded gate.
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/FullBoolean.lean .
-          lean FullBoolean.lean
+          lean -o FullBoolean.olean FullBoolean.lean
+          # Infinite symbolic nonredundancy witness from the original affine
+          # normalizer and all prior high stopping sieves.
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/AffNormFamilySource.lean .
+          lean -o AffNormFamilySource.olean AffNormFamilySource.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/InfiniteStrict.lean .
+          lean InfiniteStrict.lean
