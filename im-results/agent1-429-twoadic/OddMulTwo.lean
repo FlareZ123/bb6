@@ -136,6 +136,32 @@ theorem odd_double_shift (E x y d : Nat) (hE : 1≤E)
     _ = x0 := hright
     _ = x%M := rfl
 
+
+/-- Elementary CRT combining two congruences under a coprimality
+    certificate, using cancellation in each difference direction. -/
+theorem coprime_mod_combine (M N x y : Nat) (hc : Nat.Coprime M N)
+    (hM : x%M=y%M) (hN : x%N=y%N) :
+    x%(M*N)=y%(M*N) := by
+  have hd1 : M*N ∣ x-y :=
+    hc.mul_dvd_of_dvd_of_dvd
+      (Nat.dvd_of_mod_eq_zero (Nat.sub_mod_eq_zero_of_mod_eq hM))
+      (Nat.dvd_of_mod_eq_zero (Nat.sub_mod_eq_zero_of_mod_eq hN))
+  have hd2 : M*N ∣ y-x :=
+    hc.mul_dvd_of_dvd_of_dvd
+      (Nat.dvd_of_mod_eq_zero (Nat.sub_mod_eq_zero_of_mod_eq hM.symm))
+      (Nat.dvd_of_mod_eq_zero (Nat.sub_mod_eq_zero_of_mod_eq hN.symm))
+  by_cases hxy : y≤x
+  · obtain ⟨k,hk⟩ := hd1
+    have he : x=y+(M*N)*k := by omega
+    rw [he]
+    simp
+  · obtain ⟨k,hk⟩ := hd2
+    have he : y=x+(M*N)*k := by omega
+    rw [he]
+    simp
+
+#print axioms coprime_mod_combine
+
 #print axioms odd_double_shift
 
 #print axioms odd_mul_surjective
