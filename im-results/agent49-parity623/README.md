@@ -135,9 +135,11 @@ The buffer theorem `newAffine_to_oldRight` says that, for even first counter `a)
 
 ## 2026-11-07: sharp linear-logarithmic B-drain envelopes
 
-**Status:** source-CI verified intermediate mathematical result. The Lean proof
-text compiles locally with Lean 4.36.0-rc2 against an exact copy of the pinned
-upstream `evalA` and `drainB` equations. The pinned-source workflow run
+**Status:** source-CI verified intermediate mathematical result. Promotion to
+`results/` is deferred pending fuller external-novelty review and integration
+into a complete #623 decision. The Lean proof text compiles locally with Lean
+4.36.0-rc2 against an exact copy of the pinned upstream `evalA` and `drainB`
+equations. The pinned-source workflow run
 [42361679978](https://github.com/FlareZ123/bb6/actions/runs/42361679978)
 completed successfully on repository head `abf8ce1d1fa2bd4a590e78bc302a25a7c2a338d8`,
 compiling the authentic machine source and both dependent drain modules.
@@ -179,6 +181,8 @@ A second family, `b=(3^n+1)/2`, `a=n+1`, also attains the first-counter
 loss `n+1`.
 
 Files:
+- `SharpLinearLogDrainBound.md`: standalone theorem statement, proof sketch,
+  sharpness witness, and source-verification provenance.
 - `DrainLinearLogSource.lean`: Lean proof, locally compiled against the exact
   recursion equations and compiled by pinned-source CI run 42361679978.
 - `drain_linear_log_check.py`: reproducible finite checks for `n≤9`,
