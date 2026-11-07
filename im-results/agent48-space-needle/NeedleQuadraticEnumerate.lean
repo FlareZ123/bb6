@@ -166,7 +166,7 @@ theorem quadraticRegularParents_spec (q v K : Nat) :
   rw [quadraticRegularParents, List.mem_filter]
   constructor
   · rintro ⟨hm,hb⟩
-    exact ⟨(quadraticParents_spec q v K).mp hm, of_decide_eq_true hb⟩
+    exact ⟨(quadraticParents_spec q v K).mp hm, by simpa using hb⟩
   · rintro ⟨heq,hb⟩
     exact ⟨(quadraticParents_spec q v K).mpr heq, of_decide_eq_true hb⟩
 
