@@ -26,7 +26,7 @@ analysis. Every concrete machine step induces an abstract step, while the
 blank initial window lies outside the 12-state set. Therefore neither target
 window can occur in a blank-reachable configuration.
 
-The file also proves that Agent 42's synthetic
+The expanded module passed the repository workflow in [run 42418128383](https://github.com/FlareZ123/bb6/actions/runs/42418128383).\n\nThe file also proves that Agent 42's synthetic
 `oddEvenShieldCounterexample` is not in `Reach`. Its local tape pattern
 is a valid counterexample to dropping the boundary guard for arbitrary
 configurations, but it does not witness a reachable failure.
