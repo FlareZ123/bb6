@@ -25,7 +25,11 @@ def knownM0Family (j : Nat) : Bool :=
   j%64==58 ||
   j%32==21 ||
   j%32==15 ||
-  j%128==71
+  j%128==71 ||
+  (j%128==5 && decide (128≤j)) ||
+  j%512==357 ||
+  j%512==406 ||
+  j%512==191
 
 def uncoveredM0 : List Nat :=
   (jsFor 0).filter fun j => !(knownM0Family j)
