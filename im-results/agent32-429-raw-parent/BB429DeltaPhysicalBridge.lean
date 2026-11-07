@@ -145,6 +145,59 @@ theorem physical_shift_E11_prefix_via_delta
     (z 4 (ones (n-j) ++ tail) true (ones (j+6) ++ suffix))
     (-(j : Int)) (e1_left_prefix n j tail suffix hj)
 
+
+/-- A represented source run that returns none lifts to an exact raw-table
+    halt. This is the converse-side companion to source_runWithDelta_rep. -/
+theorem source_runWithDelta_none_rep (n : Nat) (z : Zipper) (c : Config)
+    (hrep : Represents z c) (hz : runWithDelta n z = none) :
+    BB6Coverage.run BB429PhysicalFrontier.target429 n c = none := by
+  induction n generalizing z c with
+  | zero =>
+      simp [runWithDelta] at hz
+  | succ n ih =>
+      cases hstep : oneWithDelta z with
+      | none =>
+          rcases hrep with ⟨hstate,hcur,hleft,hright⟩
+          have hsource : action z.state z.current =
+              (BB429PhysicalFrontier.target429 (readSlot c)).map
+                (fun move => (move.next.val,move.write,move.right)) := by
+            have h0 := BB429SourceRows.action_matches_target c.state (c.tape c.head)
+            simp only [readSlot]
+            rw [← hstate, ← hcur]
+            exact h0
+          have hact : action z.state z.current = none := by
+            cases h : action z.state z.current with
+            | none => rfl
+            | some a =>
+                exfalso
+                rcases a with ⟨s,w,r⟩
+                cases r <;> cases hright' : z.right <;> cases hleft' : z.left <;>
+                  simp [oneWithDelta,one,h,hright',hleft'] at hstep
+          have hmove : BB429PhysicalFrontier.target429 (readSlot c) = none := by
+            cases h : BB429PhysicalFrontier.target429 (readSlot c) with
+            | none => rfl
+            | some move =>
+                have hm : action z.state z.current =
+                    some (move.next.val,move.write,move.right) := by
+                  simpa [h] using hsource
+                rw [hact] at hm
+                cases hm
+          have hraw : rawStep BB429PhysicalFrontier.target429 c = none := by
+            simp [rawStep,hmove]
+          simp [BB6Coverage.run,hraw]
+      | some p =>
+          rcases p with ⟨z1,d1⟩
+          obtain ⟨c1,hraw1,hrep1,hhead1⟩ :=
+            sim_one_delta z c hrep z1 d1 hstep
+          have htail : runWithDelta n z1 = none := by
+            cases htail : runWithDelta n z1 with
+            | none => rfl
+            | some q => simp [runWithDelta,hstep,htail] at hz
+          have hrawtail := ih z1 c1 hrep1 htail
+          simp [BB6Coverage.run,hraw1,hrawtail]
+
+#print axioms source_runWithDelta_none_rep
+
 #print axioms sim_one_delta
 #print axioms source_runWithDelta_rep
 #print axioms physical_sourceScanE_e1_revisit
