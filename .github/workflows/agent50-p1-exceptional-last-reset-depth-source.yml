@@ -63,7 +63,7 @@ jobs:
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
           lean "$AG43/CountedWall148Source.lean"
-          if lean "$AG50SUB/ExceptionalLastResetDepthSource.lean" > /tmp/agent50-exceptional-depth-axioms.txt; then
+          if lean -o "$AG50SUB/ExceptionalLastResetDepthSource.olean" "$AG50SUB/ExceptionalLastResetDepthSource.lean" > /tmp/agent50-exceptional-depth-axioms.txt; then
             cat /tmp/agent50-exceptional-depth-axioms.txt
           else
             status=$?
@@ -76,5 +76,17 @@ jobs:
           grep -q "source_right_five_last_positive_reset_no_tail" /tmp/agent50-exceptional-depth-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-exceptional-depth-axioms.txt; then
             echo "The exact last-reset theorem depends on sorryAx" >&2
+            exit 1
+          fi
+          if lean "$AG50SUB/RightFiveResetFloor.lean" > /tmp/agent50-right-five-floor-axioms.txt; then
+            cat /tmp/agent50-right-five-floor-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-floor-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_right_five_needs_two_resets" /tmp/agent50-right-five-floor-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-floor-axioms.txt; then
+            echo "Right-five two-reset theorem depends on sorryAx" >&2
             exit 1
           fi
