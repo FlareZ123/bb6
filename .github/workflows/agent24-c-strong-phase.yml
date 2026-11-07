@@ -405,6 +405,7 @@ jobs:
             full-forced-param-scan.txt
             m0-mod8-three.txt
             m1-full-forced.txt
+            m2-full-forced.txt
             c-residual-probe.txt
           if-no-files-found: ignore
 
