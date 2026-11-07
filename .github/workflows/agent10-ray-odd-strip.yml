@@ -118,4 +118,7 @@ jobs:
           lean -o "$b/RayTThreePacket.olean" "$b/RayTThreePacket.lean"
           lean -o "$b/RayTThreeHighGeometry.olean" "$b/RayTThreeHighGeometry.lean"
           lean -o "$b/RayTThreeHighRoot.olean" "$b/RayTThreeHighRoot.lean"
-          echo "Agent 10 source-verified exact source t1,t2,t3 rooted classification; Agent 7 all-index two-tier root gap."
+          lean -o "$b/ParentsFast.olean" "$b/ParentsFast.lean"
+          lean -o "$b/ClosedCertFast.olean" "$b/ClosedCertFast.lean"
+          lean -o "$b/TThreeHighGateCertificates.olean" "$b/TThreeHighGateCertificates.lean"
+          echo "Agent 10 source-verified exact t1,t2,t3 selector chain and seven kernel-checked high-q closed-cone exclusions."
