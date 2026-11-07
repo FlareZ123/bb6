@@ -9,7 +9,7 @@ namespace BB6.Agent5CParameterSearch
     The box bounds are experimental only; no claim is made outside them. -/
 def scanRow (jMax m : Nat) : List Nat :=
   (List.range (jMax + 1)).filter
-    (fun j => BB6.Agent27Phase.fastHighAllowedFullBool j m)
+    (fun j => BB6.Agent27FastBool.fastHighAllowedFullBool j m)
 
 /-- Pairs are ordered by increasing m, then increasing j. -/
 def scanPairs (jMax mMax : Nat) : List (Nat × Nat) :=

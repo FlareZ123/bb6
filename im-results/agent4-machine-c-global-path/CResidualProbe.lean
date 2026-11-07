@@ -58,6 +58,13 @@ theorem blank_halts_iff_final_booleans :
 #print axioms highAllowedC23WithEvenRightBool_iff
 #print axioms blank_halts_iff_final_booleans
 
+theorem normalizedRootDecision_eq (x y : Nat) :
+    BB6.Agent11Fast.backwardFastFuel
+      (((BB6.Agent3ValSix.valSixMixedNormalize x y).1 +
+        2*(BB6.Agent3ValSix.valSixMixedNormalize x y).2)/2)
+      (BB6.Agent3ValSix.valSixMixedNormalize x y) =
+    BB6.Agent3ValSix.valSixMixedRootDecision x y := rfl
+
 structure ProbeResult where
   family : String
   j : Nat
@@ -66,21 +73,41 @@ structure ProbeResult where
   y : Nat
   normalizedX : Nat
   normalizedY : Nat
-  mass : Nat
+  rawMass : Nat
+  normalizedMass : Nat
+  fuel : Nat
+  status : String
   root : Option Bool
   deriving Repr
 
-def rootMassLimit : Nat := 20000
+/-- These caps bound the experiment. A skipped row is not a negative
+    reachability result. The raw-mass cap bounds normalization work using
+    its proven strict mass decrease; the fuel cap bounds the backward search. -/
+def rawMassLimit : Nat := 2000
+def rootFuelLimit : Nat := 256
 
 def evaluateTarget (family : String) (j m x y : Nat) : ProbeResult :=
-  let p := BB6.Agent3ValSix.valSixMixedNormalize x y
-  let mass := p.1 + 2*p.2
-  let root :=
-    if mass ≤ rootMassLimit then
-      some (BB6.Agent3ValSix.valSixMixedRootDecision x y)
-    else none
-  { family := family, j := j, m := m, x := x, y := y,
-    normalizedX := p.1, normalizedY := p.2, mass := mass, root := root }
+  let rawMass := x + 2*y
+  if rawMass ≤ rawMassLimit then
+    let p := BB6.Agent3ValSix.valSixMixedNormalize x y
+    let mass := p.1 + 2*p.2
+    let fuel := mass/2
+    if fuel ≤ rootFuelLimit then
+      let root := BB6.Agent11Fast.backwardFastFuel fuel p
+      { family := family, j := j, m := m, x := x, y := y,
+        normalizedX := p.1, normalizedY := p.2, rawMass := rawMass,
+        normalizedMass := mass, fuel := fuel, status := "evaluated",
+        root := some root }
+    else
+      { family := family, j := j, m := m, x := x, y := y,
+        normalizedX := p.1, normalizedY := p.2, rawMass := rawMass,
+        normalizedMass := mass, fuel := fuel, status := "root-fuel-cap",
+        root := none }
+  else
+    { family := family, j := j, m := m, x := x, y := y,
+      normalizedX := x, normalizedY := y, rawMass := rawMass,
+      normalizedMass := rawMass, fuel := rawMass/2,
+      status := "raw-mass-cap", root := none }
 
 def lowProbe (m : Nat) : ProbeResult :=
   evaluateTarget "low" 0 m 1 (2^(2*m+3)-(3*m+4))
@@ -105,7 +132,7 @@ def renderCounts (counts : List (Nat × Nat)) : String :=
   String.intercalate "\n" (counts.map fun (m,n) => s!"m={m}: {n}")
 
 def renderResult (r : ProbeResult) : String :=
-  s!"{r.family} j={r.j} m={r.m} target=({r.x},{r.y}) normalized=({r.normalizedX},{r.normalizedY}) mass={r.mass} root={r.root}"
+  s!"{r.family} j={r.j} m={r.m} target=({r.x},{r.y}) normalized=({r.normalizedX},{r.normalizedY}) rawMass={r.rawMass} normalizedMass={r.normalizedMass} fuel={r.fuel} status={r.status} root={r.root}"
 
 def main : IO Unit := do
   let lowMax := 20
@@ -125,7 +152,7 @@ def main : IO Unit := do
   IO.println s!"High filter domain: j=0..{highJMax}, m=0..{highMMax}"
   IO.println s!"High allowed counts by m:\n{renderCounts counts}"
   IO.println s!"High exact-root samples: first {perRow} allowed j values per m; total={pairs.length}"
-  IO.println s!"Root mass limit={rootMassLimit}; tested={tested.length}; skipped={results.length-tested.length}; hits={hits.length}"
+  IO.println s!"Raw-mass limit={rawMassLimit}; root-fuel limit={rootFuelLimit}; tested={tested.length}; skipped={results.length-tested.length}; hits={hits.length}"
   IO.println "Probe records:"
   for r in results do
     IO.println (renderResult r)
@@ -135,3 +162,5 @@ def main : IO Unit := do
       IO.println (renderResult r)
 
 end BB6.Agent4CResidualProbe
+
+def main : IO Unit := BB6.Agent4CResidualProbe.main
