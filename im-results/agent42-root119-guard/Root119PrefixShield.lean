@@ -388,6 +388,7 @@ def oddEvenShieldCounterexampleSummary (c : Conf) :
 theorem oddEvenShieldCounterexample_NoLeft4 :
     NoLeft4 true true false oddEvenShieldCounterexample := by
   intro x hx hw
+  change x+3 < 0 at hx
   have hfirst : x = -6 ∨ x = -5 ∨ x = -3 ∨ x = -1 := by
     simpa [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] using hw.1
   rcases hfirst with h | h | h | h
@@ -425,7 +426,7 @@ theorem oddEvenShieldCounterexample_run_creates_1100 :
           congrArg Prod.snd hrest2
       have h2 : c.tape (-4) = false := congrArg Prod.fst hrest3
       have h3 : c.tape (-3) = false := congrArg Prod.snd hrest3
-      exact ⟨c,hrun,hh,h0,h1,h2,h3⟩
+      exact ⟨c,rfl,hh,h0,h1,h2,h3⟩
 
 theorem oddEvenShieldCounterexample_run_not_NoLeft4 :
     ∀ c, run 23 oddEvenShieldCounterexample = some c →
@@ -433,7 +434,8 @@ theorem oddEvenShieldCounterexample_run_not_NoLeft4 :
   intro c hrun hshield
   obtain ⟨c',hrun',hh,h0,h1,h2,h3⟩ :=
     oddEvenShieldCounterexample_run_creates_1100
-  have heq : c = c' := Option.some.inj (hrun.symm.trans hrun')
+  have hsome : some c = some c' := hrun.symm.trans hrun'
+  have heq : c = c' := Option.some.inj hsome
   have hbound : (-6:Int)+3 < c.h := by rw [heq]; omega
   have hword : c.tape (-6) = true ∧ c.tape (-5) = true ∧
       c.tape (-4) = false ∧ c.tape (-3) = false := by
