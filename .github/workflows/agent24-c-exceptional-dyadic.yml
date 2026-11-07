@@ -26,7 +26,7 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a24-exceptional/
           cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/a24-exceptional/
           cp im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean /tmp/a24-exceptional/
-          cp im-results/agent24-c-exceptional-dyadic/{TerminalCone,TerminalBroad,AlternateDyadic,ExpandedDyadic,HighAllDepth,HighExplicitFamily}.lean /tmp/a24-exceptional/
+          cp im-results/agent24-c-exceptional-dyadic/{TerminalCone,TerminalBroad,AlternateDyadic,ExpandedDyadic,HighAllDepth,HighOtherBranch,HighExplicitFamily}.lean /tmp/a24-exceptional/
           cd /tmp/a24-exceptional
           export LEAN_PATH="."
           lean --version
@@ -38,4 +38,5 @@ jobs:
           lean -o AlternateDyadic.olean AlternateDyadic.lean
           lean -o ExpandedDyadic.olean ExpandedDyadic.lean
           lean -o HighAllDepth.olean HighAllDepth.lean
+          lean -o HighOtherBranch.olean HighOtherBranch.lean
           lean -o HighExplicitFamily.olean HighExplicitFamily.lean
