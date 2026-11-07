@@ -54,8 +54,9 @@ theorem scan_from_B_exact (b : Conf) (hb : Reach b) (hB : BZero b)
         intro i hi
         by_cases hlt : i < r
         · have hne : b.h-1-(i:Int) ≠ c.h := by rw [hpos]; omega
+          have hne' : b.h-(1+(i:Int)) ≠ c.h := by omega
           change setBit c.tape c.h false (b.h-1-(i:Int)) = false
-          simp [setBit,hne,hzeros i hlt]
+          simp [setBit,hne,hne',hzeros i hlt]
         · have heq : i = r := by omega
           subst i
           have hidx : b.h-1-(r:Int) = c.h := by omega
