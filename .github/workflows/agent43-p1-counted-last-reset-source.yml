@@ -55,7 +55,7 @@ jobs:
           lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
           lean -o "$AG43/CountedWallStrongGateSource.olean" "$AG43/CountedWallStrongGateSource.lean"
           lean -o "$AG43/CountedEnergySource.olean" "$AG43/CountedEnergySource.lean"
-          lean "$AG43/CountedEnergyCostSource.lean"
+          lean -o "$AG43/CountedEnergyCostSource.olean" "$AG43/CountedEnergyCostSource.lean"
           for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound; do
             lean -o "$AG50/$m.olean" "$AG50/$m.lean"
           done
