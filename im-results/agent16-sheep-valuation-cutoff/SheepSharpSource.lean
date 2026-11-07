@@ -22,7 +22,8 @@ theorem original_power_generic_cutoffs {x j : Nat}
     have heq' : 3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
         =2^(j+h+1)+3*3^h := by simpa using heq
     have hthree : h < 15 ∨ a < cutoff h := by
-      by_contra hh
+      by_cases hh : h < 15 ∨ a < cutoff h
+      · exact hh
       have hh15 : 15 ≤ h := by omega
       have hcut : cutoff h ≤ a := by omega
       have a3 : 3 ≤ a := by
@@ -31,7 +32,8 @@ theorem original_power_generic_cutoffs {x j : Nat}
       have eq := generic_source_diophantine a h v j a3 heq'
       exact (no_power_generic_three j h a v hh15 hcut) eq
     have hfive : h < 100 ∨ a < cutoffFive h := by
-      by_contra hh
+      by_cases hh : h < 100 ∨ a < cutoffFive h
+      · exact hh
       have hh100 : 100 ≤ h := by omega
       have hcut : cutoffFive h ≤ a := by omega
       have a3 : 3 ≤ a := by
