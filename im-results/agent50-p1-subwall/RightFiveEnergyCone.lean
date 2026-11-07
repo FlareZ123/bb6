@@ -50,7 +50,7 @@ theorem source_energy_budget_gap
             omega
           exact Or.inr (by simpa only [hcm] using hnow)
       · have ht3 : 3≤t := by omega
-        have hhigh := deep_high_step_above n b d m t k c hn
+        have hhigh := deep_high_step_above n b d m t k c (by omega)
           hmass hb4 hInv.1 hinvMass ht3 hk
         exact Or.inl hhigh
 
