@@ -366,8 +366,9 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
         rw [hh]
         have hhead : b1Tape H = true := by
           simpa [b1Tape] using oddWaveTape_head n t1 H
-        have hne : H ≠ H-1 := by omega
-        simp [tD2,f2Tape,setBit,hne,hhead]
+        have hne1 : H ≠ H-1 := by omega
+        have hne2 : H ≠ H-2 := by omega
+        simp [tD2,f2Tape,setBit,hne1,hne2,hhead]
       · have hjpos : 2 ≤ j := by omega
         have hidx : H-1+(j:Int) = H+1+((j-2:Nat):Int) := by omega
         rw [hidx]
