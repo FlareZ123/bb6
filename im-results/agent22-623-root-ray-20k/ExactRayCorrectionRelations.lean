@@ -40,6 +40,7 @@ theorem left_even_correction (k d B E : Nat)
 
 /-- Right-odd canonical base: delta + 2 beta = 2r + 8. -/
 theorem right_odd_correction (k a B E : Nat)
+    (ha : 1 ≤ a)
     (hbudget : a - 1 ≤ ternaryOnes (2*k + 5))
     (hbase : drainB (2*k + 5) (a - 1) 3 = some (.D B E)) :
     ∃ r : Nat, delta E a + 2 * beta B 1 (2*k) = (2*r + 8 : Int) := by
