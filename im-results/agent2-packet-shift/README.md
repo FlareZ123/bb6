@@ -55,7 +55,7 @@ Formal theorems: `e_two_reset`, `b_zero_any`, and `e_two_k0_regular`. The source
 
 ## Exact residual and relevance to the true blank root
 
-- For `p≡2 (mod3)`, rank normalization still terminates. It may exit through A, B with `q=0`, or E with `p=2`. The latter is now source-normalized to a changed marker `01010111`, and its k≡0 subcase is source-proved to reenter regular L. **The k≡1,2 changed-tail dynamics remain the explicit escaping branch to understand.**
+- For `p≡2 (mod3)`, rank normalization still terminates. It may exit through A, B with `q=0`, or E with `p=2`. The latter is source-normalized to a changed marker `01010111`. The fixed-tail E,p=2 reset family is now source-composed to regular L for all q in `k≡0 (mod3)`, `k≡2 (mod3)`, and `k≡1 (mod9)`, covering seven of nine k residue classes modulo nine. The remaining `k≡4,7 (mod9)` changed-tail dynamics and the authentic blank-root connection remain open.
 - Authentic blank-root Machine D exceptional returns are not yet covered by a global source-connected invariant. The current original-source twentieth return candidate is [`BlankTwentiethRejoin.lean`](../agent37-d-timing-cocycle/BlankTwentiethRejoin.lean). It uses one guarded E edge from `M(3k20+4,4,4;0 1^6)` to `L(8k20+9,8,5)`, with `k20=512*((u20-1)/3)+255`; `u20=3*((u20-1)/3)+1` by `t20%27=4`. This is **pending complete parent source CI**: an initial run [42329147551](https://github.com/FlareZ123/bb6/actions/runs/42329147551) suffered GitHub runner shutdown during the fifteenth earlier module, and retry [42331004226](https://github.com/FlareZ123/bb6/actions/runs/42331004226) was still underway at this writing. Do **not** label twentieth true-blank reentry proved until full source chain succeeds without `sorryAx`.
 - Independent exact DRegular arithmetic predicts twenty-first and twenty-second exception inputs after the twentieth candidate. A twenty-second off-L endpoint is `M(512u+434,1,13;0 1^6)`, with `p=13≡1 (mod3)`, now covered by the **unconditional synthetic source** theorem. Connecting these later endpoints to the authentic blank trajectory requires the original-source root-chain proof, and further future exceptions may still enter p=2 cases.
 - **Next discriminating test:** prove either a source-backed finite-tail invariant routing every *authentic* p=2 reset back to a safe packet or L, or exhibit a literal original-machine fatal event from that reachable family. A bounded search or an arithmetic DRegular lookahead alone is not enough to decide Cryptid D.
@@ -63,3 +63,16 @@ Formal theorems: `e_two_reset`, `b_zero_any`, and `e_two_k0_regular`. The source
 ## Reproduction
 
 Manual, source-pinned workflow `.github/workflows/agent2-a-one-packet-boundary.yml` reconstructs original source files with `im-results/agent31-cryptid-boundary/unpack.py` and `im-results/agent25-cryptid-doublezero/unpack.py`, compiles the exact upstream `Boundary`, `TokenCode`, `ABridgeCode`, `CryptidPairs`, `CryptidTriplePairs`, `PacketSource`, `PacketRank`, and `PacketPaths` modules, and then checks the four new Agent2 proof files with Lean 4.36.0-rc2. The workflow fails on `sorryAx` or native-decide dependence in the concluding axiom output and has no per-commit trigger. Preserve source hashes and the exact full CI run ID for any public assertion. 
+
+
+## Source-composed seven-of-nine exceptional E,p=2 coverage (7 November 2026)
+
+Agent31's previously stub-checked compositions are now verified against the unchanged original D source in [manual CI 42359163994](https://github.com/FlareZ123/bb6/actions/runs/42359163994), commit `aeec0ba7cb2b254495feed1cbf72a1cc3da718f5`, Lean 4.36.0-rc2. The workflow extends the existing manual source audit and compiles both `P2K2Source.lean` and `P2K1Mod9Source.lean` after the exact source dependencies. Their six quantified endpoint theorems each print only `[propext, Quot.sound]`; the workflow rejects `sorryAx` and `_native.native_decide`.
+
+Combined with `e_two_k0_regular` in this directory:
+
+- `k≡0 (mod 3)`: all q reenter regular L after the E,p=2 reset and a B,q=0 return.
+- `k≡2 (mod 3)`: all q reenter regular L after the E,p=2 reset and an A-code return, with three q-mod-3 endpoint forms.
+- `k≡1 (mod 9)`: all q reenter regular L after the E,p=2 reset, a second E return, and an A-code return, with three q-mod-3 endpoint forms.
+
+These disjoint families cover seven of nine k residue classes modulo nine. The remaining classes are `k≡4,7 (mod 9)`. The source theorems prove designated exact `run` endpoints for all natural parameters; they do not assert that those endpoints are the first physical F/0 visits. The independent Python regressions establish first-return behavior only on their finite test ranges. None of these synthetic F/0 packet results establishes reachability from the authentic blank tape or decides BB(6).
