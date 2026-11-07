@@ -36,7 +36,7 @@ The gate is a compact all-depth condition. It includes the explicit seed progres
 - This excludes only parameters satisfying the displayed gate. It does not eliminate the entire low branch.
 - For example, (m=112) is not covered by this gate and remains a difficult low-root decision instance.
 - Smoke checks include (m=11,75,219,539) (excluded) and (m=112) (not excluded).
-- The module is kept under `im-results/` because it is an executable interface to an existing exclusion theorem, not a new standalone mathematical result.
+- The module compiled successfully under Lean 4.36.0-rc2 in CI run `42353576142`; the temporary push trigger used for this check has been removed. It is kept under `im-results/` because it is an executable interface to an existing exclusion theorem, not a new standalone mathematical result.
 
 ## Bounded low-root search experiment
 
