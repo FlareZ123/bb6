@@ -136,3 +136,12 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 - The sole unsafe state has left-six 110101, rightWindow 1111111111, and rightTail 010101 starting at h+m with m=401. Thus h+401=0, h+402=1, h+403=0; the required odd-even terminal-zero corridor fails at h+402. The unique unsafe reachable B0 is therefore a long unmatched run, not an odd-even macro input.
 - This makes the remaining conjecture sharper: Reach plus the full odd-even corridor conditions may force the boundary guard, while the only observed reachable guard violation is paired with an alternating right tail that violates those corridor conditions. This remains finite evidence, not a proof.
 - Updated PREFIX_SHIELD_TRANSPORT.md, EVEN_WAVE_PREFIX_FAMILIES.md, and the directory README with this clue.
+
+
+### Exact odd-even guard sharpness (21:35 UTC)
+
+- Added to Root119PrefixShield.lean the tape-level lemma that the odd-even return output agrees with the input tape at every x≤h-4 and has output bit 0 at h-3.
+- New theorem b0_odd_even_chain_to_b0_exact_bad_boundary proves that, under the exact odd-even return hypotheses, if the three-cell boundary is 110 then the exact return output necessarily contains a left-of-head 1100 and fails NoLeft4. This proof does not need the input shield.
+- Combined with b0_odd_even_chain_to_b0_preserves_NoLeft4, the boundary guard is exactly necessary and sufficient for shield preservation under the odd-even family hypotheses plus the input shield. The remaining open question is whether Reach and the full odd-even corridor force the guard.
+- CI run 42416523909 succeeded, source commit c29f03b6dff62891aba6183f4a0bcaeafbe5f407. Axiom report for the sharpness theorem: [propext, Classical.choice, Quot.sound]; no sorryAx. The same run completed the 10M census with the same left-six and right-tail data.
+- Updated PREFIX_SHIELD_TRANSPORT.md, EVEN_WAVE_PREFIX_FAMILIES.md, and the directory README. Keep this conditional sharp result in im-results/.
