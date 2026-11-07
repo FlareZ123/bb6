@@ -64,7 +64,7 @@ theorem evenFarLeftGap (x y a d n c : Nat)
 
 /-- Odd near-left branch: the right-ray gap tracks 7*x-4*y. -/
 theorem oddNearRightGap (x y a d n c : Nat)
-    (hpos : 0 < x)
+    (_hpos : 0 < x)
     (hxy : x ≤ y + 4)
     (hc : c = 1 ∨ c = 2)
     (hfirstLower : y + 4 - x ≤ a + n + 1)
@@ -80,7 +80,7 @@ theorem oddNearRightGap (x y a d n c : Nat)
 
 /-- Odd near-left branch: the left-ray gap tracks y-13*x. -/
 theorem oddNearLeftGap (x y a d n c : Nat)
-    (hpos : 0 < x)
+    (_hpos : 0 < x)
     (hxy : x ≤ y + 4)
     (hc : c = 5 ∨ c = 9)
     (hfirstLower : y + 4 - x ≤ a + n + 1)
@@ -96,7 +96,7 @@ theorem oddNearLeftGap (x y a d n c : Nat)
 
 /-- Even near-left branch: the right-ray gap tracks 7*x-4*y. -/
 theorem evenNearRightGap (x y p q r a d n c : Nat)
-    (hpos : 0 < x)
+    (_hpos : 0 < x)
     (hxy : x ≤ y)
     (hc : c = 1 ∨ c = 2)
     (hevalFirstLower : y + 1 - x ≤ p + n + 1)
@@ -116,7 +116,7 @@ theorem evenNearRightGap (x y p q r a d n c : Nat)
 
 /-- Even near-left branch: the left-ray gap tracks y-13*x. -/
 theorem evenNearLeftGap (x y p q r a d n c : Nat)
-    (hpos : 0 < x)
+    (_hpos : 0 < x)
     (hxy : x ≤ y)
     (hc : c = 5 ∨ c = 9)
     (hevalFirstLower : y + 1 - x ≤ p + n + 1)
