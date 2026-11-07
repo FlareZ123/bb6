@@ -655,52 +655,69 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
     funext x
     by_cases hx0 : x < -2*(u:Int)-9
     · have hc := cCfg_tape_left_blank u w x hx0
-      have hleft : x<cC.head := by simp [cC,hC]; omega
-      simp [firstBranchTape,cbPaint_left cC.tape cC.head (k+1) x hleft,
-        cC,hC,hx0,hc]
+      have hleft : x<cC.head := by
+        dsimp [cC,hC]
+        omega
+      calc
+        cbPaint cC.tape cC.head (k+1) x = cC.tape x :=
+          cbPaint_left cC.tape cC.head (k+1) x hleft
+        _ = false := by
+          change setupTape (f0Tape u w) (-2*(u:Int)-7) x=false
+          exact hc
+        _ = firstBranchTape u w x := by simp [firstBranchTape,hx0]
     · by_cases hx1 : x < -2*(u:Int)-3
       · have hc := cCfg_tape_left_ones u w x (by omega) hx1
-        have hleft : x<cC.head := by simp [cC,hC]; omega
-        simp [firstBranchTape,cbPaint_left cC.tape cC.head (k+1) x hleft,
-          cC,hC,hx0,hx1,hc]
+        have hleft : x<cC.head := by
+          dsimp [cC,hC]
+          exact hx1
+        calc
+          cbPaint cC.tape cC.head (k+1) x = cC.tape x :=
+            cbPaint_left cC.tape cC.head (k+1) x hleft
+          _ = true := by
+            change setupTape (f0Tape u w) (-2*(u:Int)-7) x=true
+            exact hc
+          _ = firstBranchTape u w x := by simp [firstBranchTape,hx0,hx1]
       · by_cases hx2 : x < 2*(u:Int)+3
         · by_cases heven : x%2=0
           · have hoff : (x-cC.head)%2=1 := by
-              simp [cC,hC]
+              dsimp [cC,hC]
               omega
             have hpaint : cbPaint cC.tape cC.head (k+1) x=true := by
               apply cbPaint_odd cC.tape cC.head (k+1) x
-              · simp [cC,hC]
+              · dsimp [cC,hC]
                 omega
-              · simp [cC,hC,k]
+              · dsimp [cC,hC,k]
                 omega
               · exact hoff
             simp [firstBranchTape,cC,hC,k,hx0,hx1,hx2,heven,hpaint]
           · have hoff : (x-cC.head)%2=0 := by
-              simp [cC,hC]
+              dsimp [cC,hC]
               omega
             have hpaint : cbPaint cC.tape cC.head (k+1) x=false := by
               apply cbPaint_even cC.tape cC.head (k+1) x
-              · simp [cC,hC]
+              · dsimp [cC,hC]
                 omega
-              · simp [cC,hC,k]
+              · dsimp [cC,hC,k]
                 omega
               · exact hoff
             simp [firstBranchTape,cC,hC,k,hx0,hx1,hx2,heven,hpaint]
         · have hright : cC.head+2*((k+1):Int) ≤ x := by
-            simp [cC,hC,k]
+            dsimp [cC,hC,k]
             omega
-          have hc := cCfg_tape_right u w x (by simp [cC,hC]; omega)
-          have hb := baseTape_right u w x (by omega)
-          simp [firstBranchTape,cbPaint_right cC.tape cC.head (k+1) x hright,
-            cC,hC,hx0,hx1,hx2,hc,hb]
+          calc
+            cbPaint cC.tape cC.head (k+1) x = cC.tape x :=
+              cbPaint_right cC.tape cC.head (k+1) x hright
+            _ = baseTape u w x := by
+              change setupTape (f0Tape u w) (-2*(u:Int)-7) x=baseTape u w x
+              exact cCfg_tape_right u w x (by omega)
+            _ = jTape u w x := baseTape_right u w x (by omega)
+            _ = firstBranchTape u w x := by
+              simp [firstBranchTape,hx0,hx1,hx2]
   have hfinal : cFinal =
       {state:=A,head:=2*(u:Int)+3,
         tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
-    apply Config.ext
-    · exact hsFinal
-    · exact hheadFinal
-    · exact hprofile.trans (firstBranchTape_eq_jTapeAt u w hw)
+    rw [Config.mk.injEq]
+    exact ⟨hsFinal,hheadFinal,hprofile.trans (firstBranchTape_eq_jTapeAt u w hw)⟩
   simpa [hfinal] using (show run target429 (4*u*u+10*u+27)
       {state:=A,head:=0,tape:=jTape u w}=some cFinal from by
         rw [htime,run_add',hF0]
