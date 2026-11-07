@@ -155,6 +155,7 @@ jobs:
           done
           lean -o im-results/agent9-p1-periodic/PeriodSecondary.olean im-results/agent9-p1-periodic/PeriodSecondary.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean -o im-results/agent9-p1-periodic/PeriodFactorization.olean im-results/agent9-p1-periodic/PeriodFactorization.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean -o im-results/agent9-p1-periodic/PeriodAllPeriods.olean im-results/agent9-p1-periodic/PeriodAllPeriods.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean im-results/agent9-p1-periodic/SourcePeriodWord.lean | tee -a /tmp/agent9-periodic-source-audit.log
           grep -F 'primitive_no_integral_slope' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_infinite_primitive_ray' /tmp/agent9-periodic-source-audit.log
@@ -162,4 +163,5 @@ jobs:
           grep -F 'run_source_transport' /tmp/agent9-periodic-source-audit.log
           grep -F 'secondary_obstruction' /tmp/agent9-periodic-source-audit.log
           grep -F 'factor_word_of_rotation_period' /tmp/agent9-periodic-source-audit.log
+          grep -F 'no_infinite_positive_depth_periodic_ray' /tmp/agent9-periodic-source-audit.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-periodic-source-audit.log; then exit 1; fi
