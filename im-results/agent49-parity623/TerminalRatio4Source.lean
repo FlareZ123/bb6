@@ -16,13 +16,13 @@ open BB6.Agent49JointMassSource
 open BB6.Agent49TerminalRatio4Arithmetic
 
 /-- An evalA result followed by a complete B-drain has total output mass at
-most y+5+3*n when the evaluator's initial counter x is below 3^n. -/
+most y+2*x+5+3*n when the evaluator's initial counter x is below 3^n. -/
 theorem evalA_drain_joint_mass (n x y p q r aa dd : Nat)
     (hpos : 0<x)
     (hx : x<3^n)
     (hEval : evalA (y+1-x) x (2*x+5) = some (p,q,r))
     (hDrain : drainB p q r = some (.D aa dd)) :
-    aa+dd ≤ y+5+3*n := by
+    aa+dd ≤ y+2*x+5+3*n := by
   by_cases hq : q=0
   · have hEval0 : evalA (y+1-x) x (2*x+5) = some (p,0,r) := by
       simpa [hq] using hEval
@@ -32,27 +32,30 @@ theorem evalA_drain_joint_mass (n x y p q r aa dd : Nat)
       have hn0 : n=0 := by omega
       subst n
       simp at hx
-    have hrec : some (.D p r) = some (.D aa dd) := by
+      omega
+    have hrec : some (HighLevelState.D p r) = some (HighLevelState.D aa dd) := by
       simpa [drainB, hq] using hDrain
+    have hstate : HighLevelState.D p r = HighLevelState.D aa dd := Option.some.inj hrec
     have hMass : aa+dd=p+r := by
-      have hstate := Option.some.inj hrec
-      cases hstate
+      injection hstate with hp hd
+      subst p
+      subst r
       rfl
-    have hzero' : aa+dd≤y+n+7 := by
+    have hzero' : aa+dd≤y+2*x+n+7 := by
       rw [hMass]
       omega
     omega
   · have hqpos : 0<q := by omega
     obtain ⟨r0,s,hrs,hrpos,hqsmall,hpot⟩ :=
       evalA_joint_positive n (y+1-x) x (2*x+5) p q r hx hEval hqpos
-    have hpot' : p+r+3*q≤y+6+r0 := by
+    have hpot' : p+r+3*q≤y+6+2*x+r0 := by
       have := hpot
       omega
     have hrecMass := drainB_joint_mass s p q r aa dd hqsmall hDrain
     calc
       aa+dd ≤ p+r+3*q+3*s+1 := hrecMass
-      _ ≤ y+7+r0+3*s := by omega
-      _ ≤ y+5+3*n := by omega
+      _ ≤ y+7+2*x+r0+3*s := by omega
+      _ ≤ y+2*x+5+3*n := by omega
 
 /-- Odd far-left predecessor: the terminal ratio-four window is source-certified. -/
 theorem oddFar_terminal_ratio4_source
@@ -66,8 +69,9 @@ theorem oddFar_terminal_ratio4_source
     (hhalt : highLevelNext (.D aa dd)=none)
     (hK : 2*(x+2*y+10+3*n)+5<3^K) :
     4*y≤x+K+5*n+29 ∧ x≤4*y+K+5*n+29 := by
+  have hK' : 2*((x-y-5)+5+3*(y+3)+3*n+1)+5<3^K := by omega
   have hbal := terminal_output_balance_joint (x-y-5) (y+3) 5 n K aa dd
-    hDrain hb he hhalt hK
+    hDrain hb he hhalt hK'
   obtain ⟨hBridgeR,hBridgeL⟩ := oddFarGap x y aa dd n cR cL hxy hcR hcL hDrain hb
   obtain ⟨hRlo,hRhi⟩ := hBridgeR
   obtain ⟨hLlo,hLhi⟩ := hBridgeL
@@ -91,8 +95,9 @@ theorem evenFar_terminal_ratio4_source
     (hhalt : highLevelNext (.D aa dd)=none)
     (hK : 2*(x+2*y+7+3*n)+5<3^K) :
     4*y≤x+K+5*n+20 ∧ x≤4*y+K+5*n+20 := by
+  have hK' : 2*((x-y-2)+2+3*(y+2)+3*n+1)+5<3^K := by omega
   have hbal := terminal_output_balance_joint (x-y-2) (y+2) 2 n K aa dd
-    hDrain hb he hhalt hK
+    hDrain hb he hhalt hK'
   obtain ⟨hBridgeR,hBridgeL⟩ := evenFarGap x y aa dd n cR cL hxy hcR hcL hDrain hb
   obtain ⟨hRlo,hRhi⟩ := hBridgeR
   obtain ⟨hLlo,hLhi⟩ := hBridgeL
@@ -117,8 +122,9 @@ theorem oddNear_terminal_ratio4_source
     (hhalt : highLevelNext (.D aa dd)=none)
     (hK : 2*(y+2*x+5+3*n)+5<3^K) :
     4*x≤y+K+5*n+12 ∧ y≤4*x+K+5*n+12 := by
+  have hK' : 2*((y+4-x)+3+3*(x-1)+3*n+1)+5<3^K := by omega
   have hbal := terminal_output_balance_joint (y+4-x) (x-1) 3 n K aa dd
-    hDrain hb he hhalt hK
+    hDrain hb he hhalt hK'
   obtain ⟨hBridgeR,hBridgeL⟩ := oddNearGap x y aa dd n cR cL hpos hxy hcR hcL hDrain hb
   obtain ⟨hRlo,hRhi⟩ := hBridgeR
   obtain ⟨hLlo,hLhi⟩ := hBridgeL
@@ -130,8 +136,8 @@ theorem oddNear_terminal_ratio4_source
     (by simpa [gapL] using hLhi)
   omega
 
-/-- Even near-right predecessor: joint evaluator/drain mass removes the
-previous extra 2*x term from the terminal mass envelope. -/
+/-- Even near-right predecessor: compose the evaluator and drain joint-mass
+bounds before applying the source terminal-output balance. -/
 theorem evenNear_terminal_ratio4_source
     (x y p q r n K aa dd cR cL : Nat)
     (hpos : 0<x)
@@ -146,7 +152,7 @@ theorem evenNear_terminal_ratio4_source
     (hK : 2*(y+5+3*n)+5<3^K) :
     4*x≤y+K+8*n+17 ∧ y≤4*x+K+8*n+17 := by
   have hmass := evalA_drain_joint_mass n x y p q r aa dd hpos hx hEval hDrain
-  have hbal := terminal_output_balance_of_mass aa dd K (y+5+3*n) hmass hK he hhalt
+  have hbal := terminal_output_balance_of_mass aa dd K (y+2*x+5+3*n) hmass hK he hhalt
   obtain ⟨hBridgeR,hBridgeL⟩ := evenNearGap x y p q r aa dd n cR cL
     hpos hxy hx hcR hcL hEval hDrain
   obtain ⟨hRlo,hRhi⟩ := hBridgeR
