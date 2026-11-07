@@ -305,7 +305,7 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
   let tD2 : Int → Bool := setBit f2Tape (H-2) false
   let d2 : Conf := ⟨.D,H-1,tD2⟩
   let bout : Conf :=
-    ⟨.B,H-1+2*(n+2)+1,evenSweepBResultTape (n+1) tD2 (H-1)⟩
+    ⟨.B,H-1+2*((n+1)+1)+1,evenSweepBResultTape (n+1) tD2 (H-1)⟩
   have hprefix : run 9 b = some f1 := by
     simpa [f1,H,t1] using b0_two_wave_prefix b hb0 hleft hzero hone
   have hfhead : t1 H = true := by
@@ -334,7 +334,8 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
     rw [hidx]
     rw [twoWavePrefixTape_right b.tape b.h _ (by omega)]
     exact hterminal1
-  have hWave := odd_f1_to_b n t1 H hfhead hones1 hzero1
+  have hWave : run (4*n+5) f1 = some b1 := by
+    simpa [b1,b1Tape] using odd_f1_to_b n t1 H hfhead hones1 hzero1
   have hb1bit : b1Tape (H-1) = true := by
     rw [oddWaveTape_left n t1 H (H-1) (by omega)]
     have hbit : t1 (H-1) = true := by
@@ -363,7 +364,8 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
       · subst j
         have hh : H-1+((1:Nat):Int) = H := by omega
         rw [hh]
-        have hhead : oddWaveTape n t1 H H = true := oddWaveTape_head n t1 H
+        have hhead : b1Tape H = true := by
+          simpa [b1Tape] using oddWaveTape_head n t1 H
         have hne : H ≠ H-1 := by omega
         simp [tD2,f2Tape,setBit,hne,hhead]
       · have hjpos : 2 ≤ j := by omega
@@ -376,38 +378,45 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
       tD2 (H-1+(2*(n+2):Int)) = false := by
     have hidx : H-1+(2*(n+2):Int) = H+2*(n:Int)+3 := by omega
     rw [hidx]
-    have hout := oddWaveTape_outside_right n t1 H (H+2*(n:Int)+3) (by omega)
-    rw [tD2,f2Tape]
-    simp [setBit,show H+2*(n:Int)+3 ≠ H-1 by omega,
-      show H+2*(n:Int)+3 ≠ H-2 by omega,hout]
     have hidx2 : H+2*(n:Int)+3 = b.h+(2*n+2:Int) := by
       dsimp [H]
       omega
-    rw [hidx2]
-    rw [twoWavePrefixTape_right b.tape b.h _ (by omega)]
-    exact hterminal2
+    calc
+      tD2 (H+2*(n:Int)+3) = b1Tape (H+2*(n:Int)+3) := by
+        simp [tD2,f2Tape,setBit,
+          show H+2*(n:Int)+3 ≠ H-1 by omega,
+          show H+2*(n:Int)+3 ≠ H-2 by omega]
+      _ = t1 (H+2*(n:Int)+3) :=
+        oddWaveTape_outside_right n t1 H (H+2*(n:Int)+3) (by omega)
+      _ = b.tape (H+2*(n:Int)+3) :=
+        twoWavePrefixTape_right b.tape b.h _ (by omega)
+      _ = false := by rw [hidx2]; exact hterminal2
   have hEven := evenSweep_to_B_exact (n+1) tD2 (H-1) honesD2 hzeroD2
   have hfinalTape :
       evenSweepBResultTape (n+1) tD2 (H-1)
         (H-1+2*((n+1)+1)+1) = false := by
-    rw [evenSweepBResultTape_finalCell]
+    have hcell := evenSweepBResultTape_finalCell (n+1) tD2 (H-1)
     have hidx : H-1+2*((n+1)+1)+1 = H+2*(n:Int)+4 := by omega
+    rw [hidx] at hcell
     rw [hidx]
-    have hout := oddWaveTape_outside_right n t1 H (H+2*(n:Int)+4) (by omega)
-    rw [tD2,f2Tape]
-    simp [setBit,show H+2*(n:Int)+4 ≠ H-1 by omega,
-      show H+2*(n:Int)+4 ≠ H-2 by omega,hout]
     have hidx2 : H+2*(n:Int)+4 = b.h+(2*n+3:Int) := by
       dsimp [H]
       omega
-    rw [hidx2]
-    rw [twoWavePrefixTape_right b.tape b.h _ (by omega)]
-    exact hfinal
+    calc
+      evenSweepBResultTape (n+1) tD2 (H-1) (H+2*(n:Int)+4) =
+          tD2 (H+2*(n:Int)+4) := hcell
+      _ = b1Tape (H+2*(n:Int)+4) := by
+        simp [tD2,f2Tape,setBit,
+          show H+2*(n:Int)+4 ≠ H-1 by omega,
+          show H+2*(n:Int)+4 ≠ H-2 by omega]
+      _ = t1 (H+2*(n:Int)+4) :=
+        oddWaveTape_outside_right n t1 H (H+2*(n:Int)+4) (by omega)
+      _ = b.tape (H+2*(n:Int)+4) :=
+        twoWavePrefixTape_right b.tape b.h _ (by omega)
+      _ = false := by rw [hidx2]; exact hfinal
   have hboutZero : BZero bout := by
     refine ⟨rfl,?_⟩
-    have hhead : bout.h = H-1+2*((n+1)+1)+1 := by rfl
-    rw [hhead]
-    simpa [bout] using hfinalTape
+      simpa [bout] using hfinalTape
   have hrunD2 : run (2*((n+1)+1)+3) d2 = some bout := by
     simpa [d2,bout,tD2] using hEven
   have htime : 6*n+23 =
@@ -421,8 +430,7 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
       _ = run ((4*n+5)+(1+(1+(2*((n+1)+1)+3)))) f1 := by simp [hprefix]
       _ = (run (4*n+5) f1).bind
             (run (1+(1+(2*((n+1)+1)+3)))) := by rw [run_add]
-      _ = run (1+(1+(2*((n+1)+1)+3))) b1 := by
-            simpa [b1,b1Tape] using congrArg (fun o => o.bind (run (1+(1+(2*((n+1)+1)+3)))) ) hWave
+      _ = run (1+(1+(2*((n+1)+1)+3))) b1 := by simp [hWave]
       _ = (run 1 b1).bind (run (1+(2*((n+1)+1)+3))) := by rw [run_add]
       _ = run (1+(2*((n+1)+1)+3)) f2 := by simp [hBstep]
       _ = (run 1 f2).bind (run (2*((n+1)+1)+3)) := by rw [run_add]
@@ -431,6 +439,11 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
   exact ⟨bout,hrun,reachable_of_run (6*n+23) b bout hb hrun,hboutZero⟩
 
 #print axioms BB6Root119.evenSweep_to_B_exact
+#print axioms BB6Root119.twoWavePrefixTape
+#print axioms BB6Root119.b0_two_wave_prefix
+#print axioms BB6Root119.reachable_of_run
+#print axioms BB6Root119.run_add
+#print axioms BB6Root119.odd_f1_to_b
 #print axioms BB6Root119.b0_even_prefix_to_b0
 #print axioms BB6Root119.b0_odd_even_chain_to_b0
 
