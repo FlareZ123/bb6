@@ -13,13 +13,13 @@ private theorem pow_two_linear (c : Nat) : c+1 ≤ 2^c := by
     rw [Nat.pow_succ]
     omega
 
-private theorem N_large (c : Nat) (hc : 2 ≤ c) : c+2 ≤ N c := by
+theorem N_large (c : Nat) (hc : 2 ≤ c) : c+2 ≤ N c := by
   have hp : 2^2 ≤ 2^c := Nat.pow_le_pow_right (by omega) hc
   have hpow : 4 ≤ 2^c := by simpa using hp
   simp only [N]
   omega
 
-private theorem H0_identity (c : Nat) (hc : 2 ≤ c) :
+theorem H0_identity (c : Nat) (hc : 2 ≤ c) :
     H0 c + (8 * 2^c + c) = 4 * 2^(N c) + 13 := by
   have hN := N_large c hc
   have hp : 2^(c+2) ≤ 2^(N c) := Nat.pow_le_pow_right (by omega) hN
