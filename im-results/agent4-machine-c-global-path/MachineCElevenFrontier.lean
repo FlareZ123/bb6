@@ -41,11 +41,12 @@ theorem machineC_eleven_prefix_ext (n : Nat) (hn : n < 11) :
     refine (machineCPrefix n) (machineCVisited[n]!)
       (machineC (machineCVisited[n]!)) = machineCPrefix (n+1) := by
   funext s
-  have hall : ∀ i : Fin 11, ∀ s : Slot,
+  rcases s with ⟨q, b⟩
+  have hall : ∀ i : Fin 11, ∀ q : Fin 6, ∀ b : Bool,
       refine (machineCPrefix i.val) (machineCVisited[i.val]!)
-        (machineC (machineCVisited[i.val]!)) s =
-          machineCPrefix (i.val+1) s := by decide
-  exact hall ⟨n, hn⟩ s
+        (machineC (machineCVisited[i.val]!)) (q, b) =
+          machineCPrefix (i.val+1) (q, b) := by decide
+  exact hall ⟨n, hn⟩ q b
 
 /-- None of the already source-sound finite halt, fresh-ray, lasso, or
     finite-entry-macro tests prove a verdict at any one of the twelve
@@ -87,7 +88,7 @@ private theorem eleven_path_open (depth : Nat) :
           (machineCPrefix (n+1)) 6 6 24 12 2 4 depth).open machineC :=
         ih (n+1) (by omega)
       exact (open_lasso_step_24 (machineCPrefix n) depth slot hf hs).mpr
-        (by simpa only [hext] using htail)
+        (by rw [hext]; exact htail)
 
 /-- The authentic Machine C root lies in a specific original-branch open
     cylinder in the **eleven-level** all-six-state source-sound global
