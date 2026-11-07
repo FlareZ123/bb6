@@ -115,4 +115,43 @@ theorem e_two_reset (k q : Nat) :
 
 #print axioms e_two_reset
 
+/-- A complete B,q=0 source return for every right suffix, retaining the
+    arbitrary suffix literally after absorbing p unary ones. -/
+theorem b_zero_any (k p : Nat) (ys : List Bool) :
+    run (12*k*k+49*k+40)
+      (packet (3*k+2) 0 p ys) =
+      ⟨[],false,List.replicate (8*k+9+p) true ++ ys,5⟩ := by
+  have hn : List.replicate (3*k+2) true =
+      true::true::List.replicate (3*k) true := by
+    rw [show 3*k+2=2+3*k by omega,
+      ←List.replicate_append_replicate]
+    rfl
+  have hin : packet (3*k+2) 0 p ys =
+      init (List.replicate (3*k) true ++
+        false :: (List.replicate p true ++ ys)) := by
+    simp [packet,word,init,hn,oppairs]
+  rw [hin, full_B]
+  rw [←List.append_assoc, List.replicate_append_replicate]
+
+/-- When the E,p=2 reset index k is divisible by three, the newly
+    created packet is a B,q=0 source whose next return is canonical L.
+    This closes an infinite, source-certified exceptional subfamily. -/
+theorem e_two_k0_regular (t q : Nat) :
+    run (eTwoTime (3*t) q +
+      (12*(8*t+1)*(8*t+1)+49*(8*t+1)+40))
+      (packet (3*(3*t)+4) q 2 (false::List.replicate 6 true)) =
+      BB6.Agent2BoundaryBZero.regularSection
+        (64*t+2*q+23) 3 2 := by
+  rw [run_add, e_two_reset]
+  have hA : 8*(3*t)+5=3*(8*t+1)+2 := by omega
+  rw [hA]
+  rw [b_zero_any (8*t+1) (2*q+6) marker]
+  have hN : 8*(8*t+1)+9+(2*q+6) = 64*t+2*q+23 := by omega
+  rw [hN]
+  simp [BB6.Agent2BoundaryBZero.regularSection,marker,List.append_assoc]
+
+#print axioms b_zero_any
+#print axioms e_two_k0_regular
+
+
 end BB6.Agent2PacketP2Reset
