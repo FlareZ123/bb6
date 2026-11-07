@@ -1,162 +1,104 @@
-# Machine C: original-source low-58 rectangle and coupled stopping exclusions
+# Machine C: source-authentic C58 rectangle and all-depth stopping criterion
 
-**Status, 2026-11-06:** Lean 4.36.0-rc2, certified against the
-unchanged original Machine C section source. The core theorems have only
-Lean's standard `propext`, `Classical.choice` and `Quot.sound`
-axioms. The resulting exact halting criterion **does not decide Machine C**.
+**Status, 7 November 2026: Machine C and BB(6) remain unresolved.** The source-authentic C58/ValSix criterion now combines the exact C58 exclusions, the complete ValSixFull restrictions, and an unbounded dyadic inverse-depth high exclusion. Its fixed-target root decisions are exact, but the existential stopping parameters remain unbounded. No complete halt/nonhalt decision follows.
 
-## The source-level mathematical result
+## Exact source-level C58 exclusions
 
-Let `CReach x y` denote eventual section reachability from the authentic
-blank-derived section seed `(5,1)`, with transition `secNext`.
-The theorem in [Rect58Source.lean](Rect58Source.lean) states
+Let `CReach x y` be eventual section reachability from the authentic blank-derived seed `(5,1)`, using the original Machine C section transition `secNext`.
 
-```lean
-theorem blank_no_rect_58_full (x y : Nat)
-    (hx : x%64=1) (hy : y%256=58) :
-    ¬ BB6.Agent3.CReach x y
-```
+### Infinite low and high families
 
-The proof uniformly excludes a *two-dimensional infinite rectangle*.
-There is no time bound, section bound, predecessor-depth cutoff, or
-periodicity assumption. It imports the complete, previously verified
-original-source relation `section_preimage_all_iff` from
-`SectionAllInverse.lean` and the exact even-right equivalence from
-`EvenRightSixOrbit.lean`.
+- `Low58Source.lean` proves `blank_no_low_m_150`: every low stopping index `m % 256 = 150` is unreachable.
+- `Low14Source.lean` proves that every target `(1,64*t+14)` is unreachable. This removes all low indices `m % 64 = 58`, including its base case.
+- `Rect58Source.lean` proves the full infinite rectangle
+  ```lean
+  theorem blank_no_rect_58_full (x y : Nat)
+      (hx : x%64=1) (hy : y%256=58) :
+      ¬ BB6.Agent3.CReach x y
+  ```
+  and hence removes every high stopping pair satisfying
+  `m ≥ 3`, `j % 32 = 31`, and `(j+3*m+5) % 256 = 198`.
 
-To audit the crucial geometry, write the forbidden target as
-`T=(64u+1,256v+58)`. Two forced direct predecessor steps give
-
+The rectangle proof is uniform in both parameters. It has no time bound, predecessor-depth cutoff, or periodicity assumption. Write the forbidden target as `T=(64u+1,256v+58)`. Two forced direct predecessors are
 ```text
-T  = (64u+1,         256v+58)
-R1 = (64u+256v+57,   128v+28)
-R2 = (64u+384v+83,    64v+13)
+R1 = (64u+256v+57, 128v+28)
+R2 = (64u+384v+83,  64v+13).
 ```
-
-The exact complete section inverse of `R2` admits **only**
-
+The complete original-source inverse of `R2` admits only
 ```text
 A = (32u+224v+46, 16u+144v+28)
-B = ( 8u+ 56v+10, 28u+228v+43)
+B = ( 8u+ 56v+10, 28u+228v+43).
 ```
+The sum of the coordinates of `R2` has 2-adic valuation exactly five, so only even-bounce depths zero and two are possible. The exact inverse of `A` is forced to `C=(48u+368v+72, 8u+72v+13)`. Both `B` and `C` have odd right counter and coordinate sum congruent to one modulo four, contradicting the genuine blank-orbit odd-image invariant. The complete inverse grammar also rules out the odd-source and exceptional zero/one-left branches. The time-zero state is handled separately.
 
-because `R2.x+R2.y = 64u+448v+96` has 2-adic valuation
-**exactly five**, making the only even-bounce depths `0` and `2`.
-Odd-source cases and the special `a=0`, `a=1` branches are excluded
-using the complete grammar and exact arithmetic. `B` has odd right
-counter at least 43 and coordinate sum congruent to 1 modulo 4,
-so the genuine blank orbit cannot reach it. The direct inverse of `A`
-is forced to
+The proof imports the complete source relation `section_preimage_all_iff` and the exact even-right equivalence. It is a genuine blank-root nonreachability result for this section, not a quotient-only argument.
 
+### Comparison with the finite M512 quotient
+
+The independent M512 quotient census has 27,858,704 reached abstract states and 221,572,376 generated candidate edges. All 16 cells in the C58 rectangle, with `x∈{1,65,129,193,257,321,385,449}` and `y∈{58,314}`, are admitted by that finite quotient. This is a computational observation about that abstraction. The Lean source theorem proves the entire rectangle unreachable in the original section. The low-14 family, by contrast, was already rejected by the tested M512 quotient.
+
+## Integrated all-depth Machine C criterion
+
+The key integration is `ValSixC58AllDepth.lean`, with the exact theorem
+`BB6.Agent11C58AllDepth.blank_halts_iff_joint_c58_all_depth`.
+
+It preserves the exact low stopping branch and combines the previous Agent3/11/19/29 ValSixFull+C58 high restrictions with Agent19's source-certified all-depth dyadic cone. The high predicate is the previous exact `BB6.Agent11C58ValSix.highAllowed` predicate together with
 ```text
-C = (48u+368v+72, 8u+72v+13).
+∀ r,
+  ¬(2≤r ∧ 3≤m ∧ r+4≤2*m+2 ∧
+    m%4=(2*r+3)%4 ∧
+    (j+9*m+14)%2^(r+4)=3*2^(r+2)).
 ```
+The final high stopping target remains
+`(2*j+3, 2^(2*m+2)*(j+3)-(j+3*m+5))`.
+The root evaluator `BB6.Agent3ValSix.valSixMixedRootDecision` is exact for each fixed target. The existential quantifiers over `m` and `(j,m)` are still unbounded.
 
-`C` has odd right counter at least 13 and sum 1 modulo 4. It is likewise
-blank-unreachable by `Agent3CImage.blank_section_odd_image`.
-Both exhaustive parent cases are contradicted, proving the rectangle.
-The proof explicitly separates the initial time-zero state.
+The all-depth cone itself is source-certified in [CI 42334843728](https://github.com/FlareZ123/bb6/actions/runs/42334843728). The complete C58/ValSix all-depth integration, including its independent-family checks, passed original-source CI [42335683875](https://github.com/FlareZ123/bb6/actions/runs/42335683875). The bounded executable scan and unique-depth theorem were included in successful manual source CI [42336297638](https://github.com/FlareZ123/bb6/actions/runs/42336297638). These runs use Lean 4.36.0-rc2 and the original source dependency chain.
 
-## Infinite stopping parameters removed
+### Strictly new infinite exclusions beyond the previous combined sieve
 
-The low section stopping target is
-`(1, 2^(2m+3)-(3m+4))`. Every `m%256=150` has right counter 58
-modulo 256. [Low58Source.lean](Low58Source.lean) proves the complete
-all-time exclusion `blank_no_low_m_150`.
+The source-checked integration proves three explicit independence results:
 
-The high section stopping target is
-`(2j+3, 2^(2m+2)*(j+3)-(j+3m+5))`. The rectangle's
-[high-sector theorem](Rect58Source.lean) excludes every pair satisfying
+1. At depth two, every `(j,m)=(7+64t,3)` passes the previous combined C58/ValSix predicate and is excluded by the new dyadic gate.
+2. At depth three, every `(j,m)=(37+128t,5)` passes the previous combined predicate and is excluded by the new gate.
+3. For every `t`, put `r=130+128t`, `m=2r-1`, and `j=3*2^(r+2)-(18r+5)`. The previous combined predicate admits this pair, while the arbitrary-depth source cone excludes it. The theorem also proves that distinct `t` give distinct `m`, so this is an infinite family of genuinely distinct exclusions.
 
+These are parameter exclusions for Machine C's exact stopping criterion. They do not establish that the remaining parameter sets are empty.
+
+## Direct one-depth evaluator
+
+The previous executable gate, `HighDyadicGateDecision.lean`, tests every `r` in `List.range (2*m+1)`. The range is exact because the gate itself requires `r+4≤2*m+2`.
+
+A sharper identity removes this linear scan. For
+`D=j+9*m+14`, the residue equation gives
 ```text
-m ≥ 3
-j % 32 = 31
-(j + 3m + 5) % 256 = 198
+D % 2^(r+4) = 3*2^(r+2)
+    ⇒ D = 2^(r+2) * (4*q+3)
+    ⇒ v2(D) = r+2.
 ```
+Therefore any qualifying depth is unique and is exactly `v2(D)-2`. The new `HighDyadicGateDecisionFast.lean` defines a logarithmic-time recursive `v2` evaluator and a Boolean that checks only this candidate. Its theorems are:
 
-as its left coordinate is 1 modulo 64 and its right coordinate is
-58 modulo 256. This is an unbounded coupled two-parameter family.
+- `v2_of_high_residue`: the residue equation determines the exact 2-adic valuation.
+- `candidateAllowedBool_iff`: the one-candidate Boolean is equivalent to exclusion at every depth.
+- `candidate_matches_scan`: the new Boolean is extensionally identical to the previous bounded scan.
 
-A second exact independent proof, [Low14Source.lean](Low14Source.lean),
-eliminates every target `(1,64t+14)`. Hence all low indices
-`m%64=58` are excluded. The first-target exceptional inverse parents
-are checked explicitly. The base case `t=0` uses the source theorem
-excluding blank-reachable right counter 2. This theorem is valid,
-although this sector was already rejected by the tested M512 quotient.
+The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports only `propext` and `Quot.sound`; no `sorryAx`. It has been wired into `ValSixC58AllDepthBool.lean` and the existing manual source workflow, but this newest integration is **not yet source-CI certified**. The latest full workflow run, [42374537334](https://github.com/FlareZ123/bb6/actions/runs/42374537334), failed in the separate Agent19 `HighThreeLate256.lean` leaf (a type mismatch and heartbeat timeouts). That failure does not falsify the fast-gate proof; it blocks a clean full-workflow acceptance run. Do not describe the fast gate as source-certified until the complete workflow passes.
 
-[JointC58.lean](JointC58.lean) incorporates both low restrictions and
-the high rectangle restriction into a **lossless halting equivalence**
-built from [Agent23's C26 exact criterion](../agent23-c-low26/JointC26.lean).
-Its low predicate is
+## Formal artifacts and verification boundary
 
-```text
-C26.lowAllowed(m) ∧ m%64 ≠ 58 ∧ m%256 ≠ 150
-```
-
-and its high predicate is
-
-```text
-C26.highAllowed(j,m) ∧
-¬(m≥3 ∧ j%32=31 ∧ (j+3m+5)%256=198).
-```
-
-The fixed-target Boolean predicate remains exact. The existential search
-over unbounded indices remains mathematically unresolved. The independent
-[ValSixJointFull](../agent3-c-bounce-inverse/ValSixJointFull.lean)
-criterion has additional restrictions and is **not yet merged** into
-this new C58 branch; do not treat either document as subsuming all of
-the other's high predicates.
-
-## Formal verification and source dependency
-
-| CI run | Proved source claim | Result |
+| Artifact | Claim | Verification |
 | --- | --- | --- |
-| [42280559453](https://github.com/FlareZ123/bb6/actions/runs/42280559453) | low `m%256=150` root exclusion | success |
-| [42282006382](https://github.com/FlareZ123/bb6/actions/runs/42282006382) | low `m%64=58` root exclusion | success |
-| [42283365249](https://github.com/FlareZ123/bb6/actions/runs/42283365249) | full 2D rectangle and high gate exclusion | success |
-| [42282621087](https://github.com/FlareZ123/bb6/actions/runs/42282621087) | low-only exact C58 halting iff | success |
+| `Low58Source.lean` | low `m%256=150` exclusion | source CI 42280559453, success |
+| `Low14Source.lean` | low `m%64=58` exclusion | source CI 42282006382, success |
+| `Rect58Source.lean` | full two-dimensional rectangle and high family | source CI 42283365249, success |
+| `ValSixC58AllDepth.lean` | exact C58/ValSix criterion plus all-depth cone | source CI 42335683875, success |
+| `HighDyadicGateDecision.lean` and `HighDyadicDepthUnique.lean` | exact bounded Boolean scan and at-most-one-depth lemma | source CI 42336297638, success |
+| `HighDyadicGateDecisionFast.lean` | direct valuation candidate and equivalence to the scan | local Lean 4.36.0-rc2 only; full source CI pending |
 
-The source workflow is
-[`agent11-c-low58.yml`](../../.github/workflows/agent11-c-low58.yml).
-The integrated proof workflow is
-[`agent11-c58-joint.yml`](../../.github/workflows/agent11-c58-joint.yml).
-Both compile the authentic Machine C source from the repository.
+All cited source theorems have standard Lean axiom audits without `sorryAx`. The M512 counts are finite computational evidence, not a proof of actual reachability.
 
-## Comparison with the finite M512 quotient
+## Remaining mathematical obstacle
 
-The independent finite quotient algorithm in
-[`QuotientRectCensus.cpp`](../agent19-c-odd-dyadic/QuotientRectCensus.cpp)
-was rerun locally with the same transition and residue-abstraction rules
-and a print of `seen[idx({x,y,0})]` for the new rectangle.
+The integrated theorem is an exact reformulation and restriction of Machine C's blank-start halting condition. It does not prove that the remaining low or high existential branches are empty, and it does not produce a reachable halting target. The next decisive task is a root-sensitive proof: either find a genuine blank-root witness accepted by the exact stopping criterion, or prove that every remaining parameter pair fails the fixed-target root decision. Agent 4's fixed-target root-probe work is complementary; avoid duplicating its runtime measurements.
 
-At `M=512`, the quotient has **27,858,704** reached abstract states and
-**221,572,376** generated edges. **All 16** rectangle cells
-`x∈{1,65,129,193,257,321,385,449}` and `y∈{58,314}` are
-quotient-admitted. In particular both `(1,58,0)` and `(1,314,0)`
-are admitted. This is an empirical finite-computation statement,
-not a formal proof of the quotient implementation. The Lean theorem
-proves the full original-source cylinder unreachable despite every
-one of these quotient admissions.
-
-In contrast, the finite M512 quotient rejected all tested
-`x=1, y%64=14` residues. This makes the low-14 theorem a useful
-independent source certificate and the low-58 rectangle the
-clearer advance over that particular abstraction.
-
-The [joint proof](JointC58.lean) also proves `old_low_admits_150`:
-**every** parameter `m=256r+150` passed Agent23's earlier C26
-low predicate. The same file proves these parameters survive the
-separate ValSix low 128-divisibility filter.
-
-## Boundaries and next research decisions
-
-This is a source-exact nonreachability result for one formal Machine C
-section family and two corresponding stopping sectors. It gives
-neither an upper bound for all six-state machines nor a proof that
-Machine C never halts. Other low/high stopping parameter families remain.
-
-Next useful steps are to merge the rectangle into the current
-ValSixFull combined certificate, prove explicit independence of the
-high sector from all earlier formal high restrictions where possible,
-and look for further quotient-admitted rectangular sectors using exact
-2-adic inverse arithmetic rather than finite-step searches.
+All material here remains in `im-results/`. Promotion to `results/` requires independent novelty review and a theorem-level contribution that is suitable for academic publication.
