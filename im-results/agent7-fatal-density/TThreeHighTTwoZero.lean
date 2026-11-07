@@ -187,7 +187,7 @@ theorem ttwo_zero_two_gates (n j d0 q e r d a:Nat)
    2*c=8*2^(n-8)+f+(n-8) ∧
    2*f=8*2^(n-8)+g+(n-8) ∧
    ((2*b+5)%9=0 ∨ (2*f+5)%27=0) := by
- obtain ⟨hl,hu⟩:=high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
+ obtain ⟨hl,hu⟩:=CascadeTranslatedRayDepth.high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
  obtain ⟨hdlo,hdhi⟩:=high_r_ttwo_interval n r d hn hl hu htwo
  have hs:=size_bound n hn
  obtain ⟨b,c,f,g,he1,he2,he3,he4⟩:=even_four_witnesses n (2^(n-8)) d a
@@ -267,7 +267,7 @@ theorem high_ttwo_nine_zero_all_scales (n j d0 q e r k d a:Nat)
  (he0:8*d=8*2^k+a+k+5)
  (hdmod:d%9=0) :
  ¬CascadeSweep.ReachC (2,0) (a,0) := by
-  obtain ⟨hl,hu⟩:=high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
+  obtain ⟨hl,hu⟩:=CascadeTranslatedRayDepth.high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
   obtain ⟨hdlo,hdhi⟩:=high_r_ttwo_interval n r d hn hl hu htwo
   have hbandReal:=t_two_image_band n d hn hdlo hdhi
   have hk:k=n-8:=odd_band_scale_unique (4*d) k (n-8) hband hbandReal
@@ -294,7 +294,7 @@ theorem high_ttwo_zero_two_gates_all_scales (n j d0 q e r k d a:Nat)
    2*c=8*2^(n-8)+f+(n-8) ∧
    2*f=8*2^(n-8)+g+(n-8) ∧
    ((2*b+5)%9=0 ∨ (2*f+5)%27=0) := by
-  obtain ⟨hl,hu⟩:=high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
+  obtain ⟨hl,hu⟩:=CascadeTranslatedRayDepth.high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
   obtain ⟨hdlo,hdhi⟩:=high_r_ttwo_interval n r d hn hl hu htwo
   have hbandReal:=t_two_image_band n d hn hdlo hdhi
   have hk:k=n-8:=odd_band_scale_unique (4*d) k (n-8) hband hbandReal
