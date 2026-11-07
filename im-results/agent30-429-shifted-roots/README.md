@@ -1,43 +1,66 @@
-# Four source-certified shifted terminal cylinders for BB429
+# BB429: 686 certified blank-root terminal residues excluded at modulus 262144
 
-**7 November 2026.** This is an intermediate machine-specific result, **not a decision of machine #429 or BB(6)**. The full unchanged-repository Lean 4.36.0-rc2 proof chain passed [source CI 42347188987](https://github.com/FlareZ123/bb6/actions/runs/42347188987). The pinned Google DeepMind original Cryptids six-state machine audit also **passed** [CI 42347463517](https://github.com/FlareZ123/bb6/actions/runs/42347463517).
+**Research status, 7 November 2026:** Unchanged-source Lean 4.36.0-rc2 [CI 42348808379](https://github.com/FlareZ123/bb6/actions/runs/42348808379) **PASSED**, checking thirteen new infinite root-specific forbidden rays and the exact merged `686`-class gate. The first four of those rays independently passed pinned, unchanged **original Google DeepMind Cryptids raw six-state machine** [CI 42347463517](https://github.com/FlareZ123/bb6/actions/runs/42347463517). The separate pinned raw-source full `686` integration [CI 42348810430](https://github.com/FlareZ123/bb6/actions/runs/42348810430) **is still running**; its conclusion must be verified before calling that particular larger raw-machine theorem checked.
 
-## Result and exact quantifiers
+**The full BB(6) problem, and machine #429's genuine blank-start halting status, remain open.** This is a source-kernel-verified *necessary condition*, stored under `im-results/` because external novelty and publishability have not been established. No claimed terminal residue is known reachable.
 
-Let `BB429.run n (0,0)=some (a,b)` be the **actual blank-root** trajectory under the exact local arithmetic accelerator for six-state Cryptids machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. Its unique halting gateway is `b+1=2*a`. In [BB429ShiftRays.lean](BB429ShiftRays.lean), four theorems state, for **every natural** `n,a,b`, that an authentic `run` state on this line satisfies:
+## Exact mathematical result
 
-| First-counter forbidden congruence | Full family proved unreachable, every `q∈ℕ` | Proof declaration |
+Let `BB429.run n (0,0)=some (a,b)` be the authentic initial trajectory of the local accelerator for the six-state, two-symbol machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. Its exact halting gateway is `b+1=2*a`.
+
+The source-checked [BB429Combined686.lean](BB429Combined686.lean) theorem `blank_halt_not_686` proves, **for all natural numbers** `n,a,b`, that an actual blank-root state on this terminal line satisfies
+```
+a % 262144 ∉ excluded686
+```
+where `excluded686` is the explicit union of Agent 1's 673 original forbidden classes and **thirteen newly certified, previously surviving residues**. The file proves `excluded686.length=686` and `excluded686.Nodup` in Lean's kernel.
+
+Combined with the preexisting 58-class true-root terminal predicate modulo 16384, whose 16-fold expansion consists of 928 candidates modulo 262144, `BB429Combined686.still242` is an **exact necessary candidate list of length 242**, all distinct. Its proved `still242_iff` theorem states
+```
+a % 262144 ∈ still242 ↔
+  a % 16384 ∈ BB429SurvivorMask.base58 ∧
+  a % 262144 ∉ excluded686
+```
+These 242 classes are *arithmetic survivors* only. The theorem establishes no reachability among them. The original root remains unclassified and no upper bound for BB(6) follows.
+
+The thirteen new entire infinite forbidden families, with `r` always denoting the first-counter residue, are:
+
+| Uniform modulus A | Forbidden residues r | Source lemma |
 | --- | --- | --- |
-| `a % 32768 ≠ 765` | `(32768*q+765, 65536*q+1529)` | `blank_halt_not_765_mod_32768` |
-| `a % 32768 ≠ 3281` | `(32768*q+3281, 65536*q+6561)` | `blank_halt_not_3281_mod_32768` |
-| `a % 262144 ≠ 2385` | `(262144*q+2385, 524288*q+4769)` | `blank_halt_not_2385_mod_262144` |
-| `a % 131072 ≠ 16381` | `(131072*q+16381, 262144*q+32761)` | `blank_halt_not_16381_mod_131072` |
+| 32768 | 765, 3281 | [BB429ShiftRays.lean](BB429ShiftRays.lean) |
+| 262144 | 2385 | [BB429ShiftRays.lean](BB429ShiftRays.lean) |
+| 131072 | 16381 | [BB429ShiftRays.lean](BB429ShiftRays.lean) |
+| 262144 | 6141, 19665, 49149, 65533, 81917, 98301, 114685, 163837, 229373 | [BB429MoreShifted.lean](BB429MoreShifted.lean) |
 
-These exclude the single **previously surviving representatives 765, 3281, 2385, and 16381** among the original 255 survivors at modulus 262144 after Agent 1's 673-cylinder exclusion. On the exact prior common baseline of 58 terminal residues mod 16384 (928 lifts at mod 262144), the combined exclusion grows from **673 to 677**, leaving **251 necessary candidates** under this composition. This is a count of arithmetic constraints, *not* a claim that any survivor occurs or that a still-unresolved machine has been decided. The four families overlap previously excluded finer-modulus rays. Their distinct new content against that baseline is exactly the four named representatives.
+For each listed pair `(A,r)` the Lean proof excludes **every** source-root affine terminal state `(A*q+r,2*A*q+2*r-1)` for **every** `q≥0` and source time. There is no finite parameter cap and no large-number simulation heuristic in this statement. The four coarse-modulus rays eliminate precisely four more representatives from the former 255 survivor list; the nine additional representatives eliminate nine more, giving `255−13=242`.
 
-## Proof mechanism
+## How the proof works
 
-The new proof reuses Agent 30's earlier [all-parameter, source-sound affine inverse certifier](../agent30-429-even16/BB429InverseKernel16.lean), whose `cert_sound` theorem proves nonreachability simultaneously for **all quotient parameters `q`** whenever a finite symbolic inverse tree closes. As in Agent 1's earlier [four split rays](../agent1-429-four-split/BB429FourSplit.lean) and Agent 33's [five shifted rays](../agent33-429-five-shift/README.md), a ray with coefficient `A` is divided into `q=0` and `q=k+1`. The second case is shifted to `(A*k+(A+r),2*A*k+(2*A+2*r-1))`, at which the *unchanged* depth-16 `BB429Kernel16.cert` evaluates to `true` in Lean's kernel.
+All thirteen rays use Agent 30's previously source-checked [`BB429Kernel16.cert_sound`](../agent30-429-even16/BB429InverseKernel16.lean), a mathematically sound symbolic inverse certificate over the **whole natural parameter domain**. For each residue `r`, the source checker evaluates the finite depth-16 inverse certificate at shifted affine offset `(A,A+r,2*A,2*A+2*r−1)`. This proves every positive quotient `q+1` by substituting the parameter `q`. The previously missing zero quotient is discharged from the *genuine blank root* using strict monotonicity of the exact rank `2a+b` along successful runs.
 
-The four zero-quotient targets are ruled out by exact successful blank-root checkpoints together with Agent 5's all-time strictly increasing `rank(u,w)=2*u+w`, using a rank-straddle lemma credited to Agent 1. No sampled finite time cutoff is assumed to decide unbounded reachability.
+The four original new rays use individual true-root consecutive rank straddles:
 
-| Target `(a,b)` | Rank `2a+b` | Genuine crossing macro time `k` | `run k` | `run (k+1)` |
-| --- | ---: | ---: | --- | --- |
-| `(765,1529)` | 3059 | 638 | `(9,3040)` | `(21,3019)` |
-| `(3281,6561)` | 13123 | 3171 | `(25,13073)` | `(53,13020)` |
-| `(2385,4769)` | 9539 | 2246 | `(3069,3396)` | `(0,9544)` |
-| `(16381,32761)` | 65523 | 16107 | `(16396,32722)` | `(0,65524)` |
+| Missing zero-quotient target | Certified crossing macro time | Genuine run before | Genuine run after |
+| --- | ---: | --- | --- |
+| (765,1529) | 638 | (9,3040) | (21,3019) |
+| (3281,6561) | 3171 | (25,13073) | (53,13020) |
+| (2385,4769) | 2246 | (3069,3396) | (0,9544) |
+| (16381,32761) | 16107 | (16396,32722) | (0,65524) |
 
-Lean checks the first three straddles by `decide` and the fourth using sixteen exact 1,000-step checkpoint blocks to avoid elaborator recursion-depth limits. The proof derives all-natural exclusions from authentic `run` and `cert_sound`. It uses no `sorry`, `native_decide`, substitute successor map, or unverified machine simulation.
+The nine later rays share a stronger **reusable root-rank lemma** `BB429MoreShifted.no_terminal_below_rank`. Lean checks the exact successful original-root endpoint
+```
+BB429.run 240000 (0,0) = some (196605,529002)
+```
+whose rank equals 922212. It follows, by a split on source time before/after this checkpoint, that **no terminal configuration of strictly smaller rank can ever be reached**: an earlier terminal would prevent this successful checkpoint, and a later terminal would violate the all-time rank monotonicity. All nine zero-quotient terminal targets have rank less than 922212. The 240,000-step proof is reconstructed in source Lean from 240 exact 1,000-transition checkpoints; each finite block is checked by `decide`. The single endpoint replaces nine separate root straddles, while inverse soundness handles the unbounded tails.
 
-## Verification and provenance
+This general rank-barrier lemma can be reused for future shifted cylinders, though continued finite modular refinement alone is not a complete machine decision.
 
-- [Source audit 42347188987](https://github.com/FlareZ123/bb6/actions/runs/42347188987): **successful**. Selective workflow [.github/workflows/agent30-429-shifted-roots.yml](../../.github/workflows/agent30-429-shifted-roots.yml) compiled the original local accelerator, all prior root predicates, `BB429InverseKernel16`, and the new `BB429ShiftRays` file with Lean 4.36.0-rc2. Final `#print axioms` audited; `sorryAx` rejected.
-- [SourceRawHaltShift.lean](SourceRawHaltShift.lean) transports all four genuine-source exclusions to the unchanged **original Cryptids six-state machine** through the established source bridge, and composes them with the previously native-certified 673-cylinder raw halting equivalence. The [pinned native-source workflow](../../.github/workflows/agent30-429-shifted-native.yml) **passed** [CI 42347463517](https://github.com/FlareZ123/bb6/actions/runs/42347463517), compiling the unchanged original Google DeepMind repository at `c86f15861709b76042998c5211c7b2f83991621b` under Lean 4.35.0-rc4.
-- Temporary local interface preflight compiled the new proof structure with original signatures supplied as axioms and an exact definition of the inverse certifier. **This preliminary test is not cited as a complete proof.** The successful repository-source audit above is the decisive verification for the genuine local accelerator.
+## Original raw Turing-machine provenance and audit boundaries
 
-## Why the result matters, and limits
+- **Verified original accelerator plus combined 686 gate:** [CI 42348808379](https://github.com/FlareZ123/bb6/actions/runs/42348808379), workflow [agent30-429-shifted-roots.yml](../../.github/workflows/agent30-429-shifted-roots.yml), compiles unchanged `BB429Rank`, parity/root constraints, affine inverse soundness, Agent 1's 673-class sieve and exact predecessor survivor representation, the four first ray proofs, the 240k-checkpoint extension, and the `686/242` cardinality theorems. The earlier stages passed [42347188987](https://github.com/FlareZ123/bb6/actions/runs/42347188987), [42348114459](https://github.com/FlareZ123/bb6/actions/runs/42348114459), and [42348461286](https://github.com/FlareZ123/bb6/actions/runs/42348461286).
+- **Verified original raw six-state bridge for first four rays:** [SourceRawHaltShift.lean](SourceRawHaltShift.lean) passed [pinned CI 42347463517](https://github.com/FlareZ123/bb6/actions/runs/42347463517) against the unchanged original [Google DeepMind Cryptids](https://github.com/google-deepmind/cryptids) Turing-machine module at SHA `c86f15861709b76042998c5211c7b2f83991621b` under Lean 4.35.0-rc4. Its exact raw-machine halting iff retains the actual source terminal witness and adds the four new exclusions.
+- **Expanded original raw six-state bridge awaiting independent CI conclusion:** [SourceRawHalt686.lean](SourceRawHalt686.lean) uses the same previously verified `source_run_to_local` and `source_next_none_to_local` bridge and original 38-class raw halt theorem. It formalizes `raw_halts_iff_686`: `IsHalt target` iff a **genuine source-root** terminal event satisfies the earlier 38/1024 constraints and avoids all 686 new forbidden residues. [Pinned raw-machine audit 42348810430](https://github.com/FlareZ123/bb6/actions/runs/42348810430) is currently pending; do not treat an unverified edit as an additional original-machine audit.
+- All source theorem files use ordinary Lean 4 proof tactics and kernel computation, with no `sorry`, `native_decide`, or replacement successor map in the published proofs. The workflows inspect `#print axioms` and reject unexpected `sorryAx`. Exploratory Python/JavaScript inverse checks and temporary mock-interface compilation were used only to choose candidates; they are **not** the evidence for the checked theorem.
 
-The source all-parameter inverse kernel can fail at low affine offsets even when the entire positive-parameter tail is certifiable. A finite exact blank-root rank argument then discharges the finitely many missing boundary cases, producing universal exclusions. This specific split technique and both major components are prior project work; this module supplies four previously surviving precise applications and a native raw-source theorem with successful pinned original-machine Lean verification. These are **intermediate research refinements** with unconfirmed external mathematical novelty, appropriately stored under `im-results/`.
+## Next decisive research question
 
-The complement still contains infinitely many terminal parameter families. The exact BB(6) maximum and a certified nonhalting decision for machine #429 remain open. Future proof effort should prioritize an all-time authentic-root return invariant, a complete history-sensitive physical-tape characterization of the last one-sided excursion, or a full machine-level decision; endlessly subdividing finite-modulus residues cannot by itself solve that quantifier.
+The source-verified [physical B/001 (equivalently C/01) fatal-event characterization](../agent32-429-raw-parent/README.md), the [one-sided last-writer theorem](../agent18-429-lastwriter/README.md), and the synthetic-vs-blank counterexamples remain the deeper #429 problem: either exhibit a **genuine blank-root** fatal event or exclude it for all time using a full-tape history-sensitive invariant. Source-defined inverse cylinders and arithmetic count reductions do not settle that existential. This exact 242-class executable mask is a useful residual filter for experiments on the genuine root, but synthetic starts satisfying excluded congruences cannot be promoted into real blank witnesses.
