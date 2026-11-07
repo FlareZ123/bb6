@@ -68,6 +68,8 @@ The odd wave and the subsequent B/1 retreat move the head left while leaving the
 
 The boundary condition is a proof obligation with a concrete semantic role. It is not hidden inside a broad automation step.
 
+The guard is sharp. The additional theorem **b0_odd_even_chain_to_b0_exact_bad_boundary** proves that whenever the three-cell boundary pattern is 110, the exact odd-even return produces a left-of-head 1100 and therefore fails NoLeft4. The proof tracks h-6 through h-4 unchanged through the odd wave and sweep, while the F/1 transition makes h-3 equal to 0. Combined with the preservation theorem, this gives an exact criterion: under the input NoLeft4 hypothesis and the odd-even return premises, the output is shielded precisely when the boundary guard holds.
+
 ## A formal synthetic obstruction to dropping the boundary condition
 
 **oddEvenShieldCounterexample** is a B/0 configuration at head 0 whose tape is 1 exactly at positions
