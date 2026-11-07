@@ -96,20 +96,37 @@ The companion `physical_finishC_ScanE_delta` instantiates Agent 32's generic `so
 
 **Scope:** this is an exact endpoint/head-displacement certificate for the source macro, not a proof that the later path crosses the entire earlier `shift_E_11` interval. The remaining global argument must connect the parameters of the post-shift S_E return to this C/1 entry and prove the required coordinate inequality for the full swept block. The theorem by itself does not eliminate all E/1 last-writer candidates and does not establish any blank-origin halting result.
 
-**Verification status:** the source-level proof core was compiled locally with Lean 4.36.0-rc2 against matching interfaces; the local harness used a stub for the imported physical-bridge theorem. The actual-source workflow compiles this module after the real `BB429DeltaPhysicalBridge` dependency and audits the axiom report for `sorryAx`. That manual CI run has not yet been triggered, so original-source integration verification remains pending.
+**Verification status:** the exact source dependency chain, including the real `BB429DeltaPhysicalBridge`, was compiled by the fail-closed [Junc crossing CI run 42394921817](https://github.com/FlareZ123/bb6/actions/runs/42394921817). The workflow audits the complete axiom output for `sorryAx`; none was found.
 
-## Composed S_E return and later Junc head excursion
+## Unbounded Junc-cycle crossing for both source return parities
 
-[`BB429JuncHeadExcursion.lean`](BB429JuncHeadExcursion.lean) composes the E/1 return, the C/1 `finish_C_ScanE` path, and the next Junc macro. It proves the two parity cases for every right parameter (k):
+`BB429JuncHeadExcursion.lean` now proves an all-parameter extension of the earlier fixed-offset return calculation.
 
-- If (b=2r), the E/1 return lands at `finishCStart 2 b k`; `finish_C_ScanE` reaches `Junc(2,b+2,2k+1)) with displacement (-2b). The first Junc macro reaches its intermediate A configuration after (2(b+2)+6) steps, with displacement (2b+6) from that Junc entry. The combined path therefore reaches a physical head exactly **6 cells right** of the post-shift S_E boundary.
-- If (b=2r+1) and (k\ge1), the return lands at `finishCStart 0 b k`; the next Junc macro reaches `Junc(b+5,0,2k-2)). Its displacement (2b+7) cancels the preceding (-2b), giving a physical head exactly **7 cells right** of the post-shift S_E boundary.
+For every affordable full cycle, the exact zipper transition is
 
-The physical corollaries use Agent 32's generic `source_runWithDelta_rep` theorem. In the concrete (b=0,k=3) case, the segment takes (42+12+10=64) steps from the post-shift S_E boundary. Thus a shift ending at global step 128 reaches the later head at step 192, six cells to the right of the post-shift head at (-2), reproducing the observed return to head (4).
+```lean
+runWithDelta (juncPosFullTime u 0 + (4*u+27)) (junc u 0 w) =
+  some (junc (2*u+3) 0 (w-(2*u+3)), ((2*u+3 : Nat) : Int))
+```
 
-**Important limitation:** these composite offsets are (+6) and (+7), independent of (k). Since the `shift_E_11 k` interval spans (2k) cells, this chain proves a complete crossing when (k\le3). It does not establish the requested arbitrary-(k) crossing. For (k>3), the proof needs a further Junc iteration or a genuine-root parameter invariant that supplies a larger later head coordinate. The new theorems explain the observed (k=3) exclusion exactly, while leaving the unbounded case open.
+The positive parameter follows (U_{n+1}=2U_n+3), while the right-counter budget and head displacement both increase by (2U_n+3). The theorem `juncCycle_iter_delta` composes any number of affordable cycles exactly.
 
-**Verification status:** both new Lean modules were proof-checked locally with Lean 4.36.0-rc2 against matching interfaces; the local harness used stubs for the imported source-return and physical-bridge theorems. The actual-source workflow now compiles `BB429FinishScanEDelta.lean` and `BB429JuncHeadExcursion.lean` after their real dependencies and audits their axiom reports for `sorryAx`. That manual CI run has not yet been triggered, so original-source integration verification remains pending.
+The bounded recursive search `juncTerminalN` finds the first unaffordable cycle. At that point the remaining counter (R=w-S_n) satisfies (R<2U_n+3). If (R\le4), the cycle endpoint already lies beyond the target. If (R\ge5), choosing (N=R/2-1) gives
+- (1\le N\le U_n);
+- (2N-1\le R), so the partial positive-u excursion is valid;
+- (R-5<2N), so its head displacement crosses the target.
+
+This is formalized by `juncCycle_crossing`: whenever the initial head offset (h) and right counter (w) satisfy (h+w=2k+5), some finite Junc run has displacement (d) with (2k<h+d).
+
+The two source E/1 return parities satisfy this relation exactly:
+- **Even branch:** the return reaches (J(2r+9,0,2k-6)) after displacement (11), for (k\ge3).
+- **Odd branch:** the return reaches (J(2r+6,0,2k-2)) after displacement (7), for (k\ge1).
+
+The theorems `sourceScanE_finishC_even_crosses_delta` and `sourceScanE_finishC_odd_crosses_delta` compose these prefixes with the cycle argument. Their physical lifts, `physical_sourceScanE_finishC_even_crosses_delta` and `physical_sourceScanE_finishC_odd_crosses_delta`, apply to every raw configuration representing the corresponding `sourceScanE` zipper. Each guarantees a later original-machine head position strictly greater than the starting head plus (2k).
+
+**Scope:** this closes the unbounded head-crossing subproblem for these prepared source E/1 return families. It does not prove that any such prepared configuration is reached from the blank tape, and it does not decide the separate C/B `j_c_sweep` intermediate branches. In particular, `finishCStart` requires a C/1 tape with left word `true :: ones (2*p) ++ pairs01 u ++ ones 5` and right word `ones 6 ++ ones (2*k) ++ [false,true]`. The `j_c_sweep` endpoint has a different processed-pair history and can have only 0, 1 or 2 right-side ones in the intermediate (w=2u,2u+1,2u+2) cases. No direct tape adapter between those branches has been proved.
+
+**Verification:** dedicated fail-closed workflow [`agent6-429-junc-crossing.yml`, run 42394921817](https://github.com/FlareZ123/bb6/actions/runs/42394921817) compiled the complete real source dependency chain through `BB429JuncHeadExcursion.lean`. The workflow uses `set -euo pipefail`, checks the axiom output for `sorryAx`, and completed successfully. The new cycle and physical-lift declarations have no `sorryAx` dependency. The original broad `agent18-429-lastwriter.yml` workflow was also changed to fail closed, because its earlier tee pipelines could conceal Lean failures.
 
 ## Connection to the hard blank-origin question
 
