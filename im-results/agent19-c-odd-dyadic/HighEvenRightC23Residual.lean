@@ -12,7 +12,8 @@ theorem high_even_right_family_prior_allowed_C70 (j m : Nat)
     (hj8 : j%8=(m+3)%8) :
     BB6.Agent20C70.highAllowedC70 j m := by
   refine ⟨high_even_right_family_prior_allowed j m hm hm4 hj8,?_⟩
-  rintro ⟨⟨_,hm82⟩|⟨_,hm18⟩⟩
+  intro hbad
+  rcases hbad with ⟨_,hm82⟩ | ⟨_,hm18⟩
   · omega
   · omega
 
