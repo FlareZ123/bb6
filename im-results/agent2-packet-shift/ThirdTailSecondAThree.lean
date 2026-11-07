@@ -56,6 +56,7 @@ private theorem a_input_shape (t r : Nat) :
   have hp : 2*(3*r+3)+2 = 3*(2*r+2)+2 := by omega
   rw [hn,hp,← List.replicate_append_replicate]
   simp [CryptidBoundary.pairs,List.append_assoc]
+  omega
 
 /-- The q=3r+3 A branch passes through the original 110111 A-to-E portal
     and returns to a packet with two 01 pairs and eleven trailing ones. -/
