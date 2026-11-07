@@ -155,7 +155,15 @@ Among even positive integers its natural density is \(2^{-C(w)}\), exactly the H
 
 The finite inverse-word bijection in [Agent 22's dyadic completeness result](../agent22-sheep-mixed-hub/DYADIC-COMPLETENESS.md) is the finite-precision version of the same coding. The present note adds the exact product law, the branch entropy, and the almost-everywhere dense-orbit consequence.
 
-## 6. Fixed blank-root boundary
+## 6. The pointwise symbolic obstruction
+
+Every finite exact branch word (w) has a cylinder (C_w) on which (E_g^{|w|}) is an affine bijection onto all of (X). Thus fixing any finite prefix of an itinerary leaves the entire 2-adic tail coordinate available. This is the dynamical reason finite generic path lifting can realize arbitrary finite walks from freely chosen starts, while it cannot decide the tail of one specified start.
+
+Let (omega(10)) be the itinerary of 10 under the generic extension. An authentic halt occurs precisely when some shifted tail (sigma^nomega(10)) is the generic itinerary of a terminal power (2^j), before any authentic exceptional-source divergence. Encountering an exceptional source (3cdot2^a) is another countable-tail event. The target itineraries form a countable set in the full Bernoulli shift. Haar-almost every code avoids them, but this measure statement says nothing about the particular code (omega(10)).
+
+Consequently, a finite-depth inverse-tree sieve can exclude whole arithmetic families of target exponents, yet it cannot by itself establish that the fixed root's infinite code avoids every target tail. A decisive argument must control the actual tail of (omega(10)), or establish an arithmetic invariant that forces it away from the countable exceptional code set.
+
+## 7. Fixed blank-root boundary
 
 The blank even-section entry is the specific integer \(10\). It is a singleton of Haar measure zero. The full-measure conclusions above leave its itinerary completely undecided. In particular, almost-everywhere nonhalting and almost-everywhere density do not imply that 10 is nonhalting or dense.
 
