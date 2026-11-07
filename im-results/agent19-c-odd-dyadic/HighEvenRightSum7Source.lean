@@ -1,5 +1,6 @@
 import SectionAllInverse
 import Agent3CImage
+import Agent3COrbitIff
 import HighEvenRightSum7Arithmetic
 import Lean.Elab.Tactic.Omega
 
