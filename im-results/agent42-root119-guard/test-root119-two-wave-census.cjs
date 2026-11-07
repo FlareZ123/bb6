@@ -10,6 +10,8 @@ let state = 'A';
 let head = 0;
 let previousBZero = null;
 let lastIntervalClass = 'root';
+let prefixReachKnown = true;
+let firstUnknownInterval = null;
 let bZeros = 0;
 let cphaseShieldInputs = 0;
 let cphaseShieldOutputs = 0;
@@ -226,9 +228,12 @@ for (let time = 0; time < LIMIT; time++) {
           displacement: head - previousBZero.head,
           leftSix: previousBZero.prefixLeftSix,
           incomingClass: previousBZero.incomingClass,
+          startReachChainKnown: previousBZero.incomingChainKnown,
         });
         const incoming = previousBZero.incomingClass;
         twoWaveIncomingAudit[incoming] = (twoWaveIncomingAudit[incoming] || 0) + 1;
+        const chainKey = previousBZero.incomingChainKnown ? 'chainKnown' : 'chainUnknown';
+        twoWaveIncomingAudit[chainKey] = (twoWaveIncomingAudit[chainKey] || 0) + 1;
         assert.equal(time - previousBZero.time,
           8 * previousBZero.twoWave.n1 + 2 * previousBZero.twoWave.r + 30);
         assert.equal(head - previousBZero.head,
@@ -239,6 +244,12 @@ for (let time = 0; time < LIMIT; time++) {
           previousBZero.prefix.type === 'prefixUnmatched') {
         counts.prefixUnmatched++;
         lastIntervalClass = 'prefixUnmatched';
+        prefixReachKnown = false;
+        firstUnknownInterval ??= {
+          type: 'prefixUnmatched',
+          startTime: previousBZero.time,
+          endTime: time,
+        };
       } else if (validCphase) {
         assert.equal(previousBZero.cphaseShield, true,
           "C-phase D1 input does not satisfy the 1100 exclusion");
@@ -257,11 +268,18 @@ for (let time = 0; time < LIMIT; time++) {
       } else {
         counts.other++;
         lastIntervalClass = 'other';
+        prefixReachKnown = false;
+        firstUnknownInterval ??= {
+          type: 'other',
+          startTime: previousBZero.time,
+          endTime: time,
+        };
       }
     }
     const incomingClass = lastIntervalClass;
+    const incomingChainKnown = prefixReachKnown;
     previousBZero = {
-      time, head, incomingClass, prefix, cphase, twoWave, cphaseShield, prefixShield,
+      time, head, incomingClass, incomingChainKnown, prefix, cphase, twoWave, cphaseShield, prefixShield,
       twoWaveShield, oddEvenBoundarySafe, prefixLeftSix,
     };
   }
@@ -301,6 +319,8 @@ assert.equal(twoWaveIncomingAudit.other || 0, 0,
   'A two-wave-root start follows an unclassified interval: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(twoWaveIncomingAudit.prefixUnmatched || 0, 0,
   'A two-wave-root start follows an unmatched-prefix interval: ' + JSON.stringify(twoWaveIncomingAudit));
+assert.equal(twoWaveIncomingAudit.chainUnknown || 0, 0,
+  'A two-wave-root start is beyond the first unclassified interval: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
 console.log(JSON.stringify({
   rawSteps: LIMIT,
@@ -315,6 +335,7 @@ console.log(JSON.stringify({
     intervals: twoWaveIntervals,
     shield: twoWaveShieldAudit,
     incoming: twoWaveIncomingAudit,
+    reachChain: { knownThroughCensus: prefixReachKnown, firstUnknownInterval },
   },
   b0Left101Audit,
 }, null, 2));
