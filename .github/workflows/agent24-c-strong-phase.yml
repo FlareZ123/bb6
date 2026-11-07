@@ -283,4 +283,6 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/AffNormFamilySource.lean .
           lean -o AffNormFamilySource.olean AffNormFamilySource.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/InfiniteStrict.lean .
-          lean InfiniteStrict.lean
+          lean -o InfiniteStrict.olean InfiniteStrict.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/TrueStoppingFamily.lean .
+          lean TrueStoppingFamily.lean
