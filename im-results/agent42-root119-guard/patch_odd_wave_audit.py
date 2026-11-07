@@ -9,7 +9,8 @@ replacements = [
 
 function bit(x) {""",
         """let previousBit = null;
-let predictedIntervals = 0;
+let predictedB0Intervals = 0;
+let predictedB1Checkpoints = 0;
 
 function bit(x) {""",
     ),
@@ -17,54 +18,31 @@ function bit(x) {""",
         """  for (const prediction of due) {
     assert.equal(q, 'B', `predicted B/0 at time ${time}`);
     assert.equal(head, prediction.head, `predicted head at time ${time}`);
-  }""",
+  }
+  pending.delete(time);""",
         """  for (const prediction of due) {
-    assert.equal(q, 'B', `predicted B/0 at time ${time}`);
+    assert.equal(q, 'B', `predicted B state at time ${time}`);
     assert.equal(head, prediction.head, `predicted head at time ${time}`);
-    assert.equal(bit(head), 0, `predicted B/0 reads zero at time ${time}`);
-  }""",
+  }
+  if (due.length > 0 && bit(head) === 1) predictedB1Checkpoints++;
+  pending.delete(time);""",
     ),
     (
-        """    if (previousB0 && due.length === 0) {
-      residuals.push({
-        from: previousB0.time,
-        to: time,
-        duration: time - previousB0.time,
-        delta: head - previousB0.head,
-        start: previousB0.context,
-        fEvents: previousB0.fEvents,
-        dEvents: previousB0.dEvents,
-      });
-    }
-
-    let leftRun = 0;""",
-        """    if (previousB0 && due.length === 0) {
-      residuals.push({
-        from: previousB0.time,
-        to: time,
-        duration: time - previousB0.time,
-        delta: head - previousB0.head,
-        start: previousB0.context,
-        fEvents: previousB0.fEvents,
-        dEvents: previousB0.dEvents,
-      });
-    } else if (previousB0) {
+        """    } else if (previousB0) {
       predictedIntervals++;
-    }
-
-    let leftRun = 0;""",
+    }""",
+        """    } else if (previousB0) {
+      predictedB0Intervals++;
+    }""",
     ),
     (
-        """  simulatedSteps: LIMIT,
-  unmatchedB0Intervals: residuals.length,
-  classifiedByParameterizedWaveMacros: counts,""",
-        """  simulatedSteps: LIMIT,
-  completedB0Intervals: residuals.length + predictedIntervals,
+        """  completedB0Intervals: residuals.length + predictedIntervals,
   predictedB0Intervals: predictedIntervals,
-  unmatchedB0Intervals: residuals.length,
-  pendingPredictionsAtCutoff: Array.from(pending.entries()),
-  lastB0AtCutoff: previousB0 ? { time: previousB0.time, head: previousB0.head } : null,
-  classifiedByParameterizedWaveMacros: counts,""",
+  unmatchedB0Intervals: residuals.length,""",
+        """  completedB0Intervals: residuals.length + predictedB0Intervals,
+  predictedB0Intervals,
+  predictedB1Checkpoints,
+  unmatchedB0Intervals: residuals.length,""",
     ),
 ]
 
@@ -75,4 +53,4 @@ for old, new in replacements:
     text = text.replace(old, new)
 
 source.write_text(text, encoding="utf-8")
-print("Patched odd-wave audit: assert predicted B/0 reads zero and report cutoff coverage.")
+print("Patched odd-wave audit: distinguish B/0 returns from B/1 checkpoints and report cutoff coverage.")
