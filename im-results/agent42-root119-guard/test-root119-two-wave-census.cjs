@@ -120,6 +120,8 @@ for (let time = 0; time < LIMIT; time++) {
           prefix,
           rightWindow: Array.from({ length: 10 }, (_, i) =>
             tape.has(head + 1 + i) ? '1' : '0').join(''),
+          rightTail: Array.from({ length: 6 }, (_, i) =>
+            tape.has(head + prefix.m + i) ? '1' : '0').join(''),
         });
       }
     }
