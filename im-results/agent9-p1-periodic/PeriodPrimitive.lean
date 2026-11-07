@@ -38,13 +38,12 @@ theorem positive_marker (w : List Nat)
   · have hb := nonzero_word_marker_lt w hp
     omega
 
-/-- For every positive-depth finite word with no shorter cyclic binary
-    period, exact infinite repetition is impossible at any scalar node.
-    The theorem is uniform in word length and its maximum depth. -/
-theorem no_infinite_primitive_ray (L : Nat) (w : List Nat)
-    (hp : ∃ t ∈ w, 0<t) (hprim : Primitive w)
-    (m z : Nat → Nat)
-    (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) : False := by
+/-- Every positive-depth primitive marker has nonintegral affine-block slope.
+    This all-cost arithmetic obstruction is stronger than the infinite-ray corollary. -/
+theorem primitive_no_integral_slope (w : List Nat)
+    (hp : ∃ t ∈ w, 0<t) (hprim : Primitive w) (d : Int)
+    (hd : (((2:Nat)^(cost w):Int)-1)*d =
+      (weight w:Int)*(cost w:Int)) : False := by
   let S := cost w
   let H := weight w
   let B := 2^S-1
@@ -56,7 +55,6 @@ theorem no_infinite_primitive_ray (L : Nat) (w : List Nat)
       omega
     dsimp [B]
     omega
-  obtain ⟨d,hd⟩ := periodic_run_integral_slope L w (by omega) m z hr
   have hcast : (((2^S-1):Nat):Int) = ((2^S:Nat):Int)-1 := by
     have hh : 1≤2^S := Nat.one_le_pow S 2 (by decide)
     omega
@@ -90,5 +88,17 @@ theorem no_infinite_primitive_ray (L : Nat) (w : List Nat)
       ⟨hQpos,hQlt⟩ hratio_nat
   exact hprim r hrpos hrlt hrot
 
+/-- For every positive-depth finite word with no shorter cyclic binary
+    period, exact infinite repetition is impossible at any scalar node.
+    The theorem is uniform in word length and its maximum depth. -/
+theorem no_infinite_primitive_ray (L : Nat) (w : List Nat)
+    (hp : ∃ t ∈ w, 0<t) (hprim : Primitive w)
+    (m z : Nat → Nat)
+    (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) : False := by
+  obtain ⟨d,hd⟩ := periodic_run_integral_slope L w
+    (by have hh := positive_depth_cost w hp; omega) m z hr
+  exact primitive_no_integral_slope w hp hprim d hd
+
+#print axioms primitive_no_integral_slope
 #print axioms no_infinite_primitive_ray
 end PeriodPrimitive
