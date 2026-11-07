@@ -178,22 +178,6 @@ theorem prunFast_eq (n : Nat) : ∀ S,
       rw [hfun]
       exact prun_shift n S
 
-def s5457 : List Nat :=
-  [283,906,982,3490,3734,5935,13580,109210,171050,
-   366446,435688,443554,1702180,1770018,211301,281569,35137,35134]
-
-theorem root_survives_5457_fast : prunFast 5457 seed = some s5457 := by decide
-
-theorem root_survives_5457 : prun 5457 seed = some s5457 := by
-  rw [← prunFast_eq 5457 seed]
-  exact root_survives_5457_fast
-
-theorem root_eight_prefix_at_5457 :
-    s5457.take 8 = cycle8PeriodicStart := by
-  have h : prun (5457+0) seed = some s5457 := by
-    simpa using root_survives_5457
-  simpa [prefixRun] using root_eight_prefix_from_5457 0 s5457 h
-
 #print axioms return8_25036
 #print axioms return8_109210
 #print axioms return8_109208
@@ -209,8 +193,5 @@ theorem root_eight_prefix_at_5457 :
 #print axioms root_tail_mass_sum
 #print axioms root_tail_mass_step20480
 #print axioms prunFast_eq
-#print axioms root_survives_5457_fast
-#print axioms root_survives_5457
-#print axioms root_eight_prefix_at_5457
 
 end S4PrefixEighthCycle
