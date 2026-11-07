@@ -155,6 +155,45 @@ theorem root_tail_mass_step20480 (m : Nat) (U V : List Nat)
   rw [hbase] at hsumV
   omega
 
+def prunFast : Nat → List Nat → Option (List Nat)
+  | 0, S => some S
+  | n+1, S => (P S).bind (prunFast n)
+
+private theorem prun_shift (n : Nat) (S : List Nat) :
+    (P S).bind (prun n) = (prun n S).bind P := by
+  induction n with
+  | zero => simp [prun]
+  | succ n ih =>
+      simp only [prun]
+      rw [← Option.bind_assoc, ih]
+
+theorem prunFast_eq (n : Nat) : ∀ S,
+    prunFast n S = prun n S := by
+  induction n with
+  | zero => intro S; rfl
+  | succ n ih =>
+      intro S
+      change (P S).bind (prunFast n) = (prun n S).bind P
+      have hfun : prunFast n = prun n := funext ih
+      rw [hfun]
+      exact prun_shift n S
+
+def s5457 : List Nat :=
+  [283,906,982,3490,3734,5935,13580,109210,171050,
+   366446,435688,443554,1702180,1770018,211301,281569,35137,35134]
+
+theorem root_survives_5457_fast : prunFast 5457 seed = some s5457 := by decide
+
+theorem root_survives_5457 : prun 5457 seed = some s5457 := by
+  rw [← prunFast_eq 5457 seed]
+  exact root_survives_5457_fast
+
+theorem root_eight_prefix_at_5457 :
+    s5457.take 8 = cycle8PeriodicStart := by
+  have h : prun (5457+0) seed = some s5457 := by
+    simpa using root_survives_5457
+  simpa [prefixRun] using root_eight_prefix_from_5457 0 s5457 h
+
 #print axioms return8_25036
 #print axioms return8_109210
 #print axioms return8_109208
@@ -169,5 +208,9 @@ theorem root_tail_mass_step20480 (m : Nat) (U V : List Nat)
 #print axioms root_eight_prefix_mod20480
 #print axioms root_tail_mass_sum
 #print axioms root_tail_mass_step20480
+#print axioms prunFast_eq
+#print axioms root_survives_5457_fast
+#print axioms root_survives_5457
+#print axioms root_eight_prefix_at_5457
 
 end S4PrefixEighthCycle
