@@ -121,9 +121,10 @@ theorem jLeftList_getD_nested (u n : Nat) :
           rcases hcases with h | h | h | h | h <;> simp [h, hk]
         · have hge : 5 ≤ n - 2 * u := by omega
           simp [List.getD, hge]
-      have hnotle : ¬ n + 1 ≤ 2 * u := by omega
-      have hbound : n + 1 ≤ 2 * u + 5 ↔ n - 2 * u < 5 := by omega
-      simp [hn, hval, hbound, hnotle]
+      have hge : 2 * u ≤ n := Nat.le_of_not_gt hn
+      rw [hval]
+      have hbound : n - 2 * u < 5 ↔ n ≤ 2 * u + 4 := by omega
+      by_cases h : n - 2 * u < 5 <;> simp [h, hbound]
 
 theorem jLeftList_getD (u n : Nat) :
     (jLeftList u).getD n 0 =
@@ -310,6 +311,7 @@ theorem sourceListBlank_toTuring_mk (l : List Bit) :
 theorem sourceJCfg_toBB (u w : Nat) :
     (sourceJCfg u w).toBB = highLevelEncode (.J u w) := by
   have hdefault : (default : Turing.ListBlank Bit) = Turing.ListBlank.mk [] := rfl
+  have hpow0 : ([0, 1] : List Bit) ^ 0 = [] := by decide
   dsimp only [sourceJCfg, ConjectureMachines.Cfg.toBB,
     ConjectureMachines.Tape.toTuring]
   simp only [sourceListBlank_toTuring_mk]
@@ -318,7 +320,7 @@ theorem sourceJCfg_toBB (u w : Nat) :
     Turing.ListBlank.append_mk, Turing.ListBlank.head_mk,
     Turing.ListBlank.tail_mk, Turing.ListBlank.head_cons,
     BusyBeaver.SixState.A, hdefault, List.append_assoc, List.append_nil,
-    List.nil_append, List.cons_append, _root_.pow_zero,
+    List.nil_append, List.cons_append, hpow0,
     List.headI_cons, List.tail_cons]
 
 private def sourceBit (a : Bit) : Bool := a.val == 1
@@ -341,7 +343,7 @@ theorem sourceJPosition_toRelative (u w : Nat) (head : Int) :
 
 theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
     BB6.Bridge.toAbsolute (BB6.ConjectureBridge.toRelative (sourceJPosition u w head)) =
-      { state := A, head := head, tape := jTapeAt u w head } := by
+      { state := BB6Bubble.A, head := head, tape := jTapeAt u w head } := by
   rw [sourceJPosition_toRelative]
   apply BB429JFirstBranch.config_ext
   · apply Fin.ext
