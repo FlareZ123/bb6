@@ -420,7 +420,15 @@ jobs:
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
-          lean --run ParameterSearch.lean
+          set +e
+          lean --run ParameterSearch.lean > "$GITHUB_WORKSPACE/parameter-search.txt" 2>&1
+          parameter_search_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/parameter-search.txt"
+          cat "$GITHUB_WORKSPACE/parameter-search.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$parameter_search_status" -ne 0 ]; then
+            echo "::warning::ParameterSearch is exploratory and non-gating; its 5000x40 scan did not complete."
+          fi
           # Agent 4: exploratory fixed-target root-decision diagnostic. Its raw-mass
           # domain is already covered by the source-certified mass-2000 theorem.
           cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/CResidualProbe.lean .
@@ -433,16 +441,20 @@ jobs:
           if [ "$c_probe_status" -ne 0 ]; then
             echo "::warning::CResidualProbe is exploratory and non-gating; the source proofs and mass-2000 theorem are the proof checks."
           fi
-          cp im-results/agent5-c-parameter-search/high-allowed-5000x40.txt ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/
-          cd ${GITHUB_WORKSPACE}
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add im-results/agent5-c-parameter-search/high-allowed-5000x40.txt
-          if ! git diff --cached --quiet; then
-            git commit -m "Agent 5: record C high-filter parameter scan"
-            git fetch origin main
-            git rebase origin/main
-            git push origin HEAD:main
+          if [ "$parameter_search_status" -eq 0 ] && [ -f im-results/agent5-c-parameter-search/high-allowed-5000x40.txt ]; then
+            cp im-results/agent5-c-parameter-search/high-allowed-5000x40.txt ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/
+            cd ${GITHUB_WORKSPACE}
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add im-results/agent5-c-parameter-search/high-allowed-5000x40.txt
+            if ! git diff --cached --quiet; then
+              git commit -m "Agent 5: record C high-filter parameter scan"
+              git fetch origin main
+              git rebase origin/main
+              git push origin HEAD:main
+            fi
+          else
+            echo "::warning::Skipping the Agent5 scan-result commit because the 5000x40 scan did not complete."
           fi
 
       - name: Upload C residual probe outputs
@@ -456,6 +468,7 @@ jobs:
             c-residual-mass-integration.txt
             full-forced-param-scan.txt
             m1-m2-param-scan.txt
+            parameter-search.txt
             m0-mod8-three.txt
             m0-mod16-two.txt
             m0-additional-forced-families.txt
