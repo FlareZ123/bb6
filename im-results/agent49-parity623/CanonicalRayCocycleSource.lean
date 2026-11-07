@@ -145,7 +145,10 @@ theorem leftOddCanonicalTransition (a d : Nat)
       highLevelNext (.D a d) =
           highLevelNext (.D ((d+5+k)+t) d) := by rw [hdecomp]
       _ = (highLevelNext (.D (d+5+k) d)).map (liftFirstState t) :=
-        highLevel_far_odd_shift_ones (d+5+k) d t hd (by omega) hbaseBudget
+        highLevel_far_odd_shift_ones (d+5+k) d t hd (by omega) (by
+          have harg : d+5+k-d-5=k := by omega
+          rw [harg]
+          exact hbaseBudget)
   refine ⟨B,E,?_,hbase⟩
   rw [hshift,hbase]
   rfl
@@ -176,8 +179,9 @@ theorem leftEvenCanonicalTransition (a d : Nat)
   have hbaseEq : highLevelNext (.D (d+2+k) d) = drainB k (d+2) 2 := by
     rw [highLevelNext]
     have h0 : d+2+k ≠ 0 := by omega
-    have h1 : d%2=0 ∧ d+2+k≥d+3 := by omega
-    simp only [if_neg h0, if_pos h1]
+    have h1neg : ¬(d%2=1 ∧ d+2+k≥d+5) := by omega
+    have h1pos : d%2=0 ∧ d+2+k≥d+3 := by omega
+    simp only [if_neg h0, if_neg h1neg, if_pos h1pos]
   obtain ⟨B,E,hBE⟩ := drainB_safe_ones (d+2) k 2 hbaseBudget
   have hbase : highLevelNext (.D (d+2+k) d) = some (.D B E) := by
     rw [hbaseEq,hBE]
@@ -187,7 +191,10 @@ theorem leftEvenCanonicalTransition (a d : Nat)
       highLevelNext (.D a d) =
           highLevelNext (.D ((d+2+k)+t) d) := by rw [hdecomp]
       _ = (highLevelNext (.D (d+2+k) d)).map (liftFirstState t) :=
-        highLevel_far_even_shift_ones (d+2+k) d t hd (by omega) hbaseBudget
+        highLevel_far_even_shift_ones (d+2+k) d t hd (by omega) (by
+          have harg : d+2+k-d-2=k := by omega
+          rw [harg]
+          exact hbaseBudget)
   refine ⟨B,E,?_,hbase⟩
   rw [hshift,hbase]
   rfl
@@ -233,7 +240,10 @@ theorem rightOddCanonicalTransition (a d : Nat)
       highLevelNext (.D a d) =
           highLevelNext (.D a ((a+1+2*k)+2*t)) := by rw [hdecomp]
       _ = (highLevelNext (.D a (a+1+2*k))).map (liftFirstState (2*t)) :=
-        highLevel_right_odd_shift_ones a (a+1+2*k) t ha he hdBase (by omega) hbaseBudget
+        highLevel_right_odd_shift_ones a (a+1+2*k) t ha he hdBase (by omega) (by
+          have harg : a+1+2*k+4-a=2*k+5 := by omega
+          rw [harg]
+          exact hbaseBudget)
   refine ⟨B,E,?_,hbase⟩
   rw [hshift,hbase]
   rfl
@@ -305,7 +315,10 @@ theorem rightEvenCanonicalTransition (a d : Nat)
       highLevelNext (.D a d) =
           highLevelNext (.D a ((a+2+2*k)+2*t)) := by rw [hdecomp]
       _ = (highLevelNext (.D a (a+2+2*k))).map (liftFirstState (2*t)) :=
-        highLevel_right_even_shift_ones a (a+2+2*k) t ha he hdBase (by omega) hbaseBudget
+        highLevel_right_even_shift_ones a (a+2+2*k) t ha he hdBase (by omega) (by
+          have harg : a+2+2*k+1-a=2*k+3 := by omega
+          rw [harg]
+          exact hbaseBudget)
   refine ⟨B,E,?_,hbase⟩
   rw [hshift,hbase]
   rfl
