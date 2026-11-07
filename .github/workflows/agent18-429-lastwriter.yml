@@ -50,5 +50,8 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FreshFrontier.olean im-results/agent32-429-raw-parent/BB429FreshFrontier.lean | tee -a /tmp/agent32-429-source.log
           lean -o im-results/agent18-429-lastwriter/LastLeftWrite.olean im-results/agent18-429-lastwriter/LastLeftWrite.lean | tee /tmp/agent18-last-writer.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-lastwriter/BB429LastWriter.olean im-results/agent18-429-lastwriter/BB429LastWriter.lean | tee -a /tmp/agent18-last-writer.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent18-429-lastwriter/BB429HaltLeftWriter.lean | tee -a /tmp/agent18-last-writer.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-lastwriter/BB429HaltLeftWriter.olean im-results/agent18-429-lastwriter/BB429HaltLeftWriter.lean | tee -a /tmp/agent18-last-writer.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-lastwriter/LastLeftExcursion.olean im-results/agent18-429-lastwriter/LastLeftExcursion.lean | tee -a /tmp/agent18-last-writer.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent18-429-lastwriter/BB429HaltExcursion.lean | tee -a /tmp/agent18-last-writer.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent18-429-lastwriter/BB429SyntheticLeftExcursion.lean | tee -a /tmp/agent18-last-writer.log
           if grep -q sorryAx /tmp/agent18-last-writer.log /tmp/agent32-429-source.log /tmp/agent32-bubble.log; then exit 1; fi
