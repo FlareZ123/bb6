@@ -20,7 +20,7 @@ jobs:
       - name: Compile original frontier, authentic #429 path and new all-time predecessor theorem
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost"
+          export LEAN_PATH="im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean | tee /tmp/agent32-bubble.log
           lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean | tee -a /tmp/agent32-bubble.log
@@ -46,8 +46,9 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JPhysicalPrefix.olean im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean | tee -a /tmp/agent32-bubble.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JF0Prefix.olean im-results/agent32-429-primitive-cost/JF0Prefix.lean | tee -a /tmp/agent32-bubble.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-j-first-branch/JFirstBranch.olean im-results/agent1-429-j-first-branch/JFirstBranch.lean | tee -a /tmp/agent32-bubble.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high3-ladder/High3Ladder.olean im-results/agent32-429-high3-ladder/High3Ladder.lean | tee /tmp/agent32-high3.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FEntry.olean im-results/agent32-429-raw-parent/BB429FEntry.lean | tee /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FatalB.olean im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
           lean -o im-results/agent32-429-raw-parent/FreshCell.olean im-results/agent32-429-raw-parent/FreshCell.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FreshFrontier.lean | tee -a /tmp/agent32-429-source.log
-          if grep -q sorryAx /tmp/agent32-429-source.log /tmp/agent32-bubble.log; then exit 1; fi
+          if grep -q sorryAx /tmp/agent32-429-source.log /tmp/agent32-bubble.log /tmp/agent32-high3.log; then exit 1; fi
