@@ -41,9 +41,8 @@ private theorem special_code (r : Nat) :
   rw [hmul]
   have h : List.replicate (6*r+3) true ++ [true] =
       List.replicate (6*r+4) true := by
-    rw [show [true] = List.replicate 1 true by rfl,
-      show 6*r+4=(6*r+3)+1 by omega,
-      ← List.replicate_append_replicate]
+    simpa [show [true] = List.replicate 1 true by rfl] using
+      (List.replicate_append_replicate (6*r+3) 1 true)
   change (List.replicate (6*r+3) true ++
       ([true] ++ (false :: List.replicate 12 true))) =
     List.replicate (6*r+4) true ++ (false :: List.replicate 12 true)
@@ -75,8 +74,7 @@ private theorem a_input_shape (t r : Nat) :
   have hn : 8*(3*t+2)+5 = 2+(3*(8*t+6)+1) := by omega
   have hp : 2*(3*r+1)+2 = 3*(2*r+1)+1 := by omega
   rw [hn,hp,← List.replicate_append_replicate]
-  simp [List.append_assoc]
-  omega
+  simp [List.append_assoc] <;> omega
 
 /-- The q=3r+1 A branch closes after two physical blank cells are made explicit
     for the original 1100 terminal. The unpadded endpoint is physically equal. -/
