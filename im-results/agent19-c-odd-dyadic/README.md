@@ -21,7 +21,7 @@ A constructive parameter family and explicit cross-agent `ValSixC58AllDepth` mer
 
 See [HighEvenRight.md](HighEvenRight.md) for the proof synthesis and exact residue calculations. The unique even-right inverse cylinder (m\equiv3\pmod4, j\equiv m+3\pmod8) is source-certified and survives the full previous Agent24 high sieve; its exact residual criterion and axiom audit passed [CI 42349021125](https://github.com/FlareZ123/bb6/actions/runs/42349021125).
 
-A second exceptional sum-seven cylinder (j=32q+8, m=32r+5) is being checked using Agent3's complete one-step preimage grammar. Its source proof rules out every possible parent by the odd-right image invariant, with no finite bounce-depth cutoff. The combined source and prior-sieve verification is pending [CI 42350364054](https://github.com/FlareZ123/bb6/actions/runs/42350364054). Treat the second cylinder as provisional until that run succeeds.
+A second exceptional sum-seven cylinder is now formulated in the full congruence form m>=5, m mod 4=1, (j+8) mod 32=(3*m+1) mod 32, covering eight residue pairs modulo 32. Its source proof uses Agent3's complete one-step preimage grammar and rules out every possible parent by the odd-right image invariant, with no finite bounce-depth cutoff. The generalized source and prior-sieve verification is pending [CI 42351055087](https://github.com/FlareZ123/bb6/actions/runs/42351055087). Treat the generalized cylinder as provisional until that run succeeds.
 
 
 ## Current state
