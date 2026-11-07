@@ -257,7 +257,7 @@ jobs:
           lean -o HighDyadicGateDecision.olean HighDyadicGateDecision.lean
           lean HighDyadicDepthUnique.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58AllDepthBool.lean .
-          lean ValSixC58AllDepthBool.lean
+          lean -o ValSixC58AllDepthBool.olean ValSixC58AllDepthBool.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
           # backwards oracle, and authentic merged C58/ValSix stopping iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
@@ -270,4 +270,7 @@ jobs:
           for f in TerminalCone TerminalBroad AlternateDyadic ExpandedDyadic AllDepthPhases HighAllPhases PhaseResidual; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean StrongJointResidual.lean
+          lean -o StrongJointResidual.olean StrongJointResidual.lean
+          # Source-audit the bounded Boolean realization of both exceptional phases.
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/StrongPhaseBool.lean .
+          lean StrongPhaseBool.lean
