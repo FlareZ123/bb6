@@ -109,8 +109,8 @@ private theorem full_forced_normalize_m0_j32_six (t : Nat) :
   have hA1 : ¬ BB6.Agent3.evenAffineGate (80*t+18) (88*t+20) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE1 : BB6.Agent3.sixEvenRightGate (80*t+18) (88*t+20) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE1 : BB6.Agent46.sixEvenRightGate (80*t+18) (88*t+20) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO2 : ¬ BB6.Agent3.oddLowGate (168*t+36) (44*t+9) := by
     unfold BB6.Agent3.oddLowGate
@@ -121,8 +121,8 @@ private theorem full_forced_normalize_m0_j32_six (t : Nat) :
   have hA2 : ¬ BB6.Agent3.evenAffineGate (168*t+36) (44*t+9) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE2 : ¬ BB6.Agent3.sixEvenRightGate (168*t+36) (44*t+9) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE2 : ¬ BB6.Agent46.sixEvenRightGate (168*t+36) (44*t+9) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   unfold BB6.Agent3.fullForcedNormalize
   rw [dif_pos hO]
@@ -159,8 +159,8 @@ private theorem full_forced_normalize_m0_j64_fiftyeight (t : Nat) :
   have hA1 : ¬ BB6.Agent3.evenAffineGate (160*t+148) (176*t+163) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE1 : ¬ BB6.Agent3.sixEvenRightGate (160*t+148) (176*t+163) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE1 : ¬ BB6.Agent46.sixEvenRightGate (160*t+148) (176*t+163) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO2 : ¬ BB6.Agent3.oddLowGate (168*t+153) (172*t+157) := by
     unfold BB6.Agent3.oddLowGate
@@ -171,8 +171,8 @@ private theorem full_forced_normalize_m0_j64_fiftyeight (t : Nat) :
   have hA2 : ¬ BB6.Agent3.evenAffineGate (168*t+153) (172*t+157) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE2 : ¬ BB6.Agent3.sixEvenRightGate (168*t+153) (172*t+157) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE2 : ¬ BB6.Agent46.sixEvenRightGate (168*t+153) (172*t+157) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   unfold BB6.Agent3.fullForcedNormalize
   rw [dif_pos hO]
@@ -207,8 +207,8 @@ private theorem full_forced_normalize_m0_j32_twentyone (t : Nat) :
   have hA0 : ¬ BB6.Agent3.evenAffineGate (64*t+45) (96*t+70) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE0 : BB6.Agent3.sixEvenRightGate (64*t+45) (96*t+70) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE0 : BB6.Agent46.sixEvenRightGate (64*t+45) (96*t+70) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO1 : ¬ BB6.Agent3.oddLowGate (160*t+113) (48*t+34) := by
     unfold BB6.Agent3.oddLowGate
@@ -219,8 +219,8 @@ private theorem full_forced_normalize_m0_j32_twentyone (t : Nat) :
   have hA1 : ¬ BB6.Agent3.evenAffineGate (160*t+113) (48*t+34) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE1 : BB6.Agent3.sixEvenRightGate (160*t+113) (48*t+34) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE1 : BB6.Agent46.sixEvenRightGate (160*t+113) (48*t+34) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO2 : ¬ BB6.Agent3.oddLowGate (208*t+145) (24*t+16) := by
     unfold BB6.Agent3.oddLowGate
@@ -240,8 +240,8 @@ private theorem full_forced_normalize_m0_j32_twentyone (t : Nat) :
   have hA3 : ¬ BB6.Agent3.evenAffineGate (232*t+159) (12*t+7) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE3 : ¬ BB6.Agent3.sixEvenRightGate (232*t+159) (12*t+7) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE3 : ¬ BB6.Agent46.sixEvenRightGate (232*t+159) (12*t+7) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO0,dif_neg hS0,dif_neg hA0,dif_pos hE0]
@@ -289,8 +289,8 @@ private theorem full_forced_normalize_m0_j32_fifteen (t : Nat) :
   have hA1 : ¬ BB6.Agent3.evenAffineGate (160*t+83) (48*t+25) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE1 : ¬ BB6.Agent3.sixEvenRightGate (160*t+83) (48*t+25) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE1 : ¬ BB6.Agent46.sixEvenRightGate (160*t+83) (48*t+25) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO2 : ¬ BB6.Agent3.oddLowGate (104*t+52) (76*t+37) := by
     unfold BB6.Agent3.oddLowGate
@@ -301,8 +301,8 @@ private theorem full_forced_normalize_m0_j32_fifteen (t : Nat) :
   have hA2 : ¬ BB6.Agent3.evenAffineGate (104*t+52) (76*t+37) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE2 : ¬ BB6.Agent3.sixEvenRightGate (104*t+52) (76*t+37) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE2 : ¬ BB6.Agent46.sixEvenRightGate (104*t+52) (76*t+37) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO0,dif_neg hS0,dif_pos hA0]
@@ -345,8 +345,8 @@ private theorem full_forced_normalize_m0_j128_seventyone (t : Nat) :
   have hA1 : ¬ BB6.Agent3.evenAffineGate (640*t+363) (192*t+109) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE1 : ¬ BB6.Agent3.sixEvenRightGate (640*t+363) (192*t+109) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE1 : ¬ BB6.Agent46.sixEvenRightGate (640*t+363) (192*t+109) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO2 : ¬ BB6.Agent3.oddLowGate (416*t+234) (304*t+170) := by
     unfold BB6.Agent3.oddLowGate
@@ -357,8 +357,8 @@ private theorem full_forced_normalize_m0_j128_seventyone (t : Nat) :
   have hA2 : ¬ BB6.Agent3.evenAffineGate (416*t+234) (304*t+170) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE2 : BB6.Agent3.sixEvenRightGate (416*t+234) (304*t+170) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE2 : BB6.Agent46.sixEvenRightGate (416*t+234) (304*t+170) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO3 : ¬ BB6.Agent3.oddLowGate (720*t+402) (152*t+84) := by
     unfold BB6.Agent3.oddLowGate
@@ -369,8 +369,8 @@ private theorem full_forced_normalize_m0_j128_seventyone (t : Nat) :
   have hA3 : ¬ BB6.Agent3.evenAffineGate (720*t+402) (152*t+84) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE3 : BB6.Agent3.sixEvenRightGate (720*t+402) (152*t+84) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE3 : BB6.Agent46.sixEvenRightGate (720*t+402) (152*t+84) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   have hO4 : ¬ BB6.Agent3.oddLowGate (872*t+484) (76*t+41) := by
     unfold BB6.Agent3.oddLowGate
@@ -381,8 +381,8 @@ private theorem full_forced_normalize_m0_j128_seventyone (t : Nat) :
   have hA4 : ¬ BB6.Agent3.evenAffineGate (872*t+484) (76*t+41) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE4 : ¬ BB6.Agent3.sixEvenRightGate (872*t+484) (76*t+41) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE4 : ¬ BB6.Agent46.sixEvenRightGate (872*t+484) (76*t+41) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO0,dif_neg hS0,dif_pos hA0]
