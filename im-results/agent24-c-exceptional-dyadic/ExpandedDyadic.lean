@@ -25,7 +25,7 @@ theorem expanded_dyadic_no_blank (r x b0 t : Nat)
     have hm : (b0+2)%32=0 := Nat.mod_eq_zero_of_dvd hdiv32
     omega
   have hx8 : x%8=3 := by omega
-  have hbase : (x+2*b0)%8=7 := by omega
+  have hbase : (x+2*b0)%4=3 := by omega
   intro hre
   have hm0 : x+2*b0+4*(r-r)=x+2*b0 := by omega
   obtain ⟨A,hreach,hMass⟩ :=
