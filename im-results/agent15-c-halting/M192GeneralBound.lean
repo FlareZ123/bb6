@@ -24,7 +24,7 @@ theorem two_pow_lower_linear (m : Nat) :
       norm_num
   | succ m ih =>
       have hexp : 2*(m+1)+2 = (2*m+2)+2 := by omega
-      rw [hexp, pow_add]
+      rw [hexp, Nat.pow_add]
       norm_num
       nlinarith
 
