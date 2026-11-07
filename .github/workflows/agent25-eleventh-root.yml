@@ -98,6 +98,8 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$D/BlankEighthRejoin.olean" "$D/BlankEighthRejoin.lean"
           lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
+          lean -o "$P2/PacketP2ResetSource.olean" "$P2/PacketP2ResetSource.lean"
+          lean -o "$P2/P2ResetRegularReentry.olean" "$P2/P2ResetRegularReentry.lean"
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
           lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
