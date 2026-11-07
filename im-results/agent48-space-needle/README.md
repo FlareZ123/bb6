@@ -1,6 +1,6 @@
 # Space Needle research dossier
 
-**Status (7 November 2026): unresolved.** There is no proof that this machine halts or runs forever, and no exact value of BB(6). The strongest current result is an original-source-checked equivalence reducing halting to reachability of a sixth-regular terminal-feeder list. Its exponent and blank-root reachability quantifiers remain unbounded.
+**Status (7 November 2026): unresolved.** There is no proof that this machine halts or runs forever, and no exact value of BB(6). The strongest current result is an original-source-checked equivalence reducing halting to reachability of a quadratic-size, sixth-regular terminal-feeder list. Its exponent and blank-root reachability quantifiers remain unbounded.
 
 ## Machine and source model
 
@@ -20,7 +20,7 @@ One high-level transition sends
 
 The raw-machine bridge identifies halting with the actual blank-start high-level orbit reaching a state with `d+2=2^K`. Here `ReachN d` means reachability from the genuine blank-tape start. It is not arbitrary predecessor reachability.
 
-The shifted variable `b=d+2) starts at 3. The external 100-million-update computation starts at the first post-start value 6.
+The shifted variable `b=d+2` starts at 3. The external 100-million-update computation starts at the first post-start value 6.
 
 ## Exact terminal-feeder equation
 
@@ -52,25 +52,47 @@ The sixth-linear refinement proves that every fifth-regular terminal source sati
 
 The two new exceptional source counters are 3446 and 4006494. Exact reverse checks exclude both from `ReachN`.
 
-The resulting source-level theorem is [raw_halts_iff_reaches_sixth_regular](NeedleSixthRoot.lean):
+The sixth-linear source-level theorem is [raw_halts_iff_reaches_sixth_regular](NeedleSixthRoot.lean):
 
 `IsHalt target ↔ ∃ k q v, ReachN (oddTower q v) ∧ (v,q) ∈ NeedleSixthRegular.parents (k+1)`.
 
-The exact list specification says membership in `parents(K)` is equivalent to `E(q,v,K) ∧ 6v ≤ K+4`. The source file uses `K=k+1`. Thus every possible halt must enter the actual blank-start orbit through a sixth-regular feeder. The remaining exponent and reachability quantifiers are still unbounded.
+The stronger exact reduction is [raw_halts_iff_reaches_quadratic_regular_feeder](NeedleRootQuadraticRegular.lean):
 
-The detailed derivation and exception audit are in [SIXTH-BOUND.md](SIXTH-BOUND.md). The complete manual original-source workflow passed in [CI run 42374851305](https://github.com/FlareZ123/bb6/actions/runs/42374851305). It compiles the fifth-root bridge, sixth-linear arithmetic, exact inverse list, root exclusions, and modular obstruction module against the pinned Cryptids source.
+`IsHalt target ↔ ∃ k q v, ReachN (oddTower q v) ∧ (v,q) ∈ NeedleQuadraticEnum.quadraticRegularParents (k+1)`.
 
-## Quadratic terminal-valuation bound outside the cancellation family
+Its complete list is an exact subset of the sixth-regular list, with a formally proved cardinality bound of `11 + sqrt(8*(K+1)) + log2(K+1) + 2`. The remaining exponent and reachability quantifiers are still unbounded.
 
-The new all-natural theorem in [NeedleTerminalDichotomy.lean](NeedleTerminalDichotomy.lean) proves that every terminal feeder satisfying E(q,v,K), with v≥11, falls into exactly the following necessary disjunction. Put n=floor((K+1)/(v+1)) and s=(K+1) mod (v+1):
+The detailed sixth-linear derivation and exception audit are in [SIXTH-BOUND.md](SIXTH-BOUND.md). The original-source verification of the stronger quadratic enumeration, both root equivalences, and the additional cancellation holdout proofs passed in [CI run 42416997719](https://github.com/FlareZ123/bb6/actions/runs/42416997719). The earlier sixth-linear workflow passed in [CI run 42374851305](https://github.com/FlareZ123/bb6/actions/runs/42374851305).
 
-- s=0, n even, and 2v=3^n+3; or
-- v²≤8(K+1).
+## Quadratic-size exact inverse enumeration
 
-The first branch is the existing synthetic variable-valuation family from [Agent20's NeedleVariableValuation.lean](../agent20-needle-coprime/NeedleVariableValuation.lean). Writing n=2r gives v=(9^r+3)/2 and K+1=r(9^r+5). For fixed K, this exceptional family has at most one candidate r because r(9^r+5) is strictly increasing. Every other valuation v≥11 is at most sqrt(8(K+1)). Thus the ordinary valuation scan can be reduced to O(sqrt K), with a separate logarithmic-time exceptional-family check.
+The all-natural theorem in [NeedleTerminalDichotomy.lean](NeedleTerminalDichotomy.lean) proves that every terminal feeder with `v≥11` satisfies at least one of these alternatives:
 
-The source-linked theorem [NeedleTerminalDichotomySource.lean](NeedleTerminalDichotomySource.lean) applies the arithmetic result directly to the pinned highLevelNext predecessor relation in SpaceNeedleClosed.lean. The standalone proof was kernel-checked locally with Lean 4.36.0-rc2 and has no custom axioms. Original-source CI was dispatched after adding both files to the manual workflow; its result remains pending. This is a one-step predecessor theorem and does not establish blank-root reachability or a BB(6) value.
+- `v²≤8(K+1)`;
+- or, writing `n=(K+1)/(v+1)` and requiring zero remainder, `n` is even and `2v=3^n+3`.
 
+The cancellation branch has the exact parameterization `v=(9^r+3)/2` and `K+1=r(9^r+5)`, with `r≤log₂(K+1)`. [NeedleQuadraticEnumerate.lean](NeedleQuadraticEnumerate.lean) checks this exact identity before evaluating an inverse candidate, avoiding irrelevant enormous exponent computations.
+
+The executable list `quadraticParents(K)` has the formal exact specification
+
+`(v,q) ∈ quadraticParents(K) ↔ E(q,v,K)`
+
+for all natural q, v, and K. Its length is bounded by
+
+`11 + (Nat.sqrt (8*(K+1))+1) + (Nat.log2 (K+1)+1)`,
+
+so the candidate count is `O(sqrt(K)+log(K))`. The filtered list `quadraticRegularParents(K)` also imposes the sixth-linear condition `6v≤K+4` and satisfies the same bound.
+
+[NeedleQuadraticEnumerateSource.lean](NeedleQuadraticEnumerateSource.lean) proves exact equivalence with an actual one-step predecessor of the pinned original source. [NeedleRootQuadraticRegular.lean](NeedleRootQuadraticRegular.lean) combines the list with the sixth-root theorem to give the stronger exact blank-root criterion shown above. This asymptotically improves the previous optimized slope-scan cutoff, while preserving the unbounded root-reachability existential.
+
+[NeedleCancellationHoldouts.lean](NeedleCancellationHoldouts.lean) proves two additional genuine-root exclusions:
+
+- r=3: K=2201, v=366 is a genuine terminal feeder, but its exact generic inverse parent list is empty.
+- r=4: K=26263, v=3282 is a genuine terminal feeder, with exact reverse-parent valuation chain 4 → 0 → 1 → no parents.
+
+Both satisfy the sixth-linear restriction, and both are formally proved unreachable from the original blank root using the exact fixed-target reverse checker. The r=1 and r=2 cancellation cases were already excluded in [NeedleRootSharp.lean](../agent20-needle-coprime/NeedleRootSharp.lean) and [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean). Thus the first four cancellation-family members are excluded; r≥5 and the entire square-root-bounded sector remain unresolved.
+
+The full derivation, exact list, complexity bound, source bridge, root criterion, and finite reverse certificates are documented in [QUADRATIC-ENUMERATION.md](QUADRATIC-ENUMERATION.md). Original-source CI passed in [run 42416997719](https://github.com/FlareZ123/bb6/actions/runs/42416997719).
 ## Modular terminal-feeder exclusions
 
 The current Lean source explicitly proves these ten infinite valuation progressions impossible for terminal feeders:
@@ -116,7 +138,10 @@ The external [final integer hash record](https://github.com/oohzaim1-afk/space-n
 ## Main artifacts
 
 - [SpaceNeedleClosed.lean](SpaceNeedleClosed.lean): original high-level counter dynamics and exact transition identities.
-- [NeedleTerminalDichotomy.lean](NeedleTerminalDichotomy.lean), [NeedleTerminalDichotomySource.lean](NeedleTerminalDichotomySource.lean): quadratic valuation bound outside the exact synthetic cancellation family, with a source-linked predecessor theorem.
+- [NeedleTerminalDichotomy.lean](NeedleTerminalDichotomy.lean), [NeedleTerminalDichotomySource.lean](NeedleTerminalDichotomySource.lean): quadratic valuation dichotomy and source-linked predecessor theorem.
+- [NeedleQuadraticEnumerate.lean](NeedleQuadraticEnumerate.lean), [NeedleQuadraticEnumerateSource.lean](NeedleQuadraticEnumerateSource.lean): exact square-root/logarithmic terminal-feeder list.
+- [NeedleRootQuadraticRegular.lean](NeedleRootQuadraticRegular.lean): exact quadratic-size, sixth-regular blank-root halting criterion.
+- [NeedleCancellationHoldouts.lean](NeedleCancellationHoldouts.lean): original-source terminal feeders at r=3 and r=4 excluded from the blank-root orbit.
 - [SpaceNeedleRawBridge.lean](SpaceNeedleRawBridge.lean): raw-machine halting bridge and genuine blank-start reachability.
 - [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean): fifth-linear root reduction and exclusion of its two exceptional feeders.
 - [FifthHigh.lean](FifthHigh.lean), [NeedleQuinticRegular.lean](NeedleQuinticRegular.lean): fifth-linear bound and exact inverse list.
@@ -131,6 +156,6 @@ A fixed odd-modulus invariant that forgets the true valuation is necessarily tri
 
 ## Next research priority
 
-Prove that `ReachN` avoids every member of the unbounded sixth-regular feeder family, or produce an actual reachable feeder. Prioritize a history-sensitive root invariant, symbolic reverse-cone closure, or a combined odd-block/even-tail analysis. Further synthetic slope improvements are secondary unless they eliminate an infinite sector of the remaining root existential.
+Prove that `ReachN` avoids the remaining quadratic-regular feeder family, or produce an actual reachable feeder. The first four cancellation parameters are now excluded; prioritize a uniform treatment of r≥5 and the square-root-bounded sector, using history-sensitive root invariants or symbolic reverse-cone closure. Further synthetic slope improvements are secondary unless they eliminate an infinite sector of the remaining root existential.
 
 **No exact BB(6) value or Space Needle halting decision is claimed.**
