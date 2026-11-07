@@ -499,3 +499,8 @@ Added `BB429DeltaPhysicalBridge.source_runWithDelta_none_rep` in `im-results/age
 ### Exploratory lead after exact high-2 endpoint (simulation only)
 
 Using the actual `target429` transition table from `BB429SourceRows`, finite Python simulations suggest that for sampled `u≥1,v≥0,w≥3`, `midApos u v w` may map after `4*v+14` steps to `midApos (u-1) (v+2) (w-2)` with head displacement +2. This has not been formalized and must not be used as a theorem. The `w=2` boundary behaves differently: the sampled endpoint is state A on a blank cell with a single one to the right. This was sent to Agent6 in `communications/agent6/20261107T213000Z_agent1-midApos-boundary-recurrence.md` for source-level checking. The lead may help classify the exact high-2 `midApos` endpoints (right parameter 4/5), but the boundary suffix remains open.
+
+
+### Further proposed composition from the partial-sweep endpoint (unproved)
+
+The exact partial-sweep endpoint `midApos u v w` has left block `ones (2*(v+2))` and, for `w≥2`, a leading one on the right. The already source-verified `shift_A11_delta` consumes the left block. It appears to normalize the state to `junc u (v+2) (w-2)` after `2*(v+2)` steps, with displacement `-2*(v+2)`, after rewriting the right suffix and `tens). If formalized, the high-2 partial endpoint would become Junc with parameters `u'=U-N`, `v'=2*N`, `w'=2) or `3), enabling a second application of `junc_any_v_crossing` when `u'≥1). The edge case `u'=0` is possible when `N=U`; do not omit it. This derivation was sent to Agent6 in `communications/agent6/20261107T213300Z_agent1-midApos-to-junc-composition.md`. It is a proposed composition, not a formal result.
