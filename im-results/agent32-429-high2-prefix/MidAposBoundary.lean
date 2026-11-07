@@ -345,8 +345,7 @@ theorem ones_right_101 (n : Nat) :
     rfl
   calc
     ones n ++ [true,false,true] = (ones n ++ [true]) ++ [false,true] := by
-      change ones n ++ ([true] ++ [false,true]) = (ones n ++ [true]) ++ [false,true]
-      exact (List.append_assoc (ones n) [true] [false,true]).symm
+      simpa using (List.append_assoc (ones n) [true] [false,true]).symm
     _ = ones (n+1) ++ [false,true] := by rw [hones]
     _ = (true :: ones n) ++ [false,true] := by rw [hsucc]
     _ = true :: (ones n ++ [false,true]) := by rfl
@@ -395,6 +394,7 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
     simp only [pairs01]
     rw [ones_right_101]
     simp [ones]
+    simp [ones]
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
@@ -422,7 +422,6 @@ theorem c1_odd_to_junc3_delta (k : Nat) :
   rw [htime, runWithDelta_add, hfirst]
   simp only [Option.bind_some]
   rw [hnext]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   have hw : 4*k+20-3 = 4*k+17 := by omega
   rw [hw]
@@ -474,9 +473,7 @@ theorem c1_even_to_junc11_delta (k : Nat) :
     calc
       ones (4*k+21) ++ [true,false,true] =
           (ones (4*k+21) ++ [true]) ++ [false,true] := by
-            change ones (4*k+21) ++ ([true] ++ [false,true]) =
-              (ones (4*k+21) ++ [true]) ++ [false,true]
-            exact (List.append_assoc (ones (4*k+21)) [true] [false,true]).symm
+            simpa using (List.append_assoc (ones (4*k+21)) [true] [false,true]).symm
       _ = ones (4*k+22) ++ [false,true] := by rw [hones1]
       _ = (ones 6 ++ ones (4*k+16)) ++ [false,true] := by rw [hones2]
       _ = ones 6 ++ ones (4*k+16) ++ [false,true] := by rw [List.append_assoc]
@@ -502,6 +499,7 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
   rw [hsource, htail]
+  simp only [Option.map_some]
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
