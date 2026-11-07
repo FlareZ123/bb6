@@ -14,7 +14,7 @@ theorem highAllowed_iff (j m : Nat) :
   · rintro ⟨hprior,hbool⟩
     exact ⟨hprior,(BB6.Agent11FastDepthGate.candidateAllowedBool_iff j m).mp hbool⟩
   · rintro ⟨hprior,hall⟩
-    exact ⟨hprior,(BB6.Agent11GateDecision.allowedBool_iff j m).mpr hall⟩
+    exact ⟨hprior,(BB6.Agent11FastDepthGate.candidateAllowedBool_iff j m).mpr hall⟩
 
 /-- The all-depth original-source exact blank-halting equivalence,
     with an executable finite high-parameter gate. This still retains
