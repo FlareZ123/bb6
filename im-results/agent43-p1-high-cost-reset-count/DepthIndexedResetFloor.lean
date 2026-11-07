@@ -67,7 +67,7 @@ theorem source_right_five_depth_reset_dichotomy
   · have htEq : t=n+1 := by omega
     have hpow2 : 2^(t+1)=4*2^n := by
       rw [htEq, show n+1+1=n+2 by omega, Nat.pow_add]
-      norm_num
+      simp [Nat.mul_comm]
     have hpow3 : 2^(t+3)=16*2^n := by
       rw [htEq, show n+1+3=n+4 by omega, Nat.pow_add]
       norm_num
