@@ -447,11 +447,16 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   have hsweep := E1_sweep_prefix_delta (4*k+21)
     (pairs01 2 ++ ones 5) [true,false,true]
   have hones1 : ones (4*k+21) ++ [true] = ones (4*k+22) := by
-    rw [← BB429SourceE1Return.ones_add (4*k+21) 1]
-    rfl
+    calc
+      ones (4*k+21) ++ [true] = ones (4*k+21) ++ ones 1 := by rfl
+      _ = ones ((4*k+21)+1) :=
+          (BB429SourceE1Return.ones_add (4*k+21) 1).symm
+      _ = ones (4*k+22) := by congr 1 <;> omega
   have hones2 : ones 6 ++ ones (4*k+16) = ones (4*k+22) := by
-    rw [← BB429SourceE1Return.ones_add 6 (4*k+16)]
-    congr 1 <;> omega
+    calc
+      ones 6 ++ ones (4*k+16) = ones (6+(4*k+16)) :=
+          (BB429SourceE1Return.ones_add 6 (4*k+16)).symm
+      _ = ones (4*k+22) := by congr 1 <;> omega
   have hright :
       ones (4*k+21) ++ [true,false,true] =
       ones 6 ++ ones (4*k+16) ++ [false,true] := by
@@ -467,8 +472,7 @@ theorem c1_even_to_junc11_delta (k : Nat) :
         (ones (4*k+21) ++ [true,false,true]) =
       sourceScanE 2 (sourceSuffix (2*k+8)) := by
     simp only [sourceScanE, sourceSuffix]
-    congr 1
-    exact hright
+    rw [show 2*(2*k+8) = 4*k+16 by omega, hright]
   have htail := sourceScanE_finishC_even_after_junc0_delta 1 (2*k+8) (by omega)
   have htailTime :
       ((crossTime (2*1)+1+(12+2*(2*1))) +
@@ -478,6 +482,7 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   rw [htailTime] at htail
   have hw : 2*(2*k+8)-6 = 4*k+10 := by omega
   rw [show 2*1+9=11 by omega, hw] at htail
+  rw [List.append_assoc] at hprefix
   have htime : 4*k+220 = 24 + ((4*k+21)+175) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
