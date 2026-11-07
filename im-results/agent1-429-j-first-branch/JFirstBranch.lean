@@ -512,40 +512,136 @@ def firstBranchTape (u w : Nat) (x : Int) : Bool :=
 theorem cCfg_tape_left_blank (u w : Nat) (x : Int)
     (hx : x < -2*(u:Int)-9) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=false := by
-  have hout : ¬(-2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4) := by omega
   have hbase : baseTape u w x=false :=
-    baseTape_left_blank u w x (by omega)
+    baseTape_left_blank u w x hx
   have hne : x≠-2*(u:Int)-6 := by omega
-  simp [setupTape,f0Tape,writeAt,hout,hne,hbase]
+  simp only [setupTape]
+  by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
+  · simp [h]
+    omega
+  · simp [h,f0Tape,writeAt,hne,hbase]
 
 theorem cCfg_tape_left_ones (u w : Nat) (x : Int)
     (hlo : -2*(u:Int)-9≤x) (hhi : x < -2*(u:Int)-3) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=true := by
-  have hrange : -2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4 := by omega
-  simp [setupTape,hrange]
+  simp only [setupTape]
+  by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
+  · simp [h]
+  · simp [h]
+    omega
 
 theorem cCfg_tape_right (u w : Nat) (x : Int)
     (hx : -2*(u:Int)-3 ≤ x) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=baseTape u w x := by
-  have hout : ¬(-2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4) := by omega
   have hne : x≠-2*(u:Int)-6 := by omega
-  simp [setupTape,f0Tape,writeAt,hout,hne]
+  simp only [setupTape]
+  by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
+  · simp [h]
+    omega
+  · simp [h,f0Tape,writeAt,hne]
 
 theorem firstBranchTape_eq_jTapeAt (u w : Nat) (hw : 2*u+3≤w) :
     firstBranchTape u w =
       jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
   funext x
+  change firstBranchTape u w x =
+    jTape (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3))
   by_cases hx0 : x < -2*(u:Int)-9
-  · simp [firstBranchTape,jTapeAt,jTape,jMark,jHole,hx0]
-    omega
+  · have hy : x-(2*(u:Int)+3) < -2*((2*u+3:Nat):Int)-6 := by omega
+    have hmark : ¬jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
+      intro hm
+      unfold jMark jHole at hm
+      rcases hm with ⟨hlo,hhi,hnot⟩ | heq
+      · omega
+      · omega
+    simp [firstBranchTape,hx0,jTape,hmark]
   · by_cases hx1 : x < -2*(u:Int)-3
-    · simp [firstBranchTape,jTapeAt,jTape,jMark,jHole,hx0,hx1]
-      omega
+    · have hylo : -2*((2*u+3:Nat):Int)-6 ≤ x-(2*(u:Int)+3) := by omega
+      have hyhi : x-(2*(u:Int)+3) ≤ ((w-(2*u+3):Nat):Int)+1 := by omega
+      have hnot : ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+        intro hh
+        unfold jHole at hh
+        omega
+      have hmark : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
+        unfold jMark
+        exact Or.inl ⟨hylo,hyhi,hnot⟩
+      simp [firstBranchTape,hx0,hx1,jTape,hmark]
     · by_cases hx2 : x < 2*(u:Int)+3
-      · simp [firstBranchTape,jTapeAt,jTape,jMark,jHole,hx0,hx1,hx2]
-        omega
-      · simp [firstBranchTape,jTapeAt,jTape,jMark,jHole,hx0,hx1,hx2]
-        omega
+      · have hylo : -2*((2*u+3:Nat):Int) ≤ x-(2*(u:Int)+3) := by omega
+        have hyhi : x-(2*(u:Int)+3) < 0 := by omega
+        have hpar : (x-(2*(u:Int)+3))%2 = (x%2-1)%2 := by
+          rw [Int.sub_emod]
+          simp
+        by_cases heven : x%2=0
+        · have hyodd : (x-(2*(u:Int)+3))%2=1 := by rw [hpar]; omega
+          have hnot : ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+            intro hh
+            unfold jHole at hh
+            omega
+          have hmark : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
+            unfold jMark
+            exact Or.inl ⟨by omega, by omega, hnot⟩
+          simp [firstBranchTape,hx0,hx1,hx2,jTape,hmark,heven]
+        · have hxeven : x%2=1 := by omega
+          have hyzero : (x-(2*(u:Int)+3))%2=0 := by rw [hpar,hxeven]; decide
+          have hmark : ¬jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
+            intro hm
+            unfold jMark jHole at hm
+            rcases hm with ⟨hlo,hhi,hnot⟩ | heq
+            · exact hnot ⟨by omega,hyhi,hyzero⟩
+            · omega
+          simp [firstBranchTape,hx0,hx1,hx2,jTape,hmark,heven]
+      · have hy : 0≤x-(2*(u:Int)+3) := by omega
+        have hnotNew : ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+          intro hh
+          unfold jHole at hh
+          omega
+        have hnotOld : ¬jHole u x := by
+          intro hh
+          unfold jHole at hh
+          omega
+        have hnew : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) ↔
+            (x-(2*(u:Int)+3) ≤ ((w-(2*u+3):Nat):Int)+1 ∨
+             x-(2*(u:Int)+3)=((w-(2*u+3):Nat):Int)+3) := by
+          unfold jMark
+          constructor
+          · rintro (⟨hlo,hhi,hnh⟩ | heq)
+            · exact Or.inl hhi
+            · exact Or.inr heq
+          · intro h
+            rcases h with hhi | heq
+            · exact Or.inl ⟨by omega,hhi,hnotNew⟩
+            · exact Or.inr heq
+        have hold : jMark u w x ↔ (x ≤ (w:Int)+1 ∨ x=(w:Int)+3) := by
+          unfold jMark
+          constructor
+          · rintro (⟨hlo,hhi,hnh⟩ | heq)
+            · exact Or.inl hhi
+            · exact Or.inr heq
+          · intro h
+            rcases h with hhi | heq
+            · exact Or.inl ⟨by omega,hhi,hnotOld⟩
+            · exact Or.inr heq
+        have hrel :
+            (x-(2*(u:Int)+3) ≤ ((w-(2*u+3):Nat):Int)+1 ∨
+             x-(2*(u:Int)+3)=((w-(2*u+3):Nat):Int)+3) ↔
+            (x ≤ (w:Int)+1 ∨ x=(w:Int)+3) := by
+          constructor
+          · intro h
+            rcases h with h | h
+            · left
+              omega
+            · right
+              omega
+          · intro h
+            rcases h with h | h
+            · left
+              omega
+            · right
+              omega
+        have hmark : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) ↔ jMark u w x :=
+          hnew.trans (hrel.trans hold.symm)
+        simp [firstBranchTape,hx0,hx1,hx2,jTape,hmark]
 
 /-- Exact raw primitive-step realization of the high-level first branch
     J(u,w) -> J(2u+3,w-2u-3), including its complete two-sided tape. -/
@@ -570,12 +666,28 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
     have hh : hF-2=-2*(u:Int)-9 := by dsimp [hF]; omega
     rw [hh]
     exact hlocal.2.2.2.2.2.2
+  have hFplus1 : f0Tape u w (hF+1)=false := by
+    have hh : hF+1=-2*(u:Int)-6 := by dsimp [hF]; omega
+    rw [hh]
+    exact hlocal.2.1
+  have hFplus2 : f0Tape u w (hF+2)=true := by
+    have hh : hF+2=-2*(u:Int)-5 := by dsimp [hF]; omega
+    rw [hh]
+    exact hlocal.2.2.1
+  have hFplus3 : f0Tape u w (hF+3)=false := by
+    have hh : hF+3=-2*(u:Int)-4 := by dsimp [hF]; omega
+    rw [hh]
+    exact hlocal.2.2.2.1
+  have hFplus4 : f0Tape u w (hF+4)=true := by
+    have hh : hF+4=-2*(u:Int)-3 := by dsimp [hF]; omega
+    rw [hh]
+    exact hlocal.2.2.2.2.1
   have hsetup := f0_to_c1 hF (f0Tape u w)
       (by simpa [hF] using hlocal.1)
-      (by simpa [hF] using hlocal.2.1)
-      (by simpa [hF] using hlocal.2.2.1)
-      (by simpa [hF] using hlocal.2.2.2.1)
-      (by simpa [hF] using hlocal.2.2.2.2.1)
+      hFplus1
+      hFplus2
+      hFplus3
+      hFplus4
       hFminus1
       hFminus2
   have hC1 : target429 (C,true)=some ⟨false,true,B⟩ := by decide
