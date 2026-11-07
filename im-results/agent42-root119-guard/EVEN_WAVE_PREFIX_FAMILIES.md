@@ -114,12 +114,12 @@ All 43 new-family predictions agree with the raw machine replay, including both 
 
 The candidate's local hypotheses are: the B/0 head is at h; the r cells h-1 through h-r are ones; h-r-1 is zero; h-r-2 is one; and r≥2. The observed return law is r+7 steps to B/0 at h-r+1. The mechanism is a C/1 left scan erasing the r-cell block, followed by C/0, D/1, F/1, D/0, E/0, and A/0. The returned head lies in the erased block. This candidate has been checked against the raw replay for all 15,198 occurrences, including time and returned head, but its general Lean proof is not yet complete.
 
-The eight unmatched left-prefix candidates have local patterns and observed times consistent with the separate two-wave-root formula (8n_1+2r+30), with head displacement (-2r-6). They remain computational matches only: the current `Root119TwoWaveRootPrefix.lean` source file has unrelated compile errors and is not importable. See the verification correction at the top of this directory's README and the broadcast warning in `communications/broadcast/`.
+The eight unmatched left-prefix candidates have local patterns and observed times consistent with the separate two-wave-root formula (8n_1+2r+30), with head displacement (-2r-6). The complete `Root119TwoWaveRootPrefix.lean` module now compiles under Lean 4.36.0-rc2 in [CI 42421095795](https://github.com/FlareZ123/bb6/actions/runs/42421095795), including the two-wave return, BBad exclusion, D-retreat shield lemma, and C0/D1 odd-retreat shield theorem. The eight observed starts remain computational matches until their detailed theorem hypotheses are extracted and source-verified for each concrete interval; see the maintained directory [README](README.md).
 
 ## Scope and next work
 
 - The new 43 return laws prove exact B/0 returns from their stated hypotheses.
 - The even-prefix shield theorem is unconditional under the input `NoLeft4` hypothesis. The odd-even shield theorem has the explicit three-cell boundary guard above; proving that `Reach` implies the guard, or finding a reachable counterexample, is the next question.
-- The 8 two-wave candidates need an isolated, source-compiling proof module or repair of the existing two-wave file.
+- Extract and source-verify the exact local hypotheses of `b0_two_wave_root_interval_to_b0` for each of the 8 unmatched concrete intervals; the module itself now compiles. Classify the remaining 49 other intervals and establish an all-time B/0 shield or a genuine BBad witness.
 - The C-phase D1 family is now source-import verified in [Root119CPhaseReturn.lean](Root119CPhaseReturn.lean), including `NoLeft4` preservation and `BBad` exclusion; see the directory README for its separate 15,198-instance audit.
 - This work is intermediate research and belongs in `im-results/`, not `results/`.
