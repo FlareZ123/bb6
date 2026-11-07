@@ -6,8 +6,8 @@ namespace BB6.Agent46
 /-- Reachability can be transported back to the final exceptional
     dyadic level for arbitrary exponent k. Along the forced chain the
     weighted mass a+2*b falls by four at each genuine source edge. -/
-private theorem dyadic_back_iter (r t x b0 : Nat)
-    (_hr : 8≤r) (ht : t%8=7)
+theorem dyadic_back_iter (r t x b0 : Nat)
+    (_hr : 8≤r) (htodd : t%2=1) (ht7 : 7≤t)
     (hbase : (x+2*b0)%8=7)
     (k a b : Nat) (hk : 1≤k) (hkr : k≤r)
     (hpow : b+2=2^k*t)
@@ -29,7 +29,6 @@ private theorem dyadic_back_iter (r t x b0 : Nat)
         have hp : 4≤(2:Nat)^k := by
           have h := Nat.pow_le_pow_right (show 0<(2:Nat) by decide) hk2
           simpa using h
-        have ht7 : 7≤t := by omega
         have hmul : 4*t ≤ 2^k*t := Nat.mul_le_mul_right t hp
         have hb6 : 6≤b := by omega
         have hbe : b%2=0 := by
@@ -111,7 +110,7 @@ theorem alternate_dyadic_no_blank (r x b0 t : Nat)
   intro hre
   have hm0 : x+2*b0+4*(r-r)=x+2*b0 := by omega
   obtain ⟨A,hreach,hMass⟩ :=
-    dyadic_back_iter r t x b0 hr8 ht hbase r x b0
+    dyadic_back_iter r t x b0 hr8 (by omega) (by omega) hbase r x b0
       (by omega) (by omega) hpow hm0 hre
   have ht7 : 7≤t := by omega
   have hY : (2*t-2)%16=12 := by omega
