@@ -88,12 +88,6 @@ private theorem affine_norm_not_four (u : Nat) (hu : 7≤u) :
     2*u-2≠4 := by
   omega
 
-private theorem late256_j_plus_three_m_plus_three (m : Nat) :
-    late256J m+3*m+3=9*2^(2*m+2) := by
-  have hP := BB6.Agent29New.power_linear_bound m
-  dsimp [late256J]
-  omega
-
 private theorem older_gate_impossible_of_late256_form (j m : Nat)
     (hform : j+3*m+3=9*2^(2*m+2)) :
     ∀ n, ¬(n+4≤2*m+2 ∧
@@ -419,7 +413,7 @@ theorem old_sieve_admits_late256_family (m : Nat)
   have hjmod256 := late256_j_mod256 m hm hmres
   have hjmod256' : j%256=244 := by simpa [j] using hjmod256
   have hformOlder : j+3*m+3=9*2^(2*m+2) := by
-    simpa [j] using late256_j_plus_three_m_plus_three m
+    simpa [j] using hsum
   have hJoint : BB6.Agent19Joint.highAllowed j m :=
     joint_high_allowed_of_mod256 j m hjmod256' hmres hformOlder
   have hjmod256' : j%256=244 := by simpa [j] using hjmod256
