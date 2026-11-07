@@ -121,3 +121,5 @@ jobs:
           lake env lean -o ".lake/build/lib/lean/SpaceNeedleFifthRoot.olean" SpaceNeedleFifthRoot.lean
           cp "$base48/NeedleSixthRoot.lean" .
           lake env lean NeedleSixthRoot.lean
+          cp "$base48/NeedleRootQuadraticRegular.lean" .
+          lake env lean NeedleRootQuadraticRegular.lean
