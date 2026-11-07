@@ -54,7 +54,7 @@ theorem blank_twenty_fourth_exception :
     · change 64*BB6.Agent2TwentyThirdRoot.t23+21 ≥ 2
       omega
     · left
-      change (5 : Nat) ≠ 0
+      change (1 : Nat) ≠ 0
       omega
   · exact terminal4510_exact
   · exact BB6.Agent2TwentyThirdRoot.blank_twenty_third_reentry
