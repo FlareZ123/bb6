@@ -349,6 +349,11 @@ jobs:
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt"
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$full_forced_status" -ne 0 ]; then exit "$full_forced_status"; fi
+          # Agent 3: exact finite residue census of additional full-forced exclusions.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/FullForcedParamScan.lean .
+          lean FullForcedParamScan.lean > "$GITHUB_WORKSPACE/full-forced-param-scan.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/full-forced-param-scan.txt"
+          cat "$GITHUB_WORKSPACE/full-forced-param-scan.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
@@ -382,6 +387,7 @@ jobs:
           name: c-residual-probe-${{ github.run_id }}
           path: |
             full-forced-residual.txt
+            full-forced-param-scan.txt
             c-residual-probe.txt
           if-no-files-found: ignore
 
