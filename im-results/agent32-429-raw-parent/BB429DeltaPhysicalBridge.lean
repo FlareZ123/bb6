@@ -157,7 +157,7 @@ theorem source_runWithDelta_none_rep (n : Nat) (z : Zipper) (c : Config)
   | succ n ih =>
       cases hstep : oneWithDelta z with
       | none =>
-          rcases hrep with ⟨hstate,hcur,hleft,hright⟩
+          rcases hrep with ⟨hstate,hcur,_,_⟩
           have hsource : action z.state z.current =
               (BB429PhysicalFrontier.target429 (readSlot c)).map
                 (fun move => (move.next.val,move.write,move.right)) := by
