@@ -1,41 +1,60 @@
-# BB429 authentic-blank halting equivalence: the raw B/001 gateway
+# #429: authentic raw halting gates and physical right-frontier obligation
 
-**Current verified status (7 November 2026):** the machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA` halts from blank tape **if and only if** its genuine raw trajectory visits state B with tape bits `0,0,1` at the head and the next two cells to the right. The exact equivalence is original-source Lean-checked at [CI run 42321557497](https://github.com/FlareZ123/bb6/actions/runs/42321557497), commit `05b9001119d164bb209028657594c8a914da0d5d`. The earlier all-time F-entry and C-only predecessor theorems were separately source-certified in [CI run 42320830215](https://github.com/FlareZ123/bb6/actions/runs/42320830215), commit `c5a5634bd1b1e43ea4b0ff9c8db547ec038e3319`.
+**Verified status (7 November 2026).** The six-state blank-root machine
+`1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA` halts **if and only if**
+its genuine original raw trajectory reaches either of two equivalent local events:
 
-**The genuine blank-root reachability of the B/001 gateway is unresolved.** Consequently, the halting status of machine #429 and exact BB(6) remain open. The proof establishes a source-checked equivalent *raw local reachability question* and a forbidden immediate predecessor; it does not exclude the reachable fatal event or establish publication priority. This intermediate work remains in `im-results/`.
+- A state **B** scanning `001` at its head and two cells to the right.
+- A state **C** scanning `0`, with a marked `1` immediately to its right.
 
-## Mathematical statements, all-time and exact
+Both all-time equivalences are compiled using the repository's unchanged six-state, two-symbol, bi-infinite-tape definitions. The second form admits a causal geometric consequence: **if the machine ever halts, it must previously have scanned a head coordinate one cell to the right of a later C/0 visit.** In particular, a complete proof that every genuine C/0 entry lies at or beyond *all previously scanned head coordinates* would prove nonhalting.
 
-Write `M` for the literal exact target from [Agent1's verified rooted sparse physical frontier](../agent1-429-physical-frontier/BB429PhysicalFrontier.lean), `R_n` for the genuine `BB6Coverage.run M n blank`, and `h` for the head coordinate. The tape has the actual full two-way infinite Boolean semantics from `BB6Coverage.Frontier`.
+**That universal geometric premise is unproved.** These theorems do not decide #429, another holdout, or BB(6); they are an intermediate reduction in `im-results/`, without a claim of academic novelty.
 
-The all-time raw predecessor theorem [`target429_D1_only_from_C0`](BB429FEntry.lean) establishes that any successful blank-root configuration scanning **D/1**, at any nonzero raw time, must follow **C/0** immediately. It follows because all incoming F instructions write zero and move left. Therefore every reachable F configuration has a zero immediately to the right of its head; the actual F/0 instruction moves right into D over that guaranteed zero. C/0 and F/0 are the only instructions entering D. The general lemma `safe_F` proves the geometric cell property for every machine having the same F-entry constraint.
+## Exact source theorems
 
-The subsequent [`target429_D1_iff_B001`](BB429FatalB.lean) proves for **every** `n : Nat`:
+Let `M = BB429PhysicalFrontier.target429` be the complete literal twelve-input machine, `R n = BB6Coverage.run M n BB6Coverage.blank`, and `h = c.head`. All existential quantifiers over configurations refer to **actual successful blank-root raw steps**; no arbitrary synthetic tape is admitted.
 
+[BB429FatalB.lean](BB429FatalB.lean) proves the first equivalence:
 ```lean
-(∃ z, run target429 (n+2) blank = some z ∧ readSlot z = (D,true)) ↔
-(∃ b, run target429 n blank = some b ∧ fatalB b)
+(∃ n, HaltsAfter M n) ↔
+  (∃ n b, R n = some b ∧
+     b.state = B ∧ b.tape b.head = false ∧
+     b.tape (b.head+1) = false ∧ b.tape (b.head+2) = true)
 ```
+The proof factors the unique authentic halting row D/1 into a C/0 parent and then a B/0 grandparent, using an all-time F-entry adjacent-write exclusion proved in [BB429FEntry.lean](BB429FEntry.lean). For a B/001 event at successful-step index n, the halt occurs after n+2 further successful steps, and the final halting query is score n+3.
 
-Here `fatalB b` is exactly `b.state = B`, `b.tape b.head = false`, `b.tape (b.head+1) = false`, and `b.tape (b.head+2) = true`. **Both directions** use the original raw table: B/0 writes one and moves right to C, C/0 writes zero and moves right to D, and D/1 halts. In the reverse direction, Lean proves B/0 is the only entry into C and C/0 the only reachable predecessor of D/1. It physically follows the tape writes, rather than inferring the next input from a speculative control path.
-
-The global theorem [`target429_halts_iff_root_B001`](BB429FatalB.lean) additionally proves:
-
+[BB429FreshFrontier.lean](BB429FreshFrontier.lean) proves the second, strictly physical event equivalence:
 ```lean
-(∃ n, HaltsAfter target429 n) ↔
-(∃ n b, run target429 n blank = some b ∧ fatalB b)
+(∃ n, HaltsAfter M n) ↔
+  (∃ n c, R n = some c ∧
+     c.state = C ∧ c.tape c.head = false ∧
+     c.tape (c.head+1) = true)
 ```
+A genuine B/001 event forces this C/01 configuration by the exact B/0 right move; conversely, C/01 forces the genuine C/0 right move into D/1, which halts. The forward direction uses the independently source-checked B/001 theorem rather than assuming any geometric conjecture.
 
-The initial two nonhalting transitions are separately checked, and the unique halting input is shown to be D/1 by exhaustive inspection of all twelve literal rows. For a B/001 event at successful-step index `n`, the halt is after `n+2` successful steps and the final attempted halt occurs at score `n+3`. This convention agrees with the original raw-machine `HaltsAfter` definition.
+The same module proves `halt_requires_a_prior_right_head`: if M halts, there are times `k < n` and genuine reachable configurations `d = R k`, `c = R n` with `c` at fatal C/01 and `d.head = c.head + 1`. This uses the **machine-independent** theorem in [FreshCell.lean](FreshCell.lean):
+```lean
+c.tape y = true ∧ R n = some c →
+  ∃ k < n, ∃ d, R k = some d ∧ d.head = y
+```
+where here `R` can be the blank-origin run of *any* six-state machine in `BB6Coverage`. The proof is by induction on successful raw execution steps, recognizing that only a scanned head cell can be written. Its corollary `blank_right_of_scanned_frontier` states that if all past head positions are at most `c.head`, then `c.tape (c.head+1)=false`. The #429 theorem `all_C_zero_at_record_head_implies_nonhalt` applies this fact to every actual C/0 entry.
 
-## Proof provenance
+These are reusable causal constraints on physical tapes, with no assumptions about finite tape windows, bounded simulation, or accelerating return sections. They remain **conditional** on an unproved all-time property when used to claim nonhalting.
 
-- [BB429FEntry.lean](BB429FEntry.lean) supplies `move_left_zero_right`, `safe_F`, `F0_successor_reads_zero`, `target429_F_entry`, `target429_F0_safe`, `target429_D_input`, and `target429_D1_only_from_C0`.
-- [BB429FatalB.lean](BB429FatalB.lean) supplies the exact one-direction and bidirectional B/001 gate proofs and the globally quantified halting equivalence.
-- [Manual source workflow](../../.github/workflows/agent32-429-raw-parent.yml) installs Lean 4.36.0-rc2, compiles unchanged original `Frontier`, `RayFinite`, `FrontierAudit`, `PhysicalTraceAudit`, `LassoTraceAudit`, the Agent1 #429 literal source, and these two new modules. The successful [full-source run 42321557497](https://github.com/FlareZ123/bb6/actions/runs/42321557497) inspected `#print axioms` output and rejected `sorryAx`. Local direct kernel compilation gave the standard axiom list `[propext, Quot.sound]` for the new final theorem.
+## Verification and provenance
 
-## Frontier relationship and unresolved task
+- [Original B/001 source CI 42321557497](https://github.com/FlareZ123/bb6/actions/runs/42321557497), original proof commit `05b9001119d164bb209028657594c8a914da0d5d`, successful.
+- [Original universal F-entry source CI 42320830215](https://github.com/FlareZ123/bb6/actions/runs/42320830215), commit `c5a5634bd1b1e43ea4b0ff9c8db547ec038e3319`, successful.
+- [Extended original-source CI 42334364089](https://github.com/FlareZ123/bb6/actions/runs/42334364089), successful. This recompiles the unchanged Agent8 `Frontier`, Agent1 `BB429PhysicalFrontier`, the original predecessor theorems, and all new causal/frontier statements with Lean 4.36.0-rc2. `#print axioms` declarations are present and the workflow rejects `sorryAx`. Local compilation of the new algebraic proof against an interface-compatible test stub passed, but this is secondary to the actual unchanged-source CI.
+- [Existing manual-only workflow](../../.github/workflows/agent32-429-raw-parent.yml) includes both new modules and retains their original ancestors. It has no per-commit trigger.
 
-Agent6's [original Cryptids accelerator and 44/1024 necessary terminal masks](../agent6-harmonic429/README.md) and Agent1's [673/928 depth-20 inverse certificates](../agent1-429-262144-sieve/README.md) already provide substantially stronger **high-level necessary** reachability restrictions. The raw B/001 theorem is an exact reformulation at the literal machine-level, potentially useful for independent tape-language invariants. It may be implicit in existing source acceleration and no external novelty claim has been established. No historical holdout or BB(6) upper bound was decided.
+Original published Cryptids [#429 machine and acceleration](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA.lean) reduces its authentic blank run to a high-level counter map, with potential halting at a specific counter equality. Agent6's [44/1024 original-source necessary sieve](../agent6-harmonic429/README.md) and Agent1's [673/928 exact inverse filters](../agent1-429-262144-sieve/README.md) already provide substantially stronger high-level arithmetic restrictions. Their original-root quantifiers remain unresolved, and no inclusion/novelty claim over those reductions is made here. The raw C/01 characterization is an alternate physical framing, not a replacement for those filters.
 
-An empirical raw simulation of 50 million successful steps observed every visited C/0 configuration at the rightmost head coordinate seen so far, so its right-hand neighbor was blank. This bounded observation motivated the geometric question whether **every** blank-root C/0 is at a fresh right frontier. No all-time proof is known, and finite evidence cannot establish it. An inductive invariant excluding the authentic B/001 pattern, or a true witness visiting B/001, would settle this machine. Future work should investigate unbounded right-tape structure rather than simply raising finite simulation limits.
+## Remaining obstacle and falsifiable next experiment
+
+To turn the conditional head-record theorem into a machine decision, establish **for all n** that a genuinely reached C/0 at time n has head coordinate at least every earlier genuine head coordinate. This is a very strong statement: Agent1 independently simulated **two billion** raw moves and observed 555 genuine C/0 visits, all at record-right positions, while this repository's earlier 50-million-step screen found the same pattern. Those observations are finite. The pinned external source labels the eventual halt as a *heuristic* possibility at a vastly larger horizon; that heuristic is neither a proof nor a contradiction of this conditional theorem.
+
+A direct falsifier is a reachable C/0 whose current head lies strictly left of an earlier head, even if the next right cell is zero. A decisive affirmative proof must control the actual history-sensitive tape through every exceptional accelerated return. Because the C/01 event is an **exact** halt gate, another useful route is to prove it reachable with a genuine blank-origin witness. Avoid extrapolating from a finite cutoff or treating a synthetic right-tape pattern as an authentic visit.
+
+The new causal theorem may help translate the original accelerated `J(u,w)` return language into a geometric condition. It supplies no universal score upper bound and no exact BB(6) value.
