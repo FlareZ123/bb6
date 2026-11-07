@@ -76,7 +76,7 @@ These are conditional local return theorems, not a complete classification of re
 
 The proof is decomposed into an exact (r+1)-step B-to-C scan, a six-step explicit C/0-D/1-F/1-D/0-E/0-A/0 tail, and a shield-preservation argument using the unchanged prefix and the three endpoint cells (111). The four new theorem axiom reports are limited to `propext` and `Quot.sound`; the source-import workflow [42412861860](https://github.com/FlareZ123/bb6/actions/runs/42412861860) passed and contains no `sorryAx`.
 
-The same workflow reran the ten-million-step raw census. All 15,198 observed C-phase D1 candidate inputs satisfy the shield, and all 15,198 endpoints satisfy it. Their (r)-histogram remains (r=2:1), (r=3:15,176), (r=4:21). This is finite evidence about the blank-root orbit. The theorem remains conditional, and the census still contains 8 unmatched left-prefix intervals and 49 other intervals. The global shield and complete blank-root classification remain open.
+The same workflow reran the ten-million-step raw census. All 15,198 observed C-phase D1 candidate inputs satisfy the shield, and all 15,198 endpoints satisfy it. Their (r)-histogram remains (r=2:1), (r=3:15,176), (r=4:21). This is finite evidence about the blank-root orbit. The theorem remains conditional; the current census has zero unmatched left-prefix intervals and 49 other intervals. The global shield and complete blank-root classification remain open.
 
 
 ## Even/odd-even prefix shield transport and boundary obstruction (7 November 2026)
