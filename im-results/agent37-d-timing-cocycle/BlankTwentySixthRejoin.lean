@@ -75,6 +75,10 @@ theorem packet26_p_eq : packet26.p = 3*r26+1 := by
   dsimp [r26,packet26]
   omega
 
+def reentry26Time (T22 Tnorm24 : Nat) : Nat :=
+  exception26Time T22 Tnorm24 +
+    (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)
+
 /-- The E-first return for a=9*t+10 reaches an A,p=1 packet when q=8.
     The original A-code source theorem then returns to a pure-unary
     regular section, extending the blank-root orbit through episode 26. -/
@@ -102,7 +106,7 @@ theorem blank_twenty_sixth_reentry :
       (⟨[],false,List.replicate seed27.a true,5⟩ : Cfg) =
         DRegularSource.sourceSection seed27 := by
     have hreg :=
-      BB6.Agent2ThirdRoot.regularSection_sourceSection
+      BB6.Agent2TwentyThirdRoot.regularSection_sourceSection
         seed27.a 0 0 (by dsimp [seed27,BB6.Agent2AOneBoundary.aUnary]; omega)
     simpa [seed27,BB6.Agent2BoundaryBZero.regularSection,
       CryptidBoundary.oppairs] using hreg
@@ -140,10 +144,6 @@ theorem blank_twenty_sixth_reentry :
     (DRegularSource.sourceSection ⟨9*t26+10,8,1⟩)
     (DRegularSource.sourceSection seed27)
     h26 hroot⟩
-
-def reentry26Time (T22 Tnorm24 : Nat) : Nat :=
-  exception26Time T22 Tnorm24 +
-    (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)
 
 #print axioms terminal8516_exact
 #print axioms t26_mod27
