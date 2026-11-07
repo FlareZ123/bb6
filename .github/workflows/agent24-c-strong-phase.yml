@@ -335,3 +335,6 @@ jobs:
           lean -o C23Integration.olean C23Integration.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C23Strict.lean .
           lean -o C23Strict.olean C23Strict.lean
+          # Agent19: append the independent even-right exclusion to the strongest C70+C23 residual.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighEvenRightC23Residual.lean .
+          lean HighEvenRightC23Residual.lean
