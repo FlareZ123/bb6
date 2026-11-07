@@ -51,7 +51,7 @@ theorem evalA_joint_positive (n : Nat) :
         omega
       · by_cases h0 : k % 3 = 0
         · by_cases ha : a = 0
-          · simp [evalA, h2, h0, ha] at he
+          · simp [evalA, h0, ha] at he
           · have he' : some (a-1,k/3,m+2) = some (aa,bb,dd) := by
               simpa [evalA, h2, h0, ha] using he
             injection he' with htuple
@@ -158,7 +158,7 @@ theorem drainB_joint_mass (n : Nat) :
       · have hs' : some (HighLevelState.D a d) = some (HighLevelState.D aa dd) := by
           simpa [drainB, hb0] using hs
         have htuple := Option.some.inj hs'
-        rcases Prod.mk.inj htuple with ⟨haa,hdd⟩
+        injection htuple with haa hdd
         subst aa dd
         omega
       · have hbpos : 0 < b := by omega
