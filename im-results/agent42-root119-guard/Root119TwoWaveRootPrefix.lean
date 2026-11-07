@@ -275,13 +275,18 @@ theorem b0_two_wave_root_interval_to_b0
     change t2 x = false
     rw [hval]
     exact hzero2
+  have hleftTape : ∀ x : Int, x ≤ b.h-4 → t2 x = b.tape x := by
+    intro x hx
+    have ha := twoWaveAfterFirst_left n1 t1 H x (by dsimp [H]; omega)
+    have hp := twoWavePrefixTape_left b.tape b.h x hx
+    change (setBit (oddWaveTape n1 t1 H) (H-1) true) x = b.tape x
+    rw [ha]
+    change twoWavePrefixTape b.tape b.h x = b.tape x
+    exact hp
   have hleft2' : t2 (H-2-1) = true := by
     have hidx : H-2-1 = b.h-4 := by dsimp [H]; omega
     rw [hidx]
-    have ha := twoWaveAfterFirst_left n1 t1 H (b.h-4) (by dsimp [H]; omega)
-    rw [ha]
-    have hp := twoWavePrefixTape_left b.tape b.h (b.h-4) (by omega)
-    rw [hp]
+    rw [hleftTape (b.h-4) (by omega)]
     exact hleft2
   have hfb2 : ∀ i : Nat, i < m →
       t2 ((H-2)-2-2*(i:Int)) = false ∧
@@ -290,39 +295,21 @@ theorem b0_two_wave_root_interval_to_b0
     constructor
     · have hidx : (H-2)-2-2*(i:Int) = b.h-5-2*(i:Int) := by dsimp [H]; omega
       rw [hidx]
-      have ha := twoWaveAfterFirst_left n1 t1 H (b.h-5-2*(i:Int)) (by dsimp [H]; omega)
-      rw [ha]
-      have hp := twoWavePrefixTape_left b.tape b.h (b.h-5-2*(i:Int)) (by omega)
-      rw [hp]
+      rw [hleftTape (b.h-5-2*(i:Int)) (by omega)]
       exact (hfb i hi).1
     · have hidx : (H-2)-3-2*(i:Int) = b.h-6-2*(i:Int) := by dsimp [H]; omega
       rw [hidx]
-      have ha := twoWaveAfterFirst_left n1 t1 H (b.h-6-2*(i:Int)) (by dsimp [H]; omega)
-      rw [ha]
-      have hp := twoWavePrefixTape_left b.tape b.h (b.h-6-2*(i:Int)) (by omega)
-      rw [hp]
+      rw [hleftTape (b.h-6-2*(i:Int)) (by omega)]
       exact (hfb i hi).2
   have hfinalF2 : t2 ((H-2)-2-2*(m:Int)) = false := by
     have hidx : (H-2)-2-2*(m:Int) = b.h-5-2*(m:Int) := by dsimp [H]; omega
     rw [hidx]
-    change (setBit (oddWaveTape n1 t1 H) (H-1) true)
-      (b.h-5-2*(m:Int)) = false
-    have ha := twoWaveAfterFirst_left n1 t1 H (b.h-5-2*(m:Int)) (by dsimp [H]; omega)
-    rw [ha]
-    change twoWavePrefixTape b.tape b.h (b.h-5-2*(m:Int)) = false
-    have hp := twoWavePrefixTape_left b.tape b.h (b.h-5-2*(m:Int)) (by omega)
-    rw [hp]
+    rw [hleftTape (b.h-5-2*(m:Int)) (by omega)]
     exact hfinalF
   have hfinalB2 : t2 ((H-2)-3-2*(m:Int)) = false := by
     have hidx : (H-2)-3-2*(m:Int) = b.h-6-2*(m:Int) := by dsimp [H]; omega
     rw [hidx]
-    change (setBit (oddWaveTape n1 t1 H) (H-1) true)
-      (b.h-6-2*(m:Int)) = false
-    have ha := twoWaveAfterFirst_left n1 t1 H (b.h-6-2*(m:Int)) (by dsimp [H]; omega)
-    rw [ha]
-    change twoWavePrefixTape b.tape b.h (b.h-6-2*(m:Int)) = false
-    have hp := twoWavePrefixTape_left b.tape b.h (b.h-6-2*(m:Int)) (by omega)
-    rw [hp]
+    rw [hleftTape (b.h-6-2*(m:Int)) (by omega)]
     exact hfinalB
   have hchain := odd_f1_two_wave_chain_to_b0 n1 (n1+2) m t1 H
     hhead1 hones1' hzero1' hleft1' hhead2 hones2 hzero2 hleft2' hfb2 hfinalF2 hfinalB2
