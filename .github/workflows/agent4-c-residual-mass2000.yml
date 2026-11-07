@@ -1,4 +1,4 @@
-name: Agent 4 Machine C raw-mass-2000 source certificate (manual)
+name: Machine C raw-mass-10000 source certificate (manual)
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Compile exact source dependency closure and raw-mass certificate
+      - name: Compile exact source dependency closure and raw-mass certificates
         shell: bash
         run: |
           set -euo pipefail
@@ -28,7 +28,7 @@ jobs:
           cp im-results/agent8-c-total-section/GenericSection.lean /tmp/c-residual-mass/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/c-residual-mass/
           cp im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFuelOriginal}.lean /tmp/c-residual-mass/
-          cp im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000}.lean /tmp/c-residual-mass/
+          cp im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMass10000}.lean /tmp/c-residual-mass/
           cd /tmp/c-residual-mass
           export LEAN_PATH="."
           {
@@ -44,18 +44,26 @@ jobs:
           lean -o CResidualMassBounds.olean CResidualMassBounds.lean
           set +e
           lean -o CResidualMass2000.olean CResidualMass2000.lean > "$GITHUB_WORKSPACE/c-residual-mass2000.txt" 2>&1
-          status=$?
+          mass2000_status=$?
           set -e
           cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt"
           cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt" >> "$GITHUB_STEP_SUMMARY"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if [ "$mass2000_status" -ne 0 ]; then exit "$mass2000_status"; fi
+          set +e
+          lean -o CResidualMass10000.olean CResidualMass10000.lean > "$GITHUB_WORKSPACE/c-residual-mass10000.txt" 2>&1
+          mass10000_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass10000.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-mass10000.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$mass10000_status" -ne 0 ]; then exit "$mass10000_status"; fi
 
       - name: Upload source-check diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: c-residual-mass2000-${{ github.run_id }}
+          name: c-residual-mass10000-${{ github.run_id }}
           path: |
             c-residual-mass2000.txt
+            c-residual-mass10000.txt
             source-manifest.txt
           if-no-files-found: ignore
