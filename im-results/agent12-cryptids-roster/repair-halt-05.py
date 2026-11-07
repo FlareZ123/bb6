@@ -1,9 +1,10 @@
 """Fifth proof-only compatibility patch for the pinned Cryptids halt source.
 
-The local Lean 4.36.0-rc2 rewrite gate checked both ListBlank rewrite sequences
-against the exact helper-lemma types. This patch uses the already proved
-zeros_append_cons_zero helper rather than brittle nested append rewrites.
-It changes no transition, semantic definition, or final theorem statement.
+An isolated Lean 4.36.0-rc2 gate compiled both rewrite sequences with opaque
+declarations carrying the exact upstream helper signatures. This checks tactic
+matching, not the imported full project. The pinned-project build remains the
+final verification gate. The patch reuses the proved zeros_append_cons_zero
+helper and changes no transition, semantic definition, or final theorem.
 """
 from pathlib import Path
 import fcntl
