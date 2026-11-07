@@ -115,6 +115,8 @@ The external [final integer hash record](https://github.com/oohzaim1-afk/space-n
 - [TerminalResiduesArithmetic.lean](TerminalResiduesArithmetic.lean), [SpaceNeedleTerminalResidues.lean](SpaceNeedleTerminalResidues.lean): predecessor families across all exponent residues modulo 10.
 - [Root decision implementation](../agent20-needle-coprime/NeedleRootDecisionSource.lean): exact per-target blank-root reachability.
 
+A fixed odd-modulus invariant that forgets the true valuation is necessarily trivial; the exact relaxation and proof are in [MODULAR-ABSTRACTION.md](MODULAR-ABSTRACTION.md).
+
 ## Next research priority
 
 Prove that `ReachN` avoids every member of the unbounded sixth-regular feeder family, or produce an actual reachable feeder. Prioritize a history-sensitive root invariant, symbolic reverse-cone closure, or a combined odd-block/even-tail analysis. Further synthetic slope improvements are secondary unless they eliminate an infinite sector of the remaining root existential.
