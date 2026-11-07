@@ -43,7 +43,7 @@ theorem sim_one_delta (z : Zipper) (c : Config)
           subst z'
           obtain ⟨c', hraw', hrep'⟩ :=
             sim_one z c ⟨hstate, hcur, hleft, hright⟩ z1 hone
-          cases hmove : target429 (readSlot c) with
+          cases hmove : BB429PhysicalFrontier.target429 (readSlot c) with
           | none =>
               have hsourceNone : action z.state z.current = none := by
                 simpa [hmove] using hsource
@@ -58,7 +58,7 @@ theorem sim_one_delta (z : Zipper) (c : Config)
                   simpa [hact, hmove] using hsource
                 exact Option.some.inj hsome
               rcases htrip with ⟨rfl, rfl, rfl⟩
-              have hraw : rawStep target429 c =
+              have hraw : rawStep BB429PhysicalFrontier.target429 c =
                   some (applyMove c move) := by
                 simp [rawStep, hmove]
               have heq : c' = applyMove c move :=
@@ -124,7 +124,7 @@ theorem source_runWithDelta_rep (n : Nat) (z : Zipper) (c : Config)
 theorem physical_sourceScanE_e1_revisit (b : Nat) (suffix : List Bool)
     (c : Config)
     (hrep : Represents (sourceScanE b suffix) c) :
-    ∃ c', BB6Coverage.run target429 (crossTime b + 1) c = some c' ∧
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 (crossTime b + 1) c = some c' ∧
       Represents (z 2 (finalLeft b) true suffix) c' ∧
       c'.head = c.head := by
   exact source_runWithDelta_rep (crossTime b + 1)
