@@ -102,6 +102,37 @@ theorem secondary_obstruction (a h r D0 : Int) (T : Nat)
         grind
   exact hbase hgood
 
+/-- A long block built by repeating one primitive source block cannot have
+    an integral affine orbit with nonnegative or arbitrary integer starts.
+    The coefficient formulas encode exact repetitions; no finite-word
+    decomposition is postulated here. -/
+theorem repeated_affine_obstruction
+    (a h r D0 : Int) (T : Nat) (J A H D S Q X Z : Int)
+    (hJ : J=geom a T) (hA : A=a^T)
+    (hH : H=h*J) (hS : S=r*(T:Int))
+    (hD : D=D0*J+h*r*weighted a T)
+    (hB : A-1=(a-1)*J)
+    (hpos : 0<J)
+    (hbase : ¬(a-1) ∣ h*r)
+    (hSlope : (A-1)*Q=H*S)
+    (hStart : (A-1)*Z=H*X+D-A*Q) : False := by
+  have hscaled : J*((a-1)*Q)=J*(h*r*(T:Int)) := by
+    calc
+      J*((a-1)*Q) = (A-1)*Q := by rw [hB]; ac_rfl
+      _ = H*S := hSlope
+      _ = J*(h*r*(T:Int)) := by rw [hH,hS]; ac_rfl
+  have hbaseSlope : (a-1)*Q=h*r*(T:Int) :=
+    Int.eq_of_mul_eq_mul_left (by omega : J≠0) hscaled
+  have hdiv : J ∣ A*Q-D := by
+    refine ⟨h*X-(a-1)*Z, ?_⟩
+    have he : A*Q-D=H*X-(A-1)*Z := by omega
+    rw [he,hH,hB]
+    simp only [Int.mul_add,Int.mul_sub,Int.sub_mul,Int.add_mul,
+      Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+  exact secondary_obstruction a h r D0 T J A D Q hJ hA hD
+    hbaseSlope hpos hbase hdiv
+
+#print axioms repeated_affine_obstruction
 #print axioms geom_identity
 #print axioms weighted_identity
 #print axioms secondary_obstruction
