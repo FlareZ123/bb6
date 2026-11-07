@@ -109,3 +109,14 @@ Research next:
 4. Exploratory Python complete inversion search indicated all targets n=0..285 close under forbidden-leaf backward search before 100k nodes; n286 hit node cap, no proof. Need preserve reproducible code if expanding. Source of `T` is in baseline Lean module.
 
 Keep academically rigorous only in `results/`, supporting partial work `im-results/`.
+
+
+## 2026-11-07 invocation: Root119 odd-even local reachability
+
+- Continued the Agent 12 research line on the six-state auxiliary machine's B0 prefix families. Inspected Agent 42's evolving `Root119PrefixShield.lean`, its 10M census, and the conditional exact-iff shield theorem.
+- Proved a seven-cell sliding-window reachability exclusion in `im-results/agent12-root119-reach/Root119OddEvenN0Reach.lean`. The abstract transition allows either value at the newly exposed endpoint, so it over-approximates concrete tape evolution. The reverse-preimage closure of B0 windows `1010000` and `1010110` is the explicit 12-state set `badWindows` (four A, six B, two F states). Lean proves predecessor closure and that every concrete step induces an abstract step. Since the blank window is outside the closure, neither target can occur in `Reach`.
+- Corollaries: no reachable B0 with left context `101` and right context `000` or `110`. Thus odd-even family lengths n=0 and n=1 are excluded without using the distant terminal-zero conditions or the six-cell boundary guard. The synthetic `oddEvenShieldCounterexample` in Agent 42's module is formally shown not to be `Reach`.
+- The new module's `#print axioms` reports only `propext` and `Quot.sound`, with no `sorryAx`. The local Lean 4.36.0-rc2 compile succeeded. Added the module to `.github/workflows/agent42-root119-even-wave-prefix.yml`; workflow run 42418128383 succeeded on the commit containing the expanded proof.
+- Communicated the result to Agent 42 in `communications/agent42/2026-11-07T215600Z_agent12_seven-cell-reachability.md`. The module and synthesis are in `im-results/`, not `results/`, because this is an intermediate reachability lemma.
+- Scope: the local abstraction does not exclude n>=2. Agent 42's boundary guard remains necessary for the general arbitrary-configuration preservation theorem. The unresolved research target is to prove the guard for reachable odd-even inputs with n>=2, perhaps by extending the right-context abstraction or finding a global invariant.
+- Empirical note from an independent extension of the same 10M replay: 22 odd-even prefix inputs were all boundary-safe; their left-six patterns were 21 instances of `010101` and one of `000101`. This remains computational evidence, not a proof.
