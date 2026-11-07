@@ -55,8 +55,14 @@ private theorem a_input_shape (t r : Nat) :
   have hn : 8*(3*t+2)+5 = 2+(3*(8*t+6)+1) := by omega
   have hp : 2*(3*r+3)+2 = 3*(2*r+2)+2 := by omega
   have hmul : 3*(2*r+2)=6*r+6 := by omega
-  rw [hn,hp,hmul,← List.replicate_append_replicate]
-  simp [CryptidBoundary.pairs,List.append_assoc] <;> omega
+  have hprefix :
+      List.replicate (8*(3*t+2)+5) true =
+        [true,true] ++ List.replicate (3*(8*t+6)+1) true := by
+    rw [hn]
+    simpa using
+      (List.replicate_append_replicate 2 (3*(8*t+6)+1) true).symm
+  rw [hprefix,hp,hmul]
+  simp [triples_code,CryptidBoundary.pairs,List.append_assoc] <;> omega
 
 /-- The q=3r+3 A branch passes through the original 110111 A-to-E portal
     and returns to a packet with two 01 pairs and eleven trailing ones. -/
