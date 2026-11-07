@@ -1,70 +1,81 @@
-# Exact primitive first branch of the #429 J family
+# Exact outer branches of the #429 J chart
 
-## Result
+## Established source theorem
 
-For every pair of natural numbers (u,w) satisfying (2u+3\le w), the source-verified raw transition table `target429` satisfies
+Let `jTape u w` be the symbolic J-chart tape from the original-source #429 formalization. The module `JFirstBranch.lean` now proves two distinct all-parameter branches of the exact raw transition relation `target429`.
+
+**Continuation branch.** For every `u,w : Nat` with `2*u+3 ≤ w`,
 
 ```lean
-theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
-    run target429 (4*u*u+10*u+27)
-      {state:=A,head:=0,tape:=jTape u w} =
-    some {state:=A,head:=2*(u:Int)+3,
-      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)}
+run target429 (4*u*u+10*u+27)
+  {state:=A,head:=0,tape:=jTape u w} =
+  some {state:=A,head:=2*(u:Int)+3,
+    tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)}
 ```
 
-Thus this branch returns exactly to the J family with parameters
-`(2*u+3, w-(2*u+3))), translated to head position `2*u+3`, after exactly
-`4*u^2+10*u+27` raw machine steps.
+The run returns exactly to the translated J family with parameters
+`(2*u+3, w-(2*u+3))`, after `4*u^2+10*u+27` successful raw steps.
 
-The proof is in [JFirstBranch.lean](JFirstBranch.lean). It is an exact raw-run
-theorem, not a simulator-only claim.
+**Fatal boundary branch.** For every `u,w : Nat` with `w+1=2*u`,
 
-## Proof decomposition
+```lean
+run target429 (4*u*u+10*u+27)
+  {state:=A,head:=0,tape:=jTape u w} = none
+```
 
-The raw run is composed from three verified pieces:
+After `4*u^2+10*u+25` successful steps, the machine is in state C at head
+`2*u+1`. The two cells there are exactly `01`: C reads 0, writes 0 and
+moves right into D/1, whose transition is undefined. Thus the machine makes
+`4*u^2+10*u+26` successful moves and halts on the next query.
 
-1. `j_F0_exact`: (4u^2+6u+7) steps from the J tape to the F/0 setup
-   configuration.
-2. `f0_to_c1`: a 14-step setup from F/0 to C/1.
-3. A C/B sweep of (2u+2) pairs, taking (4u+4) steps, followed by the
-   final two-step exit pair.
+## Proof structure
 
-The total is
-[
-(4u^2+6u+7)+14+(4u+4)+2=4u^2+10u+27.
-]
+Both theorems use the same source-connected prefix:
 
-The pointwise tape identity is proved separately as
-`j_first_branch_tape`; the final theorem composes it with the raw-step
-sweep and exit lemmas. The F/0 write is proved extensionally, and the
-`#print axioms` audit covers the prefix, setup, sweep, tape identity, and
-composed theorem.
+1. `j_F0_exact`: `4*u^2+6*u+7` raw steps from the J tape to the F/0 setup.
+2. `f0_to_c1`: the exact 14-step F/0-to-C/1 setup.
+3. `j_c_sweep`: `2*(2*u+2)=4*u+4` steps through the C/1,B/0 pairs.
 
-## Verification
+For the continuation branch, `cb_exit` handles the final 11 pair and the
+separate theorem `j_first_branch_tape` proves equality of the complete
+translated tape.
 
-- GitHub Actions workflow: [run 42378679590](https://github.com/FlareZ123/bb6/actions/runs/42378679590), successful.
-- The axiom audit reports no `sorryAx` dependency for `j_F0_exact`,
-  `f0_to_c1`, `cb_exit`, `j_first_branch_tape`, or `j_first_branch`.
-  The final theorem depends only on the standard Lean axioms
-  `propext`, `Classical.choice`, and `Quot.sound`.
-- Independent finite simulation checked 32 additional parameter pairs
-  (`u=0..7`, with four admissible values of `w` per `u`). An earlier
-  155-pair regression is also recorded in the development notes. These
-  simulations are regression checks; the universal claim is established by
-  the Lean proof.
+For the fatal branch, `j_fatal_boundary_bits` proves the boundary cells are
+01 directly from the original J-tape definition and `w+1=2*u`.
+`baseTape_above_pivot`, `f0Tape_neq`, `setupTape_above`, and
+`cbPaint_right` transport those exact bits through the F/0 setup and C/B
+sweep. `C01_halts` then supplies the undefined D/1 transition.
 
-## Scope and next obligations
+The shared total time is
+`(4*u^2+6*u+7)+14+(4*u+4)+2 = 4*u^2+10*u+27`.
+In the fatal case, the last two queries are C/0 (successful) and D/1
+(undefined); in the continuation case, they are C/1 and B/1 (both
+successful).
 
-This result proves one conditional branch of the #429 J transition. It does
-not show that the authentic blank-tape orbit enters this branch, determine
-the orbit's eventual behavior, or establish a BB(6) bound.
+## Verification and provenance
 
-The highest-value continuations are:
+- Full manual original-source workflow: [CI run 42390569324](https://github.com/FlareZ123/bb6/actions/runs/42390569324).
+- Exact checked commit: `4afb59a786703dc0f86c6ba081b385db4a0caddf`.
+- The workflow compiled the original dependency chain and this module, printed
+  the theorem axiom audits, and passed its explicit `sorryAx` rejection gate.
+- The two new boundary-bit lemmas were independently checked locally with
+  Lean 4.36.0-rc2 using the exact J-tape, zero-paint, negative-fill, setup,
+  and C/B sweep definitions. Their local axiom reports contain only
+  `propext` and `Quot.sound`.
 
-- prove the fatal boundary branch (w+1=2u) with its exact raw halting time;
-- prove the neighboring exceptional branches (w=2u,2u+1,2u+2);
-- connect the resulting source-level branch costs to the authentic blank
-  orbit and its accumulated raw step count.
+## Remaining cases and scope
 
-This remains intermediate research in `im-results/`, not a BB(6) solution
-or a publishable global result.
+Within the prefix domain `w+1 ≥ 2*u`, the outer cases are now established:
+`w=2*u-1` is fatal, while `w≥2*u+3` continues to the translated J family.
+The three neighboring cases `w=2*u`, `w=2*u+1`, and `w=2*u+2` remain
+open. Values below the prefix domain are outside these theorems.
+
+These are exact conditional J-chart transition results. They do not prove
+that the authentic blank-tape orbit enters this J family, decide the #429
+machine's eventual behavior, or establish any BB(6) lower or upper bound.
+The next useful step is to settle the three intermediate parameter cases
+and connect the resulting complete J-chart dynamics to the authentic
+blank-root criterion in
+[the #429 physical-root dossier](../agent32-429-raw-parent/README.md).
+
+This is intermediate work and remains in `im-results/`.
