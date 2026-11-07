@@ -342,6 +342,7 @@ theorem b0_two_wave_root_interval_to_b0
     (hzero2 : b.tape (b.h+(2*n1+3:Int)) = false) :
     ∃ bout : Conf, run (8*n1+2*m+30) b = some bout ∧
       Reach bout ∧ BZero bout ∧
+      bout.h = b.h - 2*(m:Int) - 6 ∧
       (NoLeft4 true true false b → NoLeft4 true true false bout) := by
   let H : Int := b.h-1
   let t1 : Int → Bool := twoWavePrefixTape b.tape b.h
@@ -558,7 +559,13 @@ theorem b0_two_wave_root_interval_to_b0
   have houtB : BZero out := by
     refine ⟨rfl,?_⟩
     simpa [out,oddRetreatResult,t2] using hchain.2
-  exact ⟨out,hrun,houtReach,houtB,hNoOut⟩
+  have hheadOut : out.h = b.h - 2*(m:Int) - 6 := by
+    have hproj : out.h = c4.h - 1 := by
+      simpa using congrArg Conf.h hEq
+    rw [hproj,hheadC4]
+    dsimp [h2,H]
+    omega
+  exact ⟨out,hrun,houtReach,houtB,hheadOut,hNoOut⟩
 
 /-- Under the BShield invariant, a completed two-wave root interval cannot
     end at the BBad gate: BBad contains the forbidden left factor 1100. -/
@@ -581,11 +588,12 @@ theorem b0_two_wave_root_interval_avoids_BBad
     (hextra : b.tape (b.h+(2*n1+2:Int)) = true)
     (hzero2 : b.tape (b.h+(2*n1+3:Int)) = false) :
     ∃ bout : Conf, run (8*n1+2*m+30) b = some bout ∧
-      Reach bout ∧ BZero bout ∧ ¬ BBad bout := by
-  obtain ⟨bout,hrun,hreach,hbOut,hpreserve⟩ :=
+      Reach bout ∧ BZero bout ∧
+      bout.h = b.h - 2*(m:Int) - 6 ∧ ¬ BBad bout := by
+  obtain ⟨bout,hrun,hreach,hbOut,hhead,hpreserve⟩ :=
     b0_two_wave_root_interval_to_b0 b n1 m hb hb0
       hleft0 hzero0 hone0 hleft2 hfb hfinalF hfinalB hones1 hzero1 hextra hzero2
-  exact ⟨bout,hrun,hreach,hbOut,noLeft4_excludes_BBad bout (hpreserve hshield)⟩
+  exact ⟨bout,hrun,hreach,hbOut,hhead,noLeft4_excludes_BBad bout (hpreserve hshield)⟩
 
 theorem b0_cphase_d0_odd_wave_return_preserves_noLeft4 (b : Conf) (r m : Nat)
     (hb : Reach b) (hb0 : BZero b)
