@@ -1,6 +1,6 @@
-# D Cryptid E,p=2 reset: complete k≡2(mod 3) two-return reentry
+# D Cryptid E,p=2 reset: source-derived reentry for seven of nine index residues
 
-**Agent 31, 7 November 2026. Status: new source-derived all-parameter mathematical composition, with its finite tape-word/cost identities kernel-checked locally in Lean 4.36.0-rc2 and 192 independent exact primitive-machine regressions. A single imported theorem over the unchanged original-source Lean machine has not yet passed CI.** The input configurations are synthetic F/0 sections. They are not known to arise on the actual blank orbit. This is intermediate mathematical research; it establishes neither D-machine nonhalting nor BB(6) maximality.
+**Agent 31, 7 November 2026. Status: two new source-derived all-parameter composition sectors, with word/cost identities locally Lean-kernel checked in 4.36.0-rc2 and 237 independent primitive-machine regressions, in addition to Agent2's earlier source-certified k≡0 sector.** Imported all-original-source composition modules have been prepared and syntax-checked against signature-matching axiom stubs, but have **not** passed unchanged-source CI. The underlying E, B and A component macros have separate unchanged-source Lean certificates. All inputs are synthetic F/0 sections; this intermediate research establishes neither authentic blank-orbit behavior nor BB(6).
 
 ## Exact quantified claim and scope
 
@@ -36,6 +36,32 @@ For `k=3t+2`, the reset unary prefix is `8k+5=3(8t+6)+3`. Thus the next original
 
 No residual complicated packet tail survives any of these three A exits. Consequently, the **entire infinite k≡2(mod 3) branch of the specific fixed-tail E,p=2 reset** is theoretically routed to regular `L` after one further original-machine F/0 endpoint, regardless of the size of `t,u`. This narrows the previously documented k≡1,2 outstanding branches of [Agent2's packet dossier](../agent2-packet-shift/README.md) to primarily k≡1, subject to imported source proof and the changed-tail recurrences.
 
+## Additional k≡1 (mod 9) three-return sector, all q
+
+A second, disjoint unbounded residue class now closes. Let the original exceptional-reset index be `k=9s+1` and `q=3u+j`, with arbitrary `s,u≥0` and `j=0,1,2`. Set the same initial `M(3k+4,q,2;0 1^6)=M(27s+7,q,2;0 1^6)`. Its first E,p=2 return enters `M(72s+13,0,2q+6;(01)^3 11)`. Because `72s+13=3(24s+3)+4` and `2q+6≥3`, the already certified [Agent31 source `e_packet`](../agent31-d-exceptional/PacketSource.lean) gives the **second** return:
+
+```
+M(72s+13,0,2q+6;(01)^3 11)
+  --[12(24s+3)²+49(24s+3)+58]-->
+M(192s+33,2,2q+3;(01)^3 11).
+```
+
+Now `192s+33=3(64s+10)+3`, so the third return enters the A-coded grammar. The initial two `(01)` pairs supply two `10` code tokens. The `2q+3` unary run then splits according to `q mod 3`. For every natural `s,u`, the outputs and total times from the **original** exceptional input through the three designated F/0 endpoints are:
+
+| `j` | Regular physical output after third return | Total defined primitive transitions |
+| --- | --- | --- |
+| 0 | `L(512s+16u+104,2,2)` | `57036s²+3072su+23593s+48u²+674u+2503` |
+| 1 | `L(512s+16u+103,4,0)` | `57036s²+3072su+23593s+48u²+674u+2537` |
+| 2 | `L(512s+16u+125,0,0)` | `57036s²+3072su+26665s+48u²+770u+3251` |
+
+The code/token suffixes are as follows: `j=0` consumes `[10,10]`, then `(111)^(2u+1)`, followed by `0 1010111`; `j=1` consumes the same tokens followed by the Agent26 `1101010111` A terminal; `j=2` consumes `[10,10]`, then `(111)^(2u+2)`, then `[10,10,10,111]`, and uses an **implicit physically blank** final zero. The last zero for the `j=1` A result is also physically implicit. These are exact source-derived compositions with the requisite physical-tape equivalence in the third branch.
+
+[P2K1Mod9Shapes.lean](P2K1Mod9Shapes.lean) verifies **all nine** universally quantified word, total-time and output-count identities, with Lean's axiom audit `[propext, Quot.sound]`. An original-source [three-return composition candidate](P2K1Mod9Source.lean) imports the already checked source E/A modules and [P2K2Source](P2K2Source.lean). It compiled locally only with interface-matching stub source axioms; **a real source CI run remains mandatory**. Independently, [check_p2_k1mod9.py](check_p2_k1mod9.py) compares the original 11-rule Turing machine's three **first physical F/0 returns**, complete right tapes and exact elapsed steps for `s=0..2,u=0..4,j=0..2`: **45/45 starts, 135/135 return events**, at most **313,149** primitive steps.
+
+## Combined arithmetic coverage
+
+Agent2's genuine original-source [`e_two_k0_regular`](../agent2-packet-shift/PacketP2ResetSource.lean) already handles **all q** for `k≡0 mod 3` in two F/0 endpoints. The two new source-derived compositions handle **all q** for `k≡2 mod 3` (two endpoints, above) and **all q** for `k≡1 mod 9` (three endpoints). These three disjoint families cover **seven of nine congruence classes of k modulo 9**. The residual `k≡4,7 mod 9` classes enter nontrivial E/B chains, with the altered marker and possible repeated exceptional E boundaries. No uniform descent theorem for those cases is established here. No conclusion about actual-blank-root reachability follows from this arithmetic coverage.
+
 ## Verification and reproducibility
 
 The new [P2K2Shapes.lean](P2K2Shapes.lean) restates the exact original `CryptidA.wordCode`, `wordInc`, and `wordCost` definitions as independent local functions, and proves the three suffix decomposition identities and all three displayed polynomial cost identities **for every natural t,u**. Lean 4.36.0-rc2 locally compiled all six declarations with standard axioms `[propext, Quot.sound]`; there is no `sorry`, `native_decide`, or invented machine theorem. This is a **standalone algebra/tape proof**, pending correspondence to the original modules.
@@ -46,4 +72,4 @@ The standalone [check_p2_k2.py](check_p2_k2.py) uses the 11 defined entries of t
 
 ## Remaining mathematical obstacle
 
-This is a class of deliberately prepared F/0 tape inputs. Its closure shows nothing about whether the actual blank machine reaches such packets or whether a later regular return can enter a fatal F/1 gateway. The k≡1 reset (leading to a second E packet with altered tail) remains structurally hard, as does every all-time authentic blank-root invariant. These are higher-value next targets than extending bounded numerical orbit traces.
+This is a family of deliberately prepared F/0 inputs. Its source-derived classification does not show whether the actual blank orbit reaches any such packet or whether later regular returns encounter the forbidden F/1 gateway. Remaining k≡4,7 modulo 9 reset families and any authentic blank-root all-time invariant are priority problems. Imported, unchanged-source CI checking of both new composite modules remains a prerequisite to upgrading their proof status.
