@@ -94,3 +94,11 @@ drain-specific wrapper terminal_output_balance_joint. It states
 still awaits a successful CI run. The four branch-specific ratio-4 bounds
 above remain an algebraic derivation; their source formalization is the
 next step.
+
+
+The generic cancellation step is now formalized separately in
+TerminalRatio4Arithmetic.lean. Its far/near lemmas prove the ratio-4 interval
+from the two bridge-error intervals, the output-balance bound, and the
+parity ranges for c_R,c_L. It compiles locally under Lean 4.36.0-rc2 with
+only standard axioms. The CI workflow now compiles this arithmetic module
+after DrainLinearTerminalSource; source CI is pending.
