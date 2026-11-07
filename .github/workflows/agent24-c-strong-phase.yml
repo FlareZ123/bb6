@@ -271,6 +271,12 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean -o StrongJointResidual.olean StrongJointResidual.lean
+          # Agent19: source-authenticated even-right high stopping exclusion and
+          # an explicit infinite progression surviving the full prior all-phase sieve.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighEvenRightArithmetic,HighEvenRightSource,HighEvenRightResidual}.lean .
+          lean -o HighEvenRightArithmetic.olean HighEvenRightArithmetic.lean
+          lean -o HighEvenRightSource.olean HighEvenRightSource.lean
+          lean HighEvenRightResidual.lean
           # Source-audit the bounded Boolean realization of both exceptional phases.
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/StrongPhaseBool.lean .
           lean -o StrongPhaseBool.olean StrongPhaseBool.lean
