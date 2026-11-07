@@ -116,10 +116,25 @@ jobs:
             echo "All-high-depth source theorem depends on sorryAx" >&2
             exit 1
           fi
-          lean "$AG50SUB/RightFiveShallowSource.lean" > /tmp/agent50-right-five-shallow-axioms.txt
+          lean -o "$AG50SUB/RightFiveShallowSource.olean" "$AG50SUB/RightFiveShallowSource.lean" > /tmp/agent50-right-five-shallow-axioms.txt
           cat /tmp/agent50-right-five-shallow-axioms.txt
           grep -q "source_low_cost_right_five_has_shallow_edge" /tmp/agent50-right-five-shallow-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-right-five-shallow-axioms.txt; then
             echo "Shallow-edge original CountCone result depends on sorryAx" >&2
+            exit 1
+          fi
+          lean -o "$AG50SUB/RightFiveEnergyNumeric.olean" "$AG50SUB/RightFiveEnergyNumeric.lean"
+          lean -o "$AG50SUB/RightFiveEnergyStep.olean" "$AG50SUB/RightFiveEnergyStep.lean"
+          lean -o "$AG50SUB/RightFiveEnergyCone.olean" "$AG50SUB/RightFiveEnergyCone.lean"
+          if lean "$AG50SUB/RightFiveCostGapSource.lean" > /tmp/agent50-right-five-cost-gap-axioms.txt; then
+            cat /tmp/agent50-right-five-cost-gap-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-cost-gap-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_right_five_cost_above_three_halves" /tmp/agent50-right-five-cost-gap-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-cost-gap-axioms.txt; then
+            echo "Energy-budget source theorem depends on sorryAx" >&2
             exit 1
           fi
