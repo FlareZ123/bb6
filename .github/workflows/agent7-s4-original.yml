@@ -167,6 +167,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-all-depth-sharp/S4AllDepthBool.lean" S4AllDepthBool.lean
           echo "b9e9f5462cebc896fc2a3995e1ee0a009e83cead7a6a614f1f58e0001844d3ac  S4AllDepthBool.lean" | sha256sum -c -
           lake env lean -o S4AllDepthBool.olean S4AllDepthBool.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-all-depth-sharp/S4AllDepthGrowth.lean.xz.b64" | xz -dc > S4AllDepthGrowth.lean
+          echo "3fbb97be0a309ccad35bbd957c5efaf90e3eb95b2a5ac3c70623a92f4850f3bd  S4AllDepthGrowth.lean" | sha256sum -c -
+          lake env lean -o S4AllDepthGrowth.olean S4AllDepthGrowth.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
