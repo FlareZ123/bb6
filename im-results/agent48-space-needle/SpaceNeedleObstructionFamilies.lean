@@ -1,6 +1,8 @@
 import SpaceNeedleClosed
 import Lean.Elab.Tactic.Omega
 
+set_option maxHeartbeats 0
+
 /-!
 Periodic congruence obstructions for Space Needle terminal feeders.
 
@@ -193,40 +195,44 @@ The v=19 class was already present in SpaceNeedleClosed; v=1,4,10 are new
 infinite progressions. -/
 theorem no_7_mod_21_halving_into_power (q k t v0 : Nat)
     (hv0 : v0=1 ∨ v0=4 ∨ v0=10 ∨ v0=19) :
-    highLevelNext (.N (oddTower q (21*t+v0))) ≠
+    highLevelNext (.N (oddTower q (v0+21*t))) ≠
       some (.N (haltTower k)) := by
   have hperiod : 2^21%7=1 := by decide
-  have hden : 7 ∣ 2^(21*t+v0+1)+3 := by
+  have hden : 7 ∣ 2^(v0+21*t+1)+3 := by
     rcases hv0 with h1|h4|h10|h19
     · subst v0
-      exact progression_denominator 7 2 21 0 1 t (by omega) hperiod (by omega) (by decide)
+      simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using
+        (progression_denominator 7 2 21 0 1 t (by decide) hperiod (by decide) (by decide))
     · subst v0
-      exact progression_denominator 7 5 21 0 4 t (by omega) hperiod (by omega) (by decide)
+      simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using
+        (progression_denominator 7 5 21 0 4 t (by decide) hperiod (by decide) (by decide))
     · subst v0
-      exact progression_denominator 7 11 21 0 10 t (by omega) hperiod (by omega) (by decide)
+      simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using
+        (progression_denominator 7 11 21 0 10 t (by decide) hperiod (by decide) (by decide))
     · subst v0
-      exact progression_denominator 7 20 21 0 19 t (by omega) hperiod (by omega) (by decide)
-  have havoid : ∀ n, (2^n+3)%7 ≠ (2*(21*t+v0))%7 := by
+      simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using
+        (progression_denominator 7 20 21 0 19 t (by decide) hperiod (by decide) (by decide))
+  have havoid : ∀ n, (2^n+3)%7 ≠ (2*(v0+21*t))%7 := by
     intro n
     have hleft := pow_plus_three_mod_seven n
     rcases hv0 with h1|h4|h10|h19
     · subst v0
-      have htarget : (2*(21*t+1))%7=2 := by omega
+      have htarget : (2*(1+21*t))%7=2 := by omega
       rw [htarget]
       rcases hleft with h|h|h <;> omega
     · subst v0
-      have htarget : (2*(21*t+4))%7=1 := by omega
+      have htarget : (2*(4+21*t))%7=1 := by omega
       rw [htarget]
       rcases hleft with h|h|h <;> omega
     · subst v0
-      have htarget : (2*(21*t+10))%7=6 := by omega
+      have htarget : (2*(10+21*t))%7=6 := by omega
       rw [htarget]
       rcases hleft with h|h|h <;> omega
     · subst v0
-      have htarget : (2*(21*t+19))%7=3 := by omega
+      have htarget : (2*(19+21*t))%7=3 := by omega
       rw [htarget]
       rcases hleft with h|h|h <;> omega
-  exact no_terminal_by_modular_residue_avoidance q (21*t+v0) k 7
+  exact no_terminal_by_modular_residue_avoidance q (v0+21*t) k 7
     (by omega) hden havoid
 
 private theorem pow_two_multiple39_mod79 (n : Nat) : 2^(39*n)%79=1 := by
