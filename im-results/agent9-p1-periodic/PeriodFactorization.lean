@@ -586,4 +586,41 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
 #print axioms no_infinite_repeated_word_ray
 
 
+
+/-- Recenter the scalar shadow state by removing the linear source coordinate. -/
+def recentered (L m z : Nat) : Int :=
+  2*(z:Int)-(m:Int)-(L:Int)+2
+
+/-- Exact one-step varying-depth recurrence. If a depth-`t` source step
+    takes `(m,z)` to `(m',z')`, then the recentered coordinate satisfies
+    (2^{t+1}R(m',z')=R(m,z)+m+L-2). -/
+theorem recentered_step (L m z m' z' t v : Nat)
+    (hdiv : z=2^t*v)
+    (hstep : 2*z'+1=L+m+t+v)
+    (hm : m'=m+t+1) :
+    (2:Int)^(t+1)*recentered L m' z' =
+      recentered L m z+(m:Int)+(L:Int)-2 := by
+  have hcenter : recentered L m' z'=(v:Int) := by
+    dsimp [recentered]
+    rw [hm]
+    have hs := congrArg (fun n : Nat => (n:Int)) hstep
+    omega
+  have hdivI : (z:Int)=((2^t:Nat):Int)*(v:Int) := by
+    exact_mod_cast hdiv
+  have hpowI : (2:Int)^(t+1)=((2^t:Nat):Int)*2 := by
+    change ((2:Nat):Int)^(t+1)=_
+    rw [← Int.natCast_pow]
+    simp [Nat.pow_succ]
+  rw [hcenter,hpowI]
+  calc
+    ((2^t:Nat):Int)*2*(v:Int) = 2*(z:Int) := by
+      rw [hdivI]
+      ac_rfl
+    _ = recentered L m z+(m:Int)+(L:Int)-2 := by
+      dsimp [recentered]
+      omega
+
+#print axioms recentered_step
+
+
 end PeriodWord
