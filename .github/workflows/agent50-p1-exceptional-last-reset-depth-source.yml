@@ -78,7 +78,7 @@ jobs:
             echo "The exact last-reset theorem depends on sorryAx" >&2
             exit 1
           fi
-          if lean "$AG50SUB/RightFiveResetFloor.lean" > /tmp/agent50-right-five-floor-axioms.txt; then
+          if lean -o "$AG50SUB/RightFiveResetFloor.olean" "$AG50SUB/RightFiveResetFloor.lean" > /tmp/agent50-right-five-floor-axioms.txt; then
             cat /tmp/agent50-right-five-floor-axioms.txt
           else
             status=$?
@@ -88,5 +88,18 @@ jobs:
           grep -q "source_right_five_needs_two_resets" /tmp/agent50-right-five-floor-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-right-five-floor-axioms.txt; then
             echo "Right-five two-reset theorem depends on sorryAx" >&2
+            exit 1
+          fi
+          lean -o "$AG50SUB/RightFiveTwoArithmetic.olean" "$AG50SUB/RightFiveTwoArithmetic.lean"
+          if lean "$AG50SUB/RightFiveThreeSource.lean" > /tmp/agent50-right-five-three-axioms.txt; then
+            cat /tmp/agent50-right-five-three-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-three-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_right_five_needs_three_resets" /tmp/agent50-right-five-three-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-three-axioms.txt; then
+            echo "Right-five three-reset theorem depends on sorryAx" >&2
             exit 1
           fi
