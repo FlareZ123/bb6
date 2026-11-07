@@ -109,6 +109,19 @@ The source-verified `juncCycle_crossing_shape` theorem gives two exact endpoint 
 - The named high-2 endpoint and crossing theorem audits pass with no `sorryAx`.
 
 
+
+### 6. Raw lift for finite halting suffixes
+
+The physical bridge now also contains `BB429DeltaPhysicalBridge.source_runWithDelta_none_rep`. If a zipper state `z` represents a raw configuration `c` and `runWithDelta n z = none`, then the exact raw six-state machine run also satisfies `BB6Coverage.run target429 n c = none`.
+
+The proof is by induction on the source run. Successful first steps use `sim_one_delta`; a source first-step halt is transferred to the raw transition table using `action_matches_target) and the representation invariant. This is a general halting-lift lemma, independent of the high-2 endpoint theorem.
+
+- Source CI: [42415667222](https://github.com/FlareZ123/bb6/actions/runs/42415667222).
+- The theorem's targeted axiom audit passes with no `sorryAx`.
+
+The high-2 endpoint alternatives have not yet been classified as halting or nonhalting. The new lemma supplies the raw-machine side once a finite zipper-level halting suffix is proved.
+
+
 ## Remaining #429 questions
 
 The high-2 case `w=2*u+2` now returns to `junc 0 0 (4*u+18)`, and a further source-verified Junc excursion crosses the original J-chart head to a position strictly greater than `2*u+3`. The separate C/B cases `w=2*u` and `w=2*u+1` remain open. The J-chart outer cases are source proved: `w=2*u-1` halts, and `w>=2*u+3` returns to the J family. The crossing theorem leaves the final zipper abstract, so a useful next step is to expose its exact endpoint alternatives and compose those alternatives with the outer J-chart classification.
