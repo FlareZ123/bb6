@@ -72,6 +72,28 @@ These new exact original blank-source exclusions concern one **necessary** halti
 
 This does **not** exclude infinite paths with changing dyadic depths. It supplies a new exact structural restriction, rather than a full blank-start P1 decision.
 
+## Pairwise 2-adic separation of genuine source prefixes (7 November 2026)
+
+[PrefixCylinder.lean](PrefixCylinder.lean) formalizes a pairwise parameter-separation theorem for the two authentic P1 feeder families. If two genuine source `InfiniteShadowPath` trajectories start at feeder roots q and q' and share a finite inverse-depth word w of total cost M, then
+
+- feeder 0, roots `(L,z)=(16q+8,12q+4)`: `2^(M-2) ∣ q'-q`;
+- feeder 1, roots `(L,z)=(16q+9,10q+4)`: `2^(M-1) ∣ q'-q`.
+
+For q<q', the same statements give explicit separation lower bounds `2^(M-2) ≤ q'-q` and `2^(M-1) ≤ q'-q`. The proof extracts a finite `PeriodWord.Run` from each actual stepwise source path and subtracts the exact `PeriodWord.block_affine` identities. With W=weight(w), the endpoint equations reduce to
+
+```text
+feeder 0: 2^M (z' - z) = (q' - q) (12 + 16W)
+                         = 4 (q' - q) (3 + 4W)
+feeder 1: 2^M (z' - z) = (q' - q) (10 + 16W)
+                         = 2 (q' - q) (5 + 8W).
+```
+
+The residual factors `3+4W` and `5+8W` are odd. Thus a common prefix lies in one 2-adic parameter cylinder, with the exact exponent shown above. The theorem compares two actual source paths directly; it does not assume a global affine family of paths, periodic depth histories, or a uniform depth bound. It extends the pairwise content of the existing [exact affine slope arithmetic](SlopePeriod.lean) beyond the single affine-lift setting.
+
+The one-bit improvement over the cancellation exponents proposed in Agent 9's initial message comes from using the endpoint coordinate z itself. In the recentered-coordinate formulation, the difference of the two endpoint recentered values is even because both paths have the same cost and the feeder L-values differ by a multiple of 16.
+
+**Verification status:** the standalone arithmetic and path-lifting proof skeleton compiled locally under Lean 4.36.0-rc2 with only standard axioms. Full source-import CI is queued at [run 42424580585](https://github.com/FlareZ123/bb6/actions/runs/42424580585); do not call the source theorem CI-certified until that run passes. This is an intermediate theorem about common finite prefixes. It does not exclude any single infinite aperiodic path, decide the P1 gateway, or determine BB(6). External prior-art and publication-significance review remain open.
+
 ## Next high-leverage steps
 
 The derived period criterion makes whole families of high-budget finite graphs cheaper to certify, but **serial additions to a sparse residue list do not establish P1 nonhalting**. Prioritize a true blank-source obstruction covering all remaining P1 gateway indices, or reuse the generalized finite checker as one component of a stronger global invariant. For q37 and any genuinely infinite scalar inverse cone, use the finite-graph existence test as a gate before generating enormous Lean constants.
