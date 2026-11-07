@@ -185,4 +185,6 @@ jobs:
           grep -F 'feeder10_common_source_prefix' /tmp/agent13-prefix-cylinder.log
           grep -F 'feeder12_common_source_prefix_separation' /tmp/agent13-prefix-cylinder.log
           grep -F 'feeder10_common_source_prefix_separation' /tmp/agent13-prefix-cylinder.log
+          grep -F 'feeder12_depth_sequence_parameter_unique' /tmp/agent13-prefix-cylinder.log
+          grep -F 'feeder10_depth_sequence_parameter_unique' /tmp/agent13-prefix-cylinder.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-prefix-cylinder.log; then exit 1; fi
