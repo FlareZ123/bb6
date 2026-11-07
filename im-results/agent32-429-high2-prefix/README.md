@@ -143,15 +143,30 @@ source-verified lemmas are:
 
 The full source dependency chain compiles in
 [CI 42419563111](https://github.com/FlareZ123/bb6/actions/runs/42419563111).
-All six new theorem audits report only `[propext, Quot.sound]`; no
+All six initial theorem audits report only `[propext, Quot.sound]`; no
 `sorryAx` or `Classical.choice` is introduced.
 
-For the high-2 partial endpoint, w′ is 4 or 5. The new theorem always
-reduces `midApos u′ v′ w′` to `junc u′ (v′+2) (w′−2)`. Positive-u
-cases are covered by the exact re-entry/exit lemmas and the existing
-arbitrary-v Junc crossing theorem. The remaining exceptional case is
-u′=0, yielding `junc 0 (v′+2) 2` or `junc 0 (v′+2) 3`; its
-continuation remains open. This is still a conditional synthetic J-chart
+The u′=0 edge is now reduced as well. The additional exact lemmas are:
+
+- `junc0_w2_boundary_delta`: `junc 0 v 2` reaches an explicit A/1
+  configuration after 2v+27 steps, with displacement 2v+3.
+- `junc0_w3_exit_delta`: `junc 0 v 3` reaches an explicit A/0
+  configuration after 2v+33 steps, with displacement 2v+5.
+- `midApos_zero_w4_boundary_delta`: `midApos 0 v 4` reaches A/1
+  after 4v+35 steps, with displacement +3.
+- `midApos_zero_w5_boundary_delta`: `midApos 0 v 5` reaches A/0
+  after 4v+41 steps, with displacement +5.
+
+The expanded source dependency chain passes
+[CI 42419998685](https://github.com/FlareZ123/bb6/actions/runs/42419998685).
+All ten theorem audits report exactly `[propext, Quot.sound]`; no
+`sorryAx` or `Classical.choice` is introduced.
+
+Thus every high-2 partial endpoint `midApos u′ v′ w′` with w′∈{4,5}
+has an exact finite continuation: positive-u endpoints reduce by the
+re-entry/exit lemmas, while u′=0 reaches one of the explicit A/1 or A/0
+boundary families above. The subsequent fate of those A boundary
+families remains open. This is still a conditional synthetic J-chart
 result and does not establish blank-root reachability or decide #429.
 
 
