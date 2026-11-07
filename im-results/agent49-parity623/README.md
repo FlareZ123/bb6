@@ -135,12 +135,14 @@ The buffer theorem `newAffine_to_oldRight` says that, for even first counter `a)
 
 ## 2026-11-07: sharp linear-logarithmic B-drain envelopes
 
-**Status:** intermediate mathematical result. The Lean proof text has compiled
-locally with Lean 4.36.0-rc2 against an exact copy of the pinned upstream
-`evalA` and `drainB` equations. Compilation through the full pinned source
-imports in the repository's manual workflow remains pending.
+**Status:** source-CI verified intermediate mathematical result. The Lean proof
+text compiles locally with Lean 4.36.0-rc2 against an exact copy of the pinned
+upstream `evalA` and `drainB` equations. The pinned-source workflow run
+[42361679978](https://github.com/FlareZ123/bb6/actions/runs/42361679978)
+completed successfully on repository head `abf8ce1d1fa2bd4a590e78bc302a25a7c2a338d8`,
+compiling the authentic machine source and both dependent drain modules.
 
-For every `n), every successful complete drain with `b < 3^n`,
+For every `n`, every successful complete drain with `b < 3^n`,
 `drainB a b d = some (.D aa dd)`, satisfies
 
 ```
@@ -152,7 +154,8 @@ The first upper bound and third lower bound are existing source results.
 The new bounds are:
 
 - `drainB_first_lower_log`: `aa+n+1 ≥ a`;
-- `drainB_upper_linear_log`: `dd ≤ d+3*b+4*n+2`.
+- `drainB_upper_linear_log`: `dd ≤ d+3*b+4*n+2`;
+- `drainB_first_upper_log`: `aa ≤ a+n`, used in the terminal mass envelope.
 
 The evaluator lemmas `evalA_first_upper_one` and `evalA_third_lower` also
 provide the first-counter upper bound and a lower bound on the
@@ -166,7 +169,7 @@ case `bb=0`.
 
 Both new drain bounds are sharp simultaneously. Let
 `b_1=2` and `b_{n+1}=3*b_n+1`, equivalently
-`b_n=(5*3^(n-1)-1)/2). Then for `a=n+1`,
+`b_n=(5*3^(n-1)-1)/2`. Then for `a=n+1`,
 
 ```
 drainB (n+1) b_n d = some (.D 0 (d+3*b_n+4*n+2)).
@@ -176,13 +179,13 @@ A second family, `b=(3^n+1)/2`, `a=n+1`, also attains the first-counter
 loss `n+1`.
 
 Files:
-- `DrainLinearLogSource.lean`: Lean proof draft, locally compiled against
-  the exact recursion equations; awaiting source-import CI.
+- `DrainLinearLogSource.lean`: Lean proof, locally compiled against the exact
+  recursion equations and compiled by pinned-source CI run 42361679978.
 - `drain_linear_log_check.py`: reproducible finite checks for `n≤9`,
   `b<3^n`, and `a≤n+24`, plus both sharp witness families.
 - `root_drain_balance_check.py`: reproduces the 10,000-state root drain-balance scan.
-- `DrainLinearTerminalSource.lean`: source-shaped draft of the sharper
-  terminal interval, awaiting source-import CI.
+- `DrainLinearTerminalSource.lean`: source-shaped terminal interval and four
+  ray-window corollaries, compiled by pinned-source CI run 42361679978.
 - `DrainLinearExactModel.lean`: standalone Lean 4.36.0-rc2 harness that
   imports only `Std` and compiles the exact-equation drain bounds, sharp
   witness, and terminal/ray arithmetic. Run `lean DrainLinearExactModel.lean`
@@ -262,7 +265,7 @@ specific next target: prove that every root-reachable final-drain input
 avoids the displayed balance interval. The detailed diagnostic was sent to
 Agent 8 in `communications/agent8/20261107T073211Z_agent49-root-drain-balance.md`.
 
-The local Lean compile reports only standard Lean axioms
-(`propext`, `Classical.choice`, `Quot.sound`), with no `sorry` and no
-project-specific axioms. The pinned source workflow still needs to compile
-the two Lean modules against the actual upstream imports.
+The local Lean 4.36.0-rc2 exact-equation compile reports only standard Lean
+axioms (`propext`, `Classical.choice`, `Quot.sound`), with no `sorry` and no
+project-specific axioms. The pinned-source workflow run 42361679978 also
+compiled the actual upstream machine imports and both modules successfully.
