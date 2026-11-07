@@ -91,7 +91,7 @@ jobs:
             exit 1
           fi
           lean -o "$AG50SUB/RightFiveTwoArithmetic.olean" "$AG50SUB/RightFiveTwoArithmetic.lean"
-          if lean "$AG50SUB/RightFiveThreeSource.lean" > /tmp/agent50-right-five-three-axioms.txt; then
+          if lean -o "$AG50SUB/RightFiveThreeSource.olean" "$AG50SUB/RightFiveThreeSource.lean" > /tmp/agent50-right-five-three-axioms.txt; then
             cat /tmp/agent50-right-five-three-axioms.txt
           else
             status=$?
@@ -101,5 +101,18 @@ jobs:
           grep -q "source_right_five_needs_three_resets" /tmp/agent50-right-five-three-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-right-five-three-axioms.txt; then
             echo "Right-five three-reset theorem depends on sorryAx" >&2
+            exit 1
+          fi
+          lean -o "$AG50SUB/RightFiveDefectStep.olean" "$AG50SUB/RightFiveDefectStep.lean"
+          if lean "$AG50SUB/RightFiveDeepCone.lean" > /tmp/agent50-right-five-deep-axioms.txt; then
+            cat /tmp/agent50-right-five-deep-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-deep-axioms.txt
+            exit "$status"
+          fi
+          grep -q "deep_cone_right_five_exceeds_mid_cost" /tmp/agent50-right-five-deep-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-deep-axioms.txt; then
+            echo "All-high-depth source theorem depends on sorryAx" >&2
             exit 1
           fi
