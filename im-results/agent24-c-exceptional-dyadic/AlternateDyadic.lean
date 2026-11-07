@@ -8,7 +8,7 @@ namespace BB6.Agent46
     weighted mass a+2*b falls by four at each genuine source edge. -/
 theorem dyadic_back_iter (r t x b0 : Nat)
     (_hr : 8≤r) (htodd : t%2=1) (ht7 : 7≤t)
-    (hbase : (x+2*b0)%8=7)
+    (hbase : (x+2*b0)%4=3)
     (k a b : Nat) (hk : 1≤k) (hkr : k≤r)
     (hpow : b+2=2^k*t)
     (hmass : a+2*b+4*(r-k)=x+2*b0)
@@ -60,7 +60,7 @@ theorem dyadic_back_iter (r t x b0 : Nat)
             have hm : (b+2)%8=0 := Nat.mod_eq_zero_of_dvd hdiv
             right
             omega
-        have hm8 : (a+2*b+4*(r-k))%8=7 := by
+        have hm4 : (a+2*b+4*(r-k))%4=3 := by
           rw [hmass]
           exact hbase
         have hguard : (a+b)%8≠0 ∧ (a+b)%8≠7 := by
@@ -106,7 +106,7 @@ theorem alternate_dyadic_no_blank (r x b0 t : Nat)
   have hb032 : b0%32=30 := by
     have hm : (b0+2)%32=0 := Nat.mod_eq_zero_of_dvd hdiv32
     omega
-  have hbase : (x+2*b0)%8=7 := by omega
+  have hbase : (x+2*b0)%4=3 := by omega
   intro hre
   have hm0 : x+2*b0+4*(r-r)=x+2*b0 := by omega
   obtain ⟨A,hreach,hMass⟩ :=
