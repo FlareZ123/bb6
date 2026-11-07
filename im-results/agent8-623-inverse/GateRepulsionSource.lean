@@ -1,5 +1,6 @@
 import Agent8DrainLogDepthSource
 import Agent8BudgetSource
+import Agent49ParitySource
 
 /-!
 A source-authentic logarithmic first-counter bound and two diagonal-gate
@@ -158,6 +159,50 @@ theorem odd_diagonal_repulsion (a d k aa dd : Nat)
   have hf := drainB_first_le_pow k (d+4-a) (a-1) 3 aa dd hpow hstep
   have ht := BB6.Agent8BudgetSource.drainB_d3 (a-1) (d+4-a) 3 aa dd hstep
   omega
+
+
+/-- Any even-first-counter state with a sufficiently dominant second
+counter returns at least one more time. -/
+theorem right_dominated_safe (a d : Nat)
+    (he : a%2=0) (hr : 2*a+8 ≤ d) :
+    ∃aa dd, highLevelNext (.D a d) = some (.D aa dd) := by
+  by_cases hzero : a=0
+  · subst a
+    by_cases hodd : d%2=1
+    · have hones := BB6.Agent49ParitySource.ternaryOnes_ge (d+1)
+      have hb : 2 ≤ BB6.Agent49ParitySource.ternaryOnes (d+1) := by omega
+      obtain ⟨aa,dd,hs⟩ := BB6.Agent49ParitySource.drainB_safe_ones
+        2 (d+1) 2 hb
+      exact ⟨aa,dd,by simpa [highLevelNext,hodd] using hs⟩
+    · exact ⟨d,7,by simp [highLevelNext,hodd]⟩
+  · have ha : 0<a := by omega
+    have hc : a+a/3+1 ≤ d := by omega
+    exact BB6.Agent49ParitySource.next_safe_left_third_two a d ha he hc
+
+/-- A successful even-second-counter near-diagonal return has a
+guaranteed immediately following successful return. -/
+theorem even_diagonal_two_step (a d k aa dd : Nat)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=0) (hside : a≤d)
+    (hpow : a<3^k) (hroom : 2*d+2*k+7≤4*a)
+    (hstep : highLevelNext (.D a d) = some (.D aa dd)) :
+    ∃bb ee, highLevelNext (.D aa dd) = some (.D bb ee) := by
+  have hr := even_diagonal_repulsion a d k aa dd ha he hd hside hpow hroom hstep
+  have hp := BB6.Agent49ParitySource.next_preserves_even a d aa dd he hstep
+  exact right_dominated_safe aa dd hp hr
+
+/-- Odd-second-counter companion to the source two-step theorem. -/
+theorem odd_diagonal_two_step (a d k aa dd : Nat)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hside : a≤d)
+    (hpow : a-1<3^k) (hroom : 2*d+2*k+16≤5*a)
+    (hstep : highLevelNext (.D a d) = some (.D aa dd)) :
+    ∃bb ee, highLevelNext (.D aa dd) = some (.D bb ee) := by
+  have hr := odd_diagonal_repulsion a d k aa dd ha he hd hside hpow hroom hstep
+  have hp := BB6.Agent49ParitySource.next_preserves_even a d aa dd he hstep
+  exact right_dominated_safe aa dd hp hr
+
+#print axioms right_dominated_safe
+#print axioms even_diagonal_two_step
+#print axioms odd_diagonal_two_step
 
 #print axioms evalA_first_le_succ
 #print axioms evalA_third_ge
