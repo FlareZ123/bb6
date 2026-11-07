@@ -58,9 +58,40 @@ but this dossier has not yet transported these time formulas through
 that source correspondence. The displayed parameter condition is exactly
 the domain certified by these lemmas.
 
+## Proved high-3 J return and arbitrary high-3 ladders
+
+The separate [Agent1 J-first-branch dossier](../agent1-429-j-first-branch/README.md)
+now proves the complete raw continuation branch for every (u,w) with
+(w\ge 2u+3): exactly (4u^2+10u+27) successful transitions return to
+the translated J chart ((2u+3,w-2u-3)), with full infinite-tape equality.
+It also proves the fatal boundary (w+1=2u).
+
+Building on that one-branch theorem,
+[High3Ladder.lean](../agent32-429-high3-ladder/High3Ladder.lean) proves
+arbitrary consecutive high-3 segments directly for the raw machine. If
+`branchShift u k ≤ w`, then exactly `branchCostSum u k` primitive
+transitions reach the translated J chart with
+[
+u_k=2^k(u+3)-3,\qquad
+w_k=w-\operatorname{branchShift}(u,k),
+]
+and
+[
+\operatorname{branchShift}(u,k)+3k=2(u+3)(2^k-1).
+]
+The exact primitive cost is the recursive sum of the one-branch costs
+(4u_i^2+10u_i+27). CI run
+[42399391414](https://github.com/FlareZ123/bb6/actions/runs/42399391414)
+compiled this module and passed the `sorryAx` rejection gate.
+
+These are exact conditional J-chart results. The raw tape encoding still
+needs its separate accepted bridge to the pinned Cryptids `highLevelEncode`
+and authentic blank-root representation; see
+[Agent1's source bridge](../agent1-429-j-first-branch/JSourceBridge.lean).
+
 ## Further computational evidence, not yet proved
 
-An independent raw-tape CommonJS simulator checked 4,280 synthetic
+The high-3 continuation branch and fatal boundary have since been proved for all parameters, so they are excluded from the remaining conjecture table below. The table retains the other ten branch families, which remain computational evidence only. An independent raw-tape CommonJS simulator checked 4,280 synthetic
 `J(u,w)` cases (40×82 grid and 1,000 seeded samples, up to 146,327
 raw moves) against the twelve-case original high-level return map.
 It found a polynomial exact primitive return-time formula for every
@@ -93,13 +124,16 @@ further `4u+19` raw transitions beyond F/0.
 ## Open proof obligations and scientific scope
 
 1. The generic `(C/1,B/0)` rightward sweep and its fatal/continuation
-   boundary costs are now formally proved in [CBPrimitiveSweep.lean](CBPrimitiveSweep.lean).
-   The remaining composition is the 14-transition source-exact F/0-to-C
-   setup, derivation of its `10`-pair tape pattern from `j_F0_prefix`, and
-   full output-tape equality for the `w≥2u+3` branch; see
-   [CBPrimitiveSweep.md](CBPrimitiveSweep.md).
-2. Translate each completed raw segment into the existing pinned
-   Cryptids J-acceleration semantics, checking final score conventions.
+   boundary costs are formally proved in [CBPrimitiveSweep.lean](CBPrimitiveSweep.lean).
+   The F/0-to-C setup, `10`-pair pattern, full high-3 output tape, and fatal
+   boundary are now composed in [Agent1's J-first-branch proof](../agent1-429-j-first-branch/README.md).
+   The remaining raw J-chart cases are `w=2u`, `w=2u+1`, `w=2u+2`, and
+   the `w<2u` families. The original-Cryptids representation bridge is a
+   separate, not-yet-accepted proof obligation.
+2. Complete and CI-accept the raw-to-Cryptids bridge in
+   [JSourceBridge.lean](../agent1-429-j-first-branch/JSourceBridge.lean),
+   then translate all completed raw segments into the pinned Cryptids
+   acceleration semantics, checking final score conventions.
 3. For a genuine holdout decision, **resolve the unbounded blank-origin
    recurrence**, i.e. whether the real J-parameter orbit ever reaches
    the fatal `w=2u−1` input. A fast time formula for an arbitrary
