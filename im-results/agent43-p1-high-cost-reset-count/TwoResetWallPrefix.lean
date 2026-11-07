@@ -32,6 +32,7 @@ private theorem two_hundred_mul_le_pow (n : Nat) (hn : 14 ≤ n) :
     The proof peels the last two positive resets, removes their zero-depth
     suffixes using large-left bounds, and traps the first reset's power
     strictly between consecutive dyadic multiples. -/
+set_option maxHeartbeats 1000000 in
 theorem source_no_two_reset_shifted_wall
     (n b d m : Nat) (hn : 14≤n)
     (h : CountCone (14*2^n-2*n-16) 3 b d m 2)
@@ -105,7 +106,7 @@ theorem source_no_two_reset_shifted_wall
     rw [Nat.pow_succ, Nat.mul_comm]
   have hmulPow : 2^(t2+1)*(c2+3)=2*(2^t2*(c2+3)) := by
     rw [hpowrel2]
-    omega
+    simp [Nat.mul_assoc]
   have hB1wall : bp+4*mp+4*n+20+2^(t2+1)*(c2+3)=28*P := by
     have hbpHalf : 2*(bp/2)=bp := by omega
     omega
@@ -223,7 +224,7 @@ theorem source_right_five_four_reset_floor_shifted_wall
       have hzp2 : zp=2 := by omega
       have hpre2 : CountCone (14*2^n-2*n-16) 3 bp dp mp 2 := by
         simpa [hzp2] using hpre
-      exact source_no_two_reset_shifted_wall n bp dp mp hn hpre2 hwall
+      exact False.elim (source_no_two_reset_shifted_wall n bp dp mp hn hpre2 hwall)
 
 #print axioms BB6.Agent43DepthResetFloor.source_right_five_four_reset_floor_shifted_wall
 
