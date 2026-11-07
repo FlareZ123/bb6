@@ -182,8 +182,8 @@ theorem oddRetreatResult_preserves_noLeft4
   rw [hEq]
   exact noLeft4_left_write true true false c2 hNoFB
 
-/-- Exact nine-step source-machine prefix from B/0 to the first F/1 wave.
-    It uses the local input pattern 1,0,1 immediately to the left of B/0. -/
+/- Exact nine-step source-machine prefix from B/0 to the first F/1 wave.
+   It uses the local input pattern 1,0,1 immediately to the left of B/0. -/
 /-- The D-shuttle retreat preserves NoLeft4: all shuttle and sweep writes
     lie strictly to the right of the returned B head. -/
 theorem dRetreatResult_preserves_noLeft4
