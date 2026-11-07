@@ -254,7 +254,7 @@ theorem root_eight_prefix (n : Nat) (U : List Nat)
     rw [prun_add_local, seed337] at h
     simpa using h
   have hfull : prun n (cycle8Start ++ tail337) = some U := by
-    simpa [s337, cycle8Start, tail337] using hstate
+    simpa [s337, cycle8Start, tail337, cycle7] using hstate
   exact prun_prefix n cycle8Start tail337 U hfull
 
 /-- The seventh-prefix cycle's phase 17 is the explicit forcing key for digit eight. -/
@@ -307,13 +307,15 @@ theorem block5120_contraction (v : Nat) :
   · simpa [hnum] using hw
   · simpa [K8, key8_phase] using hb
 
-def return8 (v : Nat) : Nat := (prefixRun 5120 (cycle7 ++ [v]))[7]!
+def return8 (v : Nat) : Nat := (prefixRun 5120 (cycle7 ++ [v])).getLast!
 
 theorem block5120_shape (v : Nat) :
     prefixRun 5120 (cycle7 ++ [v]) = cycle7 ++ [return8 v] := by
   obtain ⟨w, hw, _hb⟩ := block5120_contraction v
   have hlast : return8 v = w := by
-    simp [return8, hw, cycle7]
+    unfold return8
+    rw [hw]
+    simp [cycle7]
   simpa [hlast] using hw
 
 theorem return8_bound (v : Nat) : return8 v ≤ v/2 + K8 := by
@@ -343,7 +345,7 @@ theorem prefixRun_blocks (n v : Nat) :
     prefixRun (5120*n) (cycle7 ++ [v]) =
       cycle7 ++ [return8Iter n v] := by
   induction n with
-  | zero => simp [return8Iter]
+  | zero => simp [prefixRun, return8Iter]
   | succ n ih =>
       have hmul : 5120*(n+1) = 5120*n+5120 := by omega
       rw [hmul, prefixRun_add, ih]
