@@ -355,3 +355,64 @@ Run 42402490749 failed only in `high2_to_midA`; `high2_to_sourceScanE` compiled 
 Triggered rerun [42402683258](https://github.com/FlareZ123/bb6/actions/runs/42402683258) at 18:43:22Z. It was still in progress at the last status check. The proof is intended to establish only the C/B-sweep-endpoint zipper to MidA2 prefix. It does not yet bridge the C/B zipper to Agent1's physical raw `Config`, nor prove the remaining MidA2-to-Junc0 tail.
 
 Do not report `high2_to_midA` as verified until run 42402683258 passes. If it fails, inspect the failed-job tail and either repair the exact proof or remove the incomplete theorem while retaining the independently passing 21-step `high2_to_sourceScanE` lemma. The 70-minute lease threshold remains 18:43:53.572315497Z; release only after measuring the clock at a checkpoint.
+
+---
+
+## 2026-11-07 current incarnation checkpoint (claimed 19:16:17.184Z)
+
+This incarnation claimed Agent32 under lease run ID `agent32-gpt6-20261107T191617184Z-midA2-root-closure`. The prior lease was more than 100 minutes old when claimed. The 70-minute release threshold for this incarnation is 20:26:17.184Z. Do not refresh the lease.
+
+### Verified high-2 progress
+
+The earlier memory warning that `high2_to_midA` was unverified is superseded. The theorem now passes the repository's source CI.
+
+1. Repaired `im-results/agent32-429-high2-prefix/High2Prefix.lean`. The failed rewrite was caused by the source zipper index `2*u+2` not matching the theorem's `2*(u+1)` pattern definitionally. The proof now establishes `hindex : 2*u+2 = 2*(u+1)` by omega, rewrites, applies `sourceScanE_finishC_even_midA_delta (u+1) 0`, and simplifies the remaining natural arithmetic.
+   - Passing CI: [42405659040](https://github.com/FlareZ123/bb6/actions/runs/42405659040).
+   - This proves the C/B zipper endpoint reaches `midA2 (2*u+4) 1` in `22*u+107` steps, with displacement +5.
+
+2. Added `im-results/agent32-429-high2-prefix/High2PhysicalBridge.lean`.
+   - `j_c_sweep_high2_rep` proves that Agent1's authentic raw `j_c_sweep u (2*u+2)` endpoint is represented by `high2SweepStart u`. It checks the alternating painted segment, the six-cell setup fringe, the two right-side ones, the following 01, and the blank tail.
+   - `j_high2_to_midA_raw` composes the raw `j_c_sweep` prefix with the source-verified zipper macro. For every `u : Nat`, the authentic J configuration `(A, head=0, tape=jTape u (2*u+2))` reaches a configuration represented by `midA2 (2*u+4) 1` in exactly `4*u*u+32*u+132` primitive steps, with final head `2*u+6`.
+   - Passing source CI: [42407287630](https://github.com/FlareZ123/bb6/actions/runs/42407287630). The workflow compiled the new module, printed theorem axioms, and passed its fail-closed `sorryAx` audit.
+
+3. Added `im-results/agent32-429-high2-prefix/README.md` documenting the verified scope and open suffix. Updated `research/BOARD.md` to distinguish the verified w=2u+2 prefix from the still-open midA-to-Junc suffix and the w=2u,2u+1 cases.
+
+4. The workflow `.github/workflows/agent32-429-raw-parent.yml` now includes the high2-prefix module in `LEAN_PATH` and compiles `High2PhysicalBridge.lean` after `JFirstBranch.lean`.
+
+### Independent empirical cross-check
+
+Agent1's messages in `communications/agent32/` report independent raw simulation for u=0,...,20: the full branch reaches translated `J(0,4*u+18)` after `4*u*u+44*u+204` moves, with head offset `-(2*u+10)`, and tape equality over full finite support plus blank margins. This remains finite simulation evidence. It agrees with the proposed remaining `12*u+72` suffix but does not prove it.
+
+### Remaining high-2 suffix
+
+The endpoint has the shape of `midApos 1 (2*u+4) 1`. The proposed universal suffix is:
+```
+runWithDelta (6*v+48) (midApos 1 v 1)
+  = some (junc 0 0 (2*v+10), -(2*v+8))
+```
+For v=2*u+4, this is `12*u+72` steps to `J(0,4*u+18)` with displacement `-(4*u+16)`. If proved, it composes with the new raw prefix to give the independently simulated full cost `4*u*u+44*u+204` and head offset `-(2*u+10)`.
+
+A proposed reduction is:
+```
+midAaux(v,k) =
+  z 0 (ones(2*v+1) ++ [false] ++ ones(6))
+    true (tens(k) ++ [false,true])
+
+runWithDelta 6 (midAaux(v,k))
+  = some (midAaux(v-3,k+3), -6)  -- v >= 3
+
+runWithDelta (6*v+4*k+36) (midAaux(v,k))
+  = some (junc 0 0 (2*(v+k)+6), -(2*v+4))
+```
+The 6-step recurrence and the v=0,1,2 base cases for arbitrary k still require Lean proofs. Agent6 was asked to investigate these. Agent1 was asked to review the raw representation proof. Check new mail in `communications/agent32/` before duplicating their work.
+
+### Immediate next actions
+
+1. Prove the `midAaux` six-step recurrence and its three base cases, or find a better phase decomposition.
+2. Prove the `midApos` to `midAaux` six-step prefix and compose the suffix to Junc0.
+3. Add a raw physical lift from the midA2 endpoint to J(0,4u+18), then compare the universal Lean theorem with Agent1's bounded simulator.
+4. Continue with the separate w=2u and w=2u+1 C/B cases and the authentic blank-root entry. This branch result alone does not decide #429 or BB(6).
+
+### Local Lean installation note
+
+The supplied split archive concatenates to a zip containing `lean-4.36.0-rc2-linux.tar.zst`. After the prompt's unzip step, the tar.zst must also be extracted with `tar --zstd -xf ... -C /tmp/lean`. The verified local binary reports Lean 4.36.0-rc2. Keep using CI for repository-wide dependency verification.
