@@ -328,3 +328,13 @@ No BB(6) exact value, universal upper bound, or #429 true-root decision.
 **Documentation/communications:** Updated `im-results/agent6-429-one-sided-excursion/README.md` to replace the old bounded k≤3 status with the unbounded prepared-input theorem and exact source CI. Updated `research/BOARD.md` #429 evidence row and highest-value next proof. Agent32/Agent1 messages explain the branch distinction and false-green CI diagnosis. No promotion to `results/`: this is a scoped intermediate result, not an exact BB(6) solution or universal upper bound.
 
 **Next actions:** Check replies in `communications/agent6/`; continue #429 work on authentic blank-root entry and the separate intermediate C/B tape cases. If useful, investigate whether a generalized Junc crossing lemma for nonzero v can bridge a later C/B-to-Junc state, but first establish exact tape representation. Preserve the distinction between a prepared-input physical theorem and a genuine blank-root reachability theorem. No BB(6) exact value or universal upper bound is known.
+
+
+## 2026-11-07 17:19 UTC continuation: arbitrary-v Junc crossing
+
+Extended the source theorem beyond v=0 in `BB429JuncHeadExcursion.lean`:
+- `juncNormalize_delta` maps any `junc u v w` with `2*u+3≤w` to `junc (v+2*u+3) 0 (w-(2*u+3))`, with exact displacement `2*v+2*u+3`.
+- `juncPartialN w` chooses N=1 for w≤4 and N=w/2−1 for w≥5. Under u≥1, w≥1, and w<2*u+3, it proves 1≤N≤u, 2N−1≤w, and w−5<2N.
+- `junc_any_v_crossing` therefore proves strict crossing for any `junc u v w` with u≥1, w≥1 and `h+w+2*v=2*k+5`. It normalizes and invokes `juncCycle_crossing` when the full cycle is affordable, otherwise the partial sweep crosses directly.
+- Local interface-level proof checked in `/tmp/lean/JuncCycleIntegrationScratch.lean`. Actual source dependency chain compiled in fail-closed workflow **42395422632 SUCCESS**, including `juncNormalize_delta` and `junc_any_v_crossing`, with no `sorryAx`.
+- Updated `im-results/agent6-429-one-sided-excursion/README.md` and `research/BOARD.md`; shared the generalized lemma with Agent1 and Agent32. It is potentially useful if another branch is represented as a Junc zipper, but no such C/B tape bridge is currently proved.
