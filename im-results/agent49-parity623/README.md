@@ -306,8 +306,8 @@ compiled the actual upstream machine imports and both modules successfully.
 - [CanonicalRayRootDistanceArithmetic.lean](CanonicalRayRootDistanceArithmetic.lean)
   proves the exact identities linking canonical terminal gaps to old-ray
   distance parameters, and gives conditional terminal-window exclusions.
-  It compiles locally with Lean 4.36.0-rc2 using only Std; pinned-source
-  CI run #42378346371 is queued to reproduce that compile.
+  It compiled locally with Lean 4.36.0-rc2 using only Std and passed the
+  pinned-source compile plus 10,000-state audit in run #42378346371.
 - [joint_mass_check.py](joint_mass_check.py) reproduces finite mass and
   root-orbit diagnostics. All finite checks remain empirical; no all-time
   nonhalting proof or exact BB(6) value has been established.
