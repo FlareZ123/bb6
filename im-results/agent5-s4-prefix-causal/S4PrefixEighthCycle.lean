@@ -115,6 +115,46 @@ theorem root_eight_prefix_mod20480 (n : Nat) (U : List Nat)
   rw [root_eight_prefix_from_5457 n U h]
   exact prefixRun_mod20480 n
 
+private theorem stackMass_append_eighth (xs ys : List Nat) :
+    stackMass (xs++ys) = stackMass xs + stackMass ys := by
+  simp [stackMass, List.sum_append, List.length_append,
+    Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+
+private theorem stackMass_take_drop8 (U : List Nat) :
+    stackMass U = stackMass (U.take 8) + stackMass (U.drop 8) := by
+  have hdecomp : U = U.take 8 ++ U.drop 8 := by
+    symm
+    exact List.take_append_drop 8 U
+  calc
+    stackMass U = stackMass (U.take 8 ++ U.drop 8) := congrArg stackMass hdecomp
+    _ = stackMass (U.take 8) + stackMass (U.drop 8) :=
+      stackMass_append_eighth _ _
+
+theorem root_tail_mass_sum (m : Nat) (U : List Nat)
+    (h : prun (5457+20480*m) seed = some U) :
+    stackMass cycle8PeriodicStart + stackMass (U.drop 8) =
+      2247 + 1024*(5457+20480*m) := by
+  have hmass := root_mass (5457+20480*m) U h
+  have hprefix0 := root_eight_prefix_mod20480 (20480*m) U h
+  have hmod : (20480*m)%20480 = 0 := by omega
+  have hprefix : U.take 8 = cycle8PeriodicStart := by
+    simpa [hmod, prefixRun] using hprefix0
+  have hsplit := stackMass_take_drop8 U
+  rw [hprefix] at hsplit
+  rw [hsplit] at hmass
+  exact hmass
+
+theorem root_tail_mass_step20480 (m : Nat) (U V : List Nat)
+    (hU : prun (5457+20480*m) seed = some U)
+    (hV : prun (5457+20480*(m+1)) seed = some V) :
+    stackMass (V.drop 8) = stackMass (U.drop 8) + 20971520 := by
+  have hsumU := root_tail_mass_sum m U hU
+  have hsumV := root_tail_mass_sum (m+1) V hV
+  have hbase : 2247 + 1024*(5457+20480*(m+1)) =
+      (2247 + 1024*(5457+20480*m)) + 20971520 := by omega
+  rw [hbase] at hsumV
+  omega
+
 #print axioms return8_25036
 #print axioms return8_109210
 #print axioms return8_109208
@@ -127,5 +167,7 @@ theorem root_eight_prefix_mod20480 (n : Nat) (U : List Nat)
 #print axioms prefixRun_mod20480
 #print axioms root_eight_prefix_from_5457
 #print axioms root_eight_prefix_mod20480
+#print axioms root_tail_mass_sum
+#print axioms root_tail_mass_step20480
 
 end S4PrefixEighthCycle
