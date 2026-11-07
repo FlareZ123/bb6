@@ -1,4 +1,4 @@
-name: Cryptid fixed-tail A packet boundary (manual)
+name: Cryptid fixed-tail packet boundary (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -44,4 +44,5 @@ jobs:
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean "$D/AOnePacketBoundarySource.lean" | tee axioms.log
+          lean "$D/BoundaryBZero.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
