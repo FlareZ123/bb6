@@ -1,6 +1,6 @@
 # An infinite genuine-witness Sheep quotient path with no ordinary integer realization
 
-**Agent 40, 7 November 2026. Intermediate constructive mathematical counterexample.** The generic Sheep first-even quotient graph modulo **16** has a legitimate self-loop at the residue **14**. For every natural N, the constant N-edge walk `14 -> 14 -> ... -> 14` has a genuine, finite, consecutive generic first-even return orbit from a sufficiently large *positive integer*. However, **no positive integer** generates an infinite first-even generic orbit whose every section value remains 14 modulo 16.
+**Agent 40, 7 November 2026. Intermediate constructive mathematical counterexample.** For **every even modulus divisible by 16**, the generic Sheep first-even quotient graph contains a legitimate self-loop at the residue **−2 modulo m**. Every finite repetition of this loop is realized by consecutive genuine generic first-even returns of a single positive integer, yet **no positive integer** follows that infinite constant-residue path. For m=16 this is the concrete residue **14**, with the same sharp obstruction.
 
 This explicit failure of infinite-path lifting clarifies the exact boundary of the [all-even-modulus finite-path theorem](MIXED-FINITE-PATH-LIFTING.md). Every finite quotient path is genuinely physically concatenable from a freely chosen positive integer, but compatible finite starts can converge to a negative 2-adic integer and have no ordinary positive-integer limit. This has **no inference** about the original Sheep blank-start even state **10**, and does not decide its halting behavior or BB(6).
 
@@ -38,6 +38,20 @@ The identity (1) forces `E(x_i)=x_(i+1)` **on the actual deterministic generic i
 
 This is a literal physical-integer section trajectory. The earlier machine-source bridge verifies the published section semantics when used for authentic states, but the arbitrary constructed starts here are not claimed to be genuine blank-tape reachable.
 
+### Generalization to every modulus divisible by 16
+
+Let `m=2^p*q` with p>=4 and q odd. Write `r=m−2`, representing the full residue `−2 modm`. The source `x=4m−2` is positive, congruent to `r`, and congruent to 14 modulo16. Its **genuine** generic first-even return obeys `E(x)+2=5m`, so `E(x)≡r modm`. Thus `r->r` is a legal self-loop of the original **generic** quotient `G_m`.
+
+For **every N>=0**, choose the positive integer
+
+`x_0=4^N*m−2`, and define `x_i=5^i*4^(N−i)*m−2` for `0<=i<=N`.
+
+Each `x_i` is positive and congruent to r modulo m (hence 14 modulo16). For each i<N, the forced identity (1) gives `E(x_i)=x_(i+1)` with a=1,h=0 and legal generic odd cofactors. The chosen single integer `x_0` therefore realizes the full N-edge self-loop. Its next return from `x_N` leaves the target residue because `v2(x_N+2)=v2(m)=p` drops to `p−2`, so `x_(N+1)+2` is no longer divisible by m.
+
+For a hypothetical positive integer that realized the infinite r self-loop, all its consecutive orbit states would also be 14 modulo16; the no-infinite-14 proof below already contradicts this. Thus **the same explicit failure of infinite lifting occurs for every m with 16 dividing m**, including arbitrary odd factors q and arbitrarily large dyadic precision p. The initial starts `4^N m−2` converge 2-adically to −2 as N grows.
+
+[verify_noncompact_all.py](verify_noncompact_all.py) independently checks **2,800 literal generic single-integer self-loop prefixes** with N=0..39, p=4..10 and q in {1,3,5,7,9,11,15,21,25,35}, including exact forced steps and exit. The all-m proof is elementary and independent of that finite check.
+
 ### No positive integer follows the infinite constant-14 path
 
 Suppose some positive integer x0 has an infinite first-even section trajectory all at residue14 mod16. Every one-step transition must satisfy (1). By ordinary induction,
@@ -64,4 +78,4 @@ The complete independent standalone [Lean kernel certificate](SheepNoncompactLea
 
 [verify_noncompact.py](verify_noncompact.py) independently checked all literal actual generic first-even trajectories with N=0,...,100, including cofactor bounds, every finite 14-residue step, exact values `x_i+2=5^i 2^(2(N-i)+4)`, and the next-step exit to residue2 mod16. These 101 finite trajectories corroborate the universal argument without replacing it.
 
-**Research limit:** This example proves an explicit gap between arbitrary finite genuine-path realizability and existence of a single genuine *infinite* positive-integer path. It is a methodological constraint on finite quotient proof strategies, not evidence that Sheep halts or fails to halt from 10. The exact value BB(6) remains unsolved. The new result belongs in `im-results/` pending source-level integration and external novelty assessment.
+**Research limit:** This every-m-divisible-by-16 family proves a uniform, explicit gap between arbitrary finite genuine-path realizability and existence of a single genuine *infinite* positive-integer path. It is a methodological constraint on finite quotient proof strategies, not evidence that Sheep halts or fails to halt from 10. The exact value BB(6) remains unsolved. The new result belongs in `im-results/` pending source-level integration and external novelty assessment.
