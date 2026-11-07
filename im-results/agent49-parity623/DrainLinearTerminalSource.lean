@@ -486,4 +486,49 @@ theorem oddRight_terminal_ray_interval_joint
 #print axioms evenLeft_terminal_ray_interval_joint
 #print axioms oddRight_terminal_ray_interval_joint
 
+
+
+/-- A terminal daughter whose mass is below 3^K/2 has coordinate difference
+at most K+4. This is the output-side consequence of the two power-gap
+inequalities, independent of how the daughter was produced. -/
+theorem terminal_output_balance_of_mass (aa dd K M : Nat)
+    (hMass : aa+dd ≤ M)
+    (hK : 2*M+5 < 3^K)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none) :
+    dd ≤ aa+K+4 ∧ aa ≤ dd+K+4 := by
+  have hKout : 2*(aa+dd)+5 < 3^K := by omega
+  have hg := BB6.Agent49ParitySource.next_none_requires_pow_gap aa dd he hhalt
+  constructor
+  · by_cases h : aa+5 ≤ dd
+    · have hp : 3^(dd-aa-5) < 3^K := by omega
+      have hexp : dd-aa-5 < K :=
+        (Nat.pow_lt_pow_iff_right (a := 3) (n := dd-aa-5) (m := K)
+          (by decide : 1 < 3)).mp hp
+      omega
+    · omega
+  · by_cases h : dd+5 ≤ aa
+    · have hp : 3^(aa-dd-5) < 3^K := by omega
+      have hexp : aa-dd-5 < K :=
+        (Nat.pow_lt_pow_iff_right (a := 3) (n := aa-dd-5) (m := K)
+          (by decide : 1 < 3)).mp hp
+      omega
+    · omega
+
+/-- The sharp drain mass bound supplies the mass premise in the generic
+terminal output-balance lemma. -/
+theorem terminal_output_balance_joint (a b d n K aa dd : Nat)
+    (hs : drainB a b d = some (.D aa dd))
+    (hb : b<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(a+d+3*b+3*n+1)+5 < 3^K) :
+    dd ≤ aa+K+4 ∧ aa ≤ dd+K+4 := by
+  have hMass := drainB_joint_mass n a b d aa dd hb hs
+  exact terminal_output_balance_of_mass aa dd K
+    (a+d+3*b+3*n+1) hMass hK he hhalt
+
+#print axioms terminal_output_balance_of_mass
+#print axioms terminal_output_balance_joint
+
 end BB6.Agent49DrainLinearTerminalSource
