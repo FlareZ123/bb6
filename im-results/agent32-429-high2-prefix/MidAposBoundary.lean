@@ -177,11 +177,78 @@ theorem midApos_w2_exit_delta (u v : Nat) (hu : 1 ≤ u) :
   simp [hleft, Int.natCast_add, Int.natCast_mul]
   omega
   
+/-- The u=0 Junc boundary with two right ones has an exact A/1 exit. -/
+theorem junc0_w2_boundary_delta (v : Nat) :
+    runWithDelta (2*v+27) (junc 0 v 2) =
+      some (z 0 (true :: (pairs01 (v+3) ++ ones 5)) true [false,true],
+        ((2*v+3 : Nat) : Int)) := by
+  have hB := junc0_to_B_delta v 2 (by omega)
+  have hlast :
+      runWithDelta 1
+        (z 1 (pairs01 (v+3) ++ ones 5) true (ones 1 ++ [false,true])) =
+      some (z 0 (true :: (pairs01 (v+3) ++ ones 5)) true [false,true], 1) := by
+    rfl
+  rw [show 2*v+27 = (2*v+26)+1 by omega, runWithDelta_add, hB]
+  simp only [Option.bind_some]
+  rw [hlast]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- The u=0 Junc boundary with three right ones exits to a positive-u
+    zero-budget Junc, then to an explicit A/0 configuration. -/
+theorem junc0_w3_exit_delta (v : Nat) :
+    runWithDelta (2*v+33) (junc 0 v 3) =
+      some (z 0 (ones 5 ++ pairs01 (v+2) ++ ones 5) false [true],
+        ((2*v+5 : Nat) : Int)) := by
+  have hnext := junc0_next_delta v 3 (by omega)
+  have htail := juncPos_w0_exit_delta (v+2) 0
+  rw [show 2*v+33 = (2*v+27)+6 by omega, runWithDelta_add, hnext]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- Exhausting the positive-u counter at the w=4 MidA boundary gives an
+    exact A/1 state with the remaining alternating block exposed. -/
+theorem midApos_zero_w4_boundary_delta (v : Nat) :
+    runWithDelta (4*v+35) (midApos 0 v 4) =
+      some (z 0 (true :: (pairs01 (v+5) ++ ones 5)) true [false,true], 3) := by
+  have hshift := midApos_to_junc_delta 0 v 4 (by omega)
+  have htail := junc0_w2_boundary_delta (v+2)
+  have htime : 4*v+35 = 2*(v+2) + (2*(v+2)+27) := by omega
+  rw [htime, runWithDelta_add, hshift]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- Exhausting the positive-u counter at the w=5 MidA boundary gives an
+    exact A/0 state with the remaining alternating block exposed. -/
+theorem midApos_zero_w5_boundary_delta (v : Nat) :
+    runWithDelta (4*v+41) (midApos 0 v 5) =
+      some (z 0 (ones 5 ++ pairs01 (v+4) ++ ones 5) false [true], 5) := by
+  have hshift := midApos_to_junc_delta 0 v 5 (by omega)
+  have htail := junc0_w3_exit_delta (v+2)
+  have htime : 4*v+41 = 2*(v+2) + (2*(v+2)+33) := by omega
+  rw [htime, runWithDelta_add, hshift]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
 #print axioms shift_A01_tail_delta
 #print axioms juncPos_w0_exit_delta
 #print axioms midApos_to_junc_delta
 #print axioms midApos_reenter_delta
 #print axioms midApos_reenter_twice_delta
 #print axioms midApos_w2_exit_delta
+#print axioms junc0_w2_boundary_delta
+#print axioms junc0_w3_exit_delta
+#print axioms midApos_zero_w4_boundary_delta
+#print axioms midApos_zero_w5_boundary_delta
 
 end BB429MidAposBoundary
