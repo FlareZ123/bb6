@@ -3,6 +3,8 @@ import NeedleTerminalDichotomy
 
 namespace BB6.Agent48.SpaceNeedle
 
+open BusyBeaver.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
+
 /-- Source-linked version of the quadratic terminal-feeder bound. The
     predecessor relation is taken directly from the pinned Cryptids source
     adapter, so the arithmetic theorem applies to actual highLevelNext edges. -/
