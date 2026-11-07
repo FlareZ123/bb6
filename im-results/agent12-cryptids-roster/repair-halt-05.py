@@ -27,19 +27,36 @@ with open(lock, "a+", encoding="utf-8") as guard:
   rw [encM_replicate_zero] at h12"""
 
     second_old = """  rw [ListBlank.append_pow_succ, encM_replicate_zero] at h12"""
-    second_new = """  rw [zeros_append_cons_zero d2 (encM (bumpM L))] at h12
-  rw [encM_replicate_zero] at h12
-  simp only [List.replicate_succ, List.cons_append, encM_cons_zero,
-    listblank_append_cons, nil_append_list] at h12"""
+    second_new = """  rw [zeros_append_cons_zero (d2 + 1) (encM (bumpM L))] at h12
+  rw [encM_replicate_zero] at h12"""
 
-    if original.count(first_old) != 1:
-        raise ValueError(f"Expected exactly one first failed rewrite block, found {original.count(first_old)}")
-    if original.count(second_old) != 1:
-        raise ValueError(f"Expected exactly one second failed rewrite block, found {original.count(second_old)}")
-    if original.count("\nlemma zeros_append_cons_zero") != 1:
+    first_end_old = """  exact stepPlus_trans h12 (exit_R_A (List.replicate (d0 + 1) .zero ++ L1) R1)"""
+    first_end_new = """  exact stepPlus_trans (by
+    simpa only [List.replicate_succ, List.cons_append, encM_cons_zero] using h12
+  ) (exit_R_A (List.replicate (d0 + 1) .zero ++ L1) R1)"""
+
+    second_end_old = """  exact stepPlus_trans h12 (exit_R_A (List.replicate d2 .zero ++ bumpM L) R2)"""
+    second_end_new = """  exact stepPlus_trans (by
+    simpa only [List.replicate_succ, List.cons_append, encM_cons_zero] using h12
+  ) (exit_R_A (List.replicate d2 .zero ++ bumpM L) R2)"""
+
+    for label, old in [
+        ("first rewrite", first_old),
+        ("second rewrite", second_old),
+        ("first composition", first_end_old),
+        ("second composition", second_end_old),
+    ]:
+        if original.count(old) != 1:
+            raise ValueError(f"Expected exactly one {label} block, found {original.count(old)}")
+    if original.count("private lemma zeros_append_cons_zero") != 1:
         raise ValueError("The previously proved zeros_append_cons_zero helper is missing or duplicated")
 
-    out = original.replace(first_old, first_new, 1).replace(second_old, second_new, 1)
+    out = (
+        original.replace(first_old, first_new, 1)
+        .replace(second_old, second_new, 1)
+        .replace(first_end_old, first_end_new, 1)
+        .replace(second_end_old, second_end_new, 1)
+    )
 
     assert out.split("-- END TRUSTED DEFINITIONS")[0] == original.split("-- END TRUSTED DEFINITIONS")[0]
     assert out.count("def target_tm") == original.count("def target_tm") == 1
