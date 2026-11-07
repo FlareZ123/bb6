@@ -3,6 +3,7 @@ import RightFiveThreeSource
 namespace BB6.Agent43DepthResetFloor
 
 open BB6.Agent28
+open BB6.Agent47P1
 open BB6.Agent50ExceptionalDepth
 open BB6.Agent50RightFiveThree
 
@@ -70,7 +71,7 @@ theorem source_right_five_depth_reset_dichotomy
       simp [Nat.mul_comm]
     have hpow3 : 2^(t+3)=16*2^n := by
       rw [htEq, show n+1+3=n+4 by omega, Nat.pow_add]
-      norm_num
+      simp [Nat.mul_comm]
     have hbpExact : bp+4*m+12=12*2^n := by
       rw [hpow3] at hbp
       omega
