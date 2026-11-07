@@ -195,12 +195,14 @@ theorem b0_two_wave_root_interval_to_b0
       have hidx2 : b.h+((k+1:Nat):Int) = b.h+1+(k:Int) := by omega
       rw [hidx2]
       have hp := twoWavePrefixTape_right b.tape b.h (b.h+1+(k:Int)) (by omega)
+      change twoWavePrefixTape b.tape b.h (b.h+1+(k:Int)) = true
       rw [hp]
       exact hones1 k hk
   have hzero1' : t1 (H+2*(n1:Int)+2) = false := by
     have hidx : H+2*(n1:Int)+2 = b.h+(2*n1+1:Int) := by dsimp [H]; omega
     rw [hidx]
     have hp := twoWavePrefixTape_right b.tape b.h (b.h+(2*n1+1:Int)) (by omega)
+    change twoWavePrefixTape b.tape b.h (b.h+(2*n1+1:Int)) = false
     rw [hp]
     exact hzero1
   have hleft1' : t1 (H-1) = true := by
@@ -223,13 +225,13 @@ theorem b0_two_wave_root_interval_to_b0
     intro j hj
     by_cases hj0 : j = 0
     · subst j
-      have hidx : H-2+1+(0:Int) = H-1 := by omega
+      have hidx : H-2+1+((0:Nat):Int) = H-1 := by omega
       rw [hidx]
       dsimp [t2]
       simp [setBit]
     · by_cases hj1 : j = 1
       · subst j
-        have hidx : H-2+1+(1:Int) = H := by omega
+        have hidx : H-2+1+((1:Nat):Int) = H := by omega
         rw [hidx]
         have hh := oddWaveTape_head n1 t1 H
         have hne : H ≠ H-1 := by omega
