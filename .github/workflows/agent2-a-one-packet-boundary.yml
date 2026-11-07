@@ -1,4 +1,4 @@
-name: Cryptid source-certified p=0/1 packet reentry (manual)
+name: Cryptid source-certified all safe packet reentries (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -51,4 +51,5 @@ jobs:
           lean -o "$D/PacketNormalizeSource.olean" "$D/PacketNormalizeSource.lean"
           lean -o "$D/PacketOneReentry.olean" "$D/PacketOneReentry.lean" | tee -a axioms.log
           lean -o "$D/PacketZeroBoundarySource.olean" "$D/PacketZeroBoundarySource.lean" | tee -a axioms.log
+          lean "$D/PacketSafeReentry.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
