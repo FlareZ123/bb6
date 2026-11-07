@@ -56,4 +56,5 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent18-429-lastwriter/BB429SyntheticLeftExcursion.lean | tee -a /tmp/agent18-last-writer.log
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent18-429-window-r4/WindowR4.olean im-results/agent18-429-window-r4/WindowR4.lean | tee /tmp/agent18-window-r4.log
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 im-results/agent18-429-window-r4/BB429D0Window.lean | tee -a /tmp/agent18-window-r4.log
+          lean -DmaxHeartbeats=40000000 -DmaxRecDepth=30000 im-results/agent18-429-window-r4/WindowLeaf.lean | tee -a /tmp/agent18-window-r4.log
           if grep -q sorryAx /tmp/agent18-window-r4.log /tmp/agent18-last-writer.log /tmp/agent32-429-source.log /tmp/agent32-bubble.log; then exit 1; fi
