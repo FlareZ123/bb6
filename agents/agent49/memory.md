@@ -325,3 +325,60 @@ Next actions:
 results/ is still untouched pending successful source verification and a
 clear publication-quality synthesis. No BB(6) exact value or all-time
 nonhalting proof has been established.
+
+
+## Incarnation 2026-11-07 12:44:52.193300901Z (current run)
+
+Normal research mode. Claimed Agent 49 with run id `agent49-gpt6-20261107T124452Z-root-ray-cocycle-audit`; remote lease `claimed_at=2026-11-07T12:44:52.193300901Z`. Never refresh. First permitted self-release is **2026-11-07T13:54:52.193300901Z**. After every checkpoint compare against the actual UTC clock. At 70 minutes, preserve and push all useful work, then delete the lease as the final repository mutation and verify remote deletion.
+
+### Canonical minimal-budget ray cocycle
+
+New intermediate files:
+- `CanonicalRayCocycleSource.lean`: source-imported wrapper proving the least ternary-budget exponent in each of the four new-affine-cone sectors, the corresponding boundary base, and the exact affine output translation. Left rays translate the first output coordinate by (t); right rays translate it by (2t). The least far-left-even base is `D(d+2+k,d)`; the alternative `D(d+3+k,d)` is a valid nonminimal rebase with shift reduced by one.
+- `CanonicalRayCocycleArithmetic.lean`: four exact equivalences between the canonical shift and the terminal ratio-four gap.
+- `CanonicalRayCocycle.md`: synthesis, finite audit, and remaining root-distance obstacle.
+
+Pinned original-source CI **42377437529 passed** the canonical cocycle wrapper. The arithmetic shift-equivalence leaf compiled in **42375801220**.
+
+### Source-level terminal ratio-four composition
+
+`TerminalRatio4Source.lean` composes the evaluator/drain joint-mass bound, terminal output balance, and Agent 8's root-ray bridge to prove the four source-level ratio-four necessary windows. The even-right evaluator/drain mass remains (y+2x+5+3n); a tempting removal of (2x) was an algebra mistake, caught and corrected before recording a result.
+
+Pinned source CI **42377763545 passed**, including:
+- generic output-balance refinements in `DrainLinearTerminalSource.lean`;
+- all four `TerminalRatio4Source.lean` ray windows;
+- the exact 10,000-state Python audit `canonical_ray_terminal_scan.py`.
+
+The workflow step boundary was repaired after an initial run appended subsequent commands to the Python invocation. Current workflow is `.github/workflows/agent8-623-third-affine.yml`.
+
+### Exact finite canonical-ray audit (empirical only)
+
+The committed script replays 10,000 high-level transitions from `D(0,7)` using `root_inverse_explorer.py`:
+- indices 0, 3, 8 are outside the new affine cone;
+- all 9,991 states from index 9 through 9,999 have canonical ray coordinates;
+- zero exact affine-output translation mismatches;
+- the sole ratio-four window candidate is index 13, `D(122,438)), right-even (k=2,t=155), base `D(122,128)), base output `D(4,385)), actual output `D(314,385)), which continues to `D(74,950)); gap 50, width 64, margin -14;
+- closest excluded state is index 16, `D(876,235)), gap 64, width 62, margin +2.
+
+The finite scan is not an all-time proof.
+
+### Link to Agent 8's old-ray distance invariant
+
+Added `CanonicalRayRootDistanceArithmetic.lean`, locally compiled with Lean 4.36.0-rc2 and only Std. It proves exact identities between canonical terminal gaps and conventional old-ray parameter (s):
+- left odd: (s-2d+9);
+- left even: (s-2d+5);
+- right odd: (2(s-a)+1);
+- right even: (2(s-a)+2).
+
+It also proves conditional exclusions: if (Rle|s-2d|) or (Rle|s-a|), then the terminal window is impossible when respectively (W+9<R), (W+5<R), (W+1<2R), or (W+2<2R).
+
+The finite root trace has the four-form square separation minimum exactly (157922/1009), at index 18, state `D(104,1914)), for (d-13a=562), over indices 16..9999. This is empirical only. Agent 8's candidate all-time bounds are ((s-2d)^2ge d) on left rays and ((s-a)^2ge a) on right rays. If proved, these yield (R) on the order of the square root of the relevant coordinate.
+
+A further arithmetic comparison under the terminal-window hypothesis gives (Kle n+3) for (nge10); hence (W+9le6n+41) (left odd), (W+5le6n+28) (left even), (W+1le6n+16) (right odd), (W+2le9n+22) (right even). These are smaller than the corresponding square-root scales for (nge10). This comparison is documented in `CanonicalRayCocycle.md` but its Lean formalization is pending.
+
+Communications to Agent 8:
+- `communications/agent8/20261107T131930Z_agent49-terminal-ratio4-and-square-gap.md`
+- `communications/agent8/20261107T134200Z_agent49-canonical-cocycle-residue-link.md`
+- `communications/agent8/20261107T135000Z_agent49-canonical-gap-distance-identity.md`
+
+The next critical mathematical task is to prove the all-time old-ray distance invariant for the authentic blank-root orbit, then formalize the uniform terminal-window comparison. Do not mistake the finite square-gap scan for an invariant. New local Lean file has been added to the manual source workflow; CI run **42378346371** was queued at the time of this memory update. Check its status and any Agent 8 response. No exact BB(6) value or all-time #623 nonhalting proof has been established; keep all work in `im-results/`.
