@@ -1,5 +1,6 @@
 import OddForcedNormalize
 import ReachAffine
+import EvenRightSixOrbit
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent3
@@ -14,8 +15,9 @@ instance evenAffineGate_decidable (x y : Nat) : Decidable (evenAffineGate x y) :
   infer_instance
 
 /-- Normalize three independent exact original-source inverse sectors:
-    odd/odd 2-adic low-value, even/odd seven-sector, and even-right affine.
-    Weighted mass drops by seven in the first two, four in the third. -/
+    odd/odd 2-adic low-value, even/odd seven-sector, affine even-right,
+    and the complete six-residue even-right inverse. Weighted mass drops
+    by seven in the first two sectors and four in both even-right sectors. -/
 def fullForcedNormalize (x y : Nat) : Nat × Nat :=
   if h : oddLowGate x y then
     fullForcedNormalize ((x+y-4)/2) ((x+3*y-10)/4)
@@ -23,12 +25,14 @@ def fullForcedNormalize (x y : Nat) : Nat × Nat :=
     fullForcedNormalize ((x+y-5)/2) ((x+3*y-9)/4)
   else if hf : evenAffineGate x y then
     fullForcedNormalize (x+y-2) ((y-2)/2)
+  else if hs : sixEvenRightGate x y then
+    fullForcedNormalize (x+y-2) ((y-2)/2)
   else (x,y)
 termination_by x+2*y
 decreasing_by
   all_goals
     simp_wf
-    simp only [oddLowGate,evenSevenGate,evenAffineGate] at *
+    simp only [oddLowGate,evenSevenGate,evenAffineGate,sixEvenRightGate] at *
     omega
 
 /-- Unbounded executable exact backward reduction for all natural Machine C
@@ -66,6 +70,14 @@ theorem blank_reach_iff_fullForcedNormalize (x y : Nat) :
             have hrec := ih _ hlt (x+y-2) ((y-2)/2) (by rfl)
             exact hh.trans hrec
           · rw [dif_neg hf]
+            by_cases hs : sixEvenRightGate x y
+            · rw [dif_pos hs]
+              rcases hs with ⟨hy,heven,h0,h7⟩
+              have hh := six_even_right_blank_reach_iff x y hy heven h0 h7
+              have hlt : x+y-2+2*((y-2)/2)<z := by omega
+              have hrec := ih _ hlt (x+y-2) ((y-2)/2) (by rfl)
+              exact hh.trans hrec
+            · rw [dif_neg hs]
 
 #print axioms blank_reach_iff_fullForcedNormalize
 end BB6.Agent3
