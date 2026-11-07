@@ -170,7 +170,13 @@ theorem weight_repeat (u : List Nat) (k : Nat) :
   | zero => simp [repeatWord, weight, geomN]
   | succ k ih =>
       rw [repeatWord, weight_append, ih, geomN]
-      simp [Nat.mul_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+      calc
+        weight u + 2^(cost u)*(geomN (2^(cost u)) k*weight u) =
+            weight u + (2^(cost u)*geomN (2^(cost u)) k)*weight u := by
+              rw [Nat.mul_assoc]
+        _ = (1+2^(cost u)*geomN (2^(cost u)) k)*weight u := by
+              rw [Nat.add_mul]
+              simp
 
 theorem geomN_identity (a k : Nat) (ha : 0<a) :
     (a-1)*geomN a k = a^k-1 := by
@@ -251,6 +257,9 @@ theorem factor_word_of_rotation_period (w : List Nat) (d : Nat)
   let J : Nat := geomN A k
   let q : Nat := (A*H)/B
   have hApos : 0<A := by exact Nat.pow_pos (by decide : 0<2)
+  have hAgt : 1<A := by
+    dsimp [A]
+    exact Nat.one_lt_two_pow (Nat.ne_of_gt hdpos)
   have hmod : (A*H)%B=H := by simpa [A,B,H] using hrot
   have hquot : A*H=H+B*q := by
     have h := Nat.mod_add_div (A*H) B
