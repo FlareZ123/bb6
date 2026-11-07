@@ -234,7 +234,14 @@ jobs:
           lean -o ValSixC58.olean ValSixC58.lean
           # Source-check nonredundant infinite j=7+64t, m=3 high-cone family.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicPrior.lean .
-          lean HighDyadicPrior.lean
+          lean -o HighDyadicPrior.olean HighDyadicPrior.lean
+          # Source-exact joint C58+ValSix+high dyadic stopping criterion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{DyadicSixCone,HighDyadicArithmetic,HighDyadicLowVal}.lean .
+          lean -o DyadicSixCone.olean DyadicSixCone.lean
+          lean -o HighDyadicArithmetic.olean HighDyadicArithmetic.lean
+          lean -o HighDyadicLowVal.olean HighDyadicLowVal.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58Dyadic.lean .
+          lean ValSixC58Dyadic.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
           # backwards oracle, and authentic merged C58/ValSix stopping iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
