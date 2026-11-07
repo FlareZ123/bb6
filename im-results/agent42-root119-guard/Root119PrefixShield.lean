@@ -392,9 +392,9 @@ theorem oddEvenShieldCounterexample_NoLeft4 :
     simpa [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] using hw.1
   rcases hfirst with h | h | h | h
   · subst x
-    norm_num [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] at hw
+    simp [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] at hw
   · subst x
-    norm_num [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] at hw
+    simp [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] at hw
   · omega
   · omega
 
@@ -414,7 +414,17 @@ theorem oddEvenShieldCounterexample_run_creates_1100 :
       have hsummary : oddEvenShieldCounterexampleSummary c =
           (3,true,true,false,false) := by
         simpa [hrun] using hs
-      rcases hsummary with ⟨hh,h0,h1,h2,h3⟩
+      have hh : c.h = 3 := congrArg Prod.fst hsummary
+      have hrest1 : (c.tape (-6),c.tape (-5),c.tape (-4),c.tape (-3)) =
+          (true,true,false,false) := congrArg Prod.snd hsummary
+      have h0 : c.tape (-6) = true := congrArg Prod.fst hrest1
+      have hrest2 : (c.tape (-5),c.tape (-4),c.tape (-3)) =
+          (true,false,false) := congrArg Prod.snd hrest1
+      have h1 : c.tape (-5) = true := congrArg Prod.fst hrest2
+      have hrest3 : (c.tape (-4),c.tape (-3)) = (false,false) :=
+          congrArg Prod.snd hrest2
+      have h2 : c.tape (-4) = false := congrArg Prod.fst hrest3
+      have h3 : c.tape (-3) = false := congrArg Prod.snd hrest3
       exact ⟨c,hrun,hh,h0,h1,h2,h3⟩
 
 theorem oddEvenShieldCounterexample_run_not_NoLeft4 :
@@ -423,11 +433,13 @@ theorem oddEvenShieldCounterexample_run_not_NoLeft4 :
   intro c hrun hshield
   obtain ⟨c',hrun',hh,h0,h1,h2,h3⟩ :=
     oddEvenShieldCounterexample_run_creates_1100
-  have heq : c = c' := by
-    rw [hrun] at hrun'
-    injection hrun'
-  subst c
-  exact hshield (-6) (by omega) ⟨h0,h1,h2,h3⟩
+  have heq : c = c' := Option.some.inj (hrun.symm.trans hrun')
+  have hbound : (-6:Int)+3 < c.h := by rw [heq]; omega
+  have hword : c.tape (-6) = true ∧ c.tape (-5) = true ∧
+      c.tape (-4) = false ∧ c.tape (-3) = false := by
+    rw [heq]
+    exact ⟨h0,h1,h2,h3⟩
+  exact hshield (-6) hbound hword
 
 #print axioms BB6Root119.b0_even_prefix_to_b0_preserves_NoLeft4
 #print axioms BB6Root119.b0_odd_even_chain_to_b0_preserves_NoLeft4
