@@ -3,7 +3,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429MidAposBoundary
 
-open BB429High2Return BB429JuncHeadExcursion BB429FinishScanEDelta
+open BB429High2Return BB429High2TailBase BB429JuncHeadExcursion BB429FinishScanEDelta
 open BB429SourceE1Delta BB429SourceE1Return BB429OddExcursion BB6Coverage
 
 /-- Consume a right-hand alternating block `1(01)^n`, leaving its final
@@ -297,6 +297,191 @@ theorem midApos_zero_w5_to_C1_odd_delta (k : Nat) :
   rw [show 4*(k+2)+1 = 4*k+9 by omega]
   rfl
 
+/-- Sweep a leading block of ones in an E/1 zipper while preserving
+    an arbitrary untouched left tail. -/
+theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
+    runWithDelta n (z 4 (ones n ++ left) true suffix) =
+      some (z 4 left true (ones n ++ suffix), -((n : Nat) : Int)) := by
+  induction n generalizing left suffix with
+  | zero =>
+      rfl
+  | succ n ih =>
+      rw [show n+1 = 1+n by omega, runWithDelta_add]
+      have hstep :
+          runWithDelta 1 (z 4 (ones (n+1) ++ left) true suffix) =
+            some (z 4 (ones n ++ left) true (true :: suffix), -1) := by
+        rfl
+      rw [hstep]
+      simp only [Option.bind_some]
+      rw [ih]
+      simp only [Option.map_some]
+      have hones : ones n ++ [true] = ones (n+1) := by
+        rw [← BB429SourceE1Return.ones_add n 1]
+        rfl
+      have hright : ones n ++ (true :: suffix) = ones (n+1) ++ suffix := by
+        calc
+          ones n ++ (true :: suffix) = ones n ++ ([true] ++ suffix) := rfl
+          _ = (ones n ++ [true]) ++ suffix := by rw [← List.append_assoc]
+          _ = ones (n+1) ++ suffix := by rw [hones]
+      rw [hright]
+      simp [Int.natCast_add, Int.natCast_mul]
+      omega
+
+/-- The even-b C/1 boundary begins with a fixed 24-step E/1 preparation. -/
+theorem c1_odd_to_e1_prefix_delta (k : Nat) :
+    runWithDelta 24
+      (z 2 (ones (4*k+12)) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true])) =
+      some (z 4 (ones (4*k+24)) true [true,false,true], 12) := by
+  rfl
+
+/-- The odd-b C/1 boundary begins with the corresponding 24-step
+    preparation, retaining the two-pair alternating left block. -/
+theorem c1_even_to_e1_prefix_delta (k : Nat) :
+    runWithDelta 24
+      (z 2 (ones (4*k+9) ++ pairs01 2 ++ ones 5) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true])) =
+      some (z 4 (ones (4*k+21) ++ pairs01 2 ++ ones 5) true
+        [true,false,true], 12) := by
+  rfl
+
+/-- The even-v C/1 boundary reduces exactly to a zero-u Junc state. -/
+theorem c1_odd_to_junc0_delta (k : Nat) :
+    runWithDelta (4*k+60)
+      (z 2 (ones (4*k+12)) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true])) =
+      some (junc 0 0 (4*k+20), -((4*k+8 : Nat) : Int)) := by
+  have hprefix := c1_odd_to_e1_prefix_delta k
+  have hsweep := E1_sweep_delta (4*k+24) [true,false,true]
+  have htail := E1_tail12_delta (ones (4*k+20) ++ [true,false,true])
+  have hones : ones (4*k+24) = ones 4 ++ ones (4*k+20) := by
+    calc
+      ones (4*k+24) = ones (4+(4*k+20)) := by congr 1 <;> omega
+      _ = ones 4 ++ ones (4*k+20) :=
+        BB429SourceE1Return.ones_add 4 (4*k+20)
+  have hinput :
+      z 4 [] true (ones (4*k+24) ++ [true,false,true]) =
+      z 4 [] true (ones 4 ++ (ones (4*k+20) ++ [true,false,true])) := by
+    congr 1
+    rw [hones, List.append_assoc]
+  have hcfg :
+      z 0 (ones 6) true (ones (4*k+20) ++ [true,false,true]) =
+      junc 0 0 (4*k+20) := by
+    simp [junc, pairs01, ones, List.append_assoc]
+  have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
+  rw [htime, runWithDelta_add, hprefix]
+  simp only [Option.bind_some]
+  rw [runWithDelta_add, hsweep]
+  simp only [Option.bind_some]
+  rw [hinput, htail]
+  simp only [Option.map_some]
+  rw [hcfg]
+  congr 1
+  · rfl
+  · omega
+
+/-- One more u=0 Junc macro moves the even-v boundary to positive u. -/
+theorem c1_odd_to_junc3_delta (k : Nat) :
+    runWithDelta (4*k+87)
+      (z 2 (ones (4*k+12)) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true])) =
+      some (junc 3 0 (4*k+17), -((4*k+5 : Nat) : Int)) := by
+  have hfirst := c1_odd_to_junc0_delta k
+  have hnext := junc0_next_delta 0 (4*k+20) (by omega)
+  have htime : 4*k+87 = (4*k+60)+27 := by omega
+  rw [htime, runWithDelta_add, hfirst]
+  simp only [Option.bind_some]
+  rw [hnext]
+  simp only [Option.map_some]
+  have hw : 4*k+20-3 = 4*k+17 := by omega
+  rw [hw]
+  congr 1
+  · rfl
+  · omega
+
+/-- Compose the even-v C/1 return with its positive-u Junc continuation. -/
+theorem midApos_zero_w5_even_to_junc3_delta (k : Nat) :
+    runWithDelta (26*k+177) (midApos 0 (2*k) 5) =
+      some (junc 3 0 (4*k+17), -((4*k+7 : Nat) : Int)) := by
+  have hfirst := midApos_zero_w5_to_C1_even_delta k
+  have htail := c1_odd_to_junc3_delta k
+  have htime : 26*k+177 = (22*k+90)+(4*k+87) := by omega
+  rw [htime, runWithDelta_add, hfirst]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some]
+  congr 1
+  · rfl
+  · omega
+
+/-- The odd-v C/1 boundary reduces through a source S_E suffix to
+    a positive-u Junc state. -/
+theorem c1_even_to_junc11_delta (k : Nat) :
+    runWithDelta (4*k+220)
+      (z 2 (ones (4*k+9) ++ pairs01 2 ++ ones 5) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true])) =
+      some (junc 11 0 (4*k+10), (2 : Int) - (4*k : Int)) := by
+  have hprefix := c1_even_to_e1_prefix_delta k
+  have hsweep := E1_sweep_prefix_delta (4*k+21)
+    (pairs01 2 ++ ones 5) [true,false,true]
+  have hones1 : ones (4*k+21) ++ [true] = ones (4*k+22) := by
+    rw [← BB429SourceE1Return.ones_add (4*k+21) 1]
+    rfl
+  have hones2 : ones 6 ++ ones (4*k+16) = ones (4*k+22) := by
+    rw [← BB429SourceE1Return.ones_add 6 (4*k+16)]
+    congr 1 <;> omega
+  have hright :
+      ones (4*k+21) ++ [true,false,true] =
+      ones 6 ++ ones (4*k+16) ++ [false,true] := by
+    calc
+      ones (4*k+21) ++ [true,false,true] =
+          (ones (4*k+21) ++ [true]) ++ [false,true] := by
+            rw [List.append_assoc]
+      _ = ones (4*k+22) ++ [false,true] := by rw [hones1]
+      _ = (ones 6 ++ ones (4*k+16)) ++ [false,true] := by rw [hones2]
+      _ = ones 6 ++ ones (4*k+16) ++ [false,true] := by rw [List.append_assoc]
+  have hsource :
+      z 4 (pairs01 2 ++ ones 5) true
+        (ones (4*k+21) ++ [true,false,true]) =
+      sourceScanE 2 (sourceSuffix (2*k+8)) := by
+    simp only [sourceScanE, sourceSuffix]
+    congr 1
+    exact hright
+  have htail := sourceScanE_finishC_even_after_junc0_delta 1 (2*k+8) (by omega)
+  have htailTime :
+      ((crossTime (2*1)+1+(12+2*(2*1))) +
+        (juncPosFullTime 2 (2*1+2) + (2*(2*1+6)+27))) = 175 := by
+    rw [crossTime_even 1]
+    simp [juncPosFullTime]
+  rw [htailTime] at htail
+  have hw : 2*(2*k+8)-6 = 4*k+10 := by omega
+  rw [show 2*1+9=11 by omega, hw] at htail
+  have htime : 4*k+220 = 24 + ((4*k+21)+175) := by omega
+  rw [htime, runWithDelta_add, hprefix]
+  simp only [Option.bind_some]
+  rw [runWithDelta_add, hsweep]
+  simp only [Option.bind_some]
+  rw [hsource, htail]
+  simp only [Option.map_some]
+  congr 1
+  · rfl
+  · omega
+
+/-- Compose the odd-v C/1 return with its positive-u Junc continuation. -/
+theorem midApos_zero_w5_odd_to_junc11_delta (k : Nat) :
+    runWithDelta (26*k+354) (midApos 0 (2*k+1) 5) =
+      some (junc 11 0 (4*k+10), -((4*k : Nat) : Int)) := by
+  have hfirst := midApos_zero_w5_to_C1_odd_delta k
+  have htail := c1_even_to_junc11_delta k
+  have htime : 26*k+354 = (22*k+134)+(4*k+220) := by omega
+  rw [htime, runWithDelta_add, hfirst]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some]
+  congr 1
+  · rfl
+  · omega
+
 #print axioms shift_A01_tail_delta
 #print axioms juncPos_w0_exit_delta
 #print axioms midApos_to_junc_delta
@@ -310,5 +495,13 @@ theorem midApos_zero_w5_to_C1_odd_delta (k : Nat) :
 #print axioms midApos_zero_w5_to_sourceScanE_delta
 #print axioms midApos_zero_w5_to_C1_even_delta
 #print axioms midApos_zero_w5_to_C1_odd_delta
+#print axioms E1_sweep_prefix_delta
+#print axioms c1_odd_to_e1_prefix_delta
+#print axioms c1_even_to_e1_prefix_delta
+#print axioms c1_odd_to_junc0_delta
+#print axioms c1_odd_to_junc3_delta
+#print axioms midApos_zero_w5_even_to_junc3_delta
+#print axioms c1_even_to_junc11_delta
+#print axioms midApos_zero_w5_odd_to_junc11_delta
 
 end BB429MidAposBoundary
