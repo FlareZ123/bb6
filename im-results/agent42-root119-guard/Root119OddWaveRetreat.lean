@@ -153,7 +153,8 @@ theorem odd_f1_retreat_to_b0 (n m : Nat) (t : Int → Bool) (h : Int)
       rw [hhead',hidx]
     have hq' : (fbMany m c1).q = .F := fbMany_state m c1 rfl
     have hFread'' : (fbMany m c1).tape (h-(2+2*(m:Int))) = false := by
-      rw [←hhead'']
+      have hidx : h-(2+2*(m:Int)) = h-2-2*(m:Int) := by omega
+      rw [hidx]
       exact hFread
     have hpos'' : h-(2+2*(m:Int))-1 = h-3-2*(m:Int) := by omega
     simp [run,next,hq',hFread'',hhead'',hpos'']
@@ -337,7 +338,8 @@ theorem d1_retreat_to_b0 (n m : Nat) (t : Int → Bool) (h : Int)
       rw [hhead',hidx]
     have hq' : (fbMany m c1).q = .F := fbMany_state m c1 rfl
     have hFread'' : (fbMany m c1).tape (h-(3+2*(m:Int))) = false := by
-      rw [←hhead'']
+      have hidx : h-(3+2*(m:Int)) = h-3-2*(m:Int) := by omega
+      rw [hidx]
       exact hFread
     have hpos'' : h-(3+2*(m:Int))-1 = h-4-2*(m:Int) := by omega
     simp [run,next,hq',hFread'',hhead'',hpos'']
