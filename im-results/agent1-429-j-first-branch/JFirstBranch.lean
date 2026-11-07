@@ -168,8 +168,9 @@ theorem bc_sweep (m : Machine) (k : Nat) (c : Config)
       refine ⟨c,by simp [run],hs,by simp,?_⟩
       exact cbPaint_zero c.tape c.head
   | succ k ih =>
-      have hzero : c.tape c.head=true := (hpair 0 (by omega)).1
-      have hone : c.tape (c.head+1)=false := (hpair 0 (by omega)).2
+      have hp0 := hpair 0 (by omega)
+      have hzero : c.tape c.head=true := by simpa using hp0.1
+      have hone : c.tape (c.head+1)=false := by simpa using hp0.2
       obtain ⟨d1,hr1,hs1,hd1,ht1⟩ := bc_two_full m c hC hB hs hzero hone
       have hpair' : ∀ i : Nat, i<k →
           d1.tape (d1.head+2*(i:Int))=true ∧
@@ -178,19 +179,21 @@ theorem bc_sweep (m : Machine) (k : Nat) (c : Config)
         have h0 : d1.tape (d1.head+2*(i:Int)) =
             c.tape (c.head+2*(i:Int)+2) := by
           rw [ht1,hd1]
+          rw [show c.head+2+2*(i:Int)=c.head+2*(i:Int)+2 by omega]
           rw [cbPaint_right c.tape c.head 1 (c.head+2*(i:Int)+2) (by omega)]
           rfl
         have h1 : d1.tape (d1.head+2*(i:Int)+1) =
             c.tape (c.head+2*(i:Int)+3) := by
           rw [ht1,hd1]
+          rw [show c.head+2+2*(i:Int)+1=c.head+2*(i:Int)+3 by omega]
           rw [cbPaint_right c.tape c.head 1 (c.head+2*(i:Int)+3) (by omega)]
           rfl
         have hp := hpair (i+1) (by omega)
         constructor
-        · simpa [show (i+1:Int) = (i:Int)+1 by omega, Int.add_assoc,
-            Int.add_left_comm, Int.add_comm] using hp.1
-        · simpa [show (i+1:Int) = (i:Int)+1 by omega, Int.add_assoc,
-            Int.add_left_comm, Int.add_comm] using hp.2
+        · rw [h0]
+          convert hp.1 using 1 <;> omega
+        · rw [h1]
+          convert hp.2 using 1 <;> omega
       obtain ⟨d,hr2,hs2,hd2,ht2⟩ := ih d1 hpair'
       have hrun : run m (2*(k+1)) c=some d := by
         have hlen : 2*(k+1)=2+2*k := by omega
@@ -340,8 +343,7 @@ theorem f0_local (u w : Nat) :
   have hodd5 : baseTape u w (-2*(u:Int)-5)=true := by
     apply baseTape_odd u w _ <;> omega
   have heven4 : baseTape u w (-2*(u:Int)-4)=false := by
-    apply baseTape_even_zero u w <;> simp
-    omega
+    apply baseTape_even_zero u w <;> omega
   have hodd3 : baseTape u w (-2*(u:Int)-3)=true := by
     apply baseTape_odd u w _ <;> omega
   unfold f0Tape
@@ -361,7 +363,7 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
     simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb]
   have htime : 4*u*u+6*u+7=(4*u*u+6*u+6)+1 := by omega
   rw [htime,run_add',hp]
-  simp [hstep]
+  simpa [baseTape] using hstep
 
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
@@ -389,29 +391,29 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   let c14 : Config := {state:=C,head:=h+4,tape:=writeAt c13.tape (h+3) true}
   have hs0 : readSlot c0=(F,false) := by simp [readSlot,c0,h0]
   have hs1 : readSlot c1=(D,false) := by
-    simp [readSlot,c1,writeAt,h1]
+    simp [readSlot,c1,writeAt,h1] <;> omega
   have hs2 : readSlot c2=(E,true) := by
-    simp [readSlot,c2,c1,writeAt]
+    simp [readSlot,c2,c1,writeAt] <;> omega
   have hs3 : readSlot c3=(E,false) := by
-    simp [readSlot,c3,c2,c1,writeAt,hm1]
+    simp [readSlot,c3,c2,c1,writeAt,hm1] <;> omega
   have hs4 : readSlot c4=(A,false) := by
-    simp [readSlot,c4,c3,c2,c1,writeAt,hm2]
+    simp [readSlot,c4,c3,c2,c1,writeAt,hm2] <;> omega
   have hs5 : readSlot c5=(B,false) := by
-    simp [readSlot,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs6 : readSlot c6=(C,true) := by
     simp [readSlot,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs7 : readSlot c7=(B,true) := by
     simp [readSlot,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs8 : readSlot c8=(A,true) := by
-    simp [readSlot,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h2]
+    simp [readSlot,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h2] <;> omega
   have hs9 : readSlot c9=(F,true) := by
     simp [readSlot,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs10 : readSlot c10=(A,false) := by
-    simp [readSlot,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs11 : readSlot c11=(B,true) := by
     simp [readSlot,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs12 : readSlot c12=(A,false) := by
-    simp [readSlot,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs13 : readSlot c13=(B,false) := by
     simp [readSlot,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h3] <;> omega
   have hs14 : readSlot c14=(C,true) := by
@@ -434,72 +436,72 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     have hraw := rawStep_of_read target429 c0 F false _ hs0 hrow0
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c0,c1] <;> omega))
+      all_goals (simp [applyMove,c0,c1,writeAt] <;> omega))
   have r1 : rawStep target429 c1=some c2 := by
     have hraw := rawStep_of_read target429 c1 D false _ hs1 hrow1
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c1,c2] <;> omega))
+      all_goals (simp [applyMove,c1,c2,writeAt] <;> omega))
   have r2 : rawStep target429 c2=some c3 := by
     have hraw := rawStep_of_read target429 c2 E true _ hs2 hrow2
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c2,c3] <;> omega))
+      all_goals (simp [applyMove,c2,c3,writeAt] <;> omega))
   have r3 : rawStep target429 c3=some c4 := by
     have hraw := rawStep_of_read target429 c3 E false _ hs3 hrow3
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c3,c4] <;> omega))
+      all_goals (simp [applyMove,c3,c4,writeAt] <;> omega))
   have r4 : rawStep target429 c4=some c5 := by
     have hraw := rawStep_of_read target429 c4 A false _ hs4 hrow4
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c4,c5] <;> omega))
+      all_goals (simp [applyMove,c4,c5,writeAt] <;> omega))
   have r5 : rawStep target429 c5=some c6 := by
     have hraw := rawStep_of_read target429 c5 B false _ hs5 hrow5
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c5,c6] <;> omega))
+      all_goals (simp [applyMove,c5,c6,writeAt] <;> omega))
   have r6 : rawStep target429 c6=some c7 := by
     have hraw := rawStep_of_read target429 c6 C true _ hs6 hrow6
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c6,c7] <;> omega))
+      all_goals (simp [applyMove,c6,c7,writeAt] <;> omega))
   have r7 : rawStep target429 c7=some c8 := by
     have hraw := rawStep_of_read target429 c7 B true _ hs7 hrow7
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c7,c8] <;> omega))
+      all_goals (simp [applyMove,c7,c8,writeAt] <;> omega))
   have r8 : rawStep target429 c8=some c9 := by
     have hraw := rawStep_of_read target429 c8 A true _ hs8 hrow8
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c8,c9] <;> omega))
+      all_goals (simp [applyMove,c8,c9,writeAt] <;> omega))
   have r9 : rawStep target429 c9=some c10 := by
     have hraw := rawStep_of_read target429 c9 F true _ hs9 hrow9
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c9,c10] <;> omega))
+      all_goals (simp [applyMove,c9,c10,writeAt] <;> omega))
   have r10 : rawStep target429 c10=some c11 := by
     have hraw := rawStep_of_read target429 c10 A false _ hs10 hrow10
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c10,c11] <;> omega))
+      all_goals (simp [applyMove,c10,c11,writeAt] <;> omega))
   have r11 : rawStep target429 c11=some c12 := by
     have hraw := rawStep_of_read target429 c11 B true _ hs11 hrow11
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c11,c12] <;> omega))
+      all_goals (simp [applyMove,c11,c12,writeAt] <;> omega))
   have r12 : rawStep target429 c12=some c13 := by
     have hraw := rawStep_of_read target429 c12 A false _ hs12 hrow12
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c12,c13] <;> omega))
+      all_goals (simp [applyMove,c12,c13,writeAt] <;> omega))
   have r13 : rawStep target429 c13=some c14 := by
     have hraw := rawStep_of_read target429 c13 B false _ hs13 hrow13
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c13,c14] <;> omega))
+      all_goals (simp [applyMove,c13,c14,writeAt] <;> omega))
   have hfinal : cFinal =
       {state:=A,head:=2*(u:Int)+3,
         tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
