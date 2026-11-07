@@ -238,6 +238,13 @@ A stronger finite symbolic consequence follows by combining the exact cylinder t
 ]
 Consequently the prefix contains all 8,191 nonempty branch words of cost at most 14, plus the empty word. In this precise finite sense, the authentic blank-root itinerary is **14-bit universal**: no finite-word avoidance argument with total branch cost at most 14 can separate it from any target itinerary. This is only a finite-prefix statement; it neither establishes higher-cost universality nor an infinite tail match.
 
+The same audited prefix also has substantial **joint 2-adic/3-adic residue coverage**. The updated `root_prefix_stats.py` stores the pairs `(x mod 2^10, x mod 3^4)` and `(x mod 2^12, x mod 3)`. It finds 34,832 distinct pairs in the former quotient and all 6,144 possible pairs in the latter. Projections give complete coverage of:
+- every even residue modulo `2^6` paired with every residue modulo `3^3` (864/864);
+- every even residue modulo `2^8` paired with every residue modulo `3^2` (1,152/1,152);
+- every even residue modulo `2^{10}` paired with every residue modulo `3` (1,536/1,536).
+
+The nearby projections are also close to complete: modulo `2^6\times3^4`, one pair is missing, `(62,50)`; modulo `2^8\times3^3`, six pairs are missing, `(80,23),(116,23),(130,23),(152,23),(168,23),(190,23)`; modulo `2^{10}\times3^2`, four pairs are missing, `(238,5),(630,5),(820,5),(912,5)`. These are finite orbit-coverage counts, not an all-time invariant, equidistribution theorem, or proof that the missing pairs are unreachable. They provide a root-specific mixed-modulus complement to the 2-adic word universality above.
+
 ## 8. Literature and novelty boundary
 
 The classical 3x+1 map is already known to be metrically conjugate to the one-sided 2-adic shift and hence Bernoulli; see Bernstein and Lagarias, *The 3x+1 Conjugacy Map* (1996), [PDF](https://websites.umich.edu/~lagarias/doc/bernstein.pdf). Related 2-adic De Bruijn graph formulations for Collatz-like maps are discussed in *The Collatz Conjecture and De Bruijn Graphs* (2013), [DOI](https://doi.org/10.1016/j.indag.2013.03.003). The present derivation is the explicit countable-branch analogue for the Sheep generic first-even return, with two independent geometric coordinates and entropy four bits per return. Whether this specialization is externally novel remains unassessed.
