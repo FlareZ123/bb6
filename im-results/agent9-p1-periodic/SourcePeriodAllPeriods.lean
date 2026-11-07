@@ -356,6 +356,86 @@ theorem recentered_quotient_bounds {L root : Nat}
 
 #print axioms recentered_quotient_bounds
 
+
+/-- The source gap is the unused part of the affine source margin. -/
+def sourceGap {L root : Nat}
+    (p : InfiniteShadowPath L root) (n : Nat) : Nat :=
+  L+p.m n-p.z n
+
+/-- A zero-depth transition sends the source gap D to (D+3)/2. -/
+theorem sourceGap_step_zero {L root : Nat}
+    (p : InfiniteShadowPath L root)
+    (hmargin : ∀ n, 0<p.z n ∧ p.z n+4≤L+p.m n)
+    (n : Nat) (ht : p.depth n=0) :
+    2*sourceGap p (n+1)=sourceGap p n+3 := by
+  have hv : p.quotient n=p.z n := by
+    simpa [ht] using (p.hdiv n).symm
+  have hn : 2*p.z (n+1)+1=L+p.m n+p.z n := by
+    simpa [ht,hv] using p.hnext n
+  have hm : p.m (n+1)=p.m n+1 := by
+    simpa [ht] using p.hm n
+  have hmargn := hmargin n
+  have hmargn1 := hmargin (n+1)
+  dsimp [sourceGap]
+  omega
+
+/-- An all-zero block of length k has an exact closed-form gap evolution. -/
+theorem zero_run_gap_identity {L root : Nat}
+    (p : InfiniteShadowPath L root)
+    (hmargin : ∀ n, 0<p.z n ∧ p.z n+4≤L+p.m n)
+    (N k : Nat) (hzero : ∀ i, i<k → p.depth (N+i)=0) :
+    2^k*sourceGap p (N+k)=
+      sourceGap p N+3*(2^k-1) := by
+  induction k with
+  | zero => simp [sourceGap]
+  | succ k ih =>
+      have hzero' : ∀ i, i<k → p.depth (N+i)=0 := by
+        intro i hi
+        exact hzero i (by omega)
+      have hstep := sourceGap_step_zero p hmargin (N+k) (hzero k (by omega))
+      rw [Nat.pow_succ]
+      calc
+        2^k*2*sourceGap p (N+k+1) =
+            2^k*(2*sourceGap p (N+k+1)) := by ac_rfl
+        _ = 2^k*(sourceGap p (N+k)+3) := by rw [hstep]
+        _ = 2^k*sourceGap p (N+k)+2^k*3 := by rw [Nat.mul_add]
+        _ = sourceGap p N+3*(2^k-1)+2^k*3 := by rw [ih hzero']
+        _ = sourceGap p N+3*(2^(k+1)-1) := by omega
+
+/-- Every consecutive zero-depth run is logarithmically bounded by the
+    source gap at its start: 2^k ≤ D_N-3. -/
+theorem zero_run_length_bound {L root : Nat}
+    (p : InfiniteShadowPath L root)
+    (hmargin : ∀ n, 0<p.z n ∧ p.z n+4≤L+p.m n)
+    (N k : Nat) (hzero : ∀ i, i<k → p.depth (N+i)=0) :
+    2^k ≤ sourceGap p N-3 := by
+  have hId := p.zero_run_gap_identity hmargin N k hzero
+  have hEnd : 4≤sourceGap p (N+k) := by
+    have hm := (hmargin (N+k)).2
+    dsimp [sourceGap]
+    omega
+  have hGapN : 3≤sourceGap p N := by
+    have hm := (hmargin N).2
+    dsimp [sourceGap]
+    omega
+  have h3 : 3*(2^k-1)=3*2^k-3 := by omega
+  have hquot : 2^k*(sourceGap p (N+k)-3)=sourceGap p N-3 := by
+    rw [Nat.mul_sub_left_distrib, hId, h3]
+    have hcomm : 3*2^k=2^k*3 := by ac_rfl
+    rw [hcomm]
+    have hpowpos : 0<2^k := Nat.pow_pos (by omega)
+    have hx : 3≤2^k*3 := by omega
+    have hshift : sourceGap p N+(2^k*3-3)=
+        (sourceGap p N-3)+2^k*3 := by omega
+    rw [hshift]
+    simp
+  have hmul : 2^k*1 ≤ 2^k*(sourceGap p (N+k)-3) :=
+    Nat.mul_le_mul_left (2^k) (by omega)
+  rw [hquot] at hmul
+  simpa using hmul
+
+#print axioms zero_run_length_bound
+
 #print axioms no_eventually_periodic_shadow_path
 
 end InfiniteShadowPath
