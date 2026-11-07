@@ -57,7 +57,6 @@ theorem noLeft4_transfer_of_left_agreement (p q r : Bool) (c d : Conf)
     (hagree : ∀ x : Int, x < d.h → d.tape x = c.tape x)
     (hc : NoLeft4 p q r c) : NoLeft4 p q r d := by
   intro x hx hword
-  change x+3 < c.h-1 at hx
   have hxOld : x+3 < c.h := by omega
   apply hc x hxOld
   refine ⟨?_,?_,?_,?_⟩
@@ -78,6 +77,7 @@ theorem noLeft4_left_write (p q r : Bool) (c : Conf)
     (hc : NoLeft4 p q r c) :
     NoLeft4 p q r ⟨.B,c.h-1,setBit c.tape c.h true⟩ := by
   intro x hx hword
+  change x+3 < c.h-1 at hx
   have hxOld : x+3 < c.h := by omega
   apply hc x hxOld
   refine ⟨?_,?_,?_,?_⟩
@@ -435,11 +435,13 @@ theorem b0_two_wave_root_interval_to_b0
       have hq4 : q4 = .F := by
         simpa [hFB,c3] using (fbMany_state m c3 rfl)
       have hh4 : h4 = h2-2-2*(m:Int) := by
-        simpa [hFB,c3,h2] using (fbMany_head m c3)
+        have hproj : (fbMany m c3).h = h4 := congrArg Conf.h hFB
+        have hhead : (fbMany m c3).h = h2-2-2*(m:Int) := by
+          simpa [c3,h2] using (fbMany_head m c3)
+        exact hproj.symm.trans hhead
       subst q4
       subst h4
-      simp [out,oddRetreatResult,c4,c3,h2,hFB]
-      omega
+      simpa [out,oddRetreatResult,c4,c3,h2,hFB]
   have hNoOut : NoLeft4 true true false out := by
     rw [hEq]
     exact noLeft4_left_write true true false c4 hNoFB
