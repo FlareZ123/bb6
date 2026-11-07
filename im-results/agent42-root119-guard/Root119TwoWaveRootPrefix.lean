@@ -124,6 +124,64 @@ theorem noLeft4_excludes_BBad (b : Conf)
       exact hzero0
   exact hb x hx hword
 
+/-- The alternating F/B retreat preserves the 1100-exclusion shield.
+    The wave and B/1-to-F/0 step modify only cells to the right of the new
+    retreat head; the F/B sweep itself preserves NoLeft4 by FBSweep. -/
+theorem oddRetreatResult_preserves_noLeft4
+    (n m : Nat) (t : Int → Bool) (h : Int)
+    (hshield : NoLeft4 true true false (⟨.F,h,t⟩ : Conf))
+    (hfb : ∀ i : Nat, i < m →
+      t (h-2-2*(i:Int)) = false ∧
+      t (h-3-2*(i:Int)) = true) :
+    NoLeft4 true true false (oddRetreatResult n m t h) := by
+  let c1 : Conf := ⟨.F,h-2,setBit (oddWaveTape n t h) (h-1) true⟩
+  have hleftTape (x : Int) (hx : x ≤ h-2) : c1.tape x = t x := by
+    have hne : x ≠ h-1 := by omega
+    have hx' : x < h := by omega
+    change setBit (oddWaveTape n t h) (h-1) true x = t x
+    simp [setBit,hne,oddWaveTape_left n t h x hx']
+  have hNoC1 : NoLeft4 true true false c1 :=
+    noLeft4_transfer_of_left_agreement true true false
+      (⟨.F,h,t⟩ : Conf) c1
+      (by simp [c1]; omega)
+      (by intro x hx; exact hleftTape x (by simp [c1] at hx; omega))
+      hshield
+  have hfbExt : fbExtended m c1 := by
+    refine ⟨rfl,?_⟩
+    intro i hi
+    constructor
+    · change c1.tape (h-2-2*(i:Int)) = false
+      rw [hleftTape (h-2-2*(i:Int)) (by omega)]
+      exact (hfb i hi).1
+    · have hpos : c1.h-2*(i:Int)-1 = h-3-2*(i:Int) := by
+        simp [c1]
+        omega
+      change c1.tape (c1.h-2*(i:Int)-1) = true
+      rw [hpos,hleftTape (h-3-2*(i:Int)) (by omega)]
+      exact (hfb i hi).2
+  have hNoFB : NoLeft4 true true false (fbMany m c1) :=
+    fb_many_preserves_noLeft4 true true false m c1 hfbExt hNoC1
+  let c2 : Conf := fbMany m c1
+  have hEq : oddRetreatResult n m t h =
+      ⟨.B,c2.h-1,setBit c2.tape c2.h true⟩ := by
+    cases hFB : fbMany m c1 with
+    | mk q2 h2 t2 =>
+      have hq2 : q2 = .F := by
+        simpa [hFB,c1] using (fbMany_state m c1 rfl)
+      have hh2 : h2 = h-2-2*(m:Int) := by
+        have hproj : (fbMany m c1).h = h2 := congrArg Conf.h hFB
+        have hhead : (fbMany m c1).h = h-2-2*(m:Int) := by
+          simpa [c1] using (fbMany_head m c1)
+        exact hproj.symm.trans hhead
+      subst q2
+      subst h2
+      simp only [oddRetreatResult,c1,c2]
+      rw [hFB]
+      have hhead : h-3-2*(m:Int) = (h-2-2*(m:Int))-1 := by omega
+      rw [hhead]
+  rw [hEq]
+  exact noLeft4_left_write true true false c2 hNoFB
+
 /-- Exact nine-step source-machine prefix from B/0 to the first F/1 wave.
     It uses the local input pattern 1,0,1 immediately to the left of B/0. -/
 theorem b0_two_wave_prefix (b : Conf) (hb0 : BZero b)
@@ -494,5 +552,6 @@ theorem b0_two_wave_root_interval_avoids_BBad
 #print axioms BB6Root119.b0_two_wave_root_interval_to_b0
 #print axioms BB6Root119.b0_two_wave_root_interval_avoids_BBad
 #print axioms BB6Root119.noLeft4_excludes_BBad
+#print axioms BB6Root119.oddRetreatResult_preserves_noLeft4
 
 end BB6Root119
