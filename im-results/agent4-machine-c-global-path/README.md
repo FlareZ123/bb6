@@ -132,7 +132,7 @@ CResidualMassBounds.lean derives exact weighted-mass formulas for the two stoppi
 - Low target: M_low(m) = 2^(2m+4) - (6m+7). If M_low(m) <= 2000, then m <= 3.
 - High target: M_high(j,m) = 2^(2m+3)(j+3) - (6m+7). If M_high(j,m) <= 2000, then m <= 3 and j <= 250.
 
-The proofs establish M_low(m) >= 4065 and M_high(j,m) >= 6113 for every m >= 4. Thus the rectangle 0 <= m <= 3, 0 <= j <= 250 contains every high target under the raw-mass cap, and 0 <= m <= 3 contains every low target under that cap.
+The proofs establish M_low(m) >= 4065 and M_high(j,m) >= 6113 for every m >= 4. Thus the rectangle 0 <= m <= 3, 0 <= j <= 250 contains every high target under the raw-mass cap, and 0 <= m <= 3 contains every low target under that cap. The sharper theorem high_raw_mass_box_exact gives the exact per-row bounds: m=0 has j<=247 (248 values), m=1 has j<=59 (60 values), m=2 has j<=12 (13 values), and m=3 has j=0 (1 value). Together with the four low targets, this is exactly 326 unfiltered target points.
 
 This is a **search-domain theorem**, not a nonhalting theorem. The existing CResidualProbe.lean still samples only the first two allowed high j-values per m and imposes a root-fuel cap of 256. It therefore does not yet exhaust the full raw-mass-2000 domain. The new bound makes an exhaustive finite scan possible once every allowed pair in the box is evaluated and every root-fuel skip is eliminated or explicitly retained.
 
