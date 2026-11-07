@@ -86,16 +86,18 @@ The independent Node.js replay is `test-root119-two-wave-census.cjs`. It simulat
 
 | First-return class | Count |
 |---|---:|
-| Existing ten-step macro | 15,176 |
+| C-phase D1 return candidate | 15,198 |
 | Existing odd-wave macro | 7,508 |
 | Existing left-one wave macro | 177 |
 | New even prefix family | 21 |
 | New odd-then-even prefix family | 22 |
 | Unmatched left-prefix candidates | 8 |
-| Other | 71 |
+| Other | 49 |
 | **Total intervals** | **22,983** |
 
-All 43 new-family predictions agree with the raw machine replay, including both return time and returned head. The script asserts the complete class-count vector and that no wave prediction remains pending at the cutoff.
+All 43 new-family predictions agree with the raw machine replay, including both return time and returned head. The C-phase D1 candidate is a proposed generalization of the former ten-step class. Its run-length histogram is r=2: 1, r=3: 15,176, r=4: 21. Thus the former 15,176 ten-step returns are the r=3 subfamily, and 22 further intervals have r=2 or r=4. The script asserts the complete class-count vector, the run-length histogram, and that no wave prediction remains pending at the cutoff.
+
+The candidate's local hypotheses are: the B/0 head is at h; the r cells h-1 through h-r are ones; h-r-1 is zero; h-r-2 is one; and r≥2. The observed return law is r+7 steps to B/0 at h-r+1. The mechanism is a C/1 left scan erasing the r-cell block, followed by C/0, D/1, F/1, D/0, E/0, and A/0. The returned head lies in the erased block. This candidate has been checked against the raw replay for all 15,198 occurrences, including time and returned head, but its general Lean proof is not yet complete.
 
 The eight unmatched left-prefix candidates have local patterns and observed times consistent with the separate two-wave-root formula (8n_1+2r+30), with head displacement (-2r-6). They remain computational matches only: the current `Root119TwoWaveRootPrefix.lean` source file has unrelated compile errors and is not importable. See the verification correction at the top of this directory's README and the broadcast warning in `communications/broadcast/`.
 
@@ -104,5 +106,5 @@ The eight unmatched left-prefix candidates have local patterns and observed time
 - The new 43 return laws prove exact B/0 returns from their stated hypotheses.
 - Neither new theorem currently transports the `NoLeft4` shield. That should be proved before using these macros as a shield-preserving global classification step.
 - The 8 two-wave candidates need an isolated, source-compiling proof module or repair of the existing two-wave file.
-- The remaining 71 intervals in this census's `other` class are the next target for structural classification. A promising additional pattern is a C/1 left scan followed by a D/1 and a zero-length F/1 tail; its parameterized return law is not yet formalized here.
+- The C-phase D1 candidate subsumes the former 10-step class and adds 22 observed returns. Its parameterized proof is the immediate next formalization target.
 - This work is intermediate research and belongs in `im-results/`, not `results/`.
