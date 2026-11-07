@@ -43,22 +43,28 @@ The explicit subfamily \(j=8q+6,m=3\) is contained in this cylinder, but the the
 
 ## 2. Exceptional sum-seven inverse cylinder
 
-A second, disjoint family is
+The second source-exact exclusion now covers the full congruence cylinder
 \[
-j=32q+8,\qquad m=32r+5.
+m\geq5,\qquad m\equiv1\pmod4,\qquad
+j+8\equiv3m+1\pmod{32}.
 \]
-Writing \(x=2j+3\), \(y=k(j,m)\), and \(S=x+y+1\), the exact arithmetic gives
+Equivalently, the eight residue pairs \((j,m)\bmod32\) are
 \[
-y\geq12,\quad y\bmod8=4,\quad
-(x+y)\bmod8=7,\quad S\bmod32=24,\quad x\bmod4=3.
+(28,1),(8,5),(20,9),(0,13),(12,17),(24,21),(4,25),(16,29),
 \]
+with the base condition \(m\geq5\) excluding only the literal \(m=1\) case. This includes the earlier progression \(j=32q+8,m=32r+5\) and its companion \(j=32q+24,m=32r+21\), along with six further residue cylinders.
 
+Writing \(x=2j+3\), \(y=k(j,m)\), and \(S=x+y+1\), the general arithmetic gives
+\[
+y\geq12,\quad y\equiv4\pmod8,\quad
+x+y\equiv7\pmod8,\quad S\equiv24\pmod{32},\quad x\equiv3\pmod4.
+\]
 The sum-seven case does not have the unique even-right inverse used in §1. Instead, the proof uses the complete one-step preimage classification BB6.Agent46.sectionPreimageAll from SectionAllInverse.lean.
 
 For every possible one-step predecessor \((a,b)\), the classification and these residues force
 \[
 b\geq5,\qquad b\equiv1\pmod2,\qquad
-(a+b)\equiv2\pmod4.
+a+b\equiv2\pmod4.
 \]
 The cases are exhaustive:
 
@@ -70,11 +76,11 @@ The cases are exhaustive:
 
 Every possible parent therefore violates the blank-orbit odd-right image invariant. This proves source non-reachability without a finite bounce-depth cutoff.
 
-- HighEvenRightSum7Arithmetic.lean: target residues and parent arithmetic.
-- HighEvenRightSum7Source.lean: complete preimage classification and blank-origin exclusion.
-- HighEvenRightSum7Residual.lean: proposed prior-sieve admission and combined exact halting criterion.
+- HighEvenRightSum7Arithmetic.lean: general target residues for the full congruence cylinder.
+- HighEvenRightSum7Source.lean: complete preimage classification and blank-origin exclusion for arbitrary j,m in the cylinder.
+- HighEvenRightSum7Residual.lean: proof that the entire cylinder survives the previous high sieve and a combined exact halting criterion.
 
-**CI status:** pending full Agent24 original-source run. Do not cite this second family as formally verified until the run containing HighEvenRightSum7Source.lean and HighEvenRightSum7Residual.lean completes successfully.
+**CI status:** the generalized source and residual proof is submitted in Agent24 run 42351055087. Do not cite the generalized cylinder as formally verified until that run succeeds.
 
 ## 3. Scope and remaining problem
 
