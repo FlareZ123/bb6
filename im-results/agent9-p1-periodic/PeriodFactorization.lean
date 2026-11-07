@@ -411,7 +411,7 @@ theorem offset_repeat (u : List Nat) (k : Nat) :
 
 /-- The original scalar run recurrence, with the exact affine coefficients
     exposed for every block index. -/
-theorem periodic_run_affine_recurrence (L w : Nat) (m z : Nat → Nat)
+theorem periodic_run_affine_recurrence (L : Nat) (w : List Nat) (m z : Nat → Nat)
     (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) :
     ∀ n, ((2:Nat)^(cost w):Int)*(z (n+1):Int) =
       (z n:Int)+(weight w:Int)*((L:Int)+(m 0:Int))+
@@ -428,7 +428,7 @@ theorem periodic_run_affine_recurrence (L w : Nat) (m z : Nat → Nat)
 
 /-- The increment between the first two output boundaries is the unique
     affine slope forced by an infinite fixed-word run. -/
-theorem periodic_run_slope_at_zero (L w : Nat) (hw : 0<cost w)
+theorem periodic_run_slope_at_zero (L : Nat) (w : List Nat) (hw : 0<cost w)
     (m z : Nat → Nat)
     (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) :
     (((2:Nat)^(cost w):Int)-1)*((z 1:Int)-(z 0:Int)) =
@@ -474,6 +474,11 @@ theorem periodic_run_slope_at_zero (L w : Nat) (hw : 0<cost w)
   dsimp [err,delta,zi,A] at hz
   omega
 
+#print axioms run_cost
+#print axioms linear_cost_orbit
+#print axioms block_affine
+#print axioms PeriodCore.affine_difference
+#print axioms PeriodCore.forced_zero
 #print axioms periodic_run_affine_recurrence
 #print axioms periodic_run_slope_at_zero
 
@@ -508,7 +513,7 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
   have hA : A=a^T := by
     dsimp [A,a,T]
     rw [cost_repeat]
-    rw [← Int.natCast_pow, Nat.pow_mul]
+    exact_mod_cast (Nat.pow_mul 2 (cost u) k)
   have hH : H=h*J := by
     simpa [H,h,J,a,T,w] using weight_repeat_int u k
   have hS : S=r*(T:Int) := by
@@ -528,8 +533,8 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
     induction n with
     | zero => simp [PeriodSecondary.geom]
     | succ n ih =>
-        simp [PeriodSecondary.geom]
-        omega
+        simp only [PeriodSecondary.geom]
+        exact Int.add_nonneg (by decide) (Int.mul_nonneg (le_of_lt ha) ih)
   have hJpos : 0<J := by
     cases k with
     | zero => omega
@@ -551,8 +556,11 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
     simpa [A,H,S,X,D,w] using periodic_run_affine_recurrence L w m z hr
   have h0 := hrec 0
   have hStart : (A-1)*Z=H*X+D-A*Q := by
-    dsimp [Z,Q] at *
-    simp at h0
+    dsimp [Z,Q]
+    have h0' : A*(z 1:Int)=(z 0:Int)+H*X+D := by
+      simpa using h0
+    rw [Int.sub_mul, Int.mul_sub]
+    simp
     omega
   exact PeriodSecondary.repeated_affine_obstruction
     a h r (offset u) T J A H D S Q X Z
