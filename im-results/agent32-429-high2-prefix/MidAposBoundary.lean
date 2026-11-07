@@ -264,10 +264,11 @@ theorem midApos_zero_w5_to_C1_even_delta (k : Nat) :
       some (z 2 (ones (4*k+12)) true
         (ones 3 ++ pairs01 3 ++ [false,false,true]), -2) := by
   have hsource := midApos_zero_w5_to_sourceScanE_delta (2*k)
+  rw [show 2*k+3 = 2*(k+1)+1 by omega] at hsource
   have hreturn := sourceScanE_e1_revisit_delta (2*k+3)
     (ones 3 ++ pairs01 3 ++ [false,false,true])
   rw [show 2*k+3 = 2*(k+1)+1 by omega, crossTime_odd] at hreturn
-  have htime : 22*k+90 = (4*(2*k)+60) + (14*(k+1)+16) := by omega
+  have htime : 22*k+90 = (4*(2*k)+60) + (14*(k+1)+15+1) := by omega
   rw [htime, runWithDelta_add, hsource]
   simp only [Option.bind_some]
   rw [hreturn]
@@ -283,10 +284,11 @@ theorem midApos_zero_w5_to_C1_odd_delta (k : Nat) :
       some (z 2 (ones (4*k+9) ++ pairs01 2 ++ ones 5) true
         (ones 3 ++ pairs01 3 ++ [false,false,true]), -2) := by
   have hsource := midApos_zero_w5_to_sourceScanE_delta (2*k+1)
+  rw [show 2*k+1+3 = 2*(k+2) by omega] at hsource
   have hreturn := sourceScanE_e1_revisit_delta (2*k+4)
     (ones 3 ++ pairs01 3 ++ [false,false,true])
   rw [show 2*k+4 = 2*(k+2) by omega, crossTime_even] at hreturn
-  have htime : 22*k+134 = (4*(2*k+1)+60) + (14*(k+2)+42) := by omega
+  have htime : 22*k+134 = (4*(2*k+1)+60) + (14*(k+2)+41+1) := by omega
   rw [htime, runWithDelta_add, hsource]
   simp only [Option.bind_some]
   rw [hreturn]
