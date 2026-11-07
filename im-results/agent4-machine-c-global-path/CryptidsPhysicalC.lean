@@ -1,6 +1,7 @@
 import CryptidsHaltIff
 import CSourceBridge
 import MachineCPath
+import TotalHaltAudit
 
 namespace BB6Coverage
 
@@ -30,6 +31,70 @@ theorem machineC_raw_halts_iff_counter :
       machineCSource).symm.trans
     (BB6.CSourceBridge.raw_halts_iff_local.trans
       BB6.CSourceBridge.collatz_iff_runHalts))
+
+/-- The unique original halting input in the canonical six-state
+    Machine C transition table. -/
+def machineCSourceHaltSlot : Slot := (⟨5, by decide⟩, false)
+
+/-- The original eleven physically witnessed transitions form exactly the
+    generic single-free-halting-input cylinder. -/
+theorem machineCPrefix_eleven_eq_free_source :
+    machineCPrefix 11 =
+      freeHaltCylinder machineC machineCSourceHaltSlot := by
+  funext s
+  rcases s with ⟨q,b⟩
+  fin_cases q <;> cases b <;> rfl
+
+theorem machineC_source_unique_halt :
+    machineC machineCSourceHaltSlot = none := rfl
+
+theorem machineC_source_other_rows_live :
+    ∀ s : Slot, s ≠ machineCSourceHaltSlot → machineC s ≠ none := by
+  intro s hs
+  rcases s with ⟨q,b⟩
+  have hall : ∀ q : Fin 6, ∀ b : Bool,
+      (q,b) ≠ machineCSourceHaltSlot →
+        machineC (q,b) ≠ none := by decide
+  exact hall q b hs
+
+/-- Exact, original-source, full-tape, unbounded halting equation for
+    *every one of the 25* Machine C transition-table completions:
+    the only possibly halting completion retains F/0=HALT, in which case
+    the three-counter source accelerator halts iff the physical machine
+    halts. All other completions are syntactically total and nonhalting.
+    This does not decide the remaining infinite counter reachability. -/
+theorem machineC_cylinder_raw_halts_iff_counter
+    (m : Machine) (hm : compatible (machineCPrefix 11) m) :
+    (∃ n, run m n blank = none) ↔
+      m machineCSourceHaltSlot = none ∧
+        BB6.CReachBridge.RunHalts := by
+  have hfree : compatible
+      (freeHaltCylinder machineC machineCSourceHaltSlot) m := by
+    simpa only [← machineCPrefix_eleven_eq_free_source] using hm
+  by_cases hhalt : m machineCSourceHaltSlot = none
+  · have heq : m = machineC :=
+      one_halt_freedom_nontrivial_singleton machineC m
+        machineCSourceHaltSlot machineC_source_unique_halt hfree hhalt
+    constructor
+    · intro hh
+      exact ⟨hhalt,
+        machineC_raw_halts_iff_counter.mp (by simpa only [heq] using hh)⟩
+    · rintro ⟨_, hc⟩
+      have hh := machineC_raw_halts_iff_counter.mpr hc
+      simpa only [heq] using hh
+  · have hnever : NeverHalts m :=
+      one_halt_freedom_trivial_part machineC m machineCSourceHaltSlot
+        machineC_source_other_rows_live hfree hhalt
+    constructor
+    · rintro ⟨n, hn⟩
+      have hsome := hnever n
+      simp [hn] at hsome
+    · rintro ⟨hs, _⟩
+      exact False.elim (hhalt hs)
+
+#print axioms machineCPrefix_eleven_eq_free_source
+#print axioms machineC_source_other_rows_live
+#print axioms machineC_cylinder_raw_halts_iff_counter
 
 #print axioms machineC_equals_pinned_cryptids
 #print axioms machineC_raw_halts_iff_counter
