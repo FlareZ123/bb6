@@ -311,3 +311,5 @@ jobs:
           lean -o C70Rectangle.olean C70Rectangle.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C70Integration.lean .
           lean -o C70Integration.olean C70Integration.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C70Strict.lean .
+          lean -o C70Strict.olean C70Strict.lean
