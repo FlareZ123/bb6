@@ -56,7 +56,7 @@ theorem source_no_three_reset_shifted_wall
   have hfinalMassExact : b+d+2*m+2*n+13=14*P := by
     dsimp [K] at hfinalMass
     omega
-  have hcostAll := source_counted_cost_linear_in_resets n b d m 3
+  have hcostAll := source_counted_cost_linear_in_resets n b d m 3 hn
     (by simpa [K,P] using h)
   have hcostAllBound : m≤7*n+10 := by omega
   have hbLarge : 11*P≤b := by omega
@@ -73,7 +73,7 @@ theorem source_no_three_reset_shifted_wall
   have hpre2MassExact : b2+d2+2*m2+2*n+13=14*P := by
     dsimp [K] at hpre2Mass
     omega
-  have hcost2 := source_counted_cost_linear_in_resets n b2 d2 m2 2
+  have hcost2 := source_counted_cost_linear_in_resets n b2 d2 m2 2 hn
     (by simpa [K,P] using hpre2)
   have hcost2Bound : m2≤5*n+7 := by omega
   have hm2Lower : 4≤m2 := by
@@ -109,7 +109,6 @@ theorem source_no_three_reset_shifted_wall
   have hb2Half : 2*(b2/2)=b2 := by omega
   have hMulPow3 : 2^(t3+1)*(c3+3)=2*(2^t3*(c3+3)) := by
     rw [Nat.pow_succ, Nat.mul_comm]
-    simp [Nat.mul_assoc]
   have hwallPre3 := source_predecessor_wall_relation_three b2 d2 m2 n P t3 c3
     hpre2MassExact hInv3.1 hb2Half hMulPow3
   have hS3Upper : d2+b2/2+3≤14*P := by omega
@@ -184,7 +183,6 @@ theorem source_no_three_reset_shifted_wall
     have hb1Half : 2*(b1/2)=b1 := by omega
     have hMulPow2 : 2^(t2+1)*(c2+3)=2*(2^t2*(c2+3)) := by
       rw [Nat.pow_succ, Nat.mul_comm]
-      simp [Nat.mul_assoc]
     have hwallPre2 := source_predecessor_wall_relation_three b1 d1 m1 n P t2 c2
       hpre1MassExact hInv2.1 hb1Half hMulPow2
     have hS2Upper : d1+b1/2+3≤14*P := by omega
@@ -222,7 +220,7 @@ theorem source_no_three_reset_shifted_wall
       have hpre1Mass := upper_tail_mass K 3 0 B D R r hupperPre
       have hpre1Cost0 := upper_tail_cost_three K 3 0 B D R r hupperPre
       have hRr : R=r := by omega
-      have hpre1MassExact : B+D+2*r+2*n+13=14*P := by
+      have hrootMassExact : B+D+2*r+2*n+13=14*P := by
         dsimp [K] at hpre1Mass
         omega
       have hrootEq : 2^r*(B+12)+2*n+4=14*P := by
@@ -259,7 +257,7 @@ theorem source_no_three_reset_shifted_wall
         omega
       exact BB6.ThreeResetCore.no_three_reset_root_power
         n P m2 r B D (c1+3) (D+B/2+3) u hn hm2Lower hcost2Bound hr
-        hC1 rfl hL hu hpre1MassExact hrootEq hBeven
+        hC1 rfl hL hu hrootMassExact hrootEq hBeven
         hGap0 hGap1 hGap2 hP14 hFive
 
 #print axioms BB6.Agent43DepthResetFloor.source_no_three_reset_shifted_wall
