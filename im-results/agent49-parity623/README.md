@@ -315,3 +315,30 @@ compiled the actual upstream machine imports and both modules successfully.
 These are intermediate results and remain in im-results pending proof of an
 all-time root-ray distance invariant and the resulting terminal-window
 exclusion.
+
+
+## 2026-11-07: 20,001-state four-sector canonical gap scan
+
+A separate arbitrary-precision C++ replay of the source-matched accelerated
+map checked states 9 through 20,000. The implementation and exact output are
+preserved in [root_gap_scan.cpp](root_gap_scan.cpp) and
+[RootGapScan20k.md](RootGapScan20k.md). It verifies all four sufficient
+bit-length budgets for the new affine cone and records:
+
+- canonical ratio-four gap g=a-4d on left sectors, g=d-4a on right sectors:
+  g^2 >= 5*scale on indices 9..20,000, with exact minimum 4096/235 at
+  index 16, D(876,235); from index 16 onward g^2 >= 17*scale;
+- old-ray distance h=a-4d-9, a-4d-5, (d-4a-1)/2, or (d-4a-2)/2:
+  h^2 >= 5*scale on indices 9..20,000, with exact minimum 338/61 at
+  index 13, D(122,438); from index 16 onward h^2 >= 22*scale;
+- maximum difference between coordinate bit lengths is 16, at index 6901.
+
+[GapBudgetArithmetic.lean](GapBudgetArithmetic.lean) kernel-checks the
+generic implication from a binary bit-length exponent to the required
+ternary-ones budget, including the strict even-right case.
+
+These are finite computational observations, not all-time invariants. In
+particular, neither square-gap bound has been proved for every future
+blank-root state, and no nonhalting conclusion follows. The direct next target
+is a source-exact induction or block-return argument establishing an
+all-time root-sensitive gap invariant.
