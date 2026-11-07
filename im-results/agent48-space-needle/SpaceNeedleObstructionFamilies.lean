@@ -4,21 +4,24 @@ import Lean.Elab.Tactic.Omega
 set_option maxHeartbeats 0
 
 /-!
-Periodic congruence obstructions for Space Needle terminal feeders.
+Modular and CRT obstructions for Space Needle terminal feeders.
 
 The source-certified terminal-predecessor identity is
   2^(k+2)+3 = (2^(v+1)+3)*(2*q+3)+2*v.
-If an odd modulus p divides both 2^(v+1)+3 and 2*v-3, then this identity
-forces p | 2^(k+2), impossible because p is coprime to 2.
+If m divides 2^(v+1)+3, every terminal feeder must therefore satisfy
+  (2^(k+2)+3) % m = (2*v) % m.
+The public modular-identity theorem exposes this necessary condition;
+residue avoidance and incompatible exponent congruences turn it into
+non-halting feeder exclusions.
 
-The generic theorem below lifts one modular obstruction to an entire
-arithmetic progression of valuations. It formalizes the p=11 and p=13
-families from the external Space Needle modular analysis, and gives two
-additional progressions: v = 201 mod 342 (p=19) and v = 74 mod 812 (p=29).
-The p=29 family extends the obstruction at v=74 to every member of that
-progression. These are exclusions of immediate terminal feeders for all q
-and k; they do not establish blank-root nonreachability of the remaining
-feeders.
+The periodic lift theorem formalizes arithmetic progressions, including
+p=11,13,19,29 zero-residue families and p=7,79,103 nonzero-residue
+families. The file also formalizes two composite-modulus CRT obstructions
+at v=7 and v=12, where each prime-power factor separately admits a
+discrete logarithm but the required exponents are incompatible.
+
+These results exclude immediate terminal feeders. They do not establish
+blank-root nonreachability of all remaining feeder configurations.
 -/
 
 namespace BB6.Agent48.SpaceNeedleObstructionFamilies
@@ -83,6 +86,33 @@ private theorem pow_multiple_period (p L n : Nat) (hp : 1 < p)
     (hperiod : 2^L % p = 1) : 2^(L*n)%p=1 := by
   rw [Nat.pow_mul]
   exact pow_period_mod p L n hp hperiod
+
+
+private theorem pow_period_mod_base (p g L n : Nat) (hp : 1 < p)
+    (hperiod : g^L%p=1) : (g^L)^n%p=1 := by
+  induction n with
+  | zero => exact Nat.mod_eq_of_lt hp
+  | succ n ih =>
+      rw [Nat.pow_succ, Nat.mul_mod, ih, hperiod]
+      rw [Nat.one_mul]
+      exact Nat.mod_eq_of_lt (by omega)
+
+private theorem pow_multiple_period_base (p g L n : Nat) (hp : 1 < p)
+    (hperiod : g^L%p=1) : g^(L*n)%p=1 := by
+  rw [Nat.pow_mul]
+  exact pow_period_mod_base p g L n hp hperiod
+
+private theorem no_power_residue_of_order_power_mismatch_base (p g L r : Nat)
+    (hp : 1 < p) (hperiod : g^L%p=1) (hwrong : r^L%p ≠ 1)
+    (n : Nat) : g^n%p ≠ r := by
+  intro h
+  have hleft : (g^n)^L%p=1 := by
+    rw [←Nat.pow_mul, Nat.mul_comm n L]
+    exact pow_multiple_period_base p g L n hp hperiod
+  have hright : (g^n)^L%p=r^L%p := by rw [Nat.pow_mod, h]
+  rw [hleft] at hright
+  exact hwrong hright.symm
+
 
 /-- One modular obstruction lifts to an infinite progression of feeder
 valuations. The exponent and correction congruences are explicit inputs. -/
@@ -156,6 +186,25 @@ theorem no_74_mod_812_halving_into_power (q k t : Nat) :
     (by refine ⟨56, ?_⟩; omega)
 
 
+/-- Necessary modular identity for every terminal feeder. -/
+theorem terminal_feeder_modular_identity
+    (q v k m : Nat) (hm : 0 < m)
+    (hden : m ∣ 2^(v+1)+3)
+    (hhalt : highLevelNext (.N (oddTower q v)) = some (.N (haltTower k))) :
+    (2^(k+2)+3)%m=(2*v)%m := by
+  have heq := (predecessor_power_identity q v k).mp hhalt
+  have hdenMod : (2^(v+1)+3)%m=0 := Nat.dvd_iff_mod_eq_zero.mp hden
+  have hprodMod : ((2^(v+1)+3)*(2*q+3))%m=0 := by
+    rw [Nat.mul_mod, hdenMod]
+    simp
+  calc
+    (2^(k+2)+3)%m = ((2^(v+1)+3)*(2*q+3)+2*v)%m := by rw [heq]
+    _ = (((2^(v+1)+3)*(2*q+3))%m+(2*v)%m)%m := by rw [Nat.add_mod]
+    _ = (0+(2*v)%m)%m := by rw [hprodMod]
+    _ = (2*v)%m := by
+      rw [Nat.zero_add]
+      exact Nat.mod_eq_of_lt (Nat.mod_lt _ hm)
+
 /-- A stronger residue obstruction: if the required residue of 2^(k+2)
 is absent modulo m, then the source cannot feed a halt. -/
 theorem no_terminal_by_modular_residue_avoidance
@@ -165,20 +214,107 @@ theorem no_terminal_by_modular_residue_avoidance
     (havoid : ∀ n, (2^n+3)%m ≠ (2*v)%m) :
     highLevelNext (.N (oddTower q v)) ≠ some (.N (haltTower k)) := by
   intro hhalt
-  have heq := (predecessor_power_identity q v k).mp hhalt
-  have hdenMod : (2^(v+1)+3)%m=0 := Nat.dvd_iff_mod_eq_zero.mp hden
-  have hprodMod : ((2^(v+1)+3)*(2*q+3))%m=0 := by
-    rw [Nat.mul_mod, hdenMod]
-    simp
-  have hmod : (2^(k+2)+3)%m=(2*v)%m := by
+  exact havoid (k+2) (terminal_feeder_modular_identity q v k m hm hden hhalt)
+
+private theorem pow_two_mod5_eq1_implies_n_mod4_eq0 (n : Nat)
+    (h5 : 2^n%5=1) : n%4=0 := by
+  have hperiod :2^4%5=1 := by decide
+  have hred :2^n%5=2^(n%4)%5 := by
     calc
-      (2^(k+2)+3)%m = ((2^(v+1)+3)*(2*q+3)+2*v)%m := by rw [heq]
-      _ = (((2^(v+1)+3)*(2*q+3))%m+(2*v)%m)%m := by rw [Nat.add_mod]
-      _ = (0+(2*v)%m)%m := by rw [hprodMod]
-      _ = (2*v)%m := by
-        rw [Nat.zero_add]
-        exact Nat.mod_eq_of_lt (Nat.mod_lt _ hm)
-  exact havoid (k+2) hmod
+      2^n%5=2^(n%4+4*(n/4))%5 := by rw [Nat.mod_add_div n 4]
+      _ =2^(n%4)%5 := pow_mod_progression 5 (n%4) 4 (n/4) (by omega) hperiod
+  have hlt :n%4<4 := Nat.mod_lt _ (by decide)
+  by_cases h0:n%4=0
+  · exact h0
+  by_cases h1:n%4=1
+  · rw [hred,h1] at h5
+    simp at h5
+  by_cases h2:n%4=2
+  · rw [hred,h2] at h5
+    simp at h5
+  have h3:n%4=3 := by omega
+  rw [hred,h3] at h5
+  simp at h5
+
+/-- Composite CRT obstruction at v=7: the mod-7 and mod-37 exponent
+requirements are incompatible. -/
+theorem no_7_terminal_feeder (q k : Nat) :
+    highLevelNext (.N (oddTower q 7)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have h7den : 7 ∣ 2^(7+1)+3 := by decide
+  have h37den : 37 ∣ 2^(7+1)+3 := by decide
+  have h7 : (2^(k+2)+3)%7=(2*7)%7 :=
+    terminal_feeder_modular_identity q 7 k 7 (by omega) h7den hhalt
+  have h37 : (2^(k+2)+3)%37=(2*7)%37 :=
+    terminal_feeder_modular_identity q 7 k 37 (by omega) h37den hhalt
+  have h3_7 : 3%7=3 := by decide
+  rw [Nat.add_mod,h3_7] at h7
+  have h7lt : 2^(k+2)%7<7 := Nat.mod_lt _ (by decide)
+  have h7pow : 2^(k+2)%7=4 := by omega
+  have h3_37 : 3%37=3 := by decide
+  rw [Nat.add_mod,h3_37] at h37
+  have h37lt : 2^(k+2)%37<37 := Nat.mod_lt _ (by decide)
+  have h37pow : 2^(k+2)%37=11 := by omega
+  have hperiod3 : 2^3%7=1 := by decide
+  have hred : 2^(k+2)%7=2^((k+2)%3)%7 := by
+    calc
+      2^(k+2)%7=2^((k+2)%3+3*((k+2)/3))%7 := by rw [Nat.mod_add_div (k+2) 3]
+      _ = 2^((k+2)%3)%7 := pow_mod_progression 7 ((k+2)%3) 3 ((k+2)/3) (by omega) hperiod3
+  have hmod3 : (k+2)%3=2 := by
+    by_cases h0 : (k+2)%3=0
+    · rw [hred,h0] at h7pow
+      simp at h7pow
+    by_cases h1 : (k+2)%3=1
+    · rw [hred,h1] at h7pow
+      simp at h7pow
+    have hlt : (k+2)%3<3 := Nat.mod_lt _ (by decide)
+    omega
+  have hdecomp : k+2=3*((k+2)/3)+2 := by
+    have hn := Nat.mod_add_div (k+2) 3
+    rw [hmod3] at hn
+    omega
+  have hrewrite : 2^(3*((k+2)/3)+2)%37=(8^((k+2)/3)*4)%37 := by
+    rw [Nat.pow_add,Nat.pow_mul]
+  rw [hdecomp,hrewrite] at h37pow
+  have h4 : 4%37=4 := by decide
+  rw [Nat.mul_mod,h4] at h37pow
+  have h8lt : 8^((k+2)/3)%37<37 := Nat.mod_lt _ (by decide)
+  have h8pow : 8^((k+2)/3)%37=12 := by omega
+  have hwrong : 12^12%37≠1 := by decide
+  exact (no_power_residue_of_order_power_mismatch_base 37 8 12 12 (by omega) (by decide) hwrong ((k+2)/3)) h8pow
+
+/-- Composite CRT obstruction at v=12: mod 5 forces k+2 even, while
+mod 11 forces it into a power-of-four class that cannot yield -1. -/
+theorem no_12_terminal_feeder (q k : Nat) :
+    highLevelNext (.N (oddTower q 12)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have h5den : 5 ∣ 2^(12+1)+3 := by decide
+  have h11den : 11 ∣ 2^(12+1)+3 := by decide
+  have h5 : (2^(k+2)+3)%5=(2*12)%5 :=
+    terminal_feeder_modular_identity q 12 k 5 (by omega) h5den hhalt
+  have h11 : (2^(k+2)+3)%11=(2*12)%11 :=
+    terminal_feeder_modular_identity q 12 k 11 (by omega) h11den hhalt
+  have h3_5 :3%5=3 := by decide
+  rw [Nat.add_mod,h3_5] at h5
+  have h5lt :2^(k+2)%5<5 := Nat.mod_lt _ (by decide)
+  have h5pow :2^(k+2)%5=1 := by omega
+  have h3_11 :3%11=3 := by decide
+  rw [Nat.add_mod,h3_11] at h11
+  have h11lt :2^(k+2)%11<11 := Nat.mod_lt _ (by decide)
+  have h11pow :2^(k+2)%11=10 := by omega
+  have hmod4 := pow_two_mod5_eq1_implies_n_mod4_eq0 (k+2) h5pow
+  have heven : (k+2)%2=0 := by omega
+  have hdecomp : k+2=2*((k+2)/2) := by
+    have hn := Nat.mod_add_div (k+2) 2
+    rw [heven] at hn
+    omega
+  have hrewrite : 2^(2*((k+2)/2))%11=(4^((k+2)/2))%11 := by
+    rw [Nat.pow_mul]
+  rw [hdecomp,hrewrite] at h11pow
+  have hperiod4 :4^5%11=1 := by decide
+  have hwrong10 :10^5%11≠1 := by decide
+  exact (no_power_residue_of_order_power_mismatch_base 11 4 5 10 (by omega) hperiod4 hwrong10 ((k+2)/2)) h11pow
+
 
 private theorem pow_plus_three_mod_seven (n : Nat) :
     (2^n+3)%7=0 ∨ (2^n+3)%7=4 ∨ (2^n+3)%7=5 := by
@@ -369,5 +505,8 @@ theorem no_59_mod_5253_halving_into_power (q k t : Nat) :
 #print axioms no_9_mod_3081_halving_into_power
 #print axioms no_48_mod_3081_halving_into_power
 #print axioms no_59_mod_5253_halving_into_power
+#print axioms terminal_feeder_modular_identity
+#print axioms no_7_terminal_feeder
+#print axioms no_12_terminal_feeder
 
 end BB6.Agent48.SpaceNeedleObstructionFamilies
