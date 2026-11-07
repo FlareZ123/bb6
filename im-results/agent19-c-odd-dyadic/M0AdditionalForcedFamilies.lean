@@ -930,4 +930,72 @@ theorem m0_four_more_families_blank_unreachable :
 
 #print axioms m0_four_more_families_blank_unreachable
 
+/-- Concrete residual target j=534, normalized by the exact source function. -/
+theorem full_forced_normalize_m0_residual_534 :
+    BB6.Agent3.fullForcedNormalize 1071 1609=(3570,343) := by decide
+/-- Concrete residual target j=581. -/
+theorem full_forced_normalize_m0_residual_581 :
+    BB6.Agent3.fullForcedNormalize 1165 1750=(1586,1523) := by decide
+/-- Concrete residual target j=1046. -/
+theorem full_forced_normalize_m0_residual_1046 :
+    BB6.Agent3.fullForcedNormalize 2095 3145=(8010,167) := by decide
+/-- Concrete residual target j=1093. -/
+theorem full_forced_normalize_m0_residual_1093 :
+    BB6.Agent3.fullForcedNormalize 2189 3286=(7532,577) := by decide
+/-- Concrete residual target j=1159. -/
+theorem full_forced_normalize_m0_residual_1159 :
+    BB6.Agent3.fullForcedNormalize 2321 3484=(3386,2935) := by decide
+/-- Concrete residual target j=1343. -/
+theorem full_forced_normalize_m0_residual_1343 :
+    BB6.Agent3.fullForcedNormalize 2689 4036=(8954,887) := by decide
+
+/-- The six points left after removing the eleven infinite progressions
+    are individually excluded by the authentic blank-orbit theorem. -/
+theorem m0_six_residuals_blank_unreachable :
+    (¬ BB6.Agent3.CReach 1071 1609) ∧
+    (¬ BB6.Agent3.CReach 1165 1750) ∧
+    (¬ BB6.Agent3.CReach 2095 3145) ∧
+    (¬ BB6.Agent3.CReach 2189 3286) ∧
+    (¬ BB6.Agent3.CReach 2321 3484) ∧
+    (¬ BB6.Agent3.CReach 2689 4036) := by
+  refine ⟨?_,?_,?_,?_,?_,?_⟩
+  · intro h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound 1071 1609 (by
+      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_534]
+      omega) time) hrun
+  · intro h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound 1165 1750 (by
+      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_581]
+      omega) time) hrun
+  · intro h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound 2095 3145 (by
+      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1046]
+      omega) time) hrun
+  · intro h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound 2189 3286 (by
+      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1093]
+      omega) time) hrun
+  · intro h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound 2321 3484 (by
+      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1159]
+      omega) time) hrun
+  · intro h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound 2689 4036 (by
+      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1343]
+      omega) time) hrun
+
+#print axioms full_forced_normalize_m0_residual_534
+#print axioms full_forced_normalize_m0_residual_581
+#print axioms full_forced_normalize_m0_residual_1046
+#print axioms full_forced_normalize_m0_residual_1093
+#print axioms full_forced_normalize_m0_residual_1159
+#print axioms full_forced_normalize_m0_residual_1343
+#print axioms m0_six_residuals_blank_unreachable
+
 end BB6.Agent19M0Additional
