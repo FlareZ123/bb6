@@ -10,7 +10,7 @@ open BB6.Agent4CResidualMass2000
 /-- The first m=0 high parameters beyond the mass-2000 cutoff that survive
     the exact high filter and the four-sector full-forced exclusion. -/
 def sampleJ : List Nat :=
-  [249,253,254,255,257,263,265,266,269,270]
+  [249]
 
 def main : IO Unit := do
   IO.println "Exact massStopRoot decisions for the first surviving m=0 high targets"
