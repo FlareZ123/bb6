@@ -12,6 +12,8 @@ namespace BB6.Agent2TwentyFourthRoot
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 open BB6.Agent31PacketSource
 
+def fixedTail : List Bool := false :: List.replicate 6 true
+
 def seed24 : DRegular.L :=
   ⟨64*BB6.Agent2TwentyThirdRoot.t23+21,1,5⟩
 
@@ -109,7 +111,7 @@ private theorem secondOutput_eq_packet24 :
       packet packet24.a packet24.q packet24.p fixedTail := by
   have ha : 8*(24*u24+19)+9=192*u24+161 := by omega
   simp [BB6.Agent2E7SecondSafe.secondOutput,packet24,fixedTail,ha,
-    packet,word,CryptidBoundary.packetThree,
+    packet,word,BB6.Agent31PacketSource.packetThree,
     BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs]
 
 def reentry24Time : Nat :=
