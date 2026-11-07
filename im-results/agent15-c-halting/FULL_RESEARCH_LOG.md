@@ -222,3 +222,20 @@ SectionFirstReturn.lean; that alias was renamed to SectionState.
 SectionReachEquivalence.lean adds the converse reachability direction and
 an iff theorem. The next CI run is required before treating these latter
 modules as source-verified.
+
+## CI run 42366931163: first-return bridge diagnostics
+
+The second CI attempt compiled BounceFirstReturn.lean, SectionFirstReturn.lean,
+and M32SectionEmbedding.lean. In particular, the new section_no_early_c0
+theorem compiled without sorryAx. It then found two proof-script errors in
+SectionReachEquivalence.lean:
+- The time-split rewrite used hsplit in the forward direction, rewriting
+  occurrences inside n - secTime and producing a nested time expression.
+  The corrected proof rewrites with hsplit in the reverse direction.
+- A redundant omega followed a simp call that had already closed the n=0
+  contradiction branch. The redundant tactic was removed.
+
+These changes are in commit a30392d3. CI run 42367962614 was started against
+that revision. It also contains the corrected M192 lowCore residue arguments;
+the previous run stopped before compiling M192GeneralBound, so the corrected
+M192 and residual-family modules still require CI verification.
