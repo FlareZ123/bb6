@@ -1,6 +1,6 @@
 # Canonical ray cocycle for the pinned #623 section orbit
 
-**Status:** the canonical minimal-ray cocycle and its four original-source transition identities compiled in pinned-source CI run [42377437529](https://github.com/FlareZ123/bb6/actions/runs/42377437529). The arithmetic shift equivalences compiled in run [42375801220](https://github.com/FlareZ123/bb6/actions/runs/42375801220). The source-level composition of the terminal ratio-four windows is being checked separately. This remains an intermediate result, not an all-time nonhalting proof.
+**Status:** the canonical minimal-ray cocycle and its four original-source transition identities compiled in pinned-source CI run [42377437529](https://github.com/FlareZ123/bb6/actions/runs/42377437529). The arithmetic shift equivalences compiled in run [42375801220](https://github.com/FlareZ123/bb6/actions/runs/42375801220). The source-level composition of all four terminal ratio-four windows and the exact 10,000-state scan passed in run [42377763545](https://github.com/FlareZ123/bb6/actions/runs/42377763545). The old-ray distance identities and conditional exclusions in [CanonicalRayRootDistanceArithmetic.lean](CanonicalRayRootDistanceArithmetic.lean) compile locally with Lean 4.36.0-rc2; pinned CI run 42378346371 is queued. This remains an intermediate result, not an all-time nonhalting proof.
 
 ## Canonical minimal-budget bases
 
