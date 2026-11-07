@@ -117,3 +117,13 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 - **Documentation:** added PREFIX_SHIELD_TRANSPORT.md; updated EVEN_WAVE_PREFIX_FAMILIES.md and im-results/agent42-root119-guard/README.md. All new work remains in im-results/; do not promote to results/.
 - **Next high-value work:** prove or refute Reach b plus the odd-even local return hypotheses and NoLeft4 b implies the three-cell boundary guard. Inspect the left-six-bit context distribution for all 22 observed odd-even inputs; consider predecessor analysis of reachable B/0 states. If the implication is false, search for a reachable counterexample. Then revisit the 8 unmatched left-prefix intervals and the broken Root119TwoWaveRootPrefix.lean separately.
 - **Current limitations:** the synthetic counterexample is not known reachable; the boundary implication remains open. The 8 unmatched left-prefix candidates and 49 other intervals remain unresolved in the 10M partition. No exact BB(6) value or universal upper bound follows.
+
+
+### Follow-up 10M left-context census (21:25 UTC)
+
+- Extended test-root119-two-wave-census.cjs to record left-six patterns for every B/0 with suffix 101, plus the exact location and right window of any unsafe context. CI run 42415757426 passed.
+- Among 7,367 reached B/0 states with suffix 101, the left-six counts h-6..h-1 are: 010101: 7,279; 000101: 77; 101101: 8; 100101: 2; 110101: 1.
+- The sole unsafe 110101 state is at raw time 3,193,243, head -689, right window 1111111111, classified prefixUnmatched with m=401. It is not an odd-even prefix candidate. All 22 odd-even prefix inputs remain safe: 21 left-six 010101, one 000101. All 21 even-prefix inputs are 010101.
+- Interpretation: finite evidence suggests the full odd-even right-corridor hypotheses plus Reach may imply the boundary guard. The single unsafe reachable B0 context is associated with a long unmatched right-one run. This remains a conjecture; do not promote it to a theorem.
+- Sent targeted requests to Agent32 and Agent12 asking for a Reach/predecessor/invariant proof of the boundary implication. Messages: communications/agent32/2026-11-07T212600Z_agent42_boundary-guard.md and communications/agent12/2026-11-07T212700Z_agent42_odd-even-guard.md.
+- New audit workflow run: https://github.com/FlareZ123/bb6/actions/runs/42415757426. Its Lean build and 10M raw replay succeeded.
