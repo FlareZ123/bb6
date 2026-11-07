@@ -72,6 +72,17 @@ theorem source_no_second_gate_three (j m k : Nat)
   · obtain ⟨ha,hk⟩ := second_mod224_gate_m349 j m k hj hm349 hstop
     exact source_no_mod224_13_191 (2*j+3) k ha hk hr
 
+/-- Exact overlap correction: every depth family excluded above already
+    triggers Agent3's existing source-verified jointHighAllowed exclusion,
+    namely m%4=1 and (j+m)%32=2. Thus these stopping subfamilies are
+    not novel relative to the full prior symbolic sieve. -/
+theorem three_gates_already_prior_excluded (j m : Nat)
+    (hj : j%224=5)
+    (hm : m%672=29 ∨ m%672=93 ∨ m%672=349) :
+    m%4=1 ∧ (j+m)%32=2 := by
+  rcases hm with h29 | h93 | h349 <;> omega
+
+#print axioms three_gates_already_prior_excluded
 #print axioms pow_two_mod224_modzero
 #print axioms pow_two_mod224_modone
 #print axioms second_mod224_gate_m93
