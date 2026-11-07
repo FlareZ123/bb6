@@ -443,10 +443,79 @@ theorem oddEvenShieldCounterexample_run_not_NoLeft4 :
     exact ⟨h0,h1,h2,h3⟩
   exact hshield (-6) hbound hword
 
+
+theorem oddEvenPrefixResultTape_left (n : Nat) (t : Int → Bool) (h x : Int)
+    (hx : x ≤ h-4) :
+    evenSweepBResultTape (n+1)
+      (setBit (setBit (oddWaveTape n (twoWavePrefixTape t h) (h-1))
+        (h-2) true) (h-3) false) (h-2) x = t x := by
+  have hlt : x < h-2 := by omega
+  rw [evenSweepBResultTape_left (n+1)
+    (setBit (setBit (oddWaveTape n (twoWavePrefixTape t h) (h-1))
+      (h-2) true) (h-3) false) (h-2) x hlt]
+  have hne1 : x ≠ h-2 := by omega
+  have hne2 : x ≠ h-3 := by omega
+  simp only [setBit, if_neg hne1, if_neg hne2]
+  rw [oddWaveTape_left n (twoWavePrefixTape t h) (h-1) x (by omega)]
+  exact twoWavePrefixTape_left t h x (by omega)
+
+theorem oddEvenPrefixResultTape_at_h_minus_3 (n : Nat) (t : Int → Bool) (h : Int) :
+    evenSweepBResultTape (n+1)
+      (setBit (setBit (oddWaveTape n (twoWavePrefixTape t h) (h-1))
+        (h-2) true) (h-3) false) (h-2) (h-3) = false := by
+  have hlt : h-3 < h-2 := by omega
+  rw [evenSweepBResultTape_left (n+1)
+    (setBit (setBit (oddWaveTape n (twoWavePrefixTape t h) (h-1))
+      (h-2) true) (h-3) false) (h-2) (h-3) hlt]
+  have hne : h-3 ≠ h-2 := by omega
+  simp [setBit,hne]
+
+/-- The odd-even return creates a left-of-head 1100 whenever its explicit
+    three-cell boundary guard fails. This makes the guard sharp. -/
+theorem b0_odd_even_chain_to_b0_exact_bad_boundary
+    (b : Conf) (n : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true)
+    (hones : ∀ j : Nat, j < 2*n → b.tape (b.h+1+(j:Int)) = true)
+    (hterminal1 : b.tape (b.h+(2*n+1:Int)) = false)
+    (hterminal2 : b.tape (b.h+(2*n+2:Int)) = false)
+    (hfinal : b.tape (b.h+(2*n+3:Int)) = false)
+    (hbad : b.tape (b.h-6) = true ∧ b.tape (b.h-5) = true ∧
+      b.tape (b.h-4) = false) :
+    ∃ bout : Conf, run (6*n+23) b = some bout ∧
+      ¬ NoLeft4 true true false bout := by
+  obtain ⟨bout,hrun,hreach,hBzero,hhead,htape⟩ :=
+    b0_odd_even_chain_to_b0_exact b n hb hb0 hleft hzero hone hones
+      hterminal1 hterminal2 hfinal
+  have hcell (x : Int) (hx : x ≤ b.h-4) : bout.tape x = b.tape x := by
+    rw [htape]
+    exact oddEvenPrefixResultTape_left n b.tape b.h x hx
+  have hlast : bout.tape (b.h-3) = false := by
+    rw [htape]
+    exact oddEvenPrefixResultTape_at_h_minus_3 n b.tape b.h
+  have hheadBound : b.h-6+3 < bout.h := by rw [hhead]; omega
+  have hword : bout.tape (b.h-6) = true ∧ bout.tape (b.h-5) = true ∧
+      bout.tape (b.h-4) = false ∧ bout.tape (b.h-3) = false := by
+    exact ⟨(hcell (b.h-6) (by omega)).trans hbad.1,
+      (hcell (b.h-5) (by omega)).trans hbad.2.1,
+      (hcell (b.h-4) (by omega)).trans hbad.2.2,hlast⟩
+  have hword' : bout.tape (b.h-6) = true ∧
+      bout.tape ((b.h-6)+1) = true ∧
+      bout.tape ((b.h-6)+2) = false ∧
+      bout.tape ((b.h-6)+3) = false := by
+    have hidx1 : b.h-6+1 = b.h-5 := by omega
+    have hidx2 : b.h-6+2 = b.h-4 := by omega
+    have hidx3 : b.h-6+3 = b.h-3 := by omega
+    simpa [hidx1,hidx2,hidx3] using hword
+  exact ⟨bout,hrun,fun hs => hs (b.h-6) hheadBound hword'⟩
+
 #print axioms BB6Root119.b0_even_prefix_to_b0_preserves_NoLeft4
 #print axioms BB6Root119.b0_odd_even_chain_to_b0_preserves_NoLeft4
 #print axioms BB6Root119.oddEvenShieldCounterexample_NoLeft4
 #print axioms BB6Root119.oddEvenShieldCounterexample_run_summary
 #print axioms BB6Root119.oddEvenShieldCounterexample_run_not_NoLeft4
+#print axioms BB6Root119.b0_odd_even_chain_to_b0_exact_bad_boundary
 
 end BB6Root119
