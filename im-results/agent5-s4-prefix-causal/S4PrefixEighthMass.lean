@@ -21,7 +21,7 @@ private theorem H_empty_mass (a : Nat) :
       intro U h
       by_cases he : a % 2 = 0
       · by_cases hzero : a = 0
-        · simp [H, he, hzero] at h
+        · simp [H, hzero] at h
         · have hU : [a/2+2, a/2-1] = U := by
             simpa [H, he, hzero] using h
           subst U
@@ -72,12 +72,14 @@ theorem G_mass (c : Nat) (T U : List Nat)
   cases T with
   | nil =>
       have hm := H_mass (c-1) [] U h
-      simp [stackMass] at hm ⊢
-      omega
+      calc
+        stackMass U = (c-1) + stackMass [] + 3 := hm
+        _ = stackMass [] + c + 2 := by simp; omega
   | cons b S =>
       have hm := H_mass (b+c) S U h
-      simp [stackMass] at hm ⊢
-      omega
+      calc
+        stackMass U = (b+c) + stackMass S + 3 := hm
+        _ = stackMass (b::S) + c + 2 := by simp [stackMass]; omega
 
 /-- The three drains in one P-return add 511+292+221 = 1024 mass. -/
 theorem P_mass (T U : List Nat) (h : P T = some U) :
@@ -243,7 +245,9 @@ theorem seed337 : prun 337 seed = some s337 := by
   have hsteps : 143+ 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 16 + 2 = 337 := by omega
   simpa [hsteps] using h13'
 
-def cycle8Start : List Nat := cycle7 ++ [25036]
+def cycle8Start : List Nat := [283,906,982,3490,3734,5935,13580,25036]
+
+theorem cycle8Start_eq : cycle8Start = cycle7 ++ [25036] := by rfl
 def tail337 : List Nat := [64260,110669,47472,29613,35485,2939,2936]
 
 /-- Conditional exact prefix evolution from the formally verified step-337 state. -/
@@ -254,8 +258,8 @@ theorem root_eight_prefix (n : Nat) (U : List Nat)
     rw [prun_add_local, seed337] at h
     simpa using h
   have hfull : prun n (cycle8Start ++ tail337) = some U := by
-    simpa [s337, cycle8Start, tail337, cycle7] using hstate
-  exact prun_prefix n cycle8Start tail337 U hfull
+    simpa [s337, cycle8Start, tail337] using hstate
+  simpa [cycle8Start] using prun_prefix n cycle8Start tail337 U hfull
 
 /-- The seventh-prefix cycle's phase 17 is the explicit forcing key for digit eight. -/
 def key8 : List Nat := [282,964,974,2637,13534,14347,13580]
@@ -285,9 +289,9 @@ theorem forcing17_append (v : Nat) :
   simpa using hb
 
 /-- One 5120-step return contracts the appended eighth digit. -/
-def K8 : Nat := toll 17 cycle7 + 6153 + toll 5102 key8
+def K8 : Nat := toll 17 cycle7 + 6153 + toll 5102 (pp key8)
 
-theorem K8_eq : K8 = 1407397607 := by decide
+theorem K8_eq : K8 = 1407365935 := by decide
 
 theorem block5120_contraction (v : Nat) :
     ∃ w, prefixRun 5120 (cycle7 ++ [v]) = cycle7 ++ [w] ∧
@@ -321,7 +325,9 @@ theorem block5120_shape (v : Nat) :
 theorem return8_bound (v : Nat) : return8 v ≤ v/2 + K8 := by
   obtain ⟨w, hw, hb⟩ := block5120_contraction v
   have hlast : return8 v = w := by
-    simp [return8, hw, cycle7]
+    unfold return8
+    rw [hw]
+    simp [cycle7]
   simpa [hlast] using hb
 
 def return8Iter : Nat → Nat → Nat
@@ -360,7 +366,8 @@ theorem root_eighth_block_bound (k : Nat) (U : List Nat)
   have hblocks :
       prefixRun (5120*k) cycle8Start =
         cycle7 ++ [return8Iter k 25036] := by
-    simpa [cycle8Start] using prefixRun_blocks k 25036
+    rw [cycle8Start_eq]
+    exact prefixRun_blocks k 25036
   constructor
   · exact hroot.trans hblocks
   · exact return8Iter_bound k 25036
@@ -368,7 +375,7 @@ theorem root_eighth_block_bound (k : Nat) (U : List Nat)
 theorem root_eighth_block_bound_numeric (k : Nat) (U : List Nat)
     (h : prun (337+5120*k) seed = some U) :
     U.take 8 = cycle7 ++ [return8Iter k 25036] ∧
-      return8Iter k 25036 ≤ 2814795214 := by
+      return8Iter k 25036 ≤ 2814731870 := by
   obtain ⟨hprefix, hbound⟩ := root_eighth_block_bound k U h
   exact ⟨hprefix, by simpa [K8_eq] using hbound⟩
 
