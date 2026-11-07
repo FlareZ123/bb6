@@ -19,7 +19,7 @@ const counts = {
   cphaseD1: 0,
   other: 0,
 };
-const cphaseRuns = Object.create(null);
+const cphaseRuns = {};
 
 /** @param {number} h */
 function positiveRunLength(h) {
