@@ -434,72 +434,72 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     have hraw := rawStep_of_read target429 c0 F false _ hs0 hrow0
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c0,c1] <;> omega)
+      all_goals (simp [applyMove,c0,c1] <;> omega))
   have r1 : rawStep target429 c1=some c2 := by
     have hraw := rawStep_of_read target429 c1 D false _ hs1 hrow1
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c1,c2] <;> omega)
+      all_goals (simp [applyMove,c1,c2] <;> omega))
   have r2 : rawStep target429 c2=some c3 := by
     have hraw := rawStep_of_read target429 c2 E true _ hs2 hrow2
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c2,c3] <;> omega)
+      all_goals (simp [applyMove,c2,c3] <;> omega))
   have r3 : rawStep target429 c3=some c4 := by
     have hraw := rawStep_of_read target429 c3 E false _ hs3 hrow3
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c3,c4] <;> omega)
+      all_goals (simp [applyMove,c3,c4] <;> omega))
   have r4 : rawStep target429 c4=some c5 := by
     have hraw := rawStep_of_read target429 c4 A false _ hs4 hrow4
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c4,c5] <;> omega)
+      all_goals (simp [applyMove,c4,c5] <;> omega))
   have r5 : rawStep target429 c5=some c6 := by
     have hraw := rawStep_of_read target429 c5 B false _ hs5 hrow5
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c5,c6] <;> omega)
+      all_goals (simp [applyMove,c5,c6] <;> omega))
   have r6 : rawStep target429 c6=some c7 := by
     have hraw := rawStep_of_read target429 c6 C true _ hs6 hrow6
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c6,c7] <;> omega)
+      all_goals (simp [applyMove,c6,c7] <;> omega))
   have r7 : rawStep target429 c7=some c8 := by
     have hraw := rawStep_of_read target429 c7 B true _ hs7 hrow7
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c7,c8] <;> omega)
+      all_goals (simp [applyMove,c7,c8] <;> omega))
   have r8 : rawStep target429 c8=some c9 := by
     have hraw := rawStep_of_read target429 c8 A true _ hs8 hrow8
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c8,c9] <;> omega)
+      all_goals (simp [applyMove,c8,c9] <;> omega))
   have r9 : rawStep target429 c9=some c10 := by
     have hraw := rawStep_of_read target429 c9 F true _ hs9 hrow9
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c9,c10] <;> omega)
+      all_goals (simp [applyMove,c9,c10] <;> omega))
   have r10 : rawStep target429 c10=some c11 := by
     have hraw := rawStep_of_read target429 c10 A false _ hs10 hrow10
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c10,c11] <;> omega)
+      all_goals (simp [applyMove,c10,c11] <;> omega))
   have r11 : rawStep target429 c11=some c12 := by
     have hraw := rawStep_of_read target429 c11 B true _ hs11 hrow11
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c11,c12] <;> omega)
+      all_goals (simp [applyMove,c11,c12] <;> omega))
   have r12 : rawStep target429 c12=some c13 := by
     have hraw := rawStep_of_read target429 c12 A false _ hs12 hrow12
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c12,c13] <;> omega)
+      all_goals (simp [applyMove,c12,c13] <;> omega))
   have r13 : rawStep target429 c13=some c14 := by
     have hraw := rawStep_of_read target429 c13 B false _ hs13 hrow13
     exact hraw.trans (by
       congr 1
-      simp [applyMove,c13,c14] <;> omega)
+      all_goals (simp [applyMove,c13,c14] <;> omega))
   have hfinal : cFinal =
       {state:=A,head:=2*(u:Int)+3,
         tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
