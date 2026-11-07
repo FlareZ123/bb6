@@ -1,6 +1,6 @@
 # Terminal ratio-4 separation from the root-ray bridge
 
-**Agent 49, 2026-11-07. Algebraic synthesis; source formalization pending.**
+**Agent 49, 2026-11-07. Algebraic synthesis; four-sector source formalization and finite audit passed pinned CI.**
 
 This combines the root-ray bridge with the joint-mass drain bound. It gives a
 single necessary condition on the predecessor coordinates if a B-drain output
@@ -79,26 +79,40 @@ From index 17 onward, the minimum margins by branch are:
 - far-left-odd: 425 at index 19;
 - far-left-even: 2,838 at index 22.
 
-These are finite observations, not an all-time orbit proof. The formal next
-step is to prove the generic output-balance lemma and four branch-specific
-ratio-4 bounds, then investigate a preserved inequality that keeps the
-blank-root orbit outside these logarithmic windows.
+These are finite observations, not an all-time orbit proof. The generic
+output-balance lemma and four branch-specific ratio-4 bounds are now
+source-formalized. The remaining mathematical step is a preserved
+root-specific inequality that keeps the blank-root orbit outside these
+logarithmic windows.
 
 
 ## Formalization status
 
-The generic output-balance lemma has now been added to
-DrainLinearTerminalSource.lean as terminal_output_balance_of_mass, with a
-drain-specific wrapper terminal_output_balance_joint. It states
-|d'-a'|≤K+4 from a'+d'≤M, 2M+5<3^K, and terminality. This source theorem
-still awaits a successful CI run. The four branch-specific ratio-4 bounds
-above remain an algebraic derivation; their source formalization is the
-next step.
+The generic output-balance lemma is in DrainLinearTerminalSource.lean as
+terminal_output_balance_of_mass, with a drain-specific wrapper
+terminal_output_balance_joint. It states |d'-a'|≤K+4 from
+a'+d'≤M, 2M+5<3^K, and terminality. These refinements compiled with the
+unmodified upstream source imports in pinned CI run 42377763545.
 
+The four branch-specific source theorems are in TerminalRatio4Source.lean.
+They compose the evaluator/drain joint-mass bounds, terminal output balance,
+and root-ray bridge to prove the four ratio-4 windows. All four compiled in
+run 42377763545. The exact 10,000-state scan also passed in that run and again
+in run 42378346371.
 
-The generic cancellation step is now formalized separately in
+The generic cancellation step is formalized separately in
 TerminalRatio4Arithmetic.lean. Its far/near lemmas prove the ratio-4 interval
 from the two bridge-error intervals, the output-balance bound, and the
-parity ranges for c_R,c_L. It compiles locally under Lean 4.36.0-rc2 with
-only standard axioms. The CI workflow now compiles this arithmetic module
-after DrainLinearTerminalSource; source CI is pending.
+parity ranges for c_R,c_L. It compiled in pinned CI run 42375801220.
+
+The canonical minimal-budget ray cocycle is source-verified in
+CanonicalRayCocycleSource.lean (run 42377437529). The exact identities
+connecting canonical terminal gaps to the old-ray distance parameters, and
+the conditional terminal-window exclusions, are in
+CanonicalRayRootDistanceArithmetic.lean; they passed source CI in run
+42378346371. See CanonicalRayCocycle.md for the four canonical bases, finite
+distance scans, and the conditional logarithmic-versus-square-root argument.
+
+The all-time old-ray distance invariant remains unproved. No all-time
+nonhalting theorem for the blank-root orbit and no exact BB(6) value has been
+established.
