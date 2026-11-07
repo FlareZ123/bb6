@@ -120,8 +120,10 @@ private theorem late256_parameters (m : Nat)
     dsimp [P]
     exact BB6.Agent29New.power_linear_bound m
   have hPpos : 1≤P := by
-    dsimp [P]
-    exact Nat.pow_pos (by decide)
+    have hp : 0<P := by
+      dsimp [P]
+      exact Nat.pow_pos (by decide)
+    omega
   have hJbound : 3*m+3≤9*P := by omega
   have hJplus : j+3*m+3=9*P := by
     dsimp [j]
