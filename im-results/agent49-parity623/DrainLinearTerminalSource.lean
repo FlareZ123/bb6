@@ -125,6 +125,7 @@ theorem evenLeft_terminal_ray_interval
 /-- Odd-right ray: d=2*a+1+2*t, so its drain balance is 2*(t-a)+5. -/
 theorem oddRight_terminal_ray_interval
     (a t n K aa dd : Nat)
+    (ha : 1≤a)
     (hs : drainB (a+2*t+5) (a-1) 3 = some (.D aa dd))
     (hb : a-1<3^n)
     (he : aa%2=0)
