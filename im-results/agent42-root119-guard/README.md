@@ -91,3 +91,5 @@ The 10M audit was also extended to all 7,367 reached B/0 states with left suffix
 Final compact source-import and 10M audit run: [42416197936](https://github.com/FlareZ123/bb6/actions/runs/42416197936).
 
 The sharpness theorem `b0_odd_even_chain_to_b0_exact_bad_boundary` was added and source-verified in [CI run 42416523909](https://github.com/FlareZ123/bb6/actions/runs/42416523909). It proves the exact return output is unshielded whenever the boundary pattern 110 occurs.
+
+The exact odd-even criterion is now formalized by `b0_odd_even_chain_to_b0_NoLeft4_iff_boundary`: under the family hypotheses and input shield, the return output satisfies `NoLeft4` if and only if the three-cell boundary guard holds. Source CI [42416716883](https://github.com/FlareZ123/bb6/actions/runs/42416716883) passed with the iff and sharpness theorems.
