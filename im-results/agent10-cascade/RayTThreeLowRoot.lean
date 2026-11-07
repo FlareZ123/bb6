@@ -3,7 +3,7 @@ import RayNoSeamResidue
 import RayTThreeLowGeometry
 set_option maxHeartbeats 0
 namespace CascadeTThreeLow
-open CascadeResetInverse CascadeSweep CascadeUniformFatal CascadeOddRay CascadeSeam
+open CascadeResetInverse CascadeSweep CascadeUniformFatal CascadeOddRay CascadeSeam CascadeForkOddDead
 
 private theorem odd_band_unique (u k l:Nat)
   (hk:6*2^k+1≤u ∧ u≤8*2^k-1)
@@ -89,7 +89,8 @@ theorem ray_tthree_low_source_dead (n j k d q:Nat) (hn:20≤n)
     constructor <;> omega
   have hk:k=n-3:=odd_band_unique (8*d) k (n-3) hb hband
   have heq:16*d=2^n+q+(n-3)+5:=by
-    rw[hk,hpp] at he
+    rw[hk] at he
+    rw[hpp]
     exact he
   have hlinear:81*q+32*deficit n j+81*n+82=47*2^n:=by omega
   obtain ⟨hlo,hhi⟩:=third_parent_interval n (deficit n j) q hn hm hlinear
