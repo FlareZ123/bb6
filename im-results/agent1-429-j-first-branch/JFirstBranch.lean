@@ -490,6 +490,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     rw [Config.mk.injEq]
     exact ⟨rfl,rfl,htape'⟩
   simpa [c0,hcfg] using hrun
+  done
 
 def firstBranchTape (u w : Nat) (x : Int) : Bool :=
   if x < -2*(u:Int)-9 then false
