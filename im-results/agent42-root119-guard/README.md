@@ -84,3 +84,6 @@ The same workflow reran the ten-million-step raw census. All 15,198 observed C-p
 
 Source-import CI [42415186262](https://github.com/FlareZ123/bb6/actions/runs/42415186262) compiled the exact return configurations, both shield theorems, and the counterexample. The axiom audit reports only standard Lean axioms; the concrete run-summary computation has no axioms, and the workflow rejects sorryAx. The same 10-million-step replay verifies 21/21 even-prefix and 22/22 odd-even-prefix inputs and outputs, with all 22 odd-even cases satisfying the guard. Full statements, proof structure, limitations, and axiom audit are in [PREFIX_SHIELD_TRANSPORT.md](PREFIX_SHIELD_TRANSPORT.md).
 
+
+
+The 10M audit was also extended to all 7,367 reached B/0 states with left suffix 101. Their left-six-bit distribution is 010101: 7,279; 000101: 77; 101101: 8; 100101: 2; 110101: 1. The sole unsafe 110101 state is at time 3,193,243, head -689, with right window 1111111111; it is an unmatched m=401 prefix, not an odd-even return candidate. The 22 odd-even prefix starts have left-six patterns 010101 (21) and 000101 (one). This is finite evidence for the open implication from Reach plus the full odd-even corridor to the boundary guard, not a proof.
