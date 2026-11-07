@@ -1,4 +1,5 @@
 import Root119OddWaveRetreat
+import Root119FBSweep
 
 set_option linter.unusedSimpArgs false
 
@@ -50,6 +51,76 @@ theorem twoWaveAfterFirst_left (n : Nat) (t : Int → Bool) (h x : Int)
   have hw := oddWaveTape_left n t h x (by omega)
   have hne : x ≠ h-1 := by omega
   simp [setBit,hne,hw]
+
+theorem noLeft4_transfer_of_left_agreement (p q r : Bool) (c d : Conf)
+    (hhead : d.h ≤ c.h)
+    (hagree : ∀ x : Int, x < d.h → d.tape x = c.tape x)
+    (hc : NoLeft4 p q r c) : NoLeft4 p q r d := by
+  intro x hx hword
+  have hxOld : x+3 < c.h := by omega
+  apply hc x hxOld
+  refine ⟨?_,?_,?_,?_⟩
+  · calc
+      c.tape x = d.tape x := (hagree x (by omega)).symm
+      _ = p := hword.1
+  · calc
+      c.tape (x+1) = d.tape (x+1) := (hagree (x+1) (by omega)).symm
+      _ = q := hword.2.1
+  · calc
+      c.tape (x+2) = d.tape (x+2) := (hagree (x+2) (by omega)).symm
+      _ = r := hword.2.2.1
+  · calc
+      c.tape (x+3) = d.tape (x+3) := (hagree (x+3) (by omega)).symm
+      _ = false := hword.2.2.2
+
+theorem noLeft4_left_write (p q r : Bool) (c : Conf)
+    (hc : NoLeft4 p q r c) :
+    NoLeft4 p q r ⟨.B,c.h-1,setBit c.tape c.h true⟩ := by
+  intro x hx hword
+  have hxOld : x+3 < c.h := by omega
+  apply hc x hxOld
+  refine ⟨?_,?_,?_,?_⟩
+  · have hunchanged : setBit c.tape c.h true x = c.tape x := by
+      simp [setBit,show x ≠ c.h by omega]
+    calc
+      c.tape x = setBit c.tape c.h true x := hunchanged.symm
+      _ = true := hword.1
+  · have hunchanged : setBit c.tape c.h true (x+1) = c.tape (x+1) := by
+      simp [setBit,show x+1 ≠ c.h by omega]
+    calc
+      c.tape (x+1) = setBit c.tape c.h true (x+1) := hunchanged.symm
+      _ = q := hword.2.1
+  · have hunchanged : setBit c.tape c.h true (x+2) = c.tape (x+2) := by
+      simp [setBit,show x+2 ≠ c.h by omega]
+    calc
+      c.tape (x+2) = setBit c.tape c.h true (x+2) := hunchanged.symm
+      _ = r := hword.2.2.1
+  · have hunchanged : setBit c.tape c.h true (x+3) = c.tape (x+3) := by
+      simp [setBit,show x+3 ≠ c.h by omega]
+    calc
+      c.tape (x+3) = setBit c.tape c.h true (x+3) := hunchanged.symm
+      _ = false := hword.2.2.2
+
+theorem noLeft4_excludes_BBad (b : Conf)
+    (hb : NoLeft4 true true false b) : ¬ BBad b := by
+  intro hbad
+  rcases hbad with ⟨_,r,_,hzero0,hzero1,hone1,hone2⟩
+  let x : Int := b.h-4-(r:Int)
+  have hx : x+3 < b.h := by dsimp [x]; omega
+  have hword : b.tape x = true ∧ b.tape (x+1) = true ∧
+      b.tape (x+2) = false ∧ b.tape (x+3) = false := by
+    dsimp [x]
+    refine ⟨hone2,?_,?_,?_⟩
+    · have hidx : b.h-4-(r:Int)+1 = b.h-3-(r:Int) := by omega
+      rw [hidx]
+      exact hone1
+    · have hidx : b.h-4-(r:Int)+2 = b.h-2-(r:Int) := by omega
+      rw [hidx]
+      exact hzero1
+    · have hidx : b.h-4-(r:Int)+3 = b.h-1-(r:Int) := by omega
+      rw [hidx]
+      exact hzero0
+  exact hb x hx hword
 
 /-- Exact nine-step source-machine prefix from B/0 to the first F/1 wave.
     It uses the local input pattern 1,0,1 immediately to the left of B/0. -/
