@@ -84,6 +84,7 @@ jobs:
           lean -o "$A/BlankSixthExceptional.olean" "$A/BlankSixthExceptional.lean"
           R=im-results/agent31-d-exceptional
           P2=im-results/agent2-packet-shift
+          lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
           RL=im-results/agent37-root-language-pilot
           lean -DmaxRecDepth=4096 -o "$P2/E110111Pairs.olean" "$RL/E110111Pairs.lean"
           G=im-results/agent35-d-sixth-rejoin
