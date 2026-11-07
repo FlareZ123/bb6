@@ -171,12 +171,13 @@ theorem weight_repeat (u : List Nat) (k : Nat) :
   | succ k ih =>
       rw [repeatWord, weight_append, ih, geomN]
       calc
-        weight u + 2^(cost u)*(geomN (2^(cost u)) k*weight u) =
-            weight u + (2^(cost u)*geomN (2^(cost u)) k)*weight u := by
+        weight u + 2^(cost u)*(weight u*geomN (2^(cost u)) k) =
+            weight u + (2^(cost u)*weight u)*geomN (2^(cost u)) k := by
               rw [Nat.mul_assoc]
-        _ = (1+2^(cost u)*geomN (2^(cost u)) k)*weight u := by
-              rw [Nat.add_mul]
-              simp
+        _ = weight u*(1+2^(cost u)*geomN (2^(cost u)) k) := by
+              rw [Nat.mul_add]
+              simp only [Nat.mul_one]
+              ac_rfl
 
 theorem geomN_identity (a k : Nat) (ha : 0<a) :
     (a-1)*geomN a k = a^k-1 := by
@@ -391,9 +392,9 @@ theorem weight_repeat_int (u : List Nat) (k : Nat) :
       rw [hw, ih, PeriodSecondary.geom]
       calc
         (weight u:Int) + (2^(cost u):Int) *
-            (PeriodSecondary.geom (2^(cost u):Int) k * (weight u:Int)) =
-            (weight u:Int) + ((2^(cost u):Int) *
-              PeriodSecondary.geom (2^(cost u):Int) k) * (weight u:Int) := by
+            ((weight u:Int)*PeriodSecondary.geom (2^(cost u):Int) k) =
+            (weight u:Int) + ((2^(cost u):Int)*(weight u:Int)) *
+              PeriodSecondary.geom (2^(cost u):Int) k := by
                 rw [Int.mul_assoc]
         _ = (weight u:Int) * (1+(2^(cost u):Int) *
               PeriodSecondary.geom (2^(cost u):Int) k) := by
@@ -555,7 +556,9 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
     | succ k =>
         change 0<1+a*PeriodSecondary.geom a k
         have hg := hgeom_nonneg k
-        omega
+        have hprod : 0≤a*PeriodSecondary.geom a k := Int.mul_nonneg ha0 hg
+        simpa [Int.add_comm] using
+          Int.add_pos_of_nonneg_of_pos hprod (by decide : 0<1)
   have hbase : ¬(a-1) ∣ h*r := by
     intro hdiv
     rcases hdiv with ⟨q,hq⟩
