@@ -8,7 +8,8 @@ open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
 open BB429JFirstBranch BB429PhysicalBridge BB429DeltaPhysicalBridge
 open BB429JuncHeadExcursion BB429High2PhysicalBridge
 open BB429High2Tail BB429High2TailBase
-open BB429SourceE1Delta BB429FinishScanEDelta
+open BB429SourceE1Delta BB429SourceE1Return BB429OddExcursion
+open BB429FinishScanEDelta
 
 /-- The high-2 endpoint is exactly the u=1 positive-MidA family. -/
 theorem midA2_eq_midApos (v w : Nat) :
