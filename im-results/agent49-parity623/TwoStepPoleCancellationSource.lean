@@ -11,7 +11,6 @@ corrections on states elsewhere in the admissible cone.
 
 namespace BB6.Agent49TwoStepPoleCancellation
 
-open BB6.Agent49ParitySource
 open BB6.Agent8BudgetSource
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 
@@ -28,7 +27,9 @@ theorem tightB_mod_two (m : Nat) : tightB m % 2 = m % 2 := by
 
 theorem xFamily_even (m : Nat) (hm : m % 2 = 0) :
     xFamily m % 2 = 0 := by
-  simp [xFamily, tightB_mod_two]
+  have hb := tightB_mod_two m
+  unfold xFamily
+  omega
 
 /-- Exact first step on the synthetic ratio-40 family. -/
 theorem first_step (m : Nat) (hm : m % 2 = 0) :
@@ -52,7 +53,7 @@ theorem first_step (m : Nat) (hm : m % 2 = 0) :
         some (39 * x + 2, tightB m, 2 * x + 5) := by
     rw [evalA]
     simp [hxmod, hxdiv]
-  have hthird : 2 * x + 5 + 3 * tightB m = 3 * x + 3 := by
+  have hthird : 5 + (2 * x + 3 * tightB m) = 3 * x + 3 := by
     dsimp [x, xFamily]
     omega
   have hdrain :
@@ -60,9 +61,18 @@ theorem first_step (m : Nat) (hm : m % 2 = 0) :
         some (.D (39 * x + m + 2) (3 * x + 3)) := by
     simpa [hthird, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
       drainB_tight m (39 * x + 2) (2 * x + 5)
+  have h0 : x ≠ 0 := by omega
+  have h1 : ¬(40 * x % 2 = 1 ∧ x ≥ 40 * x + 5) := by
+    simp [hxeven]
+  have h2 : ¬(40 * x % 2 = 0 ∧ x ≥ 40 * x + 3) := by omega
+  have heven : x % 2 ≠ 1 := by omega
+  have h4 : x ≠ 40 * x + 2 := by omega
+  have h5 : 40 * x % 2 ≠ 1 := by simp [hxeven]
   change highLevelNext (.D x (40 * x)) =
     some (.D (39 * x + m + 2) (3 * x + 3))
-  simp [highLevelNext, hxpos, hxeven, harg, heval, hdrain]
+  simp only [highLevelNext, if_neg h0, if_neg h1, if_neg h2,
+    if_neg heven, if_neg h4, if_neg h5]
+  simp only [harg, heval, Option.bind_some, hdrain]
 
 /-- A source-level exact far-left odd step when its drain block is tight. -/
 private theorem far_left_odd_tight (a d n : Nat)
@@ -71,13 +81,15 @@ private theorem far_left_odd_tight (a d n : Nat)
     highLevelNext (.D a d) =
       some (.D (a - d - 5 + n) (5 + 3 * (d + 3))) := by
   have ha : a ≠ 0 := by omega
+  have h1 : d % 2 = 1 ∧ a ≥ d + 5 := ⟨hd, hfar⟩
   have hdrain :
       drainB (a - d - 5) (d + 3) 5 =
         some (.D (a - d - 5 + n) (5 + 3 * (d + 3))) := by
     rw [hblock]
     simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
       drainB_tight n (a - d - 5) 5
-  simp [highLevelNext, ha, hd, hfar, hdrain]
+  simp only [highLevelNext, if_neg ha, if_pos h1]
+  exact hdrain
 
 /-- Exact second step: the second block is tightB (m+2). -/
 theorem second_step (m : Nat) (hm : m % 2 = 0) :
