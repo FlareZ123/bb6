@@ -184,6 +184,41 @@ theorem oddRetreatResult_preserves_noLeft4
 
 /-- Exact nine-step source-machine prefix from B/0 to the first F/1 wave.
     It uses the local input pattern 1,0,1 immediately to the left of B/0. -/
+/-- The D-shuttle retreat preserves NoLeft4: all shuttle and sweep writes
+    lie strictly to the right of the returned B head. -/
+theorem dRetreatResult_preserves_noLeft4
+    (n m : Nat) (t : Int → Bool) (h : Int)
+    (hshield : NoLeft4 true true false (⟨.D,h,t⟩ : Conf)) :
+    NoLeft4 true true false (dRetreatResult n m t h) := by
+  let c1 : Conf := ⟨.F,h-3,
+    setBit (setBit (shuttleFill t h (2*n+2)) (h-1) true) (h-2) true⟩
+  have hhead : (dRetreatResult n m t h).h ≤ h := by
+    simp [dRetreatResult]
+    omega
+  have hagree : ∀ x : Int, x < (dRetreatResult n m t h).h →
+      (dRetreatResult n m t h).tape x = t x := by
+    intro x hx
+    have hxout : x < h-4-2*(m:Int) := by
+      simpa [dRetreatResult] using hx
+    have hnot : ∀ i : Nat, i < m → x ≠ c1.h-2*(i:Int) := by
+      intro i hi
+      have hpos : h-3-2*(i:Int) ≥ h-1-2*(m:Int) := by omega
+      change x ≠ h-3-2*(i:Int)
+      dsimp [c1]
+      omega
+    have hfb := fb_many_unvisited m c1 x hnot
+    have hne1 : x ≠ h-1 := by omega
+    have hne2 : x ≠ h-2 := by omega
+    have hne3 : x ≠ h-3-2*(m:Int) := by omega
+    have hfill : shuttleFill t h (2*n+2) x = t x :=
+      shuttleFill_outside t (h+1) x (2*n+2) (Or.inl (by omega))
+    change setBit (fbMany m c1).tape (h-3-2*(m:Int)) true x = t x
+    rw [hfb]
+    simp [c1,setBit,hne1,hne2,hne3,hfill]
+  exact noLeft4_transfer_of_left_agreement true true false
+    (⟨.D,h,t⟩ : Conf) (dRetreatResult n m t h)
+    (by simp [dRetreatResult]; omega) hagree hshield
+
 theorem b0_two_wave_prefix (b : Conf) (hb0 : BZero b)
     (hleft : b.tape (b.h-1) = true)
     (hzero : b.tape (b.h-2) = false)
@@ -712,6 +747,87 @@ theorem b0_cphase_d0_odd_wave_return_preserves_noLeft4 (b : Conf) (r m : Nat)
 
 
 #print axioms BB6Root119.b0_cphase_d0_odd_wave_return_preserves_noLeft4
+
+theorem b0_c0_d1_odd_retreat_to_b0_preserves_noLeft4 (b : Conf) (n m : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hCzero : b.tape (b.h-1) = false)
+    (hones : ∀ j : Nat, j < 2*n+1 →
+      b0C0DTape b (b.h-2+(j:Int)) = true)
+    (hzero : b0C0DTape b (b.h-2+(2*n+1:Int)) = false)
+    (hleftF : b0C0DTape b (b.h-3) = false)
+    (hleftB : b0C0DTape b (b.h-4) = true)
+    (hfb : ∀ i : Nat, i < m →
+      b0C0DTape b (b.h-5-2*(i:Int)) = false ∧
+      b0C0DTape b (b.h-6-2*(i:Int)) = true)
+    (hfinalF : b0C0DTape b (b.h-5-2*(m:Int)) = false)
+    (hfinalB : b0C0DTape b (b.h-6-2*(m:Int)) = false) :
+    ∃ b', Reach b' ∧ BZero b' ∧
+      (NoLeft4 true true false b → NoLeft4 true true false b') := by
+  rcases b with ⟨q,pos,t⟩
+  rcases hb0 with ⟨hq,hB0⟩
+  change q = .B at hq
+  subst q
+  let b0 : Conf := ⟨.B,pos,t⟩
+  let c : Conf := ⟨.C,pos-1,setBit t pos true⟩
+  have hB0' : t pos = false := by simpa [b0] using hB0
+  have hCzero' : t (pos-1) = false := by simpa [b0] using hCzero
+  have hb' : Reach b0 := by simpa [b0] using hb
+  have hbstep : next b0 = some c := by simp [next,b0,c,hB0']
+  have hcReach : Reach c := Reach.follow hb' hbstep
+  have hreadC : (setBit t pos true) (pos-1) = false := by
+    have hne : pos-1 ≠ pos := by omega
+    simp [setBit,hne,hCzero']
+  let tD : Int → Bool := setBit (setBit t pos true) (pos-1) true
+  let d : Conf := ⟨.D,pos-2,tD⟩
+  have hcstep : next c = some d := by
+    have hpos : pos-1-1 = pos-2 := by omega
+    simp [next,c,d,tD,hreadC,hpos]
+  have hdReach : Reach d := Reach.follow hcReach hcstep
+  have hones' : ∀ j : Nat, j < 2*n+1 → tD (pos-2+(j:Int)) = true := by
+    simpa [tD,b0,b0C0DTape] using hones
+  have hzero' : tD (pos-2+(2*n+1:Int)) = false := by
+    simpa [tD,b0,b0C0DTape] using hzero
+  have hleftF' : tD ((pos-2)-1) = false := by
+    simpa [tD,b0,b0C0DTape,show pos-2-1=pos-3 by omega] using hleftF
+  have hleftB' : tD ((pos-2)-2) = true := by
+    simpa [tD,b0,b0C0DTape,show pos-2-2=pos-4 by omega] using hleftB
+  have hfb' : ∀ i : Nat, i < m →
+      tD ((pos-2)-3-2*(i:Int)) = false ∧
+      tD ((pos-2)-4-2*(i:Int)) = true := by
+    intro i hi
+    simpa [tD,b0,b0C0DTape,
+      show pos-2-3-2*(i:Int)=pos-5-2*(i:Int) by omega,
+      show pos-2-4-2*(i:Int)=pos-6-2*(i:Int) by omega] using hfb i hi
+  have hfinalF' : tD ((pos-2)-3-2*(m:Int)) = false := by
+    simpa [tD,b0,b0C0DTape,show pos-2-3-2*(m:Int)=pos-5-2*(m:Int) by omega] using hfinalF
+  have hfinalB' : tD ((pos-2)-4-2*(m:Int)) = false := by
+    simpa [tD,b0,b0C0DTape,show pos-2-4-2*(m:Int)=pos-6-2*(m:Int) by omega] using hfinalB
+  have hret := d1_retreat_to_b0 n m tD (pos-2)
+    hones' hzero' hleftF' hleftB' hfb' hfinalF' hfinalB'
+  let bout : Conf := dRetreatResult n m tD (pos-2)
+  have hbout : BZero bout := by
+    refine ⟨rfl,?_⟩
+    simpa [bout,dRetreatResult,tD] using hret.2
+  have hboutReach : Reach bout := by
+    apply reachable_of_run (4*n+2*m+6) d bout hdReach
+    simpa [bout,dRetreatResult,tD] using hret.1
+  have hNoBout : NoLeft4 true true false b → NoLeft4 true true false bout := by
+    intro hshield
+    have hNoD : NoLeft4 true true false d :=
+      noLeft4_transfer_of_left_agreement true true false b d
+        (by simp [d,b0]; omega)
+        (by
+          intro x hx
+          have hne0 : x ≠ pos := by simp [d] at hx; omega
+          have hne1 : x ≠ pos-1 := by simp [d] at hx; omega
+          simp [d,b0,b0C0DTape,setBit,hne0,hne1])
+        hshield
+    have hNoRet := dRetreatResult_preserves_noLeft4 n m tD (pos-2) hNoD
+    simpa [bout] using hNoRet
+  exact ⟨bout,hboutReach,hbout,hNoBout⟩
+
+#print axioms BB6Root119.b0_c0_d1_odd_retreat_to_b0_preserves_noLeft4
+#print axioms BB6Root119.dRetreatResult_preserves_noLeft4
 
 #print axioms BB6Root119.b0_two_wave_prefix
 #print axioms BB6Root119.b0_two_wave_root_interval_to_b0
