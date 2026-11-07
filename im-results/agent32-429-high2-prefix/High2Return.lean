@@ -75,4 +75,41 @@ theorem j_high2_to_junc_raw (u : Nat) :
 #print axioms midA2_to_junc0_of_base
 #print axioms j_high2_to_junc_raw
 
+/-- After the high-2 return to Junc(0,0,4u+18), the exact Junc-cycle
+    crossing theorem forces a later raw configuration strictly to the
+    right of the original J-chart head. -/
+theorem j_high2_crosses_origin_raw (u : Nat) :
+    ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
+      BB6Coverage.run BB429PhysicalFrontier.target429
+        (4*u*u+44*u+204+steps)
+        {state:=BB6Bubble.A,head:=0,tape:=BB429JPhysical.jTape u (2*u+2)} =
+          some c' ∧
+      BB429PhysicalBridge.Represents cfg c' ∧
+      c'.head > ((2*u+3 : Nat) : Int) := by
+  let c0 : Config :=
+    {state:=BB6Bubble.A,head:=0,
+      tape:=BB429JPhysical.jTape u (2*u+2)}
+  obtain ⟨cJ, hprefix, hrepJ, hheadJ⟩ := j_high2_to_junc_raw u
+  obtain ⟨steps, cfg, d, hcrossRun, hcross⟩ :=
+    BB429JuncHeadExcursion.juncCycle_crossing 0 (4*u+18)
+      (3*u+12) (2*u+11) (by omega)
+  obtain ⟨cFinal, hcrossRaw, hrepFinal, hheadFinal⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep steps
+      (junc 0 0 (4*u+18)) cJ hrepJ cfg (d : Int) hcrossRun
+  have htotal :
+      BB6Coverage.run BB429PhysicalFrontier.target429
+        ((4*u*u+44*u+204)+steps) c0 = some cFinal := by
+    rw [BB6Bubble.run_add' BB429PhysicalFrontier.target429
+      (4*u*u+44*u+204) steps c0, hprefix]
+    simp only [Option.bind_some]
+    exact hcrossRaw
+  have hcrossInt : (2*(3*u+12) : Int) < (2*u+11 : Int) + (d : Int) := by
+    omega
+  have hhead : cFinal.head > ((2*u+3 : Nat) : Int) := by
+    rw [hheadFinal, hheadJ]
+    omega
+  exact ⟨steps, cfg, cFinal, by simpa [c0] using htotal, hrepFinal, hhead⟩
+
+#print axioms j_high2_crosses_origin_raw
+
 end BB429High2Return
