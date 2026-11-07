@@ -68,3 +68,10 @@ jobs:
             cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/$name.lean" "$name.lean"
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
+
+          # Agent39's already kernel-certified full 3-adic identity
+          # supplies the actual quotient witness for every allowed k,h.
+          cp "$GITHUB_WORKSPACE/im-results/agent39-sheep-zero-ancestry/ThreeAdicOrder.lean" ThreeAdicOrder.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/SheepFaninAllK.lean" SheepFaninAllK.lean
+          lake env lean -o ".lake/build/lib/lean/ThreeAdicOrder.olean" ThreeAdicOrder.lean
+          lake env lean SheepFaninAllK.lean
