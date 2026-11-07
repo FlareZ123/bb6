@@ -55,7 +55,8 @@ theorem high_dyadic_stopping_target_unreachable (j m : Nat)
       have ht : 3*(8*m+8)≤3*2^(2*m+2) := by omega
       rw [Nat.mul_add]
       omega
-    exact Nat.sub_add_cancel he
+    have hh := Nat.sub_add_cancel he
+    omega
   exact high_dyadic_no_blank j m k hm3 hm4 hpair hstop
 
 #print axioms high_dyadic_no_blank
