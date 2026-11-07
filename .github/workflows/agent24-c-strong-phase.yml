@@ -347,9 +347,13 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighEvenRightC23Residual.lean .
           lean -o HighEvenRightC23Residual.olean HighEvenRightC23Residual.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/HighEvenRightC23FullForcedResidual.lean .
-          lean -o HighEvenRightC23FullForcedResidual.olean HighEvenRightC23FullForcedResidual.lean > full-forced-residual.txt 2>&1
-          cat full-forced-residual.txt
-          cat full-forced-residual.txt >> "$GITHUB_STEP_SUMMARY"
+          set +e
+          lean -o HighEvenRightC23FullForcedResidual.olean HighEvenRightC23FullForcedResidual.lean > "$GITHUB_WORKSPACE/full-forced-residual.txt" 2>&1
+          full_forced_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/full-forced-residual.txt"
+          cat "$GITHUB_WORKSPACE/full-forced-residual.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$full_forced_status" -ne 0 ]; then exit "$full_forced_status"; fi
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
@@ -357,9 +361,13 @@ jobs:
           # Agent 4: evaluate exact fixed-target root decisions on a reproducible
           # sample of the strongest surviving low/high parameter families.
           cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/CResidualProbe.lean .
-          lean --run CResidualProbe.lean > c-residual-probe.txt 2>&1
-          cat c-residual-probe.txt
-          cat c-residual-probe.txt >> "$GITHUB_STEP_SUMMARY"
+          set +e
+          lean --run CResidualProbe.lean > "$GITHUB_WORKSPACE/c-residual-probe.txt" 2>&1
+          c_probe_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-probe.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-probe.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$c_probe_status" -ne 0 ]; then exit "$c_probe_status"; fi
           cp im-results/agent5-c-parameter-search/high-allowed-5000x40.txt ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/
           cd ${GITHUB_WORKSPACE}
           git config user.name "github-actions[bot]"
