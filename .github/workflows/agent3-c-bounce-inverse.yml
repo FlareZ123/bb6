@@ -2,6 +2,11 @@ name: Agent 3 Machine C bounce inverse arithmetic (manual)
 on:
   workflow_dispatch:
     inputs:
+      strong_mass_only:
+        description: 'Prove the original-source positive-right mass invariant and quarter-fuel oracle, skipping unrelated downstream tests'
+        required: false
+        type: boolean
+        default: false
       seven_only:
         description: 'Verify exact seven-four ancestry and M32-admitted stopping family, then stop'
         required: false
@@ -208,6 +213,7 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter}.lean .
           lean -o StrongMassOriginal.olean StrongMassOriginal.lean
           lean StrongMassQuarter.lean
+          if [ "${{ inputs.strong_mass_only }}" = "true" ]; then exit 0; fi
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/MixedFastRoot.lean .
           lean -o MixedFastRoot.olean MixedFastRoot.lean
           if [ "${{ inputs.boundary_only }}" != "true" ]; then
