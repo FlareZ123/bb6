@@ -55,6 +55,8 @@ crossTime (2*k)   = 14*k + 41
 crossTime (2*k+1) = 14*k + 15
 ```
 
+The companion file [BB429SourceE1Delta.lean](BB429SourceE1Delta.lean) independently augments each raw zipper step with its signed head movement. It proves that the post-E/1 excursion has net displacement `+1`, while the initial E/1 instruction contributes `-1`. Thus the complete source-start run has net displacement exactly zero: the zipper head returns to its original coordinate. The six-step reduction has displacement `-4`, and the eight-step suffix-consumption macro has displacement `+4`; the two-step induction preserves the net `+1` for every b. This is the displacement-level companion to the configuration return theorem.
+
 The final left stacks are also exact:
 
 - even `b = 2*k`: `1^(4*k+1) ++ 0101 ++ 1^5`;
