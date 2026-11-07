@@ -58,8 +58,6 @@ jobs:
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
-          RL=im-results/agent37-root-language-pilot
-          lean -DmaxRecDepth=4096 -o "$P2/E110111Pairs.olean" "$RL/E110111Pairs.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
           lean -o "$D/DRegularFast.olean" "$D/DRegularFast.lean"
@@ -86,6 +84,8 @@ jobs:
           lean -o "$A/BlankSixthExceptional.olean" "$A/BlankSixthExceptional.lean"
           R=im-results/agent31-d-exceptional
           P2=im-results/agent2-packet-shift
+          RL=im-results/agent37-root-language-pilot
+          lean -DmaxRecDepth=4096 -o "$P2/E110111Pairs.olean" "$RL/E110111Pairs.lean"
           G=im-results/agent35-d-sixth-rejoin
           for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
             lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
