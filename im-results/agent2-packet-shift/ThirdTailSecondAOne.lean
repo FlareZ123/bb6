@@ -97,7 +97,7 @@ theorem a_q1_next (t r : Nat) :
             (2*(m+CryptidA.wordInc ws)+16)) := by
     dsimp [K,m,ws]
     rw [cost_eq, inc_eq]
-    exact BB6.ThirdTailArithmetic.a_first_mod_time t r
+    exact (BB6.ThirdTailArithmetic.a_first_mod_time t r).symm
   rw [hs,ht]
   have hpad := BB6.BoundaryPadding.source_init_pad
     ((12*K*K+41*K+32) +
