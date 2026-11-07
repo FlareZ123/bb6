@@ -82,3 +82,4 @@ jobs:
           audit_axiom_free "BB429High2TailBase.midAaux_to_junc0_of_base" /tmp/agent32-429-source.log
           audit_axiom_free "BB429High2Return.midA2_to_junc0_of_base" /tmp/agent32-429-source.log
           audit_axiom_free "BB429High2Return.j_high2_to_junc_raw" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2Return.j_high2_crosses_origin_raw" /tmp/agent32-429-source.log
