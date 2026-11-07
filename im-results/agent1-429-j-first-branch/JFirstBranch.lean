@@ -380,7 +380,7 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
     simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb]
   have htime : 4*u*u+6*u+7=(4*u*u+6*u+6)+1 := by omega
   rw [htime,run_add',hp]
-  simpa [run,rawStep,baseTape] using hstep
+  simpa [run,rawStep,readSlot,target429,prefix11,applyMove,baseTape,f0Tape,writeAt,hb] using hstep
 
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
@@ -575,16 +575,61 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
       · simp [applyMove,c13,c14] <;> omega
       · funext x
         simp [applyMove,c13,c14,writeAt])
-  have hfinal : cFinal =
-      {state:=A,head:=2*(u:Int)+3,
-        tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
-    rw [Config.mk.injEq]
-    exact ⟨hsFinal,hheadFinal,hprofile.trans (firstBranchTape_eq_jTapeAt u w hw)⟩
-  simpa [hfinal] using (show run target429 (4*u*u+10*u+27)
-      {state:=A,head:=0,tape:=jTape u w}=some cFinal from by
-        rw [htime,run_add',hF0]
-        simp only [Option.bind_some]
-        exact hrunTail)
+  have htape : c14.tape=setupTape t h := by
+    funext x
+    have hcases : x=h-2 ∨ x=h-1 ∨ x=h ∨ x=h+1 ∨ x=h+2 ∨ x=h+3 ∨
+        x<h-2 ∨ h+3<x := by omega
+    rcases hcases with h0x | h1x | h2x | h3x | h4x | h5x | hleft | hright
+    · subst x
+      have hinside : h-2≤h-2 ∧ h-2≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
+    · subst x
+      have hinside : h-2≤h-1 ∧ h-1≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
+    · subst x
+      have hinside : h-2≤h ∧ h≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
+    · subst x
+      have hinside : h-2≤h+1 ∧ h+1≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
+    · subst x
+      have hinside : h-2≤h+2 ∧ h+2≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
+    · subst x
+      have hinside : h-2≤h+3 ∧ h+3≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
+    · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
+      have hneq0 : x≠h-2 := by omega
+      have hneq1 : x≠h-1 := by omega
+      have hneq2 : x≠h := by omega
+      have hneq3 : x≠h+1 := by omega
+      have hneq4 : x≠h+2 := by omega
+      have hneq5 : x≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hout,hneq0,hneq1,hneq2,hneq3,hneq4,hneq5]
+    · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
+      have hneq0 : x≠h-2 := by omega
+      have hneq1 : x≠h-1 := by omega
+      have hneq2 : x≠h := by omega
+      have hneq3 : x≠h+1 := by omega
+      have hneq4 : x≠h+2 := by omega
+      have hneq5 : x≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hout,hneq0,hneq1,hneq2,hneq3,hneq4,hneq5]
+  have hrun : run target429 14 c0=some c14 := by
+    simp [run,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13]
+  have hcfg : c14={state:=C,head:=h+4,tape:=setupTape t h} := by
+    apply config_ext
+    · rfl
+    · rfl
+    · exact htape
+  simpa [c0] using hrun.trans (congrArg some hcfg)
 
 #print axioms j_first_branch
 end BB429JFirstBranch
