@@ -1,4 +1,4 @@
-name: Cryptid fixed-tail packet boundary (manual)
+name: Cryptid source-certified p=1 packet reentry (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -43,6 +43,11 @@ jobs:
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
-          lean "$D/AOnePacketBoundarySource.lean" | tee axioms.log
-          lean "$D/BoundaryBZero.lean" | tee -a axioms.log
+          lean -o "$D/AOnePacketBoundarySource.olean" "$D/AOnePacketBoundarySource.lean" | tee axioms.log
+          lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean" | tee -a axioms.log
+          lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
+          lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
+          lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean"
+          lean -o "$D/PacketNormalizeSource.olean" "$D/PacketNormalizeSource.lean"
+          lean "$D/PacketOneReentry.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
