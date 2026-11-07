@@ -91,4 +91,59 @@ theorem source_branch_forced (x : Nat) (hx : x%16=14) :
 
 #print axioms source_branch_forced
 
+
+/-! An executable finite-quantifier strengthening: every forced arithmetic
+orbit exits residue 14 modulo 16 within at most x+3 iterations. -/
+
+theorem finite_orbit_identity (x n : Nat)
+    (h : ∀ i < n, 16 ∣ orbit x i + 2) :
+    4^n * (orbit x n + 2) = 5^n*(x+2) := by
+  induction n with
+  | zero => simp [orbit]
+  | succ n ih =>
+    have hs0 : 16 ∣ orbit x n+2 := h n (by omega)
+    have hp : ∀ i < n, 16 ∣ orbit x i+2 := by
+      intro i hi
+      exact h i (by omega)
+    have hs : 4*(orbit x (n+1)+2)=5*(orbit x n+2) := by
+      simpa [orbit] using forced_identity (orbit x n) hs0
+    calc
+      4^(n+1)*(orbit x (n+1)+2)
+          = 4^n * (4*(orbit x (n+1)+2)) := by
+              rw [show n+1 = n.succ by omega, Nat.pow_succ]
+              ac_rfl
+      _ = 4^n * (5*(orbit x n+2)) := by rw [hs]
+      _ = 5*(5^n*(x+2)) := by
+            calc
+              4^n * (5*(orbit x n+2))
+                  = 5*(4^n*(orbit x n+2)) := by ac_rfl
+              _ = 5*(5^n*(x+2)) := by rw [ih hp]
+      _ = 5^(n+1)*(x+2) := by
+            rw [show n+1 = n.succ by omega, Nat.pow_succ]
+            ac_rfl
+
+theorem escape_within_linear_bound (x:Nat) :
+    ∃ n ≤ x+3, ¬ (16 ∣ orbit x n+2) := by
+  classical
+  by_cases hc : ∃ n ≤ x+3, ¬ (16 ∣ orbit x n+2)
+  · exact hc
+  have hprefix : ∀ i < x+3, 16 ∣ orbit x i + 2 := by
+    intro i hi
+    by_cases hi0 : 16 ∣ orbit x i+2
+    · exact hi0
+    · exact False.elim (hc ⟨i, by omega, hi0⟩)
+  have eqn := finite_orbit_identity x (x+3) hprefix
+  have hd : 4^(x+3) ∣ 5^(x+3)*(x+2) := by
+    refine ⟨orbit x (x+3)+2, ?_⟩
+    exact eqn.symm
+  have cop : Nat.Coprime (4^(x+3)) (5^(x+3)) :=
+    Nat.Coprime.pow (x+3) (x+3) (by decide : Nat.Coprime 4 5)
+  have hd2 : 4^(x+3) ∣ x+2 := Nat.Coprime.dvd_of_dvd_mul_left cop hd
+  have he : 4^(x+3) ≤ x+2 := Nat.le_of_dvd (by omega) hd2
+  have hl : x+3 < 4^(x+3) := Nat.lt_pow_self (by decide : 1 < (4:Nat))
+  omega
+
+#print axioms finite_orbit_identity
+#print axioms escape_within_linear_bound
+
 end SheepNoncompact
