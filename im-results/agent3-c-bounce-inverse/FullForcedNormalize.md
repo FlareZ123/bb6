@@ -12,7 +12,7 @@ y % 2 = 0
 (x+y) % 8 ≠ 0
 (x+y) % 8 ≠ 7
 ```
-and its exact source predecessor is `(x+y-2, (y-2)/2)), with weighted mass `x+2*y` dropping by four. The previous `evenAffineGate` remains earlier in the branch order: for even `y≥6` it is contained in the new gate, while it also handles `y=4`, which the six-residue theorem does not cover. The current `fullForcedNormalize` therefore applies four exact source sectors, and `blank_reach_iff_fullForcedNormalize` proves the all-natural exact reachability equivalence.
+and its exact source predecessor is `(x+y-2, (y-2)/2)`, with weighted mass `x+2*y` dropping by four. The previous `evenAffineGate` remains earlier in the branch order: for even `y≥6` it is contained in the new gate, while it also handles `y=4`, which the six-residue theorem does not cover. The current `fullForcedNormalize` therefore applies four exact source sectors, and `blank_reach_iff_fullForcedNormalize` proves the all-natural exact reachability equivalence.
 
 The updated [original-source workflow](../../.github/workflows/agent3-c-bounce-inverse.yml) passed targeted run [42366675885](https://github.com/FlareZ123/bb6/actions/runs/42366675885) at commit `ed3619f5a08ada2b9387ca34ed905be1dd9690cb`. It compiled the current four-sector `FullForcedNormalize.lean` and `FullForcedFilter.lean` against the original source modules. The workflow now has a `forced_normalize_only` input so this dependency closure can be checked without running unrelated downstream experiments.
 
