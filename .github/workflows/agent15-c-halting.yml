@@ -97,6 +97,8 @@ jobs:
           lean -o M8M16Composition.olean M8M16Composition.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/BounceFirstReturn.lean /tmp/agent15-c-check/
           lean -o BounceFirstReturn.olean BounceFirstReturn.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/SectionFirstReturn.lean /tmp/agent15-c-check/
+          lean -o SectionFirstReturn.olean SectionFirstReturn.lean
           lean -o AffineQuotientExclusion.olean AffineQuotientExclusion.lean
           lean -o AffineParityDepth.olean AffineParityDepth.lean
           lean -o AffineHaltOneStep.olean AffineHaltOneStep.lean
