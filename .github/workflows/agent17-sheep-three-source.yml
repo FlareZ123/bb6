@@ -74,8 +74,14 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent39-sheep-zero-ancestry/ThreeAdicOrder.lean" ThreeAdicOrder.lean
           cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/SheepFaninAllK.lean" SheepFaninAllK.lean
           lake env lean -o ".lake/build/lib/lean/ThreeAdicOrder.olean" ThreeAdicOrder.lean
-          lake env lean SheepFaninAllK.lean
+          lake env lean -o ".lake/build/lib/lean/SheepFaninAllK.olean" SheepFaninAllK.lean
           # Certify distinct valuation and odd-block parameters for the
           # incoming-source count using the genuine proven unique 2-adic factorization.
           cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/SheepFaninParameters.lean" SheepFaninParameters.lean
-          lake env lean SheepFaninParameters.lean
+          lake env lean -o ".lake/build/lib/lean/SheepFaninParameters.olean" SheepFaninParameters.lean
+          # Explicit source-checked injection from n distinct indices
+          # into genuine EvenEdge parents at valuation three.
+          for name in SheepFaninInjection SheepFaninEvenA3N; do
+            cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/$name.lean" "$name.lean"
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
