@@ -182,7 +182,6 @@ theorem leftEvenCanonicalTransition (a d : Nat)
     have h := leftEvenExponent_spec d
     rw [hz] at h
     simp [ternaryOnes] at h
-    omega
   have hkpos : 1≤k := by dsimp [k]; omega
   have hdecomp : a=(d+2+k)+t := by dsimp [t]; omega
   have hbaseEq : highLevelNext (.D (d+2+k) d) = drainB k (d+2) 2 := by
