@@ -135,13 +135,12 @@ theorem finite_window_cover (p : PartialMachine) (P : Fin 6 → W → Bool)
 private def A : Fin 6 := ⟨0,by decide⟩
 private def B : Fin 6 := ⟨1,by decide⟩
 
-/-- Four fixed input rows, with all other rows freely assignable. A/0
+/-- Three fixed input rows, with all other rows freely assignable. A/0
 writes1 and B/0 writes0, so zero-only control graph closure fails. -/
 def oscillatory : PartialMachine := fun s =>
   if s = (A,false) then some (some ⟨true,true,B⟩)
   else if s = (A,true) then some (some ⟨true,true,B⟩)
   else if s = (B,false) then some (some ⟨false,false,A⟩)
-  else if s = (B,true) then some none
   else none
 
 def oscillatorSafe (q:Fin 6) (w:W) : Bool :=
@@ -176,7 +175,7 @@ theorem oscillator_closed : ∀ q w far mv, oscillatorSafe q w = true →
     simp [oscillatorSafe,oscillatory,A,B] at h hp ⊢ <;>
     cases hp <;> simp_all [shiftR,shiftL,oscillatorSafe,A,B] <;> omega
 
-/-- Every total machine compatible with this four-row partial table
+/-- Every total machine compatible with this three-row partial table
 is a genuine infinite blank-tape nonhalting machine. -/
 theorem oscillator_never (m:Machine) (hm:compatible oscillatory m) :
     NeverHalts m :=
