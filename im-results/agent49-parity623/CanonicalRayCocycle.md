@@ -42,6 +42,34 @@ The source-derived ratio-four conditions become:
 
 Here \(n\) and \(K\) are the least exponents in the corresponding source terminal bounds. The four equivalences are proved in [CanonicalRayCocycleArithmetic.lean](CanonicalRayCocycleArithmetic.lean). The source-level composition of the terminal output balance, root-ray bridge, and integer cancellation is in [TerminalRatio4Source.lean](TerminalRatio4Source.lean).
 
+## Connection to the old-ray distance invariant
+
+For an old-cone ray, write its conventional parameter as \(s\):
+- left odd: \(a=2d+9+s\);
+- left even: \(a=2d+5+s\);
+- right odd: \(d=2a+1+2s\);
+- right even: \(d=2a+2+2s\).
+
+The canonical terminal-gap expressions above then simplify exactly to:
+
+| Sector | Canonical terminal gap |
+|---|---|
+| Far-left odd | \(s-2d+9\) |
+| Far-left even | \(s-2d+5\) |
+| Far-right odd | \(2(s-a)+1\) |
+| Far-right even | \(2(s-a)+2\) |
+
+[CanonicalRayRootDistanceArithmetic.lean](CanonicalRayRootDistanceArithmetic.lean) proves these four identities and the following conditional exclusions, using only Std and Lean 4.36.0-rc2:
+
+- left odd: a root lower bound \(R\le |s-2d|\) excludes a terminal window of width \(W\) if \(W+9<R\);
+- left even: \(W+5<R\);
+- right odd: a root lower bound \(R\le |s-a|\) excludes the window if \(W+1<2R\);
+- right even: \(W+2<2R\).
+
+This connects directly to Agent 8's finite root-ray observation: old right rays appeared to satisfy \((s-a)^2\ge a\), and old left rays appeared to satisfy \((s-2d)^2\ge d\), over the sampled prefix. If those inequalities can be proved for all future root states, one can take \(R\) on the order of the square root of the relevant coordinate and compare it with the logarithmic terminal-window width.
+
+The root-distance inequalities remain empirical. Their all-time proof, and a uniform comparison of the resulting \(R\) with \(W\) when the other coordinate dominates the mass, are still open.
+
 ## Finite root audit
 
 The exact-integer mirror was replayed for 10,000 consecutive states from the blank-root section state \(D(0,7)\).
