@@ -396,4 +396,74 @@ theorem offset_repeat (u : List Nat) (k : Nat) :
 #print axioms offset_repeat
 
 
+
+/-- The original scalar run recurrence, with the exact affine coefficients
+    exposed for every block index. -/
+theorem periodic_run_affine_recurrence (L w : Nat) (m z : Nat → Nat)
+    (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) :
+    ∀ n, ((2:Nat)^(cost w):Int)*(z (n+1):Int) =
+      (z n:Int)+(weight w:Int)*((L:Int)+(m 0:Int))+
+        ((weight w:Int)*(cost w:Int))*(n:Int)+offset w := by
+  have hm : ∀ n, m (n+1)=m n+cost w := by
+    intro n
+    exact run_cost L w (m n) (z n) (m (n+1)) (z (n+1)) (hr n)
+  have hline := linear_cost_orbit w m hm
+  intro n
+  have hb := block_affine L w (m n) (z n) (m (n+1)) (z (n+1)) (hr n)
+  rw [hline n] at hb
+  simp only [Int.natCast_add, Int.natCast_mul] at hb
+  grind
+
+/-- The increment between the first two output boundaries is the unique
+    affine slope forced by an infinite fixed-word run. -/
+theorem periodic_run_slope_at_zero (L w : Nat) (hw : 0<cost w)
+    (m z : Nat → Nat)
+    (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) :
+    (((2:Nat)^(cost w):Int)-1)*((z 1:Int)-(z 0:Int)) =
+      (weight w:Int)*(cost w:Int) := by
+  let A : Nat := 2^(cost w)
+  let zi : Nat → Int := fun n => (z n:Int)
+  let H : Int := (weight w:Int)
+  let S : Int := (cost w:Int)
+  let X : Int := (L:Int)+(m 0:Int)
+  let D : Int := offset w
+  have hA : 2≤A := by
+    dsimp [A]
+    have h := Nat.one_lt_two_pow (Nat.ne_of_gt hw)
+    omega
+  have hrec : ∀ n, (A:Int)*zi (n+1)=zi n+H*X+(H*S)*(n:Int)+D := by
+    simpa [A,zi,H,S,X,D] using periodic_run_affine_recurrence L w m z hr
+  let delta : Nat → Int := fun n => zi (n+1)-zi n
+  let err : Nat → Int := fun n => ((A:Int)-1)*delta n-H*S
+  have hdiff := PeriodCore.affine_difference (A:Int) H S X D zi hrec
+  have herr : ∀ n, err n=(A:Int)*err (n+1) := by
+    intro n
+    have hd : (A:Int)*delta (n+1)=delta n+H*S := by
+      simpa only [delta, show n+1+1=n+2 by omega] using hdiff n
+    have hmul := congrArg (fun x : Int => ((A:Int)-1)*x) hd
+    have hx : (A:Int)*(((A:Int)-1)*delta (n+1)) =
+        ((A:Int)-1)*delta n+((A:Int)-1)*(H*S) := by
+      calc
+        (A:Int)*(((A:Int)-1)*delta (n+1)) =
+            ((A:Int)-1)*((A:Int)*delta (n+1)) := by
+              simp only [Int.mul_left_comm]
+        _ = ((A:Int)-1)*delta n+((A:Int)-1)*(H*S) := by
+              simpa only [Int.mul_add] using hmul
+    have hs : ((A:Int)-1)*(H*S)=(A:Int)*(H*S)-H*S := by
+      rw [Int.sub_mul]
+      simp
+    change ((A:Int)-1)*delta n-H*S =
+      (A:Int)*(((A:Int)-1)*delta (n+1)-H*S)
+    rw [hs] at hx
+    calc
+      _ = (A:Int)*(((A:Int)-1)*delta (n+1))-(A:Int)*(H*S) := by omega
+      _ = _ := by exact (Int.mul_sub _ _ _).symm
+  have hz := PeriodCore.forced_zero A hA err herr
+  dsimp [err,delta,zi,A] at hz
+  omega
+
+#print axioms periodic_run_affine_recurrence
+#print axioms periodic_run_slope_at_zero
+
+
 end PeriodWord
