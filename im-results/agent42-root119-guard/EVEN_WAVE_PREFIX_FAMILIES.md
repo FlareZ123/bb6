@@ -1,4 +1,4 @@
-# Even and odd-even B/0 prefix return families
+# Even, odd-even, and two-wave B/0 return families
 
 Date: 2026-11-07  
 Status: source-import verified in Lean 4.36.0-rc2; finite census corroboration only.
@@ -63,13 +63,13 @@ h'=h+m+2=h+2n+3.
 
 The proof is in `b0_odd_even_chain_to_b0_exact`; the original `b0_odd_even_chain_to_b0` name remains as a backwards-compatible wrapper. It composes the nine-step prefix, the existing odd F/1 wave theorem, the B/1-to-F/1 transition, and the exact even D-sweep return.
 
-Both statements are conditional local return theorems. They do not classify every reached B/0 configuration and do not establish a global BB(6) upper bound.
+These are conditional local return theorems. They do not classify every reached B/0 configuration and do not establish a global BB(6) upper bound.
 
 ## Lean verification
 
-Source file: `Root119OddEvenChain.lean`  
+Source files: `Root119OddEvenChain.lean`, `Root119TwoWaveRootPrefix.lean`  
 Workflow: `.github/workflows/agent42-root119-even-wave-prefix.yml`  
-Successful run: [42405102264](https://github.com/FlareZ123/bb6/actions/runs/42405102264)
+Successful source-import runs: [42405102264](https://github.com/FlareZ123/bb6/actions/runs/42405102264), [42423330099](https://github.com/FlareZ123/bb6/actions/runs/42423330099)
 
 The workflow compiles the dependency closure from source and checks the axiom output. The relevant declarations report:
 
@@ -77,6 +77,7 @@ The workflow compiles the dependency closure from source and checks the axiom ou
 - `b0_even_prefix_to_b0`: [propext, Classical.choice, Quot.sound]
 - `b0_odd_even_chain_to_b0`: [propext, Classical.choice, Quot.sound]
 - `b0_two_wave_prefix`: [propext, Quot.sound]
+- `b0_two_wave_root_interval_to_b0` and `b0_two_wave_root_interval_avoids_BBad`: [propext, Classical.choice, Quot.sound]
 
 No relevant declaration depends on `sorryAx`. The local Lean 4.36.0-rc2 model proof for the even-sweep composition also compiled independently before the source-import run.
 
@@ -93,7 +94,7 @@ The proof follows the exact intermediate tape configurations. In the even family
 
 The condition cannot be omitted from a theorem based only on NoLeft4 and the displayed local tape assumptions. The formal synthetic B/0 configuration with ones exactly at -6,-5,-3,-1 satisfies NoLeft4 and the n=0 right-side conditions, yet its actual 23-step run returns at head 3 with 1100 at -6 through -3. This example is not proved reachable from blank, so the open question is whether genuine Reach plus the odd-even hypotheses implies the boundary condition.
 
-Source-import CI [42415186262](https://github.com/FlareZ123/bb6/actions/runs/42415186262) compiled the exact return theorems, the shield transport proofs, and the synthetic counterexample with no sorryAx. The raw 10-million-step audit found all 21/21 even-prefix and 22/22 odd-even-prefix inputs and outputs shielded; all 22 observed odd-even inputs satisfy the boundary condition. A broader census of 7,367 reached B/0 states with left suffix 101 found only one boundary-unsafe left-six pattern, 110101. It occurs at time 3,193,243, head -689, with a right window of ten ones, then right tail 010101 beginning at h+401; it is classified as an unmatched m=401 prefix. In particular h+402=1, so it fails the odd-even terminal-zero corridor. It is not an odd-even return candidate. All 22 actual odd-even inputs have left-six pattern 010101 (21) or 000101 (one). This supports, but does not prove, the conjecture that the full reachable odd-even corridor hypotheses imply the boundary guard. The final source-import run, including the exact iff theorem and 10M audit, is [42416716883](https://github.com/FlareZ123/bb6/actions/runs/42416716883). Full proof and axiom details: [PREFIX_SHIELD_TRANSPORT.md](PREFIX_SHIELD_TRANSPORT.md).
+Source-import CI [42415186262](https://github.com/FlareZ123/bb6/actions/runs/42415186262) compiled the exact return theorems, the shield transport proofs, and the synthetic counterexample with no sorryAx. The raw 10-million-step audit found all 21/21 even-prefix, 22/22 odd-even-prefix, and 8/8 two-wave-root inputs and outputs shielded; all 22 observed odd-even inputs satisfy the boundary condition. A broader census of 7,367 reached B/0 states with left suffix 101 found only one boundary-unsafe left-six pattern, 110101. It occurs at time 3,193,243, head -689, with a right window of ten ones, then right tail 010101 beginning at h+401; it is classified as an unmatched m=401 prefix. In particular h+402=1, so it fails the odd-even terminal-zero corridor. It is not an odd-even return candidate. All 22 actual odd-even inputs have left-six pattern 010101 (21) or 000101 (one). This supports, but does not prove, the conjecture that the full reachable odd-even corridor hypotheses imply the boundary guard. The final source-import run, including the exact iff theorem and 10M audit, is [42416716883](https://github.com/FlareZ123/bb6/actions/runs/42416716883). Full proof and axiom details: [PREFIX_SHIELD_TRANSPORT.md](PREFIX_SHIELD_TRANSPORT.md).
 
 ## Ten-million-step census
 
@@ -106,20 +107,41 @@ The independent Node.js replay is `test-root119-two-wave-census.cjs`. It simulat
 | Existing left-one wave macro | 177 |
 | New even prefix family | 21 |
 | New odd-then-even prefix family | 22 |
-| Unmatched left-prefix candidates | 8 |
+| Two-wave root family | 8 |
+| Unmatched left-prefix candidates | 0 |
 | Other | 49 |
 | **Total intervals** | **22,983** |
 
-All 43 new-family predictions agree with the raw machine replay, including both return time and returned head. The C-phase D1 candidate is a proposed generalization of the former ten-step class. Its run-length histogram is r=2: 1, r=3: 15,176, r=4: 21. Thus the former 15,176 ten-step returns are the r=3 subfamily, and 22 further intervals have r=2 or r=4. The script asserts the complete class-count vector, the run-length histogram, and that no wave prediction remains pending at the cutoff.
+All 51 new-family predictions agree with the raw machine replay, including both return time and returned head: 21 even-prefix, 22 odd-then-even, and 8 two-wave-root intervals. The C-phase D1 candidate is a proposed generalization of the former ten-step class. Its run-length histogram is r=2: 1, r=3: 15,176, r=4: 21. Thus the former 15,176 ten-step returns are the r=3 subfamily, and 22 further intervals have r=2 or r=4. The script asserts the complete class-count vector, the run-length histogram, and that no wave prediction remains pending at the cutoff.
 
-The candidate's local hypotheses are: the B/0 head is at h; the r cells h-1 through h-r are ones; h-r-1 is zero; h-r-2 is one; and r≥2. The observed return law is r+7 steps to B/0 at h-r+1. The mechanism is a C/1 left scan erasing the r-cell block, followed by C/0, D/1, F/1, D/0, E/0, and A/0. The returned head lies in the erased block. This candidate has been checked against the raw replay for all 15,198 occurrences, including time and returned head, but its general Lean proof is not yet complete.
+### Two-wave root family: eight formerly unmatched intervals
 
-The eight unmatched left-prefix candidates have local patterns and observed times consistent with the separate two-wave-root formula (8n_1+2r+30), with head displacement (-2r-6). The complete `Root119TwoWaveRootPrefix.lean` module now compiles under Lean 4.36.0-rc2 in [CI 42421095795](https://github.com/FlareZ123/bb6/actions/runs/42421095795), including the two-wave return, BBad exclusion, D-retreat shield lemma, and C0/D1 odd-retreat shield theorem. The eight observed starts remain computational matches until their detailed theorem hypotheses are extracted and source-verified for each concrete interval; see the maintained directory [README](README.md).
+The eight intervals previously classified as unmatched left-prefix candidates now satisfy the exact hypotheses of `b0_two_wave_root_interval_to_b0` in `Root119TwoWaveRootPrefix.lean`. In this theorem's parameterization, `n1` is half the right-hand run of ones and `r` is the length of the alternating left retreat.
+
+At a reached B/0 configuration with head (h), the local hypotheses are:
+- (t(h-1)=1, t(h-2)=0, t(h-3)=1, t(h-4)=1);
+- for every (i<r), (t(h-5-2i)=0) and (t(h-6-2i)=1);
+- (t(h-5-2r)=t(h-6-2r)=0);
+- the right side begins with (2n1) ones, then (0,1,0).
+
+The Lean theorem proves a reached B/0 return after (8n1+2r+30) steps, with returned head (h-2r-6). Under the input NoLeft4 shield, it also proves NoLeft4 at the output and hence excludes BBad there.
+
+The current 10M replay verifies all eight starts against these full local hypotheses, checks the predicted return time and head displacement, and checks NoLeft4 at both endpoints. The observed ((n1,r)) pairs are:
+[
+(32,2), (32,17), (32,109), (40,15), (40,46), (96,1), (176,73), (184,194).
+]
+The runnable audit is `test-root119-two-wave-census.cjs`; it asserts these pairs and emits the eight interval records. The earlier exploratory `n1` values in `FULL_RESEARCH_LOG.md` use a different parameterization and should not be read as the right-run half-length defined here.
+
+This is a conditional theorem plus a computationally checked census. The concrete reachability of each start is supplied by the raw deterministic replay, not yet by an individual Lean `Reach` derivation. The 49 remaining `other` intervals are still unclassified.
+
+The C-phase D1 family has a separate source-import proof in `Root119CPhaseReturn.lean`, including NoLeft4 preservation and BBad exclusion. Its 15,198 raw occurrences are checked for return time and head; see the maintained directory README for its source proof and census details.
+
+The two-wave-root theorem and its eight-instance replay audit are summarized above; the module also contains the D-retreat shield lemma and C0/D1 odd-retreat shield theorem. See the maintained directory [README](README.md).
 
 ## Scope and next work
 
-- The new 43 return laws prove exact B/0 returns from their stated hypotheses.
+- The 51 source-verified conditional return laws prove exact B/0 returns from their stated hypotheses.
 - The even-prefix shield theorem is unconditional under the input `NoLeft4` hypothesis. The odd-even shield theorem has the explicit three-cell boundary guard above; proving that `Reach` implies the guard, or finding a reachable counterexample, is the next question.
-- Extract and source-verify the exact local hypotheses of `b0_two_wave_root_interval_to_b0` for each of the 8 unmatched concrete intervals; the module itself now compiles. Classify the remaining 49 other intervals and establish an all-time B/0 shield or a genuine BBad witness.
+- Formalize the concrete Reach derivations for the eight two-wave-root start configurations. Classify the remaining 49 other intervals and establish an all-time B/0 shield or a genuine BBad witness.
 - The C-phase D1 family is now source-import verified in [Root119CPhaseReturn.lean](Root119CPhaseReturn.lean), including `NoLeft4` preservation and `BBad` exclusion; see the directory README for its separate 15,198-instance audit.
 - This work is intermediate research and belongs in `im-results/`, not `results/`.
