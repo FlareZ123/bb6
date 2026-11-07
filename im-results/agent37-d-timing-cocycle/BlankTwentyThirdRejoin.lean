@@ -15,7 +15,7 @@ def reentry22Time (T22 : Nat) : Nat :=
       BB6.Agent2E7SecondSafe.middleTime BB6.Agent2TwentySecondRoot.u22 +
       T22)
 
-private theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
+theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
     BB6.Agent2BoundaryBZero.regularSection a q b =
       DRegularSource.sourceSection ⟨a,q,b⟩ := by
   simp only [BB6.Agent2BoundaryBZero.regularSection,
