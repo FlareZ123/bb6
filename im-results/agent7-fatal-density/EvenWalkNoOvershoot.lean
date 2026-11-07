@@ -13,8 +13,8 @@ private def F (n:Nat):Nat := 4*n*n + 8*n
 private theorem F_succ (n:Nat):F (n+1)=F n+8*n+12:=by
   simp only [F,Nat.mul_add,Nat.add_mul]
   omega
-private theorem F_growth (n:Nat) (hn:40≤n):F (n+1)≤2*F n:=by
-  have hm:40*n≤n*n := Nat.mul_le_mul_right n hn
+private theorem F_growth (n:Nat) (hn:25≤n):F (n+1)≤2*F n:=by
+  have hm:25*n≤n*n := Nat.mul_le_mul_right n hn
   have hm4:= Nat.mul_le_mul_left 4 hm
   have ha : 8*n+12≤F n:=by
     dsimp [F]
@@ -26,23 +26,23 @@ private theorem F_eq (n:Nat):F n=2*n*(2*n+3)+2*n:=by
   dsimp [F]
   grind
 private theorem exp_quad_aux (t : Nat) :
-    F (t+40) < 2^(t+27) := by
+    F (t+25) < 2^(t+12) := by
   induction t with
   | zero => decide
   | succ t ih =>
-      have hh :F (t+40+1)≤2*F (t+40) :=
-        F_growth (t+40) (by omega)
-      have he : t+1+40=t+40+1:=by omega
-      have he2 : 2^(t+1+27)=2*2^(t+27):=by
-        rw [show t+1+27=t+27+1 by omega, Nat.pow_succ]
+      have hh :F (t+25+1)≤2*F (t+25) :=
+        F_growth (t+25) (by omega)
+      have he : t+1+25=t+25+1:=by omega
+      have he2 : 2^(t+1+12)=2*2^(t+12):=by
+        rw [show t+1+12=t+12+1 by omega, Nat.pow_succ]
         omega
       rw [he,he2]
       omega
-theorem exp_quad (n:Nat) (hn:40≤n) :
+theorem exp_quad (n:Nat) (hn:25≤n) :
     2*n*(2*n+3)+2*n < 2^(n-13) := by
-  have hnval : n=(n-40)+40 := by omega
-  have hh:=exp_quad_aux (n-40)
-  have hk : n-13=(n-40)+27 := by omega
+  have hnval : n=(n-25)+25 := by omega
+  have hh:=exp_quad_aux (n-25)
+  have hk : n-13=(n-25)+12 := by omega
   rw [F_eq] at hh
   rw [←hnval,←hk] at hh
   exact hh
@@ -99,14 +99,14 @@ theorem near_power_impossible (n j e c δ : Nat)
     omega
 #print axioms near_power_impossible
 
-private theorem three_proximity (n B p M T:Nat) (hn:40≤n)
+private theorem three_proximity (n B p M T:Nat) (hn:25≤n)
  (hmodel:81*B+3=16*p+128*M+169*n)
  (hT:1024*T=196*p)
  (hprev:4*B+3*(n-4)≤2*p+1)
  (hbad:4*p+3≤8*B+7*(n-4)):
   0<T-M ∧ T-M<2*n := by
   grind
-private theorem four_proximity (n B p M T:Nat) (hn:40≤n)
+private theorem four_proximity (n B p M T:Nat) (hn:25≤n)
  (hmodel:81*B+3=16*p+128*M+169*n)
  (hT:2048*T=68*p)
  (hprev:8*B+7*(n-4)≤2*p+1)
@@ -127,14 +127,14 @@ private theorem pow_scale_four (n:Nat) (hn:13≤n):
    2^(n-4)=2^((n-13)+9):=congrArg (fun x:Nat=>2^x) h
    _=2^(n-13)*2^9:=Nat.pow_add 2 (n-13) 9
    _=512*2^(n-13):=by simp;omega
-private theorem exp_quad_three (n:Nat) (hn:40≤n):
+private theorem exp_quad_three (n:Nat) (hn:25≤n):
     2*n*(2*n+3)+2*n < 2^(n-12) := by
   have h := Growth.exp_quad n hn
   have he:n-12=(n-13)+1:=by omega
   rw [he,Nat.pow_succ]
   omega
 
-theorem no_three_overshoot (n j B:Nat) (hn:40≤n)
+theorem no_three_overshoot (n j B:Nat) (hn:25≤n)
   (hmodel:81*B+3=16*2^(n-4)+128*(2^j*(2*n+3))+169*n)
   (hprev:4*B+3*(n-4)≤2*2^(n-4)+1)
   (hbad:4*2^(n-4)+3≤8*B+7*(n-4)) : False := by
@@ -154,7 +154,7 @@ theorem no_three_overshoot (n j B:Nat) (hn:40≤n)
   exact near_power_impossible n j (n-12) 49 (T-M)
     (exp_quad_three n hn) (by decide) hpositive hbound hs
 
-theorem no_four_overshoot (n j B:Nat) (hn:40≤n)
+theorem no_four_overshoot (n j B:Nat) (hn:25≤n)
   (hmodel:81*B+3=16*2^(n-4)+128*(2^j*(2*n+3))+169*n)
   (hprev:8*B+7*(n-4)≤2*2^(n-4)+1)
   (hbad:4*2^(n-4)+3≤16*B+15*(n-4)) : False := by
@@ -176,8 +176,8 @@ theorem no_four_overshoot (n j B:Nat) (hn:40≤n)
 
 /-- A uniform bound, with all dyadic arithmetic and exceptional power
     windows proved in Lean, for any source-typed symbolic second-tier
-    inverse ray and every n>=40. -/
-theorem uniform_two_four_gap (n j B:Nat) (hn:40≤n)
+    inverse ray and every n>=25. -/
+theorem uniform_two_four_gap (n j B:Nat) (hn:25≤n)
   (hmodel:81*B+3=16*2^(n-4)+128*(2^j*(2*n+3))+169*n)
   (hweak:2*(2^j*(2*n+3))+2*n+10≤2^(n-4))
   :
