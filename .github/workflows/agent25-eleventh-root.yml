@@ -1,4 +1,4 @@
-name: D blank-root source chain through seventeenth reentry (manual)
+name: D blank-root source chain through twentieth reentry (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -24,7 +24,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Verify DRegular root chain through seventeenth source reentry
+      - name: Verify DRegular root chain through twentieth source reentry
         shell: bash
         run: |
           set -euo pipefail
@@ -112,4 +112,9 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankFourteenthRejoin.olean" "$T/BlankFourteenthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankFifteenthRejoin.olean" "$T/BlankFifteenthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
-          lean -DmaxRecDepth=55000 "$T/BlankSeventeenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
+          lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankEighteenthRejoin.olean" "$T/BlankEighteenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankNineteenthRejoin.olean" "$T/BlankNineteenthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
+          lean -DmaxRecDepth=55000 "$T/BlankTwentiethRejoin.lean"
