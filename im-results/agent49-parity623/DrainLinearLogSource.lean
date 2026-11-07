@@ -2,19 +2,21 @@ import Agent8DrainQuadraticLogSource
 
 /-!
 DRAFT: sharp linear-in-ternary-length bounds for the original Cryptids #623
-B-drain. The proof is source-shaped and imports the unmodified source through
-Agent8DrainQuadraticLogSource. It has not yet been compiled in CI; treat this
-as an intermediate proof draft until then.
+B-drain. The proof text has been compiled locally with Lean 4.36.0-rc2 against an
+exact copy of the upstream evalA/drainB equations. The pinned source workflow
+still needs to compile this module through its actual imports; treat it as an
+intermediate result until that source-level CI check passes.
 
 For b < 3^n and a successful drain:
   output third counter <= d + 3*b + 4*n + 2
   output first counter + n + 1 >= a
 
-Both bounds are sharp. For the first-coordinate loss, take
-  b_n = (3^n+1)/2, a=n+1;
-then evalA consumes the n base-3 digits of (3^n-1)/2, all equal to 1,
-and returns first counter zero. For the third-counter excess, take
-  b_1=2, b_(n+1)=3*b_n+1, a=n+1.
+Both bounds are sharp, and one family attains both simultaneously.
+For n>=1, take a=n+1 and b_n=(5*3^(n-1)-1)/2. The drain recurrence
+reduces (a,b_n) to (a-1,b_(n-1)) at each outer call, so the final first
+counter is zero and the third-counter excess is exactly 4*n+2.
+The separate family b=(3^n+1)/2, a=n+1 also attains the first-counter
+loss n+1.
 -/
 
 namespace BB6.Agent49DrainLinearLogSource
@@ -87,7 +89,7 @@ theorem evalA_positive_depth (n : Nat) :
       rw [evalA] at hs
       by_cases h2 : k%3=2
       · simp [h2] at hs
-        cases hs
+        rcases hs with ⟨rfl, rfl, rfl⟩
         have hpow : 3^(n+1)=3*3^n := by rw [Nat.pow_succ]; omega
         have hq : k/3<3^n := by omega
         refine ⟨1,n,by omega,by omega,hq,by omega,by omega⟩
@@ -95,7 +97,7 @@ theorem evalA_positive_depth (n : Nat) :
         · by_cases h0 : k%3=0
           · simp [h2,ha,h0] at hs
           · simp [h2,ha,h0] at hs
-            cases hs
+            rcases hs with ⟨rfl, rfl, rfl⟩
             have hpow : 3^(n+1)=3*3^n := by rw [Nat.pow_succ]; omega
             have hq : k/3<3^n := by omega
             refine ⟨1,n,by omega,by omega,hq,by omega,by omega⟩
@@ -129,11 +131,11 @@ theorem drainB_upper_linear_log (n : Nat) :
         cases hs
         omega
       · have hn : 0<n := by
-          by_contra h
-          have hn0 : n=0 := by omega
-          subst n
-          simp at hb
-          omega
+          cases n with
+          | zero =>
+              simp at hb
+              omega
+          | succ n => omega
         rw [drainB] at hs
         simp only [if_neg hb0] at hs
         cases hev : evalA a (b-1) (d+2*b+3) with
