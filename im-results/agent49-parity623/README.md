@@ -209,16 +209,26 @@ form; for example it is `a-4*d-19` on the odd-left branch,
 branch. The even-right branch is evaluated first, so its final drain input
 must be used. The source theorem
 `evenRight_terminal_balance_interval` packages that case: if the first
-evaluator consumes `r) ternary digits and `a<3^n0`, terminality forces
+evaluator consumes `r` ternary digits and `a<3^n0`, terminality forces
 
 ```
 4*a ≤ d+n+K+3
 d ≤ 4*a+5*n+K+11+3*n0.
 ```
 
-Here `n) bounds the final drain block count and `K) bounds the terminal
+Here `n` bounds the final drain block count and `K` bounds the terminal
 mass. Thus the even-right ray parameter `t-a` is confined to an
 O(log a + log mass) interval as well.
+
+The three direct-ray corollaries are also formalized in the same Lean module:
+
+- odd-left: `2*d+6 ≤ t+n+K` and `t ≤ 2*d+5*n+K+17`;
+- even-left: `2*d+1 ≤ t+n+K` and `t ≤ 2*d+5*n+K+12`;
+- odd-right: `2*a ≤ 2*t+n+K+9` and `2*t ≤ 2*a+5*n+K+2`
+  (with the branch condition `1≤a`).
+
+Together these give explicit logarithmic-width terminal windows on all four
+old-cone rays.
 
 ### Root diagnostic (empirical only)
 
