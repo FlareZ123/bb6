@@ -361,7 +361,7 @@ jobs:
           if [ "$full_forced_status" -ne 0 ]; then exit "$full_forced_status"; fi
           # Agent 4: compile the exact forward mass scan and compose it with
           # the original-source halting iff before later independent probes.
-          cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMassIntegration}.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMass10000,CResidualMassIntegration}.lean .
           lean -o CResidualMassBounds.olean CResidualMassBounds.lean
           set +e
           lean -o CResidualMass2000.olean CResidualMass2000.lean > "$GITHUB_WORKSPACE/c-residual-mass2000.txt" 2>&1
@@ -370,6 +370,13 @@ jobs:
           cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt"
           cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$mass_status" -ne 0 ]; then exit "$mass_status"; fi
+          set +e
+          lean -o CResidualMass10000.olean CResidualMass10000.lean > "$GITHUB_WORKSPACE/c-residual-mass10000.txt" 2>&1
+          mass10000_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass10000.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-mass10000.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$mass10000_status" -ne 0 ]; then exit "$mass10000_status"; fi
           set +e
           lean -o CResidualMassIntegration.olean CResidualMassIntegration.lean > "$GITHUB_WORKSPACE/c-residual-mass-integration.txt" 2>&1
           integration_status=$?
@@ -410,9 +417,13 @@ jobs:
           cat "$GITHUB_WORKSPACE/m1-m2-param-scan.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 3: source-proof the newly identified infinite m=0, j=3 mod8 family.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/M0Mod8Three.lean .
+          set +e
           lean -o M0Mod8Three.olean M0Mod8Three.lean > "$GITHUB_WORKSPACE/m0-mod8-three.txt" 2>&1
+          m0_mod8_three_status=$?
+          set -e
           cat "$GITHUB_WORKSPACE/m0-mod8-three.txt"
           cat "$GITHUB_WORKSPACE/m0-mod8-three.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$m0_mod8_three_status" -ne 0 ]; then exit "$m0_mod8_three_status"; fi
           # Agent 19: source-proof the new infinite m=0, j=2 mod16 family.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/M0Mod16Two.lean .
           lean -o M0Mod16Two.olean M0Mod16Two.lean > "$GITHUB_WORKSPACE/m0-mod16-two.txt" 2>&1
@@ -476,6 +487,7 @@ jobs:
           path: |
             full-forced-residual.txt
             c-residual-mass2000.txt
+            c-residual-mass10000.txt
             c-residual-mass-integration.txt
             m0-first-survivor-root-probe.txt
             full-forced-param-scan.txt
