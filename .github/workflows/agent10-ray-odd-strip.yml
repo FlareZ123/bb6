@@ -103,5 +103,6 @@ jobs:
           lean -o "$g/EvenWalkNoOvershoot.olean" "$g/EvenWalkNoOvershoot.lean"
           lean -o "$g/EvenWalkGapBridge.olean" "$g/EvenWalkGapBridge.lean"
           lean -o "$g/EvenWalkSourceModel.olean" "$g/EvenWalkSourceModel.lean"
+          lean -o "$g/EvenWalkSmall.olean" "$g/EvenWalkSmall.lean"
           lean -o "$g/EvenWalkForkDead.olean" "$g/EvenWalkForkDead.lean"
           echo "Agent 10 source-verified exact source t1,t2,t3 rooted classification; Agent 7 all-index two-tier root gap."
