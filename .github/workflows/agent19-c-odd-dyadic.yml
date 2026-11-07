@@ -59,3 +59,7 @@ jobs:
           lean -o DyadicLowTower.olean DyadicLowTower.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/LowTowerFamilies.lean .
           lean LowTowerFamilies.lean
+          # Unbounded high stopping family: arithmetic, complete source odd/odd inverse, dyadic cone.
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighDyadicArithmetic,HighDyadicLowVal}.lean .
+          lean -o HighDyadicArithmetic.olean HighDyadicArithmetic.lean
+          lean HighDyadicLowVal.lean
