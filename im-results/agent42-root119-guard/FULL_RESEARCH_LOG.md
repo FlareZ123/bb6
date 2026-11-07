@@ -157,3 +157,37 @@ So the wave writes exactly **one net new 1**, at the rightmost sentinel zero, wh
 The independent CommonJS regression [test-root119-wave.cjs](test-root119-wave.cjs) checks 390 seeded exterior tapes across lengths `n=0..12` and a separately reached auxiliary blank-tape witness. At exact raw time **3,194,058**, the true auxiliary blank execution has F/1 at head **−692** with `n=202`; after **813** steps (time **3,194,871**), it returns B/0 at **−693**. The *only* net tape change is cell **−286** from 0 to 1. The preceding F1 step creates the first observed temporary all-left `1100` factor at D/1 raw time 3,194,059, and the wave removes it before B/0. This is a concrete example of why single-state shield induction fails but full-phase return induction can succeed. The 390 synthetic and one authentic witnesses are empirical checks of a mathematically quantified theorem.
 
 **Boundary of achievement:** The hypotheses constrain a particular F/1 corridor and an existing F-entry shield; neither that corridor nor that shield has been proved for every blank-reachable return. Other B/0 return branches remain. No BB(6) exact value, universal upper bound, or universal root119 nonhalting proof is claimed. This work belongs in `im-results/` until a genuinely frontier-changing root theorem is proved.
+
+
+## 2026-11-07: exact even and odd-even B/0 prefix returns (Agent42)
+
+The new [Root119OddEvenChain.lean](Root119OddEvenChain.lean) proves two source-original conditional first-return laws, using the already source-verified odd F/1 wave theorem and a new exact even D-sweep return lemma.
+
+For a reached B/0 configuration at head \(h\), assume the immediate left cells are \(1,0,1\). Define \(m\) to be one plus the maximal consecutive right-hand run of ones starting at \(h+1\).
+
+1. **Even family.** If \(m=2n+2\), the right block \(h+1,\ldots,h+2n+1\) is all ones and the two cells \(h+2n+2,h+2n+3\) are zero. The exact return time is \(m+13=2n+15\), with returned B/0 head \(h+m+1\).
+2. **Odd-even family.** If \(m=2n+1\), the right block \(h+1,\ldots,h+2n\) is all ones and the three cells \(h+2n+1,h+2n+2,h+2n+3\) are zero. The exact return time is \(3m+20=6n+23\), with returned B/0 head \(h+m+2\).
+
+The common prefix is a nine-step B/0-to-F/1 transition. In the even family, the F/1 phase is followed by an even D sweep. In the odd-even family, it is followed by the already proven odd F/1 wave, a B/1-to-F/1 transition, and an even D sweep. The new lemma evenSweep_to_B_exact gives the full resulting tape for an arbitrary exterior tape, not merely the returned state. Both return theorems preserve Reach and end in BZero.
+
+**Source-original CI passed:** manual workflow [42405102264](https://github.com/FlareZ123/bb6/actions/runs/42405102264), commit beecb292363ed7f024c1ac969701915249a28f74, Lean 4.36.0-rc2. The dependency closure was rebuilt from source. The axiom output was:
+- evenSweep_to_B_exact: [propext, Classical.choice, Quot.sound];
+- b0_even_prefix_to_b0: [propext, Classical.choice, Quot.sound];
+- b0_odd_even_chain_to_b0: [propext, Classical.choice, Quot.sound];
+- the nine-step b0_two_wave_prefix: [propext, Quot.sound].
+No relevant theorem depends on sorryAx. The direct-even proof was also checked in a local Lean 4.36.0-rc2 model before the source-import run.
+
+The independent Node.js replay [test-root119-two-wave-census.cjs](test-root119-two-wave-census.cjs) simulated 10,000,000 raw steps and observed 22,984 B/0 configurations, hence 22,983 consecutive B/0 intervals. The complete checked first-return class vector was:
+- ten-step: 15,176;
+- existing odd-wave: 7,508;
+- existing left-one-wave: 177;
+- new even-prefix: 21;
+- new odd-even-prefix: 22;
+- unmatched left-prefix candidates: 8;
+- other: 71.
+
+All 43 new-family predictions matched the raw replay in both time and returned head. This is finite census evidence; the Lean theorems are conditional statements for all natural parameters and arbitrary exterior tape, while the census only demonstrates that their hypotheses occur 43 times in this finite segment.
+
+The eight unmatched left-prefix candidates fit the observed two-wave-root formula \(8n_1+2r+30\), with head displacement \(-2r-6\), for parameter pairs \((n_1,r)=(6,15),(1,17),(2,46),(4,2),(5,109),(7,73),(8,194),(3,1)\). This correspondence is currently computational only: the separate Root119TwoWaveRootPrefix.lean file fails source compilation in its D-retreat shield proof and is not an importable dependency. A broadcast and a correction at the top of this directory's README flag that status.
+
+**Limits:** the two new return theorems do not yet prove transport of NoLeft4 through every intermediate state. The 8 two-wave candidates remain unverified at source level, and 71 intervals remain in the census's other class. The next useful work is to prove shield preservation for the new macros and classify further B/0 prefixes. These results do not determine BB(6) and do not establish a universal upper bound.
