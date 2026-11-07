@@ -75,4 +75,20 @@ theorem no_positive_infinite_selfloop (x : Nat)
 #print axioms orbit_identity
 #print axioms no_positive_infinite_selfloop
 
+
+/-! The published generic first-section formula really equals the forced
+    branch at every positive residue-14 source. The odd cofactor is ≥7 and
+    the first successor is even, so there is no intervening odd block. -/
+
+def genericFirst (a u : Nat) : Nat := (2:Nat)^a*u+a+(u-1)/2
+
+theorem source_branch_forced (x : Nat) (hx : x%16=14) :
+    ∃ u : Nat, 7 ≤ u ∧ u%2=1 ∧ x=2*u ∧
+      genericFirst 1 u=forced x ∧ (genericFirst 1 u)%2=0 := by
+  refine ⟨8*(x/16)+7, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals try dsimp [genericFirst, forced]
+  all_goals omega
+
+#print axioms source_branch_forced
+
 end SheepNoncompact
