@@ -964,6 +964,176 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
     exact hexit
   exact htotal.trans (congrArg some hcfg)
 
+
+/-- The prefix through the C/B sweep, valid throughout the full
+    J-prefix domain 2*u <= w+1. -/
+theorem j_c_sweep (u w : Nat) (hw : 2*u ≤ w+1) :
+    run target429 (4*u*u+10*u+25)
+      {state:=A,head:=0,tape:=jTape u w} =
+    some (Config.mk C (2*(u:Int)+1)
+      (cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+        (-2*(u:Int)-3) (2*u+2))) := by
+  have hprefix : 2*u ≤ w+1 := hw
+  rcases f0_local u w with ⟨h0,h1,h2,h3,h4,hm1,hm2⟩
+  have hsetup := f0_to_c1 (-2*(u:Int)-7) (f0Tape u w)
+    h0
+    (by
+      rw [show (-2*(u:Int)-7)+1 = -2*(u:Int)-6 by omega]
+      exact h1)
+    (by
+      rw [show (-2*(u:Int)-7)+2 = -2*(u:Int)-5 by omega]
+      exact h2)
+    (by
+      rw [show (-2*(u:Int)-7)+3 = -2*(u:Int)-4 by omega]
+      exact h3)
+    (by
+      rw [show (-2*(u:Int)-7)+4 = -2*(u:Int)-3 by omega]
+      exact h4)
+    (by
+      rw [show (-2*(u:Int)-7)-1 = -2*(u:Int)-8 by omega]
+      exact hm1)
+    (by
+      rw [show (-2*(u:Int)-7)-2 = -2*(u:Int)-9 by omega]
+      exact hm2)
+  let c0 : Config := {state:=A,head:=0,tape:=jTape u w}
+  let c1 : Config :=
+    {state:=C,head:=-2*(u:Int)-3,
+      tape:=setupTape (f0Tape u w) (-2*(u:Int)-7)}
+  have hfirst :
+      run target429 (4*u*u+6*u+7+14) c0 = some c1 := by
+    rw [run_add', j_F0_exact u w hprefix]
+    simp only [Option.bind_some]
+    rw [show (-2*(u:Int)-7)+4 = -2*(u:Int)-3 by omega] at hsetup
+    simpa [c1] using hsetup
+  let k : Nat := 2*u+2
+  have hpair : ∀ i : Nat, i<k →
+      c1.tape (c1.head+2*(i:Int))=true ∧
+      c1.tape (c1.head+2*(i:Int)+1)=false := by
+    intro i hi
+    have hx0 : -2*(u:Int)-3 ≤
+        -2*(u:Int)-3+2*(i:Int) := by omega
+    have hx0hi : -2*(u:Int)-3+2*(i:Int) ≤ 2*(u:Int)-1 := by
+      dsimp [k] at hi
+      omega
+    have hx1 : -2*(u:Int)-2 ≤
+        -2*(u:Int)-3+2*(i:Int)+1 := by omega
+    have hx1hi : -2*(u:Int)-3+2*(i:Int)+1 ≤ 2*(u:Int) := by
+      dsimp [k] at hi
+      omega
+    have h0' :
+        setupTape (f0Tape u w) (-2*(u:Int)-7)
+          (-2*(u:Int)-3+2*(i:Int)) = true := by
+      rw [setupTape_above _ _ _ (by omega)]
+      rw [f0Tape_neq u w _ (by omega)]
+      exact baseTape_odd u w _ (by omega) (by omega) (by omega)
+    have h1' :
+        setupTape (f0Tape u w) (-2*(u:Int)-7)
+          (-2*(u:Int)-3+2*(i:Int)+1) = false := by
+      rw [setupTape_above _ _ _ (by omega)]
+      rw [f0Tape_neq u w _ (by omega)]
+      exact baseTape_even_zero u w _ (by omega) (by omega) (by omega)
+    constructor
+    · simpa [c1] using h0'
+    · simpa [c1] using h1'
+  have hCrow : target429 (C,true)=some ⟨false,true,B⟩ := by decide
+  have hBzero : target429 (B,false)=some ⟨true,true,C⟩ := by decide
+  obtain ⟨c2,hsweep,hs2,hh2,ht2⟩ :=
+    bc_sweep target429 k c1 hCrow hBzero (by simp [c1]) hpair
+  have hhead2 : c2.head=2*(u:Int)+1 := by
+    have h := hh2
+    dsimp [c1,k] at h
+    omega
+  have hcfg : c2 =
+      Config.mk C (2*(u:Int)+1)
+        (cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+          (-2*(u:Int)-3) k) := by
+    apply config_ext
+    · exact hs2
+    · exact hhead2
+    · simpa [c1] using ht2
+  have htime :
+      4*u*u+10*u+25 =
+        (4*u*u+6*u+7+14)+(2*k) := by
+    dsimp [k]
+    omega
+  have htotal :
+      run target429 (4*u*u+10*u+25) c0 = some c2 := by
+    rw [htime,run_add',hfirst]
+    simp only [Option.bind_some]
+    exact hsweep
+  exact htotal.trans (congrArg some hcfg)
+
+/-- Above the zero-paint pivot, neither the negative-hole fill nor the
+    zero-paint sweep changes the original J tape. -/
+theorem baseTape_above_pivot (u w : Nat) (x : Int)
+    (hx : 2*(u:Int) < x) :
+    baseTape u w x = jTape u w x := by
+  have hz : ¬zeroTest (2*(u:Int)) x (2*u+3) := by
+    unfold zeroTest
+    omega
+  have hn : ¬negFillTest u x := by
+    unfold negFillTest
+    omega
+  simp [baseTape,zeroPaint,hz,negFill,hn]
+
+/-- A C/0 head with a one immediately to its right makes the next two
+    raw moves enter the undefined D/1 transition. -/
+theorem C01_halts (c : Config) (hc : c.state=C)
+    (h0 : c.tape c.head=false)
+    (h1 : c.tape (c.head+1)=true) :
+    run target429 2 c = none := by
+  have hC0 : target429 (C,false)=some ⟨false,true,D⟩ := by decide
+  have hD1 : target429 (D,true)=none := by decide
+  let c' : Config := applyMove c ⟨false,true,D⟩
+  have hread : readSlot c=(C,false) := Prod.ext hc h0
+  have hstep1 : rawStep target429 c=some c' := by
+    simp [rawStep,hread,hC0,c']
+  have hread' : readSlot c'=(D,true) := by
+    apply Prod.ext
+    · simp [c',applyMove]
+    · have hne : c.head+1 ≠ c.head := by omega
+      simp [c',applyMove,writeAt,hne,h1]
+  have hstep2 : rawStep target429 c'=none := by
+    simp [rawStep,hread',hD1]
+  simp [run,hstep1,hstep2]
+
+/-- The exact fatal J boundary: w+1=2*u gives 4*u^2+10*u+26
+    successful moves, followed by the undefined D/1 query. -/
+theorem j_fatal_branch (u w : Nat) (hw : w+1=2*u) :
+    run target429 (4*u*u+10*u+27)
+      {state:=A,head:=0,tape:=jTape u w} = none := by
+  have hprefix : 2*u ≤ w+1 := by omega
+  have hwi : (w:Int)+1=2*(u:Int) := by omega
+  let c0 : Config := {state:=A,head:=0,tape:=jTape u w}
+  let c2 : Config :=
+    Config.mk C (2*(u:Int)+1)
+      (cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+        (-2*(u:Int)-3) (2*u+2))
+  have hcs :
+      run target429 (4*u*u+10*u+25) c0 = some c2 := by
+    simpa [c0,c2] using j_c_sweep u w hprefix
+  have hzero : c2.tape c2.head=false := by
+    dsimp [c2]
+    rw [cbPaint_right _ _ _ _ (by dsimp; omega)]
+    rw [setupTape_above _ _ _ (by omega)]
+    rw [f0Tape_neq u w _ (by omega)]
+    rw [baseTape_above_pivot u w _ (by omega)]
+    simp [jTape,jMark,jHole,hwi]
+  have hone : c2.tape (c2.head+1)=true := by
+    dsimp [c2]
+    rw [cbPaint_right _ _ _ _ (by dsimp; omega)]
+    rw [setupTape_above _ _ _ (by omega)]
+    rw [f0Tape_neq u w _ (by omega)]
+    rw [baseTape_above_pivot u w _ (by omega)]
+    simp [jTape,jMark,jHole,hwi]
+  have hhalt : run target429 2 c2 = none :=
+    C01_halts c2 (by simp [c2]) hzero hone
+  have htime :
+      4*u*u+10*u+27 = (4*u*u+10*u+25)+2 := by omega
+  rw [htime,run_add',hcs]
+  simp only [Option.bind_some]
+  exact hhalt
+
 #print axioms f0_local
 #print axioms j_F0_exact
 #print axioms f0_to_c1
