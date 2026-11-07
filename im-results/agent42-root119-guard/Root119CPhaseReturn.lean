@@ -53,10 +53,11 @@ theorem scan_from_B_exact (b : Conf) (hb : Reach b) (hB : BZero b)
       have hzeros' : ∀ i : Nat, i < r+1 → d.tape (b.h-1-(i:Int)) = false := by
         intro i hi
         by_cases hlt : i < r
-        · have hne : b.h-1-(i:Int) ≠ c.h := by rw [hpos]; omega
-          have hne' : b.h-(1+(i:Int)) ≠ c.h := by omega
+        · have hne' : b.h-(1+(i:Int)) ≠ c.h := by rw [hpos]; omega
+          have hzeroIndex : c.tape (b.h-(1+(i:Int))) = false := by
+            convert hzeros i hlt using 1 <;> congr 1 <;> omega
           change setBit c.tape c.h false (b.h-1-(i:Int)) = false
-          simp [setBit,hne,hne',hzeros i hlt]
+          simp [setBit,hne',hzeroIndex]
         · have heq : i = r := by omega
           subst i
           have hidx : b.h-1-(r:Int) = c.h := by omega
