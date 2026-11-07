@@ -60,6 +60,7 @@ jobs:
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
+          lean -o "$D/DRegularFast.olean" "$D/DRegularFast.lean"
           lean -o "$D/DRegularDurationShift.olean" "$D/DRegularDurationShift.lean"
           lean -o "$D/DRegularTimedShift.olean" "$D/DRegularTimedShift.lean"
           lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
