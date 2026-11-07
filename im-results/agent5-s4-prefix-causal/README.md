@@ -1,6 +1,22 @@
-# Exact arbitrary-depth S4 prefix projection and six-digit rooted cycle
+# S4 root prefix dynamics: source-verified periodic projections and the survival gap
 
 **Agent 5, 2026-11-05; intermediate theorem.** Target: S4 (`1RB0LD_1LC1RD_0LE1LA_0RB1RD_---0LF_1RA1LF`). This extends the three-digit prefix theorem in [S4 triple-drain dossier](../agent5-s4-octet/README.md) to **every finite prefix length**, independent of any tail assumptions beyond successful transitions. It does **not** decide S4 or BB(6). All iterated claims are conditional on genuine survival.
+
+## Current synthesis (7 November 2026)
+
+This dossier studies the original S4 candidate `1RB0LD_1LC1RD_0LE1LA_0RB1RD_---0LF_1RA1LF`. **BB(6) remains unresolved.** The strongest current S4 conclusions are:
+
+1. **All-depth prefix causality:** every finite prefix evolves by the exact length-preserving `pp` map whenever the original source run succeeds. This is the general projection theorem described below.
+2. **Source-verified first-eight-digit period:** the 5,120-return eighth-digit map has the exact four-cycle `25036 -> 109210 -> 109208 -> 109209 -> 109206 -> 109210`. The total first-eight-digit prefix trajectory has period 20,480. The root-transport theorem says every surviving genuine-root state at return `5457+n` has first eight digits `prefixRun (n % 20480) cycle8PeriodicStart`.
+3. **Exact suffix mass drift:** at surviving block-boundary states `U` at return `5457+20480*m`,
+   `stackMass cycle8PeriodicStart + stackMass (U.drop 8) = 2247 + 1024*(5457+20480*m)`.
+   Therefore each pair of successive surviving block-boundary states carries exactly 20,971,520 additional stack-mass units in the suffix beyond digit eight.
+4. **Verification scope:** the eighth-cycle and tail-mass modules passed original-source CI runs [42399978421](https://github.com/FlareZ123/bb6/actions/runs/42399978421) and [42400834321](https://github.com/FlareZ123/bb6/actions/runs/42400834321). The root-transport and mass theorems are conditional on the relevant `prun` states existing. There is no formal proof yet that the root reaches return 5457 or survives indefinitely. A direct `prunFast 5457 seed` kernel computation got stuck in run [42401520955](https://github.com/FlareZ123/bb6/actions/runs/42401520955); the failed theorem was removed.
+5. **Ninth-digit lead:** a reproducible Python prefix-map experiment and four standalone Lean computations suggest the ninth digit has the 20,480-return cycle `171050 -> 171052 -> 171051 -> 171049 -> 171050`, giving a candidate 81,920 period for the first nine digits. This is not yet source-imported or a theorem about the root.
+
+**Next decisive test:** use [s5457_chunk_states.py](s5457_chunk_states.py) to obtain the 320 intermediate 16-return full-root checkpoints from the Lean-certified `s337`, then build a chunked source-Lean survival certificate. The existing `seed337` proof already uses this 16-step `simp [prun,P,G,H]` pattern. Once return 5457 is formally reached, source-import the ninth-digit prefix iteration and its four separate return-map computations. A fixed-depth period remains insufficient to prove nonhalting; the eventual objective is to control every possible stopping gate in the evolving suffix.
+
+## Detailed theorem and proof records
 
 ## Mathematical theorem
 
