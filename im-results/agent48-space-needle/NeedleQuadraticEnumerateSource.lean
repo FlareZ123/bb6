@@ -14,6 +14,20 @@ theorem original_terminal_quadratic_list_iff (q v k : Nat) :
   rw [NeedleInverse.original_source_equation_iff q v k]
   exact (predecessor_power_identity q v k).symm
 
+/-- The sixth-regular filtered list is source-exact as well. The
+    terminal exponent in the arithmetic equation is k+1. -/
+theorem original_terminal_quadratic_regular_list_iff (q v k : Nat) :
+    (v,q) ∈ NeedleQuadraticEnum.quadraticRegularParents (k+1) ↔
+      highLevelNext (.N (oddTower q v)) = some (.N (haltTower k)) ∧
+        6*v≤k+5 := by
+  rw [NeedleQuadraticEnum.quadraticRegularParents_spec]
+  rw [NeedleInverse.original_source_equation_iff q v k]
+  constructor
+  · rintro ⟨hfeed,hbound⟩
+    exact ⟨(predecessor_power_identity q v k).mpr hfeed,hbound⟩
+  · rintro ⟨hsource,hbound⟩
+    exact ⟨(predecessor_power_identity q v k).mp hsource,hbound⟩
+
 /-- Every original-source terminal feeder is represented by the quadratic
     list, and every list entry is an actual source predecessor. -/
 theorem original_any_terminal_quadratic_list (d k : Nat) :
@@ -33,5 +47,6 @@ theorem original_any_terminal_quadratic_list (d k : Nat) :
     simpa only [hd] using hh
 
 #print axioms original_terminal_quadratic_list_iff
+#print axioms original_terminal_quadratic_regular_list_iff
 #print axioms original_any_terminal_quadratic_list
 end BB6.Agent48.SpaceNeedleQuadraticEnumeration
