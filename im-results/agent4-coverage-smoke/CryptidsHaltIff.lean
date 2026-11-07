@@ -65,7 +65,7 @@ theorem sourceRun_of_reaches (m : ConjectureMachines.Machine 6 2)
     ∃ n, sourceRun m n = some c := by
   induction hc with
   | refl => exact ⟨0, rfl⟩
-  | @tail a b c hprev hstep ih =>
+  | @tail b c hprev hstep ih =>
     obtain ⟨n, hn⟩ := ih
     exact ⟨n+1, by simp [sourceRun, hn, hstep]⟩
 
