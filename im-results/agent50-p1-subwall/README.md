@@ -30,6 +30,41 @@ The proof uses the source-preserving disjunction `source_shallow_or_all_deep`: e
 
 The authentic `CountCone` disjunction and final low-cost shallow theorem were verified in **[manual original-source CI 42337286479](https://github.com/FlareZ123/bb6/actions/runs/42337286479)** at head `b02ee59d1c591629cf1255d1e1385556b2db36fe`; the all-deep source proof previously passed **[42336988993](https://github.com/FlareZ123/bb6/actions/runs/42336988993)**. Every printed axiom list contains at most `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`. This result is complementary to the all-cost `z>=3` theorem above and does not close the `t=0` or `t=1` routes.
 
+## Universal shifted-defect gap and cost sieve (7 November)
+
+The newest original-source theorem is a **general all-endpoint energy invariant** rather than a right-five-only numerical cost claim. Let `P=2^n`, `W=b+4*m+4*n+20`, and, for a chosen inverse-cost budget `M<=n`, define the positive integer buffer
+
+```
+threshold(n,M,m) = 16*(M+n+6)*(M-m+1)*2^(M-m).
+```
+
+[`BB6.Agent50EnergyParam.source_energy_budget_gap_param`](RightFiveEnergyParam.lean) proves for every `n>=14`, every `M<=n` satisfying `64*(n+2)^2*2^M<=P`, and **every original-source** `CountCone (14*P-2*n-16) 3 b d m z` with `m<=M`:
+
+```
+W > 12*P     OR     W + threshold(n,M,m) <= 12*P.
+```
+
+The strict gap is uniform in all inverse depths, right endpoints `d`, history lengths, and numbers `z` of true positive-depth resets. It is an exact structural source invariant; all counted cone branches are handled directly with no preselected transition sequence.
+
+The key source-level identities for an actual original `inverseAt b d t = some(k,c)` and output cost `m+t+1` are
+
+```
+W + 2^(t+1)*(c+3) = 28*P,
+W_after + (c+3) = 14*P + 2*(m+n+t+4).
+```
+
+At depths `t<=1`, modest-cost paths fall at least `P` below the `12P` wall. Every `t>=3` transition ends above it. A `t=2` transition satisfies the exact cocycle
+
+```
+8*W_after = W_before + 84*P + 16*(m+n+6),
+```
+
+so the dyadic buffer is preserved through arbitrary numbers of depth-two steps. The positive `threshold` makes equality at `W=12P` impossible throughout the stated cost range. See [RightFiveEnergyNumeric.lean](RightFiveEnergyNumeric.lean), [RightFiveEnergyStep.lean](RightFiveEnergyStep.lean), and the exact source induction [RightFiveEnergyCone.lean](RightFiveEnergyCone.lean).
+
+**Verification:** manual [original-source CI run 42338373090](https://github.com/FlareZ123/bb6/actions/runs/42338373090) **SUCCESS** at head `3f67e90e348d1deee3a5a78c0b93345689689ad0`. The parametric theorem `source_energy_budget_gap_param`, its corollary `source_right_five_parametric_cost_gap`, and [`source_right_five_near_double_cost`](RightFiveNearDouble.lean) all print only `[propext, Classical.choice, Quot.sound]`; no `sorryAx`. [Earlier original-source run 42338039826](https://github.com/FlareZ123/bb6/actions/runs/42338039826) independently verified the simpler all-count cost floor `m>n+2+floor(n/2)` for `n>=128`, in [RightFiveCostGapSource.lean](RightFiveCostGapSource.lean).
+
+**Numerical corollaries and priority:** If `n>=14, M<=n, 64*(n+2)^2*2^M<=P`, a right-five `CountCone` has `m>n+2+M`. More explicitly, if `2*k<=n` and `8*(n+2)<=2^k`, [RightFiveNearDouble.lean](RightFiveNearDouble.lean) yields `2*n+2-2*k<m`, a near-`2n-O(log n)` cost barrier. These numerical bounds are **weaker** than the earlier [Agent8 original-source theorem `2*n<=m+Nat.log2(n+1)`](../agent8-p1-fixed-reset/ExceptionalNearDoubleSource.lean), [CI 41837316502](https://github.com/FlareZ123/bb6/actions/runs/41837316502). Do not claim a record improvement. The independent all-endpoint forbidden-zone invariant and its elementary source proof are the main reusable contribution; their external mathematical novelty has not been reviewed.
+
 ## Earlier source-certified subwall results
 
 The same source history, with arbitrary right endpoint `d`, has these necessary conditions:
