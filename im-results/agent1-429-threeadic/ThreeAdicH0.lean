@@ -154,6 +154,72 @@ theorem H0_eq_paper (c : Nat) (hc : 2≤c) :
   dsimp [H0]
   omega
 
+
+/-- Repeat the exact H0 3-adic shift any fixed finite number of times. -/
+theorem H0_shift_iterated (e c k : Nat) (hc : 2≤c) :
+    (H0 (c+(2*3^e)*k)+(2*3^e)*k)%(3^(e+1)) =
+      H0 c%(3^(e+1)) := by
+  induction k with
+  | zero =>
+      simp
+  | succ k ih =>
+      let p := 2*3^e
+      let M := 3^(e+1)
+      have hc' : 2≤c+p*k := by omega
+      have hstep := H0_shift e (c+p*k) hc'
+      have hbefore : c+p*(k+1)=(c+p*k)+p := by omega
+      have hafter : p*(k+1)=p+p*k := by omega
+      change (H0 (c+p*(k+1))+p*(k+1))%M=H0 c%M
+      rw [hbefore,hafter]
+      calc
+        (H0 (c+p*k+p)+(p+p*k))%M =
+            ((H0 (c+p*k+p)+p)+p*k)%M := by omega
+        _ = (((H0 (c+p*k+p)+p)%M)+p*k)%M :=
+          (Nat.mod_add_mod _ _ _).symm
+        _ = ((H0 (c+p*k)%M)+p*k)%M := by rw [hstep]
+        _ = (H0 (c+p*k)+p*k)%M := Nat.mod_add_mod _ _ _
+        _ = H0 c%M := ih
+
+/-- For every 3-adic target there is a matching H0 parameter in
+    either arbitrarily chosen even or arbitrarily chosen odd progression
+    c0 + 4*n. The arithmetic source is the same all-depth shift
+    used for the earlier even-only H0 residue theorem. -/
+theorem H0_all_threeadic_residues_from_four (c0 E r : Nat)
+    (hc0 : 2≤c0) :
+    ∃ n, H0 (c0+4*n)%(3^E)=r%(3^E) := by
+  have hshift : ∀ e n,
+      (H0 (c0+4*(n+2*3^e))+2*3^e)%(3^(e+1)) =
+        H0 (c0+4*n)%(3^(e+1)) := by
+    intro e n
+    let p := 2*3^e
+    let M := 3^(e+1)
+    let c := c0+4*n
+    have hc : 2≤c := by omega
+    have h4 := H0_shift_iterated e c 4 hc
+    have hM : M=3*3^e := by simp [M,Nat.pow_succ]
+    have h24 : p*4=p+2*M := by
+      dsimp [p]
+      rw [hM]
+      omega
+    have hremove :
+        (H0 (c+p*4)+p)%M=(H0 (c+p*4)+p*4)%M := by
+      rw [h24]
+      have heq : H0 (c+p*4)+(p+2*M) =
+          H0 (c+p*4)+p+M*2 := by omega
+      rw [heq]
+      simp
+    have harg : c0+4*(n+2*3^e)=c+p*4 := by
+      dsimp [c,p]
+      omega
+    rw [harg]
+    exact hremove.trans h4
+  obtain ⟨n,_,_,hr⟩ :=
+    all_residues (fun n => H0 (c0+4*n)) 0 hshift E r
+  exact ⟨n,hr⟩
+
+#print axioms H0_shift_iterated
+#print axioms H0_all_threeadic_residues_from_four
+
 #print axioms H0_eq_paper
 #print axioms H0_all_residues
 #print axioms H0_shift
