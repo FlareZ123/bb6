@@ -26,15 +26,22 @@ theorem candidatePairs_spec (q v K : Nat) (vs : List Nat) :
     refine ⟨v,hv',?_⟩
     simp [(candidate_correct q v K).mpr heq]
 
+/-- Search the logarithmically many possible cancellation parameters,
+    but evaluate an expensive inverse candidate only when the exact
+    parameter identity K+1 = r*(9^r+5) holds. -/
+def cancellationValuations (K : Nat) : List Nat :=
+  (List.range (Nat.log2 (K+1)+1)).filterMap fun r =>
+    if K+1 = r*(9^r+5) then
+      let v := (9^r+3)/2
+      if 11 ≤ v then some v else none
+    else none
+
 /-- Valuations below eleven, square-bounded valuations, and the exact
-    cancellation family. The latter is parameterized by r with
-    K+1 = r*(9^r+5), so its search width is logarithmic in K. -/
+    cancellation family. -/
 def quadraticValuations (K : Nat) : List Nat :=
   List.range 11 ++
-  ((List.filter (fun v => decide (11 ≤ v))
-      (List.range (Nat.sqrt (8*(K+1))+1))) ++
-   (List.filter (fun v => decide (11 ≤ v))
-      (List.map (fun r => (9^r+3)/2) (List.range (Nat.log2 (K+1)+1)))))
+    (List.filter (fun v => decide (11 ≤ v))
+      (List.range (Nat.sqrt (8*(K+1))+1)) ++ cancellationValuations K)
 
 def quadraticParents (K : Nat) : List (Nat × Nat) :=
   candidatePairs K (quadraticValuations K)
@@ -72,7 +79,8 @@ private theorem equation_to_terminal_feed (q v K : Nat)
 private theorem cancellation_bound_log (v K : Nat)
     (hcancel : (K+1)%(v+1)=0 ∧ ((K+1)/(v+1))%2=0 ∧
       2*v=3^((K+1)/(v+1))+3) :
-    ∃ r, r ≤ Nat.log2 (K+1) ∧ v=(9^r+3)/2 := by
+    ∃ r, r ≤ Nat.log2 (K+1) ∧ v=(9^r+3)/2 ∧
+      K+1=r*(9^r+5) := by
   let n := (K+1)/(v+1)
   let r := n/2
   have hn : n=2*r := by
@@ -113,7 +121,7 @@ private theorem cancellation_bound_log (v K : Nat)
       _=K+1 := hK.symm
   have hrlog : r≤Nat.log2 (K+1) :=
     (Nat.le_log2 (by omega : K+1≠0)).mpr h2K
-  exact ⟨r,hrlog,hvExpr⟩
+  exact ⟨r,hrlog,hvExpr,hK⟩
 
 /-- Every exact terminal predecessor valuation occurs in the finite list. -/
 theorem valuation_mem_quadraticValuations (q v K : Nat)
@@ -125,16 +133,18 @@ theorem valuation_mem_quadraticValuations (q v K : Nat)
     have hfeed := equation_to_terminal_feed q v K heq
     rcases NeedleTerminalDichotomy.terminal_exception_or_square_bound
       q v K hv hfeed with hcancel | hbound
-    · rcases cancellation_bound_log v K hcancel with ⟨r,hrlog,hvExpr⟩
+    · rcases cancellation_bound_log v K hcancel with
+        ⟨r,hrlog,hvExpr,hK⟩
       apply List.mem_append.mpr
       right
       apply List.mem_append.mpr
       right
-      apply List.mem_filter.mpr
-      constructor
-      · apply List.mem_map.mpr
-        exact ⟨r,List.mem_range.mpr (by omega),hvExpr.symm⟩
-      · simp [hv]
+      change v ∈ cancellationValuations K
+      unfold cancellationValuations
+      apply List.mem_filterMap.mpr
+      refine ⟨r,List.mem_range.mpr (by omega),?_⟩
+      have hv' : 11≤(9^r+3)/2 := by simpa [hvExpr] using hv
+      simp [hK,hv',hvExpr]
     · have hsqrt := le_sqrt_of_sq_le (8*(K+1)) v hbound
       apply List.mem_append.mpr
       right
@@ -168,7 +178,7 @@ theorem quadraticRegularParents_spec (q v K : Nat) :
   · rintro ⟨hm,hb⟩
     exact ⟨(quadraticParents_spec q v K).mp hm, by simpa using hb⟩
   · rintro ⟨heq,hb⟩
-    exact ⟨(quadraticParents_spec q v K).mpr heq, of_decide_eq_true hb⟩
+    exact ⟨(quadraticParents_spec q v K).mpr heq, by simpa using hb⟩
 
 /-- The list has at most O(sqrt(K)+log(K)) valuation trials, with an
     explicit bound independent of the quotient q. -/
@@ -181,24 +191,23 @@ theorem quadraticParents_length_bound (K : Nat) :
     _ = 11 +
         ((List.filter (fun v => decide (11 ≤ v))
           (List.range (Nat.sqrt (8*(K+1))+1))).length +
-        (List.filter (fun v => decide (11 ≤ v))
-          (List.map (fun r => (9^r+3)/2)
-            (List.range (Nat.log2 (K+1)+1)))).length) := by
-            simp [quadraticValuations, List.length_append, List.length_range, List.length_map]
+        (cancellationValuations K).length) := by
+            simp [quadraticValuations, List.length_append, List.length_range]
     _ ≤ 11 + (Nat.sqrt (8*(K+1))+1) + (Nat.log2 (K+1)+1) := by
       have hm := List.length_filter_le
         (fun v => decide (11 ≤ v))
         (List.range (Nat.sqrt (8*(K+1))+1))
-      have he := List.length_filter_le
-        (fun v => decide (11 ≤ v))
-        (List.map (fun r => (9^r+3)/2) (List.range (Nat.log2 (K+1)+1)))
+      have he := List.length_filterMap_le
+        (fun r => if K+1 = r*(9^r+5) then
+          let v := (9^r+3)/2
+          if 11 ≤ v then some v else none
+          else none)
+        (List.range (Nat.log2 (K+1)+1))
       have hm' : (List.filter (fun v => decide (11 ≤ v))
           (List.range (Nat.sqrt (8*(K+1))+1))).length ≤ Nat.sqrt (8*(K+1))+1 := by
         simpa [List.length_range] using hm
-      have he' : (List.filter (fun v => decide (11 ≤ v))
-          (List.map (fun r => (9^r+3)/2)
-            (List.range (Nat.log2 (K+1)+1)))).length ≤ Nat.log2 (K+1)+1 := by
-        simpa [List.length_range, List.length_map] using he
+      have he' : (cancellationValuations K).length ≤ Nat.log2 (K+1)+1 := by
+        simpa [cancellationValuations, List.length_range] using he
       omega
 
 #eval (quadraticParents 13).map Prod.fst
