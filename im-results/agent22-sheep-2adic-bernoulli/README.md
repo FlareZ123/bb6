@@ -166,16 +166,32 @@ Among even positive integers its natural density is \(2^{-C(w)}\), exactly the H
 
 The finite inverse-word bijection in [Agent 22's dyadic completeness result](../agent22-sheep-mixed-hub/DYADIC-COMPLETENESS.md) is the finite-precision version of the same coding. The present note adds the exact product law, the branch entropy, and the almost-everywhere dense-orbit consequence.
 
-That earlier bijection gives a further exact statistic. For a uniform even residue modulo \(2^p\), let \(J_p\) be the length of its unique canonical inverse word. Since exactly \(\binom{p}{2j}\) canonical words have length \(j\),
+That earlier bijection gives further exact statistics. For a uniform even residue modulo \(2^p\), let \(J_p\) and \(C_p\) be the length and total cost of its unique canonical inverse word. A word of length \(j\) and exact cost \(c\) is a choice of \(2j\) nonnegative parameters \((a_i-1,h_i)\) with sum \(c-2j\). Hence
+\[
+\Pr(J_p=j,C_p=c)
+=\frac{\binom{c-1}{2j-1}}{2^{p-1}}
+\quad(1\le j,\ 2j\le c\le p),
+\]
+with the empty word having \((J_p,C_p)=(0,0)\). Summing over \(c\) recovers
 \[
 \Pr(J_p=j)=\frac{\binom{p}{2j}}{2^{p-1}}.
 \]
-For \(p\ge2\), this is half a \(\operatorname{Binomial}(p,1/2)\) variable conditioned to be even, so
+For \(p\ge2\), \(2J_p\) is a \(\operatorname{Binomial}(p,1/2)\) variable conditioned to be even, so
 \[
 \mathbb E[J_p]=\frac p4,\qquad
 \operatorname{Var}(J_p)=\frac p{16}.
 \]
-Thus a uniformly selected even residue requires, on average, one quarter as many canonical even-return symbols as the precision in bits. This is the finite-precision counterpart of the Haar branch cost mean of four bits per return.
+Summing instead over \(j\), the number of canonical words of exact cost \(c\) is \(2^{c-2}\) for \(2\le c\le p\), with one empty word of cost zero. Therefore
+\[
+\Pr(C_p=0)=2^{1-p},\qquad
+\Pr(C_p=c)=2^{c-p-1}\quad(2\le c\le p),
+\]
+and direct summation gives
+\[
+\mathbb E[C_p]=p-1,\qquad
+\operatorname{Var}(C_p)=2-2^{2-p}.
+\]
+The unused precision \(p-C_p\) has mean exactly one bit. By symmetry between the positive compositions of \(A_p=\sum a_i\) and \(B_p=\sum(h_i+1)\), both have mean \((p-1)/2\). Thus a uniform residue needs, on average, \(p/4\) even-return symbols and \((p-1)/2\) raw section transitions to decode. This is the finite-precision counterpart of the Haar branch cost mean of four bits per return.
 
 
 ## 6. The pointwise symbolic obstruction
