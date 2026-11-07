@@ -104,7 +104,7 @@ jobs:
             exit 1
           fi
           lean -o "$AG50SUB/RightFiveDefectStep.olean" "$AG50SUB/RightFiveDefectStep.lean"
-          if lean "$AG50SUB/RightFiveDeepCone.lean" > /tmp/agent50-right-five-deep-axioms.txt; then
+          if lean -o "$AG50SUB/RightFiveDeepCone.olean" "$AG50SUB/RightFiveDeepCone.lean" > /tmp/agent50-right-five-deep-axioms.txt; then
             cat /tmp/agent50-right-five-deep-axioms.txt
           else
             status=$?
@@ -114,5 +114,12 @@ jobs:
           grep -q "deep_cone_right_five_exceeds_mid_cost" /tmp/agent50-right-five-deep-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-right-five-deep-axioms.txt; then
             echo "All-high-depth source theorem depends on sorryAx" >&2
+            exit 1
+          fi
+          lean "$AG50SUB/RightFiveShallowSource.lean" > /tmp/agent50-right-five-shallow-axioms.txt
+          cat /tmp/agent50-right-five-shallow-axioms.txt
+          grep -q "source_low_cost_right_five_has_shallow_edge" /tmp/agent50-right-five-shallow-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-shallow-axioms.txt; then
+            echo "Shallow-edge original CountCone result depends on sorryAx" >&2
             exit 1
           fi
