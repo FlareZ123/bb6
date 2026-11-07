@@ -15,8 +15,7 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
   have hH : 0<weight w ∧ weight w<2^(cost w)-1 := positive_marker w hp
   have hSpos : 0<cost w := by omega
   have hSlope := periodic_run_slope_at_zero L w hSpos m z hr
-  have hpowcast : (2:Int)^(cost w)=((2^(cost w):Nat):Int) := by
-    change ((2:Nat):Int)^(cost w)=((2^(cost w):Nat):Int)
+  have hpowcast : ((2:Nat):Int)^(cost w)=((2^(cost w):Nat):Int) := by
     rw [← Int.natCast_pow]
   have hSlopeCast :
       (((2^(cost w):Nat):Int)-1)*((z 1:Int)-(z 0:Int)) =
@@ -95,7 +94,9 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
     let q : Nat := (2^s*weight u)/(2^d-1)
     have hdecomp : 2^s*weight u=weight u+(2^d-1)*q := by
       have h := Nat.mod_add_div (2^s*weight u) (2^d-1)
-      rw [hrotU] at h
+      have hrotU' : (2^s*weight u)%(2^d-1)=weight u := by
+        simpa [hcostU] using hrotU
+      rw [hrotU'] at h
       change weight u+(2^d-1)*q=2^s*weight u at h
       exact h.symm
     have hWrep' : weight w=weight u*J := by simpa [J] using hWrep
