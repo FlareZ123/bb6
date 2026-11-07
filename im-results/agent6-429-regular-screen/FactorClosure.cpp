@@ -19,7 +19,7 @@ struct Context {
 static constexpr int state_next[6][2] = {
     {1,5},{2,0},{3,1},{4,6},{0,4},{3,0}};
 static constexpr int write_bit[6][2] = {
-    {1,0},{1,1},{0,0},{0,1},{0,1},{1,1}};
+    {1,0},{1,1},{0,0},{1,0},{0,1},{1,1}};
 static constexpr int move_dir[6][2] = {
     {1,-1},{1,1},{1,1},{-1,0},{-1,-1},{1,-1}};
 
