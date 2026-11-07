@@ -113,4 +113,73 @@ theorem j_high2_crosses_origin_raw (u : Nat) :
 
 #print axioms j_high2_crosses_origin_raw
 
+/-- Exact endpoint alternatives for the finite Junc crossing. The terminal
+    full-cycle remainder either leaves a Junc state with at most four right
+    ones, or a midApos state after the maximal partial sweep. -/
+theorem juncCycle_crossing_shape (u w k h : Nat) (hrel : h+w=2*k+5) :
+    ∃ (steps : Nat) (cfg : Zipper) (d : Nat),
+      runWithDelta steps (junc u 0 w) = some (cfg, (d : Int)) ∧
+      2*k < h+d ∧
+      ((w-juncCycleSpent (juncTerminalN u w) u ≤ 4 ∧
+        steps = juncCycleTimeTotal (juncTerminalN u w) u ∧
+        d = juncCycleSpent (juncTerminalN u w) u ∧
+        cfg = junc (juncCycleU (juncTerminalN u w) u) 0
+          (w-juncCycleSpent (juncTerminalN u w) u)) ∨
+       (5 ≤ w-juncCycleSpent (juncTerminalN u w) u ∧
+        ∃ N : Nat,
+          N = (w-juncCycleSpent (juncTerminalN u w) u)/2-1 ∧
+          steps = juncCycleTimeTotal (juncTerminalN u w) u + juncPosMidTime N 0 ∧
+          d = juncCycleSpent (juncTerminalN u w) u + 2*N ∧
+          cfg = midApos (juncCycleU (juncTerminalN u w) u-N)
+            (2*(N-1)) (w-juncCycleSpent (juncTerminalN u w) u-2*(N-1)))) := by
+  let n := juncTerminalN u w
+  let spent := juncCycleSpent n u
+  let rem := w-spent
+  have hspent : spent ≤ w := by
+    simpa [spent,n] using juncTerminal_spent_le u w
+  have hcycles :
+      runWithDelta (juncCycleTimeTotal n u) (junc u 0 w) =
+        some (junc (juncCycleU n u) 0 rem, (spent : Int)) := by
+    simpa [spent,rem] using juncCycle_iter_delta n u w hspent
+  have hrel' : h+spent+rem=2*k+5 := by
+    dsimp [rem]
+    omega
+  by_cases hsmall : rem ≤ 4
+  · refine ⟨juncCycleTimeTotal n u, junc (juncCycleU n u) 0 rem,
+      spent, ?_, ?_, ?_⟩
+    · simpa using hcycles
+    · omega
+    · left
+      simpa [n,spent,rem] using
+        (show rem ≤ 4 ∧
+          juncCycleTimeTotal n u = juncCycleTimeTotal n u ∧
+          spent = spent ∧
+          junc (juncCycleU n u) 0 rem = junc (juncCycleU n u) 0 rem
+          from ⟨hsmall,rfl,rfl,rfl⟩)
+  · have hrem : 5 ≤ rem := by omega
+    have hb := juncTerminal_final_bounds u w
+      (by simpa [rem,spent,n] using hrem)
+    let N := rem/2-1
+    have hN : 1 ≤ N := by dsimp [N]; exact hb.1
+    have hU : N ≤ juncCycleU n u := by dsimp [N]; exact hb.2.1
+    have hwN : 2*N-1 ≤ rem := by dsimp [N]; exact hb.2.2.1
+    have hmid := juncPos_iter_mid_delta N (juncCycleU n u) 0 rem hN hU hwN
+    refine ⟨juncCycleTimeTotal n u + juncPosMidTime N 0,
+      midApos (juncCycleU n u-N) (2*(N-1)) (rem-2*(N-1)),
+      spent+2*N, ?_, ?_, ?_⟩
+    · rw [runWithDelta_add,hcycles]
+      simp only [Option.bind_some]
+      rw [hmid]
+      simp only [Option.map_some]
+      simp [Int.natCast_add,Int.natCast_mul]
+    · omega
+    · right
+      refine ⟨hrem,N,?_,?_,?_,?_⟩
+      · dsimp [N]
+      · simp [n,spent,rem]
+      · simp [n,spent,rem]
+      · simp [n,spent,rem]
+
+#print axioms juncCycle_crossing_shape
+
 end BB429High2Return
