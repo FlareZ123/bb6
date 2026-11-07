@@ -1,6 +1,6 @@
 # Arbitrary-precision affine inverse certificates for the original P1 blank-root gateway
 
-**Agent 13, 6 November 2026.** Research intermediate in `im-results/`. This dossier documents a source-verified generic theorem and strengthened infinite necessary-gateway exclusions for the six-state P1 machine. It does **not** settle P1 nonhalting, the other six-state holdouts, or BB(6).
+**Agent 13, 6–7 November 2026.** Research intermediate in `im-results/`. This dossier documents a source-verified generic theorem and strengthened infinite necessary-gateway exclusions for the six-state P1 machine. It does **not** settle P1 nonhalting, the other six-state holdouts, or BB(6).
 
 ## Original-source theorem, beyond the fixed 41/10 checker
 
@@ -61,8 +61,15 @@ The pure Python library [generate_narrow.py](generate_narrow.py) reconstructs ba
 | 74 | 25 / 29 | 18 | 6 | `2^18` | `1186+2^22*r` | New q class relative to inspected prior P1 catalogue |
 | 70 | 195 / 199 | 57 | 7 | `2^56` | `1122+2^60*r` | Previous q period `2^67`; 2048 times denser |
 | 89 | 258 / 280 | 51 | 11 | `2^50` | `1426+2^54*r` | Previous q period `2^62`; 4096 times denser |
+| 853 | 21 / 33 | 11 | 12 | `2^10` | `13650+2^14*r` | New complete q-residue class; adaptive precision |
 
 The q74 theorem `critical_1186_mod_4194304_unreachable` passed source [CI 42310575677](https://github.com/FlareZ123/bb6/actions/runs/42310575677), with its separate full dossier [here](../agent13-p1-q74-cylinder/README.md). The q89 theorem [Q89NarrowFinal.lean](Q89NarrowFinal.lean), `critical_1426_mod_2pow54_unreachable`, passed source [CI 42311837759](https://github.com/FlareZ123/bb6/actions/runs/42311837759), with [538 explicit affine rows](Q89NarrowNodes.lean). The [q70 source theorem](Q70NarrowFinal.lean), `critical_1122_mod_2pow60_unreachable`, uses [394 exact affine rows](Q70NarrowNodes.lean) and passed the genuine original-source [CI 42312485119](https://github.com/FlareZ123/bb6/actions/runs/42312485119), with standard Lean axioms only.
+
+The q853 certificate is [Q853NarrowNodes.lean](Q853NarrowNodes.lean) and [Q853NarrowFinal.lean](Q853NarrowFinal.lean). Its 21- and 33-node affine graphs use `K=12`, `B=11`, and the minimal valuation-preserving period `P=1024`. The feeder-0 root is `z=10240=5·2^11`, so the old `K=10` cutoff fails already at the root; raising the precision to 12 while retaining budget 11 yields a closed graph. The exact theorem `critical_13650_mod_16384_unreachable` excludes the original blank-start P1 critical gateway for every `q=853+1024*r`, equivalently `n=13650+16384*r`. Full original-source CI [run 42426338508](https://github.com/FlareZ123/bb6/actions/runs/42426338508) passed at the pinned revision, with standard Lean axioms only and no `sorryAx`.
+
+[DensityCount701.lean](DensityCount701.lean) adds this class to the prior 700-class census and proves the exact union count `701/1024`; the count and disjointness checks are axiom-free. Full CI [run 42426623702](https://github.com/FlareZ123/bb6/actions/runs/42426623702) passed, including the q853 source theorem and the density-count module. The finite endpoint diagnostic [prefix_residue_census.py](prefix_residue_census.py) independently finds the same 323 residues from feeder-0 cost-12 and feeder-1 cost-11 endpoint-integrality words. These are exactly the 323 classes among the 324 left outside the prior 700 census; q=853 is the sole remaining class not represented by either endpoint set. This script checks a necessary endpoint congruence only; it is not a source-path proof and is not used by the q853 Lean certificate.
+
+The 701/1024 figure is a density of exclusions for this one necessary P1 gateway. It does not establish P1 nonhalting, eliminate the other critical-index families, or determine BB(6); 323 residue classes remain outside this census.
 
 These new exact original blank-source exclusions concern one **necessary** halting gateway for the P1 accelerated model. Other critical index families remain and the complete P1 halting question remains open. The largest value of the six-state Busy Beaver function remains unknown. External academic novelty has not been investigated; the comparisons here refer to specific previously committed repository proofs.
 
@@ -94,7 +101,7 @@ A global corollary is also formalized: `feeder12_depth_sequence_parameter_unique
 
 The one-bit improvement over the cancellation exponents proposed in Agent 9's initial message comes from using the endpoint coordinate z itself. In the recentered-coordinate formulation, the difference of the two endpoint recentered values is even because both paths have the same cost and the feeder L-values differ by a multiple of 16.
 
-**Verification status:** full source-import CI [run 42424580585](https://github.com/FlareZ123/bb6/actions/runs/42424580585) **passed** at pinned commit `79a4dcb43faadcfc361303cf53d590fc04e143ea` under Lean 4.36.0-rc2. The workflow compiled the unchanged Agent 9 source dependencies, imported `SourcePeriodAllPeriods`, and checked all eight new theorems. The final axiom lists for all eight theorems are exactly `[propext, Classical.choice, Quot.sound]`; the acceptance gate rejected `sorryAx` and errors. This is an intermediate theorem about common finite prefixes. It does not exclude any single infinite aperiodic path, decide the P1 gateway, or determine BB(6). External prior-art and publication-significance review remain open.
+**Verification status:** full source-import CI [run 42425099642](https://github.com/FlareZ123/bb6/actions/runs/42425099642) **passed** at pinned commit `1a675e98618c0520572296288a8200a04fb37e5f` under Lean 4.36.0-rc2. The workflow compiled the unchanged Agent 9 source dependencies, imported `SourcePeriodAllPeriods`, and checked all eight new theorems. The final axiom lists for all eight theorems are exactly `[propext, Classical.choice, Quot.sound]`; the acceptance gate rejected `sorryAx` and errors. This is an intermediate theorem about common finite prefixes. It does not exclude any single infinite aperiodic path, decide the P1 gateway, or determine BB(6). External prior-art and publication-significance review remain open.
 
 ## Next high-leverage steps
 
