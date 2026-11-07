@@ -20,8 +20,9 @@ jobs:
       - name: Compile original frontier, authentic #429 path and new all-time predecessor theorem
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean | tee /tmp/agent32-bubble.log
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
           done
@@ -44,4 +45,4 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FatalB.olean im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
           lean -o im-results/agent32-429-raw-parent/FreshCell.olean im-results/agent32-429-raw-parent/FreshCell.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FreshFrontier.lean | tee -a /tmp/agent32-429-source.log
-          if grep -q sorryAx /tmp/agent32-429-source.log; then exit 1; fi
+          if grep -q sorryAx /tmp/agent32-429-source.log /tmp/agent32-bubble.log; then exit 1; fi
