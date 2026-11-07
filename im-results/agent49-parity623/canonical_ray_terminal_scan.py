@@ -118,9 +118,7 @@ def terminal_window(a: int, d: int, ray: tuple[str, int, int, int, int, int]) ->
         width = K + 5 * n + 12
     else:
         n = min_pow3_greater(a)
-        # The evaluator/drain joint-mass lemma improves the former envelope
-        # d + 2*a + 5 + 3*n to d + 5 + 3*n.
-        mass = d + 5 + 3 * n
+        mass = d + 2 * a + 5 + 3 * n
         K = min_pow3_greater(2 * mass + 5)
         gap = abs(2 * t - (3 * a - 2 - 2 * k))
         width = K + 8 * n + 17
