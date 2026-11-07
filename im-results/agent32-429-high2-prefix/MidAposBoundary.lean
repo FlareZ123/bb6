@@ -310,10 +310,14 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
       rfl
   | succ n ih =>
       rw [show n+1 = 1+n by omega, runWithDelta_add]
+      have hleft : ones (1+n) ++ left = true :: (ones n ++ left) := by
+        rw [show 1+n = n+1 by omega]
+        simp [ones, List.cons_append]
       have hstep :
           runWithDelta 1 (z 4 (ones (1+n) ++ left) true suffix) =
             some (z 4 (ones n ++ left) true (true :: suffix), -1) := by
-        simp [runWithDelta, oneWithDelta, one, action, z, ones, List.append_assoc]
+        rw [hleft]
+        simp [runWithDelta, oneWithDelta, one, action, z, ones]
       rw [hstep]
       simp only [Option.bind_some]
       rw [ih]
@@ -341,7 +345,8 @@ theorem ones_right_101 (n : Nat) :
     rfl
   calc
     ones n ++ [true,false,true] = (ones n ++ [true]) ++ [false,true] := by
-      rw [← List.append_assoc]
+      change ones n ++ ([true] ++ [false,true]) = (ones n ++ [true]) ++ [false,true]
+      exact (List.append_assoc (ones n) [true] [false,true]).symm
     _ = ones (n+1) ++ [false,true] := by rw [hones]
     _ = (true :: ones n) ++ [false,true] := by rw [hsucc]
     _ = true :: (ones n ++ [false,true]) := by rfl
@@ -392,6 +397,7 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
+  rw [List.append_assoc]
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
   rw [hinput, htail]
@@ -468,7 +474,9 @@ theorem c1_even_to_junc11_delta (k : Nat) :
     calc
       ones (4*k+21) ++ [true,false,true] =
           (ones (4*k+21) ++ [true]) ++ [false,true] := by
-            rw [← List.append_assoc]
+            change ones (4*k+21) ++ ([true] ++ [false,true]) =
+              (ones (4*k+21) ++ [true]) ++ [false,true]
+            exact (List.append_assoc (ones (4*k+21)) [true] [false,true]).symm
       _ = ones (4*k+22) ++ [false,true] := by rw [hones1]
       _ = (ones 6 ++ ones (4*k+16)) ++ [false,true] := by rw [hones2]
       _ = ones 6 ++ ones (4*k+16) ++ [false,true] := by rw [List.append_assoc]
@@ -487,15 +495,8 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   rw [htailTime] at htail
   have hw : 2*(2*k+8)-6 = 4*k+10 := by omega
   rw [show 2*1+9=11 by omega, hw] at htail
-  have hprefix' :
-      runWithDelta 24
-        (z 2 (ones (4*k+9) ++ (pairs01 2 ++ ones 5)) true
-          (ones 3 ++ pairs01 3 ++ [false,false,true])) =
-      some (z 4 (ones (4*k+21) ++ (pairs01 2 ++ ones 5)) true
-        [true,false,true], 12) := by
-    simpa [List.append_assoc] using hprefix
   have htime : 4*k+220 = 24 + ((4*k+21)+175) := by omega
-  rw [htime, runWithDelta_add, hprefix']
+  rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
