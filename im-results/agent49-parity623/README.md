@@ -273,3 +273,29 @@ The local Lean 4.36.0-rc2 exact-equation compile reports only standard Lean
 axioms (`propext`, `Classical.choice`, `Quot.sound`), with no `sorry` and no
 project-specific axioms. The pinned-source workflow run 42361679978 also
 compiled the actual upstream machine imports and both modules successfully.
+
+
+## 2026-11-07 joint-mass and terminal refinements
+
+- [JointMass.md](JointMass.md) records the sharp source theorem
+  a'+d'≤a+d+3b+3n+1 for b<3^n. The positive/zero evaluator split and
+  sharpBlock equality witness are formalized in [JointMassSource.lean](JointMassSource.lean).
+  Pinned source-import CI passed in workflow run #24.
+- [RootRayBridge.md](RootRayBridge.md) records the four source-derived
+  predecessor-form bridge packages. The arithmetic module and its
+  integration into the terminal source passed workflow run #25.
+- [DrainLinearTerminalSource.lean](DrainLinearTerminalSource.lean) now has
+  joint-mass terminal interval refinements. Those refinements passed run #25.
+  The generic output-balance lemmas appended after run #25 still await CI.
+- [TerminalRatio4.md](TerminalRatio4.md) records the cancellation of paired
+  ray gaps into logarithmic ratio-4 necessary windows. The generic arithmetic
+  cancellation lemmas are in [TerminalRatio4Arithmetic.lean](TerminalRatio4Arithmetic.lean);
+  they compile locally with Lean 4.36.0-rc2. The workflow has been updated to
+  compile them, and the next pinned CI run will verify both this module and
+  the post-run-25 output-balance lemmas.
+- [joint_mass_check.py](joint_mass_check.py) reproduces finite mass and
+  root-orbit diagnostics. All finite checks remain empirical; no all-time
+  nonhalting proof or exact BB(6) value has been established.
+
+These are intermediate results and remain in im-results pending further
+synthesis and proof of an all-time orbit invariant.
