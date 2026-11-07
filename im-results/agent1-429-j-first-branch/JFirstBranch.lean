@@ -466,17 +466,29 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
         x<h-2 ∨ h+3<x := by omega
     rcases hcases with h0x | h1x | h2x | h3x | h4x | h5x | hleft | hright
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape] <;> omega
+      have hinside : h-2≤x ∧ x≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hinside] <;> omega
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape] <;> omega
+      have hinside : h-2≤x ∧ x≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hinside] <;> omega
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape] <;> omega
+      have hinside : h-2≤x ∧ x≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hinside] <;> omega
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape] <;> omega
+      have hinside : h-2≤x ∧ x≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hinside] <;> omega
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape] <;> omega
+      have hinside : h-2≤x ∧ x≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hinside] <;> omega
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape] <;> omega
+      have hinside : h-2≤x ∧ x≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hinside] <;> omega
     · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
         writeAt,setupTape,hout] <;> omega
