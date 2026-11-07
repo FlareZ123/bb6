@@ -56,9 +56,26 @@ This is `all_suffix_iff_short`. The all-time corollary `all_time_iff_bounded` st
 
 ## Proof mechanism
 
-The odd drain preserves a fixed `k`-digit prefix and the weight increment `2^k t` between coupled stacks whenever the source stopping potential is nonzero modulo `2^k`. This affine coupling composes through arbitrary finite odd-drain chains and repeated returns. When the earliest safety guard fails, choose a positive `t` making the relevant stopping potential exactly a binary power. Appending the one-digit list `[t-1]` to the original prefix realizes that weight increment at the first step and preserves it through every safe preceding stage.
+Write `k=|T|`, `W(T)=Σᵢ (Tᵢ+1)2ⁱ`, and `ν₂(v)` for the exact power of two dividing a positive integer `v`. The proofs use the unmodified source `H` and `G` definitions. Every odd input to `H` emits a digit and carries `b+⌊a/2⌋+1` to the next digit; the first even carry ends the drain. For `G c T=some U`, the pre-existing source-derived stack-length identity is
 
-Separately, the [S4Length length law](../agent5-s4-length/README.md) gives the exact output length of each successful odd drain in terms of its 2-adic valuation. The valuation passes the designated prefix length exactly when a new two-or-more-entry burst appears, which proves the growth characterization. These proofs apply to *every* successful input, including arbitrary zero digits and potentially arbitrarily long odd-carry drains.
+`|U| = max(|T|, ν₂(W(T)+c)+2)`.
+
+In particular, every successful drain is nonshrinking. If the potential `W(T)+c` is divisible by `2ᵏ`, that successful drain outputs at least `k+2` digits; otherwise its output is bounded by `max(|T|,k+1)`. This is the first bridge from dyadic arithmetic to exact output length, generalized through arbitrary finite positive-offset drain sequences in `chain_good_short` and `chain_bad_long`.
+
+If `W(T)+c` is **not** divisible by `2ᵏ`, `H_suffix_stable` and `G_suffix_stable` prove that every appended suffix `S` survives that drain, with a common first `k` output digits and an exact affine weighted shift of `2ᵏW(S)`. More generally, define two stacks `x,y` to be `(k,t)`-coupled if they have the same first `k` digits and `W(y)=W(x)+2ᵏt`. Under a safe modular gate, `G_pair_stable` proves that their successful outputs are again `(k,t)`-coupled. The invariance persists through any finite chain and any finite number of returns as long as each bare-input guard succeeds.
+
+Now suppose the first unsafe gate in a chain encounters a potential `A=W(x)+c` divisible by `2ᵏ`. Let `q=A/2ᵏ ≥1`; choose `r` so that `2ʳ>q`, and set `d=2ʳ-q-1≥0`. A one-symbol appended suffix `[d]` has weighted increment `2ᵏ(d+1)`, making the dangerous potential exactly `2ᵏ(q+d+1)=2ᵏ⁺ʳ`. The exact binary-power stopping theorem therefore forces that gate to return `none`. Coupling transports the same digit `d` through all earlier *safe* gates, even those whose output lists have grown. The constructive `chain_bad_weight` / `chain_bad_one_digit` lemmas formalize this argument with no bounded-digit or bounded-length hypothesis.
+
+For a **finite horizon of n returns**, fix the protected depth `k=|T|` once at the starting stack. Define `nGood(k,n,T)` by applying `P` to the bare stack `n` times, requiring the modular guard at **that same fixed k** at every intermediate return. If the guard ever fails, the preceding coupling argument constructs a one-digit extension of the *original* stack that stops no later than return `n`. If all guards pass, every extension survives all `n` returns. This is the quantified `all_suffix_iff_nGood` theorem, transferred by `runN_eq_prun` to the exact source `prun`; `one_digit_horizon_complete` and `one_digit_all_time_complete` follow.
+
+Finally, the actual unextended `P` output length is nondecreasing across successful returns. If all guards at the fixed initial `k` pass, every intermediate stack has length at most `k+1`; conversely, if any guard fails while the bare orbit survives, that stage forces length at least `k+2`, permanently. Hence a **single final-length check** is equivalent to the entire sequence of fixed-depth modular guards:
+
+```
+All finite suffixes survive n returns from T
+  iff prun(n,T)=some U and |U| <= |T|+1.
+```
+
+Quantifying this statement over every `n` gives the all-time theorem. None of these equivalences requires or grants a blank-origin reachability property for a constructed suffix.
 
 ## Verification, reproducibility, and boundaries
 
