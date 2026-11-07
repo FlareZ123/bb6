@@ -380,7 +380,7 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
     simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb]
   have htime : 4*u*u+6*u+7=(4*u*u+6*u+6)+1 := by omega
   rw [htime,run_add',hp]
-  simpa [run,baseTape] using hstep
+  simpa [run,rawStep,baseTape] using hstep
 
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
@@ -452,7 +452,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r0 : rawStep target429 c0=some c1 := by
     have hraw := rawStep_of_read target429 c0 F false _ hs0 hrow0
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c0,c1]
       · simp [applyMove,c0,c1] <;> omega
@@ -461,7 +461,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r1 : rawStep target429 c1=some c2 := by
     have hraw := rawStep_of_read target429 c1 D false _ hs1 hrow1
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c1,c2]
       · simp [applyMove,c1,c2] <;> omega
@@ -470,7 +470,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r2 : rawStep target429 c2=some c3 := by
     have hraw := rawStep_of_read target429 c2 E true _ hs2 hrow2
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c2,c3]
       · simp [applyMove,c2,c3] <;> omega
@@ -479,7 +479,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r3 : rawStep target429 c3=some c4 := by
     have hraw := rawStep_of_read target429 c3 E false _ hs3 hrow3
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c3,c4]
       · simp [applyMove,c3,c4] <;> omega
@@ -488,7 +488,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r4 : rawStep target429 c4=some c5 := by
     have hraw := rawStep_of_read target429 c4 A false _ hs4 hrow4
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c4,c5]
       · simp [applyMove,c4,c5] <;> omega
@@ -497,7 +497,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r5 : rawStep target429 c5=some c6 := by
     have hraw := rawStep_of_read target429 c5 B false _ hs5 hrow5
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c5,c6]
       · simp [applyMove,c5,c6] <;> omega
@@ -506,7 +506,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r6 : rawStep target429 c6=some c7 := by
     have hraw := rawStep_of_read target429 c6 C true _ hs6 hrow6
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c6,c7]
       · simp [applyMove,c6,c7] <;> omega
@@ -515,7 +515,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r7 : rawStep target429 c7=some c8 := by
     have hraw := rawStep_of_read target429 c7 B true _ hs7 hrow7
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c7,c8]
       · simp [applyMove,c7,c8] <;> omega
@@ -524,7 +524,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r8 : rawStep target429 c8=some c9 := by
     have hraw := rawStep_of_read target429 c8 A true _ hs8 hrow8
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c8,c9]
       · simp [applyMove,c8,c9] <;> omega
@@ -533,7 +533,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r9 : rawStep target429 c9=some c10 := by
     have hraw := rawStep_of_read target429 c9 F true _ hs9 hrow9
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c9,c10]
       · simp [applyMove,c9,c10] <;> omega
@@ -542,7 +542,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r10 : rawStep target429 c10=some c11 := by
     have hraw := rawStep_of_read target429 c10 A false _ hs10 hrow10
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c10,c11]
       · simp [applyMove,c10,c11] <;> omega
@@ -551,7 +551,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r11 : rawStep target429 c11=some c12 := by
     have hraw := rawStep_of_read target429 c11 B true _ hs11 hrow11
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c11,c12]
       · simp [applyMove,c11,c12] <;> omega
@@ -560,7 +560,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r12 : rawStep target429 c12=some c13 := by
     have hraw := rawStep_of_read target429 c12 A false _ hs12 hrow12
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c12,c13]
       · simp [applyMove,c12,c13] <;> omega
@@ -569,7 +569,7 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have r13 : rawStep target429 c13=some c14 := by
     have hraw := rawStep_of_read target429 c13 B false _ hs13 hrow13
     exact hraw.trans (by
-      congr 1
+      apply congrArg some
       apply config_ext
       · simp [applyMove,c13,c14]
       · simp [applyMove,c13,c14] <;> omega
