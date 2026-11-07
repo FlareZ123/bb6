@@ -59,7 +59,7 @@ theorem source_periodic_tail_boundaries_reachable
   induction n with
   | zero => simpa using hroot
   | succ n ih =>
-      exact run_source_transport L (hr n) root ih
+      exact run_source_transport (hr n) root ih
 
 /-- The arbitrary-word theorem excludes every eventually periodic
     positive-depth inverse tail in the original P1 scalar shadow. -/
