@@ -111,34 +111,6 @@ theorem cbPaint_odd (t : Int → Bool) (h : Int) (k : Nat) (x : Int)
           simpa [cbPaint,writeAt,hx0,hx1] using ih hhi'
 
 /-- The two raw C/1, B/0 instructions paint one 01 pair and return to C. -/
-theorem cbPaint_compose_right (t : Int → Bool) (h : Int) (k : Nat) :
-    cbPaint (cbPaint t h k) (h+2*(k:Int)) 1 = cbPaint t h (k+1) := by
-  funext x
-  by_cases hx : x < h+2*(k:Int)
-  · have hz : cbZeroTest h x (k+1) ↔ cbZeroTest h x k := by
-      unfold cbZeroTest
-      constructor <;> intro hh <;> rcases hh with ⟨a,b,c⟩ <;> constructor <;> omega
-    have ho : cbOneTest h x (k+1) ↔ cbOneTest h x k := by
-      unfold cbOneTest
-      constructor <;> intro hh <;> rcases hh with ⟨a,b,c⟩ <;> constructor <;> omega
-    have hout : cbPaint (cbPaint t h k) (h+2*(k:Int)) 1 x =
-        cbPaint t h k x := cbPaint_left (cbPaint t h k) (h+2*(k:Int)) 1 x hx
-    rw [hout]
-    simp [cbPaint,hz,ho]
-  · by_cases hx0 : x=h+2*(k:Int)
-    · subst x
-      simp [cbPaint,cbZeroTest,cbOneTest]
-    · by_cases hx1 : x=h+2*(k:Int)+1
-      · subst x
-        simp [cbPaint,cbZeroTest,cbOneTest]
-      · have hout : cbPaint (cbPaint t h k) (h+2*(k:Int)) 1 x =
-            cbPaint t h k x :=
-          cbPaint_right (cbPaint t h k) (h+2*(k:Int)) 1 x (by omega)
-        rw [hout]
-        have hz : ¬cbZeroTest h x (k+1) := by unfold cbZeroTest; omega
-        have ho : ¬cbOneTest h x (k+1) := by unfold cbOneTest; omega
-        simp [cbPaint,hz,ho]
-
 theorem bc_two_full (m : Machine) (c : Config)
     (hC : m (C,true)=some ⟨false,true,B⟩)
     (hB : m (B,false)=some ⟨true,true,C⟩)
@@ -655,8 +627,8 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
       cFinal.tape = cbPaint cE.tape cE.head 1 := htFinal
       _ = cbPaint (cbPaint cC.tape cC.head k) (cC.head+2*(k:Int)) 1 := by
         rw [htE,hhE]
-      _ = cbPaint cC.tape cC.head (k+1) :=
-        cbPaint_compose_right cC.tape cC.head k
+      _ = cbPaint cC.tape cC.head (k+1) := by
+        simpa using cbPaint_compose_right cC.tape cC.head k
   have hprofile : cFinal.tape=firstBranchTape u w := by
     rw [hcompose]
     funext x
@@ -672,32 +644,28 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
           cC,hC,hx0,hx1,hc]
       · by_cases hx2 : x < 2*(u:Int)+3
         · by_cases heven : x%2=0
-          · have hzero : ¬cbZeroTest cC.head x (k+1) := by
-              unfold cbZeroTest
-              simp [cC,hC,k]
+          · have hoff : (x-cC.head)%2=1 := by
+              simp [cC,hC]
               omega
-            have hOne : cbOneTest cC.head x (k+1) := by
-              unfold cbOneTest
-              constructor
-              · simp [cC,hC]; omega
-              constructor
-              · simp [cC,hC,k]; omega
+            have hpaint : cbPaint cC.tape cC.head (k+1) x=true := by
+              apply cbPaint_odd cC.tape cC.head (k+1) x
               · simp [cC,hC]
                 omega
-            simp [firstBranchTape,cbPaint,hzero,hOne,cC,hC,k,hx0,hx1,hx2,heven]
-          · have hzero : cbZeroTest cC.head x (k+1) := by
-              unfold cbZeroTest
-              constructor
-              · simp [cC,hC]; omega
-              constructor
-              · simp [cC,hC,k]; omega
+              · simp [cC,hC,k]
+                omega
+              · exact hoff
+            simp [firstBranchTape,cC,hC,k,hx0,hx1,hx2,heven,hpaint]
+          · have hoff : (x-cC.head)%2=0 := by
+              simp [cC,hC]
+              omega
+            have hpaint : cbPaint cC.tape cC.head (k+1) x=false := by
+              apply cbPaint_even cC.tape cC.head (k+1) x
               · simp [cC,hC]
                 omega
-            have hOne : ¬cbOneTest cC.head x (k+1) := by
-              unfold cbOneTest
-              simp [cC,hC,k]
-              omega
-            simp [firstBranchTape,cbPaint,hzero,hOne,cC,hC,k,hx0,hx1,hx2,heven]
+              · simp [cC,hC,k]
+                omega
+              · exact hoff
+            simp [firstBranchTape,cC,hC,k,hx0,hx1,hx2,heven,hpaint]
         · have hright : cC.head+2*((k+1):Int) ≤ x := by
             simp [cC,hC,k]
             omega
