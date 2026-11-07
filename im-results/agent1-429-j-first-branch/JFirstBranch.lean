@@ -647,5 +647,297 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     · exact htape
   simpa [c0] using hrun.trans (congrArg some hcfg)
 
+
+theorem setupTape_below (t : Int → Bool) (h x : Int)
+    (hx : x < h-2) : setupTape t h x = t x := by
+  simp [setupTape]
+  omega
+
+theorem setupTape_above (t : Int → Bool) (h x : Int)
+    (hx : h+3 < x) : setupTape t h x = t x := by
+  simp [setupTape]
+  omega
+
+theorem f0Tape_neq (u w : Nat) (x : Int)
+    (hx : x ≠ -2*(u:Int)-6) : f0Tape u w x = baseTape u w x := by
+  simp [f0Tape,writeAt,hx]
+
+/-- The C/B sweep followed by its final exit pair is exactly the translated
+    J tape with the new bubble parameter. -/
+theorem j_first_branch_tape (u w : Nat) (hw : 2*u+3 ≤ w) :
+    cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+      (-2*(u:Int)-3) (2*u+3) =
+    jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
+  have hsub : ((w-(2*u+3):Nat):Int) =
+      (w:Int) - (2*(u:Int)+3) := by
+    rw [Nat.cast_sub hw]
+    omega
+  funext x
+  by_cases hleft : x < -2*(u:Int)-9
+  · have hcb : x < -2*(u:Int)-3 := by omega
+    rw [cbPaint_left _ _ _ _ hcb]
+    rw [setupTape_below _ _ _ (by omega)]
+    rw [f0Tape_neq u w x (by omega)]
+    rw [baseTape_left_blank u w x (by omega)]
+    have hmark :
+        ¬jMark (2*u+3) (w-(2*u+3))
+          (x-(2*(u:Int)+3)) := by
+      unfold jMark
+      intro hm
+      rcases hm with ⟨hl,hu,hn⟩ | heq
+      · omega
+      · rw [hsub] at heq
+        omega
+    simp [jTapeAt,jTape,hmark]
+  · by_cases hmid : x < -2*(u:Int)-3
+    · have hcb : x < -2*(u:Int)-3 := hmid
+      rw [cbPaint_left _ _ _ _ hcb]
+      have hinside :
+          -2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4 := by omega
+      have hsetup :
+          setupTape (f0Tape u w) (-2*(u:Int)-7) x = true := by
+        simp [setupTape,hinside]
+      rw [hsetup]
+      have hnotHole :
+          ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+        intro hh
+        unfold jHole at hh
+        omega
+      have hmark :
+          jMark (2*u+3) (w-(2*u+3))
+            (x-(2*(u:Int)+3)) := by
+        unfold jMark
+        left
+        refine ⟨by omega, ?_, hnotHole⟩
+        rw [hsub]
+        omega
+      simp [jTapeAt,jTape,hmark]
+    · by_cases hright : x < 2*(u:Int)+3
+      · have hlo : -2*(u:Int)-3 ≤ x := by omega
+        have hhi : x < -2*(u:Int)-3 + 2*((2*u+3:Int)) := by omega
+        have hpar :
+            (x-(2*(u:Int)+3))%2 =
+              (x-(-2*(u:Int)-3))%2 := by omega
+        by_cases heven : (x-(-2*(u:Int)-3))%2=0
+        · have hpaint :
+              cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+                (-2*(u:Int)-3) (2*u+3) x = false :=
+            cbPaint_even _ _ _ _ hlo hhi heven
+          rw [hpaint]
+          have hhole :
+              jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+            unfold jHole
+            refine ⟨by omega, by omega, ?_⟩
+            rw [hpar]
+            exact heven
+          have hmark :
+              ¬jMark (2*u+3) (w-(2*u+3))
+                (x-(2*(u:Int)+3)) := by
+            unfold jMark
+            intro hm
+            rcases hm with ⟨hl,hu,hn⟩ | heq
+            · exact hn hhole
+            · rw [hsub] at heq
+              omega
+          simp [jTapeAt,jTape,hmark]
+        · have hodd : (x-(-2*(u:Int)-3))%2=1 := by omega
+          have hpaint :
+              cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+                (-2*(u:Int)-3) (2*u+3) x = true :=
+            cbPaint_odd _ _ _ _ hlo hhi hodd
+          rw [hpaint]
+          have hnotHole :
+              ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+            intro hh
+            unfold jHole at hh
+            rcases hh with ⟨hl,hu,hp⟩
+            rw [hpar] at hp
+            omega
+          have hmark :
+              jMark (2*u+3) (w-(2*u+3))
+                (x-(2*(u:Int)+3)) := by
+            unfold jMark
+            left
+            refine ⟨by omega, ?_, hnotHole⟩
+            rw [hsub]
+            omega
+          simp [jTapeAt,jTape,hmark]
+      · have hright' : 2*(u:Int)+3 ≤ x := by omega
+        have hpaint :
+            cbPaint (setupTape (f0Tape u w) (-2*(u:Int)-7))
+              (-2*(u:Int)-3) (2*u+3) x =
+              setupTape (f0Tape u w) (-2*(u:Int)-7) x :=
+          cbPaint_right _ _ _ _ (by
+            have hk : (-2*(u:Int)-3)+2*((2*u+3:Int)) =
+                2*(u:Int)+3 := by omega
+            omega)
+        rw [hpaint]
+        rw [setupTape_above _ _ _ (by omega)]
+        rw [f0Tape_neq u w x (by omega)]
+        rw [baseTape_right u w x hright']
+        have hholeOld : ¬jHole u x := by
+          unfold jHole
+          omega
+        have hmarkOld :
+            jMark u w x ↔ x≤(w:Int)+1 ∨ x=(w:Int)+3 := by
+          unfold jMark
+          constructor
+          · intro hm
+            rcases hm with ⟨hl,hu,hn⟩ | heq
+            · exact Or.inl hu
+            · exact Or.inr heq
+          · intro hm
+            rcases hm with hu | heq
+            · exact Or.inl ⟨by omega,hu,hholeOld⟩
+            · exact Or.inr heq
+        have hholeNew :
+            ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
+          unfold jHole
+          omega
+        have hmarkNew :
+            jMark (2*u+3) (w-(2*u+3))
+              (x-(2*(u:Int)+3)) ↔
+              x≤(w:Int)+1 ∨ x=(w:Int)+3 := by
+          unfold jMark
+          constructor
+          · intro hm
+            rcases hm with ⟨hl,hu,hn⟩ | heq
+            · left
+              rw [hsub] at hu
+              omega
+            · right
+              rw [hsub] at heq
+              omega
+          · intro hm
+            rcases hm with hu | heq
+            · left
+              refine ⟨by rw [hsub]; omega, ?_, hholeNew⟩
+              rw [hsub]
+              omega
+            · right
+              rw [hsub]
+              omega
+        simp [jTapeAt,jTape,hmarkOld,hmarkNew]
+
+/-- Exact original-source primitive-step realization of the first J branch. -/
+theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
+    run target429 (4*u*u+10*u+27)
+      {state:=A,head:=0,tape:=jTape u w} =
+    some {state:=A,head:=2*(u:Int)+3,
+      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
+  have hprefix : 2*u ≤ w+1 := by omega
+  rcases f0_local u w with ⟨h0,h1,h2,h3,h4,hm1,hm2⟩
+  have hsetup := f0_to_c1 (-2*(u:Int)-7) (f0Tape u w)
+    h0 h1 h2 h3 h4 hm1 hm2
+  let c0 : Config := {state:=A,head:=0,tape:=jTape u w}
+  let c1 : Config :=
+    {state:=C,head:=-2*(u:Int)-3,
+      tape:=setupTape (f0Tape u w) (-2*(u:Int)-7)}
+  have hfirst :
+      run target429 (4*u*u+6*u+7+14) c0 = some c1 := by
+    rw [run_add', j_F0_exact u w hprefix]
+    simpa [c0,c1] using hsetup
+  have hCrow : target429 (C,true)=some ⟨false,true,B⟩ := by decide
+  have hBzero : target429 (B,false)=some ⟨true,true,C⟩ := by decide
+  have hBone : target429 (B,true)=some ⟨true,true,A⟩ := by decide
+  let k : Nat := 2*u+2
+  have hpair : ∀ i : Nat, i<k →
+      c1.tape (c1.head+2*(i:Int))=true ∧
+      c1.tape (c1.head+2*(i:Int)+1)=false := by
+    intro i hi
+    have hx0 : -2*(u:Int)-3 ≤
+        -2*(u:Int)-3+2*(i:Int) := by omega
+    have hx0hi : -2*(u:Int)-3+2*(i:Int) ≤ 2*(u:Int)+1 := by
+      dsimp [k] at hi
+      omega
+    have hx1 : -2*(u:Int)-2 ≤
+        -2*(u:Int)-3+2*(i:Int)+1 := by omega
+    have hx1hi : -2*(u:Int)-3+2*(i:Int)+1 ≤ 2*(u:Int) := by
+      dsimp [k] at hi
+      omega
+    have h0' :
+        setupTape (f0Tape u w) (-2*(u:Int)-7)
+          (-2*(u:Int)-3+2*(i:Int)) = true := by
+      rw [setupTape_above _ _ _ (by omega)]
+      rw [f0Tape_neq u w _ (by omega)]
+      exact baseTape_odd u w _ (by omega) (by omega) (by omega)
+    have h1' :
+        setupTape (f0Tape u w) (-2*(u:Int)-7)
+          (-2*(u:Int)-3+2*(i:Int)+1) = false := by
+      rw [setupTape_above _ _ _ (by omega)]
+      rw [f0Tape_neq u w _ (by omega)]
+      exact baseTape_even_zero u w _ (by omega) (by omega) (by omega)
+    constructor
+    · simpa [c1] using h0'
+    · simpa [c1] using h1'
+  obtain ⟨c2,hsweep,hs2,hh2,ht2⟩ :=
+    bc_sweep target429 k c1 hCrow hBzero (by simp [c1]) hpair
+  have hhead2 : c2.head=2*(u:Int)+1 := by
+    have h := hh2
+    dsimp [c1,k] at h
+    omega
+  have htail : ∀ x : Int, 2*(u:Int)+1≤x → x≤2*(u:Int)+2 →
+      c1.tape x=true := by
+    intro x hx0 hx1
+    change setupTape (f0Tape u w) (-2*(u:Int)-7) x=true
+    rw [setupTape_above _ _ _ (by omega)]
+    rw [f0Tape_neq u w x (by omega)]
+    exact baseTape_right_one u w hprefix x (by omega) (by omega)
+  have hzeroAt : c2.tape c2.head=true := by
+    rw [ht2,hh2]
+    rw [cbPaint_right c1.tape c1.head k
+      (c1.head+2*(k:Int)) (by omega)]
+    apply htail
+    · rw [hhead2]
+      dsimp [c1,k]
+      omega
+    · dsimp [c1,k]
+      omega
+  have honeAt : c2.tape (c2.head+1)=true := by
+    rw [ht2,hh2]
+    rw [cbPaint_right c1.tape c1.head k
+      (c1.head+2*(k:Int)+1) (by omega)]
+    apply htail
+    · rw [hhead2]
+      omega
+    · rw [hhead2]
+      omega
+  obtain ⟨c3,hexit,hs3,hh3,ht3⟩ :=
+    cb_exit target429 c2 hCrow hBone hs2 hzeroAt honeAt
+  have hhead3 : c3.head=2*(u:Int)+3 := by
+    rw [hh3,hhead2]
+    omega
+  have htape3 :
+      c3.tape =
+        jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
+    calc
+      c3.tape = cbPaint c2.tape c2.head 1 := ht3
+      _ = cbPaint (cbPaint c1.tape c1.head k)
+            (c1.head+2*(k:Int)) 1 := by rw [ht2,hh2]
+      _ = cbPaint c1.tape c1.head (Nat.succ k) :=
+        cbPaint_compose_right c1.tape c1.head k
+      _ = jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
+        simpa [c1,k] using j_first_branch_tape u w hw
+  have hcfg : c3 =
+      {state:=A,head:=2*(u:Int)+3,
+        tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
+    apply config_ext
+    · exact hs3
+    · exact hhead3
+    · exact htape3
+  have htime :
+      4*u*u+10*u+27 =
+        (4*u*u+6*u+7+14)+(2*k+2) := by
+    dsimp [k]
+    omega
+  have htotal :
+      run target429 (4*u*u+10*u+27) c0 = some c3 := by
+    rw [htime,run_add',hfirst]
+    simp only [Option.bind_some]
+    rw [run_add',hsweep]
+    simp only [Option.bind_some]
+    exact hexit
+  exact htotal.trans (congrArg some hcfg)
+
 #print axioms j_first_branch
 end BB429JFirstBranch
