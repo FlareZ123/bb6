@@ -229,7 +229,6 @@ theorem b0_two_wave_prefix (b : Conf) (hb0 : BZero b)
 theorem b0_two_wave_root_interval_to_b0
     (b : Conf) (n1 m : Nat)
     (hb : Reach b) (hb0 : BZero b)
-    (hshield : NoLeft4 true true false b)
     (hleft0 : b.tape (b.h-1) = true)
     (hzero0 : b.tape (b.h-2) = false)
     (hone0 : b.tape (b.h-3) = true)
@@ -245,7 +244,8 @@ theorem b0_two_wave_root_interval_to_b0
     (hextra : b.tape (b.h+(2*n1+2:Int)) = true)
     (hzero2 : b.tape (b.h+(2*n1+3:Int)) = false) :
     ∃ bout : Conf, run (8*n1+2*m+30) b = some bout ∧
-      Reach bout ∧ BZero bout ∧ NoLeft4 true true false bout := by
+      Reach bout ∧ BZero bout ∧
+      (NoLeft4 true true false b → NoLeft4 true true false bout) := by
   let H : Int := b.h-1
   let t1 : Int → Bool := twoWavePrefixTape b.tape b.h
   let t2 : Int → Bool := setBit (oddWaveTape n1 t1 H) (H-1) true
@@ -405,9 +405,6 @@ theorem b0_two_wave_root_interval_to_b0
     have hx2 : x ≤ h2-2 := by omega
     rw [hc3Tape x hx2]
     exact hleftTape x (by dsimp [c3,h2,H] at hx; omega)
-  have hNoC3 : NoLeft4 true true false c3 :=
-    noLeft4_transfer_of_left_agreement true true false b c3
-      (by dsimp [c3,h2,H]; omega) hc3Left hshield
   have hfbExt : fbExtended m c3 := by
     refine ⟨rfl,?_⟩
     intro i hi
@@ -423,8 +420,6 @@ theorem b0_two_wave_root_interval_to_b0
       rw [hidx]
       rw [hc3Tape ((H-2)-3-2*(i:Int)) (by omega)]
       exact (hfb2 i hi).2
-  have hNoFB : NoLeft4 true true false (fbMany m c3) :=
-    fb_many_preserves_noLeft4 true true false m c3 hfbExt hNoC3
   let c4 : Conf := fbMany m c3
   have hheadC4 : c4.h = h2-2-2*(m:Int) := by
     simpa [c4,c3,h2] using fbMany_head m c3
@@ -445,7 +440,13 @@ theorem b0_two_wave_root_interval_to_b0
       rw [hFB]
       have hhead : H-2-3-2*(m:Int) = (H-2-2-2*(m:Int))-1 := by omega
       rw [hhead]
-  have hNoOut : NoLeft4 true true false out := by
+  have hNoOut : NoLeft4 true true false b → NoLeft4 true true false out := by
+    intro hshield
+    have hNoC3 : NoLeft4 true true false c3 :=
+      noLeft4_transfer_of_left_agreement true true false b c3
+        (by dsimp [c3,h2,H]; omega) hc3Left hshield
+    have hNoFB : NoLeft4 true true false (fbMany m c3) :=
+      fb_many_preserves_noLeft4 true true false m c3 hfbExt hNoC3
     rw [hEq]
     exact noLeft4_left_write true true false c4 hNoFB
   have htotal : 8*n1+2*m+30 =
@@ -462,7 +463,36 @@ theorem b0_two_wave_root_interval_to_b0
     simpa [out,oddRetreatResult,t2] using hchain.2
   exact ⟨out,hrun,houtReach,houtB,hNoOut⟩
 
+/-- Under the BShield invariant, a completed two-wave root interval cannot
+    end at the BBad gate: BBad contains the forbidden left factor 1100. -/
+theorem b0_two_wave_root_interval_avoids_BBad
+    (b : Conf) (n1 m : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hshield : NoLeft4 true true false b)
+    (hleft0 : b.tape (b.h-1) = true)
+    (hzero0 : b.tape (b.h-2) = false)
+    (hone0 : b.tape (b.h-3) = true)
+    (hleft2 : b.tape (b.h-4) = true)
+    (hfb : ∀ i : Nat, i < m →
+      b.tape (b.h-5-2*(i:Int)) = false ∧
+      b.tape (b.h-6-2*(i:Int)) = true)
+    (hfinalF : b.tape (b.h-5-2*(m:Int)) = false)
+    (hfinalB : b.tape (b.h-6-2*(m:Int)) = false)
+    (hones1 : ∀ j : Nat, j < 2*n1 →
+      b.tape (b.h+1+(j:Int)) = true)
+    (hzero1 : b.tape (b.h+(2*n1+1:Int)) = false)
+    (hextra : b.tape (b.h+(2*n1+2:Int)) = true)
+    (hzero2 : b.tape (b.h+(2*n1+3:Int)) = false) :
+    ∃ bout : Conf, run (8*n1+2*m+30) b = some bout ∧
+      Reach bout ∧ BZero bout ∧ ¬ BBad bout := by
+  obtain ⟨bout,hrun,hreach,hbOut,hpreserve⟩ :=
+    b0_two_wave_root_interval_to_b0 b n1 m hb hb0
+      hleft0 hzero0 hone0 hleft2 hfb hfinalF hfinalB hones1 hzero1 hextra hzero2
+  exact ⟨bout,hrun,hreach,hbOut,noLeft4_excludes_BBad bout (hpreserve hshield)⟩
+
 #print axioms BB6Root119.b0_two_wave_prefix
 #print axioms BB6Root119.b0_two_wave_root_interval_to_b0
+#print axioms BB6Root119.b0_two_wave_root_interval_avoids_BBad
+#print axioms BB6Root119.noLeft4_excludes_BBad
 
 end BB6Root119
