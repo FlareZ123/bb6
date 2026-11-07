@@ -15,7 +15,7 @@ bₙ₊₁ = bₙ + v₂(bₙ) + 3/2 · (bₙ / 2^v₂(bₙ) − 1)
 halt iff bₙ is a power of two
 ```
 
-through 100,000,000 updates. No power of two was encountered. The maximum observed 2-adic valuation is 25, first attained at 1-based term position 23,145,881. The final term has 94,125,050 bits (28,334,464 decimal digits).
+through 100,000,000 updates from b₀. No power of two was encountered in positions 1 through 100,000,001, including b₁₀₀,₀₀₀,₀₀₀. The maximum observed 2-adic valuation is 25, first attained at 1-based term position 23,145,881, reached after 23,145,880 updates. The final term has 94,125,050 bits (28,334,464 decimal digits).
 
 The local formalization starts at high-level state `N 1`, with counter `d). Its shifted variable is `b=d+2`, initially 3. The first high-level transition sends `d=1` to `d=4), hence `b=6`. The external run starts at this first post-start value 6. Its initial value 3 is not a power of two, so the omitted initial check is trivial. The external run checks positions 1 through 100,000,001, including the term after the 100,000,000th update.
 
@@ -23,10 +23,10 @@ The local formalization starts at high-level state `N 1`, with counter `d). Its 
 
 The external README records:
 
-- C + GMP computation of 100,000,000 updates, with 400 checkpoints at 250,000-update intervals.
+- The shipped C + GMP binary's main loop processed the first 100,000,000 terms, with 400 checkpoints at 250,000-term intervals. Its loop tested positions 1..100,000,000; the final term after the 100,000,000th update was tested separately by the corrected C+GMP source and by the full-range block-affine re-derivation.
 - Rust `num-bigint` cross-check through 23,250,000 terms; 93 overlapping checkpoints matched the C+GMP implementation, with zero mismatches.
 - A separate Python standard-library big-integer implementation through 1,000,000 terms, matching the published prefix and the 1,000,000-term bit length.
-- A block-affine re-derivation of the full 100,000,000-term range, matching all 400 checkpoints, all 13 valuation-record events, and the final term.
+- A block-affine re-derivation of the full 100,000,000-update range, matching all 400 checkpoints, all 13 valuation-record events, and the final term.
 - The published final integer in `data/final_term_100M.bin`, canonical big-endian minimal-byte encoding, SHA-256:
   `627e09c5bb1fbf93fe18ed3f2a2feaff45a16f139282364e07831337766acce1`.
 - Checkpoint hashes in `data/sha256_checkpoints_100M.csv`; the C+GMP checkpoint CSV hash is `2dd4c88d169f5db331598d49a7773504a18f6dd621d15482f9b497915adb3169`.
@@ -50,6 +50,6 @@ The report lists four elementary infinite obstruction progressions:
 
 ## Evidential limits
 
-This is strong reproducible computational evidence over a finite prefix, not a proof that the Space Needle machine never halts. The external README explicitly states that the 100M run is a record and statistical study, not a proof or a resolution of the halting question. It does not establish a BB(6) upper bound or determine BB(6).
+This is strong reproducible computational evidence over a finite prefix, not a proof that the Space Needle machine never halts. The external README explicitly states that the 100M run is a record and statistical study, not a proof or a resolution of the halting question. The shipped C+GMP binary predates the post-audit source corrections; the README says those corrections change no values, records a clean rebuild matching the first 10 checkpoints, and relies on the separate block-affine full-range re-derivation for an independent 400/400 checkpoint and final-term match. It does not establish a BB(6) upper bound or determine BB(6).
 
 The external package declares MIT licensing for code and CC-BY-4.0 for data, logs, and text. This note links to the original artifacts rather than copying the large final integer or datasets.
