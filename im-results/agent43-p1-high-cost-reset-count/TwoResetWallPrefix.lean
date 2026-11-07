@@ -42,9 +42,9 @@ private theorem source_c1_relation
     (hPow : dp+bp/2+3=2^t2*(c2+3))
     (hBpHalf : 2*(bp/2)=bp)
     (hDp : dp=c1+4)
-    (hPowRel : 2^(t2+1)=2*2^t2) :
+    (hMulPow : 2^(t2+1)*(c2+3)=2*(2^t2*(c2+3))) :
     c1+3+14*P=2^(t2+1)*(c2+3)+2*n+2*mp+6 := by
-  rw [hPowRel]
+  rw [hMulPow]
   omega
 
 private theorem source_predecessor_wall_relation
@@ -52,9 +52,9 @@ private theorem source_predecessor_wall_relation
     (hMass : bp+dp+2*mp+2*n+13=14*P)
     (hPow : dp+bp/2+3=2^t2*(c2+3))
     (hBpHalf : 2*(bp/2)=bp)
-    (hPowRel : 2^(t2+1)=2*2^t2) :
+    (hMulPow : 2^(t2+1)*(c2+3)=2*(2^t2*(c2+3))) :
     bp+4*mp+4*n+20+2^(t2+1)*(c2+3)=28*P := by
-  rw [hPowRel]
+  rw [hMulPow]
   omega
 
 private theorem two_reset_wall_dyadic_gap
@@ -201,7 +201,7 @@ theorem source_no_two_reset_shifted_wall
     simp [Nat.mul_assoc]
   have hbpHalf : 2*(bp/2)=bp := by omega
   have hB1wall := source_predecessor_wall_relation bp dp mp n P t2 c2
-    hpreOneMassExact hInv2.1 hbpHalf hpowrel2
+    hpreOneMassExact hInv2.1 hbpHalf hmulPow
   have hbpLarge : 11*P≤bp := by
     by_cases ht2eq : t2=1
     · have hpow : 2^(t2+1)=4 := by simp [ht2eq]
@@ -246,7 +246,7 @@ theorem source_no_two_reset_shifted_wall
   have hBeven : 2*(B/2)=B := by omega
   have hL : D+B/2+3=2^u*(c1+3) := hInv1.1
   have hC1Eq := source_c1_relation bp dp mp n P t2 c2 c1
-    hpreOneMassExact hInv2.1 hbpHalf hpost1Right hpowrel2
+    hpreOneMassExact hInv2.1 hbpHalf hpost1Right hmulPow
   have hC1pos : 4≤c1+3 := by omega
   have hLpair : (D+B/2+3 = D+B/2+3) ∧ D+B/2+3=2^u*(c1+3) :=
     ⟨rfl,hL⟩
