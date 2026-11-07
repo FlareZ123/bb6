@@ -13,7 +13,17 @@ private theorem open_lasso_step_24 (p : PartialMachine) (d : Nat)
       (lassoPhysicalTraceAudit
         (refine p slot (machineC slot)) 6 6 24 12 2 4 d).open machineC := by
   have hn : ¬ lassoDecisionOracle p 6 6 12 2 4 = true := by simp [hf]
-  simp [lassoPhysicalTraceAudit, FrontierAudit.open, hn, hs]
+  rw [lassoPhysicalTraceAudit.eq_2]
+  split
+  · rename_i hhit
+    exact False.elim (hn hhit)
+  · split
+    · rename_i hnone
+      cases hnone.symm.trans hs
+    · rename_i found hfound
+      have heq : found = slot := by simpa [hfound] using hs
+      subst found
+      rfl
 
 /-- Eleven actual table-input consultations, including the read-one rows.
     The finite quantifier is explicit: no inferred zero-read control path. -/
