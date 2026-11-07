@@ -75,3 +75,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/SheepFaninAllK.lean" SheepFaninAllK.lean
           lake env lean -o ".lake/build/lib/lean/ThreeAdicOrder.olean" ThreeAdicOrder.lean
           lake env lean SheepFaninAllK.lean
+          # Certify distinct valuation and odd-block parameters for the
+          # incoming-source count using the genuine proven unique 2-adic factorization.
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/SheepFaninParameters.lean" SheepFaninParameters.lean
+          lake env lean SheepFaninParameters.lean
