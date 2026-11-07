@@ -227,6 +227,7 @@ theorem b0_two_wave_prefix (b : Conf) (hb0 : BZero b)
 theorem b0_two_wave_root_interval_to_b0
     (b : Conf) (n1 m : Nat)
     (hb : Reach b) (hb0 : BZero b)
+    (hshield : NoLeft4 true true false b)
     (hleft0 : b.tape (b.h-1) = true)
     (hzero0 : b.tape (b.h-2) = false)
     (hone0 : b.tape (b.h-3) = true)
@@ -242,7 +243,7 @@ theorem b0_two_wave_root_interval_to_b0
     (hextra : b.tape (b.h+(2*n1+2:Int)) = true)
     (hzero2 : b.tape (b.h+(2*n1+3:Int)) = false) :
     ∃ bout : Conf, run (8*n1+2*m+30) b = some bout ∧
-      Reach bout ∧ BZero bout := by
+      Reach bout ∧ BZero bout ∧ NoLeft4 true true false bout := by
   let H : Int := b.h-1
   let t1 : Int → Bool := twoWavePrefixTape b.tape b.h
   let t2 : Int → Bool := setBit (oddWaveTape n1 t1 H) (H-1) true
@@ -387,7 +388,53 @@ theorem b0_two_wave_root_interval_to_b0
     exact hfinalB
   have hchain := odd_f1_two_wave_chain_to_b0 n1 (n1+2) m t1 H
     hhead1 hones1' hzero1' hleft1' hhead2 hones2 hzero2 hleft2' hfb2 hfinalF2 hfinalB2
+  let h2 : Int := H-2
+  let tWave2 : Int → Bool := oddWaveTape (n1+2) t2 h2
+  let c3 : Conf := ⟨.F,h2-2,setBit tWave2 (h2-1) true⟩
+  have hc3Tape : ∀ x : Int, x ≤ h2-2 → c3.tape x = t2 x := by
+    intro x hx
+    have hw := oddWaveTape_left (n1+2) t2 h2 x (by omega)
+    have hne : x ≠ h2-1 := by omega
+    change setBit (oddWaveTape (n1+2) t2 h2) (h2-1) true x = t2 x
+    simp [setBit,hne,hw]
+  have hc3Left : ∀ x : Int, x < c3.h → c3.tape x = b.tape x := by
+    intro x hx
+    have hx2 : x ≤ h2-2 := by dsimp [c3]; omega
+    rw [hc3Tape x hx2]
+    exact hleftTape x (by dsimp [c3,h2,H] at hx; omega)
+  have hNoC3 : NoLeft4 true true false c3 :=
+    noLeft4_transfer_of_left_agreement true true false b c3
+      (by dsimp [c3,h2,H]; omega) hc3Left hshield
+  have hfbExt : fbExtended m c3 := by
+    refine ⟨rfl,?_⟩
+    intro i hi
+    constructor
+    · have hidx : c3.h-2*(i:Int) = (H-2)-2-2*(i:Int) := by
+        dsimp [c3,h2]
+        omega
+      rw [hidx]
+      rw [hc3Tape ((H-2)-2-2*(i:Int)) (by omega)]
+      exact (hfb2 i hi).1
+    · have hidx : c3.h-2*(i:Int)-1 = (H-2)-3-2*(i:Int) := by
+        dsimp [c3,h2]
+        omega
+      rw [hidx]
+      rw [hc3Tape ((H-2)-3-2*(i:Int)) (by omega)]
+      exact (hfb2 i hi).2
+  have hNoFB : NoLeft4 true true false (fbMany m c3) :=
+    fb_many_preserves_noLeft4 true true false m c3 hfbExt hNoC3
+  let c4 : Conf := fbMany m c3
+  have hheadC4 : c4.h = h2-2-2*(m:Int) := by
+    simpa [c4,c3,h2] using fbMany_head m c3
   let out : Conf := oddRetreatResult (n1+2) m t2 (H-2)
+  have hEq : out = ⟨.B,c4.h-1,setBit c4.tape c4.h true⟩ := by
+    apply Conf.ext
+    · rfl
+    · simp [out,oddRetreatResult,c4,c3,h2,hheadC4] <;> omega
+    · simp [out,oddRetreatResult,c4,c3,h2,hheadC4]
+  have hNoOut : NoLeft4 true true false out := by
+    rw [hEq]
+    exact noLeft4_left_write true true false c4 hNoFB
   have htotal : 8*n1+2*m+30 =
       9+(4*n1+4*(n1+2)+2*m+13) := by omega
   have hadd := run_add 9 (4*n1+4*(n1+2)+2*m+13) b
@@ -400,7 +447,7 @@ theorem b0_two_wave_root_interval_to_b0
   have houtB : BZero out := by
     refine ⟨rfl,?_⟩
     simpa [out,oddRetreatResult,t2] using hchain.2
-  exact ⟨out,hrun,houtReach,houtB⟩
+  exact ⟨out,hrun,houtReach,houtB,hNoOut⟩
 
 #print axioms BB6Root119.b0_two_wave_prefix
 #print axioms BB6Root119.b0_two_wave_root_interval_to_b0
