@@ -8,11 +8,12 @@ namespace BB6.Agent19ThreeCone
 open BB6.Agent46 BB6.Agent3
 
 /-- Complementary all-depth inverse cone. For odd base u=3 modulo4,
-    the forbidden mass class is 3 modulo8. This is disjoint from
+    the forbidden mass class is 3 modulo8. The minimal permitted odd part
+  in this argument is seven, including u=7 across all depths. This is disjoint from
     Agent19's original u=1, mass=0 dyadic six-cone, and holds for
     every arbitrary natural depth r in the genuine blank section. -/
 theorem dyadic_three_cone_no_blank (r a b u : Nat)
-    (hu : 9≤u) (hu4 : u%4=3)
+    (hu : 7≤u) (hu4 : u%4=3)
     (hb : b+2=2^r*u)
     (hmass : (a+2*b+4*r)%8=3) :
     ¬ BB6.Agent3.CReach a b := by
