@@ -56,7 +56,7 @@ theorem source_right_five_depth_reset_dichotomy
       by_cases htn : t=n
       · subst t
         have hpow : 2^(n+2)=4*2^n := by
-          simp [Nat.pow_add]
+          simp [Nat.pow_add, Nat.mul_comm]
         omega
       · have ht' : t+1≤n := by omega
         have hpow : 2^(t+2)≤2^(n+1) :=
