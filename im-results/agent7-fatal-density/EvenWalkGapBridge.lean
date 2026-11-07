@@ -4,12 +4,12 @@ import Lean.Elab.Tactic.Omega
 set_option maxHeartbeats 0
 
 namespace GapNumber
-private theorem pow_scale (n:Nat)(hn:40≤n):2^(n-4)=512*2^(n-13):=by
+private theorem pow_scale (n:Nat)(hn:25≤n):2^(n-4)=512*2^(n-13):=by
   have he:n-4=(n-13)+9:=by omega
   rw [he,Nat.pow_add]
   simp [Nat.mul_comm]
 
-theorem uniform_initial_B_bands (n j B : Nat) (hn:40≤n)
+theorem uniform_initial_B_bands (n j B : Nat) (hn:25≤n)
   (hmodel:81*B+3=16*2^(n-4)+128*(2^j*(2*n+3))+169*n)
   (hweak:2*(2^j*(2*n+3))+2*n+10≤2^(n-4)) :
    3≤B ∧ B≤2*2^(n-4)+1 ∧
@@ -51,7 +51,7 @@ private theorem arithmetic_gap (p u C:Nat) (hb:C+u=8*p)
 
 /-- A fully quantified all-index inverse-walk certificate with genuine
     dyadic image-band hypotheses at all intermediate steps. -/
-theorem uniform_two_four_walk (n j B q:Nat) (hn:40≤n)
+theorem uniform_two_four_walk (n j B q:Nat) (hn:25≤n)
  (hmodel:81*B+3=16*2^(n-4)+128*(2^j*(2*n+3))+169*n)
  (hweak:2*(2^j*(2*n+3))+2*n+10≤2^(n-4))
  (hq:B+q=8*2^(n-4)) :
@@ -174,7 +174,7 @@ theorem uniform_two_four_walk (n j B q:Nat) (hn:40≤n)
 
 /-- Rooted exclusion from actual (2,0) source reset semantics under the
     exact arithmetic model and the proved all-time SafeResidue condition. -/
-theorem uniform_two_four_root_exclusion (n j B q : Nat) (hn:40≤n)
+theorem uniform_two_four_root_exclusion (n j B q : Nat) (hn:25≤n)
  (hmodel:81*B+3=16*2^(n-4)+128*(2^j*(2*n+3))+169*n)
  (hweak:2*(2^j*(2*n+3))+2*n+10≤2^(n-4))
  (hq:B+q=8*2^(n-4))
