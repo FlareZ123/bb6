@@ -613,17 +613,25 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
     exact baseTape_right_one u w hw _ (by omega) (by omega)
   have hE1 : cE.tape (cE.head+1)=true := by
     rw [htE,hheadE]
-    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+2) (by simp [cC,hC,k]; omega)]
-    rw [cCfg_tape_right u w _ (by simp [cC,hC]; omega)]
-    exact baseTape_right_one u w hw _ (by omega) (by omega)
+    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1+1) (by simp [cC,hC,k]; omega)]
+    rw [cCfg_tape_right u w (2*(u:Int)+1+1) (by omega)]
+    exact baseTape_right_one u w hw (2*(u:Int)+1+1) (by omega) (by omega)
   obtain ⟨cFinal,hExit,hsFinal,hhFinal,htFinal⟩ :=
     cb_exit target429 cE hC1 hB1 hsE hE0 hE1
   have htime : 4*u*u+10*u+27 =
       (4*u*u+6*u+7) + (14 + (2*k+2)) := by
     simp [k]
     omega
-  have hrunTail : run target429 (14+(2*k+2)) cC=some cFinal := by
-    rw [run_add',hsetup]
+  have hFC : hF+4=hC := by
+    dsimp [hF,hC]
+    omega
+  have hsetup' : run target429 14
+      {state:=F,head:=hF,tape:=f0Tape u w}=some cC := by
+    rw [hFC] at hsetup
+    simpa [cC] using hsetup
+  have hrunTail : run target429 (14+(2*k+2))
+      {state:=F,head:=hF,tape:=f0Tape u w}=some cFinal := by
+    rw [run_add',hsetup']
     simp only [Option.bind_some]
     rw [run_add',hSweep]
     simp only [Option.bind_some]
