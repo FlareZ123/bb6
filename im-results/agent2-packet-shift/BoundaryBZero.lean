@@ -16,7 +16,7 @@ def regularSection (a q b : Nat) : Cfg :=
 private theorem one_append (a p : Nat) (ys : List Bool) :
     List.replicate a true ++ (List.replicate p true ++ ys) =
       List.replicate (a+p) true ++ ys := by
-  rw [List.append_assoc]
+  rw [←List.append_assoc]
   rw [List.replicate_append_replicate]
 
 /-- The previously unhandled B packet with q=0 has an exact source return
@@ -33,7 +33,7 @@ theorem b_zero_source (k p : Nat) :
       rw [show 3*k+2=2+3*k by omega,
         ←List.replicate_append_replicate]
       rfl
-    simp [packet,word,ys,init,hn]
+    simp [packet,word,ys,init,hn,oppairs]
   have hrun := full_B k ys
   rw [hin, hrun]
   change (⟨[],false,
