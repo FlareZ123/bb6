@@ -1,20 +1,9 @@
 """Finite prefix-projection experiment for the ninth S4 stack digit.
 
-This computes the first nine digits of the prefix map. It is not a full-root
-survival proof; root transport to the prefix map is supplied by the Lean
-prun_prefix theorem. The exact eight-digit cycle is proved in
-S4PrefixEighthCycle.lean.
+The projected hp/gp maps preserve the supplied prefix length. The full-root
+checker uses a different empty-tail completion, so it must not be applied to a
+truncated prefix.
 """
-from pathlib import Path
-import sys
-
-sys.path.insert(
-    0,
-    str(Path(__file__).resolve().parents[1] / "agent5-s4-all-depth-sharp"),
-)
-from checker import chain
-
-OFFSETS = (509, 290, 219)
 INITIAL_NINE = (
     283, 906, 982, 3490, 3734, 5935, 13580, 25036, 64260
 )
@@ -32,13 +21,29 @@ EXPECTED_NINTH = (
 )
 
 
+def hp(head: int, tail: tuple[int, ...]) -> tuple[int, ...]:
+    if not tail:
+        return (head // 2 + 2,) if head % 2 == 0 else (head // 2,)
+    digit, *rest = tail
+    if head % 2 == 0:
+        return (head // 2 + 2, digit + head // 2, *rest)
+    return (head // 2, *hp(digit + head // 2 + 1, tuple(rest)))
+
+
+def gp(offset: int, digits: tuple[int, ...]) -> tuple[int, ...]:
+    if not digits:
+        return ()
+    return hp(digits[0] + offset, digits[1:])
+
+
+def pp(digits: tuple[int, ...]) -> tuple[int, ...]:
+    return gp(219, gp(290, gp(509, digits)))
+
+
 def prefix_run(steps: int, digits: tuple[int, ...]) -> tuple[int, ...]:
     state = digits
     for _ in range(steps):
-        next_state = chain(OFFSETS, state)
-        if next_state is None:
-            raise AssertionError("projected prefix map halted")
-        state = next_state
+        state = pp(state)
     return state
 
 
