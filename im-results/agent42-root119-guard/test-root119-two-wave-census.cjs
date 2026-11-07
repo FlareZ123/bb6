@@ -17,7 +17,7 @@ const prefixShieldAudit = {
   oddEvenPrefix: { inputs: 0, outputs: 0, boundarySafe: 0 },
 };
 const prefixLeftSixAudit = { evenPrefix: {}, oddEvenPrefix: {} };
-const b0Left101Audit = { count: 0, boundaryUnsafe: 0, leftSix: {} };
+const b0Left101Audit = { count: 0, boundaryUnsafe: 0, leftSix: {}, unsafe: [] };
 const counts = {
   oldWave: 0,
   leftOneWave: 0,
@@ -111,7 +111,17 @@ for (let time = 0; time < LIMIT; time++) {
         tape.has(head - 6 + i) ? '1' : '0').join('');
       b0Left101Audit.count++;
       b0Left101Audit.leftSix[leftSix] = (b0Left101Audit.leftSix[leftSix] || 0) + 1;
-      if (leftSix.startsWith('110')) b0Left101Audit.boundaryUnsafe++;
+      if (leftSix.startsWith('110')) {
+        b0Left101Audit.boundaryUnsafe++;
+        b0Left101Audit.unsafe.push({
+          time,
+          head,
+          leftSix,
+          prefix,
+          rightWindow: Array.from({ length: 10 }, (_, i) =>
+            tape.has(head + 1 + i) ? '1' : '0').join(''),
+        });
+      }
     }
     const cphaseShield = cphase === null ? null : noLeft1100(head);
     const prefixShield = prefix === null || prefix.type === 'prefixUnmatched'
