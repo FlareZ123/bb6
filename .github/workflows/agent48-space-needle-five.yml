@@ -1,4 +1,4 @@
-name: Agent48 five Space Needle terminal feeders (manual)
+name: Agent 48 Space Needle source audit (manual)
 
 on:
   workflow_dispatch:

@@ -1,6 +1,6 @@
 # Space Needle: fifth-linear terminal inverse and authentic-root exception exclusion
 
-**Research scope (7 November 2026).** This note records an exact fifth-linear restriction on the one-step terminal inverse of the original six-state Space Needle machine, together with a finite inverse certificate excluding its large exceptional feeder from the genuine blank-start orbit. BB(6) and the Space Needle halting problem remain **undecided**. The selective [manual original-source workflow](../../.github/workflows/agent48-space-needle-five.yml) compiled and checked the entire fifth-linear arithmetic, complete list, and original-source one-step inverse in **successful [CI run 42332720650](https://github.com/FlareZ123/bb6/actions/runs/42332720650)**, printing only standard Lean axioms. The additional authentic-root exclusion and integrated halting equivalence are under [CI run 42333153807](https://github.com/FlareZ123/bb6/actions/runs/42333153807); **that root-level extension remains pending until a green original-source run**.
+**Research scope (7 November 2026).** This note records an exact fifth-linear restriction on the one-step terminal inverse of the original six-state Space Needle machine, together with a finite inverse certificate excluding its large exceptional feeder from the genuine blank-start orbit. BB(6) and the Space Needle halting problem remain **undecided**. The selective [manual original-source workflow](../../.github/workflows/agent48-space-needle-five.yml) compiled and checked the fifth-linear arithmetic, complete list, and source bridge in successful [CI run 42332720650](https://github.com/FlareZ123/bb6/actions/runs/42332720650). The authentic-root fifth-linear equivalence passed [CI run 42333641928](https://github.com/FlareZ123/bb6/actions/runs/42333641928). The stronger sixth-linear arithmetic, exact inverse list, exceptional root exclusions, and modular obstruction module passed [CI run 42374851305](https://github.com/FlareZ123/bb6/actions/runs/42374851305); see [SIXTH-BOUND.md](SIXTH-BOUND.md).
 
 ## Mathematically precise result
 
@@ -62,7 +62,7 @@ source42 = oddTower 340282366920822406584691642613415018481 42
 
 The complete source inverse of Agent 20's `NeedleGeneralInverse.parents` has an **empty** finite predecessor list at `source42+2`. The [original-root Lean module](SpaceNeedleFifthRoot.lean) provides a kernel-computable `source42_has_no_parents` certificate, then derives `¬ReachN source42`: it is different from initial counter 1 and every noninitial reachable counter has a genuine incoming predecessor. This excludes the large exceptional feeder **from the real blank orbit**, without having to decide whether it is synthetically legal as a predecessor of a terminal.
 
-The earlier genuine-root theorem [NeedleRootSharp.blank_never_7998](../agent20-needle-coprime/NeedleRootSharp.lean) excludes the K=13 exceptional source. Combining both with the source-checked cubic halting equivalence gives the new claimed rooted criterion, pending complete original-source CI:
+The earlier genuine-root theorem [NeedleRootSharp.blank_never_7998](../agent20-needle-coprime/NeedleRootSharp.lean) excludes the K=13 exceptional source. Combining both with the source-checked cubic halting equivalence gives the following original-source-checked rooted criterion (CI 42333641928):
 
 ```text
 IsHalt originalSpaceNeedle
@@ -72,7 +72,7 @@ IsHalt originalSpaceNeedle
     AND 5*v <= k+4.
 ```
 
-This removes *both* exceptional feeder cases from the authentic-root existential. It remains unbounded in k and reachability, and is **not** a halt/nonhalt verdict.
+This removes *both* exceptional feeder cases from the authentic-root existential. It remains unbounded in k and reachability, and is **not** a halt/nonhalt verdict. The stronger sixth-regular criterion, with two further exact root exclusions, is proved in [SIXTH-BOUND.md](SIXTH-BOUND.md).
 
 ## Comparison, use, and decisive residual problem
 
