@@ -38,6 +38,34 @@ The new original-physical bridge defines `Represents zipper physical` as equalit
 
 **Verification:** unchanged-original-source [manual GitHub Actions run 42344559326](https://github.com/FlareZ123/bb6/actions/runs/42344559326) passed at commit `d6a8b451e17f0b216cc8f75b249de29efa944334` under Lean 4.36.0-rc2, via the previously established manual-only `.github/workflows/agent18-429-lastwriter.yml`. The workflow builds the full earlier Agent 8, Agent 32, Agent 1 and Agent 18 dependencies and these three new files, and rejects `sorryAx`. The axiom reports for the physical bridge are restricted to ordinary `[propext, Classical.choice, Quot.sound]` or smaller subsets. The local cross-check compiled against an exact matching interface before the source run. No custom proof axioms are introduced.
 
+## Exact source S_E E/1 return theorem
+
+[BB429SourceE1Return.lean](BB429SourceE1Return.lean) proves a further all-parameter theorem for the source `S_E) family. In the zipper convention, the left stack is nearest-cell first, the current cell is separate, and the right stack begins immediately to its right. The source configuration is
+
+```lean
+z 4 ((01)^b ++ 1^5) true suffix
+```
+
+with arbitrary finite right suffix. This is the same left/current pattern as the pinned Cryptids source's `cfg_ScanE` family; its right-hand parameters are subsumed by the arbitrary `suffix`. The physical left-to-right tape notation is `1^5(10)^b E>1`, because the zipper's left list is nearest-first.
+
+After the first E/1 instruction, the head returns to the exact cell it just wrote. The formal theorem is `sourceScanE_e1_revisit`; at the return the machine is C scanning 1, and the audited C/1 row writes 0 on that cell. The number of additional steps after the initial E/1 instruction is
+
+```
+crossTime (2*k)   = 14*k + 41
+crossTime (2*k+1) = 14*k + 15
+```
+
+The final left stacks are also exact:
+
+- even `b = 2*k`: `1^(4*k+1) ++ 0101 ++ 1^5`;
+- odd `b = 2*k+1`: `1^(4*k+8)`.
+
+The proof is a two-step induction. Its inductive step composes a six-instruction macro that removes two nearest `01` pairs while appending `1101` to the right suffix, the induction hypothesis with that extended suffix, and an eight-instruction macro that consumes the appended `1101`. The arbitrary-suffix quantifier is essential: it preserves the original written cell while the nested return is established.
+
+This is a source-pattern-specific E/1 last-writer exclusion, not yet a theorem that every E/1 event on the genuine blank-origin orbit has this form. The broader (r=0,ldots,5) one-sided family discussed by Agent 32 still needs an exact representation-level comparison. The result is therefore retained in `im-results/`, and does not establish the blank-origin halting status.
+
+**Source correspondence:** the source pattern is from the pinned upstream module [`M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA.lean`](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA.lean). The raw transition table is the same one already checked row-by-row in [`BB429SourceRows.lean`](BB429SourceRows.lean). The local proof was compiled under Lean 4.36.0-rc2; the axiom reports contain only `propext` and `Quot.sound`, with no `sorryAx`.
+
 ## Connection to the hard blank-origin question
 
 Agent 32's [authentic halting biconditional](../agent32-429-raw-parent/README.md) identifies genuine source-blank C/01 as precisely fatal. Agent 18's [last-writer theorem](../agent18-429-lastwriter/README.md) proves that an actual fatal C/01 requires a one-sided excursion from a genuine left-moving write-one event D/0, E/1 or F/1, and gave one *synthetic* 18-step example. Our odd parametric family shows that such prepared-input excursions can persist for arbitrary left-block lengths in the **same** source machine, with a rigorous full-tape bridge.
