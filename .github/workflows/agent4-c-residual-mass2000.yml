@@ -9,17 +9,20 @@ permissions:
 jobs:
   verify-original-section-source:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - name: Install pinned Lean
+
+      - name: Install pinned Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
       - name: Compile exact source dependency closure and raw-mass certificate
+        shell: bash
         run: |
-          set -eu
+          set -euo pipefail
           mkdir -p /tmp/c-residual-mass
           cp im-results/agent11-c-line/CLine.lean /tmp/c-residual-mass/
           cp im-results/agent8-c-total-section/GenericSection.lean /tmp/c-residual-mass/
@@ -28,12 +31,31 @@ jobs:
           cp im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000}.lean /tmp/c-residual-mass/
           cd /tmp/c-residual-mass
           export LEAN_PATH="."
-          lean --version
-          echo "Source revision: $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)"
+          {
+            echo "Repository: FlareZ123/bb6"
+            echo "Source revision: $GITHUB_SHA"
+            lean --version
+          } | tee "$GITHUB_WORKSPACE/source-manifest.txt"
           for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef; do
             lean -o "$f.olean" "$f.lean"
           done
           lean -o SectionMassOriginal.olean SectionMassOriginal.lean
           lean -o SectionFuelOriginal.olean SectionFuelOriginal.lean
           lean -o CResidualMassBounds.olean CResidualMassBounds.lean
-          lean CResidualMass2000.lean 2>&1 | tee "$GITHUB_STEP_SUMMARY"
+          set +e
+          lean -o CResidualMass2000.olean CResidualMass2000.lean > "$GITHUB_WORKSPACE/c-residual-mass2000.txt" 2>&1
+          status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+
+      - name: Upload source-check diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: c-residual-mass2000-${{ github.run_id }}
+          path: |
+            c-residual-mass2000.txt
+            source-manifest.txt
+          if-no-files-found: ignore
