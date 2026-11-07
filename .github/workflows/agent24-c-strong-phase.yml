@@ -387,6 +387,11 @@ jobs:
           lean -o M0Mod8Three.olean M0Mod8Three.lean > "$GITHUB_WORKSPACE/m0-mod8-three.txt" 2>&1
           cat "$GITHUB_WORKSPACE/m0-mod8-three.txt"
           cat "$GITHUB_WORKSPACE/m0-mod8-three.txt" >> "$GITHUB_STEP_SUMMARY"
+          # Agent 19: source-proof the new infinite m=0, j=2 mod16 family.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/M0Mod16Two.lean .
+          lean -o M0Mod16Two.olean M0Mod16Two.lean > "$GITHUB_WORKSPACE/m0-mod16-two.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/m0-mod16-two.txt"
+          cat "$GITHUB_WORKSPACE/m0-mod16-two.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
@@ -424,6 +429,7 @@ jobs:
             c-residual-mass-integration.txt
             full-forced-param-scan.txt
             m0-mod8-three.txt
+            m0-mod16-two.txt
             m1-full-forced.txt
             m2-full-forced.txt
             c-residual-probe.txt
