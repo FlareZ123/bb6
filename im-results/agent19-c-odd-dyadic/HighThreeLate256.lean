@@ -1,4 +1,5 @@
 import ValSixC58Late
+import HighDyadicOlderGateFast
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent19HighThreeLate256
@@ -86,6 +87,94 @@ private theorem sub_eq_of_add_eq (x y : Nat) (h : x+2=y) :
 private theorem affine_norm_not_four (u : Nat) (hu : 7≤u) :
     2*u-2≠4 := by
   omega
+
+private theorem late256_j_plus_three_m_plus_three (m : Nat) :
+    late256J m+3*m+3=9*2^(2*m+2) := by
+  have hP := BB6.Agent29New.power_linear_bound m
+  dsimp [late256J]
+  omega
+
+private theorem older_gate_impossible_of_late256_form (j m : Nat)
+    (hform : j+3*m+3=9*2^(2*m+2)) :
+    ∀ n, ¬(n+4≤2*m+2 ∧
+      (j+3*m+3)%2^(n+4)=2^(n+2) ∧
+      (2*j+3)%8=(if n%2=0 then 7 else 3)) := by
+  intro n hgate
+  have hv := BB6.Agent11OlderGateFast.v2_of_older_residue
+    j m n hgate.2.1
+  rw [hform] at hv
+  have hv9 : BB6.Agent11FastDepthGate.v2
+      (9*2^(2*m+2))=2*m+2 := by
+    rw [show 9*2^(2*m+2)=2^(2*m+2)*9 by ac_rfl]
+    exact BB6.Agent11FastDepthGate.v2_pow_mul_odd
+      (2*m+2) 9 (by decide)
+  rw [hv9] at hv
+  omega
+
+private theorem jointHighRectAllowed_of_mod256 (j m : Nat)
+    (hj : j%256=244) (hm : m%256=3) :
+    BB6.Agent3.jointHighRectAllowed j m := by
+  have hj4 : j%4=0 := by omega
+  have hj2 : j%2=0 := by omega
+  have hj32 : j%32=20 := by omega
+  have hm4 : m%4=3 := by omega
+  have hm32 : m%32=3 := by omega
+  unfold BB6.Agent3.jointHighRectAllowed BB6.Agent3.jointHighAllowed
+  constructor
+  · refine ⟨?_,?_,?_,?_,?_⟩
+    · intro h
+      rcases h with ⟨_,h,_⟩
+      omega
+    · intro h
+      rcases h with ⟨_,h,_⟩
+      omega
+    · intro h
+      rcases h with ⟨_,hC⟩
+      rcases hC with ⟨hm4',_⟩ | ⟨hm4',_⟩
+      · omega
+      · omega
+    · intro h
+      rcases h with ⟨hm1,_⟩
+      omega
+    · intro h
+      rcases h with ⟨_,hjodd,_⟩
+      omega
+  · intro h
+    rcases h with ⟨hm32',_⟩
+    omega
+
+private theorem agent19_joint_extras_of_mod256 (j m : Nat)
+    (hj : j%256=244) (hm : m%256=3) :
+    ¬(2≤m ∧ j%8=7 ∧ (j+3*m+15)%64=0) ∧
+    ¬(2≤m ∧ j%8=3 ∧ (j+3*m+47)%64=0) ∧
+    ¬(3≤m ∧ j%8=5 ∧ (j+3*m+27)%128=0) ∧
+    ¬(3≤m ∧ j%8=1 ∧ (j+3*m+91)%128=0) := by
+  have hj8 : j%8=4 := by omega
+  constructor
+  · intro h
+    rcases h with ⟨_,h,_⟩
+    omega
+  constructor
+  · intro h
+    rcases h with ⟨_,h,_⟩
+    omega
+  constructor
+  · intro h
+    rcases h with ⟨_,h,_⟩
+    omega
+  · intro h
+    rcases h with ⟨_,h,_⟩
+    omega
+
+private theorem joint_high_allowed_of_mod256 (j m : Nat)
+    (hj : j%256=244) (hm : m%256=3)
+    (hform : j+3*m+3=9*2^(2*m+2)) :
+    BB6.Agent19Joint.highAllowed j m := by
+  have hrect := jointHighRectAllowed_of_mod256 j m hj hm
+  have hold := older_gate_impossible_of_late256_form j m hform
+  have hextra := agent19_joint_extras_of_mod256 j m hj hm
+  unfold BB6.Agent19Joint.highAllowed
+  exact ⟨hrect,hold,hextra.1,hextra.2.1,hextra.2.2.1,hextra.2.2.2⟩
 
 private theorem two_dvd_pow_two_m_add_two (m : Nat) :
     2∣2^(2*m+2) := by
@@ -328,29 +417,11 @@ theorem old_sieve_admits_late256_family (m : Nat)
     late256_parameters m hm hmres
   have hsum := late256_sum_identity m hm
   have hjmod256 := late256_j_mod256 m hm hmres
-  have hJoint : BB6.Agent19Joint.highAllowed j m := by
-    unfold BB6.Agent19Joint.highAllowed
-    refine ⟨?_,?_,?_,?_,?_,?_⟩
-    · simp [BB6.Agent3.jointHighRectAllowed,
-        BB6.Agent3.jointHighAllowed] <;> omega
-    · intro n
-      rintro ⟨hdepth,hpair,_⟩
-      have hdiv : 2^(n+4)∣P := Nat.pow_dvd_pow 2 hdepth
-      have hdiv9 : 2^(n+4)∣9*P := by
-        rcases hdiv with ⟨v,hv⟩
-        refine ⟨9*v,?_⟩
-        rw [hv]
-        ac_rfl
-      have hzero : (j+3*m+3)%2^(n+4)=0 := by
-        rw [show j+3*m+3=9*P by simpa [P] using hsum]
-        exact Nat.mod_eq_zero_of_dvd hdiv9
-      rw [hzero] at hpair
-      have hpos : 0<2^(n+2) := Nat.pow_pos (by decide)
-      omega
-    · omega
-    · omega
-    · omega
-    · omega
+  have hjmod256' : j%256=244 := by simpa [j] using hjmod256
+  have hformOlder : j+3*m+3=9*2^(2*m+2) := by
+    simpa [j] using late256_j_plus_three_m_plus_three m
+  have hJoint : BB6.Agent19Joint.highAllowed j m :=
+    joint_high_allowed_of_mod256 j m hjmod256' hmres hformOlder
   have hjmod256' : j%256=244 := by simpa [j] using hjmod256
   have hExtra := highAllowedPlus_extras_of_mod256 j m hjmod256' hmres
   have hPlus : BB6.Agent29Joint.highAllowedPlus j m := by
