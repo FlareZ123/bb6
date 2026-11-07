@@ -45,6 +45,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49TernaryBufferSource.olean Agent49TernaryBufferSource.lean
+      - name: Verify canonical minimal ternary-budget ray cocycle
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/CanonicalRayCocycleSource.lean" Agent49CanonicalRayCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49CanonicalRayCocycleSource.olean Agent49CanonicalRayCocycleSource.lean
       - name: Prove finite affine predecessor envelopes
         working-directory: /tmp/cryptids
         run: |
