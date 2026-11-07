@@ -1,5 +1,6 @@
 import Q853NarrowNodes
 import AffineParamRoot
+import SourcePeriodAllPeriods
 
 namespace BB6.Agent13Narrow
 open BB6.Agent13AdaptiveParam
