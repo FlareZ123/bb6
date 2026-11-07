@@ -206,3 +206,13 @@ jobs:
           echo "2f9ef55ad731e3af82068eab19c9148ae440f56dcace2de967f0d50d2d9049a0  S4Prefix5457.lean" | sha256sum -c -
           export LEAN_PATH=.:${LEAN_PATH:-}
           lake env lean -o S4Prefix5457.olean S4Prefix5457.lean
+
+      - name: Verify Agent 5 source-rooted ninth-prefix cycle
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=.:\${LEAN_PATH:-}
+          for module in S4PrefixNinthBase S4PrefixNinthR171050 S4PrefixNinthR171052 S4PrefixNinthR171051 S4PrefixNinthR171049 S4PrefixNinthCycle; do
+            cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/\${module}.lean" "\${module}.lean"
+            lake env lean -o "\${module}.olean" "\${module}.lean"
+          done
