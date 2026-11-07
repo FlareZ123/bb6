@@ -19,7 +19,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check fixed-tail A p=1 mod3 source theorem
+      - name: Check safe packets, p=2 reset, and seven-of-nine compositions
         shell: bash
         run: |
           set -euo pipefail
@@ -49,7 +49,7 @@ jobs:
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
-          lean -o "$D/AOnePacketBoundarySource.olean" "$D/AOnePacketBoundarySource.lean" | tee axioms.log
+          lean -o "$D/AOnePacketBoundarySource.olean" "$D/AOnePacketBoundarySource.lean" | tee -a axioms.log
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean" | tee -a axioms.log
           lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
