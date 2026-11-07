@@ -202,6 +202,28 @@ theorem drainB_joint_mass (n : Nat) :
             aa+dd ≤ p+r+3*q+3*v+1 := hrecBound
             _ ≤ a+d+3*b+3*n+1 := by omega
 
+
+/-- The sharp-block family lies below the next ternary power. -/
+theorem sharpBlock_lt_pow (n : Nat) : sharpBlock n < 3^(n+1) := by
+  induction n with
+  | zero =>
+      simp [sharpBlock]
+  | succ n ih =>
+      have hle : 3*(sharpBlock n + 1) ≤ 3*3^(n+1) :=
+        Nat.mul_le_mul_left 3 (Nat.succ_le_of_lt ih)
+      have hbound : 3*sharpBlock n + 1 < 3*3^(n+1) := by omega
+      simpa [sharpBlock, Nat.pow_succ] using hbound
+
+/-- The joint-mass upper bound is attained by the existing sharp-block family. -/
+theorem drainB_joint_mass_sharp (n d : Nat) :
+    sharpBlock n < 3^(n+1) ∧
+    ∃ dd, drainB (n+2) (sharpBlock n) d = some (.D 0 dd) ∧
+      dd = (n+2)+d+3*sharpBlock n+3*(n+1)+1 := by
+  constructor
+  · exact sharpBlock_lt_pow n
+  · refine ⟨d+3*sharpBlock n+4*(n+1)+2, drainB_sharp_witness n d, ?_⟩
+    omega
+
 #print axioms evalA_joint_positive
 #print axioms evalA_joint_zero
 #print axioms drainB_joint_mass
