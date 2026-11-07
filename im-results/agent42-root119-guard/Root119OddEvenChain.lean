@@ -416,7 +416,7 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
       _ = false := by rw [hidx2]; exact hfinal
   have hboutZero : BZero bout := by
     refine ⟨rfl,?_⟩
-      simpa [bout] using hfinalTape
+    simpa [bout] using hfinalTape
   have hrunD2 : run (2*((n+1)+1)+3) d2 = some bout := by
     simpa [d2,bout,tD2] using hEven
   have htime : 6*n+23 =
