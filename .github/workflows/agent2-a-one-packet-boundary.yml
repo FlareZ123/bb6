@@ -1,4 +1,4 @@
-name: Cryptid source-certified all safe packet reentries (manual)
+name: Cryptid all safe packet and p2 reset source (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original sources and Lean
@@ -42,6 +42,7 @@ jobs:
           lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -o "$D/AOnePacketBoundarySource.olean" "$D/AOnePacketBoundarySource.lean" | tee axioms.log
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean" | tee -a axioms.log
@@ -52,4 +53,5 @@ jobs:
           lean -o "$D/PacketOneReentry.olean" "$D/PacketOneReentry.lean" | tee -a axioms.log
           lean -o "$D/PacketZeroBoundarySource.olean" "$D/PacketZeroBoundarySource.lean" | tee -a axioms.log
           lean "$D/PacketSafeReentry.lean" | tee -a axioms.log
+          lean "$D/PacketP2ResetSource.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
