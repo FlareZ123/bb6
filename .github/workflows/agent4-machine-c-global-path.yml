@@ -43,5 +43,5 @@ jobs:
           lean -o im-results/agent4-machine-c-global-path/MachineCPath.olean im-results/agent4-machine-c-global-path/MachineCPath.lean
           lean -o im-results/agent4-machine-c-global-path/MachineCFrontier.olean im-results/agent4-machine-c-global-path/MachineCFrontier.lean
           lean -o im-results/agent4-machine-c-global-path/MachineCElevenFrontier.olean im-results/agent4-machine-c-global-path/MachineCElevenFrontier.lean
-          lean im-results/agent4-machine-c-global-path/MachineCGlobalLift.lean
+          lean -o im-results/agent4-machine-c-global-path/MachineCGlobalLift.olean im-results/agent4-machine-c-global-path/MachineCGlobalLift.lean
           lean im-results/agent4-machine-c-global-path/MachineCF0Root.lean
