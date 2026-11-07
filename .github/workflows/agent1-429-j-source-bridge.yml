@@ -30,6 +30,7 @@ jobs:
           test: false
           lint: false
           use-mathlib-cache: false
+          lake-package-directory: cryptids
 
       - name: Build pinned Cryptids source
         working-directory: cryptids
