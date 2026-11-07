@@ -1,67 +1,45 @@
-# Candidate high-family pullback into the certified dyadic cone
+# Machine C: source-certified high-stopping dyadic-cone exclusion
 
-**Agent 19, 6 November 2026. Working mathematical derivation, not yet kernel-certified as a high-family theorem.** The ingredients `dyadic_six_cone_no_blank` and `oddodd_lowval_blank_reach_iff` are independently original-source kernel-certified. The following combined high stopping parameter corollary has only been arithmetically derived and tested across examples; an original-source Lean theorem remains to be built and audited.
+**Verified scope, 7 November 2026.** The infinite high-stopping exclusion proposed in this note has now been proved against the authentic original Machine C `secNext` section. The theorem is a genuinely all-time blank-origin nonreachability statement. It does **not** decide Machine C or BB(6). The historical working-note filename is retained to preserve links; its earlier provisional status is superseded by the verified evidence below.
 
-## Proposed high stopping exclusion
+## Mathematical theorem
 
-Machine C's exact high stopping gate has output
-
-```text
-x = 2j+3,
-K + j+3m+5 = 2^(2m+2)*(j+3).
-```
-
-Consider every natural `j,m` satisfying
+Let `CReach x y` mean that the authentic Machine C blank-derived section trajectory from `(5,1)` eventually visits `(x,y)`. For arbitrary natural `j,m`, assume
 
 ```text
-m ≥ 3,       m ≡ 3 (mod 4),
-j+9m+14 ≡ 48 (mod 64).
+m >= 3,  m % 4 = 3,  (j + 9*m + 14) % 64 = 48.
+P = 2^(2*m+2).
+K = P*(j+3) - (j+3*m+5).
 ```
 
-The source halting counter `K` is large (indeed >50 in sampled cases; a general inequality follows from exponential growth). The candidate theorem is `¬CReach (2j+3) K` for all these parameters. This is **not** the conclusion of an independently compiled new high-family Lean certificate at the time of writing.
+Then **`¬CReach (2*j+3) K`**. No search depth, cutoff, quotient model, or iteration bound appears in the result. The source module is [HighDyadicLowVal.lean](HighDyadicLowVal.lean), which also proves a universally quantified version taking the exact high stopping equation `K+j+3m+5=P*(j+3)` as a hypothesis. This avoids hiding a subtraction-truncation assumption.
 
-Set `P=2^(2m+2)` and `x=2j+3`. Since `m≥3`, `64 | P`. The source equation and modular hypotheses give:
+## Proof mechanism
+
+Write `x=2*j+3`. Exact stopping arithmetic gives `K` odd, `x+K≡4 (mod 8)`, and `x+K≥24`. The source-certified **complete odd/odd low-valuation inverse** [OddOddLowVal.lean](../agent3-c-bounce-inverse/OddOddLowVal.lean) then identifies its unique genuine parent:
 
 ```text
-K odd;
-(x+K)%8 = 4;
-x+3K-2 = 3P*(j+3) - (j+9m+14)
-        ≡ 16 (mod 64).
+a = (x+K-4)/2,
+b = (x+3*K-10)/4.
 ```
 
-Consequently the **source-exact unique odd/odd inverse** takes the high target `(x,K)` to
+The modular hypothesis is precisely `x+3*K-2 ≡ 16 (mod 64)`. Hence `b+2=4*u`, where `u≥9` and `u%4=1`. The other stopping congruence `m%4=3` yields `(a+2*b+8)%8=0`. The source-certified [DyadicSixCone.lean](DyadicSixCone.lean) forbids *every* blank-reached `(a,b)` with these conditions, taking its depth `r=2`. The exact inverse equivalence pulls this contradiction forward to `(x,K)`.
 
-```text
-A = (x+K-4)/2,
-B = (x+3K-10)/4.
-```
+All required exponential lower bounds, divisibility, natural subtraction identities and residues are kernel-proved in [HighDyadicArithmetic.lean](HighDyadicArithmetic.lean). The source theorem does not assume that any arbitrary predecessor is actually blank-reachable.
 
-The odd/odd inverse theorem `BB6.Agent3.oddodd_lowval_blank_reach_iff` applies: x and K are odd, K≥5, x+K≡4(mod8), x+K≥24. By `x+3K-2 ≡16(mod64)`, `B+2` is divisible by four and its quotient `u=(B+2)/4` satisfies `u≡1(mod4)`. For sufficiently large K (automatic from m≥3), u≥9. Further authentic stopping arithmetic gives
+## Verification
 
-```text
-A+2B+8 = x+2K+1 ≡ 0 (mod 8)
-```
+- **Lean 4.36.0-rc2** with the unchanged checked-in source `Agent46.secNext`, original `OddOddLowVal`, genuine blank-orbit `CReach` and `DyadicSixCone`.
+- Existing manual workflow [agent19-c-odd-dyadic.yml](../../.github/workflows/agent19-c-odd-dyadic.yml) includes the two source files without a new standalone CI workflow.
+- [GitHub Actions run 42333928553](https://github.com/FlareZ123/bb6/actions/runs/42333928553), head SHA `dec360f085c7d73cfa104a9692cf8916a9265daa`, **success**. The checked `#print axioms` lines for `finalArithmetic`, `high_dyadic_no_blank` and `high_dyadic_stopping_target_unreachable` report only `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+- A preceding attempt [run 42333603757](https://github.com/FlareZ123/bb6/actions/runs/42333603757) failed only in the final explicit-target corollary because its proof used an invalid direct subtraction rewrite; that source was corrected before the successful run. Its failed output must not be cited as source certification.
 
-because m≡3(mod4). Thus the predecessor (A,B) lies in the **already certified** `dyadic_six_cone_no_blank` at depth r=2, and cannot be blank-reached. The exact odd/odd inverse equivalence would then exclude the high stopping target.
+## Relation to the existing sieve and finite quotient
 
-This is a possible new **infinite high parameter cylinder**, with an elementary modular bridge to the fully source-certified dyadic cone. It may overlap earlier Agent3/11/19/29/46 source sieves and must be checked against `ValSixJointFull.lean` before novelty claims.
+The candidate's concrete pair `(j,m)=(263,3)` yields `(x,K)=(529,67819)` and genuine unique parent `(34172,50994)`; its `u=12749` is `1 (mod 4)`. The previously reported `M512` quotient admits the corresponding abstract target cell `(17,235,0)`, so quotient nonmembership at that modulus cannot establish this conclusion. This is an independently recorded computational comparison, not an input to the proof.
 
-## Concrete quotient-admitted witness for follow-up
+The statement has not yet been formally merged into `ValSixJointFull` or `ValSixC58`. Its independence from *every* earlier source exclusion, and novelty relative to external published methods, require separate theorem-level review. The currently verified source theorem is valid within its exact reachability semantics independently of that novelty review.
 
-`m=3, j=263` satisfies all modular conditions:
+## Remaining quantified problem
 
-```text
-P=256,
-x=529,
-K=256*(266)-(263+9+5)=67819,
-A=(529+67819-4)/2=34172,
-B=(529+3*67819-10)/4=50994,
-B+2=50996=4*12749,  12749%4=1,
-A+2B+8=136168, divisible by 8.
-```
-
-The existing independently reproduced M512 original-CLine quotient `QuotientRectCensus.cpp` **admits** the corresponding abstract blank-section layer cell `(a,k,c)=(17,235,0)` (`529%512=17`, `67819%512=235`). This sample is therefore not eliminated by direct quotient nonmembership at modulus 512. Additional satisfying examples with admitted cells include `m=3,j=455`, `m=7,j=355`, `m=7,j=419`, and `m=11,j=383`. No quotient admission is an actual reachability claim.
-
-A separate Python arbitrary-precision arithmetic test checked the proposed modular inverse hypotheses and cone constraints for all `m=3,7,...,67`, with the first seven nonnegative candidate `j` in each residue class. All evaluations satisfied every listed condition, including the parent mass congruence and `u≥9`. This is finite evidence for the arithmetic derivation, not source verification of the resulting global high-family claim.
-
-**Suggested next action:** Add `HighDyadicLowVal.lean` importing `OddOddLowVal` and `DyadicSixCone`; certify the all-natural-number high halting corollary against original `secNext`, check `#print axioms`, then audit whether `ValSixJointFull` already excludes the family. If new, incorporate it as a necessary condition into the source-exact high family criterion. A theorem with the explicit extra hypothesis `50≤K` can be proved first to avoid entangling the initial modular argument with an unrelated exponential growth bound.
+The combined Machine C halting criterion contains unbounded low and high stopping parameters. The theorem removes one infinite high parameter cylinder, but many parameter families survive. The next useful improvement is a source-verified prior-sieve admission theorem for an infinite subfamily (for instance `j=7+64t, m=3`), followed by integration into the strongest lossless blank-halting criterion. A depth-variable version of the same dyadic inverse argument may provide more general unbounded exclusions, provided every additional inverse case and exact root condition is proved.
