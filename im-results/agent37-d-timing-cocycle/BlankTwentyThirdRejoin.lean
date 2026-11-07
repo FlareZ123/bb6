@@ -93,7 +93,7 @@ theorem blank_twenty_third_exception :
     · change BB6.Agent2TwentySecondRoot.normalized22.a ≥ 2
       omega
     · left
-      change (5 : Nat) ≠ 0
+      change (BB6.Agent2TwentySecondRoot.normalized22.q+2) ≠ 0
       omega
   · exact terminal3636_exact
   · exact h22source
