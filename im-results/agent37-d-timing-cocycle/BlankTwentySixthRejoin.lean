@@ -115,7 +115,7 @@ theorem blank_twenty_sixth_reentry :
       rw [packet26_a_eq,packet26_p_eq]
       rfl
     rw [hshape]
-    simpa [aOneTime26,seed27,htarget] using hA0
+    simpa [aOneTime26,seed27,htarget,BB6.Agent2EFirstAPacket.fixedTail] using hA0
   have hroot :
       ObsEq
         (run (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)
