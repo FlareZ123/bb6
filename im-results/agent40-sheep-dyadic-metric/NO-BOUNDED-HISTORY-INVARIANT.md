@@ -46,7 +46,7 @@ The target is already even; hence its genuine first-even return is immediately `
 
 of length L, ending at an exact halting power. Since j can be arbitrarily large, so can the starting y_L. QED.
 
-For L=0, any sufficiently large power of two is itself a legal zero-length history endpoint. [verify_power_ancestors.py](verify_power_ancestors.py) runs the exact reverse chain for L=1..8, checking integrality, evenness, valuations, cofactor positivity and literal F/E consistency; the largest tested exponent is 468,751. This finite test corroborates the elementary all-L argument.
+For L=0, any sufficiently large power of two is itself a legal zero-length history endpoint. [verify_power_ancestors.py](verify_power_ancestors.py) runs the exact reverse chain for L=1..8, checking integrality, evenness, valuations, cofactor positivity and literal F/E consistency; the largest tested exponent is 468,751. This finite test corroborates the elementary all-L argument. The central 5-adic divisibility has also been independently **kernel checked in Lean 4.36.0-rc2**: [SheepPowerAncestors.lean](SheepPowerAncestors.lean) proves `5^(k+1) | 4^(5^k)+1` and `5^(k+1) | 2^(2*5^k+1)+2` for every k. Both `#print axioms` reports are exactly `[propext, Classical.choice, Quot.sound]` without `sorryAx`. This standalone certificate proves the arithmetic exponent family, not the original-source even-section or bounded-history graph theorem.
 
 ## Corollary: no globally inductive bounded-residue-history power avoidance
 
