@@ -145,7 +145,7 @@ theorem even_diagonal_repulsion (a d k aa dd : Nat)
 
 /-- Odd second-counter near-diagonal input: the same exit conclusion. -/
 theorem odd_diagonal_repulsion (a d k aa dd : Nat)
-    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hside : a≤d)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hside : a<d+5)
     (hpow : a-1 < 3^k) (hroom : 2*d+2*k+16 ≤ 5*a)
     (hstep : highLevelNext (.D a d) = some (.D aa dd)) :
     2*aa+8 ≤ dd := by
@@ -192,7 +192,7 @@ theorem even_diagonal_two_step (a d k aa dd : Nat)
 
 /-- Odd-second-counter companion to the source two-step theorem. -/
 theorem odd_diagonal_two_step (a d k aa dd : Nat)
-    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hside : a≤d)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hside : a<d+5)
     (hpow : a-1<3^k) (hroom : 2*d+2*k+16≤5*a)
     (hstep : highLevelNext (.D a d) = some (.D aa dd)) :
     ∃bb ee, highLevelNext (.D aa dd) = some (.D bb ee) := by
