@@ -116,17 +116,17 @@ All 51 new-family predictions agree with the raw machine replay, including both 
 
 ### Two-wave root family: eight formerly unmatched intervals
 
-The eight intervals previously classified as unmatched left-prefix candidates now satisfy the exact hypotheses of `b0_two_wave_root_interval_to_b0` in `Root119TwoWaveRootPrefix.lean`. In this theorem's parameterization, `n1` is half the right-hand run of ones and `r` is the length of the alternating left retreat.
+The eight intervals previously classified as unmatched left-prefix candidates now satisfy the exact hypotheses of `b0_two_wave_root_interval_to_b0` in `Root119TwoWaveRootPrefix.lean`. In this theorem's parameterization, `n_1` is half the right-hand run of ones and `r` is the length of the alternating left retreat.
 
 At a reached B/0 configuration with head (h), the local hypotheses are:
 - (t(h-1)=1, t(h-2)=0, t(h-3)=1, t(h-4)=1);
 - for every (i<r), (t(h-5-2i)=0) and (t(h-6-2i)=1);
 - (t(h-5-2r)=t(h-6-2r)=0);
-- the right side begins with (2n1) ones, then (0,1,0).
+- the right side begins with \(2n_1\) ones, then \(0,1,0\).
 
-The Lean theorem proves a reached B/0 return after (8n1+2r+30) steps, with returned head (h-2r-6). Under the input NoLeft4 shield, it also proves NoLeft4 at the output and hence excludes BBad there.
+The Lean theorem proves a reached B/0 return after \(8n_1+2r+30\) steps, with returned head \(h-2r-6\). Under the input NoLeft4 shield, it also proves NoLeft4 at the output and hence excludes BBad there.
 
-The current 10M replay verifies all eight starts against these full local hypotheses, checks the predicted return time and head displacement, and checks NoLeft4 at both endpoints. The observed ((n1,r)) pairs are:
+The current 10M replay verifies all eight starts against these full local hypotheses, checks the predicted return time and head displacement, and checks NoLeft4 at both endpoints. The observed \((n_1,r)\) pairs are:
 [
 (32,2), (32,17), (32,109), (40,15), (40,46), (96,1), (176,73), (184,194).
 ]
@@ -140,7 +140,7 @@ The two-wave-root theorem and its eight-instance replay audit are summarized abo
 
 ## Scope and next work
 
-- The 51 source-verified conditional return laws prove exact B/0 returns from their stated hypotheses.
+- The even-prefix, odd-even-prefix, and two-wave-root theorems prove exact B/0 returns under their stated hypotheses; the 51 corresponding observed intervals are checked in the 10M replay.
 - The even-prefix shield theorem is unconditional under the input `NoLeft4` hypothesis. The odd-even shield theorem has the explicit three-cell boundary guard above; proving that `Reach` implies the guard, or finding a reachable counterexample, is the next question.
 - Formalize the concrete Reach derivations for the eight two-wave-root start configurations. Classify the remaining 49 other intervals and establish an all-time B/0 shield or a genuine BBad witness.
 - The C-phase D1 family is now source-import verified in [Root119CPhaseReturn.lean](Root119CPhaseReturn.lean), including `NoLeft4` preservation and `BBad` exclusion; see the directory README for its separate 15,198-instance audit.
