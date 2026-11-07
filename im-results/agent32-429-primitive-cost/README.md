@@ -2,8 +2,8 @@
 
 **Original-source verified (7 November 2026).** For the literal six-state, two-symbol machine
 `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`, this dossier proves an exact
-*quadratic primitive-time prefix* from every suitable symbolic `J(u,w)` configuration
-an exact subsequent first arrival at F/0, the full raw high-3 J-to-J return,
+*quadratic primitive-time prefix* from every suitable symbolic `J(u,w)` configuration,
+followed by an exact first arrival at F/0, the full raw high-3 J-to-J return,
 and arbitrary consecutive high-3 ladders, using the unmodified raw two-way
 infinite-tape semantics. The parameter `u` is unrestricted. This is a partial
 analysis of **synthetic source-encoded sections**; it does not show which parameters
@@ -72,14 +72,14 @@ Building on that one-branch theorem,
 arbitrary consecutive high-3 segments directly for the raw machine. If
 `branchShift u k ≤ w`, then exactly `branchCostSum u k` primitive
 transitions reach the translated J chart with
-\\[
+\[
 u_k=2^k(u+3)-3,\\qquad
-w_k=w-\\operatorname{branchShift}(u,k),
-\\]
+w_k=w-\operatorname{branchShift}(u,k),
+\]
 and
-\\[
-\\operatorname{branchShift}(u,k)+3k=2(u+3)(2^k-1).
-\\]
+\[
+\operatorname{branchShift}(u,k)+3k=2(u+3)(2^k-1).
+\]
 The exact primitive cost is the recursive sum of the one-branch costs
 (4u_i^2+10u_i+27). CI run
 [42399391414](https://github.com/FlareZ123/bb6/actions/runs/42399391414)
@@ -103,7 +103,7 @@ ever visits that arbitrary source section.
 
 | Original map branch | Conjectured successful raw steps to next J, or final D/1 halt input |
 | --- | --- |
-| `w≥2u+3` | `4u²+10u+27` |
+
 | `w=2u+2` | `4u²+44u+204` |
 | `w=2u+1` | `4u²+28u+306` |
 | `w=2u` | `4u²+28u+110` |
