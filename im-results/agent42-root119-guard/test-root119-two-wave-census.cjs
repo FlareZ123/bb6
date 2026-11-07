@@ -368,6 +368,6 @@ const report = {
 const reportJson = JSON.stringify(report, null, 2);
 require('node:fs').writeFileSync(
   'im-results/agent42-root119-guard/root119-census-10m.json',
-  reportJson + '\\n',
+  reportJson + '\n',
 );
 console.log(reportJson);
