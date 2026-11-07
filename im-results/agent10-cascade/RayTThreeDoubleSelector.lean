@@ -41,12 +41,13 @@ theorem exact_odd_root_tthree_two_gate (n j:Nat) (hn:20≤n)
       · exact Or.inl h81
       · right
         intro d0 h hd0 he0
-        by_contra hnot9
-        have hz81:2*ray n j+5=81*d:=by simpa using hz
-        have hband8:6*2^k+1≤8*d ∧ 8*d≤8*2^k-1:=by simpa using hband
-        have he16:16*d=8*2^k+q+k+5:=by simpa using heq
-        exact (ray_tthree_two_gate_source_dead n j k d q d0 h hn hm
-          hz81 hband8 he16 hd0 he0 h81 hnot9) hroot
+        by_cases h9 : (2*h+5)%9=0
+        · exact h9
+        · have hz81:2*ray n j+5=81*d:=by simpa using hz
+          have hband8:6*2^k+1≤8*d ∧ 8*d≤8*2^k-1:=by simpa using hband
+          have he16:16*d=8*2^k+q+k+5:=by omega
+          exact False.elim ((ray_tthree_two_gate_source_dead n j k d q d0 h hn hm
+            hz81 hband8 he16 hd0 he0 h81 h9) hroot)
     · exact Or.inr (Or.inr ht)
   · rintro ⟨q,k,t,d,hroot,⟨hd,hband,hz,heq⟩,hgate⟩
     have hweak:(4≤t ∨ (t=3 ∧ q%3=2) ∨ (t=1 ∧
