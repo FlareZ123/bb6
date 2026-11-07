@@ -127,7 +127,7 @@ theorem physical_sourceScanE_e1_revisit (b : Nat) (suffix : List Bool)
     ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 (crossTime b + 1) c = some c' ∧
       Represents (z 2 (finalLeft b) true suffix) c' ∧
       c'.head = c.head := by
-  exact source_runWithDelta_rep (crossTime b + 1)
+  simpa using source_runWithDelta_rep (crossTime b + 1)
     (sourceScanE b suffix) c hrep
     (z 2 (finalLeft b) true suffix) 0
     (sourceScanE_e1_revisit_delta b suffix)
