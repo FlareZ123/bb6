@@ -308,7 +308,7 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
   | succ n ih =>
       rw [show n+1 = 1+n by omega, runWithDelta_add]
       have hstep :
-          runWithDelta 1 (z 4 (ones (n+1) ++ left) true suffix) =
+          runWithDelta 1 (z 4 (ones (1+n) ++ left) true suffix) =
             some (z 4 (ones n ++ left) true (true :: suffix), -1) := by
         rfl
       rw [hstep]
@@ -316,16 +316,32 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
       rw [ih]
       simp only [Option.map_some]
       have hones : ones n ++ [true] = ones (n+1) := by
-        rw [← BB429SourceE1Return.ones_add n 1]
-        rfl
+        simpa [ones] using (BB429SourceE1Return.ones_add n 1).symm
       have hright : ones n ++ (true :: suffix) = ones (n+1) ++ suffix := by
         calc
           ones n ++ (true :: suffix) = ones n ++ ([true] ++ suffix) := rfl
           _ = (ones n ++ [true]) ++ suffix := by rw [← List.append_assoc]
           _ = ones (n+1) ++ suffix := by rw [hones]
       rw [hright]
-      simp [Int.natCast_add, Int.natCast_mul]
-      omega
+      apply Option.some.inj
+      apply Prod.ext
+      · rfl
+      · omega
+
+/-- Appending a fixed 101 tail to an all-one block exposes one
+    additional leading one. -/
+theorem ones_right_101 (n : Nat) :
+    ones n ++ [true,false,true] = true :: (ones n ++ [false,true]) := by
+  have hones : ones n ++ [true] = ones (n+1) := by
+    simpa [ones] using (BB429SourceE1Return.ones_add n 1).symm
+  have hsucc : ones (n+1) = true :: ones n := by
+    rfl
+  calc
+    ones n ++ [true,false,true] = (ones n ++ [true]) ++ [false,true] := by
+      rw [List.append_assoc]
+    _ = ones (n+1) ++ [false,true] := by rw [hones]
+    _ = (true :: ones n) ++ [false,true] := by rw [hsucc]
+    _ = true :: (ones n ++ [false,true]) := by rfl
 
 /-- The even-b C/1 boundary begins with a fixed 24-step E/1 preparation. -/
 theorem c1_odd_to_e1_prefix_delta (k : Nat) :
