@@ -23,6 +23,22 @@ for **every** positive-depth reset count `z`, including arbitrary zero-depth int
 
 This is a uniform source-history restriction, not a root-reachability or halting decision. Original-source Lean 4.36.0-rc2 verification succeeded in [CI 42353729728](https://github.com/FlareZ123/bb6/actions/runs/42353729728); the theorem's axiom report contains no `sorryAx`.
 
+## Three-reset shifted-wall exclusion and five-reset floor (7 November 2026)
+
+[ThreeResetWallPrefix.lean](ThreeResetWallPrefix.lean) now proves that no genuine original-source
+`CountCone (14*2^n-2*n-16) 3 b d m 3` with `n>=14` can satisfy the exact shifted wall
+`b+4*m+4*n+20=12*2^n`. Combining this exclusion with the depth-indexed dichotomy and the earlier four-reset floor proves
+`source_right_five_five_reset_floor_shifted_wall`: every original-source right-five history
+`CountCone (14*2^n-2*n-16) 3 b 5 m z` has **at least five positive-depth resets** for `n>=14`.
+
+The proof peels the three positive resets and removes each following zero-depth tail. A depth-one last reset forces a negative predecessor right counter. Depth two gives the exact intermediate identities
+`c2+3=2*P+18*m2+18*n+102` and
+`c1+3=2*P+146*m2+146*n+816`, where `P=2^n`. The remaining root-connected inverse power is excluded by a three-way split on its reset depth `r=0`, `r=1`, or `r>=2`, using the locally checked dyadic core [ThreeResetCore.lean](../agent50-p1-subwall/ThreeResetCore.lean).
+
+**Verification:** original-source CI [42398746712](https://github.com/FlareZ123/bb6/actions/runs/42398746712) **succeeded** at head `55902afb482ea84aaddb93a688802facde679c98`, compiling the exact source dependency chain, the arithmetic core, and the source wrapper. The new files include explicit `#print axioms` audits. The arithmetic core was also compiled locally under Lean 4.36.0-rc2 and its axiom report contains no `sorryAx`.
+
+This is a uniform reset-count lower bound for a restricted original-source family. It does not establish blank-root reachability, a P1 halt/nonhalt decision, or a BB(6) upper bound. The result remains in `im-results/` pending broader synthesis and adversarial review.
+
 ## Remaining proof
 
 The reset count is unbounded. High-cost histories, other inverse exits and genuine blank-root ancestry are not uniformly excluded. No P1 halt/nonhalt result or BB(6) upper bound follows. Complete source assumptions, earlier inequalities, mathematical proofs, numerical checks and verification references remain in the [historical research log](FULL_RESEARCH_LOG.md).
