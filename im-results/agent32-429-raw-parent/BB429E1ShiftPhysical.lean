@@ -119,9 +119,52 @@ theorem physical_shift_E11_total (k : Nat) (tail suffix : List Bool)
   have h := physical_left_prefix (2*k) (2*k) tail suffix c hrep (by omega)
   simpa [ones] using h
 
+/-- Every cell in the leading E/1 sweep is retained as a one. In
+    particular, the original head cell is still one after any positive
+    prefix, while the head is strictly to its left. -/
+private theorem ones_append_getD (n : Nat) (suffix : List Bool) (i : Nat)
+    (hi : i < n) :
+    (ones n ++ suffix).getD i false = true := by
+  induction n generalizing i with
+  | zero => omega
+  | succ n ih =>
+      cases i with
+      | zero => simp [ones]
+      | succ i =>
+          have hi' : i < n := by omega
+          simpa [ones, List.replicate_succ] using ih i hi'
+
+/-- The first E/1 write in a `shift_E_11` sweep remains present throughout
+    the macro. This is a concrete one-sided last-writer candidate: after
+    every positive prefix, the head is left of the original cell and that
+    cell still contains one. No claim is made about later J-orbit steps. -/
+theorem physical_shift_E11_mark_persists (k j : Nat) (tail suffix : List Bool)
+    (c : Config)
+    (hrep : Represents
+      (z 4 (ones (2*k) ++ tail) true (ones 6 ++ suffix)) c)
+    (hj : 0 < j) (hbound : j ≤ 2*k) :
+    ∃ c', BB6Coverage.run target429 j c = some c' ∧
+      c'.head = c.head - (j : Int) ∧ c'.tape c.head = true := by
+  obtain ⟨c', hrun, hrep', hhead⟩ :=
+    physical_shift_E11_prefix k j tail suffix c hrep hbound
+  rcases hrep' with ⟨_, _, _, hright⟩
+  have hpos : c'.head + fcast (j-1) = c.head := by
+    rw [hhead]
+    simp [fcast]
+    omega
+  have hget : (ones (j+6) ++ suffix).getD (j-1) false = true :=
+    ones_append_getD (j+6) suffix (j-1) (by omega)
+  have hmark : c'.tape c.head = true := by
+    calc
+      c'.tape c.head = c'.tape (c'.head + fcast (j-1)) := by rw [hpos]
+      _ = (ones (j+6) ++ suffix).getD (j-1) false := hright (j-1)
+      _ = true := hget
+  exact ⟨c', hrun, hhead, hmark⟩
+
 #print axioms physical_E1_step
 #print axioms physical_left_prefix
 #print axioms physical_shift_E11_prefix
 #print axioms physical_shift_E11_total
+#print axioms physical_shift_E11_mark_persists
 
 end BB429E1ShiftPhysical
