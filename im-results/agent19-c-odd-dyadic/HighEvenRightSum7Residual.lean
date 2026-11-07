@@ -88,22 +88,29 @@ private theorem sum7_phase_no (j m : Nat)
     rw [hrhs] at hmod8
     omega
 
-/-- The second sum-seven high cylinder also survives the complete
-    previous high sieve. -/
-theorem sum7_family_prior_allowed (q r : Nat) :
-    BB6.Agent24Phase.highAllowed (32*q+8) (32*r+5) := by
-  let j : Nat := 32*q+8
-  let m : Nat := 32*r+5
-  have hm5 : 5≤m := by dsimp [m]; omega
-  have hm4 : m%4=1 := by dsimp [m]; omega
-  have hm8 : m%8=5 := by dsimp [m]; omega
-  have hm32 : m%32=5 := by dsimp [m]; omega
-  have hj2 : j%2=0 := by dsimp [j]; omega
-  have hj4 : j%4=0 := by dsimp [j]; omega
-  have hj8 : j%8=0 := by dsimp [j]; omega
-  have hj32 : j%32=8 := by dsimp [j]; omega
-  have hjm16 : (j+m)%16=13 := by dsimp [j,m]; omega
-  have hjm32 : (j+m)%32=13 := by dsimp [j,m]; omega
+/-- The entire exceptional sum-seven congruence cylinder survives
+    the complete previous Agent24 high sieve. -/
+theorem sum7_family_prior_allowed (j m : Nat)
+    (hm5 : 5≤m) (hm4 : m%4=1)
+    (hrel : (j+8)%32=(3*m+1)%32) :
+    BB6.Agent24Phase.highAllowed j m := by
+  have hj4 : j%4=0 := by
+    have h := congrArg (fun z : Nat => z%4) hrel
+    have hleft : (j+8)%32%4=(j+8)%4 :=
+      Nat.mod_mod_of_dvd (j+8) (by decide : 4∣32)
+    have hright : (3*m+1)%32%4=(3*m+1)%4 :=
+      Nat.mod_mod_of_dvd (3*m+1) (by decide : 4∣32)
+    rw [hleft,hright] at h
+    omega
+  have hrel8 : (j+8)%8=(3*m+1)%8 := by
+    have h := congrArg (fun z : Nat => z%8) hrel
+    have hleft : (j+8)%32%8=(j+8)%8 :=
+      Nat.mod_mod_of_dvd (j+8) (by decide : 8∣32)
+    have hright : (3*m+1)%32%8=(3*m+1)%8 :=
+      Nat.mod_mod_of_dvd (3*m+1) (by decide : 8∣32)
+    rw [hleft,hright] at h
+    exact h
+  have hjm4 : (j+m)%4=1 := by omega
   have hA4 : (j+3*m+3)%4=2 := by omega
   have hA8 : (j+3*m+3)%8=2 := by omega
   have hB2 : (j+9*m+14)%2=1 := by omega
@@ -121,12 +128,13 @@ theorem sum7_family_prior_allowed (q r : Nat) :
     exact sum7_c58_gate_no j m n hB2 hpair
   have hPhase : ¬ BB6.Agent46.allPhaseExcluded j m :=
     sum7_phase_no j m hA8
-  rcases sum7_target_residues q r with ⟨hk12,hk8,hxk8,hS32,hx4⟩
+  rcases sum7_target_residues_of_congruence j m hm5 hm4 hrel with
+    ⟨hk12,hk8,hxk8,hS32,hx4⟩
   let k : Nat := highK j m
-  have hk12' : 12≤k := by simpa [j,m,k] using hk12
-  have hk8' : k%8=4 := by simpa [j,m,k] using hk8
+  have hk12' : 12≤k := by simpa [k] using hk12
+  have hk8' : k%8=4 := by simpa [k] using hk8
   have hxk8' : (2*j+3+k)%8=7 := by
-    simpa [j,m,k,highK] using hxk8
+    simpa [k] using hxk8
   have hxk4 : (2*j+3+k)%4=3 := by omega
   have hguard : ¬(4≤k ∧ k%2=0 ∧ (2*j+3+k)%4=1) := by omega
   have hnorm : BB6.Agent15.affineNormalize (2*j+3) k=(2*j+3,k) := by
@@ -139,7 +147,9 @@ theorem sum7_family_prior_allowed (q r : Nat) :
     refine ⟨?_,?_,?_,?_,?_⟩ <;> omega
   have hRect : BB6.Agent3.jointHighRectAllowed j m := by
     unfold BB6.Agent3.jointHighRectAllowed
-    exact ⟨hJointBase,by omega⟩
+    exact ⟨hJointBase,by
+      rintro ⟨hm32,hj32⟩
+      omega⟩
   have hAgent19 : BB6.Agent19Joint.highAllowed j m := by
     unfold BB6.Agent19Joint.highAllowed
     refine ⟨hRect,hOld,?_,?_,?_,?_⟩ <;> omega
@@ -162,7 +172,9 @@ theorem sum7_family_prior_allowed (q r : Nat) :
     simpa [k,BB6.Agent19HighEvenRight.highK] using hright
   have hValFull : BB6.Agent3ValSix.highAllowedValSixFull j m := by
     unfold BB6.Agent3ValSix.highAllowedValSixFull
-    exact ⟨hValSix,hFive,by omega,by omega,by omega,hright'⟩
+    exact ⟨hValSix,hFive,by omega,by omega,by
+      rintro ⟨hm32,hj32⟩
+      omega,hright'⟩
   have hC58ValSix : BB6.Agent11C58ValSix.highAllowed j m := by
     unfold BB6.Agent11C58ValSix.highAllowed
     exact ⟨hValFull,by omega⟩
