@@ -102,7 +102,7 @@ private theorem direct_32 (q : Nat) :
   rw [hx,hy] at h
   exact h
 
-private theorem odd_sum_two_unreachable (x y : Nat)
+theorem odd_sum_two_unreachable (x y : Nat)
     (hy : 5≤y) (ho : y%2=1) (hs : (x+y)%4=2) :
     ¬BB6.Agent3.CReach x y := by
   rintro ⟨time,ht⟩
