@@ -5,7 +5,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429High2PhysicalBridge
 
-open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
+open BB6Coverage BB6Bubble BB6BCFuture BB429PhysicalFrontier BB429JPhysical
 open BB429JFirstBranch BB429PhysicalBridge BB429OddExcursion
 open BB429SourceE1Return BB429High2Prefix BB429JuncHeadExcursion
 
@@ -88,10 +88,14 @@ private theorem baseTape_high2_right (u : Nat) (x : Int)
   have hn : ¬negFillTest u x := by
     unfold negFillTest
     omega
+  have hhole : ¬jHole u x := by
+    unfold jHole
+    omega
+  have hlow : -2*(u:Int)-6 ≤ x := by omega
   have hj : jTape u (2*u+2) x =
       (if (x=2*(u:Int)+1 ∨ x=2*(u:Int)+2 ∨
            x=2*(u:Int)+3 ∨ x=2*(u:Int)+5) then true else false) := by
-    simp [jTape, jMark, jHole]
+    simp [jTape, jMark, hhole, hlow]
     omega
   simp [baseTape, zeroPaint, hz, negFill, hn, hj]
 
