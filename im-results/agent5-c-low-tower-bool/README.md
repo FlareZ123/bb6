@@ -37,3 +37,19 @@ The gate is a compact all-depth condition. It includes the explicit seed progres
 - For example, (m=112) is not covered by this gate and remains a difficult low-root decision instance.
 - Smoke checks include (m=11,75,219,539) (excluded) and (m=112) (not excluded).
 - The module is kept under `im-results/` because it is an executable interface to an existing exclusion theorem, not a new standalone mathematical result.
+
+## Bounded low-root search experiment
+
+`search_low_roots.py` implements the exact section map, the complete inverse
+candidate grammar for states with (y\ge5), and mass-bounded brute-force
+predecessors for (y<5). It applies the source normalizers at every inverse
+node, which preserves `CReach` by the corresponding source equivalences.
+The optimized candidate generator is checked against exact brute-force
+predecessor enumeration on 450 small states.
+
+For (m\le200), the transcribed low filter admits 92 values. The inverse
+search exhausts all 92 with no blank-root path. The largest tree is (m=112):
+614,197 visited states, maximum depth 2,608, maximum branching 11, and no
+(y<5) frontier. The all-depth tower gate itself excludes (m=11,75,139)
+in this interval. These are finite computational observations only; they
+do not prove the low branch impossible for arbitrary (m).
