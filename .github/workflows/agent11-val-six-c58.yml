@@ -257,11 +257,18 @@ jobs:
           lean -o HighDyadicGateDecision.olean HighDyadicGateDecision.lean
           lean HighDyadicDepthUnique.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58AllDepthBool.lean .
-          lean ValSixC58AllDepthBool.lean
+          lean -o ValSixC58AllDepthBool.olean ValSixC58AllDepthBool.lean
           # Complementary source-cone affine normal form and strict old-sieve admission.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{HighThreeAffine,HighThreeLatePrior}.lean .
           lean -o HighThreeAffine.olean HighThreeAffine.lean
-          lean HighThreeLatePrior.lean
+          lean -o HighThreeLatePrior.olean HighThreeLatePrior.lean
+          # Late-source three-cone high exclusion beyond the older depth bound.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{DyadicThreeCone,HighThreeLateArithmetic,HighThreeLate}.lean .
+          lean -o DyadicThreeCone.olean DyadicThreeCone.lean
+          lean -o HighThreeLateArithmetic.olean HighThreeLateArithmetic.lean
+          lean -o HighThreeLate.olean HighThreeLate.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58Late.lean .
+          lean ValSixC58Late.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
           # backwards oracle, and authentic merged C58/ValSix stopping iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
