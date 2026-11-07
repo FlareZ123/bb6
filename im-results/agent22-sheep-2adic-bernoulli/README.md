@@ -140,6 +140,13 @@ Here \(B_n\) is exactly the number of raw section transitions, while \(C_n\) is 
 
 Since \(-\log_2\Pr(a,b)=a+b\), the Bernoulli system has Kolmogorov-Sinai entropy exactly **four bits per first-even return** (two bits from each independent geometric coordinate).
 
+There is also a complete prefix-code interpretation. Conditional on the first binary digit being zero (the even domain), each branch cylinder fixes exactly \(c=a+b\) further low-order bits, and distinct branch cylinders are disjoint. There are exactly \(c-1\) branch symbols of length \(c\), so their Kraft sum is
+\[
+\sum_{c\ge2}(c-1)2^{-c}=1.
+\]
+The length law is \(\Pr(c)=(c-1)2^{-c}\), with mean four bits. The map \(E_g\) removes the first variable-length branch block, which is the prefix-code version of the Bernoulli shift.
+
+
 Equivalently, the itinerary map identifies the generic 2-adic system, modulo its countable exceptional set, with the one-sided Bernoulli shift on \(\mathcal A^{\mathbb N}\) equipped with this product distribution. The map \(E_g\) corresponds to deleting the first branch symbol.
 
 ## 4. Consequences for almost every 2-adic start
