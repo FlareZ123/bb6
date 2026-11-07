@@ -446,8 +446,9 @@ theorem oddLeft_terminal_ray_interval_joint
     (hK : 2*(4*d+t+19+3*n)+5 < 3^K) :
     2*d+6≤t+n+K ∧ t≤2*d+5*n+K+17 := by
   have hK' : 2*((d+t+4)+5+3*(d+3)+3*n+1)+5 < 3^K := by omega
-  exact drainB_terminal_balance_interval_joint
+  have hbal := drainB_terminal_balance_interval_joint
     (d+t+4) (d+3) 5 n K aa dd hs hb he hhalt hK'
+  omega
 
 /-- Even-left ray window with the sharp joint-mass threshold. -/
 theorem evenLeft_terminal_ray_interval_joint
@@ -459,8 +460,9 @@ theorem evenLeft_terminal_ray_interval_joint
     (hK : 2*(4*d+t+12+3*n)+5 < 3^K) :
     2*d+1≤t+n+K ∧ t≤2*d+5*n+K+12 := by
   have hK' : 2*((d+t+3)+2+3*(d+2)+3*n+1)+5 < 3^K := by omega
-  exact drainB_terminal_balance_interval_joint
+  have hbal := drainB_terminal_balance_interval_joint
     (d+t+3) (d+2) 2 n K aa dd hs hb he hhalt hK'
+  omega
 
 /-- Odd-right ray window with the sharp joint-mass threshold. -/
 theorem oddRight_terminal_ray_interval_joint
@@ -473,8 +475,9 @@ theorem oddRight_terminal_ray_interval_joint
     (hK : 2*(4*a+2*t+6+3*n)+5 < 3^K) :
     2*a≤2*t+n+K+9 ∧ 2*t≤2*a+5*n+K+2 := by
   have hK' : 2*((a+2*t+5)+3+3*(a-1)+3*n+1)+5 < 3^K := by omega
-  exact drainB_terminal_balance_interval_joint
+  have hbal := drainB_terminal_balance_interval_joint
     (a+2*t+5) (a-1) 3 n K aa dd hs hb he hhalt hK'
+  omega
 
 #print axioms drainB_terminal_interval_joint
 #print axioms drainB_terminal_balance_interval_joint
