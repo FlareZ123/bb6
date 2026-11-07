@@ -191,7 +191,11 @@ with the empty word having \((J_p,C_p)=(0,0)\). Summing over \(c\) recovers
 \Pr(J_p=j)=\frac{\binom{p}{2j}}{2^{p-1}}.
 \]
 For \(p\ge2\), \(2J_p\) is a \(\operatorname{Binomial}(p,1/2)\) variable conditioned to be even, so \(\mathbb E[J_p]=p/4\). For \(p\ge3\), its variance is \(p/16\); the small case \(p=2\) has variance \(1/4\).
-Summing instead over \(j\), the number of canonical words of exact cost \(c\) is \(2^{c-2}\) for \(2\le c\le p\), with one empty word of cost zero. Therefore
+Summing instead over \(j\), the number of canonical words of exact cost \(c\) is
+\[
+\sum_{j=1}^{\lfloor c/2\rfloor}\binom{c-1}{2j-1}=2^{c-2}
+\]
+for \(2\le c\le p\), with one empty word of cost zero. Therefore
 \[
 \Pr(C_p=0)=2^{1-p},\qquad
 \Pr(C_p=c)=2^{c-p-1}\quad(2\le c\le p),
