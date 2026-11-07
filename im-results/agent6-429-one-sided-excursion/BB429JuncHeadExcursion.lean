@@ -618,6 +618,317 @@ theorem physical_sourceScanE_finishC_even_after_junc0_delta (r k : Nat)
       (sourceScanE_finishC_even_after_junc0_delta r k hk)
   exact ⟨c', hrun, hrep', hhead⟩
 
+
+
+/-!
+## Unbounded Junc head-crossing lemma
+
+A complete positive-u Junc sweep followed by the u=0 transition maps
+Junc(u,0,w) to Junc(2u+3,0,w-(2u+3)) and moves the head right by 2u+3.
+Thus the consumed right counter and the head displacement agree, while the
+positive parameter grows geometrically. Iterate every affordable full cycle;
+the first unaffordable cycle leaves enough room for a final partial excursion
+whose intermediate A head passes the original right boundary.
+-/
+
+def juncCycleTime (u : Nat) : Nat := juncPosFullTime u 0 + (4*u+27)
+
+def juncCycleU : Nat → Nat → Nat
+  | 0, u => u
+  | n+1, u => 2 * juncCycleU n u + 3
+
+def juncCycleSpent : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, u => juncCycleSpent n u + (2 * juncCycleU n u + 3)
+
+def juncCycleTimeTotal : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, u => juncCycleTimeTotal n u + juncCycleTime (juncCycleU n u)
+
+def juncAvailable (u w n : Nat) : Prop :=
+  juncCycleSpent n u + (2 * juncCycleU n u + 3) ≤ w
+
+instance (u w n : Nat) : Decidable (juncAvailable u w n) := by
+  unfold juncAvailable
+  infer_instance
+
+/-- Bounded executable search for the first cycle that cannot be completed. -/
+def juncFirstBadAux (u w : Nat) : Nat → Nat
+  | 0 => 0
+  | fuel+1 =>
+      if juncAvailable u w (juncFirstBadAux u w fuel) then
+        juncFirstBadAux u w fuel + 1
+      else juncFirstBadAux u w fuel
+
+def juncTerminalN (u w : Nat) : Nat := juncFirstBadAux u w (w+2)
+
+theorem juncCycleU_lower (n u : Nat) : u + 3*n ≤ juncCycleU n u := by
+  induction n with
+  | zero => simp [juncCycleU]
+  | succ n ih =>
+      simp only [juncCycleU]
+      omega
+
+theorem juncTerminal_available_exists (u w : Nat) :
+    ¬ juncAvailable u w (w+1) := by
+  have hU := juncCycleU_lower (w+1) u
+  have hgt : w < 2 * juncCycleU (w+1) u + 3 := by omega
+  unfold juncAvailable
+  omega
+
+theorem juncFirstBadAux_le (u w fuel : Nat) :
+    juncFirstBadAux u w fuel ≤ fuel := by
+  induction fuel with
+  | zero => simp [juncFirstBadAux]
+  | succ fuel ih =>
+      by_cases h : juncAvailable u w (juncFirstBadAux u w fuel)
+      · simp [juncFirstBadAux, h]
+        omega
+      · simp [juncFirstBadAux, h]
+        omega
+
+theorem juncFirstBadAux_spec (u w fuel : Nat) :
+    (∀ m, m < juncFirstBadAux u w fuel → juncAvailable u w m) ∧
+    (juncFirstBadAux u w fuel < fuel →
+      ¬ juncAvailable u w (juncFirstBadAux u w fuel)) := by
+  induction fuel with
+  | zero =>
+      constructor
+      · intro m hm
+        simp [juncFirstBadAux] at hm
+      · intro hlt
+        simp [juncFirstBadAux] at hlt
+  | succ fuel ih =>
+      by_cases h : juncAvailable u w (juncFirstBadAux u w fuel)
+      · constructor
+        · intro m hm
+          have hm' : m < juncFirstBadAux u w fuel + 1 := by
+            simpa [juncFirstBadAux, h] using hm
+          by_cases hmk : m < juncFirstBadAux u w fuel
+          · exact ih.1 m hmk
+          · have heq : m = juncFirstBadAux u w fuel := by omega
+            subst m
+            exact h
+        · intro hlt
+          have hk : juncFirstBadAux u w fuel < fuel := by
+            simpa [juncFirstBadAux, h] using hlt
+          exact False.elim ((ih.2 hk) h)
+      · constructor
+        · intro m hm
+          have hm' : m < juncFirstBadAux u w fuel := by
+            simpa [juncFirstBadAux, h] using hm
+          exact ih.1 m hm'
+        · intro hlt
+          simpa [juncFirstBadAux, h] using h
+
+theorem juncTerminal_prior (u w : Nat) (m : Nat)
+    (hm : m < juncTerminalN u w) : juncAvailable u w m := by
+  exact (juncFirstBadAux_spec u w (w+2)).1 m hm
+
+theorem juncTerminal_bad (u w : Nat) :
+    ¬ juncAvailable u w (juncTerminalN u w) := by
+  have hspec := juncFirstBadAux_spec u w (w+2)
+  have hle : juncTerminalN u w ≤ w+1 := by
+    by_cases h : juncTerminalN u w ≤ w+1
+    · exact h
+    · have hm : w+1 < juncFirstBadAux u w (w+2) := by
+        simpa [juncTerminalN] using Nat.lt_of_not_ge h
+      exact False.elim ((juncTerminal_available_exists u w) (hspec.1 (w+1) hm))
+  exact hspec.2 (by simpa [juncTerminalN] using Nat.lt_succ_of_le hle)
+
+theorem juncTerminal_spent_le (u w : Nat) :
+    juncCycleSpent (juncTerminalN u w) u ≤ w := by
+  cases hn : juncTerminalN u w with
+  | zero => simp [juncCycleSpent]
+  | succ n =>
+      have hm : n < juncTerminalN u w := by rw [hn]; omega
+      have hp := juncTerminal_prior u w n hm
+      simpa [hn, juncAvailable, juncCycleSpent] using hp
+
+theorem juncTerminal_remaining_lt (u w : Nat) :
+    w - juncCycleSpent (juncTerminalN u w) u <
+      2 * juncCycleU (juncTerminalN u w) u + 3 := by
+  have hs := juncTerminal_spent_le u w
+  have hb := juncTerminal_bad u w
+  unfold juncAvailable at hb
+  omega
+
+theorem juncTerminal_final_bounds (u w : Nat)
+    (hrem : 5 ≤ w - juncCycleSpent (juncTerminalN u w) u) :
+    1 ≤ (w - juncCycleSpent (juncTerminalN u w) u) / 2 - 1 ∧
+    (w - juncCycleSpent (juncTerminalN u w) u) / 2 - 1 ≤
+      juncCycleU (juncTerminalN u w) u ∧
+    2 * ((w - juncCycleSpent (juncTerminalN u w) u) / 2 - 1) - 1 ≤
+      w - juncCycleSpent (juncTerminalN u w) u ∧
+    w - juncCycleSpent (juncTerminalN u w) u - 5 <
+      2 * ((w - juncCycleSpent (juncTerminalN u w) u) / 2 - 1) := by
+  have hlt := juncTerminal_remaining_lt u w
+  omega
+
+/-- One full positive-u sweep and the following u=0 sweep advance the head
+    by exactly the amount consumed from the right counter. -/
+theorem juncCycle_delta (u w : Nat) (hw : 2*u+3 ≤ w) :
+    runWithDelta (juncPosFullTime u 0 + (4*u+27)) (junc u 0 w) =
+      some (junc (2*u+3) 0 (w-(2*u+3)), ((2*u+3 : Nat) : Int)) := by
+  rw [runWithDelta_add,
+    juncPos_iter_full_delta u u 0 w (by omega) (by omega)]
+  simp only [Option.bind_some, Nat.sub_self, Nat.zero_add]
+  have htail := junc0_next_delta (2*u) (w-2*u) (by omega)
+  rw [show 4*u+27 = 2*(2*u)+27 by omega, htail]
+  simp only [Option.map_some]
+  have hsub : w-2*u-3 = w-(2*u+3) := by omega
+  rw [hsub]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- Exact composition of n affordable full Junc cycles. -/
+theorem juncCycle_iter_delta (n u w : Nat) (hs : juncCycleSpent n u ≤ w) :
+    runWithDelta (juncCycleTimeTotal n u) (junc u 0 w) =
+      some (junc (juncCycleU n u) 0 (w-juncCycleSpent n u),
+        ((juncCycleSpent n u : Nat) : Int)) := by
+  induction n with
+  | zero =>
+      simp [juncCycleTimeTotal, juncCycleSpent, juncCycleU, runWithDelta]
+  | succ n ih =>
+      have hs' : juncCycleSpent n u + (2*juncCycleU n u+3) ≤ w := by
+        simpa [juncCycleSpent] using hs
+      have hprev : juncCycleSpent n u ≤ w := by omega
+      simp only [juncCycleTimeTotal]
+      rw [runWithDelta_add, ih hprev]
+      simp only [Option.bind_some]
+      have hrem : 2*juncCycleU n u+3 ≤ w-juncCycleSpent n u := by omega
+      simp only [juncCycleTime]
+      rw [juncCycle_delta (juncCycleU n u) (w-juncCycleSpent n u) hrem]
+      simp only [Option.map_some]
+      simp [juncCycleU, juncCycleSpent, Nat.sub_sub,
+        Int.natCast_add, Int.natCast_mul]
+
+/-- From J(u,0,w), a finite Junc excursion reaches a head strictly beyond
+    the target whenever the starting head offset h and right counter w
+    satisfy h+w=2k+5. -/
+theorem juncCycle_crossing (u w k h : Nat) (hrel : h+w=2*k+5) :
+    ∃ (steps : Nat) (cfg : Zipper) (d : Nat),
+      runWithDelta steps (junc u 0 w) = some (cfg, (d : Int)) ∧
+      2*k < h+d := by
+  let n := juncTerminalN u w
+  let spent := juncCycleSpent n u
+  let rem := w-spent
+  have hspent : spent ≤ w := by simpa [spent,n] using juncTerminal_spent_le u w
+  have hcycles : runWithDelta (juncCycleTimeTotal n u) (junc u 0 w) =
+      some (junc (juncCycleU n u) 0 rem, (spent : Int)) := by
+    simpa [spent, rem] using juncCycle_iter_delta n u w hspent
+  have hrel' : h+spent+rem=2*k+5 := by
+    dsimp [rem]
+    omega
+  by_cases hsmall : rem ≤ 4
+  · refine ⟨juncCycleTimeTotal n u, junc (juncCycleU n u) 0 rem, spent, ?_, ?_⟩
+    · simpa using hcycles
+    · omega
+  · have hrem : 5 ≤ rem := by omega
+    have hb := juncTerminal_final_bounds u w (by simpa [rem,spent,n] using hrem)
+    let N := rem/2-1
+    have hN : 1 ≤ N := by dsimp [N]; exact hb.1
+    have hU : N ≤ juncCycleU n u := by dsimp [N]; exact hb.2.1
+    have hwN : 2*N-1 ≤ rem := by dsimp [N]; exact hb.2.2.1
+    have hmid := juncPos_iter_mid_delta N (juncCycleU n u) 0 rem hN hU hwN
+    refine ⟨juncCycleTimeTotal n u + juncPosMidTime N 0,
+      midApos (juncCycleU n u-N) (2*(N-1)) (rem-2*(N-1)),
+      spent+2*N, ?_, ?_⟩
+    · rw [runWithDelta_add, hcycles]
+      simp only [Option.bind_some]
+      rw [hmid]
+      simp only [Option.map_some]
+      simp [Int.natCast_add, Int.natCast_mul]
+    · omega
+
+/-- The even-b source E/1 return always has a later Junc head strictly
+    beyond the entire 2k-cell interval to its right. -/
+theorem sourceScanE_finishC_even_crosses_delta (r k : Nat) (hk : 3 ≤ k) :
+    ∃ (steps : Nat) (cfg : Zipper) (d : Nat),
+      runWithDelta
+        (((crossTime (2*r)+1 + (12+2*(2*r))) +
+          (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + steps)
+        (sourceScanE (2*r) (sourceSuffix k)) = some (cfg, (d : Int)) ∧
+      2*k < d := by
+  obtain ⟨steps,cfg,d,htail,hcross⟩ :=
+    juncCycle_crossing (2*r+9) (2*k-6) k 11 (by omega)
+  refine ⟨steps,cfg,11+d,?_,?_⟩
+  · rw [runWithDelta_add, sourceScanE_finishC_even_after_junc0_delta r k hk]
+    simp only [Option.bind_some]
+    rw [htail]
+    simp only [Option.map_some]
+    simp [Int.natCast_add, Int.natCast_mul]
+  · omega
+
+/-- The odd-b source E/1 return always has a later Junc head strictly
+    beyond the entire 2k-cell interval to its right. -/
+theorem sourceScanE_finishC_odd_crosses_delta (r k : Nat) (hk : 1 ≤ k) :
+    ∃ (steps : Nat) (cfg : Zipper) (d : Nat),
+      runWithDelta
+        (((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) + steps)
+        (sourceScanE (2*r+1) (sourceSuffix k)) = some (cfg, (d : Int)) ∧
+      2*k < d := by
+  obtain ⟨steps,cfg,d,htail,hcross⟩ :=
+    juncCycle_crossing (2*r+6) (2*k-2) k 7 (by omega)
+  refine ⟨steps,cfg,7+d,?_,?_⟩
+  · rw [runWithDelta_add, sourceScanE_finishC_odd_next_delta r k hk]
+    simp only [Option.bind_some]
+    rw [htail]
+    simp only [Option.map_some]
+    simp [Int.natCast_add, Int.natCast_mul]
+  · omega
+
+/-- Physical-source lift: after the even-b return, a genuine raw head visit
+    lies strictly beyond the complete 2k-cell right boundary. -/
+theorem physical_sourceScanE_finishC_even_crosses_delta (r k : Nat)
+    (hk : 3 ≤ k) (c : Config)
+    (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
+    ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
+      BB6Coverage.run target429
+        ((((crossTime (2*r)+1 + (12+2*(2*r))) +
+          (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + steps)) c = some c' ∧
+      Represents cfg c' ∧ c'.head > c.head + (2*k : Int) := by
+  obtain ⟨steps,cfg,d,hrun,hcross⟩ :=
+    sourceScanE_finishC_even_crosses_delta r k hk
+  obtain ⟨c',hrun',hrep',hhead⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep
+      (((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + steps)
+      (sourceScanE (2*r) (sourceSuffix k)) c hrep cfg (d : Int) hrun
+  have hcrossInt : (2*k : Int) < (d : Int) := by exact_mod_cast hcross
+  refine ⟨steps,cfg,c',hrun',hrep',?_⟩
+  rw [hhead]
+  omega
+
+/-- Physical-source lift of the odd-b return, with the same strict crossing. -/
+theorem physical_sourceScanE_finishC_odd_crosses_delta (r k : Nat)
+    (hk : 1 ≤ k) (c : Config)
+    (hrep : Represents (sourceScanE (2*r+1) (sourceSuffix k)) c) :
+    ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
+      BB6Coverage.run target429
+        ((((crossTime (2*r+1)+1 + (12+2*(2*r+1))) +
+          (2*(2*r+3)+27)) + steps)) c = some c' ∧
+      Represents cfg c' ∧ c'.head > c.head + (2*k : Int) := by
+  obtain ⟨steps,cfg,d,hrun,hcross⟩ :=
+    sourceScanE_finishC_odd_crosses_delta r k hk
+  obtain ⟨c',hrun',hrep',hhead⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep
+      (((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) + steps)
+      (sourceScanE (2*r+1) (sourceSuffix k)) c hrep cfg (d : Int) hrun
+  have hcrossInt : (2*k : Int) < (d : Int) := by exact_mod_cast hcross
+  refine ⟨steps,cfg,c',hrun',hrep',?_⟩
+  rw [hhead]
+  omega
+
+#print axioms juncCycle_delta
+#print axioms juncCycle_iter_delta
+#print axioms juncCycle_crossing
+#print axioms sourceScanE_finishC_even_crosses_delta
+#print axioms sourceScanE_finishC_odd_crosses_delta
+#print axioms physical_sourceScanE_finishC_even_crosses_delta
+#print axioms physical_sourceScanE_finishC_odd_crosses_delta
+
+
 end BB429JuncHeadExcursion
 
 #print axioms BB429JuncHeadExcursion.junc2_to_midA_delta
