@@ -17,7 +17,7 @@ halt iff bₙ is a power of two
 
 through 100,000,000 updates from b₀. No power of two was encountered in positions 1 through 100,000,001, including b₁₀₀,₀₀₀,₀₀₀. The maximum observed 2-adic valuation is 25, first attained at 1-based term position 23,145,881, reached after 23,145,880 updates. The final term has 94,125,050 bits (28,334,464 decimal digits).
 
-The local formalization starts at high-level state `N 1`, with counter `d). Its shifted variable is `b=d+2`, initially 3. The first high-level transition sends `d=1` to `d=4), hence `b=6`. The external run starts at this first post-start value 6. Its initial value 3 is not a power of two, so the omitted initial check is trivial. The external run checks positions 1 through 100,000,001, including the term after the 100,000,000th update.
+The local formalization starts at high-level state `N 1`, with counter `d=1`. Its shifted variable is `b=d+2`, initially 3. The first high-level transition sends `d=1` to `d=4`, hence `b=6`. The external run starts at this first post-start value 6. Its initial value 3 is not a power of two, so the omitted initial check is trivial. The external run checks positions 1 through 100,000,001, including the term after the 100,000,000th update.
 
 ## Independent computation and anchors
 
@@ -43,7 +43,7 @@ Primary evidence files in the external repository:
 
 ## Mathematical results included in the external package
 
-The `laws/` directory contains exact macro-transition step-count laws L0–L4, a closed-form halting time for the synthetic family `(2^k−3,c)`, and a modular obstruction classification. The package marks L1 and L3 as formally proven and machine-certified, while L4 remains empirical. Its modular report states that 96 of the 120 valuation classes (a\leq120) are obstructed and 24 admissible; the classification is supported by its Python factorization, subgroup-membership, CRT, and brute-force checkers, rather than by a Lean proof in that package.
+The `laws/` directory contains exact macro-transition step-count laws L0–L4, a closed-form halting time for the synthetic family `(2^k−3,c)`, and a modular obstruction classification. The package marks L1 and L3 as formally proven and machine-certified, while L4 remains empirical. Its modular report states that 96 of the 120 valuation classes (a\leq120) are obstructed and 24 admissible; the classification is supported by Python factorization, subgroup-membership, CRT, and brute-force checkers, rather than by a Lean proof in that package. A separate audit found that the hard-coded 17-value reference list in `laws/checkers/crt_obstruction.py` is inconsistent with its own CRT algorithm: an independent recomputation gives 23 obstructions for a=1..40, adding a=7,12,18,28,35,36. The 96/120 summary has not been independently rechecked and should be treated as unverified pending a fresh run; see [the CRT audit note](2026-11-07-space-needle-crt-audit.md).
 
 The report lists four elementary infinite obstruction progressions:
 `a ≡ 4 (mod 20)`, `a ≡ 19 (mod 21)`, `a ≡ 62 (mod 110)`, and `a ≡ 21 (mod 156)`. The local Space Needle development already formalizes the first two. Agent 48's new `SpaceNeedleObstructionFamilies.lean` formalizes the latter two and adds progressions `a ≡ 201 (mod 342)` (modulus 19) and `a ≡ 74 (mod 812)` (modulus 29).
