@@ -1,9 +1,140 @@
-import Root119TwoWaveRootPrefix
+import Root119OddWaveRetreat
 import Root119ParityDichotomy
 
 set_option linter.unusedSimpArgs false
 
 namespace BB6Root119
+
+
+/-- The exact nine-step B/0 prefix writes four consecutive ones and reaches
+    F/1 one cell to the left. -/
+def twoWavePrefixTape (t : Int → Bool) (h : Int) : Int → Bool :=
+  setBit (setBit (setBit (setBit t h true) (h-1) true) (h-2) true) (h-3) true
+
+theorem twoWavePrefixTape_right (t : Int → Bool) (h x : Int)
+    (hx : h < x) : twoWavePrefixTape t h x = t x := by
+  have hne0 : x ≠ h := by omega
+  have hne1 : x ≠ h-1 := by omega
+  have hne2 : x ≠ h-2 := by omega
+  have hne3 : x ≠ h-3 := by omega
+  simp [twoWavePrefixTape,setBit,hne0,hne1,hne2,hne3]
+
+theorem oddWaveTape_head (n : Nat) (t : Int → Bool) (h : Int) :
+    oddWaveTape n t h h = true := by
+  simp [oddWaveTape,setBit]
+
+theorem oddWaveTape_filled (n : Nat) (t : Int → Bool) (h : Int) (k : Nat)
+    (hk : k < 2*n+2) :
+    oddWaveTape n t h (h+1+(k:Int)) = true := by
+  have hne : h+1+(k:Int) ≠ h := by omega
+  have hinside : h+1 ≤ h+1+(k:Int) ∧
+      h+1+(k:Int) < h+1+(2*n+2:Int) := by omega
+  simp [oddWaveTape,shuttleFill,setBit,hne,hinside]
+
+theorem oddWaveTape_outside_right (n : Nat) (t : Int → Bool) (h x : Int)
+    (hx : h+1+(2*n+2:Int) ≤ x) :
+    oddWaveTape n t h x = t x := by
+  have hout := shuttleFill_outside (setBit t h false) (h+1) x (2*n+2)
+    (Or.inr (by omega))
+  have hne : x ≠ h := by omega
+  simp [oddWaveTape,setBit,hne,hout]
+
+theorem b0_two_wave_prefix (b : Conf) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true) :
+    run 9 b = some (⟨.F,b.h-1,twoWavePrefixTape b.tape b.h⟩ : Conf) := by
+  rcases b with ⟨q,h,t⟩
+  obtain ⟨hq,hb⟩ := hb0
+  change q = .B at hq
+  subst q
+  change t h = false at hb
+  change t (h-1) = true at hleft
+  change t (h-2) = false at hzero
+  change t (h-3) = true at hone
+  let t1 := setBit t h true
+  let t2 := setBit t1 (h-1) false
+  let t3 := setBit t2 (h-2) true
+  let t4 := setBit t3 (h-3) true
+  let t5 := setBit t4 (h-2) false
+  let t6 := setBit t5 (h-1) false
+  let t7 := setBit t6 (h-2) true
+  let t8 := setBit t7 (h-1) true
+  let t9 := setBit t8 h true
+  let c0 : Conf := ⟨.B,h,t⟩
+  let c1 : Conf := ⟨.C,h-1,t1⟩
+  let c2 : Conf := ⟨.C,h-2,t2⟩
+  let c3 : Conf := ⟨.D,h-3,t3⟩
+  let c4 : Conf := ⟨.F,h-2,t4⟩
+  let c5 : Conf := ⟨.D,h-1,t5⟩
+  let c6 : Conf := ⟨.E,h-2,t6⟩
+  let c7 : Conf := ⟨.A,h-1,t7⟩
+  let c8 : Conf := ⟨.B,h,t8⟩
+  let c9 : Conf := ⟨.F,h-1,t9⟩
+  have h01 : next c0 = some c1 := by simp [next,c0,c1,t1,hb]
+  have h12 : next c1 = some c2 := by
+    have hr : t1 (h-1) = true := by
+      simp [t1,setBit,show h-1 ≠ h by omega,hleft]
+    have hp : h-1-1 = h-2 := by omega
+    simp [next,c1,c2,t1,t2,hr,hp]
+  have h23 : next c2 = some c3 := by
+    have hr : t2 (h-2) = false := by
+      simp [t2,t1,setBit,show h-2 ≠ h-1 by omega,
+        show h-2 ≠ h by omega,hzero]
+    have hp : h-2-1 = h-3 := by omega
+    simp [next,c2,c3,t2,t1,t3,setBit,hr,hp]
+  have h34 : next c3 = some c4 := by
+    have hr : t3 (h-3) = true := by
+      simp [t3,t2,t1,setBit,show h-3 ≠ h-2 by omega,
+        show h-3 ≠ h-1 by omega,show h-3 ≠ h by omega,hone]
+    have hp : h-3+1 = h-2 := by omega
+    simp [next,c3,c4,t3,t4,hr,hp]
+  have h45 : next c4 = some c5 := by
+    have hr : t4 (h-2) = true := by
+      simp [t4,t3,t2,t1,setBit,show h-2 ≠ h-3 by omega,
+        show h-2 ≠ h by omega]
+    have hp : h-2+1 = h-1 := by omega
+    simp [next,c4,c5,t4,t5,hr,hp]
+  have h56 : next c5 = some c6 := by
+    have hr : t5 (h-1) = false := by
+      simp [t5,t4,t3,t2,t1,setBit,show h-1 ≠ h-2 by omega,
+        show h-1 ≠ h by omega]
+    have hp : h-1-1 = h-2 := by omega
+    simp [next,c5,c6,t5,t6,hr,hp]
+  have h67 : next c6 = some c7 := by
+    have hr : t6 (h-2) = false := by
+      simp [t6,t5,t4,t3,t2,t1,setBit,show h-2 ≠ h-1 by omega,
+        show h-2 ≠ h-3 by omega,show h-2 ≠ h by omega]
+    have hp : h-2+1 = h-1 := by omega
+    simp [next,c6,c7,t6,t7,hr,hp]
+  have h78 : next c7 = some c8 := by
+    have hr : t7 (h-1) = false := by
+      simp [t7,t6,t5,t4,t3,t2,t1,setBit,show h-1 ≠ h-2 by omega,
+        show h-1 ≠ h by omega]
+    have hp : h-1+1 = h := by omega
+    simp [next,c7,c8,t7,t8,hr,hp]
+  have hne1 : h ≠ h-1 := by omega
+  have hne2 : h ≠ h-2 := by omega
+  have hne3 : h ≠ h-3 := by omega
+  have hr : t8 h = true := by
+    simp [t8,t7,t6,t5,t4,t3,t2,t1,setBit,hne1,hne2,hne3]
+  have h89 : next c8 = some c9 := by
+    simp [next,c8,c9,t8,t9,hr]
+  have hrun : run 9 c0 = some c9 := by
+    simp [run,h01,h12,h23,h34,h45,h56,h67,h78,h89]
+  have htape : t9 = twoWavePrefixTape t h := by
+    funext x
+    simp only [t9,t8,t7,t6,t5,t4,t3,t2,t1,twoWavePrefixTape,setBit]
+    by_cases hx0 : x = h
+    · simp [hx0]
+    · by_cases hx1 : x = h-1
+      · simp [hx0,hx1]
+      · by_cases hx2 : x = h-2
+        · simp [hx0,hx1,hx2]
+        · by_cases hx3 : x = h-3
+          · simp [hx0,hx1,hx2,hx3]
+          · simp [hx0,hx1,hx2,hx3]
+  simpa [c0,c9,htape] using hrun
 
 /-- The exact tape after an even D/1-F/1 sweep and its D/0-E/0-A/0 finish. -/
 def evenSweepBResultTape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
