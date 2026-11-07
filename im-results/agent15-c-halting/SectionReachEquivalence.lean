@@ -109,7 +109,7 @@ private theorem runN_eq_agent8 (n : Nat) (s : Option (Nat × Nat × Nat)) :
   | succ n ih =>
       simp [BB6.CReachBridge.runN, BB6.CReachBridge.stepC, BB6.Agent8Section.run, ih]
 
-theorem m32_section_reach_reflects {a k : Nat}
+theorem section_reach_reflects {a k : Nat}
     (h : BB6CLine.Reach (a,k,0)) : CReach a k := by
   obtain ⟨n,hn⟩ := BB6.CReachBridge.run_of_reachable h
   have hrun8 : BB6.Agent8Section.run BB6CLine.nextC n (some (5,0,1))=some (a,k,0) := by
@@ -141,11 +141,11 @@ theorem m32_section_reach_reflects {a k : Nat}
     rfl
   exact section_returns_preserve_CReach (n-1) 5 1 a k hstart htail46
 
-theorem m32_section_reach_iff {a k : Nat} :
+theorem cLine_c0_reach_iff_section_reach {a k : Nat} :
     CReach a k ↔ BB6CLine.Reach (a,k,0) :=
-  ⟨m32_section_reach_embeds, m32_section_reach_reflects⟩
+  ⟨m32_section_reach_embeds, section_reach_reflects⟩
 
-#print axioms m32_section_reach_reflects
-#print axioms m32_section_reach_iff
+#print axioms section_reach_reflects
+#print axioms cLine_c0_reach_iff_section_reach
 
 end BB6.Agent15
