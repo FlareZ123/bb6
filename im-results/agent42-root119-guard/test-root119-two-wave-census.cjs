@@ -16,6 +16,7 @@ const prefixShieldAudit = {
   evenPrefix: { inputs: 0, outputs: 0 },
   oddEvenPrefix: { inputs: 0, outputs: 0, boundarySafe: 0 },
 };
+const prefixLeftSixAudit = { evenPrefix: {}, oddEvenPrefix: {} };
 const counts = {
   oldWave: 0,
   leftOneWave: 0,
@@ -110,6 +111,8 @@ for (let time = 0; time < LIMIT; time++) {
     const oddEvenBoundarySafe = prefix?.type === 'oddEvenPrefix'
       ? !(tape.has(head - 6) && tape.has(head - 5) && !tape.has(head - 4))
       : null;
+    const prefixLeftSix = Array.from({ length: 6 }, (_, i) =>
+      tape.has(head - 6 + i) ? '1' : '0').join('');
 
     if (previousBZero !== null) {
       const expected = predictions.get(time);
@@ -137,6 +140,9 @@ for (let time = 0; time < LIMIT; time++) {
         if (previousBZero.prefix.type === 'oddEvenPrefix') {
           audit.boundarySafe += Number(previousBZero.oddEvenBoundarySafe);
         }
+        const familyPatterns = prefixLeftSixAudit[previousBZero.prefix.type];
+        familyPatterns[previousBZero.prefixLeftSix] =
+          (familyPatterns[previousBZero.prefixLeftSix] || 0) + 1;
       } else if (previousBZero.prefix &&
           previousBZero.prefix.type === 'prefixUnmatched') {
         counts.prefixUnmatched++;
@@ -158,7 +164,7 @@ for (let time = 0; time < LIMIT; time++) {
         counts.other++;
       }
     }
-    previousBZero = { time, prefix, cphase, cphaseShield, prefixShield, oddEvenBoundarySafe };
+    previousBZero = { time, prefix, cphase, cphaseShield, prefixShield, oddEvenBoundarySafe, prefixLeftSix };
   }
 
   const rule = RULES[state.charCodeAt(0) - 65].slice(symbol * 3, symbol * 3 + 3);
@@ -191,4 +197,5 @@ console.log(JSON.stringify({
   cphaseD1RunLengths: cphaseRuns,
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
   prefixShieldAudit,
+  prefixLeftSixAudit,
 }, null, 2));
