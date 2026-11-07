@@ -130,6 +130,40 @@ theorem conjecture_halts_iff_agent8_halts
   · rintro ⟨n, hn⟩
     exact ⟨n, (hpoint n).mp hn⟩
 
+/-- Exact transfer of the *halting score* in primitive moves from the
+    original source transition semantics to the absolute tape model.
+    Every finite n, including n=0, is handled uniformly. -/
+theorem source_halts_after_iff_agent8_halts_after
+    (m : ConjectureMachines.Machine 6 2) (n : Nat) :
+    ((sourceRun m n).isSome = true ∧ sourceRun m (n+1) = none) ↔
+      BB6Coverage.HaltsAfter (toAgent8 m) n := by
+  have hpoint := sourceRun_none_iff_original_none m n
+  have hnext := sourceRun_none_iff_original_none m (n+1)
+  change _ ↔
+    (BB6Coverage.run (toAgent8 m) n BB6Coverage.blank).isSome = true ∧
+      BB6Coverage.run (toAgent8 m) (n+1) BB6Coverage.blank = none
+  constructor
+  · rintro ⟨hsource, hs⟩
+    constructor
+    · cases hr : BB6Coverage.run (toAgent8 m) n BB6Coverage.blank with
+      | none =>
+        have hnone : sourceRun m n = none := hpoint.mp hr
+        simp [hnone] at hsource
+      | some c => rfl
+    · exact hnext.mpr hs
+  · rintro ⟨hraw, hs⟩
+    constructor
+    · cases hsource : sourceRun m n with
+      | none =>
+        have hrawNone :
+            BB6Coverage.run (toAgent8 m) n BB6Coverage.blank = none :=
+          hpoint.mpr hsource
+        simp [hrawNone] at hraw
+      | some c => rfl
+    · exact hnext.mp hs
+
+#print axioms source_halts_after_iff_agent8_halts_after
+
 /-- Both directions of *nonhalting* transfer, including a converse to
     the existing source-to-original adapter used by A6/F287. -/
 theorem conjecture_nonhalts_iff_agent8_never
