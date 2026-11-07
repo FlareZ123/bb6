@@ -269,6 +269,9 @@ jobs:
           lean -o HighThreeLate.olean HighThreeLate.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58Late.lean .
           lean ValSixC58Late.lean
+          # Agent 19: source-check the new infinite late-depth family and exact C58 iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighThreeLate256.lean .
+          lean HighThreeLate256.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
           # backwards oracle, and authentic merged C58/ValSix stopping iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
