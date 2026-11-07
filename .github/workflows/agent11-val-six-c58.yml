@@ -259,6 +259,8 @@ jobs:
           lean -o HighDyadicGateDecisionFast.olean HighDyadicGateDecisionFast.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicOlderGateFast.lean .
           lean -o HighDyadicOlderGateFast.olean HighDyadicOlderGateFast.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/OlderGateRawRootExamples.lean .
+          lean -o OlderGateRawRootExamples.olean OlderGateRawRootExamples.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighThreeLateGateFast.lean .
           lean -o HighThreeLateGateFast.olean HighThreeLateGateFast.lean
           lean HighDyadicDepthUnique.lean
