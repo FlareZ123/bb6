@@ -58,6 +58,8 @@ jobs:
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          RL=im-results/agent37-root-language-pilot
+          lean -DmaxRecDepth=4096 -o "$P2/E110111Pairs.olean" "$RL/E110111Pairs.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
           lean -o "$D/DRegularFast.olean" "$D/DRegularFast.lean"
