@@ -349,6 +349,11 @@ jobs:
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt"
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$full_forced_status" -ne 0 ]; then exit "$full_forced_status"; fi
+          # Agent 19: source-proof the new m=1, j=24 mod256 progression.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighM1FullForced.lean .
+          lean -o HighM1FullForced.olean HighM1FullForced.lean > "$GITHUB_WORKSPACE/m1-full-forced.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/m1-full-forced.txt"
+          cat "$GITHUB_WORKSPACE/m1-full-forced.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 3: exact finite residue census of additional full-forced exclusions.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/FullForcedParamScan.lean .
           lean FullForcedParamScan.lean > "$GITHUB_WORKSPACE/full-forced-param-scan.txt" 2>&1
