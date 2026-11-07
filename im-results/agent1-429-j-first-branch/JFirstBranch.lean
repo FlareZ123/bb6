@@ -380,7 +380,7 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
     simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb]
   have htime : 4*u*u+6*u+7=(4*u*u+6*u+6)+1 := by omega
   rw [htime,run_add',hp]
-  simpa [run,rawStep,readSlot,target429,prefix11,applyMove,baseTape,f0Tape,writeAt,hb] using hstep
+  simpa [run,rawStep,readSlot,target429,prefix11,prefix10,prefix9,prefix8,prefix7,prefix6,prefix5,prefix4,prefix3,prefix2,prefix1,prefix0,applyMove,baseTape,f0Tape,writeAt,hb] using hstep
 
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
@@ -582,24 +582,39 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     rcases hcases with h0x | h1x | h2x | h3x | h4x | h5x | hleft | hright
     · subst x
       have hinside : h-2≤h-2 ∧ h-2≤h+3 := by omega
+      have hneq1 : h-2≠h-1 := by omega
+      have hneq2 : h-2≠h := by omega
+      have hneq3 : h-2≠h+1 := by omega
+      have hneq4 : h-2≠h+2 := by omega
+      have hneq5 : h-2≠h+3 := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside]
+        writeAt,setupTape,hinside,hneq1,hneq2,hneq3,hneq4,hneq5]
     · subst x
       have hinside : h-2≤h-1 ∧ h-1≤h+3 := by omega
+      have hneq2 : h-1≠h := by omega
+      have hneq3 : h-1≠h+1 := by omega
+      have hneq4 : h-1≠h+2 := by omega
+      have hneq5 : h-1≠h+3 := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside]
+        writeAt,setupTape,hinside,hneq2,hneq3,hneq4,hneq5]
     · subst x
       have hinside : h-2≤h ∧ h≤h+3 := by omega
+      have hneq3 : h≠h+1 := by omega
+      have hneq4 : h≠h+2 := by omega
+      have hneq5 : h≠h+3 := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside]
+        writeAt,setupTape,hinside,hneq3,hneq4,hneq5]
     · subst x
       have hinside : h-2≤h+1 ∧ h+1≤h+3 := by omega
+      have hneq4 : h+1≠h+2 := by omega
+      have hneq5 : h+1≠h+3 := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside]
+        writeAt,setupTape,hinside,hneq4,hneq5]
     · subst x
       have hinside : h-2≤h+2 ∧ h+2≤h+3 := by omega
+      have hneq5 : h+2≠h+3 := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside]
+        writeAt,setupTape,hinside,hneq5]
     · subst x
       have hinside : h-2≤h+3 ∧ h+3≤h+3 := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
