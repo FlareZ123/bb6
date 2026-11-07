@@ -41,7 +41,7 @@ jobs:
           cp ../im-results/agent8-coverage-contract/FiniteHalting.lean BB6Agent4/
           cp ../im-results/agent8-coverage-contract/RayTurnExample.lean BB6Agent4/
           cp ../im-results/agent8-coverage-contract/IncrementalAudit.lean BB6Agent4/
-          for m in RelativeTape FrontierAudit FrontierMass FrontierClose CryptidsTapeAdapter SingletonFrontier CryptidsF287 CryptidsF287Global TurnBranchAudit AuthenticTurnBranchAudit; do
+          for m in RelativeTape FrontierAudit FrontierMass FrontierClose CryptidsTapeAdapter CryptidsHaltIff SingletonFrontier CryptidsF287 CryptidsF287Global TurnBranchAudit AuthenticTurnBranchAudit; do
             cp "../im-results/agent4-coverage-smoke/$m.lean" BB6Agent4/
           done
           export LEAN_PATH="BB6Agent4"
@@ -51,6 +51,7 @@ jobs:
           lake env lean -o BB6Agent4/FrontierMass.olean BB6Agent4/FrontierMass.lean
           lake env lean -o BB6Agent4/FrontierClose.olean BB6Agent4/FrontierClose.lean
           lake env lean -o BB6Agent4/CryptidsTapeAdapter.olean BB6Agent4/CryptidsTapeAdapter.lean
+          lake env lean -o BB6Agent4/CryptidsHaltIff.olean BB6Agent4/CryptidsHaltIff.lean
           lake env lean -o BB6Agent4/SingletonFrontier.olean BB6Agent4/SingletonFrontier.lean
           lake env lean -o BB6Agent4/CryptidsF287.olean BB6Agent4/CryptidsF287.lean
           lake env lean -o BB6Agent4/CryptidsF287Global.olean BB6Agent4/CryptidsF287Global.lean
