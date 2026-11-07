@@ -123,3 +123,5 @@ jobs:
           lake env lean NeedleSixthRoot.lean
           cp "$base48/NeedleRootQuadraticRegular.lean" .
           lake env lean NeedleRootQuadraticRegular.lean
+          cp "$base48/NeedleCancellationHoldouts.lean" .
+          lake env lean NeedleCancellationHoldouts.lean
