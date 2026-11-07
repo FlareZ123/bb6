@@ -580,6 +580,160 @@ theorem no_18_terminal_feeder (q k : Nat) :
     omega
   omega
 
+
+private theorem pow_two_mod5_eq3_implies_n_mod4_eq3 (n : Nat)
+    (h5 : 2^n%5=3) : n%4=3 := by
+  have hperiod :2^4%5=1 := by decide
+  have hred :2^n%5=2^(n%4)%5 := by
+    calc
+      2^n%5=2^(n%4+4*(n/4))%5 := by rw [Nat.mod_add_div n 4]
+      _ =2^(n%4)%5 := pow_mod_progression 5 (n%4) 4 (n/4) (by omega) hperiod
+  have hlt :n%4<4 := Nat.mod_lt _ (by decide)
+  by_cases h0:n%4=0
+  · rw [hred,h0] at h5
+    simp at h5
+  by_cases h1:n%4=1
+  · rw [hred,h1] at h5
+    simp at h5
+  by_cases h2:n%4=2
+  · rw [hred,h2] at h5
+    simp at h5
+  omega
+
+/-- Composite CRT obstruction at v=28: mod 5 forces k+2 odd,
+while a projected mod-1901 residue forces it even. -/
+theorem no_28_terminal_feeder (q k : Nat) :
+    highLevelNext (.N (oddTower q 28)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have h5den : 5 ∣ 2^(28+1)+3 := by decide
+  have h1901den : 1901 ∣ 2^(28+1)+3 := by decide
+  have h5 : (2^(k+2)+3)%5=(2*28)%5 :=
+    terminal_feeder_modular_identity q 28 k 5 (by omega) h5den hhalt
+  have h1901 : (2^(k+2)+3)%1901=(2*28)%1901 :=
+    terminal_feeder_modular_identity q 28 k 1901 (by omega) h1901den hhalt
+  have h3_5 :3%5=3 := by decide
+  rw [Nat.add_mod,h3_5] at h5
+  have h5lt :2^(k+2)%5<5 := Nat.mod_lt _ (by decide)
+  have h5pow :2^(k+2)%5=3 := by omega
+  have h3_1901 :3%1901=3 := by decide
+  rw [Nat.add_mod,h3_1901] at h1901
+  have h1901lt :2^(k+2)%1901<1901 := Nat.mod_lt _ (by decide)
+  have h1901pow :2^(k+2)%1901=53 := by omega
+  have hmod4 := pow_two_mod5_eq3_implies_n_mod4_eq3 (k+2) h5pow
+  have hodd : (k+2)%2=1 := by omega
+  have h2_95 :2^95%1901=692 := by decide
+  have h53_95 :53^95%1901=1224 := by decide
+  have h1224_10 :1224^10%1901=1 := by decide
+  have h692_10 :692^10%1901=1900 := by decide
+  have hleft :(2^(k+2))^95%1901=53^95%1901 := by rw [Nat.pow_mod,h1901pow]
+  have hrewrite :(2^(k+2))^95%1901=(2^95)^(k+2)%1901 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 95,Nat.pow_mul]
+  have hbase :(2^95)^(k+2)%1901=692^(k+2)%1901 := by rw [Nat.pow_mod,h2_95]
+  have h692pow :692^(k+2)%1901=1224 := by
+    rw [h53_95] at hleft
+    rw [hrewrite,hbase] at hleft
+    exact hleft
+  have hleft10 :(692^(k+2))^10%1901=1224^10%1901 := by rw [Nat.pow_mod,h692pow]
+  have hrewrite10 :(692^(k+2))^10%1901=(692^10)^(k+2)%1901 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 10,Nat.pow_mul]
+  have hbase10 :(692^10)^(k+2)%1901=1900^(k+2)%1901 := by rw [Nat.pow_mod,h692_10]
+  have h1900pow :1900^(k+2)%1901=1 := by
+    rw [h1224_10] at hleft10
+    rw [hrewrite10,hbase10] at hleft10
+    exact hleft10
+  have hperiod :1900^2%1901=1 := by decide
+  have hred :1900^(k+2)%1901=1900^((k+2)%2)%1901 := by
+    calc
+      1900^(k+2)%1901=1900^((k+2)%2+2*((k+2)/2))%1901 := by rw [Nat.mod_add_div (k+2) 2]
+      _ =1900^((k+2)%2)%1901 :=
+        pow_mod_progression_base 1901 1900 ((k+2)%2) 2 ((k+2)/2) (by omega) hperiod
+  have heven : (k+2)%2=0 := by
+    by_cases h0:(k+2)%2=0
+    · exact h0
+    have hlt :(k+2)%2<2 := Nat.mod_lt _ (by decide)
+    have h1:(k+2)%2=1 := by omega
+    rw [hred,h1] at h1900pow
+    simp at h1900pow
+  omega
+
+/-- Composite CRT obstruction at v=35: the mod-61 and mod-523
+conditions force different residues of k+2 modulo 3. -/
+theorem no_35_terminal_feeder (q k : Nat) :
+    highLevelNext (.N (oddTower q 35)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have h61den :61 ∣ 2^(35+1)+3 := by decide
+  have h523den :523 ∣ 2^(35+1)+3 := by decide
+  have h61 : (2^(k+2)+3)%61=(2*35)%61 :=
+    terminal_feeder_modular_identity q 35 k 61 (by omega) h61den hhalt
+  have h523 : (2^(k+2)+3)%523=(2*35)%523 :=
+    terminal_feeder_modular_identity q 35 k 523 (by omega) h523den hhalt
+  have h3_61 :3%61=3 := by decide
+  rw [Nat.add_mod,h3_61] at h61
+  have h61lt :2^(k+2)%61<61 := Nat.mod_lt _ (by decide)
+  have h61pow :2^(k+2)%61=6 := by omega
+  have h3_523 :3%523=3 := by decide
+  rw [Nat.add_mod,h3_523] at h523
+  have h523lt :2^(k+2)%523<523 := Nat.mod_lt _ (by decide)
+  have h523pow :2^(k+2)%523=67 := by omega
+  have h2_20 :2^20%61=47 := by decide
+  have h6_20 :6^20%61=47 := by decide
+  have h47_3 :47^3%61=1 := by decide
+  have hleft61 :(2^(k+2))^20%61=6^20%61 := by rw [Nat.pow_mod,h61pow]
+  have hrewrite61 :(2^(k+2))^20%61=(2^20)^(k+2)%61 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 20,Nat.pow_mul]
+  have hbase61 :(2^20)^(k+2)%61=47^(k+2)%61 := by rw [Nat.pow_mod,h2_20]
+  have h47pow :47^(k+2)%61=47 := by
+    rw [h6_20] at hleft61
+    rw [hrewrite61,hbase61] at hleft61
+    exact hleft61
+  have h47red :47^(k+2)%61=47^((k+2)%3)%61 := by
+    calc
+      47^(k+2)%61=47^((k+2)%3+3*((k+2)/3))%61 := by rw [Nat.mod_add_div (k+2) 3]
+      _ =47^((k+2)%3)%61 :=
+        pow_mod_progression_base 61 47 ((k+2)%3) 3 ((k+2)/3) (by omega) h47_3
+  have hmod3_1 :(k+2)%3=1 := by
+    by_cases h0:(k+2)%3=0
+    · rw [h47red,h0] at h47pow
+      simp at h47pow
+    by_cases h2:(k+2)%3=2
+    · rw [h47red,h2] at h47pow
+      have h47sq :47^2%61=13 := by decide
+      rw [h47sq] at h47pow
+      omega
+    have hlt :(k+2)%3<3 := Nat.mod_lt _ (by decide)
+    omega
+  have h2_174 :2^174%523=462 := by decide
+  have h67_174 :67^174%523=60 := by decide
+  have h462_3 :462^3%523=1 := by decide
+  have hleft523 :(2^(k+2))^174%523=67^174%523 := by rw [Nat.pow_mod,h523pow]
+  have hrewrite523 :(2^(k+2))^174%523=(2^174)^(k+2)%523 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 174,Nat.pow_mul]
+  have hbase523 :(2^174)^(k+2)%523=462^(k+2)%523 := by rw [Nat.pow_mod,h2_174]
+  have h462pow :462^(k+2)%523=60 := by
+    rw [h67_174] at hleft523
+    rw [hrewrite523,hbase523] at hleft523
+    exact hleft523
+  have h462red :462^(k+2)%523=462^((k+2)%3)%523 := by
+    calc
+      462^(k+2)%523=462^((k+2)%3+3*((k+2)/3))%523 := by rw [Nat.mod_add_div (k+2) 3]
+      _ =462^((k+2)%3)%523 :=
+        pow_mod_progression_base 523 462 ((k+2)%3) 3 ((k+2)/3) (by omega) h462_3
+  have hmod3_2 :(k+2)%3=2 := by
+    by_cases h0:(k+2)%3=0
+    · rw [h462red,h0] at h462pow
+      simp at h462pow
+    by_cases h1:(k+2)%3=1
+    · rw [h462red,h1] at h462pow
+      have h462 :462%523=462 := by decide
+      rw [h462] at h462pow
+      omega
+    have hlt :(k+2)%3<3 := Nat.mod_lt _ (by decide)
+    omega
+  omega
+
+#print axioms no_28_terminal_feeder
+#print axioms no_35_terminal_feeder
+
 #print axioms no_18_terminal_feeder
 
 end BB6.Agent48.SpaceNeedleObstructionFamilies
