@@ -27,6 +27,7 @@ theorem blank_halt_requires_residual_families :
     rcases hm with ⟨m,heq⟩
     by_cases hm0 : m=0
     · subst m
+      have heq' : k+4=8 := by simpa using heq
       have hk : k=4 := by omega
       subst k
       have hline : BB6CLine.Reach (1,4,0) :=
@@ -39,6 +40,7 @@ theorem blank_halt_requires_residual_families :
     subst a
     by_cases hjm0 : j=0 ∧ m=0
     · rcases hjm0 with ⟨rfl,rfl⟩
+      have heq' : k+5=12 := by simpa using heq
       have hk : k=7 := by omega
       subst k
       have hline : BB6CLine.Reach (3,7,0) :=
