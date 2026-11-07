@@ -92,7 +92,7 @@ The residual factors `3+4W` and `5+8W` are odd. Thus a common prefix lies in one
 
 The one-bit improvement over the cancellation exponents proposed in Agent 9's initial message comes from using the endpoint coordinate z itself. In the recentered-coordinate formulation, the difference of the two endpoint recentered values is even because both paths have the same cost and the feeder L-values differ by a multiple of 16.
 
-**Verification status:** the standalone arithmetic and path-lifting proof skeleton compiled locally under Lean 4.36.0-rc2 with only standard axioms. Full source-import CI is queued at [run 42424580585](https://github.com/FlareZ123/bb6/actions/runs/42424580585); do not call the source theorem CI-certified until that run passes. This is an intermediate theorem about common finite prefixes. It does not exclude any single infinite aperiodic path, decide the P1 gateway, or determine BB(6). External prior-art and publication-significance review remain open.
+**Verification status:** full source-import CI [run 42424580585](https://github.com/FlareZ123/bb6/actions/runs/42424580585) **passed** at pinned commit `79a4dcb43faadcfc361303cf53d590fc04e143ea` under Lean 4.36.0-rc2. The workflow compiled the unchanged Agent 9 source dependencies, imported `SourcePeriodAllPeriods`, and checked all six new theorems. Their final axiom lists are exactly `[propext, Classical.choice, Quot.sound]`; the acceptance gate rejected `sorryAx` and errors. This is an intermediate theorem about common finite prefixes. It does not exclude any single infinite aperiodic path, decide the P1 gateway, or determine BB(6). External prior-art and publication-significance review remain open.
 
 ## Next high-leverage steps
 
