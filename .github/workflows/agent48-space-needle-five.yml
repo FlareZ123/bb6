@@ -68,7 +68,7 @@ jobs:
           cp "$base48/NeedleQuinticEnumerate.lean" .
           lake env lean -o ".lake/build/lib/lean/NeedleQuinticEnumerate.olean" NeedleQuinticEnumerate.lean
           cp "$base48/NeedleQuinticEnumerateSource.lean" .
-          lake env lean NeedleQuinticEnumerateSource.lean
+          lake env lean -o ".lake/build/lib/lean/NeedleQuinticEnumerateSource.olean" NeedleQuinticEnumerateSource.lean
           cp "$base48/SuperlinearAll.lean" .
           lake env lean -o ".lake/build/lib/lean/SuperlinearAll.olean" SuperlinearAll.lean
           cp "$base48/SuperlinearAllSource.lean" .
