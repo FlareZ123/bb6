@@ -4,6 +4,8 @@ import PeriodSecondary
 
 namespace PeriodWord
 
+open PeriodPrimitive
+
 /-- The depth word obtained by repeating a finite block. -/
 def repeatWord (u : List Nat) : Nat → List Nat
   | 0 => []
@@ -511,7 +513,7 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
     exact (PeriodSecondary.geom_identity a T).symm
   have ha : 0<a := by
     dsimp [a]
-    exact Int.ofNat_pos.mpr (Nat.pow_pos (by decide : 0<2))
+    exact_mod_cast Nat.pow_pos (by decide : 0<2)
   have hgeom_nonneg : ∀ n, 0≤PeriodSecondary.geom a n := by
     intro n
     induction n with
@@ -529,10 +531,10 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
   have hbase : ¬(a-1) ∣ h*r := by
     intro hdiv
     rcases hdiv with ⟨q,hq⟩
-    have hd : ((2^(cost u):Nat):Int)-1*q =
+    have hd : (((2^(cost u):Nat):Int)-1)*q =
         (weight u:Int)*(cost u:Int) := by
       simpa [a,h,r] using hq.symm
-    exact primitive_no_integral_slope u hp hprim q hd
+    exact PeriodPrimitive.primitive_no_integral_slope u hp hprim q hd
   have hSlope : (A-1)*Q=H*S := by
     simpa [A,H,S,Q,w] using periodic_run_slope_at_zero L w hwcost m z hr
   have hrec : ∀ n, A*(z (n+1):Int) =
