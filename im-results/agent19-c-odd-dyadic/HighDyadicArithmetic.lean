@@ -2,7 +2,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent19HighDyadic
 
-private theorem eight_power_bound (m : Nat) (hm : 1≤m) :
+theorem eight_power_bound (m : Nat) (hm : 1≤m) :
     8*m+8≤2^(2*m+2) := by
   induction m with
   | zero => omega
