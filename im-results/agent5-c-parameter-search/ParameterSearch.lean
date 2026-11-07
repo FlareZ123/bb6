@@ -41,3 +41,6 @@ def main : IO Unit := do
   IO.println s!"Wrote {pairs.length} high-filter pairs."
 
 end BB6.Agent5CParameterSearch
+
+/-- Root entry point required by `lean --run`. -/
+def main : IO Unit := BB6.Agent5CParameterSearch.main
