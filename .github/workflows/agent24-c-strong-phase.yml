@@ -286,3 +286,11 @@ jobs:
           lean -o InfiniteStrict.olean InfiniteStrict.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/TrueStoppingFamily.lean .
           lean TrueStoppingFamily.lean
+          # Symmetric second exceptional phase: infinite strict separation
+          # from every prior gate, including the source affine normalizer.
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/AffNormFamilyB.lean .
+          lean -o AffNormFamilyB.olean AffNormFamilyB.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/InfiniteStrictB.lean .
+          lean -o InfiniteStrictB.olean InfiniteStrictB.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/TrueStoppingFamilyB.lean .
+          lean TrueStoppingFamilyB.lean
