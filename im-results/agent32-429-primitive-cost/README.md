@@ -92,9 +92,12 @@ further `4u+19` raw transitions beyond F/0.
 
 ## Open proof obligations and scientific scope
 
-1. Formalize the 14-transition source-exact F/0-to-C setup and the
-   subsequent `(C/1,B/0)` rightward sweep to obtain the full
-   `w≥2u+3` and `w=2u−1` primitive-time branches.
+1. The generic `(C/1,B/0)` rightward sweep and its fatal/continuation
+   boundary costs are now formally proved in [CBPrimitiveSweep.lean](CBPrimitiveSweep.lean).
+   The remaining composition is the 14-transition source-exact F/0-to-C
+   setup, derivation of its `10`-pair tape pattern from `j_F0_prefix`, and
+   full output-tape equality for the `w≥2u+3` branch; see
+   [CBPrimitiveSweep.md](CBPrimitiveSweep.md).
 2. Translate each completed raw segment into the existing pinned
    Cryptids J-acceleration semantics, checking final score conventions.
 3. For a genuine holdout decision, **resolve the unbounded blank-origin
