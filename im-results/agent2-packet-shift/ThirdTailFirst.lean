@@ -55,17 +55,13 @@ theorem allFalse_congr {xs ys : List Bool} (h : TapeEq xs ys) :
     complete physical equivalence, not merely under list equality. -/
 theorem physical_obs_congr {c d : Cfg} (h : ObsEq c d) :
     Physical c ↔ Physical d := by
+  change CfgEq (represent c) (represent d) at h
+  rcases h with ⟨hleft,hbit,hright,hstate⟩
+  change TapeEq c.l d.l at hleft
+  change c.h = d.h at hbit
+  change c.st = d.st at hstate
   change (c.st=5 ∧ c.h=false ∧ c.l.all (!·)=true) ↔
     (d.st=5 ∧ d.h=false ∧ d.l.all (!·)=true)
-  have hleft : TapeEq c.l d.l := by
-    change TapeEq c.l d.l at h.1
-    exact h.1
-  have hbit : c.h = d.h := by
-    change c.h = d.h at h.2.1
-    exact h.2.1
-  have hstate : c.st = d.st := by
-    change c.st = d.st at h.2.2.2
-    exact h.2.2.2
   constructor
   · rintro ⟨hs,hb,hl⟩
     exact ⟨by simpa [hstate] using hs,
