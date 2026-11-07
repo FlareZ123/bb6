@@ -6,7 +6,7 @@ namespace BB6.Agent19HighEvenRight
 def highK (j m : Nat) : Nat :=
   2^(2*m+2)*(j+3) - (j+3*m+5)
 
-private theorem power_linear_bound (m : Nat) : 4*m+4 ≤ 2^(2*m+2) := by
+theorem power_linear_bound (m : Nat) : 4*m+4 ≤ 2^(2*m+2) := by
   induction m with
   | zero => decide
   | succ m ih =>
@@ -15,7 +15,7 @@ private theorem power_linear_bound (m : Nat) : 4*m+4 ≤ 2^(2*m+2) := by
       simp only [show (2:Nat)^2=4 by decide]
       omega
 
-private theorem high_score_bound (j m : Nat) :
+theorem high_score_bound (j m : Nat) :
     j+3*m+5 ≤ 2^(2*m+2)*(j+3) := by
   have hN : 4*m+4 ≤ 2^(2*m+2) := power_linear_bound m
   have hNpos : 1 ≤ 2^(2*m+2) := by omega
