@@ -338,7 +338,7 @@ theorem ones_right_101 (n : Nat) :
     rfl
   calc
     ones n ++ [true,false,true] = (ones n ++ [true]) ++ [false,true] := by
-      rw [List.append_assoc]
+      rw [← List.append_assoc]
     _ = ones (n+1) ++ [false,true] := by rw [hones]
     _ = (true :: ones n) ++ [false,true] := by rw [hsucc]
     _ = true :: (ones n ++ [false,true]) := by rfl
@@ -463,7 +463,7 @@ theorem c1_even_to_junc11_delta (k : Nat) :
     calc
       ones (4*k+21) ++ [true,false,true] =
           (ones (4*k+21) ++ [true]) ++ [false,true] := by
-            rw [List.append_assoc]
+            rw [← List.append_assoc]
       _ = ones (4*k+22) ++ [false,true] := by rw [hones1]
       _ = (ones 6 ++ ones (4*k+16)) ++ [false,true] := by rw [hones2]
       _ = ones 6 ++ ones (4*k+16) ++ [false,true] := by rw [List.append_assoc]
