@@ -326,8 +326,8 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
           _ = (ones n ++ [true]) ++ suffix := by rw [← List.append_assoc]
           _ = ones (n+1) ++ suffix := by rw [hones]
       rw [hright]
-      apply Option.some.inj
-      apply Prod.ext
+      simp only [Option.some.injEq, Prod.mk.injEq]
+      constructor
       · rfl
       · omega
 
@@ -389,7 +389,6 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
     unfold junc
     simp only [pairs01]
     rw [ones_right_101]
-    rfl
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
@@ -399,8 +398,8 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   simp only [Option.map_some]
   simp only [Option.map_some]
   rw [hcfg]
-  apply Option.some.inj
-  apply Prod.ext
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
   · rfl
   · omega
 
@@ -420,8 +419,8 @@ theorem c1_odd_to_junc3_delta (k : Nat) :
   simp only [Option.map_some]
   have hw : 4*k+20-3 = 4*k+17 := by omega
   rw [hw]
-  apply Option.some.inj
-  apply Prod.ext
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
   · rfl
   · omega
 
@@ -437,8 +436,8 @@ theorem midApos_zero_w5_even_to_junc3_delta (k : Nat) :
   rw [htail]
   simp only [Option.map_some]
   simp only [Option.map_some]
-  apply Option.some.inj
-  apply Prod.ext
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
   · rfl
   · omega
 
@@ -502,7 +501,9 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   simp only [Option.bind_some]
   rw [hsource, htail]
   simp only [Option.map_some]
-  congr 1
+  simp only [Option.map_some]
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
   · rfl
   · omega
 
@@ -518,8 +519,8 @@ theorem midApos_zero_w5_odd_to_junc11_delta (k : Nat) :
   rw [htail]
   simp only [Option.map_some]
   simp only [Option.map_some]
-  apply Option.some.inj
-  apply Prod.ext
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
   · rfl
   · omega
 
