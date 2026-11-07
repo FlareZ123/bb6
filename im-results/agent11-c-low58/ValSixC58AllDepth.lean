@@ -1,6 +1,7 @@
 import ValSixC58
 import HighDyadicAllDepth
 import HighDyadicPrior
+import HighDyadicAllDepthPrior
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11C58AllDepth
@@ -60,6 +61,36 @@ theorem all_depth_three_independent (t : Nat) :
   intro h
   exact h.2 3 ⟨by omega,by omega,by omega,by omega,by omega⟩
 
+/-- An infinite, depth-unbounded subfamily survives the old combined
+    ValSixFull+C58 sieve but is eliminated by the new exact source cone. -/
+theorem infinite_depth_old_sieve_independence (t : Nat) :
+    BB6.Agent11C58ValSix.highAllowed
+      (BB6.Agent19AllDepth.depthJ (130+128*t))
+      (BB6.Agent19AllDepth.depthM (130+128*t)) ∧
+    ¬ highAllowed
+      (BB6.Agent19AllDepth.depthJ (130+128*t))
+      (BB6.Agent19AllDepth.depthM (130+128*t)) := by
+  let r := 130+128*t
+  let j := BB6.Agent19AllDepth.depthJ r
+  let m := BB6.Agent19AllDepth.depthM r
+  have hr : 2≤r := by dsimp [r]; omega
+  obtain ⟨hm,hd,hm4,hpair⟩ :=
+    BB6.Agent19AllDepth.depth_family_parameters r hr
+  refine ⟨BB6.Agent11C58AllDepthPrior.distinct_depth_family_survives_old t,?_⟩
+  intro h
+  exact h.2 r ⟨hr,hm,hd,hm4,hpair⟩
+
+/-- Different depth indices in that progression have distinct high m,
+    providing genuinely infinitely many previously admitted exclusions. -/
+theorem infinite_depth_indices_distinct (s t : Nat)
+    (he : BB6.Agent19AllDepth.depthM (130+128*s) =
+      BB6.Agent19AllDepth.depthM (130+128*t)) : s=t := by
+  have hdepth := BB6.Agent19AllDepth.depthM_injective_on_two
+    (130+128*s) (130+128*t) (by omega) (by omega) he
+  omega
+
+#print axioms infinite_depth_old_sieve_independence
+#print axioms infinite_depth_indices_distinct
 #print axioms blank_halts_iff_joint_c58_all_depth
 #print axioms all_depth_two_independent
 #print axioms all_depth_three_independent
