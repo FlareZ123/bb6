@@ -105,6 +105,12 @@ computable decision procedure. This is designed to replace the
 changing the mathematical predicate. It locally compiles with Lean
 4.36.0-rc2 and no `sorryAx`; run 17 is the first source-workflow check.
 
+The companion `OlderGateRawRootExamples.lean` formally certifies depth-`n=0`
+witnesses for high target pairs `(j,m)=(14,1),(30,1),(46,1)`, so the
+direct Boolean rejects those three members of Agent4's 326-point
+raw-mass-2000 box. This is a concrete finite filter evaluation; it does
+not establish that these are the only older-gate exclusions in the box.
+
 ## Formal artifacts and verification boundary
 
 | Artifact | Claim | Verification |
