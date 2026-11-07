@@ -1,6 +1,6 @@
 # Exact sharp six-digit safety atlas for the S4 triple-drain holdout
 
-**Research status (7 November 2026).** The 68 explicit source-map witness theorems have passed unchanged-original-source Lean CI [run 42324585891](https://github.com/FlareZ123/bb6/actions/runs/42324585891). The stronger all-time biconditional in [S4SharpCensus.lean](S4SharpCensus.lean) was constructed and locally checked against source-shaped names; its *complete* authentic-source CI check is pending. No BB(6) value or decision of the authentic S4 blank root follows. This is intermediate work; its external academic novelty has not been established.
+**Research status (7 November 2026).** The 68 explicit source-map witness theorems passed unchanged-original-source Lean CI [run 42324585891](https://github.com/FlareZ123/bb6/actions/runs/42324585891). **The full all-time biconditional in [S4SharpCensus.lean](S4SharpCensus.lean) also passed the unchanged-original-source Lean CI [run 42325592229](https://github.com/FlareZ123/bb6/actions/runs/42325592229)**, compiling after the SHA-pinned upstream Cryptids acceleration and all intermediate imported source modules. Final axiom audits contain only standard Lean axioms. No BB(6) value or decision of the authentic S4 blank root follows. This is intermediate work; its external academic novelty has not been established.
 
 ## Exact question and statement
 
@@ -24,7 +24,7 @@ prefixRun(1024,phase)=phase
 
 The previously source-proved `guard6(xs)` checks that all three successive finite-prefix weights, with offsets 509, 290 and 219 respectively, have **nonzero remainder modulo 64**. It suffices to prove `P(xs++S)≠none` for *every* suffix `S` whenever `xs.length=6`; exactly **956 of 1,024** cyclic phases satisfy this test.
 
-**New exact sharpness theorem** (source-research candidate):
+**New exact sharpness theorem (source-checked):**
 
 ```text
 ∀ n : Nat,
@@ -39,7 +39,7 @@ This theorem is about **universal safety over arbitrary completions of a six-dig
 ## Formal certificate architecture
 
 - [S4SharpWitness.lean](S4SharpWitness.lean) contains **68 separate explicit source-map theorems** `bad_0014` through `bad_1023`. Each proves `P(sixDigitPrefix++[t])=none`. Successful `G` branches are unfolded in Lean and the terminal `G` failure uses the previously source-proved `G_none_iff_power` theorem with an explicit exponent. The full imported chain from unchanged upstream Cryptids source passed [manual CI run 42324585891](https://github.com/FlareZ123/bb6/actions/runs/42324585891), job 128256804381.
-- [S4SharpCensus.lean](S4SharpCensus.lean) defines an independent linear-scan total evaluator `badScan` on the exact `pp` and `guard6` source definitions. The finite equality `scanExact` computes **all 1,024 cyclic phases** with `by decide` and returns precisely the 68 literal certified pairs. This finite proof does not depend on axioms.
+- [S4SharpCensus.lean](S4SharpCensus.lean), source-checked in [run 42325592229](https://github.com/FlareZ123/bb6/actions/runs/42325592229), defines an independent linear-scan total evaluator `badScan` on the exact `pp` and `guard6` source definitions. The finite equality `scanExact` computes **all 1,024 cyclic phases** with `by decide` and returns precisely the 68 literal certified pairs. This finite proof does not depend on axioms.
 - The quantified lemma `scan_contains` proves that *any* index below 1,024 whose guard fails belongs to the scan, without assuming any specific trace. `cases_have_witness` transports membership into one of the 68 proof certificates.
 - The final `exact_phase` composes that synthetic completeness with the pre-existing all-suffix `P_safe64`, and `exact_phase_all_times` uses the source-proved period 1,024 to quantify over every future cycle. `genuine_failure_has_synthetic_completion` is a necessary-only corollary about a genuinely reached P failure.
 
@@ -49,4 +49,4 @@ The direct original-machine source is Google DeepMind's Cryptids pinned to commi
 
 The 68/1024 candidate-phase filter is **complete for six-digit suffix-independent safety**. No stronger purely six-digit universal safety test can mark an additional cyclic phase as safe; each counterexample is a concrete seven-digit stack. This formally isolates the need for deeper/full-tail or ancestry-sensitive information rather than extrapolating a periodic prefix into an infinite raw-machine nonhalting claim.
 
-Next, confirm full source-import compilation and axiom audit for `S4SharpCensus.lean`; then investigate the actual seven-plus-digit suffix histories at those 68 cyclic phases, using the existing longer-prefix gates only when they provide genuinely new root restrictions. Avoid conflating a synthetic witness with authentic blank reachability, and avoid treating this finite-prefix classification as a BB(6) upper bound.
+Next, investigate the actual seven-plus-digit suffix histories at those 68 cyclic phases, using the existing longer-prefix gates only when they provide genuinely new root restrictions. Avoid conflating a synthetic witness with authentic blank reachability, and avoid treating this finite-prefix classification as a BB(6) upper bound.
