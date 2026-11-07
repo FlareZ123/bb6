@@ -37,7 +37,7 @@ theorem one_terminal_regular (d : BB6.Agent31PacketRank.Packet)
     refine ⟨BB6.Agent2AOneBoundary.aCost k d.q r,
       BB6.Agent2AOneBoundary.aUnary k d.q r,0,0,?_⟩
     have h := BB6.Agent2AOneBoundary.a_p1_boundary k d.q r
-    simpa [ha',hp',fixedTail,BB6.Agent2BoundaryBZero.regularSection]
+    simpa [ha',hp',fixedTail,BB6.Agent2BoundaryBZero.regularSection,oppairs]
       using h
   · obtain ⟨hB,hq⟩ := hB
     let k : Nat := (d.a-2)/3
@@ -82,9 +82,8 @@ theorem all_one_packets_regular (c : BB6.Agent31PacketRank.Packet)
       (d.a % 3 = 1 ∧ (d.p=0 ∨ d.p=1)) :=
     BB6.Agent2PacketSafe.normalize_safe_exit c ha (by omega)
   have hamin : d.a ≥ 4 := BB6.Agent2PacketSafe.normalize_amin c ha
-  have hpmod : d.p%3=1 := by
-    have h := BB6.Agent2PacketSafe.normalize_pmod c
-    omega
+  have hpmod : d.p%3=1 :=
+    (BB6.Agent2PacketSafe.normalize_pmod c).trans hp
   obtain ⟨n,a,q,b,hboundary⟩ :=
     one_terminal_regular d hamin hpmod hb
   refine ⟨T+n,a,q,b,?_⟩
