@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/agent24-c-strong-phase.yml'
       - 'im-results/agent5-c-parameter-search/ParameterSearch.lean'
+      - 'im-results/agent4-machine-c-global-path/CResidualProbe.lean'
   workflow_dispatch:
 
 permissions:
@@ -339,10 +340,18 @@ jobs:
           lean -o C23Integration.olean C23Integration.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C23Strict.lean .
           lean -o C23Strict.olean C23Strict.lean
+          # Agent 19: compile the final C70+C23+even-right exact residual
+          # in the same Lean module path as all of its imported dependencies.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighEvenRightC23Residual.lean .
+          lean -o HighEvenRightC23Residual.olean HighEvenRightC23Residual.lean
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
           lean --run ParameterSearch.lean
+          # Agent 4: evaluate exact fixed-target root decisions on a reproducible
+          # sample of the strongest surviving low/high parameter families.
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/CResidualProbe.lean .
+          lean --run CResidualProbe.lean
           cp im-results/agent5-c-parameter-search/high-allowed-5000x40.txt ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/
           cd ${GITHUB_WORKSPACE}
           git config user.name "github-actions[bot]"
@@ -355,7 +364,4 @@ jobs:
             git push origin HEAD:main
           fi
 
-          # Agent19: append the independent even-right exclusion to the strongest C70+C23 residual.
-          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighEvenRightC23Residual.lean .
-          lean HighEvenRightC23Residual.lean
 
