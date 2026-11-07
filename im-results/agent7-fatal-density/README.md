@@ -44,7 +44,7 @@ whenever the respective quotients are integral.
 
 These are strict dyadic gaps: the first lies between the odd-parent bands at scales (k-1) and (k), and the second lies between the bands at scales (k-2) and (k-1). Therefore an odd parent of (r), if one exists, cannot have exponent (t=0) or (t=1); every possible odd parent has (t\ge2). This is a root-cone reduction beyond the residue selector.
 
-The Lean file proves the arithmetic implication from Int-cast source equations and margin hypotheses, plus the scaled gap inequalities. Full unchanged-source CI is queued in [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455); the Nat-to-Int margin bridge and direct composition with the complete reset-parent grammar remain to be checked. Do not yet claim that the second-parent branch is root-dead.
+The Lean file proves the arithmetic implication from Int-cast source equations and margin hypotheses, plus the scaled gap inequalities. Full unchanged-source Lean CI passed in [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455); the Nat-to-Int margin bridge and direct composition with the complete reset-parent grammar remain to be checked. Do not yet claim that the second-parent branch is root-dead.
 
 ## Remaining question
 
