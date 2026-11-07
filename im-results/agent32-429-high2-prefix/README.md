@@ -122,6 +122,39 @@ The proof is by induction on the source run. Successful first steps use `sim_one
 The high-2 endpoint alternatives have not yet been classified as halting or nonhalting. The new lemma supplies the raw-machine side once a finite zipper-level halting suffix is proved.
 
 
+
+### 7. MidApos boundary reduction
+
+`MidAposBoundary.lean` now extends the exact endpoint analysis. The new
+source-verified lemmas are:
+
+- `shift_A01_tail_delta`: consume a right-hand `1(01)^n` block exactly,
+  leaving one right mark.
+- `juncPos_w0_exit_delta`: every positive-u Junc with zero right budget
+  has an exact A/0 exit.
+- `midApos_to_junc_delta`: for all u,v and w≥2,
+  `midApos u v w` maps to `junc u (v+2) (w-2)` in 2(v+2) steps,
+  with displacement −2(v+2).
+- `midApos_reenter_delta`: for u≥1,w≥3, the composite Junc excursion
+  re-enters `midApos (u-1) (v+2) (w-2)`, costing 4v+14 and moving the
+  head +2.
+- `midApos_reenter_twice_delta`: two re-entries from w=5 when u≥2.
+- `midApos_w2_exit_delta`: an exact A/0 exit from w=2 when u≥1.
+
+The full source dependency chain compiles in
+[CI 42419563111](https://github.com/FlareZ123/bb6/actions/runs/42419563111).
+All six new theorem audits report only `[propext, Quot.sound]`; no
+`sorryAx` or `Classical.choice` is introduced.
+
+For the high-2 partial endpoint, w′ is 4 or 5. The new theorem always
+reduces `midApos u′ v′ w′` to `junc u′ (v′+2) (w′−2)`. Positive-u
+cases are covered by the exact re-entry/exit lemmas and the existing
+arbitrary-v Junc crossing theorem. The remaining exceptional case is
+u′=0, yielding `junc 0 (v′+2) 2` or `junc 0 (v′+2) 3`; its
+continuation remains open. This is still a conditional synthetic J-chart
+result and does not establish blank-root reachability or decide #429.
+
+
 ## Remaining #429 questions
 
 The high-2 case `w=2*u+2` now returns to `junc 0 0 (4*u+18)`, and a further source-verified Junc excursion crosses the original J-chart head to a position strictly greater than `2*u+3`. The separate C/B cases `w=2*u` and `w=2*u+1` remain open. The J-chart outer cases are source proved: `w=2*u-1` halts, and `w>=2*u+3` returns to the J family. The crossing theorem leaves the final zipper abstract, so a useful next step is to expose its exact endpoint alternatives and compose those alternatives with the outer J-chart classification.
