@@ -450,26 +450,31 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     funext x
     by_cases hx0 : x=h-2
     · subst x
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape]
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape] <;> ring_nf
     · by_cases hx1 : x=h-1
       · subst x
-        simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape]
+        simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape] <;> ring_nf
       · by_cases hx2 : x=h
         · subst x
-          simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape]
+          simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape] <;> ring_nf
         · by_cases hx3 : x=h+1
           · subst x
-            simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape]
+            simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape] <;> ring_nf
           · by_cases hx4 : x=h+2
             · subst x
-              simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape]
+              simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape] <;> ring_nf
             · by_cases hx5 : x=h+3
               · subst x
-                simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape]
+                simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove,setupTape] <;> ring_nf
               · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
                 simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
                   applyMove,setupTape,hx0,hx1,hx2,hx3,hx4,hx5,hout]
-  simpa [c0,c14,htape] using hrun
+  have hcfg : c14 = {state:=C,head:=h+4,tape:=setupTape t h} := by
+    ext
+    · simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove]
+    · simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,applyMove] <;> ring_nf
+    · exact htape
+  simpa [c0,hcfg] using hrun
 
 def firstBranchTape (u w : Nat) (x : Int) : Bool :=
   if x < -2*(u:Int)-9 then false
