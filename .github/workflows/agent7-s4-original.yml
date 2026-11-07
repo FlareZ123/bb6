@@ -157,6 +157,8 @@ jobs:
           lake env lean -o S4SharpWitness.olean S4SharpWitness.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-sharp6/S4SharpCensus.lean" S4SharpCensus.lean
           lake env lean -o S4SharpCensus.olean S4SharpCensus.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-general-sharp/S4EarlyCompletion.lean" S4EarlyCompletion.lean
+          lake env lean -o S4EarlyCompletion.olean S4EarlyCompletion.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
