@@ -354,6 +354,11 @@ jobs:
           lean FullForcedParamScan.lean > "$GITHUB_WORKSPACE/full-forced-param-scan.txt" 2>&1
           cat "$GITHUB_WORKSPACE/full-forced-param-scan.txt"
           cat "$GITHUB_WORKSPACE/full-forced-param-scan.txt" >> "$GITHUB_STEP_SUMMARY"
+          # Agent 3: source-proof the newly identified infinite m=0, j=3 mod8 family.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/M0Mod8Three.lean .
+          lean -o M0Mod8Three.olean M0Mod8Three.lean > "$GITHUB_WORKSPACE/m0-mod8-three.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/m0-mod8-three.txt"
+          cat "$GITHUB_WORKSPACE/m0-mod8-three.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
@@ -388,6 +393,7 @@ jobs:
           path: |
             full-forced-residual.txt
             full-forced-param-scan.txt
+            m0-mod8-three.txt
             c-residual-probe.txt
           if-no-files-found: ignore
 
