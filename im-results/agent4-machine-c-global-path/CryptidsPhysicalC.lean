@@ -92,6 +92,31 @@ theorem machineC_cylinder_raw_halts_iff_counter
     · rintro ⟨hs, _⟩
       exact False.elim (hhalt hs)
 
+/-- The authentic raw C cylinder is exactly classified by the genuine
+    source-certified *thin halting gateway*, with all 25 table outcomes
+    quantified. Reaching the infinite gateway from the true blank seed
+    remains the open mathematical problem. -/
+theorem machineC_cylinder_raw_halts_iff_thin_gateway
+    (m : Machine) (hm : compatible (machineCPrefix 11) m) :
+    (∃ n, run m n blank = none) ↔
+      (m machineCSourceHaltSlot = none ∧
+        ∃ j : Nat, BB6CLine.Reach (0,2*j,4*j+10)) := by
+  have hthin : BB6.CReachBridge.RunHalts ↔
+      ∃ j : Nat, BB6CLine.Reach (0,2*j,4*j+10) :=
+    ((BB6.CSourceBridge.raw_halts_iff_local).trans
+      BB6.CSourceBridge.collatz_iff_runHalts).symm.trans
+      BB6.CSourceBridge.raw_halts_iff_thin
+  constructor
+  · intro hh
+    obtain ⟨hslot, hcounter⟩ :=
+      (machineC_cylinder_raw_halts_iff_counter m hm).mp hh
+    exact ⟨hslot, hthin.mp hcounter⟩
+  · rintro ⟨hslot, hreach⟩
+    exact (machineC_cylinder_raw_halts_iff_counter m hm).mpr
+      ⟨hslot, hthin.mpr hreach⟩
+
+#print axioms machineC_cylinder_raw_halts_iff_thin_gateway
+
 /-- A future proof that the published three-counter process never stops
     can be plugged *directly* into the complete raw global audit for the
     genuine 25-table cylinder, without another semantic argument. This is
