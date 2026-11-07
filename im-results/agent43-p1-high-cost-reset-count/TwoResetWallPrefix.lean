@@ -213,17 +213,17 @@ theorem source_right_five_four_reset_floor_shifted_wall
   by_cases hfour : 4≤z
   · exact hfour
   · have hzThree : z=3 := by
-    have hz3 := source_right_five_needs_three_resets n b m z hn h
-    omega
-  have hP200 : 200*n≤2^n := two_hundred_mul_le_pow n hn
-  have hsmall : (2*n+3)*z<3*2^n := by rw [hzThree]; omega
-  rcases source_right_five_depth_reset_dichotomy n b m z hn h with hlarge | hprefix
-  · omega
-  · rcases hprefix with ⟨bp,dp,mp,zp,k,hpre,hzEq,hzp,hip,hb,hkm,hbpExact,hwall,hdpExact,hmEq,hcost⟩
-    have hzp2 : zp=2 := by omega
-    have hpre2 : CountCone (14*2^n-2*n-16) 3 bp dp mp 2 := by
-      simpa [hzp2] using hpre
-    exact source_no_two_reset_shifted_wall n bp dp mp hn hpre2 hwall
+      have hz3 := source_right_five_needs_three_resets n b m z hn h
+      omega
+    have hP200 : 200*n≤2^n := two_hundred_mul_le_pow n hn
+    have hsmall : (2*n+3)*z<3*2^n := by rw [hzThree]; omega
+    rcases source_right_five_depth_reset_dichotomy n b m z hn h with hlarge | hprefix
+    · omega
+    · rcases hprefix with ⟨bp,dp,mp,zp,k,hpre,hzEq,hzp,hip,hb,hkm,hbpExact,hwall,hdpExact,hmEq,hcost⟩
+      have hzp2 : zp=2 := by omega
+      have hpre2 : CountCone (14*2^n-2*n-16) 3 bp dp mp 2 := by
+        simpa [hzp2] using hpre
+      exact source_no_two_reset_shifted_wall n bp dp mp hn hpre2 hwall
 
 #print axioms BB6.Agent43DepthResetFloor.source_right_five_four_reset_floor_shifted_wall
 
