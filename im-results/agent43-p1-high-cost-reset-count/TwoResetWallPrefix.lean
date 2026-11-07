@@ -86,7 +86,8 @@ private theorem two_reset_wall_dyadic_gap
     have hC1upper : C1≤2*P+72*n+174 := by omega
     rcases hL with ⟨hLdef,hLpow⟩
     by_cases hr0 : r=0
-    · have hLdouble : 2*L+2*n+4=14*P := by omega
+    · subst r
+      have hLdouble : 2*L+2*n+4=14*P := by omega
       have hgapLow : 4*C1<2*L := by omega
       have hgapHigh : 2*L<8*C1 := by omega
       by_cases hu1 : u=1
