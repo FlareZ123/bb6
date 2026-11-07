@@ -42,7 +42,7 @@ theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n) (left : List Bool) :
             calc
               ones (2*(n+1)) ++ [true,true] =
                   ones (2*(n+1)) ++ ones 2 := by simp [ones]
-              _ = ones (2*(n+1)+2) := by rw [← ones_add]
+              _ = ones (2*(n+1)+2) := by rw [← BB429SourceE1Return.ones_add]
               _ = ones (2*(n+2)) := by congr 1 <;> omega
           have hleft' : ones (2*(n+1)) ++ (true :: true :: left) =
               ones (2+2*(n+1)) ++ left := by
@@ -84,7 +84,7 @@ theorem juncPos_w0_exit_delta (u v : Nat) :
     calc
       ones (2*(v+1)) ++ [true,true,true] =
           ones (2*(v+1)) ++ ones 3 := by simp [ones]
-      _ = ones (2*(v+1)+3) := by rw [← ones_add]
+      _ = ones (2*(v+1)+3) := by rw [← BB429SourceE1Return.ones_add]
       _ = ones (2*v+5) := by congr 1 <;> omega
   have hleft' :
       ones (2*(v+1)) ++ (true :: true :: true :: (pairs01 u ++ ones 5)) =
