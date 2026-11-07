@@ -52,3 +52,19 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean ForwardThreeSource.lean
+
+          # Agent17: source-connected proof of new valuation 3/6/7
+          # genuine first-even parents, with existing archived original
+          # SheepEven and EvenEdge definitions (no interface stubs).
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/reconstruct_all.py"
+          for name in SheepEven EvenEdge; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/$name.lean" "$name.lean"
+          done
+          /tmp/agent17-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEven.lean EvenEdge.lean
+          for name in SheepEven EvenEdge; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          for name in SheepA3Boost SheepA6Boost SheepA7Boost SheepBoostSourceModel SheepFaninSource SheepFaninOriginal; do
+            cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-a3-boost/$name.lean" "$name.lean"
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
