@@ -40,5 +40,6 @@ jobs:
             lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean"
           done
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FEntry.lean | tee /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FEntry.olean im-results/agent32-429-raw-parent/BB429FEntry.lean | tee /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
           if grep -q sorryAx /tmp/agent32-429-source.log; then exit 1; fi
