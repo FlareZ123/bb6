@@ -184,7 +184,9 @@ theorem source_runWithDelta_none_rep (n : Nat) (z : Zipper) (c : Config)
                 cases hm
           have hraw : rawStep BB429PhysicalFrontier.target429 c = none := by
             simp [rawStep,hmove]
-          simp [BB6Coverage.run,hraw]
+          rw [BB429PhysicalBridge.physical_run_succ
+            BB429PhysicalFrontier.target429 n c, hraw]
+          rfl
       | some p =>
           rcases p with ⟨z1,d1⟩
           obtain ⟨c1,hraw1,hrep1,hhead1⟩ :=
@@ -194,7 +196,9 @@ theorem source_runWithDelta_none_rep (n : Nat) (z : Zipper) (c : Config)
             | none => rfl
             | some q => simp [runWithDelta,hstep,htail] at hz
           have hrawtail := ih z1 c1 hrep1 htail
-          simp [BB6Coverage.run,hraw1,hrawtail]
+          rw [BB429PhysicalBridge.physical_run_succ
+            BB429PhysicalFrontier.target429 n c, hraw1]
+          simpa [hrawtail]
 
 #print axioms source_runWithDelta_none_rep
 
