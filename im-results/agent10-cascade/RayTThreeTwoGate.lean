@@ -2,7 +2,7 @@ import RayTThreeLowRoot
 import RayTThreeExtendedGeometry
 set_option maxHeartbeats 0
 namespace CascadeTThreeLow
-open CascadeResetInverse CascadeSweep CascadeUniformFatal CascadeOddRay CascadeRayOddStrip
+open CascadeResetInverse CascadeSweep CascadeUniformFatal CascadeOddRay CascadeRayOddStrip CascadeForkOddDead
 
 private theorem odd_scale_unique (u k l:Nat)
   (hk:6*2^k+1≤u ∧ u≤8*2^k-1)
@@ -108,7 +108,8 @@ theorem ray_tthree_two_gate_source_dead (n j k d q d0 h:Nat) (hn:20≤n)
     constructor <;> omega
   have hk:k=n-3:=odd_scale_unique (8*d) k (n-3) hb hband
   have heq:16*d=2^n+q+(n-3)+5:=by
-    rw[hk,hpp] at hreset
+    rw[hk] at hreset
+    rw[hpp]
     exact hreset
   have hlinear:81*q+32*deficit n j+81*n+82=47*2^n:=by omega
   obtain ⟨hlo,hhi⟩:=third_parent_interval n (deficit n j) q hn hm hlinear
