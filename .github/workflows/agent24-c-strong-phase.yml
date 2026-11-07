@@ -285,7 +285,7 @@ jobs:
           # Complete sum-seven preimage grammar for the second high cylinder.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighEvenRightSum7Arithmetic,HighEvenRightSum7Source}.lean .
           lean -o HighEvenRightSum7Arithmetic.olean HighEvenRightSum7Arithmetic.lean
-          lean HighEvenRightSum7Source.lean
+          lean -o HighEvenRightSum7Source.olean HighEvenRightSum7Source.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighEvenRightSum7Residual.lean .
           lean HighEvenRightSum7Residual.lean
           # Source-audit the bounded Boolean realization of both exceptional phases.
