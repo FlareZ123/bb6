@@ -513,7 +513,7 @@ theorem cCfg_tape_left_blank (u w : Nat) (x : Int)
     (hx : x < -2*(u:Int)-9) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=false := by
   have hbase : baseTape u w x=false :=
-    baseTape_left_blank u w x hx
+    baseTape_left_blank u w x (by omega)
   have hne : x≠-2*(u:Int)-6 := by omega
   simp only [setupTape]
   by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
