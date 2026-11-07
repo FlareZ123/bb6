@@ -53,6 +53,15 @@ theorem depth_family_parameters (r : Nat) (hr : 2≤r) :
   rw [hD]
   exact Nat.mod_eq_of_lt hlt
 
+/-- The defining parameters satisfy the exact source stopping
+    dyadic residue equation before taking a modulus. -/
+theorem depth_family_exact_sum (r : Nat) (hr : 2≤r) :
+    depthJ r+9*depthM r+14=3*2^(r+2) := by
+  have hm : depthM r+1=2*r := by dsimp [depthM]; omega
+  have hp := depth_linear_margin r hr
+  dsimp [depthJ]
+  omega
+
 /-- Different depths at least two necessarily give different m values. -/
 theorem depthM_injective_on_two (r s : Nat)
     (hr : 2≤r) (hs : 2≤s)
@@ -71,6 +80,7 @@ theorem depth_family_no_blank (r : Nat) (hr : 2≤r) :
     r (depthJ r) (depthM r) hr hm hd hm4 hpair
 
 #print axioms depth_family_parameters
+#print axioms depth_family_exact_sum
 #print axioms depthM_injective_on_two
 #print axioms depth_family_no_blank
 end BB6.Agent19AllDepth
