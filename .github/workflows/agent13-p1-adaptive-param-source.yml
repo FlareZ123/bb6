@@ -143,3 +143,19 @@ jobs:
         run: |
           set -euo pipefail
           python -c "import sys; sys.path.insert(0, 'im-results/agent13-p1-adaptive-param'); import periodic_word_modular as p; p.self_test(); print('periodic-word exact arithmetic tests passed; no nontrivial unresolved words through cost 2048')"
+      - name: Audit Agent9 arbitrary primitive-depth word theorem against unchanged source ShadowReach
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent9-p1-q33:im-results/agent9-p1-periodic"
+          for m in UniformPrecisionStep UniformPrecisionPath; do
+            lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean"
+          done
+          for m in PeriodCore PeriodWord PeriodWordBounds PeriodPigeonhole PeriodCycle PeriodRotate PeriodMarker PeriodPrimitive PeriodFinite PeriodFiniteWord PeriodPrimitiveFinite; do
+            lean -o "im-results/agent9-p1-periodic/$m.olean" "im-results/agent9-p1-periodic/$m.lean" | tee -a /tmp/agent9-periodic-source-audit.log
+          done
+          lean im-results/agent9-p1-periodic/SourcePeriodWord.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          grep -F 'primitive_no_integral_slope' /tmp/agent9-periodic-source-audit.log
+          grep -F 'no_infinite_primitive_ray' /tmp/agent9-periodic-source-audit.log
+          grep -F 'primitive_finite_bound' /tmp/agent9-periodic-source-audit.log
+          grep -F 'run_source_transport' /tmp/agent9-periodic-source-audit.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent9-periodic-source-audit.log; then exit 1; fi
