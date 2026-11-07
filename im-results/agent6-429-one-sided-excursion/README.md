@@ -40,10 +40,10 @@ The new original-physical bridge defines `Represents zipper physical` as equalit
 
 ## Exact source S_E E/1 return theorem
 
-[BB429SourceE1Return.lean](BB429SourceE1Return.lean) proves a further all-parameter theorem for the source `S_E) family. In the zipper convention, the left stack is nearest-cell first, the current cell is separate, and the right stack begins immediately to its right. The source configuration is
+[BB429SourceE1Return.lean](BB429SourceE1Return.lean) proves a further all-parameter theorem for the source `S_E` family. In the zipper convention, the left stack is nearest-cell first, the current cell is separate, and the right stack begins immediately to its right. The source configuration is
 
 ```lean
-z 4 ((01)^b ++ 1^5) true suffix
+sourceScanE b suffix := z 4 (pairs01 b ++ ones 5) true suffix
 ```
 
 with arbitrary finite right suffix. This is the same left/current pattern as the pinned Cryptids source's `cfg_ScanE` family; its right-hand parameters are subsumed by the arbitrary `suffix`. The physical left-to-right tape notation is `1^5(10)^b E>1`, because the zipper's left list is nearest-first.
