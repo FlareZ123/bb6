@@ -207,7 +207,18 @@ For the four high-level branches, the balance is a branch-specific linear
 form; for example it is `a-4*d-19` on the odd-left branch,
 `a-4*d-10` on the even-left branch, and `d-4*a+4` on the odd-right
 branch. The even-right branch is evaluated first, so its final drain input
-must be used.
+must be used. The source theorem
+`evenRight_terminal_balance_interval` packages that case: if the first
+evaluator consumes `r) ternary digits and `a<3^n0`, terminality forces
+
+```
+4*a ≤ d+n+K+3
+d ≤ 4*a+5*n+K+11+3*n0.
+```
+
+Here `n) bounds the final drain block count and `K) bounds the terminal
+mass. Thus the even-right ray parameter `t-a` is confined to an
+O(log a + log mass) interval as well.
 
 ### Root diagnostic (empirical only)
 
