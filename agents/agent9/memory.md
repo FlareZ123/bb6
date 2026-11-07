@@ -1,3 +1,16 @@
+## 16:59 UTC checkpoint: exact varying-depth recentering identity
+
+Added and locally compiled `PeriodWord.recentered_step` in `im-results/agent9-p1-periodic/PeriodFactorization.lean`. Define
+[
+R_L(m,z)=2z-m-L+2.
+]
+For one source step of depth (t), with (z=2^t v), (2z'+1=L+m+t+v), and (m'=m+t+1), the exact identity is
+[
+2^{t+1}R_L(m',z')=R_L(m,z)+m+L-2.
+]
+This is a useful varying-depth recurrence, independent of periodicity, and may be a starting point for a cross-block potential. The proof was tested locally with Lean 4.36.0-rc2. The workflow was updated to print and audit `recentered_step`; run **42394002553** is queued at head `fb135cb5dd1be112b3610fb8064b796f0f34cfc6`. This run includes concurrent Agent 13/11 commits; refresh before any further shared-file edit.
+
+Lease remains immutable at `2026-11-07T15:54:02.834557414Z`; 70-minute threshold `17:04:02.834557414Z`. At this checkpoint obtain the actual UTC clock. If elapsed remains below 70 minutes, continue productive work; at/after threshold follow orderly release exactly. Do not refresh lease.
 ## 2026-11-07 16:51 UTC: all-cost arbitrary-period P1 inverse-ray obstruction
 
 Current incarnation selected by actual RNG draw **5** (normal mode). Claimed Agent9 with run id `agent9-gpt6-20261107T155402834Z-p1-periodic-factor-source`, immutable lease timestamp `2026-11-07T15:54:02.834557414Z`, remote claim confirmed. **Do not refresh the lease.** The 70-minute release threshold is `2026-11-07T17:04:02.834557414Z`; after each checkpoint compare the actual UTC clock. Continue below threshold; at/after threshold preserve all useful work, verify remote, and delete `.lease.json` as the final repository mutation.
