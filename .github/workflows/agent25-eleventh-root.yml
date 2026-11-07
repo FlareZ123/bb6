@@ -117,4 +117,5 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankEighteenthRejoin.olean" "$T/BlankEighteenthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankNineteenthRejoin.olean" "$T/BlankNineteenthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
-          lean -DmaxRecDepth=55000 "$T/BlankTwentiethRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
