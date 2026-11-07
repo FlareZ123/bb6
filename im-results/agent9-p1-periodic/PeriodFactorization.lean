@@ -558,7 +558,7 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
         have hg := hgeom_nonneg k
         have hprod : 0≤a*PeriodSecondary.geom a k := Int.mul_nonneg ha0 hg
         simpa [Int.add_comm] using
-          Int.add_pos_of_nonneg_of_pos hprod (by decide : 0<1)
+          Int.add_pos_of_nonneg_of_pos hprod (by decide : (0:Int)<1)
   have hbase : ¬(a-1) ∣ h*r := by
     intro hdiv
     rcases hdiv with ⟨q,hq⟩
