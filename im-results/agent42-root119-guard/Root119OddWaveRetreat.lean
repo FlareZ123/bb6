@@ -152,13 +152,11 @@ theorem odd_f1_retreat_to_b0 (n m : Nat) (t : Int → Bool) (h : Int)
       have hidx : h-2-2*(m:Int) = h-(2+2*(m:Int)) := by omega
       rw [hhead',hidx]
     have hq' : (fbMany m c1).q = .F := fbMany_state m c1 rfl
-    have hFread' : (fbMany m c1).tape (fbMany m c1).h = false := by
-      rw [hhead']
+    have hFread'' : (fbMany m c1).tape (h-(2+2*(m:Int))) = false := by
+      rw [←hhead'']
       exact hFread
-    have hpos : (fbMany m c1).h-1 = h-3-2*(m:Int) := by
-      rw [hhead'']
-      omega
-    simp [run,next,hq',hFread',hhead'',hpos]
+    have hpos'' : h-(2+2*(m:Int))-1 = h-3-2*(m:Int) := by omega
+    simp [run,next,hq',hFread'',hhead'',hpos'']
   have hrest : run (1+(2*m+1)) (⟨.B,h-1,waveTape⟩ : Conf) =
       some ⟨.B,h-3-2*(m:Int),
         setBit (fbMany m c1).tape (h-2-2*(m:Int)) true⟩ := by
@@ -338,13 +336,11 @@ theorem d1_retreat_to_b0 (n m : Nat) (t : Int → Bool) (h : Int)
       have hidx : h-3-2*(m:Int) = h-(3+2*(m:Int)) := by omega
       rw [hhead',hidx]
     have hq' : (fbMany m c1).q = .F := fbMany_state m c1 rfl
-    have hFread' : (fbMany m c1).tape (fbMany m c1).h = false := by
-      rw [hhead']
+    have hFread'' : (fbMany m c1).tape (h-(3+2*(m:Int))) = false := by
+      rw [←hhead'']
       exact hFread
-    have hpos : (fbMany m c1).h-1 = h-4-2*(m:Int) := by
-      rw [hhead'']
-      omega
-    simp [run,next,hq',hFread',hhead'',hpos]
+    have hpos'' : h-(3+2*(m:Int))-1 = h-4-2*(m:Int) := by omega
+    simp [run,next,hq',hFread'',hhead'',hpos'']
   have hrest : run (1+(1+(2*m+1)))
       (⟨.F,h-1,shuttleFill t h (2*n+2)⟩ : Conf) =
       some ⟨.B,h-4-2*(m:Int),
