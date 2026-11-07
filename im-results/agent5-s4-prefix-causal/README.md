@@ -139,3 +139,6 @@ The independent Python checker agrees with this state after 5,120 returns from `
 
 
 A further local experiment used a tail-recursive `prefixRunFast` with a proved equivalence to the standalone recursive `prefixRun`. Each of the four concrete ninth-digit return equalities was separately kernel-checked with `by decide` in Lean 4.36.0-rc2, with no extra axioms (about 33 seconds per value). The combined four-theorem file timed out, while separate modules succeeded. These local modules are not yet source-imported or committed; the ninth-digit cycle remains a candidate until that bridge and its root transport are formalized.
+
+
+The full-root simulation is now reproducible with [s5457_chunk_states.py](s5457_chunk_states.py). It starts from the Lean-certified `s337`, runs the original Python `checker.chain` for 5,120 returns, asserts the candidate `s5457`, and exposes 320 intermediate 16-return checkpoints through `chunk_states()`. Those checkpoints are intended as input for a future chunked source-Lean survival certificate.
