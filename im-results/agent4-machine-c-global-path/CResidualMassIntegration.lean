@@ -107,10 +107,13 @@ theorem low_root_requires_mass_gt_10000 (m : Nat)
     (hroot : BB6.Agent3ValSix.valSixMixedRootDecision 1
       (2^(2*m+3)-(3*m+4)) = true) :
     10000 < BB6.Agent4MassBounds.lowRawMass m := by
-  have hreach : BB6.Agent11Mass.SectionReach 1 (lowStopTargetY m) := by
-    apply (BB6.Agent4CResidualMass2000.massStopRoot_iff_sectionReach 1 _).mp
-    exact (BB6.Agent3ValSix.valSixMixedRootDecision_eq_true_iff 1 _).mp hroot |>.2
-  exact BB6.Agent4CResidualMass10000.low_reach_implies_mass_gt_10000 m hreach
+  have hc : BB6.Agent3.CReach 1 (lowStopTargetY m) := by
+    simpa [lowStopTargetY] using
+      (BB6.Agent3ValSix.valSixMixedRootDecision_iff 1
+        (lowStopTargetY m)).mp hroot
+  have hr : BB6.Agent11Mass.SectionReach 1 (lowStopTargetY m) := by
+    simpa [BB6.Agent3.CReach, BB6.Agent11Mass.SectionReach] using hc
+  exact BB6.Agent4CResidualMass10000.low_reach_implies_mass_gt_10000 m hr
 
 /-- The stronger one-pass source exclusion: every high-family root halt
     candidate has raw mass strictly greater than 10,000. -/
@@ -118,11 +121,14 @@ theorem high_root_requires_mass_gt_10000 (j m : Nat)
     (hroot : BB6.Agent3ValSix.valSixMixedRootDecision
       (highTargetX j) (highTargetY j m) = true) :
     10000 < BB6.Agent4MassBounds.highRawMass j m := by
-  have hreach : BB6.Agent11Mass.SectionReach
+  have hc : BB6.Agent3.CReach (highTargetX j) (highTargetY j m) :=
+    (BB6.Agent3ValSix.valSixMixedRootDecision_iff
+      (highTargetX j) (highTargetY j m)).mp hroot
+  have hr : BB6.Agent11Mass.SectionReach
       (highStopTarget j m).1 (highStopTarget j m).2 := by
-    apply (BB6.Agent4CResidualMass2000.massStopRoot_iff_sectionReach _ _).mp
-    exact (BB6.Agent3ValSix.valSixMixedRootDecision_eq_true_iff _ _).mp hroot |>.2
-  exact BB6.Agent4CResidualMass10000.high_reach_implies_mass_gt_10000 j m hreach
+    simpa [BB6.Agent3.CReach, BB6.Agent11Mass.SectionReach,
+      highTargetX, highTargetY, highStopTarget] using hc
+  exact BB6.Agent4CResidualMass10000.high_reach_implies_mass_gt_10000 j m hr
 
 /-- Any genuine original Machine C halt must use a low or high stopping
     target whose weighted mass exceeds 10,000. -/
@@ -163,7 +169,6 @@ theorem low_root_requires_m_ge5 (m : Nat)
       omega
     · have hrow : BB6.Agent4MassBounds.lowRawMass 4 = 4065 := by
         rw [BB6.Agent4MassBounds.lowRawMass_eq]
-        decide
       rw [hrow] at hmass
       omega
 
