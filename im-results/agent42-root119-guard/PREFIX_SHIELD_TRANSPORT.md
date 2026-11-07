@@ -125,7 +125,7 @@ The audit was extended to all reached B/0 states with left suffix 101. Among 7,3
 | 100101 | 2 |
 | 110101 | 1 |
 
-The sole boundary-unsafe state is at raw time 3,193,243, head -689. Its right window h+1 through h+10 is 1111111111, and the prefix classifier labels it prefixUnmatched with m=401. It is not an odd-even prefix input. In contrast, the 22 odd-even inputs have left-six patterns 010101 (21 cases) and 000101 (one case); all satisfy the boundary condition. The 21 even-prefix inputs all have 010101.
+The sole boundary-unsafe state is at raw time 3,193,243, head -689. Its right window h+1 through h+10 is 1111111111, and the prefix classifier labels it prefixUnmatched with m=401. The six bits beginning at h+m are 010101, so h+402=1 prevents the required odd-even terminal-zero corridor. It is not an odd-even prefix input. In contrast, the 22 odd-even inputs have left-six patterns 010101 (21 cases) and 000101 (one case); all satisfy the boundary condition. The 21 even-prefix inputs all have 010101.
 
 This is a useful structural lead: the only observed reachable 110101 context is attached to a long unmatched right-one run, while every actual odd-even terminal-zero corridor is boundary-safe. It does not prove that Reach plus the odd-even corridor implies the guard. That implication remains the next formal target.
 
