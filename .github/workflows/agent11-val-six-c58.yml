@@ -251,7 +251,13 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicAllDepthPrior.lean .
           lean -o HighDyadicAllDepthPrior.olean HighDyadicAllDepthPrior.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58AllDepth.lean .
-          lean ValSixC58AllDepth.lean
+          lean -o ValSixC58AllDepth.olean ValSixC58AllDepth.lean
+          # A finite executable parameter guard and pairwise distinct depth residues.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{HighDyadicGateDecision,HighDyadicDepthUnique}.lean .
+          lean -o HighDyadicGateDecision.olean HighDyadicGateDecision.lean
+          lean HighDyadicDepthUnique.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58AllDepthBool.lean .
+          lean ValSixC58AllDepthBool.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
           # backwards oracle, and authentic merged C58/ValSix stopping iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
