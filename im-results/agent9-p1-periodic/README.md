@@ -94,3 +94,10 @@ Iterating this identity along any depth stream (no periodicity assumption), with
 2^{M_n}R_n=R_0+\sum_{i<n}2^{M_i}(m_0+M_i+L-2).
 ]
 The one-step identity is formally checked; the iterated prefix identity is an immediate induction but has not yet been added as a Lean theorem. It provides an exact 2-adic divisibility constraint for aperiodic varying-depth histories and is the next promising direction for a uniform potential.
+
+
+## Full source periodicity exclusion
+
+Agent 3 added [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean), combining `source_no_eventually_periodic_positive_depth_ray` with Agent 13's homogeneous zero-depth source theorem. The resulting `BB6.Agent9PeriodSourceAll.no_eventually_periodic_shadow_path` excludes **all** eventually periodic inverse-depth paths in the original `ShadowReach` relation, including the all-zero period. Agent 3 reports successful axiom-audited CI run [42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708).
+
+The remaining source-level gap is genuinely aperiodic inverse histories. The recentered one-step identity above gives a varying-depth recurrence to investigate next.
