@@ -9,24 +9,13 @@ namespace BB6.Agent2TwentyThirdRoot
 
 open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 
-noncomputable def normalization22Time : Nat :=
-  Classical.choose BB6.Agent2TwentySecondRoot.blank_twentysecond_reentry
-
-def reentry22Time : Nat :=
+def reentry22Time (T22 : Nat) : Nat :=
   BB6.Agent2TwentySecondRoot.exception22Time +
     (BB6.Agent2E7SecondSafe.eTime BB6.Agent2TwentySecondRoot.u22 8 +
       BB6.Agent2E7SecondSafe.middleTime BB6.Agent2TwentySecondRoot.u22 +
-      normalization22Time)
+      T22)
 
-theorem blank_twentysecond_reentry_chosen :
-    ObsEq (run reentry22Time blank)
-      (BB6.Agent2BoundaryBZero.regularSection
-        BB6.Agent2TwentySecondRoot.normalized22.a
-        (BB6.Agent2TwentySecondRoot.normalized22.q+2) 5) := by
-  simpa [reentry22Time, normalization22Time] using
-    (Classical.choose_spec BB6.Agent2TwentySecondRoot.blank_twentysecond_reentry)
-
-theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
+private theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
     BB6.Agent2BoundaryBZero.regularSection a q b =
       DRegularSource.sourceSection ⟨a,q,b⟩ := by
   simp only [BB6.Agent2BoundaryBZero.regularSection,
@@ -70,24 +59,28 @@ theorem terminal3636_exact :
 theorem t23_mod27 : t23 % 27 = 21 :=
   terminal3636_certificate.2
 
-def exception23Time : Nat :=
-  reentry22Time + DRegular.accumulated 3636 seed23
+def exception23Time (T22 : Nat) : Nat :=
+  reentry22Time T22 + DRegular.accumulated 3636 seed23
 
-/-- The twenty-third exceptional input is reached from the blank tape. -/
-theorem blank_twenty_third_exception :
-    ObsEq (run exception23Time blank)
+/-- Extend any witnessed twenty-second reentry through the next D-regular run. -/
+theorem blank_twenty_third_exception_from (T22 : Nat)
+    (h22 : ObsEq (run (reentry22Time T22) blank)
+      (BB6.Agent2BoundaryBZero.regularSection
+        BB6.Agent2TwentySecondRoot.normalized22.a
+        (BB6.Agent2TwentySecondRoot.normalized22.q+2) 5)) :
+    ObsEq (run (exception23Time T22) blank)
       (DRegularSource.sourceSection ⟨9*t23+4,2,1⟩) := by
   have hamin : BB6.Agent2TwentySecondRoot.normalized22.a ≥ 4 :=
     BB6.Agent2PacketSafe.normalize_amin
       BB6.Agent2TwentySecondRoot.packet22
       (by simp [BB6.Agent2TwentySecondRoot.packet22]; omega)
-  have h22source : ObsEq (run reentry22Time blank)
+  have h22source : ObsEq (run (reentry22Time T22) blank)
       (DRegularSource.sourceSection seed23) := by
     rw [← regularSection_sourceSection
       BB6.Agent2TwentySecondRoot.normalized22.a
       (BB6.Agent2TwentySecondRoot.normalized22.q+2) 5 (by omega)]
-    exact blank_twentysecond_reentry_chosen
-  apply BB6.Agent25RootChain.extend_regular blank reentry22Time
+    exact h22
+  apply BB6.Agent25RootChain.extend_regular blank (reentry22Time T22)
     3636 seed23 ⟨9*t23+4,2,1⟩
   · constructor
     · change BB6.Agent2TwentySecondRoot.normalized22.a ≥ 2
@@ -102,12 +95,16 @@ def packet23Time : Nat :=
   BB6.Agent32EAll.duration (3*t23) 1 +
     BB6.Agent25BGeneral.bCost t23
 
-def reentry23Time : Nat := exception23Time + packet23Time
+def reentry23Time (T22 : Nat) : Nat :=
+  exception23Time T22 + packet23Time
 
 /-- The q=2 exceptional B return closes the twenty-third root episode. -/
 theorem blank_twenty_third_reentry :
-    ObsEq (run reentry23Time blank)
+    ∃ T22, ObsEq (run (reentry23Time T22) blank)
       (DRegularSource.sourceSection ⟨64*t23+21,1,5⟩) := by
+  obtain ⟨T22,h22⟩ :=
+    BB6.Agent2TwentySecondRoot.blank_twentysecond_reentry
+  have h23 := blank_twenty_third_exception_from T22 h22
   have hEB :
       ObsEq
         (run packet23Time
@@ -115,14 +112,13 @@ theorem blank_twenty_third_reentry :
         (DRegularSource.sourceSection ⟨64*t23+21,1,5⟩) := by
     simpa [packet23Time] using
       (BB6.Agent25BGeneral.exceptional_EB_general t23 0)
-  exact source_chain exception23Time packet23Time blank
+  exact ⟨T22, source_chain (exception23Time T22) packet23Time blank
     (DRegularSource.sourceSection ⟨9*t23+4,2,1⟩)
-    (DRegularSource.sourceSection ⟨64*t23+21,1,5⟩)
-    blank_twenty_third_exception hEB
+    (DRegularSource.sourceSection ⟨64*t23+21,1,5⟩) h23 hEB⟩
 
 #print axioms terminal3636_exact
 #print axioms t23_mod27
-#print axioms blank_twenty_third_exception
+#print axioms blank_twenty_third_exception_from
 #print axioms blank_twenty_third_reentry
 
 end BB6.Agent2TwentyThirdRoot
