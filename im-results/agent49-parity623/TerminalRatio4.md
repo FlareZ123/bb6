@@ -83,3 +83,14 @@ These are finite observations, not an all-time orbit proof. The formal next
 step is to prove the generic output-balance lemma and four branch-specific
 ratio-4 bounds, then investigate a preserved inequality that keeps the
 blank-root orbit outside these logarithmic windows.
+
+
+## Formalization status
+
+The generic output-balance lemma has now been added to
+DrainLinearTerminalSource.lean as terminal_output_balance_of_mass, with a
+drain-specific wrapper terminal_output_balance_joint. It states
+|d'-a'|≤K+4 from a'+d'≤M, 2M+5<3^K, and terminality. This source theorem
+still awaits a successful CI run. The four branch-specific ratio-4 bounds
+above remain an algebraic derivation; their source formalization is the
+next step.
