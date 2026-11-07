@@ -388,8 +388,18 @@ theorem weight_repeat_int (u : List Nat) (k : Nat) :
       rw [repeatWord]
       have hw := congrArg (fun n : Nat => (n:Int)) (weight_append u (repeatWord u k))
       simp only [Int.natCast_add, Int.natCast_mul, Int.natCast_pow] at hw
-      rw [hw, ih]
-      simp [PeriodSecondary.geom, Int.mul_add, Int.mul_assoc, Int.mul_comm, Int.mul_left_comm]
+      rw [hw, ih, PeriodSecondary.geom]
+      calc
+        (weight u:Int) + (2^(cost u):Int) *
+            (PeriodSecondary.geom (2^(cost u):Int) k * (weight u:Int)) =
+            (weight u:Int) + ((2^(cost u):Int) *
+              PeriodSecondary.geom (2^(cost u):Int) k) * (weight u:Int) := by
+                rw [Int.mul_assoc]
+        _ = (weight u:Int) * (1+(2^(cost u):Int) *
+              PeriodSecondary.geom (2^(cost u):Int) k) := by
+                rw [Int.mul_add]
+                simp only [Int.mul_one]
+                ac_rfl
 
 /-- Repetition has the exact affine offset coefficient used by
     PeriodSecondary.repeated_affine_obstruction. -/
@@ -471,8 +481,10 @@ theorem periodic_run_slope_at_zero (L : Nat) (w : List Nat) (hw : 0<cost w)
       _ = (A:Int)*(((A:Int)-1)*delta (n+1))-(A:Int)*(H*S) := by omega
       _ = _ := by exact (Int.mul_sub _ _ _).symm
   have hz := PeriodCore.forced_zero A hA err herr
-  dsimp [err,delta,zi,A] at hz
-  omega
+  have hz' : ((A:Int)-1)*(zi 1-zi 0)-H*S=0 := by
+    simpa [err,delta] using hz
+  have hzEq : ((A:Int)-1)*(zi 1-zi 0)=H*S := Int.sub_eq_zero.mp hz'
+  simpa [A,zi,H,S] using hzEq
 
 #print axioms run_cost
 #print axioms linear_cost_orbit
@@ -495,7 +507,8 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
     have h := positive_depth_cost u hp
     omega
   have hwcost : 0<cost w := by
-    rw [w, cost_repeat]
+    dsimp [w]
+    rw [cost_repeat]
     exact Nat.mul_pos hcostu hkpos
   let a : Int := (2^(cost u):Nat)
   let h : Int := (weight u:Nat)
@@ -528,13 +541,14 @@ theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
   have ha : 0<a := by
     dsimp [a]
     exact_mod_cast Nat.pow_pos (by decide : 0<2)
+  have ha0 : 0≤a := by omega
   have hgeom_nonneg : ∀ n, 0≤PeriodSecondary.geom a n := by
     intro n
     induction n with
     | zero => simp [PeriodSecondary.geom]
     | succ n ih =>
         simp only [PeriodSecondary.geom]
-        exact Int.add_nonneg (by decide) (Int.mul_nonneg (le_of_lt ha) ih)
+        exact Int.add_nonneg (by decide) (Int.mul_nonneg ha0 ih)
   have hJpos : 0<J := by
     cases k with
     | zero => omega
