@@ -84,11 +84,38 @@ j_high2_to_junc_raw (u : Nat) :
 
 - Full source CI: [42413147930](https://github.com/FlareZ123/bb6/actions/runs/42413147930).
 - Pinned source revision: `2a5f188b80512e69cf40a20c170cea88af8c8041`.
+- Follow-on raw crossing CI: [42413538308](https://github.com/FlareZ123/bb6/actions/runs/42413538308), pinned revision `560640f3b34aeb49c82e006aebd07585230444cd`.
 - The final theorem's transitive axiom audit is `[propext, Classical.choice, Quot.sound]`. The supporting zipper theorems use `[propext, Quot.sound]`. No audited high-2 theorem depends on `sorryAx`.
+
+### 5. Raw rightward crossing after the high-2 return
+
+The high-2 return endpoint is `junc 0 0 (4*u+18)`, with head displacement `-(2*u+10)`. The existing `juncCycle_crossing` theorem applies with
+
+```
+h = 2*u+11
+w = 4*u+18
+k = 3*u+12
+h+w = 2*k+5
+```
+
+It supplies a finite further Junc excursion whose displacement `d` satisfies `2*k < h+d`. Lifting this excursion through the raw-source representation and composing it with the high-2 path proves:
+
+```lean
+j_high2_crosses_origin_raw (u : Nat) :
+  ∃ steps cfg c',
+    run target429 (4*u*u+44*u+204+steps) J(u,2*u+2) = some c' ∧
+    Represents cfg c' ∧
+    c'.head > 2*u+3
+```
+
+Thus every synthetic high-2 J-chart input has a finite raw-machine continuation whose head lies strictly to the right of the original J-chart head by more than `2*u+3` cells. The theorem deliberately leaves the final zipper in existential form, following the existing crossing theorem's interface.
+
+- Lean CI: [42413538308](https://github.com/FlareZ123/bb6/actions/runs/42413538308).
+- The named crossing theorem's axiom audit passes with no `sorryAx`.
 
 ## Remaining #429 questions
 
-The high-2 case `w=2*u+2` now returns to the Junc family. The separate C/B cases `w=2*u` and `w=2*u+1` remain open. The J-chart outer cases are source proved: `w=2*u-1` halts, and `w>=2*u+3` returns to the J family. The endpoint `J(0,4*u+18)` lies in that outer-return range, so the next useful step is to compose the new return with the existing outer J-chart theorem and determine the resulting parameter map.
+The high-2 case `w=2*u+2` now returns to `junc 0 0 (4*u+18)`, and a further source-verified Junc excursion crosses the original J-chart head to a position strictly greater than `2*u+3`. The separate C/B cases `w=2*u` and `w=2*u+1` remain open. The J-chart outer cases are source proved: `w=2*u-1` halts, and `w>=2*u+3` returns to the J family. The crossing theorem leaves the final zipper abstract, so a useful next step is to expose its exact endpoint alternatives and compose those alternatives with the outer J-chart classification.
 
 The authentic blank-root entry remains a separate question. The high-2 theorem starts from the synthetic state `J(u,2*u+2)`. The global #429 decision still requires determining whether the genuine blank orbit visits B with tape `001` at and immediately right of its head.
 
