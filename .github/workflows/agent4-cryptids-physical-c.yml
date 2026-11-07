@@ -34,7 +34,7 @@ jobs:
           set -eu
           mkdir -p BB6Agent4
           ROOT="../im-results"
-          for m in Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry ZeroMaskOracle FiniteDecision; do
+          for m in Frontier HaltSlotFreedom TotalHaltAudit RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry ZeroMaskOracle FiniteDecision; do
             cp "$ROOT/agent8-coverage-contract/$m.lean" BB6Agent4/
           done
           for m in RayMacro EntryMacroOracle EntryMacroLeft; do
@@ -54,7 +54,7 @@ jobs:
             cp "$ROOT/agent21-c-source-bridge/$m.lean" BB6Agent4/
           done
           export LEAN_PATH=BB6Agent4
-          for m in Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry; do
+          for m in Frontier HaltSlotFreedom TotalHaltAudit RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry; do
             lake env lean -o "BB6Agent4/$m.olean" "BB6Agent4/$m.lean"
           done
           for m in RayMacro EntryMacroOracle EntryMacroLeft; do
