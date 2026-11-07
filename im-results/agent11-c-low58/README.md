@@ -82,7 +82,28 @@ Therefore any qualifying depth is unique and is exactly `v2(D)-2`. The new `High
 - `candidateAllowedBool_iff`: the one-candidate Boolean is equivalent to exclusion at every depth.
 - `candidate_matches_scan`: the new Boolean is extensionally identical to the previous bounded scan.
 
-The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports only `propext` and `Quot.sound`; no `sorryAx`. It has been wired into `ValSixC58AllDepthBool.lean` and the existing manual source workflow, but this newest integration is **not yet source-CI certified**. The latest full workflow run, [42374537334](https://github.com/FlareZ123/bb6/actions/runs/42374537334), failed in the separate Agent19 `HighThreeLate256.lean` leaf (a type mismatch and heartbeat timeouts). That failure does not falsify the fast-gate proof; it blocks a clean full-workflow acceptance run. Do not describe the fast gate as source-certified until the complete workflow passes.
+The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports only `propext` and `Quot.sound`; no `sorryAx`. It is wired into `ValSixC58AllDepthBool.lean` and the manual source workflow. Full source verification is still pending: run [42394679706](https://github.com/FlareZ123/bb6/actions/runs/42394679706) compiled all three valuation leaves and the C58 Boolean criterion, then stopped at `ValSixC58Late.lean:90` because the strict-family proof still used the old Boolean name. I repaired that bridge with `candidate_matches_scan`; run 17 ([42395358939](https://github.com/FlareZ123/bb6/actions/runs/42395358939)) is queued with the fix and the additional leaves. The earlier `HighThreeLate256.lean` heartbeat/type issues have also received isolated proof-structure repairs, but the new full chain has not yet passed. Do not describe these additions as source-CI certified until run 17 completes successfully.
+
+## Direct evaluator for Agent19's older all-depth guard
+
+Agent19's older high guard contains the residue
+```text
+(j+3*m+3) % 2^(n+4) = 2^(n+2).
+```
+Writing `D=j+3*m+3` and `q=D/2^(n+4)` gives
+```text
+D = 2^(n+2)*(4*q+1)
+  ⇒ v2(D)=n+2.
+```
+Thus the only possible depth is `n=v2(j+3*m+3)-2`. The new
+`HighDyadicOlderGateFast.lean` checks this candidate, the original
+upper bound `n+4≤2*m+2`, and the parity-dependent right-coordinate
+condition. Its `candidateAllowedBool_iff` proves exact equivalence to
+`∀ n, ¬gate n j m`, and `candidateAllowedDecidable` supplies a named
+computable decision procedure. This is designed to replace the
+`List.range (2*m+1)` scan in Agent27's `FullBoolean.lean` without
+changing the mathematical predicate. It locally compiles with Lean
+4.36.0-rc2 and no `sorryAx`; run 17 is the first source-workflow check.
 
 ## Formal artifacts and verification boundary
 
@@ -94,6 +115,9 @@ The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports
 | `ValSixC58AllDepth.lean` | exact C58/ValSix criterion plus all-depth cone | source CI 42335683875, success |
 | `HighDyadicGateDecision.lean` and `HighDyadicDepthUnique.lean` | exact bounded Boolean scan and at-most-one-depth lemma | source CI 42336297638, success |
 | `HighDyadicGateDecisionFast.lean` | direct valuation candidate and equivalence to the scan | local Lean 4.36.0-rc2 only; full source CI pending |
+| `HighDyadicOlderGateFast.lean` | direct candidate for Agent19's parity-dependent older depth guard | local Lean 4.36.0-rc2 only; run 17 pending |
+| `HighThreeLateGateFast.lean` | direct candidate for the arbitrary-depth late three-cone | local Lean 4.36.0-rc2 only; run 17 pending |
+| `ValSixC58LateFast.lean` | exact C58 criterion strengthened by the late cone | locally typechecked against interface stubs; run 17 pending |
 
 All cited source theorems have standard Lean axiom audits without `sorryAx`. The M512 counts are finite computational evidence, not a proof of actual reachability.
 
