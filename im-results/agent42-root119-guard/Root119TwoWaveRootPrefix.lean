@@ -548,6 +548,171 @@ theorem b0_two_wave_root_interval_avoids_BBad
       hleft0 hzero0 hone0 hleft2 hfb hfinalF hfinalB hones1 hzero1 hextra hzero2
   exact ⟨bout,hrun,hreach,hbOut,noLeft4_excludes_BBad bout (hpreserve hshield)⟩
 
+theorem b0_cphase_d0_odd_wave_return_preserves_noLeft4 (b : Conf) (r m : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hscan : ∀ i : Nat, i < r → b.tape (b.h-1-(i:Int)) = true)
+    (hzeroC : b.tape (b.h-1-(r:Int)) = false)
+    (hDzero : b.tape (b.h-2-(r:Int)) = false)
+    (hEone : b.tape (b.h-3-(r:Int)) = true)
+    (hAzero : b.tape (b.h-4-(r:Int)) = false)
+    (hLeft1 : b.tape (b.h-5-(r:Int)) = true)
+    (hfb : ∀ i : Nat, i < m →
+      b.tape (b.h-6-(r:Int)-2*(i:Int)) = false ∧
+      b.tape (b.h-7-(r:Int)-2*(i:Int)) = true)
+    (hfinalF : b.tape (b.h-6-(r:Int)-2*(m:Int)) = false)
+    (hfinalB : b.tape (b.h-7-(r:Int)-2*(m:Int)) = false) :
+    ∃ b', Reach b' ∧ BZero b' ∧
+      (NoLeft4 true true false b → NoLeft4 true true false b') := by
+  obtain ⟨c,hc,hphase⟩ := scan_from_B b hb hb0 r hscan
+  obtain ⟨_,hC,hpos,hprefix,_⟩ := hphase
+  have hCzero : c.tape c.h = false := by
+    calc
+      c.tape c.h = b.tape c.h := hprefix c.h (by omega)
+      _ = b.tape (b.h-1-(r:Int)) := by rw [hpos]
+      _ = false := hzeroC
+  have hDzeroC : c.tape (c.h-1) = false := by
+    calc
+      c.tape (c.h-1) = b.tape (c.h-1) := hprefix (c.h-1) (by omega)
+      _ = b.tape (b.h-2-(r:Int)) := by rw [hpos]; congr 1 <;> omega
+      _ = false := hDzero
+  have hEoneC : c.tape (c.h-2) = true := by
+    calc
+      c.tape (c.h-2) = b.tape (c.h-2) := hprefix (c.h-2) (by omega)
+      _ = b.tape (b.h-3-(r:Int)) := by rw [hpos]; congr 1 <;> omega
+      _ = true := hEone
+  have hAzeroC : c.tape (c.h-3) = false := by
+    calc
+      c.tape (c.h-3) = b.tape (c.h-3) := hprefix (c.h-3) (by omega)
+      _ = b.tape (b.h-4-(r:Int)) := by rw [hpos]; congr 1 <;> omega
+      _ = false := hAzero
+  let d : Conf := ⟨.D,c.h-1,setBit c.tape c.h true⟩
+  have hcstep : next c = some d := by simp [next,hC,hCzero,d]
+  have hreadD : (setBit c.tape c.h true) (c.h-1) = false := by
+    simp [setBit,show c.h-1 ≠ c.h by omega,hDzeroC]
+  let e : Conf := ⟨.E,c.h-2,setBit d.tape (c.h-1) false⟩
+  have hdstep : next d = some e := by
+    have hpos : c.h-1-1 = c.h-2 := by omega
+    simp [next,d,e,hreadD,hpos]
+  have hreadE : (setBit d.tape (c.h-1) false) (c.h-2) = true := by
+    have hne : c.h-2 ≠ c.h-1 := by omega
+    have hne' : c.h-2 ≠ c.h := by omega
+    simp [setBit,hne,d,setBit,hne',hEoneC]
+  let a : Conf := ⟨.A,c.h-3,setBit e.tape (c.h-2) true⟩
+  have hestep : next e = some a := by
+    have hpos : c.h-2-1 = c.h-3 := by omega
+    simp [next,e,a,hreadE,hpos]
+  have hreadA : (setBit e.tape (c.h-2) true) (c.h-3) = false := by
+    have hne : c.h-3 ≠ c.h-2 := by omega
+    have hne1 : c.h-3 ≠ c.h-1 := by omega
+    have hne2 : c.h-3 ≠ c.h := by omega
+    simp [setBit,hne,e,setBit,hne1,d,setBit,hne2,hAzeroC]
+  let b1 : Conf := ⟨.B,c.h-2,setBit a.tape (c.h-3) true⟩
+  have hastep : next a = some b1 := by
+    have hpos : c.h-3+1 = c.h-2 := by omega
+    simp [next,a,b1,hreadA,hpos]
+  have hreadB : (setBit a.tape (c.h-3) true) (c.h-2) = true := by
+    have hne : c.h-2 ≠ c.h-3 := by omega
+    simp [setBit,hne,a,setBit]
+  let f : Conf := ⟨.F,c.h-3,setBit b1.tape (c.h-2) true⟩
+  have hb1step : next b1 = some f := by
+    have hpos : c.h-2-1 = c.h-3 := by omega
+    simp [next,b1,f,hreadB,hpos]
+  have hfReach : Reach f := Reach.follow (Reach.follow (Reach.follow
+      (Reach.follow (Reach.follow hc hcstep) hdstep) hestep) hastep) hb1step
+  have hfhead : f.tape (c.h-3) = true := by
+    change setBit b1.tape (c.h-2) true (c.h-3) = true
+    simp [setBit,b1]
+  have hfright : f.tape (c.h-2) = true := by
+    change setBit b1.tape (c.h-2) true (c.h-2) = true
+    simp [setBit]
+  have hfsentinel : f.tape (c.h-1) = false := by
+    change setBit b1.tape (c.h-2) true (c.h-1) = false
+    have hne : c.h-1 ≠ c.h-2 := by omega
+    simp [setBit,hne,b1,a,e]
+  have hfleft (x : Int) (hx : x ≤ c.h-4) : f.tape x = b.tape x := by
+    have hne0 : x ≠ c.h := by omega
+    have hne1 : x ≠ c.h-1 := by omega
+    have hne2 : x ≠ c.h-2 := by omega
+    have hne3 : x ≠ c.h-3 := by omega
+    have hcp : c.tape x = b.tape x := hprefix x (by omega)
+    change setBit b1.tape (c.h-2) true x = b.tape x
+    simp [setBit,hne2,b1,a,e,d,setBit,hne0,hne1,hne3,hcp]
+  have hfleft1 : f.tape (c.h-4) = true := by
+    rw [hfleft (c.h-4) (by omega)]
+    have heq : c.h-4 = b.h-5-(r:Int) := by rw [hpos]; omega
+    rw [heq]
+    exact hLeft1
+  have hfback : ∀ i : Nat, i < m →
+      f.tape (c.h-5-2*(i:Int)) = false ∧
+      f.tape (c.h-6-2*(i:Int)) = true := by
+    intro i hi
+    constructor
+    · rw [hfleft (c.h-5-2*(i:Int)) (by omega)]
+      have heq : c.h-5-2*(i:Int) = b.h-6-(r:Int)-2*(i:Int) := by rw [hpos]; omega
+      rw [heq]
+      exact (hfb i hi).1
+    · rw [hfleft (c.h-6-2*(i:Int)) (by omega)]
+      have heq : c.h-6-2*(i:Int) = b.h-7-(r:Int)-2*(i:Int) := by rw [hpos]; omega
+      rw [heq]
+      exact (hfb i hi).2
+  have hffinal : f.tape (c.h-5-2*(m:Int)) = false := by
+    rw [hfleft (c.h-5-2*(m:Int)) (by omega)]
+    have heq : c.h-5-2*(m:Int) = b.h-6-(r:Int)-2*(m:Int) := by rw [hpos]; omega
+    rw [heq]
+    exact hfinalF
+  have hbfinal : f.tape (c.h-6-2*(m:Int)) = false := by
+    rw [hfleft (c.h-6-2*(m:Int)) (by omega)]
+    have heq : c.h-6-2*(m:Int) = b.h-7-(r:Int)-2*(m:Int) := by rw [hpos]; omega
+    rw [heq]
+    exact hfinalB
+  have hret := odd_f1_retreat_to_b0 0 m f.tape (c.h-3)
+    hfhead (by
+      intro j hj
+      have hj0 : j = 0 := by omega
+      subst j
+      simpa [show c.h-3+1 = c.h-2 by omega] using hfright)
+    (by simpa [show c.h-3+2 = c.h-1 by omega] using hfsentinel)
+    (by simpa [show c.h-3-1 = c.h-4 by omega] using hfleft1)
+    (by
+      intro i hi
+      constructor
+      · simpa [show c.h-3-2-2*(i:Int) = c.h-5-2*(i:Int) by omega] using (hfback i hi).1
+      · simpa [show c.h-3-3-2*(i:Int) = c.h-6-2*(i:Int) by omega] using (hfback i hi).2)
+    (by simpa [show c.h-3-2-2*(m:Int) = c.h-5-2*(m:Int) by omega] using hffinal)
+    (by simpa [show c.h-3-3-2*(m:Int) = c.h-6-2*(m:Int) by omega] using hbfinal)
+  let bout : Conf := oddRetreatResult 0 m f.tape (c.h-3)
+  have hbout : BZero bout := by
+    refine ⟨rfl,?_⟩
+    simpa [bout,oddRetreatResult] using hret.2
+  have hboutReach : Reach bout := by
+    apply reachable_of_run (2*m+7) f bout hfReach
+    simpa [bout,oddRetreatResult] using hret.1
+  have hNoBout : NoLeft4 true true false b → NoLeft4 true true false bout := by
+    intro hshield
+    have hNoF : NoLeft4 true true false f :=
+      noLeft4_transfer_of_left_agreement true true false b f
+        (by simp [f]; rw [hpos]; omega)
+        (by
+          intro x hx
+          apply hfleft x
+          simp [f] at hx
+          omega)
+        hshield
+    have hNoRet : NoLeft4 true true false (oddRetreatResult 0 m f.tape (c.h-3)) :=
+      oddRetreatResult_preserves_noLeft4 0 m f.tape (c.h-3) hNoF
+        (by
+          intro i hi
+          constructor
+          · simpa [show c.h-3-2-2*(i:Int) = c.h-5-2*(i:Int) by omega]
+              using (hfback i hi).1
+          · simpa [show c.h-3-3-2*(i:Int) = c.h-6-2*(i:Int) by omega]
+              using (hfback i hi).2)
+    simpa [bout] using hNoRet
+  exact ⟨bout,hboutReach,hbout,hNoBout⟩
+
+
+#print axioms BB6Root119.b0_cphase_d0_odd_wave_return_preserves_noLeft4
+
 #print axioms BB6Root119.b0_two_wave_prefix
 #print axioms BB6Root119.b0_two_wave_root_interval_to_b0
 #print axioms BB6Root119.b0_two_wave_root_interval_avoids_BBad
