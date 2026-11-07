@@ -446,7 +446,6 @@ theorem b0_two_wave_root_interval_to_b0
       rw [hFB]
       have hhead : H-2-3-2*(m:Int) = (H-2-2-2*(m:Int))-1 := by omega
       rw [hhead]
-      rfl
   have hNoOut : NoLeft4 true true false out := by
     rw [hEq]
     exact noLeft4_left_write true true false c4 hNoFB
