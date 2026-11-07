@@ -187,13 +187,13 @@ theorem bc_sweep (m : Machine) (k : Nat) (c : Config)
           rw [show c.head+2+2*(i:Int)+1=c.head+2*(i:Int)+3 by omega]
           exact cbPaint_right c.tape c.head 1 (c.head+2*(i:Int)+3) (by omega)
         have hp := hpair (i+1) (by omega)
-        have hpos0 : c.head+2*((i+1:Int))=c.head+2*(i:Int)+2 := by omega
-        have hpos1 : c.head+2*((i+1:Int))+1=c.head+2*(i:Int)+3 := by omega
+        have hpos0 : c.head+2*(i:Int)+2=c.head+2*((i+1:Int)) := by omega
+        have hpos1 : c.head+2*(i:Int)+3=c.head+2*((i+1:Int))+1 := by omega
         constructor
-        · rw [h0]
-          simpa [hpos0] using hp.1
-        · rw [h1]
-          simpa [hpos1] using hp.2
+        · rw [h0,hpos0]
+          exact hp.1
+        · rw [h1,hpos1]
+          exact hp.2
       obtain ⟨d,hr2,hs2,hd2,ht2⟩ := ih d1 hpair'
       have hrun : run m (2*(k+1)) c=some d := by
         have hlen : 2*(k+1)=2+2*k := by omega
@@ -342,14 +342,28 @@ theorem f0_local (u w : Nat) :
     baseTape_left_blank u w _ (by omega)
   have hodd5 : baseTape u w (-2*(u:Int)-5)=true := by
     apply baseTape_odd u w _ <;> omega
-  have heven4 : baseTape u w (-2*(u:Int)-4)=false := by
-    apply baseTape_left_blank u w
-    omega
+  have heven4 : baseTape u w (-2*(u:Int)-4)=true := by
+    have hz : ¬zeroTest (2*(u:Int)) (-2*(u:Int)-4) (2*u+3) := by
+      unfold zeroTest
+      omega
+    have hn : ¬negFillTest u (-2*(u:Int)-4) := by
+      unfold negFillTest
+      omega
+    have hmark : jMark u w (-2*(u:Int)-4) := by
+      unfold jMark jHole
+      left
+      constructor
+      · omega
+      constructor
+      · omega
+      · omega
+    have hj : jTape u w (-2*(u:Int)-4)=true := by
+      simp [jTape,hmark]
+    simp [baseTape,zeroPaint,hz,negFill,hn,hj]
   have hodd3 : baseTape u w (-2*(u:Int)-3)=true := by
     apply baseTape_odd u w _ <;> omega
   unfold f0Tape
   simp [writeAt,hblank7,hblank8,hblank9,hodd5,heven4,hodd3]
-  omega
 
 theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
     run target429 (4*u*u+6*u+7)
