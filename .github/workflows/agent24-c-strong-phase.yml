@@ -301,3 +301,5 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/{SevenInverse,C70Root}.lean .
           lean -o SevenInverse.olean SevenInverse.lean
           lean -o C70Root.olean C70Root.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C70Integration.lean .
+          lean -o C70Integration.olean C70Integration.lean
