@@ -235,7 +235,7 @@ theorem b0_even_prefix_to_b0_preserves_NoLeft4 (b : Conf) (n : Nat)
     simpa [f] using noLeft4_twoWavePrefix b hshield
   have hpos : d.h = f.h+1 := by simp [d,f]
   have hprev : d.tape (f.h-1) ≠ false := by
-    have hidx : f.h-1 = b.h-2 := by simp [f]; omega
+    have hidx : f.h-1 = b.h-2 := by dsimp [f]; omega
     rw [hidx]
     have hne : b.h-2 ≠ b.h-1 := by omega
     simp [d,setBit,twoWavePrefixTape,hne]
