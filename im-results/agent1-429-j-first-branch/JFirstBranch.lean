@@ -363,16 +363,6 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
   rw [htime,run_add',hp]
   simp [hstep]
 
-theorem writeAt_true_eq (t : Int → Bool) (p : Int) :
-    writeAt t p true = fun x => decide (x=p) || t x := by
-  funext x
-  by_cases hx : x=p <;> simp [writeAt,hx]
-
-theorem writeAt_false_eq (t : Int → Bool) (p : Int) :
-    writeAt t p false = fun x => !decide (x=p) && t x := by
-  funext x
-  by_cases hx : x=p <;> simp [writeAt,hx]
-
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
 theorem f0_to_c1 (h : Int) (t : Int → Bool)
@@ -409,17 +399,17 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have hs5 : readSlot c5=(B,false) := by
     simp [readSlot,c5,c4,c3,c2,c1,writeAt]
   have hs6 : readSlot c6=(C,true) := by
-    simp [readSlot,c6,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs7 : readSlot c7=(B,true) := by
-    simp [readSlot,c7,c6,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs8 : readSlot c8=(A,true) := by
     simp [readSlot,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h2]
   have hs9 : readSlot c9=(F,true) := by
-    simp [readSlot,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs10 : readSlot c10=(A,false) := by
     simp [readSlot,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
   have hs11 : readSlot c11=(B,true) := by
-    simp [readSlot,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
+    simp [readSlot,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt] <;> omega
   have hs12 : readSlot c12=(A,false) := by
     simp [readSlot,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
   have hs13 : readSlot c13=(B,false) := by
@@ -442,495 +432,46 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have hrow13 : target429 (B,false)=some ⟨true,true,C⟩ := by decide
   have r0 : rawStep target429 c0=some c1 := by
     have hraw := rawStep_of_read target429 c0 F false _ hs0 hrow0
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c0.tape c0.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r1 : rawStep target429 c1=some c2 := by
     have hraw := rawStep_of_read target429 c1 D false _ hs1 hrow1
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c1.tape c1.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r2 : rawStep target429 c2=some c3 := by
     have hraw := rawStep_of_read target429 c2 E true _ hs2 hrow2
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c2.tape c2.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r3 : rawStep target429 c3=some c4 := by
     have hraw := rawStep_of_read target429 c3 E false _ hs3 hrow3
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_false_eq c3.tape c3.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r4 : rawStep target429 c4=some c5 := by
     have hraw := rawStep_of_read target429 c4 A false _ hs4 hrow4
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c4.tape c4.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r5 : rawStep target429 c5=some c6 := by
     have hraw := rawStep_of_read target429 c5 B false _ hs5 hrow5
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c5.tape c5.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r6 : rawStep target429 c6=some c7 := by
     have hraw := rawStep_of_read target429 c6 C true _ hs6 hrow6
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_false_eq c6.tape c6.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r7 : rawStep target429 c7=some c8 := by
     have hraw := rawStep_of_read target429 c7 B true _ hs7 hrow7
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c7.tape c7.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r8 : rawStep target429 c8=some c9 := by
     have hraw := rawStep_of_read target429 c8 A true _ hs8 hrow8
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_false_eq c8.tape c8.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r9 : rawStep target429 c9=some c10 := by
     have hraw := rawStep_of_read target429 c9 F true _ hs9 hrow9
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c9.tape c9.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r10 : rawStep target429 c10=some c11 := by
     have hraw := rawStep_of_read target429 c10 A false _ hs10 hrow10
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c10.tape c10.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r11 : rawStep target429 c11=some c12 := by
     have hraw := rawStep_of_read target429 c11 B true _ hs11 hrow11
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c11.tape c11.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r12 : rawStep target429 c12=some c13 := by
     have hraw := rawStep_of_read target429 c12 A false _ hs12 hrow12
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c12.tape c12.head).symm⟩)
+    exact hraw.trans (by congr 1)
   have r13 : rawStep target429 c13=some c14 := by
     have hraw := rawStep_of_read target429 c13 B false _ hs13 hrow13
-    exact hraw.trans (by
-      congr 1
-      rw [Config.mk.injEq]
-      exact ⟨rfl,rfl,(writeAt_true_eq c13.tape c13.head).symm⟩)
-  have hrun : run target429 14 c0=some c14 := by
-    simp [run,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13]
-  have htape : c14.tape=setupTape t h := by
-    funext x
-    have hcases : x=h-2 ∨ x=h-1 ∨ x=h ∨ x=h+1 ∨ x=h+2 ∨ x=h+3 ∨
-        x<h-2 ∨ h+3<x := by omega
-    rcases hcases with h0x | h1x | h2x | h3x | h4x | h5x | hleft | hright
-    · subst x
-      have hinside : h-2≤h-2 ∧ h-2≤h+3 := by omega
-      have hneq1 : h-2≠h-1 := by omega
-      have hneq2 : h-2≠h := by omega
-      have hneq3 : h-2≠h+1 := by omega
-      have hneq4 : h-2≠h+2 := by omega
-      have hneq5 : h-2≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside,hneq1,hneq2,hneq3,hneq4,hneq5]
-    · subst x
-      have hinside : h-2≤h-1 ∧ h-1≤h+3 := by omega
-      have hneq2 : h-1≠h := by omega
-      have hneq3 : h-1≠h+1 := by omega
-      have hneq4 : h-1≠h+2 := by omega
-      have hneq5 : h-1≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside,hneq2,hneq3,hneq4,hneq5]
-    · subst x
-      have hinside : h-2≤h ∧ h≤h+3 := by omega
-      have hneq3 : h≠h+1 := by omega
-      have hneq4 : h≠h+2 := by omega
-      have hneq5 : h≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside,hneq3,hneq4,hneq5]
-    · subst x
-      have hinside : h-2≤h+1 ∧ h+1≤h+3 := by omega
-      have hneq4 : h+1≠h+2 := by omega
-      have hneq5 : h+1≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside,hneq4,hneq5]
-    · subst x
-      have hinside : h-2≤h+2 ∧ h+2≤h+3 := by omega
-      have hneq5 : h+2≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside,hneq5]
-    · subst x
-      have hinside : h-2≤h+3 ∧ h+3≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hinside]
-    · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
-      have hneq0 : x≠h-2 := by omega
-      have hneq1 : x≠h-1 := by omega
-      have hneq2 : x≠h := by omega
-      have hneq3 : x≠h+1 := by omega
-      have hneq4 : x≠h+2 := by omega
-      have hneq5 : x≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hout,hneq0,hneq1,hneq2,hneq3,hneq4,hneq5]
-    · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
-      have hneq0 : x≠h-2 := by omega
-      have hneq1 : x≠h-1 := by omega
-      have hneq2 : x≠h := by omega
-      have hneq3 : x≠h+1 := by omega
-      have hneq4 : x≠h+2 := by omega
-      have hneq5 : x≠h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
-        writeAt,setupTape,hout,hneq0,hneq1,hneq2,hneq3,hneq4,hneq5]
-  have htape' : writeAt c13.tape (h+3) true=setupTape t h := by
-    simpa [c14] using htape
-  have hcfg : c14 = {state:=C,head:=h+4,tape:=setupTape t h} := by
-    dsimp [c14]
-    rw [Config.mk.injEq]
-    exact ⟨rfl,rfl,htape'⟩
-  simpa [c0,hcfg] using hrun
-
-def firstBranchTape (u w : Nat) (x : Int) : Bool :=
-  if x < -2*(u:Int)-9 then false
-  else if x < -2*(u:Int)-3 then true
-  else if x < 2*(u:Int)+3 then decide (x%2=0)
-  else jTape u w x
-
-theorem cCfg_tape_left_blank (u w : Nat) (x : Int)
-    (hx : x < -2*(u:Int)-9) :
-    setupTape (f0Tape u w) (-2*(u:Int)-7) x=false := by
-  have hbase : baseTape u w x=false :=
-    baseTape_left_blank u w x (by omega)
-  have hne : x≠-2*(u:Int)-6 := by omega
-  simp only [setupTape]
-  by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
-  · simp [h]
-    omega
-  · simp [h,f0Tape,writeAt,hne,hbase]
-
-theorem cCfg_tape_left_ones (u w : Nat) (x : Int)
-    (hlo : -2*(u:Int)-9≤x) (hhi : x < -2*(u:Int)-3) :
-    setupTape (f0Tape u w) (-2*(u:Int)-7) x=true := by
-  simp only [setupTape]
-  by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
-  · simp [h]
-  · simp [h]
-    omega
-
-theorem cCfg_tape_right (u w : Nat) (x : Int)
-    (hx : -2*(u:Int)-3 ≤ x) :
-    setupTape (f0Tape u w) (-2*(u:Int)-7) x=baseTape u w x := by
-  have hne : x≠-2*(u:Int)-6 := by omega
-  simp only [setupTape]
-  by_cases h : (-2*(u:Int)-7)-2≤x ∧ x≤(-2*(u:Int)-7)+3
-  · simp [h]
-    omega
-  · simp [h,f0Tape,writeAt,hne]
-
-theorem firstBranchTape_eq_jTapeAt (u w : Nat) (hw : 2*u+3≤w) :
-    firstBranchTape u w =
-      jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
-  funext x
-  change firstBranchTape u w x =
-    jTape (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3))
-  by_cases hx0 : x < -2*(u:Int)-9
-  · have hy : x-(2*(u:Int)+3) < -2*((2*u+3:Nat):Int)-6 := by omega
-    have hmark : ¬jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
-      intro hm
-      unfold jMark jHole at hm
-      rcases hm with ⟨hlo,hhi,hnot⟩ | heq
-      · omega
-      · omega
-    simp [firstBranchTape,hx0,jTape,hmark]
-  · by_cases hx1 : x < -2*(u:Int)-3
-    · have hylo : -2*((2*u+3:Nat):Int)-6 ≤ x-(2*(u:Int)+3) := by omega
-      have hyhi : x-(2*(u:Int)+3) ≤ ((w-(2*u+3):Nat):Int)+1 := by omega
-      have hnot : ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
-        intro hh
-        unfold jHole at hh
-        omega
-      have hmark : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
-        unfold jMark
-        exact Or.inl ⟨hylo,hyhi,hnot⟩
-      simp [firstBranchTape,hx0,hx1,jTape,hmark]
-    · by_cases hx2 : x < 2*(u:Int)+3
-      · have hylo : -2*((2*u+3:Nat):Int) ≤ x-(2*(u:Int)+3) := by omega
-        have hyhi : x-(2*(u:Int)+3) < 0 := by omega
-        have hpar : (x-(2*(u:Int)+3))%2 = (x%2-1)%2 := by
-          rw [Int.sub_emod]
-          simp
-        by_cases heven : x%2=0
-        · have hyodd : (x-(2*(u:Int)+3))%2=1 := by rw [hpar]; omega
-          have hnot : ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
-            intro hh
-            unfold jHole at hh
-            omega
-          have hmark : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
-            unfold jMark
-            exact Or.inl ⟨by omega, by omega, hnot⟩
-          simp [firstBranchTape,hx0,hx1,hx2,jTape,hmark,heven]
-        · have hxeven : x%2=1 := by omega
-          have hyzero : (x-(2*(u:Int)+3))%2=0 := by rw [hpar,hxeven]; decide
-          have hmark : ¬jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) := by
-            intro hm
-            unfold jMark jHole at hm
-            rcases hm with ⟨hlo,hhi,hnot⟩ | heq
-            · exact hnot ⟨by omega,hyhi,hyzero⟩
-            · omega
-          simp [firstBranchTape,hx0,hx1,hx2,jTape,hmark,heven]
-      · have hy : 0≤x-(2*(u:Int)+3) := by omega
-        have hnotNew : ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
-          intro hh
-          unfold jHole at hh
-          omega
-        have hnotOld : ¬jHole u x := by
-          intro hh
-          unfold jHole at hh
-          omega
-        have hnew : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) ↔
-            (x-(2*(u:Int)+3) ≤ ((w-(2*u+3):Nat):Int)+1 ∨
-             x-(2*(u:Int)+3)=((w-(2*u+3):Nat):Int)+3) := by
-          unfold jMark
-          constructor
-          · rintro (⟨hlo,hhi,hnh⟩ | heq)
-            · exact Or.inl hhi
-            · exact Or.inr heq
-          · intro h
-            rcases h with hhi | heq
-            · exact Or.inl ⟨by omega,hhi,hnotNew⟩
-            · exact Or.inr heq
-        have hold : jMark u w x ↔ (x ≤ (w:Int)+1 ∨ x=(w:Int)+3) := by
-          unfold jMark
-          constructor
-          · rintro (⟨hlo,hhi,hnh⟩ | heq)
-            · exact Or.inl hhi
-            · exact Or.inr heq
-          · intro h
-            rcases h with hhi | heq
-            · exact Or.inl ⟨by omega,hhi,hnotOld⟩
-            · exact Or.inr heq
-        have hrel :
-            (x-(2*(u:Int)+3) ≤ ((w-(2*u+3):Nat):Int)+1 ∨
-             x-(2*(u:Int)+3)=((w-(2*u+3):Nat):Int)+3) ↔
-            (x ≤ (w:Int)+1 ∨ x=(w:Int)+3) := by
-          constructor
-          · intro h
-            rcases h with h | h
-            · left
-              omega
-            · right
-              omega
-          · intro h
-            rcases h with h | h
-            · left
-              omega
-            · right
-              omega
-        have hmark : jMark (2*u+3) (w-(2*u+3)) (x-(2*(u:Int)+3)) ↔ jMark u w x :=
-          hnew.trans (hrel.trans hold.symm)
-        simp [firstBranchTape,hx0,hx1,hx2,jTape,hmark]
-
-/-- Exact raw primitive-step realization of the high-level first branch
-    J(u,w) -> J(2u+3,w-2u-3), including its complete two-sided tape. -/
-theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
-    run target429 (4*u*u+10*u+27)
-      {state:=A,head:=0,tape:=jTape u w} =
-    some {state:=A,head:=2*(u:Int)+3,
-          tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
-  let hF : Int := -2*(u:Int)-7
-  let hC : Int := -2*(u:Int)-3
-  let k : Nat := 2*u+2
-  let cC : Config :=
-    {state:=C,head:=hC,tape:=setupTape (f0Tape u w) hF}
-  have hw' : 2*u≤w+1 := by omega
-  have hF0 := j_F0_exact u w hw'
-  have hlocal := f0_local u w
-  have hFminus1 : f0Tape u w (hF-1)=false := by
-    have hh : hF-1=-2*(u:Int)-8 := by dsimp [hF]; omega
-    rw [hh]
-    exact hlocal.2.2.2.2.2.1
-  have hFminus2 : f0Tape u w (hF-2)=false := by
-    have hh : hF-2=-2*(u:Int)-9 := by dsimp [hF]; omega
-    rw [hh]
-    exact hlocal.2.2.2.2.2.2
-  have hFplus1 : f0Tape u w (hF+1)=false := by
-    have hh : hF+1=-2*(u:Int)-6 := by dsimp [hF]; omega
-    rw [hh]
-    exact hlocal.2.1
-  have hFplus2 : f0Tape u w (hF+2)=true := by
-    have hh : hF+2=-2*(u:Int)-5 := by dsimp [hF]; omega
-    rw [hh]
-    exact hlocal.2.2.1
-  have hFplus3 : f0Tape u w (hF+3)=false := by
-    have hh : hF+3=-2*(u:Int)-4 := by dsimp [hF]; omega
-    rw [hh]
-    exact hlocal.2.2.2.1
-  have hFplus4 : f0Tape u w (hF+4)=true := by
-    have hh : hF+4=-2*(u:Int)-3 := by dsimp [hF]; omega
-    rw [hh]
-    exact hlocal.2.2.2.2.1
-  have hsetup := f0_to_c1 hF (f0Tape u w)
-      (by simpa [hF] using hlocal.1)
-      hFplus1
-      hFplus2
-      hFplus3
-      hFplus4
-      hFminus1
-      hFminus2
-  have hC1 : target429 (C,true)=some ⟨false,true,B⟩ := by decide
-  have hB0 : target429 (B,false)=some ⟨true,true,C⟩ := by decide
-  have hB1 : target429 (B,true)=some ⟨true,true,A⟩ := by decide
-  have hpair : ∀ i : Nat, i<k →
-      cC.tape (cC.head+2*(i:Int))=true ∧
-      cC.tape (cC.head+2*(i:Int)+1)=false := by
-    intro i hi
-    have hx0lo : -2*(u:Int)-6 ≤ cC.head+2*(i:Int) := by
-      dsimp [cC,hC]
-      omega
-    have hx0hi : cC.head+2*(i:Int) ≤ 2*(u:Int)-1 := by
-      dsimp [cC,hC,k] at *
-      omega
-    have hx1lo : -2*(u:Int)-2 ≤ cC.head+2*(i:Int)+1 := by
-      dsimp [cC,hC]
-      omega
-    have hx1hi : cC.head+2*(i:Int)+1 ≤ 2*(u:Int) := by
-      dsimp [cC,hC,k] at *
-      omega
-    have hodd : (cC.head+2*(i:Int))%2≠0 := by
-      dsimp [cC,hC]
-      omega
-    have heven : (cC.head+2*(i:Int)+1)%2=0 := by
-      dsimp [cC,hC]
-      omega
-    change
-      setupTape (f0Tape u w) (-2*(u:Int)-7) (cC.head+2*(i:Int))=true ∧
-      setupTape (f0Tape u w) (-2*(u:Int)-7) (cC.head+2*(i:Int)+1)=false
-    rw [cCfg_tape_right u w (cC.head+2*(i:Int)) (by dsimp [cC,hC]; omega)]
-    rw [cCfg_tape_right u w (cC.head+2*(i:Int)+1) (by dsimp [cC,hC]; omega)]
-    constructor
-    · exact baseTape_odd u w _ hx0lo (by omega) hodd
-    · exact baseTape_even_zero u w _ hx1lo hx1hi heven
-  obtain ⟨cE,hSweep,hsE,hhE,htE⟩ :=
-    bc_sweep target429 k cC hC1 hB0 rfl hpair
-  have hheadE : cE.head=2*(u:Int)+1 := by
-    rw [hhE]
-    simp [cC,hC,k]
-    omega
-  have hE0 : cE.tape cE.head=true := by
-    rw [htE,hheadE]
-    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1) (by dsimp [cC,hC,k]; omega)]
-    change setupTape (f0Tape u w) (-2*(u:Int)-7) (2*(u:Int)+1)=true
-    rw [cCfg_tape_right u w (2*(u:Int)+1) (by omega)]
-    exact baseTape_right_one u w hw (2*(u:Int)+1) (by omega) (by omega)
-  have hE1 : cE.tape (cE.head+1)=true := by
-    rw [htE,hheadE]
-    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1+1) (by dsimp [cC,hC,k]; omega)]
-    change setupTape (f0Tape u w) (-2*(u:Int)-7) (2*(u:Int)+1+1)=true
-    rw [cCfg_tape_right u w (2*(u:Int)+1+1) (by omega)]
-    exact baseTape_right_one u w hw (2*(u:Int)+1+1) (by omega) (by omega)
-  obtain ⟨cFinal,hExit,hsFinal,hhFinal,htFinal⟩ :=
-    cb_exit target429 cE hC1 hB1 hsE hE0 hE1
-  have htime : 4*u*u+10*u+27 =
-      (4*u*u+6*u+7) + (14 + (2*k+2)) := by
-    simp [k]
-    omega
-  have hFC : hF+4=hC := by
-    dsimp [hF,hC]
-    omega
-  have hsetup' : run target429 14
-      {state:=F,head:=hF,tape:=f0Tape u w}=some cC := by
-    rw [hFC] at hsetup
-    simpa [cC] using hsetup
-  have hrunTail : run target429 (14+(2*k+2))
-      {state:=F,head:=hF,tape:=f0Tape u w}=some cFinal := by
-    rw [run_add',hsetup']
-    simp only [Option.bind_some]
-    rw [run_add',hSweep]
-    simp only [Option.bind_some]
-    exact hExit
-  rw [htime,run_add',hF0]
-  simp only [Option.bind_some]
-  rw [hrunTail]
-  have hheadFinal : cFinal.head=2*(u:Int)+3 := by
-    rw [hhFinal,hheadE]
-    omega
-  have hcompose : cFinal.tape =
-      cbPaint cC.tape cC.head (k+1) := by
-    calc
-      cFinal.tape = cbPaint cE.tape cE.head 1 := htFinal
-      _ = cbPaint (cbPaint cC.tape cC.head k) (cC.head+2*(k:Int)) 1 := by
-        rw [htE,hhE]
-      _ = cbPaint cC.tape cC.head (k+1) := by
-        simpa using cbPaint_compose_right cC.tape cC.head k
-  have hprofile : cFinal.tape=firstBranchTape u w := by
-    rw [hcompose]
-    funext x
-    by_cases hx0 : x < -2*(u:Int)-9
-    · have hc := cCfg_tape_left_blank u w x hx0
-      have hleft : x<cC.head := by
-        dsimp [cC,hC]
-        omega
-      calc
-        cbPaint cC.tape cC.head (k+1) x = cC.tape x :=
-          cbPaint_left cC.tape cC.head (k+1) x hleft
-        _ = false := by
-          change setupTape (f0Tape u w) (-2*(u:Int)-7) x=false
-          exact hc
-        _ = firstBranchTape u w x := by simp [firstBranchTape,hx0]
-    · by_cases hx1 : x < -2*(u:Int)-3
-      · have hc := cCfg_tape_left_ones u w x (by omega) hx1
-        have hleft : x<cC.head := by
-          dsimp [cC,hC]
-          exact hx1
-        calc
-          cbPaint cC.tape cC.head (k+1) x = cC.tape x :=
-            cbPaint_left cC.tape cC.head (k+1) x hleft
-          _ = true := by
-            change setupTape (f0Tape u w) (-2*(u:Int)-7) x=true
-            exact hc
-          _ = firstBranchTape u w x := by simp [firstBranchTape,hx0,hx1]
-      · by_cases hx2 : x < 2*(u:Int)+3
-        · by_cases heven : x%2=0
-          · have hoff : (x-cC.head)%2=1 := by
-              dsimp [cC,hC]
-              omega
-            have hpaint : cbPaint cC.tape cC.head (k+1) x=true := by
-              apply cbPaint_odd cC.tape cC.head (k+1) x
-              · dsimp [cC,hC]
-                omega
-              · dsimp [cC,hC,k]
-                omega
-              · exact hoff
-            simp [firstBranchTape,cC,hC,k,hx0,hx1,hx2,heven,hpaint]
-          · have hoff : (x-cC.head)%2=0 := by
-              dsimp [cC,hC]
-              omega
-            have hpaint : cbPaint cC.tape cC.head (k+1) x=false := by
-              apply cbPaint_even cC.tape cC.head (k+1) x
-              · dsimp [cC,hC]
-                omega
-              · dsimp [cC,hC,k]
-                omega
-              · exact hoff
-            simp [firstBranchTape,cC,hC,k,hx0,hx1,hx2,heven,hpaint]
-        · have hright : cC.head+2*((k+1):Int) ≤ x := by
-            dsimp [cC,hC,k]
-            omega
-          calc
-            cbPaint cC.tape cC.head (k+1) x = cC.tape x :=
-              cbPaint_right cC.tape cC.head (k+1) x hright
-            _ = baseTape u w x := by
-              change setupTape (f0Tape u w) (-2*(u:Int)-7) x=baseTape u w x
-              exact cCfg_tape_right u w x (by omega)
-            _ = jTape u w x := baseTape_right u w x (by omega)
-            _ = firstBranchTape u w x := by
-              simp [firstBranchTape,hx0,hx1,hx2]
+    exact hraw.trans (by congr 1)
   have hfinal : cFinal =
       {state:=A,head:=2*(u:Int)+3,
         tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
