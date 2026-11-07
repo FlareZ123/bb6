@@ -60,6 +60,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Tail.olean im-results/agent32-429-high2-prefix/High2Tail.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2TailBase.olean im-results/agent32-429-high2-prefix/High2TailBase.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Return.olean im-results/agent32-429-high2-prefix/High2Return.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/MidAposBoundary.olean im-results/agent32-429-high2-prefix/MidAposBoundary.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high3-ladder/High3Ladder.olean im-results/agent32-429-high3-ladder/High3Ladder.lean | tee /tmp/agent32-high3.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FEntry.olean im-results/agent32-429-raw-parent/BB429FEntry.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FatalB.olean im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
@@ -86,3 +87,9 @@ jobs:
           audit_axiom_free "BB429High2Return.j_high2_crosses_origin_raw" /tmp/agent32-429-source.log
           audit_axiom_free "BB429High2Return.juncCycle_crossing_shape" /tmp/agent32-429-source.log
           audit_axiom_free "BB429High2Return.j_high2_crossing_shape_raw" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429MidAposBoundary.shift_A01_tail_delta" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429MidAposBoundary.juncPos_w0_exit_delta" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429MidAposBoundary.midApos_to_junc_delta" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429MidAposBoundary.midApos_reenter_delta" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429MidAposBoundary.midApos_reenter_twice_delta" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429MidAposBoundary.midApos_w2_exit_delta" /tmp/agent32-429-source.log
