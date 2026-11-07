@@ -90,8 +90,9 @@ theorem source_no_two_reset_shifted_wall
     have hbpHalf : 2*(bp/2)=bp := by omega
     have hS2Upper : dp+bp/2+3≤14*P := by omega
     have hC2Lower : 2*P≤c2+3 := by omega
-    by_contra hnot
-    have ht3 : 3≤t2 := by omega
+    by_cases ht2le : t2≤2
+    · exact ht2le
+    · have ht3 : 3≤t2 := by omega
     have hpow : 8≤2^t2 := by
       have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) ht3
       simpa using hh
@@ -209,8 +210,9 @@ theorem source_no_two_reset_shifted_wall
 theorem source_right_five_four_reset_floor_shifted_wall
     (n b m z : Nat) (hn : 14≤n)
     (h : CountCone (14*2^n-2*n-16) 3 b 5 m z) : 4≤z := by
-  by_contra hnot
-  have hzThree : z=3 := by
+  by_cases hfour : 4≤z
+  · exact hfour
+  · have hzThree : z=3 := by
     have hz3 := source_right_five_needs_three_resets n b m z hn h
     omega
   have hP200 : 200*n≤2^n := two_hundred_mul_le_pow n hn
