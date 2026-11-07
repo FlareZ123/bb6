@@ -1,0 +1,603 @@
+import HighEvenRightC23FullForcedResidual
+import Lean.Elab.Tactic.Omega
+
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+
+namespace BB6.Agent19M0Mod2048
+
+private theorem prior_high_allowed_m0 (j : Nat)
+    (hj4 : j%4 ≠ 0)
+    (hright0 :
+      (BB6.Agent15.affineNormalize (2*j+3) (3*j+7)).2 ≠ 4) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight j 0 := by
+  have hbase : BB6.Agent3.jointHighAllowed j 0 := by
+    unfold BB6.Agent3.jointHighAllowed
+    refine ⟨?_,?_,?_,?_,?_⟩ <;> omega
+  have hrect : BB6.Agent3.jointHighRectAllowed j 0 := by
+    unfold BB6.Agent3.jointHighRectAllowed
+    exact ⟨hbase,by omega⟩
+  have hOld : ∀ n : Nat, ¬(n+4≤2*0+2 ∧
+      (j+3*0+3)%2^(n+4)=2^(n+2) ∧
+      (2*j+3)%8=(if n%2=0 then 7 else 3)) := by
+    intro n
+    omega
+  have hAgent19 : BB6.Agent19Joint.highAllowed j 0 := by
+    unfold BB6.Agent19Joint.highAllowed
+    exact ⟨hrect,hOld,by omega,by omega,by omega,by omega⟩
+  have hAgent29 : BB6.Agent29Joint.highAllowedPlus j 0 := by
+    unfold BB6.Agent29Joint.highAllowedPlus
+    exact ⟨hAgent19,by omega,by omega,by omega,by omega⟩
+  have hValSix : BB6.Agent3ValSix.highAllowedValSixThree j 0 := by
+    unfold BB6.Agent3ValSix.highAllowedValSixThree
+      BB6.Agent3ValSix.highAllowedValSix
+    exact ⟨⟨hAgent29,by omega,by omega⟩,by omega⟩
+  have hAgent11 : BB6.Agent11Joint.highAllowed j 0 := by
+    unfold BB6.Agent11Joint.highAllowed
+    exact ⟨hAgent19,by omega,by omega⟩
+  have hFive : BB6.Agent19Five.highAllowed j 0 := by
+    unfold BB6.Agent19Five.highAllowed
+    exact ⟨hAgent11,by omega⟩
+  have hy :
+      2^(2*0+2)*(j+3)-(j+3*0+5)=3*j+7 := by
+    norm_num
+    omega
+  have hright :
+      (BB6.Agent15.affineNormalize (2*j+3)
+        (2^(2*0+2)*(j+3)-(j+3*0+5))).2≠4 := by
+    rw [hy]
+    exact hright0
+  have hValFull : BB6.Agent3ValSix.highAllowedValSixFull j 0 := by
+    unfold BB6.Agent3ValSix.highAllowedValSixFull
+    exact ⟨hValSix,hFive,by omega,by omega,by omega,hright⟩
+  have hC58ValSix : BB6.Agent11C58ValSix.highAllowed j 0 := by
+    unfold BB6.Agent11C58ValSix.highAllowed
+    exact ⟨hValFull,by omega⟩
+  have hC58 : ∀ r : Nat, ¬(2≤r ∧ 3≤0 ∧ r+4≤2*0+2 ∧
+      0%4=(2*r+3)%4 ∧
+      (j+9*0+14)%2^(r+4)=3*2^(r+2)) := by
+    intro r
+    omega
+  have hAllDepth : BB6.Agent11C58AllDepth.highAllowed j 0 := by
+    unfold BB6.Agent11C58AllDepth.highAllowed
+    exact ⟨hC58ValSix,hC58⟩
+  have hPhase : ¬ BB6.Agent46.allPhaseExcluded j 0 := by
+    unfold BB6.Agent46.allPhaseExcluded
+    rintro ⟨r,hr8,hrbound,_⟩
+    omega
+  have hPhaseHigh : BB6.Agent24Phase.highAllowed j 0 := by
+    unfold BB6.Agent24Phase.highAllowed
+    exact ⟨hAllDepth,hPhase⟩
+  have hC70 : BB6.Agent20C70.highAllowedC70 j 0 := by
+    unfold BB6.Agent20C70.highAllowedC70
+    exact ⟨hPhaseHigh,by omega⟩
+  have hC23 : BB6.Agent20C23.highAllowedC23 j 0 := by
+    unfold BB6.Agent20C23.highAllowedC23
+    exact ⟨hC70,by omega⟩
+  unfold BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+  exact ⟨hC23,by omega⟩
+
+private theorem affine_right_no_step (x y : Nat)
+    (hgate : ¬(4≤y ∧ y%2=0 ∧ (x+y)%4=1))
+    (hy4 : y≠4) :
+    (BB6.Agent15.affineNormalize x y).2 ≠ 4 := by
+  unfold BB6.Agent15.affineNormalize
+  rw [dif_neg hgate]
+  exact hy4
+
+private theorem affine_right_one_step (x y x' y' : Nat)
+    (hgate : 4≤y ∧ y%2=0 ∧ (x+y)%4=1)
+    (hx : x+y-2=x')
+    (hy : (y-2)/2=y')
+    (hnext : ¬(4≤y' ∧ y'%2=0 ∧ (x'+y')%4=1))
+    (hy4 : y'≠4) :
+    (BB6.Agent15.affineNormalize x y).2 ≠ 4 := by
+  unfold BB6.Agent15.affineNormalize
+  rw [dif_pos hgate,hx,hy]
+  unfold BB6.Agent15.affineNormalize
+  rw [dif_neg hnext]
+  exact hy4
+
+private theorem forced_step_odd (x y x' y' : Nat)
+    (hO : BB6.Agent3.oddLowGate x y)
+    (hx : (x+y-4)/2=x')
+    (hy : (x+3*y-10)/4=y') :
+    BB6.Agent3.fullForcedNormalize x y =
+      BB6.Agent3.fullForcedNormalize x' y' := by
+  unfold BB6.Agent3.fullForcedNormalize
+  rw [dif_pos hO,hx,hy]
+
+private theorem forced_step_seven (x y x' y' : Nat)
+    (hO : ¬BB6.Agent3.oddLowGate x y)
+    (hS : BB6.Agent3.evenSevenGate x y)
+    (hx : (x+y-5)/2=x')
+    (hy : (x+3*y-9)/4=y') :
+    BB6.Agent3.fullForcedNormalize x y =
+      BB6.Agent3.fullForcedNormalize x' y' := by
+  unfold BB6.Agent3.fullForcedNormalize
+  rw [dif_neg hO,dif_pos hS,hx,hy]
+
+private theorem forced_step_affine (x y x' y' : Nat)
+    (hO : ¬BB6.Agent3.oddLowGate x y)
+    (hS : ¬BB6.Agent3.evenSevenGate x y)
+    (hA : BB6.Agent3.evenAffineGate x y)
+    (hx : x+y-2=x')
+    (hy : (y-2)/2=y') :
+    BB6.Agent3.fullForcedNormalize x y =
+      BB6.Agent3.fullForcedNormalize x' y' := by
+  unfold BB6.Agent3.fullForcedNormalize
+  rw [dif_neg hO,dif_neg hS,dif_pos hA,hx,hy]
+
+private theorem forced_step_six (x y x' y' : Nat)
+    (hO : ¬BB6.Agent3.oddLowGate x y)
+    (hS : ¬BB6.Agent3.evenSevenGate x y)
+    (hA : ¬BB6.Agent3.evenAffineGate x y)
+    (hE : BB6.Agent46.sixEvenRightGate x y)
+    (hx : x+y-2=x')
+    (hy : (y-2)/2=y') :
+    BB6.Agent3.fullForcedNormalize x y =
+      BB6.Agent3.fullForcedNormalize x' y' := by
+  unfold BB6.Agent3.fullForcedNormalize
+  rw [dif_neg hO,dif_neg hS,dif_neg hA,dif_pos hE,hx,hy]
+
+private theorem forced_terminal (x y : Nat)
+    (hO : ¬BB6.Agent3.oddLowGate x y)
+    (hS : ¬BB6.Agent3.evenSevenGate x y)
+    (hA : ¬BB6.Agent3.evenAffineGate x y)
+    (hE : ¬BB6.Agent46.sixEvenRightGate x y) :
+    BB6.Agent3.fullForcedNormalize x y = (x,y) := by
+  unfold BB6.Agent3.fullForcedNormalize
+  rw [dif_neg hO,dif_neg hS,dif_neg hA,dif_neg hE]
+
+/- Family j = 2048*t + 534. The forced path is O, E, S, O, E, E. -/
+private theorem normalize_m0_2048_534 (t : Nat) :
+    BB6.Agent3.fullForcedNormalize (4096*t+1071) (6144*t+1609) =
+      (13736*t+3570,1324*t+343) := by
+  have hO0 : BB6.Agent3.oddLowGate (4096*t+1071) (6144*t+1609) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO1 : ¬BB6.Agent3.oddLowGate (5120*t+1338) (5632*t+1472) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS1 : ¬BB6.Agent3.evenSevenGate (5120*t+1338) (5632*t+1472) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA1 : ¬BB6.Agent3.evenAffineGate (5120*t+1338) (5632*t+1472) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE1 : BB6.Agent46.sixEvenRightGate (5120*t+1338) (5632*t+1472) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO2 : ¬BB6.Agent3.oddLowGate (10752*t+2808) (2816*t+735) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS2 : BB6.Agent3.evenSevenGate (10752*t+2808) (2816*t+735) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hO3 : BB6.Agent3.oddLowGate (6784*t+1769) (4800*t+1251) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO4 : ¬BB6.Agent3.oddLowGate (5792*t+1508) (5296*t+1378) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS4 : ¬BB6.Agent3.evenSevenGate (5792*t+1508) (5296*t+1378) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA4 : ¬BB6.Agent3.evenAffineGate (5792*t+1508) (5296*t+1378) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE4 : BB6.Agent46.sixEvenRightGate (5792*t+1508) (5296*t+1378) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO5 : ¬BB6.Agent3.oddLowGate (11088*t+2884) (2648*t+688) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS5 : ¬BB6.Agent3.evenSevenGate (11088*t+2884) (2648*t+688) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA5 : ¬BB6.Agent3.evenAffineGate (11088*t+2884) (2648*t+688) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE5 : BB6.Agent46.sixEvenRightGate (11088*t+2884) (2648*t+688) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO6 : ¬BB6.Agent3.oddLowGate (13736*t+3570) (1324*t+343) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS6 : ¬BB6.Agent3.evenSevenGate (13736*t+3570) (1324*t+343) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA6 : ¬BB6.Agent3.evenAffineGate (13736*t+3570) (1324*t+343) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE6 : ¬BB6.Agent46.sixEvenRightGate (13736*t+3570) (1324*t+343) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  calc
+    BB6.Agent3.fullForcedNormalize (4096*t+1071) (6144*t+1609) =
+        BB6.Agent3.fullForcedNormalize (5120*t+1338) (5632*t+1472) :=
+      forced_step_odd hO0 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (10752*t+2808) (2816*t+735) :=
+      forced_step_six hO1 hS1 hA1 hE1 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (6784*t+1769) (4800*t+1251) :=
+      forced_step_seven hO2 hS2 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (5792*t+1508) (5296*t+1378) :=
+      forced_step_odd hO3 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (11088*t+2884) (2648*t+688) :=
+      forced_step_six hO4 hS4 hA4 hE4 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (13736*t+3570) (1324*t+343) :=
+      forced_step_six hO5 hS5 hA5 hE5 (by omega) (by omega)
+    _ = (13736*t+3570,1324*t+343) :=
+      forced_terminal hO6 hS6 hA6 hE6
+
+/- Family j = 2048*t + 581. The forced path is E, E, A, O, S, O. -/
+private theorem normalize_m0_2048_581 (t : Nat) :
+    BB6.Agent3.fullForcedNormalize (4096*t+1165) (6144*t+1750) =
+      (5608*t+1586,5388*t+1523) := by
+  have hO0 : ¬BB6.Agent3.oddLowGate (4096*t+1165) (6144*t+1750) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS0 : ¬BB6.Agent3.evenSevenGate (4096*t+1165) (6144*t+1750) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA0 : ¬BB6.Agent3.evenAffineGate (4096*t+1165) (6144*t+1750) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE0 : BB6.Agent46.sixEvenRightGate (4096*t+1165) (6144*t+1750) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO1 : ¬BB6.Agent3.oddLowGate (10240*t+2913) (3072*t+874) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS1 : ¬BB6.Agent3.evenSevenGate (10240*t+2913) (3072*t+874) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA1 : ¬BB6.Agent3.evenAffineGate (10240*t+2913) (3072*t+874) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE1 : BB6.Agent46.sixEvenRightGate (10240*t+2913) (3072*t+874) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO2 : ¬BB6.Agent3.oddLowGate (13312*t+3785) (1536*t+436) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS2 : ¬BB6.Agent3.evenSevenGate (13312*t+3785) (1536*t+436) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA2 : BB6.Agent3.evenAffineGate (13312*t+3785) (1536*t+436) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hO3 : BB6.Agent3.oddLowGate (14848*t+4219) (768*t+217) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO4 : ¬BB6.Agent3.oddLowGate (7808*t+2216) (4288*t+1215) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS4 : BB6.Agent3.evenSevenGate (7808*t+2216) (4288*t+1215) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hO5 : BB6.Agent3.oddLowGate (6048*t+1713) (5168*t+1463) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO6 : ¬BB6.Agent3.oddLowGate (5608*t+1586) (5388*t+1523) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS6 : ¬BB6.Agent3.evenSevenGate (5608*t+1586) (5388*t+1523) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA6 : ¬BB6.Agent3.evenAffineGate (5608*t+1586) (5388*t+1523) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE6 : ¬BB6.Agent46.sixEvenRightGate (5608*t+1586) (5388*t+1523) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  calc
+    BB6.Agent3.fullForcedNormalize (4096*t+1165) (6144*t+1750) =
+        BB6.Agent3.fullForcedNormalize (10240*t+2913) (3072*t+874) :=
+      forced_step_six hO0 hS0 hA0 hE0 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (13312*t+3785) (1536*t+436) :=
+      forced_step_six hO1 hS1 hA1 hE1 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (14848*t+4219) (768*t+217) :=
+      forced_step_affine hO2 hS2 hA2 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (7808*t+2216) (4288*t+1215) :=
+      forced_step_odd hO3 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (6048*t+1713) (5168*t+1463) :=
+      forced_step_seven hO4 hS4 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (5608*t+1586) (5388*t+1523) :=
+      forced_step_odd hO5 (by omega) (by omega)
+    _ = (5608*t+1586,5388*t+1523) :=
+      forced_terminal hO6 hS6 hA6 hE6
+
+/- Family j = 2048*t + 1159. The forced path is A, O, E, E, S, O. -/
+private theorem normalize_m0_2048_1159 (t : Nat) :
+    BB6.Agent3.fullForcedNormalize (4096*t+2321) (6144*t+3484) =
+      (5992*t+3386,5196*t+2935) := by
+  have hO0 : ¬BB6.Agent3.oddLowGate (4096*t+2321) (6144*t+3484) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS0 : ¬BB6.Agent3.evenSevenGate (4096*t+2321) (6144*t+3484) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA0 : BB6.Agent3.evenAffineGate (4096*t+2321) (6144*t+3484) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hO1 : BB6.Agent3.oddLowGate (10240*t+5803) (3072*t+1741) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO2 : ¬BB6.Agent3.oddLowGate (6656*t+3770) (4864*t+2754) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS2 : ¬BB6.Agent3.evenSevenGate (6656*t+3770) (4864*t+2754) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA2 : ¬BB6.Agent3.evenAffineGate (6656*t+3770) (4864*t+2754) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE2 : BB6.Agent46.sixEvenRightGate (6656*t+3770) (4864*t+2754) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO3 : ¬BB6.Agent3.oddLowGate (11520*t+6522) (2432*t+1376) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS3 : ¬BB6.Agent3.evenSevenGate (11520*t+6522) (2432*t+1376) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA3 : ¬BB6.Agent3.evenAffineGate (11520*t+6522) (2432*t+1376) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE3 : BB6.Agent46.sixEvenRightGate (11520*t+6522) (2432*t+1376) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO4 : ¬BB6.Agent3.oddLowGate (13952*t+7896) (1216*t+687) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS4 : BB6.Agent3.evenSevenGate (13952*t+7896) (1216*t+687) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hO5 : BB6.Agent3.oddLowGate (7584*t+4289) (4400*t+2487) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO6 : ¬BB6.Agent3.oddLowGate (5992*t+3386) (5196*t+2935) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS6 : ¬BB6.Agent3.evenSevenGate (5992*t+3386) (5196*t+2935) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA6 : ¬BB6.Agent3.evenAffineGate (5992*t+3386) (5196*t+2935) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE6 : ¬BB6.Agent46.sixEvenRightGate (5992*t+3386) (5196*t+2935) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  calc
+    BB6.Agent3.fullForcedNormalize (4096*t+2321) (6144*t+3484) =
+        BB6.Agent3.fullForcedNormalize (10240*t+5803) (3072*t+1741) :=
+      forced_step_affine hO0 hS0 hA0 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (6656*t+3770) (4864*t+2754) :=
+      forced_step_odd hO1 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (11520*t+6522) (2432*t+1376) :=
+      forced_step_six hO2 hS2 hA2 hE2 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (13952*t+7896) (1216*t+687) :=
+      forced_step_six hO3 hS3 hA3 hE3 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (7584*t+4289) (4400*t+2487) :=
+      forced_step_seven hO4 hS4 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (5992*t+3386) (5196*t+2935) :=
+      forced_step_odd hO5 (by omega) (by omega)
+    _ = (5992*t+3386,5196*t+2935) :=
+      forced_terminal hO6 hS6 hA6 hE6
+
+/- Family j = 2048*t + 1343. The forced path is A, O, S, O, E, E. -/
+private theorem normalize_m0_2048_1343 (t : Nat) :
+    BB6.Agent3.fullForcedNormalize (4096*t+2689) (6144*t+4036) =
+      (13672*t+8954,1356*t+887) := by
+  have hO0 : ¬BB6.Agent3.oddLowGate (4096*t+2689) (6144*t+4036) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS0 : ¬BB6.Agent3.evenSevenGate (4096*t+2689) (6144*t+4036) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA0 : BB6.Agent3.evenAffineGate (4096*t+2689) (6144*t+4036) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hO1 : BB6.Agent3.oddLowGate (10240*t+6723) (3072*t+2017) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO2 : ¬BB6.Agent3.oddLowGate (6656*t+4368) (4864*t+3191) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS2 : BB6.Agent3.evenSevenGate (6656*t+4368) (4864*t+3191) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hO3 : BB6.Agent3.oddLowGate (5760*t+3777) (5312*t+3483) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hO4 : ¬BB6.Agent3.oddLowGate (5536*t+3628) (5424*t+3554) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS4 : ¬BB6.Agent3.evenSevenGate (5536*t+3628) (5424*t+3554) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA4 : ¬BB6.Agent3.evenAffineGate (5536*t+3628) (5424*t+3554) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE4 : BB6.Agent46.sixEvenRightGate (5536*t+3628) (5424*t+3554) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO5 : ¬BB6.Agent3.oddLowGate (10960*t+7180) (2712*t+1776) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS5 : ¬BB6.Agent3.evenSevenGate (10960*t+7180) (2712*t+1776) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA5 : ¬BB6.Agent3.evenAffineGate (10960*t+7180) (2712*t+1776) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE5 : BB6.Agent46.sixEvenRightGate (10960*t+7180) (2712*t+1776) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  have hO6 : ¬BB6.Agent3.oddLowGate (13672*t+8954) (1356*t+887) := by
+    unfold BB6.Agent3.oddLowGate
+    omega
+  have hS6 : ¬BB6.Agent3.evenSevenGate (13672*t+8954) (1356*t+887) := by
+    unfold BB6.Agent3.evenSevenGate
+    omega
+  have hA6 : ¬BB6.Agent3.evenAffineGate (13672*t+8954) (1356*t+887) := by
+    unfold BB6.Agent3.evenAffineGate
+    omega
+  have hE6 : ¬BB6.Agent46.sixEvenRightGate (13672*t+8954) (1356*t+887) := by
+    unfold BB6.Agent46.sixEvenRightGate
+    omega
+  calc
+    BB6.Agent3.fullForcedNormalize (4096*t+2689) (6144*t+4036) =
+        BB6.Agent3.fullForcedNormalize (10240*t+6723) (3072*t+2017) :=
+      forced_step_affine hO0 hS0 hA0 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (6656*t+4368) (4864*t+3191) :=
+      forced_step_odd hO1 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (5760*t+3777) (5312*t+3483) :=
+      forced_step_seven hO2 hS2 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (5536*t+3628) (5424*t+3554) :=
+      forced_step_odd hO3 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (10960*t+7180) (2712*t+1776) :=
+      forced_step_six hO4 hS4 hA4 hE4 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (13672*t+8954) (1356*t+887) :=
+      forced_step_six hO5 hS5 hA5 hE5 (by omega) (by omega)
+    _ = (13672*t+8954,1356*t+887) :=
+      forced_terminal hO6 hS6 hA6 hE6
+
+private theorem excluded_m0_2048_534 (t : Nat) :
+    BB6.Agent3.fullForcedExcluded (4096*t+1071) (6144*t+1609)=true := by
+  simp [BB6.Agent3.fullForcedExcluded,normalize_m0_2048_534]
+  omega
+
+private theorem excluded_m0_2048_581 (t : Nat) :
+    BB6.Agent3.fullForcedExcluded (4096*t+1165) (6144*t+1750)=true := by
+  simp [BB6.Agent3.fullForcedExcluded,normalize_m0_2048_581]
+  omega
+
+private theorem excluded_m0_2048_1159 (t : Nat) :
+    BB6.Agent3.fullForcedExcluded (4096*t+2321) (6144*t+3484)=true := by
+  simp [BB6.Agent3.fullForcedExcluded,normalize_m0_2048_1159]
+  omega
+
+private theorem excluded_m0_2048_1343 (t : Nat) :
+    BB6.Agent3.fullForcedExcluded (4096*t+2689) (6144*t+4036)=true := by
+  simp [BB6.Agent3.fullForcedExcluded,normalize_m0_2048_1343]
+  omega
+
+private theorem affine_right_m0_2048_534 (t : Nat) :
+    (BB6.Agent15.affineNormalize (4096*t+1071) (6144*t+1609)).2≠4 := by
+  apply affine_right_no_step
+  · omega
+  · omega
+
+private theorem affine_right_m0_2048_581 (t : Nat) :
+    (BB6.Agent15.affineNormalize (4096*t+1165) (6144*t+1750)).2≠4 := by
+  apply affine_right_no_step
+  · omega
+  · omega
+
+private theorem affine_right_m0_2048_1159 (t : Nat) :
+    (BB6.Agent15.affineNormalize (4096*t+2321) (6144*t+3484)).2≠4 := by
+  apply affine_right_one_step (4096*t+2321) (6144*t+3484)
+    (10240*t+5803) (3072*t+1741)
+  · omega
+  · omega
+  · omega
+  · omega
+
+private theorem affine_right_m0_2048_1343 (t : Nat) :
+    (BB6.Agent15.affineNormalize (4096*t+2689) (6144*t+4036)).2≠4 := by
+  apply affine_right_one_step (4096*t+2689) (6144*t+4036)
+    (10240*t+6723) (3072*t+2017)
+  · omega
+  · omega
+  · omega
+  · omega
+
+theorem m0_2048_534_admitted_and_excluded (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+        (2048*t+534) 0 ∧
+      BB6.Agent3.fullForcedExcluded (4096*t+1071)
+        (6144*t+1609)=true := by
+  constructor
+  · apply prior_high_allowed_m0
+    · omega
+    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+        affine_right_m0_2048_534 t
+  · exact excluded_m0_2048_534 t
+
+theorem m0_2048_581_admitted_and_excluded (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+        (2048*t+581) 0 ∧
+      BB6.Agent3.fullForcedExcluded (4096*t+1165)
+        (6144*t+1750)=true := by
+  constructor
+  · apply prior_high_allowed_m0
+    · omega
+    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+        affine_right_m0_2048_581 t
+  · exact excluded_m0_2048_581 t
+
+theorem m0_2048_1159_admitted_and_excluded (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+        (2048*t+1159) 0 ∧
+      BB6.Agent3.fullForcedExcluded (4096*t+2321)
+        (6144*t+3484)=true := by
+  constructor
+  · apply prior_high_allowed_m0
+    · omega
+    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+        affine_right_m0_2048_1159 t
+  · exact excluded_m0_2048_1159 t
+
+theorem m0_2048_1343_admitted_and_excluded (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+        (2048*t+1343) 0 ∧
+      BB6.Agent3.fullForcedExcluded (4096*t+2689)
+        (6144*t+4036)=true := by
+  constructor
+  · apply prior_high_allowed_m0
+    · omega
+    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+        affine_right_m0_2048_1343 t
+  · exact excluded_m0_2048_1343 t
+
+theorem m0_2048_534_blank_unreachable (t : Nat) :
+    ¬ BB6.Agent3.CReach (4096*t+1071) (6144*t+1609) := by
+  intro h
+  rcases h with ⟨time,hr⟩
+  exact (BB6.Agent3.fullForcedExcluded_sound _ _
+    (excluded_m0_2048_534 t) time) hr
+
+theorem m0_2048_581_blank_unreachable (t : Nat) :
+    ¬ BB6.Agent3.CReach (4096*t+1165) (6144*t+1750) := by
+  intro h
+  rcases h with ⟨time,hr⟩
+  exact (BB6.Agent3.fullForcedExcluded_sound _ _
+    (excluded_m0_2048_581 t) time) hr
+
+theorem m0_2048_1159_blank_unreachable (t : Nat) :
+    ¬ BB6.Agent3.CReach (4096*t+2321) (6144*t+3484) := by
+  intro h
+  rcases h with ⟨time,hr⟩
+  exact (BB6.Agent3.fullForcedExcluded_sound _ _
+    (excluded_m0_2048_1159 t) time) hr
+
+theorem m0_2048_1343_blank_unreachable (t : Nat) :
+    ¬ BB6.Agent3.CReach (4096*t+2689) (6144*t+4036) := by
+  intro h
+  rcases h with ⟨time,hr⟩
+  exact (BB6.Agent3.fullForcedExcluded_sound _ _
+    (excluded_m0_2048_1343 t) time) hr
+
+#print axioms prior_high_allowed_m0
+#print axioms m0_2048_534_admitted_and_excluded
+#print axioms m0_2048_581_admitted_and_excluded
+#print axioms m0_2048_1159_admitted_and_excluded
+#print axioms m0_2048_1343_admitted_and_excluded
+#print axioms m0_2048_534_blank_unreachable
+#print axioms m0_2048_581_blank_unreachable
+#print axioms m0_2048_1159_blank_unreachable
+#print axioms m0_2048_1343_blank_unreachable
+
+end BB6.Agent19M0Mod2048
