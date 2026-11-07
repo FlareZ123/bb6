@@ -7,6 +7,7 @@ private theorem merged_and_quarter_roots_equivalent (x y : Nat) :
     BB6.Agent3ValSix.valSixMixedRootDecision x y = true ↔
       quarterFuelRootDecision x y = true := by
   rw [BB6.Agent3ValSix.valSixMixedRootDecision_iff, quarterFuelRootDecision_iff]
+  rfl
 
 /-- Preserve all source-authentic ValSixFull and C58 low/high stopping restrictions
 while using an exact backward root search bounded by one-quarter target mass. -/
