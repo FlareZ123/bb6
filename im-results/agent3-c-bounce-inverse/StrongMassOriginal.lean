@@ -141,18 +141,18 @@ theorem secNext_weight_growth_four (a k x y : Nat)
 
 /-- From any positive-right section input, every successful step grows mass by four. -/
 theorem generic_run_quad_mass (n : Nat) : ∀ a k x y : Nat,
-    0 < k → run secNext n (some (a,k)) = some (x,y) →
+    0 < k → BB6.Agent8Section.run secNext n (some (a,k)) = some (x,y) →
     0 < y ∧ a+2*k+4*n ≤ x+2*y := by
   induction n with
   | zero =>
     intro a k x y hk h
-    simp only [run] at h
+    simp only [BB6.Agent8Section.run] at h
     cases h
     omega
   | succ n ih =>
     intro a k x y hk h
-    change (run secNext n (some (a,k))).bind secNext=some (x,y) at h
-    cases hp : run secNext n (some (a,k)) with
+    change (BB6.Agent8Section.run secNext n (some (a,k))).bind secNext=some (x,y) at h
+    cases hp : BB6.Agent8Section.run secNext n (some (a,k)) with
     | none => simp [hp] at h
     | some p =>
       rcases p with ⟨b,l⟩
@@ -164,7 +164,7 @@ theorem generic_run_quad_mass (n : Nat) : ∀ a k x y : Nat,
 
 /-- Real blank-origin section steps grow mass at least four each. -/
 theorem blank_run_quad_mass (n : Nat) : ∀ x y : Nat,
-    run secNext n (some (5,1)) = some (x,y) →
+    BB6.Agent8Section.run secNext n (some (5,1)) = some (x,y) →
     0 < y ∧ 7 + 4*n ≤ x+2*y := by
   intro x y h
   exact generic_run_quad_mass n 5 1 x y (by omega) h
@@ -172,7 +172,7 @@ theorem blank_run_quad_mass (n : Nat) : ∀ x y : Nat,
 /-- Four-unit mass increase yields a source-exact quarter-fuel reachability bound. -/
 theorem section_reach_iff_quarter_bound (x y : Nat) :
     SectionReach x y ↔ ∃ n ≤ (x+2*y-7)/4,
-      run secNext n (some (5,1)) = some (x,y) := by
+      BB6.Agent8Section.run secNext n (some (5,1)) = some (x,y) := by
   constructor
   · rintro ⟨n,hn⟩
     have hm := (blank_run_quad_mass n x y hn).2
