@@ -1,4 +1,4 @@
-name: Machine C raw-mass-10000 source certificate (manual)
+name: Machine C raw-mass-100000 source certificate (manual)
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
           cp im-results/agent8-c-total-section/GenericSection.lean /tmp/c-residual-mass/
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/c-residual-mass/
           cp im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFuelOriginal}.lean /tmp/c-residual-mass/
-          cp im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMass10000}.lean /tmp/c-residual-mass/
+          cp im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMass10000,CResidualMass100000}.lean /tmp/c-residual-mass/
           cd /tmp/c-residual-mass
           export LEAN_PATH="."
           {
@@ -56,14 +56,22 @@ jobs:
           cat "$GITHUB_WORKSPACE/c-residual-mass10000.txt"
           cat "$GITHUB_WORKSPACE/c-residual-mass10000.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$mass10000_status" -ne 0 ]; then exit "$mass10000_status"; fi
+          set +e
+          lean -o CResidualMass100000.olean CResidualMass100000.lean > "$GITHUB_WORKSPACE/c-residual-mass100000.txt" 2>&1
+          mass100000_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass100000.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-mass100000.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$mass100000_status" -ne 0 ]; then exit "$mass100000_status"; fi
 
       - name: Upload source-check diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: c-residual-mass10000-${{ github.run_id }}
+          name: c-residual-mass100000-${{ github.run_id }}
           path: |
             c-residual-mass2000.txt
             c-residual-mass10000.txt
+            c-residual-mass100000.txt
             source-manifest.txt
           if-no-files-found: ignore
