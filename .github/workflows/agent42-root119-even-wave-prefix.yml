@@ -65,4 +65,9 @@ jobs:
             echo "::error::sorryAx found in C-phase D1 return theorems"
             exit 1
           fi
+          lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean" 2>&1 | tee "$A/Root119TwoWaveRootPrefix.log"
+          if grep -q 'sorryAx' "$A/Root119TwoWaveRootPrefix.log"; then
+            echo "::error::sorryAx found in two-wave root prefix return theorems"
+            exit 1
+          fi
           node "$A/test-root119-two-wave-census.cjs"
