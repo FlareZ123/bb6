@@ -5,6 +5,8 @@ on:
     paths:
       - 'im-results/agent50-p1-subwall/ThreeResetCore.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/ThreeResetWallPrefix.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourResetCore.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourResetWallPrefix.lean'
       - '.github/workflows/agent43-p1-counted-last-reset-source.yml'
 permissions:
   contents: read
@@ -77,4 +79,6 @@ jobs:
           lean -o "$AG43/DepthIndexedResetFloor.olean" "$AG43/DepthIndexedResetFloor.lean"
           lean -o "$AG43/TwoResetWallPrefix.olean" "$AG43/TwoResetWallPrefix.lean"
           lean -o "$AG50SUB/ThreeResetCore.olean" "$AG50SUB/ThreeResetCore.lean"
-          lean -o "$AG43/ThreeResetWallPrefix.olean" "$AG43/ThreeResetWallPrefix.lean"
+          lean "$AG43/ThreeResetWallPrefix.lean"
+          lean -o "$AG43/FourResetCore.olean" "$AG43/FourResetCore.lean"
+          lean "$AG43/FourResetWallPrefix.lean"
