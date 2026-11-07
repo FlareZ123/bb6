@@ -84,9 +84,13 @@ theorem late_high_new_strict_family (t : Nat) :
       ¬highAllowed (372+512*t) 3 := by
   have hprior : BB6.Agent11C58ValSix.highAllowed (372+512*t) 3 :=
     BB6.Agent11C58LatePrior.old_sieve_admits_late_high t
-  have hbool : BB6.Agent11GateDecision.allowedBool (372+512*t) 3=true :=
+  have hboolOld : BB6.Agent11GateDecision.allowedBool (372+512*t) 3=true :=
     (BB6.Agent11GateDecision.allowedBool_iff _ _).mpr
       (by intro r; exact late_not_in_old_depth_gate t r)
+  have hbool : BB6.Agent11FastDepthGate.candidateAllowedBool
+      (372+512*t) 3=true := by
+    rw [BB6.Agent11FastDepthGate.candidate_matches_scan]
+    exact hboolOld
   refine ⟨⟨hprior,hbool⟩,?_⟩
   intro h
   exact h.2 ⟨by decide,by omega⟩
