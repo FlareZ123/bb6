@@ -154,6 +154,22 @@ theorem quadraticParents_spec (q v K : Nat) :
   · intro heq
     exact ⟨valuation_mem_quadraticValuations q v K heq,heq⟩
 
+/-- Intersect the complete quadratic list with the already certified
+    sixth-linear condition. This removes synthetic exceptional feeders that
+    are excluded by the genuine blank-root theorem. -/
+def quadraticRegularParents (K : Nat) : List (Nat × Nat) :=
+  (quadraticParents K).filter fun p => decide (6*p.1 ≤ K+4)
+
+theorem quadraticRegularParents_spec (q v K : Nat) :
+    (v,q) ∈ quadraticRegularParents K ↔
+      equation q v K ∧ 6*v ≤ K+4 := by
+  rw [quadraticRegularParents, List.mem_filter]
+  constructor
+  · rintro ⟨hm,hb⟩
+    exact ⟨(quadraticParents_spec q v K).mp hm, of_decide_eq_true hb⟩
+  · rintro ⟨heq,hb⟩
+    exact ⟨(quadraticParents_spec q v K).mpr heq, of_decide_eq_true hb⟩
+
 /-- The list has at most O(sqrt(K)+log(K)) valuation trials, with an
     explicit bound independent of the quotient q. -/
 theorem quadraticParents_length_bound (K : Nat) :
@@ -189,6 +205,17 @@ theorem quadraticParents_length_bound (K : Nat) :
 #eval (quadraticParents 171).map Prod.fst
 #eval (quadraticParents 2201).map Prod.fst
 
+theorem quadraticRegularParents_length_bound (K : Nat) :
+    (quadraticRegularParents K).length ≤
+      11 + (Nat.sqrt (8*(K+1))+1) + (Nat.log2 (K+1)+1) := by
+  unfold quadraticRegularParents
+  calc
+    _ ≤ (quadraticParents K).length := List.length_filter_le _ _
+    _ ≤ 11 + (Nat.sqrt (8*(K+1))+1) + (Nat.log2 (K+1)+1) :=
+      quadraticParents_length_bound K
+
 #print axioms quadraticParents_spec
 #print axioms quadraticParents_length_bound
+#print axioms quadraticRegularParents_spec
+#print axioms quadraticRegularParents_length_bound
 end NeedleQuadraticEnum
