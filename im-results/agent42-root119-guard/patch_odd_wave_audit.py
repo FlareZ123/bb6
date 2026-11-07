@@ -28,21 +28,29 @@ function bit(x) {""",
   pending.delete(time);""",
     ),
     (
-        """    } else if (previousB0) {
-      predictedIntervals++;
-    }""",
-        """    } else if (previousB0) {
+        """      });
+    }
+
+    let leftRun = 0;
+    while (tape.has(head - 1 - leftRun)) leftRun++;""",
+        """      });
+    } else if (previousB0) {
       predictedB0Intervals++;
-    }""",
+    }
+
+    let leftRun = 0;
+    while (tape.has(head - 1 - leftRun)) leftRun++;""",
     ),
     (
-        """  completedB0Intervals: residuals.length + predictedIntervals,
-  predictedB0Intervals: predictedIntervals,
+        """  simulatedSteps: LIMIT,
   unmatchedB0Intervals: residuals.length,""",
-        """  completedB0Intervals: residuals.length + predictedB0Intervals,
+        """  simulatedSteps: LIMIT,
+  completedB0Intervals: residuals.length + predictedB0Intervals,
   predictedB0Intervals,
   predictedB1Checkpoints,
-  unmatchedB0Intervals: residuals.length,""",
+  unmatchedB0Intervals: residuals.length,
+  pendingPredictionsAtCutoff: Array.from(pending.entries()),
+  lastB0AtCutoff: previousB0 ? { time: previousB0.time, head: previousB0.head } : null,""",
     ),
 ]
 
