@@ -118,16 +118,27 @@ The joint law factors:
 \Pr(a=k)=2^{-k}\quad(k\ge1),\qquad
 \Pr(h=\ell)=2^{-(\ell+1)}\quad(\ell\ge0).
 \]
-In particular, the two coordinates are independent geometric random variables. Their expectations and variances are
+Set \(b=h+1\), the number of raw section transitions from one even state to the next. Then
 \[
-\mathbb E[a]=2,\quad \mathbb E[h]=1,\quad
-\operatorname{Var}(a)=\operatorname{Var}(h)=2.
+\Pr(a=k,b=\ell)=2^{-(k+\ell)},\qquad k,\ell\ge1.
 \]
-The branch cost \(c=a+h+1\) has
+Thus \(a\) and \(b\) are iid geometric random variables on the positive integers, with \(\Pr(a=k)=2^{-k}\). In particular,
 \[
-\mathbb E[c]=4,\qquad \operatorname{Var}(c)=4.
+\mathbb E[a]=\mathbb E[b]=2,\qquad
+\operatorname{Var}(a)=\operatorname{Var}(b)=2.
 \]
-Since \(-\log_2\Pr(a,h)=a+h+1\), the Bernoulli system has Kolmogorov-Sinai entropy exactly **four bits per first-even return**.
+The branch cost \(c=a+b\) has
+\[
+\Pr(c=m)=(m-1)2^{-m}\quad(m\ge2),\qquad
+\mathbb E[c]=4,\quad \operatorname{Var}(c)=4.
+\]
+For \(n\) consecutive even returns, let \(A_n=\sum_{i<n}a_i\), \(B_n=\sum_{i<n}b_i\), and \(C_n=A_n+B_n\). The variables \(A_n,B_n\) are independent negative-binomial sums, and
+\[
+\Pr(C_n=m)=\binom{m-1}{2n-1}2^{-m},\qquad m\ge2n.
+\]
+Here \(B_n\) is exactly the number of raw section transitions, while \(C_n\) is the number of binary precision bits fixed by the length-\(n\) branch cylinder. Hence the typical raw length is \(2n\), and the typical precision consumed is \(4n\), by the strong law of large numbers.
+
+Since \(-\log_2\Pr(a,b)=a+b\), the Bernoulli system has Kolmogorov-Sinai entropy exactly **four bits per first-even return** (two bits from each independent geometric coordinate).
 
 Equivalently, the itinerary map identifies the generic 2-adic system, modulo its countable exceptional set, with the one-sided Bernoulli shift on \(\mathcal A^{\mathbb N}\) equipped with this product distribution. The map \(E_g\) corresponds to deleting the first branch symbol.
 
