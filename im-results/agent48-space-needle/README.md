@@ -34,7 +34,7 @@ The source-oriented equivalent form is
 
 The exact inverse modules enumerate all natural solutions for a fixed exponent. The open question concerns which of these sources lie on the one genuine blank-start orbit.
 
-## Strongest current result: sixth-linear root criterion
+## Strongest current result: quadratic-size sixth-regular root criterion
 
 The fifth-linear theorem first gives the unrestricted disjunction
 
@@ -93,6 +93,7 @@ so the candidate count is `O(sqrt(K)+log(K))`. The filtered list `quadraticRegul
 Both satisfy the sixth-linear restriction, and both are formally proved unreachable from the original blank root using the exact fixed-target reverse checker. The r=1 and r=2 cancellation cases were already excluded in [NeedleRootSharp.lean](../agent20-needle-coprime/NeedleRootSharp.lean) and [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean). Thus the first four cancellation-family members are excluded; r≥5 and the entire square-root-bounded sector remain unresolved.
 
 The full derivation, exact list, complexity bound, source bridge, root criterion, and finite reverse certificates are documented in [QUADRATIC-ENUMERATION.md](QUADRATIC-ENUMERATION.md). Original-source CI passed in [run 42416997719](https://github.com/FlareZ123/bb6/actions/runs/42416997719).
+
 ## Modular terminal-feeder exclusions
 
 The current Lean source explicitly proves these ten infinite valuation progressions impossible for terminal feeders:
