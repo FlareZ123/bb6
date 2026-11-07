@@ -1134,6 +1134,10 @@ theorem j_fatal_branch (u w : Nat) (hw : w+1=2*u) :
   simp only [Option.bind_some]
   exact hhalt
 
+#print axioms j_c_sweep
+#print axioms baseTape_above_pivot
+#print axioms C01_halts
+#print axioms j_fatal_branch
 #print axioms f0_local
 #print axioms j_F0_exact
 #print axioms f0_to_c1
