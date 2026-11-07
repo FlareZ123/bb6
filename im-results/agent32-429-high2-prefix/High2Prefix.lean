@@ -42,8 +42,10 @@ theorem high2_to_midA (u : Nat) :
       some (midA2 (2*u+4) 1, 5) := by
   rw [BB429SourceE1Delta.runWithDelta_add, high2_to_sourceScanE]
   simp only [Option.bind_some]
-  rw [BB429JuncHeadExcursion.sourceScanE_finishC_even_midA_delta]
-  simp [Int.add_assoc]
+  have hindex : 2*u+2 = 2*(u+1) := by omega
+  rw [hindex]
+  rw [BB429JuncHeadExcursion.sourceScanE_finishC_even_midA_delta (u+1) 0]
+  simp [Nat.mul_add]
 
 #print axioms high2_to_sourceScanE
 #print axioms high2_to_midA
