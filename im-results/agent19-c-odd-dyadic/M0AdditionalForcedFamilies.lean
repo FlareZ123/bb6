@@ -19,7 +19,7 @@ private def m0AdditionalFamily (j : Nat) : Prop :=
   (∃ t, j=512*t+406) ∨
   (∃ t, j=512*t+191)
 
-/-- All five progressions are admitted by the complete preceding
+/-- All nine progressions are admitted by the complete preceding
     C70+C23+all-phase+even-right high sieve. -/
 private theorem prior_high_allowed_m0_of_family (j : Nat)
     (hf : m0AdditionalFamily j) :
@@ -64,10 +64,15 @@ private theorem prior_high_allowed_m0_of_family (j : Nat)
         omega
       · rw [dif_neg hgate]
         omega
+    have hy :
+        2^(2*0+2)*(j+3)-(j+3*0+5)=3*j+7 := by
+      norm_num
+      omega
     have hright :
         (BB6.Agent15.affineNormalize (2*j+3)
           (2^(2*0+2)*(j+3)-(j+3*0+5))).2≠4 := by
-      simpa using hright0
+      rw [hy]
+      exact hright0
     have hValFull : BB6.Agent3ValSix.highAllowedValSixFull j 0 := by
       unfold BB6.Agent3ValSix.highAllowedValSixFull
       exact ⟨hValSix,hFive,by omega,by omega,by omega,hright⟩
