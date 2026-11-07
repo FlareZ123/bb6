@@ -725,7 +725,6 @@ theorem no_35_terminal_feeder (q k : Nat) :
     by_cases h1:(k+2)%3=1
     · rw [h462red,h1] at h462pow
       simp at h462pow
-      omega
     have hlt :(k+2)%3<3 := Nat.mod_lt _ (by decide)
     omega
   omega
