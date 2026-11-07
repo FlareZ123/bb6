@@ -40,6 +40,22 @@ The candidate's concrete pair `(j,m)=(263,3)` yields `(x,K)=(529,67819)` and gen
 
 The statement has not yet been formally merged into `ValSixJointFull` or `ValSixC58`. Its independence from *every* earlier source exclusion, and novelty relative to external published methods, require separate theorem-level review. The currently verified source theorem is valid within its exact reachability semantics independently of that novelty review.
 
+## Verified arbitrary-depth extension
+
+The fixed depth-two theorem is now subsumed by a stronger original-source result, [HighDyadicAllDepth.lean](HighDyadicAllDepth.lean) and its separately kernel-checked arithmetic [HighDyadicAllDepthArithmetic.lean](HighDyadicAllDepthArithmetic.lean). The exact full-source manual workflow [run 42334843728](https://github.com/FlareZ123/bb6/actions/runs/42334843728) **succeeded** at 03:39 UTC, 7 November 2026. Its two universal source theorems and both arithmetic intermediates all print only the standard axioms `[propext, Classical.choice, Quot.sound]`.
+
+For arbitrary `r,j,m : Nat`, assume
+
+```text
+2 ≤ r, 3 ≤ m, r+4 ≤ 2*m+2,
+m % 4 = (2*r+3) % 4,
+(j+9*m+14) % 2^(r+4) = 3*2^(r+2).
+```
+
+Then the high stopping target `(2*j+3, 2^(2*m+2)*(j+3)-(j+3*m+5))` is blank-unreachable in the genuine `secNext` section. The bound `r+4≤2*m+2` is the exact condition used to factor the source stopping power `2^(2*m+2)` through `2^(r+4)`; no fixed or finite search depth appears. The mass residue condition is `(a+2*b+4*r)%8=0` for that same depth. Depth two recovers the earlier cylinder, and depth three includes `m=5,j=37+128t`, which is disjoint from depth-two's `m≡3 (mod4)`.
+
+This theorem demonstrates the broad mathematical principle: once the original odd/odd inverse feeds the certified dyadic six-cone at *any* depth compatible with the stopping equation, all states in that high stopping sector are ruled out uniformly. Distinct depths provide distinct candidate parameter sectors.
+
 ## Remaining quantified problem
 
-The combined Machine C halting criterion contains unbounded low and high stopping parameters. The theorem removes one infinite high parameter cylinder, but many parameter families survive. The next useful improvement is a source-verified prior-sieve admission theorem for an infinite subfamily (for instance `j=7+64t, m=3`), followed by integration into the strongest lossless blank-halting criterion. A depth-variable version of the same dyadic inverse argument may provide more general unbounded exclusions, provided every additional inverse case and exact root condition is proved.
+The combined Machine C halting criterion contains unbounded low and high stopping parameters. The theorem removes one infinite high parameter cylinder, but many parameter families survive. The next useful improvement is source verification of the submitted prior-sieve admission theorems for the disjoint depth-two and depth-three infinite subfamilies, plus the combined original-blank criterion in `ValSixC58AllDepth.lean`. Determining whether the remaining unbounded stopping roots exist is still open.
