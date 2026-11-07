@@ -32,9 +32,30 @@ The relation `≈` is physical tape equivalence `BoundaryPadding.ObsEq`, treatin
 
 The *source-return* formulas here are specializations of Agent31's 3 November [packet-descent mathematical table](../agent31-d-exceptional/packet-descent.md). The new contribution is the **single quantified, original-source-certified, all-guarded-depth composition**: the earlier abstract rank and boundary formulas did not form one original-machine L reentry certificate. This is a reusable unbounded closure theorem for a selected packet family, with clear outstanding assumptions.
 
+## New source-certified first exceptional p=2 return and k≡0 closing branch
+
+The [`PacketP2ResetSource.lean`](./PacketP2ResetSource.lean) extension is **original-source-certified** at successful [CI 42332391372](https://github.com/FlareZ123/bb6/actions/runs/42332391372), SHA `f7b8144ee54b2f2e138cf99007aecad5611027ba`, with `[propext, Quot.sound]` and no `sorryAx`. It uses Agent37's unchanged source-proved `E110111Pairs.full_E_110111_pairs_raw` and a literal tape-word identity, and derives, for every k,q:
+
+```text
+run_original(12k²+49k+68+4q, M(3k+4,q,2;0 1^6))
+    = M(8k+5,0,2q+6;(01)^3 11).
+```
+
+The new marker is precisely `01010111`. This equality holds for arbitrary k,q and specifies exactly where the original safe-tail grammar stops being directly applicable. In the **infinite subfamily k=3t**, the reset output is a B with q=0, and the second certified source return gives the exact regular section
+
+```text
+run_original(
+   (12(3t)² + 49(3t) + 68 + 4q)
+   + (12(8t+1)² + 49(8t+1) + 40),
+   M(9t+4,q,2;0 1^6)
+) = L(64t+2q+23,3,2).
+```
+
+Formal theorems: `e_two_reset`, `b_zero_any`, and `e_two_k0_regular`. The source-certified p=2 exception is therefore **partially closed**, leaving at least k≡1,2 and the more general changed-tail recurrences. The claim is only an infinite *input-packet family*, not a statement about whether those inputs occur on the authentic blank orbit.
+
 ## Exact residual and relevance to the true blank root
 
-- For `p≡2 (mod3)`, rank normalization still terminates. It may exit through A, B with `q=0`, or E with `p=2`. The E,p=2 branch can reset the packet with a new right-tail marker, e.g. `01010111`, increasing the packet rank. **This remains the explicit escaping branch to understand.**
+- For `p≡2 (mod3)`, rank normalization still terminates. It may exit through A, B with `q=0`, or E with `p=2`. The latter is now source-normalized to a changed marker `01010111`, and its k≡0 subcase is source-proved to reenter regular L. **The k≡1,2 changed-tail dynamics remain the explicit escaping branch to understand.**
 - Authentic blank-root Machine D exceptional returns are not yet covered by a global source-connected invariant. The current original-source twentieth return candidate is [`BlankTwentiethRejoin.lean`](../agent37-d-timing-cocycle/BlankTwentiethRejoin.lean). It uses one guarded E edge from `M(3k20+4,4,4;0 1^6)` to `L(8k20+9,8,5)`, with `k20=512*((u20-1)/3)+255`; `u20=3*((u20-1)/3)+1` by `t20%27=4`. This is **pending complete parent source CI**: an initial run [42329147551](https://github.com/FlareZ123/bb6/actions/runs/42329147551) suffered GitHub runner shutdown during the fifteenth earlier module, and retry [42331004226](https://github.com/FlareZ123/bb6/actions/runs/42331004226) was still underway at this writing. Do **not** label twentieth true-blank reentry proved until full source chain succeeds without `sorryAx`.
 - Independent exact DRegular arithmetic predicts twenty-first and twenty-second exception inputs after the twentieth candidate. A twenty-second off-L endpoint is `M(512u+434,1,13;0 1^6)`, with `p=13≡1 (mod3)`, now covered by the **unconditional synthetic source** theorem. Connecting these later endpoints to the authentic blank trajectory requires the original-source root-chain proof, and further future exceptions may still enter p=2 cases.
 - **Next discriminating test:** prove either a source-backed finite-tail invariant routing every *authentic* p=2 reset back to a safe packet or L, or exhibit a literal original-machine fatal event from that reachable family. A bounded search or an arithmetic DRegular lookahead alone is not enough to decide Cryptid D.
