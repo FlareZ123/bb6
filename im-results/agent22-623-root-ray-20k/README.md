@@ -52,17 +52,36 @@ Observed over the 20,000 checked states:
 - from index 16 onward, the minimum is `5329/235`, at index 16, where `D(a,d)=D(876,235)` and the left-odd gap is `-73`;
 - the state after 20,000 transitions has `a` and `d` bit lengths 6,137 and 6,136.
 
-## Interpretation and limitation
-
-This extends the finite audit and supplies an independent GMP implementation whose first 10,000-step endpoint matches the existing Python mirror. It is computational evidence only. The unresolved mathematical task remains an all-time proof that the root orbit satisfies the square-distance predicate (or another sufficient condition excluding every terminal window). No claim of nonhalting or of a BB(6) classification follows from this finite trace.
-
-
 ## Formal algebra behind the projective gap calculation
 
-The companion `GapCoordinateMatrices.lean` was checked locally with Lean 4.36.0-rc2. With the unshifted coordinates `R=y-4*x` and `L=x-4*y), it proves:
+The companion `GapCoordinateMatrices.lean` was checked locally with Lean 4.36.0-rc2. With the unshifted coordinates `R=y-4*x` and `L=x-4*y`, it proves:
 
 - `15*x = -(4*R+L)` and `15*y = -(R+4*L)`;
 - the far-left leading pair `(7*y-4*x, x-13*y)` is `((3*R-8*L)/5, (3*R+17*L)/5)`;
 - the near-left leading pair `(7*x-4*y, y-13*x)` is `((-8*R+3*L)/5, (17*R+3*L)/5)`.
 
 The Lean file proves the corresponding denominator-cleared integer identities exactly. These are algebraic coordinate changes for the leading bridge forms. They do not absorb the parity-dependent constants or the logarithmic correction bounds in `RootRayBridge.md`, and they do not establish an invariant for the root orbit.
+
+## Exact corrected gap-scale recurrence
+
+The new `GapScaleExactArithmetic.lean` proves the exact algebraic update for any canonical ray representation. Let `m=min(a,d)`, let `g` be the signed ratio-four gap, and write the current state in the form
+
+`g = u + c + v - 3m`,
+
+where `u` is the actual ray shift, `v` is the scaled canonical exponent, and `c` is the sector constant. Let the canonical base transition return `(B,E)), and define the two exact correction statistics
+
+`beta = B-c-v`, `delta = E-3m`.
+
+The translated output is `(B+u,E)). If it is on the left (`E ≤ B+u`), its next gap and scale satisfy
+
+`g' = g - 9m + beta - 4*delta`, `m' = 3m + delta`.
+
+If it is on the right (`B+u < E`), they satisfy
+
+`g' = -4g - 9m + delta - 4*beta`, `m' = 3m + g + beta`.
+
+Both identities are kernel-checked with Lean 4.36.0-rc2, with no admitted axioms beyond Lean's standard propositional extensionality and quotient soundness. This isolates the exact source-dependent corrections that the leading projective matrices suppress. The remaining task is to instantiate `beta` and `delta` through the four source branches, establish which output-side condition holds along the authentic root, and prove a root-specific lower bound strong enough to exclude all terminal windows.
+
+## Interpretation and limitation
+
+This is a formal algebraic reduction plus a finite computational cross-check. It is not a source-level all-time theorem and does not establish nonhalting or a BB(6) classification. The unresolved mathematical task remains an all-time proof that the root orbit avoids every terminal window.
