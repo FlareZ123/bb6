@@ -183,6 +183,11 @@ Files:
 - `root_drain_balance_check.py`: reproduces the 10,000-state root drain-balance scan.
 - `DrainLinearTerminalSource.lean`: source-shaped draft of the sharper
   terminal interval, awaiting source-import CI.
+- `DrainLinearExactModel.lean`: standalone Lean 4.36.0-rc2 harness that
+  imports only `Std` and compiles the exact-equation drain bounds, sharp
+  witness, and terminal/ray arithmetic. Run `lean DrainLinearExactModel.lean`
+  from this directory. The one-step terminal gap inequalities are abstracted
+  as hypotheses here and instantiated by the source-shaped terminal module.
 
 ### Consequence for terminal-drain predecessors
 
