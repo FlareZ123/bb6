@@ -64,5 +64,30 @@ theorem drainB_terminal_balance_interval (a b d n K aa dd : Nat)
       omega
 
 #print axioms drainB_terminal_interval_linear
+/-- Even-right first-evaluator plus final-drain terminality confines
+the original right-ray balance d-4*a to a logarithmic interval. -/
+theorem evenRight_terminal_balance_interval
+    (a d n0 n K x b y aa dd : Nat)
+    (hRight : a≤d)
+    (ha : a<3^n0)
+    (hbpos : 0<b)
+    (hEval : evalA (d+1-a) a (2*a+5) = some (x,b,y))
+    (hDrain : drainB x b y = some (.D aa dd))
+    (hb : b<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(x+y+3*b+5*n+2)+5 < 3^K) :
+    4*a≤d+n+K+3 ∧ d≤4*a+5*n+K+11+3*n0 := by
+  obtain ⟨r,s,hrs,hrpos,hbs,hfirst,hpot⟩ :=
+    evalA_positive_depth n0 (d+1-a) a (2*a+5) x b y ha hbpos hEval
+  have hfirstUpper :=
+    evalA_first_upper_one (d+1-a) a (2*a+5) x b y hEval
+  have hthirdLower :=
+    evalA_third_lower (d+1-a) a (2*a+5) x b y hEval
+  have hbal :=
+    drainB_terminal_balance_interval x b y n K aa dd hDrain hb he hhalt hK
+  omega
+
 #print axioms drainB_terminal_balance_interval
+#print axioms evenRight_terminal_balance_interval
 end BB6.Agent49DrainLinearTerminalSource
