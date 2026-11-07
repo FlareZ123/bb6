@@ -251,3 +251,57 @@ theorem high_ttwo_nine_zero_root_dead (n j d0 q e r d a:Nat)
 #print axioms nine_gate_failure
 #print axioms high_ttwo_nine_zero_root_dead
 end CascadeHighTTwo
+
+
+namespace CascadeHighTTwo
+/-- In the exact source t=2 odd predecessor branch, any image scale is forced to n-8; divisible-by-nine quotients are root-dead. -/
+theorem high_ttwo_nine_zero_all_scales (n j d0 q e r k d a:Nat)
+ (hn:20≤n) (hsector:n%6=4∨n%6=5)
+ (hm:2048*CascadeOddRay.deficit n j+16384*n+16384≤2^n)
+ (hz:2*CascadeOddRay.ray n j+5=81*d0)
+ (hrel:16*d0=2^n+q+(n-3)+5)
+ (hgate:2*q+5=81*e)
+ (hrrel:16*e=8*2^(n-6)+r+(n-6)+5)
+ (htwo:2*r+5=27*d)
+ (hband:6*2^k+1≤4*d ∧ 4*d≤8*2^k-1)
+ (he0:8*d=8*2^k+a+k+5)
+ (hdmod:d%9=0) :
+ ¬CascadeSweep.ReachC (2,0) (a,0) := by
+  obtain ⟨hl,hu⟩:=high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
+  obtain ⟨hdlo,hdhi⟩:=high_r_ttwo_interval n r d hn hl hu htwo
+  have hbandReal:=t_two_image_band n d hn hdlo hdhi
+  have hk:k=n-8:=odd_band_scale_unique (4*d) k (n-8) hband hbandReal
+  subst k
+  exact high_ttwo_nine_zero_root_dead n j d0 q e r d a hn hsector
+    hm hz hrel hgate hrrel htwo he0 hdmod
+
+/-- At arbitrary exact t=2 dyadic scale, the quotient-zero residue requires a secondary /9 or /27 gate. -/
+theorem high_ttwo_zero_two_gates_all_scales (n j d0 q e r k d a:Nat)
+ (hn:20≤n) (hsector:n%6=4∨n%6=5)
+ (hm:2048*CascadeOddRay.deficit n j+16384*n+16384≤2^n)
+ (hz:2*CascadeOddRay.ray n j+5=81*d0)
+ (hrel:16*d0=2^n+q+(n-3)+5)
+ (hgate:2*q+5=81*e)
+ (hrrel:16*e=8*2^(n-6)+r+(n-6)+5)
+ (htwo:2*r+5=27*d)
+ (hband:6*2^k+1≤4*d ∧ 4*d≤8*2^k-1)
+ (he0:8*d=8*2^k+a+k+5)
+ (hdmod:d%3=0)
+ (hroot:CascadeSweep.ReachC (2,0) (a,0)) :
+ ∃b c f g:Nat,
+   2*a=8*2^(n-8)+b+(n-8) ∧
+   2*b=8*2^(n-8)+c+(n-8) ∧
+   2*c=8*2^(n-8)+f+(n-8) ∧
+   2*f=8*2^(n-8)+g+(n-8) ∧
+   ((2*b+5)%9=0 ∨ (2*f+5)%27=0) := by
+  obtain ⟨hl,hu⟩:=high_source_ray_bounds n j d0 q e r hn hm hz hrel hgate hrrel
+  obtain ⟨hdlo,hdhi⟩:=high_r_ttwo_interval n r d hn hl hu htwo
+  have hbandReal:=t_two_image_band n d hn hdlo hdhi
+  have hk:k=n-8:=odd_band_scale_unique (4*d) k (n-8) hband hbandReal
+  subst k
+  exact ttwo_zero_two_gates n j d0 q e r d a hn hsector hm hz hrel hgate
+    hrrel htwo he0 hdmod hroot
+
+#print axioms high_ttwo_nine_zero_all_scales
+#print axioms high_ttwo_zero_two_gates_all_scales
+end CascadeHighTTwo
