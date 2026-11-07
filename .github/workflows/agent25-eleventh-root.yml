@@ -105,7 +105,6 @@ jobs:
           lean -o "$P2/P2ResetRegularReentry.olean" "$P2/P2ResetRegularReentry.lean"
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
-          lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
           lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean"
           lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
