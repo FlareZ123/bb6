@@ -402,6 +402,11 @@ jobs:
           lean -o M0Mod16Two.olean M0Mod16Two.lean > "$GITHUB_WORKSPACE/m0-mod16-two.txt" 2>&1
           cat "$GITHUB_WORKSPACE/m0-mod16-two.txt"
           cat "$GITHUB_WORKSPACE/m0-mod16-two.txt" >> "$GITHUB_STEP_SUMMARY"
+          # Agent 19: five further m=0 infinite full-forced source exclusions.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/M0AdditionalForcedFamilies.lean .
+          lean -o M0AdditionalForcedFamilies.olean M0AdditionalForcedFamilies.lean > "$GITHUB_WORKSPACE/m0-additional-forced-families.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/m0-additional-forced-families.txt"
+          cat "$GITHUB_WORKSPACE/m0-additional-forced-families.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
@@ -440,6 +445,7 @@ jobs:
             full-forced-param-scan.txt
             m0-mod8-three.txt
             m0-mod16-two.txt
+            m0-additional-forced-families.txt
             m1-full-forced.txt
             m2-full-forced.txt
             c-residual-probe.txt
