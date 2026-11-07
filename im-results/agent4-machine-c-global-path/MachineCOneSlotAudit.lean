@@ -44,8 +44,7 @@ def machineCOneSlotAudit (bound : Nat) :
   by_cases ht : t = none
   · exact .unresolved
       (refine (machineCPrefix 11) machineCHaltSlot t)
-  · apply .certified
-      (refine (machineCPrefix 11) machineCHaltSlot t)
+  · apply FrontierAudit.certified
     apply Cover.leaf
     intro m hm
     exact Or.inl (machineC_ordinary_F0_completion_never t ht m hm)
@@ -54,7 +53,7 @@ def machineCOneSlotAudit (bound : Nat) :
     24 fully specified machines nonhalt trivially; one original machine
     remains undecided. -/
 theorem machineCOneSlotAudit_mass (bound : Nat) :
-    (machineCOneSlotAudit bound).report = (24, 1) := by decide
+    (machineCOneSlotAudit bound).report = (24, 1) := by rfl
 
 theorem machineCOneSlotAudit_exhaustive (bound : Nat)
     (m : Machine) (hm : compatible (machineCPrefix 11) m) :
