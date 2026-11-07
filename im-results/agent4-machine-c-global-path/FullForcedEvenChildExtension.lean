@@ -33,6 +33,7 @@ theorem evenChild_parent_reach_of_reach (x y : Nat)
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at ht
+      omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -62,7 +63,7 @@ theorem fullForcedExcludedPlus_sound (x y : Nat)
     ∀ time, BB6.Agent8Section.run secNext time (some (5,1)) ≠ some (x,y) := by
   intro time ht
   by_cases hbase : fullForcedExcluded x y = true
-  · exact fullForcedExcluded_sound x y hbase time
+  · exact (fullForcedExcluded_sound x y hbase time) ht
   · have hparts :
         evenChildGate x y = true ∧
           fullForcedExcluded (evenChildParent x y).1
@@ -85,7 +86,9 @@ theorem highAllowedC23WithEvenRightPlusBool_sound (j m : Nat)
     (h : highAllowedC23WithEvenRightPlusBool j m = true) :
     ∀ time, BB6.Agent8Section.run secNext time (some (5,1)) ≠
       some (highTargetX j,highTargetY j m) := by
-  have hp := Bool.and_eq_true.mp h
+  have hp : highAllowedC23WithEvenRightBool j m = true ∧
+      fullForcedExcludedPlus (highTargetX j) (highTargetY j m) = true := by
+    simpa [highAllowedC23WithEvenRightPlusBool] using h
   exact fullForcedExcludedPlus_sound (highTargetX j) (highTargetY j m) hp.2
 
 #print axioms evenChild_parent_reach_of_reach
