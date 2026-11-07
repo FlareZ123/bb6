@@ -8,8 +8,8 @@ def machine623HaltSlot : Slot := (⟨5, by decide⟩, false)
 
 theorem machine623_halts_only_at_F0 (s : Slot) :
     machine623 s = none ↔ s = machine623HaltSlot := by
-  rcases s with ⟨q,b⟩
-  fin_cases q <;> cases b <;> decide
+  have all : ∀ x : Slot, machine623 x = none ↔ x = machine623HaltSlot := by decide
+  exact all s
 
 /-- The eleven actually visited inputs fix every original table entry
     except F/0; this is an exact identity of sparse tables. -/
@@ -17,8 +17,9 @@ theorem machine623_visited_eq_free_halt :
     machine623Prefix 11 =
        freeHaltCylinder machine623 machine623HaltSlot := by
   funext s
-  rcases s with ⟨q,b⟩
-  fin_cases q <;> cases b <;> decide
+  have all : ∀ x : Slot, machine623Prefix 11 x =
+      freeHaltCylinder machine623 machine623HaltSlot x := by decide
+  exact all s
 
 /-- The 24 nonhalting choices for F/0 are syntactically total machines
     and hence have never-halting blank-tape runs. The sole remaining
