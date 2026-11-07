@@ -49,8 +49,8 @@ The exact-integer mirror was replayed for 10,000 consecutive states from the bla
 - The states at indices 0, 3, and 8 are outside the new affine cone.
 - Every state from index 9 through 9,999 has a canonical ray representation.
 - All 9,991 exact affine output translations agree with the direct transition; there are zero mismatches.
-- The ratio-four shift window has one candidate in this prefix, at index 13, state \(D(314,385)\).
-- The closest excluded state is index 16, \(D(632,735)\), with exact margin 2 outside its window.
+- The ratio-four shift window has one candidate in this prefix, at index 13, state \(D(122,438)\). Its canonical ray is far-right even with \(k=2,t=155\), base \(D(122,128)\), base output \(D(4,385)\), and actual output \(D(314,385)\). The latter continues to \(D(74,950)\), so this candidate is explicitly survived.
+- The closest excluded state is index 16, \(D(876,235)\), with exact margin 2 outside its window.
 
 The reproducible script is [canonical_ray_terminal_scan.py](canonical_ray_terminal_scan.py); run it from this directory with:
 
