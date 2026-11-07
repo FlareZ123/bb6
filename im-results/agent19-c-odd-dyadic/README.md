@@ -71,3 +71,10 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 - Search for further source inverse cylinders or rectangles that eliminate M512-admitted states.
 - Derive symbolic bounds on the surviving parameters, or establish that no surviving fixed target is blank-reachable.
 - Keep computational quotient evidence separate from kernel-checked source proofs.
+
+
+## Provisional m=1 full-forced progression (7 November 2026)
+
+[HighM1FullForced.md](HighM1FullForced.md) records a candidate infinite family at \(m=1,\ j\equiv24\pmod{256}\). Its target is \((512t+51,3840t+400)\), and the full-forced normalizer takes two exact inverse steps to \((3136t+322,2528t+259)\), whose right coordinate is odd and whose sum is 1 modulo 4. The existing C23+all-phase+even-right high predicate admits the progression; the source-module proof is in [HighM1FullForced.lean](HighM1FullForced.lean).
+
+**This is provisional, not yet source-certified.** A standalone local Lean 4.36.0-rc2 proof checks the exact copied normalizer and Boolean exclusion, with no sorryAx. The imported source module still requires local dependency-closure compilation and one manual run of [the all-phase workflow](../../.github/workflows/agent24-c-strong-phase.yml). A workflow compile step and output artifact have been added, but no new run has been dispatched. Do not promote this family to a source-certified result until that exact run passes and all final axiom audits exclude sorryAx.
