@@ -14,7 +14,7 @@ More generally, no such repeated block can begin after a finite prefix. In parti
 
 The theorem is formalized as `PeriodWord.no_infinite_positive_depth_periodic_ray` and `PeriodWord.no_eventually_periodic_positive_depth_ray`. The source module `BB6.Agent9PeriodSource` additionally proves that every block boundary of a hypothetical repeated tail remains in the unchanged `BB6.Precision.ShadowReach` relation and exports `source_no_eventually_periodic_positive_depth_ray`.
 
-The all-zero homogeneous case is covered separately by Agent 13's source-verified homogeneous-ray exclusion. This result therefore closes the arbitrary finite positive-depth period case. It does not rule out genuinely aperiodic inverse histories and does not decide P1 or BB(6).
+The all-zero homogeneous case is covered separately by Agent 13's source-verified homogeneous-ray exclusion. The stepwise source-path theorem below also rules out an all-zero eventual-periodic tail under its stated root-margin assumptions. This result does not rule out genuinely aperiodic inverse histories and does not decide P1 or BB(6).
 
 ## Proof
 
@@ -60,6 +60,28 @@ Supporting formal files:
 - `im-results/agent9-p1-periodic/PeriodAllPeriods.lean`: minimal-return reduction and all-period / eventual-tail theorems.
 - `im-results/agent9-p1-periodic/SourcePeriodWord.lean`: original-source reachability transport and source-level corollary.
 - `im-results/agent9-p1-periodic/PeriodPrimitive.lean` and `PeriodSecondary.lean`: primitive divisibility and repeated affine obstructions.
+
+## Stepwise source-path strengthening
+
+The fixed-word theorem can be applied directly to a genuine infinite trajectory in the original `BB6.Precision.ShadowReach` relation.
+
+Let (L,r\in\mathbb N) satisfy (L\ge8), (0<r), and (r+4\le L). An `InfiniteShadowPath` consists of sequences (m_n,z_n,t_n,v_n\in\mathbb N) with an initial state reachable from the root (r), and
+\[
+z_n=2^{t_n}v_n,\qquad
+2z_{n+1}+1=L+m_n+t_n+v_n,\qquad
+m_{n+1}=m_n+t_n+1.
+\]
+**Theorem.** The depth sequence ((t_n)) cannot be eventually periodic.
+
+For a period word containing a positive entry, induction over each finite block constructs the exact `PeriodWord.Run` relation. The all-period obstruction then gives a contradiction. If the period word is all zero, the source margin is propagated by `shadow_step_preserves_offset`. With (D_n=L+m_n-z_n\ge4), a zero-depth step satisfies
+\[
+2D_{n+1}=D_n+3,
+\]
+so (D_{n+1}<D_n), which cannot hold forever in (mathbb N).
+
+This closes the stepwise extraction gap from an infinite `ShadowReach` trajectory to repeated finite-word runs. The theorem is formalized in `BB6.Precision.InfiniteShadowPath.no_eventually_periodic_shadow_path` in `im-results/agent9-p1-periodic/SourcePeriodAllPeriods.lean`. It is conditional on an actual infinite trajectory with the displayed step witnesses and the root margin; it does not establish that every nonhalting P1 execution yields such a trajectory.
+
+The source-path audit is [GitHub Actions run 42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708). Lean 4.36.0-rc2 compiled the module and printed the axiom dependencies for the positive-depth, zero-depth, and combined theorems. The audit passed without `sorryAx` or Lean errors; the remaining dependencies are standard Lean axioms.
 
 ## Scope
 
