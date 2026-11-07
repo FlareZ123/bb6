@@ -1,121 +1,113 @@
-import Std
 import Core192Source
+import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent15
 
 open Agent41M192
 
-/-- The M192 backward invariant excludes every original CLine section state
-whose right coordinate is at least eight. This generalizes the single
-(9,67,0) corollary currently exposed by the source dossier. -/
-theorem source_no_c0_right_ge8 (a k : Nat) (hk : 8≤k) :
-    ¬ BB6CLine.Reach (a,k,0) := by
-  intro hreach
-  have hnot := source_blank_never_bad (a,k,0) hreach
-  have hbad : bad a k 0 := by
-    simp [bad, low, hk]
-  exact hnot hbad
-
-/-- Elementary lower bound used to place the second stopping family in the
-right-coordinate region excluded by source_no_c0_right_ge8. -/
-theorem two_pow_lower_linear (m : Nat) :
-    2*m+3 ≤ 2^(2*m+2) := by
+private theorem pow_linear_first (m : Nat) : 3*m+12 ≤ 2^(m+4) := by
   induction m with
   | zero => decide
   | succ m ih =>
-      have hexp : 2*(m+1)+2 = (2*m+2)+2 := by omega
-      rw [hexp, Nat.pow_add]
-      simp
-      omega
-
-/-- Every parameter in the second stopping family with m≥2 has k≥10. -/
-theorem second_stop_k_ge10 (j m k : Nat) (hm : 2≤m)
-    (heq : k+j+3*m+5 = 2^(2*m+2)*(j+3)) : 10≤k := by
-  have hp := two_pow_lower_linear m
-  have hmul : (2*m+3)*(j+3) ≤ 2^(2*m+2)*(j+3) :=
-    Nat.mul_le_mul_right (j+3) hp
-  have hmain : (2*m+3)*(j+3) ≤ k+j+3*m+5 := by
-    calc
-      (2*m+3)*(j+3) ≤ 2^(2*m+2)*(j+3) := hmul
-      _ = k+j+3*m+5 := heq.symm
-  have hexpand : (2*m+3)*(j+3) = (2*m+3)*j + 6*m+9 := by
-    rw [Nat.mul_add]
-    omega
-  have hprod : (2*m+3)*j = (2*m+2)*j + j := by
-    rw [show 2*m+3 = (2*m+2)+1 by omega, Nat.add_mul]
-    simp
-  rw [hexpand, hprod] at hmain
-  clear hp hmul heq
-  omega
-
-/-- Consequently the entire second stopping family, for every j and m≥2,
-is excluded from the original blank-root CLine orbit. No residue restriction
-on j or m is needed. -/
-theorem source_no_second_stop_all (j m k : Nat) (hm : 2≤m)
-    (heq : k+j+3*m+5 = 2^(2*m+2)*(j+3)) :
-    ¬ BB6CLine.Reach (2*j+3,k,0) := by
-  apply source_no_c0_right_ge8
-  have hk := second_stop_k_ge10 j m k hm heq
-  omega
-
-/-- The first stopping family has k≥8 for every positive m. -/
-theorem first_stop_k_ge8 (m k : Nat) (hm : 1≤m)
-    (heq : k+3*m+4 = 2^(2*m+3)) : 8≤k := by
-  by_cases hm6 : 6≤m
-  · have hp := two_pow_lower_linear m
-    have hpow : 4*m+6 ≤ 2^(2*m+3) := by
-      have hexp : 2*m+3 = (2*m+2)+1 := by omega
-      rw [hexp, Nat.pow_succ]
-      simp
-      omega
-    have hmain : 4*m+6 ≤ k+3*m+4 := by
       calc
-        4*m+6 ≤ 2^(2*m+3) := hpow
-        _ = k+3*m+4 := heq.symm
-    omega
-  · have hcases : m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 := by omega
-    rcases hcases with rfl | rfl | rfl | rfl | rfl
-    all_goals simp at heq
-    all_goals omega
+        3*(m+1)+12 ≤ 2*(3*m+12) := by omega
+        _ ≤ 2*2^(m+4) := Nat.mul_le_mul_left 2 ih
+        _ = 2^(m+5) := by simp [Nat.pow_succ, Nat.mul_comm]
 
-/-- The second stopping family has k≥8 except for its single small
-parameter point (j,m)=(0,0). -/
-theorem second_stop_k_ge8_except_00 (j m k : Nat)
-    (hjm : j ≠ 0 ∨ m ≠ 0)
-    (heq : k+j+3*m+5 = 2^(2*m+2)*(j+3)) : 8≤k := by
-  by_cases hm0 : m=0
-  · subst m
-    have hj : 1≤j := by
-      rcases hjm with hj | hm
-      · omega
-      · contradiction
-    have heq' : k+j+5 = 4*(j+3) := by simpa using heq
-    omega
-  · by_cases hm1 : m=1
+private theorem pow_linear_second_base (m : Nat) : m+5 ≤ 2^(m+3) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      calc
+        m+1+5 ≤ 2*(m+5) := by omega
+        _ ≤ 2*2^(m+3) := Nat.mul_le_mul_left 2 ih
+        _ = 2^(m+4) := by simp [Nat.pow_succ, Nat.mul_comm]
+
+private theorem pow_linear_second (m : Nat) (hm : 1≤m) : m+5 ≤ 2^(2*m+2) := by
+  have hexp : m+3 ≤ 2*m+2 := by omega
+  exact Nat.le_trans (pow_linear_second_base m) (Nat.pow_le_pow_right (by omega) hexp)
+
+/-- Every positive-index first-family parameter has right coordinate at least 8. -/
+theorem first_stop_k_ge8 (m k : Nat) (hm : 1≤m)
+    (hstop : k+3*m+4=2^(2*m+3)) : 8≤k := by
+  have hexp : m+4 ≤ 2*m+3 := by omega
+  have hpow : 3*m+12 ≤ 2^(2*m+3) :=
+    Nat.le_trans (pow_linear_first m) (Nat.pow_le_pow_right (by omega) hexp)
+  omega
+
+/-- Every second-family parameter with positive m has right coordinate at least 10. -/
+theorem second_stop_k_ge10 (j m k : Nat) (hm : 1≤m)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) : 10≤k := by
+  have hpow : m+5 ≤ 2^(2*m+2) := pow_linear_second m hm
+  have hprod : (m+5)*(j+3) ≤ 2^(2*m+2)*(j+3) :=
+    Nat.mul_le_mul_right (j+3) hpow
+  have hmul : (m+5)*(j+3) = m*j + 3*m + 5*j + 15 := by
+    simp [Nat.add_mul, Nat.mul_add, Nat.mul_comm, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc]
+  have hlin : j+3*m+15 ≤ (m+5)*(j+3) := by rw [hmul]; omega
+  have hlarge : j+3*m+15 ≤ 2^(2*m+2)*(j+3) := Nat.le_trans hlin hprod
+  omega
+
+/-- The m=0 second-family branch is also at least 10 when j is positive. -/
+theorem second_stop_k_ge10_m0 (j k : Nat) (hj : 1≤j)
+    (hstop : k+j+5=4*(j+3)) : 10≤k := by
+  have hlin : j+15 ≤ 4*(j+3) := by omega
+  omega
+
+/-- All nonexceptional second-family parameters have k≥10. -/
+theorem second_stop_k_ge10_except_00 (j m k : Nat) (hjm : j≠0 ∨ m≠0)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) : 10≤k := by
+  rcases hjm with hj|hm
+  · by_cases hm0 : m=0
     · subst m
-      have heq' : k+j+8 = 16*(j+3) := by simpa using heq
-      omega
-    · have hm2 : 2≤m := by omega
-      have hk10 := second_stop_k_ge10 j m k hm2 heq
-      omega
+      have hjpos : 1≤j := by omega
+      have heq : k+j+5=4*(j+3) := by simpa using hstop
+      exact second_stop_k_ge10_m0 j k hjpos heq
+    · have hmpos : 1≤m := by omega
+      exact second_stop_k_ge10 j m k hmpos hstop
+  · have hmpos : 1≤m := by omega
+    exact second_stop_k_ge10 j m k hmpos hstop
 
-/-- Every positive-m first stopping-family target is absent from the
-original blank-root CLine orbit. -/
-theorem source_no_first_stop_m_pos (m k : Nat) (hm : 1≤m)
-    (heq : k+3*m+4 = 2^(2*m+3)) :
-    ¬ BB6CLine.Reach (1,k,0) := by
-  apply source_no_c0_right_ge8
-  exact first_stop_k_ge8 m k hm heq
+/--
+The M192 backward invariant excludes c=0 states only when their residue pair
+satisfies lowCore. The lower bound on k alone is insufficient.
+-/
+theorem source_no_c0_lowCore (a k : Nat) (hk : 8≤k)
+    (hcore : lowCore ((a+192)%192) (k%192)) :
+    ¬ BB6CLine.Reach (a,k,0) := by
+  intro hreach
+  have hnot := source_blank_never_bad a k 0 hreach
+  have hbad : bad a k 0 := by
+    simp [bad, low, hcore, hk]
+  exact hnot hbad
 
-/-- Every second stopping-family target except (j,m)=(0,0) is absent from
-the original blank-root CLine orbit. -/
-theorem source_no_second_stop_except_00 (j m k : Nat)
-    (hjm : j ≠ 0 ∨ m ≠ 0)
-    (heq : k+j+3*m+5 = 2^(2*m+2)*(j+3)) :
+/-- The entire first stopping family lies outside the M192 lowCore slice. -/
+theorem first_stop_family_outside_lowCore (k : Nat) :
+    ¬ lowCore ((1+192)%192) (k%192) := by
+  have hx : (1+192)%192=1 := by omega
+  rw [hx]
+  simp [lowCore]
+
+/-- The second-family point (j,m,k)=(0,1,40) is outside the same slice. -/
+theorem second_stop_example_outside_lowCore :
+    ¬ lowCore ((3+192)%192) (40%192) := by
+  have hx : (3+192)%192=3 := by omega
+  have hw : 40%192=40 := by omega
+  rw [hx,hw]
+  simp [lowCore]
+
+/-- Conditional exclusion for second-family states covered by lowCore. -/
+theorem source_no_second_stop_when_lowCore (j m k : Nat)
+    (hjm : j≠0 ∨ m≠0)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3))
+    (hcore : lowCore ((2*j+3+192)%192) (k%192)) :
     ¬ BB6CLine.Reach (2*j+3,k,0) := by
-  apply source_no_c0_right_ge8
-  exact second_stop_k_ge8_except_00 j m k hjm heq
+  have hk : 8≤k := by
+    have h10 := second_stop_k_ge10_except_00 j m k hjm hstop
+    omega
+  exact source_no_c0_lowCore (2*j+3) k hk hcore
 
-#print axioms source_no_second_stop_all
+#print axioms source_no_c0_lowCore
+#print axioms first_stop_k_ge8
+#print axioms second_stop_k_ge10_except_00
 
 end BB6.Agent15
