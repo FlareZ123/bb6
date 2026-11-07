@@ -81,3 +81,7 @@ jobs:
           # One closed-form distinct excluded high stopping family at each depth.
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/HighDyadicDepthFamily.lean .
           lean HighDyadicDepthFamily.lean
+          # New even-right high stopping cone: arithmetic and genuine blank-root exclusion.
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighEvenRightArithmetic,HighEvenRightSource}.lean .
+          lean -o HighEvenRightArithmetic.olean HighEvenRightArithmetic.lean
+          lean HighEvenRightSource.lean
