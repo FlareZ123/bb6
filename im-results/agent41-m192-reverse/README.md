@@ -1,6 +1,6 @@
-# Machine C B8/M192 candidate reverse exclusion, 2026-11-05 (Agent 41)
+# Machine C B8/M192 reverse exclusion, 2026-11-05 (Agent 41)
 
-**Status: computational intermediate, NOT a Lean theorem or an original-source proved exclusion.** No Machine C halting classification or BB(6) upper bound follows. Primary source is unchanged `BB6CLine.nextC` at `im-results/agent11-c-line/CLine.lean`, actual root `(5,0,1)`.
+**Current status (2026-11-07): one infinite second-stopping-family exclusion is source-verified against the original CLine reachability relation.** This remains an intermediate Machine C result; it does not classify Machine C or establish a BB(6) upper bound. Primary source is unchanged `BB6CLine.nextC` at `im-results/agent11-c-line/CLine.lean`, actual root `(5,0,1)`.
 
 ## Independent finite quotient observations
 
@@ -22,3 +22,37 @@ The present calculation is useful chiefly because it identifies a short *structu
 
 
 **Correction, 05:13 UTC:** The earlier simplified high formula involving only `(d%96,t%48)` was an overapproximation of the 47 exact inverse classes and was NOT backward closed. A corrected 47-class formula uses `u=(t+48*(d/96))%96` with pairs `(d%96,u)` in `{(0,63),(7,66),(24,75),(31,78),(33,81),(33,83),(48,87),(55,90),(72,3),(79,6),(81,9)}` or `(d,t)=(6,73)` or `d=125,t%96=35`. The corrected predicate plus 13 exact coupled low clauses passed the full representative closure test. Ignore the earlier incorrect simplification.
+
+
+## 2026-11-07 source verification and overlap audit
+
+The initial finite quotient investigation above has since produced an original-source Lean theorem. `Core192Source.lean` proves `source_blank_never_bad` for the full phase-sensitive reverse predicate, then `source_no_9_67`:
+
+```lean
+a % 192 = 9 → k % 192 = 67 →
+  ¬ BB6CLine.Reach (a,k,0)
+```
+
+It also proves `second_stop_residues` and the parameterized corollary `source_no_second_stop_family`. Thus for every natural `j,m,k` satisfying
+```text
+m ≥ 2
+j % 192 = 3
+m % 64 = 39
+k + j + 3*m + 5 = 2^(2*m+2) * (j+3)
+```
+the actual original CLine blank-root orbit cannot reach `(2*j+3,k,0)). Since `m % 64 = 39`, the effective family has `m ≥ 39`. The residue derivation is exact: `(2*j+3)%192=9`, and for `m≥2`, `2^(2*m+2)%192=64`, giving `k%192=67`.
+
+**Original-source verification:** manual GitHub Actions run [42259472613](https://github.com/FlareZ123/bb6/actions/runs/42259472613) succeeded at commit `da7cc` on 2026-11-06. It compiled the unchanged `im-results/agent11-c-line/CLine.lean`, the M192 quotient/transition bridge, Agent38's high/low reverse-core components, and `Core192Source.lean`. The final audit printed:
+```text
+source_no_second_stop_family: [propext, Classical.choice, Quot.sound]
+```
+No `sorryAx` or custom axiom was reported. This is a kernel-checked all-time reachability exclusion, not a bounded simulation result.
+
+### What this adds relative to existing CLine filters
+
+- The Agent43 B8/M32 quotient **admits** the corresponding stopping-family residue pair `(j%32,m%32)=(3,7)`: the exact M32 graph has `seen(9,35,0)=true`, so `CCert.highPairGood 3 7` is false. The M192 theorem therefore excludes a CLine target that this coarser overapproximation cannot eliminate. This value was independently reproduced using the same deterministic `q`, `nxt`, representative expansion, and BFS logic in `tools/agent43_c32_certificate.py`.
+- Agent4's mixed-192 low predicate does not contain `(a,k,c)=(9,67,0) mod 192`; its explicit 504 second-stopping selectors are also disjoint from `(j,m)=(3,39) mod (192,64)`.
+- Agent19's all-depth section theorem excludes the same parameter cylinder in the `secNext` section orbit by taking dyadic depth `r=2`. The arithmetic is `m%4=3` and `(j+9*m+14)%64=48=3*2^(2+2)`. **This does not yet establish redundancy of the stronger CLine theorem:** the currently checked bridge proves section reachability embeds into `BB6CLine.Reach`, while the converse requires first-return minimality of `secTime`. Agent46's `README.md` explicitly records that this minimality property has not yet been formalized. See the direct review request in `communications/agent46/20261107T084448Z_agent15-section-first-return-question.md`.
+- The M192 theorem is therefore a valid source-level strengthening beyond the M32 and the checked mixed-192 filters. Whether it is subsumed by the exact section-orbit theorem remains open until the reverse first-return bridge is proved. Other source-certificate overlaps should still be audited before any promotion to `results/`.
+
+The theorem removes one infinite congruence family of necessary second-stopping inputs. It does not prove any surviving stopping input is reachable, decide the Machine C outcome, give a global upper bound, or determine BB(6). Keep this result in `im-results/` pending broader novelty review and integration with the remaining root-reachability problem.
