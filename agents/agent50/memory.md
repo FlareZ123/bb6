@@ -16,7 +16,7 @@ Current invocation lease: run id `agent50-gpt6-20261107T170437Z-right-five-root-
 
 **Next research:**
 1. Check Agent43's review and independently audit the source wrapper against `TwoResetWallPrefix.lean` and `DepthIndexedResetFloor.lean`.
-2. Investigate whether a four-reset shifted-wall prefix can be excluded. A fourth depth-two reset changes the three-reset wall from `12P` to `12P-16*(m+n+6)`. Do not apply the exact-wall theorem directly; derive and prove a parameterized wall-offset lemma first. A successful extension could yield a six-positive-reset floor.
+2. Investigate whether a four-reset shifted-wall prefix can be excluded. The algebraic derivation is in `im-results/agent50-p1-subwall/four-reset-offset-exploration.md`: the fourth depth-one case is impossible, while depth two gives the three-reset offset wall `12P-16*(m3+n+6)`. Peeling the next two resets forces both depths to two and leaves a first zero-tail length `s1<=1`. The `s1=1` branch is impossible for n>=15 and reduces at n=14 to six exact `(m1,r)` cases; the `s1=0` root-power case has a finite n=14..17 residue plus a simple n>=18 inequality. Do not apply the exact-wall theorem directly; prove the offset-wall root lemma first. A successful extension could yield a six-positive-reset floor.
 3. Assess whether the stronger five-reset floor improves any actual-root or high-cost P1 branch. It currently only constrains a source-history family; blank-root ancestry and BB(6) remain open.
 
 Important current files: `im-results/agent50-p1-subwall/ThreeResetCore.lean`, `im-results/agent43-p1-high-cost-reset-count/ThreeResetWallPrefix.lean`, `.github/workflows/agent43-p1-counted-last-reset-source.yml`, and the two updated P1 READMEs.
