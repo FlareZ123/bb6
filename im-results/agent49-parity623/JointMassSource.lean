@@ -149,13 +149,13 @@ theorem evalA_joint_zero (n : Nat) :
 theorem drainB_joint_mass (n : Nat) :
     ∀ a b d aa dd,
       b < 3^n →
-      drainB a b d = some (.D aa dd) →
+      drainB a b d = some (HighLevelState.D aa dd) →
       aa+dd ≤ a+d+3*b+3*n+1 := by
-  induction n using Nat.strong_induction_on with
-  | h n ih =>
+  induction n using Nat.strongRecOn with
+  | ind n ih =>
       intro a b d aa dd hb hs
       by_cases hb0 : b = 0
-      · have hs' : some (.D a d) = some (.D aa dd) := by
+      · have hs' : some (HighLevelState.D a d) = some (HighLevelState.D aa dd) := by
           simpa [drainB, hb0] using hs
         have htuple := Option.some.inj hs'
         rcases Prod.mk.inj htuple with ⟨haa,hdd⟩
@@ -167,31 +167,39 @@ theorem drainB_joint_mass (n : Nat) :
         simp only [if_neg hb0] at hs'
         have hEval :
             ∃ p q r, evalA a (b-1) (d+2*b+3) = some (p,q,r) ∧
-              q < b ∧ drainB p q r = some (.D aa dd) := by
+              q < b ∧ drainB p q r = some (HighLevelState.D aa dd) := by
           cases he : evalA a (b-1) (d+2*b+3) with
           | none =>
               simp [he] at hs'
           | some p =>
+              rcases p with ⟨p,q,r⟩
               have hif :
-                  (if p.2.1 < b then drainB p.1 p.2.1 p.2.2 else none)
-                    = some (.D aa dd) := by
+                  (if q < b then drainB p q r else none)
+                    = some (HighLevelState.D aa dd) := by
                 simpa [he] using hs'
-              have hq : p.2.1 < b := by
-                by_contra hnot
-                simp [hnot] at hif
-              have hrec : drainB p.1 p.2.1 p.2.2 = some (.D aa dd) := by
+              have hq : q < b := by
+                by_cases h : q < b
+                · exact h
+                · simp [h] at hif
+              have hrec : drainB p q r = some (HighLevelState.D aa dd) := by
                 simpa [hq] using hif
-              exact ⟨p.1,p.2.1,p.2.2,he,hq,hrec⟩
+              exact ⟨p,q,r,by simpa using he,hq,hrec⟩
         rcases hEval with ⟨p,q,r,he,hq,hrec⟩
         have hk : b-1 < 3^n := by omega
         by_cases hq0 : q = 0
-        · have he0 : evalA a (b-1) (d+2*b+3) = some (p,0,r) := by
+        · have hn : 0 < n := by
+            by_cases hn0 : n = 0
+            · subst n
+              simp at hb
+              omega
+            · omega
+          have he0 : evalA a (b-1) (d+2*b+3) = some (p,0,r) := by
             simpa [hq0] using he
           have hzero := evalA_joint_zero n a (b-1) (d+2*b+3) p r hk he0
-          have hrec' : some (.D p r) = some (.D aa dd) := by
+          have hrec' : some (HighLevelState.D p r) = some (HighLevelState.D aa dd) := by
             simpa [drainB, hq0] using hrec
           have htuple := Option.some.inj hrec'
-          rcases Prod.mk.inj htuple with ⟨haa,hdd⟩
+          injection htuple with haa hdd
           subst aa dd
           omega
         · have hqpos : 0 < q := by omega
@@ -218,7 +226,7 @@ theorem sharpBlock_lt_pow (n : Nat) : sharpBlock n < 3^(n+1) := by
 /-- The joint-mass upper bound is attained by the existing sharp-block family. -/
 theorem drainB_joint_mass_sharp (n d : Nat) :
     sharpBlock n < 3^(n+1) ∧
-    ∃ dd, drainB (n+2) (sharpBlock n) d = some (.D 0 dd) ∧
+    ∃ dd, drainB (n+2) (sharpBlock n) d = some (HighLevelState.D 0 dd) ∧
       dd = (n+2)+d+3*sharpBlock n+3*(n+1)+1 := by
   constructor
   · exact sharpBlock_lt_pow n
