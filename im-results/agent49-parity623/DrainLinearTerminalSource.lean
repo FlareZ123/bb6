@@ -194,4 +194,165 @@ theorem oddRight_terminal_ray_interval
 #print axioms evenLeft_terminal_ray_interval
 #print axioms oddRight_terminal_ray_interval
 
+
+
+/-!
+The following four theorems instantiate the arithmetic bridge with the
+authentic source evalA/drainB bounds. Both ray directions are retained for
+each predecessor branch, yielding all four linear forms on predecessor
+coordinates.
+-/
+
+/-- Odd far-left predecessor: output deviations track 7*y-4*x and
+x-13*y with the source-derived errors. -/
+theorem oddFarGap (x y a d n cR cL : Nat)
+    (hxy : y + 5 ≤ x)
+    (hcR : cR = 1 ∨ cR = 2)
+    (hcL : cL = 5 ∨ cL = 9)
+    (hDrain : drainB (x-y-5) (y+3) 5 = some (.D a d))
+    (hb : y+3 < 3^n) :
+    (-(8*n+39 : Int) ≤
+        (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(y : Int) - 4*(x : Int)) ∧
+      (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(y : Int) - 4*(x : Int)) ≤ (8*n+39 : Int)) ∧
+    (-(17*n+79 : Int) ≤
+        (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((x : Int) - 13*(y : Int)) ∧
+      (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((x : Int) - 13*(y : Int)) ≤ (17*n+79 : Int)) := by
+  have hfirstLower := drainB_first_lower_log n (x-y-5) (y+3) 5 a d hb hDrain
+  have hfirstUpper := drainB_first_upper_log n (x-y-5) (y+3) 5 a d hb hDrain
+  have hthirdLower := drainB_d3 (y+3) (x-y-5) 5 a d hDrain
+  have hthirdUpper := drainB_upper_linear_log n (x-y-5) (y+3) 5 a d hb hDrain
+  have hthirdLower' : 3*y+14 ≤ d := by omega
+  have hthirdUpper' : d ≤ 3*y+16+4*n := by omega
+  constructor
+  · exact BB6.Agent49RootRayBridgeArithmetic.oddFarRightGap
+      x y a d n cR hxy hcR hfirstLower hfirstUpper hthirdLower' hthirdUpper'
+  · exact BB6.Agent49RootRayBridgeArithmetic.oddFarLeftGap
+      x y a d n cL hxy hcL hfirstLower hfirstUpper hthirdLower' hthirdUpper'
+
+/-- Even far-left predecessor: output deviations track 7*y-4*x and
+x-13*y with the source-derived errors. -/
+theorem evenFarGap (x y a d n cR cL : Nat)
+    (hxy : y + 3 ≤ x)
+    (hcR : cR = 1 ∨ cR = 2)
+    (hcL : cL = 5 ∨ cL = 9)
+    (hDrain : drainB (x-y-2) (y+2) 2 = some (.D a d))
+    (hb : y+2 < 3^n) :
+    (-(8*n+21 : Int) ≤
+        (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(y : Int) - 4*(x : Int)) ∧
+      (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(y : Int) - 4*(x : Int)) ≤ (8*n+21 : Int)) ∧
+    (-(17*n+52 : Int) ≤
+        (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((x : Int) - 13*(y : Int)) ∧
+      (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((x : Int) - 13*(y : Int)) ≤ (17*n+52 : Int)) := by
+  have hfirstLower := drainB_first_lower_log n (x-y-2) (y+2) 2 a d hb hDrain
+  have hfirstUpper := drainB_first_upper_log n (x-y-2) (y+2) 2 a d hb hDrain
+  have hthirdLower := drainB_d3 (y+2) (x-y-2) 2 a d hDrain
+  have hthirdUpper := drainB_upper_linear_log n (x-y-2) (y+2) 2 a d hb hDrain
+  have hthirdLower' : 3*y+8 ≤ d := by omega
+  have hthirdUpper' : d ≤ 3*y+10+4*n := by omega
+  constructor
+  · exact BB6.Agent49RootRayBridgeArithmetic.evenFarRightGap
+      x y a d n cR hxy hcR hfirstLower hfirstUpper hthirdLower' hthirdUpper'
+  · exact BB6.Agent49RootRayBridgeArithmetic.evenFarLeftGap
+      x y a d n cL hxy hcL hfirstLower hfirstUpper hthirdLower' hthirdUpper'
+
+/-- Odd near-left predecessor: output deviations track 7*x-4*y and
+y-13*x with the source-derived errors. -/
+theorem oddNearGap (x y a d n cR cL : Nat)
+    (hpos : 0 < x)
+    (hxy : x ≤ y + 4)
+    (hcR : cR = 1 ∨ cR = 2)
+    (hcL : cL = 5 ∨ cL = 9)
+    (hDrain : drainB (y+4-x) (x-1) 3 = some (.D a d))
+    (hb : x-1 < 3^n) :
+    (-(8*n+18 : Int) ≤
+        (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(x : Int) - 4*(y : Int)) ∧
+      (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(x : Int) - 4*(y : Int)) ≤ (8*n+18 : Int)) ∧
+    (-(17*n+14 : Int) ≤
+        (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((y : Int) - 13*(x : Int)) ∧
+      (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((y : Int) - 13*(x : Int)) ≤ (17*n+14 : Int)) := by
+  have hfirstLower := drainB_first_lower_log n (y+4-x) (x-1) 3 a d hb hDrain
+  have hfirstUpper := drainB_first_upper_log n (y+4-x) (x-1) 3 a d hb hDrain
+  have hthirdLower := drainB_d3 (x-1) (y+4-x) 3 a d hDrain
+  have hthirdUpper := drainB_upper_linear_log n (y+4-x) (x-1) 3 a d hb hDrain
+  have hthirdLower' : 3*x ≤ d := by omega
+  have hthirdUpper' : d ≤ 3*x+4*n+2 := by omega
+  constructor
+  · exact BB6.Agent49RootRayBridgeArithmetic.oddNearRightGap
+      x y a d n cR hpos hxy hcR hfirstLower hfirstUpper hthirdLower' hthirdUpper'
+  · exact BB6.Agent49RootRayBridgeArithmetic.oddNearLeftGap
+      x y a d n cL hpos hxy hcL hfirstLower hfirstUpper hthirdLower' hthirdUpper'
+
+/-- Even near-left predecessor: the initial evalA and following B-drain
+share one ternary-depth budget. -/
+theorem evenNearGap (x y p q r a d n cR cL : Nat)
+    (hpos : 0 < x)
+    (hxy : x ≤ y)
+    (hx : x < 3^n)
+    (hcR : cR = 1 ∨ cR = 2)
+    (hcL : cL = 5 ∨ cL = 9)
+    (hEval : evalA (y+1-x) x (2*x+5) = some (p,q,r))
+    (hDrain : drainB p q r = some (.D a d)) :
+    (-(14*n+12 : Int) ≤
+        (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(x : Int) - 4*(y : Int)) ∧
+      (d : Int) - 4*(a : Int) - (cR : Int) -
+          (7*(x : Int) - 4*(y : Int)) ≤ (14*n+12 : Int)) ∧
+    (-(26*n+46 : Int) ≤
+        (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((y : Int) - 13*(x : Int)) ∧
+      (a : Int) - 4*(d : Int) - (cL : Int) -
+          ((y : Int) - 13*(x : Int)) ≤ (26*n+46 : Int)) := by
+  have hq : q < 3^n := by
+    by_cases hq0 : q = 0
+    · subst q
+      exact Nat.pow_pos (by decide : 0 < 3)
+    · obtain ⟨r0,s,hrs,hrpos,hqsmall,hfirst,hpot⟩ :=
+        evalA_positive_depth n (y+1-x) x (2*x+5) p q r hx (by omega) hEval
+      have hsle : s ≤ n := by omega
+      have hpow : 3^s ≤ 3^n :=
+        Nat.pow_le_pow_right (by decide : 0 < 3) hsle
+      exact Nat.lt_of_lt_of_le hqsmall hpow
+  have hEvalFirstLower :=
+    evalA_first_lower_log n (y+1-x) x (2*x+5) p q r hx hEval
+  have hEvalFirstUpper :=
+    evalA_first_upper_one (y+1-x) x (2*x+5) p q r hEval
+  have hEvalThirdLower :=
+    evalA_third_lower (y+1-x) x (2*x+5) p q r hEval
+  have hEvalThirdUpper :=
+    evalA_upper_log n (y+1-x) x (2*x+5) p q r hx hEval
+  have hDrainFirstLower := drainB_first_lower_log n p q r a d hq hDrain
+  have hDrainFirstUpper := drainB_first_upper_log n p q r a d hq hDrain
+  have hDrainThirdLower := drainB_d3 q p r a d hDrain
+  have hDrainThirdUpper := drainB_upper_linear_log n p q r a d hq hDrain
+  have hEvalFirstLower' : y+1-x ≤ p+n+1 := by omega
+  have hEvalFirstUpper' : p ≤ y+2-x := by omega
+  have hEvalThirdLower' : 3*x+5 ≤ r+3*q+2 := by omega
+  have hEvalThirdUpper' : r+3*q ≤ 3*x+2*n+7 := by omega
+  constructor
+  · exact BB6.Agent49RootRayBridgeArithmetic.evenNearRightGap
+      x y p q r a d n cR hpos hxy hcR
+      hEvalFirstLower' hEvalFirstUpper' hEvalThirdLower' hEvalThirdUpper'
+      hDrainFirstLower hDrainFirstUpper hDrainThirdLower hDrainThirdUpper
+  · exact BB6.Agent49RootRayBridgeArithmetic.evenNearLeftGap
+      x y p q r a d n cL hpos hxy hcL
+      hEvalFirstLower' hEvalFirstUpper' hEvalThirdLower' hEvalThirdUpper'
+      hDrainFirstLower hDrainFirstUpper hDrainThirdLower hDrainThirdUpper
+
+#print axioms oddFarGap
+#print axioms evenFarGap
+#print axioms oddNearGap
+#print axioms evenNearGap
+
 end BB6.Agent49DrainLinearTerminalSource
