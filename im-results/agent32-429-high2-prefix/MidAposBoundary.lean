@@ -329,7 +329,7 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
       rw [hright, show n+1 = 1+n by omega]
       simp only [Option.some.injEq, Prod.mk.injEq]
       constructor
-      · rfl
+      · trivial
       · omega
 
 /-- Appending a fixed 101 tail to an all-one block exposes one
@@ -394,11 +394,9 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
     simp only [pairs01]
     rw [ones_right_101]
     simp [ones]
-    simp [ones]
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
-  rw [List.append_assoc]
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
   rw [hinput, htail]
@@ -407,7 +405,7 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   rw [hcfg]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
-  · rfl
+  · trivial
   · omega
 
 /-- One more u=0 Junc macro moves the even-v boundary to positive u. -/
@@ -427,7 +425,7 @@ theorem c1_odd_to_junc3_delta (k : Nat) :
   rw [hw]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
-  · rfl
+  · trivial
   · omega
 
 /-- Compose the even-v C/1 return with its positive-u Junc continuation. -/
@@ -443,7 +441,7 @@ theorem midApos_zero_w5_even_to_junc3_delta (k : Nat) :
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
-  · rfl
+  · trivial
   · omega
 
 /-- The odd-v C/1 boundary reduces through a source S_E suffix to
@@ -503,7 +501,7 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
-  · rfl
+  · trivial
   · omega
 
 /-- Compose the odd-v C/1 return with its positive-u Junc continuation. -/
@@ -519,7 +517,7 @@ theorem midApos_zero_w5_odd_to_junc11_delta (k : Nat) :
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
-  · rfl
+  · trivial
   · omega
 
 #print axioms shift_A01_tail_delta
