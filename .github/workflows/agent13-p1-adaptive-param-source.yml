@@ -132,3 +132,10 @@ jobs:
           grep -F 'no_infinite_10' /tmp/agent13-block-potential.log
           grep -F 'no_infinite_block' /tmp/agent13-block-potential.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-block-potential.log; then exit 1; fi
+      - name: Independently check secondary finite modular certificate for exceptional repeating blocks
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent13-p1-adaptive-param"
+          lean im-results/agent13-p1-adaptive-param/BlockSecondary.lean | tee /tmp/agent13-block-secondary.log
+          grep -F 'no_infinite_block_secondary' /tmp/agent13-block-secondary.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-block-secondary.log; then exit 1; fi
