@@ -9,6 +9,7 @@ const predictions = new Map();
 let state = 'A';
 let head = 0;
 let previousBZero = null;
+let lastIntervalClass = 'root';
 let bZeros = 0;
 let cphaseShieldInputs = 0;
 let cphaseShieldOutputs = 0;
@@ -32,6 +33,7 @@ const cphaseRuns = {};
 const twoWavePairs = {};
 const twoWaveIntervals = [];
 const twoWaveShieldAudit = { inputs: 0, outputs: 0 };
+const twoWaveIncomingAudit = {};
 
 /** @param {number} h */
 function positiveRunLength(h) {
@@ -179,6 +181,7 @@ for (let time = 0; time < LIMIT; time++) {
       if (expected) {
         assert.equal(head, expected.head, 'Wave theorem endpoint disagrees with raw machine');
         counts[expected.type]++;
+        lastIntervalClass = expected.type;
         predictions.delete(time);
       } else if (validPrefix) {
         assert.equal(time, previousBZero.prefix.returnTime,
@@ -186,6 +189,7 @@ for (let time = 0; time < LIMIT; time++) {
         assert.equal(head, previousBZero.prefix.returnHead,
           'Even-wave prefix return head disagrees with raw machine');
         counts[previousBZero.prefix.type]++;
+        lastIntervalClass = previousBZero.prefix.type;
         const audit = prefixShieldAudit[previousBZero.prefix.type];
         audit.inputs += Number(previousBZero.prefixShield);
         audit.outputs += Number(noLeft1100(head));
@@ -208,6 +212,7 @@ for (let time = 0; time < LIMIT; time++) {
         assert.equal(noLeft1100(head), true,
           'Two-wave root return did not preserve the 1100 exclusion');
         counts.twoWaveRoot++;
+        lastIntervalClass = 'twoWaveRoot';
         const key = previousBZero.twoWave.n1 + ',' + previousBZero.twoWave.r;
         twoWavePairs[key] = (twoWavePairs[key] || 0) + 1;
         twoWaveIntervals.push({
@@ -220,7 +225,10 @@ for (let time = 0; time < LIMIT; time++) {
           steps: time - previousBZero.time,
           displacement: head - previousBZero.head,
           leftSix: previousBZero.prefixLeftSix,
+          incomingClass: previousBZero.incomingClass,
         });
+        const incoming = previousBZero.incomingClass;
+        twoWaveIncomingAudit[incoming] = (twoWaveIncomingAudit[incoming] || 0) + 1;
         assert.equal(time - previousBZero.time,
           8 * previousBZero.twoWave.n1 + 2 * previousBZero.twoWave.r + 30);
         assert.equal(head - previousBZero.head,
@@ -230,6 +238,7 @@ for (let time = 0; time < LIMIT; time++) {
       } else if (previousBZero.prefix &&
           previousBZero.prefix.type === 'prefixUnmatched') {
         counts.prefixUnmatched++;
+        lastIntervalClass = 'prefixUnmatched';
       } else if (validCphase) {
         assert.equal(previousBZero.cphaseShield, true,
           "C-phase D1 input does not satisfy the 1100 exclusion");
@@ -242,14 +251,17 @@ for (let time = 0; time < LIMIT; time++) {
         assert.equal(head, previousBZero.cphase.returnHead,
           'C-phase D1 return head disagrees with raw machine');
         counts.cphaseD1++;
+        lastIntervalClass = 'cphaseD1';
         const r = previousBZero.cphase.r;
         cphaseRuns[r] = (cphaseRuns[r] || 0) + 1;
       } else {
         counts.other++;
+        lastIntervalClass = 'other';
       }
     }
+    const incomingClass = lastIntervalClass;
     previousBZero = {
-      time, head, prefix, cphase, twoWave, cphaseShield, prefixShield,
+      time, head, incomingClass, prefix, cphase, twoWave, cphaseShield, prefixShield,
       twoWaveShield, oddEvenBoundarySafe, prefixLeftSix,
     };
   }
@@ -285,6 +297,10 @@ assert.deepEqual(twoWavePairs, {
   '32,2': 1, '40,15': 1, '40,46': 1, '96,1': 1,
 });
 assert.deepEqual(twoWaveShieldAudit, { inputs: 8, outputs: 8 });
+assert.equal(twoWaveIncomingAudit.other || 0, 0,
+  'A two-wave-root start follows an unclassified interval: ' + JSON.stringify(twoWaveIncomingAudit));
+assert.equal(twoWaveIncomingAudit.prefixUnmatched || 0, 0,
+  'A two-wave-root start follows an unmatched-prefix interval: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
 console.log(JSON.stringify({
   rawSteps: LIMIT,
@@ -298,6 +314,7 @@ console.log(JSON.stringify({
     pairs: twoWavePairs,
     intervals: twoWaveIntervals,
     shield: twoWaveShieldAudit,
+    incoming: twoWaveIncomingAudit,
   },
   b0Left101Audit,
 }, null, 2));
