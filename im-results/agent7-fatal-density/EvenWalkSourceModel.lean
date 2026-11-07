@@ -19,7 +19,7 @@ private theorem pow_mod3 (j:Nat):
       · have hj:j%2=1:=by omega
         simp[hj];omega
 
-private theorem safe_near (n q d:Nat) (hn:40≤n)
+private theorem safe_near (n q d:Nat) (hn:25≤n)
  (hsector:n%6=4 ∨ n%6=5)
  (hdiv:(9*d)%27≠0)
  (hq:4*d=8*2^(n-4)+q+(n-4)+5):
@@ -53,9 +53,9 @@ private theorem safe_near (n q d:Nat) (hn:40≤n)
 
 /-- Genuine original blank-reset root exclusion for every second-tier
     low-valuation source arm satisfying the literal inverse arithmetic,
-    every qualifying n>=40, and every symbolic canonical ray depth j. -/
+    every qualifying n>=25, and every symbolic canonical ray depth j. -/
 theorem second_tier_root_dead (n j D h w q d:Nat)
- (hn:40≤n)
+ (hn:25≤n)
  (hsector:n%6=4∨n%6=5)
  (hD:D+(n-1)=2^j*(2*n+3))
  (hm:32*D+64*n+128≤2^n)
