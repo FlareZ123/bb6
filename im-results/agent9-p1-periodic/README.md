@@ -69,11 +69,29 @@ H_r/(2^r-1) = H/(2^S-1) = h/d
 
 in lowest terms. Apply the same integer-drift necessity (★) to the infinite path grouped in this *shorter* period: `(2^r-1)|r*H_r`, hence **`d|r`**. This contradicts `0<r<d`. Therefore no infinite periodic path can have a positive depth in its period.
 
+### Alternative finite-state proof of the shorter binary period
+
+The necessary divisibility (★) also permits a proof without multiplicative orders. Put `B=2^S-1` and `Q=S H/B`. It is an integer in `1,...,S-1` whenever the period contains a positive depth, by the checked marker bounds. Regard the S-bit marker H as a cyclic binary word. One cyclic left rotation sends `H` to `H'=2H-bB`, where `b∈{0,1}` is the outgoing most significant bit. Accordingly `Q'=2Q-bS` is again an integer between 1 and `S-1`: this holds at every rotation because the rotated marker remains strictly between 0 and B. The induced map is deterministic, `Q→2Q mod S`.
+
+Among the S cyclic rotations, S integer values Q belong to a set of only S-1 elements. The pigeonhole principle gives a repeated value at a shift `0<r<S`. Iterating the deterministic doubling map forces the cyclic binary marker to repeat after r positions. Because the top marker bit is 1 at the original block boundary, the shorter marker block of length r ends in 1 and is a genuine shorter list of inverse costs. Choose a shortest-period depth list if there were an infinite eventually periodic run; that list would have a strictly shorter period, contradiction. The all-zero-depth case follows from the original feeder margin below. This is a second **paper proof** of the finite-word combinatorial step; its rotation/pigeonhole formalization remains pending.
+
 The remaining case `H=B` is the all-zero-depth word. For both authentic feeder roots `z_0+4≤L`, and Agent 13 has already source-checked preservation of `z+4≤L+m` and the impossibility of an infinite zero-depth tail. A finite prefix before a repeated tail changes `m,z` but preserves the required margin. That completes the paper proof of the stated genuine-feeder conclusion.
+
+## Certified finite-horizon repetition bound
+
+An additional pair of original new modules, [PeriodFinite.lean](PeriodFinite.lean) (source SHA-256 `f3b57ddb04c0491ffcc5bf54c18f48319a9a64f38dbfa0af91a81d3514000c17`) and [PeriodFiniteWord.lean](PeriodFiniteWord.lean) (SHA-256 `207adf1fbea2ba64330bd90ab5eaf201c21832c61916e1589420c21578ba9e71`), establishes a quantitative obstruction for *finite*, authentic scalar inverse-word repetitions. Both are Lean 4.36.0-rc2 kernel-checked locally with standard axioms and no `sorry`.
+
+For any nonempty depth word `w` of cost `S` and marker `H`, suppose there are `N+1` consecutive **exact** repeated `Run L w` blocks with block-start scalar counters `Z_0,...,Z_(N+1)`. If the integer equation `(2^S-1)d=H S` has **no solution**, then the theorem `PeriodFiniteWord.finite_word_bound` gives
+
+```text
+2^(S*N) ≤ abs((2^S-1)*(Z_1-Z_0)-H*S).
+```
+
+This is an explicit bound on how long any given nonintegral-slope word can repeat from specified initial two block starts, independent of `L`, the initial cost, or a preselected maximum inverse depth. The proof derives an exact finite affine error recurrence and repeated integer divisibility by `2^S`; it does not assume an infinite run. Words whose initial necessary condition holds (e.g. a nonprimitive repeated word) may still be excluded by applying the shorter primitive word, but this last step uses the paper-level binary-period argument. This theorem does not supply a uniform global bound on every mixed or aperiodic inverse history.
 
 ## Reproducibility, limitations, and next test
 
-With Lean 4.36.0-rc2, compile `PeriodCore.lean` to an `.olean`, then compile `PeriodWord.lean` to an `.olean`, and compile `PeriodWordBounds.lean` with that directory in `LEAN_PATH`. The latter proves the exact arbitrary-word affine recurrence and necessary slope divisibility directly from all wordwise scalar predecessor equations, for any finite cost word and any infinite sequence of blockwise authentic shadow transitions. **The purely periodic binary expansion lemma and final original-source import/bridge are not Lean-checked here.**
+With Lean 4.36.0-rc2, compile `PeriodCore.lean` to an `.olean`, then compile `PeriodWord.lean` and `PeriodFinite.lean` to `.olean` modules, and compile `PeriodWordBounds.lean` and `PeriodFiniteWord.lean` with that directory in `LEAN_PATH`. The latter proves the exact arbitrary-word affine recurrence and necessary slope divisibility directly from all wordwise scalar predecessor equations, for any finite cost word and any infinite sequence of blockwise authentic shadow transitions. **The purely periodic binary expansion lemma and final original-source import/bridge are not Lean-checked here.**
 
 [verify_periodic.py](verify_periodic.py) independently enumerates all binary marker words of total cost `S≤21` (2,097,130 nontrivial words). Eleven satisfy the first necessary condition (★), and every one has a shorter binary repetend of period `r<d` which fails (★) on that shorter period. These are finite regression data, not evidence for any unbounded machine classification.
 
