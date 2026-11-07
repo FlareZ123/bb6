@@ -98,7 +98,7 @@ private theorem section_returns_preserve_CReach :
                     (BB6.Agent46.run (BB6.Agent46.secTime (a,k)) (some (a,k,0))) := by rw [hsecSome]
               _ = BB6.Agent46.run (BB6.Agent46.secTime (a,k)+(n-BB6.Agent46.secTime (a,k)))
                     (some (a,k,0)) := (agent46_run_add _ _ _).symm
-              _ = some (b,c,0) := by rw [hsplit]; exact hrun
+              _ = some (b,c,0) := by rw [← hsplit]; exact hrun
           have hlt' : n-BB6.Agent46.secTime (a,k)<n := by omega
           exact ih (n-BB6.Agent46.secTime (a,k)) hlt' p.1 p.2 b c hreachNext htail
 
@@ -119,7 +119,6 @@ theorem section_reach_reflects {a k : Nat}
     by_cases hn0 : n=0
     · subst n
       simp [BB6.Agent8Section.run, Option.some.injEq,Prod.mk.injEq] at hrun8
-      omega
     · omega
   have hfirst : BB6.Agent8Section.run BB6CLine.nextC 1 (some (5,0,1))=some (5,1,0) := by
     simp [BB6.Agent8Section.run,BB6CLine.nextC]
