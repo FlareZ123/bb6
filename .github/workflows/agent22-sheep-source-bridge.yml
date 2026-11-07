@@ -204,3 +204,30 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
           lake env lean SheepSharpSource.lean
+
+          # Agent14: source-certified all-k 31104 first-even root inverse chain.
+          # Reuse the pinned-original Sheep build and existing machine-semantic bridge.
+          # Generated low rows are checked full-period certificates, not finite traces.
+          export LEAN_PATH=".:$LEAN_PATH"
+          ROOT31104="$GITHUB_WORKSPACE/im-results/agent14-sheep-inverse-dag-222"
+          cp "$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse/IndependentExceptionalGap.lean" IndependentExceptionalGap.lean
+          python3 "$ROOT31104/generate_z_low.py"
+          python3 "$ROOT31104/generate_t_low.py"
+          for h in 0 1 2 3 4 5 6; do python3 "$ROOT31104/generate_root_low.py" "$h"; done
+          for name in Sheep31104ZLowPeriod SheepEdgeIdentities Sheep31104RootBound Sheep31104RootHigh Sheep31104RootSpecial Sheep31104RootComplete Sheep31104RootEdge Sheep31104ZBound Sheep31104ZHigh Sheep31104ZSpecial Sheep31104ZComplete Sheep31104ZEdge Sheep31104TBound Sheep31104THigh Sheep31104TSpecial Sheep31104TComplete Sheep31104TEdge Sheep31104NoBlank Sheep31104ZLow Sheep31104TLow Sheep31104RootLow0 Sheep31104RootLow1 Sheep31104RootLow2 Sheep31104RootLow3 Sheep31104RootLow4 Sheep31104RootLow5 Sheep31104RootLow6; do
+            cp "$ROOT31104/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            IndependentExceptionalGap.lean Sheep31104ZLowPeriod.lean SheepEdgeIdentities.lean \
+            Sheep31104RootBound.lean Sheep31104RootHigh.lean Sheep31104RootSpecial.lean \
+            Sheep31104RootLow0.lean Sheep31104RootLow1.lean Sheep31104RootLow2.lean \
+            Sheep31104RootLow3.lean Sheep31104RootLow4.lean Sheep31104RootLow5.lean \
+            Sheep31104RootLow6.lean Sheep31104RootComplete.lean Sheep31104RootEdge.lean \
+            Sheep31104ZBound.lean Sheep31104ZHigh.lean Sheep31104ZSpecial.lean Sheep31104ZLow.lean \
+            Sheep31104ZComplete.lean Sheep31104ZEdge.lean Sheep31104TBound.lean \
+            Sheep31104THigh.lean Sheep31104TSpecial.lean Sheep31104TLow.lean \
+            Sheep31104TComplete.lean Sheep31104TEdge.lean Sheep31104NoBlank.lean
+          for name in IndependentExceptionalGap Sheep31104ZLowPeriod SheepEdgeIdentities Sheep31104RootBound Sheep31104RootHigh Sheep31104RootSpecial Sheep31104RootLow0 Sheep31104RootLow1 Sheep31104RootLow2 Sheep31104RootLow3 Sheep31104RootLow4 Sheep31104RootLow5 Sheep31104RootLow6 Sheep31104RootComplete Sheep31104RootEdge Sheep31104ZBound Sheep31104ZHigh Sheep31104ZSpecial Sheep31104ZLow Sheep31104ZComplete Sheep31104ZEdge Sheep31104TBound Sheep31104THigh Sheep31104TSpecial Sheep31104TLow Sheep31104TComplete Sheep31104TEdge; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean Sheep31104NoBlank.lean
