@@ -36,5 +36,5 @@ jobs:
           lean -o CZeroLarge.olean CZeroLarge.lean
           lean -o CZeroBridge.olean CZeroBridge.lean
           lean -o Core192Source.olean Core192Source.lean
-          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/M192GeneralBound.lean /tmp/agent41-m192/
+          cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/M192GeneralBound.lean M192GeneralBound.lean
           lean -o M192GeneralBound.olean M192GeneralBound.lean
