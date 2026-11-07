@@ -61,4 +61,6 @@ jobs:
           cp "../im-results/agent8-623-inverse/ZeroTailSource.lean" Agent8ZeroTailSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8ZeroTailSource.olean Agent8ZeroTailSource.lean
           cp "../im-results/agent8-623-inverse/RootCorridorSource.lean" Agent8RootCorridorSource.lean
-          lake env lean Agent8RootCorridorSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCorridorSource.olean Agent8RootCorridorSource.lean
+          cp "../im-results/agent8-623-inverse/HaltParentSource.lean" Agent8HaltParentSource.lean
+          lake env lean Agent8HaltParentSource.lean
