@@ -129,8 +129,10 @@ theorem no_201_mod_342_halving_into_power (q k t : Nat) :
     highLevelNext (.N (oddTower q (201+342*t))) ≠
       some (.N (haltTower k)) := by
   have hperiod : 2^342%19=1 := by
-    change 2^(18*19)%19=1
-    exact pow_multiple_period 19 18 19 (by omega) (by decide)
+    calc
+      2^342%19 = (2^18)^19%19 := by
+        rw [show 342=18*19 by omega, Nat.pow_mul]
+      _ = 1 := pow_period_mod 19 18 19 (by omega) (by decide)
   exact no_terminal_on_periodic_valuation_progression 19 202 342 0 201 q k t
     (by omega) (by decide) hperiod (by omega) (by decide)
     (by refine ⟨21, ?_⟩; omega)
@@ -142,17 +144,224 @@ theorem no_74_mod_812_halving_into_power (q k t : Nat) :
     highLevelNext (.N (oddTower q (74+812*t))) ≠
       some (.N (haltTower k)) := by
   have hperiod : 2^812%29=1 := by
-    change 2^(28*29)%29=1
-    exact pow_multiple_period 29 28 29 (by omega) (by decide)
+    calc
+      2^812%29 = (2^28)^29%29 := by
+        rw [show 812=28*29 by omega, Nat.pow_mul]
+      _ = 1 := pow_period_mod 29 28 29 (by omega) (by decide)
   exact no_terminal_on_periodic_valuation_progression 29 75 812 0 74 q k t
     (by omega) (by decide) hperiod (by omega) (by decide)
     (by refine ⟨5, ?_⟩; omega)
     (by refine ⟨56, ?_⟩; omega)
+
+
+/-- A stronger residue obstruction: if the required residue of 2^(k+2)
+is absent modulo m, then the source cannot feed a halt. -/
+theorem no_terminal_by_modular_residue_avoidance
+    (q v k m : Nat)
+    (hm : 0 < m)
+    (hden : m ∣ 2^(v+1)+3)
+    (havoid : ∀ n, (2^n+3)%m ≠ (2*v)%m) :
+    highLevelNext (.N (oddTower q v)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have heq := (predecessor_power_identity q v k).mp hhalt
+  have hdenMod : (2^(v+1)+3)%m=0 := Nat.dvd_iff_mod_eq_zero.mp hden
+  have hprodMod : ((2^(v+1)+3)*(2*q+3))%m=0 := by
+    rw [Nat.mul_mod, hdenMod]
+    simp
+  have hmod : (2^(k+2)+3)%m=(2*v)%m := by
+    calc
+      (2^(k+2)+3)%m = ((2^(v+1)+3)*(2*q+3)+2*v)%m := by rw [heq]
+      _ = (((2^(v+1)+3)*(2*q+3))%m+(2*v)%m)%m := by rw [Nat.add_mod]
+      _ = (0+(2*v)%m)%m := by rw [hprodMod]
+      _ = (2*v)%m := by
+        rw [Nat.zero_add]
+        exact Nat.mod_eq_of_lt (Nat.mod_lt _ hm)
+  exact havoid (k+2) hmod
+
+private theorem pow_plus_three_mod_seven (n : Nat) :
+    (2^n+3)%7=0 ∨ (2^n+3)%7=4 ∨ (2^n+3)%7=5 := by
+  rcases pow_two_mod_seven n with h1|h2|h4
+  · rw [Nat.add_mod, h1]
+    decide
+  · rw [Nat.add_mod, h2]
+    decide
+  · rw [Nat.add_mod, h4]
+    decide
+
+/-- The 7-adic residue test excludes four complete valuation classes modulo 21.
+The v=19 class was already present in SpaceNeedleClosed; v=1,4,10 are new
+infinite progressions. -/
+theorem no_7_mod_21_halving_into_power (q k t v0 : Nat)
+    (hv0 : v0=1 ∨ v0=4 ∨ v0=10 ∨ v0=19) :
+    highLevelNext (.N (oddTower q (21*t+v0))) ≠
+      some (.N (haltTower k)) := by
+  have hperiod : 2^21%7=1 := by decide
+  have hden : 7 ∣ 2^(21*t+v0+1)+3 := by
+    rcases hv0 with h1|h4|h10|h19
+    · subst v0
+      exact progression_denominator 7 2 21 0 1 t (by omega) hperiod (by omega) (by decide)
+    · subst v0
+      exact progression_denominator 7 5 21 0 4 t (by omega) hperiod (by omega) (by decide)
+    · subst v0
+      exact progression_denominator 7 11 21 0 10 t (by omega) hperiod (by omega) (by decide)
+    · subst v0
+      exact progression_denominator 7 20 21 0 19 t (by omega) hperiod (by omega) (by decide)
+  have havoid : ∀ n, (2^n+3)%7 ≠ (2*(21*t+v0))%7 := by
+    intro n
+    have hleft := pow_plus_three_mod_seven n
+    rcases hv0 with h1|h4|h10|h19
+    · subst v0
+      have htarget : (2*(21*t+1))%7=2 := by omega
+      rw [htarget]
+      rcases hleft with h|h|h <;> omega
+    · subst v0
+      have htarget : (2*(21*t+4))%7=1 := by omega
+      rw [htarget]
+      rcases hleft with h|h|h <;> omega
+    · subst v0
+      have htarget : (2*(21*t+10))%7=6 := by omega
+      rw [htarget]
+      rcases hleft with h|h|h <;> omega
+    · subst v0
+      have htarget : (2*(21*t+19))%7=3 := by omega
+      rw [htarget]
+      rcases hleft with h|h|h <;> omega
+  exact no_terminal_by_modular_residue_avoidance q (21*t+v0) k 7
+    (by omega) hden havoid
+
+private theorem pow_two_multiple39_mod79 (n : Nat) : 2^(39*n)%79=1 := by
+  exact pow_multiple_period 79 39 n (by omega) (by decide)
+
+private theorem pow_two_mod79_ne_15 (n : Nat) : 2^n%79 ≠ 15 := by
+  intro h
+  have hleft : (2^n)^39%79=1 := by
+    rw [←Nat.pow_mul, Nat.mul_comm n 39]
+    exact pow_two_multiple39_mod79 n
+  have hright : (2^n)^39%79=15^39%79 := by
+    rw [Nat.pow_mod, h]
+  have htarget : 15^39%79=78 := by decide
+  rw [htarget] at hright
+  omega
+
+private theorem pow_two_mod79_ne_14 (n : Nat) : 2^n%79 ≠ 14 := by
+  intro h
+  have hleft : (2^n)^39%79=1 := by
+    rw [←Nat.pow_mul, Nat.mul_comm n 39]
+    exact pow_two_multiple39_mod79 n
+  have hright : (2^n)^39%79=14^39%79 := by
+    rw [Nat.pow_mod, h]
+  have htarget : 14^39%79=78 := by decide
+  rw [htarget] at hright
+  omega
+
+private theorem no_two_plus_three_mod79_eq18 (n : Nat) :
+    (2^n+3)%79 ≠ 18 := by
+  intro h
+  have h3 : 3%79=3 := by decide
+  rw [Nat.add_mod, h3] at h
+  have hlt : 2^n%79 < 79 := Nat.mod_lt _ (by decide)
+  have hpow : 2^n%79=15 := by omega
+  exact pow_two_mod79_ne_15 n hpow
+
+private theorem no_two_plus_three_mod79_eq17 (n : Nat) :
+    (2^n+3)%79 ≠ 17 := by
+  intro h
+  have h3 : 3%79=3 := by decide
+  rw [Nat.add_mod, h3] at h
+  have hlt : 2^n%79 < 79 := Nat.mod_lt _ (by decide)
+  have hpow : 2^n%79=14 := by omega
+  exact pow_two_mod79_ne_14 n hpow
+
+/-- The p=79 subgroup obstruction extends the known v=9 feeder obstruction
+to v=9 mod 3081. -/
+theorem no_9_mod_3081_halving_into_power (q k t : Nat) :
+    highLevelNext (.N (oddTower q (9+3081*t))) ≠
+      some (.N (haltTower k)) := by
+  have hperiod : 2^3081%79=1 := by
+    calc
+      2^3081%79 = (2^39)^79%79 := by
+        rw [show 3081=39*79 by omega, Nat.pow_mul]
+      _ = 1 := pow_period_mod 79 39 79 (by omega) (by decide)
+  have hden : 79 ∣ 2^(9+3081*t+1)+3 :=
+    progression_denominator 79 10 3081 0 9 t (by omega) hperiod (by omega) (by decide)
+  have havoid : ∀ n, (2^n+3)%79 ≠ (2*(9+3081*t))%79 := by
+    intro n
+    have htarget : (2*(9+3081*t))%79=18 := by omega
+    rw [htarget]
+    exact no_two_plus_three_mod79_eq18 n
+  exact no_terminal_by_modular_residue_avoidance q (9+3081*t) k 79
+    (by omega) hden havoid
+
+/-- A second p=79 subgroup obstruction, for v=48 mod 3081. -/
+theorem no_48_mod_3081_halving_into_power (q k t : Nat) :
+    highLevelNext (.N (oddTower q (48+3081*t))) ≠
+      some (.N (haltTower k)) := by
+  have hperiod : 2^3081%79=1 := by
+    calc
+      2^3081%79 = (2^39)^79%79 := by
+        rw [show 3081=39*79 by omega, Nat.pow_mul]
+      _ = 1 := pow_period_mod 79 39 79 (by omega) (by decide)
+  have hden : 79 ∣ 2^(48+3081*t+1)+3 :=
+    progression_denominator 79 49 3081 0 48 t (by omega) hperiod (by omega) (by decide)
+  have havoid : ∀ n, (2^n+3)%79 ≠ (2*(48+3081*t))%79 := by
+    intro n
+    have htarget : (2*(48+3081*t))%79=17 := by omega
+    rw [htarget]
+    exact no_two_plus_three_mod79_eq17 n
+  exact no_terminal_by_modular_residue_avoidance q (48+3081*t) k 79
+    (by omega) hden havoid
+
+private theorem pow_two_multiple51_mod103 (n : Nat) : 2^(51*n)%103=1 := by
+  exact pow_multiple_period 103 51 n (by omega) (by decide)
+
+private theorem pow_two_mod103_ne_12 (n : Nat) : 2^n%103 ≠ 12 := by
+  intro h
+  have hleft : (2^n)^51%103=1 := by
+    rw [←Nat.pow_mul, Nat.mul_comm n 51]
+    exact pow_two_multiple51_mod103 n
+  have hright : (2^n)^51%103=12^51%103 := by
+    rw [Nat.pow_mod, h]
+  have htarget : 12^51%103=102 := by decide
+  rw [htarget] at hright
+  omega
+
+private theorem no_two_plus_three_mod103_eq15 (n : Nat) :
+    (2^n+3)%103 ≠ 15 := by
+  intro h
+  have h3 : 3%103=3 := by decide
+  rw [Nat.add_mod, h3] at h
+  have hlt : 2^n%103 < 103 := Nat.mod_lt _ (by decide)
+  have hpow : 2^n%103=12 := by omega
+  exact pow_two_mod103_ne_12 n hpow
+
+/-- The p=103 subgroup obstruction extends v=59 to v=59 mod 5253. -/
+theorem no_59_mod_5253_halving_into_power (q k t : Nat) :
+    highLevelNext (.N (oddTower q (59+5253*t))) ≠
+      some (.N (haltTower k)) := by
+  have hperiod : 2^5253%103=1 := by
+    calc
+      2^5253%103 = (2^51)^103%103 := by
+        rw [show 5253=51*103 by omega, Nat.pow_mul]
+      _ = 1 := pow_period_mod 103 51 103 (by omega) (by decide)
+  have hden : 103 ∣ 2^(59+5253*t+1)+3 :=
+    progression_denominator 103 60 5253 0 59 t (by omega) hperiod (by omega) (by decide)
+  have havoid : ∀ n, (2^n+3)%103 ≠ (2*(59+5253*t))%103 := by
+    intro n
+    have htarget : (2*(59+5253*t))%103=15 := by omega
+    rw [htarget]
+    exact no_two_plus_three_mod103_eq15 n
+  exact no_terminal_by_modular_residue_avoidance q (59+5253*t) k 103
+    (by omega) hden havoid
 
 #print axioms no_terminal_on_periodic_valuation_progression
 #print axioms no_62_mod_110_halving_into_power
 #print axioms no_21_mod_156_halving_into_power
 #print axioms no_201_mod_342_halving_into_power
 #print axioms no_74_mod_812_halving_into_power
+#print axioms no_terminal_by_modular_residue_avoidance
+#print axioms no_7_mod_21_halving_into_power
+#print axioms no_9_mod_3081_halving_into_power
+#print axioms no_48_mod_3081_halving_into_power
+#print axioms no_59_mod_5253_halving_into_power
 
 end BB6.Agent48.SpaceNeedleObstructionFamilies
