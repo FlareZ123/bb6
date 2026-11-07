@@ -147,7 +147,7 @@ Here \(B_n\) is exactly the number of raw section transitions, while \(C_n\) is 
 
 Since \(-\log_2\Pr(a,b)=a+b\), the Bernoulli system has Kolmogorov-Sinai entropy exactly **four bits per first-even return** (two bits from each independent geometric coordinate).
 
-There is also a complete prefix-code interpretation. Conditional on the first binary digit being zero (the even domain), each branch cylinder fixes exactly \(c=a+b\) further low-order bits, and distinct branch cylinders are disjoint. There are exactly \(c-1\) branch symbols of length \(c\), so their Kraft sum is
+There is also a complete prefix-code interpretation. Read the 2-adic binary digits from least significant to most significant. Conditional on the first digit being zero (the even domain), each branch cylinder fixes exactly \(c=a+b\) further low-order bits, and distinct branch cylinders are disjoint. There are exactly \(c-1\) branch symbols of length \(c\), so their Kraft sum is
 \[
 \sum_{c\ge2}(c-1)2^{-c}=1.
 \]
