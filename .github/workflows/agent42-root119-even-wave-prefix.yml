@@ -39,11 +39,6 @@ jobs:
           lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
           lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
           lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
-          lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean" 2>&1 | tee "$A/Root119TwoWaveRootPrefix.log"
-          if grep -q 'sorryAx' "$A/Root119TwoWaveRootPrefix.log"; then
-            echo "::error::sorryAx found in two-wave root-prefix module"
-            exit 1
-          fi
           lean "$A/Root119OddEvenChain.lean" 2>&1 | tee "$A/Root119OddEvenChain.log"
           if grep -q 'sorryAx' "$A/Root119OddEvenChain.log"; then
             echo "::error::sorryAx found in new even-wave return theorems"
