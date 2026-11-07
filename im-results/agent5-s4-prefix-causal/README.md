@@ -136,3 +136,6 @@ The candidate state from the Python full-root simulator is
 ```
 
 The independent Python checker agrees with this state after 5,120 returns from `s337`. This remains computational evidence. A next formal attempt should split the run into 16-step source-map chunks using the existing `seed337` proof pattern (`simp [prun,P,G,H]`), or define a structurally recursive evaluator for `H/P` and prove its equivalence to the original well-founded definitions. The exact prefix-period theorem remains conditional on survival at the relevant return.
+
+
+A further local experiment used a tail-recursive `prefixRunFast` with a proved equivalence to the standalone recursive `prefixRun`. Each of the four concrete ninth-digit return equalities was separately kernel-checked with `by decide` in Lean 4.36.0-rc2, with no extra axioms (about 33 seconds per value). The combined four-theorem file timed out, while separate modules succeeded. These local modules are not yet source-imported or committed; the ninth-digit cycle remains a candidate until that bridge and its root transport are formalized.
