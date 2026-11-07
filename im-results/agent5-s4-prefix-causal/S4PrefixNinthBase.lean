@@ -2,7 +2,7 @@ import S4Prefix5457
 import Lean.Elab.Tactic.Omega
 
 namespace S4PrefixNinth
-open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457
+open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457 S4Toggle
 
 set_option maxRecDepth 500000
 set_option maxHeartbeats 0
@@ -112,7 +112,9 @@ theorem block20480_ninth (v : Nat) :
       prefixRunFast 20480 cycle8PeriodicStart = cycle8PeriodicStart := by
     rw [prefixRunFast_eq, prefixRun_20480_cycle]
   have hlast : return9Fast v = w := by
-    simp [return9Fast, hw, hprefix, cycle8PeriodicStart]
+    unfold return9Fast
+    rw [hw, hprefix]
+    simp
   rw [hw, hprefix, hlast]
 
 #print axioms s5457_decomp
