@@ -30,7 +30,7 @@ jobs:
           lake update
           lake exe cache get
           lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
-      - name: Prove universal evaluator and full-drain affine equivariance
+      - name: Prove evaluator bounds, joint drain mass, and root-ray bridge
         working-directory: cryptids
         run: |
           set -eu
