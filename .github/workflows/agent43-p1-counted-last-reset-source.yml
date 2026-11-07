@@ -1,18 +1,11 @@
 name: Agent43 P1 counted last-reset source check (manual)
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'im-results/agent50-p1-subwall/ThreeResetCore.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/ThreeResetWallPrefix.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FourResetCore.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FourResetWallPrefix.lean'
-      - '.github/workflows/agent43-p1-counted-last-reset-source.yml'
 permissions:
   contents: read
 jobs:
   source-check:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 50
     steps:
