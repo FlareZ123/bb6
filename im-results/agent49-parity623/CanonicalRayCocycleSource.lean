@@ -233,7 +233,7 @@ theorem rightOddCanonicalTransition (a d : Nat)
       highLevelNext (.D a d) =
           highLevelNext (.D a ((a+1+2*k)+2*t)) := by rw [hdecomp]
       _ = (highLevelNext (.D a (a+1+2*k))).map (liftFirstState (2*t)) :=
-        highLevel_right_odd_shift_ones a (a+1+2*k) t ha he hd' (by omega) hbaseBudget
+        highLevel_right_odd_shift_ones a (a+1+2*k) t ha he hdBase (by omega) hbaseBudget
   refine ⟨B,E,?_,hbase⟩
   rw [hshift,hbase]
   rfl
@@ -258,6 +258,7 @@ theorem rightEvenCanonicalTransition (a d : Nat)
     have heq : d=a := by omega
     subst d
     simp [ternaryOnes] at hbudget
+    omega
   have hdDiv : d=2*(d/2) := by
     have h := Nat.mod_add_div d 2
     rw [hd] at h
@@ -277,6 +278,8 @@ theorem rightEvenCanonicalTransition (a d : Nat)
     dsimp [t,m]
     rw [hdDiv,haDiv]
     omega
+  have hdBase : (a+2+2*k)%2=0 := by omega
+  have hdBaseNotOne : (a+2+2*k)%2 ≠ 1 := by omega
   have hbaseEq : highLevelNext (.D a (a+2+2*k)) =
       (evalA (2*k+3) a (2*a+5)).bind
         (fun p => drainB p.1 p.2.1 p.2.2) := by
@@ -286,8 +289,7 @@ theorem rightEvenCanonicalTransition (a d : Nat)
     have h2 : ¬((a+2+2*k)%2=0 ∧ a≥a+2+2*k+3) := by omega
     have hodd : a%2 ≠ 1 := by omega
     have heq : a ≠ a+2+2*k+2 := by omega
-    have hdBase : (a+2+2*k)%2=0 := by omega
-    simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg heq, if_neg (show (a+2+2*k)%2 ≠ 1 from by omega)]
+    simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg heq, if_neg hdBaseNotOne]
     have harg : a+2+2*k+1-a=2*k+3 := by omega
     rw [harg]
   obtain ⟨x,b,y,hEval,hbudget'⟩ :=
