@@ -170,7 +170,8 @@ theorem b0_two_wave_root_interval_to_b0
     (hzero1 : b.tape (b.h+(2*n1+1:Int)) = false)
     (hextra : b.tape (b.h+(2*n1+2:Int)) = true)
     (hzero2 : b.tape (b.h+(2*n1+3:Int)) = false) :
-    ∃ bout : Conf, Reach bout ∧ BZero bout := by
+    ∃ bout : Conf, run (8*n1+2*m+30) b = some bout ∧
+      Reach bout ∧ BZero bout := by
   let H : Int := b.h-1
   let t1 : Int → Bool := twoWavePrefixTape b.tape b.h
   let t2 : Int → Bool := setBit (oddWaveTape n1 t1 H) (H-1) true
@@ -316,19 +317,19 @@ theorem b0_two_wave_root_interval_to_b0
   have hchain := odd_f1_two_wave_chain_to_b0 n1 (n1+2) m t1 H
     hhead1 hones1' hzero1' hleft1' hhead2 hones2 hzero2 hleft2' hfb2 hfinalF2 hfinalB2
   let out : Conf := oddRetreatResult (n1+2) m t2 (H-2)
-  have htotal : 9+(4*n1+4*(n1+2)+2*m+13) =
-      9+(4*n1+4*(n1+2)+2*m+13) := rfl
+  have htotal : 8*n1+2*m+30 =
+      9+(4*n1+4*(n1+2)+2*m+13) := by omega
   have hadd := run_add 9 (4*n1+4*(n1+2)+2*m+13) b
-  have hrun : run (9+(4*n1+4*(n1+2)+2*m+13)) b = some out := by
-    rw [hadd,hprefix]
+  have hrun : run (8*n1+2*m+30) b = some out := by
+    rw [htotal,hadd,hprefix]
     simp only [Option.bind_some]
     simpa [out,t2] using hchain.1
   have houtReach : Reach out :=
-    reachable_of_run (9+(4*n1+4*(n1+2)+2*m+13)) b out hb hrun
+    reachable_of_run (8*n1+2*m+30) b out hb hrun
   have houtB : BZero out := by
     refine ⟨rfl,?_⟩
     simpa [out,oddRetreatResult,t2] using hchain.2
-  exact ⟨out,houtReach,houtB⟩
+  exact ⟨out,hrun,houtReach,houtB⟩
 
 #print axioms BB6Root119.b0_two_wave_prefix
 #print axioms BB6Root119.b0_two_wave_root_interval_to_b0
