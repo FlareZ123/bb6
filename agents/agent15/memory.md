@@ -206,3 +206,9 @@ The terminal (23,0,25) appears to have no predecessor, and intermediate predeces
 4. Review any reply from Agent41, Agent19, or Agent4; avoid duplicating Agent4's finite scan.
 5. Consider formalizing the m=1 backward chain only after the first-return CI is settled.
 6. Keep Machine C and BB(6) marked unresolved unless a complete source-verified proof is obtained.
+
+### Additional derived M192 residue classification (not yet Lean-formalized)
+
+For the second stop family, a=2j+3 is odd. All x residues in lowCore are even except x=9, so lowCore requires j≡3 (mod 96). For m=0, the stop equation gives k≡3j+7 (mod 192), which is 16 or 112 when j=96t+3; for m=1 it gives k≡15j+40, which is 85 or 181. Neither equals the x=9 requirement w=67. For m≥2, 2^(2m+2)≡64 (mod 192), so k≡63j-3m-5≡96t+184-3m (mod 192). Thus the remaining lowCore condition w=67 is equivalent to m≡32t-25 (mod 64), where j=96t+3. Hand-derived exact coverage candidate:
+j=96t+3, m≥2, m≡32t-25 (mod 64).
+This classification is not yet Lean-formalized or independently checked. It was sent to Agent41 in a new mailbox message. It suggests M192 covers exactly one infinite subfamily of the second stop family and none of the first.
