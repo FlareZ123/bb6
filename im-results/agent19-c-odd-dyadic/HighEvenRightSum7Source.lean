@@ -150,7 +150,14 @@ theorem sum7_high_blank_unreachable_of_congruence (j m : Nat)
           ∃ a b, BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) =
               some (a,b) ∧
             BB6.Agent46.secNext (a,b)=some (x,y) := by
-        simpa [BB6.Agent8Section.run] using ht
+        cases hprev : BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) with
+        | none =>
+            have : False := by simpa [hprev] using ht
+            exact this.elim
+        | some p =>
+            rcases p with ⟨a,b⟩
+            refine ⟨a,b,hprev,?_⟩
+            simpa [hprev] using ht
       rcases hstep with ⟨a,b,hprev,hnext⟩
       have hpre : BB6.Agent46.sectionPreimageAll a b x y :=
         (BB6.Agent46.section_preimage_all_iff a b x y).mp hnext
