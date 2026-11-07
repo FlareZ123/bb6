@@ -57,7 +57,24 @@ theorem physical_obs_congr {c d : Cfg} (h : ObsEq c d) :
     Physical c ↔ Physical d := by
   change (c.st=5 ∧ c.h=false ∧ c.l.all (!·)=true) ↔
     (d.st=5 ∧ d.h=false ∧ d.l.all (!·)=true)
-  rw [h.2.2.2,h.2.1,allFalse_congr h.1]
+  have hleft : TapeEq c.l d.l := by
+    change TapeEq c.l d.l at h.1
+    exact h.1
+  have hbit : c.h = d.h := by
+    change c.h = d.h at h.2.1
+    exact h.2.1
+  have hstate : c.st = d.st := by
+    change c.st = d.st at h.2.2.2
+    exact h.2.2.2
+  constructor
+  · rintro ⟨hs,hb,hl⟩
+    exact ⟨by simpa [hstate] using hs,
+      by simpa [hbit] using hb,
+      (allFalse_congr hleft).mp hl⟩
+  · rintro ⟨hs,hb,hl⟩
+    exact ⟨by simpa [hstate] using hs,
+      by simpa [hbit] using hb,
+      (allFalse_congr hleft).mpr hl⟩
 
 /-- Every earlier physical return has the same truth value in the input
     with and without a terminal explicitly written zero. -/
