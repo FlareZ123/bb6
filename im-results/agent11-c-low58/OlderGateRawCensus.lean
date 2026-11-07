@@ -32,17 +32,19 @@ theorem rawHighPoints_length : rawHighPoints.length=322 := by
 theorem scanAllowedBool_iff (j m : Nat) :
     scanAllowedBool j m = true ↔ ∀ n, ¬gate n j m := by
   unfold scanAllowedBool
-  rw [List.all_eq_true]
   constructor
   · intro h n
+    have hall : ∀ a ∈ List.range (2*m+1),
+        decide (¬gate a j m)=true := List.all_eq_true.mp h
     by_cases hlt : n < 2*m+1
     · have hmem : n∈List.range (2*m+1) := List.mem_range.mpr hlt
-      exact of_decide_eq_true (h n hmem)
+      exact of_decide_eq_true (hall n hmem)
     · intro hg
       rcases hg with ⟨hlim,_,_⟩
       omega
-  · intro h n hn
-    have hlt : n < 2*m+1 := List.mem_range.mp hn
+  · intro h
+    apply List.all_eq_true.mpr
+    intro n hn
     exact decide_eq_true_eq.mpr (h n)
 
 /-- The three excluded pairs each have the simple depth-zero witness. -/
