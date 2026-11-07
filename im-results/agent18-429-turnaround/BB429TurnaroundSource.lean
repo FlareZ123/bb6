@@ -182,6 +182,39 @@ theorem source_exit_shape (u w a b : Nat) (hexit : w < 2*u+3)
                 · cases hn
                   omega
 
+theorem even_seed_odd_burst (u w n : Nat) (hw : w%2=0)
+    (he : 2*u+w+3*n+13 = 4*((u+3)*2^n)) : n%2=1 := by
+  omega
+
+theorem pow_two_odd_mod_six (k : Nat) : 2^(2*k+1)%6=2 := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    have hp : 2^(2*(k+1)+1) = 2^(2*k+1)*4 := by
+      rw [show 2*(k+1)+1 = (2*k+1)+2 by omega, Nat.pow_add]
+    rw [hp, Nat.mul_mod, ih]
+
+theorem even_gateway_mod_six (u w n : Nat) (hw : w%2=0)
+    (he : 2*u+w+3*n+13 = 4*((u+3)*2^n)) : w%6=2 := by
+  have hn := even_seed_odd_burst u w n hw he
+  have hdecomp : n = 2*(n/2)+1 := by
+    have h := Nat.mod_add_div n 2
+    omega
+  have hpow : 2^n%6=2 := by
+    rw [hdecomp]
+    exact pow_two_odd_mod_six (n/2)
+  have hmod := congrArg (fun z : Nat => z%6) he
+  have hrhs : (4*((u+3)*2^n))%6 = (2*u)%6 := by
+    simp [Nat.mul_mod, hpow]
+    omega
+  rw [hrhs] at hmod
+  omega
+
+theorem sourceTurnaround_even_seed_mod_six (u w : Nat)
+    (hw : w%2=0) (h : sourceTurnaround u w = none) : w%6=2 := by
+  have he := (sourceTurnaround_none_iff_exponential u w).mp h
+  exact even_gateway_mod_six u w (burstExit u w).2 hw he
+
 theorem sourceTurnaround_even (u w a b : Nat)
     (h : sourceTurnaround u w = some (a,b)) : b%2=0 := by
   let r := burstExit u w
@@ -203,6 +236,25 @@ theorem sourceTurnaround_even (u w a b : Nat)
 
 theorem blank_first_return : sourceTurnaround 0 0 = some (0,12) := by
   simp [sourceTurnaround, sourceTurnAt, burstExit, highLevelNext]
+
+theorem blank_second_return : sourceTurnaround 0 12 = some (0,28) := by
+  simp [sourceTurnaround, sourceTurnAt, burstExit, highLevelNext]
+
+theorem blank_third_return : sourceTurnaround 0 28 = some (0,44) := by
+  simp [sourceTurnaround, sourceTurnAt, burstExit, highLevelNext]
+
+theorem blank_fourth_return : sourceTurnaround 0 44 = some (23,18) := by
+  simp [sourceTurnaround, sourceTurnAt, burstExit, highLevelNext]
+
+theorem blank_second_return_not_halt : sourceTurnaround 0 12 ≠ none := by
+  intro h
+  have hm := sourceTurnaround_even_seed_mod_six 0 12 (by decide) h
+  omega
+
+theorem blank_third_return_not_halt : sourceTurnaround 0 28 ≠ none := by
+  intro h
+  have hm := sourceTurnaround_even_seed_mod_six 0 28 (by decide) h
+  omega
 
 theorem sourceTurnaround_shape (u w a b : Nat)
     (h : sourceTurnaround u w = some (a,b)) :
@@ -227,9 +279,15 @@ theorem sourceTurnaround_shape (u w a b : Nat)
 #print axioms source_burst_decomposition
 #print axioms sourceTurnaround_none_iff_exponential
 #print axioms sourceTurnaround_even
+#print axioms sourceTurnaround_even_seed_mod_six
 #print axioms sourceReturn_run
 #print axioms source_exit_shape
 #print axioms sourceTurnaround_shape
 #print axioms blank_first_return
+#print axioms blank_second_return
+#print axioms blank_third_return
+#print axioms blank_fourth_return
+#print axioms blank_second_return_not_halt
+#print axioms blank_third_return_not_halt
 
 end BB429TurnaroundSource
