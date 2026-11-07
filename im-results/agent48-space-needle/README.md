@@ -1,41 +1,77 @@
-# Space Needle: original-source arithmetic, complete inverse, and blank-root boundary
+# Space Needle terminal-feeder and root analysis
 
-**Research status, 7 November 2026.** The Space Needle machine `1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_---0LD` remains undecided from its true blank root. The strongest reusable results here are a complete source-connected high-level transition classification, source-certified fifth-linear terminal inverse enumeration, and an original-root argument excluding the two exceptional fifth-bound feeders. The **fifth-linear arithmetic and complete terminal-list theorems passed original-source [CI 42332720650](https://github.com/FlareZ123/bb6/actions/runs/42332720650)** with only standard axioms and no `sorryAx`. The separate blank-root exclusion and integrated fifth-linear halting equivalence have been submitted to [source CI 42333153807](https://github.com/FlareZ123/bb6/actions/runs/42333153807) and remain **pending verification** until that run completes. Neither the original machine nor BB(6) has a halt/nonhalt decision, a new attainable Busy Beaver score, or a global maximum proof.
+**Status (2026-11-07): BB(6) remains unresolved.** The Space Needle machine has not been proved nonhalting from its blank-root state. The work below narrows the terminal-feeder problem and records strong finite computational evidence, while preserving the distinction between feeder impossibility and root nonreachability.
 
-## Original-source semantics and decisive unknown
+## 1. Existing source-level reduction
 
-The source is the published [Google DeepMind Cryptids Space Needle module](https://github.com/google-deepmind/cryptids/blob/ced8f9f44f67a167d5ecc03e687b048c67926371/BusyBeaver/BB6/M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD.lean), revision `ced8f9f44f67a167d5ecc03e687b048c67926371`, whose theorem reduces original blank-tape halting to iterating `highLevelNext` from `N 1`. [SpaceNeedleClosed.lean](SpaceNeedleClosed.lean) gives the exhaustive source transition:
+The source-checked Space Needle development is based on the original high-level transition function and includes the terminal-predecessor identity
 
-```text
-H(0)=0; H(k+1)=2(H(k)+1); H(k)+2=2^(k+1)
-O(q,0)=2q+1; O(q,k+1)=2(O(q,k)+1); O(q,k)+2=2^k(2q+3)
-scanEven(H(k),b)=none
-scanEven(O(q,k),b)=some(N(b+O(q,k)+k+3(q+1)))
-```
+[
+2^{k+2}+3=(2^{v+1}+3)(2q+3)+2v.
+]
 
-For a nonterminal counter `d`, write `d+2=2^v(2q+3)`. Its successor is `d'=d+v+3(q+1)`, and every successful call strictly increases `d`. Terminal counters are `d=2^K-2`, `K>=1`. A source `O(q,v)` is an immediate terminal predecessor **iff**
+The existing fifth-root and cubic-parent work reduces a halting question to reachability of a finite family of synthetic feeder states for each fixed terminal exponent. Relevant source files and workflows are linked from [the research board](../../../research/BOARD.md). The earlier original-source checks are recorded in [CI run 42355480381](https://github.com/FlareZ123/bb6/actions/runs/42355480381).
 
-```text
-2^K=(2^(v+1)+3)q+3*2^v+v+3.
-```
+The local formalization starts at high-level state `N 1`, with counter (d=1). Its shifted variable is (b=d+2), initially 3. The first high-level transition sends (d=1) to (d=4), hence (b=6).
 
-The unsettled all-time question is whether any `2^K-2` occurs on the deterministic orbit starting `d=1`. [SpaceNeedleRawBridge.lean](SpaceNeedleRawBridge.lean) and [Agent 20's root decision](../agent20-needle-coprime/NeedleRootDecisionSource.lean) formalize the raw-machine halting criterion and exact reachability of each **fixed** counter. Neither closes the unbounded existential in K.
+## 2. Modular feeder exclusions
 
-## Strongest theorem-level reductions
+The file [`SpaceNeedleObstructionFamilies.lean`](SpaceNeedleObstructionFamilies.lean) now exposes a general necessary modular identity:
 
-| Mechanism | Scope and evidence | Missing root-level conclusion |
-| --- | --- | --- |
-| **Fifth-linear terminal inverse** | [FIFTH-BOUND.md](FIFTH-BOUND.md), [FifthHigh.lean](FifthHigh.lean), [NeedleQuinticEnumerate.lean](NeedleQuinticEnumerate.lean) and [source bridge](NeedleQuinticEnumerateSource.lean). Every terminal predecessor satisfies `5v<=K+3` or is one of the two exact triples `(61,6,13)`, `(340282366920822406584691642613415018481,42,171)`. The finite list tests `v<=floor((K+3)/5)` plus exceptions; membership is iff for **all K**. Original-source **CI 42332720650 passed**, auditing only standard axioms. | Which regular feeder, if any, actually occurs from blank? |
-| **True-root exceptional exclusion** | [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean) computes the complete immediate predecessor list of the 171-bit `v=42` exceptional source as empty, and uses authentic original-root semantics to exclude its reachability. Agent 20 [already source-certified](../agent20-needle-coprime/NeedleRootSharp.lean) nonreachability of the `v=6` exception. Integration gives `IsHalt target` iff some **reachable** listed feeder satisfies `5v<=K+3`. **Original source CI 42333153807 pending.** | An unbounded all-time regular-feeder exclusion or genuine hit. |
-| **Automatic all-slope inverse** | [SuperlinearOne.lean](SuperlinearOne.lean), [SuperlinearOptimized.lean](SuperlinearOptimized.lean) and [source proof](SuperlinearOptimizedSource.lean) sharpen candidate cutoffs when `v>=3^c+1` and choose a slope among logarithmically many candidates. Source CI [42301784364](https://github.com/FlareZ123/bb6/actions/runs/42301784364) passed. For sufficiently large K this can be tighter than the uniform fifth-linear bound. | Reverse candidate restriction alone does not decide reachable feeders. |
-| **Earlier quartic, sharp and boundary classifications** | [QUARTIC-ENUMERATION.md](QUARTIC-ENUMERATION.md), [OFFSET-STRIP.md](OFFSET-STRIP.md), [BOUNDARY-EXACT.md](BOUNDARY-EXACT.md). The earlier quartic list tests through `floor((K+2)/4)`; boundary equality `K=3v+3` has only `(45,2,9)`, `(214,3,12)`. Source CIs [42296731159](https://github.com/FlareZ123/bb6/actions/runs/42296731159) and [42298248203](https://github.com/FlareZ123/bb6/actions/runs/42298248203) succeeded. | Exact source list is conditional on target and does not bound all K. |
-| **Odd-block acceleration and two-step terminal inverse** | [ODD-BLOCKS.md](ODD-BLOCKS.md), [ORDER-5ADIC.md](ORDER-5ADIC.md), [TWO-STEP-ODD.md](TWO-STEP-ODD.md). Odd-block lengths feeding an exact terminal exponent K satisfy the iff `4*5^(t-1) | K`. Two-step odd terminal equation is source-certified in CI [41931806607](https://github.com/FlareZ123/bb6/actions/runs/41931806607); complete odd lengths in [41935571573](https://github.com/FlareZ123/bb6/actions/runs/41935571573). | Synthetic odd blocks may have no authentic blank history. |
-| **Unrestricted terminal source density and fan-in** | [TERMINAL-RESIDUES.md](TERMINAL-RESIDUES.md) covers every decimal residue of incoming exponents. [FIVE-TERMINAL.md](FIVE-TERMINAL.md) gives five simultaneous synthetic source valuations `0,3,20,38,83`, extending Agent 20's three-source theorem ([CI 42107688083](https://github.com/FlareZ123/bb6/actions/runs/42107688083)). Five sources are original-source certified by [CI 42296731159](https://github.com/FlareZ123/bb6/actions/runs/42296731159). Agent 20 also gives an unrestricted unbounded-indegree [paper construction](../agent20-needle-coprime/UnboundedFanin.md) for nonterminal destinations. | Incoming degree has no implication for a unique deterministic blank orbit. |
+[
+mmid 2^{v+1}+3
+quadLongrightarrowquad
+(2^{k+2}+3)mod m=(2v)mod m
+]
 
-The new 171-bit exceptional predecessor is an instance of [Agent 20's earlier unbounded-valuation synthetic construction](../agent20-needle-coprime/NeedleVariableValuation.lean); that construction is credited and retained. The substantive additional question answered here is its finite incoming-source/blank-root nonreachability, pending original-source CI. None of the statements has been promoted as a standalone externally novel mathematical publication.
+for every terminal feeder. The theorem `no_terminal_by_modular_residue_avoidance` turns absence of the required residue from the powers-of-two residues into a feeder exclusion. A periodic lift proves whole arithmetic progressions.
 
-## Finite diagnostics and next mathematical obligation
+### Formalized infinite progressions
 
-An earlier exact-integer forward experiment from `N 1` checked 30,000 successful calls and reached 28,098 bits without encountering a power-of-two input. Another 300,000-call finite test visited all residues of `d+2` modulo `2^14`, refuting simple fixed small-modulus single-state invariant proposals. These computations establish only their finite observations.
+| Modulus | Excluded valuation classes |
+|---:|---|
+| 5 | (vequiv4pmod{20}) (existing) |
+| 7 | (vequiv1,4,10,19pmod{21}) |
+| 11 | (vequiv62pmod{110}) |
+| 13 | (vequiv21pmod{156}) |
+| 19 | (vequiv201pmod{342}) |
+| 29 | (vequiv74pmod{812}) |
+| 79 | (vequiv9,48pmod{3081}) |
+| 103 | (vequiv59pmod{5253}) |
 
-The [fifth-bound proof and source-root certificate](FIFTH-BOUND.md) are intended as tools for **history-sensitive actual-root analysis**. To advance BB(6), the next useful theorem must eliminate every remaining authentic terminal feeder or produce a genuine terminal witness, with a proof transporting to the raw machine. Further synthetic density studies or finite traces alone do not address that quantifier. The [manual-only original-source workflow](../../.github/workflows/agent48-space-needle-five.yml) has no per-push trigger and preserves a pinned upstream revision.
+The union of these 12 progressions has computed natural density
+
+[
+rac{570208311809}{2288864948370}
+approx 0.2491227419.
+]
+
+This is an exact generalized-CRT inclusion-exclusion calculation for the listed progressions. It is not a frequency statement about the actual orbit.
+
+### Composite CRT obstructions
+
+The same file now proves that no terminal feeder exists at the fixed valuations (v=7) and (v=12). In each case, every relevant prime factor separately admits a power-of-two residue, but the required exponent congruences conflict. These two formal proofs address omissions in an external hard-coded CRT reference list.
+
+[CI run 42357543053](https://github.com/FlareZ123/bb6/actions/runs/42357543053) successfully checked the periodic progression development. [CI run 42358417424](https://github.com/FlareZ123/bb6/actions/runs/42358417424) checks the modular identity and composite CRT additions; its status was pending at the time of this update.
+
+## 3. Search infrastructure
+
+[`find_modular_progressions.py`](find_modular_progressions.py) enumerates prime-modulus CRT progressions. With the default prime limit 103, it finds 157 candidate progressions. Only a subset is currently formalized in Lean. The script is a discovery tool, not a proof certificate for every emitted row.
+
+## 4. External 100-million-update trajectory
+
+The external repository [`oohzaim1-afk/space-needle-100M`](https://github.com/oohzaim1-afk/space-needle-100M), inspected at commit `96e50a6ad829fa43e4ecfdf881b6679e599ef0b4`, reports 100,000,000 exact-integer updates from (b_0=6), with no power-of-two term. Its final term has 94,125,050 bits. The report includes 400 checkpoints and independent C+GMP, Rust, Python-prefix, and block-affine cross-checks.
+
+The detailed source and indexing audit is in [`resources/2026-11-07-space-needle-100m.md`](../../../resources/2026-11-07-space-needle-100m.md). This finite computation is strong evidence and a reason to avoid duplicating the same forward prefix. It is not a proof of nonhalting.
+
+## 5. Audit of the external CRT classification
+
+The separate [CRT audit note](../../../resources/2026-11-07-space-needle-crt-audit.md) records that the external `crt_obstruction.py` hard-coded 17-value reference list for (1le ale40) is inconsistent with its own factor/order/discrete-log/CRT algorithm. Independent recomputation yields 23 obstructions, adding (a=7,12,18,28,35,36). The Lean file now proves the (a=7,12) cases; (a=18,28,35,36) remain computational CRT certificates. The external 96/120 summary has not been independently rechecked and remains unverified.
+
+## 6. Main unresolved problem
+
+All results above concern whether a synthetic state can be an immediate terminal feeder. The central missing theorem is still:
+
+**Prove that the blank-root Space Needle trajectory cannot reach any terminal feeder that survives the modular restrictions.**
+
+The highest-value next work is to integrate the modular valuation filters with the existing `NeedleRootCubic` and exact root-decision machinery, and to develop a parameter-uniform root-reachability obstruction. Repeating the same finite forward simulation is lower priority given the external 100-million-update evidence.
