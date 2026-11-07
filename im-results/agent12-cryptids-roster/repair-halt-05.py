@@ -30,13 +30,13 @@ with open(lock, "a+", encoding="utf-8") as guard:
     second_new = """  rw [zeros_append_cons_zero d2 (encM (bumpM L))] at h12
   rw [encM_replicate_zero] at h12
   simp only [List.replicate_succ, List.cons_append, encM_cons_zero,
-    ListBlank.append_cons, ListBlank.append_nil] at h12"""
+    listblank_append_cons, nil_append_list] at h12"""
 
     if original.count(first_old) != 1:
         raise ValueError(f"Expected exactly one first failed rewrite block, found {original.count(first_old)}")
     if original.count(second_old) != 1:
         raise ValueError(f"Expected exactly one second failed rewrite block, found {original.count(second_old)}")
-    if original.count("private lemma zeros_append_cons_zero") != 1:
+    if original.count("\nlemma zeros_append_cons_zero") != 1:
         raise ValueError("The previously proved zeros_append_cons_zero helper is missing or duplicated")
 
     out = original.replace(first_old, first_new, 1).replace(second_old, second_new, 1)
