@@ -21,8 +21,14 @@ theorem midAaux_step2 (v k : Nat) :
 theorem midApos_to_midAaux (v : Nat) :
     runWithDelta 6 (midApos 1 (v+1) 1) =
       some (midAaux v 3, -6) := by
-  simp [runWithDelta, oneWithDelta, one, action, midApos, midAaux,
-    pairs01, ones, tens, z]
+  have hones : ones (2*(v+3)) = ones 5 ++ ones (2*v+1) := by
+    rw [show 2*(v+3) = 5+(2*v+1) by omega,
+      BB429FinishScanEDelta.ones_add]
+  unfold midApos
+  rw [show v+1+2 = v+3 by omega]
+  rw [hones]
+  simp [runWithDelta, oneWithDelta, one, action, midAaux,
+    pairs01, ones, tens, z, List.append_assoc]
 
 /-- Repeated two-step reduction removes all v left pairs and transfers them
     into the right alternating block. -/
@@ -38,10 +44,10 @@ theorem midAaux_reduce_v (v k : Nat) :
       simp only [Option.bind_some]
       rw [ih (k+1)]
       simp only [Option.map_some]
-      congr 1
-      · congr 1
-        omega
-      · omega
+      have hparam : (k+1)+v = k+(v+1) := by omega
+      have hdisp : (-2 : Int) + -((2*v : Nat) : Int) =
+          -((2+2*v : Nat) : Int) := by omega
+      rw [hparam, hdisp]
 
 /-- Once the single v=0 base family is proved, the complete midApos-to-Junc
     suffix follows uniformly. This isolates the remaining proof obligation. -/
@@ -72,12 +78,10 @@ theorem midApos_to_junc0_of_base (v : Nat) (hv : 1≤v)
     simp only [Option.bind_some]
     rw [hlast]
     simp only [Option.map_some]
-    congr 1
-    · rfl
-    · omega
+    simp [Int.add_assoc]
   have htime : 6 + (2*(v-1) + (4*(v+2)+36)) = 6*v+48 := by omega
   have hparam : 2*(v+2)+6 = 2*v+10 := by omega
-  have hdisp : (-6 : Int) + (-((2*(v-1) : Nat) : Int) + (-4)) =
+  have hdisp : (-6 : Int) + -((2*(v-1) : Nat) : Int) + (-4) =
       -((2*v+8 : Nat) : Int) := by omega
   rw [htime, hparam, hdisp] at htotal
   exact htotal
