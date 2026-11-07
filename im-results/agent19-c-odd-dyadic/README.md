@@ -73,12 +73,32 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 - Keep computational quotient evidence separate from kernel-checked source proofs.
 
 
-## Provisional m=1 full-forced progression (7 November 2026)
+## Source-certified m=1 and m=2 full-forced progressions (7 November 2026)
 
-[HighM1FullForced.md](HighM1FullForced.md) records the infinite family \(m=1,\ j\equiv24\pmod{32}\). Its target is \((64t+51,480t+400)\), and the full-forced normalizer takes two exact inverse steps to \((392t+322,316t+259)\), whose right coordinate is odd and whose sum is 1 modulo 4. The existing C23+all-phase+even-right high predicate admits the progression; the source-module proof is in [HighM1FullForced.lean](HighM1FullForced.lean).
+The infinite family (m=1, j=32t+24) has target ((64t+51,480t+400)). Its exact full-forced inverse path is six-even-right followed by odd-low, ending at ((392t+322,316t+259)), with odd right coordinate and sum (1\pmod4). The source theorem and prior-high-sieve admission are in [HighM1FullForced.lean](HighM1FullForced.lean).
 
-## Provisional m=2 full-forced progression (7 November 2026)
+The infinite family (m=2, j=32t+9) has target ((64t+21,2016t+748)). Its exact path is even-affine followed by odd-low, ending at ((1544t+568,1276t+469)), again with odd right coordinate and sum (1\pmod4). The source theorem and prior-sieve admission are in [HighM2FullForced.lean](HighM2FullForced.lean).
 
-[HighM2FullForced.md](HighM2FullForced.md) records a second infinite family \(m=2,\ j\equiv9\pmod{32}\). Its target is \((64t+21,2016t+748)\), and the full-forced normalizer takes two exact inverse steps to \((1544t+568,1276t+469)\), whose right coordinate is odd and whose sum is 1 modulo 4. The earlier affine-right-four sieve takes one step and stops at an odd right coordinate, so this family also survives that prior gate. The source-module proof is in [HighM2FullForced.lean](HighM2FullForced.lean).
+Both modules were successfully compiled from their exact current source blobs in [CI run 42389238139](https://github.com/FlareZ123/bb6/actions/runs/42389238139). The final theorem audits contain only `propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx`. The overall workflow later failed in the separate M0Mod8Three module because it used an incorrect namespace for `sixEvenRightGate`; that namespace has since been corrected. This later failure does not invalidate the M1/M2 source checks.
 
-**Both progressions remain provisional, not yet source-certified.** Standalone local Lean 4.36.0-rc2 proofs check the exact copied normalizer paths, Boolean exclusions, and prior high-sieve predicate chains, with no sorryAx. The imported source modules still require local dependency-closure compilation and one manual run of [the all-phase workflow](../../.github/workflows/agent24-c-strong-phase.yml). Compile steps and output artifacts have been added for both modules, but no new run has been dispatched. Do not promote either family to a source-certified result until that exact run passes and all final axiom audits exclude sorryAx.
+## Exact finite raw-mass exclusion (7 November 2026)
+
+[Agent4's CResidualMass2000.lean](../agent4-machine-c-global-path/CResidualMass2000.lean) and [CResidualMassIntegration.lean](../agent4-machine-c-global-path/CResidualMassIntegration.lean) were also successfully source-compiled in [CI run 42389238139](https://github.com/FlareZ123/bb6/actions/runs/42389238139). The finite census proves that every low/high stopping target with raw mass (x+2y\le2000) is absent from the authentic blank-derived section orbit. The four low/high row scans are exact finite decisions; their final audits contain no `sorryAx`.
+
+The integrated theorem establishes the necessary tail:
+- Low family: (m\ge4).
+- High family: (m\ge4), or (m=0,j\ge248), (m=1,j\ge60), (m=2,j\ge13), or (m=3,j\ge1).
+
+This is a strict source-level reduction of the remaining parameter domain. It does not establish that any target above the mass threshold is reachable.
+
+## Further m=0 full-forced progressions (7 November 2026)
+
+[M0FullForcedFamilies.md](M0FullForcedFamilies.md) records seven disjoint infinite progressions on the m=0 high line. Along with the earlier (j=8t+3) progression, six additional families have been formalized:
+- (j=16s+2), (s\ge1);
+- (j=32t+6);
+- (j=64t+58);
+- (j=32t+21);
+- (j=32t+15);
+- (j=128t+71).
+
+Their exact source modules are [M0Mod16Two.lean](M0Mod16Two.lean) and [M0AdditionalForcedFamilies.lean](M0AdditionalForcedFamilies.lean). The universal old-sieve admission and blank-unreachability statements are committed. Corrected original-source CI is pending in [run 42401719081](https://github.com/FlareZ123/bb6/actions/runs/42401719081). The finite scan over (j\le2000) reports 642 prior-sieve-admitted m=0 full-forced exclusions; the seven progressions account for 609 distinct examples. The remaining 33 finite examples require further symbolic analysis. The scan count is computational evidence, not a complete classification.
