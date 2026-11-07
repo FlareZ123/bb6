@@ -22,6 +22,14 @@ The proof is in three small source-auditable files:
 
 **Verification:** [manual original-source Lean CI run 42336144100](https://github.com/FlareZ123/bb6/actions/runs/42336144100) **succeeded**, at head `efdd21c68fd6fd7217b0146adc62db0a2683ea0d`. It compiled the exact original source chain and all three files. `#print axioms` for `source_right_five_needs_three_resets` reports `[propext, Classical.choice, Quot.sound]` only. The pure arithmetic gap has `[propext, Quot.sound]`. No `sorryAx`, mock imports, or `native_decide` occur in this source check. [Manual-only reproducible workflow](../../.github/workflows/agent50-p1-exceptional-last-reset-depth-source.yml).
 
+## All-length mid-cost shallow-edge theorem (7 November)
+
+The exact [RightFiveShallowSource.lean](RightFiveShallowSource.lean) theorem `BB6.Agent50Shallow.source_low_cost_right_five_has_shallow_edge` proves that every original-source `CountCone (14*2^n-2*n-16) 3 b 5 m z` with `n>=14` and `2*m+n+2<=5*2^n` contains a **genuine** previous source edge `inverseAt B D t = some (k,c)` where `t<=1`, embedded in a prefix `CountCone (14*2^n-2*n-16) 3 B D M Z`. The statement imposes **no reset count, word length, or maximum inverse depth bound**. It is a necessary low-cost restriction, not a right-five global exclusion.
+
+The proof uses the source-preserving disjunction `source_shallow_or_all_deep`: each exact counted word either contains a `t<=1` edge or belongs to the genuine source-defined [DeepCone](RightFiveDeepCone.lean) where all inverse steps have depth `t>=2`. A universal strict defect invariant then rules out the right-five mid-cost end of an all-deep history. Define `P=2^n` and `W=b+4*m+4*n+20`. Every valid all-deep source prefix satisfies `W>12P`, while the unique final inverse at low exceptional right-five cost would require its immediate predecessor `W=12P`. The invariant is derived from **the original** inverseAt power and mass equations and is preserved without any limit on the number of steps.
+
+The authentic `CountCone` disjunction and final low-cost shallow theorem were verified in **[manual original-source CI 42337286479](https://github.com/FlareZ123/bb6/actions/runs/42337286479)** at head `b02ee59d1c591629cf1255d1e1385556b2db36fe`; the all-deep source proof previously passed **[42336988993](https://github.com/FlareZ123/bb6/actions/runs/42336988993)**. Every printed axiom list contains at most `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`. This result is complementary to the all-cost `z>=3` theorem above and does not close the `t=0` or `t=1` routes.
+
 ## Earlier source-certified subwall results
 
 The same source history, with arbitrary right endpoint `d`, has these necessary conditions:
