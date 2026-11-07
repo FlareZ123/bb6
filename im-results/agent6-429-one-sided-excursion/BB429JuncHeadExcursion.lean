@@ -335,6 +335,289 @@ theorem physical_sourceScanE_finishC_odd_next_delta (r k : Nat) (hk : 1 ≤ k)
       (sourceScanE_finishC_odd_next_delta r k hk)
   exact ⟨c', hrun, hrep', hhead⟩
 
+def midApos (u v w : Nat) : Zipper :=
+  z 0 (true :: (ones (2*(v+2)) ++ pairs01 u ++ ones 5)) true
+    (ones (w-1) ++ [false,true])
+
+/-- Three newly written ones absorb the fixed 01 prefix after the A/01 sweep. -/
+theorem ones_three_left (n : Nat) (rest : List Bool) :
+    ones n ++ (true :: true :: true :: rest) =
+      true :: (ones (n+2) ++ rest) := by
+  have hp : ones n ++ [true,true,true] = true :: ones (n+2) := by
+    calc
+      ones n ++ [true,true,true] = ones n ++ ones 3 := rfl
+      _ = ones (n+3) := by rw [← ones_add]
+      _ = ones (1+(n+2)) := by congr 1 <;> omega
+      _ = ones 1 ++ ones (n+2) := ones_add 1 _
+      _ = true :: ones (n+2) := rfl
+  calc
+    ones n ++ (true :: true :: true :: rest) =
+        (ones n ++ [true,true,true]) ++ rest := by
+          exact (List.append_assoc (ones n) [true,true,true] rest).symm
+    _ = (true :: ones (n+2)) ++ rest := by rw [hp]
+    _ = true :: (ones (n+2) ++ rest) := by rw [List.cons_append]
+
+/-- The fixed four-step prefix of step_u_pos_to_MidA works for every
+    positive Junc left parameter. -/
+theorem juncPos_prep4_delta (u v w : Nat) :
+    runWithDelta 4 (junc (u+1) v w) =
+      some (z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false
+        (true :: (pairs01 v ++ ones w ++ [false,true])), 0) := by
+  rfl
+
+/-- General positive-u Junc-to-MidA displacement. -/
+theorem juncPos_to_midA_delta (u v w : Nat) (hw : 1 ≤ w) :
+    runWithDelta (2*v+6) (junc (u+1) v w) =
+      some (midApos u v w, ((2*v+2 : Nat) : Int)) := by
+  have hones : ones w = true :: ones (w-1) := by
+    cases w with
+    | zero => omega
+    | succ w => rfl
+  rw [show 2*v+6 = 4 + 2*(v+1) by omega, runWithDelta_add,
+    juncPos_prep4_delta]
+  simp only [Option.bind_some]
+  have hshift :
+      runWithDelta (2*(v+1))
+        (z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false
+          (true :: (pairs01 v ++ ones w ++ [false,true]))) =
+      some (z 0 (ones (2*(v+1)) ++ true :: true :: true :: (pairs01 u ++ ones 5)) true
+        (ones (w-1) ++ [false,true]), ((2*(v+1) : Nat) : Int)) := by
+    simpa [hones, List.append_assoc, List.cons_append] using
+      (shift_A01_delta v (true :: true :: true :: (pairs01 u ++ ones 5))
+        (ones (w-1) ++ [false,true]))
+  rw [hshift]
+  simp only [Option.map_some]
+  rw [ones_three_left (2*(v+1)) (pairs01 u ++ ones 5)]
+  apply congrArg some
+  apply Prod.ext
+  · simp only [midApos]
+    rw [show 2*(v+1)+2 = 2*(v+2) by omega]
+    simp [List.append_assoc]
+  · simp [Int.natCast_add, Int.natCast_mul]
+    omega
+
+/-- General positive-u Junc transition: one alternating pair is moved from
+    the left parameter to the middle parameter, with net head displacement -2. -/
+theorem juncPos_next_delta (u v w : Nat) (hw : 2 ≤ w) :
+    runWithDelta (4*v+10) (junc (u+1) v w) =
+      some (junc u (v+2) (w-2), -2) := by
+  have hmid := juncPos_to_midA_delta u v w (by omega)
+  have hones : ones (w-1) = true :: ones (w-2) := by
+    cases w with
+    | zero => omega
+    | succ w => cases w with
+      | zero => omega
+      | succ w => rfl
+  rw [show 4*v+10 = (2*v+6) + 2*(v+2) by omega, runWithDelta_add, hmid]
+  simp only [Option.bind_some]
+  have hinput : midApos u v w =
+      z 0 (true :: (ones (2*(v+2)) ++ (pairs01 u ++ ones 5))) true
+        (true :: (ones (w-2) ++ [false,true])) := by
+    simp [midApos, hones, List.append_assoc, List.cons_append]
+  have hshift :
+      runWithDelta (2*(v+2)) (midApos u v w) =
+        some (junc u (v+2) (w-2), -((2*(v+2) : Nat) : Int)) := by
+    rw [hinput]
+    simpa [junc, pairs01, List.append_assoc, List.cons_append] using
+      (shift_A11_delta (v+2) (pairs01 u ++ ones 5) (ones (w-2) ++ [false,true]))
+  rw [hshift]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- Total step count for N full positive-u Junc transitions, with the
+    middle parameter increasing by two after each transition. -/
+def juncPosFullTime : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, v => 4*v+10 + juncPosFullTime n (v+2)
+
+/-- Iterating N positive-u Junc transitions decreases u and w by 1 and 2
+    respectively, increases v by 2, and moves the head left by 2N. -/
+theorem juncPos_iter_full_delta (N U v w : Nat) (hU : N ≤ U) (hw : 2*N ≤ w) :
+    runWithDelta (juncPosFullTime N v) (junc U v w) =
+      some (junc (U-N) (v+2*N) (w-2*N), -((2*N : Nat) : Int)) := by
+  induction N generalizing U v w with
+  | zero => rfl
+  | succ N ih =>
+      have hstep0 := juncPos_next_delta (U-1) v w (by omega)
+      have hstep : runWithDelta (4*v+10) (junc U v w) =
+          some (junc (U-1) (v+2) (w-2), -2) := by
+        simpa [Nat.sub_add_cancel (by omega : 1 ≤ U)] using hstep0
+      rw [show juncPosFullTime (N+1) v = (4*v+10) + juncPosFullTime N (v+2) by rfl,
+        runWithDelta_add, hstep]
+      simp only [Option.bind_some]
+      have htail := ih (U-1) (v+2) (w-2) (by omega) (by omega)
+      rw [htail]
+      simp only [Option.map_some]
+      have hUsub : U-1-N = U-(N+1) := by omega
+      have hv : v+2+2*N = v+2*(N+1) := by omega
+      have hwsub : w-2-2*N = w-2*(N+1) := by omega
+      rw [hUsub, hv, hwsub]
+      simp [junc, Int.natCast_add, Int.natCast_mul]
+      omega
+
+/-- Number of steps to reach the intermediate A configuration on the Nth
+    positive-u Junc transition (N>=1). -/
+def juncPosMidTime : Nat → Nat → Nat
+  | 0, _ => 0
+  | 1, v => 2*v+6
+  | n+2, v => 4*v+10 + juncPosMidTime (n+1) (v+2)
+
+/-- After N positive-u Junc transitions, the Nth intermediate A head is
+    exactly 2v+2N cells to the right of the initial Junc head. -/
+theorem juncPos_iter_mid_delta (N U v w : Nat) (hN : 1 ≤ N)
+    (hU : N ≤ U) (hw : 2*N-1 ≤ w) :
+    runWithDelta (juncPosMidTime N v) (junc U v w) =
+      some (midApos (U-N) (v+2*(N-1)) (w-2*(N-1)), ((2*v+2*N : Nat) : Int)) := by
+  cases N with
+  | zero => omega
+  | succ N =>
+      induction N generalizing U v w with
+      | zero =>
+          have hstep := juncPos_to_midA_delta (U-1) v w (by omega)
+          simpa [juncPosMidTime, midApos, Nat.sub_add_cancel (by omega : 1 ≤ U)] using hstep
+      | succ N ih =>
+          have hstep0 := juncPos_next_delta (U-1) v w (by omega)
+          have hstep : runWithDelta (4*v+10) (junc U v w) =
+              some (junc (U-1) (v+2) (w-2), -2) := by
+            simpa [Nat.sub_add_cancel (by omega : 1 ≤ U)] using hstep0
+          rw [show juncPosMidTime (N+2) v = (4*v+10) + juncPosMidTime (N+1) (v+2) by rfl,
+            runWithDelta_add, hstep]
+          simp only [Option.bind_some]
+          have htail := ih (U-1) (v+2) (w-2) (by omega) (by omega) (by omega)
+          rw [htail]
+          simp only [Option.map_some]
+          simp only [Nat.succ_sub_one]
+          have hUsub : U-1-(N+1) = U-(N+2) := by omega
+          have hv : v+2+2*N = v+2*(N+1) := by omega
+          have hwsub : w-2-2*N = w-2*(N+1) := by omega
+          rw [hUsub, hv, hwsub]
+          simp [midApos, Int.natCast_add, Int.natCast_mul]
+          omega
+
+
+/-- After the two positive-u transitions from the even-b finish_C entry,
+    the u=0 Junc transition reaches a later head at net offset +11. -/
+theorem sourceScanE_finishC_even_after_junc0_delta (r k : Nat) (hk : 3 ≤ k) :
+    runWithDelta
+      ((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27)))
+      (sourceScanE (2*r) (sourceSuffix k)) =
+      some (junc (2*r+9) 0 (2*k-6), 11) := by
+  rw [runWithDelta_add, sourceScanE_finishC_even_delta]
+  simp only [Option.bind_some]
+  rw [runWithDelta_add,
+    juncPos_iter_full_delta 2 2 (2*r+2) (2*k+1) (by omega) (by omega)]
+  simp only [Option.bind_some]
+  have hcfg : junc (2-2) (2*r+2+2*2) (2*k+1-2*2) =
+      junc 0 (2*r+6) (2*k-3) := by
+    congr 1 <;> omega
+  rw [hcfg, junc0_next_delta (2*r+6) (2*k-3) (by omega)]
+  have hwout : (2*k-3)-3 = 2*k-6 := by omega
+  rw [hwout]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- For even b=2r and 6<=k<=b+14, the repeated positive-u Junc excursion
+    reaches a head strictly beyond the entire 2k-cell shift interval. -/
+theorem sourceScanE_finishC_even_long_delta (r k : Nat) (hk : 6 ≤ k)
+    (hbound : k ≤ 2*r+14) :
+    runWithDelta
+      (((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + juncPosMidTime (k-5) 0)
+      (sourceScanE (2*r) (sourceSuffix k)) =
+      some (midApos ((2*r+9)-(k-5)) (2*((k-5)-1))
+        ((2*k-6)-2*((k-5)-1)), ((2*k+1 : Nat) : Int)) := by
+  rw [runWithDelta_add, sourceScanE_finishC_even_after_junc0_delta r k (by omega)]
+  simp only [Option.bind_some]
+  rw [juncPos_iter_mid_delta (k-5) (2*r+9) 0 (2*k-6)
+    (by omega) (by omega) (by omega)]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- The odd-b path followed by N positive-u transitions has a rightward
+    intermediate excursion of +7+2N from the post-shift S_E boundary. -/
+theorem sourceScanE_finishC_odd_long_delta (r k : Nat) (hk : 4 ≤ k)
+    (hbound : k ≤ 2*r+9) :
+    runWithDelta
+      (((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) +
+        juncPosMidTime (k-3) 0)
+      (sourceScanE (2*r+1) (sourceSuffix k)) =
+      some (midApos ((2*r+6)-(k-3)) (2*((k-3)-1))
+        ((2*k-2)-2*((k-3)-1)), ((2*k+1 : Nat) : Int)) := by
+  rw [runWithDelta_add, sourceScanE_finishC_odd_next_delta r k (by omega)]
+  simp only [Option.bind_some]
+  have hwstart : (2*k+1)-3 = 2*k-2 := by omega
+  rw [hwstart]
+  rw [juncPos_iter_mid_delta (k-3) (2*r+6) 0 (2*k-2)
+    (by omega) (by omega) (by omega)]
+  simp only [Option.map_some]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- Physical lift of the even long-parameter crossing certificate. -/
+theorem physical_sourceScanE_finishC_even_long_delta (r k : Nat) (hk : 6 ≤ k)
+    (hbound : k ≤ 2*r+14) (c : Config)
+    (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
+    ∃ c', BB6Coverage.run target429
+      (((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + juncPosMidTime (k-5) 0) c = some c' ∧
+      Represents (midApos ((2*r+9)-(k-5)) (2*((k-5)-1))
+        ((2*k-6)-2*((k-5)-1))) c' ∧ c'.head = c.head + (2*k+1) := by
+  obtain ⟨c', hrun, hrep', hhead⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep
+      (((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + juncPosMidTime (k-5) 0)
+      (sourceScanE (2*r) (sourceSuffix k)) c hrep
+      (midApos ((2*r+9)-(k-5)) (2*((k-5)-1))
+        ((2*k-6)-2*((k-5)-1))) ((2*k+1 : Nat) : Int)
+      (sourceScanE_finishC_even_long_delta r k hk hbound)
+  have hhead' : c'.head = c.head + (2*k+1) := by
+    simpa [Int.natCast_add, Int.natCast_mul] using hhead
+  exact ⟨c', hrun, hrep', hhead'⟩
+
+/-- Physical lift of the odd long-parameter crossing certificate. -/
+theorem physical_sourceScanE_finishC_odd_long_delta (r k : Nat) (hk : 4 ≤ k)
+    (hbound : k ≤ 2*r+9) (c : Config)
+    (hrep : Represents (sourceScanE (2*r+1) (sourceSuffix k)) c) :
+    ∃ c', BB6Coverage.run target429
+      (((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) +
+        juncPosMidTime (k-3) 0) c = some c' ∧
+      Represents (midApos ((2*r+6)-(k-3)) (2*((k-3)-1))
+        ((2*k-2)-2*((k-3)-1))) c' ∧ c'.head = c.head + (2*k+1) := by
+  obtain ⟨c', hrun, hrep', hhead⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep
+      (((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) +
+        juncPosMidTime (k-3) 0)
+      (sourceScanE (2*r+1) (sourceSuffix k)) c hrep
+      (midApos ((2*r+6)-(k-3)) (2*((k-3)-1))
+        ((2*k-2)-2*((k-3)-1))) ((2*k+1 : Nat) : Int)
+      (sourceScanE_finishC_odd_long_delta r k hk hbound)
+  have hhead' : c'.head = c.head + (2*k+1) := by
+    simpa [Int.natCast_add, Int.natCast_mul] using hhead
+  exact ⟨c', hrun, hrep', hhead'⟩
+
+
+/-- Physical lift of the even-b +11 excursion after the two positive-u
+    transitions and the u=0 Junc transition. -/
+theorem physical_sourceScanE_finishC_even_after_junc0_delta (r k : Nat)
+    (hk : 3 ≤ k) (c : Config)
+    (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
+    ∃ c', BB6Coverage.run target429
+      ((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) c = some c' ∧
+      Represents (junc (2*r+9) 0 (2*k-6)) c' ∧ c'.head = c.head + 11 := by
+  obtain ⟨c', hrun, hrep', hhead⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep
+      ((crossTime (2*r)+1 + (12+2*(2*r))) +
+        (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27)))
+      (sourceScanE (2*r) (sourceSuffix k)) c hrep
+      (junc (2*r+9) 0 (2*k-6)) 11
+      (sourceScanE_finishC_even_after_junc0_delta r k hk)
+  exact ⟨c', hrun, hrep', hhead⟩
+
 end BB429JuncHeadExcursion
 
 #print axioms BB429JuncHeadExcursion.junc2_to_midA_delta
@@ -343,3 +626,12 @@ end BB429JuncHeadExcursion
 #print axioms BB429JuncHeadExcursion.sourceScanE_finishC_odd_next_delta
 #print axioms BB429JuncHeadExcursion.physical_sourceScanE_finishC_even_midA_delta
 #print axioms BB429JuncHeadExcursion.physical_sourceScanE_finishC_odd_next_delta
+
+#print axioms BB429JuncHeadExcursion.juncPos_iter_full_delta
+#print axioms BB429JuncHeadExcursion.juncPos_iter_mid_delta
+#print axioms BB429JuncHeadExcursion.sourceScanE_finishC_even_after_junc0_delta
+#print axioms BB429JuncHeadExcursion.sourceScanE_finishC_even_long_delta
+#print axioms BB429JuncHeadExcursion.sourceScanE_finishC_odd_long_delta
+#print axioms BB429JuncHeadExcursion.physical_sourceScanE_finishC_even_long_delta
+#print axioms BB429JuncHeadExcursion.physical_sourceScanE_finishC_odd_long_delta
+#print axioms BB429JuncHeadExcursion.physical_sourceScanE_finishC_even_after_junc0_delta
