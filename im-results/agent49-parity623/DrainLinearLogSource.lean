@@ -198,8 +198,50 @@ theorem drainB_first_lower_log (n : Nat) :
                 omega
             · simp [hlt] at hs
 
+/-- A sharp block-count family: b_0=2 and b_(n+1)=3*b_n+1. -/
+def sharpBlock : Nat → Nat
+  | 0 => 2
+  | n+1 => 3*sharpBlock n + 1
+
+/-- The linear-logarithmic first-loss and third-counter bounds are
+simultaneously sharp on this family. -/
+theorem drainB_sharp_witness (n d : Nat) :
+    drainB (n+2) (sharpBlock n) d =
+      some (.D 0 (d+3*sharpBlock n+4*(n+1)+2)) := by
+  induction n generalizing d with
+  | zero =>
+      change drainB 2 2 d = some (.D 0 (d+12))
+      have hEval : evalA 2 1 (d+7) = some (0,0,d+12) := by
+        simp [evalA]
+      rw [drainB.eq_1]
+      rw [if_neg (by decide : 2 ≠ 0)]
+      rw [hEval]
+      simp only [Option.bind_some, if_pos (by decide : 0 < 2)]
+      simp [drainB]
+  | succ n ih =>
+      have hlt : sharpBlock n < 3*sharpBlock n+1 := by omega
+      have hEval :
+          evalA (n+3) ((3*sharpBlock n+1)-1)
+            (d+2*(3*sharpBlock n+1)+3) =
+              some (n+2, sharpBlock n, d+2*(3*sharpBlock n+1)+5) := by
+        simp [evalA]
+      change drainB (n+3) (3*sharpBlock n+1) d =
+        some (.D 0 (d+3*sharpBlock (n+1)+4*((n+1)+1)+2))
+      rw [drainB.eq_1]
+      rw [if_neg (by omega : 3*sharpBlock n+1 ≠ 0)]
+      rw [hEval]
+      simp only [Option.bind_some, if_pos hlt]
+      calc
+        drainB (n+2) (sharpBlock n) (d+2*(3*sharpBlock n+1)+5) =
+            some (.D 0 ((d+2*(3*sharpBlock n+1)+5)+3*sharpBlock n+4*(n+1)+2)) :=
+          ih (d+2*(3*sharpBlock n+1)+5)
+        _ = some (.D 0 (d+3*sharpBlock (n+1)+4*((n+1)+1)+2)) := by
+          simp [sharpBlock]
+          omega
+
 #print axioms evalA_first_lower_log
 #print axioms evalA_positive_depth
 #print axioms drainB_upper_linear_log
 #print axioms drainB_first_lower_log
+#print axioms drainB_sharp_witness
 end BB6.Agent49DrainLinearLogSource
