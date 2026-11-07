@@ -255,7 +255,7 @@ theorem midApos_zero_w5_to_sourceScanE_delta (v : Nat) :
   simp only [Option.bind_some]
   rw [hscan]
   simp only [Option.map_some]
-  omega
+  rfl
 
 #print axioms shift_A01_tail_delta
 #print axioms juncPos_w0_exit_delta
