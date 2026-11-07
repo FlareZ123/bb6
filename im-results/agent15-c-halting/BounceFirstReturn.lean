@@ -35,34 +35,32 @@ private theorem run_odd_prefix (k c t : Nat)
     (ht : t≤2*k+3) (htc : t+3≤c) :
     run (t+1) (some (0,k,c)) =
       some (2*k+3-t,t,c-t) := by
-  have hc_eq : c = (c-4)+4 := by omega
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le' hc
   have hstep :
-      (some (0,k,c) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
-        some (2*k+3,0,c) := by
-    rw [hc_eq]
+      (some (0,k,d+4) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
+        some (2*k+3,0,d+4) := by
     simp [BB6CLine.nextC, hodd]
     omega
-  change run t ((some (0,k,c)).bind BB6CLine.nextC) =
-    some (2*k+3-t,t,c-t)
+  change run t ((some (0,k,d+4)).bind BB6CLine.nextC) =
+    some (2*k+3-t,t,(d+4)-t)
   rw [hstep]
-  simpa using run_high t (2*k+3) 0 c ht htc
+  simpa using run_high t (2*k+3) 0 (d+4) ht htc
 
 private theorem run_even_prefix (k c t : Nat)
     (heven : k%2=0) (hc : 4≤c)
     (ht : t≤2*k+2) (htc : t+3≤c-3) :
     run (t+1) (some (0,k,c)) =
       some (2*k+2-t,2+t,c-3-t) := by
-  have hc_eq : c = (c-4)+4 := by omega
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le' hc
   have hstep :
-      (some (0,k,c) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
-        some (2*k+2,2,c-3) := by
-    rw [hc_eq]
+      (some (0,k,d+4) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
+        some (2*k+2,2,d+1) := by
     simp [BB6CLine.nextC, heven]
     omega
-  change run t ((some (0,k,c)).bind BB6CLine.nextC) =
-    some (2*k+2-t,2+t,c-3-t)
+  change run t ((some (0,k,d+4)).bind BB6CLine.nextC) =
+    some (2*k+2-t,2+t,(d+1)-t)
   rw [hstep]
-  simpa using run_high t (2*k+2) 2 (c-3) ht htc
+  simpa using run_high t (2*k+2) 2 (d+1) ht htc
 
 /-- Before the certified bounce time, the original CLine path has not
 returned to the c=0 section. This is the minimality property missing from
