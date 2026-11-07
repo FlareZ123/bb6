@@ -67,7 +67,12 @@ theorem sourceRun_of_reaches (m : ConjectureMachines.Machine 6 2)
   | refl => exact ⟨0, rfl⟩
   | @tail b c hprev hstep ih =>
     obtain ⟨n, hn⟩ := ih
-    exact ⟨n+1, by simp [sourceRun, hn, hstep]⟩
+    cases hs : ConjectureMachines.step m b with
+    | none => simp [hs] at hstep
+    | some c' =>
+      have hc : c = c' := by simpa [hs] using hstep
+      subst c'
+      exact ⟨n+1, by simp [sourceRun, hn, hs]⟩
 
 /-- Mathematically exact equivalence of finite physical halting and
     upstream's partial-computation-domain halting definition. -/
