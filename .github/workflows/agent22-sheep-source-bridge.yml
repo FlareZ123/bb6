@@ -189,3 +189,18 @@ jobs:
           for name in ExceptionalGrowth ExceptionalGap ExceptionalUniform ExceptionalEight FiniteModCert FiniteGates0 FiniteGates1 FiniteGates2 FiniteGates3 FiniteGates4 FiniteGates5 FiniteGates6 FiniteGates7; do
             lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
           done
+
+          # Agent16: asymptotically sharper generic power-parent valuations,
+          # composed with the exact six-state Sheep source and all-branch split.
+          cp "$GITHUB_WORKSPACE/im-results/agent40-sheep-third-preimages/ResidueGap.lean" ResidueGap.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent17-sheep-geometric-rays/SpecialSourceNoPower.lean" SpecialSourceNoPower.lean
+          for name in SheepSharper SheepPowerCutoff SheepSharpSource; do
+            cp "$GITHUB_WORKSPACE/im-results/agent16-sheep-valuation-cutoff/$name.lean" "$name.lean"
+          done
+          /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" \
+            ResidueGap.lean SpecialSourceNoPower.lean SheepSharper.lean \
+            SheepPowerCutoff.lean SheepSharpSource.lean
+          for name in ResidueGap SpecialSourceNoPower SheepSharper SheepPowerCutoff; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean SheepSharpSource.lean
