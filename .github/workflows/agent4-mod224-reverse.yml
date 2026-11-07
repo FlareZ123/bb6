@@ -1,0 +1,28 @@
+name: Agent 4 Machine C modulus-224 independent inverse core (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel check factor-seven all-natural reverse cone against unmodified CLine
+        run: |
+          set -eu
+          git rev-parse HEAD
+          sha256sum im-results/agent11-c-line/CLine.lean
+          export LEAN_PATH="im-results/agent11-c-line:im-results/agent4-mixed96-backward:im-results/agent4-mod224-reverse"
+          lean --version
+          lean -o im-results/agent11-c-line/CLine.olean im-results/agent11-c-line/CLine.lean
+          lean -o im-results/agent4-mixed96-backward/BackwardMod.olean im-results/agent4-mixed96-backward/BackwardMod.lean
+          lean -o im-results/agent4-mixed96-backward/SourceBridge.olean im-results/agent4-mixed96-backward/SourceBridge.lean
+          lean -o im-results/agent4-mod224-reverse/Mod224Core.olean im-results/agent4-mod224-reverse/Mod224Core.lean
+          lean im-results/agent4-mod224-reverse/Mod224Second.lean
