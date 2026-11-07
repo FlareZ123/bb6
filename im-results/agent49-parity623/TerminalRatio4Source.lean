@@ -19,6 +19,7 @@ open BB6.Agent49TerminalRatio4Arithmetic
 most y+2*x+5+3*n when the evaluator's initial counter x is below 3^n. -/
 theorem evalA_drain_joint_mass (n x y p q r aa dd : Nat)
     (hpos : 0<x)
+    (hxy : x≤y)
     (hx : x<3^n)
     (hEval : evalA (y+1-x) x (2*x+5) = some (p,q,r))
     (hDrain : drainB p q r = some (.D aa dd)) :
@@ -151,7 +152,7 @@ theorem evenNear_terminal_ratio4_source
     (hhalt : highLevelNext (.D aa dd)=none)
     (hK : 2*(y+2*x+5+3*n)+5<3^K) :
     4*x≤y+K+8*n+17 ∧ y≤4*x+K+8*n+17 := by
-  have hmass := evalA_drain_joint_mass n x y p q r aa dd hpos hx hEval hDrain
+  have hmass := evalA_drain_joint_mass n x y p q r aa dd hpos hxy hx hEval hDrain
   have hbal := terminal_output_balance_of_mass aa dd K (y+2*x+5+3*n) hmass hK he hhalt
   obtain ⟨hBridgeR,hBridgeL⟩ := evenNearGap x y p q r aa dd n cR cL
     hpos hxy hx hcR hcL hEval hDrain
