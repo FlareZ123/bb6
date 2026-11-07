@@ -28,7 +28,7 @@ theorem drainB_terminal_interval_linear (a b d n aa dd : Nat)
     (hhalt : highLevelNext (.D aa dd) = none) :
     3^((d+3*b)-(a+n)-5) ≤ 2*(a+d+3*b+5*n+2)+5 ∧
     3^(a-d-3*b-5*n-8) ≤ 2*(a+d+3*b+5*n+2)+5 := by
-  have hf := drainB_first_le_pow n a b d aa dd hb hs
+  have hf := drainB_first_upper_log n a b d aa dd hb hs
   have hl := drainB_first_lower_log n a b d aa dd hb hs
   have hd := drainB_d3 b a d aa dd hs
   have hu := drainB_upper_linear_log n a b d aa dd hb hs
@@ -91,8 +91,6 @@ theorem evenRight_terminal_balance_interval
 
 #print axioms drainB_terminal_balance_interval
 #print axioms evenRight_terminal_balance_interval
-#print axioms oddLeft_terminal_ray_interval
-#print axioms evenLeft_terminal_ray_interval
 /-- A terminal state on the even-right branch with zero residual blocks
 is confined by the direct evaluator bounds. -/
 theorem terminal_gap_bound (x y K M : Nat)
@@ -139,7 +137,6 @@ theorem evenRight_zero_block_terminal_interval
     terminal_gap_bound x y K (d+2*a+9+2*n0) hEven hhalt hmass hK
   omega
 
-#print axioms oddRight_terminal_ray_interval
 #print axioms terminal_gap_bound
 #print axioms evenRight_zero_block_terminal_interval
 
@@ -152,9 +149,11 @@ theorem oddLeft_terminal_ray_interval
     (hhalt : highLevelNext (.D aa dd) = none)
     (hK : 2*(4*d+t+20+5*n)+5 < 3^K) :
     2*d+6≤t+n+K ∧ t≤2*d+5*n+K+17 := by
+  have hK' :
+      2*((d+t+4)+5+3*(d+3)+5*n+2)+5 < 3^K := by omega
   have hbal :=
     drainB_terminal_balance_interval (d+t+4) (d+3) 5 n K aa dd
-      hs hb he hhalt hK
+      hs hb he hhalt hK'
   omega
 
 /-- Even-left ray: a=2*d+5+t, so its drain balance is t-2*d-5. -/
@@ -166,9 +165,11 @@ theorem evenLeft_terminal_ray_interval
     (hhalt : highLevelNext (.D aa dd) = none)
     (hK : 2*(4*d+t+13+5*n)+5 < 3^K) :
     2*d+1≤t+n+K ∧ t≤2*d+5*n+K+12 := by
+  have hK' :
+      2*((d+t+3)+2+3*(d+2)+5*n+2)+5 < 3^K := by omega
   have hbal :=
     drainB_terminal_balance_interval (d+t+3) (d+2) 2 n K aa dd
-      hs hb he hhalt hK
+      hs hb he hhalt hK'
   omega
 
 /-- Odd-right ray: d=2*a+1+2*t, so its drain balance is 2*(t-a)+5. -/
@@ -181,10 +182,16 @@ theorem oddRight_terminal_ray_interval
     (hhalt : highLevelNext (.D aa dd) = none)
     (hK : 2*(4*a+2*t+7+5*n)+5 < 3^K) :
     2*a≤2*t+n+K+9 ∧ 2*t≤2*a+5*n+K+2 := by
+  have hK' :
+      2*((a+2*t+5)+3+3*(a-1)+5*n+2)+5 < 3^K := by omega
   have hbal :=
     drainB_terminal_balance_interval (a+2*t+5) (a-1) 3 n K aa dd
-      hs hb he hhalt hK
+      hs hb he hhalt hK'
   omega
 
+
+#print axioms oddLeft_terminal_ray_interval
+#print axioms evenLeft_terminal_ray_interval
+#print axioms oddRight_terminal_ray_interval
 
 end BB6.Agent49DrainLinearTerminalSource
