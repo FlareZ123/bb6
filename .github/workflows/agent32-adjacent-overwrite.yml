@@ -1,0 +1,26 @@
+name: Agent 32 raw overwrite predecessor theorem (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged raw machine source and generic all-time overwrite theorem
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent32-adjacent-overwrite"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent32-adjacent-overwrite/GenericOverwrite.olean im-results/agent32-adjacent-overwrite/GenericOverwrite.lean | tee /tmp/overwrite-proof.log
+          if grep -q sorryAx /tmp/overwrite-proof.log; then exit 1; fi
