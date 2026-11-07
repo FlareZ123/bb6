@@ -126,15 +126,17 @@ theorem sum7_every_parent_odd_image (x y a b : Nat)
               have hsum : (a+b)%4=2 := by omega
               exact ⟨hb5,by omega,hsum⟩
 
-/-- The entire sum-seven high cylinder is unreachable from the blank
-    tape. Every possible one-step predecessor is excluded by the
-    odd-right section image invariant. -/
-theorem sum7_high_blank_unreachable (q r : Nat) :
-    ¬ BB6.Agent3.CReach (2*(32*q+8)+3)
-      (highK (32*q+8) (32*r+5)) := by
-  let x : Nat := 2*(32*q+8)+3
-  let y : Nat := highK (32*q+8) (32*r+5)
-  obtain ⟨hy12,hy8,hxy8,hS32,hx4⟩ := sum7_target_residues q r
+/-- The full exceptional sum-seven high cylinder is unreachable.
+    The only arithmetic hypotheses are m >= 5, m = 1 (mod 4), and
+    (j+8) = (3*m+1) (mod 32). -/
+theorem sum7_high_blank_unreachable_of_congruence (j m : Nat)
+    (hm5 : 5≤m) (hm4 : m%4=1)
+    (hrel : (j+8)%32=(3*m+1)%32) :
+    ¬ BB6.Agent3.CReach (2*j+3) (highK j m) := by
+  let x : Nat := 2*j+3
+  let y : Nat := highK j m
+  obtain ⟨hy12,hy8,hxy8,hS32,hx4⟩ :=
+    sum7_target_residues_of_congruence j m hm5 hm4 hrel
   have hS16 : (x+y+1)%16=8 := by omega
   intro hreach
   rcases hreach with ⟨time,ht⟩
@@ -161,6 +163,16 @@ theorem sum7_high_blank_unreachable (q r : Nat) :
           have himage :=
             BB6.Agent3.blank_section_odd_image t a b hprev hb5 hbodd
           omega
+
+/-- The previously isolated (j,m)=(8,5) mod-32 progression is a
+    special case of the full sum-seven congruence cylinder. -/
+theorem sum7_high_blank_unreachable (q r : Nat) :
+    ¬ BB6.Agent3.CReach (2*(32*q+8)+3)
+      (highK (32*q+8) (32*r+5)) := by
+  apply sum7_high_blank_unreachable_of_congruence (32*q+8) (32*r+5)
+  · omega
+  · omega
+  · omega
 
 #print axioms sum7_every_parent_odd_image
 #print axioms sum7_high_blank_unreachable
