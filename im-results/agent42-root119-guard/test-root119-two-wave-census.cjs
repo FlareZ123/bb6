@@ -12,6 +12,10 @@ let previousBZero = null;
 let bZeros = 0;
 let cphaseShieldInputs = 0;
 let cphaseShieldOutputs = 0;
+const prefixShieldAudit = {
+  evenPrefix: { inputs: 0, outputs: 0 },
+  oddEvenPrefix: { inputs: 0, outputs: 0, boundarySafe: 0 },
+};
 const counts = {
   oldWave: 0,
   leftOneWave: 0,
@@ -101,6 +105,11 @@ for (let time = 0; time < LIMIT; time++) {
     const prefix = prefixAtBZero(head, time);
     const cphase = cphaseD1AtBZero(head, time);
     const cphaseShield = cphase === null ? null : noLeft1100(head);
+    const prefixShield = prefix === null || prefix.type === 'prefixUnmatched'
+      ? null : noLeft1100(head);
+    const oddEvenBoundarySafe = prefix?.type === 'oddEvenPrefix'
+      ? !(tape.has(head - 6) && tape.has(head - 5) && !tape.has(head - 4))
+      : null;
 
     if (previousBZero !== null) {
       const expected = predictions.get(time);
@@ -122,6 +131,12 @@ for (let time = 0; time < LIMIT; time++) {
         assert.equal(head, previousBZero.prefix.returnHead,
           'Even-wave prefix return head disagrees with raw machine');
         counts[previousBZero.prefix.type]++;
+        const audit = prefixShieldAudit[previousBZero.prefix.type];
+        audit.inputs += Number(previousBZero.prefixShield);
+        audit.outputs += Number(noLeft1100(head));
+        if (previousBZero.prefix.type === 'oddEvenPrefix') {
+          audit.boundarySafe += Number(previousBZero.oddEvenBoundarySafe);
+        }
       } else if (previousBZero.prefix &&
           previousBZero.prefix.type === 'prefixUnmatched') {
         counts.prefixUnmatched++;
@@ -143,7 +158,7 @@ for (let time = 0; time < LIMIT; time++) {
         counts.other++;
       }
     }
-    previousBZero = { time, prefix, cphase, cphaseShield };
+    previousBZero = { time, prefix, cphase, cphaseShield, prefixShield, oddEvenBoundarySafe };
   }
 
   const rule = RULES[state.charCodeAt(0) - 65].slice(symbol * 3, symbol * 3 + 3);
@@ -175,4 +190,5 @@ console.log(JSON.stringify({
   firstReturnClasses: counts,
   cphaseD1RunLengths: cphaseRuns,
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
+  prefixShieldAudit,
 }, null, 2));
