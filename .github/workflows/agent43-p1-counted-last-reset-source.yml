@@ -1,6 +1,11 @@
 name: Agent43 P1 counted last-reset source check (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'im-results/agent50-p1-subwall/ThreeResetCore.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/ThreeResetWallPrefix.lean'
+      - '.github/workflows/agent43-p1-counted-last-reset-source.yml'
 permissions:
   contents: read
 jobs:
@@ -71,3 +76,5 @@ jobs:
           lean -o "$AG50SUB/RightFiveThreeSource.olean" "$AG50SUB/RightFiveThreeSource.lean"
           lean -o "$AG43/DepthIndexedResetFloor.olean" "$AG43/DepthIndexedResetFloor.lean"
           lean -o "$AG43/TwoResetWallPrefix.olean" "$AG43/TwoResetWallPrefix.lean"
+          lean -o "$AG50SUB/ThreeResetCore.olean" "$AG50SUB/ThreeResetCore.lean"
+          lean -o "$AG43/ThreeResetWallPrefix.olean" "$AG43/ThreeResetWallPrefix.lean"
