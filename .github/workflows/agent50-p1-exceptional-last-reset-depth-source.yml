@@ -138,7 +138,7 @@ jobs:
             echo "Energy-budget source theorem depends on sorryAx" >&2
             exit 1
           fi
-          if lean "$AG50SUB/RightFiveEnergyParam.lean" > /tmp/agent50-right-five-parametric-axioms.txt; then
+          if lean -o "$AG50SUB/RightFiveEnergyParam.olean" "$AG50SUB/RightFiveEnergyParam.lean" > /tmp/agent50-right-five-parametric-axioms.txt; then
             cat /tmp/agent50-right-five-parametric-axioms.txt
           else
             status=$?
@@ -148,5 +148,17 @@ jobs:
           grep -q "source_right_five_parametric_cost_gap" /tmp/agent50-right-five-parametric-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-right-five-parametric-axioms.txt; then
             echo "Parametric source theorem depends on sorryAx" >&2
+            exit 1
+          fi
+          if lean "$AG50SUB/RightFiveNearDouble.lean" > /tmp/agent50-right-five-near-double-axioms.txt; then
+            cat /tmp/agent50-right-five-near-double-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-near-double-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_right_five_near_double_cost" /tmp/agent50-right-five-near-double-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-near-double-axioms.txt; then
+            echo "Near-double-n source theorem depends on sorryAx" >&2
             exit 1
           fi
