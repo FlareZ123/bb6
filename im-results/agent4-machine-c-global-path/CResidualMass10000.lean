@@ -44,7 +44,7 @@ theorem rootTrace_no_stop_target :
 theorem runFuel_weight_growth (n a k x y : Nat)
     (h : BB6.Agent11Fuel.runFuel n (some (a,k)) = some (x,y)) :
     a+2*k+2*n ≤ x+2*y := by
-  have hsrc : BB6.Agent8Section.run BB6.Agent11Fuel.secNext n (some (a,k)) =
+  have hsrc : BB6.Agent8Section.run BB6.Agent8Section.secNext n (some (a,k)) =
       some (x,y) := by
     simpa only [BB6.Agent11Fuel.runFuel_eq] using h
   exact BB6.Agent11Mass.run_generic_weight_growth n a k x y hsrc
@@ -130,18 +130,21 @@ theorem low_is_stop_target (m : Nat) (hm : m ≤ 4)
     (hmass : 1+2*lowStopTargetY m ≤ 10000) :
     isStopTarget (some (1,lowStopTargetY m)) = true := by
   unfold isStopTarget
-  have hmem : m ∈ List.range 5 := List.mem_range.mpr (by omega)
-  simp [hmass, hmem]
+  have hmass' : 1+2*(2^(2*m+3)-(3*m+4)) ≤ 10000 := by
+    simpa [lowStopTargetY] using hmass
+  simp [hmass', lowStopTargetY]
+  exact ⟨m, by omega, rfl⟩
 
 theorem high_is_stop_target (j m : Nat) (hm : m ≤ 4)
     (hmass : (highStopTarget j m).1 + 2*(highStopTarget j m).2 ≤ 10000) :
     isStopTarget (some (highStopTarget j m)) = true := by
   unfold isStopTarget
-  have hmem : m ∈ List.range 5 := List.mem_range.mpr (by omega)
+  have hmass' : 2*j+3 + 2*(2^(2*m+2)*(j+3)-(j+3*m+5)) ≤ 10000 := by
+    simpa [highStopTarget] using hmass
   have hx : 3 ≤ 2*j+3 := by omega
   have hodd : (2*j+3) % 2 = 1 := by omega
-  have hj : ((2*j+3)-3)/2 = j := by omega
-  simp [hmass, hmem, hx, hodd, hj, highStopTarget]
+  simp [hmass', hx, hodd, highStopTarget]
+  exact ⟨m, by omega, rfl⟩
 
 /-- For m≥5, the low raw mass already exceeds the 10,000 cutoff. -/
 theorem low_mass_ge_16347 (m : Nat) (hm : 5 ≤ m) :
