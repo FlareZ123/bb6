@@ -39,9 +39,14 @@ jobs:
           lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
           lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
           lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
-          lean "$A/Root119OddEvenChain.lean" 2>&1 | tee "$A/Root119OddEvenChain.log"
+          lean -o "$A/Root119OddEvenChain.olean" "$A/Root119OddEvenChain.lean" 2>&1 | tee "$A/Root119OddEvenChain.log"
           if grep -q 'sorryAx' "$A/Root119OddEvenChain.log"; then
             echo "::error::sorryAx found in new even-wave return theorems"
+            exit 1
+          fi
+          lean -o "$A/Root119PrefixShield.olean" "$A/Root119PrefixShield.lean" 2>&1 | tee "$A/Root119PrefixShield.log"
+          if grep -q 'sorryAx' "$A/Root119PrefixShield.log"; then
+            echo "::error::sorryAx found in prefix shield transport theorems"
             exit 1
           fi
           lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean" 2>&1 | tee "$A/Root119CPhaseReturn.log"
