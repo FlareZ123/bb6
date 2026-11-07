@@ -354,6 +354,5 @@ theorem factor_word_of_rotation_period (w : List Nat) (d : Nat)
   refine ⟨u,k,hkpos,hcostU,?_,hrd⟩
   simpa [hweightU,A] using hqhi
 
-def offset_repeat_placeholder : Nat := 0
 
 end PeriodWord
