@@ -16,6 +16,14 @@ For arbitrary `r,j,m` with `2≤r`, `3≤m`, `r+4≤2*m+2`, `m%4=(2*r+3)%4` and 
 
 A constructive parameter family and explicit cross-agent `ValSixC58AllDepth` merger are now being checked separately. Their source-verification status should be read from the corresponding CI runs rather than assumed from the original high theorem. This advance does not determine whether Machine C or BB(6) halts.
 
+
+## Independent even-right and sum-seven high exclusions (7 November 2026)
+
+See [HighEvenRight.md](HighEvenRight.md) for the proof synthesis and exact residue calculations. The unique even-right inverse cylinder (m\equiv3\pmod4, j\equiv m+3\pmod8) is source-certified and survives the full previous Agent24 high sieve; its exact residual criterion and axiom audit passed [CI 42349021125](https://github.com/FlareZ123/bb6/actions/runs/42349021125).
+
+A second exceptional sum-seven cylinder (j=32q+8, m=32r+5) is being checked using Agent3's complete one-step preimage grammar. Its source proof rules out every possible parent by the odd-right image invariant, with no finite bounce-depth cutoff. The combined source and prior-sieve verification is pending [CI 42350364054](https://github.com/FlareZ123/bb6/actions/runs/42350364054). Treat the second cylinder as provisional until that run succeeds.
+
+
 ## Current state
 
 The established ValSixFull integration is documented in [JointCriterionIntegration.md](JointCriterionIntegration.md) and formalized in [ValSixJointFull.lean](../agent3-c-bounce-inverse/ValSixJointFull.lean). The later exact C58 refinement is in [ValSixC58.lean](../agent11-c-low58/ValSixC58.lean), successful in [CI 42333769024](https://github.com/FlareZ123/bb6/actions/runs/42333769024). The proposed all-depth merge is [ValSixC58AllDepth.lean](../agent11-c-low58/ValSixC58AllDepth.lean), requiring its separate integration audit.
