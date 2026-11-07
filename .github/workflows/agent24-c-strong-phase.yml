@@ -281,7 +281,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighEvenRightArithmetic,HighEvenRightSource,HighEvenRightResidual}.lean .
           lean -o HighEvenRightArithmetic.olean HighEvenRightArithmetic.lean
           lean -o HighEvenRightSource.olean HighEvenRightSource.lean
-          lean HighEvenRightResidual.lean
+          lean -o HighEvenRightResidual.olean HighEvenRightResidual.lean
           # Complete sum-seven preimage grammar for the second high cylinder.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighEvenRightSum7Arithmetic,HighEvenRightSum7Source}.lean .
           lean -o HighEvenRightSum7Arithmetic.olean HighEvenRightSum7Arithmetic.lean
