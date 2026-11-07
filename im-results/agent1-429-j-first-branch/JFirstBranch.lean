@@ -831,12 +831,24 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
   rcases f0_local u w with ⟨h0,h1,h2,h3,h4,hm1,hm2⟩
   have hsetup := f0_to_c1 (-2*(u:Int)-7) (f0Tape u w)
     h0
-    (by convert h1 using 1 <;> omega)
-    (by convert h2 using 1 <;> omega)
-    (by convert h3 using 1 <;> omega)
-    (by convert h4 using 1 <;> omega)
-    (by convert hm1 using 1 <;> omega)
-    (by convert hm2 using 1 <;> omega)
+    (by
+      rw [show (-2*(u:Int)-7)+1 = -2*(u:Int)-6 by omega]
+      exact h1)
+    (by
+      rw [show (-2*(u:Int)-7)+2 = -2*(u:Int)-5 by omega]
+      exact h2)
+    (by
+      rw [show (-2*(u:Int)-7)+3 = -2*(u:Int)-4 by omega]
+      exact h3)
+    (by
+      rw [show (-2*(u:Int)-7)+4 = -2*(u:Int)-3 by omega]
+      exact h4)
+    (by
+      rw [show (-2*(u:Int)-7)-1 = -2*(u:Int)-8 by omega]
+      exact hm1)
+    (by
+      rw [show (-2*(u:Int)-7)-2 = -2*(u:Int)-9 by omega]
+      exact hm2)
   let c0 : Config := {state:=A,head:=0,tape:=jTape u w}
   let c1 : Config :=
     {state:=C,head:=-2*(u:Int)-3,
