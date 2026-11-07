@@ -106,10 +106,18 @@ theorem prior_high_allowed_m0_j3_mod8 (t : Nat) :
       (BB6.Agent15.affineNormalize (16*t+9) (24*t+16)).2≠4 := by
     rw [affine_normalize_m0_j3_mod8]
     omega
+  have hx : 2*j+3=16*t+9 := by
+    dsimp [j]
+    omega
+  have hy : 2^(2*0+2)*(j+3)-(j+3*0+5)=24*t+16 := by
+    dsimp [j]
+    norm_num
+    omega
   have hright :
       (BB6.Agent15.affineNormalize (2*j+3)
         (2^(2*0+2)*(j+3)-(j+3*0+5))).2≠4 := by
-    simpa [j] using hright0
+    rw [hx,hy]
+    exact hright0
   have hValFull : BB6.Agent3ValSix.highAllowedValSixFull j 0 := by
     unfold BB6.Agent3ValSix.highAllowedValSixFull
     exact ⟨hValSix,hFive,by omega,by omega,by omega,hright⟩
@@ -166,8 +174,23 @@ theorem m0_j_mod8_three_new_bool_filter (t : Nat) :
         (8*t+3) 0 = true :=
     (BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightBool_iff
       (8*t+3) 0).mpr (prior_high_allowed_m0_j3_mod8 t)
+  have hx :
+      BB6.Agent3FullForcedResidual.highTargetX (8*t+3)=16*t+9 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetX]
+    omega
+  have hy :
+      BB6.Agent3FullForcedResidual.highTargetY (8*t+3) 0=24*t+16 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetY]
+    norm_num
+    omega
+  have hforced :
+      BB6.Agent3.fullForcedExcluded
+        (BB6.Agent3FullForcedResidual.highTargetX (8*t+3))
+        (BB6.Agent3FullForcedResidual.highTargetY (8*t+3) 0)=true := by
+    rw [hx,hy]
+    exact full_forced_excluded_m0_j3_mod8 t
   simp [BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool,
-    hprior, full_forced_excluded_m0_j3_mod8]
+    hprior, hforced]
 
 #print axioms prior_high_allowed_m0_j3_mod8
 #print axioms m0_j_mod8_three_new_infinite_exclusion
