@@ -43,11 +43,16 @@ private theorem special_code (r : Nat) :
       List.replicate (6*r+4) true := by
     simpa [show [true] = List.replicate 1 true by rfl] using
       (List.replicate_append_replicate (6*r+3) 1 true)
-  change (List.replicate (6*r+3) true ++
-      ([true] ++ (false :: List.replicate 12 true))) =
-    List.replicate (6*r+4) true ++ (false :: List.replicate 12 true)
-  rw [← List.append_assoc, h]
-  rfl
+  calc
+    List.replicate (6*r+3) true ++
+        (true :: false :: List.replicate 12 true)
+      = (List.replicate (6*r+3) true ++ [true]) ++
+          (false :: List.replicate 12 true) := by
+            simpa using
+              (List.append_assoc (List.replicate (6*r+3) true)
+                [true] (false :: List.replicate 12 true)).symm
+    _ = List.replicate (6*r+4) true ++
+          (false :: List.replicate 12 true) := by rw [h]
 
 private theorem inc_eq (ws : List Bool) :
     CryptidA.wordInc ws = BB6.ThirdTailArithmetic.inc ws := by
@@ -70,12 +75,18 @@ private theorem a_input_shape (t r : Nat) :
         [true,true])) := by
   simp only [packetTarget,init]
   apply congrArg (fun xs : List Bool => (⟨[],false,xs,5⟩ : Cfg))
-  rw [special_code]
   have hn : 8*(3*t+2)+5 = 2+(3*(8*t+6)+1) := by omega
   have hp : 2*(3*r+1)+2 = 3*(2*r+1)+1 := by omega
   have hmul : 3*(2*r+1)=6*r+3 := by omega
-  rw [hn,hp,hmul,← List.replicate_append_replicate]
-  simp [List.append_assoc] <;> omega
+  have hprefix :
+      List.replicate (8*(3*t+2)+5) true =
+        [true,true] ++ List.replicate (3*(8*t+6)+1) true := by
+    rw [hn]
+    simpa using
+      (List.replicate_append_replicate 2 (3*(8*t+6)+1) true).symm
+  rw [hprefix,hp,hmul,special_code]
+  simp [List.append_assoc]
+
 
 /-- The q=3r+1 A branch closes after two physical blank cells are made explicit
     for the original 1100 terminal. The unpadded endpoint is physically equal. -/
