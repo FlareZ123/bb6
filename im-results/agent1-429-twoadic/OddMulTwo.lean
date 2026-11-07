@@ -76,5 +76,67 @@ theorem odd_mul_surjective (d E r : Nat) (hd : d%2=1) :
             _ = r%(2*m) := heq
         simpa only [hM] using hres
 
+
+/-- Whenever two residues have the same parity, repeated shifts by twice
+    any odd factor traverse their exact residue classes mod 2^E. -/
+theorem odd_double_shift (E x y d : Nat) (hE : 1≤E)
+    (hd : d%2=1) (hpar : x%2=y%2) :
+    ∃ t, (y+2*d*t)%2^E=x%2^E := by
+  let m := 2^(E-1)
+  let M := 2^E
+  have hm : 0<m := Nat.pow_pos (by decide)
+  have hM : M=2*m := by
+    have hExp : E=(E-1)+1 := by omega
+    change 2^E=2*2^(E-1)
+    calc
+      2^E = 2^((E-1)+1) := congrArg (fun z:Nat => 2^z) hExp
+      _ = 2*2^(E-1) := by rw [Nat.pow_succ]; omega
+  let x0 := x%M
+  let y0 := y%M
+  have hx : x0<M :=
+    Nat.mod_lt _ (by dsimp[M]; exact Nat.pow_pos (by decide))
+  have hy : y0<M :=
+    Nat.mod_lt _ (by dsimp[M]; exact Nat.pow_pos (by decide))
+  have hpar0 : x0%2=y0%2 := by
+    have hxpar : x0%2=x%2 := by
+      have he := Nat.mod_mul_left_mod x m 2
+      simpa [x0,hM,Nat.mul_comm] using he
+    have hypar : y0%2=y%2 := by
+      have he := Nat.mod_mul_left_mod y m 2
+      simpa [y0,hM,Nat.mul_comm] using he
+    omega
+  let v := (x0+2*m-y0)/2
+  have hv : y0+2*v=x0+2*m := by dsimp [v]; omega
+  obtain ⟨t,ht⟩ := odd_mul_surjective d (E-1) v hd
+  have ht' : (d*t)%m=v%m := ht
+  have hshift : (2*(d*t))%M=(2*v)%M := by
+    rw [hM]
+    calc
+      (2*(d*t))%(2*m)=2*((d*t)%m) :=
+        Nat.mul_mod_mul_left 2 (d*t) m
+      _ = 2*(v%m) := by rw [ht']
+      _ = (2*v)%(2*m) :=
+        (Nat.mul_mod_mul_left 2 v m).symm
+  refine ⟨t,?_⟩
+  have hymod : (y+2*d*t)%M=(y0+2*(d*t))%M := by
+    have heq : y+2*d*t=y+2*(d*t) := by simp only [Nat.mul_assoc]
+    rw [heq]
+    exact (Nat.mod_add_mod y M (2*(d*t))).symm
+  have hright : (y0+2*v)%M=x0 := by
+    rw [hv,hM]
+    have hmx : x0<2*m := by omega
+    simp [Nat.mod_eq_of_lt hmx]
+  calc
+    (y+2*d*t)%M = (y0+2*(d*t))%M := hymod
+    _ = (y0+2*v)%M := by
+      calc
+        _ = (y0%M+(2*(d*t))%M)%M := Nat.add_mod _ _ _
+        _ = (y0%M+(2*v)%M)%M := by rw [hshift]
+        _ = (y0+2*v)%M := (Nat.add_mod _ _ _).symm
+    _ = x0 := hright
+    _ = x%M := rfl
+
+#print axioms odd_double_shift
+
 #print axioms odd_mul_surjective
 end BB6Modular
