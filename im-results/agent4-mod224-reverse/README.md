@@ -59,9 +59,9 @@ The reverse core arose from a finite abstract graph with quotient
 - **5,820,416** abstract vertices;
 - **45,559,808** abstract edges, including duplicates;
 - **5,227** vertices in the complete reverse ancestor set of `(13,191,0)`;
-- **25** c0, **25** c1, **zero** c2, and **5,177** high-phase reverse states.
+- **25** c0, **25** c1, **zero** c2, **25** c3, and **5,152** high-phase (c≥4) reverse states.
 
-The projected authentic source `(5,0,1)` lies outside. Independent total-state evaluation of the seven-clause arithmetic predicate matched the 5,227-vertex computed reverse set at **every** vertex (no false positives or negatives). This finite experiment motivated the theorem; **the Lean proof of all-natural transition closure is the actual mathematical certificate**. The finite graph size and overlaps are reproducible computational evidence, not kernel-checked cardinality statements.
+The projected authentic source `(5,0,1)` lies outside. The independent [complete C++17 checker](ReverseCore224.cpp) recomputes both reverse ancestors and forward abstract reachability, testing the seven-clause arithmetic predicate against **every** vertex (no false positives or negatives). It reports 3,222,498 forward-reached vertices and that the target is absent; these figures provide a second internal crosscheck independent of the Lean proof. This finite experiment motivated the theorem; **the Lean proof of all-natural transition closure is the actual mathematical certificate**. The finite graph size and overlaps are reproducible computational evidence, not kernel-checked cardinality statements.
 
 ## Source CI and provenance
 
@@ -84,6 +84,8 @@ An independent M512/M256 finite overapproximate forward search over 68,157,440 a
 Admission by an abstract model is not proof of actual source reachability; it shows that **this previously successful finite filter alone cannot establish the new all-time exclusion**. The M512 numeric count has not been independently kernel-certified here, and is not a claim of new mathematical lower/upper BB(6) bounds. A comparison against every prior symbolic exception and published proof has **not** been completed; we therefore do not assert external novelty or submit this dossier as a standalone publication.
 
 ## Remaining obligation
+
+**Extension to three depth classes:** [Mod224SecondWide.lean](Mod224SecondWide.lean) extends the same reverse cone to all second-family parameters with `j%224=5` and `m%672 ∈ {29,93,349}`, by proving the two other stable dyadic residues `32` and `128` modulo 224. Check its own subsequent original-source CI run before treating that extension as fully certified. The full 28-of-256 M512 admission comparison above concerns the `29` subfamily; each of the other two subfamilies also admitted exactly 28 M512 parameter cells in a separate finite computation.
 
 The first-family stopping gates and the complementary infinitely many second-family gates remain entirely undecided. To resolve Machine C, a proof must remove **all** genuine blank-root stopping possibilities (or establish a true halting witness), including exceptional inverse exits. This modular cone is a nontrivial source-checked barrier useful for testing broader invariant synthesis. It does **not** establish all-time nonhalting of Machine C, classify any other holdout, or determine BB(6).
 
