@@ -55,3 +55,14 @@ Observed over the 20,000 checked states:
 ## Interpretation and limitation
 
 This extends the finite audit and supplies an independent GMP implementation whose first 10,000-step endpoint matches the existing Python mirror. It is computational evidence only. The unresolved mathematical task remains an all-time proof that the root orbit satisfies the square-distance predicate (or another sufficient condition excluding every terminal window). No claim of nonhalting or of a BB(6) classification follows from this finite trace.
+
+
+## Formal algebra behind the projective gap calculation
+
+The companion `GapCoordinateMatrices.lean` was checked locally with Lean 4.36.0-rc2. With the unshifted coordinates `R=y-4*x` and `L=x-4*y), it proves:
+
+- `15*x = -(4*R+L)` and `15*y = -(R+4*L)`;
+- the far-left leading pair `(7*y-4*x, x-13*y)` is `((3*R-8*L)/5, (3*R+17*L)/5)`;
+- the near-left leading pair `(7*x-4*y, y-13*x)` is `((-8*R+3*L)/5, (17*R+3*L)/5)`.
+
+The Lean file proves the corresponding denominator-cleared integer identities exactly. These are algebraic coordinate changes for the leading bridge forms. They do not absorb the parity-dependent constants or the logarithmic correction bounds in `RootRayBridge.md`, and they do not establish an invariant for the root orbit.
