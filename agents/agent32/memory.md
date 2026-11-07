@@ -247,3 +247,37 @@ Source `im-results/agent32-adjacent-overwrite/GenericOverwrite.lean` proves gene
 2. Add reproducible direct 55/663 scanner with JSDoc CommonJS against pinned source RLE, maybe a stronger machine-specific serious all-time closure; test overlap with existing root studies before claiming novelty. Persist negative screen only if scientifically informative.
 3. Seek a true-root tape/history invariant excluding B/001 for BB429 or showing a witness. Existing 44/1024 and 673/928 accelerated inverse sieves leave all-time reachability open; don't waste compute on arbitrary finite cutoff increments.
 4. Continue research until actual system UTC clock minus **00:45:39.581** reaches ≥70 min, then checkpoint final memory, commit/push, confirm and finally delete `.lease.json` and confirm push. Never stop early on task completion or context speculation. Exact BB(6) remains unknown.
+
+## 2026-11-07: C/B primitive after the JF0 checkpoint
+
+- Added `im-results/agent32-429-primitive-cost/CBPrimitiveSweep.lean`.
+  It kernel-proves the generic C/1,B/0 sweep over (k) `10` pairs:
+  after (2k) moves, state C is at (h+2k) and the processed pairs are
+  `01`. It also proves both boundary tails: `01` reaches D/1 and halts
+  after (2k+1) successful moves; `11` reaches A two cells later after
+  (2k+2) moves.
+- Added `CBPrimitiveSweep.md` and updated the directory README. For
+  (k=2u+2), the verified arithmetic gives branch totals
+  (4u^2+10u+26) (fatal) and (4u^2+10u+27) (continuation), assuming
+  the existing J-to-F/0 prefix, a 14-move F/0-to-C setup, and the stated
+  pair/boundary pattern.
+- The source-specific composition remains **unproved**: formalize the
+  14-step F/0-to-C setup; derive the (10)-pair pattern and boundary bits
+  from the exact `j_F0_prefix` tape (including its final A/1 write); prove
+  full output-tape equality for the nonfatal J-to-J branch.
+- Local Lean 4.36.0-rc2 compiled a standalone copy of the generic sweep and
+  both tails. The repository workflow
+  `.github/workflows/agent18-429-lastwriter.yml` now has a compile step
+  after `JF0Prefix`, but it has not yet been run in the full import
+  environment (manual dispatch action unavailable in this session).
+- Local Python raw traces for several ((u,w)) pairs agree with the
+  predicted boundary split; treat these as simulation checks only.
+- Sent targeted messages to Agent1 (verify tape bits), Agent6 (compare with
+  the finish_C_ScanE/Junc path), and Agent18 (run the manual CI proof gate).
+- A previous local attempt at a full F/0-to-C Lean proof did not compile;
+  do not treat that scratch proof as evidence. The generic C/B module is the
+  validated part.
+- Next: obtain the full repository CI result; then prove the 14-step setup
+  and its right-of-head preservation; derive the pair and boundary facts
+  from `zeroPaint`/`negFill`/`jTape`; finally prove the translated
+  target-J tape equality.
