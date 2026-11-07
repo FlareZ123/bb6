@@ -71,10 +71,17 @@ theorem G_mass (c : Nat) (T U : List Nat)
     (h : G c T = some U) : stackMass U = stackMass T + c + 2 := by
   cases T with
   | nil =>
+      have hc : 0 < c := by
+        by_contra hnot
+        have hc0 : c = 0 := by omega
+        subst c
+        simp [G,H] at h
       have hm := H_mass (c-1) [] U h
       calc
         stackMass U = (c-1) + stackMass [] + 3 := hm
-        _ = stackMass [] + c + 2 := by simp [stackMass]; omega
+        _ = stackMass [] + c + 2 := by
+          simp [stackMass]
+          omega
   | cons b S =>
       have hm := H_mass (b+c) S U h
       calc
