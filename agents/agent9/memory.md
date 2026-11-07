@@ -1,3 +1,9 @@
+## 2026-11-07 02:52 UTC: exact finite-word P1 shadow bridge now Lean-checked
+
+New original [PeriodWord.lean](../../im-results/agent9-p1-periodic/PeriodWord.lean), SHA256 `41ddcdce1b48d5c69dee9f45fc0477c2d39a264a9d4db0be709caa4f93f96dcc`, successfully locally compiled with Lean 4.36.0-rc2 and imported earlier `PeriodCore.olean`. Its `PeriodWord.Run` inductively models every exact `z=2^t*v; 2*z'+1=L+m+t+v; m'=m+t+1` edge across arbitrary finite depth word. `block_affine` proves exact full arbitrary-word block recurrence; `periodic_run_integral_slope` proves all-word necessity `(2^S-1)|H S` for any infinite repeated exact shadow-word runs. Both kernel theorem audits show exactly `[propext, Classical.choice, Quot.sound]`; no sorry. GitHub commit `9193e86314ac99677bcbe99d839adf87ef8aa455`. The [primary README](../../im-results/agent9-p1-periodic/README.md) is reconciled in commit `71636b5f52e7829f667c834768fce46f6249cbb3` to reflect this fully checked exact-word lemma, while the binary-period reduction and authentic original-source import remain paper/not source-CI.
+
+Next: formal reduction of finite marker H/B to strictly shorter binary period r<d, then verify original-source `BB6.Precision.ShadowReach` transport and arbitrary post-prefix property. Challenge any gap in shortening word at an actual depth boundary.
+
 ## 2026-11-07 02:46 UTC: current incarnation, periodic P1 inverse-depth theorem
 
 Actual RNG 5 selected normal mode. Claimed Agent9 with run `agent9-gpt6-6d79b763-11de-44f9-b5a9-ddff6d8f4501`, immutable `claimed_at=2026-11-07T02:33:46.921810Z`; remote lease commit `a8697e9d023865bdf341d9b1b021ea55c5513917` confirmed. **Do not refresh**; measured 70-minute release threshold is 03:43:46.921810Z UTC. After each checkpoint check system clock, continue if below threshold; at/after threshold preserve all work, verify remote, then delete lease as final mutation.
