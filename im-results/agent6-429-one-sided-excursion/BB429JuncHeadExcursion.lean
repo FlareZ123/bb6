@@ -1007,6 +1007,27 @@ theorem junc_any_v_crossing (u v w k h : Nat) (hu : 1 ≤ u) (hw : 1 ≤ w)
 #print axioms juncNormalize_delta
 #print axioms junc_any_v_crossing
 
+
+
+/-- Raw-machine lift of the arbitrary-v Junc crossing theorem. -/
+theorem physical_junc_any_v_crossing (u v w k h : Nat)
+    (hu : 1 ≤ u) (hw : 1 ≤ w) (hrel : h+w+2*v=2*k+5)
+    (c : Config) (hrep : Represents (junc u v w) c) :
+    ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
+      BB6Coverage.run BB429PhysicalFrontier.target429 steps c = some c' ∧
+      Represents cfg c' ∧ c'.head > c.head + (2*k : Int) := by
+  obtain ⟨steps,cfg,d,hrun,hcross⟩ :=
+    junc_any_v_crossing u v w k h hu hw hrel
+  obtain ⟨c',hrun',hrep',hhead⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep steps
+      (junc u v w) c hrep cfg (d : Int) hrun
+  have hcrossInt : (2*k : Int) < (d : Int) := by exact_mod_cast hcross
+  refine ⟨steps,cfg,c',hrun',hrep',?_⟩
+  rw [hhead]
+  omega
+
+#print axioms physical_junc_any_v_crossing
+
 end BB429JuncHeadExcursion
 
 #print axioms BB429JuncHeadExcursion.junc2_to_midA_delta
