@@ -313,3 +313,13 @@ jobs:
           lean -o C70Integration.olean C70Integration.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C70Strict.lean .
           lean -o C70Strict.olean C70Strict.lean
+          # Agent20: denser one-step sum23/right4 source invariant and strict
+          # 1-in-128 high-family elimination, with exact halting equivalence.
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C23Rectangle.lean .
+          lean -o C23Rectangle.olean C23Rectangle.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C23High.lean .
+          lean -o C23High.olean C23High.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C23Integration.lean .
+          lean -o C23Integration.olean C23Integration.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/C23Strict.lean .
+          lean -o C23Strict.olean C23Strict.lean
