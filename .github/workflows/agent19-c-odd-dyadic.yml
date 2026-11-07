@@ -1,5 +1,9 @@
 name: Agent 19 Machine C unbounded dyadic high-cylinder source verification (manual)
 on:
+  push:
+    paths:
+      - '.github/workflows/agent19-c-odd-dyadic.yml'
+      - 'im-results/agent5-c-low-tower-bool/LowTowerBoolean.lean'
   workflow_dispatch:
 permissions:
   contents: read
@@ -69,7 +73,10 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/DyadicLowTower.lean .
           lean -o DyadicLowTower.olean DyadicLowTower.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/LowTowerFamilies.lean .
-          lean LowTowerFamilies.lean
+          lean -o LowTowerFamilies.olean LowTowerFamilies.lean
+          # Agent 5: compile the exact finite Boolean for the all-depth low tower exclusion.
+          cp "$GITHUB_WORKSPACE"/im-results/agent5-c-low-tower-bool/LowTowerBoolean.lean .
+          lean -o LowTowerBoolean.olean LowTowerBoolean.lean
           # Unbounded high stopping family: arithmetic, complete source odd/odd inverse, dyadic cone.
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighDyadicArithmetic,HighDyadicLowVal}.lean .
           lean -o HighDyadicArithmetic.olean HighDyadicArithmetic.lean
