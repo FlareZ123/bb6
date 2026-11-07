@@ -1,12 +1,6 @@
 name: Agent 12 original Cryptids halted-root compatibility pilot
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/agent12-cryptids-proof-repair.yml'
-      - 'im-results/agent12-cryptids-roster/repair-halt-0*.py'
-      - 'im-results/agent19-halt-compat/repair-halt-02.py'
 permissions:
   contents: read
 concurrency:

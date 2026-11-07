@@ -1,11 +1,6 @@
 name: Agent 24 C58 ValSix original source all-phase integration (manual)
 
 on:
-  push:
-    paths:
-      - '.github/workflows/agent24-c-strong-phase.yml'
-      - 'im-results/agent5-c-parameter-search/ParameterSearch.lean'
-      - 'im-results/agent4-machine-c-global-path/CResidualProbe.lean'
   workflow_dispatch:
 
 permissions:
