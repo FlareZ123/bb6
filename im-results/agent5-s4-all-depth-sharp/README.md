@@ -41,7 +41,18 @@ In addition, `one_digit_horizon_complete` proves for **every finite n**:
 (∀ t : Nat, prun n (T++[t]) ≠ none).
 ```
 
-The all-time corollary `one_digit_all_time_complete` quantifies universally over `n` on both sides. It reduces synthetic **universal** nonhalting over all finite suffixes to the one-parameter family of one-digit extensions. This does *not* reduce the genuine blank-root orbit to that family. **At present this multi-step file is locally compiled with a definition-matched S4 interface, and an unchanged-source CI run has been dispatched; do not describe it as original-source certified until successful.**
+The all-time corollary `one_digit_all_time_complete` quantifies over every finite horizon `n`, establishing universal synthetic-tail nonhalting if and only if every one-digit extension survives forever. **Original-source Lean verification succeeded** in [manual CI run 42345755016](https://github.com/FlareZ123/bb6/actions/runs/42345755016), including direct import and proof of the source `S4Toggle.prun` recurrence.
+
+### Exact horizon-wide growth characterization
+
+The subsequent [S4MultiGrowth.lean.xz.b64](S4MultiGrowth.lean.xz.b64), also **original-source certified** in [CI run 42346135479](https://github.com/FlareZ123/bb6/actions/runs/42346135479), proves a stronger and simpler equality for every finite `T` and `n`:
+
+```lean
+(∀ S, S4Toggle.prun n (T++S) ≠ none)
+  ↔ ∃ U, S4Toggle.prun n T = some U ∧ U.length ≤ T.length+1
+```
+
+This is `all_suffix_iff_short`. The all-time corollary `all_time_iff_bounded` states that **every finite suffix survives forever precisely when the unextended stack survives forever and its length always remains at most one entry above its initial length**. The proof uses the previously sourced all-depth sharp guard, the general valuation/length law, and the fact that successful chains cannot shrink the stack; no numerical cutoff, digit cap, or unproved liveness assumption appears. The conclusion is strictly about the infinite family of *synthetic* suffixes. It does not establish a genuine S4 blank-tape outcome.
 
 ## Proof mechanism
 
@@ -51,11 +62,11 @@ Separately, the [S4Length length law](../agent5-s4-length/README.md) gives the e
 
 ## Verification, reproducibility, and boundaries
 
-All four modules import the repository's exact source-connected `S4Toggle`, `S4Octet`, `S4PowerGate` chain. The manual [agent7 S4 source workflow](../../.github/workflows/agent7-s4-original.yml) builds pinned unmodified Google DeepMind Cryptids `c86f15861709b76042998c5211c7b2f83991621b`. Source-reproducible successful runs are: [all-depth sharp 42343695742](https://github.com/FlareZ123/bb6/actions/runs/42343695742), [Boolean and phase 279 42344162653](https://github.com/FlareZ123/bb6/actions/runs/42344162653), [sharp growth 42344827178](https://github.com/FlareZ123/bb6/actions/runs/42344827178), [one-digit iff growth 42345293076](https://github.com/FlareZ123/bb6/actions/runs/42345293076). These check actual decoded SHA-256 hashes and compile Lean against the pinned source, with standard Lean axioms and no custom gate axiom.
+All four modules import the repository's exact source-connected `S4Toggle`, `S4Octet`, `S4PowerGate` chain. The manual [agent7 S4 source workflow](../../.github/workflows/agent7-s4-original.yml) builds pinned unmodified Google DeepMind Cryptids `c86f15861709b76042998c5211c7b2f83991621b`. Source-reproducible successful runs are: [all-depth sharp 42343695742](https://github.com/FlareZ123/bb6/actions/runs/42343695742), [Boolean and phase 279 42344162653](https://github.com/FlareZ123/bb6/actions/runs/42344162653), [sharp growth 42344827178](https://github.com/FlareZ123/bb6/actions/runs/42344827178), [one-digit iff growth 42345293076](https://github.com/FlareZ123/bb6/actions/runs/42345293076). The multi-step [run 42345755016](https://github.com/FlareZ123/bb6/actions/runs/42345755016) and growth-horizon [run 42346135479](https://github.com/FlareZ123/bb6/actions/runs/42346135479) also succeeded against the same pinned source. Every listed job checks decoded SHA-256 fingerprints and compiles in Lean with only standard axioms and no custom gate axiom.
 
-Decoded Lean SHA-256 digests: `S4AllDepthSharp` = `5c055cc0fdd6bb40c7e189080c126277e32510d7d0b9ca55162264c512a5e115`; `S4AllDepthGrowth` = `3fbb97be0a309ccad35bbd957c5efaf90e3eb95b2a5ac3c70623a92f4850f3bd`; `S4MultiSharp` = `587894ae875e731f86cde19d79e07db0ec84574ee61e8be1f82bc130427639b7` (multi-step local compile succeeded, original-source run pending).
+Decoded Lean SHA-256 digests: `S4AllDepthSharp` = `5c055cc0fdd6bb40c7e189080c126277e32510d7d0b9ca55162264c512a5e115`; `S4AllDepthGrowth` = `3fbb97be0a309ccad35bbd957c5efaf90e3eb95b2a5ac3c70623a92f4850f3bd`; `S4MultiSharp` = `587894ae875e731f86cde19d79e07db0ec84574ee61e8be1f82bc130427639b7`; `S4MultiGrowth` = `eb6a757cf2ebd0a3ece9b5e1881c7dcfc9bc7ec9b970ba6dada55ff6c90b5d0f`.
 
-The standalone [checker.py](checker.py) is a minimal deterministic source-shaped one-digit witness extractor. [root_guard_scan.py](root_guard_scan.py) reproduces a finite simulation of **1,000,000 successful triple-drain returns** from the genuine reduced seed `[301,650,645,322,163,160]`: five guard-unsafe steps, precisely those with ≥2-entry growth; one additional safe 1-entry growth. This is **finite computational evidence**, with no unlimited orbit theorem. The earlier generic tests covered 24,000 random prefixes and 1,554 small exhaustive prefixes.
+The standalone [checker.py](checker.py) is a minimal deterministic source-shaped one-digit witness extractor. [horizon_checker.py](horizon_checker.py) implements the fixed-k finite-horizon guard. It reproduces a synthetic appended digit `1043` which makes the six-digit genuine reduced seed halt after 18 returns, while the unextended seed remains alive with length 10. This is a modeled, alternate *input* only, never a blank-tape halt witness. [root_guard_scan.py](root_guard_scan.py) reproduces a finite simulation of **1,000,000 successful triple-drain returns** from the genuine reduced seed `[301,650,645,322,163,160]`: five guard-unsafe steps, precisely those with ≥2-entry growth; one additional safe 1-entry growth. This is **finite computational evidence**, with no unlimited orbit theorem. The earlier generic tests covered 24,000 random prefixes and 1,554 small exhaustive prefixes.
 
 ## Genuine-root obstacle and prior work
 
