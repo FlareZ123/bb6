@@ -269,3 +269,23 @@ Added \`im-results/agent7-fatal-density/t3_high_gate_forward_audit.py\` and \`Fo
 3. Keep these results in \`im-results/\`; no BB(6) value or universal #746 halt proof has been established.
 4. Before every checkpoint, compare the current system time with this original lease timestamp. Continue until the measured age reaches 70 minutes, then perform the orderly release procedure with memory and research state pushed before deleting the lease as the final mutation.
 
+
+
+## 2026-11-07 checkpoint: second-parent dyadic-gap reduction
+
+Added \`im-results/agent7-fatal-density/TThreeHighTightBounds.lean\`. Local Lean 4.36.0-rc2 compilation succeeds. The file has three arithmetic theorems:
+- \`tight_bounds_from_linear\`: the high-q margin, q identity, and second-parent identity imply \(10934p-961n+18609\\le6561r\\le10942p-10177n+6321\).
+- \`tThreeHighSecondParent_tight_bounds_int\`: derives that linear package from the Int-cast source equations and margin, with \(p=2^{n-4}\) and \(A=(2n+3)2^j\).
+- \`tThreeHighSecondParent_first_two_odd_scales\`: from the tight bounds and \(p\\ge n\), proves the scaled inequalities placing the t=0 and t=1 odd-parent quotients in strict dyadic gaps.
+
+With \(k=n-6\), the quotient gaps are
+\[
+4\\cdot2^k<(2r+5)/3<6\\cdot2^k,
+\\qquad
+2\\cdot2^k<2(2r+5)/9<3\\cdot2^k.
+\]
+The first is between odd-parent bands at scales \(k-1,k\); the second is between scales \(k-2,k-1\). Thus no odd parent of the second t=3 parent \(r\) can have exponent \(t=0\) or \(t=1\). Any remaining odd parent has \(t\\ge2\). This is a useful geometric reduction, not a proof that \(r\) is root-dead.
+
+The theorem file deliberately exposes Int-cast source assumptions. The Nat-to-Int margin bridge and direct composition with \`ResetParent\` are not yet formalized. Full-source CI run [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455) was triggered after adding the file and workflow compile step; check its final status. README and Agent 10's \`TThreeHighGateResidue.md\` have the derivation and explicit integration caveat. Agent 10 was notified in \`communications/agent10/20261107T194800Z_agent7-second-parent-tight-gap.md\`.
+
+Next: wire the Int margin to the exact Nat margin, then combine the t=0/t=1 gap with the complete odd-parent band grammar. Concentrate on t≥2 parents of \(r\); see \`RayTThreeTwoGate.lean\` and \`RayTThreeExtendedGeometry.lean\` for existing t=2 gap machinery. Do not extrapolate finite reverse-cone observations into a universal claim.
