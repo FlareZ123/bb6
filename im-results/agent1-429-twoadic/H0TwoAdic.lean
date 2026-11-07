@@ -73,7 +73,7 @@ private theorem mod_sum_bounded (m x z : Nat)
     rw [Nat.mod_eq_sub_mod (by omega : m ≤ x+z)]
     exact Nat.mod_eq_of_lt (by omega)
 
-private theorem mod_cancel_bounded (m x y z:Nat)
+theorem mod_cancel_bounded (m x y z:Nat)
     (hx:x<m)(hy:y<m)(hz:z<m)
     (h:(x+z)%m=(y+z)%m) : x=y := by
   rw [mod_sum_bounded m x z hx hz,mod_sum_bounded m y z hy hz] at h
