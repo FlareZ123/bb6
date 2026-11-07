@@ -29,15 +29,17 @@ theorem rawHighPoints_length : rawHighPoints.length=322 := by
 theorem scanAllowedBool_iff (j m : Nat) :
     scanAllowedBool j m = true ↔ ∀ n, ¬gate n j m := by
   unfold scanAllowedBool
-  simp only [List.all_eq_true, List.mem_range]
+  rw [List.all_eq_true]
   constructor
   · intro h n
     by_cases hlt : n < 2*m+1
-    · exact of_decide_eq_true (h n hlt)
+    · have hmem : n∈List.range (2*m+1) := List.mem_range.mpr hlt
+      exact of_decide_eq_true (h n hmem)
     · intro hg
       rcases hg with ⟨hlim,_,_⟩
       omega
   · intro h n hn
+    have hlt : n < 2*m+1 := List.mem_range.mp hn
     exact decide_eq_true_eq.mpr (h n)
 
 /-- Exactly three of the 322 high pairs in this raw box are rejected
