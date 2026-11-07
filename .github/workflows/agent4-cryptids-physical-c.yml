@@ -1,0 +1,74 @@
+name: Agent 4 original Cryptids Machine C to global raw halting bridge (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  physical-counter-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: ced8f9f44f67a167d5ecc03e687b048c67926371
+          path: cryptids
+      - name: Install pinned upstream Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build unchanged upstream cryptid source
+        working-directory: cryptids
+        run: |
+          test "$(git rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC
+      - name: Source-check original physical and accelerated Machine C equivalence
+        working-directory: cryptids
+        run: |
+          set -eu
+          mkdir -p BB6Agent4
+          ROOT="../im-results"
+          for m in Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry ZeroMaskOracle FiniteDecision; do
+            cp "$ROOT/agent8-coverage-contract/$m.lean" BB6Agent4/
+          done
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            cp "$ROOT/agent6-fresh-glider/$m.lean" BB6Agent4/
+          done
+          cp "$ROOT/agent44-drift-closure/DirectedDrift.lean" BB6Agent4/
+          for m in FrontierAudit FrontierMass RelativeTape CryptidsTapeAdapter CryptidsHaltIff; do
+            cp "$ROOT/agent4-coverage-smoke/$m.lean" BB6Agent4/
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            cp "$ROOT/agent32-zero-prefix-global/$m.lean" BB6Agent4/
+          done
+          cp "$ROOT/agent4-machine-c-global-path/MachineCPath.lean" BB6Agent4/
+          cp "$ROOT/agent4-machine-c-global-path/CryptidsPhysicalC.lean" BB6Agent4/
+          cp "$ROOT/agent11-c-line/CLine.lean" BB6Agent4/
+          for m in CReachBridge CSourceBridge; do
+            cp "$ROOT/agent21-c-source-bridge/$m.lean" BB6Agent4/
+          done
+          export LEAN_PATH=BB6Agent4
+          for m in Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry; do
+            lake env lean -o "BB6Agent4/$m.olean" "BB6Agent4/$m.lean"
+          done
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            lake env lean -o "BB6Agent4/$m.olean" "BB6Agent4/$m.lean"
+          done
+          lake env lean -o BB6Agent4/DirectedDrift.olean BB6Agent4/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision FrontierAudit FrontierMass ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            lake env lean -o "BB6Agent4/$m.olean" "BB6Agent4/$m.lean"
+          done
+          lake env lean -o BB6Agent4/MachineCPath.olean BB6Agent4/MachineCPath.lean
+          lake env lean -o BB6Agent4/RelativeTape.olean BB6Agent4/RelativeTape.lean
+          lake env lean -o BB6Agent4/CryptidsTapeAdapter.olean BB6Agent4/CryptidsTapeAdapter.lean
+          lake env lean -o BB6Agent4/CryptidsHaltIff.olean BB6Agent4/CryptidsHaltIff.lean
+          lake env lean -o BB6Agent4/CLine.olean BB6Agent4/CLine.lean
+          lake env lean -o BB6Agent4/CReachBridge.olean BB6Agent4/CReachBridge.lean
+          lake env lean -o BB6Agent4/CSourceBridge.olean BB6Agent4/CSourceBridge.lean
+          lake env lean BB6Agent4/CryptidsPhysicalC.lean
