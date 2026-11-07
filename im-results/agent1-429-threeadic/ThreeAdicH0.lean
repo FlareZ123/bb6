@@ -167,8 +167,8 @@ theorem H0_shift_iterated (e c k : Nat) (hc : 2≤c) :
       let M := 3^(e+1)
       have hc' : 2≤c+p*k := by omega
       have hstep := H0_shift e (c+p*k) hc'
-      have hbefore : c+p*(k+1)=(c+p*k)+p := by omega
-      have hafter : p*(k+1)=p+p*k := by omega
+      have hbefore : c+p*(k+1)=(c+p*k)+p := by rw [Nat.mul_succ]; omega
+      have hafter : p*(k+1)=p+p*k := by rw [Nat.mul_succ]; omega
       change (H0 (c+p*(k+1))+p*(k+1))%M=H0 c%M
       rw [hbefore,hafter]
       calc
@@ -196,16 +196,17 @@ theorem H0_all_threeadic_residues_from_four (c0 E r : Nat)
     let c := c0+4*n
     have hc : 2≤c := by omega
     have h4 := H0_shift_iterated e c 4 hc
-    have hM : M=3*3^e := by simp [M,Nat.pow_succ]
+    have hM : M=3*3^e := by simp [M,Nat.pow_succ,Nat.mul_comm]
     have h24 : p*4=p+2*M := by
       dsimp [p]
       rw [hM]
       omega
     have hremove :
         (H0 (c+p*4)+p)%M=(H0 (c+p*4)+p*4)%M := by
-      rw [h24]
-      have heq : H0 (c+p*4)+(p+2*M) =
-          H0 (c+p*4)+p+M*2 := by omega
+      have heq : H0 (c+p*4)+p*4 =
+          (H0 (c+p*4)+p)+M*2 := by
+        rw [h24]
+        omega
       rw [heq]
       simp
     have harg : c0+4*(n+2*3^e)=c+p*4 := by
