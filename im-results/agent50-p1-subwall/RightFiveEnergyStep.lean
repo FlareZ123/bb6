@@ -55,7 +55,7 @@ theorem shallow_step_deficit (n M b d m t k c : Nat)
 /-- Every t>=3 source-shape inverse ends strictly above the shifted
 wall regardless of the prior sign. -/
 theorem deep_high_step_above (n b d m t k c : Nat)
-    (hn : 128≤n)
+    (hn : 14≤n)
     (hmass : b+d+2*m+2*n+13=14*2^n)
     (hb : b%4=0)
     (hpower : d+b/2+3=2^t*(c+3))
