@@ -41,10 +41,14 @@ def main() -> None:
     total_cost = 0
     max_a = 0
     max_h = 0
+    mixed_pairs_10_4: set[tuple[int, int]] = set()
+    mixed_pairs_12_1: set[tuple[int, int]] = set()
     x = 10
 
     for index in range(N):
         residue = (x & ((1 << P) - 1)) >> 1
+        mixed_pairs_10_4.add((x & 1023, x % 81))
+        mixed_pairs_12_1.add((x & 4095, x % 3))
         if first[residue] == SENTINEL:
             first[residue] = index
 
@@ -61,6 +65,19 @@ def main() -> None:
         x = y
 
     missing = sum(index == SENTINEL for index in first)
+
+    def projected_coverage(p: int, q: int) -> tuple[int, list[tuple[int, int]]]:
+        mod2 = 1 << p
+        mod3 = 3**q
+        seen = {(r % mod2, s % mod3) for r, s in mixed_pairs_10_4}
+        missing_pairs = [
+            (r, s)
+            for r in range(0, mod2, 2)
+            for s in range(mod3)
+            if (r, s) not in seen
+        ]
+        return len(seen), missing_pairs
+
     first_hash = sha256(
         b"".join(index.to_bytes(4, "little") for index in first)
     ).hexdigest()
@@ -77,6 +94,18 @@ def main() -> None:
     assert exceptional_u3 == 0
     assert small_v == Counter({1: 1, 3: 1})
     assert branch_counts[(1, 0)] == 71_215
+    assert len(mixed_pairs_10_4) == 34_832
+    assert len(mixed_pairs_12_1) == 6_144
+    assert projected_coverage(6, 3)[0] == 864
+    assert projected_coverage(8, 2)[0] == 1_152
+    assert projected_coverage(10, 1)[0] == 1_536
+    assert projected_coverage(6, 4)[1] == [(62, 50)]
+    assert projected_coverage(8, 3)[1] == [
+        (80, 23), (116, 23), (130, 23), (152, 23), (168, 23), (190, 23)
+    ]
+    assert projected_coverage(10, 2)[1] == [
+        (238, 5), (630, 5), (820, 5), (912, 5)
+    ]
 
     print(f"transitions: {N}")
     print(f"final state bit length: {x.bit_length()}")
@@ -90,6 +119,12 @@ def main() -> None:
     print(f"p=15 residue coverage: {RESIDUES - missing}/{RESIDUES}")
     print(f"last first-occurrence index: {max_first_index}")
     print(f"first-occurrence digest (LE uint32): {first_hash}")
+    print(f"distinct pairs mod 2^10 x 3^4: {len(mixed_pairs_10_4)}/41472")
+    print(f"distinct pairs mod 2^12 x 3: {len(mixed_pairs_12_1)}/6144")
+    for p, q in ((6, 3), (8, 2), (10, 1), (6, 4), (8, 3), (10, 2)):
+        count, absent = projected_coverage(p, q)
+        total = (1 << (p - 1)) * (3**q)
+        print(f"joint mod 2^{p} x 3^{q}: {count}/{total}; missing={absent}")
     print(f"a histogram: {dict(sorted(a_counts.items()))}")
     print(f"h histogram: {dict(sorted(h_counts.items()))}")
 
