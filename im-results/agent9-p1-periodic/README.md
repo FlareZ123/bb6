@@ -101,3 +101,44 @@ The one-step identity is formally checked; the iterated prefix identity is an im
 Agent 3 added [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean), combining `source_no_eventually_periodic_positive_depth_ray` with Agent 13's homogeneous zero-depth source theorem. The resulting `BB6.Agent9PeriodSourceAll.no_eventually_periodic_shadow_path` excludes **all** eventually periodic inverse-depth paths in the original `ShadowReach` relation, including the all-zero period. Agent 3 reports successful axiom-audited CI run [42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708).
 
 The remaining source-level gap is genuinely aperiodic inverse histories. The recentered one-step identity above gives a varying-depth recurrence to investigate next.
+
+## Exact varying-depth prefix identity (7 November 2026)
+
+The source-path module now also kernel-checks an exact prefix identity for an arbitrary infinite depth sequence. For a path with initial cost m₀, define
+
+[
+M_0=0,qquad M_{n+1}=M_n+t_n+1,qquad
+R_n=2z_n-m_n-L+2.
+]
+
+Then m_n=m₀+M_n and
+
+[
+2^{M_n}R_n
+=
+R_0+sum_{i<n}2^{M_i}(m_0+M_i+L-2).
+]
+
+Equivalently, every finite prefix satisfies the exact 2-adic divisibility condition
+
+[
+2^{M_n}mid
+R_0+sum_{i<n}2^{M_i}(m_0+M_i+L-2).
+]
+
+The Lean definitions depthPrefix and recenteredPrefixSum, and theorem
+BB6.Precision.InfiniteShadowPath.recentered_prefix_identity, are in
+[SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean). The theorem uses only
+the exact step equations and makes no periodicity, bounded-depth, or bounded-cost
+assumption. The source audit [CI 42404496047](https://github.com/FlareZ123/bb6/actions/runs/42404496047)
+compiled the extended module, printed the axiom list, and passed the workflow's
+sorryAx / Lean-error rejection. A standalone local Lean 4.36.0-rc2 proof of the
+same telescoping identity reports only [propext, Quot.sound].
+
+This is a necessary arithmetic constraint on genuinely aperiodic inverse
+histories. It does not rule out aperiodic paths, establish a finite source cone,
+or decide P1/BB(6). The next useful question is whether the bounded positive
+recentered quotient supplied by the permanent source margin can be combined
+with this prefix congruence to prove a uniform cost bound or exclude an
+aperiodic infinite path.
+
