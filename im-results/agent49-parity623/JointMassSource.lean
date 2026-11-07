@@ -1,0 +1,209 @@
+import Agent49DrainLinearLogSource
+
+/-!
+# Tight joint-mass bound for the authentic evaluator/drain recursion
+
+The evaluator proof separates positive residual blocks from the zero-block
+case. The drain induction then closes with the same ternary depth parameter.
+All definitions are imported from the pinned Cryptids machine source through
+Agent49DrainLinearLogSource.
+-/
+
+namespace BB6.Agent49JointMassSource
+
+open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+
+/-- Positive residual blocks admit a depth split and a joint potential bound. -/
+theorem evalA_joint_positive (n : Nat) :
+    ∀ a k m aa bb dd,
+      k < 3^n →
+      evalA a k m = some (aa,bb,dd) →
+      0 < bb →
+      ∃ r s, r+s=n ∧ 0<r ∧ bb<3^s ∧ aa+dd+3*bb ≤ a+m+k+r := by
+  induction n with
+  | zero =>
+      intro a k m aa bb dd hk he hbb
+      have hk0 : k = 0 := by omega
+      subst k
+      cases a with
+      | zero =>
+          simp [evalA] at he
+      | succ a =>
+          simp [evalA] at he
+          omega
+  | succ n ih =>
+      intro a k m aa bb dd hk he hbb
+      have hq : k / 3 < 3^n := by
+        apply (Nat.div_lt_iff_lt_mul (by decide : 0 < 3)).2
+        simpa [Nat.pow_succ] using hk
+      have hsplit : k = 3 * (k / 3) + k % 3 := by
+        have := Nat.mod_add_div k 3
+        omega
+      by_cases h2 : k % 3 = 2
+      · have he' : some (a+1,k/3,m) = some (aa,bb,dd) := by
+          simpa [evalA, h2] using he
+        injection he' with htuple
+        rcases Prod.mk.inj htuple with ⟨hfirst,hrest⟩
+        rcases Prod.mk.inj hrest with ⟨hsecond,hthird⟩
+        subst aa bb dd
+        refine ⟨1,n,by omega,by omega,hq,?_⟩
+        omega
+      · by_cases h0 : k % 3 = 0
+        · by_cases ha : a = 0
+          · simp [evalA, h2, h0, ha] at he
+          · have he' : some (a-1,k/3,m+2) = some (aa,bb,dd) := by
+              simpa [evalA, h2, h0, ha] using he
+            injection he' with htuple
+            rcases Prod.mk.inj htuple with ⟨hfirst,hrest⟩
+            rcases Prod.mk.inj hrest with ⟨hsecond,hthird⟩
+            subst aa bb dd
+            refine ⟨1,n,by omega,by omega,hq,?_⟩
+            omega
+        · have h1 : k % 3 = 1 := by omega
+          by_cases ha : a = 0
+          · have he' : some (0,k/3,m) = some (aa,bb,dd) := by
+              simpa [evalA, h2, h0, ha] using he
+            injection he' with htuple
+            rcases Prod.mk.inj htuple with ⟨hfirst,hrest⟩
+            rcases Prod.mk.inj hrest with ⟨hsecond,hthird⟩
+            subst aa bb dd
+            refine ⟨1,n,by omega,by omega,hq,?_⟩
+            omega
+          · have he' : evalA (a-1) (k/3) (m+2*(k/3)+3) = some (aa,bb,dd) := by
+              have he' := he
+              rw [evalA] at he'
+              simp only [if_neg h2, if_neg ha, if_neg h0] at he'
+              exact he'
+            obtain ⟨r,s,hrs,hrpos,hbb',hbound⟩ :=
+              ih (a-1) (k/3) (m+2*(k/3)+3) aa bb dd hq he' hbb
+            refine ⟨r+1,s,by omega,by omega,hbb',?_⟩
+            omega
+
+/-- Zero residual blocks have a separate sharp coarse bound. -/
+theorem evalA_joint_zero (n : Nat) :
+    ∀ a k m aa dd,
+      k < 3^n →
+      evalA a k m = some (aa,0,dd) →
+      aa+dd ≤ a+m+k+n+1 := by
+  induction n with
+  | zero =>
+      intro a k m aa dd hk he
+      have hk0 : k = 0 := by omega
+      subst k
+      cases a with
+      | zero =>
+          simp [evalA] at he
+      | succ a =>
+          have he' : some (a,0,m+2) = some (aa,0,dd) := by
+            simpa [evalA] using he
+          have htuple := Option.some.inj he'
+          rcases Prod.mk.inj htuple with ⟨haa,hrest⟩
+          rcases Prod.mk.inj hrest with ⟨hbb,hdd⟩
+          subst aa dd
+          omega
+  | succ n ih =>
+      intro a k m aa dd hk he
+      have hq : k / 3 < 3^n := by
+        apply (Nat.div_lt_iff_lt_mul (by decide : 0 < 3)).2
+        simpa [Nat.pow_succ] using hk
+      have hsplit : k = 3 * (k / 3) + k % 3 := by
+        have := Nat.mod_add_div k 3
+        omega
+      by_cases h2 : k % 3 = 2
+      · have he' : some (a+1,k/3,m) = some (aa,0,dd) := by
+          simpa [evalA, h2] using he
+        have htuple := Option.some.inj he'
+        rcases Prod.mk.inj htuple with ⟨haa,hrest⟩
+        rcases Prod.mk.inj hrest with ⟨hq0,hdd⟩
+        subst aa dd
+        omega
+      · by_cases h0 : k % 3 = 0
+        · by_cases ha : a = 0
+          · simp [evalA, h0, ha] at he
+          · have he' : some (a-1,k/3,m+2) = some (aa,0,dd) := by
+              simpa [evalA, h0, ha] using he
+            have htuple := Option.some.inj he'
+            rcases Prod.mk.inj htuple with ⟨haa,hrest⟩
+            rcases Prod.mk.inj hrest with ⟨hq0,hdd⟩
+            subst aa dd
+            omega
+        · have h1 : k % 3 = 1 := by omega
+          by_cases ha : a = 0
+          · have he' : some (0,k/3,m) = some (aa,0,dd) := by
+              simpa [evalA, h2, h0, ha] using he
+            have htuple := Option.some.inj he'
+            rcases Prod.mk.inj htuple with ⟨haa,hrest⟩
+            rcases Prod.mk.inj hrest with ⟨hq0,hdd⟩
+            subst aa dd
+            omega
+          · have he' : evalA (a-1) (k/3) (m+2*(k/3)+3) = some (aa,0,dd) := by
+              have he' := he
+              rw [evalA] at he'
+              simp only [if_neg h2, if_neg ha, if_neg h0] at he'
+              exact he'
+            have hbound := ih (a-1) (k/3) (m+2*(k/3)+3) aa dd hq he'
+            omega
+
+/-- A complete B-drain obeys the sharp joint-mass bound. -/
+theorem drainB_joint_mass (n : Nat) :
+    ∀ a b d aa dd,
+      b < 3^n →
+      drainB a b d = some (.D aa dd) →
+      aa+dd ≤ a+d+3*b+3*n+1 := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+      intro a b d aa dd hb hs
+      by_cases hb0 : b = 0
+      · have hs' : some (.D a d) = some (.D aa dd) := by
+          simpa [drainB, hb0] using hs
+        have htuple := Option.some.inj hs'
+        rcases Prod.mk.inj htuple with ⟨haa,hdd⟩
+        subst aa dd
+        omega
+      · have hbpos : 0 < b := by omega
+        have hs' := hs
+        rw [drainB] at hs'
+        simp only [if_neg hb0] at hs'
+        have hEval :
+            ∃ p q r, evalA a (b-1) (d+2*b+3) = some (p,q,r) ∧
+              q < b ∧ drainB p q r = some (.D aa dd) := by
+          cases he : evalA a (b-1) (d+2*b+3) with
+          | none =>
+              simp [he] at hs'
+          | some p =>
+              have hif :
+                  (if p.2.1 < b then drainB p.1 p.2.1 p.2.2 else none)
+                    = some (.D aa dd) := by
+                simpa [he] using hs'
+              have hq : p.2.1 < b := by
+                by_contra hnot
+                simp [hnot] at hif
+              have hrec : drainB p.1 p.2.1 p.2.2 = some (.D aa dd) := by
+                simpa [hq] using hif
+              exact ⟨p.1,p.2.1,p.2.2,he,hq,hrec⟩
+        rcases hEval with ⟨p,q,r,he,hq,hrec⟩
+        have hk : b-1 < 3^n := by omega
+        by_cases hq0 : q = 0
+        · have he0 : evalA a (b-1) (d+2*b+3) = some (p,0,r) := by
+            simpa [hq0] using he
+          have hzero := evalA_joint_zero n a (b-1) (d+2*b+3) p r hk he0
+          have hrec' : some (.D p r) = some (.D aa dd) := by
+            simpa [drainB, hq0] using hrec
+          have htuple := Option.some.inj hrec'
+          rcases Prod.mk.inj htuple with ⟨haa,hdd⟩
+          subst aa dd
+          omega
+        · have hqpos : 0 < q := by omega
+          obtain ⟨u,v,huv,hu,hv,hbound⟩ :=
+            evalA_joint_positive n a (b-1) (d+2*b+3) p q r hk he hqpos
+          have hvlt : v < n := by omega
+          have hrecBound := ih v hvlt p q r aa dd hv hrec
+          calc
+            aa+dd ≤ p+r+3*q+3*v+1 := hrecBound
+            _ ≤ a+d+3*b+3*n+1 := by omega
+
+#print axioms evalA_joint_positive
+#print axioms evalA_joint_zero
+#print axioms drainB_joint_mass
+
+end BB6.Agent49JointMassSource
