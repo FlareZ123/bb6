@@ -1,0 +1,47 @@
+name: Cryptid fixed-tail A packet boundary (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned original sources and Lean
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check fixed-tail A p=1 mod3 source theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          A=im-results/agent25-cryptid-doublezero
+          C=im-results/agent35-cryptid-code
+          S=im-results/agent32-cryptid-third
+          P=im-results/agent32-cryptid-padding
+          R=im-results/agent31-d-exceptional
+          D=im-results/agent2-packet-shift
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "$A/$module.olean" "$A/$module.lean"
+          done
+          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+          lean "$D/AOnePacketBoundarySource.lean" | tee axioms.log
+          if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
