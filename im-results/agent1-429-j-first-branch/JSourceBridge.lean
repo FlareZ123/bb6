@@ -121,9 +121,9 @@ theorem jLeftList_getD_nested (u n : Nat) :
           rcases hcases with h | h | h | h | h <;> simp [h, hk]
         · have hge : 5 ≤ n - 2 * u := by omega
           simp [List.getD, hge]
+      have hnotle : ¬ n + 1 ≤ 2 * u := by omega
       have hbound : n + 1 ≤ 2 * u + 5 ↔ n - 2 * u < 5 := by omega
-      simp [hn, hval, hbound]
-      omega
+      simp [hn, hval, hbound, hnotle]
 
 theorem jLeftList_getD (u n : Nat) :
     (jLeftList u).getD n 0 =
@@ -134,6 +134,7 @@ theorem jLeftList_getD (u n : Nat) :
   · by_cases hle : n ≤ 2 * u
     · by_cases he : n % 2 = 0
       · simp [h0, hle, he]
+        omega
       · have hodd : n % 2 = 1 := by omega
         simp [h0, hle, he, hodd]
         omega
@@ -170,10 +171,13 @@ theorem jRightList_getD (w n : Nat) :
         cases k with
         | zero =>
           have heq : n + 1 = w + 2 := by omega
-          simp [heq]
+          simp [hn, hdiff, heq]
         | succ k =>
-          simp [hdiff]
-          omega
+          have hge : w ≤ n := Nat.le_of_not_gt hn
+          have hsum : w + (n - w) = n := Nat.add_sub_of_le hge
+          rw [hdiff] at hsum
+          have hne : n + 1 ≠ w + 2 := by omega
+          simp [hn, hdiff, hne]
 
 @[simp] theorem jMark_zero (u w : Nat) : jMark u w 0 := by
   unfold jMark jHole
@@ -307,9 +311,11 @@ theorem sourceJCfg_toBB (u w : Nat) :
   simp only [sourceListBlank_toTuring_mk]
   dsimp only [highLevelEncode, toState, encode, BusyBeaver.Cfg.headRight]
   simp only [jLeftList, jRightList, jPow01_eq_pow, jPow1_eq_pow,
-    Turing.ListBlank.cons_mk, Turing.ListBlank.append_mk,
-    Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons,
-    Turing.ListBlank.append_assoc, hdefault, List.append_assoc]
+    Turing.ListBlank.append_mk, Turing.ListBlank.head_mk,
+    Turing.ListBlank.tail_mk, Turing.ListBlank.head_cons,
+    Turing.ListBlank.tail_cons, BusyBeaver.SixState.A,
+    hdefault, List.append_assoc, List.append_nil, List.nil_append, pow_zero,
+    List.headI_cons, List.tail_cons]
 
 private def sourceBit (a : Bit) : Bool := a.val == 1
 
@@ -334,7 +340,7 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
       { state := A, head := head, tape := jTapeAt u w head } := by
   rw [sourceJPosition_toRelative]
   apply BB429JFirstBranch.config_ext
-  · change 0 = A.val
+  · apply Fin.ext
     rfl
   · rfl
   · funext x
