@@ -71,3 +71,11 @@ jobs:
             exit 1
           fi
           node "$A/test-root119-two-wave-census.cjs"
+      - name: Upload reproducible 10M census data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: root119-census-10m
+          path: im-results/agent42-root119-guard/root119-census-10m.json
+          if-no-files-found: warn
+          retention-days: 7
