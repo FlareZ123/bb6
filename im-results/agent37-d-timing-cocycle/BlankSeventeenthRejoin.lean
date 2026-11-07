@@ -74,7 +74,6 @@ theorem blank_seventeenth_reentry :
         DRegularSource.sourceSection ⟨9*t17+7,7,1⟩ := by
     unfold BB6.Agent2E7ThirdReturn.sourceStart
     congr 1
-    omega
   have hpacket :=
     BB6.Agent2E7ThirdReturn.exceptional_EEA_rejoin u17 2 (by omega)
   rw [hstart] at hpacket
