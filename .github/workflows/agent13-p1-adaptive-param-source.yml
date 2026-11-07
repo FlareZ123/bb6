@@ -176,3 +176,13 @@ jobs:
           grep -F 'source_periodic_tail_boundaries_reachable' /tmp/agent9-periodic-source-audit.log
           grep -F 'source_no_eventually_periodic_positive_depth_ray' /tmp/agent9-periodic-source-audit.log
           if grep -E -q 'sorryAx|error:' /tmp/agent9-periodic-source-audit.log; then exit 1; fi
+      - name: Verify pairwise 2-adic separation of authentic P1 source prefixes
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent9-p1-q33:im-results/agent9-p1-periodic:im-results/agent9-p1-shadow:im-results/agent13-p1-adaptive-param"
+          lean im-results/agent13-p1-adaptive-param/PrefixCylinder.lean | tee /tmp/agent13-prefix-cylinder.log
+          grep -F 'feeder12_common_source_prefix' /tmp/agent13-prefix-cylinder.log
+          grep -F 'feeder10_common_source_prefix' /tmp/agent13-prefix-cylinder.log
+          grep -F 'feeder12_common_source_prefix_separation' /tmp/agent13-prefix-cylinder.log
+          grep -F 'feeder10_common_source_prefix_separation' /tmp/agent13-prefix-cylinder.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-prefix-cylinder.log; then exit 1; fi
