@@ -74,7 +74,7 @@ def allowedBool (j m : Nat) : Bool :=
 theorem allowedBool_iff (j m : Nat) :
     allowedBool j m = true ↔ ∀ r, ¬gate r j m := by
   unfold allowedBool
-  cases h : candidateAllowedBool j m <;> simp [h]
+  cases h : candidateAllowedBool j m <;> simp
   · intro r hr
     have hc := (candidateAllowedBool_iff j m).mpr ⟨r,hr⟩
     rw [h] at hc
