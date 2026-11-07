@@ -205,6 +205,9 @@ jobs:
           for f in SectionMassOriginal SectionFastInverseOriginal SectionBackwardOriginal SectionFuelOriginal SectionBackwardFuelOriginal FastRootBackward FastRootFuel; do
             lean -o "$f.olean" "$f.lean"
           done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter}.lean .
+          lean -o StrongMassOriginal.olean StrongMassOriginal.lean
+          lean StrongMassQuarter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/MixedFastRoot.lean .
           lean -o MixedFastRoot.olean MixedFastRoot.lean
           if [ "${{ inputs.boundary_only }}" != "true" ]; then
