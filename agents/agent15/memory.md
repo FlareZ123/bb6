@@ -183,7 +183,7 @@ NoMachineCHalt.lean no longer asserts nonhalting. It proves blank_halt_requires_
 - CI run 42365813545 compiled BounceFirstReturn.lean, including bounce_prefix and bounce_no_early_c0, then failed at a duplicate CState alias in SectionFirstReturn.lean.
 - Fixed the alias collision by renaming SectionFirstReturn.CState to SectionState.
 - SectionReachEquivalence.lean adds the converse direction: every original CLine reach to a c=0 state is represented by CReach, using section_no_early_c0 and section_exact. Together with M32SectionEmbedding this gives the intended iff. This is not yet source-verified.
-- CI run 42366931163 was started at head 0ce6eeb. It may use the earlier M192GeneralBound version whose lowCore argument was written as (a+192)%192. After it finishes, inspect failed-job logs only. The current source has since been corrected to a%192 and should be checked in a new run (run34) after run33 is complete.
+- CI run 42366931163 completed with failure. It compiled SectionFirstReturn.section_no_early_c0 and M32SectionEmbedding.m32_section_reach_embeds, then exposed two errors in SectionReachEquivalence: the time-split rewrite at line 101 used hsplit in the wrong direction, and line 122 ran omega after simp had already closed the branch. Both are corrected in commit a30392d3. The run did not reach M192GeneralBound, so that module remains unverified by CI. Run 42367962614 was started at head a30392d3 and includes the corrected normalized lowCore hypotheses; inspect its result and failed-job logs only.
 - Local Lean 4.36.0-rc2 scratch checks passed for the arithmetic lower bounds and the normalized lowCore conditional proof, but these scratch files are not repository proofs.
 
 ### External research and coordination
