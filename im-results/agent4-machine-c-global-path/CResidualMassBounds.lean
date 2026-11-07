@@ -158,11 +158,61 @@ theorem high_raw_mass_box (j m : Nat) (h : highRawMass j m ≤ 2000) :
     · exact hm3
     · omega
 
+
+theorem high_raw_mass_m0 (j : Nat) : highRawMass j 0 = 8*j+17 := by
+  rw [highRawMass_eq]
+  omega
+
+theorem high_raw_mass_m1 (j : Nat) : highRawMass j 1 = 32*j+83 := by
+  rw [highRawMass_eq]
+  omega
+
+theorem high_raw_mass_m2 (j : Nat) : highRawMass j 2 = 128*j+365 := by
+  rw [highRawMass_eq]
+  omega
+
+theorem high_raw_mass_m3 (j : Nat) : highRawMass j 3 = 512*j+1511 := by
+  rw [highRawMass_eq]
+  omega
+
+/-- Exact per-row finite parameter bounds for the raw-mass-2000 high box. -/
+theorem high_raw_mass_box_exact (j m : Nat) (h : highRawMass j m ≤ 2000) :
+    (m=0 ∧ j≤247) ∨ (m=1 ∧ j≤59) ∨
+    (m=2 ∧ j≤12) ∨ (m=3 ∧ j=0) := by
+  have hm3 : m≤3 := (high_raw_mass_box j m h).1
+  have hmCases : m=0 ∨ m=1 ∨ m=2 ∨ m=3 := by omega
+  rcases hmCases with rfl | rfl | rfl | rfl
+  · rw [high_raw_mass_m0] at h
+    exact Or.inl ⟨rfl, by omega⟩
+  · rw [high_raw_mass_m1] at h
+    exact Or.inr (Or.inl ⟨rfl, by omega⟩)
+  · rw [high_raw_mass_m2] at h
+    exact Or.inr (Or.inr (Or.inl ⟨rfl, by omega⟩))
+  · rw [high_raw_mass_m3] at h
+    have hj : j=0 := by omega
+    exact Or.inr (Or.inr (Or.inr ⟨rfl,hj⟩))
+
+theorem low_raw_mass_m0 : lowRawMass 0 = 9 := by rw [lowRawMass_eq]
+theorem low_raw_mass_m1 : lowRawMass 1 = 51 := by rw [lowRawMass_eq]
+theorem low_raw_mass_m2 : lowRawMass 2 = 237 := by rw [lowRawMass_eq]
+theorem low_raw_mass_m3 : lowRawMass 3 = 999 := by rw [lowRawMass_eq]
+
+theorem low_raw_mass_box_exact (m : Nat) (h : lowRawMass m ≤ 2000) :
+    m=0 ∨ m=1 ∨ m=2 ∨ m=3 := by
+  have hm := low_raw_mass_box m h
+  omega
+
 #print axioms lowRawMass_eq
 #print axioms highRawMass_eq
 #print axioms low_mass_ge_4065
 #print axioms high_mass_ge_6113
 #print axioms low_raw_mass_box
 #print axioms high_raw_mass_box
+#print axioms high_raw_mass_box_exact
+#print axioms high_raw_mass_m0
+#print axioms high_raw_mass_m1
+#print axioms high_raw_mass_m2
+#print axioms high_raw_mass_m3
+#print axioms low_raw_mass_box_exact
 
 end BB6.Agent4MassBounds
