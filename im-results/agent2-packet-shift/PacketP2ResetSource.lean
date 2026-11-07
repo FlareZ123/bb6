@@ -93,7 +93,7 @@ theorem e_two_output (k q : Nat) :
       ←List.replicate_append_replicate]
     rfl
   rw [longPacket_shape]
-  simp [packet,hn,oppairs,List.append_assoc]
+  simp [packet,word,hn,oppairs,List.append_assoc]
 
 def eTwoTime (k q : Nat) : Nat := 12*k*k+49*k+68+4*q
 
