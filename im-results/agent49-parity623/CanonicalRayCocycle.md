@@ -98,6 +98,12 @@ The reproducible script is [canonical_ray_terminal_scan.py](canonical_ray_termin
 
 python canonical_ray_terminal_scan.py --steps 10000
 
+A separate exact-integer scan of the four old-ray bridge forms
+\[
+7d-4a,\quad 7a-4d,\quad d-13a,\quad a-13d
+\]
+over indices 16 through 9,999 found the minimum of \(L^2/(a+d)\) to be exactly \(157922/1009\), attained at index 18, state \(D(104,1914)\), with \(L=d-13a=562\). This is empirical evidence only; it is not an inductive invariant.
+
 This scan is finite computational evidence. The index-13 candidate is not itself a halting result: its actual successor is D(314,385), which continues to D(74,950). The scan has been independently reproduced in the private Python analysis; the committed script is also included in the pending CI workflow. No all-time separation theorem for the genuine root ray shifts has been established.
 
 ## Remaining mathematical obstacle
