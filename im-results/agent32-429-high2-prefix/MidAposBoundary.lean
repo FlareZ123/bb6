@@ -383,7 +383,10 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   have hcfg :
       z 0 (ones 6) true (ones (4*k+20) ++ [true,false,true]) =
       junc 0 0 (4*k+20) := by
-    simp [junc, pairs01, ones, List.append_assoc]
+    unfold junc
+    simp only [pairs01]
+    rw [ones_right_101]
+    rfl
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
@@ -392,7 +395,8 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   rw [hinput, htail]
   simp only [Option.map_some]
   rw [hcfg]
-  congr 1
+  apply Option.some.inj
+  apply Prod.ext
   · rfl
   · omega
 
@@ -411,7 +415,8 @@ theorem c1_odd_to_junc3_delta (k : Nat) :
   simp only [Option.map_some]
   have hw : 4*k+20-3 = 4*k+17 := by omega
   rw [hw]
-  congr 1
+  apply Option.some.inj
+  apply Prod.ext
   · rfl
   · omega
 
@@ -426,7 +431,8 @@ theorem midApos_zero_w5_even_to_junc3_delta (k : Nat) :
   simp only [Option.bind_some]
   rw [htail]
   simp only [Option.map_some]
-  congr 1
+  apply Option.some.inj
+  apply Prod.ext
   · rfl
   · omega
 
@@ -494,7 +500,8 @@ theorem midApos_zero_w5_odd_to_junc11_delta (k : Nat) :
   simp only [Option.bind_some]
   rw [htail]
   simp only [Option.map_some]
-  congr 1
+  apply Option.some.inj
+  apply Prod.ext
   · rfl
   · omega
 
