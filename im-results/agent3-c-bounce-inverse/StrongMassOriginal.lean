@@ -139,28 +139,35 @@ theorem secNext_weight_growth_four (a k x y : Nat)
         have hb := bounce_weight_growth (2*k-a+3) (a-1) x y h
         omega
 
-/-- Real blank-origin section steps grow mass at least four each. -/
-theorem blank_run_quad_mass (n : Nat) : ∀ x y : Nat,
-    run secNext n (some (5,1)) = some (x,y) →
-    0 < y ∧ 7 + 4*n ≤ x+2*y := by
+/-- From any positive-right section input, every successful step grows mass by four. -/
+theorem generic_run_quad_mass (n : Nat) : ∀ a k x y : Nat,
+    0 < k → run secNext n (some (a,k)) = some (x,y) →
+    0 < y ∧ a+2*k+4*n ≤ x+2*y := by
   induction n with
   | zero =>
-    intro x y h
+    intro a k x y hk h
     simp only [run] at h
     cases h
     omega
   | succ n ih =>
-    intro x y h
-    change (run secNext n (some (5,1))).bind secNext=some (x,y) at h
-    cases hp : run secNext n (some (5,1)) with
+    intro a k x y hk h
+    change (run secNext n (some (a,k))).bind secNext=some (x,y) at h
+    cases hp : run secNext n (some (a,k)) with
     | none => simp [hp] at h
     | some p =>
-      rcases p with ⟨a,k⟩
-      obtain ⟨hk,hm⟩ := ih a k hp
+      rcases p with ⟨b,l⟩
+      obtain ⟨hl,hm⟩ := ih a k b l hk hp
       simp only [hp,Option.bind_some] at h
-      have h1 := secNext_second_positive a k x y h
-      have h2 := secNext_weight_growth_four a k x y hk h
+      have h1 := secNext_second_positive b l x y h
+      have h2 := secNext_weight_growth_four b l x y hl h
       exact ⟨h1, by omega⟩
+
+/-- Real blank-origin section steps grow mass at least four each. -/
+theorem blank_run_quad_mass (n : Nat) : ∀ x y : Nat,
+    run secNext n (some (5,1)) = some (x,y) →
+    0 < y ∧ 7 + 4*n ≤ x+2*y := by
+  intro x y h
+  exact generic_run_quad_mass n 5 1 x y (by omega) h
 
 /-- Four-unit mass increase yields a source-exact quarter-fuel reachability bound. -/
 theorem section_reach_iff_quarter_bound (x y : Nat) :
@@ -175,6 +182,7 @@ theorem section_reach_iff_quarter_bound (x y : Nat) :
 
 #print axioms secNext_second_positive
 #print axioms secNext_weight_growth_four
+#print axioms generic_run_quad_mass
 #print axioms blank_run_quad_mass
 #print axioms section_reach_iff_quarter_bound
 end BB6.Agent3StrongMass
