@@ -46,7 +46,6 @@ theorem previous_combined_admits_high_dyadic (r : Nat) :
   let k := 2^(2*3+2)*(j+3)-(j+3*3+5)
   have hk : k=2539+16320*r := by
     dsimp [k,j]
-    simp only [show (2:Nat)^(2*3+2)=256 by decide]
     omega
   have hguard : ¬(4≤k ∧ k%2=0 ∧ ((2*j+3)+k)%4=1) := by
     rw [hk]
