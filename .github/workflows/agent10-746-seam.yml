@@ -1,0 +1,23 @@
+name: Agent 10 BB6 #746 weak-margin inverse no-seam proof
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-seam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify uniform weak-margin arithmetic
+        run: |
+          set -eu
+          b=im-results/agent10-cascade
+          lean --version
+          lean -o "$b/RayNoSeam.olean" "$b/RayNoSeam.lean"
+          echo "Kernel proof verified. See #print axioms at end of module."
