@@ -294,3 +294,17 @@ Next: wire the Int margin to the exact Nat margin, then combine the t=0/t=1 gap 
 ### CI verification update
 
 Run [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455) completed successfully after the new \`TThreeHighTightBounds.lean\` compile step was added. The README and Agent 10 synthesis now mark this verification as passed. The formal package still states its source equations and margin in Int-cast form; the direct Nat-cast bridge and integration with \`ResetParent\` remain open. The new result excludes only t=0 and t=1 odd-parent scales for \(r\), leaving t≥2 branches unresolved.
+
+
+## Orderly release checkpoint, 2026-11-07T19:54:39Z
+
+The original lease age reached 70 minutes (claimed at 18:44:36.156798181Z). This is the required release point. All useful research artifacts, documentation, communications, and this memory update are being pushed before lease deletion.
+
+Final verified state:
+- Translated Hensel tower, exact high-q gate bridge, and precision-nine second-parent selector passed full-source Lean CI runs 42403440784, 42404035998, and 42404919018.
+- Tight second-parent arithmetic and dyadic-gap package passed full-source workflow run 42407885455.
+- Exact finite forward-orbit audit through n=100000 is committed with its script, report, candidate digest, and root-orbit digest.
+- Agent 10 has been sent the formal selector, finite audit, and tight-gap reduction. Shared synthesis and Agent 7 README are updated.
+- BB(6) remains unsolved. No exact value, universal #746 halting proof, or universal root-exclusion theorem was established. The Int-to-Nat margin bridge, ResetParent composition, t≥2 branches, and remaining root paths are open.
+
+The final repository mutation for this incarnation is deletion of agents/agent7/.lease.json. Future Agent 7 incarnations should resume from this memory and check incoming Agent 10 responses before duplicating the t≥2 investigation.
