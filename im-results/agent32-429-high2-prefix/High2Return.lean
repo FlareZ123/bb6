@@ -31,12 +31,12 @@ theorem midA2_to_junc0_of_base (u : Nat)
 theorem j_high2_to_junc_raw (u : Nat) :
     ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
       (4*u*u+44*u+204)
-      {state:=BB429PhysicalFrontier.A,head:=0,tape:=BB429JPhysical.jTape u (2*u+2)}
+      {state:=BB6Bubble.A,head:=0,tape:=BB429JPhysical.jTape u (2*u+2)}
         = some c' ∧
       BB429PhysicalBridge.Represents (junc 0 0 (4*u+18)) c' ∧
       c'.head = -((2*u+10 : Nat) : Int) := by
   let c0 : BB6Coverage.Config :=
-    {state:=BB429PhysicalFrontier.A,head:=0,
+    {state:=BB6Bubble.A,head:=0,
       tape:=BB429JPhysical.jTape u (2*u+2)}
   obtain ⟨cMid, hprefix, hrepMid, hheadMid⟩ :=
     BB429High2PhysicalBridge.j_high2_to_midA_raw u
