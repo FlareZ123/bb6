@@ -1,4 +1,5 @@
 import Agent49DrainLinearLogSource
+import Agent49JointMassSource
 import Agent49RootRayBridgeArithmetic
 import Agent8TerminalIntervalSource
 
@@ -18,6 +19,7 @@ open BB6.Agent8DrainFirstSharpSource
 open BB6.Agent8DrainSevenSource
 open BB6.Agent8BudgetSource
 open BB6.Agent49DrainLinearLogSource
+open BB6.Agent49JointMassSource
 open BB6.Agent8DrainQuadraticLogSource
 
 /-- A successful drain that is followed by a halting daughter must have
@@ -355,5 +357,130 @@ theorem evenNearGap (x y p q r a d n cR cL : Nat)
 #print axioms evenFarGap
 #print axioms oddNearGap
 #print axioms evenNearGap
+
+
+
+/-!
+## Joint-mass refinement
+
+The componentwise drain envelope above can be replaced in the terminal
+power-gap argument by the sharp joint-mass theorem. This keeps the same
+balance conclusions while reducing the mass hypothesis from 5*n+2 to 3*n+1.
+-/
+
+/-- Joint-mass version of the two terminal power-gap inequalities. -/
+theorem drainB_terminal_interval_joint (a b d n aa dd : Nat)
+    (hs : drainB a b d = some (.D aa dd))
+    (hb : b<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none) :
+    3^((d+3*b)-(a+n)-5) ≤ 2*(a+d+3*b+3*n+1)+5 ∧
+    3^(a-d-3*b-5*n-8) ≤ 2*(a+d+3*b+3*n+1)+5 := by
+  have hf := drainB_first_upper_log n a b d aa dd hb hs
+  have hl := drainB_first_lower_log n a b d aa dd hb hs
+  have hd := drainB_d3 b a d aa dd hs
+  have hu := drainB_upper_linear_log n a b d aa dd hb hs
+  have hg := BB6.Agent49ParitySource.next_none_requires_pow_gap aa dd he hhalt
+  have hm := drainB_joint_mass n a b d aa dd hb hs
+  constructor
+  · have hr : (d+3*b)-(a+n)-5 ≤ dd-aa-5 := by omega
+    have hp := Nat.pow_le_pow_right (by omega : 0<3) hr
+    omega
+  · have hr : (a-d-3*b-5*n-8) ≤ aa-dd-5 := by omega
+    have hp := Nat.pow_le_pow_right (by omega : 0<3) hr
+    omega
+
+/-- The joint-mass power-gap bound yields the same balance interval under
+a strictly weaker terminal-mass hypothesis. -/
+theorem drainB_terminal_balance_interval_joint (a b d n K aa dd : Nat)
+    (hs : drainB a b d = some (.D aa dd))
+    (hb : b<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(a+d+3*b+3*n+1)+5 < 3^K) :
+    d+3*b ≤ a+n+K+4 ∧ a ≤ d+3*b+5*n+K+7 := by
+  have hi := drainB_terminal_interval_joint a b d n aa dd hs hb he hhalt
+  constructor
+  · by_cases h : d+3*b ≤ a+n+K+4
+    · exact h
+    · have hexp : K ≤ (d+3*b)-(a+n)-5 := by omega
+      have hp := Nat.pow_le_pow_right (by omega : 0<3) hexp
+      omega
+  · by_cases h : a ≤ d+3*b+5*n+K+7
+    · exact h
+    · have hexp : K ≤ a-d-3*b-5*n-8 := by omega
+      have hp := Nat.pow_le_pow_right (by omega : 0<3) hexp
+      omega
+
+/-- Even-right terminal balance with the joint-mass threshold on its final
+B-drain. -/
+theorem evenRight_terminal_balance_interval_joint
+    (a d n0 n K x b y aa dd : Nat)
+    (hRight : a≤d)
+    (ha : a<3^n0)
+    (hbpos : 0<b)
+    (hEval : evalA (d+1-a) a (2*a+5) = some (x,b,y))
+    (hDrain : drainB x b y = some (.D aa dd))
+    (hb : b<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(x+y+3*b+3*n+1)+5 < 3^K) :
+    4*a≤d+n+K+3 ∧ d≤4*a+5*n+K+11+3*n0 := by
+  obtain ⟨r,s,hrs,hrpos,hbs,hfirst,hpot⟩ :=
+    evalA_positive_depth n0 (d+1-a) a (2*a+5) x b y ha hbpos hEval
+  have hfirstUpper :=
+    evalA_first_upper_one (d+1-a) a (2*a+5) x b y hEval
+  have hthirdLower :=
+    evalA_third_lower (d+1-a) a (2*a+5) x b y hEval
+  have hbal :=
+    drainB_terminal_balance_interval_joint x b y n K aa dd hDrain hb he hhalt hK
+  omega
+
+/-- Odd-left ray window with the sharp joint-mass threshold. -/
+theorem oddLeft_terminal_ray_interval_joint
+    (d t n K aa dd : Nat)
+    (hs : drainB (d+t+4) (d+3) 5 = some (.D aa dd))
+    (hb : d+3<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(4*d+t+19+3*n)+5 < 3^K) :
+    2*d+6≤t+n+K ∧ t≤2*d+5*n+K+17 := by
+  have hK' : 2*((d+t+4)+5+3*(d+3)+3*n+1)+5 < 3^K := by omega
+  exact drainB_terminal_balance_interval_joint
+    (d+t+4) (d+3) 5 n K aa dd hs hb he hhalt hK'
+
+/-- Even-left ray window with the sharp joint-mass threshold. -/
+theorem evenLeft_terminal_ray_interval_joint
+    (d t n K aa dd : Nat)
+    (hs : drainB (d+t+3) (d+2) 2 = some (.D aa dd))
+    (hb : d+2<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(4*d+t+12+3*n)+5 < 3^K) :
+    2*d+1≤t+n+K ∧ t≤2*d+5*n+K+12 := by
+  have hK' : 2*((d+t+3)+2+3*(d+2)+3*n+1)+5 < 3^K := by omega
+  exact drainB_terminal_balance_interval_joint
+    (d+t+3) (d+2) 2 n K aa dd hs hb he hhalt hK'
+
+/-- Odd-right ray window with the sharp joint-mass threshold. -/
+theorem oddRight_terminal_ray_interval_joint
+    (a t n K aa dd : Nat)
+    (hs : drainB (a+2*t+5) (a-1) 3 = some (.D aa dd))
+    (ha : 1≤a)
+    (hb : a-1<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(4*a+2*t+6+3*n)+5 < 3^K) :
+    2*a≤2*t+n+K+9 ∧ 2*t≤2*a+5*n+K+2 := by
+  have hK' : 2*((a+2*t+5)+3+3*(a-1)+3*n+1)+5 < 3^K := by omega
+  exact drainB_terminal_balance_interval_joint
+    (a+2*t+5) (a-1) 3 n K aa dd hs hb he hhalt hK'
+
+#print axioms drainB_terminal_interval_joint
+#print axioms drainB_terminal_balance_interval_joint
+#print axioms evenRight_terminal_balance_interval_joint
+#print axioms oddLeft_terminal_ray_interval_joint
+#print axioms evenLeft_terminal_ray_interval_joint
+#print axioms oddRight_terminal_ray_interval_joint
 
 end BB6.Agent49DrainLinearTerminalSource
