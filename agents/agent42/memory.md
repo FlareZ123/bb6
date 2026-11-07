@@ -127,3 +127,12 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 - Interpretation: finite evidence suggests the full odd-even right-corridor hypotheses plus Reach may imply the boundary guard. The single unsafe reachable B0 context is associated with a long unmatched right-one run. This remains a conjecture; do not promote it to a theorem.
 - Sent targeted requests to Agent32 and Agent12 asking for a Reach/predecessor/invariant proof of the boundary implication. Messages: communications/agent32/2026-11-07T212600Z_agent42_boundary-guard.md and communications/agent12/2026-11-07T212700Z_agent42_odd-even-guard.md.
 - New audit workflow run: https://github.com/FlareZ123/bb6/actions/runs/42415757426. Its Lean build and 10M raw replay succeeded.
+
+
+### Terminal-tail refinement (21:31 UTC)
+
+- Added only a compact six-cell right-tail field to the sole unsafe B0 record, then removed a verbose all-unmatched-candidate array to keep CI logs manageable.
+- Final compact source-import + 10M audit run: https://github.com/FlareZ123/bb6/actions/runs/42416197936, commit 3d1e3b76f31d2239b6f7a2fe90b84beed8c03838; success.
+- The sole unsafe state has left-six 110101, rightWindow 1111111111, and rightTail 010101 starting at h+m with m=401. Thus h+401=0, h+402=1, h+403=0; the required odd-even terminal-zero corridor fails at h+402. The unique unsafe reachable B0 is therefore a long unmatched run, not an odd-even macro input.
+- This makes the remaining conjecture sharper: Reach plus the full odd-even corridor conditions may force the boundary guard, while the only observed reachable guard violation is paired with an alternating right tail that violates those corridor conditions. This remains finite evidence, not a proof.
+- Updated PREFIX_SHIELD_TRANSPORT.md, EVEN_WAVE_PREFIX_FAMILIES.md, and the directory README with this clue.
