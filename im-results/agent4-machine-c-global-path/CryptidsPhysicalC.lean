@@ -92,6 +92,27 @@ theorem machineC_cylinder_raw_halts_iff_counter
     · rintro ⟨hs, _⟩
       exact False.elim (hhalt hs)
 
+/-- A future proof that the published three-counter process never stops
+    can be plugged *directly* into the complete raw global audit for the
+    genuine 25-table cylinder, without another semantic argument. This is
+    deliberately conditional: the required all-time arithmetic assumption
+    remains open. -/
+theorem machineC_counter_nonhalt_closes_physical_cylinder
+    (bound : Nat) (hcounter : ¬ BB6.CReachBridge.RunHalts) :
+    Cover (DecidedBelow bound) (machineCPrefix 11) := by
+  apply Cover.leaf
+  intro m hm
+  left
+  intro n
+  cases hr : run m n blank with
+  | some c => rfl
+  | none =>
+    have hhalt :=
+      (machineC_cylinder_raw_halts_iff_counter m hm).mp ⟨n, hr⟩
+    exact False.elim (hcounter hhalt.2)
+
+#print axioms machineC_counter_nonhalt_closes_physical_cylinder
+
 #print axioms machineCPrefix_eleven_eq_free_source
 #print axioms machineC_source_other_rows_live
 #print axioms machineC_cylinder_raw_halts_iff_counter
