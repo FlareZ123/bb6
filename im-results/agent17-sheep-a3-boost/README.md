@@ -1,6 +1,6 @@
 # Additional Sheep power-gate parent families at valuations three, six and seven
 
-**Scientific status.** Exact all-parameter mathematical constructions for three legal first-even return source families, with modular and legal-source arithmetic independently certified by standalone Lean 4.36.0-rc2 files. These certificates supplement a published one-variable model already linked to the original six-state Turing machine by Agent16. The complete combined all-`k` counting statement, its 3-adic prerequisites, and an original-source E-edge composition have conventional proofs below; they are **not** yet a single unchanged-source Lean theorem. The resulting parents are synthetic: their membership in the authentic blank-tape orbit is **unknown**. This supplies no Sheep decision, no Busy Beaver upper bound, and no exact BB(6) value. External novelty is unassessed. This dossier belongs in `im-results/`.
+**Scientific status.** Exact all-parameter mathematical constructions for three legal first-even return source families, with modular and legal-source arithmetic independently certified by standalone Lean 4.36.0-rc2 files. These certificates supplement a published one-variable model already linked to the original six-state Turing machine by Agent16. The all-`k` 3-adic counting statement has a conventional proof below. Two additional Lean modules now compose the source equations with the exact published generic F/E formula in a standalone model. This compositional proof has not yet been jointly imported into the original six-state machine's unchanged Lean definitions. The resulting parents are synthetic: their membership in the authentic blank-tape orbit is **unknown**. This supplies no Sheep decision, no Busy Beaver upper bound, and no exact BB(6) value. External novelty is unassessed. This dossier belongs in `im-results/`.
 
 The Sheep machine is `1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_---1LE`. Its legal nonterminal generic section return from even `x=2^a*v`, `a>=1`, odd `v>=5`, is
 
@@ -118,13 +118,15 @@ The condition `h<=k-1` forces `3^2|q_h`, so `2^(h+1)q_h-9` is also divisible by 
 
 ## Verification, provenance and remaining obstacle
 
-Three exact, readable standalone Lean files, each with `import Std`, were locally compiled under **Lean 4.36.0-rc2**:
+Five exact, readable Lean source files were locally compiled under **Lean 4.36.0-rc2**, with the final composition importing the four preceding modules:
 
 - [SheepA3Boost.lean](SheepA3Boost.lean): `mod_iff_even`, `mod_iff_odd`, `parent_even`, `parent_odd`, complete modulo-17 iff, axioms `[propext, Quot.sound]`.
 - [SheepA6Boost.lean](SheepA6Boost.lean): `mod43_sufficient`, `parent_arithmetic`, `parent_six`, axioms `[propext, Quot.sound]`.
 - [SheepA7Boost.lean](SheepA7Boost.lean): `mod_even`, `mod_odd`, `parent_even`, `parent_odd`, axioms no stronger than `[propext, Quot.sound]`.
+- [SheepBoostSourceModel.lean](SheepBoostSourceModel.lean): the exact published `GenericF` and accelerated even-edge predicate, plus `generic_return_identity`, `odd_quotient_of_power` and `generic_edge_of_equation`. Fully kernel checked with axioms `[propext, Quot.sound]`.
+- [SheepFaninSource.lean](SheepFaninSource.lean): **jointly imports all four files** and proves `a3_even_edge`, `a3_odd_edge`, `a6_edge`, `a7_even_edge`, `a7_odd_edge`. Each theorem constructs a fully legal generic first-even edge under the explicit 3-adic identity and cofactor hypotheses. Every final `#print axioms` reports `[propext, Quot.sound]`.
 
-None uses `sorry`, `admit`, `sorryAx`, `native_decide`, or user-supplied axioms. Lean certifies the modular and cofactor construction under explicitly stated `3^h q+1=2^j`, size and (for `a=6`) divisibility premises. The elementary induction on `k`, source E semantics, distinctness, and total counting are mathematical proofs stated above, **without a new single combined Lean theorem connected to unmodified source**.
+None uses `sorry`, `admit`, `sorryAx`, `native_decide`, or user-supplied axioms. Lean certifies the modular and cofactor construction under explicit `3^h q+1=2^j`, size and (for `a=6`) divisibility premises. It also certifies the **entire source-formula F/E edge construction** as a single imported Lean composition. The all-`k` 3-adic induction, counting and distinctness are paper proofs, and an additional unchanged-original-six-state import remains open. Neither the source-model compilation nor Agent16's earlier original-machine bridge directly proves any selected synthetic parent is reachable from blank tape.
 
 Independent [fanin_boost_verify.py](fanin_boost_verify.py) reproduces **2,362** exact positive modular source cases for `k=1..256` across `a=3,6,7`, including 240 `a=6` and 106 `a=7` cases, plus three fully materialized low-`k` original-F/E transitions. The full-source digest is `d4c0e2af63be390312512e00e6ffd509404176fcdfe80ea267c34bae68246ae9`. The separate [a3_boost_verify.py](a3_boost_verify.py) checks **all** `h=1..k+1` through `k=128`, 8,384 candidate lengths, to supplement the formal valuation-three iff. Large examples rely on modular exponentiation because the true target power has astronomically many bits.
 
