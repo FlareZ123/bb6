@@ -42,16 +42,35 @@ private theorem triples_cost (m n : Nat) :
     rw [ih]
     grind
 
+private theorem replicate_succ_true (n : Nat) :
+    List.replicate n true ++ [true] =
+      List.replicate (n+1) true := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp [List.replicate_succ, ih]
+
+private theorem replicate_two_true (n : Nat) :
+    List.replicate n true ++ [true,true] =
+      List.replicate (n+2) true := by
+  calc
+    List.replicate n true ++ [true,true] =
+        (List.replicate n true ++ [true]) ++ [true] := by
+          simpa using
+            (List.append_assoc (List.replicate n true) [true] [true]).symm
+    _ = List.replicate (n+1) true ++ [true] := by
+          rw [replicate_succ_true]
+    _ = List.replicate (n+2) true := by
+          simpa using replicate_succ_true (n+1)
+
 private theorem a_input_shape (t r : Nat) :
     packetTarget (3*t+2) (3*r+3) =
-    init (List.replicate (3*(8*t+6)+1) true ++
-      false :: (CryptidA.wordCode (List.replicate (2*r+2) true) ++
+    init (List.replicate (3*(8*t+6)+1) true ++ false ::
+      (CryptidA.wordCode (List.replicate (2*r+2) true) ++
         ([true,true,false] ++
           (CryptidBoundary.pairs 0 ++
             ([true,true,true] ++ List.replicate 11 true))))) := by
   simp only [packetTarget,init]
   apply congrArg (fun xs : List Bool => (⟨[],false,xs,5⟩ : Cfg))
-  rw [triples_code]
   have hn : 8*(3*t+2)+5 = 2+(3*(8*t+6)+1) := by omega
   have hp : 2*(3*r+3)+2 = 3*(2*r+2)+2 := by omega
   have hmul : 3*(2*r+2)=6*r+6 := by omega
@@ -60,9 +79,41 @@ private theorem a_input_shape (t r : Nat) :
         [true,true] ++ List.replicate (3*(8*t+6)+1) true := by
     rw [hn]
     simpa using
-      (List.replicate_append_replicate (n := 2) (m := 3*(8*t+6)+1) (a := true)).symm
-  rw [hprefix,hp,hmul]
-  simp [triples_code,CryptidBoundary.pairs,List.append_assoc] <;> omega
+      (List.replicate_append_replicate
+        (n := 2) (m := 3*(8*t+6)+1) (a := true)).symm
+  rw [hprefix,hp,triples_code,hmul]
+  have hlen : 6*r+6+2=6*r+8 := by omega
+  rw [hlen]
+  have hcode :
+      List.replicate (6*r+6) true ++ [true,true,false] =
+        List.replicate (6*r+8) true ++ [false] := by
+    simpa [List.append_assoc] using
+      congrArg (fun xs : List Bool => xs ++ [false])
+        (replicate_two_true (6*r+6))
+  have htail :
+      List.replicate (6*r+6) true ++
+          ([true,true,false] ++
+            ([] ++ ([true,true,true] ++ List.replicate 11 true))) =
+        List.replicate (6*r+8) true ++
+          ([false] ++
+            ([] ++ ([true,true,true] ++ List.replicate 11 true))) := by
+    calc
+      List.replicate (6*r+6) true ++
+          ([true,true,false] ++
+            ([] ++ ([true,true,true] ++ List.replicate 11 true)))
+        = (List.replicate (6*r+6) true ++ [true,true,false]) ++
+            ([] ++ ([true,true,true] ++ List.replicate 11 true)) := by
+              rw [← List.append_assoc]
+      _ = (List.replicate (6*r+8) true ++ [false]) ++
+            ([] ++ ([true,true,true] ++ List.replicate 11 true)) := by
+              rw [hcode]
+      _ = List.replicate (6*r+8) true ++
+            ([false] ++
+              ([] ++ ([true,true,true] ++ List.replicate 11 true))) := by
+              rw [List.append_assoc]
+  rw [htail]
+  simp [List.append_assoc]
+
 
 /-- The q=3r+3 A branch passes through the original 110111 A-to-E portal
     and returns to a packet with two 01 pairs and eleven trailing ones. -/
