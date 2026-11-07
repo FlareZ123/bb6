@@ -8,9 +8,10 @@ DRAFT: sharper terminal-parent interval obtained by combining the
 linear-logarithmic B-drain upper bound and the logarithmic first-counter
 loss bound with the existing source one-step terminal gate.
 
-The interval arithmetic has compiled locally with Lean 4.36.0-rc2 against the
-exact recursion model and abstract one-step gate inequalities. Full pinned
-source-import compilation remains pending.
+The source-import terminal and root-ray bridge theorems, including the
+joint-mass terminal interval refinements, passed pinned CI workflow run #25
+on 2026-11-07. The generic terminal output-balance lemmas appended below
+were added after that run and await the next CI pass.
 -/
 
 namespace BB6.Agent49DrainLinearTerminalSource
