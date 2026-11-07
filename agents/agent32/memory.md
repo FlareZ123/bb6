@@ -197,8 +197,7 @@ The finite-lasso code was split for reuse:
 
 Added `scan-holdout-lasso.cjs`, a dependency-free Node CJS screening tool with self-tests against the read-one lasso, Agent6 entry-macro witness, and F287 bounded negative example. [CI 42306119782](https://github.com/FlareZ123/bb6/actions/runs/42306119782) passed the self-tests and scanned all 663 frozen RLE holdouts with entryLimit=10,000, macroLimit=32, lassoLimit=1,000:
 - exactLassoCount = 0
-- entryMacroCount = 0
-- haltedBeforeLimitCount = 0
+- entryMacroCount = 0- haltedBeforeLimitCount = 0
 - hits = []
 This is a bounded empirical negative screen, not proof of nonhalting or absence of longer patterns. It indicates these short predicates do not directly resolve the 663 historic holdouts.
 
@@ -312,3 +311,40 @@ Sent direct reconciliation messages to Agent1 (`communications/agent1/20261107T1
 2. If not duplicated by Agent1/6, investigate a source-level raw Lean proof for w=2u+2 using the exact `jTape`, existing JF0/C/B primitives, and the observed endpoint J(0,4u+18) at head -(2u+10).
 3. Continue with the other two neighboring J cases w=2u+1 and w=2u, or support the pending raw-to-Cryptids source bridge, prioritizing work that advances the unbounded blank-root J recurrence.
 4. Preserve the conditional scope: no BB(6) exact value, universal upper bound, or #429 decision has been proved in this incarnation.
+## 2026-11-07T18:41Z checkpoint: high-2 source macro decomposition
+
+Lease is unchanged: `claimed_at=2026-11-07T17:33:53.572315497Z`; system clock at this checkpoint was `2026-11-07T18:41:12.277877818Z`, elapsed about 67m19s. The 70-minute threshold is `2026-11-07T18:43:53.572315497Z`. Continue until the threshold is measured at a checkpoint, then perform the orderly release procedure.
+
+### New high-2 zipper prefix theorem, CI pending
+
+Added `im-results/agent32-429-high2-prefix/High2Prefix.lean`. It defines the high-2 C/1 C/B-sweep endpoint zipper as `z 2 (tens (2*u+2) ++ ones 6) true (ones 2 ++ [false,true])` and proves the fixed 21-step setup into `sourceScanE (2*u+2) (sourceSuffix 0)`, with head delta -1. The key list identity is `tens n ++ ones 6 = true :: (pairs01 n ++ ones 5)`, which makes the 21-step macro kernel-reduce.
+
+The file then composes this prefix with Agent6's already-proved `sourceScanE_finishC_even_midA_delta` at r=u+1,k=0. It proves the zipper-level result `runWithDelta (22*u+107) high2SweepStart = some (midA2 (2*u+4) 1, 5)`. This is a formal intermediate for the high-2 branch. It starts from the C/B sweep endpoint zipper, so a separate physical `Represents` bridge from Agent1's `j_c_sweep` output is still needed before calling it a complete raw J theorem.
+
+Updated `.github/workflows/agent32-429-raw-parent.yml` to compile the Agent6 source dependency chain (OddExcursion, SourceE1Return/Delta, SourceRows, PhysicalBridge, E1ShiftDelta, DeltaPhysicalBridge, FinishScanEDelta, JuncHeadExcursion) and then High2Prefix. The new fail-closed run is [42402490749](https://github.com/FlareZ123/bb6/actions/runs/42402490749), queued at 18:41Z; its result is pending at this checkpoint. The workflow captures all new module output and rejects `sorryAx`.
+
+### High-2 path structure and candidate final boundary
+
+Corrected raw simulation gives the following high-2 decomposition for w=2u+2:
+- J(u,2u+2) to the exact C/B sweep endpoint after `4*u^2+10*u+25` steps (Agent1's source theorem `j_c_sweep`).
+- C/B endpoint to `sourceScanE(2u+2,sourceSuffix 0)` in 21 steps, head delta -1 (now proved in High2Prefix).
+- `sourceScanE_finishC_even_midA_delta` with r=u+1,k=0, followed by `junc2_to_midA_delta`, reaches `midA2(2u+4,1)`; the combined C/B-to-MidA cost is `22*u+107`, head delta +5.
+- The remaining `midA2(2u+4,1)` to `Junc(0,0,4u+18)` is computationally observed in `12*u+72` steps. This is the unresolved w=1 Junc boundary.
+
+More generally, define the auxiliary zipper `midAaux(v,k) = z 0 (ones(2*v+1) ++ [false] ++ ones(6)) true (tens(k) ++ [false,true])`. Raw simulation for v,k=0,...,7 supports:
+- `runWithDelta (6*v+4*k+36) (midAaux(v,k)) = some (junc 0 0 (2*(v+k)+6), -(2*v+4))`.
+- For v≥3, `runWithDelta 6 (midAaux(v,k)) = some (midAaux(v-3,k+3), -6)`.
+- For v≥1, `runWithDelta 6 (midApos 1 v 1) = some (midAaux(v-1,3), -6)`.
+
+These recurrences reduce the midApos theorem to base cases v=0,1,2 for the auxiliary family. They are simulation-derived and not yet Lean-proved. If proved, the midApos boundary theorem becomes `runWithDelta (6*v+48) (midApos 1 v 1) = some (junc 0 0 (2*v+10), -(2*v+8))`. At v=2u+4 this is exactly the missing `12u+72` high-2 tail to J(0,4u+18).
+
+Sent Agent6 the candidate midApos boundary and auxiliary recurrence in `communications/agent6/20261107T1920Z_agent32-midA-w1-to-junc0.md` and `communications/agent6/20261107T1935Z_agent32-midAaux-six-step-recurrence.md`. Earlier high-2 endpoint and Junc decomposition messages are in the same mailbox. Check their replies before duplicating a proof.
+
+The 40u versus 44u discrepancy is now better understood: at `4u^2+40u+204`, the complete raw configuration is not the canonical J(0,4u+18) config. For u=1,2,3 the states/heads are A/-16, C/-18, E/-20, while the expected head is -(2u+10); at u=2 the tape matches after translation but the state/head do not. At `4u^2+44u+204`, state A, exact head `-(2u+10)`, and the complete J tape match for u=0,...,7. The 40u report likely names an intermediate phase or uses an incomplete endpoint predicate. Detailed evidence was sent to Agent1 and Agent6; keep both coefficients qualified until they respond.
+
+### Next actions
+
+1. Check CI run 42402490749. If it fails, retrieve only the failed job tail through GitHub Actions MCP, repair the exact compile error, and rerun.
+2. If High2Prefix passes, add a concise README describing the zipper-level scope and CI evidence.
+3. Prove the physical representation of Agent1's `j_c_sweep` high-2 endpoint as `high2SweepStart u`, then compose it with `high2_to_midA` to get a raw physical theorem.
+4. Work with Agent6 on the `midAaux` recurrence and its v=0,1,2 base cases; this is the remaining candidate tail to Junc(0,0,4u+18).
