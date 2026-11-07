@@ -929,6 +929,84 @@ theorem physical_sourceScanE_finishC_odd_crosses_delta (r k : Nat)
 #print axioms physical_sourceScanE_finishC_odd_crosses_delta
 
 
+
+
+/-!
+## General Junc crossing with a nonzero right alternating counter
+
+The all-parameter crossing argument also applies to Junc configurations with
+v>0. A full normalization cycle absorbs v into the new positive-u parameter
+and adds 2v to the head/counter relation. If the right counter is too short
+for that cycle, a partial positive-u excursion already suffices.
+-/
+
+def juncNormalizeTime (u v : Nat) : Nat :=
+  juncPosFullTime u v + (2*(v+2*u)+27)
+
+/-- Normalize any Junc(u,v,w) with enough right-counter budget to a v=0 Junc. -/
+theorem juncNormalize_delta (u v w : Nat) (hw : 2*u+3 ≤ w) :
+    runWithDelta (juncNormalizeTime u v) (junc u v w) =
+      some (junc (v+2*u+3) 0 (w-(2*u+3)), ((2*v+2*u+3 : Nat) : Int)) := by
+  rw [show juncNormalizeTime u v = juncPosFullTime u v + (2*(v+2*u)+27) by rfl,
+    runWithDelta_add,
+    juncPos_iter_full_delta u u v w (by omega) (by omega)]
+  simp only [Option.bind_some, Nat.sub_self]
+  have htail := junc0_next_delta (v+2*u) (w-2*u) (by omega)
+  rw [htail]
+  simp only [Option.map_some]
+  have hsub : w-2*u-3 = w-(2*u+3) := by omega
+  rw [hsub]
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
+
+/-- A partial sweep length that works for every positive-u, positive-w Junc. -/
+def juncPartialN (w : Nat) : Nat := if w ≤ 4 then 1 else w/2-1
+
+theorem juncPartialN_bounds (u w : Nat) (hu : 1 ≤ u) (hw : 1 ≤ w)
+    (hlt : w < 2*u+3) :
+    1 ≤ juncPartialN w ∧ juncPartialN w ≤ u ∧
+    2*juncPartialN w-1 ≤ w ∧ w-5 < 2*juncPartialN w := by
+  by_cases hsmall : w ≤ 4
+  · simp [juncPartialN, hsmall]
+    omega
+  · have hlarge : 5 ≤ w := by omega
+    have hN1 : 1 ≤ w/2-1 := by omega
+    have hNu : w/2-1 ≤ u := by omega
+    have hNw : 2*(w/2-1)-1 ≤ w := by omega
+    have hcross : w-5 < 2*(w/2-1) := by omega
+    simpa [juncPartialN, hsmall] using
+      And.intro hN1 (And.intro hNu (And.intro hNw hcross))
+
+/-- Uniform crossing from Junc(u,v,w), including nonzero v. If a full
+    normalization cycle is affordable, reduce to juncCycle_crossing. Otherwise
+    a single bounded partial-sweep choice crosses the target directly. -/
+theorem junc_any_v_crossing (u v w k h : Nat) (hu : 1 ≤ u) (hw : 1 ≤ w)
+    (hrel : h+w+2*v=2*k+5) :
+    ∃ (steps : Nat) (cfg : Zipper) (d : Nat),
+      runWithDelta steps (junc u v w) = some (cfg, (d : Int)) ∧
+      2*k < h+d := by
+  by_cases hnorm : 2*u+3 ≤ w
+  · obtain ⟨steps,cfg,d,htail,hcross⟩ :=
+      juncCycle_crossing (v+2*u+3) (w-(2*u+3)) k (h+2*v+2*u+3) (by omega)
+    refine ⟨juncNormalizeTime u v + steps,cfg,2*v+2*u+3+d,?_,?_⟩
+    · rw [runWithDelta_add, juncNormalize_delta u v w hnorm]
+      simp only [Option.bind_some]
+      rw [htail]
+      simp only [Option.map_some]
+      simp [Int.natCast_add, Int.natCast_mul]
+    · omega
+  · have hlt : w < 2*u+3 := by omega
+    let N := juncPartialN w
+    have hb := juncPartialN_bounds u w hu hw hlt
+    have hmid := juncPos_iter_mid_delta N u v w hb.1 hb.2.1 hb.2.2.1
+    refine ⟨juncPosMidTime N v, midApos (u-N) (v+2*(N-1)) (w-2*(N-1)),
+      2*v+2*N, ?_,?_⟩
+    · exact hmid
+    · omega
+
+#print axioms juncNormalize_delta
+#print axioms junc_any_v_crossing
+
 end BB429JuncHeadExcursion
 
 #print axioms BB429JuncHeadExcursion.junc2_to_midA_delta
