@@ -34,6 +34,7 @@ const counts = {
 const cphaseRuns = {};
 const twoWavePairs = {};
 const twoWaveIntervals = [];
+const otherIntervals = [];
 const twoWaveShieldAudit = { inputs: 0, outputs: 0 };
 const twoWaveIncomingAudit = {};
 
@@ -139,9 +140,15 @@ for (let time = 0; time < LIMIT; time++) {
     const cphase = cphaseD1AtBZero(head, time);
     const twoWave = twoWaveRootAtBZero(head, time);
     const twoWaveShield = twoWave === null ? null : noLeft1100(head);
+    const leftSix = Array.from({ length: 6 }, (_, i) =>
+      tape.has(head - 6 + i) ? '1' : '0').join('');
+    const right10 = Array.from({ length: 10 }, (_, i) =>
+      tape.has(head + 1 + i) ? '1' : '0').join('');
+    let leftRun = 0;
+    while (tape.has(head - 1 - leftRun)) leftRun++;
+    const rightRun = rightRunLength(head + 1);
+    const noLeft4 = noLeft1100(head);
     if (tape.has(head - 1) && !tape.has(head - 2) && tape.has(head - 3)) {
-      const leftSix = Array.from({ length: 6 }, (_, i) =>
-        tape.has(head - 6 + i) ? '1' : '0').join('');
       b0Left101Audit.count++;
       b0Left101Audit.leftSix[leftSix] = (b0Left101Audit.leftSix[leftSix] || 0) + 1;
       if (leftSix.startsWith('110')) {
@@ -151,8 +158,7 @@ for (let time = 0; time < LIMIT; time++) {
           head,
           leftSix,
           prefix,
-          rightWindow: Array.from({ length: 10 }, (_, i) =>
-            tape.has(head + 1 + i) ? '1' : '0').join(''),
+          rightWindow: right10,
           rightTail: Array.from({ length: 6 }, (_, i) =>
             tape.has(head + prefix.m + i) ? '1' : '0').join(''),
         });
@@ -164,8 +170,7 @@ for (let time = 0; time < LIMIT; time++) {
     const oddEvenBoundarySafe = prefix?.type === 'oddEvenPrefix'
       ? !(tape.has(head - 6) && tape.has(head - 5) && !tape.has(head - 4))
       : null;
-    const prefixLeftSix = Array.from({ length: 6 }, (_, i) =>
-      tape.has(head - 6 + i) ? '1' : '0').join('');
+    const prefixLeftSix = leftSix;
 
     if (previousBZero !== null) {
       const expected = predictions.get(time);
@@ -268,6 +273,26 @@ for (let time = 0; time < LIMIT; time++) {
       } else {
         counts.other++;
         lastIntervalClass = 'other';
+        otherIntervals.push({
+          startTime: previousBZero.time,
+          startHead: previousBZero.head,
+          endTime: time,
+          endHead: head,
+          steps: time - previousBZero.time,
+          displacement: head - previousBZero.head,
+          incomingClass: previousBZero.incomingClass,
+          leftSix: previousBZero.leftSix,
+          right10: previousBZero.right10,
+          leftRun: previousBZero.leftRun,
+          rightRun: previousBZero.rightRun,
+          noLeft4: previousBZero.noLeft4,
+          prefix: previousBZero.prefix,
+          cphase: previousBZero.cphase,
+          twoWave: previousBZero.twoWave,
+          endLeftSix: leftSix,
+          endRight10: right10,
+          endNoLeft4: noLeft4,
+        });
         prefixReachKnown = false;
         firstUnknownInterval ??= {
           type: 'other',
@@ -280,7 +305,7 @@ for (let time = 0; time < LIMIT; time++) {
     const incomingChainKnown = prefixReachKnown;
     previousBZero = {
       time, head, incomingClass, incomingChainKnown, prefix, cphase, twoWave, cphaseShield, prefixShield,
-      twoWaveShield, oddEvenBoundarySafe, prefixLeftSix,
+      twoWaveShield, oddEvenBoundarySafe, prefixLeftSix, leftSix, right10, leftRun, rightRun, noLeft4,
     };
   }
 
@@ -322,7 +347,7 @@ assert.equal(twoWaveIncomingAudit.prefixUnmatched || 0, 0,
 assert.equal(twoWaveIncomingAudit.chainUnknown || 0, 0,
   'A two-wave-root start is beyond the first unclassified interval: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
-console.log(JSON.stringify({
+const report = {
   rawSteps: LIMIT,
   bZeroSections: bZeros,
   firstReturnClasses: counts,
@@ -338,4 +363,11 @@ console.log(JSON.stringify({
     reachChain: { knownThroughCensus: prefixReachKnown, firstUnknownInterval },
   },
   b0Left101Audit,
-}, null, 2));
+  otherIntervals,
+};
+const reportJson = JSON.stringify(report, null, 2);
+require('node:fs').writeFileSync(
+  'im-results/agent42-root119-guard/root119-census-10m.json',
+  reportJson + '\\n',
+);
+console.log(reportJson);
