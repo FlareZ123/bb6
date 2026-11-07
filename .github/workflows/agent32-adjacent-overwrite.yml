@@ -23,4 +23,5 @@ jobs:
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent32-adjacent-overwrite"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent32-adjacent-overwrite/GenericOverwrite.olean im-results/agent32-adjacent-overwrite/GenericOverwrite.lean | tee /tmp/overwrite-proof.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-adjacent-overwrite/Overwrite55.lean | tee -a /tmp/overwrite-proof.log
           if grep -q sorryAx /tmp/overwrite-proof.log; then exit 1; fi
