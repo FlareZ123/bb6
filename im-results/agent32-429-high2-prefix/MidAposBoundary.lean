@@ -12,7 +12,7 @@ open BB429SourceE1Delta BB429SourceE1Return BB429OddExcursion BB6Coverage
 theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n) (left : List Bool) :
     runWithDelta (2*n) (z 0 left false (true :: pairs01 n)) =
       some (z 0 (ones (2*n) ++ left) false [true], ((2*n : Nat) : Int)) := by
-  induction n with
+  induction n generalizing left with
   | zero =>
       omega
   | succ n ih =>
@@ -29,7 +29,12 @@ theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n) (left : List Bool) :
               (shift_A01_pair_delta left (false :: true :: pairs01 (n+1)))
           have hrest := ih (by omega) (true :: true :: left)
           have htime : 2*(n+2) = 2 + 2*(n+1) := by omega
-          rw [htime, runWithDelta_add, hpair]
+          rw [htime, runWithDelta_add]
+          have hpair' :
+              runWithDelta 2 (z 0 left false (true :: pairs01 (n+2))) =
+                some (z 0 (true :: true :: left) false (true :: pairs01 (n+1)), 2) := by
+            simpa only [pairs01] using hpair
+          rw [hpair']
           simp only [Option.bind_some]
           rw [hrest]
           simp only [Option.map_some]
@@ -39,7 +44,18 @@ theorem shift_A01_tail_delta (n : Nat) (hn : 1 ≤ n) (left : List Bool) :
                   ones (2*(n+1)) ++ ones 2 := by simp [ones]
               _ = ones (2*(n+1)+2) := by rw [← ones_add]
               _ = ones (2*(n+2)) := by congr 1 <;> omega
-          simp [hleft, List.append_assoc, Int.natCast_add, Int.natCast_mul]
+          have hleft' : ones (2*(n+1)) ++ (true :: true :: left) =
+              ones (2+2*(n+1)) ++ left := by
+            calc
+              ones (2*(n+1)) ++ (true :: true :: left) =
+                  (ones (2*(n+1)) ++ [true,true]) ++ left := by
+                    rw [show true :: true :: left = [true,true] ++ left by rfl,
+                      ← List.append_assoc]
+              _ = ones (2+2*(n+1)) ++ left := by
+                rw [hleft]
+                rw [show 2*(n+2) = 2+2*(n+1) by omega]
+          rw [hleft']
+          simp [Int.natCast_add, Int.natCast_mul]
   
 /-- A positive-left-parameter Junc with zero right budget has an exact
     finite exit to A/0 with one marked cell immediately to the right. -/
@@ -49,17 +65,19 @@ theorem juncPos_w0_exit_delta (u v : Nat) :
         ((2*v+2 : Nat) : Int)) := by
   have hprep := juncPos_prep4_delta u v 0
   have htail := shift_A01_tail_delta (v+1) (by omega)
-    (true :: true :: true :: pairs01 u ++ ones 5)
+    (true :: true :: true :: (pairs01 u ++ ones 5))
   have htime : 2*v+6 = 4 + 2*(v+1) := by omega
   rw [htime, runWithDelta_add, hprep]
   simp only [Option.bind_some]
+  have hright : pairs01 v ++ ones 0 ++ [false,true] = pairs01 (v+1) := by
+    simpa [ones] using pairs01_succ_append v
   have hinput :
       z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false
-        (true :: (pairs01 v ++ [false,true])) =
+        (true :: (pairs01 v ++ ones 0 ++ [false,true])) =
       z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false
         (true :: pairs01 (v+1)) := by
-    congr 1
-    rw [pairs01_succ_append]
+    exact congrArg (fun r : List Bool =>
+      z 0 (true :: true :: true :: (pairs01 u ++ ones 5)) false (true :: r)) hright
   rw [hinput, htail]
   simp only [Option.map_some]
   have hleft : ones (2*(v+1)) ++ [true,true,true] = ones (2*v+5) := by
@@ -68,7 +86,20 @@ theorem juncPos_w0_exit_delta (u v : Nat) :
           ones (2*(v+1)) ++ ones 3 := by simp [ones]
       _ = ones (2*(v+1)+3) := by rw [← ones_add]
       _ = ones (2*v+5) := by congr 1 <;> omega
-  simp [hleft, List.append_assoc, Int.natCast_add, Int.natCast_mul]
+  have hleft' :
+      ones (2*(v+1)) ++ (true :: true :: true :: (pairs01 u ++ ones 5)) =
+        ones (2*v+5) ++ pairs01 u ++ ones 5 := by
+    calc
+      ones (2*(v+1)) ++ (true :: true :: true :: (pairs01 u ++ ones 5)) =
+          (ones (2*(v+1)) ++ [true,true,true]) ++ (pairs01 u ++ ones 5) := by
+            rw [show true :: true :: true :: (pairs01 u ++ ones 5) =
+              [true,true,true] ++ (pairs01 u ++ ones 5) by rfl,
+              ← List.append_assoc]
+      _ = ones (2*v+5) ++ pairs01 u ++ ones 5 := by
+        rw [hleft, List.append_assoc]
+  rw [hleft']
+  simp [Int.natCast_add, Int.natCast_mul]
+  omega
 
 /-- A MidA-positive configuration with at least two right ones normalizes
     exactly to a Junc configuration by the source shift_A_11 macro. -/
@@ -107,8 +138,7 @@ theorem midApos_reenter_delta (u v w : Nat) (hu : 1 ≤ u) (hw : 3 ≤ w) :
   rw [hcross]
   simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
-  have hsub : u - 1 - 1 = u - 2 := by omega
-  simp [hsub]
+  omega
 
 /-- Two successive re-entries reduce a right parameter of five to one. -/
 theorem midApos_reenter_twice_delta (u v : Nat) (hu : 2 ≤ u) :
@@ -122,7 +152,8 @@ theorem midApos_reenter_twice_delta (u v : Nat) (hu : 2 ≤ u) :
   rw [hsecond]
   simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
-  omega
+  have hsub : u - 1 - 1 = u - 2 := by omega
+  rw [hsub]
 
 /-- The w=2 boundary after a MidA-positive shift has an exact A/0 exit.
     The right tape is now a single one; the remaining left pattern is
@@ -144,6 +175,7 @@ theorem midApos_w2_exit_delta (u v : Nat) (hu : 1 ≤ u) :
   simp only [Option.map_some]
   have hleft : 2*(v+2)+5 = 2*v+9 := by omega
   simp [hleft, Int.natCast_add, Int.natCast_mul]
+  omega
   
 #print axioms shift_A01_tail_delta
 #print axioms juncPos_w0_exit_delta
