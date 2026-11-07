@@ -100,7 +100,7 @@ jobs:
           cp "$base48/NeedleQuadraticEnumerate.lean" .
           lake env lean -o ".lake/build/lib/lean/NeedleQuadraticEnumerate.olean" NeedleQuadraticEnumerate.lean
           cp "$base48/NeedleQuadraticEnumerateSource.lean" .
-          lake env lean NeedleQuadraticEnumerateSource.lean
+          lake env lean -o ".lake/build/lib/lean/NeedleQuadraticEnumerateSource.olean" NeedleQuadraticEnumerateSource.lean
           cp "$base48/NeedleRootQuadratic.lean" .
           lake env lean NeedleRootQuadratic.lean
           cp "$base48/SuperlinearRoot.lean" .
@@ -120,7 +120,7 @@ jobs:
           cp "$base48/SpaceNeedleFifthRoot.lean" .
           lake env lean -o ".lake/build/lib/lean/SpaceNeedleFifthRoot.olean" SpaceNeedleFifthRoot.lean
           cp "$base48/NeedleSixthRoot.lean" .
-          lake env lean NeedleSixthRoot.lean
+          lake env lean -o ".lake/build/lib/lean/NeedleSixthRoot.olean" NeedleSixthRoot.lean
           cp "$base48/NeedleRootQuadraticRegular.lean" .
           lake env lean NeedleRootQuadraticRegular.lean
           cp "$base48/NeedleCancellationHoldouts.lean" .
