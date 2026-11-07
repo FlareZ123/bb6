@@ -167,6 +167,7 @@ jobs:
           grep -F 'run_source_transport' /tmp/agent9-periodic-source-audit.log
           grep -F 'secondary_obstruction' /tmp/agent9-periodic-source-audit.log
           grep -F 'factor_word_of_rotation_period' /tmp/agent9-periodic-source-audit.log
+          grep -F 'recentered_step' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_infinite_positive_depth_periodic_ray' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_positive_depth_ray' /tmp/agent9-periodic-source-audit.log
           grep -F 'source_periodic_tail_boundaries_reachable' /tmp/agent9-periodic-source-audit.log
