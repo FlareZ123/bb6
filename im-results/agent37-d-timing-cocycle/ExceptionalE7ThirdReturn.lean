@@ -98,8 +98,14 @@ private theorem first_mid_shape (u r : Nat) (hr : 1 ≤ r) :
       [true,true,true] ++ List.replicate (6*r-1) true := by
     rw [hrp,←List.replicate_append_replicate]
     rfl
-  simp only [BB6.Agent32EAll.output,List.append_nil]
-  rw [hrep,hp]
+  have heval : BB6.Agent32EAll.output (9*u+1) (3*r) [] =
+      ⟨[],false,List.replicate (8*(9*u+1)+5) true ++
+        (false :: List.replicate (2*(3*r)+2) true ++
+          (false :: List.replicate 6 true)),5⟩ := by
+    cases hq : 3*r with
+    | zero => omega
+    | succ q => simp only [BB6.Agent32EAll.output,List.append_nil]
+  rw [heval,hrep,hp]
   simp [init,suffix2,List.append_assoc]
 
 private def secondOutput (u r : Nat) : Cfg :=
@@ -158,19 +164,18 @@ private theorem a_end_shape (u r : Nat) (hr : 1 ≤ r) :
     omega
   have ht :
       CryptidA110111CodeFirst.tail suffix3 =
-        BB6.Agent25BGeneral.oppairs 3 ++ [true,true] := by decide
+        CryptidBoundary.oppairs 3 ++ [true,true] := by decide
   have hrep :
       List.replicate
         (2*(4*(64*u+10)+3+CryptidA.wordInc (codeWords r))+5) true ++
           CryptidA110111CodeFirst.tail suffix3 =
       List.replicate (8*(64*u+10)+16*r+7) true ++
-          (BB6.Agent25BGeneral.oppairs 3 ++ [true,true]) := by
+          (CryptidBoundary.oppairs 3 ++ [true,true]) := by
     rw [hi,ht]
     have hlen :
         2*(4*(64*u+10)+3+(8*r-2))+5 =
           8*(64*u+10)+16*r+7 := by omega
     rw [hlen]
-    rfl
   have hfront :
       List.replicate (8*(64*u+10)+16*r+7) true =
         true::true::List.replicate (8*(64*u+10)+16*r+5) true := by
@@ -180,8 +185,7 @@ private theorem a_end_shape (u r : Nat) (hr : 1 ≤ r) :
     simp [List.replicate]
   simp only [sourceEnd,DRegularSource.sourceSection,init,
     show (8*(64*u+10)+16*r+7)-2=8*(64*u+10)+16*r+5 by omega]
-  rw [hrep,hfront]
-  simp [List.replicate]
+  rw [hrep,hfront] <;> simp [List.replicate]
 
 private theorem third_return (u r : Nat) (hr : 1 ≤ r) :
     run (aTime u r) (secondOutput u r) = sourceEnd u r := by
