@@ -389,9 +389,14 @@ jobs:
           cat "$GITHUB_WORKSPACE/m2-full-forced.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 3: exact finite residue census of additional full-forced exclusions.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/FullForcedParamScan.lean .
-          lean FullForcedParamScan.lean > "$GITHUB_WORKSPACE/full-forced-param-scan.txt" 2>&1
+          lean -o FullForcedParamScan.olean FullForcedParamScan.lean > "$GITHUB_WORKSPACE/full-forced-param-scan.txt" 2>&1
           cat "$GITHUB_WORKSPACE/full-forced-param-scan.txt"
           cat "$GITHUB_WORKSPACE/full-forced-param-scan.txt" >> "$GITHUB_STEP_SUMMARY"
+          # Agent 19: expose all fixed-m candidate j values and terminal states.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/FullForcedParamScanM1M2.lean .
+          lean FullForcedParamScanM1M2.lean > "$GITHUB_WORKSPACE/m1-m2-param-scan.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/m1-m2-param-scan.txt"
+          cat "$GITHUB_WORKSPACE/m1-m2-param-scan.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 3: source-proof the newly identified infinite m=0, j=3 mod8 family.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/M0Mod8Three.lean .
           lean -o M0Mod8Three.olean M0Mod8Three.lean > "$GITHUB_WORKSPACE/m0-mod8-three.txt" 2>&1
@@ -443,6 +448,7 @@ jobs:
             c-residual-mass2000.txt
             c-residual-mass-integration.txt
             full-forced-param-scan.txt
+            m1-m2-param-scan.txt
             m0-mod8-three.txt
             m0-mod16-two.txt
             m0-additional-forced-families.txt
