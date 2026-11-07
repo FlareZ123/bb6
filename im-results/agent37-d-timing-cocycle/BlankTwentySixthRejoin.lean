@@ -31,16 +31,19 @@ theorem terminal8516_exact :
 theorem t26_mod27 : t26 % 27 = 25 :=
   terminal8516_certificate.2
 
-def exception26Time : Nat :=
-  BB6.Agent2TwentyFifthRoot.reentry25Time +
+def exception26Time (T22 Tnorm24 : Nat) : Nat :=
+  BB6.Agent2TwentyFifthRoot.reentry25Time T22 Tnorm24 +
     DRegular.accumulated 8516 seed26
 
-/-- The twenty-sixth exceptional input is reached from the blank tape. -/
-theorem blank_twenty_sixth_exception :
-    ObsEq (run exception26Time blank)
+/-- Extend any witnessed twenty-fifth reentry through the next D-regular run. -/
+theorem blank_twenty_sixth_exception_from (T22 Tnorm24 : Nat)
+    (h25 : ObsEq
+      (run (BB6.Agent2TwentyFifthRoot.reentry25Time T22 Tnorm24) blank)
+      (DRegularSource.sourceSection ⟨64*BB6.Agent2TwentyFifthRoot.t25+33,1,5⟩)) :
+    ObsEq (run (exception26Time T22 Tnorm24) blank)
       (DRegularSource.sourceSection ⟨9*t26+10,8,1⟩) := by
   apply BB6.Agent25RootChain.extend_regular blank
-    BB6.Agent2TwentyFifthRoot.reentry25Time
+    (BB6.Agent2TwentyFifthRoot.reentry25Time T22 Tnorm24)
     8516 seed26 ⟨9*t26+10,8,1⟩
   · constructor
     · change 64*BB6.Agent2TwentyFifthRoot.t25+33 ≥ 2
@@ -49,7 +52,7 @@ theorem blank_twenty_sixth_exception :
       change (1 : Nat) ≠ 0
       omega
   · exact terminal8516_exact
-  · exact BB6.Agent2TwentyFifthRoot.blank_twenty_fifth_reentry
+  · exact h25
 
 def packet26 : BB6.Agent31PacketRank.Packet :=
   ⟨24*t26+21,0,16⟩
@@ -76,10 +79,13 @@ theorem packet26_p_eq : packet26.p = 3*r26+1 := by
     The original A-code source theorem then returns to a pure-unary
     regular section, extending the blank-root orbit through episode 26. -/
 theorem blank_twenty_sixth_reentry :
-    ObsEq
-      (run (exception26Time +
-        (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)) blank)
-      (DRegularSource.sourceSection seed27) := by
+    ∃ T22 Tnorm24,
+      ObsEq
+        (run (reentry26Time T22 Tnorm24) blank)
+        (DRegularSource.sourceSection seed27) := by
+  obtain ⟨T22,Tnorm24,h25⟩ :=
+    BB6.Agent2TwentyFifthRoot.blank_twenty_fifth_reentry
+  have h26 := blank_twenty_sixth_exception_from T22 Tnorm24 h25
   have hE0 :=
     BB6.Agent2EFirstAPacket.exceptional_EA_packet t26 8 (by omega)
   have hE :
@@ -96,7 +102,7 @@ theorem blank_twenty_sixth_reentry :
       (⟨[],false,List.replicate seed27.a true,5⟩ : Cfg) =
         DRegularSource.sourceSection seed27 := by
     have hreg :=
-      BB6.Agent2TwentyThirdRoot.regularSection_sourceSection
+      BB6.Agent2ThirdRoot.regularSection_sourceSection
         seed27.a 0 0 (by dsimp [seed27,BB6.Agent2AOneBoundary.aUnary]; omega)
     simpa [seed27,BB6.Agent2BoundaryBZero.regularSection,
       CryptidBoundary.oppairs] using hreg
@@ -115,7 +121,8 @@ theorem blank_twenty_sixth_reentry :
       rw [packet26_a_eq,packet26_p_eq]
       rfl
     rw [hshape]
-    simpa [aOneTime26,seed27,htarget,BB6.Agent2EFirstAPacket.fixedTail] using hA0
+    simpa [aOneTime26,seed27,htarget,
+      BB6.Agent2EFirstAPacket.fixedTail] using hA0
   have hroot :
       ObsEq
         (run (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)
@@ -127,16 +134,20 @@ theorem blank_twenty_sixth_reentry :
       (packet packet26.a packet26.q packet26.p
         BB6.Agent2EFirstAPacket.fixedTail)
       (DRegularSource.sourceSection seed27) hE hA
-  exact source_chain exception26Time
+  exact ⟨T22,Tnorm24,source_chain (exception26Time T22 Tnorm24)
     (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)
     blank
     (DRegularSource.sourceSection ⟨9*t26+10,8,1⟩)
     (DRegularSource.sourceSection seed27)
-    blank_twenty_sixth_exception hroot
+    h26 hroot⟩
+
+def reentry26Time (T22 Tnorm24 : Nat) : Nat :=
+  exception26Time T22 Tnorm24 +
+    (BB6.Agent2EFirstAPacket.duration t26 8 + aOneTime26)
 
 #print axioms terminal8516_exact
 #print axioms t26_mod27
-#print axioms blank_twenty_sixth_exception
+#print axioms blank_twenty_sixth_exception_from
 #print axioms blank_twenty_sixth_reentry
 
 end BB6.Agent2TwentySixthRoot
