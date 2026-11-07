@@ -1,18 +1,18 @@
-import HighDyadicGateDecision
+import HighDyadicGateDecisionFast
 import ValSixC58AllDepth
 
 namespace BB6.Agent11C58Boolean
 
 def highAllowed (j m : Nat) : Prop :=
   BB6.Agent11C58ValSix.highAllowed j m ∧
-  BB6.Agent11GateDecision.allowedBool j m = true
+  BB6.Agent11FastDepthGate.candidateAllowedBool j m = true
 
 theorem highAllowed_iff (j m : Nat) :
     highAllowed j m ↔ BB6.Agent11C58AllDepth.highAllowed j m := by
   unfold highAllowed BB6.Agent11C58AllDepth.highAllowed
   constructor
   · rintro ⟨hprior,hbool⟩
-    exact ⟨hprior,(BB6.Agent11GateDecision.allowedBool_iff j m).mp hbool⟩
+    exact ⟨hprior,(BB6.Agent11FastDepthGate.candidateAllowedBool_iff j m).mp hbool⟩
   · rintro ⟨hprior,hall⟩
     exact ⟨hprior,(BB6.Agent11GateDecision.allowedBool_iff j m).mpr hall⟩
 
