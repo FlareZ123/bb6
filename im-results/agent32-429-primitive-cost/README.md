@@ -3,7 +3,8 @@
 **Original-source verified (7 November 2026).** For the literal six-state, two-symbol machine
 `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`, this dossier proves an exact
 *quadratic primitive-time prefix* from every suitable symbolic `J(u,w)` configuration
-and an exact subsequent first arrival at F/0, using the unmodified raw two-way
+an exact subsequent first arrival at F/0, the full raw high-3 J-to-J return,
+and arbitrary consecutive high-3 ladders, using the unmodified raw two-way
 infinite-tape semantics. The parameter `u` is unrestricted. This is a partial
 analysis of **synthetic source-encoded sections**; it does not show which parameters
 the genuine blank orbit visits and it does not decide #429 or BB(6).
@@ -61,24 +62,24 @@ the domain certified by these lemmas.
 ## Proved high-3 J return and arbitrary high-3 ladders
 
 The separate [Agent1 J-first-branch dossier](../agent1-429-j-first-branch/README.md)
-now proves the complete raw continuation branch for every (u,w) with
-(w\ge 2u+3): exactly (4u^2+10u+27) successful transitions return to
-the translated J chart ((2u+3,w-2u-3)), with full infinite-tape equality.
-It also proves the fatal boundary (w+1=2u).
+now proves the complete raw continuation branch for every `u,w` with
+`2*u+3 ≤ w`: exactly `4*u^2+10*u+27` successful transitions return to
+the translated J chart `(2*u+3, w-2*u-3)`, with full infinite-tape equality.
+It also proves the fatal boundary `w+1=2*u`.
 
 Building on that one-branch theorem,
 [High3Ladder.lean](../agent32-429-high3-ladder/High3Ladder.lean) proves
 arbitrary consecutive high-3 segments directly for the raw machine. If
 `branchShift u k ≤ w`, then exactly `branchCostSum u k` primitive
 transitions reach the translated J chart with
-[
-u_k=2^k(u+3)-3,\qquad
-w_k=w-\operatorname{branchShift}(u,k),
-]
+\\[
+u_k=2^k(u+3)-3,\\qquad
+w_k=w-\\operatorname{branchShift}(u,k),
+\\]
 and
-[
-\operatorname{branchShift}(u,k)+3k=2(u+3)(2^k-1).
-]
+\\[
+\\operatorname{branchShift}(u,k)+3k=2(u+3)(2^k-1).
+\\]
 The exact primitive cost is the recursive sum of the one-branch costs
 (4u_i^2+10u_i+27). CI run
 [42399391414](https://github.com/FlareZ123/bb6/actions/runs/42399391414)
@@ -91,7 +92,7 @@ and authentic blank-root representation; see
 
 ## Further computational evidence, not yet proved
 
-The high-3 continuation branch and fatal boundary have since been proved for all parameters, so they are excluded from the remaining conjecture table below. The table retains the other ten branch families, which remain computational evidence only. An independent raw-tape CommonJS simulator checked 4,280 synthetic
+The high-3 continuation branch and fatal boundary have since been proved for all parameters, so they are excluded from the remaining conjecture table below. The table retains the other eleven branch families, which remain computational evidence only. An independent raw-tape CommonJS simulator checked 4,280 synthetic
 `J(u,w)` cases (40×82 grid and 1,000 seeded samples, up to 146,327
 raw moves) against the twelve-case original high-level return map.
 It found a polynomial exact primitive return-time formula for every
