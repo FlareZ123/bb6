@@ -14,11 +14,16 @@ theorem high_m0_128_71_unreachable (t : Nat) :
   intro h
   have hline : BB6CLine.Reach
       (2*(128*t+71)+3, 3*(128*t+71)+7, 0) :=
-    (cLine_c0_reach_iff_section_reach).mp h
+    (cLine_c0_reach_iff_section_reach _ _).mp h
   have heq :
       (2*(128*t+71)+3, 3*(128*t+71)+7, 0) =
         (256*t+145, 384*t+220, 0) := by
-    simp only [Prod.mk.injEq] <;> omega
+    apply Prod.ext
+    · omega
+    · apply Prod.ext
+      · simp [Nat.mul_add]
+        rw [← Nat.mul_assoc]
+      · rfl
   have hline' : BB6CLine.Reach (256*t+145, 384*t+220, 0) := by
     exact heq ▸ hline
   exact BB6.CMod128SeventyTwo.reset_mod128_seventytwo_unreachable t hline'
@@ -34,28 +39,32 @@ theorem blank_halts_iff_two_parametric_families_with_m0_128_71_excluded :
          (∃ j m, a=2*j+3 ∧
            k+j+3*m+5=2^(2*m+2)*(j+3) ∧
            (m≠0 ∨ j%128≠71))) := by
-  rw [blank_halts_iff_two_parametric_families]
   constructor
-  · rintro ⟨time,a,k,hr,hfamily⟩
+  · intro hRun
+    rcases (blank_halts_iff_two_parametric_families).mp hRun with
+      ⟨time,a,k,hr,hfamily⟩
     refine ⟨time,a,k,hr,?_⟩
     rcases hfamily with hlow | ⟨j,m,ha,heq⟩
     · exact Or.inl hlow
     · by_cases hm : m=0
       · subst m
         have hj : j%128≠71 := by
-          by_contra hbad
+          intro hmod
           have hdiv : j=128*(j/128)+71 := by omega
           let t := j/128
+          have hdiv' : j=128*t+71 := by simpa [t] using hdiv
           have ha' : a=2*(128*t+71)+3 := by omega
+          have heq0 : k+j+5=4*(j+3) := by simpa using heq
           have hk' : k=3*(128*t+71)+7 := by omega
           have hreach : CReach a k := ⟨time,hr⟩
           have hroot :
               CReach (2*(128*t+71)+3) (3*(128*t+71)+7) := by
             simpa [ha',hk'] using hreach
           exact high_m0_128_71_unreachable t hroot
-        exact Or.inr ⟨j,0,ha,by simpa using heq,Or.inr hj⟩
+        exact Or.inr ⟨j,0,ha,heq,Or.inr hj⟩
       · exact Or.inr ⟨j,m,ha,heq,Or.inl hm⟩
-  · rintro ⟨time,a,k,hr,hfamily⟩
+  · intro hNew
+    rcases hNew with ⟨time,a,k,hr,hfamily⟩
     apply (blank_halts_iff_two_parametric_families).mpr
     refine ⟨time,a,k,hr,?_⟩
     rcases hfamily with hlow | ⟨j,m,ha,heq,hgate⟩
