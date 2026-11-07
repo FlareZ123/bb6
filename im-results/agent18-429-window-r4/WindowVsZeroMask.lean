@@ -1,5 +1,6 @@
 import WindowLeaf
 import ZeroMaskOracle
+import FrontierMass
 
 namespace BB429WindowLeaf
 open BB6Coverage
@@ -11,10 +12,16 @@ theorem oscillator_zeroMaskOracle_false :
 
 /-- However the full finite-window invariant gives a closed sound
 original-blank nonhalting leaf for every completion of this cylinder. -/
+theorem oscillator_mass : cylinderMass oscillatory = 25^8 := by decide
+theorem oscillator_mass_explicit :
+    cylinderMass oscillatory = 152587890625 := by decide
+
 theorem oscillator_not_zero_only_but_closed (bound : Nat) :
     zeroMaskOracle oscillatory = false ∧
     Cover (DecidedBelow bound) oscillatory :=
   ⟨oscillator_zeroMaskOracle_false, oscillator_leaf bound⟩
 
+#print axioms oscillator_mass
+#print axioms oscillator_mass_explicit
 #print axioms oscillator_not_zero_only_but_closed
 end BB429WindowLeaf
