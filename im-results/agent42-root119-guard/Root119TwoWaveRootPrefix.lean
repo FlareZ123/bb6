@@ -57,6 +57,7 @@ theorem noLeft4_transfer_of_left_agreement (p q r : Bool) (c d : Conf)
     (hagree : ∀ x : Int, x < d.h → d.tape x = c.tape x)
     (hc : NoLeft4 p q r c) : NoLeft4 p q r d := by
   intro x hx hword
+  change x+3 < c.h-1 at hx
   have hxOld : x+3 < c.h := by omega
   apply hc x hxOld
   refine ⟨?_,?_,?_,?_⟩
@@ -84,7 +85,7 @@ theorem noLeft4_left_write (p q r : Bool) (c : Conf)
       simp [setBit,show x ≠ c.h by omega]
     calc
       c.tape x = setBit c.tape c.h true x := hunchanged.symm
-      _ = true := hword.1
+      _ = p := hword.1
   · have hunchanged : setBit c.tape c.h true (x+1) = c.tape (x+1) := by
       simp [setBit,show x+1 ≠ c.h by omega]
     calc
@@ -399,7 +400,8 @@ theorem b0_two_wave_root_interval_to_b0
     simp [setBit,hne,hw]
   have hc3Left : ∀ x : Int, x < c3.h → c3.tape x = b.tape x := by
     intro x hx
-    have hx2 : x ≤ h2-2 := by dsimp [c3]; omega
+    change x < h2-2 at hx
+    have hx2 : x ≤ h2-2 := by omega
     rw [hc3Tape x hx2]
     exact hleftTape x (by dsimp [c3,h2,H] at hx; omega)
   have hNoC3 : NoLeft4 true true false c3 :=
@@ -428,10 +430,16 @@ theorem b0_two_wave_root_interval_to_b0
     simpa [c4,c3,h2] using fbMany_head m c3
   let out : Conf := oddRetreatResult (n1+2) m t2 (H-2)
   have hEq : out = ⟨.B,c4.h-1,setBit c4.tape c4.h true⟩ := by
-    apply Conf.ext
-    · rfl
-    · simp [out,oddRetreatResult,c4,c3,h2,hheadC4] <;> omega
-    · simp [out,oddRetreatResult,c4,c3,h2,hheadC4]
+    cases hFB : fbMany m c3 with
+    | mk q4 h4 t4 =>
+      have hq4 : q4 = .F := by
+        simpa [hFB,c3] using (fbMany_state m c3 rfl)
+      have hh4 : h4 = h2-2-2*(m:Int) := by
+        simpa [hFB,c3,h2] using (fbMany_head m c3)
+      subst q4
+      subst h4
+      simp [out,oddRetreatResult,c4,c3,h2,hFB]
+      omega
   have hNoOut : NoLeft4 true true false out := by
     rw [hEq]
     exact noLeft4_left_write true true false c4 hNoFB
