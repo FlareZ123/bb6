@@ -136,3 +136,25 @@ Next steps:
 4. Continue the separate all-\(t=0\)-parent selector branch; this note does not subsume it.
 
 No result here determines whether machine #746 halts or the exact value of BB(6).
+
+
+## 6. Formalized translated tower and precision-nine second-parent selector (Agent 7, 7 November 2026)
+
+The shifted-target Hensel lift and the exact source-equation bridge are now formalized in [Agent 7's TranslatedDepthResidue.lean](../agent7-fatal-density/TranslatedDepthResidue.lean).
+
+- `translatedDepthResidue_iff` proves, for every offset divisible by (81), exactly one depth class modulo (2\cdot3^{k+3}) at precision (3^{k+4}).
+- `tThreeHighGate_iff` proves that the source equations (Z_j(n)=81d) and (16d=2^n+q+n+2) make (81\mid(2q+5)) equivalent to the translated precision-eight condition.
+- `tThreeHighGate_residue_iff` therefore makes (6) a kernel-checked source-gate residue class modulo (4374), not only a paper derivation.
+- Define (X_n=2^{n+1}+2n-1), (K_n=(32c_n-X_n)/81), and (A_{0,n}=81c_n+6561(K_n+1)). The new theorem `tThreeHighSecondParent_mod_zero_iff` proves that, under the exact second-parent equation and (n\ge20), (n\bmod6\in\{4,5\}),
+  [
+  r\equiv0\pmod3
+  \quad\Longleftrightarrow\quad
+  3^9\mid Z_j(n)-A_{0,n}.
+  ]
+  The translated tower makes this one unique class modulo (13122). It identifies precisely the (r\bmod3=0) branch already handled by `third_high_child_zero_root_dead`; the other two lifted classes remain unresolved.
+
+Full unchanged-source Lean runs [42403440784](https://github.com/FlareZ123/bb6/actions/runs/42403440784), [42404035998](https://github.com/FlareZ123/bb6/actions/runs/42404035998), and [42404919018](https://github.com/FlareZ123/bb6/actions/runs/42404919018) succeeded. The new theorem audits report only standard logical axioms, with no `sorryAx`.
+
+An independent forward-orbit audit is also recorded in [ForwardOrbitAudit100k.md](../agent7-fatal-density/ForwardOrbitAudit100k.md), with executable script [t3_high_gate_forward_audit.py](../agent7-fatal-density/t3_high_gate_forward_audit.py). It checked 245,399 high-(q) candidates through (n=100000) against the deterministic blank-root reset orbit and found zero matches. This is finite exact-integer evidence, not a universal exclusion. The existing reverse-cone census through (n=10000) remains a separate exhaustive finite check.
+
+**Updated remaining task:** prove or refute root reachability in the (r\bmod3=1,2) lifted classes, including all possible (t=0) and higher-valuation parents. The formal residue selectors do not by themselves close those branches or establish halting of the original machine.
