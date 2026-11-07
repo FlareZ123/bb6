@@ -81,13 +81,16 @@ and
 \operatorname{branchShift}(u,k)+3k=2(u+3)(2^k-1).
 \]
 The exact primitive cost is the recursive sum of the one-branch costs
-(4u_i^2+10u_i+27). Its scaled closed form is also proved. With (a=u+3),
-[
-3\,\operatorname{branchCostSum}(u,k)
-=4a^2(4^k-1)-42a(2^k-1)+99k.
-]
+`4*u_i^2+10*u_i+27`. Its scaled closed form is also proved. With
+`a = u+3`:
+
+```text
+3*branchCostSum(u,k) = 4*a^2*(4^k-1)-42*a*(2^k-1)+99*k
+```
+
 CI run [42399927193](https://github.com/FlareZ123/bb6/actions/runs/42399927193)
-is compiling the expanded module with this cost identity.
+compiled the expanded module with this cost identity and passed the `sorryAx`
+rejection gate.
 
 These are exact conditional J-chart results. The raw tape encoding still
 needs its separate accepted bridge to the pinned Cryptids `highLevelEncode`
@@ -105,12 +108,12 @@ conjectures** outside the tested inputs. A predicted target J is a
 symbolic source checkpoint, not a claim that the authentic blank orbit
 ever visits that arbitrary source section.
 
-**High-2 caution.** The (w=2u+2) entry (4u^2+44u+204) remains a
+**High-2 caution.** The `w=2*u+2` entry `4*u^2+44*u+204` remains a
 computational conjecture. A separate Python report gave a conflicting
-(4u^2+40u+204) coefficient. The exact `jTape` support has ones through
-(w+1), a zero at (w+2), and a separate one at (w+3). A corrected
+`4*u^2+40*u+204` coefficient. The exact `jTape` support has ones through
+`w+1`, a zero at `w+2`, and a separate one at `w+3`. A corrected
 independent Python run using this support and the predicted head offset
-(-(2u+10)) agrees with the CommonJS screen for (u=0,ldots,7).
+`-(2*u+10)` agrees with the CommonJS screen for `u=0,...,7`.
 A source-level Lean proof of this high-2 branch is still required.
 
 | Original map branch | Conjectured successful raw steps to next J, or final D/1 halt input |
