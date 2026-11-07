@@ -1,255 +1,272 @@
-import FastSectionProof
+import FastSectionHalting
+import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent15
 
 open BB6.Agent46
 
-private theorem run_step_commute (n : Nat) :
-    ∀ s : Option (Nat × Nat × Nat),
-      run n (s.bind BB6CLine.nextC) = (run n s).bind BB6CLine.nextC := by
+abbrev CState := Nat × Nat × Nat
+
+private theorem run_step_commute (n : Nat) : ∀ s : Option CState,
+    BB6.Agent46.run n (s.bind BB6CLine.nextC) = (BB6.Agent46.run n s).bind BB6CLine.nextC := by
   induction n with
-  | zero =>
-      intro s
-      rfl
+  | zero => intro s; rfl
   | succ n ih =>
       intro s
-      simp [run, ih]
+      change BB6.Agent46.run n ((s.bind BB6CLine.nextC).bind BB6CLine.nextC) = (BB6.Agent46.run n (s.bind BB6CLine.nextC)).bind BB6CLine.nextC
+      exact ih (s.bind BB6CLine.nextC)
 
-private theorem run_add (n m : Nat) :
-    ∀ s : Option (Nat × Nat × Nat),
-      run (n+m) s = run m (run n s) := by
+private theorem run_add (n m : Nat) (s : Option CState) :
+    BB6.Agent46.run (n+m) s = BB6.Agent46.run m (BB6.Agent46.run n s) := by
   induction m with
-  | zero =>
-      intro s
-      simp [run]
+  | zero => rfl
   | succ m ih =>
-      intro s
       rw [Nat.add_succ]
-      change run (n+m) (s.bind BB6CLine.nextC) =
-        run m ((run n s).bind BB6CLine.nextC)
-      rw [ih]
-      rw [run_step_commute n s]
+      calc
+        BB6.Agent46.run (n+m+1) s = BB6.Agent46.run (n+m) (s.bind BB6CLine.nextC) := rfl
+        _ = (BB6.Agent46.run (n+m) s).bind BB6CLine.nextC := run_step_commute (n+m) s
+        _ = (BB6.Agent46.run m (BB6.Agent46.run n s)).bind BB6CLine.nextC := congrArg (fun z => z.bind BB6CLine.nextC) ih
+        _ = BB6.Agent46.run m ((BB6.Agent46.run n s).bind BB6CLine.nextC) := (run_step_commute m (BB6.Agent46.run n s)).symm
+        _ = BB6.Agent46.run (m+1) (BB6.Agent46.run n s) := rfl
 
-private theorem run_odd_prefix (k c t : Nat)
-    (hodd : k%2=1) (hc : 4≤c)
-    (ht : t≤2*k+3) (htc : t+3≤c) :
-    run (t+1) (some (0,k,c)) =
-      some (2*k+3-t,t,c-t) := by
-  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le' hc
-  have hstep :
-      (some (0,k,d+4) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
-        some (2*k+3,0,d+4) := by
-    simp [BB6CLine.nextC, hodd]
-    omega
-  change run t ((some (0,k,d+4)).bind BB6CLine.nextC) =
-    some (2*k+3-t,t,(d+4)-t)
-  rw [hstep]
-  simpa using run_high t (2*k+3) 0 (d+4) ht htc
+private theorem high_odd_bounce (k c : Nat) (hk : k%2=1) (hc : 4≤c) :
+    BB6CLine.nextC (0,k,c) = some (2*k+3,0,c) := by
+  obtain ⟨d, rfl⟩ : ∃ d, c=d+4 := ⟨c-4,by omega⟩
+  change (if k%2=0 then some (4*(k/2)+2,2,d+1)
+      else some (4*(k/2)+5,0,d+4)) = some (2*k+3,0,d+4)
+  have hne : k%2≠0 := by omega
+  have hdiv : k%2 + 2*(k/2) = k := Nat.mod_add_div k 2
+  simp only [hne, ite_false, Option.some.injEq, Prod.mk.injEq]
+  constructor
+  · omega
+  · trivial
 
-private theorem run_even_prefix (k c t : Nat)
-    (heven : k%2=0) (hc : 4≤c)
-    (ht : t≤2*k+2) (htc : t+3≤c-3) :
-    run (t+1) (some (0,k,c)) =
-      some (2*k+2-t,2+t,c-3-t) := by
-  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le' hc
-  have hstep :
-      (some (0,k,d+4) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
-        some (2*k+2,2,d+1) := by
-    simp [BB6CLine.nextC, heven]
-    omega
-  change run t ((some (0,k,d+4)).bind BB6CLine.nextC) =
-    some (2*k+2-t,2+t,(d+1)-t)
-  rw [hstep]
-  simpa using run_high t (2*k+2) 2 (d+1) ht htc
+private theorem high_even_bounce (k c : Nat) (hk : k%2=0) (hc : 4≤c) :
+    BB6CLine.nextC (0,k,c) = some (2*k+2,2,c-3) := by
+  obtain ⟨d, rfl⟩ : ∃ d, c=d+4 := ⟨c-4,by omega⟩
+  change (if k%2=0 then some (4*(k/2)+2,2,d+1)
+      else some (4*(k/2)+5,0,d+4)) = some (2*k+2,2,(d+4)-3)
+  have hdiv : k%2 + 2*(k/2) = k := Nat.mod_add_div k 2
+  simp only [hk, ite_true, Option.some.injEq, Prod.mk.injEq]
+  constructor
+  · omega
+  · constructor
+    · trivial
+    · omega
 
-/-- Before the certified bounce time, the original CLine path has not
-returned to the c=0 section. This is the minimality property missing from
-the generic section-halting argument. -/
-theorem bounce_no_early_c0 :
-    ∀ c, 4≤c → ∀ k n, n < (bounce k c).1 →
-      ∀ a b, run n (some (0,k,c)) ≠ some (a,b,0) := by
-  intro c
-  refine Nat.strongRecOn c ?_
-  intro c ih
-  intro hc k n hn a b
-  by_cases hodd : k%2=1
-  · by_cases hsmall : c≤2*k+6
-    · have hnlt : n<c := by
-        simpa [bounce, Nat.not_lt.mpr hc, hodd, hsmall] using hn
-      by_cases hn0 : n=0
-      · subst n
-        intro hEq
-        simp [run] at hEq
-        simp only [Prod.mk.injEq] at hEq
-        omega
-      · by_cases hlast : n=c-1
-        · have hbound : c-3≤2*k+3 := by omega
-          have hpre0 := odd_bounce_to_three k c hodd hc hbound
-          have hnum : c-2 = 1+(c-3) := by omega
-          have hpre : run (c-2) (some (0,k,c)) =
-              some (2*k+3-(c-3),c-3,3) := by
-            rw [hnum]
-            exact hpre0
-          have hrun : run n (some (0,k,c)) =
-              some (2*k+3-(c-3),c-3+2,1) := by
-            rw [hlast, show c-1=(c-2)+1 by omega, run_add, hpre]
-            simp [run, BB6CLine.nextC]
-          intro hEq
-          rw [hrun] at hEq
-          simp only [Option.some.injEq, Prod.mk.injEq] at hEq
+def BouncePrefix (n k c : Nat) : Prop :=
+  ∀ i, 1 ≤ i → i < n →
+    ∃ s, BB6.Agent46.run i (some (0,k,c)) = some s ∧ 0 < s.2.2
+
+private theorem odd_exit_prefix (k c i : Nat) (hk : k%2=1)
+    (hc : 4≤c) (hsmall : c≤2*k+6) (hi1 : 1≤i) (hi : i<c) :
+    ∃ s, BB6.Agent46.run i (some (0,k,c)) = some s ∧ 0<s.2.2 := by
+  have hkEq : k=2*(k/2)+1 := by omega
+  by_cases hlast : i=c-1
+  · have hbound : c-3≤2*k+3 := by omega
+    have hb := odd_bounce_to_three k c hk hc hbound
+    have hnum : i=(1+(c-3))+1 := by omega
+    refine ⟨(2*k+3-(c-3),c-3+2,1), ?_, ?_⟩
+    · calc
+      BB6.Agent46.run i (some (0,k,c)) = BB6.Agent46.run ((1+(c-3))+1) (some (0,k,c)) := congrArg (fun n => BB6.Agent46.run n (some (0,k,c))) hnum
+      _ = BB6.Agent46.run 1 (BB6.Agent46.run (1+(c-3)) (some (0,k,c))) := run_add _ _ _
+      _ = BB6.Agent46.run 1 (some (2*k+3-(c-3),c-3,3)) := by rw [hb]
+      _ = some (2*k+3-(c-3),c-3+2,1) := by simp [BB6.Agent46.run,BB6CLine.nextC]
+    · change 0 < 1
+      omega
+  · have hi2 : i≤c-2 := by omega
+    have hfirst : BB6.Agent46.run 1 (some (0,k,c)) = some (2*k+3,0,c) := by
+      simp [BB6.Agent46.run,high_odd_bounce k c hk hc]
+    have hiA : i-1≤2*k+3 := by omega
+    have hiC : (i-1)+3≤c := by omega
+    have hh := run_high (i-1) (2*k+3) 0 c hiA hiC
+    have hnum : i=1+(i-1) := by omega
+    refine ⟨(2*k+3-(i-1),i-1,c-(i-1)), ?_, ?_⟩
+    · calc
+      BB6.Agent46.run i (some (0,k,c)) = BB6.Agent46.run (1+(i-1)) (some (0,k,c)) := congrArg (fun n => BB6.Agent46.run n (some (0,k,c))) hnum
+      _ = BB6.Agent46.run (i-1) (BB6.Agent46.run 1 (some (0,k,c))) := run_add _ _ _
+      _ = BB6.Agent46.run (i-1) (some (2*k+3,0,c)) := by rw [hfirst]
+      _ = some (2*k+3-(i-1),i-1,c-(i-1)) := by simpa [Nat.zero_add] using hh
+    · change 0 < c-(i-1)
+      omega
+
+private theorem even_exit_prefix (k c i : Nat) (hk : k%2=0)
+    (hc : 6≤c) (hsmall : c≤2*k+8) (hi1 : 1≤i) (hi : i<c-3) :
+    ∃ s, BB6.Agent46.run i (some (0,k,c)) = some s ∧ 0<s.2.2 := by
+  have hkEq : k=2*(k/2) := by omega
+  by_cases hlast : i=c-4
+  · have hbound : c-6≤2*k+2 := by omega
+    have hb := even_bounce_to_three k c hk hc hbound
+    have hnum : i=(1+(c-6))+1 := by omega
+    refine ⟨(2*k+2-(c-6),2+(c-6)+2,1), ?_, ?_⟩
+    · calc
+      BB6.Agent46.run i (some (0,k,c)) = BB6.Agent46.run ((1+(c-6))+1) (some (0,k,c)) := congrArg (fun n => BB6.Agent46.run n (some (0,k,c))) hnum
+      _ = BB6.Agent46.run 1 (BB6.Agent46.run (1+(c-6)) (some (0,k,c))) := run_add _ _ _
+      _ = BB6.Agent46.run 1 (some (2*k+2-(c-6),2+(c-6),3)) := by rw [hb]
+      _ = some (2*k+2-(c-6),2+(c-6)+2,1) := by simp [BB6.Agent46.run,BB6CLine.nextC]
+    · change 0 < 1
+      omega
+  · have hi2 : i≤c-5 := by omega
+    have hfirst : BB6.Agent46.run 1 (some (0,k,c)) = some (2*k+2,2,c-3) := by
+      simp [BB6.Agent46.run,high_even_bounce k c hk (by omega)]
+    have hiA : i-1≤2*k+2 := by omega
+    have hiC : (i-1)+3≤c-3 := by omega
+    have hh := run_high (i-1) (2*k+2) 2 (c-3) hiA hiC
+    have hnum : i=1+(i-1) := by omega
+    refine ⟨(2*k+2-(i-1),2+(i-1),c-3-(i-1)), ?_, ?_⟩
+    · calc
+      BB6.Agent46.run i (some (0,k,c)) = BB6.Agent46.run (1+(i-1)) (some (0,k,c)) := congrArg (fun n => BB6.Agent46.run n (some (0,k,c))) hnum
+      _ = BB6.Agent46.run (i-1) (BB6.Agent46.run 1 (some (0,k,c))) := run_add _ _ _
+      _ = BB6.Agent46.run (i-1) (some (2*k+2,2,c-3)) := by rw [hfirst]
+      _ = some (2*k+2-(i-1),2+(i-1),c-3-(i-1)) := hh
+    · change 0 < c-3-(i-1)
+      omega
+
+private theorem odd_continue_prefix (k c i : Nat) (hk : k%2=1)
+    (hc : 4≤c) (hlarge : 2*k+6<c) (hi1 : 1≤i) (hi : i≤2*k+4) :
+    ∃ s, BB6.Agent46.run i (some (0,k,c)) = some s ∧ 0<s.2.2 := by
+  have hkEq : k=2*(k/2)+1 := by omega
+  by_cases hiEq : i=1
+  · subst i
+    refine ⟨(2*k+3,0,c), ?_, ?_⟩
+    · simp [BB6.Agent46.run,high_odd_bounce k c hk hc]
+    · change 0 < c
+      omega
+  · have hi2 : 2≤i := by omega
+    have hiA : i-1≤2*k+3 := by omega
+    have hiC : (i-1)+3≤c := by omega
+    have hh := run_high (i-1) (2*k+3) 0 c hiA hiC
+    have hfirst : BB6.Agent46.run 1 (some (0,k,c)) = some (2*k+3,0,c) := by
+      simp [BB6.Agent46.run,high_odd_bounce k c hk hc]
+    have hnum : i=1+(i-1) := by omega
+    refine ⟨(2*k+3-(i-1),i-1,c-(i-1)), ?_, ?_⟩
+    · calc
+      BB6.Agent46.run i (some (0,k,c)) = BB6.Agent46.run (1+(i-1)) (some (0,k,c)) := congrArg (fun n => BB6.Agent46.run n (some (0,k,c))) hnum
+      _ = BB6.Agent46.run (i-1) (BB6.Agent46.run 1 (some (0,k,c))) := run_add _ _ _
+      _ = BB6.Agent46.run (i-1) (some (2*k+3,0,c)) := by rw [hfirst]
+      _ = some (2*k+3-(i-1),i-1,c-(i-1)) := by simpa [Nat.zero_add] using hh
+    · change 0 < c-(i-1)
+      omega
+
+private theorem even_continue_prefix (k c i : Nat) (hk : k%2=0)
+    (hc : 4≤c) (hlarge : 2*k+8<c) (hi1 : 1≤i) (hi : i≤2*k+3) :
+    ∃ s, BB6.Agent46.run i (some (0,k,c)) = some s ∧ 0<s.2.2 := by
+  have hkEq : k=2*(k/2) := by omega
+  by_cases hiEq : i=1
+  · subst i
+    refine ⟨(2*k+2,2,c-3), ?_, ?_⟩
+    · simp [BB6.Agent46.run,high_even_bounce k c hk hc]
+    · change 0 < c-3
+      omega
+  · have hi2 : 2≤i := by omega
+    have hiA : i-1≤2*k+2 := by omega
+    have hiC : (i-1)+3≤c-3 := by omega
+    have hh := run_high (i-1) (2*k+2) 2 (c-3) hiA hiC
+    have hfirst : BB6.Agent46.run 1 (some (0,k,c)) = some (2*k+2,2,c-3) := by
+      simp [BB6.Agent46.run,high_even_bounce k c hk hc]
+    have hnum : i=1+(i-1) := by omega
+    refine ⟨(2*k+2-(i-1),2+(i-1),c-3-(i-1)), ?_, ?_⟩
+    · calc
+      BB6.Agent46.run i (some (0,k,c)) = BB6.Agent46.run (1+(i-1)) (some (0,k,c)) := congrArg (fun n => BB6.Agent46.run n (some (0,k,c))) hnum
+      _ = BB6.Agent46.run (i-1) (BB6.Agent46.run 1 (some (0,k,c))) := run_add _ _ _
+      _ = BB6.Agent46.run (i-1) (some (2*k+2,2,c-3)) := by rw [hfirst]
+      _ = some (2*k+2-(i-1),2+(i-1),c-3-(i-1)) := hh
+    · change 0 < c-3-(i-1)
+      omega
+
+theorem bounce_prefix (c : Nat) : ∀ k : Nat, 4≤c → BouncePrefix (BB6.Agent46.bounce k c).1 k c := by
+  induction c using Nat.strongRecOn with
+  | ind c ih =>
+    intro k hc i hi1 hiLt
+    rw [BB6.Agent46.bounce.eq_1] at hiLt
+    have hnot : ¬c<4 := by omega
+    simp only [hnot,ite_false] at hiLt
+    by_cases ho : k%2=1
+    · simp only [ho,ite_true] at hiLt
+      by_cases hs : c≤2*k+6
+      · simp only [hs,ite_true] at hiLt ⊢
+        exact odd_exit_prefix k c i ho hc hs hi1 hiLt
+      · simp only [hs,ite_false] at hiLt ⊢
+        have hlarge : 2*k+6<c := by omega
+        let m := 2*k+4
+        let c' := c-(2*k+3)
+        have hsmall : c'<c := Nat.sub_lt (by omega) (by omega)
+        have hc' : 4≤c' := by omega
+        change i < m + (BB6.Agent46.bounce (2*k+3) c').1 at hiLt
+        by_cases hshort : i≤m
+        · exact odd_continue_prefix k c i ho hc hlarge hi1 (by omega)
+        · have hj1 : 1≤i-m := by omega
+          have hjlt : i-m < (BB6.Agent46.bounce (2*k+3) c').1 := by omega
+          have hpre := odd_zero_continue k c ho hlarge
+          have hrec := ih c' hsmall (2*k+3) hc' (i-m) hj1 hjlt
+          have hsplit : i=m+(i-m) := by omega
+          obtain ⟨s,hsrun,hsc⟩ := hrec
+          refine ⟨s, ?_, hsc⟩
+          rw [hsplit,run_add,hpre]
+          exact hsrun
+    · simp only [ho,ite_false] at hiLt
+      have he : k%2=0 := by omega
+      by_cases hc4 : c=4
+      · simp only [hc4,ite_true] at hiLt ⊢
+        have hiEq : i=1 := by omega
+        subst i
+        refine ⟨(2*k+2,2,1), ?_, ?_⟩
+        · simp [BB6.Agent46.run,high_even_bounce k 4 he (by omega)]
+        · change 0 < 1
           omega
-        · have hnle : n≤c-2 := by omega
-          have ht : n-1≤2*k+3 := by omega
-          have htc : n-1+3≤c := by omega
-          have hpre := run_odd_prefix k c (n-1) hodd hc ht htc
-          have hrun : run n (some (0,k,c)) =
-              some (2*k+3-(n-1),n-1,c-(n-1)) := by
-            simpa [show n=(n-1)+1 by omega] using hpre
-          intro hEq
-          rw [hrun] at hEq
-          simp only [Option.some.injEq, Prod.mk.injEq] at hEq
-          omega
-    · have hlarge : 2*k+6<c := by omega
-      have hnlt : n < 2*k+4 + (bounce (2*k+3) (c-(2*k+3))).1 := by
-        simpa [bounce, Nat.not_lt.mpr hc, hodd, hlarge] using hn
-      by_cases hprefix : n<2*k+4
-      · by_cases hn0 : n=0
-        · subst n
-          intro hEq
-          simp [run] at hEq
-          simp only [Prod.mk.injEq] at hEq
-          omega
-        · have ht : n-1≤2*k+3 := by omega
-          have htc : n-1+3≤c := by omega
-          have hpre := run_odd_prefix k c (n-1) hodd hc ht htc
-          have hrun : run n (some (0,k,c)) =
-              some (2*k+3-(n-1),n-1,c-(n-1)) := by
-            simpa [show n=(n-1)+1 by omega] using hpre
-          intro hEq
-          rw [hrun] at hEq
-          simp only [Option.some.injEq, Prod.mk.injEq] at hEq
-          omega
-      · have hprefix_le : 2*k+4≤n := by omega
-        let n' := n-(2*k+4)
-        have hnEq : n=(2*k+4)+n' := by
-          dsimp [n']
-          omega
-        have hnrec : n' < (bounce (2*k+3) (c-(2*k+3))).1 := by
-          dsimp [n']
-          omega
-        have hc' : 4≤c-(2*k+3) := by omega
-        have hpre := odd_zero_continue k c hodd hlarge
-        have hrun : run n (some (0,k,c)) =
-            run n' (some (0,2*k+3,c-(2*k+3))) := by
-          rw [hnEq, run_add, hpre]
-        intro hEq
-        rw [hrun] at hEq
-        exact ih (c-(2*k+3)) (by omega) hc' (2*k+3) n' hnrec a b hEq
-  · have heven : k%2=0 := by omega
-    by_cases hc4 : c=4
-    · have hnlt : n<2 := by
-        subst c
-        simpa [bounce, heven] using hn
-      have hncase : n=0 ∨ n=1 := by omega
-      rcases hncase with hn0 | hn1
-      · subst n
-        intro hEq
-        simp [run] at hEq
-        simp only [Prod.mk.injEq] at hEq
-        omega
-      · subst n
-        intro hEq
-        subst c
-        simp [run, BB6CLine.nextC, heven] at hEq
-    · by_cases hc5 : c=5
-      · have hnlt : n<2 := by
-          subst c
-          simpa [bounce, heven] using hn
-        have hncase : n=0 ∨ n=1 := by omega
-        rcases hncase with hn0 | hn1
-        · subst n
-          intro hEq
-          simp [run] at hEq
-          simp only [Prod.mk.injEq] at hEq
-          omega
-        · subst n
-          intro hEq
-          subst c
-          simp [run, BB6CLine.nextC, heven] at hEq
-      · have hc6 : 6≤c := by omega
-        by_cases hsmall : c≤2*k+8
-        · have hnlt : n<c-3 := by
-            simpa [bounce, Nat.not_lt.mpr hc, heven, hc6, hsmall] using hn
-          by_cases hn0 : n=0
-          · subst n
-            intro hEq
-            simp [run] at hEq
-            simp only [Prod.mk.injEq] at hEq
+      · simp only [hc4,ite_false] at hiLt
+        by_cases hc5 : c=5
+        · simp only [hc5,ite_true] at hiLt ⊢
+          have hiEq : i=1 := by omega
+          subst i
+          refine ⟨(2*k+2,2,2), ?_, ?_⟩
+          · simp [BB6.Agent46.run,high_even_bounce k 5 he (by omega)]
+          · change 0 < 2
             omega
-          · by_cases hlast : n=c-4
-            · have hbound : c-6≤2*k+2 := by omega
-              have hpre0 := even_bounce_to_three k c heven hc6 hbound
-              have hnum : c-5 = 1+(c-6) := by omega
-              have hpre : run (c-5) (some (0,k,c)) =
-                  some (2*k+2-(c-6),2+(c-6),3) := by
-                rw [hnum]
-                exact hpre0
-              have hrun : run n (some (0,k,c)) =
-                  some (2*k+2-(c-6),2+(c-6)+2,1) := by
-                rw [hlast, show c-4=(c-5)+1 by omega, run_add, hpre]
-                simp [run, BB6CLine.nextC]
-              intro hEq
-              rw [hrun] at hEq
-              simp only [Option.some.injEq, Prod.mk.injEq] at hEq
-              omega
-            · have hnle : n≤c-5 := by omega
-              have ht : n-1≤2*k+2 := by omega
-              have htc : n-1+3≤c-3 := by omega
-              have hpre := run_even_prefix k c (n-1) heven hc ht htc
-              have hrun : run n (some (0,k,c)) =
-                  some (2*k+2-(n-1),2+(n-1),c-3-(n-1)) := by
-                simpa [show n=(n-1)+1 by omega] using hpre
-              intro hEq
-              rw [hrun] at hEq
-              simp only [Option.some.injEq, Prod.mk.injEq] at hEq
-              omega
-        · have hlarge : 2*k+8<c := by omega
-          have hnlt : n < 2*k+3 + (bounce (2*k+4) (c-(2*k+5))).1 := by
-            simpa [bounce, Nat.not_lt.mpr hc, heven, hc6, hlarge] using hn
-          by_cases hprefix : n<2*k+3
-          · by_cases hn0 : n=0
-            · subst n
-              intro hEq
-              simp [run] at hEq
-              simp only [Prod.mk.injEq] at hEq
-              omega
-            · have ht : n-1≤2*k+2 := by omega
-              have htc : n-1+3≤c-3 := by omega
-              have hpre := run_even_prefix k c (n-1) heven hc ht htc
-              have hrun : run n (some (0,k,c)) =
-                  some (2*k+2-(n-1),2+(n-1),c-3-(n-1)) := by
-                simpa [show n=(n-1)+1 by omega] using hpre
-              intro hEq
-              rw [hrun] at hEq
-              simp only [Option.some.injEq, Prod.mk.injEq] at hEq
-              omega
-          · have hprefix_le : 2*k+3≤n := by omega
-            let n' := n-(2*k+3)
-            have hnEq : n=(2*k+3)+n' := by
-              dsimp [n']
-              omega
-            have hnrec : n' < (bounce (2*k+4) (c-(2*k+5))).1 := by
-              dsimp [n']
-              omega
-            have hc' : 4≤c-(2*k+5) := by omega
-            have hpre := even_zero_continue k c heven hlarge
-            have hrun : run n (some (0,k,c)) =
-                run n' (some (0,2*k+4,c-(2*k+5))) := by
-              rw [hnEq, run_add, hpre]
-            intro hEq
-            rw [hrun] at hEq
-            exact ih (c-(2*k+5)) (by omega) hc' (2*k+4) n' hnrec a b hEq
+        · simp only [hc5,ite_false] at hiLt
+          by_cases hs : c≤2*k+8
+          · simp only [hs,ite_true] at hiLt ⊢
+            exact even_exit_prefix k c i he (by omega) hs hi1 hiLt
+          · simp only [hs,ite_false] at hiLt ⊢
+            have hlarge : 2*k+8<c := by omega
+            let m := 2*k+3
+            let c' := c-(2*k+5)
+            have hsmall : c'<c := Nat.sub_lt (by omega) (by omega)
+            have hc' : 4≤c' := by omega
+            change i < m + (BB6.Agent46.bounce (2*k+4) c').1 at hiLt
+            by_cases hshort : i≤m
+            · exact even_continue_prefix k c i he hc hlarge hi1 (by omega)
+            · have hj1 : 1≤i-m := by omega
+              have hjlt : i-m < (BB6.Agent46.bounce (2*k+4) c').1 := by omega
+              have hpre := even_zero_continue k c he hlarge
+              have hrec := ih c' hsmall (2*k+4) hc' (i-m) hj1 hjlt
+              have hsplit : i=m+(i-m) := by omega
+              obtain ⟨s,hsrun,hsc⟩ := hrec
+              refine ⟨s, ?_, hsc⟩
+              rw [hsplit,run_add,hpre]
+              exact hsrun
 
+
+theorem bounce_no_early_c0 (c : Nat) (hc : 4≤c) (k n : Nat)
+    (hn : n<(BB6.Agent46.bounce k c).1) :
+    ∀ a b, BB6.Agent46.run n (some (0,k,c)) ≠ some (a,b,0) := by
+  intro a b hEq
+  by_cases hn0 : n=0
+  · subst n
+    have hcEq : c=0 := by
+      simp [BB6.Agent46.run] at hEq
+      rcases hEq with ⟨_,_,hcEq⟩
+      exact hcEq
+    omega
+  · have hp := bounce_prefix c k hc n (by omega) hn
+    obtain ⟨s,hs,hsc⟩ := hp
+    rw [hs] at hEq
+    have hcEq : s.2.2=0 := by
+      injection hEq with hs'
+      simpa using congrArg (fun z : CState => z.2.2) hs'
+    omega
+
+#print axioms bounce_prefix
 #print axioms bounce_no_early_c0
 
 end BB6.Agent15
