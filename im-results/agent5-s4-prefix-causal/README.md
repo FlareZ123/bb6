@@ -103,7 +103,7 @@ More strongly, the root-transport theorem proves that for every `n` and every st
 U.take 8 = prefixRun (n % 20480) cycle8PeriodicStart.
 ```
 
-This is an exact period for the first eight digits of every *surviving* genuine-root configuration from accelerated return 5457 onward. It does not prove survival to 5457, survival thereafter, or repetition of the complete stack. The five return-map values are kernel-computed with `by decide` and have no extra axioms; the period and root-transport proofs reuse the existing prefix-block and root-causality theorems. Local Lean 4.36.0-rc2 computation and proof-body checks passed. Original-Cryptids source-import CI run [42399978421](https://github.com/FlareZ123/bb6/actions/runs/42399978421) passed on the first source-connected version of this module. The subsequent tail-mass extension is included in run [42400834321](https://github.com/FlareZ123/bb6/actions/runs/42400834321), which is pending at the time of this note.
+This is an exact period for the first eight digits of every *surviving* genuine-root configuration from accelerated return 5457 onward. It does not prove survival to 5457, survival thereafter, or repetition of the complete stack. The five return-map values are kernel-computed with `by decide` and have no extra axioms; the period and root-transport proofs reuse the existing prefix-block and root-causality theorems. Local Lean 4.36.0-rc2 computation and proof-body checks passed. Original-Cryptids source-import CI run [42399978421](https://github.com/FlareZ123/bb6/actions/runs/42399978421) passed on the first source-connected version of this module. The subsequent tail-mass extension also passed original-source CI in run [42400834321](https://github.com/FlareZ123/bb6/actions/runs/42400834321).
 
 
 ### Exact mass drift into the suffix beyond digit eight
@@ -121,4 +121,4 @@ Consequently, whenever two successive block-boundary states `U,V` both exist,
 stackMass (V.drop 8) = stackMass (U.drop 8) + 20,971,520.
 ```
 
-Thus the entire exact 20,971,520-unit mass increment per 20,480-return block is carried by the suffix after the periodic eight-digit prefix. This is conditional on the relevant root states existing; it does not establish that the machine survives indefinitely. The new additive mass identities are Lean-proved and are awaiting the source-import run above.
+Thus the entire exact 20,971,520-unit mass increment per 20,480-return block is carried by the suffix after the periodic eight-digit prefix. This is conditional on the relevant root states existing; it does not establish that the machine survives indefinitely. The additive mass identities are Lean-proved and passed the same source-import run.
