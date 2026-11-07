@@ -24,9 +24,9 @@ theorem original_terminal_quadratic_regular_list_iff (q v k : Nat) :
   rw [NeedleInverse.original_source_equation_iff q v k]
   constructor
   · rintro ⟨hfeed,hbound⟩
-    exact ⟨(predecessor_power_identity q v k).mpr hfeed,hbound⟩
+    exact ⟨(predecessor_power_identity q v k).mpr hfeed,by omega⟩
   · rintro ⟨hsource,hbound⟩
-    exact ⟨(predecessor_power_identity q v k).mp hsource,hbound⟩
+    exact ⟨(predecessor_power_identity q v k).mp hsource,by omega⟩
 
 /-- Every original-source terminal feeder is represented by the quadratic
     list, and every list entry is an actual source predecessor. -/
