@@ -294,3 +294,10 @@ jobs:
           lean -o InfiniteStrictB.olean InfiniteStrictB.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/TrueStoppingFamilyB.lean .
           lean TrueStoppingFamilyB.lean
+
+          # Agent20: source-audit the full exact mod16=7 inverse and three-level
+          # blank-root closure of the 70(mod128) cylinder. These imports use
+          # original complete section inverse and six-residue theorem, never stubs.
+          cp ${GITHUB_WORKSPACE}/im-results/agent20-c70/{SevenInverse,C70Root}.lean .
+          lean -o SevenInverse.olean SevenInverse.lean
+          lean -o C70Root.olean C70Root.lean
