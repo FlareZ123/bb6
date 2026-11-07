@@ -23,22 +23,11 @@ def setupTape (t : Int → Bool) (h : Int) : Int → Bool :=
 def jTapeAt (u w : Nat) (head : Int) : Int → Bool :=
   fun x => jTape u w (x-head)
 
-def cbZeroTest (h x : Int) (k : Nat) : Prop :=
-  0 ≤ x-h ∧ x-h < 2*(k:Int) ∧ (x-h)%2=0
-
-def cbOneTest (h x : Int) (k : Nat) : Prop :=
-  0 ≤ x-h ∧ x-h < 2*(k:Int) ∧ (x-h)%2=1
-
-instance cbZeroTestDecidable (h x : Int) (k : Nat) : Decidable (cbZeroTest h x k) := by
-  unfold cbZeroTest
-  infer_instance
-
-instance cbOneTestDecidable (h x : Int) (k : Nat) : Decidable (cbOneTest h x k) := by
-  unfold cbOneTest
-  infer_instance
-
-def cbPaint (t : Int → Bool) (h : Int) (k : Nat) : Int → Bool :=
-  fun x => if cbZeroTest h x k then false else if cbOneTest h x k then true else t x
+def cbPaint (t : Int → Bool) (h : Int) : Nat → Int → Bool
+  | 0 => t
+  | Nat.succ k =>
+      writeAt (writeAt (cbPaint t h k) (h+2*(k:Int)) false)
+        (h+2*(k:Int)+1) true
 
 theorem rawStep_of_read (m : Machine) (c : Config) (s : Fin 6) (b : Bool)
     (mv : Move) (hs : readSlot c = (s,b))
@@ -47,49 +36,79 @@ theorem rawStep_of_read (m : Machine) (c : Config) (s : Fin 6) (b : Bool)
   simp [rawStep, hs, hm]
 
 theorem cbPaint_zero (t : Int → Bool) (h : Int) :
-    cbPaint t h 0 = t := by
-  funext x
-  have hz : ¬cbZeroTest h x 0 := by unfold cbZeroTest; omega
-  have ho : ¬cbOneTest h x 0 := by unfold cbOneTest; omega
-  simp [cbPaint, hz, ho]
+    cbPaint t h 0 = t := rfl
 
 theorem cbPaint_left (t : Int → Bool) (h : Int) (k : Nat) (x : Int)
     (hx : x < h) : cbPaint t h k x = t x := by
-  have hz : ¬cbZeroTest h x k := by unfold cbZeroTest; omega
-  have ho : ¬cbOneTest h x k := by unfold cbOneTest; omega
-  simp [cbPaint, hz, ho]
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      have h0 : x≠h+2*(k:Int) := by omega
+      have h1 : x≠h+2*(k:Int)+1 := by omega
+      simpa [cbPaint,writeAt,h0,h1] using ih
 
 theorem cbPaint_right (t : Int → Bool) (h : Int) (k : Nat) (x : Int)
     (hx : h+2*(k:Int) ≤ x) : cbPaint t h k x = t x := by
-  have hz : ¬cbZeroTest h x k := by unfold cbZeroTest; omega
-  have ho : ¬cbOneTest h x k := by unfold cbOneTest; omega
-  simp [cbPaint, hz, ho]
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      have h0 : x≠h+2*(k:Int) := by omega
+      have h1 : x≠h+2*(k:Int)+1 := by omega
+      have hx' : h+2*(k:Int)≤x := by omega
+      simpa [cbPaint,writeAt,h0,h1] using ih hx'
 
 theorem cbPaint_compose (t : Int → Bool) (h : Int) (k : Nat) :
-    cbPaint (cbPaint t h 1) (h+2) k = cbPaint t h (k+1) := by
+    cbPaint (cbPaint t h 1) (h+2) k = cbPaint t h (Nat.succ k) := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      funext x
+      have hp : h+2+2*(k:Int)=h+2*((Nat.succ k):Int) := by omega
+      change writeAt (writeAt (cbPaint (cbPaint t h 1) (h+2) k)
+          (h+2+2*(k:Int)) false) (h+2+2*(k:Int)+1) true x =
+        writeAt (writeAt (cbPaint t h (Nat.succ k))
+          (h+2*((Nat.succ k):Int)) false)
+          (h+2*((Nat.succ k):Int)+1) true x
+      rw [ih]
+      simp [writeAt,hp]
+
+theorem cbPaint_compose_right (t : Int → Bool) (h : Int) (k : Nat) :
+    cbPaint (cbPaint t h k) (h+2*(k:Int)) (Nat.succ 0) =
+      cbPaint t h (Nat.succ k) := by
   funext x
-  by_cases hx0 : x < h
-  · have hz : ¬cbZeroTest h x (k+1) := by unfold cbZeroTest; omega
-    have ho : ¬cbOneTest h x (k+1) := by unfold cbOneTest; omega
-    have hz' : ¬cbZeroTest (h+2) x k := by unfold cbZeroTest; omega
-    have ho' : ¬cbOneTest (h+2) x k := by unfold cbOneTest; omega
-    simp [cbPaint, hz, ho, hz', ho', cbPaint_left, hx0]
-  · by_cases hx1 : x < h+2
-    · have hx : x=h ∨ x=h+1 := by omega
-      rcases hx with hx | hx
+  simp [cbPaint,writeAt]
+
+theorem cbPaint_even (t : Int → Bool) (h : Int) (k : Nat) (x : Int)
+    (hlo : h≤x) (hhi : x<h+2*(k:Int)) (heven : (x-h)%2=0) :
+    cbPaint t h k x=false := by
+  induction k with
+  | zero => omega
+  | succ k ih =>
+      by_cases hx0 : x=h+2*(k:Int)
       · subst x
-        simp [cbPaint, cbZeroTest, cbOneTest]
+        simp [cbPaint,writeAt] <;> omega
+      · by_cases hx1 : x=h+2*(k:Int)+1
+        · subst x
+          have hbad : (h+2*(k:Int)+1-h)%2=0 := heven
+          omega
+        · have hhi' : x<h+2*(k:Int) := by omega
+          simpa [cbPaint,writeAt,hx0,hx1] using ih hhi'
+
+theorem cbPaint_odd (t : Int → Bool) (h : Int) (k : Nat) (x : Int)
+    (hlo : h≤x) (hhi : x<h+2*(k:Int)) (hodd : (x-h)%2=1) :
+    cbPaint t h k x=true := by
+  induction k with
+  | zero => omega
+  | succ k ih =>
+      by_cases hx0 : x=h+2*(k:Int)
       · subst x
-        simp [cbPaint, cbZeroTest, cbOneTest]
-    · have hx : h+2 ≤ x := by omega
-      have hz : cbZeroTest h x (k+1) ↔ cbZeroTest (h+2) x k := by
-        unfold cbZeroTest
-        constructor <;> intro hh <;> rcases hh with ⟨a,b,c⟩ <;> constructor <;> omega
-      have ho : cbOneTest h x (k+1) ↔ cbOneTest (h+2) x k := by
-        unfold cbOneTest
-        constructor <;> intro hh <;> rcases hh with ⟨a,b,c⟩ <;> constructor <;> omega
-      have hinner : cbPaint t h 1 x = t x := cbPaint_right t h 1 x (by omega)
-      simp [cbPaint, hz, ho, hinner]
+        have hbad : (h+2*(k:Int)-h)%2=1 := hodd
+        omega
+      · by_cases hx1 : x=h+2*(k:Int)+1
+        · subst x
+          simp [cbPaint,writeAt]
+        · have hhi' : x<h+2*(k:Int) := by omega
+          simpa [cbPaint,writeAt,hx0,hx1] using ih hhi'
 
 /-- The two raw C/1, B/0 instructions paint one 01 pair and return to C. -/
 theorem cbPaint_compose_right (t : Int → Bool) (h : Int) (k : Nat) :
@@ -151,13 +170,11 @@ theorem bc_two_full (m : Machine) (c : Config)
     funext x
     by_cases hx0 : x=c.head
     · subst x
-      simp [c2,c1,applyMove,ca,ba,cbPaint,cbZeroTest,cbOneTest]
+      simp [c2,c1,applyMove,ca,ba,cbPaint,writeAt]
     · by_cases hx1 : x=c.head+1
       · subst x
-        simp [c2,c1,applyMove,ca,ba,cbPaint,cbZeroTest,cbOneTest]
-      · have hz : ¬cbZeroTest c.head x 1 := by unfold cbZeroTest; omega
-        have ho : ¬cbOneTest c.head x 1 := by unfold cbOneTest; omega
-        simp [c2,c1,applyMove,ca,ba,cbPaint,hz,ho,hx0,hx1]
+        simp [c2,c1,applyMove,ca,ba,cbPaint,writeAt] <;> omega
+      · simp [c2,c1,applyMove,ca,ba,cbPaint,writeAt,hx0,hx1] <;> omega
   refine ⟨c2,hr,?_,?_,htape⟩
   · rfl
   · simp [c2,c1,applyMove,ca,ba]
@@ -213,7 +230,8 @@ theorem bc_sweep (m : Machine) (k : Nat) (c : Config)
       · calc
           d.tape = cbPaint d1.tape d1.head k := ht2
           _ = cbPaint (cbPaint c.tape c.head 1) (c.head+2) k := by rw [ht1,hd1]
-          _ = cbPaint c.tape c.head (k+1) := cbPaint_compose c.tape c.head k
+          _ = cbPaint c.tape c.head (k+1) := by
+            simpa using cbPaint_compose c.tape c.head k
 
 /-- The final C/1, B/1 pair exits the right sweep into A. -/
 theorem cb_exit (m : Machine) (c : Config)
@@ -247,13 +265,11 @@ theorem cb_exit (m : Machine) (c : Config)
     funext x
     by_cases hx0 : x=c.head
     · subst x
-      simp [c2,c1,applyMove,ca,ba,cbPaint,cbZeroTest,cbOneTest]
+      simp [c2,c1,applyMove,ca,ba,cbPaint,writeAt]
     · by_cases hx1 : x=c.head+1
       · subst x
-        simp [c2,c1,applyMove,ca,ba,cbPaint,cbZeroTest,cbOneTest]
-      · have hz : ¬cbZeroTest c.head x 1 := by unfold cbZeroTest; omega
-        have ho : ¬cbOneTest c.head x 1 := by unfold cbOneTest; omega
-        simp [c2,c1,applyMove,ca,ba,cbPaint,hz,ho,hx0,hx1]
+        simp [c2,c1,applyMove,ca,ba,cbPaint,writeAt] <;> omega
+      · simp [c2,c1,applyMove,ca,ba,cbPaint,writeAt,hx0,hx1] <;> omega
   refine ⟨c2,hr,?_,?_,htape⟩
   · rfl
   · simp [c2,c1,applyMove,ca,ba]
