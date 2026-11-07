@@ -48,7 +48,7 @@ theorem blank_halts_iff_c58_all_depth_late_fast :
         intro r hr
         rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
         exact (BB6.Agent11HighThreeLate.late_high_no_blank
-          r (2*j+3) m k hrmin hm3 hm4 hstop hmod hsize) hreach
+          r j m k hrmin hm3 hm4 hstop hmod hsize) hreach
       exact Or.inr ⟨j,m,⟨hprior,hgate⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,hgate⟩,hroot⟩)
     · exact Or.inl hlow
