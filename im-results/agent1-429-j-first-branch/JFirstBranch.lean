@@ -92,6 +92,34 @@ theorem cbPaint_compose (t : Int → Bool) (h : Int) (k : Nat) :
       simp [cbPaint, hz, ho, hinner]
 
 /-- The two raw C/1, B/0 instructions paint one 01 pair and return to C. -/
+theorem cbPaint_compose_right (t : Int → Bool) (h : Int) (k : Nat) :
+    cbPaint (cbPaint t h k) (h+2*(k:Int)) 1 = cbPaint t h (k+1) := by
+  funext x
+  by_cases hx : x < h+2*(k:Int)
+  · have hz : cbZeroTest h x (k+1) ↔ cbZeroTest h x k := by
+      unfold cbZeroTest
+      constructor <;> intro hh <;> rcases hh with ⟨a,b,c⟩ <;> constructor <;> omega
+    have ho : cbOneTest h x (k+1) ↔ cbOneTest h x k := by
+      unfold cbOneTest
+      constructor <;> intro hh <;> rcases hh with ⟨a,b,c⟩ <;> constructor <;> omega
+    have hout : cbPaint (cbPaint t h k) (h+2*(k:Int)) 1 x =
+        cbPaint t h k x := cbPaint_left (cbPaint t h k) (h+2*(k:Int)) 1 x hx
+    rw [hout]
+    simp [cbPaint,hz,ho]
+  · by_cases hx0 : x=h+2*(k:Int)
+    · subst x
+      simp [cbPaint,cbZeroTest,cbOneTest]
+    · by_cases hx1 : x=h+2*(k:Int)+1
+      · subst x
+        simp [cbPaint,cbZeroTest,cbOneTest]
+      · have hout : cbPaint (cbPaint t h k) (h+2*(k:Int)) 1 x =
+            cbPaint t h k x :=
+          cbPaint_right (cbPaint t h k) (h+2*(k:Int)) 1 x (by omega)
+        rw [hout]
+        have hz : ¬cbZeroTest h x (k+1) := by unfold cbZeroTest; omega
+        have ho : ¬cbOneTest h x (k+1) := by unfold cbOneTest; omega
+        simp [cbPaint,hz,ho]
+
 theorem bc_two_full (m : Machine) (c : Config)
     (hC : m (C,true)=some ⟨false,true,B⟩)
     (hB : m (B,false)=some ⟨true,true,C⟩)
@@ -595,7 +623,7 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
     simp [k]
     omega
   have hrunTail : run target429 (14+(2*k+2)) cC=some cFinal := by
-    rw [show 14+(2*k+2)=14+(2*k)+2 by omega,run_add',hsetup]
+    rw [run_add',hsetup]
     simp only [Option.bind_some]
     rw [run_add',hSweep]
     simp only [Option.bind_some]
@@ -612,8 +640,8 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
       cFinal.tape = cbPaint cE.tape cE.head 1 := htFinal
       _ = cbPaint (cbPaint cC.tape cC.head k) (cC.head+2*(k:Int)) 1 := by
         rw [htE,hhE]
-      _ = cbPaint cC.tape cC.head (k+1) := by
-        rw [← cbPaint_compose]
+      _ = cbPaint cC.tape cC.head (k+1) :=
+        cbPaint_compose_right cC.tape cC.head k
   have hprofile : cFinal.tape=firstBranchTape u w := by
     rw [hcompose]
     funext x
@@ -628,15 +656,10 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
         simp [firstBranchTape,cbPaint_left cC.tape cC.head (k+1) x hleft,
           cC,hC,hx0,hx1,hc]
       · by_cases hx2 : x < 2*(u:Int)+3
-        · have hzero : cbZeroTest cC.head x (k+1) := by
-            unfold cbZeroTest
-            simp [cC,hC,k]
-            omega
-          have hodd : x%2≠0 := by
-            by_contra he
-            have he' : x%2=0 := by omega
-            have : (x-cC.head)%2=1 := by
-              simp [cC,hC]
+        · by_cases heven : x%2=0
+          · have hzero : ¬cbZeroTest cC.head x (k+1) := by
+              unfold cbZeroTest
+              simp [cC,hC,k]
               omega
             have hOne : cbOneTest cC.head x (k+1) := by
               unfold cbOneTest
@@ -644,9 +667,22 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
               · simp [cC,hC]; omega
               constructor
               · simp [cC,hC,k]; omega
-              · exact this
-            simp [firstBranchTape,cbPaint,hzero,hOne,he']
-          simp [firstBranchTape,cbPaint,hzero,hodd,cC,hC,k,hx0,hx1,hx2]
+              · simp [cC,hC]
+                omega
+            simp [firstBranchTape,cbPaint,hzero,hOne,cC,hC,k,hx0,hx1,hx2,heven]
+          · have hzero : cbZeroTest cC.head x (k+1) := by
+              unfold cbZeroTest
+              constructor
+              · simp [cC,hC]; omega
+              constructor
+              · simp [cC,hC,k]; omega
+              · simp [cC,hC]
+                omega
+            have hOne : ¬cbOneTest cC.head x (k+1) := by
+              unfold cbOneTest
+              simp [cC,hC,k]
+              omega
+            simp [firstBranchTape,cbPaint,hzero,hOne,cC,hC,k,hx0,hx1,hx2,heven]
         · have hright : cC.head+2*((k+1):Int) ≤ x := by
             simp [cC,hC,k]
             omega
@@ -657,8 +693,10 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
   have hfinal : cFinal =
       {state:=A,head:=2*(u:Int)+3,
         tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
-    cases cFinal
-    simp_all [hheadFinal,hprofile,firstBranchTape_eq_jTapeAt u w hw]
+    apply Config.ext
+    · exact hsFinal
+    · exact hheadFinal
+    · exact hprofile.trans (firstBranchTape_eq_jTapeAt u w hw)
   simpa [hfinal] using (show run target429 (4*u*u+10*u+27)
       {state:=A,head:=0,tape:=jTape u w}=some cFinal from by
         rw [htime,run_add',hF0]
