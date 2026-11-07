@@ -42,8 +42,11 @@ private theorem late256_j_mod256 (m : Nat)
     ac_rfl
   have hpowmod : (9*P)%256=0 := Nat.mod_eq_zero_of_dvd hdiv9
   have hlinmod : (3*m+3)%256=12 := by omega
+  have hsumAssoc : late256J m + (3*m+3)=9*P := by
+    have hsum' : late256J m + 3*m+3=9*P := by simpa [P] using hsum
+    omega
   have hsumMod : (late256J m + (3*m+3))%256=(9*P)%256 := by
-    simpa [P] using congrArg (fun z : Nat => z%256) hsum
+    exact congrArg (fun z : Nat => z%256) hsumAssoc
   rw [Nat.add_mod,hpowmod,hlinmod] at hsumMod
   omega
 
@@ -182,9 +185,11 @@ private theorem late256_parameters (m : Nat)
     rw [Nat.mul_add]
     rw [Nat.mul_comm P 3]
     omega
-  have hkstop : k+j+3*m+5=P*(j+3) := by
+  have hkstop' : k+(j+3*m+5)=P*(j+3) := by
     dsimp [k,late256K]
-    exact Nat.sub_add_cancel hscore
+    simpa [P] using Nat.sub_add_cancel hscore
+  have hkstop : k+j+3*m+5=P*(j+3) := by
+    omega
   have hstop' : k+(9*P+2)=P*(q+9) := by
     calc
       k+(9*P+2)=k+(j+3*m+5) := by rw [hJcost]
@@ -201,15 +206,24 @@ private theorem late256_parameters (m : Nat)
     rw [show 2*m+3=(2*m+2)+1 by omega,Nat.pow_succ]
     omega
   have hkpow : k+2=2^(2*m+3)*u := by
-    rw [hkplus,hqu,hpowr]
-    omega
+    calc
+      k+2=P*q := hkplus
+      _=P*(2*u) := by rw [hqu]
+      _=(2*P)*u := by
+        simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+      _=2^(2*m+3)*u := by rw [hpowr]
   have hqrepr : q=8*(q/8)+6 := by
     have h := Nat.mod_add_div q 8
     rw [hqmod8] at h
     omega
   have hkrepr : k+2=8*P*(q/8)+6*P := by
-    rw [hkplus,hqrepr]
-    simp [Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+    calc
+      k+2=P*q := hkplus
+      _=P*(8*(q/8)+6) := by
+        exact congrArg (fun x : Nat => P*x) hqrepr
+      _=8*P*(q/8)+6*P := by
+        rw [Nat.mul_add]
+        simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
   have hmodulus : (2:Nat)^(2*m+5)=8*P := by
     dsimp [P]
     rw [show 2*m+5=(2*m+2)+3 by omega,Nat.pow_add]
@@ -220,15 +234,18 @@ private theorem late256_parameters (m : Nat)
     ac_rfl
   have hlt : 6*P<8*P := by omega
   have hmod : (k+2)%(2:Nat)^(2*m+5)=3*2^(2*m+3) := by
-    rw [hmodulus,hkrepr,hpowr]
+    rw [hmodulus,hkrepr]
     calc
       (8*P*(q/8)+6*P)%(8*P)
         =((8*P*(q/8))%(8*P)+(6*P)%(8*P))%(8*P) := by rw [Nat.add_mod]
       _=6*P := by
-        rw [Nat.mod_eq_zero_of_dvd hdiv,Nat.mod_eq_of_lt hlt]
-        simp
+        have hzero : (8*P*(q/8))%(8*P)=0 :=
+          Nat.mod_eq_zero_of_dvd hdiv
+        have hrem : (6*P)%(8*P)=6*P := Nat.mod_eq_of_lt hlt
+        rw [Nat.add_mod,hzero]
+        simpa using hrem
       _=3*(2*P) := by omega
-      _=3*2^(2*m+3) := by rw [←hpowr]
+      _=3*2^(2*m+3) := by rw [hpowr]
   have hsize : 7*2^(2*m+3)≤k+2 := by
     rw [hkpow]
     simpa [Nat.mul_comm] using
