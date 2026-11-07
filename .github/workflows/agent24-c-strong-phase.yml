@@ -377,6 +377,17 @@ jobs:
           cat "$GITHUB_WORKSPACE/c-residual-mass-integration.txt"
           cat "$GITHUB_WORKSPACE/c-residual-mass-integration.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$integration_status" -ne 0 ]; then exit "$integration_status"; fi
+          # Agent 19: exact root decision for the first m=0 high candidate above raw mass 2000.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/M0FirstSurvivorRootProbe.lean .
+          set +e
+          lean --run M0FirstSurvivorRootProbe.lean > "$GITHUB_WORKSPACE/m0-first-survivor-root-probe.txt" 2>&1
+          first_root_probe_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/m0-first-survivor-root-probe.txt"
+          cat "$GITHUB_WORKSPACE/m0-first-survivor-root-probe.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$first_root_probe_status" -ne 0 ]; then
+            echo "::warning::The first post-2000 root probe did not complete; source proofs remain the gating checks."
+          fi
           # Agent 19: source-proof the new m=1, j=24 mod256 progression.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighM1FullForced.lean .
           lean -o HighM1FullForced.olean HighM1FullForced.lean > "$GITHUB_WORKSPACE/m1-full-forced.txt" 2>&1
@@ -466,6 +477,7 @@ jobs:
             full-forced-residual.txt
             c-residual-mass2000.txt
             c-residual-mass-integration.txt
+            m0-first-survivor-root-probe.txt
             full-forced-param-scan.txt
             m1-m2-param-scan.txt
             parameter-search.txt
