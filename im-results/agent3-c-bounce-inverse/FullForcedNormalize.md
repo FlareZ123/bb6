@@ -1,8 +1,35 @@
-# Three-sector source-exact full backward normalizer and a new Machine C stopping obstruction
+# Four-sector source-exact full backward normalizer and a new Machine C stopping obstruction
+
+
+## Current four-sector status (2026-11-07)
+
+**Agent 3, 2026-11-07.** The 2026-11-03 three-sector normalizer has been extended with Agent 24's complete six-residue even-right inverse from [EvenRightSixOrbit.lean](../agent24-c48/EvenRightSixOrbit.lean).
+
+The added gate is
+```
+6 ≤ y
+y % 2 = 0
+(x+y) % 8 ≠ 0
+(x+y) % 8 ≠ 7
+```
+and its exact source predecessor is `(x+y-2, (y-2)/2)), with weighted mass `x+2*y` dropping by four. The previous `evenAffineGate` remains earlier in the branch order: for even `y≥6` it is contained in the new gate, while it also handles `y=4`, which the six-residue theorem does not cover. The current `fullForcedNormalize` therefore applies four exact source sectors, and `blank_reach_iff_fullForcedNormalize` proves the all-natural exact reachability equivalence.
+
+The updated [original-source workflow](../../.github/workflows/agent3-c-bounce-inverse.yml) passed targeted run [42366675885](https://github.com/FlareZ123/bb6/actions/runs/42366675885) at commit `ed3619f5a08ada2b9387ca34ed905be1dd9690cb`. It compiled the current four-sector `FullForcedNormalize.lean` and `FullForcedFilter.lean` against the original source modules. The workflow now has a `forced_normalize_only` input so this dependency closure can be checked without running unrelated downstream experiments.
+
+A local Lean 4.36.0-rc2 exact-integer comparison over `3≤m≤35`, `0≤j<256` (8,448 high stopping inputs) gives:
+- previous three-sector filter: **3,208** excluded;
+- current four-sector filter: **4,517** excluded;
+- additional exclusions from the six-residue branch: **1,309**.
+
+[FullForcedCompare.lean](./FullForcedCompare.lean) records this finite comparison, imports the current `FullForcedFilter`, and retains the old three-sector implementation as the baseline. Its regression guards were checked locally against a matching Lean interface stub; the source-importing CI check for this comparison file is pending. These counts are finite experimental evidence only. The universal result is the source-proved soundness theorem `fullForcedExcluded_sound`, which applies to every target where the Boolean returns true.
+
+The new normalizer can now be composed with the existing C70/C23/all-phase residual. Before integrating it into the global high-parameter predicate, compare its exclusions against the current combined filter to avoid double-counting families already removed by the C23 and high-even-right gates.
+
+## Historical three-sector result (2026-11-03)
 
 **Agent 3, 2026-11-03 18:50 UTC.** Mathematical and computational intermediate progress. Machine C and BB(6) remain **open**. The complete original-source Lean 4.36.0-rc2 module [FullForcedNormalize.lean](./FullForcedNormalize.lean) and sound [FullForcedFilter.lean](./FullForcedFilter.lean) have **both passed full original-source Lean CI**. The normalizer passed [run 41697210586](https://github.com/FlareZ123/bb6/actions/runs/41697210586); the full filter and exact obstruction passed [run 41697759547](https://github.com/FlareZ123/bb6/actions/runs/41697759547). Both checks compiled unchanged source and audited standard axioms only. An extended infinite-family theorem also passed [run 41698364955](https://github.com/FlareZ123/bb6/actions/runs/41698364955), with full details in [HighAffineInfinite.md](./HighAffineInfinite.md).
 
-## The exact inverse reduction
+## Historical three-sector inverse reduction
 
 Building on the [two-sector source-certified backward normalizer](./OddForcedNormalize.md), `fullForcedNormalize x y` recursively applies a third **exact** source predecessor, in addition to two existing forced regions:
 
