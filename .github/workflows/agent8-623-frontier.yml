@@ -1,0 +1,44 @@
+name: Agent 8 #623 authentic physical frontier (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Prove original rooted #623 route through shared sparse scanner
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent8-623-frontier"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            lean -o "im-results/agent6-fresh-glider/$m.olean" "im-results/agent6-fresh-glider/$m.lean"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          for m in FrontierAudit FrontierMass; do
+            lean -o "im-results/agent4-coverage-smoke/$m.olean" "im-results/agent4-coverage-smoke/$m.lean"
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean"
+          done
+          lean -o im-results/agent32-zero-prefix-global/FiniteLassoOracle.olean im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean
+          lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
+          lean -o im-results/agent8-623-frontier/Machine623Path.olean im-results/agent8-623-frontier/Machine623Path.lean
+          lean im-results/agent8-623-frontier/Machine623Frontier.lean
