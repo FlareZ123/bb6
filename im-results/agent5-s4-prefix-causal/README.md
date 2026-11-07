@@ -122,3 +122,16 @@ stackMass (V.drop 8) = stackMass (U.drop 8) + 20,971,520.
 ```
 
 Thus the entire exact 20,971,520-unit mass increment per 20,480-return block is carried by the suffix after the periodic eight-digit prefix. This is conditional on the relevant root states existing; it does not establish that the machine survives indefinitely. The additive mass identities are Lean-proved and passed the same source-import run.
+
+
+### Direct finite survival certificate through return 5457 (source CI pending)
+
+The latest revision adds a tail-recursive evaluator `prunFast`, together with a Lean proof that it agrees with the original `S4Toggle.prun` via associativity of `Option.bind`. It then asks the kernel to compute the complete original-root run through accelerated return 5457:
+
+```
+prunFast 5457 seed = some s5457
+s5457 = [283,906,982,3490,3734,5935,13580,109210,171050,
+         366446,435688,443554,1702180,1770018,211301,281569,35137,35134]
+```
+
+The resulting theorem transports this finite computation back to the original `prun` and identifies the reached first-eight-digit state with `cycle8PeriodicStart`. This would remove the earlier uncertainty about whether the 20,480-periodic prefix orbit is actually reached by the root. The computation was independently checked against the Python simulator; original-source Lean verification is pending in run [42401520955](https://github.com/FlareZ123/bb6/actions/runs/42401520955). Do not upgrade the finite-survival claim to source-verified until that run succeeds.
