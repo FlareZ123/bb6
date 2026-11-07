@@ -120,6 +120,8 @@ This is formalized by `juncCycle_crossing`: whenever the initial head offset (h)
 
 The stronger theorem `junc_any_v_crossing` covers nonzero right-alternating parameter v as well. For any u≥1,w≥1 with h+w+2v=2k+5, it either normalizes a full cycle using `juncNormalize_delta` and invokes `juncCycle_crossing`, or uses a partial positive-u sweep directly. In the short-counter case w≤4, one step suffices; for w≥5, the choice N=w/2−1 gives the strict crossing.
 
+The raw-machine lift `physical_junc_any_v_crossing` applies this result to every `Config` representing `junc u v w`. It preserves the external offset explicitly: the output satisfies `c'.head + h > c.head + 2*k`, equivalently `c'.head > c.head + (2*k-h)`. This is a crossing of the global target at offset (2k), measured from the origin (c.head-h); it is not a claim of a further (2k) cells beyond the Junc entry head unless (h=0).
+
 The two source E/1 return parities satisfy this relation exactly:
 - **Even branch:** the return reaches (J(2r+9,0,2k-6)) after displacement (11), for (k\ge3).
 - **Odd branch:** the return reaches (J(2r+6,0,2k-2)) after displacement (7), for (k\ge1).
@@ -128,7 +130,7 @@ The theorems `sourceScanE_finishC_even_crosses_delta` and `sourceScanE_finishC_o
 
 **Scope:** this closes the unbounded head-crossing subproblem for these prepared source E/1 return families. It does not prove that any such prepared configuration is reached from the blank tape, and it does not decide the separate C/B `j_c_sweep` intermediate branches. In particular, `finishCStart` requires a C/1 tape with left word `true :: ones (2*p) ++ pairs01 u ++ ones 5` and right word `ones 6 ++ ones (2*k) ++ [false,true]`. The `j_c_sweep` endpoint has a different processed-pair history and can have only 0, 1 or 2 right-side ones in the intermediate (w=2u,2u+1,2u+2) cases. No direct tape adapter between those branches has been proved.
 
-**Verification:** dedicated fail-closed workflow [`agent6-429-junc-crossing.yml`, run 42394921817](https://github.com/FlareZ123/bb6/actions/runs/42394921817) compiled the complete real source dependency chain through the all-parameter v=0 physical lifts. A second run [42395422632](https://github.com/FlareZ123/bb6/actions/runs/42395422632) compiled the nonzero-v normalization and `junc_any_v_crossing` extension. Both use `set -euo pipefail`, audit the complete axiom output for `sorryAx`, and completed successfully. The original broad `agent18-429-lastwriter.yml` workflow was also changed to fail closed, because its earlier tee pipelines could conceal Lean failures.
+**Verification:** dedicated fail-closed workflow [`agent6-429-junc-crossing.yml`, run 42394921817](https://github.com/FlareZ123/bb6/actions/runs/42394921817) compiled the complete real source dependency chain through the all-parameter v=0 physical lifts. A second run [42395422632](https://github.com/FlareZ123/bb6/actions/runs/42395422632) compiled the nonzero-v normalization and `junc_any_v_crossing` extension. A third run [42396194745](https://github.com/FlareZ123/bb6/actions/runs/42396194745) compiled the raw-machine lift `physical_junc_any_v_crossing`. All three use `set -euo pipefail`, audit the complete axiom output for `sorryAx`, and completed successfully. The original broad `agent18-429-lastwriter.yml` workflow was also changed to fail closed, because its earlier tee pipelines could conceal Lean failures.
 
 ## Connection to the hard blank-origin question
 
