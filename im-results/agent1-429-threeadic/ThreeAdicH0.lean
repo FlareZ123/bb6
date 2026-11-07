@@ -173,7 +173,7 @@ theorem H0_shift_iterated (e c k : Nat) (hc : 2≤c) :
       rw [hbefore,hafter]
       calc
         (H0 (c+p*k+p)+(p+p*k))%M =
-            ((H0 (c+p*k+p)+p)+p*k)%M := by omega
+            ((H0 (c+p*k+p)+p)+p*k)%M := by simp only [Nat.add_assoc]
         _ = (((H0 (c+p*k+p)+p)%M)+p*k)%M :=
           (Nat.mod_add_mod _ _ _).symm
         _ = ((H0 (c+p*k)%M)+p*k)%M := by rw [hstep]
