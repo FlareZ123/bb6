@@ -141,20 +141,16 @@ theorem e_zero_boundary (k q : Nat) :
     rw [hword]
   have hraw := CryptidBoundary.full_E_pairs k q ys
   rw [hin,hraw]
-  have hlen : List.replicate (2*q+6) true ++ ys =
-      List.replicate (2*q+12) true := by
-    change List.replicate (2*q+6) true ++ List.replicate 6 true =
-      List.replicate (2*q+12) true
-    rw [List.replicate_append_replicate]
-    congr 1 <;> omega
-  rw [hlen]
-  simp only [BB6.Agent2BoundaryBZero.regularSection,oppairs,ys]
-  have hh : List.replicate (2*q+12) true =
-      true :: List.replicate (2*q+11) true := by
-    rw [show 2*q+12=1+(2*q+11) by omega,
-      ←List.replicate_append_replicate]
-    rfl
-  rw [hh]
+  change
+    (⟨[],false,List.replicate (8*k+5) true ++
+      (false :: (List.replicate (2*q+6) true ++
+        List.replicate 6 true)),5⟩ : Cfg) =
+    BB6.Agent2BoundaryBZero.regularSection (8*k+5) 1 (2*q+11)
+  unfold BB6.Agent2BoundaryBZero.regularSection
+  simp only [oppairs]
+  rw [List.replicate_append_replicate]
+  have hcount : (2*q+6)+6=(2*q+11)+1 := by omega
+  rw [hcount,List.replicate_succ]
   rfl
 
 #print axioms a_zero_boundary
