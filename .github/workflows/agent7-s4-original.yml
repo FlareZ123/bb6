@@ -194,3 +194,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixEighthMass.lean" S4PrefixEighthMass.lean
           export LEAN_PATH=.:${LEAN_PATH:-}
           lake env lean -o S4PrefixEighthMass.olean S4PrefixEighthMass.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixEighthCycle.lean" S4PrefixEighthCycle.lean
+          echo "1073d6d2717b2f30cef618d7139fa02496e7d6177479ad41bd843ef61bf34eec  S4PrefixEighthCycle.lean" | sha256sum -c -
+          lake env lean -o S4PrefixEighthCycle.olean S4PrefixEighthCycle.lean
