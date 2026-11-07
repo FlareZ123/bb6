@@ -10,6 +10,8 @@ let state = 'A';
 let head = 0;
 let previousBZero = null;
 let bZeros = 0;
+let cphaseShieldInputs = 0;
+let cphaseShieldOutputs = 0;
 const counts = {
   oldWave: 0,
   leftOneWave: 0,
@@ -33,6 +35,14 @@ function rightRunLength(first) {
   let length = 0;
   while (tape.has(first + length)) length++;
   return length;
+}
+
+/** @param {number} h */
+function noLeft1100(h) {
+  for (const x of tape) {
+    if (x + 3 < h && tape.has(x + 1) && !tape.has(x + 2) && !tape.has(x + 3)) return false;
+  }
+  return true;
 }
 
 /** @param {number} h @param {number} time */
@@ -90,6 +100,7 @@ for (let time = 0; time < LIMIT; time++) {
     bZeros++;
     const prefix = prefixAtBZero(head, time);
     const cphase = cphaseD1AtBZero(head, time);
+    const cphaseShield = cphase === null ? null : noLeft1100(head);
 
     if (previousBZero !== null) {
       const expected = predictions.get(time);
@@ -115,6 +126,12 @@ for (let time = 0; time < LIMIT; time++) {
           previousBZero.prefix.type === 'prefixUnmatched') {
         counts.prefixUnmatched++;
       } else if (validCphase) {
+        assert.equal(previousBZero.cphaseShield, true,
+          "C-phase D1 input does not satisfy the 1100 exclusion");
+        cphaseShieldInputs++;
+        assert.equal(noLeft1100(head), true,
+          "C-phase D1 return did not preserve the 1100 exclusion");
+        cphaseShieldOutputs++;
         assert.equal(time, previousBZero.cphase.returnTime,
           'C-phase D1 return time disagrees with raw machine');
         assert.equal(head, previousBZero.cphase.returnHead,
@@ -126,7 +143,7 @@ for (let time = 0; time < LIMIT; time++) {
         counts.other++;
       }
     }
-    previousBZero = { time, prefix, cphase };
+    previousBZero = { time, prefix, cphase, cphaseShield };
   }
 
   const rule = RULES[state.charCodeAt(0) - 65].slice(symbol * 3, symbol * 3 + 3);
@@ -149,10 +166,13 @@ assert.deepEqual(counts, {
 });
 assert.deepEqual(cphaseRuns, { 2: 1, 3: 15_176, 4: 21 });
 assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
+assert.equal(cphaseShieldInputs, counts.cphaseD1);
+assert.equal(cphaseShieldOutputs, counts.cphaseD1);
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
 console.log(JSON.stringify({
   rawSteps: LIMIT,
   bZeroSections: bZeros,
   firstReturnClasses: counts,
   cphaseD1RunLengths: cphaseRuns,
+  cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
 }, null, 2));
