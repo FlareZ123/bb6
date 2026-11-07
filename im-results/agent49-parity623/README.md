@@ -230,6 +230,18 @@ The three direct-ray corollaries are also formalized in the same Lean module:
 Together these give explicit logarithmic-width terminal windows on all four
 old-cone rays.
 
+The even-right residual-block-zero case is handled separately by
+`evenRight_zero_block_terminal_interval`. It uses the symmetric terminal
+gap bound `|x-y|≤K+4` and the evaluator bounds to obtain
+
+```
+4*a ≤ d+K+3
+d ≤ 4*a+K+11+3*n0.
+```
+
+Thus the algebraic terminal-window reduction now covers both even-right
+subcases (`b>0` and `b=0`).
+
 ### Root diagnostic (empirical only)
 
 A Python mirror of `highLevelNext` was replayed for 10,000 states from
