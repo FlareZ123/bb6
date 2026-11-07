@@ -247,7 +247,7 @@ theorem cb_exit (m : Machine) (c : Config)
   · simp [c2,c1,applyMove,ca,ba]
     omega
 
-lemma baseTape_atA (u w : Nat) :
+theorem baseTape_atA (u w : Nat) :
     baseTape u w (-2*(u:Int)-6)=true := by
   have hz := zeroPaint_outside (negFill (jTape u w) u)
       (2*(u:Int)) (2*u+3) (-2*(u:Int)-6) (by omega)
@@ -259,7 +259,7 @@ lemma baseTape_atA (u w : Nat) :
     omega
   exact hj
 
-lemma baseTape_left_blank (u w : Nat) (x : Int)
+theorem baseTape_left_blank (u w : Nat) (x : Int)
     (hx : x < -2*(u:Int)-6) :
     baseTape u w x=false := by
   have hz : ¬zeroTest (2*(u:Int)) x (2*u+3) := by
@@ -273,7 +273,7 @@ lemma baseTape_left_blank (u w : Nat) (x : Int)
     omega
   simp [baseTape,zeroPaint,hz,negFill,hn,hj]
 
-lemma baseTape_odd (u w : Nat) (x : Int)
+theorem baseTape_odd (u w : Nat) (x : Int)
     (hlo : -2*(u:Int)-6≤x) (hhi : x≤(w:Int)+1)
     (hodd : x%2≠0) :
     baseTape u w x=true := by
@@ -288,7 +288,7 @@ lemma baseTape_odd (u w : Nat) (x : Int)
     omega
   simp [baseTape,zeroPaint,hz,negFill,hn,hj]
 
-lemma baseTape_even_zero (u w : Nat) (x : Int)
+theorem baseTape_even_zero (u w : Nat) (x : Int)
     (hlo : -2*(u:Int)-2≤x) (hhi : x≤2*(u:Int))
     (heven : x%2=0) :
     baseTape u w x=false := by
@@ -297,7 +297,7 @@ lemma baseTape_even_zero (u w : Nat) (x : Int)
     omega
   simp [baseTape,zeroPaint,hz]
 
-lemma baseTape_right (u w : Nat) (x : Int)
+theorem baseTape_right (u w : Nat) (x : Int)
     (hx : 2*(u:Int)+3≤x) :
     baseTape u w x=jTape u w x := by
   have hz : ¬zeroTest (2*(u:Int)) x (2*u+3) := by
@@ -308,7 +308,7 @@ lemma baseTape_right (u w : Nat) (x : Int)
     omega
   simp [baseTape,zeroPaint,hz,negFill,hn]
 
-lemma baseTape_right_one (u w : Nat) (hw : 2*u+3≤w)
+theorem baseTape_right_one (u w : Nat) (hw : 2*u+3≤w)
     (x : Int) (hlo : 2*(u:Int)+1≤x) (hhi : x≤2*(u:Int)+2) :
     baseTape u w x=true := by
   have hb : baseTape u w x=jTape u w x := by
@@ -323,7 +323,7 @@ lemma baseTape_right_one (u w : Nat) (hw : 2*u+3≤w)
   simp [jTape,jMark,jHole]
   omega
 
-lemma f0_local (u w : Nat) :
+theorem f0_local (u w : Nat) :
     f0Tape u w (-2*(u:Int)-7)=false ∧
     f0Tape u w (-2*(u:Int)-6)=false ∧
     f0Tape u w (-2*(u:Int)-5)=true ∧
@@ -510,7 +510,7 @@ def firstBranchTape (u w : Nat) (x : Int) : Bool :=
   else if x < 2*(u:Int)+3 then decide (x%2=0)
   else jTape u w x
 
-lemma cCfg_tape_left_blank (u w : Nat) (x : Int)
+theorem cCfg_tape_left_blank (u w : Nat) (x : Int)
     (hx : x < -2*(u:Int)-9) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=false := by
   have hout : ¬(-2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4) := by omega
@@ -519,20 +519,20 @@ lemma cCfg_tape_left_blank (u w : Nat) (x : Int)
   have hne : x≠-2*(u:Int)-6 := by omega
   simp [setupTape,f0Tape,writeAt,hout,hne,hbase]
 
-lemma cCfg_tape_left_ones (u w : Nat) (x : Int)
+theorem cCfg_tape_left_ones (u w : Nat) (x : Int)
     (hlo : -2*(u:Int)-9≤x) (hhi : x < -2*(u:Int)-3) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=true := by
   have hrange : -2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4 := by omega
   simp [setupTape,hrange]
 
-lemma cCfg_tape_right (u w : Nat) (x : Int)
+theorem cCfg_tape_right (u w : Nat) (x : Int)
     (hx : -2*(u:Int)-3 ≤ x) :
     setupTape (f0Tape u w) (-2*(u:Int)-7) x=baseTape u w x := by
   have hout : ¬(-2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4) := by omega
   have hne : x≠-2*(u:Int)-6 := by omega
   simp [setupTape,f0Tape,writeAt,hout,hne]
 
-lemma firstBranchTape_eq_jTapeAt (u w : Nat) (hw : 2*u+3≤w) :
+theorem firstBranchTape_eq_jTapeAt (u w : Nat) (hw : 2*u+3≤w) :
     firstBranchTape u w =
       jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
   funext x
