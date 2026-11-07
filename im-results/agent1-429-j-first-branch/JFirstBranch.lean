@@ -670,7 +670,7 @@ theorem j_first_branch_tape (u w : Nat) (hw : 2*u+3 ≤ w) :
     jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
   have hsub : ((w-(2*u+3):Nat):Int) =
       (w:Int) - (2*(u:Int)+3) := by
-    rw [Nat.cast_sub hw]
+    rw [Int.ofNat_sub hw]
     omega
   funext x
   by_cases hleft : x < -2*(u:Int)-9
@@ -696,7 +696,9 @@ theorem j_first_branch_tape (u w : Nat) (hw : 2*u+3 ≤ w) :
           -2*(u:Int)-9 ≤ x ∧ x ≤ -2*(u:Int)-4 := by omega
       have hsetup :
           setupTape (f0Tape u w) (-2*(u:Int)-7) x = true := by
-        simp [setupTape,hinside]
+        simp only [setupTape]
+        have hcond : (-2*(u:Int)-7)-2 ≤ x ∧ x ≤ (-2*(u:Int)-7)+3 := by omega
+        simp [hcond]
       rw [hsetup]
       have hnotHole :
           ¬jHole (2*u+3) (x-(2*(u:Int)+3)) := by
@@ -811,7 +813,7 @@ theorem j_first_branch_tape (u w : Nat) (hw : 2*u+3 ≤ w) :
           · intro hm
             rcases hm with hu | heq
             · left
-              refine ⟨by rw [hsub]; omega, ?_, hholeNew⟩
+              refine ⟨by omega, ?_, hholeNew⟩
               rw [hsub]
               omega
             · right
@@ -823,8 +825,8 @@ theorem j_first_branch_tape (u w : Nat) (hw : 2*u+3 ≤ w) :
 theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
     run target429 (4*u*u+10*u+27)
       {state:=A,head:=0,tape:=jTape u w} =
-    some {state:=A,head:=2*(u:Int)+3,
-      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
+    some ({state:=A,head:=Int.ofNat (2*u+3),
+      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} : Config) := by
   have hprefix : 2*u ≤ w+1 := by omega
   rcases f0_local u w with ⟨h0,h1,h2,h3,h4,hm1,hm2⟩
   have hsetup := f0_to_c1 (-2*(u:Int)-7) (f0Tape u w)
