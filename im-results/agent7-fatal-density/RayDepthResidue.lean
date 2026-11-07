@@ -22,7 +22,7 @@ private theorem depthPeriod_next (k : Nat) :
   simp only [depthPeriod,Nat.pow_succ]
   omega
 
-private theorem depthResidue_lt (n k : Nat) :
+theorem depthResidue_lt (n k : Nat) :
     depthResidue n k < depthPeriod k := by
   induction k with
   | zero =>
@@ -153,6 +153,15 @@ theorem depthResidue_iff (n k j : Nat) (hn : n%6=4 ∨ n%6=5) :
         rw [hx]
         exact depthResidue_good n (k+1) hn
 
+/-- Exactly one residue is divisible at each precision inside a full depth period. -/
+theorem depthResidue_unique_in_period (n k j : Nat)
+    (hn : n%6=4 ∨ n%6=5) (hj : j<depthPeriod k) :
+    ((3:Int)^(k+1) ∣ signedZ n j) ↔ j=depthResidue n k := by
+  rw [depthResidue_iff n k j hn]
+  simp only [Nat.mod_eq_of_lt hj]
+
+#print axioms depthResidue_unique_in_period
+#print axioms depthResidue_lt
 #print axioms depthResidue_iff
 #print axioms depthResidue_good
 end CascadeRayDepthResidue
