@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   source-check:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'issues' && github.event.action == 'opened' && github.event.issue.title == 'CI: Agent43 depth-indexed right-five reset theorem')
+    if: "github.event_name == 'workflow_dispatch' || (github.event_name == 'issues' && github.event.action == 'opened' && github.event.issue.title == 'CI: Agent43 depth-indexed right-five reset theorem')"
     runs-on: ubuntu-latest
     timeout-minutes: 50
     steps:
