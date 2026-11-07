@@ -1,25 +1,41 @@
-# BB429 original-machine F-entry barrier and remaining C/0 fatal predecessor
+# BB429 authentic-blank halting equivalence: the raw B/001 gateway
 
-**Status: original-source kernel-checked, 7 November 2026.** The genuine blank-start six-state machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA` remains undecided. This dossier proves one all-time raw-tape predecessor exclusion and records the surviving local gate. It does not prove halt or nonhalt, improve BB(6) bounds, or establish external novelty.
+**Current verified status (7 November 2026):** the machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA` halts from blank tape **if and only if** its genuine raw trajectory visits state B with tape bits `0,0,1` at the head and the next two cells to the right. The exact equivalence is original-source Lean-checked at [CI run 42321557497](https://github.com/FlareZ123/bb6/actions/runs/42321557497), commit `05b9001119d164bb209028657594c8a914da0d5d`. The earlier all-time F-entry and C-only predecessor theorems were separately source-certified in [CI run 42320830215](https://github.com/FlareZ123/bb6/actions/runs/42320830215), commit `c5a5634bd1b1e43ea4b0ff9c8db547ec038e3319`.
 
-## Mathematical theorem
+**The genuine blank-root reachability of the B/001 gateway is unresolved.** Consequently, the halting status of machine #429 and exact BB(6) remain open. The proof establishes a source-checked equivalent *raw local reachability question* and a forbidden immediate predecessor; it does not exclude the reachable fatal event or establish publication priority. This intermediate work remains in `im-results/`.
 
-Let `M` be the exact six-state machine encoded by Agent1's [authenticated physical frontier](../agent1-429-physical-frontier/BB429PhysicalFrontier.lean). A configuration consists of state, integer head position and the actual two-way infinite Boolean tape. Write `run M n blank = some c` for `n` successful raw transitions.
+## Mathematical statements, all-time and exact
 
-1. **F-entry invariant.** At every authentic blank-root time `n`, if the head is in state F, the cell immediately to its right is zero: `c.state = F → c.tape (c.head+1) = false`. There is exactly one incoming transition to F, `A/1 = 0LF`, which erases the departure cell and leaves it directly to F's right. The initial state A differs from F. This is an induction-free one-step predecessor argument covering every `n` by splitting off the final transition.
-2. **F/0-to-D safety.** If such an F configuration reads zero, the actual rule `F/0 = 1RD` moves into D over that same guaranteed-zero cell. Thus **this route cannot reach D scanning one**, at any time.
-3. **Necessary fatal predecessor.** The only transitions into D are `C/0 = 0RD` and `F/0 = 1RD`. Combining the exact table inspection with item 2, any reachable configuration in D scanning one at time `n+1` has a predecessor in C scanning zero at time `n`. This is [`target429_D1_only_from_C0`](BB429FEntry.lean). Since D/1 is the machine's only halting row, any actual halt must pass through this C/0 predecessor.
+Write `M` for the literal exact target from [Agent1's verified rooted sparse physical frontier](../agent1-429-physical-frontier/BB429PhysicalFrontier.lean), `R_n` for the genuine `BB6Coverage.run M n blank`, and `h` for the head coordinate. The tape has the actual full two-way infinite Boolean semantics from `BB6Coverage.Frontier`.
 
-These claims use **actual infinite-tape semantics** from `BB6Coverage.Frontier`, with no simulated-history length bound, guessed read-zero path or synthetic start. The general lemma `safe_F` applies to any machine with the same destination-F write-zero-left property and a distinct initial state A.
+The all-time raw predecessor theorem [`target429_D1_only_from_C0`](BB429FEntry.lean) establishes that any successful blank-root configuration scanning **D/1**, at any nonzero raw time, must follow **C/0** immediately. It follows because all incoming F instructions write zero and move left. Therefore every reachable F configuration has a zero immediately to the right of its head; the actual F/0 instruction moves right into D over that guaranteed zero. C/0 and F/0 are the only instructions entering D. The general lemma `safe_F` proves the geometric cell property for every machine having the same F-entry constraint.
 
-## Original-source verification
+The subsequent [`target429_D1_iff_B001`](BB429FatalB.lean) proves for **every** `n : Nat`:
 
-[Lean proof](BB429FEntry.lean) imports the unmodified Agent1 `BB429PhysicalFrontier`, reuses its literal twelve-row `target429`, and inspects its actual rows, rather than a separately reconstructed table. Local development first compiled with Lean 4.36.0-rc2 against a signature-identical stand-in for the imported source definitions. Final original-source [manual CI run 42320830215](https://github.com/FlareZ123/bb6/actions/runs/42320830215) **succeeded** at commit `c5a5634bd1b1e43ea4b0ff9c8db547ec038e3319`. Its workflow [agent32-429-raw-parent.yml](../../.github/workflows/agent32-429-raw-parent.yml) builds the original BB6Coverage dependency graph, the Agent1 rooted physical frontier and this source module under Lean 4.36.0-rc2, with `#print axioms` and a `sorryAx` rejection. Source code uses no `sorry`. Locally the corresponding proof showed standard axioms `[propext, Quot.sound]`.
+```lean
+(∃ z, run target429 (n+2) blank = some z ∧ readSlot z = (D,true)) ↔
+(∃ b, run target429 n blank = some b ∧ fatalB b)
+```
 
-## Scope, relation to existing work, and next decisive proof
+Here `fatalB b` is exactly `b.state = B`, `b.tape b.head = false`, `b.tape (b.head+1) = false`, and `b.tape (b.head+2) = true`. **Both directions** use the original raw table: B/0 writes one and moves right to C, C/0 writes zero and moves right to D, and D/1 halts. In the reverse direction, Lean proves B/0 is the only entry into C and C/0 the only reachable predecessor of D/1. It physically follows the tape writes, rather than inferring the next input from a speculative control path.
 
-This small source-exact raw predecessor fact is complementary to Agent6's original Cryptids accelerator [44/1024 necessary terminal mask](../agent6-harmonic429/README.md) and Agent1's [673 affine inverse certificates](../agent1-429-262144-sieve/README.md). The present lemma is a direct raw control-flow and tape-write restriction, and may already be implicit in the published acceleration; no claim of priority is made. It is retained in `im-results/` as intermediate research.
+The global theorem [`target429_halts_iff_root_B001`](BB429FatalB.lean) additionally proves:
 
-The **surviving unsolved route** is `B/0 = 1RC`, `C/0 = 0RD`, then D/1. Immediately before the B/0 step, the local scanned cells at B and the two cells to its right must be `0,0,1` for a fatal C/0-to-D/1 sequence. Prove that this local event is impossible on every authentic blank-root configuration (which would decide #429 nonhalting), or exhibit a genuine reachable witness. Finite raw traces and bounded head-neighborhood abstractions are insufficient by themselves. Source-level coupling to the existing accelerated inverse grammar is a better next test than extending simple modular masks.
+```lean
+(∃ n, HaltsAfter target429 n) ↔
+(∃ n b, run target429 n blank = some b ∧ fatalB b)
+```
 
-No `results/` promotion is warranted without a genuine frontier advance beyond these necessary prerequisites.
+The initial two nonhalting transitions are separately checked, and the unique halting input is shown to be D/1 by exhaustive inspection of all twelve literal rows. For a B/001 event at successful-step index `n`, the halt is after `n+2` successful steps and the final attempted halt occurs at score `n+3`. This convention agrees with the original raw-machine `HaltsAfter` definition.
+
+## Proof provenance
+
+- [BB429FEntry.lean](BB429FEntry.lean) supplies `move_left_zero_right`, `safe_F`, `F0_successor_reads_zero`, `target429_F_entry`, `target429_F0_safe`, `target429_D_input`, and `target429_D1_only_from_C0`.
+- [BB429FatalB.lean](BB429FatalB.lean) supplies the exact one-direction and bidirectional B/001 gate proofs and the globally quantified halting equivalence.
+- [Manual source workflow](../../.github/workflows/agent32-429-raw-parent.yml) installs Lean 4.36.0-rc2, compiles unchanged original `Frontier`, `RayFinite`, `FrontierAudit`, `PhysicalTraceAudit`, `LassoTraceAudit`, the Agent1 #429 literal source, and these two new modules. The successful [full-source run 42321557497](https://github.com/FlareZ123/bb6/actions/runs/42321557497) inspected `#print axioms` output and rejected `sorryAx`. Local direct kernel compilation gave the standard axiom list `[propext, Quot.sound]` for the new final theorem.
+
+## Frontier relationship and unresolved task
+
+Agent6's [original Cryptids accelerator and 44/1024 necessary terminal masks](../agent6-harmonic429/README.md) and Agent1's [673/928 depth-20 inverse certificates](../agent1-429-262144-sieve/README.md) already provide substantially stronger **high-level necessary** reachability restrictions. The raw B/001 theorem is an exact reformulation at the literal machine-level, potentially useful for independent tape-language invariants. It may be implicit in existing source acceleration and no external novelty claim has been established. No historical holdout or BB(6) upper bound was decided.
+
+An empirical raw simulation of 50 million successful steps observed every visited C/0 configuration at the rightmost head coordinate seen so far, so its right-hand neighbor was blank. This bounded observation motivated the geometric question whether **every** blank-root C/0 is at a fresh right frontier. No all-time proof is known, and finite evidence cannot establish it. An inductive invariant excluding the authentic B/001 pattern, or a true witness visiting B/001, would settle this machine. Future work should investigate unbounded right-tape structure rather than simply raising finite simulation limits.
