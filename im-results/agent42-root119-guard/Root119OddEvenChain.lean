@@ -422,9 +422,14 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
           (H-1+2*((n+1)+1)+1) =
           tD2 (H-1+2*((n+1)+1)+1) := hcell'
       _ = b1Tape (H-1+2*((n+1)+1)+1) := by
-        simp [tD2,f2Tape,b1Tape,setBit,
-          show H-1+2*((n+1)+1)+1 ≠ H-1 by omega,
-          show H-1+2*((n+1)+1)+1 ≠ H-2 by omega]
+        calc
+          tD2 (H-1+2*((n+1)+1)+1) =
+              f2Tape (H-1+2*((n+1)+1)+1) := by
+            simp [tD2,setBit,
+              show H-1+2*((n+1)+1)+1 ≠ H-2 by omega]
+          _ = b1Tape (H-1+2*((n+1)+1)+1) := by
+            simp [f2Tape,setBit,
+              show H-1+2*((n+1)+1)+1 ≠ H-1 by omega]
       _ = t1 (H-1+2*((n+1)+1)+1) := by
         change oddWaveTape n t1 H (H-1+2*((n+1)+1)+1) =
           t1 (H-1+2*((n+1)+1)+1)
