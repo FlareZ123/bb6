@@ -1,4 +1,4 @@
-name: D blank-root source chain through twentieth reentry (manual)
+name: D blank-root source chain through twenty-second reentry (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent2-packet-shift:im-results/agent37-d-timing-cocycle
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -24,7 +24,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Verify DRegular root chain through twentieth source reentry
+      - name: Verify DRegular root chain through twenty-second source reentry
         shell: bash
         run: |
           set -euo pipefail
@@ -82,6 +82,7 @@ jobs:
           lean -o "$A/BlankFifthExceptional.olean" "$A/BlankFifthExceptional.lean"
           lean -o "$A/BlankSixthExceptional.olean" "$A/BlankSixthExceptional.lean"
           R=im-results/agent31-d-exceptional
+          P2=im-results/agent2-packet-shift
           G=im-results/agent35-d-sixth-rejoin
           for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
             lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
@@ -94,9 +95,17 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$G/SeventhRejoin.olean" "$G/SeventhRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$D/BlankEighthRejoin.olean" "$D/BlankEighthRejoin.lean"
+          lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
+          lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
+          lean -DmaxRecDepth=8192 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
+          lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean"
+          lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
+          lean -DmaxRecDepth=8192 -o "$P2/PacketOneReentry.olean" "$P2/PacketOneReentry.lean"
+          lean -DmaxRecDepth=8192 -o "$P2/PacketZeroBoundarySource.olean" "$P2/PacketZeroBoundarySource.lean"
+          lean -DmaxRecDepth=8192 -o "$P2/PacketSafeReentry.olean" "$P2/PacketSafeReentry.lean"
           V=im-results/agent37-cryptid-model-bridge
           lean -o "$V/CrossModelBridge.olean" "$V/CrossModelBridge.lean"
           lean -o "$V/CompleteAReturn.olean" "$V/CompleteAReturn.lean"
@@ -119,3 +128,5 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethEscape.olean" "$T/BlankTwentiethEscape.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
+          lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentySecondRejoin.olean" "$T/BlankTwentySecondRejoin.lean"
