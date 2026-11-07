@@ -59,6 +59,28 @@ Using both sharp drain coefficients, [FarSectorSource.lean](../agent8-623-invers
 
 The return moves into the far-left safe output cone. The first transition must succeed; the source theorem does not assert universal absence of first-step halting in these sectors.
 
+## Exact logarithmic outer and complementary daughter-tail budgets
+
+[LogConeSource.lean](../agent8-623-inverse/LogConeSource.lean) sharpens the conservative constant-ratio sectors with source-certified ternary logarithms. If `d+5+k<=a` and `2*d+7<=3^k`, then the next source accelerated step succeeds. Combining this with the sharp drain envelopes gives the unconditional *second-step* source safety result for any successful B-drain:
+
+```text
+B(a,b,d)=D(A,D) and
+    d+8*b+5+k <= a
+    2*d+14*b+7 <= 3^k
+  => T(D(A,D)) succeeds.
+```
+
+The exact branch instantiations, all for positive input first counter and successful first transition, are:
+
+| Second-coordinate parity | First-dominated logarithmic sector | Second-dominated logarithmic sector (even first coordinate) |
+| --- | --- | --- |
+| odd `d` | `9*d+39+k<=a` and `14*d+59<=3^k` | `9*a+k<=d+4` and `14*a<=3^k` |
+| even `d` | `9*d+25+k<=a` and `14*d+39<=3^k` | `8*a+13+k<=d` and `12*a+23<=3^k` |
+
+These four sectors are verified at arbitrary size and can be combined with the preceding linear sectors. [LogParentSource.lean](../agent8-623-inverse/LogParentSource.lean) transports their **universal negative condition** to every hypothetical terminal parent of the authentic blank-root orbit. [CI run 42346417148](https://github.com/FlareZ123/bb6/actions/runs/42346417148) source-certified these results.
+
+A complementary direction is proved locally in [LogRightSource.lean](../agent8-623-inverse/LogRightSource.lean): for even `a`, if `a+ell<=d` and `2*a+3<=3^ell`, then `T(D(a,d))` succeeds. It allows a successful B-drain to send its daughter into a **right-safe** logarithmic sector, even when the daughter fails the stronger ratio-two bound. [LogRightSectorsSource.lean](../agent8-623-inverse/LogRightSectorsSource.lean) instantiates this for all four branch cases with two explicit natural budgets `k,ell`. The source-import audit is pending as of this writing; [LogRightParentSource.lean](../agent8-623-inverse/LogRightParentSource.lean) turns these four sufficient conditions into a necessary root-terminal-parent exclusion at all k and ell. Neither source theorem infers all-time nonhalting.
+
 ## Consequences for the authentic blank-root run
 
 The source supplies `run 0 = D(0,7)`, a parity proof `a % 2 = 0` for every surviving `run n`, and mass growth `7*(n+1) <= a+d`. The exact first five visits are:
@@ -87,7 +109,7 @@ The terminal section itself satisfies the independently established power-of-thr
 
 The [MachineHaltSource.lean](../agent8-623-inverse/MachineHaltSource.lean) wrapper transports this paired necessary condition directly to the original six-state machine using upstream's already proved machine-to-section equivalence.
 
-**Verification distinction:** [source run 42344165418](https://github.com/FlareZ123/bb6/actions/runs/42344165418) verified the five-branch theorem. [Source run 42345112992](https://github.com/FlareZ123/bb6/actions/runs/42345112992) verified the sharp drain and four-sector statements. Rooted paired-witness and machine-level wrapper proof files are currently subject to the next original-source CI audit; local Lean compilation used source-matched definitions and explicit locally mocked imported proof interfaces. A CI failure due to a missing imported `.olean` was resolved by compiling the module as an importable object, with no changes to theorem hypotheses.
+**Verification:** [source run 42344165418](https://github.com/FlareZ123/bb6/actions/runs/42344165418) verified the five-branch theorem. [Source run 42345112992](https://github.com/FlareZ123/bb6/actions/runs/42345112992) verified sharp drain and four-sector statements. [Source run 42345821318](https://github.com/FlareZ123/bb6/actions/runs/42345821318) proved true-root zero-parent exclusion and the conditional angular corridor. [Source run 42346417148](https://github.com/FlareZ123/bb6/actions/runs/42346417148) certified the four logarithmic outer sectors, original-machine halt-to-paired-witness theorem, and source-authenticated root exclusions. Logarithmic right-safe source modules and the combined [MachineFullGateSource.lean](../agent8-623-inverse/MachineFullGateSource.lean) await their own successful source CI check; local Lean mock-import compilation of the source-shaped statements is a preliminary check only. An earlier CI failure was caused by an omitted importable `.olean` build step; the subsequent original-source audit passed after correcting the workflow.
 
 ## Quantified limitation and research direction
 
@@ -98,8 +120,11 @@ The independent [finite coverage diagnostic](coverage.py) mirrored the exact acc
 | Five gate budgets | 1,924 |
 | Strong first-dominance sector | 232 |
 | Strong second-dominance sector | 433 |
+| Added logarithmic first-dominance sector | 149 |
+| Added logarithmic second-dominance sector | 297 |
+| Added logarithmic right-tail daughter sector | 859 |
 | Zero-first-coordinate case | 1 |
-| **Outside all current two-step safety certificates** | **2,410** |
+| **Outside the union of current two-step sufficient conditions** | **1,105** |
 
 These finite observations are computational diagnostics, with explicit assertions in the script. They demonstrate substantial uncovered territory and cannot support an all-time BB(6) conclusion. The first genuinely useful next proof target is a root-specific invariant or symbolic multi-step return theorem covering those excursions outside the gate and both outer sectors. Further local constant refinements alone are unlikely to decide #623.
 
