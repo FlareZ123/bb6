@@ -6,7 +6,6 @@ const RULES = '1RB---_1LC1LF_1LD0LC_0LE1RF_1RA1LA_1LB0RD'.split('_');
 const LIMIT = 10_000_000;
 const tape = new Set();
 const predictions = new Map();
-const prefixPredictions = new Map();
 let state = 'A';
 let head = 0;
 let previousBZero = null;
@@ -17,6 +16,7 @@ const counts = {
   leftOneWave: 0,
   evenPrefix: 0,
   oddEvenPrefix: 0,
+  prefixUnmatched: 0,
   other: 0,
 };
 
@@ -32,6 +32,30 @@ function rightRunLength(first) {
   let length = 0;
   while (tape.has(first + length)) length++;
   return length;
+}
+
+/** @param {number} h @param {number} time */
+function prefixAtBZero(h, time) {
+  if (!(tape.has(h - 1) && !tape.has(h - 2) && tape.has(h - 3))) return null;
+  const m = rightRunLength(h + 1) + 1;
+  if (m % 2 === 0 && !tape.has(h + m + 1)) {
+    return {
+      type: 'evenPrefix',
+      m,
+      returnTime: time + m + 13,
+      returnHead: h + m + 1,
+    };
+  }
+  if (m % 2 === 1 &&
+      !tape.has(h + m + 1) && !tape.has(h + m + 2)) {
+    return {
+      type: 'oddEvenPrefix',
+      m,
+      returnTime: time + 3 * m + 20,
+      returnHead: h + m + 2,
+    };
+  }
+  return { type: 'prefixUnmatched', m };
 }
 
 for (let time = 0; time < LIMIT; time++) {
@@ -65,53 +89,32 @@ for (let time = 0; time < LIMIT; time++) {
 
   if (state === 'B' && symbol === 0) {
     bZeros++;
-
-    // Nine-step B/0 -> F/1 prefix: the resulting F head is h-1 and
-    // its right run has length 1 + the original run beginning at h+1.
-    if (tape.has(head - 1) && !tape.has(head - 2) && tape.has(head - 3)) {
-      const m = rightRunLength(head + 1) + 1;
-      let type;
-      let returnTime;
-      let returnHead;
-      if (m % 2 === 0 && !tape.has(head + m + 1)) {
-        type = 'evenPrefix';
-        returnTime = time + m + 13;
-        returnHead = head + m + 1;
-      } else if (m % 2 === 1 &&
-          !tape.has(head + m + 1) && !tape.has(head + m + 2)) {
-        type = 'oddEvenPrefix';
-        returnTime = time + 3 * m + 20;
-        returnHead = head + m + 2;
-      }
-      if (type !== undefined) {
-        const old = prefixPredictions.get(returnTime);
-        if (old) {
-          assert.equal(old.head, returnHead, 'Nested prefix predictions disagree');
-        } else {
-          prefixPredictions.set(returnTime, { type, head: returnHead, m });
-        }
-      }
-    }
+    const prefix = prefixAtBZero(head, time);
 
     if (previousBZero !== null) {
       const expected = predictions.get(time);
-      const prefixExpected = prefixPredictions.get(time);
-      assert(!(expected && prefixExpected), 'Two first-return macro families overlap');
+      const validPrefix = previousBZero.prefix &&
+        previousBZero.prefix.type !== 'prefixUnmatched';
+      assert(!(expected && validPrefix), 'Two first-return macro families overlap');
       if (expected) {
         assert.equal(head, expected.head, 'Wave theorem endpoint disagrees with raw machine');
         counts[expected.type]++;
         predictions.delete(time);
-      } else if (prefixExpected) {
-        assert.equal(head, prefixExpected.head, 'Even-wave prefix endpoint disagrees with raw machine');
-        counts[prefixExpected.type]++;
-        prefixPredictions.delete(time);
-      } else if (time - previousBZero === 10) {
+      } else if (validPrefix) {
+        assert.equal(time, previousBZero.prefix.returnTime,
+          'Even-wave prefix return time disagrees with raw machine');
+        assert.equal(head, previousBZero.prefix.returnHead,
+          'Even-wave prefix return head disagrees with raw machine');
+        counts[previousBZero.prefix.type]++;
+      } else if (previousBZero.prefix?.type === 'prefixUnmatched') {
+        counts.prefixUnmatched++;
+      } else if (time - previousBZero.time === 10) {
         counts.ten++;
       } else {
         counts.other++;
       }
     }
-    previousBZero = time;
+    previousBZero = { time, prefix };
   }
 
   const rule = RULES[state.charCodeAt(0) - 65].slice(symbol * 3, symbol * 3 + 3);
@@ -127,13 +130,13 @@ assert.deepEqual(counts, {
   ten: 15_176,
   oldWave: 7_508,
   leftOneWave: 177,
-  evenPrefix: 19,
-  oddEvenPrefix: 17,
-  other: 86,
+  evenPrefix: 21,
+  oddEvenPrefix: 22,
+  prefixUnmatched: 8,
+  other: 71,
 });
 assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
-assert.equal(prefixPredictions.size, 0, 'Unfinished even-wave prefix predictions at cutoff');
 console.log(JSON.stringify({
   rawSteps: LIMIT,
   bZeroSections: bZeros,
