@@ -5,6 +5,16 @@ namespace BB6Coverage
 set_option maxRecDepth 12000
 set_option maxHeartbeats 0
 
+private theorem open_lasso_step_24 (p : PartialMachine) (d : Nat)
+    (slot : Slot)
+    (hf : lassoDecisionOracle p 6 6 12 2 4 = false)
+    (hs : firstUnknownPhysical p 24 finiteBlank = some slot) :
+    (lassoPhysicalTraceAudit p 6 6 24 12 2 4 (d+1)).open machineC ↔
+      (lassoPhysicalTraceAudit
+        (refine p slot (machineC slot)) 6 6 24 12 2 4 d).open machineC := by
+  have hn : ¬ lassoDecisionOracle p 6 6 12 2 4 = true := by simp [hf]
+  simp [lassoPhysicalTraceAudit, FrontierAudit.open, hn, hs]
+
 /-- Eleven actual table-input consultations, including the read-one rows.
     The finite quantifier is explicit: no inferred zero-read control path. -/
 theorem machineC_eleven_first_unknown (n : Nat) (hn : n < 11) :
