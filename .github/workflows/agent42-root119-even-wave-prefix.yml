@@ -44,3 +44,4 @@ jobs:
             echo "::error::sorryAx found in new even-wave return theorems"
             exit 1
           fi
+          node "$A/test-root119-two-wave-census.cjs"
