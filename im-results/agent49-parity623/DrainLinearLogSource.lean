@@ -260,7 +260,6 @@ theorem drainB_first_lower_log (n : Nat) :
                 omega
             · simp [hlt] at hs
 
-/-- A sharp block-count family: b_0=2 and b_(n+1)=3*b_n+1. -/
 /-- A successful B-drain increases its first counter by at most its
 ternary depth. -/
 theorem drainB_first_upper_log (n : Nat) :
@@ -304,6 +303,7 @@ theorem drainB_first_upper_log (n : Nat) :
                 omega
             · simp [hlt] at hs
 
+/-- A sharp block-count family: b_0=2 and b_(n+1)=3*b_n+1. -/
 def sharpBlock : Nat → Nat
   | 0 => 2
   | n+1 => 3*sharpBlock n + 1
