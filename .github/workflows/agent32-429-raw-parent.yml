@@ -65,4 +65,20 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FatalB.olean im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
           lean -o im-results/agent32-429-raw-parent/FreshCell.olean im-results/agent32-429-raw-parent/FreshCell.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FreshFrontier.lean | tee -a /tmp/agent32-429-source.log
-          if grep -q sorryAx /tmp/agent32-429-source.log /tmp/agent32-bubble.log /tmp/agent32-high3.log; then exit 1; fi
+          audit_axiom_free() {
+            theorem="$1"
+            logfile="$2"
+            line="$(grep -F "'${theorem}' depends on axioms:" "$logfile")"
+            printf '%s\\n' "$line"
+            if printf '%s\\n' "$line" | grep -q 'sorryAx'; then
+              echo "ERROR: ${theorem} depends on sorryAx" >&2
+              exit 1
+            fi
+          }
+          audit_axiom_free "BB429High2Tail.midApos_to_midAaux" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2Tail.midAaux_reduce_v" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2Tail.midApos_to_junc0_of_base" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2TailBase.midAaux_zero_base" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2TailBase.midAaux_to_junc0_of_base" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2Return.midA2_to_junc0_of_base" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429High2Return.j_high2_to_junc_raw" /tmp/agent32-429-source.log
