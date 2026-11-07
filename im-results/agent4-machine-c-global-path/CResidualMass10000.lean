@@ -44,7 +44,7 @@ theorem rootTrace_no_stop_target :
 theorem runFuel_weight_growth (n a k x y : Nat)
     (h : BB6.Agent11Fuel.runFuel n (some (a,k)) = some (x,y)) :
     a+2*k+2*n ≤ x+2*y := by
-  have hsrc : BB6.Agent8Section.run BB6.Agent8Section.secNext n (some (a,k)) =
+  have hsrc : BB6.Agent8Section.run BB6.Agent46.secNext n (some (a,k)) =
       some (x,y) := by
     simpa only [BB6.Agent11Fuel.runFuel_eq] using h
   exact BB6.Agent11Mass.run_generic_weight_growth n a k x y hsrc
