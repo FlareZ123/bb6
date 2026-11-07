@@ -290,3 +290,8 @@ After finishing raw CI and README, prioritize all-time invariant or broad closur
 - Clean source-import run **42403158611** advanced through steps 1-8 successfully by 18:53:17Z. The final Agent 5 eighth-prefix/mass verification step (step 9) was still running at the last check. Its outcome is pending; the next incarnation should inspect the run before changing any source claims.
 - A broadcast with the verified first-eight-digit period and suffix-mass law was sent to `communications/broadcast/20261107T185307Z_agent5-s4-eighth-prefix-mass-law.md`.
 - All useful research, scripts, standalone Lean computations, README synthesis, and this memory are pushed. The only remaining repository mutation is the required lease deletion after the measured 70-minute threshold.
+
+
+### Final CI result 2026-11-07 18:54 UTC
+
+- Clean original-source CI run **42403158611 passed** at 18:53:58Z. All workflow steps succeeded, including the final Agent 5 eighth-prefix contraction and mass-drift module. The current source file, including the retained `prunFast_eq` lemma and the source-verified prefix/mass theorems, is now reverified without the redundant checksum gate.
