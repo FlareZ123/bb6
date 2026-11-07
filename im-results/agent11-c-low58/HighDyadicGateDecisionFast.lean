@@ -112,7 +112,6 @@ theorem candidate_matches_scan (j m : Nat) :
   apply Bool.eq_iff_iff.mpr
   rw [candidateAllowedBool_iff,
     BB6.Agent11GateDecision.allowedBool_iff]
-  rfl
 
 #print axioms v2_of_high_residue
 #print axioms candidateAllowedBool_iff
