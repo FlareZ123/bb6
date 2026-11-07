@@ -357,3 +357,23 @@ Fixed the un-generalized induction hypothesis, missing `ones 0` normalization in
 The high-2 partial endpoint is `midApos u' v' w'` with (w'\in\{4,5\}). The new theorem reduces every such state to `junc u' (v'+2) (w'-2)`. If (u'\ge1), existing `junc_any_v_crossing` applies (the remaining right counter is 2 or 3); the new re-entry/exit lemmas further classify positive-u boundaries. If (u'=0), the residual Junc is `junc 0 (v'+2) 2` or `junc 0 (v'+2) 3`; this exceptional u=0 edge is not classified by the positive-u lemmas and remains the next target. A local Python simulator of the literal #429 table (A1=0LF, B1=1RA, C1=0RB, D1=halt, etc.) shows no halt within 100,000 steps for sample `midApos 0 v 4/5` inputs, but this is only finite experimental evidence and is not a proof. The (w=1,u=0) samples halt after (34+4v) steps; this is not yet connected to the (w=4/5) exceptional branch.
 
 This remains a conditional synthetic J-chart continuation. It does not establish blank-root reachability, decide #429, or determine BB(6). Do not promote to `results/`.
+
+
+## 2026-11-07 22:20 UTC continuation: zero-u high-2 boundary resolved to exact A configurations
+
+Extended `im-results/agent32-429-high2-prefix/MidAposBoundary.lean` with four more exact source lemmas:
+- `junc0_w2_boundary_delta`: `junc 0 v 2` reaches `A/1` with left `true :: (pairs01 (v+3) ++ ones 5)` and right `01` after (2v+27) steps, displacement (2v+3).
+- `junc0_w3_exit_delta`: `junc 0 v 3` reaches `A/0` with left `ones 5 ++ pairs01 (v+2) ++ ones 5` and right `1` after (2v+33) steps, displacement (2v+5). This composes `junc0_next_delta` with the positive-u zero-budget exit.
+- `midApos_zero_w4_boundary_delta`: `midApos 0 v 4` reaches `A/1` with left `true :: (pairs01 (v+5) ++ ones 5)`, right `01`, after (4v+35) steps, net displacement (+3).
+- `midApos_zero_w5_boundary_delta`: `midApos 0 v 5` reaches `A/0` with left `ones 5 ++ pairs01 (v+4) ++ ones 5`, right `1`, after (4v+41) steps, net displacement (+5).
+
+Actual-source CI **42419998685 SUCCESS** compiles the entire source chain; all ten `MidAposBoundary` theorem audits, including the four new zero-u lemmas, are exactly `[propext, Quot.sound]`. No `sorryAx` and no `Classical.choice` in these lemmas. Commit `558bc4c22b0b6da659d2d5a74a9213a7c4699145`.
+
+The high-2 exceptional (u'=0) cases are therefore no longer unstructured: after the general `midApos_to_junc_delta` shift, right counter 2 or 3 has an exact further continuation to one of two A boundary families. This is still not a halting/nonhalting classification.
+
+Exploratory Python simulation (literal table, nearest-first stacks) suggests further structure but is not yet formal:
+- The w=4 A/1 boundary appears to reach `midApos (2,v+4,3)` for even v and `midApos (0,v+4,3)` for odd v, with respective costs (7v+97) (even) and (7v+64) (odd), head displacement +4.
+- The w=5 A/0 boundary reaches `sourceScanE (v+3, suffix)` after 19 steps, where `suffix = ones 3 ++ pairs01 3 ++ [false,true]`; head displacement −2 from that A/0 boundary. The E/1 state is exact by simulation only; no Lean lemma yet.
+- Further finite simulations show additional Junc/MidApos matches, but these are not proof and need reproducible transition traces before any theorem claim.
+
+Next useful task: formalize the 19-step A/0-to-`sourceScanE` macro for the w=5 boundary, then determine whether the resulting arbitrary-suffix E/1 return can be composed with a source C-scan theorem. For w=4, derive the parity-dependent exact path to the midApos w=3 families. Do not claim a halting status from the finite simulations.
