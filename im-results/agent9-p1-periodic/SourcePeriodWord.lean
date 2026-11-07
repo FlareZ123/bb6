@@ -1,4 +1,5 @@
 import PeriodPrimitiveFinite
+import PeriodAllPeriods
 import UniformPrecisionPath
 
 namespace BB6.Agent9PeriodSource
@@ -44,6 +45,34 @@ theorem source_primitive_repetition_bound
         have hstep : i<N+1 := by omega
         exact run_source_transport L (hr i hstep) root (ih hprev)
   · exact PeriodPrimitiveFinite.primitive_finite_bound L w N hp hprim m z hr
+
+
+/-- A repeated finite block preserves original-source reachability at every
+    boundary after any reachable starting index. -/
+theorem source_periodic_tail_boundaries_reachable
+    (L root N : Nat) (w : List Nat) (m z : Nat → Nat)
+    (hroot : BB6.Precision.ShadowReach L root (m N) (z N))
+    (hr : ∀ n, PeriodWord.Run L w (m (N+n)) (z (N+n))
+      (m (N+(n+1))) (z (N+(n+1)))) :
+    ∀ n, BB6.Precision.ShadowReach L root (m (N+n)) (z (N+n)) := by
+  intro n
+  induction n with
+  | zero => simpa using hroot
+  | succ n ih =>
+      exact run_source_transport L (hr n) root ih
+
+/-- The arbitrary-word theorem excludes every eventually periodic
+    positive-depth inverse tail in the original P1 scalar shadow. -/
+theorem source_no_eventually_periodic_positive_depth_ray
+    (L : Nat) (w : List Nat) (N : Nat)
+    (hp : ∃ t ∈ w, 0<t) (m z : Nat → Nat)
+    (hr : ∀ n, PeriodWord.Run L w (m (N+n)) (z (N+n))
+      (m (N+(n+1))) (z (N+(n+1)))) : False := by
+  exact PeriodWord.no_eventually_periodic_positive_depth_ray L w N hp m z hr
+
+#print axioms source_periodic_tail_boundaries_reachable
+#print axioms source_no_eventually_periodic_positive_depth_ray
+
 
 #print axioms run_source_transport
 #print axioms source_primitive_repetition_bound
