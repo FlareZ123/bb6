@@ -11,6 +11,14 @@ def E : Fin 6 := ⟨4, by decide⟩
 def writeAt (t : Int → Bool) (x : Int) (b : Bool) : Int → Bool :=
   fun y => if y = x then b else t y
 
+theorem config_ext {a b : Config}
+    (hs : a.state=b.state) (hh : a.head=b.head)
+    (ht : a.tape=b.tape) : a=b := by
+  cases a
+  cases b
+  simp_all
+
+
 def baseTape (u w : Nat) : Int → Bool :=
   zeroPaint (negFill (jTape u w) u) (2*(u:Int)) (2*u+3)
 
@@ -190,11 +198,15 @@ theorem bc_sweep (m : Machine) (k : Nat) (c : Config)
         have hpos0 : c.head+2*(i:Int)+2=c.head+2*((i+1:Int)) := by omega
         have hpos1 : c.head+2*(i:Int)+3=c.head+2*((i+1:Int))+1 := by omega
         constructor
-        · rw [h0,hpos0]
-          exact hp.1
-        · rw [h1,hpos1]
-          exact hp.2
-      obtain ⟨d,hr2,hs2,hd2,ht2⟩ := ih d1 hpair'
+        · calc
+            d1.tape (d1.head+2*(i:Int)) = c.tape (c.head+2*(i:Int)+2) := h0
+            _ = c.tape (c.head+2*((i+1:Int))) := by rw [hpos0]
+            _ = true := hp.1
+        · calc
+            d1.tape (d1.head+2*(i:Int)+1) = c.tape (c.head+2*(i:Int)+3) := h1
+            _ = c.tape (c.head+2*((i+1:Int))+1) := by rw [hpos1]
+            _ = false := hp.2
+      obtain ⟨d,hr2,hs2,hd2,ht2⟩ := ih d1 hs1 hpair'
       have hrun : run m (2*(k+1)) c=some d := by
         have hlen : 2*(k+1)=2+2*k := by omega
         rw [hlen,run_add',hr1]
@@ -342,24 +354,14 @@ theorem f0_local (u w : Nat) :
     baseTape_left_blank u w _ (by omega)
   have hodd5 : baseTape u w (-2*(u:Int)-5)=true := by
     apply baseTape_odd u w _ <;> omega
-  have heven4 : baseTape u w (-2*(u:Int)-4)=true := by
-    have hz : ¬zeroTest (2*(u:Int)) (-2*(u:Int)-4) (2*u+3) := by
+  have heven4 : baseTape u w (-2*(u:Int)-4)=false := by
+    have hz : zeroTest (2*(u:Int)) (-2*(u:Int)-4) (2*u+3) := by
       unfold zeroTest
       omega
     have hn : ¬negFillTest u (-2*(u:Int)-4) := by
       unfold negFillTest
       omega
-    have hmark : jMark u w (-2*(u:Int)-4) := by
-      unfold jMark jHole
-      left
-      constructor
-      · omega
-      constructor
-      · omega
-      · omega
-    have hj : jTape u w (-2*(u:Int)-4)=true := by
-      simp [jTape,hmark]
-    simp [baseTape,zeroPaint,hz,negFill,hn,hj]
+    simp [baseTape,zeroPaint,hz,negFill,hn]
   have hodd3 : baseTape u w (-2*(u:Int)-3)=true := by
     apply baseTape_odd u w _ <;> omega
   unfold f0Tape
@@ -451,72 +453,128 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     have hraw := rawStep_of_read target429 c0 F false _ hs0 hrow0
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c0,c1,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c0,c1]
+      · simp [applyMove,c0,c1] <;> omega
+      · funext x
+        simp [applyMove,c0,c1,writeAt])
   have r1 : rawStep target429 c1=some c2 := by
     have hraw := rawStep_of_read target429 c1 D false _ hs1 hrow1
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c1,c2,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c1,c2]
+      · simp [applyMove,c1,c2] <;> omega
+      · funext x
+        simp [applyMove,c1,c2,writeAt])
   have r2 : rawStep target429 c2=some c3 := by
     have hraw := rawStep_of_read target429 c2 E true _ hs2 hrow2
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c2,c3,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c2,c3]
+      · simp [applyMove,c2,c3] <;> omega
+      · funext x
+        simp [applyMove,c2,c3,writeAt])
   have r3 : rawStep target429 c3=some c4 := by
     have hraw := rawStep_of_read target429 c3 E false _ hs3 hrow3
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c3,c4,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c3,c4]
+      · simp [applyMove,c3,c4] <;> omega
+      · funext x
+        simp [applyMove,c3,c4,writeAt])
   have r4 : rawStep target429 c4=some c5 := by
     have hraw := rawStep_of_read target429 c4 A false _ hs4 hrow4
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c4,c5,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c4,c5]
+      · simp [applyMove,c4,c5] <;> omega
+      · funext x
+        simp [applyMove,c4,c5,writeAt])
   have r5 : rawStep target429 c5=some c6 := by
     have hraw := rawStep_of_read target429 c5 B false _ hs5 hrow5
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c5,c6,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c5,c6]
+      · simp [applyMove,c5,c6] <;> omega
+      · funext x
+        simp [applyMove,c5,c6,writeAt])
   have r6 : rawStep target429 c6=some c7 := by
     have hraw := rawStep_of_read target429 c6 C true _ hs6 hrow6
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c6,c7,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c6,c7]
+      · simp [applyMove,c6,c7] <;> omega
+      · funext x
+        simp [applyMove,c6,c7,writeAt])
   have r7 : rawStep target429 c7=some c8 := by
     have hraw := rawStep_of_read target429 c7 B true _ hs7 hrow7
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c7,c8,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c7,c8]
+      · simp [applyMove,c7,c8] <;> omega
+      · funext x
+        simp [applyMove,c7,c8,writeAt])
   have r8 : rawStep target429 c8=some c9 := by
     have hraw := rawStep_of_read target429 c8 A true _ hs8 hrow8
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c8,c9,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c8,c9]
+      · simp [applyMove,c8,c9] <;> omega
+      · funext x
+        simp [applyMove,c8,c9,writeAt])
   have r9 : rawStep target429 c9=some c10 := by
     have hraw := rawStep_of_read target429 c9 F true _ hs9 hrow9
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c9,c10,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c9,c10]
+      · simp [applyMove,c9,c10] <;> omega
+      · funext x
+        simp [applyMove,c9,c10,writeAt])
   have r10 : rawStep target429 c10=some c11 := by
     have hraw := rawStep_of_read target429 c10 A false _ hs10 hrow10
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c10,c11,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c10,c11]
+      · simp [applyMove,c10,c11] <;> omega
+      · funext x
+        simp [applyMove,c10,c11,writeAt])
   have r11 : rawStep target429 c11=some c12 := by
     have hraw := rawStep_of_read target429 c11 B true _ hs11 hrow11
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c11,c12,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c11,c12]
+      · simp [applyMove,c11,c12] <;> omega
+      · funext x
+        simp [applyMove,c11,c12,writeAt])
   have r12 : rawStep target429 c12=some c13 := by
     have hraw := rawStep_of_read target429 c12 A false _ hs12 hrow12
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c12,c13,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c12,c13]
+      · simp [applyMove,c12,c13] <;> omega
+      · funext x
+        simp [applyMove,c12,c13,writeAt])
   have r13 : rawStep target429 c13=some c14 := by
     have hraw := rawStep_of_read target429 c13 B false _ hs13 hrow13
     exact hraw.trans (by
       congr 1
-      all_goals (simp [applyMove,c13,c14,writeAt] <;> first | rfl | omega))
+      apply config_ext
+      · simp [applyMove,c13,c14]
+      · simp [applyMove,c13,c14] <;> omega
+      · funext x
+        simp [applyMove,c13,c14,writeAt])
   have hfinal : cFinal =
       {state:=A,head:=2*(u:Int)+3,
         tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
