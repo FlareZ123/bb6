@@ -29,7 +29,7 @@ theorem high70_fibre (q a k : Nat)
   · right
     constructor <;> omega
 
-private theorem reach_parent_two (x y u v w z : Nat) (hx : x≠5)
+theorem reach_parent_two (x y u v w z : Nat) (hx : x≠5)
     (hpar : ∀ a k, secNext (a,k)=some (x,y) →
       (a=u ∧ k=v) ∨ (a=w ∧ k=z))
     (hr : BB6.Agent3.CReach x y) :
