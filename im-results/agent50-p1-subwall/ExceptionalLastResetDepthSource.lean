@@ -510,6 +510,9 @@ theorem source_exceptional_last_reset_depth_window
     have hcostUpperPrefix : mp+n+7+2^(t+1)≤7*2^n := by
       rw [hpow3] at hbpBound
       omega
+    have hresetEnergyExpand : (2*n+3)*z=(2*n+3)*zp+(2*n+3) := by
+      rw [hzEq, Nat.mul_add]
+      omega
     have hdepthEnergy : mp+t+1+n+1≤(2*n+3)*z+t := by omega
     have henergyUniform : mp+t+1≤(2*n+3)*z := by omega
     exact ⟨bp,dp,mp,zp,t,k,hpre,hzEq,hip,rfl,hkm,hbpEq,hdpFormula,rfl,hdepthEnergy,henergyUniform,hcostFour,hdpFive,hdepthExact,hcostLowerPrefix,hcostUpperPrefix,htTwo,htUpper⟩
