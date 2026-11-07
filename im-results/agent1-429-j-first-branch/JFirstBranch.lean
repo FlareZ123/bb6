@@ -373,12 +373,12 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
     some {state:=F,head:=-2*(u:Int)-7,tape:=f0Tape u w} := by
   have hp := j_left_sweep u w hw
   have hb := baseTape_atA u w
+  have hprefix : prefix11 (A,true)=some (⟨false,false,F⟩ : Move) := by decide
   have hstep :
       rawStep target429
         {state:=A,head:=-2*(u:Int)-6,tape:=baseTape u w} =
       some {state:=F,head:=-2*(u:Int)-7,tape:=f0Tape u w} := by
-    simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb]
-  have hprefix : prefix11 (A,true)=some (⟨false,false,F⟩ : Move) := by decide
+    simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb,hprefix]
   have htime : 4*u*u+6*u+7=(4*u*u+6*u+6)+1 := by omega
   rw [htime,run_add',hp]
   simpa [run,rawStep,readSlot,target429,applyMove,baseTape,f0Tape,writeAt,hb,hprefix] using hstep
