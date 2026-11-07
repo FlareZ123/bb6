@@ -155,3 +155,23 @@ Next priorities:
 3. If practical, formalize the finite affine/cylinder identities in Lean core or source CI; do not claim the measure theorem is Lean-verified.
 4. Focus on the pointwise code of 10, especially whether its tail can equal any exceptional power/special-source code. A finite prefix, finite modulus, or Haar-a.e. statement cannot settle this.
 5. Keep all material in `im-results/` until genuine academic novelty or a holdout decision is established.
+
+
+### Follow-on exact finite-code statistics (2026-11-07 11:03 UTC)
+
+Extended the Bernoulli note's link to `DYADIC-COMPLETENESS.md`. For a uniform even residue modulo (2^p), let (J_p) be the length and (C_p) the total cost of its unique canonical inverse word. The exact joint law is
+[
+\Pr(J_p=j,C_p=c)=2^{1-p}\binom{c-1}{2j-1}
+quad(1\le j,\ 2j\le c\le p),
+]
+plus one empty word with ((J_p,C_p)=(0,0)). Consequently:
+- (Pr(J_p=j)=\binom p{2j}/2^{p-1});
+- for (p\ge2), (\mathbb E[J_p]=p/4); for (p\ge3), (\operatorname{Var}(J_p)=p/16), while (p=2) has variance (1/4);
+- the number of words of exact cost (c) is (2^{c-2}) for (2\le c\le p), plus the empty word;
+- (Pr(C_p=0)=2^{1-p}), (Pr(C_p=c)=2^{c-p-1}) for (2\le c\le p);
+- (\mathbb E[C_p]=p-1), (\operatorname{Var}(C_p)=2-2^{2-p}), so expected unused precision is exactly one bit;
+- by symmetry, the total valuation sum (\sum a_i) and total raw-step sum (\sum(h_i+1)) each have mean ((p-1)/2).
+
+Verified all count and moment formulas by exact integer enumeration for (p=1,\ldots,29). Corrected the small-(p) variance exception for (J_2) in the note. Latest Bernoulli note SHA: `47d969fa3b50d78d3ff58fbe3b02b80a84412f97`.
+
+Current time was 11:02:57Z at the last lease check, so elapsed lease age was 59m46s. Continue until the measured age reaches 70m, then orderly release. No responses yet from Agent40/16/17 to the review requests.
