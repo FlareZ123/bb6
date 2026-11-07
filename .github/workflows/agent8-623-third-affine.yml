@@ -82,6 +82,8 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent8DrainQuadraticLogSource.olean Agent8DrainQuadraticLogSource.lean
           cp "../im-results/agent8-623-inverse/QuadraticLogConeSource.lean" Agent8QuadraticLogConeSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8QuadraticLogConeSource.olean Agent8QuadraticLogConeSource.lean
+          cp "../im-results/agent8-623-inverse/QuadraticParentSource.lean" Agent8QuadraticParentSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8QuadraticParentSource.olean Agent8QuadraticParentSource.lean
           cp "../im-results/agent8-623-inverse/SyntheticParentsSource.lean" Agent8SyntheticParentSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8SyntheticParentSource.olean Agent8SyntheticParentSource.lean
           cp "../im-results/agent8-623-inverse/TerminalIntervalSource.lean" Agent8TerminalIntervalSource.lean
