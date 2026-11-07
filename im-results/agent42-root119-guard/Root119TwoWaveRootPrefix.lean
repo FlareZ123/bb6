@@ -57,6 +57,7 @@ theorem noLeft4_transfer_of_left_agreement (p q r : Bool) (c d : Conf)
     (hagree : ∀ x : Int, x < d.h → d.tape x = c.tape x)
     (hc : NoLeft4 p q r c) : NoLeft4 p q r d := by
   intro x hx hword
+  change x+3 < d.h at hx
   have hxOld : x+3 < c.h := by omega
   apply hc x hxOld
   refine ⟨?_,?_,?_,?_⟩
@@ -441,7 +442,11 @@ theorem b0_two_wave_root_interval_to_b0
         exact hproj.symm.trans hhead
       subst q4
       subst h4
-      simpa [out,oddRetreatResult,c4,c3,h2,hFB]
+      simp only [out,oddRetreatResult,c4,c3,h2,tWave2]
+      rw [hFB]
+      constructor
+      · omega
+      · rfl
   have hNoOut : NoLeft4 true true false out := by
     rw [hEq]
     exact noLeft4_left_write true true false c4 hNoFB
