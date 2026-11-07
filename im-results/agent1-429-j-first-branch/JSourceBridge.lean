@@ -278,8 +278,11 @@ theorem jTape_neg (u w n : Nat) :
     (ConjectureMachines.ListBlank.mk l).nth n = l.getD n 0 := by
   induction n generalizing l with
   | zero =>
-    simp [ConjectureMachines.ListBlank.nth_zero,
-      ConjectureMachines.ListBlank.head_mk]
+    cases l with
+    | nil => simp [ConjectureMachines.ListBlank.nth_zero,
+        ConjectureMachines.ListBlank.head_mk]
+    | cons a l => simp [ConjectureMachines.ListBlank.nth_zero,
+        ConjectureMachines.ListBlank.head_mk]
   | succ n ih =>
     rw [ConjectureMachines.ListBlank.nth_succ,
       ConjectureMachines.ListBlank.tail_mk]
@@ -298,12 +301,14 @@ theorem sourceJCfg_toBB (u w : Nat) :
   simp [sourceJCfg, jLeftList, jRightList, jPow01, jPow1,
     ConjectureMachines.Cfg.toBB, ConjectureMachines.Tape.toTuring,
     ConjectureMachines.ListBlank.toTuring, highLevelEncode, toState, encode,
-    Cfg.headRight, Turing.ListBlank.append_mk]
+    BusyBeaver.Cfg.headRight]
+
+private def sourceBit (a : Bit) : Bool := a.val == 1
 
 def sourceTapeToRelative (t : ConjectureMachines.Tape Bit) : BB6.Bridge.Tape :=
-  ⟨BB6.ConjectureBridge.bit t.head,
-    fun n => BB6.ConjectureBridge.bit (t.left.nth n),
-    fun n => BB6.ConjectureBridge.bit (t.right.nth n)⟩
+  ⟨sourceBit t.head,
+    fun n => sourceBit (t.left.nth n),
+    fun n => sourceBit (t.right.nth n)⟩
 
 def sourceJPosition (u w : Nat) (head : Int) : BB6.ConjectureBridge.Positioned :=
   ⟨sourceJCfg u w, head⟩
@@ -316,7 +321,7 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
     BB6.Bridge.toAbsolute (BB6.ConjectureBridge.toRelative (sourceJPosition u w head)) =
       { state := A, head := head, tape := jTapeAt u w head } := by
   rw [sourceJPosition_toRelative]
-  apply BB6Coverage.Config.ext
+  apply BB429JFirstBranch.config_ext
   · rfl
   · rfl
   · funext x
@@ -325,14 +330,14 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
       cases n with
       | zero =>
         simp [BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-          BB6.ConjectureBridge.bit, jTapeAt, jTape_zero]
+          sourceBit, jTapeAt, jTape_zero]
       | succ n =>
         simp [BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-          BB6.ConjectureBridge.bit, jTapeAt, listBlank_nth_mk,
+          sourceBit, jTapeAt, listBlank_nth_mk,
           jRightList, jRightList_getD, jTape_pos]
     | negSucc n =>
       simp [BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-        BB6.ConjectureBridge.bit, jTapeAt, listBlank_nth_mk,
+        sourceBit, jTapeAt, listBlank_nth_mk,
         jLeftList, jLeftList_getD, jTape_neg]
 
 theorem toAgent8_machine_eq :
@@ -354,11 +359,12 @@ theorem source_j_first_branch_physical (u w : Nat) (hw : 2 * u + 3 ≤ w) :
           (BB6.ConjectureBridge.toRelative (sourceJPosition u w 0))).map
           BB6.Bridge.toAbsolute := by
       rw [BB6.ConjectureBridge.run_toRelative]
-      simp
+      cases hrun : BB6.ConjectureBridge.run machine
+          (4 * u * u + 10 * u + 27) (sourceJPosition u w 0) <;> rfl
     _ = _ := by
       rw [← BB6.Bridge.run_absolute]
-      simpa [toAgent8_machine_eq, sourceJPosition_toAbsolute, jTapeAt] using
-        BB429JFirstBranch.j_first_branch u w hw
+      rw [toAgent8_machine_eq, sourceJPosition_toAbsolute]
+      simpa [jTapeAt] using BB429JFirstBranch.j_first_branch u w hw
 
 theorem source_j_fatal_branch (u w : Nat) (hw : w + 1 = 2 * u) :
     BB6.ConjectureBridge.run machine (4 * u * u + 10 * u + 27)
@@ -373,11 +379,12 @@ theorem source_j_fatal_branch (u w : Nat) (hw : w + 1 = 2 * u) :
             (BB6.ConjectureBridge.toRelative (sourceJPosition u w 0))).map
             BB6.Bridge.toAbsolute := by
         rw [BB6.ConjectureBridge.run_toRelative]
-        simp
+        cases hrun : BB6.ConjectureBridge.run machine
+            (4 * u * u + 10 * u + 27) (sourceJPosition u w 0) <;> rfl
       _ = none := by
         rw [← BB6.Bridge.run_absolute]
-        simpa [toAgent8_machine_eq, sourceJPosition_toAbsolute, jTapeAt] using
-          BB429JFirstBranch.j_fatal_branch u w hw
+        rw [toAgent8_machine_eq, sourceJPosition_toAbsolute]
+        simpa [jTapeAt] using BB429JFirstBranch.j_fatal_branch u w hw
   cases hrun : BB6.ConjectureBridge.run machine (4 * u * u + 10 * u + 27)
       (sourceJPosition u w 0) with
   | none => rfl
