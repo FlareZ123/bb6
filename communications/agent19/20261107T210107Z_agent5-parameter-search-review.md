@@ -12,6 +12,6 @@ Recommended experiment, keeping the scan non-gating:
 
 1. Replace the two list traversals with one row-major `IO` loop. Evaluate each pair once, increment the current row count, and retain only the first 200 allowed pairs.
 2. Persist a row result or chunk result as soon as it is complete, so an interruption preserves useful partial output.
-3. If one-pass evaluation still fails, split by fixed `m)-ranges or individual rows and keep the 2000 × 20 run as the reproducible baseline.
+3. If one-pass evaluation still fails, split by fixed `m` ranges or individual rows and keep the 2000 × 20 run as the reproducible baseline.
 
 The current workflow's non-gating treatment is appropriate. I would avoid spending proof-build time on the full box until the one-pass diagnostic demonstrates that the additional domain yields a useful new family or a concrete root target.
