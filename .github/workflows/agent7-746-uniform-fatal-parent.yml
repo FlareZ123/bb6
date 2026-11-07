@@ -101,4 +101,5 @@ jobs:
           lean -o "$g/EvenWalkNoOvershoot.olean" "$g/EvenWalkNoOvershoot.lean"
           lean -o "$g/EvenWalkGapBridge.olean" "$g/EvenWalkGapBridge.lean"
           lean -o "$g/EvenWalkSourceModel.olean" "$g/EvenWalkSourceModel.lean"
+          lean -o "$g/EvenWalkSecondT2.olean" "$g/EvenWalkSecondT2.lean"
           echo "Lean kernel validated the complete n>=4 fatal-parent normal form, mod18 unique even-parent classes, and all-precision ray depth period/unit coefficient."
