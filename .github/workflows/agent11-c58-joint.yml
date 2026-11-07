@@ -188,3 +188,6 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/Rect58Source.lean .
           lean -o Rect58Source.olean Rect58Source.lean
           lean JointC58.lean
+          # Agent 3: verify a source-derived affine generalization of Agent 11's C58 rectangle.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/Rect58Slope.lean .
+          lean Rect58Slope.lean
