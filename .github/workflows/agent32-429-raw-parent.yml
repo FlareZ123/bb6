@@ -69,8 +69,8 @@ jobs:
             theorem="$1"
             logfile="$2"
             line="$(grep -F "'${theorem}' depends on axioms:" "$logfile")"
-            printf '%s\\n' "$line"
-            if printf '%s\\n' "$line" | grep -q 'sorryAx'; then
+            printf '%s\n' "$line"
+            if printf '%s\n' "$line" | grep -q 'sorryAx'; then
               echo "ERROR: ${theorem} depends on sorryAx" >&2
               exit 1
             fi
