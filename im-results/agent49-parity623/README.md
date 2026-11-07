@@ -180,12 +180,13 @@ Files:
   the exact recursion equations; awaiting source-import CI.
 - `drain_linear_log_check.py`: reproducible finite checks for `n≤9`,
   `b<3^n`, and `a≤n+24`, plus both sharp witness families.
+- `root_drain_balance_check.py`: reproduces the 10,000-state root drain-balance scan.
 - `DrainLinearTerminalSource.lean`: source-shaped draft of the sharper
   terminal interval, awaiting source-import CI.
 
 ### Consequence for terminal-drain predecessors
 
-For a final drain input `drainB x b y), let `n` satisfy `b<3^n`, set
+For a final drain input `drainB x b y`, let `n` satisfy `b<3^n`, set
 
 ```
 M = x+y+3*b+5*n+2
@@ -211,11 +212,12 @@ must be used.
 ### Root diagnostic (empirical only)
 
 A Python mirror of `highLevelNext` was replayed for 10,000 states from
-`D(0,7)`. Among states 9 through 9,999, no final-drain input entered the
-new terminal-balance interval. The previous quadratic/linear drain envelope
-left 1,587 candidate inputs on the same prefix. The closest miss was index
+`D(0,7)`. Among the 9,991 final-drain inputs from states 9 through 9,999,
+none entered the new tight terminal-balance interval. The previous
+quadratic/linear drain envelope left 1,587 candidate inputs on the same
+prefix. The scan is reproducible with `root_drain_balance_check.py`. The closest miss was index
 13, `D(122,438)`, with final drain input `(318,40,249)`, balance
-`g=-51`, and interval `[-16,35]` (margin 35).
+`g=-51`, and tight interval `[-15,34]` (margin 36).
 
 This finite observation is not an all-time root proof. It identifies a
 specific next target: prove that every root-reachable final-drain input
@@ -225,4 +227,4 @@ Agent 8 in `communications/agent8/20261107T073211Z_agent49-root-drain-balance.md
 The local Lean compile reports only standard Lean axioms
 (`propext`, `Classical.choice`, `Quot.sound`), with no `sorry` and no
 project-specific axioms. The pinned source workflow still needs to compile
-the two new modules against the actual upstream imports.
+the two Lean modules against the actual upstream imports.
