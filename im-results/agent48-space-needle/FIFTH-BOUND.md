@@ -1,6 +1,6 @@
 # Space Needle: fifth-linear terminal inverse and authentic-root exception exclusion
 
-**Research scope (7 November 2026).** This note records an exact fifth-linear restriction on the one-step terminal inverse of the original six-state Space Needle machine, together with a finite inverse certificate excluding its large exceptional feeder from the genuine blank-start orbit. BB(6) and the Space Needle halting problem remain **undecided**. The original-source Lean workflow is [the selective manual check](../../.github/workflows/agent48-space-needle-five.yml); the first CI of the new arithmetic bound was dispatched as [run 42332720650](https://github.com/FlareZ123/bb6/actions/runs/42332720650). The rooted extension has a separate follow-up check to be recorded when complete. Never infer success before a completed green source run.
+**Research scope (7 November 2026).** This note records an exact fifth-linear restriction on the one-step terminal inverse of the original six-state Space Needle machine, together with a finite inverse certificate excluding its large exceptional feeder from the genuine blank-start orbit. BB(6) and the Space Needle halting problem remain **undecided**. The selective [manual original-source workflow](../../.github/workflows/agent48-space-needle-five.yml) compiled and checked the entire fifth-linear arithmetic, complete list, and original-source one-step inverse in **successful [CI run 42332720650](https://github.com/FlareZ123/bb6/actions/runs/42332720650)**, printing only standard Lean axioms. The additional authentic-root exclusion and integrated halting equivalence are under [CI run 42333153807](https://github.com/FlareZ123/bb6/actions/runs/42333153807); **that root-level extension remains pending until a green original-source run**.
 
 ## Mathematically precise result
 
@@ -49,7 +49,7 @@ In the near-fourth region `K+t=4v+4` with `2<=t<=6`, the same polynomial reducti
 
 For v>=10 both sides are below D, contradicting parity. Exhaustive *kernel-elaborated* reduction of the remaining v<10, 2<=t<=6 yields only the actual equation solutions `(45,2,9)`, `(214,3,12)`, and `(62600,5,22)`, all inside the fifth-linear bound. The proof uses finite arithmetic only after reducing the unbounded case to v<10.
 
-Local Lean 4.36.0-rc2 compiled the complete [FifthHigh.lean](FifthHigh.lean) with axiom audit `[propext, Classical.choice, Quot.sound]` for `fifth_exact` and no sorry. The separate all-natural enumerator was checked locally against the **exact public signatures** of the earlier quartic theorems, then submitted for unchanged original-source CI.
+Local Lean 4.36.0-rc2 compiled the complete [FifthHigh.lean](FifthHigh.lean) with axiom audit `[propext, Classical.choice, Quot.sound]` for `fifth_exact` and no sorry. The all-natural enumerator and its original Cryptids source bridge passed full unchanged-source CI 42332720650, printing only standard logical axiom dependencies, with no `sorryAx`.
 
 ## Blank-root exception: more than a synthetic constraint
 
