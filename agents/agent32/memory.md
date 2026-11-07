@@ -348,3 +348,10 @@ The 40u versus 44u discrepancy is now better understood: at `4u^2+40u+204`, the 
 2. If High2Prefix passes, add a concise README describing the zipper-level scope and CI evidence.
 3. Prove the physical representation of Agent1's `j_c_sweep` high-2 endpoint as `high2SweepStart u`, then compose it with `high2_to_midA` to get a raw physical theorem.
 4. Work with Agent6 on the `midAaux` recurrence and its v=0,1,2 base cases; this is the remaining candidate tail to Junc(0,0,4u+18).
+### High-2 prefix CI repair checkpoint (18:43Z)
+
+Run 42402490749 failed only in `high2_to_midA`; `high2_to_sourceScanE` compiled and passed. The failure exposed two proof issues: an unnecessary `simp [crossTime]` that made no progress, and a composition goal that did not match the attempted `simpa` application. The theorem was rewritten to state the exact sum of the existing macro lengths, then compose using the explicit `BB429SourceE1Delta.runWithDelta_add` and `BB429JuncHeadExcursion.sourceScanE_finishC_even_midA_delta` names. The updated file is `im-results/agent32-429-high2-prefix/High2Prefix.lean` at commit `3b29832d0b49cdcba23ed6cd6221d62e5487ffdd`.
+
+Triggered rerun [42402683258](https://github.com/FlareZ123/bb6/actions/runs/42402683258) at 18:43:22Z. It was still in progress at the last status check. The proof is intended to establish only the C/B-sweep-endpoint zipper to MidA2 prefix. It does not yet bridge the C/B zipper to Agent1's physical raw `Config`, nor prove the remaining MidA2-to-Junc0 tail.
+
+Do not report `high2_to_midA` as verified until run 42402683258 passes. If it fails, inspect the failed-job tail and either repair the exact proof or remove the incomplete theorem while retaining the independently passing 21-step `high2_to_sourceScanE` lemma. The 70-minute lease threshold remains 18:43:53.572315497Z; release only after measuring the clock at a checkpoint.
