@@ -37,7 +37,11 @@ theorem getD_append {α : Type} (xs ys : List α) (n : Nat) (d : α) :
       rw [ih]
       simp [Nat.succ_lt_succ_iff, Nat.succ_sub_succ_eq_sub]
 
+theorem jPow01_eq_pow (u : Nat) : jPow01 u = ([0, 1] : List Bit) ^ u := rfl
+
 theorem jPow01_succ (u : Nat) : jPow01 (u + 1) = [0, 1] ++ jPow01 u := rfl
+
+theorem jPow1_eq_pow (u : Nat) : jPow1 u = ([1] : List Bit) ^ u := rfl
 
 theorem jPow1_succ (u : Nat) : jPow1 (u + 1) = [1] ++ jPow1 u := rfl
 
@@ -298,10 +302,10 @@ def sourceJCfg (u w : Nat) : ConjectureMachines.Cfg 6 2 :=
 
 theorem sourceJCfg_toBB (u w : Nat) :
     (sourceJCfg u w).toBB = highLevelEncode (.J u w) := by
-  simp [sourceJCfg, jLeftList, jRightList, jPow01, jPow1,
+  simp [sourceJCfg, jLeftList, jRightList, jPow01_eq_pow, jPow1_eq_pow,
     ConjectureMachines.Cfg.toBB, ConjectureMachines.Tape.toTuring,
     ConjectureMachines.ListBlank.toTuring, highLevelEncode, toState, encode,
-    BusyBeaver.Cfg.headRight]
+    BusyBeaver.Cfg.headRight, Turing.ListBlank.cons_mk, Turing.ListBlank.append_mk]
 
 private def sourceBit (a : Bit) : Bool := a.val == 1
 
@@ -322,23 +326,23 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
       { state := A, head := head, tape := jTapeAt u w head } := by
   rw [sourceJPosition_toRelative]
   apply BB429JFirstBranch.config_ext
-  · rfl
+  · exact Fin.ext rfl
   · rfl
   · funext x
     cases hix : x - head with
     | ofNat n =>
       cases n with
       | zero =>
-        simp [BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-          sourceBit, jTapeAt, jTape_zero]
+        simp [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
+          sourceBit, sourceJCfg, jTapeAt, jTape_zero]
       | succ n =>
-        simp [BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-          sourceBit, jTapeAt, listBlank_nth_mk,
-          jRightList, jRightList_getD, jTape_pos]
+        simp [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
+          sourceBit, sourceJCfg, jTapeAt, listBlank_nth_mk,
+          jRightList_getD, jTape_pos]
     | negSucc n =>
-      simp [BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-        sourceBit, jTapeAt, listBlank_nth_mk,
-        jLeftList, jLeftList_getD, jTape_neg]
+      simp [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
+        sourceBit, sourceJCfg, jTapeAt, listBlank_nth_mk,
+        jLeftList_getD, jTape_neg]
 
 theorem toAgent8_machine_eq :
     BB6.ConjectureBridge.toAgent8 machine = BB429PhysicalFrontier.target429 := by
@@ -359,12 +363,11 @@ theorem source_j_first_branch_physical (u w : Nat) (hw : 2 * u + 3 ≤ w) :
           (BB6.ConjectureBridge.toRelative (sourceJPosition u w 0))).map
           BB6.Bridge.toAbsolute := by
       rw [BB6.ConjectureBridge.run_toRelative]
-      cases hrun : BB6.ConjectureBridge.run machine
-          (4 * u * u + 10 * u + 27) (sourceJPosition u w 0) <;> rfl
+      simp [Function.comp_def]
     _ = _ := by
       rw [← BB6.Bridge.run_absolute]
       rw [toAgent8_machine_eq, sourceJPosition_toAbsolute]
-      simpa [jTapeAt] using BB429JFirstBranch.j_first_branch u w hw
+      simpa only [jTapeAt, Int.sub_zero] using BB429JFirstBranch.j_first_branch u w hw
 
 theorem source_j_fatal_branch (u w : Nat) (hw : w + 1 = 2 * u) :
     BB6.ConjectureBridge.run machine (4 * u * u + 10 * u + 27)
@@ -379,16 +382,12 @@ theorem source_j_fatal_branch (u w : Nat) (hw : w + 1 = 2 * u) :
             (BB6.ConjectureBridge.toRelative (sourceJPosition u w 0))).map
             BB6.Bridge.toAbsolute := by
         rw [BB6.ConjectureBridge.run_toRelative]
-        cases hrun : BB6.ConjectureBridge.run machine
-            (4 * u * u + 10 * u + 27) (sourceJPosition u w 0) <;> rfl
+        simp [Function.comp_def]
       _ = none := by
         rw [← BB6.Bridge.run_absolute]
         rw [toAgent8_machine_eq, sourceJPosition_toAbsolute]
-        simpa [jTapeAt] using BB429JFirstBranch.j_fatal_branch u w hw
-  cases hrun : BB6.ConjectureBridge.run machine (4 * u * u + 10 * u + 27)
-      (sourceJPosition u w 0) with
-  | none => rfl
-  | some p => simp [hrun] at hmap
+        simpa only [jTapeAt, Int.sub_zero] using BB429JFirstBranch.j_fatal_branch u w hw
+  exact Option.map_eq_none_iff.mp hmap
 
 #print axioms sourceJCfg_toBB
 #print axioms sourceJPosition_toAbsolute
