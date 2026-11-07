@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429DeltaPhysicalBridge
 open BB6Coverage
-open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
+open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta BB429SourceRows BB429PhysicalFrontier
 open BB429E1ShiftDelta BB429PhysicalBridge
 
 /-- A single source zipper instruction with signed displacement has an
@@ -12,13 +12,13 @@ open BB429E1ShiftDelta BB429PhysicalBridge
 theorem sim_one_delta (z : Zipper) (c : Config)
     (hrep : Represents z c) (z' : Zipper) (d : Int)
     (hz : oneWithDelta z = some (z', d)) :
-    ∃ c', rawStep target429 c = some c' ∧
+    ∃ c', rawStep BB429PhysicalFrontier.target429 c = some c' ∧
       Represents z' c' ∧ c'.head = c.head + d := by
   rcases hrep with ⟨hstate, hcur, hleft, hright⟩
   have hsource : action z.state z.current =
-      (target429 (readSlot c)).map
+      (BB429PhysicalFrontier.target429 (readSlot c)).map
         (fun move => (move.next.val, move.write, move.right)) := by
-    have h0 := action_matches_target c.state (c.tape c.head)
+    have h0 := BB429SourceRows.action_matches_target c.state (c.tape c.head)
     simp only [readSlot]
     rw [← hstate, ← hcur]
     exact h0
@@ -33,7 +33,10 @@ theorem sim_one_delta (z : Zipper) (c : Config)
       | some z1 =>
           have hpair :
               (z1, if rightward then (1 : Int) else -1) = (z', d) := by
-            injection (by simpa [oneWithDelta, hact, hone] using hz)
+            have hsome :
+                some (z1, if rightward then (1 : Int) else -1) = some (z', d) := by
+              simpa [oneWithDelta, hact, hone] using hz
+            exact Option.some.inj hsome
           have hdelta : (if rightward then (1 : Int) else -1) = d :=
             congrArg Prod.snd hpair
           have hz1 : z1 = z' := congrArg Prod.fst hpair
@@ -49,7 +52,11 @@ theorem sim_one_delta (z : Zipper) (c : Config)
               have htrip :
                   (s, w, rightward) =
                     (move.next.val, move.write, move.right) := by
-                exact Option.some.inj (by simpa [hmove] using hsource)
+                have hsome :
+                    some (s, w, rightward) =
+                      some (move.next.val, move.write, move.right) := by
+                  simpa [hact, hmove] using hsource
+                exact Option.some.inj hsome
               rcases htrip with ⟨rfl, rfl, rfl⟩
               have hraw : rawStep target429 c =
                   some (applyMove c move) := by
@@ -66,12 +73,12 @@ theorem sim_one_delta (z : Zipper) (c : Config)
 theorem source_runWithDelta_rep (n : Nat) (z : Zipper) (c : Config)
     (hrep : Represents z c) (z' : Zipper) (d : Int)
     (hz : runWithDelta n z = some (z', d)) :
-    ∃ c', BB6Coverage.run target429 n c = some c' ∧
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 n c = some c' ∧
       Represents z' c' ∧ c'.head = c.head + d := by
   induction n generalizing z c z' d with
   | zero =>
       have hpair : (z, (0 : Int)) = (z', d) := by
-        injection (by simpa [runWithDelta] using hz)
+        exact Option.some.inj (by simpa [runWithDelta] using hz)
       have hz' : z = z' := congrArg Prod.fst hpair
       have hd : (0 : Int) = d := congrArg Prod.snd hpair
       subst z'
@@ -103,7 +110,7 @@ theorem source_runWithDelta_rep (n : Nat) (z : Zipper) (c : Config)
               have hrepFinal : Represents z' c2 := by
                 simpa [hz2] using hrep2
               refine ⟨c2, ?_, hrepFinal, ?_⟩
-              · rw [BB429PhysicalBridge.physical_run_succ target429 n c, hraw1]
+              · rw [BB429PhysicalBridge.physical_run_succ BB429PhysicalFrontier.target429 n c, hraw1]
                 simpa using hraw2
               · calc
                   c2.head = c1.head + d2 := hhead2
