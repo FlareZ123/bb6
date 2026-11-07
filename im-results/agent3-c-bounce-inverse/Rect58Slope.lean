@@ -185,7 +185,56 @@ theorem blank_no_rect_slope58 (t u v : Nat) :
   exact no_root_middle t u v h2'
 
 
+/-- Exact modular formulation: every authentic blank-section configuration
+with first counter 1 modulo 16 and second counter four-times-first-plus-54
+modulo 256 is excluded, uniformly over all counter magnitudes. -/
+theorem blank_no_slope58_full (x y : Nat)
+    (hx : x%16=1) (hy : y%256=(4*x+54)%256) :
+    ¬ BB6.Agent3.CReach x y := by
+  let t := (x%64-1)/16
+  have hmod : (x%64)%16=1 := by
+    rw [Nat.mod_mod_of_dvd x (by decide : 16 ∣ 64)]
+    exact hx
+  have ht4 : t<4 := by
+    dsimp [t]
+    omega
+  have hr : x%64=16*t+1 := by
+    dsimp [t]
+    omega
+  have reprx : x=64*(x/64)+16*t+1 := by omega
+  have hy64 : y%256=64*t+58 := by
+    rw [reprx] at hy
+    omega
+  have repry : y=256*(y/256)+64*t+58 := by omega
+  rw [reprx,repry]
+  exact blank_no_rect_slope58 t (x/64) (y/256)
+
+/-- The slope-stripe excludes an infinite coupled two-parameter class of
+high stopping events in the exact source-derived section machine. -/
+theorem blank_no_high_slope58 (j m k : Nat)
+    (hm : 3≤m) (hj : j%8=7)
+    (hpair : (9*j+3*m+71)%256=0)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    ¬ BB6.Agent3.CReach (2*j+3) k := by
+  have hpow256 : 256 ∣ (2:Nat)^(2*m+2) := by
+    have hd : (2:Nat)^8 ∣ (2:Nat)^(2*m+2) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    simpa only [show (2:Nat)^8=256 by decide] using hd
+  have hprod256 : 256 ∣ 2^(2*m+2)*(j+3) := by
+    rcases hpow256 with ⟨w,hw⟩
+    refine ⟨w*(j+3), ?_⟩
+    rw [hw]
+    ac_rfl
+  have hxmod16 : (2*j+3)%16=1 := by omega
+  have hyMod : k%256=(4*(2*j+3)+54)%256 := by
+    rcases hprod256 with ⟨w,hw⟩
+    rw [hw] at hstop
+    omega
+  exact blank_no_slope58_full (2*j+3) k hxmod16 hyMod
+
 /-- A three-parameter source-sound affine stripe. Taking t modulo four
 adds three disjoint residue rectangles beyond the previous 1/58 case. -/
 #print axioms blank_no_rect_slope58
+#print axioms blank_no_slope58_full
+#print axioms blank_no_high_slope58
 end BB6.Agent3Slope58
