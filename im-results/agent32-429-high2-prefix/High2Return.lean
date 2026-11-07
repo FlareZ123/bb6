@@ -182,4 +182,53 @@ theorem juncCycle_crossing_shape (u w k h : Nat) (hrel : h+w=2*k+5) :
 
 #print axioms juncCycle_crossing_shape
 
+/-- Physical lift of the explicit Junc crossing alternatives for the
+    high-2 branch. The final raw configuration is represented either by a
+    small-remainder Junc state or by the exact partial-sweep midApos state. -/
+theorem j_high2_crossing_shape_raw (u : Nat) :
+    ∃ (steps : Nat) (cfg : Zipper) (d : Nat) (c' : Config),
+      BB6Coverage.run BB429PhysicalFrontier.target429
+        (4*u*u+44*u+204+steps)
+        {state:=BB6Bubble.A,head:=0,tape:=BB429JPhysical.jTape u (2*u+2)} =
+          some c' ∧
+      BB429PhysicalBridge.Represents cfg c' ∧
+      c'.head > ((2*u+3 : Nat) : Int) ∧
+      ((4*u+18-juncCycleSpent (juncTerminalN 0 (4*u+18)) 0 ≤ 4 ∧
+        steps = juncCycleTimeTotal (juncTerminalN 0 (4*u+18)) 0 ∧
+        d = juncCycleSpent (juncTerminalN 0 (4*u+18)) 0 ∧
+        cfg = junc (juncCycleU (juncTerminalN 0 (4*u+18)) 0) 0
+          (4*u+18-juncCycleSpent (juncTerminalN 0 (4*u+18)) 0)) ∨
+       (5 ≤ 4*u+18-juncCycleSpent (juncTerminalN 0 (4*u+18)) 0 ∧
+        ∃ N : Nat,
+          N = (4*u+18-juncCycleSpent (juncTerminalN 0 (4*u+18)) 0)/2-1 ∧
+          steps = juncCycleTimeTotal (juncTerminalN 0 (4*u+18)) 0 + juncPosMidTime N 0 ∧
+          d = juncCycleSpent (juncTerminalN 0 (4*u+18)) 0 + 2*N ∧
+          cfg = midApos (juncCycleU (juncTerminalN 0 (4*u+18)) 0-N)
+            (2*(N-1))
+            (4*u+18-juncCycleSpent (juncTerminalN 0 (4*u+18)) 0-2*(N-1)))) := by
+  let c0 : Config :=
+    {state:=BB6Bubble.A,head:=0,
+      tape:=BB429JPhysical.jTape u (2*u+2)}
+  obtain ⟨cJ, hprefix, hrepJ, hheadJ⟩ := j_high2_to_junc_raw u
+  obtain ⟨steps, cfg, d, hcrossRun, hcross, hshape⟩ :=
+    juncCycle_crossing_shape 0 (4*u+18) (3*u+12) (2*u+11) (by omega)
+  obtain ⟨cFinal, hcrossRaw, hrepFinal, hheadFinal⟩ :=
+    BB429DeltaPhysicalBridge.source_runWithDelta_rep steps
+      (junc 0 0 (4*u+18)) cJ hrepJ cfg (d : Int) hcrossRun
+  have htotal :
+      BB6Coverage.run BB429PhysicalFrontier.target429
+        ((4*u*u+44*u+204)+steps) c0 = some cFinal := by
+    rw [BB6Bubble.run_add' BB429PhysicalFrontier.target429
+      (4*u*u+44*u+204) steps c0, hprefix]
+    simp only [Option.bind_some]
+    exact hcrossRaw
+  have hcrossInt : (2*(3*u+12) : Int) < (2*u+11 : Int) + (d : Int) := by
+    omega
+  have hhead : cFinal.head > ((2*u+3 : Nat) : Int) := by
+    rw [hheadFinal, hheadJ]
+    omega
+  exact ⟨steps,cfg,d,cFinal,by simpa [c0] using htotal,hrepFinal,hhead,hshape⟩
+
+#print axioms j_high2_crossing_shape_raw
+
 end BB429High2Return
