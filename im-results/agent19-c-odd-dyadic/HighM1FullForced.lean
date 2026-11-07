@@ -13,7 +13,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent19M1FullForced
 
-/-- The m=1, j=24 (mod 256) high stopping progression. -/
+/-- The m=1, j=24 (mod 32) high stopping progression. -/
 private theorem target_x (t : Nat) :
     2*(32*t+24)+3 = 64*t+51 := by omega
 
