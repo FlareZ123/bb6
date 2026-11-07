@@ -232,6 +232,9 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean -o ValSixC58.olean ValSixC58.lean
+          # Source-check nonredundant infinite j=7+64t, m=3 high-cone family.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicPrior.lean .
+          lean HighDyadicPrior.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
           # backwards oracle, and authentic merged C58/ValSix stopping iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
