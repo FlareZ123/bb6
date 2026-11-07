@@ -261,6 +261,49 @@ theorem drainB_first_lower_log (n : Nat) :
             · simp [hlt] at hs
 
 /-- A sharp block-count family: b_0=2 and b_(n+1)=3*b_n+1. -/
+/-- A successful B-drain increases its first counter by at most its
+ternary depth. -/
+theorem drainB_first_upper_log (n : Nat) :
+    ∀ a b d aa dd : Nat, b<3^n →
+      drainB a b d = some (.D aa dd) → aa≤a+n := by
+  induction n using Nat.strongRecOn with
+  | ind n ih =>
+      intro a b d aa dd hb hs
+      by_cases hb0 : b=0
+      · subst b
+        simp [drainB] at hs
+        cases hs
+        omega
+      · have hn : 0<n := by
+          cases n with
+          | zero =>
+              simp at hb
+              omega
+          | succ n => omega
+        rw [drainB] at hs
+        simp only [if_neg hb0] at hs
+        cases hev : evalA a (b-1) (d+2*b+3) with
+        | none => simp [hev] at hs
+        | some p =>
+            rcases p with ⟨a1,b1,d1⟩
+            simp only [hev,Option.bind_some] at hs
+            by_cases hlt : b1<b
+            · simp only [if_pos hlt] at hs
+              have hfirst :=
+                evalA_first_upper_one a (b-1) (d+2*b+3) a1 b1 d1 hev
+              by_cases hb1 : b1=0
+              · subst b1
+                simp [drainB] at hs
+                cases hs
+                omega
+              · have hdepth := evalA_positive_depth n a (b-1)
+                  (d+2*b+3) a1 b1 d1 (by omega) (by omega) hev
+                rcases hdepth with ⟨r,s,hrs,hrpos,hbs,hfirstLower,hpot⟩
+                have hsn : s<n := by omega
+                have hrec := ih s hsn a1 b1 d1 aa dd hbs hs
+                omega
+            · simp [hlt] at hs
+
 def sharpBlock : Nat → Nat
   | 0 => 2
   | n+1 => 3*sharpBlock n + 1
