@@ -24,8 +24,8 @@ private theorem full_forced_normalize_m0_j16_two (s : Nat) (hs : 1≤s) :
   have hA' : ¬ BB6.Agent3.evenAffineGate (40*s+8) (44*s+9) := by
     unfold BB6.Agent3.evenAffineGate
     omega
-  have hE' : ¬ BB6.Agent3.sixEvenRightGate (40*s+8) (44*s+9) := by
-    unfold BB6.Agent3.sixEvenRightGate
+  have hE' : ¬ BB6.Agent46.sixEvenRightGate (40*s+8) (44*s+9) := by
+    unfold BB6.Agent46.sixEvenRightGate
     omega
   unfold BB6.Agent3.fullForcedNormalize
   rw [dif_pos hO]
