@@ -60,7 +60,7 @@ private theorem a_input_shape (t r : Nat) :
         [true,true] ++ List.replicate (3*(8*t+6)+1) true := by
     rw [hn]
     simpa using
-      (List.replicate_append_replicate 2 (3*(8*t+6)+1) true).symm
+      (List.replicate_append_replicate (n := 2) (m := 3*(8*t+6)+1) (a := true)).symm
   rw [hprefix,hp,hmul]
   simp [triples_code,CryptidBoundary.pairs,List.append_assoc] <;> omega
 
