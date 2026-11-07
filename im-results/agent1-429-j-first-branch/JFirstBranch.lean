@@ -363,6 +363,16 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
   rw [htime,run_add',hp]
   simp [hstep]
 
+theorem writeAt_true_eq (t : Int → Bool) (p : Int) :
+    writeAt t p true = fun x => decide (x=p) || t x := by
+  funext x
+  by_cases hx : x=p <;> simp [writeAt,hx]
+
+theorem writeAt_false_eq (t : Int → Bool) (p : Int) :
+    writeAt t p false = fun x => !decide (x=p) && t x := by
+  funext x
+  by_cases hx : x=p <;> simp [writeAt,hx]
+
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
 theorem f0_to_c1 (h : Int) (t : Int → Bool)
@@ -413,9 +423,9 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have hs12 : readSlot c12=(A,false) := by
     simp [readSlot,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt]
   have hs13 : readSlot c13=(B,false) := by
-    simp [readSlot,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h3]
+    simp [readSlot,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h3] <;> omega
   have hs14 : readSlot c14=(C,true) := by
-    simp [readSlot,c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h4]
+    simp [readSlot,c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,writeAt,h4] <;> omega
   have hrow0 : target429 (F,false)=some ⟨true,true,D⟩ := by decide
   have hrow1 : target429 (D,false)=some ⟨true,false,E⟩ := by decide
   have hrow2 : target429 (E,true)=some ⟨true,false,E⟩ := by decide
@@ -431,33 +441,33 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have hrow12 : target429 (A,false)=some ⟨true,true,B⟩ := by decide
   have hrow13 : target429 (B,false)=some ⟨true,true,C⟩ := by decide
   have r0 : rawStep target429 c0=some c1 := by
-    simpa [c1,c0,applyMove,writeAt] using rawStep_of_read target429 c0 F false _ hs0 hrow0
+    simpa [c1,c0,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c0 F false _ hs0 hrow0
   have r1 : rawStep target429 c1=some c2 := by
-    simpa [c2,c1,applyMove,writeAt] using rawStep_of_read target429 c1 D false _ hs1 hrow1
+    simpa [c2,c1,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c1 D false _ hs1 hrow1
   have r2 : rawStep target429 c2=some c3 := by
-    simpa [c3,c2,applyMove,writeAt] using rawStep_of_read target429 c2 E true _ hs2 hrow2
+    simpa [c3,c2,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c2 E true _ hs2 hrow2
   have r3 : rawStep target429 c3=some c4 := by
-    simpa [c4,c3,applyMove,writeAt] using rawStep_of_read target429 c3 E false _ hs3 hrow3
+    simpa [c4,c3,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c3 E false _ hs3 hrow3
   have r4 : rawStep target429 c4=some c5 := by
-    simpa [c5,c4,applyMove,writeAt] using rawStep_of_read target429 c4 A false _ hs4 hrow4
+    simpa [c5,c4,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c4 A false _ hs4 hrow4
   have r5 : rawStep target429 c5=some c6 := by
-    simpa [c6,c5,applyMove,writeAt] using rawStep_of_read target429 c5 B false _ hs5 hrow5
+    simpa [c6,c5,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c5 B false _ hs5 hrow5
   have r6 : rawStep target429 c6=some c7 := by
-    simpa [c7,c6,applyMove,writeAt] using rawStep_of_read target429 c6 C true _ hs6 hrow6
+    simpa [c7,c6,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c6 C true _ hs6 hrow6
   have r7 : rawStep target429 c7=some c8 := by
-    simpa [c8,c7,applyMove,writeAt] using rawStep_of_read target429 c7 B true _ hs7 hrow7
+    simpa [c8,c7,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c7 B true _ hs7 hrow7
   have r8 : rawStep target429 c8=some c9 := by
-    simpa [c9,c8,applyMove,writeAt] using rawStep_of_read target429 c8 A true _ hs8 hrow8
+    simpa [c9,c8,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c8 A true _ hs8 hrow8
   have r9 : rawStep target429 c9=some c10 := by
-    simpa [c10,c9,applyMove,writeAt] using rawStep_of_read target429 c9 F true _ hs9 hrow9
+    simpa [c10,c9,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c9 F true _ hs9 hrow9
   have r10 : rawStep target429 c10=some c11 := by
-    simpa [c11,c10,applyMove,writeAt] using rawStep_of_read target429 c10 A false _ hs10 hrow10
+    simpa [c11,c10,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c10 A false _ hs10 hrow10
   have r11 : rawStep target429 c11=some c12 := by
-    simpa [c12,c11,applyMove,writeAt] using rawStep_of_read target429 c11 B true _ hs11 hrow11
+    simpa [c12,c11,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c11 B true _ hs11 hrow11
   have r12 : rawStep target429 c12=some c13 := by
-    simpa [c13,c12,applyMove,writeAt] using rawStep_of_read target429 c12 A false _ hs12 hrow12
+    simpa [c13,c12,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c12 A false _ hs12 hrow12
   have r13 : rawStep target429 c13=some c14 := by
-    simpa [c14,c13,applyMove,writeAt] using rawStep_of_read target429 c13 B false _ hs13 hrow13
+    simpa [c14,c13,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c13 B false _ hs13 hrow13
   have hrun : run target429 14 c0=some c14 := by
     simp [run,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13]
   have htape : c14.tape=setupTape t h := by
@@ -466,35 +476,62 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
         x<h-2 ∨ h+3<x := by omega
     rcases hcases with h0x | h1x | h2x | h3x | h4x | h5x | hleft | hright
     · subst x
-      have hinside : h-2≤x ∧ x≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hinside] <;> omega
+      have hinside : h-2≤h-2 ∧ h-2≤h+3 := by omega
+      have hneq1 : h-2≠h-1 := by omega
+      have hneq2 : h-2≠h := by omega
+      have hneq3 : h-2≠h+1 := by omega
+      have hneq4 : h-2≠h+2 := by omega
+      have hneq5 : h-2≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside,hneq1,hneq2,hneq3,hneq4,hneq5]
     · subst x
-      have hinside : h-2≤x ∧ x≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hinside] <;> omega
+      have hinside : h-2≤h-1 ∧ h-1≤h+3 := by omega
+      have hneq2 : h-1≠h := by omega
+      have hneq3 : h-1≠h+1 := by omega
+      have hneq4 : h-1≠h+2 := by omega
+      have hneq5 : h-1≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside,hneq2,hneq3,hneq4,hneq5]
     · subst x
-      have hinside : h-2≤x ∧ x≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hinside] <;> omega
+      have hinside : h-2≤h ∧ h≤h+3 := by omega
+      have hneq3 : h≠h+1 := by omega
+      have hneq4 : h≠h+2 := by omega
+      have hneq5 : h≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside,hneq3,hneq4,hneq5]
     · subst x
-      have hinside : h-2≤x ∧ x≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hinside] <;> omega
+      have hinside : h-2≤h+1 ∧ h+1≤h+3 := by omega
+      have hneq4 : h+1≠h+2 := by omega
+      have hneq5 : h+1≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside,hneq4,hneq5]
     · subst x
-      have hinside : h-2≤x ∧ x≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hinside] <;> omega
+      have hinside : h-2≤h+2 ∧ h+2≤h+3 := by omega
+      have hneq5 : h+2≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside,hneq5]
     · subst x
-      have hinside : h-2≤x ∧ x≤h+3 := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hinside] <;> omega
+      have hinside : h-2≤h+3 ∧ h+3≤h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hinside]
     · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hout] <;> omega
+      have hneq0 : x≠h-2 := by omega
+      have hneq1 : x≠h-1 := by omega
+      have hneq2 : x≠h := by omega
+      have hneq3 : x≠h+1 := by omega
+      have hneq4 : x≠h+2 := by omega
+      have hneq5 : x≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hout,hneq0,hneq1,hneq2,hneq3,hneq4,hneq5]
     · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
-      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-        writeAt,setupTape,hout] <;> omega
+      have hneq0 : x≠h-2 := by omega
+      have hneq1 : x≠h-1 := by omega
+      have hneq2 : x≠h := by omega
+      have hneq3 : x≠h+1 := by omega
+      have hneq4 : x≠h+2 := by omega
+      have hneq5 : x≠h+3 := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,
+        writeAt,setupTape,hout,hneq0,hneq1,hneq2,hneq3,hneq4,hneq5]
   have htape' : writeAt c13.tape (h+3) true=setupTape t h := by
     simpa [c14] using htape
   have hcfg : c14 = {state:=C,head:=h+4,tape:=setupTape t h} := by
