@@ -70,7 +70,7 @@ theorem sourceRun_of_reaches (m : ConjectureMachines.Machine 6 2)
     cases hs : ConjectureMachines.step m b with
     | none => simp [hs] at hstep
     | some c' =>
-      have hc : c = c' := by simpa [hs] using hstep
+      have hc : c' = c := by simpa [hs] using hstep
       subst c'
       exact ⟨n+1, by simp [sourceRun, hn, hs]⟩
 
