@@ -135,7 +135,7 @@ Equivalently, the itinerary map identifies the generic 2-adic system, modulo its
 
 Every finite branch word has positive probability. For any fixed word, disjoint blocks of its length are independent, so the probability that the word never occurs is zero. It occurs infinitely often almost surely. There are countably many finite words, hence almost every itinerary contains every finite word infinitely often.
 
-The cylinder associated with a finite branch word is a nonempty 2-adic open set. Therefore, for Haar-almost every \(x\in X\), the orbit
+Composing the inverse branches (2.2), the cylinder for a word \(w\) is one residue class modulo \(2^{C(w)+1}\): the composed inverse has coefficient \(2^{C(w)}\) times an odd 2-adic unit. Each additional symbol costs at least two bits, so cylinders along any itinerary have diameters tending to zero and form a basis of the 2-adic topology. Therefore, for Haar-almost every \(x\in X\), the orbit
 \[
 x,E_g(x),E_g^2(x),\ldots
 \]
@@ -174,6 +174,6 @@ These observations are consistent with a typical Bernoulli itinerary. They do no
 
 The classical 3x+1 map is already known to be metrically conjugate to the one-sided 2-adic shift and hence Bernoulli; see Bernstein and Lagarias, *The 3x+1 Conjugacy Map* (1996), [PDF](https://websites.umich.edu/~lagarias/doc/bernstein.pdf). Related 2-adic De Bruijn graph formulations for Collatz-like maps are discussed in *The Collatz Conjecture and De Bruijn Graphs* (2013), [DOI](https://doi.org/10.1016/j.indag.2013.03.003). The present derivation is the explicit countable-branch analogue for the Sheep generic first-even return, with two independent geometric coordinates and entropy four bits per return. Whether this specialization is externally novel remains unassessed.
 
-A 2026 Collatz preprint also derives product laws for finite 2-adic branch cylinders and explicitly warns that product measure and density-one results do not settle a single specified integer; see Deep Bhattacharjee, *2-Adic Finite-Certificate Descent Closure for the 3x+1 Collatz Problem* (2026), [DOI](https://doi.org/10.37648/ijiest.v12i01.010). That paper's pointwise certificate programme is a separate line of work. The warning applies here: a full-measure result cannot decide the fixed blank root.
+A 2026 Collatz paper develops exact residue cylinders and explicitly distinguishes pointwise closure from statistical regularity; see Deep Bhattacharjee, *2-Adic Finite-Certificate Descent Closure for the 3x+1 Collatz Problem* (2026), [DOI](https://doi.org/10.37648/ijiest.v12i01.010). Its claimed global implication is conditional on a finite carry-repayment certificate, and the paper states that supplying and verifying this decisive certificate is the remaining proof obligation. I treat its cylinder framework as a useful methodological precedent, not as a completed Collatz solution. Its warning applies here: a full-measure result cannot decide the fixed blank root.
 
 **Research conclusion:** the generic Sheep return has an exact Bernoulli symbolic model. The remaining arithmetic difficulty is to determine whether the particular 2-adic point 10 belongs to the full-measure set of dense, nonhalting itineraries, or to the exceptional null set. No claim about Sheep or BB(6) is made.
