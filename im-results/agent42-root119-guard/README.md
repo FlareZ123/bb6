@@ -28,7 +28,7 @@ A finite original auxiliary blank run through ten million primitive steps has **
 
 ## General odd-wave and alternating-retreat return laws (7 November 2026)
 
-The new compressed Lean module [Root119OddWaveRetreat.lean.xz.b64](Root119OddWaveRetreat.lean.xz.b64) (decoded SHA-256 `68816db794a0aa558a8805bf1c21301297589f2cad09c3daa74a667740e0c3db`) imports the existing source-derived `Root119Shuttle`, `Root119WaveNormal`, and `Root119BRegular` modules. It proves five quantified return laws over arbitrary exterior tape:
+The immutable compressed source snapshot [Root119OddWaveRetreat.lean.xz.b64](Root119OddWaveRetreat.lean.xz.b64) has decoded SHA-256 `68816db794a0aa558a8805bf1c21301297589f2cad09c3daa74a667740e0c3db`. The materialized, CI-compiled [Root119OddWaveRetreat.lean](Root119OddWaveRetreat.lean) is the repaired source module: it removes duplicate declarations already imported from the dependency chain and makes the arithmetic tape-index conversions explicit. It imports `Root119Shuttle`, `Root119WaveNormal`, and `Root119BRegular`, and proves five quantified return laws over arbitrary exterior tape:
 
 - `odd_f1_retreat_to_b0`: an odd F/1 right wave of length (2n+1), followed by any (m) alternating F/0-B/1 pairs and a final F/0-B/0 boundary, returns to B/0 at (h-3-2m) after exactly (4n+2m+7) primitive steps.
 - `odd_f1_two_wave_chain_to_b0`: two odd F/1 waves, with the first B/1 transition starting the second, followed by the same general retreat, return after exactly (4n_1+4n_2+2m+13) steps.
@@ -36,15 +36,15 @@ The new compressed Lean module [Root119OddWaveRetreat.lean.xz.b64](Root119OddWav
 - `b0_cphase_d0_odd_wave_return`: a B/0 leftward C-phase followed by the D/0-E/1-A/0-B/1-F/1 local branch and the (n=0) odd-wave retreat yields a genuinely reachable B/0.
 - `b0_c0_d1_odd_retreat_to_b0`: the B/0-C/0-D/1 prefix followed by an arbitrary odd D/1 shuttle and alternating retreat yields a genuinely reachable B/0.
 
-The module's five `#print axioms` reports are each exactly `[propext, Classical.choice, Quot.sound]`; no `sorryAx`. Local verification used Lean 4.36.0-rc2. The manual original-source workflow is [agent42-root119-odd-wave-retreat.yml](../../.github/workflows/agent42-root119-odd-wave-retreat.yml); its result must be checked before claiming CI/source-import verification.
+The module's five `#print axioms` reports are each exactly `[propext, Classical.choice, Quot.sound]`; no `sorryAx`. The new [Root119TwoWaveRootPrefix.lean](Root119TwoWaveRootPrefix.lean) proves an exact nine-step B/0-to-first-F/1 prefix and composes it with the two-wave chain. Its theorem `b0_two_wave_root_interval_to_b0` states that every reached B/0 satisfying the audited two-wave tape conditions returns to a reached B/0 after exactly `8*n1 + 2*m + 30` primitive steps. The two new theorem axiom reports are `[propext, Quot.sound]` for the prefix and `[propext, Classical.choice, Quot.sound]` for the composed return; neither uses `sorryAx`. Lean 4.36.0-rc2 CI workflow [42373754193](https://github.com/FlareZ123/bb6/actions/runs/42373754193) compiled the repaired source, the composition theorem, and the bounded audit successfully.
 
 The independent [10-million-step audit source](test-root119-odd-wave-audit.cjs.xz.b64) (decoded SHA-256 `11398c3bb0451bd0bac496bb3c6e49fa584781b59bfea6086c3536a48cf23276`) replays the auxiliary blank-root machine and reclassifies the 39 consecutive B/0 intervals not covered by the previously used return macros:
 
 - **29** single odd-wave/retreat cases: the B/0 C-phase has (rin{1,3}), the local D/0-E/1-A/0 branch enters an (n=0) F/1 wave, and the retreat parameter ranges over (2le mle681). The new B/0-to-B/0 theorem applies to these conditional configurations.
-- **8** two-wave cases: (32le n_1le184), (n_2=n_1+2), and (1le mle194). The formal two-wave theorem covers the chain from the first B/1-to-F/1 configuration. The preceding nine-step B/0-to-first-wave prefix is reproduced and checked by the audit; composing that prefix into one B/0 theorem remains open.
+- **8** two-wave cases: (32le n_1le184), (n_2=n_1+2), and (1le mle194). The new `b0_two_wave_root_interval_to_b0` theorem covers the entire interval from its starting B/0, including the exact nine-step prefix, and returns to B/0 after `8*n1+2*m+30` steps.
 - **2** odd D-shuttle cases: (nin{17,369}), (min{6,25}). The new B/0-C/0-D/1 theorem applies.
 
-The audit checks exact interval durations and endpoint head displacements, and asserts the partition (29+8+2=39). This is finite computational evidence, not an all-time classification. These conditional return laws and the bounded census do not decide the authentic blank-root machine, establish a universal upper bound, or determine BB(6).
+The audit checks exact interval durations and endpoint head displacements, and asserts the partition (29+8+2=39). Its pending predictions are B-state/head checkpoints, not necessarily B/0: a predicted B state can read 1. The committed `patch_odd_wave_audit.py` therefore distinguishes B/1 checkpoints from actual B/0 endpoints, counts only real B/0 interval completions as predicted returns, and reports the cutoff's pending predictions and last B/0 section. CI run [42373754193](https://github.com/FlareZ123/bb6/actions/runs/42373754193) passed this hardened audit. This is finite computational evidence, not an all-time classification. These conditional return laws and the bounded census do not decide the authentic blank-root machine, establish a universal upper bound, or determine BB(6).
 
 ## Remaining mathematical obligation
 
