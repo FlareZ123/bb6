@@ -34,7 +34,7 @@ theorem shift_A01_delta (v : Nat) (left suffix : List Bool) :
       simp only [Option.map_some]
       have hones : ones (2+2*(v+1)) = ones (2*(v+1)) ++ [true,true] := by
         rw [show 2+2*(v+1) = 2*(v+1)+2 by omega]
-        simpa [ones] using (ones_add (2*(v+1)) 2)
+        simpa [ones] using (BB429SourceE1Return.ones_add (2*(v+1)) 2)
       rw [hones]
       simp [List.append_assoc]
 
@@ -77,9 +77,9 @@ theorem junc2_to_midA_delta (v w : Nat) (hw : 1 ≤ w) :
     calc
       ones (2*(v+1)) ++ [true,true,true] =
           ones (2*(v+1)) ++ ones 3 := rfl
-      _ = ones (2*(v+1)+3) := by rw [← ones_add]
+      _ = ones (2*(v+1)+3) := by rw [← BB429SourceE1Return.ones_add]
       _ = ones (1+2*(v+2)) := by congr 1 <;> omega
-      _ = ones 1 ++ ones (2*(v+2)) := ones_add 1 _
+      _ = ones 1 ++ ones (2*(v+2)) := BB429SourceE1Return.ones_add 1 _
       _ = true :: ones (2*(v+2)) := rfl
   have hleft :
       ones (2*(v+1)) ++ (true :: true :: true :: (pairs01 1 ++ ones 5)) =
@@ -238,7 +238,7 @@ theorem finalLeft_even_finishC_entry (r k : Nat) :
   have hhead : ones (4*r+1) = true :: ones (4*r) := by
     calc
       ones (4*r+1) = ones (1+4*r) := by congr 1 <;> omega
-      _ = ones 1 ++ ones (4*r) := ones_add 1 _
+      _ = ones 1 ++ ones (4*r) := BB429SourceE1Return.ones_add 1 _
       _ = true :: ones (4*r) := rfl
   rw [finalLeft_even, hhead, show 4*r = 2*(2*r) by omega]
   simp [finishCStart, sourceSuffix, pairs01, List.append_assoc, List.cons_append]
@@ -249,9 +249,9 @@ theorem finalLeft_odd_finishC_entry (r k : Nat) :
   have hleft : ones (4*r+8) = true :: (ones (4*r+2) ++ ones 5) := by
     calc
       ones (4*r+8) = ones (1+(4*r+7)) := by congr 1 <;> omega
-      _ = ones 1 ++ ones (4*r+7) := ones_add 1 _
+      _ = ones 1 ++ ones (4*r+7) := BB429SourceE1Return.ones_add 1 _
       _ = true :: (ones (4*r+2) ++ ones 5) := by
-        rw [show 4*r+7 = (4*r+2)+5 by omega, ones_add]
+        rw [show 4*r+7 = (4*r+2)+5 by omega, BB429SourceE1Return.ones_add]
         rfl
   rw [finalLeft_odd, hleft]
   simp [finishCStart, sourceSuffix, pairs01, List.append_assoc,
@@ -346,9 +346,9 @@ theorem ones_three_left (n : Nat) (rest : List Bool) :
   have hp : ones n ++ [true,true,true] = true :: ones (n+2) := by
     calc
       ones n ++ [true,true,true] = ones n ++ ones 3 := rfl
-      _ = ones (n+3) := by rw [← ones_add]
+      _ = ones (n+3) := by rw [← BB429SourceE1Return.ones_add]
       _ = ones (1+(n+2)) := by congr 1 <;> omega
-      _ = ones 1 ++ ones (n+2) := ones_add 1 _
+      _ = ones 1 ++ ones (n+2) := BB429SourceE1Return.ones_add 1 _
       _ = true :: ones (n+2) := rfl
   calc
     ones n ++ (true :: true :: true :: rest) =
@@ -873,7 +873,7 @@ theorem sourceScanE_finishC_odd_crosses_delta (r k : Nat) (hk : 1 ≤ k) :
   refine ⟨steps,cfg,7+d,?_,?_⟩
   · rw [runWithDelta_add, sourceScanE_finishC_odd_next_delta r k hk]
     simp only [Option.bind_some]
-    rw [htail]
+    rw [show (2*k+1)-3 = 2*k-2 by omega, htail]
     simp only [Option.map_some]
     simp [Int.natCast_add, Int.natCast_mul]
   · omega
