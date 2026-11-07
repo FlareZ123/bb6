@@ -106,6 +106,13 @@ theorem candidateAllowedBool_iff (j m : Nat) :
 /-- The optimized test is extensionally identical to the previous
     bounded scan, so downstream users can replace it without changing
     the exact criterion. -/
+def candidateAllowedDecidable (j m : Nat) :
+    Decidable (∀ r, ¬gate r j m) :=
+  if h : candidateAllowedBool j m = true then
+    isTrue ((candidateAllowedBool_iff j m).mp h)
+  else
+    isFalse (fun hp => h ((candidateAllowedBool_iff j m).mpr hp))
+
 theorem candidate_matches_scan (j m : Nat) :
     candidateAllowedBool j m =
       BB6.Agent11GateDecision.allowedBool j m := by
@@ -117,4 +124,5 @@ theorem candidate_matches_scan (j m : Nat) :
 #print axioms v2_of_high_residue
 #print axioms candidateAllowedBool_iff
 #print axioms candidate_matches_scan
+#print axioms candidateAllowedDecidable
 end BB6.Agent11FastDepthGate
