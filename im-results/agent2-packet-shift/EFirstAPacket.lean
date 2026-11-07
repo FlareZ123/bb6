@@ -23,13 +23,16 @@ def packetOutput (t q : Nat) : Cfg :=
 private theorem input_shape (t q : Nat) (hq : 2 ≤ q) :
     sourceStart t q =
       init (List.replicate (3*(3*t+2)+2) true ++
-        false :: (BB6.Agent25BGeneral.pairs (q-1) ++ [true,true])) := by
-  have hlen : 9*t+8 = 3*(3*t+2)+2 := by omega
+        false :: (CryptidBoundary.pairs (q-1) ++ [true,true])) := by
+  have hlen : (9*t+10)-2 = 3*(3*t+2)+2 := by omega
   have hq' : (q-1)+1 = q := by omega
   simp only [sourceStart, DRegularSource.sourceSection, init, hlen,
     List.replicate_one]
-  rw [← hq']
-  rw [BB6.Agent25BGeneral.oppairs_last]
+  have ho : CryptidBoundary.oppairs (q-1+1) ++ [true] =
+      false :: (CryptidBoundary.pairs (q-1) ++ [true,true]) := by
+    simpa using (BB6.Agent25BGeneral.oppairs_last (q-1))
+  rw [hq'] at ho
+  rw [List.append_assoc, ho]
 
 private theorem output_shape (t q : Nat) (hq : 2 ≤ q) :
     BB6.Agent32EAll.output (3*t+2) (q-1) [] = packetOutput t q := by
@@ -37,7 +40,7 @@ private theorem output_shape (t q : Nat) (hq : 2 ≤ q) :
   have ha : 8*(3*t+2)+5 = 24*t+21 := by omega
   simp [packetOutput, BB6.Agent32EAll.output,
     BB6.Agent31PacketSource.packet, BB6.Agent31PacketSource.word,
-    fixedTail, hlen, ha]
+    fixedTail, hlen, ha, CryptidBoundary.oppairs]
 
 /--
 One E-double return sends every source section of shape
