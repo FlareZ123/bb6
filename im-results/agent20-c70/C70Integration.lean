@@ -1,4 +1,4 @@
-import C70Root
+import C70Rectangle
 import StrongJointResidual
 import Lean.Elab.Tactic.Omega
 
@@ -57,6 +57,60 @@ theorem blank_halts_iff_c70 :
   · rintro (⟨m,⟨hprior,_⟩,hroot⟩ | ⟨j,m,hprior,hroot⟩)
     · exact Or.inl ⟨m,hprior,hroot⟩
     · exact Or.inr ⟨j,m,hprior,hroot⟩
+
+/-- The exact high stopping sieve additionally removes two new
+    parameter rectangles, uniformly at every right depth. -/
+def highAllowedC70 (j m : Nat) : Prop :=
+  BB6.Agent24Phase.highAllowed j m ∧
+  ¬((j%128=63 ∧ m%128=82) ∨ (j%128=127 ∧ m%128=18))
+
+private theorem high_bound_C70 (j m : Nat) :
+    j+3*m+5 ≤ 2^(2*m+2)*(j+3) := by
+  have hm : 4*m+4 ≤ 2^(2*m+2) := by
+    induction m with
+    | zero => decide
+    | succ m ih =>
+        have he : 2*(m+1)+2=(2*m+2)+2 := by omega
+        rw [he,Nat.pow_add]
+        simp only [show (2:Nat)^2=4 by decide]
+        omega
+  have hp : 1 ≤ 2^(2*m+2) := Nat.pow_pos (by decide)
+  have hj : j ≤ 2^(2*m+2)*j := by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hp
+  rw [Nat.mul_add]
+  omega
+
+/-- All three high/low new infinite families are losslessly conjoined
+    with the strongest existing exact source stopping criterion. -/
+theorem blank_halts_iff_c70_both :
+    BB6.CReachBridge.RunHalts ↔
+      (∃ m, lowAllowedC70 m ∧
+         BB6.Agent3ValSix.valSixMixedRootDecision 1
+           (2^(2*m+3)-(3*m+4))=true) ∨
+      (∃ j m, highAllowedC70 j m ∧
+         BB6.Agent3ValSix.valSixMixedRootDecision (2*j+3)
+           (2^(2*m+2)*(j+3)-(j+3*m+5))=true) := by
+  rw [blank_halts_iff_c70]
+  constructor
+  · rintro (hlow | ⟨j,m,hprior,hroot⟩)
+    · exact Or.inl hlow
+    · let k := 2^(2*m+2)*(j+3)-(j+3*m+5)
+      have hr : BB6.Agent3.CReach (2*j+3) k :=
+        (BB6.Agent3ValSix.valSixMixedRootDecision_iff _ _).mp hroot
+      have hstop : k+j+3*m+5=2^(2*m+2)*(j+3) := by
+        dsimp [k]
+        have hc := Nat.sub_add_cancel (high_bound_C70 j m)
+        omega
+      have hnot : ¬((j%128=63 ∧ m%128=82) ∨
+                    (j%128=127 ∧ m%128=18)) := by
+        intro hres
+        exact (blank_no_high_63_82_or_127_18 j m k hres hstop) hr
+      exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
+  · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
+    · exact Or.inl hlow
+    · exact Or.inr ⟨j,m,hprior,hroot⟩
+
+#print axioms blank_halts_iff_c70_both
 
 #print axioms prior_low_admits_18
 #print axioms blank_halts_iff_c70
