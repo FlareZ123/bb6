@@ -135,7 +135,7 @@ theorem prior_val_six_full_admits_high_31_54 (r : Nat) :
         (2*31+3)
         (2^(2*m+2)*(31+3)-(31+3*m+5))).2≠4 := by
     rw [hnorm]
-    exact ne_of_gt (by omega : 4<k)
+    omega
   unfold BB6.Agent3ValSix.highAllowedValSixFull
   refine ⟨hval,hfive,by omega,by omega,by omega,?_⟩
   simpa [m,k] using hright
