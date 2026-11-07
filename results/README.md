@@ -29,3 +29,10 @@ The 18 standalone notes currently in this directory comprise three Machine C com
 The former approximately 19-kB, certificate-by-certificate index is preserved in the [historical catalogue](../im-results/legacy-results-index-20261105-critic.md), whose links now point to the retained results or the qualification archive. Larger results should be presented through synthesis documents that state the new method, existing baselines, exact remaining quantifier, and source chain.
 
 **Research aim:** Prove a complete authentic blank-root halt/nonhalt decision, or a proof-carrying exhaustive six-state maximality certificate. Parameter counts, longer finite traces, synthetic predecessor counts and disconnected necessary conditions provide research tools; none alone measures a fraction of BB(6) solved.
+
+
+## New P1 inverse-shadow theorem (7 November 2026)
+
+[No eventually periodic positive-depth inverse rays](p1-periodic-inverse-shadow.md) is a Lean 4.36.0-rc2 kernel-checked all-cost result. It proves that no infinite P1 scalar-shadow ray can repeat any finite depth word containing a positive entry, including after an arbitrary finite prefix. The proof factors every admissible nonprimitive marker period into an actual shorter depth word, then applies the primitive affine obstruction. The unchanged source `ShadowReach` boundary transport is included.
+
+Verification: [GitHub Actions run 42392999355](https://github.com/FlareZ123/bb6/actions/runs/42392999355). This closes the positive-depth eventually-periodic case; genuinely aperiodic inverse histories remain open. It does not decide P1 or BB(6).
