@@ -125,6 +125,20 @@ theorem shadowreach_margin {L root m z : Nat}
         BB6.Shadow.shadow_step_preserves_offset
           L m z t v zp hL ih.1 ih.2 hdiv hnext
 
+/-- The root margin propagates to every state on the infinite trajectory. -/
+theorem margin_all {L root : Nat} (p : InfiniteShadowPath L root)
+    (hL : 8≤L) (hrootpos : 0<root) (hrootmargin : root+4≤L) :
+    ∀ n, 0<p.z n ∧ p.z n+4≤L+p.m n := by
+  have hstart := shadowreach_margin hL hrootpos hrootmargin p.hroot
+  intro n
+  induction n with
+  | zero => exact hstart
+  | succ n ih =>
+      have h := BB6.Shadow.shadow_step_preserves_offset
+        L (p.m n) (p.z n) (p.depth n) (p.quotient n) (p.z (n+1))
+        hL ih.1 ih.2 (p.hdiv n) (p.hnext n)
+      simpa [p.hm n, Nat.add_assoc] using h
+
 /-- The source margin makes an all-zero depth tail impossible: its gap
 D=L+m-z would satisfy 2D'=D+3 and hence decrease strictly forever. -/
 theorem no_eventually_zero_depth {L root : Nat}
@@ -209,6 +223,8 @@ theorem no_eventually_periodic_shadow_path
     exact p.no_eventually_zero_depth hmargin N hzero
 
 #print axioms no_eventually_periodic_positive_depth
+#print axioms shadowreach_margin
+#print axioms margin_all
 #print axioms no_eventually_zero_depth
 #print axioms no_eventually_periodic_shadow_path
 
