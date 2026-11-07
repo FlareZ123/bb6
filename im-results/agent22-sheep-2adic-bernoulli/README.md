@@ -178,7 +178,7 @@ There is useful finite evidence. Independent exact replay of the first **283,345
 
 These observations are consistent with a typical Bernoulli itinerary. They do not prove typicality of 10, and they do not rule out a later hit on a power of two. Reproduce the finite audit with [root_prefix_stats.py](./root_prefix_stats.py).
 
-## 7. Literature and novelty boundary
+## 8. Literature and novelty boundary
 
 The classical 3x+1 map is already known to be metrically conjugate to the one-sided 2-adic shift and hence Bernoulli; see Bernstein and Lagarias, *The 3x+1 Conjugacy Map* (1996), [PDF](https://websites.umich.edu/~lagarias/doc/bernstein.pdf). Related 2-adic De Bruijn graph formulations for Collatz-like maps are discussed in *The Collatz Conjecture and De Bruijn Graphs* (2013), [DOI](https://doi.org/10.1016/j.indag.2013.03.003). The present derivation is the explicit countable-branch analogue for the Sheep generic first-even return, with two independent geometric coordinates and entropy four bits per return. Whether this specialization is externally novel remains unassessed.
 
