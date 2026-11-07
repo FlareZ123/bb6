@@ -2,6 +2,88 @@
 
 **Agent 24, 7 November 2026. Status: source-verified intermediate mathematics.** The Machine C halting question and BB(6) remain open. These theorems are proved for the authentic original blank-rooted section and have no finite run-time or inverse-depth cutoff. Do not confuse quotient admission with concrete reachability or claim a complete Busy Beaver upper bound.
 
+## Latest strengthening: all depths, parity-phased source obstruction
+
+**Supersedes the earlier fixed 8-divisibility phase in this document.**
+The strongest source-certified theorem is
+[AllDepthPhases.lean](AllDepthPhases.lean),
+\`BB6.Agent46.expanded_dyadic_all_depth\`:
+
+\[
+r\ge8,\quad t\ge7,\quad t\equiv3\pmod4,\quad
+b+2=2^rt,\quad x+30t\equiv21+4r\pmod{32}
+\quad\Longrightarrow\quad\neg\operatorname{CReach}(x,b).
+\]
+
+**Every natural inverse depth r≥8 is covered**, including odd r.
+The crucial invariant in \`AlternateDyadic.dyadic_back_iter\` uses
+\`(x+2*b)%4=3\`, which suffices for source-unique even-right
+predecessors. The explicit terminal residue formula tracks the
+accumulated \(4(r-1)\) mass change modulo 32. At r divisible by eight
+this recovers the earlier \`ExpandedDyadic.lean\` theorem.
+
+The strongest high-stopping pullback is
+[HighAllPhases.lean](HighAllPhases.lean): for every r≥8,
+\`r+4≤2*m+2\`, and exact genuine stopping equation
+\`k+j+3*m+5=2^(2*m+2)*(j+3)\`, either condition implies
+\`¬ CReach (2*j+3) k\`:
+
+| Branch | j modulo 16 | (j+3m+3) modulo \(2^{r+4}\) |
+|---|---|---|
+| A | \(2r\) | \(9\cdot2^r\) |
+| B | \(12+2r\) | \(13\cdot2^r\) |
+
+All displayed j congruences are modulo 16. The older source theorems
+\`HighAllDepth.lean\` and \`HighOtherBranch.lean\` are the special
+case r divisible by eight, not the frontier. The stronger
+[PhaseResidual.lean](PhaseResidual.lean) proves a complete exact
+\`RunHalts\` equivalence removing both all-r high stopping
+subfamilies from the original two-family stopping criterion.
+This is a lossless sieve, **not a nonhalting decision**.
+
+**Unmodified-original-source Lean CI verification:**
+[run 42336114356](https://github.com/FlareZ123/bb6/actions/runs/42336114356)
+certifies the all-r phase inverse cone;
+[run 42336235089](https://github.com/FlareZ123/bb6/actions/runs/42336235089)
+certifies both high parameter families and the combined
+halting equivalence. The CI compiles original
+\`CLine\` / \`secNext\` / full inverse / blank-root bridge sources.
+Final audits use only standard foundational axioms, with no
+\`sorryAx\`, \`native_decide\`, or model stubs.
+
+At inverse depth r=9, examples admitted by the independently
+reproduced M512 overapproximation are:
+- Branch A: (j,m)=(2,4265), section target projection (7,510,0).
+- Branch B: (j,m)=(14,2213), section target projection (31,510,0).
+
+Both pairs satisfy the exact all-r arithmetic hypotheses and produce
+actual immediate stopping inputs. Abstract quotient admission is
+numerical evidence of a finite quotient's insufficiency; the original
+source Lean proof supplies true blank nonreachability.
+
+**Arithmetic density (separate paper derivation, not a Lean theorem):**
+For fixed r, each branch selects one j residue mod16 and exactly
+one m residue mod \(2^{r+4}\), because 3 is invertible mod powers
+of two. The two branches are disjoint for the same r (their j
+residues differ by 12 mod16); different r are disjoint because the
+equation gives exact 2-adic valuation
+\(v_2(j+3m+3)=r\). The width constraint eliminates only finitely
+many m values for fixed r. Summing the disjoint classes gives
+limiting natural density among \((j,m)\) pairs in expanding squares:
+
+\[
+\sum_{r=8}^\infty \frac{2}{16\cdot 2^{r+4}}
+=\frac1{16384}.
+\]
+
+The valuation-r tail is bounded by the congruence
+\(2^R\mid j+3m+3\), giving a uniform upper-density bound \(2^{-R}\);
+this justifies exchange of the density limit and infinite sum.
+This is a density of **excluded syntactic high stopping parameter
+pairs**. It implies no proportion of Turing machines has been solved.
+
+---
+
 ## Main theorem
 
 Let \(\operatorname{CReach}(x,b)\) mean reachability by the unmodified Machine C section transition \`secNext\` from \((5,1)\), at an arbitrary natural time. [ExpandedDyadic.lean](ExpandedDyadic.lean) proves
