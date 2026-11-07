@@ -344,8 +344,10 @@ assert.equal(twoWaveIncomingAudit.other || 0, 0,
   'A two-wave-root start follows an unclassified interval: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(twoWaveIncomingAudit.prefixUnmatched || 0, 0,
   'A two-wave-root start follows an unmatched-prefix interval: ' + JSON.stringify(twoWaveIncomingAudit));
-assert.equal(twoWaveIncomingAudit.chainUnknown || 0, 0,
-  'A two-wave-root start is beyond the first unclassified interval: ' + JSON.stringify(twoWaveIncomingAudit));
+assert.equal(twoWaveIncomingAudit.oldWave || 0, 8,
+  'Two-wave-root starts do not all follow an old-wave interval: ' + JSON.stringify(twoWaveIncomingAudit));
+assert.equal(twoWaveIncomingAudit.chainUnknown || 0, 8,
+  'Unexpected cumulative-prefix status for two-wave-root starts: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
 const report = {
   rawSteps: LIMIT,
