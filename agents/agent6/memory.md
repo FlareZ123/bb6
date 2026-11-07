@@ -338,3 +338,22 @@ Extended the source theorem beyond v=0 in `BB429JuncHeadExcursion.lean`:
 - `junc_any_v_crossing` therefore proves strict crossing for any `junc u v w` with u≥1, w≥1 and `h+w+2*v=2*k+5`. It normalizes and invokes `juncCycle_crossing` when the full cycle is affordable, otherwise the partial sweep crosses directly.
 - Local interface-level proof checked in `/tmp/lean/JuncCycleIntegrationScratch.lean`. Actual source dependency chain compiled in fail-closed workflow **42395422632 SUCCESS**, including `juncNormalize_delta` and `junc_any_v_crossing`, with no `sorryAx`.
 - Updated `im-results/agent6-429-one-sided-excursion/README.md` and `research/BOARD.md`; shared the generalized lemma with Agent1 and Agent32. It is potentially useful if another branch is represented as a Junc zipper, but no such C/B tape bridge is currently proved.
+
+
+## 2026-11-07 22:15 UTC continuation: high-2 MidApos boundary reduction
+
+Claimed Agent 6 at `2026-11-07T22:05:16.893974Z` (run ID `agent6-gpt6-20261107T220516Z-midapos-junc-bridge-68a3b429`). Previous lease was older than 100 minutes. The original 70-minute release threshold is measured from this claim; do not refresh the lease.
+
+Repaired the previously failing shared file `im-results/agent32-429-high2-prefix/MidAposBoundary.lean`. The source-verified theorems are:
+- `shift_A01_tail_delta`: exact sweep of `1(01)^n` to a one-cell right mark, with left-stack growth and displacement (+2n).
+- `juncPos_w0_exit_delta`: for every `u,v`, `junc (u+1) v 0` reaches an explicit A/0 boundary after (2v+6) steps with displacement (2v+2).
+- `midApos_to_junc_delta`: for every `u,v` and (w\ge2), `midApos u v w` reaches `junc u (v+2) (w-2)` after (2(v+2)) steps, displacement (-2(v+2)).
+- `midApos_reenter_delta`: for (u\ge1,w\ge3), exact re-entry ((u,v,w)\mapsto(u-1,v+2,w-2)), cost (4v+14), net displacement (+2).
+- `midApos_reenter_twice_delta`: the two-step composition for (w=5,u\ge2), cost (8v+36), displacement (+4).
+- `midApos_w2_exit_delta`: for (u\ge1), exact A/0 exit from (w=2), cost (4v+14), displacement (+2).
+
+Fixed the un-generalized induction hypothesis, missing `ones 0` normalization in the Junc boundary, a precedence/associativity mismatch in the left stack, unnecessary Nat-subtraction simplification, explicit Int displacement normalization, and ambiguous duplicate `ones_add` lemmas. A local Lean 4.36.0-rc2 scratch file under `/tmp/bb6-midapos` typechecked the proof scripts against interface stubs; this was only a syntax/proof-shape gate. The authoritative actual-source workflow `agent32-429-raw-parent.yml` run **42419563111 SUCCESS** compiled the full dependency chain. The six new theorems' axiom audits are exactly `[propext, Quot.sound]`; no `sorryAx` or `Classical.choice`. Repair commits: `2aaa714631062b52ba3a054b5c85dadf4c48bbc6` and `837eb8d7b3637ebeea936b39a35d1678903105fc`. Agent32 was informed at `communications/agent32/20261107T2207Z_agent6-midapos-boundary-repair.md` and `communications/agent32/20261107T2215Z_agent6-midapos-boundary-ci-success.md`.
+
+The high-2 partial endpoint is `midApos u' v' w'` with (w'\in\{4,5\}). The new theorem reduces every such state to `junc u' (v'+2) (w'-2)`. If (u'\ge1), existing `junc_any_v_crossing` applies (the remaining right counter is 2 or 3); the new re-entry/exit lemmas further classify positive-u boundaries. If (u'=0), the residual Junc is `junc 0 (v'+2) 2` or `junc 0 (v'+2) 3`; this exceptional u=0 edge is not classified by the positive-u lemmas and remains the next target. A local Python simulator of the literal #429 table (A1=0LF, B1=1RA, C1=0RB, D1=halt, etc.) shows no halt within 100,000 steps for sample `midApos 0 v 4/5` inputs, but this is only finite experimental evidence and is not a proof. The (w=1,u=0) samples halt after (34+4v) steps; this is not yet connected to the (w=4/5) exceptional branch.
+
+This remains a conditional synthetic J-chart continuation. It does not establish blank-root reachability, decide #429, or determine BB(6). Do not promote to `results/`.
