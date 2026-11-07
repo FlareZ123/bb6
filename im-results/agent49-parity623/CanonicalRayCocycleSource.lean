@@ -46,7 +46,8 @@ theorem leftOddExponent_spec (d : Nat) :
 theorem leftOddExponent_le (d m : Nat) (h : d+3 ≤ ternaryOnes m) :
     leftOddExponent d ≤ m := by
   unfold leftOddExponent
-  exact Nat.find_min' h
+  exact Nat.find_min'
+    (show ∃ k, d+3 ≤ ternaryOnes k from ⟨d+3, ternaryOnes_ge (d+3)⟩) h
 
 theorem leftOddExponent_minimal (d j : Nat)
     (hj : j < leftOddExponent d) :
@@ -65,7 +66,8 @@ theorem leftEvenExponent_spec (d : Nat) :
 theorem leftEvenExponent_le (d m : Nat) (h : d+2 ≤ ternaryOnes m) :
     leftEvenExponent d ≤ m := by
   unfold leftEvenExponent
-  exact Nat.find_min' h
+  exact Nat.find_min'
+    (show ∃ k, d+2 ≤ ternaryOnes k from ⟨d+2, ternaryOnes_ge (d+2)⟩) h
 
 theorem leftEvenExponent_minimal (d j : Nat)
     (hj : j < leftEvenExponent d) :
@@ -85,7 +87,9 @@ theorem rightOddExponent_le (a m : Nat)
     (h : a-1 ≤ ternaryOnes (2*m+5)) :
     rightOddExponent a ≤ m := by
   unfold rightOddExponent
-  exact Nat.find_min' h
+  exact Nat.find_min'
+    (show ∃ k, a-1 ≤ ternaryOnes (2*k+5) from
+      ⟨a, by have h := ternaryOnes_ge (2*a+5); omega⟩) h
 
 theorem rightOddExponent_minimal (a j : Nat)
     (hj : j < rightOddExponent a) :
@@ -105,7 +109,9 @@ theorem rightEvenExponent_le (a m : Nat)
     (h : a < ternaryOnes (2*m+3)) :
     rightEvenExponent a ≤ m := by
   unfold rightEvenExponent
-  exact Nat.find_min' h
+  exact Nat.find_min'
+    (show ∃ k, a < ternaryOnes (2*k+3) from
+      ⟨a, by have h := ternaryOnes_ge (2*a+3); omega⟩) h
 
 theorem rightEvenExponent_minimal (a j : Nat)
     (hj : j < rightEvenExponent a) :
@@ -136,6 +142,8 @@ theorem leftOddCanonicalTransition (a d : Nat)
     have h0 : d+5+k ≠ 0 := by omega
     have h1 : d%2=1 ∧ d+5+k≥d+5 := by omega
     simp only [if_neg h0, if_pos h1]
+    have harg : d+5+k-d-5=k := by omega
+    rw [harg]
   obtain ⟨B,E,hBE⟩ := drainB_safe_ones (d+3) k 5 hbaseBudget
   have hbase : highLevelNext (.D (d+5+k) d) = some (.D B E) := by
     rw [hbaseEq,hBE]
@@ -169,12 +177,13 @@ theorem leftEvenCanonicalTransition (a d : Nat)
   let t := a-d-2-k
   have hbaseBudget : d+2≤ternaryOnes k := leftEvenExponent_spec d
   have hk : k≤a-d-2 := leftEvenExponent_le d (a-d-2) hbudget
-  have hkpos : 1≤k := by
-    by_contra h
-    have hk0 : k=0 := by omega
-    subst k
-    have hbad : d+2≤0 := by simpa [ternaryOnes] using hbaseBudget
+  have hne : leftEvenExponent d ≠ 0 := by
+    intro hz
+    have h := leftEvenExponent_spec d
+    rw [hz] at h
+    simp [ternaryOnes] at h
     omega
+  have hkpos : 1≤k := by dsimp [k]; omega
   have hdecomp : a=(d+2+k)+t := by dsimp [t]; omega
   have hbaseEq : highLevelNext (.D (d+2+k) d) = drainB k (d+2) 2 := by
     rw [highLevelNext]
@@ -182,6 +191,8 @@ theorem leftEvenCanonicalTransition (a d : Nat)
     have h1neg : ¬(d%2=1 ∧ d+2+k≥d+5) := by omega
     have h1pos : d%2=0 ∧ d+2+k≥d+3 := by omega
     simp only [if_neg h0, if_neg h1neg, if_pos h1pos]
+    have harg : d+2+k-d-2=k := by omega
+    rw [harg]
   obtain ⟨B,E,hBE⟩ := drainB_safe_ones (d+2) k 2 hbaseBudget
   have hbase : highLevelNext (.D (d+2+k) d) = some (.D B E) := by
     rw [hbaseEq,hBE]
