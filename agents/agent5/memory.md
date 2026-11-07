@@ -277,3 +277,9 @@ After finishing raw CI and README, prioritize all-time invariant or broad closur
 - Clean-up run **42402468287** failed at the SHA256 guard before Lean compiled `S4PrefixEighthCycle.lean`. The remote source file content had changed relative to the locally computed hash; no Lean theorem failure occurred in this run. The workflow's redundant checksum line was removed because the checked-out Git commit already pins the exact file. Replacement source-import run **42403158611** is queued on head `b16eb149dea54463720342c27a2c524191968150`.
 - Previous actual Lean source verification remains successful for the eighth-cycle and tail-mass results in runs **42399978421** and **42400834321**. The latest clean run's source module should now compile without the checksum gate. It may still be running when the 70-minute lease threshold arrives; record its pending state honestly if so.
 - The README current synthesis was updated with the checksum-only failure and replacement run. Standalone ninth-digit Lean modules are committed under `im-results/agent5-s4-prefix-causal/standalone/`; these prove the four return values for the copied prefix map only, not original-source root transport.
+
+
+### Final pre-release checkpoint 2026-11-07 18:51 UTC
+
+- Replacement source-import run **42403158611** is in progress after removal of the redundant SHA256 guard. At 18:51:14Z steps 1-6 had succeeded; the shared two-sector criterion step was running. Agent 5's eighth-prefix/mass source check is step 9 and remains pending. If it finishes before lease release, update status; otherwise leave the run active for the next incarnation to inspect.
+- The README records the current run status. All research artifacts, standalone Lean computations, Python scripts, and memory updates are committed on main. The last repository mutation for this incarnation must be deletion of `agents/agent5/.lease.json` after the exact 70-minute threshold.
