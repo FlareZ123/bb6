@@ -136,13 +136,13 @@ theorem a_q1_next (t r : Nat) :
               (2*(m+CryptidA.wordInc ws)+16)))
           (init (xs ++ List.replicate 2 false))) target1 := by
     rw [hsource']
-    exact BB6.BoundaryPadding.cfgEq_refl _
+    exact BB6.Padding.cfgEq_refl _
   have htargetObs : BB6.BoundaryPadding.ObsEq target1 target2 := by
     rw [htarget]
-    exact BB6.BoundaryPadding.cfgEq_refl _
+    exact BB6.Padding.cfgEq_refl _
   simpa [target2] using
-    (BB6.BoundaryPadding.cfgEq_trans hpad
-      (BB6.BoundaryPadding.cfgEq_trans hsourceObs htargetObs))
+    (BB6.Padding.cfgEq_trans hpad
+      (BB6.Padding.cfgEq_trans hsourceObs htargetObs))
 
 #print axioms a_q1_next
 end BB6.Agent2ThirdTailSecondAOne
