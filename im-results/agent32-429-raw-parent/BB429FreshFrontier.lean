@@ -83,6 +83,21 @@ theorem halts_iff_original_C_right_marked :
   · rintro ⟨n,c,hr,hfatal⟩
     exact ⟨n+1, fatalC_causes_halt n c hr hfatal⟩
 
+/-- A genuine #429 halt requires a C/0 entry that has a marked cell just
+right, and an earlier physical visit of the head to that exact right cell. -/
+theorem halt_requires_a_prior_right_head
+    (hh : ∃ t, BB6Coverage.HaltsAfter target429 t) :
+    ∃ k n c d, k < n ∧
+      run target429 k blank = some d ∧
+      run target429 n blank = some c ∧
+      fatalC c ∧ d.head = c.head + 1 := by
+  obtain ⟨n,c,hr,hfatal⟩ := halts_iff_original_C_right_marked.mp hh
+  obtain ⟨k,d,hk,hd,hhead⟩ :=
+    marked_cell_previously_scanned target429 n c (c.head+1) hr hfatal.2.2
+  exact ⟨k,n,c,d,hk,hd,hr,hfatal,hhead⟩
+
+#print axioms halt_requires_a_prior_right_head
+
 /-- A precise geometric sufficient condition for #429 nonhalting.
 It requires *every* original C/0 to be at or beyond all earlier head positions. -/
 theorem all_C_zero_at_record_head_implies_nonhalt
