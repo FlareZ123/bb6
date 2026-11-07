@@ -138,3 +138,15 @@ jobs:
             echo "Energy-budget source theorem depends on sorryAx" >&2
             exit 1
           fi
+          if lean "$AG50SUB/RightFiveEnergyParam.lean" > /tmp/agent50-right-five-parametric-axioms.txt; then
+            cat /tmp/agent50-right-five-parametric-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-right-five-parametric-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_right_five_parametric_cost_gap" /tmp/agent50-right-five-parametric-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-right-five-parametric-axioms.txt; then
+            echo "Parametric source theorem depends on sorryAx" >&2
+            exit 1
+          fi
