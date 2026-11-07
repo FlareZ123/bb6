@@ -163,6 +163,7 @@ jobs:
           grep -F 'no_eventually_periodic_shadow_path' /tmp/agent9-periodic-source-audit.log
           grep -F 'recentered_prefix_identity' /tmp/agent9-periodic-source-audit.log
           grep -F 'recentered_quotient_bounds' /tmp/agent9-periodic-source-audit.log
+          grep -F 'zero_run_length_bound' /tmp/agent9-periodic-source-audit.log
           grep -F 'primitive_no_integral_slope' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_infinite_primitive_ray' /tmp/agent9-periodic-source-audit.log
           grep -F 'primitive_finite_bound' /tmp/agent9-periodic-source-audit.log
