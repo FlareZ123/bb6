@@ -132,7 +132,6 @@ theorem e_zero_boundary (k q : Nat) :
         false :: (pairs q ++ (false::ys))) := by
     simp only [packet,word,init,hn,List.replicate_zero,List.nil_append,
       List.cons_append]
-    simp only [List.append_assoc]
     have hword : oppairs q ++ (false :: (false :: ys)) =
         false :: (pairs q ++ (false :: ys)) := by
       calc
@@ -144,11 +143,12 @@ theorem e_zero_boundary (k q : Nat) :
   rw [hin,hraw]
   have hlen : List.replicate (2*q+6) true ++ ys =
       List.replicate (2*q+12) true := by
-    dsimp [ys]
+    change List.replicate (2*q+6) true ++ List.replicate 6 true =
+      List.replicate (2*q+12) true
     rw [List.replicate_append_replicate]
     congr 1 <;> omega
-  simp only [BB6.Agent2BoundaryBZero.regularSection,oppairs,ys]
   rw [hlen]
+  simp only [BB6.Agent2BoundaryBZero.regularSection,oppairs,ys]
   have hh : List.replicate (2*q+12) true =
       true :: List.replicate (2*q+11) true := by
     rw [show 2*q+12=1+(2*q+11) by omega,
