@@ -93,3 +93,9 @@ jobs:
           done
           cp "$base48/SuperlinearRoot.lean" .
           lake env lean SuperlinearRoot.lean
+          for f in NeedleRootDecisionCore NeedleGeneralInverseSource NeedleRootDecisionSource NeedleSharperSource NeedleRootSharp; do
+            cp "$base20/$f.lean" .
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
+          cp "$base48/SpaceNeedleFifthRoot.lean" .
+          lake env lean SpaceNeedleFifthRoot.lean
