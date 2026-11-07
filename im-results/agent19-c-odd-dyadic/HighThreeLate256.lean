@@ -470,28 +470,14 @@ theorem old_sieve_admits_late256_family (m : Nat)
     have hPmod : P%2=0 := Nat.mod_eq_zero_of_dvd hdiv2
     exact odd_mod_two_of_form P m hPmod
   have hNoGate : ∀ r : Nat, ¬BB6.Agent11GateDecision.gate r j m := by
-    intro r hgate
-    have hdiv4 : 4∣(2:Nat)^(r+4) := by
-      have h := Nat.pow_dvd_pow 2 (by omega : 2≤r+4)
-      simpa only [show (2:Nat)^2=4 by decide] using h
-    have hmod4 : (j+9*m+14)%4=
-        ((j+9*m+14)%(2:Nat)^(r+4))%4 :=
-      (Nat.mod_mod_of_dvd _ hdiv4).symm
-    rw [hgate.2.2.2.2] at hmod4
-    have hdivrhs : 4∣3*(2:Nat)^(r+2) := by
-      have h := Nat.pow_dvd_pow 2 (by omega : 2≤r+2)
-      rcases h with ⟨v,hv⟩
-      refine ⟨3*v,?_⟩
-      rw [hv]
-      ac_rfl
-    have hrhs : (3*(2:Nat)^(r+2))%4=0 :=
-      Nat.mod_eq_zero_of_dvd hdivrhs
-    rw [hrhs] at hmod4
-    have hleft2 : ((j+9*m+14)%4)%2=1 := by
-      rw [Nat.mod_mod_of_dvd _ (by decide : 2∣4)]
-      exact hsumOdd
-    rw [hmod4] at hleft2
-    omega
+    have hv0 := BB6.Agent11FastDepthGate.v2_odd
+      (j+9*m+14) hsumOdd
+    have hbool : BB6.Agent11FastDepthGate.candidateAllowedBool j m=true := by
+      simp [BB6.Agent11FastDepthGate.candidateAllowedBool,
+        BB6.Agent11FastDepthGate.candidateDepth,hv0]
+    have hall :=
+      (BB6.Agent11FastDepthGate.candidateAllowedBool_iff j m).mp hbool
+    exact hall
   have hAll : BB6.Agent11C58AllDepth.highAllowed j m :=
     ⟨hC58,hNoGate⟩
   have hBool : BB6.Agent11C58Boolean.highAllowed j m :=
