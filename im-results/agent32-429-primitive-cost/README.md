@@ -118,7 +118,6 @@ A source-level Lean proof of this high-2 branch is still required.
 
 | Original map branch | Conjectured successful raw steps to next J, or final D/1 halt input |
 | --- | --- |
-
 | `w=2u+2` | `4u²+44u+204` |
 | `w=2u+1` | `4u²+28u+306` |
 | `w=2u` | `4u²+28u+110` |
