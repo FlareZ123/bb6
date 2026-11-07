@@ -8,11 +8,22 @@ namespace BB6Coverage
 def machineCHaltSlot : Slot := (⟨5, by decide⟩, false)
 
 theorem machineC_only_halt_row :
-    ∀ s : Slot, machineC s = none ↔ s = machineCHaltSlot := by decide
+    ∀ s : Slot, machineC s = none ↔ s = machineCHaltSlot := by
+  intro s
+  rcases s with ⟨q, b⟩
+  have hall : ∀ q : Fin 6, ∀ b : Bool,
+      machineC (q, b) = none ↔ (q, b) = machineCHaltSlot := by decide
+  exact hall q b
 
 theorem machineCPrefix_eleven_all_other_rows :
     ∀ s : Slot, s ≠ machineCHaltSlot →
-      machineCPrefix 11 s = some (machineC s) := by decide
+      machineCPrefix 11 s = some (machineC s) := by
+  intro s hs
+  rcases s with ⟨q, b⟩
+  have hall : ∀ q : Fin 6, ∀ b : Bool,
+      (q, b) ≠ machineCHaltSlot →
+        machineCPrefix 11 (q, b) = some (machineC (q, b)) := by decide
+  exact hall q b hs
 
 /-- Every time-step of a hypothetical infinite canonical Machine C run
     must avoid F/0. This is deliberately a conditional theorem:
