@@ -124,25 +124,15 @@ stackMass (V.drop 8) = stackMass (U.drop 8) + 20,971,520.
 Thus the entire exact 20,971,520-unit mass increment per 20,480-return block is carried by the suffix after the periodic eight-digit prefix. This is conditional on the relevant root states existing; it does not establish that the machine survives indefinitely. The additive mass identities are Lean-proved and passed the same source-import run.
 
 
-### Direct finite survival certificate through return 5457 (source CI pending)
+### Finite survival through return 5457: unresolved kernel computation
 
-The latest revision adds a tail-recursive evaluator `prunFast`, together with a Lean proof that it agrees with the original `S4Toggle.prun` via associativity of `Option.bind`. It then asks the kernel to compute the complete original-root run through accelerated return 5457:
+A tail-recursive evaluator `prunFast` and a Lean theorem `prunFast_eq` proving equivalence with the original `S4Toggle.prun` via `Option.bind` associativity remain in `S4PrefixEighthCycle.lean`. An attempted kernel computation of `prunFast 5457 seed` with `by decide` did not reduce: original-source CI run [42401520955](https://github.com/FlareZ123/bb6/actions/runs/42401520955) became stuck at the full `P/H` computation. No formal survival theorem through return 5457 is claimed, and the failed computation was removed from the verified module.
 
-```
-prunFast 5457 seed = some s5457
-s5457 = [283,906,982,3490,3734,5935,13580,109210,171050,
-         366446,435688,443554,1702180,1770018,211301,281569,35137,35134]
-```
-
-The resulting theorem transports this finite computation back to the original `prun` and identifies the reached first-eight-digit state with `cycle8PeriodicStart`. This would remove the earlier uncertainty about whether the 20,480-periodic prefix orbit is actually reached by the root. The computation was independently checked against the Python simulator; original-source Lean verification is pending in run [42401520955](https://github.com/FlareZ123/bb6/actions/runs/42401520955). Do not upgrade the finite-survival claim to source-verified until that run succeeds.
-
-
-### Ninth-digit four-cycle candidate (Python prefix-map evidence only)
-
-The reproducible experiment [ninth_digit_candidate.py](ninth_digit_candidate.py) iterates the length-preserving prefix maps `hp/gp/pp` for seventeen successive 5,120-return blocks, starting from the first nine digits of `s337`. At boundaries separated by 20,480 returns, the ninth digit is
+The candidate state from the Python full-root simulator is
 
 ```
-171050 -> 171052 -> 171051 -> 171049 -> 171050.
+[283,906,982,3490,3734,5935,13580,109210,171050,
+ 366446,435688,443554,1702180,1770018,211301,281569,35137,35134]
 ```
 
-The corresponding first-nine-digit projection therefore appears to have period 81,920 after return 5457. The script also records all intermediate 5,120-block boundary values. This remains a computational candidate; no Lean theorem for the ninth-digit cycle is claimed. Use the prefix `hp/gp` maps in this experiment. The full-root `checker.chain` has an empty-tail completion that can change list length, so applying it directly to a truncated prefix gives a different trajectory.
+The independent Python checker agrees with this state after 5,120 returns from `s337`. This remains computational evidence. A next formal attempt should split the run into 16-step source-map chunks using the existing `seed337` proof pattern (`simp [prun,P,G,H]`), or define a structurally recursive evaluator for `H/P` and prove its equivalence to the original well-founded definitions. The exact prefix-period theorem remains conditional on survival at the relevant return.
