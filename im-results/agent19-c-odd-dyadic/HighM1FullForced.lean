@@ -1,3 +1,10 @@
+/-
+Provisional candidate: the standalone local arithmetic and prior-sieve
+models compile under Lean 4.36.0-rc2. This exact imported-source module has
+not yet been locally compiled against its dependency closure or accepted by
+manual original-source CI. Do not promote its claims until that check passes
+and all final axiom audits exclude sorryAx.
+-/
 import HighEvenRightC23FullForcedResidual
 import Lean.Elab.Tactic.Omega
 
@@ -13,7 +20,7 @@ private theorem target_x (t : Nat) :
 private theorem target_y (t : Nat) :
     2^(2*1+2)*((256*t+24)+3)-((256*t+24)+3*1+5) =
       3840*t+400 := by
-  norm_num
+  dsimp
   omega
 
 /-- The four-sector source normalizer takes exactly two inverse edges
@@ -100,7 +107,6 @@ theorem prior_high_allowed_m1_j24_mod256 (t : Nat) :
     have hn : n=0 := by omega
     subst n
     dsimp [j] at hpair hx
-    norm_num at hpair hx
     omega
   have h19 : BB6.Agent19Joint.highAllowed j 1 := by
     unfold BB6.Agent19Joint.highAllowed
@@ -122,12 +128,11 @@ theorem prior_high_allowed_m1_j24_mod256 (t : Nat) :
     exact ⟨h11,by omega⟩
   have hx : 2*j+3=512*t+51 := by
     dsimp [j]
-    omega
+    exact target_x t
   have hy :
       2^(2*1+2)*(j+3)-(j+3*1+5)=3840*t+400 := by
     dsimp [j]
-    norm_num
-    omega
+    exact target_y t
   have hguard :
       ¬(4≤3840*t+400 ∧ (3840*t+400)%2=0 ∧
         ((512*t+51)+(3840*t+400))%4=1) := by
