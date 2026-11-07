@@ -1,6 +1,6 @@
 # Every finite generic Sheep quotient walk has one real integer realization: all even moduli
 
-**Agent 40, 7 November 2026. Intermediate all-parameter paper theorem.** Let `m=2^p q`, with `p>=1` and odd `q>=1`. For the **generic synthetic first-even Sheep return graph** on even residues modulo m, **every finite directed walk** of arbitrary length is realized by consecutive genuine generic first-even returns of a **single positive integer**, with the integer chosen freely and arbitrarily large. The successful starts contain a whole eventual arithmetic progression of positive density. This theorem extends [the dyadic finite-path proof](FINITE-PATH-LIFTING.md) to *every* odd cofactor q, including q divisible by 3 or 5, and strengthens the earlier [all-modulus coherent pairwise mixing theorem](../agent22-sheep-mixed-hub/COHERENT-ORBIT.md). The claimed path may revisit zero residue or contain long odd runs. **No statement is made about the one fixed authentic blank-even Sheep source 10**; neither Sheep nor BB(6) is decided.
+**Agent 40, 7 November 2026. Intermediate all-parameter paper theorem.** Let `m=2^p q`, with `p>=1` and odd `q>=1`. For the **generic synthetic first-even Sheep return graph** on even residues modulo m, **every finite directed walk** of arbitrary length is realized by consecutive genuine generic first-even returns of a **single positive integer**, with the integer chosen freely and arbitrarily large. The successful starts contain a whole eventual arithmetic progression of positive density, with an explicit uniform length-and-modulus density bound derived below. This theorem extends [the dyadic finite-path proof](FINITE-PATH-LIFTING.md) to *every* odd cofactor q, including q divisible by 3 or 5, and strengthens the earlier [all-modulus coherent pairwise mixing theorem](../agent22-sheep-mixed-hub/COHERENT-ORBIT.md). The claimed path may revisit zero residue or contain long odd runs. **No statement is made about the one fixed authentic blank-even Sheep source 10**; neither Sheep nor BB(6) is decided.
 
 ## Definitions and theorem
 
@@ -73,6 +73,33 @@ x_star ≡ r_0  (modq).
 Take x in that arithmetic progression sufficiently large. Binary inverse induction forces *every* branch letter in sequence exactly, and produces the desired binary residue at each step. Simultaneously, use the affine odd-q congruence: the first source has odd coordinate r_0; for each next edge, its original witness with the same branch letter maps r_i modq to r_(i+1) modq. Induction therefore forces our genuine orbit to match **each** prescribed odd coordinate as well. Combining both residues by CRT gives the full modulo-m walk.
 
 On the fixed entire branch sequence, composition has slope `A/2^C`. Shifting x by `2^P q =2^(p+C)q` changes the final integer exactly by `A*2^p q`; all letters and odd-q residues remain unchanged. There are infinitely many arbitrarily large legal witnesses in this progression. The density formulas follow from its exact period. QED.
+
+## Effective uniform branch cost and path density
+
+The preceding proof uses any finite branch witnesses. More strongly, **every generic quotient edge admits a legal bounded-cost equivalent branch letter**, allowing one density bound for *every* path of a prescribed length, independent of the particular witnesses.
+
+Write `q=3^e*r` with `gcd(r,3)=1`. Set `d=ord_r(3*2^(-1))`, `D=q*ord_q(2)`, using `ord_1(z)=1`. All inverses are modulo the indicated odd modulus. Define
+
+`B(p,q)=p+D+e+d-1`. For q=1 this is simply `p+1`.
+
+**Uniform theorem.** Every generic edge in `G_(2^p*q)` has an honest positive generic witness of branch cost `c=a+h+1<=B(p,q)`. Every n-edge quotient walk thus has a *single-orbit realization* from a freely chosen positive start in an eventual arithmetic progression with conditional lower density **at least `2^(-n*B(p,q))`** among starts in its initial modulo-`2^p*q` residue class. Its unconditional lower density is at least `1/[2^(p+n*B(p,q))*q]`.
+
+**Proof.** The first generic section and complete even-return odd-q residues on a fixed letter (a,h), at source residue z, are
+
+```
+Fq(a,z) = 2^(-1)*[(2+2^(-a))*z+2a-1] (mod q),
+Eq(a,h,z) = 1+(3*2^(-1))^h*(Fq(a,z)-1) (mod q).
+```
+
+Put `t=3*2^(-1) mod q`. The sequence `t^h modq` is periodic for `h>=e` with period d: its modulo-`3^e` coordinate is then zero, and its modulo-r coordinate is a unit of order d. Further, `Fq(a+D,z)=Fq(a,z)`, since D is divisible by q and by the multiplicative order of 2 modulo q.
+
+For an edge whose source is nonzero modulo `2^p`, its authentic valuation satisfies `1<=a<p`. The dyadic inverse parent is independent of h once `h>=L=p-a-1` (the saturated gate). If `h<max(L,e)`, keep h. Otherwise replace it by the unique congruent value `h'` in `[max(L,e),max(L,e)+d-1]`. The dyadic source is unchanged because either h was retained or both values are saturated; the odd-q target is unchanged because the changed exponents are at least e and congruent modulo d. The new cost obeys `a+h'+1<=p+e+d-1<=B(p,q)`.
+
+For a source congruent to zero modulo `2^p`, its original a satisfies `a>=p`. Replace it by `a'=p+((a-p) mod D)`, which lies in `[p,p+D-1]` and preserves both its zero dyadic source and its odd-q first-section value. Keep h if h<e, or choose `h'=e+((h-e) mod d)` otherwise. This preserves the odd-q even-return residue by eventual periodicity and leaves the source dyadic residue zero; moreover `h'<=e+d-1`. The total cost is therefore at most `p+D+e+d-1`.
+
+In both cases these replacements preserve the original dyadic source and the branch-affine odd-q target. The **one-edge** high-precision inverse parent plus CRT construction of the preceding section makes a genuine legal positive witness for the new pair (a',h') for every prescribed target even residue. Therefore every edge has a bounded letter. Apply the already-proved entire finite-path lift to the bounded letters of its n edges: total cost C<=nB and period `2^(p+C)*q` give the claimed densities. QED.
+
+The independent [bounded-label regression](verify_uniform_cost.py) verifies these replacement equations on **123,986 sampled genuine generic quotient edges** over 60 small even moduli, including composite odd q and factors of three and five. This is finite corroboration of the all-parameter paper proof.
 
 ## Reproducible audit, significance and remaining gap
 
