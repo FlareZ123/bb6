@@ -136,6 +136,8 @@ jobs:
             lean -o "$f.olean" "$f.lean"
           done
           lean -o JointResidual.olean JointResidual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
+          lean -o FullForcedFilter.olean FullForcedFilter.lean
           # Convert the exact rooted stopping criteria to executable
           # parameter predicates through Agent11's original-source
           # fixed-target backward reachability oracle.
@@ -344,6 +346,8 @@ jobs:
           # in the same Lean module path as all of its imported dependencies.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighEvenRightC23Residual.lean .
           lean -o HighEvenRightC23Residual.olean HighEvenRightC23Residual.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/HighEvenRightC23FullForcedResidual.lean .
+          lean -o HighEvenRightC23FullForcedResidual.olean HighEvenRightC23FullForcedResidual.lean
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
