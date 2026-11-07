@@ -355,4 +355,45 @@ theorem factor_word_of_rotation_period (w : List Nat) (d : Nat)
   simpa [hweightU,A] using hqhi
 
 
+
+/-- Exact offset under concatenation; the second block is translated by the
+    cost of the first block. -/
+theorem offset_append (u v : List Nat) :
+    offset (u++v)=offset u+(2^(cost u):Int)*(offset v+(cost u:Int)*(weight v:Int)) := by
+  induction u with
+  | nil => simp [offset, cost]
+  | cons t ts ih =>
+      simp only [List.cons_append, offset, cost]
+      rw [weight_append, ih]
+      simp only [Nat.pow_add, Int.natCast_add, Int.natCast_mul, Int.natCast_pow]
+      grind
+
+theorem weight_repeat_int (u : List Nat) (k : Nat) :
+    (weight (repeatWord u k):Int)=(weight u:Int)*PeriodSecondary.geom (2^(cost u):Int) k := by
+  induction k with
+  | zero => simp [repeatWord, weight, PeriodSecondary.geom]
+  | succ k ih =>
+      rw [repeatWord]
+      have hw := congrArg (fun n : Nat => (n:Int)) (weight_append u (repeatWord u k))
+      simp only [Int.natCast_add, Int.natCast_mul, Int.natCast_pow] at hw
+      rw [hw, ih]
+      simp [PeriodSecondary.geom, Int.mul_add, Int.mul_assoc, Int.mul_comm, Int.mul_left_comm]
+
+/-- Repetition has the exact affine offset coefficient used by
+    PeriodSecondary.repeated_affine_obstruction. -/
+theorem offset_repeat (u : List Nat) (k : Nat) :
+    offset (repeatWord u k)=offset u*PeriodSecondary.geom (2^(cost u):Int) k +
+      (weight u:Int)*(cost u:Int)*PeriodSecondary.weighted (2^(cost u):Int) k := by
+  induction k with
+  | zero => simp [repeatWord, offset, PeriodSecondary.geom, PeriodSecondary.weighted]
+  | succ k ih =>
+      rw [repeatWord, offset_append, ih, weight_repeat_int]
+      simp only [PeriodSecondary.geom, PeriodSecondary.weighted, Int.mul_add, Int.mul_assoc, Int.mul_comm, Int.mul_left_comm]
+      grind
+
+#print axioms factor_word_of_rotation_period
+#print axioms weight_repeat_int
+#print axioms offset_repeat
+
+
 end PeriodWord
