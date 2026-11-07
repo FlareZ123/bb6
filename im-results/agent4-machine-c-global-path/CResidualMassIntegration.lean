@@ -65,16 +65,18 @@ theorem low_root_requires_m_ge4 (m : Nat)
       (2^(2*m+3)-(3*m+4)) = true) :
     4 ≤ m := by
   have hmass := low_root_requires_mass_gt_2000 m hroot
-  have hcases : m=0 ∨ m=1 ∨ m=2 ∨ m=3 := by omega
-  rcases hcases with rfl | rfl | rfl | rfl
-  · rw [BB6.Agent4MassBounds.low_raw_mass_m0] at hmass
-    omega
-  · rw [BB6.Agent4MassBounds.low_raw_mass_m1] at hmass
-    omega
-  · rw [BB6.Agent4MassBounds.low_raw_mass_m2] at hmass
-    omega
-  · rw [BB6.Agent4MassBounds.low_raw_mass_m3] at hmass
-    omega
+  by_cases hm : 4 ≤ m
+  · exact hm
+  · have hcases : m=0 ∨ m=1 ∨ m=2 ∨ m=3 := by omega
+    rcases hcases with rfl | rfl | rfl | rfl
+    · rw [BB6.Agent4MassBounds.low_raw_mass_m0] at hmass
+      omega
+    · rw [BB6.Agent4MassBounds.low_raw_mass_m1] at hmass
+      omega
+    · rw [BB6.Agent4MassBounds.low_raw_mass_m2] at hmass
+      omega
+    · rw [BB6.Agent4MassBounds.low_raw_mass_m3] at hmass
+      omega
 
 /-- Exact surviving parameter tail forced by the mass-2000 theorem. -/
 theorem high_root_requires_parameter_tail (j m : Nat)
