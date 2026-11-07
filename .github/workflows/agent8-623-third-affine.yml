@@ -100,5 +100,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent49TerminalRatio4Arithmetic.olean Agent49TerminalRatio4Arithmetic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/CanonicalRayCocycleArithmetic.lean" Agent49CanonicalRayCocycleArithmetic.lean
           lake env lean Agent49CanonicalRayCocycleArithmetic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TerminalRatio4Source.lean" Agent49TerminalRatio4Source.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TerminalRatio4Source.olean Agent49TerminalRatio4Source.lean
           cp "../im-results/agent8-623-inverse/MachineFullGateSource.lean" Agent8MachineFullGateSource.lean
           lake env lean Agent8MachineFullGateSource.lean
