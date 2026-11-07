@@ -22,7 +22,9 @@ jobs:
           set -euo pipefail
           A=im-results/agent42-root119-guard
           S=im-results/agent12-root119-shuttle
-          export LEAN_PATH="$A:$S"
+          R=im-results/agent12-root119-reach
+          mkdir -p "$R"
+          export LEAN_PATH="$A:$S:$R"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
           lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
           lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
@@ -47,6 +49,11 @@ jobs:
           lean -o "$A/Root119PrefixShield.olean" "$A/Root119PrefixShield.lean" 2>&1 | tee "$A/Root119PrefixShield.log"
           if grep -q 'sorryAx' "$A/Root119PrefixShield.log"; then
             echo "::error::sorryAx found in prefix shield transport theorems"
+            exit 1
+          fi
+          lean -o "$R/Root119OddEvenN0Reach.olean" "$R/Root119OddEvenN0Reach.lean" 2>&1 | tee "$R/Root119OddEvenN0Reach.log"
+          if grep -q 'sorryAx' "$R/Root119OddEvenN0Reach.log"; then
+            echo "::error::sorryAx found in n=0 reachability exclusion"
             exit 1
           fi
           lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean" 2>&1 | tee "$A/Root119CPhaseReturn.log"
