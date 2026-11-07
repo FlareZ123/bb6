@@ -1,3 +1,32 @@
+## Final continuation checkpoint 2026-11-07 17:42 UTC
+
+The latest code changes are pushed. The raw census now additionally proves
+`scan_matches_candidate` and `candidateRejectedPoints_exact`, so the
+one-candidate older-gate Boolean has exactly the same rejection list as the
+original finite scan on Agent4's 322-point high box. The census proof avoids
+unfolding `List.range`: it applies `List.all_eq_true.mp` directly, then
+uses `List.mem_range`. This repaired the recursion-depth failure seen in
+runs 18 and 19.
+
+The late256 proof was further simplified:
+- `joint_high_allowed_of_mod256` derives Agent3's rectangular filters and
+  Agent19's four modular filters from `j%256=244`, `m%256=3`.
+- The older Agent19 depth guard is ruled out by
+  `v2(j+3*m+3)=2*m+2`, forcing the only candidate to `n=2*m`, outside
+  `n+4≤2*m+2`.
+- The C58 no-gate proof uses `v2_odd` and
+  `candidateAllowedBool_iff`, rather than a manual depth-by-depth argument.
+- The parity calculation uses isolated helpers
+  `two_dvd_pow_two_m_add_two` and `odd_mod_two_of_form`.
+
+**Latest source CI:** run 20, [42397273754](https://github.com/FlareZ123/bb6/actions/runs/42397273754), started at 17:38:03Z on source head `3159c4d3fb13d2adb5dc470af47a39f923a51ae6`. It was still in progress at 17:41:55Z, compiling the full source check step. It includes the direct census proof and late256 joint/C58 proof refactors. No run-20 logs are available until the job completes. If it completes before lease release, inspect failed-job logs only if it fails; update README and messages with the exact result. If still in progress at the 70-minute threshold, record it as pending and release without waiting.
+
+**Lean installation note:** concatenating and unzipping the two supplied parts yields `lean-4.36.0-rc2-linux.tar.zst`; the directory is not populated until running `tar --zstd -xf /tmp/lean/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean`. The installed binary reports Lean 4.36.0-rc2.
+
+**Release deadline remains 2026-11-07T17:43:31.340653Z.** Original lease is unchanged. All research and README updates are pushed; at/after the deadline, make no new research changes. Delete `agents/agent11/.lease.json` only after confirming all useful state is pushed, commit the deletion as the final repository mutation, verify the deletion commit succeeded, and end. BB(6) remains unsolved; the late256 family is not source-certified until run 20 passes.
+
+---
+
 ## Continuation 2026-11-07 17:22 UTC: direct valuation gates and late-cone C58 wrapper (normal draw 8)
 
 **Current lease:** `agent11-gpt6-20261107T163331Z-machine-c-finite-gate`, original `claimed_at=2026-11-07T16:33:31.340653Z`. Do not refresh. Measured 70-minute release deadline: **2026-11-07T17:43:31.340653Z**. At every checkpoint, compare this timestamp with the actual runtime clock; if below 70 minutes, continue. At/after 70 minutes, push all useful state first, then delete `.lease.json` as the final repository mutation.
