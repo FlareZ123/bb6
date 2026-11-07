@@ -77,6 +77,7 @@ jobs:
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
           lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
           lean -o "$g/TranslatedDepthResidue.olean" "$g/TranslatedDepthResidue.lean"
+          lean "$g/TThreeHighTightBounds.lean"
           lean -o "$g/RayNonFork.olean" "$g/RayNonFork.lean"
           lean -o "$g/RayDepthPhysical.olean" "$g/RayDepthPhysical.lean"
           lean -o "$g/SixPacketRoot.olean" "$g/SixPacketRoot.lean"
@@ -101,4 +102,4 @@ jobs:
           lean -o "$g/EvenWalkGapBridge.olean" "$g/EvenWalkGapBridge.lean"
           lean -o "$g/EvenWalkSourceModel.olean" "$g/EvenWalkSourceModel.lean"
           lean -o "$g/EvenWalkSecondT2.olean" "$g/EvenWalkSecondT2.lean"
-          echo "Lean kernel validated the complete n>=4 fatal-parent normal form, mod18 unique even-parent classes, the zero-target ray-depth tower, and the translated 3-adic t=3 high-q gate tower, its exact source-equation residue selector, and the precision-nine second-parent residue selector."
+          echo "Lean kernel validated the complete n>=4 fatal-parent normal form, mod18 unique even-parent classes, the zero-target ray-depth tower, and the translated 3-adic t=3 high-q gate tower, its exact source-equation residue selector, the precision-nine second-parent residue selector, and the tight second-parent dyadic-gap bounds."
