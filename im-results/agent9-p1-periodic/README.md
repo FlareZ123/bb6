@@ -1,6 +1,6 @@
 # P1 inverse shadow: periodic-depth rays are excluded (paper proof)
 
-**Status:** New all-period analytic argument, 7 November 2026, extending the earlier *constant-depth* result of Agent 13. The integer-drift lemma is independently **Lean 4.36.0-rc2 kernel-checked** in [PeriodCore.lean](PeriodCore.lean), axioms exactly `[propext, Quot.sound]`. **The entire arbitrary-word source-equation-to-affine-block reduction is now independently Lean kernel-checked** in [PeriodWord.lean](PeriodWord.lean), including its `periodic_run_integral_slope` corollary for infinite repetitions of any finite word; axioms `[propext, Classical.choice, Quot.sound]`. Neither module uses `sorry` or `native_decide`. The finite binary-repetend contradiction and composition with the unchanged original-source feeder `ShadowReach` remain **paper-level and unverified through source CI**. This is a source-equation-derived *paper theorem*, pending independent proof review. It does not decide P1, any BB(6) holdout, or BB(6).
+**Status:** New all-period analytic argument, 7 November 2026, extending the earlier *constant-depth* result of Agent 13. The integer-drift lemma is independently **Lean 4.36.0-rc2 kernel-checked** in [PeriodCore.lean](PeriodCore.lean), axioms exactly `[propext, Quot.sound]`. **The entire arbitrary-word source-equation-to-affine-block reduction is now independently Lean kernel-checked** in [PeriodWord.lean](PeriodWord.lean), including its `periodic_run_integral_slope` corollary for infinite repetitions of any finite word; axioms `[propext, Classical.choice, Quot.sound]`. Both modules use standard Lean axioms and no `sorry` or `native_decide`. The separate [PeriodWordBounds.lean](PeriodWordBounds.lean) now kernel-checks the exact marker decomposition `2^S=H+loss+1`, proves `H<2^S`, and certifies `H<2^S-1` whenever at least one depth is positive; axioms `[propext, Classical.choice, Quot.sound]`, no `sorry`. The finite binary-repetend contradiction and composition with the unchanged original-source feeder `ShadowReach` remain **paper-level and unverified through source CI**. This is a source-equation-derived *paper theorem*, pending independent proof review. It does not decide P1, any BB(6) holdout, or BB(6).
 
 ## Claim and original-source boundary
 
@@ -33,7 +33,7 @@ H = Σ_(j=1)^k 2^(s_j-1),
 D = Σ_(j=1)^k 2^(s_j-1)*(s_j-2).
 ```
 
-The powers appearing in `H` are distinct: `H` is the binary word of length `S` whose one-bits occur exactly at the *ends* of the individual cost blocks. In particular `2^(S-1)≤H≤2^S-1`, and equality at the upper bound occurs exactly when every `l_j=1`, meaning all depths zero.
+The exact natural-number inequality and its all-zero equality case are independently Lean-checked in [PeriodWordBounds.lean](PeriodWordBounds.lean) (SHA-256 `bc08eb422a1d990aab43c156903eedd697e70813ce6f21c95e1893174acf3881`). The powers appearing in `H` are distinct: `H` is the binary word of length `S` whose one-bits occur exactly at the *ends* of the individual cost blocks. In particular `2^(S-1)≤H≤2^S-1`, and equality at the upper bound occurs exactly when every `l_j=1`, meaning all depths zero.
 
 Under an infinite repetition of this word, take the end-of-block values `Z_n` and `X=L+m_0`. The total cost increases by `S` at every block, so
 
@@ -73,7 +73,7 @@ The remaining case `H=B` is the all-zero-depth word. For both authentic feeder r
 
 ## Reproducibility, limitations, and next test
 
-With Lean 4.36.0-rc2, compile `PeriodCore.lean` to an `.olean`, then compile `PeriodWord.lean` with that directory in `LEAN_PATH`. The latter proves the exact arbitrary-word affine recurrence and necessary slope divisibility directly from all wordwise scalar predecessor equations, for any finite cost word and any infinite sequence of blockwise authentic shadow transitions. **The purely periodic binary expansion lemma and final original-source import/bridge are not Lean-checked here.**
+With Lean 4.36.0-rc2, compile `PeriodCore.lean` to an `.olean`, then compile `PeriodWord.lean` to an `.olean`, and compile `PeriodWordBounds.lean` with that directory in `LEAN_PATH`. The latter proves the exact arbitrary-word affine recurrence and necessary slope divisibility directly from all wordwise scalar predecessor equations, for any finite cost word and any infinite sequence of blockwise authentic shadow transitions. **The purely periodic binary expansion lemma and final original-source import/bridge are not Lean-checked here.**
 
 [verify_periodic.py](verify_periodic.py) independently enumerates all binary marker words of total cost `S≤21` (2,097,130 nontrivial words). Eleven satisfy the first necessary condition (★), and every one has a shorter binary repetend of period `r<d` which fails (★) on that shorter period. These are finite regression data, not evidence for any unbounded machine classification.
 
