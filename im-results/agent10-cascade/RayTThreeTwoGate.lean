@@ -2,7 +2,7 @@ import RayTThreeLowRoot
 import RayTThreeExtendedGeometry
 set_option maxHeartbeats 0
 namespace CascadeTThreeLow
-open CascadeResetInverse CascadeSweep CascadeUniformFatal CascadeOddRay CascadeRayOddStrip CascadeForkOddDead
+open CascadeResetInverse CascadeSweep CascadeUniformFatal CascadeOddRay CascadeRayOddStrip CascadeForkOddDead CascadeForkOddDead27
 
 private theorem odd_scale_unique (u k l:Nat)
   (hk:6*2^k+1≤u ∧ u≤8*2^k-1)
