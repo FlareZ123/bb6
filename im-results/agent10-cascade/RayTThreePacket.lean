@@ -20,7 +20,7 @@ private theorem deficit_shift (n j i:Nat):
 /-- Full six-even-reset source-C packet equivalence: one canonical
     continuation plus a single odd branch at the source-selected fork.
     All t=0,2 and most t=3 source odd arms are rigorously excluded;
-    t=3 requires the new first-/second-valuation gate. -/
+    t=3 requires the new first- and second-valuation gate. -/
 theorem exact_two_tier_tthree_packet (n j:Nat) (hn:20≤n)
  (hsector:n%6=4 ∨ n%6=5) (hpar:j%2=0)
  (hm:2048*deficit n (j+5)+16384*n+16384≤2^n):
