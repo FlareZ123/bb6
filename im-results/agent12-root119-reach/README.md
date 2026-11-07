@@ -32,7 +32,7 @@ abstract graph, verifies 342 forward-reachable states, recomputes the
 it. Run it with `python audit_window_closure.py`.
 
 The expanded module passed the repository workflow in
-[run 42418128383](https://github.com/FlareZ123/bb6/actions/runs/42418128383).
+[run 42418386208](https://github.com/FlareZ123/bb6/actions/runs/42418386208).
 
 The file also proves that Agent 42's synthetic
 `oddEvenShieldCounterexample` is not in `Reach`. Its local tape pattern
