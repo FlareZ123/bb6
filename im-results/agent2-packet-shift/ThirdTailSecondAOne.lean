@@ -36,14 +36,16 @@ private theorem special_code (r : Nat) :
       List.replicate (6*r+4) true ++
         (false :: List.replicate 12 true) := by
   unfold BB6.ThirdTailArithmetic.special
-  rw [wordCode_append, triples_code]
-  simp only [CryptidA.wordCode]
+  rw [wordCode_append, triples_code, CryptidA.wordCode, triples_code]
+  have hmul : 3*(2*r+1)=6*r+3 := by omega
+  rw [hmul]
   have h : List.replicate (6*r+3) true ++ [true] =
       List.replicate (6*r+4) true := by
-    rw [← List.replicate_append_replicate]
-    rfl
-  rw [List.append_assoc, h]
-  simp [List.append_assoc]
+    rw [show [true] = List.replicate 1 true by rfl,
+      show 6*r+4=(6*r+3)+1 by omega,
+      ← List.replicate_append_replicate]
+  simp only [List.append_assoc]
+  rw [h]
 
 private theorem inc_eq (ws : List Bool) :
     CryptidA.wordInc ws = BB6.ThirdTailArithmetic.inc ws := by
@@ -71,6 +73,7 @@ private theorem a_input_shape (t r : Nat) :
   have hp : 2*(3*r+1)+2 = 3*(2*r+1)+1 := by omega
   rw [hn,hp,← List.replicate_append_replicate]
   simp [List.append_assoc]
+  omega
 
 /-- The q=3r+1 A branch closes after two physical blank cells are made explicit
     for the original 1100 terminal. The unpadded endpoint is physically equal. -/
@@ -114,7 +117,7 @@ theorem a_q1_next (t r : Nat) :
           (CryptidA.wordCost m ws +
             (2*(m+CryptidA.wordInc ws)+16)))
         (init (xs ++ List.replicate 2 false)) = target1 := by
-    simpa [target1,xs,K,m,ws,List.append_assoc] using hsource
+    simpa [target1,xs,K,m,List.append_assoc] using hsource
   have hlen :
       2*(m+CryptidA.wordInc ws)+1 = 64*t+97+16*r := by
     dsimp [m,K,ws]
@@ -140,7 +143,7 @@ theorem a_q1_next (t r : Nat) :
   have htargetObs : BB6.BoundaryPadding.ObsEq target1 target2 := by
     rw [htarget]
     exact BB6.Padding.cfgEq_refl _
-  simpa [target2] using
+  simpa [target2, BB6.BoundaryPadding.ObsEq] using
     (BB6.Padding.cfgEq_trans hpad
       (BB6.Padding.cfgEq_trans hsourceObs htargetObs))
 
