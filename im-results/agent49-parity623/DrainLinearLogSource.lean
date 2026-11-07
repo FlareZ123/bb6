@@ -64,9 +64,6 @@ theorem evalA_first_lower_log (n : Nat) :
             have hr := ih (a-1) (k/3) (m+2*(k/3)+3) aa bb dd hq hs
             omega
 
-/-- If a successful evaluator returns a positive residual block count,
-record the exact number r of ternary digits consumed by this evaluator.
-The remaining output index is below 3^s, where r+s=n. -/
 /-- A single evaluator call increases its first counter by at most one. -/
 theorem evalA_first_upper_one (a : Nat) :
     ∀ k m aa bb dd : Nat,
