@@ -240,6 +240,23 @@ theorem midApos_zero_w5_boundary_delta (v : Nat) :
   simp [Int.natCast_add, Int.natCast_mul]
   omega
 
+/-- The explicit w=5,u=0 A/0 boundary is a source E/1 configuration
+    after 19 further steps, with a fixed right suffix ending in 001. -/
+theorem midApos_zero_w5_to_sourceScanE_delta (v : Nat) :
+    runWithDelta (4*v+60) (midApos 0 v 5) =
+      some (sourceScanE (v+3) (ones 3 ++ pairs01 3 ++ [false,false,true]), -2) := by
+  have hboundary := midApos_zero_w5_boundary_delta v
+  have hscan :
+      runWithDelta 19 (z 0 (ones 5 ++ pairs01 (v+4) ++ ones 5) false [true]) =
+        some (sourceScanE (v+3) (ones 3 ++ pairs01 3 ++ [false,false,true]), -7) := by
+    rfl
+  have htime : 4*v+60 = (4*v+41)+19 := by omega
+  rw [htime, runWithDelta_add, hboundary]
+  simp only [Option.bind_some]
+  rw [hscan]
+  simp only [Option.map_some]
+  omega
+
 #print axioms shift_A01_tail_delta
 #print axioms juncPos_w0_exit_delta
 #print axioms midApos_to_junc_delta
@@ -250,5 +267,6 @@ theorem midApos_zero_w5_boundary_delta (v : Nat) :
 #print axioms junc0_w3_exit_delta
 #print axioms midApos_zero_w4_boundary_delta
 #print axioms midApos_zero_w5_boundary_delta
+#print axioms midApos_zero_w5_to_sourceScanE_delta
 
 end BB429MidAposBoundary
