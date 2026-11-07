@@ -1,68 +1,70 @@
-# Exact first J-branch for machine #429
+# Exact primitive first branch of the #429 J family
 
-## Scope
+## Result
 
-This directory investigates the primitive-step realization of the first branch of the
-high-level J-tape transition for the six-state machine `target429`.
+For every pair of natural numbers (u,w) satisfying (2u+3\le w), the source-verified raw transition table `target429` satisfies
 
-For `u,w : Nat` with `2*u+3 <= w`, the intended transition is
-
-```
-J(u,w), head 0, state A
-  -> J(2u+3, w-(2u+3)), head 2u+3, state A
-```
-
-with exact primitive-step cost
-
-```
-4*u^2 + 10*u + 27.
+```lean
+theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
+    run target429 (4*u*u+10*u+27)
+      {state:=A,head:=0,tape:=jTape u w} =
+    some {state:=A,head:=2*(u:Int)+3,
+      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)}
 ```
 
-The Lean development is in [JFirstBranch.lean](JFirstBranch.lean). It imports the
-existing `JF0Prefix` and `BCFuture` developments from
-`im-results/agent32-429-primitive-cost/`.
+Thus this branch returns exactly to the J family with parameters
+`(2*u+3, w-(2*u+3))), translated to head position `2*u+3`, after exactly
+`4*u^2+10*u+27` raw machine steps.
 
-## Trace decomposition
+The proof is in [JFirstBranch.lean](JFirstBranch.lean). It is an exact raw-run
+theorem, not a simulator-only claim.
 
-The proposed trace is decomposed into three exact phases.
+## Proof decomposition
 
-1. The existing left sweep reaches the F/0 configuration at head `-2u-7`
-   after `4*u^2+6*u+7` steps.
-2. A fixed fourteen-transition F/0 setup reaches C/1 at head `-2u-3`.
-   It sets the six cells from `head-2` through `head+3` to one.
-3. The C/1, B/0 pair repeats `2u+2` times, writing zero/one pairs across the
-   remaining interval. A final C/1, B/1 pair exits to A at head `2u+3`.
+The raw run is composed from three verified pieces:
 
-The resulting cost is
+1. `j_F0_exact`: (4u^2+6u+7) steps from the J tape to the F/0 setup
+   configuration.
+2. `f0_to_c1`: a 14-step setup from F/0 to C/1.
+3. A C/B sweep of (2u+2) pairs, taking (4u+4) steps, followed by the
+   final two-step exit pair.
 
-```
-(4*u^2+6*u+7) + 14 + 2*(2*u+2) + 2
-  = 4*u^2+10*u+27.
-```
+The total is
+[
+(4u^2+6u+7)+14+(4u+4)+2=4u^2+10u+27.
+]
 
-The recursive `cbPaint` tape function records the complete sweep, rather than
-only the head position or the number of ones. The final theorem compares the
-entire two-sided tape with the translated `J(2u+3,w-(2u+3)` pattern.
+The pointwise tape identity is proved separately as
+`j_first_branch_tape`; the final theorem composes it with the raw-step
+sweep and exit lemmas. The F/0 write is proved extensionally, and the
+`#print axioms` audit covers the prefix, setup, sweep, tape identity, and
+composed theorem.
 
-## Evidence and status
+## Verification
 
-- The target transition rows are checked by Lean `decide` proofs in the file.
-- The fixed setup is represented as fourteen explicit raw transitions.
-- The repeated C/B sweep is proved by induction in the intended development.
-- An independent simulator check covered 155 parameter pairs with
-  `0 <= u <= 30` and five representative admissible values of `w` per `u`;
-  all reached the predicted state, head, step count, and translated J tape.
-- This simulation is supporting evidence only. It is not a substitute for the
-  Lean theorem.
+- GitHub Actions workflow: [run 42378679590](https://github.com/FlareZ123/bb6/actions/runs/42378679590), successful.
+- The axiom audit reports no `sorryAx` dependency for `j_F0_exact`,
+  `f0_to_c1`, `cb_exit`, `j_first_branch_tape`, or `j_first_branch`.
+  The final theorem depends only on the standard Lean axioms
+  `propext`, `Classical.choice`, and `Quot.sound`.
+- Independent finite simulation checked 32 additional parameter pairs
+  (`u=0..7`, with four admissible values of `w` per `u`). An earlier
+  155-pair regression is also recorded in the development notes. These
+  simulations are regression checks; the universal claim is established by
+  the Lean proof.
 
-**Verification status:** the current Lean proof is under CI validation. Until the
-workflow compiles this module successfully and the axiom report is inspected,
-treat the branch formula as a research claim rather than a formally verified result.
+## Scope and next obligations
 
-## Next work
+This result proves one conditional branch of the #429 J transition. It does
+not show that the authentic blank-tape orbit enters this branch, determine
+the orbit's eventual behavior, or establish a BB(6) bound.
 
-1. Finish the Lean compilation and remove any proof or elaboration errors.
-2. Have another researcher independently review the trace and tape invariant.
-3. Investigate the complementary J branch where `w < 2u+3`. The current theorem
-   covers only the first branch and does not establish nonhalting of #429 or an
-   upper bound for BB(6).
+The highest-value continuations are:
+
+- prove the fatal boundary branch (w+1=2u) with its exact raw halting time;
+- prove the neighboring exceptional branches (w=2u,2u+1,2u+2);
+- connect the resulting source-level branch costs to the authentic blank
+  orbit and its accumulated raw step count.
+
+This remains intermediate research in `im-results/`, not a BB(6) solution
+or a publishable global result.
