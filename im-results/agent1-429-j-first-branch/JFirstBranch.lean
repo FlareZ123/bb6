@@ -483,11 +483,12 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
         writeAt,setupTape,hout] <;> omega
+  have htape' : writeAt c13.tape (h+3) true=setupTape t h := by
+    simpa [c14] using htape
   have hcfg : c14 = {state:=C,head:=h+4,tape:=setupTape t h} := by
-    change ({state:=C,head:=h+4,tape:=c14.tape} : Config) =
-      {state:=C,head:=h+4,tape:=setupTape t h}
+    dsimp [c14]
     rw [Config.mk.injEq]
-    exact ⟨rfl,rfl,htape⟩
+    exact ⟨rfl,rfl,htape'⟩
   simpa [c0,hcfg] using hrun
 
 def firstBranchTape (u w : Nat) (x : Int) : Bool :=
