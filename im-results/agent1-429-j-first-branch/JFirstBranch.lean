@@ -830,7 +830,13 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
   have hprefix : 2*u ≤ w+1 := by omega
   rcases f0_local u w with ⟨h0,h1,h2,h3,h4,hm1,hm2⟩
   have hsetup := f0_to_c1 (-2*(u:Int)-7) (f0Tape u w)
-    h0 h1 h2 h3 h4 hm1 hm2
+    h0
+    (by convert h1 using 1 <;> omega)
+    (by convert h2 using 1 <;> omega)
+    (by convert h3 using 1 <;> omega)
+    (by convert h4 using 1 <;> omega)
+    (by convert hm1 using 1 <;> omega)
+    (by convert hm2 using 1 <;> omega)
   let c0 : Config := {state:=A,head:=0,tape:=jTape u w}
   let c1 : Config :=
     {state:=C,head:=-2*(u:Int)-3,
@@ -838,7 +844,8 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
   have hfirst :
       run target429 (4*u*u+6*u+7+14) c0 = some c1 := by
     rw [run_add', j_F0_exact u w hprefix]
-    simpa [c0,c1] using hsetup
+    simp only [Option.bind_some]
+    convert hsetup using 1 <;> simp [c0,c1] <;> omega
   have hCrow : target429 (C,true)=some ⟨false,true,B⟩ := by decide
   have hBzero : target429 (B,false)=some ⟨true,true,C⟩ := by decide
   have hBone : target429 (B,true)=some ⟨true,true,A⟩ := by decide
@@ -884,14 +891,13 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
     change setupTape (f0Tape u w) (-2*(u:Int)-7) x=true
     rw [setupTape_above _ _ _ (by omega)]
     rw [f0Tape_neq u w x (by omega)]
-    exact baseTape_right_one u w hprefix x (by omega) (by omega)
+    exact baseTape_right_one u w hw x (by omega) (by omega)
   have hzeroAt : c2.tape c2.head=true := by
     rw [ht2,hh2]
     rw [cbPaint_right c1.tape c1.head k
       (c1.head+2*(k:Int)) (by omega)]
     apply htail
-    · rw [hhead2]
-      dsimp [c1,k]
+    · dsimp [c1,k]
       omega
     · dsimp [c1,k]
       omega
@@ -900,9 +906,9 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
     rw [cbPaint_right c1.tape c1.head k
       (c1.head+2*(k:Int)+1) (by omega)]
     apply htail
-    · rw [hhead2]
+    · dsimp [c1,k]
       omega
-    · rw [hhead2]
+    · dsimp [c1,k]
       omega
   obtain ⟨c3,hexit,hs3,hh3,ht3⟩ :=
     cb_exit target429 c2 hCrow hBone hs2 hzeroAt honeAt
