@@ -37,4 +37,6 @@ jobs:
           cp "../im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
           cp "../im-results/agent8-623-inverse/ThirdCounterAffineSource.lean" Agent8ThirdCounterAffineSource.lean
-          lake env lean Agent8ThirdCounterAffineSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8ThirdCounterAffineSource.olean Agent8ThirdCounterAffineSource.lean
+          cp "../im-results/agent8-623-inverse/DrainLogDepthSource.lean" Agent8DrainLogDepthSource.lean
+          lake env lean Agent8DrainLogDepthSource.lean
