@@ -69,7 +69,7 @@ These are conditional local return theorems. They do not classify every reached 
 
 Source files: `Root119OddEvenChain.lean`, `Root119TwoWaveRootPrefix.lean`  
 Workflow: `.github/workflows/agent42-root119-even-wave-prefix.yml`  
-Successful source-import runs: [42405102264](https://github.com/FlareZ123/bb6/actions/runs/42405102264), [42423330099](https://github.com/FlareZ123/bb6/actions/runs/42423330099)
+Successful source-import runs: [42405102264](https://github.com/FlareZ123/bb6/actions/runs/42405102264), [42423330099](https://github.com/FlareZ123/bb6/actions/runs/42423330099), [42423714896](https://github.com/FlareZ123/bb6/actions/runs/42423714896)
 
 The workflow compiles the dependency closure from source and checks the axiom output. The relevant declarations report:
 
@@ -130,7 +130,7 @@ The current 10M replay verifies all eight starts against these full local hypoth
 [
 (32,2), (32,17), (32,109), (40,15), (40,46), (96,1), (176,73), (184,194).
 ]
-The runnable audit is `test-root119-two-wave-census.cjs`; it asserts these pairs and emits the eight interval records. The earlier exploratory `n1` values in `FULL_RESEARCH_LOG.md` use a different parameterization and should not be read as the right-run half-length defined here.
+The runnable audit is `test-root119-two-wave-census.cjs`; it asserts these pairs and emits the eight interval records. A further prefix-chain assertion verifies that all eight starts occur before the first unclassified B/0 interval: none has an incoming `other` or unmatched interval, and no earlier such interval occurs in its prefix from the first B/0. This makes the starts' Reach premises compositional in principle, although the macro chain has not yet been packaged as eight Lean Reach derivations. The earlier exploratory `n1` values in `FULL_RESEARCH_LOG.md` use a different parameterization and should not be read as the right-run half-length defined here.
 
 This is a conditional theorem plus a computationally checked census. The concrete reachability of each start is supplied by the raw deterministic replay, not yet by an individual Lean `Reach` derivation. The 49 remaining `other` intervals are still unclassified.
 
@@ -142,6 +142,6 @@ The two-wave-root theorem and its eight-instance replay audit are summarized abo
 
 - The even-prefix, odd-even-prefix, and two-wave-root theorems prove exact B/0 returns under their stated hypotheses; the 51 corresponding observed intervals are checked in the 10M replay.
 - The even-prefix shield theorem is unconditional under the input `NoLeft4` hypothesis. The odd-even shield theorem has the explicit three-cell boundary guard above; proving that `Reach` implies the guard, or finding a reachable counterexample, is the next question.
-- Formalize the concrete Reach derivations for the eight two-wave-root start configurations. Classify the remaining 49 other intervals and establish an all-time B/0 shield or a genuine BBad witness.
+- Package the fully classified incoming macro prefix into Lean Reach derivations for the eight two-wave-root starts. Classify the remaining 49 other intervals and establish an all-time B/0 shield or a genuine BBad witness.
 - The C-phase D1 family is now source-import verified in [Root119CPhaseReturn.lean](Root119CPhaseReturn.lean), including `NoLeft4` preservation and `BBad` exclusion; see the directory README for its separate 15,198-instance audit.
 - This work is intermediate research and belongs in `im-results/`, not `results/`.
