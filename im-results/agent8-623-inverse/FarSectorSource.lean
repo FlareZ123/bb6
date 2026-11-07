@@ -1,5 +1,6 @@
 import Agent8DrainSectorSource
 import Agent8DrainSevenSource
+import Agent8DrainFirstSharpSource
 import Agent49ParitySource
 
 /-!
@@ -13,6 +14,7 @@ namespace BB6.Agent8FarSectorSource
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent8DrainSectorSource
 open BB6.Agent8DrainSevenSource
+open BB6.Agent8DrainFirstSharpSource
 open BB6.Agent49ParitySource
 
 /-- Complete original high-level source transition succeeds in the
@@ -43,32 +45,32 @@ theorem farLeftSafe (b e : Nat)
 
 /-- Strongly left-dominated state, odd second counter. -/
 theorem odd_far_left_two_step (a d aa dd : Nat)
-    (ha : 0<a) (he : d%2=1) (hfar : 17*d+71 ≤ a)
+    (ha : 0<a) (he : d%2=1) (hfar : 16*d+68 ≤ a)
     (hs : highLevelNext (.D a d) = some (.D aa dd)) :
     ∃bb ee, highLevelNext (.D aa dd) = some (.D bb ee) := by
   have h0 : a ≠ 0 := by omega
   have h1 : d%2=1 ∧ a≥d+5 := ⟨he,by omega⟩
   simp only [highLevelNext, if_neg h0, if_pos h1] at hs
-  have hcone := drainB_left_sector_seven (a-d-5) (d+3) 5 aa dd hs
+  have hcone := drainB_left_sector_best (a-d-5) (d+3) 5 aa dd hs
     (by omega)
   exact farLeftSafe aa dd hcone
 
 /-- Strongly left-dominated state, even second counter. -/
 theorem even_far_left_two_step (a d aa dd : Nat)
-    (ha : 0<a) (he : d%2=0) (hfar : 17*d+46 ≤ a)
+    (ha : 0<a) (he : d%2=0) (hfar : 16*d+44 ≤ a)
     (hs : highLevelNext (.D a d) = some (.D aa dd)) :
     ∃bb ee, highLevelNext (.D aa dd) = some (.D bb ee) := by
   have h0 : a ≠ 0 := by omega
   have h1 : ¬(d%2=1 ∧ a≥d+5) := by omega
   have h2 : d%2=0 ∧ a≥d+3 := ⟨he,by omega⟩
   simp only [highLevelNext, if_neg h0, if_neg h1, if_pos h2] at hs
-  have hcone := drainB_left_sector_seven (a-d-2) (d+2) 2 aa dd hs
+  have hcone := drainB_left_sector_best (a-d-2) (d+2) 2 aa dd hs
     (by omega)
   exact farLeftSafe aa dd hcone
 
 /-- Strongly right-dominated state, odd second counter. -/
 theorem odd_far_right_two_step (a d aa dd : Nat)
-    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hfar : 17*a ≤ d)
+    (ha : 0<a) (he : a%2=0) (hd : d%2=1) (hfar : 16*a ≤ d)
     (hs : highLevelNext (.D a d) = some (.D aa dd)) :
     ∃bb ee, highLevelNext (.D aa dd) = some (.D bb ee) := by
   have h0 : a ≠ 0 := by omega
@@ -78,7 +80,7 @@ theorem odd_far_right_two_step (a d aa dd : Nat)
   have h4 : a ≠ d+2 := by omega
   simp only [highLevelNext, if_neg h0, if_neg h1, if_neg h2,
     if_neg h3, if_neg h4, if_pos hd] at hs
-  have hcone := drainB_left_sector_seven (d+4-a) (a-1) 3 aa dd hs
+  have hcone := drainB_left_sector_best (d+4-a) (a-1) 3 aa dd hs
     (by omega)
   exact farLeftSafe aa dd hcone
 
@@ -104,8 +106,8 @@ theorem even_far_right_two_step (a d aa dd : Nat)
     have hi := evalA_third_potential (d+1-a) a (2*a+5) a1 b1 d1 hev
     have hq := BB6.Agent8DrainLogDepthSource.evalA_second_le_quotient
       (d+1-a) a (2*a+5) a1 b1 d1 hev
-    have hcone : 2*d1+16*b1+8 ≤ a1 := by omega
-    have hscone := drainB_left_sector_seven a1 b1 d1 aa dd hs hcone
+    have hcone : 2*d1+15*b1+8 ≤ a1 := by omega
+    have hscone := drainB_left_sector_best a1 b1 d1 aa dd hs hcone
     exact farLeftSafe aa dd hscone
 
 #print axioms farLeftSafe
