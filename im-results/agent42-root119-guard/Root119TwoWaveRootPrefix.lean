@@ -414,7 +414,6 @@ theorem b0_two_wave_root_interval_to_b0
     constructor
     · have hidx : c3.h-2*(i:Int) = (H-2)-2-2*(i:Int) := by
         dsimp [c3,h2]
-        omega
       rw [hidx]
       rw [hc3Tape ((H-2)-2-2*(i:Int)) (by omega)]
       exact (hfb2 i hi).1
