@@ -1,9 +1,11 @@
 import Lean.Elab.Tactic.Omega
 import BlankTwentiethRejoin
 import ExceptionalBGeneral
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
+set_option exponentiation.threshold 2048
 
 namespace BB6.Agent2TwentyFirstRoot
 
@@ -16,13 +18,19 @@ def seed21 : DRegular.L :=
 
 /-- Exact endpoint after 12,588 DRegular sections from the twentieth reentry. -/
 def terminal12588 : DRegular.L :=
-  (DRegular.run 12588 seed21).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 12588 seed21).getD ⟨9,0,0⟩
 
 def t21 : Nat := (terminal12588.a-4)/9
 
 theorem terminal12588_certificate :
     DRegular.run 12588 seed21 = some ⟨9*t21+4,8,1⟩ ∧
       t21 % 27 = 6 := by
+  have hcanon : DRegular.Canon seed21 := by
+    constructor
+    · dsimp [seed21]
+      omega
+    · simp [seed21]
+  rw [BB6.DRegularFast.fastRun_correct 12588 seed21 hcanon]
   decide
 
 theorem terminal12588_exact :
