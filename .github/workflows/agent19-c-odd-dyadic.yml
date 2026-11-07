@@ -62,6 +62,10 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighThreeDirectArithmetic,HighThreeDirect}.lean .
           lean -o HighThreeDirectArithmetic.olean HighThreeDirectArithmetic.lean
           lean HighThreeDirect.lean
+          # Exact original-source high stopping family beyond the old depth cap.
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighThreeLateArithmetic,HighThreeLate}.lean .
+          lean -o HighThreeLateArithmetic.olean HighThreeLateArithmetic.lean
+          lean HighThreeLate.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/DyadicLowTower.lean .
           lean -o DyadicLowTower.olean DyadicLowTower.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/LowTowerFamilies.lean .
