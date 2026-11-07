@@ -50,6 +50,43 @@ private theorem late256_j_mod256 (m : Nat)
   rw [Nat.add_mod,hpowmod,hlinmod] at hsumMod
   omega
 
+/-- Small modular consequences of the explicit late256 residue. Keeping
+    these isolated prevents Omega from normalizing the large stopping powers. -/
+private theorem left_mod4_of_jmod256 (j : Nat) (hj : j%256=244) :
+    (2*j+3)%4=3 := by
+  have hj4 : j%4=0 := by omega
+  omega
+
+private theorem highAllowedPlus_extras_of_mod256 (j m : Nat)
+    (hj : j%256=244) (hm : m%256=3) :
+    ¬(4≤m ∧ j%8=5 ∧ (j+31)%128=(3*m)%128) ∧
+    ¬(4≤m ∧ j%32=17 ∧ (j+31)%128=(3*m)%128) ∧
+    ¬(4≤m ∧ j%64=57 ∧ (j+31)%128=(3*m)%128) ∧
+    ¬(m%32=6 ∧ (j+51)%256=(9*m)%256) := by
+  have hj8 : j%8=4 := by omega
+  have hj32 : j%32=20 := by omega
+  have hj64 : j%64=52 := by omega
+  have hm32 : m%32=3 := by omega
+  constructor
+  · rintro ⟨_,h,_⟩
+    omega
+  constructor
+  · rintro ⟨_,h,_⟩
+    omega
+  constructor
+  · rintro ⟨_,h,_⟩
+    omega
+  · rintro ⟨h,_⟩
+    omega
+
+private theorem sub_eq_of_add_eq (x y : Nat) (h : x+2=y) :
+    x=y-2 := by
+  omega
+
+private theorem affine_norm_not_four (u : Nat) (hu : 7≤u) :
+    2*u-2≠4 := by
+  omega
+
 /-- The recursive affine normalizer strips every forced halving link.
     If the right counter starts at 2^(d+1)u-2, with u odd, it stops
     exactly at 2u-2. This gives a closed form for its residual right. -/
@@ -251,7 +288,9 @@ private theorem late256_parameters (m : Nat)
     simpa [Nat.mul_comm] using
       Nat.mul_le_mul_left (2^(2*m+3)) huge
   have hjmod256 := late256_j_mod256 m hm hmres
-  have hleft : (2*j+3)%4=3 := by omega
+  have hjmod256' : j%256=244 := by simpa [j] using hjmod256
+  have hleft : (2*j+3)%4=3 :=
+    left_mod4_of_jmod256 j hjmod256'
   refine ⟨u,hkstop,hkpow,huodd,huge,hleft,hmod,hsize⟩
 
 /-- The complementary odd-part-three cone now excludes every member of
@@ -303,9 +342,11 @@ theorem old_sieve_admits_late256_family (m : Nat)
     · omega
     · omega
     · omega
+  have hjmod256' : j%256=244 := by simpa [j] using hjmod256
+  have hExtra := highAllowedPlus_extras_of_mod256 j m hjmod256' hmres
   have hPlus : BB6.Agent29Joint.highAllowedPlus j m := by
     unfold BB6.Agent29Joint.highAllowedPlus
-    exact ⟨hJoint,by omega,by omega,by omega,by omega⟩
+    exact ⟨hJoint,hExtra.1,hExtra.2.1,hExtra.2.2.1,hExtra.2.2.2⟩
   have hValSix : BB6.Agent3ValSix.highAllowedValSix j m := by
     unfold BB6.Agent3ValSix.highAllowedValSix
     exact ⟨hPlus,by omega,by omega⟩
@@ -320,16 +361,17 @@ theorem old_sieve_admits_late256_family (m : Nat)
     exact ⟨h11,by omega⟩
   have hnorm : (BB6.Agent15.affineNormalize (2*j+3)
       (late256K j m)).2=2*u-2 := by
-    have hkEq : late256K j m=2^(2*m+3)*u-2 := by
-      dsimp [late256K] at *
-      omega
+    have hkpow' : late256K j m+2=2^(2*m+3)*u := by
+      simpa [j] using hkpow
+    have hkEq : late256K j m=2^(2*m+3)*u-2 :=
+      sub_eq_of_add_eq _ _ hkpow'
     rw [hkEq]
     exact affineNormalize_pow_two (2*j+3) u (2*m+2)
-      hleft huodd huge
+      hleft huodd (by omega)
   have hAffine : (BB6.Agent15.affineNormalize (2*j+3)
       (late256K j m)).2≠4 := by
     rw [hnorm]
-    omega
+    exact affine_norm_not_four u huge
   have hFull : BB6.Agent3ValSix.highAllowedValSixFull j m := by
     unfold BB6.Agent3ValSix.highAllowedValSixFull
     exact ⟨hThree,hFive,by omega,by omega,by omega,hAffine⟩
