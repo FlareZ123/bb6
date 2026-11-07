@@ -209,8 +209,9 @@ theorem rightOddCanonicalTransition (a d : Nat)
   let t := m-k
   have hexp : 2*m+5=d+4-a := by omega
   have hbaseBudget : a-1≤ternaryOnes (2*k+5) := rightOddExponent_spec a
-  have hmBudget : a-1≤ternaryOnes (2*m+5) := by rw [← hexp]; exact hbudget
+  have hmBudget : a-1≤ternaryOnes (2*m+5) := by rw [hexp]; exact hbudget
   have hk : k≤m := rightOddExponent_le a m hmBudget
+  have hdBase : (a+1+2*k)%2=1 := by omega
   have hdecomp : d=(a+1+2*k)+2*t := by dsimp [t]; omega
   have hbaseEq : highLevelNext (.D a (a+1+2*k)) =
       drainB (2*k+5) (a-1) 3 := by
@@ -220,8 +221,7 @@ theorem rightOddCanonicalTransition (a d : Nat)
     have h2 : ¬((a+1+2*k)%2=0 ∧ a≥a+1+2*k+3) := by omega
     have hodd : a%2 ≠ 1 := by omega
     have heq : a ≠ a+1+2*k+2 := by omega
-    have hd' : (a+1+2*k)%2=1 := by omega
-    simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg heq, if_pos hd']
+    simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg heq, if_pos hdBase]
     have harg : a+1+2*k+4-a=2*k+5 := by omega
     rw [harg]
   obtain ⟨B,E,hBE⟩ := drainB_safe_ones (a-1) (2*k+5) 3 hbaseBudget
@@ -246,18 +246,37 @@ theorem rightEvenCanonicalTransition (a d : Nat)
     (hbudget : a<ternaryOnes (d+1-a)) :
     ∃ B E,
       highLevelNext (.D a d) =
-        some (.D (B + 2*((d-a-2)/2-rightEvenExponent a)) E) ∧
+        some (.D (B + 2*(d/2-a/2-1-rightEvenExponent a)) E) ∧
       highLevelNext (.D a (a+2+2*rightEvenExponent a)) =
         some (.D B E) := by
   classical
   let k := rightEvenExponent a
-  let m := (d-a-2)/2
+  let m := d/2-a/2-1
   let t := m-k
-  have hexp : 2*m+3=d+1-a := by omega
+  have hstrict : a+2≤d := by
+    by_contra h
+    have heq : d=a := by omega
+    subst d
+    simp [ternaryOnes] at hbudget
+  have hdDiv : d=2*(d/2) := by
+    have h := Nat.mod_add_div d 2
+    rw [hd] at h
+    omega
+  have haDiv : a=2*(a/2) := by
+    have h := Nat.mod_add_div a 2
+    rw [he] at h
+    omega
+  have hexp : 2*m+3=d+1-a := by
+    dsimp [m]
+    rw [hdDiv,haDiv]
+    omega
   have hbaseBudget : a<ternaryOnes (2*k+3) := rightEvenExponent_spec a
-  have hmBudget : a<ternaryOnes (2*m+3) := by rw [← hexp]; exact hbudget
+  have hmBudget : a<ternaryOnes (2*m+3) := by rw [hexp]; exact hbudget
   have hk : k≤m := rightEvenExponent_le a m hmBudget
-  have hdecomp : d=(a+2+2*k)+2*t := by dsimp [t]; omega
+  have hdecomp : d=(a+2+2*k)+2*t := by
+    dsimp [t,m]
+    rw [hdDiv,haDiv]
+    omega
   have hbaseEq : highLevelNext (.D a (a+2+2*k)) =
       (evalA (2*k+3) a (2*a+5)).bind
         (fun p => drainB p.1 p.2.1 p.2.2) := by
@@ -267,8 +286,8 @@ theorem rightEvenCanonicalTransition (a d : Nat)
     have h2 : ¬((a+2+2*k)%2=0 ∧ a≥a+2+2*k+3) := by omega
     have hodd : a%2 ≠ 1 := by omega
     have heq : a ≠ a+2+2*k+2 := by omega
-    have hd' : (a+2+2*k)%2 ≠ 1 := by omega
-    simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg heq, if_neg hd']
+    have hdBase : (a+2+2*k)%2=0 := by omega
+    simp only [if_neg h0, if_neg h1, if_neg h2, if_neg hodd, if_neg heq, if_neg (show (a+2+2*k)%2 ≠ 1 from by omega)]
     have harg : a+2+2*k+1-a=2*k+3 := by omega
     rw [harg]
   obtain ⟨x,b,y,hEval,hbudget'⟩ :=
@@ -284,7 +303,7 @@ theorem rightEvenCanonicalTransition (a d : Nat)
       highLevelNext (.D a d) =
           highLevelNext (.D a ((a+2+2*k)+2*t)) := by rw [hdecomp]
       _ = (highLevelNext (.D a (a+2+2*k))).map (liftFirstState (2*t)) :=
-        highLevel_right_even_shift_ones a (a+2+2*k) t ha he hd' (by omega) hbaseBudget
+        highLevel_right_even_shift_ones a (a+2+2*k) t ha he hdBase (by omega) hbaseBudget
   refine ⟨B,E,?_,hbase⟩
   rw [hshift,hbase]
   rfl
@@ -306,7 +325,7 @@ theorem newAffine_canonicalRay (a d : Nat) (hcone : newAffineCone a d) :
       highLevelNext (.D a (a+1+2*rightOddExponent a)) = some (.D B E)) ∨
     (∃ B E,
       highLevelNext (.D a d) =
-        some (.D (B + 2*((d-a-2)/2-rightEvenExponent a)) E) ∧
+        some (.D (B + 2*(d/2-a/2-1-rightEvenExponent a)) E) ∧
       highLevelNext (.D a (a+2+2*rightEvenExponent a)) = some (.D B E)) := by
   rcases hcone with h | h | h | h
   · rcases h with ⟨hd,hbranch,hbudget⟩
@@ -316,7 +335,7 @@ theorem newAffine_canonicalRay (a d : Nat) (hcone : newAffineCone a d) :
   · rcases h with ⟨ha,he,hside,hd,hbudget⟩
     exact Or.inr (Or.inr (Or.inl (rightOddCanonicalTransition a d ha he hd hside hbudget)))
   · rcases h with ⟨ha,he,hside,hd,hbudget⟩
-    exact Or.inr (Or.inr (Or.inr (rightEvenCanonicalTransition a d ha he hd hbudget)))
+    exact Or.inr (Or.inr (Or.inr (rightEvenCanonicalTransition a d ha he hd hside hbudget)))
 
 #print axioms leftOddCanonicalTransition
 #print axioms leftEvenCanonicalTransition
