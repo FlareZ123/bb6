@@ -48,3 +48,5 @@ jobs:
           lean -o HighResidual.olean HighResidual.lean
           lean -o PhaseResidual.olean PhaseResidual.lean
           lean -o HighActualStates.olean HighActualStates.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent24-c-exceptional-dyadic/HighPhaseUnique.lean .
+          lean -o HighPhaseUnique.olean HighPhaseUnique.lean
