@@ -21,8 +21,13 @@ theorem midA2_to_junc0_of_base (u : Nat)
         some (junc 0 0 (2*k+6), -4)) :
     runWithDelta (12*u+72) (midA2 (2*u+4) 1) =
       some (junc 0 0 (4*u+18), -((4*u+16 : Nat) : Int)) := by
+  have hEq := midA2_eq_midApos (2*u+4) 1
+  rw [hEq]
   have h := midApos_to_junc0_of_base (2*u+4) (by omega) hbase
-  simpa [midA2, midApos] using h
+  have htime : 6*(2*u+4)+48 = 12*u+72 := by omega
+  have hparam : 2*(2*u+4)+10 = 4*u+18 := by omega
+  have hdisp : 2*(2*u+4)+8 = 4*u+16 := by omega
+  simpa [htime, hparam, hdisp] using h
 
 /-- From the synthetic J-chart state J(u,2u+2), the high-2 C/B branch
     now has a complete exact raw-source return to J(0,4u+18). The proof
