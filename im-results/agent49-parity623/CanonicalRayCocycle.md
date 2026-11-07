@@ -104,7 +104,11 @@ A separate exact-integer scan of the four old-ray bridge forms
 \]
 over indices 16 through 9,999 found the minimum of \(L^2/(a+d)\) to be exactly \(157922/1009\), attained at index 18, state \(D(104,1914)\), with \(L=d-13a=562\). This is empirical evidence only; it is not an inductive invariant.
 
-This scan is finite computational evidence. The index-13 candidate is not itself a halting result: its actual successor is D(314,385), which continues to D(74,950). The scan has been independently reproduced in the private Python analysis; the committed script is also included in the pending CI workflow. No all-time separation theorem for the genuine root ray shifts has been established.
+This scan is finite computational evidence. The index-13 candidate is not itself a halting result: its actual successor is D(314,385), which continues to D(74,950). The committed script passed the pinned workflow audit.
+
+A separate exact-integer replay checked the old-ray distance predicate over 6,803 old-cone states in indices 9 through 9,999. It found no violations of \((s-2d)^2\ge d\) on left rays or \((s-a)^2\ge a\) on right rays. The minimum ratio of squared distance to its coordinate is exactly \(338/61\), at index 13, \(D(122,438)\), right-even with \(s=96\) and \(s-a=-26\). Restricting to indices 16 onward, the minimum is \(5329/235\), at index 16, \(D(876,235)\), left-odd with \(s=397\) and \(s-2d=-73\). This is also finite empirical evidence, not an all-time invariant.
+
+No all-time separation theorem for the genuine root ray shifts has been established.
 
 ## Remaining mathematical obstacle
 
