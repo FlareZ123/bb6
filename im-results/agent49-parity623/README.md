@@ -131,3 +131,94 @@ The sharp exponential-budget translation theorem in [TERNARY-SHIFT.md](TERNARY-S
 The buffer theorem `newAffine_to_oldRight` says that, for even first counter `a), every state in the four-sector exponential `newAffineCone` but outside the four-sector older linear `oldAffineCone` (apart from `D(4,5)` and `D(4,7)`) returns, whenever it returns, to an even-first-counter state satisfying `2*b+1≤e`. This is a source-kernel theorem, not a simulation. The finite small-sector tables used by the proof are explicitly bounded and audited.
 
 **Limit:** the theorem covers the new-only part of the safe region. It does not establish forward closure of the full safe region or blank-root reachability, and it leaves the two named synthetic exceptions outside the conclusion. The blank-origin fate of #623 and BB(6) remain unresolved.
+
+
+## 2026-11-07: sharp linear-logarithmic B-drain envelopes
+
+**Status:** intermediate mathematical result. The Lean proof text has compiled
+locally with Lean 4.36.0-rc2 against an exact copy of the pinned upstream
+`evalA` and `drainB` equations. Compilation through the full pinned source
+imports in the repository's manual workflow remains pending.
+
+For every `n), every successful complete drain with `b < 3^n`,
+`drainB a b d = some (.D aa dd)`, satisfies
+
+```
+a - (n+1) ≤ aa ≤ a+n
+d + 3*b ≤ dd ≤ d + 3*b + 4*n + 2
+```
+
+The first upper bound and third lower bound are existing source results.
+The new bounds are:
+
+- `drainB_first_lower_log`: `aa+n+1 ≥ a`;
+- `drainB_upper_linear_log`: `dd ≤ d+3*b+4*n+2`.
+
+The evaluator lemma `evalA_positive_depth` supplies a digit-depth witness
+`r+s=n`, `r>0`, `bb<3^s`, with both
+`aa+r ≥ a` and `dd+3*bb ≤ m+k+2*r`. Strong induction on the remaining
+ternary exponent composes these witnesses through the complete drain.
+The separate evaluator bound `evalA_first_lower_log` handles the terminal
+case `bb=0`.
+
+Both new drain bounds are sharp simultaneously. Let
+`b_1=2` and `b_{n+1}=3*b_n+1`, equivalently
+`b_n=(5*3^(n-1)-1)/2). Then for `a=n+1`,
+
+```
+drainB (n+1) b_n d = some (.D 0 (d+3*b_n+4*n+2)).
+```
+
+A second family, `b=(3^n+1)/2`, `a=n+1`, also attains the first-counter
+loss `n+1`.
+
+Files:
+- `DrainLinearLogSource.lean`: Lean proof draft, locally compiled against
+  the exact recursion equations; awaiting source-import CI.
+- `drain_linear_log_check.py`: reproducible finite checks for `n≤9`,
+  `b<3^n`, and `a≤n+24`, plus both sharp witness families.
+- `DrainLinearTerminalSource.lean`: source-shaped draft of the sharper
+  terminal interval, awaiting source-import CI.
+
+### Consequence for terminal-drain predecessors
+
+For a final drain input `drainB x b y), let `n` satisfy `b<3^n`, set
+
+```
+M = x+y+3*b+5*n+2
+K = least integer with 2*M+5 < 3^K
+g = x-y-3*b.
+```
+
+If the drain output is a terminal daughter, the one-step power-gap theorem
+and the two-sided drain envelope force
+
+```
+-(n+K+5) ≤ g ≤ 5*n+K+8.
+```
+
+This is a narrow interval around the balance equation `x=y+3*b`.
+For the four high-level branches, the balance is a branch-specific linear
+form; for example it is `a-4*d-19` on the odd-left branch,
+`a-4*d-10` on the even-left branch, and `d-4*a+4` on the odd-right
+branch. The even-right branch is evaluated first, so its final drain input
+must be used.
+
+### Root diagnostic (empirical only)
+
+A Python mirror of `highLevelNext` was replayed for 10,000 states from
+`D(0,7)`. Among states 9 through 9,999, no final-drain input entered the
+new terminal-balance interval. The previous quadratic/linear drain envelope
+left 1,587 candidate inputs on the same prefix. The closest miss was index
+13, `D(122,438)`, with final drain input `(318,40,249)`, balance
+`g=-51`, and interval `[-16,35]` (margin 35).
+
+This finite observation is not an all-time root proof. It identifies a
+specific next target: prove that every root-reachable final-drain input
+avoids the displayed balance interval. The detailed diagnostic was sent to
+Agent 8 in `communications/agent8/20261107T073211Z_agent49-root-drain-balance.md`.
+
+The local Lean compile reports only standard Lean axioms
+(`propext`, `Classical.choice`, `Quot.sound`), with no `sorry` and no
+project-specific axioms. The pinned source workflow still needs to compile
+the two new modules against the actual upstream imports.
