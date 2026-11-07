@@ -562,14 +562,22 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
   have hw' : 2*u≤w+1 := by omega
   have hF0 := j_F0_exact u w hw'
   have hlocal := f0_local u w
+  have hFminus1 : f0Tape u w (hF-1)=false := by
+    have hh : hF-1=-2*(u:Int)-8 := by dsimp [hF]; omega
+    rw [hh]
+    exact hlocal.2.2.2.2.2.1
+  have hFminus2 : f0Tape u w (hF-2)=false := by
+    have hh : hF-2=-2*(u:Int)-9 := by dsimp [hF]; omega
+    rw [hh]
+    exact hlocal.2.2.2.2.2.2
   have hsetup := f0_to_c1 hF (f0Tape u w)
       (by simpa [hF] using hlocal.1)
       (by simpa [hF] using hlocal.2.1)
       (by simpa [hF] using hlocal.2.2.1)
       (by simpa [hF] using hlocal.2.2.2.1)
       (by simpa [hF] using hlocal.2.2.2.2.1)
-      (by simpa [hF] using hlocal.2.2.2.2.2.1)
-      (by simpa [hF] using hlocal.2.2.2.2.2.2)
+      hFminus1
+      hFminus2
   have hC1 : target429 (C,true)=some ⟨false,true,B⟩ := by decide
   have hB0 : target429 (B,false)=some ⟨true,true,C⟩ := by decide
   have hB1 : target429 (B,true)=some ⟨true,true,A⟩ := by decide
@@ -578,25 +586,28 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
       cC.tape (cC.head+2*(i:Int)+1)=false := by
     intro i hi
     have hx0lo : -2*(u:Int)-6 ≤ cC.head+2*(i:Int) := by
-      simp [cC,hC]
+      dsimp [cC,hC]
       omega
     have hx0hi : cC.head+2*(i:Int) ≤ 2*(u:Int)-1 := by
-      simp [cC,hC,k] at *
+      dsimp [cC,hC,k] at *
       omega
     have hx1lo : -2*(u:Int)-2 ≤ cC.head+2*(i:Int)+1 := by
-      simp [cC,hC]
+      dsimp [cC,hC]
       omega
     have hx1hi : cC.head+2*(i:Int)+1 ≤ 2*(u:Int) := by
-      simp [cC,hC,k] at *
+      dsimp [cC,hC,k] at *
       omega
     have hodd : (cC.head+2*(i:Int))%2≠0 := by
-      simp [cC,hC]
+      dsimp [cC,hC]
       omega
     have heven : (cC.head+2*(i:Int)+1)%2=0 := by
-      simp [cC,hC]
+      dsimp [cC,hC]
       omega
-    rw [cCfg_tape_right u w _ (by simp [cC,hC]; omega)]
-    rw [cCfg_tape_right u w _ (by simp [cC,hC]; omega)]
+    change
+      setupTape (f0Tape u w) (-2*(u:Int)-7) (cC.head+2*(i:Int))=true ∧
+      setupTape (f0Tape u w) (-2*(u:Int)-7) (cC.head+2*(i:Int)+1)=false
+    rw [cCfg_tape_right u w (cC.head+2*(i:Int)) (by dsimp [cC,hC]; omega)]
+    rw [cCfg_tape_right u w (cC.head+2*(i:Int)+1) (by dsimp [cC,hC]; omega)]
     constructor
     · exact baseTape_odd u w _ hx0lo (by omega) hodd
     · exact baseTape_even_zero u w _ hx1lo hx1hi heven
@@ -608,12 +619,14 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
     omega
   have hE0 : cE.tape cE.head=true := by
     rw [htE,hheadE]
-    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1) (by simp [cC,hC,k]; omega)]
-    rw [cCfg_tape_right u w _ (by simp [cC,hC]; omega)]
-    exact baseTape_right_one u w hw _ (by omega) (by omega)
+    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1) (by dsimp [cC,hC,k]; omega)]
+    change setupTape (f0Tape u w) (-2*(u:Int)-7) (2*(u:Int)+1)=true
+    rw [cCfg_tape_right u w (2*(u:Int)+1) (by omega)]
+    exact baseTape_right_one u w hw (2*(u:Int)+1) (by omega) (by omega)
   have hE1 : cE.tape (cE.head+1)=true := by
     rw [htE,hheadE]
-    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1+1) (by simp [cC,hC,k]; omega)]
+    rw [cbPaint_right cC.tape cC.head k (2*(u:Int)+1+1) (by dsimp [cC,hC,k]; omega)]
+    change setupTape (f0Tape u w) (-2*(u:Int)-7) (2*(u:Int)+1+1)=true
     rw [cCfg_tape_right u w (2*(u:Int)+1+1) (by omega)]
     exact baseTape_right_one u w hw (2*(u:Int)+1+1) (by omega) (by omega)
   obtain ⟨cFinal,hExit,hsFinal,hhFinal,htFinal⟩ :=
