@@ -813,15 +813,17 @@ theorem b0_c0_d1_odd_retreat_to_b0_preserves_noLeft4 (b : Conf) (n m : Nat)
     simpa [bout,dRetreatResult,tD] using hret.1
   have hNoBout : NoLeft4 true true false b → NoLeft4 true true false bout := by
     intro hshield
+    have hNoB0 : NoLeft4 true true false b0 := by
+      simpa [b0] using hshield
     have hNoD : NoLeft4 true true false d :=
-      noLeft4_transfer_of_left_agreement true true false b d
+      noLeft4_transfer_of_left_agreement true true false b0 d
         (by simp [d,b0]; omega)
         (by
           intro x hx
           have hne0 : x ≠ pos := by simp [d] at hx; omega
           have hne1 : x ≠ pos-1 := by simp [d] at hx; omega
           simp [d,b0,b0C0DTape,setBit,hne0,hne1])
-        hshield
+        hNoB0
     have hNoRet := dRetreatResult_preserves_noLeft4 n m tD (pos-2) hNoD
     simpa [bout] using hNoRet
   exact ⟨bout,hboutReach,hbout,hNoBout⟩
