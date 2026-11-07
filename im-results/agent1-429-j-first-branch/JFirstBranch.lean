@@ -378,9 +378,10 @@ theorem j_F0_exact (u w : Nat) (hw : 2*u≤w+1) :
         {state:=A,head:=-2*(u:Int)-6,tape:=baseTape u w} =
       some {state:=F,head:=-2*(u:Int)-7,tape:=f0Tape u w} := by
     simp [rawStep,readSlot,target429,applyMove,f0Tape,writeAt,hb]
+  have hprefix : prefix11 (A,true)=some ⟨false,false,F⟩ := by decide
   have htime : 4*u*u+6*u+7=(4*u*u+6*u+6)+1 := by omega
   rw [htime,run_add',hp]
-  simpa [run,rawStep,readSlot,target429,prefix11,prefix10,prefix9,prefix8,prefix7,prefix6,prefix5,prefix4,prefix3,prefix2,prefix1,prefix0,applyMove,baseTape,f0Tape,writeAt,hb] using hstep
+  simpa [run,rawStep,readSlot,target429,applyMove,baseTape,f0Tape,writeAt,hb,hprefix] using hstep
 
 /-- The exact fourteen-transition F/0-to-C/1 setup, independent of the
     surrounding tape once the seven queried cells have the displayed bits. -/
