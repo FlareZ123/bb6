@@ -82,7 +82,7 @@ Therefore any qualifying depth is unique and is exactly `v2(D)-2`. The new `High
 - `candidateAllowedBool_iff`: the one-candidate Boolean is equivalent to exclusion at every depth.
 - `candidate_matches_scan`: the new Boolean is extensionally identical to the previous bounded scan.
 
-The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports only `propext` and `Quot.sound`; no `sorryAx`. It is wired into `ValSixC58AllDepthBool.lean` and the manual source workflow. Full source verification is still pending: run [42394679706](https://github.com/FlareZ123/bb6/actions/runs/42394679706) compiled all three valuation leaves and the C58 Boolean criterion, then stopped at `ValSixC58Late.lean:90` because the strict-family proof still used the old Boolean name. I repaired that bridge with `candidate_matches_scan`; run 17 ([42395358939](https://github.com/FlareZ123/bb6/actions/runs/42395358939)) is queued with the fix and the additional leaves. The earlier `HighThreeLate256.lean` heartbeat/type issues have also received isolated proof-structure repairs, but the new full chain has not yet passed. Do not describe these additions as source-CI certified until run 17 completes successfully.
+The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports only `propext` and `Quot.sound`; no `sorryAx`. It is wired into `ValSixC58AllDepthBool.lean` and the manual source workflow. Run 17 ([42395358939](https://github.com/FlareZ123/bb6/actions/runs/42395358939)) compiled all three valuation leaves, the C58 Boolean criterion, `ValSixC58Late`, and `ValSixC58LateFast`; it stopped in the separate `HighThreeLate256.lean` old-sieve family proof at large-context parity/whnf timeouts. Run 18 ([42395972563](https://github.com/FlareZ123/bb6/actions/runs/42395972563)) stopped earlier at the raw-census equivalence because `rw [List.all_eq_true]` caused recursion-depth overflow. Run 19 ([42396678145](https://github.com/FlareZ123/bb6/actions/runs/42396678145)) repeated that census failure because it used the same revision. The scan proof has now been rewritten using direct `List.all_eq_true.mp` application; the late256 joint admission proof now uses the explicit mod-256 residues and the older-gate v2 lemma, and the C58 no-gate proof uses `v2_odd` plus the exact fast-gate iff. Run 20 ([42397273754](https://github.com/FlareZ123/bb6/actions/runs/42397273754)) is testing these changes. Do not claim the late256 family source-certified until run 20 passes.
 
 ## Direct evaluator for Agent19's older all-depth guard
 
@@ -109,9 +109,15 @@ The companion `OlderGateRawCensus.lean` formalizes Agent4's 322 high
 pairs in the raw mass-2000 box and proves that the original finite scan
 rejects **exactly** `[(14,1),(30,1),(46,1)]`. Each is witnessed at depth
 `n=0`. The theorem `scanAllowedBool_iff` proves the finite scan covers
-all possible depths because the gate requires `n+4≤2*m+2`; the exact
-list theorem is kernel-checked by `decide` and has no axioms. The
-remaining four low targets are outside this high-only guard.
+all possible depths because the gate requires `n+4≤2*m+2`. The new
+`scan_matches_candidate` theorem identifies the one-candidate v2
+Boolean with that original scan, and `candidateRejectedPoints_exact`
+proves the fast evaluator has the same exact rejection list. The exact
+list and witness theorems are kernel-checked by `decide`; the
+equivalence theorems use only standard Lean axioms. The remaining four
+low targets are outside this high-only guard. Run 20 is the first source
+workflow to compile the updated direct-application proof and candidate
+census.
 
 ## Formal artifacts and verification boundary
 
