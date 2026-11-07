@@ -467,8 +467,7 @@ theorem oddEvenPrefixResultTape_at_h_minus_3 (n : Nat) (t : Int → Bool) (h : I
   rw [evenSweepBResultTape_left (n+1)
     (setBit (setBit (oddWaveTape n (twoWavePrefixTape t h) (h-1))
       (h-2) true) (h-3) false) (h-2) (h-3) hlt]
-  have hne : h-3 ≠ h-2 := by omega
-  simp [setBit,hne]
+  simp [setBit]
 
 /-- The odd-even return creates a left-of-head 1100 whenever its explicit
     three-cell boundary guard fails. This makes the guard sharp. -/
