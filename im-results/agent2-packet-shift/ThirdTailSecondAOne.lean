@@ -124,13 +124,19 @@ theorem a_q1_next (t r : Nat) :
     ⟨[],false,
       List.replicate (2*(m+CryptidA.wordInc ws)+1) true ++
         (false :: List.replicate 6 true),5⟩
+  have hxs : xs ++ List.replicate 2 false =
+      List.replicate (3*K+1) true ++
+        false :: (CryptidA.wordCode ws ++ [true,true,false,false]) := by
+    dsimp [xs]
+    simp [List.append_assoc]
   have hsource' :
       CryptidBoundary.run
         ((12*K*K+41*K+32) +
           (CryptidA.wordCost m ws +
             (2*(m+CryptidA.wordInc ws)+16)))
         (init (xs ++ List.replicate 2 false)) = target1 := by
-    simpa [target1,xs,K,m,List.append_assoc] using hsource
+    rw [hxs]
+    simpa [target1,K,m] using hsource
   have hlen :
       2*(m+CryptidA.wordInc ws)+1 = 64*t+97+16*r := by
     dsimp [m,K,ws]
