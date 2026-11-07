@@ -90,6 +90,13 @@ The probabilities sum to one:
 \sum_{a\ge1}\sum_{h\ge0}2^{-(a+h+1)}=1.
 \]
 
+More explicitly, for any measurable \(A\subseteq X\), the affine bijection on each branch gives
+\[
+\mu_X(C_{a,h}\cap E_g^{-1}(A))
+=2^{-(a+h+1)}\mu_X(A).
+\]
+Summing over the disjoint branches and using the preceding probability sum proves \(\mu_X(E_g^{-1}(A))=\mu_X(A)\). Thus normalized Haar measure is invariant, as required for the Bernoulli-system statement.
+
 ## 3. Exact Bernoulli law
 
 Let \(\mathcal A=\mathbb N_{\ge1}\times\mathbb N\) be the countable branch alphabet. For a generic point \(x\), its itinerary is
