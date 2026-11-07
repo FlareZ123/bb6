@@ -88,7 +88,8 @@ theorem machineC_completion_halts_iff_original
   constructor
   · intro hh
     have hs : m machineCHaltSlot = none := by
-      by_contra hnot
+      by_cases hnot : m machineCHaltSlot = none
+      · exact hnot
       have hcompat : compatible
           (refine (machineCPrefix 11) machineCHaltSlot
             (m machineCHaltSlot)) m :=
