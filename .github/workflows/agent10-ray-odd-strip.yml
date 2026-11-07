@@ -108,4 +108,6 @@ jobs:
           lean -o "$b/RayNoSeam.olean" "$b/RayNoSeam.lean"
           lean -o "$b/RayNoSeamResidue.olean" "$b/RayNoSeamResidue.lean"
           lean -o "$b/RayNoSeamWalk.olean" "$b/RayNoSeamWalk.lean"
+          lean -o "$g/EvenChainFork.olean" "$g/EvenChainFork.lean"
+          lean -o "$b/RayNoSeamRoot.olean" "$b/RayNoSeamRoot.lean"
           echo "Agent 10 source-verified exact source t1,t2,t3 rooted classification; Agent 7 all-index two-tier root gap."
