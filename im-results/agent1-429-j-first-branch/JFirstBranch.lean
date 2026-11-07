@@ -825,8 +825,8 @@ theorem j_first_branch_tape (u w : Nat) (hw : 2*u+3 ≤ w) :
 theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
     run target429 (4*u*u+10*u+27)
       {state:=A,head:=0,tape:=jTape u w} =
-    some ({state:=A,head:=Int.ofNat (2*u+3),
-      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} : Config) := by
+    some (Config.mk A (2*(u:Int)+3)
+      (jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3))) := by
   have hprefix : 2*u ≤ w+1 := by omega
   rcases f0_local u w with ⟨h0,h1,h2,h3,h4,hm1,hm2⟩
   have hsetup := f0_to_c1 (-2*(u:Int)-7) (f0Tape u w)
@@ -921,8 +921,8 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
       _ = jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3) := by
         simpa [c1,k] using j_first_branch_tape u w hw
   have hcfg : c3 =
-      {state:=A,head:=2*(u:Int)+3,
-        tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
+      Config.mk A (2*(u:Int)+3)
+        (jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)) := by
     apply config_ext
     · exact hs3
     · exact hhead3
