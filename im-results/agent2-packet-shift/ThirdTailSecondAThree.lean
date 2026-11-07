@@ -84,15 +84,22 @@ theorem a_q3_next (t r : Nat) :
           ([true,true,false] ++
             (CryptidBoundary.pairs 0 ++ ([true,true,true] ++ ys))))) := by
     simpa [K,m,ws,ys] using a_input_shape t r
+  have hinc : CryptidA.wordInc ws =
+      BB6.ThirdTailArithmetic.inc ws := by
+    dsimp [ws]
+    rw [triples_inc, BB6.ThirdTailArithmetic.inc_triples]
+  have hcost : CryptidA.wordCost m ws =
+      BB6.ThirdTailArithmetic.wc m ws := by
+    dsimp [ws]
+    rw [triples_cost, BB6.ThirdTailArithmetic.wc_triples]
   have ht :
       48*r*r+384*r*t+494*r+768*t*t+1928*t+1234 =
         (12*K*K+41*K+32) +
           (CryptidA.wordCost m ws +
             (2*(m+CryptidA.wordInc ws)+24)) := by
     dsimp [K,m,ws]
-    rw [triples_cost,triples_inc]
-    unfold BB6.ThirdTailArithmetic.tripleCost
-    grind
+    rw [hcost,hinc]
+    exact (BB6.ThirdTailArithmetic.a_third_mod_time t r).symm
   rw [hs,ht]
   rw [CryptidBoundary.run_add, CryptidBoundary.prefix_A]
   change CryptidBoundary.run
