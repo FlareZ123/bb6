@@ -40,6 +40,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean
+      - name: Verify exact two-step ratio-40 pole cancellation family
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TwoStepPoleCancellationSource.lean" Agent49TwoStepPoleCancellationSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TwoStepPoleCancellationSource.olean Agent49TwoStepPoleCancellationSource.lean
       - name: Prove new-to-old affine source buffer universally
         working-directory: /tmp/cryptids
         run: |
