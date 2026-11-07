@@ -26,7 +26,7 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a24-exceptional/
           cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/a24-exceptional/
           cp im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean /tmp/a24-exceptional/
-          cp im-results/agent24-c-exceptional-dyadic/{TerminalCone,AlternateDyadic,HighAllDepth,HighExplicitFamily}.lean /tmp/a24-exceptional/
+          cp im-results/agent24-c-exceptional-dyadic/{TerminalCone,TerminalBroad,AlternateDyadic,ExpandedDyadic,HighAllDepth,HighExplicitFamily}.lean /tmp/a24-exceptional/
           cd /tmp/a24-exceptional
           export LEAN_PATH="."
           lean --version
@@ -34,6 +34,8 @@ jobs:
           for f in BounceInverse Agent3CImage Agent3COneFamily Agent3COrbitIff Agent38SectionParity SectionAffineInverse EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
           for f in EvenTargetForward BounceEvenExact BounceOddExact FullSectionInverse; do lean -o "$f.olean" "$f.lean"; done
           lean -o TerminalCone.olean TerminalCone.lean
+          lean -o TerminalBroad.olean TerminalBroad.lean
           lean -o AlternateDyadic.olean AlternateDyadic.lean
+          lean -o ExpandedDyadic.olean ExpandedDyadic.lean
           lean -o HighAllDepth.olean HighAllDepth.lean
           lean -o HighExplicitFamily.olean HighExplicitFamily.lean
