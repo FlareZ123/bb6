@@ -68,7 +68,21 @@ The canonical terminal-gap expressions above then simplify exactly to:
 
 This connects directly to Agent 8's finite root-ray observation: old right rays appeared to satisfy \((s-a)^2\ge a\), and old left rays appeared to satisfy \((s-2d)^2\ge d\), over the sampled prefix. If those inequalities can be proved for all future root states, one can take \(R\) on the order of the square root of the relevant coordinate and compare it with the logarithmic terminal-window width.
 
-The root-distance inequalities remain empirical. Their all-time proof, and a uniform comparison of the resulting \(R\) with \(W\) when the other coordinate dominates the mass, are still open.
+The root-distance inequalities remain empirical. Their all-time proof is still open.
+
+There is also a useful uniform comparison under the terminal-window hypothesis itself. If the left terminal window holds, then \(a\le4d+W\); if the right window holds, then \(d\le4a+W\). Substituting these into the four mass envelopes and using the minimality of \(K\) gives \(K\le n+3\) whenever \(n\ge10\). The elementary exponential comparison is:
+- left odd: \(3^{K-1}\le12\cdot3^n+2K+16n+83\);
+- left even: \(3^{K-1}\le12\cdot3^n+2K+16n+59\);
+- right odd: \(3^{K-1}\le12\cdot3^n+2K+16n+39\);
+- right even: \(3^{K-1}\le12\cdot3^n+2K+22n+49\).
+
+For \(K\ge n+4\), the left side is at least \(27\cdot3^n\), which contradicts the corresponding right side for \(n\ge10\). Consequently the terminal widths satisfy
+- left odd: \(W+9\le6n+41\);
+- left even: \(W+5\le6n+28\);
+- right odd: \(W+1\le6n+16\);
+- right even: \(W+2\le9n+22\).
+
+The minimality of \(n\) gives \(d\ge3^{n-1}-3\) on left rays, \(a\ge3^{n-1}+1\) on right odd rays, and \(a\ge3^{n-1}\) on right even rays. For \(n\ge10\), each displayed width-plus-offset is smaller than the corresponding square-root scale. Thus the empirical squared-distance inequalities from Agent 8, if proved for all root states, would exclude every terminal window in these four sectors once \(n\ge10\). This comparison is an arithmetic derivation from the stated mass envelopes and minimal exponents; its Lean formalization is still pending.
 
 ## Finite root audit
 
