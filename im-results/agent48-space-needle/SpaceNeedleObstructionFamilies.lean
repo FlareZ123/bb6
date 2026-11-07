@@ -2,143 +2,154 @@ import SpaceNeedleClosed
 import Lean.Elab.Tactic.Omega
 
 /-!
-Additional infinite congruence obstructions for Space Needle terminal feeders.
+Periodic congruence obstructions for Space Needle terminal feeders.
 
-For a feeder valuation v, the source-certified terminal equation is
+The source-certified terminal-predecessor identity is
   2^(k+2)+3 = (2^(v+1)+3)*(2*q+3)+2*v.
-If an odd modulus p divides both 2^(v+1)+3 and 2*v-3, this equation
-forces p | 2^(k+2), contradicting coprimality of p and 2.
+If an odd modulus p divides both 2^(v+1)+3 and 2*v-3, then this identity
+forces p | 2^(k+2), impossible because p is coprime to 2.
 
-The existing SpaceNeedleClosed development already formalizes the p=5 and
-p=7 families. This file formalizes the p=11 and p=13 families recorded in
-the external Space Needle modular-obstruction analysis, and adds p=19 and
-p=29 families. In particular, v=74 (already in the external finite
-obstruction table) is extended to the full progression 74 mod 812.
-These are exclusions of immediate terminal feeders for every q and k;
-they do not prove that the actual blank-root orbit avoids all remaining
-terminal feeders.
+The generic theorem below lifts one modular obstruction to an entire
+arithmetic progression of valuations. It formalizes the p=11 and p=13
+families from the external Space Needle modular analysis, and gives two
+additional progressions: v = 201 mod 342 (p=19) and v = 74 mod 812 (p=29).
+The p=29 family extends the obstruction at v=74 to every member of that
+progression. These are exclusions of immediate terminal feeders for all q
+and k; they do not establish blank-root nonreachability of the remaining
+feeders.
 -/
 
 namespace BB6.Agent48.SpaceNeedleObstructionFamilies
 
 open BB6.Agent48.SpaceNeedle
+open BusyBeaver.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
 
-private theorem pow10_mod11 : 2^10 % 11 = 1 := by decide
-private theorem pow3_mod11 : 2^3 % 11 = 8 := by decide
-
-private theorem pow10_period11 (n : Nat) : (2^10)^n % 11 = 1 := by
+private theorem pow_period_mod (p L n : Nat) (hp : 1 < p)
+    (hperiod : 2^L % p = 1) : (2^L)^n % p = 1 := by
   induction n with
-  | zero => decide
-  | succ n ih => rw [Nat.pow_succ, Nat.mul_mod, ih, pow10_mod11]
+  | zero =>
+      have h1 : 1 % p = 1 := Nat.mod_eq_of_lt (by omega)
+      simpa using h1
+  | succ n ih =>
+      rw [Nat.pow_succ, Nat.mul_mod, ih, hperiod]
+      rw [Nat.one_mul]
+      exact Nat.mod_eq_of_lt (by omega)
 
-/-- The denominator 2^(v+1)+3 is divisible by 11 when v=62 mod 110. -/
-theorem family11_denominator (t : Nat) :
-    11 ∣ 2^(62+110*t+1)+3 := by
-  have hexp : 62+110*t+1 = 3+10*(6+11*t) := by omega
-  have hpow : 2^(62+110*t+1)%11=8 := by
-    rw [hexp, Nat.pow_add, Nat.pow_mul, Nat.mul_mod, pow3_mod11, pow10_period11]
+private theorem pow_mod_progression (p r L n : Nat) (hp : 1 < p)
+    (hperiod : 2^L % p = 1) : 2^(r+L*n) % p = 2^r % p := by
+  rw [Nat.pow_add, Nat.pow_mul, Nat.mul_mod, pow_period_mod p L n hp hperiod]
+  rw [Nat.mul_one]
+  exact Nat.mod_eq_of_lt (Nat.mod_lt _ (by omega))
+
+private theorem progression_denominator (p r L s v0 t : Nat)
+    (hp : 3 < p)
+    (hperiod : 2^L % p = 1)
+    (hexp : v0+1 = r+L*s)
+    (hbase : p ∣ 2^r+3) :
+    p ∣ 2^(v0+L*t+1)+3 := by
+  have hExp : v0+L*t+1 = r+L*(s+t) := by
+    calc
+      v0+L*t+1 = (v0+1)+L*t := by omega
+      _ = (r+L*s)+L*t := by rw [hexp]
+      _ = r+L*(s+t) := by rw [Nat.mul_add]; omega
+  have hpow : 2^(v0+L*t+1)%p = 2^r%p := by
+    rw [hExp]
+    exact pow_mod_progression p r L (s+t) (by omega) hperiod
+  have h3 : 3%p=3 := Nat.mod_eq_of_lt (by omega)
+  have hbaseMod : (2^r%p+3)%p=0 := by
+    have h := (Nat.dvd_iff_mod_eq_zero).mp hbase
+    rw [Nat.add_mod, h3] at h
+    exact h
   apply Nat.dvd_iff_mod_eq_zero.mpr
-  rw [Nat.add_mod, hpow]
+  rw [Nat.add_mod, hpow, h3]
+  exact hbaseMod
 
-/-- The valuation correction 2v-3 is divisible by 11 on the same family. -/
-theorem family11_remainder (t : Nat) :
-    ∃ u, 2*(62+110*t)=3+11*u := by
-  exact ⟨11+20*t, by omega⟩
+private theorem progression_correction (p L v0 t : Nat)
+    (hbase : ∃ u, 2*v0=3+p*u)
+    (hstep : p ∣ 2*L) :
+    ∃ u, 2*(v0+L*t)=3+p*u := by
+  rcases hbase with ⟨u,hu⟩
+  rcases hstep with ⟨w,hw⟩
+  refine ⟨u+w*t, ?_⟩
+  calc
+    2*(v0+L*t) = 2*v0+2*(L*t) := by rw [Nat.mul_add]
+    _ = (3+p*u)+(2*L)*t := by rw [hu, ←Nat.mul_assoc]
+    _ = (3+p*u)+(p*w)*t := by rw [hw]
+    _ = 3+p*(u+w*t) := by rw [Nat.mul_assoc, Nat.add_assoc, ←Nat.mul_add]
+
+private theorem pow_multiple_period (p L n : Nat) (hp : 1 < p)
+    (hperiod : 2^L % p = 1) : 2^(L*n)%p=1 := by
+  rw [Nat.pow_mul]
+  exact pow_period_mod p L n hp hperiod
+
+/-- One modular obstruction lifts to an infinite progression of feeder
+valuations. The exponent and correction congruences are explicit inputs. -/
+theorem no_terminal_on_periodic_valuation_progression
+    (p r L s v0 q k t : Nat)
+    (hp : 3 < p)
+    (hc : Nat.Coprime p 2)
+    (hperiod : 2^L % p = 1)
+    (hexp : v0+1 = r+L*s)
+    (hbase : p ∣ 2^r+3)
+    (hbaseCorrection : ∃ u, 2*v0=3+p*u)
+    (hstep : p ∣ 2*L) :
+    highLevelNext (.N (oddTower q (v0+L*t))) ≠
+      some (.N (haltTower k)) := by
+  exact no_common_modulus_into_power q (v0+L*t) k p
+    (by omega) hc
+    (progression_denominator p r L s v0 t hp hperiod hexp hbase)
+    (progression_correction p L v0 t hbaseCorrection hstep)
 
 /-- No valuation v=62 mod 110 can feed any terminal power-of-two counter. -/
 theorem no_62_mod_110_halving_into_power (q k t : Nat) :
     highLevelNext (.N (oddTower q (62+110*t))) ≠
       some (.N (haltTower k)) := by
-  exact no_common_modulus_into_power q (62+110*t) k 11
-    (by decide) (by decide) (family11_denominator t) (family11_remainder t)
-
-private theorem pow12_mod13 : 2^12 % 13 = 1 := by decide
-private theorem pow10_mod13 : 2^10 % 13 = 10 := by decide
-
-private theorem pow12_period13 (n : Nat) : (2^12)^n % 13 = 1 := by
-  induction n with
-  | zero => decide
-  | succ n ih => rw [Nat.pow_succ, Nat.mul_mod, ih, pow12_mod13]
-
-/-- The denominator 2^(v+1)+3 is divisible by 13 when v=21 mod 156. -/
-theorem family13_denominator (t : Nat) :
-    13 ∣ 2^(21+156*t+1)+3 := by
-  have hexp : 21+156*t+1 = 10+12*(1+13*t) := by omega
-  have hpow : 2^(21+156*t+1)%13=10 := by
-    rw [hexp, Nat.pow_add, Nat.pow_mul, Nat.mul_mod, pow10_mod13, pow12_period13]
-  apply Nat.dvd_iff_mod_eq_zero.mpr
-  rw [Nat.add_mod, hpow]
-
-/-- The valuation correction 2v-3 is divisible by 13 on the same family. -/
-theorem family13_remainder (t : Nat) :
-    ∃ u, 2*(21+156*t)=3+13*u := by
-  exact ⟨3+24*t, by omega⟩
+  have hperiod : 2^110%11=1 := by
+    change 2^(10*11)%11=1
+    exact pow_multiple_period 11 10 11 (by omega) (by decide)
+  exact no_terminal_on_periodic_valuation_progression 11 63 110 0 62 q k t
+    (by omega) (by decide) hperiod (by omega) (by decide)
+    (by refine ⟨11, ?_⟩; omega)
+    (by refine ⟨20, ?_⟩; omega)
 
 /-- No valuation v=21 mod 156 can feed any terminal power-of-two counter. -/
 theorem no_21_mod_156_halving_into_power (q k t : Nat) :
     highLevelNext (.N (oddTower q (21+156*t))) ≠
       some (.N (haltTower k)) := by
-  exact no_common_modulus_into_power q (21+156*t) k 13
-    (by decide) (by decide) (family13_denominator t) (family13_remainder t)
-
-private theorem pow18_mod19 : 2^18 % 19 = 1 := by decide
-private theorem pow4_mod19 : 2^4 % 19 = 16 := by decide
-
-private theorem pow18_period19 (n : Nat) : (2^18)^n % 19 = 1 := by
-  induction n with
-  | zero => decide
-  | succ n ih => rw [Nat.pow_succ, Nat.mul_mod, ih, pow18_mod19]
-
-/-- The denominator 2^(v+1)+3 is divisible by 19 when v=201 mod 342. -/
-theorem family19_denominator (t : Nat) :
-    19 ∣ 2^(201+342*t+1)+3 := by
-  have hexp : 201+342*t+1 = 4+18*(11+19*t) := by omega
-  have hpow : 2^(201+342*t+1)%19=16 := by
-    rw [hexp, Nat.pow_add, Nat.pow_mul, Nat.mul_mod, pow4_mod19, pow18_period19]
-  apply Nat.dvd_iff_mod_eq_zero.mpr
-  rw [Nat.add_mod, hpow]
-
-/-- The valuation correction 2v-3 is divisible by 19 on the same family. -/
-theorem family19_remainder (t : Nat) :
-    ∃ u, 2*(201+342*t)=3+19*u := by
-  exact ⟨21+36*t, by omega⟩
+  have hperiod : 2^156%13=1 := by
+    change 2^(12*13)%13=1
+    exact pow_multiple_period 13 12 13 (by omega) (by decide)
+  exact no_terminal_on_periodic_valuation_progression 13 22 156 0 21 q k t
+    (by omega) (by decide) hperiod (by omega) (by decide)
+    (by refine ⟨3, ?_⟩; omega)
+    (by refine ⟨24, ?_⟩; omega)
 
 /-- New infinite obstruction: no valuation v=201 mod 342 feeds a halt. -/
 theorem no_201_mod_342_halving_into_power (q k t : Nat) :
     highLevelNext (.N (oddTower q (201+342*t))) ≠
       some (.N (haltTower k)) := by
-  exact no_common_modulus_into_power q (201+342*t) k 19
-    (by decide) (by decide) (family19_denominator t) (family19_remainder t)
+  have hperiod : 2^342%19=1 := by
+    change 2^(18*19)%19=1
+    exact pow_multiple_period 19 18 19 (by omega) (by decide)
+  exact no_terminal_on_periodic_valuation_progression 19 202 342 0 201 q k t
+    (by omega) (by decide) hperiod (by omega) (by decide)
+    (by refine ⟨21, ?_⟩; omega)
+    (by refine ⟨36, ?_⟩; omega)
 
-private theorem pow28_mod29 : 2^28 % 29 = 1 := by decide
-private theorem pow19_mod29 : 2^19 % 29 = 26 := by decide
-
-private theorem pow28_period29 (n : Nat) : (2^28)^n % 29 = 1 := by
-  induction n with
-  | zero => decide
-  | succ n ih => rw [Nat.pow_succ, Nat.mul_mod, ih, pow28_mod29]
-
-/-- The denominator 2^(v+1)+3 is divisible by 29 when v=74 mod 812. -/
-theorem family29_denominator (t : Nat) :
-    29 ∣ 2^(74+812*t+1)+3 := by
-  have hexp : 74+812*t+1 = 19+28*(2+29*t) := by omega
-  have hpow : 2^(74+812*t+1)%29=26 := by
-    rw [hexp, Nat.pow_add, Nat.pow_mul, Nat.mul_mod, pow19_mod29, pow28_period29]
-  apply Nat.dvd_iff_mod_eq_zero.mpr
-  rw [Nat.add_mod, hpow]
-
-/-- The valuation correction 2v-3 is divisible by 29 on the same family. -/
-theorem family29_remainder (t : Nat) :
-    ∃ u, 2*(74+812*t)=3+29*u := by
-  exact ⟨5+56*t, by omega⟩
-
-/-- New infinite obstruction: the known v=74 exception extends to all v=74 mod 812. -/
+/-- New infinite obstruction: the known v=74 obstruction extends to all
+v=74 mod 812. -/
 theorem no_74_mod_812_halving_into_power (q k t : Nat) :
     highLevelNext (.N (oddTower q (74+812*t))) ≠
       some (.N (haltTower k)) := by
-  exact no_common_modulus_into_power q (74+812*t) k 29
-    (by decide) (by decide) (family29_denominator t) (family29_remainder t)
+  have hperiod : 2^812%29=1 := by
+    change 2^(28*29)%29=1
+    exact pow_multiple_period 29 28 29 (by omega) (by decide)
+  exact no_terminal_on_periodic_valuation_progression 29 75 812 0 74 q k t
+    (by omega) (by decide) hperiod (by omega) (by decide)
+    (by refine ⟨5, ?_⟩; omega)
+    (by refine ⟨56, ?_⟩; omega)
 
+#print axioms no_terminal_on_periodic_valuation_progression
 #print axioms no_62_mod_110_halving_into_power
 #print axioms no_21_mod_156_halving_into_power
 #print axioms no_201_mod_342_halving_into_power
