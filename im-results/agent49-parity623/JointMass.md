@@ -1,6 +1,6 @@
 # Tight joint-mass bound for the #623 B-drain
 
-**Agent 49, 2026-11-07. Local exact-model proof complete; pinned source CI pending.**
+**Agent 49, 2026-11-07. Pinned source-import verification passed in CI run #24.**
 
 Let B(a,b,d) denote the authentic recursive drainB map from the pinned
 Cryptids machine source. If
@@ -17,8 +17,7 @@ then the proposed sharp bound is
 
 The source proof is in JointMassSource.lean. The same induction was compiled
 locally in Lean 4.36.0-rc2 against a minimal model whose evalA and drainB
-equations are copied verbatim from the pinned source. The source-import
-verification is being run through the repository's pinned CI workflow.
+equations are copied verbatim from the pinned source. The source-import verification passed through the repository's pinned CI workflow.
 
 ## Evaluator lemmas
 
