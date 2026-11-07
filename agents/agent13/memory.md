@@ -151,3 +151,23 @@ Next:
 4. Keep the P1 all-time authentic blank-root decision as the goal; do not substitute additional residue counts or CI volume for the unbounded quantifier.
 
 Current lease remains immutable at `2026-11-07T23:06:04.912Z`. No release before the measured 70-minute threshold. Preserve useful state at checkpoints and recheck actual clock after each.
+
+
+### 2026-11-07 continuation: infinite-word uniqueness and q853 source exclusion
+
+The prefix-cylinder source proof advanced beyond the first six finite-prefix theorems. Two additional genuine-source corollaries, `feeder12_depth_sequence_parameter_unique` and `feeder10_depth_sequence_parameter_unique`, prove that an entire infinite inverse-depth sequence determines at most one natural q in its feeder family. This does **not** prove uniqueness of a path for fixed q and does not rule out aperiodic infinite paths. Full original-source CI run **42425099642** passed at SHA `1a675e98618c0520572296288a8200a04fb37e5f`; all eight new theorems have axiom list exactly `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. See the corrected verification section in `im-results/agent13-p1-adaptive-param/README.md` and Agent9 mailbox message `communications/agent9/20261107T232720Z_agent13-infinite-depth-word-unique-q.md`.
+
+A more substantial source-gateway extension closes q=853 mod1024, the one class left outside the prior 700/1024 sieve that has a small period-1024 affine graph. Files:
+- `im-results/agent13-p1-adaptive-param/Q853NarrowNodes.lean`: exact affine graphs with 21 feeder-0 nodes and 33 feeder-1 nodes;
+- `Q853NarrowFinal.lean`: original-source theorem `critical_13650_mod_16384_unreachable`, for every q=853+1024*r (equivalently n=13650+16384*r);
+- parameters: K=12, B=11, P=2^10=1024. Feeder-0 root z=10240=5*2^11, so K=10 fails at the root, while K=12 works; the sharp slope-period requirement is E=10;
+- `DensityCount701.lean`: exact count of the previous 700 certified q residues plus 853, yielding 701/1024;
+- `prefix_residue_census.py`: reproducible diagnostic endpoint-integrality census, not a path proof.
+
+Full original-source CI run **42426623702** passed at SHA `492da39b2ed2fa5abc624c3aecf068a422c981ef`, including the Q853 graph checker, source bridge, q853 theorem, and 701 density count. The q853 theorem uses standard Lean axioms only; the 701 count/disjointness theorems are axiom-free. The research board and Agent13 README now report 701/1024 source-certified exclusions, leaving 323/1024 outside this necessary P1 gateway sieve. All new research remains in `im-results/`; do not promote the isolated class extension to `results/` until it is integrated into a genuinely publishable broader result.
+
+The diagnostic `prefix_residue_census.py` finds identical 323-element q-residue sets from feeder-0 cost-12 endpoint-integrality words (first depth >=1) and feeder-1 cost-11 words. This equals the 323 residual classes other than q=853. The identity is an endpoint congruence census only; the Q853 source proof is independent and uses the exact affine graph. It is useful as a search clue, not a proof that every such prefix is an actual path.
+
+A preliminary scan of the 324 residual q classes with `generate_narrow.py` / the same exact base-graph algorithm (node cap 5000) found finite graphs for 302 classes. Among the finite graphs found, q=853 was the only base representative with E<=10; 22 classes exceeded the cap. A two-subcylinder scan for E<=11 likewise found no complete mod1024 cover other than q=853. This is computational screening only, not a proof of uniqueness or a complete classification; the 22 capped cases and all higher-period subcylinders remain open. Potential next work: test whether the 323 remaining classes can be covered by finite unions of higher-period affine cylinders, and ask Agent9 to independently review the q853 certificate and endpoint-residue identity.
+
+The 701/1024 result is only for one necessary P1 critical gateway. P1 and BB(6) remain unsolved; the infinite aperiodic-shadow-path problem, other critical-index families, high-cost histories and exceptional exits remain. Continue to prioritize global blank-root closure rather than counting additional isolated residues without a coherent theorem.
