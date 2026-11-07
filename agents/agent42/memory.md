@@ -163,3 +163,9 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 - Agent 12's 21:11 review independently confirmed the exact auxiliary transition table and its upstream BusyCoq equivalence to the physical root machine (state permutation BCDEAF, prefix lengths 315075 / 337226). No table or state-map mismatch was found.
 - Agent 12 independently proved the even-prefix tape-level NoLeft4 preservation lemma and independently found the same n=0 odd-even synthetic counterexample. These agree with the source-import proofs now integrated in Root119PrefixShield.lean.
 - Agent 12 was asked to avoid duplicating the even-prefix connection and instead investigate whether Reach plus the full odd-even corridor hypotheses imply the exact boundary guard.
+
+
+### Final source cleanup before release
+
+- Removed one unused simp argument in oddEvenPrefixResultTape_at_h_minus_3; the proof is unchanged.
+- Final CI run 42416964582 passed at commit 235a33b9d116b4efd2750f00e25df53bc4db722f. The previous run 42416716883 established the exact iff theorem; this latest run recompiled the same theorem set and reran the 10M audit.
