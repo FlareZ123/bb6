@@ -152,9 +152,7 @@ theorem sum7_high_blank_unreachable_of_congruence (j m : Nat)
             BB6.Agent46.secNext (a,b)=some (x,y) := by
         cases hprev : BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) with
         | none =>
-            have : False := by
-            simpa [BB6.Agent8Section.run, hprev] using ht
-            exact this.elim
+            simp [BB6.Agent8Section.run, hprev] at ht
         | some p =>
             rcases p with ⟨a,b⟩
             refine ⟨a,b,rfl,?_⟩
