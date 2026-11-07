@@ -75,3 +75,22 @@ This is a statement about genuine stepwise paths in the abstract source `ShadowR
 ## Remaining mathematical gap
 
 The result excludes eventually periodic positive-depth inverse tails. It does not prove that every infinite inverse history is eventually periodic, and it gives no contradiction for a genuinely aperiodic sequence of varying depth words. The next research target is a uniform obstruction for arbitrary varying blocks, using the exact affine recurrence and source feeder margins. Until that gap is closed, the P1 decision and the exact value of BB(6) remain open.
+
+
+## Varying-depth recurrence (new research direction)
+
+The one-step scalar source relation has a useful recentering. Define
+[
+R_L(m,z)=2z-m-L+2.
+]
+For a depth-(t) step with (z=2^t v), (2z'+1=L+m+t+v), and (m'=m+t+1), the Lean theorem `PeriodWord.recentered_step` proves exactly
+[
+2^{t+1}R_L(m',z')=R_L(m,z)+m+L-2.
+]
+This lemma is in `PeriodFactorization.lean`; it was tested locally, and CI run [42394002553](https://github.com/FlareZ123/bb6/actions/runs/42394002553) audits it.
+
+Iterating this identity along any depth stream (no periodicity assumption), with (M_n=\sum_{i<n}(t_i+1)), gives the derived prefix equation
+[
+2^{M_n}R_n=R_0+\sum_{i<n}2^{M_i}(m_0+M_i+L-2).
+]
+The one-step identity is formally checked; the iterated prefix identity is an immediate induction but has not yet been added as a Lean theorem. It provides an exact 2-adic divisibility constraint for aperiodic varying-depth histories and is the next promising direction for a uniform potential.
