@@ -3,8 +3,8 @@ name: Agent 30 BB429 shifted-root proof (manual)
 on:
   workflow_dispatch:
   push:
-    branches: [agent30-shift-audit, agent30-mask-audit]
-    paths: [im-results/agent30-429-shifted-roots/.audit-trigger, im-results/agent30-429-shifted-roots/.mask-audit-trigger]
+    branches: [agent30-shift-audit, agent30-mask-audit, agent30-more-audit]
+    paths: [im-results/agent30-429-shifted-roots/.audit-trigger, im-results/agent30-429-shifted-roots/.mask-audit-trigger, im-results/agent30-429-shifted-roots/.more-audit-trigger]
 
 permissions:
   contents: read
@@ -41,6 +41,7 @@ jobs:
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=32768 -o im-results/agent1-429-262144-sieve/BB429SplitSieve.olean im-results/agent1-429-262144-sieve/BB429SplitSieve.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-262144-sieve/BB429SurvivorBase.olean im-results/agent1-429-262144-sieve/BB429SurvivorBase.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=40000 -o im-results/agent30-429-shifted-roots/BB429Combined677.olean im-results/agent30-429-shifted-roots/BB429Combined677.lean | tee -a /tmp/agent30-shifted-audit.log
+          lean -DmaxHeartbeats=60000000 -DmaxRecDepth=50000 -o im-results/agent30-429-shifted-roots/BB429MoreShifted.olean im-results/agent30-429-shifted-roots/BB429MoreShifted.lean | tee -a /tmp/agent30-shifted-audit.log
           if grep -q sorryAx /tmp/agent30-shifted-audit.log; then
             echo "ERROR: sorryAx in audit"
             exit 1
