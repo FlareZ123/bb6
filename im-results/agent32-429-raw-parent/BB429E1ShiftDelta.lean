@@ -21,7 +21,9 @@ theorem e1_left_prefix (n j : Nat) (tail suffix : List Bool) :
       have hrep : ones n = true :: ones (n-1) := by
         cases n with
         | zero => omega
-        | succ n => simp [ones]
+        | succ n =>
+          simp only [ones, Nat.succ_sub_one]
+          rw [List.replicate_succ]
       have h1 :
           runWithDelta 1 (z 4 (ones n ++ tail) true (ones 6 ++ suffix)) =
             some (z 4 (ones (n-1) ++ tail) true (ones 7 ++ suffix), -1) := by
@@ -30,19 +32,20 @@ theorem e1_left_prefix (n j : Nat) (tail suffix : List Bool) :
       rw [show j+1 = 1+j by omega, runWithDelta_add, h1]
       simp only [Option.bind_some]
       have hright : ones 7 ++ suffix = ones 6 ++ (ones 1 ++ suffix) := by
-        rw [show 7 = 6+1 by omega, ones_add]
+        rw [show 7 = 6+1 by omega, ones_add 6 1]
         simp [List.append_assoc]
       rw [hright]
       have hih := ih (n-1) tail (ones 1 ++ suffix) (by omega)
       rw [hih]
-      have hleft : n-1-j = n-(j+1) := by omega
+      simp only [Option.map_some]
+      have hleft : n-1-j = n-(1+j) := by omega
       have hright' : ones (j+6) ++ (ones 1 ++ suffix) =
-          ones (j+1+6) ++ suffix := by
-        have heq : j+1+6 = (j+6)+1 := by omega
-        rw [heq, ← ones_add (j+6) 1]
+          ones (1+j+6) ++ suffix := by
+        have heq : 1+j+6 = (j+6)+1 := by omega
+        rw [heq, ones_add (j+6) 1]
         simp [List.append_assoc]
       have hdelta : (-1 : Int) + (-(j : Int)) =
-          -((j+1 : Nat) : Int) := by omega
+          -((1+j : Nat) : Int) := by omega
       rw [hleft, hright', hdelta]
 
 /-- Exact displacement of the pinned Cryptids helper `shift_E_11`:
