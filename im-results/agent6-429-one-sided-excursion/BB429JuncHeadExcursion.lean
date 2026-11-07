@@ -1015,13 +1015,13 @@ theorem physical_junc_any_v_crossing (u v w k h : Nat)
     (c : Config) (hrep : Represents (junc u v w) c) :
     ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
       BB6Coverage.run BB429PhysicalFrontier.target429 steps c = some c' ∧
-      Represents cfg c' ∧ c'.head > c.head + (2*k : Int) := by
+      Represents cfg c' ∧ c'.head + (h : Int) > c.head + (2*k : Int) := by
   obtain ⟨steps,cfg,d,hrun,hcross⟩ :=
     junc_any_v_crossing u v w k h hu hw hrel
   obtain ⟨c',hrun',hrep',hhead⟩ :=
     BB429DeltaPhysicalBridge.source_runWithDelta_rep steps
       (junc u v w) c hrep cfg (d : Int) hrun
-  have hcrossInt : (2*k : Int) < (d : Int) := by exact_mod_cast hcross
+  have hcrossInt : (2*k : Int) < (h : Int) + (d : Int) := by exact_mod_cast hcross
   refine ⟨steps,cfg,c',hrun',hrep',?_⟩
   rw [hhead]
   omega
