@@ -257,6 +257,44 @@ theorem midApos_zero_w5_to_sourceScanE_delta (v : Nat) :
   simp only [Option.map_some]
   rfl
 
+/-- The w=5 zero-u branch returns to C/1 with a solid left stack
+    when v is even. -/
+theorem midApos_zero_w5_to_C1_even_delta (k : Nat) :
+    runWithDelta (22*k+90) (midApos 0 (2*k) 5) =
+      some (z 2 (ones (4*k+12)) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true]), -2) := by
+  have hsource := midApos_zero_w5_to_sourceScanE_delta (2*k)
+  have hreturn := sourceScanE_e1_revisit_delta (2*k+3)
+    (ones 3 ++ pairs01 3 ++ [false,false,true])
+  rw [show 2*k+3 = 2*(k+1)+1 by omega, crossTime_odd] at hreturn
+  have htime : 22*k+90 = (4*(2*k)+60) + (14*(k+1)+16) := by omega
+  rw [htime, runWithDelta_add, hsource]
+  simp only [Option.bind_some]
+  rw [hreturn]
+  simp only [Option.map_some]
+  rw [finalLeft_odd (k+1)]
+  rw [show 4*(k+1)+8 = 4*k+12 by omega]
+  rfl
+
+/-- The w=5 zero-u branch returns to C/1 with an alternating two-pair
+    left block when v is odd. -/
+theorem midApos_zero_w5_to_C1_odd_delta (k : Nat) :
+    runWithDelta (22*k+134) (midApos 0 (2*k+1) 5) =
+      some (z 2 (ones (4*k+9) ++ pairs01 2 ++ ones 5) true
+        (ones 3 ++ pairs01 3 ++ [false,false,true]), -2) := by
+  have hsource := midApos_zero_w5_to_sourceScanE_delta (2*k+1)
+  have hreturn := sourceScanE_e1_revisit_delta (2*k+4)
+    (ones 3 ++ pairs01 3 ++ [false,false,true])
+  rw [show 2*k+4 = 2*(k+2) by omega, crossTime_even] at hreturn
+  have htime : 22*k+134 = (4*(2*k+1)+60) + (14*(k+2)+42) := by omega
+  rw [htime, runWithDelta_add, hsource]
+  simp only [Option.bind_some]
+  rw [hreturn]
+  simp only [Option.map_some]
+  rw [finalLeft_even (k+2)]
+  rw [show 4*(k+2)+1 = 4*k+9 by omega]
+  rfl
+
 #print axioms shift_A01_tail_delta
 #print axioms juncPos_w0_exit_delta
 #print axioms midApos_to_junc_delta
@@ -268,5 +306,7 @@ theorem midApos_zero_w5_to_sourceScanE_delta (v : Nat) :
 #print axioms midApos_zero_w4_boundary_delta
 #print axioms midApos_zero_w5_boundary_delta
 #print axioms midApos_zero_w5_to_sourceScanE_delta
+#print axioms midApos_zero_w5_to_C1_even_delta
+#print axioms midApos_zero_w5_to_C1_odd_delta
 
 end BB429MidAposBoundary
