@@ -113,3 +113,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Sharp27RaySource.lean" Agent49SharpRaySource.lean
           lake env lean Agent49SharpRaySource.lean
+
+      - name: Verify Agent22 exact weighted B-drain cocycle on original source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactDrainCocycleSource.lean" Agent22ExactDrainCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleSource.olean Agent22ExactDrainCocycleSource.lean
