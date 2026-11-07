@@ -216,8 +216,9 @@ theorem dRetreatResult_preserves_noLeft4
     have hfill : shuttleFill t h (2*n+2) x = t x :=
       shuttleFill_outside t h x (2*n+2) (Or.inl (by omega))
     change setBit (fbMany m c1).tape (h-3-2*(m:Int)) true x = t x
+    simp only [setBit, if_neg hne3]
     rw [hfb]
-    simp [c1,setBit,hne1,hne2,hne3,hfill]
+    simp [c1,setBit,hne1,hne2,hfill]
   exact noLeft4_transfer_of_left_agreement true true false
     (⟨.D,h,t⟩ : Conf) (dRetreatResult n m t h)
     (by simp [dRetreatResult]; omega) hagree hshield
