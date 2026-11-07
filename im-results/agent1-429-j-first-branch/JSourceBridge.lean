@@ -131,19 +131,14 @@ theorem jLeftList_getD (u n : Nat) :
   rw [jLeftList_getD_nested]
   by_cases h0 : n = 0
   · simp [h0]
-    omega
   · by_cases hle : n ≤ 2 * u
     · by_cases he : n % 2 = 0
       · simp [h0, hle, he]
-        omega
       · have hodd : n % 2 = 1 := by omega
         simp [h0, hle, he, hodd]
-        omega
     · by_cases hbound : n ≤ 2 * u + 5
       · simp [h0, hle, hbound]
-        omega
       · simp [h0, hle, hbound]
-        omega
 
 theorem jPow1_length (u : Nat) : (jPow1 u).length = u := by
   induction u with
@@ -166,18 +161,18 @@ theorem jRightList_getD (w n : Nat) :
     · rw [jPow1_getD]
       simp [hn]
       omega
-    · have hval : ([0, 1] : List Bit).getD (n - w) 0 =
-          (if n - w = 1 then 1 else 0) := by
-        cases n - w with
-        | zero => simp
+    · cases hdiff : n - w with
+      | zero =>
+        have heq : n = w := by omega
+        simp [hn, hdiff, heq]
+      | succ k =>
+        cases k with
+        | zero =>
+          have heq : n + 1 = w + 2 := by omega
+          simp [hn, hdiff, heq]
         | succ k =>
-          cases k with
-          | zero => simp
-          | succ k => simp
-      have heq : n - w = 1 ↔ n + 1 = w + 2 := by omega
-      have hleft : ¬ n + 1 ≤ w := by omega
-      simp [hn, hval, heq, hleft]
-      omega
+          have hne : n + 1 ≠ w + 2 := by omega
+          simp [hn, hdiff, hne]
 
 @[simp] theorem jMark_zero (u w : Nat) : jMark u w 0 := by
   unfold jMark jHole
@@ -300,12 +295,17 @@ def sourceJCfg (u w : Nat) : ConjectureMachines.Cfg 6 2 :=
     ConjectureMachines.ListBlank.mk (jLeftList u),
     ConjectureMachines.ListBlank.mk (jRightList w)⟩⟩
 
+theorem sourceListBlank_toTuring_mk (l : List Bit) :
+    (ConjectureMachines.ListBlank.mk l).toTuring = Turing.ListBlank.mk l := rfl
+
 theorem sourceJCfg_toBB (u w : Nat) :
     (sourceJCfg u w).toBB = highLevelEncode (.J u w) := by
+  have hdefault : (default : Turing.ListBlank Bit) = Turing.ListBlank.mk [] := rfl
   simp [sourceJCfg, jLeftList, jRightList, jPow01_eq_pow, jPow1_eq_pow,
     ConjectureMachines.Cfg.toBB, ConjectureMachines.Tape.toTuring,
-    ConjectureMachines.ListBlank.toTuring, highLevelEncode, toState, encode,
-    BusyBeaver.Cfg.headRight, Turing.ListBlank.cons_mk, Turing.ListBlank.append_mk]
+    highLevelEncode, toState, encode, BusyBeaver.Cfg.headRight,
+    sourceListBlank_toTuring_mk, Turing.ListBlank.cons_mk,
+    Turing.ListBlank.append_mk, hdefault, List.append_assoc]
 
 private def sourceBit (a : Bit) : Bool := a.val == 1
 
@@ -326,7 +326,7 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
       { state := A, head := head, tape := jTapeAt u w head } := by
   rw [sourceJPosition_toRelative]
   apply BB429JFirstBranch.config_ext
-  · exact Fin.ext rfl
+  · decide
   · rfl
   · funext x
     cases hix : x - head with
@@ -336,13 +336,17 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
         simp [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
           sourceBit, sourceJCfg, jTapeAt, jTape_zero]
       | succ n =>
-        simp [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-          sourceBit, sourceJCfg, jTapeAt, listBlank_nth_mk,
-          jRightList_getD, jTape_pos]
+        simp only [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
+          sourceBit, sourceJCfg, jTapeAt, listBlank_nth_mk]
+        have hpos : Int.ofNat (n + 1) = (n : Int) + 1 := by omega
+        rw [jRightList_getD, hpos, jTape_pos]
+        simp
     | negSucc n =>
-      simp [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
-        sourceBit, sourceJCfg, jTapeAt, listBlank_nth_mk,
-        jLeftList_getD, jTape_neg]
+      simp only [hix, BB6.Bridge.toAbsolute, BB6.Bridge.symbol, sourceTapeToRelative,
+        sourceBit, sourceJCfg, jTapeAt, listBlank_nth_mk]
+      have hneg : Int.negSucc n = -((n : Int) + 1) := by omega
+      rw [jLeftList_getD, hneg, jTape_neg]
+      simp
 
 theorem toAgent8_machine_eq :
     BB6.ConjectureBridge.toAgent8 machine = BB429PhysicalFrontier.target429 := by
