@@ -1,0 +1,72 @@
+name: Agent 8 #623 genuine upstream root table check (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+      - name: Install upstream Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore pinned upstream mathlib and build true #623 source
+        working-directory: cryptids
+        run: |
+          test "$(git rev-parse HEAD)" = "c86f15861709b76042998c5211c7b2f83991621b"
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+      - name: Prove source table identity and genuine physical 54-step prefix
+        working-directory: cryptids
+        run: |
+          set -eu
+          mkdir -p BB6Agent8
+          for m in Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry ZeroMaskOracle FiniteDecision; do
+            cp "../im-results/agent8-coverage-contract/$m.lean" BB6Agent8/
+          done
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            cp "../im-results/agent6-fresh-glider/$m.lean" BB6Agent8/
+          done
+          for m in FrontierAudit FrontierMass RelativeTape CryptidsTapeAdapter; do
+            cp "../im-results/agent4-coverage-smoke/$m.lean" BB6Agent8/
+          done
+          cp ../im-results/agent44-drift-closure/DirectedDrift.lean BB6Agent8/
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            cp "../im-results/agent32-zero-prefix-global/$m.lean" BB6Agent8/
+          done
+          for m in Machine623Path Machine623Source; do
+            cp "../im-results/agent8-623-frontier/$m.lean" BB6Agent8/
+          done
+          export LEAN_PATH="BB6Agent8"
+          lake env lean -o BB6Agent8/Frontier.olean BB6Agent8/Frontier.lean
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry; do
+            lake env lean -o "BB6Agent8/$m.olean" "BB6Agent8/$m.lean"
+          done
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            lake env lean -o "BB6Agent8/$m.olean" "BB6Agent8/$m.lean"
+          done
+          lake env lean -o BB6Agent8/DirectedDrift.olean BB6Agent8/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision; do
+            lake env lean -o "BB6Agent8/$m.olean" "BB6Agent8/$m.lean"
+          done
+          for m in FrontierAudit FrontierMass RelativeTape CryptidsTapeAdapter; do
+            lake env lean -o "BB6Agent8/$m.olean" "BB6Agent8/$m.lean"
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            lake env lean -o "BB6Agent8/$m.olean" "BB6Agent8/$m.lean"
+          done
+          lake env lean -o BB6Agent8/Machine623Path.olean BB6Agent8/Machine623Path.lean
+          lake env lean BB6Agent8/Machine623Source.lean
