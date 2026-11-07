@@ -17,6 +17,7 @@ open BB6.Agent8DrainFirstSharpSource
 open BB6.Agent8DrainSevenSource
 open BB6.Agent8BudgetSource
 open BB6.Agent49DrainLinearLogSource
+open BB6.Agent8DrainQuadraticLogSource
 
 /-- A successful drain that is followed by a halting daughter must have
 its input first counter within a logarithmic-width interval around d+3b. -/
@@ -92,7 +93,55 @@ theorem evenRight_terminal_balance_interval
 #print axioms evenRight_terminal_balance_interval
 #print axioms oddLeft_terminal_ray_interval
 #print axioms evenLeft_terminal_ray_interval
+/-- A terminal state on the even-right branch with zero residual blocks
+is confined by the direct evaluator bounds. -/
+theorem terminal_gap_bound (x y K M : Nat)
+    (hEven : x%2=0)
+    (hhalt : highLevelNext (.D x y) = none)
+    (hmass : x+y≤M)
+    (hK : 2*M+5<3^K) :
+    x≤y+K+4 ∧ y≤x+K+4 := by
+  have hg :=
+    BB6.Agent49ParitySource.next_none_requires_pow_gap x y hEven hhalt
+  rcases hg with ⟨hgap1,hgap2⟩
+  constructor
+  · by_cases h : x≤y+K+4
+    · exact h
+    · have hexp : K≤x-y-5 := by omega
+      have hp := Nat.pow_le_pow_right (by omega : 0<3) hexp
+      omega
+  · by_cases h : y≤x+K+4
+    · exact h
+    · have hexp : K≤y-x-5 := by omega
+      have hp := Nat.pow_le_pow_right (by omega : 0<3) hexp
+      omega
+
+/-- The even-right b=0 case also confines d-4*a to logarithmic width. -/
+theorem evenRight_zero_block_terminal_interval
+    (a d n0 K x y : Nat)
+    (hRight : a≤d)
+    (ha : a<3^n0)
+    (hEval : evalA (d+1-a) a (2*a+5) = some (x,0,y))
+    (hEven : x%2=0)
+    (hhalt : highLevelNext (.D x y) = none)
+    (hK : 2*(d+2*a+9+2*n0)+5 < 3^K) :
+    4*a≤d+K+3 ∧ d≤4*a+K+11+3*n0 := by
+  have hfirstUpper :=
+    evalA_first_upper_one (d+1-a) a (2*a+5) x 0 y hEval
+  have hfirstLower :=
+    evalA_first_lower_log n0 (d+1-a) a (2*a+5) x 0 y ha hEval
+  have hthirdLower :=
+    evalA_third_lower (d+1-a) a (2*a+5) x 0 y hEval
+  have hthirdUpper :=
+    evalA_upper_log n0 (d+1-a) a (2*a+5) x 0 y ha hEval
+  have hmass : x+y≤d+2*a+9+2*n0 := by omega
+  have hgap :=
+    terminal_gap_bound x y K (d+2*a+9+2*n0) hEven hhalt hmass hK
+  omega
+
 #print axioms oddRight_terminal_ray_interval
+#print axioms terminal_gap_bound
+#print axioms evenRight_zero_block_terminal_interval
 
 /-- Odd-left ray: a=2*d+9+t, so its drain balance is t-2*d-10. -/
 theorem oddLeft_terminal_ray_interval
