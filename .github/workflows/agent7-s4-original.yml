@@ -204,5 +204,5 @@ jobs:
           set -euo pipefail
           python3 "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/s5457_lean_certificate.py" --output S4Prefix5457.lean
           echo "2f9ef55ad731e3af82068eab19c9148ae440f56dcace2de967f0d50d2d9049a0  S4Prefix5457.lean" | sha256sum -c -
-          export LEAN_PATH=.:\${LEAN_PATH:-}
+          export LEAN_PATH=.:${LEAN_PATH:-}
           lake env lean -o S4Prefix5457.olean S4Prefix5457.lean
