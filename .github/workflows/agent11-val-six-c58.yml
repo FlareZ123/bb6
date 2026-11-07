@@ -246,6 +246,10 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighDyadicAllDepthArithmetic,HighDyadicAllDepth}.lean .
           lean -o HighDyadicAllDepthArithmetic.olean HighDyadicAllDepthArithmetic.lean
           lean -o HighDyadicAllDepth.olean HighDyadicAllDepth.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighDyadicDepthFamily.lean .
+          lean -o HighDyadicDepthFamily.olean HighDyadicDepthFamily.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicAllDepthPrior.lean .
+          lean -o HighDyadicAllDepthPrior.olean HighDyadicAllDepthPrior.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58AllDepth.lean .
           lean ValSixC58AllDepth.lean
           # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
