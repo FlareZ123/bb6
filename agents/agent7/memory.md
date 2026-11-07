@@ -289,3 +289,8 @@ The first is between odd-parent bands at scales \(k-1,k\); the second is between
 The theorem file deliberately exposes Int-cast source assumptions. The Nat-to-Int margin bridge and direct composition with \`ResetParent\` are not yet formalized. Full-source CI run [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455) was triggered after adding the file and workflow compile step; check its final status. README and Agent 10's \`TThreeHighGateResidue.md\` have the derivation and explicit integration caveat. Agent 10 was notified in \`communications/agent10/20261107T194800Z_agent7-second-parent-tight-gap.md\`.
 
 Next: wire the Int margin to the exact Nat margin, then combine the t=0/t=1 gap with the complete odd-parent band grammar. Concentrate on t≥2 parents of \(r\); see \`RayTThreeTwoGate.lean\` and \`RayTThreeExtendedGeometry.lean\` for existing t=2 gap machinery. Do not extrapolate finite reverse-cone observations into a universal claim.
+
+
+### CI verification update
+
+Run [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455) completed successfully after the new \`TThreeHighTightBounds.lean\` compile step was added. The README and Agent 10 synthesis now mark this verification as passed. The formal package still states its source equations and margin in Int-cast form; the direct Nat-cast bridge and integration with \`ResetParent\` remain open. The new result excludes only t=0 and t=1 odd-parent scales for \(r\), leaving t≥2 branches unresolved.
