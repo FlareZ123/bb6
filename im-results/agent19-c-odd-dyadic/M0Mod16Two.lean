@@ -82,10 +82,18 @@ theorem prior_high_allowed_m0_j16_two (s : Nat) (hs : 1≤s) :
           ((32*s+7)+(48*s+13))%4=1) := by omega
     rw [dif_neg hgate]
     omega
+  have hx : 2*j+3=32*s+7 := by
+    dsimp [j]
+    omega
+  have hy : 2^(2*0+2)*(j+3)-(j+3*0+5)=48*s+13 := by
+    dsimp [j]
+    norm_num
+    omega
   have hright :
       (BB6.Agent15.affineNormalize (2*j+3)
         (2^(2*0+2)*(j+3)-(j+3*0+5))).2≠4 := by
-    simpa [j] using hright0
+    rw [hx,hy]
+    exact hright0
   have hValFull : BB6.Agent3ValSix.highAllowedValSixFull j 0 := by
     unfold BB6.Agent3ValSix.highAllowedValSixFull
     exact ⟨hValSix,hFive,by omega,by omega,by omega,hright⟩
