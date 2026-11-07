@@ -137,3 +137,11 @@ The proofs establish M_low(m) >= 4065 and M_high(j,m) >= 6113 for every m >= 4. 
 This is a **search-domain theorem**, not a nonhalting theorem. The existing CResidualProbe.lean still samples only the first two allowed high j-values per m and imposes a root-fuel cap of 256. It therefore does not yet exhaust the full raw-mass-2000 domain. The new bound makes an exhaustive finite scan possible once every allowed pair in the box is evaluated and every root-fuel skip is eliminated or explicitly retained.
 
 CResidualMassBounds.lean compiled locally with Lean 4.36.0-rc2. Its six printed theorem audits use only [propext, Quot.sound]; no sorryAx is present.
+
+## Finite raw-mass-2000 reachability exclusion
+
+[CResidualMass2000.lean](CResidualMass2000.lean) turns the parameter box above into an exact finite root-exclusion certificate. It evaluates the source-faithful forward `massStop` test on every unfiltered target in the box: 4 low targets and 322 high targets, split into rows of 248, 60, 13, and 1. The row propositions are closed Lean computations proved by `decide`. The file then uses `SectionFuelOriginal.massStopHalfFull_iff` to prove that none of these targets belongs to the blank-root section orbit.
+
+The resulting theorems `low_reach_implies_mass_gt_2000` and `high_reach_implies_mass_gt_2000` state that **every reachable target in either complete low/high stopping family has weighted mass strictly greater than 2000**. No C70, C23, phase, or other parameter filters are assumed, so the finite exclusion covers a superset of the currently surviving candidates. This is a finite lower bound on the stopping-target mass; it does not establish that the machine is nonhalting, and it does not determine BB(6).
+
+The finite row computations were independently compiled locally with Lean 4.36.0-rc2 using a line-for-line copy of the executable `bounceFuel`, `secNextFuel`, and `massStop` definitions from SectionFuelOriginal. The repository module imports the original SectionFuelOriginal source and will be checked by the all-phase CI workflow. The local row theorems have no axioms; the reachability corollaries rely on the source `massStopHalfFull_iff` bridge and the arithmetic bounds in CResidualMassBounds. No `sorryAx` was used in the local certificate.
