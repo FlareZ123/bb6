@@ -54,4 +54,6 @@ theorem exceptional_EA_packet (t q : Nat) (hq : 2 ≤ q) :
   rw [input_shape t q hq]
   simpa [duration, output_shape t q hq] using hraw
 
+#print axioms exceptional_EA_packet
+
 end BB6.Agent2EFirstAPacket
