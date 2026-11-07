@@ -393,14 +393,12 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
     unfold junc
     simp only [pairs01]
     rw [ones_right_101]
-    simp [ones]
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
   rw [hinput, htail]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   rw [hcfg]
   simp only [Option.some.injEq, Prod.mk.injEq]
@@ -497,7 +495,6 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
   rw [hsource, htail]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
