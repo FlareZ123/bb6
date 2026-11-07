@@ -12,12 +12,10 @@ namespace CascadeResetInverse
 private def evenHeightFast (u k:Nat) := 2*u-8*2^k-k
 private def oddHeightFast (u k t:Nat) := 2*(2^t*((2*u+5)/(3^(t+1))))-8*2^k-k-5
 
-/-- Structurally recursive valuation counter, reducible by the kernel. -/
 def v3AuxFast (z : Nat) : Nat → Nat
 | 0 => 0
 | fuel+1 => if z > 0 ∧ z % 3 = 0 then v3AuxFast (z/3) fuel + 1 else 0
 
-/-- The fuel bound is one more than the binary logarithm of z. -/
 def v3Fast (z:Nat) := v3AuxFast z (Nat.log2 z + 1)
 
 theorem v3AuxFast_step (z fuel:Nat) (hz:0<z) (hm:z%3=0) :
@@ -102,43 +100,75 @@ private theorem log2_odd_band (x k:Nat)
   have hhi:x<2^(k+3) := by rw [pow2_add3]; omega
   exact (Nat.log2_eq_iff (by omega)).2 ⟨hlo,hhi⟩
 
-private def evenCheckFast (h u:Nat) : Bool :=
+private def evenParentsFast (u:Nat):List Nat :=
   let k:=Nat.log2 u-2
-  decide (6*2^k-1≤u ∧ u≤8*2^k-3 ∧ 2*u=8*2^k+h+k)
+  let h:=evenHeightFast u k
+  if decide (6*2^k-1≤u ∧ u≤8*2^k-3 ∧ 2*u=8*2^k+h+k) then [h] else []
 
-private def oddCheckFast (h u t:Nat) : Bool :=
+private def oddCandidate (u t:Nat):Option Nat :=
   let d:=(2*u+5)/(3^(t+1))
   let x:=2^t*d
   let k:=Nat.log2 x-2
-  decide (d%2=1 ∧ 6*2^k+1≤x ∧ x≤8*2^k-1 ∧
-    2*u+5=3^(t+1)*d ∧ 2*x=8*2^k+h+k+5)
+  let h:=oddHeightFast u k t
+  if decide (d%2=1 ∧ 6*2^k+1≤x ∧ x≤8*2^k-1 ∧
+      2*u+5=3^(t+1)*d ∧ 2*x=8*2^k+h+k+5) then some h else none
 
-def parentCheckFast (h u:Nat) : Bool :=
-  evenCheckFast h u || (List.range (v3Fast (2*u+5))).any (oddCheckFast h u)
+private def oddParentsFast (u:Nat):List Nat :=
+  (List.range (v3Fast (2*u+5))).filterMap (oddCandidate u)
 
-theorem parentCheckFast_iff (h u:Nat) : parentCheckFast h u=true ↔ ResetParent h u := by
-  unfold parentCheckFast
-  rw [Bool.or_eq_true]
+/-- All ResetParent predecessors, generated from one even scale and the
+    exact 3-adic range of odd-parent exponents. -/
+def parentsFast (u:Nat):List Nat := evenParentsFast u ++ oddParentsFast u
+
+theorem parentsFast_iff (h u:Nat) : h∈parentsFast u ↔ ResetParent h u := by
   constructor
-  · rintro (heven | hodd)
-    · have he := of_decide_eq_true heven
-      let k:=Nat.log2 u-2
-      exact Or.inl ⟨k,⟨he.1,he.2.1⟩,he.2.2⟩
-    · obtain ⟨t,ht,hyes⟩ := List.any_eq_true.mp hodd
+  · intro hmem
+    rcases List.mem_append.mp hmem with he | ho
+    · let k:=Nat.log2 u-2
+      let v:=evenHeightFast u k
+      have he' : (6*2^k-1≤u ∧ u≤8*2^k-3 ∧ 2*u=8*2^k+v+k) ∧ h=v := by
+        simpa [evenParentsFast,k,v] using he
+      rcases he' with ⟨hp,rfl⟩
+      exact Or.inl ⟨k,⟨hp.1,hp.2.1⟩,hp.2.2⟩
+    · obtain ⟨t,ht,hyes⟩ := List.mem_filterMap.mp ho
       let d:=(2*u+5)/(3^(t+1))
       let x:=2^t*d
       let k:=Nat.log2 x-2
-      have hh := of_decide_eq_true hyes
-      exact Or.inr ⟨k,t,d,hh.1,⟨hh.2.1,hh.2.2.1⟩,hh.2.2.2.1,hh.2.2.2.2⟩
+      let v:=oddHeightFast u k t
+      change (if decide (d%2=1 ∧ 6*2^k+1≤x ∧ x≤8*2^k-1 ∧
+          2*u+5=3^(t+1)*d ∧ 2*x=8*2^k+v+k+5) then some v else none)=some h at hyes
+      by_cases hcheck : d%2=1 ∧ 6*2^k+1≤x ∧ x≤8*2^k-1 ∧
+          2*u+5=3^(t+1)*d ∧ 2*x=8*2^k+v+k+5
+      · simp [hcheck] at hyes
+        subst h
+        exact Or.inr ⟨k,t,d,hcheck.1,⟨hcheck.2.1,hcheck.2.2.1⟩,hcheck.2.2.2.1,hcheck.2.2.2.2⟩
+      · simp [hcheck] at hyes
   · intro hp
     rcases hp with ⟨k,⟨hl,hh⟩,heq⟩ | ⟨k,t,d,hd,⟨hl,hh⟩,hout,heq⟩
     · have hlog:=log2_even_band u k hl hh
       have hindex:Nat.log2 u-2=k := by omega
-      have hcheck:evenCheckFast h u=true := by
-        dsimp [evenCheckFast]
+      have hheight:evenHeightFast u (Nat.log2 u-2)=h := by
+        dsimp [evenHeightFast]
         rw [hindex]
-        exact decide_eq_true_iff.mpr ⟨hl,hh,heq⟩
-      simp [hcheck]
+        omega
+      have hheight' : evenHeightFast u k = h := by simpa [hindex] using hheight
+      have hcheck:6*2^(Nat.log2 u-2)-1≤u ∧
+          u≤8*2^(Nat.log2 u-2)-3 ∧
+          2*u=8*2^(Nat.log2 u-2)+evenHeightFast u (Nat.log2 u-2)+(Nat.log2 u-2) := by
+        rw [hindex,hheight']
+        omega
+      have hcheck' : decide (6*2^k≤u+1 ∧ u≤8*2^k-3 ∧
+          2*u=8*2^k+h+k)=true := by
+        apply decide_eq_true_iff.mpr
+        exact ⟨by omega,hh,heq⟩
+      have he : h∈evenParentsFast u := by
+        change h∈(if decide (6*2^(Nat.log2 u-2)-1≤u ∧
+          u≤8*2^(Nat.log2 u-2)-3 ∧
+          2*u=8*2^(Nat.log2 u-2)+evenHeightFast u (Nat.log2 u-2)+(Nat.log2 u-2))
+          then [evenHeightFast u (Nat.log2 u-2)] else [])
+        rw [hindex,hheight']
+        simp [hcheck']
+      exact List.mem_append.mpr (Or.inl he)
     · let x:=2^t*d
       have hlog:=log2_odd_band x k (by simpa [x] using hl) (by simpa [x] using hh)
       have hindex:Nat.log2 x-2=k := by simpa [hlog]
@@ -146,57 +176,23 @@ theorem parentCheckFast_iff (h u:Nat) : parentCheckFast h u=true ↔ ResetParent
         rw [hout]
         exact Nat.mul_div_cancel_left d (Nat.pow_pos (by decide))
       have ht:t<v3Fast (2*u+5) := pow_dvd_v3Fast (2*u+5) t (by omega) ⟨d,hout⟩
-      have hyes:oddCheckFast h u t=true := by
-        dsimp [oddCheckFast]
-        rw [hdiv,hindex]
-        exact decide_eq_true_iff.mpr ⟨hd,by simpa [x] using hl,by simpa [x] using hh,hout,heq⟩
-      have hodd:(List.range (v3Fast (2*u+5))).any (oddCheckFast h u)=true :=
-        List.any_eq_true.mpr ⟨t,List.mem_range.mpr ht,hyes⟩
-      simp [hodd]
-
-def candidateParentsFast (u:Nat):List Nat :=
-  evenHeightFast u (Nat.log2 u - 2) ::
-    (List.range (v3Fast (2*u+5))).map (fun t =>
-      oddHeightFast u (Nat.log2 (2^t*((2*u+5)/(3^(t+1)))) - 2) t)
-
-/-- All ResetParent predecessors, generated from one even scale and the
-    exact 3-adic range of odd-parent exponents. -/
-def parentsFast (u:Nat):List Nat :=
-  (candidateParentsFast u).filter (fun h => parentCheckFast h u)
-
-private theorem candidateParentsFast_complete (h u:Nat) (hp:ResetParent h u):
-    h∈candidateParentsFast u := by
-  rcases hp with ⟨k,⟨hl,hh⟩,heq⟩ | ⟨k,t,d,hd,⟨hl,hh⟩,hout,heq⟩
-  · have hlog:=log2_even_band u k hl hh
-    have hindex:Nat.log2 u-2=k := by omega
-    have hheight : h=evenHeightFast u (Nat.log2 u-2) := by
-      dsimp [evenHeightFast]
-      rw [hindex]
-      omega
-    exact List.mem_cons.mpr (Or.inl hheight)
-  · let x := 2^t*d
-    have hlog:=log2_odd_band x k (by simpa [x] using hl) (by simpa [x] using hh)
-    have hindex : Nat.log2 x-2=k := by simpa [hlog]
-    have hdiv : (2*u+5)/3^(t+1)=d := by
-      rw [hout]
-      exact Nat.mul_div_cancel_left d (Nat.pow_pos (by decide))
-    have ht : t<v3Fast (2*u+5) := pow_dvd_v3Fast (2*u+5) t (by omega) ⟨d,hout⟩
-    apply List.mem_cons.mpr
-    right
-    apply List.mem_map.mpr
-    refine ⟨t,List.mem_range.mpr ht,?_⟩
-    dsimp [oddHeightFast]
-    rw [hdiv]
-    have hindex' : Nat.log2 (2^t*d)-2=k := by simpa [x] using hindex
-    rw [hindex']
-    omega
-
-theorem parentsFast_iff (h u:Nat) : h∈parentsFast u ↔ ResetParent h u := by
-  constructor
-  · intro hc
-    exact (parentCheckFast_iff h u).mp (List.mem_filter.mp hc).2
-  · intro hp
-    exact List.mem_filter.mpr ⟨candidateParentsFast_complete h u hp,(parentCheckFast_iff h u).mpr hp⟩
+      have hindex':Nat.log2 (2^t*d)-2=k := by simpa [x] using hindex
+      have hheight' : oddHeightFast u k t=h := by
+        dsimp [oddHeightFast]
+        rw [hdiv]
+        omega
+      have hcheck' : decide (d%2=1 ∧ 6*2^k+1≤2^t*d ∧
+          2^t*d≤8*2^k-1 ∧ 2*u+5=3^(t+1)*d ∧
+          2*(2^t*d)=8*2^k+h+k+5)=true := by
+        exact decide_eq_true_iff.mpr ⟨hd,hl,hh,hout,heq⟩
+      have ho : h∈oddParentsFast u := by
+        apply List.mem_filterMap.mpr
+        refine ⟨t,List.mem_range.mpr ht,?_⟩
+        change oddCandidate u t = some h
+        dsimp [oddCandidate]
+        rw [hdiv,hindex',hheight',hcheck']
+        rfl
+      exact List.mem_append.mpr (Or.inr ho)
 
 #print axioms parentsFast_iff
 end CascadeResetInverse
