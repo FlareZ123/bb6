@@ -60,6 +60,53 @@ theorem machineCOneSlotAudit_exhaustive (bound : Nat)
     DecidedBelow bound m ∨ (machineCOneSlotAudit bound).open m :=
   (machineCOneSlotAudit bound).exhaustive m hm
 
+/-- The single unresolved halt-at-F/0 completion is definitionally the
+    historic Machine C table. All other eleven rows are fixed, so no
+    additional unknown machine hides inside this cylinder. -/
+theorem machineC_halt_F0_completion_eq_original
+    (m : Machine)
+    (hm : compatible (machineCPrefix 11) m)
+    (hslot : m machineCHaltSlot = none) :
+    m = machineC := by
+  funext s
+  by_cases hs : s = machineCHaltSlot
+  · subst s
+    have hsource : machineC machineCHaltSlot = none :=
+      (machineC_only_halt_row machineCHaltSlot).mpr rfl
+    exact hslot.trans hsource.symm
+  · exact hm s (machineC s)
+      (machineCPrefix_eleven_all_other_rows s hs)
+
+/-- The complete, exact halting classification of this cylinder remains
+    a single outstanding source-machine halting assertion. All compatible
+    completed raw tables either are total or are literally the original C. -/
+theorem machineC_completion_halts_iff_original
+    (m : Machine) (hm : compatible (machineCPrefix 11) m) :
+    (∃ n, run m n blank = none) ↔
+      m machineCHaltSlot = none ∧
+        (∃ n, run machineC n blank = none) := by
+  constructor
+  · intro hh
+    have hs : m machineCHaltSlot = none := by
+      by_contra hnot
+      have hcompat : compatible
+          (refine (machineCPrefix 11) machineCHaltSlot
+            (m machineCHaltSlot)) m :=
+        compatible_refine (machineCPrefix 11) m machineCHaltSlot hm
+      have hnever := machineC_ordinary_F0_completion_never
+        (m machineCHaltSlot) hnot m hcompat
+      obtain ⟨n, hn⟩ := hh
+      have hsome := hnever n
+      simp [hn] at hsome
+    have hEq := machineC_halt_F0_completion_eq_original m hm hs
+    exact ⟨hs, by simpa only [hEq] using hh⟩
+  · rintro ⟨hs, hh⟩
+    have hEq := machineC_halt_F0_completion_eq_original m hm hs
+    simpa only [hEq] using hh
+
+#print axioms machineC_halt_F0_completion_eq_original
+#print axioms machineC_completion_halts_iff_original
+
 #print axioms machineC_other_rows_live
 #print axioms machineC_ordinary_F0_completion_never
 #print axioms machineCOneSlotAudit_mass
