@@ -285,17 +285,33 @@ compiled the actual upstream machine imports and both modules successfully.
   predecessor-form bridge packages. The arithmetic module and its
   integration into the terminal source passed workflow run #25.
 - [DrainLinearTerminalSource.lean](DrainLinearTerminalSource.lean) now has
-  joint-mass terminal interval refinements. Those refinements passed run #25.
-  The generic output-balance lemmas appended after run #25 still await CI.
+  joint-mass terminal interval refinements. The generic output-balance
+  refinements compiled with the unmodified upstream machine imports in
+  pinned-source workflow run #42377763545.
 - [TerminalRatio4.md](TerminalRatio4.md) records the cancellation of paired
-  ray gaps into logarithmic ratio-4 necessary windows. The generic arithmetic
-  cancellation lemmas are in [TerminalRatio4Arithmetic.lean](TerminalRatio4Arithmetic.lean);
-  they compile locally with Lean 4.36.0-rc2. The workflow has been updated to
-  compile them, and the next pinned CI run will verify both this module and
-  the post-run-25 output-balance lemmas.
+  ray gaps into logarithmic ratio-4 necessary windows. The source-level
+  four-sector composition is in [TerminalRatio4Source.lean](TerminalRatio4Source.lean);
+  it composes the evaluator/drain joint-mass bound, terminal output balance,
+  and root-ray bridge. The module compiled in run #42377763545, and the
+  accompanying exact 10,000-state Python audit passed in the same run.
+- [CanonicalRayCocycle.md](CanonicalRayCocycle.md) gives the four minimal
+  ternary-budget ray bases and the exact affine output cocycle. Its
+  original-source wrapper [CanonicalRayCocycleSource.lean](CanonicalRayCocycleSource.lean)
+  compiled in run #42377437529. The arithmetic terminal-gap equivalences
+  compiled in run #42375801220.
+- [canonical_ray_terminal_scan.py](canonical_ray_terminal_scan.py) reproduces
+  the finite root scan: 9,991 canonical states from index 9, zero output
+  cocycle mismatches, one ratio-four candidate at index 13 (D(122,438)),
+  and closest excluded state index 16 (D(876,235)) with margin 2.
+- [CanonicalRayRootDistanceArithmetic.lean](CanonicalRayRootDistanceArithmetic.lean)
+  proves the exact identities linking canonical terminal gaps to old-ray
+  distance parameters, and gives conditional terminal-window exclusions.
+  It compiles locally with Lean 4.36.0-rc2 using only Std; pinned-source
+  CI run #42378346371 is queued to reproduce that compile.
 - [joint_mass_check.py](joint_mass_check.py) reproduces finite mass and
   root-orbit diagnostics. All finite checks remain empirical; no all-time
   nonhalting proof or exact BB(6) value has been established.
 
-These are intermediate results and remain in im-results pending further
-synthesis and proof of an all-time orbit invariant.
+These are intermediate results and remain in im-results pending proof of an
+all-time root-ray distance invariant and the resulting terminal-window
+exclusion.
