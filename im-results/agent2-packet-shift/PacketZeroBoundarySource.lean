@@ -144,7 +144,7 @@ theorem e_zero_boundary (k q : Nat) :
   change
     (⟨[],false,List.replicate (8*k+5) true ++
       (false :: (List.replicate (2*q+6) true ++
-        List.replicate 6 true)),5⟩ : Cfg) =
+        List.replicate 6 true)),5⟩ : CryptidBoundary.Cfg) =
     BB6.Agent2BoundaryBZero.regularSection (8*k+5) 1 (2*q+11)
   unfold BB6.Agent2BoundaryBZero.regularSection
   simp only [oppairs]
