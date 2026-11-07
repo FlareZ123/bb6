@@ -115,6 +115,20 @@ The same run executes the 10,000,000-step raw-machine audit in test-root119-two-
 
 These counts are finite observations along the blank-root orbit. They are not substitutes for the conditional Lean theorems or an all-time orbit proof.
 
+The audit was extended to all reached B/0 states with left suffix 101. Among 7,367 such states, the left-six-bit distribution (from h-6 through h-1) was:
+
+| Left six bits | Count |
+|---|---:|
+| 010101 | 7,279 |
+| 000101 | 77 |
+| 101101 | 8 |
+| 100101 | 2 |
+| 110101 | 1 |
+
+The sole boundary-unsafe state is at raw time 3,193,243, head -689. Its right window h+1 through h+10 is 1111111111, and the prefix classifier labels it prefixUnmatched with m=401. It is not an odd-even prefix input. In contrast, the 22 odd-even inputs have left-six patterns 010101 (21 cases) and 000101 (one case); all satisfy the boundary condition. The 21 even-prefix inputs all have 010101.
+
+This is a useful structural lead: the only observed reachable 110101 context is attached to a long unmatched right-one run, while every actual odd-even terminal-zero corridor is boundary-safe. It does not prove that Reach plus the odd-even corridor implies the guard. That implication remains the next formal target.
+
 ## Next mathematical question
 
 Can the reachability hypothesis, together with the odd-even return's existing local tape assumptions and NoLeft4, prove the boundary condition
