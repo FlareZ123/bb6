@@ -322,6 +322,165 @@ theorem tThreeHighGate_residue_iff (n j d q : Nat)
     (81:Int)∣(2*q+5:Int) ↔ j%4374=tThreeHighResidue n := by
   exact (tThreeHighGate_iff n j d q hz hrel).trans (tThreeHighResidue_iff n j hn)
 
+private theorem two_pow_mod_three (k : Nat) :
+    2^k%3=(if k%2=0 then 1 else 2) := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      rw [Nat.pow_succ,Nat.mul_mod,ih]
+      by_cases h:k%2=0
+      · simp[h]; omega
+      · have hk:k%2=1:=by omega
+        simp[hk]; omega
+
+theorem tThreeHighCenter_divisible (n : Nat) :
+    (81:Int)∣(32:Int)*tThreeHighC n-((2:Int)^(n+1)+2*n-1) := by
+  let X : Int := (2:Int)^(n+1)+2*n-1
+  have hc : tThreeHighC n=(38*X)%81 := by rfl
+  have hcrem : tThreeHighC n%81=(38*X)%81 := by
+    rw [hc,Int.emod_emod]
+  have hmul : (32:Int)*38=1+15*81 := by decide
+  have hrem : ((38:Int)*X%81-(38:Int)*X)%81=0 := by
+    have h : ((38:Int)*X%81)%81=((38:Int)*X)%81 := by rw [Int.emod_emod]
+    exact (Int.emod_eq_emod_iff_emod_sub_eq_zero).mp h
+  have hprod : ((32:Int)*((38:Int)*X%81)-(32:Int)*((38:Int)*X))%81=0 := by
+    rw [←Int.mul_sub,Int.mul_emod,hrem]
+    simp
+  have hconst : ((1:Int)+15*81)%81=1 := by omega
+  have h32 : (32:Int)*tThreeHighC n%81=X%81 := by
+    calc
+      (32:Int)*tThreeHighC n%81=((32:Int)%81*(tThreeHighC n%81))%81 := by rw [Int.mul_emod]
+      _=(32:Int)*((38*X)%81)%81 := by simp [hcrem]
+      _=(32:Int)*(38*X)%81 := by exact (Int.emod_eq_emod_iff_emod_sub_eq_zero).2 hprod
+      _=X%81 := by
+        rw [←Int.mul_assoc,hmul,Int.mul_emod,hconst]
+        simp
+  rw [Int.dvd_iff_emod_eq_zero,Int.sub_emod,h32]
+  dsimp [X]
+  simp
+
+def tThreeHighK (n : Nat) : Int :=
+  ((32:Int)*tThreeHighC n-((2:Int)^(n+1)+2*n-1))/81
+
+theorem tThreeHighK_exact (n : Nat) :
+    (81:Int)*tThreeHighK n=
+      (32:Int)*tThreeHighC n-((2:Int)^(n+1)+2*n-1) := by
+  exact Int.mul_ediv_cancel_of_dvd (tThreeHighCenter_divisible n)
+
+def tThreeHighRZeroOffset (n : Nat) : Int :=
+  tThreeHighOffset n+(6561:Int)*(tThreeHighK n+1)
+
+def tThreeHighRZeroResidue (n : Nat) : Nat :=
+  translatedDepthResidue n (tThreeHighRZeroOffset n) 5
+
+theorem tThreeHighRZeroOffset_divisible (n : Nat) :
+    (3:Int)^4∣tThreeHighRZeroOffset n := by
+  have hp : (3:Int)^4=81 := by decide
+  rw [hp,tThreeHighRZeroOffset,tThreeHighOffset]
+  apply Int.dvd_add
+  · exact Int.dvd_mul_right 81 (tThreeHighC n)
+  · rw [show (6561:Int)=(81:Int)*81 by decide,Int.mul_assoc]
+    exact Int.dvd_mul_right 81 (81*(tThreeHighK n+1))
+
+/-- The r mod 3 zero branch is a unique translated ray-depth class modulo 13122. -/
+theorem tThreeHighRZeroResidue_iff (n j : Nat) (hn : n%6=4 ∨ n%6=5) :
+    (3:Int)^9∣signedZ n j-tThreeHighRZeroOffset n ↔
+      j%13122=tThreeHighRZeroResidue n := by
+  have h := translatedDepthResidue_iff n (tThreeHighRZeroOffset n) 5 j hn
+    (tThreeHighRZeroOffset_divisible n)
+  have hp : depthPeriod 8=13122 := by decide
+  simpa [translatedZ,tThreeHighRZeroResidue,hp] using h
+
+/-- The second t=3 parent has residue zero exactly on the precision-nine lift. -/
+theorem tThreeHighSecondParent_mod_zero_iff (n j d q e r : Nat)
+    (hn : 20≤n) (hsector : n%6=4 ∨ n%6=5)
+    (hz : signedZ n j=(81:Int)*d)
+    (hrel : 16*d=2^n+q+n+2)
+    (hgate : 2*q+5=81*e)
+    (hrrel : 16*e=8*2^(n-6)+r+(n-6)+5) :
+    r%3=0 ↔ (3:Int)^9∣signedZ n j-tThreeHighRZeroOffset n := by
+  have hgateI : (81:Int)∣(2*q+5:Int) := by
+    refine ⟨(e:Int),?_⟩
+    exact_mod_cast hgate
+  have htranslated : (3:Int)^8∣signedZ n j-tThreeHighOffset n :=
+    (tThreeHighGate_iff n j d q hz hrel).mp hgateI
+  have hshift : signedZ n j-tThreeHighOffset n=
+      (81:Int)*((d:Int)-tThreeHighC n) := by
+    rw [hz,tThreeHighOffset]
+    omega
+  have hdivdc : (81:Int)∣(d:Int)-tThreeHighC n := by
+    have hp : (3:Int)^8=(81:Int)*81 := by decide
+    rw [hp,hshift] at htranslated
+    exact (Int.mul_dvd_mul_iff_left (by decide : (81:Int)≠0)).mp htranslated
+  obtain ⟨s,hs⟩ := hdivdc
+  have hd : (d:Int)=tThreeHighC n+81*s := by omega
+  have hqexpr : (2:Int)*q+5=
+      (32:Int)*d-((2:Int)^(n+1)+2*n-1) := by
+    have hrelI : (16:Int)*(d:Int)=(2:Int)^n+q+n+2 := by exact_mod_cast hrel
+    have hpow : (2:Int)^(n+1)=2*(2:Int)^n := by
+      rw [Int.pow_succ]
+      exact Int.mul_comm _ _
+    have h32 : (32:Int)*(d:Int)=(2:Int)^(n+1)+2*q+2*n+4 := by
+      have hh:=congrArg (fun x:Int=>2*x) hrelI
+      omega
+    omega
+  have hK : (81:Int)*tThreeHighK n=
+      (32:Int)*tThreeHighC n-((2:Int)^(n+1)+2*n-1) :=
+    tThreeHighK_exact n
+  have heq : (e:Int)=tThreeHighK n+32*s := by
+    have heq0 : (81:Int)*(e:Int)=
+        (81:Int)*(tThreeHighK n+32*s) := by
+      calc
+        (81:Int)*(e:Int)=(2:Int)*q+5 := by exact_mod_cast hgate.symm
+        _=(32:Int)*(d:Int)-((2:Int)^(n+1)+2*n-1) := hqexpr
+        _=(81:Int)*(tThreeHighK n+32*s) := by
+          rw [hd]
+          omega
+    omega
+  have hpowNat : 8*2^(n-6)=2^(n-3) := by
+    calc
+      8*2^(n-6)=2^3*2^(n-6) := by congr 1 <;> decide
+      _=2^((n-6)+3) := by
+        rw [Nat.pow_add]
+        exact Nat.mul_comm _ _
+      _=2^(n-3) := by congr 1; omega
+  have hrrel' : 16*e+1=2^(n-3)+r+n := by
+    rw [hpowNat] at hrrel
+    omega
+  have hrrelI : (16:Int)*(e:Int)+1=(2:Int)^(n-3)+r+n := by
+    exact_mod_cast hrrel'
+  have hrformulaI : (r:Int)=16*e-(2:Int)^(n-3)-n+1 := by omega
+  have hconst : (2^(n-3)+n)%3=0 := by
+    have hpow := two_pow_mod_three (n-3)
+    rcases hsector with h|h
+    · have hneq : (n-3)%2≠0 := by omega
+      rw [if_neg hneq] at hpow
+      omega
+    · have hpar : (n-3)%2=0 := by omega
+      rw [if_pos hpar] at hpow
+      omega
+  have hconstI : ((2:Int)^(n-3)+n)%3=0 := by exact_mod_cast hconst
+  have hrmodI : (r:Int)%3=((e:Int)+1)%3 := by omega
+  have hresI : ((e:Int)+1)%3=0 ↔
+      (s-(tThreeHighK n+1))%3=0 := by omega
+  have hrzeroI : (r:Int)%3=0 ↔ (s-(tThreeHighK n+1))%3=0 := by
+    rw [hrmodI]
+    exact hresI
+  have hrzero : r%3=0 ↔ (s-(tThreeHighK n+1))%3=0 := by
+    exact_mod_cast hrzeroI
+  have hshiftR : signedZ n j-tThreeHighRZeroOffset n=
+      (6561:Int)*(s-(tThreeHighK n+1)) := by
+    rw [hz,tThreeHighRZeroOffset,tThreeHighOffset]
+    omega
+  have hdivR : (3:Int)^9∣signedZ n j-tThreeHighRZeroOffset n ↔
+      (3:Int)∣s-(tThreeHighK n+1) := by
+    rw [show (3:Int)^9=(6561:Int)*3 by decide,hshiftR]
+    exact Int.mul_dvd_mul_iff_left (by decide : (6561:Int)≠0)
+  have hmodR : (3:Int)∣s-(tThreeHighK n+1) ↔
+      (s-(tThreeHighK n+1))%3=0 := Int.dvd_iff_emod_eq_zero
+  rw [hrzero]
+  exact (hdivR.trans hmodR).symm
+
 #print axioms translatedZ_lift_criterion
 #print axioms translatedDepthResidue_good
 #print axioms translatedDepthResidue_iff
@@ -330,4 +489,6 @@ theorem tThreeHighGate_residue_iff (n j d q : Nat)
 #print axioms tThreeHighGate_iff
 #print axioms tThreeHighC_bounds
 #print axioms tThreeHighGate_residue_iff
+#print axioms tThreeHighRZeroResidue_iff
+#print axioms tThreeHighSecondParent_mod_zero_iff
 end CascadeTranslatedRayDepth
