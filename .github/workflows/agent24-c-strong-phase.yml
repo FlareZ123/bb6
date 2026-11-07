@@ -277,6 +277,10 @@ jobs:
           lean -o HighEvenRightArithmetic.olean HighEvenRightArithmetic.lean
           lean -o HighEvenRightSource.olean HighEvenRightSource.lean
           lean HighEvenRightResidual.lean
+          # Complete sum-seven preimage grammar for the second high cylinder.
+          cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighEvenRightSum7Arithmetic,HighEvenRightSum7Source}.lean .
+          lean -o HighEvenRightSum7Arithmetic.olean HighEvenRightSum7Arithmetic.lean
+          lean HighEvenRightSum7Source.lean
           # Source-audit the bounded Boolean realization of both exceptional phases.
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/StrongPhaseBool.lean .
           lean -o StrongPhaseBool.olean StrongPhaseBool.lean
