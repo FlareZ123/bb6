@@ -1,5 +1,6 @@
 import Machine623Path
 import TotalHaltAudit
+import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage
 
@@ -8,8 +9,11 @@ def machine623HaltSlot : Slot := (⟨5, by decide⟩, false)
 
 theorem machine623_halts_only_at_F0 (s : Slot) :
     machine623 s = none ↔ s = machine623HaltSlot := by
-  have all : ∀ x : Slot, machine623 x = none ↔ x = machine623HaltSlot := by decide
-  exact all s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by
+    have hlt := q.isLt
+    omega
+  rcases hq with hq|hq|hq|hq|hq|hq <;> subst q <;> cases b <;> decide
 
 /-- The eleven actually visited inputs fix every original table entry
     except F/0; this is an exact identity of sparse tables. -/
@@ -17,9 +21,11 @@ theorem machine623_visited_eq_free_halt :
     machine623Prefix 11 =
        freeHaltCylinder machine623 machine623HaltSlot := by
   funext s
-  have all : ∀ x : Slot, machine623Prefix 11 x =
-      freeHaltCylinder machine623 machine623HaltSlot x := by decide
-  exact all s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by
+    have hlt := q.isLt
+    omega
+  rcases hq with hq|hq|hq|hq|hq|hq <;> subst q <;> cases b <;> decide
 
 /-- The 24 nonhalting choices for F/0 are syntactically total machines
     and hence have never-halting blank-tape runs. The sole remaining
