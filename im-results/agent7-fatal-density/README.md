@@ -27,6 +27,25 @@ This is exactly the (r\bmod3=0) case covered by Agent 10's existing root-dead th
 
 [ForwardOrbitAudit100k.md](ForwardOrbitAudit100k.md) records an independent exact-integer finite check: 245,399 high-(q) candidates for (20\le n\le100000) were compared with the deterministic blank-root reset orbit, with zero matches. This extends finite evidence; it is not a universal exclusion theorem. The executable audit is [t3_high_gate_forward_audit.py](t3_high_gate_forward_audit.py).
 
+
+## Second-parent dyadic-gap reduction
+
+[TThreeHighTightBounds.lean](TThreeHighTightBounds.lean) formalizes a further geometric consequence of the exact high-q margin. Put (p=2^{n-4}), (k=n-6), and let (r) be the second (t=3) parent. The source equations and margin imply
+[
+10934p-961n+18609\le6561r\le10942p-10177n+6321.
+]
+They consequently force
+[
+4\cdot2^k<\frac{2r+5}{3}<6\cdot2^k,
+\qquad
+2\cdot2^k<\frac{2(2r+5)}{9}<3\cdot2^k,
+]
+whenever the respective quotients are integral.
+
+These are strict dyadic gaps: the first lies between the odd-parent bands at scales (k-1) and (k), and the second lies between the bands at scales (k-2) and (k-1). Therefore an odd parent of (r), if one exists, cannot have exponent (t=0) or (t=1); every possible odd parent has (t\ge2). This is a root-cone reduction beyond the residue selector.
+
+The Lean file proves the arithmetic implication from Int-cast source equations and margin hypotheses, plus the scaled gap inequalities. Full unchanged-source CI is queued in [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455); the Nat-to-Int margin bridge and direct composition with the complete reset-parent grammar remain to be checked. Do not yet claim that the second-parent branch is root-dead.
+
 ## Remaining question
 
 The resulting fork recursion retains source-possible branches, including higher 3-adic valuations. No uniform proof separates **all** surviving fatal gates from the genuine `C(2,0)` root, and no original raw-machine halt has been produced. Find a full symbolic odd-fork closure or a genuine root witness; avoid interpreting formal inverse densities as a true trajectory frequency.
