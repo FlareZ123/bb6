@@ -102,5 +102,7 @@ jobs:
           lake env lean Agent49CanonicalRayCocycleArithmetic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TerminalRatio4Source.lean" Agent49TerminalRatio4Source.lean
           lake env lean -o .lake/build/lib/lean/Agent49TerminalRatio4Source.olean Agent49TerminalRatio4Source.lean
+      - name: Reproduce 10,000-state canonical ray terminal-window audit
+        run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
           cp "../im-results/agent8-623-inverse/MachineFullGateSource.lean" Agent8MachineFullGateSource.lean
           lake env lean Agent8MachineFullGateSource.lean
