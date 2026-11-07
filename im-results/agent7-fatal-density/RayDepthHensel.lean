@@ -59,9 +59,7 @@ theorem pow_depth_period (k : Nat) :
             rw [show 2*k+1=(k+1)+k by omega,Nat.pow_add]
           simp only [depthCoeff]
           rw [hp1,hp2]
-          simp [Nat.pow_succ,Nat.mul_add,Nat.add_mul,Nat.mul_assoc,
-            Nat.mul_comm,Nat.mul_left_comm]
-          omega
+          grind
 
 /-- The signed ray numerator has period 2*3^k modulo 3^(k+1),
     uniformly in both the fatal index and the depth. -/
@@ -205,7 +203,7 @@ theorem pow_period_digit (k t : Nat) (ht:t<3) :
     rw [htwo,pow_depth_period]
     simp [depthError,Nat.pow_succ,Nat.mul_add,
       Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
-    omega
+    grind
 
 /-- Modulo the next power of three, the three depth candidates differ
     by the expected linear digit term. -/
@@ -272,7 +270,7 @@ theorem signedZ_lift_criterion (n b k t:Nat) (ht:t<3)
       m*(signedZ n b/m-((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k)*t) := by
     calc
       _ = m*(signedZ n b/m)-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t) := by
-        exact congrArg (fun x:Int => x-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)) hquot
+        exact congrArg (fun x:Int => x-m*((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)) hquot.symm
       _ = m*(signedZ n b/m-((2*n+3:Int)*(2:Int)^(b+1)*depthCoeff k*t)) := by
         rw [Int.mul_sub]
   have hcomm:(3:Int)*m=m*3:=Int.mul_comm _ _
