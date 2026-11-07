@@ -131,3 +131,9 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactRayPotentialGain.lean" Agent22ExactRayPotentialGain.lean
           lake env lean -o .lake/build/lib/lean/Agent22ExactRayPotentialGain.olean Agent22ExactRayPotentialGain.lean
+
+      - name: Verify Agent22 exact B-drain depth bound on original source
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactDrainCocycleDepthSource.lean" Agent22ExactDrainCocycleDepthSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleDepthSource.olean Agent22ExactDrainCocycleDepthSource.lean
