@@ -273,4 +273,8 @@ jobs:
           lean -o StrongJointResidual.olean StrongJointResidual.lean
           # Source-audit the bounded Boolean realization of both exceptional phases.
           cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/StrongPhaseBool.lean .
-          lean StrongPhaseBool.lean
+          lean -o StrongPhaseBool.olean StrongPhaseBool.lean
+          # Complete executable per-parameter high/low filters, with
+          # constructive Decidable instances for each previous unbounded gate.
+          cp ${GITHUB_WORKSPACE}/im-results/agent27-c-phase-boolean/FullBoolean.lean .
+          lean FullBoolean.lean
