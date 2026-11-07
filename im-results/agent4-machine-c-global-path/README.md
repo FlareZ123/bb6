@@ -42,3 +42,59 @@ These four specific global-tree children show why the existing physical lasso/ma
 All eleven nonhalting source rows were seen in a very short actual execution, so further syntactic enumeration of free transition rows on this particular authentic root terminates immediately at F/0. The open all-time question is whether F/0 is ever physically consulted. The already certified Machine C source acceleration reduces this to two infinite Diophantine stopping-parameter families and an exact fixed-target predecessor evaluator; the latest root-connected [joint criterion](../agent19-c-odd-dyadic/JointCriterionIntegration.md) still has unbounded low/high parameters. Neither this finite prefix nor the global finite lasso/macro screen decides those quantifiers.
 
 The appropriate extension is a true source-closed invariant through all exceptional counter returns, or a genuine halting witness. A longer finite trace, or closing only easy raw-table cylinders, does not replace that proof. This dossier stays in `im-results/` unless genuinely new all-time mathematics is established.
+
+
+## Original physical stopping input: all-time exact dichotomy and 24/1 frontier refinement
+
+**Source verification, 7 November 2026.** The original all-time primitive-step
+question is whether the genuine blank run ever *consults* the sole halting
+table input **F/0**. The source-level theorem
+`machineC_halts_iff_reads_F0` in
+[`MachineCF0Root.lean`](MachineCF0Root.lean) establishes the biconditional
+
+```
+(∃ n, run machineC n blank = none) ↔
+  ∃ n d, run machineC n blank = some d ∧
+    readSlot d = machineCHaltSlot
+```
+
+The stronger theorem
+`machineC_entire_cylinder_nonhalt_iff_F0_avoided` says that **all 25**
+completions agreeing on the other eleven table entries are nonhalting
+exactly when the original run avoids F/0 forever. It is a mathematical
+equivalence with an unresolved right-hand premise. For a *hypothetical first*
+F/0 consultation, `machineC_first_F0_common_prefix` and
+`machineC_first_F0_halt_completion` transport the actual primitive-step
+prefix and its halting score to every corresponding completion.
+
+These all-time statements compiled against the unchanged original
+six-state full-tape coverage semantics in
+[manual Lean CI **42336664117**](https://github.com/FlareZ123/bb6/actions/runs/42336664117),
+Lean 4.36.0-rc2. Every printed theorem depends only on `[propext]`,
+with no `sorryAx`.
+
+The independent [`MachineCOneSlotAudit.lean`](MachineCOneSlotAudit.lean)
+uses the original `TotalHaltAudit.total_never` theorem to separate the
+eleven-fixed-row cylinder at its *sole free input F/0*. Every one of the
+**24 ordinary F/0 outcomes** gives a completely specified machine with
+no halting transition at *any* input, so it cannot halt from any start.
+The single F/0 HALT outcome is precisely the original undecided historical
+Machine C. `machineCOneSlotAudit_mass` proves the exact frontier report
+`(24, 1)`, and `machineCOneSlotAudit_exhaustive` proves source-sound
+coverage of every compatible full machine. All final statements passed
+[manual Lean CI **42337612928**](https://github.com/FlareZ123/bb6/actions/runs/42337612928)
+using only standard logical axioms, without `sorryAx`.
+
+The earlier original-global-tree result `machineC_depth_eleven_open`
+reflected failure of its **finite lasso/macro oracle** to certify any
+of those 25 continuations. The new 24/1 split uses the separate direct
+syntactic no-halt-transition theorem and does not contradict that finite
+oracle result. **No new historic machine is classified:** the 24 easy
+completions already have no halting instruction, and the one meaningful
+holdout is unchanged. No numerical BB(6) bound follows.
+
+The appropriate remaining work is a source-verified all-time exclusion of
+F/0 for the original Machine C run, or an actual primitive-step halting
+witness. The associated three-counter stopping and original raw-machine
+semantic reductions provide potential proof targets. This entire
+dossier remains intermediate, under `im-results/`.
