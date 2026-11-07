@@ -149,7 +149,7 @@ theorem evenNear_terminal_ratio4_source
     (hDrain : drainB p q r = some (.D aa dd))
     (he : aa%2=0)
     (hhalt : highLevelNext (.D aa dd)=none)
-    (hK : 2*(y+5+3*n)+5<3^K) :
+    (hK : 2*(y+2*x+5+3*n)+5<3^K) :
     4*x≤y+K+8*n+17 ∧ y≤4*x+K+8*n+17 := by
   have hmass := evalA_drain_joint_mass n x y p q r aa dd hpos hx hEval hDrain
   have hbal := terminal_output_balance_of_mass aa dd K (y+2*x+5+3*n) hmass hK he hhalt
