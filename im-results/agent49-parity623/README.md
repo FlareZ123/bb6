@@ -154,7 +154,10 @@ The new bounds are:
 - `drainB_first_lower_log`: `aa+n+1 ≥ a`;
 - `drainB_upper_linear_log`: `dd ≤ d+3*b+4*n+2`.
 
-The evaluator lemma `evalA_positive_depth` supplies a digit-depth witness
+The evaluator lemmas `evalA_first_upper_one` and `evalA_third_lower` also
+provide the first-counter upper bound and a lower bound on the
+third-counter-plus-three-block potential; these are useful on the even-right
+ray. The evaluator lemma `evalA_positive_depth` supplies a digit-depth witness
 `r+s=n`, `r>0`, `bb<3^s`, with both
 `aa+r ≥ a` and `dd+3*bb ≤ m+k+2*r`. Strong induction on the remaining
 ternary exponent composes these witnesses through the complete drain.
@@ -194,10 +197,11 @@ If the drain output is a terminal daughter, the one-step power-gap theorem
 and the two-sided drain envelope force
 
 ```
--(n+K+5) ≤ g ≤ 5*n+K+8.
+-(n+K+4) ≤ g ≤ 5*n+K+7.
 ```
 
-This is a narrow interval around the balance equation `x=y+3*b`.
+This is the sharp interval around the balance equation `x=y+3*b`, obtained
+from the power-gap inequalities and `2*M+5<3^K`.
 For the four high-level branches, the balance is a branch-specific linear
 form; for example it is `a-4*d-19` on the odd-left branch,
 `a-4*d-10` on the even-left branch, and `d-4*a+4` on the odd-right
