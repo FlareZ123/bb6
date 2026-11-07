@@ -105,6 +105,34 @@ theorem high_no_section_reach_under_mass2000 (j m : Nat)
   rw [high_no_root_under_mass2000 j m hm] at htrue
   cases htrue
 
+
+/-- The weighted mass of each low stopping target is exactly lowRawMass. -/
+theorem low_target_weighted_mass (m : Nat) :
+    BB6.Agent4MassBounds.lowRawMass m = 1 + 2*lowStopTargetY m := rfl
+
+/-- The weighted mass of each high stopping target is exactly highRawMass. -/
+theorem high_target_weighted_mass (j m : Nat) :
+    BB6.Agent4MassBounds.highRawMass j m =
+      (highStopTarget j m).1 + 2*(highStopTarget j m).2 := rfl
+
+/-- Any reachable low stopping target must have weighted mass >2000. -/
+theorem low_reach_implies_mass_gt_2000 (m : Nat)
+    (hr : BB6.Agent11Mass.SectionReach 1 (lowStopTargetY m)) :
+    2000 < BB6.Agent4MassBounds.lowRawMass m := by
+  by_cases h : 2000 < BB6.Agent4MassBounds.lowRawMass m
+  · exact h
+  · have hm : BB6.Agent4MassBounds.lowRawMass m ≤ 2000 := by omega
+    exact False.elim ((low_no_section_reach_under_mass2000 m hm) hr)
+
+/-- Any reachable high stopping target must have weighted mass >2000. -/
+theorem high_reach_implies_mass_gt_2000 (j m : Nat)
+    (hr : BB6.Agent11Mass.SectionReach (highStopTarget j m).1 (highStopTarget j m).2) :
+    2000 < BB6.Agent4MassBounds.highRawMass j m := by
+  by_cases h : 2000 < BB6.Agent4MassBounds.highRawMass j m
+  · exact h
+  · have hm : BB6.Agent4MassBounds.highRawMass j m ≤ 2000 := by omega
+    exact False.elim ((high_no_section_reach_under_mass2000 j m hm) hr)
+
 #print axioms massStopRoot_iff_sectionReach
 #print axioms lowNoHitAll
 #print axioms highNoHitM0
@@ -115,5 +143,7 @@ theorem high_no_section_reach_under_mass2000 (j m : Nat)
 #print axioms high_no_root_under_mass2000
 #print axioms low_no_section_reach_under_mass2000
 #print axioms high_no_section_reach_under_mass2000
+#print axioms low_reach_implies_mass_gt_2000
+#print axioms high_reach_implies_mass_gt_2000
 
 end BB6.Agent4CResidualMass2000
