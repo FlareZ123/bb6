@@ -139,8 +139,8 @@ theorem no_root_middle (t u v : Nat) :
   cases time with
   | zero =>
     simp [BB6.Agent8Section.run] at hr
-  | succ t =>
-    cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
+  | succ idx =>
+    cases hp : BB6.Agent8Section.run secNext idx (some (5,1)) with
     | none => simp [BB6.Agent8Section.run,hp] at hr
     | some p =>
       rcases p with ⟨a,k⟩
@@ -149,7 +149,7 @@ theorem no_root_middle (t u v : Nat) :
       have hpossible := (section_preimage_all_iff a k (64*u+384*v+112*t+83) (64*v+16*t+13)).mp hedge
       rcases p2_parent_iff t u v a k hpossible with ⟨ha,hk⟩ | ⟨ha,hk⟩
       · have hrA : BB6.Agent3.CReach (32*u+224*v+64*t+46) (16*u+144*v+40*t+28) := by
-          exact ⟨t, by simpa only [ha,hk] using hp⟩
+          exact ⟨idx, by simpa only [ha,hk] using hp⟩
         have hrC := (six_even_right_blank_reach_iff
           (32*u+224*v+64*t+46) (16*u+144*v+40*t+28)
           (by omega) (by omega) (by omega) (by omega)).mp hrA
@@ -160,7 +160,7 @@ theorem no_root_middle (t u v : Nat) :
         exact excluded_odd_sum_one (48*u+368*v+104*t+72) (8*u+72*v+20*t+13)
           (by omega) (by omega) (by omega) hrC'
       · have hrB : BB6.Agent3.CReach (8*u+56*v+16*t+10) (28*u+228*v+64*t+43) := by
-          exact ⟨t, by simpa only [ha,hk] using hp⟩
+          exact ⟨idx, by simpa only [ha,hk] using hp⟩
         exact excluded_odd_sum_one (8*u+56*v+16*t+10) (28*u+228*v+64*t+43)
           (by omega) (by omega) (by omega) hrB
 
