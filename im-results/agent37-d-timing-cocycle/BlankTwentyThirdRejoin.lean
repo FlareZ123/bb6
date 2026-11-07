@@ -26,7 +26,7 @@ theorem blank_twentysecond_reentry_chosen :
   simpa [reentry22Time, normalization22Time] using
     (Classical.choose_spec BB6.Agent2TwentySecondRoot.blank_twentysecond_reentry)
 
-private theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
+theorem regularSection_sourceSection (a q b : Nat) (ha : 2 ≤ a) :
     BB6.Agent2BoundaryBZero.regularSection a q b =
       DRegularSource.sourceSection ⟨a,q,b⟩ := by
   simp only [BB6.Agent2BoundaryBZero.regularSection,
