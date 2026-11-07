@@ -6,7 +6,7 @@
 
 For every (t\in\mathbb N), take the high stopping parameters
 [
-m=1,\qquad j=256t+24.
+m=1,\qquad j=32t+24.
 ]
 The canonical high target is
 [
@@ -16,15 +16,15 @@ The canonical high target is
 
 The existing `highAllowedC23WithEvenRight` predicate admits this entire progression. The candidate full-forced normalizer then maps it to
 [
-(512t+51,3840t+400)
+(64t+51,480t+400)
 \longmapsto
-(4352t+449,1920t+199)
+(544t+449,240t+199)
 \longmapsto
-(3136t+322,2528t+259).
+(392t+322,316t+259).
 ]
 The first edge is the six-residue even-right inverse; the second is the odd/odd low-value inverse. The terminal right coordinate is odd and at least (259), while the terminal coordinate sum is
 [
-5664t+581\equiv1\pmod4.
+708t+581\equiv1\pmod4.
 ]
 Consequently, the existing full-forced odd-image test rejects the terminal state.
 
