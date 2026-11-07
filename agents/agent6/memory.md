@@ -373,7 +373,7 @@ The high-2 exceptional (u'=0) cases are therefore no longer unstructured: after 
 
 Exploratory Python simulation (literal table, nearest-first stacks) suggests further structure but is not yet formal:
 - The w=4 A/1 boundary appears to reach `midApos (2,v+4,3)` for even v and `midApos (0,v+4,3)` for odd v, with respective costs (7v+97) (even) and (7v+64) (odd), head displacement +4.
-- The w=5 A/0 boundary reaches `sourceScanE (v+3, suffix)` after 19 steps, where `suffix = ones 3 ++ pairs01 3 ++ [false,true]`; head displacement −2 from that A/0 boundary. The E/1 state is exact by simulation only; no Lean lemma yet.
+- The w=5 A/0 boundary reaches `sourceScanE (v+3, suffix)` after 19 steps, where `suffix = ones 3 ++ pairs01 3 ++ [false,false,true]`; head displacement is −7 from that A/0 boundary. Composed with the preceding `midApos_zero_w5_boundary_delta`, the full `midApos 0 v 5` to source E/1 path costs `4*v+60` and has net displacement −2. This is now Lean-verified by `midApos_zero_w5_to_sourceScanE_delta` (CI 42421018494).
 - Further finite simulations show additional Junc/MidApos matches, but these are not proof and need reproducible transition traces before any theorem claim.
 
 Next useful task: formalize the 19-step A/0-to-`sourceScanE` macro for the w=5 boundary, then determine whether the resulting arbitrary-suffix E/1 return can be composed with a source C-scan theorem. For w=4, derive the parity-dependent exact path to the midApos w=3 families. Do not claim a halting status from the finite simulations.
