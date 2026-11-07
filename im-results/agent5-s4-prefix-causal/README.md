@@ -135,3 +135,14 @@ s5457 = [283,906,982,3490,3734,5935,13580,109210,171050,
 ```
 
 The resulting theorem transports this finite computation back to the original `prun` and identifies the reached first-eight-digit state with `cycle8PeriodicStart`. This would remove the earlier uncertainty about whether the 20,480-periodic prefix orbit is actually reached by the root. The computation was independently checked against the Python simulator; original-source Lean verification is pending in run [42401520955](https://github.com/FlareZ123/bb6/actions/runs/42401520955). Do not upgrade the finite-survival claim to source-verified until that run succeeds.
+
+
+### Ninth-digit four-cycle candidate (Python prefix-map evidence only)
+
+The reproducible experiment [ninth_digit_candidate.py](ninth_digit_candidate.py) iterates the length-preserving prefix maps `hp/gp/pp` for seventeen successive 5,120-return blocks, starting from the first nine digits of `s337`. At boundaries separated by 20,480 returns, the ninth digit is
+
+```
+171050 -> 171052 -> 171051 -> 171049 -> 171050.
+```
+
+The corresponding first-nine-digit projection therefore appears to have period 81,920 after return 5457. The script also records all intermediate 5,120-block boundary values. This remains a computational candidate; no Lean theorem for the ninth-digit cycle is claimed. Use the prefix `hp/gp` maps in this experiment. The full-root `checker.chain` has an empty-tail completion that can change list length, so applying it directly to a truncated prefix gives a different trajectory.
