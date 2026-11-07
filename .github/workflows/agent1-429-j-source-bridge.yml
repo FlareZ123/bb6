@@ -1,0 +1,89 @@
+name: BB(6) #429 source J bridge
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-j-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: bb6
+
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+
+      - uses: leanprover/lean-action@v1
+        with:
+          lean-version: leanprover/lean4:v4.35.0-rc4
+          use-mathlib-cache: true
+          working-directory: cryptids
+
+      - name: Build pinned Cryptids source
+        working-directory: cryptids
+        run: |
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
+
+      - name: Copy BB(6) proof dependencies
+        working-directory: cryptids
+        run: |
+          mkdir -p BB6Agent
+          cp ../bb6/im-results/agent8-coverage-contract/Frontier.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/RayClosed.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/RayChecker.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/RayEntry.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/RayFinite.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/RayTurnExample.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/RayFiniteOracle.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/FiniteHalting.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/Symmetry.lean BB6Agent/
+          cp ../bb6/im-results/agent6-fresh-glider/RayMacro.lean BB6Agent/
+          cp ../bb6/im-results/agent6-fresh-glider/EntryMacroOracle.lean BB6Agent/
+          cp ../bb6/im-results/agent6-fresh-glider/EntryMacroLeft.lean BB6Agent/
+          cp ../bb6/im-results/agent44-directed-drift/DirectedDrift.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/ZeroMaskOracle.lean BB6Agent/
+          cp ../bb6/im-results/agent8-coverage-contract/FiniteDecision.lean BB6Agent/
+          cp ../bb6/im-results/agent4-coverage-smoke/FrontierAudit.lean BB6Agent/
+          cp ../bb6/im-results/agent4-coverage-smoke/FrontierMass.lean BB6Agent/
+          cp ../bb6/im-results/agent32-zero-prefix-global/ZeroPathAudit.lean BB6Agent/
+          cp ../bb6/im-results/agent32-zero-prefix-global/ControlPathAudit.lean BB6Agent/
+          cp ../bb6/im-results/agent32-zero-prefix-global/ZeroRowAudit.lean BB6Agent/
+          cp ../bb6/im-results/agent32-zero-prefix-global/PhysicalTraceAudit.lean BB6Agent/
+          cp ../bb6/im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean BB6Agent/
+          cp ../bb6/im-results/agent32-zero-prefix-global/LassoTraceAudit.lean BB6Agent/
+          cp ../bb6/im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean BB6Agent/
+          cp ../bb6/im-results/agent32-429-primitive-cost/BubbleExact.lean BB6Agent/
+          cp ../bb6/im-results/agent32-429-primitive-cost/BubblePrefix.lean BB6Agent/
+          cp ../bb6/im-results/agent32-429-primitive-cost/BCFuture.lean BB6Agent/
+          cp ../bb6/im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean BB6Agent/
+          cp ../bb6/im-results/agent32-429-primitive-cost/JF0Prefix.lean BB6Agent/
+          cp ../bb6/im-results/agent1-429-j-first-branch/JFirstBranch.lean BB6Agent/
+          cp ../bb6/im-results/agent4-coverage-smoke/RelativeTape.lean BB6Agent/
+          cp ../bb6/im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean BB6Agent/
+          cp ../bb6/im-results/agent1-429-j-first-branch/JSourceBridge.lean BB6Agent/
+
+      - name: Compile source and raw-machine bridge
+        working-directory: cryptids
+        run: |
+          export LEAN_PATH="BB6Agent"
+          for module in \
+            Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle \
+            FiniteHalting Symmetry RayMacro EntryMacroOracle EntryMacroLeft DirectedDrift \
+            ZeroMaskOracle FiniteDecision FrontierAudit FrontierMass ZeroPathAudit \
+            ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit \
+            BB429PhysicalFrontier BubbleExact BubblePrefix BCFuture JPhysicalPrefix JF0Prefix \
+            JFirstBranch RelativeTape CryptidsTapeAdapter JSourceBridge
+          do
+            echo "Compiling $module"
+            lake env lean -o "BB6Agent/$module.olean" "BB6Agent/$module.lean"
+          done
