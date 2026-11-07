@@ -180,7 +180,7 @@ The blank even-section entry is the specific integer \(10\). It is a singleton o
 
 There is useful finite evidence. Independent exact replay of the first **283,345** even returns from 10 gives:
 
-- total branch cost \(1,132,967\), mean cost \(3.998542412959466\), against the Haar expectation 4;
+- total branch cost \(1,132,967\), mean cost \(3.998542412959466\), against the Haar expectation 4; the empirical means are \(\bar a=1.99902239\) and \(\bar b=1.99952002\), against 2 for each;
 - \((a,h)=(1,0)\) occurs 71,215 times, frequency 0.25133671, against the Haar probability \(1/4\);
 - maximum observed \(a=17\), maximum observed \(h=20\);
 - no exceptional source odd part \(u=3\) in this finite prefix;
