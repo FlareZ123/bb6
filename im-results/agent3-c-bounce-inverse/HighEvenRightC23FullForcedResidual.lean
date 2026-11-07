@@ -34,11 +34,23 @@ def highAllowedC23WithEvenRightBool (j m : Nat) : Bool :=
 theorem highAllowedC23WithEvenRightBool_iff (j m : Nat) :
     highAllowedC23WithEvenRightBool j m = true ↔
       BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight j m := by
-  simp [highAllowedC23WithEvenRightBool,
-    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight,
-    BB6.Agent20C23.highAllowedC23,
-    BB6.Agent20C70.highAllowedC70,
-    BB6.Agent27FastBool.fastHighAllowedFullBool_iff]
+  constructor
+  · intro h
+    simp only [highAllowedC23WithEvenRightBool, Bool.and_eq_true,
+      decide_eq_true_eq] at h
+    rcases h with ⟨hrest,hEvenRight⟩
+    rcases hrest with ⟨hrest,hC23⟩
+    rcases hrest with ⟨hFast,hC70⟩
+    have hPhase : BB6.Agent24Phase.highAllowed j m :=
+      (BB6.Agent27FastBool.fastHighAllowedFullBool_iff j m).mp hFast
+    exact ⟨⟨⟨hPhase,hC70⟩,hC23⟩,hEvenRight⟩
+  · intro h
+    rcases h with ⟨hC23,hEvenRight⟩
+    rcases hC23 with ⟨hC70,hC23⟩
+    rcases hC70 with ⟨hPhase,hC70⟩
+    have hFast : BB6.Agent27FastBool.fastHighAllowedFullBool j m = true :=
+      (BB6.Agent27FastBool.fastHighAllowedFullBool_iff j m).mpr hPhase
+    simp [highAllowedC23WithEvenRightBool,hFast,hC70,hC23,hEvenRight]
 
 /-- A root-admitted target cannot be rejected by the source-exact full
     forced normalizer. This transfers its universal nonreachability theorem
