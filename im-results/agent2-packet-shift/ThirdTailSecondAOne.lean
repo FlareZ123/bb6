@@ -44,8 +44,11 @@ private theorem special_code (r : Nat) :
     rw [show [true] = List.replicate 1 true by rfl,
       show 6*r+4=(6*r+3)+1 by omega,
       ← List.replicate_append_replicate]
-  simp only [List.append_assoc]
-  rw [h]
+  change (List.replicate (6*r+3) true ++
+      ([true] ++ (false :: List.replicate 12 true))) =
+    List.replicate (6*r+4) true ++ (false :: List.replicate 12 true)
+  rw [← List.append_assoc, h]
+  rfl
 
 private theorem inc_eq (ws : List Bool) :
     CryptidA.wordInc ws = BB6.ThirdTailArithmetic.inc ws := by
