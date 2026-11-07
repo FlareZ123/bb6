@@ -19,16 +19,24 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify complete original source chain and packet path synchrony
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace:im-results/agent32-cryptid-padding
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace:im-results/agent32-cryptid-padding
         run: |
           set -euo pipefail
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
           lean --version
           B=im-results/agent31-cryptid-boundary
           S=im-results/agent32-cryptid-third
           R=im-results/agent31-d-exceptional
           P=im-results/agent2-packet-shift
+          A=im-results/agent25-cryptid-doublezero
+          C=im-results/agent35-cryptid-code
+          : > axioms.log
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "$A/$module.olean" "$A/$module.lean"
+          done
+          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean" | tee -a axioms.log
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
           lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
           lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
@@ -60,7 +68,10 @@ jobs:
           lean -o "$P/EOneZeroLocalFirst.olean" "$P/EOneZeroLocalFirst.lean"
           lean -o "$P/EOneZeroFullFirst.olean" "$P/EOneZeroFullFirst.lean"
           lean -o "$P/EZeroFirst.olean" "$P/EZeroFirst.lean"
-          lean -o "$P/EThirdTailPhysical.olean" "$P/EThirdTailPhysical.lean"
-          lean -o "$P/ThirdTailFirst.olean" "$P/ThirdTailFirst.lean"
-          lean -o "$P/ThirdTailPositive.olean" "$P/ThirdTailPositive.lean"
-          lean "$P/ThirdTailSecondBE.lean"
+          lean -o "$P/EThirdTailPhysical.olean" "$P/EThirdTailPhysical.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailFirst.olean" "$P/ThirdTailFirst.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailPositive.olean" "$P/ThirdTailPositive.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailArithmetic.olean" "$P/ThirdTailArithmetic.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailSecondBE.olean" "$P/ThirdTailSecondBE.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailSecondAZero.olean" "$P/ThirdTailSecondAZero.lean" | tee -a axioms.log
+          if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
