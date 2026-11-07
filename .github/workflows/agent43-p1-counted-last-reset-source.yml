@@ -71,4 +71,5 @@ jobs:
           lean -o "$AG50SUB/RightFiveResetFloor.olean" "$AG50SUB/RightFiveResetFloor.lean"
           lean -o "$AG50SUB/RightFiveTwoArithmetic.olean" "$AG50SUB/RightFiveTwoArithmetic.lean"
           lean -o "$AG50SUB/RightFiveThreeSource.olean" "$AG50SUB/RightFiveThreeSource.lean"
-          lean "$AG43/DepthIndexedResetFloor.lean"
+          lean -o "$AG43/DepthIndexedResetFloor.olean" "$AG43/DepthIndexedResetFloor.lean"
+          lean -o "$AG43/TwoResetWallPrefix.olean" "$AG43/TwoResetWallPrefix.lean"
