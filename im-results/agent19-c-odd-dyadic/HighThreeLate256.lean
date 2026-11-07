@@ -87,6 +87,15 @@ private theorem affine_norm_not_four (u : Nat) (hu : 7≤u) :
     2*u-2≠4 := by
   omega
 
+private theorem two_dvd_pow_two_m_add_two (m : Nat) :
+    2∣2^(2*m+2) := by
+  have h : 1≤2*m+2 := by omega
+  simpa only [show (2:Nat)^1=2 by decide] using Nat.pow_dvd_pow 2 h
+
+private theorem odd_mod_two_of_form (P m : Nat) (hP : P%2=0) :
+    (9*P+6*m+11)%2=1 := by
+  omega
+
 /-- The recursive affine normalizer strips every forced halving link.
     If the right counter starts at 2^(d+1)u-2, with u odd, it stops
     exactly at 2u-2. This gives a closed form for its residual right. -/
@@ -384,11 +393,11 @@ theorem old_sieve_admits_late256_family (m : Nat)
       dsimp [j,late256J,P]
       omega
     have hdiv2 : 2∣P := by
-      have h := Nat.pow_dvd_pow 2 (by omega : 1≤2*m+2)
-      simpa only [show (2:Nat)^1=2 by decide,P] using h
+      dsimp [P]
+      exact two_dvd_pow_two_m_add_two m
     rw [hform]
     have hPmod : P%2=0 := Nat.mod_eq_zero_of_dvd hdiv2
-    omega
+    exact odd_mod_two_of_form P m hPmod
   have hNoGate : ∀ r : Nat, ¬BB6.Agent11GateDecision.gate r j m := by
     intro r hgate
     have hdiv4 : 4∣(2:Nat)^(r+4) := by
