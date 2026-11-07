@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB429High2Tail
 
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
-open BB429JuncHeadExcursion
+open BB429JuncHeadExcursion BB429FinishScanEDelta
 
 /-- The leftward A/F boundary family at the end of the high-2 excursion. -/
 def midAaux (v k : Nat) : Zipper :=
@@ -21,22 +21,27 @@ theorem midAaux_step2 (v k : Nat) :
 theorem midApos_to_midAaux (v : Nat) :
     runWithDelta 6 (midApos 1 (v+1) 1) =
       some (midAaux v 3, -6) := by
-  rfl
+  simp [runWithDelta, oneWithDelta, one, action, midApos, midAaux,
+    pairs01, ones, tens, z]
 
 /-- Repeated two-step reduction removes all v left pairs and transfers them
     into the right alternating block. -/
 theorem midAaux_reduce_v (v k : Nat) :
     runWithDelta (2*v) (midAaux v k) =
       some (midAaux 0 (k+v), -((2*v : Nat) : Int)) := by
-  induction v with
+  induction v generalizing k with
   | zero =>
       simp [runWithDelta]
   | succ v ih =>
       rw [show 2*(v+1) = 2 + 2*v by omega, runWithDelta_add,
         midAaux_step2]
       simp only [Option.bind_some]
-      rw [ih]
-      simp [Nat.add_assoc, Int.natCast_add, Int.natCast_mul]
+      rw [ih (k+1)]
+      simp only [Option.map_some]
+      congr 1
+      · congr 1
+        omega
+      · omega
 
 /-- Once the single v=0 base family is proved, the complete midApos-to-Junc
     suffix follows uniformly. This isolates the remaining proof obligation. -/
@@ -66,10 +71,16 @@ theorem midApos_to_junc0_of_base (v : Nat) (hv : 1≤v)
     rw [runWithDelta_add, hreduce]
     simp only [Option.bind_some]
     rw [hlast]
-    simp
+    simp only [Option.map_some]
+    congr 1
+    · rfl
+    · omega
   have htime : 6 + (2*(v-1) + (4*(v+2)+36)) = 6*v+48 := by omega
-  rw [← htime]
-  simpa [Int.natCast_add, Int.natCast_mul] using htotal
+  have hparam : 2*(v+2)+6 = 2*v+10 := by omega
+  have hdisp : (-6 : Int) + (-((2*(v-1) : Nat) : Int) + (-4)) =
+      -((2*v+8 : Nat) : Int) := by omega
+  rw [htime, hparam, hdisp] at htotal
+  exact htotal
 
 #print axioms midAaux_step2
 #print axioms midApos_to_midAaux
