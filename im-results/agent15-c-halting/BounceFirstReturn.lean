@@ -35,28 +35,34 @@ private theorem run_odd_prefix (k c t : Nat)
     (ht : t≤2*k+3) (htc : t+3≤c) :
     run (t+1) (some (0,k,c)) =
       some (2*k+3-t,t,c-t) := by
+  have hc_eq : c = (c-4)+4 := by omega
   have hstep :
       (some (0,k,c) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
         some (2*k+3,0,c) := by
+    rw [hc_eq]
     simp [BB6CLine.nextC, hodd]
+    omega
   change run t ((some (0,k,c)).bind BB6CLine.nextC) =
     some (2*k+3-t,t,c-t)
   rw [hstep]
-  exact run_high t (2*k+3) 0 c ht htc
+  simpa using run_high t (2*k+3) 0 c ht htc
 
 private theorem run_even_prefix (k c t : Nat)
     (heven : k%2=0) (hc : 4≤c)
     (ht : t≤2*k+2) (htc : t+3≤c-3) :
     run (t+1) (some (0,k,c)) =
       some (2*k+2-t,2+t,c-3-t) := by
+  have hc_eq : c = (c-4)+4 := by omega
   have hstep :
       (some (0,k,c) : Option (Nat × Nat × Nat)).bind BB6CLine.nextC =
         some (2*k+2,2,c-3) := by
+    rw [hc_eq]
     simp [BB6CLine.nextC, heven]
+    omega
   change run t ((some (0,k,c)).bind BB6CLine.nextC) =
     some (2*k+2-t,2+t,c-3-t)
   rw [hstep]
-  exact run_high t (2*k+2) 2 (c-3) ht htc
+  simpa using run_high t (2*k+2) 2 (c-3) ht htc
 
 /-- Before the certified bounce time, the original CLine path has not
 returned to the c=0 section. This is the minimality property missing from
@@ -65,9 +71,9 @@ theorem bounce_no_early_c0 :
     ∀ c, 4≤c → ∀ k n, n < (bounce k c).1 →
       ∀ a b, run n (some (0,k,c)) ≠ some (a,b,0) := by
   intro c
-  induction c using Nat.strong_induction_on with
-  | h c ih =>
-      intro hc k n hn a b
+  refine Nat.strongRecOn c ?_
+  intro c ih
+  intro hc k n hn a b
       by_cases hodd : k%2=1
       · by_cases hsmall : c≤2*k+6
         · have hnlt : n<c := by
