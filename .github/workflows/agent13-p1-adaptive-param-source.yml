@@ -95,6 +95,14 @@ jobs:
           lean im-results/agent13-p1-adaptive-param/Q70NarrowFinal.lean | tee -a /tmp/agent13-q70-narrow.log
           grep -F 'critical_1122_mod_2pow60_unreachable' /tmp/agent13-q70-narrow.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-q70-narrow.log; then exit 1; fi
+      - name: Certify q853 mod1024 original P1 cylinder at K12 and budget 11
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param"
+          lean -o im-results/agent13-p1-adaptive-param/Q853NarrowNodes.olean im-results/agent13-p1-adaptive-param/Q853NarrowNodes.lean | tee /tmp/agent13-q853-nodes.log
+          lean im-results/agent13-p1-adaptive-param/Q853NarrowFinal.lean | tee -a /tmp/agent13-q853-nodes.log
+          grep -F 'critical_13650_mod_16384_unreachable' /tmp/agent13-q853-nodes.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-q853-nodes.log; then exit 1; fi
       - name: Verify all-positive-fixed-depth original scalar inverse obstruction
         run: |
           set -euo pipefail
