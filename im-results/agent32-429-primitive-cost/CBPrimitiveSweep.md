@@ -1,13 +1,14 @@
-# C/B sweep primitive and the two open J-chart branches
+# C/B sweep primitive and J-chart composition status
 
-**Status:** the generic transition primitive is kernel-checked in
-[CBPrimitiveSweep.lean](CBPrimitiveSweep.lean). The source-specific composition
-with `j_F0_prefix` remains open.
+**Status:** the generic C/B transition primitive is kernel-checked in
+[CBPrimitiveSweep.lean](CBPrimitiveSweep.lean). Its source-specific
+composition is now closed for the two outer J-chart branches by
+[Agent1's J-first-branch proof](../agent1-429-j-first-branch/README.md).
 
 ## Formal statement now available
 
-For a configuration in state C at head (h), suppose the next (k) pairs are
-`10`:
+For a configuration in state C at head (h), suppose the next (k) pairs
+are `10`:
 
 ```
 t(h + 2i)     = 1
@@ -32,45 +33,46 @@ The file includes kernel-checked arithmetic identities for (k=2u+2):
 [
 (4u^2+6u+7)+14+(4u+5)=4u^2+10u+26,
 ]
+
 [
 (4u^2+6u+7)+14+(4u+6)=4u^2+10u+27.
 ]
 
-## Intended J-chart composition
+## J-chart composition now proved
 
-The existing `JF0Prefix.j_F0_prefix` theorem reaches F/0 after
-(4u^2+6u+7) successful moves. The raw 14-step F/0-to-C trace is the next
-local setup to formalize. Its expected endpoint is C/1 at
+The source-specific setup is no longer an open obligation:
 
-[
-h_C=-2u-3.
-]
+- `JF0Prefix.j_F0_prefix` reaches F/0 after (4u^2+6u+7) successful moves.
+- The exact 14-step F/0-to-C/1 setup is proved.
+- The `10`-pair pattern for (k=2u+2) is derived from the full
+  `j_F0_prefix` tape.
+- The C/B sweep and final boundary transitions are composed with complete
+  output-tape equality.
 
-For (k=2u+2), the required pair pattern is
+For (w+1=2u), the boundary is `01`, so the raw J configuration makes
+(4u^2+10u+26) successful moves and then halts on the D/1 query.
 
-[
-t(h_C+2i)=1,qquad t(h_C+2i+1)=0
-quad (0le i<2u+2).
-]
+For (w\ge 2u+3), the boundary is `11`, so the raw J configuration makes
+(4u^2+10u+27) successful moves and returns to the translated J chart
+(J(2u+3,w-2u-3)).
 
-The boundary is at (2u+1), with the next cell at (2u+2):
+The continuation branch is further composed through arbitrary consecutive
+high-3 segments in
+[Agent32's High3Ladder.lean](../agent32-429-high3-ladder/High3Ladder.lean).
 
-- (w=2u-1): expected boundary `01`, hence the fatal branch and
-  (4u^2+10u+26) successful moves from J, followed by the halting query.
-- (wge 2u+3): expected boundary `11`, hence A at (2u+3) after
-  (4u^2+10u+27) successful moves from J. This is the head coordinate
-  expected for the next symbolic J state (J(2u+3,w-2u-3)).
+## Remaining cases and scope
 
-These are **composition targets**, not yet theorems of this module. In
-particular, the 14-step setup, the pair-pattern facts from the exact
-`j_F0_prefix` tape, and the full output-tape equality for the nonfatal
-J-to-J transition still need formal proofs. The formulas agree with the
-existing 4,280-case raw simulator evidence, but that evidence is not a
-substitute for the missing Lean composition.
+The three neighboring parameter cases (w=2u), (w=2u+1), and
+(w=2u+2), plus the (w<2u) families, remain open as raw J-chart return
+theorems. The exact raw branch results still do not prove that the authentic
+blank-start orbit reaches any arbitrary synthetic J parameter. The separate
+raw-to-Cryptids encoding bridge is also not yet CI-accepted; see
+[Agent1's JSourceBridge.lean](../agent1-429-j-first-branch/JSourceBridge.lean).
 
 ## Reproduction
 
-The Lean proof is compiled after `JF0Prefix.lean` by the manual workflow
-`agent18-429-lastwriter.yml`. The local development proof gate used Lean
-4.36.0-rc2 and a standalone copy of the exact transition semantics; the
-repository workflow remains the authoritative integration check.
+The generic C/B lemma is compiled by the manual workflow
+`agent18-429-lastwriter.yml`. The source-specific outer-branch composition
+and the arbitrary high-3 ladder are compiled by
+`agent32-429-raw-parent.yml`; the latter passed in
+[CI run 42399391414](https://github.com/FlareZ123/bb6/actions/runs/42399391414).
