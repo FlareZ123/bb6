@@ -58,7 +58,7 @@ jobs:
           lean -o "$D/PacketOneReentry.olean" "$D/PacketOneReentry.lean" | tee -a axioms.log
           lean -o "$D/PacketZeroBoundarySource.olean" "$D/PacketZeroBoundarySource.lean" | tee -a axioms.log
           lean "$D/PacketSafeReentry.lean" | tee -a axioms.log
-          lean "$D/PacketP2ResetSource.lean" | tee -a axioms.log
+          lean -o "$D/PacketP2ResetSource.olean" "$D/PacketP2ResetSource.lean" | tee -a axioms.log
           lean -o "$K/P2K2Shapes.olean" "$K/P2K2Shapes.lean" | tee -a axioms.log
           lean -o "$K/P2K2Source.olean" "$K/P2K2Source.lean" | tee -a axioms.log
           lean -o "$K/P2K1Mod9Shapes.olean" "$K/P2K1Mod9Shapes.lean" | tee -a axioms.log
