@@ -172,9 +172,9 @@ theorem sum7_family_prior_allowed (j m : Nat)
     simpa [k,BB6.Agent19HighEvenRight.highK] using hright
   have hValFull : BB6.Agent3ValSix.highAllowedValSixFull j m := by
     unfold BB6.Agent3ValSix.highAllowedValSixFull
-    exact ⟨hValSix,hFive,by omega,by omega,by
+    exact ⟨hValSix,hFive,by omega,by omega,(by
       rintro ⟨hm32,hj32⟩
-      omega,hright'⟩
+      omega),hright'⟩
   have hC58ValSix : BB6.Agent11C58ValSix.highAllowed j m := by
     unfold BB6.Agent11C58ValSix.highAllowed
     exact ⟨hValFull,by omega⟩
