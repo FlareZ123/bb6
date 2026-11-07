@@ -112,4 +112,6 @@ jobs:
           lean -o "$b/RayNoSeamRoot.olean" "$b/RayNoSeamRoot.lean"
           lean -o "$b/RayTThreeLowGeometry.olean" "$b/RayTThreeLowGeometry.lean"
           lean -o "$b/RayTThreeLowRoot.olean" "$b/RayTThreeLowRoot.lean"
+          lean -o "$b/RayTThreeExtendedGeometry.olean" "$b/RayTThreeExtendedGeometry.lean"
+          lean -o "$b/RayTThreeTwoGate.olean" "$b/RayTThreeTwoGate.lean"
           echo "Agent 10 source-verified exact source t1,t2,t3 rooted classification; Agent 7 all-index two-tier root gap."
