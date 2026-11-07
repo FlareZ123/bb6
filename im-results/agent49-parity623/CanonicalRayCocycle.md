@@ -108,6 +108,8 @@ This scan is finite computational evidence. The index-13 candidate is not itself
 
 A separate exact-integer replay checked the old-ray distance predicate over 6,803 old-cone states in indices 9 through 9,999. It found no violations of \((s-2d)^2\ge d\) on left rays or \((s-a)^2\ge a\) on right rays. The minimum ratio of squared distance to its coordinate is exactly \(338/61\), at index 13, \(D(122,438)\), right-even with \(s=96\) and \(s-a=-26\). Restricting to indices 16 onward, the minimum is \(5329/235\), at index 16, \(D(876,235)\), left-odd with \(s=397\) and \(s-2d=-73\). This is also finite empirical evidence, not an all-time invariant. In particular, the sampled prefix satisfies the stronger inequalities distance\(^2\ge5\cdot\)coordinate, and the sampled tail from index 16 satisfies distance\(^2\ge22\cdot\)coordinate. If the constant-5 bound were proved all-time, the same width comparison would already apply for \(n\ge8\) instead of \(n\ge10\).
 
+A separate exact replay finds that both coordinates are at least \(3^9\) at every scanned index from 35 through 9,999; the last state in this prefix with a smaller coordinate below \(3^9\) is index 34, \(D(7784,59872)\). This is finite evidence only, and a future proof still needs an all-time lower-growth invariant for the smaller coordinate.
+
 No all-time separation theorem for the genuine root ray shifts has been established.
 
 ## Remaining mathematical obstacle
