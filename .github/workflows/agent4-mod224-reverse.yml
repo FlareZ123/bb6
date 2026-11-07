@@ -14,6 +14,11 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Independently reproduce the 5,227-state reverse core and full formula match
+        run: |
+          set -eu
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror im-results/agent4-mod224-reverse/ReverseCore224.cpp -o /tmp/reversecore224
+          /tmp/reversecore224
       - name: Kernel check factor-seven all-natural reverse cone against unmodified CLine
         run: |
           set -eu
