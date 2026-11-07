@@ -1,0 +1,34 @@
+name: Agent 32 #429 E/1 one-sided shift prefix (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact one-sided E/1 shift trace
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent6-429-one-sided-excursion:im-results/agent32-429-raw-parent"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.lean
+          lean im-results/agent32-429-raw-parent/BB429E1ShiftDelta.lean 2>&1 | tee /tmp/agent32-e1-shift.log
+          if grep -q sorryAx /tmp/agent32-e1-shift.log; then
+            echo "ERROR: unproved axiom in E/1 shift certificate"
+            exit 1
+          fi
