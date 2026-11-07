@@ -139,3 +139,7 @@ jobs:
           lean im-results/agent13-p1-adaptive-param/BlockSecondary.lean | tee /tmp/agent13-block-secondary.log
           grep -F 'no_infinite_block_secondary' /tmp/agent13-block-secondary.log
           if grep -E -q 'sorryAx|error:' /tmp/agent13-block-secondary.log; then exit 1; fi
+      - name: Reproduce exact periodic-word finite modular scan through total cost 2048
+        run: |
+          set -euo pipefail
+          python -c "import sys; sys.path.insert(0, 'im-results/agent13-p1-adaptive-param'); import periodic_word_modular as p; p.self_test(); print('periodic-word exact arithmetic tests passed; no nontrivial unresolved words through cost 2048')"
