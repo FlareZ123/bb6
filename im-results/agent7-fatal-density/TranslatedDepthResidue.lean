@@ -238,16 +238,16 @@ theorem translatedDepthResidue_unique_in_period (n : Nat) (offset : Int)
   simp only [Nat.mod_eq_of_lt hj]
 
 /-- Quotient offset selected by the source t=3 high-q gate. -/
-def tThreeHighC (n : Nat) : Nat := (38*(2^(n+1)+2*n-1))%81
+def tThreeHighC (n : Nat) : Int := (38*((2:Int)^(n+1)+2*n-1))%81
 
-def tThreeHighOffset (n : Nat) : Int := (81:Int)*(tThreeHighC n:Int)
+def tThreeHighOffset (n : Nat) : Int := (81:Int)*tThreeHighC n
 
 def tThreeHighResidue (n : Nat) : Nat := translatedDepthResidue n (tThreeHighOffset n) 4
 
 theorem tThreeHighOffset_divisible (n : Nat) : (3:Int)^4∣tThreeHighOffset n := by
   have hp : (3:Int)^4=81 := by decide
   rw [hp,tThreeHighOffset]
-  exact Int.dvd_mul_right 81 (tThreeHighC n:Int)
+  exact Int.dvd_mul_right 81 (tThreeHighC n)
 
 /-- The high-q t=3 gate occupies exactly one ray-depth class modulo 4374. -/
 theorem tThreeHighResidue_iff (n j : Nat) (hn : n%6=4 ∨ n%6=5) :
@@ -258,9 +258,76 @@ theorem tThreeHighResidue_iff (n j : Nat) (hn : n%6=4 ∨ n%6=5) :
   have hp : depthPeriod 7=4374 := by decide
   simpa [translatedZ, tThreeHighResidue, hp] using h
 
+/-- The quotient gate is exactly the translated 3^8 divisibility condition. -/
+theorem tThreeHighGate_iff (n j d q : Nat)
+    (hz : signedZ n j=(81:Int)*d)
+    (hrel : 16*d=2^n+q+n+2) :
+    (81:Int)∣(2*q+5:Int) ↔
+      (3:Int)^8∣signedZ n j-tThreeHighOffset n := by
+  have hrelI : (16:Int)*(d:Int)=(2:Int)^n+q+n+2 := by
+    exact_mod_cast hrel
+  have hpow : (2:Int)^(n+1)=2*(2:Int)^n := by
+    rw [Int.pow_succ]
+    exact Int.mul_comm _ _
+  have h32 : (32:Int)*(d:Int)=(2:Int)^(n+1)+2*q+2*n+4 := by
+    have hh := congrArg (fun x:Int => 2*x) hrelI
+    omega
+  have hqexpr : (2:Int)*q+5=
+      (32:Int)*d-((2:Int)^(n+1)+2*n-1) := by omega
+  let X : Int := (2:Int)^(n+1)+2*n-1
+  let c : Int := tThreeHighC n
+  have hc : c=(38*X)%81 := by rfl
+  have hdivc : (81:Int)∣(32:Int)*c-X := by
+    have hh := hc
+    omega
+  have hsplit : (32:Int)*d-X=(32:Int)*(d-c)+((32:Int)*c-X) := by omega
+  have hA : (81:Int)∣(32:Int)*d-X ↔ (81:Int)∣(32:Int)*(d-c) := by
+    rw [hsplit]
+    exact Int.dvd_add_left hdivc
+  have hcancel : (81:Int)∣(32:Int)*(d-c) ↔ (81:Int)∣d-c := by
+    constructor
+    · intro hh
+      have hmul : (81:Int)∣(38:Int)*((32:Int)*(d-c)) :=
+        Int.dvd_mul_of_dvd_right hh
+      have heq : (38:Int)*((32:Int)*(d-c))=(d-c)+81*(15*(d-c)) := by
+        omega
+      have h' : (81:Int)∣(d-c)+81*(15*(d-c)) := by simpa [heq] using hmul
+      exact (Int.dvd_add_left (Int.dvd_mul_right 81 (15*(d-c)))).1 h'
+    · intro hh
+      exact Int.dvd_mul_of_dvd_right hh
+  have hshift : signedZ n j-tThreeHighOffset n=(81:Int)*(d-c) := by
+    rw [hz,tThreeHighOffset]
+    omega
+  have hfinal : (3:Int)^8∣signedZ n j-tThreeHighOffset n ↔
+      (81:Int)∣d-c := by
+    rw [show (3:Int)^8=(81:Int)*81 by decide,hshift]
+    exact Int.mul_dvd_mul_iff_left (by decide : (81:Int)≠0)
+  calc
+    (81:Int)∣(2*q+5:Int) ↔ (81:Int)∣(32:Int)*d-X := by
+      rw [hqexpr]
+    _ ↔ (81:Int)∣d-c := hA.trans hcancel
+    _ ↔ (3:Int)^8∣signedZ n j-tThreeHighOffset n := hfinal.symm
+
+theorem tThreeHighC_bounds (n : Nat) :
+    0≤tThreeHighC n ∧ tThreeHighC n<81 := by
+  constructor
+  · exact Int.emod_nonneg _ (by decide)
+  · exact Int.emod_lt_of_pos _ (by decide)
+
+/-- Source t=3 high-q gate, expressed as its unique depth residue modulo 4374. -/
+theorem tThreeHighGate_residue_iff (n j d q : Nat)
+    (hn : n%6=4 ∨ n%6=5)
+    (hz : signedZ n j=(81:Int)*d)
+    (hrel : 16*d=2^n+q+n+2) :
+    (81:Int)∣(2*q+5:Int) ↔ j%4374=tThreeHighResidue n := by
+  exact (tThreeHighGate_iff n j d q hz hrel).trans (tThreeHighResidue_iff n j hn)
+
 #print axioms translatedZ_lift_criterion
 #print axioms translatedDepthResidue_good
 #print axioms translatedDepthResidue_iff
 #print axioms translatedDepthResidue_unique_in_period
 #print axioms tThreeHighResidue_iff
+#print axioms tThreeHighGate_iff
+#print axioms tThreeHighC_bounds
+#print axioms tThreeHighGate_residue_iff
 end CascadeTranslatedRayDepth
