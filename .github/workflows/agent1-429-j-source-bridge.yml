@@ -55,7 +55,7 @@ jobs:
           cp ../bb6/im-results/agent6-fresh-glider/RayMacro.lean BB6Agent/
           cp ../bb6/im-results/agent6-fresh-glider/EntryMacroOracle.lean BB6Agent/
           cp ../bb6/im-results/agent6-fresh-glider/EntryMacroLeft.lean BB6Agent/
-          cp ../bb6/im-results/agent44-directed-drift/DirectedDrift.lean BB6Agent/
+          cp ../bb6/im-results/agent44-drift-closure/DirectedDrift.lean BB6Agent/
           cp ../bb6/im-results/agent8-coverage-contract/ZeroMaskOracle.lean BB6Agent/
           cp ../bb6/im-results/agent8-coverage-contract/FiniteDecision.lean BB6Agent/
           cp ../bb6/im-results/agent4-coverage-smoke/FrontierAudit.lean BB6Agent/
