@@ -17,12 +17,19 @@ For arbitrary `r,j,m` with `2≤r`, `3≤m`, `r+4≤2*m+2`, `m%4=(2*r+3)%4` and 
 A constructive parameter family and explicit cross-agent `ValSixC58AllDepth` merger are now being checked separately. Their source-verification status should be read from the corresponding CI runs rather than assumed from the original high theorem. This advance does not determine whether Machine C or BB(6) halts.
 
 
-## Independent even-right and sum-seven high exclusions (7 November 2026)
+## New even-right high exclusion and independent C23 cross-check (7 November 2026)
 
-See [HighEvenRight.md](HighEvenRight.md) for the proof synthesis and exact residue calculations. The unique even-right inverse cylinder (m\equiv3\pmod4, j\equiv m+3\pmod8) is source-certified and survives the full previous Agent24 high sieve; its exact residual criterion and axiom audit passed [CI 42349021125](https://github.com/FlareZ123/bb6/actions/runs/42349021125).
+See [HighEvenRight.md](HighEvenRight.md) for the proof synthesis.
 
-A second exceptional sum-seven cylinder is now formulated in the full congruence form m>=5, m mod 4=1, (j+8) mod 32=(3*m+1) mod 32, covering eight residue pairs modulo 32. Its source proof uses Agent3's complete one-step preimage grammar and rules out every possible parent by the odd-right image invariant, with no finite bounce-depth cutoff. The generalized source and prior-sieve verification is pending [CI 42351055087](https://github.com/FlareZ123/bb6/actions/runs/42351055087). Treat the generalized cylinder as provisional until that run succeeds.
+The genuinely new result is the source-certified even-right inverse cylinder
+\[
+m\equiv3\pmod4,\quad m\geq3,\quad j\equiv m+3\pmod8.
+\]
+It survives the full previous Agent24 high sieve and is excluded by the exact unique even-right predecessor plus the odd-right image invariant. Its source proof passed [CI 42348489335](https://github.com/FlareZ123/bb6/actions/runs/42348489335); the prior-sieve admission and exact residual theorem passed [CI 42349021125](https://github.com/FlareZ123/bb6/actions/runs/42349021125). The final axiom audit contains no sorryAx.
 
+The sum-seven congruence family \(m\geq5,\ m\equiv1\pmod4,\ j+8\equiv3m+1\pmod{32}\) is exactly Agent20's C23 high family, not a new exclusion. HighEvenRightSum7Arithmetic.lean and HighEvenRightSum7Source.lean independently reconstruct its target residues and complete preimage argument through Agent46.sectionPreimageAll. This is retained as a source-level cross-check of C23Rectangle/C23High/C23Strict/C23Integration. Its duplicate prior-sieve proof is in HighEvenRightSum7Residual.lean.
+
+HighEvenRightC23Residual.lean appends the genuinely new even-right family to Agent20's strongest C70+C23 exact residual, retaining the low C70 restriction, both C70 high rectangles, and the C23 high exclusion. The combined original-source CI audit is pending [run 42351346417](https://github.com/FlareZ123/bb6/actions/runs/42351346417).
 
 ## Current state
 
