@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB429MidAposBoundary
 
 open BB429High2Return BB429JuncHeadExcursion BB429FinishScanEDelta
-open BB429SourceE1Delta BB429OddExcursion BB6Coverage
+open BB429SourceE1Delta BB429SourceE1Return BB429OddExcursion BB6Coverage
 
 /-- Consume a right-hand alternating block `1(01)^n`, leaving its final
     one as the only right-hand mark. This is the exact A/0,B/1 sweep used
@@ -106,8 +106,9 @@ theorem midApos_reenter_delta (u v w : Nat) (hu : 1 ≤ u) (hw : 3 ≤ w) :
   simp only [Option.bind_some]
   rw [hcross]
   simp only [Option.map_some]
-  simp [juncPosMidTime, Int.natCast_add, Int.natCast_mul]
-  omega
+  simp [Int.natCast_add, Int.natCast_mul]
+  have hsub : u - 1 - 1 = u - 2 := by omega
+  simp [hsub]
 
 /-- Two successive re-entries reduce a right parameter of five to one. -/
 theorem midApos_reenter_twice_delta (u v : Nat) (hu : 2 ≤ u) :
