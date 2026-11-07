@@ -34,15 +34,31 @@ The current block size is 512. This is an exact evaluator for the eleven-row DRe
 
 **BlankTwentyFirstRejoin.lean** now uses DRegularFast.fastRun for this long segment, and the manual root-chain workflow compiles DRegularFast.lean before it. The earlier root-chain run [42377931873](https://github.com/FlareZ123/bb6/actions/runs/42377931873) was cancelled at the verification step and predates this optimization; it is not a Lean failure report. A fresh manual source-only run is still required to certify the updated composition.
 
-## Conditional blank-root arithmetic lookahead through exception 100
+## Corrected conditional root lookahead: first residual at exception 41
 
-The Python DRegular model was extended beyond the existing twentieth/twenty-second root candidates. Conditional on the preceding root reentries being valid, it predicts exceptional sections through #100. This is an arithmetic lookahead, **not** an original-source proof of those reentries. The most useful branch observations are:
+A second continuation pass now uses the **source-specific E7 branches** (EEE escape, E/E packet, and third-return cases), rather than applying the generic two-return arithmetic formula to every E7 state. This corrects the earlier exploratory claim of a clean lookahead through exception 100: that claim was invalid for E7 states with q >= 3 and must be disregarded.
 
-- #24 and #27 are E/E packet returns with p=9 and p=15, respectively; their normalized packets enter A,p divisible by 3 and close through the existing A-zero source boundary.
-- #33 is L(27u+7,5,1); two E returns give an A packet with p=7, then the A-one boundary closes it.
-- #44 and #45 use the EEE escape family. #44 reaches B then A,p=2; #45 reaches A,p=2 directly. Both are candidates for APacketMarkerSource.A_two and return to L(a,4,0).
-- #47 reaches E,p=2 with reset index k mod 9 = 6, so the already source-certified e_two_k0_regular family applies.
-- #58, #68 and #90 normalize E/E packets to A,p=5,2 and 11, respectively, and are candidates for A_two; #64 and #78 normalize to A,p=13 and 7, respectively, and are candidates for AOnePacketBoundarySource.a_p1_boundary.
-- #82 and #93 use the EEE escape and reach A,p=2. #92 uses the two-E/A-one route.
+Conditional on the existing root-20/21/22 reentries, the exact DRegular model reaches the first currently uncovered p=2 reset at exception **#41**:
 
-The A,p=2 closure is supplied by APacketMarkerSource.lean, whose composition is not yet included in the successful unchanged-source CI run 42359163994. These root-specific uses remain provisional until a source-only workflow compiles the exact chain. No k mod 9 = 4 or 7 E,p=2 reset was encountered in this finite model lookahead through #100, but that observation is not a proof of an invariant and does not remove those residual classes from the general problem.
+- Exceptional section: L(9*t41+7, 7, 1), with t41 mod 81 = 76 (hence t41 mod 27 = 22).
+- The source-specific EEE escape uses u41=(t41-1)/3, with u41 mod 27 = 25 and u41 mod 9 = 7.
+- It produces the packet M(512*u41+257, 4, 2; 0 1^6). Its prefix is 1 mod 3, so this is an E,p=2 reset, not an A-packet closure.
+- The reset parameter is k41=(512*u41+257-4)/3, with k41 mod 81 = 76 and **k41 mod 9 = 4**.
+- The p=2 reset output has q=4 and p=14 in the reset marker, with the fixed marker word 01010111. The existing source families cover k mod 3 = 0, k mod 3 = 2, and k mod 9 = 1. They do not cover k mod 9 = 4.
+
+The first residual is therefore a **reachable k = 4 mod 9 p=2 marker**, conditional on the upstream blank-root chain. This is the next source-level target. The k=7 mod 9 class remains a separate general residual; this run has not established whether it is also reachable.
+
+The corrected arithmetic trace from exceptions 21 through 40 uses the already-developed B/A/E return families and the source-specific E7 packet normalization. The first 20 steps of that continuation contain no uncovered p=2 reset; exception 41 is the first one. These are model-level computations and proposed source compositions, not an original-source proof of the full blank-root chain. The upstream root-chain workflow [42377931873](https://github.com/FlareZ123/bb6/actions/runs/42377931873) was cancelled at its verification step and predates the DRegularFast optimization; a fresh manual source-only run is still needed.
+
+The exact reset arithmetic can be reproduced from the DRegular model. Useful residues for adversarial checking are:
+
+| Quantity | Exact residue |
+|---|---:|
+| t41 mod 81 | 76 |
+| u41 mod 27 | 25 |
+| (512*u41+257) mod 81 | 70 |
+| k41 mod 81 | 76 |
+| k41 mod 9 | **4** |
+| (8*k41+5) mod 81 | 46 |
+
+Do not use the earlier #44/#45/#58/#64/#68/#78/#82/#90/#92/#93/#100 continuation table as evidence: it came from the incorrect E7 shortcut and has been superseded by this corrected branch analysis.
