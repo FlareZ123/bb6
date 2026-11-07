@@ -475,27 +475,27 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     simp [run,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13]
   have htape : c14.tape=setupTape t h := by
     funext x
-    by_cases hx0 : x=h-2
+    have hcases : x=h-2 ∨ x=h-1 ∨ x=h ∨ x=h+1 ∨ x=h+2 ∨ x=h+3 ∨
+        x<h-2 ∨ h+3<x := by omega
+    rcases hcases with h0x | h1x | h2x | h3x | h4x | h5x | hleft | hright
     · subst x
       simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
-    · by_cases hx1 : x=h-1
-      · subst x
-        simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
-      · by_cases hx2 : x=h
-        · subst x
-          simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
-        · by_cases hx3 : x=h+1
-          · subst x
-            simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
-          · by_cases hx4 : x=h+2
-            · subst x
-              simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
-            · by_cases hx5 : x=h+3
-              · subst x
-                simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
-              · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
-                simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
-                  writeAt,setupTape,hx0,hx1,hx2,hx3,hx4,hx5,hout] <;> omega
+    · subst x
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
+    · subst x
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
+    · subst x
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
+    · subst x
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
+    · subst x
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,writeAt,setupTape]
+    · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hout] <;> omega
+    · have hout : ¬(h-2≤x ∧ x≤h+3) := by omega
+      simp [c14,c13,c12,c11,c10,c9,c8,c7,c6,c5,c4,c3,c2,c1,c0,
+        writeAt,setupTape,hout] <;> omega
   have hcfg : c14 = {state:=C,head:=h+4,tape:=setupTape t h} := by
     ext
     · rfl
