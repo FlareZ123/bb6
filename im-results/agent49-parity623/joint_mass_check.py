@@ -170,6 +170,76 @@ def root_balance_scan(steps: int = 10_000) -> dict:
     }
 
 
+
+
+def terminal_ratio4_scan(steps: int = 10_000) -> dict:
+    """Check the ratio-4 necessary condition obtained by subtracting ray gaps."""
+    state = (0, 7)
+    checked = 0
+    candidates = []
+    branch_min_margin = {}
+
+    for index in range(steps):
+        x, y = state
+        if index >= 9:
+            branch, drain = final_drain_input(x, y)
+            if drain is not None:
+                p, b, r = drain
+                if branch == "far-left-odd":
+                    n = pow3_budget(b)
+                    mass = x + 2 * y + 10 + 3 * n
+                    bound = pow3_budget(2 * mass + 5) + 5 * n + 29
+                    gap = 4 * y - x
+                elif branch == "far-left-even":
+                    n = pow3_budget(b)
+                    mass = x + 2 * y + 7 + 3 * n
+                    bound = pow3_budget(2 * mass + 5) + 5 * n + 20
+                    gap = 4 * y - x
+                elif branch == "right-odd":
+                    n = pow3_budget(b)
+                    mass = y + 2 * x + 5 + 3 * n
+                    bound = pow3_budget(2 * mass + 5) + 5 * n + 12
+                    gap = 4 * x - y
+                elif branch == "right-even":
+                    n = pow3_budget(x)
+                    mass = y + 2 * x + 5 + 3 * n
+                    bound = pow3_budget(2 * mass + 5) + 8 * n + 17
+                    gap = 4 * x - y
+                else:
+                    state = high_level_next(*state)
+                    if state is None:
+                        break
+                    continue
+
+                checked += 1
+                margin = abs(gap) - bound
+                out = drain_b(p, b, r)
+                assert out is not None
+                if margin <= 0:
+                    candidates.append({
+                        "index": index,
+                        "branch": branch,
+                        "state": (x, y),
+                        "gap": gap,
+                        "bound": bound,
+                        "output": out,
+                        "output_has_successor": high_level_next(*out) is not None,
+                    })
+                old = branch_min_margin.get(branch)
+                if old is None or margin < old[0]:
+                    branch_min_margin[branch] = (margin, index, (x, y), gap, bound)
+
+        state = high_level_next(*state)
+        if state is None:
+            break
+
+    return {
+        "states_with_final_drain": checked,
+        "ratio4_candidates": candidates,
+        "minimum_margins_by_branch": branch_min_margin,
+    }
+
 if __name__ == "__main__":
     print("Joint-mass finite checks:", check_mass_bound())
     print("Root balance comparison:", root_balance_scan())
+    print("Terminal ratio-4 scan:", terminal_ratio4_scan())
