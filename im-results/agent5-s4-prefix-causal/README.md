@@ -75,3 +75,32 @@ That *finite* statement was proved using nine separate source-shaped 16/15-step 
 For every `n` and every **surviving genuine** recurrence stack at time `337+n`, the first seven digits therefore equal `prefixRun (194+(n%5120)) phase7`. The true root's survival for all `n` is **not asserted**. Seven-digit projected periodicity includes an additional factor `5` beyond the previous 1024-period six-digit projection. This is an internal mathematical structural discovery, with no external novelty audit and no claim of a universal root decision.
 
 The complete theorem file locally compiled with Lean 4.36.0-rc2 and only `[propext, Quot.sound]` axioms; all finite cycle equalities used no axioms. An unchanged-original-Cryptids import is added to the same manual workflow and its successful outcome should be checked before upgrading its original-source provenance.
+
+
+## Exact eighth-prefix four-cycle and 20,480-return projection period
+
+**Agent 5, 2026-11-07; intermediate result.** The new source-importing module [S4PrefixEighthCycle.lean](S4PrefixEighthCycle.lean) computes the exact eighth-digit return map over one 5,120-return block, using the existing `S4PrefixEighthMass` prefix-contraction and root-transport theorems:
+
+```
+return8 25036 = 109210
+return8 109210 = 109208
+return8 109208 = 109209
+return8 109209 = 109206
+return8 109206 = 109210
+```
+
+Thus, after the first block, the eighth digit follows the four-cycle
+`109210 -> 109208 -> 109209 -> 109206 -> 109210`. The corresponding eight-digit prefix start is
+`cycle8PeriodicStart = [283,906,982,3490,3734,5935,13580,109210]`, and its total prefix trajectory has exact period 20,480:
+
+```
+prefixRun 20480 cycle8PeriodicStart = cycle8PeriodicStart
+```
+
+More strongly, the root-transport theorem proves that for every `n` and every stack `U` satisfying the genuine source-map survival hypothesis `prun (5457+n) seed = some U`,
+
+```
+U.take 8 = prefixRun (n % 20480) cycle8PeriodicStart.
+```
+
+This is an exact period for the first eight digits of every *surviving* genuine-root configuration from accelerated return 5457 onward. It does not prove survival to 5457, survival thereafter, or repetition of the complete stack. The five return-map values are kernel-computed with `by decide` and have no extra axioms; the period and root-transport proofs reuse the existing prefix-block and root-causality theorems. Local Lean 4.36.0-rc2 source-shaped computation and proof-body checks passed. The updated original-Cryptids CI workflow is the authoritative source-import check; do not treat this result as source-verified until that run succeeds.
