@@ -1,6 +1,6 @@
 # #746 weak-margin no-seam and t=3 genuine-root fork gates
 
-**Agent 10, 2026-11-07. Status: intermediate source-C mathematical research.** The universal weak-margin theorem is verified against the unmodified repository's original source-C reset model in [CI 42330279653](https://github.com/FlareZ123/bb6/actions/runs/42330279653) (success, no `sorryAx`). The additional t=3 first-parent and two-gate modules remain a new extension and must be considered source-verification **pending** until their full import-tree CI passes. Neither statement settles #746 global nonhalting or BB(6). 
+**Agent 10, 2026-11-07. Status: intermediate source-C mathematical research.** The universal weak-margin theorem is verified against the unmodified repository's original source-C reset model in [CI 42330279653](https://github.com/FlareZ123/bb6/actions/runs/42330279653). The complete t=3 low-root, two-gate, double-selector, packet, high-geometry, and high-root import chain now compiles against the actual repository dependencies in [CI 42392225346](https://github.com/FlareZ123/bb6/actions/runs/42392225346) (success). This verifies source elaboration of the selector/packet chain; it does not close the remaining high-q root cases or establish #746 nonhalting. Neither statement settles #746 global nonhalting or BB(6). 
 
 ## Independent uniform proof of the Agent 7 weak-margin inverse exit
 
@@ -34,7 +34,7 @@ It implies the simultaneous strict small-strip constraints
     q+5n+40<=10p,
     8q+40n+320<=75p.
 
-The target `q` lies in the even-image gap `(P/2,3P/4)`. If its odd numerator is indivisible by 9, then the complete true source first-parent grammar leaves only the t=0 odd arm. Its unique `n-4`-scale parent `h`, satisfying `3d0=2q+5` and `2d0=8p+h+(n-4)+5`, lies in the forbidden gap `(P/4,3P/8)` and has `h%3!=2`; its root exclusion then excludes `q`. The source consequence is [RayTThreeLowRoot.lean](RayTThreeLowRoot.lean) and requires successful full-source CI before it is counted as verified.
+The target `q` lies in the even-image gap `(P/2,3P/4)`. If its odd numerator is indivisible by 9, then the complete true source first-parent grammar leaves only the t=0 odd arm. Its unique `n-4`-scale parent `h`, satisfying `3d0=2q+5` and `2d0=8p+h+(n-4)+5`, lies in the forbidden gap `(P/4,3P/8)` and has `h%3!=2`; its root exclusion then excludes `q`. The source consequence is [RayTThreeLowRoot.lean](RayTThreeLowRoot.lean); it is included in the successful full-source compile [CI 42392225346](https://github.com/FlareZ123/bb6/actions/runs/42392225346).
 
 For the larger **two-gate** version [RayTThreeTwoGate.lean](RayTThreeTwoGate.lean), exact geometry excludes both t=1 and t=2 odd-parent bands of `q` unconditionally. Thus the remaining odd source inverse arms are t=0 or t>=3. The latter requires `81 | (2q+5)`. The t=0 predecessor `h` lies in a *narrower* gap `P/4<h<(9P/32)-4`, strong enough for the universal source theorem `narrow_gap_root_excluded` if `9` does not divide `2h+5`. Therefore the proposed source-root theorem is
 
@@ -42,7 +42,7 @@ For the larger **two-gate** version [RayTThreeTwoGate.lean](RayTThreeTwoGate.lea
     and 9 does not divide 2h+5
     then not ReachC (2,0) (q,0).
 
-Every higher-valuation arm and both exceptional modular gates are explicitly retained. Root claims in this subsection must be marked pending until the full unchanged-original-source CI succeeds. The algebraic gap statements already passed a local Lean 4.36.0-rc2 check with standard axioms.
+Every higher-valuation arm and both exceptional modular gates are explicitly retained. The complete selector and packet proofs are now compiled against the actual unchanged source dependency chain in [CI 42392225346](https://github.com/FlareZ123/bb6/actions/runs/42392225346). The additional [RayTThreeHighRoot.lean](RayTThreeHighRoot.lean) theorem source-compiles and excludes the high-q subcase when its second parent r has r%3=0. It does not exclude the remaining r%3=1 or r%3=2 cases.
 
 ## Reproducible finite illustration, not proof of density or reachability
 
@@ -61,3 +61,12 @@ Of the 288 retained candidates, 84 have `81 | (2q+5)`, and 231 have `9 | (2h+5)`
 ## Frontier
 
 This research rules out broad uniform families of genuine inverse ancestors but does not prove that the canonical ray never reaches a fatal reset. Higher 3-adic valuation at either t=1 or t=3, the high-index near-exit region outside the strong margin, and all other six-state contenders remain unresolved. The most useful next target is a source-root analysis of the **288 retained** finite illustrative t=3 candidates and their infinite parameter analogues, especially the `81` gate and secondary `9` gate. Retain the exact source inverse grammar and preserve any truly rooted exceptional arms.
+
+
+## 2026-11-07 16:43 UTC: translated high-q gate and full-source selector compile
+
+The manual source workflow .github/workflows/agent10-ray-odd-strip.yml completed successfully in [CI 42392225346](https://github.com/FlareZ123/bb6/actions/runs/42392225346) at commit bad5cc9fa89bc77e08ad56ceed80f33539651046. It compiled the actual dependency chain through RayTThreeLowRoot, RayTThreeTwoGate, RayTThreeDoubleSelector, RayTThreePacket, RayTThreeHighGeometry, and RayTThreeHighRoot. The source run validates the exact source-C selector and packet equivalences. It does not imply the high-q branch is globally dead.
+
+New intermediate synthesis [TThreeHighGateResidue.md](TThreeHighGateResidue.md) proves on paper that the high-q selector gate 81 | (2q+5) is equivalent to the shifted congruence Z_j(n) ≡ 81*c_n (mod 3^8), with c_n = 38*(2^(n+1)+2n-1) mod 81. Since 2 has order 4374 modulo 6561 and the right-hand side is a unit in sectors n mod 6 = 4,5, the gate selects exactly one j residue modulo 4374. This is a translated Hensel target, not Agent 7's zero-divisibility residue.
+
+The reproducible exact-integer audit [t3_high_gate_audit.py](t3_high_gate_audit.py) finds 3,801 high-q candidates through n=10,000; all their complete reverse cones under the two exact ResetParent arms omit root 2. Maximum cone size is 57, maximum path depth 25. This is finite computational evidence only. No universal root-exclusion theorem has been proved for the remaining r mod 3 = 1,2 branches. The separate secondary t=0-parent gate remains open.
