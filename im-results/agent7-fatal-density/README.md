@@ -1,6 +1,6 @@
 # Cryptids #746: source-certified six-packet inverse grammar and 3-adic fork constraints
 
-**Research state (6 November 2026): original-source all-index arithmetic and six-packet root reductions constrain hypothetical #746 fatal ancestors; blank-start halting and BB(6) remain open.** [Complete proof derivations, density analysis, and historical chronology](FULL_RESEARCH_LOG.md).
+**Research state (7 November 2026): original-source all-index arithmetic and six-packet root reductions constrain hypothetical #746 fatal ancestors; blank-start halting and BB(6) remain open.** [Complete proof derivations, density analysis, and historical chronology](FULL_RESEARCH_LOG.md).
 
 ## Source-certified result
 
@@ -28,23 +28,36 @@ This is exactly the (r\bmod3=0) case covered by Agent 10's existing root-dead th
 [ForwardOrbitAudit100k.md](ForwardOrbitAudit100k.md) records an independent exact-integer finite check: 245,399 high-(q) candidates for (20\le n\le100000) were compared with the deterministic blank-root reset orbit, with zero matches. This extends finite evidence; it is not a universal exclusion theorem. The executable audit is [t3_high_gate_forward_audit.py](t3_high_gate_forward_audit.py).
 
 
-## Second-parent dyadic-gap reduction
+## Source-connected high-q second-parent inverse grammar
 
-[TThreeHighTightBounds.lean](TThreeHighTightBounds.lean) formalizes a further geometric consequence of the exact high-q margin. Put (p=2^{n-4}), (k=n-6), and let (r) be the second (t=3) parent. The source equations and margin imply
-[
-10934p-961n+18609\le6561r\le10942p-10177n+6321.
-]
-They consequently force
-[
-4\cdot2^k<\frac{2r+5}{3}<6\cdot2^k,
-\qquad
-2\cdot2^k<\frac{2(2r+5)}{9}<3\cdot2^k,
-]
-whenever the respective quotients are integral.
+Fix a canonical ray index \(n\ge20\), \(n\bmod6\in\{4,5\}\), depth \(j\), and exact source high-margin \(2048D_j(n)+16384n+16384\le 2^n\). Assume the actual source reset equations
+\[
+2U_j(n)+5=81d_0,\quad16d_0=2^n+q+(n-3)+5,\quad
+2q+5=81e,\quad16e=8\cdot2^{n-6}+r+(n-6)+5.
+\]
+The previous [TThreeHighTightBounds.lean](TThreeHighTightBounds.lean) algebra, new [TThreeHighNatBridge.lean](TThreeHighNatBridge.lean), and [TThreeHighNatSource.lean](TThreeHighNatSource.lean) jointly prove the source-level bounds
+\[
+10934p-961n+18609\le6561r\le10942p-10177n+6321,\qquad p=2^{n-4}.
+\]
+This completes the missing Nat-to-Int margin bridge. [TThreeHighOddPrune.lean](TThreeHighOddPrune.lean) uses the *complete* actual first-reset predecessor grammar to exclude odd valuations \(t=0,1\) at \(r\). Original-source Lean CI [42410401513](https://github.com/FlareZ123/bb6/actions/runs/42410401513) passed.
 
-These are strict dyadic gaps: the first lies between the odd-parent bands at scales (k-1) and (k), and the second lies between the bands at scales (k-2) and (k-1). Therefore an odd parent of (r), if one exists, cannot have exponent (t=0) or (t=1); every possible odd parent has (t\ge2). This is a root-cone reduction beyond the residue selector.
+### Uniform genuine-root obstruction at \(t=2\)
 
-The Lean file proves the arithmetic implication from Int-cast source equations and margin hypotheses, plus the scaled gap inequalities. Full unchanged-source Lean CI passed in [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455); the Nat-to-Int margin bridge and direct composition with the complete reset-parent grammar remain to be checked. Do not yet claim that the second-parent branch is root-dead.
+Any odd valuation-\(2\) predecessor \(a\) of \(r\) has quotient \(d\), with \(2r+5=27d\). [TThreeHighTTwoGeometry.lean](TThreeHighTTwoGeometry.lean) proves its dyadic scale is uniquely \(k=n-8\), putting \(s=2^{n-8}\) and \(1973s\le1000d\le1979s\). Four successive candidate even predecessors \(b,c,f,g\) satisfy
+\[
+8d=8s+a+k+5,\quad2a=8s+b+k,\quad
+2b=8s+c+k,\quad2c=8s+f+k,\quad2f=8s+g+k.
+\]
+All of \(a,b,c,f\) are in the exact source even-return band of scale \(k\), while \(g\) lies in a strict gap \(4s<g\) and \(2g+2<12s\). If \(d\bmod3=2\), all five are residue \(1\) modulo 3; the first four predecessors are therefore forced even, and source-root reachability contradicts the forbidden gap at \(g\). [TThreeHighTTwoRoot.lean](TThreeHighTTwoRoot.lean) proves this at arbitrary exact odd-image exponent and integrates it into an all-source ResetParent classifier. Full source Lean CI [42411744664](https://github.com/FlareZ123/bb6/actions/runs/42411744664) **passed**, with no extra axioms beyond ordinary Lean logic.
+
+For \(d\bmod3=0\), [TThreeHighTTwoZero.lean](TThreeHighTTwoZero.lean) establishes the stronger rooted condition \((2b+5)\bmod9=0\) **or** \((2f+5)\bmod27=0\). Thus **all** quotients \(d\bmod9=0\) are excluded. The necessary quotient classification becomes
+\[
+d\bmod9=6\quad\lor\quad
+(128d)\bmod27=(30(8\cdot2^{n-8}+n-8)+75)\bmod27.
+\]
+[TThreeHighTTwoResidues.lean](TThreeHighTTwoResidues.lean) classifies the second case by \(n\bmod18\): indices \(4,17\) require \(d\bmod27=12\); indices \(5,10\) require \(d\bmod27=21\); indices \(11,16\) require \(d\bmod27=3\). The new zero-quotient and indexed residue modules have local Lean checks and are undergoing complete-source CI verification; check the latest manual workflow conclusion before upgrading this status.
+
+The \(d\bmod3=1\) branch, surviving modulo-27 gates, valuations \(t\ge3\), other \(q\)-selector arms, and the continuing inverse ray remain open. The source-root restrictions do not establish that machine #746 halts or never halts. They are neither a BB(6) upper bound nor an exact BB(6) value.
 
 ## Remaining question
 
