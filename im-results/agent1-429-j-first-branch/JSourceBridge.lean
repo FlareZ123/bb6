@@ -160,7 +160,6 @@ theorem jRightList_getD (w n : Nat) :
     by_cases hn : n < w
     · rw [jPow1_getD]
       simp [hn]
-      omega
     · cases hdiff : n - w with
       | zero =>
         have heq : n = w := by omega
@@ -367,7 +366,8 @@ theorem source_j_first_branch_physical (u w : Nat) (hw : 2 * u + 3 ≤ w) :
           (BB6.ConjectureBridge.toRelative (sourceJPosition u w 0))).map
           BB6.Bridge.toAbsolute := by
       rw [BB6.ConjectureBridge.run_toRelative]
-      simp [Function.comp_def]
+      rw [Option.map_map]
+      rfl
     _ = _ := by
       rw [← BB6.Bridge.run_absolute]
       rw [toAgent8_machine_eq, sourceJPosition_toAbsolute]
@@ -386,7 +386,8 @@ theorem source_j_fatal_branch (u w : Nat) (hw : w + 1 = 2 * u) :
             (BB6.ConjectureBridge.toRelative (sourceJPosition u w 0))).map
             BB6.Bridge.toAbsolute := by
         rw [BB6.ConjectureBridge.run_toRelative]
-        simp [Function.comp_def]
+        rw [Option.map_map]
+        rfl
       _ = none := by
         rw [← BB6.Bridge.run_absolute]
         rw [toAgent8_machine_eq, sourceJPosition_toAbsolute]
