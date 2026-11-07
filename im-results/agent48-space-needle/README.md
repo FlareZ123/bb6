@@ -90,9 +90,11 @@ so the candidate count is `O(sqrt(K)+log(K))`. The filtered list `quadraticRegul
 - r=3: K=2201, v=366 is a genuine terminal feeder, but its exact generic inverse parent list is empty.
 - r=4: K=26263, v=3282 is a genuine terminal feeder, with exact reverse-parent valuation chain 4 → 0 → 1 → no parents.
 
-Both satisfy the sixth-linear restriction, and both are formally proved unreachable from the original blank root using the exact fixed-target reverse checker. The r=1 and r=2 cancellation cases were already excluded in [NeedleRootSharp.lean](../agent20-needle-coprime/NeedleRootSharp.lean) and [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean). Thus the first four cancellation-family members are excluded; r≥5 and the entire square-root-bounded sector remain unresolved.
+Both satisfy the sixth-linear restriction, and both are formally proved unreachable from the original blank root using the exact fixed-target reverse checker. The r=1 and r=2 cancellation cases were already excluded in [NeedleRootSharp.lean](../agent20-needle-coprime/NeedleRootSharp.lean) and [SpaceNeedleFifthRoot.lean](SpaceNeedleFifthRoot.lean). Thus the first four cancellation-family members are formally excluded. The r=5 member has a separate exact-integer no-parent audit described below, but it is not yet Lean-kernel-certified; r≥6 and the entire square-root-bounded sector remain unresolved.
 
 The full derivation, exact list, complexity bound, source bridge, root criterion, and finite reverse certificates are documented in [QUADRATIC-ENUMERATION.md](QUADRATIC-ENUMERATION.md). Original-source CI passed in [run 42416997719](https://github.com/FlareZ123/bb6/actions/runs/42416997719).
+
+The r=5 cancellation member has now received an exact computational no-parent audit: `K=295269`, `v=29526`, with all 295,270 possible incoming valuations checked. A small-prime progression sieve rejects 238,684 valuations; exact direct and signed-base remainder checks eliminate the remaining 56,586. The reproducible script and derivation are in [R5-CANCELLATION-ROOT-AUDIT.md](R5-CANCELLATION-ROOT-AUDIT.md) and [r5_cancellation_parent_audit.py](r5_cancellation_parent_audit.py). This is an exact finite arithmetic result, pending Lean formalization and independent review.
 
 ## Modular terminal-feeder exclusions
 
@@ -157,6 +159,6 @@ A fixed odd-modulus invariant that forgets the true valuation is necessarily tri
 
 ## Next research priority
 
-Prove that `ReachN` avoids the remaining quadratic-regular feeder family, or produce an actual reachable feeder. The first four cancellation parameters are now excluded; prioritize a uniform treatment of r≥5 and the square-root-bounded sector, using history-sensitive root invariants or symbolic reverse-cone closure. Further synthetic slope improvements are secondary unless they eliminate an infinite sector of the remaining root existential.
+Formalize the r=5 no-parent audit in Lean and connect it to `ReachN`; then extend the inverse-divisibility method to r≥6. In parallel, pursue the square-root-bounded sector using history-sensitive root invariants or symbolic reverse-cone closure. Further synthetic slope improvements are secondary unless they eliminate an infinite sector of the remaining root existential.
 
 **No exact BB(6) value or Space Needle halting decision is claimed.**
