@@ -1,6 +1,7 @@
 import EvenWalkSourceModel
 import RayTwoGateExact
 import OddRayDeep
+import EvenWalkSmall
 import Lean.Elab.Tactic.Omega
 set_option maxHeartbeats 0
 
@@ -20,7 +21,7 @@ private theorem odd_band_unique (u k l:Nat)
     rw[Nat.pow_succ] at hp
     omega
 
-private theorem power16 (n:Nat) (hn:25≤n): 2^n=16*2^(n-4):=by
+private theorem power16 (n:Nat) (hn:13≤n): 2^n=16*2^(n-4):=by
   have he:n=(n-4)+4:=by omega
   rw[he,Nat.pow_add]
   simp [Nat.mul_comm]
@@ -28,7 +29,7 @@ private theorem power16 (n:Nat) (hn:25≤n): 2^n=16*2^(n-4):=by
 /-- Uniform actual blank-root exclusion for second-tier low-valuation
     off-ray forks. Every source-possible scale and odd return witness is
     retained until the exact dyadic band proves its unique scale. -/
-theorem offray_tone_low_two_root_dead (n j h w:Nat) (hn:25≤n)
+theorem offray_tone_low_two_root_dead (n j h w:Nat) (hn:13≤n)
  (hsector:n%6=4 ∨ n%6=5)
  (hm:32*CascadeOddRay.deficit n j+64*n+128≤2^n)
  (hl:9*h+8*CascadeOddRay.deficit n j+9*n+7=14*2^n)
@@ -51,8 +52,24 @@ theorem offray_tone_low_two_root_dead (n j h w:Nat) (hn:25≤n)
  rw[hk] at hq
  have hdclosed:CascadeOddRay.deficit n j+(n-1)=2^j*(2*n+3):=
    CascadeOddRay.deficit_closed n j (by omega)
- exact (second_tier_root_dead n j (CascadeOddRay.deficit n j) h w q d hn
-   hsector hdclosed hm hl he hw wdiv hband0 hq) hqr
+ by_cases h25:25≤n
+ · exact (second_tier_root_dead n j (CascadeOddRay.deficit n j) h w q d h25
+     hsector hdclosed hm hl he hw wdiv hband0 hq) hqr
+ · let p:=2^(n-4)
+   let B:=8*p-q
+   have hqp:q≤8*p:=by
+     dsimp[p] at hq hband0 ⊢
+     omega
+   have hQB:B+q=8*p:=by dsimp[B];omega
+   have hweak:2*(2^j*(2*n+3))+2*n+10≤p:=by
+     rw[power16 n hn] at hm
+     dsimp[p]
+     omega
+   have hmodel:81*B+3=16*p+128*(2^j*(2*n+3))+169*n:=by
+     rw[power16 n hn] at hl he
+     dsimp[B]
+     omega
+   exact small_n_no_model n j B hn (by omega) hmodel hweak
 
 #print axioms offray_tone_low_two_root_dead
 end GapNumber
