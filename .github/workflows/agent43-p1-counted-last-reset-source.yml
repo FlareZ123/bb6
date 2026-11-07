@@ -33,7 +33,9 @@ jobs:
           AG28=im-results/agent28-p1-word-automaton
           AG43=im-results/agent43-p1-high-cost-reset-count
           AG50=im-results/agent50-p1-two-reset
-          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50"
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
           for m in GParity GInverse PosEvenForm; do
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
           done
@@ -59,3 +61,11 @@ jobs:
           done
           lean "$AG43/CountedWall148Source.lean"
           lean "$AG43/ExceptionalLastResetSource.lean"
+          for m in ExceptionalCost ExceptionalSource ExceptionalStrong ExceptionalStrongSource; do
+            lean -o "$AG8/$m.olean" "$AG8/$m.lean"
+          done
+          lean -o "$AG50SUB/ExceptionalLastResetDepthSource.olean" "$AG50SUB/ExceptionalLastResetDepthSource.lean"
+          lean -o "$AG50SUB/RightFiveResetFloor.olean" "$AG50SUB/RightFiveResetFloor.lean"
+          lean -o "$AG50SUB/RightFiveTwoArithmetic.olean" "$AG50SUB/RightFiveTwoArithmetic.lean"
+          lean -o "$AG50SUB/RightFiveThreeSource.olean" "$AG50SUB/RightFiveThreeSource.lean"
+          lean "$AG43/DepthIndexedResetFloor.lean"
