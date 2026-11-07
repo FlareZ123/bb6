@@ -2,6 +2,17 @@
 
 **Current synthesis, 7 November 2026.** These are mathematical restrictions on genuine original-source finite inverse histories. Their strongest statements have been checked against the unmodified P1 `CountCone`, `OddCone`, `inverseAt`, and `UpperTail` definitions using Lean 4.36.0-rc2 and the repository's SHA-verified dependent sources. The P1 blank-root halting outcome and BB(6) remain **open**. External mathematical novelty has not been established, so every result remains in `im-results/`.
 
+## Right-five five-reset floor (7 November 2026)
+
+The source bridge now raises the right-five positive-reset floor from three to **five** for every `n>=14`. [ThreeResetWallPrefix.lean](../agent43-p1-high-cost-reset-count/ThreeResetWallPrefix.lean) proves the source theorem `source_right_five_five_reset_floor_shifted_wall` for the unmodified original `CountCone`:
+`CountCone (14*2^n-2*n-16) 3 b 5 m z => 5<=z`.
+
+Its key intermediate theorem, `source_no_three_reset_shifted_wall`, excludes a genuine three-positive-reset prefix on `b+4*m+4*n+20=12*2^n`. The proof peels the last two positive resets, eliminates depth-one cases by forcing negative predecessor right counters, and obtains the exact depth-two constants `c2+3=2P+18*m2+18*n+102` and `c1+3=2P+146*m2+146*n+816`. The remaining first reset is ruled out by the formal dyadic gap split `r=0,1,>=2` in [ThreeResetCore.lean](ThreeResetCore.lean).
+
+**Verification:** original-source CI [42398746712](https://github.com/FlareZ123/bb6/actions/runs/42398746712) succeeded at head `55902afb482ea84aaddb93a688802facde679c98`. The source wrapper imports the existing original-source reset and depth modules, and the workflow compiles the new core and leaf theorem. The arithmetic core was also compiled locally with Lean 4.36.0-rc2; its explicit axiom report contains no `sorryAx`. Both new Lean files contain `#print axioms` commands for source-level auditing.
+
+This result is a necessary source-history restriction. It does not bound the reset count above, close high-cost histories, prove blank-root reachability, or decide P1/BB(6). It remains in `im-results/` pending adversarial review and possible integration with stronger P1 exclusions.
+
 ## Strongest exceptional right-five result
 
 Let `K(n) = 14*2^n-2*n-16`. The theorem [`BB6.Agent50RightFiveThree.source_right_five_needs_three_resets`](RightFiveThreeSource.lean) proves, with no cost or inverse-word-length cutoff,
