@@ -226,6 +226,89 @@ theorem no_eventually_periodic_shadow_path
 #print axioms shadowreach_margin
 #print axioms margin_all
 #print axioms no_eventually_zero_depth
+
+
+/-- Cumulative source depth cost through the first n inverse steps. -/
+def depthPrefix {L root : Nat} (p : InfiniteShadowPath L root) : Nat → Nat
+  | 0 => 0
+  | n+1 => depthPrefix p n + p.depth n + 1
+
+/-- The exact weighted prefix sum in the recentered recurrence. -/
+def recenteredPrefixSum {L root : Nat}
+    (p : InfiniteShadowPath L root) : Nat → Int
+  | 0 => 0
+  | n+1 => recenteredPrefixSum p n +
+      (2:Int)^(depthPrefix p n) *
+        ((p.m 0:Int)+(depthPrefix p n:Int)+(L:Int)-2)
+
+/-- The source cost coordinate is the initial cost plus cumulative depth. -/
+theorem m_eq_depthPrefix {L root : Nat}
+    (p : InfiniteShadowPath L root) :
+    ∀ n, p.m n = p.m 0 + depthPrefix p n := by
+  intro n
+  induction n with
+  | zero => simp [depthPrefix]
+  | succ n ih =>
+      rw [p.hm n, ih]
+      simp [depthPrefix, Nat.add_assoc]
+
+/-- Every infinite source path satisfies an exact prefix identity, with no
+    periodicity, bounded-depth, or bounded-step assumption. The identity is
+    the telescoped form of PeriodWord.recentered_step. -/
+theorem recentered_prefix_identity {L root : Nat}
+    (p : InfiniteShadowPath L root) :
+    ∀ n,
+      (2:Int)^(depthPrefix p n) *
+          PeriodWord.recentered L (p.m n) (p.z n) =
+        PeriodWord.recentered L (p.m 0) (p.z 0) +
+          recenteredPrefixSum p n := by
+  intro n
+  induction n with
+  | zero =>
+      simp [depthPrefix, recenteredPrefixSum]
+  | succ n ih =>
+      have hrec := PeriodWord.recentered_step L (p.m n) (p.z n)
+        (p.m (n+1)) (p.z (n+1)) (p.depth n) (p.quotient n)
+        (p.hdiv n) (p.hnext n) (p.hm n)
+      have hM : depthPrefix p (n+1) =
+          depthPrefix p n + (p.depth n+1) := by
+        simp [depthPrefix, Nat.add_assoc]
+      have hmeq := m_eq_depthPrefix p n
+      rw [hM, Int.pow_add]
+      calc
+        (2:Int)^depthPrefix p n * (2:Int)^(p.depth n+1) *
+            PeriodWord.recentered L (p.m (n+1)) (p.z (n+1)) =
+          (2:Int)^depthPrefix p n *
+            ((2:Int)^(p.depth n+1) *
+              PeriodWord.recentered L (p.m (n+1)) (p.z (n+1))) := by
+                ac_rfl
+        _ = (2:Int)^depthPrefix p n *
+              (PeriodWord.recentered L (p.m n) (p.z n) +
+                (p.m n:Int)+(L:Int)-2) := by
+                rw [hrec]
+        _ = (2:Int)^depthPrefix p n *
+              PeriodWord.recentered L (p.m n) (p.z n) +
+            (2:Int)^depthPrefix p n *
+              ((p.m n:Int)+(L:Int)-2) := by
+                simp only [Int.mul_add, Int.mul_sub]
+                omega
+        _ = (2:Int)^depthPrefix p n *
+              PeriodWord.recentered L (p.m n) (p.z n) +
+            (2:Int)^depthPrefix p n *
+              ((p.m 0:Int)+(depthPrefix p n:Int)+(L:Int)-2) := by
+                have hcoef : (p.m n:Int)+(L:Int)-2 =
+                    (p.m 0:Int)+(depthPrefix p n:Int)+(L:Int)-2 := by
+                  rw [hmeq]
+                  simp only [Int.natCast_add]
+                rw [hcoef]
+        _ = PeriodWord.recentered L (p.m 0) (p.z 0) +
+              recenteredPrefixSum p (n+1) := by
+                rw [ih]
+                simp [recenteredPrefixSum, Int.add_assoc]
+
+#print axioms m_eq_depthPrefix
+#print axioms recentered_prefix_identity
+
 #print axioms no_eventually_periodic_shadow_path
 
 end InfiniteShadowPath
