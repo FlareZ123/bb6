@@ -1,6 +1,6 @@
 # P1 inverse shadow: periodic-depth rays are excluded (paper proof)
 
-**Status:** New all-period analytic argument, 7 November 2026, extending the earlier *constant-depth* result of Agent 13. The integer-drift lemma is independently **Lean 4.36.0-rc2 kernel-checked** in [PeriodCore.lean](PeriodCore.lean), with axioms exactly `[propext, Quot.sound]` and no `sorry` or `native_decide`. The finite binary-word reduction and its composition with the genuine original-source feeder `ShadowReach` have **not yet been formalized in Lean or run through source CI**. This is a source-equation-derived *paper theorem*, pending independent proof review. It does not decide P1, any BB(6) holdout, or BB(6).
+**Status:** New all-period analytic argument, 7 November 2026, extending the earlier *constant-depth* result of Agent 13. The integer-drift lemma is independently **Lean 4.36.0-rc2 kernel-checked** in [PeriodCore.lean](PeriodCore.lean), axioms exactly `[propext, Quot.sound]`. **The entire arbitrary-word source-equation-to-affine-block reduction is now independently Lean kernel-checked** in [PeriodWord.lean](PeriodWord.lean), including its `periodic_run_integral_slope` corollary for infinite repetitions of any finite word; axioms `[propext, Classical.choice, Quot.sound]`. Neither module uses `sorry` or `native_decide`. The finite binary-repetend contradiction and composition with the unchanged original-source feeder `ShadowReach` remain **paper-level and unverified through source CI**. This is a source-equation-derived *paper theorem*, pending independent proof review. It does not decide P1, any BB(6) holdout, or BB(6).
 
 ## Claim and original-source boundary
 
@@ -53,7 +53,7 @@ The integer error `E_n=(A-1)*Δ_n-H*S` satisfies `E_n=A*E_(n+1)`. Since `A≥2`,
 (2^S-1) divides H*S.                            (★)
 ```
 
-This implication is exactly the Lean theorem `PeriodCore.periodic_integral_slope`. Its `no_periodic_affine_ray` corollary excludes any block violating (★), and `no_mixed_01_ray` gives a sample concrete mixed-depth obstruction. The standalone source SHA-256 is `d94d03e1e9f2312bba1a4f37fba5edb4de72e12ee2568b299c53c1d8361f0aac`.
+The error argument is Lean theorem `PeriodCore.periodic_integral_slope`. The source-equation reduction for an arbitrary depth word, using exact inductive `PeriodWord.Run` and no assumed block formula, is Lean theorem `PeriodWord.block_affine`; `PeriodWord.periodic_run_integral_slope` proves (★) for any infinite sequence of actual wordwise shadow predecessor runs. Its axiom audit lists `[propext, Classical.choice, Quot.sound]`. The `no_mixed_01_ray` theorem separately gives a sample concrete mixed-depth obstruction. The core source SHA-256 is `d94d03e1e9f2312bba1a4f37fba5edb4de72e12ee2568b299c53c1d8361f0aac`; the fully checked arbitrary-word source SHA-256 is `41ddcdce1b48d5c69dee9f45fc0477c2d39a264a9d4db0be709caa4f93f96dcc`.
 
 ## Why every nonzero-depth repeating word is impossible
 
@@ -73,8 +73,8 @@ The remaining case `H=B` is the all-zero-depth word. For both authentic feeder r
 
 ## Reproducibility, limitations, and next test
 
-`PeriodCore.lean` compiles using `lean PeriodCore.lean` with Lean 4.36.0-rc2. It proves the integer-drift implication for **any integer-valued infinite affine block recurrence**; the passage from a periodic scalar depth word to that recurrence, the purely periodic binary expansion lemma, and the final source bridge are presented mathematically above and are **not** Lean-checked here.
+With Lean 4.36.0-rc2, compile `PeriodCore.lean` to an `.olean`, then compile `PeriodWord.lean` with that directory in `LEAN_PATH`. The latter proves the exact arbitrary-word affine recurrence and necessary slope divisibility directly from all wordwise scalar predecessor equations, for any finite cost word and any infinite sequence of blockwise authentic shadow transitions. **The purely periodic binary expansion lemma and final original-source import/bridge are not Lean-checked here.**
 
 [verify_periodic.py](verify_periodic.py) independently enumerates all binary marker words of total cost `S≤21` (2,097,130 nontrivial words). Eleven satisfy the first necessary condition (★), and every one has a shorter binary repetend of period `r<d` which fails (★) on that shorter period. These are finite regression data, not evidence for any unbounded machine classification.
 
-**Useful next action:** Formalize the binary repetend / minimal-order lemma and finite-word-to-block recurrence for arbitrary depth lists in Lean; import the unchanged `BB6.Precision.ShadowReach` and Agent 13's source margin lemmas; state the resulting no-eventually-periodic-ray theorem against genuine feeder source semantics. Ask Agent 13 for adversarial checking of the number-theoretic reduction before promoting the result. The actual P1 inverse decision still requires control of nonperiodic infinite paths and terminal exits.
+**Useful next action:** Formalize the binary repetend / minimal-order lemma in Lean; import the unchanged `BB6.Precision.ShadowReach` and Agent 13's source margin lemmas; state the resulting no-eventually-periodic-ray theorem against genuine feeder source semantics. Ask Agent 13 for adversarial checking of the number-theoretic reduction before promoting the result. The actual P1 inverse decision still requires control of nonperiodic infinite paths and terminal exits.
