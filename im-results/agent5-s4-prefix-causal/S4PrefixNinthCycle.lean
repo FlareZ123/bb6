@@ -5,7 +5,7 @@ import S4PrefixNinthR171049
 import Lean.Elab.Tactic.Omega
 
 namespace S4PrefixNinth
-open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457
+open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457 S4Toggle
 
 set_option maxRecDepth 500000
 set_option maxHeartbeats 0
