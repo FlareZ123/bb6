@@ -1,5 +1,6 @@
 import FastFullBoolean
 import HighEvenRightC23Residual
+import HighEvenRightC23FullForcedResidual
 import ValSixMixedNormalize
 
 set_option maxRecDepth 1000000
@@ -17,22 +18,14 @@ theorem lowAllowedC70Bool_iff (m : Nat) :
     BB6.Agent27FullBool.lowAllowedFullBool_iff]
 
 /-- Executable high predicate after the all-phase, C70, C23/sum-seven,
-    and even-right source exclusions. -/
+    even-right, and four-sector full-forced source exclusions. -/
 def highAllowedC23WithEvenRightBool (j m : Nat) : Bool :=
-  BB6.Agent27FastBool.fastHighAllowedFullBool j m &&
-  decide (¬((j % 128 = 63 ∧ m % 128 = 82) ∨
-            (j % 128 = 127 ∧ m % 128 = 18))) &&
-  decide (¬(2 ≤ m ∧ j % 4 = 0 ∧ (j+7) % 32 = (3*m) % 32)) &&
-  decide (¬(3 ≤ m ∧ m % 4 = 3 ∧ j % 8 = (m+3) % 8))
+  BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool j m
 
 theorem highAllowedC23WithEvenRightBool_iff (j m : Nat) :
     highAllowedC23WithEvenRightBool j m = true ↔
-      BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight j m := by
-  simp [highAllowedC23WithEvenRightBool,
-    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight,
-    BB6.Agent20C23.highAllowedC23,
-    BB6.Agent20C70.highAllowedC70,
-    BB6.Agent27FastBool.fastHighAllowedFullBool_iff]
+      BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForced j m :=
+  BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool_iff j m
 
 /-- The strongest currently integrated exact Machine C halting
     equivalence, with both parameter filters represented by executable
@@ -45,14 +38,14 @@ theorem blank_halts_iff_final_booleans :
       (∃ j m, highAllowedC23WithEvenRightBool j m = true ∧
         BB6.Agent3ValSix.valSixMixedRootDecision (2*j+3)
           (2^(2*m+2)*(j+3)-(j+3*m+5)) = true) := by
-  rw [BB6.Agent19HighEvenRight.blank_halts_iff_c23_and_even_right]
+  rw [BB6.Agent3FullForcedResidual.blank_halts_iff_c23_even_right_full_forced_bool]
   constructor
   · rintro (⟨m,hm,hroot⟩ | ⟨j,m,hh,hroot⟩)
     · exact Or.inl ⟨m,(lowAllowedC70Bool_iff m).mpr hm,hroot⟩
-    · exact Or.inr ⟨j,m,(highAllowedC23WithEvenRightBool_iff j m).mpr hh,hroot⟩
+    · exact Or.inr ⟨j,m,hh,hroot⟩
   · rintro (⟨m,hm,hroot⟩ | ⟨j,m,hh,hroot⟩)
     · exact Or.inl ⟨m,(lowAllowedC70Bool_iff m).mp hm,hroot⟩
-    · exact Or.inr ⟨j,m,(highAllowedC23WithEvenRightBool_iff j m).mp hh,hroot⟩
+    · exact Or.inr ⟨j,m,hh,hroot⟩
 
 #print axioms lowAllowedC70Bool_iff
 #print axioms highAllowedC23WithEvenRightBool_iff
