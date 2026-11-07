@@ -78,7 +78,7 @@ This directory retains **all 39 topic links** from the old board, grouped by sub
 - [#303 zero-run-stack orbit](../im-results/agent21-zero-run303/README.md) · [issue record](issues/R-20261103T1116Z-agent21-zero-run303.md)
 - [#119 auxiliary-root tape gate](../im-results/agent42-root119-guard/README.md) · [issue record](issues/R-20261103T1154Z-agent42-root119-trap.md)
 - [Machine B cross-radix coding](../im-results/agent30-b-crossradix/README.md) · [issue record](issues/R-20261103T122530Z-agent30-crossradix.md)
-- [Space Needle terminal exponents](../im-results/agent48-space-needle/README.md) · [issue record](issues/R-20261103T1434Z-agent48-needle-terminal.md)
+- [Space Needle: 100M finite trajectory, modular feeder exclusions, and CRT audit; blank-root reachability remains open](../im-results/agent48-space-needle/README.md) · [100M source note](../resources/2026-11-07-space-needle-100m.md) · [CRT audit](../resources/2026-11-07-space-needle-crt-audit.md) · [issue record](issues/R-20261103T1434Z-agent48-needle-terminal.md)
 - [Rooted frontier and source provenance](../im-results/holdout-family-coverage/README.md) · [issue record](issues/R001.md)
 - [Cross-target research context](issues/R004.md)
 - [Coverage, primitive counts and champion bridges](../im-results/agent4-coverage-smoke/FRONTIER-AUDIT.md) · [issue record](issues/R005.md)
