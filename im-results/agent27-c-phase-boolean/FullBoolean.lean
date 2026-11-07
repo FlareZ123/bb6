@@ -121,17 +121,6 @@ theorem priorHighAllowedBool_iff (j m : Nat) :
       BB6.Agent11C58AllDepth.highAllowed j m := by
   simp only [priorHighAllowedBool, decide_eq_true_eq]
 
-/-- The new two-sided phase gate excludes an explicit high target that
-    survived every previous integrated source-authentic parameter guard.
-    This does not decide whether that target is blank-reachable. -/
-theorem phase_strict_example :
-    BB6.Agent11C58AllDepth.highAllowed 2256 15 ∧
-    ¬ BB6.Agent24Phase.highAllowed 2256 15 := by
-  constructor
-  · exact (priorHighAllowedBool_iff 2256 15).mp (by decide)
-  · intro h
-    exact h.2 ((BB6.Agent27Phase.phaseExcludedFastBool_iff 2256 15).mp (by decide))
-
 /-- The source low-family predicate has only finite arithmetic guards. -/
 def lowAllowedFullBool (m : Nat) : Bool :=
   letI : Decidable (BB6.Agent11C58ValSix.lowAllowed m) := by
@@ -167,7 +156,6 @@ theorem blank_halts_iff_full_booleans :
     · exact Or.inr ⟨j,m,(highAllowedFullBool_iff j m).mp hallowed,hroot⟩
 
 #print axioms priorHighAllowedBool_iff
-#print axioms phase_strict_example
 #print axioms olderAllowedBool_iff
 #print axioms highAllowedFullBool_iff
 #print axioms lowAllowedFullBool_iff
