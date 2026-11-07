@@ -967,7 +967,6 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
 #print axioms f0_local
 #print axioms j_F0_exact
 #print axioms f0_to_c1
-#print axioms cb_sweep
 #print axioms cb_exit
 #print axioms j_first_branch_tape
 #print axioms j_first_branch
