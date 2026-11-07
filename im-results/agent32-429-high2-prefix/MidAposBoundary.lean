@@ -207,6 +207,7 @@ theorem junc0_w3_exit_delta (v : Nat) :
   simp only [Option.bind_some]
   rw [htail]
   simp only [Option.map_some]
+  simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
   omega
 
@@ -222,6 +223,7 @@ theorem midApos_zero_w4_boundary_delta (v : Nat) :
   simp only [Option.bind_some]
   rw [htail]
   simp only [Option.map_some]
+  simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
   omega
 
@@ -236,6 +238,7 @@ theorem midApos_zero_w5_boundary_delta (v : Nat) :
   rw [htime, runWithDelta_add, hshift]
   simp only [Option.bind_some]
   rw [htail]
+  simp only [Option.map_some]
   simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
   omega
@@ -394,6 +397,7 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   simp only [Option.bind_some]
   rw [hinput, htail]
   simp only [Option.map_some]
+  simp only [Option.map_some]
   rw [hcfg]
   apply Option.some.inj
   apply Prod.ext
@@ -413,6 +417,7 @@ theorem c1_odd_to_junc3_delta (k : Nat) :
   simp only [Option.bind_some]
   rw [hnext]
   simp only [Option.map_some]
+  simp only [Option.map_some]
   have hw : 4*k+20-3 = 4*k+17 := by omega
   rw [hw]
   apply Option.some.inj
@@ -430,6 +435,7 @@ theorem midApos_zero_w5_even_to_junc3_delta (k : Nat) :
   rw [htime, runWithDelta_add, hfirst]
   simp only [Option.bind_some]
   rw [htail]
+  simp only [Option.map_some]
   simp only [Option.map_some]
   apply Option.some.inj
   apply Prod.ext
@@ -482,9 +488,15 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   rw [htailTime] at htail
   have hw : 2*(2*k+8)-6 = 4*k+10 := by omega
   rw [show 2*1+9=11 by omega, hw] at htail
-  rw [List.append_assoc] at hprefix
+  have hprefix' :
+      runWithDelta 24
+        (z 2 (ones (4*k+9) ++ (pairs01 2 ++ ones 5)) true
+          (ones 3 ++ pairs01 3 ++ [false,false,true])) =
+      some (z 4 (ones (4*k+21) ++ (pairs01 2 ++ ones 5)) true
+        [true,false,true], 12) := by
+    simpa [List.append_assoc] using hprefix
   have htime : 4*k+220 = 24 + ((4*k+21)+175) := by omega
-  rw [htime, runWithDelta_add, hprefix]
+  rw [htime, runWithDelta_add, hprefix']
   simp only [Option.bind_some]
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
@@ -504,6 +516,7 @@ theorem midApos_zero_w5_odd_to_junc11_delta (k : Nat) :
   rw [htime, runWithDelta_add, hfirst]
   simp only [Option.bind_some]
   rw [htail]
+  simp only [Option.map_some]
   simp only [Option.map_some]
   apply Option.some.inj
   apply Prod.ext
