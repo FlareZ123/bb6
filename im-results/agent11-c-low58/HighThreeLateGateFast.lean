@@ -92,7 +92,15 @@ theorem allowedBool_iff (j m : Nat) :
         obtain ⟨r,hr⟩ := (candidateAllowedBool_iff j m).mp h
         exact (hall r hr).elim
 
+def allowedDecidable (j m : Nat) :
+    Decidable (∀ r, ¬gate r j m) :=
+  if h : allowedBool j m = true then
+    isTrue ((allowedBool_iff j m).mp h)
+  else
+    isFalse (fun hp => h ((allowedBool_iff j m).mpr hp))
+
 #print axioms v2_of_late_residue
 #print axioms candidateAllowedBool_iff
 #print axioms allowedBool_iff
+#print axioms allowedDecidable
 end BB6.Agent11LateDepthGate
