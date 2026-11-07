@@ -168,7 +168,7 @@ theorem evalA_positive_depth (n : Nat) :
             refine ⟨1,n,by omega,by omega,hq,by omega,by omega⟩
         · by_cases h0 : k%3=0
           · simp [h2,ha,h0] at hs
-            cases hs
+            rcases hs with ⟨rfl, rfl, rfl⟩
             have hpow : 3^(n+1)=3*3^n := by rw [Nat.pow_succ]; omega
             have hq : k/3<3^n := by omega
             refine ⟨1,n,by omega,by omega,hq,by omega,by omega⟩
