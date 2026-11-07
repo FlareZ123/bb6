@@ -58,12 +58,12 @@ theorem blank_halt_requires_residual_families :
 
 /-- The M192 lowCore invariant covers no state in the first stop family. -/
 theorem first_stop_family_not_covered_by_M192 (k : Nat) :
-    ¬ lowCore ((1+192)%192) (k%192) :=
+    ¬ lowCore (1%192) (k%192) :=
   first_stop_family_outside_lowCore k
 
 /-- The second-family point (j,m,k)=(0,1,40) is also outside lowCore. -/
 theorem second_stop_example_not_covered_by_M192 :
-    ¬ lowCore ((3+192)%192) (40%192) :=
+    ¬ lowCore (3%192) (40%192) :=
   second_stop_example_outside_lowCore
 
 #print axioms blank_halt_requires_residual_families
