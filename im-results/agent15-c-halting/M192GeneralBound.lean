@@ -58,6 +58,64 @@ theorem source_no_second_stop_all (j m k : Nat) (hm : 2≤m)
   have hk := second_stop_k_ge10 j m k hm heq
   omega
 
+/-- The first stopping family has k≥8 for every positive m. -/
+theorem first_stop_k_ge8 (m k : Nat) (hm : 1≤m)
+    (heq : k+3*m+4 = 2^(2*m+3)) : 8≤k := by
+  by_cases hm6 : 6≤m
+  · have hp := two_pow_lower_linear m
+    have hpow : 4*m+6 ≤ 2^(2*m+3) := by
+      have hexp : 2*m+3 = (2*m+2)+1 := by omega
+      rw [hexp, Nat.pow_succ]
+      simp
+      omega
+    have hmain : 4*m+6 ≤ k+3*m+4 := by
+      calc
+        4*m+6 ≤ 2^(2*m+3) := hpow
+        _ = k+3*m+4 := heq.symm
+    omega
+  · have hcases : m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 := by omega
+    rcases hcases with rfl | rfl | rfl | rfl | rfl
+    all_goals simp at heq
+    all_goals omega
+
+/-- The second stopping family has k≥8 except for its single small
+parameter point (j,m)=(0,0). -/
+theorem second_stop_k_ge8_except_00 (j m k : Nat)
+    (hjm : j ≠ 0 ∨ m ≠ 0)
+    (heq : k+j+3*m+5 = 2^(2*m+2)*(j+3)) : 8≤k := by
+  by_cases hm0 : m=0
+  · subst m
+    have hj : 1≤j := by
+      rcases hjm with hj | hm
+      · omega
+      · contradiction
+    have heq' : k+j+5 = 4*(j+3) := by simpa using heq
+    omega
+  · by_cases hm1 : m=1
+    · subst m
+      have heq' : k+j+8 = 16*(j+3) := by simpa using heq
+      omega
+    · have hm2 : 2≤m := by omega
+      have hk10 := second_stop_k_ge10 j m k hm2 heq
+      omega
+
+/-- Every positive-m first stopping-family target is absent from the
+original blank-root CLine orbit. -/
+theorem source_no_first_stop_m_pos (m k : Nat) (hm : 1≤m)
+    (heq : k+3*m+4 = 2^(2*m+3)) :
+    ¬ BB6CLine.Reach (1,k,0) := by
+  apply source_no_c0_right_ge8
+  exact first_stop_k_ge8 m k hm heq
+
+/-- Every second stopping-family target except (j,m)=(0,0) is absent from
+the original blank-root CLine orbit. -/
+theorem source_no_second_stop_except_00 (j m k : Nat)
+    (hjm : j ≠ 0 ∨ m ≠ 0)
+    (heq : k+j+3*m+5 = 2^(2*m+2)*(j+3)) :
+    ¬ BB6CLine.Reach (2*j+3,k,0) := by
+  apply source_no_c0_right_ge8
+  exact second_stop_k_ge8_except_00 j m k hjm heq
+
 #print axioms source_no_second_stop_all
 
 end BB6.Agent15
