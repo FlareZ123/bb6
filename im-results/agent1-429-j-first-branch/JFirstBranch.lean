@@ -441,33 +441,89 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
   have hrow12 : target429 (A,false)=some ⟨true,true,B⟩ := by decide
   have hrow13 : target429 (B,false)=some ⟨true,true,C⟩ := by decide
   have r0 : rawStep target429 c0=some c1 := by
-    simpa [c1,c0,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c0 F false _ hs0 hrow0
+    have hraw := rawStep_of_read target429 c0 F false _ hs0 hrow0
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c0.tape c0.head).symm⟩)
   have r1 : rawStep target429 c1=some c2 := by
-    simpa [c2,c1,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c1 D false _ hs1 hrow1
+    have hraw := rawStep_of_read target429 c1 D false _ hs1 hrow1
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c1.tape c1.head).symm⟩)
   have r2 : rawStep target429 c2=some c3 := by
-    simpa [c3,c2,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c2 E true _ hs2 hrow2
+    have hraw := rawStep_of_read target429 c2 E true _ hs2 hrow2
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c2.tape c2.head).symm⟩)
   have r3 : rawStep target429 c3=some c4 := by
-    simpa [c4,c3,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c3 E false _ hs3 hrow3
+    have hraw := rawStep_of_read target429 c3 E false _ hs3 hrow3
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_false_eq c3.tape c3.head).symm⟩)
   have r4 : rawStep target429 c4=some c5 := by
-    simpa [c5,c4,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c4 A false _ hs4 hrow4
+    have hraw := rawStep_of_read target429 c4 A false _ hs4 hrow4
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c4.tape c4.head).symm⟩)
   have r5 : rawStep target429 c5=some c6 := by
-    simpa [c6,c5,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c5 B false _ hs5 hrow5
+    have hraw := rawStep_of_read target429 c5 B false _ hs5 hrow5
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c5.tape c5.head).symm⟩)
   have r6 : rawStep target429 c6=some c7 := by
-    simpa [c7,c6,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c6 C true _ hs6 hrow6
+    have hraw := rawStep_of_read target429 c6 C true _ hs6 hrow6
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_false_eq c6.tape c6.head).symm⟩)
   have r7 : rawStep target429 c7=some c8 := by
-    simpa [c8,c7,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c7 B true _ hs7 hrow7
+    have hraw := rawStep_of_read target429 c7 B true _ hs7 hrow7
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c7.tape c7.head).symm⟩)
   have r8 : rawStep target429 c8=some c9 := by
-    simpa [c9,c8,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c8 A true _ hs8 hrow8
+    have hraw := rawStep_of_read target429 c8 A true _ hs8 hrow8
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_false_eq c8.tape c8.head).symm⟩)
   have r9 : rawStep target429 c9=some c10 := by
-    simpa [c10,c9,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c9 F true _ hs9 hrow9
+    have hraw := rawStep_of_read target429 c9 F true _ hs9 hrow9
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c9.tape c9.head).symm⟩)
   have r10 : rawStep target429 c10=some c11 := by
-    simpa [c11,c10,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c10 A false _ hs10 hrow10
+    have hraw := rawStep_of_read target429 c10 A false _ hs10 hrow10
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c10.tape c10.head).symm⟩)
   have r11 : rawStep target429 c11=some c12 := by
-    simpa [c12,c11,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c11 B true _ hs11 hrow11
+    have hraw := rawStep_of_read target429 c11 B true _ hs11 hrow11
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c11.tape c11.head).symm⟩)
   have r12 : rawStep target429 c12=some c13 := by
-    simpa [c13,c12,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c12 A false _ hs12 hrow12
+    have hraw := rawStep_of_read target429 c12 A false _ hs12 hrow12
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c12.tape c12.head).symm⟩)
   have r13 : rawStep target429 c13=some c14 := by
-    simpa [c14,c13,applyMove,writeAt_true_eq,writeAt_false_eq] using rawStep_of_read target429 c13 B false _ hs13 hrow13
+    have hraw := rawStep_of_read target429 c13 B false _ hs13 hrow13
+    exact hraw.trans (by
+      congr 1
+      rw [Config.mk.injEq]
+      exact ⟨rfl,rfl,(writeAt_true_eq c13.tape c13.head).symm⟩)
   have hrun : run target429 14 c0=some c14 := by
     simp [run,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13]
   have htape : c14.tape=setupTape t h := by
