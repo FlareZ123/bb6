@@ -60,22 +60,25 @@ private theorem affineNormalize_pow_two (a u d : Nat)
       have hguard :
           ¬(4≤2*u-2 ∧ (2*u-2)%2=0 ∧ (a+(2*u-2))%4=1) := by
         omega
-      rw [BB6.Agent15.affineNormalize,dif_neg hguard]
-      simp [hpow]
+      simp [BB6.Agent15.affineNormalize,hpow,hguard]
   | succ d ih =>
       let k := 2^(d+2)*u-2
-      have hpow4 : 4≤2^(d+2) := by
-        have hp : 1≤2^d := Nat.pow_pos (by decide)
-        have hsq : (2:Nat)^2=4 := by decide
-        rw [Nat.pow_add,hsq]
+      have hp : 1≤2^d := by
+        have hp0 : 0<2^d := Nat.pow_pos (by decide)
         omega
+      have hsq : (2:Nat)^2=4 := by decide
+      have hpow4 : 4≤2^(d+2) := by
+        have hpow : 2^(d+2)=2^d*4 := by
+          rw [Nat.pow_add,hsq]
+        rw [hpow]
+        omega
+      have hmulbig : 4*3≤2^(d+2)*u :=
+        Nat.mul_le_mul hpow4 huge
       have hkadd : k+2=2^(d+2)*u := by
         dsimp [k]
-        omega
+        exact Nat.sub_add_cancel (by omega)
       have hkbig : 4≤k := by
-        have hmul : 4*3≤2^(d+2)*u :=
-          Nat.mul_le_mul hpow4 huge
-        rw [←hkadd]
+        rw [←hkadd] at hmulbig
         omega
       have hdiv4 : 4∣2^(d+2) := by
         have hpow : (2:Nat)^2=4 := by decide
@@ -94,7 +97,7 @@ private theorem affineNormalize_pow_two (a u d : Nat)
         ac_rfl
       have hmul : k-2=2*(2^(d+1)*u-2) := by
         dsimp [k]
-        rw [hpow]
+        rw [hpow,Nat.mul_assoc]
         omega
       have hnext : (k-2)/2=2^(d+1)*u-2 := by omega
       have hnexta : (a+k-2)%4=3 := by omega
@@ -228,7 +231,8 @@ private theorem late256_parameters (m : Nat)
       _=3*2^(2*m+3) := by rw [←hpowr]
   have hsize : 7*2^(2*m+3)≤k+2 := by
     rw [hkpow]
-    exact Nat.mul_le_mul_left (2^(2*m+3)) huge
+    simpa [Nat.mul_comm] using
+      Nat.mul_le_mul_left (2^(2*m+3)) huge
   have hjmod256 := late256_j_mod256 m hm hmres
   have hleft : (2*j+3)%4=3 := by omega
   refine ⟨u,hkstop,hkpow,huodd,huge,hleft,hmod,hsize⟩
