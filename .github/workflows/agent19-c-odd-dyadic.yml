@@ -57,7 +57,11 @@ jobs:
           lean -o DyadicSixCone.olean DyadicSixCone.lean
           # Complementary source-certified all-depth mass-3, odd-part-3 cone.
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/DyadicThreeCone.lean .
-          lean DyadicThreeCone.lean
+          lean -o DyadicThreeCone.olean DyadicThreeCone.lean
+          # Direct complementary all-depth high stopping parameters, source-certified.
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighThreeDirectArithmetic,HighThreeDirect}.lean .
+          lean -o HighThreeDirectArithmetic.olean HighThreeDirectArithmetic.lean
+          lean HighThreeDirect.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/DyadicLowTower.lean .
           lean -o DyadicLowTower.olean DyadicLowTower.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/LowTowerFamilies.lean .
