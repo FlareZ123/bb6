@@ -105,5 +105,47 @@ theorem seven_inverse (a k x y : Nat)
               right
               omega
 
+/-- Exact two-way classification of the entire 7(mod16) even-right fibre.
+    The odd-bounce branch carries its necessary source-domain conditions. -/
+theorem seven_inverse_iff (a k x y : Nat)
+    (hy : 6≤y) (he : y%2=0) (hs : (x+y)%16=7) :
+    secNext (a,k)=some (x,y) ↔
+    (a=x+y-2 ∧ y=2*k+2) ∨
+    (3≤a ∧ a%2=1 ∧ a<2*k ∧
+      x+y=4*a+11 ∧ x+2*y=2*k+a+10) := by
+  constructor
+  · intro h
+    rcases seven_inverse a k x y hy he hs h with hd | ho
+    · exact Or.inl hd
+    · have ha3 : 3≤a := by omega
+      have hao : a%2=1 := by omega
+      have hr : a<2*k := by omega
+      exact Or.inr ⟨ha3,hao,hr,ho.1,ho.2⟩
+  · rintro (⟨ha,hy'⟩ | ⟨ha3,hao,hr,hsum,hcost⟩)
+    · have ha0 : a≠0 := by omega
+      have ha1 : a≠1 := by omega
+      have hk0 : k≠0 := by omega
+      have hregion : 2*k≤a := by omega
+      apply (section_preimage_all_iff a k x y).mpr
+      simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
+        if_neg hk0,if_pos hregion]
+      constructor <;> omega
+    · have ha0 : a≠0 := by omega
+      have ha1 : a≠1 := by omega
+      have hk0 : k≠0 := by omega
+      have hregion : ¬2*k≤a := by omega
+      have haEven : ¬a%2=0 := by omega
+      apply (section_preimage_all_iff a k x y).mpr
+      simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
+        if_neg hk0,if_neg hregion,if_neg haEven]
+      right
+      refine ⟨by omega,1,?_,?_⟩
+      · simp
+        omega
+      · simp
+        omega
+
+#print axioms seven_inverse_iff
+
 #print axioms seven_inverse
 end BB6.Agent20C70
