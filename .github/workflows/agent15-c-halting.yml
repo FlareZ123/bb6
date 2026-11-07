@@ -145,3 +145,30 @@ jobs:
           lean -o SecondResidue.olean SecondResidue.lean
           lean -o SecondUniform.olean SecondUniform.lean
           lean SecondWitness.lean
+
+          # Independently reconstruct and compile the M192 source invariant.
+          python3 "$GITHUB_WORKSPACE/tools/agent41_m192_generate.py" quotient > Quotient192.lean
+          python3 "$GITHUB_WORKSPACE/tools/agent41_m192_generate.py" bridge > CMapBridge192.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m192-reverse/Core192High.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m192-reverse/Core192All.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent41-m192-reverse/Core192Source.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent38-m192-high-zero/HighZeroEven.lean" .
+          lean -o Quotient192.olean Quotient192.lean
+          lean -o CMapBridge192.olean CMapBridge192.lean
+          lean -o Core192High.olean Core192High.lean
+          lean -o Core192All.olean Core192All.lean
+          lean -o HighZeroEven.olean HighZeroEven.lean
+          lean -o Core192Source.olean Core192Source.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M192GeneralBound.lean" .
+          lean -o M192GeneralBound.olean M192GeneralBound.lean
+
+          # Compile Agent 6's independent finite certificate and use it to
+          # exclude the sole small second-family point (3,7,0).
+          cp "$GITHUB_WORKSPACE/im-results/agent6-c-feeder/NoFirstCFeeder.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent6-c-feeder/CFeederCertificate.lean" .
+          lean -o NoFirstCFeeder.olean NoFirstCFeeder.lean
+          lean -o CFeederCertificate.olean CFeederCertificate.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/SmallSecondFamily.lean" .
+          lean -o SmallSecondFamily.olean SmallSecondFamily.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/NoMachineCHalt.lean" .
+          lean -o NoMachineCHalt.olean NoMachineCHalt.lean
