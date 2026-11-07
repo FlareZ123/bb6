@@ -257,6 +257,16 @@ jobs:
           # A finite executable parameter guard and pairwise distinct depth residues.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{HighDyadicGateDecision,HighDyadicDepthUnique}.lean .
           lean -o HighDyadicGateDecision.olean HighDyadicGateDecision.lean
+          # These fast executable bridges are direct dependencies of the
+          # lossless C58 Boolean wrapper; emit their oleans before importers.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicGateDecisionFast.lean .
+          lean -o HighDyadicGateDecisionFast.olean HighDyadicGateDecisionFast.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighDyadicOlderGateFast.lean .
+          lean -o HighDyadicOlderGateFast.olean HighDyadicOlderGateFast.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/OlderGateRawCensus.lean .
+          lean -o OlderGateRawCensus.olean OlderGateRawCensus.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/HighThreeLateGateFast.lean .
+          lean -o HighThreeLateGateFast.olean HighThreeLateGateFast.lean
           lean HighDyadicDepthUnique.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58AllDepthBool.lean .
           lean -o ValSixC58AllDepthBool.olean ValSixC58AllDepthBool.lean
