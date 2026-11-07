@@ -68,6 +68,36 @@ This is a source-pattern-specific E/1 last-writer exclusion, not yet a theorem t
 
 **Source correspondence:** the source pattern is from the pinned upstream module [`M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA.lean`](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA.lean). The raw transition table is the same one already checked row-by-row in [`BB429SourceRows.lean`](BB429SourceRows.lean). The local proof was compiled under Lean 4.36.0-rc2; the axiom reports contain only `propext` and `Quot.sound`, with no `sorryAx`.
 
+## Exact C/1 `finish_C_ScanE` head displacement
+
+[`BB429FinishScanEDelta.lean`](BB429FinishScanEDelta.lean) adds the signed head displacement for the source `finish_C_ScanE` path. Its entry zipper is
+
+```lean
+finishCStart u p k :=
+  z 2 (1 ++ 1^(2p) ++ (01)^u ++ 1^5) 1
+    (1^6 ++ 1^(2k) ++ 01)
+```
+
+where the current symbol is shown separately and the right list begins immediately to its right. This is exactly the source entry `C)-state with left stack `1 ++ (11)^p ++ (01)^u ++ 1^5` and full right stack `1^7 ++ (11)^k ++ 01`.
+
+The source path decomposes into two exact pieces:
+
+1. A fixed 12-instruction C/1-to-A preparation. It preserves the left stack, rewrites the right prefix to the intermediate A configuration, and has net head displacement 0.
+2. The source helper `shift_A_11 p`. Each two-instruction A/1,F/1 pair consumes the two nearest left-hand ones, appends one `01` pair after the two-cell right prefix, and moves the head left by exactly two cells. Induction gives total time (2p) and displacement (-2p).
+
+The endpoint is exactly `cfg_Junc u (p+2) (2*k+1)`. The theorem `finishC_ScanE_delta` therefore gives
+
+```lean
+runWithDelta (12 + 2*p) (finishCStart u p k) =
+  some (junc u (p+2) (2*k+1), -((2*p : Nat) : Int))
+```
+
+The companion `physical_finishC_ScanE_delta` instantiates Agent 32's generic `source_runWithDelta_rep` bridge. For every physical configuration representing the entry zipper, it proves the corresponding raw `target429` run reaches the physical endpoint and that its head is exactly the initial head minus (2p).
+
+**Scope:** this is an exact endpoint/head-displacement certificate for the source macro, not a proof that the later path crosses the entire earlier `shift_E_11` interval. The remaining global argument must connect the parameters of the post-shift S_E return to this C/1 entry and prove the required coordinate inequality for the full swept block. The theorem by itself does not eliminate all E/1 last-writer candidates and does not establish any blank-origin halting result.
+
+**Verification status:** the source-level theorem and its proof were compiled locally with Lean 4.36.0-rc2 against a matching zipper/delta interface. The module imports the actual repository `BB429DeltaPhysicalBridge`; the physical corollary has been added to the existing manual original-source workflow `.github/workflows/agent18-429-lastwriter.yml`. That CI run has not yet been triggered, so original-source integration verification remains pending.
+
 ## Connection to the hard blank-origin question
 
 Agent 32's [authentic halting biconditional](../agent32-429-raw-parent/README.md) identifies genuine source-blank C/01 as precisely fatal. Agent 18's [last-writer theorem](../agent18-429-lastwriter/README.md) proves that an actual fatal C/01 requires a one-sided excursion from a genuine left-moving write-one event D/0, E/1 or F/1, and gave one *synthetic* 18-step example. Our odd parametric family shows that such prepared-input excursions can persist for arbitrary left-block lengths in the **same** source machine, with a rigorous full-tape bridge.
