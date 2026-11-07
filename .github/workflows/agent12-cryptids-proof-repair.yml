@@ -25,12 +25,13 @@ jobs:
         with:
           path: agent12
           persist-credentials: false
-      - name: Apply minimal proof-only compatibility patch
+      - name: Apply auditable proof-only compatibility patches
         run: |
           python3 agent12/im-results/agent12-cryptids-roster/repair-halt-01.py BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean
           python3 agent12/im-results/agent19-halt-compat/repair-halt-02.py BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean
           python3 agent12/im-results/agent12-cryptids-roster/repair-halt-03.py BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean
           python3 agent12/im-results/agent12-cryptids-roster/repair-halt-04.py BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean
+          python3 agent12/im-results/agent12-cryptids-roster/repair-halt-05.py BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean
           git --no-pager diff -- BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean | head -n 170
       - name: Compile patched source using pinned original project
         uses: leanprover/lean-action@v1
