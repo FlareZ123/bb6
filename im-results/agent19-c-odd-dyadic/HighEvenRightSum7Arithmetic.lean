@@ -76,6 +76,94 @@ theorem sum7_target_residues (q r : Nat) :
   have hx4 : x%4=3 := by dsimp [x,j]; omega
   exact ⟨hk12,hk8,hxk8,hS32,hx4⟩
 
+/-- General high-target residue lemma for the entire exceptional
+    sum-seven cylinder. The congruence is exactly the condition
+    x+y+1 = 24 (mod 32), after factoring the stopping power. -/
+theorem sum7_target_residues_of_congruence (j m : Nat)
+    (hm5 : 5≤m) (hm4 : m%4=1)
+    (hrel : (j+8)%32=(3*m+1)%32) :
+    let k := highK j m
+    let x := 2*j+3
+    12≤k ∧ k%8=4 ∧ (x+k)%8=7 ∧ (x+k+1)%32=24 ∧ x%4=3 := by
+  let N : Nat := 2^(2*m+2)
+  let k : Nat := N*(j+3)-(j+3*m+5)
+  let x : Nat := 2*j+3
+  change 12≤k ∧ k%8=4 ∧ (x+k)%8=7 ∧ (x+k+1)%32=24 ∧ x%4=3
+  have hNbound : 4*m+4≤N := by dsimp [N]; exact power_linear_bound m
+  have hN8 : 8∣N := by
+    dsimp [N]
+    change (2:Nat)^3 ∣ 2^(2*m+2)
+    exact Nat.pow_dvd_pow (a:=2) (m:=3) (n:=2*m+2) (by omega)
+  have hN32 : 32∣N := by
+    dsimp [N]
+    change (2:Nat)^5 ∣ 2^(2*m+2)
+    exact Nat.pow_dvd_pow (a:=2) (m:=5) (n:=2*m+2) (by omega)
+  have hNpos : 1≤N := by omega
+  have hscore : j+3*m+5≤N*(j+3) := by
+    dsimp [N]
+    exact high_score_bound j m
+  have hstop : k+j+3*m+5=N*(j+3) := by
+    dsimp [k]
+    omega
+  have hmul : N*(j+3)=N*j+3*N := by
+    rw [Nat.mul_add]
+    omega
+  have hjmul : j≤N*j := by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hNpos
+  have h3mul : 3*(4*m+4)≤3*N := Nat.mul_le_mul_left 3 hNbound
+  have hk12 : 12≤k := by
+    rw [hmul] at hstop
+    omega
+  have hNmod8 : N%8=0 := Nat.mod_eq_zero_of_dvd hN8
+  have hNmod32 : N%32=0 := Nat.mod_eq_zero_of_dvd hN32
+  have hprod8 : (N*(j+3))%8=0 := by
+    rw [Nat.mul_mod,hNmod8]
+    simp
+  have hprod32 : (N*(j+3))%32=0 := by
+    rw [Nat.mul_mod,hNmod32]
+    simp
+  have hstopmod8 : (k+j+3*m+5)%8=0 := by rw [hstop]; exact hprod8
+  have hrel8 : (j+8)%8=(3*m+1)%8 := by
+    have h := congrArg (fun z : Nat => z%8) hrel
+    have hleft : (j+8)%32%8=(j+8)%8 :=
+      Nat.mod_mod_of_dvd (j+8) (by decide : 8∣32)
+    have hright : (3*m+1)%32%8=(3*m+1)%8 :=
+      Nat.mod_mod_of_dvd (3*m+1) (by decide : 8∣32)
+    rw [hleft,hright] at h
+    exact h
+  have hterm8 : (j+3*m+5)%8=4 := by omega
+  have hk8 : k%8=4 := by omega
+  have hx8 : x%8=3 := by
+    dsimp [x]
+    have h := congrArg (fun z : Nat => z%4) hrel
+    have hleft : (j+8)%32%4=(j+8)%4 :=
+      Nat.mod_mod_of_dvd (j+8) (by decide : 4∣32)
+    have hright : (3*m+1)%32%4=(3*m+1)%4 :=
+      Nat.mod_mod_of_dvd (3*m+1) (by decide : 4∣32)
+    rw [hleft,hright] at h
+    omega
+  have hxk8 : (x+k)%8=7 := by omega
+  have hS : x+k+1=(N*(j+3)+j)-(3*m+1) := by
+    dsimp [x]
+    omega
+  have hAmod : (N*(j+3)+j)%32=j%32 := by
+    rw [Nat.add_mod,hprod32]
+    omega
+  have hBmod : (3*m+1)%32=(j+8)%32 := hrel.symm
+  have hAdiv : 32*((N*(j+3)+j)/32)+j%32=N*(j+3)+j := by
+    have h := Nat.mod_add_div (N*(j+3)+j) 32
+    rw [hAmod] at h
+    omega
+  have hBdiv : 32*((3*m+1)/32)+(j+8)%32=3*m+1 := by
+    have h := Nat.mod_add_div (3*m+1) 32
+    rw [hBmod] at h
+    omega
+  have hS32 : (x+k+1)%32=24 := by
+    rw [hS,←hAdiv,←hBdiv]
+    omega
+  have hx4 : x%4=3 := by omega
+  exact ⟨hk12,hk8,hxk8,hS32,hx4⟩
+
 /-- If a target has the displayed sum-seven residues, both its direct
     even-right predecessor and its exceptional odd-bounce predecessor
     have odd right coordinate and sum 2 modulo 4. -/
