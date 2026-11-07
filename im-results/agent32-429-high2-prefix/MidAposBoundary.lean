@@ -392,6 +392,8 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
       junc 0 0 (4*k+20) := by
     unfold junc
     rw [ones_right_101]
+    rw [show pairs01 0 = [] by rfl]
+    simp [ones]
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
