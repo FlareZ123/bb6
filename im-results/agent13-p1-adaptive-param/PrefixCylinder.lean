@@ -301,11 +301,201 @@ theorem feeder10_common_source_prefix_separation
     (feeder10_common_source_prefix q q' n w p p' hlen hdepth0
       hdepth1 hm0 hz0 hm1 hz1 (by omega) hM)
 
+private def commonDepthWord (p : InfiniteShadowPath L root) (n : Nat) : List Nat :=
+  List.ofFn (fun i : Fin n => p.depth i)
+
+private theorem commonDepthWord_length (p : InfiniteShadowPath L root) (n : Nat) :
+    (commonDepthWord p n).length = n := by
+  simp [commonDepthWord]
+
+private theorem commonDepthWord_get (p : InfiniteShadowPath L root)
+    (n i : Nat) (hi : i<n) :
+    (commonDepthWord p n).get
+      ⟨i, by simpa [commonDepthWord] using hi⟩ = p.depth i := by
+  rw [List.get_eq_getElem]
+  simp [commonDepthWord]
+
+private theorem length_le_depth_cost (w : List Nat) : w.length ≤ cost w := by
+  induction w with
+  | nil => simp [cost]
+  | cons t ts ih => simp [cost]; omega
+
+/-- An infinite feeder-0 inverse-depth word determines at most one natural
+parameter q.  This follows by applying the finite-prefix separation theorem
+to arbitrarily long initial words. -/
+theorem feeder12_depth_sequence_parameter_unique
+    (q q' : Nat)
+    (p : InfiniteShadowPath (16*q+8) (12*q+4))
+    (p' : InfiniteShadowPath (16*q'+8) (12*q'+4))
+    (hm0 : p.m 0=0) (hz0 : p.z 0=12*q+4)
+    (hm1 : p'.m 0=0) (hz1 : p'.z 0=12*q'+4)
+    (hdepth : ∀ i, p.depth i = p'.depth i) : q=q' := by
+  by_cases heq : q=q'
+  · exact heq
+  · have hne : q≠q' := heq
+    by_cases hqq : q≤q'
+    · have hlt : q<q' := by omega
+      let d := q'-q
+      let n := d+3
+      let w := commonDepthWord p n
+      have hlen : w.length=n := by simp [w,commonDepthWord,n]
+      have hcost : n≤cost w := by
+        have h := length_le_depth_cost w
+        simpa [hlen] using h
+      have hM : 2≤cost w := by omega
+      have hdepth0 : ∀ i (hi : i<w.length),
+          p.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        have hg := commonDepthWord_get p n i hi'
+        simpa [w,Nat.zero_add] using hg.symm
+      have hdepth1 : ∀ i (hi : i<w.length),
+          p'.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        calc
+          p'.depth (0+i) = p'.depth i := by simp
+          _ = p.depth i := (hdepth i).symm
+          _ = w.get ⟨i,hi⟩ := by
+            simpa [w] using (commonDepthWord_get p n i hi').symm
+      have hdiv := feeder12_common_source_prefix q q' n w p p'
+        hlen hdepth0 hdepth1 hm0 hz0 hm1 hz1 hqq hM
+      have hpowdvd : 2^(d+1) ∣ 2^(cost w-2) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      have hsmall : 2^(d+1) ∣ d :=
+        Nat.dvd_trans hpowdvd (by simpa [d] using hdiv)
+      have hle : 2^(d+1) ≤ d := Nat.le_of_dvd (by omega) hsmall
+      have hpow : d < 2^(d+1) := by
+        have hh := Nat.lt_pow_self (n:=d+1) (a:=2) (by decide : 1<2)
+        omega
+      omega
+    · have hgt : q'<q := by omega
+      let d := q-q'
+      let n := d+3
+      let w := commonDepthWord p' n
+      have hlen : w.length=n := by simp [w,commonDepthWord,n]
+      have hcost : n≤cost w := by
+        have h := length_le_depth_cost w
+        simpa [hlen] using h
+      have hM : 2≤cost w := by omega
+      have hdepth0 : ∀ i (hi : i<w.length),
+          p'.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        have hg := commonDepthWord_get p' n i hi'
+        simpa [w,Nat.zero_add] using hg.symm
+      have hdepth1 : ∀ i (hi : i<w.length),
+          p.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        calc
+          p.depth (0+i) = p.depth i := by simp
+          _ = p'.depth i := hdepth i
+          _ = w.get ⟨i,hi⟩ := by
+            simpa [w] using (commonDepthWord_get p' n i hi').symm
+      have hdiv := feeder12_common_source_prefix q' q n w p' p
+        hlen hdepth0 hdepth1 hm1 hz1 hm0 hz0 (by omega) hM
+      have hpowdvd : 2^(d+1) ∣ 2^(cost w-2) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      have hsmall : 2^(d+1) ∣ d :=
+        Nat.dvd_trans hpowdvd (by simpa [d] using hdiv)
+      have hle : 2^(d+1) ≤ d := Nat.le_of_dvd (by omega) hsmall
+      have hpow : d < 2^(d+1) := by
+        have hh := Nat.lt_pow_self (n:=d+1) (a:=2) (by decide : 1<2)
+        omega
+      omega
+
+/-- An infinite feeder-1 inverse-depth word determines at most one natural
+parameter q. -/
+theorem feeder10_depth_sequence_parameter_unique
+    (q q' : Nat)
+    (p : InfiniteShadowPath (16*q+9) (10*q+4))
+    (p' : InfiniteShadowPath (16*q'+9) (10*q'+4))
+    (hm0 : p.m 0=0) (hz0 : p.z 0=10*q+4)
+    (hm1 : p'.m 0=0) (hz1 : p'.z 0=10*q'+4)
+    (hdepth : ∀ i, p.depth i = p'.depth i) : q=q' := by
+  by_cases heq : q=q'
+  · exact heq
+  · have hne : q≠q' := heq
+    by_cases hqq : q≤q'
+    · have hlt : q<q' := by omega
+      let d := q'-q
+      let n := d+2
+      let w := commonDepthWord p n
+      have hlen : w.length=n := by simp [w,commonDepthWord,n]
+      have hcost : n≤cost w := by
+        have h := length_le_depth_cost w
+        simpa [hlen] using h
+      have hM : 1≤cost w := by omega
+      have hdepth0 : ∀ i (hi : i<w.length),
+          p.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        have hg := commonDepthWord_get p n i hi'
+        simpa [w,Nat.zero_add] using hg.symm
+      have hdepth1 : ∀ i (hi : i<w.length),
+          p'.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        calc
+          p'.depth (0+i) = p'.depth i := by simp
+          _ = p.depth i := (hdepth i).symm
+          _ = w.get ⟨i,hi⟩ := by
+            simpa [w] using (commonDepthWord_get p n i hi').symm
+      have hdiv := feeder10_common_source_prefix q q' n w p p'
+        hlen hdepth0 hdepth1 hm0 hz0 hm1 hz1 hqq hM
+      have hpowdvd : 2^(d+1) ∣ 2^(cost w-1) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      have hsmall : 2^(d+1) ∣ d :=
+        Nat.dvd_trans hpowdvd (by simpa [d] using hdiv)
+      have hle : 2^(d+1) ≤ d := Nat.le_of_dvd (by omega) hsmall
+      have hpow : d < 2^(d+1) := by
+        have hh := Nat.lt_pow_self (n:=d+1) (a:=2) (by decide : 1<2)
+        omega
+      omega
+    · have hgt : q'<q := by omega
+      let d := q-q'
+      let n := d+2
+      let w := commonDepthWord p' n
+      have hlen : w.length=n := by simp [w,commonDepthWord,n]
+      have hcost : n≤cost w := by
+        have h := length_le_depth_cost w
+        simpa [hlen] using h
+      have hM : 1≤cost w := by omega
+      have hdepth0 : ∀ i (hi : i<w.length),
+          p'.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        have hg := commonDepthWord_get p' n i hi'
+        simpa [w,Nat.zero_add] using hg.symm
+      have hdepth1 : ∀ i (hi : i<w.length),
+          p.depth (0+i)=w.get ⟨i,hi⟩ := by
+        intro i hi
+        have hi' : i<n := by simpa [hlen] using hi
+        calc
+          p.depth (0+i) = p.depth i := by simp
+          _ = p'.depth i := hdepth i
+          _ = w.get ⟨i,hi⟩ := by
+            simpa [w] using (commonDepthWord_get p' n i hi').symm
+      have hdiv := feeder10_common_source_prefix q' q n w p' p
+        hlen hdepth0 hdepth1 hm1 hz1 hm0 hz0 (by omega) hM
+      have hpowdvd : 2^(d+1) ∣ 2^(cost w-1) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      have hsmall : 2^(d+1) ∣ d :=
+        Nat.dvd_trans hpowdvd (by simpa [d] using hdiv)
+      have hle : 2^(d+1) ≤ d := Nat.le_of_dvd (by omega) hsmall
+      have hpow : d < 2^(d+1) := by
+        have hh := Nat.lt_pow_self (n:=d+1) (a:=2) (by decide : 1<2)
+        omega
+      omega
+
 #print axioms feeder12_common_word_parameter_divisibility
 #print axioms feeder10_common_word_parameter_divisibility
 #print axioms feeder12_common_source_prefix
 #print axioms feeder10_common_source_prefix
 #print axioms feeder12_common_source_prefix_separation
 #print axioms feeder10_common_source_prefix_separation
+#print axioms feeder12_depth_sequence_parameter_unique
+#print axioms feeder10_depth_sequence_parameter_unique
 
 end BB6.Precision
