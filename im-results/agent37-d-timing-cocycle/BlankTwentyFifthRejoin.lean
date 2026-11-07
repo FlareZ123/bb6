@@ -28,16 +28,19 @@ theorem terminal1718_exact :
 theorem t25_mod27 : t25 % 27 = 16 :=
   terminal1718_certificate.2
 
-def exception25Time : Nat :=
-  BB6.Agent2TwentyFourthRoot.reentry24Time +
+def exception25Time (T22 Tnorm24 : Nat) : Nat :=
+  BB6.Agent2TwentyFourthRoot.reentry24Time T22 Tnorm24 +
     DRegular.accumulated 1718 seed25
 
-/-- The twenty-fifth exceptional input is reached from the blank tape. -/
-theorem blank_twenty_fifth_exception :
-    ObsEq (run exception25Time blank)
+/-- Extend any witnessed twenty-fourth reentry through the next D-regular run. -/
+theorem blank_twenty_fifth_exception_from (T22 Tnorm24 : Nat)
+    (h24 : ObsEq
+      (run (BB6.Agent2TwentyFourthRoot.reentry24Time T22 Tnorm24) blank)
+      (DRegularSource.sourceSection seed25)) :
+    ObsEq (run (exception25Time T22 Tnorm24) blank)
       (DRegularSource.sourceSection ⟨9*t25+4,8,1⟩) := by
   apply BB6.Agent25RootChain.extend_regular blank
-    BB6.Agent2TwentyFourthRoot.reentry24Time
+    (BB6.Agent2TwentyFourthRoot.reentry24Time T22 Tnorm24)
     1718 seed25 ⟨9*t25+4,8,1⟩
   · constructor
     · change
@@ -50,18 +53,23 @@ theorem blank_twenty_fifth_exception :
     · right
       rfl
   · exact terminal1718_exact
-  · exact BB6.Agent2TwentyFourthRoot.blank_twenty_fourth_reentry
+  · exact h24
 
 def packet25Time : Nat :=
   BB6.Agent32EAll.duration (3*t25) 7 +
     BB6.Agent25BGeneral.bCost t25
 
-def reentry25Time : Nat := exception25Time + packet25Time
+def reentry25Time (T22 Tnorm24 : Nat) : Nat :=
+  exception25Time T22 Tnorm24 + packet25Time
 
 /-- The q=8 exceptional B return closes the twenty-fifth root episode. -/
 theorem blank_twenty_fifth_reentry :
-    ObsEq (run reentry25Time blank)
-      (DRegularSource.sourceSection ⟨64*t25+33,1,5⟩) := by
+    ∃ T22 Tnorm24,
+      ObsEq (run (reentry25Time T22 Tnorm24) blank)
+        (DRegularSource.sourceSection ⟨64*t25+33,1,5⟩) := by
+  obtain ⟨T22,Tnorm24,h24⟩ :=
+    BB6.Agent2TwentyFourthRoot.blank_twenty_fourth_reentry
+  have h25 := blank_twenty_fifth_exception_from T22 Tnorm24 h24
   have hEB :
       ObsEq
         (run packet25Time
@@ -69,14 +77,15 @@ theorem blank_twenty_fifth_reentry :
         (DRegularSource.sourceSection ⟨64*t25+33,1,5⟩) := by
     simpa [packet25Time] using
       (BB6.Agent25BGeneral.exceptional_EB_general t25 6)
-  exact source_chain exception25Time packet25Time blank
+  exact ⟨T22,Tnorm24,source_chain (exception25Time T22 Tnorm24)
+    packet25Time blank
     (DRegularSource.sourceSection ⟨9*t25+4,8,1⟩)
     (DRegularSource.sourceSection ⟨64*t25+33,1,5⟩)
-    blank_twenty_fifth_exception hEB
+    h25 hEB⟩
 
 #print axioms terminal1718_exact
 #print axioms t25_mod27
-#print axioms blank_twenty_fifth_exception
+#print axioms blank_twenty_fifth_exception_from
 #print axioms blank_twenty_fifth_reentry
 
 end BB6.Agent2TwentyFifthRoot
