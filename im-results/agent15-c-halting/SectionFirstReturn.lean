@@ -6,10 +6,10 @@ namespace BB6.Agent15
 
 open BB6.Agent46
 
-abbrev CState := Nat × Nat × Nat
+abbrev SectionState := Nat × Nat × Nat
 
 private theorem section_run_step_commute (n : Nat) :
-    ∀ s : Option CState,
+    ∀ s : Option SectionState,
       BB6.Agent46.run n (s.bind BB6CLine.nextC) =
         (BB6.Agent46.run n s).bind BB6CLine.nextC := by
   induction n with
@@ -20,7 +20,7 @@ private theorem section_run_step_commute (n : Nat) :
         (BB6.Agent46.run n (s.bind BB6CLine.nextC)).bind BB6CLine.nextC
       exact ih (s.bind BB6CLine.nextC)
 
-private theorem section_run_add (n m : Nat) (s : Option CState) :
+private theorem section_run_add (n m : Nat) (s : Option SectionState) :
     BB6.Agent46.run (n+m) s = BB6.Agent46.run m (BB6.Agent46.run n s) := by
   induction m with
   | zero => simp [BB6.Agent46.run]
@@ -46,14 +46,14 @@ private theorem first_one_step (k : Nat) (hk : 1≤k) :
   simp [BB6.Agent46.run, BB6CLine.nextC]
   omega
 
-private theorem run_not_zero_of_pos {n : Nat} {start : Option CState} {s : CState}
+private theorem run_not_zero_of_pos {n : Nat} {start : Option SectionState} {s : SectionState}
     (hrun : BB6.Agent46.run n start = some s) (hc : 0<s.2.2) :
     ∀ x y, BB6.Agent46.run n start ≠ some (x,y,0) := by
   intro x y hEq
   rw [hrun] at hEq
   have hcEq : s.2.2=0 := by
     injection hEq with hs
-    simpa using congrArg (fun z : CState => z.2.2) hs
+    simpa using congrArg (fun z : SectionState => z.2.2) hs
   omega
 
 theorem section_no_early_c0 (a k n : Nat) (hn : 0<n)
