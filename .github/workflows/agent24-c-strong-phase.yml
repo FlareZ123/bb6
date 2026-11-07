@@ -349,6 +349,24 @@ jobs:
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt"
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$full_forced_status" -ne 0 ]; then exit "$full_forced_status"; fi
+          # Agent 4: compile the exact forward mass scan and compose it with
+          # the original-source halting iff before later independent probes.
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMassIntegration}.lean .
+          lean -o CResidualMassBounds.olean CResidualMassBounds.lean
+          set +e
+          lean -o CResidualMass2000.olean CResidualMass2000.lean > "$GITHUB_WORKSPACE/c-residual-mass2000.txt" 2>&1
+          mass_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-mass2000.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$mass_status" -ne 0 ]; then exit "$mass_status"; fi
+          set +e
+          lean -o CResidualMassIntegration.olean CResidualMassIntegration.lean > "$GITHUB_WORKSPACE/c-residual-mass-integration.txt" 2>&1
+          integration_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass-integration.txt"
+          cat "$GITHUB_WORKSPACE/c-residual-mass-integration.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$integration_status" -ne 0 ]; then exit "$integration_status"; fi
           # Agent 19: source-proof the new m=1, j=24 mod256 progression.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighM1FullForced.lean .
           lean -o HighM1FullForced.olean HighM1FullForced.lean > "$GITHUB_WORKSPACE/m1-full-forced.txt" 2>&1
@@ -402,6 +420,8 @@ jobs:
           name: c-residual-probe-${{ github.run_id }}
           path: |
             full-forced-residual.txt
+            c-residual-mass2000.txt
+            c-residual-mass-integration.txt
             full-forced-param-scan.txt
             m0-mod8-three.txt
             m1-full-forced.txt
