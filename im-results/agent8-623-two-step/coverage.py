@@ -80,6 +80,22 @@ def far_right(a, d):
     return a > 0 and a % 2 == 0 and d >= (16 * a if d % 2 else 14 * a + 24)
 
 
+def log_far_left(a, d):
+    if a == 0:
+        return False
+    power_target = 14 * d + (59 if d % 2 else 39)
+    k = ternary_budget(power_target - 1)
+    return a >= (9 * d + 39 + k if d % 2 else 9 * d + 25 + k)
+
+
+def log_far_right(a, d):
+    if a == 0 or a % 2:
+        return False
+    power_target = 14 * a if d % 2 else 12 * a + 23
+    k = ternary_budget(power_target - 1)
+    return d + 4 >= 9 * a + k if d % 2 else d >= 8 * a + 13 + k
+
+
 def main():
     state = (0, 7)
     categories = Counter()
@@ -91,13 +107,17 @@ def main():
             initial.append(state)
         group = ("zero" if a == 0 else "gate" if near_gate(a, d)
                  else "far_left" if far_left(a, d)
-                 else "far_right" if far_right(a, d) else "uncovered")
+                 else "far_right" if far_right(a, d)
+                 else "log_far_left" if log_far_left(a, d)
+                 else "log_far_right" if log_far_right(a, d)
+                 else "uncovered")
         categories[group] += 1
         state = transition(a, d)
         assert state is not None, f"halt at section {index}"
     assert initial == [(0, 7), (6, 14), (6, 31), (26, 26), (2, 83)]
     assert categories == {"zero": 1, "gate": 1924, "far_left": 232,
-                          "far_right": 433, "uncovered": 2410}
+                          "far_right": 433, "log_far_left": 149,
+                          "log_far_right": 297, "uncovered": 1964}
     print("First 5000 source-mirrored visits:", dict(sorted(categories.items())))
     print("Uncovered:", categories["uncovered"], "of 5000")
     print("Finite trace only; no nonhalting conclusion.")
