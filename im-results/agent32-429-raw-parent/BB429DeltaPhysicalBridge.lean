@@ -137,7 +137,7 @@ theorem physical_shift_E11_prefix_via_delta
     (n j : Nat) (tail suffix : List Bool) (c : Config)
     (hrep : Represents (z 4 (ones n ++ tail) true (ones 6 ++ suffix)) c)
     (hj : j ≤ n) :
-    ∃ c', BB6Coverage.run target429 j c = some c' ∧
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 j c = some c' ∧
       Represents (z 4 (ones (n-j) ++ tail) true (ones (j+6) ++ suffix)) c' ∧
       c'.head = c.head - (j : Int) := by
   exact source_runWithDelta_rep j
