@@ -176,6 +176,9 @@ jobs:
           base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-all-depth-sharp/S4MultiSharp.lean.xz.b64" | xz -dc > S4MultiSharp.lean
           echo "587894ae875e731f86cde19d79e07db0ec84574ee61e8be1f82bc130427639b7  S4MultiSharp.lean" | sha256sum -c -
           lake env lean -o S4MultiSharp.olean S4MultiSharp.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-all-depth-sharp/S4MultiGrowth.lean.xz.b64" | xz -dc > S4MultiGrowth.lean
+          echo "eb6a757cf2ebd0a3ece9b5e1881c7dcfc9bc7ec9b970ba6dada55ff6c90b5d0f  S4MultiGrowth.lean" | sha256sum -c -
+          lake env lean -o S4MultiGrowth.olean S4MultiGrowth.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
