@@ -176,8 +176,12 @@ theorem jRightList_getD (w n : Nat) :
           have hge : w ≤ n := Nat.le_of_not_gt hn
           have hsum : w + (n - w) = n := Nat.add_sub_of_le hge
           rw [hdiff] at hsum
-          have hne : n + 1 ≠ w + 2 := by omega
-          simp [hn, hdiff, hne]
+          have hne' : n ≠ w + 1 := by
+            intro heq
+            rw [heq] at hsum
+            omega
+          simp [hn, hdiff]
+          exact hne'
 
 @[simp] theorem jMark_zero (u w : Nat) : jMark u w 0 := by
   unfold jMark jHole
@@ -313,8 +317,8 @@ theorem sourceJCfg_toBB (u w : Nat) :
   simp only [jLeftList, jRightList, jPow01_eq_pow, jPow1_eq_pow,
     Turing.ListBlank.append_mk, Turing.ListBlank.head_mk,
     Turing.ListBlank.tail_mk, Turing.ListBlank.head_cons,
-    Turing.ListBlank.tail_cons, BusyBeaver.SixState.A,
-    hdefault, List.append_assoc, List.append_nil, List.nil_append, pow_zero,
+    BusyBeaver.SixState.A, hdefault, List.append_assoc, List.append_nil,
+    List.nil_append, List.cons_append, _root_.pow_zero,
     List.headI_cons, List.tail_cons]
 
 private def sourceBit (a : Bit) : Bool := a.val == 1
@@ -341,7 +345,7 @@ theorem sourceJPosition_toAbsolute (u w : Nat) (head : Int) :
   rw [sourceJPosition_toRelative]
   apply BB429JFirstBranch.config_ext
   · apply Fin.ext
-    rfl
+    simp [BB6.Bridge.toAbsolute, BB6Bubble.A]
   · rfl
   · funext x
     cases hix : x - head with
