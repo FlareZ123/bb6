@@ -857,7 +857,9 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3 ≤ w) :
       run target429 (4*u*u+6*u+7+14) c0 = some c1 := by
     rw [run_add', j_F0_exact u w hprefix]
     simp only [Option.bind_some]
-    convert hsetup using 1 <;> simp [c0,c1] <;> omega
+    have hhead : (-2*(u:Int)-7)+4 = -2*(u:Int)-3 := by omega
+    rw [hhead] at hsetup
+    simpa [c1] using hsetup
   have hCrow : target429 (C,true)=some ⟨false,true,B⟩ := by decide
   have hBzero : target429 (B,false)=some ⟨true,true,C⟩ := by decide
   have hBone : target429 (B,true)=some ⟨true,true,A⟩ := by decide
