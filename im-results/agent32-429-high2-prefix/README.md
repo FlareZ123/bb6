@@ -87,31 +87,27 @@ j_high2_to_junc_raw (u : Nat) :
 - Follow-on raw crossing CI: [42413538308](https://github.com/FlareZ123/bb6/actions/runs/42413538308), pinned revision `560640f3b34aeb49c82e006aebd07585230444cd`.
 - The final theorem's transitive axiom audit is `[propext, Classical.choice, Quot.sound]`. The supporting zipper theorems use `[propext, Quot.sound]`. No audited high-2 theorem depends on `sorryAx`.
 
-### 5. Raw rightward crossing after the high-2 return
+### 5. Exact endpoint and raw rightward crossing
 
-The high-2 return endpoint is `junc 0 0 (4*u+18)`, with head displacement `-(2*u+10)`. The existing `juncCycle_crossing` theorem applies with
+The high-2 return endpoint is `junc 0 0 (4*u+18)`, with head displacement `-(2*u+10)`. Set
 
 ```
-h = 2*u+11
-w = 4*u+18
-k = 3*u+12
-h+w = 2*k+5
+n     = juncTerminalN 0 (4*u+18)
+spent = juncCycleSpent n 0
+rem   = 4*u+18-spent
 ```
 
-It supplies a finite further Junc excursion whose displacement `d` satisfies `2*k < h+d`. Lifting this excursion through the raw-source representation and composing it with the high-2 path proves:
+The source-verified `juncCycle_crossing_shape` theorem gives two exact endpoint cases.
 
-```lean
-j_high2_crosses_origin_raw (u : Nat) :
-  ∃ steps cfg c',
-    run target429 (4*u*u+44*u+204+steps) J(u,2*u+2) = some c' ∧
-    Represents cfg c' ∧
-    c'.head > 2*u+3
-```
+1. **Small remainder:** if `rem ≤ 4`, the further run takes exactly `juncCycleTimeTotal n 0` steps, displaces the head by `spent`, and ends at `junc (juncCycleU n 0) 0 rem`.
+2. **Partial sweep:** if `rem ≥ 5`, put `N = rem/2-1`. The further run takes exactly `juncCycleTimeTotal n 0 + juncPosMidTime N 0` steps, displaces the head by `spent+2*N`, and ends at `midApos (juncCycleU n 0-N) (2*(N-1)) (rem-2*(N-1))`. The final right parameter is 4 when `rem` is even and 5 when `rem` is odd.
 
-Thus every synthetic high-2 J-chart input has a finite raw-machine continuation whose head lies strictly to the right of the original J-chart head by more than `2*u+3` cells. The theorem deliberately leaves the final zipper in existential form, following the existing crossing theorem's interface.
+[`High2Return.lean`](High2Return.lean) lifts these exact alternatives through the raw-source representation theorem. The theorem `j_high2_crossing_shape_raw` proves that every synthetic high-2 J-chart input has a finite raw-machine continuation with the stated endpoint and with final head strictly greater than `2*u+3` relative to the original J-chart head. The weaker head-crossing corollary is `j_high2_crosses_origin_raw`.
 
-- Lean CI: [42413538308](https://github.com/FlareZ123/bb6/actions/runs/42413538308).
-- The named crossing theorem's axiom audit passes with no `sorryAx`.
+- Exact endpoint and raw crossing CI: [42414260489](https://github.com/FlareZ123/bb6/actions/runs/42414260489).
+- Pinned source revision: `72fa2df0c311b8bbe5bd4530206e3ccf5bc27125`.
+- The named high-2 endpoint and crossing theorem audits pass with no `sorryAx`.
+
 
 ## Remaining #429 questions
 
