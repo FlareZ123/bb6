@@ -1,0 +1,29 @@
+name: DRegular small-base probe (manual)
+on:
+  workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned DRegular source
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Evaluate small canonical DRegular orbit
+        shell: bash
+        run: |
+          set -euo pipefail
+          H=im-results/agent35-d-regular-certificate
+          D=im-results/agent2-cryptid-continuity
+          lean --version
+          lean -o "$H/DRegular.olean" "$H/DRegular.lean"
+          LEAN_PATH="$H" lean "$D/DRegularBaseProbe.lean"
