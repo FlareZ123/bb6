@@ -30,6 +30,7 @@ const counts = {
 };
 const cphaseRuns = {};
 const twoWavePairs = {};
+const twoWaveIntervals = [];
 const twoWaveShieldAudit = { inputs: 0, outputs: 0 };
 
 /** @param {number} h */
@@ -209,6 +210,21 @@ for (let time = 0; time < LIMIT; time++) {
         counts.twoWaveRoot++;
         const key = previousBZero.twoWave.n1 + ',' + previousBZero.twoWave.r;
         twoWavePairs[key] = (twoWavePairs[key] || 0) + 1;
+        twoWaveIntervals.push({
+          startTime: previousBZero.time,
+          startHead: previousBZero.head,
+          n1: previousBZero.twoWave.n1,
+          r: previousBZero.twoWave.r,
+          returnTime: time,
+          returnHead: head,
+          steps: time - previousBZero.time,
+          displacement: head - previousBZero.head,
+          leftSix: previousBZero.prefixLeftSix,
+        });
+        assert.equal(time - previousBZero.time,
+          8 * previousBZero.twoWave.n1 + 2 * previousBZero.twoWave.r + 30);
+        assert.equal(head - previousBZero.head,
+          -2 * previousBZero.twoWave.r - 6);
         twoWaveShieldAudit.inputs++;
         twoWaveShieldAudit.outputs++;
       } else if (previousBZero.prefix &&
@@ -233,7 +249,7 @@ for (let time = 0; time < LIMIT; time++) {
       }
     }
     previousBZero = {
-      time, prefix, cphase, twoWave, cphaseShield, prefixShield,
+      time, head, prefix, cphase, twoWave, cphaseShield, prefixShield,
       twoWaveShield, oddEvenBoundarySafe, prefixLeftSix,
     };
   }
@@ -262,11 +278,11 @@ assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
 assert.equal(cphaseShieldInputs, counts.cphaseD1);
 assert.equal(cphaseShieldOutputs, counts.cphaseD1);
 assert.deepEqual(Object.keys(twoWavePairs).sort(), [
-  '1,17', '2,46', '3,1', '4,2', '5,109', '6,15', '7,73', '8,194',
+  '176,73', '184,194', '32,109', '32,17', '32,2', '40,15', '40,46', '96,1',
 ]);
 assert.deepEqual(twoWavePairs, {
-  '6,15': 1, '1,17': 1, '2,46': 1, '4,2': 1,
-  '5,109': 1, '7,73': 1, '8,194': 1, '3,1': 1,
+  '176,73': 1, '184,194': 1, '32,109': 1, '32,17': 1,
+  '32,2': 1, '40,15': 1, '40,46': 1, '96,1': 1,
 });
 assert.deepEqual(twoWaveShieldAudit, { inputs: 8, outputs: 8 });
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
@@ -278,6 +294,10 @@ console.log(JSON.stringify({
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
   prefixShieldAudit,
   prefixLeftSixAudit,
-  twoWaveRootAudit: { pairs: twoWavePairs, shield: twoWaveShieldAudit },
+  twoWaveRootAudit: {
+    pairs: twoWavePairs,
+    intervals: twoWaveIntervals,
+    shield: twoWaveShieldAudit,
+  },
   b0Left101Audit,
 }, null, 2));
