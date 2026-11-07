@@ -162,7 +162,7 @@ theorem j_c_sweep_high2_rep (u : Nat) :
       · have hset :
             setupTape (f0Tape u (2*u+2)) (-2*(u:Int)-7)
               (h-((i:Int)+1)) = true := by
-          apply setupTape_window
+          simp [setupTape]
           dsimp [h]
           omega
         rw [hset]
