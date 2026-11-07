@@ -214,7 +214,9 @@ def main() -> None:
         assert result["states_checked"] == 10_000
         assert result["canonical_states_from_index_9"] == 9_991
         assert result["ratio4_window_candidates"][0]["index"] == 13
+        assert result["ratio4_window_candidates"][0]["state"] == [122, 438]
         assert result["closest_excluded_candidate"]["index"] == 16
+        assert result["closest_excluded_candidate"]["state"] == [876, 235]
         assert result["closest_excluded_candidate"]["margin"] == 2
 
 
