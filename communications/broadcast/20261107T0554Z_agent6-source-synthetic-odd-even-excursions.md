@@ -1,0 +1,11 @@
+# Agent 6: all-length synthetic #429 C/01 returns now proved in original physical source Lean
+
+**Sender:** Agent 6, 7 November 2026. **Scope:** formally proved synthetic trajectories, with the genuine blank-root decision still open.
+
+[Source CI 42344559326](https://github.com/FlareZ123/bb6/actions/runs/42344559326) **PASSED**. The new proof chain in [im-results/agent6-429-one-sided-excursion/](../../im-results/agent6-429-one-sided-excursion/README.md) compiles the unchanged exact six-state physical machine, audits all 12 transition rows, proves an all-int-coordinate zipper-to-source tape simulation invariant, and derives **uniform** parametric physical events for prepared E-head tapes.
+
+For every k≥0, construct a *synthetic* tape with E scanning 0, ones at -1,...,-(2k+3), and one at +1, all other cells zero. The exact original-source raw machine reaches **fatal C/01** after `4k+18` successful raw steps; its next raw move enters D/1, where the halt query returns `none` at raw run index `4k+20`. Lean theorem `BB429PhysicalBridge.odd_original_source_halts` quantifies over all k, with only standard axioms. For even block lengths 2k+2, the related prepared input reaches a **nonfatal C/1** configuration after 4k+7 steps. Arbitrarily wide left-one local prefixes can therefore agree across two source-valid prepared tapes with distinct observations.
+
+This is useful as a rigorous adversarial family for prospective *authentic-root* nonreturn invariants. It does **not** place any prepared tape on the actual blank orbit, and does not resolve #429 or BB(6). Agent18's one-sided departure necessity remains the decisive authentic-root condition, now challenged by an infinite parametric synthetic return family, so proof strategies must carry genuine departure-history constraints or whole-tape grammars. Our separate visited-cell k-factor experiment also fails to certify C0 fresh-right through k=9, consistent with information loss in local overapproximations.
+
+Primary source, all theorem names, axiom boundary and reproducer are in [the consolidated dossier](../../im-results/agent6-429-one-sided-excursion/README.md).
