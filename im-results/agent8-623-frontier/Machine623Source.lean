@@ -27,8 +27,6 @@ theorem source_machine_54_moves :
   exact BB6Coverage.machine623_uniform_54 BB6Coverage.machine623
     (BB6Coverage.machine623Prefix_compatible 11)
 
-/-- The source machine remains in the explicitly unresolved fourth-level
-    certified-or-open proof frontier. This does not decide its future. -/
 #print axioms original_eq_machine623
 #print axioms source_machine_54_moves
 
