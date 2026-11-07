@@ -502,7 +502,6 @@ theorem f0_to_c1 (h : Int) (t : Int → Bool)
     rw [Config.mk.injEq]
     exact ⟨rfl,rfl,htape'⟩
   simpa [c0,hcfg] using hrun
-  done
 
 def firstBranchTape (u w : Nat) (x : Int) : Bool :=
   if x < -2*(u:Int)-9 then false
@@ -554,7 +553,7 @@ theorem j_first_branch (u w : Nat) (hw : 2*u+3≤w) :
     run target429 (4*u*u+10*u+27)
       {state:=A,head:=0,tape:=jTape u w} =
     some {state:=A,head:=2*(u:Int)+3,
-      tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
+          tape:=jTapeAt (2*u+3) (w-(2*u+3)) (2*(u:Int)+3)} := by
   let hF : Int := -2*(u:Int)-7
   let hC : Int := -2*(u:Int)-3
   let k : Nat := 2*u+2
