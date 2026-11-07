@@ -17,6 +17,11 @@ on:
         required: false
         type: boolean
         default: false
+      forced_normalize_only:
+        description: 'Compile the four-sector original-source full forced normalizer and its sound exclusion filter, then stop'
+        required: false
+        type: boolean
+        default: false
       balanced_only:
         description: 'Stop after source-verifying the exact balanced and odd target fibers; skip downstream experimental modules'
         required: false
@@ -199,11 +204,16 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent15-c-halting/{SectionAffineInverse,ReachAffine}.lean .
           lean -o SectionAffineInverse.olean SectionAffineInverse.lean
           lean -o ReachAffine.olean ReachAffine.lean
-          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean .
-          lean -o FullForcedNormalize.olean FullForcedNormalize.lean
-          # Joint original-source check: Agent3 odd inverses plus Agent24 six-residue even-right inverse.
+          # Agent 24's six-residue even-right inverse is a dependency of the full normalizer.
           cp "$GITHUB_WORKSPACE"/im-results/agent24-c48/{EvenEvenInverse,OddEvenInverse,ExtraEvenOrbit,EvenRightSixOrbit}.lean .
           for f in EvenEvenInverse OddEvenInverse ExtraEvenOrbit EvenRightSixOrbit; do lean -o "$f.olean" "$f.lean"; done
+          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean .
+          lean -o FullForcedNormalize.olean FullForcedNormalize.lean
+          if [ "${{ inputs.boundary_only }}" != "true" ]; then
+            cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
+            lean -o FullForcedFilter.olean FullForcedFilter.lean
+            if [ "${{ inputs.forced_normalize_only }}" = "true" ]; then exit 0; fi
+          fi
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedHighResidual,MixedLowFour,MixedLowFourSharp,MixedFullResidual,MixedEvenEightSharp,MixedHighEightSharp,MixedThreeHighResidual,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
           for f in MixedFourNormalize MixedFourFilter MixedHighOne MixedHighBoth MixedHighAllOdd MixedHighResidual MixedLowFour MixedLowFourSharp MixedFullResidual MixedEvenEightSharp MixedHighEightSharp MixedThreeHighResidual MixedTwoSharp MixedHighSharp MixedUniversalAncestry MixedUniversalSharp MixedUniversalAB; do lean -o "$f.olean" "$f.lean"; done
           cp "$GITHUB_WORKSPACE"/im-results/agent11-c-bounce-exact/{SectionMassOriginal,SectionFastInverseOriginal,SectionBackwardOriginal,SectionFuelOriginal,SectionBackwardFuelOriginal,FastRootBackward,FastRootFuel}.lean .
@@ -263,8 +273,6 @@ jobs:
           cp "$GITHUB_WORKSPACE"/im-results/agent29-forced-depth/AffineFourGlobal.lean .
           lean AffineFourGlobal.lean
           if [ "${{ inputs.boundary_only }}" = "true" ]; then exit 0; fi
-          cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
-          lean -o FullForcedFilter.olean FullForcedFilter.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineInfinite.lean .
           lean HighAffineInfinite.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/HighAffineCone.lean .
