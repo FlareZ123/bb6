@@ -9,7 +9,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -17,9 +17,9 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Verify complete original source chain and packet path synchrony
+      - name: Verify original source and third-tail return compositions
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace:im-results/agent32-cryptid-padding
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent37-cryptid-model-bridge:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace:im-results/agent36-d-tail-packet:im-results/agent32-cryptid-padding
         run: |
           set -euo pipefail
           python3 -m pip install --quiet filelock
@@ -27,23 +27,30 @@ jobs:
           python3 im-results/agent25-cryptid-doublezero/unpack.py
           lean --version
           B=im-results/agent31-cryptid-boundary
+          A=im-results/agent25-cryptid-doublezero
+          C=im-results/agent35-cryptid-code
           S=im-results/agent32-cryptid-third
           R=im-results/agent31-d-exceptional
           P=im-results/agent2-packet-shift
-          A=im-results/agent25-cryptid-doublezero
-          C=im-results/agent35-cryptid-code
+          M=im-results/agent37-cryptid-model-bridge
+          T=im-results/agent36-d-tail-packet
           : > axioms.log
+
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
-          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean" | tee -a axioms.log
+
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
           lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
           lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
+
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
-          lean -o im-results/agent32-cryptid-padding/EZeroPair.olean im-results/agent32-cryptid-padding/EZeroPair.lean
+          lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o im-results/agent32-cryptid-padding/EZeroPair.olean im-results/agent32-cryptid-padding/EZeroPair.lean
+
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
           lean -o "$P/PacketShift.olean" "$P/PacketShift.lean"
@@ -68,10 +75,27 @@ jobs:
           lean -o "$P/EOneZeroLocalFirst.olean" "$P/EOneZeroLocalFirst.lean"
           lean -o "$P/EOneZeroFullFirst.olean" "$P/EOneZeroFullFirst.lean"
           lean -o "$P/EZeroFirst.olean" "$P/EZeroFirst.lean"
+
+          lean -o "$A/TripleIteration.olean" "$A/TripleIteration.lean"
+          lean -o "$A/SixOnes.olean" "$A/SixOnes.lean"
+          lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
+          lean -o "$M/CrossModelBridge.olean" "$M/CrossModelBridge.lean"
+          lean -o "$M/CompleteAReturn.olean" "$M/CompleteAReturn.lean"
+          lean -o "$M/WordReturns.olean" "$M/WordReturns.lean"
+          lean -o "$M/ShortTripleGate.olean" "$M/ShortTripleGate.lean"
+          lean -o "$M/A110Portal.olean" "$M/A110Portal.lean"
+          lean -o "$T/A110TriplePairs.olean" "$T/A110TriplePairs.lean"
+
+          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean" | tee -a axioms.log
+          lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean" | tee -a axioms.log
+
           lean -o "$P/EThirdTailPhysical.olean" "$P/EThirdTailPhysical.lean" | tee -a axioms.log
           lean -o "$P/ThirdTailFirst.olean" "$P/ThirdTailFirst.lean" | tee -a axioms.log
           lean -o "$P/ThirdTailPositive.olean" "$P/ThirdTailPositive.lean" | tee -a axioms.log
           lean -o "$P/ThirdTailArithmetic.olean" "$P/ThirdTailArithmetic.lean" | tee -a axioms.log
           lean -o "$P/ThirdTailSecondBE.olean" "$P/ThirdTailSecondBE.lean" | tee -a axioms.log
           lean -o "$P/ThirdTailSecondAZero.olean" "$P/ThirdTailSecondAZero.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailSecondAOne.olean" "$P/ThirdTailSecondAOne.lean" | tee -a axioms.log
+          lean -o "$P/ThirdTailSecondAThree.olean" "$P/ThirdTailSecondAThree.lean" | tee -a axioms.log
+
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
