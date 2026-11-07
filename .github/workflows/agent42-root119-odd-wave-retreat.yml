@@ -1,0 +1,39 @@
+name: Agent 42 root119 odd-wave retreat (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  odd-wave-retreat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean4-action@v1
+        with:
+          lean-version: v4.36.0-rc2
+      - name: Verify source modules, formal return laws, and 10-million-step census
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent42-root119-guard:im-results/agent12-root119-shuttle"
+          A=im-results/agent42-root119-guard
+          S=im-results/agent12-root119-shuttle
+          lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
+          lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
+          lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
+          lean -o "$A/Root119BRegular.olean" "$A/Root119BRegular.lean"
+          lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$A/Root119DFSweep.olean" "$A/Root119DFSweep.lean"
+          lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
+          lean -o "$S/Root119Shuttle.olean" "$S/Root119Shuttle.lean"
+          lean -o "$A/Root119FBSweep.olean" "$A/Root119FBSweep.lean"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119Wave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('wave-source-sha256',h); assert h=='715e5512da53986da896ea05d68d28869fc8489b6ad3e1e49e26459545299930'; p.with_name('Root119Wave.lean').write_bytes(b)"
+          lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
+          lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119OddWaveRetreat.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('odd-wave-source-sha256',h); assert h=='68816db794a0aa558a8805bf1c21301297589f2cad09c3daa74a667740e0c3db'; p.with_name('Root119OddWaveRetreat.lean').write_bytes(b)"
+          lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/test-root119-odd-wave-audit.cjs.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('audit-source-sha256',h); assert h=='11398c3bb0451bd0bac496bb3c6e49fa584781b59bfea6086c3536a48cf23276'; p.with_name('test-root119-odd-wave-audit.cjs').write_bytes(b)"
+          node "$A/test-root119-odd-wave-audit.cjs"
