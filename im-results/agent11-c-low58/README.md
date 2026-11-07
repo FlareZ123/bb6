@@ -105,11 +105,13 @@ computable decision procedure. This is designed to replace the
 changing the mathematical predicate. It locally compiles with Lean
 4.36.0-rc2 and no `sorryAx`; run 17 is the first source-workflow check.
 
-The companion `OlderGateRawRootExamples.lean` formally certifies depth-`n=0`
-witnesses for high target pairs `(j,m)=(14,1),(30,1),(46,1)`, so the
-direct Boolean rejects those three members of Agent4's 326-point
-raw-mass-2000 box. This is a concrete finite filter evaluation; it does
-not establish that these are the only older-gate exclusions in the box.
+The companion `OlderGateRawCensus.lean` formalizes Agent4's 322 high
+pairs in the raw mass-2000 box and proves that the original finite scan
+rejects **exactly** `[(14,1),(30,1),(46,1)]`. Each is witnessed at depth
+`n=0`. The theorem `scanAllowedBool_iff` proves the finite scan covers
+all possible depths because the gate requires `n+4≤2*m+2`; the exact
+list theorem is kernel-checked by `decide` and has no axioms. The
+remaining four low targets are outside this high-only guard.
 
 ## Formal artifacts and verification boundary
 
