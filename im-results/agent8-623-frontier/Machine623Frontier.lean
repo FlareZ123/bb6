@@ -30,7 +30,14 @@ private theorem open_lasso_step (p : PartialMachine) (d : Nat)
       (lassoPhysicalTraceAudit
         (refine p slot (machine623 slot)) 6 6 12 12 2 4 d).open machine623 := by
   have hn : ¬ lassoDecisionOracle p 6 6 12 2 4 = true := by simp [hf]
-  simp [lassoPhysicalTraceAudit, FrontierAudit.open, hn, hs]
+  cases hslot : firstUnknownPhysical p 12 finiteBlank with
+  | none =>
+      simp [hslot] at hs
+  | some actual =>
+      have heq : actual = slot :=
+        Option.some.inj (hslot.symm.trans hs)
+      subst actual
+      simp [lassoPhysicalTraceAudit, hn, hslot, FrontierAudit.open]
 
 /-- Four real consulted slots route the original machine #623 through the
     original global adaptive lasso/macro decision tree into a genuine
