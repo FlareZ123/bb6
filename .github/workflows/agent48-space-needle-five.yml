@@ -1,4 +1,4 @@
-name: Agent 48 Space Needle source audit (manual)
+name: Agent 48 Space Needle source audit and quadratic terminal bound (manual)
 
 on:
   workflow_dispatch:
@@ -31,14 +31,18 @@ jobs:
           sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
           lake exe cache get
           lake build BusyBeaver.BB6.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
-      - name: Check original-source five-parent theorem and axioms
+      - name: Check original-source Space Needle results and quadratic terminal bound
         working-directory: /tmp/cryptids
         run: |
           set -euo pipefail
           base48="$GITHUB_WORKSPACE/im-results/agent48-space-needle"
           base20="$GITHUB_WORKSPACE/im-results/agent20-needle-coprime"
+          cp "$base48/NeedleTerminalDichotomy.lean" .
+          lake env lean -o ".lake/build/lib/lean/NeedleTerminalDichotomy.olean" NeedleTerminalDichotomy.lean
           cp "$base48/SpaceNeedleClosed.lean" .
           lake env lean -o ".lake/build/lib/lean/SpaceNeedleClosed.olean" SpaceNeedleClosed.lean
+          cp "$base48/NeedleTerminalDichotomySource.lean" .
+          lake env lean NeedleTerminalDichotomySource.lean
           cp "$base48/SpaceNeedleObstructionFamilies.lean" .
           lake env lean SpaceNeedleObstructionFamilies.lean
           for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedleTerminalAffineSource; do
