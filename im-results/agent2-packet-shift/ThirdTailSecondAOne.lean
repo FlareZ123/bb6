@@ -31,6 +31,13 @@ private theorem triples_code (n : Nat) :
       rfl
     rw [h]
 
+private theorem replicate_succ_true (n : Nat) :
+    List.replicate n true ++ [true] =
+      List.replicate (n+1) true := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp [List.replicate_succ, ih]
+
 private theorem special_code (r : Nat) :
     CryptidA.wordCode (BB6.ThirdTailArithmetic.special r) =
       List.replicate (6*r+4) true ++
@@ -41,8 +48,7 @@ private theorem special_code (r : Nat) :
   rw [hmul]
   have h : List.replicate (6*r+3) true ++ [true] =
       List.replicate (6*r+4) true := by
-    simpa [show [true] = List.replicate 1 true by rfl] using
-      (List.replicate_append_replicate (6*r+3) 1 true)
+    simpa using replicate_succ_true (6*r+3)
   calc
     List.replicate (6*r+3) true ++
         (true :: false :: List.replicate 12 true)
@@ -83,7 +89,7 @@ private theorem a_input_shape (t r : Nat) :
         [true,true] ++ List.replicate (3*(8*t+6)+1) true := by
     rw [hn]
     simpa using
-      (List.replicate_append_replicate 2 (3*(8*t+6)+1) true).symm
+      (List.replicate_append_replicate (n := 2) (m := 3*(8*t+6)+1) (a := true)).symm
   rw [hprefix,hp,hmul,special_code]
   simp [List.append_assoc]
 
