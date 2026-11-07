@@ -313,7 +313,7 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
       have hstep :
           runWithDelta 1 (z 4 (ones (1+n) ++ left) true suffix) =
             some (z 4 (ones n ++ left) true (true :: suffix), -1) := by
-        rfl
+        simp [runWithDelta, oneWithDelta, one, action, z, ones, List.append_assoc]
       rw [hstep]
       simp only [Option.bind_some]
       rw [ih]
