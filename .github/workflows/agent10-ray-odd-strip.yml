@@ -105,4 +105,7 @@ jobs:
           lean -o "$g/EvenWalkSourceModel.olean" "$g/EvenWalkSourceModel.lean"
           lean -o "$g/EvenWalkSmall.olean" "$g/EvenWalkSmall.lean"
           lean -o "$g/EvenWalkForkDead.olean" "$g/EvenWalkForkDead.lean"
+          lean -o "$b/RayNoSeam.olean" "$b/RayNoSeam.lean"
+          lean -o "$b/RayNoSeamResidue.olean" "$b/RayNoSeamResidue.lean"
+          lean -o "$b/RayNoSeamWalk.olean" "$b/RayNoSeamWalk.lean"
           echo "Agent 10 source-verified exact source t1,t2,t3 rooted classification; Agent 7 all-index two-tier root gap."
