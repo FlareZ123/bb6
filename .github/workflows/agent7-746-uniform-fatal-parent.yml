@@ -77,6 +77,7 @@ jobs:
           lean -o "$g/RayResidues.olean" "$g/RayResidues.lean"
           lean -o "$g/RayTriplePeriod.olean" "$g/RayTriplePeriod.lean"
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
+          lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
           lean -o "$g/RayNonFork.olean" "$g/RayNonFork.lean"
           lean -o "$g/SixPacketRoot.olean" "$g/SixPacketRoot.lean"
           lean -o "$g/ForkDecompose.olean" "$g/ForkDecompose.lean"
