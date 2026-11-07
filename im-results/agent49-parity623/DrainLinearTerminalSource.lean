@@ -90,4 +90,51 @@ theorem evenRight_terminal_balance_interval
 
 #print axioms drainB_terminal_balance_interval
 #print axioms evenRight_terminal_balance_interval
+#print axioms oddLeft_terminal_ray_interval
+#print axioms evenLeft_terminal_ray_interval
+#print axioms oddRight_terminal_ray_interval
+
+/-- Odd-left ray: a=2*d+9+t, so its drain balance is t-2*d-10. -/
+theorem oddLeft_terminal_ray_interval
+    (d t n K aa dd : Nat)
+    (hs : drainB (d+t+4) (d+3) 5 = some (.D aa dd))
+    (hb : d+3<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(4*d+t+20+5*n)+5 < 3^K) :
+    2*d+6≤t+n+K ∧ t≤2*d+5*n+K+17 := by
+  have hbal :=
+    drainB_terminal_balance_interval (d+t+4) (d+3) 5 n K aa dd
+      hs hb he hhalt hK
+  omega
+
+/-- Even-left ray: a=2*d+5+t, so its drain balance is t-2*d-5. -/
+theorem evenLeft_terminal_ray_interval
+    (d t n K aa dd : Nat)
+    (hs : drainB (d+t+3) (d+2) 2 = some (.D aa dd))
+    (hb : d+2<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(4*d+t+13+5*n)+5 < 3^K) :
+    2*d+1≤t+n+K ∧ t≤2*d+5*n+K+12 := by
+  have hbal :=
+    drainB_terminal_balance_interval (d+t+3) (d+2) 2 n K aa dd
+      hs hb he hhalt hK
+  omega
+
+/-- Odd-right ray: d=2*a+1+2*t, so its drain balance is 2*(t-a)+5. -/
+theorem oddRight_terminal_ray_interval
+    (a t n K aa dd : Nat)
+    (hs : drainB (a+2*t+5) (a-1) 3 = some (.D aa dd))
+    (hb : a-1<3^n)
+    (he : aa%2=0)
+    (hhalt : highLevelNext (.D aa dd) = none)
+    (hK : 2*(4*a+2*t+7+5*n)+5 < 3^K) :
+    2*a≤2*t+n+K+9 ∧ 2*t≤2*a+5*n+K+2 := by
+  have hbal :=
+    drainB_terminal_balance_interval (a+2*t+5) (a-1) 3 n K aa dd
+      hs hb he hhalt hK
+  omega
+
+
 end BB6.Agent49DrainLinearTerminalSource
