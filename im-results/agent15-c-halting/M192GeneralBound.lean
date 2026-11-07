@@ -72,7 +72,7 @@ The M192 backward invariant excludes c=0 states only when their residue pair
 satisfies lowCore. The lower bound on k alone is insufficient.
 -/
 theorem source_no_c0_lowCore (a k : Nat) (hk : 8≤k)
-    (hcore : lowCore ((a+192)%192) (k%192)) :
+    (hcore : lowCore (a%192) (k%192)) :
     ¬ BB6CLine.Reach (a,k,0) := by
   intro hreach
   have hnot := source_blank_never_bad a k 0 hreach
@@ -82,24 +82,19 @@ theorem source_no_c0_lowCore (a k : Nat) (hk : 8≤k)
 
 /-- The entire first stopping family lies outside the M192 lowCore slice. -/
 theorem first_stop_family_outside_lowCore (k : Nat) :
-    ¬ lowCore ((1+192)%192) (k%192) := by
-  have hx : (1+192)%192=1 := by omega
-  rw [hx]
+    ¬ lowCore (1%192) (k%192) := by
   simp [lowCore]
 
 /-- The second-family point (j,m,k)=(0,1,40) is outside the same slice. -/
 theorem second_stop_example_outside_lowCore :
-    ¬ lowCore ((3+192)%192) (40%192) := by
-  have hx : (3+192)%192=3 := by omega
-  have hw : 40%192=40 := by omega
-  rw [hx,hw]
+    ¬ lowCore (3%192) (40%192) := by
   simp [lowCore]
 
 /-- Conditional exclusion for second-family states covered by lowCore. -/
 theorem source_no_second_stop_when_lowCore (j m k : Nat)
     (hjm : j≠0 ∨ m≠0)
     (hstop : k+j+3*m+5=2^(2*m+2)*(j+3))
-    (hcore : lowCore ((2*j+3+192)%192) (k%192)) :
+    (hcore : lowCore ((2*j+3)%192) (k%192)) :
     ¬ BB6CLine.Reach (2*j+3,k,0) := by
   have hk : 8≤k := by
     have h10 := second_stop_k_ge10_except_00 j m k hjm hstop
