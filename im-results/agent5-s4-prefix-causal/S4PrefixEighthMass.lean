@@ -74,7 +74,7 @@ theorem G_mass (c : Nat) (T U : List Nat)
       have hm := H_mass (c-1) [] U h
       calc
         stackMass U = (c-1) + stackMass [] + 3 := hm
-        _ = stackMass [] + c + 2 := by simp; omega
+        _ = stackMass [] + c + 2 := by simp [stackMass]; omega
   | cons b S =>
       have hm := H_mass (b+c) S U h
       calc
