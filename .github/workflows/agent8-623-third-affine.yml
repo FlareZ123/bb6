@@ -69,4 +69,6 @@ jobs:
           cp "../im-results/agent8-623-inverse/HaltParentSource.lean" Agent8HaltParentSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8HaltParentSource.olean Agent8HaltParentSource.lean
           cp "../im-results/agent8-623-inverse/MachineHaltSource.lean" Agent8MachineHaltSource.lean
-          lake env lean Agent8MachineHaltSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8MachineHaltSource.olean Agent8MachineHaltSource.lean
+          cp "../im-results/agent8-623-inverse/MachineLogHaltSource.lean" Agent8MachineLogHaltSource.lean
+          lake env lean Agent8MachineLogHaltSource.lean
