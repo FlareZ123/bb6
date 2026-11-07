@@ -238,7 +238,7 @@ theorem high_even_right_progression_indices_injective :
   rcases b with ⟨q₂,n₂⟩
   simp only [Prod.mk.injEq] at h
   rcases h with ⟨hq,hn⟩
-  simp [omega]
+  apply Prod.ext <;> omega
 
 #print axioms high_even_right_family_prior_allowed
 #print axioms blank_halts_iff_high_even_right
