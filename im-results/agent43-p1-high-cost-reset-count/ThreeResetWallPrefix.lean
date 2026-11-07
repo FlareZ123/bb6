@@ -108,7 +108,8 @@ theorem source_no_three_reset_shifted_wall
   have hC3 : c3+3=2*P+2*m+2*n+6 := by omega
   have hb2Half : 2*(b2/2)=b2 := by omega
   have hMulPow3 : 2^(t3+1)*(c3+3)=2*(2^t3*(c3+3)) := by
-    rw [Nat.pow_succ, Nat.mul_comm]
+    rw [Nat.pow_succ]
+    ac_rfl
   have hwallPre3 := source_predecessor_wall_relation_three b2 d2 m2 n P t3 c3
     hpre2MassExact hInv3.1 hb2Half hMulPow3
   have hS3Upper : d2+b2/2+3≤14*P := by omega
@@ -182,7 +183,8 @@ theorem source_no_three_reset_shifted_wall
     have hC2 : c2+3=2*P+18*m2+18*n+102 := by omega
     have hb1Half : 2*(b1/2)=b1 := by omega
     have hMulPow2 : 2^(t2+1)*(c2+3)=2*(2^t2*(c2+3)) := by
-      rw [Nat.pow_succ, Nat.mul_comm]
+      rw [Nat.pow_succ]
+      ac_rfl
     have hwallPre2 := source_predecessor_wall_relation_three b1 d1 m1 n P t2 c2
       hpre1MassExact hInv2.1 hb1Half hMulPow2
     have hS2Upper : d1+b1/2+3≤14*P := by omega
