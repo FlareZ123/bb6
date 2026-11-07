@@ -25,6 +25,10 @@ jobs:
           R=im-results/agent12-root119-reach
           mkdir -p "$R"
           export LEAN_PATH="$A:$S:$R"
+          python "$R/audit_window_closure.py" > "$R/audit_window_closure.json"
+          grep -q '"forward_reachable_count": 342' "$R/audit_window_closure.json"
+          grep -q '"reverse_preimage_closure_count": 12' "$R/audit_window_closure.json"
+          grep -q '"initial_in_reverse_closure": false' "$R/audit_window_closure.json"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
           lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
           lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
