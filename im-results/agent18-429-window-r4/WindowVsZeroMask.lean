@@ -7,15 +7,15 @@ namespace BB429WindowLeaf
 open BB6Coverage
 
 /-- The older control-only zero-writer oracle cannot close the oscillatory
-four-row cylinder, because the authentic A/0 instruction writes one. -/
+three-row cylinder, because the authentic A/0 instruction writes one. -/
 theorem oscillator_zeroMaskOracle_false :
     zeroMaskOracle oscillatory = false := by decide
 
 /-- However the full finite-window invariant gives a closed sound
 original-blank nonhalting leaf for every completion of this cylinder. -/
-theorem oscillator_mass : cylinderMass oscillatory = 25^8 := by decide
+theorem oscillator_mass : cylinderMass oscillatory = 25^9 := by decide
 theorem oscillator_mass_explicit :
-    cylinderMass oscillatory = 152587890625 := by decide
+    cylinderMass oscillatory = 3814697265625 := by decide
 
 /-- The extant short-halt/fresh-ray/zero-mask combined oracle also
 does not close this actual nonhalting cylinder at the global audit
