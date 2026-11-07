@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate:im-results/agent31-p2-k2-closure
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original sources and Lean
@@ -31,11 +31,16 @@ jobs:
           P=im-results/agent32-cryptid-padding
           R=im-results/agent31-d-exceptional
           D=im-results/agent2-packet-shift
+          E=im-results/agent26-cryptid-e-gate
+          K=im-results/agent31-p2-k2-closure
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/A1100.olean" "$B/A1100.lean"
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+          lean -o "$E/A1101010111.olean" "$E/A1101010111.lean" | tee axioms.log
+          lean -o "$E/A1101010111Code.olean" "$E/A1101010111Code.lean" | tee -a axioms.log
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
@@ -54,4 +59,8 @@ jobs:
           lean -o "$D/PacketZeroBoundarySource.olean" "$D/PacketZeroBoundarySource.lean" | tee -a axioms.log
           lean "$D/PacketSafeReentry.lean" | tee -a axioms.log
           lean "$D/PacketP2ResetSource.lean" | tee -a axioms.log
+          lean -o "$K/P2K2Shapes.olean" "$K/P2K2Shapes.lean" | tee -a axioms.log
+          lean -o "$K/P2K2Source.olean" "$K/P2K2Source.lean" | tee -a axioms.log
+          lean -o "$K/P2K1Mod9Shapes.olean" "$K/P2K1Mod9Shapes.lean" | tee -a axioms.log
+          lean -o "$K/P2K1Mod9Source.olean" "$K/P2K1Mod9Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
