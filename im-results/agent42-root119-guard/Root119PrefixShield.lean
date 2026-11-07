@@ -511,11 +511,54 @@ theorem b0_odd_even_chain_to_b0_exact_bad_boundary
     simpa [hidx1,hidx2,hidx3] using hword
   exact ⟨bout,hrun,fun hs => hs (b.h-6) hheadBound hword'⟩
 
+
+/-- Under the input shield and odd-even return hypotheses, the exact output
+    is shielded if and only if the three-cell boundary guard holds. -/
+theorem b0_odd_even_chain_to_b0_NoLeft4_iff_boundary
+    (b : Conf) (n : Nat)
+    (hb : Reach b) (hb0 : BZero b)
+    (hleft : b.tape (b.h-1) = true)
+    (hzero : b.tape (b.h-2) = false)
+    (hone : b.tape (b.h-3) = true)
+    (hones : ∀ j : Nat, j < 2*n → b.tape (b.h+1+(j:Int)) = true)
+    (hterminal1 : b.tape (b.h+(2*n+1:Int)) = false)
+    (hterminal2 : b.tape (b.h+(2*n+2:Int)) = false)
+    (hfinal : b.tape (b.h+(2*n+3:Int)) = false)
+    (hshield : NoLeft4 true true false b) :
+    ∃ bout : Conf, run (6*n+23) b = some bout ∧ Reach bout ∧ BZero bout ∧
+      (NoLeft4 true true false bout ↔
+        ¬(b.tape (b.h-6) = true ∧ b.tape (b.h-5) = true ∧
+          b.tape (b.h-4) = false)) := by
+  obtain ⟨bout,hrun,hreach,hBzero,hhead,htape⟩ :=
+    b0_odd_even_chain_to_b0_exact b n hb hb0 hleft hzero hone hones
+      hterminal1 hterminal2 hfinal
+  refine ⟨bout,hrun,hreach,hBzero,?_⟩
+  constructor
+  · intro hout
+    have hguard : ¬(b.tape (b.h-6) = true ∧ b.tape (b.h-5) = true ∧
+        b.tape (b.h-4) = false) := by
+      intro hbad
+      obtain ⟨badOut,hrunBad,hnot⟩ :=
+        b0_odd_even_chain_to_b0_exact_bad_boundary b n hb hb0 hleft hzero hone
+          hones hterminal1 hterminal2 hfinal hbad
+      have heq : bout = badOut := Option.some.inj (hrun.symm.trans hrunBad)
+      rw [← heq] at hnot
+      exact hnot hout
+    exact hguard
+  · intro hguard
+    obtain ⟨safeOut,hrunSafe,hreachSafe,hBzeroSafe,hsafe⟩ :=
+      b0_odd_even_chain_to_b0_preserves_NoLeft4 b n hb hb0 hleft hzero hone
+        hones hterminal1 hterminal2 hfinal hshield hguard
+    have heq : bout = safeOut := Option.some.inj (hrun.symm.trans hrunSafe)
+    rw [heq]
+    exact hsafe
+
 #print axioms BB6Root119.b0_even_prefix_to_b0_preserves_NoLeft4
 #print axioms BB6Root119.b0_odd_even_chain_to_b0_preserves_NoLeft4
 #print axioms BB6Root119.oddEvenShieldCounterexample_NoLeft4
 #print axioms BB6Root119.oddEvenShieldCounterexample_run_summary
 #print axioms BB6Root119.oddEvenShieldCounterexample_run_not_NoLeft4
 #print axioms BB6Root119.b0_odd_even_chain_to_b0_exact_bad_boundary
+#print axioms BB6Root119.b0_odd_even_chain_to_b0_NoLeft4_iff_boundary
 
 end BB6Root119
