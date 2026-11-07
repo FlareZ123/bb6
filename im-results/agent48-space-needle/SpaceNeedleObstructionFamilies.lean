@@ -731,6 +731,93 @@ theorem no_35_terminal_feeder (q k : Nat) :
     omega
   omega
 
+set_option exponentiation.threshold 10000 in
+set_option maxRecDepth 8192 in
+/-- Composite CRT obstruction at v=36: mod 25 forces k+2 to be
+2 modulo 4, while a fourth-power projection modulo 35573 forces 0. -/
+theorem no_36_terminal_feeder (q k : Nat) :
+    highLevelNext (.N (oddTower q 36)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have h25den :25 ∣ 2^(36+1)+3 := by decide
+  have h35573den :35573 ∣ 2^(36+1)+3 := by decide
+  have h25 : (2^(k+2)+3)%25=(2*36)%25 :=
+    terminal_feeder_modular_identity q 36 k 25 (by omega) h25den hhalt
+  have h35573 : (2^(k+2)+3)%35573=(2*36)%35573 :=
+    terminal_feeder_modular_identity q 36 k 35573 (by omega) h35573den hhalt
+  have h3_25 :3%25=3 := by decide
+  rw [Nat.add_mod,h3_25] at h25
+  have h25lt :2^(k+2)%25<25 := Nat.mod_lt _ (by decide)
+  have h25pow :2^(k+2)%25=19 := by omega
+  have h3_35573 :3%35573=3 := by decide
+  rw [Nat.add_mod,h3_35573] at h35573
+  have h35573lt :2^(k+2)%35573<35573 := Nat.mod_lt _ (by decide)
+  have h35573pow :2^(k+2)%35573=69 := by omega
+  have h2_5 :2^5%25=7 := by decide
+  have h19_5 :19^5%25=24 := by decide
+  have hleft25 :(2^(k+2))^5%25=19^5%25 := by rw [Nat.pow_mod,h25pow]
+  have hrewrite25 :(2^(k+2))^5%25=(2^5)^(k+2)%25 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 5,Nat.pow_mul]
+  have hbase25 :(2^5)^(k+2)%25=7^(k+2)%25 := by rw [Nat.pow_mod,h2_5]
+  have h7pow :7^(k+2)%25=24 := by
+    rw [h19_5] at hleft25
+    rw [hrewrite25,hbase25] at hleft25
+    exact hleft25
+  have h7period :7^4%25=1 := by decide
+  have h7red :7^(k+2)%25=7^((k+2)%4)%25 := by
+    calc
+      7^(k+2)%25=7^((k+2)%4+4*((k+2)/4))%25 := by rw [Nat.mod_add_div (k+2) 4]
+      _ =7^((k+2)%4)%25 :=
+        pow_mod_progression_base 25 7 ((k+2)%4) 4 ((k+2)/4) (by omega) h7period
+  have hmod4_2 :(k+2)%4=2 := by
+    by_cases h0:(k+2)%4=0
+    · rw [h7red,h0] at h7pow
+      simp at h7pow
+    by_cases h1:(k+2)%4=1
+    · rw [h7red,h1] at h7pow
+      simp at h7pow
+    by_cases h3:(k+2)%4=3
+    · rw [h7red,h3] at h7pow
+      have h7cube :7^3%25=18 := by decide
+      rw [h7cube] at h7pow
+      omega
+    have hlt :(k+2)%4<4 := Nat.mod_lt _ (by decide)
+    omega
+  have h2_8893 :2^8893%35573=30394 := by decide
+  have h69_8893 :69^8893%35573=1 := by decide
+  have h30394_2 :30394^2%35573=35572 := by decide
+  have h30394_3 :30394^3%35573=5179 := by decide
+  have h30394_4 :30394^4%35573=1 := by decide
+  have hleft :(2^(k+2))^8893%35573=69^8893%35573 := by rw [Nat.pow_mod,h35573pow]
+  have hrewrite :(2^(k+2))^8893%35573=(2^8893)^(k+2)%35573 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 8893,Nat.pow_mul]
+  have hbase :(2^8893)^(k+2)%35573=30394^(k+2)%35573 := by rw [Nat.pow_mod,h2_8893]
+  have h30394pow :30394^(k+2)%35573=1 := by
+    rw [h69_8893] at hleft
+    rw [hrewrite,hbase] at hleft
+    exact hleft
+  have h30394red :30394^(k+2)%35573=30394^((k+2)%4)%35573 := by
+    calc
+      30394^(k+2)%35573=30394^((k+2)%4+4*((k+2)/4))%35573 := by rw [Nat.mod_add_div (k+2) 4]
+      _ =30394^((k+2)%4)%35573 :=
+        pow_mod_progression_base 35573 30394 ((k+2)%4) 4 ((k+2)/4) (by omega) h30394_4
+  have hmod4_0 :(k+2)%4=0 := by
+    by_cases h0:(k+2)%4=0
+    · exact h0
+    by_cases h1:(k+2)%4=1
+    · rw [h30394red,h1] at h30394pow
+      simp at h30394pow
+    by_cases h2:(k+2)%4=2
+    · rw [h30394red,h2,h30394_2] at h30394pow
+      omega
+    have h3:(k+2)%4=3 := by
+      have hlt :(k+2)%4<4 := Nat.mod_lt _ (by decide)
+      omega
+    rw [h30394red,h3,h30394_3] at h30394pow
+    omega
+  omega
+
+#print axioms no_36_terminal_feeder
+
 #print axioms no_28_terminal_feeder
 #print axioms no_35_terminal_feeder
 
