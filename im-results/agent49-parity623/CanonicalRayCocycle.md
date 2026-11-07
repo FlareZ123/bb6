@@ -1,6 +1,6 @@
 # Canonical ray cocycle for the pinned #623 section orbit
 
-**Status:** finite exact-integer evidence is established. The Lean source wrappers are under pinned-source CI verification. This is an intermediate result, not an all-time nonhalting proof.
+**Status:** the canonical minimal-ray cocycle and its four original-source transition identities compiled in pinned-source CI run [42377437529](https://github.com/FlareZ123/bb6/actions/runs/42377437529). The arithmetic shift equivalences compiled in run [42375801220](https://github.com/FlareZ123/bb6/actions/runs/42375801220). The source-level composition of the terminal ratio-four windows is being checked separately. This remains an intermediate result, not an all-time nonhalting proof.
 
 ## Canonical minimal-budget bases
 
@@ -27,7 +27,7 @@ then
 \[
 T(D_{\rm actual})=D(B+c t,E),
 \]
-where \(c=1\) on left rays and \(c=2\) on right rays. The source wrapper is [CanonicalRayCocycleSource.lean](CanonicalRayCocycleSource.lean). It also proves that the chosen exponents are least in their respective budget classes.
+where \(c=1\) on left rays and \(c=2\) on right rays. The source wrapper is [CanonicalRayCocycleSource.lean](CanonicalRayCocycleSource.lean). It also proves that the chosen exponents are least in their respective budget classes. The complete wrapper passed the unmodified-source import step in run 42377437529.
 
 ## Terminal ratio-four windows in shift coordinates
 
@@ -56,7 +56,7 @@ The reproducible script is [canonical_ray_terminal_scan.py](canonical_ray_termin
 
 python canonical_ray_terminal_scan.py --steps 10000
 
-This scan is finite computational evidence. The index-13 candidate is not itself a halting result; its actual successor is computed and survives. No all-time separation theorem for the genuine root ray shifts has been established.
+This scan is finite computational evidence. The index-13 candidate is not itself a halting result: its actual successor is D(314,385), which continues to D(74,950). The scan has been independently reproduced in the private Python analysis; the committed script is also included in the pending CI workflow. No all-time separation theorem for the genuine root ray shifts has been established.
 
 ## Remaining mathematical obstacle
 
