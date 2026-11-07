@@ -150,7 +150,7 @@ jobs:
             echo "Parametric source theorem depends on sorryAx" >&2
             exit 1
           fi
-          if lean "$AG50SUB/RightFiveNearDouble.lean" > /tmp/agent50-right-five-near-double-axioms.txt; then
+          if lean -o "$AG50SUB/RightFiveNearDouble.olean" "$AG50SUB/RightFiveNearDouble.lean" > /tmp/agent50-right-five-near-double-axioms.txt; then
             cat /tmp/agent50-right-five-near-double-axioms.txt
           else
             status=$?
@@ -160,5 +160,18 @@ jobs:
           grep -q "source_right_five_near_double_cost" /tmp/agent50-right-five-near-double-axioms.txt
           if grep -q "sorryAx" /tmp/agent50-right-five-near-double-axioms.txt; then
             echo "Near-double-n source theorem depends on sorryAx" >&2
+            exit 1
+          fi
+          if lean "$AG50SUB/RightFiveOddConeEnergy.lean" > /tmp/agent50-odd-cone-energy-axioms.txt; then
+            cat /tmp/agent50-odd-cone-energy-axioms.txt
+          else
+            status=$?
+            cat /tmp/agent50-odd-cone-energy-axioms.txt
+            exit "$status"
+          fi
+          grep -q "source_odd_cone_energy_gap_param" /tmp/agent50-odd-cone-energy-axioms.txt
+          grep -q "source_odd_cone_right_five_three_resets" /tmp/agent50-odd-cone-energy-axioms.txt
+          if grep -q "sorryAx" /tmp/agent50-odd-cone-energy-axioms.txt; then
+            echo "OddCone transported results depend on sorryAx" >&2
             exit 1
           fi
