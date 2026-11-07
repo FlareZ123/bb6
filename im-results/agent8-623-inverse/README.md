@@ -148,3 +148,18 @@ The proof uses only upstream source laws that were themselves checked against th
 ### What remains open
 
 The immediate question is whether the *genuine blank-origin* ray parameter ever enters a finite exceptional region for its current base, or reaches one of the logarithmic halting-gate residues. There is no proven all-time root invariant or globally finite inverse search. For the five first-call residues, later drain recursions can still halt after an initially successful evaluator call; `D(12,12)` is an explicit synthetic counterexample. Source-certified all-depth **tail** safety is compatible with the existence of arbitrarily large synthetic halting configurations elsewhere. Avoid promoting these conditional/pointwise results to a whole-machine nonhalting decision.
+
+
+## 7 November 2026: canonical gap-scale dynamics (intermediate)
+
+[RootGapScaleDynamics.md](RootGapScaleDynamics.md) records a reduction of the root-ray bridge to a two-branch recurrence on the unshifted ratio-four gap (g) and smaller coordinate (m):
+[
+(g',m')simeq(g-9m,3m)
+quad	ext{or}quad
+(g',m')simeq(-4g-9m,3m+g).
+]
+The corresponding projective map has cancellation centres (g/m=9) and (-9/4). This identifies the quantitative avoidance problem behind the finite square-gap observation. The exact bridge errors are logarithmic; the note keeps the leading map explicitly separate from those source-proven bounds.
+
+[root_gap_scale_scan.cpp](root_gap_scale_scan.cpp) is a reproducible GMP mirror diagnostic. Its 20,000-step run had zero branch-selection mismatches after canonical-ray entry, minimum (g^2/m=4096/235) at index 16, and minimum (log_2(|g|/m)approx-12.9605) at index 6899. These are finite observations only; in particular they disprove a uniform linear cone bound (|g|ge c m) on the scanned prefix, not the weaker square-gap conjecture.
+
+The next proof target is an all-time root-history invariant excluding shrinking neighbourhoods of the two cancellation centres. The sharp linear-log drain theorem is already available in Agent49's [DrainLinearLogSource.lean](../agent49-parity623/DrainLinearLogSource.lean); do not duplicate it. The exact BB(6) value and the blank-root #623 halting status remain unresolved.
