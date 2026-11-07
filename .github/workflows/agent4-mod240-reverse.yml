@@ -25,4 +25,6 @@ jobs:
           lean -o im-results/agent4-mixed96-backward/BackwardMod.olean im-results/agent4-mixed96-backward/BackwardMod.lean
           lean -o im-results/agent4-mixed96-backward/SourceBridge.olean im-results/agent4-mixed96-backward/SourceBridge.lean
           lean -o im-results/agent4-mod240-reverse/Mod240Core.olean im-results/agent4-mod240-reverse/Mod240Core.lean
-          lean im-results/agent4-mod240-reverse/Mod240Second.lean
+          lean -o im-results/agent4-mod240-reverse/Mod240Second.olean im-results/agent4-mod240-reverse/Mod240Second.lean
+          lean -o im-results/agent4-mod240-reverse/Mod240NewCore.olean im-results/agent4-mod240-reverse/Mod240NewCore.lean
+          lean im-results/agent4-mod240-reverse/Mod240NewSecond.lean
