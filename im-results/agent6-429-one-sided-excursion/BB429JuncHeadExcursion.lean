@@ -310,7 +310,7 @@ theorem sourceScanE_finishC_odd_next_delta (r k : Nat) (hk : 1 ≤ k) :
 /-- Physical lift of the even-b six-cell rightward excursion. -/
 theorem physical_sourceScanE_finishC_even_midA_delta (r k : Nat) (c : Config)
     (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
-    ∃ c', BB6Coverage.run target429
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
       ((crossTime (2*r)+1 + (12+2*(2*r))) + (2*(2*r+2)+6)) c = some c' ∧
       Represents (midA2 (2*r+2) (2*k+1)) c' ∧ c'.head = c.head + 6 := by
   obtain ⟨c', hrun, hrep', hhead⟩ :=
@@ -324,7 +324,7 @@ theorem physical_sourceScanE_finishC_even_midA_delta (r k : Nat) (c : Config)
 /-- Physical lift of the odd-b seven-cell rightward excursion. -/
 theorem physical_sourceScanE_finishC_odd_next_delta (r k : Nat) (hk : 1 ≤ k)
     (c : Config) (hrep : Represents (sourceScanE (2*r+1) (sourceSuffix k)) c) :
-    ∃ c', BB6Coverage.run target429
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
       ((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) c = some c' ∧
       Represents (junc (2*r+6) 0 ((2*k+1)-3)) c' ∧ c'.head = c.head + 7 := by
   obtain ⟨c', hrun, hrep', hhead⟩ :=
@@ -561,7 +561,7 @@ theorem sourceScanE_finishC_odd_long_delta (r k : Nat) (hk : 4 ≤ k)
 theorem physical_sourceScanE_finishC_even_long_delta (r k : Nat) (hk : 6 ≤ k)
     (hbound : k ≤ 2*r+14) (c : Config)
     (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
-    ∃ c', BB6Coverage.run target429
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
       (((crossTime (2*r)+1 + (12+2*(2*r))) +
         (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + juncPosMidTime (k-5) 0) c = some c' ∧
       Represents (midApos ((2*r+9)-(k-5)) (2*((k-5)-1))
@@ -582,7 +582,7 @@ theorem physical_sourceScanE_finishC_even_long_delta (r k : Nat) (hk : 6 ≤ k)
 theorem physical_sourceScanE_finishC_odd_long_delta (r k : Nat) (hk : 4 ≤ k)
     (hbound : k ≤ 2*r+9) (c : Config)
     (hrep : Represents (sourceScanE (2*r+1) (sourceSuffix k)) c) :
-    ∃ c', BB6Coverage.run target429
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
       (((crossTime (2*r+1)+1 + (12+2*(2*r+1))) + (2*(2*r+3)+27)) +
         juncPosMidTime (k-3) 0) c = some c' ∧
       Represents (midApos ((2*r+6)-(k-3)) (2*((k-3)-1))
@@ -605,7 +605,7 @@ theorem physical_sourceScanE_finishC_odd_long_delta (r k : Nat) (hk : 4 ≤ k)
 theorem physical_sourceScanE_finishC_even_after_junc0_delta (r k : Nat)
     (hk : 3 ≤ k) (c : Config)
     (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
-    ∃ c', BB6Coverage.run target429
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
       ((crossTime (2*r)+1 + (12+2*(2*r))) +
         (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) c = some c' ∧
       Represents (junc (2*r+9) 0 (2*k-6)) c' ∧ c'.head = c.head + 11 := by
@@ -884,7 +884,7 @@ theorem physical_sourceScanE_finishC_even_crosses_delta (r k : Nat)
     (hk : 3 ≤ k) (c : Config)
     (hrep : Represents (sourceScanE (2*r) (sourceSuffix k)) c) :
     ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
-      BB6Coverage.run target429
+      BB6Coverage.run BB429PhysicalFrontier.target429
         ((((crossTime (2*r)+1 + (12+2*(2*r))) +
           (juncPosFullTime 2 (2*r+2) + (2*(2*r+6)+27))) + steps)) c = some c' ∧
       Represents cfg c' ∧ c'.head > c.head + (2*k : Int) := by
@@ -905,7 +905,7 @@ theorem physical_sourceScanE_finishC_odd_crosses_delta (r k : Nat)
     (hk : 1 ≤ k) (c : Config)
     (hrep : Represents (sourceScanE (2*r+1) (sourceSuffix k)) c) :
     ∃ (steps : Nat) (cfg : Zipper) (c' : Config),
-      BB6Coverage.run target429
+      BB6Coverage.run BB429PhysicalFrontier.target429
         ((((crossTime (2*r+1)+1 + (12+2*(2*r+1))) +
           (2*(2*r+3)+27)) + steps)) c = some c' ∧
       Represents cfg c' ∧ c'.head > c.head + (2*k : Int) := by
