@@ -28,6 +28,7 @@ jobs:
           lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
           lean -o "$A/Root119BRegular.olean" "$A/Root119BRegular.lean"
           lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$A/Root119DFSweep.olean" "$A/Root119DFSweep.lean"
           lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
           lean -o "$S/Root119Shuttle.olean" "$S/Root119Shuttle.lean"
           lean -o "$S/Root119EvenSweep.olean" "$S/Root119EvenSweep.lean"
