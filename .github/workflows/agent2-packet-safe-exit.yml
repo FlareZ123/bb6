@@ -1,4 +1,4 @@
-name: Cryptid guarded packet safe-exit theorem (manual)
+name: Cryptid guarded packet source normalizer (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -6,9 +6,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     env:
-      LEAN_PATH: im-results/agent31-d-exceptional:im-results/agent2-packet-shift
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent32-cryptid-padding
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -24,4 +24,25 @@ jobs:
           P=im-results/agent2-packet-shift
           lean --version
           lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
-          lean "$P/PacketSafeExit.lean"
+          lean -o "$P/PacketSafeExit.olean" "$P/PacketSafeExit.lean"
+      - name: Prove original-machine source interpretation of entire safe packet phase
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          B=im-results/agent31-cryptid-boundary
+          S=im-results/agent32-cryptid-third
+          R=im-results/agent31-d-exceptional
+          P=im-results/agent2-packet-shift
+          G=im-results/agent32-cryptid-padding
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$G/Generic.olean" "$G/Generic.lean"
+          lean -o "$G/BoundaryPadding.olean" "$G/BoundaryPadding.lean"
+          lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+          lean -o "$G/EZeroPair.olean" "$G/EZeroPair.lean"
+          lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+          lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+          lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
+          lean "$P/PacketNormalizeSource.lean"
