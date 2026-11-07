@@ -19,7 +19,7 @@ private theorem odd_band_unique (u k l:Nat)
     rw[Nat.pow_succ] at hp
     omega
 
-private theorem power16 (n:Nat) (hn:40≤n): 2^n=16*2^(n-4):=by
+private theorem power16 (n:Nat) (hn:25≤n): 2^n=16*2^(n-4):=by
   have he:n=(n-4)+4:=by omega
   rw[he,Nat.pow_add]
   simp [Nat.mul_comm]
@@ -27,7 +27,7 @@ private theorem power16 (n:Nat) (hn:40≤n): 2^n=16*2^(n-4):=by
 /-- Uniform actual blank-root exclusion for second-tier low-valuation
     off-ray forks. Every source-possible scale and odd return witness is
     retained until the exact dyadic band proves its unique scale. -/
-theorem offray_tone_low_two_root_dead (n j h w:Nat) (hn:40≤n)
+theorem offray_tone_low_two_root_dead (n j h w:Nat) (hn:25≤n)
  (hsector:n%6=4 ∨ n%6=5)
  (hm:32*CascadeOddRay.deficit n j+64*n+128≤2^n)
  (hl:9*h+8*CascadeOddRay.deficit n j+9*n+7=14*2^n)
