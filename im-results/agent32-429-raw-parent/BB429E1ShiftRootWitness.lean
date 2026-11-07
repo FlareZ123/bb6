@@ -77,10 +77,53 @@ theorem root_revisits_first_shift_start :
     obsAt 192 = (0, 4, true) := by
   native_decide
 
+/-- A single-pass physical trace, recording the pre-instruction state,
+    head and scanned symbol. -/
+def rawTrace : Nat → Config → List (Nat × Int × Bool)
+  | 0, _ => []
+  | n+1, c =>
+      (c.state.val, c.head, c.tape c.head) ::
+        match BB6Coverage.rawStep target429 c with
+        | none => []
+        | some c' => rawTrace n c'
+
+/-- Positions of all left-writing instructions D/0, E/1 and F/1 in a
+    finite raw trace. These are precisely the three candidate source rows
+    in the one-sided fatal-excursion theorem. -/
+def leftWriterPositionsFromTrace (tr : List (Nat × Int × Bool)) : List Int :=
+  tr.filterMap fun obs =>
+    if (obs.1 == 3 && !obs.2.2) ||
+       (obs.1 == 4 && obs.2.2) ||
+       (obs.1 == 5 && obs.2.2)
+    then some obs.2.1 else none
+
+/-- Through step 2678, every D/0, E/1 or F/1 left-write is at or left of
+    coordinate 29. At step 2679 the head is at 29. Thus every possible
+    last-writer source in this finite prefix is later crossed by the head. -/
+theorem root_left_writers_closed_by_2679 :
+    (leftWriterPositionsFromTrace (rawTrace 2679 blank)).all
+      (fun x => decide (x ≤ 29)) = true ∧
+    obsAt 2679 = (1, 29, true) := by
+  native_decide
+
+theorem root_every_left_writer_before_2679_revisited :
+    ∀ x, x ∈ leftWriterPositionsFromTrace (rawTrace 2679 blank) →
+      x ≤ (obsAt 2679).2.1 := by
+  intro x hx
+  have hbound :=
+    (List.all_eq_true.mp root_left_writers_closed_by_2679.1) x hx
+  have hhead : (obsAt 2679).2.1 = 29 :=
+    congrArg (fun p : Nat × Int × Bool => p.2.1)
+      root_left_writers_closed_by_2679.2
+  rw [hhead]
+  exact of_decide_eq_true hbound
+
 #print axioms root_reaches_first_shift_start
 #print axioms root_first_shift_trace
 #print axioms root_revisits_first_shift_start
 #print axioms root_e1_writers_closed_by_808
 #print axioms root_every_initial_e1_writer_revisited
+#print axioms root_left_writers_closed_by_2679
+#print axioms root_every_left_writer_before_2679_revisited
 
 end BB429E1ShiftRootWitness
