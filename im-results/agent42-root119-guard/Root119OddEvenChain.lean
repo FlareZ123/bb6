@@ -19,6 +19,10 @@ theorem twoWavePrefixTape_right (t : Int → Bool) (h x : Int)
   have hne3 : x ≠ h-3 := by omega
   simp [twoWavePrefixTape,setBit,hne0,hne1,hne2,hne3]
 
+theorem setBit_away (t : Int → Bool) (h x : Int) (v : Bool)
+    (hx : x ≠ h) : setBit t h v x = t x := by
+  simp [setBit,hx]
+
 theorem oddWaveTape_head (n : Nat) (t : Int → Bool) (h : Int) :
     oddWaveTape n t h h = true := by
   simp [oddWaveTape,setBit]
@@ -422,14 +426,17 @@ theorem b0_odd_even_chain_to_b0 (b : Conf) (n : Nat)
           (H-1+2*((n+1)+1)+1) =
           tD2 (H-1+2*((n+1)+1)+1) := hcell'
       _ = b1Tape (H-1+2*((n+1)+1)+1) := by
+        change setBit (setBit b1Tape (H-1) true) (H-2) false
+          (H-1+2*((n+1)+1)+1) = b1Tape (H-1+2*((n+1)+1)+1)
         calc
-          tD2 (H-1+2*((n+1)+1)+1) =
-              f2Tape (H-1+2*((n+1)+1)+1) := by
-            simp [tD2,setBit,
-              show H-1+2*((n+1)+1)+1 ≠ H-2 by omega]
-          _ = b1Tape (H-1+2*((n+1)+1)+1) := by
-            simp [f2Tape,setBit,
-              show H-1+2*((n+1)+1)+1 ≠ H-1 by omega]
+          setBit (setBit b1Tape (H-1) true) (H-2) false
+              (H-1+2*((n+1)+1)+1) =
+              setBit b1Tape (H-1) true (H-1+2*((n+1)+1)+1) :=
+            setBit_away (setBit b1Tape (H-1) true) (H-2)
+              (H-1+2*((n+1)+1)+1) false (by omega)
+          _ = b1Tape (H-1+2*((n+1)+1)+1) :=
+            setBit_away b1Tape (H-1)
+              (H-1+2*((n+1)+1)+1) true (by omega)
       _ = t1 (H-1+2*((n+1)+1)+1) := by
         change oddWaveTape n t1 H (H-1+2*((n+1)+1)+1) =
           t1 (H-1+2*((n+1)+1)+1)
