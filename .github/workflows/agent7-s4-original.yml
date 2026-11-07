@@ -161,6 +161,9 @@ jobs:
           lake env lean -o S4EarlyCompletion.olean S4EarlyCompletion.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-general-sharp/S4EarlyRoot.lean" S4EarlyRoot.lean
           lake env lean -o S4EarlyRoot.olean S4EarlyRoot.lean
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent5-s4-all-depth-sharp/S4AllDepthSharp.lean.xz.b64" | xz -dc > S4AllDepthSharp.lean
+          echo "5c055cc0fdd6bb40c7e189080c126277e32510d7d0b9ca55162264c512a5e115  S4AllDepthSharp.lean" | sha256sum -c -
+          lake env lean -o S4AllDepthSharp.olean S4AllDepthSharp.lean
       - name: Verify Agent 34 weighted-rank source bridge
         working-directory: /tmp/cryptids
         run: |
