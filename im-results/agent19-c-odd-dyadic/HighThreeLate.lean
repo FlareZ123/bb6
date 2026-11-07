@@ -36,7 +36,9 @@ theorem late_high_372_family_no_blank (t : Nat) :
     omega
   have h := late_high_no_blank 7 j 3 k
     (by decide) (by decide) (by decide) hstop hmod hsize
-  simpa only [j,k] using h
+  have hx : 2*j+3=747+1024*t := by dsimp [j]; omega
+  rw [hx] at h
+  exact h
 
 #print axioms late_high_no_blank
 #print axioms late_high_372_family_no_blank
