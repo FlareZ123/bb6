@@ -186,3 +186,11 @@ jobs:
           export LEAN_PATH=.:$LEAN_PATH
           lake env lean -o S4Rank.olean S4Rank.lean
           lake env lean S4RankSource.lean
+
+      - name: Verify Agent 5 eighth-prefix contraction and mass drift
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4PrefixEighthMass.lean" S4PrefixEighthMass.lean
+          export LEAN_PATH=.:${LEAN_PATH:-}
+          lake env lean -o S4PrefixEighthMass.olean S4PrefixEighthMass.lean
