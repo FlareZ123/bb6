@@ -93,13 +93,13 @@ theorem source_no_two_reset_shifted_wall
     by_cases ht2le : t2≤2
     · exact ht2le
     · have ht3 : 3≤t2 := by omega
-    have hpow : 8≤2^t2 := by
-      have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) ht3
-      simpa using hh
-    have hmul : 16*P≤2^t2*(c2+3) := by
-      have hh := Nat.mul_le_mul_right (c2+3) hpow
+      have hpow : 8≤2^t2 := by
+        have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) ht3
+        simpa using hh
+      have hmul : 16*P≤2^t2*(c2+3) := by
+        have hh := Nat.mul_le_mul_right (c2+3) hpow
+        omega
       omega
-    omega
   have hmBound : m≤3*n+7 := by omega
   have hpowrel2 : 2^(t2+1)=2*2^t2 := by
     rw [Nat.pow_succ, Nat.mul_comm]
