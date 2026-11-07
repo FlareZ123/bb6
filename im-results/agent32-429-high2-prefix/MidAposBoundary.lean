@@ -3,7 +3,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429MidAposBoundary
 
-open BB429High2Return BB429High2TailBase BB429JuncHeadExcursion BB429FinishScanEDelta
+open BB429High2Return BB429JuncHeadExcursion BB429FinishScanEDelta
 open BB429SourceE1Delta BB429SourceE1Return BB429OddExcursion BB6Coverage
 
 /-- Consume a right-hand alternating block `1(01)^n`, leaving its final
@@ -371,8 +371,8 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
         (ones 3 ++ pairs01 3 ++ [false,false,true])) =
       some (junc 0 0 (4*k+20), -((4*k+8 : Nat) : Int)) := by
   have hprefix := c1_odd_to_e1_prefix_delta k
-  have hsweep := E1_sweep_delta (4*k+24) [true,false,true]
-  have htail := E1_tail12_delta (ones (4*k+20) ++ [true,false,true])
+  have hsweep := BB429High2TailBase.E1_sweep_delta (4*k+24) [true,false,true]
+  have htail := BB429High2TailBase.E1_tail12_delta (ones (4*k+20) ++ [true,false,true])
   have hones : ones (4*k+24) = ones 4 ++ ones (4*k+20) := by
     calc
       ones (4*k+24) = ones (4+(4*k+20)) := by congr 1 <;> omega
