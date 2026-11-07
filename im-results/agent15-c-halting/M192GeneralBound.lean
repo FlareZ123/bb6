@@ -12,7 +12,7 @@ theorem source_no_c0_right_ge8 (a k : Nat) (hk : 8≤k) :
     ¬ BB6CLine.Reach (a,k,0) := by
   intro hreach
   have hnot := source_blank_never_bad (a,k,0) hreach
-  have hbad : bad (a,k,0) := by
+  have hbad : bad a k 0 := by
     simp [bad, low, hk]
   exact hnot hbad
 
