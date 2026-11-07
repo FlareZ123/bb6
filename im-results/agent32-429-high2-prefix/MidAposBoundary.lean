@@ -207,7 +207,6 @@ theorem junc0_w3_exit_delta (v : Nat) :
   simp only [Option.bind_some]
   rw [htail]
   simp only [Option.map_some]
-  simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
   omega
 
@@ -223,7 +222,6 @@ theorem midApos_zero_w4_boundary_delta (v : Nat) :
   simp only [Option.bind_some]
   rw [htail]
   simp only [Option.map_some]
-  simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
   omega
 
@@ -238,7 +236,6 @@ theorem midApos_zero_w5_boundary_delta (v : Nat) :
   rw [htime, runWithDelta_add, hshift]
   simp only [Option.bind_some]
   rw [htail]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   simp [Int.natCast_add, Int.natCast_mul]
   omega
@@ -311,8 +308,8 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
   | succ n ih =>
       rw [show n+1 = 1+n by omega, runWithDelta_add]
       have hleft : ones (1+n) ++ left = true :: (ones n ++ left) := by
-        rw [show 1+n = n+1 by omega]
-        simp [ones, List.cons_append]
+        rw [BB429SourceE1Return.ones_add 1 n]
+        simp [ones, List.append_assoc]
       have hstep :
           runWithDelta 1 (z 4 (ones (1+n) ++ left) true suffix) =
             some (z 4 (ones n ++ left) true (true :: suffix), -1) := by
@@ -329,7 +326,7 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
           ones n ++ (true :: suffix) = ones n ++ ([true] ++ suffix) := rfl
           _ = (ones n ++ [true]) ++ suffix := by rw [← List.append_assoc]
           _ = ones (n+1) ++ suffix := by rw [hones]
-      rw [hright]
+      rw [hright, show n+1 = 1+n by omega]
       simp only [Option.some.injEq, Prod.mk.injEq]
       constructor
       · rfl
@@ -340,8 +337,11 @@ theorem E1_sweep_prefix_delta (n : Nat) (left suffix : List Bool) :
 theorem ones_right_101 (n : Nat) :
     ones n ++ [true,false,true] = true :: (ones n ++ [false,true]) := by
   have hones : ones n ++ [true] = ones (n+1) := by
-    simpa [ones] using (BB429SourceE1Return.ones_add n 1).symm
+    calc
+      ones n ++ [true] = ones n ++ ones 1 := by rfl
+      _ = ones (n+1) := (BB429SourceE1Return.ones_add n 1).symm
   have hsucc : ones (n+1) = true :: ones n := by
+    rw [show n+1 = 1+n by omega, BB429SourceE1Return.ones_add 1 n]
     rfl
   calc
     ones n ++ [true,false,true] = (ones n ++ [true]) ++ [false,true] := by
@@ -394,6 +394,7 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
     unfold junc
     simp only [pairs01]
     rw [ones_right_101]
+    simp [ones]
   have htime : 4*k+60 = 24 + ((4*k+24)+12) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
@@ -440,7 +441,6 @@ theorem midApos_zero_w5_even_to_junc3_delta (k : Nat) :
   rw [htime, runWithDelta_add, hfirst]
   simp only [Option.bind_some]
   rw [htail]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
@@ -498,10 +498,10 @@ theorem c1_even_to_junc11_delta (k : Nat) :
   have htime : 4*k+220 = 24 + ((4*k+21)+175) := by omega
   rw [htime, runWithDelta_add, hprefix]
   simp only [Option.bind_some]
+  rw [List.append_assoc]
   rw [runWithDelta_add, hsweep]
   simp only [Option.bind_some]
   rw [hsource, htail]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
@@ -518,7 +518,6 @@ theorem midApos_zero_w5_odd_to_junc11_delta (k : Nat) :
   rw [htime, runWithDelta_add, hfirst]
   simp only [Option.bind_some]
   rw [htail]
-  simp only [Option.map_some]
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq]
   constructor
