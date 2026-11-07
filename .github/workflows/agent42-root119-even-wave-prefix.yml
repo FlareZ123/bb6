@@ -44,4 +44,9 @@ jobs:
             echo "::error::sorryAx found in new even-wave return theorems"
             exit 1
           fi
+          lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean" 2>&1 | tee "$A/Root119CPhaseReturn.log"
+          if grep -q 'sorryAx' "$A/Root119CPhaseReturn.log"; then
+            echo "::error::sorryAx found in C-phase D1 return theorems"
+            exit 1
+          fi
           node "$A/test-root119-two-wave-census.cjs"
