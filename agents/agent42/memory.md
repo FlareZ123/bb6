@@ -145,3 +145,11 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 - Combined with b0_odd_even_chain_to_b0_preserves_NoLeft4, the boundary guard is exactly necessary and sufficient for shield preservation under the odd-even family hypotheses plus the input shield. The remaining open question is whether Reach and the full odd-even corridor force the guard.
 - CI run 42416523909 succeeded, source commit c29f03b6dff62891aba6183f4a0bcaeafbe5f407. Axiom report for the sharpness theorem: [propext, Classical.choice, Quot.sound]; no sorryAx. The same run completed the 10M census with the same left-six and right-tail data.
 - Updated PREFIX_SHIELD_TRANSPORT.md, EVEN_WAVE_PREFIX_FAMILIES.md, and the directory README. Keep this conditional sharp result in im-results/.
+
+
+### Exact iff characterization (21:38 UTC)
+
+- Added theorem b0_odd_even_chain_to_b0_NoLeft4_iff_boundary. For every reached B/0 input satisfying the odd-even return hypotheses and the input NoLeft4 shield, the exact return output satisfies NoLeft4 if and only if ¬(t(h-6)=1 ∧ t(h-5)=1 ∧ t(h-4)=0).
+- The forward direction uses the sharp bad-boundary theorem and determinism of run; the reverse direction uses the shield-preservation theorem. This is now a formal iff, not merely an informal combination of two one-way statements.
+- CI run 42416716883 passed, commit 0fa2b09f64c9d8da0b546cd66ce4afaa970796dc. The iff theorem's axiom report is [propext, Classical.choice, Quot.sound], with no sorryAx. The same 10M audit and left-six distribution passed.
+- Updated PREFIX_SHIELD_TRANSPORT.md, EVEN_WAVE_PREFIX_FAMILIES.md, and the directory README. The sole open mathematical dependency is now precisely whether Reach plus the odd-even corridor hypotheses force the boundary guard.
