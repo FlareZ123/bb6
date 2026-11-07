@@ -104,6 +104,18 @@ theorem source_halts_iff_finite_none (m : ConjectureMachines.Machine 6 2) :
     rw [Part.dom_iff_mem]
     exact ⟨c, (ConjectureMachines.mem_eval').mpr ⟨hr, hs⟩⟩
 
+/-- Exact primitive-step halting equivalence at **every fixed step index**
+    for the original source machine and the independent absolute-tape model.
+    The equality of timestamps is stronger than eventual halting alone. -/
+theorem sourceRun_none_iff_original_none
+    (m : ConjectureMachines.Machine 6 2) (n : Nat) :
+    BB6Coverage.run (toAgent8 m) n BB6Coverage.blank = none ↔
+      sourceRun m n = none := by
+  rw [blank_run_toAbsolute, ← positioned_run_cfg]
+  cases hp : run m n initialPositioned with
+  | none => simp [hp]
+  | some p => simp [hp]
+
 /-- For every raw six-state, two-symbol transition table, the existing
     quotient-tape adapter preserves *both directions* of eventual halting. -/
 theorem conjecture_halts_iff_agent8_halts
@@ -111,18 +123,31 @@ theorem conjecture_halts_iff_agent8_halts
     ConjectureMachines.Halts m ↔
       ∃ n, BB6Coverage.run (toAgent8 m) n BB6Coverage.blank = none := by
   rw [source_halts_iff_finite_none]
-  have hpoint (n : Nat) :
-      BB6Coverage.run (toAgent8 m) n BB6Coverage.blank = none ↔
-        sourceRun m n = none := by
-    rw [blank_run_toAbsolute, ← positioned_run_cfg]
-    cases hp : run m n initialPositioned with
-    | none => simp [hp]
-    | some p => simp [hp]
+  have hpoint := sourceRun_none_iff_original_none m
   constructor
   · rintro ⟨n, hn⟩
     exact ⟨n, (hpoint n).mpr hn⟩
   · rintro ⟨n, hn⟩
     exact ⟨n, (hpoint n).mp hn⟩
+
+/-- Both directions of *nonhalting* transfer, including a converse to
+    the existing source-to-original adapter used by A6/F287. -/
+theorem conjecture_nonhalts_iff_agent8_never
+    (m : ConjectureMachines.Machine 6 2) :
+    ¬ ConjectureMachines.Halts m ↔
+      BB6Coverage.NeverHalts (toAgent8 m) := by
+  rw [conjecture_halts_iff_agent8_halts]
+  constructor
+  · intro h n
+    cases hr : BB6Coverage.run (toAgent8 m) n BB6Coverage.blank with
+    | none => exact False.elim (h ⟨n, hr⟩)
+    | some c => rfl
+  · intro h ⟨n, hr⟩
+    have hlive := h n
+    simp [hr] at hlive
+
+#print axioms sourceRun_none_iff_original_none
+#print axioms conjecture_nonhalts_iff_agent8_never
 
 #print axioms sourceRun_reaches
 #print axioms sourceRun_of_reaches
