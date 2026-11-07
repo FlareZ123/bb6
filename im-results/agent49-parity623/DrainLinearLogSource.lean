@@ -67,6 +67,71 @@ theorem evalA_first_lower_log (n : Nat) :
 /-- If a successful evaluator returns a positive residual block count,
 record the exact number r of ternary digits consumed by this evaluator.
 The remaining output index is below 3^s, where r+s=n. -/
+/-- A single evaluator call increases its first counter by at most one. -/
+theorem evalA_first_upper_one (a : Nat) :
+    ∀ k m aa bb dd : Nat,
+      evalA a k m = some (aa,bb,dd) → aa≤a+1 := by
+  induction a with
+  | zero =>
+      intro k m aa bb dd hs
+      rw [evalA] at hs
+      by_cases h2 : k%3=2
+      · simp [h2] at hs
+        rcases hs with ⟨rfl,rfl,rfl⟩
+        omega
+      · by_cases h0 : k%3=0
+        · simp [h2,h0] at hs
+        · simp [h2,h0] at hs
+          rcases hs with ⟨rfl,rfl,rfl⟩
+          omega
+  | succ a ih =>
+      intro k m aa bb dd hs
+      rw [evalA] at hs
+      by_cases h2 : k%3=2
+      · simp [h2] at hs
+        rcases hs with ⟨rfl,rfl,rfl⟩
+        omega
+      · by_cases h0 : k%3=0
+        · simp [h2,h0] at hs
+          rcases hs with ⟨rfl,rfl,rfl⟩
+          omega
+        · simp [h2,h0] at hs
+          have hr := ih (k/3) (m+2*(k/3)+3) aa bb dd hs
+          omega
+
+/-- The evaluator's third-counter-plus-three-block potential never falls
+more than two below its input potential. -/
+theorem evalA_third_lower (a : Nat) :
+    ∀ k m aa bb dd : Nat,
+      evalA a k m = some (aa,bb,dd) → m+k≤dd+3*bb+2 := by
+  induction a with
+  | zero =>
+      intro k m aa bb dd hs
+      rw [evalA] at hs
+      by_cases h2 : k%3=2
+      · simp [h2] at hs
+        rcases hs with ⟨rfl,rfl,rfl⟩
+        omega
+      · by_cases h0 : k%3=0
+        · simp [h2,h0] at hs
+        · simp [h2,h0] at hs
+          rcases hs with ⟨rfl,rfl,rfl⟩
+          omega
+  | succ a ih =>
+      intro k m aa bb dd hs
+      rw [evalA] at hs
+      by_cases h2 : k%3=2
+      · simp [h2] at hs
+        rcases hs with ⟨rfl,rfl,rfl⟩
+        omega
+      · by_cases h0 : k%3=0
+        · simp [h2,h0] at hs
+          rcases hs with ⟨rfl,rfl,rfl⟩
+          omega
+        · simp [h2,h0] at hs
+          have hr := ih (k/3) (m+2*(k/3)+3) aa bb dd hs
+          omega
+
 theorem evalA_positive_depth (n : Nat) :
     ∀ a k m aa bb dd : Nat,
       k < 3^n → 0 < bb →
@@ -240,6 +305,8 @@ theorem drainB_sharp_witness (n d : Nat) :
           omega
 
 #print axioms evalA_first_lower_log
+#print axioms evalA_first_upper_one
+#print axioms evalA_third_lower
 #print axioms evalA_positive_depth
 #print axioms drainB_upper_linear_log
 #print axioms drainB_first_lower_log
