@@ -166,6 +166,18 @@ Among even positive integers its natural density is \(2^{-C(w)}\), exactly the H
 
 The finite inverse-word bijection in [Agent 22's dyadic completeness result](../agent22-sheep-mixed-hub/DYADIC-COMPLETENESS.md) is the finite-precision version of the same coding. The present note adds the exact product law, the branch entropy, and the almost-everywhere dense-orbit consequence.
 
+That earlier bijection gives a further exact statistic. For a uniform even residue modulo \(2^p\), let \(J_p\) be the length of its unique canonical inverse word. Since exactly \(\binom{p}{2j}\) canonical words have length \(j\),
+\[
+\Pr(J_p=j)=\frac{\binom{p}{2j}}{2^{p-1}}.
+\]
+For \(p\ge2\), this is half a \(\operatorname{Binomial}(p,1/2)\) variable conditioned to be even, so
+\[
+\mathbb E[J_p]=\frac p4,\qquad
+\operatorname{Var}(J_p)=\frac p{16}.
+\]
+Thus a uniformly selected even residue requires, on average, one quarter as many canonical even-return symbols as the precision in bits. This is the finite-precision counterpart of the Haar branch cost mean of four bits per return.
+
+
 ## 6. The pointwise symbolic obstruction
 
 Every finite exact branch word (w) has a cylinder (C_w) on which (E_g^{|w|}) is an affine bijection onto all of (X). Thus fixing any finite prefix of an itinerary leaves the entire 2-adic tail coordinate available. This is the dynamical reason finite generic path lifting can realize arbitrary finite walks from freely chosen starts, while it cannot decide the tail of one specified start.
