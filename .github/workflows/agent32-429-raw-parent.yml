@@ -57,6 +57,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JF0Prefix.olean im-results/agent32-429-primitive-cost/JF0Prefix.lean | tee -a /tmp/agent32-bubble.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-j-first-branch/JFirstBranch.olean im-results/agent1-429-j-first-branch/JFirstBranch.lean | tee -a /tmp/agent32-bubble.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2PhysicalBridge.olean im-results/agent32-429-high2-prefix/High2PhysicalBridge.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Tail.olean im-results/agent32-429-high2-prefix/High2Tail.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high3-ladder/High3Ladder.olean im-results/agent32-429-high3-ladder/High3Ladder.lean | tee /tmp/agent32-high3.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FEntry.olean im-results/agent32-429-raw-parent/BB429FEntry.lean | tee /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429FatalB.olean im-results/agent32-429-raw-parent/BB429FatalB.lean | tee -a /tmp/agent32-429-source.log
