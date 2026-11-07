@@ -371,4 +371,68 @@ theorem b0_odd_even_chain_to_b0_preserves_NoLeft4 (b : Conf) (n : Nat)
       rfl
   exact ⟨bout,hrun,hreach,hBzero,by rw [heq]; exact hout⟩
 
+
+/-- A finite synthetic B/0 tape showing that NoLeft4 alone does not imply
+    the odd-even boundary hypothesis. This configuration is intentionally
+    not asserted to be reachable from the blank root. -/
+def oddEvenShieldCounterexampleTape (x : Int) : Bool :=
+  decide (x = -6 ∨ x = -5 ∨ x = -3 ∨ x = -1)
+
+def oddEvenShieldCounterexample : Conf :=
+  ⟨.B,0,oddEvenShieldCounterexampleTape⟩
+
+def oddEvenShieldCounterexampleSummary (c : Conf) :
+    Int × Bool × Bool × Bool × Bool :=
+  (c.h,c.tape (-6),c.tape (-5),c.tape (-4),c.tape (-3))
+
+theorem oddEvenShieldCounterexample_NoLeft4 :
+    NoLeft4 true true false oddEvenShieldCounterexample := by
+  intro x hx hw
+  have hfirst : x = -6 ∨ x = -5 ∨ x = -3 ∨ x = -1 := by
+    simpa [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] using hw.1
+  rcases hfirst with h | h | h | h
+  · subst x
+    norm_num [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] at hw
+  · subst x
+    norm_num [oddEvenShieldCounterexample,oddEvenShieldCounterexampleTape] at hw
+  · omega
+  · omega
+
+theorem oddEvenShieldCounterexample_run_summary :
+    (run 23 oddEvenShieldCounterexample).map oddEvenShieldCounterexampleSummary =
+      some (3,true,true,false,false) := by
+  decide
+
+theorem oddEvenShieldCounterexample_run_creates_1100 :
+    ∃ c, run 23 oddEvenShieldCounterexample = some c ∧
+      c.h = 3 ∧ c.tape (-6) = true ∧ c.tape (-5) = true ∧
+      c.tape (-4) = false ∧ c.tape (-3) = false := by
+  have hs := oddEvenShieldCounterexample_run_summary
+  cases hrun : run 23 oddEvenShieldCounterexample with
+  | none => simp [hrun] at hs
+  | some c =>
+      have hsummary : oddEvenShieldCounterexampleSummary c =
+          (3,true,true,false,false) := by
+        simpa [hrun] using hs
+      rcases hsummary with ⟨hh,h0,h1,h2,h3⟩
+      exact ⟨c,hrun,hh,h0,h1,h2,h3⟩
+
+theorem oddEvenShieldCounterexample_run_not_NoLeft4 :
+    ∀ c, run 23 oddEvenShieldCounterexample = some c →
+      ¬ NoLeft4 true true false c := by
+  intro c hrun hshield
+  obtain ⟨c',hrun',hh,h0,h1,h2,h3⟩ :=
+    oddEvenShieldCounterexample_run_creates_1100
+  have heq : c = c' := by
+    rw [hrun] at hrun'
+    injection hrun'
+  subst c
+  exact hshield (-6) (by omega) ⟨h0,h1,h2,h3⟩
+
+#print axioms BB6Root119.b0_even_prefix_to_b0_preserves_NoLeft4
+#print axioms BB6Root119.b0_odd_even_chain_to_b0_preserves_NoLeft4
+#print axioms BB6Root119.oddEvenShieldCounterexample_NoLeft4
+#print axioms BB6Root119.oddEvenShieldCounterexample_run_summary
+#print axioms BB6Root119.oddEvenShieldCounterexample_run_not_NoLeft4
+
 end BB6Root119
