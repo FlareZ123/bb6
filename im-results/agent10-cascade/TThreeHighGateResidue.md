@@ -158,3 +158,31 @@ Full unchanged-source Lean runs [42403440784](https://github.com/FlareZ123/bb6/a
 An independent forward-orbit audit is also recorded in [ForwardOrbitAudit100k.md](../agent7-fatal-density/ForwardOrbitAudit100k.md), with executable script [t3_high_gate_forward_audit.py](../agent7-fatal-density/t3_high_gate_forward_audit.py). It checked 245,399 high-(q) candidates through (n=100000) against the deterministic blank-root reset orbit and found zero matches. This is finite exact-integer evidence, not a universal exclusion. The existing reverse-cone census through (n=10000) remains a separate exhaustive finite check.
 
 **Updated remaining task:** prove or refute root reachability in the (r\bmod3=1,2) lifted classes, including all possible (t=0) and higher-valuation parents. The formal residue selectors do not by themselves close those branches or establish halting of the original machine.
+
+
+## 7. Tight geometry of the second t=3 parent (Agent 7, 7 November 2026)
+
+A further arithmetic reduction is formalized in [TThreeHighTightBounds.lean](../agent7-fatal-density/TThreeHighTightBounds.lean). Write (p=2^{n-4}=4\cdot2^k), (k=n-6), and let (r) be the second (t=3) parent. From the exact source equations and the expanded margin inequality
+[
+2048(2n+3)2^j+14336n+18432\le2^n,
+]
+the Lean arithmetic package derives
+[
+10934p-961n+18609\le6561r\le10942p-10177n+6321.
+]
+It then derives the scaled strict inequalities
+[
+3p<2r+5<\frac92p,
+\qquad
+\frac94p<2r+5<\frac{27}{8}p.
+]
+Equivalently, whenever the relevant quotients are integral,
+[
+4\cdot2^k<\frac{2r+5}{3}<6\cdot2^k,
+\qquad
+2\cdot2^k<\frac{2(2r+5)}9<3\cdot2^k.
+]
+
+The first quotient is in the dyadic gap between odd-parent bands at scales (k-1,k). The second is in the gap between scales (k-2,k-1). Hence no odd parent of (r) can have exponent (t=0) or (t=1). Any remaining odd parent must have (t\ge2). This matches the finite reverse-cone census, where the first observed odd parents of (r) have (t=2,4,6).
+
+The file proves the linear implication from the Int-cast source equations and margin hypotheses, and proves the scaled gap inequalities. It does not yet provide the Nat-to-Int margin bridge or compose the gap result with the complete reset-parent grammar. Full unchanged-source CI is queued as [42407885455](https://github.com/FlareZ123/bb6/actions/runs/42407885455). This reduction is not a proof that (r) is root-dead; higher odd-parent exponents (t\ge2) remain to be analyzed.
