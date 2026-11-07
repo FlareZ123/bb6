@@ -273,6 +273,8 @@ jobs:
           lean -o HighThreeLate.olean HighThreeLate.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58Late.lean .
           lean -o ValSixC58Late.olean ValSixC58Late.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58LateFast.lean .
+          lean -o ValSixC58LateFast.olean ValSixC58LateFast.lean
           # Agent 19: source-check the new infinite late-depth family and exact C58 iff.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/HighThreeLate256.lean .
           lean HighThreeLate256.lean
