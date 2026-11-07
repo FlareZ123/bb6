@@ -102,6 +102,12 @@ private theorem pow_multiple_period_base (p g L n : Nat) (hp : 1 < p)
   rw [Nat.pow_mul]
   exact pow_period_mod_base p g L n hp hperiod
 
+private theorem pow_mod_progression_base (p g r L n : Nat) (hp : 1 < p)
+    (hperiod : g^L%p=1) : g^(r+L*n)%p=g^r%p := by
+  rw [Nat.pow_add,Nat.pow_mul,Nat.mul_mod,pow_period_mod_base p g L n hp hperiod]
+  rw [Nat.mul_one]
+  exact Nat.mod_eq_of_lt (Nat.mod_lt _ (by omega))
+
 private theorem no_power_residue_of_order_power_mismatch_base (p g L r : Nat)
     (hp : 1 < p) (hperiod : g^L%p=1) (hwrong : r^L%p ≠ 1)
     (n : Nat) : g^n%p ≠ r := by
@@ -508,5 +514,72 @@ theorem no_59_mod_5253_halving_into_power (q k t : Nat) :
 #print axioms terminal_feeder_modular_identity
 #print axioms no_7_terminal_feeder
 #print axioms no_12_terminal_feeder
+/-- Composite CRT obstruction at v=18: modulo 29 forces k+2 even,
+while modulo 179 forces k+2 odd. -/
+theorem no_18_terminal_feeder (q k : Nat) :
+    highLevelNext (.N (oddTower q 18)) ≠ some (.N (haltTower k)) := by
+  intro hhalt
+  have h29den : 29 ∣ 2^(18+1)+3 := by decide
+  have h179den : 179 ∣ 2^(18+1)+3 := by decide
+  have h29 : (2^(k+2)+3)%29=(2*18)%29 :=
+    terminal_feeder_modular_identity q 18 k 29 (by omega) h29den hhalt
+  have h179 : (2^(k+2)+3)%179=(2*18)%179 :=
+    terminal_feeder_modular_identity q 18 k 179 (by omega) h179den hhalt
+  have h3_29 : 3%29=3 := by decide
+  rw [Nat.add_mod,h3_29] at h29
+  have h29lt : 2^(k+2)%29<29 := Nat.mod_lt _ (by decide)
+  have h29pow : 2^(k+2)%29=4 := by omega
+  have h3_179 : 3%179=3 := by decide
+  rw [Nat.add_mod,h3_179] at h179
+  have h179lt : 2^(k+2)%179<179 := Nat.mod_lt _ (by decide)
+  have h179pow : 2^(k+2)%179=33 := by omega
+  have h2_14 : 2^14%29=28 := by decide
+  have h4_14 : 4^14%29=1 := by decide
+  have h2_89 : 2^89%179=178 := by decide
+  have h33_89 : 33^89%179=178 := by decide
+  have h29left : (2^(k+2))^14%29=4^14%29 := by rw [Nat.pow_mod,h29pow]
+  have h29rewrite : (2^(k+2))^14%29=(2^14)^(k+2)%29 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 14,Nat.pow_mul]
+  have h29base : (2^14)^(k+2)%29=28^(k+2)%29 := by rw [Nat.pow_mod,h2_14]
+  have h28pow : 28^(k+2)%29=1 := by
+    rw [h4_14] at h29left
+    rw [h29rewrite,h29base] at h29left
+    exact h29left
+  have h28period : 28^2%29=1 := by decide
+  have h28red : 28^(k+2)%29=28^((k+2)%2)%29 := by
+    calc
+      28^(k+2)%29=28^((k+2)%2+2*((k+2)/2))%29 := by rw [Nat.mod_add_div (k+2) 2]
+      _ = 28^((k+2)%2)%29 :=
+        pow_mod_progression_base 29 28 ((k+2)%2) 2 ((k+2)/2) (by omega) h28period
+  have heven : (k+2)%2=0 := by
+    by_cases h0 : (k+2)%2=0
+    · exact h0
+    have hlt : (k+2)%2<2 := Nat.mod_lt _ (by decide)
+    have h1 : (k+2)%2=1 := by omega
+    rw [h28red,h1] at h28pow
+    simp at h28pow
+  have h179left : (2^(k+2))^89%179=33^89%179 := by rw [Nat.pow_mod,h179pow]
+  have h179rewrite : (2^(k+2))^89%179=(2^89)^(k+2)%179 := by
+    rw [←Nat.pow_mul,Nat.mul_comm (k+2) 89,Nat.pow_mul]
+  have h179base : (2^89)^(k+2)%179=178^(k+2)%179 := by rw [Nat.pow_mod,h2_89]
+  have h178pow : 178^(k+2)%179=178 := by
+    rw [h33_89] at h179left
+    rw [h179rewrite,h179base] at h179left
+    exact h179left
+  have h178period : 178^2%179=1 := by decide
+  have h178red : 178^(k+2)%179=178^((k+2)%2)%179 := by
+    calc
+      178^(k+2)%179=178^((k+2)%2+2*((k+2)/2))%179 := by rw [Nat.mod_add_div (k+2) 2]
+      _ = 178^((k+2)%2)%179 :=
+        pow_mod_progression_base 179 178 ((k+2)%2) 2 ((k+2)/2) (by omega) h178period
+  have hodd : (k+2)%2=1 := by
+    by_cases h0 : (k+2)%2=0
+    · rw [h178red,h0] at h178pow
+      simp at h178pow
+    have hlt : (k+2)%2<2 := Nat.mod_lt _ (by decide)
+    omega
+  omega
+
+#print axioms no_18_terminal_feeder
 
 end BB6.Agent48.SpaceNeedleObstructionFamilies
