@@ -309,6 +309,53 @@ theorem recentered_prefix_identity {L root : Nat}
 #print axioms m_eq_depthPrefix
 #print axioms recentered_prefix_identity
 
+
+/-- The recentered coordinate at the next state is exactly the current
+    dyadic quotient. -/
+theorem recentered_eq_quotient {L root : Nat}
+    (p : InfiniteShadowPath L root) (n : Nat) :
+    PeriodWord.recentered L (p.m (n+1)) (p.z (n+1)) =
+      (p.quotient n:Int) := by
+  dsimp [PeriodWord.recentered]
+  rw [p.hm n]
+  have hs := congrArg (fun x : Nat => (x:Int)) (p.hnext n)
+  omega
+
+/-- Every source-path recentered quotient is positive and bounded by the
+    source margin. Combined with recentered_prefix_identity, this bounds the
+    positive integer quotient of every prefix divisibility relation. -/
+theorem recentered_quotient_bounds {L root : Nat}
+    (p : InfiniteShadowPath L root)
+    (hL : 8≤L) (hrootpos : 0<root) (hrootmargin : root+4≤L) :
+    ∀ n,
+      0 < PeriodWord.recentered L (p.m (n+1)) (p.z (n+1)) ∧
+      PeriodWord.recentered L (p.m (n+1)) (p.z (n+1)) ≤
+        (p.m (n+1):Int)+(L:Int)-6 := by
+  intro n
+  have hz := (p.margin_all hL hrootpos hrootmargin n).1
+  have hdiv := p.hdiv n
+  have hqne : p.quotient n≠0 := by
+    intro hzero
+    rw [hzero] at hdiv
+    simp at hdiv
+    omega
+  have hqpos : 0<p.quotient n := by omega
+  have hcenter := p.recentered_eq_quotient n
+  have hmarginNext := (p.margin_all hL hrootpos hrootmargin (n+1)).2
+  have hmI : (p.z (n+1):Int)+4 ≤
+      (L:Int)+(p.m (n+1):Int) := by
+    exact_mod_cast hmarginNext
+  constructor
+  · rw [hcenter]
+    exact_mod_cast hqpos
+  · rw [hcenter]
+    have hcenterI : (p.quotient n:Int) =
+        2*(p.z (n+1):Int)-(p.m (n+1):Int)-(L:Int)+2 := by
+      simpa [PeriodWord.recentered] using hcenter.symm
+    omega
+
+#print axioms recentered_quotient_bounds
+
 #print axioms no_eventually_periodic_shadow_path
 
 end InfiniteShadowPath
