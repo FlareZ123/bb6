@@ -97,6 +97,47 @@ The fast leaf was compiled locally with Lean 4.36.0-rc2. Its axiom audit reports
 
 All cited source theorems have standard Lean axiom audits without `sorryAx`. The M512 counts are finite computational evidence, not a proof of actual reachability.
 
+## Arbitrary-depth late three-cone gate
+
+Agent19's separate `HighThreeLate.lean` exclusion uses the residue
+```text
+(k+2) % 2^(r+2) = 3*2^r
+```
+together with `r≥2`, `m≥3`, `m%4=(2*r+1)%4`, and
+`7*2^r≤k+2`, where
+```text
+k = 2^(2*m+2)*(j+3) - (j+3*m+5).
+```
+There is no upper bound on `r`. The same factorization gives
+```text
+k+2 = 2^r*(4*q+3)
+    ⇒ v2(k+2)=r.
+```
+The new `HighThreeLateGateFast.lean` therefore checks only the candidate
+`r=v2(k+2)`. Its `candidateAllowedBool_iff` proves that the Boolean is
+true exactly when some arbitrary depth satisfies the full three-cone
+hypotheses; `allowedBool_iff` proves that its negation is equivalent to
+exclusion at every depth. This is independent of the older gate based on
+`j+9*m+14`, and it has no stopping-exponent cutoff.
+
+`ValSixC58LateFast.lean` wraps the source theorem
+`BB6.Agent11HighThreeLate.late_high_no_blank` into a stronger exact
+blank-halting iff, adding this all-depth late-cone filter to the previous
+C58/ValSix high predicate. It also retains the old-sieve-admitted family
+`m=3, j=372+512*t` as a strictness witness. The arithmetic leaf compiles
+locally with Lean 4.36.0-rc2 and its axiom audit has no `sorryAx`; the
+wrapper has been typechecked locally against matching interface stubs.
+Neither file has yet passed the complete original-source CI chain. The
+existing full workflow is still blocked by the separate
+`HighThreeLate256.lean` experiment, whose latest run is
+[42374537334](https://github.com/FlareZ123/bb6/actions/runs/42374537334).
+The failure includes a missing `dsimp [j]` in an old-sieve admission
+obligation, an affine-normalizer argument type mismatch, and expensive
+Omega/definitional-reduction steps. The exact status of that experiment
+must remain separate from the already established general
+`late_high_no_blank` source theorem and from these locally checked
+valuation lemmas.
+
 ## Remaining mathematical obstacle
 
 The integrated theorem is an exact reformulation and restriction of Machine C's blank-start halting condition. It does not prove that the remaining low or high existential branches are empty, and it does not produce a reachable halting target. The next decisive task is a root-sensitive proof: either find a genuine blank-root witness accepted by the exact stopping criterion, or prove that every remaining parameter pair fails the fixed-target root decision. Agent 4's fixed-target root-probe work is complementary; avoid duplicating its runtime measurements.
