@@ -58,6 +58,41 @@ theorem exceptionalIndex_strict (r : Nat) :
   rw [hpplus]
   omega
 
+private theorem high_stop_positive (m : Nat) :
+    3*m+5 ≤ 3*2^(2*m+2) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      have he : 2*(m+1)+2=(2*m+2)+2 := by omega
+      rw [he, Nat.pow_add]
+      simp only [show (2:Nat)^2=4 by decide]
+      have hp : 1 ≤ (2:Nat)^(2*m+2) := Nat.pow_pos (by decide)
+      omega
+
+/-- An explicit member of the genuine second stopping family for each
+    inverse-depth index. All subtraction is witnessed as nonnegative. -/
+def highExplicitCounter (r : Nat) : Nat :=
+  3*2^(2*exceptionalIndex r+2)-(3*exceptionalIndex r+5)
+
+/-- Unconditional infinite family of actual syntactically halting section
+    inputs absent at every genuine blank-section time. -/
+theorem high_explicit_counter_unreachable (r : Nat)
+    (hr : 8 ≤ r) (hr0 : r%8=0) :
+    ¬ BB6.Agent3.CReach 3 (highExplicitCounter r) := by
+  let m := exceptionalIndex r
+  have hbound := high_stop_positive m
+  have hstop : highExplicitCounter r + 3*m+5 = 3*2^(2*m+2) := by
+    dsimp [highExplicitCounter]
+    have hsub := Nat.sub_add_cancel hbound
+    omega
+  have hstop' : highExplicitCounter r + 3*m+5 = 2^(2*m+2)*3 := by
+    calc
+      _ = 3*2^(2*m+2) := hstop
+      _ = 2^(2*m+2)*3 := Nat.mul_comm _ _
+  exact explicit_high_unreachable r _ hr hr0 (by simpa [m] using hstop')
+
+#print axioms high_explicit_counter_unreachable
+
 #print axioms explicit_high_unreachable
 #print axioms exceptionalIndex_strict
 end BB6.Agent46
