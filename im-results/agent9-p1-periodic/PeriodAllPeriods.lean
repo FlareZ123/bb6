@@ -134,4 +134,22 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
 
 #print axioms no_infinite_positive_depth_periodic_ray
 
+
+/-- Reindexing shows that no positive-depth periodic block can occur after
+    any finite prefix of an inverse ray. -/
+theorem no_eventually_periodic_positive_depth_ray
+    (L : Nat) (w : List Nat) (N : Nat)
+    (hp : ∃ t ∈ w, 0<t) (m z : Nat → Nat)
+    (hr : ∀ n, Run L w (m (N+n)) (z (N+n))
+        (m (N+(n+1))) (z (N+(n+1)))) : False := by
+  let m' : Nat → Nat := fun n => m (N+n)
+  let z' : Nat → Nat := fun n => z (N+n)
+  have hr' : ∀ n, Run L w (m' n) (z' n) (m' (n+1)) (z' (n+1)) := by
+    intro n
+    simpa [m',z'] using hr n
+  exact no_infinite_positive_depth_periodic_ray L w hp m' z' hr'
+
+#print axioms no_eventually_periodic_positive_depth_ray
+
+
 end PeriodWord
