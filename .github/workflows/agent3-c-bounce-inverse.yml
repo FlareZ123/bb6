@@ -212,6 +212,8 @@ jobs:
           if [ "${{ inputs.boundary_only }}" != "true" ]; then
             cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedFilter.lean .
             lean -o FullForcedFilter.olean FullForcedFilter.lean
+            cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/FullForcedCompare.lean .
+            lean -o FullForcedCompare.olean FullForcedCompare.lean
             if [ "${{ inputs.forced_normalize_only }}" = "true" ]; then exit 0; fi
           fi
           cp "$GITHUB_WORKSPACE"/im-results/agent3-c-bounce-inverse/{MixedFourNormalize,MixedFourFilter,MixedHighOne,MixedHighBoth,MixedHighAllOdd,MixedHighResidual,MixedLowFour,MixedLowFourSharp,MixedFullResidual,MixedEvenEightSharp,MixedHighEightSharp,MixedThreeHighResidual,MixedTwoSharp,MixedHighSharp,MixedUniversalAncestry,MixedUniversalSharp,MixedUniversalAB}.lean .
