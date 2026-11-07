@@ -97,6 +97,12 @@ jobs:
             cp "$base20/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
+          cp "$base48/NeedleQuadraticEnumerate.lean" .
+          lake env lean -o ".lake/build/lib/lean/NeedleQuadraticEnumerate.olean" NeedleQuadraticEnumerate.lean
+          cp "$base48/NeedleQuadraticEnumerateSource.lean" .
+          lake env lean NeedleQuadraticEnumerateSource.lean
+          cp "$base48/NeedleRootQuadratic.lean" .
+          lake env lean NeedleRootQuadratic.lean
           cp "$base48/SuperlinearRoot.lean" .
           lake env lean SuperlinearRoot.lean
           for f in NeedleRootDecisionCore NeedleGeneralInverseSource NeedleRootDecisionSource NeedleSharperSource NeedleRootSharp; do
