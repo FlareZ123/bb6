@@ -1097,13 +1097,27 @@ theorem C01_halts (c : Config) (hc : c.state=C)
     simp [rawStep,hread',hD1]
   simp [run,hstep1,hstep2]
 
+/-- The two cells at the fatal J boundary are exactly 01. -/
+theorem j_fatal_boundary_bits (u w : Nat) (hw : w+1=2*u) :
+    jTape u w (2*(u:Int)+1)=false ∧
+    jTape u w (2*(u:Int)+2)=true := by
+  constructor
+  · have hnot : ¬jMark u w (2*(u:Int)+1) := by
+      unfold jMark jHole
+      omega
+    simp [jTape,hnot]
+  · have hmark : jMark u w (2*(u:Int)+2) := by
+      unfold jMark jHole
+      right
+      omega
+    simp [jTape,hmark]
+
 /-- The exact fatal J boundary: w+1=2*u gives 4*u^2+10*u+26
     successful moves, followed by the undefined D/1 query. -/
 theorem j_fatal_branch (u w : Nat) (hw : w+1=2*u) :
     run target429 (4*u*u+10*u+27)
       {state:=A,head:=0,tape:=jTape u w} = none := by
   have hprefix : 2*u ≤ w+1 := by omega
-  have hwi : (w:Int)+1=2*(u:Int) := by omega
   let c0 : Config := {state:=A,head:=0,tape:=jTape u w}
   let c2 : Config :=
     Config.mk C (2*(u:Int)+1)
@@ -1114,18 +1128,18 @@ theorem j_fatal_branch (u w : Nat) (hw : w+1=2*u) :
     simpa [c0,c2] using j_c_sweep u w hprefix
   have hzero : c2.tape c2.head=false := by
     dsimp [c2]
-    rw [cbPaint_right _ _ _ _ (by dsimp; omega)]
+    rw [cbPaint_right _ _ _ _ (by omega)]
     rw [setupTape_above _ _ _ (by omega)]
     rw [f0Tape_neq u w _ (by omega)]
     rw [baseTape_above_pivot u w _ (by omega)]
-    simp [jTape,jMark,jHole,hwi]
+    exact (j_fatal_boundary_bits u w hw).1
   have hone : c2.tape (c2.head+1)=true := by
     dsimp [c2]
-    rw [cbPaint_right _ _ _ _ (by dsimp; omega)]
+    rw [cbPaint_right _ _ _ _ (by omega)]
     rw [setupTape_above _ _ _ (by omega)]
     rw [f0Tape_neq u w _ (by omega)]
     rw [baseTape_above_pivot u w _ (by omega)]
-    simp [jTape,jMark,jHole,hwi]
+    exact (j_fatal_boundary_bits u w hw).2
   have hhalt : run target429 2 c2 = none :=
     C01_halts c2 (by simp [c2]) hzero hone
   have htime :
