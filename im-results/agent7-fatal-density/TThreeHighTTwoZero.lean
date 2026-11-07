@@ -213,3 +213,41 @@ theorem ttwo_zero_two_gates (n j d0 q e r d a:Nat)
 
 #print axioms ttwo_zero_two_gates
 end CascadeHighTTwo
+
+
+namespace CascadeHighTTwo
+/-- Divisibility of the first t=2 quotient by nine excludes both residual low-valuation odd gates. -/
+theorem nine_gate_failure (s k d a b c f g:Nat)
+ (hconst:(8*s+k)%3=1) (hd:d%9=0)
+ (h0:8*d=8*s+a+k+5)
+ (h1:2*a=8*s+b+k)
+ (h2:2*b=8*s+c+k)
+ (h3:2*c=8*s+f+k)
+ (_h4:2*f=8*s+g+k):
+ (2*b+5)%9≠0 ∧ (2*f+5)%27≠0 := by
+  constructor <;> omega
+
+/-- A genuine t=2 high-q predecessor whose quotient is 0 modulo nine is unreachable from blank. -/
+theorem high_ttwo_nine_zero_root_dead (n j d0 q e r d a:Nat)
+ (hn:20≤n) (hsector:n%6=4∨n%6=5)
+ (hm:2048*CascadeOddRay.deficit n j+16384*n+16384≤2^n)
+ (hz:2*CascadeOddRay.ray n j+5=81*d0)
+ (hrel:16*d0=2^n+q+(n-3)+5)
+ (hgate:2*q+5=81*e)
+ (hrrel:16*e=8*2^(n-6)+r+(n-6)+5)
+ (htwo:2*r+5=27*d)
+ (he0:8*d=8*2^(n-8)+a+(n-8)+5)
+ (hdmod:d%9=0) :
+ ¬CascadeSweep.ReachC (2,0) (a,0) := by
+  intro hroot
+  have hd3:d%3=0:=by omega
+  obtain ⟨b,c,f,g,h1,h2,h3,h4,hdisj⟩ := ttwo_zero_two_gates n j d0 q e r d a
+    hn hsector hm hz hrel hgate hrrel htwo he0 hd3 hroot
+  have hconst:=even_const_mod_three n hn hsector
+  obtain ⟨hbnot,hfnot⟩ := nine_gate_failure (2^(n-8)) (n-8) d a b c f g
+    hconst hdmod he0 h1 h2 h3 h4
+  exact hdisj.elim (fun h => hbnot h) (fun h => hfnot h)
+
+#print axioms nine_gate_failure
+#print axioms high_ttwo_nine_zero_root_dead
+end CascadeHighTTwo
