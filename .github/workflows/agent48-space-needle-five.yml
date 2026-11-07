@@ -99,5 +99,15 @@ jobs:
             cp "$base20/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
+          cp "$base48/NeedleQuinticRegular.lean" .
+          lake env lean -o ".lake/build/lib/lean/NeedleQuinticRegular.olean" NeedleQuinticRegular.lean
+          cp "$base48/SixthHigh.lean" .
+          lake env lean -o ".lake/build/lib/lean/SixthHigh.olean" SixthHigh.lean
+          cp "$base48/SixthNear.lean" .
+          lake env lean -o ".lake/build/lib/lean/SixthNear.olean" SixthNear.lean
+          cp "$base48/NeedleSixthRegular.lean" .
+          lake env lean -o ".lake/build/lib/lean/NeedleSixthRegular.olean" NeedleSixthRegular.lean
           cp "$base48/SpaceNeedleFifthRoot.lean" .
-          lake env lean SpaceNeedleFifthRoot.lean
+          lake env lean -o ".lake/build/lib/lean/SpaceNeedleFifthRoot.olean" SpaceNeedleFifthRoot.lean
+          cp "$base48/NeedleSixthRoot.lean" .
+          lake env lean NeedleSixthRoot.lean
