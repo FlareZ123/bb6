@@ -36,8 +36,16 @@ jobs:
           lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
           lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
           python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/Root119OddWaveRetreat.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('odd-wave-archive-source-sha256',h); assert h=='68816db794a0aa558a8805bf1c21301297589f2cad09c3daa74a667740e0c3db'"
-          lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
-          lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean"
+          lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean" 2>&1 | tee "$A/Root119OddWaveRetreat.log"
+          if grep -q 'sorryAx' "$A/Root119OddWaveRetreat.log"; then
+            echo "::error::sorryAx found in odd-wave retreat theorem axioms"
+            exit 1
+          fi
+          lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean" 2>&1 | tee "$A/Root119TwoWaveRootPrefix.log"
+          if grep -q 'sorryAx' "$A/Root119TwoWaveRootPrefix.log"; then
+            echo "::error::sorryAx found in two-wave root theorem axioms"
+            exit 1
+          fi
           python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('im-results/agent42-root119-guard/test-root119-odd-wave-audit.cjs.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('audit-source-sha256',h); assert h=='11398c3bb0451bd0bac496bb3c6e49fa584781b59bfea6086c3536a48cf23276'; p.with_name('test-root119-odd-wave-audit.cjs').write_bytes(b)"
           python "$A/patch_odd_wave_audit.py"
           node "$A/test-root119-odd-wave-audit.cjs"
