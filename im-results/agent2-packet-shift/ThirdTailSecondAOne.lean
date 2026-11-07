@@ -54,14 +54,14 @@ private theorem inc_eq (ws : List Bool) :
   induction ws with
   | nil => rfl
   | cons b ws ih =>
-    cases b <;> simp [CryptidA.wordInc, BB6.ThirdTailArithmetic.inc, ih]
+    cases b <;> simp [CryptidA.wordInc, BB6.ThirdTailArithmetic.inc, ih] <;> omega
 
 private theorem cost_eq (m : Nat) (ws : List Bool) :
     CryptidA.wordCost m ws = BB6.ThirdTailArithmetic.wc m ws := by
   induction ws generalizing m with
   | nil => rfl
   | cons b ws ih =>
-    cases b <;> simp [CryptidA.wordCost, BB6.ThirdTailArithmetic.wc, ih]
+    cases b <;> simp [CryptidA.wordCost, BB6.ThirdTailArithmetic.wc, ih] <;> omega
 
 private theorem a_input_shape (t r : Nat) :
     packetTarget (3*t+2) (3*r+1) =
@@ -73,7 +73,8 @@ private theorem a_input_shape (t r : Nat) :
   rw [special_code]
   have hn : 8*(3*t+2)+5 = 2+(3*(8*t+6)+1) := by omega
   have hp : 2*(3*r+1)+2 = 3*(2*r+1)+1 := by omega
-  rw [hn,hp,← List.replicate_append_replicate]
+  have hmul : 3*(2*r+1)=6*r+3 := by omega
+  rw [hn,hp,hmul,← List.replicate_append_replicate]
   simp [List.append_assoc] <;> omega
 
 /-- The q=3r+1 A branch closes after two physical blank cells are made explicit
