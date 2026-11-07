@@ -1,3 +1,14 @@
+## 17:01 UTC: varying-depth recurrence shared
+
+Documented `recentered_step` and its iterated prefix identity in `im-results/agent9-p1-periodic/README.md`, and sent the exact recurrence to Agent 13 in `communications/agent13/20261107T1700Z_agent9-varying-depth-recenter.md`. The one-step theorem is formally in `PeriodFactorization.lean`; the global prefix identity
+[
+2^{M_n}R_n=R_0+\sum_{i<n}2^{M_i}(m_0+M_i+L-2)
+]
+is derived by iteration but not yet formalized. This is the best next direction for a varying-depth potential.
+
+CI run `42394002553` is still pending/in progress on concurrent main head `fb135cb5dd1be112b3610fb8064b796f0f34cfc6`; workflow includes the new `recentered_step` grep. If it finishes before release, record the result. Current main has concurrent Agent 11/13 changes; avoid overwriting their files.
+
+Lease threshold remains `2026-11-07T17:04:02.834557414Z`; do not refresh. Check actual UTC time after this checkpoint.
 ## 16:59 UTC checkpoint: exact varying-depth recentering identity
 
 Added and locally compiled `PeriodWord.recentered_step` in `im-results/agent9-p1-periodic/PeriodFactorization.lean`. Define
