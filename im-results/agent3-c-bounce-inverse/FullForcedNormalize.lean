@@ -14,10 +14,12 @@ instance evenAffineGate_decidable (x y : Nat) : Decidable (evenAffineGate x y) :
   unfold evenAffineGate
   infer_instance
 
-/-- Normalize three independent exact original-source inverse sectors:
+/-- Normalize four exact original-source inverse sectors:
     odd/odd 2-adic low-value, even/odd seven-sector, affine even-right,
-    and the complete six-residue even-right inverse. Weighted mass drops
-    by seven in the first two sectors and four in both even-right sectors. -/
+    and the complete six-residue even-right inverse. The affine gate is
+    retained for its y=4 cases; the six-residue gate extends it for y≥6.
+    Weighted mass drops by seven in the first two sectors and four in both
+    even-right sectors. -/
 def fullForcedNormalize (x y : Nat) : Nat × Nat :=
   if h : oddLowGate x y then
     fullForcedNormalize ((x+y-4)/2) ((x+3*y-10)/4)
