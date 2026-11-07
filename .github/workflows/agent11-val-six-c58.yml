@@ -231,4 +231,10 @@ jobs:
           for f in Low58Source Low14Source Rect58Source; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean ValSixC58.lean
+          lean -o ValSixC58.olean ValSixC58.lean
+          # Agent 3: sharper all-time section mass theorem, exact quarter-fuel
+          # backwards oracle, and authentic merged C58/ValSix stopping iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{StrongMassOriginal,StrongMassQuarter,ValSixC58Quarter}.lean .
+          lean -o StrongMassOriginal.olean StrongMassOriginal.lean
+          lean -o StrongMassQuarter.olean StrongMassQuarter.lean
+          lean ValSixC58Quarter.lean
