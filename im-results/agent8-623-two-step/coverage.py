@@ -122,6 +122,30 @@ def log_right_tail(a, d):
     return False
 
 
+def quadratic_log_far_sector(a, d):
+    if a == 0:
+        return False
+    if d % 2:
+        if a >= d + 5:
+            n = ternary_budget(d + 3)
+            ell = ternary_budget(6 * d + 34 + 2 * n * (n + 5))
+            return a >= 5 * d + 27 + n * (n + 5) + ell
+        if a % 2:
+            return False
+        n = ternary_budget(a - 1)
+        ell = ternary_budget(6 * a + 6 + 2 * n * (n + 5))
+        return d >= 5 * a + n * (n + 5) + ell
+    if a >= d + 3:
+        n = ternary_budget(d + 2)
+        ell = ternary_budget(6 * d + 22 + 2 * n * (n + 5))
+        return a >= 5 * d + 17 + n * (n + 5) + ell
+    if a % 2:
+        return False
+    n = ternary_budget(a)
+    ell = ternary_budget(6 * a + 4 * n + 20 + 2 * n * (n + 5))
+    return d >= 5 * a + n * (n + 5) + 2 * n + 12 + ell
+
+
 def main():
     state = (0, 7)
     categories = Counter()
@@ -137,6 +161,7 @@ def main():
                  else "log_far_left" if log_far_left(a, d)
                  else "log_far_right" if log_far_right(a, d)
                  else "log_right_tail" if log_right_tail(a, d)
+                 else "quadratic_log" if quadratic_log_far_sector(a, d)
                  else "uncovered")
         categories[group] += 1
         state = transition(a, d)
@@ -145,7 +170,7 @@ def main():
     assert categories == {"zero": 1, "gate": 1924, "far_left": 232,
                           "far_right": 433, "log_far_left": 149,
                           "log_far_right": 297, "log_right_tail": 859,
-                          "uncovered": 1105}
+                          "quadratic_log": 637, "uncovered": 468}
     print("First 5000 source-mirrored visits:", dict(sorted(categories.items())))
     print("Uncovered:", categories["uncovered"], "of 5000")
     print("Finite trace only; no nonhalting conclusion.")
