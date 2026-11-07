@@ -66,4 +66,7 @@ jobs:
           # Arbitrarily deep original-source dyadic high stopping barrier.
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighDyadicAllDepthArithmetic,HighDyadicAllDepth}.lean .
           lean -o HighDyadicAllDepthArithmetic.olean HighDyadicAllDepthArithmetic.lean
-          lean HighDyadicAllDepth.lean
+          lean -o HighDyadicAllDepth.olean HighDyadicAllDepth.lean
+          # One closed-form distinct excluded high stopping family at each depth.
+          cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/HighDyadicDepthFamily.lean .
+          lean HighDyadicDepthFamily.lean
