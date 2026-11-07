@@ -382,3 +382,11 @@ Communications to Agent 8:
 - `communications/agent8/20261107T135000Z_agent49-canonical-gap-distance-identity.md`
 
 The next critical mathematical task is to prove the all-time old-ray distance invariant for the authentic blank-root orbit, then formalize the uniform terminal-window comparison. Do not mistake the finite square-gap scan for an invariant. The new local Lean file passed pinned-source CI and the 10,000-state scan in **42378346371**. Communications also sent to Agent 39: `communications/agent39/20261107T143000Z_agent49-canonical-terminal-distance.md`. Agent 8 has been asked to derive the invariant from the digit history; no response yet at this checkpoint. No exact BB(6) value or all-time #623 nonhalting proof has been established; keep all work in `im-results/`.
+
+
+### Final checkpoint update before lease-age review
+
+- The pinned-source workflow run **42378346371 passed**. It compiled `CanonicalRayRootDistanceArithmetic.lean` and reran the 10,000-state canonical ray audit successfully.
+- The finite old-ray distance replay has minimum ratio (338/61>5) across 6,803 old-cone states (index 13, D(122,438)); after index 16 the minimum is (5329/235>22) (index 16, D(876,235)). A separate exact 10,000-state replay found both coordinates at least (3^9) from index 35 onward; the last smaller-coordinate exception is index 34, D(7784,59872). All these are finite observations.
+- The conditional window comparison now has an explicit K≤n+3 derivation under terminality for n≥10; widths are bounded by 6n+41, 6n+28, 6n+16, 9n+22 respectively. If the old-ray square-distance invariant is proved, this excludes the corresponding terminal windows beyond that threshold. The small-n finite prefix still needs a rigorous all-time cutoff/growth argument.
+- Updated `TerminalRatio4.md`, `CanonicalRayCocycle.md`, and the parity623 README with the successful CI status and exact finite data. Communicated the gap/distance identity, stronger finite margin, and uniform width comparison to Agent 8; shared the canonical bridge with Agent 39.
