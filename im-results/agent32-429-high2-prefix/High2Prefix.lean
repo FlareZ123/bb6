@@ -35,17 +35,15 @@ theorem high2_to_sourceScanE (u : Nat) :
     proved Junc(2,v,1)-to-MidA excursion. This gives an exact raw zipper
     predecessor for the high-2 J branch. -/
 theorem high2_to_midA (u : Nat) :
-    runWithDelta (22*u+107) (high2SweepStart u) =
+    runWithDelta
+      (21 + (crossTime (2*(u+1))+1 + (12+2*(2*(u+1))) +
+        (2*(2*(u+1)+2)+6)))
+      (high2SweepStart u) =
       some (midA2 (2*u+4) 1, 5) := by
-  have hlen :
-      22*u+107 =
-        21 + ((crossTime (2*(u+1))+1 + (12+2*(2*(u+1)))) +
-          (2*(2*(u+1)+2)+6)) := by
-    simp [crossTime]
-    omega
-  rw [hlen, runWithDelta_add, high2_to_sourceScanE]
+  rw [BB429SourceE1Delta.runWithDelta_add, high2_to_sourceScanE]
   simp only [Option.bind_some]
-  simpa using (sourceScanE_finishC_even_midA_delta (u+1) 0)
+  rw [BB429JuncHeadExcursion.sourceScanE_finishC_even_midA_delta]
+  simp [Int.add_assoc]
 
 #print axioms high2_to_sourceScanE
 #print axioms high2_to_midA
