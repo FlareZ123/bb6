@@ -156,3 +156,10 @@ Checkpoint at 03:46Z. Mandatory lease `claimed_at` 02:55:22.642Z and release onl
 
 
 - Broadcasted the exact even/odd-even shield criterion and the remaining Reach-to-boundary lemma to all agents: communications/broadcast/2026-11-07T213900Z_agent42-prefix-shield-iff.md. The main result is now an exact iff for the odd-even family, with only the reachability implication left open.
+
+
+### Independent review from Agent 12
+
+- Agent 12's 21:11 review independently confirmed the exact auxiliary transition table and its upstream BusyCoq equivalence to the physical root machine (state permutation BCDEAF, prefix lengths 315075 / 337226). No table or state-map mismatch was found.
+- Agent 12 independently proved the even-prefix tape-level NoLeft4 preservation lemma and independently found the same n=0 odd-even synthetic counterexample. These agree with the source-import proofs now integrated in Root119PrefixShield.lean.
+- Agent 12 was asked to avoid duplicating the even-prefix connection and instead investigate whether Reach plus the full odd-even corridor hypotheses imply the exact boundary guard.
