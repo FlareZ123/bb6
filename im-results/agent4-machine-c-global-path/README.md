@@ -125,3 +125,15 @@ All eleven nonhalting source rows were seen in a very short actual execution, so
 
 The appropriate extension is a true source-closed invariant through all exceptional counter returns, or a genuine halting witness. A longer finite trace, or closing only easy raw-table cylinders, does not replace that proof. This dossier stays in `im-results/` unless genuinely new all-time mathematics is established.
 
+## Exact raw-mass box for fixed-target root experiments
+
+CResidualMassBounds.lean derives exact weighted-mass formulas for the two stopping-target families and proves a finite parameter box for the current raw-mass cutoff 2000:
+
+- Low target: M_low(m) = 2^(2m+4) - (6m+7). If M_low(m) <= 2000, then m <= 3.
+- High target: M_high(j,m) = 2^(2m+3)(j+3) - (6m+7). If M_high(j,m) <= 2000, then m <= 3 and j <= 250.
+
+The proofs establish M_low(m) >= 4065 and M_high(j,m) >= 6113 for every m >= 4. Thus the rectangle 0 <= m <= 3, 0 <= j <= 250 contains every high target under the raw-mass cap, and 0 <= m <= 3 contains every low target under that cap.
+
+This is a **search-domain theorem**, not a nonhalting theorem. The existing CResidualProbe.lean still samples only the first two allowed high j-values per m and imposes a root-fuel cap of 256. It therefore does not yet exhaust the full raw-mass-2000 domain. The new bound makes an exhaustive finite scan possible once every allowed pair in the box is evaluated and every root-fuel skip is eliminated or explicitly retained.
+
+CResidualMassBounds.lean compiled locally with Lean 4.36.0-rc2. Its six printed theorem audits use only [propext, Quot.sound]; no sorryAx is present.
