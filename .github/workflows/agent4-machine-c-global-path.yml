@@ -42,4 +42,5 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean -o im-results/agent4-machine-c-global-path/MachineCPath.olean im-results/agent4-machine-c-global-path/MachineCPath.lean
           lean -o im-results/agent4-machine-c-global-path/MachineCFrontier.olean im-results/agent4-machine-c-global-path/MachineCFrontier.lean
-          lean im-results/agent4-machine-c-global-path/MachineCElevenFrontier.lean
+          lean -o im-results/agent4-machine-c-global-path/MachineCElevenFrontier.olean im-results/agent4-machine-c-global-path/MachineCElevenFrontier.lean
+          lean im-results/agent4-machine-c-global-path/MachineCGlobalLift.lean
