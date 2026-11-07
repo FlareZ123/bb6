@@ -824,8 +824,40 @@ theorem m0_j128_seventyone_new_infinite_exclusion (t : Nat) :
     BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight (128*t+71) 0 ∧
     BB6.Agent3.fullForcedExcluded (256*t+145) (384*t+220)=true := by
   exact ⟨prior_high_allowed_m0_of_family (128*t+71)
-      (Or.inr (Or.inr (Or.inr (Or.inr ⟨t,rfl⟩)))),
+      (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨t,rfl⟩))))),
     full_forced_excluded_m0_j128_seventyone t⟩
+
+/-- The j=128t+5 progression, with t≥1, is a strict new exclusion. -/
+theorem m0_j128_five_new_infinite_exclusion (t : Nat) (ht : 1≤t) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight (128*t+5) 0 ∧
+    BB6.Agent3.fullForcedExcluded (256*t+13) (384*t+22)=true := by
+  exact ⟨prior_high_allowed_m0_of_family (128*t+5)
+      (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨t,ht,rfl⟩)))))),
+    full_forced_excluded_m0_j128_five t ht⟩
+
+/-- The j=512t+357 progression is a strict new exclusion. -/
+theorem m0_j512_357_new_infinite_exclusion (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight (512*t+357) 0 ∧
+    BB6.Agent3.fullForcedExcluded (1024*t+717) (1536*t+1078)=true := by
+  exact ⟨prior_high_allowed_m0_of_family (512*t+357)
+      (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨t,rfl⟩))))))),
+    full_forced_excluded_m0_j512_357 t⟩
+
+/-- The j=512t+406 progression is a strict new exclusion. -/
+theorem m0_j512_406_new_infinite_exclusion (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight (512*t+406) 0 ∧
+    BB6.Agent3.fullForcedExcluded (1024*t+815) (1536*t+1225)=true := by
+  exact ⟨prior_high_allowed_m0_of_family (512*t+406)
+      (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨t,rfl⟩)))))))),
+    full_forced_excluded_m0_j512_406 t⟩
+
+/-- The j=512t+191 progression is a strict new exclusion. -/
+theorem m0_j512_191_new_infinite_exclusion (t : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight (512*t+191) 0 ∧
+    BB6.Agent3.fullForcedExcluded (1024*t+385) (1536*t+580)=true := by
+  exact ⟨prior_high_allowed_m0_of_family (512*t+191)
+      (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr ⟨t,rfl⟩)))))))),
+    full_forced_excluded_m0_j512_191 t⟩
 
 /-- All five new families are absent from the authentic blank-tape orbit. -/
 theorem m0_additional_families_blank_unreachable :
@@ -863,5 +895,34 @@ theorem m0_additional_families_blank_unreachable :
 #print axioms m0_j32_fifteen_new_infinite_exclusion
 #print axioms m0_j128_seventyone_new_infinite_exclusion
 #print axioms m0_additional_families_blank_unreachable
+#print axioms m0_j128_five_new_infinite_exclusion
+#print axioms m0_j512_357_new_infinite_exclusion
+#print axioms m0_j512_406_new_infinite_exclusion
+#print axioms m0_j512_191_new_infinite_exclusion
+/-- Four further progressions are absent from the authentic blank-tape orbit. -/
+theorem m0_four_more_families_blank_unreachable :
+    (∀ t, 1≤t → ¬ BB6.Agent3.CReach (256*t+13) (384*t+22)) ∧
+    (∀ t, ¬ BB6.Agent3.CReach (1024*t+717) (1536*t+1078)) ∧
+    (∀ t, ¬ BB6.Agent3.CReach (1024*t+815) (1536*t+1225)) ∧
+    (∀ t, ¬ BB6.Agent3.CReach (1024*t+385) (1536*t+580)) := by
+  refine ⟨?_,?_,?_,?_⟩
+  · intro t ht h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound
+      (256*t+13) (384*t+22) (full_forced_excluded_m0_j128_five t ht) time) hrun
+  · intro t h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound
+      (1024*t+717) (1536*t+1078) (full_forced_excluded_m0_j512_357 t) time) hrun
+  · intro t h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound
+      (1024*t+815) (1536*t+1225) (full_forced_excluded_m0_j512_406 t) time) hrun
+  · intro t h
+    rcases h with ⟨time,hrun⟩
+    exact (BB6.Agent3.fullForcedExcluded_sound
+      (1024*t+385) (1536*t+580) (full_forced_excluded_m0_j512_191 t) time) hrun
+
+#print axioms m0_four_more_families_blank_unreachable
 
 end BB6.Agent19M0Additional
