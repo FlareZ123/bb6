@@ -81,6 +81,34 @@ These four sectors are verified at arbitrary size and can be combined with the p
 
 A complementary direction is proved locally in [LogRightSource.lean](../agent8-623-inverse/LogRightSource.lean): for even `a`, if `a+ell<=d` and `2*a+3<=3^ell`, then `T(D(a,d))` succeeds. It allows a successful B-drain to send its daughter into a **right-safe** logarithmic sector, even when the daughter fails the stronger ratio-two bound. [LogRightSectorsSource.lean](../agent8-623-inverse/LogRightSectorsSource.lean) instantiates this for all four branch cases with two explicit natural budgets `k,ell`. The authentic pinned-source import of the four right-log sector theorems passed in [CI run 42346778177](https://github.com/FlareZ123/bb6/actions/runs/42346778177). [LogRightParentSource.lean](../agent8-623-inverse/LogRightParentSource.lean) turns these four sufficient conditions into a necessary root-terminal-parent exclusion at all k and ell. The combined [MachineFullGateSource.lean](../agent8-623-inverse/MachineFullGateSource.lean) connects that restriction to actual original-machine halting; source CI of these final wrappers is underway. None of these results implies all-time nonhalting.
 
+## Sublinear-excess bound and asymptotically fivefold cones
+
+[DrainQuadraticLogSource.lean](../agent8-623-inverse/DrainQuadraticLogSource.lean) proves a stronger **uniform original-source upper bound** with no a,d-dependent assumptions beyond success. For all `n` and `b<3^n`,
+
+```text
+B(a,b,d)=D(A,D) => d+3*b <= D <= d+3*b+n*(n+5).
+```
+
+The lower bound is inherited from the independently verified source third-counter theorem. The upper bound was proved by a new evaluator ternary-length potential:
+
+```text
+evalA(a,k,m)=(A,B,D), k<3^n
+    => D+3*B <= m+k+2*(n+1).
+```
+
+A structural induction on the ternary-length budget bounds the complete B-drain's aggregate excess by `n*(n+5)`. It implies that completed B-drains have third-counter growth `3b+O((log_3 b)^2)` uniformly in the other inputs. This is strictly stronger asymptotically than the earlier 7b upper bound and is verified in [original-source Lean CI run 42347481178](https://github.com/FlareZ123/bb6/actions/runs/42347481178). A possible linear-in-n excess bound `4*n+2` was tested experimentally for `1<=b<25000` and input first counters 0 through 12, with no counterexample; that candidate is **unproved** and must remain conjectural.
+
+The bound has a direct two-step application: if `B(a,b,d)=D(A,D)` succeeds, `b<3^n`, and
+
+```text
+d+4*b+n*(n+5)+5+ell <= a
+2*(d+3*b+n*(n+5))+7 <= 3^ell
+```
+
+then `T(D(A,D))` succeeds. [QuadraticLogConeSource.lean](../agent8-623-inverse/QuadraticLogConeSource.lean) instantiates this uniformly for the four original source branches, producing sufficient outer sectors whose leading ratios approach **5**, with explicit squared-log corrections. [QuadraticParentSource.lean](../agent8-623-inverse/QuadraticParentSource.lean) applies their exclusions to any hypothetical halting daughter's genuine blank-origin predecessor. Those two modules locally compiled against source-matched definitions; pinned-original-source CI is in progress and they should be treated as pending its result.
+
+[TerminalIntervalSource.lean](../agent8-623-inverse/TerminalIntervalSource.lean) adds a complementary all-input power-of-three necessary condition for a B-drain whose output immediately halts. The original source checked it in the same [run 42347481178](https://github.com/FlareZ123/bb6/actions/runs/42347481178). [SyntheticParentsSource.lean](../agent8-623-inverse/SyntheticParentsSource.lean) proves explicit finite synthetic two-step terminal parents: `D(2,9)->D(10,10)->none`, `D(20,0)->D(16,14)->none`, and `D(38,1)->D(30,25)->none`. The separate [synthetic finite grid](synthetic_grid.py) found 383 such parents for even positive first counters 2..500 and second counters 0..500. These are **not proven reachable** from `D(0,7)`, illustrating why root-specific orbit invariants remain indispensable.
+
 ## Consequences for the authentic blank-root run
 
 The source supplies `run 0 = D(0,7)`, a parity proof `a % 2 = 0` for every surviving `run n`, and mass growth `7*(n+1) <= a+d`. The exact first five visits are:
@@ -123,8 +151,9 @@ The independent [finite coverage diagnostic](coverage.py) mirrored the exact acc
 | Added logarithmic first-dominance sector | 149 |
 | Added logarithmic second-dominance sector | 297 |
 | Added logarithmic right-tail daughter sector | 859 |
+| Added squared-log outer sector | 637 |
 | Zero-first-coordinate case | 1 |
-| **Outside the union of current two-step sufficient conditions** | **1,105** |
+| **Outside the union of current two-step sufficient conditions** | **468** |
 
 These finite observations are computational diagnostics, with explicit assertions in the script. They demonstrate substantial uncovered territory and cannot support an all-time BB(6) conclusion. The first genuinely useful next proof target is a root-specific invariant or symbolic multi-step return theorem covering those excursions outside the gate and both outer sectors. Further local constant refinements alone are unlikely to decide #623.
 
