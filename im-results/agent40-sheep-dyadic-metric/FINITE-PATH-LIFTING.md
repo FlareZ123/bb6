@@ -26,7 +26,7 @@ T[q,a,h](y) =
 
 The inverses are of odd numbers modulo `2^(q-a)`. This inverse residue has exact 2-adic valuation a, is compatible with projection to all lower powers of two, and depends only on `y mod2^(q-c)`. The [inverse-word proof](../agent22-sheep-mixed-hub/DYADIC-COMPLETENESS.md) shows the exact relation with genuine generic first-even returns. For completeness, the forward property needed here follows directly from algebra:
 
-Given an even y modulo `2^(q-c)`, and any sufficiently large positive x congruent to `T[q,a,h](y)` modulo `2^q`, write x=2^a u (u odd). Setting D=1+2^(a+1), the inverse congruence yields
+Given `q>=c+1`, an even y modulo `2^(q-c)`, and any sufficiently large positive x congruent to `T[q,a,h](y)` modulo `2^q`, write x=2^a u (u odd). Setting D=1+2^(a+1), the inverse congruence yields
 
 `D*u+2a-3 == 2^(h+1)*3^(-h)*(y-1) (mod 2^(q-a))`.
 
