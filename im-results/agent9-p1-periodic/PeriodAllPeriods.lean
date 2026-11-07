@@ -15,6 +15,13 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
   have hH : 0<weight w ∧ weight w<2^(cost w)-1 := positive_marker w hp
   have hSpos : 0<cost w := by omega
   have hSlope := periodic_run_slope_at_zero L w hSpos m z hr
+  have hpowcast : (2:Int)^(cost w)=((2^(cost w):Nat):Int) := by
+    change ((2:Nat):Int)^(cost w)=((2^(cost w):Nat):Int)
+    rw [← Int.natCast_pow]
+  have hSlopeCast :
+      (((2^(cost w):Nat):Int)-1)*((z 1:Int)-(z 0:Int)) =
+        (weight w:Int)*(cost w:Int) := by
+    simpa only [hpowcast] using hSlope
   let Q : Nat := z 1-z 0
   have hQintPos : 0<((z 1:Int)-(z 0:Int)) := by
     have hBpos : 0<((2^(cost w):Nat):Int)-1 := by
@@ -26,7 +33,7 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
     · have hprodle :
           (((2^(cost w):Nat):Int)-1)*((z 1:Int)-(z 0:Int))≤0 :=
         Int.mul_nonpos_of_nonneg_of_nonpos (by omega) hQnonpos
-      rw [hSlope] at hprodle
+      rw [hSlopeCast] at hprodle
       omega
     · omega
   have hle : z 0≤z 1 := by
@@ -64,7 +71,7 @@ theorem no_infinite_positive_depth_periodic_ray (L : Nat) (w : List Nat)
           Nat.mul_lt_mul_of_pos_left hH.2 hSpos
         _ = (2^(cost w)-1)*cost w := by ac_rfl
     exact (Nat.mul_lt_mul_left hBpos).mp hmul
-  rcases PeriodMarkerMinimal.shorter_marker_rotation_minimal
+  rcases PeriodMarker.shorter_marker_rotation_minimal
       (cost w) (weight w) Q hS hH ⟨hQpos,hQlt⟩ hratio with
     ⟨d,hdpos,hdlt,hdvd,hrot,hminimal⟩
   rcases factor_word_of_rotation_period w d hdpos hdlt hdvd hH.2 hrot with
