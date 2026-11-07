@@ -50,5 +50,7 @@ jobs:
           lake env lean Agent8GateCompleteSource.lean
           cp "../im-results/agent8-623-inverse/DrainSectorSource.lean" Agent8DrainSectorSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8DrainSectorSource.olean Agent8DrainSectorSource.lean
+          cp "../im-results/agent8-623-inverse/DrainSevenSource.lean" Agent8DrainSevenSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8DrainSevenSource.olean Agent8DrainSevenSource.lean
           cp "../im-results/agent8-623-inverse/FarSectorSource.lean" Agent8FarSectorSource.lean
           lake env lean Agent8FarSectorSource.lean
