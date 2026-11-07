@@ -25,7 +25,7 @@ def candidateRejectedPoints : List (Nat × Nat) :=
   rawHighPoints.filter (fun p => !(candidateAllowedBool p.1 p.2))
 
 theorem rawHighPoints_length : rawHighPoints.length=322 := by
-  decide
+  simp [rawHighPoints]
 
 /-- The finite scan covers every possible n because the gate itself
     requires n+4≤2*m+2. -/
