@@ -53,3 +53,17 @@ The audit checks exact interval durations and endpoint head displacements, and a
 Prove a phase-sensitive forward-closed **authentic blank-root** tape language or a genuinely reached terminal-gate witness, covering all exceptional B/0 returns and transient forbidden factors. The two source-verified synthetic counterexamples rule out simple unconditional word-avoidance induction; right-of-head information or stronger provenance may be essential. No BB(6) value, universal six-state upper bound, or #119 root decision follows from these conditional facts. External novelty of these local transition identities has not been established; they remain intermediate work in `im-results/`.
 
 The [full research log](FULL_RESEARCH_LOG.md) retains the exact algebra, falsifiers and earlier verifications.
+
+
+## Even and odd-even B/0 prefix returns (2026-11-07)
+
+A new source-import-verified result covers 43 additional first-return intervals in the ten-million-step blank-tape replay:
+
+- 21 even-prefix returns, with (T=m+13) and returned head (h+m+1);
+- 22 odd-then-even returns, with (T=3m+20) and returned head (h+m+2).
+
+Here (m) is one plus the consecutive right-hand one-run length at the initial B/0 state, under the exact local tape conditions in [EVEN_WAVE_PREFIX_FAMILIES.md](EVEN_WAVE_PREFIX_FAMILIES.md). The Lean source is [Root119OddEvenChain.lean](Root119OddEvenChain.lean). The manual source-import workflow succeeded at [run 42405102264](https://github.com/FlareZ123/bb6/actions/runs/42405102264). The axiom audit for both return theorems contains no `sorryAx`.
+
+The 10,000,000-step census reports 22,984 B/0 configurations and 22,983 intervals: 15,176 ten-step, 7,508 existing odd-wave, 177 existing left-one-wave, 21 new even-prefix, 22 new odd-even-prefix, 8 unmatched left-prefix candidates, and 71 other. All 43 new macro predictions match both the observed return time and returned head.
+
+These are conditional local return theorems, not a complete classification of reached B/0 configurations. The new theorems do not yet transport `NoLeft4`; the 8 unmatched candidates remain computationally consistent with the separate two-wave-root formula, whose current source file is not importable; 71 intervals remain in the census's other class. No exact BB(6) value or universal upper bound follows.
