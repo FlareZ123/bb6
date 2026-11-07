@@ -54,16 +54,18 @@ theorem scan_from_B_exact (b : Conf) (hb : Reach b) (hB : BZero b)
         intro i hi
         by_cases hlt : i < r
         · have hne' : b.h-(1+(i:Int)) ≠ c.h := by rw [hpos]; omega
-          have hzeroIndex : c.tape (b.h-(1+(i:Int))) = false := by
-            convert hzeros i hlt using 1 <;> congr 1 <;> omega
-          change setBit c.tape c.h false (b.h-1-(i:Int)) = false
-          simp [setBit,hne',hzeroIndex]
+          have hidx : b.h-1-(i:Int) = b.h-(1+(i:Int)) := by omega
+          have hsame' : d.tape (b.h-(1+(i:Int))) = c.tape (b.h-(1+(i:Int))) := by
+            simp [d,setBit,hne']
+          have hsame : d.tape (b.h-1-(i:Int)) = c.tape (b.h-1-(i:Int)) := by
+            rw [hidx]
+            exact hsame'
+          exact hsame.trans (hzeros i hlt)
         · have heq : i = r := by omega
           subst i
           have hidx : b.h-1-(r:Int) = c.h := by omega
           rw [hidx]
-          change setBit c.tape c.h false c.h = false
-          simp [setBit]
+          simp [d,setBit]
       have htime : r+1+1 = (r+1)+1 := by omega
       have hrun' : shuttleRun (r+1+1) b = some d := by
         rw [shuttleRun_add (r+1) 1 b,hrun]
