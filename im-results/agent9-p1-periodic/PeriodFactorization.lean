@@ -1,4 +1,5 @@
 import PeriodWordBounds
+import PeriodPrimitive
 import PeriodSecondary
 
 namespace PeriodWord
@@ -464,6 +465,89 @@ theorem periodic_run_slope_at_zero (L w : Nat) (hw : 0<cost w)
 
 #print axioms periodic_run_affine_recurrence
 #print axioms periodic_run_slope_at_zero
+
+
+
+/-- An infinite run of a repeated primitive depth block is impossible by
+    the exact repeated affine coefficients and the primitive obstruction. -/
+theorem no_infinite_repeated_word_ray (L : Nat) (u : List Nat) (k : Nat)
+    (hkpos : 0<k) (hp : ∃ t ∈ u, 0<t) (hprim : Primitive u)
+    (m z : Nat → Nat)
+    (hr : ∀ n, Run L (repeatWord u k) (m n) (z n) (m (n+1)) (z (n+1))) : False := by
+  let w : List Nat := repeatWord u k
+  have hcostu : 0<cost u := by
+    have h := positive_depth_cost u hp
+    omega
+  have hwcost : 0<cost w := by
+    rw [w, cost_repeat]
+    exact Nat.mul_pos hcostu hkpos
+  let a : Int := (2^(cost u):Nat)
+  let h : Int := (weight u:Nat)
+  let r : Int := (cost u:Nat)
+  let T : Nat := k
+  let J : Int := PeriodSecondary.geom a T
+  let A : Int := (2^(cost w):Nat)
+  let H : Int := (weight w:Nat)
+  let S : Int := (cost w:Nat)
+  let D : Int := offset w
+  let Q : Int := (z 1:Int)-(z 0:Int)
+  let X : Int := (L:Int)+(m 0:Int)
+  let Z : Int := (z 0:Int)
+  have hJ : J=PeriodSecondary.geom a T := rfl
+  have hA : A=a^T := by
+    dsimp [A,a,T]
+    rw [cost_repeat]
+    rw [← Int.natCast_pow, Nat.pow_mul]
+  have hH : H=h*J := by
+    simpa [H,h,J,a,T,w] using weight_repeat_int u k
+  have hS : S=r*(T:Int) := by
+    dsimp [S,r,T,w]
+    have hc := congrArg (fun n : Nat => (n:Int)) (cost_repeat u k)
+    simpa using hc
+  have hD : D=offset u*J+h*r*PeriodSecondary.weighted a T := by
+    simpa [D,h,r,J,a,T,w] using offset_repeat u k
+  have hB : A-1=(a-1)*J := by
+    rw [hA,hJ]
+    exact (PeriodSecondary.geom_identity a T).symm
+  have ha : 0<a := by
+    dsimp [a]
+    exact Int.ofNat_pos.mpr (Nat.pow_pos (by decide : 0<2))
+  have hgeom_nonneg : ∀ n, 0≤PeriodSecondary.geom a n := by
+    intro n
+    induction n with
+    | zero => simp [PeriodSecondary.geom]
+    | succ n ih =>
+        simp [PeriodSecondary.geom]
+        omega
+  have hJpos : 0<J := by
+    cases k with
+    | zero => omega
+    | succ k =>
+        change 0<1+a*PeriodSecondary.geom a k
+        have hg := hgeom_nonneg k
+        omega
+  have hbase : ¬(a-1) ∣ h*r := by
+    intro hdiv
+    rcases hdiv with ⟨q,hq⟩
+    have hd : ((2^(cost u):Nat):Int)-1*q =
+        (weight u:Int)*(cost u:Int) := by
+      simpa [a,h,r] using hq.symm
+    exact primitive_no_integral_slope u hp hprim q hd
+  have hSlope : (A-1)*Q=H*S := by
+    simpa [A,H,S,Q,w] using periodic_run_slope_at_zero L w hwcost m z hr
+  have hrec : ∀ n, A*(z (n+1):Int) =
+      (z n:Int)+H*X+(H*S)*(n:Int)+D := by
+    simpa [A,H,S,X,D,w] using periodic_run_affine_recurrence L w m z hr
+  have h0 := hrec 0
+  have hStart : (A-1)*Z=H*X+D-A*Q := by
+    dsimp [Z,Q] at *
+    simp at h0
+    omega
+  exact PeriodSecondary.repeated_affine_obstruction
+    a h r (offset u) T J A H D S Q X Z
+    hJ hA hH hS hD hB hJpos hbase hSlope hStart
+
+#print axioms no_infinite_repeated_word_ray
 
 
 end PeriodWord
