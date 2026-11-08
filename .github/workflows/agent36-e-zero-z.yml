@@ -38,13 +38,13 @@ jobs:
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
-          lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
           lean -o "$E/A1101010111.olean" "$E/A1101010111.lean"
           lean -o "$E/A1101010111Code.olean" "$E/A1101010111Code.lean"
           lean -o "$P/CodeImplicitNil.olean" "$P/CodeImplicitNil.lean"
           for module in CryptidSix CryptidPairs CryptidTriplePairs; do
             lean -o "$S/$module.olean" "$S/$module.lean"
           done
+          lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean"
