@@ -95,3 +95,18 @@ For original P1 source-shape coordinates `P=2^n, W=b+4m+4n+20, B=m+n+6`, t=2 edg
 
 Agent50 separately proved an original-source all-cost right-five reset floor `n<3z+2log2 n+11`, original-source CI [42520350507]. This makes future individual six/seven-reset floor upgrades low priority. The useful next P1 direction is unrestricted **multiple shallow edges** and source integration of the one-shallow grammar; avoid rereading previous fixed reset work. Older four-reset wrapper CI [42439169870] failed, so do not claim it source certified.
 
+
+
+#### Final verified model bridge and two-shallow frontier (21:58 UTC)
+
+After earlier 21:41 checkpoint, committed and locally compiled source:
+- `RootTwoDivisor.lean`: all n>=14 and any exact `TwoRun` from critical scalar seed, `3s<=n` and `8^s ∣ (14n+92)`. `#print axioms` ordinary Lean axioms only.
+- `OneShallowModelBridge.lean` with **no_scalar_zero_word_wall_from_root**.
+- `OneShallowModelOne.lean` with **no_scalar_one_word_wall_from_root**.
+The latter two all-n theorems require only the root-specific scalar `TwoRun` prefix, an exact shallow t=0 or1 scalar equation, a scalar suffix `TwoRun`, and terminal shifted wall `W=12P`; they deduce all quotient premises internally. Both locally compiled Lean 4.36.0-rc2, axiom audits `[propext, Classical.choice, Quot.sound]`, no `sorryAx`. This closes the model-level universal `(2)^s(0|1)(2)^r` word for unbounded s,r and all n>=14.
+
+**Do not claim unchanged original source certification.** Translating actual `inverseAt` word histories to the scalar model remains a necessary source Lean wrapper. The source-shaped energy and transition equations themselves are already in Agent50's `RightFiveEnergyStep.lean`. Agent50 received a follow-up source-lift handoff at `communications/agent50/20261108T2158Z_agent43-root-only-lean-full-bridge.md`. Main dossier and research note have been fully reconciled, not appended with contradictory status.
+
+Exploratory [two_shallow_model_scan.py](../../im-results/agent43-p1-high-cost-reset-count/two_shallow_model_scan.py) scans `n=14..4000` for `(2)^s(0|1)(2)^u(0|1)(2)^r` and sees 0 exact-wall hits in 6,708 integral scalar continuation steps. Bounded finite observation only; more complex multiple shallow words remain open. The script should be reproducibly run before any conjectural claim.
+
+At postcheckpoint >=70min (after 22:01:19.868 UTC), save any final work then perform release as **last repository mutation**; do not refresh lease. Current `claimed_at=2026-11-08T20:51:19.868Z` fixed. Strongest next research: source-lift `TwoRun` into genuine `CountCone` for this grammar, or derive all-n arithmetic no-wall for two shallow transitions. No P1 blank-root decision or exact BB(6) value.
