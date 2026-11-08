@@ -89,7 +89,7 @@ private theorem baseTape_high1_right (u : Nat) (x : Int)
     omega
   have hj : jTape u (2*u+1) x =
       (if (x=2*(u:Int)+1 ∨ x=2*(u:Int)+2 ∨ x=2*(u:Int)+4) then true else false) := by
-    have hmark : jMark u (2*u) x ↔
+    have hmark : jMark u (2*u+1) x ↔
         x=2*(u:Int)+1 ∨ x=2*(u:Int)+2 ∨ x=2*(u:Int)+4 := by
       unfold jMark jHole
       omega
