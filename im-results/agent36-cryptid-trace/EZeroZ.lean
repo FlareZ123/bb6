@@ -144,9 +144,8 @@ theorem e_zero_k1mod9_q1_Z_regular (t u m : Nat) :
   exact hA
 
 
-/-- The terminal marker Z_0 is a genuinely blank zero after the suffix.
-    For any E-zero packet and any scanner parameter q the source E-pair
-    return is already physically equivalent to regular L. -/
+/-- The terminal zero-marker Z_0 has no remaining alternating suffix.
+    The original E/p=0 source return is exactly a regular L section. -/
 theorem e_zero_Z0_regular (k q : Nat) :
     ObsEq
       (run (12*k*k+49*k+50+4*q)
@@ -163,19 +162,27 @@ theorem e_zero_Z0_regular (k q : Nat) :
       congrArg (fun xs : List Bool => xs ++ [false]) (oppairs_false q)
   have hi : packet (3*k+4) q 0 (marker 0) =
       init (List.replicate (3*k+2) true ++
-        false :: (pairs q ++ [false,false])) := by
+        false :: (pairs q ++ [false])) := by
     simp only [packet,word,marker,oppairs,List.replicate_zero,
       List.nil_append,init,List.cons_append,hn]
     rw [hw]
   rw [hi,full_E_pairs]
-  have hrep : List.replicate (2*q+6) true =
+  have hr : List.replicate (2*q+6) true =
       true :: List.replicate (2*q+5) true := by
     rw [show 2*q+6=(2*q+5)+1 by omega]
     simp only [List.replicate_succ]
-  have hpad := BB6.Padding.cfgEq_symm
-    (BB6.BoundaryPadding.source_pad 0 0 1
-      (regularSection (8*k+5) 1 (2*q+5)))
-  simpa [run,regularSection,oppairs,hrep,List.append_assoc] using hpad
+  have heq :
+      (⟨[],false,List.replicate (8*k+5) true ++
+        (false :: List.replicate (2*q+6) true),5⟩ : Cfg) =
+      regularSection (8*k+5) 1 (2*q+5) := by
+    dsimp [regularSection,oppairs]
+    rw [hr]
+  change ObsEq
+    (⟨[],false,List.replicate (8*k+5) true ++
+      (false :: List.replicate (2*q+6) true),5⟩ : Cfg)
+    (regularSection (8*k+5) 1 (2*q+5))
+  rw [heq]
+  exact cfgEq_refl _
 
 #print axioms e_zero_drop_Z
 #print axioms e_zero_q0_Z_regular
