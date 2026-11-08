@@ -96,6 +96,21 @@ The odd case is [`W4JuncOne.lean`](W4JuncOne.lean); the even case is [`W4JuncGen
 
 The input's rightmost marked cell is at relative position `2*v+4`. Therefore the two C/0 events are respectively **three and six cells strictly to its right**. Both are provably nonfatal at the visited step because their *complete* right tapes are blank. This result was checked through the full original-source dependency graph in [manual CI 42521293673](https://github.com/FlareZ123/bb6/actions/runs/42521293673), before the later arithmetic `c0_event_offsets` lemma was added. The additional length/offset lemma is currently a separate local arithmetic extension.
 
+The first C/0 visit has the stronger exact head-history theorem
+[`junc0_w1_first_czero_max`](W4JuncMax.lean): for **all** `v`, the
+original-source maximum-head monitor certifies at step `2*v+31`
+a C/0, blank-right configuration with **net displacement = maximum head
+displacement = `2*v+7`**. Thus the head at this visit is a genuine
+record high over *every primitive prefix* of the preceding `2*v+31`
+steps, rather than merely lying beyond the input's initial marks.
+The proof combines a 20-step preparation that never moves right of the
+starting head, a monotone unbounded `2*(v+3)`-step B/0,C/1 sweep, and
+the five-step rightward arrival at C/0. This three-stage all-parameter
+source proof passed the full original-source Lean audit in
+[CI 42524166726](https://github.com/FlareZ123/bb6/actions/runs/42524166726),
+without `sorryAx`. **No equivalent record-max proof has yet been
+established for the second C/0 visit**.
+
 These two events have been identified in the continuing trajectory; **no theorem states that they exhaust every C/0 visit during the complete excursion**. In particular, there is no source-checked all-time record-right invariant for authentic blank-origin entries. The explicit frontier offsets are candidate ingredients for such a proof, not a substitute for it.
 
 The source-verified [physical halting criterion](../agent32-429-raw-parent/README.md) is still that the authentic blank trajectory reaches a C/0 with marked right neighbor, equivalently B/001. Proving its actual reachability or impossibility remains essential to deciding #429. No BB(6) exact value, global upper bound, or new blank-run witness is claimed. Therefore this intermediate result belongs in `im-results/`, not `results/`.
