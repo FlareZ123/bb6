@@ -1,5 +1,30 @@
 # D Cryptid: complete original-source reentry for the safe packet residues
 
+## Added 8 November 2026: two arbitrary-depth exceptional marker languages
+
+**Status:** Fully quantified *original six-state source theorems* compiled by Lean 4.36.0-rc2 from the unchanged archived machine sources, in [manual CI 42524657127](https://github.com/FlareZ123/bb6/actions/runs/42524657127). The workflow audits `#print axioms` and rejects `sorryAx` / native decide. These remain intermediate synthetic F/0 tape facts, with no claimed authentic blank-root reachability, Cryptid D halting decision, or exact BB(6).
+
+Use `M(a,q,p;Y)=I_a((01)^q0 1^pY)`, regular `L(A,Q,B)=I_A((01)^Q1^B)` on the physical blank-extended tape, and marker families `Y_m=(01)^m11`, `Z_m=(01)^m0` for every natural `m`.
+
+The strongest certified theorems in this extension are:
+
+| Original-source theorem | Quantified statement | Source |
+|---|---|---|
+| `Agent2MarkerTower.all_p1_regular` | Every `M(a,q,p;Y_m)` with `a≥4,p≡1 (mod3)` returns physically to some regular `L`, for every marker depth `m` | [MarkerTowerSource.lean](./MarkerTowerSource.lean) |
+| `Agent2MarkerTower.e_zero_drop` | `M(3k+4,q,0;Y_(m+1))` transitions **exactly** to `M(8k+5,0,2q+7;Y_m)` in `12k²+49k+50+4q` primitive steps | Same |
+| `Agent2MarkerTower.e_zero_q0_regular` | Every `M(3k+4,3u,0;Y_(m+1))` reaches `L` | Same |
+| `Agent2EAltTurn.turn_all` | The original A/0 scan `11(01)^(r+1)11` transforms into C/1 `(10)^(r+3)`, preserves *any* left tape `L` and any right suffix, in exactly `6r+20` steps | [EAltMarkerAll.lean](./EAltMarkerAll.lean) |
+| `Agent2EAltTurn.full_E_many` | General original-machine E-return on `11(01)^(r+1)11` for all `k,q,r` and arbitrary suffix, exact time `12k²+49k+68+4q+6r` | Same |
+| `Agent2MarkerZero.all_p1_regular` | Every `M(a,q,p;Z_m)` with `a≥4,p≡1 (mod3)` reaches `L`; redundant far-right zeros are treated by the proved original-machine physical-tape bisimulation | [MarkerZeroSource.lean](./MarkerZeroSource.lean) |
+| `Agent2EAltPacketCompose.e_two_to_zero` | `M(3k+4,q,2;Y_(r+1))` transitions **exactly** to `M(8k+5,0,2q+6;Z_(r+2))`, in `12k²+49k+68+4q+6r` steps | [EAltPacketCompose.lean](./EAltPacketCompose.lean) |
+| `Agent2EAltPacketCompose.e_two_q2_regular` | Every `M(3k+4,3u+2,2;Y_(r+1))` returns to the regular family for arbitrary `k,u,r` | Same |
+
+These are genuine independent whole-parameter symbolic source proofs. The proof connects: source `full_E_many` converts a positive-depth `Y` marker to a `Z` marker; when `q=3u+2`, the new unary-packet run `p=2q+6` has residue one, and the arbitrary-depth `Z` normalizer terminates in regular `L`. Both marker normalizers compose the already source-checked well-founded B/E packet `normalizeWithCount` with explicit A/B/E terminal source rules. The zero-ended A terminal consumes exactly the finite code `(10)^q(111)^r(10)^(m+1)` before the implicit blank.
+
+**Verification:** source-normalized fixed marker `010111` is [CI 42521952399](https://github.com/FlareZ123/bb6/actions/runs/42521952399), all-depth `Y_m` is [CI 42522113484](https://github.com/FlareZ123/bb6/actions/runs/42522113484), arbitrary-left A-turn/E return is [CI 42523540597](https://github.com/FlareZ123/bb6/actions/runs/42523540597), all-depth `Z_m` is [CI 42524149772](https://github.com/FlareZ123/bb6/actions/runs/42524149772), and composed E,p2,q2 is [CI 42524657127](https://github.com/FlareZ123/bb6/actions/runs/42524657127). The [manual workflow](../../.github/workflows/agent2-marker-two.yml) compiles source and ancestors. Fixed suffix proof [MarkerTwoSource.lean](./MarkerTwoSource.lean) is subsumed by the tower results. No need to reproduce its finite case separately.
+
+**Open direction:** classify `Z_m` packet terminal exits with `p≡0,2 (mod 3)` and prove that the resulting language transformations close more of the E,p2 original marker family, or connect a source-certified family to an authentic blank-tape checkpoint. In particular, the E-turn creates `p=2q+6`; the certified universal Z normalizer currently handles `q≡2(mod3)`, while the other q residues remain outside that specific theorem.
+
 **Status: Lean source-certified all-parameter intermediate theorem (7 November 2026).**
 Machine: `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---` (Cryptid D).
 The exact BB(6) value and the authentic blank-tape nonhalting question are open.
