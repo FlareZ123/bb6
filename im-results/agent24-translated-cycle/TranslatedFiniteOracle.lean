@@ -98,6 +98,25 @@ theorem movingMarker_check : finiteTranslatedCheck movingMarkerTable 2 5 = true 
 theorem movingMarker_never (bound : Nat) : Cover (DecidedBelow bound) movingMarkerTable :=
   finiteTranslatedCheck_sound movingMarkerTable 2 5 bound (by decide) movingMarker_check
 
+/-- A genuine translated convoy: a pair of ones moves right, while the head
+    visits both ends of the pair. The tape is never entirely blank after entry. -/
+def movingPairTable : PartialMachine := fun s =>
+  if s = (0,false) then some (some ⟨true,true,5⟩)
+  else if s = (5,false) then some (some ⟨true,false,1⟩)
+  else if s = (1,true) then some (some ⟨false,true,2⟩)
+  else if s = (2,true) then some (some ⟨true,true,3⟩)
+  else if s = (3,false) then some (some ⟨true,false,4⟩)
+  else if s = (4,true) then some (some ⟨true,true,5⟩)
+  else if s = (5,true) then some (some ⟨true,false,1⟩)
+  else none
+
+theorem movingPair_check : finiteTranslatedCheck movingPairTable 2 5 = true := by decide
+
+theorem movingPair_never (bound : Nat) : Cover (DecidedBelow bound) movingPairTable :=
+  finiteTranslatedCheck_sound movingPairTable 2 5 bound (by decide) movingPair_check
+
+#print axioms movingPair_never
+
 #print axioms shiftedFiniteEq_sound
 #print axioms finiteTranslatedCheck_sound
 #print axioms movingMarker_never
