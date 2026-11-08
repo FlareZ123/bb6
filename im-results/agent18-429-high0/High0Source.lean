@@ -1,9 +1,8 @@
-import MidAposBoundary
+import High2TailBase
 import Lean.Elab.Tactic.Omega
 namespace BB429High0Source
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
 open BB429High2Prefix BB429FinishScanEDelta BB429High2TailBase
-open BB429MidAposBoundary
 
 /-- The high-zero C/B sweep has the same processed left stack as high-two,
     with unprocessed right suffix 01. -/
@@ -70,29 +69,47 @@ theorem c_eight_blocks (k m : Nat) :
     · trivial
     · omega
 
-theorem c_solid_to_e (u : Nat) :
-  runWithDelta (4*u+19) (z 2 (ones (4*u+16)) true []) =
-    some (sourceScanE 0 (ones (4*u+12) ++ [false,true]),
-      -((4*u+11 : Nat) : Int)) := by
-  have ht : 4*u+19 = 8+(4*u+11) := by omega
-  rw [ht, runWithDelta_add, midAaux_C1_to_E1_delta]
+theorem c_solid_to_junc (u : Nat) :
+  runWithDelta (4*u+36) (z 2 (ones (4*u+16)) true []) =
+    some (junc 0 0 (4*u+12), -((4*u+12 : Nat) : Int)) := by
+  have hC := midAaux_C1_to_E1_delta (ones (4*u+16))
+  have hE := E1_sweep_delta (4*u+16) [true,false,true]
+  have htail := E1_tail12_delta (ones (4*u+13) ++ [false,true])
+  have hright : ones (4*u+16) ++ [true,false,true] =
+      ones 4 ++ (ones (4*u+13) ++ [false,true]) := by
+    have h1 : ones (4*u+16) ++ [true] = ones (4*u+17) := by
+      calc
+        ones (4*u+16) ++ [true] = ones (4*u+16) ++ ones 1 := rfl
+        _ = ones ((4*u+16)+1) := (BB429SourceE1Return.ones_add _ 1).symm
+        _ = ones (4*u+17) := by congr 1
+    calc
+      ones (4*u+16) ++ [true,false,true] =
+          (ones (4*u+16) ++ [true]) ++ [false,true] := by
+            simp [List.append_assoc]
+      _ = ones (4*u+17) ++ [false,true] := by rw [h1]
+      _ = (ones 4 ++ ones (4*u+13)) ++ [false,true] := by
+        rw [show 4*u+17=4+(4*u+13) by omega,
+          BB429SourceE1Return.ones_add]
+      _ = ones 4 ++ (ones (4*u+13) ++ [false,true]) := by
+        rw [List.append_assoc]
+  have hcfg : z 0 (ones 6) true (ones (4*u+13) ++ [false,true]) =
+      junc 0 0 (4*u+12) := by
+    have hones : ones (4*u+13) = true :: ones (4*u+12) := by
+      rw [show 4*u+13=1+(4*u+12) by omega,
+        BB429SourceE1Return.ones_add]
+      rfl
+    rw [hones]
+    rfl
+  have htime : 4*u+36 = 8 + ((4*u+16)+12) := by omega
+  rw [htime, runWithDelta_add, hC]
   simp only [Option.bind_some]
-  have hleft : ones (4*u+16)=ones (4*u+11)++ones 5 := by
-    rw [← BB429SourceE1Return.ones_add]
-  rw [hleft, E1_sweep_prefix_delta]
+  rw [runWithDelta_add, hE]
+  simp only [Option.bind_some]
+  rw [hright, htail]
   simp only [Option.map_some]
-  have hright : ones (4*u+11) ++ [true,false,true] =
-      ones (4*u+12) ++ [false,true] := by
-    rw [show 4*u+12 = (4*u+11)+1 by omega]
-    rw [BB429SourceE1Return.ones_add (4*u+11) 1]
-    simp [ones, List.append_assoc]
-  rw [hright]
-  rfl
-
-theorem e_zero_to_junc (u : Nat) :
-  runWithDelta 17 (sourceScanE 0 (ones (4*u+12) ++ [false,true])) =
-    some (junc 0 0 (4*u+12), -1) := by
-  rfl
+  rw [hcfg]
+  simp only [Option.some.injEq, Prod.mk.injEq, true_and]
+  omega
 
 /-- Exact high-zero C/B sweep-to-Junc transition for every natural u. -/
 theorem high0_to_junc (u : Nat) :
@@ -102,13 +119,12 @@ theorem high0_to_junc (u : Nat) :
   have b := e_drop_all (u+1) 1
   have c := sourceScanE_e1_revisit_delta 1 (blocks (u+2))
   have d := c_eight_blocks (u+2) 8
-  have e := c_solid_to_e u
-  have f := e_zero_to_junc u
+  have e := c_solid_to_junc u
   have hlen : 18*u+85 =
-      11 + 6*(u+1) + (crossTime 1+1) + 8*(u+2) + (4*u+19) + 17 := by
+      11 + 6*(u+1) + (crossTime 1+1) + 8*(u+2) + (4*u+36) := by
     simp [crossTime]; omega
   rw [hlen, show 11 + 6*(u+1) + (crossTime 1+1) + 8*(u+2) + (4*u+19) + 17 =
-        11 + (6*(u+1) + ((crossTime 1+1) + (8*(u+2) + ((4*u+19)+17)))) by omega]
+        11 + (6*(u+1) + ((crossTime 1+1) + (8*(u+2) + (4*u+36)))) by omega]
   rw [runWithDelta_add, a]
   simp only [Option.bind_some]
   have h2u : 2*(u+1)+1 = 2*u+3 := by omega
@@ -122,9 +138,7 @@ theorem high0_to_junc (u : Nat) :
   simp only [Option.bind_some]
   have hnorm : 4*(u+2)+8=4*u+16 := by omega
   rw [hnorm]
-  rw [runWithDelta_add, e]
-  simp only [Option.bind_some]
-  rw [f]
+  rw [e]
   simp only [Option.map_some]
   simp only [Option.some.injEq, Prod.mk.injEq, true_and]
   simp only [Int.natCast_add, Int.natCast_mul]
