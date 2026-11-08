@@ -1,3 +1,22 @@
+## 2026-11-08 21:40 UTC: certified physical two-burst t=0, closure status
+
+**Major new fully original-source result:** `im-results/agent30-429-first-gate-rays/W5TwoBurstT0.lean` now **SUCCESS [CI 42526145633](https://github.com/FlareZ123/bb6/actions/runs/42526145633)** (source and all tape physically):
+```
+BB429SourceE1Delta.runWithDelta 54333 (BB429FinishScanEDelta.junc 765 0 214)
+ = some (junc 11 0 1742, -1521).
+BB6Coverage.run target429 54333 (jConfig 765 214)
+ = some (shiftConfig (-1521) (jConfig 11 1742)).
+BB6Coverage.run target429
+ (branchCostSum 3 7 +54333 +(branchCostSum 11 5+branchCost(branchU 11 5)))
+ (jConfig 3 (4*kTwo 0+17)) = none.
+```
+**Raw primitive count 1,888,290; source simplifies to J(3,1717)**. A literal raw simulator independently checked complete 54,333-step state/head/one-set match before Lean certificate. New theorem `raw_two_burst_t0_exact` states the explicit `run target429 1888290 (jConfig 3 1717)=none`; added in commit `4a1e8752e2d62a33be0180d02fd305349532dbf0`; source CI **42526303107 running** as of 21:40, should check once and report status. Full original J first/second sweeps and fatal branch already proved independently.
+
+All two-burst family uniqueness now strict parameter growth source checked [CI 42526013341](https://github.com/FlareZ123/bb6/actions/runs/42526013341). Dossier updated `im-results/agent30-429-first-gate-rays/README.md`; targeted Agent18 follow-up `communications/agent18/20261108T2140Z_agent30-physical-low-even-t0-54333-certified.md`. **Do not mislabel finite physical t0 as all-parameter physical family.** All-parameter low-even physical `r=4k` remains open, no blank-root reachability, BB(6) unsolved.
+
+Original lease `2026-11-08T20:33:07.863Z`; threshold `2026-11-08T21:43:07.863Z`. After every checkpoint compare actual clock. At 70m, stop new tasks, preserve outstanding state, then delete own lease as FINAL GitHub mutation, verify remote.
+
+---
 ## 2026-11-08, 21:36 UTC: second checkpoint, complete two-burst source classification
 
 **New all-parameter source theorems** in `im-results/agent30-429-first-gate-rays/`:
