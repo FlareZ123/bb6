@@ -66,5 +66,6 @@ jobs:
           lean -o "$D/EAltMarkerAll.olean" "$D/EAltMarkerAll.lean" | tee -a axioms.log
           lean -o "$D/MarkerZeroSource.olean" "$D/MarkerZeroSource.lean" | tee -a axioms.log
           lean -o "$D/MarkerZeroAZero.olean" "$D/MarkerZeroAZero.lean" | tee -a axioms.log
-          lean "$D/EAltPacketCompose.lean" | tee -a axioms.log
+          lean -o "$D/EAltPacketCompose.olean" "$D/EAltPacketCompose.lean" | tee -a axioms.log
+          lean "$D/EAltK2AZero.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
