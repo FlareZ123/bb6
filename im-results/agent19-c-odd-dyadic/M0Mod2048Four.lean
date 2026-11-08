@@ -610,4 +610,292 @@ theorem m0_2048_1343_blank_unreachable (t : Nat) :
 #print axioms m0_2048_1159_blank_unreachable
 #print axioms m0_2048_1343_blank_unreachable
 
+
+/- Two further 8192-stride subfamilies of the six finite residual m=0
+   candidates. Their terminal odd-right states have sum 1 mod 4. -/
+
+private theorem normalize_m0_8192_1046 (s : Nat) :
+    BB6.Agent3.fullForcedNormalize (16384*s+2095) (24576*s+3145) =
+      (62888*s+8010,1324*s+167) := by
+  have hO0 : BB6.Agent3.oddLowGate (16384*s+2095) (24576*s+3145) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hO1 : ¬BB6.Agent3.oddLowGate (20480*s+2618) (22528*s+2880) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS1 : ¬BB6.Agent3.evenSevenGate (20480*s+2618) (22528*s+2880) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA1 : ¬BB6.Agent3.evenAffineGate (20480*s+2618) (22528*s+2880) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE1 : BB6.Agent46.sixEvenRightGate (20480*s+2618) (22528*s+2880) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO2 : ¬BB6.Agent3.oddLowGate (43008*s+5496) (11264*s+1439) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS2 : BB6.Agent3.evenSevenGate (43008*s+5496) (11264*s+1439) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hO3 : BB6.Agent3.oddLowGate (27136*s+3465) (19200*s+2451) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hO4 : ¬BB6.Agent3.oddLowGate (23168*s+2956) (21184*s+2702) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS4 : ¬BB6.Agent3.evenSevenGate (23168*s+2956) (21184*s+2702) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA4 : ¬BB6.Agent3.evenAffineGate (23168*s+2956) (21184*s+2702) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE4 : BB6.Agent46.sixEvenRightGate (23168*s+2956) (21184*s+2702) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO5 : ¬BB6.Agent3.oddLowGate (44352*s+5656) (10592*s+1350) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS5 : ¬BB6.Agent3.evenSevenGate (44352*s+5656) (10592*s+1350) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA5 : ¬BB6.Agent3.evenAffineGate (44352*s+5656) (10592*s+1350) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE5 : BB6.Agent46.sixEvenRightGate (44352*s+5656) (10592*s+1350) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO6 : ¬BB6.Agent3.oddLowGate (54944*s+7004) (5296*s+674) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS6 : ¬BB6.Agent3.evenSevenGate (54944*s+7004) (5296*s+674) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA6 : ¬BB6.Agent3.evenAffineGate (54944*s+7004) (5296*s+674) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE6 : BB6.Agent46.sixEvenRightGate (54944*s+7004) (5296*s+674) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO7 : ¬BB6.Agent3.oddLowGate (60240*s+7676) (2648*s+336) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS7 : ¬BB6.Agent3.evenSevenGate (60240*s+7676) (2648*s+336) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA7 : ¬BB6.Agent3.evenAffineGate (60240*s+7676) (2648*s+336) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE7 : BB6.Agent46.sixEvenRightGate (60240*s+7676) (2648*s+336) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO8 : ¬BB6.Agent3.oddLowGate (62888*s+8010) (1324*s+167) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS8 : ¬BB6.Agent3.evenSevenGate (62888*s+8010) (1324*s+167) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA8 : ¬BB6.Agent3.evenAffineGate (62888*s+8010) (1324*s+167) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE8 : ¬BB6.Agent46.sixEvenRightGate (62888*s+8010) (1324*s+167) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  calc
+    BB6.Agent3.fullForcedNormalize (16384*s+2095) (24576*s+3145) =
+        BB6.Agent3.fullForcedNormalize (20480*s+2618) (22528*s+2880) :=
+      forced_step_odd hO0 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (43008*s+5496) (11264*s+1439) :=
+      forced_step_six hO1 hS1 hA1 hE1 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (27136*s+3465) (19200*s+2451) :=
+      forced_step_seven hO2 hS2 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (23168*s+2956) (21184*s+2702) :=
+      forced_step_odd hO3 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (44352*s+5656) (10592*s+1350) :=
+      forced_step_six hO4 hS4 hA4 hE4 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (54944*s+7004) (5296*s+674) :=
+      forced_step_six hO5 hS5 hA5 hE5 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (60240*s+7676) (2648*s+336) :=
+      forced_step_six hO6 hS6 hA6 hE6 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (62888*s+8010) (1324*s+167) :=
+      forced_step_six hO7 hS7 hA7 hE7 (by omega) (by omega)
+    _ = (62888*s+8010,1324*s+167) :=
+      forced_terminal hO8 hS8 hA8 hE8
+
+private theorem normalize_m0_8192_3141 (s : Nat) :
+    BB6.Agent3.fullForcedNormalize (16384*s+6285) (24576*s+9430) =
+      (54760*s+20978,5388*s+2063) := by
+  have hO0 : ¬BB6.Agent3.oddLowGate (16384*s+6285) (24576*s+9430) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS0 : ¬BB6.Agent3.evenSevenGate (16384*s+6285) (24576*s+9430) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA0 : ¬BB6.Agent3.evenAffineGate (16384*s+6285) (24576*s+9430) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE0 : BB6.Agent46.sixEvenRightGate (16384*s+6285) (24576*s+9430) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO1 : ¬BB6.Agent3.oddLowGate (40960*s+15713) (12288*s+4714) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS1 : ¬BB6.Agent3.evenSevenGate (40960*s+15713) (12288*s+4714) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA1 : ¬BB6.Agent3.evenAffineGate (40960*s+15713) (12288*s+4714) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE1 : BB6.Agent46.sixEvenRightGate (40960*s+15713) (12288*s+4714) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO2 : ¬BB6.Agent3.oddLowGate (53248*s+20425) (6144*s+2356) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS2 : ¬BB6.Agent3.evenSevenGate (53248*s+20425) (6144*s+2356) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA2 : BB6.Agent3.evenAffineGate (53248*s+20425) (6144*s+2356) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hO3 : BB6.Agent3.oddLowGate (59392*s+22779) (3072*s+1177) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hO4 : ¬BB6.Agent3.oddLowGate (31232*s+11976) (17152*s+6575) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS4 : BB6.Agent3.evenSevenGate (31232*s+11976) (17152*s+6575) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hO5 : BB6.Agent3.oddLowGate (24192*s+9273) (20672*s+7923) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hO6 : ¬BB6.Agent3.oddLowGate (22432*s+8596) (21552*s+8258) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS6 : ¬BB6.Agent3.evenSevenGate (22432*s+8596) (21552*s+8258) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA6 : ¬BB6.Agent3.evenAffineGate (22432*s+8596) (21552*s+8258) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE6 : BB6.Agent46.sixEvenRightGate (22432*s+8596) (21552*s+8258) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO7 : ¬BB6.Agent3.oddLowGate (43984*s+16852) (10776*s+4128) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS7 : ¬BB6.Agent3.evenSevenGate (43984*s+16852) (10776*s+4128) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA7 : ¬BB6.Agent3.evenAffineGate (43984*s+16852) (10776*s+4128) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE7 : BB6.Agent46.sixEvenRightGate (43984*s+16852) (10776*s+4128) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  have hO8 : ¬BB6.Agent3.oddLowGate (54760*s+20978) (5388*s+2063) := by
+    unfold BB6.Agent3.oddLowGate; omega
+  have hS8 : ¬BB6.Agent3.evenSevenGate (54760*s+20978) (5388*s+2063) := by
+    unfold BB6.Agent3.evenSevenGate; omega
+  have hA8 : ¬BB6.Agent3.evenAffineGate (54760*s+20978) (5388*s+2063) := by
+    unfold BB6.Agent3.evenAffineGate; omega
+  have hE8 : ¬BB6.Agent46.sixEvenRightGate (54760*s+20978) (5388*s+2063) := by
+    unfold BB6.Agent46.sixEvenRightGate; omega
+  calc
+    BB6.Agent3.fullForcedNormalize (16384*s+6285) (24576*s+9430) =
+        BB6.Agent3.fullForcedNormalize (40960*s+15713) (12288*s+4714) :=
+      forced_step_six hO0 hS0 hA0 hE0 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (53248*s+20425) (6144*s+2356) :=
+      forced_step_six hO1 hS1 hA1 hE1 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (59392*s+22779) (3072*s+1177) :=
+      forced_step_affine hO2 hS2 hA2 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (31232*s+11976) (17152*s+6575) :=
+      forced_step_odd hO3 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (24192*s+9273) (20672*s+7923) :=
+      forced_step_seven hO4 hS4 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (22432*s+8596) (21552*s+8258) :=
+      forced_step_odd hO5 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (43984*s+16852) (10776*s+4128) :=
+      forced_step_six hO6 hS6 hA6 hE6 (by omega) (by omega)
+    _ = BB6.Agent3.fullForcedNormalize (54760*s+20978) (5388*s+2063) :=
+      forced_step_six hO7 hS7 hA7 hE7 (by omega) (by omega)
+    _ = (54760*s+20978,5388*s+2063) :=
+      forced_terminal hO8 hS8 hA8 hE8
+
+private theorem excluded_m0_8192_1046 (s : Nat) :
+    BB6.Agent3.fullForcedExcluded (16384*s+2095) (24576*s+3145)=true := by
+  simp [BB6.Agent3.fullForcedExcluded,normalize_m0_8192_1046]
+  omega
+
+private theorem excluded_m0_8192_3141 (s : Nat) :
+    BB6.Agent3.fullForcedExcluded (16384*s+6285) (24576*s+9430)=true := by
+  simp [BB6.Agent3.fullForcedExcluded,normalize_m0_8192_3141]
+  omega
+
+private theorem affine_right_m0_8192_1046 (s : Nat) :
+    (BB6.Agent15.affineNormalize (16384*s+2095)
+      (24576*s+3145)).2 ≠ 4 := by
+  apply affine_right_no_step <;> omega
+
+private theorem affine_right_m0_8192_3141 (s : Nat) :
+    (BB6.Agent15.affineNormalize (16384*s+6285)
+      (24576*s+9430)).2 ≠ 4 := by
+  apply affine_right_no_step <;> omega
+
+theorem m0_8192_1046_admitted_and_excluded (s : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+        (8192*s+1046) 0 ∧
+      BB6.Agent3.fullForcedExcluded (16384*s+2095)
+        (24576*s+3145)=true := by
+  constructor
+  · apply prior_high_allowed_m0
+    · omega
+    · have hx : 2*(8192*s+1046)+3=16384*s+2095 := by omega
+      have hy : 3*(8192*s+1046)+7=24576*s+3145 := by omega
+      rw [hx,hy]
+      exact affine_right_m0_8192_1046 s
+  · exact excluded_m0_8192_1046 s
+
+theorem m0_8192_3141_admitted_and_excluded (s : Nat) :
+    BB6.Agent19HighEvenRight.highAllowedC23WithEvenRight
+        (8192*s+3141) 0 ∧
+      BB6.Agent3.fullForcedExcluded (16384*s+6285)
+        (24576*s+9430)=true := by
+  constructor
+  · apply prior_high_allowed_m0
+    · omega
+    · have hx : 2*(8192*s+3141)+3=16384*s+6285 := by omega
+      have hy : 3*(8192*s+3141)+7=24576*s+9430 := by omega
+      rw [hx,hy]
+      exact affine_right_m0_8192_3141 s
+  · exact excluded_m0_8192_3141 s
+
+theorem m0_8192_1046_blank_unreachable (s : Nat) :
+    ¬ BB6.Agent3.CReach (16384*s+2095) (24576*s+3145) := by
+  intro h
+  rcases h with ⟨time,hrun⟩
+  exact (BB6.Agent3.fullForcedExcluded_sound _ _
+    (excluded_m0_8192_1046 s) time) hrun
+
+theorem m0_8192_3141_blank_unreachable (s : Nat) :
+    ¬ BB6.Agent3.CReach (16384*s+6285) (24576*s+9430) := by
+  intro h
+  rcases h with ⟨time,hrun⟩
+  exact (BB6.Agent3.fullForcedExcluded_sound _ _
+    (excluded_m0_8192_3141 s) time) hrun
+
+theorem m0_8192_1046_new_bool_filter (s : Nat) :
+    BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool
+      (8192*s+1046) 0 = false := by
+  have hprior :
+      BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightBool
+        (8192*s+1046) 0 = true :=
+    (BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightBool_iff
+      (8192*s+1046) 0).mpr
+        (m0_8192_1046_admitted_and_excluded s).1
+  have hx :
+      BB6.Agent3FullForcedResidual.highTargetX (8192*s+1046)
+        =16384*s+2095 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetX]
+    omega
+  have hy :
+      BB6.Agent3FullForcedResidual.highTargetY (8192*s+1046) 0
+        =24576*s+3145 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetY]
+    omega
+  have hforced :
+      BB6.Agent3.fullForcedExcluded
+        (BB6.Agent3FullForcedResidual.highTargetX (8192*s+1046))
+        (BB6.Agent3FullForcedResidual.highTargetY (8192*s+1046) 0)=true := by
+    rw [hx,hy]
+    exact (m0_8192_1046_admitted_and_excluded s).2
+  simp [BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool,
+    hprior,hforced]
+
+theorem m0_8192_3141_new_bool_filter (s : Nat) :
+    BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool
+      (8192*s+3141) 0 = false := by
+  have hprior :
+      BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightBool
+        (8192*s+3141) 0 = true :=
+    (BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightBool_iff
+      (8192*s+3141) 0).mpr
+        (m0_8192_3141_admitted_and_excluded s).1
+  have hx :
+      BB6.Agent3FullForcedResidual.highTargetX (8192*s+3141)
+        =16384*s+6285 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetX]
+    omega
+  have hy :
+      BB6.Agent3FullForcedResidual.highTargetY (8192*s+3141) 0
+        =24576*s+9430 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetY]
+    omega
+  have hforced :
+      BB6.Agent3.fullForcedExcluded
+        (BB6.Agent3FullForcedResidual.highTargetX (8192*s+3141))
+        (BB6.Agent3FullForcedResidual.highTargetY (8192*s+3141) 0)=true := by
+    rw [hx,hy]
+    exact (m0_8192_3141_admitted_and_excluded s).2
+  simp [BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool,
+    hprior,hforced]
+
+#print axioms m0_8192_1046_admitted_and_excluded
+#print axioms m0_8192_3141_admitted_and_excluded
+#print axioms m0_8192_1046_blank_unreachable
+#print axioms m0_8192_3141_blank_unreachable
+#print axioms m0_8192_1046_new_bool_filter
+#print axioms m0_8192_3141_new_bool_filter
+
+
 end BB6.Agent19M0Mod2048
