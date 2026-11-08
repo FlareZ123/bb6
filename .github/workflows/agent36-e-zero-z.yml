@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent36-cryptid-trace:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate
     steps:
       - uses: actions/checkout@v4
       - name: Restore originals
@@ -68,5 +68,7 @@ jobs:
           lean -o "$D/MarkerZeroAZero.olean" "$D/MarkerZeroAZero.lean" | tee -a axioms.log
           lean -o "$D/EAltPacketCompose.olean" "$D/EAltPacketCompose.lean" | tee -a axioms.log
           lean "$D/EAltK2AZero.lean" | tee -a axioms.log
-          lean "im-results/agent36-cryptid-trace/EZeroZ.lean" | tee -a axioms.log
+          X=im-results/agent36-cryptid-trace
+          lean -o "$X/EZeroZ.olean" "$X/EZeroZ.lean" | tee -a axioms.log
+          lean "$X/ZSafeNormalizer.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
