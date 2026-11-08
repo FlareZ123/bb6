@@ -83,4 +83,11 @@ The map also gives a direct explanation of the odd-parent underflow. After the l
 
 The exact high-level C(a,b) map is transcribed in HighLevel746Underflow.lean. The b=2 state has shifted coordinate c=a+3. If c is even, one transition replaces it with 3c/2 and leaves the second coordinate at 2. For c=2^t z with z odd, the t underflow transitions reach 3^t z, which is odd; the next transition exits to C(g,0) with 2g+5=3^(t+1)z.
 
-The bridge theorem in TThreeHighTTwoOneHighLevel.lean proves that every GapOddParent(g) witness contains this exact finite underflow path from C(2^t z-3,2) to C(g,0). It also retains the root-reachable predecessor x and the scale equation 2*(2^t z)=8*2^l+x+l+5. The preceding l-step high-b drain from C(x,0) to the intermediate state remains unformalized. The new modules compile locally; targeted repository CI is pending.
+The bridge theorem in TThreeHighTTwoOneHighLevel.lean proves that every GapOddParent(g) witness contains this exact finite underflow path from C(2^t z-3,2) to C(g,0). It also retains the root-reachable predecessor x and the scale equation 2*(2^t z)=8*2^l+x+l+5. The full l-step high-b drain is now formalized in HighLevel746Drain.lean. TThreeHighTTwoOneHighLevel.lean proves every ResetParent edge embeds as a finite high-level path C(x,0) -> C(u,0), lifts this over ResetChain, and proves every GapOddParent(g) witness yields a full path from C(0,2) to C(g,0). This is a one-way refinement; the converse is open. The underflow-only modules passed full-source CI run 42435223242; the expanded full-drain bridge CI is pending.
+
+
+## Full C(a,b) path refinement
+
+HighLevel746Drain.lean proves the exact high-b drain coordinates A_i=2^(i+2)-2 and B_i=2*x+9+2*i-8*2^i, including the drain inequalities from the parent bands, and proves the low modulo-four transition to either C(u,0) or C(2^t z-3,2). Together with the underflow theorem, this yields a finite high-level path for each ResetParent constructor.
+
+TThreeHighTTwoOneHighLevel.lean lifts the local edge theorem over ResetChain and proves gap_odd_parent_full_highlevel_path: any GapOddParent(g) witness gives a path from C(0,2), the external formalization's start state, to C(g,0). The theorem is a one-way embedding of the local source-root path into the independently formalized high-level map. A converse characterization of all high-level C-to-C paths is not claimed.

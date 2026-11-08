@@ -354,3 +354,10 @@ The external Hardness note reports 1,253 cascades and an estimated hazard near 1
 Added HighLevel746Underflow.lean, a Lean transcription of the external C(a,b) high-level map. Proved the b=2 transition formulas, the exact shifted-coordinate update c=a+3 -> 3c/2 while c is even, the closed underflow path for c=2^t z with z odd, and the final transition to C(g,0) with 2g+5=3^(t+1)z.
 
 Added TThreeHighTTwoOneHighLevel.lean. It proves that every local GapOddParent(g) witness contains this exact high-level underflow path from C(2^t z-3,2) to C(g,0), preserving the root-reachable predecessor x and the source scale equation 2*(2^t z)=8*2^l+x+l+5. The high-b drain from C(x,0) to the intermediate C-state remains unformalized. Both new modules compile locally against the source-interface stubs; the source module TThreeHighTTwoOne remains full-source CI-certified by run 42433786158. New branch agent7-highlevel-underflow adds the modules and a CI step; record its run ID after completion.
+
+
+## 2026-11-08: full high-level path refinement
+
+Extended the Cryptids map bridge from the odd-underflow tail to complete ResetParent edges. HighLevel746Drain.lean proves the l-step high-b drain with A_i=2^(i+2)-2 and B_i=2*x+9+2*i-8*2^i, proves the drain inequalities from the parent bands, and proves the low modulo-four transition to C(u,0) for even parents or C(2^t z-3,2) for odd parents. Combined with the exact 3/2 underflow, every ResetParent edge becomes a finite high-level path C(x,0)->C(u,0).
+
+TThreeHighTTwoOneHighLevel.lean lifts the edge theorem over ResetChain and proves GapOddParent(g) gives a full path from the external start C(0,2) to C(g,0). This is a one-way embedding, not a converse equivalence. The underflow-only version passed full-source CI run 42435223242; the expanded bridge is now on branch agent7-highlevel-underflow and awaits CI.

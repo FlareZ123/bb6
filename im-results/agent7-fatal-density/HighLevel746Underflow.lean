@@ -99,6 +99,11 @@ inductive Steps : State → State → Prop where
   | refl (s:State) : Steps s s
   | step {s t u:State} (h:next s=some t) (ht:Steps t u) : Steps s u
 
+theorem Steps.trans {s t u:State} (h:Steps s t) (ht:Steps t u) : Steps s u := by
+  induction h with
+  | refl _ => exact ht
+  | step hstep htail ih => exact Steps.step hstep (ih ht)
+
 theorem underflow_path (t z:Nat) (hz:z%2=1) (hlarge:7≤2^t*z) :
   Steps (.C (2^t*z-3) 2) (.C ((3^(t+1)*z-5)/2) 0) := by
   induction t generalizing z with

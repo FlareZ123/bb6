@@ -94,4 +94,11 @@ The independent C(a,b) map is transcribed in HighLevel746Underflow.lean. Lean pr
 
 TThreeHighTTwoOneHighLevel.lean packages this as a theorem from GapOddParent(g): the exact odd source witness supplies a finite high-level underflow path from C(2^t z-3,2) to C(g,0), while preserving the root-reachable x and the source scale equation 2*(2^t z)=8*2^l+x+l+5. The l-step high-b drain from C(x,0) to the intermediate C-state is not yet part of this bridge.
 
-The new modules are committed on branch agent7-highlevel-underflow; targeted full-source CI is pending.
+The underflow-tail modules passed targeted full-source CI run 42435223242. The expanded full-drain bridge is committed on branch agent7-highlevel-underflow; its CI run is pending.
+
+
+## Full ResetParent-to-high-level path refinement
+
+HighLevel746Drain.lean proves the high-b drain coordinates A_i=2^(i+2)-2 and B_i=2*x+9+2*i-8*2^i, derives every drain inequality from the parent-band lower bound, and proves the low modulo-four transition for both even and odd ResetParent branches. Together with the exact 3/2 underflow theorem, this yields a finite high-level path for every ResetParent edge.
+
+TThreeHighTTwoOneHighLevel.lean lifts the edge theorem over ResetChain and proves gap_odd_parent_full_highlevel_path: every GapOddParent(g) witness yields a path from C(0,2), the external formalization's start state, to C(g,0). This is a one-way embedding of the local source-root path into the independent high-level map. The converse characterization of all high-level C-to-C paths remains open.

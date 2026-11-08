@@ -66,4 +66,7 @@ Build a formal bridge between the external high-level map and the local source R
 
 FlareZ123/bb6 now contains HighLevel746Underflow.lean, a Lean transcription of the C(a,b) high-level map and proofs of its exact b=2 underflow. The shifted coordinate c=a+3 follows c -> 3c/2 while even. For c=2^t z with z odd, t such transitions reach 3^t z, and the final transition reaches C(g,0) with 2g+5=3^(t+1)z.
 
-TThreeHighTTwoOneHighLevel.lean proves that a local GapOddParent(g) witness yields this finite underflow path from C(2^t z-3,2) to C(g,0), retaining the source predecessor x and the scale equation. The preceding high-b drain from C(x,0) to the intermediate C-state remains open. The new modules have been checked locally; targeted full-source CI is pending.
+TThreeHighTTwoOneHighLevel.lean proves that a local GapOddParent(g) witness yields this finite underflow path from C(2^t z-3,2) to C(g,0), retaining the source predecessor x and the scale equation. The full high-b drain and low modulo-four branch are now locally Lean-formalized in HighLevel746Drain.lean. TThreeHighTTwoOneHighLevel.lean proves every ResetParent edge embeds as a finite path C(x,0) -> C(u,0), lifts this over ResetChain, and proves every GapOddParent(g) witness yields a full path C(0,2) -> C(g,0). This is a one-way embedding; the converse remains open. The new modules have been checked locally; targeted full-source CI is pending.
+
+
+The underflow-only modules passed targeted full-source CI run 42435223242. The expanded full-drain bridge is committed on branch agent7-highlevel-underflow, with CI pending.
