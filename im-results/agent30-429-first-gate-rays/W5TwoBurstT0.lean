@@ -52,6 +52,16 @@ theorem raw_two_burst_t0 :
     simpa [lowU,lowW,qTwo,BB429FirstGateRays.anc] using low_t0_raw
   exact raw_two_burst_of_low_ray 0 54333 hrow
 
+/-- Simplified exact primitive query count for the first fully physical
+    exceptional two-burst prepared tape. -/
+theorem raw_two_burst_t0_exact :
+    run target429 1888290 (jConfig 3 1717) = none := by
+  have hn : branchCostSum 3 7 + 54333 +
+      (branchCostSum 11 5 + branchCost (branchU 11 5)) = 1888290 := by decide
+  have hw : 4*kTwo 0 + 17 = 1717 := by decide
+  simpa only [hn, hw] using raw_two_burst_t0
+
+#print axioms raw_two_burst_t0_exact
 #print axioms low_t0_source
 #print axioms low_t0_raw
 #print axioms raw_two_burst_t0
