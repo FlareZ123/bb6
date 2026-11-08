@@ -55,7 +55,7 @@ This has immediate implications for the true original `highLevelNext`, because i
 - Odd `d`: even `a`, `a≥d+5`, and `d+3<T_(a-d-5)`.
 - Even `d`: even `a`, `a≥d+3`, and `d+2<T_(a-d-2)`.
 
-The branchwise boundaries are attained by synthetic even-first-counter fatal states. For even `n`, the odd-`d` example is `D(T_n+n+2,T_n-3)`; for positive even `n`, the even-`d` example is `D(T_n+n,T_n-2)`. Proofs `highLevel_far_odd_shield_sharp` and `highLevel_far_even_shield_sharp` are in the same source file, with their source CI pending as of this note. No reachability assertion is made for those synthetic states.
+The branchwise boundaries are attained by synthetic even-first-counter fatal states. For even `n`, the odd-`d` example is `D(T_n+n+2,T_n-3)`; for positive even `n`, the even-`d` example is `D(T_n+n,T_n-2)`. Proofs `highLevel_far_odd_shield_sharp` and `highLevel_far_even_shield_sharp` passed the original-source [pinned CI run 42527550110](https://github.com/FlareZ123/bb6/actions/runs/42527550110), along with all preceding bijection, shield, and high-level survival theorems. No reachability assertion is made for those synthetic states.
 
 ## Verification scope and frontier
 
