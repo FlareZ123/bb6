@@ -119,6 +119,11 @@ private theorem regularPad (a m : Nat) :
       (regularSection a m 0) := by
   have h := BB6.BoundaryPadding.source_pad 0 0 1
     (regularSection a m 0)
+  change CfgEq
+    (represent
+      (⟨[],false,List.replicate a true ++
+        (oppairs m ++ [false]),5⟩ : Cfg))
+    (represent (regularSection a m 0))
   simpa [regularSection,CryptidBoundary.run,List.append_assoc] using
     (cfgEq_symm h)
 
@@ -128,13 +133,10 @@ theorem b_zero (kb p m : Nat) :
         (packet (3*kb+2) 0 p (marker m)))
       (regularSection (8*kb+9+p) m 0) := by
   rw [BB6.Agent2PacketP2Reset.b_zero_any]
-  have hh : List.replicate (8*kb+9) true ++
-      (List.replicate p true ++ marker m) =
-      List.replicate (8*kb+9+p) true ++
-        (oppairs m ++ [false]) := by
-    rw [←List.append_assoc,List.replicate_append_replicate]
-    rfl
-  rw [hh]
+  change ObsEq
+    (⟨[],false,List.replicate (8*kb+9+p) true ++
+      (oppairs m ++ [false]),5⟩ : Cfg)
+    (regularSection (8*kb+9+p) m 0)
   exact regularPad _ _
 
 private theorem e_one_exact (a q m : Nat) :
