@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix"
           LOG=/tmp/agent6-junc-crossing.log
           : > "$LOG"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
