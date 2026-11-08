@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate:im-results/agent37-p2-k13
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate:im-results/agent37-p2-k13:im-results/agent37-echain
     steps:
       - uses: actions/checkout@v4
       - name: Restore checksum-pinned six-state machine
@@ -47,9 +47,10 @@ jobs:
           done
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+          lean im-results/agent37-echain/EChainSource.lean | tee axioms.log
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean"
           lean -o "$D/PacketP2ResetSource.olean" "$D/PacketP2ResetSource.lean"
           lean -o "$C/P2K4Shapes.olean" "$C/P2K4Shapes.lean"
-          lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee axioms.log
+          lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
           lean "$K/P2K13Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
