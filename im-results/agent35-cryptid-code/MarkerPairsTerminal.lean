@@ -130,7 +130,7 @@ theorem turn_two (m j : Nat) (ys : List Bool) :
   calc
     _ = (oppairs j ++ [false,true]) ++
           ([false,true] ++ (pairs (m+1) ++ [true,true])) := by
-            rw [oppairs_comm j]
+            rw [←List.append_assoc,oppairs_comm j]
             simp [oppairs,List.append_assoc]
     _ = oppairs (j+2) ++ (pairs (m+1) ++ [true,true]) := by
       rw [oppairs_snoc,←List.append_assoc,oppairs_snoc]
@@ -155,7 +155,7 @@ theorem back_base (m j : Nat) (ys : List Bool) :
     run 4
       (back 0 (pairs (m+1) ++ [true,true]) (pairs (j+2) ++ ys)) =
     sweepD m ([true,true,false] ++ (pairs (j+2) ++ ys)) := by
-  simpa [back,sweepD,pairs,List.append_assoc] using
+  simpa [back,oppairs,sweepD,pairs,List.append_assoc] using
     back_base_raw (pairs m ++ [true,true]) (pairs (j+2) ++ ys)
 
 /-- Arbitrarily many alternating terminal pairs, exactly 6 primitive moves per pair. -/
