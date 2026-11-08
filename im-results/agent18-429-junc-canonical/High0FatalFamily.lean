@@ -26,6 +26,19 @@ theorem seed_bound (k : Nat) : 10+3*k ≤ 3*2^(turns k) := by
     rw [hp]
     omega
 
+/-- Distinct indices give strictly increasing initial J parameters. -/
+theorem seed_strict (k : Nat) : seed k < seed (k+1) := by
+  have h0 := seed_bound k
+  have h1 := seed_bound (k+1)
+  have hp : 2^(turns (k+1)) = 16*2^(turns k) := by
+    calc
+      2^(turns (k+1)) = 2^(turns k+4) := by congr 1
+      _ = 2^(turns k)*2^4 := by rw [Nat.pow_add]
+      _ = 16*2^(turns k) := by omega
+  unfold seed
+  rw [hp]
+  omega
+
 theorem seed_linear (k : Nat) :
     4*seed k + (25+3*(turns k)) = 12*2^(turns k) := by
   have h := seed_bound k
@@ -65,7 +78,7 @@ def fatalTime (k : Nat) : Nat :=
     branchCost (branchU 0 (turns k))
 
 /-- For every k, the *original* raw six-state machine halts after the
-    certified high-zero return, 4k+1 consecutive high-3 branches, and the
+    certified high-zero return, 4k+5 consecutive high-3 branches, and the
     fatal C/01 J endpoint. Every initial J tape is synthetic/prepared. -/
 theorem high0_fatal_family (k : Nat) :
     run target429 (fatalTime k)
@@ -111,6 +124,7 @@ theorem high0_fatal_family (k : Nat) :
   exact hfinal
 
 #print axioms seed_bound
+#print axioms seed_strict
 #print axioms branch_fatal
 #print axioms high0_fatal_family
 
