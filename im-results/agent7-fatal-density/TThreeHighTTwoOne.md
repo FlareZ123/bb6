@@ -1,6 +1,6 @@
 # High-q t=2 branch with quotient d = 1 mod 3
 
-**Status:** intermediate research result. The Lean source modules are committed with a targeted full-source CI check pending. This result is a necessary-condition refinement, not a root-death theorem.
+**Status:** intermediate research result. Targeted full-source Lean 4.36.0-rc2 CI passed in [run 42433786158](https://github.com/FlareZ123/bb6/actions/runs/42433786158). This result is a necessary-condition refinement, not a root-death theorem.
 
 ## Setting
 
@@ -67,6 +67,13 @@ The third residue class is not excluded. It is routed into a specific, genuine o
 - TThreeHighTTwoOneArithmetic.lean proves the mod-9 exponent table and residue selector using Lean core arithmetic.
 - TThreeHighTTwoOne.lean connects the selector to the original reset-parent source grammar through the existing source theorems.
 - The local proof draft was checked against explicitly declared source-interface stubs. That check validates proof structure only.
-- Targeted repository CI is required to verify the theorem against the actual imports. The CI result will be recorded in the dossier README after completion.
+- Targeted repository CI run 42433786158 compiled both modules against the actual imported source chain, without source stubs or sorry.
 
 This result does not establish that any candidate is actually reachable, does not resolve the remaining odd-parent recursion at g, and does not prove that machine #746 halts or fails to halt. It contributes no BB(6) upper bound by itself.
+
+
+## Independent high-level map
+
+Google DeepMind's public Cryptids repository contains an independent Lean acceleration of this exact machine. Its high-level start is C(0,2), and the first transition is C(2,0), the same source reset root used here. The map is summarized in resources/cryptids-bb6-2026.md.
+
+The map also gives a direct explanation of the odd-parent underflow. After the low branch reaches C(y,2), put c=y+3. When c is even, the next C-transition replaces c by 3c/2. If c=2^t z with z odd, t underflow steps produce 3^t z, and the final C-transition reaches g with 2g+5=3^(t+1)z. The second source equation in GapOddParent is the exact relation 2^(t+1)z=8*2^l+x+l+5. This is an algebraic alignment with the external map; a formal cross-repository refinement theorem has not yet been added.

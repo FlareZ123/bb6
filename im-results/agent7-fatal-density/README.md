@@ -72,4 +72,17 @@ The new TThreeHighTTwoOne.lean and TThreeHighTTwoOneArithmetic.lean cover the pr
 
 The exact necessary selector is: for n%18 in {4,17}, d%9 is 1 or 4 or GapOddParent(g); for n%18 in {5,10}, d%9 is 4 or 7 or GapOddParent(g); for n%18 in {11,16}, d%9 is 1 or 7 or GapOddParent(g). The third residue in each sector is routed into the odd fork. It is not root-excluded. The result is an intermediate necessary-condition refinement and does not close the d%3=1 branch.
 
-Targeted full-source CI verification is pending on branch agent7-t2-one-root.
+Full-source Lean 4.36.0-rc2 CI passed on branch commit 78ecb666ef4071a0f24c86200466a99d770320c2: [run 42433786158](https://github.com/FlareZ123/bb6/actions/runs/42433786158). The check compiled the actual imported source modules, with no source stubs.
+
+
+## Independent high-level acceleration for #746
+
+The same machine is formalized independently in Google DeepMind's Cryptids repository. Its machine-specific Lean module defines a high-level C(a,b) map with start C(0,2), whose first transition reaches the local source root C(2,0). The map has the exact cases:
+- C(a,0) -> C(2,2a+1);
+- C(a,1) -> halt;
+- for b>=2, put d=b-2; if d>=2a then C(2a+2,d-2a);
+- otherwise use the odd/even modulo-four branches with numerators 6a+d+5 or 6a+d+8.
+
+The local ResetParent even/odd equations line up algebraically with the C-to-C cascade in this accelerated map. In the odd branch, the intermediate shifted coordinate c=2^t z undergoes the finite underflow c -> 3c/2 while it remains even, followed by a final transition with 2g+5=3^(t+1)z. This is the same 3/2 structure exposed by GapOddParent(g). A formal edge-by-edge refinement between the two independent Lean developments remains a high-value next task.
+
+The external Hardness note reports 1,253 cascades and an estimated hazard around 10^-294. Treat that hazard as a heuristic, not as a proof of non-halting. See resources/cryptids-bb6-2026.md for source links, the exact map, and the derived drain equations.
