@@ -96,21 +96,23 @@ The odd case is [`W4JuncOne.lean`](W4JuncOne.lean); the even case is [`W4JuncGen
 
 The input's rightmost marked cell is at relative position `2*v+4`. Therefore the two C/0 events are respectively **three and six cells strictly to its right**. Both are provably nonfatal at the visited step because their *complete* right tapes are blank. This result was checked through the full original-source dependency graph in [manual CI 42521293673](https://github.com/FlareZ123/bb6/actions/runs/42521293673), before the later arithmetic `c0_event_offsets` lemma was added. The additional length/offset lemma is currently a separate local arithmetic extension.
 
-The first C/0 visit has the stronger exact head-history theorem
-[`junc0_w1_first_czero_max`](W4JuncMax.lean): for **all** `v`, the
-original-source maximum-head monitor certifies at step `2*v+31`
-a C/0, blank-right configuration with **net displacement = maximum head
-displacement = `2*v+7`**. Thus the head at this visit is a genuine
-record high over *every primitive prefix* of the preceding `2*v+31`
-steps, rather than merely lying beyond the input's initial marks.
-The proof combines a 20-step preparation that never moves right of the
-starting head, a monotone unbounded `2*(v+3)`-step B/0,C/1 sweep, and
-the five-step rightward arrival at C/0. This three-stage all-parameter
-source proof passed the full original-source Lean audit in
-[CI 42524166726](https://github.com/FlareZ123/bb6/actions/runs/42524166726),
-without `sorryAx`. **No equivalent record-max proof has yet been
-established for the second C/0 visit**.
+The two C/0 visits are now certified as **complete for each entire right-one Junc transition**, for every natural-number parameter. First, [`W4JuncMax.lean`](W4JuncMax.lean) establishes that the initial C/0 at time `2*v+31` is a whole-history head record, with both final and maximum displacement `2*v+7`, original-source [CI 42524166726](https://github.com/FlareZ123/bb6/actions/runs/42524166726). [`W4JuncSecondMax.lean`](W4JuncSecondMax.lean) proves the same for the second C/0 at time `2*v+42+crossTime(v+2)+15`: both final and maximum displacement are `2*v+10`. It decomposes the intervening B/1-to-E/1 entry, unbounded E/1 return, and fixed fourteen-step terminal approach. Source [CI 42526774393](https://github.com/FlareZ123/bb6/actions/runs/42526774393) passed with standard axioms only.
 
-These two events have been identified in the continuing trajectory; **no theorem states that they exhaust every C/0 visit during the complete excursion**. In particular, there is no source-checked all-time record-right invariant for authentic blank-origin entries. The explicit frontier offsets are candidate ingredients for such a proof, not a substitute for it.
+The interval between those events is now also fully classified. [`W4CZeroSafe.lean`](W4CZeroSafe.lean) guards the original zipper interpreter against state C scanning zero and proves, by genuine two-step induction for arbitrary `b` and right suffix, that the complete `sourceScanE b suffix` return never enters C/0, including its C/1 endpoint. Its `scanE_no_czero_any_prefix` is quantified over **every primitive prefix** and compiled in original-source [CI 42527195802](https://github.com/FlareZ123/bb6/actions/runs/42527195802).
+
+[`W4CZeroCount.lean`](W4CZeroCount.lean) defines an exact `runCount` counter of C/0 configurations at instruction start and proves the original-source count through the second event is exactly **one before the terminal C/0**, which itself is the second visit. The original source audit passed in [CI 42527666678](https://github.com/FlareZ123/bb6/actions/runs/42527666678).
+
+Crucially, [`W4CZeroFull.lean`](W4CZeroFull.lean) completes the previously missing **post-second-event interval** for both parities. A six-step departure from the second C/0 counts exactly one further C/0 instruction. The subsequent E/1 left sweep is C/0-free for every parameter and any left/right suffix; both the twelve-step odd terminal and the seventy-two-step even terminal are C/0-free. Lean proves these two whole-trajectory statements:
+
+```lean
+runCount (22*k+126) (junc 0 (2*k+1) 1) =
+  some (junc 0 0 (4*k+16),2)
+runCount (22*k+203) (junc 0 (2*k) 1) =
+  some (junc 2 4 (4*k+9),2)
+```
+
+This is an **exhaustive C/0 census of the complete specified symbolic transitions**, at every primitive step, for all `k`. Their only C/0 visits are the two at the exact times and positions above, both with completely blank right stacks. Hence **no fatal C/01 event occurs during either full right-one Junc return**, independent of the chosen parameter. The complete unchanged-original-source Lean audit [CI 42528389582](https://github.com/FlareZ123/bb6/actions/runs/42528389582) passed with no `sorryAx` and only standard axioms.
+
+The quantifier is deliberately restricted to runs starting in these precise `junc 0 v 1` whole-tape configurations and ending at the indicated canonical Junc states. No theorem yet covers every transition in the authentic blank-origin high-level chart, other right-budget cases, or an arbitrary Junc continuation beyond its endpoint. In particular, local record maxima do not prove that the head at these events is a global blank-orbit head record: it might have visited farther right in an earlier symbolic transition.
 
 The source-verified [physical halting criterion](../agent32-429-raw-parent/README.md) is still that the authentic blank trajectory reaches a C/0 with marked right neighbor, equivalently B/001. Proving its actual reachability or impossibility remains essential to deciding #429. No BB(6) exact value, global upper bound, or new blank-run witness is claimed. Therefore this intermediate result belongs in `im-results/`, not `results/`.
