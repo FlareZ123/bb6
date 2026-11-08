@@ -4,7 +4,7 @@ on:
 permissions:
   contents: read
 jobs:
-  source-check:
+  source-dependencies:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 50
@@ -25,7 +25,7 @@ jobs:
           base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/agent50-count-bridge.tar.xz
           echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/agent50-count-bridge.tar.xz" | sha256sum -c -
           tar -xJf /tmp/agent50-count-bridge.tar.xz -C "$target"
-      - name: Compile exact original P1 sources, Agent43 cost gates and Agent50 reset lower bound
+      - name: Compile exact original P1 sources and dependencies through the three-reset theorem
         run: |
           set -e
           MAP=im-results/agent1-p1-map
@@ -73,5 +73,46 @@ jobs:
           lean -o "$AG43/TwoResetWallPrefix.olean" "$AG43/TwoResetWallPrefix.lean"
           lean -o "$AG50SUB/ThreeResetCore.olean" "$AG50SUB/ThreeResetCore.lean"
           lean -o "$AG43/ThreeResetWallPrefix.olean" "$AG43/ThreeResetWallPrefix.lean"
+      - name: Package compiled Lean dependencies
+        run: |
+          set -e
+          find im-results/agent1-p1-map im-results/agent47-p1-finite-inverse im-results/agent1-p1-quarter im-results/agent28-p1-word-automaton im-results/agent43-p1-high-cost-reset-count im-results/agent50-p1-two-reset im-results/agent8-p1-fixed-reset im-results/agent50-p1-subwall -type f -name '*.olean' -print0 | tar --null -T - -czf /tmp/agent43-p1-dependencies.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent43-p1-dependency-oleans
+          path: /tmp/agent43-p1-dependencies.tar.gz
+          retention-days: 3
+
+  source-final:
+    needs: source-dependencies
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent43-p1-dependency-oleans
+          path: /tmp/agent43-p1-dependencies
+      - name: Restore compiled Lean dependencies
+        run: tar -xzf /tmp/agent43-p1-dependencies/agent43-p1-dependencies.tar.gz -C "$GITHUB_WORKSPACE"
+      - name: Compile four-reset arithmetic and original-source theorem
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean --version
           lean -o "$AG43/FourResetCore.olean" "$AG43/FourResetCore.lean"
-          lean -o "$AG43/FourResetWallPrefix.olean" "$AG43/FourResetWallPrefix.lean"
+          lean "$AG43/FourResetWallPrefix.lean"
