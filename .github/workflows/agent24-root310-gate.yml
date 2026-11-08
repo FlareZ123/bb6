@@ -24,3 +24,4 @@ jobs:
           lean --version
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent24-root310-gate/Root310Gate.olean im-results/agent24-root310-gate/Root310Gate.lean
+          lean -o im-results/agent24-root310-gate/Root310Criterion.olean im-results/agent24-root310-gate/Root310Criterion.lean
