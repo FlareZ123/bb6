@@ -111,6 +111,69 @@ theorem junc0_odd_w1_to_junc0 (k : Nat) :
   · trivial
   · omega
 
+/-- Uniform C/1 preparation covering all odd S_E indices from three up. -/
+theorem c1_to_e1_20_general (k : Nat) :
+  runWithDelta 20 (z 2 (ones (4*k+12)) true sigma) =
+    some (z 4 (ones (4*k+20)) true [true,false,true], 8) := by
+  rfl
+
+/-- Complete canonical return of the entire odd-parameter, right-one Junc
+    subfamily, including the four small indices omitted in the w4 application. -/
+theorem scanE_odd_sigma_to_junc0_general (k : Nat) :
+  runWithDelta (18*k+82) (sourceScanE (2*k+3) sigma) =
+    some (junc 0 0 (4*k+16), -((4*k+8 : Nat) : Int)) := by
+  have hret := sourceScanE_e1_revisit_delta (2*(k+1)+1) sigma
+  rw [crossTime_odd, finalLeft_odd] at hret
+  have hprep := c1_to_e1_20_general k
+  have hsweep := E1_sweep_delta (4*k+20) [true,false,true]
+  have htail := E1_tail12_delta (ones (4*k+16) ++ [true,false,true])
+  have hrewrite : 2*(k+1)+1 = 2*k+3 := by omega
+  rw [hrewrite] at hret
+  have hleft : 4*(k+1)+8 = 4*k+12 := by omega
+  rw [hleft] at hret
+  have htime : 18*k+82 =
+      ((14*(k+1)+15)+1) + (20 + ((4*k+20)+12)) := by omega
+  rw [htime, runWithDelta_add, hret]
+  simp only [Option.bind_some]
+  rw [runWithDelta_add, hprep]
+  simp only [Option.bind_some]
+  rw [runWithDelta_add, hsweep]
+  simp only [Option.bind_some]
+  have hones : ones (4*k+20) = ones 4 ++ ones (4*k+16) := by
+    calc
+      ones (4*k+20) = ones (4+(4*k+16)) := by congr 1 <;> omega
+      _ = ones 4 ++ ones (4*k+16) := ones_append 4 (4*k+16)
+  rw [hones, List.append_assoc, htail]
+  simp only [Option.map_some]
+  have hcfg : z 0 (ones 6) true (ones (4*k+16) ++ [true,false,true]) =
+      junc 0 0 (4*k+16) := by
+    change z 0 (ones 6) true (ones (4*k+16) ++ [true,false,true]) =
+      z 0 (true :: ones 5) true (true :: (ones (4*k+16) ++ [false,true]))
+    rw [ones_right_101]
+    rfl
+  rw [hcfg]
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
+  · trivial
+  · omega
+
+theorem junc0_all_odd_w1 (k : Nat) :
+  runWithDelta (22*k+126) (junc 0 (2*k+1) 1) =
+    some (junc 0 0 (4*k+16), -6) := by
+  have hfirst := junc0_w1_to_scanE (2*k+1)
+  have htail := scanE_odd_sigma_to_junc0_general k
+  have hb : 2*k+1+2 = 2*k+3 := by omega
+  rw [hb] at hfirst
+  have htime : 22*k+126 = (2*(2*k+1)+42)+(18*k+82) := by omega
+  rw [htime, runWithDelta_add, hfirst]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some]
+  simp only [Option.some.injEq, Prod.mk.injEq]
+  constructor
+  · trivial
+  · omega
+
 /-- Every positive-middle Junc(2,v,1) returns to canonical Junc(0,0,*).
     This is the complementary right-one case to the zero-u odd family. -/
 theorem junc2_w1_to_junc0 (v : Nat) (hv : 1 ≤ v) :
@@ -133,5 +196,6 @@ theorem junc2_w1_to_junc0 (v : Nat) (hv : 1 ≤ v) :
 #print axioms scanE_odd_sigma_to_junc0
 #print axioms junc0_odd_w1_to_junc0
 #print axioms junc2_w1_to_junc0
+#print axioms junc0_all_odd_w1
 
 end BB429W4JuncOne
