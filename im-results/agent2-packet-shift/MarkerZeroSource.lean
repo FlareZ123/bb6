@@ -112,7 +112,7 @@ theorem a_one (ka q r m : Nat) :
   rw [a_shape]
   exact BB6.Agent32Code.full_A_code_implicit_nil ka (code q r m)
 
-private theorem regularPad (a m : Nat) :
+theorem regularPad (a m : Nat) :
     ObsEq
       (⟨[],false,List.replicate a true ++
         (oppairs m ++ [false]),5⟩ : Cfg)
