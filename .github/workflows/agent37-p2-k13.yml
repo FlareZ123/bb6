@@ -53,6 +53,8 @@ jobs:
           lean -o "$D/PacketP2ResetSource.olean" "$D/PacketP2ResetSource.lean"
           lean -o "$C/P2K4Shapes.olean" "$C/P2K4Shapes.lean"
           lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
-          lean im-results/agent37-echain/EChainAExit.lean | tee -a axioms.log
+          lean -o im-results/agent37-echain/EChainAExit.olean im-results/agent37-echain/EChainAExit.lean | tee -a axioms.log
+          lean -o im-results/agent37-echain/EChainBResidues.olean im-results/agent37-echain/EChainBResidues.lean | tee -a axioms.log
+          lean im-results/agent37-echain/EChainBExit.lean | tee -a axioms.log
           lean "$K/P2K13Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
