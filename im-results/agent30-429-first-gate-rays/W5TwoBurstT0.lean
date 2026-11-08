@@ -6,13 +6,13 @@ import Lean.Elab.Tactic.Omega
 namespace BB429TwoBurstT0
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
 open BB429High3Ladder BB429JuncCanonical BB429FinishScanEDelta
-open BB429DeltaPhysicalBridge BB429TwoBurst BB429TwoBurstRaw
+open BB429DeltaPhysicalBridge BB429TwoBurst BB429TwoBurstRaw\nopen BB429SourceE1Delta BB429OddExcursion BB429PhysicalBridge
 
 /-- Exact finite source-level low-even row at the first two-burst
     exceptional seed. This is a computational certificate of a genuine
     54333-step zipper trace, with the entire finite-support tape checked. -/
-set_option maxRecDepth 32768 in
-set_option maxHeartbeats 20000000 in
+set_option maxRecDepth 32768
+set_option maxHeartbeats 20000000
 theorem low_t0_source :
     runWithDelta 54333 (junc 765 0 214) =
       some (junc 11 0 1742, -1521) := by native_decide
