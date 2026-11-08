@@ -66,8 +66,45 @@ theorem sourceScanE_all_prefixes_right_bound (b t : Nat) (suffix : List Bool)
      p hprefix (z 2 (finalLeft b) true suffix, 0, 0) hfull
   simpa using hmax
 
+/-- The original signed zipper interpreter is exactly the projection of
+the enhanced all-prefix maximum monitor, with no semantic replacement. -/
+theorem runWithMax_toDelta (n : Nat) (c : Zipper) :
+    (runWithMax n c).map (fun p => (p.1,p.2.1)) = runWithDelta n c := by
+  induction n generalizing c with
+  | zero => rfl
+  | succ n ih =>
+      simp only [runWithMax, runWithDelta]
+      cases h : oneWithDelta c with
+      | none => simp [h]
+      | some a =>
+          simp only [h, Option.bind_some]
+          rw [← ih]
+          cases ht : runWithMax n a.1 with
+          | none => simp [ht]
+          | some t => simp [ht]
+
+/-- Final original-source mathematical theorem, quantified over ALL
+successful primitive prefixes: the signed displacement is nonpositive
+throughout any source S_E E/1 excursion, for every alternating-pair
+parameter and every arbitrary right suffix. -/
+theorem sourceScanE_delta_all_prefixes_le_zero (b t : Nat) (suffix : List Bool)
+    (ht : t ≤ crossTime b + 1) (c : Zipper) (delta : Int)
+    (hrun : runWithDelta t (sourceScanE b suffix) = some (c,delta)) :
+    delta ≤ 0 := by
+  have hproj := runWithMax_toDelta t (sourceScanE b suffix)
+  cases hmax : runWithMax t (sourceScanE b suffix) with
+  | none => simp [hmax, hrun] at hproj
+  | some p =>
+      have hdelta : p.2.1 = delta := by
+        simp [hmax, hrun] at hproj
+        exact hproj.2
+      have hle := sourceScanE_all_prefixes_right_bound b t suffix ht p hmax
+      omega
+
 #print axioms runWithMax_final_le_max
 #print axioms runWithMax_prefix_le
 #print axioms sourceScanE_all_prefixes_right_bound
+#print axioms runWithMax_toDelta
+#print axioms sourceScanE_delta_all_prefixes_le_zero
 
 end BB429W4HeadPrefix
