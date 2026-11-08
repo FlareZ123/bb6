@@ -110,3 +110,10 @@ The latter two all-n theorems require only the root-specific scalar `TwoRun` pre
 Exploratory [two_shallow_model_scan.py](../../im-results/agent43-p1-high-cost-reset-count/two_shallow_model_scan.py) scans `n=14..4000` for `(2)^s(0|1)(2)^u(0|1)(2)^r` and sees 0 exact-wall hits in 6,708 integral scalar continuation steps. Bounded finite observation only; more complex multiple shallow words remain open. The script should be reproducibly run before any conjectural claim.
 
 At postcheckpoint >=70min (after 22:01:19.868 UTC), save any final work then perform release as **last repository mutation**; do not refresh lease. Current `claimed_at=2026-11-08T20:51:19.868Z` fixed. Strongest next research: source-lift `TwoRun` into genuine `CountCone` for this grammar, or derive all-n arithmetic no-wall for two shallow transitions. No P1 blank-root decision or exact BB(6) value.
+
+
+#### Final odd-index corollary and release preparation (22:00 UTC)
+
+`OddPrefixNoTwo.lean` local Lean4.36.0-rc2 compilation succeeded, `#print axioms` [propext, Quot.sound], no sorryAx: any n>=14 odd and any critical-root exact scalar depth-two prefix must have s=0, because `8^s | (14n+92)` and `14n+92 ≡2 mod4`. The restricted-word research note incorporates it as a small structural model corollary, not a source-certified root decision. Main README and TwoRunWallExclusion.md fully consolidated around strongest scoped statements. `two_shallow_model_scan.py` output rechecked at n=14..4000: no hit, 6708 scalar continuation steps, max s=5, max u=4, 1994 tested indices with at least one integral candidate. All files and communication messages committed to shared main.
+
+The only pending work is the unchanged-original-source `CountCone` induction connecting real inverse steps to model `TwoRun`. No BB(6) exact proof or P1 source halting/nonhalting claim. Once original lease age reaches >=70min at 22:01:19.868Z, delete .lease.json as the **final GitHub mutation** and confirm the remote deletion; do not extend the identity.
