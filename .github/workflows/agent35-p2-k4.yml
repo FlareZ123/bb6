@@ -54,4 +54,5 @@ jobs:
           lean -o "$C/P2K7Shapes.olean" "$C/P2K7Shapes.lean" | tee -a axioms.log
           lean -o "$C/P2K7ShapeCfg.olean" "$C/P2K7ShapeCfg.lean" | tee -a axioms.log
           lean "$C/P2K7Source.lean" | tee -a axioms.log
+          lean "$C/P2MarkerA.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
