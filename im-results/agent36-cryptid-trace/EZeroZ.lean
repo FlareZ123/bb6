@@ -157,27 +157,25 @@ theorem e_zero_Z0_regular (k q : Nat) :
       rw [show 3*k+4=2+(3*k+2) by omega,
         ← List.replicate_append_replicate]
       rfl
+  have hw : oppairs q ++ [false,false] =
+      false :: (pairs q ++ [false]) := by
+    simpa [List.append_assoc] using
+      congrArg (fun xs : List Bool => xs ++ [false]) (oppairs_false q)
   have hi : packet (3*k+4) q 0 (marker 0) =
       init (List.replicate (3*k+2) true ++
         false :: (pairs q ++ [false,false])) := by
     simp only [packet,word,marker,oppairs,List.replicate_zero,
       List.nil_append,init,List.cons_append,hn]
-    rw [show oppairs q ++ [false] = false :: pairs q from oppairs_false q]
-    simp [List.append_assoc]
+    rw [hw]
   rw [hi,full_E_pairs]
-  let reg : Cfg := regularSection (8*k+5) 1 (2*q+5)
-  have hout :
-      (⟨[],false,List.replicate (8*k+5) true ++
-        (false :: (List.replicate (2*q+6) true ++ [false])),5⟩ : Cfg) =
-      (⟨reg.l,reg.h,reg.r++[false],reg.st⟩ : Cfg) := by
-    dsimp [reg,regularSection,oppairs]
-    simp [List.append_assoc,List.replicate_succ]
-  rw [hout]
-  change ObsEq
-    (⟨reg.l,reg.h,reg.r++[false],reg.st⟩ : Cfg) reg
-  simpa [reg,run] using
-    (BB6.Padding.cfgEq_symm
-      (BB6.BoundaryPadding.source_pad 0 0 1 reg))
+  have hrep : List.replicate (2*q+6) true =
+      true :: List.replicate (2*q+5) true := by
+    rw [show 2*q+6=(2*q+5)+1 by omega]
+    simp only [List.replicate_succ]
+  have hpad := BB6.Padding.cfgEq_symm
+    (BB6.BoundaryPadding.source_pad 0 0 1
+      (regularSection (8*k+5) 1 (2*q+5)))
+  simpa [run,regularSection,oppairs,hrep,List.append_assoc] using hpad
 
 #print axioms e_zero_drop_Z
 #print axioms e_zero_q0_Z_regular
