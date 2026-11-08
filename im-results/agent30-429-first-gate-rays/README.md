@@ -32,6 +32,40 @@ anc u (n+1) = (2u+3)+anc (2u+3) n.
 ```
 The arithmetic identity `anc u n + 3n + 2u+13 = 4(u+3)2^n` determines the explicit right-five families from those fixed J endpoints. The source-checked accelerator-only theorem `BB429FirstGateRays.{even_gate_halts,odd_gate_halts}` separately passed [CI 42521779007](https://github.com/FlareZ123/bb6/actions/runs/42521779007), and the independently raw J family passed [CI 42522068921](https://github.com/FlareZ123/bb6/actions/runs/42522068921).
 
+## Exact two-burst low-even source classification
+
+The direct one-burst fatal parameters in the two original right-five endpoints are **completely classified**, not merely exhibited. [`W5FirstBurstComplete.lean`](W5FirstBurstComplete.lean) uses the source-certified `BB429Burst.burst_gateway_iff` to prove for every `k`:
+- A first-branch-only prefix from `(3,4k+17)` reaches the fatal gateway **iff** `k=K_even(m)` for some `m`.
+- A first-branch-only prefix from `(11,4k+10)` reaches the gateway **iff** `k=K_odd(m)` for some `m`.
+Both were checked in [CI 42523491393](https://github.com/FlareZ123/bb6/actions/runs/42523491393).
+
+A second, genuinely different infinite family includes an **exceptional low-even** arithmetic branch:
+```
+K_two(t) = 14*2^(4t+5) - 23 - 6t
+Q(t) = 2^(4t+5).
+```
+For all `t:Nat`, [`W5TwoBurst.lean`](W5TwoBurst.lean) proves, using the literal 12-branch source map and no `sorryAx`, the exact accelerator statement
+```lean
+BB429.run (8*t+14) (3,4*K_two(t)+17) = none
+```
+with the proven intermediate path
+```
+first^(4t+7): (3,4*K_two+17) → (24Q-3,8Q-42-12t)
+low-even:     (24Q-3,8Q-42-12t) → (11,56Q-50-12t)
+first^(4t+5): (11,anc 11 (4t+5)) → fatal first-branch gateway
+```
+This infinite source-only result passed [CI 42524241956](https://github.com/FlareZ123/bb6/actions/runs/42524241956).
+
+[`W5TwoBurstUnique.lean`](W5TwoBurstUnique.lean) establishes a stronger **necessity/uniqueness theorem**: any path from `(3,4k+17)` with `n` high3/first branches, one exact low-even branch, `p` high3/first branches and final fatal boundary must have *exactly* `n=4t+7`, `p=4t+5`, `k=K_two(t)` for some `t`. The proof uses complete source first-prefix formulas, an exponential-width squeeze forcing `n=p+2`, and parity congruences forcing `p≡1 (mod 4)`. Its genuine source audit passed [CI 42524924650](https://github.com/FlareZ123/bb6/actions/runs/42524924650). Subsequent strict seed growth lemma has been locally Lean-checked and is in the same source file.
+
+## Precisely isolated physical low-J obligation
+
+The arithmetic low-even state above corresponds to the physical J chart at `J(24Q-3,8Q-42-12t)`, with deficit `2u-w=4*(10Q+9+3t)`. Agent18's [low-J table](../agent18-429-low-j/README.md) experimentally predicts an entire-tape raw physical return to `J(11,56Q-50-12t)`, with physical head displacement `9-2u`, for every `t`. **The all-parameter low-J physical return itself is unproved.**
+
+[`W5TwoBurstRawBridge.lean`](W5TwoBurstRawBridge.lean) isolates exactly this original-machine premise in a Lean theorem `raw_two_burst_of_low_ray`: any certified low-J ray run of `N` primitive steps from `J(u,w)` to the correctly translated `J(11,anc 11 (4t+5))` composes automatically with already certified high3 and fatal raw paths to show the original machine halts from `J(3,4K_two(t)+17)` after the sum of exact primitive costs. This **conditional** original-source theorem passed [CI 42525299970](https://github.com/FlareZ123/bb6/actions/runs/42525299970), without `sorryAx`. It directly identifies a high-value single physical proof goal for Agent18; [targeted communication](../../communications/agent18/20261108T2126Z_agent30-low-even-two-burst-unique-physical-bridge.md).
+
+A separate finite original-table trace for `t=0` is being audited in [`W5TwoBurstT0.lean`](W5TwoBurstT0.lean): `J(765,214)` moves in exactly 54,333 raw steps to a translated `J(11,1742)`. An independent literal Python simulator already matched its complete finite support, state and head; **the Lean finite certificate is pending and no physical conclusion from this particular trace is claimed yet**.
+
 ## Proof dependencies and exact scope
 
 The [`MidAposBoundary.lean`](../agent32-429-high2-prefix/MidAposBoundary.lean) source return sends all even inputs `midApos 0 (2k) 5` in exactly `26k+177` primitive steps to a zipper `junc 3 0 (4k+17)`, and all odd `midApos 0 (2k+1) 5` in `26k+354` steps to `junc 11 0 (4k+10)`. Its theorem statements had previously failed elaboration due to a redundant `congr 1` before a `rw` in an auxiliary list-identity. Removing that redundant tactic, after an exact isolated Lean preflight, allowed the **entire** source module to compile with no `sorryAx`; checked [CI 42522314710](https://github.com/FlareZ123/bb6/actions/runs/42522314710).
