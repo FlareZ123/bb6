@@ -86,7 +86,7 @@ jobs:
   source-final:
     needs: source-dependencies
     if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
@@ -101,7 +101,22 @@ jobs:
           path: /tmp/agent43-p1-dependencies
       - name: Restore compiled Lean dependencies
         run: tar -xzf /tmp/agent43-p1-dependencies/agent43-p1-dependencies.tar.gz -C "$GITHUB_WORKSPACE"
-      - name: Compile four-reset arithmetic and original-source theorem
+      - name: Add swap space and record runner resources
+        run: |
+          set -e
+          echo "Resources before swap:"
+          free -h
+          df -h /
+          sudo swapoff -a || true
+          sudo rm -f /swapfile
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          echo "Resources after swap:"
+          free -h
+          swapon --show
+      - name: Compile four-reset arithmetic core
         run: |
           set -e
           MAP=im-results/agent1-p1-map
@@ -114,18 +129,17 @@ jobs:
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
           lean --version
-          run_with_heartbeat() {
-            label="$1"
-            shift
-            "$@" &
-            pid=$!
-            while kill -0 "$pid" 2>/dev/null; do
-              sleep 30
-              if kill -0 "$pid" 2>/dev/null; then
-                echo "$label still running (pid $pid)"
-              fi
-            done
-            wait "$pid"
-          }
-          run_with_heartbeat "FourResetCore" lean -o "$AG43/FourResetCore.olean" "$AG43/FourResetCore.lean"
-          run_with_heartbeat "FourResetWallPrefix" lean "$AG43/FourResetWallPrefix.lean"
+          lean -o "$AG43/FourResetCore.olean" "$AG43/FourResetCore.lean"
+      - name: Compile original-source four-reset theorem
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          /usr/bin/time -v lean "$AG43/FourResetWallPrefix.lean"
