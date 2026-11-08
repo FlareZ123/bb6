@@ -49,7 +49,7 @@ private theorem aInput (k q r m : Nat) :
 /-- Arbitrary A-terminal p≡0 of zero-ended marker: exact source endpoint
     with arbitrary m unconsumed rightward (10) pairs. -/
 theorem aZeroRaw (k q r m : Nat) :
-    run (aCost k q r m)
+    run (aCost k q r)
       (packet (3*k+3) q (3*r) (BB6.Agent2MarkerZero.marker m)) =
       (⟨[],false,List.replicate (aUnary k q r) true ++ pairs m,5⟩ : Cfg) := by
   rw [aInput]
