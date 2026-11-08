@@ -71,7 +71,7 @@ jobs:
           lean "$D/EAltK2AZero.lean" | tee -a axioms.log
           X=im-results/agent36-cryptid-trace
           lean -o "$X/EZeroZ.olean" "$X/EZeroZ.lean" | tee -a axioms.log
-          lean "$X/ZSafeNormalizer.lean" | tee -a axioms.log
+          lean -o "$X/ZSafeNormalizer.olean" "$X/ZSafeNormalizer.lean" | tee -a axioms.log
           lean -o "$X/AZ0P2.olean" "$X/AZ0P2.lean" | tee -a axioms.log
           lean "$X/Z0ExceptE2.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
