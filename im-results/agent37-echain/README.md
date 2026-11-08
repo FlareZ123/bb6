@@ -70,6 +70,19 @@ The guard `3d <= 2Q+6` is exactly the sufficient unary-symbol budget for `d` E m
 
 The independent fixed-depth [P2K13Source.lean](../agent37-p2-k13/P2K13Source.lean), originally source-checked in [CI 42519523558](https://github.com/FlareZ123/bb6/actions/runs/42519523558), supplies a concrete depth-three regression instance but is logically subsumed by the arbitrary-depth theorem.
 
+## Complementary arbitrary-depth B-then-A exits
+
+[**EChainBResidues.lean**](EChainBResidues.lean) and [**EChainBExit.lean**](EChainBExit.lean) resolve an additional source-valid branch at every positive depth. For a final E-chain index `a=1+4·8^d h` satisfying `a=3kb+2` and `8kb+10=3ka+3`, the source-certified `b_packet` moves the head from B to A, after which Agent35's universal A marker theorem returns to one of the three regular F/0 suffixes. The B call is valid because a positive E-chain depth provides `2d>=2` alternating pairs.
+
+The congruence test is `a mod9=5`. The residue witnesses are exact and kernel-proved:
+
+- **Even depth `d=2n>=2`:** `h=18s+1`, `k=9·9^n·s+half9(n)`.
+- **Odd depth `d=2n+1`:** `h=18s+17`, `k=27·9^n·s+51·half9(n)+25`.
+
+For **every** such n,s and initial Q satisfying `3d<=2Q+6`, original D source runs from `M(3k+4,Q,2;01^6)` to a regular F/0 section in finite exact primitive time. These source theorems include `k=27s+25` at depth one, `k=81s+4` at depth two, `k=243s+229` at depth three and infinitely deeper classes. The even depth zero exception is intentionally excluded because the guarded B macro requires an existing alternating pair.
+
+**Original source CI [42521006551](https://github.com/FlareZ123/bb6/actions/runs/42521006551) passed**, with all new `#print axioms` audits restricted to Lean's standard logical axioms, no `sorryAx`.
+
 ## Implications and limits
 
 The index condition is a 3-adic valuation classification of `2k+1`: `v₃(2k+1)=d` in these two families. For every depth there are infinitely many parameterized starts with a source-certified finite route back into the regular F/0 language. The proof does **not** show that all E resets satisfy one of those congruences, or that a specific genuine blank-root trajectory reaches the input. It gives no universal BB(6) upper bound and does not exclude all alternate exit configurations.
