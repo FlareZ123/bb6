@@ -122,6 +122,35 @@ theorem e_two_q2_regular (k u r : Nat) :
   rw [run_add,e_two_to_zero]
   exact h
 
+
+/-- At a B-index E-return, every q and every positive Y marker depth
+    reaches canonical L after exactly two source macro returns.
+    This covers the complete k=0 mod3 residue, with no q restriction. -/
+theorem e_two_k0_regular (t q r : Nat) :
+    ∃ T a markerPairs b,
+      ObsEq
+        (run T
+          (packet (3*(3*t)+4) q 2
+            (BB6.Agent2MarkerTower.marker (r+1))))
+        (regularSection a markerPairs b) := by
+  let kb := 8*t+1
+  let te := 12*(3*t)*(3*t)+49*(3*t)+68+4*q+6*r
+  let tb := 12*kb*kb+49*kb+40
+  have hi : 8*(3*t)+5=3*kb+2 := by dsimp [kb]; omega
+  have he : run te
+      (packet (3*(3*t)+4) q 2
+        (BB6.Agent2MarkerTower.marker (r+1))) =
+      packet (3*kb+2) 0 (2*q+6)
+        (BB6.Agent2MarkerZero.marker (r+2)) := by
+    have hh := e_two_to_zero (3*t) q r
+    rw [hi] at hh
+    exact hh
+  refine ⟨te+tb,8*kb+9+(2*q+6),r+2,0,?_⟩
+  rw [run_add,he]
+  exact BB6.Agent2MarkerZero.b_zero kb (2*q+6) (r+2)
+
+#print axioms e_two_k0_regular
+
 #print axioms e_two_to_zero
 #print axioms e_two_q2_regular
 end BB6.Agent2EAltPacketCompose
