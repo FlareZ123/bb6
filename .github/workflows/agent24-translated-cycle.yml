@@ -1,0 +1,30 @@
+name: Agent 24 source-checked finite translated-cycle oracle (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  translated-cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check source-backed translated-cycle theorem and executable oracle
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent24-translated-cycle"
+          lean --version
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          for m in RayClosed RayChecker RayEntry RayFinite Symmetry RootShift; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          lean -o im-results/agent24-translated-cycle/TranslatedCycle.olean im-results/agent24-translated-cycle/TranslatedCycle.lean
+          lean -o im-results/agent24-translated-cycle/TranslatedFiniteOracle.olean im-results/agent24-translated-cycle/TranslatedFiniteOracle.lean
