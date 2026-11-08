@@ -68,6 +68,29 @@ a strictly positive integer smaller than the divisor. Contradiction.
 
 The proof is entirely symbolic. The observed r=6 exhaustive arithmetic [audit](R6Cancellation.md) excludes the remaining values for that particular feeder; the universal strip independently proves a large fraction of the r=6 high checks without any enumerative certificate.
 
+## Complementary all-parameter modulus-five obstruction
+
+A second independent source-equation theorem excludes **four entire classes of incoming parent valuations modulo 20** for every positive cancellation parameter, throughout the conservative physical interval `u+1<=2*r*a_r`:
+
+[
+ umod20in{0,8,12,16}.
+]
+
+Equivalently, `u%4=0` and `u%5 != 4`. The proof is in [CancellationMod5.lean](CancellationMod5.lean), with the exact arbitrary-q source-equation interface in [CancellationMod5SourceEq.lean](CancellationMod5SourceEq.lean). Both modules were locally compiled by Lean 4.36.0-rc2; the final source-equation theorem uses only standard axioms and no sorry.
+
+The proof is elementary but unbounded in r. Since `9^r=1 mod 8`, the cancellation exponent `a_r=(9^r+5)/2` is 3 modulo 4. Consequently `A_r=2^a_r=3 mod 5`. The recurrence `P_{r+1}=A_r^2 P_r+9^r(A_r-3)` gives `P_r(A_r)=0 mod 5`. For `u=0 mod 4`, the prospective denominator `D_u=2^(u+1)+3` is divisible by 5, whereas the numerator `N_u=A_rP_r(A_r)+3-2u` can be divisible by 5 only when `u=4 mod 5`. Four of the five multiples-of-four classes are therefore impossible universally.
+
+The modulo-five obstruction excludes one-fifth of the residue density independently of r. It overlaps the high strip; no naive addition of the two excluded counts is valid. The lower/middle residual inverse valuations, including `u=4 mod20`, remain unbounded.
+
+### Fully constructive terminal feeders
+
+[CancellationTopConstructive.lean](CancellationTopConstructive.lean) proves that for every r>=1 the polynomial `P_r(A_r)` is odd and at least three, so `q_r=(P_r(A_r)-3)/2` is a natural number satisfying the exact cancellation identity. [CancellationTerminalConstructive.lean](CancellationTerminalConstructive.lean) proves the corresponding **original inverse terminal equation in primitive exponent notation**:
+[
+2^{K_r}=(2^{v_r+1}+3)q_r+3cdot2^{v_r}+v_r+3,
+quad v_r=(9^r+3)/2,quad K_r+1=r(9^r+5).
+]
+Both are locally kernel checked with standard axioms. This removes any appeal to an external existential construction for the synthetic feeder arithmetic, while still requiring the established original-physical bridge to interpret the accelerated edges.
+
 ## Exact reachability scope
 
 The original source inverse equation, already formalized in [NeedleGeneralInverse.lean](NeedleGeneralInverse.lean) and [NeedleRootDecisionSource.lean](NeedleRootDecisionSource.lean), makes this divisor condition **necessary** for an actual immediate accelerated parent. The new Lean file proves the arithmetic nondivisibility and a direct source-equation interface. An original-source import into the pinned Cryptids machine and a separate external priority review remain future work.
