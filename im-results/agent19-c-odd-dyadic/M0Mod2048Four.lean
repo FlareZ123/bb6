@@ -98,26 +98,30 @@ private theorem affine_right_one_step (x y x' y' : Nat)
   rw [dif_neg hnext]
   exact hy4
 
-private theorem forced_step_odd (x y x' y' : Nat)
+private theorem forced_step_odd {x y x' y' : Nat}
     (hO : BB6.Agent3.oddLowGate x y)
     (hx : (x+y-4)/2=x')
     (hy : (x+3*y-10)/4=y') :
     BB6.Agent3.fullForcedNormalize x y =
       BB6.Agent3.fullForcedNormalize x' y' := by
-  unfold BB6.Agent3.fullForcedNormalize
+  conv =>
+    lhs
+    unfold BB6.Agent3.fullForcedNormalize
   rw [dif_pos hO,hx,hy]
 
-private theorem forced_step_seven (x y x' y' : Nat)
+private theorem forced_step_seven {x y x' y' : Nat}
     (hO : ¬BB6.Agent3.oddLowGate x y)
     (hS : BB6.Agent3.evenSevenGate x y)
     (hx : (x+y-5)/2=x')
     (hy : (x+3*y-9)/4=y') :
     BB6.Agent3.fullForcedNormalize x y =
       BB6.Agent3.fullForcedNormalize x' y' := by
-  unfold BB6.Agent3.fullForcedNormalize
+  conv =>
+    lhs
+    unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO,dif_pos hS,hx,hy]
 
-private theorem forced_step_affine (x y x' y' : Nat)
+private theorem forced_step_affine {x y x' y' : Nat}
     (hO : ¬BB6.Agent3.oddLowGate x y)
     (hS : ¬BB6.Agent3.evenSevenGate x y)
     (hA : BB6.Agent3.evenAffineGate x y)
@@ -125,10 +129,12 @@ private theorem forced_step_affine (x y x' y' : Nat)
     (hy : (y-2)/2=y') :
     BB6.Agent3.fullForcedNormalize x y =
       BB6.Agent3.fullForcedNormalize x' y' := by
-  unfold BB6.Agent3.fullForcedNormalize
+  conv =>
+    lhs
+    unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO,dif_neg hS,dif_pos hA,hx,hy]
 
-private theorem forced_step_six (x y x' y' : Nat)
+private theorem forced_step_six {x y x' y' : Nat}
     (hO : ¬BB6.Agent3.oddLowGate x y)
     (hS : ¬BB6.Agent3.evenSevenGate x y)
     (hA : ¬BB6.Agent3.evenAffineGate x y)
@@ -137,16 +143,20 @@ private theorem forced_step_six (x y x' y' : Nat)
     (hy : (y-2)/2=y') :
     BB6.Agent3.fullForcedNormalize x y =
       BB6.Agent3.fullForcedNormalize x' y' := by
-  unfold BB6.Agent3.fullForcedNormalize
+  conv =>
+    lhs
+    unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO,dif_neg hS,dif_neg hA,dif_pos hE,hx,hy]
 
-private theorem forced_terminal (x y : Nat)
+private theorem forced_terminal {x y : Nat}
     (hO : ¬BB6.Agent3.oddLowGate x y)
     (hS : ¬BB6.Agent3.evenSevenGate x y)
     (hA : ¬BB6.Agent3.evenAffineGate x y)
     (hE : ¬BB6.Agent46.sixEvenRightGate x y) :
     BB6.Agent3.fullForcedNormalize x y = (x,y) := by
-  unfold BB6.Agent3.fullForcedNormalize
+  conv =>
+    lhs
+    unfold BB6.Agent3.fullForcedNormalize
   rw [dif_neg hO,dif_neg hS,dif_neg hA,dif_neg hE]
 
 /- Family j = 2048*t + 534. The forced path is O, E, S, O, E, E. -/
