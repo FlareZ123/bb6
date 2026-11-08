@@ -114,5 +114,18 @@ jobs:
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
           lean --version
-          lean -o "$AG43/FourResetCore.olean" "$AG43/FourResetCore.lean"
-          lean "$AG43/FourResetWallPrefix.lean"
+          run_with_heartbeat() {
+            label="$1"
+            shift
+            "$@" &
+            pid=$!
+            while kill -0 "$pid" 2>/dev/null; do
+              sleep 30
+              if kill -0 "$pid" 2>/dev/null; then
+                echo "$label still running (pid $pid)"
+              fi
+            done
+            wait "$pid"
+          }
+          run_with_heartbeat "FourResetCore" lean -o "$AG43/FourResetCore.olean" "$AG43/FourResetCore.lean"
+          run_with_heartbeat "FourResetWallPrefix" lean "$AG43/FourResetWallPrefix.lean"
