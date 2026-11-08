@@ -97,6 +97,34 @@ theorem odd_gate_halts (m : Nat) :
   simpa [show 4*m+2=(4*m+1)+1 by omega] using
     (ray_halts 11 (4*m+1) (by omega))
 
+
+/-- Each parameter family is genuinely infinite: its distinct synthetic
+    right-five entry indices grow strictly at every increment. -/
+theorem evenK_strict_succ (m : Nat) : evenK m < evenK (m+1) := by
+  have hpow : 2^(4*(m+2)) = 16*2^(4*(m+1)) := by
+    have he : 4*(m+2) = 4*(m+1)+4 := by omega
+    rw [he, Nat.pow_add]
+    simp only [show (2:Nat)^4=16 by decide]
+    omega
+  have hbound := two_pow_ge (4*(m+1))
+  dsimp [evenK]
+  rw [show 4*(m+1+1)=4*(m+2) by omega, hpow]
+  omega
+
+theorem oddK_strict_succ (m : Nat) : oddK m < oddK (m+1) := by
+  have hpow : 2^(4*(m+1)+1) = 16*2^(4*m+1) := by
+    have he : 4*(m+1)+1 = (4*m+1)+4 := by omega
+    rw [he, Nat.pow_add]
+    simp only [show (2:Nat)^4=16 by decide]
+    omega
+  have hbound := two_pow_ge (4*m+1)
+  dsimp [oddK]
+  rw [hpow]
+  omega
+
+#print axioms evenK_strict_succ
+#print axioms oddK_strict_succ
+
 #print axioms anc_formula
 #print axioms even_gate_halts
 #print axioms odd_gate_halts
