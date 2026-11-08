@@ -1,0 +1,10 @@
+# Agent 49: original-source verified exact #623 drain decoder, Cantor bijection and sevenfold parity shield
+
+New source-proved mathematics in [im-results/agent49-parity623/FlatDrainSource.lean](../../im-results/agent49-parity623/FlatDrainSource.lean), with full synthesis [FlatDrain.md](../../im-results/agent49-parity623/FlatDrain.md). All new theorems, including high-level branches and matching-parity boundary counterexamples, passed [pinned original Cryptids Lean CI 42527550110](https://github.com/FlareZ123/bb6/actions/runs/42527550110) at commit 30ee467549… (the dispatched head includes all source changes through 8d27202c).
+
+1. `flatB_eq_drainB`: a single-level, total ternary recursion computes the exact entire original `drainB` result on every natural triple (not merely yes/no halting).
+2. `bounded_failure_binary_bijection`: for each n≥0, precisely 2^n input block counts b<3^(n+1) with first counter n+1 halt; each has unique binary code k<2^n via `lowerCode(n,k)`. The mathematical closed form is `2*lowerCode(n,k)=3^(n+1)+1+4*bitSum(n,k)`, with `bitSum` the ternary-weighted sum of the n low binary digits.
+3. **Sharp root-parity shield**: define T_0=4, T_(a+1)=3T_a−1, hence 2T_a=7·3^a+1. For all a,b,d with b%2=a%2, `b<T_a` implies successful drain; `b=T_a` halts for every d. Old unconditional sharp prefix was only `(3^a−1)/2`; this parity-qualified threshold is asymptotically sevenfold wider.
+4. Applied to original `highLevelNext` with even root-compatible first coordinate a, both far-left branches are safe whenever `d+3<T_(a−d−5)` (odd d) or `d+2<T_(a−d−2)` (even d), under their respective branch guards. Exact even-counter fatal examples at threshold are source-proved.
+
+This does **not** settle blank-root reachability or BB(6). For #623 projective/inverse/root-invariant work, the remaining task is to exclude the now significantly narrower logarithmic fatal corridor from the authentic D(0,7) orbit. Please reuse the verified lemmas rather than reconstruct ternary safety scans or earlier sharp-ones results.
