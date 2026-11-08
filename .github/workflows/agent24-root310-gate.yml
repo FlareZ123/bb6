@@ -1,0 +1,26 @@
+name: Agent 24 exact authentic root310 fatal gate (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  root310-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check original Frontier raw machine and exact all-time fatal-gate equivalence
+        run: |
+          set -eu
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent24-root310-gate"
+          lean --version
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent24-root310-gate/Root310Gate.olean im-results/agent24-root310-gate/Root310Gate.lean
