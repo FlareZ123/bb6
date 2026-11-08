@@ -36,7 +36,37 @@ theorem back_run (n : Nat) (L ys : List Bool) :
     simp only [pairs,List.append_assoc]
     rw [pairs_snoc]
 
-/-- Initial constant-size A turn places all remaining pairs in the proven forward scanner. -/
+/-- Single-step source certificate of the seven-move A turn. -/
+private theorem front_seven_raw (L Z : List Bool) :
+    run 7 (⟨false::L,false,[true,true,false,true] ++ Z,0⟩ : Cfg) =
+      ⟨[false,true,true,false] ++ L,false,true::Z,0⟩ := by
+  let c0 : Cfg := ⟨false::L,false,[true,true,false,true] ++ Z,0⟩
+  let c1 : Cfg := ⟨true::false::L,true,[true,false,true] ++ Z,1⟩
+  let c2 : Cfg := ⟨false::true::false::L,true,[false,true] ++ Z,0⟩
+  let c3 : Cfg := ⟨false::false::true::false::L,false,true::Z,4⟩
+  let c4 : Cfg := ⟨false::true::false::L,false,[false,true] ++ Z,2⟩
+  let c5 : Cfg := ⟨true::false::L,false,[true,false,true] ++ Z,0⟩
+  let c6 : Cfg := ⟨true::true::false::L,true,[false,true] ++ Z,1⟩
+  let c7 : Cfg := ⟨false::true::true::false::L,false,true::Z,0⟩
+  have h1 : step c0 = c1 := by rfl
+  have h2 : step c1 = c2 := by rfl
+  have h3 : step c2 = c3 := by rfl
+  have h4 : step c3 = c4 := by rfl
+  have h5 : step c4 = c5 := by rfl
+  have h6 : step c5 = c6 := by rfl
+  have h7 : step c6 = c7 := by rfl
+  change run 7 c0 = c7
+  simp only [run,h1,h2,h3,h4,h5,h6,h7]
+
+private theorem head_swap (j : Nat) (ys : List Bool) :
+    true :: (oppairs j ++ ys) = pairs j ++ (true :: ys) := by
+  induction j with
+  | zero => rfl
+  | succ j ih =>
+    simpa [oppairs,pairs,List.append_assoc] using
+      congrArg (fun zs : List Bool => true :: false :: zs) ih
+
+/-- Initial constant-size A turn enters the forward scanner. -/
 theorem front_seven (m j : Nat) (ys : List Bool) :
     run 7
       (aBoundary m
@@ -44,7 +74,23 @@ theorem front_seven (m j : Nat) (ys : List Bool) :
     scanStart j
       (oppairs 1 ++ (pairs (m+1) ++ [true,true]))
       ([true,true,true] ++ ys) := by
-  simp [aBoundary,scanStart,oppairs,run,step,goL,goR,pairs,List.append_assoc]
+  have hin : aBoundary m
+        ([true,true] ++ (oppairs (j+1) ++ ([true,true] ++ ys))) =
+      (⟨false::(pairs m ++ [true,true]),false,
+        [true,true,false,true] ++ (oppairs j ++ ([true,true] ++ ys)),0⟩ : Cfg) := by
+    simp [aBoundary,oppairs,List.append_assoc]
+  have hout :
+      (⟨[false,true,true,false] ++ (pairs m ++ [true,true]),
+        false,true::(oppairs j ++ ([true,true] ++ ys)),0⟩ : Cfg) =
+      scanStart j
+        (oppairs 1 ++ (pairs (m+1) ++ [true,true]))
+        ([true,true,true] ++ ys) := by
+    simp only [scanStart,oppairs,pairs,List.cons_append]
+    have hs := head_swap j ([true,true] ++ ys)
+    simpa [List.append_assoc] using hs
+  rw [hin]
+  exact (front_seven_raw (pairs m ++ [true,true])
+      (oppairs j ++ ([true,true] ++ ys))).trans hout
 
 private theorem oppairs_snoc (n : Nat) :
     oppairs n ++ [false,true] = oppairs (n+1) := by
@@ -54,24 +100,63 @@ private theorem oppairs_snoc (n : Nat) :
     simpa [oppairs,List.append_assoc] using
       congrArg (fun zs : List Bool => [false,true] ++ zs) ih
 
-/-- After scanning, the terminal 111 produces a uniform reversible left stack. -/
+private theorem oppairs_comm (j : Nat) :
+    [false,true] ++ oppairs j = oppairs j ++ [false,true] := by
+  induction j with
+  | zero => rfl
+  | succ j ih =>
+    simpa [oppairs,List.append_assoc] using
+      congrArg (fun zs : List Bool => [false,true] ++ zs) ih
+
+/-- The constant two-step turn on the triple-one suffix. -/
+private theorem turn_two_raw (L ys : List Bool) :
+    run 2 (⟨L,false,[true,true,true] ++ ys,0⟩ : Cfg) =
+      ⟨[false,true] ++ L,true,true::ys,0⟩ := by
+  rfl
+
+/-- The scanner converts the right triple-one end into a reversible left stack. -/
 theorem turn_two (m j : Nat) (ys : List Bool) :
     run 2
       (⟨oppairs j ++ (oppairs 1 ++ (pairs (m+1) ++ [true,true])),
         false,[true,true,true] ++ ys,0⟩ : Cfg) =
     back (j+2) (pairs (m+1) ++ [true,true]) ys := by
-  simp only [back,run,step,goR,goL]
+  rw [turn_two_raw]
+  change (⟨[false,true] ++
+      (oppairs j ++ (oppairs 1 ++ (pairs (m+1) ++ [true,true]))),
+      true,true::ys,0⟩ : Cfg) =
+    ⟨oppairs (j+2) ++ (pairs (m+1) ++ [true,true]),
+      true,true::ys,0⟩
   congr 1
-  rw [show oppairs (j+2) = (oppairs j ++ [false,true]) ++ [false,true] by
-    rw [oppairs_snoc,oppairs_snoc]]
-  simp [oppairs,List.append_assoc]
+  calc
+    _ = (oppairs j ++ [false,true]) ++
+          ([false,true] ++ (pairs (m+1) ++ [true,true])) := by
+            rw [oppairs_comm j]
+            simp [oppairs,List.append_assoc]
+    _ = oppairs (j+2) ++ (pairs (m+1) ++ [true,true]) := by
+      rw [oppairs_snoc,←List.append_assoc,oppairs_snoc]
 
-/-- Terminal left-stack pair and the initial right one enter the source D sweep. -/
+/-- Four source primitive steps consume the final left pair and enter D. -/
+private theorem back_base_raw (L Z : List Bool) :
+    run 4 (⟨true::false::L,true,true::Z,0⟩ : Cfg) =
+      ⟨L,false,[true,true,false] ++ Z,3⟩ := by
+  let c0 : Cfg := ⟨true::false::L,true,true::Z,0⟩
+  let c1 : Cfg := ⟨false::true::false::L,true,Z,4⟩
+  let c2 : Cfg := ⟨true::false::L,false,false::Z,1⟩
+  let c3 : Cfg := ⟨false::L,true,true::false::Z,2⟩
+  let c4 : Cfg := ⟨L,false,[true,true,false] ++ Z,3⟩
+  have h1 : step c0 = c1 := by rfl
+  have h2 : step c1 = c2 := by rfl
+  have h3 : step c2 = c3 := by rfl
+  have h4 : step c3 = c4 := by rfl
+  change run 4 c0 = c4
+  simp only [run,h1,h2,h3,h4]
+
 theorem back_base (m j : Nat) (ys : List Bool) :
     run 4
       (back 0 (pairs (m+1) ++ [true,true]) (pairs (j+2) ++ ys)) =
     sweepD m ([true,true,false] ++ (pairs (j+2) ++ ys)) := by
-  simp [back,sweepD,pairs,run,step,goL,goR,List.append_assoc]
+  simpa [back,sweepD,pairs,List.append_assoc] using
+    back_base_raw (pairs m ++ [true,true]) (pairs (j+2) ++ ys)
 
 /-- Arbitrarily many alternating terminal pairs, exactly 6 primitive moves per pair. -/
 theorem a_many_front (m j : Nat) (ys : List Bool) :
