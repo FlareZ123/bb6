@@ -57,6 +57,10 @@ All inequalities and both shallow-sector contradictions appear in [CubicGap.lean
 
 The same integer equations imply `s<=2` since `8^s|(14n+92)<=470<512`, and `r<=12` since `8^13>588*2^27` bounds any possible right-hand product. [OneShallowFinite.lean](OneShallowFinite.lean) checks all `n∈[14,27], s∈[0,2],r∈[0,12]` via ordinary kernel `decide` on exact divisions, powers and equality. This finite Boolean theorem has **no axioms**. [OneShallowFiniteBridge.lean](OneShallowFiniteBridge.lean) proves the authentic quantified arithmetic assumptions imply those finite checks, and combines the small and large regimes. The public all-n theorems use `[propext, Classical.choice, Quot.sound]` only.
 
+## Odd-index first-prefix obstruction
+
+[OddPrefixNoTwo.lean](OddPrefixNoTwo.lean) proves an additional exact scalar-root restriction: if the critical index `n` is odd, every depth-two prefix from the critical root has length `s=0`. The proof uses the prior root divisibility `8^s ∣ 14n+92` and the congruence `14n+92 ≡ 2 (mod 4)` for odd `n`; a positive `s` would force divisibility by eight. Local Lean 4.36.0-rc2 axiom audit: `[propext, Quot.sound]`, no `sorryAx`. This is a small structural corollary inside the arithmetic model, useful when investigating additional shallow edges. It is not presented as a new publishable finding or as a source certification.
+
 ## Earlier direct-shallow result
 
 For `s=0`, the wall equations simplify to
