@@ -1,8 +1,9 @@
 import OneShallowModelOne
 import RightFiveEnergyStep
+import InverseIff
 
 namespace BB6.Agent43SourceWord
-open BB6.Agent47P1 BB6.Agent50Energy BB6.Agent43TwoRun
+open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent50Energy BB6.Agent43TwoRun
 
 /-- Exact finite sequence of original P1 inverseAt steps, all of depth two.
 Its start may be arbitrary; no copied scalar transition is assumed. -/
@@ -24,7 +25,7 @@ private theorem two_chain_mass (n s b d m B D M : Nat)
   | empty => exact hmass
   | append s b d m B D M k c prev hb hb4 hd hi hk hc ih =>
     have hprev := ih hmass
-    have hInv := (inverseAt_iff_power_mass B D 2 k c hb hb4 hd).mp hi
+    have hInv := (inverseAt_iff_power_mass B D 2 k c (by omega) hb4 hd).mp hi
     have hMass : 2*k+c+2*2+2=B+D := by omega
     omega
 
@@ -38,7 +39,7 @@ private theorem two_chain_model (n s b d m B D M : Nat)
   | empty => exact TwoRun.done _ _
   | append s b d m B D M k c prev hb hb4 hd hi hk hc ih =>
     have hm := two_chain_mass n s b d m B D M prev hmass
-    have hInv := (inverseAt_iff_power_mass B D 2 k c hb hb4 hd).mp hi
+    have hInv := (inverseAt_iff_power_mass B D 2 k c (by omega) hb4 hd).mp hi
     have hMass : 2*k+c+2*2+2=B+D := by omega
     have hcocycle := two_step_cocycle n B D M k c hm hb4 hInv.1 hMass
     have hcocycleInt :
@@ -63,7 +64,7 @@ private theorem shallow_zero (n B D M k c : Nat)
     (hk : 2≤k) (hc : c%2=1) :
     2*((↑(2*k-4):Int)+4*(↑(M+1):Int)+4*(n:Int)+20)=
       ((B:Int)+4*(M:Int)+4*(n:Int)+20)+4*((M:Int)+(n:Int)+6)-8 := by
-  have hInv := (inverseAt_iff_power_mass B D 0 k c hb hb4 hd).mp hi
+  have hInv := (inverseAt_iff_power_mass B D 0 k c (by omega) hb4 hd).mp hi
   have hhalf : 2*(B/2)=B := by omega
   have hp : D+B/2+3=c+3 := by simpa using hInv.1
   have hm : 2*k+c+2=B+D := by omega
@@ -84,7 +85,7 @@ private theorem shallow_one (n B D M k c : Nat)
     4*((↑(2*k-4):Int)+4*(↑(M+2):Int)+4*(n:Int)+20)=
       ((B:Int)+4*(M:Int)+4*(n:Int)+20)+28*(2:Int)^n+
         8*((M:Int)+(n:Int)+6)-8 := by
-  have hInv := (inverseAt_iff_power_mass B D 1 k c hb hb4 hd).mp hi
+  have hInv := (inverseAt_iff_power_mass B D 1 k c (by omega) hb4 hd).mp hi
   have hhalf : 2*(B/2)=B := by omega
   have hp : D+B/2+3=2*(c+3) := by simpa using hInv.1
   have hm : 2*k+c+4=B+D := by omega
@@ -112,7 +113,7 @@ theorem source_no_zero_word_wall
   have hmass := two_chain_mass n s _ _ _ _ _ _ hpre hroot
   have hrootModel := two_chain_model n s _ _ _ _ _ _ hpre hroot
   have hnextMass : (2*k-4)+(c+4)+2*(mp+1)+2*n+13=14*2^n := by
-    have hInv := (inverseAt_iff_power_mass bp dp 0 k c hb hb4 hd).mp hi
+    have hInv := (inverseAt_iff_power_mass bp dp 0 k c (by omega) hb4 hd).mp hi
     have hm : 2*k+c+2=bp+dp := by omega
     omega
   have htail := two_chain_model n r _ _ _ _ _ _ hsuf hnextMass
@@ -158,7 +159,7 @@ theorem source_no_one_word_wall
   have hmass := two_chain_mass n s _ _ _ _ _ _ hpre hroot
   have hrootModel := two_chain_model n s _ _ _ _ _ _ hpre hroot
   have hnextMass : (2*k-4)+(c+4)+2*(mp+2)+2*n+13=14*2^n := by
-    have hInv := (inverseAt_iff_power_mass bp dp 1 k c hb hb4 hd).mp hi
+    have hInv := (inverseAt_iff_power_mass bp dp 1 k c (by omega) hb4 hd).mp hi
     have hm : 2*k+c+4=bp+dp := by omega
     omega
   have htail := two_chain_model n r _ _ _ _ _ _ hsuf hnextMass
