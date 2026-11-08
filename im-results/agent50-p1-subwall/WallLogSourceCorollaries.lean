@@ -66,6 +66,20 @@ theorem source_log_right_five_reset_floor
       n k bp dp mp zp hn hk hpre hwall
     omega
 
+
+/-- Explicit near one-third bound using the binary logarithm: all original
+right-five histories satisfy n < 3z+2*log2(n)+11. -/
+theorem source_right_five_log_explicit
+    (n b m z : Nat) (hn : 14≤n)
+    (h : CountCone (14*2^n-2*n-16) 3 b 5 m z) :
+    n < 3*z+2*Nat.log2 n+11 := by
+  have hk : n≤2^(Nat.log2 n+1) :=
+    Nat.le_of_lt (Nat.lt_log2_self (n:=n))
+  have hbound := source_log_right_five_reset_floor
+    n (Nat.log2 n+1) b m z hn hk h
+  omega
+
 #print axioms BB6.Agent50Density.source_log_wall_reset_floor
 #print axioms BB6.Agent50Density.source_log_right_five_reset_floor
+#print axioms BB6.Agent50Density.source_right_five_log_explicit
 end BB6.Agent50Density
