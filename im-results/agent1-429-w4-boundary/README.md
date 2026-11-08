@@ -49,4 +49,26 @@ A finite independent raw-step simulator also checked the A/1-to-Junc formulas fo
 
 For the previously open right-four endpoint, the unresolved synthetic continuation now starts at the **canonical** states `junc 0 0 (4*k+22)` or `junc 0 0 (4*k+28)`. Existing full/partial Junc-cycle source lemmas can analyze those further, but their current forms do not establish a complete halt/nonhalt decision for the authentic blank orbit. In particular, the parameter `k` here is freely chosen and does not prove a given boundary actually occurs from blank tape. For the distinct right-five terminal, the A/0 boundary retains a separate unbounded suffix question; see the neighboring [high-2 dossier](../agent32-429-high2-prefix/README.md).
 
+## Exact all-parameter right-one Junc continuation and geometric C/0 events
+
+The source-checked **full right-one Junc grammar**, valid for every `k : Nat`, is:
+
+| Input | Exact endpoint | Primitive steps | Net head displacement |
+| --- | --- | ---: | ---: |
+| `junc 0 (2*k+1) 1` | `junc 0 0 (4*k+16)` | `22*k+126` | `-6` |
+| `junc 0 (2*k) 1` | `junc 2 4 (4*k+9)` | `22*k+203` | `-9` |
+| `junc 0 (2*k) 1` | `junc 11 0 (4*k+2)` | `22*k+306` | `+6` |
+| `junc 2 v 1` (v≥1) | `junc 0 0 (2*v+10)` | `8*v+54` | `-6` |
+
+The odd case is [`W4JuncOne.lean`](W4JuncOne.lean); the even case is [`W4JuncGeneral.lean`](W4JuncGeneral.lean). Exact original-source [manual CI 42520709004](https://github.com/FlareZ123/bb6/actions/runs/42520709004) passed without `sorryAx`. These parameter transformations agree with the published pinned Cryptids `midNext` grammar. The contribution here is explicit primitive step costs, signed physical head displacements, and separately reusable source-level proofs, rather than discovery of a new state transition map.
+
+[`W4CZeroEvents.lean`](W4CZeroEvents.lean) proves two additional unbounded time-and-position formulas directly from the original source. For every `v : Nat`, starting from `junc 0 v 1`, the machine is in **C scanning 0 with an entirely blank right half-tape** at both of the following configurations:
+
+- At step `2*v+31`, relative head `2*v+7`, zipper left `ones 5 ++ pairs01 (v+3) ++ ones 5`.
+- At step `2*v+42 + crossTime(v+2)+15`, relative head `2*v+10`, zipper left `[1,0,1] ++ ones 7 ++ finalLeft(v+2)`.
+
+The input's rightmost marked cell is at relative position `2*v+4`. Therefore the two C/0 events are respectively **three and six cells strictly to its right**. Both are provably nonfatal at the visited step because their *complete* right tapes are blank. This result was checked through the full original-source dependency graph in [manual CI 42521293673](https://github.com/FlareZ123/bb6/actions/runs/42521293673), before the later arithmetic `c0_event_offsets` lemma was added. The additional length/offset lemma is currently a separate local arithmetic extension.
+
+These two events have been identified in the continuing trajectory; **no theorem states that they exhaust every C/0 visit during the complete excursion**. In particular, there is no source-checked all-time record-right invariant for authentic blank-origin entries. The explicit frontier offsets are candidate ingredients for such a proof, not a substitute for it.
+
 The source-verified [physical halting criterion](../agent32-429-raw-parent/README.md) is still that the authentic blank trajectory reaches a C/0 with marked right neighbor, equivalently B/001. Proving its actual reachability or impossibility remains essential to deciding #429. No BB(6) exact value, global upper bound, or new blank-run witness is claimed. Therefore this intermediate result belongs in `im-results/`, not `results/`.
