@@ -1,6 +1,6 @@
 # Cryptid D: original-source first sections and recursive zero-marker closure
 
-**Research state: 8 November 2026.** New original-machine zero-marker packet theorems and a terminating depth-recursive safe language have been **kernel-certified** against the original six-state table in [manual Lean CI 42530949401](https://github.com/FlareZ123/bb6/actions/runs/42530949401). This is intermediate synthetic-section mathematics. The blank-root D machine remains undecided, so no exact BB(6) value or upper bound follows. [Earlier research log](FULL_RESEARCH_LOG.md).
+**Research state: 8 November 2026.** New original-machine zero-marker packet theorems and a terminating depth-recursive safe language have been **kernel-certified** against the original six-state table in [manual Lean CI 42531370805](https://github.com/FlareZ123/bb6/actions/runs/42531370805). This is intermediate synthetic-section mathematics. The blank-root D machine remains undecided, so no exact BB(6) value or upper bound follows. [Earlier research log](FULL_RESEARCH_LOG.md).
 
 ## Section semantics and key theorem
 
@@ -30,7 +30,7 @@ The same [Lean file](EZeroZ.lean) composes that exact drop with Agent2's origina
 | `M(9t+10,3u+1,0;Z_(m+1))` | every `t,u,m` | some regular `L`, because the dropped packet is an A section with `p≡0 mod3` |
 | `M(27t+7,3u+1,0;Z_(m+1))` | every `t,u,m` | some regular `L` after one further exact guarded E packet step and an A/p=0 terminal |
 
-These are mutually overlapping sufficient families, not a complete classification. Every result is universally parameterized and checks the *literal original machine* via physical tape equivalence. All have been audited by [CI 42530949401](https://github.com/FlareZ123/bb6/actions/runs/42530949401), with no `sorryAx` or native-decision dependence.
+These are mutually overlapping sufficient families, not a complete classification. Every result is universally parameterized and checks the *literal original machine* via physical tape equivalence. All have been audited by [CI 42531370805](https://github.com/FlareZ123/bb6/actions/runs/42531370805), with no `sorryAx` or native-decision dependence.
 
 ## A certified recursive sufficient criterion
 
@@ -50,7 +50,7 @@ safeZ m c  and  c.a ≥ 4
        run(T, M(c.a,c.q,c.p;Z_m)) ≈ L(A,Q,B).
 ```
 
-The theorem `e_zero_safeZ` also specializes this procedure to `M(3k+4,q,0;Z_(m+1))`. The method composes **whole unbounded packet paths** with arbitrary-many zero-marker reductions, rather than proving a new short congruence case for every 3-adic arithmetic residue. The computed predicate is a *sufficient* original-source certificate. A rejected input is unresolved; the procedure is not a halting or nonreturn decision.
+The theorem `e_zero_safeZ` also specializes this procedure to `M(3k+4,q,0;Z_(m+1))`. Furthermore, `zero_marker_all_safe_pmod` proves that **every** `M(a,q,p;Z_0)` with `a≥4` and `p%3≠2` returns physically to regular `L`, for arbitrary `q,p`. This closes the entire safe-residue depth-zero packet language, including any number of intermediate B/E returns, using only original source rules. All three compiler theorems passed [CI 42531370805](https://github.com/FlareZ123/bb6/actions/runs/42531370805). The method composes **whole unbounded packet paths** with arbitrary-many zero-marker reductions, rather than proving a new short congruence case for every 3-adic arithmetic residue. The computed predicate is a *sufficient* original-source certificate. A rejected input is unresolved; the procedure is not a halting or nonreturn decision.
 
 In particular, `p≡2 mod3` A/E terminal exits and some deeper E-reset chains remain possible. Agent2's active Z-marker A/p=2 work is complementary. None of these synthetic tapes is asserted to be reached by any authentic blank orbit.
 
