@@ -1,65 +1,75 @@
-# P1: exact affine invariant for unbounded depth-two inverse suffixes
+# P1: unbounded depth-two runs with a single shallow inverse transition
 
-**Scope and status (8 November 2026).** The following is a locally kernel-checked Lean 4.36.0-rc2 theorem about the **exact arithmetic transition equations** of P1's source inverse map. The transition equations agree with the original-source formulas stated and certified in [Agent50's energy dossier](../agent50-p1-subwall/README.md), especially its depth-two cocycle. The new exclusion is currently proven for a separately defined `TwoRun` relation; a complete source-level `CountCone`/original-`inverseAt` wrapper has **not yet** been built. This is an intermediate inverse-word obstruction, not a nonhalting theorem, not a right-five complete exclusion, and not a BB(6) result.
+**Current evidence (8 November 2026).** A new all-natural Lean 4.36.0-rc2 theorem excludes the exact shifted wall for an inverse-word grammar consisting of an arbitrary initial depth-two run, **one** depth-zero or depth-one edge, and an arbitrary final depth-two run. The proof is fully kernel-checked for its stated **arithmetic premises** and has no `sorryAx`. Its connection to the unmodified P1 `inverseAt` and `CountCone` is at the source-identity derivation stage; an original-source integrated Lean wrapper has **not yet been compiled**. It is an intermediate necessary-word exclusion. P1 halting and BB(6) remain open.
 
-## Statement
+## The affine cocycle
 
-Let (P=2^n), (n\ge 14), and define shifted wall (W=b+4m+4n+20) and auxiliary cost (B=m+n+6). For a genuine original-source depth-two inverse edge, Agent50's source identities give
+Let `P=2^n`, `W=b+4m+4n+20` and `B=m+n+6`. Original-source P1 energy identities, previously verified by Agent50, give the depth-two transition
 
-```text
-8 W_next = W + 84 P + 16 B,
-B_next = B+3.
+```
+8 W' = W + 84 P + 16 B,       B'=B+3.
 ```
 
-The affine defect
+Define `I(P,W,B)=49W-588P-112B+384`. One depth-two transition satisfies `I(P,W',B')=I(P,W,B)/8`. Hence every (finite, unbounded-length) depth-two run of length `r` satisfies `I_before=8^r I_after`, proved in [TwoRunModel.lean](TwoRunModel.lean).
 
-```text
-I(P,W,B) = 49 W - 588 P - 112 B + 384
+The same source identities imply the following **single shallow edge** formulas, with `B` the cost coordinate immediately before the edge:
+
+```
+depth 0: 2 W' = W + 4 B - 8,          B'=B+1
+depth 1: 4 W' = W + 28 P + 8 B - 8,   B'=B+2.
 ```
 
-therefore satisfies the **exact identity** `I_next=I_before/8`. For every natural length `r`, the separately formalized `TwoRun` relation proves
+The root is `(b,d,m)=(14P-2n-16,3,0)`, with `W_root=14P+2n+4`, `B_root=n+6`, and `I_root=98P-14n-92`.
 
-```text
-I(P,W_start,B_start) = 8^r I(P,W_end,B_end),
-B_end = B_start + 3r.
+## Uniform all-n result for one shallow edge
+
+Consider the entire inverse-depth grammar `(2)^s · (0|1) · (2)^r`, for **any** naturals `s,r`, from the above root. The endpoint exact shifted wall is `W_end=12P`.
+
+The prefix depth-two defect condition gives `8^s | (98P-14n-92)`. Since `0<14n+92<2^n` for `n>=14`, the dyadic remainder lemma first forces `3s<=n`. Consequently `8^s|P` and `8^s|(14n+92)`. Write
+
+```
+q=8^s,   P=q*p,   14n+92=q*d.
 ```
 
-The source root is `(b,d,m)=(14P-2n-16,3,0)`. Its first inverse edge, when depth zero or one, respectively has the exact arithmetic consequences:
+Using the unique shallow edge and the final depth-two defect relation, a genuine exact-wall hit would require one of the following **integer equations**:
 
-```text
-t=0: W_start = 7P+3n+10,  B_start=n+7
-t=1: 2 W_start = 21P+5n+22, B_start=n+8.
+```
+depth 0: (588*q-98)*p =
+  (224*n+672*s+672*r+800)*8^r + (84*n+252*s+272-d)
+
+depth 1: (392*q-98)*p =
+  (448*n+1344*s+1344*r+2048)*8^r + (56*n+168*s+200-d).
 ```
 
-**Two source-shaped exclusions**: No `TwoRun` of any length `r\ge0` from either of the above starting coordinates reaches `W_end=12P`, for any `n\ge14`. These exclude the infinite inverse-depth patterns `0,2,2,...,2` and `1,2,2,...,2` as *necessary arithmetic wall precursors*. They do not prohibit general inverse words containing other depths, and do not claim any source-level reachability assertion beyond the explicitly cited identities.
+**Theorem:** Neither equality has a solution in natural `n,s,r,p,d` with `n>=14`, `8^s*p=2^n` and `8^s*d=14n+92`. The Lean declarations `no_zero_middle_all` and `no_one_middle_all` in [OneShallowFiniteBridge.lean](OneShallowFiniteBridge.lean) prove this without a reset-count, suffix-length, or cost cutoff.
 
-## Proof mechanism
+### Symbolic proof for n>=28
 
-Introduce `I` as above. Substituting the initial and final wall coordinates into `I_start = 8^r I_end` reduces the t=0 and t=1 cases to the respective natural-number equations
+If `K*2^e=A*8^r+R` with `0<R<2^e`, modular divisibility forces `3r<=e` and `8^r<=R`. Apply this at `e=n-3s`. The divisibility `q|(14n+92)` bounds `q<=21(n+2)`; the remainder bound yields `R<2^{n-3s}`. Therefore `3(s+r)<=n`. Substituting into either wall equation gives a polynomial upper bound contradicting the fully proved all-natural inequality
 
-```text
-245*2^n = (112*n+336*r+400)*8^r + (35*n+90)
-147*2^n = (224*n+672*r+1024)*8^r + (21*n+54).
+```
+8192*(n+2)^3 < 2^n       (n>=28).
 ```
 
-Both have no solution for `n>=14`. The common dyadic remainder lemma states: if `K*2^n = A*8^r+B` and `0<B<2^n`, then `3r<=n` and `8^r<=B`. The first assertion follows from considering which of `2^n` and `8^r` divides the other. Since `8^r|B` and `B>0`, the second follows immediately. Consequently `K*2^n <=(A+1)*B`, where `r<=n/3` makes the right side quadratic in `n`. Inductively certified exponential gaps give
+All inequalities and both shallow-sector contradictions appear in [CubicGap.lean](CubicGap.lean) and [OneShallowLarge.lean](OneShallowLarge.lean); their Lean axiom reports contain only standard axioms.
 
-```text
-10125*(n+2)^2 < 245*2^n   for n>=14
-13851*(n+2)^2 < 147*2^n   for n>=15.
+### Complete finite range 14<=n<=27
+
+The same integer equations imply `s<=2` since `8^s|(14n+92)<=470<512`, and `r<=12` since `8^13>588*2^27` bounds any possible right-hand product. [OneShallowFinite.lean](OneShallowFinite.lean) checks all `n∈[14,27], s∈[0,2],r∈[0,12]` via ordinary kernel `decide` on exact divisions, powers and equality. This finite Boolean theorem has **no axioms**. [OneShallowFiniteBridge.lean](OneShallowFiniteBridge.lean) proves the authentic quantified arithmetic assumptions imply those finite checks, and combines the small and large regimes. The public all-n theorems use `[propext, Classical.choice, Quot.sound]` only.
+
+## Earlier direct-shallow result
+
+For `s=0`, the wall equations simplify to
+
+```
+245*2^n = (112*n+336*r+400)*8^r+(35*n+90)
+147*2^n = (224*n+672*r+1024)*8^r+(21*n+54).
 ```
 
-The `n=14` t=1 case is handled by a bounded remainder argument (`r<=2`). This closes all natural `n,r` without sampling, an a priori run-length bound, or a fixed inverse cost.
+[DyadicGap.lean](DyadicGap.lean), [TwoRunModel.lean](TwoRunModel.lean), and [TwoRunBridge.lean](TwoRunBridge.lean) directly prove these two all-n original-root **arithmetic model** exclusions without `sorryAx`. The stronger one-shallow theorem includes all such equations and more.
 
-## Source and verification boundary
+## Verification, context and next decisive action
 
-- [DyadicGap.lean](DyadicGap.lean): the general modular remainder theorem and both all-natural number-theoretic exclusions.
-- [TwoRunModel.lean](TwoRunModel.lean): exact affine recurrence and its `8^r` invariant for **all** finite runs.
-- [TwoRunBridge.lean](TwoRunBridge.lean): two public wall-exclusion theorems combining the recurrence with the initial/source-shaped equations.
-- Local Lean 4.36.0-rc2 compile commands: `lean -o DyadicGap.olean DyadicGap.lean`, then `lean -o TwoRunModel.olean TwoRunModel.lean`, then `lean TwoRunBridge.lean` with `LEAN_PATH` containing the directory of the first two `.olean` files. The public theorem axiom audits printed `[propext, Quot.sound]` only; neither theorem used `sorry`.
-- A later proof **must** build the start-step bridge and transfer `TwoRun` by induction over the **unchanged original** `inverseAt`. All use of original source here is in the recurrence identities from [Agent50's source proof](../agent50-p1-subwall/RightFiveEnergyStep.lean), not a newly compiled full-source theorem.
-- Original mathematical novelty remains unreviewed. Agent50 has independently proved a far more general near-wall reset-density *necessary bound*, [source CI 42520350507](https://github.com/FlareZ123/bb6/actions/runs/42520350507); this new exact-pattern obstruction is complementary and significantly narrower.
+Compile files in this order using Lean 4.36.0-rc2 with import path set to their folder: `DyadicGap`, `TwoRunModel`, `TwoRunBridge`, `CubicGap`, `OneShallowLarge`, `OneShallowFinite`, and `OneShallowFiniteBridge`. Local compilation of each completed successfully; `#print axioms` on `no_zero_middle_all` and `no_one_middle_all` showed `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. No full original-source CI was invoked for this new chain.
 
-## Next high-value question
-
-The direct-root shallow transition is the smallest case. Extend the defect method to **arbitrarily many depth-two steps before the single shallow edge**, i.e. patterns `2^s · (0|1) · 2^r`, where both `s` and `r` are unbounded. Initial calculations reduce the problem to a two-variable dyadic remainder with `8^s | (98*2^n-14*n-92)`. If successful, first formalize this as a pure arithmetic theorem, then close the authentic original-source bridge. General words with multiple shallow transitions or depth>=3 remain open.
+**Open integration step:** Formally lift the original `inverseAt` depth-zero/one/two formulas to the affine `TwoRun` model and derive both quantified wall equations from a `CountCone` history of shape `2^s(0|1)2^r`. The original-source cocycle and mass equations are available in [Agent50's source energy modules](../agent50-p1-subwall/RightFiveEnergyStep.lean), and the root mass is in [DepthIndexedResetFloor.lean](DepthIndexedResetFloor.lean). Until this bridge is Lean checked, avoid labeling the new theorem original-source-certified. Earlier [Agent50's all-count logarithmic reset-density theorem](../agent50-p1-subwall/README.md) has successful original-source CI [42520350507](https://github.com/FlareZ123/bb6/actions/runs/42520350507), but it is a necessary lower bound rather than a decisive wall exclusion. These results are complementary; external novelty remains to be reviewed. Full P1 closure requires handling words with multiple shallow edges, arbitrary high-depth excursions, and authentic blank-root implications.
