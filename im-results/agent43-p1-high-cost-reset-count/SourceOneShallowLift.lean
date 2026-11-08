@@ -1,3 +1,4 @@
+import TwoShallowModelLarge
 import OneShallowModelOne
 import RightFiveEnergyStep
 import InverseIff
@@ -193,4 +194,136 @@ theorem source_no_one_word_wall
 
 #print axioms source_no_zero_word_wall
 #print axioms source_no_one_word_wall
+end BB6.Agent43SourceWord
+
+namespace BB6.Agent43SourceWord
+open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent50Energy BB6.Agent43TwoRun
+
+/-- Exact coefficient profile of either genuine shallow source step,
+relative to the same integer energy used in the two-run model. -/
+theorem source_shallow_profile
+    (n B D M t k c : Nat)
+    (hmass : B+D+2*M+2*n+13=14*2^n)
+    (hb : 8≤B) (hb4 : B%4=0) (hd : D%2=1)
+    (hi : inverseAt B D t=some (k,c))
+    (hk : 2≤k) (hc : c%2=1) (ht : t≤1) :
+    ∃ alpha C L O : Nat,
+      1≤alpha ∧ alpha≤2 ∧ 392≤C ∧ 56≤L ∧ L≤84 ∧ O≤232 ∧
+      alpha=t+1 ∧
+      ((2:Int)^alpha)* I ((2:Int)^n)
+        ((↑(2*k-4):Int)+4*(↑(M+t+1):Int)+4*(n:Int)+20)
+        ((M:Int)+(n:Int)+6+(alpha:Int)) =
+      I ((2:Int)^n)
+        ((B:Int)+4*(M:Int)+4*(n:Int)+20) ((M:Int)+(n:Int)+6) -
+        (C:Int)*(2:Int)^n +(L:Int)*((M:Int)+(n:Int)+6)-(O:Int) := by
+  let W : Int := (B:Int)+4*(M:Int)+4*(n:Int)+20
+  let X : Int := (↑(2*k-4):Int)+4*(↑(M+t+1):Int)+4*(n:Int)+20
+  let Z : Int := (M:Int)+(n:Int)+6
+  by_cases htzero : t=0
+  · subst t
+    refine ⟨1,588,84,232,by decide,by decide,by decide,by decide,by decide,by decide,by decide,?_⟩
+    have hW := shallow_zero n B D M k c hmass hb hb4 hd hi hk hc
+    unfold I
+    omega
+  · have htone : t=1 := by omega
+    subst t
+    refine ⟨2,392,56,136,by decide,by decide,by decide,by decide,by decide,by decide,by decide,?_⟩
+    have hW := shallow_one n B D M k c hmass hb hb4 hd hi hk hc
+    unfold I
+    omega
+
+#print axioms BB6.Agent43SourceWord.source_shallow_profile
+end BB6.Agent43SourceWord
+
+namespace BB6.Agent43SourceWord
+open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent43TwoRun
+open BB6.Agent43TwoShallowModel
+
+/-- Above n=47, no original legal source inverse word with two shallow edges
+of depths 0 or 1, and otherwise only depth-two edges, reaches the exact wall.
+Run lengths are unrestricted and may independently be zero. -/
+theorem source_no_two_shallow_word_wall_large
+    (n s u r t1 t2 bp dp mp k1 c1 B D M k2 c2 be de me : Nat)
+    (hn : 48≤n) (ht1 : t1≤1) (ht2 : t2≤1)
+    (hpre : SourceTwoChain n s (14*2^n-2*n-16) 3 0 bp dp mp)
+    (hb1 : 8≤bp) (hb14 : bp%4=0) (hd1 : dp%2=1)
+    (hi1 : inverseAt bp dp t1=some (k1,c1))
+    (hk1 : 2≤k1) (hc1 : c1%2=1)
+    (hmid : SourceTwoChain n u (2*k1-4) (c1+4) (mp+t1+1) B D M)
+    (hb2 : 8≤B) (hb24 : B%4=0) (hd2 : D%2=1)
+    (hi2 : inverseAt B D t2=some (k2,c2))
+    (hk2 : 2≤k2) (hc2 : c2%2=1)
+    (hsuf : SourceTwoChain n r (2*k2-4) (c2+4) (M+t2+1) be de me)
+    (hwall : be+4*me+4*n+20=12*2^n) : False := by
+  have hn14 : 14≤n := by omega
+  have h100 :100*n≤2^n := BB6.Agent50RightFiveTwo.hundred_mul_le_pow n hn14
+  have hrootMass : (14*2^n-2*n-16)+3+2*0+2*n+13=14*2^n := by omega
+  have hpreMass := two_chain_mass n s _ _ _ _ _ _ hpre hrootMass
+  have hpreModel := two_chain_model n s _ _ _ _ _ _ hpre hrootMass
+  have hInv1 := (inverseAt_iff_power_mass bp dp t1 k1 c1 (by omega) hb14 hd1).mp hi1
+  have hmassStep1 : 2*k1+c1+2*t1+2=bp+dp := by omega
+  have hafter1Mass : (2*k1-4)+(c1+4)+2*(mp+t1+1)+2*n+13=14*2^n := by
+    omega
+  have hmidMass := two_chain_mass n u _ _ _ _ _ _ hmid hafter1Mass
+  have hmidModel := two_chain_model n u _ _ _ _ _ _ hmid hafter1Mass
+  have hInv2 := (inverseAt_iff_power_mass B D t2 k2 c2 (by omega) hb24 hd2).mp hi2
+  have hmassStep2 : 2*k2+c2+2*t2+2=B+D := by omega
+  have hafter2Mass : (2*k2-4)+(c2+4)+2*(M+t2+1)+2*n+13=14*2^n := by
+    omega
+  have hsufModel := two_chain_model n r _ _ _ _ _ _ hsuf hafter2Mass
+  obtain ⟨alpha,C1,L1,O1,hAlpha1,hAlpha1max,hC1,hL1,hL1max,hO1,halpha1,hSh1⟩ :=
+    source_shallow_profile n bp dp mp t1 k1 c1 hpreMass
+      hb1 hb14 hd1 hi1 hk1 hc1 ht1
+  obtain ⟨beta,C2,L2,O2,hBeta1,hBeta1max,hC2,hL2,hL2max,hO2,hbeta1,hSh2⟩ :=
+    source_shallow_profile n B D M t2 k2 c2 hmidMass
+      hb2 hb24 hd2 hi2 hk2 hc2 ht2
+  let Wpre : Int := (bp:Int)+4*(mp:Int)+4*(n:Int)+20
+  let Bpre : Int := (mp:Int)+(n:Int)+6
+  let Wafter1 : Int := (↑(2*k1-4):Int)+4*(↑(mp+t1+1):Int)+4*(n:Int)+20
+  let Wmid : Int := (B:Int)+4*(M:Int)+4*(n:Int)+20
+  let Bmid : Int := (M:Int)+(n:Int)+6
+  let Wafter2 : Int := (↑(2*k2-4):Int)+4*(↑(M+t2+1):Int)+4*(n:Int)+20
+  let Wend : Int := (be:Int)+4*(me:Int)+4*(n:Int)+20
+  let Bend : Int := (me:Int)+(n:Int)+6
+  have hrootEq :
+      ((↑(14*2^n-2*n-16):Int)+4*(0:Int)+4*(n:Int)+20) =
+       14*(2:Int)^n+2*(n:Int)+4 := by
+    have hnateq : (14*2^n-2*n-16)+4*n+20=14*2^n+2*n+4 := by omega
+    exact_mod_cast hnateq
+  have hpreModel' : TwoRun ((2:Int)^n)
+      (14*(2:Int)^n+2*(n:Int)+4) ((n:Int)+6) s Wpre Bpre := by
+    rw [show (↑(0:Nat):Int)=0 by rfl] at hpreModel
+    rw [hrootEq] at hpreModel
+    simpa [Wpre,Bpre] using hpreModel
+  have hBafter1 : ((↑(mp+t1+1):Int)+(n:Int)+6) = Bpre+(alpha:Int) := by
+    dsimp [Bpre]
+    omega
+  have hmidModel' : TwoRun ((2:Int)^n)
+      Wafter1 (Bpre+(alpha:Int)) u Wmid Bmid := by
+    rw [hBafter1] at hmidModel
+    simpa [Wafter1,Wmid,Bmid] using hmidModel
+  have hBafter2 : ((↑(M+t2+1):Int)+(n:Int)+6) = Bmid+(beta:Int) := by
+    dsimp [Bmid]
+    omega
+  have hsufModel' : TwoRun ((2:Int)^n)
+      Wafter2 (Bmid+(beta:Int)) r Wend Bend := by
+    rw [hBafter2] at hsufModel
+    simpa [Wafter2,Wend,Bend] using hsufModel
+  have hSh1' : ((2:Int)^alpha)*I ((2:Int)^n) Wafter1 (Bpre+(alpha:Int)) =
+      I ((2:Int)^n) Wpre Bpre - (C1:Int)*(2:Int)^n +
+        (L1:Int)*Bpre-(O1:Int) := by
+    simpa [Wafter1,Wpre,Bpre] using hSh1
+  have hSh2' : ((2:Int)^beta)*I ((2:Int)^n) Wafter2 (Bmid+(beta:Int)) =
+      I ((2:Int)^n) Wmid Bmid - (C2:Int)*(2:Int)^n +
+        (L2:Int)*Bmid-(O2:Int) := by
+    simpa [Wafter2,Wmid,Bmid] using hSh2
+  have hwallInt : Wend=12*(2:Int)^n := by
+    dsimp [Wend]
+    exact_mod_cast hwall
+  exact no_two_shallow_model_from_source_coefficients n s u r alpha beta C1 C2 L1 L2 O1 O2
+    hn hAlpha1 hAlpha1max hBeta1 hBeta1max hC1 hC2 hL1 hL1max hL2 hL2max hO1 hO2
+    Wpre Bpre Wafter1 Wmid Bmid Wafter2 Wend Bend
+    hpreModel' hSh1' hmidModel' hSh2' hsufModel' hwallInt
+
+#print axioms BB6.Agent43SourceWord.source_no_two_shallow_word_wall_large
 end BB6.Agent43SourceWord
