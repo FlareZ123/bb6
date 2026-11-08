@@ -107,6 +107,20 @@ theorem unique_two_burst_source (k n p a b c x y : Nat)
     exact (Prod.mk.inj ((Option.some.inj h))).2
   exact unique_two_burst k n p a b c x y hf heven hbelow hd heq hs hgate
 
+/-- Strictly increasing seeds certify infinitely many distinct two-burst inputs. -/
+theorem kTwo_strict_succ (t : Nat) : kTwo t < kTwo (t+1) := by
+  have hpow : 2^(4*(t+1)+5) = 16*2^(4*t+5) := by
+    have he : 4*(t+1)+5 = (4*t+5)+4 := by omega
+    rw [he, Nat.pow_add]
+    simp only [show (2:Nat)^4=16 by decide]
+    omega
+  have hq := q_bound t
+  dsimp [qTwo] at hq
+  dsimp [kTwo]
+  rw [hpow]
+  omega
+
+#print axioms kTwo_strict_succ
 #print axioms low_even_source
 #print axioms unique_two_burst_source
 #print axioms unique_two_burst
