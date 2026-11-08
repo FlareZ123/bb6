@@ -1,0 +1,72 @@
+name: Cryptid D Z marker E-zero source proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore originals
+        run: |
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check universal marker-two source and E-zero p1 continuation
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean --version
+          B=im-results/agent31-cryptid-boundary
+          A=im-results/agent25-cryptid-doublezero
+          C=im-results/agent35-cryptid-code
+          S=im-results/agent32-cryptid-third
+          P=im-results/agent32-cryptid-padding
+          R=im-results/agent31-d-exceptional
+          D=im-results/agent2-packet-shift
+          E=im-results/agent26-cryptid-e-gate
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/A1100.olean" "$B/A1100.lean"
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode TripleIteration SixOnes; do
+            lean -o "$A/$module.olean" "$A/$module.lean"
+          done
+          lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+          lean -o "$E/A1101010111.olean" "$E/A1101010111.lean"
+          lean -o "$E/A1101010111Code.olean" "$E/A1101010111Code.lean"
+          lean -o "$P/CodeImplicitNil.olean" "$P/CodeImplicitNil.lean"
+          for module in CryptidSix CryptidPairs CryptidTriplePairs; do
+            lean -o "$S/$module.olean" "$S/$module.lean"
+          done
+          lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
+          lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+          lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean"
+          lean -o "$D/PacketP2ResetSource.olean" "$D/PacketP2ResetSource.lean"
+          lean -o "$C/P2K4Shapes.olean" "$C/P2K4Shapes.lean" | tee axioms.log
+          lean -o "$C/P2K4ShapeCfg.olean" "$C/P2K4ShapeCfg.lean" | tee -a axioms.log
+          lean "$C/P2K4Source.lean" | tee -a axioms.log
+          lean -o "$C/P2K7Shapes.olean" "$C/P2K7Shapes.lean" | tee -a axioms.log
+          lean -o "$C/P2K7ShapeCfg.olean" "$C/P2K7ShapeCfg.lean" | tee -a axioms.log
+          lean "$C/P2K7Source.lean" | tee -a axioms.log
+          lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
+          lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
+          lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean"
+          lean -o "$D/PacketNormalizeSource.olean" "$D/PacketNormalizeSource.lean"
+          lean "$D/MarkerTwoSource.lean" | tee -a axioms.log
+          lean -o "$D/MarkerTowerSource.olean" "$D/MarkerTowerSource.lean" | tee -a axioms.log
+          lean -o "$D/EAltMarkerAll.olean" "$D/EAltMarkerAll.lean" | tee -a axioms.log
+          lean -o "$D/MarkerZeroSource.olean" "$D/MarkerZeroSource.lean" | tee -a axioms.log
+          lean -o "$D/MarkerZeroAZero.olean" "$D/MarkerZeroAZero.lean" | tee -a axioms.log
+          lean -o "$D/EAltPacketCompose.olean" "$D/EAltPacketCompose.lean" | tee -a axioms.log
+          lean "$D/EAltK2AZero.lean" | tee -a axioms.log
+          lean "im-results/agent36-cryptid-trace/EZeroZ.lean" | tee -a axioms.log
+          if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
