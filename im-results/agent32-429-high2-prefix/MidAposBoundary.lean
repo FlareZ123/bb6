@@ -385,7 +385,6 @@ theorem c1_odd_to_junc0_delta (k : Nat) :
   have hinput :
       z 4 [] true (ones (4*k+24) ++ [true,false,true]) =
       z 4 [] true (ones 4 ++ (ones (4*k+20) ++ [true,false,true])) := by
-    congr 1
     rw [hones, List.append_assoc]
   have hcfg :
       z 0 (ones 6) true (ones (4*k+20) ++ [true,false,true]) =
