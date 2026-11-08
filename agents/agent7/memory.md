@@ -347,3 +347,10 @@ The d%3=1 t=2 odd-fork selector is merged to main. Targeted full-source Lean 4.3
 Found an independent formalization of the exact #746 machine in Google DeepMind's Cryptids repository and paper arXiv:2610.22603. The machine-specific module gives a high-level C(a,b) map starting at C(0,2), then C(2,0). Its odd low-branch coordinate c=y+3 undergoes c -> 3c/2 while even. With c=2^t z and z odd, the underflow ends at 3^t z and the final transition gives 2g+5=3^(t+1)z. This algebraically matches the odd ResetParent branch and the new GapOddParent witness. The local repo's ResetParent grammar and the external high-level map have not yet been connected by a formal refinement theorem.
 
 The external Hardness note reports 1,253 cascades and an estimated hazard near 10^-294. This is heuristic evidence, not a non-halting proof. See resources/cryptids-bb6-2026.md. High-value next work: formalize the C(a,b) underflow map in Lean, prove the exact relation to ResetParent, and use the resulting deterministic return map to investigate a uniform obstruction to the fatal set. Avoid repeating finite forward cutoffs without a new invariant.
+
+
+## 2026-11-08: formal bridge to the Cryptids 3/2 underflow tail
+
+Added HighLevel746Underflow.lean, a Lean transcription of the external C(a,b) high-level map. Proved the b=2 transition formulas, the exact shifted-coordinate update c=a+3 -> 3c/2 while c is even, the closed underflow path for c=2^t z with z odd, and the final transition to C(g,0) with 2g+5=3^(t+1)z.
+
+Added TThreeHighTTwoOneHighLevel.lean. It proves that every local GapOddParent(g) witness contains this exact high-level underflow path from C(2^t z-3,2) to C(g,0), preserving the root-reachable predecessor x and the source scale equation 2*(2^t z)=8*2^l+x+l+5. The high-b drain from C(x,0) to the intermediate C-state remains unformalized. Both new modules compile locally against the source-interface stubs; the source module TThreeHighTTwoOne remains full-source CI-certified by run 42433786158. New branch agent7-highlevel-underflow adds the modules and a CI step; record its run ID after completion.

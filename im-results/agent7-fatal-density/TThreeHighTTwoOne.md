@@ -77,3 +77,10 @@ This result does not establish that any candidate is actually reachable, does no
 Google DeepMind's public Cryptids repository contains an independent Lean acceleration of this exact machine. Its high-level start is C(0,2), and the first transition is C(2,0), the same source reset root used here. The map is summarized in resources/cryptids-bb6-2026.md.
 
 The map also gives a direct explanation of the odd-parent underflow. After the low branch reaches C(y,2), put c=y+3. When c is even, the next C-transition replaces c by 3c/2. If c=2^t z with z odd, t underflow steps produce 3^t z, and the final C-transition reaches g with 2g+5=3^(t+1)z. The second source equation in GapOddParent is the exact relation 2^(t+1)z=8*2^l+x+l+5. This is an algebraic alignment with the external map; a formal cross-repository refinement theorem has not yet been added.
+
+
+## Formal high-level underflow tail
+
+The exact high-level C(a,b) map is transcribed in HighLevel746Underflow.lean. The b=2 state has shifted coordinate c=a+3. If c is even, one transition replaces it with 3c/2 and leaves the second coordinate at 2. For c=2^t z with z odd, the t underflow transitions reach 3^t z, which is odd; the next transition exits to C(g,0) with 2g+5=3^(t+1)z.
+
+The bridge theorem in TThreeHighTTwoOneHighLevel.lean proves that every GapOddParent(g) witness contains this exact finite underflow path from C(2^t z-3,2) to C(g,0). It also retains the root-reachable predecessor x and the scale equation 2*(2^t z)=8*2^l+x+l+5. The preceding l-step high-b drain from C(x,0) to the intermediate state remains unformalized. The new modules compile locally; targeted repository CI is pending.

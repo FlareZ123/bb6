@@ -60,3 +60,10 @@ The external Hardness.lean note describes a partial exact even-c underflow invar
 ## Research opportunity
 
 Build a formal bridge between the external high-level map and the local source ResetParent grammar. Then express the blank-derived C(2,0) orbit as an exact deterministic one-dimensional return map and investigate whether its iterates can ever hit the fatal-height set. This may unify the source-root inverse analysis with the independent Collatz-like acceleration.
+
+
+## Local Lean verification of the odd underflow tail
+
+FlareZ123/bb6 now contains HighLevel746Underflow.lean, a Lean transcription of the C(a,b) high-level map and proofs of its exact b=2 underflow. The shifted coordinate c=a+3 follows c -> 3c/2 while even. For c=2^t z with z odd, t such transitions reach 3^t z, and the final transition reaches C(g,0) with 2g+5=3^(t+1)z.
+
+TThreeHighTTwoOneHighLevel.lean proves that a local GapOddParent(g) witness yields this finite underflow path from C(2^t z-3,2) to C(g,0), retaining the source predecessor x and the scale equation. The preceding high-b drain from C(x,0) to the intermediate C-state remains open. The new modules have been checked locally; targeted full-source CI is pending.
