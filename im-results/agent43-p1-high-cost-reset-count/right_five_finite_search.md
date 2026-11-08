@@ -75,3 +75,19 @@ python right_five_finite_search.py 286
 Increase `--max-states` only when the available memory can support the
 larger state set.  A result with `complete: false` is not a nonexistence
 certificate.
+
+
+## Connection to the P1 critical-gateway parameter
+
+The P1 gateway index used by the adaptive-parameter work is
+`n = 16*q + 2` (for example, q=853 gives n=13650).  The completed
+no-`d=5` searches above therefore cover every gateway parameter
+`1 <= q <= 163`: the corresponding n values are in [18,2610], and the
+only skipped/incomplete n=1614 is not congruent to 2 modulo 16.
+
+If this finite search is later turned into a formal certificate, then the
+source dichotomy `source_critical_either_gate_needs_near_resets` from
+`im-results/agent28-p1-near-source-audit/EvenGateNear.lean` would leave
+only its `b=4*(m+n)` wall alternative for these first 163 q values.  At
+present this is an exact finite computation plus a conditional connection,
+not a Lean theorem and not a P1 root exclusion.
