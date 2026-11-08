@@ -96,7 +96,8 @@ theorem source_wall_reset_growth
   · exact hnot
   · exfalso
     have hPow : 32*((n+1+(2*n+3)*z)+n+6)*8^z≤2^n := by
-      omega
+      have hCoefEq : (n+1+(2*n+3)*z)+n+6=2*n+7+(2*n+3)*z := by omega
+      simpa only [hCoefEq] using (Nat.le_of_not_gt hnot)
     have hcost := source_counted_cost_linear_in_resets n b d m z hn h
     have hbar := source_wall_buffer n (n+1+(2*n+3)*z) z b d m z
       hn hPow h hcost (Nat.le_refl z)
