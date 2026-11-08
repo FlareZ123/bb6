@@ -118,9 +118,9 @@ theorem drain_three_two (a q d : Nat) (ha : 0<a) :
     rcases p with ⟨aa,bb,dd⟩
     simp only [heval,Option.bind_some]
     have hbound := evalA_second_le (a-1) q (d+6*q+5+2*(q+1)+3) aa bb dd heval
-    have hlt1 : bb<3*q+2 := by omega
-    have hlt2 : bb<q+1 := by omega
-    simp [hlt1,hlt2]
+    have hle1 : bb ≤ 3*q+1 := by omega
+    have hle2 : bb ≤ q := by omega
+    simp [hle1,hle2]
 
 theorem pow_le_ones_succ (a : Nat) : 3^a ≤ ternaryOnes (a+1) := by
   induction a with
