@@ -111,7 +111,6 @@ theorem prior_high_allowed_m0_j3_mod8 (t : Nat) :
     omega
   have hy : 2^(2*0+2)*(j+3)-(j+3*0+5)=24*t+16 := by
     dsimp [j]
-    simp
     omega
   have hright :
       (BB6.Agent15.affineNormalize (2*j+3)
@@ -181,7 +180,6 @@ theorem m0_j_mod8_three_new_bool_filter (t : Nat) :
   have hy :
       BB6.Agent3FullForcedResidual.highTargetY (8*t+3) 0=24*t+16 := by
     simp [BB6.Agent3FullForcedResidual.highTargetY]
-    simp
     omega
   have hforced :
       BB6.Agent3.fullForcedExcluded
