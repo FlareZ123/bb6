@@ -38,6 +38,7 @@ jobs:
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+          lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
           lean -o "$E/A1101010111.olean" "$E/A1101010111.lean"
           lean -o "$E/A1101010111Code.olean" "$E/A1101010111Code.lean"
           lean -o "$P/CodeImplicitNil.olean" "$P/CodeImplicitNil.lean"
@@ -71,4 +72,5 @@ jobs:
           X=im-results/agent36-cryptid-trace
           lean -o "$X/EZeroZ.olean" "$X/EZeroZ.lean" | tee -a axioms.log
           lean "$X/ZSafeNormalizer.lean" | tee -a axioms.log
+          lean "$X/AZ0P2.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
