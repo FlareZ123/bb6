@@ -60,8 +60,8 @@ theorem j_high0_chart_shift (u : Nat) (d : Int) :
   rw [run_shiftConfig, j_high0_chart]
   simp only [Option.map_some]
   rw [shiftConfig_comp]
-  congr 1
-  omega
+  rw [show d + (-((2*u+6 : Nat) : Int)) =
+    d-((2*u+6 : Nat) : Int) by omega]
 
 /-- Translate the high-one branch to any original physical head offset. -/
 theorem j_high1_chart_shift (u : Nat) (d : Int) :
@@ -72,8 +72,7 @@ theorem j_high1_chart_shift (u : Nat) (d : Int) :
   rw [run_shiftConfig, j_high1_chart]
   simp only [Option.map_some]
   rw [shiftConfig_comp]
-  congr 1
-  omega
+  rw [show d + (6-2*(u:Int)) = d+6-2*(u:Int) by omega]
 
 #print axioms j_high0_chart
 #print axioms j_high1_chart
