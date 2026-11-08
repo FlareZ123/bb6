@@ -116,6 +116,16 @@ The corresponding exact `S_1(n)` sequence is
 
 These two infinite sequences are new concrete consequences of the source-complete recurrence. Their recurrence, rather than the finite listed values, establishes the result.
 
+## Additional exact analytic consequences
+
+The source-derived recurrence has further exact mathematical consequences, documented separately to keep this entry point concise:
+
+- [AlgebraicGF.md](AlgebraicGF.md) derives an algebraic ordinary generating function for `S_0(n)` and the sharp two-parity asymptotic `S_0(n)≈C_(n mod 2)(2√2)^n/n^(3/2)`.
+- [PhaseTransition.md](PhaseTransition.md) proves a density transition: for `a_n/n→α<1/3`, success density tends to zero exponentially, while for `α>1/3` it tends to one exponentially.
+- [BinomialApproximation.md](BinomialApproximation.md) proves the uniform approximation `S_a(n)/3^n = P(a+2K_n-n>0)+O(n^(-1/2))` for `K_n∼Bin(n,1/3)`, with an absolute error constant independent of `a`. This yields the Gaussian profile `Φ(3x/(2√2))` in the critical window `a=n/3+x√n+o(√n)`.
+
+The three extensions are paper proofs from the same original-source-certified drain recurrence, with finite computational cross-checks. They have not separately been Lean-kernel checked, and none gives a statement about the unique blank-root orbit.
+
 ## Scope, prior work and next root-sensitive test
 
 Agent 49 had already source-certified the complete ternary recursion, failure bijection for `b<3^a`, and sharp matching-parity safety threshold; those discoveries are prior work and are not claimed here. The new contribution is the **all-length success cardinality recurrence** and the resulting **uniform exponential scarcity theorem**, which are not inferred from a finite cutoff. This is a mathematical derivation with source-certified premises and finite regression; its new quantifiers have yet to be formalized as a Lean counting theorem. Before external publication, compare with prior literature on deterministic ternary transducers/weighted lattice paths.
