@@ -173,7 +173,7 @@ theorem j_c_sweep_high0_rep (u : Nat) :
           dsimp [h]
           omega
         rw [hset, f0Tape_neq u (2*u) _ (by dsimp [h]; omega)]
-        rw [baseTape_left_blank u (2*u+2) _ (by dsimp [h]; omega)]
+        rw [baseTape_left_blank u (2*u) _ (by dsimp [h]; omega)]
         rw [getD_append_right _ _ j (by rw [tens_length]; exact hjk)]
         rw [tens_length]
         have hidx : j-2*k=i := rfl
