@@ -64,3 +64,12 @@ The \(d\bmod3=1\) branch, surviving modulo-27 gates, valuations \(t\ge3\), other
 The resulting fork recursion retains source-possible branches, including higher 3-adic valuations. No uniform proof separates **all** surviving fatal gates from the genuine `C(2,0)` root, and no original raw-machine halt has been produced. Find a full symbolic odd-fork closure or a genuine root witness; avoid interpreting formal inverse densities as a true trajectory frequency.
 
 See [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md) for the exact Hensel residue recurrences, packet inequalities, paper extensions, evidence scopes and counterexamples.
+
+
+## Quotient d = 1 mod 3: forced odd continuation
+
+The new TThreeHighTTwoOne.lean and TThreeHighTTwoOneArithmetic.lean cover the previously open d%3=1 t=2 branch at the source-root level. The four-even residues are (a,b,c,f,g)=(2,0,2,0,2) mod 3. If neither 9|(2a+5) nor 9|(2c+5), root reachability forces the fourth even ancestor g to be rooted. The existing strict even-image gap at g then forces an actual odd source predecessor there, recorded by GapOddParent.
+
+The exact necessary selector is: for n%18 in {4,17}, d%9 is 1 or 4 or GapOddParent(g); for n%18 in {5,10}, d%9 is 4 or 7 or GapOddParent(g); for n%18 in {11,16}, d%9 is 1 or 7 or GapOddParent(g). The third residue in each sector is routed into the odd fork. It is not root-excluded. The result is an intermediate necessary-condition refinement and does not close the d%3=1 branch.
+
+Targeted full-source CI verification is pending on branch agent7-t2-one-root.
