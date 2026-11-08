@@ -423,6 +423,168 @@ theorem bounded_failure_binary_bijection (n b d : Nat) (hb : b<3^(n+1)) :
 #print axioms lowerCode_of_bad
 #print axioms bad_lowerCode
 
+
+/-- The ternary-weighted sum of n binary digits. -/
+def bitSum : Nat → Nat → Nat
+  | 0, _ => 0
+  | n+1, k => k%2 + 3*bitSum n (k/2)
+
+/-- Explicit closed form of every bounded failure code. -/
+theorem lowerCode_closed (n : Nat) :
+    ∀ k, k<2^n →
+      2*lowerCode n k = 3^(n+1)+1+4*bitSum n k := by
+  induction n with
+  | zero =>
+    intro k hk
+    simp [lowerCode,bitSum]
+  | succ n ih =>
+    intro k hk
+    have hp2 : 2^(n+1)=2*2^n := by rw [Nat.pow_succ]; omega
+    have hq : k/2<2^n := by omega
+    have hx : 0<lowerCode n (k/2) := (lowerCode_bounds n (k/2) hq).1
+    have hi := ih (k/2) hq
+    have hp3 : 3^(n+1+1)=3*3^(n+1) := by rw [Nat.pow_succ]; omega
+    simp only [lowerCode,bitSum]
+    omega
+
+/-- A strictly stronger parity-respecting sharp safety threshold. -/
+def shield : Nat → Nat
+  | 0 => 4
+  | a+1 => 3*shield a-1
+
+theorem shield_ge_four (a : Nat) : 4 ≤ shield a := by
+  induction a with
+  | zero => simp [shield]
+  | succ a ih =>
+    simp only [shield]
+    omega
+
+theorem shield_mono_step (a : Nat) : shield a ≤ shield (a+1) := by
+  have hl := shield_ge_four a
+  simp only [shield]
+  omega
+
+theorem shield_parity (a : Nat) : shield a % 2 = a % 2 := by
+  induction a with
+  | zero => simp [shield]
+  | succ a ih =>
+    have hmin := shield_ge_four a
+    have hrem : shield a%2<2 := Nat.mod_lt _ (by omega)
+    have ha : a%2<2 := Nat.mod_lt _ (by omega)
+    simp only [shield]
+    omega
+
+theorem shield_closed (a : Nat) : 2*shield a = 7*3^a+1 := by
+  induction a with
+  | zero => simp [shield]
+  | succ a ih =>
+    have hmin := shield_ge_four a
+    have hp3 : 3^(a+1)=3*3^a := by rw [Nat.pow_succ]; omega
+    simp only [shield]
+    omega
+
+/-- Exact all-input safety, without any restriction on the third counter. -/
+theorem matching_parity_shield (b : Nat) :
+    ∀ a d, b < shield a → b%2=a%2 →
+      ∃ aa dd, drainB a b d = some (.D aa dd) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d hbudget hparity
+    by_cases hz : b=0
+    · subst b
+      exact ⟨a,d,by simp [drainB]⟩
+    · let q := b/3
+      have hrem : b%3<3 := Nat.mod_lt _ (by omega)
+      have hdiv : b=3*q+b%3 := by dsimp [q]; omega
+      by_cases h0 : b%3=0
+      · have hrep : b=3*q := by omega
+        have hq : 0<q := by omega
+        have hsmall : q-1<b := by omega
+        have hnew : q-1<shield (a+1) := by
+          have hmono := shield_mono_step a
+          omega
+        have hpar : (q-1)%2=(a+1)%2 := by
+          have hr : q%2<2 := Nat.mod_lt _ (by omega)
+          have ha : a%2<2 := Nat.mod_lt _ (by omega)
+          omega
+        obtain ⟨aa,dd,hs⟩ := ih (q-1) hsmall (a+1) (d+6*q+3) hnew hpar
+        refine ⟨aa,dd,?_⟩
+        rw [hrep, drain_three a q d hq]
+        exact hs
+      · by_cases h1 : b%3=1
+        · have hrep : b=3*q+1 := by omega
+          cases a with
+          | zero =>
+            simp [shield] at hbudget
+            omega
+          | succ a =>
+            have hsmall : q<b := by omega
+            have hnew : q<shield a := by
+              simp only [shield] at hbudget
+              omega
+            have hpar : q%2=a%2 := by
+              have hr : q%2<2 := Nat.mod_lt _ (by omega)
+              have ha : a%2<2 := Nat.mod_lt _ (by omega)
+              omega
+            obtain ⟨aa,dd,hs⟩ := ih q hsmall a (d+6*q+7) hnew hpar
+            refine ⟨aa,dd,?_⟩
+            rw [hrep, drain_three_one (a+1) q d (by omega)]
+            exact hs
+        · have h2 : b%3=2 := by omega
+          have hrep : b=3*q+2 := by omega
+          cases a with
+          | zero =>
+            have hsmall : q<b := by omega
+            have hnew : q<shield 0 := by
+              simp only [shield] at hbudget ⊢
+              omega
+            have hpar : q%2=0 := by
+              have hr : q%2<2 := Nat.mod_lt _ (by omega)
+              omega
+            obtain ⟨aa,dd,hs⟩ := ih q hsmall 0 (d+6*q+7) hnew hpar
+            refine ⟨aa,dd,?_⟩
+            rw [hrep,drain_three_two_zero]
+            exact hs
+          | succ a =>
+            have hsmall : q+1<b := by omega
+            have hnew : q+1<shield a := by
+              simp only [shield] at hbudget
+              omega
+            have hpar : (q+1)%2=a%2 := by
+              have hr : q%2<2 := Nat.mod_lt _ (by omega)
+              have ha : a%2<2 := Nat.mod_lt _ (by omega)
+              omega
+            obtain ⟨aa,dd,hs⟩ := ih (q+1) hsmall a (d+6*q+5) hnew hpar
+            refine ⟨aa,dd,?_⟩
+            rw [hrep,drain_three_two (a+1) q d (by omega)]
+            exact hs
+
+/-- Sharpness: at the threshold, despite matching parity, the drain fails. -/
+theorem shield_first_failure (a : Nat) : ∀ d, drainB a (shield a) d=none := by
+  induction a with
+  | zero =>
+    intro d
+    have hs : shield 0 = 3*1+1 := by decide
+    rw [hs]
+    exact drain_three_one_zero 1 d
+  | succ a ih =>
+    intro d
+    have hlarge := shield_ge_four a
+    have heq : shield (a+1)=3*(shield a-1)+2 := by
+      simp only [shield]
+      omega
+    rw [heq, drain_three_two (a+1) (shield a-1) d (by omega)]
+    have ha : a+1-1=a := by omega
+    have hb : shield a-1+1=shield a := by omega
+    rw [ha,hb]
+    exact ih (d+6*(shield a-1)+5)
+
+#print axioms lowerCode_closed
+#print axioms matching_parity_shield
+#print axioms shield_first_failure
+#print axioms shield_parity
+#print axioms shield_closed
+
 #print axioms flatB_eq_drainB
 
 #print axioms drain_three
