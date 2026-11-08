@@ -193,6 +193,82 @@ theorem drain_none_iff_bad (a : Nat) :
         rw [hcode]
         exact ih (q+1) (d+6*q+5) hqsmall
 
+
+/-- A single-level ternary interpreter; each recursive call strictly reduces b. -/
+def flatB (a b d : Nat) : Option HighLevelState :=
+  if b=0 then some (.D a d)
+  else if b%3=0 then flatB (a+1) (b/3-1) (d+2*b+3)
+  else if b%3=1 then
+    if a=0 then none else flatB (a-1) (b/3) (d+2*b+5)
+  else if a=0 then flatB 0 (b/3) (d+2*b+3)
+  else flatB (a-1) (b/3+1) (d+2*b+1)
+termination_by b
+decreasing_by
+  all_goals
+    have hdiv : b = 3*(b/3)+b%3 := by omega
+    omega
+
+/-- The one-level interpreter is exactly the original nested evaluator and
+B-drain, for every natural triple, including successful results and failures. -/
+theorem flatB_eq_drainB (b : Nat) : ∀ a d, flatB a b d = drainB a b d := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a d
+    rw [flatB]
+    by_cases hz : b=0
+    · simp [hz,drainB]
+    · simp only [if_neg hz]
+      let q := b/3
+      have hdiv : b=3*q+b%3 := by dsimp [q]; omega
+      by_cases h0 : b%3=0
+      · simp only [if_pos h0]
+        have hrep : b=3*q := by omega
+        have hq : 0<q := by omega
+        have hs : q-1<b := by omega
+        have hh := ih (q-1) hs (a+1) (d+2*b+3)
+        rw [hh]
+        have hd : d+2*b+3=d+6*q+3 := by omega
+        rw [hd]
+        exact (hrep ▸ (drain_three a q d hq).symm)
+      · simp only [if_neg h0]
+        by_cases h1 : b%3=1
+        · simp only [if_pos h1]
+          have hrep : b=3*q+1 := by omega
+          by_cases ha : a=0
+          · simp only [if_pos ha]
+            subst a
+            simpa only [hrep] using (drain_three_one_zero q d).symm
+          · simp only [if_neg ha]
+            have hs : q<b := by omega
+            have hh := ih q hs (a-1) (d+2*b+5)
+            rw [hh]
+            have hd : d+2*b+5=d+6*q+7 := by omega
+            rw [hd]
+            have hpos : 0<a := by omega
+            exact (hrep ▸ (drain_three_one a q d hpos).symm)
+        · simp only [if_neg h1]
+          have hr : b%3=2 := by omega
+          have hrep : b=3*q+2 := by omega
+          by_cases ha : a=0
+          · simp only [if_pos ha]
+            subst a
+            have hs : q<b := by omega
+            have hh := ih q hs 0 (d+2*b+3)
+            rw [hh]
+            have hd : d+2*b+3=d+6*q+7 := by omega
+            rw [hd]
+            exact (hrep ▸ (drain_three_two_zero q d).symm)
+          · simp only [if_neg ha]
+            have hs : q+1<b := by omega
+            have hh := ih (q+1) hs (a-1) (d+2*b+1)
+            rw [hh]
+            have hd : d+2*b+1=d+6*q+5 := by omega
+            rw [hd]
+            have hpos : 0<a := by omega
+            exact (hrep ▸ (drain_three_two a q d hpos).symm)
+
+#print axioms flatB_eq_drainB
+
 #print axioms drain_three
 #print axioms drain_three_one
 #print axioms drain_three_one_zero
