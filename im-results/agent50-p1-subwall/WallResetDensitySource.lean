@@ -1,5 +1,5 @@
 import WallDensityCore
-import RightFiveEnergyCone
+import RightFiveEnergyStep
 import CountedEnergyCostSource
 
 set_option maxHeartbeats 4000000
