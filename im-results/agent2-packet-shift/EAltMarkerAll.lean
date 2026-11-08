@@ -64,6 +64,14 @@ private theorem a_scan_two (L ys : List Bool) :
       ⟨[false,true] ++ L,false,ys,0⟩ := by
   simp [run,step,goL,goR]
 
+private theorem oppairs_snoc (n : Nat) :
+    oppairs n ++ [false,true] = oppairs (n+1) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simpa [oppairs,List.append_assoc] using
+      congrArg (fun zs : List Bool => [false,true] ++ zs) ih
+
 private theorem a_scan (n : Nat) (L ys : List Bool) :
     run (2*n) (⟨L,false,pairs n ++ ys,0⟩ : Cfg) =
       ⟨oppairs n ++ L,false,ys,0⟩ := by
@@ -76,7 +84,9 @@ private theorem a_scan (n : Nat) (L ys : List Bool) :
       (run 2 (⟨L,false,[true,false] ++ (pairs n ++ ys),0⟩ : Cfg)) = _
     rw [a_scan_two]
     have h := ih ([false,true] ++ L)
-    simpa [oppairs,List.append_assoc] using h
+    apply Eq.trans h
+    congr 1
+    rw [←List.append_assoc,oppairs_snoc]
 
 /-- Source-level A turn across 11(01)^(r+1)11. The left tape and trailing
     right suffix are entirely arbitrary. All 6r+20 primitive moves are exact. -/
