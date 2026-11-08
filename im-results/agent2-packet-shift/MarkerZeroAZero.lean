@@ -34,7 +34,9 @@ private theorem aInput (k q r m : Nat) :
         BB6.Agent2MarkerZero.marker m)) =
       false :: (CryptidA.wordCode (aWords q r) ++
         (false :: pairs m)) := by
-    rw [hm, BB6.Agent35MarkerA.code_word]
+    rw [hm]
+    dsimp only [aWords]
+    rw [BB6.Agent35MarkerA.code_word]
     calc
       _ = (oppairs q ++ [false]) ++
           (List.replicate (3*r) true ++ (false :: pairs m)) := by
@@ -68,10 +70,8 @@ theorem aZeroRegular (k q r m : Nat) :
   | zero =>
     refine ⟨aCost k q r, aUnary k q r, 0,0,?_⟩
     rw [aZeroRaw]
-    change CfgEq
-      (represent
-        (⟨[],false,List.replicate (aUnary k q r) true,5⟩ : Cfg))
-      (represent (⟨[],false,List.replicate (aUnary k q r) true,5⟩ : Cfg))
+    simp only [pairs,List.append_nil,regularSection,oppairs,
+      List.replicate_zero,List.nil_append]
     exact cfgEq_refl _
   | succ m =>
     refine ⟨aCost k q r, aUnary k q r+1, m,0,?_⟩
