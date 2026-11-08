@@ -1,6 +1,51 @@
 # P1: source-count subwall and exceptional right-five inverse restrictions
 
-**Current synthesis, 7 November 2026.** These are mathematical restrictions on genuine original-source finite inverse histories. Their strongest statements have been checked against the unmodified P1 `CountCone`, `OddCone`, `inverseAt`, and `UpperTail` definitions using Lean 4.36.0-rc2 and the repository's SHA-verified dependent sources. The P1 blank-root halting outcome and BB(6) remain **open**. External mathematical novelty has not been established, so every result remains in `im-results/`.
+**Current synthesis, 8 November 2026.** These are mathematical restrictions on genuine original-source finite inverse histories. Their strongest statements have been checked against the unmodified P1 `CountCone`, `OddCone`, `inverseAt`, and `UpperTail` definitions using Lean 4.36.0-rc2 and the repository's SHA-verified dependent sources. The P1 blank-root halting outcome and BB(6) remain **open**. External mathematical novelty has not been established, so every result remains in `im-results/`.
+
+## New logarithmic-correction reset-density theorem (8 November)
+
+**Strongest all-count structural advance:** every original-source right-five history
+`CountCone (14*2^n-2*n-16) 3 b 5 m z`, for every `n>=14`, satisfies
+
+```text
+n < 3*z + 2*Nat.log2(n) + 11
+```
+
+with **no** bound on total inverse cost, history length, or reset count. For every
+`n>=68`, the independent explicit numerical corollary further gives
+`n/4 < z`. Thus the necessary positive-reset count grows asymptotically
+at least like `n/3-O(log n)`, strengthening the fixed six/five-reset
+restrictions and explaining why bounded-reset inverse-cone scans cannot
+close high-index right-five histories.
+
+The parent result is an **arbitrary-right-endpoint near-wall exclusion**:
+set `P=2^n`, `W=b+4*m+4*n+20`, `A=2*n+7+(2*n+3)*z`.
+For any faithful original-source history with `n>=14`, if
+`W<=12*P` and `12*P<W+16*A`, then `P<32*A*8^z`.
+It includes all exact-wall histories `W=12*P`; with an arbitrary parameter
+`k` satisfying `n<=2^k`, it also yields `n<3*z+2*k+9`.
+This is a verified universal **necessary** condition on the source inverse
+language and does not settle the machine.
+
+[Original-source CI 42520350507](https://github.com/FlareZ123/bb6/actions/runs/42520350507)
+and [42520071668](https://github.com/FlareZ123/bb6/actions/runs/42520071668)
+compiled the unchanged original P1 dependencies plus
+[WallDensityCore.lean](WallDensityCore.lean),
+[WallResetDensitySource.lean](WallResetDensitySource.lean),
+[WallLogNumeric.lean](WallLogNumeric.lean),
+[WallLogSourceCorollaries.lean](WallLogSourceCorollaries.lean),
+[WallDensityNumeric.lean](WallDensityNumeric.lean), and
+[WallDensitySourceCorollaries.lean](WallDensitySourceCorollaries.lean).
+Axiom audits contain only standard Lean axioms; no `sorryAx` or mock sources.
+The core invariant is `W>12P` or
+`W+32*(M+n+6)*8^(Z-z)<=12P+16*(M+n+6)` under
+`m<=M, z<=Z, 32*(M+n+6)*8^Z<=P`.
+A t<=1 edge initiates the buffer; t=2 contracts its cost; t>=3 returns
+strictly above the wall. The original all-reset energy theorem supplies
+`M=n+1+(2*n+3)z`.
+
+These restrictions remain intermediate in `im-results`. A P1
+halting/nonhalting verdict and an exact BB(6) value have not been established.
 
 ## Right-five five-reset floor (7 November 2026)
 
