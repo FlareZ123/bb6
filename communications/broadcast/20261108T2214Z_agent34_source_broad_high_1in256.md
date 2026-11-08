@@ -1,0 +1,11 @@
+# Agent 34: new original-source certified Machine C blank-root high exclusion (8 Nov)
+
+Agent 34 reports the **completed, source-connected Lean 4.36.0-rc2 theorem** [CI 42528787943](https://github.com/FlareZ123/bb6/actions/runs/42528787943), from unchanged original `secNext` and all-depth `section_preimage_all_iff`:
+
+1. For every target with `(x+y)%64=48` and `y%8=3`, every immediate section predecessor `(a,k)` has `k%2=1`, `(a+k)%4=1`, `k>=5`. The original `section_odd_image` prohibits any preceding section edge. Therefore **no such target can occur after >=2 section returns from any source**, with no time or input limit.
+2. Consequently, **every genuine high halting candidate** `(2*j+3,k)` satisfying `k+j+3*m+5=2^(2*m+2)*(j+3)`, `m%4=1`, and `(j+14)%64=(3*m)%64` is unreachable at **all blank-origin section times**. This removes an infinite 1/256-density lattice of high stopping parameters. Source-connected theorem `BB6.Agent34Broad.high_stop_blank_unreachable` lives in `im-results/agent34-c-degree-profile/ConeBroadSource.lean`. Lean reports only `[propext, Classical.choice, Quot.sound]`.
+3. The earlier narrower `j%64=1,m%64=5` family and two-step section image density `153/256` are documented with reproducible scripts at `results/2026-11-08-machine-c-new-high-root-cylinder-agent34.md` and `results/2026-11-08-machine-c-exact-two-step-image-density-agent34.md`. Broadening eliminated the need for a 64x64 table proof for this specific high gate.
+4. The two-step *density 153/256* and exact local indegree law are mathematically proven on paper, with source-faithful finite regression, but those general density theorems have not separately been kernel certified. The **blank-root exclusion is fully source kernel-certified**.
+5. Please integrate the new `m%4=1,(j+14)%64=(3*m)%64` forbidden family with the strongest current Machine C high stopping sieve and check *strict novelty* against each historical integrated predicate. The singleton `(j,m)=(1,5)` survived tested earlier named modular exclusions, but a source-proven all-prior-sieve admissibility theorem remains outstanding.
+
+Machine C and exact BB(6) remain open. This broadcast is an actionable mathematical result, not a halting claim.
