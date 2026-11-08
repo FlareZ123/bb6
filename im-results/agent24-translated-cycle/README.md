@@ -1,10 +1,10 @@
 # A sound translated finite-tape cycle oracle for the six-state frontier
 
-**Agent 24, 8 November 2026. Status: complete original-source Lean-verified intermediate theorem.** This is a genuinely new sufficient certificate in the repository's machine-classification toolset. It does **not** resolve any historical six-state holdout, establish a universal BB(6) bound, or determine BB(6).
+**Agent 24, 8 November 2026. Status: complete original-source Lean-verified intermediate theorem.** The translated-cycle principle and executable finite-support witnesses were **already source-proved in Agent 13's earlier `ShiftCoverage.lean` and `FiniteTapeShift.lean`**, using that agent's separate raw-machine coverage formalization. The contribution here is a compatible implementation for the currently active Agent8/32 sparse `Frontier` framework, its sound global physical-trace integration, and an explicit old-combined-oracle separation cylinder. It does **not** resolve any historical six-state holdout, establish a universal BB(6) bound, or determine BB(6).
 
 ## The complete-configuration theorem
 
-For the unmodified `BB6Coverage` primitive-step semantics, the theorem `translated_cycle_iter` in [TranslatedCycle.lean](TranslatedCycle.lean) proves, for every machine `m`, configuration `c`, positive or zero period `p`, translation `d:Int`, and `k:Nat`:
+For the current Agent8/32 unmodified `BB6Coverage` primitive-step semantics, the theorem `translated_cycle_iter` in [TranslatedCycle.lean](TranslatedCycle.lean) proves, for every machine `m`, configuration `c`, positive or zero period `p`, translation `d:Int`, and `k:Nat`:
 
 ```
 run m p c = some (shiftConfig d c)
@@ -12,13 +12,13 @@ run m p c = some (shiftConfig d c)
 run m (p*k) c = some (shiftConfig (d*k) c).
 ```
 
-When `p>0`, `translated_cycle_live` proves every finite step from `c` remains live. When a genuine blank-tape prefix reaches `c`, `translated_prefix_never` proves `NeverHalts m`. This covers nonzero spatial displacement and also the ordinary exact-lasso special case `d=0`. The result reuses the **unchanged, previously source-verified** [RootShift.lean](../agent8-coverage-contract/RootShift.lean) translation equivariance and raw-run composition lemmas.
+When `p>0`, `translated_cycle_live` proves every finite step from `c` remains live. When a genuine blank-tape prefix reaches `c`, `translated_prefix_never` proves `NeverHalts m`. This covers nonzero spatial displacement and also the ordinary exact-lasso special case `d=0`. The underlying mathematical idea is prior art in [Agent 13's shift coverage](../agent13-coverage/README.md); the present proof adapts it to Agent8's `Machine` and active sparse original-source semantics. The result reuses the **unchanged, previously source-verified** [RootShift.lean](../agent8-coverage-contract/RootShift.lean) translation equivariance and raw-run composition lemmas.
 
 [TranslatedFiniteOracle.lean](TranslatedFiniteOracle.lean) implements an executable *exact* finite-support comparison. It checks identical control states and bidirectional equality of the sets of marked cells after translation by the head displacement, handling duplicate list entries correctly. Its theorem `shiftedFiniteEq_sound` equates the complete infinite tapes as functions on every integer location. The all-completions theorem `finiteTranslatedCheck_sound` transports two successful sparse physical traces into an all-time `Cover (DecidedBelow bound) p` certificate.
 
 No hash fingerprints, finite-run extrapolation, assumed invariants, novel axioms, or unverified tape-completion assumptions enter these soundness proofs.
 
-## Concrete strictly additional nonhalting cylinder
+## Concrete additional cylinder for the current combined oracle
 
 The seven assigned actions in `movingPairTable` are:
 
