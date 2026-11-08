@@ -20,11 +20,27 @@ jobs:
       - name: Check source-backed translated-cycle theorem and executable oracle
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent24-translated-cycle"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle"
           lean --version
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
-          for m in RayClosed RayChecker RayEntry RayFinite Symmetry RootShift; do
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry RootShift; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
           done
           lean -o im-results/agent24-translated-cycle/TranslatedCycle.olean im-results/agent24-translated-cycle/TranslatedCycle.lean
           lean -o im-results/agent24-translated-cycle/TranslatedFiniteOracle.olean im-results/agent24-translated-cycle/TranslatedFiniteOracle.lean
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            lean -o "im-results/agent6-fresh-glider/$m.olean" "im-results/agent6-fresh-glider/$m.lean"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean
+          for m in ZeroMaskOracle FiniteDecision; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
+          done
+          for m in FrontierAudit FrontierMass; do
+            lean -o "im-results/agent4-coverage-smoke/$m.olean" "im-results/agent4-coverage-smoke/$m.lean"
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit; do
+            lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean"
+          done
+          lean -o im-results/agent32-zero-prefix-global/FiniteLassoOracle.olean im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean
+          lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
+          lean -o im-results/agent24-translated-cycle/TranslatedSeparation.olean im-results/agent24-translated-cycle/TranslatedSeparation.lean
