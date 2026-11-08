@@ -38,3 +38,15 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/"{SectionReachBridge,CFirstReach}.lean .
           lean -o SectionReachBridge.olean SectionReachBridge.lean
           lean CFirstReach.lean
+          # Two independently developed section maps: certify their equality
+          # against the exact unmodified source, including every bounce case.
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-jump/"{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting}.lean .
+          for f in JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/"{BounceFirstReturn,SectionFirstReturn}.lean .
+          lean -o BounceFirstReturn.olean BounceFirstReturn.lean
+          lean -o SectionFirstReturn.olean SectionFirstReturn.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/"{SectionUnique,CSectionCoincidence}.lean .
+          lean -o SectionUnique.olean SectionUnique.lean
+          lean CSectionCoincidence.lean
