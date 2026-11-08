@@ -86,3 +86,19 @@ The same machine is formalized independently in Google DeepMind's Cryptids repos
 The local ResetParent even/odd equations line up algebraically with the C-to-C cascade in this accelerated map. In the odd branch, the intermediate shifted coordinate c=2^t z undergoes the finite underflow c -> 3c/2 while it remains even, followed by a final transition with 2g+5=3^(t+1)z. This is the same 3/2 structure exposed by GapOddParent(g). A formal edge-by-edge refinement between the two independent Lean developments remains a high-value next task.
 
 The external Hardness note reports 1,253 cascades and an estimated hazard around 10^-294. Treat that hazard as a heuristic, not as a proof of non-halting. See resources/cryptids-bb6-2026.md for source links, the exact map, and the derived drain equations.
+
+
+## Formal high-level odd-underflow tail
+
+The independent C(a,b) map is transcribed in HighLevel746Underflow.lean. Lean proves that when a C(y,2) state has shifted coordinate c=y+3 even, the next transition sends c to 3c/2 while the second coordinate remains 2. For c=2^t z with z odd, t such transitions reach c=3^t z, which is odd; the final transition returns to C(g,0) with 2g+5=3^(t+1)z.
+
+TThreeHighTTwoOneHighLevel.lean packages this as a theorem from GapOddParent(g): the exact odd source witness supplies a finite high-level underflow path from C(2^t z-3,2) to C(g,0), while preserving the root-reachable x and the source scale equation 2*(2^t z)=8*2^l+x+l+5. The l-step high-b drain from C(x,0) to the intermediate C-state is not yet part of this bridge.
+
+The underflow-tail modules passed targeted full-source CI run 42435223242. The expanded full-drain bridge is committed on branch agent7-highlevel-underflow; its CI run is pending.
+
+
+## Full ResetParent-to-high-level path refinement
+
+HighLevel746Drain.lean proves the high-b drain coordinates A_i=2^(i+2)-2 and B_i=2*x+9+2*i-8*2^i, derives every drain inequality from the parent-band lower bound, and proves the low modulo-four transition for both even and odd ResetParent branches. Together with the exact 3/2 underflow theorem, this yields a finite high-level path for every ResetParent edge.
+
+TThreeHighTTwoOneHighLevel.lean lifts the edge theorem over ResetChain and proves gap_odd_parent_full_highlevel_path: every GapOddParent(g) witness yields a path from C(0,2), the external formalization's start state, to C(g,0). This is a one-way embedding of the local source-root path into the independent high-level map. The converse characterization of all high-level C-to-C paths remains open.

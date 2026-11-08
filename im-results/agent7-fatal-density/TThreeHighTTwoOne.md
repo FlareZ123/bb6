@@ -77,3 +77,17 @@ This result does not establish that any candidate is actually reachable, does no
 Google DeepMind's public Cryptids repository contains an independent Lean acceleration of this exact machine. Its high-level start is C(0,2), and the first transition is C(2,0), the same source reset root used here. The map is summarized in resources/cryptids-bb6-2026.md.
 
 The map also gives a direct explanation of the odd-parent underflow. After the low branch reaches C(y,2), put c=y+3. When c is even, the next C-transition replaces c by 3c/2. If c=2^t z with z odd, t underflow steps produce 3^t z, and the final C-transition reaches g with 2g+5=3^(t+1)z. The second source equation in GapOddParent is the exact relation 2^(t+1)z=8*2^l+x+l+5. This is an algebraic alignment with the external map; a formal cross-repository refinement theorem has not yet been added.
+
+
+## Formal high-level underflow tail
+
+The exact high-level C(a,b) map is transcribed in HighLevel746Underflow.lean. The b=2 state has shifted coordinate c=a+3. If c is even, one transition replaces it with 3c/2 and leaves the second coordinate at 2. For c=2^t z with z odd, the t underflow transitions reach 3^t z, which is odd; the next transition exits to C(g,0) with 2g+5=3^(t+1)z.
+
+The bridge theorem in TThreeHighTTwoOneHighLevel.lean proves that every GapOddParent(g) witness contains this exact finite underflow path from C(2^t z-3,2) to C(g,0). It also retains the root-reachable predecessor x and the scale equation 2*(2^t z)=8*2^l+x+l+5. The full l-step high-b drain is now formalized in HighLevel746Drain.lean. TThreeHighTTwoOneHighLevel.lean proves every ResetParent edge embeds as a finite high-level path C(x,0) -> C(u,0), lifts this over ResetChain, and proves every GapOddParent(g) witness yields a full path from C(0,2) to C(g,0). This is a one-way refinement; the converse is open. The underflow-only modules passed full-source CI run 42435223242; the expanded full-drain bridge CI is pending.
+
+
+## Full C(a,b) path refinement
+
+HighLevel746Drain.lean proves the exact high-b drain coordinates A_i=2^(i+2)-2 and B_i=2*x+9+2*i-8*2^i, including the drain inequalities from the parent bands, and proves the low modulo-four transition to either C(u,0) or C(2^t z-3,2). Together with the underflow theorem, this yields a finite high-level path for each ResetParent constructor.
+
+TThreeHighTTwoOneHighLevel.lean lifts the local edge theorem over ResetChain and proves gap_odd_parent_full_highlevel_path: any GapOddParent(g) witness gives a path from C(0,2), the external formalization's start state, to C(g,0). The theorem is a one-way embedding of the local source-root path into the independently formalized high-level map. A converse characterization of all high-level C-to-C paths is not claimed.

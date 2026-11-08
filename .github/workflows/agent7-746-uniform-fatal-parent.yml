@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent7-t2-one-root
+      - agent7-highlevel-underflow
 permissions:
   contents: read
 jobs:
@@ -103,6 +104,9 @@ jobs:
           lean -o "$g/TThreeHighTTwoZero.olean" "$g/TThreeHighTTwoZero.lean"
           lean -o "$g/TThreeHighTTwoOneArithmetic.olean" "$g/TThreeHighTTwoOneArithmetic.lean"
           lean -o "$g/TThreeHighTTwoOne.olean" "$g/TThreeHighTTwoOne.lean"
+          lean -o "$g/HighLevel746Underflow.olean" "$g/HighLevel746Underflow.lean"
+          lean -o "$g/HighLevel746Drain.olean" "$g/HighLevel746Drain.lean"
+          lean -o "$g/TThreeHighTTwoOneHighLevel.olean" "$g/TThreeHighTTwoOneHighLevel.lean"
           lean -o "$g/TThreeHighTTwoResidues.olean" "$g/TThreeHighTTwoResidues.lean"
           lean "$g/TThreeHighTTwoFinalSelector.lean"
           lean -o "$b/ForkOddDead486.olean" "$b/ForkOddDead486.lean"
