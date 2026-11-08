@@ -188,7 +188,7 @@ private theorem e_zero_input (k q : Nat) :
           simp [List.append_assoc]
       _ = _ := by
         rw [oppairs_false]
-        exact congrArg (List.cons false) hw
+        rfl
   simp only [packet,word,init,List.replicate_zero,
     List.nil_append,List.cons_append]
   rw [hn,hw]
