@@ -125,7 +125,7 @@ theorem high0_to_junc (u : Nat) :
   have hlen : 18*u+85 =
       11 + 6*(u+1) + (crossTime 1+1) + 8*(u+2) + (4*u+36) := by
     simp [crossTime]; omega
-  rw [hlen, show 11 + 6*(u+1) + (crossTime 1+1) + 8*(u+2) + (4*u+19) + 17 =
+  rw [hlen, show 11 + 6*(u+1) + (crossTime 1+1) + 8*(u+2) + (4*u+36) =
         11 + (6*(u+1) + ((crossTime 1+1) + (8*(u+2) + (4*u+36)))) by omega]
   rw [runWithDelta_add, a]
   simp only [Option.bind_some]
