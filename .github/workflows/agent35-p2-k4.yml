@@ -54,5 +54,12 @@ jobs:
           lean -o "$C/P2K7Shapes.olean" "$C/P2K7Shapes.lean" | tee -a axioms.log
           lean -o "$C/P2K7ShapeCfg.olean" "$C/P2K7ShapeCfg.lean" | tee -a axioms.log
           lean "$C/P2K7Source.lean" | tee -a axioms.log
-          lean "$C/P2MarkerA.lean" | tee -a axioms.log
+          lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
+          lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
+          lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean"
+          lean -o "$D/PacketNormalizeSource.olean" "$D/PacketNormalizeSource.lean"
+          lean "$C/MarkerOneSource.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
