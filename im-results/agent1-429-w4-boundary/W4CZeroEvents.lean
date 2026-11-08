@@ -82,7 +82,7 @@ theorem pairs01_length (v : Nat) :
 
 theorem junc_right_length (u v w : Nat) :
     (junc u v w).right.length = 2*v+w+3 := by
-  simp [junc, ones, pairs01_length]
+  simp [junc, z, ones, pairs01_length]
   omega
 
 /-- Both explicitly identified C/0 events scan beyond the entire initially
