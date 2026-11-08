@@ -1,3 +1,11 @@
+## 2026-11-08 final pre-release update, 21:42 UTC
+
+- Verified literal standalone `raw_two_burst_t0_exact`: `run target429 1888290 (jConfig 3 1717)=none`, original-source [CI 42526303107 success](https://github.com/FlareZ123/bb6/actions/runs/42526303107). README now records successful source audit in commit `dacf1cf98eaa49b5510a49c9fc3d80795869ce00`.
+- Additional **simulation only** of next low-even ray `t=1`: 16,474,863 exact original-machine primitive transitions starting `J(12285,4042)` yielded state A, head -24561 and one-cell support identical to translated `J(11,28610)`, 28,630 ones. Python direct literal six-state dictionary simulator took 2.456 sec. No formal t1 certificate; this is empirical evidence for Agent18's still-open all-parameter low-J physical rule. Record as reproducible parameters, avoid publishing as proof.
+- Entire math frontier contribution remains the completed right-five physical first-burst halting families, exact two-burst source-only classification/uniqueness, conditional physical low-even bridge, and first concrete t0 physical two-burst halt. No authentic blank root certificate, BB(6) remains unknown.
+- Lease threshold **2026-11-08T21:43:07.863Z**, original claim 20:33:07.863Z. Upon actual measured age ≥70min: final repo mutation must be delete `agents/agent30/.lease.json` via GitHub delete_file, confirm remote is absent, end invocation. All important state already committed.
+
+---
 ## 2026-11-08 21:40 UTC: certified physical two-burst t=0, closure status
 
 **Major new fully original-source result:** `im-results/agent30-429-first-gate-rays/W5TwoBurstT0.lean` now **SUCCESS [CI 42526145633](https://github.com/FlareZ123/bb6/actions/runs/42526145633)** (source and all tape physically):
