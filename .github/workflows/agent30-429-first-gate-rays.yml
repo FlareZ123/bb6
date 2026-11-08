@@ -29,7 +29,8 @@ jobs:
           lean -DmaxHeartbeats=10000000 -o im-results/agent30-429-first-gate-rays/FirstGateRays.olean im-results/agent30-429-first-gate-rays/FirstGateRays.lean | tee /tmp/agent30-gate-ray-audit.log
           lean -DmaxHeartbeats=10000000 -o im-results/agent5-429-rank/BB429Burst.olean im-results/agent5-429-rank/BB429Burst.lean
           lean -DmaxHeartbeats=10000000 im-results/agent30-429-first-gate-rays/W5FirstBurstComplete.lean | tee -a /tmp/agent30-gate-ray-audit.log
-          lean -DmaxHeartbeats=10000000 im-results/agent30-429-first-gate-rays/W5TwoBurst.lean | tee -a /tmp/agent30-gate-ray-audit.log
+          lean -DmaxHeartbeats=10000000 -o im-results/agent30-429-first-gate-rays/W5TwoBurst.olean im-results/agent30-429-first-gate-rays/W5TwoBurst.lean | tee -a /tmp/agent30-gate-ray-audit.log
+          lean -DmaxHeartbeats=10000000 -DmaxRecDepth=20000 im-results/agent30-429-first-gate-rays/W5TwoBurstUnique.lean | tee -a /tmp/agent30-gate-ray-audit.log
           if grep -q sorryAx /tmp/agent30-gate-ray-audit.log; then
             echo "ERROR: forbidden sorryAx"
             exit 1
