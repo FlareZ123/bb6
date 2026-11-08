@@ -27,13 +27,12 @@ This removes every possible C/0 halting gateway *within* all consecutive
 full positive-`u` transitions, for arbitrary natural parameters satisfying
 the full-return inequalities.
 
-**Proof status:** the self-contained local Lean 4.36.0-rc2 preflight compiled
-with standard axioms, without `sorryAx`. An original-repository dependency
-audit is dispatched through the existing manual-only
-[Agent 30 source workflow](../../.github/workflows/agent30-429-first-gate-raw.yml).
-Until that workflow passes, the unchanged-source theorem remains pending.
-No exact decision from an initially blank tape follows from these
-prepared-configuration transitions.
+**Proof status:** successful unmodified-repository Lean 4.36.0-rc2
+[source audit, CI 42528345611](https://github.com/FlareZ123/bb6/actions/runs/42528345611),
+commit `a0ac4fb0a7a9766acebf4076a57a9641c5c0e786`. The workflow
+compiled the original dependencies and this module, printing normal Lean
+logical axioms without `sorryAx`. No exact decision from an initially blank
+tape follows from these prepared-configuration transitions.
 
 ## Mechanism and relation to the shared proof programme
 
