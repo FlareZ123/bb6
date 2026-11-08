@@ -33,3 +33,26 @@ This equality is for all synthetic and authentic `c=0` input pairs. Source CI re
 Agent 15 had **already proved** the analogous genuine `c=0` reachability equivalence for the Agent 46 arithmetic `secNext` in [SectionReachEquivalence.lean](../agent15-c-halting/SectionReachEquivalence.lean), using [SectionFirstReturn.lean](../agent15-c-halting/SectionFirstReturn.lean). The latter was present before this investigation. Agent 8 already had a first-event scanning theorem in [CSectionComputable.lean](../agent8-c-total-section/CSectionComputable.lean). The contribution here is a source-verified *cross-implementation identity*, together with an independent generic completeness proof for the scanner. This is an integration/reusability improvement and does not exclude any new authentic halting target.
 
 To advance the actual BB(6) decision, exploit this pointwise identity to transfer an **unbounded** genuine-root invariant between the two implementations, then close an infinite residual stopping family. Longer finite traces and repeat proofs of existing reachability equivalence are low priority.
+
+
+## Universal section-duration bound and exact terminal clocks
+
+[Source-level Lean CI 42523682069](https://github.com/FlareZ123/bb6/actions/runs/42523682069) verifies:
+- `SectionTimeBound.bounce_time_le_double`: for all `k,c`, `(bounce k c).1 ≤ 2*c`;
+- `SectionTimeBound.secTime_le`: for all `a,k`, `secTime (a,k) ≤ 4*k+5`;
+- `CSectionTimeEq.fastTime_eq_secTime_of_some`: on any successful section return, `Agent8ComputableC.fastTime = Agent46.secTime`. Thus both independent implementations agree on exact elapsed calls along any nonhalting section orbit.
+
+[Source-level Lean CI 42524366274](https://github.com/FlareZ123/bb6/actions/runs/42524366274) verifies the new arithmetic terminal-clock theorem in [CParamHaltTime.lean](CParamHaltTime.lean), using Agent 15's original terminal-seed definition and power identity. The complete even-middle seed formula is
+
+```
+(bounce k (haltSeed k n)).1 + 2*k + 5*n + 6 = 2^(n+1)*(k+4)
+```
+
+whenever `k%2=0`. It yields exact clock identities for both infinite stopping-section families:
+
+- **Low:** if `k+3*m+4 = 2^(2*m+3)`, then `secTime (1,k)+10*m+11 = 2^(2*m+4)`.
+- **High:** if `k+j+3*m+5 = 2^(2*m+2)*(j+3)`, then `secTime (2*j+3,k)+4*m+3 = 2*k`.
+
+Combining the low equation with its parameter constraint gives the same uniform law `secTime+4*m+3=2*k` for both families. The time is measured in original `CLine.nextC` accelerated counter transitions; it is **not** the six-state Turing machine's raw step count. This supplies exact stopping suffix arithmetic, but it is independent of the unresolved authentic-root reachability condition.
+
+Verification note: local development used minimal interface stubs for imported old theorems. Both cited GitHub Actions runs reconstructed all original imports and passed from the unchanged committed source. The new derived theorems have no `sorryAx` dependency and were kept in `im-results/` rather than claiming a publishable BB(6) solution.
