@@ -53,6 +53,12 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.olean im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.olean im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Prefix.olean im-results/agent32-429-high2-prefix/High2Prefix.lean | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JPhysicalPrefix.olean im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean | tee -a /tmp/agent32-bubble.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JF0Prefix.olean im-results/agent32-429-primitive-cost/JF0Prefix.lean | tee -a /tmp/agent32-bubble.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-j-first-branch/JFirstBranch.olean im-results/agent1-429-j-first-branch/JFirstBranch.lean | tee -a /tmp/agent32-bubble.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2PhysicalBridge.olean im-results/agent32-429-high2-prefix/High2PhysicalBridge.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-high1/High1Source.olean im-results/agent18-429-high1/High1Source.lean 2>&1 | tee /tmp/agent18-high1.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-high1/High1Physical.olean im-results/agent18-429-high1/High1Physical.lean 2>&1 | tee -a /tmp/agent18-high1.log
           grep -F "'BB429High1Source.high1_to_junc' depends on axioms:" /tmp/agent18-high1.log
+          grep -F "'BB429High1Physical.j_high1_to_junc_raw' depends on axioms:" /tmp/agent18-high1.log
           if grep -q 'sorryAx' /tmp/agent18-high1.log; then echo "ERROR sorryAx" >&2; exit 1; fi
