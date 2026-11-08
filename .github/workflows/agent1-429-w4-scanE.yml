@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary"
           LOG=/tmp/agent6-junc-crossing.log
           : > "$LOG"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
@@ -56,12 +56,16 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.olean im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2Tail.olean im-results/agent32-429-high2-prefix/High2Tail.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high2-prefix/High2TailBase.olean im-results/agent32-429-high2-prefix/High2TailBase.lean 2>&1 | tee -a "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-w4-boundary/W4ScanE.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-w4-boundary/W4ScanE.olean im-results/agent1-429-w4-boundary/W4ScanE.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4ScanE.boundary_to_sourceScanE_delta'" "$LOG"
           grep -F "'BB429W4ScanE.even_boundary_to_junc_delta'" "$LOG"
           grep -F "'BB429W4ScanE.odd_boundary_to_junc_delta'" "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-w4-boundary/W4JuncOne.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-w4-boundary/W4JuncOne.olean im-results/agent1-429-w4-boundary/W4JuncOne.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4JuncOne.junc0_odd_w1_to_junc0'" "$LOG"
+          grep -F "'BB429W4JuncOne.junc2_w1_to_junc0'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-w4-boundary/W4Closure.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429W4Closure.even_boundary_to_canonical'" "$LOG"
+          grep -F "'BB429W4Closure.odd_boundary_to_canonical'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
