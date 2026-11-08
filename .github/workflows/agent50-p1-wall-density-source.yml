@@ -104,6 +104,7 @@ jobs:
         run: |
           set -e
           /usr/bin/time -v lean -o im-results/agent50-p1-subwall/WallDensityCore.olean im-results/agent50-p1-subwall/WallDensityCore.lean
+          /usr/bin/time -v lean -o im-results/agent50-p1-subwall/WallDensityNumeric.olean im-results/agent50-p1-subwall/WallDensityNumeric.lean
       - name: Compile original P1 source wall density theorem
         run: |
           set -e
@@ -116,4 +117,5 @@ jobs:
           AG8=im-results/agent8-p1-fixed-reset
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
-          /usr/bin/time -v lean "$AG50SUB/WallResetDensitySource.lean"
+          /usr/bin/time -v lean -o "$AG50SUB/WallResetDensitySource.olean" "$AG50SUB/WallResetDensitySource.lean"
+          /usr/bin/time -v lean "$AG50SUB/WallDensitySourceCorollaries.lean"
