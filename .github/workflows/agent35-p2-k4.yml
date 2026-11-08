@@ -62,4 +62,5 @@ jobs:
           lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean"
           lean -o "$D/PacketNormalizeSource.olean" "$D/PacketNormalizeSource.lean"
           lean "$C/MarkerOneSource.lean" | tee -a axioms.log
+          lean "$C/MarkerPairsTerminal.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
