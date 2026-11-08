@@ -26,6 +26,19 @@ theorem seed_bound (k : Nat) : 10+3*k ≤ 14*2^(turns k) := by
     rw [hp]
     omega
 
+/-- Distinct indices give strictly increasing initial J parameters. -/
+theorem seed_strict (k : Nat) : seed k < seed (k+1) := by
+  have h0 := seed_bound k
+  have h1 := seed_bound (k+1)
+  have hp : 2^(turns (k+1)) = 16*2^(turns k) := by
+    calc
+      2^(turns (k+1)) = 2^(turns k+4) := by congr 1
+      _ = 2^(turns k)*2^4 := by rw [Nat.pow_add]
+      _ = 16*2^(turns k) := by omega
+  unfold seed
+  rw [hp]
+  omega
+
 theorem seed_linear (k : Nat) :
     4*seed k + (37+3*(turns k)) = 56*2^(turns k) := by
   have h := seed_bound k
@@ -108,6 +121,7 @@ theorem high1_fatal_family (k : Nat) :
   exact hfinal
 
 #print axioms seed_bound
+#print axioms seed_strict
 #print axioms branch_fatal
 #print axioms high1_fatal_family
 
