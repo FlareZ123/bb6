@@ -78,7 +78,7 @@ theorem junc0_odd_complete_czero_count (k : Nat) :
   have hsum : ones 8 ++ finalLeft (2*k+3) = ones (4*k+20) := by
     rw [show 2*k+3=2*(k+1)+1 by omega, finalLeft_odd]
     rw [show 4*(k+1)+8=4*k+12 by omega]
-    rw [← ones_add]
+    rw [← BB429SourceE1Return.ones_add]
     congr 1; omega
   have hsweep := runSafe_to_count_zero (4*k+20)
       (z 4 (ones (4*k+20)) true [true,false,true])
@@ -92,7 +92,7 @@ theorem junc0_odd_complete_czero_count (k : Nat) :
       ones (4*k+20) ++ [true,false,true] =
       ones 4 ++ (ones (4*k+16) ++ [true,false,true]) := by
     rw [show 4*k+20 = 4+(4*k+16) by omega,
-      ones_add, List.append_assoc]
+      BB429SourceE1Return.ones_add, List.append_assoc]
   have hfirsttime :
       2*(2*k+1)+42+(crossTime ((2*k+1)+2)+15) = 18*k+88 := by
     rw [show (2*k+1)+2=2*(k+1)+1 by omega,
@@ -134,7 +134,7 @@ theorem junc0_even_complete_czero_count (k : Nat) :
           (ones 8 ++ ones (4*k+5)) ++ pairs01 2 ++ ones 5 := by
             simp [List.append_assoc]
       _ = ones (4*k+13) ++ pairs01 2 ++ ones 5 := by
-        rw [← ones_add]
+        rw [← BB429SourceE1Return.ones_add]
         rw [show 8+(4*k+5)=4*k+13 by omega]
   have hsweep := runSafe_to_count_zero (4*k+13)
       (z 4 (ones (4*k+13) ++ pairs01 2 ++ ones 5) true [true,false,true])
