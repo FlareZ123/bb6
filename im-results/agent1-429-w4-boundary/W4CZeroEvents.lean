@@ -69,10 +69,35 @@ theorem junc0_w1_second_czero (v : Nat) :
   · trivial
   · omega
 
+/-- The rightmost marked cell in a Junc configuration lies at the
+    last position in its finite right list. This length identity makes the
+    two C/0 event positions geometrically comparable to the input mark. -/
+theorem pairs01_length (v : Nat) :
+    (pairs01 v).length = 2*v := by
+  induction v with
+  | zero => rfl
+  | succ v ih =>
+      simp [pairs01, ih]
+      omega
+
+theorem junc_right_length (u v w : Nat) :
+    (junc u v w).right.length = 2*v+w+3 := by
+  simp [junc, ones, pairs01_length]
+  omega
+
+/-- Both explicitly identified C/0 events scan beyond the entire initially
+    marked right stack. This makes no assumption about earlier scan history. -/
+theorem c0_event_offsets (v : Nat) :
+    2*v+7 = (junc 0 v 1).right.length + 3 ∧
+    2*v+10 = (junc 0 v 1).right.length + 6 := by
+  rw [junc_right_length]
+  omega
+
 #print axioms b1_to_czero5
 #print axioms c1_to_czero14
 #print axioms junc0_w1_first_czero
 #print axioms sourceScanE_revisit_czero14
 #print axioms junc0_w1_second_czero
+#print axioms c0_event_offsets
 
 end BB429W4CZeroEvents
