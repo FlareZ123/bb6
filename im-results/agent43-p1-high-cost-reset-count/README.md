@@ -42,3 +42,20 @@ This is a uniform reset-count lower bound for a restricted original-source famil
 ## Remaining proof
 
 The reset count is unbounded. High-cost histories, other inverse exits and genuine blank-root ancestry are not uniformly excluded. No P1 halt/nonhalt result or BB(6) upper bound follows. Complete source assumptions, earlier inequalities, mathematical proofs, numerical checks and verification references remain in the [historical research log](FULL_RESEARCH_LOG.md).
+
+
+## Experimental finite right-five endpoint enumeration
+
+`right_five_finite_search.py` enumerates the exact source `CountCone`
+parent relation using `inverseAt_iff_power_mass`.  For each fixed n, the
+search is complete when uncapped: `b+d) strictly decreases by
+`2*(t+1)`, and the mass invariant fixes the cost from the state `(b,d)`.
+
+Completed traversals found no `d=5` endpoint for every n in [14,1612] and
+separately every n in [1616,2620].  The searches at n=1614 and n=2622 hit a
+one-million-state cap and are incomplete.  This suggests, but does not prove,
+that the entire right-five source family may be empty.  The exact method,
+sample state counts, incomplete parameters, and caveats are documented in
+[right_five_finite_search.md](right_five_finite_search.md).  This is
+experimental finite evidence, not a uniform theorem and not a blank-root
+P1 decision.
