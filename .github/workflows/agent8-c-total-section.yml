@@ -35,3 +35,6 @@ jobs:
           lean -o GenericScan.olean GenericScan.lean
           lean -o CSectionComputable.olean CSectionComputable.lean
           lean CSectionRank.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/"{SectionReachBridge,CFirstReach}.lean .
+          lean -o SectionReachBridge.olean SectionReachBridge.lean
+          lean CFirstReach.lean
