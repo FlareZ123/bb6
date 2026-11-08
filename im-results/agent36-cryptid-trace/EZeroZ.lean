@@ -117,9 +117,36 @@ theorem e_zero_k2_q1_Z_regular (t u m : Nat) :
   rw [run_add,hE]
   exact hA
 
+
+/-- A second genuinely unbounded Z-marker E-zero cylinder. Here the first
+    E-zero drop is followed by one guarded original E packet edge; its
+    endpoint is exactly the all-depth A/p=0 zero-marker terminal. -/
+theorem e_zero_k1mod9_q1_Z_regular (t u m : Nat) :
+    ∃ T a r b,
+      ObsEq
+        (run T
+          (packet (3*(9*t+1)+4) (3*u+1) 0 (marker (m+1))))
+        (regularSection a r b) := by
+  let ke : Nat := 24*t+3
+  let ka : Nat := 64*t+10
+  have hEshape : 8*(9*t+1)+5 = 3*ke+4 := by dsimp [ke]; omega
+  have hAshape : 8*ke+9 = 3*ka+3 := by dsimp [ke,ka]; omega
+  have hp : 2*(3*u+1)+7 = 3*(2*u+2)+3 := by omega
+  have h0 := e_zero_drop_Z (9*t+1) (3*u+1) m
+  rw [hEshape,hp] at h0
+  have h1 := e_packet ke 0 (3*(2*u+2)) (marker m)
+  rw [hAshape] at h1
+  obtain ⟨Ta,a,r,b,hA⟩ :=
+    BB6.Agent2MarkerZeroAZero.aZeroRegular ka 2 (2*u+2) m
+  refine ⟨(12*(9*t+1)*(9*t+1)+49*(9*t+1)+50+4*(3*u+1))+
+    ((12*ke*ke+49*ke+58)+Ta),a,r,b,?_⟩
+  rw [run_add,h0,run_add,h1]
+  exact hA
+
 #print axioms e_zero_drop_Z
 #print axioms e_zero_q0_Z_regular
 #print axioms e_zero_k0_Z_regular
 #print axioms e_zero_k2_q1_Z_regular
+#print axioms e_zero_k1mod9_q1_Z_regular
 
 end BB6.Agent36EZeroZ
