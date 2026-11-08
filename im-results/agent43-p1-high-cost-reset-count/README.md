@@ -1,61 +1,45 @@
-# P1: source-certified all-reset wall cost and energy bounds
+# P1: counted inverse-history energy, walls and one-shallow obstructions
 
-**Research state (6 November 2026): original-source Lean theorems restrict all counted inverse histories in specified sectors; actual P1 halting and BB(6) remain open.** [Complete original mathematical note and proof chronology](FULL_RESEARCH_LOG.md).
+**Research synthesis, 8 November 2026.** These are mathematical restrictions on P1's inverse histories. The genuine original-source results are explicitly separated from the new, fully Lean-checked **source-shaped arithmetic model**. Neither a P1 blank-start halting decision nor an exact value of BB(6) follows. The strongest new all-count reset-density theorem is by Agent50; further bounded-reset floor work has lower priority.
 
-## Strongest certified wall theorem
+## Strongest genuine original-source deductions
 
-For every `n≥148` and genuine source `CountCone (14*2^n-2*n-16) 3 b d m z`, if the final inverse hub lies on the critical affine wall `b=4*(m+n)`, then
+**Unrestricted reset energy.** [CountedEnergySource.lean](CountedEnergySource.lean) and [CountedEnergyCostSource.lean](CountedEnergyCostSource.lean) certify for every original critical counted inverse history with `n>=14` the upper energy bound
 
-`n+z<m`
+```
+m <= n+1+(2*n+3)*z
+```
 
-for **every** positive-depth reset count `z`, including arbitrary zero-depth interludes. [CountedWall148Source.lean](CountedWall148Source.lean) composes the source reset-bound, Agent50's lower count inequality, and a universal numeric proof. [Original-source CI 42125396876](https://github.com/FlareZ123/bb6/actions/runs/42125396876) **succeeded**, using only ordinary Lean axioms. Earlier paper-only and `n≥194` versions are superseded as the strongest wall bound.
+where `m` is total inverse cost and `z` counts genuinely positive-depth resets. It covers arbitrary zero-depth interludes. [Original-source CI 42122986713](https://github.com/FlareZ123/bb6/actions/runs/42122986713) and [42123746362](https://github.com/FlareZ123/bb6/actions/runs/42123746362).
 
-## Source-certified energy bound
+**Small-left wall cost exclusion.** [CountedWall148Source.lean](CountedWall148Source.lean) proves that for `n>=148` a genuine source history on `b=4*(m+n)` must have `n+z<m`, for every reset count and every zero-depth tail. [Original-source CI 42125396876](https://github.com/FlareZ123/bb6/actions/runs/42125396876). Agent50 independently proved the stronger half-plane generalization for `b<=4*(m+n)`, in [SubwallAllCount.lean](../agent50-p1-subwall/SubwallAllCount.lean), original-source [CI 42149985248](https://github.com/FlareZ123/bb6/actions/runs/42149985248). The historical derivations in [WallAboveNPlusZ.md](WallAboveNPlusZ.md) are superseded by these source certificates.
 
-[CountedEnergySource.lean](CountedEnergySource.lean) and [CountedEnergyCostSource.lean](CountedEnergyCostSource.lean), verified in [CI 42122986713](https://github.com/FlareZ123/bb6/actions/runs/42122986713) and [CI 42123746362](https://github.com/FlareZ123/bb6/actions/runs/42123746362), prove that every genuine critical counted history with `n≥14` obeys `m≤n+1+(2*n+3)*z`, regardless of a wall or cost cap. Thus high cost `m≥2^n` requires `2^n≤n+1+(2*n+3)*z`. The exact source last-reset decomposition passed [CI 42120115832](https://github.com/FlareZ123/bb6/actions/runs/42120115832).
+**Exceptional right-five dichotomy and reset floors.** [DepthIndexedResetFloor.lean](DepthIndexedResetFloor.lean) certifies a full original-source dichotomy: a genuine history ending at right counter five either has `3*2^n <= (2*n+3)*z`, or its last positive reset has exactly depth `n+1` and its genuine predecessor lies on the shifted wall `W=b+4m+4n+20=12*2^n`. The predecessor's exact inverse, endpoint, mass and cost equations are provided in the theorem. [CI 42353729728](https://github.com/FlareZ123/bb6/actions/runs/42353729728). [ThreeResetWallPrefix.lean](ThreeResetWallPrefix.lean) excludes every genuine original-source three-positive-reset exact-wall precursor for `n>=14`, yielding the right-five floor `z>=5`, source [CI 42398746712](https://github.com/FlareZ123/bb6/actions/runs/42398746712). The speculative source wrapper [FourResetWallPrefix.lean](FourResetWallPrefix.lean) has **not** passed a full original-source CI (run [42439169870](https://github.com/FlareZ123/bb6/actions/runs/42439169870) failed); its separate arithmetic core has passed local Lean. Do not cite a source-certified six-reset floor based on that wrapper.
 
-## Right-five depth-indexed reset dichotomy
+**Stronger later result by Agent50.** The genuinely source-certified all-count theorem in [WallLogSourceCorollaries.lean](../agent50-p1-subwall/WallLogSourceCorollaries.lean), [CI 42520350507](https://github.com/FlareZ123/bb6/actions/runs/42520350507), proves for every right-five original history and every `n>=14`:
 
-[DepthIndexedResetFloor.lean](DepthIndexedResetFloor.lean) proves, for every `n≥14` and every genuine original-source right-five history, the following alternative:
+```
+n < 3*z+2*Nat.log2(n)+11.
+```
 
-- either `3*2^n ≤ (2*n+3)*z`, so the positive-reset count is already exponential in the parameter up to the linear factor;
-- or the final positive reset has **exactly depth `n+1`**, its predecessor is a genuine source `CountCone` with at least two positive resets, and that predecessor lies on the exact shifted wall `b_p+4*m_p+4*n+20=12*2^n`, with the accompanying endpoint and cost identities recorded in the Lean theorem.
+This has no cost or history-length cutoff and asymptotically dominates any fixed reset floor. Its underlying source theorem prohibits the exact or near shifted wall unless `2^n<32*(2*n+7+(2*n+3)*z)*8^z`. It is still a necessary reset-density restriction and leaves arbitrarily many resets open.
 
-This is a uniform source-history restriction, not a root-reachability or halting decision. Original-source Lean 4.36.0-rc2 verification succeeded in [CI 42353729728](https://github.com/FlareZ123/bb6/actions/runs/42353729728); the theorem's axiom report contains no `sorryAx`.
+## New full-range arithmetic obstruction: one shallow edge between arbitrary depth-two runs
 
-## Three-reset shifted-wall exclusion and five-reset floor (7 November 2026)
+The complete new mathematical note is [TwoRunWallExclusion.md](TwoRunWallExclusion.md). It derives an affine invariant for the exact original-source **depth-two scalar equations**:
 
-[ThreeResetWallPrefix.lean](ThreeResetWallPrefix.lean) now proves that no genuine original-source
-`CountCone (14*2^n-2*n-16) 3 b d m 3` with `n>=14` can satisfy the exact shifted wall
-`b+4*m+4*n+20=12*2^n`. Combining this exclusion with the depth-indexed dichotomy and the earlier four-reset floor proves
-`source_right_five_five_reset_floor_shifted_wall`: every original-source right-five history
-`CountCone (14*2^n-2*n-16) 3 b 5 m z` has **at least five positive-depth resets** for `n>=14`.
+```
+P=2^n, W=b+4m+4n+20, B=m+n+6
+8 W' = W+84P+16B,  B'=B+3
+I=49W-588P-112B+384,    I_before=8*I_after.
+```
 
-The proof peels the three positive resets and removes each following zero-depth tail. A depth-one last reset forces a negative predecessor right counter. Depth two gives the exact intermediate identities
-`c2+3=2*P+18*m2+18*n+102` and
-`c1+3=2*P+146*m2+146*n+816`, where `P=2^n`. The remaining root-connected inverse power is excluded by a three-way split on its reset depth `r=0`, `r=1`, or `r>=2`, using the locally checked dyadic core [ThreeResetCore.lean](../agent50-p1-subwall/ThreeResetCore.lean).
+For any `n>=14` and any two unbounded lengths `s,r`, the wall equations for the inverse-depth grammar `(2)^s (0|1) (2)^r` from the critical root are **arithmetically impossible**. The precise `q,p,d` divisibility premises, both exact natural equations and complete proof are in [OneShallowFiniteBridge.lean](OneShallowFiniteBridge.lean). Every link was locally compiled with Lean4.36.0-rc2; public theorem audits contain only ordinary axioms, no `sorryAx`. The proof uses a symbolic cubic gap for `n>=28` ([OneShallowLarge.lean](OneShallowLarge.lean)) and a fully kernel-decided finite scan for `14<=n<=27` ([OneShallowFinite.lean](OneShallowFinite.lean)). The direct-root single-shallow special case has separate unbounded-run proofs in [TwoRunBridge.lean](TwoRunBridge.lean).
 
-**Verification:** original-source CI [42398746712](https://github.com/FlareZ123/bb6/actions/runs/42398746712) **succeeded** at head `55902afb482ea84aaddb93a688802facde679c98`, compiling the exact source dependency chain, the arithmetic core, and the source wrapper. The new files include explicit `#print axioms` audits. The arithmetic core was also compiled locally under Lean 4.36.0-rc2 and its axiom report contains no `sorryAx`.
+**Essential limitation:** the new restricted-word conclusion is proved against a separately defined exact recurrence and natural arithmetic consequences, **not yet as a `CountCone` theorem from the unchanged original source**. The scalar equations match the existing original-source [two-step and general energy lemmas](../agent50-p1-subwall/RightFiveEnergyStep.lean); formally transferring an original `inverseAt` history to those equations is the remaining source-lift. This is an informative exact infinite-word exclusion, not an authentic blank-root P1 decision, and its external novelty has not been established. Keep this in `im-results/`.
 
-This is a uniform reset-count lower bound for a restricted original-source family. It does not establish blank-root reachability, a P1 halt/nonhalt decision, or a BB(6) upper bound. The result remains in `im-results/` pending broader synthesis and adversarial review.
+## Finite right-five search and remaining frontier
 
-## Remaining proof
+[Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
 
-The reset count is unbounded. High-cost histories, other inverse exits and genuine blank-root ancestry are not uniformly excluded. No P1 halt/nonhalt result or BB(6) upper bound follows. Complete source assumptions, earlier inequalities, mathematical proofs, numerical checks and verification references remain in the [historical research log](FULL_RESEARCH_LOG.md).
-
-
-## Experimental finite right-five endpoint enumeration
-
-`right_five_finite_search.py` enumerates the exact source `CountCone`
-parent relation using `inverseAt_iff_power_mass`.  For each fixed n, the
-search is complete when uncapped: `b+d) strictly decreases by
-`2*(t+1)`, and the mass invariant fixes the cost from the state `(b,d)`.
-
-Completed traversals found no `d=5` endpoint for every n in [14,1612] and
-separately every n in [1616,2620].  The searches at n=1614 and n=2622 hit a
-one-million-state cap and are incomplete.  This suggests, but does not prove,
-that the entire right-five source family may be empty.  The exact method,
-sample state counts, incomplete parameters, and caveats are documented in
-[right_five_finite_search.md](right_five_finite_search.md).  This is
-experimental finite evidence, not a uniform theorem and not a blank-root
-P1 decision.
+The most valuable next step is to source-integrate the new one-shallow word restriction and extend to words containing **multiple shallow transitions** and all high-depth excursions. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
