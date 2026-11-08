@@ -72,6 +72,8 @@ jobs:
           grep -F "'BB429W4CZeroEvents.junc0_w1_second_czero'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadMax.olean im-results/agent1-429-w4-boundary/W4HeadMax.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4HeadMax.sourceScanE_e1_max'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/W4JuncMax.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429W4JuncMax.junc0_w1_first_czero_max'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadPrefix.olean im-results/agent1-429-w4-boundary/W4HeadPrefix.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4HeadPrefix.sourceScanE_all_prefixes_right_bound'" "$LOG"
           grep -F "'BB429W4HeadPrefix.sourceScanE_delta_all_prefixes_le_zero'" "$LOG"
