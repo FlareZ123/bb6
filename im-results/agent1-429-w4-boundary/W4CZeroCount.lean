@@ -1,5 +1,4 @@
 import W4CZeroSafe
-import W4JuncSecondMax
 import W4JuncOne
 import Lean.Elab.Tactic.Omega
 
