@@ -65,7 +65,9 @@ private theorem a_shape (ka q r : Nat) :
       _ = (oppairs q ++ [false]) ++
         (List.replicate (3*r+1) true ++ markerTwo) := by
           simp [List.append_assoc]
-      _ = _ := by rw [oppairs_false,hw]; rfl
+      _ = _ := by
+        rw [oppairs_false]
+        exact congrArg (List.cons false) hw
   simp only [packet,word,init,List.cons_append]
   rw [hn,hs]
   rfl
@@ -115,12 +117,14 @@ theorem terminal_one (d : Packet)
     have hp' : d.p=3*rr+1 := by dsimp [rr]; omega
     refine ⟨aCost ka d.q rr,aUnary ka d.q rr,0,0,?_⟩
     rw [ha',hp',a_one]
-    change ObsEq
-      (⟨[],false,List.replicate (aUnary ka d.q rr) true,5⟩ : Cfg)
-      (⟨[],false,List.replicate (aUnary ka d.q rr) true ++
-        (oppairs 0 ++ List.replicate 0 true),5⟩ : Cfg)
-    simpa [oppairs] using
-      (cfgEq_refl (⟨[],false,List.replicate (aUnary ka d.q rr) true,5⟩ : Cfg))
+    change CfgEq
+      (BB6.BoundaryPadding.represent
+        (⟨[],false,List.replicate (aUnary ka d.q rr) true,5⟩ : Cfg))
+      (BB6.BoundaryPadding.represent
+        (regularSection (aUnary ka d.q rr) 0 0))
+    simpa [regularSection,oppairs] using
+      (cfgEq_refl (BB6.BoundaryPadding.represent
+        (⟨[],false,List.replicate (aUnary ka d.q rr) true,5⟩ : Cfg)))
   · obtain ⟨hB,hq⟩ := hB
     let kb := (d.a-2)/3
     have ha' : d.a=3*kb+2 := by dsimp [kb]; omega
@@ -182,7 +186,9 @@ private theorem e_zero_input (k q : Nat) :
       _ = (oppairs q ++ [false]) ++
         (false :: [true,false,true,false,true,true,true]) := by
           simp [List.append_assoc]
-      _ = _ := by rw [oppairs_false]; rfl
+      _ = _ := by
+        rw [oppairs_false]
+        exact congrArg (List.cons false) hw
   simp only [packet,word,init,List.replicate_zero,
     List.nil_append,List.cons_append]
   rw [hn,hw]
