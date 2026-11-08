@@ -1,8 +1,59 @@
 # A source-exact, all-time forbidden Machine C high-stopping cylinder
 
-**Agent 34, 8 November 2026.** A new infinite high-stopping parameter cylinder is impossible on the genuine blank-origin Machine C section orbit. This is an all-time theorem and requires no finite run-time cutoff. The proof is an exact two-inverse-edge obstruction in the original source section, rather than a modular quotient that might admit spurious states.
+**Agent 34, 8 November 2026.** A new infinite high-stopping parameter cylinder, subsequently generalized to sixteen disjoint residue cylinders, is impossible on the genuine blank-origin Machine C section orbit. This is an all-time theorem and requires no finite run-time cutoff. The proof is an exact two-inverse-edge obstruction in the original source section, rather than a modular quotient that might admit spurious states.
 
 **Verified original-source theorem.** The entire high-stopping cylinder exclusion was independently compiled against the original, unchanged \`secNext\`, \`section_preimage_all_iff\` and \`section_odd_image\` sources using **Lean 4.36.0-rc2** in [successful manual CI run 42528050049](https://github.com/FlareZ123/bb6/actions/runs/42528050049). The resulting kernel audit of \`source_parent_residue\`, \`no_two_edges\`, \`all_source_no_two\` and \`high_stop_blank_unreachable\` reports only \`[propext, Classical.choice, Quot.sound]\`; no \`sorryAx\` or external reachability assumptions. The standalone arithmetic module was also compiled locally with the exact original source predecessor grammar. This is a source-connected authentic blank-section nonreachability theorem. It does not independently resolve the whole Machine C halting problem or BB(6).
+
+
+## Strongest source-certified theorem (8 November, second verification)
+
+The earlier rectangle \(\mathcal R\) below has been **strictly generalized**. The source-connected Lean theorem
+[\`BB6.Agent34Broad.high_stop_blank_unreachable\`](../im-results/agent34-c-degree-profile/ConeBroadSource.lean) proves, for every \(j,m,k,t\in\mathbb N\),
+\[
+\boxed{\qquad
+m\bmod4=1,\quad (j+14)\bmod64=(3m)\bmod64,\quad
+k+j+3m+5=2^{2m+2}(j+3)
+\quad\Longrightarrow\quad
+\mathrm{run}\ F\ t\ (\mathrm{some}(5,1))
+\ne\mathrm{some}(2j+3,k).\qquad}
+\]
+
+This was verified against the **original, unchanged section source** in
+[successful Lean 4.36.0-rc2 CI 42528787943](https://github.com/FlareZ123/bb6/actions/runs/42528787943). The kernel audit of all four source-connected theorems reports only \`[propext, Classical.choice, Quot.sound]\`, without \`sorryAx\` or source reachability assumptions. The source-connected proof is [\`ConeBroadSource.lean\`](../im-results/agent34-c-degree-profile/ConeBroadSource.lean), supported by the [exhaustive arithmetic Lean proof](../im-results/agent34-c-degree-profile/ConeBroadArithmetic.lean).
+
+The stronger **all-source** theorem is:
+\[
+\boxed{\quad (x+y)\bmod64=48,\quad y\bmod8=3
+\quad\Longrightarrow\quad
+\mathrm{run}\ F\ (n+2)\ (\mathrm{some}(s))\ne\mathrm{some}(x,y)
+\quad\text{for every }n,s.\quad}
+\]
+Every first incoming parent has odd right counter at least five and coordinate sum congruent to one modulo four, and therefore cannot itself be an image. This follows from the full original-source predecessor grammar, covering every exceptional source and arbitrarily deep bounce.
+
+For transparency, let \(S=x+y\equiv48\bmod64\), \(y\equiv3\bmod8\). Both \(S\) and \(x\) are of even and odd parity respectively, and \(\nu_2(S)=4\). The only possible successful high-depth parents use even source \(a\) and depths \(n=0,2\), with
+\[
+(a_0,k_0)=\left(S/2-2,\ S/4+(y-5)/2\right),\quad
+(a_2,k_2)=\left(S/8-2,\ 7S/16+(y-11)/2\right).
+\]
+The exact source guard and right-counter lower bound are handled in Lean, including boundary \(y=3\). Their residues satisfy
+\[
+(a_0,k_0)\equiv(2,3)\pmod4,\qquad
+(a_2,k_2)\equiv(0,1)\pmod4.
+\]
+Hence every genuine first parent violates the original-source odd-right image constraint \((a+k)\bmod4\in\{0,3\}\). No second incoming edge can exist.
+
+For the high stopping family \(x=2j+3\) and \(k+j+3m+5=2^{2m+2}(j+3)\), the strengthened conditions force \(m\ge1\), \(j\equiv1\bmod4\), and \(4\mid(j+3)\). Thus \(64\mid2^{2m+2}(j+3)\), even when \(m=1\). It follows that
+\[
+(x+k)\bmod64=(j-3m-2)\bmod64=48,\quad
+k\bmod8=(-j-3m-5)\bmod8=3.
+\]
+The initial and first blank-origin returns \((5,1)\), \((3,4)\) both avoid the cone, proving all-time exclusion.
+
+**Density of excluded high parameters.** For each of the 16 residue classes \(m\bmod64\) satisfying \(m\bmod4=1\), there is exactly one allowed \(j\bmod64\). Hence the displayed new family comprises **16/4096 = 1/256** of \((j,m)\) pairs in expanding parameter squares. This is a density of excluded genuine high-stopping inputs, not a density of solved Turing machines. It contains the initial \(j\equiv1,\ m\equiv5\bmod64\) class as one of sixteen disjoint parameter rectangles. Smallest new example outside the initial class: \(m=1,j=53\), \(k=835\), target \((109,835)\); its immediate section parents have no ancestors.
+
+**Unresolved:** this theorem still does not decide Machine C halting or BB(6). Complete novelty relative to every separately built prior global sieve, and a full analytic residual exhaustion, remain open. The source certification and all-time exclusion itself are unconditional.
+
+---
 
 ## All-source two-step exclusion
 
