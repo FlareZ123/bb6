@@ -1,0 +1,65 @@
+name: Agent 1 BB429 w4 exact ScanE/Junc boundary (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source dependency chain and Junc crossing
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion"
+          LOG=/tmp/agent6-junc-crossing.log
+          : > "$LOG"
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean 2>&1 | tee -a "$LOG"
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean 2>&1 | tee -a "$LOG"
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            lean -o "im-results/agent6-fresh-glider/$m.olean" "im-results/agent6-fresh-glider/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean 2>&1 | tee -a "$LOG"
+          for m in ZeroMaskOracle FiniteDecision; do
+            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          for m in FrontierAudit FrontierMass; do
+            lean -o "im-results/agent4-coverage-smoke/$m.olean" "im-results/agent4-coverage-smoke/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit; do
+            lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-429-one-sided-excursion/BB429SourceRows.olean im-results/agent6-429-one-sided-excursion/BB429SourceRows.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.olean im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent32-429-raw-parent/BB429E1ShiftDelta.olean im-results/agent32-429-raw-parent/BB429E1ShiftDelta.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.olean im-results/agent32-429-raw-parent/BB429DeltaPhysicalBridge.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.olean im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.olean im-results/agent6-429-one-sided-excursion/BB429JuncHeadExcursion.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-w4-boundary/W4ScanE.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429W4ScanE.boundary_to_sourceScanE_delta'" "$LOG"
+          grep -F "'BB429W4ScanE.even_boundary_to_junc_delta'" "$LOG"
+          grep -F "'BB429W4ScanE.odd_boundary_to_junc_delta'" "$LOG"
+          if grep -q sorryAx "$LOG"; then
+            echo "sorryAx detected in w4 original-source dependency chain"
+            exit 1
+          fi
+          echo "Original-source w4 boundary theorem chain compiled; no sorryAx detected."
