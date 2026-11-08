@@ -1,6 +1,6 @@
 # Space Needle: exact source inverse and blank-root decision interface
 
-**Research state, 6 November 2026.** The original six-state Space Needle machine and BB(6) remain undecided. This dossier establishes an exact per-target blank-root decision procedure, an exceptionally sharp terminal valuation restriction, one genuine root exclusion, and constructive infinite families of legal *synthetic* predecessors. Full derivations and older provenance are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+**Research state:** The original six-state Space Needle machine and BB(6) remain undecided. This dossier establishes an exact per-target blank-root decision procedure, sharp terminal valuation restrictions, genuine-root exclusions for individual feeders, and constructive infinite families of legal *synthetic* predecessors. Full derivations and older provenance are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
 ## Original machine and complete per-target decision
 
@@ -24,6 +24,12 @@ source = 2^v*(2q+3)-2
 New [NeedleVariableValuation.lean](NeedleVariableValuation.lean) proves for every `t≥0` an exact incoming terminal source with **`v>t`**, `2v=9^(t+1)+3`, `K+1=2(t+1)(v+1)`. Examples: `(v,K)=(6,13),(42,171),(366,2201)`. The proof is **locally Lean 4.36.0-rc2 kernel checked**, with only `[propext, Quot.sound]` and no sorry. The [source adapter](NeedleVariableValuationSource.lean) is being checked in a separate [manual source workflow](../../.github/workflows/agent20-needle-triple.yml). Read [VariableValuation.md](VariableValuation.md) for the constructive geometric identity and provenance; do not infer blank-orbit reachability from these edges.
 
 The independent [unbounded synthetic fan-in construction](UnboundedFanin.md) remains a paper argument using CRT and Euler's theorem, with one [ten-parent Lean instance](NeedleTenParentWitness.lean). A collection of [modular source family results](SpaceNeedleMod30.lean), [odd-modulus saturation](SpaceNeedleOdd.lean), and [coprime-15 saturation](SpaceNeedleDensity.lean) are locally kernel-checked. Their scope is unrestricted legal predecessors, and their external novelty is unreviewed.
+
+## Cancellation feeder arithmetic and rooted exclusions
+
+The exact cancellation family has (v=(9^r+3)/2) and (K+1=r(9^r+5)). Existing original-source Lean work excludes the first four individual cancellation feeder sources from the genuine blank orbit. Agent 48's [r=5 no-parent audit](../agent48-space-needle/R5-CANCELLATION-ROOT-AUDIT.md) is exact-integer computational evidence pending a finite Lean certificate.
+
+The new [r=6 no-parent audit](R6Cancellation.md) independently exhausts all 3,188,676 potential predecessor valuations of the sixth cancellation feeder: 2,579,052 excluded by small-prime witnesses, 50,877 checked by a GMP modular polynomial method, and 558,747 checked by exact signed-base remainders. Both surviving intervals have zero incoming parents. This is a **complete computational exclusion of that one genuine-root feeder**, conditional on the previously source-certified exact inverse correspondence, with the full finite check not yet kernel-certified. The [uniform polynomial identity](CancellationSparsePolynomial.lean) is independently kernel-checked in Lean 4.36.0-rc2 and is useful for faster arithmetic certificates. Its two independent executable audits are [low C++](r6_low_polynomial.cpp) and [high Python](r6_high_parent_audit.py). These exclusions do not bound the unbounded remaining terminal exponent.
 
 ## Open decisive question
 
