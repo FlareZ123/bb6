@@ -170,8 +170,40 @@ theorem represented_junc_state (u w : Nat) (c : Config)
   have hs : c.state.val = (A : Fin 6).val := hrep.1
   exact Fin.ext hs
 
+/-- A canonical J-family physical configuration translated to any
+    absolute head coordinate, retaining the exact infinite tape. -/
+def translatedJ (u w : Nat) (h : Int) : Config :=
+  {state:=A,head:=h,tape:=fun x => jTape u w (x-h)}
+
+/-- The zipper representation is extensionally *identical* to the
+    translated canonical J configuration, at every physical tape cell. -/
+theorem represented_junc_eq_translatedJ (u w : Nat) (c : Config)
+    (hrep : Represents (junc u 0 w) c) :
+    c = translatedJ u w c.head := by
+  have hs : c.state = A := represented_junc_state u w c hrep
+  have ht : c.tape = (fun x => jTape u w (x-c.head)) := by
+    funext x
+    exact represented_junc_cell u w c hrep x
+  cases c with
+  | mk state head tape =>
+    change Config.mk state head tape =
+      Config.mk A head (fun x=>jTape u w (x-head))
+    change state = A at hs
+    change tape = (fun x=>jTape u w (x-head)) at ht
+    rw [hs,ht]
+
+theorem represented_junc_iff_translatedJ (u w : Nat) (c : Config) :
+    Represents (junc u 0 w) c ↔ c = translatedJ u w c.head := by
+  constructor
+  · exact represented_junc_eq_translatedJ u w c
+  · intro hc
+    rw [hc]
+    exact canonical_junc_rep u w c.head
+
 #print axioms canonical_junc_rep
 #print axioms represented_junc_cell
 #print axioms represented_junc_state
+#print axioms represented_junc_eq_translatedJ
+#print axioms represented_junc_iff_translatedJ
 
 end BB429JuncCanonical
