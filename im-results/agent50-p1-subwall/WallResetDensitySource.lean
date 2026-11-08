@@ -92,22 +92,24 @@ theorem source_wall_reset_growth
     (h : CountCone (14*2^n-2*n-16) 3 b d m z)
     (hwall : b+4*m+4*n+20=12*2^n) :
     2^n < 32*(2*n+7+(2*n+3)*z)*8^z := by
-  by_contra hnot
-  have hPow : 32*((n+1+(2*n+3)*z)+n+6)*8^z≤2^n := by
-    omega
-  have hcost := source_counted_cost_linear_in_resets n b d m z hn h
-  have hbar := source_wall_buffer n (n+1+(2*n+3)*z) z b d m z
-    hn hPow h hcost (Nat.le_refl z)
-  rcases hbar with hhigh | hlow
-  · omega
-  · have hlow' :
-        (b+4*m+4*n+20)+32*((n+1+(2*n+3)*z)+n+6)*8^0 ≤
-          12*2^n+16*((n+1+(2*n+3)*z)+n+6) := by
-      simpa using hlow
-    exact buffer_excludes_wall (2^n)
-      ((n+1+(2*n+3)*z)+n+6) 0
-      (b+4*m+4*n+20) (by omega) hlow' hwall
-
+  by_cases hnot : 2^n < 32*(2*n+7+(2*n+3)*z)*8^z
+  · exact hnot
+  · exfalso
+    have hPow : 32*((n+1+(2*n+3)*z)+n+6)*8^z≤2^n := by
+      omega
+    have hcost := source_counted_cost_linear_in_resets n b d m z hn h
+    have hbar := source_wall_buffer n (n+1+(2*n+3)*z) z b d m z
+      hn hPow h hcost (Nat.le_refl z)
+    rcases hbar with hhigh | hlow
+    · omega
+    · have hlow' :
+          (b+4*m+4*n+20)+32*((n+1+(2*n+3)*z)+n+6)*8^0 ≤
+            12*2^n+16*((n+1+(2*n+3)*z)+n+6) := by
+        simpa using hlow
+      exact buffer_excludes_wall (2^n)
+        ((n+1+(2*n+3)*z)+n+6) 0
+        (b+4*m+4*n+20) (by omega) hlow' hwall
+  
 #print axioms BB6.Agent50Density.source_wall_buffer
 #print axioms BB6.Agent50Density.source_wall_reset_growth
 end BB6.Agent50Density
