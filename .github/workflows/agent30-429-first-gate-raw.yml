@@ -84,6 +84,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadPrefix.olean im-results/agent1-429-w4-boundary/W4HeadPrefix.lean | tee -a /tmp/agent30-raw-gate.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent30-429-positive-safe/ZeroTwoMax.olean im-results/agent30-429-positive-safe/ZeroTwoMax.lean | tee -a /tmp/agent30-raw-gate.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent30-429-positive-safe/PhysicalTwoMax.lean | tee -a /tmp/agent30-raw-gate.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent30-429-positive-safe/PositiveZeroGate.lean | tee -a /tmp/agent30-raw-gate.log
           if grep -q sorryAx /tmp/agent30-raw-gate.log; then
             echo "ERROR: unexpected sorryAx"
             exit 1
