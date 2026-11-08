@@ -44,11 +44,22 @@ F_a = { (3^a+1)/2 + 2*sum(e_j*3^j, j=0..a-2) :
 
 Hence **exactly `2^(a-1)` of the `3^a` block counts fail**, independently of `d`. The first sets are `F_1={2}`, `F_2={5,7}`, `F_3={14,16,20,22}`, `F_4={41,43,47,49,59,61,65,67}`.
 
-The counting and closed-form statements are paper corollaries of the kernel-checked bounded predicate theorem; they are **not separately formalized as cardinality theorems**. Their elementary induction uses the exact recursion `F_(a+1)={3x-1,3x+1:x∈F_a}`, which follows because `bad(a,0)` and, for `a≥1`, `bad(a,3^a)` are false. The two child maps are injective with distinct residues modulo 3.
+The failure count and the closed form are now formalized through an explicit **binary bijection**: `lowerCode(0,k)=2` and `lowerCode(n+1,k)=3*lowerCode(n,k/2)-1+2*(k%2)`. Theorems `bad_lowerCode`, `lowerCode_of_bad`, `lowerCode_injective`, and `bounded_failure_binary_bijection` prove that exactly the `2^n` distinct codes `k<2^n` parametrize failures `b<3^(n+1)`. The original-source theorem `lowerCode_closed` proves `2*lowerCode(n,k)=3^(n+1)+1+4*bitSum(n,k)`, in which `bitSum` is the ternary-weighted sum of the low `n` bits of `k`.
+
+## Sharp matching-parity failure threshold and the original return map
+
+A further theorem strengthens the earlier unconditional ternary-ones survival interval. Define `T_0=4` and `T_(a+1)=3*T_a-1`; the formal identity `2*T_a=7*3^a+1` holds. For every `a,b,d` satisfying `b%2=a%2`, the full original drain `B(a,b,d)` succeeds when `b<T_a`. It fails exactly at the first excluded matching-parity value `b=T_a` for every `d`. This factor-seven wider exponential budget is **sharp**; the threshold has the same parity as `a`. Pinned original-source CI [42527357877](https://github.com/FlareZ123/bb6/actions/runs/42527357877) passed `matching_parity_shield`, `shield_first_failure`, `shield_parity`, and `shield_closed`.
+
+This has immediate implications for the true original `highLevelNext`, because its blank-root orbit has even first counters. The two far-left survival regions, also source-proved in run 42527357877, are:
+
+- Odd `d`: even `a`, `a≥d+5`, and `d+3<T_(a-d-5)`.
+- Even `d`: even `a`, `a≥d+3`, and `d+2<T_(a-d-2)`.
+
+The branchwise boundaries are attained by synthetic even-first-counter fatal states. For even `n`, the odd-`d` example is `D(T_n+n+2,T_n-3)`; for positive even `n`, the even-`d` example is `D(T_n+n,T_n-2)`. Proofs `highLevel_far_odd_shield_sharp` and `highLevel_far_even_shield_sharp` are in the same source file, with their source CI pending as of this note. No reachability assertion is made for those synthetic states.
 
 ## Verification scope and frontier
 
-- [Original-import proof module](FlatDrainSource.lean) derives the six identities, `flatB_eq_drainB`, and `drain_none_iff_bad` directly for the unchanged upstream `evalA` and `drainB`. A manual [source-pinned CI workflow](../../.github/workflows/agent49-623-flat-drain.yml) verifies the Lean theorems with an axiom audit. At first draft, source CI run [42525791738](https://github.com/FlareZ123/bb6/actions/runs/42525791738) was in progress; check its final result before claiming source certification.
+- [Original-import proof module](FlatDrainSource.lean) derives the six identities, `flatB_eq_drainB`, and `drain_none_iff_bad` directly for the unchanged upstream `evalA` and `drainB`. A manual [source-pinned CI workflow](../../.github/workflows/agent49-623-flat-drain.yml) verifies the Lean theorems with an axiom audit. The original-source check [42526275080](https://github.com/FlareZ123/bb6/actions/runs/42526275080) passed the exact recurrence and bounded failure language; [42526742059](https://github.com/FlareZ123/bb6/actions/runs/42526742059) passed the binary bijection; [42527357877](https://github.com/FlareZ123/bb6/actions/runs/42527357877) passed the sharp parity shield and both far-left survival corollaries.
 - An independent self-contained local Lean 4.36.0-rc2 model using verbatim source arithmetic equations passed the whole proof without `sorry` or custom axioms; all seven final theorem audits listed only `[propext, Quot.sound]`.
 - The nontrivial ternary identities were checked separately against a Python implementation on `a=0..7`, `q=0..199`, `d∈{0,11}`, with the `b=3q` case restricted to `q>0`. Exact bounded failure sets matched for `a=1..8`. Those tests corroborate the theorem but do not establish an infinite result by themselves.
 - Earlier source results [TernaryShift](TERNARY-SHIFT.md) already established the sharp initial safe prefix `b≤(3^a-1)/2` and its first failure; the present theorem **extends from a first-failure boundary to a complete fractal failure classification over `b≤3^a`**, plus a new nested-recursion-free exact evaluator. Do not duplicate or misrepresent the earlier sharp prefix as new work.
