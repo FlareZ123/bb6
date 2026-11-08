@@ -30,6 +30,35 @@ dependency chain, manual CI successful without `sorryAx`:
 - [PositiveSafe.lean](PositiveSafe.lean): [CI 42528345611](https://github.com/FlareZ123/bb6/actions/runs/42528345611)
 - [ZeroRegularSafe.lean](ZeroRegularSafe.lean): [CI 42528720976](https://github.com/FlareZ123/bb6/actions/runs/42528720976)
 
+## Exceptional right-two boundary: first harmless C/0
+
+For every `v`, [ZeroTwoGate.lean](ZeroTwoGate.lean) certifies the
+**first** C/0 encounter starting from `junc 0 v 2` at exactly
+`2v+35` executed primitive transitions, with exact endpoint
+
+```lean
+z 2 (([true,false] ++ ones 5) ++ (pairs01 (v+2) ++ ones 5))
+    false []
+```
+
+The source head scans 0 and its entire *right half-tape is blank*.
+The same guarded run certifies that all `t < 2v+35` have no C/0.
+This is a full unbounded `v` theorem, and no claim is made about the
+subsequent return. The source proof passed
+[CI 42529320480](https://github.com/FlareZ123/bb6/actions/runs/42529320480).
+
+[PhysicalSafe.lean](PhysicalSafe.lean) lifts the guarded source theorem
+to **every original raw machine physical configuration** representing
+the corresponding zipper, including a theorem that this right-two
+C/0 occurs with `tape (head+1) = false` on the entire physical tape.
+It supplies all-primitive-prefix raw-machine C/0 exclusion for
+the positive-u and regular zero-u segments, and conditional theorems
+composed at absolute time `n+t` from a genuine blank-root visit to
+the specified Junc chart. Original-source
+[CI 42529605294](https://github.com/FlareZ123/bb6/actions/runs/42529605294)
+passed without `sorryAx`. The conditional root entries do not yet
+prove that the genuine run visits only these chart cases.
+
 The original full-tape zipper model is the one audited in the shared
 [one-sided-excursion source proof](../agent6-429-one-sided-excursion/BB429JuncHeadExcursion.lean);
 there is no unsound finite cutoff. The source proof imports Agent 1's
@@ -60,9 +89,10 @@ event; see [Agent 32's physical theorem](../agent32-429-raw-parent/README.md).
 
 These certificates establish a complete source-level no-gateway result
 for the stated return types. Further cases require their own analysis:
-positive-u with `w=0,1`, and zero-u with `w=0,1,2` (the zero-u
-`w=1` branch is partially or fully covered by Agent 1's separate
-right-one census). Most importantly, a source-to-physical theorem
+positive-u with `w=0,1`, and zero-u with `w=0,1,2`. The zero-u
+`w=1` branch has a separate all-parameter full C/0 census by Agent 1;
+zero-u `w=2` now has its first C/0 certified here, while its complete
+continuation remains outside this result. Most importantly, a source-to-physical theorem
 must establish that the **authentic blank-root trajectory** enters
 only certified chart/exception branches and that their physical
 head history precludes any fatal C/0 event. This all-time
