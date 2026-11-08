@@ -29,8 +29,7 @@ private theorem outputShape (k q r : Nat) :
       List.replicate (2*q+6) true
     rw [←List.append_assoc,List.replicate_append_replicate,
         List.replicate_append_replicate]
-    congr 1
-    omega
+    congr 1 <;> omega
   have htail : [true,true,true] ++
       (List.replicate (2*(q+1)) true ++ pairs (r+3)) =
       List.replicate (2*q+6) true ++
@@ -47,8 +46,9 @@ private theorem outputShape (k q r : Nat) :
     change List.replicate (8*k+3) true ++
       List.replicate 2 true = List.replicate (8*k+5) true
     rw [List.replicate_append_replicate]
-    congr 1
-    omega
+    congr 1 <;> omega
+  simp only [BB6.Agent2EAltTurn.outputWord,packet,word,
+    List.replicate_zero,List.nil_append,List.append_nil]
   change
     (⟨[],false,List.replicate (8*k+3) true ++
       ([true,true] ++ ([false,true,true,true] ++
@@ -102,8 +102,9 @@ theorem e_two_to_zero (k q r : Nat) :
       (packet (3*k+4) q 2 (BB6.Agent2MarkerTower.marker (r+1))) =
       packet (8*k+5) 0 (2*q+6) (BB6.Agent2MarkerZero.marker (r+2)) := by
   rw [inputShape]
-  rw [BB6.Agent2EAltTurn.full_E_many]
-  exact outputShape k q r
+  have hSource := BB6.Agent2EAltTurn.full_E_many k q r []
+  simp only [List.append_nil] at hSource
+  exact hSource.trans (outputShape k q r)
 
 /-- All E,p=2 with q≡2 mod3 and any positive 11-marker depth reach L.
     Source-based synthesis, not a blank-tape theorem. -/
