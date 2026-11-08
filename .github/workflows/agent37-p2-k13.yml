@@ -47,10 +47,12 @@ jobs:
           done
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
-          lean im-results/agent37-echain/EChainSource.lean | tee axioms.log
+          lean -o im-results/agent37-echain/EChainSource.olean im-results/agent37-echain/EChainSource.lean | tee axioms.log
+          lean -o im-results/agent37-echain/EChainResidues.olean im-results/agent37-echain/EChainResidues.lean | tee -a axioms.log
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean"
           lean -o "$D/PacketP2ResetSource.olean" "$D/PacketP2ResetSource.lean"
           lean -o "$C/P2K4Shapes.olean" "$C/P2K4Shapes.lean"
           lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
+          lean im-results/agent37-echain/EChainAExit.lean | tee -a axioms.log
           lean "$K/P2K13Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
