@@ -134,7 +134,35 @@ theorem e_zero_safeZ (k q m : Nat)
   rw [run_add,e_zero_drop_Z]
   exact hregular
 
+/-- The entire p=0 or 1 modulo-three packet grammar is physically
+    regularizing for the zero-depth marker Z_0. Every E/p=0 terminal
+    closes by the newly proved exact zero-marker original-source rule. -/
+theorem zero_marker_all_safe_pmod (c : Packet) (ha : c.a ≥ 4)
+    (hp : c.p % 3 ≠ 2) :
+    ∃ T a q b,
+      ObsEq (run T (packet c.a c.q c.p (marker 0)))
+        (regularSection a q b) := by
+  apply safeZ_source 0 c ha
+  let d : Packet := (normalizeWithCount c).2
+  have hs := BB6.Agent2PacketSafe.normalize_safe_exit c ha hp
+  have hmod : d.p % 3 = c.p % 3 :=
+    BB6.Agent2PacketSafe.normalize_pmod c
+  change d.a % 3 = 0 ∨ (d.a % 3 = 2 ∧ d.q = 0) ∨
+    (d.a % 3 = 1 ∧ (d.p = 0 ∨ d.p = 1)) at hs
+  change terminalSafe d ∨ (d.a % 3 = 1 ∧ d.p = 0)
+  rcases hs with hA | hB | hE
+  · have hpd : d.p % 3 = 0 ∨ d.p % 3 = 1 := by omega
+    rcases hpd with hp0 | hp1
+    · exact Or.inl (Or.inr (Or.inl ⟨hA,hp0⟩))
+    · exact Or.inl (Or.inl hp1)
+  · exact Or.inl (Or.inr (Or.inr hB))
+  · obtain ⟨ha1,he⟩ := hE
+    rcases he with hp0 | hp1
+    · exact Or.inr ⟨ha1,hp0⟩
+    · exact Or.inl (Or.inl (by omega))
+
 #print axioms terminalSafe_source
 #print axioms safeZ_source
 #print axioms e_zero_safeZ
+#print axioms zero_marker_all_safe_pmod
 end BB6.Agent36ZSafeNormalizer
