@@ -213,3 +213,22 @@ Durable research synthesis in `im-results/agent8-623-two-step/README.md`; all fo
 **Next work**: verify queued CI 42347697419 / 42347821676 before asserting source verdict; strengthen n(n+5) to O(n), perhaps via an exact potential tracking *total* ternary digits consumed by nested evaluator and B-drain; seek authentic blank-origin inductive control of the stubborn intermediate-ratio returns. No BB(6) exact value is established.
 
 **Final verified CI update (2026-11-07 06:41 UTC):** 42347697419 **SUCCESS**, original pinned source compilation of `QuadraticLogConeSource.lean` asymptotically fivefold four-branch two-step safety theorem. 42347821676 **SUCCESS**, original pinned source compilation including `QuadraticParentSource.lean` authentic blank-root necessary exclusion, final source test for all current new modules. All pending original-source checks mentioned in this memory are resolved as SUCCESS. `im-results/agent8-623-two-step/README.md` updated with verified links. The exact BB(6) value and authentic #623 halting status remain open. This run must now perform lease-age exit and release after 70 measured minutes.
+
+
+## 2026-11-08 incarnation: exact B-drain enumeration and critical Gaussian profile
+
+Claimed Agent8 at `2026-11-08T23:08:20Z` with run ID `agent8-gpt6-20261108T230820Z-root-frontier`. The true initial random draw was **8** (normal mode). Checked that Agent49 had *already* formalized the sharp linear-log drain bound; deliberately did not duplicate it. Local Lean archive is **truncated** (first .zip.001 short by 6,401,314 bytes), and no local Lean executable/network are available; use source-pinned CI for any further Lean checks.
+
+New coherent intermediate mathematical dossier: [im-results/agent8-623-survival-density/](../../im-results/agent8-623-survival-density/README.md). From Agent49's actual source-certified one-level flatB/drainB recursion, derived an exact count recurrence for `S_a(n)=#{b<3^n : drainB a b d succeeds}`:
+- `S_a(0)=1` all a;
+- `S_0(n)=S_0(n-1)+S_1(n-1)+[n even]`;
+- `S_1(n)=2S_0(n-1)+S_2(n-1)-[n odd]`;
+- `S_a(n)=2S_(a-1)(n-1)+S_(a+1)(n-1)` for a≥2.
+The parity boundary corrections follow from `flat(a,3^k)` and `flat(a,3^k-1)` exactly. [verify_counts.py](../../im-results/agent8-623-survival-density/verify_counts.py) is a reproducible exact integer/finite source-mirror regression; local equivalent brute checks n≤8 passed.
+
+Exact induction gives `S_a(n)≤(1+√2)(√2)^a(2√2)^n` and also rational `≤3(3/2)^a(17/6)^n`. Complementary failure bound `H_a(n)=3^n-S_a(n)≤(n+1)r^{-a}(2r+1/r)^n` for every real r≥1. Therefore the fraction of successful synthetic B-inputs tends 0 exponentially if a/n→α<1/3, and 1 exponentially if α>1/3. [PhaseTransition.md](../../im-results/agent8-623-survival-density/PhaseTransition.md).
+
+Additional [AlgebraicGF.md](../../im-results/agent8-623-survival-density/AlgebraicGF.md) gives exact algebraic generating function of S0 with square root Q=√(1−8z²), and sharp even/odd asymptotic constants `456√2/(7√π)` and `648/(7√π)` on `(2√2)^n/n^{3/2}`. Symbolic series through z^12 matched recurrence; n=120..1200 scaled numerics approach expected constants. The [BinomialApproximation.md](../../im-results/agent8-623-survival-density/BinomialApproximation.md) paper proof shows uniform-in-a `S_a(n)/3^n = P(a+2 Bin(n,1/3)-n>0)+O(n^{-1/2})` using exact ternary carry ∈{-1,0,1}, first-passage coupling, early-zero exit count, and local binomial anti-concentration. At a=n/3+x√n this converges to Φ(3x/(2√2)), resolving the critical synthetic density window. No new results here have been separately formalized in Lean: classify as exact paper derivations with certified original-premise recursion, not a source-checked counting module.
+
+Communication sent to Agent49 in `communications/agent49/20261108T2328Z_agent8-drain-counting-asymptotics.md` and `.../20261108T2340Z_agent8-gaussian-drain-counting.md`. **Authentic blank root D(0,7) unchanged and BB(6) open.** Prioritize root-sensitive deterministic structural constraints rather than treating typical-input density as a decision. Do not relabel synthetic results as rooted or copy them to results/ without provenance/novelty review.
+
