@@ -111,6 +111,35 @@ theorem source_wall_reset_growth
         ((n+1+(2*n+3)*z)+n+6) 0
         (b+4*m+4*n+20) (by omega) hlow' hwall
   
+
+/-- A uniform forbidden near-wall strip for arbitrary original-source P1
+endpoints: a history with W≤12P but W+16A>12P (A=2n+7+(2n+3)z)
+must have 2^n<32*A*8^z. The exact wall is only one member of this strip. -/
+theorem source_near_wall_reset_growth
+    (n b d m z : Nat) (hn : 14≤n)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z)
+    (hBelow : b+4*m+4*n+20≤12*2^n)
+    (hClose : 12*2^n<
+      (b+4*m+4*n+20)+16*(2*n+7+(2*n+3)*z)) :
+    2^n < 32*(2*n+7+(2*n+3)*z)*8^z := by
+  by_cases hGrowth : 2^n < 32*(2*n+7+(2*n+3)*z)*8^z
+  · exact hGrowth
+  · exfalso
+    have hPow : 32*((n+1+(2*n+3)*z)+n+6)*8^z≤2^n := by
+      have hCoefEq : (n+1+(2*n+3)*z)+n+6=2*n+7+(2*n+3)*z := by omega
+      simpa only [hCoefEq] using (Nat.le_of_not_gt hGrowth)
+    have hcost := source_counted_cost_linear_in_resets n b d m z hn h
+    have hbar := source_wall_buffer n (n+1+(2*n+3)*z) z b d m z
+      hn hPow h hcost (Nat.le_refl z)
+    rcases hbar with hhigh | hlow
+    · omega
+    · have hlow' :
+          (b+4*m+4*n+20)+32*((n+1+(2*n+3)*z)+n+6)*8^0 ≤
+            12*2^n+16*((n+1+(2*n+3)*z)+n+6) := by
+        simpa using hlow
+      omega
+
 #print axioms BB6.Agent50Density.source_wall_buffer
 #print axioms BB6.Agent50Density.source_wall_reset_growth
+#print axioms BB6.Agent50Density.source_near_wall_reset_growth
 end BB6.Agent50Density
