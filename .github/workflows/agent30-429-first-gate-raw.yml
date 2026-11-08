@@ -22,7 +22,7 @@ jobs:
       - name: Compile original physical-table dependencies, first-branch ladder and raw fatal rays
         shell: bash
         env:
-          LEAN_PATH: im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder:im-results/agent5-429-rank:im-results/agent30-429-first-gate-rays
+          LEAN_PATH: im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder:im-results/agent5-429-rank:im-results/agent30-429-first-gate-rays:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-raw-parent:im-results/agent32-429-high2-prefix:im-results/agent18-429-junc-canonical
         run: |
           set -euo pipefail
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
@@ -54,7 +54,22 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-high3-ladder/High3Ladder.olean im-results/agent32-429-high3-ladder/High3Ladder.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent30-429-first-gate-rays/FirstGateRays.olean im-results/agent30-429-first-gate-rays/FirstGateRays.lean
-          lean -DmaxHeartbeats=30000000 im-results/agent30-429-first-gate-rays/FirstGateRaw.lean | tee /tmp/agent30-raw-gate.log
+          lean -DmaxHeartbeats=30000000 -o im-results/agent30-429-first-gate-rays/FirstGateRaw.olean im-results/agent30-429-first-gate-rays/FirstGateRaw.lean | tee /tmp/agent30-raw-gate.log
+          for m in BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta BB429SourceRows; do
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o "im-results/agent6-429-one-sided-excursion/$m.olean" "im-results/agent6-429-one-sided-excursion/$m.lean"
+          done
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.olean im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.lean
+          for m in BB429E1ShiftDelta BB429DeltaPhysicalBridge; do
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o "im-results/agent32-429-raw-parent/$m.olean" "im-results/agent32-429-raw-parent/$m.lean"
+          done
+          for m in BB429FinishScanEDelta BB429JuncHeadExcursion; do
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o "im-results/agent6-429-one-sided-excursion/$m.olean" "im-results/agent6-429-one-sided-excursion/$m.lean"
+          done
+          for m in High2Prefix High2PhysicalBridge High2Tail High2TailBase High2Return MidAposBoundary; do
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o "im-results/agent32-429-high2-prefix/$m.olean" "im-results/agent32-429-high2-prefix/$m.lean"
+          done
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-junc-canonical/JuncCanonical.olean im-results/agent18-429-junc-canonical/JuncCanonical.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent30-429-first-gate-rays/W5FatalMidA.lean | tee -a /tmp/agent30-raw-gate.log
           if grep -q sorryAx /tmp/agent30-raw-gate.log; then
             echo "ERROR: unexpected sorryAx"
             exit 1
