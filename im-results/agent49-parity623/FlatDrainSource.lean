@@ -662,6 +662,56 @@ theorem highLevel_far_even_shield_sharp (n : Nat) (hne : n%2=0) (hn : 0<n) :
 #print axioms highLevel_far_odd_shield_sharp
 #print axioms highLevel_far_even_shield_sharp
 
+
+/-- Third original-machine safe sector: on the far right with odd d, the
+entire B-drain has matching odd counter and block parity for even a. -/
+theorem highLevel_right_odd_shield (a d : Nat)
+    (ha : 0<a) (heven : a%2=0) (hd : d%2=1) (hright : a≤d)
+    (hbudget : a-1 < shield (d+4-a)) :
+    ∃ aa dd, highLevelNext (.D a d) = some (.D aa dd) := by
+  have hz : a≠0 := by omega
+  have h1 : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have h2 : ¬(d%2=0 ∧ a≥d+3) := by omega
+  have h3 : a%2≠1 := by omega
+  have h4 : a≠d+2 := by omega
+  have hfirst : (d+4-a)%2=1 := by omega
+  have hblocks : (a-1)%2=1 := by omega
+  obtain ⟨aa,dd,hs⟩ :=
+    matching_parity_shield (a-1) (d+4-a) 3 hbudget (by omega)
+  refine ⟨aa,dd,?_⟩
+  simpa only [highLevelNext, if_neg hz, if_neg h1, if_neg h2,
+    if_neg h3, if_neg h4, if_pos hd] using hs
+
+/-- Sharp, root-parity-compatible fatal boundary for the right-odd sector.
+It is a synthetic state, with no asserted blank-root reachability. -/
+theorem highLevel_right_odd_shield_sharp (n : Nat)
+    (hnodd : n%2=1) (hn : 5≤n) :
+    highLevelNext (.D (shield n+1) (shield n+n-3))=none := by
+  let a := shield n+1
+  let d := shield n+n-3
+  have hs := shield_ge_four n
+  have hsp : shield n%2=1 := by rw [shield_parity]; exact hnodd
+  have ha : 0<a := by dsimp [a]; omega
+  have heven : a%2=0 := by dsimp [a]; omega
+  have hd : d%2=1 := by dsimp [d]; omega
+  have hright : a≤d := by dsimp [a,d]; omega
+  have h1 : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have h2 : ¬(d%2=0 ∧ a≥d+3) := by omega
+  have h3 : a%2≠1 := by omega
+  have h4 : a≠d+2 := by omega
+  have hzero : a≠0 := by omega
+  have hfirst : d+4-a=n := by dsimp [a,d]; omega
+  have hblocks : a-1=shield n := by dsimp [a]; omega
+  change highLevelNext (.D a d)=none
+  have ht : highLevelNext (.D a d)=drainB (d+4-a) (a-1) 3 := by
+    simp only [highLevelNext, if_neg hzero, if_neg h1, if_neg h2,
+      if_neg h3, if_neg h4, if_pos hd]
+  rw [ht,hfirst,hblocks]
+  exact shield_first_failure n 3
+
+#print axioms highLevel_right_odd_shield
+#print axioms highLevel_right_odd_shield_sharp
+
 #print axioms flatB_eq_drainB
 
 #print axioms drain_three
