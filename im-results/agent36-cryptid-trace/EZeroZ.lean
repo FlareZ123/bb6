@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import MarkerZeroSource
+import MarkerZeroAZero
 import CryptidPairs
 
 namespace BB6.Agent36EZeroZ
@@ -78,7 +79,47 @@ theorem e_zero_q0_Z_regular (k u m : Nat) :
   rw [run_add,e_zero_drop_Z]
   exact h
 
+
+/-- When k is 0 modulo 3, the E-zero Z drop lands directly in the
+    q=0 B sector, which returns to the regular section for every q. -/
+theorem e_zero_k0_Z_regular (t q m : Nat) :
+    ∃ T a r b,
+      ObsEq
+        (run T (packet (3*(3*t)+4) q 0 (marker (m+1))))
+        (regularSection a r b) := by
+  let kb : Nat := 8*t+1
+  have ha : 8*(3*t)+5 = 3*kb+2 := by dsimp [kb]; omega
+  have he := e_zero_drop_Z (3*t) q m
+  rw [ha] at he
+  refine ⟨(12*(3*t)*(3*t)+49*(3*t)+50+4*q)+
+    (12*kb*kb+49*kb+40),8*kb+9+(2*q+7),m,0,?_⟩
+  rw [run_add,he]
+  exact b_zero kb (2*q+7) m
+
+/-- For k≡2 and q≡1 (mod 3), the E-zero Z drop lands at an A
+    terminal whose run parameter is a multiple of three. The existing
+    all-marker-depth A/p=0 theorem then proves physical regular reentry. -/
+theorem e_zero_k2_q1_Z_regular (t u m : Nat) :
+    ∃ T a r b,
+      ObsEq
+        (run T
+          (packet (3*(3*t+2)+4) (3*u+1) 0 (marker (m+1))))
+        (regularSection a r b) := by
+  let ka : Nat := 8*t+6
+  have ha : 8*(3*t+2)+5 = 3*ka+3 := by dsimp [ka]; omega
+  have hp : 2*(3*u+1)+7 = 3*(2*u+3) := by omega
+  obtain ⟨Ta,a,r,b,hA⟩ :=
+    BB6.Agent2MarkerZeroAZero.aZeroRegular ka 0 (2*u+3) m
+  have hE := e_zero_drop_Z (3*t+2) (3*u+1) m
+  rw [ha,hp] at hE
+  refine ⟨(12*(3*t+2)*(3*t+2)+49*(3*t+2)+50+4*(3*u+1))+Ta,
+    a,r,b,?_⟩
+  rw [run_add,hE]
+  exact hA
+
 #print axioms e_zero_drop_Z
 #print axioms e_zero_q0_Z_regular
+#print axioms e_zero_k0_Z_regular
+#print axioms e_zero_k2_q1_Z_regular
 
 end BB6.Agent36EZeroZ
