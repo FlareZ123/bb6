@@ -39,7 +39,7 @@ theorem reverse_run (n : Nat) (L ys : List Bool) :
       _ = pairs (n+1) ++ ys := rfl
 
 /-- The initial seven moves of the A turn are independent of the left tape. -/
-private theorem front_seven (L zs : List Bool) :
+theorem front_seven (L zs : List Bool) :
     run 7
       (⟨L,false,[true,true,false,true] ++ zs,0⟩ : Cfg) =
       ⟨[false,true,true] ++ L,false,true::zs,0⟩ := by
@@ -72,7 +72,7 @@ private theorem oppairs_snoc (n : Nat) :
     simpa [oppairs,List.append_assoc] using
       congrArg (fun zs : List Bool => [false,true] ++ zs) ih
 
-private theorem a_scan (n : Nat) (L ys : List Bool) :
+theorem a_scan (n : Nat) (L ys : List Bool) :
     run (2*n) (⟨L,false,pairs n ++ ys,0⟩ : Cfg) =
       ⟨oppairs n ++ L,false,ys,0⟩ := by
   induction n generalizing L with
