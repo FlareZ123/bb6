@@ -24,11 +24,13 @@ jobs:
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse}.lean /tmp/agent34-source/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent34-source/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent34-source/
-          cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource}.lean /tmp/agent34-source/
+          cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource,ConeBroadArithmetic,ConeBroadSource}.lean /tmp/agent34-source/
           cd /tmp/agent34-source
           export LEAN_PATH=.
           lean --version
           for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage ConeArithmetic; do
             lean -o "$f.olean" "$f.lean"
           done
-          lean ConeSource.lean
+          lean -o ConeSource.olean ConeSource.lean
+          lean -o ConeBroadArithmetic.olean ConeBroadArithmetic.lean
+          lean ConeBroadSource.lean
