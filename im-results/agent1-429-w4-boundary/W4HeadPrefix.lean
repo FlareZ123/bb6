@@ -3,7 +3,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429W4HeadPrefix
 
-open BB429OddExcursion BB429SourceE1Return BB429W4HeadMax
+open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta BB429W4HeadMax
 
 /-- The head displacement after any successful run is no greater than its
 record maximum. This theorem interprets the max monitor as a true
