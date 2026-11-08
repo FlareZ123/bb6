@@ -1,0 +1,85 @@
+name: Agent43 P1 one-shallow genuine-source word proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source-lean:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Recover source dependency archives
+        run: |
+          set -e
+          target="im-results/agent50-p1-two-reset"
+          base64 -d "$target/three-reset-source.tar.xz.b64" > /tmp/three.tar.xz
+          echo "be550c5b326d27c459197cf81858fd8ecad95abe657d0a9f269c65bbbb12b97f  /tmp/three.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/three.tar.xz -C "$target"
+          base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/count.tar.xz
+          echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/count.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/count.tar.xz -C "$target"
+      - name: Compile source and scalar dependencies
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean --version
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          for m in MassInverse OddConeMass; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          for m in InverseIff UpperTail; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          for m in CountedLastResetDraft LastResetStrengthSource CountedWallStrongGateSource CountedEnergySource CountedEnergyCostSource; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound; do
+            lean -o "$AG50/$m.olean" "$AG50/$m.lean"
+          done
+          for m in NumericShell NumericPower148 NumericBridge148; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          for m in ExceptionalCost ExceptionalSource ExceptionalStrong ExceptionalStrongSource; do
+            lean -o "$AG8/$m.olean" "$AG8/$m.lean"
+          done
+          for m in ExceptionalLastResetDepthSource RightFiveResetFloor RightFiveTwoArithmetic RightFiveEnergyNumeric RightFiveEnergyStep; do
+            lean -o "$AG50SUB/$m.olean" "$AG50SUB/$m.lean"
+          done
+          for m in DyadicGap TwoRunModel CubicGap OneShallowLarge OneShallowFinite OneShallowFiniteBridge RootTwoDivisor OneShallowModelBridge OneShallowModelOne; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+      - name: Verify source lift and theorem axioms
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          /usr/bin/time -v lean "$AG43/SourceOneShallowLift.lean"
