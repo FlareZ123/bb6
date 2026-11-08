@@ -167,6 +167,7 @@ theorem e_zero_Z0_regular (k q : Nat) :
       List.nil_append,init,List.cons_append,hn]
     rw [hw]
   rw [hi,full_E_pairs]
+  simp only [List.append_nil]
   have hr : List.replicate (2*q+6) true =
       true :: List.replicate (2*q+5) true := by
     rw [show 2*q+6=(2*q+5)+1 by omega]
