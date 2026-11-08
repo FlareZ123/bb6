@@ -79,7 +79,26 @@ theorem source_right_five_log_explicit
     n (Nat.log2 n+1) b m z hn hk h
   omega
 
+
+/-- The logarithmic-correction reset floor holds for the entire source-valid
+near-wall strip, including arbitrary right endpoint d. -/
+theorem source_near_wall_log_reset_floor
+    (n k b d m z : Nat) (hn : 14≤n) (hk : n≤2^k)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z)
+    (hBelow : b+4*m+4*n+20≤12*2^n)
+    (hClose : 12*2^n<
+      (b+4*m+4*n+20)+16*(2*n+7+(2*n+3)*z)) :
+    n<3*z+2*k+9 := by
+  by_cases hBound : n<3*z+2*k+9
+  · exact hBound
+  · have hSmall : 3*z+2*k+9≤n := by omega
+    have hNumeric := log_budget_numeric n k z hn hk hSmall
+    have hGrowth := source_near_wall_reset_growth
+      n b d m z hn h hBelow hClose
+    omega
+
 #print axioms BB6.Agent50Density.source_log_wall_reset_floor
 #print axioms BB6.Agent50Density.source_log_right_five_reset_floor
 #print axioms BB6.Agent50Density.source_right_five_log_explicit
+#print axioms BB6.Agent50Density.source_near_wall_log_reset_floor
 end BB6.Agent50Density
