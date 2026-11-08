@@ -49,4 +49,7 @@ jobs:
           lean -o SectionFirstReturn.olean SectionFirstReturn.lean
           cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/"{SectionUnique,CSectionCoincidence}.lean .
           lean -o SectionUnique.olean SectionUnique.lean
-          lean CSectionCoincidence.lean
+          lean -o CSectionCoincidence.olean CSectionCoincidence.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/"{SectionTimeBound,CSectionTimeEq}.lean .
+          lean -o SectionTimeBound.olean SectionTimeBound.lean
+          lean CSectionTimeEq.lean
