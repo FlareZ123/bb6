@@ -57,7 +57,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -o im-results/agent30-429-first-gate-rays/FirstGateRaw.olean im-results/agent30-429-first-gate-rays/FirstGateRaw.lean | tee /tmp/agent30-raw-gate.log
           lean -DmaxHeartbeats=10000000 -o im-results/agent5-429-rank/BB429Burst.olean im-results/agent5-429-rank/BB429Burst.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent30-429-first-gate-rays/W5TwoBurst.olean im-results/agent30-429-first-gate-rays/W5TwoBurst.lean | tee -a /tmp/agent30-raw-gate.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=20000 im-results/agent30-429-first-gate-rays/W5TwoBurstRawBridge.lean | tee -a /tmp/agent30-raw-gate.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=20000 -o im-results/agent30-429-first-gate-rays/W5TwoBurstRawBridge.olean im-results/agent30-429-first-gate-rays/W5TwoBurstRawBridge.lean | tee -a /tmp/agent30-raw-gate.log
           for m in BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta BB429SourceRows; do
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o "im-results/agent6-429-one-sided-excursion/$m.olean" "im-results/agent6-429-one-sided-excursion/$m.lean"
           done
