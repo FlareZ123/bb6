@@ -1,3 +1,4 @@
+import BB429FinishScanEDelta
 import High0Source
 import High2PhysicalBridge
 import JFirstBranch
@@ -7,7 +8,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB429High0Physical
 open BB6Coverage BB6Bubble BB6BCFuture BB429PhysicalFrontier BB429JPhysical
 open BB429JFirstBranch BB429PhysicalBridge BB429OddExcursion
-open BB429SourceE1Return BB429High0Source BB429JuncHeadExcursion
+open BB429SourceE1Return BB429High0Source BB429JuncHeadExcursion BB429FinishScanEDelta
 
 private theorem tens_length (n : Nat) : (tens n).length = 2*n := by
   induction n with
@@ -123,7 +124,7 @@ theorem j_c_sweep_high0_rep (u : Nat) :
   · have hcb : (-2*(u:Int)-3)+2*((2*u+2):Int) ≤ 2*(u:Int)+1 := by omega
     rw [cbPaint_right _ _ _ _ hcb]
     rw [setupTape_above _ _ _ (by omega)]
-    rw [f0Tape_neq u (2*u+2) _ (by omega)]
+    rw [f0Tape_neq u (2*u) _ (by omega)]
     rw [baseTape_high0_right u _ (by omega)]
     simp
   · intro j
@@ -171,7 +172,7 @@ theorem j_c_sweep_high0_rep (u : Nat) :
           apply setupTape_below
           dsimp [h]
           omega
-        rw [hset, f0Tape_neq u (2*u+2) _ (by dsimp [h]; omega)]
+        rw [hset, f0Tape_neq u (2*u) _ (by dsimp [h]; omega)]
         rw [baseTape_left_blank u (2*u+2) _ (by dsimp [h]; omega)]
         rw [getD_append_right _ _ j (by rw [tens_length]; exact hjk)]
         rw [tens_length]
@@ -188,7 +189,7 @@ theorem j_c_sweep_high0_rep (u : Nat) :
       omega
     rw [cbPaint_right _ _ _ _ hcb]
     rw [setupTape_above _ _ _ (by dsimp [x]; omega)]
-    rw [f0Tape_neq u (2*u+2) x (by dsimp [x]; omega)]
+    rw [f0Tape_neq u (2*u) x (by dsimp [x]; omega)]
     rw [baseTape_high0_right u x (by dsimp [x]; omega)]
     have hx0 : x ≠ 2*(u:Int)+1 := by dsimp [x]; omega
     have hx1 : x = 2*(u:Int)+3 ↔ j=1 := by dsimp [x]; omega
