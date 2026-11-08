@@ -46,7 +46,6 @@ private theorem outputShape (k q r : Nat) :
     change List.replicate (8*k+3) true ++
       List.replicate 2 true = List.replicate (8*k+5) true
     rw [List.replicate_append_replicate]
-    congr 1 <;> omega
   simp only [BB6.Agent2EAltTurn.outputWord,packet,word,
     List.replicate_zero,List.nil_append,List.append_nil]
   change
