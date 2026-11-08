@@ -620,6 +620,48 @@ theorem highLevel_far_even_shield (a d : Nat)
 #print axioms highLevel_far_odd_shield
 #print axioms highLevel_far_even_shield
 
+
+/-- For every even n, the sharp odd-d boundary has an actual fatal
+high-level transition, with even first counter as at the blank root. -/
+theorem highLevel_far_odd_shield_sharp (n : Nat) (hne : n%2=0) :
+    highLevelNext (.D (shield n+n+2) (shield n-3))=none := by
+  let a := shield n+n+2
+  let d := shield n-3
+  have hs := shield_ge_four n
+  have hsp : shield n%2=0 := by rw [shield_parity]; exact hne
+  have hd : d%2=1 := by dsimp [d]; omega
+  have hz : a≠0 := by dsimp [a]; omega
+  have hbranch : d%2=1 ∧ a≥d+5 := by dsimp [a,d]; omega
+  have heq1 : a-d-5=n := by dsimp [a,d]; omega
+  have heq2 : d+3=shield n := by dsimp [d]; omega
+  change highLevelNext (.D a d)=none
+  have hnext : highLevelNext (.D a d)=drainB (a-d-5) (d+3) 5 := by
+    simp only [highLevelNext,if_neg hz,if_pos hbranch]
+  rw [hnext,heq1,heq2]
+  exact shield_first_failure n 5
+
+/-- Even-d fatal boundary, for every positive even n. -/
+theorem highLevel_far_even_shield_sharp (n : Nat) (hne : n%2=0) (hn : 0<n) :
+    highLevelNext (.D (shield n+n) (shield n-2))=none := by
+  let a := shield n+n
+  let d := shield n-2
+  have hs := shield_ge_four n
+  have hsp : shield n%2=0 := by rw [shield_parity]; exact hne
+  have hd : d%2=0 := by dsimp [d]; omega
+  have hz : a≠0 := by dsimp [a]; omega
+  have hnotodd : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have hbranch : d%2=0 ∧ a≥d+3 := by dsimp [a,d]; omega
+  have heq1 : a-d-2=n := by dsimp [a,d]; omega
+  have heq2 : d+2=shield n := by dsimp [d]; omega
+  change highLevelNext (.D a d)=none
+  have hnext : highLevelNext (.D a d)=drainB (a-d-2) (d+2) 2 := by
+    simp only [highLevelNext,if_neg hz,if_neg hnotodd,if_pos hbranch]
+  rw [hnext,heq1,heq2]
+  exact shield_first_failure n 2
+
+#print axioms highLevel_far_odd_shield_sharp
+#print axioms highLevel_far_even_shield_sharp
+
 #print axioms flatB_eq_drainB
 
 #print axioms drain_three
