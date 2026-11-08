@@ -585,6 +585,41 @@ theorem shield_first_failure (a : Nat) : ∀ d, drainB a (shield a) d=none := by
 #print axioms shield_parity
 #print axioms shield_closed
 
+
+/-- The true #623 accelerated far-left odd branch gains a sharp parity shield.
+This is universal over inputs; it does not establish blank-orbit reachability. -/
+theorem highLevel_far_odd_shield (a d : Nat)
+    (ha : a%2=0) (hd : d%2=1) (hleft : d+5≤a)
+    (hbudget : d+3<shield (a-d-5)) :
+    ∃ aa dd, highLevelNext (.D a d)=some (.D aa dd) := by
+  have hz : a≠0 := by omega
+  have hg : d%2=1 ∧ a≥d+5 := ⟨hd,hleft⟩
+  have heven : (a-d-5)%2=0 := by omega
+  have hblocks : (d+3)%2=0 := by omega
+  obtain ⟨aa,dd,hr⟩ :=
+    matching_parity_shield (d+3) (a-d-5) 5 hbudget (by omega)
+  refine ⟨aa,dd,?_⟩
+  simpa only [highLevelNext,if_neg hz,if_pos hg] using hr
+
+/-- Complementary even-d far-left branch, again with a factor-seven wider
+exponential guaranteed survival budget than the old ternary-ones prefix. -/
+theorem highLevel_far_even_shield (a d : Nat)
+    (ha : a%2=0) (hd : d%2=0) (hleft : d+3≤a)
+    (hbudget : d+2<shield (a-d-2)) :
+    ∃ aa dd, highLevelNext (.D a d)=some (.D aa dd) := by
+  have hz : a≠0 := by omega
+  have hnotodd : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have hg : d%2=0 ∧ a≥d+3 := ⟨hd,hleft⟩
+  have heven : (a-d-2)%2=0 := by omega
+  have hblocks : (d+2)%2=0 := by omega
+  obtain ⟨aa,dd,hr⟩ :=
+    matching_parity_shield (d+2) (a-d-2) 2 hbudget (by omega)
+  refine ⟨aa,dd,?_⟩
+  simpa only [highLevelNext,if_neg hz,if_neg hnotodd,if_pos hg] using hr
+
+#print axioms highLevel_far_odd_shield
+#print axioms highLevel_far_even_shield
+
 #print axioms flatB_eq_drainB
 
 #print axioms drain_three
