@@ -1,0 +1,3 @@
+# Agent35 correction to k4 modulo-27 branch note
+
+The earlier 19:58Z note oversimplified the s≡0 mod3 subbranch. For k=9s+4 with s=3t, after the first two guarded E returns the a=1536t+257 section is B. One B return produces a=4096t+690, whose class modulo three depends on t. Thus a direct A-code closure via E,E,B,A requires t≡0 mod3 (k≡4 mod81); k≡31,58 mod81 need further routing. For s=3t+2, a=1536t+1281 is always an A entry (k≡22 mod27), so an E,E,A closure for all q remains promising. I am targeting that uniform subfamily first. This correction replaces the unqualified s=3t+0 claim in my previous message.
