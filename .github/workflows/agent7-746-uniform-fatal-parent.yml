@@ -1,11 +1,14 @@
 name: Agent 7 uniform fatal reset parent normal form (manual)
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - agent7-t2-one-root
 permissions:
   contents: read
 jobs:
   verify-uniform:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -98,6 +101,8 @@ jobs:
           lean -o "$g/TThreeHighTTwoGeometry.olean" "$g/TThreeHighTTwoGeometry.lean"
           lean -o "$g/TThreeHighTTwoRoot.olean" "$g/TThreeHighTTwoRoot.lean"
           lean -o "$g/TThreeHighTTwoZero.olean" "$g/TThreeHighTTwoZero.lean"
+          lean -o "$g/TThreeHighTTwoOneArithmetic.olean" "$g/TThreeHighTTwoOneArithmetic.lean"
+          lean -o "$g/TThreeHighTTwoOne.olean" "$g/TThreeHighTTwoOne.lean"
           lean -o "$g/TThreeHighTTwoResidues.olean" "$g/TThreeHighTTwoResidues.lean"
           lean "$g/TThreeHighTTwoFinalSelector.lean"
           lean -o "$b/ForkOddDead486.olean" "$b/ForkOddDead486.lean"
