@@ -174,7 +174,8 @@ private theorem run_succ_of_Cstep (k a b u v : Nat)
     (hstep : Cstep a b = some (u,v)) :
     Agent10Original746.run (k+1) = some (.C u v) := by
   change (Agent10Original746.run k).bind highLevelNext = _
-  rw [hrun, highLevel_step_of_Cstep a b u v hstep]
+  rw [hrun]
+  simp [highLevel_step_of_Cstep a b u v hstep]
 
 /-- Every source-C path from the genuine post-initial root appears in the
 actual upstream high-level orbit. -/
@@ -184,7 +185,8 @@ theorem run_of_reach {x : Nat × Nat}
   induction hr with
   | refl =>
       exact ⟨0,rfl⟩
-  | @push start y z hreach hstep ih =>
+  | push hreach hstep ih =>
+      rename_i y z
       rcases ih with ⟨k,hk⟩
       rcases z with ⟨u,v⟩
       exact ⟨k+1, run_succ_of_Cstep k y.1 y.2 u v hk hstep⟩
