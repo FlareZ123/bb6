@@ -183,7 +183,7 @@ theorem e_zero_Z0_regular (k q : Nat) :
       (false :: List.replicate (2*q+6) true),5⟩ : Cfg)
     (regularSection (8*k+5) 1 (2*q+5))
   rw [heq]
-  exact cfgEq_refl _
+  exact BB6.Padding.cfgEq_refl _
 
 #print axioms e_zero_drop_Z
 #print axioms e_zero_q0_Z_regular
