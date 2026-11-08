@@ -267,6 +267,162 @@ theorem flatB_eq_drainB (b : Nat) : ∀ a d, flatB a b d = drainB a b d := by
             have hpos : 0<a := by omega
             exact (hrep ▸ (drain_three_two a q d hpos).symm)
 
+
+/-- The binary code enumerates a complete family of bounded failures. -/
+def lowerCode : Nat → Nat → Nat
+  | 0, _ => 2
+  | n+1, k => 3 * lowerCode n (k/2) - 1 + 2 * (k%2)
+
+theorem lowerCode_bounds (n : Nat) :
+    ∀ k, k < 2^n → 0 < lowerCode n k ∧ lowerCode n k < 3^(n+1) := by
+  induction n with
+  | zero =>
+    intro k hk
+    simp [lowerCode]
+  | succ n ih =>
+    intro k hk
+    have htwo : 2^(n+1)=2*2^n := by rw [Nat.pow_succ]; omega
+    have hthree : 3^(n+1+1)=3*3^(n+1) := by rw [Nat.pow_succ]; omega
+    have hq : k/2<2^n := by omega
+    have hmod : k%2<2 := Nat.mod_lt _ (by omega)
+    obtain ⟨hl,hu⟩ := ih (k/2) hq
+    simp only [lowerCode]
+    omega
+
+theorem bad_pow_false (n : Nat) : ¬bad (n+1) (3^(n+1)) := by
+  have hp : 3^(n+1)=3*3^n := by rw [Nat.pow_succ]; omega
+  have hm : 3^(n+1)%3=0 := by omega
+  simp [bad,hm]
+
+theorem bad_lowerCode (n : Nat) :
+    ∀ k, k<2^n → bad (n+1) (lowerCode n k) := by
+  induction n with
+  | zero =>
+    intro k hk
+    have hkz : k=0 := by simpa using hk
+    subst k
+    simp [lowerCode,bad]
+  | succ n ih =>
+    intro k hk
+    have hp2 : 2^(n+1)=2*2^n := by rw [Nat.pow_succ]; omega
+    have hq : k/2 < 2^n := by omega
+    have hr : k%2<2 := Nat.mod_lt _ (by omega)
+    have hbad := ih (k/2) hq
+    obtain ⟨hl,hu⟩ := lowerCode_bounds n (k/2) hq
+    by_cases he : k%2=0
+    · have hformula : lowerCode (n+1) k = 3*lowerCode n (k/2)-1 := by
+        simp [lowerCode,he]
+      rw [hformula]
+      have hmod : (3*lowerCode n (k/2)-1)%3=2 := by omega
+      have hdiv : (3*lowerCode n (k/2)-1)/3+1=lowerCode n (k/2) := by omega
+      change _ ∨ ((3*lowerCode n (k/2)-1)%3=2 ∧
+        bad (n+1) ((3*lowerCode n (k/2)-1)/3+1))
+      exact Or.inr ⟨hmod, by simpa only [hdiv] using hbad⟩
+    · have ho : k%2=1 := by omega
+      have hformula : lowerCode (n+1) k = 3*lowerCode n (k/2)+1 := by
+        simp [lowerCode,ho]
+        omega
+      rw [hformula]
+      have hmod : (3*lowerCode n (k/2)+1)%3=1 := by omega
+      have hdiv : (3*lowerCode n (k/2)+1)/3=lowerCode n (k/2) := by omega
+      change ((3*lowerCode n (k/2)+1)%3=1 ∧
+        bad (n+1) ((3*lowerCode n (k/2)+1)/3)) ∨ _
+      exact Or.inl ⟨hmod, by simpa only [hdiv] using hbad⟩
+
+/-- Every failure in the bounded interval has a binary code. -/
+theorem lowerCode_of_bad (n : Nat) :
+    ∀ b, b<3^(n+1) → bad (n+1) b →
+      ∃ k, k<2^n ∧ lowerCode n k=b := by
+  induction n with
+  | zero =>
+    intro b hb hbad
+    have hb3 : b<3 := by simpa using hb
+    change (b%3=1 ∧ b/3=1) ∨ (b%3=2 ∧ b/3+1=1) at hbad
+    have hb2 : b=2 := by rcases hbad with ⟨hm,hd⟩ | ⟨hm,hd⟩ <;> omega
+    exact ⟨0, by simp, by simpa [lowerCode] using hb2.symm⟩
+  | succ n ih =>
+    intro b hb hbad
+    let q := b/3
+    have hmod : b%3<3 := Nat.mod_lt _ (by omega)
+    have hbdiv : b=3*q+b%3 := by dsimp [q]; omega
+    have hpow : 3^(n+1+1)=3*3^(n+1) := by rw [Nat.pow_succ]; omega
+    have hp2 : 2^(n+1)=2*2^n := by rw [Nat.pow_succ]; omega
+    change (b%3=1 ∧ bad (n+1) (b/3)) ∨
+      (b%3=2 ∧ bad (n+1) (b/3+1)) at hbad
+    rcases hbad with ⟨hr,hh⟩ | ⟨hr,hh⟩
+    · have hq : q<3^(n+1) := by dsimp [q]; omega
+      obtain ⟨k,hk,he⟩ := ih q hq hh
+      refine ⟨2*k+1, ?_, ?_⟩
+      · omega
+      · have hrem : (2*k+1)%2=1 := by omega
+        have hdiv : (2*k+1)/2=k := by omega
+        simp only [lowerCode,hrem,hdiv]
+        have hx : 0<lowerCode n k := (lowerCode_bounds n k hk).1
+        omega
+    · have hqle : q+1≤3^(n+1) := by dsimp [q]; omega
+      have hq : q+1<3^(n+1) := by
+        by_cases hlt : q+1<3^(n+1)
+        · exact hlt
+        · have heq : q+1=3^(n+1) := by omega
+          have hbadq : bad (n+1) (q+1) := by simpa [q] using hh
+          exact False.elim ((by simpa only [heq] using hbadq : bad (n+1) (3^(n+1))) |> (bad_pow_false n))
+      have hbadq : bad (n+1) (q+1) := by simpa [q] using hh
+      obtain ⟨k,hk,he⟩ := ih (q+1) hq hbadq
+      refine ⟨2*k, ?_, ?_⟩
+      · omega
+      · have hrem : (2*k)%2=0 := by omega
+        have hdiv : (2*k)/2=k := by omega
+        simp only [lowerCode,hrem,hdiv]
+        have hx : 0<lowerCode n k := (lowerCode_bounds n k hk).1
+        omega
+
+theorem lowerCode_injective (n : Nat) :
+    ∀ i j, i<2^n → j<2^n → lowerCode n i=lowerCode n j → i=j := by
+  induction n with
+  | zero =>
+    intro i j hi hj he
+    have hi0 : i=0 := by simpa using hi
+    have hj0 : j=0 := by simpa using hj
+    omega
+  | succ n ih =>
+    intro i j hi hj he
+    have hp : 2^(n+1)=2*2^n := by rw [Nat.pow_succ]; omega
+    have hir : i%2<2 := Nat.mod_lt _ (by omega)
+    have hjr : j%2<2 := Nat.mod_lt _ (by omega)
+    have hiq : i/2<2^n := by omega
+    have hjq : j/2<2^n := by omega
+    obtain ⟨hil,_⟩ := lowerCode_bounds n (i/2) hiq
+    obtain ⟨hjl,_⟩ := lowerCode_bounds n (j/2) hjq
+    have heq : 3*lowerCode n (i/2)-1+2*(i%2) =
+        3*lowerCode n (j/2)-1+2*(j%2) := by simpa [lowerCode] using he
+    have hrem : i%2=j%2 := by omega
+    have hparent : lowerCode n (i/2) = lowerCode n (j/2) := by omega
+    have hquot : i/2=j/2 := ih (i/2) (j/2) hiq hjq hparent
+    omega
+
+/-- Exact binary parametrization and unique code of every bounded failure:
+the 2^n possible codes are in bijection with the failed b<3^(n+1). -/
+theorem bounded_failure_binary_bijection (n b d : Nat) (hb : b<3^(n+1)) :
+    drainB (n+1) b d = none ↔
+      ∃ k : Nat, k<2^n ∧ lowerCode n k=b ∧
+        (∀ k' : Nat, k'<2^n → lowerCode n k'=b → k'=k) := by
+  have hbound : b≤3^(n+1) := by omega
+  rw [drain_none_iff_bad (n+1) b d hbound]
+  constructor
+  · intro hbad
+    obtain ⟨k,hk,he⟩ := lowerCode_of_bad n b hb hbad
+    refine ⟨k,hk,he,?_⟩
+    intro k' hk' he'
+    exact lowerCode_injective n k' k hk' hk (he'.trans he.symm)
+  · rintro ⟨k,hk,he,hunique⟩
+    rw [←he]
+    exact bad_lowerCode n k hk
+
+#print axioms lowerCode_injective
+#print axioms bounded_failure_binary_bijection
+#print axioms lowerCode_of_bad
+#print axioms bad_lowerCode
+
 #print axioms flatB_eq_drainB
 
 #print axioms drain_three
