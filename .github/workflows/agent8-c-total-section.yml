@@ -53,3 +53,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/"{SectionTimeBound,CSectionTimeEq}.lean .
           lean -o SectionTimeBound.olean SectionTimeBound.lean
           lean CSectionTimeEq.lean
+          # Closed-form primitive-CLine duration of both dyadic stopping families.
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/BounceHalting.lean" .
+          lean -o BounceHalting.olean BounceHalting.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-c-first-reach/CParamHaltTime.lean" .
+          lean CParamHaltTime.lean
