@@ -32,8 +32,11 @@ theorem reverse_run (n : Nat) (L ys : List Bool) :
   | succ n ih =>
     have ht : 4*(n+1)=4+4*n := by omega
     rw [ht,run_add,reverse_four,ih]
-    simp only [pairs,List.append_assoc]
-    rw [pairs_snoc]
+    apply congrArg (reverse 0 L)
+    calc
+      _ = (pairs n ++ [true,false]) ++ ys := by simp [List.append_assoc]
+      _ = [true,false] ++ (pairs n ++ ys) := by rw [pairs_snoc]; simp [List.append_assoc]
+      _ = pairs (n+1) ++ ys := rfl
 
 /-- The initial seven moves of the A turn are independent of the left tape. -/
 private theorem front_seven (L zs : List Bool) :
@@ -56,6 +59,25 @@ private theorem finish_seven (L zs : List Bool) :
       ⟨L,true,[true,false,true,false,true,false] ++ zs,2⟩ := by
   simp [run,step,goL,goR]
 
+private theorem a_scan_two (L ys : List Bool) :
+    run 2 (⟨L,false,[true,false] ++ ys,0⟩ : Cfg) =
+      ⟨[false,true] ++ L,false,ys,0⟩ := by
+  simp [run,step,goL,goR]
+
+private theorem a_scan (n : Nat) (L ys : List Bool) :
+    run (2*n) (⟨L,false,pairs n ++ ys,0⟩ : Cfg) =
+      ⟨oppairs n ++ L,false,ys,0⟩ := by
+  induction n generalizing L with
+  | zero => rfl
+  | succ n ih =>
+    have ht : 2*(n+1)=2+2*n := by omega
+    rw [ht,run_add]
+    change run (2*n)
+      (run 2 (⟨L,false,[true,false] ++ (pairs n ++ ys),0⟩ : Cfg)) = _
+    rw [a_scan_two]
+    have h := ih ([false,true] ++ L)
+    simpa [oppairs,List.append_assoc] using h
+
 /-- Source-level A turn across 11(01)^(r+1)11. The left tape and trailing
     right suffix are entirely arbitrary. All 6r+20 primitive moves are exact. -/
 theorem turn_all (r : Nat) (L ys : List Bool) :
@@ -75,15 +97,24 @@ theorem turn_all (r : Nat) (L ys : List Bool) :
       have h := BB6.Agent2MarkerTower.one_marker r
       simpa [BB6.Agent2MarkerTower.marker,V,List.append_assoc] using
         congrArg (fun zs : List Bool => zs ++ ys) h
-    simpa only [oppairs,List.cons_append,U,hw] using h0
+    calc
+      run 7 (⟨L,false,[true,true] ++
+          (oppairs (r+1) ++ ([true,true] ++ ys)),0⟩ : Cfg)
+          = run 7
+            (⟨L,false,[true,true,false,true] ++
+              (oppairs r ++ ([true,true] ++ ys)),0⟩ : Cfg) := by rfl
+      _ = ⟨U,false,true :: (oppairs r ++ ([true,true] ++ ys)),0⟩ := by
+        simpa only [U] using h0
+      _ = ⟨U,false,pairs r ++ V,0⟩ := by rw [hw]
   have hscan : run (2*r)
       (⟨U,false,pairs r ++ V,0⟩ : Cfg) =
       (⟨oppairs r ++ U,false,V,0⟩ : Cfg) :=
-    aTenOppIter r U V
+    a_scan r U V
   have hturn : run 2
       (⟨oppairs r ++ U,false,V,0⟩ : Cfg) =
       reverse (r+1) U ys := by
-    dsimp [V]
+    change run 2
+      (⟨oppairs r ++ U,false,[true,true,true] ++ ys,0⟩ : Cfg) = _
     rw [turn_two]
     simp [reverse,oppairs,List.append_assoc]
   have hback := reverse_run (r+1) U ys
