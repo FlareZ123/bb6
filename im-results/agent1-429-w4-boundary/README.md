@@ -115,4 +115,23 @@ This is an **exhaustive C/0 census of the complete specified symbolic transition
 
 The quantifier is deliberately restricted to runs starting in these precise `junc 0 v 1` whole-tape configurations and ending at the indicated canonical Junc states. No theorem yet covers every transition in the authentic blank-origin high-level chart, other right-budget cases, or an arbitrary Junc continuation beyond its endpoint. In particular, local record maxima do not prove that the head at these events is a global blank-orbit head record: it might have visited farther right in an earlier symbolic transition.
 
+## Ordinary Junc macros: exact C/0 exclusion on original raw tape
+
+The right-one case is the exceptional branch that *does* contain two C/0 events. Most ordinary Junc transitions contain **none**. [`W4CZeroOrdinary.lean`](W4CZeroOrdinary.lean) proves the following source-level original-table equations, with `runSafe` rejecting any C/0 at **any processed primitive step**:
+
+```lean
+runSafe (4*v+10) (junc (u+1) v w) =
+  some (junc u (v+2) (w-2))        -- w>=2
+runSafe (2*v+27) (junc 0 v w) =
+  some (junc (v+3) 0 (w-3))        -- w>=3
+runSafe (juncPosFullTime N v) (junc U v w) =
+  some (junc (U-N) (v+2*N) (w-2*N)) -- N<=U, 2*N<=w
+```
+
+A general `runSafe_to_count_zero` theorem converts these into exact `runCount=0` results without making any finite cutoff assumption. The two variable-length A/01 and A/11 sweeps, the B/01 sweep, and fixed initial/terminal steps are source checked. The **complete original-source CI 42529143566** [passed](https://github.com/FlareZ123/bb6/actions/runs/42529143566) without `sorryAx`.
+
+[`W4CZeroPhysical.lean`](W4CZeroPhysical.lean) transports the guarded source semantics through the existing `BB429PhysicalBridge.source_run_rep` representation theorem to **the actual physical `BB429PhysicalFrontier.target429` bi-infinite tape**. For every raw configuration representing one of those ordinary source inputs, and every time `t` up to and including the completion of the stated macro or batch, it establishes a successful raw run reaching a configuration **that does not scan C/0**. The proof includes analogous source E/1-return prefix avoidance and the generic `physical_safe_all_prefix` lemma. This original-source physical theorem family passed [CI 42529368631](https://github.com/FlareZ123/bb6/actions/runs/42529368631), using only standard axioms.
+
+The physical quantifier is conditional on complete `Represents` inputs. Neither result proves that these inputs cover the entire authentic blank-start trajectory. Exceptional Junc right budgets (notably positive-left `w=1`, zero-left `w=1,2`, and terminal boundaries) require their own analysis. The right-one zero-left case is covered by the two-event census in the preceding section. The physical lifting here provides direct intermediate lemmas for any eventual authentic-blank-root chart.
+
 The source-verified [physical halting criterion](../agent32-429-raw-parent/README.md) is still that the authentic blank trajectory reaches a C/0 with marked right neighbor, equivalently B/001. Proving its actual reachability or impossibility remains essential to deciding #429. No BB(6) exact value, global upper bound, or new blank-run witness is claimed. Therefore this intermediate result belongs in `im-results/`, not `results/`.
