@@ -1,0 +1,114 @@
+import JChartTwo
+import High3Ladder
+import Lean.Elab.Tactic.Omega
+
+namespace BB429High1FatalFamily
+
+open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
+open BB429High3Ladder BB429JChartTwo
+
+/-- Number of certified high-3 outer J returns following the high-one
+    boundary; every fourth length makes the fatal 2u-1 endpoint integral. -/
+def turns (k : Nat) : Nat := 4*k+1
+
+/-- An explicit unbounded family of prepared high-one J configurations. -/
+def seed (k : Nat) : Nat := 14*2^(turns k)-(10+3*k)
+
+theorem seed_bound (k : Nat) : 10+3*k ≤ 14*2^(turns k) := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+    have hp : 2^(turns (k+1)) = 16*2^(turns k) := by
+      calc
+        2^(turns (k+1)) = 2^(turns k+4) := by congr 1
+        _ = 2^(turns k)*2^4 := by rw [Nat.pow_add]
+        _ = 16*2^(turns k) := by omega
+    rw [hp]
+    omega
+
+theorem seed_linear (k : Nat) :
+    4*seed k + (37+3*(turns k)) = 56*2^(turns k) := by
+  have h := seed_bound k
+  dsimp [seed,turns] at *
+  omega
+
+/-- The high-3 ladder decrement leaves exactly the fatal J boundary. -/
+theorem branch_tail (k : Nat) :
+    branchShift 11 (turns k) + (2*branchU 11 (turns k)-1) =
+      4*seed k + 2 := by
+  have h := seed_linear k
+  have hU := branchU_closed 11 (turns k)
+  have hS := branchShift_closed 11 (turns k)
+  have hp : 1 ≤ 2^(turns k) := Nat.one_le_pow (turns k) 2 (by decide)
+  omega
+
+theorem branch_fits (k : Nat) :
+    branchShift 11 (turns k) ≤ 4*seed k+2 := by
+  have hb := branch_tail k
+  omega
+
+theorem branch_fatal (k : Nat) :
+    (4*seed k+2 - branchShift 11 (turns k)) + 1 =
+      2*branchU 11 (turns k) := by
+  have ht := branch_tail k
+  have hu := branchU_closed 11 (turns k)
+  have hp : 1 ≤ 2^(turns k) := Nat.one_le_pow (turns k) 2 (by decide)
+  omega
+
+/-- Exact primitive-step bound for the source-certified halting family. -/
+def fatalTime (k : Nat) : Nat :=
+  (4*seed k*seed k+28*seed k+306) +
+    branchCostSum 11 (turns k) +
+    branchCost (branchU 11 (turns k))
+
+/-- For every k, the *original* raw six-state machine halts after the
+    certified high-one return, 4k+1 consecutive high-3 branches, and the
+    fatal C/01 J endpoint. Every initial J tape is synthetic/prepared. -/
+theorem high1_fatal_family (k : Nat) :
+    run target429 (fatalTime k)
+      (jConfig (seed k) (2*seed k+1)) = none := by
+  let u : Nat := seed k
+  let m : Nat := turns k
+  let U : Nat := branchU 11 m
+  let w : Nat := 4*u+2 - branchShift 11 m
+  let d : Int := (6-2*(u:Int)) + (branchShift 11 m : Int)
+  let initial : Nat := 4*u*u+28*u+306
+  let middle : Nat := branchCostSum 11 m
+  let final : Nat := branchCost U
+  have hfits : branchShift 11 m ≤ 4*u+2 := branch_fits k
+  have hfatal : w+1=2*U := branch_fatal k
+  have hfirst :
+      run target429 initial (jConfig u (2*u+1)) =
+        some (shiftConfig (6-2*(u:Int)) (jConfig 11 (4*u+2))) := by
+    simpa [initial,u] using j_high1_chart (seed k)
+  have hmiddle :
+      run target429 middle
+        (shiftConfig (6-2*(u:Int)) (jConfig 11 (4*u+2))) =
+        some (shiftConfig d (jConfig U w)) := by
+    simpa [middle,u,m,U,w,d] using
+      (j_high3_ladder 11 (4*seed k+2) (turns k)
+         (6-2*(seed k:Int)) (branch_fits k))
+  have hfinal :
+      run target429 final (shiftConfig d (jConfig U w)) = none := by
+    have hraw : run target429 final (jConfig U w) = none := by
+      simpa [final,branchCost,jConfig] using
+        (BB429JFirstBranch.j_fatal_branch U w hfatal)
+    rw [run_shiftConfig, hraw]
+    rfl
+  have htwo :
+      run target429 (initial+middle) (jConfig u (2*u+1)) =
+        some (shiftConfig d (jConfig U w)) := by
+    rw [BB6Bubble.run_add' target429 initial middle, hfirst]
+    simp only [Option.bind_some]
+    exact hmiddle
+  change run target429 ((initial+middle)+final)
+      (jConfig u (2*u+1)) = none
+  rw [BB6Bubble.run_add' target429 (initial+middle) final, htwo]
+  simp only [Option.bind_some]
+  exact hfinal
+
+#print axioms seed_bound
+#print axioms branch_fatal
+#print axioms high1_fatal_family
+
+end BB429High1FatalFamily
