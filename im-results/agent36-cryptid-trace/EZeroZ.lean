@@ -143,10 +143,47 @@ theorem e_zero_k1mod9_q1_Z_regular (t u m : Nat) :
   rw [run_add,h0,run_add,h1]
   exact hA
 
+
+/-- The terminal marker Z_0 is a genuinely blank zero after the suffix.
+    For any E-zero packet and any scanner parameter q the source E-pair
+    return is already physically equivalent to regular L. -/
+theorem e_zero_Z0_regular (k q : Nat) :
+    ObsEq
+      (run (12*k*k+49*k+50+4*q)
+        (packet (3*k+4) q 0 (marker 0)))
+      (regularSection (8*k+5) 1 (2*q+5)) := by
+  have hn : List.replicate (3*k+4) true =
+    true :: true :: List.replicate (3*k+2) true := by
+      rw [show 3*k+4=2+(3*k+2) by omega,
+        ← List.replicate_append_replicate]
+      rfl
+  have hi : packet (3*k+4) q 0 (marker 0) =
+      init (List.replicate (3*k+2) true ++
+        false :: (pairs q ++ [false,false])) := by
+    simp only [packet,word,marker,oppairs,List.replicate_zero,
+      List.nil_append,init,List.cons_append,hn]
+    rw [show oppairs q ++ [false] = false :: pairs q from oppairs_false q]
+    simp [List.append_assoc]
+  rw [hi,full_E_pairs]
+  let reg : Cfg := regularSection (8*k+5) 1 (2*q+5)
+  have hout :
+      (⟨[],false,List.replicate (8*k+5) true ++
+        (false :: (List.replicate (2*q+6) true ++ [false])),5⟩ : Cfg) =
+      (⟨reg.l,reg.h,reg.r++[false],reg.st⟩ : Cfg) := by
+    dsimp [reg,regularSection,oppairs]
+    simp [List.append_assoc,List.replicate_succ]
+  rw [hout]
+  change ObsEq
+    (⟨reg.l,reg.h,reg.r++[false],reg.st⟩ : Cfg) reg
+  simpa [reg,run] using
+    (BB6.Padding.cfgEq_symm
+      (BB6.BoundaryPadding.source_pad 0 0 1 reg))
+
 #print axioms e_zero_drop_Z
 #print axioms e_zero_q0_Z_regular
 #print axioms e_zero_k0_Z_regular
 #print axioms e_zero_k2_q1_Z_regular
 #print axioms e_zero_k1mod9_q1_Z_regular
+#print axioms e_zero_Z0_regular
 
 end BB6.Agent36EZeroZ
