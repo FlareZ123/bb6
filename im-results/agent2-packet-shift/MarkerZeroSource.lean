@@ -27,7 +27,7 @@ private theorem oppairs_add (q r : Nat) :
   | zero => simp [oppairs]
   | succ q ih => simp [Nat.succ_add,oppairs,ih]
 
-private theorem oppairs_false (q : Nat) :
+theorem oppairs_false (q : Nat) :
     oppairs q ++ [false] = false :: pairs q := by
   induction q with
   | zero => rfl
