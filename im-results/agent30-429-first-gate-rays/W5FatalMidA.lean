@@ -5,7 +5,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB429FirstGateMidA
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429High3Ladder
-open BB429OddExcursion BB429JuncHeadExcursion BB429PhysicalBridge
+open BB429OddExcursion BB429JuncHeadExcursion BB429FinishScanEDelta BB429PhysicalBridge
 open BB429DeltaPhysicalBridge BB429JuncCanonical BB429FirstGateRays
 open BB429FirstGateRaw BB429MidAposBoundary
 
@@ -22,7 +22,8 @@ theorem represented_junc_halts (u w n : Nat) (c : Config)
     simp [translatedJ, shiftConfig, jConfig]
   calc
     run target429 n c =
-        run target429 n (translatedJ u w c.head) := by rw [hc]
+        run target429 n (translatedJ u w c.head) := by
+          exact congrArg (fun x : Config => run target429 n x) hc
     _ = run target429 n (shiftConfig c.head (jConfig u w)) := by rw [hJ]
     _ = none := by rw [run_shiftConfig, hh]; rfl
 
