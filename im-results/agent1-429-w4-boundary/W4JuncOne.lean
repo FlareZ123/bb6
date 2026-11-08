@@ -111,10 +111,27 @@ theorem junc0_odd_w1_to_junc0 (k : Nat) :
   · trivial
   · omega
 
+/-- Every positive-middle Junc(2,v,1) returns to canonical Junc(0,0,*).
+    This is the complementary right-one case to the zero-u odd family. -/
+theorem junc2_w1_to_junc0 (v : Nat) (hv : 1 ≤ v) :
+    runWithDelta (8*v+54) (junc 2 v 1) =
+      some (junc 0 0 (2*v+10), -6) := by
+  have hfirst := juncPos_to_midA_delta 1 v 1 (by omega)
+  have htail := BB429High2Tail.midApos_to_junc0_of_base v hv midAaux_zero_base
+  have htime : 8*v+54 = (2*v+6)+(6*v+48) := by omega
+  rw [htime, runWithDelta_add, hfirst]
+  simp only [Option.bind_some]
+  rw [htail]
+  simp only [Option.map_some, Option.some.injEq, Prod.mk.injEq]
+  constructor
+  · trivial
+  · omega
+
 #print axioms b1_to_scanE_16
 #print axioms c1_to_e1_20
 #print axioms junc0_w1_to_scanE
 #print axioms scanE_odd_sigma_to_junc0
 #print axioms junc0_odd_w1_to_junc0
+#print axioms junc2_w1_to_junc0
 
 end BB429W4JuncOne
