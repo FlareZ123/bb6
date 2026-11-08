@@ -45,6 +45,33 @@ The two MidA compositions are paper corollaries of separately source-certified L
 
 A finite independent raw-step simulator also checked the A/1-to-Junc formulas for sampled parameters; this is secondary evidence and cannot replace the all-parameter source proof.
 
+## New all-prefix head-position barrier, including the physical raw machine
+
+The strongest geometric result is an **all-parameter, all-prefix** right-head bound for the source E/1 return, which strictly strengthens an endpoint-only head-displacement statement.
+
+[`W4HeadMax.lean`](W4HeadMax.lean) defines `runWithMax n` by folding the *original* `oneWithDelta` interpreter and retaining both net head displacement and the maximum over all intermediate positions. It proves the exact composition law for this monitor and the parameter-uniform certificate
+
+```lean
+runWithMax (crossTime b+1) (sourceScanE b suffix) =
+  some (z 2 (finalLeft b) true suffix, 0, 0)
+```
+
+for **all** natural `b` and **all** Boolean right suffixes. Thus no intermediate head position exceeds the initial head position. The proof uses a genuine two-step induction: each extra pair is removed by the exact six-step E/B macro, followed by the smaller return and exact eight-step C/B macro. The two finite seed cases are decomposed into kernel-checked short chunks. The monitor does not use finite simulation as an unbounded assumption.
+
+[`W4HeadPrefix.lean`](W4HeadPrefix.lean) proves that the monitor projects exactly to the previously verified `runWithDelta` semantics, and deduces the direct all-prefix theorem:
+
+```lean
+t ≤ crossTime b+1 →
+runWithDelta t (sourceScanE b suffix) = some (c, delta) →
+delta ≤ 0
+```
+
+This avoids quantifying over an auxiliary maximum monitor at the statement boundary and is usable by other source agents. [Original-source CI 42523352570](https://github.com/FlareZ123/bb6/actions/runs/42523352570) successfully checked both modules, the source definitions, and all axioms. No `sorryAx` occurs.
+
+[`W4HeadPhysical.lean`](W4HeadPhysical.lean) then transports the exact prefix statement through Agent32's already certified `source_runWithDelta_rep` semantics to **the literal original six-state bi-infinite-tape machine**. For every raw configuration `c` representing `sourceScanE b suffix` and every `t ≤ crossTime b+1`, it produces the raw successful configuration `c'` and proves `c'.head ≤ c.head`. This is an *entire segment* property, for every `t`, without fixing a finite ceiling on `b` or imposing a restriction on the untouched right suffix. [Original raw-source CI 42523524836](https://github.com/FlareZ123/bb6/actions/runs/42523524836) passed without `sorryAx`.
+
+The result supplies a rigorous one-sided-history lemma for the #429 fatal C/01 criterion: within any represented source E/1 excursion the head can never visit a cell strictly to the right of that excursion's entry position. It **does not** establish that all genuine blank-origin last-writer excursions enter such a source configuration. It remains a reusable conditional tape-geometric theorem.
+
 ## Remaining all-time obstruction
 
 For the previously open right-four endpoint, the unresolved synthetic continuation now starts at the **canonical** states `junc 0 0 (4*k+22)` or `junc 0 0 (4*k+28)`. Existing full/partial Junc-cycle source lemmas can analyze those further, but their current forms do not establish a complete halt/nonhalt decision for the authentic blank orbit. In particular, the parameter `k` here is freely chosen and does not prove a given boundary actually occurs from blank tape. For the distinct right-five terminal, the A/0 boundary retains a separate unbounded suffix question; see the neighboring [high-2 dossier](../agent32-429-high2-prefix/README.md).
