@@ -49,7 +49,7 @@ theorem c0_reach_iff_fast_section (a k : Nat) :
     intro p j q hj hlt heq
     have h := fastNext_first p j hj hlt
     rw [heq] at h
-    simp [BB6.Agent8ComputableC.decode, embed] at h
+    simp [BB6.Agent8Scan.finish, BB6.Agent8ComputableC.decode, embed] at h
   constructor
   · intro hr
     obtain ⟨n,hn⟩ := raw_reach_to_run hr
