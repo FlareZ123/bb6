@@ -124,7 +124,7 @@ theorem canonical_junc_rep (u w : Nat) (h : Int) :
     Represents (junc u 0 w)
       {state:=A,head:=h,tape:=fun x => jTape u w (x-h)} := by
   refine ⟨rfl, ?_, ?_, ?_⟩
-  · simpa [junc] using jTape_center u w
+  · simpa [junc, z] using jTape_center u w
   · intro j
     change jTape u w ((h-((j:Int)+1))-h) =
       (true :: (pairs01 u ++ ones 5)).getD j false
@@ -144,7 +144,7 @@ theorem represented_junc_cell (u w : Nat) (c : Config)
   rcases hrep with ⟨hs, hc, hl, hr⟩
   by_cases hx : x = c.head
   · rw [hx]
-    simpa [junc, jTape_center] using hc
+    simpa [junc, z, jTape_center] using hc
   · by_cases hlt : x < c.head
     · let j : Nat := Int.toNat (c.head-x-1)
       have hpos : 0 ≤ c.head - x - 1 := by omega
