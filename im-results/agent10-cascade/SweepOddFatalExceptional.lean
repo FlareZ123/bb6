@@ -74,7 +74,6 @@ theorem earlier_odd_fatal_entry_high (k m₁ m₂ : Nat)
     force the smaller depth into the unique class of the mod-18 table.
     Only a possibly largest odd depth can evade the congruence. -/
 theorem earlier_odd_fatal_depth_residue (k m₁ m₂ : Nat)
-    (hsector : k%6=3 ∨ k%6=4)
     (hlt : m₁<m₂)
     (h₁ : OddFatalHistory k m₁)
     (h₂ : OddFatalHistory k m₂) :
@@ -83,6 +82,8 @@ theorem earlier_odd_fatal_depth_residue (k m₁ m₂ : Nat)
     (k%18=15∧m₁%6=1)∨(k%18=16∧m₁%6=3) := by
   obtain ⟨a,e,z,v,hodd,ha,hk,hpath,hz,hu,hf,hh⟩ :=
     earlier_odd_fatal_entry_high k m₁ m₂ hlt h₁ h₂
+  have hsector := odd_entry_adjacent_fatal_level_sector k a e z v m₁
+    hodd ha hk hpath hz hu hf
   exact odd_entry_adjacent_fatal_depth_residue k a e z v m₁
     hsector hodd ha hk hh hpath hz hu hf
 
