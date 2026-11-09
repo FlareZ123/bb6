@@ -1,6 +1,6 @@
-import Low3Stage
+import Low3Delta
 import JPhysicalPrefix
-import BB429PhysicalBridge
+import BB429DeltaPhysicalBridge
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 30000000
@@ -8,7 +8,7 @@ set_option maxRecDepth 8192
 
 namespace BB429Low3Physical
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
-open BB429OddExcursion BB429SourceE1Return BB429Low3Stage
+open BB429OddExcursion BB429SourceE1Return BB429Low3Delta
 open BB429FinishScanEDelta BB429PhysicalBridge
 
 private theorem stage3_tape_character (v : Nat) (x : Int) :
@@ -164,12 +164,14 @@ private theorem physical_compose (m n : Nat) (a b c : Config)
   rw [BB6Bubble.run_add', h1]
   exact h2
 
-/-- Uniform physical #429 return from prepared J(v+2,2v+1) after
-    exactly 4v²+22v+54 successful primitive instructions. -/
-theorem low3_raw (v : Nat) :
+/-- Source-exact physical #429 return from prepared J(v+2,2v+1).
+    The final physical head is specified, with entire-tape equality up to translation.
+    The prepared chart input is separate from the genuine blank origin. -/
+theorem low3_raw_head (v : Nat) :
     ∃ c', BB6Coverage.run target429 (4*v*v+22*v+54)
       {state:=A,head:=0,tape:=jTape (v+2) (2*v+1)} = some c' ∧
-      Represents (junc 0 0 (4*v+10)) c' := by
+      Represents (junc 0 0 (4*v+10)) c' ∧
+      c'.head = -((2*v+6 : Nat) : Int) := by
   have hfirst : BB6Coverage.run target429
       (4*(v+1)*(v+1)+2*(v+1))
       {state:=A,head:=0,tape:=jTape (v+2) (2*v+1)} =
@@ -180,12 +182,13 @@ theorem low3_raw (v : Nat) :
         (jTape (v+2) (2*v+1)) (by omega)
         (by decide) (by decide) (by decide) (by decide)
         (low3_holes v) (low3_odds v) (low3_right v))
-  obtain ⟨c',hsecond,hrep⟩ := source_run_rep (12*v+48)
-      (stage3 v)
-      {state:=A,head:=2*(v:Int)+2,
-       tape:=negFill (jTape (v+2) (2*v+1)) (v+1)}
-      (stage3_represented v) (junc 0 0 (4*v+10)) (stage3_to_junc v)
-  refine ⟨c', ?_, hrep⟩
+  obtain ⟨c',hsecond,hrep,hhead⟩ :=
+      BB429DeltaPhysicalBridge.source_runWithDelta_rep (12*v+48)
+        (stage3 v)
+        {state:=A,head:=2*(v:Int)+2,
+         tape:=negFill (jTape (v+2) (2*v+1)) (v+1)}
+        (stage3_represented v) (junc 0 0 (4*v+10))
+        (-((4*v+8 : Nat) : Int)) (stage3_to_junc_delta v)
   have htotal := physical_compose
       (4*(v+1)*(v+1)+2*(v+1)) (12*v+48)
       {state:=A,head:=0,tape:=jTape (v+2) (2*v+1)}
@@ -196,9 +199,22 @@ theorem low3_raw (v : Nat) :
       4*v*v+22*v+54 := by
     simp [Nat.add_mul, Nat.mul_add]
     omega
-  simpa only [htime] using htotal
+  have hhead' : c'.head = -((2*v+6 : Nat) : Int) := by
+    have hh := hhead
+    simp only at hh
+    omega
+  exact ⟨c', by simpa only [htime] using htotal, hrep, hhead'⟩
+
+/-- Entire-tape return, as a corollary of the stronger signed-head theorem. -/
+theorem low3_raw (v : Nat) :
+    ∃ c', BB6Coverage.run target429 (4*v*v+22*v+54)
+      {state:=A,head:=0,tape:=jTape (v+2) (2*v+1)} = some c' ∧
+      Represents (junc 0 0 (4*v+10)) c' := by
+  obtain ⟨c',h,hrep,_⟩ := low3_raw_head v
+  exact ⟨c',h,hrep⟩
 
 #print axioms stage3_tape_rep
 #print axioms stage3_represented
+#print axioms low3_raw_head
 #print axioms low3_raw
 end BB429Low3Physical
