@@ -47,8 +47,6 @@ jobs:
           lake env lean Agent22RobustBandSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TwoStepPoleCancellationSource.lean" Agent49TwoStepPoleCancellationSource.lean
-          lake env lean -o .lake/build/lib/lean/Agent49TwoStepPoleCancellationSource.olean Agent49TwoStepPoleCancellationSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent22-623-robust-band/Agent22ThreeStepSource.lean" Agent22ThreeStepSource.lean
           lake env lean Agent22ThreeStepSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/ExactLeftSectorSource.lean" Agent49ExactLeftSectorSource.lean
