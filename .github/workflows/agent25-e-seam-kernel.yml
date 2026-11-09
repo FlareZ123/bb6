@@ -59,3 +59,25 @@ jobs:
           grep "paint_run.*\\[propext, Classical.choice, Quot.sound\\]" paint-coupling-axioms.log
           grep "seed0_marker_safe.*\\[propext, Classical.choice, Quot.sound\\]" paint-bridge-axioms.log
           grep "seed0_terminal_classification.*\\[propext, Classical.choice, Quot.sound\\]" paint-terminal-axioms.log
+
+      - name: Transport certified E marker into original D source and prove all-m strict first events
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
+        working-directory: ${{ runner.temp }}/e-seam-kernel
+        run: |
+          set -euo pipefail
+          python3 "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/Boundary.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent31-d-exceptional/ESeamSource.lean" .
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_source_frame.py" "$PWD"
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_source_physical.py" "$PWD"
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_seam_completion.py" "$PWD"
+          lean -o Boundary.olean Boundary.lean
+          lean -o ESeamSource.olean ESeamSource.lean
+          lean -o SourceSeamFrame.olean SourceSeamFrame.lean
+          lean -o SourcePhysicalTransfer.olean SourcePhysicalTransfer.lean
+          lean -o SourceSeedMatch.olean SourceSeedMatch.lean
+          lean SourceSeamComplete.lean | tee original-source-complete-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' original-source-complete-axioms.log; then exit 1; fi
+          grep -F "source_marker_safe' depends on axioms: [propext, Classical.choice, Quot.sound]" original-source-complete-axioms.log
+          grep -F "source_e_all_m_first_event' depends on axioms: [propext, Classical.choice, Quot.sound]" original-source-complete-axioms.log
