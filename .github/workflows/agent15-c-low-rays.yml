@@ -1,4 +1,4 @@
-name: Agent 15 Machine C two low rays original-source Lean audit
+name: Agent 15 Machine C low-ray original-source Lean audit
 on:
   workflow_dispatch:
 permissions:
@@ -14,7 +14,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Reconstruct two Lean sources with exact archive SHA and compile unchanged source dependencies
+      - name: Verify pinned Lean source archives and compile original Machine C dependencies
         shell: bash
         run: |
           set -euo pipefail
@@ -25,6 +25,7 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a15-low-rays/
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse,BounceAllExact,SectionAllInverse}.lean /tmp/a15-low-rays/
           cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a15-low-rays/
+          cp im-results/agent24-c48/EvenEvenInverse.lean /tmp/a15-low-rays/
           cp im-results/agent15-c-low-rays/{Agent15RayParam,Agent15TwoFourSharp}.lean /tmp/a15-low-rays/
           cd /tmp/a15-low-rays
           base64 -d "$GITHUB_WORKSPACE/im-results/agent15-c-low-rays/Agent15Rays.tar.xz.b64" > Agent15Rays.tar.xz
@@ -32,11 +33,15 @@ jobs:
           tar -xJf Agent15Rays.tar.xz
           echo "f16f14de65cd1ccc4091783c58799ac55286f710d60eb2f8afcce2d430a066c8  Agent15RayInverse.lean" | sha256sum -c -
           echo "536fb88b54f513c0d60f435a26ba400965c786ef46146c2b9d4fcedae0e50cfc  Agent15RayReach.lean" | sha256sum -c -
+          base64 -d "$GITHUB_WORKSPACE/im-results/agent15-c-low-rays/Agent15Low107.lean.xz.b64" > Agent15Low107.lean.xz
+          echo "7aa2f8c87feee180de0df0dae816d0d71c3a15f4e6df77e969beaf9bf5c7f4b8  Agent15Low107.lean.xz" | sha256sum -c -
+          xz -d Agent15Low107.lean.xz
+          echo "9f00bb678114ddbb8c3be8be2c9c899c1d7413a53109037a46a1eb46ac81a341  Agent15Low107.lean" | sha256sum -c -
           # Normalize one import ordering typo in the archived raw source; all theorem text is unchanged.
           python3 -c "from pathlib import Path; p=Path('Agent15RayInverse.lean'); s=p.read_text(); p.write_text(s.replace('set_option maxRecDepth 8192\\nimport Lean.Elab.Tactic.Omega', 'import Lean.Elab.Tactic.Omega\\nset_option maxRecDepth 8192', 1))"
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff Agent15RayInverse Agent15RayReach Agent15RayParam Agent15TwoFourSharp; do
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff EvenEvenInverse Agent15RayInverse Agent15RayReach Agent15RayParam Agent15TwoFourSharp Agent15Low107; do
             echo "Original-source Lean compile: $f"
             lean -o "$f.olean" "$f.lean"
           done
