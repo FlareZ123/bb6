@@ -96,6 +96,7 @@ jobs:
           lean -o "$b/MiddleLowOddExact.olean" "$b/MiddleLowOddExact.lean"
           lean -o "$b/DoubleOddGapRoot.olean" "$b/DoubleOddGapRoot.lean"
           lean -o "$b/DoubleOddGapFamily.olean" "$b/DoubleOddGapFamily.lean"
+          lean -o "$b/FatalOddFeederGap.olean" "$b/FatalOddFeederGap.lean"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
