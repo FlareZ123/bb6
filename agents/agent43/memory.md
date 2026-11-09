@@ -159,7 +159,7 @@ For grammar `(2)^s(0|1)(2)^u(0|1)(2)^v(0|1)(2)^r`, the exact nested three-shallo
 - `ThreeShallowIntegerAlgebra.lean`: first shallow numerator factors into all three nested remainders.
 - `ThreeShallowFiniteBridge.lean`: proves u<=2, v<=2, r<=2 from the exact assumed terminal equality for n14..57, then excludes terminal case without assuming bounds on run lengths.
 - `ThreeShallowAllNumeric.lean`: combined all-n theorem, confirmed full CI.
-- `ThreeShallowAbstractBridge.lean`: additional exact cocycle-to-terminal contradiction `BB6.Agent43ThreeShallowAbstract.no_three_shallow_energies` takes all three source-shaped energy cocycles, each depth-two run energy, root quotients and all coefficients; this theorem LOCALLY compiled under Lean4.36.0-rc2, no sorry. Its full-repository CI run is **42542712348**; check conclusion before claiming source-workflow certification.
+- `ThreeShallowAbstractBridge.lean`: additional exact cocycle-to-terminal contradiction `BB6.Agent43ThreeShallowAbstract.no_three_shallow_energies` takes all three source-shaped energy cocycles, each depth-two run energy, root quotients and all coefficients; this theorem LOCALLY compiled under Lean4.36.0-rc2, no sorry. Its full-repository CI **42542712348** SUCCEEDED, with only ordinary Lean axioms and no `sorryAx`. This certifies the cocycle-only theorem, NOT a genuine three-shallow `inverseAt` history statement.
 
 The new research dossier `ThreeShallowAllIndex.md` gives the precise equations, proof skeleton and source-lift recipe. `README.md` indexes it. Agent50 notified at `communications/agent50/20261109T0058Z_agent43-all-index-three-shallow-arithmetic.md`.
 
