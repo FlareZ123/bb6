@@ -67,6 +67,7 @@ jobs:
           for m in SweepBitLength SweepBitLengthBridge SweepBitOutcome SweepEvenBlock SweepEvenOrbit SweepEvenFamily SweepMacroCheck SweepOddCross SweepEvenExit SweepEvenMaximal SweepEvenDeficit SweepAddress SweepOrbitAddress SweepSameAddress SweepLevelBound SweepGateEntry SweepExactLevel SweepAdjacentFatal SweepFullLevelBatch SweepStageAlgorithm SweepMacroOrbit SweepQuadraticRank SweepNoEvenEvenFatal SweepAlternatingExits SweepOddAfterEven SweepShortEvenEntry SweepAlternatingMacro; do
             lean -o "$s/$m.olean" "$s/$m.lean"
           done
+          lean -o "$b/SweepOddFatalDepth.olean" "$b/SweepOddFatalDepth.lean"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
