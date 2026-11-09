@@ -210,6 +210,7 @@ theorem source_shallow_profile
     ∃ alpha C L O : Nat,
       1≤alpha ∧ alpha≤2 ∧ 392≤C ∧ 56≤L ∧ L≤84 ∧ O≤232 ∧
       alpha=t+1 ∧
+      (alpha,C,L,O)=BB6.Agent43TwoShallowFinite.triple t ∧
       ((2:Int)^alpha)* I ((2:Int)^n)
         ((↑(2*k-4):Int)+4*(↑(M+t+1):Int)+4*(n:Int)+20)
         ((M:Int)+(n:Int)+6+(alpha:Int)) =
@@ -221,13 +222,13 @@ theorem source_shallow_profile
   let Z : Int := (M:Int)+(n:Int)+6
   by_cases htzero : t=0
   · subst t
-    refine ⟨1,588,84,232,by decide,by decide,by decide,by decide,by decide,by decide,by decide,?_⟩
+    refine ⟨1,588,84,232,by decide,by decide,by decide,by decide,by decide,by decide,by decide,by rfl,?_⟩
     have hW := shallow_zero n B D M k c hmass hb hb4 hd hi hk hc
     unfold I
     omega
   · have htone : t=1 := by omega
     subst t
-    refine ⟨2,392,56,136,by decide,by decide,by decide,by decide,by decide,by decide,by decide,?_⟩
+    refine ⟨2,392,56,136,by decide,by decide,by decide,by decide,by decide,by decide,by decide,by rfl,?_⟩
     have hW := shallow_one n B D M k c hmass hb hb4 hd hi hk hc
     unfold I
     omega
@@ -242,9 +243,9 @@ open BB6.Agent43TwoShallowModel
 /-- Above n=47, no original legal source inverse word with two shallow edges
 of depths 0 or 1, and otherwise only depth-two edges, reaches the exact wall.
 Run lengths are unrestricted and may independently be zero. -/
-theorem source_no_two_shallow_word_wall_large
+theorem source_no_two_shallow_word_wall_all
     (n s u r t1 t2 bp dp mp k1 c1 B D M k2 c2 be de me : Nat)
-    (hn : 48≤n) (ht1 : t1≤1) (ht2 : t2≤1)
+    (hn : 14≤n) (ht1 : t1≤1) (ht2 : t2≤1)
     (hpre : SourceTwoChain n s (14*2^n-2*n-16) 3 0 bp dp mp)
     (hb1 : 8≤bp) (hb14 : bp%4=0) (hd1 : dp%2=1)
     (hi1 : inverseAt bp dp t1=some (k1,c1))
@@ -271,10 +272,10 @@ theorem source_no_two_shallow_word_wall_large
   have hafter2Mass : (2*k2-4)+(c2+4)+2*(M+t2+1)+2*n+13=14*2^n := by
     omega
   have hsufModel := two_chain_model n r _ _ _ _ _ _ hsuf hafter2Mass
-  obtain ⟨alpha,C1,L1,O1,hAlpha1,hAlpha1max,hC1,hL1,hL1max,hO1,halpha1,hSh1⟩ :=
+  obtain ⟨alpha,C1,L1,O1,hAlpha1,hAlpha1max,hC1,hL1,hL1max,hO1,halpha1,hprofile1,hSh1⟩ :=
     source_shallow_profile n bp dp mp t1 k1 c1 hpreMass
       hb1 hb14 hd1 hi1 hk1 hc1 ht1
-  obtain ⟨beta,C2,L2,O2,hBeta1,hBeta1max,hC2,hL2,hL2max,hO2,hbeta1,hSh2⟩ :=
+  obtain ⟨beta,C2,L2,O2,hBeta1,hBeta1max,hC2,hL2,hL2max,hO2,hbeta1,hprofile2,hSh2⟩ :=
     source_shallow_profile n B D M t2 k2 c2 hmidMass
       hb2 hb24 hd2 hi2 hk2 hc2 ht2
   let Wpre : Int := (bp:Int)+4*(mp:Int)+4*(n:Int)+20
@@ -320,10 +321,30 @@ theorem source_no_two_shallow_word_wall_large
   have hwallInt : Wend=12*(2:Int)^n := by
     dsimp [Wend]
     exact_mod_cast hwall
-  exact no_two_shallow_model_from_source_coefficients n s u r alpha beta C1 C2 L1 L2 O1 O2
-    hn hAlpha1 hAlpha1max hBeta1 hBeta1max hC1 hC2 hL1 hL1max hL2 hL2max hO1 hO2
+  exact no_two_shallow_model_from_source_coefficients n s u r alpha beta C1 C2 L1 L2 O1 O2 t1 t2
+    hn ht1 ht2 hprofile1 hprofile2 hAlpha1 hAlpha1max hBeta1 hBeta1max hC1 hC2 hL1 hL1max hL2 hL2max hO1 hO2
     Wpre Bpre Wafter1 Wmid Bmid Wafter2 Wend Bend
     hpreModel' hSh1' hmidModel' hSh2' hsufModel' hwallInt
 
+/-- Compatibility corollary retaining the original n >= 48 interface. -/
+theorem source_no_two_shallow_word_wall_large
+    (n s u r t1 t2 bp dp mp k1 c1 B D M k2 c2 be de me : Nat)
+    (hn : 48≤n) (ht1 : t1≤1) (ht2 : t2≤1)
+    (hpre : SourceTwoChain n s (14*2^n-2*n-16) 3 0 bp dp mp)
+    (hb1 : 8≤bp) (hb14 : bp%4=0) (hd1 : dp%2=1)
+    (hi1 : inverseAt bp dp t1=some (k1,c1))
+    (hk1 : 2≤k1) (hc1 : c1%2=1)
+    (hmid : SourceTwoChain n u (2*k1-4) (c1+4) (mp+t1+1) B D M)
+    (hb2 : 8≤B) (hb24 : B%4=0) (hd2 : D%2=1)
+    (hi2 : inverseAt B D t2=some (k2,c2))
+    (hk2 : 2≤k2) (hc2 : c2%2=1)
+    (hsuf : SourceTwoChain n r (2*k2-4) (c2+4) (M+t2+1) be de me)
+    (hwall : be+4*me+4*n+20=12*2^n) : False := by
+  exact source_no_two_shallow_word_wall_all
+    n s u r t1 t2 bp dp mp k1 c1 B D M k2 c2 be de me
+    (by omega) ht1 ht2 hpre hb1 hb14 hd1 hi1 hk1 hc1
+    hmid hb2 hb24 hd2 hi2 hk2 hc2 hsuf hwall
+
+#print axioms BB6.Agent43SourceWord.source_no_two_shallow_word_wall_all
 #print axioms BB6.Agent43SourceWord.source_no_two_shallow_word_wall_large
 end BB6.Agent43SourceWord
