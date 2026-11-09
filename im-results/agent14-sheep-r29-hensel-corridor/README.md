@@ -256,6 +256,28 @@ These are exact union counts over every residue of their complete periods, check
 
 [`SheepInteriorGate.lean`](./SheepInteriorGate.lean) proves the uniform `interior_nine` and `interior_hidden_zero` lemmas in Lean 4.36.0-rc2, with axioms `[propext, Quot.sound]` only, importing the authentic-source-shaped `SheepChain2.Chain2` relation. This module still requires an upstream original-TM import for a single complete source-level formalization of the whole corridor argument. [`exit_val_sieve.py`](./exit_val_sieve.py) independently enumerates the two exact small residue-class densities for Z and X.
 
+## Exact deepest-node hidden-run obstruction density
+
+The maximum-length endpoint `x_{L_r(k)}` of the distinguished genuine P tail is the **only** node on that tail at which a predecessor of hidden odd-run length `h>0` might remain possible. A stronger density theorem determines precisely how often even that necessary mod-three condition can occur.
+
+Write `t=v3(N_r(k))−10≥0`. Since both denominator valuations `e_r=4,10` are even, the offset valuation `v3(Y_r(k)+12)=10−e_r+t` has the same parity as t. The exact maximal-tail identity therefore has
+
+```text
+x_L+12 = 8^L * 3^(t%2) * u,   3∤u.
+```
+
+If t is odd, `x_L≡0 (mod3)`, hence **every** genuine incoming E edge must have hidden h=0. If t is even, `x_L≡±1 (mod3)`; h>0 requires `x_L≡1 (mod3)`, since all h-positive true E targets are `1+3^h u'`.
+
+The unique Hensel root modulo `3^t` and its three distinct lifts show that, at each exact valuation t, **the two non-lifting next digits produce normalized units `+1` and `−1` modulo three exactly once each**. Thus the two signs of `x_L` for even t have equal arithmetic density. The exact valuation distribution is `Pr[v3(N_r(k))=10+t]=(2/3)*3^(−t)`. Summing the geometric series gives
+
+```text
+Pr[t odd] = 1/4;
+Pr[t even, x_L≡1 (mod3)] = 3/8;
+Pr[t even, x_L≡2 (mod3)] = 3/8.
+```
+
+Consequently, for **every** one of the eight families, the deepest distinguished P node has `x_L≠1 (mod3)` for an **exact natural density 5/8** of exponent parameters k. For all such k, *every* incoming E predecessor into that deepest node has hidden h=0. The remaining density 3/8 merely passes the necessary mod-three test for a positive-h edge; no such edge is claimed to exist. The argument is elementary exact all-parameter 3-adic arithmetic, with the preceding kernel-proved `interior_hidden_zero` reasoning supplying the shape implication. This 5/8 density theorem has **not** been separately assembled in Lean and is not a blank-seed reachability result.
+
 ## Reusable 3-adic affine-corridor principle
 
 The eight cases are instances of a source-independent lemma.
