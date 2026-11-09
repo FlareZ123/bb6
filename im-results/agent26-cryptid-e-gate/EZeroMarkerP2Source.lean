@@ -125,8 +125,7 @@ theorem eZ_base_front (m r : Nat) (ys : List Bool) :
       [true,true,false] ++ (pairs r ++ (false::ys)),0⟩ : Cfg) = _
   rw [run_add (16+4*r) 4,a_front_Z_short]
   have h := cZ_finish4 m 1 (List.replicate (2*r+6) true ++ ys)
-  simpa only [List.replicate_one,List.singleton_append,
-    List.append_assoc] using h
+  simpa [cWalk,oppairs] using h
 
 /-- Full arbitrary-symbolic E p2 right grammar, all q>=1 and all
     marker depths; q=1 uses the special short-base A-front proof. -/
