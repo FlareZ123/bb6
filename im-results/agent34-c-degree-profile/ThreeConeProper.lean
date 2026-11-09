@@ -60,6 +60,17 @@ theorem exactly_two_not_three (x y : Nat)
   exact BB6.Agent34Three.no_three_edges u v b l a k x y hy hsector
     hthird hsecond hfirst
 
+
+/-- The strict two-step/non-three-step residue cone contains four of the
+256 residue pairs (x mod 16, y mod 16), exactly density 1/64. -/
+theorem strict_residue_count :
+    ((List.range 16).flatMap fun x =>
+      (List.range 16).filter fun y =>
+        ((x+y)%8==1 && y%16==10) || ((x+y)%8==3 && y%16==2)).length = 4 := by
+  decide
+
+#print axioms strict_residue_count
+
 #print axioms direct_predecessor
 #print axioms in_two_step_image
 #print axioms exactly_two_not_three
