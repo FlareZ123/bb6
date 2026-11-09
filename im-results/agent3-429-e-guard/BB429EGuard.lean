@@ -160,6 +160,102 @@ theorem root_aGate_zero_only_B1 (n : Nat) (a : Config)
       obtain ⟨b,hb,hs⟩ := root_aGate_zero_has_B1_parent n a hr hg
       exact ⟨n,b,rfl,hb,hs⟩
 
+
+/-- An alternating fatal A corridor with at least one block has its
+    third physical cell blank. -/
+private theorem aGate_succ_third_zero (k : Nat) (a : Config)
+    (hg : BB429AGate.aGate (k+1) a) :
+    a.tape (a.head+3)=false := by
+  cases k with
+  | zero =>
+      have h := hg.2.2.1
+      have heq : a.head + 2 * ((0+1:Nat):Int) + 1 = a.head + 3 := by omega
+      rw [heq] at h
+      exact h
+  | succ k =>
+      have h := (hg.2.1 1 (by omega : 1<k+1+1)).1
+      have heq : a.head + 1 + 2 * ((1 : Nat) : Int) = a.head + 3 := by omega
+      rw [heq] at h
+      exact h
+
+/-- Two original E/1 left moves followed by E/0 can never produce an
+    A/0 fatal corridor with a nonempty 01 block, from any physical tape.
+    Both E/1 instructions write 1, marking the new A head's third
+    right cell, while the corridor needs that cell blank. -/
+theorem two_E1_then_E0_no_A_corridor (e : Config) (k : Nat)
+    (he : readSlot e=(E,true))
+    (hprev : e.tape (e.head-1)=true)
+    (hprev2 : e.tape (e.head-2)=false) :
+    ∀ a, run target429 3 e=some a → ¬BB429AGate.aGate (k+1) a := by
+  let mv : Move := ⟨true,false,E⟩
+  let av : Move := ⟨false,false,A⟩
+  let e1 := applyMove e mv
+  let e0 := applyMove e1 mv
+  let a0 := applyMove e0 av
+  have step0 : rawStep target429 e=some e1 := by
+    have hrow : target429 (readSlot e)=some mv := by
+      simpa [he,mv] using
+        (show target429 (E,true)=some ⟨true,false,E⟩ by decide)
+    simp [rawStep,hrow,e1]
+  have head1 : e1.head=e.head-1 := by rfl
+  have e1slot : readSlot e1=(E,true) := by
+    change (e1.state,e1.tape e1.head)=(E,true)
+    apply Prod.ext
+    · rfl
+    · have ne : e.head-1≠e.head := by omega
+      change (if e.head + -1 = e.head then true else e.tape (e.head + -1)) = true
+      have heq : e.head + -1 = e.head-1 := by omega
+      rw [heq]
+      simp [ne,hprev]
+  have step1 : rawStep target429 e1=some e0 := by
+    have hrow : target429 (readSlot e1)=some mv := by
+      simpa [e1slot,mv] using
+        (show target429 (E,true)=some ⟨true,false,E⟩ by decide)
+    simp [rawStep,hrow,e0]
+  have head0 : e0.head=e.head-2 := by
+    simp [e0,e1,mv,applyMove]; omega
+  have e0slot : readSlot e0=(E,false) := by
+    change (e0.state,e0.tape e0.head)=(E,false)
+    apply Prod.ext
+    · rfl
+    · have ne1 : e.head-2≠e.head-1 := by omega
+      have ne2 : e.head-2≠e.head := by omega
+      change (if e.head + -1 + -1 = e.head + -1 then true else
+        if e.head + -1 + -1 = e.head then true else e.tape (e.head + -1 + -1)) = false
+      have heq1 : e.head + -1 = e.head-1 := by omega
+      rw [heq1]
+      have heq3 : e.head-1 + -1 = e.head-2 := by omega
+      rw [heq3]
+      simp [ne1,ne2,hprev2]
+  have step2 : rawStep target429 e0=some a0 := by
+    have hrow : target429 (readSlot e0)=some av := by
+      simpa [e0slot,av] using
+        (show target429 (E,false)=some ⟨false,false,A⟩ by decide)
+    simp [rawStep,hrow,a0]
+  have run3 : run target429 3 e=some a0 := by
+    change ((rawStep target429 e).bind (rawStep target429)).bind (rawStep target429)=some a0
+    rw [step0]
+    simp only [Option.bind_some]
+    rw [step1]
+    simpa only [Option.bind_some] using step2
+  have hhead : a0.head=e.head-3 := by
+    simp [a0,e0,e1,av,mv,applyMove]; omega
+  have hmark : a0.tape (a0.head+3)=true := by
+    have h1 : e.head-1≠e.head := by omega
+    have h2 : e.head-2≠e.head := by omega
+    have h3 : e.head-3+3=e.head := by omega
+    have h4 : e.head≠e.head-2 := by omega
+    have hx : a0.tape e.head=true := by
+      simp [a0,e0,e1,av,mv,applyMove,h1,h2,h4] <;> omega
+    simpa [hhead,h3] using hx
+  intro a ha hg
+  have heq : a=a0 := Option.some.inj (ha.symm.trans run3)
+  subst a
+  have hz := aGate_succ_third_zero k a0 hg
+  simp [hz] at hmark
+
+#print axioms two_E1_then_E0_no_A_corridor
+
 #print axioms root_aGate_zero_has_B1_parent
 #print axioms root_aGate_zero_only_B1
 
