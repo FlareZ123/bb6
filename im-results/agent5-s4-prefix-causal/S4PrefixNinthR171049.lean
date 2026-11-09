@@ -55,97 +55,97 @@ theorem r171049 : return9Fast 171049 = 171050 := by
   have h1 : prefixRunFast (1024*1) block0 = block1 := by simpa using piece0
   have h2 : prefixRunFast (1024*2) block0 = block2 := by
     calc
-      prefixRunFast (1024*2) block0 = prefixRunFast (1024*1+1024) block0 := by omega
+      prefixRunFast (1024*2) block0 = prefixRunFast (1024*1+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*1) block0) := prefixRunFast_add (1024*1) 1024 block0
       _ = block2 := by rw [h1, piece1]
   have h3 : prefixRunFast (1024*3) block0 = block3 := by
     calc
-      prefixRunFast (1024*3) block0 = prefixRunFast (1024*2+1024) block0 := by omega
+      prefixRunFast (1024*3) block0 = prefixRunFast (1024*2+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*2) block0) := prefixRunFast_add (1024*2) 1024 block0
       _ = block3 := by rw [h2, piece2]
   have h4 : prefixRunFast (1024*4) block0 = block4 := by
     calc
-      prefixRunFast (1024*4) block0 = prefixRunFast (1024*3+1024) block0 := by omega
+      prefixRunFast (1024*4) block0 = prefixRunFast (1024*3+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*3) block0) := prefixRunFast_add (1024*3) 1024 block0
       _ = block4 := by rw [h3, piece3]
   have h5 : prefixRunFast (1024*5) block0 = block5 := by
     calc
-      prefixRunFast (1024*5) block0 = prefixRunFast (1024*4+1024) block0 := by omega
+      prefixRunFast (1024*5) block0 = prefixRunFast (1024*4+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*4) block0) := prefixRunFast_add (1024*4) 1024 block0
       _ = block5 := by rw [h4, piece4]
   have h6 : prefixRunFast (1024*6) block0 = block6 := by
     calc
-      prefixRunFast (1024*6) block0 = prefixRunFast (1024*5+1024) block0 := by omega
+      prefixRunFast (1024*6) block0 = prefixRunFast (1024*5+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*5) block0) := prefixRunFast_add (1024*5) 1024 block0
       _ = block6 := by rw [h5, piece5]
   have h7 : prefixRunFast (1024*7) block0 = block7 := by
     calc
-      prefixRunFast (1024*7) block0 = prefixRunFast (1024*6+1024) block0 := by omega
+      prefixRunFast (1024*7) block0 = prefixRunFast (1024*6+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*6) block0) := prefixRunFast_add (1024*6) 1024 block0
       _ = block7 := by rw [h6, piece6]
   have h8 : prefixRunFast (1024*8) block0 = block8 := by
     calc
-      prefixRunFast (1024*8) block0 = prefixRunFast (1024*7+1024) block0 := by omega
+      prefixRunFast (1024*8) block0 = prefixRunFast (1024*7+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*7) block0) := prefixRunFast_add (1024*7) 1024 block0
       _ = block8 := by rw [h7, piece7]
   have h9 : prefixRunFast (1024*9) block0 = block9 := by
     calc
-      prefixRunFast (1024*9) block0 = prefixRunFast (1024*8+1024) block0 := by omega
+      prefixRunFast (1024*9) block0 = prefixRunFast (1024*8+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*8) block0) := prefixRunFast_add (1024*8) 1024 block0
       _ = block9 := by rw [h8, piece8]
   have h10 : prefixRunFast (1024*10) block0 = block10 := by
     calc
-      prefixRunFast (1024*10) block0 = prefixRunFast (1024*9+1024) block0 := by omega
+      prefixRunFast (1024*10) block0 = prefixRunFast (1024*9+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*9) block0) := prefixRunFast_add (1024*9) 1024 block0
       _ = block10 := by rw [h9, piece9]
   have h11 : prefixRunFast (1024*11) block0 = block11 := by
     calc
-      prefixRunFast (1024*11) block0 = prefixRunFast (1024*10+1024) block0 := by omega
+      prefixRunFast (1024*11) block0 = prefixRunFast (1024*10+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*10) block0) := prefixRunFast_add (1024*10) 1024 block0
       _ = block11 := by rw [h10, piece10]
   have h12 : prefixRunFast (1024*12) block0 = block12 := by
     calc
-      prefixRunFast (1024*12) block0 = prefixRunFast (1024*11+1024) block0 := by omega
+      prefixRunFast (1024*12) block0 = prefixRunFast (1024*11+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*11) block0) := prefixRunFast_add (1024*11) 1024 block0
       _ = block12 := by rw [h11, piece11]
   have h13 : prefixRunFast (1024*13) block0 = block13 := by
     calc
-      prefixRunFast (1024*13) block0 = prefixRunFast (1024*12+1024) block0 := by omega
+      prefixRunFast (1024*13) block0 = prefixRunFast (1024*12+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*12) block0) := prefixRunFast_add (1024*12) 1024 block0
       _ = block13 := by rw [h12, piece12]
   have h14 : prefixRunFast (1024*14) block0 = block14 := by
     calc
-      prefixRunFast (1024*14) block0 = prefixRunFast (1024*13+1024) block0 := by omega
+      prefixRunFast (1024*14) block0 = prefixRunFast (1024*13+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*13) block0) := prefixRunFast_add (1024*13) 1024 block0
       _ = block14 := by rw [h13, piece13]
   have h15 : prefixRunFast (1024*15) block0 = block15 := by
     calc
-      prefixRunFast (1024*15) block0 = prefixRunFast (1024*14+1024) block0 := by omega
+      prefixRunFast (1024*15) block0 = prefixRunFast (1024*14+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*14) block0) := prefixRunFast_add (1024*14) 1024 block0
       _ = block15 := by rw [h14, piece14]
   have h16 : prefixRunFast (1024*16) block0 = block16 := by
     calc
-      prefixRunFast (1024*16) block0 = prefixRunFast (1024*15+1024) block0 := by omega
+      prefixRunFast (1024*16) block0 = prefixRunFast (1024*15+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*15) block0) := prefixRunFast_add (1024*15) 1024 block0
       _ = block16 := by rw [h15, piece15]
   have h17 : prefixRunFast (1024*17) block0 = block17 := by
     calc
-      prefixRunFast (1024*17) block0 = prefixRunFast (1024*16+1024) block0 := by omega
+      prefixRunFast (1024*17) block0 = prefixRunFast (1024*16+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*16) block0) := prefixRunFast_add (1024*16) 1024 block0
       _ = block17 := by rw [h16, piece16]
   have h18 : prefixRunFast (1024*18) block0 = block18 := by
     calc
-      prefixRunFast (1024*18) block0 = prefixRunFast (1024*17+1024) block0 := by omega
+      prefixRunFast (1024*18) block0 = prefixRunFast (1024*17+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*17) block0) := prefixRunFast_add (1024*17) 1024 block0
       _ = block18 := by rw [h17, piece17]
   have h19 : prefixRunFast (1024*19) block0 = block19 := by
     calc
-      prefixRunFast (1024*19) block0 = prefixRunFast (1024*18+1024) block0 := by omega
+      prefixRunFast (1024*19) block0 = prefixRunFast (1024*18+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*18) block0) := prefixRunFast_add (1024*18) 1024 block0
       _ = block19 := by rw [h18, piece18]
   have h20 : prefixRunFast (1024*20) block0 = block20 := by
     calc
-      prefixRunFast (1024*20) block0 = prefixRunFast (1024*19+1024) block0 := by omega
+      prefixRunFast (1024*20) block0 = prefixRunFast (1024*19+1024) block0 := by rfl
       _ = prefixRunFast 1024 (prefixRunFast (1024*19) block0) := prefixRunFast_add (1024*19) 1024 block0
       _ = block20 := by rw [h19, piece19]
   have heq : prefixRunFast 20480 (cycle8PeriodicStart ++ [171049]) =
