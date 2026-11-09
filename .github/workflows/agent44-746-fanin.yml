@@ -90,6 +90,7 @@ jobs:
           lean -o "$v/SweepOdd27RootGap.olean" "$v/SweepOdd27RootGap.lean"
           lean -o "$v/SweepOdd27RootFamily.olean" "$v/SweepOdd27RootFamily.lean"
           lean -o "$b/UpperHighRootGap.olean" "$b/UpperHighRootGap.lean"
+          lean -o "$b/UpperHighRootFamily.olean" "$b/UpperHighRootFamily.lean"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
