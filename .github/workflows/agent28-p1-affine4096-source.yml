@@ -1,0 +1,75 @@
+name: Agent28 P1 residual 78 affine cylinders (manual source certification)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged original P1 dependencies
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param"
+          for m in GParity GInverse PosEvenForm ResetGate; do
+            lean -o "im-results/agent1-p1-map/$m.olean" "im-results/agent1-p1-map/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            lean -o "im-results/agent47-p1-finite-inverse/$m.olean" "im-results/agent47-p1-finite-inverse/$m.lean"
+          done
+          for m in MassInverse OddConeMass; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+            lean -o "im-results/agent50-p1-residue/$m.olean" "im-results/agent50-p1-residue/$m.lean"
+          done
+          lean -o im-results/agent4-p1-cone2398/ConeKernel.olean im-results/agent4-p1-cone2398/ConeKernel.lean
+          for m in P1Deep2 P1TwoRoot P1TwoFeeder P1TwoIff P1TwoCritical P1TwoSector; do
+            lean -o "im-results/agent45-p1-deep-two/$m.olean" "im-results/agent45-p1-deep-two/$m.lean"
+          done
+          for m in QuarterGap ShortConeGap ShortConeBridge MediumConeGap MediumConeReach; do
+            lean -o "im-results/agent1-p1-quarter/$m.olean" "im-results/agent1-p1-quarter/$m.lean"
+          done
+          for m in ShadowDepthArithmetic ShadowAlgebra ShadowCast ShadowParityArithmetic ShadowDepthSource ShadowSourceTransport ShadowParitySource ShadowSourceStep ShadowConeLift ShadowFeederRoots ShadowGraphBridge ShadowGraphFeeders ShadowQ29Finite ShadowQ29No256 ShadowQ29Graph ShadowQ29DepthArithmetic ShadowQ29DepthSource ShadowFiniteInvariant ShadowNoExceptionalGeneral; do
+            lean -o "im-results/agent9-p1-shadow/$m.olean" "im-results/agent9-p1-shadow/$m.lean"
+          done
+          lean -o im-results/agent8-p1-shadow-cylinder/CylinderPower.olean im-results/agent8-p1-shadow-cylinder/CylinderPower.lean
+          for m in GenericBudgetBlocked ShadowFiniteBudget ShadowDepthBudgetArithmetic ShadowDepthBudgetSource ShadowFiniteBudgetK; do
+            lean -o "im-results/agent9-param-budget/$m.olean" "im-results/agent9-param-budget/$m.lean"
+          done
+          lean -o im-results/agent9-p1-k10-budget12/GenericShadow41K.olean im-results/agent9-p1-k10-budget12/GenericShadow41K.lean
+          for m in GenericCritical41K AffineGeneric AffineAdaptive; do
+            lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean"
+          done
+      - name: Compile original precision and arbitrary-budget P1 bridge
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param"
+          for m in UniformPrecisionStep UniformPrecisionPath UniformSourceCone GenericShadowReachParamK GenericCriticalReachParamK; do
+            lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean"
+          done
+      - name: Verify parametric affine checker, unbounded source reachability and genuine P1 gate
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param"
+          lean -o im-results/agent13-p1-adaptive-param/AdaptiveParam.olean im-results/agent13-p1-adaptive-param/AdaptiveParam.lean | tee /tmp/agent13-param-audit.log
+          lean im-results/agent13-p1-adaptive-param/AffineParamRoot.lean | tee -a /tmp/agent13-param-audit.log
+          grep -F 'critical_unreachable_of_affine_check' /tmp/agent13-param-audit.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent13-param-audit.log; then exit 1; fi
+      - name: Source audit of 78 exact affine cylinders
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param:im-results/agent28-p1-affine4096"
+          lean -o im-results/agent13-p1-adaptive-param/AffineParamRoot.olean im-results/agent13-p1-adaptive-param/AffineParamRoot.lean
+          lean -o im-results/agent28-p1-affine4096/QNodesA.olean im-results/agent28-p1-affine4096/QNodesA.lean | tee /tmp/agent28-78.log
+          lean -o im-results/agent28-p1-affine4096/QNodesB.olean im-results/agent28-p1-affine4096/QNodesB.lean | tee -a /tmp/agent28-78.log
+          lean im-results/agent28-p1-affine4096/QFinal.lean | tee -a /tmp/agent28-78.log
+          grep -F 'newQ_unreachable' /tmp/agent28-78.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent28-78.log; then exit 1; fi
