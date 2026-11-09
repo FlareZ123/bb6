@@ -1,5 +1,7 @@
 import CNewM1
 import Lean.Elab.Tactic.Omega
+set_option maxRecDepth 8192
+set_option maxHeartbeats 0
 
 namespace BB6.Agent4Four
 open BB6.Agent46
