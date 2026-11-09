@@ -155,6 +155,59 @@ theorem ternaryBlock_diagonal_escape (w : List Digit) :
     omega
   simp [highLevelNext,hs]
 
+
+/-- Apply an arbitrary finite neutral-residue word to any positive input block
+count; the initial block may be halting or surviving. -/
+def embedBlock (w : List Digit) (b : Nat) : Nat :=
+  match w with
+  | [] => b
+  | .zero :: t => 9*embedBlock t b
+  | .six :: t => 9*embedBlock t b+6
+  | .eight :: t => 9*embedBlock t b+8
+
+def embedCharge : List Digit → Nat
+  | [] => 0
+  | .zero :: t => embedCharge t+2
+  | .six :: t => embedCharge t+4
+  | .eight :: t => embedCharge t+2
+
+theorem embedBlock_ge (w : List Digit) (b : Nat) (hb : 0<b) :
+    b ≤ embedBlock w b := by
+  induction w with
+  | nil => simp [embedBlock]
+  | cons bit w ih =>
+    cases bit <;> simp only [embedBlock] <;> omega
+
+theorem embedBlock_positive (w : List Digit) (b : Nat) (hb : 0<b) :
+    0 < embedBlock w b := by
+  have h := embedBlock_ge w b hb
+  omega
+
+/-- All three neutral symbols commute with the original drain for every
+initial first counter, and propagate successes and failures exactly. -/
+theorem embed_ninefold (w : List Digit) (a b d : Nat) (hb : 0<b) :
+    drainB a (embedBlock w b) d =
+      drainB a b (d+3*(embedBlock w b-b)+embedCharge w) := by
+  induction w generalizing d with
+  | nil => simp [embedBlock,embedCharge]
+  | cons bit w ih =>
+    have hp := embedBlock_ge w b hb
+    have hz := embedBlock_positive w b hb
+    cases bit with
+    | zero =>
+      simp only [embedBlock,embedCharge]
+      rw [drainB_nine_zero a (embedBlock w b) d hz, ih]
+      congr 1 <;> omega
+    | six =>
+      simp only [embedBlock,embedCharge]
+      rw [drainB_nine_pump, ih]
+      congr 1 <;> omega
+    | eight =>
+      simp only [embedBlock,embedCharge]
+      rw [drain_nine_eight, ih]
+      congr 1 <;> omega
+
+#print axioms embed_ninefold
 #print axioms drain_nine_eight
 #print axioms ternaryBlock_injective
 #print axioms ternaryBlock_drain
