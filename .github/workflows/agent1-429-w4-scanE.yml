@@ -96,6 +96,9 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-w4-boundary/W4Closure.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4Closure.even_boundary_to_canonical'" "$LOG"
           grep -F "'BB429W4Closure.odd_boundary_to_canonical'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent4-429-ordinary-frontier/ZeroRegularHeadMax.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429ZeroRegularHeadMax.junc0_regular_max'" "$LOG"
+          grep -F "'BB429ZeroRegularHeadMax.junc0_regular_prefix_before_old_mark'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
