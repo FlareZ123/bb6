@@ -13,7 +13,7 @@ private theorem gap_no_odd_q (k j q : Nat)
   · have hpow : 2^k≤2^j := Nat.pow_le_pow_right (by decide) (by omega)
     omega
 
-/-- At any level k, an odd reset landing in the top quarter of the level
+/-- At any level k, an odd reset landing in the upper half of the admissible dyadic band
     (height >= 6*2^k) is a 3²-divisible odd source image. The t=0 odd
     inverse would place q strictly between 4*2^k and 6*2^k, where the complete
     source odd inverse band has no member. -/
