@@ -69,7 +69,7 @@ The source-shaped finite interpreter checked each of its next 81,920
 returns and encountered 118 first-gate residue phases. At all 118,
 the authentic simulated suffix had length 9 or 13 and enough mass for
 the theorem above. The checker generated a synthetic suffix matching
-the **first nine digits, full-stack length, and full-stack mass** of
+the **first nine digits, full-stack length, full-stack mass, and last two digits** of
 the authentic state, then verified the synthetic `G 509` halts and
 the genuine simulated `G 509` succeeds. The length distribution is
 38 occurrences of length 9 and 80 of length 13; the smallest original
@@ -108,7 +108,18 @@ W(prefix ++ syntheticSuffix) + 509 = 4,294,967,296 = 2^32;
 
 the genuine state instead has `W(genuine)+509=45,821,756,928`, so
 its first gate succeeds. The two states have identical first nine digits,
-identical full-stack mass, and identical full-stack length. This is one
+identical full-stack mass, and identical full-stack length.
+An even stronger synthetic suffix at the same return is
+
+```
+[5504661,38,0,0,0,0,226964,35137,35134].
+```
+
+It additionally preserves **the last two genuine digits**, `35137,35134`,
+as well as length and mass; its complete first-G(509) gate value is
+`17,179,869,184 = 2^34`. The revised executable checker confirms this
+same-prefix, same-mass, same-depth, same-last-two-digit construction
+**for all 118** first-stage candidate phases over the finite trace. This is one
 fully explicit illustration of why the three coarse invariants cannot
 separate a genuine survivor from a synthetic stopper. The numerical
 return 5774 is simulator-confirmed; the original-source proof currently
