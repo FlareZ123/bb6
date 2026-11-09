@@ -316,8 +316,10 @@ jobs:
             exit 1
           fi
           lean -o CThreeDiagonalM0Full.olean CThreeDiagonalM0Full.lean 2>&1 | tee CThreeDiagonalM0Full.log
-          lean CThreeDiagonalM0DeepFull.lean 2>&1 | tee CThreeDiagonalM0DeepFull.log
-          if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log; then
+          lean -o CThreeDiagonalM0DeepFull.olean CThreeDiagonalM0DeepFull.lean 2>&1 | tee CThreeDiagonalM0DeepFull.log
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0ValTwoFull.lean .
+          lean CThreeDiagonalM0ValTwoFull.lean 2>&1 | tee CThreeDiagonalM0ValTwoFull.log
+          if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log CThreeDiagonalM0ValTwoFull.log; then
             echo "REJECTED: incomplete source integration"
             exit 1
           fi
