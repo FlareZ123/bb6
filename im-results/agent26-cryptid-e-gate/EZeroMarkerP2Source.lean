@@ -50,24 +50,37 @@ theorem eZ_front_ge2 (m q r : Nat) (ys : List Bool) :
       [true,true,false] ++ (pairs r ++ (false::ys)),0⟩ : Cfg) = _
   rw [run_add (16+4*r) (2*(q+1)+4),a_front_Z]
   rw [run_add (2*(q+1)) 4,cWalk_run]
-  have hp : List.replicate (2*(q+1)) true ++
-      ([true,false] ++ (List.replicate (2*r+6) true ++ ys)) =
-      List.replicate (2*(q+1)+1) true ++
-        (false::List.replicate (2*r+6) true ++ ys) := by
+  let L : List Bool := pairs (m+2) ++ [true,true]
+  let tail : List Bool := List.replicate (2*r+6) true ++ ys
+  have hprefix : List.replicate (2*(q+1)) true ++ [true] =
+      List.replicate (2*(q+1)+1) true := by
+    calc
+      _ = List.replicate (2*(q+1)) true ++ List.replicate 1 true := rfl
+      _ = List.replicate (2*(q+1)+1) true :=
+        List.replicate_append_replicate
+  have hp : List.replicate (2*(q+1)) true ++ ([true,false] ++ tail) =
+      List.replicate (2*(q+1)+1) true ++ (false::tail) := by
     calc
       _ = (List.replicate (2*(q+1)) true ++ [true]) ++
-          (false::List.replicate (2*r+6) true ++ ys) := by
-          simp [List.append_assoc]
-      _ = _ := by
-          rw [List.replicate_append_replicate]
-          rfl
-  rw [hp]
-  change run 4
-    (⟨pairs (m+2) ++ [true,true],true,
-      List.replicate (2*(q+1)+1) true ++
-        (false::List.replicate (2*r+6) true ++ ys),2⟩ : Cfg) = _
-  rw [cZ_finish4]
-  rw [show 2*(q+1)+1+3 = 2*(q+2)+2 by omega]
+          (false::tail) := by simp [List.append_assoc]
+      _ = _ :=
+          congrArg (fun z : List Bool => z ++ (false::tail)) hprefix
+  have hcfg :
+      (⟨L,true,List.replicate (2*(q+1)) true ++
+          ([true,false] ++ tail),2⟩ : Cfg) =
+      (⟨L,true,List.replicate (2*(q+1)+1) true ++
+          (false::tail),2⟩ : Cfg) :=
+    congrArg (fun z : List Bool => (⟨L,true,z,2⟩ : Cfg)) hp
+  have hcount : 2*(q+1)+1+3 = 2*(q+2)+2 := by omega
+  have hend :
+      sweepB m (false::List.replicate (2*(q+1)+1+3) true ++
+        (false::tail)) =
+      sweepB m (false::List.replicate (2*(q+2)+2) true ++
+        (false::tail)) :=
+    congrArg (fun z : Nat =>
+      sweepB m (false::List.replicate z true ++ (false::tail))) hcount
+  exact (congrArg (run 4) hcfg).trans
+    ((cZ_finish4 m (2*(q+1)+1) tail).trans hend)
 
 /-- Exact E source return for all q>=2 and arbitrary marker depth and suffix. -/
 theorem eZ_run_ge2 (m q r : Nat) (ys : List Bool) :
