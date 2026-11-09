@@ -35,6 +35,18 @@ The right side may exceed one for small `p`, which is harmless. For every fixed 
 ]
 for some `eta>0` depending only on `delta,epsilon`. Thus **the fraction halting within any `delta*log_2 N` first-even returns tends to zero for every `delta<1/4`**, uniformly over all even starts `x<=N`, including non-dyadic cutoffs `N`. Equivalently, asymptotically almost all even starts survive at least `floor(delta*log_2 N)` returns. The established stronger exceptional-inclusive bound applies to *first visits* to either odd cofactor `1` or `3`.
 
+**Quantitative exponential rate.** The exponent in (2) can be made explicit without simulating any source. Set `n=floor(delta*p)`, `r=floor(epsilon*p)` as above and define binary entropy `h_2(t)=-t*log_2(t)-(1-t)*log_2(1-t)`. The fair-binomial Chernoff bound gives
+[
+\frac{H(p,\lfloor\delta p\rfloor)}{2^{p-1}}
+\ \le\ 2^{-(\eta(\delta,\varepsilon)-o(1))p},
+\quad
+\eta(\delta,\varepsilon)=
+\min\left\{\varepsilon,\ 1-\varepsilon,\ 
+(1-\varepsilon)\left[1-h_2\!\left(\frac{2\delta}{1-\varepsilon}\right)\right]\right\}>0.
+\tag{2a}
+]
+For example `delta=epsilon=1/8` gives `eta≈0.1197695025`, so even starts that halt within `floor(p/8)` returns number at most `2^((0.880231+o(1))*p)`. The rate is a sufficient analytic bound; it is not asserted sharp for the actual Sheep trajectories.
+
 An explicit **near-one-quarter horizon** is also available. Write `p` for the bit budget and, for sufficiently large `p`, choose
 [
 r=\lceil3\log_2 p\rceil+3,\qquad
@@ -87,6 +99,8 @@ E_g^i(x_0)=x_i\equiv0\pmod{2^{r-1}}.
 Union bound over `i=0,...,n`, invoke (5), and add the small starts to prove (1). This accounts explicitly for the **exceptional authentic `u=3` path** rather than incorrectly applying the generic dynamics after it.
 
 **4. Linear and near-critical horizons.** Choose `n=floor(delta*p)`, `r=floor(epsilon*p)` with `0<epsilon<1-4delta`. Then `m=p-r+1=(1-epsilon)p+O(1)` and `2n/m<1/2` by a fixed margin. The standard elementary Chernoff bound for the fair-binomial lower tail gives `B(m,n)<=2^{-kappa*p}` for some `kappa>0`, while `2^{2-r}<=2^{-epsilon*p+O(1)}` and `2^{r-p}<=2^{-(1-epsilon)p+O(1)}`. Multiplication by `n+1=O(p)` preserves an exponentially small total fraction, proving (2).
+
+The entropy exponent (2a) is the elementary binomial lower-tail bound `B(m,n)<=2^(-m[1-h_2((2n-1)/m)])` for `2n-1<m/2`; the other two terms of (1) have exponents `1-epsilon` and `epsilon` respectively. Floors contribute only `o(p)` to the logarithms.
 
 For (2b), the proposed `r` is `3log_2 p+O(1)`, and `m=p-O(log p)`. Its fair-binomial mean is `m/2`. At the proposed `n`, the gap from the mean to the tail threshold obeys, for sufficiently large `p`,
 [
