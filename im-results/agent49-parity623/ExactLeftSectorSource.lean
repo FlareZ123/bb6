@@ -60,17 +60,17 @@ theorem odd_left_none_iff_list (a d : Nat) (hd : d%2=1) :
 /-- Corresponding exact finite fatal points in every even-d left ray. -/
 theorem even_left_none_iff_list (a d : Nat) (hd : d%2=0) :
     (d+3≤a ∧ highLevelNext (.D a d)=none) ↔
-       a ∈ (fastSpectrum (d+2)).map (fun x => x+d+2) := by
+       (d+3≤a ∧ a ∈ (fastSpectrum (d+2)).map (fun x => x+d+2)) := by
   constructor
   · rintro ⟨ha,hh⟩
     have hx : a-d-2 ∈ fastSpectrum (d+2) :=
       (even_left_none_iff_spectrum a d hd ha).1 hh
+    refine ⟨ha,?_⟩
     apply List.mem_map.mpr
     refine ⟨a-d-2,hx,?_⟩
     omega
-  · intro hh
+  · rintro ⟨ha,hh⟩
     obtain ⟨x,hx,he⟩ := List.mem_map.mp hh
-    have ha : d+3≤a := by omega
     have heq : a-d-2=x := by omega
     refine ⟨ha,(even_left_none_iff_spectrum a d hd ha).2 ?_⟩
     simpa only [heq] using hx
