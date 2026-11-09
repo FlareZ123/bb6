@@ -41,6 +41,59 @@ The positive-time qualification excludes the trivial starting F/0 event.
 No finite cutoff, tail-length restriction, or conjectured halting behavior
 enters either theorem.
 
+## Stronger physical-output and reachability theorems
+
+[FullFTapeConjugacy.lean](FullFTapeConjugacy.lean) proves an exact
+original-source physical-tape identity at the E3 core's *first* left-marker
+contact time `t`, uniformly for all `k,Y`:
+
+```text
+run (P(k)+t+8k+2) F_k(Y)
+  = F(state 5, scan 0, left [], right 1^(8k+2) ++ (run t E3(Y)).right).
+```
+
+Its source-level first-event theorem excludes all preceding positive
+physical return and halt gates. At that time the complete right tape is
+exactly `1^(8k)` appended to the right tape at the `k=0` first return.
+The uninspected right suffix is preserved, with no finite-radius
+truncation or observational approximation.
+
+[CoreMarkerCriterion.lean](CoreMarkerCriterion.lean) strengthens the
+dichotomy to a **necessary and sufficient reachability criterion**:
+
+```text
+(∃ t, (run t E3(Y)).left = [])
+  ↔ (∃ j>0, physicalReturn (run j F_k(Y))).
+```
+
+In particular,
+`one_positive_return_certifies_all_outputs` proves that *any* positive
+F/0 return witness at *any* prepared unary parameter `k0` forces a
+single exact full-tape first-return formula and strict first-event
+conditions for **all** parameters `k`. An elementary
+well-ordering lemma chooses the earliest E3 marker contact, and the
+already certified original-source marker invariant proves it is C/1.
+The converse uses the certified no-premature-contact rule and the
+strict F-prefix no-event theorem. These are unbounded Lean theorems
+with only standard axioms.
+
+**[GitHub Actions run 42579563004](https://github.com/FlareZ123/bb6/actions/runs/42579563004)
+SUCCESS**, compiling all four added source modules in the same original
+D environment. All final theorem axiom audits show only
+`propext`, `Classical.choice`, and `Quot.sound`.
+
+## Computational direction: total first events for finite suffixes
+
+An [independent literal-table C++20 census](E3FiniteCensus.md)
+classified **67,108,864 distinct right suffixes of lengths 0 through
+26**, each from prepared `I_4(0Y)`. Every one reached physical
+F/0 return or F/1 halt within 398 primitive steps; no timeout or
+tape-boundary overflow occurred. **This finite observation is no proof**
+of universal termination. The prospective stronger theorem is that the
+fixed finite-tail E3 core always either touches its left marker or
+halts. Proving a decreasing unread-right-suffix measure would make
+this a universal, useful termination result.
+
 ## Proof and integration
 
 The proof composes the complete all-time,
