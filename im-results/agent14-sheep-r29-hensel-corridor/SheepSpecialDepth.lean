@@ -217,6 +217,59 @@ theorem x_no_special_deep
   have hc := x_from_chain hj hx hchain hterminal hspecial
   omega
 
+private theorem odd_not_double (e u : Nat) (hu : u%2=1) :
+    ¬ 2^(e+1) ∣ 2^e*u := by
+  intro h
+  obtain ⟨w, hw⟩ := h
+  have hc : 2^e*u = 2^e*(2*w) := by
+    simpa [Nat.pow_succ, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hw
+  have he : 0 < 2^e := Nat.pow_pos (by decide)
+  have heq : u=2*w := Nat.eq_of_mul_eq_mul_left he hc
+  omega
+
+/-- Exact dyadic order of the exceptional source valuation offset. -/
+theorem exact_special_dyadic_depth
+    {M a n b s u : Nat}
+    (hM : Nat.Coprime M 2)
+    (hs : a ≤ s)
+    (ha : 5 ≤ a)
+    (hu : u%2=1)
+    (heq : M*(3*2^a+a+15) = 8^n*(2^s+2^b*u)) :
+    2^(3*n+b) ∣ a+15 ∧ ¬ 2^(3*n+b+1) ∣ a+15 := by
+  obtain ⟨hstrict, hdiv⟩ := no_deep_special hM hs ha heq
+  refine ⟨hdiv, ?_⟩
+  intro htoo
+  let e := 3*n+b
+  have hDA : 2^(e+1) ∣ 2^a := Nat.pow_dvd_pow 2 (by dsimp [e]; omega)
+  have hDS : 2^(e+1) ∣ 2^(3*n+s) := Nat.pow_dvd_pow 2 (by dsimp [e]; omega)
+  have hleft : 2^(e+1) ∣ M*(3*2^a+a+15) := by
+    have hpart : 2^(e+1) ∣ 3*2^a + (a+15) := by
+      have hd1 : 2^(e+1) ∣ 3*2^a := by
+        obtain ⟨w,hw⟩ := hDA
+        refine ⟨3*w, ?_⟩
+        rw [hw]
+        ac_rfl
+      exact Nat.dvd_add hd1 htoo
+    obtain ⟨w, hw⟩ := hpart
+    refine ⟨M*w, ?_⟩
+    rw [show 3*2^a+a+15=3*2^a+(a+15) by omega, hw]
+    ac_rfl
+  have hpow8 : 8^n = 2^(3*n) := by
+    change (2^3)^n = 2^(3*n)
+    rw [Nat.pow_mul]
+  have hrew : 8^n*(2^s+2^b*u) = 2^(3*n+s)+2^e*u := by
+    dsimp [e]
+    rw [hpow8, Nat.mul_add, Nat.pow_add, Nat.pow_add]
+    ac_rfl
+  have hsum : 2^(e+1) ∣ 2^(3*n+s)+2^e*u := by
+    rw [←hrew, ←heq]
+    exact hleft
+  have hlast : 2^(e+1) ∣ 2^e*u :=
+    (Nat.dvd_add_iff_right hDS).mpr hsum
+  exact odd_not_double e u hu hlast
+
+#print axioms exact_special_dyadic_depth
+
 #print axioms z_no_special_deep
 #print axioms x_no_special_deep
 #print axioms z_special_depth_bound
