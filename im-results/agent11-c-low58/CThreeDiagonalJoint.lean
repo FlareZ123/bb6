@@ -149,7 +149,7 @@ theorem blank_halts_iff_diagonal :
         dsimp [k]
         have hc := Nat.sub_add_cancel (high_bound j m)
         omega
-      have hnot : ¬(4≤m ∧ j%2=1 ∧ m%32=(j+25)%32) := by
+      have hnot : ¬(2≤m ∧ j%2=1 ∧ m%32=(j+25)%32) := by
         rintro ⟨hm,hj,hd⟩
         by_cases hm4 : 4≤m
         · exact (BB6.Agent4Three.high_stop_odd_diagonal_mod32
