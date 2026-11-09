@@ -59,3 +59,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CancellationSixArithmetic.olean CancellationSixArithmetic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/CancellationSixSource.lean" .
           lake env lean CancellationSixSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/CancellationValuationSieve.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationValuationSieve.olean CancellationValuationSieve.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/CancellationSieveSource.lean" .
+          lake env lean CancellationSieveSource.lean
