@@ -24,7 +24,7 @@ jobs:
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse}.lean /tmp/agent34-source/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent34-source/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent34-source/
-          cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource,ConeBroadArithmetic,ConeBroadSource}.lean /tmp/agent34-source/
+          cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource,ConeBroadArithmetic,ConeBroadSource,ThreeConeArithmetic,ThreeConeSource}.lean /tmp/agent34-source/
           cd /tmp/agent34-source
           export LEAN_PATH=.
           lean --version
@@ -34,3 +34,5 @@ jobs:
           lean -o ConeSource.olean ConeSource.lean
           lean -o ConeBroadArithmetic.olean ConeBroadArithmetic.lean
           lean ConeBroadSource.lean
+          lean -o ThreeConeArithmetic.olean ThreeConeArithmetic.lean
+          lean ThreeConeSource.lean
