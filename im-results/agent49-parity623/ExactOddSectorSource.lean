@@ -1,4 +1,4 @@
-import Agent49FastFailureSpectrumSource
+import Agent49ExactLeftSectorSource
 
 /-!
 Complete odd-third, positive-even-first one-step failure criterion of original
@@ -9,6 +9,7 @@ replacement simulator. It does not classify reachable blank-root states.
 namespace BB6.Agent49OddSector
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent49FastSpectrum
+open BB6.Agent49LeftSector
 
 theorem odd_near_none_iff_spectrum (a d : Nat)
     (hd : d%2=1) (ha : 0<a) (he : a%2=0) (hn : a≤d+3) :
