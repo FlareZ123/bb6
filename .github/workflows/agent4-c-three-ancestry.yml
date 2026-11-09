@@ -1,6 +1,9 @@
 name: Agent 4 Machine C three-ancestry new high gate (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'im-results/agent4-c-seven-image/CSixSeventhStrict.lean'
 permissions:
   contents: read
 jobs:
