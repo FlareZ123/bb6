@@ -29,7 +29,7 @@ theorem full_F_marker_sweep (k t : Nat) (ys : List Bool)
   have htime : t+8*k+2 = t+2*(4*k)+2 := by omega
   constructor
   · rw [htime,run_add,hprefix]
-    exact hE
+    simpa only [Nat.add_assoc, show 2*(4*k)=8*k by omega] using hE
   · intro j hjpos hjlt
     by_cases hpre : j < prefixTime k
     · exact prefix_strict_first k j ys hjpos hpre
