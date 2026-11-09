@@ -66,11 +66,11 @@ private theorem div_pow_16 (a n q : Nat) (ha : 2≤a) (he : a%2=0) (hn : 2≤n)
       _ = 16*(p*u) := by simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
   exact Nat.mod_eq_zero_of_dvd hd
 
-/-- S=84 mod128, odd y=59 mod64: every first parent is one ordinary n=0 bounce. -/
+/-- The odd-right sum-twenty cone forces an original depth-zero parent. -/
 theorem first_forced (a k x y : Nat)
-    (hy : 128≤y) (hs : (x+y)%128=84) (hr : y%64=59)
+    (hy : 128≤y) (hs : (x+y)%32=20) (hr : (x+y+34)%128=(2*y)%128)
     (h : P a k x y) :
-    a%32=8 ∧ k%32=16 ∧ 2*a+4=x+y ∧ 2*k+a+7=x+2*y := by
+    a%16=8 ∧ k%16=0 ∧ (a+k)%32=24 ∧ 2*a+4=x+y ∧ 2*k+a+7=x+2*y := by
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [P,ha0,hk0] at h
@@ -142,7 +142,7 @@ theorem first_forced (a k x y : Nat)
 /-- Both second predecessors are bad one-step-image targets. -/
 theorem second_forced (a k b l : Nat)
     (ha : 128≤a) (hk : 128≤k)
-    (ha32 : a%32=8) (hk32 : k%32=16)
+    (ha16 : a%16=8) (hk16 : k%16=0) (hsum32 : (a+k)%32=24)
     (h : P b l a k) :
     5≤l ∧ l%2=1 ∧ (b+l)%4=1 := by
   by_cases hb0 : b=0
@@ -231,14 +231,15 @@ theorem second_forced (a k b l : Nat)
 /-- This odd-right cylinder really has a first incoming high-bounce edge. -/
 theorem first_exists (x y : Nat)
     (hx : 8≤x) (hy : 256≤y)
-    (hs : (x+y)%128=84) (hr : y%64=59) :
+    (hs : (x+y)%32=20) (hr : (x+y+34)%128=(2*y)%128) :
     ∃ a k, P a k x y ∧ 128≤a ∧ 128≤k ∧ k%2=0 := by
   let a := (x+y-4)/2
   let k := (x+2*y-a-7)/2
   have haeq : 2*a+4=x+y := by dsimp [a]; omega
   have hkeq : 2*k+a+7=x+2*y := by dsimp [k]; omega
-  have ha32 : a%32=8 := by omega
-  have hk32 : k%32=16 := by omega
+  have ha16 : a%16=8 := by omega
+  have hk16 : k%16=0 := by omega
+  have hsum32 : (a+k)%32=24 := by omega
   have ha128 : 128≤a := by omega
   have hk128 : 128≤k := by omega
   have ha0 : a≠0 := by omega
