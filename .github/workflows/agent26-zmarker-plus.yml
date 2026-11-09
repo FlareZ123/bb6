@@ -47,6 +47,7 @@ jobs:
             lean -o "$S/$module.olean" "$S/$module.lean"
           done
           lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
+          lean -o "$C/EDouble.olean" "$C/EDouble.lean"
           G=im-results/agent37-cryptid-model-bridge
           for module in CrossModelBridge CompleteAReturn WordReturns DoubleOneBranch DoubleOnePairs FullWordPairs; do
             lean -o "$G/$module.olean" "$G/$module.lean"
@@ -81,4 +82,5 @@ jobs:
           lean -o "$X/AZ0P2.olean" "$X/AZ0P2.lean" | tee -a axioms.log
           lean -o "$E/ZMarkerATwo.olean" "$E/ZMarkerATwo.lean" | tee -a axioms.log
           lean -o "$E/ZSafePlus.olean" "$E/ZSafePlus.lean" | tee -a axioms.log
+          lean -o "$E/EZeroMarkerP2Front.olean" "$E/EZeroMarkerP2Front.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
