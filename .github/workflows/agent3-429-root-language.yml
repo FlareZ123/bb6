@@ -25,6 +25,9 @@ jobs:
           export LEAN_PATH="im-results/agent39-429-frontier-left:im-results/agent3-429-root-language"
           lean -o im-results/agent39-429-frontier-left/Frontier429.olean im-results/agent39-429-frontier-left/Frontier429.lean
           lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootLanguageFatal.lean | tee /tmp/agent3-root-grammar.log
+          lean -o im-results/agent3-429-root-language/BB429RootPairNormalizer.olean im-results/agent3-429-root-language/BB429RootPairNormalizer.lean | tee -a /tmp/agent3-root-grammar.log
+          lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootOddSection.lean | tee -a /tmp/agent3-root-grammar.log
+          grep -F "'BB429RootOddSection.c0_odd_pairs_to_e0' depends on axioms:" /tmp/agent3-root-grammar.log
           grep -F "'BB429RootLanguageFatal.root_grammar_contains_fatal_family' depends on axioms:" /tmp/agent3-root-grammar.log
           grep -F "'BB429RootLanguageFatal.root_grammar_fatal_halts' depends on axioms:" /tmp/agent3-root-grammar.log
           if grep -q 'sorryAx' /tmp/agent3-root-grammar.log; then exit 1; fi
