@@ -1,6 +1,7 @@
 import SourceOneShallowLift
 
 namespace BB6.Agent43SourceWord
+open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent43TwoRun
 
 /-- Legal P1 inverse word using only depths 0, 1, or 2, grouped into
 (possibly empty) depth-two runs. First index counts depth-0/1 edges. -/
