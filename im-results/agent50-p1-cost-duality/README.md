@@ -1,6 +1,6 @@
 # P1 inverse shadow: exact cost-level conservation and two-feeder complementation
 
-**Mathematical statement (9 November 2026).** This dossier establishes an exact pointwise pairing between the two **abstract source-derived** P1 inverse feeder languages when paths are indexed by accumulated inverse **cost**, rather than generation. The proof is elementary binary-marker arithmetic; its central congruence and marker-complement identities have independently compiled in Lean 4.36.0-rc2 using standard axioms. The whole finite-word/actual-edge equivalence below is a paper proof checked by direct exact-integer enumeration. Original P1 blank-root nonhalting and BB(6) remain unresolved. External priority has not been assessed.
+**Mathematical statement (9 November 2026).** This dossier establishes an exact pointwise pairing between the two **abstract source-derived** P1 inverse feeder languages when paths are indexed by accumulated inverse **cost**, rather than generation. The proof is elementary binary-marker arithmetic; its central congruence and marker-complement identities have independently compiled in Lean 4.36.0-rc2 using standard axioms. The whole finite-word/actual-edge equivalence below is a paper proof checked by direct exact-integer enumeration. A second exact full-period comparison identifies the 1,213 cost-14-support residues modulo 4,096 with **the entire complement of the existing source-certified 2,883-residue necessary-gateway sieve**. This last identity is a finite arithmetic equality between two independently computed sets; it is not a new original-source nonhalting theorem. Original P1 blank-root nonhalting and BB(6) remain unresolved. External priority has not been assessed.
 
 ## Exact theorem
 
@@ -83,11 +83,30 @@ In (8) write `a=3+8H`; in (9) for the complemented word write `b=5+8Hc`. Then `a
 
 Finally, each cost-`C` feeder word accepts a **single** residue class modulo `2^(C-2)` for side8 or `2^(C-1)` for side9, since the congruence has odd coefficient `3+8H` or `5+8H`. The number of candidate compositions equals the modulus. Summing each accepted residue with multiplicity proves the exact mean-one conservation law.
 
+## Exact bridge to the current P1 source-certified gateway sieve
+
+A direct comparison with the original-source certified lists establishes the following complete **finite set identity**, without an appeal to the numeric equality of counts alone:
+
+```text
+{q mod 4096 : N_8(14;q)>0}
+= {q mod 4096 : N_9(13;q)>0}
+= {0,...,4095} minus the union of the existing
+  701/1024 and 79/4096 source-certified gateway classes.
+```
+
+The first equality is an instance of the **even-cost same-q theorem**. The last equality is a complete, exact comparison of the **actual 4096 residue values**, yielding exactly 1,213 supported residues and 2,883 certified-excluded residues. The source-certificate sets are extracted directly from the Lean source lists `DensityCount695.lean`, `DensityCount700.lean`, `QFinal.lean`, and the single late-start class q≡5 mod4096 from `Q4101.lean`. The matching 1,213-element set is computed *independently* from 4,096 one-residue binary-marker congruences and from 4,096 full scalar-grammar enumerations. The three sets match element for element, including their exact membership at every q.
+
+[The executable full-set comparison](cost14_source_sieve_bridge.py) provides an auditable, deterministic witness for the complete equality. No statistical sampling, floating point arithmetic, heuristic pruning or numerical fitting is used.
+
+**Interpretation and boundary.** The source-certified excluded classes apply to the particular P1 necessary critical-index gateway, with their original lower-parameter restrictions; the special new q≡5 class starts at q=4101. Therefore the finite set equality identifies the *exact asymptotic residue complement* of those certificates, giving a cost-14 shadow characterization of the previously unexplained 1213/4096 surviving congruence classes. It does not prove that a cost-14 shadow word makes the genuine blank root reach a critical state. Nor does nonexistence at cost 14 by itself exclude paths that jump over cost 14 in a single larger-depth edge. Global P1 halting, its other gateways and all-time exception handling remain open.
+
+This correspondence is particularly useful as a next research selector: concentrate on root-connected exclusion of the cost-14-positive residue set, and clarify whether the existing source checker fails on those residues because of exactly the cost-14 frontier or because of other exceptional exits. The coincidence supplies a **precise boundary**, while a proof-carrying all-cost closure remains the missing task.
+
 ## Verification and scope
 
 - [CostDualityCore.lean](CostDualityCore.lean) proves the *general congruence pairing* `algebraic_duality` for all natural `p,n,H,Hc,X,Xc,q,T` subject to the stated marker identities. Its `#print axioms` is `[propext, Quot.sound]`.
 - [CostMarkerDuality.lean](CostMarkerDuality.lean) proves the binary marker sum, weighted marker sum, explicit prefix weight formula, and `cost_congruence_duality` for all Boolean internal-boundary words, all `q` and all positive `h`. Local Lean 4.36.0-rc2 compilation succeeded. Its complete theorem also has only `[propext, Quot.sound]` and no `sorry`. It proves the exact arithmetic-to-congruence transformation. The additional scalar recurrence-to-word-language induction in this note has **not** yet been embedded into Lean against the original P1 source.
-- [cost_duality_regression.py](cost_duality_regression.py) directly evaluates the original scalar legal-depth grammar via exact integers and memoization, independent of the marker formulas, for **all** `q mod P` and costs `M=2,...,12`; it checks the translation and mean-one statements. Further checks at five larger non-canonical parameters per cost passed locally. This is finite regression, never an all-cost proof.
+- [cost14_source_sieve_bridge.py](cost14_source_sieve_bridge.py) compares all 4096 source-certified-class complements with all 4096 exact cost-14 marker congruences and independent raw scalar-grammar tests. The sets coincide exactly; this is a deterministic finite set identity, not a new original-source theorem.\n- [cost_duality_regression.py](cost_duality_regression.py) directly evaluates the original scalar legal-depth grammar via exact integers and memoization, independent of the marker formulas, for **all** `q mod P` and costs `M=2,...,12`; it checks the translation and mean-one statements. Further checks at five larger non-canonical parameters per cost passed locally. This is finite regression, never an all-cost proof.
 - The local all-parameter proof above concerns the **source-derived scalar shadow**. The known one-directional source transport and bounded-cost source checks do not imply every abstract path lifts to an admissible authentic machine inverse step at arbitrary `q` and cost. No claim about any genuine blank-reachable odd cone follows merely from this pairing.
 
-**Next mathematical task:** derive a cost-indexed *all-source* correspondence on the safely encoded feeder cone and use the even-cost same-q pairing to transfer a real source obstruction between the two feeders. Independently, analyze correlated cost-level collisions: mean-one alone allows concentration into rare high multiplicities and gives no extinction/nonhalting theorem.
+**Next mathematical task:** prove a cost-indexed *all-source* correspondence on the safely encoded feeder cone and determine why the 1213/4096 cost-14-positive classes resist current source certificates. Investigate a root-relevant all-cost obstruction that handles jumps over the cost-14 boundary and every exceptional source exit. The mean-one law alone allows concentrated collisions and implies no extinction or genuine machine nonhalting theorem.
