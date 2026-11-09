@@ -6,6 +6,7 @@ on:
       - '.github/workflows/agent6-429-low42.yml'
       - 'im-results/agent6-429-low42/Low42Delta.lean'
       - 'im-results/agent6-429-low42/Low42Physical.lean'
+      - 'im-results/agent6-429-low42/Low42Max.lean.xz.b64'
   workflow_dispatch:
 
 permissions:
@@ -68,7 +69,10 @@ jobs:
           compile im-results/agent32-429-primitive-cost/JPhysicalPrefix
           compile im-results/agent6-429-low42/Low42Delta
           compile im-results/agent6-429-low42/Low42Physical
-          for decl in BB429Low42.low42_source_all BB429Low42.c0_even_to_c0_delta BB429Low42Physical.stage_tape_rep BB429Low42Physical.low42_raw_head_all; do
+          compile im-results/agent1-429-w4-boundary/W4HeadMax
+          python -c 'from pathlib import Path; import base64,hashlib,lzma; p=Path("im-results/agent6-429-low42"); b=lzma.decompress(base64.b64decode((p/"Low42Max.lean.xz.b64").read_text().strip())); assert hashlib.sha256(b).hexdigest()=="9858955ef0ad8ce9b3f2769adebd1943c6081e99bd7d77a436a6c215bea13ed5"; (p/"Low42Max.lean").write_bytes(b)'
+          compile im-results/agent6-429-low42/Low42Max
+          for decl in BB429Low42.low42_source_all BB429Low42.c0_even_to_c0_delta BB429Low42Physical.stage_tape_rep BB429Low42Physical.low42_raw_head_all BB429Low42Max.low42_source_max_all; do
             grep -F "'$decl' depends on axioms:" "$LOG"
           done
           if grep -q sorryAx "$LOG"; then
