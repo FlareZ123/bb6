@@ -82,7 +82,7 @@ The seven rows depend only on `m mod 1260`; 840 residues satisfy `3∤m`. The co
 | 4 | 140 |
 | 5 | 16 |
 
-The **132/840 = 11/70** no-incoming classes give all-time unreachability from the authentic blank even seed 10. For example, `2^(1296+204120k)` has no legal incoming even-section parent for every natural k. This is **not claimed as new global exclusion density**, since earlier inverse sieves can cover the same exponent classes. The structural theorem gives exact parent locations for all the surviving branches.
+The **132/840 = 11/70** no-incoming classes give all-time unreachability from the authentic blank even seed 10. For example, `2^(1296+204120k)` has no legal incoming even-section parent for every natural k. A [complete CRT comparison with the prior F5 and all sixteen earlier E inverse-cone classes](../agent16-sheep-power-h4-h5-root-gap/README.md) proves these no-parent classes are **entirely disjoint from that earlier excluded union**, establishing a new authentic blank-root exponent-index density of **11/17010** for this fifth-level sector. The structural theorem also gives exact parent locations for all the surviving branches.
 
 The earlier source-formula grammars covered 80/81 of even power exponents after h=4. The present fifth-level sector accounts for another 2/243, lifting that total to **242/243**. The unclassified even-exponent sector begins at **486|j**, whose targets require hidden h=6 and potentially higher. Classification of direct predecessors alone still leaves the crucial problem of excluding the genuine forward orbit rooted at 10 from every surviving halting parent.
 
