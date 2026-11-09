@@ -31,8 +31,8 @@ theorem junc0_odd_w1_full_max (k : Nat) :
     congr 2
     change ones 1 ++ (ones 7 ++ ones (4*(k+1)+8)) =
        ones (2*(2*k+3)+14)
-    rw [← ones_add 7 (4*(k+1)+8),
-        ← ones_add 1 (7+(4*(k+1)+8))]
+    rw [← BB429FinishScanEDelta.ones_add 7 (4*(k+1)+8),
+        ← BB429FinishScanEDelta.ones_add 1 (7+(4*(k+1)+8))]
     congr 1
     omega
   rw [hleft] at hfirst
