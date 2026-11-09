@@ -12,14 +12,17 @@ open BusyBeaver.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
 private theorem sourceB_ge201 (r : Nat) (hr : 1 ≤ r) : 201 ≤ sourceB r := by
   have hv : 6 ≤ v r := by
     have hp : 9 ≤ 9^r := by
-      have h := Nat.pow_le_pow_right (by decide : 0 < (9:Nat)) hr
+      have h : (9:Nat)^1 ≤ 9^r := Nat.pow_le_pow_right (by decide) hr
       simpa using h
     dsimp [v]
     omega
-  have hp : 64 ≤ 2^(v r) := Nat.pow_le_pow_right (by decide) hv
+  have hp : 64 ≤ 2^(v r) := by
+    have h : (2:Nat)^6 ≤ 2^(v r) := Nat.pow_le_pow_right (by decide) hv
+    simpa using h
   have hx : 128 ≤ xb r := by
     unfold xb
-    exact Nat.pow_le_pow_right (by decide : 0 < (2:Nat)) (by omega)
+    have h : (2:Nat)^7 ≤ 2^(v r+1) := Nat.pow_le_pow_right (by decide) (by omega)
+    omega
   have hg : 1 ≤ geo ((xb r)^2) 9 r :=
     geo_pos ((xb r)^2) 9 r (by decide) hr
   have hsub : 125 ≤ xb r-3 := by omega
@@ -39,6 +42,7 @@ theorem sourceB_parent6 (t : Nat) :
   have hmod : sourceB r %131=70 := CancellationSix.sourceB_mod131 t
   have hsize : 201 ≤ sourceB r := sourceB_ge201 r (by dsimp [r]; omega)
   refine ⟨(sourceB r-201)/131, ?_⟩
+  change sourceB r = 131*((sourceB r-201)/131)+201
   omega
 
 /-- The real pinned Space Needle source map has distinct immediate parents
