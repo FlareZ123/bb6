@@ -12,26 +12,37 @@ For `0 ≤ s ≤ 16`, fix `r` with `1≤r≤63` and `3∤r`, and consider every 
 n = 3^s * (r + 63*k),    j = 17496*n,    target = 2^j.
 ```
 
-The [complete-period certificate](./stratum_certificate.py) finds a set `R_s` of residues `r` with **no incoming authentic even-return edge** into `target` for every `k`. Thus all these powers satisfy `¬ EvenReach 10 (2^j)`. This is a source-algebra mathematical exclusion with no time horizon or numerical tape simulation.
+The [complete-period certificate](./stratum_certificate.py) finds a set `R_s` of residues `r` with **no incoming authentic even-return edge** into `target` for every `k`. The [five-phase refinement](./phase_refine.py) additionally identifies cases where only a fraction of the five `k mod 5` phases can have an incoming edge. Each excluded power satisfies `¬ EvenReach 10 (2^j)` at every time.
 
-| s | Certified residues among 42 | s | Certified residues among 42 | s | Certified residues among 42 |
-| ---: | ---: | ---: | ---: | ---: | ---: |
-| 0 | 30 | 6 | 12 | 12 | 10 |
-| 1 | 30 | 7 | 12 | 13 | 20 |
-| 2 | 12 | 8 | 30 | 14 | 20 |
-| 3 | 30 | 9 | 12 | 15 | 20 |
-| 4 | 30 | 10 | 25 | 16 | 8 |
-| 5 | 30 | 11 | 25 | | |
+| Valuation s | Unsplit closed r /42 | Phase-refined closed (r,t) /210 |
+| ---: | ---: | ---: |
+| 0 | 30 | 150 |
+| 1 | 30 | 150 |
+| 2 | 12 | 132 |
+| 3 | 30 | 150 |
+| 4 | 30 | 150 |
+| 5 | 30 | 150 |
+| 6 | 12 | 132 |
+| 7 | 12 | 132 |
+| 8 | 30 | 150 |
+| 9 | 12 | 132 |
+| 10 | 25 | 125 |
+| 11 | 25 | 125 |
+| 12 | 10 | 110 |
+| 13 | 20 | 100 |
+| 14 | 20 | 100 |
+| 15 | 20 | 100 |
+| 16 | 8 | 88 |
 
-The certified progressions are disjoint because each has an exact 3-adic valuation `v3(n)=s` and a distinct coprime residue `r` modulo 63. Their lower natural-density contribution **among positive integer indices `n` in `j=17496*n`** is exactly
+The certified progressions are disjoint: each has an exact 3-adic valuation `v3(n)=s`, a distinct coprime residue `r` modulo 63, and, when refined, a distinct phase `t` modulo 5 in `k=t+5m`. The lower natural-density bound **among positive integer indices `n` in `j=17496*n`** is
 
 ```
-sum(s=0..16) |R_s|/(63*3^s)
- = 1849545554/2711943423
- = 68.20000514443%.
+sum(s=0..16) closed(s)/(315*3^s)
+ = 9597932614/13559717115
+ = 70.78269061663%.
 ```
 
-This is a density of predecessor-free **exponent indices in this sparse subsequence**. It is not an estimate of the probability that the original machine halts. The unclassified high-valuation tail `v3(n)≥17` has natural density `3^(-17)≈7.74e-9`; classes left open within the first 17 strata can still have large unknown inverse cones. The result gives a rigorous **lower bound** on predecessor-free density; it does not establish the full exact density.
+The coarser unsplit 63-residue method already gives `1849545554/2711943423 = 68.20000514443%`. The additional 5-phase sieve improves that rigorous lower bound by approximately 2.58 percentage points. This is a density of predecessor-free **exponent indices in this sparse subsequence**. It is not an estimate of the probability that the original machine halts. The unclassified high-valuation tail `v3(n)≥17` has natural density `3^(-17)≈7.74e-9`; classes left open within the first 17 strata can still have large unknown inverse cones. The result gives a rigorous **lower bound** on predecessor-free density; it does not establish the full exact density.
 
 Previously, the [222-family certificate](../agent14-sheep-inverse-dag-222/README.md) intentionally omitted the seven exponent residues `j=17496m (mod 122472)` because their hidden 3-adic predecessor valuation was unbounded in that unsplit progression. Splitting by `v3(n)=s` now certifies infinitely many progressions within precisely this formerly excluded sector. These new progressions do not overlap the original 222 classes.
 
@@ -74,7 +85,7 @@ For each remaining pair `0≤h≤8+s`, `1≤a<A_h`, the certificate calculates a
 
 It tests **every phase** `k=0,1,...,q-1` of the necessary congruence. Therefore the row is excluded for **all nonnegative k**, without a guessed cutoff. The largest checked period is `q=43`. For a certified `r`, every generic row fails all its phases. Rows can have negative integer `K(a)`; Python's modular remainder correctly computes the integer congruence.
 
-The finite modular calculation is a proof certificate: each small modular multiplication, modulus and period is explicitly checked by reproducible source. It is not yet a Lean-kernel result for the entire 17-stratum union.
+The finite modular calculation is a proof certificate: each small modular multiplication, modulus and period is explicitly checked by reproducible source. In every stratum, each remaining candidate pair has complete phase period `q=1` or `q=5` with respect to the `k` parameter. This is checked after the *entire* inverse census, including exclusions of all other `q` values. The five-phase refinement therefore checks all `t=0..4` for each `r`, and certifies the empty-predecessor phases for every `k=t+5m`. The complete refined period is `315*3^s` in `n`, while the maximum period needed for any intermediate row remains `43`. It is not yet a Lean-kernel result for the entire 17-stratum union.
 
 ### Exceptional odd-cofactor-three sources
 
@@ -109,11 +120,13 @@ The separate [`certificate.py`](./certificate.py) prints and verifies this small
 
 ## Reproduction and open obligation
 
-Run `python stratum_certificate.py` (Python 3.10+), requiring only the standard library. The output lists every excluded `r` in each stratum and checks the complete modular orders, exceptional inequalities, row thresholds and the exact rational density. The fixed 17-element count vector is
+Run `python stratum_certificate.py` followed by `python phase_refine.py` (Python 3.10+), requiring only the standard library. The first script checks the complete modular orders, exceptional inequalities, row thresholds and the coarser rational density; the second imports that full census and strengthens the bound by certifying every `k mod 5` phase. The unsplit 17-element count vector is
 
 ```
 [30,30,12,30,30,30,12,12,30,12,25,25,10,20,20,20,8].
 ```
+
+The refined 17-element count vector, each entry out of 210 possibilities, is `[150,150,132,150,150,150,132,132,150,132,125,125,110,100,100,100,88]`. The resulting exact rational density is checked against a fixed fraction in `phase_refine.py`.
 
 The necessary remaining task for fully source-integrated formal certification is an original-machine Lean theorem incorporating the LTE bound, all complete modular finite residue checks, the existing high-`a` odd gap and the exceptional-source exclusion. The [pinned original-machine Sheep bridge](../agent16-sheep-even-return/README.md) and [even-edge inverse splitter](../agent14-sheep-even-inverse/SheepEvenSourceAlgebra.lean) already exist. Separately, a global invariant resolving genuine reachability of **all** powers from the blank seed is still needed to decide this machine and ultimately BB(6).
 
