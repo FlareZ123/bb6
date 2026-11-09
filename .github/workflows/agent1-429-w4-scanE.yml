@@ -106,9 +106,13 @@ jobs:
           grep -F "'BB429PhysicalRegularHeadMax.physical_zero_regular_frontier_conserved'" "$LOG"
           grep -F "'BB429PhysicalRegularHeadMax.physical_positive_regular_frontier_conserved'" "$LOG"
           lean -o im-results/agent33-429-writer-locality/CZeroEvenReturn.olean im-results/agent33-429-writer-locality/CZeroEvenReturn.lean 2>&1 | tee -a "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroContext.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/CZeroContext.olean im-results/agent1-429-w4-boundary/CZeroContext.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429CZeroContext.even_C0_context'" "$LOG"
           grep -F "'BB429CZeroContext.odd_C0_context_halts'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroContextPhysical.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429CZeroContextPhysical.physical_even_C0_context'" "$LOG"
+          grep -F "'BB429CZeroContextPhysical.physical_odd_C0_context_halts'" "$LOG"
+          grep -F "'BB429CZeroContextPhysical.blank_reaches_odd_C0_context_halts'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
