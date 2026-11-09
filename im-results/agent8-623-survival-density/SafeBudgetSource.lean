@@ -127,7 +127,7 @@ def pumpBlock : Nat → Nat
 theorem pumpBlock_budget_zero (k : Nat) :
     safeBudget (pumpBlock k) = 0 := by
   induction k with
-  | zero => rfl
+  | zero => simp [pumpBlock,safeBudget]
   | succ k ih =>
     change safeBudget (9*pumpBlock k+6)=0
     rw [safeBudget_nine_pump]
@@ -198,6 +198,68 @@ theorem diagonal_escape (k : Nat) :
 #print axioms pumpBlock_budget_zero
 #print axioms pumpBlock_linear_growth
 #print axioms pumpBlock_drain
+
+
+/-- Exact affine horizontal ray starting at the input-specific threshold.
+The entire digit charge stays unchanged as the first counter increases. -/
+theorem digitCode_safe_shift (b : Nat) :
+  ∀ a t : Nat, safeBudget b ≤ a →
+    digitCode (a+t) b = (digitCode a b).map (fun p => (p.1+t,p.2)) := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    intro a t hs
+    rw [safeBudget] at hs
+    conv => lhs; rw [digitCode]
+    conv => rhs; arg 2; rw [digitCode]
+    by_cases hz : b=0
+    · simp [hz]
+    · simp only [if_neg hz] at hs ⊢
+      have hdiv : b=3*(b/3)+b%3 := by omega
+      by_cases hr0 : b%3=0
+      · simp only [if_pos hr0] at hs ⊢
+        have hchild : b/3-1<b := by omega
+        have hb : safeBudget (b/3-1) ≤ a+1 := by omega
+        have hi := ih (b/3-1) hchild (a+1) t hb
+        simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hi
+      · simp only [if_neg hr0] at hs ⊢
+        by_cases hr1 : b%3=1
+        · simp only [if_pos hr1] at hs ⊢
+          have ha : a≠0 := by omega
+          have hat : a+t≠0 := by omega
+          simp only [if_neg ha,if_neg hat]
+          have hsChild : b/3<b := by omega
+          have hb : safeBudget (b/3) ≤ a-1 := by omega
+          have hshift : a+t-1=(a-1)+t := by omega
+          rw [hshift,ih (b/3) hsChild (a-1) t hb]
+          cases hc : digitCode (a-1) (b/3) with
+          | none => simp [hc]
+          | some p => rcases p with ⟨x,c⟩; simp [hc]
+        · simp only [if_neg hr1] at hs ⊢
+          have ha : a≠0 := by omega
+          have hat : a+t≠0 := by omega
+          simp only [if_neg ha,if_neg hat]
+          have hsChild : b/3+1<b := by omega
+          have hb : safeBudget (b/3+1) ≤ a-1 := by omega
+          have hshift : a+t-1=(a-1)+t := by omega
+          rw [hshift,ih (b/3+1) hsChild (a-1) t hb]
+          cases hc : digitCode (a-1) (b/3+1) with
+          | none => simp [hc]
+          | some p => rcases p with ⟨x,c⟩; simp [hc]
+
+/-- Genuine original-source drain transport, valid from the much tighter
+per-block budget rather than a coarse uniform ternary-ones bound. -/
+theorem drainB_safe_shift (a b d t : Nat) (hs : safeBudget b ≤ a) :
+    drainB (a+t) b d = (drainB a b d).map
+      (fun s => match s with | .D x dd => .D (x+t) dd) := by
+  rw [drainB_digitCode,drainB_digitCode,digitCode_safe_shift b a t hs]
+  cases hc : digitCode a b with
+  | none => simp [hc]
+  | some p =>
+    rcases p with ⟨x,c⟩
+    simp [hc,realize]
+
+#print axioms digitCode_safe_shift
+#print axioms drainB_safe_shift
 
 #print axioms safeBudget_suffices
 #print axioms drainB_safeBudget
