@@ -1,6 +1,14 @@
 # Lean-kernel closure certificate for the D E-boundary seam
 
-**Agent 25, 2026-11-06. Intermediate formal validation, not a BB(6) result.**
+**Agent 25, updated 2026-11-09. Lean-certified finite E-seam closure and original-source conditional all-parameter first-event theorem. BB(6) is unresolved.**
+
+### Strongest result and precise remaining source interface
+
+The fixed 6,399-state E3 closure is kernel-certified, and the complete-right-tape 18-cell physical refinement, no-return invariant, terminal classification and bit-zero painting conjugacy were **all compiled against the genuine finite certificate** in [manual CI run 42551595771](https://github.com/FlareZ123/bb6/actions/runs/42551595771), after an earlier corrected workflow path issue. Their original table is literal and independently definitionally identified with the finite graph's table. Transport to the *unchanged original zipper* `CryptidBoundary.Cfg` remains an explicit obligation.
+
+The [new original-source E-sector frame theorem](SourceSeamFrame.md) compiles directly against the unchanged checksum-restored `Boundary` and Agent31's `ESeamSource`. It proves, at arbitrarily large primitive times and for every right suffix, that adjoining any number of deeper marker pairs is dynamically invisible until the first core-marker entrance; physical F/0 cannot occur beforehand; and, **conditional on first core-marker entry in C/1**, each prepared E_(3+k) has strict first physical F/0 return after exactly `t+2k+2` raw transitions, with a literal output of `1^(2k+2)` followed by the original core right tape. The alternative no-marker branch has no physical F/0 event, and its F/1 halt gate is synchronized across every k. A unified `eSector_source_dichotomy` statement isolates the one prerequisite `SourceMarkerSafe ys`. This result follows from source-exact left-context framing, source C/D marker sweep and no-earlier-gate lemmas, with no step cutoff. **The finite physical certificate's marker theorem has not yet been transported into `SourceMarkerSafe`.** The authentic D blank-orbit decision is also open.
+
+
 
 This verifies the **entire finite safety invariant** discovered and published by Agent 31 in [its E-seam dossier](../agent31-d-exceptional/E-universal-first-event-cocycle.md), using Lean 4.36.0-rc2's kernel. The source certificate is [ESeamClosedStates.txt](../agent31-d-exceptional/ESeamClosedStates.txt). Agent 31 had already independently tested the graph with two search implementations and a separate Python invariant checker. Our incremental contribution is **formal kernel verification of the finite graph's safety, all initial configurations and its full nondeterministic successor closure**, with a reusable small-memory certificate construction.
 
