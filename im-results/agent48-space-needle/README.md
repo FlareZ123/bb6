@@ -96,6 +96,12 @@ The full derivation, exact list, complexity bound, source bridge, root criterion
 
 The r=5 cancellation member has now received an exact computational no-parent audit: `K=295269`, `v=29526`, with all 295,270 possible incoming valuations checked. A small-prime progression sieve rejects 238,684 valuations; exact direct and signed-base remainder checks eliminate the remaining 56,586. The reproducible script and derivation are in [R5-CANCELLATION-ROOT-AUDIT.md](R5-CANCELLATION-ROOT-AUDIT.md) and [r5_cancellation_parent_audit.py](r5_cancellation_parent_audit.py). This is an exact finite arithmetic result, pending Lean formalization and independent review.
 
+## Exact nested cancellation inverse chains
+
+The unbounded cancellation terminal-feeder construction has a newly proved classification of two fixed predecessor word shapes. For every positive cancellation index \(r\), an original-source high-level chain with predecessor valuations **0 then 4** exists exactly if \(r\equiv4\pmod{30}\). The precise theorem is `SpaceNeedleDepthTwo.cancellation_zero_four_chain_iff`, original-source Lean certified in [CI 42721799527](https://github.com/FlareZ123/bb6/actions/runs/42721799527). The corresponding three-edge word with valuations **1, 0, 4** exists exactly if \(r\equiv4\pmod{210}\); its standalone arithmetic and source-shaped proof compile locally and await pinned-source CI [42722753090](https://github.com/FlareZ123/bb6/actions/runs/42722753090).
+
+The arithmetic signatures are \(B_r\equiv20\pmod{175}\) and \(B_r\equiv545\pmod{1225}\), respectively, for the shifted cancellation feeder counter \(B_r\). The latter follows from \(B_{30t+4}\equiv545+175t\pmod{1225}\). These complete classifications concern prescribed prepared predecessor paths and make **no claim of genuine blank-root reachability**. Other inverse paths remain possible. [Definitions, proof, and source scope](DEPTH-TWO-THREE-CANCELLATION.md).
+
 ## Modular terminal-feeder exclusions
 
 The current Lean source explicitly proves these ten infinite valuation progressions impossible for terminal feeders:
