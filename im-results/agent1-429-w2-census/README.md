@@ -37,3 +37,20 @@ The new `finishC_ScanE_safe` statement verifies that the unbounded C/1-to-A and 
 ## Next step
 
 Combine the new all-parameter right-two return with the previously certified right-one and ordinary branches and prove a **blank-origin inductive chart/history invariant** on actual physical tapes. The absence of fatal C/01 in an isolated return follows from the successful source return, but ruling it out over the entire authentic infinite trajectory requires controlling all chart entries and their earlier physical head histories.
+
+## Exact C/0 clock and terminal frontier geometry
+
+The signed-displacement refinement [W2FinalDelta.lean](W2FinalDelta.lean) proves a stronger statement than the C/0 counting certificate: **every right-two Junc return ends with its head exactly 10 positions left of its starting location**, independent of the unbounded parameter and its parity. Its `physical_even_w2_delta` and `physical_odd_w2_delta` statements transport the -10 displacement to every genuine entire-tape original-machine configuration represented by the starting chart, using the established zipper-to-physical bridge. The rightmost prescribed marked position nevertheless grows monotonically across this macro. Relative to the initial original head, its new position lies **6 cells beyond the old marker for even v**, and **10 cells beyond for odd v**. The corresponding marker-location equalities are `even_w2_frontier_extension` and `odd_w2_frontier_extension`.
+
+The exact right-two event clocks, measured in original primitive steps from Junc entry, are:
+
+| Initial middle parameter | First C/0 | Second C/0 | Third C/0 |
+| --- | ---: | ---: | ---: |
+| `v=2k` | `4k+35` | `34k+164` | none |
+| `v=2k+1` | `4k+37` | `26k+137` | `40k+220` |
+
+Every listed event has an **entirely blank right half-tape**; the full-return `runCount` proves there are no additional C/0 visits inside that macro. The first visit and its no-earlier-C/0 guard are source-certified by [Agent 30's ZeroTwoGate](../agent30-429-positive-safe/ZeroTwoGate.lean); the uniform even second visit and one prior C/0 are formalized by [W2EvenEvents.lean](W2EvenEvents.lean), while the odd second and third source `runWithDelta` visits, their absolute head offsets, and finite v=1 base are formalized in [W2OddEvents.lean](W2OddEvents.lean).
+
+In each parity the displayed later gates move the head three cells to the right of the preceding gate. The exact head shifts at the even second gate are `4k+10` and at the odd second and third gates are `4k+13` and `4k+16`. The initial rightmost marked-cell offsets are `4k+5` and `4k+7`. These formulae make the gate-to-marker geometry explicit for possible root-history induction, although current source proofs have not yet established a universal all-prefix head-max certificate for the full right-two macro.
+
+**Verification note:** the new event and -10 displacement source files were proved in local Lean preflight against the original zipper and declared interfaces of existing source-certified lemmas. Their full unmodified-repository CI audit is still a separate obligation, and this section should be promoted to verified original-source status only after it succeeds.
