@@ -170,7 +170,7 @@ jobs:
           grep -F "'BB429CZeroHeadPrefix.authentic_even_C0_record_extension'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/CZeroContextToE1.olean im-results/agent1-429-w4-boundary/CZeroContextToE1.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429CZeroContextToE1.even_C0_to_E1_context'" "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroCensus.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/CZeroCensus.olean im-results/agent1-429-w4-boundary/CZeroCensus.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429CZeroCensus.even_C0_context_exact_one'" "$LOG"
           grep -F "'BB429CZeroCensus.even_C0_to_E1_exact_two'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/CZeroContextToE1Max.olean im-results/agent1-429-w4-boundary/CZeroContextToE1Max.lean 2>&1 | tee -a "$LOG"
