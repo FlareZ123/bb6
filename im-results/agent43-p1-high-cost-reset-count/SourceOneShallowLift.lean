@@ -1,3 +1,4 @@
+import ThreeShallowSourceModel
 import TwoShallowModelLarge
 import OneShallowModelOne
 import RightFiveEnergyStep
@@ -348,4 +349,110 @@ theorem source_no_two_shallow_word_wall_large
 
 #print axioms BB6.Agent43SourceWord.source_no_two_shallow_word_wall_all
 #print axioms BB6.Agent43SourceWord.source_no_two_shallow_word_wall_large
+end BB6.Agent43SourceWord
+namespace BB6.Agent43SourceWord
+open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent43TwoRun
+open BB6.Agent43ThreeShallowSourceModel
+
+/-- Three genuine shallow inverseAt transitions (depth zero or one), with
+arbitrary genuine depth-two runs before, between, and after them, cannot
+reach the P1 exact shifted wall from the critical source seed, for n >= 14. -/
+theorem source_no_three_shallow_word_wall_all
+    (n s u v r t1 t2 t3 bp dp mp k1 c1 B1 D1 M1 k2 c2 B2 D2 M2 k3 c3 be de me : Nat)
+    (hn : 14≤n) (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1)
+    (hpre : SourceTwoChain n s (14*2^n-2*n-16) 3 0 bp dp mp)
+    (hb1 : 8≤bp) (hb14 : bp%4=0) (hd1 : dp%2=1)
+    (hi1 : inverseAt bp dp t1=some (k1,c1))
+    (hk1 : 2≤k1) (hc1 : c1%2=1)
+    (hmid1 : SourceTwoChain n u (2*k1-4) (c1+4) (mp+t1+1) B1 D1 M1)
+    (hb2 : 8≤B1) (hb24 : B1%4=0) (hd2 : D1%2=1)
+    (hi2 : inverseAt B1 D1 t2=some (k2,c2))
+    (hk2 : 2≤k2) (hc2 : c2%2=1)
+    (hmid2 : SourceTwoChain n v (2*k2-4) (c2+4) (M1+t2+1) B2 D2 M2)
+    (hb3 : 8≤B2) (hb34 : B2%4=0) (hd3 : D2%2=1)
+    (hi3 : inverseAt B2 D2 t3=some (k3,c3))
+    (hk3 : 2≤k3) (hc3 : c3%2=1)
+    (hsuf : SourceTwoChain n r (2*k3-4) (c3+4) (M2+t3+1) be de me)
+    (hwall : be+4*me+4*n+20=12*2^n) : False := by
+  have hrootMass : (14*2^n-2*n-16)+3+2*0+2*n+13=14*2^n := by omega
+  have hpreMass := two_chain_mass n s _ _ _ _ _ _ hpre hrootMass
+  have hpreModel := two_chain_model n s _ _ _ _ _ _ hpre hrootMass
+  have hInv1 := (inverseAt_iff_power_mass bp dp t1 k1 c1 (by omega) hb14 hd1).mp hi1
+  have hmassStep1 : 2*k1+c1+2*t1+2=bp+dp := by omega
+  have hafter1Mass : (2*k1-4)+(c1+4)+2*(mp+t1+1)+2*n+13=14*2^n := by omega
+  have hmid1Mass := two_chain_mass n u _ _ _ _ _ _ hmid1 hafter1Mass
+  have hmid1Model := two_chain_model n u _ _ _ _ _ _ hmid1 hafter1Mass
+  have hInv2 := (inverseAt_iff_power_mass B1 D1 t2 k2 c2 (by omega) hb24 hd2).mp hi2
+  have hmassStep2 : 2*k2+c2+2*t2+2=B1+D1 := by omega
+  have hafter2Mass : (2*k2-4)+(c2+4)+2*(M1+t2+1)+2*n+13=14*2^n := by omega
+  have hmid2Mass := two_chain_mass n v _ _ _ _ _ _ hmid2 hafter2Mass
+  have hmid2Model := two_chain_model n v _ _ _ _ _ _ hmid2 hafter2Mass
+  have hInv3 := (inverseAt_iff_power_mass B2 D2 t3 k3 c3 (by omega) hb34 hd3).mp hi3
+  have hmassStep3 : 2*k3+c3+2*t3+2=B2+D2 := by omega
+  have hafter3Mass : (2*k3-4)+(c3+4)+2*(M2+t3+1)+2*n+13=14*2^n := by omega
+  have hsufModel := two_chain_model n r _ _ _ _ _ _ hsuf hafter3Mass
+  obtain ⟨alpha,C1,L1,O1,hAlpha1,hAlpha1max,hC1,hL1,hL1max,hO1,halpha1,hprofile1,hSh1⟩ :=
+    source_shallow_profile n bp dp mp t1 k1 c1 hpreMass hb1 hb14 hd1 hi1 hk1 hc1 ht1
+  obtain ⟨beta,C2,L2,O2,hBeta1,hBeta1max,hC2,hL2,hL2max,hO2,hbeta1,hprofile2,hSh2⟩ :=
+    source_shallow_profile n B1 D1 M1 t2 k2 c2 hmid1Mass hb2 hb24 hd2 hi2 hk2 hc2 ht2
+  obtain ⟨gamma,C3,L3,O3,hGamma1,hGamma1max,hC3,hL3,hL3max,hO3,hgamma1,hprofile3,hSh3⟩ :=
+    source_shallow_profile n B2 D2 M2 t3 k3 c3 hmid2Mass hb3 hb34 hd3 hi3 hk3 hc3 ht3
+  let Wa : Int := (bp:Int)+4*(mp:Int)+4*(n:Int)+20
+  let Ba : Int := (mp:Int)+(n:Int)+6
+  let Wb : Int := (↑(2*k1-4):Int)+4*(↑(mp+t1+1):Int)+4*(n:Int)+20
+  let Wc : Int := (B1:Int)+4*(M1:Int)+4*(n:Int)+20
+  let Bc : Int := (M1:Int)+(n:Int)+6
+  let Wd : Int := (↑(2*k2-4):Int)+4*(↑(M1+t2+1):Int)+4*(n:Int)+20
+  let We : Int := (B2:Int)+4*(M2:Int)+4*(n:Int)+20
+  let Be : Int := (M2:Int)+(n:Int)+6
+  let Wf : Int := (↑(2*k3-4):Int)+4*(↑(M2+t3+1):Int)+4*(n:Int)+20
+  let Wg : Int := (be:Int)+4*(me:Int)+4*(n:Int)+20
+  let Bg : Int := (me:Int)+(n:Int)+6
+  have hrootEq : ((↑(14*2^n-2*n-16):Int)+4*(0:Int)+4*(n:Int)+20) =
+      14*(2:Int)^n+2*(n:Int)+4 := by
+    have hnat : (14*2^n-2*n-16)+4*n+20 = 14*2^n+2*n+4 := by omega
+    exact_mod_cast hnat
+  have hpreModel' : TwoRun ((2:Int)^n)
+      (14*(2:Int)^n+2*(n:Int)+4) ((n:Int)+6) s Wa Ba := by
+    rw [show (↑(0:Nat):Int)=0 by rfl] at hpreModel
+    rw [hrootEq] at hpreModel
+    simpa [Wa,Ba] using hpreModel
+  have hBafter1 : ((↑(mp+t1+1):Int)+(n:Int)+6)=Ba+(alpha:Int) := by
+    dsimp [Ba]
+    omega
+  have hmid1Model' : TwoRun ((2:Int)^n) Wb (Ba+(alpha:Int)) u Wc Bc := by
+    rw [hBafter1] at hmid1Model
+    simpa [Wb,Wc,Bc] using hmid1Model
+  have hBafter2 : ((↑(M1+t2+1):Int)+(n:Int)+6)=Bc+(beta:Int) := by
+    dsimp [Bc]
+    omega
+  have hmid2Model' : TwoRun ((2:Int)^n) Wd (Bc+(beta:Int)) v We Be := by
+    rw [hBafter2] at hmid2Model
+    simpa [Wd,We,Be] using hmid2Model
+  have hBafter3 : ((↑(M2+t3+1):Int)+(n:Int)+6)=Be+(gamma:Int) := by
+    dsimp [Be]
+    omega
+  have hsufModel' : TwoRun ((2:Int)^n) Wf (Be+(gamma:Int)) r Wg Bg := by
+    rw [hBafter3] at hsufModel
+    simpa [Wf,Wg,Bg] using hsufModel
+  have hSh1' : ((2:Int)^alpha)*I ((2:Int)^n) Wb (Ba+(alpha:Int)) =
+      I ((2:Int)^n) Wa Ba-(C1:Int)*(2:Int)^n+(L1:Int)*Ba-(O1:Int) := by
+    simpa [Wa,Wb,Ba] using hSh1
+  have hSh2' : ((2:Int)^beta)*I ((2:Int)^n) Wd (Bc+(beta:Int)) =
+      I ((2:Int)^n) Wc Bc-(C2:Int)*(2:Int)^n+(L2:Int)*Bc-(O2:Int) := by
+    simpa [Wc,Wd,Bc] using hSh2
+  have hSh3' : ((2:Int)^gamma)*I ((2:Int)^n) Wf (Be+(gamma:Int)) =
+      I ((2:Int)^n) We Be-(C3:Int)*(2:Int)^n+(L3:Int)*Be-(O3:Int) := by
+    simpa [We,Wf,Be] using hSh3
+  have hwallInt : Wg=12*(2:Int)^n := by
+    dsimp [Wg]
+    exact_mod_cast hwall
+  exact no_three_shallow_model_from_source_coefficients
+    n s u v r t1 t2 t3 alpha beta gamma C1 C2 C3 L1 L2 L3 O1 O2 O3
+    hn ht1 ht2 ht3 hprofile1 hprofile2 hprofile3
+    hC1 hL1 hO1 hC2 hL2 hO2 hC3 hL3 hO3
+    Wa Ba Wb Wc Bc Wd We Be Wf Wg Bg
+    hpreModel' hSh1' hmid1Model' hSh2' hmid2Model' hSh3' hsufModel' hwallInt
+
+#print axioms source_no_three_shallow_word_wall_all
 end BB6.Agent43SourceWord
