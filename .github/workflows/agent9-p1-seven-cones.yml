@@ -1,0 +1,45 @@
+name: Agent 9 seven difficult original P1 feeder root cylinders
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-shadow-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        q: [38, 101, 129, 146, 189, 273, 294]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl -fsSL --retry 3 --retry-all-errors https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep $((5*attempt))
+          done
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Certify full source for one high-cost P1 family
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q41:im-results/agent9-p1-fixed-cone:im-results/agent9-p1-largecones"
+          Q="${{ matrix.q }}"
+          lean --version
+          python im-results/agent9-p1-largecones/generate_large_rows.py "$Q"
+          python tools/lean_compile_deps.py "im-results/agent9-p1-largecones/Q${Q}Budget.lean" | tee "/tmp/q${Q}-proof.log"
+          if grep -E -q 'sorryAx|error:' "/tmp/q${Q}-proof.log"; then
+            echo "Lean proof failed or sorry axiom detected" >&2
+            exit 1
+          fi
+          grep -F "BB6.Agent9Q${Q}.no_critical_gateway' depends on axioms: [propext, Classical.choice, Quot.sound]" "/tmp/q${Q}-proof.log"
