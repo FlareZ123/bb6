@@ -1,3 +1,4 @@
+import CZeroEvenReturn
 import BB429SourceE1Return
 import BB429FinishScanEDelta
 import Lean.Elab.Tactic.Omega
@@ -64,6 +65,22 @@ theorem C0_to_junc0 (k : Nat) :
         rw [ih]
   rw [hr (2*k)]
   rfl
+
+/-- A direct two-phase physical source corridor: an even contiguous
+    C/0 frontier is first rewritten to the 10-prefix section and then
+    enters canonical Junc(0,0,2k) with exact tape equality. -/
+theorem even_C0_to_junc0 (k : Nat) :
+    run (6*k+33) (z 2 (ones (2*k+2)) false []) =
+      some (junc 0 0 (2*k)) := by
+  have h : 6*k+33 = (4*k+11)+(2*k+22) := by omega
+  rw [h,run_add]
+  change (BB429CZeroEvenReturn.C0_even_to_C0 k).bind
+    (run (2*k+22)) = some (junc 0 0 (2*k))
+  rw [BB429CZeroEvenReturn.C0_even_to_C0]
+  simp only [Option.bind_some]
+  exact C0_to_junc0 k
+
+#print axioms even_C0_to_junc0
 
 #print axioms C0_to_E1_6
 #print axioms E1_ones_sweep
