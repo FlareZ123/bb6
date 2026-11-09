@@ -1,8 +1,8 @@
-# Authentic Root119 right-run exclusion and physical return laws
+# Sharp blank-root right-run law and five physical return families for auxiliary #119
 
 **Established 9 November 2026, original auxiliary-source Lean 4.36.0-rc2.** On the genuine blank-root orbit of the literal six-state auxiliary table `1RB---_1LC1LF_1LD0LC_0LE1RF_1RA1LA_1LB0RD`, every reached B/0 configuration with left bits `t(h−3)=1` and `t(h−2)=0` has **four consecutive ones immediately to the right of the head**. The constant **four is sharp**: [Root119Sharpness.lean](Root119Sharpness.lean) proves a genuine blank-start witness after **1,289** primitive instructions (B/0 at head **−33**) satisfying the same left context with right prefix `11110`. The proof computes the literal original `run 1289 blank` by kernel `decide` and transports it into genuine `Reach`; the witness theorem has only `propext` as an axiom. Both directions passed [original-source CI 42717638415](https://github.com/FlareZ123/bb6/actions/runs/42717638415), with no `sorryAx`.
 
-The same source-check includes four previously established, all-parameter physical B/0 return families, with conditional transport of the forbidden-`1100` left-of-head shield. Their input predicates cover all 49 B/0 first-return intervals that had remained unclassified in the older ten-million-step replay; **this coverage is finite evidence**. Neither the new right-run obstruction nor the return families establish an all-time partition of every reachable B/0 configuration. Historical root #119 and BB(6) are still unresolved.
+Four earlier all-parameter physical B/0 return families preserve the forbidden-`1100` left-of-head shield under their explicit input hypotheses. A newly source-checked **fifth family** composes two consecutive odd F/1 waves that return immediately to B/0, with no additional alternating retreat. The first four families' input predicates cover all 49 intervals left unclassified in the older ten-million-step replay; **that coverage is finite evidence**. Neither the new right-run obstruction nor the return families establish an all-time partition of every reachable B/0 configuration. Historical root #119 and BB(6) are still unresolved.
 
 ## All-time original blank-root theorem
 
@@ -23,7 +23,7 @@ The hypothesis places no restriction on `t(h−1)` or the exterior tape. Two sou
 
 **Immediate mathematical consequence for prior return formulas.** In Agent42's exact [even and odd-even B/0 prefix laws](../agent42-root119-guard/EVEN_WAVE_PREFIX_FAMILIES.md), the input left suffix is `101`, hence this theorem applies. The even family has right one-run `2n+1`, so its parameters `n=0,1` are impossible at genuine blank-reachable inputs; the odd-even family has right one-run `2n`, so its `n=0,1` inputs are likewise impossible. Larger parameter values, including dangerous odd-even shield boundaries, are still open. The source-exact ten-step exclusion itself is independent of `t(h−3)=1` and applies to every reached B/0 with `t(h−2)=0` and right word `1110`.
 
-## Exact theorem inventory
+## Exact conditional theorem inventory
 
 For `c=(B,h,t)` with `t(h)=0` and natural parameters `n,m`, let `1^k` denote k consecutive tape ones.
 
@@ -33,10 +33,15 @@ For `c=(B,h,t)` with `t(h)=0` and natural parameters `n,m`, let `1^k` denote k c
 | `left_gateway_B_return n` | `14+2n` | `h−8−2n` | Left suffix `0101001`, same alternating extension and zero sentinel; all tape at or left of return head unchanged |
 | `right_gateway_return n` | `12+2n` | `h+2n+2` | Left three bits `000`, right `1^(2n)00`; all tape at or right of return head unchanged |
 | `double_sweep_return n m` | **`4n+2m+6`** | **`h−2m`** | `t(h−1)=0`, `t(h−2)=1`, right `1^(2n)0`, and a left `m−1`-pair alternating B/1,F/0 retreat ending at zero, `m≥2`; all tape at or left of return head unchanged |
+| [`imm_two_wave_exact n m`](Root119ImmediateTwoWave.lean) | **`4n+4m+20`** | **`h−4`** | B/0 left suffix `101`, nine-step F/1 entry, two individually specified odd F/1 right-wave conditions with an intermediate B/1 move; the returned state is B and the entire tape at or left of `h−4` is unchanged. If the input has `t(h−4)=0`, it is B/0 and its left-of-head shield transfers |
 
-Each endpoint is **B/0** and is produced after exactly the stated number of ordinary Turing machine steps. Exterior tape is universally quantified; no special blank tape outside the listed input corridor is assumed. The double sweep composes a literal 3-step B/0 → F/1 prefix, `n+1` rightward F/1,D/1 pairs, a single F/0 turn to B/1, and `n+m` leftward B/1,F/0 pairs. It is genuinely **two-parameter and unbounded in both directions**. Exact arithmetic is `3 + 2(n+1) + 1 + 2(n+m) = 4n+2m+6`.
+The four original inventory rows have B/0 endpoints under their local tape hypotheses. The fifth is an exact B-state endpoint; the additional source theorem `imm_two_wave_endpoint_shield` proves it is **B/0** when the original cell `t(h−4)=0`, with shield transport. Every step count is in ordinary Turing machine transitions. Exterior tape is universally quantified; no special blank tape outside the listed input corridor is assumed. The double sweep composes a literal 3-step B/0 → F/1 prefix, `n+1` rightward F/1,D/1 pairs, a single F/0 turn to B/1, and `n+m` leftward B/1,F/0 pairs. It is genuinely **two-parameter and unbounded in both directions**. Exact arithmetic is `3 + 2(n+1) + 1 + 2(n+m) = 4n+2m+6`.
 
 The source-certified shield theorems `left_gateway_shield`, `left_gateway_B_shield`, `right_gateway_shield`, and `double_sweep_shield` each conclude existence of that precise physical return with `NoLeft4 true true false` whenever the input has the respective corridor hypotheses and satisfies `NoLeft4 true true false`. Left gateways and the double sweep preserve the entire tape below the returned head. The right gateway shield is proved by an additional induction: each rightward F/D pair writes alternating `01`, and the four-step final tail writes two ones, excluding any newly created left-of-head `1100`.
+
+The new source-[verified immediate-two-wave result](Root119ImmediateTwoWave.lean) is a separate fifth closure. The first wave takes `4n+5` steps from the nine-step B/0 entry, the B/1 bridge takes one step, and the second takes `4m+5`; the sum is `4n+4m+20`. The end head is `h−4`. Both wave tapes, plus the initial four-cell prefix write, agree with the input tape at every coordinate `x≤h−4`, giving unconditional left exterior preservation and, if input reads zero at that boundary, full `NoLeft4` transport. [Original source CI 42719548110](https://github.com/FlareZ123/bb6/actions/runs/42719548110) compiled the two-wave exact law and shield lemma under unmodified Agent42 imports without `sorryAx`.
+
+In an independent 300-million-step raw replay, twelve reached B/0 states with left suffix `110101` all had an immediate preceding B/0 return of the two-odd-wave form: previous left suffix `01010101`, input right run `2n`, right terminal `010101`, elapsed `8n+28` steps and head shift `−4`, with output right run `2n+8` and the same terminal `010101`. For example, from time `3,191,647` to `3,193,243` the input right run had length 392 (`n=196`), the two F waves had parameters `196,198`, and the output run length was 400. The twelve observations are finite, not a classification of every reached unsafe boundary. They identify a plausible source mechanism for the unresolved odd-even sentinel guard without establishing global closure.
 
 ## Verification against untouched original definitions
 
@@ -49,6 +54,7 @@ The manual [.github/workflows/agent12-root119-corridor.yml](../../.github/workfl
 | [`Root119Ancestry.lean`](Root119Ancestry.lean) | Readable, compiled against original imports | Genuine reachable B/0 right-three property; arbitrary three-step inverse |
 | [`Root119AncestryTen.lean`](Root119AncestryTen.lean) | Readable, compiled against original imports | Arbitrary ten-step inverse contradiction and all-time blank-root right-four theorem |
 | [`Root119Sharpness.lean`](Root119Sharpness.lean) | Readable, original-source kernel computation of 1,289-step blank run | Genuine reached B/0 with right `11110`, proving optimality of four |
+| [`Root119ImmediateTwoWave.lean`](Root119ImmediateTwoWave.lean) | Readable, independent [source CI 42719548110](https://github.com/FlareZ123/bb6/actions/runs/42719548110) | Exact two-wave `4n+4m+20` endpoint, left exterior preservation and shield transport |
 | [`Root119Corridor.lean.xz.b64`](Root119Corridor.lean.xz.b64) | Decoded SHA-256 `65efa8844d8836f2579e4d7d5a71f308a2fc2f5343a0c0309f1f0c971ca2ab1d` | Three one-parameter B/0 returns, exact tape boundaries |
 | [`Root119CorridorShield.lean.xz.b64`](Root119CorridorShield.lean.xz.b64) | Decoded SHA-256 `0888e541438f09ef9da1ea7228d51a2446c488a3b3c42a40a955354acec023ef` | Three corresponding forbidden-word shields |
 | [`Root119Cross.lean.xz.b64`](Root119Cross.lean.xz.b64) | Decoded SHA-256 `f5dd3f8e6432dec762dbecc1b8c7a791330218bf6c21be4b599fb457606ef99d` | Two-parameter double sweep with shield |
@@ -76,7 +82,7 @@ This census is reproducible and matches original-source machine semantics, but n
 
 ## Missing global proof obligation
 
-Agent42's original [`blank_halts_iff_gate`](../agent42-root119-guard/Root119Gate.lean) reduces auxiliary blank-root halting to a genuinely reached D/0 with two left ones. The `NoLeft4 true true false` shield and exact conditional return theorems would be useful toward excluding this gate, but no proof yet establishes that **all** genuine B/0 returns satisfy the necessary corridor hypotheses or preserve the shield. In particular, the odd-even family with `n≥2` has a sharp, source-checked `110` left boundary obstruction; whether authentic reachability excludes that boundary remains open.
+Agent42's original [`blank_halts_iff_gate`](../agent42-root119-guard/Root119Gate.lean) reduces auxiliary blank-root halting to a genuinely reached D/0 with two left ones. The `NoLeft4 true true false` shield and five exact conditional return theorems would be useful toward excluding this gate, but no proof yet establishes that **all** genuine B/0 returns satisfy the necessary corridor hypotheses or preserve the shield. In particular, the odd-even family with `n≥2` has a sharp, source-checked `110` left boundary obstruction; whether authentic reachability excludes that boundary remains open.
 
 A useful next research target is an inductively closed, source-exact language for all B/0 input sections, including two-wave chains, alternating left retreats, right-run endings, and exceptional predecessors. The new all-time four-right restriction narrows that language, but supplies no global upper bound for BB(6) or nonhalting theorem for #119.
 
