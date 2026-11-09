@@ -37,5 +37,13 @@ jobs:
           lean -o ThreeConeArithmetic.olean ThreeConeArithmetic.lean
           lean -o ThreeConeSource.olean ThreeConeSource.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/ThreeConeProper.lean .
-          lean ThreeConeProper.lean
+          lean -o ThreeConeProper.olean ThreeConeProper.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-valuation-fanin/{ValuationArithmetic,ValuationSource,ValuationOneOrbit}.lean .
+          lean -o ValuationArithmetic.olean ValuationArithmetic.lean
+          lean -o ValuationSource.olean ValuationSource.lean
+          python ${GITHUB_WORKSPACE}/im-results/agent34-c-valuation-fanin/reconstruct_one.py
+          lean -o ValuationOne.olean ValuationOne.lean
+          lean -o ValuationOneOrbit.olean ValuationOneOrbit.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/SourceImageTower.lean .
+          lean SourceImageTower.lean
 
