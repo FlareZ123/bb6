@@ -35,7 +35,9 @@ theorem wordBlock_six (w : List Bool) : 6 ≤ wordBlock w := by
   have h := wordBlock_positive w
   cases w with
   | nil => decide
-  | cons bit w => cases bit <;> simp only [wordBlock] <;> omega
+  | cons bit w =>
+    have hchild := wordBlock_positive w
+    cases bit <;> simp only [wordBlock] <;> omega
 
 theorem wordCharge_even (w : List Bool) : wordCharge w%2=0 := by
   induction w with
