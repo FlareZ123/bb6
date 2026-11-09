@@ -69,6 +69,41 @@ private theorem odd_entry_fatal_even_depth_arithmetic (k entry m : Nat)
     omega
   · omega
 
+/-- The same source odd-entry and fatal-deficit arithmetic independently
+    singles out the two high-level fatal-index sectors, for all k. -/
+theorem odd_fatal_level_sector_arithmetic (k e m : Nat)
+    (hdiv : (2*e+5)%3=0)
+    (hdef : e+2^m*(4*k+10)=8*2^k+k) :
+    k%6=3 ∨ k%6=4 := by
+  have hm : m%2=1 := odd_entry_fatal_even_depth_arithmetic k e m hdiv hdef
+  have hpar : (m+1)%2=0 := by omega
+  have hpowm : (2^(m+1))%3=1 := by
+    rw [two_pow_mod_three]
+    simp [hpar]
+  have hmult : (2^(m+1)*(4*k+10))%3=(4*k+10)%3 := by
+    rw [Nat.mul_mod,hpowm]
+    omega
+  have hpow : 2^(m+1)=2*2^m := by rw [Nat.pow_succ]; omega
+  have hscale : (2*2^m)*(4*k+10)=2*(2^m*(4*k+10)) := by ac_rfl
+  have hp : 16*2^k=2*(8*2^k) := by omega
+  have heq : 16*2^k+2*k+5=(2*e+5)+2^(m+1)*(4*k+10) := by
+    rw [hpow,hscale,hp]
+    omega
+  have hmod : (16*2^k+2*k+5)%3=(4*k+10)%3 := by
+    rw [heq,Nat.add_mod,hdiv,hmult]
+    simp
+  have hstar : (2^k+k+1)%3=0 := by omega
+  by_cases he : k%2=0
+  · have hp0 : 2^k%3=1 := by rw [two_pow_mod_three]; simp [he]
+    have hk3 : k%3=1 := by omega
+    have hk6 : k%6=4 := by omega
+    exact Or.inr hk6
+  · have ho : k%2=1 := by omega
+    have hp1 : 2^k%3=2 := by rw [two_pow_mod_three]; simp [ho]
+    have hk3 : k%3=0 := by omega
+    have hk6 : k%6=3 := by omega
+    exact Or.inl hk6
+
 /-- If an odd source first-reset edge enters level k, then m authentic
     same-level first resets followed by a successful adjacent-level even exit
     into the fatal threshold of level k+1 require m odd. This excludes every
@@ -89,6 +124,29 @@ theorem odd_entry_adjacent_fatal_depth_odd (k a entry z v m : Nat)
     dsimp [deficitAt] at hdef
     omega
   exact odd_entry_fatal_even_depth_arithmetic k entry m hdiv heq
+
+/-- Independently recover the exact fatal level sectors k mod 6 = 3 or 4
+    from any original source odd-entry and adjacent even-fatal history.
+    No root reachability or previous sector classification is required. -/
+theorem odd_entry_adjacent_fatal_level_sector (k a entry z v m : Nat)
+    (haodd : (a+firstFailIndex a)%2=1)
+    (ha : bitOutcome a=some entry)
+    (hk : firstFailIndex entry=k)
+    (hp : SameLevelPath k entry z m)
+    (hz : bitOutcome z=some v)
+    (hu : firstFailIndex v=k+1)
+    (hf : fatalAt v) : k%6=3 ∨ k%6=4 := by
+  have hdiv := odd_bit_output_mod_three a entry haodd ha
+  have hdef := adjacent_fatal_after_same_level_path k entry z v m hp hz hu hf
+  have hbound := (firstFailIndex_spec entry).2
+  rw [hk] at hbound
+  have heq : entry+2^m*(4*k+10)=8*2^k+k := by
+    dsimp [deficitAt] at hdef
+    omega
+  exact odd_fatal_level_sector_arithmetic k entry m hdiv heq
+
+#print axioms odd_fatal_level_sector_arithmetic
+#print axioms odd_entry_adjacent_fatal_level_sector
 
 #print axioms odd_bit_output_mod_three
 #print axioms odd_entry_adjacent_fatal_depth_odd
