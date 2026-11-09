@@ -35,7 +35,7 @@ These are infinitely parametrized whole-tape theorems. They are **not** a global
 
 ## Reproducibility
 
-The three compressed source files are restored with [restore.py](restore.py), an atomic, lock-protected decompressor with SHA-256 checking. Run it with Python 3 and compile the Lean sources with Lean 4.36.0-rc2. The dependencies are existing original repository modules BB429OddExcursion, W4HeadMax, and W4CZeroCount, and their respective dependencies. All local proofs checked **without sorry**; the axiom audits were:
+The three compressed source files are restored with [restore.py](restore.py), an atomic, lock-protected decompressor with SHA-256 checking. Run it with Python 3 and compile the Lean sources with Lean 4.36.0-rc2. The dependencies are existing original repository modules BB429OddExcursion and W4HeadMax. The count module defines an identical source-level C/0 monitor to the existing W4CZeroCount to avoid its unrelated import graph. All local proofs checked **without sorry**; the axiom audits were:
 
 - BB429OddEvenCorridor.odd_even_corridor: [propext, Quot.sound].
 - BB429OddEvenCorridorMax.odd_even_corridor_max: [propext, Classical.choice, Quot.sound].
@@ -47,7 +47,7 @@ The locally compiled test module for BB429OddExcursion repeated its original pub
 | --- | --- |
 | BB429OddEvenCorridor.lean | 524d8046bea7a051f406aed4192af8f89b087904f74ba2b3d1b6b3b53b530061 |
 | BB429OddEvenCorridorMax.lean | 59d8fa26979247b7e37dd91054eacd3d2c4242c88ed57a55bd236967674ee5e5 |
-| BB429OddEvenCorridorCount.lean | 4cd04289b4186a0114389485d5a7c6ecac4a900f8d97102b5a3f958eba604586 |
+| BB429OddEvenCorridorCount.lean | 5b52cb2e03f037c33a3a233ea431e6d1129f692a949b578dbcc923b65b404a95 |
 
 ## Next high-value question
 
