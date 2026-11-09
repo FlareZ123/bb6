@@ -37,7 +37,7 @@ theorem finishC_ScanE_safe (u p k : Nat) :
   have hones : ones (2*k+1) = true :: ones (2*k) := by
     calc
       ones (2*k+1) = ones (1+2*k) := by congr 1 <;> omega
-      _ = ones 1 ++ ones (2*k) := ones_add 1 (2*k)
+      _ = ones 1 ++ ones (2*k) := BB429FinishScanEDelta.ones_add 1 (2*k)
       _ = true :: ones (2*k) := rfl
   have honesTail : true :: (ones (2*k) ++ [false,true]) =
       ones (2*k+1) ++ [false,true] := by
