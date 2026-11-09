@@ -37,3 +37,5 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent49FlatDrainSource.olean Agent49FlatDrainSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FullFailureSpectrumSource.lean" Agent49FullFailureSpectrumSource.lean
           lake env lean Agent49FullFailureSpectrumSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FastFailureSpectrumSource.lean" Agent49FastFailureSpectrumSource.lean
+          lake env lean Agent49FastFailureSpectrumSource.lean
