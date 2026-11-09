@@ -39,13 +39,13 @@ theorem cycle9_period81920 :
     prefixRunFast 81920 cycle9Start = cycle9Start := by
   calc
     prefixRunFast 81920 cycle9Start =
-        prefixRunFast (61440 + 20480) cycle9Start := by norm_num
+        prefixRunFast (61440 + 20480) cycle9Start := by omega
     _ = prefixRunFast 20480 (prefixRunFast 61440 cycle9Start) :=
       prefixRunFast_add 61440 20480 cycle9Start
     _ = prefixRunFast 20480
           (prefixRunFast (40960 + 20480) cycle9Start) := by
       congr 1
-      norm_num
+      omega
     _ = prefixRunFast 20480
           (prefixRunFast 20480 (prefixRunFast 40960 cycle9Start)) := by
       rw [prefixRunFast_add 40960 20480 cycle9Start]
@@ -53,13 +53,13 @@ theorem cycle9_period81920 :
           (prefixRunFast 20480
             (prefixRunFast (20480 + 20480) cycle9Start)) := by
       congr 2
-      norm_num
+      omega
     _ = prefixRunFast 20480
           (prefixRunFast 20480
             (prefixRunFast 20480 (prefixRunFast 20480 cycle9Start))) := by
       rw [prefixRunFast_add 20480 20480 cycle9Start]
     _ = cycle9Start := by
-      simp [block9_start, block9_phase1, block9_phase2, block9_phase3]
+      rw [block9_start, block9_phase1, block9_phase2, block9_phase3]
 
 theorem prefixRunFast_period81920 (n : Nat) :
     prefixRunFast (n+81920) cycle9Start =
@@ -74,7 +74,7 @@ private theorem prefixRunFast_add_mul (r k : Nat) :
   induction k with
   | zero => simp
   | succ k ih =>
-      rw [Nat.mul_succ, Nat.add_assoc]
+      rw [Nat.mul_succ, ← Nat.add_assoc]
       rw [prefixRunFast_period81920]
       exact ih
 
@@ -82,8 +82,12 @@ theorem prefixRunFast_mod81920 (n : Nat) :
     prefixRunFast n cycle9Start =
       prefixRunFast (n % 81920) cycle9Start := by
   have h : n % 81920 + 81920 * (n / 81920) = n := by omega
-  rw [← h]
-  exact prefixRunFast_add_mul (n % 81920) (n / 81920)
+  calc
+    prefixRunFast n cycle9Start =
+        prefixRunFast (n % 81920 + 81920 * (n / 81920)) cycle9Start := by
+      exact congrArg (fun x => prefixRunFast x cycle9Start) h.symm
+    _ = prefixRunFast (n % 81920) cycle9Start :=
+      prefixRunFast_add_mul (n % 81920) (n / 81920)
 
 /-- Every successful original-root state after return 5457 has a
 first-nine-digit prefix determined periodically modulo 81,920. -/
