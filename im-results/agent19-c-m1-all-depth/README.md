@@ -84,7 +84,34 @@ The enlarged families exclude **one residue progression in `j` per depth `h`**. 
 | `m≡1 (mod4)` | `2*m` | `1/[4*(2^(2*m+2)-1)]` |
 | `m≡3 (mod4)` | `2*m-1` | `1/[2*(2^(2*m+2)-1)]` |
 
-For `m=1`, the first row contributes `1/60`; the independently certified earlier seed `j=256q+266` contributes another disjoint `1/240`, bringing the total to **`1/48`** as described above. For `m=3`, the second row gives **`1/510`**. These are conditional single-index-line densities; the countably many m-lines do not produce a positive two-dimensional density by themselves.
+For `m=1`, the first row contributes `1/60`; the independently certified earlier seed `j=256q+266` contributes another disjoint `1/240`, bringing the total to **`1/48`** as described above. For `m=3`, the second row alone gives **`1/510`**, before the three extra initial depth rays described below. These are conditional single-index-line densities; the countably many m-lines do not produce a positive two-dimensional density by themselves.
+
+## Exact all-level coverage at `m=1` and `m=3`
+
+Two source-connected, all-time, **all eligible depth** existence theorems now close the arithmetic image-cylinder intersection at the first two odd stopping indices:
+
+- [`M1EveryEvenDepth.lean`](M1EveryEvenDepth.lean) proves for every even `r≥2` the existence of `s,t,j,k` with `j=4s+2r+2`, `k=bandY r t`, the authentic `m=1` stopping equation, and a proof that the blank section misses `(2j+3,k)` at all times. Source CI [42612465488](https://github.com/FlareZ123/bb6/actions/runs/42612465488), standard axioms.
+- [`M3FourSeeds.lean`](M3FourSeeds.lean) proves three additional independent initial `m=3` stopping rays at `r=7,9,11`, plus each ray's full return-depth tower `r+8h`, source CI [42611850429](https://github.com/FlareZ123/bb6/actions/runs/42611850429). Together with `m=3,r=5+8h` from `GeneralM3.lean` and `TowerAllOdd.lean`, [`M3EveryOddDepth.lean`](M3EveryOddDepth.lean) proves for **every odd `r≥5`** that some authentic `m=3` stopping point at depth `r` is absent from every blank-section iterate. Source CI [42612271114](https://github.com/FlareZ123/bb6/actions/runs/42612271114), standard axioms.
+
+The four `m=3` exact arithmetic rays, with `q,h≥0`, have base coordinates and positive progression steps:
+
+| Initial `r` | Base `j(q)` | `s(q)` | `t(q)` | All tower depths |
+| ---: | --- | --- | --- | --- |
+| 5 | `372+512q` | `90+128q` | `184+255q` | `5+8h` |
+| 7 | `244+2048q` | `57+512q` | `28+255q` | `7+8h` |
+| 9 | `7924+8192q` | `1976+2048q` | `244+255q` | `9+8h` |
+| 11 | `5876+32768q` | `1463+8192q` | `43+255q` | `11+8h` |
+
+They are disjoint by exact valuation `v₂(k+2)=r+2`; for fixed `m=3`, the asymptotic `j`-line density is
+
+```
+(1/512 + 1/2048 + 1/8192 + 1/32768) / (1 - 1/256)
+= 1/384.
+```
+
+The analogous complete even-depth `m=1` density is `1/48`. These cover **every eligible level** of the known Agent4 strict-image hierarchy at these two stopping indices. The source Lean theorems certify the exact equations, existential depth coverage, and all-time blank absence; the rational-density evaluations remain independently checkable paper arithmetic.
+
+For arbitrary positive odd `m`, [`AllOddDepthArithmetic.md`](AllOddDepthArithmetic.md) derives a stronger uniform modular-inverse criterion at **every sufficiently deep parity-compatible image level**, with expected line densities `1/(3*2^(2m+2))` for `m≡1 mod4` and `2/(3*2^(2m+2))` for `m≡3 mod4`. This *uniform modular-existence step* remains to be kernel formalized. Its source-image premise and the all-index base towers are already certified.
 
 ### Earlier dyadic sieve and the unresolved frontier
 
@@ -94,6 +121,6 @@ At any strictly positive tower depth the source high-stopping equation and exact
 j_(h+1)+3*m+3=P*(j_h+3).
 ```
 
-Thus for **every** allowed older dyadic inverse depth `n` with `n+4≤2*m+2`, the shifted stopping center reduces to zero modulo `2^(n+4)`, whereas that obstruction requires `2^(n+2)`. The theorem `tower_successor_misses_old_dyadic` proves this universally in local Lean; its original-source CI rerun was dispatched following the already-successful original-source proof of the tower itself. The `h=0` odd-index bases independently escape the old dyadic sieve by source-certified `GeneralM.lean` and `GeneralM3.lean`.
+Thus for **every** allowed older dyadic inverse depth `n` with `n+4≤2*m+2`, the shifted stopping center reduces to zero modulo `2^(n+4)`, whereas that obstruction requires `2^(n+2)`. The theorem `tower_successor_misses_old_dyadic` proves this universally against the original source, [CI 42611085150](https://github.com/FlareZ123/bb6/actions/runs/42611085150). The `h=0` odd-index bases independently escape the old dyadic sieve by source-certified `GeneralM.lean` and `GeneralM3.lean`.
 
 **Important limitation:** these genuinely new explicit all-parameter consequences of the existing image hierarchy have not yet been compared against the complete latest collection of source-proven high allowed restrictions or the full-forced nonreachability filter. A finite- or unbounded-depth root-connected classification remains necessary. The low-stopping family, other high parameters, Machine C blank halting, other six-state holdouts and exact BB(6) are **open**. This dossier belongs in `im-results/` pending independent novelty and strongest-sieve analysis.
