@@ -112,6 +112,33 @@ theorem general_unreachable (a q time : Nat) :
   rw [hx]
   exact blank_excludes_all_depth_cylinders (8*a+2) (s a q) (t a q) time
 
+theorem general_dyadic_not_excluded (a q n : Nat) :
+    ¬ (n+4 ≤ 2*m a+2 ∧
+       (j a q+3*m a+3)%2^(n+4)=2^(n+2) ∧
+       (2*j a q+3)%8=(if n%2=0 then 7 else 3)) := by
+  rintro ⟨hn,hres,_⟩
+  have hj := j_source_relation a q
+  have hpow := power_eq a
+  have hfull :
+      j a q+3*m a+3 = (2:Nat)^(2*m a+2)*(4*q+2) := by
+    rw [hpow]
+    dsimp [m]
+    omega
+  have hdiv : (2:Nat)^(n+4) ∣ (2:Nat)^(2*m a+2) :=
+    Nat.pow_dvd_pow 2 hn
+  have hdivprod : (2:Nat)^(n+4) ∣
+      (2:Nat)^(2*m a+2)*(4*q+2) := by
+    obtain ⟨z,hz⟩ := hdiv
+    refine ⟨z*(4*q+2),?_⟩
+    rw [hz]
+    ac_rfl
+  have hzero : (j a q+3*m a+3)%2^(n+4)=0 := by
+    rw [hfull]
+    exact Nat.mod_eq_zero_of_dvd hdivprod
+  have hpositive : 0 < (2:Nat)^(n+2) := Nat.pow_pos (by decide)
+  omega
+
+#print axioms general_dyadic_not_excluded
 #print axioms general_high_stopping
 #print axioms general_unreachable
 end BB6.Agent19GeneralM
