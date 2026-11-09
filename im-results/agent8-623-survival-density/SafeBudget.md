@@ -76,6 +76,25 @@ T(T(D(P(w),P(w)-2))) = some D(2+3*P(w)+C(w),7).
 
 The Lean theorem `wordBlock_injective` establishes the encoding is injective. Consequently **each word length n supplies precisely 2^n distinct safe block counts**, all exponentially large in n. This is an infinite two-branch ternary Cantor-like family of individually certified genuine-accelerator returns, extending the one-ray pump. The states remain synthetic; reachability from `D(0,7)` is unproved. The lemmas were compiled independently under source-identical Lean definitions, with standard axioms only; original-source import CI is in progress.
 
+## Necessary deficit for any authentic fatal B-drain
+
+The contrapositive of the source-certified `drainB_safeBudget` theorem gives a directly usable necessary condition for failure:
+
+```text
+drainB(a,b,d) = none   =>   a < h(b).
+```
+
+Unfolding the **original** `highLevelNext` cases therefore yields these necessary digit-path deficits if a surviving even-first-counter state `D(a,d)` terminates in its indicated B-drain branch:
+
+| Original branch | Necessary fatal deficit |
+| --- | --- |
+| odd d, a≥d+5 (far left) | `a-d-5 < h(d+3)` |
+| even d, a≥d+3 (far left) | `a-d-2 < h(d+2)` |
+| odd d, 0<a<d+5, a even, a≠d+2 | `d+4-a < h(a-1)` |
+| even exceptional a=d+2 | `0 < h(a)` |
+
+In the final even-`d` nested-evaluator branch, termination must arise either because `evalA` fails or because its successful output `(x,b,m)` satisfies `x<h(b)`. On the `a=0` axis, the odd-`d` B call can be checked from `h(2)≤d+1`; the even-`d` return is unconditional. These are **universal one-step source consequences**, so each surviving true blank-root state must satisfy the corresponding condition to be a possible terminal parent. They substantially refine coarse logarithmic parent corridors by retaining the entire ternary carry path. No proof yet excludes these narrow fatal deficits on every actual blank-origin iterate.
+
 ## Outstanding root-specific barrier
 
 The [original-source complete digit decoder](NextDigitSource.lean) allows every original accelerated transition to be checked against the path-specific input requirement `h(b)<=a`, after any necessary `evalA` call. A potentially decisive nonhalting strategy would prove this requirement and evaluator success for every actual blank-origin iterate. No such inductive invariant has been found.
