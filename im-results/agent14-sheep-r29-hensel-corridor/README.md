@@ -53,6 +53,28 @@ At k=0 the numerator is divisible by `3^10`, for each r, by the same parent-inte
 
 Consequently the full theorem holds independently in **eight** exponent residue cylinders modulo Delta: r29 with a terminal `(3,6)` edge and the seven classes above with terminal `(8,2)` edges. Every target still satisfies `v3(j)=7`. This strengthening is reproduced by [`mixed_witness.py`](./mixed_witness.py); the original [`witness.py`](./witness.py) is retained as an independently readable r29 specialization.
 
+## Reusable 3-adic affine-corridor principle
+
+The eight cases are instances of a source-independent lemma.
+
+**3-adic unit lifting lemma.** Let `A,g,C` be integers with `3∤A`, `g>0`, `q≥1`, `v3(g−1)=q`, and `3^q | A+C`. For every `m≥q` there is an integer `k≥0` satisfying
+
+```
+3^m | A*g^k+C.
+```
+
+Indeed, when a solution is known modulo `3^p` for `p≥q`, LTE gives `g^(3^(p−q)) = 1+3^p*c` with `3∤c`. The three lifts `k+u*3^(p−q)` have next digit shifted by `u*A*g^k*c (mod 3)`; exactly one u in `{0,1,2}` cancels the digit. Moreover, all integers congruent to the resulting k modulo `3^(m−q)` are solutions at precision m, so the witness can be selected arbitrarily large. The compatible digits specify a unique 3-adic limit exponent `k_*` solving `A*g^(k_*) = -C` in the principal-unit group.
+
+**Affine source corollary.** Suppose a positive integer affine node family has
+
+```
+Y(k)+12 = (A*g^k+C)/d,
+```
+
+where `d` is positive odd and `v3(d)=e≤q`, with the expression integral and even at every chosen k. Taking `m=max(q,e+2T)` gives an arbitrarily large k with `9^T | Y(k)+12`. If Y(k) is sufficiently large, T exact ordinary Sheep first-even predecessors `P(y)=(8y−12)/9` exist. This separates the **3-adic lifting** obligation (one base congruence and the generator valuation) from the **genuine Sheep admissibility** obligation (source parity, odd quotient at least five and original F identities).
+
+Our r29 example has `q=10,e=4,C=25220`. All seven X examples have `q=e=10,C=680296`. The latter base congruence is automatic from the exact source-integrality identity. This principle can be applied to future affine inverse cones when the genuine even-return source and target constraints are already known. Its purely number-theoretic lemma is standard; the application to the specific Sheep mixed inverse branches is the research contribution.
+
 ## Exact construction
 
 Put
