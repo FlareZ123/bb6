@@ -1,37 +1,100 @@
-# Candidate exact low-J continuation chart for #429 (unproved formulas)
+# #429 low-J returns: exact deficit-three physical proof candidate and wider residue conjectures
 
-**Research status: computational conjectures only.** The original six-state machine has exact source-proved chart returns for `w+1≥2u` in [Agent18's canonical chart](../agent18-429-junc-canonical/README.md). This dossier investigates the previously uncovered region `w+1<2u`, writing `r=2u-w≥2`.
+**Scope and research state (9 November 2026).** The original six-state table is
+`1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`.
+For the canonical prepared infinite tape `J(u,w)`, previously established
+source-certified [high and fatal branches](../agent18-429-junc-canonical/README.md)
+cover `w+1≥2u`. This dossier addresses `r=2u-w≥2` with exact source
+dynamics and full-tape geometry. The remaining all-time *authentic blank-origin*
+question is whether the genuine root orbit can reach any fatal
+`w+1=2u` J section or its original B/001 equivalent. The present
+prepared-tape statements do not decide #429 or BB(6).
 
-Original source table: `BB429PhysicalFrontier.prefix11`, machine `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. Program [explore_low_j.py](explore_low_j.py) runs the exact raw table on every nonzero cell of the infinite canonical `jTape u w`, with explicit blank outside its finite support. At the proposed time it compares the **entire finite set of one-cells**, state, and physical head against the candidate translated J tape. No local-window approximation is used.
+## Deficit-three: full original-machine theorem submitted
 
-## Candidate residue-class formulas
+The source-stage theorem `BB429Low3Stage.stage3_to_junc`, written by
+Agent 6 in [Low3Stage.lean](../agent6-429-low2/Low3Stage.lean),
+targets the following all-natural exact symbolic return:
+```lean
+stage3 v = z 0 (ones (4*v+4) ++ (true::false::ones 6)) true [false,true]
+run (12*v+48) (stage3 v) = some (junc 0 0 (4*v+10))
+```
+The new [Low3Physical.lean](Low3Physical.lean) connects that symbolic
+stage to the physical original six-state interpreter, using
+`BB6Bubble.multi_bubble_prefix` after `v+1` bubbles,
+`BB429PhysicalBridge.source_run_rep`, and an entire-infinite-tape
+identification. Its precise proposed theorem is:
+```lean
+theorem BB429Low3Physical.low3_raw (v : Nat) :
+  ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
+    (4*v*v+22*v+54)
+    {state:=BB6Bubble.A,head:=0,
+     tape:=BB429JPhysical.jTape (v+2) (2*v+1)} = some c' ∧
+    BB429PhysicalBridge.Represents
+      (BB429FinishScanEDelta.junc 0 0 (4*v+10)) c'
+```
+Thus in the usual `u=v+2` coordinates the proposed exact transition is
+`J(u,2u-3) → J(0,4u+2)` up to translation, after
+`4u²+6u+26` primitive moves. The theorem does not assert the head
+offset; the independently observed candidate is `−2u−2`.
 
-Each row conjectures `J_0(u,2u-r) → J_h(U,W)` after exactly `T` primitive instructions. `k` is a nonnegative integer subject to the restrictions shown. All target `W` and starting `w` must be nonnegative. The formulas have **no Lean theorem yet**.
+**Exact source alignment of the new proof.** The first `v+1` successful
+bubbles execute `4(v+1)²+2(v+1)` instructions and place the physical
+head at `2v+2`, without changing any cell beyond filling the
+negative-even holes at `−2,−4,…,−2(v+1)`. Every intermediate tape cell
+is characterized by
+```text
+negFill (jTape (v+2) (2*v+1)) (v+1) x = true
+iff ((-2v-10 ≤ x ≤ 2v+2 and x ≠ -2v-4) or x = 2v+4).
+```
+This gives precisely `stage3 v`, including the two infinite blank
+tails. The remaining `12v+48` source moves yield total
+`4v²+22v+54` primitive moves. The geometric lemma and all three
+`multi_bubble_prefix` tape hypotheses independently typechecked with
+Lean 4.36.0-rc2 against exact published tape definitions. The
+[manual original-source CI](https://github.com/FlareZ123/bb6/actions/runs/42601955826)
+is the decisive pending integration check for the **whole committed theorem**.
+Until it passes, this is a source-authored candidate with locally verified
+components, not an established full-import Lean theorem.
 
-| Offset r=2u-w | T (raw steps) | Successor U | Successor W | Head h |
-|---|---|---:|---|---|
-| `r=4k+2`, `k≥0` | `4u²+(14−16k)u+16k²−10k+61` | `0` | `4u+8−4k` | `−2u−3` |
-| `r=4k`, `k≥1` | `4u²+(22−16k)u+16k²−26k+261` | `11` | `4u−4k−2` | `9−2u` |
-| `r=4k+1`, `k≥1` | `4u²+(14−16k)u+16k²−6k+60` | `2k+4` | `4u−8k−2` | `−2u+4k+4` |
-| `r=4k+3`, `k≥1` | `4u²+(6−16k)u+16k²+26k+146` | `2k+9` | `4u−8k−10` | `−2u+4k+10` |
-| `r=3` (special) | `4u²+6u+26` | `0` | `4u+2` | `−2u−2` |
+The adjacent `r=2` original-table physical return already has the
+Agent 6 [Low2Physical.lean](../agent6-429-low2/Low2Physical.lean)
+source proof candidate, likewise subject to its separate original-import
+CI status. The `r=2` prepared section occurs in the genuine accelerated
+root trajectory, making these low branches more than a synthetic parameter
+curiosity. A formal all-time root/halting decision remains missing.
 
-The test batch covered all `2≤r≤34`, with `u` in the first 17 admissible values after `ceil(r/2)` (capped at 35) whenever the candidate successor has nonnegative W; **554 original-table examples passed**. Cases with negative candidate W were skipped. This is an experiment only, and the table may fail for larger parameters.
+## Remaining low-J residue-class experiments
 
-Representative low-offset observations:
+The original [explore_low_j.py](explore_low_j.py) uses the entire
+bi-infinite-support finite set of one-cells and compares the predicted
+full endpoint, state and head. It found **554 matching cases** across
+`2≤r≤34` within its stated parameter bounds. The following formulas
+are still **finite computational conjectures**, unless covered separately
+by source proofs described above.
 
-| r | Raw return (all u in the admissible tested interval) |
-|---|---|
-| 2 | `J(u,2u−2) → J(0,4u+8)` in `4u²+14u+61` steps |
-| 3 | `J(u,2u−3) → J(0,4u+2)` in `4u²+6u+26` steps |
-| 4 | `J(u,2u−4) → J(11,4u−6)` in `4u²+6u+251` steps |
-| 5 | `J(u,2u−5) → J(6,4u−10)` in `4u²−2u+70` steps |
-| 6 | `J(u,2u−6) → J(0,4u+4)` in `4u²−2u+67` steps |
+| Offset `r=2u-w` | Primitive steps `T` | Target `(U,W)` | Head | Restriction |
+| --- | --- | --- | --- | --- |
+| `4k+2` | `4u²+(14−16k)u+16k²−10k+61` | `(0,4u+8−4k)` | `−2u−3` | `k≥0` |
+| `4k` | `4u²+(22−16k)u+16k²−26k+261` | `(11,4u−4k−2)` | `9−2u` | `k≥1` |
+| `4k+1` | `4u²+(14−16k)u+16k²−6k+60` | `(2k+4,4u−8k−2)` | `−2u+4k+4` | `k≥1` |
+| `4k+3` | `4u²+(6−16k)u+16k²+26k+146` | `(2k+9,4u−8k−10)` | `−2u+4k+10` | `k≥1` |
+| `3` | `4u²+6u+26` | `(0,4u+2)` | `−2u−2` | `u≥2`; physical proof candidate above |
 
-One explicit boundary warning: for `r=7,u=4`, the generic `r=4k+3` target W would be negative and is inapplicable. A different J return was observed later at time 563. For `r=7,u≥5`, the candidate formula fits tested inputs. Such exclusions are essential before attempting a universal theorem.
+The target `W` and start `w` must be nonnegative, with additional
+restrictions where specified. For example, `r=7,u=4` has negative
+predicted target `W`; a different return was observed at step 563.
+The five formulas cannot be extrapolated to such boundary inputs.
 
-## Route to rigorous proof
+## Mathematical next step
 
-The quadratic term `4u²` and residue-controlled linear coefficients strongly suggest a common first scan and a finite family of right-boundary exit macros, analogous to the source-certified [high-zero](../agent18-429-high0/High0Source.lean) and [high-one](../agent18-429-high1/High1Source.lean) decompositions. First prove the simplest `r=2` and `r=3` all-u source zipper macros, then use the already-proved [canonical Junc translation](../agent18-429-junc-canonical/JuncCanonical.lean) to obtain a full original infinite-tape physical result. Prove an explicit preservation invariant before interpolating coefficients into unbounded parameters.
-
-This research remains under `im-results/` because numerical agreement is not a universal mathematical proof. These prepared inputs say nothing yet about the authentic initially blank #429 orbit or BB(6).
+First establish the original-import theorem and signed head offset for
+`r=3`, then link its exact transition to authenticated Cryptids
+blank-root J sections, including all accumulated translation offsets.
+The decisive unresolved quantifier is the infinite authentic orbit's
+avoidance or occurrence of the fatal boundary. Further congruence
+sieves or finite sample increases are lower priority unless they
+directly close that root reachability problem. The existing
+[halting-gate dossier](../agent6-harmonic429/README.md) and
+[physical B/001 bridge](../agent32-429-raw-parent/README.md) are
+relevant downstream starting points.
