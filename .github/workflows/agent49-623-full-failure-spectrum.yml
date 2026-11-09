@@ -42,4 +42,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/SharpSpectrumCapacitySource.lean" Agent49SharpSpectrumCapacitySource.lean
           lake env lean Agent49SharpSpectrumCapacitySource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/ExactLeftSectorSource.lean" Agent49ExactLeftSectorSource.lean
-          lake env lean Agent49ExactLeftSectorSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ExactLeftSectorSource.olean Agent49ExactLeftSectorSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/ExactOddSectorSource.lean" Agent49ExactOddSectorSource.lean
+          lake env lean Agent49ExactOddSectorSource.lean
