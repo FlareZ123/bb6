@@ -1,3 +1,4 @@
+import TowerArithmetic
 import ThreeConeProper
 import ValuationOneOrbit
 import Agent3CImage
@@ -44,14 +45,6 @@ def path : Nat → Nat × Nat → Prop
 | 0, _ => True
 | n+1, p => ∃ q, secNext q=some p ∧ path n q
 
-/-- A recursively forced direct-predecessor chain ending at a missing image. -/
-def cone : Nat → Nat × Nat → Prop
-| 0, (x,y) => 5≤y ∧ y%2=1 ∧ (x+y)%4=2
-| n+1, (x,y) =>
-  6≤y ∧ y%2=0 ∧
-  ((x+y)%8=1 ∨ (x+y)%8=3 ∨ (x+y)%8=5) ∧
-  cone n (x+y-2,(y-2)/2)
-
 /-- A cone point has n consecutive authentic section ancestors, but
     there cannot be n+1 such ancestors, from any starting section state. -/
 theorem exact_depth (n x y : Nat) (h : cone n (x,y)) :
@@ -87,5 +80,71 @@ theorem exact_depth (n x y : Nat) (h : cone n (x,y)) :
 
 #print axioms no_parent_odd
 #print axioms unique_direct
+/-- The actual blank-derived section state (5,1) cannot reach ANY
+    forced ancestry cone at any depth or any time, including early times. -/
+theorem cone_blank_unreachable (n x y : Nat)
+    (h : cone n (x,y)) (time : Nat) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠ some (x,y) := by
+  induction n generalizing x y time with
+  | zero =>
+      change 5≤y ∧ y%2=1 ∧ (x+y)%4=2 at h
+      rcases h with ⟨hy,ho,hs⟩
+      cases time with
+      | zero =>
+          intro ht
+          simp [BB6.Agent8Section.run] at ht
+          omega
+      | succ t =>
+          intro ht
+          change (BB6.Agent8Section.run secNext t (some (5,1))).bind secNext =
+            some (x,y) at ht
+          cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
+          | none => simp [hp] at ht
+          | some p =>
+              rcases p with ⟨a,k⟩
+              have he : secNext (a,k)=some (x,y) := by
+                simpa [hp] using ht
+              exact no_parent_odd a k x y hy ho hs he
+  | succ n ih =>
+      change 6≤y ∧ y%2=0 ∧
+        ((x+y)%8=1 ∨ (x+y)%8=3 ∨ (x+y)%8=5) ∧
+        cone n (x+y-2,(y-2)/2) at h
+      rcases h with ⟨hy,he,hs,hinner⟩
+      cases time with
+      | zero =>
+          intro ht
+          simp [BB6.Agent8Section.run] at ht
+          omega
+      | succ t =>
+          intro ht
+          change (BB6.Agent8Section.run secNext t (some (5,1))).bind secNext =
+            some (x,y) at ht
+          cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
+          | none => simp [hp] at ht
+          | some p =>
+              rcases p with ⟨a,k⟩
+              have hedge : secNext (a,k)=some (x,y) := by
+                simpa [hp] using ht
+              obtain ⟨ha,hk⟩ := unique_direct a k x y hy he hs hedge
+              have hprev : BB6.Agent8Section.run secNext t (some (5,1)) =
+                  some (x+y-2,(y-2)/2) := by
+                simpa only [ha,hk] using hp
+              exact ih (x+y-2) ((y-2)/2) hinner t hprev
+
+/-- Every depth occurs over an infinite two-dimensional congruence cylinder.
+    These states lie in I_n, outside I_(n+1), and outside the blank orbit. -/
+theorem strict_every_depth (n t x : Nat)
+    (hx : 8≤x) (hres : x%8=xr n) :
+    path n (x,b t n) ∧
+    ¬path (n+1) (x,b t n) ∧
+    (∀ time, BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (x,b t n)) := by
+  have hc := cylinder_cone n t x hx hres
+  obtain ⟨hyes,hno⟩ := exact_depth n x (b t n) hc
+  exact ⟨hyes,hno,fun time => cone_blank_unreachable n x (b t n) hc time⟩
+
+#print axioms cone_blank_unreachable
+#print axioms strict_every_depth
+
 #print axioms exact_depth
 end BB6.Agent11Tower
