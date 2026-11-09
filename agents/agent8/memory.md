@@ -1,3 +1,7 @@
+### Root-specific failure barrier synthesized at 05:05 UTC
+
+The source-certified all-input sufficient safety law yields the precise **necessary** condition `drainB a b d = none ⇒ a<safeBudget b`. Unfolding the *original* `highLevelNext` source, every hypothetical halting even-first-counter authentic root parent must satisfy its matching digit-path deficit: far-left odd `a-d-5<h(d+3)`; far-left even `a-d-2<h(d+2)`; right-odd `d+4-a<h(a-1)`; exceptional diagonal `0<h(a)`. The last even-d evaluator branch can fail only through direct `evalA` failure or a successful evaluator output `(x,b,m)` with `x<h(b)`. This is the most immediately root-sensitive payoff of the new threshold. See [SafeBudget.md](../../im-results/agent8-623-survival-density/SafeBudget.md) and original-source CI 42563789288. The finite 10k input audit satisfying the complementary safe inequalities is *not* an inductive proof. To settle #623, prove actual root orbit excludes all such deficits (and direct evaluator failures), potentially using ancestor-digit signatures.
+
 ### 9 November, 05:02 UTC: new binary Cantor-safe cylinder
 
 - Original-source CI [42563789288](https://github.com/FlareZ123/bb6/actions/runs/42563789288) **SUCCESS** proves every original-source theorem in `SafeBudgetSource.lean` through the corrected `pumpBlock_budget_zero`, new per-input `digitCode_safe_shift`, `drainB_safe_shift`, `safeBudget_nine_pump`, `drainB_nine_pump`, and singleton synthetic diagonal `diagonal_escape`, with standard axioms only.
