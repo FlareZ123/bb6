@@ -56,6 +56,7 @@ jobs:
           lean -o im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.olean im-results/agent6-429-one-sided-excursion/BB429FinishScanEDelta.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent33-429-writer-locality/CZeroToJunc0.olean im-results/agent33-429-writer-locality/CZeroToJunc0.lean | tee -a /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/CZeroContext.lean | tee -a /tmp/agent1-429-physical.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/CZeroContextDelta.lean | tee -a /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/CZeroEvenPhysical.lean | tee -a /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/DWriterParity.lean | tee -a /tmp/agent1-429-physical.log
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
