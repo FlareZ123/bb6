@@ -1,0 +1,34 @@
+name: Agent25 original D E-sector strict first-event frame (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged original machine, marker sweep and all-m first-event theorem
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent31-d-exceptional:im-results/agent25-e-seam-kernel
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent31-cryptid-boundary/unpack.py
+          python3 im-results/agent25-e-seam-kernel/restore_source_frame.py im-results/agent25-e-seam-kernel
+          lean --version
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          lean -o im-results/agent31-d-exceptional/ESeamSource.olean im-results/agent31-d-exceptional/ESeamSource.lean
+          lean im-results/agent25-e-seam-kernel/SourceSeamFrame.lean | tee source-frame-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' source-frame-axioms.log; then exit 1; fi
+          grep -F "eSector_first_event_return' depends on axioms: [propext, Quot.sound]" source-frame-axioms.log
+          grep -F "eSector_source_dichotomy' depends on axioms: [propext, Classical.choice, Quot.sound]" source-frame-axioms.log
