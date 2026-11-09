@@ -122,3 +122,49 @@ These integer counts can alternatively be verified by hand using \(S\bmod64\) ro
 The [companion independent exact-source script](../im-results/agent34-c-degree-profile/check_degree.py) evaluates the original recursive \`bounce\` and \`secNext\` branches and reconstructs inverse candidates. The residue-certificate script additionally compares the modular decision to a separately computed exact two-step existence test for **1,028,192** targets with \(8\le x<1024,\ 12\le y<1024\), plus **100,000** seeded large-coordinate targets. All comparisons passed locally with Lean 4.36.0-rc2 available for further formalization. Modulus-64 cells were also reproduced on explicit large-coordinate grids of periods 64,128,256,512,1024 and 2048; every tested period gave exactly \(153/256\) two-step hit density.
 
 This theorem unconditionally forbids 40.234375% of all large pairs as outputs of two arbitrary source transitions. It is stronger than the previously derived 25% one-step missing-image density. It does **not** prove that a forbidden pair lies on the relevant Machine C halting locus and evades existing source-certified blank restrictions. Neither a global root invariant nor a Busy Beaver upper bound follows automatically. A source-connected Lean proof of the finite modular theorem is the next certification step; using the two-step test to exclude a full surviving blank halting family is the next genuine-root research step.
+
+
+## 9 November extension: a source-certified strict second-to-third image loss
+
+Define the image of three consecutive **successful** original-section edges from arbitrary sources as
+\[
+I_3=\{(x,y):\exists u,v,b,l,a,k,\
+ F(u,v)=\operatorname{some}(b,l),\
+ F(b,l)=\operatorname{some}(a,k),\
+ F(a,k)=\operatorname{some}(x,y)\}.
+\]
+The nesting \(I_3\subseteq I_2\) follows by forgetting the earliest edge. Unlike genuine blank-root reachability, these sets allow an arbitrary starting section source.
+
+**Theorem 2 (strict original-source image separation).** Every pair \((x,y)\) with \(y\ge34\) satisfying either
+\[
+ (x+y)\bmod8=1,\quad y\bmod16=10,
+ \qquad\text{or}\qquad
+ (x+y)\bmod8=3,\quad y\bmod16=2
+\]
+belongs to \(I_2\setminus I_3\). The two residue cylinders represent exactly four of the 256 cells of \(((x+y)\bmod16,y\bmod16)\). Therefore
+\[
+ \liminf_{N\to\infty}
+ \frac{\#((I_2\setminus I_3)\cap[0,N)^2)}{N^2}
+ \;\ge\;\frac1{64}.
+\]
+Using Theorem 1 above, which derives the exact limiting \(I_2\) density \(153/256\), gives the **upper asymptotic density**
+\[
+ \boxed{\displaystyle
+ \limsup_{N\to\infty}\frac{\#(I_3\cap[0,N)^2)}{N^2}
+ \le\frac{153}{256}-\frac1{64}=\frac{149}{256}.}
+\]
+The existence of a limiting density for \(I_3\), and its exact value if one exists, are open in this analysis.
+
+*Proof.* For every \(y\ge14\) with \(y\equiv2\pmod4\), the original source map has an actual direct predecessor
+\[
+ (a,k)=\big(x+y-2,(y-2)/2\big).
+\]
+Since \(k\ge6\) is even, this predecessor itself has an actual direct predecessor
+\[
+ (b,l)=\big(a+k-2,(k-2)/2\big).
+\]
+Consequently \((x,y)\in I_2\), with both steps independently constructed from the original first-return semantics. In the theorem's two special cylinders, the exact all-depth source predecessor grammar forces **every** first predecessor to be \((a,k)\), and forces **every** second predecessor to be \((b,l)\). The latter has \(l\ge5\), \(l\) odd and \((b+l)\bmod4=2\). The original-source \`section_odd_image\` theorem states that any returned section with odd right counter at least five has sum modulo four in \(\{0,3\}\), so no source can return \((b,l)\). There cannot be three consecutive successful edges. Counting the four congruence cells proves the limiting density claim. Combining with the exact limiting density of \(I_2\) gives the stated limsup bound. \(\square\)
+
+**Formal status.** The strict \(I_2\setminus I_3\) source theorem is separately **Lean-kernel checked against the unchanged original \`secNext\`**, using \`ThreeConeArithmetic.lean\`, \`ThreeConeSource.lean\`, and \`ThreeConeProper.lean\` in [the reproducible source directory](../im-results/agent34-c-degree-profile/), together with the exact source iff \`SectionAllInverse.lean\`. \`BB6.Agent34ThreeProper.exactly_two_not_three\` proves both existence of two edges and universal impossibility of three. The four-cell count is kernel checked in \`strict_residue_count\`. [Manual CI run 42545474747](https://github.com/FlareZ123/bb6/actions/runs/42545474747) passed with only standard logical axioms \`[propext, Classical.choice, Quot.sound]\`; no \`sorryAx\` or unmodified-source assumptions were added. The **numerical \(149/256\) corollary** combines this kernel-certified source theorem with Theorem 1's written exact two-step density proof; that earlier asymptotic modular theorem itself is not independently kernel formalized.
+
+**Distinction from prior stopping sieves.** The intermediate high-stopping exclusions in \`ThreeConeSource.lean\` are consequences of independent existing Machine C restrictions (notably Agent19's source-certified even-right theorem). The genuine mathematical content here is the strict gap between two and three arbitrary-source images, rather than a newly decided blank halting parameter. Neither this result nor the combined density inequality establishes Machine C nonhalting or BB(6).
