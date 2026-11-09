@@ -293,7 +293,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/ValSixC58LateFast.lean .
           lean -o ValSixC58LateFast.olean ValSixC58LateFast.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalLateFull.lean .
-          lean CThreeDiagonalLateFull.lean 2>&1 | tee CThreeDiagonalLateFull.log
+          lean -o CThreeDiagonalLateFull.olean CThreeDiagonalLateFull.lean 2>&1 | tee CThreeDiagonalLateFull.log
           if grep -q sorryAx CThreeDiagonalLateFull.log; then
             echo "REJECTED: incomplete source proof"
             exit 1
@@ -304,6 +304,17 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0OddRay,M0OddRayDeep,CThreeDiagonalM0Full,CThreeDiagonalM0DeepFull}.lean .
           lean -o M0OddRay.olean M0OddRay.lean 2>&1 | tee M0OddRay.log
           lean -o M0OddRayDeep.olean M0OddRayDeep.lean 2>&1 | tee M0OddRayDeep.log
+          # Original source exact even/odd valuation-two parent equivalence,
+          # and a reusable four-inverse high m=0 normalization.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenOddFourExact.lean .
+          lean -o EvenOddFourExact.olean EvenOddFourExact.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0FourRoot,M0OddRayValTwo}.lean .
+          lean -o M0FourRoot.olean M0FourRoot.lean 2>&1 | tee M0FourRoot.log
+          lean -o M0OddRayValTwo.olean M0OddRayValTwo.lean 2>&1 | tee M0OddRayValTwo.log
+          if grep -E -q sorryAx M0FourRoot.log M0OddRayValTwo.log; then
+            echo "REJECTED: failed four-edge normalizer or third m0 ray"
+            exit 1
+          fi
           lean -o CThreeDiagonalM0Full.olean CThreeDiagonalM0Full.lean 2>&1 | tee CThreeDiagonalM0Full.log
           lean CThreeDiagonalM0DeepFull.lean 2>&1 | tee CThreeDiagonalM0DeepFull.log
           if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log; then
