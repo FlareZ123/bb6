@@ -17,8 +17,8 @@ theorem no_three_edges_alt (u v b l a k s t : Nat)
   obtain ⟨ha,hk⟩ := first_parent_alt s t a k hp1
   subst a
   subst k
-  have hp2 : sectionPreimageAll b l (8*s+56*t+15) (8*t+5) :=
-    (section_preimage_all_iff b l (8*s+56*t+15) (8*t+5)).mp hsecond
+  have hp2 : sectionPreimageAll b l (8*s+16*t+15) (8*t+5) :=
+    (section_preimage_all_iff b l (8*s+16*t+15) (8*t+5)).mp hsecond
   obtain ⟨hb,hl⟩ := second_parent_alt s t b l hp2
   subst b
   subst l
