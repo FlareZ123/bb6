@@ -123,6 +123,23 @@ theorem firstFailIndex_low (h : Nat) :
     rw [hp]
     omega
 
+/-- Any monotone successor which clears the current guard strictly raises its address. -/
+theorem firstFailIndex_advance (h u k : Nat)
+    (hk : firstFailIndex h = k)
+    (hu : h≤u)
+    (hclear : 8*2^k ≤ u+k+5) :
+    k < firstFailIndex u := by
+  have hm : k≤firstFailIndex u := by
+    rw [←hk]
+    exact firstFailIndex_mono h u hu
+  have hf := (firstFailIndex_spec u).2
+  by_cases he : firstFailIndex u=k
+  · rw [he] at hf
+    omega
+  · omega
+
+#print axioms firstFailIndex_advance
+
 #print axioms firstFailIndex_low
 
 #print axioms firstFailIndex_mono
