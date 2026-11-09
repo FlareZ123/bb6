@@ -168,3 +168,6 @@ The new research dossier `ThreeShallowAllIndex.md` gives the precise equations, 
 **Scope caution:** Even source-verified three-shallow exclusion would not resolve arbitrary 4+ shallow or high-depth inverse words, P1 halting, or exact BB(6). Entire work belongs in `im-results/` rather than `results/` pending real external novelty.
 
 Other notes: a disposable branch `agent43-two-shallow-alln-ci-20261109` was created for an unnecessary push-trigger test; its only CI was cancelled. The real successful source run used main manual workflow; the main workflow remains manual-only.
+
+
+**Optional low-priority exploratory note (01:01 UTC):** A local uncommitted Python recurrence enumerated exact integral scalar depth-two and shallow t=0,1 transitions for a **four-shallow** grammar at each n=14..20000 with each depth-two run truncated at length 45; no exact shifted-wall hits were found (21,585 post-fourth-shallow states and 24,682 tested suffix run endpoints). This is a bounded, incomplete computation, not a proof; the run cap was not justified globally. Do not invest in further broad finite scans until the three-shallow source lift and/or a symbolic general k-shallow theorem is obtained. Script lives only at local `/tmp/four_shallow_scan_large.py` (not durable). The all-index source 2-shallow and scalar 3-shallow theorems are the durable results.
