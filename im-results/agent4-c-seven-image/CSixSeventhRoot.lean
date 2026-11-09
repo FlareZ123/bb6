@@ -19,14 +19,22 @@ private theorem root_run_incoming (n : Nat) (s p : Nat × Nat)
           have he : secNext q = some p := by simpa [hp] using h
           exact ⟨q,ih q hp,he⟩
 
+private theorem incoming_drop_root (n : Nat) (p : Nat × Nat) :
+    Incoming (n+1) p → Incoming n p := by
+  induction n generalizing p with
+  | zero => simp [Incoming]
+  | succ n ih =>
+      rintro ⟨q,hq,hedge⟩
+      exact ⟨q,ih q hq,hedge⟩
+
 private theorem incoming_shrink (n m : Nat) (p : Nat × Nat) :
     Incoming (n+m) p → Incoming n p := by
   induction m with
   | zero => simpa using id
   | succ m ih =>
       intro h
-      have h' : Incoming (n+m) p := incoming_drop (n+m) p (by
-        simpa [Nat.add_succ] using h)
+      have h' : Incoming (n+m) p := incoming_drop_root (n+m) p (by
+        simpa only [Nat.add_succ] using h)
       exact ih h'
 
 /-- Actual blank-origin Machine C sections avoid this strict image band at every time. -/
