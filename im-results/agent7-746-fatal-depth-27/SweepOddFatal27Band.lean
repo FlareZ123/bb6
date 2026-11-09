@@ -22,7 +22,7 @@ theorem narrow_high_odd_has_parent (entry k : Nat)
     omega
   have hdn : 27*d=2*entry+5 := by dsimp [d]; omega
   have hodd : d%2=1 := by omega
-  have hq : q=4*d := by dsimp [q]; decide
+  have hq : q=4*d := by simp [q]
   have hb1 : 6*2^j+1≤q := by rw [hq]; omega
   have hb2 : q≤8*2^j-1 := by rw [hq]; omega
   have hlinear : j+4≤4*2^j := by
