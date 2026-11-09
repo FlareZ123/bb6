@@ -13,8 +13,15 @@ from exact_fixed_shadow import fixed_shadow
 
 # (q, common cost cap, forbidden valuation cutoff, (nodes, cap, maximum v2) per feeder)
 SPECS = [
+    (38, 249, 10, ((6741, 249, 9), (6697, 248, 9))),
     (45, 401, 11, ((4804, 401, 9), (4726, 400, 10))),
+    (101, 769, 12, ((29882, 769, 11), (29856, 768, 11))),
     (113, 227, 11, ((2348, 227, 10), (2410, 226, 10))),
+    (129, 355, 12, ((7205, 355, 11), (7017, 354, 11))),
+    (146, 729, 12, ((31046, 729, 11), (30928, 728, 11))),
+    (189, 691, 12, ((9800, 691, 11), (9830, 690, 11))),
+    (273, 365, 13, ((5180, 365, 12), (5198, 364, 12))),
+    (294, 2515, 13, ((161223, 2515, 12), (160455, 2514, 12))),
 ]
 
 
@@ -116,7 +123,10 @@ def budget_final(q: int, B: int, K: int) -> str:
 
 
 def run() -> None:
+    selected = {int(value) for value in sys.argv[1:]}
     for q, B, K, expected in SPECS:
+        if selected and q not in selected:
+            continue
         records = [fixed_shadow(q, side) for side in (0, 1)]
         observed = tuple(
             (d["count"], d["max_cost"], d["max_v2_z"])
