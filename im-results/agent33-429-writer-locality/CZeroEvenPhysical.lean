@@ -39,6 +39,16 @@ theorem C0_junc0_original (k : Nat) (c : Config)
       Represents (junc 0 0 (2*k)) c' := by
   exact source_run_rep _ _ _ hc _ (C0_to_junc0 k)
 
+/-- The two-stage even C/0 source corridor reaches the entire canonical
+    Junc(0,0,2k) physical tape after exactly 6k+33 ordinary instructions. -/
+theorem even_C0_junc0_original (k : Nat) (c : Config)
+    (hc : Represents (z 2 (ones (2*k+2)) false []) c) :
+    ∃ c', BB6Coverage.run target429 (6*k+33) c = some c' ∧
+      Represents (junc 0 0 (2*k)) c' := by
+  exact source_run_rep _ _ _ hc _ (even_C0_to_junc0 k)
+
+#print axioms even_C0_junc0_original
+
 #print axioms C0_junc0_original
 
 #print axioms even_frontier_original
