@@ -9,11 +9,11 @@ private theorem e0_four (l r : List Bool) :
     run 6 ⟨4,[true,false,true,false] ++ l,false,r⟩ =
     some ⟨4,l,false,[true,true,true,false] ++ r⟩ := by rfl
 
-private def inWords : Nat → List Bool
+def inWords : Nat → List Bool
   | 0 => []
   | n+1 => [true,false,true,false] ++ inWords n
 
-private def outWords : Nat → List Bool
+def outWords : Nat → List Bool
   | 0 => []
   | n+1 => [true,true,true,false] ++ outWords n
 
