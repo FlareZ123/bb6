@@ -1,0 +1,89 @@
+name: Agent2 D original F first-event seam integration (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2 and certificate generator dependencies
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --quiet filelock
+      - name: Generate independently checked finite-tree proof obligations
+        run: |
+          python3 im-results/agent31-d-exceptional/verify_e_seam_certificate.py
+          python3 im-results/agent25-e-seam-kernel/make_e_seam_kernel.py "$RUNNER_TEMP/e-seam-kernel"
+      - name: Compile and combine all 200 proof leaves in the Lean kernel
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
+        working-directory: ${{ runner.temp }}/e-seam-kernel
+        run: |
+          lean --version
+          lean -o ESeamTreeBase.olean ESeamTreeBase.lean
+          seq 0 199 | xargs -P 4 -I{} sh -c 'lean -o "ESeamTreeBlock{}.olean" "ESeamTreeBlock{}.lean" >/dev/null'
+          lean -o ESeamTreeMaster.olean ESeamTreeMaster.lean | tee master-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' master-axioms.log; then exit 1; fi
+          grep 'root_good.*\[propext\]' master-axioms.log
+          grep 'all_seeds.*does not depend on any axioms' master-axioms.log
+          grep 'successor_closed.*\[propext, Classical.choice, Quot.sound\]' master-axioms.log
+      - name: Prove full physical-tape refinement and compose existing E-seam certificate
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
+        working-directory: ${{ runner.temp }}/e-seam-kernel
+        run: |
+          set -o pipefail
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_physical.py" "$PWD"
+          cp "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPhysicalBridge.lean" .
+          lean -o PhysicalWindow.olean PhysicalWindow.lean | tee physical-axioms.log
+          lean -o ESeamPhysicalBridge.olean ESeamPhysicalBridge.lean | tee bridge-axioms.log
+          for file in ESeamNoReturn ESeamTerminalClassification ESeamPaintZero ESeamPaintCoupling ESeamPaintBridge ESeamPaintTerminal; do cp "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/$file.lean" .; done
+          lean -o ESeamNoReturn.olean ESeamNoReturn.lean | tee no-return-axioms.log
+          lean -o ESeamTerminalClassification.olean ESeamTerminalClassification.lean | tee classification-axioms.log
+          lean -o ESeamPaintZero.olean ESeamPaintZero.lean | tee paint-zero-axioms.log
+          lean -o ESeamPaintCoupling.olean ESeamPaintCoupling.lean | tee paint-coupling-axioms.log
+          lean -o ESeamPaintBridge.olean ESeamPaintBridge.lean | tee paint-bridge-axioms.log
+          lean -o ESeamPaintTerminal.olean ESeamPaintTerminal.lean | tee paint-terminal-axioms.log
+          if grep -E 'sorryAx|_native\\.native_decide' physical-axioms.log bridge-axioms.log no-return-axioms.log classification-axioms.log paint-zero-axioms.log paint-coupling-axioms.log paint-bridge-axioms.log paint-terminal-axioms.log; then exit 1; fi
+          grep "original_e_base_marker_safe.*\\[propext, Classical.choice, Quot.sound\\]" bridge-axioms.log
+          grep "seed_no_F0_before_marker.*\\[propext, Classical.choice, Quot.sound\\]" no-return-axioms.log
+          grep "terminal_classification.*\\[propext, Classical.choice, Quot.sound\\]" classification-axioms.log
+          grep "paint_run.*\\[propext, Classical.choice, Quot.sound\\]" paint-coupling-axioms.log
+          grep "seed0_marker_safe.*\\[propext, Classical.choice, Quot.sound\\]" paint-bridge-axioms.log
+          grep "seed0_terminal_classification.*\\[propext, Classical.choice, Quot.sound\\]" paint-terminal-axioms.log
+
+      - name: Transport certified E marker into original D source and prove all-m strict first events
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
+        working-directory: ${{ runner.temp }}/e-seam-kernel
+        run: |
+          set -euo pipefail
+          python3 "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary/Boundary.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent31-d-exceptional/ESeamSource.lean" .
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_source_frame.py" "$PWD"
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_source_physical.py" "$PWD"
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_seam_completion.py" "$PWD"
+          lean -o Boundary.olean Boundary.lean
+          lean -o ESeamSource.olean ESeamSource.lean
+          lean -o SourceSeamFrame.olean SourceSeamFrame.lean
+          lean -o SourcePhysicalTransfer.olean SourcePhysicalTransfer.lean
+          lean -o SourceSeedMatch.olean SourceSeedMatch.lean
+          lean -o SourceSeamComplete.olean SourceSeamComplete.lean | tee original-source-complete-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' original-source-complete-axioms.log; then exit 1; fi
+          grep -F "source_marker_safe' depends on axioms: [propext, Classical.choice, Quot.sound]" original-source-complete-axioms.log
+          grep -F "source_e_all_m_first_event' depends on axioms: [propext, Classical.choice, Quot.sound]" original-source-complete-axioms.log
+          cp "$GITHUB_WORKSPACE/im-results/agent2-cryptid-continuity/PrefixENoFSource.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent2-e-seam-root/FullFFirstEvent.lean" .
+          lean -o PrefixENoFSource.olean PrefixENoFSource.lean
+          lean FullFFirstEvent.lean | tee f-root-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' f-root-axioms.log; then exit 1; fi
+          grep -F "all_prepared_F_first_events' depends on axioms: [propext, Classical.choice, Quot.sound]" f-root-axioms.log
