@@ -1,5 +1,27 @@
 # #429: all-time E right-marker and genuine A/0001 predecessor exclusion
 
+
+## All-length E/1-sweep obstruction
+
+The supplementary theorem `two_E1_then_E0_no_A_corridor` proves an
+additional **uniform original-physical-machine** restriction, verified in
+[CI 42588094742](https://github.com/FlareZ123/bb6/actions/runs/42588094742),
+job 129062692158, with only `[propext, Quot.sound]`, no `sorryAx`.
+For an arbitrary original physical starting tape, if E/1 executes
+twice in succession, and then E/0 executes to A, the resulting A
+configuration **cannot** scan `0(01)^k001` for **any k≥1**.
+The two E/1 transitions write ones at successive positions while
+moving left; the new A head's right+3 cell is thereby marked, whereas
+every nonempty alternating corridor requires this cell blank.
+For k=0 the independent genuinely-rooted E-right-marker theorem
+already excludes E/0 entry altogether.
+
+Consequently, an actual fatal A-corridor after an E/0 exit can only
+come from an E/1 sweep of length at most one; longer E/1-prefixes
+are source-proved impossible as fatal exits. This is a local exclusion
+valid on all tapes, not proof that a genuine A-corridor can never arise
+through E/0 when k≥1, and not an all-time source-grammar closure.
+
 **Original-source Lean verified:** CI [42587182635](https://github.com/FlareZ123/bb6/actions/runs/42587182635), job 129059694373, commit `f1444c82ebf0855bc985c366377ad8bbed1bb778` (source); the manually dispatched workflow rebuilt all imported original-source theorems. Proofs require exactly `[propext, Quot.sound]`, no `sorryAx`.
 
 The original machine is `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`, on a blank bi-infinite tape. [BB429EGuard.lean](BB429EGuard.lean) proves:
