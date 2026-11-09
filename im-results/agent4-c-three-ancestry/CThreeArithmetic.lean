@@ -34,10 +34,10 @@ private theorem mul_eight_even (a n : Nat) (ha : a%2=0) (hb : 2≤a) (hn : 0<n) 
   simp only [show (8:Nat)=2*4 by decide]
   ac_rfl
 
-/-- Every original-source parent of the sector target is the direct parent. -/
-theorem first_parent (s t a k : Nat)
-    (h : sectionPreimageAll a k (16*s+9) (32*t+36)) :
-    a=16*s+32*t+43 ∧ k=16*t+17 := by
+/-- All original-section parents of the parity-diagonal strip are direct. -/
+theorem first_parent_generic (s t a k : Nat)
+    (h : sectionPreimageAll a k (8*s+1) (16*t+20)) :
+    a=8*s+16*t+19 ∧ k=8*t+9 := by
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at h
@@ -83,9 +83,9 @@ theorem first_parent (s t a k : Nat)
               omega
 
 /-- Every parent of that direct parent is a forbidden-image state. -/
-theorem second_parent (s t b l : Nat)
-    (h : sectionPreimageAll b l (16*s+32*t+43) (16*t+17)) :
-    b=8*s+24*t+28 ∧ l=4*s+20*t+21 := by
+theorem second_parent_generic (s t b l : Nat)
+    (h : sectionPreimageAll b l (8*s+16*t+19) (8*t+9)) :
+    b=4*s+12*t+12 ∧ l=2*s+10*t+9 := by
   by_cases hb0 : b=0
   · by_cases hl0 : l=0
     · simp [sectionPreimageAll,hb0,hl0] at h
@@ -137,6 +137,29 @@ theorem second_parent (s t b l : Nat)
               rw [←hs] at hd
               omega
 
+/-- The original first sector as a specialization of the strip. -/
+theorem first_parent (s t a k : Nat)
+    (h : sectionPreimageAll a k (16*s+9) (32*t+36)) :
+    a=16*s+32*t+43 ∧ k=16*t+17 := by
+  have he : 8*(2*s+1)+1=16*s+9 := by omega
+  have hf : 16*(2*t+1)+20=32*t+36 := by omega
+  have hh := first_parent_generic (2*s+1) (2*t+1) a k
+    (by simpa only [he,hf] using h)
+  omega
+
+/-- The second predecessor specializes to the same sector. -/
+theorem second_parent (s t b l : Nat)
+    (h : sectionPreimageAll b l (16*s+32*t+43) (16*t+17)) :
+    b=8*s+24*t+28 ∧ l=4*s+20*t+21 := by
+  have he : 8*(2*s+1)+16*(2*t+1)+19=16*s+32*t+43 := by omega
+  have hf : 8*(2*t+1)+9=16*t+17 := by omega
+  have hh := second_parent_generic (2*s+1) (2*t+1) b l
+    (by simpa only [he,hf] using h)
+  omega
+
+#print axioms first_parent_generic
+#print axioms second_parent_generic
 #print axioms first_parent
 #print axioms second_parent
 end BB6.Agent4Three
+
