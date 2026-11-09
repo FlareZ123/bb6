@@ -5,6 +5,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent46NeedleThree
 open BB6.Agent48.SpaceNeedle
 open BB6.Agent47NeedleCancellationFour
+open NeedleCancelMod35
 open BusyBeaver.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
 open CancellationNat CancellationGap
 
