@@ -188,6 +188,21 @@ theorem even_C0_to_E1_exact_two (k : Nat) (tail : List Bool) :
   rw [C0_to_E1_context_count]
   rfl
 
+/-- Public C/0-free A/F induction, for arbitrary uninspected context. -/
+theorem af_pairs_no_czero (k : Nat) (tail right : List Bool) :
+    runCount (2*k) (z 0 (ones (2*k) ++ tail) true right) =
+    some (z 0 tail true (tens k ++ right),0) :=
+  af_pairs_count k tail right
+
+/-- Public C/0-free A/B induction, exact complete context. -/
+theorem ar_pairs_no_czero (k : Nat) (tail right : List Bool) :
+    runCount (2*k) (z 0 tail false (tens k ++ right)) =
+    some (z 0 (ones (2*k) ++ tail) false right,0) :=
+  ar_pairs_count k tail right
+
+#print axioms af_pairs_no_czero
+#print axioms ar_pairs_no_czero
+
 #print axioms C0_to_E1_context_count
 #print axioms even_C0_to_E1_exact_two
 #print axioms even_C0_context_exact_one
