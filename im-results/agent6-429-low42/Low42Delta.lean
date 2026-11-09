@@ -310,6 +310,135 @@ theorem low42_source (j m : Nat) :
       -((4*j+4*(m+1)+5:Nat):Int) := by omega
   simpa only [ht,he] using h123
 
+private theorem c0_even_two (n : Nat) :
+  runWithDelta 2 (z 2 (ones (2*n+2)) false []) =
+    some (z 4 (ones (2*n+2)) false [true], 0) := by
+  rfl
+
+private theorem e0_even_one (n : Nat) :
+  runWithDelta 1 (z 4 (ones (2*n+2)) false [true]) =
+    some (z 0 (true::ones (2*n)) true [false,true], -1) := by
+  have hw : ones (2*n+2) = true::true::ones (2*n) := by
+    simp [ones,show 2*n+2=(2+2*n) by omega,
+      ← List.replicate_append_replicate]
+  rw [hw]
+  rfl
+
+private theorem a_one_end (r : List Bool) :
+  runWithDelta 2 (z 0 [true] true r) =
+    some (z 0 [] false (true::false::r),-2) := by rfl
+
+private theorem a_even_end (l : List Bool) :
+  runWithDelta 2 (z 0 l false [false,true]) =
+    some (z 2 (true::true::l) true [],2) := by rfl
+
+private theorem c1_to_c0 (l : List Bool) :
+  runWithDelta 2 (z 2 l true []) =
+    some (z 2 (true::false::l) false [],2) := by rfl
+
+/-- An even contiguous C/0 frontier reaches a new C/0 three cells to
+    the right, with an exact step count and signed head displacement. -/
+theorem c0_even_to_c0_delta (n : Nat) :
+  runWithDelta (4*n+11) (z 2 (ones (2*n+2)) false []) =
+    some (z 2 (true::false::ones (2*n+4)) false [], 3) := by
+  have h0 := c0_even_two n
+  have h1 := e0_even_one n
+  have h2 : runWithDelta (2*n)
+      (z 0 (true::ones (2*n)) true [false,true]) =
+      some (z 0 [true] true (tens n++[false,true]),
+        -((2*n:Nat):Int)) := by
+    have hw : true::ones (2*n) = ones (2*n) ++ [true] := by
+      change ones 1 ++ ones (2*n) = ones (2*n) ++ ones 1
+      rw [←ones_add,←ones_add]
+      congr 1
+      omega
+    rw [hw]
+    simpa only using af_pairs_delta n [true] [false,true]
+  have h3 := a_one_end (tens n ++ [false,true])
+  have h4 : runWithDelta (2*n+2)
+      (z 0 [] false (true::false::(tens n ++ [false,true]))) =
+      some (z 0 (ones (2*n+2)) false [false,true],
+        ((2*n+2:Nat):Int)) := by
+    change runWithDelta (2*n+2)
+      (z 0 [] false (tens (n+1)++[false,true])) = _
+    simpa only [show 2*(n+1)=2*n+2 by omega,
+      List.append_nil] using (ar_pairs_delta (n+1) [] [false,true])
+  have h5 : runWithDelta 2
+      (z 0 (ones (2*n+2)) false [false,true]) =
+      some (z 2 (ones (2*n+4)) true [], 2) := by
+    have hw : true::true::ones (2*n+2) = ones (2*n+4) := by
+      calc
+        true::true::ones (2*n+2) = ones 2 ++ ones (2*n+2) := by rfl
+        _ = ones (2+(2*n+2)) := by rw [← ones_add]
+        _ = ones (2*n+4) := by congr 1; omega
+    simpa only [hw] using a_even_end (ones (2*n+2))
+  have h6 := c1_to_c0 (ones (2*n+4))
+  have h01 := compose 2 1 _ _ _ 0 (-1) h0 h1
+  have h23 := compose (2*n) 2 _ _ _ (-((2*n:Nat):Int)) (-2) h2 h3
+  have h234 := compose ((2*n)+2) (2*n+2) _ _ _
+    (-((2*n:Nat):Int)-2) ((2*n+2:Nat):Int) h23 h4
+  have h2345 := compose (((2*n)+2)+(2*n+2)) 2 _ _ _
+    ((-((2*n:Nat):Int)-2)+((2*n+2:Nat):Int)) 2 h234 h5
+  have h23456 := compose ((((2*n)+2)+(2*n+2))+2) 2 _ _ _
+    (((-((2*n:Nat):Int)-2)+((2*n+2:Nat):Int))+2) 2 h2345 h6
+  have hAll := compose (2+1) (((((2*n)+2)+(2*n+2))+2)+2)
+    _ _ _ (0+(-1))
+    ((((-((2*n:Nat):Int)-2)+((2*n+2:Nat):Int))+2)+2)
+    h01 h23456
+  have ht : (2+1)+(((((2*n)+2)+(2*n+2))+2)+2)=4*n+11 := by
+    omega
+  have hd : ((0+(-1)):Int) +
+      ((((-((2*n:Nat):Int)-2)+((2*n+2:Nat):Int))+2)+2)=3 := by
+    omega
+  simpa only [ht,hd] using hAll
+
+/-- Uniform signed source return for the entire deficit 4k+2 family,
+    including the previously separate boundary case k=0. -/
+theorem low42_source_all (j k : Nat) :
+  runWithDelta (20*j+18*k+79) (stage42 j k) =
+    some (junc 0 0 (4*j+4*k+12),
+      -((4*j+4*k+5:Nat):Int)) := by
+  cases k with
+  | succ m => exact low42_source j m
+  | zero =>
+    have hfirst := to_firstC j 0
+    have hfirst' : runWithDelta (8*j+10) (stage42 j 0) =
+      some (z 2 (ones (4*j+14)) false [],6) := by
+      have hw : ones (4*j+8) ++ tens 0 ++ ones 6 =
+          ones (4*j+14) := by
+        simp only [tens,List.append_nil]
+        rw [← ones_add]
+      simpa only [hw] using hfirst
+    have h2 : runWithDelta (8*j+35)
+        (z 2 (ones (4*j+14)) false []) =
+      some (z 2 (true::false::ones (4*j+16)) false [],3) := by
+      have hn : 2*(2*j+6)+2=4*j+14 := by omega
+      have he : 2*(2*j+6)+4=4*j+16 := by omega
+      have ht : 4*(2*j+6)+11=8*j+35 := by omega
+      simpa only [hn,he,ht] using
+        c0_even_to_c0_delta (2*j+6)
+    have h3 : runWithDelta (4*j+34)
+        (z 2 (true::false::ones (4*j+16)) false []) =
+      some (junc 0 0 (4*j+12), -((4*j+14:Nat):Int)) := by
+      have hn : 2*(2*j+6)+4=4*j+16 := by omega
+      have he : 2*(2*j+6)=4*j+12 := by omega
+      have ht : 2*(2*j+6)+22=4*j+34 := by omega
+      have hd : 2*(2*j+6)+2=4*j+14 := by omega
+      simpa only [hn,he,ht,hd] using
+        c0_to_junc0_delta (2*j+6)
+    have h12 := compose (8*j+10) (8*j+35)
+      _ _ _ 6 3 hfirst' h2
+    have h123 := compose ((8*j+10)+(8*j+35)) (4*j+34)
+      _ _ _ (6+3) (-((4*j+14:Nat):Int)) h12 h3
+    have ht : ((8*j+10)+(8*j+35))+(4*j+34)=
+        20*j+18*0+79 := by omega
+    have hd : ((6+3):Int)+-((4*j+14:Nat):Int)=
+        -((4*j+4*0+5:Nat):Int) := by omega
+    simpa only [ht,hd] using h123
+
+#print axioms c0_even_to_c0_delta
+#print axioms low42_source_all
+
 #print axioms to_firstC
 #print axioms firstC_to_A
 #print axioms firstC_to_secondC
