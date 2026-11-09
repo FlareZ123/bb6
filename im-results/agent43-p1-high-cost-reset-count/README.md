@@ -1,6 +1,6 @@
 # P1: counted inverse-history energy, walls and one-shallow obstructions
 
-**Research synthesis, 8 November 2026.** These are mathematical restrictions on P1's inverse histories. The new one-shallow theorem is now verified for legal **unchanged-source `inverseAt` transitions**, for every critical index n≥14 and arbitrarily long depth-two blocks. This is a source-word exclusion, with no unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result; additional bounded-reset floors have lower priority.
+**Research synthesis, 8 November 2026.** These are mathematical restrictions on P1's inverse histories. The one- and two-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions**, for every critical index n≥14 and arbitrarily long depth-two blocks. This is a source-word exclusion, with no unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result; additional bounded-reset floors have lower priority.
 
 ## Strongest genuine original-source deductions
 
@@ -38,16 +38,43 @@ For every `n>=14` and all nonnegative lengths `s,r`, the exact shifted wall is i
 
 **Source integration and scope:** [SourceOneShallowLift.lean](SourceOneShallowLift.lean) constructs `SourceTwoChain` from actual unchanged-source `inverseAt` steps with exact legal side conditions (`b>=8`, `b%4=0`, odd right counter and output, `k>=2`). It proves conservation of the original root mass, transfers every depth-two step using the [original two-step cocycle](../agent50-p1-subwall/RightFiveEnergyStep.lean), derives the exact depth-zero/one equations from [original inverse characterization](../agent1-p1-quarter/InverseIff.lean), then invokes the model wall contradictions. Theorems `BB6.Agent43SourceWord.source_no_zero_word_wall` and `source_no_one_word_wall` compiled with original sources in [CI 42530146731](https://github.com/FlareZ123/bb6/actions/runs/42530146731), each with axiom list `[propext, Classical.choice, Quot.sound]` and **no `sorryAx`**. A separate `CountCone` membership/word-shape characterization remains optional formal integration; the theorem itself already uses true `inverseAt` at every edge. This is an infinite legal-word restriction, not a blank-root P1 decision or an established externally novel publishable result. Keep it under `im-results/`.
 
-## New source-certified two-shallow words for all n>=48
+## Original-source certified two-shallow exclusion for every n>=14
 
-[SourceOneShallowLift.lean](SourceOneShallowLift.lean) now also proves the theorem
-`BB6.Agent43SourceWord.source_no_two_shallow_word_wall_large`: for **every n>=48** and every **legal unchanged-original-source `inverseAt`** depth word
-`(2)^s (0|1) (2)^u (0|1) (2)^r`, with s,u,r arbitrary nonnegative lengths, no endpoint on the exact shifted wall `b+4*m+4*n+20=12*2^n` exists. The theorem simultaneously covers four combinations of the two shallow types and uses the exact mass, parity and bound premises on each genuine source step. The successful original-source [CI run 42532957359](https://github.com/FlareZ123/bb6/actions/runs/42532957359) verifies the complete import chain; `#print axioms` is `[propext, Classical.choice, Quot.sound]`, **without `sorryAx`**.
+[SourceOneShallowLift.lean](SourceOneShallowLift.lean) proves
+`BB6.Agent43SourceWord.source_no_two_shallow_word_wall_all`:
+for every **n>=14** and every legal unchanged-source `inverseAt` inverse-depth word
+`(2)^s (0|1) (2)^u (0|1) (2)^r` from the authentic critical source seed,
+there is no endpoint on the exact shifted wall
+`b+4*m+4*n+20=12*2^n`. All three run lengths are unbounded, all four
+shallow-type combinations are covered, and every step carries its original
+parity, left-counter and target bounds. The complete source dependency chain
+compiled in [CI 42539116808](https://github.com/FlareZ123/bb6/actions/runs/42539116808);
+the terminal theorem's `#print axioms` gives
+`[propext, Classical.choice, Quot.sound]` without `sorryAx`.
+The previous `source_no_two_shallow_word_wall_large` remains as a compatibility
+corollary for n>=48.
 
-The arithmetic proof splits into [TwoLayerRemainder.lean](TwoLayerRemainder.lean), [TwoShallowNumeric.lean](TwoShallowNumeric.lean), and [TwoShallowModelLarge.lean](TwoShallowModelLarge.lean). A first positive residue below a dyadic power forces a bounded middle run; a second residual after division forces a bounded last run. Both powers then contradict the all-n `8400000*(n+2)^3<2^n` bound, itself proved for n>=48. This is source-certified progress on an infinite word family, **not** a complete blank-origin P1 decision and not yet a publishable BB(6) theorem. The finite range n14..47 for this two-shallow grammar and words with more than two shallows or high depths remain open.
+The proof combines [TwoLayerRemainder.lean](TwoLayerRemainder.lean),
+[TwoShallowNumeric.lean](TwoShallowNumeric.lean), and
+[TwoShallowModelLarge.lean](TwoShallowModelLarge.lean) for n>=48, where
+successive positive dyadic remainders yield a cubic separation contradiction.
+For the previously unresolved **14<=n<48**, the root divisor theorem and
+[SmallIndexEnergyCutoff.lean](SmallIndexEnergyCutoff.lean) force s<=3.
+[TwoShallowIntegerAlgebra.lean](TwoShallowIntegerAlgebra.lean) derives the
+first shallow-energy numerator directly from the terminal equation.
+[TwoShallowFiniteBridge.lean](TwoShallowFiniteBridge.lean) uses the
+[exact finite congruence tables](TwoShallowFiniteBounds.lean) to prove that a
+middle depth-two run has u<=2 and the final run has r<=2; the terminal
+numerical equation then contradicts the finite no-hit certificate.
+All steps are Lean checked with original source imports in the same CI run.
+
+This is a **restricted infinite inverse-word theorem**. Arbitrary words with
+three or more shallow transitions, depth>=3 excursions, exceptional exits,
+and the authentic blank-root halting decision remain open. Source verification
+does not establish external novelty or a publishable resolution of BB(6).
 
 ## Finite right-five search and remaining frontier
 
 [Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
 
-A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The new two-shallow theorem closes the n>=48 sector for exactly two shallow transitions. The remaining next steps are the finite n14..47 sector, three or more shallow transitions, and unrestricted high-depth excursions. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The remaining next steps concern three or more shallow transitions and unrestricted high-depth excursions. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
