@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census:im-results/agent1-429-frontier-odd0100"
           LOG=/tmp/agent6-junc-crossing.log
           : > "$LOG"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
@@ -177,6 +177,9 @@ jobs:
           grep -F "'BB429CZeroContextToE1Max.even_C0_to_E1_context_max'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroContextToE1Physical.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429CZeroContextToE1Physical.blank_even_C0_to_E1_corridor'" "$LOG"
+          # Additional original-source arbitrary-suffix C/0 frontier return.
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/FrontierOdd0100Source.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429Odd0100Source.odd_0100_original'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
