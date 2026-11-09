@@ -204,6 +204,48 @@ theorem m3_tower_unreachable (a q h time : Nat) :
           (BB6.Agent19GeneralM3.t a q) h) := by
   exact tower_blank_excluded _ _ _ _ _ _
 
+
+/-- At every strictly positive tower depth the dyadic-center quantity
+    is divisible by the full source stopping power. -/
+theorem tower_successor_center (m r0 s0 t h : Nat)
+    (hr0 : 2≤r0) (hm0 : m≤r0)
+    (hbase : K m r0 t 0+J m r0 s0 t 0+3*m+5 =
+      (2:Nat)^(2*m+2)*(J m r0 s0 t 0+3)) :
+    J m r0 s0 t (h+1)+3*m+3 =
+      (2:Nat)^(2*m+2)*(J m r0 s0 t h+3) := by
+  have hj := J_succ m r0 s0 t h hr0 hm0
+  have hs := tower_stopping m r0 s0 t h hr0 hm0 hbase
+  rw [hj]
+  omega
+
+/-- Every strictly positive tower depth escapes the entire old
+    Agent19 dyadic inverse-depth sieve, regardless of base status. -/
+theorem tower_successor_misses_old_dyadic
+    (m r0 s0 t h n : Nat)
+    (hr0 : 2≤r0) (hm0 : m≤r0)
+    (hbase : K m r0 t 0+J m r0 s0 t 0+3*m+5 =
+      (2:Nat)^(2*m+2)*(J m r0 s0 t 0+3)) :
+    ¬ (n+4 ≤ 2*m+2 ∧
+       (J m r0 s0 t (h+1)+3*m+3)%2^(n+4)=2^(n+2) ∧
+       (2*J m r0 s0 t (h+1)+3)%8=
+         (if n%2=0 then 7 else 3)) := by
+  rintro ⟨hn,hres,_⟩
+  have hcenter := tower_successor_center m r0 s0 t h hr0 hm0 hbase
+  have hdiv : (2:Nat)^(n+4) ∣ (2:Nat)^(2*m+2) :=
+    Nat.pow_dvd_pow 2 hn
+  have hzero :
+      (J m r0 s0 t (h+1)+3*m+3)%2^(n+4)=0 := by
+    rw [hcenter]
+    apply Nat.mod_eq_zero_of_dvd
+    rcases hdiv with ⟨v,hv⟩
+    refine ⟨v*(J m r0 s0 t h+3),?_⟩
+    rw [hv]
+    ac_rfl
+  have hpos : 0<(2:Nat)^(n+2) := Nat.pow_pos (by decide)
+  omega
+
+#print axioms tower_successor_center
+#print axioms tower_successor_misses_old_dyadic
 #print axioms m1_tower_stopping
 #print axioms m1_tower_unreachable
 #print axioms m3_tower_stopping
