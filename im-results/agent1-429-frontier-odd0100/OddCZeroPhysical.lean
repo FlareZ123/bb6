@@ -24,7 +24,8 @@ theorem physical_odd_C0_to_E1 (m : Nat) (tail : List Bool) (c : Config)
       (z 2 (ones (2*m+1) ++ (false :: tail)) false []) =
       some (z 4 tail true (true :: tens m ++ [false,true]),
         -((2*m+2:Nat):Int)) := by
-    simpa [odd_C0_to_E1_head_max m tail] using hp.symm
+    rw [odd_C0_to_E1_head_max m tail] at hp
+    simpa using hp.symm
   obtain ⟨c',hrun,hrep',hhead⟩ :=
     source_runWithDelta_rep _ _ c hrep _ _ hd
   refine ⟨c',hrun,hrep',?_⟩
