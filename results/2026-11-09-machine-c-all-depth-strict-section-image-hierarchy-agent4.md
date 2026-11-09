@@ -94,15 +94,20 @@ All these bands lie inside `I_2` and are therefore different from the already kn
 
 ## Relationship to genuine Machine C halting gates
 
-The original high-family stopping equation is `k+j+3*m+5=2^(2*m+2)*(j+3)`. For `r=1`, the lifted cone gives an exact source-certified stopping exclusion:
+The exact high-family stopping equation is `k+j+3*m+5=2^(2*m+2)*(j+3)`. Pulling back the strict image hierarchy gives all-time genuine blank-origin exclusions for any stopping pair lying in the proven lifted bands.
+
+**Important overlap audit.** The earlier `r=1` high-family residue exclusion `m>=3, j%4=0, m%4=3, (j+3*m+5)%32=10` is a **special case of Agent 19's already source-certified all-depth dyadic exclusion**, at their inverse depth `n=1`. In fact the `r`-th lifted band high-stop pullback is covered by that older theorem whenever `r+4<=2*m+2`. These high-depth bands should not be counted as newly removed high stopping parameters.
+
+**Two distinct low-stopping-depth `m=1` discoveries escape the older Agent 19 dyadic predicate** because that predicate permits only `n=0` when `m=1`. For every `q>=0` the original high-family equation and true blank nonreachability hold for
 
 ```
-m>=3, j%4=0, m%4=3, (j+3*m+5)%32=10.
+m=1, j=64*q+26,    (x,k)=(128*q+55, 960*q+430).
+m=1, j=256*q+266, (x,k)=(512*q+535,3840*q+4030).
 ```
 
-It excludes eight of 1024 high-stopping parameter residue cells, while all roots in the other cells remain undecided. The earlier source proof [CThreeToFourSource.lean](../im-results/agent4-c-four-step-image/CThreeToFourSource.lean), source CI [42600819847](https://github.com/FlareZ123/bb6/actions/runs/42600819847), handles the entire family.
+The first is the `r=2` strictly three/four-depth lifted source band, proved in [CNewM1.lean](../im-results/agent4-c-four-step-image/CNewM1.lean) and [successful original-source Lean CI 42604195908](https://github.com/FlareZ123/bb6/actions/runs/42604195908). The second is the disjoint `r=4` source band, proved in [CNewM1Depth4.lean](../im-results/agent4-c-four-step-image/CNewM1Depth4.lean). Its full original-source CI status is recorded in the [research dossier](../im-results/agent4-c-four-step-image/README.md). Each proof is unbounded in `q` and section-return time. The candidate index families are disjoint since their `j mod64` classes are 26 and 10. Together they remove two explicit arithmetic progressions from actual Machine C blank-reachable stopping inputs, with density `1/64+1/256=5/256` *within the one-dimensional `m=1` parameter ray*, subject to overlap with other previously proved restrictions.
 
-For any fixed higher `r`, the lifted cone provides further finite-modulus **necessary exclusions** whenever the stopping target satisfies `2*j+3=X_r(s)` and `k=Y_r(t)`. They require both a high-family stopping equation and the cone's specific congruences; the source-kernel nonreach theorem applies immediately. A direct all-parameter merged stopping predicate, or proof of independence from every earlier sieve, has **not** been established.
+The earlier Agent 29 exact right-four m=1 tower is a discrete sequence, and Agent 19's all-depth dyadic predicate cannot eliminate either new progression. The full strongest merged `highAllowedValSixFull` predicate and all other independent sieves have **not yet received a separate all-parameter Lean admission proof** for these progressions. Therefore no exclusive new parameter-count claim beyond the explicit source-verified absence and Agent 19 overlap audit is made.
 
 ## What remains unresolved
 
