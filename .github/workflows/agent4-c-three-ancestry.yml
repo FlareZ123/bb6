@@ -32,11 +32,11 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent4-three/
           cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent4-three/
           cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource,ConeBroadArithmetic,ConeBroadSource,ThreeConeArithmetic,ThreeConeSource}.lean /tmp/agent4-three/
-          cp im-results/agent4-c-three-ancestry/{CThreeArithmetic,CThreeSource,CThreeStop,CThreeGenericSource,CThreeGenericStop,CThreeWit}.lean /tmp/agent4-three/
+          cp im-results/agent4-c-three-ancestry/{CThreeArithmetic,CThreeSource,CThreeStop,CThreeGenericSource,CThreeGenericStop,CThreeWit,CThreeAltSource,CThreeAltStop}.lean /tmp/agent4-three/
           cd /tmp/agent4-three
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage ConeArithmetic ConeSource ConeBroadArithmetic ConeBroadSource ThreeConeArithmetic ThreeConeSource CThreeArithmetic CThreeSource CThreeStop CThreeGenericSource CThreeGenericStop CThreeWit; do
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage ConeArithmetic ConeSource ConeBroadArithmetic ConeBroadSource ThreeConeArithmetic ThreeConeSource CThreeArithmetic CThreeSource CThreeStop CThreeGenericSource CThreeGenericStop CThreeWit CThreeAltSource CThreeAltStop; do
             echo "Compiling $f"
             lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
             if grep -q "sorryAx" "$f.log"; then
