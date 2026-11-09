@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent4-429-ordinary-frontier"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier"
           LOG=/tmp/agent6-junc-crossing.log
           : > "$LOG"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
@@ -105,6 +105,10 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent4-429-ordinary-frontier/PhysicalRegularHeadMax.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429PhysicalRegularHeadMax.physical_zero_regular_frontier_conserved'" "$LOG"
           grep -F "'BB429PhysicalRegularHeadMax.physical_positive_regular_frontier_conserved'" "$LOG"
+          lean -o im-results/agent33-429-writer-locality/CZeroEvenReturn.olean im-results/agent33-429-writer-locality/CZeroEvenReturn.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroContext.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429CZeroContext.even_C0_context'" "$LOG"
+          grep -F "'BB429CZeroContext.odd_C0_context_halts'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
