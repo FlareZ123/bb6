@@ -84,9 +84,9 @@ jobs:
           audit_axiom_free "BB429DeltaPhysicalBridge.source_runWithDelta_none_rep" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.bGate_has_A_ancestor" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.bGate_reaches_B001" /tmp/agent32-429-source.log
-          audit_axiom_free "BB429AGate.halts_iff_earlier_A_corridor"
+          audit_axiom_free "BB429AGate.halts_iff_earlier_A_corridor" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.aGate_forces_halt_at" /tmp/agent32-429-source.log
-          audit_axiom_free "BB429AGate.halting_time_iff_A_corridor" /tmp/agent32-429-source.log /tmp/agent32-429-source.log
+          audit_axiom_free "BB429AGate.halting_time_iff_A_corridor" /tmp/agent32-429-source.log
           audit_axiom_free "BB429PreFatal.preFatal_iff_next_fatalB" /tmp/agent32-429-source.log
           audit_axiom_free "BB429PreFatal.halts_iff_root_preFatal" /tmp/agent32-429-source.log
           audit_axiom_free "BB429PreFatal.halt_requires_prior_head_three_right" /tmp/agent32-429-source.log
