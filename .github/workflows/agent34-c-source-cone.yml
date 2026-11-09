@@ -47,4 +47,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{TowerArithmetic,SourceImageTower}.lean .
           lean -o TowerArithmetic.olean TowerArithmetic.lean
           lean SourceImageTower.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeArithmetic,OddThreeSource}.lean .
+          lean -o OddThreeArithmetic.olean OddThreeArithmetic.lean
+          lean OddThreeSource.lean
 
