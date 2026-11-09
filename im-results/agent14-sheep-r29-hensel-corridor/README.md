@@ -1,6 +1,6 @@
 # Eight fixed-order 3-adic Hensel corridors: exact inverse-depth distribution
 
-**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The new quantitative theorem determines the exact natural-density distribution of the lengths of their distinguished genuine zero-valued predecessor tails. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
+**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The exact-depth theorem determines the natural-density distribution of their distinguished genuine zero-valued predecessor tails. A second, locally Lean-kernel-checked theorem gives an all-depth modular sieve against entire infinite families of generic side exits from the r29 corridor. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
 
 ## Theorem: unbounded true E inverse depth at fixed v3(j)=7
 
@@ -95,6 +95,56 @@ The paths consist of the terminal mixed edge and `d−1` consecutive zero edges.
 **Proof of exact genuine chain length.** For every even `y>36`, an inverse `P(y)` of type `(h,a)=(0,2)` exists only if `9|y+12`, by rearranging the original exact generic source formula; when it exists its source is unique. Repeating `T` times requires `9^T|y+12` and then gives `P^T(y)+12=8^T*(y+12)/9^T`. Because every `Y_r(k)` is huge and even, the case `T=1` has source at least 20. For `T≥2`, the quotient `m=(Y_r(k)+12)/9^T` is positive **even**, so the smallest source is `8^T*m−12≥2*8^2−12=116`. All intermediate inverse sources are larger. They are of exact form `4v` with odd `v≥5`, and each authentic first-even `E` edge is given by the original generic formula. Thus every arithmetically permitted `T` is a genuine chain and every longer one is impossible.
 
 **Reproduction.** [`density_certificate.py`](./density_certificate.py) verifies all eight base integrality/3-adic congruences, the exact `v3(g−1)=10` modulus test, unique Hensel residues at precisions through `3^18`, independent full-period uniqueness checks for the first five digits, and exact rational values `D(d)`. All arithmetic uses modular exponentiation without constructing `2^j` or simulating an enormous tape. The finite tests support the displayed base congruences; the induction and genuine-source inequalities give the universal, all-`k), all-`T) proof.
+
+## Kernel-checked all-depth generic side-exit walls
+
+The inverse-depth theorem above counts a **distinguished** authentic predecessor chain. To progress toward a genuine reachability exclusion, one must also examine *other* possible incoming sources to any node on that chain. We have obtained a reusable obstruction that eliminates infinitely many source valuations `a` at **every** depth, simultaneously for every exponent parameter `k`, without a finite inverse-depth cutoff.
+
+Write `x -P^n-> Y` for `n` genuine `(h,a)=(0,2)` backward steps, so the [Lean-proved chain identity](./SheepChain2.lean) is
+
+```text
+9^n*(x+12) = 8^n*(Y+12).
+```
+
+An additional incoming generic Sheep first-even edge with hidden odd-run length `h=0`, source `2^a*v` (`v` odd and at least five), and target `x` necessarily satisfies the exact original-source equation
+
+```text
+2*x+1 = (2^(a+1)+1)*v + 2*a.
+```
+
+**Universal odd-modulus exit obstruction.** For any `q` with `gcd(q,2)=1`, suppose `q∤(Y+12)` but
+
+```text
+q | (2^(a+1)+1),     q | (2*a+23).
+```
+
+The generic equation forces `q | 2*(x+12)`, and hence `q |x+12`. The chain identity then forces `q |8^n*(Y+12)`. Coprimality with eight gives `q |Y+12`, contradiction. This is fully quantified, proved without admitted axioms in [`SheepExitWall.lean`](./SheepExitWall.lean), theorem `no_generic_exit`. The only divisibility requirements on `q` are the displayed ones; no primality or numerical depth bound is needed.
+
+For the r29 distinguished parent `Y=Z(k)`, the exact numerator identity proves **for all k**
+
+```text
+(Y+12)%5 = 3,    (Y+12)%13 = 3,    (Y+12)%17 = 2.
+```
+
+Choosing these three moduli gives unconditional *generic h=0 side-exit valuation* exclusions at **every** `P` depth:
+
+```text
+a ≠ 20*s+1,      a ≠ 156*s+125,      a ≠ 136*s+99
+for every s>=0.
+```
+
+The additional parity-sensitive source congruence is substantially stronger for `a≡3 (mod8)`: `8/9≡−1 (mod17)`, so the genuine chain alternates `x≡7,3 (mod17)` by even/odd backward depth. The generic incoming equation reduces to `2*x+1≡2*a (mod17)`. Therefore **the only permissible valuations within `a≡3 (mod8)`** are
+
+```text
+even P depth:  a ≡ 67  (mod136)
+odd P depth:   a ≡ 131 (mod136).
+```
+
+Every other `a≡3 (mod8)` is excluded at that depth. Combining this parity rule with the independent 5- and 13-modulus exclusions produces an exact periodic union: **4582 of 26520** valuation residue classes, or `2291/13260 = 17.277526395...%`, are ruled out for either fixed depth parity. This is an arithmetic density of candidate *valuation integers a*, **not** a density of source states, genuine reachable configurations, target powers, or BB(6) machine tables.
+
+[`SheepR29Walls.lean`](./SheepR29Walls.lean) compiles in local Lean **4.36.0-rc2** against the existing [`SheepChain2.lean`](./SheepChain2.lean) and the new general exit theorem, and kernel-proves `r29_no_side_exit_after_genuine_chain` and `r29_side_val17_at_depth`. `#print axioms` reports only `[propext, Quot.sound]` for these results, with no `sorryAx`. The first theorem directly imports the genuine `SheepChain2.Chain2` relation and assumes the exact generic source equation, already available as a necessary consequence of the original Sheep source splitter. The second theorem similarly conditions on that source equation. **No single new theorem imports the unmodified upstream Turing-machine definition**, so the locally kernel-checked algebra and its authentic-source interpretation must be distinguished from a new original-TM CI certificate.
+
+[`exit_val_sieve.py`](./exit_val_sieve.py) checks the complete 26520-period union and independently verifies the three modulus conditions for each residue. The all-depth theorem is mathematical; the finite script only audits the explicit density arithmetic. These exit restrictions prune a meaningful subset of alternative generic valuations but leave many other incoming branches, exceptional sources, and the authentic blank-seed reachability question open.
 
 ## Reusable 3-adic affine-corridor principle
 
