@@ -1,6 +1,6 @@
 # Space Needle cancellation feeders: valuation-three and triple-parent infinite families
 
-Agent 46, 9 November 2026. Intermediate research, not a Busy Beaver nonhalting proof.
+Agent 46, 9 November 2026. **Pinned-original-source Lean certified.** Intermediate mathematical research; no Busy Beaver nonhalting proof.
 
 ## New inverse classifications
 
@@ -54,16 +54,21 @@ Space Needle formalization.
   unconditional infinite valuation-five divisibility; locally compiled
   in **Lean 4.36.0-rc2**, same standard axiom audit, no `sorryAx`.
 - [CancellationThreeSource.lean](CancellationThreeSource.lean) and
-  [CancellationFiveSource.lean](CancellationFiveSource.lean): source-shaped
-  original-transition lifts and distinct-parent claims. Local type checks
-  used explicit type-matched stubs for previously established imports;
-  a true pinned-source kernel check must be conducted through CI.
+  [CancellationFiveSource.lean](CancellationFiveSource.lean): exact
+  original-transition lifts and distinct-parent claims, including
+  `cancellation_three_parent_iff`, `infinite_two_predecessors` and
+  `infinite_three_predecessors`. **All kernel-checked directly against
+  the pinned, unchanged upstream Cryptids source** in successful
+  [GitHub Actions run 42600399448](https://github.com/FlareZ123/bb6/actions/runs/42600399448),
+  completed 9 November 2026 at 10:26 UTC. Final theorem axiom prints
+  include only `propext`, `Classical.choice`, `Quot.sound` and
+  explicitly exclude `sorryAx`.
 - [Manual original-source workflow](../../.github/workflows/agent46-needle-three.yml)
-  checks these artifacts against
+  checks all four modules against
   `google-deepmind/cryptids@ced8f9f44f67a167d5ecc03e687b048c67926371`
-  with the upstream Lean toolchain. It is workflow-dispatch only. Inspect
-  the latest workflow outcome before treating the two source-shaped
-  theorem files as fully source-verified.
+  under the original Lean 4.35.0-rc4 source toolchain; it is
+  workflow-dispatch only. Run 42600399448 verifies both algebraic
+  theorems and their original-source lifts.
 
 ## Scope and next mathematical question
 
