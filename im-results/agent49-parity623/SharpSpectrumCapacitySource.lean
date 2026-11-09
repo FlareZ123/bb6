@@ -217,6 +217,38 @@ theorem spectrum_nodup (b : Nat) : (fastSpectrum b).Nodup := by
             simp only [hf, Bool.false_eq_true, if_false, List.nil_append]
             exact nodup_succ _ (ih (b/3+1) (by omega))
 
+
+/-- The exact first block fatal for a given initial first counter. -/
+def tight (a : Nat) : Nat := boundary a + 1
+
+/-- At the first fatal block for counter n+1, the complete set of fatal
+counters is the initial interval [0,n) together with n+1; n itself is safe. -/
+theorem tight_spectrum (n : Nat) :
+    fastSpectrum (tight (n+1)) = (List.range n) ++ [n+1] := by
+  induction n with
+  | zero =>
+    simp [tight,boundary,fastSpectrum,badAll]
+  | succ n ih =>
+    have hrep : tight (n+1+1) = 3 * boundary (n+1) + 2 := by
+      simp only [tight,boundary]
+    rw [hrep,fastSpectrum]
+    have hnz : 3*boundary (n+1)+2 ≠ 0 := by omega
+    have hm0 : (3*boundary (n+1)+2)%3 ≠ 0 := by omega
+    have hm1 : (3*boundary (n+1)+2)%3 ≠ 1 := by omega
+    have hdiv : (3*boundary (n+1)+2)/3 = boundary (n+1) := by omega
+    have hbad : badAll 0 (boundary (n+1)) = true := by
+      apply (fastSpectrum_correct (boundary (n+1)) 0).1
+      rw [boundary_spectrum]
+      simp
+    simp only [if_neg hnz, if_neg hm0, if_neg hm1, hdiv, hbad, if_pos]
+    have hplus : boundary (n+1)+1 = tight (n+1) := rfl
+    rw [hplus,ih]
+    simp only [List.singleton_append, List.map_append, List.map_cons, List.map_nil]
+    rw [List.range_succ_eq_map (n:=n)]
+    simp only [List.cons_append]
+
+#print axioms tight_spectrum
+
 #print axioms spectrum_nodup
 
 #print axioms minimum_blocks_for_n_failures
