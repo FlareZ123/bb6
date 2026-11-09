@@ -2,7 +2,8 @@ import S4Prefix5457
 import Lean.Elab.Tactic.Omega
 
 namespace S4PrefixNinth
-open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457 S4Toggle
+open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457 S4Toggle S4PrefixSeven
+open S4PrefixContraction
 
 set_option maxRecDepth 500000
 set_option maxHeartbeats 0
@@ -52,7 +53,7 @@ private theorem prun_add_local (m n : Nat) (xs : List Nat) :
 /-- Every successful root state after return 5457 has the nine-digit
 prefix obtained by iterating the source prefix map from cycle9Start. -/
 theorem root_nine_prefix_from_5457 (n : Nat) (U : List Nat)
-    (h : prun (5457+n) S4Prefix5457.seed = some U) :
+    (h : prun (5457+n) seed = some U) :
     U.take 9 = prefixRun n cycle9Start := by
   have hstate : prun n S4Prefix5457.s5457 = some U := by
     rw [prun_add_local, S4Prefix5457.seed5457] at h
@@ -60,7 +61,7 @@ theorem root_nine_prefix_from_5457 (n : Nat) (U : List Nat)
   have hfull : prun n (cycle9Start ++ tail5457) = some U := by
     rw [s5457_decomp] at hstate
     exact hstate
-  simpa [cycle9Start, cycle8PeriodicStart] using
+  simpa [cycle9Start, cycle8PeriodicStart, S4PrefixSeven.cycle7] using
     (prun_prefix n cycle9Start tail5457 U hfull)
 
 /-- Additivity of the forward prefix iteration. -/
