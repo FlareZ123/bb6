@@ -85,6 +85,40 @@ def same_shape_suffix(prefix: tuple[int, ...], length: int, m: int) -> tuple[int
     return suffix
 
 
+def same_shape_suffix_keep_last2(
+    prefix: tuple[int, ...], original: tuple[int, ...]
+) -> tuple[int, ...]:
+    """Keep the original last two digits as well as length and mass."""
+    L = len(original)
+    assert L >= 5 and len(prefix) == 9
+    k = (weight(prefix) + 509) // 512
+    j = L - 3
+    c = (1 << j) - 1
+    last_blocks = (original[-2] + 1, original[-1] + 1)
+    t = mass(original) - (j - 2) - sum(last_blocks)
+    B = (
+        sum(1 << i for i in range(2, j))
+        + last_blocks[0] * (1 << (L - 2))
+        + last_blocks[1] * (1 << (L - 1))
+    )
+    lo = k + B + t + c + 1
+    power = 1 << (lo - 1).bit_length()
+    d = power - k - B - t
+    aj = (d - 1) // c
+    a1 = d - c * aj
+    a0 = t - a1 - aj
+    assert min(a0, a1, aj) >= 1
+    suffix = (
+        (a0 - 1, a1 - 1)
+        + (0,) * (L - 5)
+        + (aj - 1, original[-2], original[-1])
+    )
+    assert len(suffix) == L and mass(suffix) == mass(original)
+    assert suffix[-2:] == original[-2:]
+    assert weight(suffix) + k == power
+    return suffix
+
+
 def main() -> None:
     state = ROOT
     for _ in range(5457):
@@ -102,7 +136,7 @@ def main() -> None:
         if (weight(prefix) + 509) % 512 == 0:
             length = len(state) - 9
             original_suffix_mass = mass(state[9:])
-            synthetic_suffix = same_shape_suffix(prefix, length, original_suffix_mass)
+            synthetic_suffix = same_shape_suffix_keep_last2(prefix, state[9:])
             synthetic = prefix + synthetic_suffix
             assert len(synthetic) == len(state)
             assert mass(synthetic) == mass(state)
@@ -126,6 +160,7 @@ def main() -> None:
     print("Original suffix lengths:", dict(lens))
     print("Minimum remaining-mass minus k:", smallest_margin)
     print("First synthetic suffix witness (relative phase, digits):", first_witness)
+    print("All synthetic completions also keep both original last digits.")
     print("These are synthetic completions, not authentic-root halts.")
 
 
