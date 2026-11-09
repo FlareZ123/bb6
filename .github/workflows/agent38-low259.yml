@@ -1,0 +1,40 @@
+name: Agent 38 Machine C low259 original-source Lean proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile source and ray proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a38-low259
+          cp im-results/agent11-c-line/CLine.lean /tmp/a38-low259/
+          cp im-results/agent8-c-total-section/GenericSection.lean /tmp/a38-low259/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a38-low259/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a38-low259/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse,BounceAllExact,SectionAllInverse,OddSliver,OddSevenSliver,OddOddWedge,OddOddOrbit,OddOddVal3,OddOddVal3Orbit,OddOddLowVal}.lean /tmp/a38-low259/
+          cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a38-low259/
+          cp im-results/agent24-c48/EvenEvenInverse.lean /tmp/a38-low259/
+          cp im-results/agent38-low259/{Low259Arithmetic,Low259Inverse,Low259Reach}.lean /tmp/a38-low259/
+          cd /tmp/a38-low259
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff EvenEvenInverse OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal Low259Arithmetic Low259Inverse Low259Reach; do
+            echo "Compile $f"
+            lean -o "$f.olean" "$f.lean"
+          done
