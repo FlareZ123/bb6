@@ -25,6 +25,7 @@ jobs:
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a15-low-rays/
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse,BounceAllExact,SectionAllInverse}.lean /tmp/a15-low-rays/
           cp im-results/agent3-c-odd-image/{Agent3CImage,Agent3COneFamily,Agent3COrbitIff}.lean /tmp/a15-low-rays/
+          cp im-results/agent15-c-low-rays/Agent15RayParam.lean /tmp/a15-low-rays/
           cd /tmp/a15-low-rays
           base64 -d "$GITHUB_WORKSPACE/im-results/agent15-c-low-rays/Agent15Rays.tar.xz.b64" > Agent15Rays.tar.xz
           echo "d1d576d187cb2e80e0cdaaf6cc610a2275742d709100e3bd387270142f2c366d  Agent15Rays.tar.xz" | sha256sum -c -
@@ -35,7 +36,7 @@ jobs:
           python3 -c "from pathlib import Path; p=Path('Agent15RayInverse.lean'); s=p.read_text(); p.write_text(s.replace('set_option maxRecDepth 8192\\nimport Lean.Elab.Tactic.Omega', 'import Lean.Elab.Tactic.Omega\\nset_option maxRecDepth 8192', 1))"
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff Agent15RayInverse Agent15RayReach; do
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff Agent15RayInverse Agent15RayReach Agent15RayParam; do
             echo "Original-source Lean compile: $f"
             lean -o "$f.olean" "$f.lean"
           done
