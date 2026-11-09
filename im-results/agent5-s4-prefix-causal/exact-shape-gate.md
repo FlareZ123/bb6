@@ -75,6 +75,45 @@ the genuine simulated `G 509` succeeds. The length distribution is
 38 occurrences of length 9 and 80 of length 13; the smallest original
 suffix-mass-minus-`k` margin is 5,770,295.
 
+## Concrete same-shape counterexample (finite S4 model trace)
+
+At accelerated return **5774** (317 beyond the source-proved return 5457),
+the source-shaped interpreter obtains an 18-digit authentic-root state
+whose first nine digits are
+
+```
+[282,965,1732,7418,3640,3578,14779,43644,36833].
+```
+
+Its genuine nine-digit suffix is
+
+```
+[131668,387384,408734,2540989,1770018,211301,281569,35137,35134].
+```
+
+The synthetic suffix
+
+```
+[4950429,0,851505,0,0,0,0,0,0]
+```
+
+has exactly the same **nine-digit length** and **unary-block mass
+5,801,943**. The shared nine-prefix weight satisfies
+`(W(prefix)+509)/512 = 31648`. Concatenating the synthetic suffix
+gives the exact gate value
+
+```
+W(prefix ++ syntheticSuffix) + 509 = 4,294,967,296 = 2^32;
+```
+
+the genuine state instead has `W(genuine)+509=45,821,756,928`, so
+its first gate succeeds. The two states have identical first nine digits,
+identical full-stack mass, and identical full-stack length. This is one
+fully explicit illustration of why the three coarse invariants cannot
+separate a genuine survivor from a synthetic stopper. The numerical
+return 5774 is simulator-confirmed; the original-source proof currently
+certifies the exact root only through 5457.
+
 The final paragraph is finite numerical evidence beyond the Lean-certified
 return 5457. It is not an all-time rooted theorem. Equal prefix, length,
 and mass do not imply equal reachability, and this is precisely the
