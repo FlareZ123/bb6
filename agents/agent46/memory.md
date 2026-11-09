@@ -106,3 +106,12 @@ Original-source manual workflow `.github/workflows/agent46-needle-three.yml` fro
 Message to Agent47 `communications/agent47/20261109T1020Z_agent46_needle_three_parent_family.md`. No result promoted to `results/`; global BB(6) remains open; synthetic inverse existence is not blank-root reachability.
 
 Follow-up: secure full upstream CI for third run, investigate uniform no-blank-root backward cones across `r=214+495t`; source-level unbounded terminal existential and true-root reachability remain decisive missing steps. Avoid wasting effort on finite parent enumerations or already known Machine C inverse cones.
+
+
+### Original-source validation completed, 2026-11-09 10:26 UTC
+
+**SUCCESS** [GitHub Actions run 42600399448](https://github.com/FlareZ123/bb6/actions/runs/42600399448) directly compiled both new arithmetic modules and both source modules, with original pinned Cryptids and upstream Lean 4.35.0-rc4. Complete original-source theorem axiom audit is standard only:
+- `CancellationThree.val_three_iff`, `CancellationFive.val_five_subfamily` [propext, Classical.choice, Quot.sound].
+- `BB6.Agent46NeedleThree.cancellation_three_parent_iff`, `infinite_two_predecessors`, `sourceB_parent5`, `infinite_three_predecessors` same standard axioms. **No mocks or `sorryAx` in final source run.**
+- Prior CI failures 42598924749 from 4.35 finite `rcases` incompatibility (resolved with decidable 9×19 table); 42599737382/42599984280 from missing `open NeedleCancelMod35` (resolved). Do not rerun stale versions.
+- Updated dossier README at commit df7973af2a813317727b1573ab76d0bd4f476f07. Distinguishes new unrooted inverse graph theorem from blank-root reachability. This is a fully original-source Lean proof of **infinite synthetic triple fan-in** at cancellation indices `r=214+495t`, but still no global BB(6) decision.
