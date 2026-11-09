@@ -1,24 +1,24 @@
 # A sharp sixth/seventh image gap in the original Machine C first-return map
 
-**Agent 4, 9 November 2026.** Original-source Lean 4.36.0-rc2 proof, [CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275). 
+**Agent 4, 9 November 2026.** Original-source Lean 4.36.0-rc2 proof, [strict-image CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275) and [high-stopping CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809). 
 
 ## Theorems
 
-Let (F=\mathrm{BB6.Agent46.secNext}) be the repository's unchanged exact accelerated first-return map for six-state two-symbol Machine C, whose genuine blank-origin section begins at ((5,1)). Let (I_n) denote the states having an incoming chain of (n) successful (F)-edges from an arbitrary source, with (I_0=\mathbb N^2). For any natural numbers (u,v) satisfying ((u+v)\\bmod 4=0), define
+Let (F=\mathrm{BB6.Agent46.secNext}) be the repository's unchanged exact accelerated first-return map for six-state two-symbol Machine C, whose genuine blank-origin section begins at ((5,1)). Let (I_n) denote the states having an incoming chain of (n) successful (F)-edges from an arbitrary source, with (I_0=\mathbb N^2). For any natural numbers (u,v) satisfying ((u+v)\bmod 4=0), define
 
 \[
 V_{u,v}=(641+1024u,\ 574+1024v).
 \]
 
-**Theorem 1 (sharp sixth/seventh image separation).** For every (u,v\in\mathbb N) with ((u+v)\\bmod4=0),
+**Theorem 1 (sharp sixth/seventh image separation).** For every (u,v\in\mathbb N) with ((u+v)\bmod4=0),
 
 \[
 \boxed{V_{u,v}\in I_6\setminus I_7.}
 \]
 
-In particular, every point of this infinite two-dimensional lattice has six genuine incoming original-source transitions, and a seventh incoming transition chain is impossible from **every** potential starting section state. The natural density of this congruence-restricted union of four lattices in (\mathbb N^2) is exactly (1/2^{22}). 
+In particular, every point of this infinite two-dimensional lattice has six genuine incoming original-source transitions, and a seventh incoming transition chain is impossible from **every** potential starting section state. The natural density of this congruence-restricted lattice family in (\mathbb N^2) is exactly (1/2^{22}). 
 
-**Theorem 2 (all-time blank exclusion).** For every (u,v,t\in\mathbb N) with ((u+v)\\bmod4=0),
+**Theorem 2 (all-time blank exclusion).** For every (u,v,t\in\mathbb N) with ((u+v)\bmod4=0),
 
 \[
 F^t(5,1)\ne V_{u,v}
@@ -43,7 +43,7 @@ Then m ≥ 7 and membership in **any one** of the following four disjoint congru
 
 Together these four high-stopping parameter classes have density (1/2^{21}) in the (j,m) lattice. Their overlap with stronger pre-existing stopping sieves has not been completely audited, so this parameter density is not advertised as additional integrated coverage.
 
-Source files: [exhaustive three-parent arithmetic](../im-results/agent4-c-seven-image/CSixSeventhArithmetic.lean), [strict image theorem](../im-results/agent4-c-seven-image/CSixSeventhStrict.lean), [true blank-root exclusion](../im-results/agent4-c-seven-image/CSixSeventhRoot.lean), [original narrower high-stopping pullback](../im-results/agent4-c-seven-image/CSixSeventhGate.lean), and [four-class high-stopping pullback](../im-results/agent4-c-seven-image/CSixSeventhGateWide.lean). All source modules were compiled together in [original-source CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275), against unchanged exact section code and its proved unrestricted inverse. The workflow rejects any printed `sorryAx`; the principal theorems print ordinary Lean logical axioms only.
+Source files: [exhaustive three-parent arithmetic](../im-results/agent4-c-seven-image/CSixSeventhArithmetic.lean), [strict image theorem](../im-results/agent4-c-seven-image/CSixSeventhStrict.lean), [true blank-root exclusion](../im-results/agent4-c-seven-image/CSixSeventhRoot.lean), [original narrower high-stopping pullback](../im-results/agent4-c-seven-image/CSixSeventhGate.lean), and [four-class high-stopping pullback](../im-results/agent4-c-seven-image/CSixSeventhGateWide.lean). All source modules were compiled together in [original-source CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809), against unchanged exact section code and its proved unrestricted inverse. The workflow rejects any printed `sorryAx`; the principal theorems print ordinary Lean logical axioms only.
 
 ## Exact three-branch backward proof
 
@@ -80,7 +80,7 @@ The state (P_0) has odd second coordinate and coordinate sum (1\pmod4). The sour
 \[
 R=(471+276u+548v,\ 644+374u+750v).
 \]
-The state (R) has second coordinate (4\pmod8) and sum (3\pmod8), so Agent 34's two-edge exclusion proves (R\notin I_2). Therefore (P_2\notin I_3) and (H_1\notin I_4).
+Under (u+v)\bmod4=0, the state (R) has second coordinate (4\pmod8) and sum (3\pmod8), so Agent 34's two-edge exclusion proves (R\notin I_2). Therefore (P_2\notin I_3) and (H_1\notin I_4).
 
 Any seven-edge incoming chain into (V_{u,v}) would require a six-edge incoming chain into one of (D,H_1,H_3). The three branch obstructions above exclude that possibility. The proof uses exact algebraic inverse equations and their original Lean sufficiency theorem; it requires no finite truncation of potential bounce recursion depths.
 
