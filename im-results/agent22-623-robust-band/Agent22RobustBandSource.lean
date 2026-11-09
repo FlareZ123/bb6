@@ -66,6 +66,29 @@ theorem original_linear_family (q d : Nat) (hq : 1≤q) :
   rw [←bad_source_eq (u (2*q+5)+(8*q+26)) 3]
   exact linear_band_fatal q hq
 
+/-- Exact maximal consecutive fatal band in the unmodified original B-drain.
+The first surviving block follows at offset escape r, for all r,a,d. -/
+theorem original_sharp_initial_band (r a d : Nat) :
+    (∀ e : Nat, e < escape r →
+      drainB a (boundary (a+r)+e) d = none) ∧
+    drainB a (boundary (a+r)+escape r) d ≠ none := by
+  constructor
+  · intro e he
+    apply (drain_none_iff_badAll a (boundary (a+r)+e) d).2
+    rw [←boundary_source_eq (a+r)]
+    rw [←bad_source_eq (u (a+r)+e) a]
+    exact (exact_initial_band r a).1 e he
+  · intro hbad
+    have hh := (drain_none_iff_badAll a
+      (boundary (a+r)+escape r) d).1 hbad
+    rw [←boundary_source_eq (a+r)] at hh
+    rw [←bad_source_eq (u (a+r)+escape r) a] at hh
+    have hs := (exact_initial_band r a).2
+    rw [hs] at hh
+    cases hh
+
+#print axioms original_sharp_initial_band
+
 #print axioms bad_source_eq
 #print axioms original_drain_fatal_band
 #print axioms original_linear_family
