@@ -162,6 +162,62 @@ theorem r29_no_side_exit_after_genuine_chain
     (∀ s, a ≠ 136*s+99) := by
   exact r29_no_generic_side_exit hbase (SheepChain2.chain_offset hchain) he
 
+private theorem parent_mod17_flip {x y : Nat} (h : SheepChain2.Parent2 x y) :
+    (y % 17 = 7 → x % 17 = 3) ∧ (y % 17 = 3 → x % 17 = 7) := by
+  obtain ⟨_, _, _, he⟩ := h
+  have hm : (x%17+y%17)%17=10 := by omega
+  constructor <;> omega
+
+private theorem chain_mod17_flip {n x y : Nat} (c : SheepChain2.Chain2 n x y)
+    (hy : y%17=7) : x%17=(if n%2=0 then 7 else 3) := by
+  induction c with
+  | nil z => simpa using hy
+  | @cons n x y z edge tail ih =>
+      have hn := parent_mod17_flip edge
+      have hr := ih hy
+      by_cases he : n%2=0
+      · have hr' : y%17=7 := by simpa [he] using hr
+        have hx : x%17=3 := hn.1 hr'
+        simpa [Nat.add_mod, he] using hx
+      · have hp : n%2=1 := by omega
+        have hr' : y%17=3 := by simpa [hp] using hr
+        have hx : x%17=7 := hn.2 hr'
+        have hh : (n+1)%2=0 := by omega
+        simpa [hh] using hx
+
+/-- All valuations a≡3 modulo 8 that can enter the genuine r29
+    (0,2)-corridor are pinned to one class modulo 136 by depth parity. -/
+theorem r29_side_val17_at_depth
+    {k n x y v a : Nat}
+    (hbase : 3483*(y+12)=2^(17496*(29+63*k)+10)+25220)
+    (hchain : SheepChain2.Chain2 n x y)
+    (he : 2*x+1 = (2^(a+1)+1)*v+2*a)
+    (ha : a%8=3) :
+    a%17=(if n%2=0 then 16 else 12) := by
+  have hj8 : 17496*(29+63*k)=8*(2187*(29+63*k)) := by omega
+  have hy0 : (y+12)%17=2 := by
+    apply base17 (n:=2187*(29+63*k))
+    simpa only [hj8] using hbase
+  have hy : y%17=7 := by omega
+  have hsrc := chain_mod17_flip hchain hy
+  have hrepr : a=8*(a/8)+3 := by omega
+  have hm : (2^(a+1)+1)%17=0 := by
+    have hp := pow_17_special (a/8)
+    have hh : a+1=8*(a/8)+4 := by omega
+    simpa only [hh] using hp
+  have hzero : ((2^(a+1)+1)*v)%17=0 := by
+    rw [Nat.mul_mod, hm]
+    simp
+  by_cases hn : n%2=0
+  · have hx : x%17=7 := by simpa [hn] using hsrc
+    have hv : a%17=16 := by omega
+    simpa [hn] using hv
+  · have hn' : n%2=1 := by omega
+    have hx : x%17=3 := by simpa [hn'] using hsrc
+    have hv : a%17=12 := by omega
+    simpa [hn'] using hv
+
+#print axioms r29_side_val17_at_depth
 #print axioms r29_no_side_exit_after_genuine_chain
 #print axioms r29_base_coprime_5_13_17
 #print axioms r29_no_generic_side_exit
