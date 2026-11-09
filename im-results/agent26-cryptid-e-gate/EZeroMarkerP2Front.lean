@@ -60,9 +60,9 @@ private theorem c_pair_scan (q : Nat) (L ys : List Bool) :
       List.replicate (2*q) true ++ ([true,true] ++ ys) =
           (List.replicate (2*q) true ++ List.replicate 2 true) ++ ys := by
             simp [List.append_assoc]
-      _ = List.replicate (2*(q+1)) true ++ ys := by
+      _ = List.replicate (2+2*q) true ++ ys := by
             rw [List.replicate_append_replicate]
-            congr 1 <;> omega
+            rw [show 2+2*q=2*q+2 by omega]
 
 /-- The short seven-step C finish is inherited from an already audited
     sixteen-step A turn. We isolate it as a reusable arbitrary-suffix map. -/
@@ -108,17 +108,34 @@ theorem a_front_Z (q r : Nat) (L ys : List Bool) :
     induction (2*r) with
     | zero => rfl
     | succ n ih => simp [List.replicate_succ,ih]
+  let Z : List Bool := List.replicate (2*r) true ++ ys
+  have hrep : List.replicate 6 true ++ List.replicate (2*r) true =
+      List.replicate (2*r+6) true := by
+    rw [List.replicate_append_replicate]
+    congr 1 <;> omega
+  have hinput :
+      (⟨A,true,List.replicate (2*r) true ++ (true::ys),2⟩ : Cfg) =
+      (⟨A,true,true::Z,2⟩ : Cfg) :=
+    congrArg (fun w : List Bool => (⟨A,true,w,2⟩ : Cfg)) hcomm
+  have hout :
+      ([true,false] ++ List.replicate 6 true ++ Z) =
+      ([true,false] ++ List.replicate (2*r+6) true ++ ys) := by
+    have htail : List.replicate 6 true ++ Z =
+        List.replicate (2*r+6) true ++ ys := by
+      dsimp [Z]
+      calc
+        List.replicate 6 true ++ (List.replicate (2*r) true ++ ys) =
+            (List.replicate 6 true ++ List.replicate (2*r) true) ++ ys :=
+              (List.append_assoc _ _ _).symm
+        _ = List.replicate (2*r+6) true ++ ys :=
+              congrArg (fun z : List Bool => z ++ ys) hrep
+    exact congrArg (fun z : List Bool => [true,false] ++ z) htail
   have hfinish : run 7
     (⟨A,true,List.replicate (2*r) true ++ (true::ys),2⟩ : Cfg) =
       cWalk (q+1) L
-        ([true,false] ++ List.replicate (2*r+6) true ++ ys) := by
-    rw [hcomm]
-    have h := c_finish7 q L (List.replicate (2*r) true ++ ys)
-    have hrep : List.replicate 6 true ++ List.replicate (2*r) true =
-      List.replicate (2*r+6) true := by
-      rw [List.replicate_append_replicate]
-      congr 1 <;> omega
-    simpa only [A,List.append_assoc,hrep] using h
+        ([true,false] ++ List.replicate (2*r+6) true ++ ys) :=
+    (congrArg (run 7) hinput).trans
+      ((c_finish7 q L Z).trans (congrArg (cWalk (q+1) L) hout))
   have ht : 16+4*r = 7+(2*r+(2+(2*r+7))) := by omega
   rw [ht,run_add,run_add,run_add,run_add]
   rw [a_start7]
