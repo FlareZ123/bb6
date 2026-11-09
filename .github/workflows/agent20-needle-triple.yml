@@ -51,3 +51,15 @@ jobs:
             cp "$base/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
+          # Agent20: three-prime inverse obstruction and new valuation-two feeder.
+          base64 -d "$base/CancellationMod7Joint.lean.xz.b64" | xz -dc > CancellationMod7Joint.lean
+          echo "ac8f3b0b01d6301bed6d4bbd3e87a706ccd8cc1b30ff7bbf237a3134d694ec02  CancellationMod7Joint.lean" | sha256sum -c -
+          lake env lean -o .lake/build/lib/lean/CancellationMod7Joint.olean CancellationMod7Joint.lean
+          base64 -d "$base/CancellationMod13Joint.lean.xz.b64" | xz -dc > CancellationMod13Joint.lean
+          echo "fc7bd12031bf075027d3449257692aaf2bd00ed43acbb29a3905de9000bbce03  CancellationMod13Joint.lean" | sha256sum -c -
+          lake env lean -o .lake/build/lib/lean/CancellationMod13Joint.olean CancellationMod13Joint.lean
+          base64 -d "$base/CancellationParentTwo.lean.xz.b64" | xz -dc > CancellationParentTwo.lean
+          echo "acae5b6f4f6456413d62d053486590d8d17ec909eee43e9e9530963d30a9f002  CancellationParentTwo.lean" | sha256sum -c -
+          lake env lean -o .lake/build/lib/lean/CancellationParentTwo.olean CancellationParentTwo.lean
+          cp "$base/CancellationParentTwoSource.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationParentTwoSource.olean CancellationParentTwoSource.lean
