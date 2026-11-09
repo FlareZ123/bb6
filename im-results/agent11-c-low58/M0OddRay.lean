@@ -27,6 +27,8 @@ theorem blank_no_ray (q : Nat) :
   have h2 : BB6.Agent3.CReach (234+416*q) (170+304*q) := by
     have hx : ((363+640*q)+(109+192*q)-4)/2=234+416*q := by omega
     have hy : ((363+640*q)+3*(109+192*q)-10)/4=170+304*q := by omega
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (234+416*q,170+304*q))
     simpa only [hx,hy] using hp2
 
   have hp3 := (six_even_right_blank_reach_iff
@@ -49,6 +51,7 @@ theorem blank_no_ray (q : Nat) :
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at ht
+      omega
   | succ n =>
       have hh := BB6.Agent3.blank_section_odd_image n
         (484+872*q) (41+76*q) ht (by omega) (by omega)
