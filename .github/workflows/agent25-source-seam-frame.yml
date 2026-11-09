@@ -32,3 +32,10 @@ jobs:
           if grep -E 'sorryAx|_native\.native_decide' source-frame-axioms.log; then exit 1; fi
           grep -F "eSector_first_event_return' depends on axioms: [propext, Quot.sound]" source-frame-axioms.log
           grep -F "eSector_source_dichotomy' depends on axioms: [propext, Classical.choice, Quot.sound]" source-frame-axioms.log
+          python3 im-results/agent25-e-seam-kernel/restore_physical.py im-results/agent25-e-seam-kernel
+          python3 im-results/agent25-e-seam-kernel/restore_source_physical.py im-results/agent25-e-seam-kernel
+          lean -o im-results/agent25-e-seam-kernel/PhysicalWindow.olean im-results/agent25-e-seam-kernel/PhysicalWindow.lean
+          lean im-results/agent25-e-seam-kernel/SourcePhysicalTransfer.lean | tee source-physical-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' source-physical-axioms.log; then exit 1; fi
+          grep -F "matches_run' depends on axioms: [propext, Classical.choice, Quot.sound]" source-physical-axioms.log
+          grep -F "source_marker_from_physical' depends on axioms: [propext, Classical.choice, Quot.sound]" source-physical-axioms.log
