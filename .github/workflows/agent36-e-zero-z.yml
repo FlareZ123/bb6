@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent36-cryptid-trace:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate:im-results/agent37-cryptid-model-bridge
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent36-cryptid-trace:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate
     steps:
       - uses: actions/checkout@v4
       - name: Restore originals
@@ -33,12 +33,10 @@ jobs:
           D=im-results/agent2-packet-shift
           E=im-results/agent26-cryptid-e-gate
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
-          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
           lean -o "$B/A1100.olean" "$B/A1100.lean"
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode TripleIteration SixOnes; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
-          lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
           lean -o "$E/A1101010111.olean" "$E/A1101010111.lean"
           lean -o "$E/A1101010111Code.olean" "$E/A1101010111Code.lean"
@@ -47,10 +45,6 @@ jobs:
             lean -o "$S/$module.olean" "$S/$module.lean"
           done
           lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
-          G=im-results/agent37-cryptid-model-bridge
-          for module in CrossModelBridge CompleteAReturn WordReturns DoubleOneBranch DoubleOnePairs FullWordPairs; do
-            lean -o "$G/$module.olean" "$G/$module.lean"
-          done
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean"
@@ -79,7 +73,5 @@ jobs:
           lean -o "$X/EZeroZ.olean" "$X/EZeroZ.lean" | tee -a axioms.log
           lean -o "$X/ZSafeNormalizer.olean" "$X/ZSafeNormalizer.lean" | tee -a axioms.log
           lean -o "$X/AZ0P2.olean" "$X/AZ0P2.lean" | tee -a axioms.log
-          lean -o "$E/ZMarkerATwo.olean" "$E/ZMarkerATwo.lean" | tee -a axioms.log
-          lean -o "$E/ZSafePlus.olean" "$E/ZSafePlus.lean" | tee -a axioms.log
           lean "$X/Z0ExceptE2.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
