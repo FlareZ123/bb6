@@ -57,6 +57,25 @@ highLevelNext(highLevelNext(D(b,b-2)))
 
 The displayed composition denotes the option-bind transition and is defined for this family. **These states are synthetic.** There is no proof that the genuine blank-start orbit reaches one.
 
+## Binary family of exponentially many exact safe inputs
+
+The [source proof](BinarySafeSource.lean) extends the first ninefold pump with the genuinely distinct positive-block rule
+
+```text
+h(9*b) = h(b)                       (b>0)
+drainB(a,9*b,d) = drainB(a,b,d+24*b+2).
+```
+
+The two contractions `9*b` and `9*b+6` can be composed in arbitrary finite binary sequences. For a finite Boolean word `w`, define `P([])=6`, `P(false::w)=9*P(w)`, and `P(true::w)=9*P(w)+6`; likewise `C([])=4`, with `C(false::w)=C(w)+2` and `C(true::w)=C(w)+4`. All finite words, with no bound on length, satisfy the exact source identities
+
+```text
+h(P(w)) = 0
+drainB(0,P(w),d) = some D(0,d+3*P(w)+C(w)).
+T(T(D(P(w),P(w)-2))) = some D(2+3*P(w)+C(w),7).
+```
+
+The Lean theorem `wordBlock_injective` establishes the encoding is injective. Consequently **each word length n supplies precisely 2^n distinct safe block counts**, all exponentially large in n. This is an infinite two-branch ternary Cantor-like family of individually certified genuine-accelerator returns, extending the one-ray pump. The states remain synthetic; reachability from `D(0,7)` is unproved. The lemmas were compiled independently under source-identical Lean definitions, with standard axioms only; original-source import CI is in progress.
+
 ## Outstanding root-specific barrier
 
 The [original-source complete digit decoder](NextDigitSource.lean) allows every original accelerated transition to be checked against the path-specific input requirement `h(b)<=a`, after any necessary `evalA` call. A potentially decisive nonhalting strategy would prove this requirement and evaluator success for every actual blank-origin iterate. No such inductive invariant has been found.
