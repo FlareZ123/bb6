@@ -54,4 +54,8 @@ jobs:
           cp "$base/CancellationFiveSubfamily.lean" .
           lake env lean -o .lake/build/lib/lean/CancellationFiveSubfamily.olean CancellationFiveSubfamily.lean
           cp "$base/CancellationFiveSource.lean" .
-          lake env lean CancellationFiveSource.lean
+          lake env lean -o .lake/build/lib/lean/CancellationFiveSource.olean CancellationFiveSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/CancellationSixArithmetic.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationSixArithmetic.olean CancellationSixArithmetic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/CancellationSixSource.lean" .
+          lake env lean CancellationSixSource.lean
