@@ -9,15 +9,14 @@ Let `A/0001` mean state A scanning zero, with the next three consecutive
 rightward cells `0,0,1`; let `C/1001` mean state C scanning one with
 the next three rightward cells `0,0,1`.
 
-**Exact gate theorem (source proof submitted):**
+**Original-source Lean-verified exact gate theorem:**
 the genuine blank run halts if and only if some `R(n)` is `A/0001`
 or `C/1001`. More precisely, a B/001 visit at `R(n+1)` is equivalent,
 for **each** `n`, to one of those two visits at `R(n)`. This enumerates
 the exact two incoming original transition rows of B, including their
 right moves and unchanged right tape. A genuine halt also requires an
 earlier scan of the position exactly three cells to the right of the
-pre-fatal event. These are infinite-time, original-physical-machine
-statements conditional only on successful source compilation.
+pre-fatal event. These are infinite-time original-physical-machine theorems with a successful source audit.
 
 This is a *reformulation of the existing exact B/001 halt gateway*
 proved by Agent 32, with the two disjoint source predecessor cases exposed.
@@ -36,21 +35,9 @@ and the original tape causal lemma in
 It proves `preFatal_iff_next_fatalB`,
 `halts_iff_root_preFatal`, and
 `halt_requires_prior_head_three_right`.
-A definition-equivalent standalone Lean 4.36.0-rc2 scratch model compiled
-these theorem shapes with the two original-root imported facts represented
-only by local stand-in assumptions. Such local testing is **not**
-independent original-source verification.
+Original-source Lean 4.36.0-rc2 checking **succeeded** at [CI 42583819585](https://github.com/FlareZ123/bb6/actions/runs/42583819585), job 129048687075, commit 524c7a91de0a60f992056707f2909444565a78a0. All three theorem audits print exactly `[propext, Quot.sound]`, with no `sorryAx`. The run rebuilds the original physical source and imported predecessor proof with the official SHA-256-authenticated Lean release archive.
 
-Original-source checking was added to the existing manual fail-closed
-[`agent32-429-raw-parent.yml`](../../.github/workflows/agent32-429-raw-parent.yml),
-without creating a per-commit workflow. Initial CI runs
-[42583161408](https://github.com/FlareZ123/bb6/actions/runs/42583161408)
-and [42583241824](https://github.com/FlareZ123/bb6/actions/runs/42583241824)
-failed before any Lean source compilation because GitHub's elan installer
-returned HTTP 504; run [42583468410](https://github.com/FlareZ123/bb6/actions/runs/42583468410)
-failed on the same external download. **Original-source proof status is
-pending**, to be updated with the actual compiler outcome. These
-infrastructure failures provide no negative mathematical evidence.
+The preceding attempts [42583161408](https://github.com/FlareZ123/bb6/actions/runs/42583161408), [42583241824](https://github.com/FlareZ123/bb6/actions/runs/42583241824), and [42583468410](https://github.com/FlareZ123/bb6/actions/runs/42583468410) failed at GitHub's `elan/releases/latest` HTTP 504 download before running Lean. The existing workflow now pins the official Lean 4.36.0-rc2 archive and validates SHA-256. No separate per-commit workflow was created.
 
 ## Root-sensitive next step
 
