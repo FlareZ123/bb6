@@ -31,7 +31,6 @@ theorem blank_no_mid (q : Nat) :
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at hr
-      omega
   | succ t =>
       cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
       | none => simp [BB6.Agent8Section.run,hp] at hr
@@ -57,7 +56,6 @@ theorem blank_no_parent (q : Nat) :
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at hr
-      omega
   | succ t =>
       cases hp : BB6.Agent8Section.run secNext t (some (5,1)) with
       | none => simp [BB6.Agent8Section.run,hp] at hr
