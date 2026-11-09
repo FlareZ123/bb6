@@ -311,14 +311,18 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0FourRoot,M0OddRayValTwo}.lean .
           lean -o M0FourRoot.olean M0FourRoot.lean 2>&1 | tee M0FourRoot.log
           lean -o M0OddRayValTwo.olean M0OddRayValTwo.lean 2>&1 | tee M0OddRayValTwo.log
-          if grep -E -q sorryAx M0FourRoot.log M0OddRayValTwo.log; then
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0ValTwoBroad.lean .
+          lean -o M0ValTwoBroad.olean M0ValTwoBroad.lean 2>&1 | tee M0ValTwoBroad.log
+          if grep -E -q sorryAx M0FourRoot.log M0OddRayValTwo.log M0ValTwoBroad.log; then
             echo "REJECTED: failed four-edge normalizer or third m0 ray"
             exit 1
           fi
           lean -o CThreeDiagonalM0Full.olean CThreeDiagonalM0Full.lean 2>&1 | tee CThreeDiagonalM0Full.log
           lean -o CThreeDiagonalM0DeepFull.olean CThreeDiagonalM0DeepFull.lean 2>&1 | tee CThreeDiagonalM0DeepFull.log
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0ValTwoFull.lean .
-          lean CThreeDiagonalM0ValTwoFull.lean 2>&1 | tee CThreeDiagonalM0ValTwoFull.log
+          lean -o CThreeDiagonalM0ValTwoFull.olean CThreeDiagonalM0ValTwoFull.lean 2>&1 | tee CThreeDiagonalM0ValTwoFull.log
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0ValTwoBroadFull.lean .
+          lean CThreeDiagonalM0ValTwoBroadFull.lean 2>&1 | tee CThreeDiagonalM0ValTwoBroadFull.log
           # One general-purpose sixth exact predecessor sector, not an
           # isolated congruence ray: kernel-checked all-time iff and
           # exclusion soundness for all Machine C section coordinates.
@@ -331,7 +335,7 @@ jobs:
             echo "REJECTED: unproved arbitrary-target source normalization"
             exit 1
           fi
-          if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log CThreeDiagonalM0ValTwoFull.log; then
+          if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log CThreeDiagonalM0ValTwoFull.log CThreeDiagonalM0ValTwoBroadFull.log; then
             echo "REJECTED: incomplete source integration"
             exit 1
           fi
