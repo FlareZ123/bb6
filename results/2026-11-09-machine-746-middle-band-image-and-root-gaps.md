@@ -126,6 +126,36 @@ k_n=10+6n,\qquad e_n=27\cdot2^{8+6n}+5,\qquad
 
 for all `n≥0`, by [`upper_high_infinite_root_exclusion`](../im-results/agent10-cascade/UpperHighRootFamily.lean). The base target `e_0=6917` is congruent to 2 modulo 3.
 
+## Theorem 5. A genuine fatal odd-predecessor branch is unreachable in infinitely many fatal levels
+
+Let `F_j=4·2^j-j-4` denote the exact first-reset fatal height at level `j`. For `j≥22`, the valuation-one candidate odd parent is
+
+\[
+x_j=4\left\lfloor\frac{2F_j+5}{9}\right\rfloor
+       -8\cdot2^{j-2}-(j-2)-5.
+\]
+
+At every `j=22+486t`, `t≥0`, the original source inverse theorem establishes `ResetParent(x_j,F_j)`, and the new source theorem [`fatal_odd_feeder_unreachable`](../im-results/agent10-cascade/FatalOddFeederGap.lean) proves
+
+\[
+\boxed{\neg\operatorname{ReachC}(2,0)(x_j,0).}
+\]
+
+This result concerns a **genuine predecessor of a fatal target**, rather than a synthetic unrelated reset hole. It rules out the source-`t=1` odd branch of each listed fatal height at every genuine blank-start time, including `j=508,994,1480,\ldots` above the known finite fatal threshold.
+
+Here `k=j-2`, `p=2^k`, and the exact numerator identities are
+
+\[
+9x_j+17j+39=56p,\qquad
+9h_j+43j+60=40p,\qquad h_j=2x_j-8p-k.
+\]
+
+The period `2^162≡1 (mod 243)` and `486≡0 (mod 243)` imply `p%243=31` and `j%243=22` throughout this family, hence `x_j%27=12`, `h_j%9=8`. Thus `(2x_j+5)%27=2` and `(2h_j+5)%9=3`. The full source proof verifies `K(x_j)=k`, both requisite dyadic bands, and the two-stage blank-root exclusion. It uses the existing original-source `fatal_has_odd_parent` to prove the inverse edge is genuine.
+
+The more general [`fatal_odd_feeder_modular_root_exclusion`](../im-results/agent10-cascade/FatalOddFeederCriterion.lean) establishes an **all-index conditional theorem** for any `j≥22`: if `9|(2F_j+5)`, `27∤(2x_j+5)`, and `9∤(2h_j+5)`, then `x_j` is an authentic source parent of `F_j` and is blank-root unreachable. This lifts the two-stage sieve from arbitrary reset holes to a specific fatal inverse branch throughout the infinite domain.
+
+The proof leaves the even first-reset parent of each `F_j` unresolved. Additional odd inverse valuation branches may also exist. Consequently, this theorem excludes a genuine fatal feeder branch without proving global fatal unreachability.
+
 ## Verification, limits, and reusable contribution
 
 All modules above compile with the **unchanged original C first-reset grammar**, linked Lean 4.36.0-rc2, no `sorry`, and only standard logical axioms. [Manual original-source CI 42600378353](https://github.com/FlareZ123/bb6/actions/runs/42600378353) succeeded for the exact middle-strip image and upper/low infinite families. [Manual original-source CI 42601104142](https://github.com/FlareZ123/bb6/actions/runs/42601104142) additionally succeeded for the double-root exclusion and its all-natural infinite family.
