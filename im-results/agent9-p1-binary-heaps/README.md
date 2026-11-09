@@ -48,6 +48,17 @@ If U=E, the destination has no legal predecessor.
 
 The unrestricted transfer graph therefore has indegree at most one. This is Lean theorem `heap_edge_predecessor_unique`. Each edge increases the sum by one, so no directed cycles exist. These properties identify a highly constrained universal forest carrying the original scalar inverse dynamics as left-delimited paths.
 
+### Both feeders share a single diagonal origin
+
+There is an exact and particularly useful link between the two originally separate P1 feeder roots. The diagonal seed `(8q+2,8q+2)` has the two legal immediate children
+
+```text
+L: (4q+1, 12q+4)
+R: (12q+4, 4q+1).
+```
+
+The R child is **exactly the second feeder root**. Thus the first feeder begins at a diagonal root, while the second begins one legal transfer below the same root; the left and right children are coordinate reflections. The Lean theorems `feeder_siblings` and `diagonal_no_predecessor` prove this relation and that no diagonal state has any legal parent. Coupled with `heap_edge_predecessor_unique`, this gives a shared root and a uniquely decoded past for the entire universal tree. It may permit coordinated analysis of both genuine P1 feeder obligations through one arithmetic dynamical system.
+
 ## Status and next question
 
 The representation is exact at the scalar recurrence level. It does not by itself establish a direct original raw-Turing-machine correspondence; that connection depends on the independently established P1 `ShadowReach` source bridge and its conditions. The unrestricted heap game supports some infinite paths (for example with a zero left pile), and the prior source margin forces extra restrictions on authentic feeder histories. Accordingly, neither unrestricted heap termination nor P1 halting follows.
