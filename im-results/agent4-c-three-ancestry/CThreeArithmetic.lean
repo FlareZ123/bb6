@@ -154,6 +154,69 @@ theorem second_parent_generic (s t b l : Nat)
               rw [←hs] at hd
               omega
 
+/-- Complementary source sector exact first predecessor. -/
+theorem first_parent_alt (s t a k : Nat)
+    (h : sectionPreimageAll a k (8*s+5) (16*t+12)) :
+    a=8*s+16*t+15 ∧ k=8*t+5 := by
+  have hh := only_direct_mod4_one a k (8*s+5) (16*t+12)
+    (by omega) (by omega) (by omega) h
+  omega
+
+/-- Every parent of that direct parent is a forbidden-image state. -/
+theorem second_parent_alt (s t b l : Nat)
+    (h : sectionPreimageAll b l (8*s+16*t+15) (8*t+5)) :
+    b=4*s+12*t+8 ∧ l=2*s+10*t+5 := by
+  by_cases hb0 : b=0
+  · by_cases hl0 : l=0
+    · simp [sectionPreimageAll,hb0,hl0] at h
+    · by_cases hl1 : l=1
+      · simp [sectionPreimageAll,hb0,hl0,hl1] at h
+      · simp only [sectionPreimageAll,if_pos hb0,if_neg hl0,if_neg hl1] at h
+        obtain ⟨_,n,hs,_⟩ := h
+        omega
+  · by_cases hb1 : b=1
+    · by_cases hl0 : l=0
+      · simp [sectionPreimageAll,hb0,hb1,hl0] at h
+      · by_cases hl1 : l=1
+        · simp [sectionPreimageAll,hb0,hb1,hl0,hl1] at h
+        · by_cases hl2 : l=2
+          · simp [sectionPreimageAll,hb0,hb1,hl0,hl1,hl2] at h
+          · by_cases hl3 : l=3
+            · simp [sectionPreimageAll,hb0,hb1,hl0,hl1,hl2,hl3] at h
+            · simp only [sectionPreimageAll,if_neg hb0,if_pos hb1,
+                if_neg hl0,if_neg hl1,if_neg hl2,if_neg hl3] at h
+              rcases h with ⟨hy,_⟩ | ⟨_,n,hs,_⟩
+              · omega
+              · omega
+    · by_cases hl0 : l=0
+      · simp [sectionPreimageAll,hb0,hb1,hl0] at h
+      · by_cases hlow : 2*l≤b
+        · simp only [sectionPreimageAll,if_neg hb0,if_neg hb1,
+            if_neg hl0,if_pos hlow] at h
+          omega
+        · by_cases heven : b%2=0
+          · simp only [sectionPreimageAll,if_neg hb0,if_neg hb1,
+              if_neg hl0,if_neg hlow,if_pos heven] at h
+            obtain ⟨_,n,hs,hc⟩ := h
+            have hn : n=0 := by
+              by_cases hn0 : n=0
+              · exact hn0
+              · have hn1 : 0<n := by omega
+                have hd := mul_eight_even b n heven (by omega) hn1
+                rw [←hs] at hd
+                omega
+            subst n
+            simp at hs hc
+            omega
+          · simp only [sectionPreimageAll,if_neg hb0,if_neg hb1,
+              if_neg hl0,if_neg hlow,if_neg heven] at h
+            rcases h with ⟨hy,_⟩ | ⟨_,n,hs,_⟩
+            · omega
+            · have hbodd : b%2=1 := by omega
+              have hd := mul_four_odd b n hbodd
+              rw [←hs] at hd
+              omega
+
 /-- The original first sector as a specialization of the strip. -/
 theorem first_parent (s t a k : Nat)
     (h : sectionPreimageAll a k (16*s+9) (32*t+36)) :
