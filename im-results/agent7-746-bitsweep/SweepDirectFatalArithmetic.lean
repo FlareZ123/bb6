@@ -108,6 +108,44 @@ theorem fatal_sector_nine (k f : Nat)
   rw [heq, Nat.add_mod] at hm
   omega
 
+
+private theorem pow_two_five_linear (k : Nat) (hk : 4≤k) :
+    8*k+30 ≤ 5*2^k := by
+  induction k with
+  | zero => omega
+  | succ k ih =>
+    by_cases h : 4≤k
+    · have hh:=ih h
+      rw [Nat.pow_succ]
+      omega
+    · have hk3 : k=3 := by omega
+      subst k
+      decide
+
+/-- Each allowed fatal residue has a genuine odd inverse-band candidate
+    at valuation exponent exactly one and source sweep level k-2. -/
+theorem fatal_odd_one_band (k f : Nat)
+    (hk : 4≤k)
+    (hf : f+k+4=4*2^k)
+    (hsector : k%18=4 ∨ k%18=5) :
+    ∃ j d, j+2=k ∧ d%2=1 ∧
+      6*2^j+1 ≤ 2^1*d ∧ 2^1*d≤8*2^j-1 ∧
+      2*f+5=3^(1+1)*d := by
+  let j:=k-2
+  let d:=(2*f+5)/9
+  have hj : j+2=k := by dsimp [j]; omega
+  have hp : 2^k=4*2^j := by
+    rw [←hj,show j+2=(j+1)+1 by omega, Nat.pow_succ,Nat.pow_succ]
+    omega
+  have hnine := fatal_sector_nine k f hf hsector
+  have hd : 9*d=2*f+5 := by dsimp [d]; omega
+  have hodd : d%2=1 := by omega
+  have hlinear := pow_two_five_linear k hk
+  have hlo : 6*2^j+1≤2*d := by omega
+  have hhi : 2*d≤8*2^j-1 := by omega
+  exact ⟨j,d,hj,hodd,by simpa using hlo,by simpa using hhi,by simpa using hd.symm⟩
+
+#print axioms fatal_odd_one_band
 #print axioms fatal_sector_nine
 #print axioms fatal_no_odd_zero_valuation
 #print axioms fatal_nine_sector
