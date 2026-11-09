@@ -70,3 +70,15 @@ The second inequality holds because the original sweep failure guard gives `D_k(
 [`SweepEvenMaximal.lean`](SweepEvenMaximal.lean) establishes a companion terminal dichotomy for any maximal same-k even block with `D=2^m d` and `d≥2k+6`: its last d is odd or `d<4k+12`. The odd continuation moves to a larger k; the even continuation in this narrow strip also moves to a larger k, by the exact [`SweepEvenExit.lean`](SweepEvenExit.lean) upper-guard lemma. These component proofs motivate a future source-certified compressed event scheduler with a finite number of events per level. The algorithm integrating this classification with the low-band first step is not yet completely formalized.
 
 Lean 4.36.0-rc2 kernel locally typechecked the new `SweepEvenDeficit`, `SweepAddress`, `SweepOrbitAddress`, `SweepSameAddress`, and `SweepLevelBound` modules, plus the `SweepEvenMaximal` lemma, with no `sorry`. The complete unchanged-source CI [42558004880](https://github.com/FlareZ123/bb6/actions/runs/42558004880) successfully checked the earlier arithmetic/odd/exit/maximal modules. The latest combined source CI for the additional all-time address and stage-length files should be checked independently before treating those additions as full-source certified.
+
+## Fatal gates occur only upon entering a new level
+
+A further all-time source-trajectory theorem in [`SweepGateEntry.lean`](SweepGateEntry.lean) exposes a root-relevant consequence. Define `fatalAt(h)` as the exact source halting condition `h+K(h)+4=4*2^{K(h)}`. The universal low-guard inequality `4*2^{K(h)}≤h+K(h)+4` means a fatal height is the **minimal admissible source reset height at its own level**.
+
+For every genuinely successful edge `bitOutcome(h)=some(u)`, Lean proves:
+```
+fatalAt(u) → K(h) < K(u).
+```
+Indeed, if the level were unchanged, the already proved strict height increase from h to u and the lower-bound guard at h make equality with the fatal height impossible. Therefore **the first reset in each newly entered level is its only possible fatal reset**. Subsequent same-level even returns are safe with respect to that level's fatal trigger. This reduces the infinite halting question to the trajectory's level-entry events, a potentially smaller exact deterministic subsystem. It does not establish that those entry events avoid the unique fatal height.
+
+The gate-entry statement passed local Lean 4.36.0-rc2 checking without `sorry`; a combined full checked-in-source CI run has been requested separately. Do not treat local-only proof as an externally verified machine-halting decision.
