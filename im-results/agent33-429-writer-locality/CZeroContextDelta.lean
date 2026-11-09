@@ -89,7 +89,7 @@ theorem czero_context_original_delta (k : Nat) (left right : List Bool)
       (z 0 (ones 6 ++ left) true
         (ones (2*k+1) ++ (false::true::right)))
       (-((2*k+2 : Nat) : Int)) (czero_context_delta k left right)
-  exact ⟨c', hrun, hrep, by simpa only [sub_eq_add_neg] using hhead⟩
+  exact ⟨c', hrun, hrep, by omega⟩
 
 #print axioms czero_context_delta
 #print axioms czero_context_original_delta
