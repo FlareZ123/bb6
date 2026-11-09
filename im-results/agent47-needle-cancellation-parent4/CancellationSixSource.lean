@@ -9,7 +9,7 @@ open BB6.Agent46NeedleThree
 open NeedleCancelMod35
 open BusyBeaver.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
 
-private theorem sourceB_ge201 (r : Nat) (hr : 1 ≤ r) : 201 ≤ sourceB r := by
+theorem sourceB_ge8000 (r : Nat) (hr : 1 ≤ r) : 8000 ≤ sourceB r := by
   have hv : 6 ≤ v r := by
     have hp : 9 ≤ 9^r := by
       have h : (9:Nat)^1 ≤ 9^r := Nat.pow_le_pow_right (by decide) hr
@@ -40,7 +40,9 @@ theorem sourceB_parent6 (t : Nat) :
     ∃ q6 : Nat, sourceB (64069+1685970*t)=131*q6+201 := by
   let r := 64069+1685970*t
   have hmod : sourceB r %131=70 := CancellationSix.sourceB_mod131 t
-  have hsize : 201 ≤ sourceB r := sourceB_ge201 r (by dsimp [r]; omega)
+  have hsize : 201 ≤ sourceB r := by
+    have h := sourceB_ge8000 r (by dsimp [r]; omega)
+    omega
   refine ⟨(sourceB r-201)/131, ?_⟩
   change sourceB r = 131*((sourceB r-201)/131)+201
   omega
