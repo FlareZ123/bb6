@@ -99,6 +99,18 @@ The repository's [full forced normalization](../im-results/agent3-c-bounce-inver
 
 This is a **specific non-subsumption result relative to the existing `fullForcedExcluded` predicate**. It does not prove non-subsumption relative to every other source-certified analytic filter, and it does not imply that any new stopping parameter is blank-reachable.
 
+## A source-proven obstruction to a naive second lift
+
+The strict fifth/sixth seed (U_{8,2}=(573,286)) has a genuine direct successor ((1,574)). The next target does **not** inherit a sixth/seventh gap. Original-source Lean [CAltSeventhCounterexample.lean](../im-results/agent4-c-five-image/CAltSeventhCounterexample.lean), passed in [CI 42646801586](https://github.com/FlareZ123/bb6/actions/runs/42646801586), constructs eight real incoming return edges:
+
+\[
+(810,143)\to(524,288)\to(997,55)\to(887,112)
+\to(663,226)\to(211,454)\to(581,274)
+\to(33,550)\to(1,574).
+\]
+
+The witness uses the complete unchanged-original-section inverse equivalence, including the three recursive-bounce edges with exact depths (0,1,3). It establishes ((1,574)\in I_8) and directly refutes a speculative universal (I_6\setminus I_7) claim for the next lifted class. This is a local obstruction to the *method*, not evidence of blank reachability of ((1,574)).
+
 ## Limits and research significance
 
 These two new cones strengthen the source-realizable strict-image hierarchy, proving sharp missing fifth and sixth image bands that lie outside the previously exhibited Agent 4 bands. They exclude actual necessary high-halting states for an infinite two-parameter family **from the genuine blank start**, with no time bound. Their two-branch inverse analysis handles the high-bounce predecessor explicitly and provides a reusable pattern for other holdout cones.
