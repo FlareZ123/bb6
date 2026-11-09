@@ -86,6 +86,7 @@ jobs:
           lean -o "$v/SweepOddFatal27Arithmetic.olean" "$v/SweepOddFatal27Arithmetic.lean"
           lean -o "$v/SweepOddFatal27Source.olean" "$v/SweepOddFatal27Source.lean"
           lean -o "$v/SweepOddFatal27Band.olean" "$v/SweepOddFatal27Band.lean"
+          lean -o "$v/SweepOddFatal27Upper.olean" "$v/SweepOddFatal27Upper.lean"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
