@@ -111,6 +111,64 @@ theorem full_E_Z_p2_ge2 (k q r : Nat) (ys : List Bool) :
   rw [eZ_run_ge2]
   rw [show 2*(4*k+1)+3=8*k+5 by omega]
 
+/-- The q=1 boundary is not covered by the q>=2 alternating prefix,
+    but the short A-front turn closes it for every marker depth. -/
+theorem eZ_base_front (m r : Nat) (ys : List Bool) :
+    run (26+4*r) (eZ m 0 r ys) =
+      sweepB m (false::List.replicate 4 true ++
+        (false::List.replicate (2*r+6) true ++ ys)) := by
+  have ht : 26+4*r = (2+2*2)+((16+4*r)+4) := by omega
+  rw [ht,run_add (2+2*2) ((16+4*r)+4),
+    run_add 2 (2*2),eZ_two,scan_run]
+  change run ((16+4*r)+4)
+    (⟨oppairs 2 ++ (pairs (m+2) ++ [true,true]),false,
+      [true,true,false] ++ (pairs r ++ (false::ys)),0⟩ : Cfg) = _
+  rw [run_add (16+4*r) 4,a_front_Z_short]
+  have h := cZ_finish4 m 1 (List.replicate (2*r+6) true ++ ys)
+  simpa only [List.replicate_one,List.singleton_append,
+    List.append_assoc] using h
+
+/-- Full arbitrary-symbolic E p2 right grammar, all q>=1 and all
+    marker depths; q=1 uses the special short-base A-front proof. -/
+theorem eZ_front_all (m q r : Nat) (ys : List Bool) :
+    run (4*(q+1)+22+4*r) (eZ m q r ys) =
+      sweepB m (false::List.replicate (2*(q+1)+2) true ++
+        (false::List.replicate (2*r+6) true ++ ys)) := by
+  cases q with
+  | zero => simpa using eZ_base_front m r ys
+  | succ q => simpa using eZ_front_ge2 m q r ys
+
+theorem eZ_run_all (m q r : Nat) (ys : List Bool) :
+    run (2*m+4*(q+1)+25+4*r) (eZ m q r ys) =
+      ⟨[],false,List.replicate (2*m+3) true ++
+        (false::List.replicate (2*(q+1)+2) true ++
+         (false::List.replicate (2*r+6) true ++ ys)),5⟩ := by
+  have ht : 2*m+4*(q+1)+25+4*r =
+      (4*(q+1)+22+4*r)+(2*m+3) := by omega
+  rw [ht,run_add,eZ_front_all,sweepB_run]
+
+/-- Arbitrary 10-pair count >=1, arbitrary zero-marker depth and
+    arbitrary suffix, all on the authentic six-state D machine. -/
+theorem full_E_Z_p2_all (k q r : Nat) (ys : List Bool) :
+    run (12*k*k+49*k+64+4*q+4*r)
+      (init (List.replicate (3*k+2) true ++
+        false::(pairs (q+1) ++
+          ([true,true,false] ++ (pairs r ++ (false::ys)))))) =
+      ⟨[],false,List.replicate (8*k+5) true ++
+        (false::List.replicate (2*(q+1)+2) true ++
+          (false::List.replicate (2*r+6) true ++ ys)),5⟩ := by
+  have ht : 12*k*k+49*k+64+4*q+4*r =
+      (12*k*k+41*k+33)+(2*(4*k+1)+4*(q+1)+25+4*r) := by omega
+  rw [ht,run_add,prefix_E]
+  change run (2*(4*k+1)+4*(q+1)+25+4*r)
+    (eZ (4*k+1) q r ys) = _
+  rw [eZ_run_all]
+  rw [show 2*(4*k+1)+3=8*k+5 by omega]
+
+#print axioms eZ_base_front
+#print axioms eZ_front_all
+#print axioms full_E_Z_p2_all
+
 #print axioms eZ_front_ge2
 #print axioms eZ_run_ge2
 #print axioms full_E_Z_p2_ge2
