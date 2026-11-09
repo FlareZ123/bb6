@@ -112,6 +112,19 @@ theorem firstFailIndex_gt_of_eight (k u : Nat) (hu : 8*2^k ≤ u) :
   have hscale := Nat.mul_le_mul_left 8 hp
   omega
 
+/-- First-failure location also certifies the preceding lower dyadic guard. -/
+theorem firstFailIndex_low (h : Nat) :
+    4*2^(firstFailIndex h) ≤ h + firstFailIndex h + 4 := by
+  cases he : firstFailIndex h with
+  | zero => simp
+  | succ k =>
+    have hg := (firstFailIndex_spec h).1 k (by omega)
+    have hp : 4*2^(k+1)=8*2^k := by rw [Nat.pow_succ]; omega
+    rw [hp]
+    omega
+
+#print axioms firstFailIndex_low
+
 #print axioms firstFailIndex_mono
 #print axioms firstFailIndex_gt_of_eight
 
