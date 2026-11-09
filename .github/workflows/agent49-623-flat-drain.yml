@@ -50,4 +50,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/ThirdNinefoldSource.lean" Agent49ThirdNinefoldSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ThirdNinefoldSource.olean Agent49ThirdNinefoldSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Eleven81Source.lean" Agent49Eleven81Source.lean
-          lake env lean Agent49Eleven81Source.lean
+          lake env lean -o .lake/build/lib/lean/Agent49Eleven81Source.olean Agent49Eleven81Source.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Eleven81FamilySource.lean" Agent49Eleven81FamilySource.lean
+          lake env lean Agent49Eleven81FamilySource.lean
