@@ -230,6 +230,17 @@ Combining these with `a≡9 (mod24)` determines **exactly one** valuation residu
 | 2 | a≡321 (mod2040) | a≡153 (mod2040) |
 | 3 | a≡1473 (mod2040) | a≡417 (mod2040) |
 
+The same argument also constrains the **deepest** positive P node, even when its offset is no longer divisible by nine. At every positive P depth, the `P` source itself satisfies `x≡4 (mod8)` and the fully Lean-proved `special_val8` gives `a≡1 (mod8)` for a hypothetical exceptional h0 incoming source. Combining this with the exact q5/q17 recurrences, **without assuming a≡0 mod3**, selects precisely one residue modulo `lcm(8,5,17)=680`:
+
+| P depth n mod 4 | Z (h0 special a mod680) | X (h0 special a mod680) |
+| ---: | ---: | ---: |
+| 0 (positive n only) | 457 | 425 |
+| 1 | 385 | 281 |
+| 2 | 321 | 153 |
+| 3 | 113 | 417 |
+
+This **1/680** necessary valuation density applies even to the final, potentially high-h-branching P node, provided the hypothesized incoming exceptional edge has `h=0`. It does not rule out a genuinely nonzero h incoming edge there, which remains a primary unresolved branching question. When the node is interior and `9^(n+1)|Y+12`, its mandatory h=0 property and a≡0mod3 sharpen the mod680 condition to the mod2040 table above.
+
 Thus the necessary exceptional-source valuation classes at every positive interior depth have arithmetic density **exactly 1/2040**, excluding **2039 of 2040** valuation residues (99.95098039%). At the distinct Z terminal n=0, use the stronger Lean-proved `a≡189 (mod192)`; the same modulus-5 and modulus-17 equations select `a≡7677 (mod16320)`, excluding **16319 of 16320** valuation residues (99.99387255%).
 
 These final CRT congruences are a paper derivation plus a complete small-modulus certificate, [`special_residue_sieve.py`](./special_residue_sieve.py). The underlying 24/192 valuation necessary conditions are kernel-proved in Lean; the complete 2040/16320 residues have **not yet been imported into the Lean kernel**. Every conclusion is about the set of *candidate exceptional valuation integers* and proves no actual new incoming source exists. Exceptional source classes that survive these necessary congruences are not proved realizable or blank-reachable.
