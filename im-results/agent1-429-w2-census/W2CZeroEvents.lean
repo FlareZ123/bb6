@@ -72,6 +72,56 @@ theorem junc2_w1_gate_safe (v : Nat) (hv : 1 ≤ v) :
   simp only [Option.bind_some]
   exact hlast
 
+/-- For all even indices v=2k+2, the SECOND C/0 occurs at the
+    exact original-table time 34k+198. Its entire right half-tape is
+    blank. The endpoint is excluded from the count of one prior C/0. -/
+theorem junc0_w2_even_second_gate_count (k : Nat) :
+    runCount (34*k+198) (junc 0 (2*k+2) 2) =
+      some (z 2 (true::false::ones (4*k+26)) false [],1) := by
+  have hpre : runCount (4*k+31) (junc 0 (2*k+2) 2) =
+      some (z 0 (true :: (pairs01 (2*k+5) ++ ones 5)) true [false,true],0) := by
+    have hp := runSafe_to_count_zero (2*(2*k+2)+27) (junc 0 (2*k+2) 2)
+      (z 0 (true :: (pairs01 ((2*k+2)+3) ++ ones 5)) true [false,true])
+      (junc0_w2_to_boundary_safe (2*k+2))
+    simpa only [show 2*(2*k+2)+27 = 4*k+31 by omega,
+      show (2*k+2)+3 = 2*k+5 by omega] using hp
+  have hb := boundary_to_scanE_count (2*k)
+  have hE := runSafe_to_count_zero (crossTime (2*k+4)+1)
+      (sourceScanE (2*k+4) (sourceSuffix 0))
+      (z 2 (finalLeft (2*k+4)) true (sourceSuffix 0))
+      (scanE_safe (2*k+4) (sourceSuffix 0))
+  have hentry : z 2 (finalLeft (2*k+4)) true (sourceSuffix 0) =
+      finishCStart 2 (2*k+4) 0 := by
+    simpa only [show 2*(k+2)=2*k+4 by omega] using
+      (finalLeft_even_finishC_entry (k+2) 0)
+  have hfinish := runSafe_to_count_zero (12+2*(2*k+4))
+      (finishCStart 2 (2*k+4) 0) (junc 2 ((2*k+4)+2) 1)
+      (finishC_ScanE_safe 2 (2*k+4) 0)
+  have hg := runSafe_to_count_zero (6*(2*k+6)+22)
+      (junc 2 (2*k+6) 1)
+      (z 2 (true::false::ones (2*(2*k+6)+14)) false [])
+      (junc2_w1_gate_safe (2*k+6) (by omega))
+  have htime : 34*k+198 = (4*k+31) +
+      (19 + ((crossTime (2*k+4)+1) +
+        ((12+2*(2*k+4))+(6*(2*k+6)+22)))) := by
+    rw [show 2*k+4=2*(k+2) by omega,crossTime_even]
+    omega
+  rw [htime,runCount_add,hpre]
+  simp only [Option.bind_some]
+  rw [runCount_add,hb]
+  simp only [Option.bind_some]
+  rw [runCount_add,hE]
+  simp only [Option.bind_some]
+  rw [hentry,runCount_add,hfinish]
+  simp only [Option.bind_some]
+  rw [show 2*k+4+2=2*k+6 by omega,hg]
+  simp only [Option.map_some, Option.some.injEq, Prod.mk.injEq]
+  have hend : 2*(2*k+6)+14=4*k+26 := by omega
+  rw [hend]
+  trivial
+
+#print axioms junc0_w2_even_second_gate_count
+
 #print axioms midAaux_zero_gate_safe
 #print axioms midAaux_all_gate_safe
 #print axioms midApos_w1_gate_safe
