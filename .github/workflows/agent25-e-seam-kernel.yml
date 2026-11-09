@@ -35,3 +35,14 @@ jobs:
           grep 'root_good.*\[propext\]' master-axioms.log
           grep 'all_seeds.*does not depend on any axioms' master-axioms.log
           grep 'successor_closed.*\[propext, Classical.choice, Quot.sound\]' master-axioms.log
+      - name: Prove full physical-tape refinement and compose existing E-seam certificate
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
+        working-directory: ${{ runner.temp }}/e-seam-kernel
+        run: |
+          python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_physical.py" "$PWD"
+          cp "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPhysicalBridge.lean" .
+          lean -o PhysicalWindow.olean PhysicalWindow.lean | tee physical-axioms.log
+          lean -o ESeamPhysicalBridge.olean ESeamPhysicalBridge.lean | tee bridge-axioms.log
+          if grep -E 'sorryAx|_native\\.native_decide' physical-axioms.log bridge-axioms.log; then exit 1; fi
+          grep "original_e_base_marker_safe.*\\[propext, Classical.choice, Quot.sound\\]" bridge-axioms.log
