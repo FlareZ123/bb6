@@ -1,4 +1,4 @@
-import Agent49TwoStepPoleCancellationSource
+import Agent8BudgetSource
 import Agent49FlatDrainSource
 
 /-!
@@ -8,8 +8,23 @@ No assertion about the fixed blank-origin section D(0,7).
 namespace BB6.Agent22ThreeStepSource
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent8BudgetSource
-open BB6.Agent49TwoStepPoleCancellation
 open BB6.Agent49FlatDrainSource
+
+/-- This is the exact tight-block parameterization, duplicated locally to
+avoid depending on unrelated synthetic-pole proof machinery. -/
+def xFamily (m : Nat) : Nat := 3*tightB m+2
+
+private theorem tightB_mod_two (m : Nat) : tightB m%2=m%2 := by
+  induction m with
+  | zero => simp [tightB]
+  | succ m ih =>
+      simp only [tightB]
+      omega
+
+private theorem xFamily_even (m : Nat) (hm : m%2=0) : xFamily m%2=0 := by
+  have hb := tightB_mod_two m
+  dsimp [xFamily]
+  omega
 
 private theorem tight_ge (m : Nat) : m ≤ tightB m := by
   induction m with
