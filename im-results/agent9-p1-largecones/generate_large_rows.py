@@ -142,17 +142,18 @@ def run() -> None:
                 if m > B or z <= 0 or z >= 2**K:
                     raise ValueError(f"q={q}: outside invariant box {m,z}")
                 rows[m].append(z)
-            literal = ",\n".join(
-                "  [" + ", ".join(map(str, row)) + "]" for row in rows
-            )
+            row_declarations = [
+                f"private def cell_{m} : List Nat := [" + ", ".join(map(str, row)) + "]"
+                for m, row in enumerate(rows)
+            ]
+            table = ", ".join(f"cell_{m}" for m in range(len(rows)))
             row_source = "\n".join([
                 "import Lean",
-                "set_option maxRecDepth 8192",
+                "set_option maxRecDepth 65536",
                 "set_option maxHeartbeats 0",
                 f"namespace BB6.Agent9Q{q}Rows{side}",
-                f"def rows{side} : Array (List Nat) := #[",
-                literal,
-                "]",
+                *row_declarations,
+                f"def rows{side} : Array (List Nat) := #[{table}]",
                 f"end BB6.Agent9Q{q}Rows{side}",
                 "",
             ])
