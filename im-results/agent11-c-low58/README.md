@@ -1,5 +1,12 @@
 # Machine C: source-authentic C58 rectangle and all-depth stopping criterion
 
+## Latest original-source research, 9 November 2026
+
+For the newest exact blank-root mathematics and all-parameter proof obligations, read **[Machine C sixth source-inverse and three independent m=0 stopping rays](M0SixSourceResearch.md)**. It links the complete six-sector recursive root normalizer, both low/high exact halting criteria, a generic four-edge stopping reduction, the strictly new high diagonal, all three separate infinite m=0 source exclusions, and a finite reproducible impact census. The first two m=0 ray source proofs, the updated diagonal and its full old-sieve admission, and the new third m=0 valuation-two ray source proof are certified by original-source Lean runs cited in that research note. **The new six-sector recursive normalizer and complete combined stopping iff remain pending full source certification as of this revision.** No BB(6) value or Machine C global nonhalt proof has been obtained.
+
+The detailed sections below document earlier C58 and dyadic-depth work as of 7 November. Statements about manual CI still being pending refer to their historical state and may be superseded by newer, source-checked module information in the linked research report.
+
+
 **Status, 7 November 2026: Machine C and BB(6) remain unresolved.** The source-authentic C58/ValSix criterion now combines the exact C58 exclusions, the complete ValSixFull restrictions, and an unbounded dyadic inverse-depth high exclusion. Its fixed-target root decisions are exact, but the existential stopping parameters remain unbounded. No complete halt/nonhalt decision follows.
 
 ## Exact source-level C58 exclusions
