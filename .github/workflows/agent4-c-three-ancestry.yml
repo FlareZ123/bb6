@@ -1,0 +1,46 @@
+name: Agent 4 Machine C three-ancestry new high gate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  machine-c-three-ancestry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          for attempt in 1 2 3 4; do
+            if sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              break
+            fi
+            sleep 12
+          done
+          test -x "$HOME/.elan/bin/lean"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unmodified original Machine C and new exact high-root exclusion
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent4-three
+          cp im-results/agent11-c-line/CLine.lean /tmp/agent4-three/
+          cp im-results/agent8-c-total-section/{GenericSection,CSectionTotal}.lean /tmp/agent4-three/
+          cp im-results/agent21-c-source-bridge/{CReachBridge,CPhaseRank}.lean /tmp/agent4-three/
+          cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef,FastSectionProof,FastSectionHalting,Agent46CBridge}.lean /tmp/agent4-three/
+          cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,BounceAllExact,SectionAllInverse}.lean /tmp/agent4-three/
+          cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/agent4-three/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/agent4-three/
+          cp im-results/agent34-c-degree-profile/{ConeArithmetic,ConeSource,ConeBroadArithmetic,ConeBroadSource,ThreeConeArithmetic,ThreeConeSource}.lean /tmp/agent4-three/
+          cp im-results/agent4-c-three-ancestry/{CThreeArithmetic,CThreeSource,CThreeStop}.lean /tmp/agent4-three/
+          cd /tmp/agent4-three
+          export LEAN_PATH=.
+          lean --version
+          for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage ConeArithmetic ConeSource ConeBroadArithmetic ConeBroadSource ThreeConeArithmetic ThreeConeSource CThreeArithmetic CThreeSource CThreeStop; do
+            echo "Compiling $f"
+            lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
+            if grep -q "sorryAx" "$f.log"; then
+              echo "REJECTED sorryAx in $f"
+              exit 1
+            fi
+          done
