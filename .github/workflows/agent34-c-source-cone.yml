@@ -44,6 +44,7 @@ jobs:
           python ${GITHUB_WORKSPACE}/im-results/agent34-c-valuation-fanin/reconstruct_one.py
           lean -o ValuationOne.olean ValuationOne.lean
           lean -o ValuationOneOrbit.olean ValuationOneOrbit.lean
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/SourceImageTower.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{TowerArithmetic,SourceImageTower}.lean .
+          lean -o TowerArithmetic.olean TowerArithmetic.lean
           lean SourceImageTower.lean
 
