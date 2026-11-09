@@ -42,7 +42,7 @@ theorem junc0_ray_halts (n : Nat) :
 theorem kRay_strict (n : Nat) : kRay n < kRay (n+1) := by
   have hpower : 2^(2*(n+1)) = 4*2^(2*n) := by
     rw [show 2*(n+1)=2*n+2 by omega, Nat.pow_add]
-    norm_num
+    omega
   have hbound := two_pow_ge (2*n)
   unfold kRay
   rw [hpower]
