@@ -12,11 +12,14 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
+      - name: Install pinned Lean 4.36.0-rc2 and authenticate official release
         run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          set -euo pipefail
+          url="https://github.com/leanprover/lean4/releases/download/v4.36.0-rc2/lean-4.36.0-rc2-linux.tar.zst"
+          curl -fLsS --retry 4 --retry-all-errors --retry-delay 5 "$url" -o "$RUNNER_TEMP/lean.tar.zst"
+          printf '%s  %s\n' '0a0a3208617e9eab92f1041efa83ad94d405e69d172fb654a62dbfa9fbc5313b' "$RUNNER_TEMP/lean.tar.zst" | sha256sum -c -
+          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/lean-4.36.0-rc2-linux/bin" >> "$GITHUB_PATH"
       - name: Compile original frontier, authentic #429 path and new all-time predecessor theorem
         run: |
           set -euo pipefail
