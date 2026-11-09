@@ -129,6 +129,28 @@ The first displayed identity is the exact incoming-divisor criterion. The final 
 
 The smallest case r=1 gives `a=7`, `P=125`, `p=227`, and the actual source-counter edge `7310→7998`. In the prior original-source root analysis, **7998 is proved unreachable from blank**, illustrating that a legitimate immediate predecessor and true-blank root reachability are separate claims. A complete root decision still needs an unbounded, source-connected argument.
 
+### A new infinite valuation-two parent family
+
+Beyond the previously established valuation-four family of [Agent47](../agent47-needle-cancellation-parent4/README.md), a distinct infinite arithmetic progression of cancellation feeders has legal immediate valuation-**two** predecessors. The theorem is locally verified for every `t≥0`:
+
+```text
+r = 110t+50,  A_r=2^((9^r+5)/2),
+N_2=A_r P_r(A_r)+3-2*2,
+there exists p≥0 such that N_2=11*(2p+3).
+```
+
+This construction lies outside Agent47's fixed valuation-four classification. In particular, `r=50` has `r%3=2`, so a conjecture that *all* cancellation feeders with `r%3=2` have no immediate incoming parent is false. More generally, the progression `110t+50` cycles through all three residues of `r mod3`.
+
+**Proof:** Since `r` is even, `9^r≡1 (mod20)` and `a_r≡3 (mod10)), hence `A_r≡8 (mod11)`. In the recurrence defining `P`, this implies `A_r²≡9 (mod11)` and `A_r-3≡5 (mod11)`. Therefore for each positive `r`,
+
+```text
+P_r(A_r) ≡ 5r * 9^(r-1) (mod 11).
+```
+
+For `r=110t+50`, `r≡6 (mod11)` and `9^(r-1)≡5 (mod11)`, so `P_r(A_r)≡7 (mod11)` and `A_r P_r(A_r)≡1 (mod11)`. Because `A_r P_r(A_r)` is even and at least 128, write `A_r P_r(A_r)=22k+12` with `k≥1`, and choose `p=k-1`. This yields the displayed positive odd-quotient inverse equation. For `B_r=2^(a_r-1)P_r(A_r)`, one gets `B_r=11p+17`; the original Space Needle source rule gives `oddTower(p,2)→ B_r-2`, which is precisely the cancellation feeder counter.
+
+The 137-line standalone [CancellationParentTwo Lean proof](CancellationParentTwo.lean.xz.b64), restored with [restore_parent2.py](restore_parent2.py), contains `CancellationParentTwo.parent_two_exists`, a universal all-`t` arithmetic theorem, and `P_resonance_mod11`. It compiles under local Lean 4.36.0-rc2 with **[propext, Quot.sound]** and no sorry. Decompressed SHA-256: `acae5b6f4f6456413d62d053486590d8d17ec909eee43e9e9530963d30a9f002`. The precise original-source lift is proposed in [CancellationParentTwoSource.lean](CancellationParentTwoSource.lean), importing Agent47's published factorization and the original Cryptids source; a [shared manual upstream workflow](../../.github/workflows/agent20-needle-triple.yml) was dispatched for audit and is pending. Until that original-source proof completes, distinguish the locally checked arithmetic theorem from a source-verified high-level edge. Even a fully source-verified incoming edge remains *synthetic* until true-blank reachability is proved.
+
 ### Fully constructive terminal feeders
 
 [CancellationTopConstructive.lean](CancellationTopConstructive.lean) proves that for every r>=1 the polynomial `P_r(A_r)` is odd and at least three, so `q_r=(P_r(A_r)-3)/2` is a natural number satisfying the exact cancellation identity. [CancellationTerminalConstructive.lean](CancellationTerminalConstructive.lean) proves the corresponding **original inverse terminal equation in primitive exponent notation**:
