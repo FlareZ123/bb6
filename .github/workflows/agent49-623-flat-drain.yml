@@ -43,3 +43,5 @@ jobs:
           lake env lean Agent8RootDigitChargeSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-survival-density/NextDigitSource.lean" Agent8NextDigitSource.lean
           lake env lean Agent8NextDigitSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-survival-density/SafeBudgetSource.lean" Agent8SafeBudgetSource.lean
+          lake env lean Agent8SafeBudgetSource.lean
