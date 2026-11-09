@@ -125,10 +125,19 @@ std::optional<EscapeEvent> escape_in_pump(const Candidate& c, u64 cycles, u64 t)
         std::vector<u64> possible;
         if (slope==0) {
             if (b!=0) continue;
-            for (u64 k=0; k<std::min<u64>(cycles,100); ++k) possible.push_back(k);
-            if (du>0 && (i64)c.new_states[j].u<17) {
-                u64 k=(u64)((17-(i64)c.new_states[j].u+du-1)/du);
-                for (u64 n=k; n<std::min<u64>(cycles,k+100); ++n) possible.push_back(n);
+            // Solve both u(k)>=17 and u(k)=1 (mod 4) without scanning k.
+            for (u64 r=0; r<4 && r<cycles; ++r) {
+                i128 initial=(i128)c.new_states[j].u+(i128)r*du;
+                if (((initial%4)+4)%4!=1) continue;
+                u64 k=r;
+                if (du>0 && initial<17) {
+                    i128 stride=4*(i128)du;
+                    i128 need=17-initial;
+                    i128 kk=(i128)r+4*((need+stride-1)/stride);
+                    if (kk>=(i128)cycles) continue;
+                    k=(u64)kk;
+                }
+                if ((i128)c.new_states[j].u+(i128)k*du>=17) possible.push_back(k);
             }
         } else {
             if (-b%slope!=0) continue;
