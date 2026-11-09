@@ -35,7 +35,18 @@ The right side may exceed one for small `p`, which is harmless. For every fixed 
 ]
 for some `eta>0` depending only on `delta,epsilon`. Thus **the fraction halting within any `delta*log_2 N` first-even returns tends to zero for every `delta<1/4`**, uniformly over all even starts `x<=N`, including non-dyadic cutoffs `N`. Equivalently, asymptotically almost all even starts survive at least `floor(delta*log_2 N)` returns. The established stronger exceptional-inclusive bound applies to *first visits* to either odd cofactor `1` or `3`.
 
-This is a natural-density, **integer-source** conclusion with a linearly growing horizon. It is substantially stronger than the earlier Haar-almost-everywhere theorem alone, because Haar-null countable sets of ordinary integers can have positive natural density. The fixed integer `10` remains undecided.
+An explicit **near-one-quarter horizon** is also available. Write `p` for the bit budget and, for sufficiently large `p`, choose
+[
+r=\lceil3\log_2 p\rceil+3,\qquad
+n=\left\lfloor\frac p4-2\sqrt{p\log_2 p}\right\rfloor.
+]
+Then the same exact bound (1) gives
+[
+\boxed{H(p,n)\,/\,2^{p-1}=O(p^{-2}).}\tag{3}
+]
+The survival horizon therefore approaches **one quarter of the input bit length**, with a sublinear `O(sqrt(p log p))` correction, while the fraction of exceptions tends to zero. The explicit proof is in §4 below.
+
+These are natural-density, **integer-source** conclusions with growing horizons. They are substantially stronger than the earlier Haar-almost-everywhere theorem alone, because Haar-null countable sets of ordinary integers can have positive natural density. The fixed integer `10` remains undecided.
 
 ## Proof of the finite bound
 
@@ -75,7 +86,18 @@ E_g^i(x_0)=x_i\equiv0\pmod{2^{r-1}}.
 ]
 Union bound over `i=0,...,n`, invoke (5), and add the small starts to prove (1). This accounts explicitly for the **exceptional authentic `u=3` path** rather than incorrectly applying the generic dynamics after it.
 
-**4. Linear-horizon density.** Choose `n=floor(delta*p)`, `r=floor(epsilon*p)` with `0<epsilon<1-4delta`. Then `m=p-r+1=(1-epsilon)p+O(1)` and `2n/m<1/2` by a fixed margin. The standard elementary Chernoff bound for the fair-binomial lower tail gives `B(m,n)<=2^{-kappa*p}` for some `kappa>0`, while `2^{2-r}<=2^{-epsilon*p+O(1)}` and `2^{r-p}<=2^{-(1-epsilon)p+O(1)}`. Multiplication by `n+1=O(p)` preserves an exponentially small total fraction, proving (2). For arbitrary `N`, choose `p=ceil(log_2 N)`; the dyadic interval contains all starts up to `N` and has at most twice as many even integers, so the same natural-density conclusion follows.
+**4. Linear and near-critical horizons.** Choose `n=floor(delta*p)`, `r=floor(epsilon*p)` with `0<epsilon<1-4delta`. Then `m=p-r+1=(1-epsilon)p+O(1)` and `2n/m<1/2` by a fixed margin. The standard elementary Chernoff bound for the fair-binomial lower tail gives `B(m,n)<=2^{-kappa*p}` for some `kappa>0`, while `2^{2-r}<=2^{-epsilon*p+O(1)}` and `2^{r-p}<=2^{-(1-epsilon)p+O(1)}`. Multiplication by `n+1=O(p)` preserves an exponentially small total fraction, proving (2).
+
+For (3), the proposed `r` is `3log_2 p+O(1)`, and `m=p-O(log p)`. Its fair-binomial mean is `m/2`. At the proposed `n`, the gap from the mean to the tail threshold obeys, for sufficiently large `p`,
+[
+\frac m2-(2n-1)\ge2\sqrt{p\log_2 p}.
+]
+Hoeffding's inequality bounds the binomial lower tail by
+[
+B(m,n)\le\exp\left(-\frac{2(2\sqrt{p\log_2 p})^2}{m}\right)
+\le\exp(-8\log_2 p)\le p^{-3}
+]
+for large `p`. Also `2^{2-r}=O(p^{-3})`, `2^{r-p}=O(p^3 2^{-p})`, and `n+1=O(p)`. Substitution in (1) yields (3). For arbitrary `N`, choose `p=ceil(log_2 N)`; the dyadic interval contains all starts up to `N` and has at most twice as many even integers, so the same conclusions follow.
 
 ## Complementary elementary bound without symbolic coding
 
