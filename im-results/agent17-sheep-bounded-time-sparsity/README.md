@@ -88,7 +88,7 @@ Union bound over `i=0,...,n`, invoke (5), and add the small starts to prove (1).
 
 **4. Linear and near-critical horizons.** Choose `n=floor(delta*p)`, `r=floor(epsilon*p)` with `0<epsilon<1-4delta`. Then `m=p-r+1=(1-epsilon)p+O(1)` and `2n/m<1/2` by a fixed margin. The standard elementary Chernoff bound for the fair-binomial lower tail gives `B(m,n)<=2^{-kappa*p}` for some `kappa>0`, while `2^{2-r}<=2^{-epsilon*p+O(1)}` and `2^{r-p}<=2^{-(1-epsilon)p+O(1)}`. Multiplication by `n+1=O(p)` preserves an exponentially small total fraction, proving (2).
 
-For (3), the proposed `r` is `3log_2 p+O(1)`, and `m=p-O(log p)`. Its fair-binomial mean is `m/2`. At the proposed `n`, the gap from the mean to the tail threshold obeys, for sufficiently large `p`,
+For (2b), the proposed `r` is `3log_2 p+O(1)`, and `m=p-O(log p)`. Its fair-binomial mean is `m/2`. At the proposed `n`, the gap from the mean to the tail threshold obeys, for sufficiently large `p`,
 [
 \frac m2-(2n-1)\ge2\sqrt{p\log_2 p}.
 ]
