@@ -197,6 +197,11 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/OddFrontierCensus.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429OddFrontierCensus.odd_0100_exact_one_czero'" "$LOG"
           grep -F "'BB429OddFrontierCensus.odd_to_E1_exact_one_czero'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/OddCZeroRoot.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429OddCZeroRoot.blank_odd_C0_to_E1_corridor'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/Base1000.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429Base1000.physical_base1000_return'" "$LOG"
+          grep -F "'BB429Base1000.physical_base1000_all_prefix'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
