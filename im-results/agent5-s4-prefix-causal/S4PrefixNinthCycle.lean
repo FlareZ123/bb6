@@ -72,9 +72,8 @@ private theorem prefixRunFast_add_mul (r k : Nat) :
   induction k with
   | zero => simp
   | succ k ih =>
-      rw [Nat.mul_succ, ← Nat.add_assoc]
-      rw [prefixRunFast_period81920]
-      exact ih
+      simpa [Nat.mul_succ, Nat.add_assoc] using
+        (prefixRunFast_period81920 (r + 81920*k)).trans ih
 
 theorem prefixRunFast_mod81920 (n : Nat) :
     prefixRunFast n cycle9Start =
