@@ -183,6 +183,49 @@ theorem junc0_w2_odd_complete_count (k : Nat) :
   rw [hlast]
   rfl
 
+/-- Exact base v=0: 204 primitive steps, two C/0 starts and return
+    to Junc(0,0,18). Computed by the original zipper definition. -/
+theorem junc0_w2_base_even :
+    runCount 204 (junc 0 0 2) = some (junc 0 0 18,2) := by decide
+
+/-- Exact base v=1: 266 primitive steps, three C/0 starts and return
+    to Junc(0,0,24). Computed by the original zipper definition. -/
+theorem junc0_w2_base_odd :
+    runCount 266 (junc 0 1 2) = some (junc 0 0 24,3) := by decide
+
+/-- ALL even v, including v=0, have exactly two C/0 visits and end
+    in a canonical zero-u Junc. -/
+theorem junc0_w2_all_even_count (k : Nat) :
+    runCount (38*k+204) (junc 0 (2*k) 2) =
+      some (junc 0 0 (4*k+18),2) := by
+  cases k with
+  | zero => simpa using junc0_w2_base_even
+  | succ k =>
+      have h := junc0_w2_even_complete_count k
+      simpa only [Nat.succ_eq_add_one,
+        show 38*(k+1)+204 = 38*k+242 by omega,
+        show 2*(k+1) = 2*k+2 by omega,
+        show 4*(k+1)+18 = 4*k+22 by omega] using h
+
+/-- ALL odd v, including v=1, have exactly three C/0 visits and end
+    in a canonical zero-u Junc. -/
+theorem junc0_w2_all_odd_count (k : Nat) :
+    runCount (44*k+266) (junc 0 (2*k+1) 2) =
+      some (junc 0 0 (4*k+24),3) := by
+  cases k with
+  | zero => simpa using junc0_w2_base_odd
+  | succ k =>
+      have h := junc0_w2_odd_complete_count k
+      simpa only [Nat.succ_eq_add_one,
+        show 44*(k+1)+266 = 44*k+310 by omega,
+        show 2*(k+1)+1 = 2*k+3 by omega,
+        show 4*(k+1)+24 = 4*k+28 by omega] using h
+
+#print axioms junc0_w2_base_even
+#print axioms junc0_w2_base_odd
+#print axioms junc0_w2_all_even_count
+#print axioms junc0_w2_all_odd_count
+
 #print axioms finishC_ScanE_safe
 #print axioms junc2_w1_count
 #print axioms boundary_to_scanE_count
