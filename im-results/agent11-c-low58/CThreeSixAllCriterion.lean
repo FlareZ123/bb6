@@ -70,7 +70,21 @@ theorem low_three_excluded :
       (2^(2*3+3)-(3*3+4))=true := by
   decide
 
+/-- The first new low stopping target from the added sector is
+    m=3: it survives every previous full C58/ValSix low parameter
+    restriction but is rejected by the new authentic six-source test. -/
+theorem low_three_strict :
+    BB6.Agent11C58ValSix.lowAllowed 3 ∧ ¬lowAllowed 3 := by
+  have hprior : BB6.Agent11C58ValSix.lowAllowed 3 := by decide
+  refine ⟨hprior,?_⟩
+  intro h
+  have hno : BB6.Agent11SixForced.sixForcedExcluded 1
+      (2^(2*3+3)-(3*3+4))=false := h.2
+  have hyes := low_three_excluded
+  omega
+
 #print axioms blank_halts_iff_six_both
 #print axioms low_three_excluded
+#print axioms low_three_strict
 
 end BB6.Agent11SixAll
