@@ -91,7 +91,32 @@ theorem C0_even_to_C0 (k : Nat) :
   simp only [Option.bind_some]
   exact hlast
 
+/-- With an odd, otherwise blank contiguous marked left block, the first
+    next C/0 is at the previous frontier, with a one to its right. -/
+theorem C0_odd_to_fatal (k : Nat) :
+    ∃ l, run (4*k+20) (z 2 (ones (2*k+3)) false []) =
+      some (z 2 l false [true]) := by
+  have hfirst : run 2 (z 2 (ones (2*k+3)) false []) =
+      some (prepared (2*k+3)) := by rfl
+  obtain ⟨l,hl⟩ := odd_prepared_fatal k
+  refine ⟨l,?_⟩
+  have ht : 4*k+20 = 2+(2*(2*k+3)+12) := by omega
+  rw [ht,run_add,hfirst]
+  simp only [Option.bind_some]
+  exact hl
+
+/-- This odd-block first frontier necessarily halts at the subsequent
+    D/1 query, contrasting with the even-block fresh C/0 return. -/
+theorem C0_odd_halts (k : Nat) :
+    run (4*k+22) (z 2 (ones (2*k+3)) false []) = none := by
+  obtain ⟨l,hl⟩ := C0_odd_to_fatal k
+  have ht : 4*k+22 = (4*k+20)+2 := by omega
+  rw [ht,run_add,hl]
+  rfl
+
 #print axioms a_right_pairs_exact
 #print axioms even_E0_crosses_exact
 #print axioms C0_even_to_C0
+#print axioms C0_odd_to_fatal
+#print axioms C0_odd_halts
 end BB429CZeroEvenReturn
