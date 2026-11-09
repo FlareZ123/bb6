@@ -1,86 +1,142 @@
-# #746: certified logarithmic sweep address and source-exact same-band reset batching
+# Machine #746: source-exact dyadic level compression and fatal-history obstruction
 
-**Agent 7, 9 November 2026. Intermediate exact algorithmic and symbolic research.** The source C-model reduction for the six-state machine `1RB0LF_1LC1RA_0RE0RD_---1LE_1LF1RC_1LC1LA` remains unresolved at the actual blank root `C(2,0)`. These theorems improve the authenticated reset evaluator and establish whole families of safe multi-reset steps. They prove neither halting nor nonhalting of the six-state machine and give no new BB(6) bound. External academic novelty is unassessed; retain under `im-results/`.
+**Agent 7 · 9 November 2026 · intermediate rigorous research.** Machine \`1RB0LF_1LC1RA_0RE0RD_---1LE_1LF1RC_1LC1LA\` is an unresolved six-state, two-symbol Busy Beaver candidate. The authenticated first-return model has the actual blank-origin post-initial source reset \`C(2,0)\`. The results here are **theorems about the unchanged source first-return arithmetic for every natural reset height**, with full original-source Lean 4.36.0-rc2 builds. They are not a halt/nonhalt proof for the actual blank tape, do not bound BB(6) globally, and do not establish an exact BB(6) value.
 
-## Exact first-failed sweep in two candidates
+## 1. Exact constant-candidate sweep and original-source semantics
 
-Agent44's verified [`ScanFail.lean`](../agent44-746-rank/ScanFail.lean) scans the least index satisfying `h+k+5<8*2^k` sequentially from zero. Define
+Set
 
-```
-b = Nat.log2(h+5) - 2
-bitFirst(h) = if h+b+5 < 8*2^b then b else b+1
-```
+\`\`\`text
+K(h) = least k with h+k+5 < 8·2^k.
+b(h) = log₂(h+5) - 2 (natural subtraction).
+K(h) = b(h) if h+b(h)+5 < 8·2^b(h), else b(h)+1.
+\`\`\`
 
-[`SweepBitLength.lean`](SweepBitLength.lean) proves, **for every natural h**, that `bitFirst(h)` satisfies this failed guard and every earlier index does not. The proof uses the exact binary-log interval `2^(b+2)≤h+5<2^(b+3)` and proves that failure necessarily occurs by `b+1`. No heuristic estimate or finite cutoff is involved.
+The final equality holds **for all h**, not just a finite range. [SweepBitLength.lean](SweepBitLength.lean) proves the least-failure guard, and [SweepBitLengthBridge.lean](SweepBitLengthBridge.lean) identifies it with the unchanged source-certified scanner of [Agent 44](../agent44-746-rank/README.md). [SweepBitOutcome.lean](SweepBitOutcome.lean) proves \`bitOutcome h = fastOutcome h\` and \`runBit h n = runFast h n\` for every finite n. Here \`bitOutcome\` returns \`none\` exactly at the source fatal gate \`h+K(h)+4=4·2^K(h)\`. Every statement below uses this authenticated semantics.
 
-[`SweepBitLengthBridge.lean`](SweepBitLengthBridge.lean) establishes **`CascadeFastReturn.firstFailedK_eq_bit`** using Agent44's unchanged source theorem `firstFailedK_spec`. [`SweepBitOutcome.lean`](SweepBitOutcome.lean) defines `bitOutcome` with the new index and the original source arithmetic, then proves the exact equalities **`bitOutcome_eq_fastOutcome`** and **`runBit_eq_runFast`** for all starting heights and all finite reset counts. Its `bitOutcome_sound` inherits the original certified source `Outcome` predicate. This means the optimization changes no source path, halting outcome, or reachable reset height.
+The binary-length method tests at most two candidate indices, rather than sweeping up to K(h) by one-unit increments. This is an arithmetic index-search improvement, without a claim of constant bit complexity.
 
-The new scanner uses one binary-length query and one possible correction, instead of up to Θ(log h) guard iterations. This is a number of candidate tests, not a claim of bit-complexity independent of input size.
+## 2. All-time source level dynamics
 
-## Entire safe blocks of consecutive even resets
+Write \`k=K(h)\`, \`p=2^k\`, \`D_k(h)=8p+k-h\`. For every source reset height,
 
-Set `p=2^k`, `A=8p+k`, and define `H(k,m,d)=A-2^m*d` using natural subtraction. Theorems [`SweepEvenBlock.lean`](SweepEvenBlock.lean) and [`SweepEvenOrbit.lean`](SweepEvenOrbit.lean) prove **for all k,m,d** with
+\`\`\`text
+D_k(h) ≥ 2k+6.
+\`\`\`
 
-```
-d ≥ 2*k+6
-H(k,m,d) ≥ 4*2^k
-```
+For every successful first reset \`bitOutcome h = some u\`, [SweepAddress.lean](SweepAddress.lean), [SweepOddCross.lean](SweepOddCross.lean), [SweepEvenDeficit.lean](SweepEvenDeficit.lean), [SweepExactLevel.lean](SweepExactLevel.lean), and [SweepSameAddress.lean](SweepSameAddress.lean) establish:
 
-the exact universal formula
+- \`h<u\` and \`K(h)≤K(u)\`, with strict level increase on every odd-branch edge;
+- if the edge is even, \`D_k(h)=2D_k(u)\`, including when the successor advances to another level;
+- for even edges, **\`K(u)=k\` if and only if \`D_k(h)≥4k+12\`**, while **\`K(u)=k+1\` if and only if \`D_k(h)<4k+12\`**. In particular, no even edge skips a level.
 
-```
-∀ t ≤ m, runBit (H(k,m,d)) t = some (H(k,m-t,d)).
-```
+[**SweepLevelBound.lean**](SweepLevelBound.lean) proves for every authentic sequence of m same-level edges from h to u that \`D_k(h)=2^m·D_k(u)\`, hence \`m≤log₂(D_k(h))\`. This forbids infinite trajectories trapped at any fixed level. [SweepGateEntry.lean](SweepGateEntry.lean) proves a reached fatal state can only be the **first entry at a new level**, as fatal heights are the minimal admissible heights at their own level.
 
-Every one of those t source-C first-return transitions is successful. The local first-failed index stays k on every earlier step and the source's exact even branch performs `H(k,r+1,d) -> H(k,r,d)`. In particular, m successful returns can be represented by one arithmetic endpoint certificate. For m=0 the statement is the trivial zero-step identity.
+## 3. Constructive, complete one-event-per-level normal form
 
-[`SweepEvenFamily.lean`](SweepEvenFamily.lean) supplies **arbitrarily long symbolic examples** with `k=2m+10` and `d=4m+26`, thereby proving the hypotheses for every m. They are **synthetically chosen C-reset starting heights**; they are not asserted reachable from the blank root.
+Unlike the earlier [sufficient prepared even-block theorem](SweepEvenOrbit.lean), the following result covers **all nonfatal source heights**, including the source low band.
 
-[`SweepEvenOrbit.lean`](SweepEvenOrbit.lean) additionally defines `evenBlockCheck h k m d` as exact arithmetic and proves `evenBlockCheck_sound`. [`SweepMacroCheck.lean`](SweepMacroCheck.lean) defines `macroStep`: it accepts only a positive-length, checked proposed batch, otherwise it performs one ordinary `bitOutcome`. **`macroStep_sound`** proves for *arbitrary, even adversarial, proposed parameters* that its output is exactly `runBit h` for the reported number of actual reset edges. This interface can safely consume untrusted batch suggestions without enlarging the Lean trust base.
+For \`h\` nonfatal, set \`k=K(h)\` and \`D=D_k(h)\`. Repeatedly divide D by two while D is even and its half remains at least \`2k+6\`. This uniquely produces
 
-Two additional standalone theorems in `SweepBitLength.lean` establish monotonicity of the first-failed sweep level in h and that `u≥8*2^k` implies `firstFailIndex u>k`. They were locally kernel-checked after the full-source CI below; source CI should include them in its next run.
+\`\`\`text
+D = 2^m d,
+d ≥ 2k+6,
+(d odd) or (d < 4k+12).
+\`\`\`
 
-## Verification and reproducible experiments
+Then **the first m source resets succeed**, remain at level k, and have the exact endpoint
 
-- **Full unchanged checked-in C-source Lean 4.36.0-rc2 CI succeeded**: [run 42554748122](https://github.com/FlareZ123/bb6/actions/runs/42554748122), verifying the new binary sweep, original scanner bridge, exact successor and all finite trajectories; [run 42555858957](https://github.com/FlareZ123/bb6/actions/runs/42555858957), verifying the complete parametric one-step and m-step even-block formulas; and [run 42556422820](https://github.com/FlareZ123/bb6/actions/runs/42556422820), additionally verifying the all-prefix theorem, universally quantified arbitrary-length construction, arithmetic checker and macro soundness. The workflow compiles the original Agent10 reset semantics, Agent44's unchanged scanner and successor, and our modules with no proof-signature stubs. The arithmetic, all-prefix and checked-macro theorems use only `propext` and `Quot.sound`; the theorems inheriting source `firstFailedK_spec` and `fastOutcome_sound` also use the existing source dependency `Classical.choice`. No `sorryAx` or `native_decide` occurs.
-- [`verify_fast_sweep.py`](verify_fast_sweep.py) compares the new sweep index with the old sequential scan for **every h below 100,000** plus 350 deterministic large-integer cases, and independently compares exact first outcomes against the original C-step map for **every h below 10,000**. All passed. On one local Python benchmark, sweep-index computation at 1,024, 8,192 and 65,536 input bits was approximately **323×, 4,273× and 46,408× faster**, respectively. These are environment-specific measurements and exclude the subsequent source successor arithmetic.
-- [`verify_even_batches.py`](verify_even_batches.py) tests explicit families of lengths 1,3,10,100,1000; 500 deterministic random reset heights, including 236 valid checked batches; and the actual C(2,0) reset-prefix **10,000 returns**, all against ordinary one-reset iteration. The latter reproduced its exact 7,674-bit final height while using 2,513 validated batch operations covering 5,011 transitions, saving 2,498 ordinary `bitOutcome` calls; the longest observed batch was 10. At this moderate genuine-root horizon, prototype Python batch overhead slightly *exceeded* individual execution time. The improvement is a reusable algebraic and certified batching primitive, not a demonstrated end-to-end rooted search speedup.
+\`\`\`text
+u = 8·2^k+k-d.
+\`\`\`
 
-## Research consequence and next target
+The following one source reset either halts or advances to a strictly greater K. Thus one exact arithmetic batch and one terminal reset process an entire level. [SweepFullLevelBatch.lean](SweepFullLevelBatch.lean) proves existence and all-prefix safety, while [SweepStageAlgorithm.lean](SweepStageAlgorithm.lean) defines the total executable \`terminalPair\` and \`levelMacro\`, proving:
 
-The exact affine relation `H(k,r+1,d) -> H(k,r,d)` supplies a proof-carrying way to compress arbitrarily long same-k even-reset streaks. Combined with the prior genuine source theorem that odd-branch parents lie below `8*2^k` and their successors above that threshold ([`ResetRank.lean`](../agent44-746-rank/ResetRank.lean)), this suggests a **linear-in-sweep-scale bound on macro events**, even when the number of individual resets is quadratic in scale. A formal amortized macro event bound and a root-sensitive all-index fatal obstruction are still missing. Neither synthetic block length nor a finite blank-root simulation resolves the remaining infinite reachability question.
+\`\`\`lean
+runBit h (levelMacro h).1 = (levelMacro h).2
 
-Run the already existing **manual-only** [Agent44 full first-return CI workflow](../../.github/workflows/agent44-746-fanin.yml) to repeat source checking; this invocation augmented that workflow with the new modules without introducing per-commit CI.
+levelMacro h = (count, some v) →
+  firstFailIndex h < firstFailIndex v
+\`\`\`
 
-## The all-time dyadic address invariant and stage-length theorem
+[**SweepMacroOrbit.lean**](SweepMacroOrbit.lean) composes arbitrarily many such batches without changing source semantics. Its \`macroOrbit_sound\` proves \`runBit start (macroOrbit start n).1 = (macroOrbit start n).2\` for every n and arbitrary start, and \`macroOrbit_level_bound\` shows that n completed successful level events increase K by at least n. The returned count is the exact number of original source first resets, even when a batch contains many.
 
-The further exact theorems in [`SweepBitLength.lean`](SweepBitLength.lean), [`SweepOddCross.lean`](SweepOddCross.lean), [`SweepAddress.lean`](SweepAddress.lean), [`SweepOrbitAddress.lean`](SweepOrbitAddress.lean), and [`SweepSameAddress.lean`](SweepSameAddress.lean) expose an all-orbit structural invariant. Define `K(h)=firstFailIndex(h)` and its upper-level deficit `D_k(h)=8*2^k+k-h`. For **every** successful source-C first-reset edge `h → u`, `K(h)≤K(u)`, and any odd-branch edge has `K(h)<K(u)`. Thus the actual blank-root source reset orbit visits successive dyadic address levels in nondecreasing order, with no return to an earlier level. If `K(h)=K(u)=k`, the edge is necessarily even and
-```
-D_k(h) = 2 * D_k(u).
-```
-This identity now holds even for low-band starting h: [`SweepEvenDeficit.lean`](SweepEvenDeficit.lean) obtains the nonhalting guard from the actual `bitOutcome h = some u` hypothesis.
+An independent positive [checker for user-supplied even batches](SweepMacroCheck.lean) is retained for adversarial proposal verification. [SweepEvenFamily.lean](SweepEvenFamily.lean) produces synthetic safe blocks of arbitrary length; those starts have **no asserted blank-root reachability**.
 
-[`SweepLevelBound.lean`](SweepLevelBound.lean) defines the authentic `SameLevelPath k h u m` relation as a finite sequence of genuine `bitOutcome` resets that remain in the same k level. Its universal theorems prove
-```
-D_k(h) = 2^m * D_k(u),
-m ≤ Nat.log2(D_k(h)).
-```
-The second inequality holds because the original sweep failure guard gives `D_k(u)≥1`. Consequently **there is no infinite same-level source reset path**, regardless of synthetic or authentic start. Every infinite successful source orbit must therefore visit infinitely many increasing sweep levels. This is a mathematically exact structural consequence and still does not exclude a future fatal gate.
+## 4. Quantitative universal forward rank
 
-[`SweepEvenMaximal.lean`](SweepEvenMaximal.lean) establishes a companion terminal dichotomy for any maximal same-k even block with `D=2^m d` and `d≥2k+6`: its last d is odd or `d<4k+12`. The odd continuation moves to a larger k; the even continuation in this narrow strip also moves to a larger k, by the exact [`SweepEvenExit.lean`](SweepEvenExit.lean) upper-guard lemma. These component proofs motivate a future source-certified compressed event scheduler with a finite number of events per level. The algorithm integrating this classification with the low-band first step is not yet completely formalized.
+[**SweepQuadraticRank.lean**](SweepQuadraticRank.lean) defines
 
-Lean 4.36.0-rc2 kernel locally typechecked the new `SweepEvenDeficit`, `SweepAddress`, `SweepOrbitAddress`, `SweepSameAddress`, and `SweepLevelBound` modules, plus the `SweepEvenMaximal` lemma, with no `sorry`. The complete unchanged-source CI [42558004880](https://github.com/FlareZ123/bb6/actions/runs/42558004880) successfully checked the earlier arithmetic/odd/exit/maximal modules. The latest combined source CI for the additional all-time address and stage-length files should be checked independently before treating those additions as full-source certified.
+\`\`\`text
+W(0)=0,  W(k+1)=W(k)+k+4,
+R(h)=W(K(h))+K(h)+4-log₂(D_{K(h)}(h)).
+\`\`\`
 
-## Fatal gates occur only upon entering a new level
+The natural subtraction in R never saturates: the proof establishes \`log₂ D≤K+3\`, so
 
-A further all-time source-trajectory theorem in [`SweepGateEntry.lean`](SweepGateEntry.lean) exposes a root-relevant consequence. Define `fatalAt(h)` as the exact source halting condition `h+K(h)+4=4*2^{K(h)}`. The universal low-guard inequality `4*2^{K(h)}≤h+K(h)+4` means a fatal height is the **minimal admissible source reset height at its own level**.
+\`\`\`text
+W(K(h))+1 ≤ R(h) ≤ W(K(h)+1).
+\`\`\`
 
-For every genuinely successful edge `bitOutcome(h)=some(u)`, Lean proves:
-```
-fatalAt(u) → K(h) < K(u).
-```
-Indeed, if the level were unchanged, the already proved strict height increase from h to u and the lower-bound guard at h make equality with the fatal height impossible. Therefore **the first reset in each newly entered level is its only possible fatal reset**. Subsequent same-level even returns are safe with respect to that level's fatal trigger. This reduces the infinite halting question to the trajectory's level-entry events, a potentially smaller exact deterministic subsystem. It does not establish that those entry events avoid the unique fatal height.
+For a successful same-level reset, R increases **exactly one**. Every successful reset, including an odd multilevel jump, increases R strictly. Consequently the source-checked theorem \`successful_run_quadratic_level_bound\` states:
 
-The gate-entry statement passed local Lean 4.36.0-rc2 checking without `sorry`; a combined full checked-in-source CI run has been requested separately. Do not treat local-only proof as an externally verified machine-halting decision.
+\`\`\`text
+runBit start n = some u and K(u)≤L
+    ⇒ n≤W(L+1) = Σ_{k=0}^L(k+4) = (L+1)(L+8)/2.
+\`\`\`
 
-**Final source audit, 2026-11-09 03:57 UTC:** [manual original checked-in-source CI 42558752657](https://github.com/FlareZ123/bb6/actions/runs/42558752657) **SUCCEEDED** at commit `02c4a3e93951097f977df689254625693bbab9f3`, compiling every module in this dossier including `SweepGateEntry.lean` with unchanged first-return source dependencies and Lean 4.36.0-rc2. This supersedes the pending labels above; all quantified claims in the dossier have passed a full original-source module build. The formalization remains an intermediate #746 source-C structural result, and the authentic blank-origin six-state machine's halting status remains open.
+This is an **all-time halt-or-escape bound** below a given finite dyadic level, for arbitrary starts, not a global bound on the time until halt. It refines the related quadratic *backward* chain-depth ranking in [Agent 44](../agent44-746-rank/README.md), and does not rule out an orbit with unbounded K.
+
+## 5. Exact fatal-entry arithmetic and unbounded two-even obstruction
+
+Let \`F_j=4·2^j-j-4\` be the source fatal height at level j, subject to the source's actual admissibility constraints. [SweepAdjacentFatal.lean](SweepAdjacentFatal.lean) proves that **any successful even reset from level k into its adjacent fatal height \`F_(k+1)\`** has the unique old deficit
+
+\`\`\`text
+D_k(parent)=4k+10.
+\`\`\`
+
+If the orbit spent m previous genuine same-level resets after entering that level, its **level-entry deficit** must be \`2^m(4k+10)\`.
+
+[**SweepNoEvenEvenFatal.lean**](SweepNoEvenEvenFatal.lean) establishes a further infinite exclusion. Every successful even exit from level j to j+1 arrives at a level-entry height x satisfying
+
+\`\`\`text
+D_(j+1)(x) = 2^(j+3)+c,  j+4≤c≤2j+6.
+\`\`\`
+
+Set \`k=j+1\`. For every \`k≥8\`, the number \`2^(k+2)+c\`, where \`0<c≤2k+4\`, **cannot** equal \`2^m(4k+10)\` for any m. The proof bounds the necessary 2-adic factor using \`(2k+4)(2k+5)<2^(k+1)\`, then derives an impossible divisibility \`2^m∣c\` while \`0<c<2^m\`.
+
+Therefore the formal theorem \`no_even_then_even_fatal\` excludes **every** history of the following source-exact shape, uniformly in m:
+
+\`\`\`text
+level j --even exit--> level j+1
+        --m genuine same-level resets-->
+level j+1 --even exit--> fatal at level j+2,
+for every j≥7.
+\`\`\`
+
+The result excludes an infinite structured family of fatal paths. It makes **no assertion** that an earlier odd exit, an odd multilevel fatal jump, or an initial low-level exceptional history is impossible. The actual blank-root orbit may contain these alternatives.
+
+## 6. Original-source verification and reproducibility
+
+Manual-only [Lean 4.36.0-rc2 source-audit workflow](../../.github/workflows/agent44-746-fanin.yml) compiles the unchanged original first-return definitions, original scanner/valuation proofs, and these modules without synthetic source stubs or \`sorry\`:
+
+| Checked result | Original-source successful CI |
+|---|---|
+| Logarithmic scanner and unchanged-source equality | [42554748122](https://github.com/FlareZ123/bb6/actions/runs/42554748122) |
+| Arbitrarily long checked even batches and sound macro checker | [42556422820](https://github.com/FlareZ123/bb6/actions/runs/42556422820) |
+| All-time address, stage depth and gate-entry lemmas | [42558752657](https://github.com/FlareZ123/bb6/actions/runs/42558752657) |
+| Exact even-level criterion, adjacent fatal necessary deficit, stage normal form | [42561377599](https://github.com/FlareZ123/bb6/actions/runs/42561377599) |
+| Executable \`levelMacro\` soundness and advancement | [42562041732](https://github.com/FlareZ123/bb6/actions/runs/42562041732) |
+| Arbitrary-length composed macro soundness | [42562419865](https://github.com/FlareZ123/bb6/actions/runs/42562419865) |
+| Strict integer forward rank and quadratic bound | [42562691497](https://github.com/FlareZ123/bb6/actions/runs/42562691497) |
+| All-index high-level two-even fatal-history exclusion | [42563450899](https://github.com/FlareZ123/bb6/actions/runs/42563450899) |
+
+All newly checked proof conclusions audit with ordinary Lean axioms \`propext\`, \`Quot.sound\`, and where imported source/executable recursion requires it, \`Classical.choice\`. No \`sorryAx\` is used. The transient failed run 42560897705 identified a missing local import of \`fatalAt\`; the module was corrected and subsequently passed unchanged-source CI.
+
+The preserved standalone regression scripts [verify_fast_sweep.py](verify_fast_sweep.py) and [verify_even_batches.py](verify_even_batches.py) compare finite arithmetic outcomes against the earlier scanner and original C-map, including an authenticated 10,000-reset root prefix. These tests are sanity checks; the unbounded claims above are proved symbolically.
+
+## Remaining mathematical objective
+
+A halt of the authentic six-state machine is still equivalent to a blank-root C-reset hitting one of infinitely many eligible \`F_j\`. The all-level macro, rank, and two-even obstruction now reduce the undecided domain to **level-entry transitions with surviving odd-entry or odd-jump histories** and exceptional low-level cases. A useful next proof would classify the genuine root's odd exits strongly enough to exclude the surviving level-entry deficits, or produce a fully source-connected genuine halt witness. Longer cutoffs of the same unchanged orbit do not establish this.
+
+The results belong in \`im-results/\` until their external originality and publishability have been assessed. Neither this dossier nor any other current project result determines BB(6).
