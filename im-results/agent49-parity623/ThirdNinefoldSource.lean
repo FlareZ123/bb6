@@ -99,22 +99,22 @@ theorem ternaryBlock_injective : ∀ x y : List Digit,
         | omega
 
 /-- Exact all-word successful drain, with an explicit full output. -/
-theorem ternaryBlock_drain (w : List Digit) (d : Nat) :
-    drainB 0 (ternaryBlock w) d =
-      some (.D 0 (d+3*ternaryBlock w+ternaryCharge w)) := by
+theorem ternaryBlock_drain (a : Nat) (w : List Digit) (d : Nat) :
+    drainB a (ternaryBlock w) d =
+      some (.D a (d+3*ternaryBlock w+ternaryCharge w)) := by
   induction w generalizing d with
   | nil =>
     simp only [ternaryBlock, ternaryCharge]
     have h : drainB 0 6 d = drainB 0 0 (d+22) := by
       simpa only [Nat.zero_mul, Nat.zero_add] using
-        (drainB_nine_pump 0 0 d)
+        (drainB_nine_pump a 0 d)
     rw [h]
     simp [drainB]
   | cons bit w ih =>
     cases bit with
     | zero =>
       simp only [ternaryBlock,ternaryCharge]
-      rw [drainB_nine_zero 0 (ternaryBlock w) d (ternaryBlock_positive w), ih]
+      rw [drainB_nine_zero a (ternaryBlock w) d (ternaryBlock_positive w), ih]
       simp only [Option.some.injEq, HighLevelState.D.injEq, true_and]
       omega
     | six =>
@@ -148,7 +148,7 @@ theorem ternaryBlock_diagonal_escape (w : List Digit) :
   have hp : drainB 0 b 2 =
       some (.D 0 (2+3*b+ternaryCharge w)) := by
     dsimp [b]
-    exact ternaryBlock_drain w 2
+    exact ternaryBlock_drain 0 w 2
   rw [hp]
   have hs : (2+3*b+ternaryCharge w)%2=0 := by
     have hc := ternaryCharge_even w
