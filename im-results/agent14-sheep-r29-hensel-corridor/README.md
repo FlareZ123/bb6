@@ -196,7 +196,7 @@ a even  =>  a ≡ 2 (mod3);
 equivalently a ≠ 6*s and a ≠ 6*s+4.
 ```
 
-For a special source with cofactor `v=3`, the genuine `h=0` output is `x=3*2^a+a+3`. The interior target `x≡0 (mod3)` forces `a≡0 (mod3)`. The **first** ordinary inverse source at every positive P depth also has `x≡4 (mod8)`, by source-exact `Parent2). This forces `a≡1 (mod8)` for the special case: if a were below 3, the special output could not be 4 modulo 8; for a≥3, `3*2^a≡0 (mod8)`. Therefore at **all positive interior P depths** the special input valuation is confined to the single infinite class
+For a special source with cofactor `v=3`, the genuine `h=0` output is `x=3*2^a+a+3`. The interior target `x≡0 (mod3)` forces `a≡0 (mod3)`. The **first** ordinary inverse source at every positive P depth also has `x≡4 (mod8)`, by source-exact `Parent2`. This forces `a≡1 (mod8)` for the special case: if a were below 3, the special output could not be 4 modulo 8; for a≥3, `3*2^a≡0 (mod8)`. Therefore at **all positive interior P depths** the special input valuation is confined to the single infinite class
 
 ```text
 special cofactor-three h=0:   a ≡ 9 (mod24).
@@ -208,7 +208,31 @@ That necessary condition excludes **23 out of every 24** possible valuation resi
 special cofactor-three h=0 into Z:   a ≡ 189 (mod192).
 ```
 
-Here `a<6` gives no divisible-by-64 special output, while `a≥6` forces `a≡61 (mod64)`, combined with `a≡0 (mod3)`. All four claims are fully kernel proved by [`SheepInteriorGate.lean`](./SheepInteriorGate.lean), including the directly chain-connected `interior_positive_special_val24` and `z_terminal_special_val192`, with standard axiom audit `[propext, Quot.sound]`. The latter takes the exact Z source-shape and `9|Z+12` as assumptions, fulfilled by the earlier corridor theorem. Exceptional source classes that survive these necessary congruences are not proved realizable or blank-reachable.
+Here `a<6` gives no divisible-by-64 special output, while `a≥6` forces `a≡61 (mod64)`, combined with `a≡0 (mod3)`. All four claims are fully kernel proved by [`SheepInteriorGate.lean`](./SheepInteriorGate.lean), including the directly chain-connected `interior_positive_special_val24` and `z_terminal_special_val192`, with standard axiom audit `[propext, Quot.sound]`. The latter takes the exact Z source-shape and `9|Z+12` as assumptions, fulfilled by the earlier corridor theorem. These necessary classes can be sharpened further with the **same exact mod-5 and mod-17 corridor recurrences** already used for generic sources. A `P` edge gives `x+12≡2(y+12) (mod5)` and `x+12≡−(y+12) (mod17)`. Thus at reverse depth n from a terminal `Y` with `(Y+12)%5=C` and `(Y+12)%17=B`, we have
+
+```text
+(x+12)%5  = C*2^n (mod5),
+(x+12)%17 = (-1)^n*B (mod17).
+```
+
+For the special source `x=3*2^a+a+3`, `x+12=3*2^a+a+15`. At **positive interior depths** `1≤n<L_r(k)`, the Lean-proved `a≡9 (mod24)` means `2^a≡2` both modulo 5 and 17. The two displayed recurrences reduce to the simple exact necessary conditions
+
+```text
+a ≡ C*2^n−6 (mod5),     a ≡ (-1)^n*B−4 (mod17).
+```
+
+Combining these with `a≡9 (mod24)` determines **exactly one** valuation residue modulo `lcm(24,5,17)=2040` for each n modulo four:
+
+| P depth n mod 4 | Z parent (C=3, B=2) | X parent (C=1, B=4) |
+| ---: | ---: | ---: |
+| 0 (positive n only) | a≡1137 (mod2040) | a≡1785 (mod2040) |
+| 1 | a≡1065 (mod2040) | a≡1641 (mod2040) |
+| 2 | a≡321 (mod2040) | a≡153 (mod2040) |
+| 3 | a≡1473 (mod2040) | a≡417 (mod2040) |
+
+Thus the necessary exceptional-source valuation classes at every positive interior depth have arithmetic density **exactly 1/2040**, excluding **2039 of 2040** valuation residues (99.95098039%). At the distinct Z terminal n=0, use the stronger Lean-proved `a≡189 (mod192)`; the same modulus-5 and modulus-17 equations select `a≡7677 (mod16320)`, excluding **16319 of 16320** valuation residues (99.99387255%).
+
+These final CRT congruences are a paper derivation plus a complete small-modulus certificate, [`special_residue_sieve.py`](./special_residue_sieve.py). The underlying 24/192 valuation necessary conditions are kernel-proved in Lean; the complete 2040/16320 residues have **not yet been imported into the Lean kernel**. Every conclusion is about the set of *candidate exceptional valuation integers* and proves no actual new incoming source exists. Exceptional source classes that survive these necessary congruences are not proved realizable or blank-reachable.
 
 Combining the **generic** even-a obstruction with the parity-sensitive 5/13/17-modulus walls above yields an **exact all-interior valuation sieve**: for either reverse-depth parity, the forbidden generic valuation arithmetic density is
 
