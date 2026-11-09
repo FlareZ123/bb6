@@ -107,6 +107,8 @@ jobs:
           cp "../im-results/agent8-623-inverse/MachineFullGateSource.lean" Agent8MachineFullGateSource.lean
           lake env lean Agent8MachineFullGateSource.lean
           cp "../im-results/agent8-623-survival-density/RootSpectrumSource.lean" Agent8RootSpectrumSource.lean
-          lake env lean Agent8RootSpectrumSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootSpectrumSource.olean Agent8RootSpectrumSource.lean
+          cp "../im-results/agent8-623-survival-density/RootTerminalSource.lean" Agent8TerminalSpectrumSource.lean
+          lake env lean Agent8TerminalSpectrumSource.lean
       - name: Reproduce 10,000-state canonical ray terminal-window audit
         run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
