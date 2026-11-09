@@ -27,10 +27,11 @@ def weight(digits: tuple[int, ...]) -> int:
     return sum((digit + 1) << i for i, digit in enumerate(digits))
 
 
-def census() -> tuple[list[tuple[int, int]], Counter[tuple[bool, bool, bool]]]:
+def census() -> tuple[list[tuple[int, int]], Counter[tuple[bool, bool, bool]], int]:
     prefix = CYCLE_NINE
     mask_counts: Counter[tuple[bool, bool, bool]] = Counter()
     candidate_phases: list[tuple[int, int]] = []
+    first_gate_min_mass_gap = 10**30
 
     for phase in range(PERIOD):
         stage_prefixes = (
@@ -43,6 +44,14 @@ def census() -> tuple[list[tuple[int, int]], Counter[tuple[bool, bool, bool]]]:
         assert min(stage_inputs) > MODULUS
         mask = tuple(n % MODULUS == 0 for n in stage_inputs)
         mask_counts[mask] += 1
+        if mask[0]:
+            total_mass = 2247 + 1024 * (5457 + phase)
+            suffix_mass = total_mass - sum(digit + 1 for digit in prefix)
+            dyadic_offset = stage_inputs[0] // MODULUS
+            assert suffix_mass >= max(10, dyadic_offset)
+            first_gate_min_mass_gap = min(
+                first_gate_min_mass_gap, suffix_mass - dyadic_offset
+            )
         if any(mask):
             candidate_phases.append((phase, next(i for i, bad in enumerate(mask) if bad)))
         prefix = pp(prefix)
@@ -55,11 +64,12 @@ def census() -> tuple[list[tuple[int, int]], Counter[tuple[bool, bool, bool]]]:
         (False, True, False): 196,
         (False, False, True): 389,
     })
-    return candidate_phases, mask_counts
+    assert first_gate_min_mass_gap == 5770295
+    return candidate_phases, mask_counts, first_gate_min_mass_gap
 
 
 def main() -> None:
-    phases, masks = census()
+    phases, masks, mass_gap = census()
     print("Original S4 root-synchronized prefix: return 5457 + n")
     print("Period:", PERIOD, "prefix digits:", len(CYCLE_NINE))
     print("Unrestricted-suffix safe phases:", masks[(False, False, False)])
@@ -68,6 +78,8 @@ def main() -> None:
     print("Earliest candidate phase:", phases[0])
     print("Last candidate phase:", phases[-1])
     print("Distinct-stage disjointness: verified")
+    print("Minimum first-gate root-mass minus dyadic-offset:", mass_gap)
+    print("Every first-stage candidate has a same-mass synthetic power-gate suffix")
 
 
 if __name__ == "__main__":
