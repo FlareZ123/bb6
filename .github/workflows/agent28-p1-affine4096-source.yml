@@ -70,6 +70,17 @@ jobs:
           lean -o im-results/agent13-p1-adaptive-param/AffineParamRoot.olean im-results/agent13-p1-adaptive-param/AffineParamRoot.lean
           lean -o im-results/agent28-p1-affine4096/QNodesA.olean im-results/agent28-p1-affine4096/QNodesA.lean | tee /tmp/agent28-78.log
           lean -o im-results/agent28-p1-affine4096/QNodesB.olean im-results/agent28-p1-affine4096/QNodesB.lean | tee -a /tmp/agent28-78.log
-          lean im-results/agent28-p1-affine4096/QFinal.lean | tee -a /tmp/agent28-78.log
+          lean -o im-results/agent28-p1-affine4096/QFinal.olean im-results/agent28-p1-affine4096/QFinal.lean | tee -a /tmp/agent28-78.log
           grep -F 'newQ_unreachable' /tmp/agent28-78.log
           if grep -E -q 'sorryAx|error:' /tmp/agent28-78.log; then exit 1; fi
+      - name: Prove exact non-overlap with prior 701-class source census
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q1024-cost11:im-results/agent13-p1-q74-cylinder:im-results/agent13-p1-adaptive-param:im-results/agent28-p1-affine4096"
+          lean -o im-results/agent9-p1-q1024-cost11/DensityCount695.olean im-results/agent9-p1-q1024-cost11/DensityCount695.lean
+          lean -o im-results/agent9-p1-k10-budget12/DensityCount700.olean im-results/agent9-p1-k10-budget12/DensityCount700.lean
+          lean -o im-results/agent13-p1-adaptive-param/DensityCount701.olean im-results/agent13-p1-adaptive-param/DensityCount701.lean
+          lean im-results/agent28-p1-affine4096/QDensity.lean | tee /tmp/agent28-density.log
+          grep -F 'new_q_outside_701' /tmp/agent28-density.log
+          grep -F 'new_q_distinct_mod1024' /tmp/agent28-density.log
+          if grep -E -q 'sorryAx|error:' /tmp/agent28-density.log; then exit 1; fi
