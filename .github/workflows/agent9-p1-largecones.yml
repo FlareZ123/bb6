@@ -36,5 +36,5 @@ jobs:
             echo "Rejected: errors or sorry axioms" >&2
             exit 1
           fi
-          test "$(grep -c 'no_critical_gateway depends on axioms:' /tmp/high-cost-audit.log)" -eq 2
-          grep -F 'no_critical_gateway depends on axioms:' /tmp/high-cost-audit.log
+          test "$(grep -Ec 'BB6\.Agent9Q(45|113)\.no_critical_gateway.*depends on axioms: \[propext, Classical.choice, Quot.sound\]' /tmp/high-cost-audit.log)" -eq 2
+          grep -E 'BB6\.Agent9Q(45|113)\.no_critical_gateway.*depends on axioms:' /tmp/high-cost-audit.log
