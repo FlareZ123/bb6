@@ -127,7 +127,9 @@ m ≤ floor(log₂(2k+4)),   k≥8.
 
 This is logarithmic in k rather than the generic linear bound `m≤k+3`. It follows from exact deficit doubling, the short c interval, and the fact that `2^m` must divide c. Every statement is quantified over arbitrary source starting heights and all finite same-level histories; genuine blank-root reachability is neither assumed nor proved.
 
-**Unresolved boundary:** even-entry stages have been sharply constrained, but odd exits may skip multiple levels, and the authentic blank-reset orbit might still hit a valid fatal height through a surviving odd-entry history. No general nonhalting theorem follows.
+The [**exact high-band odd-image criterion**](../agent7-746-fatal-depth-27/README.md) sharpens the preceding odd-entry analysis for all source heights, independently of blank-root reachability. At level k≥2, for any entry e≥6·2^k, existence of an odd source first-reset predecessor is **equivalent to** `27∣(2e+5)` when `4e+10<27·2^k`, and equivalent to `9∣(2e+5)` in the complementary upper band. Both converses construct exact odd source parents with valuations t=2 and t=1. In the narrow interval, an odd entry followed by m same-level resets and an adjacent even fatal exit additionally forces the **unique** m%18 class determined by k%54, strengthening the previous mod-9 depth sieve. The full original-source Lean [CI 42593843110](https://github.com/FlareZ123/bb6/actions/runs/42593843110) passes with standard axioms only. The classification is for genuine source edges from arbitrary heights; synthetic ancestors are not certified blank-reachable.
+
+**Unresolved boundary:** even-entry stages have been sharply constrained and the high-band odd image is now exactly characterized, but odd exits may skip multiple levels, and the authentic blank-reset orbit might still hit a valid fatal height through a surviving odd-entry history. No general nonhalting theorem follows.
 
 ## 6. Original-source verification and reproducibility
 
@@ -145,6 +147,7 @@ Manual-only [Lean 4.36.0-rc2 source-audit workflow](../../.github/workflows/agen
 | Initial high-level two-even fatal-history exclusion | [42563450899](https://github.com/FlareZ123/bb6/actions/runs/42563450899) |
 | All-index ban on consecutive successful even level exits | [42564354336](https://github.com/FlareZ123/bb6/actions/runs/42564354336) |
 | Odd terminal residual and logarithmic same-level bound after even entry | [42564766777](https://github.com/FlareZ123/bb6/actions/runs/42564766777) |
+| Exact high-band odd image iff and narrow-entry mod-27 fatal-depth sieve | [42593843110](https://github.com/FlareZ123/bb6/actions/runs/42593843110) |
 
 All newly checked proof conclusions audit with ordinary Lean axioms `propext`, `Quot.sound`, and where imported source/executable recursion requires it, `Classical.choice`. No `sorryAx` is used. The transient failed run 42560897705 identified a missing local import of `fatalAt`; the module was corrected and subsequently passed unchanged-source CI.
 
