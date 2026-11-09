@@ -67,4 +67,46 @@ theorem middle_low_odd_image_iff (h k : Nat)
 
 #print axioms middle_low_odd_has_parent
 #print axioms middle_low_odd_image_iff
+
+/-- Complete (even or odd) original first-reset image in the lower-middle
+    dyadic strip: there is a source reset parent exactly at the ONE residue
+    class h ≡ 2 (mod 9). The even source image has a dyadic gap here. -/
+theorem middle_low_full_image_iff (h k : Nat)
+    (hk : 3≤k)
+    (hlow : 4*2^k≤h)
+    (htop : 2*h+5<9*2^k) :
+    (∃a, bitOutcome a=some h) ↔ h%9=2 := by
+  have hmin : 4*2^k-3<h := by omega
+  have hmax : h<6*2^k-1 := by omega
+  have hgap : ∀ j, ¬(6*2^j-1≤h ∧ h≤8*2^j-3) := by
+    intro j
+    have hshift : (k+1)-1=k := by omega
+    exact TerminalExit.no_even_band (k+1) j h
+      (by omega) (by simpa [hshift] using hmin)
+      (by simpa [hshift] using hmax)
+  constructor
+  · rintro ⟨a,ho⟩
+    have hr := bitOutcome_sound a
+    rw [ho] at hr
+    have hp := reset_parent_necessary a h hr
+    rcases hp with ⟨j,hband,heq⟩ | ⟨j,t,d,hd,hband,hout,hq⟩
+    · exact False.elim (hgap j hband)
+    · have hlowIndex : 4*2^j≤a+j+4 := by omega
+      have hhigh : a+j+5<8*2^j := by omega
+      have hindex : firstFailIndex a=j :=
+        firstFailIndex_unique a j hhigh
+          (guards_from_low a j hlowIndex)
+      have hpar : (a+firstFailIndex a)%2=1 := by
+        rw [hindex]
+        omega
+      have hdiv := middle_low_odd_output_mod_nine a h k
+        hpar ho hlow htop
+      omega
+  · intro hres
+    have hdiv : (2*h+5)%9=0 := by omega
+    obtain ⟨a,_,hout⟩ :=
+      middle_low_odd_has_parent h k (by omega) hlow htop hdiv
+    exact ⟨a,hout⟩
+
+#print axioms middle_low_full_image_iff
 end CascadeFastReturn
