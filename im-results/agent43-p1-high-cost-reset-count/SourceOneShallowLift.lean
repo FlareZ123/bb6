@@ -240,8 +240,9 @@ namespace BB6.Agent43SourceWord
 open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent43TwoRun
 open BB6.Agent43TwoShallowModel
 
-/-- Above n=47, no original legal source inverse word with two shallow edges
-of depths 0 or 1, and otherwise only depth-two edges, reaches the exact wall.
+/-- At every critical index n>=14, no original legal source inverse word
+with exactly two shallow edges of depths 0 or 1, and otherwise only depth-two
+edges, reaches the exact shifted wall.
 Run lengths are unrestricted and may independently be zero. -/
 theorem source_no_two_shallow_word_wall_all
     (n s u r t1 t2 bp dp mp k1 c1 B D M k2 c2 be de me : Nat)
