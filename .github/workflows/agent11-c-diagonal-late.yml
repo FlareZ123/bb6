@@ -301,10 +301,12 @@ jobs:
           # Close a second independent infinite m=0 ray by four
           # original-section inverse edges; merge it with the late-depth
           # exact genuine-blank halting iff, checking both source theorems.
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0OddRay,CThreeDiagonalM0Full}.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0OddRay,M0OddRayDeep,CThreeDiagonalM0Full,CThreeDiagonalM0DeepFull}.lean .
           lean -o M0OddRay.olean M0OddRay.lean 2>&1 | tee M0OddRay.log
-          lean CThreeDiagonalM0Full.lean 2>&1 | tee CThreeDiagonalM0Full.log
-          if grep -E -q sorryAx M0OddRay.log CThreeDiagonalM0Full.log; then
-            echo "REJECTED: incomplete m=0 integration"
+          lean -o M0OddRayDeep.olean M0OddRayDeep.lean 2>&1 | tee M0OddRayDeep.log
+          lean -o CThreeDiagonalM0Full.olean CThreeDiagonalM0Full.lean 2>&1 | tee CThreeDiagonalM0Full.log
+          lean CThreeDiagonalM0DeepFull.lean 2>&1 | tee CThreeDiagonalM0DeepFull.log
+          if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log; then
+            echo "REJECTED: incomplete source integration"
             exit 1
           fi
