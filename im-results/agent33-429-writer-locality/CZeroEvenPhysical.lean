@@ -1,10 +1,11 @@
 import CZeroEvenReturn
+import CZeroToJunc0
 import BB429PhysicalBridge
 
 namespace BB429CZeroEvenPhysical
 
 open BB6Coverage BB429PhysicalFrontier BB429OddExcursion
-open BB429PhysicalBridge BB429CZeroEvenReturn
+open BB429PhysicalBridge BB429CZeroEvenReturn BB429CZeroToJunc0 BB429FinishScanEDelta
 
 /-- Full original #429 bi-infinite-tape transition: a completely marked,
     even-length left stack at a fresh C/0 frontier returns to the exact
@@ -27,6 +28,18 @@ theorem odd_frontier_original (k : Nat) (c : Config)
       (z 2 (ones (2*k+3)) false []) c hc
       (z 2 l false [true]) hl
   exact ⟨l,c',hraw,hrep⟩
+
+/-- This entire-tape C/0 section feeds exactly into the independently
+    source-certified canonical Junc(0,0,2k) chart. Parameter k is unrestricted;
+    physical input is a prepared tape, not a claim of blank-root reachability. -/
+theorem C0_junc0_original (k : Nat) (c : Config)
+    (hc : Represents
+      (z 2 (true::false::ones (2*k+4)) false []) c) :
+    ∃ c', BB6Coverage.run target429 (2*k+22) c = some c' ∧
+      Represents (junc 0 0 (2*k)) c' := by
+  exact source_run_rep _ _ _ hc _ (C0_to_junc0 k)
+
+#print axioms C0_junc0_original
 
 #print axioms even_frontier_original
 #print axioms odd_frontier_original
