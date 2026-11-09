@@ -1,5 +1,7 @@
 import RootTwoDivisor
 import TwoShallowNumeric
+import TwoShallowFiniteBridge
+import SmallIndexEnergyCutoff
 
 namespace BB6.Agent43TwoShallowModel
 open BB6.Agent43TwoRun BB6.Agent43TwoLayer
@@ -7,11 +9,13 @@ open BB6.Agent43TwoRun BB6.Agent43TwoLayer
 set_option maxRecDepth 4096
 set_option maxHeartbeats 2000000
 
-/-- General bridge from two exact model shallow cocycle identities to
-nonexistence of an exact shifted-wall endpoint for n>=48. -/
+/-- General two-shallow model bridge, using a cubic gap at large indices
+and kernel-checked finite congruences for 14 <= n < 48. -/
 theorem no_two_shallow_model_from_source_coefficients
-    (n s u r alpha beta C1 C2 L1 L2 O1 O2 : Nat)
-    (hn : 48≤n)
+    (n s u r alpha beta C1 C2 L1 L2 O1 O2 t1 t2 : Nat)
+    (hn : 14≤n) (ht1 : t1≤1) (ht2 : t2≤1)
+    (hprofile1 : (alpha,C1,L1,O1)=BB6.Agent43TwoShallowFinite.triple t1)
+    (hprofile2 : (beta,C2,L2,O2)=BB6.Agent43TwoShallowFinite.triple t2)
     (ha1 : 1≤alpha) (ha2 : alpha≤2)
     (hb1 : 1≤beta) (hb2 : beta≤2)
     (hc1min : 392≤C1) (hc2min : 392≤C2)
@@ -201,11 +205,20 @@ theorem no_two_shallow_model_from_source_coefficients
       simp only [Int.natCast_add, Int.natCast_mul]
       exact hRaw2
     exact Int.ofNat_inj.mp hcast
-  exact no_two_shallow_numeric_48 n s u r p d alpha beta C1 C2 L1 L2 O1 O2
-    K R1 R2 E hn hs hpNat hdNat ha1 ha2 hb1 hb2 hc1min hc2min
-    hl1min hl1max hl2min hl2max ho1 ho2
-    (by simpa [T1] using hR1eq) (by simpa [T2] using hR2eq)
-    (by simpa [T3] using hEeq)
-    (by simpa [q,a,z] using hKeq) (by simpa [a,b,z,v] using hEqNat)
+  by_cases h48 : 48≤n
+  · exact no_two_shallow_numeric_48 n s u r p d alpha beta C1 C2 L1 L2 O1 O2
+      K R1 R2 E h48 hs hpNat hdNat ha1 ha2 hb1 hb2 hc1min hc2min
+      hl1min hl1max hl2min hl2max ho1 ho2
+      (by simpa [T1] using hR1eq) (by simpa [T2] using hR2eq)
+      (by simpa [T3] using hEeq)
+      (by simpa [q,a,z] using hKeq) (by simpa [a,b,z,v] using hEqNat)
+  · have hsSmall : s≤3 :=
+      BB6.Agent43FiniteBridge.root_two_prefix_le_three n s Wa Ba hn (by omega) hpre
+    exact BB6.Agent43TwoShallowFinite.no_small_numeric
+      n s u r t1 t2 p d alpha beta C1 C2 L1 L2 O1 O2 K R1 R2 E
+      hn (by omega) hsSmall ht1 ht2 hprofile1 hprofile2 hpNat hdNat
+      (by simpa [T1] using hR1eq) (by simpa [T2] using hR2eq)
+      (by simpa [T3] using hEeq)
+      (by simpa [q,a,z] using hKeq) (by simpa [a,b,z,v] using hEqNat)
 
 end BB6.Agent43TwoShallowModel
