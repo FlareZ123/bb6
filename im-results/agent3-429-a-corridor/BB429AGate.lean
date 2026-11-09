@@ -1,4 +1,5 @@
 import BB429FatalB
+import FreshCell
 import Lean.Elab.Tactic.Omega
 
 namespace BB429AGate
@@ -443,6 +444,22 @@ theorem halting_time_iff_A_corridor (N : Nat) :
   · rintro ⟨n,k,a,hN,hr,hg⟩
     rw [hN]
     exact aGate_forces_halt_at n k a hr hg
+
+/-- Every original halting run has a concrete earlier physical scan of
+    the future marked terminal cell of its A/0 alternating corridor. -/
+theorem halting_requires_prior_distant_scan (N : Nat)
+    (hh : HaltsAfter target429 N) :
+    ∃ n k a j d, N=n+2*k+3 ∧
+      run target429 n blank=some a ∧ aGate k a ∧
+      j<n ∧ run target429 j blank=some d ∧
+      d.head=a.head+2*(k:Int)+3 := by
+  obtain ⟨n,k,a,hN,hr,hgate⟩ := (halting_time_iff_A_corridor N).mp hh
+  obtain ⟨j,d,hj,hd,he⟩ :=
+    marked_cell_previously_scanned target429 n a
+      (a.head+2*(k:Int)+3) hr hgate.2.2.2.2
+  exact ⟨n,k,a,j,d,hN,hr,hgate,hj,hd,he⟩
+
+#print axioms halting_requires_prior_distant_scan
 
 #print axioms aGate_forces_halt_at
 #print axioms halting_time_iff_A_corridor
