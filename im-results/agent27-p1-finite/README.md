@@ -19,7 +19,9 @@ The C++ reference scanner [stream_inverse.cpp](stream_inverse.cpp) uses `boost::
 
 ## Why a visited set is unnecessary
 
-The original deterministic P1 counter transition has the following exact two-step law whenever `k>=2,c>=3`:
+**Stronger original-source Lean theorem:** [P1InverseNoMerge.lean](P1InverseNoMerge.lean) proves `unique_inverse_edge`: for *all* natural depths and valid `inverseAt` children, if the child counter pairs agree then **both parent counters and the inverse depth agree**, including the exceptional `c=1` right-five event. The proof uses the unchanged exact `inverseAt_sound`, `GAncestor_sound`, and `inverseAt_power` theorems. It passed [manual original-source CI 42542220876](https://github.com/FlareZ123/bb6/actions/runs/42542220876), ordinary axioms only. This gives a direct no-merging argument for every branch of the source-shaped inverse tree.
+
+The original deterministic P1 counter transition additionally has the following exact two-step law whenever `k>=2,c>=3`:
 ```text
 T (2*k-4,c+4) = some (2*k-1,c+2)
 T (2*k-1,c+2) = some (G k c).
