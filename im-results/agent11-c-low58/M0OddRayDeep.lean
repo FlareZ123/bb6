@@ -26,6 +26,8 @@ theorem blank_no_deep_ray (q : Nat) :
   have h2 : BB6.Agent3.CReach (3770+6656*q) (2754+4864*q) := by
     have hx : ((5803+10240*q)+(1741+3072*q)-4)/2=3770+6656*q := by omega
     have hy : ((5803+10240*q)+3*(1741+3072*q)-10)/4=2754+4864*q := by omega
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (3770+6656*q,2754+4864*q))
     simpa only [hx,hy] using hp2
 
   have hp3 := (six_even_right_blank_reach_iff
@@ -50,6 +52,8 @@ theorem blank_no_deep_ray (q : Nat) :
   have h5 : BB6.Agent3.CReach (4289+7584*q) (2487+4400*q) := by
     have hx : ((7896+13952*q)+(687+1216*q)-5)/2=4289+7584*q := by omega
     have hy : ((7896+13952*q)+3*(687+1216*q)-9)/4=2487+4400*q := by omega
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (4289+7584*q,2487+4400*q))
     simpa only [hx,hy] using hp5
 
   have hp6 := (BB6.Agent3.oddodd_val3_blank_reach_iff
@@ -58,12 +62,15 @@ theorem blank_no_deep_ray (q : Nat) :
   have h6 : BB6.Agent3.CReach (3386+5992*q) (2935+5196*q) := by
     have hx : ((4289+7584*q)+(2487+4400*q)-4)/2=3386+5992*q := by omega
     have hy : ((4289+7584*q)+3*(2487+4400*q)-10)/4=2935+5196*q := by omega
+    change (∃ n, BB6.Agent8Section.run secNext n (some (5,1)) =
+      some (3386+5992*q,2935+5196*q))
     simpa only [hx,hy] using hp6
 
   rcases h6 with ⟨time,ht⟩
   cases time with
   | zero =>
       simp [BB6.Agent8Section.run] at ht
+      omega
   | succ n =>
       have hh := BB6.Agent3.blank_section_odd_image n
         (3386+5992*q) (2935+5196*q) ht (by omega) (by omega)
