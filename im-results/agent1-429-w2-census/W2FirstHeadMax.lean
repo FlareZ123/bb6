@@ -74,6 +74,8 @@ theorem junc0_w2_first_gate_prefix_bound
         (junc 0 v 2) p hm
         (z 2 (([true,false] ++ ones 5) ++ (pairs01 (v+2) ++ ones 5))
           false [], ((2*v+7 : Nat) : Int), ((2*v+7 : Nat) : Int)) hfull
+      have hmax' : p.2.1 ≤ ((2*v+7 : Nat) : Int) := by
+        simpa only [Prod.snd] using hmax
       omega
 
 /-- The head barrier holds in the original physical #429 Turing machine
