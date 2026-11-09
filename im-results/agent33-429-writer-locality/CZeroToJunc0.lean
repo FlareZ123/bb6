@@ -23,7 +23,8 @@ theorem E1_ones_sweep (n : Nat) (suffix : List Bool) :
           some (z 4 (ones n) true (true::suffix)) := by rfl
       have hwords : ones n ++ (true::suffix) = ones (n+1) ++ suffix := by
         simp [ones, List.replicate_succ', List.append_assoc]
-      rw [show n+1 = 1+n by omega, run_add, hfirst]
+      rw [show n+1 = 1+n by omega, run_add,
+        show 1+n = n+1 by omega, hfirst]
       simp only [Option.bind_some]
       rw [ih (true::suffix), hwords]
 
@@ -44,13 +45,15 @@ theorem C0_to_junc0 (k : Nat) :
   have htail := E1_to_junc12 (ones (2*k) ++ [true,false,true])
   have hwords : ones (2*k+4) ++ [true,false,true] =
       ones 4 ++ (ones (2*k) ++ [true,false,true]) := by
-    rw [show 2*k+4 = 4+2*k by omega, ones_add, List.append_assoc]
+    rw [show 2*k+4 = 4+2*k by omega,
+      BB429SourceE1Return.ones_add, List.append_assoc]
   have ht : 2*k+22 = 6+((2*k+4)+12) := by omega
   rw [ht, run_add, hfirst]
   simp only [Option.bind_some]
   rw [run_add, hsweep]
   simp only [Option.bind_some]
   rw [hwords, htail]
+  simp only [Option.some.injEq]
   change z 0 (ones 6) true (ones (2*k) ++ [true,false,true]) =
     z 0 (true :: (pairs01 0 ++ ones 5)) true
       (true :: (pairs01 0 ++ ones (2*k) ++ [false,true]))
@@ -73,7 +76,11 @@ theorem even_C0_to_junc0 (k : Nat) :
     run (6*k+33) (z 2 (ones (2*k+2)) false []) =
       some (junc 0 0 (2*k)) := by
   have h : 6*k+33 = (4*k+11)+(2*k+22) := by omega
-  rw [h,run_add,BB429CZeroEvenReturn.C0_even_to_C0]
+  have hfirst : run (4*k+11) (z 2 (ones (2*k+2)) false []) =
+      some (z 2 (true::false::ones (2*k+4)) false []) := by
+    simpa [BB429CZeroEvenReturn.ones, BB429SourceE1Return.ones]
+      using BB429CZeroEvenReturn.C0_even_to_C0 k
+  rw [h,run_add,hfirst]
   simp only [Option.bind_some]
   exact C0_to_junc0 k
 
