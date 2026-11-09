@@ -103,6 +103,39 @@ theorem safeZPlus_source (m : Nat) (c : Packet) (ha : c.a ≥ 4)
       rw [run_add,e_zero_drop_Z]
       simpa only [next] using hregular
 
+/-- All A-index packet terminals with at least four unary symbols are
+    source-regularizing at EVERY zero-marker depth and EVERY p residue. -/
+theorem all_A_Z_regular (a q p m : Nat) (ha : a ≥ 4)
+    (hA : a % 3 = 0) :
+    ∃ T A Q B,
+      ObsEq (run T (packet a q p (marker m)))
+        (regularSection A Q B) := by
+  apply terminalSafePlus_source m ⟨a,q,p⟩ ha
+  have hp : p % 3 = 0 ∨ p % 3 = 1 ∨ p % 3 = 2 := by omega
+  rcases hp with hp0 | hp1 | hp2
+  · exact Or.inl (Or.inr (Or.inl ⟨hA,hp0⟩))
+  · exact Or.inl (Or.inl hp1)
+  · exact Or.inr ⟨hA,hp2⟩
+
+/-- Every E/p0 zero marker with k=3t+2 closes for ALL q and all
+    positive marker depths. The E drop gives an A-index packet and
+    all three A p-residues are source certified. -/
+theorem e_zero_k2_all_Z_regular (t q m : Nat) :
+    ∃ T A Q B,
+      ObsEq
+        (run T (packet (9*t+10) q 0 (marker (m+1))))
+        (regularSection A Q B) := by
+  let k : Nat := 3*t+2
+  let a : Nat := 8*k+5
+  have ha : a ≥ 4 := by dsimp [a,k]; omega
+  have ha0 : a % 3 = 0 := by dsimp [a,k]; omega
+  obtain ⟨Te,A,Q,B,hReg⟩ :=
+    all_A_Z_regular a 0 (2*q+7) m ha ha0
+  refine ⟨(12*k*k+49*k+50+4*q)+Te,A,Q,B,?_⟩
+  have hk : 9*t+10 = 3*k+4 := by dsimp [k]; omega
+  rw [hk,run_add,e_zero_drop_Z]
+  simpa only [a,k] using hReg
+
 /-- The new predicate accepts every packet accepted by the original. -/
 theorem old_safe_included (m : Nat) (c : Packet)
     (h : safeZ m c) : safeZPlus m c := by
@@ -141,6 +174,8 @@ theorem residual_52_accepted : safeZPlus 3 ⟨52,1,0⟩ := by
 
 #print axioms terminalSafePlus_source
 #print axioms safeZPlus_source
+#print axioms all_A_Z_regular
+#print axioms e_zero_k2_all_Z_regular
 #print axioms old_safe_included
 #print axioms residual_52_accepted
 end BB6.Agent26ZSafePlus
