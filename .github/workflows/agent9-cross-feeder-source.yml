@@ -75,13 +75,21 @@ jobs:
           lean -o im-results/agent9-p1-periodic/CrossFeederAll.olean im-results/agent9-p1-periodic/CrossFeederAll.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean im-results/agent9-p1-periodic/OddParameterSource.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean -o im-results/agent9-p1-periodic/OddRescale.olean im-results/agent9-p1-periodic/OddRescale.lean | tee -a /tmp/agent9-periodic-source-audit.log
-          lean im-results/agent9-p1-periodic/ScaledParameterSource.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean -o im-results/agent9-p1-periodic/ScaledParameterSource.olean im-results/agent9-p1-periodic/ScaledParameterSource.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean -o im-results/agent9-p1-periodic/Factor2.olean im-results/agent9-p1-periodic/Factor2.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean -o im-results/agent9-p1-periodic/DistinctParameterSource.olean im-results/agent9-p1-periodic/DistinctParameterSource.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean -o im-results/agent9-p1-periodic/ZeroOffset.olean im-results/agent9-p1-periodic/ZeroOffset.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean im-results/agent9-p1-periodic/RootCodeUnique.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean -o im-results/agent13-p1-adaptive-param/PrefixCylinder.olean im-results/agent13-p1-adaptive-param/PrefixCylinder.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean im-results/agent9-p1-periodic/FeederCoding.lean | tee -a /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_positive_depth' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_zero_depth' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_shadow_path' /tmp/agent9-periodic-source-audit.log
           grep -F 'infinite_feeder_code_unique' /tmp/agent9-periodic-source-audit.log
+          grep -F 'infinite_shadow_root_code_injective' /tmp/agent9-periodic-source-audit.log
+          grep -F 'distinct_L_no_common_depth_stream' /tmp/agent9-periodic-source-audit.log
+          grep -F 'zero_offset_difference_vanishes' /tmp/agent9-periodic-source-audit.log
+          grep -F 'integer_odd_factor' /tmp/agent9-periodic-source-audit.log
           grep -F 'scaled_odd_parameter_no_shared_depth_stream' /tmp/agent9-periodic-source-audit.log
           grep -F 'rescaled_odd_difference_has_period' /tmp/agent9-periodic-source-audit.log
           grep -F 'odd_parameter_no_shared_depth_stream' /tmp/agent9-periodic-source-audit.log
