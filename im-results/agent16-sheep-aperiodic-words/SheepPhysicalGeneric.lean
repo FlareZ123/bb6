@@ -5,7 +5,8 @@ open SheepAffine SheepAperiodic
 
 /-- Explicit generic first-even branch from the actual Sheep section formula. -/
 def GenericEdge (a h x y : Nat) : Prop :=
-  ∃ u v : Nat, 5 ≤ u ∧ 1 ≤ v ∧ x = 2^a*u ∧ y = 1+3^h*v ∧
+  1 ≤ a ∧ ∃ u v : Nat, 5 ≤ u ∧ u%2=1 ∧ 1 ≤ v ∧ v%2=1 ∧
+    x = 2^a*u ∧ y = 1+3^h*v ∧
     (2^(a+1)+1)*u+2*a=2^(h+1)*v+3
 
 private theorem strict_from_equation (a h u v : Nat)
@@ -20,13 +21,13 @@ private theorem strict_from_equation (a h u v : Nat)
 
 theorem generic_edge_holds (a h x y : Nat) (he : GenericEdge a h x y) :
     Holds (branchParams (a,h)) x y := by
-  obtain ⟨u,v,hu,hv,hx,hy,heq⟩ := he
+  obtain ⟨ha,u,v,hu,huodd,hv,hvodd,hx,hy,heq⟩ := he
   subst x
   subst y
   exact original_generic_algebra a h u v heq
 
 theorem generic_edge_strict (a h x y : Nat) (he : GenericEdge a h x y) : x < y := by
-  obtain ⟨u,v,hu,hv,hx,hy,heq⟩ := he
+  obtain ⟨ha,u,v,hu,huodd,hv,hvodd,hx,hy,heq⟩ := he
   subst x
   subst y
   exact strict_from_equation a h u v hu heq
