@@ -26,7 +26,8 @@ jobs:
           python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119Corridor.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='65efa8844d8836f2579e4d7d5a71f308a2fc2f5343a0c0309f1f0c971ca2ab1d'; p.with_name('Root119Corridor.lean').write_bytes(b)"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
           lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
-          lean "$B/Root119Corridor.lean" 2>&1 | tee "$B/source-check.log"
+          lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$B/Root119Corridor.olean" "$B/Root119Corridor.lean" 2>&1 | tee "$B/source-check.log"
           if grep -q 'sorryAx' "$B/source-check.log"; then
             echo "::error::Untrusted sorry axiom in proof"
             exit 1
@@ -34,3 +35,12 @@ jobs:
           grep -q 'left_gateway_return.*depends on axioms' "$B/source-check.log"
           grep -q 'left_gateway_B_return.*depends on axioms' "$B/source-check.log"
           grep -q 'right_gateway_return.*depends on axioms' "$B/source-check.log"
+          python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119CorridorShield.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='0888e541438f09ef9da1ea7228d51a2446c488a3b3c42a40a955354acec023ef'; p.with_name('Root119CorridorShield.lean').write_bytes(b)"
+          lean "$B/Root119CorridorShield.lean" 2>&1 | tee "$B/shield-check.log"
+          if grep -q 'sorryAx' "$B/shield-check.log"; then
+            echo "::error::Untrusted sorry axiom in shield proof"
+            exit 1
+          fi
+          grep -q 'right_gateway_shield.*depends on axioms' "$B/shield-check.log"
+          grep -q 'left_gateway_shield.*depends on axioms' "$B/shield-check.log"
+          grep -q 'left_gateway_B_shield.*depends on axioms' "$B/shield-check.log"
