@@ -50,4 +50,8 @@ jobs:
           cp "$base/CancellationThreeArithmetic.lean" .
           lake env lean -o .lake/build/lib/lean/CancellationThreeArithmetic.olean CancellationThreeArithmetic.lean
           cp "$base/CancellationThreeSource.lean" .
-          lake env lean CancellationThreeSource.lean
+          lake env lean -o .lake/build/lib/lean/CancellationThreeSource.olean CancellationThreeSource.lean
+          cp "$base/CancellationFiveSubfamily.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationFiveSubfamily.olean CancellationFiveSubfamily.lean
+          cp "$base/CancellationFiveSource.lean" .
+          lake env lean CancellationFiveSource.lean
