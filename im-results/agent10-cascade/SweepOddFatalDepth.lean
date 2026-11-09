@@ -1,4 +1,4 @@
-import SweepAlternatingMacro
+import SweepShortEvenEntry
 
 namespace CascadeFastReturn
 open CascadeBitSweep
