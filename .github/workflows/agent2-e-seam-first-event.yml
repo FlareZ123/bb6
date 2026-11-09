@@ -90,5 +90,7 @@ jobs:
           if grep -E 'sorryAx|_native\.native_decide' f-root-axioms.log; then exit 1; fi
           grep -F "all_prepared_F_first_events' depends on axioms: [propext, Classical.choice, Quot.sound]" f-root-axioms.log
           grep -F "positive_F_return_iff' depends on axioms: [propext, Classical.choice, Quot.sound]" f-root-axioms.log
-          cp "$GITHUB_WORKSPACE/agents/agent2/SourceSeamInterfaceProbe.lean" .
-          lean SourceSeamInterfaceProbe.lean | tee source-interface.log
+          cp "$GITHUB_WORKSPACE/im-results/agent2-e-seam-root/FullFTapeConjugacy.lean" .
+          timeout 120 lean FullFTapeConjugacy.lean | tee tape-conjugacy.log
+          if grep -E 'sorryAx|_native\\.native_decide' tape-conjugacy.log; then exit 1; fi
+          grep -F "full_F_output_shift' depends on axioms: [propext, Classical.choice, Quot.sound]" tape-conjugacy.log
