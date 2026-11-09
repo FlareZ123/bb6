@@ -307,7 +307,9 @@ theorem minus_column_original_safe (p d : Nat) (hp : 0<p) (hd : d%2=1) :
 /-- Original highLevelNext, all odd d and 3^p+1 first-counter columns. -/
 theorem plus_column_original_safe (p d : Nat) (hd : d%2=1) :
     highLevelNext (.D (3^p+1) d) ≠ none := by
-  have ha : 0<3^p+1 := by omega
+  have ha : 0<3^p+1 := by
+    have hpos := power_pos p
+    omega
   have heven : (3^p+1)%2=0 := by
     have hodd := pow3_odd p
     omega
@@ -329,6 +331,80 @@ theorem original_drain_diagonal_three (p a b d : Nat) (h : a+b+3=3^p) :
     drainB a b d ≠ none := by
   intro hnone
   exact no_fatal_diagonal_three p a b h ((drain_none_iff_badAll a b d).1 hnone)
+
+/-- Positive power-three-minus-one columns are even and of last ternary digit two. -/
+private theorem pow3_minus_even (q : Nat) : (3^(q+1)-1)%2=0 := by
+  have hp := pow3_odd (q+1)
+  omega
+
+private theorem pow3_minus_mod3 (q : Nat) : (3^(q+1)-1)%3=2 := by
+  have hp := power_pos q
+  rw [Nat.pow_succ]
+  omega
+
+private theorem pow3_minus_div3 (q : Nat) : (3^(q+1)-1)/3 +1 =3^q := by
+  have hp := power_pos q
+  rw [Nat.pow_succ]
+  omega
+
+/-- The entire power-three-minus-one first-counter column survives for even d. -/
+theorem minus_column_even_safe (q d : Nat) (hd : d%2=0) :
+    highLevelNext (.D (3^(q+1)-1) d) ≠ none := by
+  let a := 3^(q+1)-1
+  have ha0 : a≠0 := by
+    dsimp [a]
+    have hp := power_pos q
+    rw [Nat.pow_succ]
+    omega
+  have haeven : a%2=0 := pow3_minus_even q
+  have hanear : ¬(d%2=1 ∧ a≥d+5) := by omega
+  intro hh
+  have hh' := hh
+  change highLevelNext (.D a d) = none at hh'
+  simp only [highLevelNext, if_neg ha0, if_neg hanear] at hh'
+  by_cases hfar : d+3≤a
+  · have hc : d%2=0 ∧ a≥d+3 := ⟨hd,hfar⟩
+    simp only [if_pos hc] at hh'
+    have hb := (drain_none_iff_badAll (a-d-2) (d+2) 2).1 hh'
+    exact no_fatal_diagonal_one (q+1) (a-d-2) (d+2) (by dsimp [a]; omega) hb
+  · have hc : ¬(d%2=0 ∧ a≥d+3) := by omega
+    simp only [if_neg hc] at hh'
+    have hae : a%2≠1 := by omega
+    simp only [if_neg hae] at hh'
+    by_cases hdiag : a=d+2
+    · simp only [if_pos hdiag] at hh'
+      have hb := (drain_none_iff_badAll 0 a 2).1 hh'
+      have hedge : badAll 0 a = false := by simpa only [a] using zero_left_edge (q+1)
+      rw [hedge] at hb
+      cases hb
+    · simp only [if_neg hdiag] at hh'
+      have hodd : d%2≠1 := by omega
+      simp only [if_neg hodd] at hh'
+      have hmod : a%3=2 := pow3_minus_mod3 q
+      have heval : evalA (d+1-a) a (2*a+5) =
+          some (d+1-a+1,a/3,2*a+5) := by
+        rw [evalA]
+        simp only [if_pos hmod]
+      rw [heval] at hh'
+      simp only [Option.bind_some] at hh'
+      have hb := (drain_none_iff_badAll (d+1-a+1) (a/3) (2*a+5)).1 hh'
+      have hdiv : a/3+1=3^q := pow3_minus_div3 q
+      have hbound := boundary_bound q (d+1-a+1) (a/3) 1 (by omega) hb
+      omega
+
+/-- Original high-level #623 one-step safety for every d, with no parity restriction. -/
+theorem minus_column_all_third_safe (p d : Nat) (hp : 0<p) :
+    highLevelNext (.D (3^p-1) d) ≠ none := by
+  cases p with
+  | zero => omega
+  | succ q =>
+      by_cases hd : d%2=1
+      · exact minus_column_original_safe (q+1) d (by omega) hd
+      · have he : d%2=0 := by omega
+        exact minus_column_even_safe q d he
+
+#print axioms minus_column_even_safe
+#print axioms minus_column_all_third_safe
 
 #print axioms boundary_bound
 #print axioms original_drain_diagonal_one
