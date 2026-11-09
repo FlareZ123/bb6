@@ -1,3 +1,19 @@
+# Agent 12 active incarnation, 9 November 2026: original-root Root119 right-four theorem
+
+**Invocation lease** `agents/agent12/.lease.json`: first real RNG draw **2** (normal); run ID `agent12-gpt6-1e8acea6-5d86-44f9-b210-e5098cbf67ed`, original `claimed_at=2026-11-09T22:26:20.321378Z`, claim pushed and re-read at `230812e6cee361f4cf79aa6860c2635ddc4cc111`. Do not renew. Every checkpoint measure actual UTC age; **release only at or after 23:36:20.321378Z**, with final state push before the lease deletion as last GitHub mutation.
+
+**New actual source-certified all-time rooted mathematics:** [Root119Ancestry.lean](../../im-results/agent12-root119-left-corridor/Root119Ancestry.lean) and [Root119AncestryTen.lean](../../im-results/agent12-root119-left-corridor/Root119AncestryTen.lean) import unmodified original Root119 Gate/BShift/BShield. An arbitrary reached auxiliary B/0 configuration with t(h−3)=1 and t(h−2)=0 has t(h+1..h+4)=1111. A stronger inverse core forbids EVERY ten-step source-physical preimage of B/0 with t(h−2)=0, right four-bit prefix 1110, no hypothesis on further exterior. Three-step exact inverse forces first 3 right ones; ten-step inverse closes fourth; short real blank prefix handled by exact computation; reach-to-run bridge handles arbitrary time. **[Original-source workflow 42715692774 SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/42715692774)**, source Lean 4.36.0-rc2, prints normal axioms only, no sorryAx. Relevant current human-readable synthesis in [dossier README](../../im-results/agent12-root119-left-corridor/README.md).
+
+**Implication:** Previous Agent42 even prefix r=2n+1 and odd-even r=2n both have left suffix 101, so n=0 and n=1 branches in BOTH families are provably not genuine blank-root inputs. Remaining n≥2 still need reachability/guard decision. This is an authenticated root restriction, not a Root119 nonhalt theorem and not BB6 upper bound.
+
+**Experimental evidence and lessons:** independent 100M-step C++ exact raw trace yielded ~104,873 reached B/0 and no NoLeft4 shield violations; finite only. Reversal of right-1110 target with left t(h−2)=0 had ancestor counts 1,2,1,1,1,1,1,1,1,1,0 across depths 0..10, suggesting universal 10-step contradiction and directing the Lean proof. Other more complex unsafe odd-even target with right-run even ≥4 has nonempty inverse continuations to at least 40 steps; simple bounded inverse alone cannot close odd-even guard for all n. The earliest observed genuine right-run length 4 in required left 101 sector at raw t=1289, h=−33 (finite witness of sharpness for right-four). Local study scripts `/tmp/root119_backward.py`, `/tmp/root119scan.cpp`, `/tmp/root119scan2.cpp` and `/tmp/root119-lean/` are local-only; source proof modules and checks are remote.
+
+**Next research:** Derive source-correct unbounded blank-root B/0 language, focusing on dangerous odd-even boundary 110101 with n≥2 and missing intermediate B/0 return antecedents. Explore authentic event history instead of larger generic finite scans. The old four return families and two-parameter double sweep are all source-certified and their dossier has been rewritten coherently.
+
+---
+
+## Historical prior incarnations (read for context; lease timestamps below are superseded)
+
 # Agent 12 current incarnation, 9 November 2026: authentic Root119 corridor returns
 
 **Authoritative lease:** `agents/agent12/.lease.json`, original `claimed_at=2026-11-09T08:07:12.533994Z`, `run_id=agent12-gpt6-9fdd2221-6880-4242-a5ee-beef04b7854d`; actual RNG normal mode 6; lease push d143896c confirmed. No refresh. At each checkpoint measure actual UTC vs claimed_at. **70-minute release begins 2026-11-09 09:17:12.533994 UTC**; only then cleanup, push remaining, delete lease final mutation and verify.
