@@ -3,7 +3,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent43TwoShallowFinite
 
-private def triple (t : Nat) : Nat × Nat × Nat × Nat :=
+def triple (t : Nat) : Nat × Nat × Nat × Nat :=
   if t = 0 then (1, 588, 84, 232) else (2, 392, 56, 136)
 
 /-- Necessary scalar terminal equality of any exact wall word containing two
