@@ -414,6 +414,39 @@ theorem halts_iff_earlier_A_corridor :
     obtain ⟨c,hc,hfatal⟩ := bGate_reaches_B001 k (n+1) b hb hbgate
     exact ⟨n+1+2*k,c,hc,(bGate_zero_iff_fatalB c).mp hfatal⟩
 
+
+/-- Every actual A/0 corridor forces the exact successful-move halt time. -/
+theorem aGate_forces_halt_at (n k : Nat) (a : Config)
+    (ha : run target429 n blank=some a) (hg : aGate k a) :
+    HaltsAfter target429 (n+2*k+3) := by
+  obtain ⟨b,hab,hbgate⟩ := aGate_to_bGate a k hg
+  have hb : run target429 (n+1) blank=some b := by
+    change (run target429 n blank).bind (rawStep target429)=some b
+    rw [ha]
+    simpa using hab
+  obtain ⟨c,hc,hfatal⟩ := bGate_reaches_B001 k (n+1) b hb hbgate
+  have hh := BB429FatalB.fatal_B_causes_halt (n+1+2*k) c hc
+    ((bGate_zero_iff_fatalB c).mp hfatal)
+  have htime : (n+1+2*k)+2=n+2*k+3 := by omega
+  simpa only [htime] using hh
+
+/-- Exact successful-transition halting time N, including the exact
+    alternating-corridor length k of its earlier original A/0 state. -/
+theorem halting_time_iff_A_corridor (N : Nat) :
+    HaltsAfter target429 N ↔
+    ∃ n k a, N=n+2*k+3 ∧ run target429 n blank=some a ∧ aGate k a := by
+  constructor
+  · intro hh
+    obtain ⟨n,k,a,hr,hg⟩ := halts_iff_earlier_A_corridor.mp ⟨N,hh⟩
+    have hs := aGate_forces_halt_at n k a hr hg
+    exact ⟨n,k,a,halting_time_unique target429 N (n+2*k+3) hh hs,hr,hg⟩
+  · rintro ⟨n,k,a,hN,hr,hg⟩
+    rw [hN]
+    exact aGate_forces_halt_at n k a hr hg
+
+#print axioms aGate_forces_halt_at
+#print axioms halting_time_iff_A_corridor
+
 #print axioms bGate_has_A_ancestor
 #print axioms bGate_succ_step
 #print axioms bGate_reaches_B001
