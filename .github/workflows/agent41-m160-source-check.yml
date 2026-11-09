@@ -1,0 +1,33 @@
+name: Agent41 Machine C M160 source-connected inverse-core proof
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct archive and compile against full original CLine
+        run: |
+          set -euo pipefail
+          mkdir -p tools/a41m160
+          base64 -d im-results/agent41-m160-reverse/M160Proof.tar.xz.b64 > /tmp/M160Proof.tar.xz
+          echo "1e7d71f11c70b4fedca6fe9040a2bd389b5e7cdbeb137c90a420e1c8af99e81c  /tmp/M160Proof.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/M160Proof.tar.xz -C tools/a41m160
+          cp im-results/agent11-c-line/CLine.lean tools/a41m160/CLine.lean
+          cd tools/a41m160
+          export LEAN_PATH=.
+          lean --version
+          for module in CLine M160Defs M160Finite M160Low M160Gateway M160Zero M160Source M160Stopping; do
+            echo "Compiling $module"
+            lean -o "$module.olean" "$module.lean"
+          done
