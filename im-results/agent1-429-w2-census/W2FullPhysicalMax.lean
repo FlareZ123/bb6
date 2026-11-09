@@ -10,7 +10,7 @@ namespace BB429W2FullPhysicalMax
 
 open BB6Coverage BB429PhysicalFrontier BB429PhysicalBridge
 open BB429DeltaPhysicalBridge BB429OddExcursion
-open BB429SourceE1Return BB429SourceE1Delta
+open BB429SourceE1Return BB429SourceE1Delta BB429FinishScanEDelta
 open BB429W4HeadMax BB429W4HeadPrefix BB429W2FullHeadMax
 
 /-- General physical maximal-head transfer. A successfully certified
@@ -40,7 +40,7 @@ theorem physical_runWithMax_bound
       | some p =>
           have hdelta : p.2.1 = q.2 := by
             simp [hprefixMax,hprefix] at hproj
-            exact hproj.2
+            exact congrArg Prod.snd hproj
           have hfull' : runWithMax (t+(n-t)) start = some out := by
             rw [← hlen]
             exact hfull
