@@ -40,7 +40,7 @@ Therefore `(3^n-1)/2` is the **exact minimum block count admitting n distinct fa
 
 The induction in [SharpSpectrumCapacitySource.lean](SharpSpectrumCapacitySource.lean) uses a stronger auxiliary saturation invariant: whenever `3^L(b)=2b+1`, the *preceding* spectrum `E_(b-1)` is empty. For `3q`, cardinality cannot increase and strict capacity follows. For `3q+1`, cardinality increases by exactly one and the induction inequality becomes equality only when the child saturates, preserving the preceding-empty property. For `3q+2`, cardinality may increase by one only if `0∈E_q`; child saturation would force `E_q=∅`, contradiction. Since powers of three are odd, this excludes the one remaining tight integer case and gives strict capacity. The finite induction closes without heuristics. The extremal family follows from repeatedly applying the `3q+1` recurrence.
 
-The exact Lean names are `cap_and_saturation`, `minimum_blocks_for_n_failures`, `boundary_spectrum`, `boundary_power`, `boundary_is_sharp`, and `spectrum_nodup`. All compiled against the source-shaped arithmetic interface with Lean 4.36.0-rc2 and only standard axioms; a targeted original-source CI [workflow](../../.github/workflows/agent49-623-full-failure-spectrum.yml) checks the unmodified upstream source and the full imported proof chain. **Until that expanded CI run succeeds, distinguish these new original-importing modules from the already source-certified FullFailureSpectrumSource.lean.**
+The exact Lean names are `cap_and_saturation`, `minimum_blocks_for_n_failures`, `boundary_spectrum`, `boundary_power`, `boundary_is_sharp`, and `spectrum_nodup`. All the complete spectrum, logarithmic list, sharp cardinality, no-duplicates, and full left-sector theorems have passed against the unmodified original Cryptids source in manual source-pinned [CI 42605972987](https://github.com/FlareZ123/bb6/actions/runs/42605972987), with only standard foundational axioms. The new tight-threshold list theorem was subsequently appended and compiled locally with Lean 4.36.0-rc2; its expanded source-pinned rerun is pending.
 
 Illustrative exact spectra:
 
@@ -51,6 +51,42 @@ b=13:  {0,1,2}     b=14:  {0,1,3}
 b=40:  {0,1,2,3}   b=104: {0}
 b=121: {0,1,2,3,4}
 ```
+
+## Exact spectrum at the first-failure threshold and parity refinement
+
+Set `t_a=(3^a+1)/2=boundary(a)+1`. For every initial first counter `a≥1`, the new theorem `tight_spectrum` proves the full failure set at the **first block input causing failure**:
+
+```text
+E_(t_a) = {0,1,...,a-2} union {a}.
+E_(t_0) = {0}.
+```
+
+The single counter `a-1` is absent at that threshold. For example, `t_4=41` gives `E_41={0,1,2,4}` and `t_5=122` gives `E_122={0,1,2,3,5}`. The proof couples the already source-certified `E_(boundary n)=[0,n)` with the `3q+2` recurrence and induction. It is encoded in [SharpSpectrumCapacitySource.lean](SharpSpectrumCapacitySource.lean).
+
+This yields the **parity-resolved sharp minimal block counts**. The least positive `b` with at least `n≥1` distinct **even** fatal first counters is
+
+```text
+b_even(n) = (3^(2n-2)+1)/2,
+```
+
+and the least block count with at least `n` distinct **odd** fatal first counters is
+
+```text
+b_odd(n) = (3^(2n-1)+1)/2.
+```
+
+For minimality, the largest among `n` distinct even (respectively odd) natural counters is at least `2n-2` (respectively `2n-1`). The original source-proved `drainB_safe_ones` shows failure at counter `a` requires `b≥t_a`; monotonicity of the exact powers of three gives the claimed lower bounds. The `tight_spectrum` family attains both: it includes every even counter below `2n-2` and the last even counter, or every odd counter below `2n-1` and that last odd counter. The parity-resolved minimality uses this elementary cardinality argument as a paper corollary; `tight_spectrum` itself is the added Lean theorem. No claim of an independent Lean cardinality theorem for that paper corollary is made.
+
+## Original high-level one-step left-sector geometry
+
+The original source [ExactLeftSectorSource.lean](ExactLeftSectorSource.lean), verified in [CI 42605972987](https://github.com/FlareZ123/bb6/actions/runs/42605972987), establishes all-argument exact equivalences:
+
+```text
+d odd,  a>=d+5:  highLevelNext(D(a,d))=none iff a-d-5 in E_(d+3)
+d even, a>=d+3:  highLevelNext(D(a,d))=none iff a-d-2 in E_(d+2)
+```
+
+Consequently for any **fixed** third counter `d`, the entire infinite far-left first-counter ray has a finite, fully explicit list of fatal positions. In even-`d` sectors the candidate `x=0` is discarded because `a=d+2` lies outside that far-left branch and is handled separately by the source's diagonal rule. The exact source theorem `odd_left_none_iff_list` and `even_left_none_iff_list` preserve the appropriate branch boundaries. This is a root-directed classification of the *possible* fatal positions; no blanket root reachability exclusion follows from it.
 
 ## Research frontier and evidence boundary
 
