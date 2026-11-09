@@ -1,6 +1,6 @@
 # Machine #429: a two-parameter odd/even C/0 corridor
 
-**Intermediate mathematical theorem, 9 November 2026.** Lean 4.36.0-rc2 locally kernel-checked the exact source-shaped six-state machine's transition, sharp primitive head maximum, and complete C/0 count. The authentic blank-run reachability of this prepared input family is **not known**; the result does **not** decide #429 or BB(6). The local imported baseline was copied from the existing exact machine table and monitor definitions. Independent unchanged-repository-import CI is a separate audit obligation.
+**Intermediate mathematical theorem, 9 November 2026.** Original-source Lean 4.36.0-rc2 [CI run 42586475039](https://github.com/FlareZ123/bb6/actions/runs/42586475039) **succeeded**, kernel-checking the exact original six-state machine's transition, sharp primitive head maximum, and complete C/0 count. The authentic blank-run reachability of this prepared input family is **not known**; the result does **not** decide #429 or BB(6). The new source directly imports unchanged original source modules for the machine transition and head monitor. The count monitor repeats the original published definition, without its deep unrelated import graph.
 
 ## The complete symbolic transition
 
@@ -41,7 +41,7 @@ The three compressed source files are restored with [restore.py](restore.py), an
 - BB429OddEvenCorridorMax.odd_even_corridor_max: [propext, Classical.choice, Quot.sound].
 - BB429OddEvenCorridorCount.odd_even_corridor_count: [propext, Classical.choice, Quot.sound].
 
-The locally compiled test module for BB429OddExcursion repeated its original published action table and the one unbounded AF-pair lemma, and the local head/count monitors repeated the previously published source definitions. This is strong source-shaped Lean evidence, though **not yet a source-imported CI certificate**. The local test independently checked k=0..4, j=0..4 with the literal six-state raw-table simulator. The source hashes used in this report are:
+The locally compiled test module for BB429OddExcursion repeated its original published action table and the one unbounded AF-pair lemma, and the local head/count monitors repeated the previously published source definitions. Original source CI 42586475039 compiled the unchanged BB429OddExcursion, BB429SourceE1Return, BB429SourceE1Delta and W4HeadMax inputs, then the restored three proof modules, all without sorryAx. The local test independently checked k=0..4, j=0..4 with the literal six-state raw-table simulator. The source hashes used in this report are:
 
 | Restored file | SHA-256 |
 | --- | --- |
@@ -52,3 +52,7 @@ The locally compiled test module for BB429OddExcursion repeated its original pub
 ## Next high-value question
 
 Develop a **closed** all-time language of original blank-reachable C/0 head-record configurations by composing first-event returns over the actual nonlocal tape, not just synthetic local cylinders. The observed authentic left grammar has long odd 1-runs and often chains of isolated 1s before a final even run; this theorem handles only a specific short bridge with an even intermediate run and an explicit second 0. The gap is authentic coverage, not additional finite simulation of the family.
+
+## Independent original-source compilation
+
+The [manual CI workflow](../../.github/workflows/agent30-429-odd-corridor.yml) checked restored SHA-256 digests and compiled the unchanged repository machine and monitor modules together with all three new theorem modules. **Run [42586475039](https://github.com/FlareZ123/bb6/actions/runs/42586475039) completed successfully at 08:31 UTC on 9 November 2026.** This verification authenticates the prepared-tape theorem against the exact source, while leaving the genuine blank-root input-class coverage open.
