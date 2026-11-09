@@ -30,9 +30,9 @@ private theorem root_absent_from_forced_parent (x y a k time : Nat)
           rw [hb,hl] at hp
           exact hparent n hp
 
-private theorem E_absent (w t time : Nat) (he : (w+t)%2=0) :
+private theorem E_absent (w t time : Nat) (he : (w+t)%2=1) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-      some (52*w+100*t+81,6*w+14*t+9) := by
+      some (52*w+100*t+29,6*w+14*t+3) := by
   cases time with
   | zero =>
       intro hit
@@ -40,37 +40,37 @@ private theorem E_absent (w t time : Nat) (he : (w+t)%2=0) :
   | succ n =>
       intro hit
       have hp := BB6.Agent3.blank_section_odd_image n
-        (52*w+100*t+81) (6*w+14*t+9) hit (by omega) (by omega)
+        (52*w+100*t+29) (6*w+14*t+3) hit (by omega) (by omega)
       omega
 
-private theorem D_absent (w t time : Nat) (he : (w+t)%2=0) :
+private theorem D_absent (w t time : Nat) (he : (w+t)%2=1) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-      some (40*w+72*t+63,12*w+28*t+20) := by
+      some (40*w+72*t+23,12*w+28*t+8) := by
   apply root_absent_from_forced_parent
-    (40*w+72*t+63) (12*w+28*t+20)
-    (52*w+100*t+81) (6*w+14*t+9) time (by omega)
+    (40*w+72*t+23) (12*w+28*t+8)
+    (52*w+100*t+29) (6*w+14*t+3) time (by omega)
   · intro b l hstep
     have hinv : sectionPreimageAll b l _ _ :=
       (section_preimage_all_iff b l _ _).mp hstep
     have hcopy : BB6.Agent34Broad.sectionPreimageAll b l _ _ := hinv
     have hh := BB6.Agent34Three.only_direct b l
-      (40*w+72*t+63) (12*w+28*t+20)
+      (40*w+72*t+23) (12*w+28*t+8)
       (by omega) (by omega) (Or.inr (by omega)) hcopy
     omega
   · intro n
     exact E_absent w t n he
 
-private theorem H_absent (w t time : Nat) (he : (w+t)%2=0) :
+private theorem H_absent (w t time : Nat) (he : (w+t)%2=1) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-      some (16*(w+t)+23,24*w+56*t+42) := by
+      some (16*(w+t)+7,24*w+56*t+18) := by
   apply root_absent_from_forced_parent
-    (16*(w+t)+23) (24*w+56*t+42)
-    (40*w+72*t+63) (12*w+28*t+20) time (by omega)
+    (16*(w+t)+7) (24*w+56*t+18)
+    (40*w+72*t+23) (12*w+28*t+8) time (by omega)
   · intro b l hstep
     have hinv : sectionPreimageAll b l _ _ :=
       (section_preimage_all_iff b l _ _).mp hstep
     have hh := BB6.Agent4Three.only_direct_mod4_one b l
-      (16*(w+t)+23) (24*w+56*t+42)
+      (16*(w+t)+7) (24*w+56*t+18)
       (by omega) (by omega) (by omega) hinv
     omega
   · intro n
@@ -78,31 +78,31 @@ private theorem H_absent (w t time : Nat) (he : (w+t)%2=0) :
 
 private theorem P_absent (w t time : Nat) (ht : 2≤t) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-      some (64*(w+t)+101,32*t+6) := by
+      some (64*(w+t)+37,32*t+6) := by
   apply root_absent_from_forced_parent
-    (64*(w+t)+101) (32*t+6)
-    (64*w+96*t+105) (16*t+2) time (by omega)
+    (64*(w+t)+37) (32*t+6)
+    (64*w+96*t+41) (16*t+2) time (by omega)
   · intro b l hstep
     have hinv : sectionPreimageAll b l _ _ :=
       (section_preimage_all_iff b l _ _).mp hstep
     have hcopy : BB6.Agent34Broad.sectionPreimageAll b l _ _ := hinv
     have hh := BB6.Agent34Three.only_direct b l
-      (64*(w+t)+101) (32*t+6)
+      (64*(w+t)+37) (32*t+6)
       (by omega) (by omega) (Or.inr (by omega)) hcopy
     omega
   · intro n
-    have hsector : (((64*w+96*t+105)+(16*t+2))%8=1 ∧ (16*t+2)%16=10) ∨
-        (((64*w+96*t+105)+(16*t+2))%8=3 ∧ (16*t+2)%16=2) := by
+    have hsector : (((64*w+96*t+41)+(16*t+2))%8=1 ∧ (16*t+2)%16=10) ∨
+        (((64*w+96*t+41)+(16*t+2))%8=3 ∧ (16*t+2)%16=2) := by
       right
       omega
     exact BB6.Agent34Three.cone_blank_unreachable n
-      (64*w+96*t+105) (16*t+2) (by omega) hsector
+      (64*w+96*t+41) (16*t+2) (by omega) hsector
 
 /-- All original blank-section returns avoid this two-branch fifth-image cylinder. -/
 theorem fifth_blank_unreachable (w t time : Nat)
-    (ht : 2≤t) (he : (w+t)%2=0) :
+    (ht : 2≤t) (he : (w+t)%2=1) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-      some (64*w+89,64*t+14) := by
+      some (64*w+25,64*t+14) := by
   cases time with
   | zero =>
       intro hit
@@ -110,14 +110,14 @@ theorem fifth_blank_unreachable (w t time : Nat)
   | succ n =>
       intro hit
       change (BB6.Agent8Section.run secNext n (some (5,1))).bind secNext =
-        some (64*w+89,64*t+14) at hit
+        some (64*w+25,64*t+14) at hit
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none => simp [hp] at hit
       | some p =>
           rcases p with ⟨a,k⟩
-          have hstep : secNext (a,k)=some (64*w+89,64*t+14) := by
+          have hstep : secNext (a,k)=some (64*w+25,64*t+14) := by
             simpa [hp] using hit
-          have hinv : sectionPreimageAll a k (64*w+89) (64*t+14) :=
+          have hinv : sectionPreimageAll a k (64*w+25) (64*t+14) :=
             (section_preimage_all_iff a k _ _).mp hstep
           rcases two_parent_arithmetic a k w t hinv with hd|hb
           · rw [hd.1,hd.2] at hp
