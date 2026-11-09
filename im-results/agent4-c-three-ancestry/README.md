@@ -56,6 +56,15 @@ Relationship to other research: Agent45's [three-step image classification](../a
 
 The general even-right, sum-one inverse uniqueness lemma `only_direct_mod4_one` was added as an explicit self-contained arithmetic bridge, **not an independently new theorem**: Agent15 previously proved the stronger `section_sum_one_even_iff_affine` and `section_even_right_iff_affine` (`im-results/agent15-c-even-source/EvenRightUnique.lean`), while Agent3 had already certified the sharp I1-not-I2 cylinder `(x%4=1,y%8=0,y>=16)` in `MixedEvenEightSharp.lean`. That older sector is disjoint from our sharp I2-not-I3 targets, which have right coordinate 4 modulo 8. No novelty is claimed for the general uniqueness lemma or the older one-step sector. The new source-certified contribution is the different exact two-step sector and the specific high-stopping pullbacks. The refactored source arithmetic was successfully verified by [CI 42576141381](https://github.com/FlareZ123/bb6/actions/runs/42576141381).
 
+
+## Strongest consolidated theorem: one diagonal congruence
+
+The preceding four disjoint congruence lattices have an unexpectedly simple exact equivalent condition:
+\[
+\boxed{\qquad j\text{ odd},\qquad m\equiv j+25\pmod{32},\qquad m\ge4.\qquad}
+\]
+For the original-source stopping equation \`k+j+3m+5=2^(2m+2)*(j+3)\`, this single condition is enough to prove \`run secNext time (some (5,1)) != some (2*j+3,k)\` for **every** time. [CThreeDiagonal.lean](CThreeDiagonal.lean) contains both \`four_classes_iff_diagonal\`, the biconditional of congruences for arbitrary j,m, and \`high_stop_odd_diagonal_mod32\`, the authenticated blank-root exclusion. This is an infinite diagonal congruence family with exactly **1/64 natural density**, independent of the stopping time. The formal source proof was separately compiled successfully in [Lean CI 42577934765](https://github.com/FlareZ123/bb6/actions/runs/42577934765) with no \`sorryAx\`. It is equivalent to the four branches above and does not imply Machine C nonhalting.
+
 ## Stronger complement: four source-excluded stopping lattices (9 November 2026)
 
 **Original-source Lean 4.36.0-rc2 verified, [successful CI 42577477628](https://github.com/FlareZ123/bb6/actions/runs/42577477628).** This theorem supersedes the earlier two-lattice headline above. The full combined theorem is \`BB6.Agent4Three.high_stop_four_lattices\` in [CThreeAltStop.lean](CThreeAltStop.lean). Under the same exact original-source high-stop equation and m>=4, any of these four pair conditions excludes the authentic blank-root Machine C section target for all times:
