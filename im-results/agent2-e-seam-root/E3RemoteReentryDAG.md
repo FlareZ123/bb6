@@ -16,6 +16,12 @@ For any set S of permitted remote reentry states, retain all ordinary edges and 
 
 The inclusion-minimal cyclic subsets are {A} and {C,D,F}. The unrestricted graph has 11 nontrivial cyclic components, each containing 78 nodes and abstract right-excursion edges. With no permitted remote reentries, the longest path has 65 edges; with C,D alone, it has 110.
 
+## Radius robustness and bounded forcing
+
+A second independently implemented C++ finite-cylinder builder reconstructs the graph from the literal D rule table for every tracked right radius R=7 through R=16, reclassifying all 64 possible reentry-state subsets. For **each** of these ten finite radii, the minimal cyclic subsets remain A and CDF, and the maximal acyclic subsets remain BCDE, BCEF, BDEF. At R=16 the graph has 1,387,814 states and 1,353,838 edges. The detailed state counts and maximal path lengths are reproducible with [E3RadiusCycleCensus.cpp](E3RadiusCycleCensus.cpp). This is numerical evidence of structural stability under wider windows, and **does not prove** a universal radius theorem.
+
+At the source-certified R=7 graph, the acyclic path bounds give a local forcing statement: any abstract nonterminal path with **at least 138 edges** must contain an A-labeled right reentry or contain right reentries labeled C, D and F **all within that 138-edge window**. Otherwise the entire window would lie within at least one of the three maximum acyclic masks, each of whose longest paths is at most 137 edges. For the actual physical source, this is conditional on the preexisting simulation and counts *abstract* steps rather than primitive time.
+
 ## Mathematical implication and precise limits
 
 By the already-certified original-source window simulation, an original E3 trajectory that avoids first events forever must either eventually depart beyond the tracked right boundary and never return, return in A infinitely often, or return in **each** of C, D, F infinitely often. This is a **necessary condition**, not a physical witness or nonhalting classification. An abstract remote edge can represent any finite number of primitive machine steps, so the finite path-length figures are not primitive time bounds.
