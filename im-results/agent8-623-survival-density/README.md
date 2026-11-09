@@ -1,5 +1,7 @@
 # #623: exact drain-success counts and exponential scarcity
 
+**Complementary exact-source research (9 November 2026).** For the full original `drainB` output, including all successes and failures, see the [exact ternary digit-charge and joint-mass cocycle](DigitCocycle.md) and its source-verified Lean modules. The [exact original-source replacement return decoder](NextDigitSource.lean) was kernel checked in [CI #42562367092](https://github.com/FlareZ123/bb6/actions/runs/42562367092). A newer [carry-sensitive per-block safety budget, affine ray theorem, and ninefold pump](SafeBudget.md) provide a more root-specific research target than the synthetic counting results below. This work does not establish root survival or the exact value of BB(6).
+
 **Mathematical status (8 November 2026).** An exact all-input, all-length counting recurrence is derived below for the original Cryptids #623 complete B-drain, together with an explicit exponential upper bound. These are **paper proofs from an already source-certified exact recurrence**, checked independently by [`verify_counts.py`](verify_counts.py). The new cardinality and exponential estimates have **not separately been kernel formalized**. They describe enumeration of synthetic `B(a,b,d)` inputs, and establish **no** nonhalting or halting result for the true `D(0,7)` blank-root orbit, nor a BB(6) bound. They are intermediate research and belong in `im-results/`.
 
 ## Exact source interface
