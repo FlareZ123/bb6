@@ -18,7 +18,26 @@ theorem second_lift_has_eight_incoming_edges :
     secNext (211,454)=some (581,274) ∧
     secNext (581,274)=some (33,550) ∧
     secNext (33,550)=some (1,574) := by
-  decide
+  refine ⟨?_,?_,?_,?_,?_,?_,?_,?_⟩
+  · exact (section_preimage_all_iff 810 143 524 288).mpr
+      (by simp [sectionPreimageAll])
+  · apply (section_preimage_all_iff 524 288 997 55).mpr
+    simp [sectionPreimageAll]
+    exact ⟨0,by decide,by decide⟩
+  · exact (section_preimage_all_iff 997 55 887 112).mpr
+      (by simp [sectionPreimageAll])
+  · exact (section_preimage_all_iff 887 112 663 226).mpr
+      (by simp [sectionPreimageAll])
+  · exact (section_preimage_all_iff 663 226 211 454).mpr
+      (by simp [sectionPreimageAll])
+  · apply (section_preimage_all_iff 211 454 581 274).mpr
+    simp [sectionPreimageAll]
+    exact ⟨1,by decide,by decide⟩
+  · exact (section_preimage_all_iff 581 274 33 550).mpr
+      (by simp [sectionPreimageAll])
+  · apply (section_preimage_all_iff 33 550 1 574).mpr
+    simp [sectionPreimageAll]
+    exact ⟨3,by decide,by decide⟩
 
 /-- The first-generation image seed is strictly fifth/sixth at (573,286),
     yet its second direct descendant (1,574) lies in the eighth source image. -/
