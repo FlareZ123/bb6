@@ -20,7 +20,7 @@ jobs:
       - name: Check authentic six-state sparse semantics and zero-path frontier
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent33-429-writer-locality:im-results/agent6-429-one-sided-excursion"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent33-429-writer-locality:im-results/agent6-429-one-sided-excursion:im-results/agent5-429-rank:im-results/agent30-429-first-gate-rays"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -55,4 +55,7 @@ jobs:
           lean -o im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.olean im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/CZeroEvenPhysical.lean | tee -a /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/DWriterParity.lean | tee -a /tmp/agent1-429-physical.log
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -o im-results/agent30-429-first-gate-rays/FirstGateRays.olean im-results/agent30-429-first-gate-rays/FirstGateRays.lean
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/CZeroFatalRay.lean | tee -a /tmp/agent1-429-physical.log
           if grep -q sorryAx /tmp/agent1-429-physical.log; then exit 1; fi
