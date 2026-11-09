@@ -233,6 +233,32 @@ theorem heap_edge_predecessor_unique (x y z : Nat×Nat)
       simp only [Prod.mk.injEq]
       omega
 
+/-- The two P1 feeder seeds are sibling-origin coordinates in one
+    universal heap tree: the second is the right child of the first,
+    and the left child is its mirror image. -/
+theorem feeder_siblings (q : Nat) :
+    moveL (8*q+2) (8*q+2) = (4*q+1,12*q+4) ∧
+    moveR (8*q+2) (8*q+2) = (12*q+4,4*q+1) := by
+  simp only [moveL, moveR, Prod.mk.injEq]
+  omega
+
+/-- Equal-pile nodes are all genuine roots of the universal transfer forest. -/
+theorem diagonal_no_predecessor (a : Nat) (x : Nat×Nat) :
+    ¬ HeapEdge x (a,a) := by
+  rcases x with ⟨u,e⟩
+  intro h
+  dsimp [HeapEdge] at h
+  rcases h with ⟨_,hl⟩ | ⟨_,hr⟩
+  · have hs := left_image_right_dominant u e
+    rw [←hl] at hs
+    omega
+  · have hs := right_image_left_dominant u e
+    rw [←hr] at hs
+    omega
+
+#print axioms feeder_siblings
+#print axioms diagonal_no_predecessor
+
 #print axioms heap_edge_predecessor_unique
 #print axioms right_run_closed
 #print axioms right_run_quotient
