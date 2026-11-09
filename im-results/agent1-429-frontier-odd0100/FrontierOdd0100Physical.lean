@@ -6,6 +6,7 @@ namespace BB429Odd0100Physical
 
 open BB6Coverage BB429PhysicalFrontier BB429PhysicalBridge
 open BB429OddExcursion BB429CZeroEvenReturn BB429Odd0100Max
+open BB429SourceE1Delta
 open BB429DeltaPhysicalBridge BB429W4HeadPrefix BB429W2FullPhysicalMax
 open BB429W4HeadMax
 
