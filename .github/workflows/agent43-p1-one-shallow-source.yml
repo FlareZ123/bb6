@@ -67,7 +67,7 @@ jobs:
           for m in ExceptionalLastResetDepthSource RightFiveResetFloor RightFiveTwoArithmetic RightFiveEnergyNumeric RightFiveEnergyStep; do
             lean -o "$AG50SUB/$m.olean" "$AG50SUB/$m.lean"
           done
-          for m in DyadicGap TwoRunModel CubicGap OneShallowLarge OneShallowFinite OneShallowFiniteBridge RootTwoDivisor OneShallowModelBridge OneShallowModelOne TwoLayerRemainder TwoShallowNumeric TwoShallowFiniteBounds TwoShallowIntegerAlgebra TwoShallowFiniteBridge SmallIndexEnergyCutoff TwoShallowModelLarge ThreeLayerGap ThreeLayerPeel ThreeLayerBarrier ThreeShallowNumeric ThreeShallowFiniteBounds ThreeShallowIntegerAlgebra ThreeShallowFiniteBridge ThreeShallowAllNumeric; do
+          for m in DyadicGap TwoRunModel CubicGap OneShallowLarge OneShallowFinite OneShallowFiniteBridge RootTwoDivisor OneShallowModelBridge OneShallowModelOne TwoLayerRemainder TwoShallowNumeric TwoShallowFiniteBounds TwoShallowIntegerAlgebra TwoShallowFiniteBridge SmallIndexEnergyCutoff TwoShallowModelLarge ThreeLayerGap ThreeLayerPeel ThreeLayerBarrier ThreeShallowNumeric ThreeShallowFiniteBounds ThreeShallowIntegerAlgebra ThreeShallowFiniteBridge ThreeShallowAllNumeric ThreeShallowAbstractBridge; do
             lean -o "$AG43/$m.olean" "$AG43/$m.lean"
           done
       - name: Verify source lift and theorem axioms
