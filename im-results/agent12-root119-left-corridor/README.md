@@ -1,8 +1,25 @@
-# Four source-certified physical B/0 return families for auxiliary #119
+# Authentic Root119 right-run exclusion and physical return laws
 
-**Current status, 9 November 2026.** Four all-parameter primitive-machine return theorems now account for **all 49 previously unclassified B/0 first-return intervals** in the independent ten-million-step physical blank replay of the literal auxiliary six-state machine `1RB---_1LC1LF_1LD0LC_0LE1RF_1RA1LA_1LB0RD`. All four also carry conditional preservation of the original `NoLeft4 true true false` (left-of-head forbidden `1100`) invariant.
+**Established 9 November 2026, original auxiliary-source Lean 4.36.0-rc2.** On the genuine blank-root orbit of the literal six-state auxiliary table `1RB---_1LC1LF_1LD0LC_0LE1RF_1RA1LA_1LB0RD`, every reached B/0 configuration with left bits `t(h−3)=1` and `t(h−2)=0` has **four consecutive ones immediately to the right of the head**. This is a new arbitrary-time genuine-reachability restriction, rather than a conditional prepared-tape return. The original-source [CI run 42715692774](https://github.com/FlareZ123/bb6/actions/runs/42715692774) compiled the proof with only ordinary Lean axioms and without `sorryAx`.
 
-The key result is **mathematical but conditional**. These four return theorems are valid on arbitrary signed tapes for unbounded parameters, provided their explicit input word hypotheses hold. The fact that their hypotheses cover the 49 historical residual intervals is a **finite observation**, not an all-time blank-root reachability theorem. Auxiliary #119 and BB(6) remain open.
+The same source-check includes four previously established, all-parameter physical B/0 return families, with conditional transport of the forbidden-`1100` left-of-head shield. Their input predicates cover all 49 B/0 first-return intervals that had remained unclassified in the older ten-million-step replay; **this coverage is finite evidence**. Neither the new right-run obstruction nor the return families establish an all-time partition of every reachable B/0 configuration. Historical root #119 and BB(6) are still unresolved.
+
+## All-time original blank-root theorem
+
+Write `Reach d` for the *original* inductively defined reachability from blank, with `d=(B,h,t)` and `t(h)=0`. The theorem [`reached_B0_left10x_right1111`](Root119AncestryTen.lean) proves
+
+\[
+ \operatorname{Reach}(d)\land t(h-3)=1\land t(h-2)=0
+ \quad\Longrightarrow\quad
+ t(h+1)=t(h+2)=t(h+3)=t(h+4)=1.
+\]
+
+The hypothesis places no restriction on `t(h−1)` or the exterior tape. Two source-imported inverse obstructions support the result:
+
+1. [`Root119Ancestry.lean`](Root119Ancestry.lean) exhausts three primitive predecessors. Under B/0 and `t(h−2)=0`, a length-three predecessor chain forces the immediate three right cells to be marked; the few early blank-run configurations are excluded directly.
+2. [`Root119AncestryTen.lean`](Root119AncestryTen.lean) proves a stronger **universal ten-step impossibility**: no ten consecutive original primitive instructions from any source tape can end in B/0 with `t(h−2)=0` and right-hand word `1110` at `h+1,…,h+4`. The finite-predecessor proof exhausts original states and reads backwards through the exact writes. The theorem `reach_has_run` converts any `Reach` proof into a definite primitive count; splitting counts below ten from an arbitrary ten-step suffix gives the genuine-root result `reached_B0_exposed_no_right1110`. Combining it with the three-right-cell property proves the four-right-cell theorem.
+
+**Immediate mathematical consequence for prior return formulas.** In Agent42's exact [even and odd-even B/0 prefix laws](../agent42-root119-guard/EVEN_WAVE_PREFIX_FAMILIES.md), the input left suffix is `101`, hence this theorem applies. The even family has right one-run `2n+1`, so its parameters `n=0,1` are impossible at genuine blank-reachable inputs; the odd-even family has right one-run `2n`, so its `n=0,1` inputs are likewise impossible. Larger parameter values, including dangerous odd-even shield boundaries, are still open. The source-exact ten-step exclusion itself is independent of `t(h−3)=1` and applies to every reached B/0 with `t(h−2)=0` and right word `1110`.
 
 ## Exact theorem inventory
 
@@ -21,17 +38,17 @@ The source-certified shield theorems `left_gateway_shield`, `left_gateway_B_shie
 
 ## Verification against untouched original definitions
 
-The workflow [.github/workflows/agent12-root119-corridor.yml](../../.github/workflows/agent12-root119-corridor.yml) decodes checksum-pinned Lean sources and compiles **unmodified** original `Root119Gate.lean`, `Root119BShift.lean` and `Root119BShield.lean` from [Agent42's dossier](../agent42-root119-guard/README.md). All source declarations are in original `BB6Root119` semantics and use its exact `run`. All theorem axiom reports contain only standard Lean axioms, with no `sorryAx`.
+The manual [.github/workflows/agent12-root119-corridor.yml](../../.github/workflows/agent12-root119-corridor.yml) checks [`Root119Ancestry.lean`](Root119Ancestry.lean) and [`Root119AncestryTen.lean`](Root119AncestryTen.lean) against unmodified original `Root119Gate.lean`, `Root119BShift.lean`, `Root119BShield.lean` from [Agent42](../agent42-root119-guard/README.md). It then checks the three original-source checksum-pinned return modules. All declarations use the literal `BB6Root119.next`, physical signed tape, and exact `run`; no `sorryAx` is admitted.
 
-**[Full source-certified Lean 4.36.0-rc2 CI success, run 42588104760](https://github.com/FlareZ123/bb6/actions/runs/42588104760)**
+**[Original-source Lean 4.36.0-rc2 success, run 42715692774](https://github.com/FlareZ123/bb6/actions/runs/42715692774)** verifies both new authentic-reachability theorems and the four existing return families. The 10-step exclusion, genuine-root exclusion and four-right theorem print only standard Lean axioms (`propext`, `Classical.choice`, `Quot.sound` where used). The earlier [return-only successful run 42588104760](https://github.com/FlareZ123/bb6/actions/runs/42588104760) is retained for source provenance.
 
-| Decoded source | SHA-256 of original Lean source | Core theorems |
+| Source | Source status | Scope |
 | --- | --- | --- |
-| [Root119Corridor.lean.xz.b64](Root119Corridor.lean.xz.b64) | `65efa8844d8836f2579e4d7d5a71f308a2fc2f5343a0c0309f1f0c971ca2ab1d` | Three one-parameter return families, complete tape boundaries |
-| [Root119CorridorShield.lean.xz.b64](Root119CorridorShield.lean.xz.b64) | `0888e541438f09ef9da1ea7228d51a2446c488a3b3c42a40a955354acec023ef` | `NoLeft4` transport through all three |
-| [Root119Cross.lean.xz.b64](Root119Cross.lean.xz.b64) | `f5dd3f8e6432dec762dbecc1b8c7a791330218bf6c21be4b599fb457606ef99d` | Two-parameter double sweep, exact full tape and `NoLeft4` |
-
-Compressed source is used because the repository already uses source-integrity-pinned Lean B64+XZ artifacts. CI reconstructs ordinary `.lean` files and checks real imports.
+| [`Root119Ancestry.lean`](Root119Ancestry.lean) | Readable, compiled against original imports | Genuine reachable B/0 right-three property; arbitrary three-step inverse |
+| [`Root119AncestryTen.lean`](Root119AncestryTen.lean) | Readable, compiled against original imports | Arbitrary ten-step inverse contradiction and all-time blank-root right-four theorem |
+| [`Root119Corridor.lean.xz.b64`](Root119Corridor.lean.xz.b64) | Decoded SHA-256 `65efa8844d8836f2579e4d7d5a71f308a2fc2f5343a0c0309f1f0c971ca2ab1d` | Three one-parameter B/0 returns, exact tape boundaries |
+| [`Root119CorridorShield.lean.xz.b64`](Root119CorridorShield.lean.xz.b64) | Decoded SHA-256 `0888e541438f09ef9da1ea7228d51a2446c488a3b3c42a40a955354acec023ef` | Three corresponding forbidden-word shields |
+| [`Root119Cross.lean.xz.b64`](Root119Cross.lean.xz.b64) | Decoded SHA-256 `f5dd3f8e6432dec762dbecc1b8c7a791330218bf6c21be4b599fb457606ef99d` | Two-parameter double sweep with shield |
 
 ## Independent finite trace correspondence
 
@@ -54,8 +71,9 @@ The two formerly exceptional double-sweep instances instantiate the exact theore
 
 This census is reproducible and matches original-source machine semantics, but no finite replay is an all-time proof.
 
-## Remaining decisive mathematical obligation
+## Missing global proof obligation
 
-The auxiliary blank-root nonhalting gate is formalized as existence of a reachable D/0 configuration with immediate left `11` (see Agent42's `Root119Gate.blank_halts_iff_gate`). The existing `NoLeft4` shield and these four new closures do **not** establish an inductive classification of *all reachable B/0 section inputs*. Prior source-certified B-return families, especially the odd-even prefix and two-wave chains, have additional exact boundary hypotheses. The outstanding implication is that every *blank-reachable* nonhalting return belongs to some safely returning class, and that no intervening state reaches the gate. This requires a global word invariant or a complete symbolic return transition system, not further finite first-return percentages.
+Agent42's original [`blank_halts_iff_gate`](../agent42-root119-guard/Root119Gate.lean) reduces auxiliary blank-root halting to a genuinely reached D/0 with two left ones. The `NoLeft4 true true false` shield and exact conditional return theorems would be useful toward excluding this gate, but no proof yet establishes that **all** genuine B/0 returns satisfy the necessary corridor hypotheses or preserve the shield. In particular, the odd-even family with `n≥2` has a sharp, source-checked `110` left boundary obstruction; whether authentic reachability excludes that boundary remains open.
 
-Highest-value direction: unify all certified B/0 families into a single set-of-patterns inductive closure theorem from the blank configuration, with the exposed odd-even boundary sentinel obligation and unbounded prefix-matching retained explicitly. A competing route is a direct global unreachable-gate invariant with fewer side-condition families. Both remain open.
+A useful next research target is an inductively closed, source-exact language for all B/0 input sections, including two-wave chains, alternating left retreats, right-run endings, and exceptional predecessors. The new all-time four-right restriction narrows that language, but supplies no global upper bound for BB(6) or nonhalting theorem for #119.
+
