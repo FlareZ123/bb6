@@ -1,0 +1,46 @@
+name: Agent 9 fill every remaining q29-100 P1 critical gateway
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bounded-gap-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl -fsSL --retry 3 --retry-all-errors https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep $((5*attempt))
+          done
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Certify fifteen formerly uncovered finite P1 critical roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q41:im-results/agent9-p1-fixed-cone:im-results/agent9-p1-largecones"
+          QLIST=(46 49 54 58 62 66 78 81 82 85 86 90 94 97 98)
+          lean --version
+          python im-results/agent9-p1-largecones/generate_large_rows.py "${QLIST[@]}"
+          PROOFS=()
+          for Q in "${QLIST[@]}"; do
+            PROOFS+=("im-results/agent9-p1-largecones/Q${Q}Budget.lean")
+          done
+          python tools/lean_compile_deps.py "${PROOFS[@]}" | tee /tmp/p1-small-gaps-source.log
+          if grep -E -q 'sorryAx|error:' /tmp/p1-small-gaps-source.log; then
+            echo "Rejected: Lean errors or sorry axiom" >&2
+            exit 1
+          fi
+          for Q in "${QLIST[@]}"; do
+            grep -F "BB6.Agent9Q${Q}.no_critical_gateway' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/p1-small-gaps-source.log
+          done
