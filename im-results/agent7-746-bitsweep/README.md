@@ -129,6 +129,8 @@ This is logarithmic in k rather than the generic linear bound `m≤k+3`. It foll
 
 The [**exact high-band odd-image criterion**](../agent7-746-fatal-depth-27/README.md) sharpens the preceding odd-entry analysis for all source heights, independently of blank-root reachability. At level k≥2, for any entry e≥6·2^k, existence of an odd source first-reset predecessor is **equivalent to** `27∣(2e+5)` when `4e+10<27·2^k`, and equivalent to `9∣(2e+5)` in the complementary upper band. Both converses construct exact odd source parents with valuations t=2 and t=1. In the narrow interval, an odd entry followed by m same-level resets and an adjacent even fatal exit additionally forces the **unique** m%18 class determined by k%54, strengthening the previous mod-9 depth sieve. The full original-source Lean [CI 42593843110](https://github.com/FlareZ123/bb6/actions/runs/42593843110) passes with standard axioms only. The classification is for genuine source edges from arbitrary heights; synthetic ancestors are not certified blank-reachable.
 
+A subsequent [27-adic root-gap theorem](../agent7-746-fatal-depth-27/README.md) proves **genuine blank-reset-root unreachability** for an infinite family of heights `e_n=6·2^(9+54n)+(9+54n)+2` at every `n≥0`, all having `e_n%3=2`. The precise `narrow_high_root_gap_exclusion` handles a wider all-index region: no odd source parent by 27-divisibility failure, and the unique even source parent lies in the no-even-image gap with residue different from 2 mod3. Original-source Lean [CI 42595867922](https://github.com/FlareZ123/bb6/actions/runs/42595867922) passed. The excluded family consists of reset heights, generally separate from the still-unresolved fatal F_k target levels. The formal mathematical result is [here](../../results/2026-11-09-machine-746-27-adic-high-root-exclusion.md).
+
 **Unresolved boundary:** even-entry stages have been sharply constrained and the high-band odd image is now exactly characterized, but odd exits may skip multiple levels, and the authentic blank-reset orbit might still hit a valid fatal height through a surviving odd-entry history. No general nonhalting theorem follows.
 
 ## 6. Original-source verification and reproducibility
@@ -148,6 +150,7 @@ Manual-only [Lean 4.36.0-rc2 source-audit workflow](../../.github/workflows/agen
 | All-index ban on consecutive successful even level exits | [42564354336](https://github.com/FlareZ123/bb6/actions/runs/42564354336) |
 | Odd terminal residual and logarithmic same-level bound after even entry | [42564766777](https://github.com/FlareZ123/bb6/actions/runs/42564766777) |
 | Exact high-band odd image iff and narrow-entry mod-27 fatal-depth sieve | [42593843110](https://github.com/FlareZ123/bb6/actions/runs/42593843110) |
+| Unbounded 27-adic genuine blank-root high-band exclusion family | [42595867922](https://github.com/FlareZ123/bb6/actions/runs/42595867922) |
 
 All newly checked proof conclusions audit with ordinary Lean axioms `propext`, `Quot.sound`, and where imported source/executable recursion requires it, `Classical.choice`. No `sorryAx` is used. The transient failed run 42560897705 identified a missing local import of `fatalAt`; the module was corrected and subsequently passed unchanged-source CI.
 
