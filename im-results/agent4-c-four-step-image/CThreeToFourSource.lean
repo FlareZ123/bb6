@@ -1,5 +1,6 @@
 import CThreeArithmetic
 import ThreeConeSource
+import ThreeConeProper
 import GenericSection
 import Lean.Elab.Tactic.Omega
 
@@ -26,6 +27,40 @@ theorem four_edge_impossible (u v c d b l a k x y : Nat)
       constructor <;> omega
   exact BB6.Agent34Three.no_three_edges u v c d b l a k
     hparent.1 hparent.2 h4 h3 h2
+
+/-- The four-return obstruction is sharp: every such target really has
+    three consecutive source predecessors, while none has four. -/
+theorem exactly_three_not_four (x y : Nat)
+    (hy : 70≤y) (hs : (x+y)%8=1) (hy32 : y%32=22) :
+    (∃ a k b l c d,
+      secNext (c,d)=some (b,l) ∧
+      secNext (b,l)=some (a,k) ∧
+      secNext (a,k)=some (x,y)) ∧
+    (∀ u v c d b l a k,
+      ¬ (secNext (u,v)=some (c,d) ∧
+         secNext (c,d)=some (b,l) ∧
+         secNext (b,l)=some (a,k) ∧
+         secNext (a,k)=some (x,y))) := by
+  let a := x+y-2
+  let k := (y-2)/2
+  have hfirst : secNext (a,k)=some (x,y) := by
+    dsimp [a,k]
+    exact BB6.Agent34ThreeProper.direct_predecessor x y (by omega) (by omega)
+  have hsector :
+      34≤k ∧ (((a+k)%8=1 ∧ k%16=10) ∨
+        ((a+k)%8=3 ∧ k%16=2)) := by
+    dsimp [a,k]
+    constructor
+    · omega
+    · left
+      constructor <;> omega
+  obtain ⟨⟨b,l,c,d,hthird,hsecond⟩,_⟩ :=
+    BB6.Agent34ThreeProper.exactly_two_not_three a k hsector.1 hsector.2
+  constructor
+  · exact ⟨a,k,b,l,c,d,hthird,hsecond,hfirst⟩
+  · intro u v c d b l a' k' ⟨h4,h3,h2,h1⟩
+    exact four_edge_impossible u v c d b l a' k' x y hy hs hy32
+      h4 h3 h2 h1
 
 /-- Every real blank-origin section return avoids this cylinder. -/
 theorem blank_no_four_cylinder (time x y : Nat)
@@ -110,6 +145,7 @@ theorem high_stop_fourth_exclusion (j m k time : Nat)
   exact blank_no_four_cylinder time (2*j+3) k hbound hsum hkmod
 
 #print axioms four_edge_impossible
+#print axioms exactly_three_not_four
 #print axioms blank_no_four_cylinder
 #print axioms high_stop_fourth_exclusion
 end BB6.Agent4Four
