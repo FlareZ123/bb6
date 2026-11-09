@@ -1,6 +1,6 @@
 # Three shallow P1 inverse transitions: exact scalar obstruction at all indices
 
-**Status: arithmetically proved in Lean 4.36.0-rc2, original-source lift pending.**
+**Status: original-source proved in Lean 4.36.0-rc2 for the complete three-shallow word language.**
 All modules live in `im-results/agent43-p1-high-cost-reset-count/`; no theorem here
 establishes a blank-origin halt decision or an exact Busy Beaver value.
 
@@ -76,25 +76,48 @@ The all-index arithmetic theorem compiled in
 with `#print axioms` showing only
 `[propext, Classical.choice, Quot.sound]`. The abstract bridge compiled in the full repository workflow [CI 42542712348](https://github.com/FlareZ123/bb6/actions/runs/42542712348), no `sorryAx`. This certifies the exact cocycle interface, **not** a fully source-lifted three-shallow `inverseAt` word theorem.
 
-## Unresolved machine-level step
+## Verified unchanged-original-source theorem
 
-The theorem is about exact scalar equations that match the original-source
-two-step and shallow cocycle formulas. **No three-shallow genuine `inverseAt`
-word exclusion has yet been asserted**. To obtain one, re-use
-`SourceOneShallowLift.lean`:
+[SourceOneShallowLift.lean](SourceOneShallowLift.lean) proves
+`BB6.Agent43SourceWord.source_no_three_shallow_word_wall_all`: no
+legal original `inverseAt` history from the critical P1 source
+`(14*2^n-2*n-16,3,0)`, with n>=14 and depth word
+`(2)^s (0|1) (2)^u (0|1) (2)^v (0|1) (2)^r`,
+can terminate at the exact shifted wall
+`b+4*m+4*n+20=12*2^n`. Every inverse edge is constrained by its
+original parity, inverse-value, left-bound and output-bound hypotheses.
+The four runs can be arbitrarily long, and all eight choices of three
+shallow depths are included. No finite-run assumption is introduced.
 
-1. Construct three `source_shallow_profile` instances around four
-   `SourceTwoChain` runs, keeping all original legality/mass assumptions.
-2. Apply `two_chain_model` to each run to get the exact `TwoRun` models.
-3. Apply `run_cost` and `run_energy` to produce B1/B2/B3 and integer
-   energy relations, and `root_two_prefix_divisor` to produce the
-   exact `q,p,d` quotients. The latter also gives 3*s<=n.
-4. Substitute the root defect `98*P-(14*n+92)`, terminal wall defect
-   `-E`, and all three `source_shallow_profile` identities.
-5. Invoke `BB6.Agent43ThreeShallowAbstract.no_three_shallow_energies`.
-   Its hypotheses are intentionally a thin exact-cocycle interface.
+[ThreeShallowSourceModel.lean](ThreeShallowSourceModel.lean) first proves
+`no_three_shallow_model_from_source_coefficients`: four exact `TwoRun`
+relations, three affine `I`-energy cocycles, and the final wall give
+the arithmetic contradiction. It derives the exact 8-adic root quotients,
+the positive natural remainders, the nested wall equation and cost identity.
+The source theorem then calls original `two_chain_mass` and
+`two_chain_model` for all four blocks, original `inverseAt_iff_power_mass`
+for all three shallow edges, and `source_shallow_profile` for their
+true coefficients before invoking the model theorem.
 
-This is a genuine next mathematical bridge, rather than a request to rerun
-the finite searches or rederive the quartic gap. All future source lifts
-should retain `results/` only for externally publishable advances; this
-dossier remains in `im-results/`.
+The **full original-source proof compiled successfully** in
+[manual GitHub Actions CI 42544621231](https://github.com/FlareZ123/bb6/actions/runs/42544621231).
+Its final `#print axioms` is
+`[propext, Classical.choice, Quot.sound]`; there is no `sorryAx`.
+The previously established all-index arithmetic and abstract bridge
+are also included in this run. This is the strongest current verified
+source word exclusion in this dossier.
+
+## Open quantifiers and next mathematical frontier
+
+An actual P1 halting decision remains open. The next candidate grammar
+contains four shallow transitions, with arbitrary depth-two gaps; more
+general inverse words also permit depth >=3 and exceptional exits. The
+present theorem restricts only histories that satisfy its explicit
+`SourceTwoChain` decomposition. It does not prove an authentic
+blank-root reachability/exclusion statement or a BB(6) maximality result.
+
+A general symbolic (k)-shallow remainder theorem, with a formal
+source-word lift and a nontrivial parameter-uniform conclusion, is the
+most promising extension. Additional finite scans of already excluded
+three-shallow words would duplicate the proved result. These results
+remain under `im-results/` pending external novelty qualification.
