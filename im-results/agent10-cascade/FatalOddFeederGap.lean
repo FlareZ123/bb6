@@ -15,7 +15,7 @@ private theorem feeder_pow243 (t : Nat) :
     rw [heq, Nat.pow_add, Nat.mul_mod, ih]
     decide
 
-private theorem feeder_growth (k : Nat) (hk : 20≤k) :
+theorem feeder_growth (k : Nat) (hk : 20≤k) :
     12*(k+2)+40<2^k := by
   induction k with
   | zero => omega
