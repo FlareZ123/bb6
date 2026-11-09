@@ -180,6 +180,8 @@ jobs:
           # Additional original-source arbitrary-suffix C/0 frontier return.
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/FrontierOdd0100Source.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429Odd0100Source.odd_0100_original'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/FrontierOdd0100Max.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429Odd0100Max.odd_0100_all_head_max'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
