@@ -30,6 +30,8 @@ Every genuine odd source first-reset output has (2e+5=3^{t+1}d) for some (t\ge0)
 
 Thus **(m\equiv1\pmod2)**, with no minimum-level hypothesis. The source bridge is [SweepOddFatalDepth.lean](SweepOddFatalDepth.lean), theorem `odd_entry_adjacent_fatal_depth_odd`. Its essential all-natural arithmetic lemma was checked locally with Lean 4.36.0-rc2 and ordinary logical axioms.
 
+The same mod-3 identity also fixes the preceding level sector without a separate fatal-sector premise. For odd m, equation (1) implies (2^k+k+1)%3=0, which holds precisely for k%6 in {3,4}. The derived original-source theorem is `odd_entry_adjacent_fatal_level_sector` in [SweepOddFatalDepth.lean](SweepOddFatalDepth.lean).
+
 ## II. Higher 3-adic gate for entries above (6\cdot2^k)
 
 Suppose (e\ge6\cdot2^k). The original source's odd-exit quotient is in the exact image band
@@ -119,4 +121,4 @@ Outstanding paths include odd exits that skip dyadic levels, histories that do n
 
 ## Proof and CI status
 
-Four proof modules are checked in: [Depth](SweepOddFatalDepth.lean), [Nine](SweepOddFatalNine.lean), [Residue](SweepOddFatalResidue.lean), [Exceptional](SweepOddFatalExceptional.lean). The complete mathematical arithmetic cores, and original-source bridges evaluated against matching source declarations, have local Lean 4.36.0-rc2 proof checks without `sorry`. The dedicated [manual full-source workflow](../../.github/workflows/agent44-746-fanin.yml) compiles the unchanged original source and all four modules. Its CI status must be checked independently; do not interpret an unfinished or failed run as a successful source audit.
+Four proof modules are checked in: [Depth](SweepOddFatalDepth.lean), [Nine](SweepOddFatalNine.lean), [Residue](SweepOddFatalResidue.lean), [Exceptional](SweepOddFatalExceptional.lean). The full unchanged original-source Lean 4.36.0-rc2 integration for all four files **passed [CI run 42580632479](https://github.com/FlareZ123/bb6/actions/runs/42580632479)**. The subsequently added source-derived fatal-sector proof and unconditional final residue theorem **passed [CI run 42581502772](https://github.com/FlareZ123/bb6/actions/runs/42581502772)**. Each module prints theorem axiom dependencies; no `sorry` or ad hoc axiom is used. [Manual full-source workflow](../../.github/workflows/agent44-746-fanin.yml) documents the exact original-source import chain.
