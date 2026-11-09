@@ -10,6 +10,10 @@ For every finite binary right suffix `Y`, define
 
 `F_k(Y) = I_(3k+4)(0Y)`, `P(k)=12k²+41k+33`.
 
+## New finite-graph structural reduction
+
+The new [E3 remote-reentry cycle-cut analysis](E3RemoteReentryDAG.md), reproduced by [the finite checker](E3RemoteReentryDAG.py), establishes computationally that the existing 6,399-node E3 safety graph is acyclic when remote right-reentry states exclude A and omit at least one of C, D, F. The longest abstract paths for maximal allowed sets BCDE, BCEF, BDEF are 128, 137, and 82 graph edges. Thus a hypothetical infinite nonterminal E3 core orbit must remain permanently right of the window after an excursion, reenter in A infinitely often, or reenter in each C, D, F infinitely often. **This new cycle classification is exhaustive finite computation, not a new Lean-kernel theorem**, though the original graph safety and physical-tape bridge were previously source-certified. Abstract edges do not bound primitive-time cost. Finite actual inputs admit A and F reentries, so this does not establish E3 finite-tail termination, authentic D blank-root nonhalting, or BB(6).
+
 ## Certified theorem
 
 [FullFFirstEvent.lean](FullFFirstEvent.lean), theorem
