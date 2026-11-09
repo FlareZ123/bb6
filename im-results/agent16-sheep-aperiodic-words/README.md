@@ -36,15 +36,16 @@ The authentic generic even-section map strictly increases on its positive domain
 
 ## Verification and reproduction
 
-Three Lean modules, compiled in dependency order with `Std` under Lean 4.36.0-rc2:
+Four Lean modules, compiled in dependency order with `Std` under Lean 4.36.0-rc2:
 
 1. [CoprimeAffine.lean](CoprimeAffine.lean) proves `finite_chain_gap_divisibility`, `finite_chain_gap_lower_bound`, `coprime_expansion_no_infinite_chain`, and `coprime_affine_no_infinite_growth`.
 2. [SheepAffine.lean](SheepAffine.lean) proves `original_generic_algebra`, exact arbitrary-word affine composition `word_path_holds`, and `word_coprime`, `word_scale`, `nonempty_word_scale_gt_one`.
-3. [SheepAperiodic.lean](SheepAperiodic.lean) proves `no_infinite_repeated_word` for every nonempty word and every strictly increasing infinite sequence of genuine source-derived branch equations.
+3. [SheepAperiodic.lean](SheepAperiodic.lean) proves `no_infinite_repeated_word` for every nonempty word and every strictly increasing infinite sequence of source-derived generic branch equations.
+4. [SheepFinite.lean](SheepFinite.lean) proves the direct finite word-level quantitative result `word_repetition_gap_bound`: for every sequence of `n+1` identical complete generic words along a strictly increasing trajectory, `2^(n*C(w)) <= x_1-x_0`. This closes the finite-boundary inference inside Lean, without relying on a paper-only composition.
 
-All main declarations compile locally with printed axioms restricted to `[propext, Quot.sound]` (and subsets); no `sorry`, `admit`, or `native_decide`. UTF-8 SHA-256 hashes of the checked sources: CoprimeAffine `9678c0b7bda2ff9977422c17747630542bf51100048b9210e06d7bcbb6f4fea1`, SheepAffine `9304dddff6bc6b179a9f972e9820a6c801118ec2bdc3aa4396667f04a777df7e`, SheepAperiodic `9d0bd7cf8e489cbabe06875ef19aeb20f2b6cf3582be56f48d3f265f423f7cfd`.
+All main declarations compile locally with printed axioms restricted to `[propext, Quot.sound]` (and subsets); no `sorry`, `admit`, or `native_decide`. UTF-8 SHA-256 hashes of the checked sources: CoprimeAffine `9678c0b7bda2ff9977422c17747630542bf51100048b9210e06d7bcbb6f4fea1`, SheepAffine `9304dddff6bc6b179a9f972e9820a6c801118ec2bdc3aa4396667f04a777df7e`, SheepAperiodic `9d0bd7cf8e489cbabe06875ef19aeb20f2b6cf3582be56f48d3f265f423f7cfd`, SheepFinite `3a07e541cf584665fe1bed5904591a984dbfb064f559022b9a7a1ca61ba86e2b`.
 
-For standalone checking, place all three files in one Lean search directory, compile `SheepAffine.lean` and `CoprimeAffine.lean` to `.olean` files, then compile `SheepAperiodic.lean`. The files require only Lean's `Std`. The branch algebra is tied to the published Sheep generic section formula via the explicit Diophantine identity, and a separate [original-machine source bridge](../agent16-sheep-even-return/README.md) was already verified in [CI 41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547).
+For standalone checking, place all three files in one Lean search directory, compile `SheepAffine.lean` and `CoprimeAffine.lean` to `.olean` files, then compile `SheepAperiodic.lean` and `SheepFinite.lean`. The files require only Lean's `Std`. The branch algebra is tied to the published Sheep generic section formula via the explicit Diophantine identity, and a separate [original-machine source bridge](../agent16-sheep-even-return/README.md) was already verified in [CI 41505950547](https://github.com/FlareZ123/bb6/actions/runs/41505950547).
 
 ## Relationship to earlier work, limitations and next use
 
