@@ -150,6 +150,75 @@ theorem boundary_is_sharp (n : Nat) :
   rw [boundary_spectrum]
   simp
 
+
+/-- Injective successor transport preserves distinct fatal first counters. -/
+theorem nodup_succ (xs : List Nat) (h : xs.Nodup) : (xs.map Nat.succ).Nodup := by
+  induction xs with
+  | nil => simp
+  | cons x xs ih =>
+    have hp := (List.nodup_cons.mp h)
+    apply List.nodup_cons.mpr
+    constructor
+    · intro hh
+      obtain ⟨y,hy,he⟩ := List.mem_map.mp hh
+      have hx : x=y := by omega
+      exact hp.1 (hx ▸ hy)
+    · exact ih hp.2
+
+theorem nodup_down (xs : List Nat) (h : xs.Nodup) : (down xs).Nodup := by
+  induction xs with
+  | nil => simp [down]
+  | cons x xs ih =>
+    have hp := List.nodup_cons.mp h
+    cases x with
+    | zero =>
+      simpa only [down, List.filterMap_cons, ↓reduceIte] using ih hp.2
+    | succ x =>
+      apply List.nodup_cons.mpr
+      constructor
+      · intro hm
+        have hx : x+1 ∈ xs := (mem_down xs x).1 hm
+        exact hp.1 hx
+      · exact ih hp.2
+
+/-- The fast fatal spectrum contains no duplicate counters. -/
+theorem spectrum_nodup (b : Nat) : (fastSpectrum b).Nodup := by
+  induction b using Nat.strongRecOn with
+  | ind b ih =>
+    rw [fastSpectrum]
+    by_cases hz : b=0
+    · simp [hz]
+    · simp only [if_neg hz]
+      by_cases h0 : b%3=0
+      · simp only [if_pos h0]
+        exact nodup_down _ (ih (b/3-1) (by omega))
+      · simp only [if_neg h0]
+        by_cases h1 : b%3=1
+        · simp only [if_pos h1]
+          apply List.nodup_cons.mpr
+          constructor
+          · intro hh
+            obtain ⟨x,hx,he⟩ := List.mem_map.mp hh
+            omega
+          · exact nodup_succ _ (ih (b/3) (by omega))
+        · simp only [if_neg h1]
+          by_cases h2 : badAll 0 (b/3)=true
+          · simp only [h2, if_pos, List.singleton_append]
+            apply List.nodup_cons.mpr
+            constructor
+            · intro hh
+              obtain ⟨x,hx,he⟩ := List.mem_map.mp hh
+              omega
+            · exact nodup_succ _ (ih (b/3+1) (by omega))
+          · have hf : badAll 0 (b/3)=false := by
+              cases he : badAll 0 (b/3) with
+              | false => rfl
+              | true => exact False.elim (h2 he)
+            simp only [hf, Bool.false_eq_true, if_false, List.nil_append]
+            exact nodup_succ _ (ih (b/3+1) (by omega))
+
+#print axioms spectrum_nodup
+
 #print axioms minimum_blocks_for_n_failures
 #print axioms boundary_spectrum
 #print axioms cap_and_saturation
