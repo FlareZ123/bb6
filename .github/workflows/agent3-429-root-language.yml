@@ -1,0 +1,30 @@
+name: Agent 3 #429 exact C-zero section grammar (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  section-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official pinned Lean compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://github.com/leanprover/lean4/releases/download/v4.36.0-rc2/lean-4.36.0-rc2-linux.tar.zst"
+          curl -fLsS --retry 4 --retry-all-errors --retry-delay 5 "$url" -o "$RUNNER_TEMP/lean.tar.zst"
+          printf '%s  %s\n' '0a0a3208617e9eab92f1041efa83ad94d405e69d172fb654a62dbfa9fbc5313b' "$RUNNER_TEMP/lean.tar.zst" | sha256sum -c -
+          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/lean-4.36.0-rc2-linux/bin" >> "$GITHUB_PATH"
+      - name: Check original exact model and quantified fatal corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent39-429-frontier-left:im-results/agent3-429-root-language"
+          lean -o im-results/agent39-429-frontier-left/Frontier429.olean im-results/agent39-429-frontier-left/Frontier429.lean
+          lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootLanguageFatal.lean | tee /tmp/agent3-root-grammar.log
+          grep -F "'BB429RootLanguageFatal.root_grammar_contains_fatal_family' depends on axioms:" /tmp/agent3-root-grammar.log
+          grep -F "'BB429RootLanguageFatal.root_grammar_fatal_halts' depends on axioms:" /tmp/agent3-root-grammar.log
+          if grep -q 'sorryAx' /tmp/agent3-root-grammar.log; then exit 1; fi
