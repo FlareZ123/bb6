@@ -19,7 +19,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check authentic six-state sparse semantics and zero-path frontier
         run: |
-          set -eu
+          set -euo pipefail
           export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent33-429-writer-locality:im-results/agent6-429-one-sided-excursion:im-results/agent5-429-rank:im-results/agent30-429-first-gate-rays:im-results/agent32-429-raw-parent:im-results/agent1-429-w4-boundary"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
