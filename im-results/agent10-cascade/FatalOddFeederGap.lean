@@ -149,7 +149,10 @@ theorem fatal_odd_feeder_unreachable (t : Nat) :
     narrow_27_middle9_root_exclusion k x
       (by dsimp [k,n]; omega) hi hentrylo hxtop
       hdiv27 hmiddle hdiv9
-  exact ⟨hp,by simpa only [heq] using hno⟩
+  refine ⟨hp, ?_⟩
+  change ¬ReachC (2,0) (oddPre n (fatal n),0)
+  rw [heq]
+  exact hno
 
 #print axioms feeder_arithmetic
 #print axioms feeder_candidate_eq
