@@ -83,10 +83,8 @@ theorem narrow_high_odd_output_mod_twentyseven (a entry k : Nat)
       have hgaphigh : q<6*2^k := by omega
       exact False.elim (odd_quotient_gap_four_six k j q hgaplow hgaphigh hband.1)
     · by_cases htone : t=1
-      · have hdq : q=2*d := by rw [hfactor,htone]; simp
-        have heq9 : 2*entry+5=9*d := by
-          rw [heqentry,htone]
-          norm_num
+      · have hdq : q=2*d := by simpa [htone] using hfactor
+        have heq9 : 2*entry+5=9*d := by simpa [htone] using heqentry
         have heq9q : 9*q=4*entry+10 := by omega
         have hgaplow : 2*2^k<q := by omega
         have hgaphigh : q<3*2^k := by omega
