@@ -49,6 +49,27 @@ theorem diagonal_ancestor (u e : Nat) :
         exact ⟨r, HeapPath.step hpath hedge⟩
   exact hmain (u+e) u e rfl
 
+/-- Diagonal ancestors are unique: all transfer paths from root to a
+    destination agree on their diagonal origin. -/
+theorem diagonal_ancestor_unique (a b : Nat) (z : Nat×Nat)
+    (pa : HeapPath (a,a) z) (pb : HeapPath (b,b) z) : a=b := by
+  induction pa generalizing b with
+  | refl =>
+      cases pb with
+      | refl => rfl
+      | step p edge =>
+          exact False.elim ((diagonal_no_predecessor a _) edge)
+  | step p edge ih =>
+      cases pb with
+      | refl =>
+          exact False.elim ((diagonal_no_predecessor b _) edge)
+      | step p' edge' =>
+          have hprev := heap_edge_predecessor_unique _ _ _ edge edge'
+          subst_vars
+          exact ih _ p'
+
+#print axioms diagonal_ancestor_unique
+
 #print axioms legal_parent
 #print axioms diagonal_ancestor
 end BB6.Agent9Heaps
