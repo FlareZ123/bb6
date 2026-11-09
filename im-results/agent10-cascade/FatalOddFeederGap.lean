@@ -6,6 +6,12 @@ namespace CascadeFastReturn
 open CascadeBitSweep CascadeResetInverse CascadeSweep CascadeFirstFork
 open CascadeUniformFatal CascadeManyShield
 
+private theorem feeder_narrow_mod27 (x : Nat)
+    (hx : x%27=12) : (2*x+5)%27≠0 := by omega
+
+private theorem feeder_middle_mod9 (h : Nat)
+    (hh : h%9=8) : (2*h+5)%9≠0 := by omega
+
 private theorem feeder_pow243 (t : Nat) :
     2^(20+486*t)%243=31 := by
   induction t with
@@ -136,7 +142,7 @@ theorem fatal_odd_feeder_unreachable (t : Nat) :
     firstFailIndex_unique x k hindexhi
       (guards_from_low x k hindexlo)
   have heq : oddPre n (fatal n)=x := feeder_candidate_eq t
-  have hdiv27 : (2*x+5)%27≠0 := by omega
+  have hdiv27 : (2*x+5)%27≠0 := feeder_narrow_mod27 x hxmod
   have hmiddle : 2*(2*x-8*p-k)+5<9*p := by
     have he : 2*x-8*p-k=h := by omega
     rw [he]
@@ -144,7 +150,7 @@ theorem fatal_odd_feeder_unreachable (t : Nat) :
   have hdiv9 : (2*(2*x-8*p-k)+5)%9≠0 := by
     have he : 2*x-8*p-k=h := by omega
     rw [he]
-    omega
+    exact feeder_middle_mod9 h hhmod
   have hno : ¬ReachC (2,0) (x,0) :=
     narrow_27_middle9_root_exclusion k x
       (by dsimp [k,n]; omega) hi hentrylo hxtop
