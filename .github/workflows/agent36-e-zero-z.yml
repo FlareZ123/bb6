@@ -75,6 +75,7 @@ jobs:
           lean -o "$X/EZeroZTwo.olean" "$X/EZeroZTwo.lean" | tee -a axioms.log
           lean -o "$X/EZeroZTwoFollow.olean" "$X/EZeroZTwoFollow.lean" | tee -a axioms.log
           lean -o "$X/EZeroZTwoA.olean" "$X/EZeroZTwoA.lean" | tee -a axioms.log
+          lean -o "$X/EZeroZTwoAll.olean" "$X/EZeroZTwoAll.lean" | tee -a axioms.log
           lean -o "$X/ZSafeNormalizer.olean" "$X/ZSafeNormalizer.lean" | tee -a axioms.log
           lean -o "$X/AZ0P2.olean" "$X/AZ0P2.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
