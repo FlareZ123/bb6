@@ -84,12 +84,21 @@ theorem all_prepared_F_first_events (ys : List Bool) :
       intro hge
       omega
     · have hsplit : j = prefixTime k+(j-prefixTime k) := by omega
+      have hrun :
+          run j (fStart k ys) =
+            run (j-prefixTime k) (eSector (4*k) ys) := by
+        calc
+          run j (fStart k ys) =
+              run (prefixTime k+(j-prefixTime k)) (fStart k ys) :=
+                congrArg (fun n => run n (fStart k ys)) hsplit
+          _ = run (j-prefixTime k) (eSector (4*k) ys) := by
+              rw [run_add,hprefix]
       have hnone := hn (4*k) (j-prefixTime k)
       constructor
-      · rw [hsplit,run_add,hprefix]
+      · rw [hrun]
         exact hnone.1
       · intro _
-        rw [hsplit,run_add,hprefix]
+        rw [hrun]
         exact hnone.2
 
 #print axioms prefix_is_certified_sector
