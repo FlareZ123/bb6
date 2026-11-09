@@ -74,16 +74,27 @@ HaltsAfter target429 N
 
 Thus `N` is the count of successful ordinary transitions; if a
 step-scoring convention includes the terminal halt query, that score
-is `N+1 = n+2*k+4`. Original-source CI verification of the newly
-appended exact-time theorem is tracked in the existing source-audit
-workflow; its successful result should be linked here when available.
+is `N+1 = n+2*k+4`. The exact-time original-source theorem and all imported dependencies were
+Lean-certified in [CI 42586162764](https://github.com/FlareZ123/bb6/actions/runs/42586162764),
+job 129056397951, commit `9b00faf1cafed9c1c4bdfee4b41113502b95be61`,
+with only `[propext, Quot.sound]` and no `sorryAx`.
 
 A genuine A corridor has a marked cell exactly `2*k+3` cells
 right of the head. The prior-scan lemma
 `BB6Coverage.marked_cell_previously_scanned` forces an
-earlier physical head visit to that cell. This is an unbounded,
-parameter-sensitive form of the old three-cell head-history
-obstruction. Its source theorem is pending compilation.
+earlier physical head visit to that cell. The theorem
+`halting_requires_prior_distant_scan` certifies the full
+quantified original-run statement:
+
+```
+HaltsAfter target429 N → ∃ n k a j d,
+  N=n+2*k+3 ∧ R(n)=some a ∧ aGate k a ∧
+  j<n ∧ R(j)=some d ∧ d.head=a.head+2*k+3.
+```
+
+This unbounded, parameter-sensitive historical head obstruction
+is source-certified in the same successful CI 42586162764,
+with exactly `[propext, Quot.sound]`.
 
 ## Exact remaining research obligation
 
