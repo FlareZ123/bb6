@@ -1,10 +1,6 @@
 name: Agent 49 root inverse explorer
 
 on:
-  push:
-    paths:
-      - im-results/agent49-parity623/root_inverse_explorer.py
-      - .github/workflows/agent49-root-inverse-explorer.yml
   workflow_dispatch:
 
 jobs:
