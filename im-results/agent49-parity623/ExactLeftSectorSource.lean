@@ -1,4 +1,4 @@
-import Agent49SharpSpectrumCapacitySource
+import Agent49FastFailureSpectrumSource
 
 /-!
 Exact left-sector one-step halting geometry for the original Cryptids #623
@@ -10,7 +10,6 @@ the listed states.
 namespace BB6.Agent49LeftSector
 open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent49FastSpectrum
-open BB6.Agent49Capacity
 
 /-- Odd third-counter, far-left input: the entire original source halting
 predicate is membership in one exact finite block-spectrum. -/
