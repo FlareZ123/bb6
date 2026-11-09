@@ -116,6 +116,8 @@ jobs:
           grep -F "'BB429W2FirstHeadMax.junc0_w2_first_czero_max'" "$LOG"
           grep -F "'BB429W2FirstHeadMax.junc0_w2_first_gate_prefix_bound'" "$LOG"
           grep -F "'BB429W2FirstHeadMax.physical_junc0_w2_first_gate_prefix_bound'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w2-census/W2CZeroTailMax.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429W2CZeroTailMax.c0_tail_max'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/W4HeadPhysical.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4HeadPhysical.physical_sourceScanE_all_prefixes_right_bound'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-w4-boundary/W4Closure.olean im-results/agent1-429-w4-boundary/W4Closure.lean 2>&1 | tee -a "$LOG"
