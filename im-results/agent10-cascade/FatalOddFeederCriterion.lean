@@ -70,7 +70,7 @@ theorem fatal_odd_feeder_modular_root_exclusion
       (by simpa only [heqh] using hhtop)
       (by simpa only [heqh] using hdh9)
   have hp : ResetParent (oddPre n u) u :=
-    odd_parent_near_top n u (n+4) (by omega) (by omega)
+    odd_parent_near_top n u (n+4) (by omega)
       (by simpa only [u] using fatal_close n (by omega))
       (by simpa only [u] using fatal_size n (by omega)) hfdiv
   exact ⟨hp,by simpa only [x,u] using hno⟩
