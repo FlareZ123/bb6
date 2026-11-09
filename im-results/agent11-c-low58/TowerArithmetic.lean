@@ -134,6 +134,22 @@ theorem b_closed (n t : Nat) : b t n + 2 = (4*t+7)*2^n := by
         _ = 2*((4*t+7)*2^n) := by rw [ih]
         _ = (4*t+7)*2^(n+1) := by rw [Nat.pow_succ]; ac_rfl
 
+/-- The same cylinder lies in Agent19's known dyadic three-cone.
+    The novelty is its precise arbitrary-depth source image rank. -/
+theorem tower_mass_mod8 (n t x : Nat) (hx : x%8=xr n) :
+    (x+2*b t n+4*n)%8=3 := by
+  induction n generalizing x with
+  | zero =>
+      change (x+2*(4*t+5)+4*0)%8=3
+      change x%8=1 at hx
+      omega
+  | succ n ih =>
+      have hphase := phase_step n t x hx
+      have hp := ih (x+2*b t n) hphase
+      change (x+2*(2*b t n+2)+4*(n+1))%8=3
+      omega
+
 #print axioms cylinder_cone
+#print axioms tower_mass_mod8
 #print axioms b_closed
 end BB6.Agent11Tower
