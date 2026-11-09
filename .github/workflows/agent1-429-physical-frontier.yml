@@ -20,7 +20,7 @@ jobs:
       - name: Check authentic six-state sparse semantics and zero-path frontier
         run: |
           set -eu
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent33-429-writer-locality"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -43,5 +43,6 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/FiniteLassoOracle.olean im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean | tee /tmp/agent1-429-physical.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean | tee /tmp/agent1-429-physical.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/BB429WriterLocality.lean | tee -a /tmp/agent1-429-physical.log
           if grep -q sorryAx /tmp/agent1-429-physical.log; then exit 1; fi
