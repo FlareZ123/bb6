@@ -50,7 +50,7 @@ private theorem diagonal_stop_k_mod_four (j m k : Nat)
     by the preceding Agent3/11/19/29 joint original-root criterion,
     including its recursive affine-terminal-right-four test. -/
 theorem prior_high_admits_diagonal (j m : Nat)
-    (hm : 4≤m) (hj : j%2=1)
+    (hm : 2≤m) (hj : j%2=1)
     (hd : m%32=(j+25)%32) :
     BB6.Agent11C58ValSix.highAllowed j m := by
   have hbase : BB6.Agent3.jointHighAllowed j m := by
@@ -100,11 +100,31 @@ theorem prior_high_admits_diagonal (j m : Nat)
   unfold BB6.Agent11C58ValSix.highAllowed
   exact ⟨hfull,by omega⟩
 
+/-- The m=2 diagonal boundary is also genuinely blank-unreachable.
+    Its stopping target lies in the source-certified sharp I2\\I3 sector
+    (x%16,y%32)=(5,12), so the arbitrary-m>=4 bridge is unnecessary. -/
+theorem diagonal_two_no_blank (j k time : Nat)
+    (hj : j%32=9)
+    (hstop : k+j+3*2+5=(2:Nat)^(2*2+2)*(j+3)) :
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
+      some (2*j+3,k) := by
+  have hp : (2:Nat)^(2*2+2)=64 := by decide
+  rw [hp] at hstop
+  have hk : k%32=12 := by omega
+  have hkmin : 12≤k := by omega
+  let s := (j-1)/8
+  let t := (k-12)/32
+  have hj8 : j=8*s+1 := by dsimp [s]; omega
+  have ht : k=32*t+12 := by dsimp [t]; omega
+  have hx : 2*j+3=16*s+5 := by omega
+  rw [hx,ht]
+  exact BB6.Agent4Three.blank_no_sector_c time s t
+
 /-- Strictly stronger high parameter domain: remove the source-excluded
     entire odd diagonal while retaining all previous C58/ValSix gates. -/
 def highAllowed (j m : Nat) : Prop :=
   BB6.Agent11C58ValSix.highAllowed j m ∧
-  ¬(4≤m ∧ j%2=1 ∧ m%32=(j+25)%32)
+  ¬(2≤m ∧ j%2=1 ∧ m%32=(j+25)%32)
 
 /-- Original Machine C blank halting iff the exact low or high
     fixed-target evaluator succeeds with all previous restrictions and
@@ -131,8 +151,13 @@ theorem blank_halts_iff_diagonal :
         omega
       have hnot : ¬(4≤m ∧ j%2=1 ∧ m%32=(j+25)%32) := by
         rintro ⟨hm,hj,hd⟩
-        exact (BB6.Agent4Three.high_stop_odd_diagonal_mod32
-          j m k time hm hj hd hstop) ht
+        by_cases hm4 : 4≤m
+        · exact (BB6.Agent4Three.high_stop_odd_diagonal_mod32
+            j m k time hm4 hj hd hstop) ht
+        · have hm2 : m=2 := by omega
+          subst m
+          have hj9 : j%32=9 := by omega
+          exact (diagonal_two_no_blank j k time hj9 hstop) ht
       exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
     · exact Or.inl hlow
@@ -141,7 +166,7 @@ theorem blank_halts_iff_diagonal :
 /-- All diagonal parameters of sufficiently large m are strict
     exclusions of this genuinely stronger all-time criterion. -/
 theorem diagonal_strict (j m : Nat)
-    (hm : 4≤m) (hj : j%2=1)
+    (hm : 2≤m) (hj : j%2=1)
     (hd : m%32=(j+25)%32) :
     BB6.Agent11C58ValSix.highAllowed j m ∧ ¬ highAllowed j m := by
   refine ⟨prior_high_admits_diagonal j m hm hj hd,?_⟩
@@ -150,6 +175,7 @@ theorem diagonal_strict (j m : Nat)
 
 #print axioms norm_right_ne_four
 #print axioms diagonal_stop_k_mod_four
+#print axioms diagonal_two_no_blank
 #print axioms prior_high_admits_diagonal
 #print axioms blank_halts_iff_diagonal
 #print axioms diagonal_strict
