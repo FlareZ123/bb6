@@ -18,8 +18,15 @@ jobs:
         run: |
           set -e
           MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
           LAB=im-results/agent27-p1-finite
-          export LEAN_PATH="$MAP:$LAB"
+          export LEAN_PATH="$MAP:$INV:$LAB"
           lean --version
-          lean -o "$MAP/PosEvenForm.olean" "$MAP/PosEvenForm.lean"
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          for m in P1FiniteInverse P1InverseLog; do
+            lean -o "$INV/$m.olean" "$INV/$m.lean"
+          done
           lean "$LAB/P1ActiveArborescence.lean"
+          lean "$LAB/P1InverseNoMerge.lean"
