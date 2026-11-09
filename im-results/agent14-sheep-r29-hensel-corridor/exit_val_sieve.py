@@ -24,6 +24,12 @@ def run() -> None:
         density = Fraction(count, PERIOD)
         assert density == Fraction(2291, 13260)
         print(f"Z P-depth parity={parity}: forbidden a = {count}/{PERIOD} = {density}")
+        interior_count = sum(
+            excludes(a, parity) or a % 6 in (0, 4)
+            for a in range(PERIOD)
+        )
+        assert Fraction(interior_count, PERIOD) == Fraction(2237, 4420)
+        print(f"Z interior: forbidden generic a = {interior_count}/{PERIOD} = 2237/4420")
     period_x = lcm(20, 136)
     for parity in (0, 1):
         allowed_x = 35 if parity == 0 else 27
@@ -34,6 +40,15 @@ def run() -> None:
         assert count_x == 114
         assert Fraction(count_x, period_x) == Fraction(57, 340)
         print(f"X P-depth parity={parity}: forbidden a = {count_x}/{period_x} = 57/340")
+        period_int_x = lcm(period_x, 6)
+        count_int_x = sum(
+            (a % 20 == 1 or
+             (a % 8 == 3 and a % 136 != allowed_x) or
+             a % 6 in (0, 4))
+            for a in range(period_int_x)
+        )
+        assert Fraction(count_int_x, period_int_x) == Fraction(511, 1020)
+        print(f"X interior: forbidden generic a = {count_int_x}/{period_int_x} = 511/1020")
 
 
 if __name__ == "__main__":
