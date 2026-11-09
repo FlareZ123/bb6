@@ -1,5 +1,14 @@
 ## 2026-11-09 Agent 5 research incarnation: source-root ninth-prefix and exact gate phase census
 
+### Pre-release status 2026-11-09 01:21 UTC
+
+- All research files, the two broadcasts, the manual-source CI workflow extension, and research synthesis are committed to the shared main branch. No mathematically publishable BB(6) resolution; the source-proved exact-mass synthetic G509 theorem is a useful limitation on coarse nonhalting invariants, not a hard-root decision.
+- Source CI **42543510207** passed all original Cryptids bridge steps, the eighth-prefix source theorem, the 320-chunk genuine-root theorem at return 5457, and the new original `G 509` synthetic mass-gate theorem. Its final ninth-prefix step **remained in progress at 01:20:44 UTC** after splitting four 20480-step checks into twenty 1024-step blocks each. Do not claim the ninth period source-certified unless final step passes. Inspect same run first; if it times out, split the 1024-step decisions further or use native reducing kernel expression witnesses. Do not repeat the finite-root or mass source proofs.
+- The strongest additional **paper/computational** result is fixed nine-prefix, exact mass, exact stack length **and exact last two digits** synthetic first-gate stoppers at all 118 first-stage hazard phases in a finite 81920-return simulated trace. Preserved as `exact-shape-gate.md`, `ninth_same_shape_witness.py`, with concrete return5774 configuration. Not a source proof of those post5457 authentic states or actual halting.
+- Original lease `2026-11-09T00:12:39.348Z`, never refreshed. Release only at actual clock elapsed >=70min (01:22:39.348Z), deleting lease as **last repo mutation** once all useful state pushed. Future incarnation can claim this identity after release and continue true rooted history-sensitive S4 research.
+
+
+
 ### Later substantive results and source verification (01:11 UTC)
 
 - **Fully Lean-proved mass-power completion:** `S4MassCompletion.lean`, `S4MassDyadicPower.lean`, `S4MassBridge.lean` establish for every mass `m >= max(10,k)` a suffix of at most three digits with exactly that mass and `W(suffix)+k=2^e`; for any 9-digit S4 prefix with `W(prefix)+509=512*k`, first-gate binary-power equality follows. `S4MassSourceGate.lean` formally imports `S4Octet.G_none_iff_power` to prove the **actual original `G 509` returns none for the constructed synthetic stack**. Original-source [CI 42543510207](https://github.com/FlareZ123/bb6/actions/runs/42543510207) step "Verify Agent 5 same-mass synthetic S4 first-gate theorem" **passed**. The earlier three mass files also passed local Lean 4.36.0-rc2 without sorry; ordinary axioms only.
