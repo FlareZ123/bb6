@@ -229,3 +229,194 @@ theorem bGate_has_A_ancestor (n : Nat) :
             C_parent_to_bGate_succ e a b mB mv k hce hb hdirB hdir hBe hC hgate
           obtain ⟨j,k',x,hj,hjrun,hx⟩ := ih l (by omega) (k+1) e he hG
           exact ⟨j,k',x,by omega,hjrun,hx⟩
+
+/-- The exact A0 right move enters the associated B corridor on the
+    original physical tape, preserving every cell ahead of its head. -/
+theorem aGate_to_bGate (a : Config) (k : Nat) (ha : aGate k a) :
+    ∃ b, rawStep target429 a=some b ∧ bGate k b := by
+  rcases ha with ⟨ha0,hpair,hs0,hs1,hs2⟩
+  let mv : Move := ⟨true,true,B⟩
+  let b := applyMove a mv
+  have hrow : target429 (readSlot a) = some mv := by
+    simpa [ha0,mv] using
+      (show target429 (A,false)=some ⟨true,true,B⟩ by decide)
+  have step : rawStep target429 a=some b := by
+    simp [rawStep,hrow,b]
+  have hhead : b.head=a.head+1 := rfl
+  have ht : ∀ x, a.head<x → b.tape x=a.tape x := by
+    intro x hx
+    exact untouchedRight a mv rfl x hx
+  have hslot : readSlot b=(B,false) := by
+    change (b.state,b.tape b.head)=(B,false)
+    apply Prod.ext
+    · rfl
+    · have ha1 : a.tape (a.head+1)=false := by
+        cases k with
+        | zero => simpa using hs0
+        | succ k =>
+          have hh := hpair 0 (by omega : 0<k+1)
+          simpa using hh.1
+      change b.tape b.head = false
+      rw [hhead, ht (a.head+1) (by omega)]
+      exact ha1
+  refine ⟨b,step,hslot,?_,?_,?_,?_⟩
+  · intro i hi
+    obtain ⟨hi0,hi1⟩ := hpair i hi
+    constructor
+    · have heq : b.head+2*(i:Int)=a.head+1+2*(i:Int) := by omega
+      rw [heq,ht _ (by omega)]
+      exact hi0
+    · have heq : b.head+2*(i:Int)+1=a.head+2+2*(i:Int) := by omega
+      rw [heq,ht _ (by omega)]
+      exact hi1
+  · have heq : b.head+2*(k:Int)=a.head+2*(k:Int)+1 := by omega
+    rw [heq,ht _ (by omega)]
+    exact hs0
+  · have heq : b.head+2*(k:Int)+1=a.head+2*(k:Int)+2 := by omega
+    rw [heq,ht _ (by omega)]
+    exact hs1
+  · have heq : b.head+2*(k:Int)+2=a.head+2*(k:Int)+3 := by omega
+    rw [heq,ht _ (by omega)]
+    exact hs2
+
+/-- One B/0 and C/1 pair consumes precisely one 01 corridor block. -/
+theorem bGate_succ_step (b : Config) (k : Nat) (hg : bGate (k+1) b) :
+    ∃ d, run target429 2 b=some d ∧ bGate k d := by
+  rcases hg with ⟨hb0,hpair,hs0,hs1,hs2⟩
+  let mB : Move := ⟨true,true,C⟩
+  let mC : Move := ⟨false,true,B⟩
+  let c := applyMove b mB
+  let d := applyMove c mC
+  have hrowB : target429 (readSlot b)=some mB := by
+    simpa [hb0,mB] using
+      (show target429 (B,false)=some ⟨true,true,C⟩ by decide)
+  have stepB : rawStep target429 b=some c := by
+    simp [rawStep,hrowB,c]
+  have hc1 : readSlot c=(C,true) := by
+    change (c.state,c.tape c.head)=(C,true)
+    apply Prod.ext
+    · rfl
+    · have h1 := (hpair 0 (by omega : 0<k+1)).2
+      have hx : c.tape c.head=b.tape (b.head+1) := by
+        have ne : b.head+1≠b.head := by omega
+        simp [c,applyMove,mB,ne]
+      exact hx.trans (by simpa using h1)
+  have hrowC : target429 (readSlot c)=some mC := by
+    simpa [hc1,mC] using
+      (show target429 (C,true)=some ⟨false,true,B⟩ by decide)
+  have stepC : rawStep target429 c=some d := by
+    simp [rawStep,hrowC,d]
+  have hrun : run target429 2 b=some d := by
+    change (rawStep target429 b).bind (rawStep target429)=some d
+    rw [stepB]
+    simpa only [Option.bind_some] using stepC
+  have hhead : d.head=b.head+2 := by
+    simp [d,c,applyMove,mB,mC]; omega
+  have ht : ∀ x, b.head+2≤x → d.tape x=b.tape x := by
+    intro x hx
+    exact twoRightTail b mB mC rfl rfl x hx
+  have hd0 : readSlot d=(B,false) := by
+    change (d.state,d.tape d.head)=(B,false)
+    apply Prod.ext
+    · rfl
+    · have hbit : b.tape (b.head+2)=false := by
+        cases k with
+        | zero => simpa using hs0
+        | succ k =>
+          have hh := hpair 1 (by omega)
+          simpa using hh.1
+      rw [ht _ (by omega)]
+      simpa [hhead] using hbit
+  refine ⟨d,hrun,hd0,?_,?_,?_,?_⟩
+  · intro i hi
+    obtain ⟨hi0,hi1⟩ := hpair (i+1) (by omega)
+    constructor
+    · have heq : d.head+2*(i:Int)=b.head+2*((i+1:Nat):Int) := by rw [hhead];omega
+      rw [heq,ht _ (by omega)]
+      exact hi0
+    · have heq : d.head+2*(i:Int)+1=b.head+2*((i+1:Nat):Int)+1 := by rw [hhead];omega
+      rw [heq,ht _ (by omega)]
+      exact hi1
+  · have heq : d.head+2*(k:Int)=b.head+2*((k+1:Nat):Int) := by rw [hhead];omega
+    rw [heq,ht _ (by omega)]
+    exact hs0
+  · have heq : d.head+2*(k:Int)+1=b.head+2*((k+1:Nat):Int)+1 := by rw [hhead];omega
+    rw [heq,ht _ (by omega)]
+    exact hs1
+  · have heq : d.head+2*(k:Int)+2=b.head+2*((k+1:Nat):Int)+2 := by rw [hhead];omega
+    rw [heq,ht _ (by omega)]
+    exact hs2
+
+theorem run_plus (m : Machine) (a b : Nat) (c : Config) :
+    run m (a+b) c = (run m a c).bind (fun d => run m b d) := by
+  induction b with
+  | zero => simp [run]
+  | succ b ih =>
+    have hs : a+(b+1)=(a+b)+1 := by omega
+    rw [hs]
+    change (run m (a+b) c).bind (rawStep m) = _
+    rw [ih]
+    cases hc : run m a c with
+    | none => simp [hc]
+    | some d => simp [hc,run]
+
+/-- For every natural k, the genuine B corridor deterministically enters
+    a B/001 physical gate exactly 2k moves later. -/
+theorem bGate_reaches_B001 (k n : Nat) (b : Config)
+    (hr : run target429 n blank=some b) (hg : bGate k b) :
+    ∃ d, run target429 (n+2*k) blank=some d ∧ bGate 0 d := by
+  induction k generalizing n b with
+  | zero => exact ⟨b,by simpa using hr,by simpa using hg⟩
+  | succ k ih =>
+    obtain ⟨c,hstep,hnew⟩ := bGate_succ_step b k hg
+    have hc : run target429 (n+2) blank=some c := by
+      rw [run_plus,hr]
+      simpa using hstep
+    obtain ⟨d,hd,hg0⟩ := ih (n+2) c hc hnew
+    refine ⟨d,?_,hg0⟩
+    have heq : n+2*(k+1)=(n+2)+2*k := by omega
+    simpa [heq] using hd
+
+private theorem bGate_zero_iff_fatalB (b : Config) :
+    bGate 0 b ↔ BB429FatalB.fatalB b := by
+  constructor
+  · rintro ⟨hslot,_,h0,h1,h2⟩
+    have hs : b.state=BB429FatalB.B := by
+      simpa [readSlot, BB429FatalB.B, B] using congrArg Prod.fst hslot
+    exact ⟨hs, by simpa using h0, by simpa using h1, by simpa using h2⟩
+  · rintro ⟨hs,h0,h1,h2⟩
+    refine ⟨?_,?_,?_,?_,?_⟩
+    · change (b.state,b.tape b.head)=(B,false)
+      exact Prod.ext (by simpa [BB429FatalB.B,B] using hs) h0
+    · intro i hi; omega
+    · simpa using h0
+    · simpa using h1
+    · simpa using h2
+
+/-- All-time exact blank-origin #429 halt criterion. For some k, a
+    genuine A/0 visit must read 0(01)^k001 ahead on its physical tape.
+    Every such visit also forces the authentic halt. -/
+theorem halts_iff_earlier_A_corridor :
+    (∃ n, HaltsAfter target429 n) ↔
+    (∃ n k a, run target429 n blank=some a ∧ aGate k a) := by
+  rw [BB429FatalB.target429_halts_iff_root_B001]
+  constructor
+  · rintro ⟨n,b,hb,hfatal⟩
+    have hGate : bGate 0 b := (bGate_zero_iff_fatalB b).mpr hfatal
+    obtain ⟨j,k,a,hlt,hj,hgate⟩ := bGate_has_A_ancestor n 0 b hb hGate
+    exact ⟨j,k,a,hj,hgate⟩
+  · rintro ⟨n,k,a,ha,hgate⟩
+    obtain ⟨b,hab,hbgate⟩ := aGate_to_bGate a k hgate
+    have hb : run target429 (n+1) blank=some b := by
+      change (run target429 n blank).bind (rawStep target429)=some b
+      rw [ha]
+      simpa using hab
+    obtain ⟨c,hc,hfatal⟩ := bGate_reaches_B001 k (n+1) b hb hbgate
+    exact ⟨n+1+2*k,c,hc,(bGate_zero_iff_fatalB c).mp hfatal⟩
+
+#print axioms bGate_has_A_ancestor
+#print axioms bGate_succ_step
+#print axioms bGate_reaches_B001
+#print axioms halts_iff_earlier_A_corridor
+
+end BB429AGate
