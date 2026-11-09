@@ -39,21 +39,19 @@ theorem cycle9_period81920 :
     prefixRunFast 81920 cycle9Start = cycle9Start := by
   calc
     prefixRunFast 81920 cycle9Start =
-        prefixRunFast (61440 + 20480) cycle9Start := by omega
+        prefixRunFast (61440 + 20480) cycle9Start := by rfl
     _ = prefixRunFast 20480 (prefixRunFast 61440 cycle9Start) :=
       prefixRunFast_add 61440 20480 cycle9Start
     _ = prefixRunFast 20480
           (prefixRunFast (40960 + 20480) cycle9Start) := by
-      congr 1
-      omega
+      rfl
     _ = prefixRunFast 20480
           (prefixRunFast 20480 (prefixRunFast 40960 cycle9Start)) := by
       rw [prefixRunFast_add 40960 20480 cycle9Start]
     _ = prefixRunFast 20480
           (prefixRunFast 20480
             (prefixRunFast (20480 + 20480) cycle9Start)) := by
-      congr 2
-      omega
+      rfl
     _ = prefixRunFast 20480
           (prefixRunFast 20480
             (prefixRunFast 20480 (prefixRunFast 20480 cycle9Start))) := by
