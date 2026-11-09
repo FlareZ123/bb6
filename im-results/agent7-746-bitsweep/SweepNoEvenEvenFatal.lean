@@ -80,6 +80,10 @@ private theorem no_dyadic_eq (k c m : Nat) (hk : 8≤k)
   have hpowle : 2^m≤c := Nat.le_of_dvd hcpos hdivc
   omega
 
+/-- Dyadic-vs-polynomial gap for all k at least eight. -/
+theorem dyadic_gap_k (k : Nat) (hk : 8≤k) :
+    (2*k+4)*(2*k+5) < 2^(k+1) := gap k hk
+
 namespace CascadeFastReturn
 open CascadeBitSweep
 
