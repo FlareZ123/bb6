@@ -97,6 +97,24 @@ quartic remainder bound and kernel-checked n14..57 certificates.
 The complete derivation and quantified assumptions are in
 [ThreeShallowAllIndex.md](ThreeShallowAllIndex.md).
 
+**Unified low-depth necessary condition.**
+[SourceLowDepth.lean](SourceLowDepth.lean) defines a stepwise, original-`inverseAt`
+`SourceLowTrace` that records every legal inverse edge of depth 0, 1, or 2,
+including the source parity and left-bound tests, and counts all shallow
+(depth-0/1) edges. It proves the public theorem
+`BB6.Agent43SourceWord.source_low_trace_wall_needs_four_shallows`:
+**any such finite history from the critical seed that ends on the shifted
+wall must contain at least four shallow steps**, regardless of the number
+and order of depth-two transitions. The theorem is proved by a genuine
+stepwise-to-block normal-form induction, the original-source 0/1/2/3-shallow
+exclusions, and a separate pure-depth-two energy-sign contradiction.
+[Original-source CI 42546553574](https://github.com/FlareZ123/bb6/actions/runs/42546553574)
+completed successfully with terminal axioms
+`[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+[SourceOneShallowLift.lean](SourceOneShallowLift.lean) now exposes
+`source_two_chain_model` as a public genuine-source transport theorem
+for this and subsequent source trace proofs.
+
 **Scope:** This is an unbounded-length exclusion of one explicitly restricted
 original-machine inverse language. Words with four or more shallow steps,
 any depth>=3 step, exceptional inverse exits and unrestricted authentic
