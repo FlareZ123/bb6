@@ -70,11 +70,12 @@ theorem low_root_depth_ge7 (m : Nat)
     (hroot : BB6.Agent3ValSix.valSixMixedRootDecision 1
       (2^(2*m+3)-(3*m+4)) = true) : 7 ≤ m := by
   have hmass := low_root_mass_gt m hroot
-  by_contra h
-  have hcases : m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨
-      m=4 ∨ m=5 ∨ m=6 := by omega
-  rcases hcases with rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals simp [BB6.Agent4MassBounds.lowRawMass_eq] at hmass
+  by_cases hm : 7 ≤ m
+  · exact hm
+  · have hcases : m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨
+        m=4 ∨ m=5 ∨ m=6 := by omega
+    rcases hcases with rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    all_goals simp [BB6.Agent4MassBounds.lowRawMass_eq] at hmass
 
 /-- Every genuine high stopping input must lie in one of the exact
     seven unbounded parameter tails below. -/
