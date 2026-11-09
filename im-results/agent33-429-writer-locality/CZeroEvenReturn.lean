@@ -23,11 +23,14 @@ theorem a_right_pairs_exact (j : Nat) (l r : List Bool) :
           List.replicate (2*j) true ++ (true::true::l)
         rw [show 2*(j+1) = 2*j+2 by omega,
           ← List.replicate_append_replicate]
-        rfl
+        simp [List.append_assoc]
+      have hwords2 : ones (2+2*j) ++ l =
+          ones (2*j) ++ (true::true::l) := by
+        simpa only [show 2+2*j = 2*(j+1) by omega] using hwords
       rw [show 2*(j+1) = 2+2*j by omega, run_add, hfirst]
       simp only [Option.bind_some]
       rw [ih (true::true::l)]
-      rw [hwords]
+      rw [← hwords2]
 
 /-- Entire even prepared E/0 passage, now with the exact final left stack.
     Existing even_prepared_crosses supplied only an existential left stack. -/
@@ -56,7 +59,7 @@ theorem even_E0_crosses_exact (k : Nat) :
     have hwords : true::true::ones (2*(k+1)) = ones (2*k+4) := by
       change true::true::List.replicate (2*(k+1)) true =
         List.replicate (2*k+4) true
-      rw [show 2*k+4 = (2*(k+1))+2 by omega,
+      rw [show 2*k+4 = 2+(2*(k+1)) by omega,
         ← List.replicate_append_replicate]
       rfl
     simpa only [hwords] using ht
