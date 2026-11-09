@@ -1,0 +1,41 @@
+name: Agent2 D E3 finite-window uniform low-visit bound (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean and certificate-generator dependency
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --quiet filelock
+      - name: Regenerate the existing closed seam and the new low-region rank
+        run: |
+          set -euo pipefail
+          python3 im-results/agent31-d-exceptional/verify_e_seam_certificate.py
+          python3 im-results/agent25-e-seam-kernel/make_e_seam_kernel.py "$RUNNER_TEMP/e-seam"
+          python3 im-results/agent2-e-seam-rank/make_e_seam_rank.py "$RUNNER_TEMP/e-seam"
+      - name: Prove 6399 original-rule successors and rank inequalities in Lean
+        env:
+          LEAN_PATH: ${{ runner.temp }}/e-seam
+        working-directory: ${{ runner.temp }}/e-seam
+        run: |
+          set -euo pipefail
+          lean --version
+          lean -o ESeamTreeBase.olean ESeamTreeBase.lean
+          seq 0 199 | xargs -P 2 -I{} sh -c 'lean -o "ESeamTreeBlock{}.olean" "ESeamTreeBlock{}.lean" >/dev/null'
+          lean -o ESeamTreeMaster.olean ESeamTreeMaster.lean | tee graph-axioms.log
+          lean -o ESeamRankBase.olean ESeamRankBase.lean
+          seq 0 199 | xargs -P 2 -I{} sh -c 'lean -o "ESeamRankBlock{}.olean" "ESeamRankBlock{}.lean" >/dev/null'
+          lean ESeamRankMaster.lean | tee rank-axioms.log
+          if grep -E 'sorryAx|_native\.native_decide' graph-axioms.log rank-axioms.log; then exit 1; fi
+          grep -F "all_e3_low_visits' depends on axioms: [propext, Classical.choice, Quot.sound]" rank-axioms.log
