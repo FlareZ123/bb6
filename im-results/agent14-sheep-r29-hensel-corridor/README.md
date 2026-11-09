@@ -1,6 +1,6 @@
-# Eight fixed-order 3-adic Hensel corridors in the authentic Sheep even-return graph
+# Eight fixed-order 3-adic Hensel corridors: exact inverse-depth distribution
 
-**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorem and exact constructive certificate.** This establishes a genuine new *mixed-edge inverse corridor* phenomenon for a single hard Sheep power-of-two root progression. It does **not** prove any path from the authentic blank seed, does not decide Sheep, and does not determine BB(6). The proof uses the original-source section recurrences and elementary lifting-the-exponent arithmetic; a single new unchanged-original-machine Lean import remains open.
+**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The new quantitative theorem determines the exact natural-density distribution of the lengths of their distinguished genuine zero-valued predecessor tails. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
 
 ## Theorem: unbounded true E inverse depth at fixed v3(j)=7
 
@@ -52,6 +52,49 @@ X(k)+12 = (2^(j+11)+680296)/59049,
 At k=0 the numerator is divisible by `3^10`, for each r, by the same parent-integrality congruence. With `g=2^Delta` and `v3(g−1)=10`, the **identical one-digit 3-adic lifting induction** used below chooses k with numerator divisible by `3^(10+2T)` for any T. Hence `9^T | X(k)+12`, and T repetitions of `P(y)=(8y−12)/9` supply a genuine even-return inverse corridor ending at X(k). Choosing k≥T makes every synthetic source larger than 20, since `X(k)+12>2^(j-5)` and `8/9>1/2`.
 
 Consequently the full theorem holds independently in **eight** exponent residue cylinders modulo Delta: r29 with a terminal `(3,6)` edge and the seven classes above with terminal `(8,2)` edges. Every target still satisfies `v3(j)=7`. This strengthening is reproduced by [`mixed_witness.py`](./mixed_witness.py); the original [`witness.py`](./witness.py) is retained as an independently readable r29 specialization.
+
+## New exact inverse-depth distribution theorem
+
+For any of the eight families above, define `Y_r(k)` to be the **distinguished genuine mixed-edge source**: `Y_29(k)=Z(k)` and `Y_r(k)=X(k)` for the seven other residues. Write `j=17496*(r+63*k)` and, in exact integers,
+
+```text
+r=29: Y_r(k)+12 = N_r(k)/3483,     N_r(k)=2^(j+10)+25220,   e_r=4
+r≠29: Y_r(k)+12 = N_r(k)/59049,    N_r(k)=2^(j+11)+680296,  e_r=10
+```
+
+Here `e_r=v3(denominator)`; all the displayed quotients are positive even integers for every `k≥0`. Let `L_r(k)` be the **maximum** number of consecutive genuine inverse `(h,a)=(0,2)` even-return edges `P(y)=(8*y−12)/9` starting at `Y_r(k)`. This counts only the *specific zero-edge continuation after the displayed mixed source*, rather than the height of the complete predecessor tree.
+
+**Exact pointwise depth formula**, for every `k≥0`:
+
+```text
+L_r(k) = floor((v3(N_r(k)) − e_r)/2).
+```
+
+Put `b_29=3` and `b_r=0` for the other seven families. Then, with natural density taken over nonnegative integers `k`, for **every fixed** `T≥0`,
+
+```text
+density {k : L_r(k)≥T} = 9^(−max(0,T−b_r)).
+
+density {k : L_r(k)=T} =
+    (8/9)*9^(−(T−b_r))   if T≥b_r,
+    0                    if T<b_r.
+```
+
+The density is exact, including the endpoint `T=0`. Each divisibility test is one explicitly determined residue class `k (mod 3^(2*max(0,T−b_r)))`. Thus all r29 roots have at least **three** consecutive genuine `P` ancestors after the mixed edge, whereas among each of the seven h8 families precisely **one ninth** have one additional `P` ancestor and **one eighty-first** have two.
+
+As a quantitative limitation of exhaustive fixed-depth inverse-leaf closure, among **all** positive exponent indices `n` in the sparse subsequence `j=17496*n`, the lower natural density of powers with a genuine inverse path of at least `d≥1` edges is
+
+```text
+D(d) = (9^(−max(0,d−4)) + 7*9^(−(d−1)))/63.
+```
+
+The paths consist of the terminal mixed edge and `d−1` consecutive zero edges. For `d≥4`, `D(d)=736/(63*9^(d−1))`; for example `D(4)=736/45927` and `D(5)=736/413343`. These are rigorous **lower bounds** on the density of depth-`d` nonempty inverse trees, since additional inverse branches may survive beyond the distinguished one. They say nothing about whether the authentic orbit from section seed `10` visits any such ancestor.
+
+**Proof of the exact density.** Set `g=2^Delta`, `Delta=17496*63=56*3^9`. LTE gives `v3(g−1)=10`. Each numerator has shape `N_r(k)=A_r*g^k+C_r` with `3∤A_r`, and the eight exact initial congruences `N_r(0)≡0 (mod 3^10)` are checked in the source-independent certificate below. For every integer `t≥0`, we prove inductively that the congruence `N_r(k)≡0 (mod 3^(10+t))` selects **exactly one** residue `k (mod 3^t)`. At the induction step, the three lifts `k_t+u*3^t`, `u=0,1,2`, change the next divided 3-adic digit by `u*A_r*g^k_t*(g^(3^t)−1)/3^(10+t) (mod3)`. This coefficient is a unit because LTE gives `v3(g^(3^t)−1)=10+t`; exactly one lift kills the digit. The resulting residue cylinder has density `3^(−t)`. Since `v3(Y_r(k)+12)=v3(N_r(k))−e_r`, requiring `9^T |Y_r(k)+12` has density `3^(−max(0,e_r+2*T−10))`, which simplifies to the formula above.
+
+**Proof of exact genuine chain length.** For every even `y>36`, an inverse `P(y)` of type `(h,a)=(0,2)` exists only if `9|y+12`, by rearranging the original exact generic source formula; when it exists its source is unique. Repeating `T` times requires `9^T|y+12` and then gives `P^T(y)+12=8^T*(y+12)/9^T`. Because every `Y_r(k)` is huge and even, the case `T=1` has source at least 20. For `T≥2`, the quotient `m=(Y_r(k)+12)/9^T` is positive **even**, so the smallest source is `8^T*m−12≥2*8^2−12=116`. All intermediate inverse sources are larger. They are of exact form `4v` with odd `v≥5`, and each authentic first-even `E` edge is given by the original generic formula. Thus every arithmetically permitted `T` is a genuine chain and every longer one is impossible.
+
+**Reproduction.** [`density_certificate.py`](./density_certificate.py) verifies all eight base integrality/3-adic congruences, the exact `v3(g−1)=10` modulus test, unique Hensel residues at precisions through `3^18`, independent full-period uniqueness checks for the first five digits, and exact rational values `D(d)`. All arithmetic uses modular exponentiation without constructing `2^j` or simulating an enormous tape. The finite tests support the displayed base congruences; the induction and genuine-source inequalities give the universal, all-`k), all-`T) proof.
 
 ## Reusable 3-adic affine-corridor principle
 
