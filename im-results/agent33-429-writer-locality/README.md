@@ -1,6 +1,6 @@
 # #429: authentic writer prefixes admit synthetic one-sided fatal continuations
 
-**Intermediate mathematical falsification of an eight-cell local proof strategy (9 November 2026).** The machine is the genuine six-state table `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. Its blank-origin nonhalting and BB(6) remain **open**. This finding concerns the information needed to infer the C/01 gate from writer configurations. It does not exhibit an authentic blank-origin C/01 event.
+**Original-source Lean-certified finite locality obstruction (9 November 2026), [successful CI 42544324043](https://github.com/FlareZ123/bb6/actions/runs/42544324043).** The machine is the genuine six-state table `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. Its blank-origin nonhalting and BB(6) remain **open**. This finding concerns the information needed to infer the C/01 gate from writer configurations. It does not exhibit an authentic blank-origin C/01 event.
 
 ## Exact claim and reproducibility
 
@@ -17,7 +17,7 @@ Each genuine configuration has a one at position relative -9. The corresponding 
 
 Run `python writer_locality.py` to reproduce both 0-origin trajectories, the prepared fatal visit times, the one-sided head bound, and the first read divergence. The script uses the literal 11 nonhalting source rows, a sparse all-zero-elsewhere tape, and assertions for every reported quantity. The test is finite; the complete unbounded criterion is still unknown.
 
-[Lean source](BB429WriterLocality.lean) states both finite original-source physical traces, one-sided head bounds, and the authentic 276/283-step writer observations. A successful original-module CI compilation is required before calling those theorems **kernel source certified**. The Python assertions independently establish only finite simulation evidence.
+[Lean source](BB429WriterLocality.lean) states both finite original-source physical traces, one-sided head bounds, and the authentic 276/283-step writer observations. All six assertions were compiled against the repository's unchanged physical table and dependency chain in [manual CI 42544324043](https://github.com/FlareZ123/bb6/actions/runs/42544324043), commit `d1056189ffc3285985d5b9e24c5df865ace52abc`. Every corresponding `#print axioms` reports **no axioms** (fully kernel-reduced `by decide`), and the CI command rejects `sorryAx`. These are exact finite source-certified statements. The Python assertions independently reproduce the trajectories.
 
 ## Interpretation and remaining question
 
