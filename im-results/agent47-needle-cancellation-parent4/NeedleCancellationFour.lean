@@ -124,6 +124,39 @@ theorem infinite_cancellation_four_parent (t:Nat) :
   refine ⟨q,4,rfl,?_⟩
   omega
 
+
+/-- Complete classification: a positive-index cancellation feeder has
+    a valuation-four immediate original-source predecessor exactly when
+    its cancellation index is one modulo three.  This says nothing
+    about whether that predecessor is on the blank-start orbit. -/
+theorem cancellation_four_parent_iff (r:Nat) (hr:1≤r) :
+    (∃ q:Nat,
+      highLevelNext (.N (oddTower q 4)) =
+        some (.N (oddTower
+          (CancellationConstructive.feederQ r)
+          (CancellationTerminalConstructive.feederV r)))) ↔
+      r%3=1 := by
+  constructor
+  · rintro ⟨q,hstep⟩
+    have hstepFormula :
+        highLevelNext (.N (oddTower q 4)) =
+          some (.N (oddTower q 4+4+3*(q+1))) := by
+      change scanEven (oddTower q 4) 0 = _
+      simpa using scan_oddTower q 4 0
+    rw [hstepFormula] at hstep
+    simp only [Option.some.injEq, HighLevelState.N.injEq] at hstep
+    have hfeed := sourceB_is_original_feeder r hr
+    have hq4 : oddTower q 4+2=16*(2*q+3) := by
+      simpa using oddTower_factor q 4
+    have hb : sourceB r=35*q+55 := by omega
+    have hmod : sourceB r%35=20 := by rw [hb]; omega
+    exact (sourceB_mod35_iff r hr).mp hmod
+  · intro hm
+    have hrep:r=3*(r/3)+1:=by omega
+    rw [hrep]
+    exact infinite_cancellation_four_parent (r/3)
+
+#print axioms cancellation_four_parent_iff
 #print axioms sourceB_parent4
 #print axioms sourceB_is_original_feeder
 #print axioms infinite_cancellation_four_parent
