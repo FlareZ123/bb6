@@ -191,6 +191,14 @@ theorem genuinely_new : ¬ safeZ 1 ⟨6,0,2⟩ := by
 theorem residual_52_accepted : safeZPlus 3 ⟨52,1,0⟩ := by
   simp [safeZPlus, terminalSafePlus, terminalSafe, normalizeWithCount, advance]
 
+/-- A concrete source-original closure of the previously rejected
+    M(52,1,0;Z_3) prepared section. -/
+theorem residual_52_regular :
+    ∃ T a q b, ObsEq
+      (run T (packet 52 1 0 (marker 3)))
+      (regularSection a q b) :=
+  safeZPlus_source 3 ⟨52,1,0⟩ (by decide) residual_52_accepted
+
 #print axioms terminalSafePlus_source
 #print axioms safeZPlus_source
 #print axioms e_zero_k2_q2_exact
@@ -198,4 +206,5 @@ theorem residual_52_accepted : safeZPlus 3 ⟨52,1,0⟩ := by
 #print axioms e_zero_k2_all_Z_regular
 #print axioms old_safe_included
 #print axioms residual_52_accepted
+#print axioms residual_52_regular
 end BB6.Agent26ZSafePlus
