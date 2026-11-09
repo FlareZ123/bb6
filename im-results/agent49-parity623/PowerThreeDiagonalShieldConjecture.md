@@ -52,3 +52,14 @@ For every **even first counter** `a=3^p±1>0` and every odd third counter `d`, t
 If BOTH infinite conjectures are proved, the resulting **infinite vertical family** `T(D(3^p-1,d))≠none` and `T(D(3^p+1,d))≠none` for every odd `d` follows formally. This would establish a root-relevant all-time one-step safety family, though **not** a global root invariant or BB(6) solution.
 
 The next research task is a simultaneous induction for the pair of diagonal anti-membership statements under ternary changes `3q+r`. Check the two parity-dependent small terminal spectra in the same induction. If this fails, produce an explicit first counterexample rather than extending finite horizons without theory. Avoid adding any conjecture to `results/`.
+
+## Elementary infinite sublemma: the special boundary spectra are derivable
+
+The auxiliary pattern above **does admit an all-p paper induction** from the already source-certified exact recurrence (its standalone Lean proof is not included here). Put `A_p=E_(3^p)` and `B_p=E_(3^p-1)`. For p≥1 the source recurrence gives
+
+```text
+A_p = down(B_(p-1))
+B_p = ({0} if 0 in B_(p-1) else {}) union (A_(p-1)+1).
+```
+
+With `A_0=E_1={0}` and `B_0=E_0=∅`, induction yields `A_p={0}, B_p=∅` for p positive even and `A_p=∅, B_p={1}` for p odd. Also `E_(3^p-2)={0}∪(B_(p-1)+1)`, so `E_(3^p-2)={0,2}` for even p and `{0}` for odd p. **This settles the previously empirical near-right parity component on paper for every p.** The full infinite anti-diagonal shield remains an explicitly unproved conjecture and is the only remaining missing ingredient for the proposed entire safe-column conclusion.
