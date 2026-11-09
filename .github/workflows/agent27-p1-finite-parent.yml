@@ -1,0 +1,25 @@
+name: Agent27 P1 inverse unique-parent source theorem (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify exact unchanged P1 source definitions
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          LAB=im-results/agent27-p1-finite
+          export LEAN_PATH="$MAP:$LAB"
+          lean --version
+          lean -o "$MAP/PosEvenForm.olean" "$MAP/PosEvenForm.lean"
+          lean "$LAB/P1ActiveArborescence.lean"
