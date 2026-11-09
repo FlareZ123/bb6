@@ -100,6 +100,7 @@ jobs:
           lean -o "$b/FatalOddFeederCriterion.olean" "$b/FatalOddFeederCriterion.lean"
           lean -o "$b/FatalFeederResidueArithmetic.olean" "$b/FatalFeederResidueArithmetic.lean"
           lean -o "$b/FatalOddFeeder46.olean" "$b/FatalOddFeeder46.lean"
+          lean -o "$r/FeederSixStep.olean" "$r/FeederSixStep.lean"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
