@@ -99,6 +99,15 @@ The repository's [full forced normalization](../im-results/agent3-c-bounce-inver
 
 This is a **specific non-subsumption result relative to the existing `fullForcedExcluded` predicate**. It does not prove non-subsumption relative to every other source-certified analytic filter, and it does not imply that any new stopping parameter is blank-reachable.
 
+### Comparison with the five original joint high exclusions
+
+The exact original-source [Agent 3 joint high baseline](../im-results/agent3-c-bounce-inverse/JointRootQuantifier.lean) contains five universal necessary restrictions. Both new classes are retained by **all five older baseline tests**, by direct modular arithmetic:
+
+- In the fourth/fifth class `j%32=11` and `(j+m)%128=65`, so `m%32=22`. Therefore `j%4=3`, but `(j+3*m+7)%16=4`; `m%4=2`, so neither of the mod-four multibranches applies; and `(j+3*m+5)%8=2`. The `m=1` exception is impossible.
+- In the fifth/sixth class `j%32=29` and `m%256=(j+35)%256`, so `m%32=0`. Here `j%4=1`, but `(j+3*m+11)%32=8`; `(j+m)%32=29`, distinct from the older forbidden `26`; and `(j+3*m+5)%8=2`. Again `m=1` cannot occur under the required `m≥4`.
+
+These computations give a **precise baseline non-subsumption result** for the five published `jointHighAllowed` congruences. They do not establish independence of the much stronger later Agent19/29/3/11 and physical-root filters, which must be checked separately before measuring net progress in the integrated high gate.
+
 ## A source-proven obstruction to a naive second lift
 
 The strict fifth/sixth seed (U_{8,2}=(573,286)) has a genuine direct successor ((1,574)). The next target does **not** inherit a sixth/seventh gap. Original-source Lean [CAltSeventhCounterexample.lean](../im-results/agent4-c-five-image/CAltSeventhCounterexample.lean), passed in [CI 42646801586](https://github.com/FlareZ123/bb6/actions/runs/42646801586), constructs eight real incoming return edges:
