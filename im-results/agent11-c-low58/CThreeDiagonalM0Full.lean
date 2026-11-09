@@ -40,8 +40,6 @@ theorem previous_late_diagonal_admits_mzero_71 (q : Nat) :
     exact ⟨h11,by omega⟩
   have hk : (2^(2*0+2)*(j+3)-(j+3*0+5))=220+384*q := by
     dsimp [j]
-    have hpow : (2:Nat)^(2*0+2)=4 := by decide
-    rw [hpow]
     omega
   have hright : (BB6.Agent15.affineNormalize (2*j+3)
       (2^(2*0+2)*(j+3)-(j+3*0+5))).2≠4 := by
