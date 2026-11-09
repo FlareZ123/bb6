@@ -58,7 +58,7 @@ jobs:
       - name: Audit Agent9 arbitrary primitive-depth word theorem against unchanged source ShadowReach
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent9-p1-q33:im-results/agent9-p1-periodic:im-results/agent9-p1-shadow"
+          export LEAN_PATH="im-results/agent9-p1-q33:im-results/agent9-p1-periodic:im-results/agent9-p1-shadow:im-results/agent13-p1-adaptive-param"
           for m in UniformPrecisionStep UniformPrecisionPath; do
             lean -o "im-results/agent9-p1-q33/$m.olean" "im-results/agent9-p1-q33/$m.lean"
           done
