@@ -37,6 +37,8 @@ jobs:
           echo "7aa2f8c87feee180de0df0dae816d0d71c3a15f4e6df77e969beaf9bf5c7f4b8  Agent15Low107.lean.xz" | sha256sum -c -
           xz -d Agent15Low107.lean.xz
           echo "9f00bb678114ddbb8c3be8be2c9c899c1d7413a53109037a46a1eb46ac81a341  Agent15Low107.lean" | sha256sum -c -
+          # Add the original-source predecessor-module import to the archived development file.
+          python3 -c "from pathlib import Path; p=Path('Agent15Low107.lean'); p.write_text('import Agent15RayReach\\n'+p.read_text())"
           # Normalize one import ordering typo in the archived raw source; all theorem text is unchanged.
           python3 -c "from pathlib import Path; p=Path('Agent15RayInverse.lean'); s=p.read_text(); p.write_text(s.replace('set_option maxRecDepth 8192\\nimport Lean.Elab.Tactic.Omega', 'import Lean.Elab.Tactic.Omega\\nset_option maxRecDepth 8192', 1))"
           export LEAN_PATH=.
