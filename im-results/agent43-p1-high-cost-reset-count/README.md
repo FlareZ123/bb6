@@ -73,8 +73,28 @@ three or more shallow transitions, depth>=3 excursions, exceptional exits,
 and the authentic blank-root halting decision remain open. Source verification
 does not establish external novelty or a publishable resolution of BB(6).
 
+## All-index three-shallow scalar obstruction, machine-source lift pending
+
+A further proof, detailed in [ThreeShallowAllIndex.md](ThreeShallowAllIndex.md),
+excludes the exact **three-shallow scalar terminal equation** at every
+n>=14, for arbitrary run lengths s,u,v,r and all eight combinations of
+shallow depths 0 and 1. [ThreeShallowAllNumeric.lean](ThreeShallowAllNumeric.lean)
+proves the all-index theorem in Lean4.36.0-rc2, with an n>=58
+quartic-remainder argument and exact finite certificates for n14..57.
+[CI 42542068055](https://github.com/FlareZ123/bb6/actions/runs/42542068055)
+verified the full arithmetic import chain, standard axioms only and no
+`sorryAx`. [ThreeShallowAbstractBridge.lean](ThreeShallowAbstractBridge.lean)
+also proves the cocycle-to-terminal contradiction locally.
+
+**This three-shallow result is currently scalar/model-level only.**
+A genuine-source `SourceTwoChain`/ `inverseAt` source lift, as already
+done for two shallow transitions, remains necessary. Thus the
+strongest source-certified grammar remains the two-shallow theorem above,
+while the next exact machine-level task is to integrate the newly
+solved three-shallow scalar class.
+
 ## Finite right-five search and remaining frontier
 
 [Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
 
-A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The remaining next steps concern three or more shallow transitions and unrestricted high-depth excursions. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The three-shallow scalar equation is now solved at all indices; its authentic source lift, words with four or more shallow transitions, and unrestricted high-depth excursions remain open. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
