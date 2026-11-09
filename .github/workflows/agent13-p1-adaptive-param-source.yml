@@ -178,9 +178,13 @@ jobs:
           lean -o im-results/agent9-p1-periodic/PeriodAllPeriods.olean im-results/agent9-p1-periodic/PeriodAllPeriods.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean im-results/agent9-p1-periodic/SourcePeriodWord.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean -o im-results/agent9-p1-periodic/SourcePeriodAllPeriods.olean im-results/agent9-p1-periodic/SourcePeriodAllPeriods.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean im-results/agent9-p1-periodic/FeederDisjoint.lean | tee -a /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_positive_depth' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_zero_depth' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_shadow_path' /tmp/agent9-periodic-source-audit.log
+          grep -F 'same_q_feeder_marker' /tmp/agent9-periodic-source-audit.log
+          grep -F 'same_q_feeder_cost_bound' /tmp/agent9-periodic-source-audit.log
+          grep -F 'no_common_infinite_feeder_depths' /tmp/agent9-periodic-source-audit.log
           grep -F 'recentered_prefix_identity' /tmp/agent9-periodic-source-audit.log
           grep -F 'recentered_quotient_bounds' /tmp/agent9-periodic-source-audit.log
           grep -F 'zero_run_length_bound' /tmp/agent9-periodic-source-audit.log
