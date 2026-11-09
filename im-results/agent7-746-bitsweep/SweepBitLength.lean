@@ -89,6 +89,32 @@ theorem firstFailIndex_unique (h k : Nat)
   · have := hp _ hgt
     omega
 
+/-- The least failing sweep level is monotone in the reset height. -/
+theorem firstFailIndex_mono (h u : Nat) (hu : h≤u) :
+    firstFailIndex h ≤ firstFailIndex u := by
+  obtain ⟨hp, _⟩ := firstFailIndex_spec h
+  have hf := (firstFailIndex_spec u).2
+  by_cases hh : firstFailIndex h ≤ firstFailIndex u
+  · exact hh
+  have hlt : firstFailIndex u < firstFailIndex h := by omega
+  have hguard := hp (firstFailIndex u) hlt
+  omega
+
+/-- Crossing 8·2^k forces the next failed sweep level past k. -/
+theorem firstFailIndex_gt_of_eight (k u : Nat) (hu : 8*2^k ≤ u) :
+    k < firstFailIndex u := by
+  have hf := (firstFailIndex_spec u).2
+  by_cases hh : k < firstFailIndex u
+  · exact hh
+  have hle : firstFailIndex u ≤ k := by omega
+  have hp : 2^(firstFailIndex u) ≤ 2^k :=
+    Nat.pow_le_pow_right (by omega) hle
+  have hscale := Nat.mul_le_mul_left 8 hp
+  omega
+
+#print axioms firstFailIndex_mono
+#print axioms firstFailIndex_gt_of_eight
+
 #print axioms firstFailIndex_spec
 #print axioms firstFailIndex_unique
 
