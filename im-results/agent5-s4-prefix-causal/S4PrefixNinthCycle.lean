@@ -5,7 +5,7 @@ import S4PrefixNinthR171049
 import Lean.Elab.Tactic.Omega
 
 namespace S4PrefixNinth
-open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457 S4Toggle
+open S4PrefixCausal S4PrefixEighthCycle S4Prefix5457 S4Toggle S4PrefixSeven
 
 set_option maxRecDepth 500000
 set_option maxHeartbeats 0
@@ -88,7 +88,7 @@ theorem prefixRunFast_mod81920 (n : Nat) :
 /-- Every successful original-root state after return 5457 has a
 first-nine-digit prefix determined periodically modulo 81,920. -/
 theorem root_nine_prefix_mod81920 (n : Nat) (U : List Nat)
-    (h : prun (5457+n) S4Prefix5457.seed = some U) :
+    (h : prun (5457+n) seed = some U) :
     U.take 9 = prefixRunFast (n % 81920) cycle9Start := by
   calc
     U.take 9 = prefixRun n cycle9Start :=
