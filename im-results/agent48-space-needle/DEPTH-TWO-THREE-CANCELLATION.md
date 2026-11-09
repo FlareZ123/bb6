@@ -54,7 +54,7 @@ where ((p,v)) abbreviates (operatorname{oddTower}(p,v)).
 ]
 This follows from (v_{30t+4}equiv342pmod{420}), (2^{420}equiv1pmod{1225}), and the geometric-series recurrence (G_{30t+34}equiv G_{30t+4}+70pmod{245}). Hence the required residue is equivalent to (tequiv0pmod7), exactly (requiv4pmod{210}). An explicit natural (p_1=(2p_0-7)/7) proves sufficiency.
 
-**Verification:** [CancellationDepthThree.lean](CancellationDepthThree.lean) and [CancellationDepthThreeSource.lean](CancellationDepthThreeSource.lean) compile locally in Lean 4.36.0-rc2 against accurately typed local versions of the upstream interfaces, without `sorry` or new local axioms. The original-source CI run for this extension is [42722753090](https://github.com/FlareZ123/bb6/actions/runs/42722753090); **treat the source lift as pending until that run succeeds.**
+**Verification:** [CancellationDepthThree.lean](CancellationDepthThree.lean) and [CancellationDepthThreeSource.lean](CancellationDepthThreeSource.lean) compile locally in Lean 4.36.0-rc2 and **pass pinned, unchanged original-source Lean CI [42722753090](https://github.com/FlareZ123/bb6/actions/runs/42722753090)**, completed successfully on 9 November 2026. The original-source theorem's axiom print reports only standard Lean axioms, without `sorryAx`.
 
 ## Research value and missing root proof
 
