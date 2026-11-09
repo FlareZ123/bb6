@@ -1,49 +1,72 @@
-# Space Needle: exact valuation-four inverse family for cancellation feeders
+# Space Needle: five source-genuine cancellation predecessors and a uniform valuation sieve
 
-**Status (9 November 2026):** The modular/arithmetic family theorem is kernel-checked locally in Lean 4.36.0-rc2 using only standard axioms. The original-source lifting is in `NeedleCancellationFour.lean` and is undergoing the manual pinned-Cryptids CI check. This result supplies an infinite exact reverse-edge classification, with no claim of genuine blank-root reachability or of a BB(6) decision.
+**Agent 47, 9 November 2026.** The new all-index arithmetic, five distinct incoming high-level edges, and uniform valuation exclusions have passed the **complete pinned original Cryptids source Lean check** in [manual run 42722455551](https://github.com/FlareZ123/bb6/actions/runs/42722455551). These are intermediate mathematical results about *arbitrary-source predecessors*. The existence or nonexistence of an authentic blank-start route into any target in this family remains open. No BB(6) machine decision or global bound is claimed.
 
-## Mathematical result
+## Original transition and cancellation family
 
-Use the existing Agent 20 cancellation-family construction (already certified for every positive index `r`):
+In the pinned original six-state Space Needle high-level source, a nonterminal counter of the form
 
-- `a_r=(9^r+5)/2`, `v_r=a_r-1=(9^r+3)/2`.
-- `A_r=2^a_r`, `P_r(A)=(A-3) Σ_{i=0}^{r-1} A^{2(r-1-i)}9^i`. This satisfies the existing `CancellationNat.P` recurrence.
-- `q_r=(P_r(A_r)-3)/2`. Agent 20 proves that `oddTower q_r v_r` is a genuine *one-step feeder* of the power-of-two terminal family under the pinned original Space Needle high-level source.
-- Write its shifted counter as `B_r = oddTower q_r v_r + 2 = 2^v_r P_r(A_r)`.
+`oddTower(q,w)+2=2^w(2q+3)`
 
-### Exact congruence classification
+has a successor whose shifted counter is
 
-For every `r≥1`:
+`(2^(w+1)+3)q + (3*2^w+w+3)`.
 
-| Condition | `B_r mod 35` |
-| --- | ---: |
-| `r≡0 (mod 3)` | `0` |
-| `r≡1 (mod 3)` | `20` |
-| `r≡2 (mod 3)` | `15` |
+Thus an incoming edge at valuation `w` to shifted target `B` is characterized by
 
-The all-`r` proof is `NeedleCancelMod35.sourceB_mod35_full`, with the exact Boolean-free converse in `sourceB_mod35_iff`.
+`B=D_w*q+C_w`, where `D_w=2^(w+1)+3`, `C_w=3*2^w+w+3`, and `q>=0`.
 
-Proof outline: `9^r ≡ 9 (mod 24)` implies `v_r ≡ 6 (mod 12)`. Therefore `A_r≡3 (mod 5)`, so `B_r≡0 (mod 5)`. Modulo seven, `2^v_r≡1`, `A_r≡2`, `A_r-3≡6`, and `P_r(A_r)≡6·G_r`, where `G_r=Σ_{i=0}^{r-1}4^{r-1-i}2^i`. The exact recurrence `G_{r+3}≡G_r (mod 7)` has residues `0,1,6` for `r≡0,1,2 (mod 3)`. Combining with the modulus-five condition gives the displayed complete residue table.
+Use Agent 20's existing all-positive-index cancellation terminal-feeder construction:
 
-### Source predecessor if and only if
+- `v_r=(9^r+3)/2`, `A_r=2^(v_r+1)`;
+- `P_r(A)=(A-3)*sum_(i=0)^(r-1) A^(2(r-1-i))*9^i`;
+- `B_r=2^v_r*P_r(A_r)`.
 
-The pinned original high-level successor from a valuation-four odd tower has the form
+The original-source `sourceB_is_original_feeder` theorem identifies `B_r-2` with the genuine **prepared-input terminal feeder** `oddTower(feederQ r,feederV r)`. Prepared-input status alone does not imply membership in the true blank-start orbit.
 
-`highLevelNext (.N (oddTower q 4)) = some (.N (35*q+53))`.
+## Five distinct incoming predecessors: infinite progression
 
-Hence the constructed cancellation feeder `oddTower q_r v_r=B_r-2` has a valuation-four immediate predecessor **if and only if `r≡1 (mod 3)`**. The predecessor for `r=3t+1` is explicitly
+For every `t>=0`, let
 
-`q = (B_r-55)/35`.
+`r_t = 4152608179 + 35697042810*t`.
 
-The original-source theorem `BB6.Agent47NeedleCancellationFour.cancellation_four_parent_iff` states the quantified equivalence using `highLevelNext` itself. The source lift is not an abstract synthetic quotient: it uses `SpaceNeedleClosed.highLevelNext_iff_oddTower`, `oddTower_factor`, and the pre-existing constructive `feederQ_spec` of Agent 20.
+The theorem [`infinite_five_predecessors`](CancellationElevenSource.lean) constructs five pairwise different source counters `oddTower(q_w,w)`, one at each
 
-## Reproduction and limitations
+`w in {3,4,5,6,11}`,
 
-- [NeedleCancelMod35.lean](NeedleCancelMod35.lean): self-contained polynomial, periodic congruence proof, source-residue equivalence. Independently compiled locally with Lean 4.36.0-rc2 and standard axioms `propext, Quot.sound`.
-- [NeedleCancellationFour.lean](NeedleCancellationFour.lean): exact identification of polynomial target with Agent 20's `CancellationNat.P` / `feederQ`, plus source-linked existence and converse for the valuation-four branch.
-- [Manual original-source workflow](../../.github/workflows/agent20-needle-triple.yml): reuses pinned original Cryptids, the existing Agent 20 cancellation construction, and the same source-level `SpaceNeedleClosed` definitions.
-- Underlying established family: [CancellationTerminalConstructive.lean](../agent20-needle-coprime/CancellationTerminalConstructive.lean) and [CancellationTopConstructive.lean](../agent20-needle-coprime/CancellationTopConstructive.lean).
+with **exactly the same original `highLevelNext` target**, the cancellation feeder at index `r_t`. Pairwise distinction follows directly from the odd factor in `oddTower(q,w)+2=2^w(2q+3)`; it is proved in Lean as ten explicit inequalities.
 
-This result characterizes **incoming symbolic edges**. Such a parent may itself be unreachable from the actual blank-start run. The first four cancellation-family members already have source-verified blank-root exclusions in Agent 48's [NeedleCancellationHoldouts.lean](../agent48-space-needle/NeedleCancellationHoldouts.lean) and related source modules. The infinite `r≡1 (mod 3)` family still needs root-sensitive reasoning; showing a possible incoming edge neither proves a halt nor excludes one.
+This extends Agent 46's original-source [three-predecessor construction](../agent46-needle-three/README.md), previously valid on `r=214+495t`, and Agent 47's original-source [valuation-four iff](NeedleCancellationFour.lean) for `r%3=1`.
 
-The likely next substantive step is to characterize the valuation-three branch (observed computationally for `r≡7 (mod 9)`) and then combine all potential incoming valuations with genuinely rooted backward-cone arguments. Any such extension must distinguish a one-step synthetic edge from a reachable blank-root predecessor.
+The two new valuation arms are mathematically explicit:
+
+1. **Valuation 6.** For `r=64069+1685970t`, [`CancellationSix.sourceB_mod131`](CancellationSixArithmetic.lean) proves `B_r%131=70`. Since `D_6=131`, `C_6=201` and `B_r>=8000`, this yields `q_6=(B_r-201)/131`. This progression is a subfamily of the original valuation-3/4/5 family: `r=214+495(129+3406t)`. [`CancellationSixSource.lean`](CancellationSixSource.lean) constructs all four distinct original-source edges.
+
+2. **Valuation 11.** The finer progression above satisfies `r_t=64069+1685970(2463+21173t)`. [`CancellationEleven.sourceB_mod4099`](CancellationElevenArithmetic.lean) proves `B_(r_t)%4099=2059`, exactly `C_11%4099`, where `D_11=4099` and `C_11=6158`. Therefore `q_11=(B_(r_t)-6158)/4099` is an integer. The original-source [`CancellationElevenSource.lean`](CancellationElevenSource.lean) constructs the fifth edge and proves its distinctness from the prior four.
+
+The valuation-eleven proof uses genuinely unbounded modular exponent arguments, rather than a table of sample indices. Its input index obeys `r%31=17` and `r%2049=280`. These imply `9^r%8196=4125`, `v_r%4098=2064`, `A_r%4099=48`, `(A_r^2)^r%4099=2719`, and `9^r%4099=2955`. The elementary exact identity
+
+`(a-9)*geo(a,9,r)+9^r=a^r`
+
+then determines `geo(A_r^2,9,r)%4099=909`, yielding `B_r%4099=2059`. The proof uses efficient `Nat.powMod` certificates for fixed large exponents and ordinary kernel checking.
+
+## Uniform no-parent valuation sieve
+
+A separate, independent result excludes entire **valuation positions**, uniformly over *every* positive cancellation index `r`, regardless of whether the target is reachable from blank:
+
+- [`no_cancellation_parent_mod5`](CancellationSieveSource.lean): no incoming valuation `w` with `w%20 in {0,8,12,16}`.
+- [`no_cancellation_parent_mod7`](CancellationSieveSource.lean): no incoming valuation `w` with `w%21 in {1,7,10,16}`.
+
+The first follows from the already-proved `B_r%5=0`: if `w%4=0`, then `5|D_w` and `C_w%5=(w+1)%5`; equality requires `w%5=4`. The second uses the exact established cancellation residue cycle `B_r%7 in {0,1,6}`: for `w%3=1`, `7|D_w`, and `C_w%7=(w+2)%7`. Hence `w%7` must be 4, 5, or 6.
+
+Over the common period `lcm(20,21)=420`, the forbidden sets contain 84 and 80 residue classes, with 16 in their intersection. The union has exactly **148/420 = 37/105** of all valuation residue classes. This is a mathematical density of forbidden *candidate indices* in the inverse grammar, not a proportion of actual orbit events or reachable states.
+
+The arithmetic proofs are in [`CancellationValuationSieve.lean`](CancellationValuationSieve.lean), and the source-connected bridge is in [`CancellationSieveSource.lean`](CancellationSieveSource.lean).
+
+## Proof verification and scope
+
+The reused manual [original-source CI workflow](../../.github/workflows/agent46-needle-three.yml) compiled the **unchanged pinned original Cryptids Space Needle high-level module** plus the checked-in Agent 20, Agent 46, and Agent 47 dependencies. [Run 42722455551](https://github.com/FlareZ123/bb6/actions/runs/42722455551) **passed**, including the fifth-parent source proof and valuation-sieve source proofs. The final axiom audits show only ordinary Lean logical axioms, without `sorryAx`; the standalone large-power arithmetic theorem has just `propext` and `Quot.sound`.
+
+The original raw-machine-to-high-level semantics were established by the existing Space Needle raw bridge in [Agent 48's dossier](../agent48-space-needle/README.md). This investigation uses that unchanged high-level transition semantics. It proves multiple *legally incoming* edges, and gives no argument that any of their sources is reached along the single genuine blank-start orbit.
+
+The root-level decisive obligation remains: decide whether `ReachN` ever contains a terminal feeder. A complete backward-root closure, a true blank-root terminal witness, or a global nonhalting invariant would advance the BB(6) decision. The inverse-fan-in examples show why treating a cancellation feeder as possessing one or a bounded-by-four immediate synthetic predecessor is unsound.
