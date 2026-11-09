@@ -2,7 +2,7 @@
 
 **Mathematical scope, 9 November 2026.** This is an intermediate theorem about the total, length-preserving S4 prefix projection, with a conditional consequence for the actual blank-root trajectory of the six-state machine `1RB0LD_1LC1RD_0LE1LA_0RB1RD_---0LF_1RA1LF`. The global halting/nonhalting question for S4, and BB(6), remains open.
 
-The exact numerical data and a finite arithmetic witness are in [tenth_carry_attractor.py](tenth_carry_attractor.py). The previously original-source-checked [all-depth prefix causality](README.md) and [authentic root through 5,457 returns](S4PrefixNinthBase.lean) provide the source interface. The nine-digit total prefix period has complete source-compiling block certificates; its final composition [S4PrefixNinthCycle.lean](S4PrefixNinthCycle.lean) is being checked separately.
+The exact numerical data and a finite arithmetic witness are in [tenth_carry_attractor.py](tenth_carry_attractor.py). The previously original-source-checked [all-depth prefix causality](README.md) and [authentic root through 5,457 returns](S4PrefixNinthBase.lean) provide the source interface. The complete nine-digit total prefix period and genuine surviving-root bridge are now original-source Lean-certified in [S4PrefixNinthCycle.lean](S4PrefixNinthCycle.lean), [CI 42643801696](https://github.com/FlareZ123/bb6/actions/runs/42643801696), with only `[propext, Quot.sound]` in the final axiom audits.
 
 ## All-input tenth-coordinate theorem
 
@@ -80,6 +80,6 @@ Put `B=2^703`. When `v>=B`, the upper bound gives `F(v) <= floor(v/B)+366450 < v
 
 ## Evidence boundary and next decisive problem
 
-The scalar recurrence and universal bound are mathematical deductions with an explicit finite 245,760-stage certificate, independently executable with Python's exact integers. The numerical `703`, envelope endpoints and six transitions are asserted in the committed checker. Their **full numerical evaluation is not yet a Lean-kernel theorem**. The nine-prefix total cycle is itself a finite, separately source-imported Lean calculation whose formal-composition status should be taken from the current CI result.
+The scalar recurrence and universal bound are mathematical deductions with an explicit finite 245,760-stage certificate, independently executable with Python's exact integers. The numerical `703`, envelope endpoints and six transitions are asserted in the committed checker. Their **full numerical evaluation is not yet a Lean-kernel theorem**. The nine-prefix total cycle is original-source Lean-certified; the tenth-coordinate universal bound and exact six-entry attractor table remain mathematical arguments checked by Python exact integers and have not been Lean-kernel-certified.
 
 An all-time original-source correspondence from the total prefix dynamics requires the established hypothesis that the authentic `P` trajectory survives. The present theorem restricts a genuine root's prefix conditional on survival. It cannot exclude the remaining full-stack binary-power halting gates; synthetic suffixes with the same short prefix and even the same mass can still halt. Closing the **true evolving suffix** at those 703 possible gates, or finding an actual halt, remains the substantial open problem.
