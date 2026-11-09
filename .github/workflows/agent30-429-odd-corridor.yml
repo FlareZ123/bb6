@@ -1,0 +1,41 @@
+name: Agent 30 BB429 two-parameter odd-even C-zero corridor (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged source and exact symbolic corridor, head and count certificates
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent6-429-one-sided-excursion:im-results/agent1-429-w4-boundary:im-results/agent30-429-odd-corridor"
+          python3 im-results/agent30-429-odd-corridor/restore.py
+          LOG=/tmp/agent30-429-odd-even.log
+          : > "$LOG"
+          for m in BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta; do
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o "im-results/agent6-429-one-sided-excursion/$m.olean" "im-results/agent6-429-one-sided-excursion/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadMax.olean im-results/agent1-429-w4-boundary/W4HeadMax.lean 2>&1 | tee -a "$LOG"
+          for m in BB429OddEvenCorridor BB429OddEvenCorridorMax BB429OddEvenCorridorCount; do
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o "im-results/agent30-429-odd-corridor/$m.olean" "im-results/agent30-429-odd-corridor/$m.lean" 2>&1 | tee -a "$LOG"
+          done
+          grep -F "'BB429OddEvenCorridor.odd_even_corridor' depends on axioms:" "$LOG"
+          grep -F "'BB429OddEvenCorridorMax.odd_even_corridor_max' depends on axioms:" "$LOG"
+          grep -F "'BB429OddEvenCorridorCount.odd_even_corridor_count' depends on axioms:" "$LOG"
+          if grep -q sorryAx "$LOG"; then
+            echo "Unexpected sorryAx in exact source-check"; exit 1
+          fi
+          echo "All three original-source corridor theorems compiled with only standard axioms."
