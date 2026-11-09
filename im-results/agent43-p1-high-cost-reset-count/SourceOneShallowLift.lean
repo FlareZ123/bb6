@@ -59,6 +59,16 @@ private theorem two_chain_model (n s b d m B D M : Nat)
     rw [hB]
     exact hmodel
 
+/-- Public original-inverseAt interface for translating any finite depth-two
+source run into its exact affine scalar TwoRun. -/
+theorem source_two_chain_model (n s b d m B D M : Nat)
+    (h : SourceTwoChain n s b d m B D M)
+    (hmass : b+d+2*m+2*n+13=14*2^n) :
+    TwoRun ((2:Int)^n)
+      ((b:Int)+4*(m:Int)+4*(n:Int)+20) ((m:Int)+(n:Int)+6)
+      s ((B:Int)+4*(M:Int)+4*(n:Int)+20) ((M:Int)+(n:Int)+6) :=
+  two_chain_model n s b d m B D M h hmass
+
 private theorem shallow_zero (n B D M k c : Nat)
     (hmass : B+D+2*M+2*n+13=14*2^n)
     (hb : 8≤B) (hb4 : B%4=0) (hd : D%2=1)
