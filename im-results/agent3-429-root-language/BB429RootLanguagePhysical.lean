@@ -17,7 +17,7 @@ theorem prepared_C0_fatal (m : Nat) (c : Config)
     hrep _ (BB429RootLanguageCast.original_zipper_fatal m)
   rcases hrep' with ⟨hs,hcur,_,hright⟩
   refine ⟨c',hr,hs,hcur,?_⟩
-  simpa using hright 0
+  exact hright 0
 
 /-- The exact original physical machine encounters its undefined D/1 row
     two further primitive queries after the fatal C/01 configuration. -/
