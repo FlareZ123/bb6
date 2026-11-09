@@ -20,7 +20,7 @@ jobs:
       - name: Compile original frontier, authentic #429 path and new all-time predecessor theorem
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent33-429-writer-locality"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean | tee /tmp/agent32-bubble.log
           lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean | tee -a /tmp/agent32-bubble.log
@@ -66,4 +66,5 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-lastwriter/LastLeftExcursion.olean im-results/agent18-429-lastwriter/LastLeftExcursion.lean | tee -a /tmp/agent18-last-writer.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent18-429-lastwriter/BB429HaltExcursion.lean | tee -a /tmp/agent18-last-writer.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent18-429-lastwriter/BB429SyntheticLeftExcursion.lean | tee -a /tmp/agent18-last-writer.log
-          if grep -q sorryAx /tmp/agent18-last-writer.log /tmp/agent32-429-source.log /tmp/agent32-bubble.log /tmp/agent6-429-one-sided.log; then exit 1; fi
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/BB429WriterLocality.lean | tee /tmp/agent33-writer-locality.log
+          if grep -q sorryAx /tmp/agent18-last-writer.log /tmp/agent32-429-source.log /tmp/agent32-bubble.log /tmp/agent6-429-one-sided.log /tmp/agent33-writer-locality.log; then exit 1; fi
