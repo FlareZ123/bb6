@@ -53,6 +53,24 @@ private theorem period2_mod3 (n : Nat) : 2^(2*n)%3=1 := by
         rw [show 2*(n+1)=2*n+2 by omega, Nat.pow_add]
       rw [hh, Nat.mul_mod, ih]
 
+/-- Every h=0 generic incoming source at an even source valuation obeys
+    an exact mod-three identity, with no interior-chain hypothesis. This
+    remains informative at the deepest P-tail node. -/
+theorem generic_even_a_mod3_all {x a v : Nat}
+    (hgen : 2*x+1=(2^(a+1)+1)*v+2*a)
+    (ha : a%2=0) : (2*a)%3=(2*x+1)%3 := by
+  have hrepr : a=2*(a/2) := by omega
+  have hp : 2^(a+1)%3=2 := by
+    have hh : a+1=2*(a/2)+1 := by omega
+    rw [hh, Nat.pow_succ, Nat.mul_mod, period2_mod3]
+  have hpow : (2^(a+1)+1)%3=0 := by omega
+  have hz : (((2^(a+1)+1)*v)%3)=0 := by
+    rw [Nat.mul_mod, hpow]
+    simp
+  omega
+
+#print axioms generic_even_a_mod3_all
+
 /-- At any interior P-chain node, an incoming generic h=0 edge
     with even valuation a must have a≡2 mod3. Hence valuations 6s and
     6s+4 are *impossible at every interior depth* for all eight families. -/
