@@ -33,7 +33,7 @@ jobs:
           base64 --decode im-results/agent21-c-first-m1875-2048/LowQ7.lean.xz.b64 | xz --decompress > /tmp/a21-low1875/LowQ7.lean
           cd /tmp/a21-low1875
           echo "0da0704569dd55cc60b8c1dec8fd75b79220d19574f27c5901c76dcd13f44625  Low1875Arithmetic.lean" | sha256sum --check
-          echo "3d3932f333d115caf68b3ea2b9ca2892cad4d0f5340c54bcca4774d5c661d910  LowQ7.lean" | sha256sum --check
+          echo "d2154987cbec9e28dd5e2749f0f1fb31866cae65124f0be33e3bb4d6024c5e3c  LowQ7.lean" | sha256sum --check
           export LEAN_PATH=.
           lean --version
           for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse Low1875Arithmetic Low1875Source LowQ7 LowQ7Source; do
