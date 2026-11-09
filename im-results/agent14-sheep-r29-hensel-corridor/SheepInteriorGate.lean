@@ -126,6 +126,52 @@ theorem interior_special_val24 {n x y a : Nat}
   have h8 : a%8=1 := special_val8 hx hspecial
   omega
 
+/-- A genuinely positive P-chain comes with the source valuation-two
+    shape; the special-entry a≡9 mod24 bound has no extra shape premise. -/
+theorem interior_positive_special_val24 {n x y a : Nat}
+    (c : SheepChain2.Chain2 (n+1) x y)
+    (hd : 9^((n+1)+1) ∣ y+12)
+    (hspecial : x=3*2^a+a+3) : a%24=9 := by
+  cases c with
+  | cons edge tail =>
+      exact interior_special_val24 (SheepChain2.Chain2.cons edge tail) hd edge.2.1 hspecial
+
+/-- Stronger special-source restriction for a terminal Z parent of
+    exact 2-adic valuation at least 6. -/
+theorem special_val64 {x a : Nat}
+    (hx : x%64=0)
+    (hs : x=3*2^a+a+3) : a%64=61 := by
+  have ha6 : 6≤a := by
+    by_cases hh : 6≤a
+    · exact hh
+    have hc : a=0 ∨ a=1 ∨ a=2 ∨ a=3 ∨ a=4 ∨ a=5 := by omega
+    rcases hc with h0 | h1 | h2 | h3 | h4 | h5
+    all_goals subst a; simp at hs; omega
+  have he : a=6+(a-6) := by omega
+  have hpow : 2^a = 64*2^(a-6) := by
+    calc
+      2^a = 2^(6+(a-6)) := by rw [←he]
+      _ = 64*2^(a-6) := by simp [Nat.pow_add]
+  have hmod : (3*2^a)%64=0 := by
+    rw [hpow, Nat.mul_mod]
+    simp
+  omega
+
+/-- At a Z parent y divisible by 64 and with y+12 divisible by nine,
+    the special h0 source valuation is necessarily 189 mod 192. -/
+theorem z_terminal_special_val192 {y a : Nat}
+    (hy : y%64=0)
+    (hd : 9 ∣ y+12)
+    (hs : y=3*2^a+a+3) : a%192=189 := by
+  have h3 : a%3=0 := by
+    have c := SheepChain2.Chain2.nil y
+    have hc := interior_special_a_mod3 c (by simpa using hd) hs
+    exact hc
+  have h64 : a%64=61 := special_val64 hy hs
+  omega
+
+#print axioms interior_positive_special_val24
+#print axioms z_terminal_special_val192
 #print axioms special_val8
 #print axioms interior_special_val24
 
