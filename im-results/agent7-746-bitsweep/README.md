@@ -51,3 +51,22 @@ Two additional standalone theorems in `SweepBitLength.lean` establish monotonici
 The exact affine relation `H(k,r+1,d) -> H(k,r,d)` supplies a proof-carrying way to compress arbitrarily long same-k even-reset streaks. Combined with the prior genuine source theorem that odd-branch parents lie below `8*2^k` and their successors above that threshold ([`ResetRank.lean`](../agent44-746-rank/ResetRank.lean)), this suggests a **linear-in-sweep-scale bound on macro events**, even when the number of individual resets is quadratic in scale. A formal amortized macro event bound and a root-sensitive all-index fatal obstruction are still missing. Neither synthetic block length nor a finite blank-root simulation resolves the remaining infinite reachability question.
 
 Run the already existing **manual-only** [Agent44 full first-return CI workflow](../../.github/workflows/agent44-746-fanin.yml) to repeat source checking; this invocation augmented that workflow with the new modules without introducing per-commit CI.
+
+## The all-time dyadic address invariant and stage-length theorem
+
+The further exact theorems in [`SweepBitLength.lean`](SweepBitLength.lean), [`SweepOddCross.lean`](SweepOddCross.lean), [`SweepAddress.lean`](SweepAddress.lean), [`SweepOrbitAddress.lean`](SweepOrbitAddress.lean), and [`SweepSameAddress.lean`](SweepSameAddress.lean) expose an all-orbit structural invariant. Define `K(h)=firstFailIndex(h)` and its upper-level deficit `D_k(h)=8*2^k+k-h`. For **every** successful source-C first-reset edge `h → u`, `K(h)≤K(u)`, and any odd-branch edge has `K(h)<K(u)`. Thus the actual blank-root source reset orbit visits successive dyadic address levels in nondecreasing order, with no return to an earlier level. If `K(h)=K(u)=k`, the edge is necessarily even and
+```
+D_k(h) = 2 * D_k(u).
+```
+This identity now holds even for low-band starting h: [`SweepEvenDeficit.lean`](SweepEvenDeficit.lean) obtains the nonhalting guard from the actual `bitOutcome h = some u` hypothesis.
+
+[`SweepLevelBound.lean`](SweepLevelBound.lean) defines the authentic `SameLevelPath k h u m` relation as a finite sequence of genuine `bitOutcome` resets that remain in the same k level. Its universal theorems prove
+```
+D_k(h) = 2^m * D_k(u),
+m ≤ Nat.log2(D_k(h)).
+```
+The second inequality holds because the original sweep failure guard gives `D_k(u)≥1`. Consequently **there is no infinite same-level source reset path**, regardless of synthetic or authentic start. Every infinite successful source orbit must therefore visit infinitely many increasing sweep levels. This is a mathematically exact structural consequence and still does not exclude a future fatal gate.
+
+[`SweepEvenMaximal.lean`](SweepEvenMaximal.lean) establishes a companion terminal dichotomy for any maximal same-k even block with `D=2^m d` and `d≥2k+6`: its last d is odd or `d<4k+12`. The odd continuation moves to a larger k; the even continuation in this narrow strip also moves to a larger k, by the exact [`SweepEvenExit.lean`](SweepEvenExit.lean) upper-guard lemma. These component proofs motivate a future source-certified compressed event scheduler with a finite number of events per level. The algorithm integrating this classification with the low-band first step is not yet completely formalized.
+
+Lean 4.36.0-rc2 kernel locally typechecked the new `SweepEvenDeficit`, `SweepAddress`, `SweepOrbitAddress`, `SweepSameAddress`, and `SweepLevelBound` modules, plus the `SweepEvenMaximal` lemma, with no `sorry`. The complete unchanged-source CI [42558004880](https://github.com/FlareZ123/bb6/actions/runs/42558004880) successfully checked the earlier arithmetic/odd/exit/maximal modules. The latest combined source CI for the additional all-time address and stage-length files should be checked independently before treating those additions as full-source certified.
