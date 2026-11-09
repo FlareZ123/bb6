@@ -36,9 +36,7 @@ theorem junc0_w2_first_czero_max (v : Nat) :
         (true :: (pairs01 (v+2) ++ (true :: [true,false,true]))) := by
     simp [ones, List.append_assoc]
   have hpairs : pairs01 (v+3) =
-      false :: true :: pairs01 (v+2) := by
-    simpa only [show v+3 = (v+2)+1 by omega] using
-      (BB429JuncHeadExcursion.pairs01_succ_append (v+2)).symm
+      false :: true :: pairs01 (v+2) := by rfl
   have htail' :
       runWithMax 9 (z 1 (pairs01 (v+3) ++ ones 5) true [true,false,true]) =
       some (z 2 (([true,false] ++ ones 5) ++ (pairs01 (v+2) ++ ones 5))
