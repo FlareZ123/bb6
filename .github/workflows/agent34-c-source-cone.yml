@@ -35,22 +35,7 @@ jobs:
           lean -o ConeBroadArithmetic.olean ConeBroadArithmetic.lean
           lean ConeBroadSource.lean
           lean -o ThreeConeArithmetic.olean ThreeConeArithmetic.lean
-          lean ThreeConeSource.lean
+          lean -o ThreeConeSource.olean ThreeConeSource.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/ThreeConeProper.lean .
+          lean ThreeConeProper.lean
 
-          # New strict third-preimage cone reuses already-certified source inverses.
-          cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/{DyadicDepthPrune,DyadicResidualCriterion,SectionMod8Predecessor,FurtherDyadicMod16}.lean .
-          cp ${GITHUB_WORKSPACE}/im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 .
-          base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
-          for f in DyadicDepthPrune DyadicResidualCriterion SectionMod8Predecessor FurtherDyadicMod16 ThirdStageOddDepth; do
-            lean -o "$f.olean" "$f.lean"
-          done
-          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-low-mod32/OddFourExactOriginal.lean .
-          lean -o OddFourExactOriginal.olean OddFourExactOriginal.lean
-          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-valuation-fanin/{ValuationArithmetic,ValuationSource,ValuationOneOrbit}.lean .
-          lean -o ValuationArithmetic.olean ValuationArithmetic.lean
-          lean -o ValuationSource.olean ValuationSource.lean
-          python "${GITHUB_WORKSPACE}/im-results/agent34-c-valuation-fanin/reconstruct_one.py"
-          lean -o ValuationOne.olean ValuationOne.lean
-          lean -o ValuationOneOrbit.olean ValuationOneOrbit.lean
-          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/Odd13Source.lean .
-          lean Odd13Source.lean
