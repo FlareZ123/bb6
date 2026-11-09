@@ -232,18 +232,17 @@ private theorem physical_compose (m n : Nat) (a b c : BB6Coverage.Config)
   rw [BB6Bubble.run_add',h1]
   exact h2
 
-/-- Original six-state infinite-tape return from J(j+2k+1,2j), k>=1,
-    with exact successful instruction count and absolute head coordinate.
-    Prepared input only: no blank-origin reachability or nonhalting result. -/
-theorem low42_raw_head (j m : Nat) :
+/-- All-parameter original six-state physical J(j+2k+1,2j) return,
+    including boundary k=0. Exact primitive steps and absolute head
+    with the complete bi-infinite original tape. Prepared input only. -/
+theorem low42_raw_head_all (j k : Nat) :
   ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
-    (4*j*j+22*j+18*(m+1)+79)
+    (4*j*j+22*j+18*k+79)
     {state:=BB6Bubble.A,head:=0,
-     tape:=jTape (j+2*(m+1)+1) (2*j)} = some c' ∧
+     tape:=jTape (j+2*k+1) (2*j)} = some c' ∧
     BB429PhysicalBridge.Represents
-      (BB429FinishScanEDelta.junc 0 0 (4*j+4*(m+1)+12)) c' ∧
-    c'.head = -((2*j+4*(m+1)+5:Nat):Int) := by
-  let k := m+1
+      (BB429FinishScanEDelta.junc 0 0 (4*j+4*k+12)) c' ∧
+    c'.head = -((2*j+4*k+5:Nat):Int) := by
   have hfirst : BB6Coverage.run BB429PhysicalFrontier.target429
       (4*j*j+2*j)
       {state:=BB6Bubble.A,head:=0,
@@ -261,20 +260,31 @@ theorem low42_raw_head (j m : Nat) :
        tape:=negFill (jTape (j+2*k+1) (2*j)) j}
       (stage_represented j k)
       (BB429FinishScanEDelta.junc 0 0 (4*j+4*k+12))
-      (-((4*j+4*k+5:Nat):Int)) (low42_source j m)
+      (-((4*j+4*k+5:Nat):Int)) (low42_source_all j k)
   have htotal := physical_compose (4*j*j+2*j) (20*j+18*k+79)
       {state:=BB6Bubble.A,head:=0,tape:=jTape (j+2*k+1) (2*j)}
       {state:=BB6Bubble.A,head:=2*(j:Int),
        tape:=negFill (jTape (j+2*k+1) (2*j)) j} c' hfirst hsecond
   have ht : (4*j*j+2*j)+(20*j+18*k+79) =
-      4*j*j+22*j+18*(m+1)+79 := by
-    dsimp [k]
-    omega
-  have hh : c'.head = -((2*j+4*(m+1)+5:Nat):Int) := by
-    dsimp [k] at hhead
+      4*j*j+22*j+18*k+79 := by omega
+  have hh : c'.head = -((2*j+4*k+5:Nat):Int) := by
+    change c'.head = 2*(j:Int) + -((4*j+4*k+5:Nat):Int) at hhead
     omega
   exact ⟨c', by simpa only [ht] using htotal, hrep, hh⟩
 
+/-- The earlier positive-k theorem follows from the full boundary-inclusive
+    source and physical result. -/
+theorem low42_raw_head (j m : Nat) :
+  ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429
+    (4*j*j+22*j+18*(m+1)+79)
+    {state:=BB6Bubble.A,head:=0,
+     tape:=jTape (j+2*(m+1)+1) (2*j)} = some c' ∧
+    BB429PhysicalBridge.Represents
+      (BB429FinishScanEDelta.junc 0 0 (4*j+4*(m+1)+12)) c' ∧
+    c'.head = -((2*j+4*(m+1)+5:Nat):Int) :=
+  low42_raw_head_all j (m+1)
+
+#print axioms low42_raw_head_all
 #print axioms stage_tape_rep
 #print axioms stage_represented
 #print axioms low42_raw_head
