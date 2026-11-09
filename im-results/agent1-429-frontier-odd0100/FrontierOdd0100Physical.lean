@@ -24,7 +24,8 @@ theorem physical_odd_0100_return (m : Nat) (tail : List Bool) (c : Config)
   have hd : runWithDelta (4*m+21)
       (z 2 (ones (2*m) ++ [true,false,true,false,false] ++ tail) false []) =
       some (z 2 ([true,false] ++ ones (2*m+6) ++ tail) false [], 3) := by
-    simpa [odd_0100_all_head_max m tail] using hp.symm
+    rw [odd_0100_all_head_max m tail] at hp
+    simpa using hp.symm
   exact source_runWithDelta_rep _ _ c hrep _ _ hd
 
 /-- All primitive intermediate raw-machine head positions stay on or left
