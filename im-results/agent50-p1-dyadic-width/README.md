@@ -1,6 +1,6 @@
 # P1 inverse shadow: an exact critical first-moment law
 
-**Status, 9 November 2026:** new mathematical theorem for the source-derived **abstract two-counter P1 inverse shadow**, with a self-contained cylinder proof, an independent exact-integer regression, and Lean-checked universal arithmetic lemmas. Original-source Lean integration of the *statistical theorem* has not been completed; external novelty has not been assessed. Neither the original P1 machine nor BB(6) is decided.
+**Status, 9 November 2026:** exact all-generation first-moment and local offspring-distribution theorems for the source-derived **abstract two-counter P1 inverse shadow**, with self-contained cylinder/valuation proofs, independent exact-integer regressions, and Lean-checked universal arithmetic lemmas. Original-source Lean integration of the *statistical theorem* has not been completed; external novelty has not been assessed. Neither the original P1 machine nor BB(6) is decided.
 
 ## The precise model and theorem
 
@@ -45,6 +45,29 @@ Indeed for each fixed `D,T`, `F_s(q)≥1+∑_{d=1}^D N(s,d,T;q)`; average the fi
 
 This average divergence does not establish the existence of a single infinite path for a given ordinary integer `q`, let alone a P1 halt. It does show precisely why uniformly finite-depth exhaustive inverse-graph arguments cannot cover all parameters.
 
+## Exact offspring distributions and criticality
+
+For a fixed odd-slope parameter cylinder `q=q₀+2^h r`, the second coordinate `z=a+b*r` has odd `b`. Under Haar-uniform `r`, its 2-adic valuation `V=v₂(z)` has `P(V=v)=2^(-v-1)`, independently of `a,b`. Let `C=(s+m) mod 2` and let `B` be the number of all **unbounded-depth** legal children of this one abstract node. At the two root feeders, use `B_root`.
+
+| Location | Exact offspring law | Mean | Variance |
+| --- | --- | ---: | ---: |
+| Either feeder root | `P(B_root=1)=1/4`; `P(B_root=r)=9/4^r` for `r≥2` | 2 | 2/3 |
+| Generic odd-slope node, `C=0` | `P(B=0)=1/4`; `P(B=r)=9/4^(r+1)` for `r≥1` | 1 | 2/3 |
+| Generic odd-slope node, `C=1` | `P(B=0)=1/2`, `P(B=1)=1/8`; `P(B=r)=9/(2*4^r)` for `r≥2` | 1 | 4/3 |
+
+The exact second moments are respectively `14/3`, `5/3`, and `7/3`. The root law is a one-unit shift of the `C=0` generic law, despite the two feeder roots having distinct formulas.
+
+**Derivation.** For `z>0` with valuation `v`, the quotient `z/2^t` is even for all `0≤t<v` and odd at `t=v`. Therefore every lower depth is legal precisely when `C+t` is odd; the endpoint depth `t=v` is legal precisely when `C+v` is even. Thus, writing `v=2k` or `v=2k+1`, the generic child counts are
+
+```text
+C=0:  B(2k)=k+1, B(2k+1)=k
+C=1:  B(2k)=k,   B(2k+1)=k+2.
+```
+
+At `s=8`, the root count is `k+2` or `k+1` according as `v₂(3q+1)=2k` or `2k+1`. At `s=9`, the same rule holds with `v₂(5q+2)`. The odd coefficients 3 and 5 ensure each valuation is geometrically distributed. Grouping adjacent even/odd valuations yields the table. Summing the elementary series `∑r x^r=x/(1-x)^2` and `∑r² x^r=x(1+x)/(1-x)^3` at `x=1/4` gives the rational moments without simulation or probabilistic independence assumptions.
+
+**Interpretation:** every non-root cylinder has mean **one** child. This is a first-moment critical branching law, with two different parity-conditioned variances. Actual sibling nodes have overlapping parameter cylinders; their future offspring are correlated. The law alone gives no extinction theorem and cannot be substituted for a Galton–Watson model. A finite set of residues may carry many overlapping depth words even though the averaged generation width remains constant.
+
 ## Proof: exact binary-cylinder conservation
 
 A symbolic parameter cylinder of mass `2^-h` can be written as `q=q₀+2^h r` with `r` unrestricted and a current affine second coordinate `z=a+b r`, where **b is odd** and `m` is fixed along the word.
@@ -83,8 +106,9 @@ As `T→∞`, the bounded-word random variables increase monotonically to unrest
 ## Reproduction, verification and precise scope
 
 - [`finite_cylinder_regression.py`](finite_cylinder_regression.py) independently builds exact symbolic congruence cylinders with `Fraction` weights and directly enumerates every integer `q` in complete dyadic periods. It verifies `T=2,3,4`, levels `d=1,2,3,4` in the symbolic check and both feeders with `T=3,d≤3,K=13` in the direct check. These are **tests** of the complete all-`d,T` proof above, not a replacement for it.
+- [`offspring_law.py`](offspring_law.py) checks both root counts and both generic parity laws directly for every `q mod 8192`, verifies the exact geometric valuation masses, and checks first/second moments against their exact rational limits. The local run passed all assertions; the paper proof is the complete all-depth argument.
 - [`P1DyadicWidthCore.lean`](P1DyadicWidthCore.lean) is a locally checked, standalone Lean **arithmetic bridge**, not a kernel proof of the entire count. In Lean 4.36.0-rc2, `odd_slope_step`, `odd_root_slope`, `bit_flip`, `scaled_div`, and `child_affine` all compile with no `sorry`. Printed axioms are contained in `[propext, Quot.sound]`. `bit_flip` certifies the parity-bit flip on advancing a parameter by one modulus; `child_affine` certifies the exact affine slope transport without rational arithmetic.
 - The shadow recurrence is already established as source-derived by the cited Agent 9 and Agent 13 work. This theorem is **about legal abstract inverse words**, not every original raw-machine transition. A uniform source-connected theorem lifting all bounded words at sufficiently high `q` has **not** been proved here. Do not claim that the unbounded abstract average transfers to actual blank-reachable machine states.
 - Originality relative to external literature and priority over prior P1 shadow investigations remain to be independently reviewed. This is therefore maintained in `im-results/` rather than `results/`.
 
-**Next decisive mathematical question:** quantify second moments or survival probabilities of the inverse-cylinder tree, and prove a source-connected, uniform-in-`q` lift for bounded-depth words. A proof that the survival probability tends to zero would be a much stronger **density-one** statement but would still require handling genuine non-odd exits before becoming a P1 halting decision.
+**Next decisive mathematical question:** quantify **generation-level** second moments and survival probabilities of the correlated inverse-cylinder tree, and prove a source-connected, uniform-in-`q` lift for bounded-depth words. The local second moments above are for a *single node*, not for the generation total. A proof that the survival probability tends to zero would be a much stronger **density-one** statement but would still require handling genuine non-odd exits before becoming a P1 halting decision.
