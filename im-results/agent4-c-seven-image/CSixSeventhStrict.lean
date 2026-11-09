@@ -110,8 +110,6 @@ theorem six_incoming_exist (u v : Nat) :
       some (641+4096*u,574+16384*v) := by
     have he := BB6.Agent34ThreeProper.direct_predecessor
       (641+4096*u) (574+16384*v) (by omega) (by omega)
-    have hx : 64*r+61=641+4096*u+574+16384*v-2 := by dsimp [r]; omega
-    have hy : 128*t+30=(574+16384*v-2)/2 := by dsimp [t]; omega
     have hpx : 641+4096*u+(574+16384*v)-2 = 64*r+61 := by dsimp [r]; omega
     have hpy : (574+16384*v-2)/2 = 128*t+30 := by dsimp [t]; omega
     rw [hpx,hpy] at he
