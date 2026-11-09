@@ -40,16 +40,18 @@ jobs:
           LEAN_PATH: ${{ runner.temp }}/e-seam-kernel
         working-directory: ${{ runner.temp }}/e-seam-kernel
         run: |
+          set -o pipefail
           python3 "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/restore_physical.py" "$PWD"
           cp "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPhysicalBridge.lean" .
           lean -o PhysicalWindow.olean PhysicalWindow.lean | tee physical-axioms.log
           lean -o ESeamPhysicalBridge.olean ESeamPhysicalBridge.lean | tee bridge-axioms.log
-          lean -o ESeamNoReturn.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamNoReturn.lean" | tee no-return-axioms.log
-          lean -o ESeamTerminalClassification.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamTerminalClassification.lean" | tee classification-axioms.log
-          lean -o ESeamPaintZero.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPaintZero.lean" | tee paint-zero-axioms.log
-          lean -o ESeamPaintCoupling.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPaintCoupling.lean" | tee paint-coupling-axioms.log
-          lean -o ESeamPaintBridge.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPaintBridge.lean" | tee paint-bridge-axioms.log
-          lean -o ESeamPaintTerminal.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPaintTerminal.lean" | tee paint-terminal-axioms.log
+          for file in ESeamNoReturn ESeamTerminalClassification ESeamPaintZero ESeamPaintCoupling ESeamPaintBridge ESeamPaintTerminal; do cp "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/$file.lean" .; done
+          lean -o ESeamNoReturn.olean ESeamNoReturn.lean | tee no-return-axioms.log
+          lean -o ESeamTerminalClassification.olean ESeamTerminalClassification.lean | tee classification-axioms.log
+          lean -o ESeamPaintZero.olean ESeamPaintZero.lean | tee paint-zero-axioms.log
+          lean -o ESeamPaintCoupling.olean ESeamPaintCoupling.lean | tee paint-coupling-axioms.log
+          lean -o ESeamPaintBridge.olean ESeamPaintBridge.lean | tee paint-bridge-axioms.log
+          lean -o ESeamPaintTerminal.olean ESeamPaintTerminal.lean | tee paint-terminal-axioms.log
           if grep -E 'sorryAx|_native\\.native_decide' physical-axioms.log bridge-axioms.log no-return-axioms.log classification-axioms.log paint-zero-axioms.log paint-coupling-axioms.log paint-bridge-axioms.log paint-terminal-axioms.log; then exit 1; fi
           grep "original_e_base_marker_safe.*\\[propext, Classical.choice, Quot.sound\\]" bridge-axioms.log
           grep "seed_no_F0_before_marker.*\\[propext, Classical.choice, Quot.sound\\]" no-return-axioms.log
