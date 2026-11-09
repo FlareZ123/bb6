@@ -63,7 +63,9 @@ theorem high_stop_six_seven_blank_exclusion (j m k time : Nat)
   have hx : 2*j+3=641+4096*u := j_coordinate j hj
   have hy : k=574+16384*v := k_coordinate k hkmod
   rw [hx,hy]
-  exact blank_ne_six_seven_band u v time
+  have hcopy := blank_ne_six_seven_band (4*u) (16*v) time (by omega)
+  simpa only [show 1024*(4*u)=4096*u by omega,
+      show 1024*(16*v)=16384*v by omega] using hcopy
 
 #print axioms high_stop_six_seven_blank_exclusion
 end BB6.Agent4Seven

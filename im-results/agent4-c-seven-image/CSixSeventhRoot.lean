@@ -38,9 +38,9 @@ private theorem incoming_shrink (n m : Nat) (p : Nat × Nat) :
       exact ih h'
 
 /-- Actual blank-origin Machine C sections avoid this strict image band at every time. -/
-theorem blank_ne_six_seven_band (u v time : Nat) :
+theorem blank_ne_six_seven_band (u v time : Nat) (hpair : (u+v)%4=0) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-    some (641+4096*u,574+16384*v) := by
+    some (641+1024*u,574+1024*v) := by
   intro ht
   by_cases hshort : time<7
   · have hex : time=0 ∨ time=1 ∨ time=2 ∨ time=3 ∨
@@ -89,10 +89,10 @@ theorem blank_ne_six_seven_band (u v time : Nat) :
       have hk := congrArg Prod.snd (Option.some.inj ht)
       omega
   · have hlong : 7+(time-7)=time := by omega
-    have hh : Incoming time (641+4096*u,574+16384*v) :=
+    have hh : Incoming time (641+1024*u,574+1024*v) :=
       root_run_incoming time (5,1) _ ht
     rw [←hlong] at hh
-    exact no_seven_incoming u v (incoming_shrink 7 (time-7) _ hh)
+    exact no_seven_incoming u v hpair (incoming_shrink 7 (time-7) _ hh)
 
 #print axioms blank_ne_six_seven_band
 end BB6.Agent4Seven

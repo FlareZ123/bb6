@@ -58,10 +58,10 @@ private theorem poweven_bound (a n q : Nat) (ha : a%2=0) (hpos : 2≤a)
 
 /-- Exact three source parents of the candidate sixth-seventh image band. -/
 theorem target_three_parents (a k u v : Nat)
-    (h : sectionPreimageAll a k (641+4096*u) (574+16384*v)) :
-    (a=1213+4096*u+16384*v ∧ k=286+8192*v) ∨
-    (a=301+1024*u+4096*v ∧ k=739+1536*u+14336*v) ∨
-    (a=73+256*u+1024*v ∧ k=850+1920*u+15872*v) := by
+    (h : sectionPreimageAll a k (641+1024*u) (574+1024*v)) :
+    (a=1213+1024*u+1024*v ∧ k=286+512*v) ∨
+    (a=301+256*u+256*v ∧ k=739+384*u+896*v) ∨
+    (a=73+64*u+64*v ∧ k=850+480*u+992*v) := by
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at h <;> omega
@@ -69,7 +69,7 @@ theorem target_three_parents (a k u v : Nat)
       · simp [sectionPreimageAll,ha0,hk0,hk1] at h <;> omega
       · simp only [sectionPreimageAll,if_pos ha0,if_neg hk0,if_neg hk1] at h
         obtain ⟨_,n,hs,_⟩ := h
-        have hd : 8 ∣ 641+4096*u+574+16384*v := by
+        have hd : 8 ∣ 641+1024*u+574+1024*v := by
           refine ⟨(2:Nat)^n,?_⟩
           omega
         have hm := Nat.mod_eq_zero_of_dvd hd
@@ -93,10 +93,10 @@ theorem target_three_parents (a k u v : Nat)
                   have hn3 : 3≤n := by omega
                   have hp : 8∣(2:Nat)^n := Nat.pow_dvd_pow 2 hn3
                   obtain ⟨z,hz⟩ := hp
-                  have hd : 128∣641+4096*u+574+16384*v+1 := by
+                  have hd : 128∣641+1024*u+574+1024*v+1 := by
                     refine ⟨z,?_⟩
                     calc
-                      641+4096*u+574+16384*v+1=(2:Nat)^n*16 := by omega
+                      641+1024*u+574+1024*v+1=(2:Nat)^n*16 := by omega
                       _=(8*z)*16 := by rw [←hz]
                       _=128*z := by omega
                   have hm := Nat.mod_eq_zero_of_dvd hd
@@ -116,10 +116,10 @@ theorem target_three_parents (a k u v : Nat)
           · simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_pos haeven] at h
             obtain ⟨_,n,hs,_⟩ := h
-            have hd : 2∣641+4096*u+574+16384*v := by
+            have hd : 2∣641+1024*u+574+1024*v := by
               refine ⟨(2:Nat)^n*((a-1)+3),?_⟩
               calc
-                641+4096*u+574+16384*v=(2:Nat)^n*(2*(a-1)+6) := by omega
+                641+1024*u+574+1024*v=(2:Nat)^n*(2*(a-1)+6) := by omega
                 _=(2:Nat)^n*(2*((a-1)+3)) := by congr 1
                 _=2*((2:Nat)^n*((a-1)+3)) := by ac_rfl
             have hm := Nat.mod_eq_zero_of_dvd hd
@@ -142,9 +142,9 @@ theorem target_three_parents (a k u v : Nat)
 
 /-- Two exact source parents of the high odd-right branch. -/
 theorem high_one_two_parents (a k u v : Nat)
-    (h : sectionPreimageAll a k (301+1024*u+4096*v) (739+1536*u+14336*v)) :
-    (a=518+1280*u+9216*v ∧ k=627+1408*u+11776*v) ∨
-    (a=128+320*u+2304*v ∧ k=819+1888*u+15232*v) := by
+    (h : sectionPreimageAll a k (301+256*u+256*v) (739+384*u+896*v)) :
+    (a=518+320*u+576*v ∧ k=627+352*u+736*v) ∨
+    (a=128+80*u+144*v ∧ k=819+472*u+952*v) := by
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at h <;> omega
@@ -159,10 +159,10 @@ theorem high_one_two_parents (a k u v : Nat)
             change (2:Nat)^2∣2^n
             exact Nat.pow_dvd_pow 2 (by omega)
           obtain ⟨z,hz⟩ := hp
-          have hd : 32∣301+1024*u+4096*v+739+1536*u+14336*v := by
+          have hd : 32∣301+256*u+256*v+739+384*u+896*v := by
             refine ⟨z,?_⟩
             calc
-              301+1024*u+4096*v+739+1536*u+14336*v=(2:Nat)^n*8 := by omega
+              301+256*u+256*v+739+384*u+896*v=(2:Nat)^n*8 := by omega
               _=(4*z)*8 := by rw [←hz]
               _=32*z := by omega
           have hm := Nat.mod_eq_zero_of_dvd hd
@@ -183,10 +183,10 @@ theorem high_one_two_parents (a k u v : Nat)
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at h
               rcases h with h3 | ⟨_,n,hs,_⟩
               · omega
-              · have hd : 2∣301+1024*u+4096*v+739+1536*u+14336*v+1 := by
+              · have hd : 2∣301+256*u+256*v+739+384*u+896*v+1 := by
                   refine ⟨(2:Nat)^n*8,?_⟩
                   calc
-                    301+1024*u+4096*v+739+1536*u+14336*v+1=(2:Nat)^n*16 := by omega
+                    301+256*u+256*v+739+384*u+896*v+1=(2:Nat)^n*16 := by omega
                     _=2*((2:Nat)^n*8) := by omega
                 have hm := Nat.mod_eq_zero_of_dvd hd
                 omega
@@ -216,10 +216,10 @@ theorem high_one_two_parents (a k u v : Nat)
               if_neg hk0,if_neg hlow,if_neg haeven] at h
             rcases h with ⟨h3,_⟩ | ⟨_,n,hs,_⟩
             · omega
-            · have hd : 2∣301+1024*u+4096*v+739+1536*u+14336*v+1 := by
+            · have hd : 2∣301+256*u+256*v+739+384*u+896*v+1 := by
                 refine ⟨(2:Nat)^n*((a-1)+4),?_⟩
                 calc
-                  301+1024*u+4096*v+739+1536*u+14336*v+1=(2:Nat)^n*(2*(a-1)+8) := by omega
+                  301+256*u+256*v+739+384*u+896*v+1=(2:Nat)^n*(2*(a-1)+8) := by omega
                   _=(2:Nat)^n*(2*((a-1)+4)) := by congr 1
                   _=2*((2:Nat)^n*((a-1)+4)) := by ac_rfl
               have hm := Nat.mod_eq_zero_of_dvd hd
@@ -227,8 +227,8 @@ theorem high_one_two_parents (a k u v : Nat)
 
 /-- Source predecessor of the intermediate odd-right branch is uniquely forced. -/
 theorem high_two_unique (a k u v : Nat)
-    (h : sectionPreimageAll a k (128+320*u+2304*v) (819+1888*u+15232*v)) :
-    a=471+1104*u+8768*v ∧ k=644+1496*u+12000*v := by
+    (h : sectionPreimageAll a k (128+80*u+144*v) (819+472*u+952*v)) :
+    a=471+276*u+548*v ∧ k=644+374*u+750*v := by
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at h <;> omega
@@ -236,10 +236,10 @@ theorem high_two_unique (a k u v : Nat)
       · simp [sectionPreimageAll,ha0,hk0,hk1] at h <;> omega
       · simp only [sectionPreimageAll,if_pos ha0,if_neg hk0,if_neg hk1] at h
         obtain ⟨_,n,hs,_⟩ := h
-        have hd : 2∣128+320*u+2304*v+819+1888*u+15232*v := by
+        have hd : 2∣128+80*u+144*v+819+472*u+952*v := by
           refine ⟨(2:Nat)^n*4,?_⟩
           calc
-            128+320*u+2304*v+819+1888*u+15232*v=(2:Nat)^n*8 := by omega
+            128+80*u+144*v+819+472*u+952*v=(2:Nat)^n*8 := by omega
             _=2*((2:Nat)^n*4) := by omega
         have hm := Nat.mod_eq_zero_of_dvd hd
         omega
@@ -256,10 +256,10 @@ theorem high_two_unique (a k u v : Nat)
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at h
               rcases h with h3 | ⟨_,n,hs,_⟩
               · omega
-              · have hd : 8∣128+320*u+2304*v+819+1888*u+15232*v+1 := by
+              · have hd : 8∣128+80*u+144*v+819+472*u+952*v+1 := by
                   refine ⟨(2:Nat)^n*2,?_⟩
                   calc
-                    128+320*u+2304*v+819+1888*u+15232*v+1=(2:Nat)^n*16 := by omega
+                    128+80*u+144*v+819+472*u+952*v+1=(2:Nat)^n*16 := by omega
                     _=8*((2:Nat)^n*2) := by omega
                 have hm := Nat.mod_eq_zero_of_dvd hd
                 omega
@@ -273,10 +273,10 @@ theorem high_two_unique (a k u v : Nat)
           · simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_pos haeven] at h
             obtain ⟨_,n,hs,_⟩ := h
-            have hd : 2∣128+320*u+2304*v+819+1888*u+15232*v := by
+            have hd : 2∣128+80*u+144*v+819+472*u+952*v := by
               refine ⟨(2:Nat)^n*((a-1)+3),?_⟩
               calc
-                128+320*u+2304*v+819+1888*u+15232*v=(2:Nat)^n*(2*(a-1)+6) := by omega
+                128+80*u+144*v+819+472*u+952*v=(2:Nat)^n*(2*(a-1)+6) := by omega
                 _=(2:Nat)^n*(2*((a-1)+3)) := by congr 1
                 _=2*((2:Nat)^n*((a-1)+3)) := by ac_rfl
             have hm := Nat.mod_eq_zero_of_dvd hd
@@ -294,10 +294,10 @@ theorem high_two_unique (a k u v : Nat)
                 have hb := base4_odd a haodd
                 obtain ⟨z,hz⟩ := hp
                 obtain ⟨w,hw⟩ := hb
-                have hd : 8∣128+320*u+2304*v+819+1888*u+15232*v+1 := by
+                have hd : 8∣128+80*u+144*v+819+472*u+952*v+1 := by
                   refine ⟨z*w,?_⟩
                   calc
-                    128+320*u+2304*v+819+1888*u+15232*v+1=(2:Nat)^n*(2*(a-1)+8) := by omega
+                    128+80*u+144*v+819+472*u+952*v+1=(2:Nat)^n*(2*(a-1)+8) := by omega
                     _=(2*z)*(4*w) := by rw [←hz,←hw]
                     _=8*(z*w) := by simp only [show (8:Nat)=2*4 by decide]; ac_rfl
                 have hm := Nat.mod_eq_zero_of_dvd hd
