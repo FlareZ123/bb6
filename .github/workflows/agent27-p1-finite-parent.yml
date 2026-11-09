@@ -29,4 +29,19 @@ jobs:
             lean -o "$INV/$m.olean" "$INV/$m.lean"
           done
           lean "$LAB/P1ActiveArborescence.lean"
-          lean "$LAB/P1InverseNoMerge.lean"
+          lean -o "$LAB/P1InverseNoMerge.olean" "$LAB/P1InverseNoMerge.lean"
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          export LEAN_PATH="$MAP:$INV:$LAB:$P1:$AG28"
+          for m in MassInverse OddConeMass; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          lean -o "$P1/InverseIff.olean" "$P1/InverseIff.lean"
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          lean -o "$P1/UpperTail.olean" "$P1/UpperTail.lean"
+          for m in OneResetSourceBridge OneResetZero OneResetCount; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          lean "$LAB/P1CountUnique.lean"
