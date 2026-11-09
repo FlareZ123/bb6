@@ -105,9 +105,9 @@ theorem drainB_charge_witness (a b d aa dd : Nat)
   | none => simp [hc] at h
   | some p =>
     rcases p with ⟨x,c⟩
-    simp only [hc, Option.map_some, realize, HighLevelState.D.injEq] at h
-    obtain ⟨h1,h2⟩ := h
-    exact ⟨c,by simpa [←h1] using hc,by omega⟩
+    simp only [hc, Option.map_some, realize, Option.some.injEq] at h
+    cases h
+    exact ⟨c,rfl,rfl⟩
 
 #print axioms flatB_digitCode
 #print axioms drainB_digitCode
