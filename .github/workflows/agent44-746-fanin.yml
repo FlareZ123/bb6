@@ -64,7 +64,7 @@ jobs:
           done
           s="im-results/agent7-746-bitsweep"
           export LEAN_PATH="$LEAN_PATH:$s"
-          for m in SweepBitLength SweepBitLengthBridge SweepBitOutcome SweepEvenBlock SweepEvenOrbit SweepEvenFamily SweepMacroCheck SweepOddCross SweepEvenExit SweepEvenMaximal SweepEvenDeficit SweepAddress SweepOrbitAddress SweepSameAddress SweepLevelBound SweepGateEntry SweepExactLevel SweepAdjacentFatal SweepFullLevelBatch SweepStageAlgorithm; do
+          for m in SweepBitLength SweepBitLengthBridge SweepBitOutcome SweepEvenBlock SweepEvenOrbit SweepEvenFamily SweepMacroCheck SweepOddCross SweepEvenExit SweepEvenMaximal SweepEvenDeficit SweepAddress SweepOrbitAddress SweepSameAddress SweepLevelBound SweepGateEntry SweepExactLevel SweepAdjacentFatal SweepFullLevelBatch SweepStageAlgorithm SweepMacroOrbit; do
             lean -o "$s/$m.olean" "$s/$m.lean"
           done
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
