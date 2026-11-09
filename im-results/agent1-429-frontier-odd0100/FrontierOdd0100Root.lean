@@ -1,5 +1,4 @@
 import FrontierOdd0100Physical
-import CZeroHeadPrefix
 import Lean.Elab.Tactic.Omega
 
 namespace BB429Odd0100Root
