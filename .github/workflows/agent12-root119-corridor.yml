@@ -1,0 +1,34 @@
+name: Agent 12 Root119 left-corridor source certificate (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Decode exact source and check authentic imports
+        run: |
+          set -euo pipefail
+          A=im-results/agent42-root119-guard
+          B=im-results/agent12-root119-left-corridor
+          export LEAN_PATH="$A:$B"
+          python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119Corridor.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='1c81eb6c73e3b39111d099dfc931277871852d00561ba012834b67be7d958ab1'; p.with_name('Root119Corridor.lean').write_bytes(b)"
+          lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
+          lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
+          lean "$B/Root119Corridor.lean" 2>&1 | tee "$B/source-check.log"
+          if grep -q 'sorryAx' "$B/source-check.log"; then
+            echo "::error::Untrusted sorry axiom in proof"
+            exit 1
+          fi
+          grep -q 'left_gateway_return.*depends on axioms' "$B/source-check.log"
