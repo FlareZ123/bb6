@@ -324,8 +324,10 @@ jobs:
           # exclusion soundness for all Machine C section coordinates.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{SixForcedNormalize,CThreeSixCriterion}.lean .
           lean -o SixForcedNormalize.olean SixForcedNormalize.lean 2>&1 | tee SixForcedNormalize.log
-          lean CThreeSixCriterion.lean 2>&1 | tee CThreeSixCriterion.log
-          if grep -E -q sorryAx SixForcedNormalize.log CThreeSixCriterion.log; then
+          lean -o CThreeSixCriterion.olean CThreeSixCriterion.lean 2>&1 | tee CThreeSixCriterion.log
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeSixAllCriterion.lean .
+          lean CThreeSixAllCriterion.lean 2>&1 | tee CThreeSixAllCriterion.log
+          if grep -E -q sorryAx SixForcedNormalize.log CThreeSixCriterion.log CThreeSixAllCriterion.log; then
             echo "REJECTED: unproved arbitrary-target source normalization"
             exit 1
           fi
