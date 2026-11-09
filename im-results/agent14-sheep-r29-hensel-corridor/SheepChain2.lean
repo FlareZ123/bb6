@@ -4,7 +4,7 @@ namespace SheepChain2
 
 /-- A genuine generic Sheep first-even return with source 4*v (v odd >=5). -/
 def Parent2 (x y : Nat) : Prop :=
-  20 ≤ x ∧ x % 8 = 4 ∧ 9*x+12=8*y
+  20 ≤ x ∧ x % 8 = 4 ∧ y % 2 = 0 ∧ 9*x+12=8*y
 
 inductive Chain2 : Nat → Nat → Nat → Prop where
   | nil (x : Nat) : Chain2 0 x x
@@ -13,7 +13,7 @@ inductive Chain2 : Nat → Nat → Nat → Prop where
 
 private theorem parent_offset {x y : Nat} (h : Parent2 x y) :
     9*(x+12)=8*(y+12) := by
-  obtain ⟨_, _, he⟩ := h
+  obtain ⟨_, _, _, he⟩ := h
   omega
 
 theorem chain_offset {n x y : Nat} (c : Chain2 n x y) :
@@ -41,7 +41,7 @@ theorem chain_divisible {n x y : Nat} (c : Chain2 n x y) :
     exact (by decide : Nat.Coprime 9 8).pow n n
   exact hcop.dvd_of_dvd_mul_left hd
 
-private theorem parent_explicit (m : Nat) (hm : 4 ≤ m) :
+private theorem parent_explicit (m : Nat) (hm : 4 ≤ m) (hme : m % 2 = 0) :
     Parent2 (8*m-12) (9*m-12) := by
   unfold Parent2
   constructor
@@ -50,24 +50,28 @@ private theorem parent_explicit (m : Nat) (hm : 4 ≤ m) :
   · have he : 8*m-12=8*(m-2)+4 := by omega
     rw [he]
     omega
+  constructor
+  · omega
   · omega
 
 theorem chain_from_factor (n : Nat) : ∀ m : Nat, 4 ≤ m →
-    Chain2 n (8^n*m-12) (9^n*m-12) := by
+    m % 2 = 0 → Chain2 n (8^n*m-12) (9^n*m-12) := by
   induction n with
   | zero =>
-      intro m hm
+      intro m hm hme
       simpa using Chain2.nil (m-12)
   | succ n ih =>
-      intro m hm
+      intro m hm hme
       have hp : 1 ≤ 8^n := by
         have : 0 < 8^n := Nat.pow_pos (by decide : 0<8)
         omega
       have hmult := Nat.mul_le_mul_right m hp
       have hm8 : 4 ≤ 8^n*m := by omega
       have hm9 : 4 ≤ 9*m := by omega
-      have edge := parent_explicit (8^n*m) hm8
-      have tail := ih (9*m) hm9
+      have hme8 : (8^n*m)%2=0 := by simp [Nat.mul_mod, hme]
+      have hme9 : (9*m)%2=0 := by omega
+      have edge := parent_explicit (8^n*m) hm8 hme8
+      have tail := ih (9*m) hm9 hme9
       have hchain : Chain2 (n+1) (8*(8^n*m)-12) (9^n*(9*m)-12) := by
         apply Chain2.cons edge
         simpa only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using tail
