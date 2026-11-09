@@ -83,7 +83,7 @@ theorem junc0_regular_prefix_before_old_mark (v w t : Nat)
     (junc 0 v (w+3)) p hp
     (junc (v+3) 0 w,
       ((2*v+3 : Nat) : Int), ((2*v+3 : Nat) : Int)) hfull
-  simpa only [Prod.snd] at hbound
+  simp only [Prod.snd] at hbound
   omega
 
 #print axioms junc0_regular_to_b1_max
