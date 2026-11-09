@@ -36,7 +36,7 @@ jobs:
           grep -q 'left_gateway_B_return.*depends on axioms' "$B/source-check.log"
           grep -q 'right_gateway_return.*depends on axioms' "$B/source-check.log"
           python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119CorridorShield.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='0888e541438f09ef9da1ea7228d51a2446c488a3b3c42a40a955354acec023ef'; p.with_name('Root119CorridorShield.lean').write_bytes(b)"
-          lean "$B/Root119CorridorShield.lean" 2>&1 | tee "$B/shield-check.log"
+          lean -o "$B/Root119CorridorShield.olean" "$B/Root119CorridorShield.lean" 2>&1 | tee "$B/shield-check.log"
           if grep -q 'sorryAx' "$B/shield-check.log"; then
             echo "::error::Untrusted sorry axiom in shield proof"
             exit 1
@@ -44,3 +44,11 @@ jobs:
           grep -q 'right_gateway_shield.*depends on axioms' "$B/shield-check.log"
           grep -q 'left_gateway_shield.*depends on axioms' "$B/shield-check.log"
           grep -q 'left_gateway_B_shield.*depends on axioms' "$B/shield-check.log"
+          python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119Cross.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='f5dd3f8e6432dec762dbecc1b8c7a791330218bf6c21be4b599fb457606ef99d'; p.with_name('Root119Cross.lean').write_bytes(b)"
+          lean "$B/Root119Cross.lean" 2>&1 | tee "$B/cross-check.log"
+          if grep -q 'sorryAx' "$B/cross-check.log"; then
+            echo "::error::Untrusted sorry axiom in double-sweep proof"
+            exit 1
+          fi
+          grep -q 'double_sweep_return.*depends on axioms' "$B/cross-check.log"
+          grep -q 'double_sweep_shield.*depends on axioms' "$B/cross-check.log"
