@@ -53,3 +53,5 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent49Eleven81Source.olean Agent49Eleven81Source.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Eleven81FamilySource.lean" Agent49Eleven81FamilySource.lean
           lake env lean Agent49Eleven81FamilySource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/DyckSafeSource.lean" Agent49DyckSafeSource.lean
+          lake env lean Agent49DyckSafeSource.lean
