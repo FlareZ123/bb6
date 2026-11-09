@@ -175,6 +175,8 @@ theorem second_parent (s t b l : Nat)
   omega
 
 #print axioms only_direct_mod4_one
+#print axioms first_parent_alt
+#print axioms second_parent_alt
 #print axioms first_parent_generic
 #print axioms second_parent_generic
 #print axioms first_parent
