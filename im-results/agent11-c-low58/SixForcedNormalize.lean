@@ -139,9 +139,7 @@ theorem sixForcedExcluded_sound (x y : Nat)
   rcases hh with ⟨hy,ho,hbad⟩
   cases time with
   | zero =>
-      have heq : sixForcedNormalize x y=(5,1) := by
-        simpa [BB6.Agent8Section.run] using ht.symm
-      have hp := congrArg Prod.snd heq
+      simp [BB6.Agent8Section.run] at ht
       omega
   | succ n =>
       have hi := BB6.Agent3.blank_section_odd_image n
