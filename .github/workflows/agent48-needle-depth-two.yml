@@ -48,3 +48,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/CancellationDepthTwo.olean CancellationDepthTwo.lean
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/CancellationDepthTwoSource.lean" .
           lake env lean -o .lake/build/lib/lean/CancellationDepthTwoSource.olean CancellationDepthTwoSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/CancellationDepthThree.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationDepthThree.olean CancellationDepthThree.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/CancellationDepthThreeSource.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationDepthThreeSource.olean CancellationDepthThreeSource.lean
