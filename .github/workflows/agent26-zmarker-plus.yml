@@ -83,4 +83,5 @@ jobs:
           lean -o "$E/ZMarkerATwo.olean" "$E/ZMarkerATwo.lean" | tee -a axioms.log
           lean -o "$E/ZSafePlus.olean" "$E/ZSafePlus.lean" | tee -a axioms.log
           lean -o "$E/EZeroMarkerP2Front.olean" "$E/EZeroMarkerP2Front.lean" | tee -a axioms.log
+          lean -o "$E/EZeroMarkerP2Source.olean" "$E/EZeroMarkerP2Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
