@@ -42,7 +42,7 @@ n=\left\lfloor\frac p4-2\sqrt{p\log_2 p}\right\rfloor.
 ]
 Then the same exact bound (1) gives
 [
-\boxed{H(p,n)\,/\,2^{p-1}=O(p^{-2}).}\tag{3}
+\boxed{H(p,n)\,/\,2^{p-1}=O(p^{-2}).}\tag{2b}
 ]
 The survival horizon therefore approaches **one quarter of the input bit length**, with a sublinear `O(sqrt(p log p))` correction, while the fraction of exceptions tends to zero. The explicit proof is in §4 below.
 
