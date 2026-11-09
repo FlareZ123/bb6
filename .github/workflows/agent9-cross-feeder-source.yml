@@ -12,8 +12,14 @@ jobs:
       - name: Install pinned Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          for attempt in 1 2 3 4; do
+            if sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2 && "$HOME/.elan/bin/lean" --version; then
+              echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+              exit 0
+            fi
+            sleep 8
+          done
+          exit 1
       - name: Compile unchanged original P1 dependencies
         run: |
           set -euo pipefail
