@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB429Odd0100Source
 open BB429OddExcursion BB429CZeroEvenReturn
 
-private theorem shift_one (m : Nat) (tail : List Bool) :
+theorem shift_one (m : Nat) (tail : List Bool) :
     (List.replicate (2*m) true) ++ true :: tail =
     true :: (List.replicate (2*m) true) ++ tail := by
   induction m with
