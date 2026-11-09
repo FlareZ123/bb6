@@ -157,5 +157,21 @@ theorem even_C0_context_max (k : Nat) (tail : List Bool) :
   · trivial
   constructor <;> simp [Int.natCast_add,Int.natCast_mul] <;> omega
 
+/-- Public reusable two-way A/F left sweep, including all intermediate head positions. -/
+theorem af_pairs_max_uniform (k : Nat) (tail right : List Bool) :
+    runWithMax (2*k) (z 0 (ones (2*k) ++ tail) true right) =
+      some (z 0 tail true (tens k ++ right),-((2*k:Nat):Int),0) :=
+  af_pairs_max k tail right
+
+/-- Public reusable A/B right sweep, with its sharp right-head maximum. -/
+theorem ar_pairs_max_uniform (k : Nat) (tail right : List Bool) :
+    runWithMax (2*k) (z 0 tail false (tens k ++ right)) =
+      some (z 0 (ones (2*k) ++ tail) false right,
+        ((2*k:Nat):Int),((2*k:Nat):Int)) :=
+  ar_pairs_max k tail right
+
+#print axioms af_pairs_max_uniform
+#print axioms ar_pairs_max_uniform
+
 #print axioms even_C0_context_max
 end BB429CZeroHeadFrontier
