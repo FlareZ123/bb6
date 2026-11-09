@@ -1,65 +1,57 @@
-# A power-of-three diagonal shield suggested by complete #623 fatal spectra
+# Exact power-three anti-diagonal shields for the original #623 B-drain
 
-**Agent 49, 9 November 2026. Status: finite computational conjecture.** The following proposed infinite exclusions are **NOT proved**, have not received a Lean audit, and do not establish nonhalting of the authentic blank-root orbit. They provide a sharply defined next inductive proof target derived from the all-parameter source-certified fatal-set recurrence in [FullFailureSpectrum.md](FullFailureSpectrum.md).
+**Mathematical status, 9 November 2026.** The two previously computationally conjectured power-three anti-diagonals are now covered by a uniform all-natural-number Lean proof, with a stronger conclusion: **neither diagonal contains any fatal B-drain pair, regardless of first-counter parity**. The original-source-attached proof is [PowerThreeShieldSource.lean](PowerThreeShieldSource.lean); the first manual source CI is [run 42630584415](https://github.com/FlareZ123/bb6/actions/runs/42630584415) (verification status to be reconciled with the actual run result). The proof was independently compiled locally in Lean 4.36.0-rc2 on an exact copy of the source-defined recurrence without `sorry` or custom axioms, with axiom audit `[propext, Quot.sound]`. Full original import is a stronger claim and requires the pinned CI.
 
-Let `E_b={a∈ℕ : drainB(a,b,d)=none}`, independent of d. The complete original-source recurrences are
-
-```text
-E_0={}
-E_(3q)= {x-1 : x∈E_(q-1), x>0} (q>0)
-E_(3q+1)= {0} ∪ (E_q+1)
-E_(3q+2)= ({0} if 0∈E_q else {}) ∪ (E_(q+1)+1).
-```
-
-## New explicit candidate invariant
-
-For each integer `p≥1`, propose
+Let `B(a,b,d)=drainB a b d` denote the exact original-source Cryptids #623 B-drain, and let `E_b={a : B(a,b,d)=none}`, independent of `d` by [FullFailureSpectrum.md](FullFailureSpectrum.md). The strengthened all-exponent claims are
 
 ```text
-(a,b even and a+b=3^p-1)  ==> a not in E_b
-(a,b even and a+b=3^p-3)  ==> a not in E_b.
+For every p,a,b,d ∈ ℕ:
+  a+b+1 = 3^p  ==> B(a,b,d) ≠ none
+  a+b+3 = 3^p  ==> B(a,b,d) ≠ none.
 ```
 
-These are **two entire finite anti-diagonals of the exact fatal relation**, not ordinary finite prefixes in b for a fixed a. The precise tested range was p=1..9 inclusive. For each p, all even `b` between zero and the corresponding sum (and `a=sum-b`) were enumerated by the exact recursive E_b formula; **zero counterexamples** occurred. This does not prove p≥10. The family sizes grow exponentially with p, and the test itself can be reproduced using:
+The old even-even restrictions, the finite p=1..9 bound, and the unproved diagonal label have therefore been superseded. The proofs are **component safety theorems** for an accelerated original-machine routine. They do not establish an invariant of the actual blank orbit, decide #623 halting, or determine BB(6).
 
-```python
-from functools import cache
+## Stronger quantitative boundary theorem
 
-@cache
-def E(b):
-    if b == 0: return ()
-    q, r = divmod(b, 3)
-    if r == 0:
-        return tuple(x-1 for x in E(q-1) if x > 0)
-    if r == 1:
-        return (0,) + tuple(x+1 for x in E(q))
-    return ((0,) if 0 in E(q) else ()) + tuple(x+1 for x in E(q+1))
-
-for p in range(1, 10):
-    for s in (3**p-3, 3**p-1):
-        assert all((s-b) not in E(b) for b in range(0, s+1, 2))
-```
-
-Additional finite pattern, checked for p=1..9: `E_(3^p-2)={0}` and `E_(3^p)=∅` for odd p; `E_(3^p-2)={0,2}` and `E_(3^p)={0}` for even p. This pattern itself is a separate, simpler candidate for proof by the exact ternary recurrence.
-
-## Conditional authentic-map consequence
-
-For every **even first counter** `a=3^p±1>0` and every odd third counter `d`, the source-certified [ExactOddSectorSource.lean](ExactOddSectorSource.lean) says terminality occurs only in one of two sectors:
-
-- Far-left `a≥d+5`, with `b=d+3` even, `x=a-d-5` even. Then `x+b=a-2`, equal to `3^p-3` for `a=3^p-1` or `3^p-1` for `a=3^p+1`. The candidate diagonal shield would exclude this branch.
-- Near-right `a≤d+3`, with `b=a-1` even, `x=d+4-a` odd. The observed exact E_(3^p-2) and E_(3^p) consist only of even values and would exclude this branch.
-
-If BOTH infinite conjectures are proved, the resulting **infinite vertical family** `T(D(3^p-1,d))≠none` and `T(D(3^p+1,d))≠none` for every odd `d` follows formally. This would establish a root-relevant all-time one-step safety family, though **not** a global root invariant or BB(6) solution.
-
-The next research task is a simultaneous induction for the pair of diagonal anti-membership statements under ternary changes `3q+r`. Check the two parity-dependent small terminal spectra in the same induction. If this fails, produce an explicit first counterexample rather than extending finite horizons without theory. Avoid adding any conjecture to `results/`.
-
-## Elementary infinite sublemma: the special boundary spectra are derivable
-
-The auxiliary pattern above **does admit an all-p paper induction** from the already source-certified exact recurrence (its standalone Lean proof is not included here). Put `A_p=E_(3^p)` and `B_p=E_(3^p-1)`. For p≥1 the source recurrence gives
+The main all-exponent induction is more informative than either diagonal. For every `p,a,b,r∈ℕ`,
 
 ```text
-A_p = down(B_(p-1))
-B_p = ({0} if 0 in B_(p-1) else {}) union (A_(p-1)+1).
+a ∈ E_b  and  b+r=3^p   ==>   a ≤ floor(r/3)+(r mod 3).
 ```
 
-With `A_0=E_1={0}` and `B_0=E_0=∅`, induction yields `A_p={0}, B_p=∅` for p positive even and `A_p=∅, B_p={1}` for p odd. Also `E_(3^p-2)={0}∪(B_(p-1)+1)`, so `E_(3^p-2)={0,2}` for even p and `{0}` for odd p. **This settles the previously empirical near-right parity component on paper for every p.** The full infinite anti-diagonal shield remains an explicitly unproved conjecture and is the only remaining missing ingredient for the proposed entire safe-column conclusion.
+This is `boundary_bound` in the accompanying Lean file. Its proof follows the **already source-proved complete E_b recurrence**, rather than relying on any finite tape trace. With `N=3^p`, `r=N-b`, and `t=floor(r/3)`:
+
+- `r=3t` forces `b≡0 mod3` and an inner failure at `(a+1,b/3-1)`; the child gap is `t+1`, giving `a≤t`.
+- `r=3t+1` forces `b≡2 mod3`; positive `a` maps to `(a-1,b/3+1)` with child gap `t`, giving `a≤t+1`. At `a=0` the bound is immediate.
+- `r=3t+2` forces `b≡1 mod3`; positive `a` maps to `(a-1,b/3)` with child gap `t+1`, giving `a≤t+2`. Again zero is immediate.
+
+The base `p=0` contains only `b=1,a=0` as a possible failure. The inequality follows by induction on p using only the preceding child's weaker `a≤r_child`. This proves general forbidden triangular bands near every power of three. For `r=a+1`, the inequality is impossible for `a≥2`; for `r=a+3`, it is impossible for `a≥3`. The remaining finitely many first counters are disposed of by exact recursive identities:
+
+```text
+0 ∉ E_(3^p-1),     1 ∉ E_(3^p-2),
+0 ∉ E_(3^p-3),     1 ∉ E_(3^p-4),     2 ∉ E_(3^p-5).
+```
+
+All five auxiliary identities are proved uniformly in p, with safe natural-number subtraction at low exponents.
+
+## Consequence for original high-level #623 transitions
+
+The same module connects the arithmetic result to [ExactOddSectorSource.lean](ExactOddSectorSource.lean), which already proves the **complete original-source** odd-third, positive-even-first one-step halting criterion. The new statements are
+
+```text
+p≥1, d odd:  highLevelNext(D(3^p-1,d)) ≠ none
+p≥0, d odd:  highLevelNext(D(3^p+1,d)) ≠ none.
+```
+
+For the far-left branch, the exact B-drain input lies on the `3^p-3` or `3^p-1` safe anti-diagonal. For the near-right branch, the first drain counter is odd while the B-block count is `3^p-2` or `3^p`. The boundary theorem limits possible fatal counters at these blocks to `a≤2` or `a=0`, and the surviving small odd counter `a=1` at `3^p-2` is explicitly excluded. These are universally quantified **one-step** safe columns, and do not imply that the actual orbit remains in them.
+
+## Scope, reproducibility, and next missing theorem
+
+Source definitions are pinned to [google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b](https://github.com/google-deepmind/cryptids/tree/c86f15861709b76042998c5211c7b2f83991621b). [PowerThreeShieldSource.lean](PowerThreeShieldSource.lean) imports `Agent49ExactOddSectorSource`, invokes the source-proven `drain_none_iff_badAll`, and states the final results directly about the unchanged original `drainB` and `highLevelNext`. The existing dispatch-only [source workflow](../../.github/workflows/agent49-623-full-failure-spectrum.yml) was extended, without creating another workflow.
+
+The missing BB(6)-relevant quantifier remains: every genuine blank-origin successor from `D(0,7)` must be proved to avoid **all** fatal `highLevelNext` inputs for all times, or an authentic halt witness must be found. A proved infinite safe column gives leverage only if a true-root history rule can force or propagate membership; that is the next worthwhile target.
+
+## Superseded evidence
+
+The original p=1..9 exhaustive checker and proposed even-even conjecture were accurate exploratory evidence, and are preserved through the Git history of this document. The earlier paper recurrence of `E_(3^p)` and `E_(3^p-2)` gave parity information but is unnecessary for the stronger proof: the general boundary bound and five edge lemmas replace that case-by-case spectrum classification.
