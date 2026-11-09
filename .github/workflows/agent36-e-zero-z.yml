@@ -44,6 +44,7 @@ jobs:
           for module in CryptidSix CryptidPairs CryptidTriplePairs; do
             lean -o "$S/$module.olean" "$S/$module.lean"
           done
+          lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean" | tee axioms.log
           lean -o "$C/ABridgeTwo.olean" "$C/ABridgeTwo.lean"
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
@@ -71,6 +72,7 @@ jobs:
           lean "$D/EAltK2AZero.lean" | tee -a axioms.log
           X=im-results/agent36-cryptid-trace
           lean -o "$X/EZeroZ.olean" "$X/EZeroZ.lean" | tee -a axioms.log
+          lean -o "$X/EZeroZTwo.olean" "$X/EZeroZTwo.lean" | tee -a axioms.log
           lean -o "$X/ZSafeNormalizer.olean" "$X/ZSafeNormalizer.lean" | tee -a axioms.log
           lean -o "$X/AZ0P2.olean" "$X/AZ0P2.lean" | tee -a axioms.log
           lean "$X/Z0ExceptE2.lean" | tee -a axioms.log
