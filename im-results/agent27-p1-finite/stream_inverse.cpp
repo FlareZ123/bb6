@@ -17,6 +17,8 @@ struct Outcome {
     double seconds;
 };
 Outcome run(unsigned n, uint64_t cap) {
+    if(n<14) { std::cerr << "Critical index n must be >=14\n"; std::exit(2); }
+    if(n&1) return {n,1,0,0,1,false,false,0}; // odd-index seed fails b%4=0
     cpp_int P = cpp_int(1) << n;
     std::vector<State> stack;
     stack.push_back({14*P-2*n-16,3});
