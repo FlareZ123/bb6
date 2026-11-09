@@ -201,7 +201,7 @@ theorem lowOdd_raw_head (v n : Nat) :
       (4*(v+1)*(v+1)+2*(v+1))
       {state:=A,head:=0,tape:=jTape (v+2*n+3) (2*v+1)} =
       some {state:=A,head:=2*(v:Int)+2,
-        tape:=negFill (jTape (v+2*n+3) (2*v+1)) (v+1)} := by
+            tape:=negFill (jTape (v+2*n+3) (2*v+1)) (v+1)} := by
     have hhead_cast : 2*((v+1:Nat):Int) = 2*(v:Int)+2 := by omega
     simpa only [hhead_cast] using
       (multi_bubble_prefix target429 (v+1) (v+1)
