@@ -250,3 +250,11 @@ jobs:
             echo "REJECTED: non-kernel proof dependency"
             exit 1
           fi
+          # New authentic m=0 high-stopping ray (j=71 modulo128) through
+          # one odd/odd inverse and three forced even-right source edges.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0OddRay.lean .
+          lean M0OddRay.lean 2>&1 | tee M0OddRay.log
+          if grep -q sorryAx M0OddRay.log; then
+            echo "REJECTED: unproved m=0 ray"
+            exit 1
+          fi
