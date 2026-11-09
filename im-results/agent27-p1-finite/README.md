@@ -30,6 +30,20 @@ A source inverse edge has `G k c=(b,d)`; therefore any nonterminal inverse child
 
 [Source-shaped Lean file](P1ActiveArborescence.lean) contains the two-step theorem; it compiled locally in Lean 4.36.0-rc2 against a minimal copy of the original `PosEvenForm` definitions, with ordinary foundational axioms. The identical short theorem also passed **manual CI 42541859868**, importing and compiling the **unchanged repository `PosEvenForm.lean`**. The theorem's printed axioms contain only Lean's standard foundation axioms; there are no `sorry` dependencies. The unique-parent argument above uses only the original deterministic definitions and source-complete ancestor equations.
 
+## Unbounded original-source reset-annotation uniqueness
+
+[**P1CountUnique.lean**](P1CountUnique.lean), [successful original-source manual CI 42543069000](https://github.com/FlareZ123/bb6/actions/runs/42543069000), proves the following theorem against the unchanged `BB6.Agent28.CountCone`, `inverseAt`, `GAncestor`, and exact source mass library:
+
+```lean
+BB6.Agent27Finite.count_annotation_unique
+    (b0 d0 b d m z : Nat)
+    (h : BB6.Agent28.CountCone b0 d0 b d m z) :
+    ∀ m' z', BB6.Agent28.CountCone b0 d0 b d m' z' →
+      m=m' ∧ z=z'
+```
+
+The proof derives the exact mass `b+d+2*m=b0+d0`, decomposes every authentic `CountCone` at its last edge, and combines strict mass descent with `unique_inverse_edge` and induction. The all-depth parent and depth uniqueness theorem supplies the key step making the positive-reset indicator deterministic. The public theorem compiled with only standard Lean axioms, no `sorryAx`, for arbitrary initial root, endpoint and finite history length. This formally justifies that a visited-set inverse checker may deduplicate by endpoint `(b,d)` even when conclusions depend on the **exact** number `z` of positive-depth inverse steps. The unique annotation is not a uniform formula or a bound on z; it remains a conditional structural property of the source inverse relation. This is an intermediate source theorem, not a P1 machine decision.
+
 ## Reproducible exact computations
 
 | Critical index | Expanded parent nodes | Enumerated legal outgoing edges | Dead-end children | Peak DFS stack | Right-five event |
