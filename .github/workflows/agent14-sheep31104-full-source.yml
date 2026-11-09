@@ -1,0 +1,68 @@
+name: Agent14 Sheep 31104 complete original-source E reachability exclusion
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-root31104:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore source-exact Cryptids
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet ced8f9f44f67a167d5ecc03e687b048c67926371
+          test "$(git rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+      - name: Reclaim runner disk
+        run: |
+          for dir in /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/share/powershell; do
+            if test -d "$dir"; then sudo rm -rf "$dir"; fi
+          done
+      - name: Compile authentic original six-state Sheep source
+        working-directory: /tmp/cryptids
+        run: |
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB1LA_0LC0RC_1LE1RD_1RE1RC_1LF0LA_HHH1LE
+      - name: Generate exact modular inverse cases
+        run: |
+          cd im-results/agent14-sheep-inverse-dag-222
+          for h in 0 1 2 3 4 5 6; do python3 generate_root_low.py "$h"; done
+          python3 generate_z_low.py
+          python3 generate_t_low.py
+      - name: Check original-source inverse-chain closure
+        working-directory: /tmp/cryptids
+        run: |
+          python3 -m venv /tmp/agent14-31104-venv
+          /tmp/agent14-31104-venv/bin/pip -q install filelock
+          /tmp/agent14-31104-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return/reconstruct_all.py"
+          export LEAN_PATH=".:$LEAN_PATH"
+          prep="$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py"
+          base="$GITHUB_WORKSPACE/im-results/agent16-sheep-even-return"
+          for name in SheepEven EvenEdge OddPrefix EvenReach; do
+            cp "$base/$name.lean" "$name.lean"
+            /tmp/agent14-31104-venv/bin/python "$prep" "$name.lean"
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          base="$GITHUB_WORKSPACE/im-results/agent14-sheep-even-inverse"
+          for name in SheepEvenInverseAlgebra SheepEvenSourceAlgebra SheepEvenReachInverse SheepOddGap IndependentExceptionalGap; do
+            cp "$base/$name.lean" "$name.lean"
+            /tmp/agent14-31104-venv/bin/python "$prep" "$name.lean"
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          base="$GITHUB_WORKSPACE/im-results/agent14-sheep-inverse-dag-222"
+          for name in Sheep31104ZLowPeriod SheepEdgeIdentities Sheep31104RootBound Sheep31104RootHigh Sheep31104RootSpecial Sheep31104RootLow0 Sheep31104RootLow1 Sheep31104RootLow2 Sheep31104RootLow3 Sheep31104RootLow4 Sheep31104RootLow5 Sheep31104RootLow6 Sheep31104RootComplete Sheep31104RootEdge Sheep31104ZBound Sheep31104ZHigh Sheep31104ZSpecial Sheep31104ZLow Sheep31104ZComplete Sheep31104ZEdge Sheep31104TBound Sheep31104THigh Sheep31104TSpecial Sheep31104TLow Sheep31104TComplete Sheep31104TEdge Sheep31104NoBlank; do
+            cp "$base/$name.lean" "$name.lean"
+            /tmp/agent14-31104-venv/bin/python "$prep" "$name.lean"
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          grep -q 'root_31104_not_blank' Sheep31104NoBlank.lean
