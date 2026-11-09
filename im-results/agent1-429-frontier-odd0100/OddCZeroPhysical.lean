@@ -7,6 +7,7 @@ namespace BB429OddCZeroPhysical
 open BB6Coverage BB429PhysicalFrontier BB429PhysicalBridge
 open BB429OddExcursion BB429CZeroEvenReturn
 open BB429OddCZeroToE1Max BB429DeltaPhysicalBridge
+open BB429SourceE1Delta
 open BB429W4HeadPrefix BB429W2FullPhysicalMax BB429W4HeadMax
 
 /-- All-parameter original physical machine odd-frontier extraction.
