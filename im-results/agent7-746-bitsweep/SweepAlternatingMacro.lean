@@ -22,7 +22,9 @@ theorem even_entry_macro_finishes_odd (j a x v : Nat)
   let D := deficitAt k x
   let md := terminalPair k D
   have hspec := terminalPair_spec k D (by
-    simpa [k] using level_deficit_min x)
+    have hh := level_deficit_min x
+    rw [hx] at hh
+    exact hh)
   change D=2^md.1*md.2 ∧ 2*k+6≤md.2 ∧
     (md.2%2=1 ∨ md.2<4*k+12) at hspec
   obtain ⟨hfactor,hdmin,_⟩ := hspec
