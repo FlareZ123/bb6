@@ -62,6 +62,11 @@ jobs:
           for m in HalfRank HalfResetRank HalfDepth HalfFatal; do
             lean -o "$r/$m.olean" "$r/$m.lean"
           done
+          s="im-results/agent7-746-bitsweep"
+          export LEAN_PATH="$LEAN_PATH:$s"
+          for m in SweepBitLength SweepBitLengthBridge SweepBitOutcome; do
+            lean -o "$s/$m.olean" "$s/$m.lean"
+          done
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
