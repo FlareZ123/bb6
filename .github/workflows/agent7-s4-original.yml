@@ -207,6 +207,16 @@ jobs:
           export LEAN_PATH=.:${LEAN_PATH:-}
           lake env lean -o S4Prefix5457.olean S4Prefix5457.lean
 
+      - name: Verify Agent 5 same-mass synthetic S4 first-gate theorem
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=.:\${LEAN_PATH:-}
+          for module in S4MassCompletion S4MassDyadicPower S4MassBridge S4MassSourceGate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/\${module}.lean" "\${module}.lean"
+            lake env lean -o "\${module}.olean" "\${module}.lean"
+          done
+
       - name: Verify Agent 5 source-rooted ninth-prefix cycle
         working-directory: /tmp/cryptids
         run: |
