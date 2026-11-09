@@ -59,6 +59,10 @@ R: (12q+4, 4q+1).
 
 The R child is **exactly the second feeder root**. Thus the first feeder begins at a diagonal root, while the second begins one legal transfer below the same root; the left and right children are coordinate reflections. The Lean theorems `feeder_siblings` and `diagonal_no_predecessor` prove this relation and that no diagonal state has any legal parent. Coupled with `heap_edge_predecessor_unique`, this gives a shared root and a uniquely decoded past for the entire universal tree. It may permit coordinated analysis of both genuine P1 feeder obligations through one arithmetic dynamical system.
 
+### Complete backward existence theorem
+
+[HeapForest.lean](HeapForest.lean) strengthens the picture with a *kernel-checked strong-induction theorem*. Every unequal pair `(U,E)` has a legal predecessor of exactly one smaller total pile sum: `(2U,E-U-1)` when `U<E`, and `(U-E-1,2E)` when `E<U`. Iterating backwards must therefore reach a diagonal node `(a,a)` after finitely many steps. The Lean theorem `diagonal_ancestor` constructs a finite `HeapPath` from some diagonal root to **every natural heap pair**. Its local compiler axiom report is `[propext, Quot.sound]`, with no sorry or custom axioms. Together with the unique-parent result, this provides a global forest representation with all roots on the diagonal. This is a backward-well-foundedness theorem; it does not imply finite *forward* branching depth.
+
 ## Status and next question
 
 The representation is exact at the scalar recurrence level. It does not by itself establish a direct original raw-Turing-machine correspondence; that connection depends on the independently established P1 `ShadowReach` source bridge and its conditions. The unrestricted heap game supports some infinite paths (for example with a zero left pile), and the prior source margin forces extra restrictions on authentic feeder histories. Accordingly, neither unrestricted heap termination nor P1 halting follows.
