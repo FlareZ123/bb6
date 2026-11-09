@@ -1,112 +1,59 @@
-# Exact, compact fatal first-counter spectra for the original Cryptids #623 B-drain
+# Sharp complete fatal first-counter spectra of the original #623 ternary drain
 
-**Agent 49, 9 November 2026. Mathematical status: intermediate.**
-For the original six-state machine `1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_---0LA`,
-the source-connected accelerated B-drain is (B(a,b,d)=\operatorname{drainB}(a,b,d)).
-This note derives an exact finite list of **every** first counter (a) for which
-the complete drain fails at a fixed block count (b), for arbitrary (b).
-It extends the prior (b\le3^a) failure language in
-[FlatDrain.md](FlatDrain.md) and does not resolve the genuine blank-root orbit.
+**Agent 49, 9 November 2026. Intermediate mathematical result.** For the exact six-state Cryptids machine `1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_---0LA`, let `B(a,b,d)` be the full source-connected `drainB` accelerator. For every fixed block count `b`, we determine **all** first counters `a` for which the drain fails, without imposing any bound on `a` or `b`. We also give a sharp exponential bound on how many such counters can exist and an explicit family attaining equality. This classifies a component of the accelerated dynamics; reachability from the authentic blank root `D(0,7)` remains open, as does BB(6).
 
-## Mathematical result
+## Exact failure sets and source theorem
 
-Let (E_b=\{a\in\mathbb N: B(a,b,d)=\mathrm{none}\}\).
-The set is independent of (d). The six exact source-certified one-level
-recurrences imply, for all (q\ge0), with (q>0) in the first line,
+Define `E_b = { a ∈ ℕ : B(a,b,d)=none }`. This set is independent of `d` and satisfies the complete recurrences
 
 ```text
 E_0       = {}
-E_(3q)    = {x-1 : x in E_(q-1), x>0}                 (q>0)
+E_(3q)    = {x-1 : x in E_(q-1), x>0}                  (q>0)
 E_(3q+1)  = {0} union {x+1 : x in E_q}
 E_(3q+2)  = ({0} if 0 in E_q else {}) union {x+1 : x in E_(q+1)}
 ```
 
-Each recursive set argument is strictly below the original (b).
-The recurrences give the **entire** first-counter failure spectrum over all
-natural numbers, with no first-counter range, congruence, or initial-blank
-restriction. The previously bounded theorem
-`drain_none_iff_bad` classified a proper subset of parameter space.
+The six source-verified one-level equations in [FlatDrainSource.lean](FlatDrainSource.lean) imply these recurrences for the **entire Option-valued drain**, including failures. Every descendant block count is smaller than its parent. The source-imported Lean module [FullFailureSpectrumSource.lean](FullFailureSpectrumSource.lean) proves `drain_none_iff_badAll`, `drain_none_iff_failure_spectrum`, and `drain_failure_independent_d` for all natural arguments. It also proves all failures lie below `b`, making its first exact finite enumerator exhaustive. The unchanged original-source manual [CI 42600987665](https://github.com/FlareZ123/bb6/actions/runs/42600987665) **succeeded**, auditing these proofs with only `[propext, Quot.sound]`.
 
-The original-importing Lean module
-[FullFailureSpectrumSource.lean](FullFailureSpectrumSource.lean)
-defines `badAll a b` and proves:
+## Fast exact finite enumeration
 
-```lean
-drain_none_iff_badAll (a b d : Nat) :
-    (drainB a b d = none) ↔ badAll a b = true
+[FastFailureSpectrumSource.lean](FastFailureSpectrumSource.lean) defines `fastSpectrum b` directly by the displayed set recurrences, replacing an `O(b)` scan of possible first counters by one shrinking recursive list and, in the `3q+2` case, one independently evaluated predicate `badAll 0 q`. Its theorem `drain_none_iff_fastSpectrum` establishes exact membership in the **original** drain's failure set for all `a,b,d`.
 
-drain_none_iff_failure_spectrum (a b d : Nat) :
-    (drainB a b d = none) ↔ a ∈ failures b
+The block parameter in each recursion shrinks to at most `floor(b/2)`. The list is strictly ordered with no duplicates, proven inductively by the disjointness of the leading zero and the shifted positive list. Generating the complete set requires `O((log b)^2)` elementary arithmetic operations if each auxiliary Boolean test is recomputed; checking a single `a` by `badAll` takes `O(log b)` reductions. Integer bit complexity depends on operand sizes. [SharpSpectrumCapacitySource.lean](SharpSpectrumCapacitySource.lean) also formalizes the no-duplicate claim as `spectrum_nodup`.
 
-drain_failure_independent_d (a b d e : Nat) :
-    (drainB a b d = none) ↔ (drainB a b e = none)
-```
+## Sharp exponential fatal-spectrum capacity
 
-The first enumerator `failures` filters all (0\le a<b). The proof of
-`flat_safe_ge` guarantees that no failure is missed by that finite bound.
-
-## Fast exact enumeration
-
-[FastFailureSpectrumSource.lean](FastFailureSpectrumSource.lean) computes
-the same set using the displayed set recurrences, **without scanning**
-all (b) first counters. At every call it recurses on one block count
-at most (\lfloor b/2\rfloor); the (3q+2) case also tests the zero
-membership of (E_q) with `badAll 0 q`. Its Lean theorem is
-
-```lean
-drain_none_iff_fastSpectrum (a b d : Nat) :
-    (drainB a b d = none) ↔ a ∈ fastSpectrum b
-```
-
-The list is strictly increasing and has no duplicates, as follows
-inductively from the recurrence. Each call contributes at most one
-new member and halves the remaining block bound. Therefore for (b\ge1),
+Let `L(b) = |E_b| = (fastSpectrum b).length`. The new theorem, for every `b≥0`, is
 
 ```text
-|E_b| ≤ floor(log_2 b) + 1.
+3^L(b) ≤ 2*b + 1.
 ```
 
-Computing the entire fatal list uses (O((\log b)^2)) elementary
-arithmetic operations when each recursive `badAll` check is computed
-independently. Computing membership for one specified (a) takes only
-(O(\log b)) recursive steps. These bounds count arithmetic operations,
-not bit complexity. This replaces an (O(b))-candidate finite search
-with a polylogarithmic enumeration of **all** fatal first counters.
-
-Illustrations obtained from the exact recursion:
+Equivalently, `L(b) ≤ floor(log_3(2*b+1))` (interpreting the logarithm as the largest integral exponent). The bound is **sharp for every cardinality**. Define `u_0=0`, `u_(n+1)=3*u_n+1`, so that `u_n=(3^n-1)/2`. Then, for all `n≥0`,
 
 ```text
-b = 0:   {}
-b = 2:   {1}
-b = 4:   {0,1}
-b = 5:   {0,2}
-b = 11:  {1,2}
-b = 14:  {0,1,3}
-b = 40:  {0,1,2,3}
-b = 104: {0}
+E_(u_n) = {0,1,...,n-1},     |E_(u_n)| = n.
+If |E_b| ≥ n, then b ≥ u_n.
 ```
 
-The upstream-original module source is pinned to
-`google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b`
-and imports `FlatDrainSource.lean`, whose exact flat interpreter is
-already source certified. Both new theorem files were first proved
-in standalone Lean 4.36.0-rc2 with no `sorry`; they do not introduce
-any new machine dynamics. The targeted
-[manual workflow](../../.github/workflows/agent49-623-full-failure-spectrum.yml)
-must pass before **original-source CI certification** is claimed.
-Do not mistake standalone source-shaped verification for a completed
-imported-source audit.
+Therefore `(3^n-1)/2` is the **exact minimum block count admitting n distinct fatal first-counter values**, simultaneously attained by the first n counters.
 
-## What remains open
+The induction in [SharpSpectrumCapacitySource.lean](SharpSpectrumCapacitySource.lean) uses a stronger auxiliary saturation invariant: whenever `3^L(b)=2b+1`, the *preceding* spectrum `E_(b-1)` is empty. For `3q`, cardinality cannot increase and strict capacity follows. For `3q+1`, cardinality increases by exactly one and the induction inequality becomes equality only when the child saturates, preserving the preceding-empty property. For `3q+2`, cardinality may increase by one only if `0∈E_q`; child saturation would force `E_q=∅`, contradiction. Since powers of three are odd, this excludes the one remaining tight integer case and gives strict capacity. The finite induction closes without heuristics. The extremal family follows from repeatedly applying the `3q+1` recurrence.
 
-The original high-level map also has an initial `evalA` phase in one
-sector. The finite list classifies `drainB` failures exactly once
-its input `(a,b,d)` is known. It does not bound the number of real
-blank-root returns or prove that those returns avoid their corresponding
-fatal spectra. The surviving orbit starts from `D(0,7)`; neither its
-halting status nor the six-state Busy Beaver value is decided.
+The exact Lean names are `cap_and_saturation`, `minimum_blocks_for_n_failures`, `boundary_spectrum`, `boundary_power`, `boundary_is_sharp`, and `spectrum_nodup`. All compiled against the source-shaped arithmetic interface with Lean 4.36.0-rc2 and only standard axioms; a targeted original-source CI [workflow](../../.github/workflows/agent49-623-full-failure-spectrum.yml) checks the unmodified upstream source and the full imported proof chain. **Until that expanded CI run succeeds, distinguish these new original-importing modules from the already source-certified FullFailureSpectrumSource.lean.**
 
-**Next test of research value:** Use the compact spectra as explicit
-finite target sets within the source-connected inverse grammar,
-prioritizing a **history-dependent** exclusion for the authentic blank
-root rather than more synthetic safe families.
+Illustrative exact spectra:
+
+```text
+b=0:   {}          b=2:   {1}
+b=4:   {0,1}       b=5:   {0,2}
+b=13:  {0,1,2}     b=14:  {0,1,3}
+b=40:  {0,1,2,3}   b=104: {0}
+b=121: {0,1,2,3,4}
+```
+
+## Research frontier and evidence boundary
+
+The original source is pinned to [google-deepmind/cryptids@c86f15861709b76042998c5211c7b2f83991621b](https://github.com/google-deepmind/cryptids/tree/c86f15861709b76042998c5211c7b2f83991621b). Its full high-level `highLevelNext` may first call `evalA` before `drainB`. Knowing the exact fatal drain spectra classifies that component, but supplies no all-time root history invariant. The physically blank machine is halting-equivalent to the accelerated map from `D(0,7)`; one must still prove that genuine reached inputs avoid every fatal drain spectrum (or exhibit a genuine reachable fatal state). Finite scans and the exact fatal lists do not settle this universal reachability question.
+
+The present findings remain in `im-results/`. No machine-decision theorem, maximal six-state runtime, universal BB(6) upper bound, or publishable BB(6) completion has been established. The next high-value action is to integrate the compact fatal families into an exact root-sensitive predecessor restriction, rather than continuing broad synthetic input enumeration.
