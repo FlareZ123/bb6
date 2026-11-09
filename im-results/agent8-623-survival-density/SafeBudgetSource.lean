@@ -154,6 +154,45 @@ theorem pumpBlock_drain (k d : Nat) :
     simp only [Option.some.injEq, HighLevelState.D.injEq, true_and]
     omega
 
+
+theorem pumpBlock_even (k : Nat) : pumpBlock k%2=0 := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+    simp only [pumpBlock]
+    omega
+
+/-- An explicit infinite family of safe two-return escapes across the
+exceptional a=d+2 diagonal of the authentic high-level machine. -/
+theorem diagonal_escape (k : Nat) :
+    let b := pumpBlock (k+1)
+    (highLevelNext (.D b (b-2))).bind highLevelNext =
+      some (.D (2+3*b+4*(k+1)) 7) := by
+  intro b
+  have hb : 6 ≤ b := by
+    dsimp [b]
+    have h := pumpBlock_linear_growth (k+1)
+    omega
+  have he : b%2=0 := pumpBlock_even (k+1)
+  have hd : (b-2)%2=0 := by omega
+  have hdiag : b=b-2+2 := by omega
+  have hz : b≠0 := by omega
+  have h1 : ¬ ((b-2)%2=1 ∧ b≥b-2+5) := by omega
+  have h2 : ¬ ((b-2)%2=0 ∧ b≥b-2+3) := by omega
+  have hpar : b%2≠1 := by omega
+  have hstep : highLevelNext (.D b (b-2)) = drainB 0 b 2 := by
+    simp only [highLevelNext,if_neg hz,if_neg h1,if_neg h2,if_neg hpar,if_pos hdiag]
+  rw [hstep]
+  have hp : drainB 0 b 2 = some (.D 0 (2+3*b+4*(k+1))) := by
+    dsimp [b]
+    exact pumpBlock_drain (k+1) 2
+  rw [hp]
+  have hs : (2+3*b+4*(k+1))%2=0 := by omega
+  simp [highLevelNext,hs]
+
+#print axioms pumpBlock_even
+#print axioms diagonal_escape
+
 #print axioms flatB_nine_pump
 #print axioms drainB_nine_pump
 #print axioms pumpBlock_budget_zero
