@@ -34,27 +34,35 @@ private theorem mul_eight_even (a n : Nat) (ha : a%2=0) (hb : 2≤a) (hn : 0<n) 
   simp only [show (8:Nat)=2*4 by decide]
   ac_rfl
 
-/-- All original-section parents of the parity-diagonal strip are direct. -/
-theorem first_parent_generic (s t a k : Nat)
-    (h : sectionPreimageAll a k (8*s+1) (16*t+20)) :
-    a=8*s+16*t+19 ∧ k=8*t+9 := by
+/-- Uniform source law: if the output right coordinate is even at least six
+    and output coordinate sum is 1 mod4, every predecessor is the direct one. -/
+theorem only_direct_mod4_one (a k x y : Nat)
+    (hy : 6≤y) (he : y%2=0) (hmod : (x+y)%4=1)
+    (h : sectionPreimageAll a k x y) :
+    a=x+y-2 ∧ 2*k+2=y := by
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at h
+      all_goals (rcases h with ⟨hx, hy0⟩; omega)
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,ha0,hk0,hk1] at h
+        all_goals (rcases h with ⟨hx, hy0⟩; omega)
       · simp only [sectionPreimageAll,if_pos ha0,if_neg hk0,if_neg hk1] at h
         obtain ⟨_,n,hs,_⟩ := h
         omega
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at h
+        all_goals (rcases h with ⟨hx, hy0⟩; omega)
       · by_cases hk1 : k=1
         · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at h
+          all_goals (rcases h with ⟨hx, hy0⟩; omega)
         · by_cases hk2 : k=2
           · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at h
+            all_goals (rcases h with ⟨hx, hy0⟩; omega)
           · by_cases hk3 : k=3
             · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] at h
+              all_goals (rcases h with ⟨hx, hy0⟩; omega)
             · simp only [sectionPreimageAll,if_neg ha0,if_pos ha1,
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at h
               rcases h with ⟨hy,_⟩ | ⟨_,n,hs,_⟩
@@ -62,6 +70,7 @@ theorem first_parent_generic (s t a k : Nat)
               · omega
     · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at h
+        all_goals (rcases h with ⟨hx, hy0⟩; omega)
       · by_cases hlow : 2*k≤a
         · simp only [sectionPreimageAll,if_neg ha0,if_neg ha1,
             if_neg hk0,if_pos hlow] at h
@@ -81,6 +90,14 @@ theorem first_parent_generic (s t a k : Nat)
               have hd := mul_four_odd a n haodd
               rw [←hs] at hd
               omega
+
+/-- The sharp source-sector first predecessor is a direct corollary. -/
+theorem first_parent_generic (s t a k : Nat)
+    (h : sectionPreimageAll a k (8*s+1) (16*t+20)) :
+    a=8*s+16*t+19 ∧ k=8*t+9 := by
+  have hh := only_direct_mod4_one a k (8*s+1) (16*t+20)
+    (by omega) (by omega) (by omega) h
+  omega
 
 /-- Every parent of that direct parent is a forbidden-image state. -/
 theorem second_parent_generic (s t b l : Nat)
@@ -157,6 +174,7 @@ theorem second_parent (s t b l : Nat)
     (by simpa only [he,hf] using h)
   omega
 
+#print axioms only_direct_mod4_one
 #print axioms first_parent_generic
 #print axioms second_parent_generic
 #print axioms first_parent
