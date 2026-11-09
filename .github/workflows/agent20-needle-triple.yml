@@ -42,3 +42,8 @@ jobs:
             cp "$base/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
+          # Agent 47: infinite source-linked valuation-four cancellation parents.
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancelMod35.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleCancelMod35.olean NeedleCancelMod35.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancellationFour.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleCancellationFour.olean NeedleCancellationFour.lean
