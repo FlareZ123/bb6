@@ -47,7 +47,7 @@ Result simulate(int n,uint32_t word,int stepMax) {
 }
 
 int main(int argc,char**argv) {
-    int N=argc>1?stoi(argv[1]):22,limit=argc>2?stoi(argv[2]):200000;
+    int N=argc>1?stoi(argv[1]):26,limit=argc>2?stoi(argv[2]):200000;
     for (int n=0;n<=N;n++) {
         uint64_t cases=n==0?1ull:(1ull<<(n-1));
         uint64_t cnt[5]={0};
