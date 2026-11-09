@@ -178,13 +178,20 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroContextToE1Physical.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429CZeroContextToE1Physical.blank_even_C0_to_E1_corridor'" "$LOG"
           # Additional original-source arbitrary-suffix C/0 frontier return.
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/FrontierOdd0100Source.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/FrontierOdd0100Source.olean im-results/agent1-429-frontier-odd0100/FrontierOdd0100Source.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429Odd0100Source.odd_0100_original'" "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/FrontierOdd0100Max.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/FrontierOdd0100Max.olean im-results/agent1-429-frontier-odd0100/FrontierOdd0100Max.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429Odd0100Max.odd_0100_all_head_max'" "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/FrontierOdd0100Physical.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/FrontierOdd0100Physical.olean im-results/agent1-429-frontier-odd0100/FrontierOdd0100Physical.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429Odd0100Physical.physical_odd_0100_return'" "$LOG"
           grep -F "'BB429Odd0100Physical.physical_odd_0100_all_prefix_bound'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/OddCZeroToE1.olean im-results/agent1-429-frontier-odd0100/OddCZeroToE1.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429OddCZeroToE1.odd_C0_to_E1'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/OddCZeroToE1Max.olean im-results/agent1-429-frontier-odd0100/OddCZeroToE1Max.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429OddCZeroToE1Max.odd_C0_to_E1_head_max'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/OddCZeroPhysical.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429OddCZeroPhysical.physical_odd_C0_to_E1'" "$LOG"
+          grep -F "'BB429OddCZeroPhysical.physical_odd_C0_to_E1_prefix_bound'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
