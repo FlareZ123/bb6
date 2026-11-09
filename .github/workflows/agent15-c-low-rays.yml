@@ -31,6 +31,8 @@ jobs:
           tar -xJf Agent15Rays.tar.xz
           echo "f16f14de65cd1ccc4091783c58799ac55286f710d60eb2f8afcce2d430a066c8  Agent15RayInverse.lean" | sha256sum -c -
           echo "536fb88b54f513c0d60f435a26ba400965c786ef46146c2b9d4fcedae0e50cfc  Agent15RayReach.lean" | sha256sum -c -
+          # Normalize one import ordering typo in the archived raw source; all theorem text is unchanged.
+          python3 -c "from pathlib import Path; p=Path('Agent15RayInverse.lean'); s=p.read_text(); p.write_text(s.replace('set_option maxRecDepth 8192\\nimport Lean.Elab.Tactic.Omega', 'import Lean.Elab.Tactic.Omega\\nset_option maxRecDepth 8192', 1))"
           export LEAN_PATH=.
           lean --version
           for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff Agent15RayInverse Agent15RayReach; do
