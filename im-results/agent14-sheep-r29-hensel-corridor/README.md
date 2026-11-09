@@ -187,7 +187,25 @@ x+12 = 9*8^n*m,    m=(Y+12)/9^(n+1).
 
 Hence `x≡0 (mod3)`. The definition of a genuine first-even E return has target `x=1+3^h*u`, with odd u; if `h≥1` this forces `x≡1 (mod3)`, contradiction. Therefore **every** E predecessor into `x`, including exceptional sources, necessarily has `h=0`.
 
-Equivalently, for a distinguished mixed-tail root parameter `k` and maximal zero-tail length `L_r(k)`, all depth `n<L_r(k)` nodes in that tail have **only hidden-h-zero incoming edges**. Higher-h branches can occur at its last, deepest node and are not ruled out by this lemma. This is a useful exact full-source branching restriction at every interior depth, complementing the generic valuation walls above. It does not by itself close other h0 generic or exceptional parents, nor does it connect any ancestor to the actual seed.
+Equivalently, for a distinguished mixed-tail root parameter `k` and maximal zero-tail length `L_r(k)`, all depth `n<L_r(k)` nodes in that tail have **only hidden-h-zero incoming edges**. Higher-h branches can occur at its last, deepest node and are not ruled out by this lemma. This is a useful exact full-source branching restriction at every interior depth, complementing the generic valuation walls above.
+
+**Further exact interior source-valuation restrictions.** Once `h=0`, an incoming generic source of valuation `a` and odd cofactor `v≥5` obeys `2*x+1=(2^(a+1)+1)*v+2*a`. For **even** `a`, the coefficient `2^(a+1)+1` is divisible by three. Since the interior target `x≡0 (mod3)`, the equation forces `2*a≡1 (mod3)`, or
+
+```text
+a even  =>  a ≡ 2 (mod3);
+equivalently a ≠ 6*s and a ≠ 6*s+4.
+```
+
+For a special source with cofactor `v=3`, the genuine `h=0` output is `x=3*2^a+a+3`, which similarly forces `a≡0 (mod3)`. Both generic and exceptional source restrictions are fully kernel-proved, in [`SheepInteriorGate.lean`](./SheepInteriorGate.lean), theorems `interior_even_a_mod3` and `interior_special_a_mod3`, with only `[propext, Quot.sound]` in the axiom audit.
+
+Combining the **generic** even-a obstruction with the parity-sensitive 5/13/17-modulus walls above yields an **exact all-interior valuation sieve**: for either reverse-depth parity, the forbidden generic valuation arithmetic density is
+
+```text
+Z (r29):           2237/4420 = 50.61085973...% (period 26520)
+X (seven families): 511/1020 = 50.09803922...% (period 2040).
+```
+
+These are exact union counts over every residue of their complete periods, checked by [`exit_val_sieve.py`](./exit_val_sieve.py). The two densities cover possible **valuation integers a** of hypothetical incoming h0 generic edges to interior P nodes. They neither count edges nor show that such parents are genuinely reachable. In particular, more than 49% of valuation classes remain unexcluded, and exceptional h0 sources must still be analyzed separately. No Sheep or BB(6) decision follows.
 
 [`SheepInteriorGate.lean`](./SheepInteriorGate.lean) proves the uniform `interior_nine` and `interior_hidden_zero` lemmas in Lean 4.36.0-rc2, with axioms `[propext, Quot.sound]` only, importing the authentic-source-shaped `SheepChain2.Chain2` relation. This module still requires an upstream original-TM import for a single complete source-level formalization of the whole corridor argument. [`exit_val_sieve.py`](./exit_val_sieve.py) independently enumerates the two exact small residue-class densities for Z and X.
 
