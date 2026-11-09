@@ -38,9 +38,24 @@ For **every** natural `j,m,k,time` satisfying it and
 m>=3, j%4=0, m%4=3, (j+3*m+5)%32=10,
 ```
 
-the authentic blank section never reaches `(2*j+3,k)`. There are **eight qualifying (j,m) cells modulo 32 in each coordinate**, hence this infinite exclusion occupies **1/128** of high-stopping parameter pairs. The cells, written `(j mod32,m mod32)`, are `(0,23),(4,11),(8,31),(12,19),(16,7),(20,27),(24,15),(28,3)`. This family is disjoint from Agent 4's earlier `j`-odd high stopping diagonal, but overlap with *all* independent old sieves still needs checking.
+the authentic blank section never reaches `(2*j+3,k)`. There are **eight qualifying (j,m) cells modulo 32 in each coordinate**, hence this infinite exclusion occupies **1/128** of high-stopping parameter pairs. The cells, written `(j mod32,m mod32)`, are `(0,23),(4,11),(8,31),(12,19),(16,7),(20,27),(24,15),(28,3)`. This family is disjoint from Agent 4's earlier `j`-odd high-stopping diagonal. **Overlap correction:** its entire high-parameter class is already removed by Agent 19's original-source all-depth dyadic exclusion at inverse depth `n=1`. The high-stopping pullback is therefore an independent structural proof of an existing exclusion, and does not enlarge the established sieve.
 
 **Verification.** [Source Lean proof](CThreeToFourSource.lean), imported after `ThreeConeSource` and `CThreeArithmetic`, compiled against unchanged original source in manual [CI 42600105398](https://github.com/FlareZ123/bb6/actions/runs/42600105398) for `four_edge_impossible`, `blank_no_four_cylinder`, and `high_stop_fourth_exclusion`. The strengthened `exactly_three_not_four` theorem imports the authentic Agent 34 `ThreeConeProper` and also **passed unchanged-original-source Lean CI [42600819847](https://github.com/FlareZ123/bb6/actions/runs/42600819847)**. All four new theorems are now source-kernel certified, using only ordinary Lean logical axioms, without `sorryAx`. No full Machine C halting decision or BB(6) maximality follows.
+
+## Source-verified all-depth strict image hierarchy and new m=1 halting exclusions
+
+[CFourHierarchy.lean](CFourHierarchy.lean) proves in original-source Lean that `I_(r+2) \\ I_(r+3)` is **nonempty for every natural r**; its explicit infinite lattice is `(8*s+7+4*r,2^r*(16*t+44)-2)` for all `s,t`. Each lattice has fixed-r density `2^(-r-7)` and the bands are pairwise disjoint. [CAllDepthBlank.lean](CAllDepthBlank.lean) proves every one of these infinitely many lifted bands is also permanently absent from the actual blank section orbit, for all `r,s,t,time`. Both original-source proofs passed Lean 4.36.0-rc2 [CI 42602556589](https://github.com/FlareZ123/bb6/actions/runs/42602556589), with standard axioms only. The coherent academic [all-depth theorem and proof](../../results/2026-11-09-machine-c-all-depth-strict-section-image-hierarchy-agent4.md) documents the geometric 1/64 union density and remaining research limitations.
+
+The new **m=1** high stopping inputs contain two disjoint explicit arithmetic progressions:
+
+| Parameter | Authentic stopping state | Witness in lifted image hierarchy |
+| --- | --- | --- |
+| `j=64q+26, m=1` | `(128q+55,960q+430)` | `r=2, s=16q+5, t=15q+4` |
+| `j=256q+266,m=1` | `(512q+535,3840q+4030)` | `r=4, s=64q+64,t=15q+13` |
+
+Both are permanently blank-unreachable for **every natural q and time**. [CNewM1.lean](CNewM1.lean) passed original-source [CI 42604195908](https://github.com/FlareZ123/bb6/actions/runs/42604195908); [CNewM1Depth4.lean](CNewM1Depth4.lean) is checked using the same [original-source manual workflow](../../.github/workflows/agent4-c-three-ancestry.yml) (the second run's exact status is in the repository's Actions history). Both include formal algebraic stopping equations and independently prove that Agent 19's earlier all-depth dyadic condition does **not** exclude any of these m=1 candidates, since only n=0 was previously available. Additional complete prior-sieve novelty checking is still needed.
+
+These two progressions have density **5/256 within the single m=1 high-index line**, but contribute density zero within the full two-dimensional `(j,m)` plane. They leave the Machine C blank-halting question undecided.
 
 ## New mathematical calculation: exact eventual fourth-return image density
 
@@ -131,6 +146,6 @@ The affine map `(j,m) -> (S,y)` has determinant `-6`. Modulo any power of two, i
 
 - **Kernel-certified original-source:** the four-edge obstruction, genuine blank nonreachability, and high-stopping lattice, as of CI 42600105398. The exact three-edge witness was source-certified in CI 42600819847.
 - **Finite exact arithmetic plus paper reduction:** complete fourth-image density, 17 valuation rows per parity, the finite tail cover, and the sharper third-image period. The C++ file contains the complete reproducible computation. No source Lean theorem yet states the full fourth-image density.
-- **Open:** intersect the complete `I_4` sieve with the strongest existing `highAllowed` filters and isolate genuinely new surviving high parameters; pursue a true complete blank-root decision. No exact six-state Busy Beaver value follows from any image-density bound.
+- **Open:** intersect all lifted image bands with the strongest existing `highAllowed` filters, especially the new m=1 classes, and identify independent exclusions; pursue a true complete blank-root decision. No exact six-state Busy Beaver value follows from any image-density bound.
 
 Source dependencies: [complete section inverse](../agent3-c-bounce-inverse/SectionAllInverse.lean); [Agent 34 two- and three-edge theorem](../agent34-c-degree-profile/ThreeConeSource.lean); [Agent 45 full third-image certificate](../agent45-c-three-step/README.md); [prior Agent 4 two-versus-three and stopping diagonals](../agent4-c-three-ancestry/README.md).
