@@ -8,7 +8,7 @@ set_option maxHeartbeats 30000000
 
 namespace BB429OddFrontierCensus
 open BB429OddExcursion BB429CZeroEvenReturn
-open BB429Odd0100Source BB429CZeroCensus
+open BB429Odd0100Source BB429CZeroCensus BB429W4CZeroCount
 
 private theorem c3_count (m : Nat) (tail : List Bool) :
   runCount 3 (z 2 (true :: ones (2*m) ++
