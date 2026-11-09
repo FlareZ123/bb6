@@ -65,6 +65,7 @@ theorem count_annotation_unique (b0 d0 b d m z : Nat)
         rw [← hbeq, ← hdeq] at hp'
         have hprev := ih M Z hp'
         rcases hprev with ⟨hmeq,hzeq⟩
+        rw [← hteq] at hZ
         omega
 
 #print axioms counted_mass
