@@ -44,5 +44,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamPhysicalBridge.lean" .
           lean -o PhysicalWindow.olean PhysicalWindow.lean | tee physical-axioms.log
           lean -o ESeamPhysicalBridge.olean ESeamPhysicalBridge.lean | tee bridge-axioms.log
-          if grep -E 'sorryAx|_native\\.native_decide' physical-axioms.log bridge-axioms.log; then exit 1; fi
+          lean -o ESeamNoReturn.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamNoReturn.lean" | tee no-return-axioms.log
+          lean -o ESeamTerminalClassification.olean "$GITHUB_WORKSPACE/im-results/agent25-e-seam-kernel/ESeamTerminalClassification.lean" | tee classification-axioms.log
+          if grep -E 'sorryAx|_native\\.native_decide' physical-axioms.log bridge-axioms.log no-return-axioms.log classification-axioms.log; then exit 1; fi
           grep "original_e_base_marker_safe.*\\[propext, Classical.choice, Quot.sound\\]" bridge-axioms.log
+          grep "seed_no_F0_before_marker.*\\[propext, Classical.choice, Quot.sound\\]" no-return-axioms.log
+          grep "terminal_classification.*\\[propext, Classical.choice, Quot.sound\\]" classification-axioms.log
