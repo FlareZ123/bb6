@@ -28,7 +28,7 @@ jobs:
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-d-exceptional/ESeamSource.olean im-results/agent31-d-exceptional/ESeamSource.lean
-          lean im-results/agent25-e-seam-kernel/SourceSeamFrame.lean | tee source-frame-axioms.log
+          lean -o im-results/agent25-e-seam-kernel/SourceSeamFrame.olean im-results/agent25-e-seam-kernel/SourceSeamFrame.lean | tee source-frame-axioms.log
           if grep -E 'sorryAx|_native\.native_decide' source-frame-axioms.log; then exit 1; fi
           grep -F "eSector_first_event_return' depends on axioms: [propext, Quot.sound]" source-frame-axioms.log
           grep -F "eSector_source_dichotomy' depends on axioms: [propext, Classical.choice, Quot.sound]" source-frame-axioms.log
