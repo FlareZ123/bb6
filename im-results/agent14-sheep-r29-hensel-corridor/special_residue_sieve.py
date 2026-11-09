@@ -38,10 +38,10 @@ def run() -> None:
     for name, quotient_residues in (("Z", (3, 2)), ("X", (1, 4))):
         results = []
         for depth in range(4):
-            hits = interior_candidates(quotient_residues, depth)
+            hits = interior_candidates(quotient_residues, depth + 4)
             assert len(hits) == 1, (name, depth, hits)
             results.append(hits[0])
-            print(f"{name} P-depth {depth} mod4: exceptional a={hits[0]} (mod {PERIOD})")
+            print(f"{name} positive P-depth {depth} mod4: exceptional a={hits[0]} (mod {PERIOD})")
         assert results == expected[name]
         for depth in range(4, 12):
             assert interior_candidates(quotient_residues, depth) == [results[depth % 4]]
