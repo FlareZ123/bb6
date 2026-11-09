@@ -107,6 +107,32 @@ The previously established all-index arithmetic and abstract bridge
 are also included in this run. This is the strongest current verified
 source word exclusion in this dossier.
 
+## Consolidated low-depth source language
+
+[SourceLowDepth.lean](SourceLowDepth.lean) adds a complete inductive
+`SourceLowTrace` for all finite legal original `inverseAt` histories
+whose inverse depths are restricted to `0,1,2`. The induction records the
+exact count `z` of depth-0/1 transitions and constructs a decomposition
+into arbitrarily long depth-two runs. Its source theorem
+
+```lean
+source_low_trace_wall_needs_four_shallows :
+  SourceLowTrace n z (14*2^n-2*n-16) 3 0 b d m →
+  b+4*m+4*n+20=12*2^n → 4≤z
+```
+
+holds for every `n>=14`. The zero-shallow case follows from the
+positive critical-root affine defect `I`, its exact division by
+`8^s` on depth-two runs, and negative `I` on the wall.
+The one-, two-, and three-shallow cases instantiate the separately
+original-source-certified word theorems.
+
+Original-source [CI 42546553574](https://github.com/FlareZ123/bb6/actions/runs/42546553574)
+successfully checked the full chain. Its final axiom list is
+`[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+The theorem is a uniform necessary condition on actual bounded-depth
+inverse paths, with no length, cost or shallow-edge ordering restriction.
+
 ## Open quantifiers and next mathematical frontier
 
 An actual P1 halting decision remains open. The next candidate grammar
