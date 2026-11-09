@@ -75,6 +75,9 @@ jobs:
           lean -o im-results/agent39-429-frontier-left/Frontier429.olean im-results/agent39-429-frontier-left/Frontier429.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=10000000 -o im-results/agent3-429-root-language/BB429RootLanguageFatal.olean im-results/agent3-429-root-language/BB429RootLanguageFatal.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -o im-results/agent3-429-root-language/BB429RootLanguageCast.olean im-results/agent3-429-root-language/BB429RootLanguageCast.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -o im-results/agent3-429-root-language/BB429RootPairNormalizer.olean im-results/agent3-429-root-language/BB429RootPairNormalizer.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=10000000 -o im-results/agent3-429-root-language/BB429RootOddSection.olean im-results/agent3-429-root-language/BB429RootOddSection.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootOddPhysical.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootLanguagePhysical.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           audit_axiom_free() {
             theorem="$1"
@@ -93,6 +96,7 @@ jobs:
           audit_axiom_free "BB429AGate.aGate_forces_halt_at" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.halting_time_iff_A_corridor" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.halting_requires_prior_distant_scan" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429RootOddPhysical.c0_odd_pairs_raw" /tmp/agent32-429-source.log
           audit_axiom_free "BB429RootLanguagePhysical.prepared_C0_fatal" /tmp/agent32-429-source.log
           audit_axiom_free "BB429RootLanguagePhysical.prepared_C0_halts" /tmp/agent32-429-source.log
           audit_axiom_free "BB429EGuard.every_reachable_E_right_one" /tmp/agent32-429-source.log
