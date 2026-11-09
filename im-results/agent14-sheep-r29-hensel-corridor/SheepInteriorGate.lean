@@ -87,6 +87,48 @@ theorem interior_special_a_mod3 {n x y a : Nat}
   obtain ⟨z, hz⟩ := hn
   omega
 
+/-- Any cofactor-three section predecessor of a source with valuation exactly
+    two (the ordinary P-corridor shape) must have a≡1 mod8. -/
+theorem special_val8 {x a : Nat}
+    (hx : x%8=4)
+    (hs : x=3*2^a+a+3) : a%8=1 := by
+  have ha3 : 3≤a := by
+    by_cases hh : 3≤a
+    · exact hh
+    have hc : a=0 ∨ a=1 ∨ a=2 := by omega
+    rcases hc with h0 | h1 | h2
+    · subst a
+      simp at hs
+      omega
+    · subst a
+      simp at hs
+      omega
+    · subst a
+      simp at hs
+      omega
+  have he : a=3+(a-3) := by omega
+  have hpow : 2^a = 8*2^(a-3) := by
+    calc
+      2^a = 2^(3+(a-3)) := by rw [←he]
+      _ = 8*2^(a-3) := by simp [Nat.pow_add]
+  have hmod : (3*2^a)%8=0 := by
+    rw [hpow, Nat.mul_mod]
+    simp
+  omega
+
+/-- Complete special-source necessary valuation class at interior P nodes. -/
+theorem interior_special_val24 {n x y a : Nat}
+    (c : SheepChain2.Chain2 n x y)
+    (hd : 9^(n+1) ∣ y+12)
+    (hx : x%8=4)
+    (hspecial : x=3*2^a+a+3) : a%24=9 := by
+  have h3 : a%3=0 := interior_special_a_mod3 c hd hspecial
+  have h8 : a%8=1 := special_val8 hx hspecial
+  omega
+
+#print axioms special_val8
+#print axioms interior_special_val24
+
 #print axioms interior_even_a_mod3
 #print axioms interior_special_a_mod3
 #print axioms interior_nine
