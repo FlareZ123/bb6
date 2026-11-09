@@ -84,6 +84,31 @@ theorem fatal_nine_sector (k f : Nat)
     decide
   exact htable ⟨k%18, Nat.mod_lt k (by decide)⟩ hred
 
+
+/-- Conversely, every fatal index in the two mod-18 sectors has the
+    necessary nine-divisibility, independent of source reachability. -/
+theorem fatal_sector_nine (k f : Nat)
+    (hf : f+k+4=4*2^k)
+    (hsector : k%18=4 ∨ k%18=5) :
+    (2*f+5)%9=0 := by
+  have hpmod := pow2_mod18 k
+  have table : ∀ x : Fin 18,
+      (x.val=4 ∨ x.val=5) →
+      (8*2^x.val)%9=(2*x.val+3)%9 := by decide
+  have htab : (8*2^(k%18))%9=(2*(k%18)+3)%9 :=
+    table ⟨k%18, Nat.mod_lt k (by decide)⟩ hsector
+  have ha : (8*2^k)%9=(8*2^(k%18))%9 := by
+    calc
+      (8*2^k)%9 = (8%9 * (2^k%9))%9 := Nat.mul_mod 8 (2^k) 9
+      _ = (8%9 * (2^(k%18)%9))%9 := by rw [hpmod]
+      _ = (8*2^(k%18))%9 := (Nat.mul_mod 8 (2^(k%18)) 9).symm
+  have hb : (2*k+3)%9=(2*(k%18)+3)%9 := by omega
+  have hm : (8*2^k)%9=(2*k+3)%9 := by omega
+  have heq : 8*2^k=(2*f+5)+(2*k+3) := by omega
+  rw [heq, Nat.add_mod] at hm
+  omega
+
+#print axioms fatal_sector_nine
 #print axioms fatal_no_odd_zero_valuation
 #print axioms fatal_nine_sector
 
