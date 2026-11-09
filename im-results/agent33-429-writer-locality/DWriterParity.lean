@@ -53,7 +53,9 @@ theorem oddD_original_fatal (k : Nat) (c : Config)
   refine ⟨c',hraw,?_⟩
   rcases hrep with ⟨hs,hcur,_,hright⟩
   refine ⟨hs,hcur,?_⟩
-  simpa [z] using hright 0
+  have ht := hright 0
+  change c'.tape (c'.head + 1) = true at ht
+  exact ht
 
 theorem evenD_original_crosses (k : Nat) (c : Config)
     (hc : Represents (evenD k) c) :
