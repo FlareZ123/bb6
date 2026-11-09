@@ -86,12 +86,14 @@ jobs:
           lean -o im-results/agent9-p1-periodic/DistinctParameterSource.olean im-results/agent9-p1-periodic/DistinctParameterSource.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean -o im-results/agent9-p1-periodic/ZeroOffset.olean im-results/agent9-p1-periodic/ZeroOffset.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean im-results/agent9-p1-periodic/RootCodeUnique.lean | tee -a /tmp/agent9-periodic-source-audit.log
+          lean im-results/agent9-p1-periodic/EffectiveCode.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean -o im-results/agent13-p1-adaptive-param/PrefixCylinder.olean im-results/agent13-p1-adaptive-param/PrefixCylinder.lean | tee -a /tmp/agent9-periodic-source-audit.log
           lean im-results/agent9-p1-periodic/FeederCoding.lean | tee -a /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_positive_depth' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_zero_depth' /tmp/agent9-periodic-source-audit.log
           grep -F 'no_eventually_periodic_shadow_path' /tmp/agent9-periodic-source-audit.log
           grep -F 'infinite_feeder_code_unique' /tmp/agent9-periodic-source-audit.log
+          grep -F 'infinite_shadow_effective_code_injective' /tmp/agent9-periodic-source-audit.log
           grep -F 'infinite_shadow_root_code_injective' /tmp/agent9-periodic-source-audit.log
           grep -F 'distinct_L_no_common_depth_stream' /tmp/agent9-periodic-source-audit.log
           grep -F 'zero_offset_difference_vanishes' /tmp/agent9-periodic-source-audit.log
