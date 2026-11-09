@@ -109,4 +109,102 @@ theorem sourceB_mod35 (t : Nat) : sourceB (3*t+1)%35=20 := by
   simpa [r] using hresult
 
 #print axioms sourceB_mod35
+
+/-- The other two classes of the geometric-series mod-7 cycle. -/
+theorem geo30 (t:Nat) : geo 4 2 (3*t)%7=0 := by
+  induction t with
+  | zero => decide
+  | succ t ih =>
+      have hs : 3*(t+1)=3*t+3 := by omega
+      rw [hs, geo_period3]
+      exact ih
+
+theorem geo32 (t:Nat) : geo 4 2 (3*t+2)%7=6 := by
+  induction t with
+  | zero => decide
+  | succ t ih =>
+      have hs : 3*(t+1)+2=(3*t+2)+3 := by omega
+      rw [hs, geo_period3]
+      exact ih
+
+theorem B_mod5 (r:Nat) (hr:1≤r) : sourceB r%5=0 := by
+  have hv12 : v r%12=6 := v_mod12 r hr
+  have hv4 : v r%4=2 := by omega
+  have hX5 : xb r%5=3 := by
+    unfold xb
+    exact two_pow_mod5 (v r) hv4
+  have hXbig : 3≤xb r := by
+    unfold xb
+    have hpositive : 1≤v r := by omega
+    have hpow : (2:Nat)^2 ≤2^(v r+1) :=
+      Nat.pow_le_pow_right (by decide) (by omega)
+    omega
+  have hsub5 : (xb r-3)%5=0 := by omega
+  simp [sourceB,Nat.mul_mod,hsub5]
+
+theorem B_mod7 (r:Nat) (hr:1≤r) :
+    sourceB r%7=(6*(geo 4 2 r%7))%7 := by
+  have hv12 : v r%12=6 := v_mod12 r hr
+  have hv3 : v r%3=0 := by omega
+  have hy7 : 2^(v r)%7=1 := two_pow_mod7 (v r) hv3
+  have hX7 : xb r%7=2 := by
+    unfold xb
+    rw [Nat.pow_succ, Nat.mul_mod, hy7]
+  have hXbig : 3≤xb r := by
+    unfold xb
+    have hpositive : 1≤v r := by omega
+    have hpow : (2:Nat)^2 ≤2^(v r+1) :=
+      Nat.pow_le_pow_right (by decide) (by omega)
+    omega
+  have hsub7 : (xb r-3)%7=6 := by omega
+  have ha7 : ((xb r)^2)%7=4 := by
+    rw [Nat.pow_mod,hX7]
+  have hb7 : 9%7=2 := by decide
+  have hgeo : (geo ((xb r)^2) 9 r)%7=(geo 4 2 r)%7 :=
+    geo_mod7_congr ((xb r)^2) 9 r ha7 hb7
+  simp [sourceB,Nat.mul_mod,hy7,hsub7,hgeo]
+
+/-- Complete residue classification for every positive cancellation index. -/
+theorem sourceB_mod35_full (r:Nat) (hr:1≤r) :
+    (r%3=0 → sourceB r%35=0) ∧
+    (r%3=1 → sourceB r%35=20) ∧
+    (r%3=2 → sourceB r%35=15) := by
+  have h5:=B_mod5 r hr
+  have h7:=B_mod7 r hr
+  constructor
+  · intro h
+    have hrep:r=3*(r/3):=by omega
+    have hgeo:=geo30 (r/3)
+    rw [←hrep] at hgeo
+    rw [hgeo] at h7
+    omega
+  constructor
+  · intro h
+    have hrep:r=3*(r/3)+1:=by omega
+    have hgeo:=geo31 (r/3)
+    rw [←hrep] at hgeo
+    rw [hgeo] at h7
+    omega
+  · intro h
+    have hrep:r=3*(r/3)+2:=by omega
+    have hgeo:=geo32 (r/3)
+    rw [←hrep] at hgeo
+    rw [hgeo] at h7
+    omega
+
+theorem sourceB_mod35_iff (r:Nat) (hr:1≤r) :
+    sourceB r%35=20 ↔ r%3=1 := by
+  have hcases := sourceB_mod35_full r hr
+  constructor
+  · intro h
+    have hm:r%3=0∨r%3=1∨r%3=2:=by omega
+    rcases hm with hm|hm|hm
+    · have ha:=hcases.1 hm; omega
+    · exact hm
+    · have ha:=hcases.2.2 hm; omega
+  · intro h
+    exact hcases.2.1 h
+
+#print axioms sourceB_mod35_full
+#print axioms sourceB_mod35_iff
 end NeedleCancelMod35
