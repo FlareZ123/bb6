@@ -74,6 +74,33 @@ theorem cancellation_three_parent_iff (r : Nat) (hr : 1≤r) :
     refine ⟨q,3,rfl,?_⟩
     omega
 
+/-- Infinitely many distinct prepared-tape predecessors share each
+    cancellation terminal feeder indexed by 9t+7. Both edges are source-level. -/
+theorem infinite_two_predecessors (t : Nat) :
+    ∃ q3 q4 : Nat,
+      highLevelNext (.N (oddTower q3 3)) =
+        some (.N (oddTower (CancellationConstructive.feederQ (9*t+7))
+          (CancellationTerminalConstructive.feederV (9*t+7)))) ∧
+      highLevelNext (.N (oddTower q4 4)) =
+        some (.N (oddTower (CancellationConstructive.feederQ (9*t+7))
+          (CancellationTerminalConstructive.feederV (9*t+7)))) ∧
+      oddTower q3 3 ≠ oddTower q4 4 := by
+  obtain ⟨q3,h3⟩ := (cancellation_three_parent_iff (9*t+7) (by omega)).mpr (by omega)
+  obtain ⟨q4,h4⟩ := infinite_cancellation_four_parent (3*t+2)
+  have he : 3*(3*t+2)+1=9*t+7 := by omega
+  rw [he] at h4
+  refine ⟨q3,q4,h3,h4,?_⟩
+  have hp3 := oddTower_factor q3 3
+  have hp4 := oddTower_factor q4 4
+  intro hequal
+  rw [hequal] at hp3
+  have hx : (2:Nat)^3=8 := by decide
+  have hy : (2:Nat)^4=16 := by decide
+  rw [hx] at hp3
+  rw [hy] at hp4
+  omega
+
+#print axioms infinite_two_predecessors
 #print axioms sourceB_mod19_iff
 #print axioms sourceB_parent3_iff
 #print axioms cancellation_three_parent_iff
