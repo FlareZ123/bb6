@@ -6,7 +6,6 @@ set_option maxHeartbeats 0
 namespace BB6.Agent19M3Four
 open BB6.Agent19OddTower
 open BB6.Agent4Four
-open BB6.Agent46
 
 def r : Nat → Nat
   | 0 => 7
@@ -58,7 +57,7 @@ theorem extra_three_stopping (c q h : Nat) :
   · exact base c q
 
 theorem extra_three_blank_unreachable (c q h time : Nat) :
-    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
       some (2*J 3 (r c) (s c q) (t c q) h+3,
         K 3 (r c) (t c q) h) := by
   exact tower_blank_excluded _ _ _ _ _ _
