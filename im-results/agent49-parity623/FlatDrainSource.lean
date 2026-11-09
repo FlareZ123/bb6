@@ -701,7 +701,7 @@ theorem highLevel_right_odd_shield_sharp (n : Nat)
   have h4 : a≠d+2 := by omega
   have hzero : a≠0 := by omega
   have hfirst : d+4-a=n := by dsimp [a,d]; omega
-  have hblocks : a-1=shield n := by dsimp [a]; omega
+  have hblocks : a-1=shield n := by dsimp [a]
   change highLevelNext (.D a d)=none
   have ht : highLevelNext (.D a d)=drainB (d+4-a) (a-1) 3 := by
     simp only [highLevelNext, if_neg hzero, if_neg h1, if_neg h2,
