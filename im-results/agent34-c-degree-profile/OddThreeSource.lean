@@ -23,7 +23,7 @@ private theorem source_edge (a k x y : Nat)
 of the unchanged original Machine C return map. -/
 theorem two_edges (x y : Nat)
     (hx : 8≤x) (hy : 256≤y)
-    (hs : (x+y)%128=84) (hr : y%64=59) :
+    (hs : (x+y)%32=20) (hr : (x+y+34)%128=(2*y)%128) :
     ∃ a k b l,
       secNext (b,l)=some (a,k) ∧ secNext (a,k)=some (x,y) := by
   obtain ⟨a,k,h1,ha,hk,heven⟩ := first_exists x y hx hy hs hr
@@ -34,16 +34,16 @@ theorem two_edges (x y : Nat)
 cone contradicts the original odd-image parity theorem. -/
 theorem no_three_edges (u v b l a k x y : Nat)
     (hx : 8≤x) (hy : 256≤y)
-    (hs : (x+y)%128=84) (hr : y%64=59)
+    (hs : (x+y)%32=20) (hr : (x+y+34)%128=(2*y)%128)
     (hthird : secNext (u,v)=some (b,l))
     (hsecond : secNext (b,l)=some (a,k))
     (hfirst : secNext (a,k)=some (x,y)) : False := by
-  obtain ⟨ha32,hk32,haeq,hkeq⟩ :=
+  obtain ⟨ha16,hk16,hsum32,haeq,hkeq⟩ :=
     first_forced a k x y (by omega) hs hr (source_preimage a k x y hfirst)
   have ha : 128≤a := by omega
   have hk : 128≤k := by omega
   obtain ⟨hlbound,hodd,hbad⟩ :=
-    second_forced a k b l ha hk ha32 hk32 (source_preimage b l a k hsecond)
+    second_forced a k b l ha hk ha16 hk16 hsum32 (source_preimage b l a k hsecond)
   have himage := BB6.Agent3.section_odd_image u v b l hthird hlbound hodd
   omega
 
@@ -51,7 +51,7 @@ theorem no_three_edges (u v b l a k x y : Nat)
 start, with no bound on run length or counter magnitude. -/
 theorem all_source_no_three (start : Nat×Nat) (n x y : Nat)
     (hx : 8≤x) (hy : 256≤y)
-    (hs : (x+y)%128=84) (hr : y%64=59) :
+    (hs : (x+y)%32=20) (hr : (x+y+34)%128=(2*y)%128) :
     BB6.Agent8Section.run secNext (n+3) (some start) ≠ some (x,y) := by
   intro ht
   have htime : n+3=((n+1)+1)+1 := by omega
@@ -83,7 +83,7 @@ theorem all_source_no_three (start : Nat×Nat) (n x y : Nat)
 blank-derived first section seed at every time, including 0,1,2. -/
 theorem blank_unreachable (time x y : Nat)
     (hx : 8≤x) (hy : 256≤y)
-    (hs : (x+y)%128=84) (hr : y%64=59) :
+    (hs : (x+y)%32=20) (hr : (x+y+34)%128=(2*y)%128) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠ some (x,y) := by
   cases time with
   | zero =>
@@ -113,9 +113,9 @@ theorem blank_unreachable (time x y : Nat)
 /-- Pullback of the odd-right original-source cone to the genuine high
 stopping equation. The stopping right counter itself is a hypothesis. -/
 theorem high_stop_sector (j m k : Nat)
-    (hm : m%32=7) (hpair : (j+42)%128=(3*m)%128)
+    (hm : m%8=7) (hpair : (j+m+14)%128=0)
     (hgate : k+j+3*m+5=2^(2*m+2)*(j+3)) :
-    (2*j+3+k)%128=84 ∧ k%64=59 := by
+    (2*j+3+k)%32=20 ∧ (2*j+3+k+34)%128=(2*k)%128 := by
   have hm3 : 3≤m := by omega
   have hp128 : 128 ∣ (2:Nat)^(2*m+2) := by
     change (2:Nat)^7 ∣ 2^(2*m+2)
@@ -149,7 +149,7 @@ private theorem high_power_linear (m : Nat) (hm : 2≤m) :
 /-- Every high stopping state in this cylinder automatically meets the
 large-coordinate hypotheses required by the source three-edge obstruction. -/
 theorem high_stop_bounds (j m k : Nat)
-    (hm : m%32=7) (hpair : (j+42)%128=(3*m)%128)
+    (hm : m%8=7) (hpair : (j+m+14)%128=0)
     (hgate : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     8≤2*j+3 ∧ 256≤k := by
   have hm7 : 7≤m := by omega
@@ -169,7 +169,7 @@ theorem high_stop_bounds (j m k : Nat)
 /-- Infinite lattice of Machine C high halting parameter candidates
 excluded at all genuine blank-section times, without a finite cutoff. -/
 theorem high_stop_blank_unreachable (j m k time : Nat)
-    (hm : m%32=7) (hpair : (j+42)%128=(3*m)%128)
+    (hm : m%8=7) (hpair : (j+m+14)%128=0)
     (hgate : k+j+3*m+5=2^(2*m+2)*(j+3)) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
       some (2*j+3,k) := by
