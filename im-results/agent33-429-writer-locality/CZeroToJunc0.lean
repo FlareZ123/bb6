@@ -54,15 +54,15 @@ theorem C0_to_junc0 (k : Nat) :
     z 0 (true :: (pairs01 0 ++ ones 5)) true
       (true :: (pairs01 0 ++ ones (2*k) ++ [false,true]))
   rw [show ones 6 = true :: ones 5 by rfl]
-  have hr : ones (2*k) ++ [true,false,true] =
-      true :: (ones (2*k) ++ [false,true]) := by
-    cases k with
+  have hr (n : Nat) : ones n ++ [true,false,true] =
+      true :: (ones n ++ [false,true]) := by
+    induction n with
     | zero => rfl
-    | succ k =>
-        change List.replicate (2*(k+1)) true ++ [true,false,true] =
-          true :: (List.replicate (2*(k+1)) true ++ [false,true])
-        simp [List.replicate_succ, List.append_assoc]
-  rw [hr]
+    | succ n ih =>
+        change true :: (ones n ++ [true,false,true]) =
+          true :: true :: (ones n ++ [false,true])
+        rw [ih]
+  rw [hr (2*k)]
   rfl
 
 #print axioms C0_to_E1_6
