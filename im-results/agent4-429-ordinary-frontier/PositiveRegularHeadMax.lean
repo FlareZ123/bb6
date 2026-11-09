@@ -194,7 +194,7 @@ theorem juncPos_ordinary_prefix_before_old_mark
  have hbound := runWithMax_prefix_le t (4*v+10-t)
    (junc (u+1) v (w+2)) p hp
    (junc u (v+2) w,-2,((2*v+2 : Nat) : Int)) hfull
- simpa only [Prod.snd] at hbound
+ simp only [Prod.snd] at hbound
  omega
 
 #print axioms shift_A01_max
