@@ -40,7 +40,7 @@ theorem runCount_to_run (n : Nat) (c d : Zipper) (k : Nat)
     chart completes its full return in the original six-state machine. -/
 theorem physical_w2_even_complete (k : Nat) (c : Config)
     (hrep : Represents (junc 0 (2*k) 2) c) :
-    ∃ c', BB6Coverage.run target429 (38*k+204) c = some c' ∧
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 (38*k+204) c = some c' ∧
       Represents (junc 0 0 (4*k+18)) c' := by
   apply source_run_rep (38*k+204) (junc 0 (2*k) 2) c hrep
     (junc 0 0 (4*k+18))
@@ -50,7 +50,7 @@ theorem physical_w2_even_complete (k : Nat) (c : Config)
 /-- The analogous complete odd right-two physical passage. -/
 theorem physical_w2_odd_complete (k : Nat) (c : Config)
     (hrep : Represents (junc 0 (2*k+1) 2) c) :
-    ∃ c', BB6Coverage.run target429 (44*k+266) c = some c' ∧
+    ∃ c', BB6Coverage.run BB429PhysicalFrontier.target429 (44*k+266) c = some c' ∧
       Represents (junc 0 0 (4*k+24)) c' := by
   apply source_run_rep (44*k+266) (junc 0 (2*k+1) 2) c hrep
     (junc 0 0 (4*k+24))
