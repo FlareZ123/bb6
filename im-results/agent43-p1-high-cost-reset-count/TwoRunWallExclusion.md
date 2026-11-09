@@ -1,6 +1,6 @@
-# P1: unbounded depth-two runs with a single shallow inverse transition
+# P1: all-index exclusions for one or two shallow inverse transitions
 
-**Current evidence (8 November 2026).** An all-natural Lean 4.36.0-rc2 theorem excludes the exact shifted wall for every *legal original-source `inverseAt` word* consisting of an arbitrary initial depth-two run, **one** depth-zero or depth-one edge, and an arbitrary final depth-two run. [SourceOneShallowLift.lean](SourceOneShallowLift.lean) derives each scalar transition from the unchanged P1 inverse operator, proves the mass invariant, and invokes the previously checked unbounded scalar model. Both original-source theorems compiled in [successful CI 42530146731](https://github.com/FlareZ123/bb6/actions/runs/42530146731), each axiom audit `[propext, Classical.choice, Quot.sound]` with no `sorryAx`. This remains a restricted infinite-word exclusion; arbitrary words, P1 halting, and BB(6) remain open.
+**Current evidence (8 November 2026).** Lean 4.36.0-rc2 source theorems exclude the exact shifted wall for every *legal original-source `inverseAt` word* containing either one or two depth-zero/depth-one edges, with arbitrary depth-two runs before, between and after those edges, at every critical index `n>=14`. [SourceOneShallowLift.lean](SourceOneShallowLift.lean) derives each scalar transition from the unchanged P1 inverse operator, proves the mass invariant, and invokes the previously checked unbounded scalar model. The one-shallow source theorems compiled in [CI 42530146731](https://github.com/FlareZ123/bb6/actions/runs/42530146731). The stronger all-index two-shallow source theorem compiled with the full original dependency chain in [CI 42539116808](https://github.com/FlareZ123/bb6/actions/runs/42539116808). Each final axiom audit reports `[propext, Classical.choice, Quot.sound]` with no `sorryAx`. This remains a restricted infinite-word exclusion; arbitrary words, P1 halting, and BB(6) remain open.
 
 ## The affine cocycle
 
@@ -57,13 +57,71 @@ All inequalities and both shallow-sector contradictions appear in [CubicGap.lean
 
 The same integer equations imply `s<=2` since `8^s|(14n+92)<=470<512`, and `r<=12` since `8^13>588*2^27` bounds any possible right-hand product. [OneShallowFinite.lean](OneShallowFinite.lean) checks all `n∈[14,27], s∈[0,2],r∈[0,12]` via ordinary kernel `decide` on exact divisions, powers and equality. This finite Boolean theorem has **no axioms**. [OneShallowFiniteBridge.lean](OneShallowFiniteBridge.lean) proves the authentic quantified arithmetic assumptions imply those finite checks, and combines the small and large regimes. The public all-n theorems use `[propext, Classical.choice, Quot.sound]` only.
 
-## Two-shallow extension: all n>=48, original-source certified
+## Two-shallow extension: all n>=14, original-source certified
 
-The new [source theorem](SourceOneShallowLift.lean) `BB6.Agent43SourceWord.source_no_two_shallow_word_wall_large` excludes any legal original-source inverse depth word `2^s (0|1) 2^u (0|1) 2^r` from the critical root reaching the exact `W=12*2^n` shifted wall for every **n>=48** and all nonnegative s,u,r, covering all four shallow-type combinations. The word constructor is authentic `inverseAt`, with full parity, left-counter and target bounds; it is not a free-standing scalar-only assertion. Original-source full dependency [CI 42532957359](https://github.com/FlareZ123/bb6/actions/runs/42532957359) succeeded; the terminal theorem's `#print axioms` is `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
+The [source theorem](SourceOneShallowLift.lean)
+`BB6.Agent43SourceWord.source_no_two_shallow_word_wall_all` excludes every
+legal original-source inverse-depth word
+`2^s (0|1) 2^u (0|1) 2^r` from the critical root at the exact
+`W=12*2^n` shifted wall, for **all n>=14** and arbitrary nonnegative
+s,u,r. All four shallow-type combinations are covered. Its
+`SourceTwoChain` constructors require actual `inverseAt` operations and
+full original-source legality assumptions, and its affine identities come
+from unchanged-source `inverseAt_iff_power_mass` and the original two-step
+cocycle. The full dependency [CI 42539116808](https://github.com/FlareZ123/bb6/actions/runs/42539116808)
+succeeded; `#print axioms` of the terminal theorem is
+`[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+The older `source_no_two_shallow_word_wall_large` is retained as a
+compatibility theorem for n>=48.
 
-The [abstract two-layer remainder lemma](TwoLayerRemainder.lean) is reusable for nested shallow transitions: a first positive remainder must absorb the power `2^(alpha+3*u)`; dividing it leaves a second strictly positive remainder that must absorb `2^(beta+3*r)`. Their exact interval bounds force a polynomial upper bound on a quantity at least `392*2^n`, violating a formally proved `8400000*(n+2)^3<2^n` for n>=48. [TwoShallowNumeric.lean](TwoShallowNumeric.lean) proves the interval-bearing numerical case, [TwoShallowModelLarge.lean](TwoShallowModelLarge.lean) constructs its premises from the exact `TwoRun` cocycle, and `SourceOneShallowLift.lean` carries this through unchanged-source inverse transitions.
+### All-run symbolic separation for n>=48
 
-The finite low-index block n=14..47 has not yet been excluded by this theorem. Genuine inverse words with >=3 shallow steps, arbitrary high depths and authentic blank-root implications remain open, so this is a research intermediate under `im-results/`.
+The [abstract two-layer remainder lemma](TwoLayerRemainder.lean) forces a
+first positive remainder to absorb `2^(alpha+3*u)`; dividing yields a
+second positive remainder that must absorb `2^(beta+3*r)`. Exact interval
+bounds force a polynomial upper bound on a quantity at least `392*2^n`,
+contradicting the proved `8400000*(n+2)^3<2^n` for n>=48.
+[TwoShallowNumeric.lean](TwoShallowNumeric.lean) formalizes these estimates,
+and [TwoShallowModelLarge.lean](TwoShallowModelLarge.lean) transfers them
+to exact scalar runs from the critical source seed.
+
+### Finite 14<=n<48 bridge, with arbitrary middle and suffix lengths
+
+The root-specific depth-two divisor theorem combined with
+[SmallIndexEnergyCutoff.lean](SmallIndexEnergyCutoff.lean) yields `s<=3`.
+Write `P=2^n=q*p`, `14*n+92=q*d`, `q=8^s`; for shallow
+types `t1,t2 in {0,1}`, the source energy equations define
+`alpha=t1+1`, `beta=t2+1` and the fixed coefficients
+`(alpha,C,L,O)=(1,588,84,232)` or `(2,392,56,136)`.
+
+The exact terminal wall equation implies the integer identity
+
+```
+N1 := 98*p-d-C1*P+L1*(n+6+3*s)-O1
+N1 = 2^alpha * 8^u * [C2*P - 2^beta*8^r*E - R2].
+```
+
+[TwoShallowIntegerAlgebra.lean](TwoShallowIntegerAlgebra.lean) proves the
+identity using only the scalar terminal equation and the source coefficient
+definitions. If `u>=3` then `2^alpha*512 | N1`; the kernel-checked
+`first_overflow_false` table in
+[TwoShallowFiniteBounds.lean](TwoShallowFiniteBounds.lean) excludes this for
+all possible n,s,t1, so **u<=2**. After dividing the exact numerator by
+`2^alpha*8^u`, the second shallow numerator equals
+`-2^beta*8^r*E`. If `r>=3` the
+`second_overflow_false` table excludes it, so **r<=2**.
+The finite `no_small_bad_test` certificate then rules out every remaining
+terminal equation. The bridge from the three Boolean finite tables
+to the unbounded quantified equations is proved in
+[TwoShallowFiniteBridge.lean](TwoShallowFiniteBridge.lean), which compiled
+both locally and with original source imports in
+[CI 42539116808](https://github.com/FlareZ123/bb6/actions/runs/42539116808).
+There is **no cutoff on input run lengths**: their bounds are mathematical
+consequences of the exact wall hypothesis.
+
+The theorem remains a restricted inverse-word exclusion. Genuine words
+with three or more shallow steps, high-depth transitions, and unrestricted
+blank-root histories remain open.
 
 ## Odd-index first-prefix obstruction
 
