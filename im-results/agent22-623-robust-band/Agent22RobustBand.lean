@@ -375,6 +375,23 @@ theorem escape_odd (k : Nat) : escape (2*k+1)+1=2*3^k := by
 #print axioms escape_odd
 #print axioms exact_initial_band
 
+/-- The block immediately preceding any positive ternary-ones boundary
+is universally safe for the B-drain. -/
+private theorem u_succ_pos (n : Nat) : 0<u (n+1) := by
+  rw [u]
+  omega
+
+theorem left_neighbor_safe (n a : Nat) :
+    bad a (u (n+1)-1)=false := by
+  induction n generalizing a with
+  | zero => simp [u, bad]
+  | succ n ih =>
+      have hb : u (n+1+1)-1=3*u (n+1) := by rw [u]; omega
+      rw [hb,digit_zero a (u (n+1)) (u_succ_pos n)]
+      exact ih (a+1)
+
+#print axioms left_neighbor_safe
+
 #print axioms band_fatal
 #print axioms linear_band_fatal
 
