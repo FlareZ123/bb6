@@ -1,0 +1,40 @@
+name: Agent 9 P1 high-cost fixed-shadow cylinders (targeted original-source audit)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  high-cost-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl -fsSL --retry 3 --retry-all-errors https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep $((5*attempt))
+          done
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact source-data and compile only required Lean imports
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent4-p1-cone2398:im-results/agent45-p1-deep-two:im-results/agent9-p1-shadow:im-results/agent8-p1-shadow-cylinder:im-results/agent9-param-budget:im-results/agent9-p1-k10-budget12:im-results/agent9-p1-q33:im-results/agent9-p1-q41:im-results/agent9-p1-fixed-cone:im-results/agent9-p1-largecones"
+          lean --version
+          python im-results/agent9-p1-largecones/generate_large_rows.py
+          python tools/lean_compile_deps.py im-results/agent9-p1-largecones/Q45Budget.lean im-results/agent9-p1-largecones/Q113Budget.lean | tee /tmp/high-cost-audit.log
+          if grep -E -q 'sorryAx|error:' /tmp/high-cost-audit.log; then
+            echo "Rejected: errors or sorry axioms" >&2
+            exit 1
+          fi
+          test "$(grep -c 'no_critical_gateway depends on axioms:' /tmp/high-cost-audit.log)" -eq 2
+          grep -F 'no_critical_gateway depends on axioms:' /tmp/high-cost-audit.log
