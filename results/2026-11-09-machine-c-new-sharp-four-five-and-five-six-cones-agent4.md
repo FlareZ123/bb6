@@ -90,6 +90,15 @@ and the same exact stopping equation holds, then (F^n(5,1)\ne(2j+3,k)). The sour
 
 The two high stopping parameter classes are disjoint by (j\pmod{32}), and they occupy exact asymptotic joint ((j,m))-densities (1/4096) and (1/8192), giving union density (3/8192). This is a lattice-density calculation, **not** the percentage of genuine reachable or undecided halting inputs. The complete integrated source-root sieve may remove overlapping subfamilies independently. No claim of universal novelty against that sieve is made without an exhaustive prior-filter comparison.
 
+## Comparison with the existing forced-normalization obstruction
+
+The repository's [full forced normalization](../im-results/agent3-c-bounce-inverse/FullForcedNormalize.lean) and its [odd-right terminal exclusion](../im-results/agent3-c-bounce-inverse/FullForcedFilter.lean) constitute a useful earlier source-exact rooted filter. **Direct symbolic substitution** into these published definitions (an arithmetic comparison, not a separate new Lean certificate) shows that neither new cone is rejected by `fullForcedExcluded` alone:
+
+- Every (T_{w,t}) has odd first coordinate, even second coordinate, and ((T_1+T_2)\bmod8=7). Both odd-right normalization gates fail, the affine sum-one gate fails, and `sixEvenRightGate` explicitly requires sum modulo eight to differ from seven. Thus `fullForcedNormalize(T)=T`, whose even terminal right coordinate fails `fullForcedExcluded`.
+- Every (U_{r,t}) has even right coordinate and sum (3\bmod8), so `sixEvenRightGate` performs the unique forced inverse step (U\mapsto T_{r+2t+1,t}). The latter is terminal as just shown, again with even right coordinate. Thus `fullForcedExcluded(U)=false`.
+
+This is a **specific non-subsumption result relative to the existing `fullForcedExcluded` predicate**. It does not prove non-subsumption relative to every other source-certified analytic filter, and it does not imply that any new stopping parameter is blank-reachable.
+
 ## Limits and research significance
 
 These two new cones strengthen the source-realizable strict-image hierarchy, proving sharp missing fifth and sixth image bands that lie outside the previously exhibited Agent 4 bands. They exclude actual necessary high-halting states for an infinite two-parameter family **from the genuine blank start**, with no time bound. Their two-branch inverse analysis handles the high-bounce predecessor explicitly and provides a reusable pattern for other holdout cones.
