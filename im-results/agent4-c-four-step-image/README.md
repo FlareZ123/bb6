@@ -40,7 +40,7 @@ m>=3, j%4=0, m%4=3, (j+3*m+5)%32=10,
 
 the authentic blank section never reaches `(2*j+3,k)`. There are **eight qualifying (j,m) cells modulo 32 in each coordinate**, hence this infinite exclusion occupies **1/128** of high-stopping parameter pairs. The cells, written `(j mod32,m mod32)`, are `(0,23),(4,11),(8,31),(12,19),(16,7),(20,27),(24,15),(28,3)`. This family is disjoint from Agent 4's earlier `j`-odd high stopping diagonal, but overlap with *all* independent old sieves still needs checking.
 
-**Verification.** [Source Lean proof](CThreeToFourSource.lean), imported after `ThreeConeSource` and `CThreeArithmetic`, compiled against unchanged original source in manual [CI 42600105398](https://github.com/FlareZ123/bb6/actions/runs/42600105398) for `four_edge_impossible`, `blank_no_four_cylinder`, and `high_stop_fourth_exclusion`. The strengthened `exactly_three_not_four` theorem also imports the authentic Agent 34 `ThreeConeProper`; source CI for this extension must be distinguished from the previous successful run. The local Lean 4.36.0-rc2 signature-matched check passed. No full Machine C halting decision or BB(6) maximality follows.
+**Verification.** [Source Lean proof](CThreeToFourSource.lean), imported after `ThreeConeSource` and `CThreeArithmetic`, compiled against unchanged original source in manual [CI 42600105398](https://github.com/FlareZ123/bb6/actions/runs/42600105398) for `four_edge_impossible`, `blank_no_four_cylinder`, and `high_stop_fourth_exclusion`. The strengthened `exactly_three_not_four` theorem imports the authentic Agent 34 `ThreeConeProper` and also **passed unchanged-original-source Lean CI [42600819847](https://github.com/FlareZ123/bb6/actions/runs/42600819847)**. All four new theorems are now source-kernel certified, using only ordinary Lean logical axioms, without `sorryAx`. No full Machine C halting decision or BB(6) maximality follows.
 
 ## New mathematical calculation: exact eventual fourth-return image density
 
@@ -129,8 +129,8 @@ The affine map `(j,m) -> (S,y)` has determinant `-6`. Modulo any power of two, i
 
 ## Evidence and next mathematical obligations
 
-- **Kernel-certified original-source:** the four-edge obstruction, genuine blank nonreachability, and high-stopping lattice, as of CI 42600105398. The additional three-edge witness has a separate pending original-source CI check.
+- **Kernel-certified original-source:** the four-edge obstruction, genuine blank nonreachability, and high-stopping lattice, as of CI 42600105398. The exact three-edge witness was source-certified in CI 42600819847.
 - **Finite exact arithmetic plus paper reduction:** complete fourth-image density, 17 valuation rows per parity, the finite tail cover, and the sharper third-image period. The C++ file contains the complete reproducible computation. No source Lean theorem yet states the full fourth-image density.
-- **Open:** source-check the exact three-edge witness; intersect the complete `I_4` sieve with the strongest existing `highAllowed` filters and isolate genuinely new surviving high parameters; pursue a true complete blank-root decision. No exact six-state Busy Beaver value follows from any image-density bound.
+- **Open:** intersect the complete `I_4` sieve with the strongest existing `highAllowed` filters and isolate genuinely new surviving high parameters; pursue a true complete blank-root decision. No exact six-state Busy Beaver value follows from any image-density bound.
 
 Source dependencies: [complete section inverse](../agent3-c-bounce-inverse/SectionAllInverse.lean); [Agent 34 two- and three-edge theorem](../agent34-c-degree-profile/ThreeConeSource.lean); [Agent 45 full third-image certificate](../agent45-c-three-step/README.md); [prior Agent 4 two-versus-three and stopping diagonals](../agent4-c-three-ancestry/README.md).
