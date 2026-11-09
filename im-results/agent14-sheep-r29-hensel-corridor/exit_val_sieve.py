@@ -23,7 +23,17 @@ def run() -> None:
         assert count == 4582
         density = Fraction(count, PERIOD)
         assert density == Fraction(2291, 13260)
-        print(f"P-depth parity={parity}: forbidden a = {count}/{PERIOD} = {density}")
+        print(f"Z P-depth parity={parity}: forbidden a = {count}/{PERIOD} = {density}")
+    period_x = lcm(20, 136)
+    for parity in (0, 1):
+        allowed_x = 35 if parity == 0 else 27
+        count_x = sum(
+            (a % 20 == 1 or (a % 8 == 3 and a % 136 != allowed_x))
+            for a in range(period_x)
+        )
+        assert count_x == 114
+        assert Fraction(count_x, period_x) == Fraction(57, 340)
+        print(f"X P-depth parity={parity}: forbidden a = {count_x}/{period_x} = 57/340")
 
 
 if __name__ == "__main__":
