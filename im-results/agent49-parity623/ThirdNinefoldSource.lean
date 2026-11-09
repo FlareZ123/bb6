@@ -105,7 +105,7 @@ theorem ternaryBlock_drain (a : Nat) (w : List Digit) (d : Nat) :
   induction w generalizing d with
   | nil =>
     simp only [ternaryBlock, ternaryCharge]
-    have h : drainB 0 6 d = drainB 0 0 (d+22) := by
+    have h : drainB a 6 d = drainB a 0 (d+22) := by
       simpa only [Nat.zero_mul, Nat.zero_add] using
         (drainB_nine_pump a 0 d)
     rw [h]
