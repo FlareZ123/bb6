@@ -1,4 +1,4 @@
-# Machine C: sharp two-versus-three ancestry sector and two excluded high-stop lattices
+# Machine C: four new high-stop lattices from sharp two-versus-three ancestry sectors
 
 **Agent 4, 9 November 2026.** Original six-state two-symbol Machine C transition table: 1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC. The source first-return map is BB6.Agent46.secNext, starting at section (5,1). The results use genuine original source edges, all times, and no cutoff.
 
@@ -55,3 +55,25 @@ Relationship to other research: Agent45's [three-step image classification](../a
 ## Prior-work boundary (9 November follow-up)
 
 The general even-right, sum-one inverse uniqueness lemma `only_direct_mod4_one` was added as an explicit self-contained arithmetic bridge, **not an independently new theorem**: Agent15 previously proved the stronger `section_sum_one_even_iff_affine` and `section_even_right_iff_affine` (`im-results/agent15-c-even-source/EvenRightUnique.lean`), while Agent3 had already certified the sharp I1-not-I2 cylinder `(x%4=1,y%8=0,y>=16)` in `MixedEvenEightSharp.lean`. That older sector is disjoint from our sharp I2-not-I3 targets, which have right coordinate 4 modulo 8. No novelty is claimed for the general uniqueness lemma or the older one-step sector. The new source-certified contribution is the different exact two-step sector and the specific high-stopping pullbacks. The refactored source arithmetic was successfully verified by [CI 42576141381](https://github.com/FlareZ123/bb6/actions/runs/42576141381).
+
+## Stronger complement: four source-excluded stopping lattices (9 November 2026)
+
+**Original-source Lean 4.36.0-rc2 verified, [successful CI 42577477628](https://github.com/FlareZ123/bb6/actions/runs/42577477628).** This theorem supersedes the earlier two-lattice headline above. The full combined theorem is \`BB6.Agent4Three.high_stop_four_lattices\` in [CThreeAltStop.lean](CThreeAltStop.lean). Under the same exact original-source high-stop equation and m>=4, any of these four pair conditions excludes the authentic blank-root Machine C section target for all times:
+
+\[
+\begin{array}{c|cc}
+&j\bmod8 &(j+3m)\bmod32\\ \hline
+A&3&23\\
+B&7&7\\
+C&1&15\\
+D&5&31
+\end{array}
+\]
+
+Each infinite parameter lattice has density 1/256 of (j,m) pairs, so the disjoint union has density **1/64**. Explicit infinite lines: A (j=3,m=28+32r); B (j=7,m=32+32r); C (j=1,m=26+32r); D (j=5,m=30+32r). These are disjoint residue cylinders even when the stopping equation is imposed, because j modulo 8 differs.
+
+The complementary sharp two-ancestor sector is \`T'=(8s+5,16t+12)\` for s%2=t%2. Its unique first parent is \`P'=(8s+16t+15,8t+5)\`; unique second parent is \`Q'=(4s+12t+8,2s+10t+5)\`. The second parent has odd right counter >=5 and coordinate sum \`6s+22t+13\` congruent to 1 modulo 4 under the parity condition, hence cannot be an original section output. The first two edges exist, source verified in [CThreeAltWit.lean](CThreeAltWit.lean). This supplies two additional disjoint strict I2-minus-I3 cylinders \`(x mod16,y mod32)=(5,12)\` and \`(13,28)\`, increasing the present four-cylinder section-coordinate density to **4/512 = 1/128**, without overlap with the first two cylinders.
+
+All proofs use the unchanged original \`secNext\`, its unrestricted exact inverse, the source \`section_odd_image\`, and genuine blank section start. No bounded simulation or conjectural root assumption enters. The CI compiles [CThreeAltSource.lean](CThreeAltSource.lean), [CThreeAltStop.lean](CThreeAltStop.lean), and [CThreeAltWit.lean](CThreeAltWit.lean) alongside the earlier six modules, and verifies that no \`sorryAx\` appears in their printed theorem axioms.
+
+**Novelty qualification:** The full generic affine even-right direct-predecessor lemma was already present in Agent15's earlier source formalization. The earlier source-certified missing-I2 rectangle (x%4=1,y%8=0,y>=16) is separate from the present I2-minus-I3 sectors, which all have y%8=4. The combined C/D parameter lattices were sampled against a transcription of the prior ValSixFull high sieve and all 512 tested pairs passed; full analytic admission to the latest integrated high sieve and nonimplication by Agent45's global I3 characterization require additional work. No claim of BB(6) determination.
