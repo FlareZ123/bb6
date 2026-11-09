@@ -73,10 +73,7 @@ theorem even_C0_to_junc0 (k : Nat) :
     run (6*k+33) (z 2 (ones (2*k+2)) false []) =
       some (junc 0 0 (2*k)) := by
   have h : 6*k+33 = (4*k+11)+(2*k+22) := by omega
-  rw [h,run_add]
-  change (BB429CZeroEvenReturn.C0_even_to_C0 k).bind
-    (run (2*k+22)) = some (junc 0 0 (2*k))
-  rw [BB429CZeroEvenReturn.C0_even_to_C0]
+  rw [h,run_add,BB429CZeroEvenReturn.C0_even_to_C0]
   simp only [Option.bind_some]
   exact C0_to_junc0 k
 
