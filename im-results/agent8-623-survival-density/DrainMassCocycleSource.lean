@@ -115,7 +115,7 @@ theorem drainB_exact_joint_mass (a b d aa dd : Nat)
   | none => simp [he] at hi
   | some e =>
     simp only [he, Option.map_some, Option.some.injEq] at hi
-    exact ⟨e,he,by omega⟩
+    exact ⟨e,rfl,by omega⟩
 
 #print axioms code_mass
 #print axioms drainB_exact_joint_mass
