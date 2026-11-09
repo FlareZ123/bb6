@@ -70,7 +70,7 @@ jobs:
           lean -o im-results/agent32-429-raw-parent/FreshCell.olean im-results/agent32-429-raw-parent/FreshCell.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FreshFrontier.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent3-429-prefatal/BB429PreFatal.lean 2>&1 | tee -a /tmp/agent32-429-source.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent3-429-a-corridor/BB429AGate.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent3-429-a-corridor/BB429AGate.olean im-results/agent3-429-a-corridor/BB429AGate.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent3-429-e-guard/BB429EGuard.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           audit_axiom_free() {
             theorem="$1"
