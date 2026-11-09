@@ -122,7 +122,7 @@ theorem root_aGate_zero_has_B1_parent (n : Nat) (a : Config)
         simpa [rawStep,ht] using hstep.symm
       have ha : a.state=A := by
         have hh := congrArg Prod.fst hg.1
-        simpa [readSlot] using hh
+        exact hh
       have hn : mv.next=A := by rw [heq] at ha;exact ha
       rcases target429_A_input (readSlot b) mv ht hn with hB|hE|hF
       · exact ⟨b,by simpa using hp,hB⟩
