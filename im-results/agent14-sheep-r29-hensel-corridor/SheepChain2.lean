@@ -11,6 +11,22 @@ inductive Chain2 : Nat → Nat → Nat → Prop where
   | cons {n x y z : Nat} (edge : Parent2 x y)
       (tail : Chain2 n y z) : Chain2 (n+1) x z
 
+/-- An edge is exactly the original generic F step at a=2 and odd cofactor>=5,
+    with an even target, so no intermediate odd return is hidden. -/
+theorem parent2_source_shape {x y : Nat} (h : Parent2 x y) :
+    ∃ v : Nat, 5 ≤ v ∧ v % 2 = 1 ∧ x = 4*v ∧
+      y = 4*v + 2 + (v-1)/2 ∧ y % 2 = 0 := by
+  obtain ⟨hx, hr, heven, heq⟩ := h
+  let t := x/8
+  have hrepr : x=8*t+4 := by dsimp [t]; omega
+  refine ⟨2*t+1, ?_, ?_, ?_, ?_, heven⟩
+  · omega
+  · omega
+  · omega
+  · omega
+
+#print axioms parent2_source_shape
+
 private theorem parent_offset {x y : Nat} (h : Parent2 x y) :
     9*(x+12)=8*(y+12) := by
   obtain ⟨_, _, _, he⟩ := h
