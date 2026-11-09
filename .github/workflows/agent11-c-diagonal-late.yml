@@ -298,3 +298,13 @@ jobs:
             echo "REJECTED: incomplete source proof"
             exit 1
           fi
+          # Close a second independent infinite m=0 ray by four
+          # original-section inverse edges; merge it with the late-depth
+          # exact genuine-blank halting iff, checking both source theorems.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{M0OddRay,CThreeDiagonalM0Full}.lean .
+          lean -o M0OddRay.olean M0OddRay.lean 2>&1 | tee M0OddRay.log
+          lean CThreeDiagonalM0Full.lean 2>&1 | tee CThreeDiagonalM0Full.log
+          if grep -E -q sorryAx M0OddRay.log CThreeDiagonalM0Full.log; then
+            echo "REJECTED: incomplete m=0 integration"
+            exit 1
+          fi
