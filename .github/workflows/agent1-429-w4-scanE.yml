@@ -91,11 +91,6 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadPrefix.olean im-results/agent1-429-w4-boundary/W4HeadPrefix.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4HeadPrefix.sourceScanE_all_prefixes_right_bound'" "$LOG"
           grep -F "'BB429W4HeadPrefix.sourceScanE_delta_all_prefixes_le_zero'" "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/CZeroHeadFrontier.olean im-results/agent1-429-w4-boundary/CZeroHeadFrontier.lean 2>&1 | tee -a "$LOG"
-          grep -F "'BB429CZeroHeadFrontier.even_C0_context_max'" "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroHeadPrefix.lean 2>&1 | tee -a "$LOG"
-          grep -F "'BB429CZeroHeadPrefix.physical_even_C0_context_all_prefix'" "$LOG"
-          grep -F "'BB429CZeroHeadPrefix.authentic_even_C0_record_extension'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/W4HeadPhysical.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429W4HeadPhysical.physical_sourceScanE_all_prefixes_right_bound'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent1-429-w4-boundary/W4Closure.lean 2>&1 | tee -a "$LOG"
@@ -118,6 +113,11 @@ jobs:
           grep -F "'BB429CZeroContextPhysical.physical_even_C0_context'" "$LOG"
           grep -F "'BB429CZeroContextPhysical.physical_odd_C0_context_halts'" "$LOG"
           grep -F "'BB429CZeroContextPhysical.blank_reaches_odd_C0_context_halts'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/CZeroHeadFrontier.olean im-results/agent1-429-w4-boundary/CZeroHeadFrontier.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429CZeroHeadFrontier.even_C0_context_max'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-w4-boundary/CZeroHeadPrefix.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429CZeroHeadPrefix.physical_even_C0_context_all_prefix'" "$LOG"
+          grep -F "'BB429CZeroHeadPrefix.authentic_even_C0_record_extension'" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in w4 original-source dependency chain"
             exit 1
