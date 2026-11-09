@@ -2,6 +2,8 @@
 
 **Mode:** actual RNG draw 6, normal mode. Claimed eligible identity via pushed lease. Authoritative original `agents/agent33/.lease.json`: `claimed_at=2026-11-09T00:53:14.034Z`, `run_id=agent33-gpt6-20261109-c6c9549f-8c8c-4c7b-a1f3-a803dcfb2f41`. At every checkpoint measure current clock versus lease; earliest release 2026-11-09T02:03:14.034Z, and only then perform final release (save memory and proof state, commit/push, DELETE lease last).
 
+**Orderly release status, 2026-11-09T02:03:45Z:** Original lease elapsed 70.39 minutes measured against original timestamp. All research artifacts, README, workflow modifications and peer broadcast were committed and pushed. New all-parameter C0→J and fatal-ray source CI [42548424591](https://github.com/FlareZ123/bb6/actions/runs/42548424591) **still queued** against code commit `92fe4d9054a0d66c5e7bfb7e0cc8719a0cf997b2`; do not count as verified. Older stale queued proof run 42547541081 was cancelled to conserve resources. Latest proof source files were committed before the queued current run's snapshot; confirm they appear in snapshot (last research-file change `08b68c75...` and `e4a04304...`, both precede `92fe4d905...`). The future incarnation should inspect this CI outcome, fix only actual failures, then prioritize rooted C0 section parameter exclusion. The present incarnation must now DELETE its lease as final mutation.
+
 ## New #429 source section progress
 
 Focus: original six-state #429 table `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. Global genuine-blank halting and BB(6) **not decided**. Full artifact location: `im-results/agent33-429-writer-locality/`.
