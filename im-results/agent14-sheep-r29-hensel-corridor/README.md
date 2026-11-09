@@ -1,6 +1,6 @@
 # Eight fixed-order 3-adic Hensel corridors: exact inverse-depth distribution
 
-**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The exact-depth theorem determines the natural-density distribution of their distinguished genuine zero-valued predecessor tails. Additional locally Lean-kernel-checked theorems give a logarithmic depth wall eliminating **all exceptional cofactor-three, hidden-h-zero incoming predecessors** beyond an explicit depth, alongside all-depth modular sieves for alternative generic predecessors in **all eight** corridors. Every nonterminal node on each distinguished chain also has hidden odd-run length zero for every genuine incoming return. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
+**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The exact-depth theorem determines the natural-density distribution of their distinguished genuine zero-valued predecessor tails. A new locally Lean-kernel-proved theorem excludes **every exceptional cofactor-three, hidden-h-zero incoming predecessor at every depth** of all eight distinguished corridors, while separate all-depth sieves restrict generic incoming valuations. Every nonterminal node on each distinguished chain also has hidden odd-run length zero for every genuine incoming return. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
 
 ## Theorem: unbounded true E inverse depth at fixed v3(j)=7
 
@@ -96,36 +96,25 @@ The paths consist of the terminal mixed edge and `d−1` consecutive zero edges.
 
 **Reproduction.** [`density_certificate.py`](./density_certificate.py) verifies all eight base integrality/3-adic congruences, the exact `v3(g−1)=10` modulus test, unique Hensel residues at precisions through `3^18`, independent full-period uniqueness checks for the first five digits, and exact rational values `D(d)`. All arithmetic uses modular exponentiation without constructing `2^j` or simulating an enormous tape. The finite tests support the displayed base congruences; the induction and genuine-source inequalities give the universal, all-`k), all-`T) proof.
 
-## New exact all-depth cofactor-three side-exit depth wall
+## Complete elimination of exceptional h=0 predecessors across eight corridors
 
-**Statement and source scope.** Consider the distinguished original-section Sheep inverse chain of length `n` from an even node `x` to its terminal mixed parent `Y`, with exact source-derived invariant `9^n(x+12)=8^n(Y+12)`. For each of the eight root families described above, the terminal parent is one of
+**Locally Lean-kernel-proved all-depth theorem.** For any of the eight mixed-edge Sheep inverse corridors, let x be any node n backward P steps from the terminal parent Y. The exact source-derived identities are:
 
-```text
-Z: 3483(Y+12)=2^(j+10)+25220,    j=17496(29+63k)
-X: 59049(Y+12)=2^(j+11)+680296,  j=17496(r+63k),
-                                  r in {8,17,26,35,44,53,62}.
-```
+Z (r=29): 9^n(x+12)=8^n(Y+12), and 3483(Y+12)=2^(j+10)+25220.
 
-All distinguished chain nodes have `x%8=0` (terminal Z) or `x%8=4` (positive P steps and terminal X). If an **exceptional cofactor-three** E source has **hidden odd-run length h=0** into `x`, its target is `x=3*2^a+a+3`. The following **necessary** conditions hold for every `k,n,a`, with no finite search cutoff:
+X (seven r values): 9^n(x+12)=8^n(Y+12), and 59049(Y+12)=2^(j+11)+680296.
 
-```text
-Z: a>3n+2,  2^(3n+2) | (a+15),  2^(3n+2)<j+25.
-X: a>3n+3,  2^(3n+3) | (a+15),  2^(3n+3)<j+26.
-```
+For every exponent j≥100, every n≥0, and every putative cofactor-three valuation a, provided x mod 8 equals 0 or 4, the equality x=3·2^a+a+3 is **impossible**. The distinguished source-valid P chains satisfy this shape condition. Hence there are **no exceptional cofactor-three, hidden-h=0 E predecessors at any inverse depth** along any of the eight corridors.
 
-Consequently, when `j+25<=2^(3n+2)` in Z, or `j+26<=2^(3n+3)` in X, **no cofactor-three h=0 incoming E source exists** at that chain depth, for any exceptional valuation `a`. This is an *absolute absence of that branch type*, whereas the earlier mod-2040 exceptional wall merely restricted candidate `a` classes. At interior depth `n<L_r(k)`, the existing source-checked mod-nine lemma forces every incoming edge to have `h=0`, so the new absence then excludes **all exceptional cofactor-three incoming edges**, regardless of their nominal hidden length. At the deepest terminal P node, other `h>0` exceptional sources may still survive.
+The new source-shaped Lean theorems are **z_no_special_any_depth** and **x_no_special_any_depth** in [SheepSpecialDepth.lean](./SheepSpecialDepth.lean). They assume the exact chain and terminal identities rather than importing the entire original-Turing-machine source. Local Lean 4.36.0-rc2 checks succeeded, and the axiom report for each is the standard set [propext, Classical.choice, Quot.sound], without sorryAx. Upstream original-machine CI integration remains an additional independent task.
 
-**Proof mechanism.** Write `C=2^b u` with odd `u`, where `(b,C)=(2,25220)` or `(3,680296)`, and let `M=D*9^n` for the odd terminal denominator `D`. Substitution into the exact chain gives
+**Proof mechanism.** Substitution of the proposed exceptional predecessor into the chain equations gives M(3·2^a+a+15)=8^n(2^s+C), where M=D·9^n and the two triples (D,s,C) are (3483,j+10,25220) and (59049,j+11,680296). Here D is odd and divisible by three, whereas C is not divisible by three. The x mod 8 condition excludes all a<5. The equality implies a<s and, by comparing modulo 2^min(a,3n+b) where C=2^b u, the divisibility 2^(3n+b)|(a+15) and bound 2^(3n+b)<s+15. Consequently 8^n≤s+15, 9^n≤(s+15)^2, and M≤D(s+15)^2.
 
-```text
-M*(3*2^a+a+15) = 8^n*(2^s+2^b*u),  s=j+10 or j+11.
-```
+A Lean-proved elementary induction yields 2^38(s+15)^5≤2^s for s≥100. Since 4D(D+C)≤2^38 in both cases, the source equation then forces M(a+15)<2^a and 8^n C<2^a. Reduce the original equation modulo 2^a. Both terms lie below the modulus, so M(a+15)=8^n C as exact integers. This is impossible: the left side is divisible by three while the right side is not. No finite inverse-depth cutoff and no residue enumeration are used in the final theorem.
 
-Since `M` is odd and `2^s>2^b*u`, the equation forces `a<s`. Reducing it modulo `2^min(a,3n+b)` gives `2^min(a,3n+b)|(a+15)`. For `a>=5`, the inequality `0<a+15<2^a` excludes `a<=3n+b`. Thus `2^(3n+b)|(a+15)` and `2^(3n+b)<=a+15<s+15`. The small `a<5` cases contradict the actual chain's `x%8` form. No logarithm approximation is used in the formal proof.
+The older logarithmic depth restrictions, exact dyadic valuation lemma, and weaker special-source CRT sieves remain useful intermediate derivations preserved in the Lean file and its historical certificate script. They are **superseded for these h=0 exceptional branches**, which are completely empty.
 
-**Formal artifact:** [`SheepSpecialDepth.lean`](./SheepSpecialDepth.lean). Lean 4.36.0-rc2 locally kernel-checked `z_from_chain`, `x_from_chain`, `z_no_special_deep` and `x_no_special_deep`, with all printed axiom dependencies exactly `[propext, Quot.sound]` and no `sorryAx`. The propositions accept exact source-compatible chain and terminal equalities; `SheepChain2.chain_offset` and the existing Z/X terminal formulas provide these independently. The new module has **not yet been imported into pinned original-TM CI**, so original-machine semantic transport is through those previously verified source equations rather than a new unified CI theorem.
-
-**Remaining obstruction.** The depth inequality becomes useful only for corridors whose P-chain persists past roughly one third of the binary length of `j`. No claim is made that such corridors are blank-reachable, or that this bound alone closes any of the eight infinite root families. Generic high-a side exits, other exceptional types at terminal nodes, and fixed genuine seed `10` remain unresolved.
+At every nonterminal P-chain node, the earlier [SheepInteriorGate.lean](./SheepInteriorGate.lean) theorem forces all incoming E predecessors to have hidden length h=0. Thus the new theorem eliminates **all exceptional cofactor-three E predecessors** at such interior nodes. At the deepest node, hidden h>0 exceptions remain possible. Generic predecessors and actual blank-root reachability remain unresolved. The result does not decide Sheep or BB(6).
 
 ## Kernel-checked all-depth generic side-exit walls
 
