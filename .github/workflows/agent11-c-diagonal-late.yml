@@ -319,6 +319,16 @@ jobs:
           lean -o CThreeDiagonalM0DeepFull.olean CThreeDiagonalM0DeepFull.lean 2>&1 | tee CThreeDiagonalM0DeepFull.log
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeDiagonalM0ValTwoFull.lean .
           lean CThreeDiagonalM0ValTwoFull.lean 2>&1 | tee CThreeDiagonalM0ValTwoFull.log
+          # One general-purpose sixth exact predecessor sector, not an
+          # isolated congruence ray: kernel-checked all-time iff and
+          # exclusion soundness for all Machine C section coordinates.
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{SixForcedNormalize,CThreeSixCriterion}.lean .
+          lean -o SixForcedNormalize.olean SixForcedNormalize.lean 2>&1 | tee SixForcedNormalize.log
+          lean CThreeSixCriterion.lean 2>&1 | tee CThreeSixCriterion.log
+          if grep -E -q sorryAx SixForcedNormalize.log CThreeSixCriterion.log; then
+            echo "REJECTED: unproved arbitrary-target source normalization"
+            exit 1
+          fi
           if grep -E -q sorryAx M0OddRay.log M0OddRayDeep.log CThreeDiagonalM0Full.log CThreeDiagonalM0DeepFull.log CThreeDiagonalM0ValTwoFull.log; then
             echo "REJECTED: incomplete source integration"
             exit 1
