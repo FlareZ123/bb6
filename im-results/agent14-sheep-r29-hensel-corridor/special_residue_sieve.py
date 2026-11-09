@@ -10,6 +10,7 @@ from math import lcm
 
 PERIOD = lcm(24, 5, 17)
 TERMINAL_PERIOD = lcm(192, 5, 17)
+DEEP_PERIOD = lcm(8, 5, 17)
 
 
 def source_offset(a: int, modulus: int) -> int:
@@ -30,6 +31,7 @@ def interior_candidates(a_mod_5_17: tuple[int, int], depth: int) -> list[int]:
 
 def run() -> None:
     assert PERIOD == 2040
+    assert DEEP_PERIOD == 680
     assert TERMINAL_PERIOD == 16320
     expected = {
         "Z": [1137, 1065, 321, 1473],
@@ -43,6 +45,21 @@ def run() -> None:
             results.append(hits[0])
             print(f"{name} positive P-depth {depth} mod4: exceptional a={hits[0]} (mod {PERIOD})")
         assert results == expected[name]
+        deep_expected = {
+            "Z": [457, 385, 321, 113],
+            "X": [425, 281, 153, 417],
+        }
+        for depth in range(4):
+            c5, c17 = quotient_residues
+            deep = [
+                a for a in range(DEEP_PERIOD)
+                if a % 8 == 1
+                and source_offset(a, 5) == c5 * pow(2, depth, 5) % 5
+                and source_offset(a, 17) == c17 * (-1 if depth % 2 else 1) % 17
+            ]
+            assert deep == [deep_expected[name][depth]], (name, depth, deep)
+            print(f"{name} positive P-depth {depth} mod4 (incl. deepest h0): "
+                  f"exceptional a={deep[0]} (mod {DEEP_PERIOD})")
         for depth in range(4, 12):
             assert interior_candidates(quotient_residues, depth) == [results[depth % 4]]
 
