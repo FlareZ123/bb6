@@ -36,26 +36,30 @@ theorem core_contact_of_positive_F_return (k : Nat) (ys : List Bool)
       physicalReturn (run j (fStart k ys))) :
     ∃ t : Nat, (run t (eCore ys)).l = [] := by
   obtain ⟨j,hpos,hret⟩ := hr
-  by_contra hnot
-  have hnever (i : Nat) : (run i (eCore ys)).l ≠ [] := by
-    intro hi
-    exact hnot ⟨i,hi⟩
-  have hge : prefixTime k ≤ j := by
-    by_contra hsmall
-    exact (prefix_strict_first k j ys hpos (by omega)).1 hret
-  have hsplit : j = prefixTime k + (j-prefixTime k) := by omega
-  have hrun :
-      run j (fStart k ys) =
-        run (j-prefixTime k) (eSector (4*k) ys) := by
-    calc
-      run j (fStart k ys) =
-          run (prefixTime k+(j-prefixTime k)) (fStart k ys) :=
-            congrArg (fun n => run n (fStart k ys)) hsplit
-      _ = run (j-prefixTime k) (eSector (4*k) ys) := by
-            rw [run_add,prefix_is_certified_sector]
-  rw [hrun] at hret
-  exact (eSector_precontact_nonblank (4*k) (j-prefixTime k)
-    ys (fun i _ => hnever i)) hret.2.2
+  classical
+  by_cases hcontact : ∃ t : Nat, (run t (eCore ys)).l = []
+  · exact hcontact
+  · exfalso
+    have hnever (i : Nat) : (run i (eCore ys)).l ≠ [] := by
+      intro hi
+      exact hcontact ⟨i,hi⟩
+    have hge : prefixTime k ≤ j := by
+      by_cases hp : j < prefixTime k
+      · exact False.elim ((prefix_strict_first k j ys hpos hp).1 hret)
+      · omega
+    have hsplit : j = prefixTime k + (j-prefixTime k) := by omega
+    have hrun :
+        run j (fStart k ys) =
+          run (j-prefixTime k) (eSector (4*k) ys) := by
+      calc
+        run j (fStart k ys) =
+            run (prefixTime k+(j-prefixTime k)) (fStart k ys) :=
+              congrArg (fun n => run n (fStart k ys)) hsplit
+        _ = run (j-prefixTime k) (eSector (4*k) ys) := by
+              rw [run_add,prefix_is_certified_sector]
+    rw [hrun] at hret
+    exact (eSector_precontact_nonblank (4*k) (j-prefixTime k)
+      ys (fun i _ => hnever i)) hret.2.2
 
 /-- Exact converse: the first E3 marker contact, certified by the source
     invariant as C/1, sweeps back to a physically blank-left F/0 section
