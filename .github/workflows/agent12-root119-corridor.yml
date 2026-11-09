@@ -23,7 +23,7 @@ jobs:
           A=im-results/agent42-root119-guard
           B=im-results/agent12-root119-left-corridor
           export LEAN_PATH="$A:$B"
-          python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119Corridor.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='46e9d5fff534224def2d878279c505b73688990dfc9bdc5005a17289af7d0726'; p.with_name('Root119Corridor.lean').write_bytes(b)"
+          python -c "import base64,lzma,hashlib,pathlib; p=pathlib.Path('$B/Root119Corridor.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_text())); assert hashlib.sha256(b).hexdigest()=='65efa8844d8836f2579e4d7d5a71f308a2fc2f5343a0c0309f1f0c971ca2ab1d'; p.with_name('Root119Corridor.lean').write_bytes(b)"
           lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
           lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
           lean "$B/Root119Corridor.lean" 2>&1 | tee "$B/source-check.log"
@@ -33,3 +33,4 @@ jobs:
           fi
           grep -q 'left_gateway_return.*depends on axioms' "$B/source-check.log"
           grep -q 'left_gateway_B_return.*depends on axioms' "$B/source-check.log"
+          grep -q 'right_gateway_return.*depends on axioms' "$B/source-check.log"
