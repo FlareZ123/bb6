@@ -20,9 +20,10 @@ theorem second_lift_has_eight_incoming_edges :
     secNext (33,550)=some (1,574) := by
   decide
 
-/-- The first-generation image seed is strictly fifth/sixth at (61,286),
+/-- The first-generation image seed is strictly fifth/sixth at (573,286),
     yet its second direct descendant (1,574) lies in the eighth source image. -/
 theorem second_lift_gap_noninheritance :
+    secNext (573,286)=some (1,574) ∧
     (∃ a0 b0 a1 b1 a2 b2 a3 b3 a4 b4 a5 b5 a6 b6 a7 b7,
       secNext (a0,b0)=some (a1,b1) ∧
       secNext (a1,b1)=some (a2,b2) ∧
@@ -32,6 +33,8 @@ theorem second_lift_gap_noninheritance :
       secNext (a5,b5)=some (a6,b6) ∧
       secNext (a6,b6)=some (a7,b7) ∧
       secNext (a7,b7)=some (1,574)) := by
+  constructor
+  · decide
   obtain ⟨h0,h1,h2,h3,h4,h5,h6,h7⟩ := second_lift_has_eight_incoming_edges
   exact ⟨810,143,524,288,997,55,887,112,663,226,
     211,454,581,274,33,550,h0,h1,h2,h3,h4,h5,h6,h7⟩
