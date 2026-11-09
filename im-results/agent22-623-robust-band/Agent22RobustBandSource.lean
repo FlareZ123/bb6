@@ -87,6 +87,48 @@ theorem original_sharp_initial_band (r a d : Nat) :
     rw [hs] at hh
     cases hh
 
+
+/-- The immediately preceding block is always a surviving B-drain. -/
+theorem original_left_neighbor_survives (n a d : Nat) :
+    drainB a (boundary (n+1)-1) d ≠ none := by
+  intro hbad
+  have hh := (drain_none_iff_badAll a (boundary (n+1)-1) d).1 hbad
+  rw [←boundary_source_eq (n+1)] at hh
+  rw [←bad_source_eq (u (n+1)-1) a] at hh
+  have hs := left_neighbor_safe n a
+  rw [hs] at hh
+  cases hh
+
+/-- All original source odd/far-left sectors whose B-block belongs to the
+sharp fatal corridor are forced to fail in the next high-level evaluation. -/
+theorem odd_far_left_sharp_fatal (r a d e : Nat)
+    (hd : d%2=1) (hfar : d+5≤a)
+    (hblock : d+3=boundary (a-d-5+r)+e)
+    (he : e<escape r) :
+    highLevelNext (.D a d) = none := by
+  have ha : a≠0 := by omega
+  have hc : d%2=1 ∧ a≥d+5 := ⟨hd,hfar⟩
+  have hs := (original_sharp_initial_band r (a-d-5) 5).1 e he
+  rw [←hblock] at hs
+  simpa only [highLevelNext,if_neg ha,if_pos hc] using hs
+
+/-- Same exact sharp corridor in original even/far-left sectors. -/
+theorem even_far_left_sharp_fatal (r a d e : Nat)
+    (hd : d%2=0) (hfar : d+3≤a)
+    (hblock : d+2=boundary (a-d-2+r)+e)
+    (he : e<escape r) :
+    highLevelNext (.D a d) = none := by
+  have ha : a≠0 := by omega
+  have hodd : ¬(d%2=1 ∧ a≥d+5) := by omega
+  have hc : d%2=0 ∧ a≥d+3 := ⟨hd,hfar⟩
+  have hs := (original_sharp_initial_band r (a-d-2) 2).1 e he
+  rw [←hblock] at hs
+  simpa only [highLevelNext,if_neg ha,if_neg hodd,if_pos hc] using hs
+
+#print axioms original_left_neighbor_survives
+#print axioms odd_far_left_sharp_fatal
+#print axioms even_far_left_sharp_fatal
+
 #print axioms original_sharp_initial_band
 
 #print axioms bad_source_eq
