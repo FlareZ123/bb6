@@ -36,4 +36,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FlatDrainSource.lean" Agent49FlatDrainSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49FlatDrainSource.olean Agent49FlatDrainSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-survival-density/DrainDigitChargeSource.lean" Agent8DigitChargeSource.lean
-          lake env lean Agent8DigitChargeSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8DigitChargeSource.olean Agent8DigitChargeSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-survival-density/DrainMassCocycleSource.lean" Agent8DrainMassCocycleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8DrainMassCocycleSource.olean Agent8DrainMassCocycleSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-survival-density/RootDigitChargeSource.lean" Agent8RootDigitChargeSource.lean
+          lake env lean Agent8RootDigitChargeSource.lean
