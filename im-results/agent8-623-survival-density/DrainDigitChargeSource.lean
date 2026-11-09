@@ -107,9 +107,7 @@ theorem drainB_charge_witness (a b d aa dd : Nat)
     rcases p with ⟨x,c⟩
     simp only [hc, Option.map_some, realize, HighLevelState.D.injEq] at h
     obtain ⟨h1,h2⟩ := h
-    subst x
-    subst dd
-    exact ⟨c,hc,rfl⟩
+    exact ⟨c,by simpa [←h1] using hc,by omega⟩
 
 #print axioms flatB_digitCode
 #print axioms drainB_digitCode
