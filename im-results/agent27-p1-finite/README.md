@@ -2,7 +2,7 @@
 
 **Established finding (9 November 2026).** An exact-integer exhaustive traversal of the genuine **source-shaped** P1 `CountCone` inverse relation found **no right-five endpoint** from the critical inverse seed `(14*2^n-2*n-16,3)` for the formerly capped cases **n=1614 and n=2622**. A streaming traversal also finished all **837** cases `n=16*q+2`, `164<=q<=1000`, with no right-five endpoint. The earlier completed search [Agent 43](../agent43-p1-high-cost-reset-count/right_five_finite_search.md) had covered `1<=q<=163`; together, these yield an experimentally complete **first thousand gateway q-indices**, each as an individual finite inverse-tree calculation.
 
-These are **exact finite computations**, rather than a parameter-uniform source Lean theorem. No P1 original blank-root nonhalting proof, no BB(6) bound, and no verdict for all `q>1000` follows. All material remains intermediate; original-source CI verification of the supporting short Lean structural theorem is a separate task.
+These are **exact finite computations**, rather than a parameter-uniform source Lean theorem. No P1 original blank-root nonhalting proof, no BB(6) bound, and no verdict for all `q>1000` follows. All material remains intermediate. The supporting unique-parent structural theorem is **original-source Lean verified** in [manual CI 42541859868](https://github.com/FlareZ123/bb6/actions/runs/42541859868).
 
 ## Full inverse equations and admissibility
 
@@ -26,7 +26,7 @@ T (2*k-1,c+2) = some (G k c).
 ```
 A source inverse edge has `G k c=(b,d)`; therefore any nonterminal inverse child with right counter at least 7 determines **exactly one** parent: apply the deterministic `T` twice. At a fixed parent and child, `c` is determined by the child's right counter and the factor `2^t` is determined by `A/(c+3)`; thus there cannot be repeated parallel edges. Combined with strict inverse mass decrease, the graph of expandable states rooted at the critical seed is a **tree**. Repeated states cannot occur on different inverse paths. The sole `c=1` exception has child right counter 5, which is the terminal event tested *before* pruning or expansion.
 
-[Source-shaped Lean file](P1ActiveArborescence.lean) contains the two-step theorem; it compiled locally in Lean 4.36.0-rc2 against a minimal copy of the original `PosEvenForm` definitions, with ordinary foundational axioms. This local test is **not** claimed to be a CI proof against the unchanged repository imports until that additional check succeeds. The unique-parent argument above uses only the original deterministic definitions and source-complete ancestor equations.
+[Source-shaped Lean file](P1ActiveArborescence.lean) contains the two-step theorem; it compiled locally in Lean 4.36.0-rc2 against a minimal copy of the original `PosEvenForm` definitions, with ordinary foundational axioms. The identical short theorem also passed **manual CI 42541859868**, importing and compiling the **unchanged repository `PosEvenForm.lean`**. The theorem's printed axioms contain only Lean's standard foundation axioms; there are no `sorry` dependencies. The unique-parent argument above uses only the original deterministic definitions and source-complete ancestor equations.
 
 ## Reproducible exact computations
 
