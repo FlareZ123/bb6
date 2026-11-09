@@ -23,7 +23,7 @@ jobs:
       - name: Compile original frontier, authentic #429 path and new all-time predecessor theorem
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder:im-results/agent32-429-high2-prefix:im-results/agent6-429-one-sided-excursion:im-results/agent18-429-lastwriter:im-results/agent3-429-prefatal:im-results/agent3-429-a-corridor"
+          export LEAN_PATH="im-results/agent1-429-j-first-branch:im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent32-429-high3-ladder:im-results/agent32-429-high2-prefix:im-results/agent6-429-one-sided-excursion:im-results/agent18-429-lastwriter:im-results/agent3-429-prefatal:im-results/agent3-429-a-corridor:im-results/agent3-429-e-guard"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean | tee /tmp/agent32-bubble.log
           lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean | tee -a /tmp/agent32-bubble.log
@@ -71,6 +71,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-raw-parent/BB429FreshFrontier.lean | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent3-429-prefatal/BB429PreFatal.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent3-429-a-corridor/BB429AGate.lean 2>&1 | tee -a /tmp/agent32-429-source.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent3-429-e-guard/BB429EGuard.lean 2>&1 | tee -a /tmp/agent32-429-source.log
           audit_axiom_free() {
             theorem="$1"
             logfile="$2"
@@ -88,6 +89,8 @@ jobs:
           audit_axiom_free "BB429AGate.aGate_forces_halt_at" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.halting_time_iff_A_corridor" /tmp/agent32-429-source.log
           audit_axiom_free "BB429AGate.halting_requires_prior_distant_scan" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429EGuard.every_reachable_E_right_one" /tmp/agent32-429-source.log
+          audit_axiom_free "BB429EGuard.E0_cannot_enter_aGate_zero" /tmp/agent32-429-source.log
           audit_axiom_free "BB429PreFatal.preFatal_iff_next_fatalB" /tmp/agent32-429-source.log
           audit_axiom_free "BB429PreFatal.halts_iff_root_preFatal" /tmp/agent32-429-source.log
           audit_axiom_free "BB429PreFatal.halt_requires_prior_head_three_right" /tmp/agent32-429-source.log
