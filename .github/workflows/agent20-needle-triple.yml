@@ -38,7 +38,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
           lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
           base="$GITHUB_WORKSPACE/im-results/agent20-needle-coprime"
-          for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedlePeriodCore NeedlePeriodTriple NeedleAffineParent NeedleThreeTerminalParents NeedleTerminalAffineSource CancellationTopStrip CancellationTopConstructive CancellationTerminalConstructive CancellationMod5 CancellationMod5SourceEq CancellationOriginalBridge NeedleTripleDistinctSource NeedleThreeTerminalSource NeedleVariableValuation NeedleVariableValuationSource; do
+          for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedlePeriodCore NeedlePeriodTriple NeedleAffineParent NeedleThreeTerminalParents NeedleTerminalAffineSource CancellationTopStrip CancellationTopConstructive CancellationTerminalConstructive; do
             cp "$base/$f.lean" .
             lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
           done
@@ -47,3 +47,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleCancelMod35.olean NeedleCancelMod35.lean
           cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancellationFour.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleCancellationFour.olean NeedleCancellationFour.lean
+          for f in CancellationMod5 CancellationMod5SourceEq CancellationOriginalBridge NeedleTripleDistinctSource NeedleThreeTerminalSource NeedleVariableValuation NeedleVariableValuationSource; do
+            cp "$base/$f.lean" .
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
