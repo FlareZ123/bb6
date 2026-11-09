@@ -196,7 +196,19 @@ a even  =>  a ≡ 2 (mod3);
 equivalently a ≠ 6*s and a ≠ 6*s+4.
 ```
 
-For a special source with cofactor `v=3`, the genuine `h=0` output is `x=3*2^a+a+3`, which similarly forces `a≡0 (mod3)`. Both generic and exceptional source restrictions are fully kernel-proved, in [`SheepInteriorGate.lean`](./SheepInteriorGate.lean), theorems `interior_even_a_mod3` and `interior_special_a_mod3`, with only `[propext, Quot.sound]` in the axiom audit.
+For a special source with cofactor `v=3`, the genuine `h=0` output is `x=3*2^a+a+3`. The interior target `x≡0 (mod3)` forces `a≡0 (mod3)`. The **first** ordinary inverse source at every positive P depth also has `x≡4 (mod8)`, by source-exact `Parent2). This forces `a≡1 (mod8)` for the special case: if a were below 3, the special output could not be 4 modulo 8; for a≥3, `3*2^a≡0 (mod8)`. Therefore at **all positive interior P depths** the special input valuation is confined to the single infinite class
+
+```text
+special cofactor-three h=0:   a ≡ 9 (mod24).
+```
+
+That necessary condition excludes **23 out of every 24** possible valuation residues, much stronger than the generic valuation sieve. At the distinguished Z terminal (P depth zero), the exact source `Z=64*v` is divisible by 64 and `9|Z+12`; the stronger 64-adic argument gives
+
+```text
+special cofactor-three h=0 into Z:   a ≡ 189 (mod192).
+```
+
+Here `a<6` gives no divisible-by-64 special output, while `a≥6` forces `a≡61 (mod64)`, combined with `a≡0 (mod3)`. All four claims are fully kernel proved by [`SheepInteriorGate.lean`](./SheepInteriorGate.lean), including the directly chain-connected `interior_positive_special_val24` and `z_terminal_special_val192`, with standard axiom audit `[propext, Quot.sound]`. The latter takes the exact Z source-shape and `9|Z+12` as assumptions, fulfilled by the earlier corridor theorem. Exceptional source classes that survive these necessary congruences are not proved realizable or blank-reachable.
 
 Combining the **generic** even-a obstruction with the parity-sensitive 5/13/17-modulus walls above yields an **exact all-interior valuation sieve**: for either reverse-depth parity, the forbidden generic valuation arithmetic density is
 
