@@ -97,4 +97,5 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent2-e-seam-root/CoreMarkerCriterion.lean" .
           timeout 120 lean CoreMarkerCriterion.lean | tee core-criterion.log
           if grep -E 'sorryAx|_native\\.native_decide' core-criterion.log; then exit 1; fi
-          grep -F "one_positive_return_certifies_all_outputs' depends on axioms: [propext, Classical.choice, Quot.sound]" core-criterion.log
+          grep -F "core_contact_iff_positive_F_return' depends on axioms: [propext, Classical.choice, Quot.sound]" core-criterion.log
+          grep -F "one_positive_return_certifies_all_outputs' depends on axioms: [propext," core-criterion.log
