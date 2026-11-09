@@ -100,8 +100,9 @@ theorem a_two_Z_regular (k q r m : Nat) :
         false :: (CryptidA.wordCode (aWords q r) ++
           ([true,true,false] ++ (pairs m ++ [false])))
         from paddedShape k q r m]
-    exact BB6.CryptidBridge.complete_A_word_two_one_pairs
-      k m (aWords q r) []
+    simpa only [twoCost, twoUnary, List.append_nil] using
+      (BB6.CryptidBridge.complete_A_word_two_one_pairs
+        k m (aWords q r) [])
   have hout :
       (⟨[],false,List.replicate (twoUnary k q r) true ++
         (false :: List.replicate (2*m+6) true),5⟩ : Cfg) =
