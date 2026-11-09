@@ -258,6 +258,57 @@ theorem drainB_safe_shift (a b d t : Nat) (hs : safeBudget b ≤ a) :
     rcases p with ⟨x,c⟩
     simp [hc,realize]
 
+
+/-- A second, distinct two-digit pump. Unlike the +6 pump,
+the zero-suffix pump requires a strictly positive input block count. -/
+theorem safeBudget_nine_zero (b : Nat) (hb : 0<b) :
+    safeBudget (9*b) = safeBudget b := by
+  conv => lhs; rw [safeBudget]
+  have hn : 9*b≠0 := by omega
+  have hm : (9*b)%3=0 := by omega
+  simp only [if_neg hn,if_pos hm]
+  have hp : (9*b)/3-1=3*b-1 := by omega
+  rw [hp,safeBudget]
+  have hn1 : 3*b-1≠0 := by omega
+  have hm0 : (3*b-1)%3≠0 := by omega
+  have hm1 : (3*b-1)%3≠1 := by omega
+  simp only [if_neg hn1,if_neg hm0,if_neg hm1]
+  have hdiv : (3*b-1)/3+1=b := by omega
+  rw [hdiv]
+  omega
+
+theorem flatB_nine_zero (a b d : Nat) (hb : 0<b) :
+    flatB a (9*b) d = flatB a b (d+24*b+2) := by
+  conv => lhs; rw [flatB]
+  have hn : 9*b≠0 := by omega
+  have hm : (9*b)%3=0 := by omega
+  simp only [if_neg hn,if_pos hm]
+  have hp : (9*b)/3-1=3*b-1 := by omega
+  rw [hp]
+  conv => lhs; rw [flatB]
+  have hn1 : 3*b-1≠0 := by omega
+  have hm0 : (3*b-1)%3≠0 := by omega
+  have hm1 : (3*b-1)%3≠1 := by omega
+  simp only [if_neg hn1,if_neg hm0,if_neg hm1]
+  have ha1 : a+1≠0 := by omega
+  simp only [if_neg ha1]
+  have hd : (3*b-1)/3+1=b := by omega
+  rw [hd]
+  congr 1 <;> omega
+
+theorem drainB_nine_zero (a b d : Nat) (hb : 0<b) :
+    drainB a (9*b) d = drainB a b (d+24*b+2) := by
+  calc
+    drainB a (9*b) d = flatB a (9*b) d :=
+      (flatB_eq_drainB (9*b) a d).symm
+    _ = flatB a b (d+24*b+2) := flatB_nine_zero a b d hb
+    _ = drainB a b (d+24*b+2) :=
+      flatB_eq_drainB b a (d+24*b+2)
+
+#print axioms safeBudget_nine_zero
+#print axioms flatB_nine_zero
+#print axioms drainB_nine_zero
+
 #print axioms digitCode_safe_shift
 #print axioms drainB_safe_shift
 
