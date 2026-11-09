@@ -91,7 +91,8 @@ theorem cone_blank_unreachable (time x y : Nat)
           | zero =>
               intro h
               have he : secNext (5,1)=some (3,4) := by decide
-              have hf : secNext (3,4)=some (4,7) := by decide
+              have hf : secNext (3,4)=some (4,7) := by
+                simp [secNext, exactSection, bounce]
               simp [BB6.Agent8Section.run,he,hf] at h
               omega
           | succ n =>
