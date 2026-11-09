@@ -130,11 +130,14 @@ theorem old_safe_included (m : Nat) (c : Packet)
     · exact Or.inr ⟨ha,hp,ih _ hr⟩
 
 /-- This concrete packet was excluded by the earlier sufficient predicate. -/
-theorem newly_accepted : safeZPlus 1 ⟨6,0,2⟩ := by decide
-theorem genuinely_new : ¬ safeZ 1 ⟨6,0,2⟩ := by decide
+theorem newly_accepted : safeZPlus 1 ⟨6,0,2⟩ := by
+  simp [safeZPlus, terminalSafePlus, terminalSafe, normalizeWithCount, advance]
+theorem genuinely_new : ¬ safeZ 1 ⟨6,0,2⟩ := by
+  simp [safeZ, terminalSafe, normalizeWithCount, advance]
 
 /-- Previously rejected finite-depth test from Agent36's dossier. -/
-theorem residual_52_accepted : safeZPlus 3 ⟨52,1,0⟩ := by decide
+theorem residual_52_accepted : safeZPlus 3 ⟨52,1,0⟩ := by
+  simp [safeZPlus, terminalSafePlus, terminalSafe, normalizeWithCount, advance]
 
 #print axioms terminalSafePlus_source
 #print axioms safeZPlus_source
