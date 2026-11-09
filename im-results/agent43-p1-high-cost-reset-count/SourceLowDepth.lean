@@ -136,7 +136,7 @@ theorem source_low_word_zero_no_wall
   cases h with
   | two s _ _ _ _ _ _ chain =>
       have hmass : (14*2^n-2*n-16)+3+2*0+2*n+13=14*2^n := by omega
-      have hmodel := two_chain_model n s _ _ _ _ _ _ chain hmass
+      have hmodel := source_two_chain_model n s _ _ _ _ _ _ chain hmass
       have henergy := BB6.Agent43TwoRun.run_energy _ _ _ _ _ s hmodel
       have hrootEq :
           ((↑(14*2^n-2*n-16):Int)+4*(0:Int)+4*(n:Int)+20) =
