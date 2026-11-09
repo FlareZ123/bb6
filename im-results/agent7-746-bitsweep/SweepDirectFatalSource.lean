@@ -87,6 +87,63 @@ theorem odd_direct_fatal_sector (a entry k : Nat)
   exact fatal_nine_sector k entry he
     (odd_direct_fatal_mod_nine a entry k hodd hout hk hf hk2)
 
+
+/-- Inverse-band completeness sharpened to the deterministic first-reset
+    `bitOutcome` with its actual odd predecessor parity. The returned
+    parent is synthetic unless genuine root reachability is separately shown. -/
+theorem odd_band_bit_predecessor (j t d u : Nat)
+    (hd : d%2=1)
+    (hband : 6*2^j+1≤2^t*d ∧ 2^t*d≤8*2^j-1)
+    (hout : 2*u+5=3^(t+1)*d) :
+    ∃a, (a+firstFailIndex a)%2=1 ∧ bitOutcome a=some u := by
+  let q := 2^t*d
+  let a := 2*q-8*2^j-j-5
+  have hp : j+4≤4*2^j := by
+    induction j with
+    | zero => decide
+    | succ j ih =>
+      rw [Nat.pow_succ]
+      omega
+  have hlarge : 8*2^j+j+5≤2*q := by dsimp [q]; omega
+  have heq : 2*q=8*2^j+a+j+5 := by dsimp [a]; omega
+  have hlow : 4*2^j≤a+j+4 := by omega
+  have hhigh : a+j+5<8*2^j := by omega
+  have hindex : firstFailIndex a=j :=
+    firstFailIndex_unique a j hhigh
+      (CascadeResetInverse.guards_from_low a j hlow)
+  have hpar : (a+firstFailIndex a)%2=1 := by
+    rw [hindex]
+    omega
+  have heq' : 2*(2^t*d)=8*2^j+a+j+5 := by simpa only [q] using heq
+  have hparent : CascadeResetInverse.ResetParent a u :=
+    Or.inr ⟨j,t,d,hd,hband,hout,heq'⟩
+  have hr := CascadeResetInverse.reset_parent_sufficient a u hparent
+  have hb := bitOutcome_sound a
+  exact ⟨a,hpar,CascadeResetInverse.outcome_unique hb hr⟩
+
+/-- Sharp characterization for *direct odd predecessors* of high fatal
+    thresholds: such a predecessor exists exactly for levels 4 or 5 (mod 18).
+    It is not a genuine-blank-root theorem. -/
+theorem fatal_has_direct_odd_parent_iff (k f : Nat)
+    (hk : 4≤k)
+    (hf : f+k+4=4*2^k)
+    (hlevel : firstFailIndex f=k) :
+    (∃a, (a+firstFailIndex a)%2=1 ∧ bitOutcome a=some f) ↔
+      (k%18=4 ∨ k%18=5) := by
+  constructor
+  · rintro ⟨a,hodd,hout⟩
+    have hfatal : fatalAt f := by
+      dsimp [fatalAt]
+      rw [hlevel]
+      exact hf
+    exact odd_direct_fatal_sector a f k hodd hout hlevel hfatal (by omega)
+  · intro hsector
+    obtain ⟨j,d,_,hd,hlo,hhi,hout⟩ :=
+      fatal_odd_one_band k f hk hf hsector
+    exact odd_band_bit_predecessor j 1 d f hd ⟨hlo,hhi⟩ hout
+
+#print axioms odd_band_bit_predecessor
+#print axioms fatal_has_direct_odd_parent_iff
 #print axioms odd_direct_fatal_mod_nine
 #print axioms odd_direct_fatal_sector
 
