@@ -31,7 +31,7 @@ No run hit the cap or the allocated tape boundary.
 | 25 | 16,777,216 | 16,506,096 | 271,120 | 376 |
 | 26 | 33,554,432 | 33,012,187 | 542,245 | 398 |
 
-The observed maximum across all suffix lengths `n≤22` is 326 steps.
+The observed maximum across all suffix lengths `n≤26` is 398 steps.
 The starting F head reaches at most 6 cells to its left.
 The rightmost visited cell is at most 3 cells farther right than an
 initial upper bound of 6+n cells past its head. These are
