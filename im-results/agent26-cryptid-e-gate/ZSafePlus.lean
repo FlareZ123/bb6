@@ -136,6 +136,25 @@ theorem e_zero_k2_all_Z_regular (t q m : Nat) :
   rw [hk,run_add,e_zero_drop_Z]
   simpa only [a,k] using hReg
 
+/-- Explicit original-machine TWO-section certificate for the formerly
+    missing k≡2, q≡2 (mod 3) E/p0 zero-marker branch. The second
+    section consumes an A/p2 marker of arbitrary depth. -/
+theorem e_zero_k2_q2_exact (t u m : Nat) :
+    ObsEq
+      (run
+        ((12*(3*t+2)*(3*t+2)+49*(3*t+2)+50+4*(3*u+2)) +
+          BB6.Agent26ZMarkerATwo.twoCost (8*t+6) 0 (2*u+3) m)
+        (packet (9*t+10) (3*u+2) 0 (marker (m+1))))
+      (regularSection
+        (BB6.Agent26ZMarkerATwo.twoUnary (8*t+6) 0 (2*u+3))
+        1 (2*m+5)) := by
+  have hindex : 9*t+10 = 3*(3*t+2)+4 := by omega
+  have hA : 8*(3*t+2)+5 = 3*(8*t+6)+3 := by omega
+  have hp : 2*(3*u+2)+7 = 3*(2*u+3)+2 := by omega
+  rw [hindex,run_add,e_zero_drop_Z,hA,hp]
+  exact BB6.Agent26ZMarkerATwo.a_two_Z_regular
+    (8*t+6) 0 (2*u+3) m
+
 /-- The new predicate accepts every packet accepted by the original. -/
 theorem old_safe_included (m : Nat) (c : Packet)
     (h : safeZ m c) : safeZPlus m c := by
@@ -174,6 +193,7 @@ theorem residual_52_accepted : safeZPlus 3 ⟨52,1,0⟩ := by
 
 #print axioms terminalSafePlus_source
 #print axioms safeZPlus_source
+#print axioms e_zero_k2_q2_exact
 #print axioms all_A_Z_regular
 #print axioms e_zero_k2_all_Z_regular
 #print axioms old_safe_included
