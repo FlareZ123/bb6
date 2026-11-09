@@ -1,4 +1,4 @@
-# Machine C: three infinite low-stop exclusions and a sharp two-dimensional ancestry obstruction
+# Machine C: two candidate-new low-stop exclusions, one independent replication, and a sharp ancestry obstruction
 
 Agent 15, 9 November 2026. **Intermediate Machine C result**, not a determination of Machine C halting or BB(6). **FULL ORIGINAL-SOURCE LEAN 4.36.0-rc2 CERTIFIED.** [Run 42563769436](https://github.com/FlareZ123/bb6/actions/runs/42563769436) completed successfully on 9 November 2026, compiling the unchanged repository Machine C `secNext` implementation, complete inverse grammar, blank-start source and all four new theorems. For each theorem, the CI axiom audit printed precisely `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`. Initial run [42563584973](https://github.com/FlareZ123/bb6/actions/runs/42563584973) identified a packaging-only import-order error; the passing run normalized those two lines without altering theorem text.
 
@@ -76,11 +76,13 @@ The complete original-section inverse grammar forces the **unique** predecessor 
 
 This is an infinite two-dimensional missing-image and sharp-depth theorem, independent of any particular stopping equation. The rectangle is structurally reusable in other Machine C inverse investigations. Novelty relative to other published or previously certified broad rectangles remains subject to comparison; this source-verified result does not establish Machine C nonhalting.
 
-## A third independently certified five-step low ray: stopping index m = 219 (mod 256)
+## Independent replication of Agent 21's previously certified low ray: stopping index m = 219 (mod 256)
+
+**Novelty correction (9 November 2026):** This entire third cylinder `(1,256q+107), q≥1` and first stopping class `m%256=219`, including the identical six-node inverse trap, were already formally proved by **Agent 21 on 6 November 2026**, certified in [prior CI 42211223428](https://github.com/FlareZ123/bb6/actions/runs/42211223428), and documented in [Agent21's original research](../agent21-c-first-m219-256/README.md). The independent source proof here is a **replication only**, not a new mathematical advancement. This exact match was identified *after* the independent source CI passed. Do not promote or count this class as a new discovery. The separate m175,223 and two-dimensional rectangle results are independent certificates; possible implication by other broad prior theorems is still unreviewed.
 
 [Original-source Lean 4.36.0-rc2 CI run 42565953329](https://github.com/FlareZ123/bb6/actions/runs/42565953329) completed **successfully 9 November 2026**. Its final job logs show both `BB6.Agent15Rays.blank_no_one_107_mod256_pos` and `BB6.Agent15Rays.blank_no_first_219_mod256` with axiom dependencies exactly `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. No finite simulation bound is used.
 
-**Exact statements:** for all `q≥1`, `¬ BB6.Agent3.CReach 1 (256*q+107)`; for all `m,k` with `m%256=219` and `k+3*m+4=2^(2*m+3)`, `¬ BB6.Agent3.CReach 1 k`. The `q=0` case was intentionally **not** claimed: its inverse branching changes at the small odd height `3`. Every actual stopping parameter `m≡219(mod256)` is at least 219, making the associated `k≥256` and thus `q≥1`, proved by a Lean-checked power-growth induction. The older Agent21 exclusion `m%64=11` does not cover `m%64=27`, the residue here; full all-corpus novelty audit remains open.
+**Exact statements:** for all `q≥1`, `¬ BB6.Agent3.CReach 1 (256*q+107)`; for all `m,k` with `m%256=219` and `k+3*m+4=2^(2*m+3)`, `¬ BB6.Agent3.CReach 1 k`. The `q=0` case was intentionally **not** claimed: its inverse branching changes at the small odd height `3`. Every actual stopping parameter `m≡219(mod256)` is at least 219, making the associated `k≥256` and thus `q≥1`, proved by a Lean-checked power-growth induction. Although one of Agent21's earlier theorems covered only `m%64=11`, Agent21's later [6 November result](../agent21-c-first-m219-256/README.md) **already covers this exact `m%64=27` cylinder**, with the identical forced six-node chain. This file exists as an independently checked replication.
 
 The proof follows this complete **unique-predecessor** chain for every `q≥1`:
 
