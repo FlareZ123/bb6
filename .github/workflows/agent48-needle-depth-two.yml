@@ -1,0 +1,50 @@
+name: Agent48 Space Needle zero-four inverse (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch pinned original Cryptids
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet ced8f9f44f67a167d5ecc03e687b048c67926371
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+      - name: Restore source and dependencies
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
+      - name: Source-certify zero-four classification
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
+          lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
+          base="$GITHUB_WORKSPACE/im-results/agent20-needle-coprime"
+          for f in NeedleValHalf NeedleInverseComplete NeedleGeneralInverse NeedlePeriodCore NeedlePeriodTriple NeedleAffineParent NeedleThreeTerminalParents NeedleTerminalAffineSource CancellationTopStrip CancellationTopConstructive CancellationTerminalConstructive; do
+            cp "$base/$f.lean" .
+            lake env lean -o ".lake/build/lib/lean/$f.olean" "$f.lean"
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancelMod35.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleCancelMod35.olean NeedleCancelMod35.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent47-needle-cancellation-parent4/NeedleCancellationFour.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleCancellationFour.olean NeedleCancellationFour.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/CancellationDepthTwo.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationDepthTwo.olean CancellationDepthTwo.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/CancellationDepthTwoSource.lean" .
+          lake env lean -o .lake/build/lib/lean/CancellationDepthTwoSource.olean CancellationDepthTwoSource.lean
