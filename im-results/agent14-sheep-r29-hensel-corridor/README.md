@@ -1,6 +1,6 @@
 # Eight fixed-order 3-adic Hensel corridors: exact inverse-depth distribution
 
-**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The exact-depth theorem determines the natural-density distribution of their distinguished genuine zero-valued predecessor tails. A second, locally Lean-kernel-checked theorem gives an all-depth modular sieve against entire infinite families of generic side exits from the r29 corridor. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
+**Agent 14, 9 November 2026. Intermediate all-depth mathematical theorems with exact modular certificates.** Eight authentic Sheep mixed-edge inverse corridors have arbitrarily large depth despite fixed target-exponent 3-adic order. The exact-depth theorem determines the natural-density distribution of their distinguished genuine zero-valued predecessor tails. Additional locally Lean-kernel-checked theorems provide all-depth modular sieves for alternative generic predecessors in **all eight** corridors, and prove that every nonterminal node on each distinguished chain has hidden odd-run length zero for every genuine incoming return. These are synthetic ancestors; none establishes reachability from the actual blank seed, decides Sheep, or determines BB(6). The proofs use original-source section recurrences and elementary 3-adic arithmetic. A single unified, unchanged-original-machine Lean import remains open.
 
 ## Theorem: unbounded true E inverse depth at fixed v3(j)=7
 
@@ -145,6 +145,51 @@ Every other `a≡3 (mod8)` is excluded at that depth. Combining this parity rule
 [`SheepR29Walls.lean`](./SheepR29Walls.lean) compiles in local Lean **4.36.0-rc2** against the existing [`SheepChain2.lean`](./SheepChain2.lean) and the new general exit theorem, and kernel-proves `r29_no_side_exit_after_genuine_chain` and `r29_side_val17_at_depth`. `#print axioms` reports only `[propext, Quot.sound]` for these results, with no `sorryAx`. The first theorem directly imports the genuine `SheepChain2.Chain2` relation and assumes the exact generic source equation, already available as a necessary consequence of the original Sheep source splitter. The second theorem similarly conditions on that source equation. **No single new theorem imports the unmodified upstream Turing-machine definition**, so the locally kernel-checked algebra and its authentic-source interpretation must be distinguished from a new original-TM CI certificate.
 
 [`exit_val_sieve.py`](./exit_val_sieve.py) checks the complete 26520-period union and independently verifies the three modulus conditions for each residue. The all-depth theorem is mathematical; the finite script only audits the explicit density arithmetic. These exit restrictions prune a meaningful subset of alternative generic valuations but leave many other incoming branches, exceptional sources, and the authentic blank-seed reachability question open.
+
+## All seven X corridors: uniform modular walls and exact parity sieve
+
+The same method closes whole infinite generic h=0 valuation families for **each of the seven h=8,a=2 terminal branches**, with no dependence on the special r residue. Indeed, the proved source equation
+
+```text
+59049*(X+12) = 2^(17496*m+11)+680296
+```
+
+implies, **for every natural m for which X is an integer**,
+
+```text
+(X+12)%5 = 1,       (X+12)%17 = 4.
+```
+
+These residue assertions, the source-correct P chain and the universal odd-modulus exit obstruction imply that any alternative incoming *generic h=0* E source `2^a*v` into a node at arbitrary depth has
+
+```text
+a ≠ 20*s+1     and     a ≠ 136*s+99    (all s>=0).
+```
+
+The parity-sensitive version is stronger: along an X-descended P chain, the target node `x` satisfies `x≡9 (mod17)` for even reverse depth and `x≡1 (mod17)` for odd reverse depth. Thus within the valuation class `a≡3 (mod8)`, the **only permissible** congruences are
+
+```text
+even P depth:  a ≡ 35  (mod136)
+odd P depth:   a ≡ 27  (mod136).
+```
+
+Consequently for either fixed depth parity, the union of the 5-modulus and parity-sensitive 17-modulus obstructions removes exactly `57/340 = 16.764705882...%` of all valuation integers `a`, by complete period 680. The exact density is a density **only among possible generic source valuations**. It measures neither physical configurations nor genuine seed-reachable states.
+
+[`SheepXWalls.lean`](./SheepXWalls.lean) kernel-proves `x_base_residues`, `x_no_side_exit`, and `x_side_val17_at_depth` locally with Lean 4.36.0-rc2 against the already checked `SheepChain2` and `SheepExitWall`. The printed axioms are exactly `[propext, Quot.sound]`, and there are no admits. This is stronger than a period-specific certificate: the parent identity is proved for **all natural m**, covering all seven r families at once. In contrast to Z, the X quotient is divisible by 13, so the Z-specific q13 wall must **not** be transferred to X; the chosen q5/q17 restrictions are valid.
+
+## Every interior corridor node forces hidden h=0
+
+There is a second exact structural constraint applicable to **all eight families**, independent of any target exponent. If a genuine P chain `x -P^n-> Y` exists and `9^(n+1) | Y+12`, then the P-chain equality gives
+
+```text
+x+12 = 9*8^n*m,    m=(Y+12)/9^(n+1).
+```
+
+Hence `x≡0 (mod3)`. The definition of a genuine first-even E return has target `x=1+3^h*u`, with odd u; if `h≥1` this forces `x≡1 (mod3)`, contradiction. Therefore **every** E predecessor into `x`, including exceptional sources, necessarily has `h=0`.
+
+Equivalently, for a distinguished mixed-tail root parameter `k` and maximal zero-tail length `L_r(k)`, all depth `n<L_r(k)` nodes in that tail have **only hidden-h-zero incoming edges**. Higher-h branches can occur at its last, deepest node and are not ruled out by this lemma. This is a useful exact full-source branching restriction at every interior depth, complementing the generic valuation walls above. It does not by itself close other h0 generic or exceptional parents, nor does it connect any ancestor to the actual seed.
+
+[`SheepInteriorGate.lean`](./SheepInteriorGate.lean) proves the uniform `interior_nine` and `interior_hidden_zero` lemmas in Lean 4.36.0-rc2, with axioms `[propext, Quot.sound]` only, importing the authentic-source-shaped `SheepChain2.Chain2` relation. This module still requires an upstream original-TM import for a single complete source-level formalization of the whole corridor argument. [`exit_val_sieve.py`](./exit_val_sieve.py) independently enumerates the two exact small residue-class densities for Z and X.
 
 ## Reusable 3-adic affine-corridor principle
 
