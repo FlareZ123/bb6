@@ -22,3 +22,13 @@ jobs:
           lean --version
           lean im-results/agent29-roster-six-audit/Row146Conjugacy.lean
           lean im-results/agent29-roster-six-audit/Row109GF2.lean
+
+      - name: Kernel-check all-length W7 physical four-cell sweeps
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/w7
+          cp im-results/agent29-roster-six-audit/Row146Conjugacy.lean /tmp/w7/
+          cp im-results/agent3-w7-physical-block/Row146Block.lean /tmp/w7/
+          cd /tmp/w7
+          LEAN_PATH=. lean -o Row146Conjugacy.olean Row146Conjugacy.lean
+          LEAN_PATH=. lean Row146Block.lean
