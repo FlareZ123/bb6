@@ -1,144 +1,102 @@
-# P1 inverse shadow: all positive-depth periodic tails excluded
+# P1 inverse shadow: periodicity obstruction and root-code rigidity
 
-**Status (7 November 2026):** The arbitrary-period reduction and the stepwise source-path extension are Lean 4.36.0-rc2 kernel-checked. [Run 42392999355](https://github.com/FlareZ123/bb6/actions/runs/42392999355) passed the factorization, all-period, eventual-tail, and repeated-block source-transport audit. [Run 42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708) additionally compiled `SourcePeriodAllPeriods.lean`, which extracts exact finite-word runs from a genuine infinite `ShadowReach` trajectory and rules out every eventually periodic depth tail under the root-margin assumptions. Both audits reject `sorryAx` and Lean errors. Agent 3 independently reviewed the factorization and source-path arguments.
+**Research synthesis, 9 November 2026.** The original P1 scalar inverse shadow has exact edges
 
-This is a substantive all-cost obstruction for the P1 inverse shadow. It does **not** decide P1, any BB(6) holdout, or BB(6).
-
-## Main theorem
-
-For any finite depth word `w : List Nat` containing at least one positive entry, there is no infinite exact scalar inverse ray that repeats `w` at every block:
-
-```lean
-PeriodWord.no_infinite_positive_depth_periodic_ray
-  (L : Nat) (w : List Nat)
-  (hp : ∃ t ∈ w, 0 < t)
-  (m z : Nat → Nat)
-  (hr : ∀ n, Run L w (m n) (z n) (m (n+1)) (z (n+1))) :
-  False
+```text
+z = 2^t v
+2 z' + 1 = L + m + t + v
+m' = m + t + 1.
 ```
 
-The reindexed corollary `PeriodWord.no_eventually_periodic_positive_depth_ray` excludes the same pattern after any finite prefix. In `SourcePeriodWord.lean`, `source_periodic_tail_boundaries_reachable` transports every block boundary through the original `BB6.Precision.ShadowReach`, and `source_no_eventually_periodic_positive_depth_ray` exposes the source-level exclusion.
+For a root with `L ≥ 8`, `root > 0`, and `root + 4 ≤ L`, every genuine `ShadowReach` node preserves the four-unit margin. [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean) proves that **no infinite source shadow path has an eventually periodic depth sequence**. This source theorem was kernel checked in [CI 42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708). Genuinely aperiodic paths remain the outstanding single-root obstruction.
 
-The existing Agent 13 source theorem separately excludes homogeneous zero-depth tails. Thus the positive-depth theorem closes the arbitrary finite-period case; the zero-depth homogeneous case remains covered by the earlier source result. Aperiodic inverse histories remain open.
+## New: inverse-depth coding is injective on effective initial states
 
-## Proof architecture
+Let two genuine infinite source histories `p₀`, `p₁` have arbitrary nonnegative source parameters `L₀,L₁`, initial costs `m₀,m₁`, and shadows `z₀,z₁`. Suppose their complete dyadic-depth sequences agree, and the first root satisfies the preceding four-unit margin. Then
 
-1. **Exact marker decoding and factorization.** In [PeriodFactorization.lean](PeriodFactorization.lean), `factor_word_of_rotation_period` proves that if (dmid S), (0<d<S), (H=operatorname{weight}(w)<2^S-1), and
-   [
-   2^dHequiv Hpmod{2^S-1},
-   ]
-   then (w) is an exact repetition of a shorter word (u), with (operatorname{cost}(u)=d) and (operatorname{weight}(u)<2^d-1). The proof constructs a canonical binary decoder, proves its cost/weight inverse law, and obtains the quotient bounds (2^{d-1}le q<2^d-1). It does not assume a bound on the word cost or depth.
+```text
+L₀ + m₀ = L₁ + m₁
+z₀ = z₁.
+```
 
-2. **Minimal marker return.** [PeriodMarkerMinimal.lean](PeriodMarkerMinimal.lean) supplies a shortest positive rotation period (d) dividing (S), from the integral slope relation and the finite deterministic rotation orbit.
+**The input coded by the depth sequence is the effective parameter `X=L+m` together with `z`.** In particular, at equal initial cost, two distinct source `L` values cannot support the same infinite depth history, and two distinct initial shadow coordinates cannot either. The theorem is conditional on two infinite histories already existing. It neither constructs a history nor excludes one from a single fixed source root.
 
-3. **Primitive reduction.** The minimality of (d) implies the shorter word (u) is primitive: any smaller marker return of (u) lifts, by the exact repeated-weight and repeated-modulus formulas, to a smaller return of (w).
+The unrestricted statement and proof are in [EffectiveCode.lean](EffectiveCode.lean), `infinite_shadow_effective_code_injective`; the equal-cost version is [RootCodeUnique.lean](RootCodeUnique.lean), `infinite_shadow_root_code_injective`. These extended Lean files have been locally checked against the exact previously established `InfiniteShadowPath` source theorem interface. Original-dependency CI for the latest extension has been blocked by repeated upstream HTTP 504 responses while installing Lean, before compilation. Earlier source checks of its crucial scaled-offset argument passed in [CI 42565628108](https://github.com/FlareZ123/bb6/actions/runs/42565628108). Do not cite the full unrestricted import as source-CI checked until a complete run passes.
 
-4. **Affine contradiction.** [PeriodFactorization.lean](PeriodFactorization.lean) proves the exact repeated-block weight and offset formulas. The infinite-run affine recurrence forces
-   [
-   (2^S-1)(z_1-z_0)=H S.
-   ]
-   The primitive word's all-cost divisibility obstruction, combined with [PeriodSecondary.lean](PeriodSecondary.lean)'s repeated affine obstruction, contradicts this equation and the initial block equation.
+### Exact proof mechanism
 
-5. **Original-source connection.** [SourcePeriodWord.lean](SourcePeriodWord.lean) proves every repeated block boundary remains in the unmodified source `ShadowReach` relation and exports the eventual-periodic exclusion.
+For synchronized depths `tₙ`, define integer differences
 
-## Formal modules
+```text
+C = (L₁ + m₁) - (L₀ + m₀),     Dₙ = z₁,ₙ - z₀,ₙ.
+```
 
-- [PeriodFactorization.lean](PeriodFactorization.lean): exact marker decoder, arbitrary nonprimitive factorization, repeated weight/offset formulas, periodic affine recurrence, and primitive repeated-ray exclusion.
-- [PeriodAllPeriods.lean](PeriodAllPeriods.lean): minimal-return reduction to a primitive word; no infinite positive-depth periodic ray; no eventual positive-depth periodic tail.
-- [SourcePeriodWord.lean](SourcePeriodWord.lean): repeated-block `ShadowReach` boundary transport and source-level tail corollary.
-- [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean): stepwise infinite `ShadowReach` path extraction, root-margin propagation, and exclusion of all eventually periodic depth tails.
-- [PeriodPrimitive.lean](PeriodPrimitive.lean): all-cost primitive marker obstruction.
-- [PeriodSecondary.lean](PeriodSecondary.lean): repeated affine obstruction.
-- [PaperProof.md](PaperProof.md): preserved earlier order-based paper argument and historical context.
+The difference in initial cost remains constant, so the exact source equations yield, for every n,
 
-## Relation to prior work
+```text
+Dₙ = 2^(tₙ) (2 Dₙ₊₁ - C).
+```
 
-Agent 13's [BlockPotential.lean](../agent13-p1-adaptive-param/BlockPotential.lean) already established the affine-block potential and an abstract obstruction for a fixed block. [AlternatingDepth.lean](../agent13-p1-adaptive-param/AlternatingDepth.lean) treated the two mixed words `[0,1]` and `[1,0]`; [BlockSecondary.lean](../agent13-p1-adaptive-param/BlockSecondary.lean) supplied a secondary modular obstruction. The finite scan in [periodic_word_modular.py](../agent13-p1-adaptive-param/periodic_word_modular.py) covers total cost at most 2048.
+If `C ≠ 0`, write `C=2^e B` with B odd, including negative B. Iterating the difference equation gives
 
-The new contribution closes the all-cost nonprimitive-period gap: any admissible marker return yields an actual shorter depth list, which can then be ruled out by the primitive obstruction. It is not merely a finite scan or a proof for a preselected family of words.
+```text
+for every k, Dₙ = 2^k u + C v       for some integers u,v.
+```
 
-## Stepwise source-path theorem
+Thus `2^e` divides **every** `Dₙ`. Dividing by `2^e`, write `Eₙ=Dₙ/2^e`. Then
 
-[SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean) closes the reverse extraction gap left by the repeated-block transport above. It defines an `InfiniteShadowPath` as a coherent sequence of actual `ShadowReach.step` witnesses:
-`z_n=2^{t_n}v_n`,
-`2z_{n+1}+1=L+m_n+t_n+v_n`,
-and `m_{n+1}=m_n+t_n+1`,
-starting from a state reachable from root (r).
+```text
+Eₙ = 2^(tₙ) (2 Eₙ₊₁ - B).
+```
 
-**Theorem.** If (L\ge8), (0<r), and (r+4\le L), no such infinite path has an eventually periodic depth sequence, including an all-zero periodic tail.
+For odd B the dyadic valuation of the right-hand odd factor determines the depth `tₙ` uniquely from `Eₙ`. The successor `Eₙ₊₁` is likewise unique. Moreover,
 
-- If the period word contains a positive depth, induction over the list constructs an exact `PeriodWord.Run` for each period block. The all-period theorem gives a contradiction.
-- If the period word is all zero, `ShadowAlgebra.shadow_step_preserves_offset` propagates (z_n+4\le L+m_n). The gap (D_n=L+m_n-z_n\ge4) then satisfies (2D_{n+1}=D_n+3), so it decreases strictly forever, impossible in (mathbb N).
+```text
+|Eₙ₊₁| ≤ max(|Eₙ|, |B|)
+```
 
-This is a statement about genuine stepwise paths in the abstract source `ShadowReach` relation under the displayed root margin. It does not show that every nonhalting P1 machine execution is eventually periodic or exclude aperiodic paths. The source audit is [run 42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708); the printed axiom lists contain only standard Lean axioms and no `sorryAx`.
+for every edge. Consequently the `Eₙ` sequence lives in a finite interval and eventually repeats a state. Its deterministic depth sequence becomes eventually periodic, contradicting the original source margin theorem. Therefore `C=0`. The remaining recurrence `Dₙ=2^(tₙ+1)Dₙ₊₁` implies `2^k ∣ D₀` for every k, hence `D₀=0`.
 
-## Remaining mathematical gap
+This is a **cross-history comparison theorem**, applying to arbitrary aperiodic depth sequences. It gives no uniform single-history bound on total inverse cost.
 
-The result excludes eventually periodic positive-depth inverse tails. It does not prove that every infinite inverse history is eventually periodic, and it gives no contradiction for a genuinely aperiodic sequence of varying depth words. The next research target is a uniform obstruction for arbitrary varying blocks, using the exact affine recurrence and source feeder margins. Until that gap is closed, the P1 decision and the exact value of BB(6) remain open.
+### The original P1 feeder roots
 
+The original P1 feeders are
 
-## Varying-depth recurrence (new research direction)
+```text
+side 0: (L,z)=(16q+8,12q+4)
+side 1: (L,z)=(16q+9,10q+4).
+```
 
-The one-step scalar source relation has a useful recentering. Define
-[
-R_L(m,z)=2z-m-L+2.
-]
-For a depth-(t) step with (z=2^t v), (2z'+1=L+m+t+v), and (m'=m+t+1), the Lean theorem `PeriodWord.recentered_step` proves exactly
-[
-2^{t+1}R_L(m',z')=R_L(m,z)+m+L-2.
-]
-This lemma is in `PeriodFactorization.lean`; it was tested locally, and CI run [42394002553](https://github.com/FlareZ123/bb6/actions/runs/42394002553) audits it.
+For arbitrary q₀ and q₁, an infinite common depth sequence from opposite sides is impossible by the odd-offset case alone, as proved in [CrossFeederAll.lean](CrossFeederAll.lean) and source-checked in [CI 42564547994](https://github.com/FlareZ123/bb6/actions/runs/42564547994). Combining this with Agent 13's same-side 2-adic parameter separation [PrefixCylinder.lean](../agent13-p1-adaptive-param/PrefixCylinder.lean) gives the full original-feeder encoding theorem `infinite_feeder_code_unique` in [FeederCoding.lean](FeederCoding.lean), source-checked in [CI 42564771450](https://github.com/FlareZ123/bb6/actions/runs/42564771450).
 
-Iterating this identity along any depth stream (no periodicity assumption), with (M_n=\sum_{i<n}(t_i+1)), gives the derived prefix equation
-[
-2^{M_n}R_n=R_0+\sum_{i<n}2^{M_i}(m_0+M_i+L-2).
-]
-The one-step identity is formally checked; the iterated prefix identity is an immediate induction but has not yet been added as a Lean theorem. It provides an exact 2-adic divisibility constraint for aperiodic varying-depth histories and is the next promising direction for a uniform potential.
+For two feeder roots sharing the **same q** and a finite exact depth word `w`, its total dyadic cost `M=cost w` and binary marker `H=weight w` satisfy
 
+```text
+H ≡ 2q (mod 2^M).
+```
 
-## Full source periodicity exclusion
+If the word is nonempty, its highest marker bit forces `2^(M-1) ≤ 2q`. This finite restriction is [FeederDisjoint.lean](FeederDisjoint.lean) and was source-checked in the same 42564547994 audit.
 
-Agent 3 added [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean), combining `source_no_eventually_periodic_positive_depth_ray` with Agent 13's homogeneous zero-depth source theorem. The resulting `BB6.Agent9PeriodSourceAll.no_eventually_periodic_shadow_path` excludes **all** eventually periodic inverse-depth paths in the original `ShadowReach` relation, including the all-zero period. Agent 3 reports successful axiom-audited CI run [42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708).
+## Proof modules and auditable milestones
 
-The remaining source-level gap is genuinely aperiodic inverse histories. The recentered one-step identity above gives a varying-depth recurrence to investigate next.
+- [PeriodCore.lean](PeriodCore.lean), [PeriodWord.lean](PeriodWord.lean), [PeriodFactorization.lean](PeriodFactorization.lean), [PeriodAllPeriods.lean](PeriodAllPeriods.lean): exact affine finite-word recurrence, binary-marker period factorization and no fixed positive-depth periodic infinite ray. Source certification: [42392999355](https://github.com/FlareZ123/bb6/actions/runs/42392999355).
+- [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean): original-source margin, full eventually periodic depth exclusion, exact varying-depth recentered prefix identity, and zero-run gap bounds. Source certification: [42393598708](https://github.com/FlareZ123/bb6/actions/runs/42393598708) and [42404496047](https://github.com/FlareZ123/bb6/actions/runs/42404496047).
+- [OddDifference.lean](OddDifference.lean), [CrossFeederAll.lean](CrossFeederAll.lean), [FeederDisjoint.lean](FeederDisjoint.lean): odd-difference bounded deterministic dynamics, opposite-feeder disjointness, and finite same-q marker restriction. Source certification: [42564547994](https://github.com/FlareZ123/bb6/actions/runs/42564547994).
+- [OddParameterSource.lean](OddParameterSource.lean): arbitrary source L pairs of odd difference. Source certification: [42565066761](https://github.com/FlareZ123/bb6/actions/runs/42565066761).
+- [OddRescale.lean](OddRescale.lean), [ScaledParameterSource.lean](ScaledParameterSource.lean): arbitrary dyadic-scaled odd difference with source theorem. Source certification: [42565628108](https://github.com/FlareZ123/bb6/actions/runs/42565628108).
+- [Factor2.lean](Factor2.lean), [DistinctParameterSource.lean](DistinctParameterSource.lean), [ZeroOffset.lean](ZeroOffset.lean), [RootCodeUnique.lean](RootCodeUnique.lean), [EffectiveCode.lean](EffectiveCode.lean): all integer offsets including zero, and effective initial-state injectivity. Local Lean 4.36.0-rc2 interface proofs; complete source import pending infrastructure recovery.
+- [.github/workflows/agent9-cross-feeder-source.yml](../../.github/workflows/agent9-cross-feeder-source.yml): manually dispatched, original-source compiler and axiom audit (fail closed).
 
-## Exact varying-depth prefix identity (7 November 2026)
+## Relation to other work and remaining BB(6) gap
 
-The source-path module now also kernel-checks an exact prefix identity for an arbitrary infinite depth sequence. For a path with initial cost m₀, define
+Agent 13's [PrefixCylinder.lean](../agent13-p1-adaptive-param/PrefixCylinder.lean) previously proved uniqueness of the parameter within each separate P1 feeder family. The cross-family theorem adds disjointness of those languages; the generic theorem identifies the effective scalar source state coded by a depth stream. The periodicity obstruction still holds for each source root individually.
 
-[
-M_0=0,qquad M_{n+1}=M_n+t_n+1,qquad
-R_n=2z_n-m_n-L+2.
-]
+For varying depths, [SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean) also kernel-checks the exact recentered identity
 
-Then m_n=m₀+M_n and
+```text
+2^Mₙ Rₙ = R₀ + Σ_{i<n} 2^Mᵢ (m₀ + Mᵢ + L - 2),
+Rₙ = 2zₙ - mₙ - L + 2,    Mₙ = Σ_{i<n}(tᵢ+1).
+```
 
-[
-2^{M_n}R_n
-=
-R_0+sum_{i<n}2^{M_i}(m_0+M_i+L-2).
-]
-
-Equivalently, every finite prefix satisfies the exact 2-adic divisibility condition
-
-[
-2^{M_n}mid
-R_0+sum_{i<n}2^{M_i}(m_0+M_i+L-2).
-]
-
-The Lean definitions depthPrefix and recenteredPrefixSum, and theorem
-BB6.Precision.InfiniteShadowPath.recentered_prefix_identity, are in
-[SourcePeriodAllPeriods.lean](SourcePeriodAllPeriods.lean). The theorem uses only
-the exact step equations and makes no periodicity, bounded-depth, or bounded-cost
-assumption. The source audit [CI 42404496047](https://github.com/FlareZ123/bb6/actions/runs/42404496047)
-compiled the extended module, printed the axiom list, and passed the workflow's
-sorryAx / Lean-error rejection. A standalone local Lean 4.36.0-rc2 proof of the
-same telescoping identity reports only [propext, Quot.sound].
-
-This is a necessary arithmetic constraint on genuinely aperiodic inverse
-histories. It does not rule out aperiodic paths, establish a finite source cone,
-or decide P1/BB(6). The next useful question is whether the bounded positive
-recentered quotient supplied by the permanent source margin can be combined
-with this prefix congruence to prove a uniform cost bound or exclude an
-aperiodic infinite path.
-
+The urgent open task remains **exclude every infinite aperiodic inverse path from at least one authentic P1 feeder root, or exhibit an actual blank-machine halting witness**. Pairwise coding uniqueness alone cannot decide a single root, P1, or BB(6). This dossier contains intermediate research rather than an independently established publishable frontier decision. External priority review of the new comparison theorem remains to be done.
