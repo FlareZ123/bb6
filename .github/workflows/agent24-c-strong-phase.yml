@@ -384,6 +384,23 @@ jobs:
           cat "$GITHUB_WORKSPACE/c-residual-mass-integration.txt"
           cat "$GITHUB_WORKSPACE/c-residual-mass-integration.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$integration_status" -ne 0 ]; then exit "$integration_status"; fi
+
+          # Agent47: authenticate the 100,000-mass exact stopping
+          # equivalence on the same original-source dependency closure.
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/CResidualMass100000.lean .
+          cp ${GITHUB_WORKSPACE}/im-results/agent47-c-mass100k-integration/Mass100KHalting.lean .
+          set +e
+          lean -o CResidualMass100000.olean CResidualMass100000.lean > "$GITHUB_WORKSPACE/c-residual-mass100000.txt" 2>&1
+          mass100000_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-residual-mass100000.txt"
+          if [ "$mass100000_status" -ne 0 ]; then exit "$mass100000_status"; fi
+          set +e
+          lean -o Mass100KHalting.olean Mass100KHalting.lean > "$GITHUB_WORKSPACE/c-mass100k-halt.txt" 2>&1
+          halt100000_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/c-mass100k-halt.txt"
+          if [ "$halt100000_status" -ne 0 ]; then exit "$halt100000_status"; fi
           # Agent 19: exact root decision for the first m=0 high candidate above raw mass 2000.
           cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/M0FirstSurvivorRootProbe.lean .
           set +e
@@ -489,6 +506,8 @@ jobs:
             c-residual-mass2000.txt
             c-residual-mass10000.txt
             c-residual-mass-integration.txt
+            c-residual-mass100000.txt
+            c-mass100k-halt.txt
             m0-first-survivor-root-probe.txt
             full-forced-param-scan.txt
             m1-m2-param-scan.txt
