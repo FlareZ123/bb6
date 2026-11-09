@@ -67,10 +67,28 @@ F_106 = 324518553658426726783156020576146.
 
 Direct evaluation of the source-equivalent exact arithmetic gives an odd `t=2` first reset `a→e` with `K(a)=103` and `K(e)=105`. It is followed by 97 successful even same-level resets `e→…→z`, then an even reset `z→F_106`; the next source episode halts. The entry satisfies `6·2^105≤e` and `4e+10<27·2^105`, with `k mod 54=51` and `m mod 18=7`, matching the universal table. The finite path was checked by exact integer evaluation; the universal source first-reset and same-level batch rules used by this calculation have separate Lean source proofs. This synthetic starting ancestor has **no demonstrated blank-root reachability**.
 
+## Original-blank-root exclusions from the 27-adic gap
+
+The [new source-certified `narrow_high_root_gap_exclusion`](SweepOdd27RootGap.lean) turns the image characterization into a **genuine blank-origin nonreachability theorem**. Let `k=K(e)≥3`, suppose `12·2^k+k+4≤2e`, `4e+10<27·2^k`, `27∤(2e+5)`, and set `h=2e−8·2^k−k`, with `h mod3≠2`. Then the actual C reset root `(2,0)` cannot reach `(e,0)` at any time.
+
+By the exact new odd-image iff, no source odd parent of `e` exists. The unique possible even source parent is `h`, whose height is trapped in `(4·2^k−3,6·2^k−1)`, a gap containing no even image at any scale. The `h mod3≠2` condition excludes odd parents of `h`. Since `h` has no source reset parent and differs from the root, `e` is authentically root-unreachable. This is a complete all-time original-source argument, using `root_reset_chain_iff` and `root_excludes_nonimage`.
+
+The [formally verified explicit infinite family](SweepOdd27RootFamily.lean) is
+
+```text
+k_n = 9+54n,
+e_n = 6·2^(k_n)+k_n+2,
+for every n≥0: ¬ ReachC (2,0) (e_n,0).
+```
+
+Indeed, `2^(9+54n) mod27=26`, giving `(2e_n+5) mod27=15`, and the sole even predecessor `h_n=4·2^(k_n)+k_n+4` has `h_n mod3=0`. Each `e_n mod3=2`, showing the previously available coarse 3-adic odd-image obstruction cannot exclude these targets alone. The sample `e_0=3083` is also proved separately in Lean. [Full original-source CI 42595867922](https://github.com/FlareZ123/bb6/actions/runs/42595867922) **PASSED**, with the same standard axiom set and no `sorryAx`. A coherent mathematical report is in [`results/2026-11-09-machine-746-27-adic-high-root-exclusion.md`](../../results/2026-11-09-machine-746-27-adic-high-root-exclusion.md).
+
+The infinite class consists of genuinely unreachable **reset heights** in machine #746. These heights are generally different from the candidate fatal values `F_k`; the nonreachability result is an original-root structural advance and does not yet establish #746 nonhalting.
+
 ## Verification, provenance, and next obstruction
 
 [**Full original-source Lean 4.36.0-rc2 CI run 42593843110**](https://github.com/FlareZ123/bb6/actions/runs/42593843110) succeeded, compiling all four new modules, the unchanged original source-C first-reset and inverse grammar, and the prior Agent 7/10 dependencies. The axiom audits show `propext`, `Quot.sound`, and imported `Classical.choice` only, with no `sorryAx`. The standalone mod-27 arithmetic proof uses only `propext` and `Quot.sound`. The manual workflow is [`agent44-746-fanin.yml`](../../.github/workflows/agent44-746-fanin.yml); it has not been replaced with per-commit automation.
 
 Earlier and distinct source results include [Agent 7's direct-fatal predecessor mod-18/fork classification](../agent7-cascade-forward/FirstFork.lean) and [Agent 10's broader but weaker high-odd-entry mod-9 adjacent-fatal sieve](../agent10-cascade/SWEEP-ODD-FATAL-DEPTH.md). The present exact **high-band image iff** and conditional **mod-27 depth refinement** supply additional tools for those inverse investigations. Earlier direct-fatal mod-18 facts are deliberately not claimed as new.
 
-The remaining decisive unknown is whether any height in these source-compatible families belongs to the *genuine blank-origin forward orbit*. The current theorems strengthen the parent grammar and prune narrow odd-entry fatal histories while leaving that root-sensitive obstacle unresolved. These findings remain under `im-results/`, pending independent assessment of external novelty and academic publishability.
+The root gap theorem excludes an explicit infinite family, while source-compatible odd-to-even fatal histories still survive the congruence checks. The remaining decisive unknown is whether **every fatal history** can be excluded from the genuine blank-origin forward orbit. The exact high-band image theorem and the blank-root gap offer reusable constraints toward that unresolved closure. These findings remain under `im-results/`, pending independent assessment of external novelty and academic publishability.
