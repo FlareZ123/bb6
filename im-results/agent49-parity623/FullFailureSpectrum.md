@@ -40,7 +40,7 @@ Therefore `(3^n-1)/2` is the **exact minimum block count admitting n distinct fa
 
 The induction in [SharpSpectrumCapacitySource.lean](SharpSpectrumCapacitySource.lean) uses a stronger auxiliary saturation invariant: whenever `3^L(b)=2b+1`, the *preceding* spectrum `E_(b-1)` is empty. For `3q`, cardinality cannot increase and strict capacity follows. For `3q+1`, cardinality increases by exactly one and the induction inequality becomes equality only when the child saturates, preserving the preceding-empty property. For `3q+2`, cardinality may increase by one only if `0∈E_q`; child saturation would force `E_q=∅`, contradiction. Since powers of three are odd, this excludes the one remaining tight integer case and gives strict capacity. The finite induction closes without heuristics. The extremal family follows from repeatedly applying the `3q+1` recurrence.
 
-The exact Lean names are `cap_and_saturation`, `minimum_blocks_for_n_failures`, `boundary_spectrum`, `boundary_power`, `boundary_is_sharp`, and `spectrum_nodup`. All the complete spectrum, logarithmic list, sharp cardinality, no-duplicates, and full left-sector theorems have passed against the unmodified original Cryptids source in manual source-pinned [CI 42605972987](https://github.com/FlareZ123/bb6/actions/runs/42605972987), with only standard foundational axioms. The new tight-threshold list theorem was subsequently appended and compiled locally with Lean 4.36.0-rc2; its expanded source-pinned rerun is pending.
+The exact Lean names are `cap_and_saturation`, `minimum_blocks_for_n_failures`, `boundary_spectrum`, `boundary_power`, `boundary_is_sharp`, and `spectrum_nodup`. All the complete spectrum, logarithmic list, sharp cardinality, no-duplicates, and full left-sector theorems have passed against the unmodified original Cryptids source in manual source-pinned [CI 42605972987](https://github.com/FlareZ123/bb6/actions/runs/42605972987), with only standard foundational axioms. The new tight-threshold list theorem was subsequently appended and compiled locally with Lean 4.36.0-rc2; its expanded source-pinned run [42606784956](https://github.com/FlareZ123/bb6/actions/runs/42606784956) passed.
 
 Illustrative exact spectra:
 
@@ -87,6 +87,19 @@ d even, a>=d+3:  highLevelNext(D(a,d))=none iff a-d-2 in E_(d+2)
 ```
 
 Consequently for any **fixed** third counter `d`, the entire infinite far-left first-counter ray has a finite, fully explicit list of fatal positions. In even-`d` sectors the candidate `x=0` is discarded because `a=d+2` lies outside that far-left branch and is handled separately by the source's diagonal rule. The exact source theorem `odd_left_none_iff_list` and `even_left_none_iff_list` preserve the appropriate branch boundaries. This is a root-directed classification of the *possible* fatal positions; no blanket root reachability exclusion follows from it.
+
+## Complete odd-third, positive-even-first one-step fatality criterion
+
+[ExactOddSectorSource.lean](ExactOddSectorSource.lean) is checked directly against the original Cryptids `highLevelNext` in [source-pinned CI 42607260924](https://github.com/FlareZ123/bb6/actions/runs/42607260924), without any substitute simulator. For every `a>0` even and `d` odd, the exact theorem `odd_even_none_iff_two_spectra` states
+
+```text
+T(D(a,d)) = none  iff
+ (a>=d+5 AND a-d-5 in E_(d+3))
+ OR
+ (a<=d+3 AND d+4-a in E_(a-1)).
+```
+
+The derivation explicitly includes the even-first parity guard and the odd-third branch split; these conditions exhaust the positive-even odd-third sector. There is **no remaining call to the intermediate evaluator `evalA`** in this complete one-step halting predicate. The axis `a=0` is universally safe by the prior source theorem `next_zero_total`. Every genuine blank-root survivor has even first counter, so for the odd-third half of the reachable state space, a future halt is equivalent to hitting one of these two explicit sparse, finite-spectrum predicates. This statement is universally quantified over synthetic states and makes **no assertion that the actual orbit ever hits them**.
 
 ## Research frontier and evidence boundary
 
