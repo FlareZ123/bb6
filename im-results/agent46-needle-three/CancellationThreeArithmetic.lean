@@ -115,12 +115,14 @@ theorem val_three_iff (r : Nat) (hr : 1≤r) :
   rw [hsix, hnine] at heqmod
   have hQ19 : Q%19<19 := Nat.mod_lt _ (by decide)
   have hr9 : r%9<9 := Nat.mod_lt _ (by decide)
-  have hcases : r%9=0 ∨ r%9=1 ∨ r%9=2 ∨ r%9=3 ∨
-      r%9=4 ∨ r%9=5 ∨ r%9=6 ∨ r%9=7 ∨ r%9=8 := by omega
-  rcases hcases with hs | hs | hs | hs | hs | hs | hs | hs | hs | hs
-  all_goals
-    simp [hs] at heqmod
-    omega
+  have htable :
+      (List.range 9).all (fun s =>
+        (List.range 19).all (fun q =>
+          decide (((17*q+(9^s)%19)%19=(6^s)%19) →
+            (((14*q)%19=3) ↔ s=7))))=true := by decide
+  have hs := (List.all_eq_true.mp htable) (r%9) (List.mem_range.mpr hr9)
+  have hq := (List.all_eq_true.mp hs) (Q%19) (List.mem_range.mpr hQ19)
+  exact (of_decide_eq_true hq) heqmod
 
 #print axioms val_three_iff
 end CancellationThree
