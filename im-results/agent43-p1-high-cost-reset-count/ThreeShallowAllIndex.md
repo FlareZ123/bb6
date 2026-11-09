@@ -74,9 +74,7 @@ The symbolic high-index theorem compiled in original-source dependency
 The all-index arithmetic theorem compiled in
 [CI 42542068055](https://github.com/FlareZ123/bb6/actions/runs/42542068055),
 with `#print axioms` showing only
-`[propext, Classical.choice, Quot.sound]`. The abstract bridge compiles
-locally under Lean 4.36.0-rc2 with no `sorry`; the source CI for its exact
-committed bytes is [run 42542712348](https://github.com/FlareZ123/bb6/actions/runs/42542712348).
+`[propext, Classical.choice, Quot.sound]`. The abstract bridge compiled in the full repository workflow [CI 42542712348](https://github.com/FlareZ123/bb6/actions/runs/42542712348), no `sorryAx`. This certifies the exact cocycle interface, **not** a fully source-lifted three-shallow `inverseAt` word theorem.
 
 ## Unresolved machine-level step
 
