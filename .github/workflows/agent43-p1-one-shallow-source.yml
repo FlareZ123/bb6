@@ -82,4 +82,5 @@ jobs:
           AG8=im-results/agent8-p1-fixed-reset
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
-          /usr/bin/time -v lean "$AG43/SourceOneShallowLift.lean"
+          /usr/bin/time -v lean -o "$AG43/SourceOneShallowLift.olean" "$AG43/SourceOneShallowLift.lean"
+          /usr/bin/time -v lean "$AG43/SourceLowDepth.lean"
