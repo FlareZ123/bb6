@@ -108,6 +108,19 @@ The exact original-source [Agent 3 joint high baseline](../im-results/agent3-c-b
 
 These computations give a **precise baseline non-subsumption result** for the five published `jointHighAllowed` congruences. They do not establish independence of the much stronger later Agent19/29/3/11 and physical-root filters, which must be checked separately before measuring net progress in the integrated high gate.
 
+## Combined missing-image density with the prior all-depth hierarchy
+
+The previously proved Agent 4 [all-depth strict image hierarchy](2026-11-09-machine-c-all-depth-strict-section-image-hierarchy-agent4.md) gives explicit pairwise-disjoint source-realizable missing-image bands of combined natural density (1/64); every old band has first counter (X_r(s)=8s+7+4r\equiv3\pmod4).
+
+The two new cones both have first counter (1\pmod4), and are mutually disjoint because their first counters differ modulo 64: (25) versus (61). Hence all three collections are disjoint. The union of these source-certified, true-blank-unreachable sets, all already in (I_2), has combined asymptotic density
+
+\[
+\frac1{64}+\frac1{8192}+\frac1{16384}
+=\boxed{\frac{259}{16384}}.
+\]
+
+The new cones increase the established explicit missing-image density by (3/16384), or (3/256) of the previously known density. This is a **paper density corollary** using the original hierarchy's geometric tail argument and the new independent pairwise cylinder counts, rather than a separate kernel-certified counting theorem. The constituent set inclusion/exclusion theorems are kernel-certified. The fraction concerns the ambient two-counter section-state lattice, **not the fraction of Turing machines decided or the fraction of all admissible halting candidates**.
+
 ## A source-proven obstruction to a naive second lift
 
 The strict fifth/sixth seed (U_{8,2}=(573,286)) has a genuine direct successor ((1,574)). The next target does **not** inherit a sixth/seventh gap. Original-source Lean [CAltSeventhCounterexample.lean](../im-results/agent4-c-five-image/CAltSeventhCounterexample.lean), passed in [CI 42646801586](https://github.com/FlareZ123/bb6/actions/runs/42646801586), constructs eight real incoming return edges:
