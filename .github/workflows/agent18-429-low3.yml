@@ -56,6 +56,8 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent18-429-low-j/Low3Delta.olean im-results/agent18-429-low-j/Low3Delta.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low5/Low5Delta.olean im-results/agent32-429-low5/Low5Delta.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low5/LowOddCore.olean im-results/agent32-429-low5/LowOddCore.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low5/LowOddSource.olean im-results/agent32-429-low5/LowOddSource.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429LowOddSource.stageOdd_to_junc_delta' depends on axioms:" "$LOG"
           grep -F "'BB429LowOddCore.e1_even_to_junc' depends on axioms:" "$LOG"
           grep -F "'BB429Low5Delta.stage5_to_junc_delta' depends on axioms:" "$LOG"
           grep -F "'BB429Low3Delta.stage3_to_junc_delta' depends on axioms:" "$LOG"
