@@ -39,11 +39,10 @@ theorem odd_bit_output_mod_three (a entry : Nat)
   have hqpos : 0<q := by dsimp [q]; omega
   have hfactor : q=2^t*d := (stripTwos_spec q hqpos).1
   have hdodd : d%2=1 := (stripTwos_spec q hqpos).2
-  have hlow := firstFailIndex_low a
   have hq7 : 7≤2^t*d := by
     rw [←hfactor]
     dsimp [q]
-    change 4*2^k ≤ a+k+4 at hlow
+    have hp : 1≤2^k := Nat.one_le_pow k 2 (by decide)
     omega
   have heq := CascadeResetInverse.odd_output_equation t d hdodd hq7
   have hthree : 3∣3^(t+1)*d := by
