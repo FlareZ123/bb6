@@ -211,10 +211,10 @@ jobs:
         working-directory: /tmp/cryptids
         run: |
           set -euo pipefail
-          export LEAN_PATH=.:\${LEAN_PATH:-}
+          export LEAN_PATH=.:${LEAN_PATH:-}
           for module in S4MassCompletion S4MassDyadicPower S4MassBridge S4MassSourceGate; do
-            cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/\${module}.lean" "\${module}.lean"
-            lake env lean -o "\${module}.olean" "\${module}.lean"
+            cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/${module}.lean" "${module}.lean"
+            lake env lean -o "${module}.olean" "${module}.lean"
           done
 
       - name: Verify Agent 5 source-rooted ninth-prefix cycle
