@@ -21,6 +21,7 @@ jobs:
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedSweep.lean /tmp/a48-root/
+          cp im-results/agent24-champion-time/CountedOddBase.lean /tmp/a48-root/
           cd /tmp/a48-root
           export LEAN_PATH=.
           lean --version
@@ -29,3 +30,4 @@ jobs:
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
           lean CountedSweep.lean
+          lean CountedOddBase.lean
