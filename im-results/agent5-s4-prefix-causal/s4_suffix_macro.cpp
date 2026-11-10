@@ -154,3 +154,5 @@ int main() {
     for (auto c : w.offsets) std::cout << " " << c;
     std::cout << "\n";
 }
+
+#endif // BB6_S4_SUFFIX_MACRO_LIBRARY
