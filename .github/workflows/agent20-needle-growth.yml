@@ -48,4 +48,10 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleGrowthRoot.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleGrowthRoot.olean NeedleGrowthRoot.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleGrowthScan.lean" .
-          lake env lean NeedleGrowthScan.lean
+          lake env lean -o .lake/build/lib/lean/NeedleGrowthScan.olean NeedleGrowthScan.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleTwoStep.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleTwoStep.olean NeedleTwoStep.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleQuadratic.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleQuadratic.olean NeedleQuadratic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleQuadraticSource.lean" .
+          lake env lean NeedleQuadraticSource.lean
