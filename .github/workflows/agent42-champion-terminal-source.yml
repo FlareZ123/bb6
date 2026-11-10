@@ -1,0 +1,34 @@
+name: Agent 42 TM63 all-parameter terminal step certificate (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  terminal-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original Frontier and terminal theorem against unchanged source
+        run: |
+          set -eu
+          mkdir -p /tmp/a42-terminal
+          cp im-results/agent8-coverage-contract/Frontier.lean /tmp/a42-terminal/
+          cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a42-terminal/
+          python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
+          python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/a42-terminal/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
+          echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  /tmp/a42-terminal/TerminalFinish.lean" | sha256sum -c -
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/a42-terminal/TerminalLeft.lean" | sha256sum -c -
+          echo "eacf239d8e7cab071f06cfe3d5a8cf00b91110de6c1880ca2eb3ee95839267e1  /tmp/a42-terminal/TerminalBridge.lean" | sha256sum -c -
+          cd /tmp/a42-terminal
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o TerminalFinish.olean TerminalFinish.lean
+          lean -o TerminalLeft.olean TerminalLeft.lean
+          lean TerminalBridge.lean
