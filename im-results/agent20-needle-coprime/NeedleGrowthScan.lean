@@ -87,6 +87,8 @@ theorem optimizedScan_spec (d : Nat) :
   constructor
   · rintro ⟨n,hn,htarget⟩
     refine ⟨n,?_⟩
+    change Nat.iterate (fun z : Option HighLevelState => z.bind highLevelNext)
+      n (some highLevelStart) = some (.N d)
     rw [←runFrom_iter]
     exact htarget
   · rintro ⟨n,hn⟩
