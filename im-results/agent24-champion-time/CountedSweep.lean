@@ -37,7 +37,7 @@ theorem counted_three_left (T : Int → Bool) (h : Int)
   · funext x
     by_cases hx1 : x = h+1
     · have hx0 : x ≠ h := by omega
-      simp [holeThree, hx1, hx0]
+      simp [holeThree, hx1, hx0] <;> omega
     · by_cases hx0 : x = h <;> simp [holeThree, hx1, hx0] <;> omega
 
 def sweptLeft : Nat → (Int → Bool) → Int → (Int → Bool)
@@ -87,5 +87,92 @@ theorem counted_left_sweep (n : Nat) (T : Int → Bool) (h : Int)
 
 #print axioms counted_three_left
 #print axioms counted_left_sweep
+
+
+/-! The complementary physically counted rightward 3-cell scan. -/
+def afterRight3 (T : Int → Bool) (h : Int) : Int → Bool :=
+  fun x => if x=h+1 || x=h+2 then false else T x
+
+private theorem lookup11 :
+    tm2 ((1 : Fin 6), true) = some ⟨false,true,5⟩ := by rfl
+private theorem lookup51 :
+    tm2 ((5 : Fin 6), true) = some ⟨false,true,3⟩ := by rfl
+
+theorem counted_three_right (T : Int → Bool) (h : Int)
+    (h0 : T h = true) (h1 : T (h+1) = true) (h2 : T (h+2) = true) :
+    run tm2 3 ⟨3,h,T⟩ = some ⟨3,h+3, afterRight3 T h⟩ := by
+  have neq1 : h+1 ≠ h := by omega
+  have neq2 : h+2 ≠ h := by omega
+  have neq3 : h+2 ≠ h+1 := by omega
+  have hh : h+1+1=h+2 := by omega
+  have neh1 : h≠h+1 := by omega
+  have neh2 : h≠h+2 := by omega
+  simp [run, rawStep, readSlot, applyMove, h0, h1,h2,hh,
+    lookup31,lookup11,lookup51,neq1,neq2,neq3]
+  constructor
+  · omega
+  · funext x
+    by_cases hx1 : x=h+1 <;> by_cases hx2 : x=h+2 <;>
+      by_cases hx0 : x=h <;> simp [afterRight3,hx1,hx2,hx0,h0,neh1,neh2]
+
+def sweptRight : Nat → (Int → Bool) → Int → (Int → Bool)
+  | 0, T, _ => T
+  | n+1,T,h => sweptRight n (afterRight3 T h) (h+3)
+
+def rightOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
+  ∀ i : Nat, i<n → T (h+3*(i:Int)) = true ∧
+    T (h+3*(i:Int)+1) = true ∧ T (h+3*(i:Int)+2) = true
+
+private theorem rightOnes_tail (T : Int → Bool) (h : Int) (n : Nat)
+    (hon : rightOnes T h (n+1)) :
+    rightOnes (afterRight3 T h) (h+3) n := by
+  intro i hi
+  obtain ⟨a,b,c⟩ := hon (i+1) (by omega)
+  have e0 : h+3+3*(i:Int) = h+3*((i+1:Int)) := by omega
+  have e1 : h+3+3*(i:Int)+1 = h+3*((i+1:Int))+1 := by omega
+  have e2 : h+3+3*(i:Int)+2 = h+3*((i+1:Int))+2 := by omega
+  have he0 : (h+3+3*(i:Int) = h+1 || h+3+3*(i:Int) = h+2) = false := by
+    simp; omega
+  have he1 : (h+3+3*(i:Int)+1 = h+1 || h+3+3*(i:Int)+1 = h+2) = false := by
+    simp; omega
+  have he2 : (h+3+3*(i:Int)+2 = h+1 || h+3+3*(i:Int)+2 = h+2) = false := by
+    simp; omega
+  constructor
+  · change (if _ then false else T (h+3+3*(i:Int))) = true
+    rw [he0, e0]
+    exact a
+  constructor
+  · change (if _ then false else T (h+3+3*(i:Int)+1)) = true
+    rw [he1, e1]
+    exact b
+  · change (if _ then false else T (h+3+3*(i:Int)+2)) = true
+    rw [he2, e2]
+    exact c
+
+/-- Exactly 3*n successful original TM63 transitions scan n consecutive
+three-cell one-blocks toward the right; the physical tape is fully specified. -/
+theorem counted_right_sweep (n : Nat) (T : Int → Bool) (h : Int)
+    (hon : rightOnes T h n) :
+    run tm2 (3*n) ⟨3,h,T⟩ =
+      some ⟨3,h+3*(n:Int),sweptRight n T h⟩ := by
+  induction n generalizing T h with
+  | zero => simp [run,sweptRight]
+  | succ n ih =>
+    obtain ⟨h0,h1,h2⟩ := hon 0 (by omega)
+    have h0' : T h = true := by simpa using h0
+    have h1' : T (h+1) = true := by simpa using h1
+    have h2' : T (h+2) = true := by simpa using h2
+    have hstep := counted_three_right T h h0' h1' h2'
+    have hon' := rightOnes_tail T h n hon
+    have htail := ih (afterRight3 T h) (h+3) hon'
+    have hnum : 3*(n+1) = 3+3*n := by omega
+    rw [hnum,run_append,hstep]
+    simp only [Option.bind_some]
+    rw [htail]
+    have hhead : h+3+3*(n:Int) = h+3*((n+1:Int)) := by omega
+    simpa [sweptRight,hhead]
+
+#print axioms counted_three_right
+#print axioms counted_right_sweep
 
 end BB6Coverage.Agent48Champion
