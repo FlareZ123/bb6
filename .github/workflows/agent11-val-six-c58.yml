@@ -231,6 +231,16 @@ jobs:
           lean -o OddThreeWideArithmetic.olean OddThreeWideArithmetic.lean
           lean -o OddThreeWideSource.olean OddThreeWideSource.lean
           lean -o OddThreeWideJoint.olean OddThreeWideJoint.lean
+          # Agent34's second, disjoint original-source two/three strict image gate.
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeComplementArithmetic.lean.xz.b64 .
+          base64 -d OddThreeComplementArithmetic.lean.xz.b64 | xz -d > OddThreeComplementArithmetic.lean
+          echo 'b59a62e96b48f4ddc4c88028a8193cf06154ffa12633b38dd123406ef087947a  OddThreeComplementArithmetic.lean' | sha256sum -c -
+          lean -o OddThreeComplementArithmetic.olean OddThreeComplementArithmetic.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeComplementSource,OddThreeComplementJoint}.lean .
+          lean -o OddThreeComplementSource.olean OddThreeComplementSource.lean
+          lean OddThreeComplementJoint.lean
+          # Check that the historic complete high sieve really retained all
+          # newly forbidden first-cone stopping parameters.
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeWidePrior.lean .
           lean OddThreeWidePrior.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/SectionDyadic.lean .
