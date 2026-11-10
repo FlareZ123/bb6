@@ -414,3 +414,18 @@ Initial actual RNG selected normal mode 9. Claimed/pushed Agent7 via lease run `
 
 **Next high-value research:** integrate source-exact high-odd image sieve into an inverse fatal-history analysis (Agent10's odd depth work), then pursue genuine blank-root exclusion for the congruence-compatible narrow candidates or another global root-sensitive invariant. Synthetic compatible histories demonstrate a source-only modular argument cannot close #746. Do not substitute finite cutoff verification. Maintain all material under im-results pending academic external novelty evaluation.
 
+
+
+## 2026-11-10, authenticated #746 fatal odd feeder fork and modular census
+
+Current lease `agent7-gpt6-20261109T233710-source-746`, claimed 2026-11-09T23:37:10.145Z. **Important new work** in `im-results/agent7-746-fatal-fork/`:
+- `ForkCore.lean` proves an all-index *complete two-parent necessity theorem* for narrow high target x with `27∣2x+5` and `81∤2x+5`: every source ResetParent is its unique even h or valuation-two odd y. The t=0/1 bands are impossible, t≥3 ruled out by 81.
+- `ForkRoot.lean` proves a compositional two-layer `ResetChain 2 x` exclusion: the even h falls in an all-scale even-image gap with h%3≠2, while odd y has only even parent z, itself in a no-image gap with z%3≠2.
+- `ForkArithmetic.lean` and `ForkFamily.lean` give exact modular computations (mod729) and unbounded four n families, n=40,401,1012,1373 (mod1458), where x=oddPre n (fatal n), forced h/y/z satisfy 9x+17n+39=56p, 9h+43n+60=40p, 243y+515n+507=410p, 243z+1273n+42=334p, p=2^(n-2).
+- `ForkOriginal.lean` proves each x genuinely ResetParent x (fatal n) AND `¬ReachC (2,0) (x,0)` for all indices in those four infinite families, *against original-C semantics* via root_reset_chain_iff.
+- `ForkCensus.lean` pure arithmetic proves these four families are disjoint from Agent10's 46/54 and Agent44's four additional mod486 families. Combined exact *154/162* of t=1 admissible fatal indices modulo1458, eight open residues {113,400,526,599,886,887,1085,1372}. `ForkCensusRoot.lean` attempts all-natural direct original-source combination; CI currently running (workflow run 42726587980).
+- **Source CI success for first five modules in run 42725463752** (2026-11-10T00:11Z), including exact original `ResetParent` and `ReachC` bridge. Local Lean 4.36.0-rc2 no sorry and only standard axioms for four-stage standalone core. The exact 154/162 combined theorem is pending source CI.
+
+Agent44 `im-results/agent44-746-rank/FeederSixFamily.lean` independently covers n%486={76,238,275,437}; Agent10 `im-results/agent10-cascade/FatalOddFeeder46.lean` 46/54; our new 4/1458 classes eliminate two-thirds of classes n%486=40,401 (new). Distinct progress, but even fatal predecessor remains unresolved; neither #746 halting nor BB6 is decided.
+
+Explicit path-to-root probe `/tmp/bb746/cone.py` (local scratch) showed finite inverse trees for selected remaining n=526 and 887; these require higher 3-adic valuations, not yet converted to uniform all-index families. Prioritized next: source CI of combined census, consider deeper exception classes or attack even fatal predecessor rather than repeat finite simulation.
