@@ -28,11 +28,16 @@ theorem fatal_odd_feeder_154_of_162 (n : Nat)
       rw [he,Nat.pow_add]
       dsimp [p]
       omega
-    have hnum : 2*u+5+2*n+3=32*p := by
-      dsimp [u,fatal]
-      omega
+    have hclose : u+n+4=4*2^n := by
+      simpa only [u] using (fatal_close n (by omega))
+    have hnum : 2*u+5+2*n+3=32*p := by omega
     have hdiv : (2*u+5)%9=0 := fatal_divnine n (by omega) hs
     have hd : 9*d=2*u+5 := by dsimp [d]; omega
+    have hpbound : 12*n+40<p := by
+      have hb := CascadeFastReturn.feeder_growth (n-2) (by omega)
+      have he : (n-2)+2=n := by omega
+      rw [he] at hb
+      exact hb
     have hodd : oddPre n u +8*p+n+3=4*d := by
       dsimp [oddPre,p,d]
       omega
