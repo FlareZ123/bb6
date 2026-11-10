@@ -62,3 +62,31 @@ theorem prefix_superlinear (f : Nat → Nat) (N M n : Nat)
 #print axioms NeedleGrowth.prefix_dyadic_drift
 #print axioms NeedleGrowth.prefix_superlinear
 end NeedleGrowth
+
+namespace NeedleGrowth
+
+/-- Closed-form superlinear prefix lower bound in terms of the number
+    of executed successful high-level steps. -/
+theorem prefix_log_growth (f : Nat → Nat) (N n : Nat)
+    (h : Prefix f N) (hn : n ≤ N) (h2 : 2 ≤ n) :
+    (n/2)*(Nat.log2 n+1) ≤ f n := by
+  have hne : n ≠ 0 := by omega
+  have hlog := (Nat.log2_eq_iff hne).mp rfl
+  have hlogpos : 1 ≤ Nat.log2 n := by
+    by_cases hz : Nat.log2 n = 0
+    · have hpown : 2^(Nat.log2 n+1) = 2 := by simp [hz]
+      have hupper := hlog.2
+      rw [hpown] at hupper
+      omega
+    · omega
+  have hp : 2^((Nat.log2 n-1)+1) ≤ n := by
+    have heq : (Nat.log2 n-1)+1=Nat.log2 n := by omega
+    rw [heq]
+    exact hlog.1
+  have hh := prefix_superlinear f N (Nat.log2 n-1) n h hn hp
+  have heq : (Nat.log2 n-1)+2=Nat.log2 n+1 := by omega
+  rw [heq] at hh
+  exact hh
+
+#print axioms NeedleGrowth.prefix_log_growth
+end NeedleGrowth
