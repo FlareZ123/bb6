@@ -189,6 +189,8 @@ jobs:
           grep -F "'BB429Odd0100Root.authentic_odd_0100_record_extension'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/OddCZeroToE1.olean im-results/agent1-429-frontier-odd0100/OddCZeroToE1.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429OddCZeroToE1.odd_C0_to_E1'" "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/OddAlternating.olean im-results/agent1-429-frontier-odd0100/OddAlternating.lean 2>&1 | tee -a "$LOG"
+          grep -F "'BB429OddAlternating.odd_alternating_root'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-frontier-odd0100/OddCZeroToE1Max.olean im-results/agent1-429-frontier-odd0100/OddCZeroToE1Max.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429OddCZeroToE1Max.odd_C0_to_E1_head_max'" "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 im-results/agent1-429-frontier-odd0100/OddCZeroPhysical.lean 2>&1 | tee -a "$LOG"
