@@ -29,7 +29,9 @@ theorem fatal_odd_feeder_154_of_162 (n : Nat)
       dsimp [p]
       omega
     have hclose : u+n+4=4*2^n := by
-      simpa only [u] using (fatal_close n (by omega))
+      have h0 := fatal_close n (by omega)
+      dsimp [u]
+      omega
     have hnum : 2*u+5+2*n+3=32*p := by omega
     have hdiv : (2*u+5)%9=0 := fatal_divnine n (by omega) hs
     have hd : 9*d=2*u+5 := by dsimp [d]; omega
