@@ -107,6 +107,18 @@ jobs:
           /tmp/agent22-venv/bin/python "$GITHUB_WORKSPACE/im-results/agent22-sheep-semantic-bridge/prepare_modules.py" SheepEvenReachInverse.lean
           lake env lean SheepEvenReachInverse.lean
 
+          # Agent40: sixth-stratum exact all-valuation and authentic blank-root theorem.
+          # Uses original SheepEvenReachInverse and separately compiled SheepOddGap.
+          ROOT486="$GITHUB_WORKSPACE/im-results/agent40-sheep-power486"
+          for name in SheepPower486Core SheepPower486Rows SheepPower486All SheepPower486RootGate SheepPower486High SheepPower486Target SheepPower486Special SheepPower486NoSource SheepPower486Source; do
+            cp "$ROOT486/$name.lean" "$name.lean"
+          done
+          export LEAN_PATH=".:$LEAN_PATH"
+          for name in SheepPower486Core SheepPower486Rows SheepPower486All SheepPower486RootGate SheepPower486High SheepPower486Target SheepPower486Special SheepPower486NoSource; do
+            lake env lean -o ".lake/build/lib/lean/$name.olean" "$name.lean"
+          done
+          lake env lean SheepPower486Source.lean
+
           # Agent14: full source-exact r138 first-predecessor theorem,
           # including two authenticated rational-child alternatives.
           lake env lean -o ".lake/build/lib/lean/SheepEvenReachInverse.olean" SheepEvenReachInverse.lean
