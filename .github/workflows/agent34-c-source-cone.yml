@@ -65,4 +65,5 @@ jobs:
           lean -o OddThreeComplementArithmetic.olean OddThreeComplementArithmetic.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeComplementSource.lean .
           lean OddThreeComplementSource.lean
+          python ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/high_stop_third_density.py
 
