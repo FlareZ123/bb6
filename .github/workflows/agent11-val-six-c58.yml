@@ -230,7 +230,9 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeWideArithmetic,OddThreeWideSource,OddThreeWideJoint}.lean .
           lean -o OddThreeWideArithmetic.olean OddThreeWideArithmetic.lean
           lean -o OddThreeWideSource.olean OddThreeWideSource.lean
-          lean OddThreeWideJoint.lean
+          lean -o OddThreeWideJoint.olean OddThreeWideJoint.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeWidePrior.lean .
+          lean OddThreeWidePrior.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/SectionDyadic.lean .
           lean -o SectionDyadic.olean SectionDyadic.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{Low58Source,Low14Source,Rect58Source,ValSixC58}.lean .
