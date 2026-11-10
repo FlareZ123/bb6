@@ -107,3 +107,10 @@ jobs:
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
           echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
+
+          q="im-results/agent7-746-fatal-fork"
+          export LEAN_PATH="$LEAN_PATH:$q"
+          for m in ForkCore ForkRoot ForkArithmetic ForkFamily ForkOriginal; do
+            lean -o "$q/$m.olean" "$q/$m.lean"
+          done
+          echo "PASS: four infinite genuine-root-excluded fatal odd predecessors via exact inverse two-layer cone"
