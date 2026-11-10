@@ -73,7 +73,7 @@ theorem old_full_admits (j m : Nat)
     apply Nat.mod_eq_zero_of_dvd
     refine ⟨p*(j+3),?_⟩
     rw [hp]
-    omega
+    ac_rfl
   have hkodd : k%2=1 := by omega
   have hgate : ¬(4≤k ∧ k%2=0 ∧ (2*j+3+k)%4=1) := by omega
   have hnormal : BB6.Agent15.affineNormalize (2*j+3) k = (2*j+3,k) := by
