@@ -56,4 +56,7 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeArithmetic,OddThreeSource}.lean .
           lean -o OddThreeArithmetic.olean OddThreeArithmetic.lean
           lean OddThreeSource.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeWideArithmetic,OddThreeWideSource}.lean .
+          lean -o OddThreeWideArithmetic.olean OddThreeWideArithmetic.lean
+          lean OddThreeWideSource.lean
 
