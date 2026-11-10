@@ -179,4 +179,73 @@ theorem bubble_run_closed (n : Nat) (t : Int → Bool) (h : Int)
 #print axioms ChampionBubble.bubble_run
 #print axioms ChampionBubble.sweptTape_closed
 #print axioms ChampionBubble.bubble_run_closed
+
+/-- Exact physical TM63 three-step rightward block conversion 111 → 100. -/
+theorem triple3 (t : Int → Bool) (h : Int)
+    (h0 : t h = true) (h1 : t (h+1) = true) (h2 : t (h+2) = true) :
+    run 3 ⟨3,h,t⟩ =
+      some ⟨3,h+3,write (write t (h+1) false) (h+2) false⟩ := by
+  have hn1 : h+1 ≠ h := by omega
+  have hn2 : h+2 ≠ h := by omega
+  have hn3 : h+2 ≠ h+1 := by omega
+  have hv1 : write t h true (h+1) = true := by simp [write, hn1, h1]
+  have hv2 : write (write t h true) (h+1) false (h+2) = true := by
+    simp [write, hn2, hn3, h2]
+  have hm : h+1+1=h+2 := by omega
+  have hvF : write t h true (h+2) = true := by simp [write, hn2, h2]
+  simp [run, step, action, h0, hv1, hm, hvF]
+  constructor
+  · omega
+  · funext i
+    simp [write]
+    by_cases hi : i = h+1
+    · subst i
+      simp
+    · by_cases hj : i = h+2
+      · subst i
+        simp [hi]
+      · by_cases hk : i = h
+        · subst i
+          simp [hi, hj, h0]
+        · simp [hi, hj, hk]
+
+def tripleTape : Nat → (Int → Bool) → Int → (Int → Bool)
+  | 0, t, _ => t
+  | n+1, t, h => tripleTape n (write (write t (h+1) false) (h+2) false) (h+3)
+
+/-- Complete exact source table path across n consecutive 111 triples. -/
+theorem triple_run (n : Nat) (t : Int → Bool) (h : Int)
+    (hones : ∀ i : Nat, i < 3*n → t (h+(i:Int)) = true) :
+    run (3*n) ⟨3,h,t⟩ =
+      some ⟨3,h+3*(n:Int),tripleTape n t h⟩ := by
+  induction n generalizing t h with
+  | zero => simp [run, tripleTape]
+  | succ n ih =>
+    let t1 := write (write t (h+1) false) (h+2) false
+    have hh (j : Nat) (hj : j<3) : t (h+(j:Int))=true := by
+      apply hones j
+      omega
+    have hhead : t h=true := by simpa using hh 0 (by omega)
+    have hfirst : t (h+1)=true := by simpa using hh 1 (by omega)
+    have hsecond : t (h+2)=true := by simpa using hh 2 (by omega)
+    have hstep := triple3 t h hhead hfirst hsecond
+    have hones1 : ∀ i : Nat, i<3*n → t1 ((h+3)+(i:Int))=true := by
+      intro i hi
+      have hj : i+3 < 3*(n+1) := by omega
+      have hx : (h+3)+(i:Int) ≠ h+2 := by omega
+      have hy : (h+3)+(i:Int) ≠ h+1 := by omega
+      have heq : h+3+(i:Int) = h+((i+3:Nat):Int) := by push_cast; omega
+      dsimp [t1,write]
+      rw [if_neg hx, if_neg hy, heq]
+      exact hones (i+3) hj
+    have hrest := ih t1 (h+3) hones1
+    have hlen : 3*(n+1)=3+3*n := by omega
+    rw [hlen,run_add,hstep]
+    simp only [Option.bind_some]
+    rw [hrest]
+    have heq : h+3+3*(n:Int) = h+3*((n+1:Nat):Int) := by push_cast; omega
+    simp [tripleTape,t1,heq]
+
+#print axioms ChampionBubble.triple3
+#print axioms ChampionBubble.triple_run
 end ChampionBubble
