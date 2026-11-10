@@ -406,4 +406,43 @@ theorem terminal_first_halt (L a b t : Nat) :
 #print axioms terminal_macro_count
 #print axioms terminal_macro_halts
 
+
+/-- Full physical words of the original published S1 marker-m0 section.
+The head is on the last bit of the left physical word. -/
+def originalLeftWord (L a : Nat) : List Bool :=
+  [true,true,true,false,true,true] ++ o3 L ++
+  [true,false,false,true,false] ++ o3 a
+
+def originalRightWord (b : Nat) : List Bool :=
+  [false,true,true,true,false,false] ++ o3 (b+1)
+
+def fromPhysicalWords (physicalLeft physicalRight : List Bool) : Z :=
+  match physicalLeft.reverse with
+  | [] => cfg .D [] false physicalRight
+  | head :: nearestLeft => cfg .D nearestLeft head physicalRight
+
+private theorem originalLeftWord_reverse (L a : Nat) :
+    (originalLeftWord L a).reverse =
+    o3 a ++ [false,true,false,false,true] ++ o3 L ++
+      [true,true,false,true,true,true] := by
+  simp [originalLeftWord, o3, ones, List.reverse_append, List.append_assoc]
+
+/-- Source-word fidelity for EVERY three-parameter prepared tape. -/
+theorem original_words_eq_prepared (L a b : Nat) :
+    fromPhysicalWords (originalLeftWord L a) (originalRightWord b) =
+      prepared L a b := by
+  rw [fromPhysicalWords, originalLeftWord_reverse]
+  cases a with
+  | zero =>
+    simp [prepared,startD,lb,originalRightWord,rb,o3,ones,List.append_assoc]
+  | succ k =>
+    have hn : o3 (k+1) = true::ones (3*k+2) := by
+      change ones (3*(k+1)) = _
+      have heq : 3*(k+1)=3*k+2+1 := by omega
+      rw [heq,ones_succ]
+    rw [hn]
+    simp [prepared,startD,lb,originalRightWord,rb,o3,ones,List.append_assoc]
+
+#print axioms original_words_eq_prepared
+
 end BB6.ChampionTerminal
