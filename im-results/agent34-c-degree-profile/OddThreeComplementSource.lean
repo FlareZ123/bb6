@@ -21,8 +21,6 @@ private theorem source_edge (a k x y : Nat)
     secNext (a,k)=some (x,y) := by
   exact (section_preimage_all_iff a k x y).mpr h
 
-/-- The odd-right positive-density cone is in the genuine two-step image
-of the unchanged original Machine C return map. -/
 /-- Genuine two-return ancestry for each complementary high odd-right target. -/
 theorem two_edges (x y : Nat)
     (hx : 8≤x) (hy : 256≤y)
@@ -117,7 +115,6 @@ theorem blank_unreachable (time x y : Nat)
                 all_source_no_three (5,1) n x y hx hy hs hr
 
 
-/-- The exponential stopping equation forces the wider forbidden cylinder. -/
 /-- Exact high-stopping pullback to the complementary odd-right cone. -/
 theorem high_stop_sector (j m k : Nat)
     (hm4 : 4≤m) (hm : m%4=0)
