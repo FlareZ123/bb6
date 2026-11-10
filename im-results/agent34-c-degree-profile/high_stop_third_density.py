@@ -183,7 +183,9 @@ def report_high_stop_density():
         for j in range(3,131):
             x,y=high_stop_original_coordinates(j,m)
             assert y>=512 and x>=8
-            direct=third_image_generic(x+y,y)
+            s=x+y
+            q=s+s%2
+            direct = True if valuation_two(q)>=12 else third_image_generic(s,y)
             periodic=periodic_high_stop_third_image(j,m)
             assert direct == periodic,(j,m,x,y,direct,periodic)
     print("Odd-first I3 valuation rows:",rows)
