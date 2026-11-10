@@ -238,7 +238,7 @@ jobs:
           lean -o OddThreeComplementArithmetic.olean OddThreeComplementArithmetic.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeComplementSource,OddThreeComplementJoint}.lean .
           lean -o OddThreeComplementSource.olean OddThreeComplementSource.lean
-          lean OddThreeComplementJoint.lean
+          lean -o OddThreeComplementJoint.olean OddThreeComplementJoint.lean
           # Check that the historic complete high sieve really retained all
           # newly forbidden first-cone stopping parameters.
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeWidePrior.lean .
