@@ -225,6 +225,12 @@ jobs:
           done
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/ValSixJointFull.lean .
           lean -o ValSixJointFull.olean ValSixJointFull.lean
+          # Agent34's source-checked doubled strict third-image high stopping root gate,
+          # compiled against this workflow's original exact joint halting iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeWideArithmetic,OddThreeWideSource,OddThreeWideJoint}.lean .
+          lean -o OddThreeWideArithmetic.olean OddThreeWideArithmetic.lean
+          lean -o OddThreeWideSource.olean OddThreeWideSource.lean
+          lean OddThreeWideJoint.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/SectionDyadic.lean .
           lean -o SectionDyadic.olean SectionDyadic.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{Low58Source,Low14Source,Rect58Source,ValSixC58}.lean .
