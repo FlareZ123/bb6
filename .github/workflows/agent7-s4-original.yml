@@ -92,6 +92,8 @@ jobs:
           # Source-import check of the universal all-suffix gate renormalization algebra.
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4SuffixBoundary.lean" S4SuffixBoundary.lean
           lake env lean -o S4SuffixBoundary.olean S4SuffixBoundary.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent5-s4-prefix-causal/S4BoundaryWord.lean" S4BoundaryWord.lean
+          lake env lean -o S4BoundaryWord.olean S4BoundaryWord.lean
           cp "$GITHUB_WORKSPACE/im-results/agent5-s4-octet/S4OctetGrowth.lean" S4OctetGrowth.lean
           echo "b585d99f14c574cc42a889ed3aea980bf3e711520fed708ae57c10e3ffb8cce6  S4OctetGrowth.lean" | sha256sum -c -
           lake env lean -o S4OctetGrowth.olean S4OctetGrowth.lean
