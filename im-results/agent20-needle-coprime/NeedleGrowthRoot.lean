@@ -172,6 +172,8 @@ theorem genuine_root_iff_bounded (d M : Nat) :
       exact hn
   · rintro ⟨n,_,hn⟩
     refine ⟨n,?_⟩
+    change Nat.iterate (fun z : Option HighLevelState => z.bind highLevelNext)
+      n (some highLevelStart) = some (.N d)
     rw [←sourceRun_eq_iter]
     exact hn
 
