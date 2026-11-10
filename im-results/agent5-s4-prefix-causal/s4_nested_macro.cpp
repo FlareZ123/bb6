@@ -107,6 +107,29 @@ int main(int argc, char** argv) {
               << " mass gain=" << 1024ULL*T*NESTED_PERIOD;
     std::cout << "\nPASS: Q^12800 equals the 4603-gate nested suffix word\n";
 
+    // Reproduce the 50,000-macro-block finite root-model census without
+    // any external data files. 64-bit arithmetic is sufficient in this range.
+    if (argc > 1 && std::string(argv[1]) == "--scan-50000") {
+        Tail state = actualTail;
+        for (uint64_t n = 0; n < 50000; ++n) {
+            for (auto c : offsets) {
+                if (!G(c, state, out)) {
+                    std::cerr << "unexpected failing gate at block " << n << "\n";
+                    return 7;
+                }
+                state.swap(out);
+            }
+        }
+        uint64_t mass = state.size();
+        for (auto d : state) {
+            if (d > UINT64_MAX-mass) return 8;
+            mass += d;
+        }
+        if (state.size() != 30 || mass != 13743897600618269200ULL) return 9;
+        std::cout << "PASS 50000 R blocks: tail length=" << state.size()
+                  << " mass=" << mass << "\n";
+    }
+
     if (argc > 1 && std::string(argv[1]) == "--print-offsets") {
         std::cout << "Offsets:";
         for (auto v : offsets) std::cout << " " << v;
