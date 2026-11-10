@@ -445,4 +445,241 @@ theorem original_words_eq_prepared (L a b : Nat) :
 
 #print axioms original_words_eq_prepared
 
+
+/-- Read the nth tape symbol, with implicit zero padding. -/
+def sideBit : List Bool → Nat → Bool
+ | [], _ => false
+ | h::_, 0 => h
+ | _::t, n+1 => sideBit t n
+
+/-- The physical tape relative to the current head. -/
+def relativeTape (z : Z) : Int → Bool
+ | .ofNat 0 => z.cur
+ | .ofNat (n+1) => sideBit z.right n
+ | .negSucc n => sideBit z.left n
+
+private theorem sideBit_tail (l : List Bool) (n : Nat) :
+  sideBit l.tail n = sideBit l (n+1) := by
+  cases l <;> rfl
+
+private theorem sideBit_zero (l : List Bool) :
+    sideBit l 0 = l.headD false := by
+  cases l <;> rfl
+
+private theorem tape_moveR (q : Q) (v : Bool) (z : Z) (d : Int) :
+    relativeTape (moveR q v z) (d-1) =
+      if d=0 then v else relativeTape z d := by
+  cases d with
+  | ofNat n =>
+    cases n with
+    | zero => rfl
+    | succ n =>
+      cases n with
+      | zero =>
+        simp [relativeTape,moveR,cfg,sideBit_zero]
+      | succ n =>
+        have hd : (Int.ofNat (n+1+1))-1 = Int.ofNat (n+1) := by simp
+        have hp : (n:Int)+1+1≠0 := by
+          have hn := Int.natCast_nonneg n
+          omega
+        rw [hd]
+        simp [relativeTape,moveR,cfg,sideBit_tail,hp]
+  | negSucc n =>
+    have hd : (Int.negSucc n)-1 = Int.negSucc (n+1) := by omega
+    rw [hd]
+    simp [relativeTape,moveR,cfg,sideBit]
+
+private theorem tape_moveL (q : Q) (v : Bool) (z : Z) (d : Int) :
+    relativeTape (moveL q v z) (d+1) =
+      if d=0 then v else relativeTape z d := by
+  cases d with
+  | ofNat n =>
+    cases n with
+    | zero => rfl
+    | succ n =>
+      have hd : (Int.ofNat (n+1))+1 = Int.ofNat (n+1+1) := by simp
+      have hp : (n:Int)+1≠0 := by
+        have hn := Int.natCast_nonneg n
+        omega
+      rw [hd]
+      simp [relativeTape,moveL,cfg,sideBit,hp]
+  | negSucc n =>
+    cases n with
+    | zero =>
+      have hd : (Int.negSucc 0)+1 = 0 := by omega
+      rw [hd]
+      simp [relativeTape,moveL,cfg,sideBit_zero]
+    | succ n =>
+      have hd : (Int.negSucc (n+1))+1 = Int.negSucc n := by omega
+      rw [hd]
+      simp [relativeTape,moveL,cfg,sideBit_tail]
+
+#print axioms tape_moveR
+#print axioms tape_moveL
+
+
+/-- Explicit bi-infinite physical tape, for comparison with the canonical
+    research coverage-machine semantics. -/
+structure Full where
+  state : Q
+  head : Int
+  tape : Int → Bool
+
+def embedFull (z : Z) (position : Int) : Full :=
+  ⟨z.state, position, fun x => relativeTape z (x-position)⟩
+
+def fullR (q : Q) (v : Bool) (z : Full) : Full :=
+  ⟨q,z.head+1,fun x => if x=z.head then v else z.tape x⟩
+
+def fullL (q : Q) (v : Bool) (z : Full) : Full :=
+  ⟨q,z.head-1,fun x => if x=z.head then v else z.tape x⟩
+
+theorem embed_moveR (q : Q) (v : Bool) (z : Z) (p : Int) :
+    embedFull (moveR q v z) (p+1) = fullR q v (embedFull z p) := by
+  have htape : (fun x : Int => relativeTape (moveR q v z) (x-(p+1))) =
+      (fun x : Int => if x=p then v else relativeTape z (x-p)) := by
+    funext x
+    have heq : x-(p+1)=(x-p)-1 := by omega
+    rw [heq,tape_moveR]
+    by_cases hx : x=p
+    · simp [hx]
+    · have hne : x-p≠0 := by omega
+      simp [hx,hne]
+  exact congrArg (fun tape : Int→Bool => Full.mk q (p+1) tape) htape
+
+theorem embed_moveL (q : Q) (v : Bool) (z : Z) (p : Int) :
+    embedFull (moveL q v z) (p-1) = fullL q v (embedFull z p) := by
+  have htape : (fun x : Int => relativeTape (moveL q v z) (x-(p-1))) =
+      (fun x : Int => if x=p then v else relativeTape z (x-p)) := by
+    funext x
+    have heq : x-(p-1)=(x-p)+1 := by omega
+    rw [heq,tape_moveL]
+    by_cases hx : x=p
+    · simp [hx]
+    · have hne : x-p≠0 := by omega
+      simp [hx,hne]
+  exact congrArg (fun tape : Int→Bool => Full.mk q (p-1) tape) htape
+
+#print axioms embed_moveR
+#print axioms embed_moveL
+
+
+def fullStep (z : Full) : Option Full :=
+  match z.state, z.tape z.head with
+  | .A, false => some (fullR .B true z)
+  | .A, true => none
+  | .B, false => some (fullL .C true z)
+  | .B, true => some (fullR .F false z)
+  | .C, false => some (fullR .E true z)
+  | .C, true => some (fullL .D false z)
+  | .D, false => some (fullL .C false z)
+  | .D, true => some (fullR .B true z)
+  | .E, false => some (fullR .A true z)
+  | .E, true => some (fullR .E true z)
+  | .F, false => some (fullR .E true z)
+  | .F, true => some (fullR .D false z)
+
+def delta (z : Z) : Int :=
+  match z.state,z.cur with
+  | .A,false => 1
+  | .A,true => 0
+  | .B,false => -1
+  | .B,true => 1
+  | .C,false => 1
+  | .C,true => -1
+  | .D,false => -1
+  | .D,true => 1
+  | .E,false => 1
+  | .E,true => 1
+  | .F,false => 1
+  | .F,true => 1
+
+def locatedStep (zp : Z × Int) : Option (Z × Int) :=
+  (step zp.1).map (fun newZ => (newZ,zp.2+delta zp.1))
+
+@[simp] theorem embed_read_current (z : Z) (p : Int) :
+  (embedFull z p).tape (embedFull z p).head = z.cur := by
+  simp [embedFull,relativeTape]
+
+@[simp] theorem embed_state (z : Z) (p : Int) :
+  (embedFull z p).state = z.state := rfl
+
+private theorem embed_moveL_add (q : Q) (v : Bool) (z : Z) (p : Int) :
+    embedFull (moveL q v z) (p+(-1)) = fullL q v (embedFull z p) := by
+  have hp : p+(-1:Int) = p-1 := by omega
+  rw [hp]
+  exact embed_moveL q v z p
+
+theorem step_semiconjugacy (z : Z) (p : Int) :
+  fullStep (embedFull z p) =
+    (locatedStep (z,p)).map (fun x => embedFull x.1 x.2) := by
+  cases z with
+  | mk q l c r =>
+    cases q <;> cases c <;>
+      simp [fullStep,locatedStep,delta,step,embed_read_current,embed_state,
+        embed_moveR,embed_moveL_add]
+
+#print axioms step_semiconjugacy
+
+
+def locatedRun : Nat → Z × Int → Option (Z × Int)
+ | 0,z => some z
+ | n+1,z => (locatedRun n z).bind locatedStep
+
+def fullRun : Nat → Full → Option Full
+ | 0,z => some z
+ | n+1,z => (fullRun n z).bind fullStep
+
+private theorem locatedStep_fst (zp : Z × Int) :
+    (locatedStep zp).map Prod.fst = step zp.1 := by
+  unfold locatedStep
+  cases h : step zp.1 <;> simp [h]
+
+/-- Machine-independent all-fuel simulation embedding, preserving absolute
+head coordinates and the entire infinite tape at each successful step. -/
+theorem run_semiconjugacy (n : Nat) (z : Z) (p : Int) :
+    (locatedRun n (z,p)).map (fun w => embedFull w.1 w.2) =
+      fullRun n (embedFull z p) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [locatedRun,fullRun]
+    rw [← ih]
+    cases h : locatedRun n (z,p) with
+    | none => simp [h]
+    | some w =>
+      simp only [h,Option.bind_some,Option.map_some]
+      exact (step_semiconjugacy w.1 w.2).symm
+
+private theorem run_located_fst (n : Nat) (z : Z) (p : Int) :
+    (locatedRun n (z,p)).map Prod.fst = run n z := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [locatedRun,run]
+    rw [← ih]
+    cases h : locatedRun n (z,p) with
+    | none => simp [h]
+    | some w =>
+      simp only [h,Option.bind_some,Option.map_some]
+      exact locatedStep_fst w
+
+/-- Original table in an absolute-head, full-biinfinite tape: exactly the
+same fuel-to-halt predicate as the local zipper, for every initial tape. -/
+theorem full_run_none_iff (n : Nat) (z : Z) (p : Int) :
+    fullRun n (embedFull z p) = none ↔ run n z = none := by
+  rw [← run_semiconjugacy, ← run_located_fst]
+  cases h : locatedRun n (z,p) <;> simp [h]
+
+/-- Fully infinite-tape exact terminal cost for all L,a,b. -/
+theorem full_terminal_first_halt (L a b t : Nat) :
+    fullRun t (embedFull (prepared L a b) 0) = none ↔
+      59+12*(L+a)<t := by
+  rw [full_run_none_iff]
+  exact terminal_first_halt L a b t
+
+#print axioms run_semiconjugacy
+#print axioms full_run_none_iff
+#print axioms full_terminal_first_halt
+
 end BB6.ChampionTerminal
