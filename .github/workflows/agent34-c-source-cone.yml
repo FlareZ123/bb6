@@ -59,4 +59,10 @@ jobs:
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/{OddThreeWideArithmetic,OddThreeWideSource}.lean .
           lean -o OddThreeWideArithmetic.olean OddThreeWideArithmetic.lean
           lean OddThreeWideSource.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeComplementArithmetic.lean.xz.b64 .
+          base64 -d OddThreeComplementArithmetic.lean.xz.b64 | xz -d > OddThreeComplementArithmetic.lean
+          echo 'b59a62e96b48f4ddc4c88028a8193cf06154ffa12633b38dd123406ef087947a  OddThreeComplementArithmetic.lean' | sha256sum -c -
+          lean -o OddThreeComplementArithmetic.olean OddThreeComplementArithmetic.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeComplementSource.lean .
+          lean OddThreeComplementSource.lean
 
