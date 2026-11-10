@@ -31,6 +31,30 @@ theorem tm2_terminal_query (L a b : Nat) (h : Int) :
     rfl
   simp [BB6Coverage.rawStep,hz]
 
+
+/-- Exact final-query count for every genuine S1 terminal section, with
+    arbitrary tape exterior and unmodified source TM63 semantics. -/
+theorem tm2_terminal_query_any_tape (L a : Nat) (t : Int → Bool) (h : Int)
+    (H : TerminalFinish.SectionBits L a t h) :
+    ∃ c : BB6Coverage.Config,
+      BB6Coverage.run Agent48Champion.tm2 (59+12*(L+a)) ⟨3,h,t⟩ = some c ∧
+      BB6Coverage.run Agent48Champion.tm2 (59+12*(L+a)+1) ⟨3,h,t⟩ = none := by
+  obtain ⟨out,hr,ht⟩ := TerminalFinish.terminalExact L a t h H
+  have htransport := run_transport (59+12*(L+a)) (⟨3,h,t⟩ : TerminalFinish.Conf)
+    (by change 3 < 6; decide)
+  rw [hr] at htransport
+  have hseen : BB6Coverage.run Agent48Champion.tm2 (59+12*(L+a)) ⟨3,h,t⟩ =
+      some (embed ⟨0,h+7,out⟩) := by
+    rw [← tm63_eq_tm2]
+    exact htransport.symm
+  refine ⟨embed ⟨0,h+7,out⟩, hseen, ?_⟩
+  simp only [BB6Coverage.run, hseen, Option.bind_some]
+  have hz : Agent48Champion.tm2 (BB6Coverage.readSlot (embed ⟨0,h+7,out⟩)) = none := by
+    simp [BB6Coverage.readSlot,embed,Agent48Champion.tm2,ht]
+  simp [BB6Coverage.rawStep,hz]
+
+#print axioms tm2_terminal_query_any_tape
+
 #print axioms tm63_eq_tm2
 #print axioms tm2_terminal_query
 end BB6Coverage.TerminalBridge
