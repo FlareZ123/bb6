@@ -18,7 +18,9 @@ jobs:
         run: |
           set -eu
           mkdir -p /tmp/a42-terminal
-          cp im-results/agent8-coverage-contract/Frontier.lean /tmp/a42-terminal/
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
+          cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a42-terminal/
           python3 -c "import base64,io,lzma,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/a42-terminal',filter='data')"
           python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/a42-terminal/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
@@ -29,6 +31,10 @@ jobs:
           export LEAN_PATH=.
           lean --version
           lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
           lean -o TerminalFinish.olean TerminalFinish.lean
           lean -o TerminalLeft.olean TerminalLeft.lean
-          lean TerminalBridge.lean
+          lean -o TerminalBridge.olean TerminalBridge.lean
+          lean TerminalChampion.lean
