@@ -118,3 +118,5 @@ jobs:
             lean -o "$q/$m.olean" "$q/$m.lean"
           done
           echo "PASS: original-source complete modular 154 of 162 fatal odd-feeder obstruction"
+          lean -o "$q/ForkMiddleOdd.olean" "$q/ForkMiddleOdd.lean"
+          echo "PASS: exact unique lower-middle odd source parent with permitted 3-adic valuation three"
