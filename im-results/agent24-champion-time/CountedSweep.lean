@@ -47,7 +47,7 @@ def sweptLeft : Nat → (Int → Bool) → Int → (Int → Bool)
 def leftOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
   ∀ i : Nat, i<n → T (h-(i:Int)) = true
 
-private theorem leftOnes_tail (T : Int → Bool) (h : Int) (n : Nat)
+theorem leftOnes_tail (T : Int → Bool) (h : Int) (n : Nat)
     (hon : leftOnes T h (n+1)) :
     leftOnes (holeThree T h) (h-1) n := by
   intro i hi
