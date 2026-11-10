@@ -682,4 +682,37 @@ theorem full_terminal_first_halt (L a b t : Nat) :
 #print axioms full_run_none_iff
 #print axioms full_terminal_first_halt
 
+
+/-- Original BB6Coverage's successful-moves counting shape in this
+physical, infinite-tape machine. -/
+def FullHaltsAfter (z : Full) (n : Nat) : Prop :=
+  (fullRun n z).isSome = true ∧ fullRun (n+1) z = none
+
+/-- Uniform exact scored stopping time for the full infinite-tape model. -/
+theorem full_halting_score_iff (L a b t : Nat) :
+  FullHaltsAfter (embedFull (prepared L a b) 0) t ↔
+    t = 59+12*(L+a) := by
+  constructor
+  · intro h
+    obtain ⟨hlive, hnstop⟩ := h
+    have hnext : 59+12*(L+a) < t+1 :=
+      (full_terminal_first_halt L a b (t+1)).mp hnstop
+    by_cases hbig : 59+12*(L+a) < t
+    · have hbad : fullRun t (embedFull (prepared L a b) 0) = none :=
+        (full_terminal_first_halt L a b t).mpr hbig
+      rw [hbad] at hlive
+      contradiction
+    · omega
+  · intro ht
+    subst t
+    constructor
+    · cases h : fullRun (59+12*(L+a)) (embedFull (prepared L a b) 0) with
+      | none =>
+        have hn := (full_terminal_first_halt L a b (59+12*(L+a))).mp h
+        omega
+      | some z => rfl
+    · exact (full_terminal_first_halt L a b (59+12*(L+a)+1)).mpr (by omega)
+
+#print axioms full_halting_score_iff
+
 end BB6.ChampionTerminal
