@@ -2,6 +2,12 @@
 
 **Research state:** The original six-state Space Needle machine and BB(6) remain undecided. This dossier establishes an exact per-target blank-root decision procedure, sharp terminal valuation restrictions, genuine-root exclusions for individual feeders, and constructive infinite families of legal *synthetic* predecessors. Full derivations and older provenance are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
+## Genuine blank-root growth and faster fixed-target decision
+
+A new source-connected quantitative restriction applies to **every finite successful authentic blank-root prefix**: the shifted counter increases by at least its binary logarithm plus two at each step. After `n>=2` successful returns, the original counter `d_n` satisfies `floor(n/2)*(floor(log2(n))+1)<=d_n+2`, with no assumption that it runs forever. Every genuine target `d` therefore has a provably complete forward search cutoff `optimizedFuel(d)=max(2^(M+1), 2*floor((d+2)/(M+2))+2)`, `M=floor(log2(d+2))/2`. The number of examined high-level updates is `O(d/log d)` for large `d`, compared with the previous linear elementary cutoff. The new [single-pass Boolean checker](NeedleGrowthScan.lean) returns exactly whether `ReachN d` and retains no history list.
+
+The original-source transition and finite-prefix bridges passed [source CI 42727978996](https://github.com/FlareZ123/bb6/actions/runs/42727978996) and [42728646750](https://github.com/FlareZ123/bb6/actions/runs/42728646750). The optimized-cutoff and executable-checker source audit is separately pending. Full proof, reproducibility and status boundaries: [RootGrowthAndFuel.md](RootGrowthAndFuel.md). This improvement concerns individual **actual-root** targets, and does not decide the unbounded terminal existential.
+
 ## Original machine and complete per-target decision
 
 Machine: `1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_---0LD`. Pinned Cryptids source: `google-deepmind/cryptids@ced8f9f44f67a167d5ecc03e687b048c67926371`, originally blank-entering at `N 1`. In Agent 48's [source proof](../agent48-space-needle/SpaceNeedleClosed.lean), every successful high-level step has `d+2=2^v(2q+3)`, and successor `d'=d+v+3(q+1)`. Terminal inputs have `d=2^K-2`, `K≥1`. The source equation for a legal immediate terminal feeder is:
