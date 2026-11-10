@@ -62,7 +62,7 @@ theorem odd_0100_exact_one_czero (m : Nat) (tail : List Bool) :
       omega
     have hh := congrArg (fun v : List Bool => v ++ tail) hw
     exact congrArg (fun l => z 2 l false []) (by simpa [ones,List.append_assoc] using hh)
-  · rfl
+  · trivial
 
 private theorem a3_to_e1_count (tail r : List Bool) :
   runCount 3 (z 0 (false :: tail) true r) =
