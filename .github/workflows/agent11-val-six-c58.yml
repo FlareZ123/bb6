@@ -243,6 +243,8 @@ jobs:
           # newly forbidden first-cone stopping parameters.
           cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeWidePrior.lean .
           lean OddThreeWidePrior.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/OddThreeComplementPrior.lean .
+          lean OddThreeComplementPrior.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/SectionDyadic.lean .
           lean -o SectionDyadic.olean SectionDyadic.lean
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/{Low58Source,Low14Source,Rect58Source,ValSixC58}.lean .
