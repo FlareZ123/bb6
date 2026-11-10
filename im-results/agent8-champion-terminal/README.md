@@ -25,6 +25,10 @@ terminal_macro_halts :
 
 terminal_first_halt :
   run t (prepared L a b) = none ↔ 59+12*(L+a) < t
+
+original_words_eq_prepared :
+  fromPhysicalWords (originalLeftWord L a) (originalRightWord b) =
+    prepared L a b
 ```
 
 Thus the first undefined A/1 query occurs after **exactly `N=59+12*(L+a)` successful primitive moves**, independent of `b`. The final undefined query is *not* counted as an additional successful move. The all-time `terminal_first_halt` rules out premature halting and determines all fuel queries, including those beyond the terminal event.
@@ -52,8 +56,8 @@ The statements `d_scan`, `b_scan` and `f_scan` are proved by induction; `run_add
 
 The complete self-contained proof is [TerminalCount.lean](TerminalCount.lean). It compiled on the provided original `lean-4.36.0-rc2-linux` binary on 10 November 2026, without `sorry`. The three terminal theorem `#print axioms` outputs were exactly `[propext, Quot.sound]`. No external Lean packages or mathlib are needed.
 
-The local `step` contains the published twelve-entry TM63 table verbatim, and the starting list words are transcribed from the published `S1` definition. **No separately checked formal morphism to the unmodified Rocq `TM63.S1` type has yet been established.** The result is a decisive local-source-table cost proof and a concrete dependency for that future bridge. The earlier [Agent 48 champion-root offset](../agent48-champion-root/README.md) is independently source certified, but its six-step root join does not by itself turn this prepared-section theorem into a complete blank-start counted score.
+The local `step` contains the published twelve-entry TM63 table verbatim. The additional kernel theorem `original_words_eq_prepared` proves, for every `L,a,b`, that reading the last bit of the complete published physical `S1` left word and its right word constructs exactly the starting zipper `prepared L a b`. **No separately checked formal morphism to the unmodified Rocq `TM63.S1` type or the independently developed `BB6Coverage.Config` has yet been established.** The result is a decisive local-source-table cost proof and a concrete dependency for that future bridge. The earlier [Agent 48 champion-root offset](../agent48-champion-root/README.md) is independently source certified, but its six-step root join does not by itself turn this prepared-section theorem into a complete blank-start counted score.
 
 The remaining champion critical path is to prove the universally quantified physical `Inc0` binary decrement cost, counted reset-core and drain costs, compose Agent 24's already-proved carry arithmetic with these costs and transport the initial 27,959-step TM63 prefix plus source-checked champion root offset. Independently, BB(6) still needs an exhaustive six-state upper-bound certificate. Keep this result under `im-results/` pending source import and a genuinely complete lower-bound score.
 
-A reconstruction helper [TerminalCountPacked.py](TerminalCountPacked.py) preserves the exact 16,000-byte verified source snapshot if a raw source transfer is needed; the readable `TerminalCount.lean` is authoritative. The local source snapshot SHA-256 is `883cc5c982f10af69b10508a0bb141bf6f1b915ae4dbd3437e35be228caf81f3`.
+The readable Lean file is the authoritative standalone source. After adding the universally proved physical-word identity, its local SHA-256 is `7ec46a07d1928500bbd45a9aaeeb32c2ed0e957f2388876b903432fb51f0c369`. Both `terminal_first_halt` and `original_words_eq_prepared` have Lean axiom audits confined to `[propext, Quot.sound]`.
