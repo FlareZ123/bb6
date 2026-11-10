@@ -2,11 +2,17 @@
 
 **Research state:** The original six-state Space Needle machine and BB(6) remain undecided. This dossier establishes an exact per-target blank-root decision procedure, sharp terminal valuation restrictions, genuine-root exclusions for individual feeders, and constructive infinite families of legal *synthetic* predecessors. Full derivations and older provenance are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
-## Genuine blank-root growth and faster fixed-target decision
+## Original blank-root quadratic growth and square-root reachability decision
 
-A new source-connected quantitative restriction applies to **every finite successful authentic blank-root prefix**: the shifted counter increases by at least its binary logarithm plus two at each step. After `n>=2` successful returns, the original counter `d_n` satisfies `floor(n/2)*(floor(log2(n))+1)<=d_n+2`, with no assumption that it runs forever. Every genuine target `d` therefore has a provably complete forward search cutoff `optimizedFuel(d)=max(2^(M+1), 2*floor((d+2)/(M+2))+2)`, `M=floor(log2(d+2))/2`. The number of examined high-level updates is `O(d/log d)` for large `d`, compared with the previous linear elementary cutoff. The new [single-pass Boolean checker](NeedleGrowthScan.lean) returns exactly whether `ReachN d` and retains no history list.
+The strongest new result is a source-connected, universal **two-step square-root gain**. For any two successive successful high-level transitions in the *original six-state Space Needle*, writing the first shifted counter as `b=d+2` and the counter after both transitions as `B`, the source-exact theorem proves `b ≤ (B-b)^2`. Its proof uses binary-valuation divisibility, with no dynamical conjecture. It implies for **every finite successful genuine blank-root prefix** of length `n`, even when that orbit later halts,
 
-The original-source transition and finite-prefix bridges passed [source CI 42727978996](https://github.com/FlareZ123/bb6/actions/runs/42727978996) and [42728646750](https://github.com/FlareZ123/bb6/actions/runs/42728646750). The optimized-cutoff and executable-checker source audit is separately pending. Full proof, reproducibility and status boundaries: [RootGrowthAndFuel.md](RootGrowthAndFuel.md). This improvement concerns individual **actual-root** targets, and does not decide the unbounded terminal existential.
+```text
+(floor(n/4)+1)^2+1 ≤ d_n+2.
+```
+
+The resulting complete fixed-target reachability bound is `n < sqrtFuel(d) := 4*(floor(sqrt(d+1))+1)`. A single-pass executable Boolean decision `sqrtScan(d)`, proved equivalent to `ReachN d`, checks at most `O(sqrt(d))` genuine high-level transitions. It is a stronger *actual blank-root* decision method than the original linear and this dossier's earlier `O(d/log d)` scans. It remains exponential in the binary length of `d` and does not eliminate the unbounded existential over terminal targets. [Full two-step proof, precise theorem scope, and reusable checker](QuadraticRootGrowth.md). Exact source theorem modules: [NeedleTwoStep.lean](NeedleTwoStep.lean), [NeedleQuadratic.lean](NeedleQuadratic.lean), and [NeedleQuadraticSource.lean](NeedleQuadraticSource.lean). Original-source check [manual run 42732043121](https://github.com/FlareZ123/bb6/actions/runs/42732043121) is in progress; the underlying standalone Lean proofs compile with only ordinary axioms, no `sorry`.
+
+The independently certified **one-step** bound `b'-b≥floor(log2 b)+2` gives a simpler finite-prefix restriction `floor(n/2)*(floor(log2 n)+1)≤d_n+2` for `n≥2`; its derived exact `optimizedScan` decides `ReachN d` after `O(d/log d)` high-level checks. This earlier original-source chain **passed [CI 42729991967](https://github.com/FlareZ123/bb6/actions/runs/42729991967)**. Full derivation: [RootGrowthAndFuel.md](RootGrowthAndFuel.md). Both are mathematical conditions on the physical blank-root orbit, rather than synthetic incoming-edge families.
 
 ## Original machine and complete per-target decision
 
