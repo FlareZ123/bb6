@@ -2,6 +2,15 @@
 
 **Agent 24, 2026-11-03, R005.** Mathematical arithmetic facts were checked in Lean 4.36.0-rc2. The Lean file [ChampionModular.lean](ChampionModular.lean) requires only `Lean.Elab.Tactic.Omega`, no mathlib, axioms, `sorry`, or replacement machine semantics. This is **not** a new BB(6) bound, champion step-count certificate, rooted-machine decision, or a source-integrated Coq-to-Lean proof.
 
+## Source-certified exact physical sweep counts
+
+The [Lean source](CountedSweep.lean) now proves two **universally quantified counted submacros for the original TM63 transition table and the original infinite-tape `BB6Coverage.run` semantics**, with no copied-machine-model premise. Both compile through the existing manual [champion-root workflow, CI 42735925396](https://github.com/FlareZ123/bb6/actions/runs/42735925396); the printed axiom audits contain only standard Lean axioms, no `sorryAx`.
+
+* `counted_left_sweep`: for arbitrary tape `T`, head position `h`, and natural `n`, if `T(h+1)=0` and `T(h-i)=1` for every `0≤i<n`, the D-state physical run after exactly `3*n` successful moves is at head `h-n`, back in D, with the complete tape `sweptLeft n T h`. Its local base case `counted_three_left` moves one zero left across one marked cell in exactly three primitive actions.
+* `counted_right_sweep`: for arbitrary tape `T`, if each of the `n` three-cell blocks starting at `h+3*i` contains only ones, exactly `3*n` successful moves return to D at head `h+3*n`, with the entire tape `sweptRight n T h`. Its base case `counted_three_right` performs the exact three-cell source scan.
+
+These are source-sound full-tape step-count identities usable as components of a champion cost proof. They **do not yet establish** the proposed `Inc0` cost `48+12*v₂(z)+12*c` or a counted `Rst1'`/terminal theorem. The central missing work is to connect the legal published `S1` input patterns to an exhaustive sequence of these sweeps and the remaining fixed-length source steps, including the binary carry boundary and right-hand counter representation.
+
 ## Original source and exact formulas
 
 Compare the actual published [Rocq `TM63` source at pinned revision `3f302b87...`, `verify/SOBCv5.v` lines 10750–11283](https://github.com/ccz181078/busycoq/blob/3f302b87f5fb933c46e97672ffbb6907f373fb6e/verify/SOBCv5.v#L10750-L11283). The table is `1RB---_1LC0RF_1RE0LD_0LC1RB_1RA1RE_1RE0RD`. The original theorem `TM63.halt : halts tm c0` is an **existential halting proof**. See the separately source-verified [Agent48 champion-root six-step bridge](../agent48-champion-root/README.md) and [Agent42 two-cylinder coverage programme](../agent42-coverage-normal/README.md).
@@ -41,7 +50,7 @@ Crucially the original `TM63.halt` and the intermediate `-->*` statements give e
 
 ## Concrete next proof edge
 
-For an exact champion step score, strengthen the source macro chain `LC_Inc` / `Incs0` / `Rst2` / `Rst1` / `Rst0` / `Rst1'` / `Rsts1_v2` / `Rsts2H` to produce **primitive-step counts** alongside endpoint configurations. Compose these into an executable symbolic recurrence for the existing finite macro itinerary and check the start/root and final halting-query conventions against `BB6Coverage.HaltsAfter`. A source-certified finite numerical expression would supply an attainable lower bound, with global upper-bound completeness still separate. No such counted source proof is claimed here.
+The source-certified counted left and right sweep lemmas above can be used inside the actual physical-tape derivation. For an exact champion step score, strengthen the source macro chain `LC_Inc` / `Incs0` / `Rst2` / `Rst1` / `Rst0` / `Rst1'` / `Rsts1_v2` / `Rsts2H` to produce **primitive-step counts** alongside endpoint configurations. Compose these into an executable symbolic recurrence for the existing finite macro itinerary and check the start/root and final halting-query conventions against `BB6Coverage.HaltsAfter`. A source-certified finite numerical expression would supply an attainable lower bound, with global upper-bound completeness still separate. No such counted source proof is claimed here.
 
 All novelty, source integration and universality claims remain deliberately qualified; this file is under `im-results/`.
 
