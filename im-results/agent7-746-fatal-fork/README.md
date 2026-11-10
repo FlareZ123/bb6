@@ -8,14 +8,14 @@ Let `F_n=4·2^n−n−4`, `p=2^(n−2)`, and let the authentic valuation-one odd
 
 `x_n = 4·((2F_n+5)/9)−8p−n−3.`
 
-For every `t≥0` and every `r∈{40,401,1012,1373}`, put `n=r+1458t`. The full intended original-source theorem `fatal_odd_feeder_four_classes` in [ForkOriginal.lean](ForkOriginal.lean) asserts simultaneously:
+For every `t≥0` and every `r∈{40,401,1012,1373}`, put `n=r+1458t`. The original-source theorem `fatal_odd_feeder_four_classes` in [ForkOriginal.lean](ForkOriginal.lean) proves simultaneously:
 
 1. `ResetParent x_n F_n`: this candidate really is a first-reset predecessor of a fatal height.
 2. `¬ReachC (2,0) (x_n,0)`: the genuine post-blank C-reset root never reaches that predecessor, at any time.
 
 The second conclusion eliminates this specific route to halt. It does **not** eliminate the always-present even fatal predecessor or other odd valuation branches, and does not decide the machine.
 
-The original source integration is compiled by the existing manual [agent44-746-fanin workflow](../../.github/workflows/agent44-746-fanin.yml), dispatched on 10 November 2026 in [CI run 42725463752](https://github.com/FlareZ123/bb6/actions/runs/42725463752). Until that run succeeds, distinguish this source integration from the already kernel-checked standalone core below.
+The original source integration is compiled by the existing manual [agent44-746-fanin workflow](../../.github/workflows/agent44-746-fanin.yml), dispatched on 10 November 2026 in [CI run 42725463752](https://github.com/FlareZ123/bb6/actions/runs/42725463752). **This original-source CI run succeeded** and printed only the usual foundational Lean axioms, with no `sorryAx`.
 
 ## Exact two-parent inverse grammar
 
@@ -50,7 +50,7 @@ The index period 1458 is a common multiple of the order 486 of 2 modulo `3^6=729
 | 1012 | 544 | 283 | 0 | 1 | 0 |
 | 1373 | 224 | 644 | 0 | 1 | 0 |
 
-[ForkArithmetic.lean](ForkArithmetic.lean) proves the universal modular gate and dyadic root closure. [ForkFamily.lean](ForkFamily.lean) establishes the all-index period, source-feeder arithmetic and `infinite_fatal_feeder_gap`, with `#print axioms` returning only `propext`, `Classical.choice` and `Quot.sound` when locally compiled with Lean 4.36.0-rc2 against the exact standalone copy of the first-reset inverse grammar.
+[ForkArithmetic.lean](ForkArithmetic.lean) proves the universal modular gate and dyadic root closure. [ForkFamily.lean](ForkFamily.lean) establishes the all-index period, source-feeder arithmetic and `infinite_fatal_feeder_gap`, with `#print axioms` returning only `propext`, `Classical.choice` and `Quot.sound` when compiled with Lean 4.36.0-rc2 against the unchanged repository's complete source theorem dependencies.
 
 ## Improvement over earlier research
 
@@ -58,10 +58,14 @@ Agent 10 already source-proved root-unreachability of this valuation-one fatal f
 
 `{113,400,526,599,886,887,1085,1372} (mod 1458)`.
 
-The eight remaining classes require further source-root inverse-cone arguments. Exhaustion of this one feeder would still leave other fatal predecessors.
+The exact 154/162 arithmetic classification, including the eight exceptions, is verified by the all-index [ForkCensus.lean](ForkCensus.lean) kernel proof. A new full-source theorem combines the three existing separately certified root exclusions in [ForkCensusRoot.lean](ForkCensusRoot.lean); this integration has a pending source audit. The eight remaining classes require further source-root inverse-cone arguments. Exhaustion of this one feeder would still leave other fatal predecessors.
 
 ## Verification boundary
 
-The four standalone proof modules were compiled locally, including the fully quantified all-natural `infinite_fatal_feeder_gap` theorem, with Lean 4.36.0-rc2 against a copied byte-for-byte exact definition of `ResetParent` and `ResetChain`. Their final axiom lists contain only standard logical axioms and no `sorryAx`. The files in this repository instead directly **alias the unchanged original** `CascadeResetInverse.ResetParent` and `ResetChain`, and [ForkOriginal.lean](ForkOriginal.lean) composes the already proved authentic `root_reset_chain_iff`. A successful unchanged-source workflow run certifies that final bridge without an interface stub.
+**Original-source integration succeeded in CI 42725463752.** Every module `ForkCore`, `ForkRoot`, `ForkArithmetic`, `ForkFamily` and `ForkOriginal` compiled against the unchanged repository exact `ResetParent`, `ResetChain` and authentic `root_reset_chain_iff`, with standard foundational axioms and no `sorryAx`. The modular 154/162 classification is independently kernel-decided in [ForkCensus.lean](ForkCensus.lean). Its combined semantic theorem in [ForkCensusRoot.lean](ForkCensusRoot.lean) has a separate ongoing complete-source audit, so treat its source integration as pending until a successful run is recorded.
 
 This is a partial mathematical advance toward a real holdout, not an exact BB(6) solution.
+
+## Strengthened lower-middle exact inverse lemma
+
+[ForkMiddleOdd.lean](ForkMiddleOdd.lean) proves a general source-level uniqueness theorem for the dyadic middle-low target band `4·2^k≤h`, `2h+5<9·2^k`. The original six-stage analysis in Agent 44 required `27∤(2h+5)` to eliminate every odd exponent beyond valuation one. Our strengthened theorem handles the additional valuation-two candidate geometrically: its quotient lies in the open band gap `(2^k,3·2^(k−1))`. Thus under `9∣(2h+5)` and `81∤(2h+5)`, **every** true first-reset parent of `h` equals the explicit valuation-one odd predecessor. It uses the original exact inverse grammar and works for arbitrary natural `k≥4` without a root hypothesis. Local Lean 4.36.0-rc2 passed with only standard axioms; original-source CI is included in the pending updated manual workflow.
