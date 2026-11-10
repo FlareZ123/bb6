@@ -22,6 +22,7 @@ jobs:
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedSweep.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedOddBase.lean /tmp/a48-root/
+          base64 --decode im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64 | xz --decompress > /tmp/a48-root/CountedOddUnary.lean
           cd /tmp/a48-root
           export LEAN_PATH=.
           lean --version
@@ -29,5 +30,7 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
-          lean CountedSweep.lean
-          lean CountedOddBase.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          printf '%s  %s\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' CountedOddUnary.lean | sha256sum --check
+          lean CountedOddUnary.lean
