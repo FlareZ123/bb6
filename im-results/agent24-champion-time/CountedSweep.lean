@@ -175,4 +175,72 @@ theorem counted_right_sweep (n : Nat) (T : Int → Bool) (h : Int)
 #print axioms counted_three_right
 #print axioms counted_right_sweep
 
+
+
+/-- Contiguous one-run visited during the E-state rightward scan. -/
+def linearRightOnes (T : Int → Bool) (h : Int) (n : Nat) : Prop :=
+  ∀ i : Nat, i<n → T (h+(i:Int)) = true
+
+theorem E_one (T : Int → Bool) (h : Int) (ht : T h = true) :
+    run tm2 1 ⟨4,h,T⟩ = some ⟨4,h+1,T⟩ := by
+  change rawStep tm2 ⟨4,h,T⟩ = some ⟨4,h+1,T⟩
+  simp only [rawStep,readSlot,ht]
+  have he : tm2 ((4:Fin 6),true) = some ⟨true,true,4⟩ := rfl
+  rw [he]
+  simp only [Option.map_some,applyMove]
+  apply congrArg (fun f : Int → Bool => some (Config.mk 4 (h+1) f))
+  funext x
+  by_cases hx : x = h <;> simp [hx,ht]
+
+/-- Exact source count for scanning any continuous one-run in state E. -/
+theorem E_scan (T : Int → Bool) (h : Int) (n : Nat)
+    (hon : linearRightOnes T h n) :
+    run tm2 n ⟨4,h,T⟩ = some ⟨4,h+(n:Int),T⟩ := by
+  induction n generalizing h with
+  | zero => simp [run]
+  | succ n ih =>
+    have ht : T h = true := by simpa using hon 0 (by omega)
+    have hon' : linearRightOnes T (h+1) n := by
+      intro i hi
+      have hold := hon (i+1) (by omega)
+      have hh : h+1+(i:Int) = h+((i+1:Int)) := by omega
+      rwa [hh]
+    have hstep := E_one T h ht
+    have htail := ih (h+1) hon'
+    have hnum : n+1=1+n := by omega
+    rw [hnum,run_append,hstep]
+    simp only [Option.bind_some]
+    rw [htail]
+    have heq : h+1+(n:Int)=h+((n+1:Int)) := by omega
+    simp [heq] <;> omega
+
+/-- The exact tape update at the right-hand zero boundary. -/
+def afterEZero (T : Int → Bool) (h : Int) : Int → Bool :=
+  fun x => if x=h then true else if x=h+1 then false else if x=h+2 then true else T x
+
+/-- Four genuine TM63 primitive moves at the end of the E-state scan.
+The full infinite tape is preserved outside the three queried positions. -/
+theorem E_zero_bridge (T : Int → Bool) (h : Int)
+    (h0 : T h = false) (h1 : T (h+1) = false) (h2 : T (h+2) = false) :
+    run tm2 4 ⟨4,h,T⟩ = some ⟨3,h,afterEZero T h⟩ := by
+  have e01 : h+1≠h := by omega
+  have e02 : h+2≠h := by omega
+  have e12 : h+2≠h+1 := by omega
+  have ef1 : h+1+1=h+2 := by omega
+  have t40 : tm2 ((4:Fin 6),false) = some ⟨true,true,0⟩ := rfl
+  have t00 : tm2 ((0:Fin 6),false) = some ⟨true,true,1⟩ := rfl
+  have t10' : tm2 ((1:Fin 6),false) = some ⟨true,false,2⟩ := rfl
+  have t21' : tm2 ((2:Fin 6),true) = some ⟨false,false,3⟩ := rfl
+  have hback : h+2+(-1) = h+1 := by omega
+  have hreturn : h+1+(-1) = h := by omega
+  simp [run,rawStep,readSlot,applyMove,h0,h1,h2,e01,e02,e12,ef1,hback,hreturn,
+     t40,t00,t10',t21']
+  funext x
+  by_cases hxa : x=h <;> by_cases hxb : x=h+1 <;>
+    by_cases hxc : x=h+2 <;> simp [afterEZero,hxa,hxb,hxc] <;> omega
+
+#print axioms E_one
+#print axioms E_scan
+#print axioms E_zero_bridge
+
 end BB6Coverage.Agent48Champion
