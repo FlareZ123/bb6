@@ -4,6 +4,16 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent34OddWidePrior
 open BB6.Agent3ValSix
 
+private theorem old_high_score_nonnegative (j m : Nat) :
+    j+3*m+5 ≤ 2^(2*m+2)*(j+3) := by
+  have hm : 4*m+4 ≤ 2^(2*m+2) :=
+    BB6.Agent29New.power_linear_bound m
+  have hp : 1 ≤ 2^(2*m+2) := Nat.pow_pos (by decide)
+  have hj : j ≤ 2^(2*m+2)*j := by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hp
+  rw [Nat.mul_add]
+  omega
+
 private theorem mod128_to16 (z : Nat) : (z%128)%16=z%16 :=
   Nat.mod_mod_of_dvd z (by decide)
 
@@ -53,7 +63,7 @@ theorem old_full_admits (j m : Nat)
   have hstop : k+j+3*m+5=2^(2*m+2)*(j+3) := by
     dsimp [k]
     have hc := Nat.sub_add_cancel
-      (BB6.Agent34OddWideJoint.high_score_nonnegative j m)
+      (old_high_score_nonnegative j m)
     omega
   have hp2 : 2 ∣ (2:Nat)^(2*m+2) := by
     change (2:Nat)^1 ∣ 2^(2*m+2)
