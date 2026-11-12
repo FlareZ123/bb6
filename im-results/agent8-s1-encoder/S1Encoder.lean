@@ -172,8 +172,17 @@ theorem binDec_zero (len : Nat) : binDec len 0 = d1pow len := by
       simp [binDec,binaryCounterFuel,d1pow]
   | succ len ih =>
       have hbound : 0 < 2^len := Nat.pow_pos (by decide)
-      rw [binDec_even len 0 hbound,ih]
-      rfl
+      calc
+        binDec (len+1) 0 = d1 ++ binDec len 0 := by
+          simpa using binDec_even len 0 hbound
+        _ = d1pow (len+1) := by simp [d1pow,ih]
+
+/-- The repeated d1 word is invariant under reversal. -/
+theorem d1pow_reverse (n : Nat) : (d1pow n).reverse = d1pow n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp [d1pow,d1,ih,List.reverse_append]
 
 /-- Length of the physical block word on the valid source domain. -/
 theorem d1pow_length (n : Nat) : (d1pow n).length = 3*n := by
@@ -213,22 +222,16 @@ left context, exactly as l <* xs is defined in Helper.v. -/
 def s0LeftFacing (l : List Bool) (a z : Nat) : List Bool :=
   binDec a z ++ l
 
+/-- The physical S0 left word, from far left to the D-head cell. -/
+def s0PhysicalLeft (l : List Bool) (a z : Nat) : List Bool :=
+  (s0LeftFacing l a z).reverse
+
 /-- The right-facing S0 suffix includes the separator zero before RC. -/
 def s0RightFacing (b : Nat) : List Bool :=
   [false,true,true,true,false,false] ++ d1pow (b+1)
 
-/-- The full left-facing S1 stream, obtained by the source's nested
-S0 (LC ... <* d0 <* m) definition. -/
-def s1LeftFacing (L n m a z : Nat) : List Bool :=
-  binDec a z ++ markerWord m ++ d0 ++ binDec L n ++ lh
-
-/-- The literal physical left-to-right word is the reverse of the
-head-facing stream; its last cell is the cell under the D head. -/
-def s1PhysicalLeft (L n m a z : Nat) : List Bool :=
-  (s1LeftFacing L n m a z).reverse
-
-/-- The literal physical right word following the D-head cell. -/
-def s1PhysicalRight (b : Nat) : List Bool := s0RightFacing b
+/-- The physical right word following the D-head cell. -/
+def s0PhysicalRight (b : Nat) : List Bool := s0RightFacing b
 
 /-- Zero-padded lookup from a nearest-first physical side. -/
 def sideBit : List Bool → Nat → Bool
@@ -236,19 +239,79 @@ def sideBit : List Bool → Nat → Bool
   | h::_, 0 => h
   | _::t, n+1 => sideBit t n
 
-/-- The complete original-source tape, with absolute head coordinate h.
+/-- The complete original-source S0 tape, with absolute head coordinate h.
 For x≤h, index zero is the cell under the head and subsequent indices
 run left; for x>h, index zero is the first cell to the right. -/
-def s1Tape (L n m a z b : Nat) (h x : Int) : Bool :=
+def s0Tape (l : List Bool) (a z b : Nat) (h x : Int) : Bool :=
   if x ≤ h then
-    sideBit (s1LeftFacing L n m a z) (Int.toNat (h-x))
+    sideBit (s0LeftFacing l a z) (Int.toNat (h-x))
   else
     sideBit (s0RightFacing b) (Int.toNat (x-h-1))
 
-/-- The actual BB6Coverage.Config for the published TM63 S1 section.
-Its state is the original D state (Fin 6 index 3), not a copied state. -/
+/-- The actual original-source S0 configuration, in BB6Coverage.Config. -/
+def s0Config (l : List Bool) (a z b : Nat) (h : Int) : BB6Coverage.Config :=
+  ⟨(3 : Fin 6),h,s0Tape l a z b h⟩
+
+@[simp] theorem s0Config_state (l : List Bool) (a z b : Nat) (h : Int) :
+    (s0Config l a z b h).state = (3 : Fin 6) := rfl
+
+@[simp] theorem s0Config_head (l : List Bool) (a z b : Nat) (h : Int) :
+    (s0Config l a z b h).head = h := rfl
+
+/-- Exact physical cell lookup to the left of the genuine D head. -/
+theorem s0Config_left_cell (l : List Bool) (a z b : Nat)
+    (h : Int) (i : Nat) :
+    (s0Config l a z b h).tape (h-(i:Int)) =
+      sideBit (s0LeftFacing l a z) i := by
+  unfold s0Config s0Tape
+  have hle : h-(i:Int) ≤ h := by omega
+  have hdiff : h-(h-(i:Int)) = (i:Int) := by omega
+  simp [hle,hdiff]
+
+/-- Exact physical cell lookup to the right of the genuine D head. -/
+theorem s0Config_right_cell (l : List Bool) (a z b : Nat)
+    (h : Int) (i : Nat) :
+    (s0Config l a z b h).tape (h+1+(i:Int)) =
+      sideBit (s0RightFacing b) i := by
+  unfold s0Config s0Tape
+  have hgt : ¬ h+1+(i:Int) ≤ h := by omega
+  have hdiff : h+1+(i:Int)-h-1 = (i:Int) := by omega
+  simp [hgt,hdiff]
+
+/-- The universal S0 carry boundary in head-facing order. -/
+theorem s0LeftFacing_carryPrefix (l : List Bool) (a len q r : Nat)
+    (hq : q < 2^len) :
+    s0LeftFacing l (len+1+r) ((2*q+1)*2^r) =
+      d1pow r ++ d0 ++ binDec len q ++ l := by
+  unfold s0LeftFacing
+  rw [binDec_carryPrefix len q r hq]
+  simp [List.append_assoc]
+
+/-- Physical left-to-right form of the S0 boundary: the exact suffix
+immediately before the head is d0 ++ d1^r. -/
+theorem s0PhysicalLeft_carrySuffix (l : List Bool) (len q r : Nat)
+    (hq : q < 2^len) :
+    s0PhysicalLeft l (len+1+r) ((2*q+1)*2^r) =
+      (binDec len q ++ l).reverse ++ d0.reverse ++ d1pow r := by
+  unfold s0PhysicalLeft
+  rw [s0LeftFacing_carryPrefix l (len+1+r) len q r hq]
+  simp [List.reverse_append,d1pow_reverse,List.append_assoc]
+
+/-- The full left-facing S1 stream, obtained by the source's nested
+S0 (LC ... <* d0 <* m) definition. -/
+def s1LeftFacing (L n m a z : Nat) : List Bool :=
+  binDec a z ++ markerWord m ++ d0 ++ binDec L n ++ lh
+
+/-- The literal physical left-to-right S1 word. -/
+def s1PhysicalLeft (L n m a z : Nat) : List Bool :=
+  (s1LeftFacing L n m a z).reverse
+
+/-- The literal physical right word following the D-head cell. -/
+def s1PhysicalRight (b : Nat) : List Bool := s0PhysicalRight b
+
+/-- The actual original-source S1 configuration. -/
 def s1Config (L n m a z b : Nat) (h : Int) : BB6Coverage.Config :=
-  ⟨(3 : Fin 6),h,s1Tape L n m a z b h⟩
+  s0Config (markerWord m ++ d0 ++ binDec L n ++ lh) a z b h
 
 @[simp] theorem s1Config_state (L n m a z b : Nat) (h : Int) :
     (s1Config L n m a z b h).state = (3 : Fin 6) := rfl
@@ -256,32 +319,21 @@ def s1Config (L n m a z b : Nat) (h : Int) : BB6Coverage.Config :=
 @[simp] theorem s1Config_head (L n m a z b : Nat) (h : Int) :
     (s1Config L n m a z b h).head = h := rfl
 
-/-- Exact physical cell lookup to the left of the genuine D head. -/
+/-- Exact cell lookup for the S1 head-facing left stream. -/
 theorem s1Config_left_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
     (s1Config L n m a z b h).tape (h-(i:Int)) =
       sideBit (s1LeftFacing L n m a z) i := by
-  unfold s1Config s1Tape
-  have hle : h-(i:Int) ≤ h := by omega
-  have hdiff : h-(h-(i:Int)) = (i:Int) := by omega
-  simp [hle,hdiff]
+  simpa [s1Config,s1LeftFacing,s0LeftFacing,List.append_assoc] using
+    s0Config_left_cell
+      (markerWord m ++ d0 ++ binDec L n ++ lh) a z b h i
 
-/-- Exact physical cell lookup to the right of the genuine D head. -/
+/-- Exact cell lookup for the S1 right-facing suffix. -/
 theorem s1Config_right_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
     (s1Config L n m a z b h).tape (h+1+(i:Int)) =
-      sideBit (s0RightFacing b) i := by
-  unfold s1Config s1Tape
-  have hgt : ¬ h+1+(i:Int) ≤ h := by omega
-  have hdiff : h+1+(i:Int)-h-1 = (i:Int) := by omega
-  simp [hgt,hdiff]
-
-/-- The universal S0 carry boundary in head-facing order. -/
-theorem s0LeftFacing_carryPrefix (l a len q r : Nat)
-    (hq : q < 2^len) :
-    s0LeftFacing l (len+1+r) ((2*q+1)*2^r) =
-      d1pow r ++ d0 ++ binDec len q ++ l := by
-  unfold s0LeftFacing
-  rw [binDec_carryPrefix len q r hq]
-  simp [List.append_assoc]
+      sideBit (s1PhysicalRight b) i := by
+  simpa [s1Config,s1PhysicalRight,s0PhysicalRight] using
+    s0Config_right_cell
+      (markerWord m ++ d0 ++ binDec L n ++ lh) a z b h i
 
 /-- The universal S1 carry boundary at the actual D-head position. -/
 theorem s1LeftFacing_carryPrefix (L n m len q r : Nat)
@@ -293,7 +345,17 @@ theorem s1LeftFacing_carryPrefix (L n m len q r : Nat)
   rw [binDec_carryPrefix len q r hq]
   simp [List.append_assoc]
 
-/-- Physical left-to-right form of the same boundary: immediately before
+/-- The actual S1 tape exposes the entire carry prefix at its D head. -/
+theorem s1Config_left_carryCells (L n m len q r b : Nat)
+    (h : Int) (i : Nat) (hq : q < 2^len) :
+    (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h-(i:Int)) =
+      sideBit
+        (d1pow r ++ d0 ++ binDec len q ++
+          markerWord m ++ d0 ++ binDec L n ++ lh) i := by
+  rw [s1Config_left_cell]
+  rw [s1LeftFacing_carryPrefix L n m len q r hq]
+
+/-- Physical left-to-right form of the S1 boundary: immediately before
 the head-facing end, the exact suffix is d0 ++ d1^r. -/
 theorem s1PhysicalLeft_carrySuffix (L n m len q r : Nat)
     (hq : q < 2^len) :
@@ -311,7 +373,7 @@ theorem s1PhysicalLeft_m0_zero (L a : Nat) :
       [true,true,true,false,true,true] ++ d1pow L ++
         [true,false,false] ++ [true,false] ++ d1pow a := by
   unfold s1PhysicalLeft s1LeftFacing
-  rw [binDec_zero L,binDec_zero a]
+  rw [binDec_zero a,binDec_zero L]
   simp [markerWord,d0,lh,List.reverse_append,d1pow_reverse,List.append_assoc]
 
 /-- Source right word 0 ++ 11100 ++ 111^(1+b). -/
@@ -325,8 +387,11 @@ theorem s1PhysicalRight_source (b : Nat) :
 #print axioms binDec_carryPrefix
 #print axioms exists_odd_factor
 #print axioms binDec_length
+#print axioms s0Config_left_cell
 #print axioms s1Config_left_cell
 #print axioms s1LeftFacing_carryPrefix
+#print axioms s1Config_left_carryCells
+#print axioms s0PhysicalLeft_carrySuffix
 #print axioms s1PhysicalLeft_carrySuffix
 #print axioms s1PhysicalLeft_m0_zero
 
