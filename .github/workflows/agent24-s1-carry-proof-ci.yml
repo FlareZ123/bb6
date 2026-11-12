@@ -1,0 +1,65 @@
+name: Agent 24 S1 carry bridge compile (temporary)
+on:
+  push:
+    branches: [agent24-s1-carry-proof-ci]
+    paths:
+      - 'im-results/agent24-champion-time/CountedS1Carry.lean'
+      - 'im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64'
+permissions:
+  contents: write
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile proof chain
+        id: compile
+        run: |
+          set +e
+          mkdir -p /tmp/a24-carry
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a24-carry/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a24-carry/
+          cp im-results/agent8-champion-terminal/TerminalCount.lean /tmp/a24-carry/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a24-carry/
+          base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a24-carry/UniformTM63.lean
+          cp im-results/agent24-champion-time/CountedS1Carry.lean /tmp/a24-carry/
+          cd /tmp/a24-carry
+          export LEAN_PATH=.
+          : > compile.log
+          echo "RUN_ID=$GITHUB_RUN_ID" >> compile.log
+          echo "RUN_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> compile.log
+          lean --version >> compile.log 2>&1
+          status=$?
+          for file in Frontier Symmetry RootShift ChampionRootBridge TerminalCount UniformTM63 S1Encoder CountedS1Carry; do
+            if [ "$status" -ne 0 ]; then break; fi
+            echo "=== $file ===" >> compile.log
+            lean -o "$file.olean" "$file.lean" >> compile.log 2>&1
+            status=$?
+          done
+          echo "LEAN_EXIT_CODE=$status" >> compile.log
+          echo "$status" > compile.status
+          exit "$status"
+      - name: Publish compiler diagnostics to the branch
+        if: always()
+        run: |
+          mkdir -p im-results/agent24-champion-time
+          if [ -f /tmp/a24-carry/compile.log ]; then
+            cp /tmp/a24-carry/compile.log im-results/agent24-champion-time/ci-output.log
+          else
+            printf 'Compiler did not start. RUN_ID=%s\n' "$GITHUB_RUN_ID" > im-results/agent24-champion-time/ci-output.log
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent24-champion-time/ci-output.log
+          if ! git diff --cached --quiet; then
+            git commit -m "Agent 24: record S1 carry CI diagnostics"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
