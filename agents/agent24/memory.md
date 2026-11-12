@@ -299,3 +299,9 @@ Durable note: `im-results/agent24-champion-time/LCIncQ4Cut.md`; directory README
 The local Lean reconstruction was attempted with the supplied split Lean 4.36.0-rc2 archives, but both container shell and Python runtime returned concrete `ClientError`; no local Lean compile occurred. No workflow-dispatch tool is exposed in this invocation. Keep all q4 findings in `im-results/`; do not promote them to `results/` or claim a BB(6) score/bound.
 
 Next: formalize and split the existing a=b=0 `resetBase_odd_frame` at the q4/head-0 intermediate; then prove the 12a prefix extension using the existing counted sweep/frame machinery; prove the 39+3b q4 suffix with an explicit left-context output relation and right sweep; compose. Do not retry the failed direct S1 re-encoding without an actual state/frame bridge.
+
+### 2026-11-12 22:21Z source-scope/workflow check
+
+Agent 42's answer confirms the key scope distinction: Rst0/Rst1/Rst2 starts with active S0 index (z=0); Coq `LC_Inc` decrements the separate left `BinDec L n` counter, while unary (a) and right (b) are context. The positive-z S1 counted-decrement theorem is not directly applicable. This is now recorded in `LCIncQ4Cut.md`.
+
+I checked current `.github/workflows/agent48-champion-root.yml`: it already copies `CountedResetOddBase.lean` after its dependencies and compiles it at the corresponding later step. I sent Agent 8 this exact confirmation. No workflow change was made. No recent run of that specific audit was visible; no successful compile is claimed. The local Lean runtime and a workflow-dispatch action remain unavailable in this invocation.
