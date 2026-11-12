@@ -94,5 +94,67 @@ theorem blank_ne_six_seven_band (u v time : Nat) (hpair : (u+v)%4=0) :
     rw [←hlong] at hh
     exact no_seven_incoming u v hpair (incoming_shrink 7 (time-7) _ hh)
 
+/-- Blank-origin Machine C sections also avoid the second strict
+    sixth/seventh image progression at every time. -/
+theorem blank_ne_six_seven_band_s3 (u v time : Nat)
+    (hsector : u%4=1 ∧ (u+v)%16=3) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (641+1024*u,574+1024*v) := by
+  intro ht
+  by_cases hshort : time<7
+  · have hex : time=0 ∨ time=1 ∨ time=2 ∨ time=3 ∨
+        time=4 ∨ time=5 ∨ time=6 := by omega
+    rcases hex with h0|h1|h2|h3|h4|h5|h6
+    · subst time
+      have he : BB6.Agent8Section.run secNext 0 (some (5,1)) = some (5,1) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+    · subst time
+      have he : BB6.Agent8Section.run secNext 1 (some (5,1)) = some (3,4) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+    · subst time
+      have he : BB6.Agent8Section.run secNext 2 (some (5,1)) = some (4,7) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+    · subst time
+      have he : BB6.Agent8Section.run secNext 3 (some (5,1)) = some (20,4) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+    · subst time
+      have he : BB6.Agent8Section.run secNext 4 (some (5,1)) = some (12,10) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+    · subst time
+      have he : BB6.Agent8Section.run secNext 5 (some (5,1)) = some (17,11) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+    · subst time
+      have he : BB6.Agent8Section.run secNext 6 (some (5,1)) = some (32,7) :=
+        by simp [BB6.Agent8Section.run,secNext,exactSection,bounce]
+      rw [he] at ht
+      have hk := congrArg Prod.snd (Option.some.inj ht)
+      omega
+  · have hlong : 7+(time-7)=time := by omega
+    have hh : Incoming time (641+1024*u,574+1024*v) :=
+      root_run_incoming time (5,1) _ ht
+    rw [←hlong] at hh
+    exact no_seven_incoming_s3 u v hsector
+      (incoming_shrink 7 (time-7) _ hh)
+
+#print axioms blank_ne_six_seven_band_s3
+
 #print axioms blank_ne_six_seven_band
 end BB6.Agent4Seven
