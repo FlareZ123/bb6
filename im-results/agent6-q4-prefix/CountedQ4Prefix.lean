@@ -1,5 +1,6 @@
 import CountedSweep
 import CountedResetOddBase
+import Q4Suffix
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent6Q4Prefix
@@ -7,6 +8,7 @@ namespace BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
+open BB6Coverage.Agent8Q4Suffix
 
 /-! The q4 prefix for the m=2, odd-inner-counter Rst2 branch.
 
@@ -430,14 +432,192 @@ theorem q4RightFacing_succ (b i : Nat) :
   simp [q4RightFacing, s0RightFacing, sideBit]
 
 /-- The source TM63 reaches state E at the same head with the exact q4
-right word for every odd n, every a,b, and arbitrary absolute head. -/
+left-facing and right-half words for every odd n, every a,b, and arbitrary
+absolute head. -/
+
+/-- For odd n, the binary counter for n-1 begins with d1 and has the
+same remaining suffix as the counter for n after its leading d0 block. -/
+theorem binDec_odd_predecessor_head (L n : Nat)
+    (hn : n % 2 = 1) (hbound : n < 2^L) :
+    binDec L (n-1) = d1 ++ binDec (L-1) (n/2) := by
+  have hL : 0 < L := by
+    by_contra hL0
+    have hL0' : L = 0 := by omega
+    subst L
+    have hn0 : n = 0 := by omega
+    omega
+  have hLid : L = (L-1)+1 := by omega
+  have hpow : 2^L = 2^(L-1)*2 := by
+    rw [hLid, Nat.pow_succ]
+  have hq : n/2 < 2^(L-1) := by
+    have hb' : n < 2^(L-1)*2 := by simpa [hpow] using hbound
+    omega
+  have hnEq : n-1 = 2*(n/2) := by omega
+  rw [hLid, hnEq]
+  exact binDec_even (L-1) (n/2) hq
+
+/-- The eight-cell marker/counter boundary in the q4 left-facing word. -/
+theorem q4LeftFacing_mid_bits (L n a : Nat)
+    (hn : n % 2 = 1) (hbound : n < 2^L) :
+    sideBit (q4LeftFacing L (n-1) a) (3*a+1) = true ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+2) = false ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+3) = true ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+4) = false ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+5) = false ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+6) = true ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+7) = true ∧
+    sideBit (q4LeftFacing L (n-1) a) (3*a+8) = true := by
+  have hface : q4LeftFacing L (n-1) a =
+      ([true] ++ d1pow a) ++
+        (markerWord 1 ++ d0 ++ binDec L (n-1) ++ lh) := by
+    simp [q4LeftFacing, List.append_assoc]
+  have hlen : ([true] ++ d1pow a).length = 3*a+1 := by
+    simp [d1pow_length]
+  have hbin := binDec_odd_predecessor_head L n hn hbound
+  have hbit : ∀ i, 3*a+1 ≤ i →
+      sideBit (q4LeftFacing L (n-1) a) i =
+        sideBit (markerWord 1 ++ d0 ++ binDec L (n-1) ++ lh)
+          (i-(3*a+1)) := by
+    intro i hi
+    rw [hface]
+    exact sideBit_append_right ([true] ++ d1pow a)
+      (markerWord 1 ++ d0 ++ binDec L (n-1) ++ lh) i (by
+        rw [hlen]
+        exact hi)
+  constructor
+  · rw [hbit (3*a+1) (by omega)]
+    simp [markerWord, sideBit]
+  constructor
+  · rw [hbit (3*a+2) (by omega)]
+    simp [markerWord, sideBit]
+  constructor
+  · rw [hbit (3*a+3) (by omega)]
+    simp [markerWord, sideBit]
+  constructor
+  · rw [hbit (3*a+4) (by omega)]
+    simp [markerWord, d0, sideBit]
+  constructor
+  · rw [hbit (3*a+5) (by omega)]
+    simp [markerWord, d0, sideBit]
+  constructor
+  · rw [hbit (3*a+6) (by omega)]
+    simp [markerWord, d0, sideBit]
+  constructor
+  · rw [hbit (3*a+7) (by omega)]
+    simp [markerWord, d0, sideBit, hbin]
+  · rw [hbit (3*a+8) (by omega)]
+    simp [markerWord, d0, sideBit, hbin]
+
+def q4SourcePrefix (a : Nat) : List Bool :=
+  d1pow a ++ markerWord 2 ++ d0 ++ d0
+
+def q4TargetPrefix (a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 1 ++ d0 ++ d1
+
+def q4SharedTail (L n : Nat) : List Bool :=
+  binDec (L-1) (n/2) ++ lh
+
+/-- Beyond the two changed low-order counter bits, the source and q4
+left-facing words have exactly the same suffix. -/
+theorem q4LeftFacing_source_tail (L n a i : Nat)
+    (hn : n % 2 = 1) (hbound : n < 2^L)
+    (hi : 3*a+9 ≤ i) :
+    sideBit (s1LeftFacing L n 2 a 0) i =
+      sideBit (q4LeftFacing L (n-1) a) i := by
+  have hsrc : s1LeftFacing L n 2 a 0 =
+      q4SourcePrefix a ++ q4SharedTail L n := by
+    unfold s1LeftFacing
+    rw [binDec_zero a, binDec_odd_head L n hn hbound]
+    simp [q4SourcePrefix, q4SharedTail, List.append_assoc]
+  have htgt : q4LeftFacing L (n-1) a =
+      q4TargetPrefix a ++ q4SharedTail L n := by
+    unfold q4LeftFacing
+    rw [binDec_odd_predecessor_head L n hn hbound]
+    simp [q4TargetPrefix, q4SharedTail, List.append_assoc]
+  have hlenS : (q4SourcePrefix a).length = 3*a+10 := by
+    simp [q4SourcePrefix, d1pow_length, markerWord, d0]
+  have hlenT : (q4TargetPrefix a).length = 3*a+10 := by
+    simp [q4TargetPrefix, d1pow_length, markerWord, d0, d1]
+  have hsrcLast : sideBit (q4SourcePrefix a) (3*a+9) = true := by
+    unfold q4SourcePrefix
+    rw [sideBit_d1pow_append a (3*a+9) _ (by omega)]
+    have h1 : sideBit (markerWord 2 ++ d0 ++ d0) 9 =
+        sideBit (d0 ++ d0) 5 := by
+      exact sideBit_append_right (markerWord 2) (d0 ++ d0) 9 (by
+        simp [markerWord])
+    rw [h1]
+    have h2 : sideBit (d0 ++ d0) 5 = sideBit d0 2 := by
+      exact sideBit_append_right d0 d0 5 (by simp [d0])
+    rw [h2]
+    simp [d0, sideBit]
+  have htgtLast : sideBit (q4TargetPrefix a) (3*a+9) = true := by
+    unfold q4TargetPrefix
+    have h0 : sideBit
+        ([true] ++ (d1pow a ++ markerWord 1 ++ d0 ++ d1)) (3*a+9) =
+        sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d1) (3*a+8) := by
+      exact sideBit_append_right [true]
+        (d1pow a ++ markerWord 1 ++ d0 ++ d1) (3*a+9) (by simp)
+    rw [h0]
+    rw [sideBit_d1pow_append a (3*a+8) _ (by omega)]
+    have h1 : sideBit (markerWord 1 ++ d0 ++ d1) 8 =
+        sideBit (d0 ++ d1) 5 := by
+      exact sideBit_append_right (markerWord 1) (d0 ++ d1) 8 (by
+        simp [markerWord])
+    rw [h1]
+    have h2 : sideBit (d0 ++ d1) 5 = sideBit d1 2 := by
+      exact sideBit_append_right d0 d1 5 (by simp [d0])
+    rw [h2]
+    simp [d1, sideBit]
+  by_cases hlast : i = 3*a+9
+  · subst i
+    rw [hsrc, htgt]
+    have hs : sideBit (q4SourcePrefix a ++ q4SharedTail L n)
+        (3*a+9) = true := by
+      rw [sideBit_append_left (q4SourcePrefix a) (q4SharedTail L n)
+        (3*a+9) (by rw [hlenS]; omega)]
+      exact hsrcLast
+    have ht : sideBit (q4TargetPrefix a ++ q4SharedTail L n)
+        (3*a+9) = true := by
+      rw [sideBit_append_left (q4TargetPrefix a) (q4SharedTail L n)
+        (3*a+9) (by rw [hlenT]; omega)]
+      exact htgtLast
+    rw [hs, ht]
+  · have hi' : 3*a+10 ≤ i := by omega
+    rw [hsrc, htgt]
+    rw [sideBit_append_right (q4SourcePrefix a) (q4SharedTail L n) i
+      (by rw [hlenS]; omega)]
+    rw [sideBit_append_right (q4TargetPrefix a) (q4SharedTail L n) i
+      (by rw [hlenT]; omega)]
+    rw [hlenS, hlenT]
+
+/-- sideBit is blank beyond the finite word. -/
+theorem sideBit_ge_length (xs : List Bool) (i : Nat)
+    (hi : xs.length ≤ i) :
+    sideBit xs i = false := by
+  induction xs generalizing i with
+  | nil =>
+      simp [sideBit]
+  | cons x xs ih =>
+      cases i with
+      | zero =>
+          simp at hi
+      | succ i =>
+          have hi' : xs.length ≤ i := by simp at hi; omega
+          simpa [sideBit] using ih i hi'
+
+theorem q4RightFacing_length (b : Nat) :
+    (q4RightFacing b).length = 9+3*b := by
+  simp [q4RightFacing, d1pow_length]
+  omega
+
 theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
     (hn : n % 2 = 1) (hbound : n < 2^L) :
     ∃ Tq,
       run tm2 (32+12*a) (s1Config L n 2 a 0 b h) =
         some ⟨4,h,Tq⟩ ∧
       Tq h = true ∧
-      ∀ i, Tq (h+1+(i:Int)) = sideBit (q4RightFacing b) i := by
+      (∀ i, Tq (h-(i:Int)) = sideBit (q4LeftFacing L (n-1) a) i) ∧
+      q4RightShape Tq h b := by
   let T := (s1Config L n 2 a 0 b h).tape
   let N := 3*a+2
   let T1 := sweptLeft N T h
@@ -551,7 +731,214 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
             s1Config_right_cell L n 2 a 0 b h (i+1)
         rw [hframe,hpres,hsource]
         exact (q4RightFacing_succ b i).symm
-  refine ⟨T2, ?_, hheadT, hrightT⟩
+  have hleftT : ∀ i, T2 (h-(i:Int)) =
+      sideBit (q4LeftFacing L (n-1) a) i := by
+    intro i
+    by_cases hi0 : i = 0
+    · subst i
+      simpa using hheadT
+    · by_cases hiblock : i ≤ 3*a
+      · have hfalse : ¬ (-6 ≤
+          (h-(i:Int))-(h-(N:Int)) ∧
+          (h-(i:Int))-(h-(N:Int)) ≤ 1) := by
+          dsimp [N]
+          omega
+        have hnot : q4Inside ((h-(i:Int))-(h-(N:Int))) = false := by
+          simp [q4Inside,hfalse]
+        have hframe : T2 (h-(i:Int)) = T1 (h-(i:Int)) := by
+          simp only [T2,frameAt_tape]
+          simp [hnot]
+        have hj : i+1 < N := by dsimp [N]; omega
+        have hs : T1 (h-(i:Int)) = true := by
+          simpa [T1] using sweptLeft_block N i T h hj
+        have hprefix : sideBit (q4LeftFacing L (n-1) a) i =
+            sideBit (d1pow a ++ markerWord 1 ++ d0 ++
+              binDec L (n-1) ++ lh) (i-1) := by
+          rw [q4LeftFacing]
+          exact sideBit_append_right [true]
+            (d1pow a ++ markerWord 1 ++ d0 ++ binDec L (n-1) ++ lh)
+            i (by omega)
+        have htarget : sideBit (q4LeftFacing L (n-1) a) i = true := by
+          rw [hprefix]
+          have hi' : i-1 < 3*a := by omega
+          rw [sideBit_append_left (d1pow a)
+            (markerWord 1 ++ d0 ++ binDec L (n-1) ++ lh) (i-1) (by
+              rw [d1pow_length]
+              exact hi')]
+          exact sideBit_d1pow_true a (i-1) hi'
+        rw [hframe,hs]
+        exact htarget.symm
+      · by_cases himid : i ≤ 3*a+8
+        · have hcases : i=3*a+1 ∨ i=3*a+2 ∨ i=3*a+3 ∨
+              i=3*a+4 ∨ i=3*a+5 ∨ i=3*a+6 ∨
+              i=3*a+7 ∨ i=3*a+8 := by omega
+          rcases q4LeftFacing_mid_bits L n a hn hbound with
+            ⟨hq1,hq2,hq3,hq4,hq5,hq6,hq7,hq8⟩
+          rcases hcases with hi | hi | hi | hi | hi | hi | hi | hi
+          · subst i
+            have hrel : (h-((3*a+1:Int)))-(h-(N:Int)) = 1 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+1:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+1:Int))) = true := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq1.symm
+          · subst i
+            have hrel : (h-((3*a+2:Int)))-(h-(N:Int)) = 0 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+2:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+2:Int))) = false := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq2.symm
+          · subst i
+            have hrel : (h-((3*a+3:Int)))-(h-(N:Int)) = -1 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+3:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+3:Int))) = true := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq3.symm
+          · subst i
+            have hrel : (h-((3*a+4:Int)))-(h-(N:Int)) = -2 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+4:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+4:Int))) = false := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq4.symm
+          · subst i
+            have hrel : (h-((3*a+5:Int)))-(h-(N:Int)) = -3 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+5:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+5:Int))) = false := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq5.symm
+          · subst i
+            have hrel : (h-((3*a+6:Int)))-(h-(N:Int)) = -4 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+6:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+6:Int))) = true := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq6.symm
+          · subst i
+            have hrel : (h-((3*a+7:Int)))-(h-(N:Int)) = -5 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+7:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+7:Int))) = true := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq7.symm
+          · subst i
+            have hrel : (h-((3*a+8:Int)))-(h-(N:Int)) = -6 := by
+              dsimp [N]
+              omega
+            have hinside : q4Inside
+                ((h-((3*a+8:Int)))-(h-(N:Int))) = true := by
+              simp [q4Inside,hrel]
+            have hframe : T2 (h-((3*a+8:Int))) = true := by
+              simp only [T2,frameAt_tape]
+              rw [hinside]
+              simp [hrel,q4BridgeEnd]
+            exact hframe.trans hq8.symm
+        · have htailbound : 3*a+9 ≤ i := by omega
+          have hfalse : ¬ (-6 ≤
+              (h-(i:Int))-(h-(N:Int)) ∧
+              (h-(i:Int))-(h-(N:Int)) ≤ 1) := by
+            dsimp [N]
+            omega
+          have hnot : q4Inside ((h-(i:Int))-(h-(N:Int))) = false := by
+            simp [q4Inside,hfalse]
+          have hframe : T2 (h-(i:Int)) = T1 (h-(i:Int)) := by
+            simp only [T2,frameAt_tape]
+            simp [hnot]
+          have hpres : T1 (h-(i:Int)) = T (h-(i:Int)) := by
+            simpa [T1] using
+              sweptLeft_preserves_left N T h (h-(i:Int)) (by dsimp [N]; omega)
+          have hcell := s1Config_left_cell L n 2 a 0 b h i
+          rw [hframe,hpres,hcell]
+          exact q4LeftFacing_source_tail L n a i hn hbound htailbound
+  have hshape : q4RightShape T2 h b := by
+    unfold q4RightShape
+    constructor
+    · intro i hi
+      cases i with
+      | zero =>
+          simpa using hheadT
+      | succ i =>
+          have hi4 : i < 4 := by omega
+          have hq : sideBit (q4RightFacing b) i = true := by
+            interval_cases i <;> simp [q4RightFacing,sideBit]
+          have h := hrightT i
+          rw [hq] at h
+          have heq : h+((i+1 : Nat) : Int) = h+1+(i:Int) := by omega
+          simpa [heq] using h
+    · constructor
+      · have h := hrightT 4
+        have hq : sideBit (q4RightFacing b) 4 = false := by
+          simp [q4RightFacing,sideBit]
+        rw [hq] at h
+        have heq : h+5 = h+1+(4:Int) := by omega
+        simpa [heq] using h
+      · constructor
+        · have h := hrightT 5
+          have hq : sideBit (q4RightFacing b) 5 = false := by
+            simp [q4RightFacing,sideBit]
+          rw [hq] at h
+          have heq : h+6 = h+1+(5:Int) := by omega
+          simpa [heq] using h
+        · constructor
+          · intro i hi
+            have hq : sideBit (q4RightFacing b) (6+i) = true := by
+              rw [sideBit_append_right
+                [true,true,true,true,false,false] (d1pow (b+1))
+                (6+i) (by simp)]
+              simpa using sideBit_d1pow_true (b+1) i hi
+            have h := hrightT (6+i)
+            rw [hq] at h
+            have heq : h+7+(i:Int) = h+1+((6+i : Nat) : Int) := by omega
+            simpa [heq] using h
+          · intro i hi
+            have hq : sideBit (q4RightFacing b) (9+3*b+i) = false := by
+              apply sideBit_ge_length
+              rw [q4RightFacing_length]
+              omega
+            have h := hrightT (9+3*b+i)
+            rw [hq] at h
+            have heq : h+10+(3*b:Int)+(i:Int) =
+                h+1+((9+3*b+i : Nat) : Int) := by omega
+            simpa [heq] using h
+  refine ⟨T2, ?_, hheadT, hleftT, hshape⟩
   calc
     run tm2 (32+12*a) (s1Config L n 2 a 0 b h)
         = run tm2 (3*N+26+3*a) ⟨3,h,T⟩ := by
