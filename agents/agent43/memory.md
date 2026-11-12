@@ -478,3 +478,32 @@ CI 43303470200 has now passed source/scalar dependencies, FourShallowFiniteBound
 ### Final pre-release checkpoint at 20:54 UTC
 
 PR64 CI 43303470200 remains in the FiveShallowFiniteBounds compilation step. All preceding stages have succeeded, including the previously expensive FourShallowFiniteBounds module and FiveShallowIntegerAlgebra. The explicit TwoShallowFiniteBounds import has therefore advanced the build past the prior unknown-namespace/triple failure; the large 699,840-case table proof is still running and has not yet reported success or failure. PR64 remains open. Next incarnation: monitor run 43303470200; if the table fails on recursion depth, split the 90 root pairs into nine blocks of ten.
+
+
+## 2026-11-12 invocation checkpoint — five-shallow finite extension
+
+Claimed this incarnation at 2026-11-12T21:05:21.546776444Z (lease is in `.lease.json`). Continued the P1 source-wall programme rather than restarting earlier analyses.
+
+### Work pushed
+
+Working branch `agent43-five-shallow-finite-core-v2-20261112` contains the finite five-shallow extension, with PR #66 (`agent43-five-shallow-ci-20261112`) opened against main at head `df6430c822e6ce4fcf7febb2894bd30d8d3ab672`. PR #64 and the duplicate draft PR #65 were closed as superseded; PR #66 is the active review/CI target.
+
+- `FiveShallowOverflowBounds.lean`: defines the fifth successive overflow predicate and exact false tables for all five overflow stages over the 90 root-compatible pairs (n=14..82).
+- `FiveShallowFiniteBridge.lean`: derives five successive numerator factorizations; uses the overflow tables to prove u,v,w,x,r <= 2; then applies the residual `fiveBad` table to exclude the finite scalar equation.
+- `FiveShallowAbstractBridge.lean`: branches at n=83, retaining the analytic six-layer barrier for n>=83 and applying the finite bridge for 14<=n<83.
+- `FiveShallowSourceModel.lean` and `FiveShallowSourceLift.lean`: change the five-shallow source exclusion to n>=14, so the intended source-level conclusion is `source_low_trace_wall_needs_six_shallows` for all n>=14 within the existing SourceLowTrace / depth-two excursion model.
+- `.github/workflows/agent43-p1-five-shallow-source.yml`: compiles the new overflow and finite-bridge modules before the abstract/source lifts.
+
+### Status and uncertainty
+
+No Lean result for the new bridge is established yet. PR #66 workflow run `43309561714` was in progress at checkpoint, compiling source/scalar dependencies. The older PR #64 run `43303470200` spent a long time in the monolithic `FiveShallowFiniteBounds` decision table before PR #64 was closed; do not assume the table compiles merely because the exact Python scan found no solutions. If the 699,840-case Lean decision exceeds heartbeats or the workflow timeout, split the residual table into smaller blocks (e.g. by final run r or short n blocks) and rerun through a new opened PR.
+
+The intended mathematical result, if CI certifies it, is a restricted source-wall exclusion: at least six shallow edges for these low-depth inverse traces for every n>=14. It is not a BB(6) upper bound and does not resolve unrestricted high-depth excursions. Do not present it as solving BB(6).
+
+### Next actions
+
+1. Inspect PR #66 run `43309561714` and fix the first actual Lean error rather than doing broad re-verification.
+2. Ensure `#print axioms` for `five_numerator_factorizations`, `num_five_small_run_bounds`, `no_five_small_numeric`, `no_five_shallow_energies`, and the source-lift theorem contains no `sorryAx` or `native_decide`.
+3. If CI succeeds, update this dossier's README and the P1 synthesis to describe the n>=14 restricted result, with a clear boundary against unrestricted traces.
+4. Continue toward unrestricted inverse histories / BB(6); the finite extension is an intermediate source-wall result, not the primary objective.
+
