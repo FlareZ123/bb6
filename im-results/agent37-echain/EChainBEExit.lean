@@ -151,63 +151,66 @@ theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
       BB6.BoundaryPadding.ObsEq (run T c)
         (BB6.Agent2BoundaryBZero.regularSection a q b) := by
   rcases h with ⟨T,n,hcases⟩
-  have hA1 : n+3-2=n+1 := by omega
-  have hA2 : n+2-2=n := by omega
   have hrep : List.replicate (n+1) true =
       List.replicate n true ++ [true] := by
     induction n with
     | zero => rfl
-    | succ n ih => simp [List.replicate_succ, ih, List.append_assoc]
+    | succ n ih =>
+      calc
+        List.replicate (n+1+1) true =
+            true :: List.replicate (n+1) true := by rfl
+        _ = true :: (List.replicate n true ++ [true]) := by rw [ih]
+        _ = List.replicate (n+1) true ++ [true] := by rfl
   rcases hcases with h0 | h1 | h2
-  · refine ⟨T,n+3,2,2,?_⟩
+  · refine ⟨T,n+1,2,2,?_⟩
     rw [h0]
     change BB6.Padding.CfgEq
       (BB6.BoundaryPadding.represent
         (⟨[],false,List.replicate n true ++
           [true,false,true,false,true,true,true],5⟩ : Cfg))
       (BB6.BoundaryPadding.represent
-        (BB6.Agent2BoundaryBZero.regularSection (n+3) 2 2))
+        (BB6.Agent2BoundaryBZero.regularSection (n+1) 2 2))
     have heq :
         BB6.BoundaryPadding.represent
           (⟨[],false,List.replicate n true ++
             [true,false,true,false,true,true,true],5⟩ : Cfg) =
         BB6.BoundaryPadding.represent
-          (BB6.Agent2BoundaryBZero.regularSection (n+3) 2 2) := by
+          (BB6.Agent2BoundaryBZero.regularSection (n+1) 2 2) := by
       simp [BB6.BoundaryPadding.represent,
         BB6.Agent2BoundaryBZero.regularSection,
-        CryptidBoundary.init, hA1, hrep, CryptidBoundary.oppairs,
+        CryptidBoundary.init, hrep, CryptidBoundary.oppairs,
         List.append_assoc]
     rw [heq]
     exact BB6.Padding.cfgEq_refl _
-  · refine ⟨T,n+2,0,0,?_⟩
+  · refine ⟨T,n,0,0,?_⟩
     rw [h1]
     change BB6.Padding.CfgEq
       (BB6.BoundaryPadding.represent
         (⟨[],false,List.replicate n true,5⟩ : Cfg))
       (BB6.BoundaryPadding.represent
-        (BB6.Agent2BoundaryBZero.regularSection (n+2) 0 0))
+        (BB6.Agent2BoundaryBZero.regularSection n 0 0))
     have heq :
         BB6.BoundaryPadding.represent
           (⟨[],false,List.replicate n true,5⟩ : Cfg) =
         BB6.BoundaryPadding.represent
-          (BB6.Agent2BoundaryBZero.regularSection (n+2) 0 0) := by
+          (BB6.Agent2BoundaryBZero.regularSection n 0 0) := by
       simp [BB6.BoundaryPadding.represent,
         BB6.Agent2BoundaryBZero.regularSection,
-        CryptidBoundary.init, hA2, CryptidBoundary.oppairs]
+        CryptidBoundary.init, CryptidBoundary.oppairs]
     rw [heq]
     exact BB6.Padding.cfgEq_refl _
-  · refine ⟨T,n+2,4,0,?_⟩
+  · refine ⟨T,n,4,0,?_⟩
     rw [h2]
     change BB6.Padding.CfgEq
       (BB6.BoundaryPadding.represent
         (⟨[],false,List.replicate n true ++
           [false,true,false,true,false,true,false,true,false],5⟩ : Cfg))
       (BB6.BoundaryPadding.represent
-        (BB6.Agent2BoundaryBZero.regularSection (n+2) 4 0))
+        (BB6.Agent2BoundaryBZero.regularSection n 4 0))
     apply BB6.Padding.cfgEq_symm
     simp only [BB6.BoundaryPadding.represent,
       BB6.Agent2BoundaryBZero.regularSection,
-      CryptidBoundary.init, hA2, List.replicate_zero]
+      CryptidBoundary.init, List.replicate_zero]
     have hword : CryptidBoundary.oppairs 4 =
         [false,true,false,true,false,true,false,true] := by decide
     rw [hword]
