@@ -118,6 +118,51 @@ theorem root_junc11_to_junc10 :
   simpa [root_junc11_to_junc10_max] using
     (runWithMax_toDelta 2457 (junc 11 0 62))
 
+
+/-- First high-three branch from J(10,74) to J(23,51). -/
+theorem root_junc10_to_junc23_max :
+    runWithMax 527 (junc 10 0 74) =
+      some (junc 23 0 51, 23, 23) := by
+  decide
+
+/-- Second high-three branch from J(23,51) to J(49,2). -/
+theorem root_junc23_to_junc49_max :
+    runWithMax 2373 (junc 23 0 51) =
+      some (junc 49 0 2, 49, 49) := by
+  decide
+
+/-- Compose the two high-three branches. -/
+theorem root_junc10_to_junc49_max :
+    runWithMax 2900 (junc 10 0 74) =
+      some (junc 49 0 2, 72, 72) := by
+  have h1 : runWithMax 527 (junc 10 0 74) =
+      some (junc 23 0 51, 23, 23) := root_junc10_to_junc23_max
+  have h2 : runWithMax 2373 (junc 23 0 51) =
+      some (junc 49 0 2, 49, 49) := root_junc23_to_junc49_max
+  have ht : 527+2373=2900 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+/-- Continue through the concrete low-even r=96 return J(49,2)->J(11,98).
+    The complete 3619-step J(10,74) branch has displacement -17 and
+    maximum +84. -/
+theorem root_junc10_to_junc11_r96_max :
+    runWithMax 3619 (junc 10 0 74) =
+      some (junc 11 0 98, -17, 84) := by
+  have h1 : runWithMax 2900 (junc 10 0 74) =
+      some (junc 49 0 2, 72, 72) := root_junc10_to_junc49_max
+  have h2 : runWithMax 719 (junc 49 0 2) =
+      some (junc 11 0 98, -89, 12) := root_low_even_r96_max
+  have ht : 2900+719=3619 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+theorem root_junc10_to_junc11_r96 :
+    runWithDelta 3619 (junc 10 0 74) =
+      some (junc 11 0 98, -17) := by
+  simpa [root_junc10_to_junc11_r96_max] using
+    (runWithMax_toDelta 3619 (junc 10 0 74))
+
 #print axioms root_low43_C0_to_junc_max
 #print axioms root_low43_C0_to_junc
 #print axioms root_low43_junc23_to_junc11_max
@@ -129,5 +174,10 @@ theorem root_junc11_to_junc10 :
 #print axioms root_lowodd_junc25_to_junc10_max
 #print axioms root_junc11_to_junc10_max
 #print axioms root_junc11_to_junc10
+#print axioms root_junc10_to_junc23_max
+#print axioms root_junc23_to_junc49_max
+#print axioms root_junc10_to_junc49_max
+#print axioms root_junc10_to_junc11_r96_max
+#print axioms root_junc10_to_junc11_r96
 
 end BB429Low43Continuation
