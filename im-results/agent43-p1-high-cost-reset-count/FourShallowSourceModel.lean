@@ -27,7 +27,7 @@ theorem no_four_shallow_model_from_source_coefficients
  (hpr2 : (beta,C2,L2,O2)=triple t2)
  (hpr3 : (gamma,C3,L3,O3)=triple t3)
  (hpr4 : (delta,C4,L4,O4)=triple t4)
- (Wa Ba Wb Bc Wd Be Wf Bg Wh Wj : Int)
+ (Wa Ba Wb Wc Bc Wd We Be Wf Wg Bg Wh Wj Bj : Int)
  (hpre : TwoRun ((2:Int)^n) (14*(2:Int)^n+2*(n:Int)+4) ((n:Int)+6) s Wa Ba)
  (hSh1 : ((2:Int)^alpha)*I ((2:Int)^n) Wb (Ba+(alpha:Int)) =
      I ((2:Int)^n) Wa Ba-(C1:Int)*(2:Int)^n+
@@ -44,7 +44,7 @@ theorem no_four_shallow_model_from_source_coefficients
  (hSh4 : ((2:Int)^delta)*I ((2:Int)^n) Wh (Bg+(delta:Int)) =
      I ((2:Int)^n) Wg Bg-(C4:Int)*(2:Int)^n+
        (L4:Int)*Bg-(O4:Int))
- (hsuf : TwoRun ((2:Int)^n) Wh (Bg+(delta:Int)) r Wj (Bj : Int))
+ (hsuf : TwoRun ((2:Int)^n) Wh (Bg+(delta:Int)) r Wj Bj)
  (hwall : Wj=12*(2:Int)^n) : False := by
   obtain ⟨hs,hDdiv⟩ := root_two_prefix_divisor n s Wa Ba hn hpre
   have hpow : (8:Nat)^s=2^(3*s) := by
@@ -167,24 +167,23 @@ theorem no_four_shallow_model_from_source_coefficients
   have hSh1' : ((2:Int)^alpha)*I ((2:Int)^n) Wb (Ba+(alpha:Int)) =
       (98:Int)*(p:Int)-(d:Int)-(C1:Int)*(2^n:Int)+
         (L1:Int)*(T1:Int)-(O1:Int) := by
-    rw [hIpre] at hSh1
-    rw [hT1i] at hSh1
-    exact hSh1
+    rw [hIpre,hBa] at hSh1
+    simpa only [←hT1i] using hSh1
   have hSh2' : ((2:Int)^beta)*I ((2:Int)^n) Wd (Bc+(beta:Int)) =
       I ((2:Int)^n) Wc Bc-(C2:Int)*(2^n:Int)+
         (L2:Int)*(T2:Int)-(O2:Int) := by
-    rw [hT2i] at hSh2
-    exact hSh2
+    rw [hBc] at hSh2
+    simpa only [←hT2i] using hSh2
   have hSh3' : ((2:Int)^gamma)*I ((2:Int)^n) Wf (Be+(gamma:Int)) =
       I ((2:Int)^n) We Be-(C3:Int)*(2^n:Int)+
         (L3:Int)*(T3:Int)-(O3:Int) := by
-    rw [hT3i] at hSh3
-    exact hSh3
+    rw [hBe] at hSh3
+    simpa only [←hT3i] using hSh3
   have hSh4' : ((2:Int)^delta)*I ((2:Int)^n) Wh (Bg+(delta:Int)) =
       I ((2:Int)^n) Wg Bg-(C4:Int)*(2^n:Int)+
         (L4:Int)*(T4:Int)-(O4:Int) := by
-    rw [hT4i] at hSh4
-    exact hSh4
+    rw [hBg] at hSh4
+    simpa only [←hT4i] using hSh4
 
   have hEi : (E:Int)+384=112*Bj := by
     have hh : (E:Int)+384=112*(T5:Int) := by exact_mod_cast hEeq
@@ -260,7 +259,7 @@ theorem no_four_shallow_model_from_source_coefficients
     have hprod : 56*(n+6)≤L1*T1 := Nat.mul_le_mul hprof1.2.2.1 hT1lo
     omega
   have hR1bound : R1≤400*(n+2) := by
-    have hprod : L1*T1≤84*(2*n+6) := Nat.mul_le_mul hprof1.2.2.2 hT1hi
+    have hprod : L1*T1≤84*(2*n+6) := Nat.mul_le_mul hprof1.2.2.2.1 hT1hi
     omega
   have hR2pos : 0<R2 := by
     have hprod : 56*(n+6)≤L2*T2 := Nat.mul_le_mul hprof2.2.2.1 hT2lo
@@ -268,7 +267,7 @@ theorem no_four_shallow_model_from_source_coefficients
   have hR2bound : alpha+3*u≤n-3*s → R2≤600*(n+2) := by
     intro h
     have hprod : L2*T2≤84*(2*n+6) :=
-      Nat.mul_le_mul hprof2.2.2.2 (hT2hi h)
+      Nat.mul_le_mul hprof2.2.2.2.1 (hT2hi h)
     omega
   have hR3pos : 0<R3 := by
     have hprod : 56*(n+6)≤L3*T3 := Nat.mul_le_mul hprof3.2.2.1 hT3lo
@@ -276,7 +275,7 @@ theorem no_four_shallow_model_from_source_coefficients
   have hR3bound : alpha+3*u+beta+3*v≤n-3*s → R3≤600*(n+2) := by
     intro h
     have hprod : L3*T3≤84*(2*n+6) :=
-      Nat.mul_le_mul hprof3.2.2.2 (hT3hi h)
+      Nat.mul_le_mul hprof3.2.2.2.1 (hT3hi h)
     omega
   have hR4pos : 0<R4 := by
     have hprod : 56*(n+6)≤L4*T4 := Nat.mul_le_mul hprof4.2.2.1 hT4lo
@@ -285,7 +284,7 @@ theorem no_four_shallow_model_from_source_coefficients
       alpha+3*u+beta+3*v+gamma+3*w≤n-3*s → R4≤600*(n+2) := by
     intro h
     have hprod : L4*T4≤84*(2*n+6) :=
-      Nat.mul_le_mul hprof4.2.2.2 (hT4hi h)
+      Nat.mul_le_mul hprof4.2.2.2.1 (hT4hi h)
     omega
   have hEbound :
       alpha+3*u+beta+3*v+gamma+3*w+delta+3*r≤n-3*s →
@@ -306,6 +305,9 @@ theorem no_four_shallow_model_from_source_coefficients
     have hlast : 392*(8^s*((2^alpha*8^u)*((2^beta*8^v)*(2^gamma*8^w)))) ≤
         C4*(8^s*((2^alpha*8^u)*((2^beta*8^v)*(2^gamma*8^w)))) :=
       Nat.mul_le_mul_right _ hC4.2.1
+    have hlast' : 392*(8^s*((2^alpha*8^u)*((2^beta*8^v)*(2^gamma*8^w)))) ≤
+        C4*(8^s*(((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w))) := by
+      simpa [Nat.mul_assoc] using hlast
     have hK' : K+98 =
       C1*(8^s)+C2*(8^s*(2^alpha*8^u))+
       C3*(8^s*((2^alpha*8^u)*(2^beta*8^v)))+
