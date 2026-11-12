@@ -124,6 +124,13 @@ theorem s1Config_counted_decrement_of_shifted_prefix
   let T : Int → Bool := fun x => c0.tape (h+x)
   rcases hprefix with
     ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩
+  have hstart : shiftConfig h ⟨3,0,T⟩ = c0 := by
+    ext
+    · simp [shiftConfig,c0]
+    · simp [shiftConfig,c0]
+    · funext x
+      simp [shiftConfig,T]
+      omega
   let P : Int → Bool := fun x => Tpre (h+x)
   have hP1 : P 1 = true := by simpa [P] using h1
   have hP2 : P 2 = true := by simpa [P] using h2
@@ -152,11 +159,13 @@ theorem s1Config_counted_decrement_of_shifted_prefix
           (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
         simpa [s1Config] using
           s1Config_decrement_leftOutput L n m len q r b h hq x hx
+  have hrun' := hrun
+  rw [hstart] at hrun'
   have hprefix0 : run tm2 (15+12*r)
       (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
         (len+1+r) ((2*q+1)*2^r) b h) =
       some ⟨4,h+7,Tpre⟩ := by
-    simpa [c0,s1Config] using hrun
+    simpa [c0,s1Config] using hrun'
   have hdec := s0Config_counted_decrement_of_prefix
     (markerWord m ++ d0 ++ binDec L n ++ lh)
     (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h P
