@@ -1,4 +1,4 @@
-import ValSixC58AllDepth
+import ValSixC58LateFast
 import CSixSeventhDiagonal
 import Lean.Elab.Tactic.Omega
 
@@ -136,6 +136,79 @@ theorem prior_c58_admits_concrete_infinite_family (t : Nat) :
   · omega
   · omega
 
+/-- The same diagonal is admitted even by the newer arbitrary-depth
+    late three-cone filter, not merely by the earlier all-depth gate. -/
+theorem prior_latefast_admits_six_seven_diagonal (j m : Nat)
+    (hm : 7≤m) (hj : j%512=319)
+    (hpair : (3*m)%4096=(j+2879)%4096) :
+    BB6.Agent11LateFastWrapper.highAllowed j m := by
+  have hprior := prior_c58_admits_six_seven_diagonal j m hm hj hpair
+  have hbool : BB6.Agent11C58Boolean.highAllowed j m :=
+    (BB6.Agent11C58Boolean.highAllowed_iff j m).mpr hprior
+  have hlate : BB6.Agent11LateDepthGate.allowedBool j m = true := by
+    apply (BB6.Agent11LateDepthGate.allowedBool_iff j m).mpr
+    intro r hr
+    rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
+    obtain ⟨_,_,_,_,_,_,_,_,_,_,_,_,_,hm4diag⟩ :=
+      diagonal_residues j m hj hpair
+    have hodd : (2*r+1)%4=1 ∨ (2*r+1)%4=3 := by omega
+    omega
+  exact ⟨hbool,hlate⟩
+
+/-- The concrete progression also survives the arbitrary-depth late
+    filter, so the new diagonal exclusion is independent of that gate. -/
+theorem prior_latefast_admits_concrete_infinite_family (t : Nat) :
+    BB6.Agent11LateFastWrapper.highAllowed (1343+4096*t) 42 := by
+  apply prior_latefast_admits_six_seven_diagonal
+  · omega
+  · omega
+  · omega
+
+/-- Strengthen the latest late-fast high predicate by the independent
+    six/seven source-certified diagonal. -/
+def lateFastHighAllowed (j m : Nat) : Prop :=
+  BB6.Agent11LateFastWrapper.highAllowed j m ∧
+  ¬(7≤m ∧ j%512=319 ∧
+    (3*m)%4096=(j+2879)%4096)
+
+/-- Exact original-source Machine C blank-halting iff after adding
+    Agent 4's diagonal to the C58 all-depth plus arbitrary-depth
+    late three-cone high predicate. -/
+theorem blank_halts_iff_c58_late_fast_six_seven :
+    BB6.CReachBridge.RunHalts ↔
+      (∃ m, BB6.Agent11C58ValSix.lowAllowed m ∧
+        BB6.Agent3ValSix.valSixMixedRootDecision
+          1 (2^(2*m+3)-(3*m+4))=true) ∨
+      (∃ j m, lateFastHighAllowed j m ∧
+        BB6.Agent3ValSix.valSixMixedRootDecision (2*j+3)
+          (2^(2*m+2)*(j+3)-(j+3*m+5))=true) := by
+  rw [BB6.Agent11LateFastWrapper.blank_halts_iff_c58_all_depth_late_fast]
+  constructor
+  · rintro (hlow | ⟨j,m,hprior,hroot⟩)
+    · exact Or.inl hlow
+    · let k := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
+      have hreach : BB6.Agent3.CReach (2*j+3) k :=
+        (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
+      have hnot : ¬(7≤m ∧ j%512=319 ∧
+          (3*m)%4096=(j+2879)%4096) := by
+        rintro ⟨hm,hj,hpair⟩
+        obtain ⟨time,hrun⟩ := hreach
+        have hstop : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by
+          simpa [k] using high_stop_identity j m
+        exact (BB6.Agent4Seven.high_stop_six_seven_diagonal
+          j m k time hm hj hpair hstop) hrun
+      exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
+  · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
+    · exact Or.inl hlow
+    · exact Or.inr ⟨j,m,hprior,hroot⟩
+
+/-- The concrete infinite progression is excluded by the latest
+    late-fast exact high predicate, despite passing all earlier gates. -/
+theorem latefast_concrete_family_removed (t : Nat) :
+    ¬lateFastHighAllowed (1343+4096*t) 42 := by
+  intro h
+  exact h.2 ⟨by omega,by omega,by omega⟩
+
 /-- The stronger exact high predicate removes the whole six/seven
     source-certified diagonal, without changing the low branch. -/
 def highAllowed (j m : Nat) : Prop :=
@@ -183,7 +256,11 @@ theorem concrete_family_removed (t : Nat) :
 
 #print axioms prior_c58_admits_six_seven_diagonal
 #print axioms prior_c58_admits_concrete_infinite_family
+#print axioms prior_latefast_admits_six_seven_diagonal
+#print axioms prior_latefast_admits_concrete_infinite_family
 #print axioms blank_halts_iff_c58_all_depth_six_seven
 #print axioms concrete_family_removed
+#print axioms blank_halts_iff_c58_late_fast_six_seven
+#print axioms latefast_concrete_family_removed
 
 end BB6.Agent4SevenC58
