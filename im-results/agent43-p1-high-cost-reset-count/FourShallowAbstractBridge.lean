@@ -101,7 +101,7 @@ theorem no_four_shallow_energies
    omega
  have hneg4 : -(f*(E:Int))=I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
    calc
-     -f*(E:Int)=((2:Int)^delta)*J4 := hlast.symm
+     -(f*(E:Int))=((2:Int)^delta)*J4 := hlast.symm
      _=I3-(C4:Int)*(2:Int)^n+(R4:Int) := hSh4'
  have h4 : f*(E:Int)=(C4:Int)*(2:Int)^n-(R4:Int)-I3 := by
    omega
