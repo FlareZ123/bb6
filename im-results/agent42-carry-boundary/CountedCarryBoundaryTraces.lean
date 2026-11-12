@@ -105,6 +105,54 @@ theorem carryAReturn12 (T : Int → Bool) (h : Int)
     carryAReturn12_trace T h hlocal
   simpa [embed, carryAReturn12Base, shiftConfig] using hmain
 
+/-- The residue-3 bridge's framed A endpoint already supplies the first
+three right-facing ones needed by the A→D scan.  If the untouched exterior
+has ones at old coordinates h+2..h+10, the bridge output matches the
+12-cell A→D input on its entire local window. -/
+theorem carryBridge3_matches_carryAD12
+    (T : Int → Bool) (h : Int)
+    (hRight : ∀ i : Int, 2 ≤ i → i ≤ 10 → T (h+i) = true) :
+    ∀ x, carryAD12Area (x-(h-2)) = true →
+      (embed carryAD12Base).tape (x-(h-2)) =
+        (frame (fun y => carryBridgeArea3 (y-h)) T
+          (shiftConfig h (embed carryBridgeFinal3))).tape x := by
+  intro x hx
+  let i := x-h
+  have hk : x-(h-2) = i+2 := by dsimp [i]; omega
+  have hkRange : 0 ≤ x-(h-2) ∧ x-(h-2) ≤ 12 := by
+    simpa [carryAD12Area] using hx
+  have hiLo : -2 ≤ i := by dsimp [i]; omega
+  have hiHi : i ≤ 10 := by dsimp [i]; omega
+  by_cases hin : carryBridgeArea3 i = true
+  · have harea : -4 ≤ i ∧ i ≤ 1 := by simpa [carryBridgeArea3] using hin
+    have hcases : i = -2 ∨ i = -1 ∨ i = 0 ∨ i = 1 := by omega
+    rcases hcases with h2 | h1 | h0 | h1p
+    · subst i
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
+    · subst i
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
+    · subst i
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
+    · subst i
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
+  · have hnot : carryBridgeArea3 i = false := by
+      cases hh : carryBridgeArea3 i <;> simp_all
+    have hiLo' : 2 ≤ i := by
+      have harea : ¬ (-4 ≤ i ∧ i ≤ 1) := by simpa [carryBridgeArea3] using hnot
+      omega
+    have hR := hRight i hiLo' hiHi
+    have hcoord : h+i = x := by dsimp [i]; omega
+    have hmem : x-(h-2) ∈ ([1,2,3,4,5,6,7,8,9,10,11,12] : List Int) := by
+      simp only [List.mem_cons]
+      omega
+    have hbase : (embed carryAD12Base).tape (x-(h-2)) = true := by
+      simp [embed, carryAD12Base, hmem]
+    have hout :
+        (frame (fun y => carryBridgeArea3 (y-h)) T
+          (shiftConfig h (embed carryBridgeFinal3))).tape x = true := by
+      simp [frame, shiftConfig, hnot, hcoord, hR]
+    rw [hbase, hout]
+
 #print axioms carryAD12_trace
 #print axioms carryDTail15_trace
 #print axioms carryAReturn12_trace
