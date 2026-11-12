@@ -1,7 +1,7 @@
 import CountedCarryBoundaryTraces
 import Lean.Elab.Tactic.Omega
 
-namespace BB6Coverage.Agent42CarryLeftR1
+namespace BB6Coverage.Agent42CarryLeftFrames
 
 open BB6Coverage.Agent48Champion
 
@@ -59,7 +59,7 @@ theorem ad12Offset_mod (h x : Int) (hh : h % 3 = 0) :
 #print axioms bridge3FinalFrameCell_left
 #print axioms ad12Offset_mod
 
-end BB6Coverage.Agent42CarryLeftR1
+end BB6Coverage.Agent42CarryLeftFrames
 
 
 /-- The bridge0 final tape is true at offsets -1 and 0, then follows
@@ -97,4 +97,71 @@ theorem bridge0FrameOutput (bg : Int → Bool) (h x : Int)
     simp [hx, hle]
   · have hgt : ¬ x-h ≤ 0 := by omega
     have hmod : (x-h) % 3 = 1 ↔ x % 3 = 1 := by omega
+    simp [hx, hgt, hmod]
+
+
+/-- The bridge2 final tape is true through relative offset -2, then
+has the every-third pattern with residue 2 on offsets -1..2. -/
+theorem bridge2FinalCell_pattern (i : Int) (hi : -3 ≤ i ∧ i ≤ 2) :
+    (embed carryBridgeFinal2).tape i =
+      (if i ≤ -2 then true else decide (i % 3 = 2)) := by
+  have hc : i = -3 ∨ i = -2 ∨ i = -1 ∨ i = 0 ∨ i = 1 ∨ i = 2 := by
+    omega
+  rcases hc with h3 | h2 | h1 | h0 | h1p | h2p
+  all_goals subst i <;> simp [embed, carryBridgeFinal2]
+
+/-- Shifted bridge2 frame output in absolute coordinates. -/
+theorem bridge2FrameOutput (bg : Int → Bool) (h x : Int)
+    (hh : h % 3 = 2) (hi : -3 ≤ x-h ∧ x-h ≤ 2) :
+    (frame (fun y => carryBridgeArea2 (y-h)) bg
+      (shiftConfig h (embed carryBridgeFinal2))).tape x =
+        (if x ≤ h-2 then true else decide (x % 3 = 1)) := by
+  have ha : carryBridgeArea2 (x-h) = true := by
+    simp [carryBridgeArea2]
+    omega
+  have hf := bridge2FinalCell_pattern (x-h) hi
+  have hframe :
+      (frame (fun y => carryBridgeArea2 (y-h)) bg
+        (shiftConfig h (embed carryBridgeFinal2))).tape x =
+          (embed carryBridgeFinal2).tape (x-h) := by
+    simp [frame, shiftConfig, ha]
+  rw [hframe, hf]
+  by_cases hx : x ≤ h-2
+  · have hle : x-h ≤ -2 := by omega
+    simp [hx, hle]
+  · have hgt : ¬ x-h ≤ -2 := by omega
+    have hmod : (x-h) % 3 = 2 ↔ x % 3 = 1 := by omega
+    simp [hx, hgt, hmod]
+
+/-- The bridge1 final tape is true through relative offset 0, then
+has the every-third pattern at offsets 1..6. -/
+theorem bridge1FinalCell_pattern (i : Int) (hi : -2 ≤ i ∧ i ≤ 6) :
+    (embed carryBridgeFinal1).tape i =
+      (if i ≤ 0 then true else decide (i % 3 = 0)) := by
+  have hc : i = -2 ∨ i = -1 ∨ i = 0 ∨ i = 1 ∨ i = 2 ∨
+      i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 := by omega
+  rcases hc with h2 | h1 | h0 | h1p | h2p | h3 | h4 | h5 | h6
+  all_goals subst i <;> simp [embed, carryBridgeFinal1]
+
+/-- Shifted bridge1 frame output in absolute coordinates. -/
+theorem bridge1FrameOutput (bg : Int → Bool) (h x : Int)
+    (hh : h % 3 = 1) (hi : -2 ≤ x-h ∧ x-h ≤ 6) :
+    (frame (fun y => carryBridgeArea1 (y-h)) bg
+      (shiftConfig h (embed carryBridgeFinal1))).tape x =
+        (if x ≤ h then true else decide (x % 3 = 1)) := by
+  have ha : carryBridgeArea1 (x-h) = true := by
+    simp [carryBridgeArea1]
+    omega
+  have hf := bridge1FinalCell_pattern (x-h) hi
+  have hframe :
+      (frame (fun y => carryBridgeArea1 (y-h)) bg
+        (shiftConfig h (embed carryBridgeFinal1))).tape x =
+          (embed carryBridgeFinal1).tape (x-h) := by
+    simp [frame, shiftConfig, ha]
+  rw [hframe, hf]
+  by_cases hx : x ≤ h
+  · have hle : x-h ≤ 0 := by omega
+    simp [hx, hle]
+  · have hgt : ¬ x-h ≤ 0 := by omega
+    have hmod : (x-h) % 3 = 0 ↔ x % 3 = 1 := by omega
     simp [hx, hgt, hmod]
