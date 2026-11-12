@@ -388,6 +388,110 @@ theorem num_five_small_run_bounds
   exact ⟨huBound,hvBound,hwBound,hxBound,hrBound⟩
 
 
+/-- The source scalar equation forces the recurrence predicate used
+by the finite certificate. The numerator factorizations are precisely the
+successive shallow and depth-two divisibility conditions. -/
+theorem fiveBad_true_of_scalar_equation
+ (n s u v w x r t1 t2 t3 t4 t5 p d
+  alpha beta gamma delta epsilon
+  C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
+  K R1 R2 R3 R4 R5 E : Nat)
+ (hP : (8:Nat)^s*p=2^n) (hD : (8:Nat)^s*d=14*n+92)
+ (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1)
+ (ht4 : t4≤1) (ht5 : t5≤1)
+ (hprofile1 : (alpha,C1,L1,O1)=triple t1)
+ (hprofile2 : (beta,C2,L2,O2)=triple t2)
+ (hprofile3 : (gamma,C3,L3,O3)=triple t3)
+ (hprofile4 : (delta,C4,L4,O4)=triple t4)
+ (hprofile5 : (epsilon,C5,L5,O5)=triple t5)
+ (hR1 : R1+O1+d=L1*(n+6+3*s))
+ (hR2 : R2+O2=L2*(n+6+3*s+alpha+3*u))
+ (hR3 : R3+O3=L3*(n+6+3*s+alpha+3*u+beta+3*v))
+ (hR4 : R4+O4=L4*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w))
+ (hR5 : R5+O5=L5*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x))
+ (hE : E+384=112*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r))
+ (hK : K+98=C1*8^s+C2*(8^s*(2^alpha*8^u))+
+   C3*(8^s*((2^alpha*8^u)*(2^beta*8^v)))+
+   C4*(8^s*(((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w)))+
+   C5*(8^s*((((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w))*(2^delta*8^x))))
+ (hEq : K*p=(2^alpha*8^u)*((2^beta*8^v)*
+   ((2^gamma*8^w)*((2^delta*8^x)*((2^epsilon*8^r)*E+R5)+R4)+R3)+R2)+R1) :
+   fiveBad n s u v w x r t1 t2 t3 t4 t5 = true := by
+  have hmodP : 2^n % 8^s = 0 := Nat.mod_eq_zero_of_dvd ⟨p,hP.symm⟩
+  have hmodD : (14*n+92) % 8^s = 0 := Nat.mod_eq_zero_of_dvd ⟨d,hD.symm⟩
+  have hpDiv : 2^n / 8^s = p := by
+    rw [←hP]
+    exact Nat.mul_div_cancel_left p (Nat.pow_pos (by decide))
+  have hdDiv : (14*n+92) / 8^s = d := by
+    rw [←hD]
+    exact Nat.mul_div_cancel_left d (Nat.pow_pos (by decide))
+  obtain ⟨N1,N2,N3,N4,N5,X1,X2,X3,X4,
+    hN1def,hN2def,hN3def,hN4def,hN5def,
+    hN1fac,hN2fac,hN3fac,hN4fac,hN5fac⟩ :=
+    five_numerator_factorizations n s u v w x r alpha beta gamma delta epsilon
+      p d C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
+      K R1 R2 R3 R4 R5 E hP hR1 hR2 hR3 hR4 hR5 hK hEq
+  have hapos : (2:Int)^alpha ≠ 0 := Int.pow_ne_zero (by decide)
+  have huzpos : (8:Int)^u ≠ 0 := Int.pow_ne_zero (by decide)
+  have hbpos : (2:Int)^beta ≠ 0 := Int.pow_ne_zero (by decide)
+  have hvzpos : (8:Int)^v ≠ 0 := Int.pow_ne_zero (by decide)
+  have hcpos : (2:Int)^gamma ≠ 0 := Int.pow_ne_zero (by decide)
+  have hwzpos : (8:Int)^w ≠ 0 := Int.pow_ne_zero (by decide)
+  have hfpos : (2:Int)^delta ≠ 0 := Int.pow_ne_zero (by decide)
+  have hxzpos : (8:Int)^x ≠ 0 := Int.pow_ne_zero (by decide)
+  have hepos : (2:Int)^epsilon ≠ 0 := Int.pow_ne_zero (by decide)
+  have hrpos : (8:Int)^r ≠ 0 := Int.pow_ne_zero (by decide)
+  have hN1mod : N1 % ((2:Int)^alpha)=0 := by
+    rw [hN1fac]
+    exact Int.emod_eq_zero_of_dvd ⟨(8:Int)^u*X1,by ac_rfl⟩
+  have hJ1mod : (N1/((2:Int)^alpha)) % ((8:Int)^u)=0 := by
+    rw [hN1fac,Int.mul_assoc,Int.mul_ediv_cancel_left _ hapos]
+    exact Int.emod_eq_zero_of_dvd ⟨X1,by ac_rfl⟩
+  have hN2mod : N2 % ((2:Int)^beta)=0 := by
+    rw [hN2fac]
+    exact Int.emod_eq_zero_of_dvd ⟨(8:Int)^v*X2,by ac_rfl⟩
+  have hJ2mod : (N2/((2:Int)^beta)) % ((8:Int)^v)=0 := by
+    rw [hN2fac,Int.mul_assoc,Int.mul_ediv_cancel_left _ hbpos]
+    exact Int.emod_eq_zero_of_dvd ⟨X2,by ac_rfl⟩
+  have hN3mod : N3 % ((2:Int)^gamma)=0 := by
+    rw [hN3fac]
+    exact Int.emod_eq_zero_of_dvd ⟨(8:Int)^w*X3,by ac_rfl⟩
+  have hJ3mod : (N3/((2:Int)^gamma)) % ((8:Int)^w)=0 := by
+    rw [hN3fac,Int.mul_assoc,Int.mul_ediv_cancel_left _ hcpos]
+    exact Int.emod_eq_zero_of_dvd ⟨X3,by ac_rfl⟩
+  have hN4mod : N4 % ((2:Int)^delta)=0 := by
+    rw [hN4fac]
+    exact Int.emod_eq_zero_of_dvd ⟨(8:Int)^x*X4,by ac_rfl⟩
+  have hJ4mod : (N4/((2:Int)^delta)) % ((8:Int)^x)=0 := by
+    rw [hN4fac,Int.mul_assoc,Int.mul_ediv_cancel_left _ hfpos]
+    exact Int.emod_eq_zero_of_dvd ⟨X4,by ac_rfl⟩
+  have hN5prod : N5=(2:Int)^epsilon*(-((8:Int)^r*(E:Int))) := by
+    rw [hN5fac]
+    rw [Int.mul_neg,Int.mul_assoc]
+  have hN5mod : N5 % ((2:Int)^epsilon)=0 := by
+    have hdiv : (2:Int)^epsilon ∣ N5 :=
+      ⟨-((8:Int)^r*(E:Int)),hN5prod⟩
+    exact Int.emod_eq_zero_of_dvd hdiv
+  have hJ5eq : N5/((2:Int)^epsilon)=-((8:Int)^r*(E:Int)) := by
+    rw [hN5prod,Int.mul_ediv_cancel_left _ hepos]
+  have hJ5mod : (N5/((2:Int)^epsilon)) % ((8:Int)^r)=0 := by
+    rw [hJ5eq]
+    exact Int.emod_eq_zero_of_dvd ⟨-(E:Int),by ac_rfl⟩
+  have hJ5div : ((N5/((2:Int)^epsilon))/((8:Int)^r))=-(E:Int) := by
+    rw [hJ5eq,Int.mul_ediv_cancel_left _ hrpos]
+  have hEnat :
+      112*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r)-384=E := by
+    omega
+  have htt1 : triple t1=(alpha,C1,L1,O1) := hprofile1.symm
+  have htt2 : triple t2=(beta,C2,L2,O2) := hprofile2.symm
+  have htt3 : triple t3=(gamma,C3,L3,O3) := hprofile3.symm
+  have htt4 : triple t4=(delta,C4,L4,O4) := hprofile4.symm
+  have htt5 : triple t5=(epsilon,C5,L5,O5) := hprofile5.symm
+  simp [fiveBad,hmodP,hmodD,hpDiv,hdDiv,htt1,htt2,htt3,htt4,htt5,
+    ←hN1def,←hN2def,←hN3def,←hN4def,←hN5def,
+    hN1mod,hJ1mod,hN2mod,hJ2mod,hN3mod,hJ3mod,
+    hN4mod,hJ4mod,hN5mod,hJ5mod,hJ5div,hEnat]
+
 /-- No exact five-shallow source-wall equation exists in the finite
 index range 14<=n<83. The overflow certificates bound every intervening
 depth-two run by two, after which the residual finite table applies. -/
