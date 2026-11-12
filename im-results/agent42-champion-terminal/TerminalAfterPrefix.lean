@@ -71,6 +71,16 @@ theorem champion_attainable_of_tm2_haltsAfter
     champion_halts_after_tm2_haltsAfter N h, ?_⟩
   rfl
 
+/-- Root-corrected champion halting theorem for a terminal S1 prefix. -/
+theorem champion_halts_after_terminal_prefix
+    (n L a : Nat) (t : Int → Bool) (h : Int)
+    (hprefix : run tm2 n blank = some ⟨3,h,t⟩)
+    (hsection : TerminalFinish.SectionBits L a t h) :
+    HaltsAfter championTable (n + terminalMoves L a + 6) := by
+  exact champion_halts_after_tm2_haltsAfter
+    (n + terminalMoves L a)
+    (tm2_halts_after_terminal_prefix n L a t h hprefix hsection)
+
 /-- Direct attainable-score interface for downstream counted-prefix proofs.
 No root offset or final halt-query arithmetic remains to be reconstructed. -/
 theorem champion_attainable_after_terminal_prefix
