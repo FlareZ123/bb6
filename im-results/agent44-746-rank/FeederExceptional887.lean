@@ -173,17 +173,17 @@ private theorem narrow_exact_two_t2 (k x u a q : Nat)
 
 /-- An even-band target whose t=0 and t=1 odd quotients are gaps
     has only its displayed even parent when 27 does not divide 2a+5. -/
-private theorem only_even_parent_two_gaps (k a b q : Nat)
-    (hband : 6*2^k-1≤a ∧ a≤8*2^k-3)
-    (heven : 2*a=8*2^k+b+k)
+private theorem only_even_parent_two_gaps (bandK gapK a b q : Nat)
+    (hband : 6*2^bandK-1≤a ∧ a≤8*2^bandK-3)
+    (heven : 2*a=8*2^bandK+b+bandK)
     (hnot27 : (2*a+5)%27≠0)
-    (hgap0 : 2*2^(k-1)<(2*a+5)/3 ∧
-      (2*a+5)/3<3*2^(k-1))
-    (hgap1 : 2*2^(k-2)<2*((2*a+5)/9) ∧
-      2*((2*a+5)/9)<3*2^(k-2))
+    (hgap0 : 2*2^(gapK-1)<(2*a+5)/3 ∧
+      (2*a+5)/3<3*2^(gapK-1))
+    (hgap1 : 2*2^(gapK-2)<2*((2*a+5)/9) ∧
+      2*((2*a+5)/9)<3*2^(gapK-2))
     (hp : ResetParent q a) : q=b := by
   rcases hp with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
-  · have hm : m=k := even_band_scale_unique a m k hbm hband
+  · have hm : m=bandK := even_band_scale_unique a m bandK hbm hband
     rw [hm] at heq
     omega
   · have htbound : t≤1 := by
@@ -204,7 +204,7 @@ private theorem only_even_parent_two_gaps (k a b q : Nat)
       have hgap : 2*2^(k-1)<d ∧ d<3*2^(k-1) := by
         simpa [hdq] using hgap0
       exact False.elim
-        (CascadeFeederExceptional.odd_gap (k-1) d hgap.1 hgap.2 m
+        (CascadeFeederExceptional.odd_gap (gapK-1) d hgap.1 hgap.2 m
           (by simpa using hbm))
     · have ht1 : t=1 := by omega
       subst t
@@ -213,7 +213,7 @@ private theorem only_even_parent_two_gaps (k a b q : Nat)
       have hgap : 2*2^(k-2)<2*d ∧ 2*d<3*2^(k-2) := by
         simpa [hdq] using hgap1
       exact False.elim
-        (CascadeFeederExceptional.odd_gap (k-2) (2*d) hgap.1 hgap.2 m
+        (CascadeFeederExceptional.odd_gap (gapK-2) (2*d) hgap.1 hgap.2 m
           (by simpa using hbm))
 
 private theorem middle_low_unique_odd_t0 (u j f q : Nat)
@@ -488,7 +488,7 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     omega
   have haUniq : ∀q, ResetParent q a → q=b := by
     intro q hq
-    exact only_even_parent_two_gaps k a b q haBand haEq hnotA27
+    exact only_even_parent_two_gaps j k a b q haBand haEq hnotA27
       haGap0 haGap1 hq
 
   have hbLo : 4*2^j≤b := by omega
