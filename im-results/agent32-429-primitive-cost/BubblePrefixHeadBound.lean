@@ -45,10 +45,10 @@ theorem multi_bubble_prefix_head_bound
           multi_bubble_prefix m u (j+1) tape hju hmA1 hmF1 hmA0 hmB1 hz ho hr
       have htime :
           4*(j+1)*(j+1)+2*(j+1) =
-            (4*j*j+2*j) + (4*(2*j+1)+2) := by omega
+            (4*j*j+2*j) + (4*(2*j+1)+2) := by ring
       have hBubble : run m (4*(2*j+1)+2) cStage = some cFinal := by
         have hcomp := run_add' m (4*j*j+2*j) (4*(2*j+1)+2) c0
-        rw [← htime] at hFull
+        rw [htime] at hFull
         rw [hcomp, hStage] at hFull
         simpa using hFull
       have hAFones : ∀ i : Nat, i < 2*(2*j+1) →
@@ -88,13 +88,13 @@ theorem multi_bubble_prefix_head_bound
          tape:=zeroPaint (negFill tape j) (2*(j:Int)) (2*j+1)}
       have hAF : run m (2*(2*j+1)) cStage = some c1 := by
         simpa [cStage,c1] using
-          AF_sweep m (2*j+1) (2*(j:Int)) (negFill tape j)
+          AF_sweep m (2*(j:Int)) (negFill tape j) (2*j+1)
             hmA1 hmF1 hAFones
       have hAFhead : c1.head = cStage.head - 2*(2*j+1) := by
         simp [c1,cStage]
       by_cases hOld : t ≤ 4*j*j+2*j
       · obtain ⟨d,hpre,hbound⟩ :=
-          ih u t tape hj hmA1 hmF1 hmA0 hmB1 hz ho hr hOld
+          ih u t tape hj hz ho hr hOld
         exact ⟨d,hpre,by omega⟩
       · let s : Nat := t-(4*j*j+2*j)
         have hs : s ≤ 4*(2*j+1)+2 := by
