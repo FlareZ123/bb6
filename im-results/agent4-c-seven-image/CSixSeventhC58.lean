@@ -447,6 +447,66 @@ def highAllowedBoth (j m : Nat) : Prop :=
   ¬(j=831 ∧ m%16384=9770) ∧
   ¬(j=1855 ∧ m%16384=12842)
 
+/-- The full second strict image family, pulled back through the
+    exact high-stop counter, is excluded by the latest C58 predicate. -/
+def highAllowedAllS3 (j m : Nat) : Prop :=
+  lateFastHighAllowed j m ∧
+  ¬(∃ u v, j=319+512*u ∧
+    (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
+    (u+v)%16=(15+4*u)%16)
+
+/-- Exact Machine C blank-halting iff after excluding every high-stop
+    target in the second strict sixth/seventh image family, not only
+    the two explicit progressions. -/
+theorem blank_halts_iff_c58_late_fast_all_s3 :
+    BB6.CReachBridge.RunHalts ↔
+      (∃ m, BB6.Agent11C58ValSix.lowAllowed m ∧
+        BB6.Agent3ValSix.valSixMixedRootDecision
+          1 (2^(2*m+3)-(3*m+4))=true) ∨
+      (∃ j m, highAllowedAllS3 j m ∧
+        BB6.Agent3ValSix.valSixMixedRootDecision (2*j+3)
+          (2^(2*m+2)*(j+3)-(j+3*m+5))=true) := by
+  rw [blank_halts_iff_c58_late_fast_six_seven]
+  constructor
+  · rintro (hlow | ⟨j,m,hprior,hroot⟩)
+    · exact Or.inl hlow
+    · let k := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
+      have hreach : BB6.Agent3.CReach (2*j+3) k :=
+        (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
+      have hnot :
+          ¬(∃ u v, j=319+512*u ∧ k=574+1024*v ∧
+            (u+v)%16=(15+4*u)%16) := by
+        rintro ⟨u,v,hj,hk,hsector⟩
+        obtain ⟨time,hrun⟩ := hreach
+        have hblank :=
+          BB6.Agent4Seven.blank_ne_six_seven_band_s3 u v time hsector
+        have hx : 2*j+3=641+1024*u := by omega
+        apply hblank
+        rw [hx,hk] at hrun
+        exact hrun
+      exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
+  · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
+    · exact Or.inl hlow
+    · exact Or.inr ⟨j,m,hprior,hroot⟩
+
+/-- The first explicit progression is removed by the full image-family
+    predicate as well as by the two-parameter shorthand. -/
+theorem s3_parameter_family_removed_from_all (t : Nat) :
+    ¬highAllowedAllS3 831 (9770+16384*t) := by
+  intro h
+  obtain ⟨v,hkv,hv16⟩ := s3_high_target t
+  have hsector : (1+v)%16=(15+4*1)%16 := by omega
+  exact h.2 ⟨1,v,by norm_num,hkv,hsector⟩
+
+/-- The second explicit progression is removed by the full image-family
+    predicate as well as by the two-parameter shorthand. -/
+theorem s3_second_parameter_family_removed_from_all (t : Nat) :
+    ¬highAllowedAllS3 1855 (12842+16384*t) := by
+  intro h
+  obtain ⟨v,hkv,hv16⟩ := s3_high_target_second t
+  have hsector : (3+v)%16=(15+4*3)%16 := by omega
+  exact h.2 ⟨3,v,by norm_num,hkv,hsector⟩
+
 /-- Exact Machine C blank-halting iff after adding both independent
     Agent 4 six/seven source-image exclusions to the latest late-fast
     C58 high predicate. -/
@@ -514,5 +574,8 @@ theorem s3_second_parameter_family_removed (t : Nat) :
 #print axioms s3_parameter_family_removed
 #print axioms prior_latefast_admits_s3_second_parameter_family
 #print axioms s3_second_parameter_family_removed
+#print axioms blank_halts_iff_c58_late_fast_all_s3
+#print axioms s3_parameter_family_removed_from_all
+#print axioms s3_second_parameter_family_removed_from_all
 
 end BB6.Agent4SevenC58
