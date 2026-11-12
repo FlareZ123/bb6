@@ -74,6 +74,45 @@ Thus the root-connected finite prefix exhibits the invariant pattern
 frontier checkpoints (6, 12, then 16). This is a finite root-history result,
 not an all-time invariant.
 
+## Extended source-connected J-chart prefix (new candidate)
+
+`RootToJunc.lean` supplies the 145-step blank-root checkpoint
+J(0,12), at absolute head (-3), with head maximum 12 and a complete
+physical `Represents` proof. The new `RootJunctionChain.lean` adds an
+exact 1463-step source-zipper monitor
+
+```lean
+runWithMax 1463 (junc 0 0 12) =
+  some (junc 21 0 11, 15, 29)
+```
+
+and lifts it to the complete physical tape. The physical segment begins at
+head (-3), ends at head 12, and every primitive prefix has head at most
+26. Composed with the 145-step root checkpoint, this gives the candidate
+blank-root statement at step 1608: J(21,11), head 12, rightmost mark 26,
+and exact historical head maximum 26.
+
+The same file composes the corrected low43 physical branch from J(21,11)
+to J(11,62). It gives a 1559-step segment, net head displacement (-41),
+and local prefix maximum (+24). After translating the segment by the
+root head coordinate 12, the resulting candidate blank-root checkpoint is
+step 3167, J(11,62), head (-29), rightmost mark 36, and exact historical
+head maximum 36. The proof reconstructs a raw `runWithHeadMax` monitor
+from raw-run success and all-prefix bounds; the lower bound on the maximum
+comes from the newly marked rightmost endpoint cell, while the upper bound
+comes from the physical prefix monitor.
+
+These declarations are kept in `im-results/` pending the full dependency
+workflow. The finite zipper equations were reproduced locally with Lean
+4.36.0-rc2 and `by decide`, but the composed physical file has not yet
+passed repository CI. The manual workflow
+`.github/workflows/agent1-429-root-junction-chain.yml` builds the root,
+high-zero, high-three, low43, and physical dependencies, then checks the
+new root-after-1608 and root-after-3167 axiom reports and rejects
+`sorryAx`. It has not yet been dispatched. Until that workflow succeeds,
+treat this as a source-level proof candidate rather than CI-certified
+evidence.
+
 ## Evidence and source boundary
 
 The 35-step and finite-prefix monitor equations are kernel computations.
@@ -130,9 +169,7 @@ composition along the actual blank-root orbit.
 
 This work does not prove that the subsequent J/Junc orbit stays in a safe
 chart, that every later C/0 event is at the global frontier, or that #429
-never halts. The central remaining task is an all-time physical
-frontier/history invariant across every regular and exceptional J/Junc
-transition, connected to the actual blank root.
+never halts. The root is now connected through a candidate source-verified finite chain to J(11,62), but the all-time physical frontier/history invariant remains open. The next root-specific transitions (including the low-odd and low-even returns) still need their complete prefix maxima composed with the blank-root history, and the general J/Junc chart must be closed across every regular and exceptional transition.
 
 Keep this candidate in `im-results/`. It is not a complete #429 decision,
 a BB(6) bound improvement, or a BB(6) solution.
