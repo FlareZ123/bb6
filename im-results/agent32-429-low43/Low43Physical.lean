@@ -224,6 +224,10 @@ private theorem low3_tail_delta_local (l : List Bool) :
 def stage43Config (v k : Nat) : Config :=
   {state:=A,head:=2*(v:Int)+2,tape:=stage43Tape v k}
 
+def low43_C0_zipper (v k : Nat) : Zipper :=
+  z 2 (true::false::true::true::
+    (ones (4*v+6) ++ tens (2*k) ++ ones 6)) false []
+
 private theorem stage43_decomposition (v k : Nat) :
     ∃ c1 c2 c3 : Config,
       run target429 (4*v+6) (stage43Config v k) = some c1 ∧
@@ -232,6 +236,7 @@ private theorem stage43_decomposition (v k : Nat) :
       c1.head = (stage43Config v k).head - (4*v+6) ∧
       c2.head = (stage43Config v k).head ∧
       c3.head = (stage43Config v k).head + 4 ∧
+      Represents (low43_C0_zipper v k) c3 ∧
       c3.state.val = 2 ∧
       c3.tape c3.head = false ∧
       c3.tape (c3.head+1) = false := by
@@ -241,9 +246,7 @@ private theorem stage43_decomposition (v k : Nat) :
     z 0 (tens (2*k) ++ ones 6) false (tens (2*v+3) ++ [false,true])
   let zAR : Zipper :=
     z 0 (ones (4*v+6) ++ (tens (2*k) ++ ones 6)) false [false,true]
-  let zC0 : Zipper :=
-    z 2 (true::false::true::true::(ones (4*v+6) ++ tens (2*k) ++ ones 6))
-      false []
+  let zC0 : Zipper := low43_C0_zipper v k
   have hAF : runWithDelta (4*v+4) (stage43 v k) =
       some (zFirst, -((4*v+4:Nat):Int)) := by
     simpa [stage43,zFirst,show 2*(2*v+2)=4*v+4 by omega,
@@ -287,6 +290,8 @@ private theorem stage43_decomposition (v k : Nat) :
   obtain ⟨c3,h4P,hrep3,hhead3⟩ :=
     source_runWithDelta_rep 4 zAR c2 hrep2 zC0 4 h4
   rcases hrep3 with ⟨hstate,hcur,hleftRep,hrightRep⟩
+  have hrep3' : Represents (low43_C0_zipper v k) c3 := by
+    simpa [zC0] using (show Represents zC0 c3 from ⟨hstate,hcur,hleftRep,hrightRep⟩)
   have hstate' : c3.state.val=2 := by simpa [zC0] using hstate
   have hcur' : c3.tape c3.head=false := by simpa [zC0] using hcur
   have hright' : c3.tape (c3.head+1)=false := by
@@ -301,7 +306,7 @@ private theorem stage43_decomposition (v k : Nat) :
   have hhead3' : c3.head=(stage43Config v k).head+4 := by
     rw [hhead3,hhead2']
   exact ⟨c1,c2,c3,hleftP,hARP,h4P,hhead1',hhead2',hhead3',
-    hstate',hcur',hright'⟩
+    hrep3',hstate',hcur',hright'⟩
 
 /-- Every primitive prefix of the 8v+16-step prepared stage stays at most
     three cells to the right of its entry head. -/
@@ -370,6 +375,7 @@ theorem low43_C0_record (v k : Nat) :
       run target429 (4*v*v+18*v+22)
         {state:=A,head:=0,tape:=jTape (v+2*k+2) (2*v+1)} = some cC ∧
       cC.head=2*(v:Int)+6 ∧
+      Represents (low43_C0_zipper v k) cC ∧
       cC.state.val=2 ∧
       cC.tape cC.head=false ∧
       cC.tape (cC.head+1)=false ∧
@@ -400,7 +406,7 @@ theorem low43_C0_record (v k : Nat) :
         (by simpa [B] using ht)
     exact ⟨d,hpre,by omega⟩
   obtain ⟨c1,c2,cC,hleft,hAR,h4,hhead1,hhead2,hhead3,
-      hstate,hcur,hright⟩ := stage43_decomposition v k
+      hrepC,hstate,hcur,hright⟩ := stage43_decomposition v k
   let L : Nat := 4*v+6
   have hleftAR : run target429 (L+L) cStage=some c2 := by
     rw [run_add',hleft]
@@ -455,7 +461,7 @@ theorem low43_C0_record (v k : Nat) :
     have hb := hprev t ht d hd
     rw [hheadC]
     omega
-  exact ⟨cC,by simpa [c0,tape] using htotal',hheadC,hstate,hcur,hright,hrecord⟩
+  exact ⟨cC,by simpa [c0,tape] using htotal',hheadC,hrepC,hstate,hcur,hright,hrecord⟩
 
 #print axioms stage43_represented
 #print axioms low43_C0_record
