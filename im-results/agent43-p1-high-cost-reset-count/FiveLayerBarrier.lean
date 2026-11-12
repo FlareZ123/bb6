@@ -46,7 +46,7 @@ theorem five_layer_abstract_barrier
   (hR5bound : alpha+3*u+beta+3*v+gamma+3*w+delta+3*x≤n-3*s →
     R5≤168*(n+2))
   (hEbound : alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r≤n-3*s →
-    E≤2000*(n+2))
+    E+1≤224*(n+2))
   (heq : K*p =
     (a*8^u)*((b*8^v)*((c*8^w)*((f*8^x)*((g*8^r)*E+R5)+R4)+R3)+R2)+R1) : False := by
   let X : Nat := n+2
@@ -370,7 +370,9 @@ theorem five_layer_abstract_barrier
   have hA5Bound : A5≤326*X := by
     rw [hA5]
     exact Nat.le_trans hA5le hRem5Bound
-  have hEsmall : E≤2000*X := hEbound (by omega)
+  have hEplus : E+1≤224*X := by
+    have hh := hEbound (by omega)
+    simpa [X] using hh
   have hA5Rem : A5≤R5+d4 := by rw [hA5]; exact hA5le
   have hUpper : K*2^((((e-t1)-t2)-t3)-t4)≤(R5+d4)*(E+1) := by
     have hAE : A5*E≤(R5+d4)*E := Nat.mul_le_mul_right E hA5Rem
@@ -379,13 +381,12 @@ theorem five_layer_abstract_barrier
       simp
     rw [hEq5']
     omega
-  have hUpperX : (R5+d4)*(E+1)≤652326*X^2 := by
-    have hEplus : E+1≤2001*X := by omega
+  have hUpperX : (R5+d4)*(E+1)≤73024*X^2 := by
     calc
-      (R5+d4)*(E+1)≤(326*X)*(2001*X) :=
+      (R5+d4)*(E+1)≤(326*X)*(224*X) :=
         Nat.mul_le_mul hRem5Bound hEplus
-      _=652326*X^2 := by
-        rw [show (652326:Nat)=326*2001 by decide]
+      _=73024*X^2 := by
+        rw [show (73024:Nat)=326*224 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hK' : 392*(q*A1*A2*A3*A4)≤K := by
@@ -398,15 +399,15 @@ theorem five_layer_abstract_barrier
       ac_rfl
     rw [hc]
     simpa only [Nat.mul_assoc] using hh
-  have hSmallFinal : 652326*X^2<2^n := by
-    have hsmall : 652326*X^2≤19172403734400*X^6 := by
+  have hSmallFinal : 73024*X^2<2^n := by
+    have hsmall : 73024*X^2≤19172403734400*X^6 := by
       calc
-        652326*X^2≤652326*X^3 := Nat.mul_le_mul_left 652326 hx23
-        _≤652326*X^4 := Nat.mul_le_mul_left 652326 hx34
-        _≤652326*X^5 := Nat.mul_le_mul_left 652326 hx45
-        _≤652326*X^6 := Nat.mul_le_mul_left 652326 hx56
+        73024*X^2≤73024*X^3 := Nat.mul_le_mul_left 73024 hx23
+        _≤73024*X^4 := Nat.mul_le_mul_left 73024 hx34
+        _≤73024*X^5 := Nat.mul_le_mul_left 73024 hx45
+        _≤73024*X^6 := Nat.mul_le_mul_left 73024 hx56
         _≤19172403734400*X^6 :=
-          Nat.mul_le_mul_right _ (by decide : 652326≤19172403734400)
+          Nat.mul_le_mul_right _ (by decide : 73024≤19172403734400)
     exact Nat.lt_of_le_of_lt hsmall hGapX
   omega
 
