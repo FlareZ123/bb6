@@ -15,6 +15,7 @@ theorem d0pow_length (n : Nat) : (d0pow n).length = 3*n := by
   | zero => rfl
   | succ n ih =>
       simp [d0pow,d0,ih]
+      omega
 
 /-- Exact zero-padded lookup in the head-facing repeated 100 stream. -/
 theorem sideBit_d0pow_formula (n i : Nat) :
@@ -27,11 +28,11 @@ theorem sideBit_d0pow_formula (n i : Nat) :
       · have hc : i=0 ∨ i=1 ∨ i=2 := by omega
         rcases hc with h0 | h1 | h2
         · subst i
-          simp [d0pow,d0,sideBit]
+          simp [d0pow,d0,sideBit] <;> omega
         · subst i
-          simp [d0pow,d0,sideBit]
+          simp [d0pow,d0,sideBit] <;> omega
         · subst i
-          simp [d0pow,d0,sideBit]
+          simp [d0pow,d0,sideBit] <;> omega
       · have h3 : i = (i-3)+3 := by omega
         rw [h3]
         change sideBit (d0 ++ d0pow n) ((i-3)+3) =
@@ -79,6 +80,8 @@ theorem s1Config_decrement_leftOutput
       have hnot1 : ¬ i < 3*r := by omega
       simp [hnot1]
       rw [sideBit_append]
+      have hlen0 : d0.length = 3 := by rfl
+      simp only [hlen0]
       have hnot2 : ¬ i-3*r < 3 := by omega
       simp [hnot2]
       omega
@@ -93,6 +96,8 @@ theorem s1Config_decrement_leftOutput
       have hnot1 : ¬ i < 3*r := by omega
       simp [hnot1]
       rw [sideBit_append]
+      have hlen1 : d1.length = 3 := by rfl
+      simp only [hlen1]
       have hnot2 : ¬ i-3*r < 3 := by omega
       simp [hnot2]
       omega
@@ -134,9 +139,10 @@ theorem s1Config_decrement_leftOutput
         simp [hnot]
         rw [sideBit_append]
         have hidx : i-3*r < 3 := by omega
+        have hlenD1 : d1.length = 3 := by rfl
         have hd1 : sideBit d1 (i-3*r) = true := by
           simpa [d1pow] using sideBit_d1pow_true 1 (i-3*r) (by omega)
-        simp [d1, hidx, hd1]
+        simp [hlenD1,hidx,hd1]
       have hbit :
           carryLeftOutputBit r
             (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y))
