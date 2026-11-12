@@ -10,7 +10,7 @@ open CryptidBoundary
     later returns, but are unnecessary for basic regular reentry. -/
 theorem e_two_reset_regular_reentry (k q : Nat) :
     run (12*k*k + 49*k + 68 + 4*q)
-      (BB6.Agent2PacketP2Reset.packet (3*k+4) q 2
+      (BB6.Agent31PacketSource.packet (3*k+4) q 2
         (false :: List.replicate 6 true)) =
       DRegularSource.sourceSection ⟨8*k+6,3,2⟩ := by
   rw [BB6.Agent2PacketP2Reset.e_two_reset]
