@@ -12,7 +12,12 @@ A_3=2^\gamma8^w=2^{e_3},\quad
 A_4=2^\delta8^x=2^{e_4},\quad
 A_5=2^\epsilon8^r=2^{e_5},
 \]
-where \(e_1=\alpha+3u\), \(e_2=\beta+3v\), \(e_3=\gamma+3w\), \(e_4=\delta+3x\), and \(e_5=\epsilon+3r\). The shallow edge types determine the corresponding profile triples \((C_i,L_i,O_i)\).
+where \(e_1=\alpha+3u\), \(e_2=\beta+3v\), \(e_3=\gamma+3w\), \(e_4=\delta+3x\), and \(e_5=\epsilon+3r\). The exact profile table is
+\[
+\tau=0:\;(\alpha,C,L,O)=(1,588,84,232),\qquad
+\tau=1:\;(\alpha,C,L,O)=(2,392,56,136).
+\]
+In particular every \(e_i\ge1\).
 
 The cumulative times are
 \[
@@ -30,72 +35,84 @@ with
 \[
 K+98=C_1q+C_2qA_1+C_3qA_1A_2+C_4qA_1A_2A_3+C_5qA_1A_2A_3A_4.
 \]
-All profile coefficients satisfy \(392\le C_i\le588\), \(56\le L_i\le84\), and \(136\le O_i\le232\).
 
-## Remainder bounds and five peels
+## Raw remainder bounds and quotient halving
 
-Assume \(n\ge88\). Since \(q\mid 14n+92\), \(q\le14n+92\le15X\). Also \(d\le14n+92\). Initially,
+Assume \(n\ge83\). Since \(q\mid14n+92\), \(q\le14n+92\le15X\), and \(d\le14n+92\). Also \(T_i\ge n+6\), so
 \[
-R_1\ge56(n+6)-232-(14n+92)=42n+12>0.
+R_1\ge56(n+6)-232-(14n+92)=42n+12>0,
 \]
-For \(i\ge2\), \(R_i\ge56(n+6)-232=56n+104>0\).
+and for \(i\ge2\),
+\[
+R_i\ge56(n+6)-232=56n+104>0.
+\]
 
-Whenever the preceding exponents satisfy \(\sum_{j<i}e_j\le e\), one has \(T_i\le2n+6\), hence
+When the preceding exponents sum to at most \(e\), \(T_i\le2n+6\). The exact profile correlation now improves the upper bound to \(R_i\le168X\): for \(\tau_i=0\),
 \[
-R_i\le84(2n+6)\le200X.
+R_i\le84(2n+6)-232=168n+272\le168(n+2),
 \]
-The first remainder has the same upper bound. Applying the elementary dyadic remainder-peeling lemma successively to the nested equation gives \(A_i\le S_i\) and a new quotient \(d_i\), with
+while for \(\tau_i=1\),
 \[
-S_1=R_1\le200X,\quad
-S_2=R_2+d_1\le400X,\quad
-S_3=R_3+d_2\le600X,
+R_i\le56(2n+6)-136=112n+200\le168(n+2).
+\]
+The same bound applies to \(R_1\), since it has the additional subtraction of \(d\).
+
+At the \(i\)-th dyadic peel, the elementary remainder lemma gives \(S_i=2^{e_i}d_i\) and \(A_i=2^{e_i}\le S_i\). Because \(e_i\ge1\), it also gives \(2d_i\le S_i\). Consequently,
+\[
+S_1=R_1\le168X,\qquad d_1\le84X,\qquad S_2=R_2+d_1\le252X,
 \]
 \[
-S_4=R_4+d_3\le800X,\qquad
-S_5=R_5+d_4\le1000X.
+d_2\le126X,\qquad S_3=R_3+d_2\le294X,\qquad d_3\le147X,
 \]
-At the \(i\)-th peel the scaled remainder is bounded by
 \[
-qA_1\cdots A_{i-1}S_i\le c_iX^{i+1},
+S_4=R_4+d_3\le315X,\qquad d_4\le158X,\qquad S_5=R_5+d_4\le326X.
 \]
-where
+Thus \(A_1\le168X\), \(A_2\le252X\), \(A_3\le294X\), \(A_4\le315X\), and \(A_5\le326X\).
+
+The scaled remainder bounds are
 \[
-c_1=3000,\quad c_2=1{,}200{,}000,\quad
-c_3=720{,}000{,}000,\quad
-c_4=576{,}000{,}000{,}000,
+qS_1\le2520X^2,\qquad qA_1S_2\le635040X^3,
+\]
+\[
+qA_1A_2S_3\le186701760X^4,\qquad
+qA_1A_2A_3S_4\le58811054400X^5,
 \]
 and
 \[
-c_5=15\cdot200\cdot400\cdot600\cdot800\cdot1000
-=576{,}000{,}000{,}000{,}000.
+qA_1A_2A_3A_4S_5
+\le15\cdot168\cdot252\cdot294\cdot315\cdot326\,X^6
+=19172403734400X^6.
 \]
-The fifth bound is the dominant one.
 
 ## Sixth-power gap and contradiction
 
 The exact gap
 \[
-576{,}000{,}000{,}000{,}000(n+2)^6<2^n
+19172403734400(n+2)^6<2^n
 \]
-holds for every \(n\ge88\): it fails at \(n=87\), while at \(n=88\) the two sides are \(306110016000000000000000000\) and \(309485009821345068724781056\), respectively. Check \(n=88,89,90,91,92,93\), then induct in steps of six using \(n+8\le2(n+2)\).
+holds for every \(n\ge83\): it fails at \(n=82\), while at \(n=83\) the two sides are \(7230862781795901150000000\) and \(9671406556917033397649408\), respectively. Check \(n=83,84,85,86,87,88\), then induct in steps of six using \(n+8\le2(n+2)\).
 
 After four peels, the terminal equation is
 \[
 K2^{e-e_1-e_2-e_3-e_4}=A_5E+S_5.
 \]
-The fifth peel gives \(A_5\le S_5\le1000X\). Since \(T_6\le2n+6\), \(E\le2000X\), so
+The fifth peel gives \(A_5\le S_5\le326X\). Since \(T_6\le2n+6\), \(E\le2000X\), so
 \[
 K2^{e-e_1-e_2-e_3-e_4}
-\le S_5(E+1)\le1000X\cdot2001X=2{,}001{,}000X^2.
+\le S_5(E+1)\le326X\cdot2001X=652326X^2.
 \]
-On the other hand, \(K+98\) is the sum of the five positive coefficient terms. The preceding terms already include \(C_1q\ge392>98\), so subtracting 98 still leaves at least the final term; hence \(K\ge C_5qA_1A_2A_3A_4\ge392qA_1A_2A_3A_4\). Since
+On the other hand, \(K+98\) is the sum of the five positive coefficient terms. The preceding terms already include \(C_1q\ge392>98\), so subtracting 98 still leaves at least the final term; hence
+\[
+K\ge C_5qA_1A_2A_3A_4\ge392qA_1A_2A_3A_4.
+\]
+Since
 \[
 qA_1A_2A_3A_4\cdot2^{e-e_1-e_2-e_3-e_4}=2^n,
 \]
-the same quantity is at least \(392\cdot2^n\). The sixth-power gap implies \(2{,}001{,}000X^2<2^n\), a contradiction.
+the same quantity is at least \(392\cdot2^n\). The sixth-power gap implies \(652326X^2<2^n\), a contradiction.
 
 ## Formalization state
 
-- FiveLayerGap.lean contains the \(n\ge88\) sixth-power gap.
-- FiveLayerBarrier.lean encodes the five-peel conditional barrier with the sharpened \(200X\) remainder bounds.
+- FiveLayerGap.lean contains the \(n\ge83\) sixth-power gap.
+- FiveLayerBarrier.lean encodes the five-peel conditional barrier, using the exact two-profile correlation and the quotient-halving consequence \(2d_i\le S_i\).
 - Both files still need a targeted Lean CI compile. The source coefficient model and a SourceLowWord five-shallow lift have not been written.
