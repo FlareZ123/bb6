@@ -14,7 +14,7 @@ There is also an exact high stopping obstruction for `m>=7`, with the original s
 (319,3517), (831,445), (1343,1469), (1855,2493).
 ```
 
-These four disjoint parameter classes occupy density `1/2097152` of all `(j,m)` pairs as an arithmetic lattice. Their independence from the source-certified ValSixFull+C58 all-depth stopping sieve and the later arbitrary-depth late three-cone gate is now established by a uniform modular comparison; the formal integration wrappers are drafted but still await their manual original-source CI run.
+These four disjoint parameter classes occupy density `1/2097152` of all `(j,m)` pairs as an arithmetic lattice. The four-class exclusion itself is source-certified by CI 42720140809. The separate `CSixSeventhC58.lean` wrapper proves admission by the prior ValSixFull+C58 all-depth and late-fast gates and attempts to integrate both this diagonal and the later s3 family into exact criteria; that wrapper still awaits a successful original-source audit.
 
 ## Formal artifacts
 
@@ -25,7 +25,7 @@ These four disjoint parameter classes occupy density `1/2097152` of all `(j,m)` 
 - [CSixSeventhGateWide.lean](CSixSeventhGateWide.lean): four congruence classes pulled back through the exact high stopping equation
 - [CSixSeventhC58.lean](CSixSeventhC58.lean): prior-sieve admission and strengthened exact C58/late-fast iff with two new high-stop progressions; pending original-source CI
 
-The original six/seven diagonal exclusion and its initial strict-image proof were checked against **unmodified original Lean machine and inverse source** by [CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809), success, with no printed `sorryAx`. The current second strict-image slice, its all-time root exclusion, and the C58/late-fast integration were added afterward and **have not yet been source-audited**. The earlier widened source-image proof alone passed [CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275). Both relevant workflows are manual-only.
+The original six/seven diagonal exclusion and its initial strict-image proof were checked against **unmodified original Lean machine and inverse source** by [CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809), success, with no printed `sorryAx`. The second strict-image slice and its all-time blank-root exclusion were source-audited in [CI 43300420208](https://github.com/FlareZ123/bb6/actions/runs/43300420208), also with no `sorryAx`. That run did not certify the separate `CSixSeventhC58.lean` parameter-pullback integration. The earlier widened source-image proof alone passed [CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275). The retained integration workflow is manual-only.
 
 
 
@@ -70,7 +70,7 @@ u=3+16*t, v=8   ->  (3713+16384*t, 8766)
 
 The new root theorem `blank_ne_six_seven_band_s3` excludes every state in the full four-residue family from the blank-origin orbit at every time. The family is disjoint from the original diagonal because `u+v = 3 (mod 4)), not zero.
 
-The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second image family has not yet passed original-source CI** and remains an intermediate result.
+The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second image family and its all-time blank-root exclusion passed original-source CI 43300420208 with no `sorryAx`.** Its C58 parameter pullback remains intermediate pending a separate successful audit.
 
 ## Pullback to the full C58 high-stop parameter family
 
@@ -95,7 +95,7 @@ Two explicit high-stop progressions witness nonemptiness:
 
 The strongest new exact criterion is `blank_halts_iff_c58_late_fast_all_s3`: it removes every high-stop target in this full second image family, not merely the two displayed progressions, while preserving the exact Machine C blank-halting iff. The narrower two-progression corollary `blank_halts_iff_c58_late_fast_six_seven_both` and explicit removal theorems are also retained. [CSixSeventhC58.lean](CSixSeventhC58.lean) contains the generic admission proof, both concrete pullbacks, and the exact criteria.
 
-**The current second-family strict-image proof and C58 integration have not yet passed original-source CI.** They remain in `im-results/` and do not determine BB(6).
+**The second-family strict-image proof and all-time root exclusion passed CI 43300420208; the C58 integration did not compile in that run and remains pending.** The parameter-pullback file stays in `im-results/` and neither result determines Machine C or BB(6).
 ## Independence from the integrated C58 all-depth sieve
 
 The four high-stop classes are exactly equivalent to the single diagonal
@@ -138,6 +138,6 @@ CI run [43300420208](https://github.com/FlareZ123/bb6/actions/runs/43300420208) 
 - `exactly_six_not_seven_s3` and its four infinite progressions have axioms `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
 - `blank_ne_six_seven_band_s3` also has no `sorryAx`; it proves that every state in the `(u+v)%16=(15+4*u)%16` sector is absent from the genuine blank-root section orbit at every time.
 
-The same run did **not** certify the `CSixSeventhC58.lean` pullback integration: that file still has Lean elaboration errors (core-tactic availability, nested conjunction destructuring, and local-let rewriting). Therefore the two displayed high-stop progressions `(j,m)=(831,9770+16384*t)` and `(1855,12842+16384*t)` remain candidate C58 parameter pullbacks, not yet certified exclusions from the exact C58 halting predicate. See Agent 11's diagnostics in `communications/agent4/` and use the existing manual source-audit workflow after correction.
+The same run did **not** certify the `CSixSeventhC58.lean` pullback integration. Agent 11's diagnostics identified core-tactic, conjunction-destructuring, coordinate-rewrite, and local-let issues. These were repaired in commit `d751a5c111e0b2bfff821a50d9bd36d42134d081`, but that revision has not yet been audited by a fresh original-source run. Therefore the two displayed high-stop progressions `(j,m)=(831,9770+16384*t)` and `(j,m)=(1855,12842+16384*t)` remain candidate C58 parameter pullbacks, not certified exclusions from the exact C58 halting predicate. Use the existing manual workflow `.github/workflows/agent11-c-diagonal-late.yml` for the next audit; the temporary push-triggered audit workflow was removed.
 
 This separation is important: the infinite strict image family and its all-time blank-root exclusion are proven; the parameter-family composition into the C58 halting equivalence is not yet proven.
