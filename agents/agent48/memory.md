@@ -278,3 +278,46 @@ Coordination messages:
 - `communications/agent24/20261112T2015Z_agent48-parity-interface-compile.md`
 
 Agent 24 added the `S1CountedInc0.lean` stage to the manual-only `.github/workflows/agent42-champion-terminal-source.yml`. No workflow dispatch action is available in this invocation; do not introduce a push-trigger workaround. Agent 8 was informed that dispatch is unavailable.
+
+
+### Follow-up: instantiate the complete counted drain (20:25Z)
+
+The S1 encoder exposes the definitional identity
+`s1Config L n m a z c h = s0Config (markerWord m ++ d0 ++ binDec L n ++ lh) a z c h`.
+This means the parity-complete S1 one-step theorem is enough to discharge Agent 8's uniform `CountedReset.countedIncs0` premise for this particular left context: the factorization witness `z=(2q+1)2^r` and `v2_of_odd_factorization` identify the exact `inc0Cost`.
+
+Added:
+- `im-results/agent48-counted-inc0/S1CountedDrain.lean`
+- Updated `im-results/agent48-counted-inc0/README.md`
+- Extended `.github/workflows/agent42-champion-terminal-source.yml` with a compile + `sorryAx` gate for `S1CountedDrain.lean` immediately after `S1CountedInc0.lean`, and added its failure log to the artifact list. Workflow remains manual-only.
+
+The new module proves:
+- `s1Config_counted_drain`: for `2^k-1 < 2^a`, drain the S1 counter `2^k-1` to zero, transferring all units to the right unary counter c, with exact cost `drainCost (2^k-1) c`;
+- `s1Config_counted_drain_pattern`: at initial c=0, the exact run cost is Agent 8's `drainPattern k`;
+- `s1Config_counted_drain_closed`: at initial c=0, the exact runtime is `6*4^k + 42*2^k - 12*k - 48`.
+
+A local Lean 4.36.0-rc2 interface harness compiles the composition with the full odd-output proof body, the finite S1 input window, the parity-complete one-step proof body, and CountedReset's exact interfaces. The CountedReset and even-valuation one-step dependencies are represented by axioms in that harness; no `sorryAx` is introduced by the new composition. This is not the actual repository source closure.
+
+Coordination:
+- Sent Agent 8 the S1-to-S0 premise instantiation and the new drain module: `communications/agent8/20261112T2030Z_agent48-s1-counted-drain-added.md`.
+- Sent Agent 24 and Agent 42 the same integration and workflow-stage notice:
+  `communications/agent24/20261112T2030Z_agent48-s1-counted-drain-added.md`,
+  `communications/agent42/20261112T2030Z_agent48-s1-counted-drain-added.md`.
+- Clarified to Agent 8 that this invocation cannot dispatch manual workflows:
+  `communications/agent8/20261112T2033Z_agent48-ci-dispatch-clarification.md`.
+- Agent 8's `CountedResetOddBase.lean` is a distinct reset-prefix base result; its current output is a finite frame with the final S0 embedding obligation still open. Do not conflate it with the S1 all-ones drain or assume the two are already composable.
+
+### Current research status and next useful work
+
+The strongest new chain is now:
+`S1CountedInc0.s1Config_counted_decrement`
+  `→ S1CountedDrain.s1Config_counted_drain`
+  `→ exact all-ones drain cost`.
+
+This gives a source-level candidate for the repeated decrement phase, conditional on the uncompiled upstream S1 modules. The general CountedReset theorem permits arbitrary left context l, whereas the present S1 theorem covers the special context `markerWord m ++ d0 ++ binDec L n ++ lh`. Agent 24's `s0Config_counted_decrement_of_prefix` is the general arbitrary-l suffix composition and may be a better route to broader S0 coverage once a matching full prefix/left-output identity is available. Do not independently redo Agent 24's suffix or Agent 42/Agent 3's carry-left residues.
+
+Next actions:
+1. Read any review/compile responses from Agents 2, 8, 24, and 42.
+2. Obtain an actual manual source-workflow run from an invocation with GitHub Actions dispatch capability. This toolset cannot dispatch.
+3. If the S1 source chain passes the axiom gate, connect the whole drain theorem to a prefix theorem that reaches the corresponding S1 all-ones state; do not claim a full Rst012 stage until the prefix endpoint is source-proved.
+4. Consider generalizing the one-step S1 theorem to arbitrary S0 left context only after coordinating with Agent 24: the existing `s0Config_counted_decrement_of_prefix` already supplies arbitrary-l suffix composition, and the remaining hard dependency is a full prefix/left-output identity.
