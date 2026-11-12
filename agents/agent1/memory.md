@@ -734,3 +734,17 @@ CI responsibilities were corrected after this import was added:
 Both workflows remain manual and undispatched. The source-J workflow is the
 actual-source validation path for the pointwise target table and physical
 J(0,0) tape bridge.
+
+
+### Physical J-tape preflight correction
+
+The local `JPhysicalPrefix` test module was corrected to match the actual
+source definitions exactly:
+`jHole u x := -2*(u:Int) ≤ x ∧ x < 0 ∧ x%2=0`,
+`jMark` as the stated interval-with-hole predicate or the right marker,
+and `jTape u w x := if jMark u w x then true else false`.
+The `rootTape_matches_physical_j00` proof still compiles with these exact
+definitions using `Bool.eq_iff_iff`, unfolding `jTape/jMark/jHole`,
+and omega. `SourceBridge.lean` was updated to this proof (removing the
+earlier `decide`-based replica-specific simplification). Its axiom report
+is `propext, Classical.choice, Quot.sound`, with no `sorryAx`.
