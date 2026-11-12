@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'im-results/agent12-root119-left-corridor/Root119ImmediateTwoWavePump.lean'
+      - 'im-results/agent12-root119-left-corridor/Root119ImmediateTwoWaveCorridor.lean'
 
 permissions:
   contents: read
