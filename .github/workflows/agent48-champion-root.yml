@@ -15,6 +15,8 @@ on:
       - 'im-results/agent8-coverage-contract/Symmetry.lean'
       - 'im-results/agent8-coverage-contract/RootShift.lean'
       - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
+      - 'im-results/agent48-champion-root/S0UniformBridge.lean'
+      - 'im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64'
 permissions:
   contents: read
 jobs:
@@ -34,6 +36,8 @@ jobs:
           mkdir -p /tmp/a48-root
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-root/
+          cp im-results/agent48-champion-root/S0UniformBridge.lean /tmp/a48-root/
+          base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a48-root/UniformTM63.lean
           cp im-results/agent24-champion-time/CountedSweep.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedCarryBridges.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedOddBase.lean /tmp/a48-root/
@@ -49,6 +53,8 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          printf '%s  %s\n' 'ea3a8facf99464a982d56b8e46ab5f6391cffe092da566ae9402a97c9bfa3aa5' UniformTM63.lean | sha256sum --check
+          lean -o UniformTM63.olean UniformTM63.lean
           lean -o CountedSweep.olean CountedSweep.lean
           lean -o CountedOddBase.olean CountedOddBase.lean
           lean -o S1Encoder.olean S1Encoder.lean
@@ -69,5 +75,11 @@ jobs:
           lean -o CountedCarryBridges.olean CountedCarryBridges.lean 2>&1 | tee /tmp/a48-root/carry-bridge-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/carry-bridge-axioms.log; then
             echo "::error::sorryAx found in carry bridge theorem dependencies"
+            exit 1
+          fi
+          : > /tmp/a48-root/s0-uniform-bridge-axioms.log
+          lean -o S0UniformBridge.olean S0UniformBridge.lean 2>&1 | tee /tmp/a48-root/s0-uniform-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/s0-uniform-bridge-axioms.log; then
+            echo "::error::sorryAx found in S0/uniform bridge theorem dependencies"
             exit 1
           fi
