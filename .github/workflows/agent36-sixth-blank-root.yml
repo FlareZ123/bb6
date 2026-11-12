@@ -1,6 +1,11 @@
-name: Agent 36 D sixth genuine blank-root five-return proof (manual)
+name: Agent 36/2 D sixth blank-root q4 continuation (manual plus targeted push)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent2-cryptid-continuity/BlankSixthQ4Rejoin.lean'
+      - '.github/workflows/agent36-sixth-blank-root.yml'
 permissions:
   contents: read
 jobs:
@@ -105,6 +110,8 @@ jobs:
           lean -o "$A/EleventhPacketFive.olean" "$A/EleventhPacketFive.lean"
           lean -DmaxRecDepth=55000 -o "$A/BlankEleventhRejoin.olean" "$A/BlankEleventhRejoin.lean"
           T=im-results/agent37-d-timing-cocycle
+          lean -DmaxRecDepth=55000 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
+          lean -DmaxRecDepth=55000 "$D/BlankSixthQ4Rejoin.lean"
           lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwelfthRejoin.olean" "$T/BlankTwelfthRejoin.lean"
           K=im-results/agent36-sixth-packet
