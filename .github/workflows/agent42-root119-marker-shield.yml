@@ -1,0 +1,42 @@
+name: Agent 42 Root119 wave marker shield (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  marker-shield:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile authentic wave dependencies and marker theorem
+        run: |
+          set -euo pipefail
+          A=im-results/agent42-root119-guard
+          S=im-results/agent12-root119-shuttle
+          export LEAN_PATH="$A:$S"
+          lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
+          lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
+          lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
+          lean -o "$A/Root119BRegular.olean" "$A/Root119BRegular.lean"
+          lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$A/Root119DFSweep.olean" "$A/Root119DFSweep.lean"
+          lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
+          lean -o "$S/Root119Shuttle.olean" "$S/Root119Shuttle.lean"
+          lean -o "$A/Root119FBSweep.olean" "$A/Root119FBSweep.lean"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('$A/Root119Wave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('wave-source-sha256',h); assert h=='715e5512da53986da896ea05d68d28869fc8489b6ad3e1e49e26459545299930'; p.with_name('Root119Wave.lean').write_bytes(b)"
+          lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
+          lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
+          lean "$A/Root119WaveMarkerShield.lean" 2>&1 | tee "$A/Root119WaveMarkerShield.log"
+          if grep -q 'sorryAx' "$A/Root119WaveMarkerShield.log"; then
+            echo "::error::sorryAx found in marker shield theorem axioms"
+            exit 1
+          fi
