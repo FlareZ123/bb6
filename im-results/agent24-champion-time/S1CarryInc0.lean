@@ -212,9 +212,10 @@ theorem s1Config_counted_decrement_of_prefix
   rw [hprun] at hshift
   simp only [Option.map] at hshift
   rw [hstart] at hshift
+  have hhead : (7:Int)+h = h+7 := by omega
   have hprefix0 : run tm2 (15+12*r) c0 =
       some ⟨4,h+7,Tpre⟩ := by
-    simpa [shiftConfig,Tpre] using hshift
+    simpa [shiftConfig,Tpre,hhead] using hshift
   let P : Int → Bool := fun x => Tpre (h+x)
   have hP : ∀ x, P x = T' x := by
     intro x
