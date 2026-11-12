@@ -337,3 +337,6 @@ Closed the state-0 blank-root prefix that was previously only a finite-list simu
 The proof is only the initial init-to-S1 prefix. It does not prove the later Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H itinerary, the terminal drain, the exact champion score, or any BB(6) upper bound. The work remains under im-results/, not results/.
 
 A scoped path-triggered workflow, .github/workflows/agent48-root-witness.yml, compiles the original dependencies and both new modules and rejects sorryAx. Local compilation succeeded with Lean 4.36.0-rc2. Next: compose the new source theorem with Agent 8's reset-prefix work; Agent 24's current concrete gap is the LC_Inc left-counter operation with arbitrary right context after rw_Bin; es; er.
+
+
+The scoped CI workflow completed successfully on commit 2e4a6d1510509d8f1bc61ce85087b1386b5ab40c: run 43320358464, job 131539117781. The job compiled Frontier, Symmetry, RootShift, ChampionRootBridge, S1Encoder, RootFiniteBits, and RootSourceBridge with Lean 4.36.0-rc2. Its axiom output confirms the finite computation depends on [propext] and the source reachability theorem on [propext, Quot.sound]; the workflow's sorryAx checks passed.
