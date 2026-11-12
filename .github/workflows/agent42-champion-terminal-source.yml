@@ -132,6 +132,13 @@ jobs:
             echo '::error::sorryAx found in S1 source carry output bridge dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/S1CarryInc0.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/s1-carry-inc0-axioms.log
+          lean -o S1CarryInc0.olean S1CarryInc0.lean 2>&1 | tee /tmp/a42-terminal/s1-carry-inc0-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/s1-carry-inc0-axioms.log; then
+            echo '::error::sorryAx found in source S1 counted decrement dependencies'
+            exit 1
+          fi
           lean -o TerminalFinish.olean TerminalFinish.lean
           lean -o TerminalLeft.olean TerminalLeft.lean
           lean -o TerminalBridge.olean TerminalBridge.lean
@@ -154,5 +161,6 @@ jobs:
             /tmp/a42-terminal/agent2-odd-canonical-axioms.log
             /tmp/a42-terminal/counted-suffix-output-axioms.log
             /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
+            /tmp/a42-terminal/s1-carry-inc0-axioms.log
           if-no-files-found: ignore
           retention-days: 3
