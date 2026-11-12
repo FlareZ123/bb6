@@ -384,3 +384,12 @@ Next high-value action: obtain CI for AP2 and ExceptionalEPacketClosure; then in
 - Added PacketP2ReentryOrE.lean with p2_packet_reentry_or_E: composes PacketNormalizeSource.normalized_original_source with the A-p2 110111 source theorem and B-zero source. Every source-valid fixed-tail p≡2 packet either returns to regular L or reaches a source-connected normalized E,p=2 packet. This is the strongest current reduction of the p≡2 branch; the only residual is E,p=2.
 - Added the new module to both focused packet and D-root manual workflows, with axiom output captured. Updated packet-shift README and broadcast communications/broadcast/20261112T1606Z_agent2-p2-source-reduction.md.
 - This new composition is CI-pending. Check the run_add orientation, conversion physical/toState ↔ packet, and A/B terminal shape rewrites when CI is available.
+
+
+### Canonical E2 reset endpoint (2026-11-12 16:08Z)
+
+- Strengthened PacketP2ReentryOrE with p2_packet_reentry_or_reset. For every source-valid fixed-tail p≡2 packet, the original run either reaches regular L via A/B(q=0), or reaches the canonical changed-marker packet M(8k+5,0,2q+6;marker) by composing the residual E,p=2 state with PacketP2ResetSource.e_two_reset.
+- The residual existential in p2_packet_reentry_or_E now retains d=(normalizeWithCount c).2 explicitly, so the E2 reset composition can recover d.a≥4 and write d.a=3k+4.
+- This makes the only remaining path the canonical E-chain marker family studied by Agent37. See communication communications/agent37/20261112T1608Z_agent2-p2-canonical-reset.md and README section “Source-connected p≡2 packet reduction.”
+- Workflow order was corrected: root workflow compiles AP2, then BoundaryBZero, PacketP2ResetSource, PacketSafeExit, PacketNormalizeSource, then PacketP2ReentryOrE. Focused workflow already compiles PacketP2ResetSource/PacketNormalizeSource/BoundaryBZero before AP2 and PacketP2ReentryOrE.
+- CI is still pending. Check the equality witness in the residual branch and the hamin rewrite through hd, plus run_add composition, when a manual workflow can be run.
