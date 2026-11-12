@@ -7,6 +7,8 @@ on:
       - 'im-results/agent37-d-timing-cocycle/Seed31Probe.lean'
       - 'im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.lean'
       - 'im-results/agent2-packet-shift/AP2PacketBoundarySource.lean'
+      - 'im-results/agent2-packet-shift/PacketP2ReentryOrE.lean'
+      - 'im-results/agent2-packet-shift/ExceptionalEPacketClosure.lean'
       - 'im-results/agent37-d-timing-cocycle/BlankThirtiethRejoin.lean'
       - '.github/workflows/agent25-eleventh-root.yml'
 permissions:
