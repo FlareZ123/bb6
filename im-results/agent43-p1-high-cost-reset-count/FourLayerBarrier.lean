@@ -245,7 +245,6 @@ theorem four_layer_abstract_barrier
       exact Nat.lt_of_le_of_lt hqA1A2A3RemBound hGapX
     exact Nat.lt_of_mul_lt_mul_left hb
   have hEq4' : K*2^(((e-t1)-t2)-t3)=A4*E+(R4+d3) := by
-    rw [←hA4]
     simpa only [Nat.add_assoc,Nat.mul_comm,Nat.mul_assoc,Nat.mul_left_comm] using hEq4
   obtain ⟨d4,ht4le,hR4eq,hEq5,hd4le,hA4le⟩ :=
     residue_peel (((e-t1)-t2)-t3) t4 K E (R4+d3) hRem4Pos hRem4Small hEq4'
