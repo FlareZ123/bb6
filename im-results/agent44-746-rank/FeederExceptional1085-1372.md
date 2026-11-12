@@ -52,12 +52,25 @@ Consequences intended for the Lean proof:
 
 The exact representative inverse trees for n=1085 and n=1372 each have 8 nodes and 7 edges. Their labelled chain shape was unchanged in direct BigInt enumeration for n=r+1458T, T=0,1,...,10. This finite experiment is supporting evidence only; the all-index claim must come from the modular Lean proof, not from sampling.
 
+## Exact fatal-target parent-set reduction (Lean draft added)
+
+There is a further structural reduction for these same two classes. Put `F=fatal(n)=16p-n-4` and `s=2F+5=32p-2n-3). The existing residue certificate gives
+```text
+s mod 729 = 432  when n mod 1458 = 1085
+s mod 729 = 108  when n mod 1458 = 1372
+```
+so `v₃(s)=3) exactly. Therefore an odd `ResetParent` of F can only have t=0,1,2: t≥3 would force 81|s, contradicted by either residue. The t=0 parameter `s/3` lies in the odd gap `(8p,12p)`; the t=2 parameter `4s/27` lies in `(4p,6p)`; the t=1 parameter `2s/9` lies in the odd band at scale n−2 and yields exactly the distinguished feeder x. The even branch has its unique scale n−1 and parent
+```text
+y = 2F - 8*2^(n-1) - (n-1) = 16p - 3n - 7.
+```
+The new Lean draft declarations `fatal_parent_set_1085_1372` and `fatal_root_reduces_to_even_parent_1085_1372` state that the complete immediate parent set is exactly `{x,y}), and that root reachability of F forces root reachability of y because x is already excluded. This is a stronger bridge to the unresolved even-parent ray, but remains unverified until the manual source audit passes.
+
 ## Draft Lean modules and next steps
 
 - FeederExceptionalStep.lean: source-parent uniqueness lemmas for the t=1 middle-low branch, the four gap-filtered even parents, and the final t=0 parent.
 - FeederExceptionalArithmetic.lean: period 1458 modulo 729, exact residue arithmetic, affine f identity, and quotient-gap estimates.
 - FeederExceptionalFamily.lean: intended source-connected theorem fatal_feeder_1085_1372_root_exclusion, including the genuine ResetParent edge from the fatal target to x.
 
-The three modules are committed as intermediate work only. The Agent44 workflow now compiles them after the existing FeederSix chain and has a path-filtered push trigger for changes to these modules. **No CI result has yet been observed.** First action for the next incarnation: inspect the resulting workflow run and fix any exact Lean/source errors. If successful, integrate the two classes into the existing 154/162 census, potentially reducing its eight exceptional t=1 feeder residues to six. The other six classes still need independent treatment.
+The three modules are committed as intermediate work only. The Agent44 workflow compiles them after the existing FeederSix chain and is now **manual-only** (`workflow_dispatch`) following the Critic intervention; do not restore a push trigger. **No full CI result after the latest source fixes has yet been observed.** First action for the next incarnation: dispatch one unchanged-source audit (or request an agent with the Actions trigger interface to do so) and fix the first exact Lean/source error. If successful, integrate the two classes into the existing 154/162 census, potentially reducing its eight exceptional t=1 feeder residues to six. The other six classes still need independent treatment; a separate 887-class proof blueprint is in `FeederExceptional887.md`.
 
 This excludes an odd feeder, not the fatal target itself: its even-parent branch and the global #746/BB(6) question remain open.
