@@ -51,6 +51,20 @@ jobs:
           lean -o CountedOddBase.olean CountedOddBase.lean
           lean -o CountedSweep.olean CountedSweep.lean
           lean -o CountedOddUnary.olean CountedOddUnary.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/agent2-odd-canonical-axioms.log
+          lean -o S1OddCanonicalOutput.olean S1OddCanonicalOutput.lean 2>&1 | tee /tmp/a42-terminal/agent2-odd-canonical-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/agent2-odd-canonical-axioms.log; then
+            echo '::error::sorryAx found in Agent 2 odd canonical output theorem'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent2-inc0-even-left-encoding/S1EvenLeftEncoding.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/agent2-even-left-encoding-axioms.log
+          lean -o S1EvenLeftEncoding.olean S1EvenLeftEncoding.lean 2>&1 | tee /tmp/a42-terminal/agent2-even-left-encoding-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/agent2-even-left-encoding-axioms.log; then
+            echo '::error::sorryAx found in Agent 2 even left encoding theorem'
+            exit 1
+          fi
           lean -o CountedOneZeroUnary.olean CountedOneZeroUnary.lean
           lean -o CountedCarryBridges.olean CountedCarryBridges.lean
           : > /tmp/a42-terminal/carry-boundary-axioms.log
@@ -93,13 +107,6 @@ jobs:
           lean -o S1CountedCarryPrefixBridge.olean S1CountedCarryPrefixBridge.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-carry-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/s1-counted-carry-axioms.log; then
             echo '::error::sorryAx found in S1 counted carry bridge theorem dependencies'
-            exit 1
-          fi
-          cp "$GITHUB_WORKSPACE/im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/agent2-odd-canonical-axioms.log
-          lean -o S1OddCanonicalOutput.olean S1OddCanonicalOutput.lean 2>&1 | tee /tmp/a42-terminal/agent2-odd-canonical-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/agent2-odd-canonical-axioms.log; then
-            echo '::error::sorryAx found in Agent 2 odd canonical output theorem'
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean" /tmp/a42-terminal/
