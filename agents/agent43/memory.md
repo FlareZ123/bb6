@@ -338,3 +338,8 @@ The five-layer barrier has been materially sharpened again. The exact profile ta
 Run [43283125461](https://github.com/FlareZ123/bb6/actions/runs/43283125461) passed the revised four-shallow integer algebra module, then failed in `FourShallowFiniteBridge.lean`: two calls incorrectly supplied explicit exponents to `Int.pow_ne_zero`, and the final fourth-remainder equation needed the root relation `hR4int` rewritten before `omega`. Both issues are fixed; the new PR run is [43284665405](https://github.com/FlareZ123/bb6/actions/runs/43284665405).
 
 The five-layer Lean barrier now uses the sharpened constants throughout: raw remainders 168X; quotient halves 84X, 126X, 147X, and 158X; accumulated remainders 252X, 294X, 315X, 326X; scaled gap constant 19,172,403,734,400; final upper bound 652,326X². Corrected two stale product factors in the Lean calculations. Added `FiveShallowProfileBounds.lean`, formalizing the exact profile-table consequence (1\le\alpha) and (0<L T-O\le168(n+2)) when (n+6\le T\le2n+6). The workflow now has targeted compile steps for this helper, FiveLayerGap, FiveLayerBarrier, and FiveShallowIntegerAlgebra; this run should test them after the existing four-shallow source chain.
+
+
+### Late checkpoint correction (19:03Z): terminal wall bound
+
+The five-layer terminal bound is now sharpened once more. From (E=112T_6-384) and (T_6le2n+6), directly obtain (E+1le224(n+2)). Combined with (S_5le326X), the final upper bound is (73024X^2), replacing the earlier (652326X^2). Updated `FiveLayerBarrier.lean` and `FiveLayerBarrier.md`; the already-running CI run [43284665405](https://github.com/FlareZ123/bb6/actions/runs/43284665405) predates this last edit, so another run is needed after it finishes.
