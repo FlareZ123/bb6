@@ -50,7 +50,7 @@ private theorem first_mid_shape (u q : Nat) (hq : 3 ≤ q) :
       rfl
     simp only [BB6.Agent32EAll.output,List.append_nil]
     rw [hp]
-    simp [init,suffix2]
+    simp [init,suffix2,List.append_assoc]
 
 def secondOutput (u q : Nat) : Cfg :=
   ⟨[],false,List.replicate (8*(24*u+19)+9) true ++
