@@ -459,12 +459,10 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     omega
   have haGap0 :
       2*2^(k-1)<(2*a+5)/3 ∧ (2*a+5)/3<3*2^(k-1) := by
-    rw [←hpk, hpk1]
     omega
   have haGap1 :
       2*2^(k-2)<2*((2*a+5)/9) ∧
       2*((2*a+5)/9)<3*2^(k-2) := by
-    rw [←hpk, hpk2]
     omega
   have haUniq : ∀q, ResetParent q a → q=b := by
     intro q hq
