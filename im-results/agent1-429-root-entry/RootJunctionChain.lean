@@ -13,7 +13,7 @@ set_option maxRecDepth 65536
 namespace BB429RootJunctionChain
 
 open BB6Coverage BB429RootEntry BB429RootToJunc
-open BB429PhysicalFrontier BB429PhysicalBridge BB429DeltaPhysicalBridge
+open BB429PhysicalFrontier BB429JPhysical BB429PhysicalBridge BB429DeltaPhysicalBridge
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
 open BB429FinishScanEDelta BB429JuncCanonical BB429High3Ladder
 open BB429W4HeadMax BB429W4HeadPrefix
@@ -196,7 +196,7 @@ private theorem root_runWithHeadMax_bound_of_prefix (m : Machine) :
                 intro t ht
                 exact hprefix t (by omega)
               have hprevBound : hprev≤F :=
-                ih c p hprev F (by simpa [hp] using hp) hprevPrefix
+                ih c p hprev F hp hprevPrefix
               have hrunFinal : run m (n+1) c = some q := by
                 have hmon' :
                     runWithHeadMax m (n+1) c =
@@ -268,24 +268,22 @@ theorem root_after_1608_junc21_frontier :
     rw [hhead]
     simp [jTape,jMark,jHole]
     omega
-  obtain ⟨hmon⟩ :=
+  obtain ⟨hmonValue,hmonProof⟩ :=
     root_runWithHeadMax_exists_of_run target429 1608 blank c21 htotal
   have hupper :=
-    root_runWithHeadMax_bound_of_prefix target429 1608 blank c21 hmon
-      26 hprefix
-  have hlower : 26≤hmon := by
+    root_runWithHeadMax_bound_of_prefix target429 1608 blank c21 hmonValue
+      26 hmonProof hprefix
+  have hlower : 26≤hmonValue := by
     by_contra hlt
     have hunchanged :=
-      runWithHeadMax_tape_above target429 1608 blank c21 hmon
+      runWithHeadMax_tape_above target429 1608 blank c21 hmonValue hmonProof
         26 (by omega)
     have hblank0 : blank.tape 26=false := by rfl
     rw [hmark,hblank0] at hunchanged
     contradiction
-  have hmonExact : hmon=26 := by omega
+  have hmonExact : hmonValue=26 := by omega
   refine ⟨c21,htotal,hrep21,hhead,hmark,hblank,hprefix,?_⟩
-  simpa [hmonExact] using
-    (show runWithHeadMax target429 1608 blank = some (c21,hmon) from
-      root_runWithHeadMax_exists_of_run target429 1608 blank c21 htotal |>.choose_spec)
+  simpa [hmonExact] using hmonProof
 
 /-- Continue the authentic blank root through the corrected low43 branch.
     The exact 3167-step endpoint is J(11,62), with head -29 and global
@@ -368,24 +366,22 @@ theorem root_after_3167_junc11_frontier :
     rw [hhead]
     simp [jTape,jMark,jHole]
     omega
-  obtain ⟨hmon⟩ :=
+  obtain ⟨hmonValue,hmonProof⟩ :=
     root_runWithHeadMax_exists_of_run target429 3167 blank dEnd htotal
   have hupper :=
-    root_runWithHeadMax_bound_of_prefix target429 3167 blank dEnd hmon
-      36 hprefix
-  have hlower : 36≤hmon := by
+    root_runWithHeadMax_bound_of_prefix target429 3167 blank dEnd hmonValue
+      36 hmonProof hprefix
+  have hlower : 36≤hmonValue := by
     by_contra hlt
     have hunchanged :=
-      runWithHeadMax_tape_above target429 3167 blank dEnd hmon
+      runWithHeadMax_tape_above target429 3167 blank dEnd hmonValue hmonProof
         36 (by omega)
     have hblank0 : blank.tape 36=false := by rfl
     rw [hmark,hblank0] at hunchanged
     contradiction
-  have hmonExact : hmon=36 := by omega
+  have hmonExact : hmonValue=36 := by omega
   refine ⟨dEnd,htotal,hrepEnd,hhead,hmark,hblank,hprefix,?_⟩
-  simpa [hmonExact] using
-    (show runWithHeadMax target429 3167 blank = some (dEnd,hmon) from
-      root_runWithHeadMax_exists_of_run target429 3167 blank dEnd htotal |>.choose_spec)
+  simpa [hmonExact] using hmonProof
 
 #print axioms root_junc0_to_junc21_max
 #print axioms root_junc0_to_junc21_physical
