@@ -20,12 +20,25 @@
 const RESIDUES = [113, 400, 526, 599, 886, 887, 1085, 1372];
 const SAMPLE_PERIODS = [1458, 13122];
 const SAMPLE_MULTIPLIERS = [0, 1, 2, 10];
+const NINE_LIFT_BASE_PERIOD = 1458;
+const NINE_LIFT_SAMPLE_PERIOD = 13122;
+const NINE_LIFT_OFFSETS = Array.from({ length: 9 }, (_, k) => k);
 
 const pow2 = (k) => 1n << BigInt(k);
 const bitLength = (n) => n <= 0n ? 0 : n.toString(2).length;
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function valuation3(value) {
+  let n = value;
+  let v = 0;
+  while (n !== 0n && n % 3n === 0n) {
+    n /= 3n;
+    v += 1;
+  }
+  return v;
 }
 
 function resetParents(u, n) {
@@ -137,6 +150,7 @@ function buildTree(n) {
     edges,
     leaves,
     maxDepth: Math.max(...nodes.map((node) => node.depth)),
+    initialOddValuation: valuation3(2n * feeder + 5n),
   };
 }
 
@@ -156,11 +170,35 @@ const report = RESIDUES.map((r) => {
         edges: tree.edges.length,
         leaves: tree.leaves.length,
         maxDepth: tree.maxDepth,
+        initialOddValuation: tree.initialOddValuation,
         signature: topologySignature(tree),
       };
     });
     return {
       period,
+      samples: samples.map(({ signature, ...summary }) => summary),
+      sameSampledTopology: samples.every((sample) => sample.signature === samples[0].signature),
+    };
+  });
+  // A fixed r mod 1458 has nine distinct lifts modulo 13122. Sample all of
+  // them separately; n=r+13122*T alone sees only lift k=0.
+  const nineLiftDiagnostics = NINE_LIFT_OFFSETS.map((k) => {
+    const baseN = r + NINE_LIFT_BASE_PERIOD * k;
+    const samples = SAMPLE_MULTIPLIERS.map((T) => {
+      const tree = buildTree(baseN + NINE_LIFT_SAMPLE_PERIOD * T);
+      return {
+        T,
+        nodes: tree.nodes.length,
+        edges: tree.edges.length,
+        leaves: tree.leaves.length,
+        maxDepth: tree.maxDepth,
+        initialOddValuation: tree.initialOddValuation,
+        signature: topologySignature(tree),
+      };
+    });
+    return {
+      lift: k,
+      baseN,
       samples: samples.map(({ signature, ...summary }) => summary),
       sameSampledTopology: samples.every((sample) => sample.signature === samples[0].signature),
     };
@@ -173,9 +211,11 @@ const report = RESIDUES.map((r) => {
       edges: representative.edges.length,
       leaves: representative.leaves.length,
       maxDepth: representative.maxDepth,
+      initialOddValuation: representative.initialOddValuation,
       edgesById: representative.edges,
     },
     finiteSamples,
+    nineLiftDiagnostics,
   };
 });
 
@@ -184,5 +224,6 @@ console.log(JSON.stringify({
   sourceRelation: "im-results/agent10-cascade/FirstInverseComplete.lean",
   samplePeriods: SAMPLE_PERIODS,
   sampleMultipliers: SAMPLE_MULTIPLIERS,
+  nineLiftPeriods: { base: NINE_LIFT_BASE_PERIOD, sample: NINE_LIFT_SAMPLE_PERIOD, offsets: NINE_LIFT_OFFSETS },
   report,
 }, (_key, value) => typeof value === "bigint" ? value.toString() : value, 2));
