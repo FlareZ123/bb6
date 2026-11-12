@@ -57,7 +57,7 @@ private theorem prior_c58_admits_residue_pair (j m : Nat)
     (hm : 7≤m) (hj : j%512=319) (hm512 : m%512=42) :
     BB6.Agent11C58AllDepth.highAllowed j m := by
   obtain ⟨hj256,hj128,hj64,hj32,hj16,hj8,hj4,
-      hm512,hm256,hm128,hm64,hm32,hm16,hm8,hm4⟩ :=
+      hm256,hm128,hm64,hm32,hm16,hm8,hm4⟩ :=
     residue_vector_of_mod512 j m hj hm512
 
   have hbase : BB6.Agent3.jointHighAllowed j m := by
