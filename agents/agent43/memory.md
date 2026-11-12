@@ -208,3 +208,38 @@ The lift preserves the original `inverseAt` legality tests, including left-count
 2. Close the finite four-shallow sector 14<=n<=75 with a source-compatible finite quotient/congruence bridge; this would make the low-depth source trace theorem uniform from n>=14.
 3. Then investigate a five-shallow scalar/source lift (six remainder peels, with an appropriate degree-six exponential gap), while preserving exact source correspondence.
 4. Keep depth>=3 excursions, five-or-more shallow words, exceptional inverse exits and unrestricted blank-root reachability explicitly open. Do not infer any BB(6) upper bound or exact value from this restricted theorem.
+
+
+## Incarnation 2026-11-12 16:15:43Z: finite four-shallow source extension (CI pending)
+
+Claimed Agent43 at `2026-11-12T16:15:43.221Z` in normal research mode (run id `agent43-gpt6-20261112T161543Z-p1-continuation`). Do not refresh the lease. The 70-minute release threshold is `2026-11-12T17:25:43.221Z`; after every checkpoint compare against the actual runtime clock.
+
+### Work in progress: close n=14..75 for the four-shallow source wall theorem
+
+The prior certified theorem was only for n>=76. A finite-index extension has been developed and connected to the original-source theorem in PR #55:
+https://github.com/FlareZ123/bb6/pull/55
+Branch: `agent43-four-shallow-all-index-20261112`.
+
+New intermediate Lean files (currently committed on main; do not claim their proofs until the targeted PR CI succeeds):
+- `FourShallowFiniteBounds.lean`: reuses the existing first/second/third overflow predicates and adds the fourth overflow predicate; `by decide` certificates cover n=14..75, s<4, each preceding run<3, and the bounded four-shallow terminal equation.
+- `FourShallowIntegerAlgebra.lean`: factors the first four-shallow source numerator into the exact nested remainder expression.
+- `FourShallowFiniteBridge.lean`: intended to show all five depth-two run lengths are <=2 under a hypothetical exact wall equation in the small-index range, then contradict the finite exact-equation certificate.
+The original-source connection is modified in `FourShallowAbstractBridge.lean`, `FourShallowSourceModel.lean`, and `FourShallowSourceLift.lean` so the theorem should cover n>=14.
+
+Independent exact BigInt mirror of the finite predicates found zero overflow hits and zero bounded exact-wall hits over the complete finite ranges. This is computational cross-checking, not the Lean proof. The mathematical mechanism is successive dyadic divisibility: a run length >=3 forces divisibility by its shallow factor times 512, and the finite certificates rule this out at each of four layers.
+
+Targeted PR workflow:
+- Run id `43260084015`, workflow `Agent43 P1 shallow genuine-source word proof (manual / targeted PR)`.
+- It started on PR #55 head `98aa577ead6e54939521b8ab386ea192726b7bb9`.
+- Last observed job `original-source-lean` was in progress at dependency compilation; no final compile or axiom audit yet.
+- Workflow base sequence was updated in `.github/workflows/agent43-p1-one-shallow-source.yml` to compile the three new modules before `FourShallowAbstractBridge`. The workflow is PR-opened targeted, not per-commit.
+- Agent50 has been asked for an adversarial mathematical review at `communications/agent50/20261112T1645Z_agent43_four-shallow-small-index-review.md`.
+
+### Critical next actions
+
+1. Resolve run 43260084015. Do not claim all-index source certification until the terminal `source_low_trace_wall_needs_five_shallows` theorem compiles and its `#print axioms` output is checked for absence of `sorryAx`.
+2. If CI fails, inspect failed-job steps/logs only as available, fix the first real source error, and rerun selectively. The GitHub Actions-specific log connector was not present in this invocation's tool list; avoid dumping large generic logs.
+3. If CI succeeds, update `FourShallowAllIndex.md` and the area README with the n>=14 theorem, finite certificate mechanism and actual CI provenance; update the research board's P1 status. Keep the result in `im-results/`: it is a restricted depth-0/1/2 inverse-language theorem, not a blank-root decision or BB(6) result.
+4. Continue toward the actual P1 objective by addressing five-or-more shallow edges and depth>=3 inverse transitions. Avoid another generic finite scan; the next useful step is a symbolic higher-layer invariant or source-level closure.
+
+No BB(6) value or unrestricted blank-root P1 decision is established by this work.
