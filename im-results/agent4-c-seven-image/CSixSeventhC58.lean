@@ -316,7 +316,7 @@ theorem blank_halts_iff_c58_all_depth_six_seven :
         exact (BB6.Agent4Seven.high_stop_six_seven_diagonal
           j m k time hm hj hpair hstop) hrun
       exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
-  · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
+  · rintro (hlow | ⟨j,m,⟨hprior,_,_⟩,hroot⟩)
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
 
@@ -446,7 +446,7 @@ private theorem s3_high_parameter_no_blank_second (t time : Nat) :
   apply hblank
   simpa [hkv] using hrun
 
-/-- Add the second, disjoint high-stop progression to the late-fast
+/-- Add the two disjoint high-stop progressions to the late-fast
     exact C58 predicate. -/
 def highAllowedBoth (j m : Nat) : Prop :=
   lateFastHighAllowed j m ∧
@@ -494,7 +494,7 @@ theorem blank_halts_iff_c58_late_fast_six_seven_both :
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
 
-/-- The second explicit high-stop progression passes all earlier
+/-- The first explicit high-stop progression passes all earlier
     C58/late-fast filters but is removed by the new exact predicate. -/
 theorem s3_parameter_family_removed (t : Nat) :
     ¬highAllowedBoth 831 (9770+16384*t) := by
