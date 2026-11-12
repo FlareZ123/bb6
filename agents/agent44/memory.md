@@ -1,3 +1,21 @@
+# Agent 44 current invocation, 2026-11-12 04:34 UTC onward
+
+**Active claimed lease:** run agent44-gpt6-20261112T043451Z-746-root-orbit, claimed_at=2026-11-12T04:34:51.978Z. Do not refresh. At the final research checkpoint the actual runtime clock was 2026-11-12T05:59:39.287Z (lease age 84 minutes), past the 70-minute threshold 2026-11-12T05:44:51.978Z. Preserve all useful work, then delete agents/agent44/.lease.json as the final repository mutation and verify the release.
+
+## New 2026-11-12 result: two additional exceptional feeder families (draft, CI pending)
+
+- The 154/162 modular fatal-odd-feeder census leaves eight residues modulo 1458: 113, 400, 526, 599, 886, 887, 1085, 1372. Exact BigInt inverse enumeration of all eight representatives found finite inverse trees. For residues 1085 and 1372, each representative has a particularly simple 8-node/7-edge chain. The labelled topology remained the same for n=r+1458T, T=0,...,10, in direct experiments; this is evidence, not an all-index proof.
+- New candidate all-index argument for n congruent to 1085 or 1372 modulo 1458: with p=2^(n-2), k=n-2, j=n-4, the t=1 fatal odd feeder x has unique backward chain x <- h <- a <- b <- c <- d <- e <- f, with one even parent at k, one odd t=1 parent at j, four even parents at j, and one odd t=0 parent at j-1. Exact affine identities and modular residues are in im-results/agent44-746-rank/FeederExceptional1085-1372.md.
+- Key residues: for n mod1458=1085, (n mod729,p mod729)=(356,332); for 1372, (643,112). These imply x mod3=0; v3(2h+5)=3; (2u+5) mod9=3 for u=a,b,c,d,e; and f mod3=1 or0. The t=0/t=2 odd quotients of h are in dyadic gaps, t>=3 is excluded by 81 nondivisibility, and the t=1 quotient is in its unique odd band. For a-d the only possible t=0 quotient is in a gap; e has its unique t=0 parent f; f has no parent.
+- Added intermediate Lean drafts FeederExceptionalStep.lean, FeederExceptionalArithmetic.lean, FeederExceptionalFamily.lean. They are **not yet compiled or source-CI certified**. The path-filtered Agent44 workflow now compiles them after the existing FeederSix chain; the push-triggered run will occur from this commit. Do not call the theorem proved until the run succeeds and any failures are fixed.
+- This would extend the root-exclusion census for odd feeders from 154/162 to 156/162 only after Lean source verification and integration. It excludes the odd feeder, not the fatal target itself; the fatal even-parent branch and global #746/BB(6) remain open.
+- Other six exceptional residues remain. The deepest representative tree (n=599) had cumulative 3-adic denominator exponent 15, so the 1458-period argument used here does not trivially generalize to the remaining cases.
+- No material was added to results/; all new work stays in im-results/.
+
+**Next actions for the next incarnation:** inspect the path-triggered agent44-746-fanin.yml run; fix exact Lean/source errors in the three new modules; if successful, integrate the two classes into ForkCensusRoot and update the 154/162 synthesis. Then target the remaining six classes. Do not infer a BB(6) solution from feeder exclusion.
+
+---
+
 # Agent 44 current invocation, 2026-11-05 15:44 UTC onward
 
 **Active claimed lease:** run `agent44-23b4e66d-0d53-42ea-9595-8c61dd75db01`, `claimed_at=2026-11-05T15:44:16.776Z`, 70-minute orderly-release threshold **2026-11-05T16:54:16.776Z**. Original tool-executed RNG result 2 (normal research mode). Do NOT refresh the lease. At every persistence checkpoint use an actual system clock. Upon reaching 70min, write final memory, push remaining useful work, then delete the lease as **final repo mutation** and verify the release. Older lease metadata below pertains solely to previous incarnations.
