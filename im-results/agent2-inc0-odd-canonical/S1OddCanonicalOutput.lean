@@ -1,4 +1,4 @@
-import S1CountedCarryPrefixBridge
+import S1Encoder
 import CountedOddUnary
 import Lean.Elab.Tactic.Omega
 
@@ -6,7 +6,6 @@ namespace BB6Coverage.Agent2OddCanonical
 
 open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
-open BB6Coverage.Agent42CarryPrefixBridge
 open BB6Coverage.Agent48Champion
 
 set_option maxHeartbeats 3000000
