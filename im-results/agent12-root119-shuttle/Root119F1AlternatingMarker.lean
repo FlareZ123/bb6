@@ -91,7 +91,8 @@ theorem odd_f1_retreat_endpoint (m : Nat) (t : Int → Bool) (h : Int)
     have hj0 : j = 0 := by omega
     subst j
     simpa using hright1
-  have hwave := odd_f1_to_b 0 t h hhead hones hright2
+  have hzeroWave : t (h+2*(0:Int)+2) = false := by simpa using hright2
+  have hwave := odd_f1_to_b 0 t h hhead hones hzeroWave
   have hwleft : waveTape (h-1) = true := by
     change oddWaveTape 0 t h (h-1) = true
     rw [oddWaveTape_left 0 t h (h-1) (by omega)]
@@ -182,9 +183,11 @@ theorem odd_f1_retreat_endpoint (m : Nat) (t : Int → Bool) (h : Int)
   have hAtLeft : f.tape (h-1) = true := by
     rw [hrightPres (h-1) (by omega)]
     simp [setBit]
+  have hwaveHead : waveTape h = true := by simp [waveTape,oddWaveTape,setBit]
   have hAtHead : f.tape h = true := by
     rw [hrightPres h (by omega)]
-    simp [setBit,oddWaveTape]
+    have hne : h ≠ h-1 := by omega
+    simpa [setBit,hne] using hwaveHead
   have hwaveOnes := oddWaveTape_zero_ones t h
   have hAtH1 : f.tape (h+1) = true := by
     rw [hrightPres (h+1) (by omega)]
@@ -199,8 +202,8 @@ theorem odd_f1_retreat_endpoint (m : Nat) (t : Int → Bool) (h : Int)
   · rw [hleftPres f.h (by rw [hfhead]; omega)]
     rw [hfhead]
     exact hfinalF
-  · rw [hleftPres (f.h-1) (by rw [hfhead]; omega)]
-    rw [hfhead]
+  · have hcoord : f.h-1 = h-3-2*(m:Int) := by rw [hfhead]; omega
+    rw [hleftPres (f.h-1) (by rw [hfhead]; omega),hcoord]
     exact hfinalB
   · intro x hx
     exact hleftPres x (by rw [hfhead] at hx; exact hx)
@@ -250,26 +253,27 @@ theorem alternating_f1_marker_return (m : Nat) (t : Int → Bool) (h : Int)
       hAtLeft,hAtHead,hAtH1,hAtH2⟩ :=
     odd_f1_retreat_endpoint m t h hhead hleft hright1 hright2 hfb hfinalF hfinalB
   have hf3 : f.tape (f.h-3) = true := by
-    rw [hleftPres (f.h-3) (by rw [hfhead]; omega)]
-    rw [hfhead]
+    have hcoord : f.h-3 = h-5-2*(m:Int) := by rw [hfhead]; omega
+    rw [hleftPres (f.h-3) (by rw [hfhead]; omega),hcoord]
     exact hfinal3
   have hf2 : f.tape (f.h-2) = true := by
-    rw [hleftPres (f.h-2) (by rw [hfhead]; omega)]
-    rw [hfhead]
+    have hcoord : f.h-2 = h-4-2*(m:Int) := by rw [hfhead]; omega
+    rw [hleftPres (f.h-2) (by rw [hfhead]; omega),hcoord]
     exact hfinal2
   have hnF : noLeft1100 f := by
     intro x hx hpat
-    have h0 := hleftPres x (by rw [hfhead] at hx; omega)
-    have h1 := hleftPres (x+1) (by rw [hfhead] at hx; omega)
-    have h2 := hleftPres (x+2) (by rw [hfhead] at hx; omega)
-    have h3 := hleftPres (x+3) (by rw [hfhead] at hx; omega)
+    have h0 := hleftPres x (by rw [←hfhead]; omega)
+    have h1 := hleftPres (x+1) (by rw [←hfhead]; omega)
+    have h2 := hleftPres (x+2) (by rw [←hfhead]; omega)
+    have h3 := hleftPres (x+3) (by rw [←hfhead]; omega)
     have hpat' : t x = true ∧ t (x+1) = true ∧
         t (x+2) = false ∧ t (x+3) = false := by
       exact ⟨by rw [←h0]; exact hpat.1,
         by rw [←h1]; exact hpat.2.1,
         by rw [←h2]; exact hpat.2.2.1,
         by rw [←h3]; exact hpat.2.2.2⟩
-    exact hn x (by rw [hfhead] at hx; omega) hpat'
+    have hbound : f.h ≤ h := by rw [hfhead]; omega
+    exact hn x (le_trans hx hbound) hpat'
   have honesF : ∀ j : Nat, j < 2*m+5 →
       f.tape (f.h+1+(j:Int)) = true := by
     intro j hj
