@@ -103,22 +103,14 @@ theorem no_seven_incoming (u v : Nat) (hpair : (u+v)%4=0) :
 /-- The second parent of H1 has a different three-cone obstruction
     on the residue slice u=1 (mod 4), u+v=3 (mod 16). -/
 private theorem no_three_P_s3 (u v : Nat)
-    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
+    (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 3 (1113+650*u+1298*v,321+187*u+375*v) := by
   rintro ⟨⟨a,k⟩,⟨⟨b,l⟩,⟨⟨c,d⟩,_,h0⟩,h1⟩,h2⟩
   have hsum :
       (1113+650*u+1298*v+321+187*u+375*v)%8=1 := by
-    rcases hsector with hA|hB
-    · rcases hA with ⟨hu,hs⟩
-      omega
-    · rcases hB with ⟨hu,hs⟩
-      omega
+    omega
   have hy16 : (321+187*u+375*v)%16=10 := by
-    rcases hsector with hA|hB
-    · rcases hA with ⟨hu,hs⟩
-      omega
-    · rcases hB with ⟨hu,hs⟩
-      omega
+    omega
   exact BB6.Agent34Three.no_three_edges c d b l a k
     (1113+650*u+1298*v) (321+187*u+375*v)
     (by omega) (Or.inl ⟨hsum,hy16⟩) h0 h1 h2
@@ -126,17 +118,13 @@ private theorem no_three_P_s3 (u v : Nat)
 /-- On this slice R has one affine parent P; P is in the Agent34
     three-cone, so R cannot have four incoming source returns. -/
 private theorem no_four_R_s3 (u v : Nat)
-    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
+    (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 4 (471+276*u+548*v,644+374*u+750*v) := by
   rintro ⟨⟨a,k⟩,h3,hstep⟩
   have hy : 4≤644+374*u+750*v := by omega
   have heven : (644+374*u+750*v)%2=0 := by omega
   have hs : (471+276*u+548*v+644+374*u+750*v)%4=1 := by
-    rcases hsector with hA|hB
-    · rcases hA with ⟨hu,hs⟩
-      omega
-    · rcases hB with ⟨hu,hs⟩
-      omega
+    omega
   have hinv := (BB6.Agent15.section_sum_one_even_iff_affine
     a k (471+276*u+548*v) (644+374*u+750*v) hy heven hs).mp hstep
   rcases hinv with ⟨ha,hk⟩
@@ -151,7 +139,7 @@ private theorem no_four_R_s3 (u v : Nat)
 /-- The unique parent R of P2 is not in the four-return image on
     this new slice. -/
 private theorem no_five_P2_s3 (u v : Nat)
-    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
+    (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 5 (128+80*u+144*v,819+472*u+952*v) := by
   rintro ⟨⟨a,k⟩,h4,hstep⟩
   have hinv : sectionPreimageAll a k _ _ :=
@@ -162,7 +150,7 @@ private theorem no_five_P2_s3 (u v : Nat)
 
 /-- H1 is not a six-return image on the new residue slice. -/
 private theorem no_six_H1_s3 (u v : Nat)
-    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
+    (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 6 (301+256*u+256*v,739+384*u+896*v) := by
   rintro ⟨⟨a,k⟩,h5,hstep⟩
   have hinv : sectionPreimageAll a k _ _ :=
@@ -177,7 +165,7 @@ private theorem no_six_H1_s3 (u v : Nat)
 /-- No seven original-source returns enter the same sixth-image band
     on the new u=1 (mod 4), u+v=3 (mod 16) slice. -/
 theorem no_seven_incoming_s3 (u v : Nat)
-    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
+    (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 7 (641+1024*u,574+1024*v) := by
   rintro ⟨⟨a,k⟩,h6,hstep⟩
   have hinv : sectionPreimageAll a k _ _ :=
@@ -194,7 +182,7 @@ theorem no_seven_incoming_s3 (u v : Nat)
 /-- A second infinite strict sixth/seventh image family, disjoint from
     the original u+v=0 (mod 4) diagonal. -/
 theorem exactly_six_not_seven_s3 (u v : Nat)
-    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
+    (hsector : (u+v)%16=(15+4*u)%16) :
     Incoming 6 (641+1024*u,574+1024*v) ∧
     ¬ Incoming 7 (641+1024*u,574+1024*v) :=
   ⟨six_incoming_exist u v, no_seven_incoming_s3 u v hsector⟩
@@ -203,8 +191,7 @@ theorem exactly_six_not_seven_s3 (u v : Nat)
 theorem exactly_six_not_seven_s3_progression (t : Nat) :
     Incoming 6 (1665+16384*t,2622) ∧
     ¬ Incoming 7 (1665+16384*t,2622) := by
-  have h := exactly_six_not_seven_s3 (1+16*t) 2
-    (Or.inl (by constructor <;> omega))
+  have h := exactly_six_not_seven_s3 (1+16*t) 2 (by omega)
   simpa using h
 
 /-- Every state in this band admits six genuine source-return predecessors. -/
@@ -240,9 +227,24 @@ theorem exactly_six_not_seven (u v : Nat) (hpair : (u+v)%4=0) :
 theorem exactly_six_not_seven_s3_second_progression (t : Nat) :
     Incoming 6 (3713+16384*t,8766) ∧
     ¬ Incoming 7 (3713+16384*t,8766) := by
-  have h := exactly_six_not_seven_s3 (3+16*t) 8
-    (Or.inr (by constructor <;> omega))
+  have h := exactly_six_not_seven_s3 (3+16*t) 8 (by omega)
   simpa using h
 
 #print axioms exactly_six_not_seven_s3_second_progression
+/-- The u=0 residue progression in the same exact cone. -/
+theorem exactly_six_not_seven_s3_zero_progression (t : Nat) :
+    Incoming 6 (641+16384*t,15934) ∧
+    ¬ Incoming 7 (641+16384*t,15934) := by
+  have h := exactly_six_not_seven_s3 (16*t) 15 (by omega)
+  simpa using h
+
+/-- The u=2 residue progression in the same exact cone. -/
+theorem exactly_six_not_seven_s3_two_progression (t : Nat) :
+    Incoming 6 (2689+16384*t,5694) ∧
+    ¬ Incoming 7 (2689+16384*t,5694) := by
+  have h := exactly_six_not_seven_s3 (2+16*t) 5 (by omega)
+  simpa using h
+
+#print axioms exactly_six_not_seven_s3_zero_progression
+#print axioms exactly_six_not_seven_s3_two_progression
 end BB6.Agent4Seven
