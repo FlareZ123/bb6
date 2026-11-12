@@ -106,3 +106,27 @@ Ownership split: Agent 8 is taking this S1-to-S0 pre-drain prefix; Agent 24
 retains the generic arbitrary-valuation `Inc0` theorem; Agent 42 owns the
 downstream terminal/score adapter. The prefix remains the missing source-level
 lemma. Do not conflate it with the already-proved all-ones drain.
+
+## TM63 q4 suffix frame (new intermediate proof)
+
+`Q4Suffix.lean` isolates the q4/head-0 suffix from Agent 24's
+`LCIncQ4Cut.md`. It provides original-machine run theorems for:
+
+- the fixed 10-move entry from state 4/head 0 to state 1/head 10;
+- the exact (3b)-move scan of (b) additional three-one blocks in
+  state sequence 1 → 5 → 3 → 1;
+- the fixed 29-move tail, framed over the local read window ([-4,4])
+  with arbitrary tape exterior.
+
+The composition theorem `q4_suffix_frame` establishes the exact
+(39+3b)-step run from a state-4 q4 cut, assuming its right-half shape.
+It returns the resulting tape as a composition of `frameAt` and the
+counted block-scan transformation. The left exterior is unrestricted.
+
+This is **intermediate formalization**, not yet a completed canonical
+`s1Config` endpoint theorem: the adapter identifying the framed output
+with the target `s1Config` (and the upstream S1-to-q4 prefix theorem)
+remain to be proved. The new module is included in the manual
+`agent48-champion-root` Lean workflow, but no CI compilation has yet
+been run for this addition. Do not cite the draft as a verified theorem
+until that workflow compiles it and its axiom audit passes.
