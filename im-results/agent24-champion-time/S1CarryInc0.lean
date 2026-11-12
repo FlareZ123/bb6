@@ -69,11 +69,12 @@ theorem s1Config_carryInput_match
       s1Config_right_cell L n m (len+1+r) ((2*q+1)*2^r) b h i
     rw [s1PhysicalRight_source] at hsource
     have hc : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
-    rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-    all_goals
-      subst i
-      simp [hxEq,sideBit,carryInputBit] at hsource ⊢
-      exact hsource
+    have hside : sideBit
+        ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
+        carryInputBit r (1+(i:Int)) := by
+      rcases hc with h0 | h1 | h2 | h3 | h4 | h5
+      all_goals subst i <;> simp [sideBit,carryInputBit]
+    rw [hxEq,hsource,hside]
 
 /-- The source S1 right side supplies the entire 111^(b+1) run
 needed by the even counted suffix. -/
@@ -142,17 +143,16 @@ theorem s1Config_counted_decrement_of_prefix
   have hP : ∀ x, P x = T' x := by
     intro x
     simp [P,Tpre]
-  have hP1 : P 1 = true := by simpa [hP] using h1
-  have hP2 : P 2 = true := by simpa [hP] using h2
-  have hP3 : P 3 = true := by simpa [hP] using h3
-  have hP4 : P 4 = true := by simpa [hP] using h4
-  have hP5 : P 5 = false := by simpa [hP] using h5
-  have hP6 : P 6 = true := by simpa [hP] using h6
+  have hP1 : P 1 = true := by simpa [P,Tpre] using h1
+  have hP2 : P 2 = true := by simpa [P,Tpre] using h2
+  have hP3 : P 3 = true := by simpa [P,Tpre] using h3
+  have hP4 : P 4 = true := by simpa [P,Tpre] using h4
+  have hP5 : P 5 = false := by simpa [P,Tpre] using h5
+  have hP6 : P 6 = true := by simpa [P,Tpre] using h6
   have hpreserveP : ∀ x, 6 < x →
       P x = c0.tape (h+x) := by
     intro x hx
-    rw [hP]
-    exact hpreserve x hx
+    simpa [P,Tpre] using hpreserve x hx
   have honeP : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
     intro i hi
     rw [hpreserveP (7+(i:Int)) (by omega)]
@@ -161,14 +161,20 @@ theorem s1Config_counted_decrement_of_prefix
       P x = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
         (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
     intro x hx
-    rw [hP,hleft x hx]
-    simpa [s1Config] using
-      s1Config_decrement_leftOutput L n m len q r b h hq x hx
+    calc
+      P x = T' x := by simp [P,Tpre]
+      _ = carryLeftOutputBit r
+          (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x :=
+        hleft x hx
+      _ = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+          (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
+        simpa [s1Config] using
+          s1Config_decrement_leftOutput L n m len q r b h hq x hx
   have hprefix0' : run tm2 (15+12*r)
       (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
         (len+1+r) ((2*q+1)*2^r) b h) =
       some ⟨4,h+7,Tpre⟩ := by
-    simpa [s1Config] using hprefix0
+    simpa [c0,s1Config] using hprefix0
   have hdec := s0Config_counted_decrement_of_prefix
     (markerWord m ++ d0 ++ binDec L n ++ lh)
     (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
