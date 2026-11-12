@@ -6,6 +6,7 @@ on:
     paths:
       - 'im-results/agent12-root119-shuttle/Root119EvenMarkerGate.lean'
       - 'im-results/agent12-root119-shuttle/Root119F1MarkerLifecycle.lean'
+      - 'im-results/agent12-root119-shuttle/Root119F1AlternatingMarker.lean'
       - '.github/workflows/agent12-root119-even-marker.yml'
 
 permissions:
@@ -46,5 +47,22 @@ jobs:
           lean "$S/Root119F1MarkerLifecycle.lean" 2>&1 | tee "$S/f1-marker-lifecycle-check.log"
           if grep -q 'sorryAx' "$S/f1-marker-lifecycle-check.log"; then
             echo "::error::Untrusted sorry axiom in F1 marker lifecycle theorem"
+            exit 1
+          fi
+          lean -o "$A/Root119DFSweep.olean" "$A/Root119DFSweep.lean"
+          lean -o "$A/Root119FBSweep.olean" "$A/Root119FBSweep.lean"
+          lean -o "$S/Root119Shuttle.olean" "$S/Root119Shuttle.lean"
+          python -c "import base64,lzma,pathlib,hashlib; p=pathlib.Path('$A/Root119Wave.lean.xz.b64'); b=lzma.decompress(base64.b64decode(p.read_bytes())); h=hashlib.sha256(b).hexdigest(); print('wave-source-sha256',h); assert h=='715e5512da53986da896ea05d68d28869fc8489b6ad3e1e49e26459545299930'; p.with_name('Root119Wave.lean').write_bytes(b)"
+          lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
+          lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
+          lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
+          lean -o "$A/Root119WaveMarkerShield.olean" "$A/Root119WaveMarkerShield.lean" 2>&1 | tee "$A/Root119WaveMarkerShield.log"
+          if grep -q 'sorryAx' "$A/Root119WaveMarkerShield.log"; then
+            echo "::error::Untrusted sorry axiom in wave marker shield theorem"
+            exit 1
+          fi
+          lean -o "$S/Root119F1AlternatingMarker.olean" "$S/Root119F1AlternatingMarker.lean" 2>&1 | tee "$S/f1-alternating-marker-check.log"
+          if grep -q 'sorryAx' "$S/f1-alternating-marker-check.log"; then
+            echo "::error::Untrusted sorry axiom in alternating F1 marker theorem"
             exit 1
           fi
