@@ -204,7 +204,9 @@ An exact BigInt reconnaissance scan is preserved in
 32 profile masks, and 3^5 run-length tuples) and finds zero solutions to the
 five-layer natural equation. The scan deliberately omits additional
 source-time inequalities and allows zero remainders, so it checks a superset
-of the admissible source cases. This is useful experimental evidence for the
+of the admissible source cases. A broader companion scan, [five_shallow_finite_scan_upto4.js](five_shallow_finite_scan_upto4.js), also finds zero solutions when every run length ranges over 0..4: 9,000,000 root-compatible assignments checked exactly. This remains experimental and does not establish any run-length upper bound.
+
+This is useful experimental evidence for the
 finite bridge, but it is not a kernel proof and does not establish the
 run-length bounds u,v,w,x,r<=2.
 Only 90 of the 276 possible (n,s) pairs satisfy the root divisor, reducing the actual bounded core to 699,840 cases. A Lean implementation can either split the full Fin69×Fin4 table into four-index blocks, or encode the 90 admissible pairs as a finite rootPairs list and prove its completeness by a small interval_cases/decide lemma; the latter avoids kernel reduction on invalid s values. The fifth-overflow table similarly reduces from 715,392 raw assignments to 233,280 root-compatible assignments.
