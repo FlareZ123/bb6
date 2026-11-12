@@ -350,3 +350,8 @@ The five-layer terminal bound is now sharpened once more. From (E=112T_6-384) an
 Run [43284665405](https://github.com/FlareZ123/bb6/actions/runs/43284665405) passed the algebra module and profile-bound helper, then reached `FourShallowFiniteBridge.hN4`. The remaining `omega` failure was a genuine syntactic normalization issue: `-((2:Int)^delta)*(8:Int)^r*(E:Int)` parses as ((-(2^\delta))8^rE), while the preceding recurrence supplies (-(2^\delta 8^rE)). Parenthesized the whole product in both `Y` and the target. The latest run is [43285961138](https://github.com/FlareZ123/bb6/actions/runs/43285961138).
 
 The current five-layer barrier uses the final terminal estimate (E+1\le224X), hence (73024X^2), not the earlier (652326X^2). Run 432859 includes the latest barrier, profile helper, and five-layer algebra files.
+
+
+### Research-map integration (19:05Z): what the five-layer barrier would add
+
+The current synthesis in `im-results/agent43-p1-high-cost-reset-count/README.md` already records the source-certified four-shallow result: every legal low-depth source trace reaching the shifted wall has at least five shallow edges for n>=76. Therefore the new five-layer barrier, if source-lifted, would strengthen this to **at least six shallow edges for n>=83**. It does not improve the n=14..75 four-shallow gap, and n=76..82 remain at the existing five-edge floor. The next substantive task is to adapt `FourShallowSourceModel.lean` to five profiles/runs using `FiveShallowProfileBounds`, `FiveShallowIntegerAlgebra`, and `FiveLayerBarrier`, then extend `FourShallowSourceLift.lean` with an exact-five no-wall theorem and a stepwise `source_low_trace_wall_needs_six_shallows` corollary. Keep the new barrier in `im-results/` until this source chain compiles.
