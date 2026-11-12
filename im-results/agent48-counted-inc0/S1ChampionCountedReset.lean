@@ -56,6 +56,25 @@ theorem champion_attainable_after_s1_countedRst012
   exact champion_attainable_after_countedRst012
     cfg rootSteps L a b m n h ha hblank hprefix'' hInc0
 
+/-- The prefix parameter choice in Agent 42's intended reset theorem is
+`m=1,n=1`: `nextMarker 1=0` and `1-1=0`, so its output left context
+is exactly the terminal bridge's fixed `s1Config L 0 0` context. -/
+theorem champion_attainable_after_s1_countedRst012_m1n1
+    (cfg : Config) (rootSteps L a b : Nat) (h : Int)
+    (ha : 0 < a)
+    (hblank : run tm2 rootSteps blank = some cfg)
+    (hprefix :
+      run tm2 (resetPrefixCost 1 1 a b) cfg =
+        some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+          (a+b+resetDelta 1) (2^b-1) 0 h)) :
+    Attainable
+      (rootSteps + proposedIncrementCost 1 1 a b +
+        terminalMoves L (a+b+resetDelta 1) + 7) := by
+  apply champion_attainable_after_s1_countedRst012
+    cfg rootSteps L a b 1 1 h ha hblank
+  simpa [s1Config] using hprefix
+
 #print axioms champion_attainable_after_s1_countedRst012
+#print axioms champion_attainable_after_s1_countedRst012_m1n1
 
 end BB6Coverage.Agent48CountedInc0
