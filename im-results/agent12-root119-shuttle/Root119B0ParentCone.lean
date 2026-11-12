@@ -310,7 +310,7 @@ theorem reached_D1_F0_successor_F1_parent (d e : Conf)
 theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k : Nat, d e, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ (k : Nat) (d e : Conf), Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) - 1 ∧
       e.q = .F ∧ e.tape e.h = false ∧ next d = some e ∧
       Root119Path (2*k) e c := by
@@ -363,7 +363,7 @@ theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
 theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k : Nat, d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ (k : Nat) (d : Conf), Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) - 1 ∧
       Root119Path (2*k+1) d c := by
   obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
@@ -375,7 +375,7 @@ theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
 theorem reached_F0_F1_ancestor (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k : Nat, f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+    ∃ (k : Nat) (f : Conf), Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h + (2*k : Int) - 2 ∧
       Root119Path (2*k+2) f c := by
   obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
@@ -459,7 +459,7 @@ theorem parentCone_next_head_lower (c d : Conf)
   rcases c with ⟨q,h,t⟩
   cases q <;> cases hb : t h <;> simp [next,hb] at hs
   all_goals cases hs
-  all_goals omega
+  all_goals simp_all
 
 theorem parentCone_next_tape_away (c d : Conf)
     (hs : next c = some d) (x : Int) (hx : x ≠ c.h) :
@@ -648,7 +648,7 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     (hB : c.q=.B) (hcurrent : c.tape c.h=false)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
-    ∃ k : Nat, f d e g,
+    ∃ (k : Nat) (f d e g : Conf),
       1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
         f.h=c.h+(2*k:Int)-1 ∧
       Reach d ∧ d.q=.D ∧ d.tape d.h=true ∧
