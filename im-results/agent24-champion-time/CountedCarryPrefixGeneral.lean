@@ -356,4 +356,126 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
     simpa [embed,carryDTail15Final] using hv
 
 
+
+/-- The exceptional r=1 branch: bridge3, A-return12, then the three-step
+A/0-B/1-F/0 return. -/
+theorem carryShortPrefix_r1 (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea 1 x = true → T x = carryInputBit 1 x) :
+    ∃ T' : Int → Bool,
+      run tm2 27 ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) := by
+  let T1 := (frame carryBridgeArea3 T (embed carryBridgeFinal3)).tape
+  have hbridge := carryBridge3 T 0 (carryBridge3_input_match_r1 T hmatch)
+  have hbridgeRun : run tm2 12 ⟨3,0,T⟩ = some ⟨0,-2,T1⟩ := by
+    simpa [T1,frame,shiftConfig,embed,carryBridgeFinal3] using hbridge
+  have hmarker : T (-5) = true := by
+    have ha : carryInputArea 1 (-5) = true := by simp [carryInputArea]
+    have hb : carryInputBit 1 (-5) = true := by simp [carryInputBit]
+    rw [hmatch (-5) ha, hb]
+  have h2 : T 2 = true :=
+    carryInput_marked 1 T hmatch 2 (Or.inr (Or.inl rfl))
+  have h3 : T 3 = true :=
+    carryInput_marked 1 T hmatch 3 (Or.inr (Or.inr (Or.inl rfl)))
+  have h4 : T 4 = true :=
+    carryInput_marked 1 T hmatch 4 (Or.inr (Or.inr (Or.inr rfl)))
+  have h5 : T 5 = false := by
+    apply carryInput_unmarked 1 T hmatch 5
+    · omega
+    · omega
+    · simp [carryInputBit]
+  have hreturn : ∀ x, carryAReturn12Area (x-(-2)) = true →
+      (embed carryAReturn12Base).tape (x-(-2)) = T1 x := by
+    intro x hx
+    have hx' : carryAReturn12Area (x+2) = true := by simpa using hx
+    have haux : -3 ≤ x+2 ∧ x+2 ≤ 7 := by
+      simpa [carryAReturn12Area] using hx'
+    have hcases : x = -5 ∨ x = -4 ∨ x = -3 ∨ x = -2 ∨ x = -1 ∨
+        x = 0 ∨ x = 1 ∨ x = 2 ∨ x = 3 ∨ x = 4 ∨ x = 5 := by omega
+    rcases hcases with h0 | h1 | h2' | h3' | h4' | h5' |
+      h6 | h7 | h8 | h9 | h10
+    all_goals subst x
+    all_goals simp [T1,frame,shiftConfig,carryBridgeArea3,embed,
+      carryBridgeFinal3,carryAReturn12Base,hmarker,h2,h3,h4,h5]
+  have hreturn0 := carryAReturn12 T1 (-2) hreturn
+  let T2 := (frame (fun x => carryAReturn12Area (x-(-2))) T1
+    (shiftConfig (-2) (embed carryAReturn12Final))).tape
+  have hreturnRun : run tm2 12 ⟨0,-2,T1⟩ = some ⟨0,4,T2⟩ := by
+    simpa [T2,frame,shiftConfig,embed,carryAReturn12Final] using hreturn0
+  have hT4 : T2 4 = false := by
+    simp [T2,frame,shiftConfig,carryAReturn12Area,embed,carryAReturn12Final]
+  have hT5 : T2 5 = true := by
+    simp [T2,frame,shiftConfig,carryAReturn12Area,embed,carryAReturn12Final]
+  have hT6input : T 6 = false := by
+    apply carryInput_unmarked 1 T hmatch 6
+    · omega
+    · omega
+    · simp [carryInputBit]
+  have hT1six : T1 6 = T 6 := by
+    simp [T1,frame,shiftConfig,carryBridgeArea3]
+  have hT2six : T2 6 = T1 6 := by
+    have ha : carryAReturn12Area (6-(-2)) = false := by
+      simp [carryAReturn12Area]
+    simp [T2,frame,shiftConfig,ha]
+  have hT6 : T2 6 = false := by rw [hT2six,hT1six,hT6input]
+  have hA3local : ∀ x, carryA3Area (x-4) = true →
+      (embed carryA3Base).tape (x-4) = T2 x := by
+    intro x hx
+    have haux : 0 ≤ x-4 ∧ x-4 ≤ 2 := by
+      simpa [carryA3Area] using hx
+    have hcases : x=4 ∨ x=5 ∨ x=6 := by omega
+    rcases hcases with h0 | h1 | h2'
+    · subst x
+      simpa [embed,carryA3Base] using hT4.symm
+    · subst x
+      simpa [embed,carryA3Base] using hT5.symm
+    · subst x
+      simpa [embed,carryA3Base] using hT6.symm
+  have hA3 := carryA3 T2 4 hA3local
+  let T3 := (frame (fun x => carryA3Area (x-4)) T2
+    (shiftConfig 4 (embed carryA3Final))).tape
+  have hA3Run : run tm2 3 ⟨0,4,T2⟩ = some ⟨4,7,T3⟩ := by
+    simpa [T3,frame,shiftConfig,embed,carryA3Final] using hA3
+  have hT2one : T2 1 = true := by
+    simp [T2,frame,shiftConfig,carryAReturn12Area,embed,carryAReturn12Final]
+  have hT2two : T2 2 = true := by
+    simp [T2,frame,shiftConfig,carryAReturn12Area,embed,carryAReturn12Final]
+  have hT2three : T2 3 = true := by
+    simp [T2,frame,shiftConfig,carryAReturn12Area,embed,carryAReturn12Final]
+  have hT3one : T3 1 = true := by
+    have ha : carryA3Area (1-4) = false := by simp [carryA3Area]
+    simp [T3,frame,shiftConfig,ha,hT2one]
+  have hT3two : T3 2 = true := by
+    have ha : carryA3Area (2-4) = false := by simp [carryA3Area]
+    simp [T3,frame,shiftConfig,ha,hT2two]
+  have hT3three : T3 3 = true := by
+    have ha : carryA3Area (3-4) = false := by simp [carryA3Area]
+    simp [T3,frame,shiftConfig,ha,hT2three]
+  have hT3four : T3 4 = true := by
+    simp [T3,frame,shiftConfig,carryA3Area,embed,carryA3Final]
+  have hT3five : T3 5 = false := by
+    simp [T3,frame,shiftConfig,carryA3Area,embed,carryA3Final]
+  have hT3six : T3 6 = true := by
+    simp [T3,frame,shiftConfig,carryA3Area,embed,carryA3Final]
+  have hout : ∀ x, 6 < x → T3 x = T x := by
+    intro x hx
+    have ha : carryA3Area (x-4) = false := by
+      simp [carryA3Area]
+      omega
+    have hr : carryAReturn12Area (x-(-2)) = false := by
+      simp [carryAReturn12Area]
+      omega
+    have hb : carryBridgeArea3 x = false := by
+      simp [carryBridgeArea3]
+      omega
+    simp [T3,T2,T1,frame,shiftConfig,ha,hr,hb]
+  have htotal1 := run_compose tm2 12 12
+    ⟨3,0,T⟩ ⟨0,-2,T1⟩ ⟨0,4,T2⟩ hbridgeRun hreturnRun
+  have htotal := run_compose tm2 24 3
+    ⟨3,0,T⟩ ⟨0,4,T2⟩ ⟨4,7,T3⟩ htotal1 hA3Run
+  refine ⟨T3,?_,hT3one,hT3two,hT3three,hT3four,hT3five,hT3six,hout⟩
+  simpa using htotal
+
+
 end BB6Coverage.Agent48Champion
