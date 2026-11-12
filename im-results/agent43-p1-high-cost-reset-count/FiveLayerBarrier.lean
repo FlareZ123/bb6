@@ -16,8 +16,9 @@ private theorem twice_quotient_le (t d R : Nat) (ht : 1≤t)
     cases t with
     | zero => omega
     | succ k =>
-      have hpos : 0<2^k := Nat.pow_pos (by decide)
-      have hmul : 2≤2^k*2 := Nat.mul_le_mul_right 2 (by omega)
+      have hpowPos : 1≤2^k := Nat.one_le_pow k 2 (by decide)
+      have hmul : 2≤2^k*2 := by
+        simpa using Nat.mul_le_mul_right 2 hpowPos
       simpa [Nat.pow_succ] using hmul
   calc
     2*d≤2^t*d := Nat.mul_le_mul_right d hpow
@@ -298,7 +299,7 @@ theorem five_layer_abstract_barrier
     have hb : (q*A1*A2*A3)*(R4+d3)<
         (q*A1*A2*A3)*2^(((e-t1)-t2)-t3) := by
       rw [hprod3]
-      exact Nat.lt_of_le_of_lt hqA1A2A3RemBound hGapX
+      exact Nat.lt_of_le_of_lt (Nat.le_trans hqA1A2A3RemBound hbound) hGapX
     exact Nat.lt_of_mul_lt_mul_left hb
   have hEq4' : K*2^(((e-t1)-t2)-t3)=
       A4*(A5*E+R5)+(R4+d3) := by
