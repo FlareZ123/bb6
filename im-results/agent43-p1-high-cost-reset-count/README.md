@@ -180,3 +180,24 @@ The source connection is now certified in [PR #62](https://github.com/FlareZ123/
 [Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
 
 A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The three-shallow equation and its authentic original-source lift are certified at every n>=14. The four-shallow source trace is now excluded for every n>=14, so any low-depth trace reaching the wall must have at least five shallow edges. The six-shallow source theorem now applies for n>=83. Five-shallow traces remain source-unresolved for 14<=n<=82; six-or-more shallow histories for n>=83 and unrestricted high-depth excursions also remain open. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+
+
+## Next finite extension: n=14..82 six-shallow exclusion
+
+The remaining low-index gap is now precisely the five-shallow source case for
+14<=n<=82. A finite bridge can reuse the first four overflow predicates
+(firstOverflow through fourthOverflow), extending their exact false tables
+from n<=75 through n<=82, and add a fifthOverflow predicate for the terminal
+depth-two run after the fifth shallow edge.
+
+After the root divisor gives s<=3 and the five profile bits t1..t5 lie in
+{0,1}, the bounded residual core with u,v,w,x,r<=2 has
+69*4*32*243 = 2,146,176 assignments. The fifth-overflow table has
+69*4*81*32 = 715,392 assignments. Split these tables into four-index n
+blocks (at most 124,416 residual-core cases and 165,888 fifth-overflow cases
+per block) rather than one monolithic decide proof. The first four overflow
+tables also need the seven additional indices 76<=n<=82.
+
+This is a proof-construction plan, not an established finite result. The
+source theorem remains at least five shallow edges for 14<=n<=82 until the
+new fifth-overflow and residual finite certificates are completed.
