@@ -377,10 +377,11 @@ private theorem four_layer_finite_barrier
     simp [fourSecondRem,S2,hR1quot,←hp2,←hR2formula,T1]
   have hprof1lt : ¬ x1 < fourProfileAlpha t1 := Nat.not_lt.mpr hprof1.1
   have hprof1mod : (x1-fourProfileAlpha t1)%3=0 := hprof1.2
+  have hx1le' : x1≤n-3*s := by simpa [e] using hx1le
   have hnot2mod : S2%2^(e-x1)≠0 := by
     have hh := hSecondFinBool
     simp [fourSecondOverflow,fourRootOverflow,hPmod,hDmod,hrootEq,hrootMod,
-      hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,e,
+      hprof1lt,hprof1mod,hx1le',hR1mod,hS2eq,e,
       Nat.sub_add_cancel hn14] at hh
     exact hh
   have hnot2 : ¬ 2^(e-x1)∣S2 := by
@@ -417,6 +418,7 @@ private theorem four_layer_finite_barrier
     simpa [x2] using four_profile_step_of_affine t2 beta v hβ
   have hprof2lt : ¬ x2 < fourProfileAlpha t2 := Nat.not_lt.mpr hprof2.1
   have hprof2mod : (x2-fourProfileAlpha t2)%3=0 := hprof2.2
+  have hx2le' : x2≤n-3*s-x1 := by simpa [e] using hx2le
   have hThirdFinBool := four_third_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
     (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
@@ -431,7 +433,7 @@ private theorem four_layer_finite_barrier
     have hh := hThirdFinBool
     simp [fourThirdOverflow,fourRootOverflow,
       hPmod,hDmod,hrootEq,hrootMod,hprof1lt,hprof1mod,hx1le,
-      hR1mod,hS2eq,hnot2mod,hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,
+      hR1mod,hS2eq,hnot2mod,hprof2lt,hprof2mod,hx2le',hS2mod,hS3eq,
       e,Nat.sub_add_cancel hn14] at hh
     exact hh
   have hnot3 : ¬ 2^(e-x1-x2)∣S3 := by
@@ -468,6 +470,7 @@ private theorem four_layer_finite_barrier
     simpa [x3] using four_profile_step_of_affine t3 gamma w hγ
   have hprof3lt : ¬ x3 < fourProfileAlpha t3 := Nat.not_lt.mpr hprof3.1
   have hprof3mod : (x3-fourProfileAlpha t3)%3=0 := hprof3.2
+  have hx3le' : x3≤n-3*s-x1-x2 := by simpa [e] using hx3le
   have hFourthFinBool := four_fourth_finite_audit
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
     (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
@@ -488,7 +491,7 @@ private theorem four_layer_finite_barrier
     simp [fourFourthAudit,hPmod,hDmod,hrootEq,hrootMod,
       hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
       hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,hnot3mod,
-      hprof3lt,hprof3mod,hx3le,hS3mod,hS4eq,hz,e,
+      hprof3lt,hprof3mod,hx3le',hS3mod,hS4eq,hz,e,
       Nat.sub_add_cancel hn14] at hh
   have hnot4 : ¬ 2^(e-x1-x2-x3)∣S4 := by
     intro hdiv
@@ -544,7 +547,8 @@ private theorem four_layer_finite_barrier
             Nat.add_assoc,Nat.add_comm,Nat.add_left_comm]
     have hCoeff : fourCoeff s t1 x1 t2 x2 t3 x3 t4 =
         8^s*(C1+C2*2^x1+C3*2^(x1+x2)+C4*2^(x1+x2+x3))-98 := by
-      simp [fourCoeff,←hp1,←hp2,←hp3,←hp4]
+      dsimp [fourCoeff]
+      rw [←hp1,←hp2,←hp3,←hp4]
     rw [hCoeff]
     omega
   have hfinal : K*2^(e-x1-x2-x3)>S4*(Emax+1) := by
