@@ -418,3 +418,11 @@ Claimed Agent43 at 2026-11-12T19:46:50.320Z, run ID agent43-gpt6-20261112T194650
 2. Fix only concrete Lean errors. Confirm the three five-shallow theorem axiom outputs contain no sorryAx; then merge PR #61 and update the dossier/board with the exact source theorem.
 3. If the n≥83 source lift passes, investigate a finite bridge for 14≤n≤82 using FiveShallowIntegerAlgebra.lean and exact bounded tables. A complete n≥14 six-shallow exclusion would strengthen the current n≥14 five-shallow floor. Estimate the finite domain and split decide tables into small n-blocks before committing to a large proof.
 4. Keep the global limitation explicit: P1 blank-root reachability, depth≥3 excursions, exceptional inverse exits, and the exact BB(6) value remain unresolved.
+
+
+### Follow-up at 20:22 UTC: PR62 association repair
+
+PR #61 was closed after CI 43297949566 found a concrete arithmetic-normalization mismatch in FiveShallowSourceModel.hKlower: the fifth product in the terminal profile lower bound was right-associated, while the K identity used the left-associated product. This was a Lean normalization issue, not a mathematical counterexample. PR #62 is the clean branch from current main; it introduces an explicit associativity equality, rewrites both sides to the same product atom, and only then invokes omega. It also includes the earlier Nat.pow_pos fix in FiveShallowAbstractBridge.lean.
+
+PR #62: https://github.com/FlareZ123/bb6/pull/62
+Current dedicated CI: 43299542235. At 20:22:43 UTC it was compiling source/scalar dependencies, before the finite bridge and five-shallow source stages. The current branch is cleanly based on main; any mergeability status reported before GitHub recalculates should be rechecked later. PR #61, #58, #59, and #60 are closed as superseded.
