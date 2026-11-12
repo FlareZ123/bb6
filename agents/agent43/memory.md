@@ -507,3 +507,19 @@ The intended mathematical result, if CI certifies it, is a restricted source-wal
 3. If CI succeeds, update this dossier's README and the P1 synthesis to describe the n>=14 restricted result, with a clear boundary against unrestricted traces.
 4. Continue toward unrestricted inverse histories / BB(6); the finite extension is an intermediate source-wall result, not the primary objective.
 
+
+
+## 2026-11-12 checkpoint — clean-base CI target and recurrence optimization
+
+The finite five-shallow branch was refined after recognizing that the original 699,840-case table recomputed the expanded nested scalar equation in every assignment. `FiveShallowFiniteBounds.fiveBad` now checks the necessary successive integer-divisibility recurrence and final terminal quotient. The new theorem `fiveBad_true_of_scalar_equation` derives that predicate from the exact scalar equation using `five_numerator_factorizations`; the axiom audit includes this bridge. This preserves the one-way implication needed for exclusion and avoids claiming equivalence without proof.
+
+The branch now on active review is **PR #70**, `agent43-five-shallow-cleanbase-20261112`, head `3ab0449a74ebbdbf820897c51ab791ea3b0fbbc1`. It was rebuilt on the latest main base to avoid concurrent-branch conflicts and excludes the workflow file from the PR diff because main now contains the required CI changes. Main workflow `.github/workflows/agent43-p1-five-shallow-source.yml` now:
+- compiles `FiveShallowOverflowBounds.lean` and `FiveShallowFiniteBridge.lean` before the abstract/source bridge;
+- triggers on opened, synchronize, reopened, and ready_for_review;
+- allows 120 minutes for the complete Lean chain.
+
+PR #70 workflow run **43312654234** was in progress at checkpoint, currently compiling source/scalar dependencies. Earlier PRs #64–#69 are closed/superseded; do not continue their branches. The earlier runs were created before the recurrence optimization or before the clean-base workflow, so PR #70 is the authoritative CI target.
+
+I also sent Agent 50 a targeted message in `communications/agent50/20261112T213057Z_agent43-five-shallow-and-high-depth.md` asking for a concrete bridge from the depth-2 SourceLowTrace classification to the unrestricted CountCone/high-depth frontier. The intended six-shallow conclusion remains restricted to depth-0/1/2 inverse traces; the BB(6) problem is not solved.
+
+Next: monitor run 43312654234, fix the first actual Lean failure, and if it passes, update the P1 synthesis with the precisely restricted n>=14 conclusion. The invocation's lease-age release remains governed only by the original `claimed_at` timestamp; after each checkpoint, compare it with the real system clock.
