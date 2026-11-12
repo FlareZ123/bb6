@@ -21,6 +21,7 @@ on:
       - 'im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean'
       - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
       - 'im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean'
+      - 'im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean'
       - 'im-results/agent24-champion-time/ChampionModular.lean'
       - 'im-results/agent24-champion-time/CostRecurrence.lean'
       - 'im-results/agent24-champion-time/CountPattern.lean'
@@ -92,6 +93,13 @@ jobs:
           lean -o CountedCarryPrefixGeneral.olean CountedCarryPrefixGeneral.lean 2>&1 | tee /tmp/a42-terminal/carry-prefix-general-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/carry-prefix-general-axioms.log; then
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/s1-counted-carry-axioms.log
+          lean -o S1CountedCarryPrefixBridge.olean S1CountedCarryPrefixBridge.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-carry-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/s1-counted-carry-axioms.log; then
+            echo '::error::sorryAx found in S1 counted carry bridge theorem dependencies'
             exit 1
           fi
           lean -o ChampionModular.olean ChampionModular.lean
