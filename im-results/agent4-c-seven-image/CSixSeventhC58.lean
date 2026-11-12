@@ -216,6 +216,34 @@ theorem prior_latefast_admits_s3_parameter_family (t : Nat) :
     omega
   exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
 
+/-- A second explicit high-stop progression, in the other residue
+    slice u=3 (mod 4), u+v=11 (mod 16), also survives all current
+    C58/late-fast filters. -/
+theorem prior_latefast_admits_s3_second_parameter_family (t : Nat) :
+    lateFastHighAllowed 1855 (12842+16384*t) := by
+  let m := 12842+16384*t
+  have hm7 : 7≤m := by dsimp [m]; omega
+  have hj : 1855%512=319 := by norm_num
+  have hm512 : m%512=42 := by dsimp [m]; omega
+  have hprior := prior_c58_admits_residue_pair 1855 m hm7 hj hm512
+  have hbool : BB6.Agent11C58Boolean.highAllowed 1855 m :=
+    (BB6.Agent11C58Boolean.highAllowed_iff 1855 m).mpr hprior
+  have hlate : BB6.Agent11LateDepthGate.allowedBool 1855 m=true := by
+    apply (BB6.Agent11LateDepthGate.allowedBool_iff 1855 m).mpr
+    intro r hr
+    rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
+    have hm4res : m%4=2 := by dsimp [m]; omega
+    have hodd : (2*r+1)%4=1 ∨ (2*r+1)%4=3 := by omega
+    omega
+  have hnotdiag :
+      ¬(7≤m ∧ 1855%512=319 ∧
+        (3*m)%4096=(1855+2879)%4096) := by
+    rintro ⟨_,_,hpair⟩
+    have h3m : (3*m)%4096=1662 := by dsimp [m]; omega
+    have hjmod : (1855+2879)%4096=638 := by norm_num
+    omega
+  exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
+
 /-- Exact original-source Machine C blank-halting iff after adding
     Agent 4's diagonal to the C58 all-depth plus arbitrary-depth
     late three-cone high predicate. -/
@@ -243,7 +271,7 @@ theorem blank_halts_iff_c58_late_fast_six_seven :
         exact (BB6.Agent4Seven.high_stop_six_seven_diagonal
           j m k time hm hj hpair hstop) hrun
       exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
-  · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
+  · rintro (hlow | ⟨j,m,⟨hprior,_,_⟩,hroot⟩)
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
 
@@ -350,8 +378,70 @@ private theorem s3_high_parameter_no_blank (t time : Nat) :
         (2:Nat)^(2*(9770+16384*t)+2)*(831+3) -
           (831+3*(9770+16384*t)+5)) := by
   obtain ⟨v,hkv,hv16⟩ := s3_high_target t
-  have hsector : 1%4=1 ∧ (1+v)%16=3 := by omega
+  have hsector :
+      (1%4=1 ∧ (1+v)%16=3) ∨ (1%4=3 ∧ (1+v)%16=11) := by
+    apply Or.inl
+    constructor <;> omega
   have hblank := BB6.Agent4Seven.blank_ne_six_seven_band_s3 1 v time hsector
+  intro hrun
+  apply hblank
+  simpa [hkv] using hrun
+
+/-- The second exact high stop lands in the other strict image slice:
+    j=1855 and m=12842 (mod 16384) give u=3 and v=8 (mod 16). -/
+private theorem s3_high_target_second (t : Nat) :
+    ∃ v, (2:Nat)^(2*(12842+16384*t)+2)*(1855+3) -
+      (1855+3*(12842+16384*t)+5)=574+1024*v ∧ v%16=8 := by
+  let m := 12842+16384*t
+  let k := (2:Nat)^(2*m+2)*(1855+3)-(1855+3*m+5)
+  have hm7 : 7≤m := by dsimp [m]; omega
+  have hpow : 16384 ∣ (2:Nat)^(2*m+2) := by
+    have h := Nat.pow_dvd_pow 2 (by omega : 14≤2*m+2)
+    simpa only [show (2:Nat)^14=16384 by norm_num] using h
+  have hprod : 16384 ∣ (2:Nat)^(2*m+2)*(1855+3) := by
+    rcases hpow with ⟨q,hq⟩
+    refine ⟨q*(1855+3),?_⟩
+    rw [hq]
+    ac_rfl
+  have hstop : k+1855+3*m+5=(2:Nat)^(2*m+2)*(1855+3) := by
+    simpa [k] using high_stop_identity 1855 m
+  have hmres : m%16384=12842 := by dsimp [m]; omega
+  have h3m : (3*m)%16384=5758 := by omega
+  have hPmod : ((2:Nat)^(2*m+2)*(1855+3))%16384=0 :=
+    Nat.mod_eq_zero_of_dvd hprod
+  have hkmod : k%16384=8766 := by omega
+  have hdiv : 1024 ∣ 16384 := by norm_num
+  have hkmod1024 : k%1024=574 := by
+    calc
+      k%1024 = (k%16384)%1024 :=
+        (Nat.mod_mod_of_dvd k hdiv).symm
+      _ = 8766%1024 := by rw [hkmod]
+      _ = 574 := by norm_num
+  let v := k/1024
+  have hdecomp : k%1024+1024*(k/1024)=k :=
+    Nat.mod_add_div k 1024
+  have hkv : k=574+1024*v := by
+    dsimp [v]
+    omega
+  have hv16 : v%16=8 := by
+    rw [hkv] at hkmod
+    omega
+  refine ⟨v,?_,hv16⟩
+  simpa [m,k] using hkv
+
+/-- The second exact high-stop progression is excluded by the
+    second strict image slice at every time. -/
+private theorem s3_high_parameter_no_blank_second (t time : Nat) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (2*1855+3,
+        (2:Nat)^(2*(12842+16384*t)+2)*(1855+3) -
+          (1855+3*(12842+16384*t)+5)) := by
+  obtain ⟨v,hkv,hv16⟩ := s3_high_target_second t
+  have hsector :
+      (3%4=1 ∧ (3+v)%16=3) ∨ (3%4=3 ∧ (3+v)%16=11) := by
+    apply Or.inr
+    constructor <;> omega
+  have hblank := BB6.Agent4Seven.blank_ne_six_seven_band_s3 3 v time hsector
   intro hrun
   apply hblank
   simpa [hkv] using hrun
@@ -359,7 +449,9 @@ private theorem s3_high_parameter_no_blank (t time : Nat) :
 /-- Add the second, disjoint high-stop progression to the late-fast
     exact C58 predicate. -/
 def highAllowedBoth (j m : Nat) : Prop :=
-  lateFastHighAllowed j m ∧ ¬(j=831 ∧ m%16384=9770)
+  lateFastHighAllowed j m ∧
+  ¬(j=831 ∧ m%16384=9770) ∧
+  ¬(j=1855 ∧ m%16384=12842)
 
 /-- Exact Machine C blank-halting iff after adding both independent
     Agent 4 six/seven source-image exclusions to the latest late-fast
@@ -379,7 +471,7 @@ theorem blank_halts_iff_c58_late_fast_six_seven_both :
     · let k := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
       have hreach : BB6.Agent3.CReach (2*j+3) k :=
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
-      have hnot : ¬(j=831 ∧ m%16384=9770) := by
+      have hnot1 : ¬(j=831 ∧ m%16384=9770) := by
         rintro ⟨rfl,hmres⟩
         have hform : m=9770+16384*(m/16384) := by
           have hd := Nat.mod_add_div m 16384
@@ -388,7 +480,16 @@ theorem blank_halts_iff_c58_late_fast_six_seven_both :
         rw [hform] at hreach
         obtain ⟨time,hrun⟩ := hreach
         exact s3_high_parameter_no_blank (m/16384) time hrun
-      exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
+      have hnot2 : ¬(j=1855 ∧ m%16384=12842) := by
+        rintro ⟨rfl,hmres⟩
+        have hform : m=12842+16384*(m/16384) := by
+          have hd := Nat.mod_add_div m 16384
+          rw [hmres] at hd
+          omega
+        rw [hform] at hreach
+        obtain ⟨time,hrun⟩ := hreach
+        exact s3_high_parameter_no_blank_second (m/16384) time hrun
+      exact Or.inr ⟨j,m,⟨hprior,hnot1,hnot2⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
@@ -399,6 +500,12 @@ theorem s3_parameter_family_removed (t : Nat) :
     ¬highAllowedBoth 831 (9770+16384*t) := by
   intro h
   exact h.2 ⟨by rfl,by omega⟩
+
+/-- The second explicit high-stop progression is also removed. -/
+theorem s3_second_parameter_family_removed (t : Nat) :
+    ¬highAllowedBoth 1855 (12842+16384*t) := by
+  intro h
+  exact h.2.2 ⟨by rfl,by omega⟩
 
 #print axioms prior_c58_admits_six_seven_diagonal
 #print axioms prior_c58_admits_concrete_infinite_family
@@ -411,5 +518,7 @@ theorem s3_parameter_family_removed (t : Nat) :
 #print axioms prior_latefast_admits_s3_parameter_family
 #print axioms blank_halts_iff_c58_late_fast_six_seven_both
 #print axioms s3_parameter_family_removed
+#print axioms prior_latefast_admits_s3_second_parameter_family
+#print axioms s3_second_parameter_family_removed
 
 end BB6.Agent4SevenC58
