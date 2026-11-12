@@ -23,9 +23,9 @@ private theorem source_two_chain_mass (n s b d m B D M : Nat)
       omega
 
 /-- Four genuine depth-0/1 inverseAt transitions, with arbitrary depth-two
-runs between them, cannot reach the exact shifted wall for n>=76. -/
+runs between them, cannot reach the exact shifted wall for n>=14. -/
 theorem source_low_word_four_no_wall
-    (n b d m : Nat) (hn : 76≤n)
+    (n b d m : Nat) (hn : 14≤n)
     (h : SourceLowWord n 4 (14*2^n-2*n-16) 3 0 b d m)
     (hwall : b+4*m+4*n+20=12*2^n) : False := by
   cases h with
@@ -175,7 +175,7 @@ theorem source_low_word_four_no_wall
               hSh3Model hmid3Model hSh4Model htailModel hwallModel
 
 /-- Every finite legal inverseAt trace restricted to depths 0,1,2 which
-reaches the exact shifted wall at n>=76 has at least five shallow edges. -/
+reaches the exact shifted wall at n>=14 has at least five shallow edges. -/
 theorem source_low_trace_wall_needs_five_shallows
     (n z b d m : Nat) (hn : 76≤n)
     (h : SourceLowTrace n z (14*2^n-2*n-16) 3 0 b d m)
