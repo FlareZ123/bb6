@@ -138,6 +138,43 @@ private theorem signedZ_index_shift_digit_mod (n j k t : Nat)
   rw [hz]
   omega
 
+/-- Divisibility at the next precision is equivalent to the unique
+    ternary quotient digit selected by the index shift. -/
+private theorem signedZ_index_lift_criterion (n j k t : Nat) (ht:t<3)
+    (hbase : (3:Int)^(k+1) ∣ signedZ n j) :
+    (3:Int)^(k+2) ∣ signedZ (n+t*depthPeriod (k+1)) j ↔
+      (3:Int) ∣
+        (signedZ n j/(3:Int)^(k+1)-
+          (4*((2:Int)^(j+1)-1))*t) := by
+  let m : Int := (3:Int)^(k+1)
+  let a : Int := 4*((2:Int)^(j+1)-1)
+  have hmne:m≠0:=by
+    change (3:Int)^(k+1)≠0
+    exact_mod_cast (Nat.ne_of_gt (Nat.pow_pos (by decide : 0<3)))
+  have hM:(3:Int)^(k+2)=(3:Int)*m:=by
+    dsimp [m]
+    rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
+    exact Int.mul_comm _ _
+  have hmod:=signedZ_index_shift_digit_mod n j k t ht
+  have hmod' : signedZ (n+t*depthPeriod (k+1)) j%(3:Int)^(k+2)=
+      (signedZ n j-m*(a*t))%(3:Int)^(k+2) := by
+    simpa [m,a,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hmod
+  have hdiviff : (3:Int)^(k+2)∣signedZ (n+t*depthPeriod (k+1)) j ↔
+      (3:Int)^(k+2)∣(signedZ n j-m*(a*t)) := by
+    rw [Int.dvd_iff_emod_eq_zero,Int.dvd_iff_emod_eq_zero,hmod']
+  have hquot : m*(signedZ n j/m)=signedZ n j :=
+    Int.mul_ediv_cancel_of_dvd hbase
+  have hfactor : signedZ n j-m*(a*t)=
+      m*(signedZ n j/m-a*t) := by
+    calc
+      _ = m*(signedZ n j/m)-m*(a*t) := by
+        exact congrArg (fun x:Int => x-m*(a*t)) hquot.symm
+      _ = m*(signedZ n j/m-a*t) := by
+        rw [Int.mul_sub]
+  have hcomm:(3:Int)*m=m*3:=Int.mul_comm _ _
+  rw [hdiviff,hfactor,hM,hcomm]
+  exact Int.mul_dvd_mul_iff_left hmne
+
 private theorem pow_two_mod_three (m : Nat) :
     2^m%3 = if m%2=0 then 1 else 2 := by
   induction m with
