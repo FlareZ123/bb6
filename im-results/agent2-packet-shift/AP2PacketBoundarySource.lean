@@ -23,13 +23,16 @@ def input (k q r : Nat) : Cfg :=
     5⟩
 
 def endpoint (k q r : Nat) : Cfg :=
+  let m := 4*k+3+CryptidA.wordInc (words q r)
   ⟨[],false,
-    List.replicate (2*(4*k+3+q+4*r)+5) true ++
+    List.replicate (2*m+5) true ++
       CryptidBoundary.oppairs 3 ++ List.replicate 3 true,
     5⟩
 
 def sourceTime (k q r : Nat) : Nat :=
-  BB6.Agent31ACodeFirst.a110111CodeFirstTime k (words q r) ys
+  let m := 4*k+3+CryptidA.wordInc (words q r)
+  (12*k*k+41*k+32) +
+    (CryptidA.wordCost (4*k+3) (words q r) + (2*m+24))
 
 private theorem wordCode_append (xs zs : List Bool) :
     CryptidA.wordCode (xs ++ zs) =
@@ -73,10 +76,10 @@ theorem a_p2_packet_reentry (k q r : Nat) :
         CryptidBoundary.init
           (List.replicate (3*k+1) true ++
             false :: (CryptidA.wordCode (words q r) ++
-              BB6.Agent31ACodeFirst.packet ys)) := by
+              BB6.CryptidA110111CodeFirst.packet ys)) := by
     simp [input,fixedTail,words,ys,
       CryptidBoundary.init,CryptidBoundary.oppairs,
-      words_code,BB6.Agent31ACodeFirst.packet,
+      words_code,BB6.CryptidA110111CodeFirst.packet,
       List.replicate_add,List.append_assoc]
   have htail :
       false :: ([true,false,true,false,true] ++ ys) =
@@ -84,11 +87,9 @@ theorem a_p2_packet_reentry (k q r : Nat) :
     decide
   rw [hshape]
   simpa [sourceTime,endpoint,ys,htail,
-    BB6.Agent31ACodeFirst.a110111CodeFirstTime,
-    BB6.Agent31ACodeFirst.a110111CodeFirstOut,
-    BB6.Agent31ACodeFirst.a110111CodeFirstM,
-    words] using
-    (BB6.Agent31ACodeFirst.full_A_code_110111_first_return
+    BB6.CryptidA110111CodeFirst.packet,
+    BB6.CryptidA110111CodeFirst.tail] using
+    (BB6.CryptidA110111CodeFirst.full_A_code_110111_first_return
       k (words q r) ys).1
 
 #print axioms a_p2_packet_reentry
