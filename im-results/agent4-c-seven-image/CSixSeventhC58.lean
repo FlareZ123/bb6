@@ -328,7 +328,7 @@ theorem blank_halts_iff_c58_late_fast_six_seven :
           simpa [k] using high_stop_identity j m
         exact (BB6.Agent4Seven.high_stop_six_seven_diagonal
           j m k time hm hj hpair hstop) hrun
-      exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
+      exact Or.inr ⟨j,m,⟨hprior,by simpa [k] using hnot⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_,_⟩,hroot⟩)
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
