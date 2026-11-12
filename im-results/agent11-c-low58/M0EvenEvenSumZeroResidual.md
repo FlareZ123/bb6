@@ -27,6 +27,26 @@ Thus `A_s` is even-even with coordinate sum 0 modulo 8. This is exactly the case
 
 The finite six-sector census stops at this residual for odd `t`; it does not decide blank-root reachability there.
 
+## Generic even-even sum-zero inverse grammar
+
+The same source calculation gives a reusable classification beyond this one ray. For any target `(x,y)` with x and y even, `y>=6`, and `8 | (x+y)`, the complete source-parent alternatives are:
+
+```text
+(1) a=0, k>=2, and for some odd n:
+      x+y = 2^(n+3)
+      2*k + 9 + 3*n = x+2*y
+
+(2) direct/low:
+      a = x+y-2
+      k = (y-2)/2
+
+(3) a>=2 even, k>=1, 2*k>a, and for some odd n:
+      x+y = 2^(n+1)*(a+2)
+      2*k + a + 7 + 3*n = x+2*y.
+```
+
+There are no a=1 or odd-a high-bounce parents: in those branches the source grammar requires the odd quantity `x+y+1` to equal an even power-of-two multiple. The a=0 and even-a bounce depths are both forced odd by the cost equation's parity. The direct parent is always valid for x>=0 and y>=6. This generic iff is a direct specialization of Agent3's `section_preimage_all_iff`; it is not yet encoded as a new Lean theorem. The A_s formula below is the closed-form specialization in which the a=0 alternative is arithmetically absent.
+
 ## Complete specialized incoming-parent grammar
 
 The relevant all-source theorem is Agent3's `section_preimage_all_iff` in `im-results/agent3-c-bounce-inverse/SectionAllInverse.lean`. Specializing its cases to `A_s` gives the following complete parent list.
