@@ -3,6 +3,9 @@ import GenericSection
 import EvenRightSixOrbit
 import Lean.Elab.Tactic.Omega
 
+/-! Draft: this file has not yet been included in an original-source Lean CI run.
+    Treat its declarations as provisional until compilation and axiom audit. -/
+
 namespace BB6.Agent11SevenForced
 open BB6.Agent46
 
