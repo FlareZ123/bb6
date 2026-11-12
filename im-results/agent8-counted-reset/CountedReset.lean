@@ -133,7 +133,6 @@ theorem descV2_binary (b : Nat) :
       have hpow : 2^(b+1) = 2*2^b := by
         rw [Nat.pow_succ]
         ac_rfl
-      have hpos : 0 < 2^b := Nat.pow_pos (by decide)
       have hlt : 2^b-1 < 2^b := by omega
       have hsplit : 2^(b+1)-1 = 2^b+(2^b-1) := by
         rw [hpow]
@@ -218,9 +217,7 @@ theorem countedIncs0 (l : List Bool) (len n b : Nat) (h : Int)
               (s0Config l len n (b+1) h) := by simp [hfirst]
         _ = some (s0Config l len 0 (b+1+n) h) := htail
         _ = some (s0Config l len 0 (b+(n+1)) h) := by
-              congr 1
-              congr 1
-              omega
+              simpa [show b+1+n = b+(n+1) by omega] using htail
 
 /-- The second phase of Rst0/Rst1/Rst2: drain the all-ones counter
 2^b-1 to zero and transfer its value to the right unary counter. -/
@@ -269,7 +266,6 @@ intermediate, the complete counted drain follows with the exact proposed
 Rst0/Rst1/Rst2 cost. This isolates the remaining prefix proof cleanly. -/
 theorem countedRst012_of_prefix
     (cfg : Config) (l : List Bool) (a b m n : Nat) (h : Int)
-    (hm : m < 3)
     (hprefix :
       run tm2 (resetPrefixCost m n a b) cfg =
         some (s0Config l (a+b+resetDelta m) (2^b-1) 0 h))
@@ -282,8 +278,8 @@ theorem countedRst012_of_prefix
   have hbound := resetDrainBound a b m (by omega)
   have htail := countedIncs0_binary l (a+b+resetDelta m) b h hbound hInc0
   have hdecomp := proposedIncrementCost_decomp m n a b
-  rw [hdecomp,run_add,hprefix]
-  simpa [resetPrefixCost] using htail
+  rw [hdecomp,run_add,hprefix,drainCost_binary b]
+  exact htail
 
 #print axioms v2_add_pow
 #print axioms descV2_binary
