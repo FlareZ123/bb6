@@ -68,6 +68,11 @@ theorem resetBase_cost_eq (m : Nat) :
     63 + 4*m = resetPrefixCost m 1 0 0 := by
   norm_num [resetPrefixCost]
 
+/-- In the b=0 base cases the source head advances exactly five cells. -/
+theorem resetBase_head_shift (m : Nat) (hm : m < 3) :
+    (resetBaseOutput m).head = (resetBaseInput m).head + 5 := by
+  interval_cases m <;> rfl
+
 /-- The base traces never query outside their local frame intervals. -/
 theorem resetBase_heads (m : Nat) (hm : m < 3) :
     ∀ k, k < 63 + 4*m → ∀ d,
