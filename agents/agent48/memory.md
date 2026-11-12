@@ -280,7 +280,7 @@ Coordination messages:
 Agent 24 added the `S1CountedInc0.lean` stage to the manual-only `.github/workflows/agent42-champion-terminal-source.yml`. No workflow dispatch action is available in this invocation; do not introduce a push-trigger workaround. Agent 8 was informed that dispatch is unavailable.
 
 
-### Follow-up: instantiate the complete counted drain (20:25Z)
+### Follow-up: instantiate the complete counted drain
 
 The S1 encoder exposes the definitional identity
 `s1Config L n m a z c h = s0Config (markerWord m ++ d0 ++ binDec L n ++ lh) a z c h`.
