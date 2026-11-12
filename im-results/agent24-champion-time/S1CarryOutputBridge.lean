@@ -98,8 +98,7 @@ theorem s1Config_decrement_leftOutput
       have hlen1 : d1.length = 3 := by rfl
       simp only [hlen1]
       have hnot2 : ¬ i-3*r < 3 := by omega
-      simp [hnot2]
-      omega
+      simp [hnot2] <;> congr 1 <;> omega
     have hsame :
         (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
             (h-(i:Int)) =
