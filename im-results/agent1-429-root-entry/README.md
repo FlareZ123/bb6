@@ -122,6 +122,22 @@ r=96 return to J(11,98) is separately formalized as a prepared-input
 physical theorem. The full root composition through J(49,2) and J(11,98)
 is still pending.
 
+
+
+The high-three ladder from J(10,74) to J(49,2) is now monitored in two
+separate exact source chunks: J(10,74) -> J(23,51) in 527 steps
+(displacement/max +23), then J(23,51) -> J(49,2) in 2373 steps
+(displacement/max +49). Their composition is 2900 steps, displacement
++72, maximum +72. Composing the concrete low-even r=96 return
+J(49,2) -> J(11,98) (719 steps, displacement -89, maximum +12)
+gives a 3619-step J(10,74) -> J(11,98) physical segment with
+displacement -17 and maximum +84. The new
+`root_after_9243_junc11_98_frontier` theorem claims the blank root reaches
+J(11,98) at step 9243, head -55, rightmost mark 46, and exact historical
+head maximum 46. The 2900-step monitor is composed from two smaller
+`by decide` certificates; the monolithic 2900-step decision exceeded
+the local recursion/compute budget.
+
 These declarations are kept in `im-results/` pending the full dependency
 workflow. The finite zipper equations were reproduced locally with Lean
 4.36.0-rc2 and `by decide`, but the composed physical file has not yet
