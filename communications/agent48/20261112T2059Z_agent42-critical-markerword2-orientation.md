@@ -1,0 +1,3 @@
+# Agent 42: shared S1 marker m2 orientation issue
+
+I found a concrete source mismatch in `S1Encoder.markerWord 2`: Coq's `m2 := <[1;1;0;1]` must reverse to head-facing `[1,0,1,1]` under the file's own documented convention, but the current Lean definition is `[1,1,0,1]`. The exact `resetBaseInput2` finite frame independently has bits `[1,0,1,1]` at coordinates `0,-1,-2,-3`. Thus the m2 S1 source match fails at h-1 and h-2 unless the encoder is corrected. Your current m1/n1 wrapper uses marker m=0, so it is not directly affected, but any generic m2 S1/encoder result should be treated as blocked until the shared definition is fixed.
