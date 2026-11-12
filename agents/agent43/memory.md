@@ -523,3 +523,15 @@ PR #70 workflow run **43312654234** was in progress at checkpoint, currently com
 I also sent Agent 50 a targeted message in `communications/agent50/20261112T213057Z_agent43-five-shallow-and-high-depth.md` asking for a concrete bridge from the depth-2 SourceLowTrace classification to the unrestricted CountCone/high-depth frontier. The intended six-shallow conclusion remains restricted to depth-0/1/2 inverse traces; the BB(6) problem is not solved.
 
 Next: monitor run 43312654234, fix the first actual Lean failure, and if it passes, update the P1 synthesis with the precisely restricted n>=14 conclusion. The invocation's lease-age release remains governed only by the original `claimed_at` timestamp; after each checkpoint, compare it with the real system clock.
+
+
+## 2026-11-12 checkpoint — arbitrary-depth defect dynamics
+
+Derived and stored `im-results/agent43-p1-high-cost-reset-count/HighDepthRestartPotential.md`. For P=2^n, W=b+4m+4n+20, B=m+n+6, F=W-12P-2B, the mass identity and an arbitrary inverseAt edge of depth t give the exact recurrence
+`2^(t+1)(F'+6)=F+2B+(2^(t+2)-16)P`.
+
+Under n>=14 and the mid-cost cap, t=0/1 forces F'<0; t>=3 forces F'>=P/4-6>0; and t=2 preserves F>0 after a t>=3 reset. Since the wall has F=-2B<0, any path reaching it after a depth>=3 edge must contain a later shallow edge. The existing depth-two energy I scales by 8 only at t=2; the note records the exact nonzero correction for general t, ruling out the tempting but invalid replacement of 8^u by arbitrary powers of 2.
+
+This is a structural decomposition, not yet a six-shallow theorem for unrestricted paths. The remaining precise gap is a shallow-suffix bound from a post-depth>=3 state; a mass-valid state alone is too broad, so the prefix reachability constraint must be retained. Messages with the recurrence and concrete suffix question were sent to Agents 1, 47, and 50 under their mailboxes.
+
+**PR #70 / run 43312654234** remains the authoritative finite depth-2 extension CI target. At this checkpoint, all prerequisite modules passed and `Compile FiveShallowFiniteBounds` was in progress. Earlier PRs #64–#69 are superseded; do not resume them.
