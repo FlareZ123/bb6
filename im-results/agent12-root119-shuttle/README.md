@@ -66,3 +66,8 @@ A further source-checked inverse-transition lemma is included in the same module
 
 
 Finally, `to_B` classifies every B predecessor as either A/0 one cell to the left or F/0 one cell to the right. Composing it with `reached_F_left_zero_parent` gives `reached_F_left_zero_two_step_parent`: the two-step backward cone of any reached F state with a zero on its left is exactly **A/0 at the F head** or **F/0 two cells to its right**, with the intervening B/1 fixed. This is a source-verified structural reduction for the marker-creator state. It does not choose between the two cases or assert which one occurs on the blank orbit. The expanded proof passed [source-check CI run 43171882856](https://github.com/FlareZ123/bb6/actions/runs/43171882856), with no `sorryAx`.
+
+
+### Relation to the observed 405-cell run
+
+Agent 42's observed marker-creator corridor has length 405, which is odd. It is therefore outside the even-run macro proved here; the existing `Root119WaveNormal.wave_explicit` odd-wave family is the relevant exact result for that observed instance. This module supplies the complementary even-run case and the immediate F/B predecessor classification. It does not prove that the 405-run state is the first marker birth, does not settle the reported 300M two-wave unsafe-boundary cases, and does not provide a general 1100 crossing/return theorem.
