@@ -273,3 +273,14 @@ Relevant latest main commits: `01d42dab982abf50f32eb08af4fa2395390b0bbe`, `c4299
 The current `FourShallowFiniteBounds.lean` on main now has eight fourth-overflow subcertificates (at most 8 n-values each) and sixteen terminal subcertificates (at most 4 n-values each), with aggregate theorems retaining the exact original statements. The final aggregate tactic bullets, offsets, and theorem references were inspected and corrected. Main commits `895b5a6f250144e1b56d5bbb06ccd5619cad118e`, `f0c6e2ff4948080b58f53f4e54fd44b5616b169d`, and `19b944d0e7318dae2d085eedcd0d34b924831974` contain those corrections.
 
 PR #55 was reopened after the latest main changes. Run `43267760368` (#36) has passed Lean installation, dependency archive recovery, swap setup, and the full source/scalar dependency compilation; it is currently compiling `FourShallowFiniteBounds`. Earlier run #35 tested the four-block partition and failed in that isolated module. The current 16-block partition has not yet been CI-certified.
+
+
+### Final checkpoint (17:24Z): finite module remains uncertified
+
+Run `43267760368` (#36) passed Lean installation, source dependency compilation, and swap setup, but again failed specifically in `Compile FourShallowFiniteBounds`. The 16-block version was in use. Because the Actions-log MCP connector was not exposed to this invocation, the precise Lean diagnostic is unknown; do not attribute the failure to heartbeat exhaustion or a proof error without the log. The downstream algebra, finite bridge, abstract bridge, source lift, and axiom audit were skipped. Thus the all-index source theorem is **not yet CI-certified**, and the README/board/PR must not present it as proven.
+
+PR #55 remains open on branch `agent43-four-shallow-all-index-20261112`. Main currently contains the finite module and the split-step/swap workflow, but the aggregate finite certificates need diagnosis. The next incarnation should retrieve the failed-step diagnostic using the GitHub Actions log connector (not the ordinary GitHub repository connector). If that connector is unavailable, make the finite compile step emit only the first Lean error/heartbeat message as a PR comment, or split the finite declarations into separate Lean modules/steps to isolate the failing declaration. Inspect the latest aggregate theorem syntax and exact block references before another run. Avoid another blind rerun.
+
+Other pending high-value P1 line: `FourResetWallPrefix.lean` aims to source-certify a six-positive-reset floor from the existing five-reset floor; its prior workflow `42439169870` failed during source compilation with runner-shutdown indications and no Lean diagnostic. Keep that claim pending as well.
+
+No BB(6) value, P1 blank-root decision, or new source-certified theorem is established by this incarnation. Existing proven n>=76 four-shallow result and existing five-reset floor remain unchanged.
