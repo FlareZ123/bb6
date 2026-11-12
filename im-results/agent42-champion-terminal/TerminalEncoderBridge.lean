@@ -1,5 +1,6 @@
 import TerminalAfterPrefix
 import S1Encoder
+import CountedReset
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -295,6 +296,47 @@ theorem champion_attainable_after_s0_reset_prefix
   exact champion_attainable_after_terminal_prefix
     n L a _ h hprefix' (s0_reset_sectionBits L a b h)
 
+/-- Compose Agent 8's conditional, exact Rst0/Rst1/Rst2 count with
+the source-certified terminal section and champion root correction.  The
+remaining machine-specific obligations are precisely the prefix witness
+and the uniform original-source Inc0 premise already exposed by
+`countedRst012_of_prefix`; this theorem adds no surrogate cost assumption. -/
+theorem champion_attainable_after_countedRst012
+    (cfg : Config) (rootSteps L a b m n : Nat) (h : Int)
+    (ha : 0 < a)
+    (hblank : run tm2 rootSteps blank = some cfg)
+    (hprefix :
+      run tm2 (resetPrefixCost m n a b) cfg =
+        some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+          (a+b+resetDelta m) (2^b-1) 0 h))
+    (hInc0 : ∀ z c, 0 < z → z < 2^(a+b+resetDelta m) →
+      run tm2 (inc0Cost z c)
+        (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+          (a+b+resetDelta m) z c h) =
+        some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+          (a+b+resetDelta m) (z-1) (c+1) h)) :
+    Attainable
+      (rootSteps + proposedIncrementCost m n a b +
+        terminalMoves L (a+b+resetDelta m) + 7) := by
+  have hstage := countedRst012_of_prefix cfg
+    (markerWord 0 ++ d0 ++ binDec L 0 ++ lh) a b m n h ha hprefix hInc0
+  have hblankStage :
+      run tm2 (rootSteps + proposedIncrementCost m n a b) blank =
+        some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+          (a+b+resetDelta m) 0 (2^b-1) h) := by
+    calc
+      run tm2 (rootSteps + proposedIncrementCost m n a b) blank =
+          (run tm2 rootSteps blank).bind
+            (fun c => run tm2 (proposedIncrementCost m n a b) c) :=
+        run_add tm2 blank rootSteps (proposedIncrementCost m n a b)
+      _ = some (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh)
+            (a+b+resetDelta m) 0 (2^b-1) h) := by
+        simp [hblank, hstage]
+  exact champion_attainable_after_s0_reset_prefix
+    (rootSteps + proposedIncrementCost m n a b)
+    L (a+b+resetDelta m) (2^b-1) h hblankStage
+
+#print axioms champion_attainable_after_countedRst012
 #print axioms s0_reset_sectionBits
 #print axioms champion_attainable_after_s0_reset_prefix
 
