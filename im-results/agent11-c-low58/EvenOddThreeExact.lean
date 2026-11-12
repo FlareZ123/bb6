@@ -1,5 +1,6 @@
 import SectionAllInverse
 import GenericSection
+import EvenRightSixOrbit
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11SevenForced
@@ -108,6 +109,37 @@ theorem evenodd_three_parent_iff (a k x : Nat) (hx : x%8=6) :
     refine ⟨rfl,0,?_,?_⟩
     · simp [hbase]
     · omega
+
+/-- An infinite subfamily of the new y=3 sector is genuinely
+    blank-unreachable: two forced original-source parents reduce it to
+    an odd-right state forbidden by the global blank-image invariant. -/
+theorem evenodd_three_blank_unreachable (q time : Nat)
+    (hq : 5≤q) (hqmod : q%4=1) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (8*q+6,3) := by
+  intro htarget
+  have hreach1 : BB6.Agent3.CReach (8*q+6) 3 := ⟨time,htarget⟩
+  have hreach2 : BB6.Agent3.CReach (4*q+3) (2*q+2) :=
+    (evenodd_three_blank_reach_iff (8*q+6) (by omega)).mp hreach1
+  have hy : 6≤2*q+2 := by omega
+  have he : (2*q+2)%2=0 := by omega
+  have hsum : ((4*q+3)+(2*q+2))%8=3 := by omega
+  have h0 : ((4*q+3)+(2*q+2))%8≠0 := by omega
+  have h7 : ((4*q+3)+(2*q+2))%8≠7 := by omega
+  have hreach3 : BB6.Agent3.CReach (6*q+3) q :=
+    (BB6.Agent46.six_even_right_blank_reach_iff
+      (4*q+3) (2*q+2) hy he h0 h7).mp hreach2
+  obtain ⟨n,hn⟩ := hreach3
+  have hodd : q%2=1 := by omega
+  have hbad : ((6*q+3)+q)%4=2 := by omega
+  cases n with
+  | zero =>
+      simp [BB6.Agent8Section.run] at hn
+      omega
+  | succ n =>
+      have hi := BB6.Agent3.blank_section_odd_image n
+        (6*q+3) q hn hq hodd
+      omega
 
 /-- The target has one genuine predecessor, so blank reachability is
     equivalent to blank reachability of that predecessor at an earlier time. -/
