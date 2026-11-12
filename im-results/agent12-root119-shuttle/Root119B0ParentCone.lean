@@ -565,9 +565,8 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       have hlen : 2*(k+1)+1=(2*k+2)+1 := by omega
       have hp' : Root119Path ((2*k+2)+1) c d := by
         simpa [hlen] using hp
-      have hlenInt : ((2*(k+1)+1:Nat):Int) = (2*k+3:Int) := by omega
-      have hdisp' : d.h=c.h-((2*k+3:Nat):Int) := by
-        simpa [hlenInt] using hdisp
+      have hdisp' : d.h=c.h-(((2*k+2)+1:Nat):Int) := by
+        simpa [hlen] using hdisp
       obtain ⟨b,hstep1,hbpos,hp1,hdisp1⟩ :=
         parentCone_path_tight_first hp' hdisp'
       rw [next_F_zero_shape c hcF hc0] at hstep1
@@ -575,8 +574,10 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       have hlen2 : 2*k+2=(2*k+1)+1 := by omega
       have hp1' : Root119Path ((2*k+1)+1) b d := by
         simpa [hlen2] using hp1
+      have hdisp1' : d.h=b.h-(((2*k+1)+1:Nat):Int) := by
+        simpa [hlen2] using hdisp1
       obtain ⟨u,hstep2,hupos,hp2,hdisp2⟩ :=
-        parentCone_path_tight_first hp1' hdisp1
+        parentCone_path_tight_first hp1' hdisp1'
       have hbBit : b.tape b.h=true := by
         by_cases hb : b.tape b.h=true
         · exact hb
