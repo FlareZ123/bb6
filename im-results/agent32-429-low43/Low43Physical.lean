@@ -211,6 +211,16 @@ private theorem compose_delta (m n : Nat) (a b c : Zipper) (d e : Int)
   rw [h2]
   rfl
 
+private theorem af_tail_delta_local (l r : List Bool) :
+    runWithDelta 2 (z 0 (true::false::l) true r) =
+      some (z 0 l false (true::false::r), -2) := by
+  rfl
+
+private theorem low3_tail_delta_local (l : List Bool) :
+    runWithDelta 4 (z 0 l false [false,true]) =
+      some (z 2 (true::false::true::true::l) false [], 4) := by
+  rfl
+
 def stage43Config (v k : Nat) : Config :=
   {state:=A,head:=2*(v:Int)+2,tape:=stage43Tape v k}
 
@@ -248,7 +258,7 @@ private theorem stage43_decomposition (v k : Nat) :
       some (z 0 (tens (2*k) ++ ones 6) false
         (true::false::(tens (2*v+2) ++ [false,true])),-2)
     simpa [zMid,show tens (2*v+3)=true::false::tens (2*v+2) by rfl] using
-      (af_tail_delta _ _)
+      (af_tail_delta_local _ _)
   have hleft0 := compose_delta (4*v+4) 2
     (stage43 v k) zFirst zMid
     (-((4*v+4:Nat):Int)) (-2) hAF h2
@@ -266,7 +276,7 @@ private theorem stage43_decomposition (v k : Nat) :
         (tens (2*k) ++ ones 6) [false,true])
   have h4 : runWithDelta 4 zAR = some (zC0, (4:Int)) := by
     simpa [zAR,zC0,List.append_assoc] using
-      (low3_tail_delta (ones (4*v+6) ++ (tens (2*k) ++ ones 6)))
+      (low3_tail_delta_local (ones (4*v+6) ++ (tens (2*k) ++ ones 6)))
   have hrepStage : Represents (stage43 v k) (stage43Config v k) := by
     simpa [stage43Config] using stage43_represented v k
   obtain ⟨c1,hleftP,hrep1,hhead1⟩ :=
