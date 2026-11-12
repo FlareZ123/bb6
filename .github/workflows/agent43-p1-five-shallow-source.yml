@@ -1,0 +1,256 @@
+name: Agent43 P1 five-shallow genuine-source proof (isolated milestone)
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'im-results/agent43-p1-high-cost-reset-count/FourLayerGap.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourLayerBarrier.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowFiniteBounds.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowIntegerAlgebra.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowFiniteBridge.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowAbstractBridge.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowSourceModel.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowSourceLift.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveLayerGap.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveLayerBarrier.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowProfileBounds.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowIntegerAlgebra.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowAbstractBridge.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowSourceModel.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowSourceLift.lean'
+permissions:
+  contents: read
+jobs:
+  original-source-lean:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Recover source dependency archives
+        run: |
+          set -e
+          target="im-results/agent50-p1-two-reset"
+          base64 -d "$target/three-reset-source.tar.xz.b64" > /tmp/three.tar.xz
+          echo "be550c5b326d27c459197cf81858fd8ecad95abe657d0a9f269c65bbbb12b97f  /tmp/three.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/three.tar.xz -C "$target"
+          base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/count.tar.xz
+          echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/count.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/count.tar.xz -C "$target"
+      - name: Add swap space and record runner resources
+        run: |
+          set -e
+          echo "Resources before swap:"
+          free -h
+          df -h /
+          sudo swapoff -a || true
+          sudo rm -f /swapfile
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          echo "Resources after swap:"
+          free -h
+          swapon --show
+      - name: Compile source and scalar dependencies
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean --version
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          for m in MassInverse OddConeMass; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          for m in InverseIff UpperTail; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          for m in CountedLastResetDraft LastResetStrengthSource CountedWallStrongGateSource CountedEnergySource CountedEnergyCostSource; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          for m in TwoResetSharp TwoResetDefectSharp UniformDefectStep UniformResetChain ThreeResetGrowth TwoResetFirstDefect ThreeResetExactEquations ResetSkeleton CountSourceBridge CountFinal WallCountLowerBound; do
+            lean -o "$AG50/$m.olean" "$AG50/$m.lean"
+          done
+          for m in NumericShell NumericPower148 NumericBridge148; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          for m in ExceptionalCost ExceptionalSource ExceptionalStrong ExceptionalStrongSource; do
+            lean -o "$AG8/$m.olean" "$AG8/$m.lean"
+          done
+          for m in ExceptionalLastResetDepthSource RightFiveResetFloor RightFiveTwoArithmetic RightFiveEnergyNumeric RightFiveEnergyStep; do
+            lean -o "$AG50SUB/$m.olean" "$AG50SUB/$m.lean"
+          done
+          for m in DyadicGap TwoRunModel CubicGap OneShallowLarge OneShallowFinite OneShallowFiniteBridge RootTwoDivisor OneShallowModelBridge OneShallowModelOne TwoLayerRemainder TwoShallowNumeric TwoShallowFiniteBounds TwoShallowIntegerAlgebra TwoShallowFiniteBridge SmallIndexEnergyCutoff TwoShallowModelLarge ThreeLayerGap ThreeLayerPeel ThreeLayerBarrier ThreeShallowNumeric ThreeShallowFiniteBounds ThreeShallowIntegerAlgebra ThreeShallowFiniteBridge ThreeShallowAllNumeric ThreeShallowAbstractBridge ThreeShallowSourceModel FourLayerGap FourLayerBarrier; do
+            lean -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+      - name: Compile FourShallowFiniteBounds
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FourShallowFiniteBounds.olean" "$AG43/FourShallowFiniteBounds.lean"
+      - name: Compile FourShallowIntegerAlgebra
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FourShallowIntegerAlgebra.olean" "$AG43/FourShallowIntegerAlgebra.lean"
+      - name: Compile FourShallowFiniteBridge
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FourShallowFiniteBridge.olean" "$AG43/FourShallowFiniteBridge.lean"
+      - name: Compile FourShallowAbstractBridge
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FourShallowAbstractBridge.olean" "$AG43/FourShallowAbstractBridge.lean"
+      - name: Compile FiveShallowProfileBounds
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveShallowProfileBounds.olean" "$AG43/FiveShallowProfileBounds.lean"
+      - name: Compile FiveLayerGap
+        run: |
+          set -e
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          lean -o "$AG43/FiveLayerGap.olean" "$AG43/FiveLayerGap.lean"
+      - name: Compile FiveLayerBarrier
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveLayerBarrier.olean" "$AG43/FiveLayerBarrier.lean"
+      - name: Compile FiveShallowIntegerAlgebra
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveShallowIntegerAlgebra.olean" "$AG43/FiveShallowIntegerAlgebra.lean"
+      - name: Compile FiveShallowAbstractBridge
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveShallowAbstractBridge.olean" "$AG43/FiveShallowAbstractBridge.lean"
+      - name: Compile source and four-shallow prerequisites
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          /usr/bin/time -v lean -o "$AG43/SourceOneShallowLift.olean" "$AG43/SourceOneShallowLift.lean"
+          /usr/bin/time -v lean -o "$AG43/SourceLowDepth.olean" "$AG43/SourceLowDepth.lean"
+          /usr/bin/time -v lean -o "$AG43/FourShallowSourceModel.olean" "$AG43/FourShallowSourceModel.lean"
+          /usr/bin/time -v lean -o "$AG43/FourShallowSourceLift.olean" "$AG43/FourShallowSourceLift.lean"
+      - name: Compile FiveShallowSourceModel
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveShallowSourceModel.olean" "$AG43/FiveShallowSourceModel.lean"
+      - name: Verify five-shallow source lift and theorem axioms
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          /usr/bin/time -v lean -o "$AG43/FiveShallowSourceLift.olean" "$AG43/FiveShallowSourceLift.lean"
