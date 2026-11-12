@@ -72,6 +72,21 @@ jobs:
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
             exit 1
           fi
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          : > /tmp/a42-terminal/counted-reset-axioms.log
+          lean -o CountedReset.olean CountedReset.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-axioms.log; then
+            echo '::error::sorryAx found in counted reset theorem dependencies'
+            exit 1
+          fi
+          : > /tmp/a42-terminal/counted-reset-base-axioms.log
+          lean -o CountedResetBase.olean CountedResetBase.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-base-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-base-axioms.log; then
+            echo '::error::sorryAx found in counted reset base theorem dependencies'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/s1-counted-carry-axioms.log
           lean -o S1CountedCarryPrefixBridge.olean S1CountedCarryPrefixBridge.lean 2>&1 | tee /tmp/a42-terminal/s1-counted-carry-axioms.log
@@ -98,21 +113,6 @@ jobs:
           lean -o CountedSuffixOutput.olean CountedSuffixOutput.lean 2>&1 | tee /tmp/a42-terminal/counted-suffix-output-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/counted-suffix-output-axioms.log; then
             echo '::error::sorryAx found in counted suffix output theorem dependencies'
-            exit 1
-          fi
-          lean -o ChampionModular.olean ChampionModular.lean
-          lean -o CostRecurrence.olean CostRecurrence.lean
-          lean -o CountPattern.olean CountPattern.lean
-          : > /tmp/a42-terminal/counted-reset-axioms.log
-          lean -o CountedReset.olean CountedReset.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-axioms.log; then
-            echo '::error::sorryAx found in counted reset theorem dependencies'
-            exit 1
-          fi
-          : > /tmp/a42-terminal/counted-reset-base-axioms.log
-          lean -o CountedResetBase.olean CountedResetBase.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-base-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-base-axioms.log; then
-            echo '::error::sorryAx found in counted reset base theorem dependencies'
             exit 1
           fi
           lean -o TerminalFinish.olean TerminalFinish.lean
