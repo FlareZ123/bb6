@@ -416,3 +416,36 @@ The 6-step recurrence and the v=0,1,2 base cases for arbitrary k still require L
 ### Local Lean installation note
 
 The supplied split archive concatenates to a zip containing `lean-4.36.0-rc2-linux.tar.zst`. After the prompt's unzip step, the tar.zst must also be extracted with `tar --zstd -xf ... -C /tmp/lean`. The verified local binary reports Lean 4.36.0-rc2. Keep using CI for repository-wide dependency verification.
+
+
+## 2026-11-12T21:26Z checkpoint: low-43 physical C/0 frontier and root-specific return (CI pending)
+
+Current incarnation run_id `agent32-gpt6-20261112T201517Z-root-bridge-continuation`. Original lease claim is `2026-11-12T20:15:17.257Z`; the 70-minute release threshold is `2026-11-12T21:25:17.257Z`. At the checkpoint clock `2026-11-12T21:26:46.570Z`, elapsed lease age was 71m29s, so the orderly release procedure is now mandatory. Do not refresh this lease.
+
+### New low-43 source/physical branch work
+
+All new material remains in `im-results/`; no result was promoted to `results/`.
+
+- `im-results/agent32-429-low43/Low43Physical.lean` lifts the existing `Low43Delta.stage43_to_C0_delta` source zipper macro to a complete physical tape representation. Its target theorem `low43_C0_record` is uniform in v,k: from `A, head=0, tape=jTape (v+2*k+2) (2*v+1)`, after `4*v^2+18*v+22` moves the original #429 machine reaches C/0 at head `2*v+6`, with blank right neighbour, and every earlier primitive prefix has head at most `2*v+5`. The new `low43_C0_zipper` and representation conjunct retain the full C0 zipper, not just state/head/local bits. The complete tape identity uses the exact finite support and hole complement; no finite-window comparison.
+- `im-results/agent32-429-low43/README.md` records the theorem's scope and explicitly leaves the post-C0 continuation separate.
+- `im-results/agent32-429-low43/Low43Continuation.lean` adds a concrete v=5,k=7 source certificate. The 119-step C0 continuation has `runWithMax 119 = some (junc 0 9 25, -45, 1)`; hence its maximum rightward displacement is exactly one. The raw delta theorem is projected from the monitor theorem. This is encoded by `decide`, not merely the JS trace.
+- `im-results/agent32-429-low43/Low43RootPhysical.lean` lifts that monitor through the complete physical representation and composes the root-specific local branch. Candidate theorem `root_low43_branch_to_junc`: from J(21,11) at local head 0, 331 moves reach Junc(0,9,25) at head -29, with every prefix head <=17. Candidate theorem `root_low43_branch_to_junc12`: after a further 45-step physical zero-regular return, 376 moves reach Junc(12,0,22) at head -8, and every prefix remains <=17. The latter conserves the rightmost mark at local coordinate 17. This is a local theorem from the J(21,11) checkpoint, not yet composed with the complete blank-root prefix in one theorem.
+
+The low-43 stage decomposition is: bubble repair + stage to C/0 in 212 steps for v=5,k=7; concrete C0-to-Junc(0,9,25) continuation in 119; zero-regular return to Junc(12,0,22) in 45. The complete local branch is 376 steps. It is a meaningful route into a low-2 Junc chart, not a #429 nonhalting proof or a BB(6) bound.
+
+### Shared proof-infrastructure repairs
+
+- `im-results/agent32-429-primitive-cost/HeadDisplacement.lean`: corrected `rawStep_head_displacement` equality orientation and completed the move-direction arithmetic. More importantly, corrected `run_head_displacement_bound` to follow the actual tail-recursive definition `run (n+1) c = (run n c).bind (rawStep m)`; the previous induction incorrectly took a raw step first. Corrected the some-branch witness in `run_prefix_exists`.
+- `im-results/agent32-429-primitive-cost/BubblePrefixHeadBound.lean`: repaired the `AF_sweep` argument order, `run_add'` time rewrite direction, and induction-hypothesis argument list. The quadratic time identity needs explicit Nat multiplication expansion/associativity (Lean core has no Mathlib `ring` tactic); the final Int cast normalization uses `Int.natCast_add` and `Int.mul_add`. These latest algebra/cast repairs are not yet confirmed by the current CI run.
+- The supplied Lean 4.36.0-rc2 split archive was reconstructed locally: concatenating the two parts and unzipping yields a `.tar.zst`, which then needs `tar --zstd -xf`; `lean --version` reported Lean 4.36.0-rc2.
+
+### CI and next actions
+
+The manual workflow `.github/workflows/agent32-429-lowodd-frontier.yml` now has a targeted push trigger for low43 and the two primitive-cost files. It compiles W4HeadMax/W4HeadPrefix, the physical regular-head modules, Low43Delta, Low43Continuation, Low43Physical, and Low43RootPhysical, and prints theorem axioms with a fail-closed `sorryAx` check. Latest run at release checkpoint: [43310306538](https://github.com/FlareZ123/bb6/actions/runs/43310306538), head `d3373b4400f087668154df49c0e66a631415546f`, still `in_progress`. Earlier run [43309561714](https://github.com/FlareZ123/bb6/actions/runs/43309561714) was also in progress at the previous check. Do not treat any new low43 theorem as CI-certified until a successful run explicitly compiles it and prints its axiom audit. The most recent earlier failure had reached BubblePrefixHeadBound; the latest associativity and Int-cast repairs are pending.
+
+Future incarnation:
+1. Poll run 43310306538. If failed, use the failed-job Actions log tail only, repair the exact failing proof, and rerun.
+2. Verify `Low43Continuation.root_low43_C0_to_junc_max` and all four `Low43RootPhysical` theorems; reject any `sorryAx`.
+3. Update the low43 README with CI evidence only after success.
+4. Compose the local J(21,11)→Junc(12,0,22) branch with the existing blank-root prefix if useful, then continue from the low-2 Junc(12,22) case. The root path still has further low-deficit cases; this branch alone does not settle #429.
+5. Keep all these items in `im-results/`. Exact BB(6) and the six-state/two-symbol upper bound remain unresolved.
