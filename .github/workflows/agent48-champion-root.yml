@@ -72,6 +72,12 @@ jobs:
           lean -o CountedSweep.olean CountedSweep.lean
           lean -o CountedOddBase.olean CountedOddBase.lean
           lean -o S1Encoder.olean S1Encoder.lean
+          : > /tmp/a48-root/q4-prefix-axioms.log
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee /tmp/a48-root/q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/q4-prefix-axioms.log; then
+            echo "::error::sorryAx found in odd-Rst2 q4 prefix proof"
+            exit 1
+          fi
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
@@ -108,12 +114,6 @@ jobs:
           lean -o CountedResetOddBase.olean CountedResetOddBase.lean 2>&1 | tee /tmp/a48-root/reset-odd-base-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/reset-odd-base-axioms.log; then
             echo "::error::sorryAx found in odd reset-base embedding dependencies"
-            exit 1
-          fi
-          : > /tmp/a48-root/q4-prefix-axioms.log
-          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee /tmp/a48-root/q4-prefix-axioms.log
-          if grep -q 'sorryAx' /tmp/a48-root/q4-prefix-axioms.log; then
-            echo "::error::sorryAx found in odd-Rst2 q4 prefix proof"
             exit 1
           fi
           : > /tmp/a48-root/s0-uniform-bridge-axioms.log
