@@ -106,7 +106,7 @@ They satisfy `192u+161=3*k0+2`, `8*k0+10=3*k1+2`, `8*k1+10=3*k2+4`, `8*k2+9=3*k3
 
 ## New B-to-E-to-A corridor (Lean source composition verified)
 
-The B-exit partition has a third branch beyond B-to-A and B-to-B-to-A: after the E-chain, a B packet can move to E, then one more E packet can move directly to A. This is composed in [EChainBEExit.lean](EChainBEExit.lean). The focused manual source-audit workflow passed on 2026-11-12 (run 43273085496); all five new declarations have only standard `propext` and `Quot.sound` dependencies, with no `sorryAx` or native-decision axiom.
+The B-exit partition has a third branch beyond B-to-A and B-to-B-to-A: after the E-chain, a B packet can move to E, then one more E packet can move directly to A. This is composed in [EChainBEExit.lean](EChainBEExit.lean). The focused manual source-audit workflow passed on 2026-11-12 (run 43273085496); the subsequent physical-section bridge audit passed in run 43275543784. The B->E->A declarations and the four `regularEndpoint_reentry`/`*_reentry` bridge declarations have only standard `propext` and `Quot.sound` dependencies, with no `sorryAx` or native-decision axiom. The bridge identifies the first endpoint with `regularSection (n+1) 2 2`, the second with `regularSection n 0 0`, and the third with `regularSection n 4 0` up to one explicit trailing blank zero. `source_chain_B_E_A_reentry` is a composition interface requiring an already-established `ObsEq` prefix to the marker; it is not itself a blank-root reachability proof.
 
 For every \(d,h,t,q,p\in\mathbb N\) with \(h\ge1\), \(d\ge1\), and
 \[
