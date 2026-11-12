@@ -634,6 +634,160 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
             _ = true := hpatt.2
 
 
+
+
+/-- Expose the D/1 and F/0 witnesses hidden by the shorter F/1 ancestry
+    projection. The middle path is the exact leftward corridor to the B/0
+    parent. -/
+theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
+    (hB : c.q=.B) (hcurrent : c.tape c.h=false)
+    (hleft3 : c.tape (c.h-3)=true)
+    (hleft2 : c.tape (c.h-2)=false) :
+    ∃ k f d e g,
+      Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
+        f.h=c.h+(2*k:Int)-1 ∧
+      Reach d ∧ d.q=.D ∧ d.tape d.h=true ∧
+        d.h=f.h+1 ∧ next f=some d ∧
+      Reach e ∧ e.q=.F ∧ e.tape e.h=false ∧
+        e.h=f.h+2 ∧ next d=some e ∧
+      Reach g ∧ g.q=.F ∧ g.tape g.h=false ∧
+        g.h=c.h+1 ∧ Root119Path (2*k) e g ∧ next g=some c := by
+  obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
+    reached_B0_left10_parent c hc hB hcurrent hleft3 hleft2
+  obtain ⟨n,hn⟩ := reach_has_steps hg
+  obtain ⟨k,d,e,hd,hD,hDbit,hdpos,hE,hEzero,hstepD,hpath⟩ :=
+    reached_F0_D1_successor_path n g hn hG hGzero
+  obtain ⟨f,hf,hF,hFbit,hFpos,hstepF⟩ :=
+    reached_D1_F0_successor_F1_parent d e hd hD hDbit hstepD hE hEzero
+  have hposF : f.h=c.h+(2*k:Int)-1 := by
+    rw [hGpos] at hdpos
+    rw [hFpos]
+    omega
+  have hposD : d.h=f.h+1 := by omega
+  have heReach : Reach e := Reach.follow hd hstepD
+  rw [next_D_one_shape d hD hDbit] at hstepD
+  cases hstepD
+  have hposE : e.h=f.h+2 := by rw [hposD]; rfl
+  exact ⟨k,f,d,e,g,hf,hF,hFbit,hposF,
+    hd,hD,hDbit,hposD,hstepF,
+    heReach,hE,hEzero,hposE,rfl,
+    hg,hG,hGzero,hGpos,hpath,hGstep⟩
+
+/-- Every reached B/0 in the left-10 sector has an F/1 ancestor whose first
+    two right cells are exactly 1,0. Moreover the tight ancestry path forces
+    every later alternating retreat cell. For k≥2 these are precisely the
+    n=0, m=k-2 hypotheses of odd_f1_retreat_to_b0. -/
+theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
+    (hB : c.q=.B) (hcurrent : c.tape c.h=false)
+    (hleft3 : c.tape (c.h-3)=true)
+    (hleft2 : c.tape (c.h-2)=false) :
+    ∃ k f,
+      1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
+      f.h=c.h+(2*k:Int)-1 ∧
+      f.tape (f.h+1)=true ∧ f.tape (f.h+2)=false ∧
+      (∀ i : Nat, i+2<k →
+        f.tape (f.h-2-2*(i:Int))=false ∧
+        f.tape (f.h-3-2*(i:Int))=true) ∧
+      (2≤k →
+        f.tape (f.h-1)=true ∧
+        f.tape (f.h-2*(k:Int)+2)=false ∧
+        f.tape (f.h-2*(k:Int)+1)=false) := by
+  obtain ⟨k,f,d,e,g,hf,hF,hFbit,hposF,hd,hD,hDbit,hposD,
+    hstepF,he,hE,hEzero,hposE,hstepD,hg,hG,hGzero,hGpos,hpath,hGstep⟩ :=
+      reached_B0_left10_path_components c hc hB hcurrent hleft3 hleft2
+  have hkpos : 1≤k := by
+    by_contra hnot
+    have hk0 : k=0 := by omega
+    subst k
+    have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
+    rw [next_D_one_shape d hD hDbit] at hstepD
+    cases hstepD
+    cases hpath
+    have hwrite : e.tape c.h=true := by simp [setBit,hdpos0]
+    have hcopy : c.tape c.h=e.tape c.h :=
+      parentCone_next_tape_away g c hGstep c.h (by rw [hGpos]; omega)
+    rw [hcurrent] at hcopy
+    rw [hwrite] at hcopy
+    cases hcopy
+  have hpathGC : Root119Path 1 g c :=
+    Root119Path.step hGstep (Root119Path.refl c)
+  have hpathEC : Root119Path (2*k+1) e c := by
+    simpa using root119Path_comp hpath hpathGC
+  have hdispEC : c.h=e.h-((2*k+1:Nat):Int) := by
+    rw [hposE,hposF]
+    omega
+  have hdispEG : g.h=e.h-(2*k:Int) := by
+    rw [hposE,hposF,hGpos]
+    omega
+  have hpattern := parentCone_f0_b0_corridor k e c hE hEzero hB hcurrent
+    hpathEC hdispEC
+  have hEF (x : Int) (hxf : x≠f.h) (hxd : x≠d.h) :
+      e.tape x=f.tape x :=
+    (parentCone_next_tape_away d e hstepD x hxd).trans
+      (parentCone_next_tape_away f d hstepF x hxf)
+  have honesEq : d.tape (f.h+1)=f.tape (f.h+1) :=
+    parentCone_next_tape_away f d hstepF (f.h+1) (by omega)
+  have hDread : d.tape (f.h+1)=true := by
+    simpa [hposD] using hDbit
+  have hones : f.tape (f.h+1)=true := honesEq.symm.trans hDread
+  have hzeroE : e.tape (f.h+2)=false := by
+    simpa [hposE] using hEzero
+  have hzeroEq : e.tape (f.h+2)=f.tape (f.h+2) :=
+    hEF (f.h+2) (by omega) (by omega)
+  have hzero : f.tape (f.h+2)=false := hzeroEq.symm.trans hzeroE
+  have hfb : ∀ i : Nat, i+2<k →
+      f.tape (f.h-2-2*(i:Int))=false ∧
+      f.tape (f.h-3-2*(i:Int))=true := by
+    intro i hi
+    have hpatt := hpattern (i+2) (by omega)
+    have hidx1 : e.h-2*((i+2:Int))=f.h-2-2*(i:Int) := by
+      rw [hposE]
+      omega
+    have hidx2 : e.h-2*((i+2:Int))-1=f.h-3-2*(i:Int) := by
+      rw [hposE]
+      omega
+    have he1 : e.tape (f.h-2-2*(i:Int))=false := by
+      simpa [hidx1] using hpatt.1
+    have he2 : e.tape (f.h-3-2*(i:Int))=true := by
+      simpa [hidx2] using hpatt.2
+    have heq1 := hEF (f.h-2-2*(i:Int)) (by omega) (by omega)
+    have heq2 := hEF (f.h-3-2*(i:Int)) (by omega) (by omega)
+    exact ⟨heq1.symm.trans he1,heq2.symm.trans he2⟩
+  have hretreat : 2≤k →
+      f.tape (f.h-1)=true ∧
+      f.tape (f.h-2*(k:Int)+2)=false ∧
+      f.tape (f.h-2*(k:Int)+1)=false := by
+    intro hk2
+    have hp1 := hpattern 1 (by omega)
+    have hidxLeft : e.h-2*(1:Int)-1=f.h-1 := by
+      rw [hposE]
+      omega
+    have heLeft : e.tape (f.h-1)=true := by
+      simpa [hidxLeft] using hp1.2
+    have heqLeft := hEF (f.h-1) (by omega) (by omega)
+    have hleft : f.tape (f.h-1)=true := heqLeft.symm.trans heLeft
+    have hpresG := parentCone_path_tight_preserves_tape
+      hpath hdispEG g.h le_rfl
+    have heG : e.tape g.h=false := hpresG.symm.trans hGzero
+    have hidxF : f.h-2*(k:Int)+2=g.h := by
+      rw [hposF,hGpos]
+      omega
+    have heqG := hEF g.h (by rw [hidxF]; omega) (by rw [hposD,hidxF]; omega)
+    have hfinalF : f.tape (f.h-2*(k:Int)+2)=false := by
+      simpa [hidxF] using heqG.symm.trans heG
+    have hpresC := parentCone_path_tight_preserves_tape
+      hpathEC hdispEC c.h le_rfl
+    have heC : e.tape c.h=false := hpresC.symm.trans hcurrent
+    have hidxB : f.h-2*(k:Int)+1=c.h := by
+      rw [hposF]
+      omega
+    have heqC := hEF c.h (by rw [hidxB]; omega) (by rw [hposD,hidxB]; omega)
+    have hfinalB : f.tape (f.h-2*(k:Int)+1)=false := by
+      simpa [hidxB] using heqC.symm.trans heC
+    exact ⟨hleft,hfinalF,hfinalB⟩
+  exact ⟨k,f,hkpos,hf,hF,hFbit,hposF,hones,hzero,hfb,hretreat⟩
+
+
 #print axioms BB6Root119.to_A_exact_parent
 #print axioms BB6Root119.to_D_exact_parent
 #print axioms BB6Root119.reached_D1_F0_successor_F1_parent
