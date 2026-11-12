@@ -299,6 +299,107 @@ theorem concrete_family_removed (t : Nat) :
   intro h
   exact h.2 ⟨by omega,by omega,by omega⟩
 
+/-- The exact high stop with j=831 and m=9770 (mod 16384)
+    lands in the second strict sixth/seventh image slice u=1,
+    v=2 (mod 16). -/
+private theorem s3_high_target (t : Nat) :
+    ∃ v, (2:Nat)^(2*(9770+16384*t)+2)*(831+3) -
+      (831+3*(9770+16384*t)+5)=574+1024*v ∧ v%16=2 := by
+  let m := 9770+16384*t
+  let k := (2:Nat)^(2*m+2)*(831+3)-(831+3*m+5)
+  have hm7 : 7≤m := by dsimp [m]; omega
+  have hpow : 16384 ∣ (2:Nat)^(2*m+2) := by
+    have h := Nat.pow_dvd_pow 2 (by omega : 14≤2*m+2)
+    simpa only [show (2:Nat)^14=16384 by norm_num] using h
+  have hprod : 16384 ∣ (2:Nat)^(2*m+2)*(831+3) := by
+    rcases hpow with ⟨q,hq⟩
+    refine ⟨q*(831+3),?_⟩
+    rw [hq]
+    ac_rfl
+  have hstop : k+831+3*m+5=(2:Nat)^(2*m+2)*(831+3) := by
+    simpa [k] using high_stop_identity 831 m
+  have hmres : m%16384=9770 := by dsimp [m]; omega
+  have h3m : (3*m)%16384=12926 := by omega
+  have hPmod : ((2:Nat)^(2*m+2)*(831+3))%16384=0 :=
+    Nat.mod_eq_zero_of_dvd hprod
+  have hkmod : k%16384=2622 := by omega
+  have hdiv : 1024 ∣ 16384 := by norm_num
+  have hkmod1024 : k%1024=574 := by
+    calc
+      k%1024 = (k%16384)%1024 :=
+        (Nat.mod_mod_of_dvd k hdiv).symm
+      _ = 2622%1024 := by rw [hkmod]
+      _ = 574 := by norm_num
+  let v := k/1024
+  have hdecomp : k%1024+1024*(k/1024)=k :=
+    Nat.mod_add_div k 1024
+  have hkv : k=574+1024*v := by
+    dsimp [v]
+    omega
+  have hv16 : v%16=2 := by
+    rw [hkv] at hkmod
+    omega
+  refine ⟨v,?_,hv16⟩
+  simpa [m,k] using hkv
+
+/-- The new s3 strict-image family excludes these exact high-stop
+    parameters from the original blank-root orbit. -/
+private theorem s3_high_parameter_no_blank (t time : Nat) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (2*831+3,
+        (2:Nat)^(2*(9770+16384*t)+2)*(831+3) -
+          (831+3*(9770+16384*t)+5)) := by
+  obtain ⟨v,hkv,hv16⟩ := s3_high_target t
+  have hsector : 1%4=1 ∧ (1+v)%16=3 := by omega
+  have hblank := BB6.Agent4Seven.blank_ne_six_seven_band_s3 1 v time hsector
+  intro hrun
+  apply hblank
+  simpa [hkv] using hrun
+
+/-- Add the second, disjoint high-stop progression to the late-fast
+    exact C58 predicate. -/
+def highAllowedBoth (j m : Nat) : Prop :=
+  lateFastHighAllowed j m ∧ ¬(j=831 ∧ m%16384=9770)
+
+/-- Exact Machine C blank-halting iff after adding both independent
+    Agent 4 six/seven source-image exclusions to the latest late-fast
+    C58 high predicate. -/
+theorem blank_halts_iff_c58_late_fast_six_seven_both :
+    BB6.CReachBridge.RunHalts ↔
+      (∃ m, BB6.Agent11C58ValSix.lowAllowed m ∧
+        BB6.Agent3ValSix.valSixMixedRootDecision
+          1 (2^(2*m+3)-(3*m+4))=true) ∨
+      (∃ j m, highAllowedBoth j m ∧
+        BB6.Agent3ValSix.valSixMixedRootDecision (2*j+3)
+          (2^(2*m+2)*(j+3)-(j+3*m+5))=true) := by
+  rw [blank_halts_iff_c58_late_fast_six_seven]
+  constructor
+  · rintro (hlow | ⟨j,m,hprior,hroot⟩)
+    · exact Or.inl hlow
+    · let k := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
+      have hreach : BB6.Agent3.CReach (2*j+3) k :=
+        (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
+      have hnot : ¬(j=831 ∧ m%16384=9770) := by
+        rintro ⟨rfl,hmres⟩
+        have hform : m=9770+16384*(m/16384) := by
+          have hd := Nat.mod_add_div m 16384
+          rw [hmres] at hd
+          omega
+        rw [hform] at hreach
+        obtain ⟨time,hrun⟩ := hreach
+        exact s3_high_parameter_no_blank (m/16384) time hrun
+      exact Or.inr ⟨j,m,⟨hprior,hnot⟩,hroot⟩
+  · rintro (hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩)
+    · exact Or.inl hlow
+    · exact Or.inr ⟨j,m,hprior,hroot⟩
+
+/-- The second explicit high-stop progression passes all earlier
+    C58/late-fast filters but is removed by the new exact predicate. -/
+theorem s3_parameter_family_removed (t : Nat) :
+    ¬highAllowedBoth 831 (9770+16384*t) := by
+  intro h
+  exact h.2 ⟨by rfl,by omega⟩
+
 #print axioms prior_c58_admits_six_seven_diagonal
 #print axioms prior_c58_admits_concrete_infinite_family
 #print axioms prior_latefast_admits_six_seven_diagonal
@@ -307,5 +408,8 @@ theorem concrete_family_removed (t : Nat) :
 #print axioms concrete_family_removed
 #print axioms blank_halts_iff_c58_late_fast_six_seven
 #print axioms latefast_concrete_family_removed
+#print axioms prior_latefast_admits_s3_parameter_family
+#print axioms blank_halts_iff_c58_late_fast_six_seven_both
+#print axioms s3_parameter_family_removed
 
 end BB6.Agent4SevenC58
