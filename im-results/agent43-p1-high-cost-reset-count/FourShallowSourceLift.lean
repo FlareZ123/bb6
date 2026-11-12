@@ -107,11 +107,17 @@ theorem source_low_word_four_no_wall
               dsimp [Bg]
               omega
 
+            have hrootEq :
+                (↑(14*2^n-2*n-16):Int)+4*(0:Int)+4*(n:Int)+20 =
+                  14*(2:Int)^n+2*(n:Int)+4 := by
+              have hnat : (14*2^n-2*n-16)+4*n+20=14*2^n+2*n+4 := by omega
+              exact_mod_cast hnat
             have hpreModel :
                 TwoRun ((2:Int)^n) (14*(2:Int)^n+2*(n:Int)+4)
                   ((n:Int)+6) s Wa Ba := by
               have hh := source_two_chain_model n s
                 (14*2^n-2*n-16) 3 0 B0 D0 M0 pre hrootMass
+              rw [hrootEq] at hh
               simpa [Wa,Ba] using hh
             have hmid1Model :
                 TwoRun ((2:Int)^n) Wb (Ba+(alpha:Int)) u Wc Bc := by
