@@ -182,39 +182,55 @@ The source connection is now certified in [PR #62](https://github.com/FlareZ123/
 A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The three-shallow equation and its authentic original-source lift are certified at every n>=14. The four-shallow source trace is now excluded for every n>=14, so any low-depth trace reaching the wall must have at least five shallow edges. The six-shallow source theorem now applies for n>=83. Five-shallow traces remain source-unresolved for 14<=n<=82; six-or-more shallow histories for n>=83 and unrestricted high-depth excursions also remain open. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
 
-## Next finite extension: n=14..82 six-shallow exclusion
+## Finite five-shallow extension: n=14..82 (CI pending)
 
-The remaining low-index gap is now precisely the five-shallow source case for
-14<=n<=82. A finite bridge can reuse the first four overflow predicates
-(firstOverflow through fourthOverflow), extending their exact false tables
-from n<=75 through n<=82, and add a fifthOverflow predicate for the terminal
-depth-two run after the fifth shallow edge.
+The remaining low-index gap is the five-shallow source case for
+14<=n<=82. The current implementation is on [PR #67](https://github.com/FlareZ123/bb6/pull/67).
 
-After the root divisor gives s<=3 and the five profile bits t1..t5 lie in
-{0,1}, the bounded residual core with u,v,w,x,r<=2 has
-69*4*32*243 = 2,146,176 assignments. The fifth-overflow table has
-69*4*81*32 = 715,392 assignments. Split these tables into four-index n
-blocks (at most 124,416 residual-core cases and 165,888 fifth-overflow cases
-per block) rather than one monolithic decide proof. The first four overflow
-tables also need the seven additional indices 76<=n<=82.
+The finite bridge has four linked parts:
 
-An exact BigInt reconnaissance scan is preserved in
-[five_shallow_finite_scan.js](five_shallow_finite_scan.js). It checks all
-**699,840 root-compatible bounded assignments** (90 admissible (n,s) pairs,
-32 profile masks, and 3^5 run-length tuples) and finds zero solutions to the
-five-layer natural equation. The scan deliberately omits additional
-source-time inequalities and allows zero remainders, so it checks a superset
-of the admissible source cases. A broader companion scan, [five_shallow_finite_scan_upto4.js](five_shallow_finite_scan_upto4.js), also finds zero solutions when every run length ranges over 0..4: 9,000,000 root-compatible assignments checked exactly. This remains experimental and does not establish any run-length upper bound.
+1. [FiveShallowOverflowBounds.lean](FiveShallowOverflowBounds.lean) adds the
+   fifth overflow predicate after the fifth shallow edge. Exact false tables
+   are provided for all five overflow stages over the 90 root-compatible
+   (n,s) pairs.
+2. [FiveShallowFiniteBridge.lean](FiveShallowFiniteBridge.lean) formalizes
+   the successive numerator factorizations. If a source scalar equation
+   exists, the first four overflow tables and the new fifth table force
+   u,v,w,x,r<=2.
+3. [FiveShallowFiniteBounds.lean](FiveShallowFiniteBounds.lean) now evaluates
+   a necessary recurrence certificate: each shallow numerator and intervening
+   depth-two quotient must be integral, and the final quotient must equal the
+   negative terminal energy. This is cheaper and more structurally faithful
+   than recomputing the expanded nested scalar equation in every finite case.
+4. [FiveShallowAbstractBridge.lean](FiveShallowAbstractBridge.lean) keeps the
+   analytic sixth-power barrier for n>=83 and dispatches 14<=n<83 to the
+   finite bridge. [FiveShallowSourceModel.lean](FiveShallowSourceModel.lean)
+   and [FiveShallowSourceLift.lean](FiveShallowSourceLift.lean) then extend
+   the intended source-level theorem to n>=14.
 
-This is useful experimental evidence for the
-finite bridge, but it is not a kernel proof and does not establish the
-run-length bounds u,v,w,x,r<=2.
-Their exact structure is simple: s=0 for every n in [14,82]; s=1 exactly when n≡2 (mod 4); s=2 exactly at n=30,62; and s=3 exactly at n=30.
+The exact BigInt reconnaissance scans remain in
+[five_shallow_finite_scan.js](five_shallow_finite_scan.js) and
+[five_shallow_finite_scan_upto4.js](five_shallow_finite_scan_upto4.js).
+The first checks all 699,840 root-compatible bounded assignments and finds
+zero solutions to the expanded five-layer scalar equation; the second checks
+9,000,000 assignments with every run length in 0..4 and also finds no hit.
+The independent overflow scan found zero hits for each of the five overflow
+predicates over the corresponding bounded tuples. These are computational
+observations, not proofs.
 
-Only 90 of the 276 possible (n,s) pairs satisfy the root divisor, reducing the actual bounded core to 699,840 cases. A Lean implementation can either split the full Fin69×Fin4 table into four-index blocks, or encode the 90 admissible pairs as a finite rootPairs list and prove its completeness by a small interval_cases/decide lemma; the latter avoids kernel reduction on invalid s values. The fifth-overflow table similarly reduces from 715,392 raw assignments to 233,280 root-compatible assignments.
+**Proof status:** PR #67 is the active CI target. PRs #64 and #66 were
+superseded by this branch; PR #65 was a duplicate draft. The new Lean
+factorization, overflow tables, recurrence table, abstract branch, and source
+lift have not yet completed a clean CI run. In particular, the residual
+`no_five_bad_rootPairs` decision theorem still covers 699,840 assignments;
+if its kernel reduction reaches the heartbeat or workflow limit, split it
+into smaller blocks (by terminal run r or short n ranges) without weakening
+the finite domain. The fifth-overflow table covers 233,280 root-compatible
+assignments.
 
-The bounded residual-core certificate is drafted in [FiveShallowFiniteBounds.lean](FiveShallowFiniteBounds.lean) and is being repaired in [PR #64](https://github.com/FlareZ123/bb6/pull/64). The first attempt, [PR #63](https://github.com/FlareZ123/bb6/pull/63), failed because the file omitted an explicit import of TwoShallowFiniteBounds, leaving the profile namespace and triple unresolved; Lean also reported a recursion-depth error at the large table theorem, which must be reassessed after the import fix. PR #64 adds the missing import; its clean dedicated CI run [43303470200](https://github.com/FlareZ123/bb6/actions/runs/43303470200) is running. The intended table uses the 90-pair rootPairs list and a kernel-decided no-fiveBad table; it does not yet prove arbitrary run-length bounds or the full n=14..82 source theorem.
-
-This is a proof-construction plan, not an established finite result. The
-source theorem remains at least five shallow edges for 14<=n<=82 until the
-new fifth-overflow and residual finite certificates are completed.
+If CI certifies the extension, the resulting conclusion is that any
+depth-0/1/2 inverse trace reaching the shifted wall has at least six shallow
+edges for every n>=14. This is still a restricted low-depth source theorem,
+not a BB(6) upper bound: unrestricted high-depth excursions, the true
+blank-origin path, exceptional exits, and the global six-state maximum
+certificate remain unresolved.
