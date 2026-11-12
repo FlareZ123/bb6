@@ -109,8 +109,7 @@ theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
   have hs2 : next (⟨.E,p-1,v1⟩ : Conf) = some ⟨.A,p,v2⟩ := by
     simp [next,hreadE,v2]
   have hs3 : next (⟨.A,p,v2⟩ : Conf) = some b := by
-    simp [next,hreadA,b,v3]
-    rfl
+    simp [next,hreadA,b]
   have htail : shuttleRun 3 (⟨.D,p,v⟩ : Conf) = some b := by
     simp [shuttleRun,hs1,hs2,hs3]
   have hDRun : shuttleRun (2*(n+1)+3) (⟨.D,s,t0⟩ : Conf) = some b := by
@@ -219,15 +218,38 @@ theorem f1_even_result_markerB0Pattern (n : Nat) (t : Int → Bool) (h : Int)
   · have heq : b.h-5-2*(n:Int) = h-1 := by rw [hpos]; omega
     rw [heq]
     have hs := f1EvenResult_left n t h (h-1) (by omega)
-    simpa [setBit,show h-1 ≠ h by omega] using hs.trans hleft1
+    have hs' : (f1EvenResult n t h).tape (h-1) = t (h-1) := by
+      simpa [setBit,show h-1 ≠ h by omega] using hs
+    simpa [b] using hs'.trans hleft1
   · have heq : b.h-6-2*(n:Int) = h-2 := by rw [hpos]; omega
     rw [heq]
     have hs := f1EvenResult_left n t h (h-2) (by omega)
-    simpa [setBit,show h-2 ≠ h by omega] using hs.trans hleft2
+    have hs' : (f1EvenResult n t h).tape (h-2) = t (h-2) := by
+      simpa [setBit,show h-2 ≠ h by omega] using hs
+    simpa [b] using hs'.trans hleft2
   · have heq : b.h-7-2*(n:Int) = h-3 := by rw [hpos]; omega
     rw [heq]
     have hs := f1EvenResult_left n t h (h-3) (by omega)
-    simpa [setBit,show h-3 ≠ h by omega] using hs.trans hleft3
+    have hs' : (f1EvenResult n t h).tape (h-3) = t (h-3) := by
+      simpa [setBit,show h-3 ≠ h by omega] using hs
+    simpa [b] using hs'.trans hleft3
+
+/-- A finite successful shuttleRun prefix transports genuine blank-root
+    reachability to its exact endpoint. -/
+theorem reachable_of_shuttleRun {n : Nat} {c d : Conf}
+    (hc : Reach c) (hr : shuttleRun n c = some d) : Reach d := by
+  induction n generalizing c with
+  | zero =>
+      simp [shuttleRun] at hr
+      cases hr
+      exact hc
+  | succ n ih =>
+      cases hs : next c with
+      | none => simp [shuttleRun,hs] at hr
+      | some c' =>
+          have ht : shuttleRun n c' = some d := by
+            simpa [shuttleRun,hs] using hr
+          exact ih (Reach.follow hc hs) ht
 
 /-- Every reached F/1 state with left suffix 110 and an even positive
     right one-run followed by two zeros is a genuine blank-root halter.
@@ -250,7 +272,7 @@ theorem f1_even_double_zero_halts (n : Nat) (c : Conf)
   let b := f1EvenResult n t h
   have hrun := f1_even_run_exact n t h hhead hones hzero
   have hb : Reach b := by
-    apply reachable_of_shuttleRun (1+(2*(n+1)+3)) (by simpa [b] using hc) ?_
+    apply reachable_of_shuttleRun hc
     simpa [b] using hrun
   have hp : MarkerB0Pattern n b :=
     f1_even_result_markerB0Pattern n t h hleft1 hleft2 hleft3 hzero2
