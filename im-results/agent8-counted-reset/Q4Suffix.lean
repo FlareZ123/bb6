@@ -130,17 +130,20 @@ theorem state1_one_d1_block (T : Int → Bool) (h : Int)
   have t1 : tm2 ((1:Fin 6),true) = some ⟨false,true,5⟩ := rfl
   have t5 : tm2 ((5:Fin 6),true) = some ⟨false,true,3⟩ := rfl
   have t3 : tm2 ((3:Fin 6),true) = some ⟨true,true,1⟩ := rfl
-  have e01 : h+1 ≠ h := by omega
-  have e02 : h+2 ≠ h := by omega
-  have e12 : h+2 ≠ h+1 := by omega
+  have neq1 : h+1 ≠ h := by omega
+  have neq2 : h+2 ≠ h := by omega
+  have neq3 : h+2 ≠ h+1 := by omega
   have hh : h+1+1 = h+2 := by omega
-  simp [run,rawStep,readSlot,applyMove,h0,h1,h2,e01,e02,e12,hh,t1,t5,t3]
+  have neh1 : h ≠ h+1 := by omega
+  have neh2 : h ≠ h+2 := by omega
+  simp [run,rawStep,readSlot,applyMove,h0,h1,h2,hh,t1,t5,t3,
+    neq1,neq2,neq3]
   constructor
   · omega
   · funext x
-    by_cases hx0 : x=h <;> by_cases hx1 : x=h+1 <;>
-      by_cases hx2 : x=h+2 <;>
-      simp [afterD1Block,hx0,hx1,hx2]
+    by_cases hx1 : x=h+1 <;> by_cases hx2 : x=h+2 <;>
+      by_cases hx0 : x=h <;>
+      simp [afterD1Block,hx1,hx2,hx0,h0,neh1,neh2]
 
 /-- The next b three-one blocks are the only cells changed by the repeated
 state-1 digit scan. -/
@@ -246,7 +249,7 @@ theorem state1_d1_blocks_right (n : Nat) (T : Int → Bool) (h : Int)
       have htail := ih (afterD1Block T h) (h+3)
         (d1BlocksOn_tail T h n hon)
       have hnum : 3*(n+1) = 3+3*n := by omega
-      rw [hnum,run_add,hstep]
+      rw [hnum,run_append,hstep]
       simp only [Option.bind_some]
       rw [htail]
       have hhead : h+3+(3*n:Int) = h+(3*(n+1:Int)) := by omega
@@ -370,10 +373,10 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
         rw [heq]
         by_cases hb0 : b=0
         · subst b
-          exact h6
+          simpa using h6
         · have hb1 : b=1 := by omega
           subst b
-          exact h9
+          simpa using h9
       · have hb2 : 2≤b := by omega
         let i := b-2
         have hi : i<b := by dsimp [i]; omega
@@ -432,7 +435,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
         run tm2 (10+(3*b+29)) ⟨4,h,T⟩ := by congr 1 <;> omega
     _ = (run tm2 10 ⟨4,h,T⟩).bind
           (fun d => run tm2 (3*b+29) d) :=
-        run_add tm2 ⟨4,h,T⟩ 10 (3*b+29)
+        run_append
     _ = run tm2 (3*b+29)
           (frameAt T h q4First10Inside q4First10End) := by
         rw [hfirst]
@@ -440,8 +443,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
     _ = (run tm2 (3*b)
           (frameAt T h q4First10Inside q4First10End)).bind
           (fun d => run tm2 29 d) :=
-        run_add tm2
-          (frameAt T h q4First10Inside q4First10End) (3*b) 29
+        run_append
     _ = run tm2 29 ⟨1,g,T2⟩ := by
         rw [hscan]
         rfl
