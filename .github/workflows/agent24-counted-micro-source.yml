@@ -27,14 +27,14 @@ jobs:
             dst="im-results/agent24-champion-time/$stem.lean"
             tmp="$(mktemp)"
             curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$api/contents/$src?ref=$branch" > "$tmp"
-            jq -r '.content' "$tmp" | tr -d '\\n' | base64 --decode | base64 --decode | xz --decompress > "$dst"
+            jq -r '.content' "$tmp" | tr -d '\n' | base64 --decode | base64 --decode | xz --decompress > "$dst"
             expected=""
             if [ "$stem" = "CountedOddUnary" ]; then
               expected="a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4"
             else
               expected="0d1acc16c377f17e3f2c624a74f9874bafdf255f2fcdc9749c9d00c83b4f6737"
             fi
-            printf '%s  %s\\n' "$expected" "$dst" | sha256sum --check
+            printf '%s  %s\n' "$expected" "$dst" | sha256sum --check
             content="$(base64 --wrap=0 "$dst")"
             body="$(jq -n --arg message "Agent 24: expose $stem proof source" --arg content "$content" --arg branch "$branch" '{message:$message,content:$content,branch:$branch}')"
             if curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$api/contents/$dst?ref=$branch" >/dev/null 2>&1; then
