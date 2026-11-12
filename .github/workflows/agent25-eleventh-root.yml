@@ -1,4 +1,4 @@
-name: D blank-root source chain through twenty-sixth reentry (manual)
+name: D blank-root source chain through twenty-ninth reentry (manual)
 on:
   workflow_dispatch:
 permissions:
@@ -138,3 +138,6 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFifthRejoin.olean" "$T/BlankTwentyFifthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentySixthRejoin.olean" "$T/BlankTwentySixthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentySeventhRejoin.olean" "$T/BlankTwentySeventhRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyEighthRejoin.olean" "$T/BlankTwentyEighthRejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/BlankTwentyNinthRejoin.olean" "$T/BlankTwentyNinthRejoin.lean"
