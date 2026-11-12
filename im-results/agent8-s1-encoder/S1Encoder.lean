@@ -58,10 +58,9 @@ private theorem binaryCounterFuel_even (fuel n : Nat) (hn : 0 < n) :
     binaryCounterFuel (fuel+1) (2*n) =
       d0 ++ binaryCounterFuel fuel n := by
   have hp : ¬ 2*n ≤ 1 := by omega
-  have hm : (2*n) % 2 = 0 := by omega
   have hd : (2*n) / 2 = n := by omega
   rw [binaryCounterFuel]
-  simp [hp,hm,hd]
+  simp [hp,hd]
 
 private theorem binaryCounterFuel_odd (fuel n : Nat) (hn : 0 < n) :
     binaryCounterFuel (fuel+1) (2*n+1) =
@@ -297,7 +296,7 @@ theorem s0Config_right_cell (l : List Bool) (a z b : Nat)
   simp [hgt,hdiff]
 
 /-- The universal S0 carry boundary in head-facing order. -/
-theorem s0LeftFacing_carryPrefix (l : List Bool) (a len q r : Nat)
+theorem s0LeftFacing_carryPrefix (l : List Bool) (len q r : Nat)
     (hq : q < 2^len) :
     s0LeftFacing l (len+1+r) ((2*q+1)*2^r) =
       d1pow r ++ d0 ++ binDec len q ++ l := by
@@ -311,7 +310,7 @@ theorem s0PhysicalLeft_carrySuffix (l : List Bool) (len q r : Nat)
     s0PhysicalLeft l (len+1+r) ((2*q+1)*2^r) =
       (binDec len q ++ l).reverse ++ d0.reverse ++ d1pow r := by
   unfold s0PhysicalLeft
-  rw [s0LeftFacing_carryPrefix l (len+1+r) len q r hq]
+  rw [s0LeftFacing_carryPrefix l len q r hq]
   simp [List.reverse_append,d1pow_reverse,List.append_assoc]
 
 /-- The full left-facing S1 stream, obtained by the source's nested
