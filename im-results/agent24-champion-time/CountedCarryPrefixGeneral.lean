@@ -367,7 +367,7 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
           simp [carryDTail15OpenArea]
           omega
         change T4 x = (if x < h then T x else decide ((x-h) % 3 = 0))
-        simp [T4,frame,shiftConfig,harea,hmod,hlt,hT]
+        simp [T3,T4,frame,shiftConfig,harea,hmod,hlt,hT]
       · have hcases : x = -2 ∨ x = -1 ∨ x = 0 := by omega
         rcases hcases with h0 | h1 | h2
         · subst x
