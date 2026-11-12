@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import EFirstAPacket
 import ExceptionalE7SecondSafe
 import PacketSafeReentry
+import AP2PacketBoundarySource
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -44,6 +45,60 @@ theorem exceptional_EA_safe_reentry (t q : Nat) (hq : 2 ≤ q)
       (packet c.a c.q c.p fixedTail)
       (BB6.Agent2BoundaryBZero.regularSection a q' b) hEA hpacket⟩
 
+/-- The E/A exceptional family is closed for every q≥2. The q≡1
+    residue is the A-terminal p=2 mod 3 case, handled by the universal
+    original-source 110111 packet boundary. -/
+theorem exceptional_EA_all_reentry (t q : Nat) (hq : 2 ≤ q) :
+    ∃ T a q' b,
+      ObsEq
+        (run T (DRegularSource.sourceSection ⟨9*t+10,q,1⟩))
+        (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
+  by_cases hclass : q % 3 ≠ 1
+  · exact exceptional_EA_safe_reentry t q hq hclass
+  · have hqmod : q % 3 = 1 := by omega
+    let r : Nat := (2*q-2)/3
+    let k : Nat := 8*t+6
+    let c : BB6.Agent31PacketRank.Packet := ⟨24*t+21,0,2*q⟩
+    have hEA0 := BB6.Agent2EFirstAPacket.exceptional_EA_packet t q hq
+    have hEA : ObsEq
+        (run (BB6.Agent2EFirstAPacket.duration t q)
+          (DRegularSource.sourceSection ⟨9*t+10,q,1⟩))
+        (packet c.a c.q c.p fixedTail) := by
+      simpa [BB6.Agent2EFirstAPacket.sourceStart,
+        BB6.Agent2EFirstAPacket.packetOutput,c,fixedTail,
+        BB6.Agent2EFirstAPacket.fixedTail] using hEA0
+    have hk : 3*k+3=24*t+21 := by dsimp [k]; omega
+    have hr : 3*r+2=2*q := by dsimp [r]; omega
+    have hshape : packet c.a c.q c.p fixedTail =
+        BB6.Agent2AP2PacketBoundary.input k 0 r := by
+      simp [c,k,r,BB6.Agent2AP2PacketBoundary.input,
+        BB6.Agent2AP2PacketBoundary.fixedTail,
+        packet,word,fixedTail,hk,hr]
+    have hAP2 :=
+      BB6.Agent2AP2PacketBoundary.a_p2_packet_reentry k 0 r
+    let a : Nat :=
+      2*(4*k+3+CryptidA.wordInc
+        (BB6.Agent2AP2PacketBoundary.words 0 r))+5
+    have hendpoint :
+        BB6.Agent2AP2PacketBoundary.endpoint k 0 r =
+          BB6.Agent2BoundaryBZero.regularSection a 3 3 := by
+      simp [a,BB6.Agent2AP2PacketBoundary.endpoint,
+        BB6.Agent2BoundaryBZero.regularSection]
+    have hA2 : ObsEq
+        (run (BB6.Agent2AP2PacketBoundary.sourceTime k 0 r)
+          (packet c.a c.q c.p fixedTail))
+        (BB6.Agent2BoundaryBZero.regularSection a 3 3) := by
+      rw [hshape,hAP2,hendpoint]
+      exact BB6.Padding.cfgEq_refl _
+    exact ⟨BB6.Agent2EFirstAPacket.duration t q +
+        BB6.Agent2AP2PacketBoundary.sourceTime k 0 r,
+      a,3,3,
+      source_chain (BB6.Agent2EFirstAPacket.duration t q)
+        (BB6.Agent2AP2PacketBoundary.sourceTime k 0 r)
+        (DRegularSource.sourceSection ⟨9*t+10,q,1⟩)
+        (packet c.a c.q c.p fixedTail)
+        (BB6.Agent2BoundaryBZero.regularSection a 3 3) hEA hA2⟩
+
 /-- The second E/E exceptional family produces a packet with p=2q-3.
     For q not 1 modulo 3, its original-source orbit also returns to
     the regular section language after finitely many primitive steps. -/
@@ -82,6 +137,7 @@ theorem exceptional_EE_safe_reentry (u q : Nat) (hq : 3 ≤ q)
       (BB6.Agent2BoundaryBZero.regularSection a q' b) hEE hpacket⟩
 
 #print axioms exceptional_EA_safe_reentry
+#print axioms exceptional_EA_all_reentry
 #print axioms exceptional_EE_safe_reentry
 
 end BB6.Agent2ExceptionalEPacketClosure
