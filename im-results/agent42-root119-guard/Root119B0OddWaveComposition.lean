@@ -97,12 +97,10 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
     subst j
     simpa using hones1
 
-  have hrunInputShort : run 5 (⟨.F,f.h,f.tape⟩ : Conf) = some c := by
-    have hk1 : k=1 := by omega
-    simpa [hk1] using hrunInput
-
   by_cases hk1 : k=1
-  · have hret := odd_f1_to_b 0 f.tape f.h hFbit hones hzero2
+  · have hrunInputShort : run 5 (⟨.F,f.h,f.tape⟩ : Conf) = some c := by
+      simpa [hk1] using hrunInput
+    have hret := odd_f1_to_b 0 f.tape f.h hFbit hones hzero2
     have hhead : f.h-1=c.h := by rw [hposF]; omega
     have hret' :
         run 5 (⟨.F,f.h,f.tape⟩ : Conf) =
@@ -149,7 +147,7 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
       omega
     have heqG := hEF g.h
       (by rw [hidxF]; omega)
-      (by rw [hposD,hidxF]; omega)
+      (by rw [hposD,hidxF.symm]; omega)
     have hfinalF : f.tape (f.h-2*(k:Int)+2)=false := by
       simpa [hidxF] using heqG.symm.trans heG
 
@@ -160,8 +158,8 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
       rw [hposF]
       omega
     have heqC := hEF c.h
-      (by rw [hidxB]; omega)
-      (by rw [hposD,hidxB]; omega)
+      (by rw [hidxB.symm]; omega)
+      (by rw [hposD,hidxB.symm]; omega)
     have hfinalB : f.tape (f.h-2*(k:Int)+1)=false := by
       simpa [hidxB] using heqC.symm.trans heC
 
