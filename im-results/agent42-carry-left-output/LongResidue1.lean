@@ -155,6 +155,12 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     have heq : hB+3*(nR:Int)+8 = 6 := by omega
     simpa [heq] using h6
 
+  have hthreshold : -3*((4*k+1:Int))-2 = h'-5 := by
+    dsimp [h']
+    omega
+  have hthreshold' : -3*((4*k+1:Int)) = h'-3 := by
+    dsimp [h']
+    omega
   have ad12Seed (x : Int) (hlo : h'-2 ≤ x) (hhi : x ≤ h'+9) :
       T2 x = carryLeftOutputBit (4*k+1) T x := by
     have hi : 0 ≤ x-(h'-2) ∧ x-(h'-2) ≤ 12 := by omega
@@ -174,12 +180,6 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     rw [hT2,hcell]
     simpa [hmod,htarget]
 
-  have hthreshold : -3*((4*k+1:Int))-2 = h'-5 := by
-    dsimp [h']
-    omega
-  have hthreshold' : -3*((4*k+1:Int)) = h'-3 := by
-    dsimp [h']
-    omega
   have hseed : ∀ x, x < hB → T2 x = carryLeftOutputBit (4*k+1) T x := by
     intro x hx
     by_cases hfar : x < h'-5
