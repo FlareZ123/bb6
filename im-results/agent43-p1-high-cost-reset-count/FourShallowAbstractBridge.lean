@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent43FourShallowAbstract
 
-open BB6.Agent43TwoShallowFinite
+open BB6.Agent43TwoShallowFinite BB6.Agent43FourLayer
 
 /-- Four source-profiled shallow cocycles, separated by depth-two energy
 divisions, imply an impossible terminal shifted-wall equation. -/
