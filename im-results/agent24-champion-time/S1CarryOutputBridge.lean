@@ -83,8 +83,7 @@ theorem s1Config_decrement_leftOutput
       have hlen0 : d0.length = 3 := by rfl
       simp only [hlen0]
       have hnot2 : ¬ i-3*r < 3 := by omega
-      simp [hnot2]
-      omega
+      simp [hnot2] <;> congr 1 <;> omega
     have houtTail :
         sideBit
           (d0pow r ++ d1 ++ binDec len q ++
