@@ -250,4 +250,108 @@ theorem carryBridge3_input_match_r1 (T : Int → Bool)
     have hmem : (1:Int) ∉ ([-2,-1,0] : List Int) := by simp
     simpa [hmem] using hblank
 
+
+/-- Finish the arbitrary counted right sweep with the open-end D-tail.
+The final E head is at 7, and the source cell at 7 is preserved. -/
+theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
+    (hfinish : h+3*(n:Int) = -2)
+    (hseg : carrySegmentOnes T h (3*n+7))
+    (hz0 : T (h+3*(n:Int)+7) = false)
+    (hz1 : T (h+3*(n:Int)+8) = false) :
+    ∃ T' : Int → Bool,
+      run tm2 (3*n+15) ⟨3,h,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) := by
+  let T3 := sweptRight n T h
+  have hseg0 : carrySegmentOnes T h (3*n) := by
+    intro i hi
+    exact hseg i (by omega)
+  have hright : rightOnes T h n := rightOnes_of_segment n T h hseg0
+  have hrunRight0 := counted_right_sweep n T h hright
+  have hrunRight : run tm2 (3*n) ⟨3,h,T⟩ = some ⟨3,-2,T3⟩ := by
+    simpa [T3,hfinish] using hrunRight0
+  have hseven := sweptRight_keeps_seven n T h hseg
+  have hzeros := sweptRight_keeps_two_zeroes n T h hz0 hz1
+  have hlocal : ∀ x, carryDTail15OpenArea (x+2) = true →
+      (embed carryDTail15Base).tape (x+2) = T3 x := by
+    intro x hx
+    have hrange : -2 ≤ x ∧ x ≤ 6 := by
+      simpa [carryDTail15OpenArea] using hx
+    have hcases : x = -2 ∨ x = -1 ∨ x = 0 ∨ x = 1 ∨ x = 2 ∨
+        x = 3 ∨ x = 4 ∨ x = 5 ∨ x = 6 := by omega
+    rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8
+    · subst x
+      have hv := hseven 0 (by omega)
+      have hv' : T3 (-2) = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv := hseven 1 (by omega)
+      have hv' : T3 (-1) = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv := hseven 2 (by omega)
+      have hv' : T3 0 = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv := hseven 3 (by omega)
+      have hv' : T3 1 = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv := hseven 4 (by omega)
+      have hv' : T3 2 = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv := hseven 5 (by omega)
+      have hv' : T3 3 = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv := hseven 6 (by omega)
+      have hv' : T3 4 = true := by simpa [T3,hfinish] using hv
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv' : T3 5 = false := by simpa [T3,hfinish] using hzeros.1
+      simpa [embed,carryDTail15Base] using hv'
+    · subst x
+      have hv' : T3 6 = false := by simpa [T3,hfinish] using hzeros.2
+      simpa [embed,carryDTail15Base] using hv'
+  have htail := carryDTail15_openEnd T3 (-2) hlocal
+  let T4 := (frame (fun x => carryDTail15OpenArea (x-(-2))) T3
+    (shiftConfig (-2) (embed carryDTail15Final))).tape
+  have hrunTail : run tm2 15 ⟨3,-2,T3⟩ = some ⟨4,7,T4⟩ := by
+    simpa [T4,shiftConfig,embed,carryDTail15Final] using htail
+  have hrun := run_compose tm2 (3*n) 15
+    ⟨3,h,T⟩ ⟨3,-2,T3⟩ ⟨4,7,T4⟩ hrunRight hrunTail
+  have hframe : ∀ x, -2 ≤ x → x ≤ 6 →
+      T4 x = (embed carryDTail15Final).tape (x+2) := by
+    intro x hlo hhi
+    have harea : carryDTail15OpenArea (x+2) = true := by
+      simp [carryDTail15OpenArea]
+      omega
+    simp [T4,frame,shiftConfig,harea]
+  have hout : ∀ x, 6 < x → T4 x = T x := by
+    intro x hx
+    have harea : carryDTail15OpenArea (x+2) = false := by
+      simp [carryDTail15OpenArea]
+      omega
+    have hfuture : T3 x = T x := by
+      apply sweptRight_future
+      rw [hfinish]
+      omega
+    simp [T4,frame,shiftConfig,harea,hfuture]
+  refine ⟨T4,hrun,?_,?_,?_,?_,?_,?_,hout⟩
+  · have hv := hframe 1 (by omega) (by omega)
+    simpa [embed,carryDTail15Final] using hv
+  · have hv := hframe 2 (by omega) (by omega)
+    simpa [embed,carryDTail15Final] using hv
+  · have hv := hframe 3 (by omega) (by omega)
+    simpa [embed,carryDTail15Final] using hv
+  · have hv := hframe 4 (by omega) (by omega)
+    simpa [embed,carryDTail15Final] using hv
+  · have hv := hframe 5 (by omega) (by omega)
+    simpa [embed,carryDTail15Final] using hv
+  · have hv := hframe 6 (by omega) (by omega)
+    simpa [embed,carryDTail15Final] using hv
+
+
 end BB6Coverage.Agent48Champion
