@@ -288,7 +288,7 @@ theorem fatal_parent_set_1085_1372 (n : Nat)
     odd_parent_near_top n u (n+4) (by omega)
       (by simpa only [u] using fatal_close n (by omega))
       (by simpa only [u] using fatal_size n (by omega))
-      (by simpa only [u] using hfdiv
+      (by simpa only [u] using hfdiv)
 
   have hgrowth : 10000*n+10000≤p := by
     simpa only [p,k] using growth n (by omega)
