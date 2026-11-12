@@ -572,6 +572,8 @@ theorem fatal_root_iff_even_parent_887_subresidue (n : Nat)
 theorem even_parent_formula_887 (n : Nat)
     (hn : n%13122=887) :
     CascadeFirstFork.evenPre n (n+4)=16*2^(n-2)-3*n-7 := by
+  have hbig : 10000*n+10000≤2^(n-2) :=
+    CascadeFeederSix.growth n (by omega)
   have hpow : 2^n=4*2^(n-2) := by
     have he : n=(n-2)+2 := by omega
     rw [he,Nat.pow_add]
