@@ -78,7 +78,7 @@ theorem sweptLeft_plus1 (n : Nat) (T : Int → Bool) (h : Int) :
 theorem sweptLeft_head (n : Nat) (T : Int → Bool) (h : Int) :
     sweptLeft (n+2) T h h = true := by
   rw [sweptLeft]
-  have hp := sweptLeft_plus1 (n+1) (holeThree T h) (h-1)
+  have hp := sweptLeft_plus1 n (holeThree T h) (h-1)
   have heq : (h-1)+1 = h := by omega
   simpa [heq] using hp
 
@@ -410,9 +410,11 @@ theorem q4Bridge_input_match (L n a b : Nat) (h : Int)
     rw [hp, hcell]
     simpa [q4BridgeStart] using h2
   · subst y
+    have hlen : 3*a+2 = (3*a+1)+1 := by omega
+    rw [hlen]
     have hp := sweptLeft_leftmost (3*a+1)
       (s1Config L n 2 a 0 b h).tape h
-    have heq : h - ((3*a+2 : Nat) : Int) + 1 =
+    have heq : h - (((3*a+1)+1 : Nat) : Int) + 1 =
         h - ((3*a+1 : Nat) : Int) := by omega
     rw [heq, hp]
     simp [q4BridgeStart]
@@ -444,9 +446,8 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
   have hOn : leftOnes T h N := by
     simpa [N] using s1Config_q4_leftOnes L n a b h hn hbound
   have hr : T (h+1) = false := by
-    change (s1Config L n 2 a 0 b h).tape (h+1) = false
-    rw [s1Config_right_cell]
-    simp [s1PhysicalRight, s0PhysicalRight, s0RightFacing, sideBit]
+    have hright0 := s1Config_right_cell L n 2 a 0 b h 0
+    simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hright0
   have hSweep :
       run tm2 (3*N) ⟨3,h,T⟩ = some ⟨3,h-(N:Int),T1⟩ := by
     simpa [T1] using counted_left_sweep N T h hOn hr
@@ -524,7 +525,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
     intro i
     cases i with
     | zero =>
-        simpa using hplusT
+        simpa [q4RightFacing,sideBit] using hplusT
     | succ i =>
         have xge : h+2 ≤ h+1+((i+1:Int)) := by omega
         have hfalse : ¬ (-6 ≤
@@ -549,7 +550,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
           simpa [T,s1PhysicalRight,s0PhysicalRight] using
             s1Config_right_cell L n 2 a 0 b h (i+1)
         rw [hframe,hpres,hsource]
-        exact q4RightFacing_succ b i
+        exact (q4RightFacing_succ b i).symm
   refine ⟨T2, ?_, hheadT, hrightT⟩
   calc
     run tm2 (32+12*a) (s1Config L n 2 a 0 b h)
