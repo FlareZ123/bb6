@@ -102,6 +102,26 @@ from raw-run success and all-prefix bounds; the lower bound on the maximum
 comes from the newly marked rightmost endpoint cell, while the upper bound
 comes from the physical prefix monitor.
 
+
+
+The same chain is now extended another 2457 steps. A concrete high-three
+branch J(11,62) -> J(25,37) takes 621 steps with displacement +25 and
+maximum +25. The exact (v=18,n=2) low-odd return J(25,37) -> J(10,74)
+takes 1836 steps with displacement (-34) and full-prefix maximum +43.
+Composing these monitors gives J(11,62) -> J(10,74) in 2457 steps,
+displacement (-9), maximum +68. The physical lift in
+`Low43RootPhysical.lean` retains the all-prefix bound. The new
+`root_after_5624_junc10_frontier` theorem in `RootJunctionChain.lean`
+therefore claims the blank root reaches J(10,74) at step 5624, head -38,
+rightmost mark 39, and exact historical head maximum 39.
+
+The 1836-step low-odd maximum is a concrete `by decide` monitor, not a
+general low-odd max theorem. The next simulated state J(49,2) is reached
+from J(10,74) by the existing high-three ladder, and its concrete
+r=96 return to J(11,98) is separately formalized as a prepared-input
+physical theorem. The full root composition through J(49,2) and J(11,98)
+is still pending.
+
 These declarations are kept in `im-results/` pending the full dependency
 workflow. The finite zipper equations were reproduced locally with Lean
 4.36.0-rc2 and `by decide`, but the composed physical file has not yet
