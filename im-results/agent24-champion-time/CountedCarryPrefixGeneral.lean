@@ -367,7 +367,11 @@ theorem carryShortPrefix_r1 (T : Int → Bool)
       T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
       (∀ x, 6 < x → T' x = T x) := by
   let T1 := (frame carryBridgeArea3 T (embed carryBridgeFinal3)).tape
-  have hbridge := carryBridge3 T 0 (carryBridge3_input_match_r1 T hmatch)
+  have hmatch3 : ∀ i : Int, -4 ≤ i → i ≤ 1 →
+      T (0+i) = decide (i ∈ ([-2,-1,0] : List Int)) := by
+    intro i hlo hhi
+    simpa using carryBridge3_input_match_r1 T hmatch i hlo hhi
+  have hbridge := carryBridge3 T 0 hmatch3
   have hbridgeRun : run tm2 12 ⟨3,0,T⟩ = some ⟨0,-2,T1⟩ := by
     simpa [T1,frame,shiftConfig,embed,carryBridgeFinal3] using hbridge
   have hmarker : T (-5) = true := by
@@ -415,9 +419,7 @@ theorem carryShortPrefix_r1 (T : Int → Bool)
   have hT1six : T1 6 = T 6 := by
     simp [T1,frame,shiftConfig,carryBridgeArea3]
   have hT2six : T2 6 = T1 6 := by
-    have ha : carryAReturn12Area (6-(-2)) = false := by
-      simp [carryAReturn12Area]
-    simp [T2,frame,shiftConfig,ha]
+    simp [T2,frame,shiftConfig,carryAReturn12Area]
   have hT6 : T2 6 = false := by rw [hT2six,hT1six,hT6input]
   have hA3local : ∀ x, carryA3Area (x-4) = true →
       (embed carryA3Base).tape (x-4) = T2 x := by
@@ -444,13 +446,13 @@ theorem carryShortPrefix_r1 (T : Int → Bool)
   have hT2three : T2 3 = true := by
     simp [T2,frame,shiftConfig,carryAReturn12Area,embed,carryAReturn12Final]
   have hT3one : T3 1 = true := by
-    have ha : carryA3Area (1-4) = false := by simp [carryA3Area]
+    have ha : carryA3Area (-3) = false := by simp [carryA3Area]
     simp [T3,frame,shiftConfig,ha,hT2one]
   have hT3two : T3 2 = true := by
-    have ha : carryA3Area (2-4) = false := by simp [carryA3Area]
+    have ha : carryA3Area (-2) = false := by simp [carryA3Area]
     simp [T3,frame,shiftConfig,ha,hT2two]
   have hT3three : T3 3 = true := by
-    have ha : carryA3Area (3-4) = false := by simp [carryA3Area]
+    have ha : carryA3Area (-1) = false := by simp [carryA3Area]
     simp [T3,frame,shiftConfig,ha,hT2three]
   have hT3four : T3 4 = true := by
     simp [T3,frame,shiftConfig,carryA3Area,embed,carryA3Final]
