@@ -19,6 +19,7 @@ on:
       - 'im-results/agent24-champion-time/CountedOneZeroUnary.lean'
       - 'im-results/agent24-champion-time/CountedCarryBridges.lean'
       - 'im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean'
+      - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
       - 'im-results/agent24-champion-time/ChampionModular.lean'
       - 'im-results/agent24-champion-time/CostRecurrence.lean'
       - 'im-results/agent24-champion-time/CountPattern.lean'
@@ -76,6 +77,13 @@ jobs:
           lean -o CountedCarryBoundaryTraces.olean CountedCarryBoundaryTraces.lean 2>&1 | tee /tmp/a42-terminal/carry-boundary-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/carry-boundary-axioms.log; then
             echo '::error::sorryAx found in carry boundary trace theorem dependencies'
+            exit 1
+          fi
+          cp im-results/agent24-champion-time/CountedCarryPrefix.lean /tmp/a42-terminal/
+          : > /tmp/a42-terminal/carry-prefix-axioms.log
+          lean -o CountedCarryPrefix.olean CountedCarryPrefix.lean 2>&1 | tee /tmp/a42-terminal/carry-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/carry-prefix-axioms.log; then
+            echo '::error::sorryAx found in counted carry prefix theorem dependencies'
             exit 1
           fi
           lean -o ChampionModular.olean ChampionModular.lean
