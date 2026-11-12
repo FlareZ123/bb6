@@ -54,10 +54,7 @@ theorem imm_two_wave_concrete (n : Nat) (b : Conf)
     by_cases hj0 : j=0
     · subst j
       simp (disch := omega) [immF2,setBit]
-      omega
-    have hj1 : j ≥ 1 := by omega
     have hposNe : b.h-3+1+(j:Int) ≠ b.h-2 := by omega
-    have hposEq : b.h-3+1+(j:Int) = b.h-2+(j:Int) := by omega
     change (setBit (immB1 n b).tape (b.h-2) true) (b.h-3+1+(j:Int)) = true
     rw [imm_setBit_away (immB1 n b).tape (b.h-2) _ true hposNe]
     change oddWaveTape n (immF1 b).tape (b.h-1) (b.h-3+1+(j:Int)) = true
