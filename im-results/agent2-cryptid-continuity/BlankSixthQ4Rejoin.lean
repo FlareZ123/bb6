@@ -35,7 +35,7 @@ private theorem packet_to_A110111_start (k : Nat) :
       CryptidBoundary.init
         (List.replicate (3*k+1) true ++ false ::
           (CryptidA.wordCode (List.replicate 3 false) ++
-            BB6.CryptidA110111CodeFirst.packet (List.replicate 4 true))) := by
+            BB6.CryptidA110111CodeFirst.packet (List.replicate 3 true))) := by
   have hcode :
       CryptidA.wordCode (List.replicate 3 false) =
         CryptidBoundary.pairs 3 := by decide
@@ -50,13 +50,13 @@ private theorem packet_to_A110111_start (k : Nat) :
     List.append_assoc]
 
 private theorem a110111_tail_shape :
-    BB6.CryptidA110111CodeFirst.tail (List.replicate 4 true) =
+    BB6.CryptidA110111CodeFirst.tail (List.replicate 3 true) =
       CryptidBoundary.oppairs 3 ++ List.replicate 3 true := by
   decide
 
 private def a110111Time (k : Nat) : Nat :=
   let ws := List.replicate 3 false
-  let ys := List.replicate 4 true
+  let ys := List.replicate 3 true
   let m := 4*k+3+CryptidA.wordInc ws
   12*k*k+41*k+32 + CryptidA.wordCost (4*k+3) ws + (2*m+24)
 
@@ -65,9 +65,9 @@ private theorem a110111_rejoin (k : Nat) :
     ObsEq
       (run (a110111Time k)
         (BB6.Agent31PacketSource.packet (3*k+3) 3 2 fixedTail))
-      (DRegularSource.sourceSection ⟨8*k+17,3,3⟩) := by
+      (DRegularSource.sourceSection ⟨8*k+17,3,2⟩) := by
   let ws := List.replicate 3 false
-  let ys := List.replicate 4 true
+  let ys := List.replicate 3 true
   have hinc : CryptidA.wordInc ws = 3 := by decide
   have htail :
       BB6.CryptidA110111CodeFirst.tail ys =
@@ -84,7 +84,7 @@ private theorem a110111_rejoin (k : Nat) :
 theorem q4_mod9_rejoin (s : Nat) :
     ∃ T, ObsEq
       (run T (BB6.Agent2E7SecondSafe.sourceStart (9*s+7) 4))
-      (DRegularSource.sourceSection ⟨32768*s+28577,3,3⟩) := by
+      (DRegularSource.sourceSection ⟨32768*s+28577,3,2⟩) := by
   let u := 9*s+7
   let kb := 576*s+501
   let ke := 1536*s+1338
@@ -135,7 +135,7 @@ theorem q4_mod9_rejoin (s : Nat) :
   have hA : ObsEq
       (run tA
         (BB6.Agent31PacketSource.packet (8*ke+9) 3 2 fixedTail))
-      (DRegularSource.sourceSection ⟨8*ka+17,3,3⟩) := by
+      (DRegularSource.sourceSection ⟨8*ka+17,3,2⟩) := by
     rw [hAstart]
     exact a110111_rejoin ka
   have hfinal : 8*ka+17 = 32768*s+28577 := by
@@ -150,7 +150,7 @@ theorem q4_mod9_rejoin (s : Nat) :
   have hlast := source_chain (t0+tB+tE) tA
       (BB6.Agent2E7SecondSafe.sourceStart u 4)
       (BB6.Agent31PacketSource.packet (8*ke+9) 3 2 fixedTail)
-      (DRegularSource.sourceSection ⟨8*ka+17,3,3⟩)
+      (DRegularSource.sourceSection ⟨8*ka+17,3,2⟩)
       hfirst hA
   simpa [hfinal] using hlast
 
@@ -175,7 +175,7 @@ theorem u6_eq : u6 = 9*s6+7 := by
 
 /-- The sixth source-certified blank-root q=4 E/E section closes through
     the previously uncovered u = 7 mod 9 B-E-A110111 corridor and
-    returns to regular L at (32768*s6+28577, 3, 3). -/
+    returns to regular L at (32768*s6+28577, 3, 2). -/
 theorem sixth_q4_root_rejoin_original :
     ∃ T, ObsEq
       (run (BB6.Agent25SixthRoot.sixthExceptionTime+T) blank)
