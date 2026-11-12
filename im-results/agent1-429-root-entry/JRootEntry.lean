@@ -376,6 +376,34 @@ theorem c0GateAfterTwo_frontier (c : Config) (F : Int)
     simp [c0GateAfterTwo, writeAt, h1, h2]
     exact hblank x (by omega)
 
+/-- A C/0 event at the monitored head maximum is safe and advances the
+    rightmost mark by one, provided the input tape had a blank right tail
+    beginning no farther right than that maximum. -/
+theorem source429_c0_gate_advance_of_record
+    (n : Nat) (c d : Config) (M F : Int)
+    (hmon : runWithHeadMax source429 n c = some (d, M))
+    (hhead : d.head = M) (hF : F ≤ M)
+    (hblank : ∀ x, F < x → c.tape x = false)
+    (hstate : d.state = (2 : Fin 6))
+    (hread : d.tape d.head = false) :
+    run source429 2 d = some (c0GateAfterTwo d) ∧
+    (c0GateAfterTwo d).tape (M + 1) = true ∧
+    (∀ x, M + 1 < x → (c0GateAfterTwo d).tape x = false) := by
+  have hright := runWithHeadMax_current_max_right_blank
+    source429 n c d M F hmon hhead hF hblank
+  have hrun := source429_c0_gate_two_steps d hstate hread hright
+  have hblankD : ∀ x, M < x → d.tape x = false := by
+    intro x hx
+    rw [runWithHeadMax_tape_above source429 n c d M hmon x hx]
+    exact hblank x (by omega)
+  have hfront := c0GateAfterTwo_frontier d M
+    (by rw [hhead]; omega) hblankD
+  refine ⟨hrun, ?_, ?_⟩
+  · simpa [hhead] using hfront.1
+  · intro x hx
+    have hx' : d.head + 1 < x := by rw [hhead]; exact hx
+    simpa [hhead] using hfront.2 x hx'
+
 /-- The same 35-step root trace never visits a head coordinate above 6. -/
 theorem blank_reaches_j00_with_head_max :
     runWithHeadMax source429 35 blank = some (j00Config, 6) := by
@@ -470,29 +498,22 @@ theorem root_at_275_safe_gate : rootAt275.1.tape (rootAt275.1.head + 1) = false 
   intro x hx
   simp [blank]
 
-theorem root_at_275_gate_two_steps :
-    run source429 2 rootAt275.1 = some (c0GateAfterTwo rootAt275.1) := by
-  exact source429_c0_gate_two_steps rootAt275.1 root_at_275_state
-    root_at_275_reads_zero root_at_275_safe_gate
-
-/-- The 275th root C/0 gate writes a new rightmost mark at 16 and leaves
-    every larger coordinate blank. -/
-theorem root_at_275_gate_frontier :
+theorem root_at_275_gate_advance :
+    run source429 2 rootAt275.1 = some (c0GateAfterTwo rootAt275.1) ∧
     (c0GateAfterTwo rootAt275.1).tape 16 = true ∧
     (∀ x, 16 < x → (c0GateAfterTwo rootAt275.1).tape x = false) := by
-  have hblank : ∀ x, 15 < x → rootAt275.1.tape x = false := by
-    intro x hx
-    rw [runWithHeadMax_tape_above source429 275 blank rootAt275.1 15
-      root_at_275_computes x hx]
-    rfl
-  have hfront := c0GateAfterTwo_frontier rootAt275.1 15
-    (by rw [root_at_275_head]; omega) hblank
-  constructor
-  · simpa [root_at_275_head] using hfront.1
-  · intro x hx
-    have hx' : rootAt275.1.head + 1 < x := by rw [root_at_275_head]; exact hx
-    have h := hfront.2 x hx'
-    simpa [root_at_275_head] using h
+  exact source429_c0_gate_advance_of_record 275 blank rootAt275.1 15 0
+    root_at_275_computes root_at_275_head (by omega)
+    (by intro x hx; simp [blank]) root_at_275_state root_at_275_reads_zero
+
+theorem root_at_275_gate_two_steps :
+    run source429 2 rootAt275.1 = some (c0GateAfterTwo rootAt275.1) :=
+  root_at_275_gate_advance.1
+
+theorem root_at_275_gate_frontier :
+    (c0GateAfterTwo rootAt275.1).tape 16 = true ∧
+    (∀ x, 16 < x → (c0GateAfterTwo rootAt275.1).tape x = false) :=
+  ⟨root_at_275_gate_advance.2.1, root_at_275_gate_advance.2.2⟩
 
 /-- The C/0-to-D/0 continuation writes the new frontier cell at 16; after
     277 root steps the global head maximum and rightmost mark both equal 16. -/
@@ -579,6 +600,7 @@ theorem blank_root_frontier_base :
 #print axioms runWithHeadMax_two_of_rawSteps
 #print axioms runWithHeadMax_add
 #print axioms c0GateAfterTwo_frontier
+#print axioms source429_c0_gate_advance_of_record
 #print axioms rawStep_tape_eq_of_ne
 #print axioms runWithHeadMax_tape_above
 #print axioms root_after_271_computes
@@ -588,6 +610,7 @@ theorem blank_root_frontier_base :
 #print axioms root_at_275_computes
 #print axioms root_at_275_right_blank
 #print axioms root_at_275_safe_gate
+#print axioms root_at_275_gate_advance
 #print axioms root_at_275_gate_two_steps
 #print axioms root_at_275_gate_frontier
 #print axioms root_after_277_computes
