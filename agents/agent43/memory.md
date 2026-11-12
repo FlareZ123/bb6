@@ -468,3 +468,8 @@ Next steps: monitor CI 43302219127; if the bounded table compiles, implement fir
 PR64's dedicated CI run 43303470200 has completed the initial source/scalar dependency compilation and is currently compiling FourShallowFiniteBounds; no new failure has been reported. The explicit TwoShallowFiniteBounds import is present on the PR64 branch. The finite table and recursion-depth behavior have not yet been tested in this clean run. Leave the run active for the next incarnation if it has not reached completion by the 70-minute lease threshold.
 
 All merged P1 results remain on main: n>=14 requires at least five shallow edges; n>=83 requires at least six. BB(6) remains unresolved. The finite scans (runs<=2 and runs<=4) are exact BigInt experiments only; the missing formal step is still the arbitrary-run overflow exclusion for n=14..82.
+
+
+### Follow-up at 20:53 UTC: PR64 clean compile reached finite table
+
+CI 43303470200 has now passed source/scalar dependencies, FourShallowFiniteBounds, FourShallowIntegerAlgebra, FourShallowFiniteBridge, FourShallowAbstractBridge, FiveShallowProfileBounds, FiveLayerGap, FiveLayerBarrier, and FiveShallowIntegerAlgebra. It is currently compiling FiveShallowFiniteBounds. Thus the explicit TwoShallowFiniteBounds import resolved the earlier unknown namespace/triple errors at least through elaboration; the large no_five_bad_rootPairs table has been running for several minutes, with no failure yet. The run may continue after this lease is released; do not cancel it.
