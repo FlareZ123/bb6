@@ -33,7 +33,7 @@ def frameAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
 
 @[simp] theorem frameAt_head (T : Int → Bool) (h : Int)
     (inside : Int → Bool) (c : FConfig) :
-    (frameAt T h inside c).head = h + c.head := by
+    (frameAt T h inside c).head = c.head + h := by
   rfl
 
 @[simp] theorem frameAt_tape (T : Int → Bool) (h : Int)
