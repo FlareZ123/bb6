@@ -126,17 +126,29 @@ theorem q_a_gap (n p a q : Nat)
     (hq : 3*q=2*a+5)
     (hbig : 10000*n+10000≤p) :
     p<q ∧ 2*q<3*p := by
-  have hlin : 243*q+850*n+357=316*p := by omega
+  have hlin : 243*q+850*n+357=316*p := by
+    clear hbig
+    omega
   have hbig73 : 73*(10000*n+10000)≤73*p := Nat.mul_le_mul_left 73 hbig
-  have hsmall : 850*n+357 < 73*(10000*n+10000) := by omega
-  have hineq : 850*n+357 <73*p := by omega
-  have hscaled1 : 243*p<243*q := by omega
+  have hsmall : 850*n+357 < 73*(10000*n+10000) := by
+    clear hlin hbig73 hbig ha hq a p q
+    omega
+  have hineq : 850*n+357 <73*p := Nat.lt_of_lt_of_le hsmall hbig73
+  have hscaled1 : 243*p<243*q := by
+    clear hsmall hbig73 hbig ha hq a
+    omega
   have hpq : p<q := Nat.lt_of_mul_lt_mul_left hscaled1
-  have hlin2 : 486*q+1700*n+714=632*p := by omega
-  have hpos : 0<p := by omega
+  have hlin2 : 486*q+1700*n+714=632*p := by
+    clear hsmall hbig73 hineq hbig ha hq a
+    omega
+  have hpos : 0<p := by
+    clear hlin hlin2 hsmall hbig73 hineq hscaled1 hpq ha hq a q
+    omega
   have hlt : 632*p<729*p :=
     Nat.mul_lt_mul_of_pos_right (by decide : 632<729) hpos
-  have hscaled2 : 243*(2*q)<243*(3*p) := by omega
+  have hscaled2 : 243*(2*q)<243*(3*p) := by
+    clear hlin hsmall hbig73 hineq hscaled1 hpq hpos hbig ha hq a
+    omega
   have htwice : 2*q<3*p := Nat.lt_of_mul_lt_mul_left hscaled2
   exact ⟨hpq,htwice⟩
 
@@ -145,17 +157,29 @@ theorem q_b_gap (n p b q : Nat)
     (hq : 3*q=2*b+5)
     (hbig : 10000*n+10000≤p) :
     p<q ∧ 2*q<3*p := by
-  have hlin : 243*q+1862*n+471=308*p := by omega
-  have hbig73 : 73*(10000*n+10000)≤73*p := Nat.mul_le_mul_left 73 hbig
-  have hsmall : 1862*n+471 < 73*(10000*n+10000) := by omega
-  have hineq : 1862*n+471 <73*p := by omega
-  have hscaled1 : 243*p<243*q := by omega
+  have hlin : 243*q+1862*n+471=308*p := by
+    clear hbig
+    omega
+  have hbig65 : 65*(10000*n+10000)≤65*p := Nat.mul_le_mul_left 65 hbig
+  have hsmall : 1862*n+471 < 65*(10000*n+10000) := by
+    clear hlin hbig65 hbig hb hq b p q
+    omega
+  have hineq : 1862*n+471 <65*p := Nat.lt_of_lt_of_le hsmall hbig65
+  have hscaled1 : 243*p<243*q := by
+    clear hsmall hbig65 hbig hb hq b
+    omega
   have hpq : p<q := Nat.lt_of_mul_lt_mul_left hscaled1
-  have hlin2 : 486*q+3724*n+942=616*p := by omega
-  have hpos : 0<p := by omega
+  have hlin2 : 486*q+3724*n+942=616*p := by
+    clear hsmall hbig65 hineq hbig hb hq b
+    omega
+  have hpos : 0<p := by
+    clear hlin hlin2 hsmall hbig65 hineq hscaled1 hpq hb hq b q
+    omega
   have hlt : 616*p<729*p :=
     Nat.mul_lt_mul_of_pos_right (by decide : 616<729) hpos
-  have hscaled2 : 243*(2*q)<243*(3*p) := by omega
+  have hscaled2 : 243*(2*q)<243*(3*p) := by
+    clear hlin hsmall hbig65 hineq hscaled1 hpq hpos hbig hb hq b
+    omega
   have htwice : 2*q<3*p := Nat.lt_of_mul_lt_mul_left hscaled2
   exact ⟨hpq,htwice⟩
 
@@ -164,17 +188,29 @@ theorem q_c_gap (n p c q : Nat)
     (hq : 3*q=2*c+5)
     (hbig : 10000*n+10000≤p) :
     p<q ∧ 2*q<3*p := by
-  have hlin : 243*q+3886*n+699=292*p := by omega
-  have hbig73 : 73*(10000*n+10000)≤73*p := Nat.mul_le_mul_left 73 hbig
-  have hsmall : 3886*n+699 < 73*(10000*n+10000) := by omega
-  have hineq : 3886*n+699 <73*p := by omega
-  have hscaled1 : 243*p<243*q := by omega
+  have hlin : 243*q+3886*n+699=292*p := by
+    clear hbig
+    omega
+  have hbig49 : 49*(10000*n+10000)≤49*p := Nat.mul_le_mul_left 49 hbig
+  have hsmall : 3886*n+699 < 49*(10000*n+10000) := by
+    clear hlin hbig49 hbig hc hq c p q
+    omega
+  have hineq : 3886*n+699 <49*p := Nat.lt_of_lt_of_le hsmall hbig49
+  have hscaled1 : 243*p<243*q := by
+    clear hsmall hbig49 hbig hc hq c
+    omega
   have hpq : p<q := Nat.lt_of_mul_lt_mul_left hscaled1
-  have hlin2 : 486*q+7772*n+1398=584*p := by omega
-  have hpos : 0<p := by omega
+  have hlin2 : 486*q+7772*n+1398=584*p := by
+    clear hsmall hbig49 hineq hbig hc hq c
+    omega
+  have hpos : 0<p := by
+    clear hlin hlin2 hsmall hbig49 hineq hscaled1 hpq hc hq c q
+    omega
   have hlt : 584*p<729*p :=
     Nat.mul_lt_mul_of_pos_right (by decide : 584<729) hpos
-  have hscaled2 : 243*(2*q)<243*(3*p) := by omega
+  have hscaled2 : 243*(2*q)<243*(3*p) := by
+    clear hlin hsmall hbig49 hineq hscaled1 hpq hpos hbig hc hq c
+    omega
   have htwice : 2*q<3*p := Nat.lt_of_mul_lt_mul_left hscaled2
   exact ⟨hpq,htwice⟩
 
@@ -183,17 +219,29 @@ theorem q_d_gap (n p d q : Nat)
     (hq : 3*q=2*d+5)
     (hbig : 10000*n+10000≤p) :
     p<q ∧ 2*q<3*p := by
-  have hlin : 243*q+7934*n+1155=260*p := by omega
-  have hbig73 : 73*(10000*n+10000)≤73*p := Nat.mul_le_mul_left 73 hbig
-  have hsmall : 7934*n+1155 < 73*(10000*n+10000) := by omega
-  have hineq : 7934*n+1155 <73*p := by omega
-  have hscaled1 : 243*p<243*q := by omega
+  have hlin : 243*q+7934*n+1155=260*p := by
+    clear hbig
+    omega
+  have hbig17 : 17*(10000*n+10000)≤17*p := Nat.mul_le_mul_left 17 hbig
+  have hsmall : 7934*n+1155 < 17*(10000*n+10000) := by
+    clear hlin hbig17 hbig hd hq d p q
+    omega
+  have hineq : 7934*n+1155 <17*p := Nat.lt_of_lt_of_le hsmall hbig17
+  have hscaled1 : 243*p<243*q := by
+    clear hsmall hbig17 hbig hd hq d
+    omega
   have hpq : p<q := Nat.lt_of_mul_lt_mul_left hscaled1
-  have hlin2 : 486*q+15868*n+2310=520*p := by omega
-  have hpos : 0<p := by omega
+  have hlin2 : 486*q+15868*n+2310=520*p := by
+    clear hsmall hbig17 hineq hbig hd hq d
+    omega
+  have hpos : 0<p := by
+    clear hlin hlin2 hsmall hbig17 hineq hscaled1 hpq hd hq d q
+    omega
   have hlt : 520*p<729*p :=
     Nat.mul_lt_mul_of_pos_right (by decide : 520<729) hpos
-  have hscaled2 : 243*(2*q)<243*(3*p) := by omega
+  have hscaled2 : 243*(2*q)<243*(3*p) := by
+    clear hlin hsmall hbig17 hineq hscaled1 hpq hpos hbig hd hq d
+    omega
   have htwice : 2*q<3*p := Nat.lt_of_mul_lt_mul_left hscaled2
   exact ⟨hpq,htwice⟩
 
@@ -202,14 +250,21 @@ theorem q_e_band (n p e q : Nat)
     (hq : 3*q=2*e+5)
     (hbig : 10000*n+10000≤p) :
     3*p<4*q ∧ q<p := by
-  have hlin : 243*q+16030*n+2067=196*p := by omega
+  have hlin : 243*q+16030*n+2067=196*p := by
+    clear hbig
+    omega
   have hbig55 : 55*(10000*n+10000)≤55*p := Nat.mul_le_mul_left 55 hbig
-  have hsmall : 64120*n+8268 < 55*(10000*n+10000) := by omega
-  have hineq : 64120*n+8268 <55*p := by omega
-  have hscaled1 : 729*p<972*q := by omega
-  have hscaled1' : 243*(3*p)<243*(4*q) := by omega
+  have hsmall : 64120*n+8268 < 55*(10000*n+10000) := by
+    clear hlin hbig55 hbig he hq e p q
+    omega
+  have hineq : 64120*n+8268 <55*p := Nat.lt_of_lt_of_le hsmall hbig55
+  have hscaled1' : 243*(3*p)<243*(4*q) := by
+    clear hsmall hbig55 hbig he hq e
+    omega
   have h3p : 3*p<4*q := Nat.lt_of_mul_lt_mul_left hscaled1'
-  have hscaled2 : 243*q<243*p := by omega
+  have hscaled2 : 243*q<243*p := by
+    clear hsmall hbig55 hbig he hq e
+    omega
   have hqp : q<p := Nat.lt_of_mul_lt_mul_left hscaled2
   exact ⟨h3p,hqp⟩
 
@@ -218,11 +273,21 @@ theorem geom_f (n p j f : Nat)
     (hf : 243*f+32303*n+4134=149*p)
     (hbig : 10000*n+10000≤p) :
     4*2^j-3<f ∧ f<6*2^j-1 := by
-  have hB : 1250*n+1250≤2^j := by rw [hpj] at hbig; omega
-  have hf' : 243*f+32303*n+4134=1192*2^j := by rw [hpj] at hf; omega
-  have hcoeff : 32303*n+4134≤220*2^j+486 := by omega
-  have hlow : 4*2^j-3<f := by omega
-  have hhigh : f<6*2^j-1 := by omega
+  have hB : 1250*n+1250≤2^j := by
+    rw [hpj] at hbig
+    omega
+  have hf' : 243*f+32303*n+4134=1192*2^j := by
+    rw [hpj] at hf
+    omega
+  have hcoeff : 32303*n+4134≤220*2^j+486 := by
+    clear hf' hf hpj hbig p f
+    omega
+  have hlow : 4*2^j-3<f := by
+    clear hpj hbig p hf
+    omega
+  have hhigh : f<6*2^j-1 := by
+    clear hpj hbig hcoeff p hf
+    omega
   exact ⟨hlow,hhigh⟩
 
 end CascadeFeederExceptional
