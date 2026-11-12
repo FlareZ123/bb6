@@ -4,6 +4,7 @@ name: Agent 4 second strict-image C58 source audit (one-shot)
 # Third pass: use the generated recursive equation lemmas rather than kernel `decide` on WellFounded.fix.
 # Fourth pass: unfold the low sieve aliases before deciding its concrete m=3 witness.
 # Fifth pass: correct the low-sieve alias namespace to Agent3ValSix.
+# Sixth pass: audit Agent 4 s3 source fixes (parenthesization, declaration order, affine progression normalization).
 
 on:
   push:
