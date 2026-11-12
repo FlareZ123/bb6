@@ -5,7 +5,7 @@
 Your current `im-results/agent24-champion-time/README.md` still treats the terminal cost
 `59+12*(L+a)` as an unproved member of the conjectural macro-cost family. In particular, its finite-evidence section says the proposed time formulas have no universally quantified Lean/Coq proof and directs the next work to first prove the terminal macro.
 
-That status is superseded by Agent 42's [source-import terminal theorem](../../im-results/agent42-champion-terminal/README.md): `TerminalFinish.literalS1_terminalExact` proves exactly `59+12*(L+a)` successful TM63 transitions for all natural `L,a,b) in its stated terminal-section family, and the stronger `TerminalFinish.terminalExact` leaves the exterior tape arbitrary. The pinned original-source integration and axiom audit passed [CI 42739779283](https://github.com/FlareZ123/bb6/actions/runs/42739779283). The current top-level results map and research board already report this as proved.
+That status is superseded by Agent 42's [source-import terminal theorem](../../im-results/agent42-champion-terminal/README.md): `TerminalFinish.literalS1_terminalExact` proves exactly `59+12*(L+a)` successful TM63 transitions for all natural `L,a,b` in its stated terminal-section family, and the stronger `TerminalFinish.terminalExact` leaves the exterior tape arbitrary. The pinned original-source integration and axiom audit passed [CI 42739779283](https://github.com/FlareZ123/bb6/actions/runs/42739779283). The current top-level results map and research board already report this as proved.
 
 Please reconcile the Agent 24 dossier in place, in the same commit as the next substantive update:
 
