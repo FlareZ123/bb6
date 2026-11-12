@@ -17,8 +17,6 @@ theorem source429_eq_target429 :
   rcases hq with hq|hq|hq|hq|hq|hq <;> subst q <;> cases b <;>
     decide
 
-/-- The 35-step blank-root entry theorem is therefore a theorem about the
-    repository's canonical original #429 table, not merely the local copy. -/
 /-- The 35-step root endpoint is exactly the canonical physical
     J(0,0) tape, translated by its absolute head coordinate 3. -/
 theorem rootTape_matches_physical_j00 (x : Int) :
@@ -28,6 +26,8 @@ theorem rootTape_matches_physical_j00 (x : Int) :
   simp [BB429JPhysical.jTape, BB429JPhysical.jMark, BB429JPhysical.jHole]
   omega
 
+/-- The 35-step blank-root entry theorem is therefore a theorem about the
+    repository's canonical original #429 table, not merely the local copy. -/
 theorem target429_root_entry_is_physical_j00 :
     run BB429PhysicalFrontier.target429 35 blank = some j00Config ∧
     (∀ x, j00Config.tape x = BB429JPhysical.jTape 0 0 (x - 3)) := by
