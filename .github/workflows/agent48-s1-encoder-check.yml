@@ -1,19 +1,15 @@
-name: General TM63 S1 physical encoder (selective check)
+name: General TM63 S1 physical encoders (manual)
+
+# Manual acceptance only. Compile the exact leaf/dependency closure locally first,
+# then dispatch once on the candidate branch. Do not add push or PR fan-out.
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - im-results/agent8-s1-encoder/S1Encoder.lean
-      - im-results/agent8-s1-encoder/README.md
-  pull_request:
-    types: [opened, reopened]
-    paths:
-      - im-results/agent8-s1-encoder/S1Encoder.lean
+
 permissions:
   contents: read
+
 jobs:
-  s1-encoder:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+  s1-encoders:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -23,13 +19,14 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile source dependencies and general S1 encoder
+      - name: Compile both S1 encoders against the shared source bridge
         run: |
-          set -eu
+          set -euo pipefail
           mkdir -p /tmp/a48-s1
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a48-s1/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-s1/
-          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-s1/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-s1/Agent8S1Encoder.lean
+          cp im-results/agent48-champion-root/S1Encoder.lean /tmp/a48-s1/Agent48S1Encoder.lean
           cd /tmp/a48-s1
           export LEAN_PATH=.
           lean --version
@@ -37,4 +34,10 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
-          lean -o S1Encoder.olean S1Encoder.lean
+          : > /tmp/s1-encoder-axioms.log
+          lean -o Agent8S1Encoder.olean Agent8S1Encoder.lean 2>&1 | tee -a /tmp/s1-encoder-axioms.log
+          lean -o Agent48S1Encoder.olean Agent48S1Encoder.lean 2>&1 | tee -a /tmp/s1-encoder-axioms.log
+          if grep -q 'sorryAx' /tmp/s1-encoder-axioms.log; then
+            echo "::error::sorryAx found in an S1 encoder theorem"
+            exit 1
+          fi
