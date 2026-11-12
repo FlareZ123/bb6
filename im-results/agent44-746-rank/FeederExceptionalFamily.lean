@@ -371,6 +371,20 @@ theorem fatal_root_iff_even_parent_of_not81 (n : Nat)
     have hc : ResetChain 2 y := (root_reset_chain_iff y).mp hy
     exact (root_reset_chain_iff u).mpr (ResetChain.append hc hparent)
 
+/-- For any of the eight exceptional t=1 feeder classes, once its
+    distinguished odd feeder is root-excluded, fatal-root reachability
+    reduces exactly to the even predecessor. -/
+theorem fatal_root_iff_even_parent_eight_exceptional (n : Nat)
+    (hn : n%1458=113 ∨ n%1458=400 ∨ n%1458=526 ∨ n%1458=599 ∨
+      n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372)
+    (hoddNo : ¬ReachC (2,0) (oddPre n (fatal n),0)) :
+    (ReachC (2,0) (fatal n,0) ↔
+      ReachC (2,0) (evenPre n (n+4),0)) := by
+  have hnlow : 76≤n := by omega
+  have hres : n%18=4 ∨ n%18=5 := by omega
+  exact fatal_root_iff_even_parent_of_not81 n hnlow hres
+    (fatal_not81_of_eight_exceptional n hn) hoddNo
+
 /-- The 1085/1372 classes satisfy the generic 81-gate hypotheses, and their
     distinguished odd feeder is root-unreachable. -/
 theorem fatal_root_iff_even_parent_1085_1372 (n : Nat)
