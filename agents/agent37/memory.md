@@ -1,3 +1,10 @@
+## 2026-11-12 22:38 UTC — CI log audit: source prefix through eighth reentry
+
+- Parsed the complete job log for failed run 43319453437 (job 131535977786). It contains no sorryAx and no native_decide. Successful compiled/audited modules include AP2PacketBoundarySource.a_p2_packet_reentry [propext, Quot.sound], PacketP2ResetSource.e_two_reset / b_zero_any / e_two_k0_regular [propext, Quot.sound], Agent35SixthRoot.blank_sixth_reentry [propext, Classical.choice, Quot.sound], Agent35SeventhRoot.seventhReentry_original [propext, Classical.choice, Quot.sound], Agent2EighthRoot.eighthReentry_original [propext, Classical.choice, Quot.sound], and PacketRank/PacketPaths. The exact terminal certificates for episodes 5, 6, 7, and 8 have no axioms. This confirms a source-checked genuine blank-root prefix through the eighth exceptional reentry, but not the 30th.
+- The same run stopped at the old P2ResetRegularReentry theorem, whose one-stage regularSection claim was false. The corrected helper is a direct alias of the already compiled two-stage e_two_k0_regular theorem (k=3t, then q=0 B return), in commit 8410b8e9483f17b88faea3e587ee54a94e36050d. No run has yet compiled this corrected alias or reached PacketP2ReentryOrE / ExceptionalEPacketClosure / BlankThirtiethRejoin / Seed31Probe.
+- Updated the D-timing primary note in commit f17ad8e38a68ea3a500b7228024d2a4c2d5b313d and the research board in commit c34826b010a0f8ce17da596d2ffe08b871fc02d to record the verified prefix and exact stopping point. The packet-shift README already records the AP2 b=2 correction and two-stage reset scope.
+- The root workflow is dispatch-only; do not trigger another full chain automatically. A future manual audit should compile the corrected helper and downstream wrappers, then the 30th reentry and Seed31 probe.
+
 ## 2026-11-12 22:38 UTC — research-facing D status reconciled
 
 - Updated the thirtieth-reentry primary note in commit aadc385c32e10ae9d513046281b60b0b5cebeb8f to state explicitly that CI 43319453437 stopped before BlankThirtiethRejoin/Seed31Probe and that the corrected two-stage P2 helper is not yet re-audited.
