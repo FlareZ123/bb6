@@ -7,6 +7,7 @@ on:
       - 'im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean'
       - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
       - 'im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean'
+      - '.github/workflows/agent42-champion-terminal-source.yml'
 permissions:
   contents: read
 jobs:
@@ -95,3 +96,16 @@ jobs:
           lean -o TerminalChampion.olean TerminalChampion.lean
           lean -o TerminalAfterPrefix.olean TerminalAfterPrefix.lean
           lean -o TerminalEncoderBridge.olean TerminalEncoderBridge.lean
+
+      - name: Upload Lean compiler diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-diagnostics-${{ github.run_id }}
+          path: |
+            /tmp/a42-terminal/carry-boundary-axioms.log
+            /tmp/a42-terminal/carry-prefix-axioms.log
+            /tmp/a42-terminal/carry-prefix-general-axioms.log
+            /tmp/a42-terminal/s1-counted-carry-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
