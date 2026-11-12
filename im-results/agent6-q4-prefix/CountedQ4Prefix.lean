@@ -1,14 +1,11 @@
 import CountedSweep
-import CountedResetOddBase
-import Q4Suffix
+import S1Encoder
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent6Q4Prefix
 
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
-open BB6Coverage.Agent8CountedReset
-open BB6Coverage.Agent8Q4Suffix
 
 /-! The q4 prefix for the m=2, odd-inner-counter Rst2 branch.
 
@@ -157,6 +154,41 @@ theorem sideBit_d1pow_append (a i : Nat) (ys : List Bool)
   have hlen := d1pow_length a
   rw [sideBit_append_right (d1pow a) ys i (by omega), hlen]
 
+
+/-- Canonical q4 left-facing source word, kept local so the prefix proof
+has no dependency on the suffix module. -/
+def q4LeftFacing (L n a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 1 ++ d0 ++ binDec L n ++ lh
+
+/-- The exact right-half contract consumed by the independent q4 suffix. -/
+def q4RightShape (T : Int → Bool) (h : Int) (b : Nat) : Prop :=
+  (∀ i : Nat, i<5 → T (h+(i:Int)) = true) ∧
+  T (h+5) = false ∧
+  T (h+6) = false ∧
+  (∀ i : Nat, i<3*(b+1) → T (h+7+(i:Int)) = true) ∧
+  (∀ i : Nat, i≤4 → T (h+10+(3*b:Int)+(i:Int)) = false)
+
+/-- Odd BinDec has a d0 head. This local derivation uses only the encoder
+recurrence, avoiding the currently broken CountedResetBase dependency. -/
+theorem binDec_odd_head_local (L n : Nat)
+    (hn : n % 2 = 1) (hbound : n < 2^L) :
+    binDec L n = d0 ++ binDec (L-1) (n/2) := by
+  have hL : 0 < L := by
+    by_contra hL0
+    have hL0' : L = 0 := by omega
+    subst L
+    have hn0 : n = 0 := by norm_num at hbound; omega
+    simp [hn0] at hn
+  have hLid : L = (L-1)+1 := by omega
+  have hpow : 2^L = 2^(L-1)*2 := by
+    rw [hLid, Nat.pow_succ]
+  have hq : n/2 < 2^(L-1) := by
+    have hb' : n < 2^(L-1)*2 := by simpa [hpow] using hbound
+    omega
+  have hnEq : n = 2*(n/2)+1 := by omega
+  rw [hLid, hnEq]
+  exact binDec_odd (L-1) (n/2) hq
+
 /-- The seven source bits immediately beyond d1^a at an odd m=2 reset. -/
 theorem s1LeftFacing_q4_bits (L n a : Nat)
     (hn : n % 2 = 1) (hbound : n < 2^L) :
@@ -170,7 +202,7 @@ theorem s1LeftFacing_q4_bits (L n a : Nat)
   have hface : s1LeftFacing L n 2 a 0 =
       d1pow a ++ (markerWord 2 ++ d0 ++ binDec L n ++ lh) := by
     simp [s1LeftFacing, binDec_zero]
-  have hbin := binDec_odd_head L n hn hbound
+  have hbin := binDec_odd_head_local L n hn hbound
   have hbit : ∀ i, 3*a ≤ i →
       sideBit (s1LeftFacing L n 2 a 0) i =
         sideBit (markerWord 2 ++ d0 ++ binDec L n ++ lh) (i-3*a) := by
