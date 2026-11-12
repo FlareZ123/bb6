@@ -76,9 +76,9 @@ private theorem s1CarryInput_left
   have hcell := s1Config_left_carryCells L n m len q r b h i hq
   have hcell' :
       (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+x) =
-        sideBit (d1pow r ++ d0 ++ rest) i := by
+        sideBit (d1pow r ++ (d0 ++ rest)) i := by
     rw [hcoord] at hcell
-    simpa [rest] using hcell
+    simpa [rest,List.append_assoc] using hcell
   have hibound : i ≤ 3*r+2 := by
     have hi : (i:Int) = -x := hix
     omega
@@ -144,28 +144,35 @@ private theorem s1CarryInput_right
     omega
   have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
   rcases hcases with h0 | h1 | h2 | h3 | h4 | h5
-  · have hx : x=1 := by have hi : (i:Int)=x-1 := hix; omega
-    rw [h0,hx] at hcell'
+  · subst i
+    have hx : x=1 := by have hi : (0:Int)=x-1 := hix; omega
+    subst x
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,d1pow,
       carryInputBit] using hcell'
-  · have hx : x=2 := by have hi : (i:Int)=x-1 := hix; omega
-    rw [h1,hx] at hcell'
+  · subst i
+    have hx : x=2 := by have hi : (1:Int)=x-1 := hix; omega
+    subst x
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,d1pow,
       carryInputBit] using hcell'
-  · have hx : x=3 := by have hi : (i:Int)=x-1 := hix; omega
-    rw [h2,hx] at hcell'
+  · subst i
+    have hx : x=3 := by have hi : (2:Int)=x-1 := hix; omega
+    subst x
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,d1pow,
       carryInputBit] using hcell'
-  · have hx : x=4 := by have hi : (i:Int)=x-1 := hix; omega
-    rw [h3,hx] at hcell'
+  · subst i
+    have hx : x=4 := by have hi : (3:Int)=x-1 := hix; omega
+    subst x
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,d1pow,
       carryInputBit] using hcell'
-  · have hx : x=5 := by have hi : (i:Int)=x-1 := hix; omega
-    rw [h4,hx] at hcell'
+  · subst i
+    have hx : x=5 := by have hi : (4:Int)=x-1 := hix; omega
+    subst x
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,d1pow,
       carryInputBit] using hcell'
-  · have hx : x=6 := by have hi : (i:Int)=x-1 := hix; omega
-    rw [h5,hx] at hcell'
+  · subst i
+    have hx : x=6 := by have hi : (5:Int)=x-1 := hix
+      omega
+    subst x
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,d1pow,
       carryInputBit] using hcell'
 
@@ -187,13 +194,13 @@ theorem s1Config_evenCounter_carryPrefix
   obtain ⟨q,r,len,hfactor,ha,hq⟩ :=
     exists_odd_factor_bounded a z hz hzlt
   have hr : 0 < r := by
-    by_contra hnot
-    have hr0 : r=0 := by omega
-    have hodd : z=2*q+1 := by
-      calc
-        z = (2*q+1)*2^r := hfactor
-        _ = 2*q+1 := by simp [hr0]
-    omega
+    by_cases hr0 : r=0
+    · have hodd : z=2*q+1 := by
+        calc
+          z = (2*q+1)*2^r := hfactor
+          _ = 2*q+1 := by simp [hr0]
+      omega
+    · omega
   let cfg := s1Config L n m a z b h
   let T : Int → Bool := fun x => cfg.tape (h+x)
   have hmatch : ∀ x, carryInputArea r x = true →
