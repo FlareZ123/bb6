@@ -132,3 +132,27 @@ The single k=0 subresidue has now been formalized as an intermediate Lean draft 
 - `CascadeFeeder887.fatal_root_iff_even_parent_887_subresidue` composes this exclusion with the existing eight-class fatal-parent theorem and reduces fatal-root reachability to the even fatal predecessor on this one lift.
 
 The module is included after `FeederExceptionalFamily.lean` in the manual-only workflow [agent44-746-fanin.yml](../../.github/workflows/agent44-746-fanin.yml). **This is still an uncompiled draft pending unchanged-source Lean CI**; do not cite the theorem as kernel-verified until the workflow completes and its two `#print axioms` outputs are checked. The scope remains exactly one of the nine lifts of n mod1458=887.
+
+## Exact modular certificates for the five stable lifts
+
+The same six-node tree shape is observed for the five lifts
+`n = 887 + 1458 k` with `k ∈ {0,1,3,4,7}`, i.e.
+`n mod 13122 ∈ {887,2345,5261,6719,11093}`. The following table gives the exact modular data for the affine chain
+`x,u,a,b,c,d` defined above. It is computed at each least nonnegative representative; it holds for every lift `n=r+13122T`, because `n mod 6561` is fixed and `2^4374 ≡ 1 (mod 6561)` (hence `2^(n-2) mod 6561` is fixed).
+
+| k | r | n mod 6561 | p mod 6561 | (2x+5) mod 729 | u mod 729 | a mod 27 | (2a+5) mod 27 | b mod 27 | (2b+5) mod 9 | c mod 9 | d mod 9 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 887 | 887 | 3869 | 324 | 558 | 2 | 9 | 23 | 6 | 3 | 7 |
+| 1 | 2345 | 2345 | 1682 | 405 | 639 | 26 | 3 | 17 | 3 | 4 | 0 |
+| 3 | 5261 | 5261 | 3869 | 567 | 72 | 20 | 18 | 5 | 6 | 6 | 4 |
+| 4 | 6719 | 158 | 1682 | 648 | 153 | 17 | 12 | 26 | 3 | 7 | 6 |
+| 7 | 11093 | 4532 | 1682 | 162 | 396 | 8 | 21 | 8 | 3 | 1 | 3 |
+
+The table shows the uniform valuation/residue conditions needed by the six-node argument:
+- `(2x+5) mod 729` is always divisible by 81 and nonzero modulo 243, so the t=2 odd parent is the only possible odd parent after the t=0,1,3 quotient gaps.
+- `u mod 729` is always 0 modulo 3, excluding odd parents of u.
+- `(2a+5) mod 27` is always divisible by 3 and nonzero modulo 27; the t=0,1 quotient gaps therefore leave only the displayed even parent b.
+- `(2b+5) mod 9` is always divisible by 3 and nonzero modulo 9, leaving only the displayed t=0 odd parent c.
+- `c mod 9` and `d mod 9` are never 2 modulo 3, excluding their odd parents.
+
+The affine dyadic-band/gap inequalities are uniform in all five lifts once the common growth bound is available. Thus this table strongly supports extending the Lean proof to all five stable lifts by replacing the k=0 residue equalities with the five-way modular disjunctions. **That five-lift extension is not yet formalized**; the current Lean draft remains restricted to `n mod 13122 = 887`.
