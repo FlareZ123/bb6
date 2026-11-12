@@ -1,6 +1,12 @@
 # Cryptids #746: exact reset inverse grammar and infinite fatal-gate problem
 
-**Research state (6 November 2026): original-source inverse and fixed-target nonreachability theorems; the genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+**Research state (12 November 2026): original-source inverse and fixed-target nonreachability theorems remain the strongest root-facing results; a dual index/depth 3-adic selector is now drafted, but its new Lean source check is pending. The genuine blank-start halt/nonhalt question remains open.** All closed forms, certificates, experiments and earlier verification entries are retained in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+
+## 12 November 2026: dual index/depth Hensel selector (CI pending)
+
+[The new index-coordinate Hensel analysis](RAY-INDEX-DEPTH-HENSEL.md) complements the existing depth-coordinate selector. For every even canonical-ray depth (j) and sector (s\in\{4,5\}), exactly one index class (h\bmod3^k) makes the signed ray numerator divisible by (3^{k+1}). The selectors are inverse coordinates of the same 3-adic congruence surface; `depth_index_duality` states the mutual relation and `indexResidue_bijective` gives the finite bijection in each precision block.
+
+Lean draft: [RayIndexHensel.lean](RayIndexHensel.lean). The existing manual [Agent 10 ray/odd-strip workflow](../../.github/workflows/agent10-ray-odd-strip.yml) now compiles `RayDepthHensel`, `RayDepthResidue`, and the new module in sequence. **No CI result exists for this revision yet.** This locates potential odd exits along the canonical even ray; it does not establish the dyadic source band, blank-root reachability, or nonreachability of the even fatal predecessor. It remains in `im-results/`.
 
 ## 9 November 2026: uniform odd-entry fatal-depth sieve
 
