@@ -82,7 +82,7 @@ theorem low_three_strict :
     BB6.Agent11C58ValSix.lowAllowed 3 ∧ ¬lowAllowed 3 := by
   have hprior : BB6.Agent11C58ValSix.lowAllowed 3 := by
     unfold BB6.Agent11C58ValSix.lowAllowed
-      BB6.Agent11C58ValSix.lowAllowedValSixFull
+      BB6.Agent3ValSix.lowAllowedValSixFull
       BB6.Agent11Joint.lowAllowed
       BB6.Agent3.jointLowAllowed
     decide
