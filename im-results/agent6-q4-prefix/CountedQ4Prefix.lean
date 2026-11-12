@@ -665,7 +665,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
   let N := 3*a+2
   let T1 := sweptLeft N T h
   let h' := h - (N : Int)
-  let T2 := frameAt T1 h' q4Inside q4BridgeEnd
+  let T2 := (frameAt T1 h' q4Inside q4BridgeEnd).tape
   have hOn : leftOnes T h N := by
     simpa [N] using s1Config_q4_leftOnes L n a b h hn hbound
   have hr : T (h+1) = false := by
