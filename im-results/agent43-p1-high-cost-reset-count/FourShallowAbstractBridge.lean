@@ -14,8 +14,8 @@ def fourProfileAlpha (t : Nat) : Nat := if t=0 then 1 else 2
 def fourProfileStep (x t : Nat) : Prop :=
   fourProfileAlpha t ≤ x ∧ (x-fourProfileAlpha t)%3=0
 
-def fourRootDivides (n s : Nat) : Prop :=
-  2^n % 8^s = 0 ∧ (14*n+92)%8^s=0
+def fourProfileStep (x t : Nat) : Prop :=
+  fourProfileAlpha t ≤ x ∧ (x-fourProfileAlpha t)%3=0
 
 def fourRootRem (n s t1 : Nat) : Nat := Id.run do
   let (_,_,L,O) := triple t1
@@ -51,83 +51,80 @@ def fourCoeff (s t1 x1 t2 x2 t3 x3 t4 : Nat) : Nat := Id.run do
 def fourEmax (n s x1 x2 x3 : Nat) : Nat :=
   112*(n+6+3*s+x1+x2+x3+15)-384
 
+def fourRootOverflow (n s t1 : Nat) : Bool := Id.run do
+  let q := 8^s
+  if 2^n%q != 0 || (14*n+92)%q != 0 then return false
+  return fourRootRem n s t1 % 2^(n-3*s) == 0
+
+def fourSecondOverflow (n s t1 x1 t2 : Nat) : Bool := Id.run do
+  let q := 8^s
+  let e := n-3*s
+  if 2^n%q != 0 || (14*n+92)%q != 0 then return false
+  if fourRootOverflow n s t1 then return false
+  if x1<fourProfileAlpha t1 || (x1-fourProfileAlpha t1)%3 != 0 || x1>e then
+    return false
+  if fourRootRem n s t1 % 2^x1 != 0 then return false
+  return fourSecondRem n s t1 x1 t2 % 2^(e-x1) == 0
+
+def fourThirdOverflow (n s t1 x1 t2 x2 t3 : Nat) : Bool := Id.run do
+  let q := 8^s
+  let e := n-3*s
+  if 2^n%q != 0 || (14*n+92)%q != 0 then return false
+  if fourRootOverflow n s t1 then return false
+  if x1<fourProfileAlpha t1 || (x1-fourProfileAlpha t1)%3 != 0 || x1>e then
+    return false
+  if fourRootRem n s t1 % 2^x1 != 0 then return false
+  if fourSecondOverflow n s t1 x1 t2 then return false
+  if x2<fourProfileAlpha t2 || (x2-fourProfileAlpha t2)%3 != 0 || x2>e-x1 then
+    return false
+  if fourSecondRem n s t1 x1 t2 % 2^x2 != 0 then return false
+  return fourThirdRem n s t1 x1 t2 x2 t3 % 2^(e-x1-x2) == 0
+
+def fourFourthAudit (n s t1 x1 t2 x2 t3 x3 t4 : Nat) : Bool := Id.run do
+  let q := 8^s
+  let e := n-3*s
+  if 2^n%q != 0 || (14*n+92)%q != 0 then return false
+  if fourRootOverflow n s t1 then return false
+  if x1<fourProfileAlpha t1 || (x1-fourProfileAlpha t1)%3 != 0 || x1>e then
+    return false
+  if fourRootRem n s t1 % 2^x1 != 0 then return false
+  if fourSecondOverflow n s t1 x1 t2 then return false
+  if x2<fourProfileAlpha t2 || (x2-fourProfileAlpha t2)%3 != 0 || x2>e-x1 then
+    return false
+  if fourSecondRem n s t1 x1 t2 % 2^x2 != 0 then return false
+  if fourThirdOverflow n s t1 x1 t2 x2 t3 then return false
+  if x3<fourProfileAlpha t3 || (x3-fourProfileAlpha t3)%3 != 0 || x3>e-x1-x2 then
+    return false
+  if fourThirdRem n s t1 x1 t2 x2 t3 % 2^x3 != 0 then return false
+  let S4 := fourFourthRem n s t1 x1 t2 x2 t3 x3 t4
+  let h4 := e-x1-x2-x3
+  if S4%2^h4 == 0 then return true
+  let K := fourCoeff s t1 x1 t2 x2 t3 x3 t4
+  let Emax := fourEmax n s x1 x2 x3
+  return K*2^h4 <= S4*(Emax+1)
+
 set_option maxRecDepth 8192
 set_option maxHeartbeats 50000000
 
-/-- Exact finite nondivisibility at the root, for every source profile and
-every possible root prefix with 14 <= n <= 75. -/
 theorem four_root_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
-    fourRootDivides (n.val+14) s.val →
-    fourRootRem (n.val+14) s.val t1.val %
-      2^(n.val+14-3*s.val) ≠ 0 := by decide
+    fourRootOverflow (n.val+14) s.val t1.val = false := by decide
 
-/-- The second shallow remainder is not divisible by the remaining
-root-power after any legal first shallow exponent. -/
 theorem four_second_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
     ∀ x1 : Fin 13, ∀ t2 : Fin 2,
-    fourRootDivides (n.val+14) s.val →
-    fourRootRem (n.val+14) s.val t1.val %
-      2^(n.val+14-3*s.val) ≠ 0 →
-    x1.val ≤ n.val+14-3*s.val →
-    fourProfileStep x1.val t1.val →
-    fourRootRem (n.val+14) s.val t1.val % 2^x1.val = 0 →
-    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val %
-      2^(n.val+14-3*s.val-x1.val) ≠ 0 := by decide
+    fourSecondOverflow (n.val+14) s.val t1.val x1.val t2.val = false := by decide
 
-/-- The third shallow remainder is not divisible by the remaining
-root-power after any legal first two shallow exponents. -/
 theorem four_third_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
     ∀ x1 : Fin 13, ∀ t2 : Fin 2, ∀ x2 : Fin 14, ∀ t3 : Fin 2,
-    fourRootDivides (n.val+14) s.val →
-    fourRootRem (n.val+14) s.val t1.val %
-      2^(n.val+14-3*s.val) ≠ 0 →
-    x1.val ≤ n.val+14-3*s.val →
-    fourProfileStep x1.val t1.val →
-    fourRootRem (n.val+14) s.val t1.val % 2^x1.val = 0 →
-    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val %
-      2^(n.val+14-3*s.val-x1.val) ≠ 0 →
-    x2.val ≤ n.val+14-3*s.val-x1.val →
-    fourProfileStep x2.val t2.val →
-    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val % 2^x2.val = 0 →
-    fourThirdRem (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val %
-      2^(n.val+14-3*s.val-x1.val-x2.val) ≠ 0 := by decide
+    fourThirdOverflow (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val = false := by decide
 
-/-- Final finite certificate for the 14..75 four-shallow sector.  Once the
-first three remainders have been peeled, the fourth remainder is not divisible
-by the remaining power, and the exact coefficient exceeds the largest
-possible fourth-remainder terminal contribution (using x4 <= 15). -/
 theorem four_fourth_finite_audit :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
     ∀ x1 : Fin 13, ∀ t2 : Fin 2, ∀ x2 : Fin 14,
     ∀ t3 : Fin 2, ∀ x3 : Fin 15, ∀ t4 : Fin 2,
-    fourRootDivides (n.val+14) s.val →
-    fourRootRem (n.val+14) s.val t1.val %
-      2^(n.val+14-3*s.val) ≠ 0 →
-    x1.val ≤ n.val+14-3*s.val →
-    fourProfileStep x1.val t1.val →
-    fourRootRem (n.val+14) s.val t1.val % 2^x1.val = 0 →
-    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val %
-      2^(n.val+14-3*s.val-x1.val) ≠ 0 →
-    x2.val ≤ n.val+14-3*s.val-x1.val →
-    fourProfileStep x2.val t2.val →
-    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val % 2^x2.val = 0 →
-    fourThirdRem (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val %
-      2^(n.val+14-3*s.val-x1.val-x2.val) ≠ 0 →
-    x3.val ≤ n.val+14-3*s.val-x1.val-x2.val →
-    fourProfileStep x3.val t3.val →
-    fourThirdRem (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val %
-      2^x3.val = 0 →
-    (fourFourthRem (n.val+14) s.val t1.val x1.val t2.val x2.val
-        t3.val x3.val t4.val %
-        2^(n.val+14-3*s.val-x1.val-x2.val-x3.val) ≠ 0 ∧
-      fourCoeff s.val t1.val x1.val t2.val x2.val t3.val x3.val t4.val *
-        2^(n.val+14-3*s.val-x1.val-x2.val-x3.val) >
-        fourFourthRem (n.val+14) s.val t1.val x1.val t2.val x2.val
-          t3.val x3.val t4.val *
-          (fourEmax (n.val+14) s.val x1.val x2.val x3.val+1)) := by
+    fourFourthAudit (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val x3.val t4.val = false := by
   native_decide
 
 #print axioms four_root_no_overflow
