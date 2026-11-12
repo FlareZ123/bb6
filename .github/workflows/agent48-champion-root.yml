@@ -18,6 +18,7 @@ on:
       - "im-results/agent24-champion-time/CostRecurrence.lean"
       - "im-results/agent24-champion-time/CountPattern.lean"
       - "im-results/agent48-champion-root/ChampionRootBridge.lean"
+      - "im-results/agent6-q4-prefix/CountedQ4Prefix.lean"
       - "im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64"
 permissions:
   contents: read
@@ -50,6 +51,7 @@ jobs:
           cp im-results/agent8-counted-reset/CountedResetOddBase.lean /tmp/a48-root/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-root/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
@@ -106,6 +108,12 @@ jobs:
           lean -o CountedResetOddBase.olean CountedResetOddBase.lean 2>&1 | tee /tmp/a48-root/reset-odd-base-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/reset-odd-base-axioms.log; then
             echo "::error::sorryAx found in odd reset-base embedding dependencies"
+            exit 1
+          fi
+          : > /tmp/a48-root/q4-prefix-axioms.log
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean 2>&1 | tee /tmp/a48-root/q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/q4-prefix-axioms.log; then
+            echo "::error::sorryAx found in odd-Rst2 q4 prefix proof"
             exit 1
           fi
           : > /tmp/a48-root/s0-uniform-bridge-axioms.log
