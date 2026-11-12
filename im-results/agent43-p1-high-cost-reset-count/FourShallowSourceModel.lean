@@ -46,7 +46,8 @@ theorem no_four_shallow_model_from_source_coefficients
        (L4:Int)*Bg-(O4:Int))
  (hsuf : TwoRun ((2:Int)^n) Wh (Bg+(delta:Int)) r Wj Bj)
  (hwall : Wj=12*(2:Int)^n) : False := by
-  obtain ⟨hs,hDdiv⟩ := root_two_prefix_divisor n s Wa Ba hn hpre
+  have hn14 : 14≤n := by omega
+  obtain ⟨hs,hDdiv⟩ := root_two_prefix_divisor n s Wa Ba hn14 hpre
   have hpow : (8:Nat)^s=2^(3*s) := by
     simpa only [show (8:Nat)=2^3 by decide] using (Nat.pow_mul 2 3 s).symm
   have hPdiv : (8:Nat)^s ∣ 2^n := by
@@ -112,7 +113,6 @@ theorem no_four_shallow_model_from_source_coefficients
       have hC1 := profile_bounds t1 alpha C1 L1 O1 ht1 hpr1
       have hh := Nat.mul_le_mul_right q hC1.2.1
       have hq : 1≤q := by dsimp [q]; exact Nat.one_le_pow s 8 (by decide)
-      dsimp [K]
       omega
     dsimp [K]
     omega
@@ -150,19 +150,18 @@ theorem no_four_shallow_model_from_source_coefficients
           _ = (8:Int)^s*(98*(p:Int))-(8:Int)^s*(d:Int) := by congr 1 <;> ac_rfl
   have hqpos : 0<(8:Int)^s := Int.pow_pos (by decide)
   have hIpre : I ((2:Int)^n) Wa Ba=98*(p:Int)-(d:Int) :=
-    Int.eq_of_mul_eq_mul_left hqpos hscaled
+    Int.eq_of_mul_eq_mul_left (ne_of_gt hqpos) hscaled
 
-  have hT1i : (T1:Int)= (n:Int)+6+3*(s:Int) := by dsimp [T1]; omega
+  have hT1i : (T1:Int)= (n:Int)+6+3*(s:Int) := by simp [T1]
   have hT2i : (T2:Int)= (n:Int)+6+3*(s:Int)+(alpha:Int)+3*(u:Int) := by
-    dsimp [T2,T1]; omega
+    simp [T2,T1]
   have hT3i : (T3:Int)= (n:Int)+6+3*(s:Int)+(alpha:Int)+3*(u:Int)+
-      (beta:Int)+3*(v:Int) := by dsimp [T3,T2,T1]; omega
+      (beta:Int)+3*(v:Int) := by simp [T3,T2,T1]
   have hT4i : (T4:Int)= (n:Int)+6+3*(s:Int)+(alpha:Int)+3*(u:Int)+
-      (beta:Int)+3*(v:Int)+(gamma:Int)+3*(w:Int) := by dsimp [T4,T3,T2,T1]; omega
+      (beta:Int)+3*(v:Int)+(gamma:Int)+3*(w:Int) := by simp [T4,T3,T2,T1]
   have hT5i : (T5:Int)= (n:Int)+6+3*(s:Int)+(alpha:Int)+3*(u:Int)+
       (beta:Int)+3*(v:Int)+(gamma:Int)+3*(w:Int)+(delta:Int)+3*(r:Int) := by
-    dsimp [T5,T4,T3,T2,T1]
-    omega
+    simp [T5,T4,T3,T2,T1]
 
   have hcoef1 : (L1:Int)*Ba=(L1:Int)*(T1:Int) := by rw [hBa,hT1i]
   have hcoef2 : (L2:Int)*Bc=(L2:Int)*(T2:Int) := by rw [hBc,hT2i]
@@ -191,7 +190,7 @@ theorem no_four_shallow_model_from_source_coefficients
 
   have hEi : (E:Int)+384=112*Bj := by
     have hh : (E:Int)+384=112*(T5:Int) := by exact_mod_cast hEeq
-    rw [hT5i] at hh
+    rw [hT5i,←hBj] at hh
     exact hh
   have hIend : I ((2:Int)^n) Wj Bj=-(E:Int) := by
     rw [hwall]
@@ -203,13 +202,13 @@ theorem no_four_shallow_model_from_source_coefficients
     rw [hIend] at hlastEnergy
     simpa only [Int.mul_neg] using hlastEnergy
 
-  have J1 : Int := I ((2:Int)^n) Wb (Ba+(alpha:Int))
-  have I1 : Int := I ((2:Int)^n) Wc Bc
-  have J2 : Int := I ((2:Int)^n) Wd (Bc+(beta:Int))
-  have I2 : Int := I ((2:Int)^n) We Be
-  have J3 : Int := I ((2:Int)^n) Wf (Be+(gamma:Int))
-  have I3 : Int := I ((2:Int)^n) Wg Bg
-  have J4 : Int := I ((2:Int)^n) Wh (Bg+(delta:Int))
+  let J1 : Int := I ((2:Int)^n) Wb (Ba+(alpha:Int))
+  let I1 : Int := I ((2:Int)^n) Wc Bc
+  let J2 : Int := I ((2:Int)^n) Wd (Bc+(beta:Int))
+  let I2 : Int := I ((2:Int)^n) We Be
+  let J3 : Int := I ((2:Int)^n) Wf (Be+(gamma:Int))
+  let I3 : Int := I ((2:Int)^n) Wg Bg
+  let J4 : Int := I ((2:Int)^n) Wh (Bg+(delta:Int))
   have hMid1 : J1=(8:Int)^u*I1 := by
     dsimp [J1,I1]
     exact run_energy _ _ _ _ _ u hmid1
@@ -231,6 +230,8 @@ theorem no_four_shallow_model_from_source_coefficients
   have hSh4J : ((2:Int)^delta)*J4 =
       I3-(C4:Int)*(2^n:Int)+(L4:Int)*(T4:Int)-(O4:Int) := by
     simpa only [J4,I3] using hSh4'
+  have hLastJ : J4=-((8:Int)^r*(E:Int)) := by
+    simpa only [J4] using hLast
 
   have hT1lo : n+6≤T1 := by dsimp [T1]; omega
   have hT1hi : T1≤2*n+6 := by dsimp [T1]; omega
@@ -331,7 +332,7 @@ theorem no_four_shallow_model_from_source_coefficients
     (by simpa [q,A1,A2,A3] using hK)
     hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
     hR4pos hR4bound hEbound
-    J1 I1 J2 I2 J3 I3 J4 hSh1J hMid1 hSh2J hMid2 hSh3J hMid3 hSh4J hLast
+    J1 I1 J2 I2 J3 I3 J4 hSh1J hMid1 hSh2J hMid2 hSh3J hMid3 hSh4J hLastJ
 
 #print axioms no_four_shallow_model_from_source_coefficients
 
