@@ -292,6 +292,227 @@ theorem even_counted_suffix_canonical_of_left
 #print axioms even_counted_suffix_matches_s1_right_of_prefix
 #print axioms even_counted_suffix_canonical_of_left
 
+
+/-- The S0 right-facing word is blank after its six-cell guard and unary block. -/
+theorem s0Config_right_far_zero (l : List Bool) (a z b : Nat)
+    (h : Int) (i : Nat) (hi : 9+3*b ≤ i) :
+    (s0Config l a z b h).tape (h+1+(i:Int)) = false := by
+  rw [s0Config_right_cell]
+  change sideBit (s0RightFacing b) i = false
+  simp only [s0RightFacing]
+  rw [sideBit_append]
+  have hi6 : ¬ i < 6 := by omega
+  simp [hi6]
+  have hiD : 3*(b+1) ≤ i-6 := by omega
+  exact sideBit_d1pow_false (b+1) (i-6) hiD
+
+/-- Every cell from the old S0 unary counter's right boundary onward is blank. -/
+theorem s0Config_right_zero_after_counter
+    (l : List Bool) (a z b : Nat) (h : Int) (k : Nat) :
+    (s0Config l a z b h).tape
+      (h+even_rightStop b+(k:Int)) = false := by
+  have hcell := s0Config_right_far_zero l a z b h (9+3*b+k) (by omega)
+  have hcoord : h+even_rightStop b+(k:Int) =
+      h+1+((9+3*b+k):Int) := by
+    unfold even_rightStop
+    omega
+  rw [hcoord]
+  exact hcell
+
+/-- Prefix preservation transports the S0 zero-padded right exterior to P. -/
+theorem s0Config_prefix_far_zero
+    (l : List Bool) (a z b : Nat) (h : Int) (P : Int → Bool)
+    (hpreserve : ∀ x, 6 < x →
+      P x = (s0Config l a z b h).tape (h+x)) :
+    ∀ x, even_rightStop b+3 ≤ x → P x = false := by
+  intro x hx
+  let i : Nat := (x-1).toNat
+  have hpos : 0 ≤ x-1 := by
+    unfold even_rightStop at hx
+    omega
+  have hcast : (i:Int) = x-1 := by
+    dsimp [i]
+    exact Int.toNat_sub_of_le (by omega)
+  have hi : 9+3*b ≤ i := by
+    unfold even_rightStop at hx
+    omega
+  have hpres := hpreserve x (by
+    unfold even_rightStop at hx
+    omega)
+  have hcell := s0Config_right_far_zero l a z b h i hi
+  have hcoord : h+x = h+1+(i:Int) := by
+    rw [hcast]
+    omega
+  rw [hpres,hcoord]
+  exact hcell
+
+/-- Match the complete positive half of the even suffix to an arbitrary S0
+configuration with the updated right counter. -/
+theorem even_counted_suffix_matches_s0_right_of_prefix
+    (l : List Bool) (a zIn zOut b : Nat) (h : Int) (P : Int → Bool)
+    (h6 : P 6 = true)
+    (hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true)
+    (hpreserve : ∀ x, 6 < x →
+      P x = (s0Config l a zIn b h).tape (h+x)) :
+    ∀ i : Nat,
+      (frame even_tailArea (evenOpenFinalSweepTape b P) (embed even_tailFinal)).tape
+        (1+(i:Int)) =
+      (s0Config l a zOut (b+1) h).tape (h+1+(i:Int)) := by
+  have hfar := s0Config_prefix_far_zero l a zIn b h P hpreserve
+  have hright := even_counted_suffix_rightFacing P b h6 hone hfar
+  intro i
+  rw [s0Config_right_cell]
+  simpa using hright i
+
+/--
+Canonical S0 tape glue for the even counted suffix.  The caller supplies the
+prefix's nonpositive-cell identity; the positive half is established from
+the source S0 right encoding and prefix preservation.
+-/
+theorem even_counted_suffix_canonical_s0_of_left
+    (l : List Bool) (a zIn zOut b : Nat) (h : Int) (P : Int → Bool)
+    (h6 : P 6 = true)
+    (hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true)
+    (hpreserve : ∀ x, 6 < x →
+      P x = (s0Config l a zIn b h).tape (h+x))
+    (hleft : ∀ x, x ≤ 0 →
+      P x = (s0Config l a zOut (b+1) h).tape (h+x)) :
+    ∀ x,
+      (frame even_tailArea (evenOpenFinalSweepTape b P) (embed even_tailFinal)).tape x =
+        (s0Config l a zOut (b+1) h).tape (h+x) := by
+  have hright := even_counted_suffix_matches_s0_right_of_prefix
+    l a zIn zOut b h P h6 hone hpreserve
+  intro x
+  by_cases hx : x ≤ 0
+  · have hQ := (even_counted_suffix_tape_output P b h6 hone).1 x hx
+    rw [hQ,hleft x hx]
+  · have hpos : 1 ≤ x := by omega
+    let i : Nat := (x-1).toNat
+    have hcast : (i:Int) = x-1 := by
+      dsimp [i]
+      exact Int.toNat_sub_of_le (by omega)
+    have heq : x = 1+(i:Int) := by omega
+    rw [heq]
+    rw [hright i]
+    have hcoord : h+1+(i:Int) = h+(1+(i:Int)) := by omega
+    rw [hcoord]
+
+/--
+Full S0 single-decrement composition interface.  A caller supplies the
+15+12r-step prefix run, its open even-suffix boundary, preservation of the
+old right exterior, and the prefix's left-output identity.  The suffix then
+completes the 33+12b steps and the complete output is the canonical S0
+configuration with counter zOut and right counter b+1.
+-/
+theorem s0Config_counted_decrement_of_prefix
+    (l : List Bool) (a zIn zOut b r : Nat) (h : Int) (Tpre : Int → Bool)
+    (hprefix : run tm2 (15+12*r) (s0Config l a zIn b h) =
+      some ⟨(4 : Fin 6),h+7,Tpre⟩)
+    (h1 : Tpre (h+1) = true) (h2 : Tpre (h+2) = true)
+    (h3 : Tpre (h+3) = true) (h4 : Tpre (h+4) = true)
+    (h5 : Tpre (h+5) = false) (h6 : Tpre (h+6) = true)
+    (hone : ∀ i : Nat, i < 3*(b+1) → Tpre (h+7+(i:Int)) = true)
+    (hpreserve : ∀ x, 6 < x →
+      Tpre (h+x) = (s0Config l a zIn b h).tape (h+x))
+    (hleft : ∀ x, x ≤ 0 →
+      Tpre (h+x) = (s0Config l a zOut (b+1) h).tape (h+x)) :
+    run tm2 (48+12*r+12*b) (s0Config l a zIn b h) =
+      some (s0Config l a zOut (b+1) h) := by
+  let P : Int → Bool := fun x => Tpre (h+x)
+  have hP1 : P 1 = true := by simpa [P] using h1
+  have hP2 : P 2 = true := by simpa [P] using h2
+  have hP3 : P 3 = true := by simpa [P] using h3
+  have hP4 : P 4 = true := by simpa [P] using h4
+  have hP5 : P 5 = false := by simpa [P] using h5
+  have hP6 : P 6 = true := by simpa [P] using h6
+  have honeP : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
+    intro i hi
+    simpa [P,Int.add_assoc] using hone i hi
+  have hpreserveP : ∀ x, 6 < x →
+      P x = (s0Config l a zIn b h).tape (h+x) := by
+    intro x hx
+    simpa [P] using hpreserve x hx
+  have hleftP : ∀ x, x ≤ 0 →
+      P x = (s0Config l a zOut (b+1) h).tape (h+x) := by
+    intro x hx
+    simpa [P] using hleft x hx
+  have hzero0 : P (even_rightStop b) = false := by
+    have hfar : 6 < even_rightStop b := by
+      unfold even_rightStop
+      omega
+    have hkeep := hpreserve (even_rightStop b) hfar
+    have hsource := s0Config_right_zero_after_counter l a zIn b h 0
+    have hvalue : Tpre (h+even_rightStop b) = false := by
+      rw [hkeep]
+      exact hsource
+    simpa [P] using hvalue
+  have hzero1 : P (even_rightStop b+1) = false := by
+    have hfar : 6 < even_rightStop b+1 := by
+      unfold even_rightStop
+      omega
+    have hkeep := hpreserve (even_rightStop b+1) hfar
+    have hsource := s0Config_right_zero_after_counter l a zIn b h 1
+    have hvalue : Tpre (h+(even_rightStop b+1)) = false := by
+      rw [hkeep]
+      exact hsource
+    simpa [P] using hvalue
+  have hzero2 : P (even_rightStop b+2) = false := by
+    have hfar : 6 < even_rightStop b+2 := by
+      unfold even_rightStop
+      omega
+    have hkeep := hpreserve (even_rightStop b+2) hfar
+    have hsource := s0Config_right_zero_after_counter l a zIn b h 2
+    have hvalue : Tpre (h+(even_rightStop b+2)) = false := by
+      rw [hkeep]
+      exact hsource
+    simpa [P] using hvalue
+  have hsuffix := even_counted_suffix_from_open P b
+    hP1 hP2 hP3 hP4 hP5 hP6 honeP hzero0 hzero1 hzero2
+  have hstart : shiftConfig h ⟨(4 : Fin 6),7,P⟩ =
+      ⟨(4 : Fin 6),h+7,Tpre⟩ := by
+    change (⟨(4 : Fin 6),7+h,fun x => P (x-h)⟩ : Config) =
+      ⟨(4 : Fin 6),h+7,Tpre⟩
+    have hhead : (7:Int)+h = h+7 := by omega
+    rw [hhead]
+    congr 1
+    funext x
+    dsimp [P]
+    congr 1
+    omega
+  let Tpost : Int → Bool := fun x =>
+    (frame even_tailArea (evenOpenFinalSweepTape b P)
+      (embed even_tailFinal)).tape (x-h)
+  have hshift := shift_run h tm2 ⟨(4 : Fin 6),7,P⟩ (33+12*b)
+  rw [hsuffix] at hshift
+  simp only [Option.map] at hshift
+  rw [hstart] at hshift
+  have hshift' : run tm2 (33+12*b) ⟨(4 : Fin 6),h+7,Tpre⟩ =
+      some ⟨(3 : Fin 6),h,Tpost⟩ := by
+    simpa [shiftConfig,Tpost,frame,embed,even_tailFinal] using hshift
+  have hfull := run_compose tm2 (15+12*r) (33+12*b)
+    (s0Config l a zIn b h) ⟨(4 : Fin 6),h+7,Tpre⟩
+    ⟨(3 : Fin 6),h,Tpost⟩ hprefix hshift'
+  have hcanonical := even_counted_suffix_canonical_s0_of_left
+    l a zIn zOut b h P hP6 honeP hpreserveP hleftP
+  have hTpost : Tpost = (s0Config l a zOut (b+1) h).tape := by
+    funext x
+    dsimp [Tpost]
+    have hv := hcanonical (x-h)
+    have hcoord : h+(x-h)=x := by omega
+    simpa [hcoord] using hv
+  have hout : (⟨(3 : Fin 6),h,Tpost⟩ : Config) =
+      s0Config l a zOut (b+1) h := by
+    simp [s0Config,hTpost]
+  have hcost : (15+12*r)+(33+12*b) = 48+12*r+12*b := by omega
+  rw [hcost] at hfull
+  simpa [hout] using hfull
+
+#print axioms s0Config_right_far_zero
+#print axioms s0Config_right_zero_after_counter
+#print axioms s0Config_prefix_far_zero
+#print axioms even_counted_suffix_canonical_s0_of_left
+#print axioms s0Config_counted_decrement_of_prefix
+
 #print axioms even_counted_suffix_tape_output
 
 end BB6Coverage.Agent24ChampionTime
