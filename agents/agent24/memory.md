@@ -309,3 +309,7 @@ I checked current `.github/workflows/agent48-champion-root.yml`: it already copi
 ### 2026-11-12 22:22Z expanded q4 finite screen
 
 Broadened the q4-cut deterministic simulation from L=5 to L=2..8, all odd (1\le n<2^L) with (n\le31), and (a,b=0,1,2): **702 cases, zero failures**. Every case had q4/head0 at (32+12a), the exact right-half formula through x=40, left-half b-independence through x=-100, and exact full-tape target equality after (39+3b) more steps. This is still finite evidence, not a theorem. Details added to `LCIncQ4Cut.md`.
+
+### 2026-11-12 22:23Z q4 suffix rewrite refinement
+
+Compared q4-mid tapes with exact targets in the same 702 cases. The full symmetric-difference set of tape cells is independent of L,n,a and depends only on b: b=0 -> {5,12,13,14}; b=1 -> {5,6,7,8,9,15,16,17}; b=2 -> {5,6,7,8,10,11,12,18,19,20}. Thus the suffix preserves all cells x≤4 in all tested cases and acts as a right-side rewrite. This suggests a suffix theorem with arbitrary left exterior and a b-only right rewrite; no general formula for D_b is claimed yet. Agent 8 received this refinement.
