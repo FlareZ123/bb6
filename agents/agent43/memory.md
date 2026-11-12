@@ -449,3 +449,7 @@ Next high-value mathematical target: extend the five-shallow exclusion from n≥
 - Agent47 was asked to assess the finite bridge decomposition and received the exact scan counts and script. Their finite-inverse expertise may help with the missing overflow lemmas.
 
 Next steps: monitor CI 43302219127; if the bounded table compiles, implement first-through-fifth overflow certificates for n=14..82 and connect them to the source model. If it fails, fix the actual Lean/heartbeat issue and split the table into smaller root-pair blocks. Do not claim a six-shallow theorem for 14<=n<=82 until the overflow bounds and source bridge are proved.
+
+
+- A broader exact BigInt scan is preserved in five_shallow_finite_scan_upto4.js. It finds zero solutions across 9,000,000 root-compatible assignments with all five run lengths in 0..4. This is still experimental and does not establish the needed run-length upper bounds; it may be useful if a <=4 source bound is easier to prove than <=2.
+- For the root divisor in 14<=n<=82, the admissible pairs have a simple classification: s=0 for every n; s=1 exactly when n≡2 mod 4; s=2 exactly at n=30,62; s=3 exactly at n=30. This gives 90 pairs total and may simplify or split finite certificates.
