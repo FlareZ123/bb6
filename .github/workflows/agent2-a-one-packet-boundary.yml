@@ -39,13 +39,7 @@ jobs:
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
-          lean -o "$C/BlankBeyond.olean" "$C/BlankBeyond.lean"
-          lean -o "$C/BlankBContin.olean" "$C/BlankBContin.lean"
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
-          lean -o "$C2/ACodeFirstReturn.olean" "$C2/ACodeFirstReturn.lean"
-          for module in A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
-            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
-          done
           lean -o "$E/A1101010111.olean" "$E/A1101010111.lean" | tee axioms.log
           lean -o "$E/A1101010111Code.olean" "$E/A1101010111Code.lean" | tee -a axioms.log
           lean -o "$P/Generic.olean" "$P/Generic.lean"
@@ -54,6 +48,12 @@ jobs:
           lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
+            lean -DmaxRecDepth=8192 -o "$C2/$module.olean" "$C2/$module.lean"
+          done
+          for module in A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
+            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
+          done
           lean -o im-results/agent37-root-language-pilot/E110111Pairs.olean im-results/agent37-root-language-pilot/E110111Pairs.lean
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -o "$D/AOnePacketBoundarySource.olean" "$D/AOnePacketBoundarySource.lean" | tee -a axioms.log
