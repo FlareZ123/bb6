@@ -64,7 +64,7 @@ theorem blank_halts_iff_six_both :
 
 /-- A low halting candidate rejected by the new recursive six-sector
     root filter. Its predecessor path uses the added valuation-two gate. -/
-set_option maxRecDepth 8192 in
+set_option maxRecDepth 8192
 theorem low_three_excluded :
     BB6.Agent11SixForced.sixForcedExcluded 1
       (2^(2*3+3)-(3*3+4))=true := by
@@ -81,7 +81,12 @@ theorem low_three_strict :
   have hno : BB6.Agent11SixForced.sixForcedExcluded 1
       (2^(2*3+3)-(3*3+4))=false := h.2
   have hyes := low_three_excluded
-  omega
+  have hne : true = false := by
+    calc
+      true = BB6.Agent11SixForced.sixForcedExcluded 1
+          (2^(2*3+3)-(3*3+4)) := hyes.symm
+      _ = false := hno
+  cases hne
 
 #print axioms blank_halts_iff_six_both
 #print axioms low_three_excluded
