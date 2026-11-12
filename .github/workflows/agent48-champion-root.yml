@@ -46,6 +46,8 @@ jobs:
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-root/
+          cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
+          cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           base64 --decode im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64 | xz --decompress > /tmp/a48-root/CountedOddUnary.lean
           base64 --decode im-results/agent24-champion-time/CountedOneZeroUnary.lean.xz.b64 | xz --decompress > /tmp/a48-root/CountedOneZeroUnary.lean
           cd /tmp/a48-root
