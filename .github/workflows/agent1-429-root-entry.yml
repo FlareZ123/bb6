@@ -2,6 +2,10 @@ name: Agent 1 #429 exact blank-root J(0,0) entry (manual)
 
 on:
   workflow_dispatch:
+  # One-shot verification trigger; restricted to the temporary CI branch.
+  push:
+    branches:
+      - agent1-root-entry-ci
 
 permissions:
   contents: read
