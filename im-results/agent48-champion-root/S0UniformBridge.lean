@@ -104,14 +104,8 @@ theorem rawEnd_right (k c : Nat) (ls : List Bool) :
   cases k with
   | zero =>
       simp only [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing, List.append_nil]
-      rw [d1pow_eq_uniformOnes]
-      rw [show 3*(c+1+1) = 3*(c+2) by omega]
-      rw [List.append_nil]
   | succ k =>
       simp only [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing, List.append_nil]
-      rw [d1pow_eq_uniformOnes]
-      rw [show 3*(c+1+1) = 3*(c+2) by omega]
-      rw [List.append_nil]
 
 theorem sideBit_false_of_all_false (xs : List Bool) :
     (∀ b ∈ xs, b = false) → ∀ i, sideBit xs i = false := by
