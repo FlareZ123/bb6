@@ -30,7 +30,7 @@ theorem sweptLeft_preserves_left (n : Nat) (T : Int → Bool) (h x : Int)
   | succ n ih =>
       rw [sweptLeft]
       have hx' : x ≤ (h - 1) - (n : Int) := by omega
-      rw [ih (holeThree T h) (h - 1) hx']
+      rw [ih (T := holeThree T h) (h := h - 1) hx']
       have hx0 : x ≠ h := by omega
       have hx1 : x ≠ h + 1 := by omega
       simp [holeThree, hx0, hx1]
@@ -135,7 +135,7 @@ theorem sideBit_append_right (xs ys : List Bool) (i : Nat)
           simp at hi
       | succ i =>
           have hi' : xs.length ≤ i := by simp at hi; omega
-          simpa [sideBit] using ih ys i hi'
+          simpa [sideBit] using ih i hi'
 
 /-- Every position of d1^a is marked. -/
 theorem sideBit_d1pow_true (a i : Nat) (hi : i < 3*a) :
@@ -185,11 +185,13 @@ theorem binDec_odd_head_local (L n : Nat)
     (hn : n % 2 = 1) (hbound : n < 2^L) :
     binDec L n = d0 ++ binDec (L-1) (n/2) := by
   have hL : 0 < L := by
-    by_contra hL0
-    have hL0' : L = 0 := by omega
-    subst L
-    have hn0 : n = 0 := by have hsmall : n < 1 := by simpa using hbound; omega
-    simp [hn0] at hn
+    cases L with
+    | zero =>
+        have hn0 : n = 0 := by
+          have hsmall : n < 1 := by simpa using hbound
+          omega
+        simp [hn0] at hn
+    | succ L => omega
   have hLid : L = (L-1)+1 := by omega
   have hpow : 2^L = 2^(L-1)*2 := by
     rw [hLid, Nat.pow_succ]
@@ -299,11 +301,24 @@ def frameAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
     (inside : Int → Bool) (c : FConfig) :
     (frameAt T h inside c).head = c.head + h := rfl
 
+theorem config_ext {c d : Config}
+    (hs : c.state = d.state) (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      simp only at hs hh ht
+      cases hs
+      cases hh
+      cases ht
+      rfl
+
 @[simp] theorem frameAt_tape (T : Int → Bool) (h : Int)
     (inside : Int → Bool) (c : FConfig) (x : Int) :
     (frameAt T h inside c).tape x =
       (if inside (x-h) then decide (x-h ∈ c.marked) else T x) := by
-  simp [frameAt, frame, shiftConfig, centerTape, embed]
+  simp [frameAt, frame, shiftConfig, centerTape, embed] <;> rfl
 
 /-- A finite local trace acts on any tape agreeing on its query interval. -/
 theorem finiteHeads (inside : Int → Bool) (c : FConfig) (n : Nat)
@@ -360,7 +375,7 @@ theorem bridgeAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
     | mk s ch marks =>
       have hch : ch = 0 := hc
       subst ch
-      apply Config.ext
+      apply config_ext
       · rfl
       · rfl
       · funext x
@@ -373,7 +388,7 @@ theorem bridgeAt (T : Int → Bool) (h : Int) (inside : Int → Bool)
       shiftConfig h
         ({state := c.state, head := 0, tape := centerTape T h} : Config)
         = ⟨c.state,h,T⟩ := by
-    apply Config.ext
+    apply config_ext
     · rfl
     · simp [shiftConfig]
     · funext x
@@ -395,7 +410,7 @@ theorem q4Bridge_input_match (L n a b : Nat) (h : Int)
     omega
   rcases s1LeftFacing_q4_bits L n a hn hbound with
     ⟨h2,h3,h4,h5,h6,h7,h8⟩
-  have hcell : ∀ i, (s1Config L n 2 a 0 b h).tape (h-(i:Int)) =
+  have hcell : ∀ i : Nat, (s1Config L n 2 a 0 b h).tape (h-(i:Int)) =
       sideBit (s1LeftFacing L n 2 a 0) i := by
     intro i
     exact s1Config_left_cell L n 2 a 0 b h i
@@ -403,48 +418,48 @@ theorem q4Bridge_input_match (L n a b : Nat) (h : Int)
   · subst y
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
-      (h - ((3*a+2 : Nat) : Int) - 6) (by omega)
-    have heq : h - ((3*a+2 : Nat) : Int) - 6 =
+      (h - ((3*a+8 : Nat) : Int)) (by omega)
+    have heq : h - ((3*a+2 : Nat) : Int) + (-6) =
         h - ((3*a+8 : Nat) : Int) := by omega
-    rw [hp, heq, hcell]
+    rw [heq,hp,hcell]
     simpa [q4BridgeStart] using h8
   · subst y
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
-      (h - ((3*a+2 : Nat) : Int) - 5) (by omega)
-    have heq : h - ((3*a+2 : Nat) : Int) - 5 =
+      (h - ((3*a+7 : Nat) : Int)) (by omega)
+    have heq : h - ((3*a+2 : Nat) : Int) + (-5) =
         h - ((3*a+7 : Nat) : Int) := by omega
     rw [hp, heq, hcell]
     simpa [q4BridgeStart] using h7
   · subst y
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
-      (h - ((3*a+2 : Nat) : Int) - 4) (by omega)
-    have heq : h - ((3*a+2 : Nat) : Int) - 4 =
+      (h - ((3*a+6 : Nat) : Int)) (by omega)
+    have heq : h - ((3*a+2 : Nat) : Int) + (-4) =
         h - ((3*a+6 : Nat) : Int) := by omega
     rw [hp, heq, hcell]
     simpa [q4BridgeStart] using h6
   · subst y
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
-      (h - ((3*a+2 : Nat) : Int) - 3) (by omega)
-    have heq : h - ((3*a+2 : Nat) : Int) - 3 =
+      (h - ((3*a+5 : Nat) : Int)) (by omega)
+    have heq : h - ((3*a+2 : Nat) : Int) + (-3) =
         h - ((3*a+5 : Nat) : Int) := by omega
     rw [hp, heq, hcell]
     simpa [q4BridgeStart] using h5
   · subst y
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
-      (h - ((3*a+2 : Nat) : Int) - 2) (by omega)
-    have heq : h - ((3*a+2 : Nat) : Int) - 2 =
+      (h - ((3*a+4 : Nat) : Int)) (by omega)
+    have heq : h - ((3*a+2 : Nat) : Int) + (-2) =
         h - ((3*a+4 : Nat) : Int) := by omega
     rw [hp, heq, hcell]
     simpa [q4BridgeStart] using h4
   · subst y
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
-      (h - ((3*a+2 : Nat) : Int) - 1) (by omega)
-    have heq : h - ((3*a+2 : Nat) : Int) - 1 =
+      (h - ((3*a+3 : Nat) : Int)) (by omega)
+    have heq : h - ((3*a+2 : Nat) : Int) + (-1) =
         h - ((3*a+3 : Nat) : Int) := by omega
     rw [hp, heq, hcell]
     simpa [q4BridgeStart] using h3
@@ -452,7 +467,9 @@ theorem q4Bridge_input_match (L n a b : Nat) (h : Int)
     have hp := sweptLeft_preserves_left (3*a+2)
       (s1Config L n 2 a 0 b h).tape h
       (h - ((3*a+2 : Nat) : Int)) (by omega)
-    rw [hp, hcell]
+    have heq : h - ((3*a+2 : Nat) : Int) + 0 =
+        h - ((3*a+2 : Nat) : Int) := by omega
+    rw [heq,hp,hcell]
     simpa [q4BridgeStart] using h2
   · subst y
     have hlen : 3*a+2 = (3*a+1)+1 := by omega
@@ -484,11 +501,13 @@ theorem binDec_odd_predecessor_head (L n : Nat)
     (hn : n % 2 = 1) (hbound : n < 2^L) :
     binDec L (n-1) = d1 ++ binDec (L-1) (n/2) := by
   have hL : 0 < L := by
-    by_contra hL0
-    have hL0' : L = 0 := by omega
-    subst L
-    have hn0 : n = 0 := by omega
-    omega
+    cases L with
+    | zero =>
+        have hn0 : n = 0 := by
+          have hsmall : n < 1 := by simpa using hbound
+          omega
+        simp [hn0] at hn
+    | succ L => omega
   have hLid : L = (L-1)+1 := by omega
   have hpow : 2^L = 2^(L-1)*2 := by
     rw [hLid, Nat.pow_succ]
@@ -701,7 +720,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
     have hframe : T2 (h-(3*a:Int)+(i:Int)) =
         T1 (h-(3*a:Int)+(i:Int)) := by
       simp only [T2,frameAt_tape]
-      simp [hnot]
+      simp [hnot,h',N]
     have hj : (3*a-i)+1 < N := by dsimp [N]; omega
     have hs : T1 (h-(3*a:Int)+(i:Int)) = true := by
       rw [hcoord]
@@ -733,7 +752,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
     have hs : T1 h = true := by
       simpa [T1,N] using sweptLeft_head (3*a) T h
     simp only [T2,frameAt_tape]
-    simp [hnot,hs]
+    simp [hnot,hs,h',N]
   have hplusT : T2 (h+1) = true := by
     have hfalse : ¬ (-6 ≤ (h+1)-(h-(N:Int)) ∧
         (h+1)-(h-(N:Int)) ≤ 1) := by dsimp [N]; omega
@@ -742,8 +761,8 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
     have hs : T1 (h+1) = true := by
       simpa [T1,N] using sweptLeft_plus1 (3*a+1) T h
     simp only [T2,frameAt_tape]
-    simp [hnot,hs]
-  have hrightT : ∀ i, T2 (h+1+(i:Int)) =
+    simp [hnot,hs,h',N]
+  have hrightT : ∀ i : Nat, T2 (h+1+(i:Int)) =
       sideBit (q4RightFacing b) i := by
     intro i
     cases i with
@@ -762,7 +781,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
         have hframe : T2 (h+1+((i+1:Int))) =
             T1 (h+1+((i+1:Int))) := by
           simp only [T2,frameAt_tape]
-          simp [hnot]
+          simp [hnot,h',N]
         have hpres : T1 (h+1+((i+1:Int))) =
             T (h+1+((i+1:Int))) := by
           simpa [T1] using
@@ -774,7 +793,7 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
             s1Config_right_cell L n 2 a 0 b h (i+1)
         rw [hframe,hpres,hsource]
         exact (q4RightFacing_succ b i).symm
-  have hleftT : ∀ i, T2 (h-(i:Int)) =
+  have hleftT : ∀ i : Nat, T2 (h-(i:Int)) =
       sideBit (q4LeftFacing L (n-1) a) i := by
     intro i
     by_cases hi0 : i = 0
@@ -968,10 +987,14 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
         · constructor
           · intro i hi
             have hq : sideBit (q4RightFacing b) (6+i) = true := by
+              change sideBit ([true,true,true,true,false,false] ++
+                d1pow (b+1)) (6+i) = true
               rw [sideBit_append_right
                 [true,true,true,true,false,false] (d1pow (b+1))
                 (6+i) (by simp)]
-              simpa using sideBit_d1pow_true (b+1) i hi
+              have hidx : 6+i-6=i := by omega
+              rw [hidx]
+              exact sideBit_d1pow_true (b+1) i hi
             have h := hrightT (6+i)
             rw [hq] at h
             have heq : h+7+(i:Int) = h+1+((6+i : Nat) : Int) := by omega
