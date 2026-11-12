@@ -2,6 +2,29 @@ name: Agent 1 #429 root-to-J(21,11)-to-J(11,62) physical chain (manual)
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/agent1-429-root-junction-chain.yml'
+      - 'im-results/agent1-429-j-first-branch/**'
+      - 'im-results/agent1-429-physical-frontier/**'
+      - 'im-results/agent1-429-root-entry/**'
+      - 'im-results/agent1-429-w4-boundary/**'
+      - 'im-results/agent18-429-high0/**'
+      - 'im-results/agent18-429-junc-canonical/**'
+      - 'im-results/agent18-429-low-j/**'
+      - 'im-results/agent32-429-high2-prefix/**'
+      - 'im-results/agent32-429-high3-ladder/**'
+      - 'im-results/agent32-429-low43/**'
+      - 'im-results/agent32-429-primitive-cost/**'
+      - 'im-results/agent32-429-raw-parent/**'
+      - 'im-results/agent32-429-root-bridge/**'
+      - 'im-results/agent32-zero-prefix-global/**'
+      - 'im-results/agent4-429-ordinary-frontier/**'
+      - 'im-results/agent4-coverage-smoke/**'
+      - 'im-results/agent44-drift-closure/**'
+      - 'im-results/agent6-429-one-sided-excursion/**'
+      - 'im-results/agent6-fresh-glider/**'
+      - 'im-results/agent8-coverage-contract/**'
 
 permissions:
   contents: read
