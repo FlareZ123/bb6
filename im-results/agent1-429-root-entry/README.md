@@ -86,19 +86,25 @@ and `applyMove`) compiles the declarations; the axiom reports contain only
 standard axioms (`propext`, `Classical.choice`, `Quot.sound` as needed),
 with no `sorryAx`.
 
-This is **not yet an original-source CI certificate**. The explicit
-`source429` table still needs a pointwise bridge to the repository's
-`BB429PhysicalFrontier.target429` completion and the pinned original
-Cryptids machine. Agent 32 has the bridge/lift investigation. The earlier
-suggestion that `target429` is necessarily a *different semantic table*
-was too strong: its sparse-table completion may be computationally
-inconvenient while agreeing on every valid six-state slot. Do not claim the
-root-prefix theorem for the original source until the pointwise identity and
-physical source transport pass the unchanged-source Lean audit.
+The explicit table bridge is now present in [SourceBridge.lean](SourceBridge.lean).
+Its kernel proof establishes pointwise equality
+`source429 = BB429PhysicalFrontier.target429` by exhausting all twelve
+state-symbol slots. It then transfers both the 35-step blank-root entry and
+the 277-step monitored frontier certificate to the repository's canonical
+physical #429 table. The generic monitored-record C/0 frontier theorem is
+also transferred to `target429`.
 
-The manual workflow is `.github/workflows/agent1-429-root-entry.yml`; it
-compiles against the repository's actual `Frontier.lean` dependency. It has
-not yet been dispatched on this expanded revision.
+The bridge has been locally preflighted against a minimal replica of the
+repository's `PartialMachine`, `refine`, and eleven-entry completion
+definitions. This confirms the proof script and table equality, but is not a
+substitute for compiling against the actual imported physical module. The
+manual workflow `.github/workflows/agent1-429-physical-frontier.yml` now
+compiles `JRootEntry.lean` and `SourceBridge.lean` after the actual
+`BB429PhysicalFrontier.olean` is built, and checks that the source-identity
+and 277-step frontier theorems appear in the axiom audit. That updated
+workflow has not yet been dispatched. The smaller
+`.github/workflows/agent1-429-root-entry.yml` remains a standalone
+operational-definition preflight.
 
 ## Why the entry matters
 
