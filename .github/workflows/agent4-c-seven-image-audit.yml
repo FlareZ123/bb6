@@ -1,6 +1,7 @@
 name: Agent 4 second strict-image C58 source audit (one-shot)
 # Retry after repairing Agent 11's six-sector integration blockers found in run 43290337838.
 # Follow-up retry: move maxRecDepth before the theorem docstrings so Lean applies it.
+# Third pass: use the generated recursive equation lemmas rather than kernel `decide` on WellFounded.fix.
 
 on:
   push:
