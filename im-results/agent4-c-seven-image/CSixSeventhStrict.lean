@@ -101,7 +101,7 @@ theorem no_seven_incoming (u v : Nat) (hpair : (u+v)%4=0) :
     exact no_three_H3 u v (incoming_drop 3 _ (incoming_drop 4 _ (incoming_drop 5 _ h6)))
 
 /-- The second parent of H1 has a different three-cone obstruction
-    on the residue slice u=1 (mod 4), u+v=3 (mod 16). -/
+    on the full four-residue family (u+v)%16=(15+4*u)%16. -/
 private theorem no_three_P_s3 (u v : Nat)
     (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 3 (1113+650*u+1298*v,321+187*u+375*v) := by
@@ -162,8 +162,8 @@ private theorem no_six_H1_s3 (u v : Nat)
   · rw [hq.1,hq.2] at h5
     exact no_five_P2_s3 u v hsector h5
 
-/-- No seven original-source returns enter the same sixth-image band
-    on the new u=1 (mod 4), u+v=3 (mod 16) slice. -/
+/-- No seven original-source returns enter the sixth-image band
+    anywhere in the new four-residue family. -/
 theorem no_seven_incoming_s3 (u v : Nat)
     (hsector : (u+v)%16=(15+4*u)%16) :
     ¬ Incoming 7 (641+1024*u,574+1024*v) := by
