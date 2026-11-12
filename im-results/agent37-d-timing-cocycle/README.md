@@ -122,7 +122,7 @@ The intermediate proofs are [BlankFourteenthRejoin.lean](BlankFourteenthRejoin.l
 The new [ExceptionalE7ThirdReturnEscape.lean](ExceptionalE7ThirdReturnEscape.lean) formalizes the general q≥3, t=3u+1 three-return E/E/E source route. It reaches the off-L packet I_(8*(64u+31)+9)(P4 0 1^(2q-6) 0 1^6) through EAllDouble, full_E_three, and full_E_triple_pairs. Root-transport drafts now exist: [BlankEighteenthRejoin.lean](BlankEighteenthRejoin.lean), [BlankNineteenthRejoin.lean](BlankNineteenthRejoin.lean), and [BlankTwentiethEscape.lean](BlankTwentiethEscape.lean). The 18th and 19th drafts apply the existing E/B and E/A general theorems; the 20th draft transports the t mod 27 = 4, q=5 exception into the off-L E/E/E packet. These files are included in the manual source workflow, but this inclusion alone is not a successful source-CI verification; treat the 18–20 extension as provisional until a successful run and axiom audit are recorded.
 
 
-## Blank-root continuation through the twenty-ninth exceptional section (Lean submissions; CI pending)
+## Blank-root continuation through the thirtieth exceptional section (Lean submissions; CI pending)
 
 The arithmetic replay has been extended from the twentieth reentry through the twenty-ninth exceptional input. The new files compose existing original-source boundary theorems with exact DRegular runs; they are **proof submissions, not yet CI-verified results**.
 
@@ -137,9 +137,10 @@ The arithmetic replay has been extended from the twentieth reentry through the t
 | 27 | 1,684 | L(9t+7,9,1) | 8 | E/E packet (192u+161,2,15); one B normalization to (512u+434,1,15), then A-zero rejoin to pure unary |
 | 28 | 2,590 | L(9t+4,9,1) | 23 | E/B, parameter 7; rejoin L(64t+35,1,5) |
 | 29 | 6,443 | L(9t+10,6,1) | 22 | E/A packet (24t+21,0,12); A-zero rejoin to pure unary |
+| 30 | 2,613 | L(9t+10,8,1) | 22 | E/A packet (24t+21,0,16); A-one rejoin to pure unary |
 
-Here u=(t-2)/3 in the E/E rows. The new source files are [BlankTwentySeventhRejoin.lean](BlankTwentySeventhRejoin.lean), [BlankTwentyEighthRejoin.lean](BlankTwentyEighthRejoin.lean), and [BlankTwentyNinthRejoin.lean](BlankTwentyNinthRejoin.lean). The exact arithmetic endpoints in the new files use DRegularFast.fastRun_correct; the E/E, E/B, E/A, packet-normalization, and A-zero steps reuse the existing original-machine source theorems.
+Here u=(t-2)/3 in the E/E rows. The new source files are [BlankTwentySeventhRejoin.lean](BlankTwentySeventhRejoin.lean), [BlankTwentyEighthRejoin.lean](BlankTwentyEighthRejoin.lean), and [BlankTwentyNinthRejoin.lean](BlankTwentyNinthRejoin.lean), plus [BlankThirtiethRejoin.lean](BlankThirtiethRejoin.lean). The exact arithmetic endpoints in the new files use DRegularFast.fastRun_correct; the E/E, E/B, E/A, packet-normalization, and A-zero steps reuse the existing original-machine source theorems.
 
-The manual workflow [agent25-eleventh-root.yml](../../.github/workflows/agent25-eleventh-root.yml) now compiles the chain through the twenty-ninth reentry in dependency order. **No successful CI run is claimed for these additions.** The workflow must be manually dispatched, and the resulting Lean 4.36.0-rc2 build and axiom audit must be checked before describing the chain as source-CI verified.
+The manual workflow [agent25-eleventh-root.yml](../../.github/workflows/agent25-eleventh-root.yml) now compiles the chain through the thirtieth reentry in dependency order. **No successful CI run is claimed for these additions.** The workflow must be manually dispatched, and the resulting Lean 4.36.0-rc2 build and axiom audit must be checked before describing the chain as source-CI verified.
 
 The arithmetic continuation is finite and conditional on the earlier source chain. It does not prove that the D machine runs forever, does not resolve a six-state holdout, and does not improve the BB(6) lower or upper bound. It remains in im-results/ for that reason.
