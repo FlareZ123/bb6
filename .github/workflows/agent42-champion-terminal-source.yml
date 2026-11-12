@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean'
+      - 'im-results/agent8-counted-reset/CountedResetBase.lean'
 permissions:
   contents: read
 jobs:
@@ -26,6 +27,7 @@ jobs:
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a42-terminal/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-terminal/
+          cp im-results/agent8-counted-reset/CountedResetBase.lean /tmp/a42-terminal/
           cp im-results/agent24-champion-time/{CountedOddBase,CountedSweep,CountedOddUnary,CountedOneZeroUnary,CountedCarryBridges}.lean /tmp/a42-terminal/
           cp im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a42-terminal/
@@ -105,6 +107,12 @@ jobs:
           lean -o CountedReset.olean CountedReset.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-axioms.log; then
             echo '::error::sorryAx found in counted reset theorem dependencies'
+            exit 1
+          fi
+          : > /tmp/a42-terminal/counted-reset-base-axioms.log
+          lean -o CountedResetBase.olean CountedResetBase.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-base-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-base-axioms.log; then
+            echo '::error::sorryAx found in counted reset base theorem dependencies'
             exit 1
           fi
           lean -o TerminalFinish.olean TerminalFinish.lean
