@@ -1,3 +1,4 @@
+import FirstForkAt81
 import FeederExceptionalArithmetic
 set_option maxHeartbeats 0
 
@@ -243,132 +244,42 @@ theorem fatal_feeder_1085_1372_root_exclusion (n : Nat)
   exact ⟨hxparent,by simpa only [x,u] using hroot⟩
 
 
-/-- In the 1085/1372 residue classes, the fatal height has exactly two
-    ResetParent predecessors: its even predecessor and the distinguished
-    odd t=1 feeder. This isolates the only remaining immediate branch once
-    the odd feeder is excluded. -/
-theorem fatal_parent_set_1085_1372 (n : Nat)
+/-- The generic first-fork theorem at the 81-divisibility gate gives the
+    complete immediate parent set of fatal(n) in these two residue classes:
+    exactly the distinguished odd feeder and the unique even predecessor. -/
+theorem fatal_parent_set_1085_1372 (n q : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
-    ResetParent (16*2^(n-2)-3*n-7) (fatal n) ∧
-      ResetParent (oddPre n (fatal n)) (fatal n) ∧
-      (∀ q, ResetParent q (fatal n) →
-        q=16*2^(n-2)-3*n-7 ∨ q=oddPre n (fatal n)) := by
-  let k := n-2
-  let p := 2^k
-  let u := fatal n
-  let d0 := (2*u+5)/9
-  let x := oddPre n u
-  let y := 16*p-3*n-7
-  have hnlow : 1085≤n := by omega
-  have hk : 3≤k := by dsimp [k]; omega
-  have hp : p=2^(n-2) := by rfl
+    ResetParent q (fatal n) ↔
+      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+  have hnlow : 4≤n := by omega
+  have hres : n%18=4 ∨ n%18=5 := by omega
+  have hclose : fatal n+(n+4)=4*2^n := by
+    simpa using fatal_close n (by omega)
+  have hsize : 8*(n+4)≤5*2^n := by
+    simpa using fatal_size n (by omega)
+  have hdiv9 : (2*fatal n+5)%9=0 := by
+    simpa using fatal_divnine n (by omega) hres
+  let p := 2^(n-2)
+  have hp : p=2^(n-2) := rfl
   have hpow : 2^n=4*p := by
-    have he : n=k+2 := by dsimp [k]; omega
+    have he : n=(n-2)+2 := by omega
     rw [he,Nat.pow_add]
     simp only [show 2^2=4 by decide]
     dsimp [p]
     omega
-  have hclose : u+n+4=16*p := by
-    dsimp [u,fatal]
+  have hnum : 2*fatal n+5=32*p-2*n-3 := by
+    dsimp [fatal]
     rw [hpow]
     omega
-  have hnum : 2*u+5=32*p-2*n-3 := by omega
-  have hres : n%18=4 ∨ n%18=5 := by omega
-  have hfdiv : (2*u+5)%9=0 := by
-    simpa [u] using fatal_divnine n (by omega) hres
-  have hd0 : 9*d0=2*u+5 := by dsimp [d0]; omega
-  have hdx : x+8*p+n+3=4*d0 := by
-    dsimp [x,oddPre,d0]
-    have he : n-2=k := by dsimp [k]; omega
-    rw [he]
-    dsimp [p]
-    omega
-  have hxl : 9*x+17*n+39=56*p := by omega
-  have hxparent : ResetParent x u :=
-    odd_parent_near_top n u (n+4) (by omega)
-      (by simpa only [u] using fatal_close n (by omega))
-      (by simpa only [u] using fatal_size n (by omega))
-      (by simpa only [u] using hfdiv)
-
-  have hgrowth : 10000*n+10000≤p := by
-    simpa only [p,k] using growth n (by omega)
-  have hEvenScale : 2^(n-1)=2*p := by
-    have he : n-1=k+1 := by dsimp [k]; omega
-    rw [he,Nat.pow_succ]
-    dsimp [p]
-    omega
-  have hEvenBand : 6*2^(n-1)-1≤u ∧ u≤8*2^(n-1)-3 := by
-    rw [hEvenScale]
-    dsimp [u,fatal]
-    rw [hpow]
-    omega
-  have hyPos : 3*n+7≤16*p := by omega
-  have hyEq : 2*u=8*2^(n-1)+y+(n-1) := by
-    rw [hEvenScale]
-    dsimp [u,fatal,y]
-    rw [hpow]
-    omega
-  have hyparent : ResetParent y u := Or.inl ⟨n-1,hEvenBand,hyEq⟩
-
   have hnumres := exceptional_numeric n p hp hn
-  have hnum729 : (2*u+5)%729=432 ∨ (2*u+5)%729=108 := by
-    rcases hnumres with ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ <;> omega
-  have hnot81 : (2*u+5)%81≠0 := by
+  have hnum729 : (2*fatal n+5)%729=432 ∨
+      (2*fatal n+5)%729=108 := by
+    rcases hnumres with ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ <;>
+      rw [hnum] <;> omega
+  have hnot81 : (2*fatal n+5)%81≠0 := by
     rcases hnum729 with h | h <;> omega
-
-  have huniq : ∀ q, ResetParent q u → q=y ∨ q=x := by
-    intro q hpq
-    rcases hpq with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
-    · have hm : m=n-1 := even_band_unique u m (n-1) hbm hEvenBand
-      rw [hm] at heq
-      left
-      dsimp [y]
-      omega
-    · have htle : t≤2 := by
-        by_cases ht : t≤2
-        · exact ht
-        · have hpow81 : 81∣3^(t+1) := by
-            have ht' : 4≤t+1 := by omega
-            simpa using Nat.pow_dvd_pow 3 ht'
-          have hdiv81 : 81∣2*u+5 := by
-            rw [←hout]
-            exact dvd_mul_of_dvd_left hpow81 d
-          exact False.elim (hnot81 (Nat.mod_eq_zero_of_dvd hdiv81))
-      by_cases ht0 : t=0
-      · subst t
-        have hdval : 3*d=2*u+5 := by simpa using hout.symm
-        have hdq : d=(2*u+5)/3 := by omega
-        have hgap0 : 2*2^n<d ∧ d<3*2^n := by
-          rw [hdq,hnum,hpow]
-          omega
-        exact False.elim (odd_gap n d hgap0.1 hgap0.2 m (by simpa using hbm))
-      · by_cases ht1 : t=1
-        · subst t
-          have hdval : 9*d=2*u+5 := by simpa using hout.symm
-          have hdq : d=(2*u+5)/9 := by omega
-          have hband1 : 6*2^(n-2)+1≤2*d ∧ 2*d≤8*2^(n-2)-1 := by
-            rw [hdq,hnum,←hp]
-            omega
-          have hm : m=n-2 :=
-            odd_band_scale_unique (2*d) m (n-2) (by simpa using hbm) hband1
-          rw [hm] at hq
-          have hdx' : x+8*2^(n-2)+n+3=4*d := by
-            dsimp [d0] at hdx
-            rw [←hp,←hdq] at hdx
-            exact hdx
-          right
-          omega
-        · have ht2 : t=2 := by omega
-          subst t
-          have hdval : 27*d=2*u+5 := by simpa using hout.symm
-          have hdq : d=(2*u+5)/27 := by omega
-          have hgap2 : 2*2^(n-1)<4*d ∧ 4*d<3*2^(n-1) := by
-            rw [hdq,hnum,hEvenScale]
-            omega
-          exact False.elim
-            (odd_gap (n-1) (4*d) hgap2.1 hgap2.2 m (by simpa using hbm))
-
-  simpa [p,k,u,x,y] using ⟨hyparent,hxparent,huniq⟩
+  exact CascadeFirstFork.near_top_exact_two_at81 n (fatal n) (n+4) q
+    (by omega) (by omega) hclose hsize hdiv9 hnot81
 
 /-- If a fatal height in the 1085/1372 classes is root-reachable, its
     even predecessor is root-reachable: the only other immediate parent
