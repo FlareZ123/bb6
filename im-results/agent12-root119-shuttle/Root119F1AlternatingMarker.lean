@@ -262,10 +262,18 @@ theorem alternating_f1_marker_return (m : Nat) (t : Int → Bool) (h : Int)
     exact hfinal2
   have hnF : noLeft1100 f := by
     intro x hx hpat
-    have h0 := hleftPres x (by rw [←hfhead]; omega)
-    have h1 := hleftPres (x+1) (by rw [←hfhead]; omega)
-    have h2 := hleftPres (x+2) (by rw [←hfhead]; omega)
-    have h3 := hleftPres (x+3) (by rw [←hfhead]; omega)
+    have h0 := hleftPres x (by
+      have hx' : x ≤ f.h := by omega
+      simpa [hfhead] using hx')
+    have h1 := hleftPres (x+1) (by
+      have hx' : x+1 ≤ f.h := by omega
+      simpa [hfhead] using hx')
+    have h2 := hleftPres (x+2) (by
+      have hx' : x+2 ≤ f.h := by omega
+      simpa [hfhead] using hx')
+    have h3 := hleftPres (x+3) (by
+      have hx' : x+3 ≤ f.h := by omega
+      simpa [hfhead] using hx')
     have hpat' : t x = true ∧ t (x+1) = true ∧
         t (x+2) = false ∧ t (x+3) = false := by
       exact ⟨by rw [←h0]; exact hpat.1,
