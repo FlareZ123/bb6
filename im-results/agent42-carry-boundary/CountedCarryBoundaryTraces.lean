@@ -13,6 +13,8 @@ not an arbitrary-r carry theorem.
 
 namespace BB6Coverage.Agent48Champion
 
+set_option maxHeartbeats 1000000
+
 /-- A at head 0, twelve consecutive ones to the right. -/
 def carryAD12Area (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 12)
 def carryAD12Base : FConfig := ⟨0, 0, [1,2,3,4,5,6,7,8,9,10,11,12]⟩
@@ -29,6 +31,7 @@ theorem carryAD12_trace (bg : Int → Bool) :
   rw [run_frame tm2 carryAD12Area bg (embed carryAD12Base) 12
     (finite_heads tm2 carryAD12Area carryAD12Base 12 hc)]
   rw [← finite_run_source tm2 12 carryAD12Base, he]
+  simp
 
 theorem carryAD12 (T : Int → Bool) (h : Int)
     (hlocal : ∀ x, carryAD12Area (x-h) = true →
@@ -58,6 +61,7 @@ theorem carryDTail15_trace (bg : Int → Bool) :
   rw [run_frame tm2 carryDTail15Area bg (embed carryDTail15Base) 15
     (finite_heads tm2 carryDTail15Area carryDTail15Base 15 hc)]
   rw [← finite_run_source tm2 15 carryDTail15Base, he]
+  simp
 
 theorem carryDTail15 (T : Int → Bool) (h : Int)
     (hlocal : ∀ x, carryDTail15Area (x-h) = true →
@@ -90,6 +94,7 @@ theorem carryAReturn12_trace (bg : Int → Bool) :
   rw [run_frame tm2 carryAReturn12Area bg (embed carryAReturn12Base) 12
     (finite_heads tm2 carryAReturn12Area carryAReturn12Base 12 hc)]
   rw [← finite_run_source tm2 12 carryAReturn12Base, he]
+  simp
 
 theorem carryAReturn12 (T : Int → Bool) (h : Int)
     (hlocal : ∀ x, carryAReturn12Area (x-h) = true →
