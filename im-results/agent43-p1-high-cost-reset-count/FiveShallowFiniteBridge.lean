@@ -141,7 +141,7 @@ theorem five_numerator_factorizations
     dsimp [X4,A5]
     rw [←hR5i]
     omega
-  refine ⟨N1,N2,N3,N4,N5,X1,X2,X3,X4,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩
+  refine ⟨N1,N2,N3,N4,N5,X1,X2,X3,X4,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩
   · rfl
   · rfl
   · rfl
