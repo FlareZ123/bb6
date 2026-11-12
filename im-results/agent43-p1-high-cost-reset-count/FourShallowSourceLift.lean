@@ -84,16 +84,16 @@ theorem source_low_word_four_no_wall
 
             let Wa : Int := (B0:Int)+4*(M0:Int)+4*(n:Int)+20
             let Ba : Int := (M0:Int)+(n:Int)+6
-            let Wb : Int := (2*k1-4:Int)+4*(M0+t1+1:Int)+4*(n:Int)+20
+            let Wb : Int := ((2*k1-4:Nat):Int)+4*((M0+t1+1:Nat):Int)+4*(n:Int)+20
             let Wc : Int := (B2:Int)+4*(M2:Int)+4*(n:Int)+20
             let Bc : Int := (M2:Int)+(n:Int)+6
-            let Wd : Int := (2*k2-4:Int)+4*(M2+t2+1:Int)+4*(n:Int)+20
+            let Wd : Int := ((2*k2-4:Nat):Int)+4*((M2+t2+1:Nat):Int)+4*(n:Int)+20
             let We : Int := (B4:Int)+4*(M4:Int)+4*(n:Int)+20
             let Be : Int := (M4:Int)+(n:Int)+6
-            let Wf : Int := (2*k3-4:Int)+4*(M4+t3+1:Int)+4*(n:Int)+20
+            let Wf : Int := ((2*k3-4:Nat):Int)+4*((M4+t3+1:Nat):Int)+4*(n:Int)+20
             let Wg : Int := (B6:Int)+4*(M6:Int)+4*(n:Int)+20
             let Bg : Int := (M6:Int)+(n:Int)+6
-            let Wh : Int := (2*k4-4:Int)+4*(M6+t4+1:Int)+4*(n:Int)+20
+            let Wh : Int := ((2*k4-4:Nat):Int)+4*((M6+t4+1:Nat):Int)+4*(n:Int)+20
             let Wj : Int := (b:Int)+4*(m:Int)+4*(n:Int)+20
             let Bj : Int := (m:Int)+(n:Int)+6
 
@@ -111,7 +111,7 @@ theorem source_low_word_four_no_wall
               omega
 
             have hrootEq :
-                (↑(14*2^n-2*n-16):Int)+4*(0:Int)+4*(n:Int)+20 =
+                (↑(14*2^n-2*n-16):Int)+4*(↑(0:Nat):Int)+4*(n:Int)+20 =
                   14*(2:Int)^n+2*(n:Int)+4 := by
               have hnat : (14*2^n-2*n-16)+4*n+20=14*2^n+2*n+4 := by omega
               exact_mod_cast hnat
