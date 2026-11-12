@@ -1,28 +1,6 @@
 name: Agent 48 original champion-root six-step equivalence (manual)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/agent48-champion-root.yml'
-      - 'im-results/agent8-counted-reset/CountedReset.lean'
-      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
-      - 'im-results/agent24-champion-time/CountedCarryBridges.lean'
-      - 'im-results/agent24-champion-time/ChampionModular.lean'
-      - 'im-results/agent24-champion-time/CostRecurrence.lean'
-      - 'im-results/agent24-champion-time/CountPattern.lean'
-      - 'im-results/agent8-coverage-contract/Frontier.lean'
-      - 'im-results/agent8-coverage-contract/Symmetry.lean'
-      - 'im-results/agent8-coverage-contract/RootShift.lean'
-      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
-      - 'im-results/agent48-champion-root/S0UniformBridge.lean'
-      - 'im-results/agent48-champion-root/UniformTM63HeadOffset.lean'
-      - 'im-results/agent48-champion-root/UniformTM63SourceRun.lean'
-      - 'im-results/agent42-champion-terminal/TerminalBridge.lean'
-      - 'im-results/agent42-champion-terminal/TerminalChampion.lean'
-      - 'im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'
-      - 'im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'
-      - 'im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64'
 permissions:
   contents: read
 jobs:
