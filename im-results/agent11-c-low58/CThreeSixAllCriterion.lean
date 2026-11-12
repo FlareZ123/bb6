@@ -62,9 +62,9 @@ theorem blank_halts_iff_six_both :
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mpr hr
       exact Or.inr ⟨j,m,hprior,hold⟩
 
+set_option maxRecDepth 8192
 /-- A low halting candidate rejected by the new recursive six-sector
     root filter. Its predecessor path uses the added valuation-two gate. -/
-set_option maxRecDepth 8192
 theorem low_three_excluded :
     BB6.Agent11SixForced.sixForcedExcluded 1
       (2^(2*3+3)-(3*3+4))=true := by
