@@ -145,7 +145,7 @@ theorem reset_B_E_A_mod27 (d k h Q : Nat)
   exact reset_B_E_A_resource d k h t Q hh hd hk ha hQ
 
 /-- Convert each exact F/0 endpoint into Agent 2's physical regularSection
-    language.  The third endpoint differs only by one explicit far blank zero. -/
+    language.  The first two are exact; the third differs only by one explicit far blank zero. -/
 theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
     ∃ (T a q b : Nat),
       BB6.BoundaryPadding.ObsEq (run T c)
