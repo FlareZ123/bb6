@@ -713,13 +713,13 @@ theorem no_four_shallow_energies
    exact Nat.eq_of_mul_eq_mul_left (by omega : 0<(8:Nat)^s) (by
      rw [hP,hcomp])
  by_cases hlarge : 76≤n
- · exact four_layer_abstract_barrier n s u v r alpha beta gamma delta
+ · exact four_layer_abstract_barrier n s u v w r alpha beta gamma delta
      (8^s) p (2^alpha) (2^beta) (2^gamma) (2^delta)
      K R1 R2 R3 R4 E hlarge hP ⟨d,hD⟩ rfl hExp rfl rfl rfl rfl
      hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
      hR4pos hR4bound hEbound hEqNat
  · have hn75 : n≤75 := by omega
-   exact four_layer_finite_barrier n s u v r t1 t2 t3 t4 p d
+   exact four_layer_finite_barrier n s u v w r t1 t2 t3 t4 p d
      alpha beta gamma delta C1 C2 C3 C4 L1 L2 L3 L4 O1 O2 O3 O4
      K R1 R2 R3 R4 E hn14 hn75 hs ht1 ht2 ht3 ht4 hp1 hp2 hp3 hp4
      hP hD hR1 hR2 hR3 hR4 hE hK hR1pos hR2pos hR3pos hR4pos hEqNat
