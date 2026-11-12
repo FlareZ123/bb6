@@ -11,6 +11,38 @@ theorem setBit_apply_eq (t : Int → Bool) (loc : Int) (b : Bool) :
     setBit t loc b loc = b := by
   simp [setBit]
 
+/-- Exact inverse transition classification for entry into state F. -/
+theorem to_F {u v : Conf} (hstep : next u = some v) (hF : v.q = .F) :
+    (u.q = .B ∧ u.tape u.h = true ∧ v.h = u.h-1) ∨
+    (u.q = .D ∧ u.tape u.h = true ∧ v.h = u.h+1 ∧
+      v.tape (v.h-1) = true) := by
+  cases u with
+  | mk q h t =>
+      cases q <;> cases hb : t h <;> simp [next,hb] at hstep
+      all_goals cases hstep
+      all_goals simp_all [setBit]
+
+/-- A reachable F configuration whose left neighbor is zero can only have
+    arrived from B/1 immediately to its right: the alternative D/1
+    predecessor necessarily writes one into that left neighbor. -/
+theorem reached_F_left_zero_parent (c : Conf) (hc : Reach c)
+    (hF : c.q = .F) (hleft : c.tape (c.h-1) = false) :
+    ∃ b, Reach b ∧ b.q = .B ∧ b.tape b.h = true ∧
+      b.h = c.h+1 ∧ next b = some c := by
+  cases hc with
+  | initial =>
+      simp [blank] at hF
+  | @follow u v hu hstep =>
+      have hFv : v.q = .F := by simpa using hF
+      have hleftv : v.tape (v.h-1) = false := by simpa using hleft
+      rcases to_F hstep hFv with hB | hD
+      · rcases hB with ⟨hq,hbit,hpos⟩
+        have hpos' : u.h = v.h+1 := by omega
+        exact ⟨u,hu,hq,hbit,hpos',by simpa using hstep⟩
+      · rcases hD with ⟨hq,hbit,hpos,hwritten⟩
+        rw [hleftv] at hwritten
+        cases hwritten
+
 /-- The even D/F sweep leaves every cell strictly left of its start unchanged. -/
 theorem evenSweepTape_left (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : x < h) : evenSweepTape n t h x = t x := by
@@ -449,6 +481,8 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
     dsimp [p]
     omega
 
+#print axioms BB6Root119.to_F
+#print axioms BB6Root119.reached_F_left_zero_parent
 #print axioms BB6Root119.f1_even_run_exact
 #print axioms BB6Root119.f1_even_result_markerB0Pattern
 #print axioms BB6Root119.f1_even_double_zero_halts
