@@ -21,3 +21,5 @@ treat the `#print axioms` declarations as verification until compiled under
 Lean 4.36.0-rc2 with the original dependencies.
 
 See [SeedWindowPlan.md](SeedWindowPlan.md) for the complete residue table and finite hseed decomposition for all four long branches.
+
+`LongResidue1.lean` contains a candidate full-tape left-output theorem for the long r=4k+1 branch (k>0), using the shared frame-cell lemmas and the common D-tail finish. It is **source-authored but uncompiled**; do not treat `carryLongPrefix_r1_left` as established until Lean 4.36.0-rc2 accepts it and the `#print axioms` output is clean.
