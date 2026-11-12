@@ -164,26 +164,30 @@ theorem no_four_shallow_model_from_source_coefficients
     dsimp [T5,T4,T3,T2,T1]
     omega
 
+  have hcoef1 : (L1:Int)*Ba=(L1:Int)*(T1:Int) := by rw [hBa,hT1i]
+  have hcoef2 : (L2:Int)*Bc=(L2:Int)*(T2:Int) := by rw [hBc,hT2i]
+  have hcoef3 : (L3:Int)*Be=(L3:Int)*(T3:Int) := by rw [hBe,hT3i]
+  have hcoef4 : (L4:Int)*Bg=(L4:Int)*(T4:Int) := by rw [hBg,hT4i]
   have hSh1' : ((2:Int)^alpha)*I ((2:Int)^n) Wb (Ba+(alpha:Int)) =
       (98:Int)*(p:Int)-(d:Int)-(C1:Int)*(2^n:Int)+
         (L1:Int)*(T1:Int)-(O1:Int) := by
-    rw [hIpre,hBa] at hSh1
-    simpa only [←hT1i] using hSh1
+    rw [hIpre,hcoef1] at hSh1
+    exact hSh1
   have hSh2' : ((2:Int)^beta)*I ((2:Int)^n) Wd (Bc+(beta:Int)) =
       I ((2:Int)^n) Wc Bc-(C2:Int)*(2^n:Int)+
         (L2:Int)*(T2:Int)-(O2:Int) := by
-    rw [hBc] at hSh2
-    simpa only [←hT2i] using hSh2
+    rw [hcoef2] at hSh2
+    exact hSh2
   have hSh3' : ((2:Int)^gamma)*I ((2:Int)^n) Wf (Be+(gamma:Int)) =
       I ((2:Int)^n) We Be-(C3:Int)*(2^n:Int)+
         (L3:Int)*(T3:Int)-(O3:Int) := by
-    rw [hBe] at hSh3
-    simpa only [←hT3i] using hSh3
+    rw [hcoef3] at hSh3
+    exact hSh3
   have hSh4' : ((2:Int)^delta)*I ((2:Int)^n) Wh (Bg+(delta:Int)) =
       I ((2:Int)^n) Wg Bg-(C4:Int)*(2^n:Int)+
         (L4:Int)*(T4:Int)-(O4:Int) := by
-    rw [hBg] at hSh4
-    simpa only [←hT4i] using hSh4
+    rw [hcoef4] at hSh4
+    exact hSh4
 
   have hEi : (E:Int)+384=112*Bj := by
     have hh : (E:Int)+384=112*(T5:Int) := by exact_mod_cast hEeq
