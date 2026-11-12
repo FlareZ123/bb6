@@ -253,7 +253,10 @@ theorem no_five_shallow_energies
      by_contra hs3
      have hs4 : 4≤s := by omega
      have hpow : 8^4≤8^s := Nat.pow_le_pow_right (by decide : 0<8) hs4
-     norm_num at hpow
+     have hpow4096 : 4096≤8^s := by
+       calc
+         4096 = 8^4 := by decide
+         _ ≤ 8^s := hpow
      omega
    exact no_five_small_numeric
      n s u v w x r t1 t2 t3 t4 t5
