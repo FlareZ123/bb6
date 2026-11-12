@@ -68,6 +68,28 @@ and J(11,98) at step 9243 (head -55, historical maximum 46). The
 prepared-tape theorem proves the local 719-step transition; the preceding
 blank-root composition to J(49,2) is still a separate obligation.
 
+## Continuation beyond J(11,62)
+
+The prepared J(11,62) state has also been advanced through the next
+high-three and low-odd return:
+- J(11,62) -> J(25,37): 621 steps, displacement +25, maximum +25.
+- J(25,37) -> J(10,74): 1836 steps, displacement -34, maximum +43.
+- Composed J(11,62) -> J(10,74): 2457 steps, displacement -9, maximum +68.
+
+The 1836-step monitor is a concrete Lean `by decide` certificate for the
+(v=18,n=2) low-odd row; it tracks the *entire* return prefix, beyond the
+first C/0 frontier. `root_junc11_to_junc10_physical` lifts the composed
+2457-step monitor to the complete physical tape. When composed with the
+candidate blank-root step-3167 J(11,62) checkpoint, the resulting
+`root_after_5624_junc10_frontier` theorem claims J(10,74) at step 5624,
+head -38, rightmost mark 39, and exact historical head maximum 39.
+
+The concrete J(49,2) -> J(11,98) r=96 return above is a separate prepared
+branch. The high-three ladder connects J(10,74) to J(49,2), but the full
+root composition through that ladder and the low-even return has not yet
+been written. All root-chain physical declarations remain pending the
+manual CI workflow.
+
 ## Root and proof-status limits
 
 The root simulation reaches J(21,11) at step 1608 with head 12 and historical maximum 26. If that checkpoint is established by the separate blank-root source composition, the corrected 1559-step branch reaches J(11,62) at step 3167 with absolute head (-29) and historical maximum 36. This agrees with an independent raw simulation, but the full blank-root prefix to J(21,11) is not yet certified by this dossier.
