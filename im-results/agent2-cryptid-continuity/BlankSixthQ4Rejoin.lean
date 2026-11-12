@@ -51,7 +51,7 @@ private theorem packet_to_A110111_start (k : Nat) :
 
 private theorem a110111_tail_shape :
     BB6.CryptidA110111CodeFirst.tail (List.replicate 3 true) =
-      CryptidBoundary.oppairs 3 ++ List.replicate 3 true := by
+      CryptidBoundary.oppairs 3 ++ List.replicate 2 true := by
   decide
 
 private def a110111Time (k : Nat) : Nat :=
@@ -71,7 +71,7 @@ private theorem a110111_rejoin (k : Nat) :
   have hinc : CryptidA.wordInc ws = 3 := by decide
   have htail :
       BB6.CryptidA110111CodeFirst.tail ys =
-        CryptidBoundary.oppairs 3 ++ List.replicate 3 true := by
+        CryptidBoundary.oppairs 3 ++ List.replicate 2 true := by
     simpa [ws, ys] using a110111_tail_shape
   have hA :=
     BB6.CryptidA110111CodeFirst.full_A_code_110111_first_return k ws ys
@@ -179,7 +179,7 @@ theorem u6_eq : u6 = 9*s6+7 := by
 theorem sixth_q4_root_rejoin_original :
     ∃ T, ObsEq
       (run (BB6.Agent25SixthRoot.sixthExceptionTime+T) blank)
-      (DRegularSource.sourceSection ⟨32768*s6+28577,3,3⟩) := by
+      (DRegularSource.sourceSection ⟨32768*s6+28577,3,2⟩) := by
   obtain ⟨T,hclose⟩ := q4_mod9_rejoin s6
   have hroot : ObsEq
       (run BB6.Agent25SixthRoot.sixthExceptionTime blank)
@@ -196,7 +196,7 @@ theorem sixth_q4_root_rejoin_original :
   exact source_chain BB6.Agent25SixthRoot.sixthExceptionTime T
     blank
     (BB6.Agent2E7SecondSafe.sourceStart (9*s6+7) 4)
-    (DRegularSource.sourceSection ⟨32768*s6+28577,3,3⟩)
+    (DRegularSource.sourceSection ⟨32768*s6+28577,3,2⟩)
     hroot hclose
 
 #print axioms q4_mod9_rejoin
