@@ -135,15 +135,20 @@ inverse paths, with no length, cost or shallow-edge ordering restriction.
 
 ## Open quantifiers and next mathematical frontier
 
-An actual P1 halting decision remains open. The next candidate grammar
-contains four shallow transitions, with arbitrary depth-two gaps; more
-general inverse words also permit depth >=3 and exceptional exits. The
-present theorem restricts only histories that satisfy its explicit
-`SourceTwoChain` decomposition. It does not prove an authentic
-blank-root reachability/exclusion statement or a BB(6) maximality result.
+The four-shallow scalar energy equation is now excluded for every n>=77 by
+[FourShallowAllIndex.md](FourShallowAllIndex.md), using a fourth exact
+dyadic-remainder peel and a quintic exponential gap. This is a deductive
+model-level result from the source-certified shallow profiles and
+depth-two cocycles; its composition into the genuine `SourceLowWord`
+induction has not yet been Lean-compiled. Accordingly, the existing
+formal source theorem still guarantees only four shallow steps.
 
-A general symbolic (k)-shallow remainder theorem, with a formal
-source-word lift and a nontrivial parameter-uniform conclusion, is the
-most promising extension. Additional finite scans of already excluded
-three-shallow words would duplicate the proved result. These results
-remain under `im-results/` pending external novelty qualification.
+The remaining low-depth frontier is the four-shallow scalar/source case
+14<=n<77 and five-or-more shallow transitions. More general inverse words
+also permit depth>=3 and exceptional exits. None of these restrictions is
+an authentic blank-root P1 decision or a BB(6) maximality result. Avoid
+repeating bounded scans of the already excluded one-, two- and three-shallow
+languages; the next useful step is to formalize the four-shallow source
+composition and then address the still-open quantifiers. Keep these
+intermediate results under `im-results/` pending external novelty
+qualification.

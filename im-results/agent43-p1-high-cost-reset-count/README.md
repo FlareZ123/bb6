@@ -121,6 +121,29 @@ any depth>=3 step, exceptional inverse exits and unrestricted authentic
 blank-root reachability remain open. It does not determine P1 halting or
 the exact BB(6) score, and has not been qualified as externally publishable.
 
+## Four-shallow scalar energy barrier for every n>=77
+
+[FourShallowAllIndex.md](FourShallowAllIndex.md) gives a new all-index
+**scalar energy-model theorem**: four depth-0/1 transitions separated by
+arbitrary depth-two runs cannot satisfy the exact shifted-wall equation for
+any critical index n>=77. The proof adds a fourth positive dyadic remainder
+peel to the established three-shallow argument. Its decisive estimate is
+
+```
+29,568,000,000,000 * (n+2)^5 < 2^n,  n>=77.
+```
+
+The theorem uses the exact source-derived shallow profiles and depth-two
+energy cocycles already established above. It is not a finite history cutoff.
+The five-chain/four-shallow composition into the existing `SourceLowWord`
+induction has **not yet been added or Lean-compiled**; until that composition
+is checked, the formal source-language theorem remains
+`source_low_trace_wall_needs_four_shallows`. The new result is therefore
+kept as an intermediate mathematical derivation, not advertised as a
+source-certified P1 decision. Indices 14<=n<77, five-or-more shallow steps,
+depth>=3 excursions, exceptional exits and blank-root reachability remain
+open.
+
 ## Finite right-five search and remaining frontier
 
 [Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
