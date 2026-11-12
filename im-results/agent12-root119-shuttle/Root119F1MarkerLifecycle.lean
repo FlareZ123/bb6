@@ -74,7 +74,7 @@ def f1EvenTape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
       (setBit
         (evenSweepTape (n+1) (setBit t h false) (h+1))
         (h+1+((2*(n+1):Nat):Int)) false)
-      (h+((2*(n+1):Nat):Int)) true)
+      (h+1+((2*(n+1):Nat):Int)-1) true)
     (h+1+((2*(n+1):Nat):Int)) true
 
 def f1EvenResult (n : Nat) (t : Int → Bool) (h : Int) : Conf :=
