@@ -20,7 +20,7 @@ jobs:
       - name: Check authentic six-state sparse semantics and zero-path frontier
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent33-429-writer-locality:im-results/agent6-429-one-sided-excursion:im-results/agent5-429-rank:im-results/agent30-429-first-gate-rays:im-results/agent32-429-raw-parent:im-results/agent1-429-w4-boundary"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent1-429-root-entry:im-results/agent33-429-writer-locality:im-results/agent6-429-one-sided-excursion:im-results/agent5-429-rank:im-results/agent30-429-first-gate-rays:im-results/agent32-429-raw-parent:im-results/agent1-429-w4-boundary"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
           for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
             lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean"
@@ -44,6 +44,10 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean | tee /tmp/agent1-429-physical.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/JRootEntry.olean im-results/agent1-429-root-entry/JRootEntry.lean | tee -a /tmp/agent1-429-physical.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/SourceBridge.olean im-results/agent1-429-root-entry/SourceBridge.lean | tee -a /tmp/agent1-429-physical.log
+          grep -q "BB429RootEntry.source429_eq_target429" /tmp/agent1-429-physical.log
+          grep -q "BB429RootEntry.target429_root_277_frontier_base" /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/BB429WriterLocality.lean | tee -a /tmp/agent1-429-physical.log
           lean -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent33-429-writer-locality/CZeroEvenReturn.olean im-results/agent33-429-writer-locality/CZeroEvenReturn.lean | tee -a /tmp/agent1-429-physical.log
