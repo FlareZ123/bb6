@@ -29,6 +29,7 @@ theorem p2_packet_reentry_or_E (c : Packet) (ha : c.a ≥ 4)
       run T (packet c.a c.q c.p fixedTail) =
         regularSection a q b) ∨
     (∃ T d,
+      d = (normalizeWithCount c).2 ∧
       run T (packet c.a c.q c.p fixedTail) =
         packet d.a d.q d.p fixedTail ∧
       d.a % 3 = 1 ∧ d.p = 2) := by
@@ -85,7 +86,7 @@ theorem p2_packet_reentry_or_E (c : Packet) (ha : c.a ≥ 4)
         rw [run_add,h0,hshape,hB0]
       exact Or.inl ⟨T0+(12*k*k+49*k+40),
         8*k+9+d.p,1,5,hfinal⟩
-    · exact Or.inr ⟨T0,d,h0,hE.1,hE.2⟩
+    · exact Or.inr ⟨T0,d,rfl,h0,hE.1,hE.2⟩
 
 /-- Strengthening p2_packet_reentry_or_E: the only residual E,p=2
     branch is immediately converted to the canonical changed-marker reset
@@ -101,9 +102,9 @@ theorem p2_packet_reentry_or_reset (c : Packet) (ha : c.a ≥ 4)
           BB6.Agent2PacketP2Reset.marker) := by
   rcases p2_packet_reentry_or_E c ha hp with hL | hE
   · exact Or.inl hL
-  · rcases hE with ⟨T0,d,h0,haE,hpE⟩
+  · rcases hE with ⟨T0,d,hd,h0,haE,hpE⟩
     have hamin : d.a ≥ 4 := by
-      simpa [normalizeWithCount] using normalize_amin c ha
+      simpa [hd] using normalize_amin c ha
     let k : Nat := (d.a-4)/3
     have hk : 3*k+4=d.a := by dsimp [k]; omega
     have hshape : packet d.a d.q d.p fixedTail =
