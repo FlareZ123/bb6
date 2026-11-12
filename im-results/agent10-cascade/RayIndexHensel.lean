@@ -398,7 +398,61 @@ theorem depth_index_duality (s h j k:Nat)
   have hindex:=indexResidue_iff s j k h hs hj
   exact hdepth.symm.trans hindex
 
+/-- The depth selector is always an even depth, since its numerator
+    is divisible by three at every positive precision. -/
+private theorem depthResidue_even (n k:Nat)
+    (hn:n%6=4∨n%6=5) :
+    depthResidue n k%2=0 := by
+  have hlt:=depthResidue_lt n k
+  have hdiv:(3:Int)^(k+1)∣signedZ n (depthResidue n k):=
+    (depthResidue_iff n k (depthResidue n k) hn).mpr
+      (Nat.mod_eq_of_lt hlt)
+  have h3pow:(3:Int)∣(3:Int)^(k+1):=by
+    refine ⟨(3:Int)^k,?_⟩
+    rw [Int.pow_succ]
+  have h3:(3:Int)∣signedZ n (depthResidue n k):=
+    Int.dvd_trans h3pow hdiv
+  have hmod:=Int.dvd_iff_emod_eq_zero.mp h3
+  exact (signedZ_mod_three_even_iff n (depthResidue n k) hn).mp hmod
+
+/-- At each precision the even depth classes in one full depth period
+    are in bijection with the fatal-index classes in a surviving sector.
+    The inverse maps are the two Hensel selectors above. -/
+theorem indexResidue_bijective (s k:Nat) (hs:s=4∨s=5) :
+    ∀ h, h<3^k →
+      ∃! j, j<depthPeriod k ∧ j%2=0 ∧ indexResidue s j k=h := by
+  intro h hh
+  let n:=indexSector s h
+  let j:=depthResidue n k
+  have hn:n%6=4∨n%6=5:=by
+    rcases hs with hs4|hs5
+    · rw [hs4]; simp [indexSector]
+    · rw [hs5]; simp [indexSector]
+  have hj:j%2=0:=depthResidue_even n k hn
+  have hjlt:j<depthPeriod k:=depthResidue_lt n k
+  have hdual:=depth_index_duality s h j k hs hj
+  have hmod:j%depthPeriod k=j:=Nat.mod_eq_of_lt hjlt
+  have hidx:h%3^k=indexResidue s j k:=hdual.mp hmod
+  have hmodh:h%3^k=h:=Nat.mod_eq_of_lt hh
+  have hidxeq:indexResidue s j k=h:=hidx.symm.trans hmodh
+  refine ⟨j,⟨hjlt,hj,hidxeq⟩,?_⟩
+  intro j' hj'
+  rcases hj' with ⟨hj'lt,hj'even,hj'idx⟩
+  have hdual':j'%depthPeriod k=depthResidue n k ↔
+      h%3^k=indexResidue s j' k:=
+    depth_index_duality s h j' k hs hj'even
+  have hright:h%3^k=indexResidue s j' k:=by
+    rw [hj'idx]
+    exact hmodh
+  have hmod':j'%depthPeriod k=depthResidue n k:=hdual'.mpr hright
+  have hjmod:j'%depthPeriod k=j':=Nat.mod_eq_of_lt hj'lt
+  calc
+    j'=j'%depthPeriod k:=hjmod.symm
+    _=depthResidue n k:=hmod'
+    _=j:=rfl
+
 #print axioms indexResidue_lt
 #print axioms indexResidue_iff
 #print axioms depth_index_duality
+#print axioms indexResidue_bijective
 end CascadeRayIndexHensel
