@@ -3,6 +3,7 @@ name: Agent 4 second strict-image C58 source audit (one-shot)
 # Follow-up retry: move maxRecDepth before the theorem docstrings so Lean applies it.
 # Third pass: use the generated recursive equation lemmas rather than kernel `decide` on WellFounded.fix.
 # Fourth pass: unfold the low sieve aliases before deciding its concrete m=3 witness.
+# Fifth pass: correct the low-sieve alias namespace to Agent3ValSix.
 
 on:
   push:
