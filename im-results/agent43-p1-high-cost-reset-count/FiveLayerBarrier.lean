@@ -215,7 +215,7 @@ theorem five_layer_abstract_barrier
         ac_rfl
   have hqA1A2RemBound : q*A1*A2*(R3+d2)≤186701760*X^4 := by
     calc
-      q*A1*A2*(R3+d2)≤(635040*X^3)*(600*X) :=
+      q*A1*A2*(R3+d2)≤(635040*X^3)*(294*X) :=
         Nat.mul_le_mul hqA1A2Bound hRem3Bound
       _=186701760*X^4 := by
         rw [show (186701760:Nat)=635040*294 by decide]
@@ -263,7 +263,7 @@ theorem five_layer_abstract_barrier
     omega
   have hqA1A2A3Bound : q*A1*A2*A3≤186701760*X^4 := by
     calc
-      q*A1*A2*A3≤(635040*X^3)*(600*X) :=
+      q*A1*A2*A3≤(635040*X^3)*(294*X) :=
         Nat.mul_le_mul hqA1A2Bound hA3Bound
       _=186701760*X^4 := by
         rw [show (186701760:Nat)=635040*294 by decide]
@@ -338,7 +338,7 @@ theorem five_layer_abstract_barrier
           (58811054400*X^5)*(326*X) :=
         Nat.mul_le_mul hqA1A2A3A4Bound hRem5Bound
       _=19172403734400*X^6 := by
-        rw [show (19172403734400:Nat)=576000000000*1000 by decide]
+        rw [show (19172403734400:Nat)=58811054400*326 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hprod4 : (q*A1*A2*A3*A4)*2^((((e-t1)-t2)-t3)-t4)=2^n := by
