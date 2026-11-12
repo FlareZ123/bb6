@@ -1,4 +1,4 @@
-name: Agent43 P1 shallow genuine-source word proof (manual / targeted PR)
+name: Agent43 P1 five-shallow genuine-source wall exclusion (manual / targeted PR)
 on:
   workflow_dispatch:
   pull_request:
@@ -15,6 +15,9 @@ on:
       - 'im-results/agent43-p1-high-cost-reset-count/FiveLayerBarrier.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowIntegerAlgebra.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowProfileBounds.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowAbstractBridge.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowSourceModel.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowSourceLift.lean'
 permissions:
   contents: read
 jobs:
@@ -187,6 +190,32 @@ jobs:
           set -e
           AG43=im-results/agent43-p1-high-cost-reset-count
           lean -o "$AG43/FiveShallowIntegerAlgebra.olean" "$AG43/FiveShallowIntegerAlgebra.lean"
+      - name: Compile FiveShallowAbstractBridge
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveShallowAbstractBridge.olean" "$AG43/FiveShallowAbstractBridge.lean"
+      - name: Compile FiveShallowSourceModel
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          lean -o "$AG43/FiveShallowSourceModel.olean" "$AG43/FiveShallowSourceModel.lean"
       - name: Verify source lift and theorem axioms
         run: |
           set -e
@@ -202,4 +231,5 @@ jobs:
           /usr/bin/time -v lean -o "$AG43/SourceOneShallowLift.olean" "$AG43/SourceOneShallowLift.lean"
           /usr/bin/time -v lean -o "$AG43/SourceLowDepth.olean" "$AG43/SourceLowDepth.lean"
           /usr/bin/time -v lean -o "$AG43/FourShallowSourceModel.olean" "$AG43/FourShallowSourceModel.lean"
-          /usr/bin/time -v lean "$AG43/FourShallowSourceLift.lean"
+          /usr/bin/time -v lean -o "$AG43/FourShallowSourceLift.olean" "$AG43/FourShallowSourceLift.lean"
+          /usr/bin/time -v lean -o "$AG43/FiveShallowSourceLift.olean" "$AG43/FiveShallowSourceLift.lean"
