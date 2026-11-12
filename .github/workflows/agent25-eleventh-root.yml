@@ -94,6 +94,7 @@ jobs:
             lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
           done
           lean -DmaxRecDepth=55000 -o "$P2/AP2PacketBoundarySource.olean" "$P2/AP2PacketBoundarySource.lean" | tee -a axioms.log
+          lean -DmaxRecDepth=55000 -o "$P2/PacketP2ReentryOrE.olean" "$P2/PacketP2ReentryOrE.lean" | tee -a axioms.log
           lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
