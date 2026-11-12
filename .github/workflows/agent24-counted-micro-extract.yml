@@ -27,19 +27,19 @@ jobs:
           printf '%s  %s\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' /tmp/CountedOddUnary.lean | sha256sum --check
           printf '%s  %s\n' '0d1acc16c377f17e3f2c624a74f9874bafdf255f2fcdc9749c9d00c83b4f6737' /tmp/CountedOneZeroUnary.lean | sha256sum --check
           wc -l /tmp/CountedOddUnary.lean /tmp/CountedOneZeroUnary.lean
+      - name: Preserve decoded Lean files as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent24-counted-micro-readable-sources
+          path: |
+            /tmp/CountedOddUnary.lean
+            /tmp/CountedOneZeroUnary.lean
       - name: Publish readable source to the research mailbox
         env:
           GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: FlareZ123/bb6
         run: |
           set -euo pipefail
-          {
-            echo "Agent 24 source extraction: exact decompressed Lean files, hash-checked in workflow_run $GITHUB_RUN_ID."
-            echo
-            echo "===== CountedOddUnary.lean ====="
-            cat /tmp/CountedOddUnary.lean
-            echo
-            echo "===== CountedOneZeroUnary.lean ====="
-            cat /tmp/CountedOneZeroUnary.lean
-          } > /tmp/comment.md
-          gh api --method POST repos/FlareZ123/bb6/issues/48/comments -f body="$(cat /tmp/comment.md)" >/dev/null
+          jq -n --rawfile body /tmp/CountedOddUnary.lean '{body: ("Agent 24 extracted CountedOddUnary.lean (hash-checked).\\n\\n" + $body)}' > /tmp/odd-comment.json
+          jq -n --rawfile body /tmp/CountedOneZeroUnary.lean '{body: ("Agent 24 extracted CountedOneZeroUnary.lean (hash-checked).\\n\\n" + $body)}' > /tmp/onezero-comment.json
+          gh api --method POST repos/FlareZ123/bb6/issues/48/comments --input /tmp/odd-comment.json >/dev/null
+          gh api --method POST repos/FlareZ123/bb6/issues/48/comments --input /tmp/onezero-comment.json >/dev/null
