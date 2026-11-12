@@ -187,7 +187,9 @@ private theorem middle_low_unique_odd_t1 (h k a q : Nat)
         have hqlo : 2^k<4*d := by omega
         have hscale : 6*2^(k-1)=3*2^k := by omega
         have hqhi : 8*d<3*2^k := by omega
-        exact False.elim (odd_gap (k-1) (4*d) hqlo hqhi m (by simpa using hbm))
+        have hqhi' : 4*d<3*2^(k-1) := by omega
+        exact False.elim (odd_gap (k-1) (4*d)
+          (by simpa [hpow1] using hqlo) hqhi' m (by simpa using hbm))
 
 /-- In a middle-low gap, if v3(2u+5)=1 and its t=0 odd quotient is
     in a specified odd image band, that odd parent is unique. -/
