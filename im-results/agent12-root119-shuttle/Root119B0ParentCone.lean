@@ -3,7 +3,7 @@ import Root119F1MarkerLifecycle
 namespace BB6Root119
 
 /-- Exact inverse transition classification for entry into state A. -/
-theorem to_A {u v : Conf} (hstep : next u = some v) (hA : v.q = .A) :
+theorem to_A_exact_parent {u v : Conf} (hstep : next u = some v) (hA : v.q = .A) :
     (u.q = .E ∧ u.tape u.h = false ∧ v.h = u.h+1 ∧
       v.tape (v.h-1) = true) ∨
     (u.q = .E ∧ u.tape u.h = true ∧ v.h = u.h-1 ∧
@@ -68,7 +68,7 @@ theorem reached_B0_left10_parent (c : Conf) (hc : Reach c)
             rw [hleft3] at hfalse
             cases hfalse
         | @follow p _ hp hprev =>
-            rcases to_A hprev hAq with hE0 | hE1
+            rcases to_A_exact_parent hprev hAq with hE0 | hE1
             · rcases hE0 with ⟨hEq,hreadE,hposE,hwriteE⟩
               have hcoord : u.h+1-2 = u.h-1 := by omega
               have htrue : c.tape (c.h-2) = true := by
@@ -159,7 +159,7 @@ theorem reached_B0_left10_three_step_parent (c : Conf) (hc : Reach c)
   · rw [hGpos] at hBpos
     omega
 
-#print axioms BB6Root119.to_A
+#print axioms BB6Root119.to_A_exact_parent
 #print axioms BB6Root119.reached_B0_left10_parent
 #print axioms BB6Root119.reached_F0_left_zero_two_step_parent
 #print axioms BB6Root119.reached_B0_left10_three_step_parent
