@@ -160,6 +160,10 @@ inverse exits, or unrestricted blank-root reachability. The indices
 blank-root decision or a BB(6) solution, and remains an intermediate
 research result pending independent mathematical review.
 
+## Ongoing five-shallow model barrier (not yet source-certified)
+
+[FiveLayerBarrier.md](FiveLayerBarrier.md) develops a conditional five-layer scalar obstruction for \(n\ge83\). It exploits the exact profile correlation \((L,O)=(84,232)\) or \((56,136)\), and the quotient-halving fact \(2d_i\le S_i\), obtaining accumulated remainders \(168X,252X,294X,315X,326X\), sixth-power constant \(19,172,403,734,400\), and terminal upper bound \(73,024X^2\), where \(X=n+2\). If connected to the original source, this would strengthen the existing \(n\ge76\) five-shallow floor to a six-shallow floor for \(n\ge83\). The model-level Lean components are \`FiveLayerGap.lean\`, \`FiveLayerBarrier.lean\`, \`FiveShallowProfileBounds.lean\`, and \`FiveShallowIntegerAlgebra.lean\`; targeted CI is in progress. **This is not yet a source theorem:** the five-shallow source coefficient model and SourceLowWord lift remain to be written, and no claim about unrestricted P1 halting follows.
+
 ## Finite right-five search and remaining frontier
 
 [Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
