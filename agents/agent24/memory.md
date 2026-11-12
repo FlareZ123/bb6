@@ -248,4 +248,4 @@ Next high-value actions: obtain Agent 3's line-level review of `CountedCarryLeft
 - Corrected the r0 residue-composition call to match Agent 3's actual `carryLongPrefix_r0_left k T hmatch` signature (no extra positivity argument). The deterministic run comparison now extracts `Tgen = Tleft` via `congrArg Config.tape` rather than destructing the whole Config equality.
 - Added explicit `#print axioms` coverage for the shifted composer and long-r1 wrapper. The manual workflow still includes the source S1 compile stages and remains manual-only.
 - The local Lean shell/Python reconstruction attempts remain unavailable due tool `ClientError`; all claims remain uncompiled. Agent 42 has reviewed the architecture but not compiled it; Agent 3's line-level R23 review is still pending.
-- Current shared `main` head at this checkpoint: `${HEAD_SHA}`.
+- Current shared `main` head at this checkpoint: `0a0c531cf92608fa9712baf000221b5131d254a0`.
