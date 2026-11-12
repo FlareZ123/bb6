@@ -1,4 +1,4 @@
-name: Agent43 P1 shallow genuine-source word proof (manual / targeted PR)
+name: Agent43 P1 four-shallow genuine-source proof (isolated milestone)
 on:
   workflow_dispatch:
   pull_request:
@@ -6,15 +6,12 @@ on:
     paths:
       - 'im-results/agent43-p1-high-cost-reset-count/FourLayerGap.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourLayerBarrier.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowAbstractBridge.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowFiniteBounds.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowIntegerAlgebra.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowFiniteBridge.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowAbstractBridge.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowSourceModel.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowSourceLift.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FiveLayerGap.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FiveLayerBarrier.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowIntegerAlgebra.lean'
-      - 'im-results/agent43-p1-high-cost-reset-count/FiveShallowProfileBounds.lean'
 permissions:
   contents: read
 jobs:
@@ -151,42 +148,6 @@ jobs:
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
           lean -o "$AG43/FourShallowAbstractBridge.olean" "$AG43/FourShallowAbstractBridge.lean"
-      - name: Compile FiveShallowProfileBounds
-        run: |
-          set -e
-          MAP=im-results/agent1-p1-map
-          INV=im-results/agent47-p1-finite-inverse
-          P1=im-results/agent1-p1-quarter
-          AG28=im-results/agent28-p1-word-automaton
-          AG43=im-results/agent43-p1-high-cost-reset-count
-          AG50=im-results/agent50-p1-two-reset
-          AG8=im-results/agent8-p1-fixed-reset
-          AG50SUB=im-results/agent50-p1-subwall
-          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
-          lean -o "$AG43/FiveShallowProfileBounds.olean" "$AG43/FiveShallowProfileBounds.lean"
-      - name: Compile FiveLayerGap
-        run: |
-          set -e
-          AG43=im-results/agent43-p1-high-cost-reset-count
-          lean -o "$AG43/FiveLayerGap.olean" "$AG43/FiveLayerGap.lean"
-      - name: Compile FiveLayerBarrier
-        run: |
-          set -e
-          MAP=im-results/agent1-p1-map
-          INV=im-results/agent47-p1-finite-inverse
-          P1=im-results/agent1-p1-quarter
-          AG28=im-results/agent28-p1-word-automaton
-          AG43=im-results/agent43-p1-high-cost-reset-count
-          AG50=im-results/agent50-p1-two-reset
-          AG8=im-results/agent8-p1-fixed-reset
-          AG50SUB=im-results/agent50-p1-subwall
-          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
-          lean -o "$AG43/FiveLayerBarrier.olean" "$AG43/FiveLayerBarrier.lean"
-      - name: Compile FiveShallowIntegerAlgebra
-        run: |
-          set -e
-          AG43=im-results/agent43-p1-high-cost-reset-count
-          lean -o "$AG43/FiveShallowIntegerAlgebra.olean" "$AG43/FiveShallowIntegerAlgebra.lean"
       - name: Verify source lift and theorem axioms
         run: |
           set -e

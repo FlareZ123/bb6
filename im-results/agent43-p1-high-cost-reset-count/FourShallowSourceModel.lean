@@ -22,7 +22,7 @@ the five intervening depth-two runs are the original TwoRun relations. -/
 theorem no_four_shallow_model_from_source_coefficients
  (n s u v w r t1 t2 t3 t4 alpha beta gamma delta
   C1 C2 C3 C4 L1 L2 L3 L4 O1 O2 O3 O4 : Nat)
- (hn : 76≤n) (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1) (ht4 : t4≤1)
+ (hn : 14≤n) (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1) (ht4 : t4≤1)
  (hpr1 : (alpha,C1,L1,O1)=triple t1)
  (hpr2 : (beta,C2,L2,O2)=triple t2)
  (hpr3 : (gamma,C3,L3,O3)=triple t3)
