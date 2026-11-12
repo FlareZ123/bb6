@@ -164,6 +164,45 @@ theorem exists_odd_factor (z : Nat) (hz : 0 < z) :
         rw [hh,Nat.pow_succ]
         ac_rfl
 
+
+/-- A valid length-bounded source counter has the matching residual
+odd-part length: if 0<z<2^a and z=(2q+1)2^r, then a=len+1+r
+for len=a-r-1 and q<2^len. This closes the range side-condition needed
+to instantiate the carry-prefix theorem for every valid S0/S1 input. -/
+theorem exists_odd_factor_bounded (a z : Nat)
+    (hz : 0 < z) (hzlt : z < 2^a) :
+    ∃ q r len, z = (2*q+1)*2^r ∧ a = len+1+r ∧ q < 2^len := by
+  obtain ⟨q,r,hr⟩ := exists_odd_factor z hz
+  have hodd : 1 ≤ 2*q+1 := by omega
+  have hmul := Nat.mul_le_mul_left (2^r) hodd
+  have hpowle : 2^r ≤ z := by
+    simpa [Nat.mul_comm,hr] using hmul
+  have hpowlt : 2^r < 2^a := lt_of_le_of_lt hpowle hzlt
+  have hra : r < a := by
+    by_contra hnot
+    have har : a ≤ r := by omega
+    have hp := Nat.pow_le_pow_right (show 0 < 2 by decide) har
+    omega
+  let len := a-r-1
+  have ha : a = len+1+r := by dsimp [len]; omega
+  have hpowadd : 2^a = 2^(len+1)*2^r := by
+    calc
+      2^a = 2^(len+1+r) := by rw [ha]
+      _ = 2^(len+1)*2^r := by rw [Nat.pow_add]
+  have hq : q < 2^len := by
+    by_contra hqnot
+    have hqge : 2^len ≤ q := by omega
+    have hlargeOdd : 2^(len+1) < 2*q+1 := by
+      rw [Nat.pow_succ]
+      omega
+    have hlarge :
+        2^(len+1)*2^r < (2*q+1)*2^r :=
+      Nat.mul_lt_mul_of_pos_right hlargeOdd (Nat.pow_pos (by decide))
+    have hsmall : (2*q+1)*2^r < 2^(len+1)*2^r := by
+      simpa [hr,hpowadd] using hzlt
+    omega
+  exact ⟨q,r,len,hr,ha,hq⟩
+
 /-- The source zero counter is exactly a repetition of d1. -/
 theorem binDec_zero (len : Nat) : binDec len 0 = d1pow len := by
   induction len with
@@ -369,6 +408,27 @@ theorem s1Config_left_carryCells (L n m len q r b : Nat)
           markerWord m ++ d0 ++ binDec L n ++ lh) i := by
   rw [s1Config_left_cell]
   rw [s1LeftFacing_carryPrefix L n m len q r hq]
+
+
+/-- Turn an arbitrary valid positive S1 counter directly into the exact
+carry-window tape required by the counted local macro. No residual-range
+obligation remains for the caller. -/
+theorem s1Config_anyPositive_carry (L n m a z b : Nat) (h : Int)
+    (hz : 0 < z) (hzlt : z < 2^a) :
+    ∃ q r len, z = (2*q+1)*2^r ∧ a = len+1+r ∧ q < 2^len ∧
+      ∀ i, (s1Config L n m a z b h).tape (h-(i:Int)) =
+        sideBit
+          (d1pow r ++ d0 ++ binDec len q ++
+            markerWord m ++ d0 ++ binDec L n ++ lh) i := by
+  obtain ⟨q,r,len,hr,ha,hq⟩ :=
+    exists_odd_factor_bounded a z hz hzlt
+  refine ⟨q,r,len,hr,ha,hq,?_⟩
+  intro i
+  have hcfg : s1Config L n m a z b h =
+      s1Config L n m (len+1+r) ((2*q+1)*2^r) b h := by
+    rw [ha,hr]
+  rw [hcfg]
+  exact s1Config_left_carryCells L n m len q r b h i hq
 
 /-- Physical left-to-right form of the S1 boundary: immediately before
 the head-facing end, the exact suffix is d0 ++ d1^r. -/
