@@ -1,0 +1,361 @@
+import RayDepthHensel
+set_option maxHeartbeats 0
+
+/-!
+The signed #746 inverse-ray numerator has a second, complementary Hensel
+direction.  RayDepthResidue lifts the depth coordinate for fixed fatal n;
+this file lifts the fatal-sector index for fixed even depth.
+
+For every even j and s in {4,5}, exactly one h modulo 3^k makes
+3^(k+1) divide signedZ (s+6*h) j.  The two residue maps are inverse
+coordinates on the same 3-adic congruence surface.
+-/
+
+namespace CascadeRayIndexHensel
+open CascadeRayDepthHensel CascadeRayPeriod
+
+/-- One step of the fatal-sector index is six in the original n-coordinate. -/
+def indexSector (s h : Nat) : Nat := s+6*h
+
+/-- The unique ternary index residue at a fixed even ray depth. -/
+def indexResidue (s j : Nat) : Nat → Nat
+  | 0 => 0
+  | k+1 =>
+      let b := indexResidue s j k
+      let a : Int := 4*((2:Int)^(j+1)-1)
+      let q : Int := signedZ (indexSector s b) j/(3:Int)^(k+1)
+      b + henselDigit q a * 3^k
+
+/-- One exact even-depth index shift.  The exponential term changes only
+    at precision k+2; the linear term supplies a unit ternary digit. -/
+private theorem signedZ_index_step (n j k : Nat) :
+    signedZ (n+depthPeriod (k+1)) j =
+      signedZ n j
+        - (3:Int)^(k+1)*(4*((2:Int)^(j+1)-1))
+        + (3:Int)^(k+2)*(8*(2:Int)^n*depthCoeff (k+1)) := by
+  have hpowNat : (2:Nat)^(n+depthPeriod (k+1)) =
+      (2:Nat)^n*(1+3^(k+2)*depthCoeff (k+1)) := by
+    calc
+      (2:Nat)^(n+depthPeriod (k+1)) =
+          (2:Nat)^n*(2:Nat)^(depthPeriod (k+1)) := by
+            rw [Nat.pow_add]
+      _ = (2:Nat)^n*(1+3^(k+2)*depthCoeff (k+1)) := by
+            rw [pow_depth_period]
+  have hpowInt : (2:Int)^(n+depthPeriod (k+1)) =
+      (2:Int)^n*(1+(3:Int)^(k+2)*depthCoeff (k+1)) := by
+    exact_mod_cast hpowNat
+  have hlin : (2:Int)*(n+depthPeriod (k+1))+3 =
+      (2:Int)*n+3+4*(3:Int)^(k+1) := by
+    simp [depthPeriod,Nat.pow_succ]
+    omega
+  dsimp [signedZ]
+  push_cast
+  rw [hpowInt,hlin]
+  simp only [Int.mul_add,Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+  omega
+
+private theorem signedZ_index_step_divisible (n j k : Nat) :
+    (3:Int)^(k+1) ∣
+      signedZ (n+depthPeriod (k+1)) j-signedZ n j := by
+  have hstep:=signedZ_index_step n j k
+  have hpow : (3:Int)^(k+2)=3*(3:Int)^(k+1) := by
+    rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
+  let P : Int := (3:Int)^(k+1)
+  let a : Int := 4*((2:Int)^(j+1)-1)
+  let c : Int := 8*(2:Int)^n*depthCoeff (k+1)
+  have hfactor : P*(-a+3*c) = -P*a+(3*P)*c := by
+    simp [Int.mul_add,Int.mul_neg,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+  refine ⟨-a+3*c,?_⟩
+  calc
+    signedZ (n+depthPeriod (k+1)) j-signedZ n j =
+        -P*a+(3:Int)^(k+2)*c := by
+          rw [hstep]
+          dsimp [P,a,c]
+          omega
+    _ = P*(-a+3*c) := by
+          rw [hpow]
+          exact hfactor.symm
+
+private theorem signedZ_index_step_mod (n j k : Nat) :
+    signedZ (n+depthPeriod (k+1)) j%(3:Int)^(k+1) =
+      signedZ n j%(3:Int)^(k+1) := by
+  apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
+  exact Int.dvd_iff_emod_eq_zero.mp (signedZ_index_step_divisible n j k)
+
+private theorem signedZ_index_step_mod_next (n j k : Nat) :
+    signedZ (n+depthPeriod (k+1)) j%(3:Int)^(k+2) =
+      (signedZ n j-(3:Int)^(k+1)*(4*((2:Int)^(j+1)-1)))%(3:Int)^(k+2) := by
+  rw [signedZ_index_step]
+  simp [Int.add_emod,Int.mul_emod]
+
+/-- Repeating the index stride gives the exact linear digit action modulo
+    the next power of three. -/
+private theorem signedZ_index_shift_mod (n j k t : Nat) :
+    signedZ (n+t*depthPeriod (k+1)) j%(3:Int)^(k+2) =
+      (signedZ n j-(3:Int)^(k+1)*
+        (4*((2:Int)^(j+1)-1)*t))%(3:Int)^(k+2) := by
+  induction t with
+  | zero =>
+      simp
+  | succ t ih =>
+      have hidx : n+(t+1)*depthPeriod (k+1) =
+          (n+t*depthPeriod (k+1))+depthPeriod (k+1) := by
+        rw [Nat.succ_mul]
+        omega
+      rw [hidx,signedZ_index_step_mod_next,ih]
+      push_cast
+      simp only [Int.mul_add,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+      omega
+
+/-- The exact next-digit criterion in the fatal-index direction. -/
+private theorem signedZ_index_lift_criterion (n j k t : Nat)
+    (hbase : (3:Int)^(k+1) ∣ signedZ n j) :
+    (3:Int)^(k+2) ∣ signedZ (n+t*depthPeriod (k+1)) j ↔
+      (3:Int) ∣
+        (signedZ n j/(3:Int)^(k+1)-
+          4*((2:Int)^(j+1)-1)*t) := by
+  let P : Int := (3:Int)^(k+1)
+  let M : Int := (3:Int)^(k+2)
+  let a : Int := 4*((2:Int)^(j+1)-1)
+  have hp : P≠0 := by
+    dsimp [P]
+    exact_mod_cast (Nat.ne_of_gt (Nat.pow_pos (by decide : 0<3)))
+  have hM : M=3*P := by
+    dsimp [M,P]
+    rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
+    exact Int.mul_comm _ _
+  have hmod := signedZ_index_shift_mod n j k t
+  have hmod' : signedZ (n+t*depthPeriod (k+1)) j%M =
+      (signedZ n j-P*(a*t))%M := by
+    simpa [P,M,a,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hmod
+  have hdiviff : M∣signedZ (n+t*depthPeriod (k+1)) j ↔
+      M∣(signedZ n j-P*(a*t)) := by
+    rw [Int.dvd_iff_emod_eq_zero,Int.dvd_iff_emod_eq_zero,hmod']
+  have hquot : P*(signedZ n j/P)=signedZ n j :=
+    Int.mul_ediv_cancel_of_dvd hbase
+  have hfactor : signedZ n j-P*(a*t)=
+      P*(signedZ n j/P-a*t) := by
+    calc
+      _ = P*(signedZ n j/P)-P*(a*t) := by rw [hquot]
+      _ = P*(signedZ n j/P-a*t) := by rw [Int.mul_sub]
+  rw [hdiviff,hfactor,hM]
+  exact Int.mul_dvd_mul_iff_left hp
+
+private theorem pow_two_mod_three (m : Nat) :
+    2^m%3 = if m%2=0 then 1 else 2 := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      rw [Nat.pow_succ,Nat.mul_mod,ih]
+      by_cases hm:m%2=0
+      · have hs:(m+1)%2=1:=by omega
+        rw [if_pos hm]
+        simp [hs]
+      · have hm1:m%2=1:=by omega
+        have hs:(m+1)%2=0:=by omega
+        rw [if_neg hm]
+        simp [hm1,hs]
+
+/-- The index-lift coefficient is a unit, and in fact equals one modulo
+    three, at every even ray depth. -/
+private theorem indexCoeff_mod_three (j:Nat) (hj:j%2=0) :
+    (4*((2:Int)^(j+1)-1))%3=1 := by
+  have hpNat:(2:Nat)^(j+1)%3=2 := by
+    rw [pow_two_mod_three]
+    have hodd:(j+1)%2=1:=by omega
+    simp [hodd]
+  have hpInt:((2:Int)^(j+1))%3=2:=by exact_mod_cast hpNat
+  have hsub:(((2:Int)^(j+1)-1)%3)=1 := by
+    rw [Int.sub_emod,hpInt]
+    decide
+  rw [Int.mul_emod]
+  have hfour:(4:Int)%3=1:=by decide
+  rw [hfour,hsub]
+  decide
+
+/-- The recursive lift has the expected canonical interval. -/
+theorem indexResidue_lt (s j k:Nat) :
+    indexResidue s j k<3^k := by
+  induction k with
+  | zero =>
+      simp [indexResidue]
+  | succ k ih =>
+      let b:=indexResidue s j k
+      let a:Int:=4*((2:Int)^(j+1)-1)
+      let q:Int:=signedZ (indexSector s b) j/(3:Int)^(k+1)
+      let d:=henselDigit q a
+      have hd: d<3:=henselDigit_lt q a
+      have hle:d≤2:=by omega
+      have hmul:=Nat.mul_le_mul_right (3^k) hle
+      have hpow:3^(k+1)=3*3^k:=by rw [Nat.pow_succ]
+      change b+d*3^k<3^(k+1)
+      omega
+
+/-- At every precision, the recursive residue is an actual solution. -/
+private theorem indexResidue_good (s j k:Nat)
+    (hs:s=4∨s=5) (hj:j%2=0) :
+    indexResidue s j k<3^k ∧
+      (3:Int)^(k+1)∣signedZ (indexSector s (indexResidue s j k)) j := by
+  induction k with
+  | zero =>
+      constructor
+      · simp [indexResidue]
+      · have hsector:(s+6*0)%6=4∨(s+6*0)%6=5:=by
+          rcases hs with h|h <;> simp [h]
+        have hmod: signedZ s j%3=0 :=
+          (signedZ_mod_three_even_iff s j hsector).mpr hj
+        have hdiv:(3:Int)∣signedZ s j :=
+          Int.dvd_iff_emod_eq_zero.mpr hmod
+        simpa [indexResidue,indexSector] using hdiv
+  | succ k ih =>
+      let b:=indexResidue s j k
+      let a:Int:=4*((2:Int)^(j+1)-1)
+      let q:Int:=signedZ (indexSector s b) j/(3:Int)^(k+1)
+      let d:=henselDigit q a
+      have hb:b<3^k:=ih.1
+      have hbase:(3:Int)^(k+1)∣signedZ (indexSector s b) j:=ih.2
+      have ha:a%3≠0:=by
+        simpa [a] using indexCoeff_mod_three j hj
+      have hd:d<3:=henselDigit_lt q a
+      have hdiv:(3:Int)∣q-a*d:=by
+        simpa [d] using henselDigit_divides q a ha
+      have hlift: (3:Int)^(k+2)∣
+          signedZ (indexSector s b+d*depthPeriod (k+1)) j :=
+        (signedZ_index_lift_criterion (indexSector s b) j k d hbase).mpr
+          (by simpa [q,a] using hdiv)
+      have hshift:indexSector s (b+d*3^k)=
+          indexSector s b+d*depthPeriod (k+1):=by
+        simp [indexSector,depthPeriod,Nat.pow_succ]
+        omega
+      have hbound:b+d*3^k<3^(k+1):=by
+        have hdle:d≤2:=by omega
+        have hmul:=Nat.mul_le_mul_right (3^k) hdle
+        have hpow:3^(k+1)=3*3^k:=by rw [Nat.pow_succ]
+        omega
+      constructor
+      · exact hbound
+      · rw [hshift]
+        exact hlift
+
+private theorem index_period_dvd_iff (s j k h m:Nat) :
+    (3:Int)^(k+1)∣signedZ (indexSector s (h+m*3^k)) j ↔
+      (3:Int)^(k+1)∣signedZ (indexSector s h) j := by
+  have hshift:indexSector s (h+m*3^k)=
+      indexSector s h+m*depthPeriod (k+1):=by
+    simp [indexSector,depthPeriod,Nat.pow_succ]
+    omega
+  rw [hshift,Int.dvd_iff_emod_eq_zero]
+  exact signedZ_index_period (indexSector s h) j k m
+
+private theorem index_period_mod_dvd_iff (s j k h:Nat) :
+    (3:Int)^(k+1)∣signedZ (indexSector s h) j ↔
+      (3:Int)^(k+1)∣signedZ (indexSector s (h%3^k)) j := by
+  have hper:=index_period_dvd_iff s j k (h%3^k) (h/3^k)
+  have heq:h%3^k+(h/3^k)*3^k=h:=Nat.mod_add_div' h (3^k)
+  rw [heq] at hper
+  exact hper
+
+/-- Exact index-coordinate Hensel theorem: in every complete 3^k block
+    there is precisely one fatal-sector index whose ray numerator has
+    3-adic valuation at least k+1. -/
+theorem indexResidue_iff (s j k h:Nat)
+    (hs:s=4∨s=5) (hj:j%2=0) :
+    (3:Int)^(k+1)∣signedZ (indexSector s h) j ↔
+      h%3^k=indexResidue s j k := by
+  induction k generalizing h with
+  | zero =>
+      have hsector:(indexSector s h)%6=4∨(indexSector s h)%6=5:=by
+        rcases hs with h|h <;> simp [indexSector,h]
+      have hmod:(signedZ (indexSector s h) j)%3=0 :=
+        (signedZ_mod_three_even_iff (indexSector s h) j hsector).mpr hj
+      have hdiv:(3:Int)∣signedZ (indexSector s h) j :=
+        Int.dvd_iff_emod_eq_zero.mpr hmod
+      have hres:h%3^0=indexResidue s j 0:=by simp [indexResidue]
+      constructor
+      · intro _
+        exact hres
+      · intro _
+        simpa [indexResidue] using hdiv
+  | succ k ih =>
+      let P:=3^k
+      let pn:=3^(k+1)
+      let b:=indexResidue s j k
+      let a:Int:=4*((2:Int)^(j+1)-1)
+      let q:Int:=signedZ (indexSector s b) j/(3:Int)^(k+1)
+      let d:=henselDigit q a
+      have hstep:pn=3*P:=by
+        dsimp [pn,P]
+        rw [Nat.pow_succ]
+      have hdiv:(3:Int)^(k+1)∣(3:Int)^(k+2):=by
+        refine ⟨3,?_⟩
+        rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
+      constructor
+      · intro hx
+        have hz:(3:Int)^(k+2)∣signedZ (indexSector s (h%pn)) j :=
+          (index_period_mod_dvd_iff s j (k+1) h).mp hx
+        have hlo:(3:Int)^(k+1)∣signedZ (indexSector s (h%pn)) j:=by
+          rcases hz with ⟨w,hw⟩
+          rcases hdiv with ⟨v,hv⟩
+          refine ⟨v*w,?_⟩
+          rw [hw,hv]
+          ac_rfl
+        have haidx:(h%pn)%P=b:=(ih (h%pn)).mp hlo
+        have hp:0<P:=Nat.pow_pos (by decide)
+        have hjlt:h%pn<3*P:=by
+          have hh:=Nat.mod_lt h (Nat.pow_pos (by decide))
+          simpa only [pn,hstep] using hh
+        have ht:(h%pn)/P<3:=
+          (Nat.div_lt_iff_lt_mul hp).mpr hjlt
+        have hsplit:h%pn=(h%pn)%P+((h%pn)/P)*P:=
+          Nat.mod_add_div' (h%pn) P
+        have hshift:indexSector s (h%pn)=
+            indexSector s b+((h%pn)/P)*depthPeriod (k+1):=by
+          rw [hsplit,haidx]
+          simp [indexSector,depthPeriod,Nat.pow_succ]
+          omega
+        have hbase:(3:Int)^(k+1)∣signedZ (indexSector s b) j:=
+          (indexResidue_good s j k hs hj).2
+        have hshiftdiv:(3:Int)^(k+2)∣
+            signedZ (indexSector s b+((h%pn)/P)*depthPeriod (k+1)) j:=by
+          rw [←hshift]
+          exact hz
+        have hcrit:(3:Int)∣q-a*((h%pn)/P):=
+          (signedZ_index_lift_criterion (indexSector s b) j k
+            ((h%pn)/P) hbase).mp hshiftdiv
+        have haunit:a%3≠0:=by
+          simpa [a] using indexCoeff_mod_three j hj
+        have hdigit:((h%pn)/P)=d:=
+          henselDigit_div q a haunit ((h%pn)/P) ht
+            (by simpa [q,a] using hcrit)
+        have htarget:h%pn=b+d*P:=by
+          rw [hsplit,haidx,hdigit]
+        have hnext:indexResidue s j (k+1)=b+d*P:=rfl
+        have hcanon:h%pn=indexResidue s j (k+1):=by
+          rw [hnext]
+          exact htarget
+        change h%3^(k+1)=indexResidue s j (k+1)
+        simpa [pn] using hcanon
+      · intro hx
+        have hcanon:h%pn=indexResidue s j (k+1):=by
+          simpa [pn] using hx
+        apply (index_period_mod_dvd_iff s j (k+1) h).mpr
+        rw [hcanon]
+        exact (indexResidue_good s j (k+1) hs hj).2
+
+/-- The index- and depth-direction lifts are mutual inverses on the
+    same 3-adic zero set: a depth class is selected exactly when the
+    fatal-sector index belongs to its corresponding index class. -/
+theorem depth_index_duality (s h j k:Nat)
+    (hs:s=4∨s=5) (hj:j%2=0) :
+    j%depthPeriod k=depthResidue (indexSector s h) k ↔
+      h%3^k=indexResidue s j k := by
+  have hsector:(indexSector s h)%6=4∨(indexSector s h)%6=5:=by
+    rcases hs with h|h <;> simp [indexSector,h]
+  have hdepth:=depthResidue_iff (indexSector s h) k j hsector
+  have hindex:=indexResidue_iff s j k h hs hj
+  exact hdepth.symm.trans hindex
+
+#print axioms indexResidue_lt
+#print axioms indexResidue_iff
+#print axioms depth_index_duality
+end CascadeRayIndexHensel
