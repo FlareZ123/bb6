@@ -272,7 +272,6 @@ private theorem four_layer_finite_barrier
       omega
   have hPmod : 2^n%8^s=0 := Nat.mod_eq_zero_of_dvd ⟨p,hP⟩
   have hDmod : (14*n+92)%8^s=0 := Nat.mod_eq_zero_of_dvd hDdiv
-  have hrootDiv : fourRootDivides n s := ⟨hPmod,hDmod⟩
   have hdq : (14*n+92)/(8^s)=d := by
     rw [hD]
     exact Nat.mul_div_cancel_left d (Nat.pow_pos (by decide))
@@ -320,12 +319,12 @@ private theorem four_layer_finite_barrier
   have hrootEq : fourRootRem n s t1=R1 := by
     simp [fourRootRem,←hp1,hdq,T1]
     omega
-  have hrootFin := four_root_no_overflow
+  have hrootFinBool := four_root_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
     (⟨t1,ht1⟩ : Fin 2)
-    (by simpa [Nat.sub_add_cancel hn14] using hrootDiv)
   have hrootMod : R1%2^e≠0 := by
-    simpa [hrootEq,e,Nat.sub_add_cancel hn14] using hrootFin
+    simpa [fourRootOverflow,hPmod,hDmod,hrootEq,e,Nat.sub_add_cancel hn14]
+      using hrootFinBool
   have hnot1 : ¬ 2^e∣R1 := by
     intro hdiv
     exact hrootMod (Nat.mod_eq_zero_of_dvd hdiv)
@@ -364,13 +363,10 @@ private theorem four_layer_finite_barrier
     rw [hrootEq,hR1div]
     exact Nat.mul_div_cancel_left d1 (Nat.pow_pos (by decide))
   have hR1mod : R1%2^x1=0 := Nat.mod_eq_zero_of_dvd ⟨d1,hR1div⟩
-  have hSecondFin := four_second_no_overflow
+  have hSecondFinBool := four_second_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
     (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
     (⟨t2,ht2⟩ : Fin 2)
-    (by simpa [Nat.sub_add_cancel hn14] using hrootDiv)
-    (by simpa [hrootEq,e,Nat.sub_add_cancel hn14] using hrootFin)
-    (by simpa [e] using hx1le) hprof1 hR1mod
   let S2 := R2+d1
   have hR2formula : R2+O2=L2*(T1+x1) := by
     dsimp [T1,x1]
@@ -379,7 +375,11 @@ private theorem four_layer_finite_barrier
     simp [fourSecondRem,S2,hR1quot,←hp2,hR2formula,T1]
     omega
   have hnot2mod : S2%2^(e-x1)≠0 := by
-    simpa [hS2eq,e,Nat.sub_add_cancel hn14] using hSecondFin
+    have hh := hSecondFinBool
+    simp [fourSecondOverflow,fourRootOverflow,hPmod,hDmod,hrootEq,hrootMod,
+      fourProfileAlpha,hprof1.1,hprof1.2,hR1mod,hS2eq,e,
+      Nat.sub_add_cancel hn14] at hh
+    exact hh
   have hnot2 : ¬ 2^(e-x1)∣S2 := by
     intro hdiv
     exact hnot2mod (Nat.mod_eq_zero_of_dvd hdiv)
@@ -412,16 +412,11 @@ private theorem four_layer_finite_barrier
   have hprof2 : fourProfileStep x2 t2 := by
     have hβ := four_profile_alpha_eq t2 beta C2 L2 O2 ht2 hp2
     simpa [x2] using four_profile_step_of_affine t2 beta v hβ
-  have hThirdFin := four_third_no_overflow
+  have hThirdFinBool := four_third_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
     (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
     (⟨t2,ht2⟩ : Fin 2) (⟨x2,hx2bound⟩ : Fin 14)
     (⟨t3,ht3⟩ : Fin 2)
-    (by simpa [Nat.sub_add_cancel hn14] using hrootDiv)
-    (by simpa [hrootEq,e,Nat.sub_add_cancel hn14] using hrootFin)
-    (by simpa [e] using hx1le) hprof1 hR1mod
-    (by simpa [hS2eq,e,Nat.sub_add_cancel hn14] using hSecondFin)
-    (by simpa [e] using hx2le) hprof2 hS2mod
   let S3 := R3+d2
   have hR3formula : R3+O3=L3*(T1+x1+x2) := by
     dsimp [T1,x1,x2]
@@ -430,7 +425,12 @@ private theorem four_layer_finite_barrier
     simp [fourThirdRem,S3,hS2quot,←hp3,hR3formula,T1]
     omega
   have hnot3mod : S3%2^(e-x1-x2)≠0 := by
-    simpa [hS3eq,e,Nat.sub_add_cancel hn14] using hThirdFin
+    have hh := hThirdFinBool
+    simp [fourThirdOverflow,fourSecondOverflow,fourRootOverflow,
+      hPmod,hDmod,hrootEq,hrootMod,fourProfileAlpha,hprof1.1,hprof1.2,
+      hR1mod,hS2eq,hSecondFinBool,hprof2.1,hprof2.2,hS2mod,hS3eq,
+      e,Nat.sub_add_cancel hn14] at hh
+    exact hh
   have hnot3 : ¬ 2^(e-x1-x2)∣S3 := by
     intro hdiv
     exact hnot3mod (Nat.mod_eq_zero_of_dvd hdiv)
@@ -463,19 +463,12 @@ private theorem four_layer_finite_barrier
   have hprof3 : fourProfileStep x3 t3 := by
     have hγ := four_profile_alpha_eq t3 gamma C3 L3 O3 ht3 hp3
     simpa [x3] using four_profile_step_of_affine t3 gamma w hγ
-  have hFourthFin := four_fourth_finite_audit
+  have hFourthFinBool := four_fourth_finite_audit
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
     (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
     (⟨t2,ht2⟩ : Fin 2) (⟨x2,hx2bound⟩ : Fin 14)
     (⟨t3,ht3⟩ : Fin 2) (⟨x3,hx3bound⟩ : Fin 15)
     (⟨t4,ht4⟩ : Fin 2)
-    (by simpa [Nat.sub_add_cancel hn14] using hrootDiv)
-    (by simpa [hrootEq,e,Nat.sub_add_cancel hn14] using hrootFin)
-    (by simpa [e] using hx1le) hprof1 hR1mod
-    (by simpa [hS2eq,e,Nat.sub_add_cancel hn14] using hSecondFin)
-    (by simpa [e] using hx2le) hprof2 hS2mod
-    (by simpa [hS3eq,e,Nat.sub_add_cancel hn14] using hThirdFin)
-    (by simpa [e] using hx3le) hprof3 hS3mod
   let S4 := R4+d3
   have hR4formula : R4+O4=L4*(T1+x1+x2+x3) := by
     dsimp [T1,x1,x2,x3]
@@ -483,9 +476,16 @@ private theorem four_layer_finite_barrier
   have hS4eq : fourFourthRem n s t1 x1 t2 x2 t3 x3 t4 = S4 := by
     simp [fourFourthRem,S4,hS3quot,←hp4,hR4formula,T1]
     omega
-  have hnot4mod : S4%2^(e-x1-x2-x3)≠0 := by
-    have h := hFourthFin.1
-    simpa [hS4eq,e,Nat.sub_add_cancel hn14] using h
+  have hFourthFin : S4%2^(e-x1-x2-x3)≠0 ∧
+      K*2^(e-x1-x2-x3)>S4*(Emax+1) := by
+    have hh := hFourthFinBool
+    simp [fourFourthAudit,fourThirdOverflow,fourSecondOverflow,fourRootOverflow,
+      hPmod,hDmod,hrootEq,hrootMod,fourProfileAlpha,hprof1.1,hprof1.2,
+      hR1mod,hS2eq,hSecondFinBool,hprof2.1,hprof2.2,hS2mod,hS3eq,
+      hThirdFinBool,hprof3.1,hprof3.2,hS3mod,hS4eq,hKformula,Emax,
+      fourEmax,e,Nat.sub_add_cancel hn14] at hh
+    exact hh
+  have hnot4mod : S4%2^(e-x1-x2-x3)≠0 := hFourthFin.1
   have hnot4 : ¬ 2^(e-x1-x2-x3)∣S4 := by
     intro hdiv
     exact hnot4mod (Nat.mod_eq_zero_of_dvd hdiv)
@@ -518,9 +518,7 @@ private theorem four_layer_finite_barrier
     rw [←Nat.pow_add,←Nat.pow_add] at hK'
     simp only [Nat.mul_add,Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm] at hK'
     omega
-  have hfinal : K*2^(e-x1-x2-x3)>S4*(Emax+1) := by
-    have h := hFourthFin.2
-    simpa [hS4eq,hKformula,Emax,fourEmax,e,Nat.sub_add_cancel hn14] using h
+  have hfinal : K*2^(e-x1-x2-x3)>S4*(Emax+1) := hFourthFin.2
   have hupper : K*2^(e-x1-x2-x3)≤S4*(Emax+1) := by
     rw [hEq4,hA4]
     have hAE : 2^x4*E≤S4*E := Nat.mul_le_mul_right E hpow4le
