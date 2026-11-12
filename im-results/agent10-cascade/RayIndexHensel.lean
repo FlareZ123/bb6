@@ -576,7 +576,9 @@ theorem tThreeHighGate_digit_eq_quotient_mod_three (n j:Nat)
   have hq:(d:Int)=q%3:=by
     have h:=hmod
     rw [Int.mul_emod,ha,hcast] at h
-    simpa [d] using h
+    have h' : (d:Int)%3=q%3:=by simpa using h
+    rw [hcast] at h'
+    exact h'
   simpa [q,d] using hq
 
 /-- In the source equation for the second t=3 parent, its level index
