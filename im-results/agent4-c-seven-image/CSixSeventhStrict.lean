@@ -107,7 +107,7 @@ private theorem no_three_P_s3 (u v : Nat)
     ¬ Incoming 3 (1113+650*u+1298*v,321+187*u+375*v) := by
   rintro ⟨⟨a,k⟩,⟨⟨b,l⟩,⟨⟨c,d⟩,_,h0⟩,h1⟩,h2⟩
   have hsum :
-      (1113+650*u+1298*v+321+187*u+375*v)%8=1 := by
+      ((1113+650*u+1298*v) + (321+187*u+375*v))%8=1 := by
     omega
   have hy16 : (321+187*u+375*v)%16=10 := by
     omega
@@ -123,13 +123,14 @@ private theorem no_four_R_s3 (u v : Nat)
   rintro ⟨⟨a,k⟩,h3,hstep⟩
   have hy : 4≤644+374*u+750*v := by omega
   have heven : (644+374*u+750*v)%2=0 := by omega
-  have hs : (471+276*u+548*v+644+374*u+750*v)%4=1 := by
+  have hs :
+      ((471+276*u+548*v) + (644+374*u+750*v))%4=1 := by
     omega
   have hinv := (BB6.Agent15.section_sum_one_even_iff_affine
     a k (471+276*u+548*v) (644+374*u+750*v) hy heven hs).mp hstep
   rcases hinv with ⟨ha,hk⟩
   have hax :
-      471+276*u+548*v+644+374*u+750*v-2 =
+      (471+276*u+548*v) + (644+374*u+750*v)-2 =
         1113+650*u+1298*v := by omega
   have hky :
       (644+374*u+750*v-2)/2=321+187*u+375*v := by omega
@@ -179,21 +180,6 @@ theorem no_seven_incoming_s3 (u v : Nat)
     exact no_three_H3 u v
       (incoming_drop 3 _ (incoming_drop 4 _ (incoming_drop 5 _ h6)))
 
-/-- A second infinite strict sixth/seventh image family, disjoint from
-    the original u+v=0 (mod 4) diagonal. -/
-theorem exactly_six_not_seven_s3 (u v : Nat)
-    (hsector : (u+v)%16=(15+4*u)%16) :
-    Incoming 6 (641+1024*u,574+1024*v) ∧
-    ¬ Incoming 7 (641+1024*u,574+1024*v) :=
-  ⟨six_incoming_exist u v, no_seven_incoming_s3 u v hsector⟩
-
-/-- Explicit infinite progression in the new strict sixth/seventh family. -/
-theorem exactly_six_not_seven_s3_progression (t : Nat) :
-    Incoming 6 (1665+16384*t,2622) ∧
-    ¬ Incoming 7 (1665+16384*t,2622) := by
-  have h := exactly_six_not_seven_s3 (1+16*t) 2 (by omega)
-  simpa using h
-
 /-- Every state in this band admits six genuine source-return predecessors. -/
 theorem six_incoming_exist (u v : Nat) :
     Incoming 6 (641+1024*u,574+1024*v) := by
@@ -212,6 +198,21 @@ theorem six_incoming_exist (u v : Nat) :
   exact ⟨(64*r+61,128*t+30),
     ⟨(a4,b4),⟨(a3,b3),⟨(a2,b2),⟨(a1,b1),⟨(a0,b0),trivial,h0⟩,h1⟩,h2⟩,h3⟩,h4⟩,
     hlast⟩
+
+/-- A second infinite strict sixth/seventh image family, disjoint from
+    the original u+v=0 (mod 4) diagonal. -/
+theorem exactly_six_not_seven_s3 (u v : Nat)
+    (hsector : (u+v)%16=(15+4*u)%16) :
+    Incoming 6 (641+1024*u,574+1024*v) ∧
+    ¬ Incoming 7 (641+1024*u,574+1024*v) :=
+  ⟨six_incoming_exist u v, no_seven_incoming_s3 u v hsector⟩
+
+/-- Explicit infinite progression in the new strict sixth/seventh family. -/
+theorem exactly_six_not_seven_s3_progression (t : Nat) :
+    Incoming 6 (1665+16384*t,2622) ∧
+    ¬ Incoming 7 (1665+16384*t,2622) := by
+  have h := exactly_six_not_seven_s3 (1+16*t) 2 (by omega)
+  convert h using 1 <;> omega
 
 /-- Strict sixth-return image, outside the seventh, for every u,v. -/
 theorem exactly_six_not_seven (u v : Nat) (hpair : (u+v)%4=0) :
