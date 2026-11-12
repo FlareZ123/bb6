@@ -263,12 +263,10 @@ theorem fatal_parent_set_of_not81 (n q : Nat)
 
 /-- The mod-729 certificate for the 1085/1372 classes gives the mod-81
     nondivisibility needed by the generic exact parent-set theorem. -/
-theorem fatal_parent_set_1085_1372 (n q : Nat)
+private theorem fatal_not81_1085_1372 (n : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
-    ResetParent q (fatal n) ↔
-      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+    (2*fatal n+5)%81≠0 := by
   have hnlow : 76≤n := by omega
-  have hres : n%18=4 ∨ n%18=5 := by omega
   let p := 2^(n-2)
   have hp : p=2^(n-2) := rfl
   have hpow : 2^n=4*p := by
@@ -286,53 +284,75 @@ theorem fatal_parent_set_1085_1372 (n q : Nat)
       (2*fatal n+5)%729=108 := by
     rcases hnumres with ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ <;>
       rw [hnum] <;> omega
-  have hnot81 : (2*fatal n+5)%81≠0 := by
-    rcases hnum729 with h | h <;> omega
-  exact fatal_parent_set_of_not81 n q hnlow hres hnot81
+  rcases hnum729 with h | h <;> omega
 
-/-- If a fatal height in the 1085/1372 classes is root-reachable, its
-    even predecessor is root-reachable: the only other immediate parent
-    is the distinguished odd feeder, already excluded by the theorem above. -/
-theorem fatal_root_reduces_to_even_parent_1085_1372 (n : Nat)
+/-- Exact two-parent classification for the 1085/1372 classes, obtained by
+    specializing the reusable 81-gate theorem. -/
+theorem fatal_parent_set_1085_1372 (n q : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
-    ReachC (2,0) (fatal n,0) →
-      ReachC (2,0) (evenPre n (n+4),0) := by
+    ResetParent q (fatal n) ↔
+      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+  have hnlow : 76≤n := by omega
+  have hres : n%18=4 ∨ n%18=5 := by omega
+  exact fatal_parent_set_of_not81 n q hnlow hres
+    (fatal_not81_1085_1372 n hn)
+
+/-- If the odd feeder of a fatal height is root-unreachable and the
+    81-gate parent classification applies, fatal-root reachability is exactly
+    equivalent to reachability of the unique even predecessor. -/
+theorem fatal_root_iff_even_parent_of_not81 (n : Nat)
+    (hn : 76≤n)
+    (hres : n%18=4 ∨ n%18=5)
+    (hnot81 : (2*fatal n+5)%81≠0)
+    (hoddNo : ¬ReachC (2,0) (oddPre n (fatal n),0)) :
+    (ReachC (2,0) (fatal n,0) ↔
+      ReachC (2,0) (evenPre n (n+4),0)) := by
   let u := fatal n
   let x := oddPre n u
   let y := evenPre n (n+4)
   have hne : u≠2 := by dsimp [u,fatal]; omega
   have huniq : ∀q, ResetParent q u → q=y ∨ q=x := by
     intro q hpq
-    have h := (fatal_parent_set_1085_1372 n q hn).mp (by simpa [u] using hpq)
+    have h := (fatal_parent_set_of_not81 n q hn hres hnot81).mp
+      (by simpa [u] using hpq)
     rcases h with hodd | heven
     · exact Or.inr (by simpa [x,u] using hodd)
     · exact Or.inl (by simpa [y] using heven)
-  have hxNo : ¬ReachC (2,0) (x,0) := by
-    simpa [x,u] using (fatal_feeder_1085_1372_root_exclusion n hn).2
-  intro hu
-  have hc : ResetChain 2 u := (root_reset_chain_iff u).mp hu
-  obtain ⟨q,hqc,hq⟩ := reset_chain_last hc hne
-  rcases huniq q hq with hqy | hqx
-  · rw [hqy] at hqc
-    exact (root_reset_chain_iff y).mpr hqc
-  · rw [hqx] at hqc
-    exact False.elim (hxNo ((root_reset_chain_iff x).mpr hqc))
+  constructor
+  · intro hu
+    have hc : ResetChain 2 u := (root_reset_chain_iff u).mp hu
+    obtain ⟨q,hqc,hq⟩ := reset_chain_last hc hne
+    rcases huniq q hq with hqy | hqx
+    · rw [hqy] at hqc
+      exact (root_reset_chain_iff y).mpr hqc
+    · rw [hqx] at hqc
+      exact False.elim
+        (hoddNo (by simpa [x,u] using ((root_reset_chain_iff x).mpr hqc)))
+  · intro hy
+    have hparent : ResetParent y u := by
+      exact (fatal_parent_set_of_not81 n y hn hres hnot81).mpr (Or.inr rfl)
+    have hc : ResetChain 2 y := (root_reset_chain_iff y).mp hy
+    exact (root_reset_chain_iff u).mpr (ResetChain.append hc hparent)
 
-/-- In the 1085/1372 classes, fatal-root reachability is exactly equivalent
-    to reachability of the unique even predecessor after the odd feeder is
-    excluded. The reverse implication is one genuine ResetParent edge. -/
+/-- The 1085/1372 classes satisfy the generic 81-gate hypotheses, and their
+    distinguished odd feeder is root-unreachable. -/
 theorem fatal_root_iff_even_parent_1085_1372 (n : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
     (ReachC (2,0) (fatal n,0) ↔
       ReachC (2,0) (evenPre n (n+4),0)) := by
-  let y := evenPre n (n+4)
-  constructor
-  · exact fatal_root_reduces_to_even_parent_1085_1372 n hn
-  · intro hy
-    have hparent : ResetParent y (fatal n) := by
-      exact (fatal_parent_set_1085_1372 n y hn).mpr (Or.inr rfl)
-    have hc : ResetChain 2 y := (root_reset_chain_iff y).mp hy
-    exact (root_reset_chain_iff (fatal n)).mpr (ResetChain.append hc hparent)
+  have hnlow : 76≤n := by omega
+  have hres : n%18=4 ∨ n%18=5 := by omega
+  have hnot81 := fatal_not81_1085_1372 n hn
+  have hoddNo : ¬ReachC (2,0) (oddPre n (fatal n),0) :=
+    (fatal_feeder_1085_1372_root_exclusion n hn).2
+  exact fatal_root_iff_even_parent_of_not81 n hnlow hres hnot81 hoddNo
+
+/-- The one-way reduction is the forward projection of the exact iff. -/
+theorem fatal_root_reduces_to_even_parent_1085_1372 (n : Nat)
+    (hn : n%1458=1085 ∨ n%1458=1372) :
+    ReachC (2,0) (fatal n,0) →
+      ReachC (2,0) (evenPre n (n+4),0) :=
+  (fatal_root_iff_even_parent_1085_1372 n hn).mp
 
 /-- The even predecessor in the exact parent-set theorem is the affine
     height 16*2^(n-2)-3*n-7 used in the research notes. -/
