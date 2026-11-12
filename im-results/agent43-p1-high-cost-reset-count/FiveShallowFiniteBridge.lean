@@ -543,24 +543,13 @@ theorem no_five_small_numeric
       (⟨n-14,by omega⟩ : Fin 69) (⟨s,by omega⟩ : Fin 4)
     simpa [Fin.val,Nat.sub_add_cancel hn14] using hh hmodD
   obtain ⟨i,hi⟩ := List.mem_iff_get.mp hroot
-  have hR1nat : L1*(n+6+3*s)-O1-d=R1 := by omega
-  have hR2nat : L2*(n+6+3*s+alpha+3*u)-O2=R2 := by omega
-  have hR3nat : L3*(n+6+3*s+alpha+3*u+beta+3*v)-O3=R3 := by omega
-  have hR4nat : L4*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w)-O4=R4 := by omega
-  have hR5nat :
-      L5*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x)-O5=R5 := by omega
-  have hEnat :
-      112*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r)-384=E := by omega
-  have hKnat :
-      C1*8^s+C2*(8^s*(2^alpha*8^u))+
-      C3*(8^s*((2^alpha*8^u)*(2^beta*8^v)))+
-      C4*(8^s*(((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w)))+
-      C5*(8^s*((((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w))*(2^delta*8^x)))-98=K := by
-    omega
-  have hBad : fiveBad n s u v w x r t1 t2 t3 t4 t5 = true := by
-    simp [fiveBad,hmodP,hmodD,hprofile1.symm,hprofile2.symm,
-      hprofile3.symm,hprofile4.symm,hprofile5.symm,hpDiv,hdDiv,
-      hR1nat,hR2nat,hR3nat,hR4nat,hR5nat,hEnat,hKnat,hEq]
+  have hBad := fiveBad_true_of_scalar_equation
+    n s u v w x r t1 t2 t3 t4 t5 p d
+    alpha beta gamma delta epsilon
+    C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
+    K R1 R2 R3 R4 R5 E hP hD
+    ht1 ht2 ht3 ht4 ht5 hprofile1 hprofile2 hprofile3 hprofile4 hprofile5
+    hR1 hR2 hR3 hR4 hR5 hE hK hEq
   have hF : fiveBad n s u v w x r t1 t2 t3 t4 t5 = false := by
     have hh := no_five_bad_rootPairs i
       ⟨t1,by omega⟩ ⟨t2,by omega⟩ ⟨t3,by omega⟩
