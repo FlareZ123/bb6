@@ -161,9 +161,8 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
         simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
           carryLeftOutputBit,h',hxEq] <;> omega only [h']
       · have hxEq : x = h'+0 := by omega
-        rw [hxEq]
         simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
-          carryLeftOutputBit,h'] <;> omega
+          carryLeftOutputBit,h',hxEq] <;> omega only [h']
       · have hxEq : x = h'+1 := by omega
         rw [hxEq]
         simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
