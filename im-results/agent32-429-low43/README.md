@@ -90,6 +90,25 @@ root composition through that ladder and the low-even return has not yet
 been written. All root-chain physical declarations remain pending the
 manual CI workflow.
 
+
+
+The continuation now goes one cycle farther. The two high-three branches
+J(10,74) -> J(23,51) (527 steps, +23) and J(23,51) -> J(49,2)
+(2373 steps, +49) compose to 2900 steps, displacement +72, maximum +72.
+The prepared low-even r=96 return J(49,2) -> J(11,98) then adds 719
+steps, displacement -89, maximum +12. The combined physical theorem
+`root_junc10_to_junc11_r96_physical` gives J(10,74) -> J(11,98) in
+3619 steps, displacement -17, maximum +84. Composed with the candidate
+blank-root step-5624 checkpoint, this gives the new
+`root_after_9243_junc11_98_frontier`: step 9243, J(11,98), head -55,
+rightmost mark 46, exact historical head maximum 46.
+
+The 2900-step high-three monitor was intentionally split into two
+smaller `by decide` certificates because the monolithic decision exceeded
+the local recursion/compute budget. These are still prepared-source
+finite proofs; the blank-root physical composition remains pending the
+manual workflow.
+
 ## Root and proof-status limits
 
 The root simulation reaches J(21,11) at step 1608 with head 12 and historical maximum 26. If that checkpoint is established by the separate blank-root source composition, the corrected 1559-step branch reaches J(11,62) at step 3167 with absolute head (-29) and historical maximum 36. This agrees with an independent raw simulation, but the full blank-root prefix to J(21,11) is not yet certified by this dossier.
