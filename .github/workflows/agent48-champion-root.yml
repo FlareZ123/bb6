@@ -38,6 +38,8 @@ jobs:
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/S0UniformBridge.lean /tmp/a48-root/
           base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a48-root/UniformTM63.lean
+          echo "### UniformTM63 source, lines 1-240"
+          sed -n '1,240p' /tmp/a48-root/UniformTM63.lean
           cp im-results/agent24-champion-time/CountedSweep.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedCarryBridges.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedOddBase.lean /tmp/a48-root/
