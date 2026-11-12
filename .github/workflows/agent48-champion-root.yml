@@ -1,6 +1,10 @@
 name: Agent 48 original champion-root six-step equivalence (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'im-results/agent46-rst1prime/**'
+      - '.github/workflows/agent48-champion-root.yml'
 permissions:
   contents: read
 jobs:
@@ -28,6 +32,7 @@ jobs:
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-root/
+          cp im-results/agent46-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
@@ -55,6 +60,12 @@ jobs:
           lean -o CountedReset.olean CountedReset.lean 2>&1 | tee /tmp/a48-root/counted-reset-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/counted-reset-axioms.log; then
             echo "::error::sorryAx found in counted reset theorem dependencies"
+            exit 1
+          fi
+          : > /tmp/a48-root/rst1prime-axioms.log
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee /tmp/a48-root/rst1prime-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/rst1prime-axioms.log; then
+            echo '::error::sorryAx found in Rst1Prime proof dependencies'
             exit 1
           fi
           printf '%s  %s\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' CountedOddUnary.lean | sha256sum --check
