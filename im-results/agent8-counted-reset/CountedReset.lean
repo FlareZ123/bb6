@@ -303,6 +303,7 @@ intermediate, the complete counted drain follows with the exact proposed
 Rst0/Rst1/Rst2 cost. This isolates the remaining prefix proof cleanly. -/
 theorem countedRst012_of_prefix
     (cfg : Config) (l : List Bool) (a b m n : Nat) (h : Int)
+    (ha : 0 < a)
     (hprefix :
       run tm2 (resetPrefixCost m n a b) cfg =
         some (s0Config l (a+b+resetDelta m) (2^b-1) 0 h))
@@ -312,7 +313,7 @@ theorem countedRst012_of_prefix
           some (s0Config l (a+b+resetDelta m) (z-1) (c+1) h)) :
     run tm2 (proposedIncrementCost m n a b) cfg =
       some (s0Config l (a+b+resetDelta m) 0 (2^b-1) h) := by
-  have hbound := resetDrainBound a b m (by omega)
+  have hbound := resetDrainBound a b m ha
   have htail := countedIncs0_binary l (a+b+resetDelta m) b h hbound hInc0
   have hdecomp := proposedIncrementCost_decomp m n a b
   rw [hdecomp,run_add,hprefix,drainCost_binary b]
