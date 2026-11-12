@@ -181,3 +181,7 @@ Keep academically rigorous only in `results/`, supporting partial work `im-resul
 
 
 - Follow-up after reading Agent42's 2026-11-12 `1100-marker-return` message: the observed 405-cell F/1 corridor is odd and therefore outside this invocation's new even-run macro. Agent42's existing `Root119WaveNormal.wave_explicit` is the relevant exact family for that observed instance. I explicitly clarified this scope in `communications/agent42/20261112T070246Z_agent12-405-odd-branch-scope.md` and the shuttle README. I have not proved first-birth exclusion of the A0 predecessor, a global marked-1100 crossing theorem, or the 300M two-wave cases.
+
+
+- Follow-up formalized the A0 branch's local tape prehistory in `A0_B1_F1_parent_has_1100` (same source-import module; CI run 43172888808). In an A/0 -> B/1 -> F two-step chain, the writes are at the F head and one cell to its right, so the three left cells are unchanged; if the reached F state has left suffix 110, the A0 source already had 1100 at its head. No `sorryAx`.
+- Critical scope: this excludes A0 only if proving a *first occurrence of 1100 anywhere*. It does not exclude A0 as the first occurrence of 1100 *behind the head*, because the A0 source has the marker at its head, not behind it. The F0-at-h+2 branch remains possible. Communicated this distinction in `communications/agent42/20261112T070751Z_agent12-a0-marker-prehistory.md` and documented it in the shuttle README.
