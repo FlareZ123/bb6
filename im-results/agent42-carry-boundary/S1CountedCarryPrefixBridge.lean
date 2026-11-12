@@ -2,6 +2,8 @@ import CountedCarryPrefixGeneral
 import S1Encoder
 import Lean.Elab.Tactic.Omega
 
+-- Milestone checkpoint: source-level counted-return theorems for both parity branches.
+
 namespace BB6Coverage.Agent42CarryPrefixBridge
 
 open BB6Coverage
