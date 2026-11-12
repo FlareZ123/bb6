@@ -130,6 +130,7 @@ The single k=0 subresidue has now been formalized as an intermediate Lean draft 
 - `CascadeFeeder887.narrow_exact_two_t2` is the reusable t=2 parent classifier under 243-nondivisibility. It proves that an even-band target with the displayed t=2 odd parent has exactly two immediate parents: the even parent and that t=2 parent. The odd t=0,1,3 branches are eliminated by the three quotient gaps; t≥4 is eliminated by 243-nondivisibility.
 - `CascadeFeeder887.fatal_feeder_887_subresidue_root_exclusion` proves the exact tree above for every `n % 13122 = 887`, including both terminal branches u and d.
 - `CascadeFeeder887.fatal_root_iff_even_parent_887_subresidue` composes this exclusion with the existing eight-class fatal-parent theorem and reduces fatal-root reachability to the even fatal predecessor on this one lift.
+- `CascadeFeeder887.even_parent_formula_887` identifies that predecessor exactly as `16*2^(n-2)-3*n-7`; `fatal_root_iff_even_parent_formula_887` gives the corresponding explicit reachability equivalence. The even predecessor itself remains unresolved.
 
 The module is included after `FeederExceptionalFamily.lean` in the manual-only workflow [agent44-746-fanin.yml](../../.github/workflows/agent44-746-fanin.yml). **This is still an uncompiled draft pending unchanged-source Lean CI**; do not cite the theorem as kernel-verified until the workflow completes and its two `#print axioms` outputs are checked. The scope remains exactly one of the nine lifts of n mod1458=887.
 
