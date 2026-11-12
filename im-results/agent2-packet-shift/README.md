@@ -106,6 +106,15 @@ Combined with `e_two_k0_regular` in this directory:
 These disjoint families cover seven of nine k residue classes modulo nine. The remaining classes are `k≡4,7 (mod 9)`. The source theorems prove designated exact `run` endpoints for all natural parameters; they do not assert that those endpoints are the first physical F/0 visits. The independent Python regressions establish first-return behavior only on their finite test ranges. None of these synthetic F/0 packet results establishes reachability from the authentic blank tape or decides BB(6).
 
 
+## Exact p≡2 packet-normalizer terminal trichotomy (new; CI pending)
+
+`PacketSafeExit.normalize_p2_exit` now complements the existing `normalize_safe_exit`: for every source-valid packet with p≡2 (mod3), the terminating guarded normalizer state is exactly one of:
+- A: a≡0 (mod3);
+- B: a≡2 (mod3) and q=0;
+- E: a≡1 (mod3) and p=2.
+
+The A branch is now source-closed by `AP2PacketBoundarySource.a_p2_packet_reentry`; the B,q=0 branch is covered by the existing B-zero source. Thus after rank normalization the only remaining p≡2 packet boundary is E,p=2, i.e. the changed-tail reset studied by the E-chain work. This isolates the genuine residual rather than treating every p≡2 packet as unresolved. The new theorem has an axiom-print check and is wired into both focused packet and D-root manual workflows, but it is not yet CI-verified.
+
 ## E/A and E/E exceptional packet closure by residue (new Lean composition; CI pending)
 
 The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem. The A-terminal p≡2 boundary is implemented in [AP2PacketBoundarySource.lean](./AP2PacketBoundarySource.lean).
