@@ -468,10 +468,11 @@ theorem carryShortPrefix_r1 (T : Int → Bool)
     have hr : carryAReturn12Area (x-(-2)) = false := by
       simp [carryAReturn12Area]
       omega
+    have hr' : carryAReturn12Area (x+2) = false := by simpa using hr
     have hb : carryBridgeArea3 x = false := by
       simp [carryBridgeArea3]
       omega
-    simp [T3,T2,T1,frame,shiftConfig,ha,hr,hb]
+    simp [T3,T2,T1,frame,shiftConfig,ha,hr,hr',hb]
   have htotal1 := run_compose tm2 12 12
     ⟨3,0,T⟩ ⟨0,-2,T1⟩ ⟨0,4,T2⟩ hbridgeRun hreturnRun
   have htotal := run_compose tm2 24 3
