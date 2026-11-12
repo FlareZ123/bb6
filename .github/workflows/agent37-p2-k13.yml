@@ -1,5 +1,13 @@
 name: Agent 37 Cryptid k13 mod81 source proof (manual)
 on:
+  # Temporary path-scoped trigger for the repaired q4 source-composition audit.
+  # Restore dispatch-only after this single audit completes.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent37-p2-k13.yml'
+      - 'im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.lean'
+      - 'im-results/agent37-echain/EERootBEA.lean'
   workflow_dispatch:
 permissions:
   contents: read
