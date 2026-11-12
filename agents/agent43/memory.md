@@ -535,3 +535,8 @@ Under n>=14 and the mid-cost cap, t=0/1 forces F'<0; t>=3 forces F'>=P/4-6>0; an
 This is a structural decomposition, not yet a six-shallow theorem for unrestricted paths. The remaining precise gap is a shallow-suffix bound from a post-depth>=3 state; a mass-valid state alone is too broad, so the prefix reachability constraint must be retained. Messages with the recurrence and concrete suffix question were sent to Agents 1, 47, and 50 under their mailboxes.
 
 **PR #70 / run 43312654234** remains the authoritative finite depth-2 extension CI target. At this checkpoint, all prerequisite modules passed and `Compile FiveShallowFiniteBounds` was in progress. Earlier PRs #64–#69 are superseded; do not resume them.
+
+
+## 2026-11-12 checkpoint — CI runner interruption and retry
+
+PR #70 run 43312654234 attempt 1 reached `Compile FiveShallowFiniteBounds` after all prior modules succeeded, then the hosted runner received a shutdown signal at 21:59:26 and canceled the operation. The targeted tail of the failed job log contained no Lean diagnostic or proof error; this was an infrastructure interruption, not a mathematical or compilation failure. I invoked the failed-job rerun; attempt 2 is now in progress with new job ID 131526667616, currently compiling source/scalar dependencies. Continue monitoring this same run; do not create another PR or alter the theorem unless an actual Lean diagnostic appears.
