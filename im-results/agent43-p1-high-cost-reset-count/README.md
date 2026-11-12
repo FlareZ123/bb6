@@ -1,6 +1,6 @@
 # P1: counted inverse-history energy, walls and one-shallow obstructions
 
-**Research synthesis, 12 November 2026.** These are mathematical restrictions on P1's inverse histories. The one-, two-, three-, and four-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions** for every critical index n≥14 and arbitrarily long depth-two blocks. Consequently, any legal depth-0/1/2 inverse trace reaching the exact shifted wall has at least five shallow edges. A further five-shallow source lift for n≥83 is under CI in PR #58. These are source-word exclusions, not an unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result.
+**Research synthesis, 12 November 2026.** These are mathematical restrictions on P1's inverse histories. The one-, two-, three-, and four-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions** for every critical index n≥14 and arbitrarily long depth-two blocks. Consequently, any legal depth-0/1/2 inverse trace reaching the exact shifted wall has at least five shallow edges. A further five-shallow source lift for n≥83 is under CI in PR #62. These are source-word exclusions, not an unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result.
 
 ## Strongest genuine original-source deductions
 
@@ -128,9 +128,9 @@ the exact BB(6) score, and has not been qualified as externally publishable.
 by arbitrary depth-two runs cannot satisfy the exact shifted-wall equation
 for any critical index n>=76. The decisive large-index gap is
 
-\`\`\`
+```
 21,120,000,000,000 * (n+2)^5 < 2^n,  n>=76.
-\`\`\`
+```
 
 The remaining finite interval **14<=n<=75** is now closed by the exact
 finite bridge in [FourShallowFiniteBounds.lean](FourShallowFiniteBounds.lean),
@@ -147,20 +147,20 @@ four affine source profiles and five unchanged-source depth-two runs into
 the scalar identity. [FourShallowSourceLift.lean](FourShallowSourceLift.lean)
 then proves, for **every n>=14**:
 
-- \`source_low_word_four_no_wall\`: no genuine \`SourceLowWord\` with exactly
+- `source_low_word_four_no_wall`: no genuine `SourceLowWord` with exactly
   four depth-0/1 edges reaches the shifted wall;
-- \`source_low_trace_wall_needs_five_shallows\`: every finite legal
-  \`SourceLowTrace\` over depths 0, 1 and 2 that reaches the shifted wall
+- `source_low_trace_wall_needs_five_shallows`: every finite legal
+  `SourceLowTrace` over depths 0, 1 and 2 that reaches the shifted wall
   has at least five shallow edges.
 
-The proof uses the original unchanged-source \`inverseAt\` relations,
+The proof uses the original unchanged-source `inverseAt` relations,
 exact parity/left-counter conditions, source mass propagation, and the
 stepwise-to-block normal form. The finite tables are kernel-decided, not
 floating-point or bounded simulator evidence. All source/scalar dependencies,
 finite tables, abstract bridge, source model, source lift, and theorem-axiom
 audit passed Lean 4.36.0-rc2 in
 [targeted original-source CI 43294753016](https://github.com/FlareZ123/bb6/actions/runs/43294753016).
-The public theorem audits contain no \`sorryAx\`.
+The public theorem audits contain no `sorryAx`.
 
 **Scope:** This excludes exactly four shallow edges and all smaller
 depth-0/1/2 traces for n>=14. It does not exclude five-or-more shallow
@@ -171,9 +171,9 @@ mathematical review.
 
 ## Five-shallow scalar barrier proved; original-source lift under CI
 
-[FiveLayerBarrier.md](FiveLayerBarrier.md) gives a conditional five-layer scalar obstruction for \(n\ge83\). It exploits the exact profile correlation \((L,O)=(84,232)\) or \((56,136)\), and the quotient-halving fact \(2d_i\le S_i\), obtaining accumulated remainders \(168X,252X,294X,315X,326X\), sixth-power constant \(19,172,403,734,400\), and terminal upper bound \(73,024X^2\), where \(X=n+2\). The scalar theorem \`five_layer_abstract_barrier\` is now kernel-checked: [Lean CI 43295285993](https://github.com/FlareZ123/bb6/actions/runs/43295285993) compiled \`FiveLayerGap.lean\`, \`FiveLayerBarrier.lean\`, \`FiveShallowProfileBounds.lean\`, and \`FiveShallowIntegerAlgebra.lean\). Its \`#print axioms\` list is \`[propext, Classical.choice, Quot.sound]\`, with no \`sorryAx\`.
+[FiveLayerBarrier.md](FiveLayerBarrier.md) gives a conditional five-layer scalar obstruction for \(n\ge83\). It exploits the exact profile correlation \((L,O)=(84,232)\) or \((56,136)\), and the quotient-halving fact \(2d_i\le S_i\), obtaining accumulated remainders \(168X,252X,294X,315X,326X\), sixth-power constant \(19,172,403,734,400\), and terminal upper bound \(73,024X^2\), where \(X=n+2\). The scalar theorem `five_layer_abstract_barrier` is now kernel-checked: [Lean CI 43295285993](https://github.com/FlareZ123/bb6/actions/runs/43295285993) compiled `FiveLayerGap.lean`, `FiveLayerBarrier.lean`, `FiveShallowProfileBounds.lean`, and `FiveShallowIntegerAlgebra.lean\). Its `#print axioms` list is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
 
-The source connection is being tested separately in [PR #62](https://github.com/FlareZ123/bb6/pull/62): \`FiveShallowAbstractBridge.lean\` composes five source cocycles; \`FiveShallowSourceModel.lean\` transports five genuine source profiles across six original \`TwoRun\` segments; and \`FiveShallowSourceLift.lean\` reconstructs them from legal \`inverseAt\` edges. The earlier integrated runs [43296490015](https://github.com/FlareZ123/bb6/actions/runs/43296490015) and [43297949566](https://github.com/FlareZ123/bb6/actions/runs/43297949566) exposed two proof-engineering issues: an omitted explicit positivity proof for 8^s and an association mismatch in the fifth coefficient product. PR #62 fixes both without changing hypotheses or constants; the clean dedicated run is [43299542235](https://github.com/FlareZ123/bb6/actions/runs/43299542235). If it passes, it will prove that a depth-0/1/2 trace reaching the shifted wall for \(n\ge83\) has at least six shallow edges. Until that source and axiom audit succeeds, this remains a proposed lift, not an established source theorem. Neither result decides unrestricted P1 halting.
+The source connection is being tested separately in [PR #62](https://github.com/FlareZ123/bb6/pull/62): `FiveShallowAbstractBridge.lean` composes five source cocycles; `FiveShallowSourceModel.lean` transports five genuine source profiles across six original `TwoRun` segments; and `FiveShallowSourceLift.lean` reconstructs them from legal `inverseAt` edges. The earlier integrated runs [43296490015](https://github.com/FlareZ123/bb6/actions/runs/43296490015) and [43297949566](https://github.com/FlareZ123/bb6/actions/runs/43297949566) exposed two proof-engineering issues: an omitted explicit positivity proof for 8^s and an association mismatch in the fifth coefficient product. PR #62 fixes both without changing hypotheses or constants; the clean dedicated run is [43299542235](https://github.com/FlareZ123/bb6/actions/runs/43299542235). If it passes, it will prove that a depth-0/1/2 trace reaching the shifted wall for \(n\ge83\) has at least six shallow edges. Until that source and axiom audit succeeds, this remains a proposed lift, not an established source theorem. Neither result decides unrestricted P1 halting.
 
 ## Finite right-five search and remaining frontier
 
