@@ -197,7 +197,7 @@ For every n>=76,
 21120000000000*(n+2)^5 < 2^n.                           (8)
 ```
 
-The five base cases n=77,...,81 are exact integer inequalities:
+The five base cases n=76,...,80 are exact integer inequalities:
 
 ```
 n=76:  60977122652160000000000 < 75557863725914323419136
