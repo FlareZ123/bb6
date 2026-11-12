@@ -80,7 +80,7 @@ private theorem twoTierNumerator_lift_criterion (n j k r : Nat)
         (n+r*depthPeriod (k+1)) j ↔
       (3:Int)∣
         (twoTierNumerator n j/(3:Int)^(k+1)-
-          (64*((2:Int)^(j+1)-1)*r) := by
+          (64*((2:Int)^(j+1)-1)*r)) := by
   let P:Int:=(3:Int)^(k+1)
   let M:Int:=(3:Int)^(k+2)
   let a:Int:=64*((2:Int)^(j+1)-1)
@@ -287,7 +287,7 @@ private theorem twoTierNumerator_period_mod_dvd_iff (s j k h:Nat) :
   have hper:=twoTierNumerator_period_dvd_iff s j k (h%3^k) (h/3^k)
   have heq:h%3^k+(h/3^k)*3^k=h:=Nat.mod_add_div' h (3^k)
   rw [heq] at hper
-  exact hper.symm
+  exact hper
 
 /-- Exact index-coordinate characterization of the second-tier gate:
 for fixed even depth j, admissible fatal indices form one residue class
