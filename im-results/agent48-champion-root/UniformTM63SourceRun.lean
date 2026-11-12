@@ -46,24 +46,39 @@ private theorem toNat_sub_one (z : Int) (hz : 1 ≤ z) :
 private theorem moveR_left (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
     sideBit ((TM63Uniform.moveR c b s).h :: (TM63Uniform.moveR c b s).l)
       (n + 1) = sideBit (b :: c.l) n := by
-  cases c.r <;> rfl
+  cases c with
+  | mk q l h r => cases r <;> rfl
 
 private theorem moveR_head (c : TM63Uniform.Cfg) (b : Bool) (s : Nat) :
     (TM63Uniform.moveR c b s).h = sideBit c.r 0 := by
-  cases c.r <;> rfl
+  cases c with
+  | mk q l h r => cases r <;> rfl
 
 private theorem moveR_right (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
     sideBit (TM63Uniform.moveR c b s).r n = sideBit c.r (n + 1) := by
-  cases c.r <;> rfl
+  cases c with
+  | mk q l h r => cases r <;> rfl
+
+private theorem moveR_st (c : TM63Uniform.Cfg) (b : Bool) (s : Nat) :
+    (TM63Uniform.moveR c b s).st = s := by
+  cases c with
+  | mk q l h r => cases r <;> rfl
 
 private theorem moveL_left (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
     sideBit ((TM63Uniform.moveL c b s).h :: (TM63Uniform.moveL c b s).l) n =
       sideBit (c.h :: c.l) (n + 1) := by
-  cases c.l <;> cases n <;> rfl
+  cases c with
+  | mk q l h r => cases l <;> cases n <;> rfl
 
 private theorem moveL_right (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
     sideBit (TM63Uniform.moveL c b s).r (n + 1) = sideBit c.r n := by
-  cases c.l <;> rfl
+  cases c with
+  | mk q l h r => cases l <;> rfl
+
+private theorem moveL_st (c : TM63Uniform.Cfg) (b : Bool) (s : Nat) :
+    (TM63Uniform.moveL c b s).st = s := by
+  cases c with
+  | mk q l h r => cases l <;> rfl
 
 /-- Moving the zipper head right corresponds to writing at the old head and
 moving the physical head one cell right. -/
@@ -79,6 +94,8 @@ theorem uniformTapeAt_moveR (c : TM63Uniform.Cfg) (h : Int)
       exact toNat_add_one (h - x) (by omega)
     by_cases heq : x = h
     · subst x
+      have hcoord : h + 1 - h = 1 := by omega
+      rw [hcoord]
       simp [uniformTapeAt, hx', moveR_left, sideBit]
     · have hn : Int.toNat (h - x) ≠ 0 := by
         intro hz
@@ -90,12 +107,14 @@ theorem uniformTapeAt_moveR (c : TM63Uniform.Cfg) (h : Int)
       rw [hidx, moveR_left]
       simp only [if_neg heq]
       cases hn' : Int.toNat (h - x) with
-      | zero => simp [hn'] at hn
+      | zero => exact False.elim (hn hn')
       | succ n => simp [sideBit]
   · by_cases hx' : x ≤ h + 1
     · have heq : x = h + 1 := by omega
       subst x
-      simp [uniformTapeAt, hx, hx', moveR_head, sideBit]
+      have hcoord : h + 1 - h = 1 := by omega
+      have hne : h + 1 ≠ h := by omega
+      simp [uniformTapeAt, hx, hx', hcoord, hne, moveR_head, sideBit]
     · have hidx : Int.toNat (x - (h + 1) - 1) + 1 =
           Int.toNat (x - h - 1) := by
         have heq : x - (h + 1) - 1 = (x - h - 1) - 1 := by omega
@@ -122,11 +141,13 @@ theorem uniformTapeAt_moveL (c : TM63Uniform.Cfg) (h : Int)
       exact toNat_sub_one (h - x) (by omega)
     simp only [uniformTapeAt, if_pos hxL, if_pos hxR]
     rw [moveL_left, hidx]
-    simp [hx]
+    have hne : x ≠ h := by omega
+    simp [hne]
   · by_cases heq : x = h
     · subst x
       have hnot : ¬ h ≤ h - 1 := by omega
-      simp [uniformTapeAt, hnot, moveL_right, sideBit]
+      have hcoord : h - (h - 1) = 1 := by omega
+      simp [uniformTapeAt, hnot, hcoord, TM63Uniform.moveL, sideBit]
     · have hxG : h < x := by omega
       have hnotL : ¬ x ≤ h - 1 := by omega
       have hnotR : ¬ x ≤ h := by omega
@@ -136,7 +157,7 @@ theorem uniformTapeAt_moveL (c : TM63Uniform.Cfg) (h : Int)
         rw [heq]
         exact toNat_add_one (x - h - 1) (by omega)
       simp only [uniformTapeAt, if_neg hnotL, if_neg hnotR]
-      rw [moveL_right, hidx]
+      rw [hidx, moveL_right]
       simp [heq]
 
 /-- The total zipper transition preserves the six-state range. -/
@@ -146,22 +167,22 @@ theorem step_state_lt (c : TM63Uniform.Cfg) (hc : c.st < 6) :
   | mk q l b r =>
     have hq : q < 6 := hc
     cases q with
-    | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+    | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
     | succ q =>
       cases q with
-      | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+      | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
       | succ q =>
         cases q with
-        | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+        | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
         | succ q =>
           cases q with
-          | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+          | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
           | succ q =>
             cases q with
-            | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+            | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
             | succ q =>
               cases q with
-              | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+              | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
               | succ q => omega
 
 /-- A single total zipper step is exactly one original TM63 primitive move,
