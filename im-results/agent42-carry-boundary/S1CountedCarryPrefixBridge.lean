@@ -1,4 +1,5 @@
 import CountedCarryPrefixGeneral
+import LongResidue1
 import S1Encoder
 import Lean.Elab.Tactic.Omega
 
@@ -748,5 +749,80 @@ theorem s1Config_oddCounter_countedReturn
   simpa [cfg] using hrunAbs
 
 #print axioms s1Config_oddCounter_countedReturn
+
+end BB6Coverage.Agent42CarryPrefixBridge
+
+
+namespace BB6Coverage.Agent42CarryPrefixBridge
+
+open BB6Coverage
+open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent42CarryLeftOutput
+
+/-- Source-level S1 embedding of the long residue-one left-output prefix.
+This exposes the left-output identity together with the six local cells and
+right-exterior preservation, in the exact arbitrary-head shape needed by the
+S0 suffix composition. -/
+theorem s1Config_evenCounter_carryPrefix_r1_left
+    (L n m len q k b : Nat) (h : Int)
+    (hq : q < 2^len) (hk : 0 < k) :
+    ∃ Tpre : Int → Bool,
+      run tm2 (15+12*(4*k+1))
+        (s1Config L n m (len+1+(4*k+1)) ((2*q+1)*2^(4*k+1)) b h) =
+          some ⟨(4 : Fin 6),h+7,Tpre⟩ ∧
+      Tpre (h+1) = true ∧ Tpre (h+2) = true ∧
+      Tpre (h+3) = true ∧ Tpre (h+4) = true ∧
+      Tpre (h+5) = false ∧ Tpre (h+6) = true ∧
+      (∀ x, h+6 < x →
+        Tpre x =
+          (s1Config L n m (len+1+(4*k+1))
+            ((2*q+1)*2^(4*k+1)) b h).tape x) ∧
+      (∀ x, x ≤ 0 →
+        Tpre (h+x) =
+          carryLeftOutputBit (4*k+1)
+            (fun y => (s1Config L n m (len+1+(4*k+1))
+              ((2*q+1)*2^(4*k+1)) b h).tape (h+y)) x) := by
+  let r : Nat := 4*k+1
+  let cfg : Config :=
+    s1Config L n m (len+1+r) ((2*q+1)*2^r) b h
+  let T : Int → Bool := fun x => cfg.tape (h+x)
+  have hmatch : ∀ x, carryInputArea r x = true →
+      T x = carryInputBit r x := by
+    intro x hx
+    have hbounds : -(3*(r:Int))-2 ≤ x ∧ x ≤ 6 := by
+      simpa [carryInputArea] using hx
+    by_cases hleft : x ≤ 0
+    · have hv := s1CarryInput_left L n m len q r b h hq x hbounds.1 hleft
+      simpa [T,cfg] using hv
+    · have hright : 0 < x ∧ x ≤ 6 := by omega
+      have hv := s1CarryInput_right L n m len q r b h hq x hright.1 hright.2
+      simpa [T,cfg] using hv
+  have hstart : shiftConfig h ⟨(3 : Fin 6),0,T⟩ = cfg := by
+    change (⟨(3 : Fin 6),0+h,fun x => T (x-h)⟩ : Config) = cfg
+    have hzero : (0:Int)+h=h := by omega
+    rw [hzero]
+    congr 1
+    funext x
+    dsimp [T,cfg]
+    congr 1
+    omega
+  obtain ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserveT,hleft⟩ :=
+    carryLongPrefix_r1_shifted k T h hmatch hk
+  rw [hstart] at hrun
+  have hpreserve : ∀ x, h+6 < x →
+      Tpre x = cfg.tape x := by
+    intro x hx
+    have hx' : 6 < x-h := by omega
+    have hv := hpreserveT (x-h) hx'
+    have hcoord : h+(x-h)=x := by omega
+    simpa [T,cfg,hcoord] using hv
+  refine ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,?_,?_⟩
+  · intro x hx
+    simpa [cfg] using hpreserve x hx
+  · intro x hx
+    simpa [T,cfg] using hleft x hx
+
+#print axioms s1Config_evenCounter_carryPrefix_r1_left
 
 end BB6Coverage.Agent42CarryPrefixBridge
