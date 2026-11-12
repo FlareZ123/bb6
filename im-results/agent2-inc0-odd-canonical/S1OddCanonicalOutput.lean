@@ -210,7 +210,7 @@ theorem oddCounterOutput_s1Successor
       simp [h6,h1,h0,h2,hpre] at hv
       exact hv
     have hout : (oddCounterOutput b P).tape y = P y := by
-      simp [oddCounterOutput,frame,tailArea,harea,hfinaly]
+      simp [oddCounterOutput,frame,harea,hfinaly]
     let i : Nat := (-y).toNat
     have hi : (i:Int) = -y := by
       dsimp [i]
@@ -221,16 +221,18 @@ theorem oddCounterOutput_s1Successor
     have htgt := s1Config_left_cell L n m (len+1) (2*q) (b+1) h i
     rw [hcoord,htgtList] at htgt
     have hbit : sideBit (d0 ++ rest) i = sideBit (d1 ++ rest) i := by
-      by_cases hi2 : i=2
-      · subst i
+      change sideBit (d0 ++ rest) (-y).toNat =
+        sideBit (d1 ++ rest) (-y).toNat
+      by_cases hi2 : (-y).toNat = 2
+      · rw [hi2]
         have hd0 : sideBit d0 2 = true := by simp [sideBit,d0]
         have hd1 : sideBit d1 2 = true := by simp [sideBit,d1]
         rw [sideBit_append_before d0 rest 2 (by simp [d0])]
         rw [sideBit_append_before d1 rest 2 (by simp [d1])]
         rw [hd0,hd1]
-      · have hi3 : 3 ≤ i := by omega
-        rw [sideBit_append_after d0 rest i (by simp [d0]; omega)]
-        rw [sideBit_append_after d1 rest i (by simp [d1]; omega)]
+      · have hi3 : 3 ≤ (-y).toNat := by omega
+        rw [sideBit_append_after d0 rest (-y).toNat (by simp [d0]; omega)]
+        rw [sideBit_append_after d1 rest (-y).toNat (by simp [d1]; omega)]
         simp [d0,d1]
     have hP : P y = sideBit (d0 ++ rest) i := by
       simpa [P] using hsrc
@@ -241,7 +243,7 @@ theorem oddCounterOutput_s1Successor
   · by_cases hyNeg1 : y = -1
     · have harea : tailArea y = true := by simp [tailArea,hyNeg1]
       have hout : (oddCounterOutput b P).tape y = true := by
-        simp [oddCounterOutput,frame,tailArea,harea,embed,tailFinal,hyNeg1]
+        simp [oddCounterOutput,frame,tailArea,embed,tailFinal,hyNeg1]
       have hcoord : h-(1:Nat) = h+y := by omega
       have htgt := s1Config_left_cell L n m (len+1) (2*q) (b+1) h 1
       rw [hcoord,htgtList] at htgt
@@ -251,7 +253,7 @@ theorem oddCounterOutput_s1Successor
     · by_cases hy0 : y = 0
       · have harea : tailArea y = true := by simp [tailArea,hy0]
         have hout : (oddCounterOutput b P).tape y = true := by
-          simp [oddCounterOutput,frame,tailArea,harea,embed,tailFinal,hy0]
+          simp [oddCounterOutput,frame,tailArea,embed,tailFinal,hy0]
         have htgt := s1Config_left_cell L n m (len+1) (2*q) (b+1) h 0
         rw [htgtList] at htgt
         have htarget : (s1Config L n m (len+1) (2*q) (b+1) h).tape (h+y) = true := by
@@ -336,15 +338,16 @@ theorem oddCounterOutput_s1Successor
           have hPbit : P y = decide (y < rightStop b) := by
             simpa [P] using
               s1Config_right_bit_formula L n m (len+1) (2*q+1) b h y hy7
+          have hy6 : y ≠ 6 := by omega
           have hout : (oddCounterOutput b P).tape y =
               decide (y < rightStop (b+1)) := by
-            simp [oddCounterOutput,frame,tailArea,harea,hpre] at *
+            simp [oddCounterOutput,frame,harea]
             rw [hfinaly]
-            simp [hpre,hPbit]
+            simp only [hpre,hPbit]
             have hstop : rightStop (b+1) = rightStop b + 3 := by
               simp only [rightStop, Int.natCast_add]
               omega
-            have hcut :
+            have hcutInner :
                 (if y = rightStop b+1 then true
                  else if y = rightStop b then true
                  else if y = rightStop b+2 then true
@@ -363,6 +366,14 @@ theorem oddCounterOutput_s1Successor
                       rw [hstop]
                       omega
                     simp [hs1,hs0,hs2,hiff]
+            have hcut :
+                (if y = 6 then false
+                 else if y = rightStop b+1 then true
+                 else if y = rightStop b then true
+                 else if y = rightStop b+2 then true
+                 else decide (y < rightStop b)) =
+                decide (y < rightStop (b+1)) := by
+              simpa only [ite_eq_right hy6] using hcutInner
             exact hcut
           have htarget := s1Config_right_bit_formula
             L n m (len+1) (2*q) (b+1) h y hy7
