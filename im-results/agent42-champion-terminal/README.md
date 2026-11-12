@@ -60,3 +60,17 @@ under the explicit premises `hblank` (a genuine blank-root prefix to the reset c
 This is now kernel-checked in [CI 43165423005](https://github.com/FlareZ123/bb6/actions/runs/43165423005), including the original `S1Encoder`, `CountedReset`, terminal source modules and the new composition. The new SectionBits theorem depends only on `[propext, Quot.sound]`; the counted-reset composition depends on `[propext, Classical.choice, Quot.sound]`. The earlier forward-reference defect in `TerminalAfterPrefix.lean` was fixed by ordering the generic score adapter before its specialization, and the source workflow now compiles that file successfully.
 
 This remains a conditional integration result, not a full champion witness or a BB(6) solution. In particular, the genuine blank-root prefix, the universal `hInc0` proof, and the other earlier itinerary obligations are not discharged here. No exact global champion score or universal BB(6) upper bound is claimed.
+
+
+## Initial S1 root candidate and final reset-source itinerary
+
+A new reproducible intermediate simulation is recorded in [InitialS1RootWitness.md](InitialS1RootWitness.md): the exact `tm2` finite simulator reaches the S1Encoder candidate `s1Config 3 7 2 6 0 63 29` from blank state 0 after **27,959 steps** (state 3, head 29, 225 marked cells). From blank state 4 the same finite configuration is reached after 27,965 steps, matching the existing 9/15-step `join_source` root offset. The exact finite marked-list order and a standalone JS reproducer are included. This is computational evidence only; the `fRun` equality and finite-to-infinite source embedding still need a Lean theorem.
+
+[CoqHaltItinerary.md](CoqHaltItinerary.md) derives the exact parameter chain from the published Coq TM63 `halt` proof:
+`init → Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H`.
+In particular, the m1,n1 source specialized by the terminal wrapper is the final Rst1 inside Rsts2H, after Rsts and Rst2. Its pre-drain source parameters are
+`aTerm = st2(3*k)B2 + 5*k + t2(1+3*k)B2 + 2`,
+`bTerm = 2^(t2(1+3*k)B2)-1`,
+where `k=(N2-2)/3`. The Lean wrapper's pre-drain endpoint is the all-ones S1 state; its counted drain then produces the full Coq Rst1 endpoint before the terminal section.
+
+The same note gives short parity arguments for the two modular side conditions: `N1 mod 3=1` and `N2 mod 3=2`, with final `aTerm` even and `bTerm` odd. These formulas are an integration roadmap, not a completed Lean proof of the global itinerary. Agent 48 has been asked to formalize the root witness using `fRun`/the finite-to-infinite bridge; Agent 8 owns the missing reset-prefix itinerary.
