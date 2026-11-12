@@ -47,9 +47,8 @@ theorem tri_eq_d0pow (n : Nat) :
 
 theorem dTail_empty (c : Nat) :
     TM63Uniform.dTail c [] = d1pow (c+1) ++ [false,false,false] := by
-  change TM63Uniform.ones (3*(c+1)) ++ [false,false,false] =
-    d1pow (c+1) ++ [false,false,false]
-  rw [d1pow_eq_uniformOnes]
+  simp only [TM63Uniform.dTail, List.append_nil]
+  rw [← d1pow_eq_uniformOnes (c+1)]
 
 /-- The head plus the zipper's left list is exactly d1^k d0 and its
 arbitrary residual source prefix. -/
@@ -59,15 +58,15 @@ theorem rawStart_left (k c : Nat) (ls rs : List Bool) :
         d1pow k ++ d0 ++ ls := by
   cases k with
   | zero =>
-      simp [TM63Uniform.rawStart, TM63Uniform.dBoundary, d0, List.append_assoc]
+      simp [TM63Uniform.rawStart, TM63Uniform.dBoundary, d0, d1pow, List.append_assoc]
   | succ k =>
       change (true :: TM63Uniform.ones (3*k+2)) ++ [false,false,true] ++ ls =
         d1pow (k+1) ++ d0 ++ ls
       have hone : true :: TM63Uniform.ones (3*k+2) = d1pow (k+1) := by
         rw [d1pow_eq_uniformOnes]
-        have hpow : 3*(k+1) = 1+(3*k+2) := by omega
-        rw [hpow, TM63Uniform.ones_add]
-        simp [TM63Uniform.ones]
+        have hpow : 3*(k+1) = (3*k+2)+1 := by omega
+        rw [hpow]
+        rfl
       rw [hone]
       rfl
 
@@ -102,8 +101,17 @@ theorem rawEnd_left (k c : Nat) (ls : List Bool) :
 /-- rawEnd's right word is exactly the next S0 unary counter. -/
 theorem rawEnd_right (k c : Nat) (ls : List Bool) :
     (TM63Uniform.rawEnd k c ls []).r = s0RightFacing (c+1) := by
-  simp [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing,
-    d1pow_eq_uniformOnes, TM63Uniform.ones, List.append_assoc]
+  cases k with
+  | zero =>
+      simp only [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing]
+      rw [d1pow_eq_uniformOnes]
+      congr 1
+      omega
+  | succ k =>
+      simp only [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing]
+      rw [d1pow_eq_uniformOnes]
+      congr 1
+      omega
 
 theorem sideBit_false_of_all_false (xs : List Bool) :
     (∀ b ∈ xs, b = false) → ∀ i, sideBit xs i = false := by
@@ -164,8 +172,14 @@ theorem s0Config_eq_uniformRawStart
   apply congrArg (fun t : Int → Bool => (⟨(3 : Fin 6), h, t⟩ : Config))
   funext x
   by_cases hx : x ≤ h
-  · simp [s0Config, s0Tape, uniformConfigAt3, uniformTapeAt, hx, hleft]
-  · simp [s0Config, s0Tape, uniformConfigAt3, uniformTapeAt, hx, hright]
+  · change s0Tape l (len+1+k) ((2*q+1)*2^k) c h x =
+      uniformTapeAt (TM63Uniform.rawStart k c ls []) h x
+    simp only [s0Tape, uniformTapeAt, if_pos hx]
+    rw [← hleft]
+  · change s0Tape l (len+1+k) ((2*q+1)*2^k) c h x =
+      uniformTapeAt (TM63Uniform.rawStart k c ls []) h x
+    simp only [s0Tape, uniformTapeAt, if_neg hx]
+    rw [← hright (Int.toNat (x-h-1))]
 
 /-- Every source S0 post-decrement configuration is exactly Agent 26's
 all-k rawEnd, with the right unary counter increased by one. -/
@@ -193,8 +207,14 @@ theorem s0Config_eq_uniformRawEnd
   apply congrArg (fun t : Int → Bool => (⟨(3 : Fin 6), h, t⟩ : Config))
   funext x
   by_cases hx : x ≤ h
-  · simp [s0Config, s0Tape, uniformConfigAt3, uniformTapeAt, hx, hleft]
-  · simp [s0Config, s0Tape, uniformConfigAt3, uniformTapeAt, hx, hright]
+  · change s0Tape l (len+1+k) (((2*q+1)*2^k)-1) (c+1) h x =
+      uniformTapeAt (TM63Uniform.rawEnd k c ls []) h x
+    simp only [s0Tape, uniformTapeAt, if_pos hx]
+    rw [← hleft]
+  · change s0Tape l (len+1+k) (((2*q+1)*2^k)-1) (c+1) h x =
+      uniformTapeAt (TM63Uniform.rawEnd k c ls []) h x
+    simp only [s0Tape, uniformTapeAt, if_neg hx]
+    rw [← hright (Int.toNat (x-h-1))]
 
 #print axioms s0Config_eq_uniformRawStart
 #print axioms s0Config_eq_uniformRawEnd
