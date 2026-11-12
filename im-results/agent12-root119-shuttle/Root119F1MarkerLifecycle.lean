@@ -78,7 +78,7 @@ def f1EvenTape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
     (h+1+((2*(n+1):Nat):Int)) true
 
 def f1EvenResult (n : Nat) (t : Int → Bool) (h : Int) : Conf :=
-  ⟨.B,h+2+((2*(n+1):Nat):Int),f1EvenTape n t h⟩
+  ⟨.B,h+1+((2*(n+1):Nat):Int)+1,f1EvenTape n t h⟩
 
 /-- The exact even F/1 corridor execution, including its final D/0-E/0-A/0
     tail. It uses only the original auxiliary transition table. -/
@@ -143,14 +143,18 @@ theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
     rw [shuttleRun_add 1 (2*(n+1)+3)]
     rw [hOne]
     simp [hDRun]
-  simpa [f1EvenResult,f1EvenTape,t0,s,p,v,v1,v2,b] using hRun
+  have hbEq : b = f1EvenResult n t h := by
+    dsimp [b,f1EvenResult,f1EvenTape,t0,s,p,v,v1,v2]
+  rw [hbEq] at hRun
+  exact hRun
 
 /-- The even F/1 result preserves the tape weakly left of the original head,
     except for the F/1 transition's write of zero at that head. -/
 theorem f1EvenResult_left (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : x ≤ h) :
     (f1EvenResult n t h).tape x = setBit t h false x := by
-  unfold f1EvenResult f1EvenTape
+  change f1EvenTape n t h x = setBit t h false x
+  unfold f1EvenTape
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1) x true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x false (by omega)]
@@ -159,13 +163,15 @@ theorem f1EvenResult_left (n : Nat) (t : Int → Bool) (h x : Int)
 theorem f1EvenResult_A (n : Nat) (t : Int → Bool) (h : Int) :
     (f1EvenResult n t h).tape
       (h+1+((2*(n+1):Nat):Int)) = true := by
-  dsimp [f1EvenResult]
+  change f1EvenTape n t h (h+1+((2*(n+1):Nat):Int)) = true
+  unfold f1EvenTape
   exact setBit_apply_eq _ _ true
 
 theorem f1EvenResult_E (n : Nat) (t : Int → Bool) (h : Int) :
     (f1EvenResult n t h).tape
       (h+1+((2*(n+1):Nat):Int)-1) = true := by
-  dsimp [f1EvenResult]
+  change f1EvenTape n t h (h+1+((2*(n+1):Nat):Int)-1) = true
+  unfold f1EvenTape
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
     (h+1+((2*(n+1):Nat):Int)-1) true (by omega)]
   exact setBit_apply_eq _ _ true
@@ -174,7 +180,8 @@ theorem f1EvenResult_E (n : Nat) (t : Int → Bool) (h : Int) :
 theorem f1EvenResult_D (n : Nat) (t : Int → Bool) (h : Int)
     (j : Nat) (hj : j ≤ n) :
     (f1EvenResult n t h).tape (h+1+2*(j:Int)) = true := by
-  unfold f1EvenResult
+  change f1EvenTape n t h (h+1+2*(j:Int)) = true
+  unfold f1EvenTape
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
     (h+1+2*(j:Int)) true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1)
@@ -186,7 +193,8 @@ theorem f1EvenResult_D (n : Nat) (t : Int → Bool) (h : Int)
 theorem f1EvenResult_F (n : Nat) (t : Int → Bool) (h : Int)
     (j : Nat) (hj : j < n) :
     (f1EvenResult n t h).tape (h+2+2*(j:Int)) = false := by
-  unfold f1EvenResult
+  change f1EvenTape n t h (h+2+2*(j:Int)) = false
+  unfold f1EvenTape
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
     (h+2+2*(j:Int)) true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1)
@@ -199,7 +207,8 @@ theorem f1EvenResult_F (n : Nat) (t : Int → Bool) (h : Int)
 theorem f1EvenResult_right (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : h+1+((2*(n+1):Nat):Int) < x) :
     (f1EvenResult n t h).tape x = t x := by
-  unfold f1EvenResult
+  change f1EvenTape n t h x = t x
+  unfold f1EvenTape
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1) x true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x false (by omega)]
@@ -231,8 +240,7 @@ theorem f1_even_result_markerB0Pattern (n : Nat) (t : Int → Bool) (h : Int)
     MarkerB0Pattern n (f1EvenResult n t h) := by
   let b := f1EvenResult n t h
   have hpos : b.h = h+2+((2*(n+1):Nat):Int) := by
-    simp [b,f1EvenResult]
-    omega
+    simp [b,f1EvenResult] <;> omega
   have hcur : b.tape b.h = false := by
     rw [hpos]
     exact (f1EvenResult_right n t h _ (by omega)).trans hnext
@@ -373,7 +381,7 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
   let f : Conf := ⟨.F,p,setBit b.tape (p+1) true⟩
   have hrun := f1_even_run_exact n t h hhead hones hzero
   have hb : Reach b := reachable_of_shuttleRun hc (by simpa [b] using hrun)
-  have hpos : b.h = p+1 := by simp [b,f1EvenResult,p]
+  have hpos : b.h = p+1 := by simp [b,f1EvenResult,p] <;> omega
   have hnext' : t (p+1) = true := by
     have heq : p+1 = h+2+((2*(n+1):Nat):Int) := by dsimp [p]; omega
     rw [heq]
