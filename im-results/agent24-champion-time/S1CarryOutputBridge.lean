@@ -164,8 +164,9 @@ theorem s1Config_decrement_leftOutput
         have hgt : ¬ (-(i:Int)) ≤ -3*(r:Int) := by omega
         have hmod : (-(i:Int)) % 3 = 1 ↔ i%3=2 := by omega
         simp [carryLeftOutputBit,hnotfar,hgt,hmod]
-      rw [hbit,hout,hside]
-      simp [hcoord]
+      rw [hbit]
+      rw [hcoord]
+      rw [hout,hside]
 
 #print axioms d0pow_length
 #print axioms sideBit_d0pow_formula
