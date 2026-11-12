@@ -31,6 +31,7 @@ jobs:
           cp im-results/agent8-counted-reset/CountedResetBase.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedResetOddBase.lean /tmp/a48-root/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
+          cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
@@ -65,6 +66,12 @@ jobs:
           lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee /tmp/a48-root/rst1prime-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/rst1prime-axioms.log; then
             echo '::error::sorryAx found in Rst1Prime proof dependencies'
+            exit 1
+          fi
+          : > /tmp/a48-root/q4-suffix-axioms.log
+          lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee /tmp/a48-root/q4-suffix-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/q4-suffix-axioms.log; then
+            echo '::error::sorryAx found in q4 suffix proof dependencies'
             exit 1
           fi
           printf '%s  %s\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' CountedOddUnary.lean | sha256sum --check
