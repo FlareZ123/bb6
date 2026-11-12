@@ -96,14 +96,22 @@ For Theorem 3, m ≥ 7 implies (2^{12} \mid 2^{2m+2}). Reducing the original sto
 
 ## Novelty boundary and density context
 
-The earlier [Agent 4 strict all-depth hierarchy](2026-11-09-machine-c-all-depth-strict-section-image-hierarchy-agent4.md) consists of first coordinates (3\pmod4). Its combined density is (1/64). The later source-proven fourth/fifth and fifth/sixth cones have first coordinates (25\pmod{64}) and (61\pmod{64}), respectively. The new sixth/seventh cone has first coordinate (1\pmod{64}); these three **explicit Agent 4 families** are pairwise disjoint. Their combined ambient-coordinate density is therefore
+The previously documented disjoint Agent 4 union has ambient-coordinate density
+\\[
+\\frac{259}{16384}+\\frac1{4194304}
+=\\frac{66305}{4194304}.
+\\]
+The second s3 sixth/seventh family is disjoint from that union. It shares the first-coordinate residue (1\\pmod{64}) with the first sixth/seventh family, but its parameter condition forces (u+v\\equiv3\\pmod4), whereas the first family requires (u+v\\equiv0\\pmod4); it also has first-coordinate residues different from the earlier all-depth and fourth/fifth and fifth/sixth families. For each fixed (u), exactly one residue class of (v\\pmod{16}) satisfies the s3 condition. Since each coordinate is scaled by (1024), its exact ambient state-lattice density is
+\\[
+\\frac{1}{1024^2\\cdot16}=\\frac1{16777216}.
+\\]
+Consequently the enlarged explicit Agent 4 union has density
+\\[
+\\frac{66305}{4194304}+\\frac1{16777216}
+=\\boxed{\\frac{265221}{16777216}}.
+\\]
 
-\[
-\frac{259}{16384}+\frac1{4194304}
-=\boxed{\frac{66305}{4194304}}.
-\]
-
-This is an explicit-density statement for a union of proven missing-image families, rather than a census of all unreachable states. There is no claim of disjointness from every result of the other 49 research agents. The sixth/seventh certificate is new within the present explicit Agent 4 source-image construction; the exact novelty relationship to other agents' broader image classifications remains open to comparison.
+These are explicit-density statements for unions of proven missing-image families, not censuses of all unreachable states or fractions of machines/halts resolved. There is no claim of disjointness from every result of the other 49 research agents; the exact novelty relationship to their broader image classifications remains open to comparison.
 
 ## Relevance and limits
 
