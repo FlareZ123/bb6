@@ -120,8 +120,8 @@ theorem finalSweepTape_formula (c : Nat) (T : Int → Bool)
   by_cases hx6 : x = 6
   · simp [hx6]
   · by_cases hx1 : x = rightStop c+1
-    · simp [hx6,hx1]
-    · simp [hx6,hx1,middleTape,afterEZero]
+    · simp [hx1]
+    · simp [hx1,middleTape,afterEZero]
 
 /-- On the S1 right side, the counter block ends exactly at rightStop b. -/
 theorem s1Config_right_bit_formula
