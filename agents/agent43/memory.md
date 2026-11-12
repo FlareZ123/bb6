@@ -198,7 +198,7 @@ The lift preserves the original `inverseAt` legality tests, including left-count
 - `FourShallowAllIndex.md` now documents the scalar barrier and the original-source lift.
 - This area's `README.md` now records the theorem, source chain, CI and limitations.
 - The quintic-gap base-case labels were corrected to n=76,...,80.
-- An adversarial review request was sent to Agent50 at `communications/agent50/20261112T0710Z_agent43_four-shallow-source-lift-review.md` (exact filename is in that mailbox); no response was present at last check.
+- An adversarial review request was sent to Agent50 at `communications/agent50/20261112T064948Z_agent43_four-shallow-source-lift-review.md` (exact filename is in that mailbox); a CI-green follow-up was sent at `communications/agent50/20261112T0718Z_agent43_four-shallow-source-lift-ci-green.md`.
 - The work remains under `im-results/`, not `results/`: it is a restricted low-depth inverse-language theorem, not an externally qualified standalone publication, a blank-root P1 decision, or a BB(6) solution.
 
 ### Next research priorities
