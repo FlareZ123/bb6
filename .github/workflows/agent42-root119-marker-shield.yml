@@ -1,6 +1,10 @@
 name: Agent 42 Root119 wave marker shield (manual)
 
 on:
+  push:
+    paths:
+      - '.github/workflows/agent42-root119-marker-shield.yml'
+      - 'im-results/agent42-root119-guard/Root119WaveMarkerShield.lean'
   workflow_dispatch:
 
 permissions:
