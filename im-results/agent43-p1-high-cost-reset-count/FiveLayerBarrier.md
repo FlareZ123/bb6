@@ -96,10 +96,14 @@ After four peels, the terminal equation is
 \[
 K2^{e-e_1-e_2-e_3-e_4}=A_5E+S_5.
 \]
-The fifth peel gives \(A_5\le S_5\le326X\). Since \(T_6\le2n+6\), \(E\le2000X\), so
+The fifth peel gives \(A_5\le S_5\le326X\). Since \(T_6\le2n+6\) and \(E=112T_6-384\),
+\[
+E+1\le224n+289\le224(n+2)=224X.
+\]
+Therefore
 \[
 K2^{e-e_1-e_2-e_3-e_4}
-\le S_5(E+1)\le326X\cdot2001X=652326X^2.
+\le S_5(E+1)\le326X\cdot224X=73024X^2.
 \]
 On the other hand, \(K+98\) is the sum of the five positive coefficient terms. The preceding terms already include \(C_1q\ge392>98\), so subtracting 98 still leaves at least the final term; hence
 \[
@@ -109,7 +113,7 @@ Since
 \[
 qA_1A_2A_3A_4\cdot2^{e-e_1-e_2-e_3-e_4}=2^n,
 \]
-the same quantity is at least \(392\cdot2^n\). The sixth-power gap implies \(652326X^2<2^n\), a contradiction.
+the same quantity is at least \(392\cdot2^n\). The sixth-power gap implies \(73024X^2<2^n\), a contradiction.
 
 ## Formalization state
 
