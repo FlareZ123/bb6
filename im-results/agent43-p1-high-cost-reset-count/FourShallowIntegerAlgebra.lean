@@ -72,8 +72,36 @@ theorem algebraic_first_four
      (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int)))) := by
    simp only [Int.mul_add,Int.mul_sub]
    omega
- rw [htarget]
- rw [←hR1Int]
+ let V : Int := (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int))))
+ let U : Int := (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))
+ let W : Int := (A1:Int)*((A2:Int)*(R3:Int))
+ let Z : Int := (A1:Int)*(R2:Int)
+ let X2 : Int := (A1:Int)*((C2:Int)*(P:Int))
+ let X3 : Int := (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))
+ let X4 : Int := (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))
+ have hEqLin : (K:Int)*(p:Int)=V+U+W+Z+(R1:Int) := by
+   change (K:Int)*(p:Int)=
+     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int))))+
+     (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
+     (A1:Int)*((A2:Int)*(R3:Int))+
+     (A1:Int)*(R2:Int)+(R1:Int)
+   exact hEqExpanded
+ have hKLin : (K:Int)*(p:Int)+98*(p:Int)=
+     (C1:Int)*(P:Int)+X2+X3+X4 := by
+   change (K:Int)*(p:Int)+98*(p:Int)=
+     (C1:Int)*(P:Int)+
+     (A1:Int)*((C2:Int)*(P:Int))+
+     (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))+
+     (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))
+   exact hKExpanded
+ have hU : (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))=U := rfl
+ have hW : (A1:Int)*((A2:Int)*(R3:Int))=W := rfl
+ have hZ : (A1:Int)*(R2:Int)=Z := rfl
+ have hX2 : (A1:Int)*((C2:Int)*(P:Int))=X2 := rfl
+ have hX3 : (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))=X3 := rfl
+ have hX4 : (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))=X4 := rfl
+ have hV : (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int))))=V := rfl
+ rw [htarget,←hR1Int,hX2,hZ,hX3,hW,hX4,hU,hV]
  omega
 
 #print axioms algebraic_first_four
