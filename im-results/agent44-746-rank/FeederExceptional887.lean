@@ -276,7 +276,6 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
       (CascadeUniformFatal.fatal n) ∧
     ¬ReachC (2,0)
       (CascadeFirstFork.oddPre n (CascadeUniformFatal.fatal n),0) := by
-  have hnlow : 887≤n := by omega
   have hn4 : 4≤n := by omega
   have h18 : n%18=5 := by omega
   let p : Nat := 2^(n-2)
