@@ -119,4 +119,6 @@ the same quantity is at least \(392\cdot2^n\). The sixth-power gap implies \(730
 
 - FiveLayerGap.lean contains the \(n\ge83\) sixth-power gap.
 - FiveLayerBarrier.lean encodes the five-peel conditional barrier, using the exact two-profile correlation and the quotient-halving consequence \(2d_i\le S_i\).
-- Both files still need a targeted Lean CI compile. The source coefficient model and a SourceLowWord five-shallow lift have not been written.
+- FiveShallowProfileBounds.lean formalizes the exact-profile estimate \(1\le\alpha\) and \(0<LT-O\le168(n+2)\).
+- FiveShallowIntegerAlgebra.lean encodes the five-layer telescoping identity from the coefficient and terminal-wall equations.
+- The targeted CI compile is in progress. A five-shallow source coefficient model and a SourceLowWord lift have not yet been written.
