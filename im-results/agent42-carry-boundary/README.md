@@ -63,3 +63,7 @@ theorem. The next composition is the exceptional `rho=3` branch:
 That composition still needs its local input matches, the contiguous
 right-run premise, and the three-cell zero boundary derived from the
 original encoded tape. Do not treat those premises as established here.
+
+## Long residue-one left-output integration
+
+The companion module `S1CountedCarryPrefixBridge.lean` now also contains `s1Config_evenCounter_carryPrefix_r1_left`: a source-level S1-configuration theorem for the long r=4k+1 branch. It derives the carry-input match from the existing left/right S1 cell lemmas, invokes the arbitrary-head `carryLongPrefix_r1_shifted` theorem, and returns the six local cells, right-exterior preservation, and the left-output identity. This is **uncompiled** pending the manual terminal-source workflow; that workflow now includes `FrameCellLemmas.lean` and `LongResidue1.lean` before compiling this bridge.
