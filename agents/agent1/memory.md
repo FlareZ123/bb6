@@ -777,3 +777,23 @@ Next highest-value work:
 3. Connect the prepared J(21,11) branch to the blank root through J(0,12), high3, Low42, Low2, and the high3 ladder with exact physical representations and prefix maxima. The previous root entry proof only certifies J(0,0) and the 277-step prefix.
 4. Investigate the all-parameter r=4k low-even physical return. The r=96 point is only a concrete case and does not close the family.
 5. Keep all these artifacts in `im-results/`; no publishable exact BB(6) result or #429 halting/nonhalting theorem exists.
+
+
+### 2026-11-12 root-chain composition checkpoint
+
+Built a new candidate physical composition extending the actual blank root through the corrected low43 branch:
+- Added `im-results/agent1-429-root-entry/RootJunctionChain.lean`.
+- Its exact source zipper monitor is `runWithMax 1463 (junc 0 0 12) = some (junc 21 0 11, 15, 29)`, checked locally by `by decide` at Lean 4.36.0-rc2 with maxRecDepth 65536. The physical lift begins at the canonical J(0,12) config with head -3, ends at J(21,11) head 12, and bounds every raw prefix head by 26.
+- Composed with `RootToJunc.root_after_145_junc_frontier`, the new theorem `root_after_1608_junc21_frontier` claims the blank root reaches J(21,11) at step1608, with rightmost mark 26 and exact head maximum26.
+- Composed with corrected `root_low43_branch_to_junc11`, `root_after_3167_junc11_frontier` claims the blank root reaches J(11,62) at step3167, head -29, rightmost mark36, exact head maximum36.
+- To prove exact raw monitor maxima, the new file contains generic lemmas reconstructing `runWithHeadMax` from raw-run success, extracting prefix monitors, and bounding the monitor maximum from all-prefix head bounds. The lower bound is forced by the new endpoint rightmost mark and the blank initial cell beyond the prior frontier.
+
+Created manual workflow `.github/workflows/agent1-429-root-junction-chain.yml` by extending the existing high0 dependency build. It compiles RootToJunc, corrected low43 source/physical modules, and RootJunctionChain, audits all new theorem axiom reports, and rejects `sorryAx`. It is workflow_dispatch-only and has not been dispatched. The new physical proof script has not yet been compiled against the full repository dependency graph, so treat both root-after-1608 and root-after-3167 as **candidate Lean theorems pending CI**, not as CI-certified results. The source monitor equation itself is locally kernel checked.
+
+Updated `im-results/agent1-429-root-entry/README.md` with the new candidate scope. The new root chain depends on Agent32's corrected low43 files and Agent32's RootToJunc / Agent18 high0 modules. The prior direct mailbox and broadcast corrections remain in communications.
+
+Next actions:
+1. Obtain a supported workflow dispatch and run `.github/workflows/agent1-429-root-junction-chain.yml`. Fix any compile failures at the source, then require the axiom audit and no-`sorryAx` check.
+2. Once certified, the root is connected to J(11,62) at step3167 with frontier36. Continue by composing the high3 J(11,62)->J(25,37), low-odd J(25,37)->J(10,74), high3 J(10,74)->J(49,2), and the new concrete low-even r=96 J(49,2)->J(11,98) physical return, each with complete prefix maxima.
+3. The low-odd complete-return prefix maximum is not yet a repository theorem. Local `runWithMax 1836 (junc 25 0 37)` evaluates to endpoint J(10,74), displacement -34, max +43, and `by decide` compiled only at maxRecDepth65536; this is an exploratory fact, not a committed theorem.
+4. Do not claim #429 nonhalting or BB(6) progress until the infinite J/Junc chart has a closed all-time frontier invariant.
