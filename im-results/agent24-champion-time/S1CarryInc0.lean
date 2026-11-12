@@ -413,6 +413,38 @@ theorem s1Config_counted_decrement_allPositive
       L n m len q k b h hq
     simpa [hrEq] using hdec
 
+/-- Every even positive bounded S1 counter admits a complete
+source-level counted decrement. The odd-factor decomposition supplies
+the positive carry valuation, and the all-residue prefix theorem closes it. -/
+theorem s1Config_counted_decrement_even
+    (L n m a z b : Nat) (h : Int)
+    (hz : 0 < z) (hzlt : z < 2^a) (heven : z%2=0) :
+    ∃ q r len, z=(2*q+1)*2^r ∧ a=len+1+r ∧ q<2^len ∧ 0<r ∧
+      run tm2 (48+12*r+12*b) (s1Config L n m a z b h) =
+        some (s1Config L n m a (z-1) (b+1) h) := by
+  obtain ⟨q,r,len,hr,ha,hq⟩ :=
+    exists_odd_factor_bounded a z hz hzlt
+  have hrpos : 0 < r := by
+    by_contra hnot
+    have hr0 : r=0 := by omega
+    have hodd : ((2*q+1)*2^r)%2=1 := by
+      simp [hr0]
+    rw [hr] at heven
+    omega
+  have hdec := s1Config_counted_decrement_allPositive
+    L n m len q r b h hq hrpos
+  have hinput : s1Config L n m a z b h =
+      s1Config L n m (len+1+r) ((2*q+1)*2^r) b h := by
+    rw [ha,hr]
+  have houtput : s1Config L n m a (z-1) (b+1) h =
+      s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h := by
+    rw [ha,hr]
+  refine ⟨q,r,len,hr,ha,hq,hrpos,?_⟩
+  simpa [hinput,houtput] using hdec
+
+#print axioms s1Config_counted_decrement_allPositive
+#print axioms s1Config_counted_decrement_even
+
 #print axioms s1Config_carryInput_match
 #print axioms s1Config_carryRightOnes
 #print axioms s1Config_counted_decrement_of_prefix
