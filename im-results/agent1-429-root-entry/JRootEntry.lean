@@ -8,7 +8,9 @@ open BB6Coverage
 def move (w r : Bool) (q : Fin 6) : Transition :=
   some ⟨w, r, q⟩
 
-/-- The complete original #429 table, including the genuine D/1 halt. -/
+/-- The complete original #429 table, including the genuine D/1 halt.
+    The wildcard is unreachable for a Fin 6 state; it makes the total
+    function's pattern match exhaustive rather than introducing sorryAx. -/
 def source429 : Machine := fun s =>
   match s.1.val, s.2 with
   | 0, false => move true true 1
@@ -23,6 +25,7 @@ def source429 : Machine := fun s =>
   | 4, true  => move true false 4
   | 5, false => move true true 3
   | 5, true  => move true false 0
+  | _, _ => none
 
 /-- A primitive tape write, in the same convention as rawStep. -/
 def writeAt (tape : Int → Bool) (p : Int) (b : Bool) : Int → Bool :=
@@ -48,12 +51,12 @@ def j00Config : Config :=
     head := 3
     tape := rootTape }
 
-/-- Candidate exact raw root entry: blank A reaches the physical J(0,0)
-    tape after 35 primitive transitions. The manual CI workflow checks it. -/
+/-- Exact raw root entry: blank A reaches the physical J(0,0) tape after
+    35 primitive transitions. This is a local computation theorem; the
+    original-source table bridge is a separate proof obligation. -/
 theorem blank_reaches_j00_after_35 :
     run source429 35 blank = some j00Config := by
-  simp [j00Config, rootTape, rootWrites, writeAt, run, rawStep,
-    applyMove, readSlot, source429, move]
+  rfl
 
 #print axioms blank_reaches_j00_after_35
 
