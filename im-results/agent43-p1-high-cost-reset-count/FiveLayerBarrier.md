@@ -121,4 +121,4 @@ the same quantity is at least \(392\cdot2^n\). The sixth-power gap implies \(730
 - FiveLayerBarrier.lean encodes the five-peel conditional barrier, using the exact two-profile correlation and the quotient-halving consequence \(2d_i\le S_i\).
 - FiveShallowProfileBounds.lean formalizes the exact-profile estimate \(1\le\alpha\) and \(0<LT-O\le168(n+2)\).
 - FiveShallowIntegerAlgebra.lean encodes the five-layer telescoping identity from the coefficient and terminal-wall equations.
-- The targeted CI compile is in progress. A five-shallow source coefficient model and a SourceLowWord lift have not yet been written.
+- The targeted CI compile is in progress. The source lift remains pending: adapt [FourShallowSourceModel.lean](FourShallowSourceModel.lean) to five profiles and six depth-two segments, then adapt [FourShallowSourceLift.lean](FourShallowSourceLift.lean) with an exact-five no-wall theorem. The existing stepwise proof pattern should then give `source_low_trace_wall_needs_six_shallows` for n>=83 by splitting the shallow count at five.
