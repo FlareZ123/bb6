@@ -96,6 +96,19 @@ Two explicit high-stop progressions witness nonemptiness:
 The strongest new exact criterion is `blank_halts_iff_c58_late_fast_all_s3`: it removes every high-stop target in this full second image family, not merely the two displayed progressions, while preserving the exact Machine C blank-halting iff. The narrower two-progression corollary `blank_halts_iff_c58_late_fast_six_seven_both` and explicit removal theorems are also retained. [CSixSeventhC58.lean](CSixSeventhC58.lean) contains the generic admission proof, both concrete pullbacks, and the exact criteria.
 
 **The second-family strict-image proof and all-time root exclusion passed CI 43300420208; the C58 integration did not compile in that run and remains pending.** The parameter-pullback file stays in `im-results/` and neither result determines Machine C or BB(6).
+## Composition with the latest six-sector exact criterion (not yet audited)
+
+The older `blank_halts_iff_c58_late_fast_all_s3` extends the C58/late-fast criterion. The newer `CSixSeventhSixAll.lean` goes further: it composes the same strict-image exclusion with `Agent11SixAll.blank_halts_iff_six_both`, whose high predicate already includes the C58/late-fast base, the odd-diagonal filter, both m=0 guards, and the six-sector source-exact normalizer.
+
+The new admission lemma `prior_six_all_admits_s3_image_family` proves that **every** s3 high-stop parameter still passes that latest pre-existing high predicate:
+- The stopping equation forces (m\equiv10\pmod{32}), while the additional odd-diagonal filter requires (m\equiv j+25\equiv24\pmod{32}).
+- Both m=0 guards are vacuous because (m\ge7).
+- At the source target ((x,y)=(641+1024u,574+1024v)), (x\equiv1\pmod{16}), (y\equiv0\pmod2), (x+y\equiv3\pmod4), and (x+y\equiv7\pmod8). These residues make all six branches of `sixForcedNormalize` inapplicable, so `sixForcedExcluded x y=false`.
+
+Thus the s3 family is not already removed by the latest combined sieve. The new exact iff `blank_halts_iff_six_both_s3` adds it as a genuine infinite high-parameter exclusion while preserving the latest exact low branch and fixed-target decision.
+
+[CSixSeventhSixAll.lean](CSixSeventhSixAll.lean) contains this composition and its admission proof. The manual-only `.github/workflows/agent11-c-diagonal-late.yml` has been extended to compile it after `CSixSeventhC58.lean` and reject `sorryAx`. **Neither the repaired C58 wrapper nor this stronger six-sector composition has yet passed a fresh original-source CI run.** Keep both in `im-results/` until the existing manual workflow succeeds.
+
 ## Independence from the integrated C58 all-depth sieve
 
 The four high-stop classes are exactly equivalent to the single diagonal
