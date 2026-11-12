@@ -83,6 +83,38 @@ For **every** such n,s and initial Q satisfying `3d<=2Q+6`, original D source ru
 
 **Original source CI [42521006551](https://github.com/FlareZ123/bb6/actions/runs/42521006551) passed**, with all new `#print axioms` audits restricted to Lean's standard logical axioms, no `sorryAx`.
 
+## New B-to-E-to-A corridor (Lean source composition added; CI pending)
+
+The B-exit partition has a third branch beyond B-to-A and B-to-B-to-A: after the E-chain, a B packet can move to E, then one more E packet can move directly to A. This is now composed in [EChainBEExit.lean](EChainBEExit.lean), but the new file has **not yet been compiled by the manual source-audit workflow**. Treat the theorem as a proof candidate, not a verified result, until that audit passes.
+
+For every \(d,h,t,q,p\in\mathbb N\) with \(h\ge1\), \(d\ge1\), and
+\[
+1+4\cdot8^d h=27t+20,
+\]
+the proposed theorem chain_B_E_A source-composes:
+
+\`\`\`text
+M(1+4·3^d·h, q, 3d+3+p; Y_3)
+  -- d E edges --> M(27t+20, q+2d, 3+p; Y_3)
+  -- B edge --> M(72t+58, q+2d-1, 3+p; Y_3)
+  -- E edge --> M(192t+153, q+2d+1, p; Y_3).
+\`\`\`
+
+The final unary index is \(192t+153=3(64t+51)\), so Agent35's all-depth A-marker return closes it. Composing the initial exceptional reset gives reset_B_E_A: for \(2k+1=3^d h\) and \(3d+3\le2Q+6\), the fixed-tail input \(M(3k+4,Q,2;01^6)\) reaches one of the three established regular endpoints whenever \(1+4\cdot8^d h\equiv20\pmod{27}\).
+
+This is an explicit infinite residue cylinder. Since \(8^6\equiv1\pmod{27}\), the congruence is equivalent to the following \(h\pmod{27}\) classes, indexed by \(d\pmod6\):
+
+| \(d\bmod6\) | \(h\bmod27\) | odd \(h\bmod54\) (as required by \(2k+1=3^d h\)) |
+|---:|---:|---:|
+| 0 | 25 | 25 |
+| 1 | 20 | 47 |
+| 2 | 16 | 43 |
+| 3 | 2 | 29 |
+| 4 | 7 | 7 |
+| 5 | 11 | 11 |
+
+The source-level composition is deliberately separated from the modular parameterization. The new manual workflow step is wired to compile this file after EChainDoubleBExit.lean; successful Lean compilation and the #print axioms audit are still required before promotion. This corridor does not cover the other B-to-E residue classes or establish authentic blank-root reachability.
+
 ## Implications and limits
 
 The index condition is a 3-adic valuation classification of `2k+1`: `v₃(2k+1)=d` in these two families. For every depth there are infinitely many parameterized starts with a source-certified finite route back into the regular F/0 language. The proof does **not** show that all E resets satisfy one of those congruences, or that a specific genuine blank-root trajectory reaches the input. It gives no universal BB(6) upper bound and does not exclude all alternate exit configurations.
