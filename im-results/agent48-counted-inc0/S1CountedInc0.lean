@@ -204,12 +204,9 @@ theorem s1Config_counted_decrement_odd
     cases r with
     | zero => rfl
     | succ r =>
-        have hdivPow : 2 ∣ 2^(Nat.succ r) := by
-          simp [Nat.pow_succ,Nat.mul_comm]
-        have hdiv : 2 ∣ z := by
+        have heven : z % 2 = 0 := by
           rw [hfactor]
-          exact dvd_mul_of_dvd_right hdivPow (2*q+1)
-        have heven : z % 2 = 0 := Nat.mod_eq_zero_of_dvd hdiv
+          simp [Nat.pow_succ,Nat.mul_mod]
         omega
   have hfactor' : z = 2*q+1 := by simpa [hr] using hfactor
   have ha' : a = len+1 := by simpa [hr] using ha
@@ -240,12 +237,12 @@ theorem s1Config_counted_decrement
     exists_odd_factor_bounded a z hz hzlt
   by_cases heven : z % 2 = 0
   · have hrpos : 0 < r := by
-      by_contra hnot
-      have hr0 : r = 0 := by omega
-      have hodd : z % 2 = 1 := by
-        rw [hfactor]
-        simp [hr0]
-      omega
+      by_cases hr0 : r = 0
+      · have hodd : z % 2 = 1 := by
+          rw [hfactor]
+          simp [hr0]
+        omega
+      · omega
     have hdec := s1Config_counted_decrement_allPositive
       L n m len q r b h hq hrpos
     have hinput : s1Config L n m a z b h =
@@ -261,12 +258,9 @@ theorem s1Config_counted_decrement
       cases r with
       | zero => rfl
       | succ r =>
-          have hdivPow : 2 ∣ 2^(Nat.succ r) := by
-            simp [Nat.pow_succ,Nat.mul_comm]
-          have hdiv : 2 ∣ z := by
+          have heven' : z % 2 = 0 := by
             rw [hfactor]
-            exact dvd_mul_of_dvd_right hdivPow (2*q+1)
-          have heven' : z % 2 = 0 := Nat.mod_eq_zero_of_dvd hdiv
+            simp [Nat.pow_succ,Nat.mul_mod]
           omega
     have hfactor' : z = 2*q+1 := by simpa [hr0] using hfactor
     have ha' : a = len+1 := by simpa [hr0] using ha
