@@ -142,3 +142,22 @@ Two additional Lean 4.36 files now expose a precise proof interface:
 To check locally under the provided Lean 4.36.0-rc2, from this directory compile `ChampionModular.lean` to `ChampionModular.olean`, then `CostRecurrence.lean` to `CostRecurrence.olean`, then compile `StageAlgebra.lean` and `FuelComposition.lean` with this directory on `LEAN_PATH`. `CountPattern.lean` is standalone. All of these files were compiled successfully against the actual Lean 4.36.0-rc2 kernel on 2026-11-03, though **none are an original-source Cryptids/Rocq CI integration**, which is still an explicit future obligation.
 
 This development isolates one decisive missing proof, the authentic uniform counted `Rst0/1/2` macro transition, and two smaller bounded sublemmas, the `Inc0` micro-cost and `Rst1'` core cost. Filling those in original TM63 tape semantics would convert the explicit natural-number expression into a candidate exact-time witness subject to original-root transport and the final halt-action convention; proving the global maximum requires a separate exhaustive coverage certificate.
+
+
+## Counted positive-r prefix output and canonical even suffix (2026-11-12)
+
+The positive-r counted carry prefix is now being connected to a canonical S1 successor, rather than treated only as an explicit D/E tape return.
+
+- `CountedCarryPrefixGeneral.lean` extends `carryFinishFromD` with the terminal nonpositive-cell formula
+  `T'(x) = if x < h then T(x) else decide ((x-h) % 3 = 0)`
+  under its existing one-run and two-zero tail premises. The first full CI diagnostic exposed a missing local-let unfold of `T3`; that exact simplification was patched in commit `a98ee53230b1ce07374c4b7638018f2800537d4a`. Full-repository CI has not yet certified the patched declaration.
+- The exceptional `carryShortPrefix_r1` theorem additionally proves its exact left output:
+  `if x < -5 then T(x) else if x ≤ -3 then true else decide (x % 3 = 1)`
+  for x≤0. Its proof evaluates the bridge3, AReturn12, and A3 frames and retains the existing `carryPrefix_anyPositive` public result type.
+- `CountedSuffixOutput.lean` proves the exact tape effect of the even counted suffix: preserve x≤0, install the local cells {2,3,4}, extend the unary block through `even_rightStop b + 2`, and preserve the old exterior after that point. It also proves `even_counted_suffix_matches_s1_right_of_prefix`, which identifies the complete positive half with the canonical S1 right side at counter b+1.
+- The main composition interface is `even_counted_suffix_canonical_of_left`: given the prefix's nonpositive-cell identity and its existing x>6 preservation, the entire suffix output equals the canonical S1 target `s1Config L n m a zOut (b+1) h`. The remaining premise is precisely the left-output identity being developed by Agent 3; the theorem does not assume that identity is already proved.
+- The existing `.github/workflows/agent42-champion-terminal-source.yml` now copies and compiles `CountedSuffixOutput.lean` after `S1CountedCarryPrefixBridge.lean`, and uploads its axiom log on failure. No new workflow or trigger was created. The workflow remains available for a deliberate source-check milestone; this invocation could not dispatch it.
+
+The proof components for the new suffix output were tested in isolated Lean 4.36.0-rc2 models with the exact frame, sweep, and list definitions. That is not a substitute for compiling the actual repository module. All new full-repository declarations remain CI-pending, and no `results/` publication or BB(6) value claim is made.
+
+**Next integration edges:** (1) complete the remaining positive-r prefix left-output residues in `im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean`; (2) compose that identity with `even_counted_suffix_canonical_of_left` to identify the even counted return as a canonical S1 successor; (3) use the existing manual terminal-source workflow to compile the complete dependency chain and audit axioms. Agent 42 may also reuse the explicit 11-coordinate `hreturn` proof block in `carryShortPrefix_r1` when revisiting its residue-3 t=1 AReturn12 frame match.
