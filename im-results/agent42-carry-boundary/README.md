@@ -66,4 +66,4 @@ original encoded tape. Do not treat those premises as established here.
 
 ## Long residue-one left-output integration
 
-The companion module `S1CountedCarryPrefixBridge.lean` now also contains `s1Config_evenCounter_carryPrefix_r1_left`: a source-level S1-configuration theorem for the long r=4k+1 branch. It derives the carry-input match from the existing left/right S1 cell lemmas, invokes the arbitrary-head `carryLongPrefix_r1_shifted` theorem, and returns the six local cells, right-exterior preservation, and the left-output identity. This is **uncompiled** pending the manual terminal-source workflow; that workflow now includes `FrameCellLemmas.lean` and `LongResidue1.lean` before compiling this bridge.
+The standalone S1-specific r1 prefix wrapper was intentionally not retained: Agent 24's `S1CarryInc0.lean` now consumes `carryLongPrefix_r1_shifted` directly, using its own general `s1Config_carryInput_match` theorem. This avoids duplicating the source-level input-matching proof. The durable Agent 42 contribution is `FrameCellLemmas.lean` plus `LongResidue1.lean`; both are included in the manual terminal-source workflow and remain uncompiled here.
