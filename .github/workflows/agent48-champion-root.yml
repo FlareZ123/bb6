@@ -1,6 +1,24 @@
-name: Agent 48 original champion-root six-step equivalence (manual)
+name: Agent 48 original champion-root and q4 suffix Lean audit
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/agent48-champion-root.yml"
+      - "im-results/agent8-counted-reset/Q4Suffix.lean"
+      - "im-results/agent8-counted-reset/CountedReset.lean"
+      - "im-results/agent8-counted-reset/CountedResetBase.lean"
+      - "im-results/agent8-rst1prime/CountedRst1Prime.lean"
+      - "im-results/agent8-s1-encoder/S1Encoder.lean"
+      - "im-results/agent8-coverage-contract/Frontier.lean"
+      - "im-results/agent8-coverage-contract/Symmetry.lean"
+      - "im-results/agent8-coverage-contract/RootShift.lean"
+      - "im-results/agent24-champion-time/CountedSweep.lean"
+      - "im-results/agent24-champion-time/CountedOddBase.lean"
+      - "im-results/agent24-champion-time/ChampionModular.lean"
+      - "im-results/agent24-champion-time/CostRecurrence.lean"
+      - "im-results/agent24-champion-time/CountPattern.lean"
+      - "im-results/agent48-champion-root/ChampionRootBridge.lean"
+      - "im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64"
 permissions:
   contents: read
 jobs:
