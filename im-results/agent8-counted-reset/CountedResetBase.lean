@@ -1,4 +1,5 @@
 import CountedReset
+import CountedOddBase
 
 namespace BB6Coverage.Agent8CountedReset
 
@@ -60,18 +61,33 @@ def resetBaseOutput (m : Nat) : FConfig :=
 theorem resetBase_exact (m : Nat) (hm : m < 3) :
     fRun tm2 (63 + 4*m) (resetBaseInput m) =
       some (resetBaseOutput m) := by
-  interval_cases m <;> decide
+  have hcases : m=0 ∨ m=1 ∨ m=2 := by omega
+  rcases hcases with h|h|h
+  · subst m
+    decide
+  · subst m
+    decide
+  · subst m
+    decide
 
 /-- The local odd-base trace length agrees with the candidate reset-prefix
 cost at n=1, a=b=0. -/
 theorem resetBase_cost_eq (m : Nat) :
     63 + 4*m = resetPrefixCost m 1 0 0 := by
-  norm_num [resetPrefixCost]
+  have hv : v2 1 = 0 := by decide
+  simp [resetPrefixCost,hv]
 
 /-- In the b=0 base cases the source head advances exactly five cells. -/
 theorem resetBase_head_shift (m : Nat) (hm : m < 3) :
     (resetBaseOutput m).head = (resetBaseInput m).head + 5 := by
-  interval_cases m <;> rfl
+  have hcases : m=0 ∨ m=1 ∨ m=2 := by omega
+  rcases hcases with h|h|h
+  · subst m
+    rfl
+  · subst m
+    rfl
+  · subst m
+    rfl
 
 /-- The base traces never query outside their local frame intervals. -/
 theorem resetBase_heads (m : Nat) (hm : m < 3) :
@@ -83,7 +99,14 @@ theorem resetBase_heads (m : Nat) (hm : m < 3) :
         match fRun tm2 k (resetBaseInput m) with
         | none => true
         | some f => resetBaseInside m f.head) = true := by
-    interval_cases m <;> decide
+    have hcases : m=0 ∨ m=1 ∨ m=2 := by omega
+    rcases hcases with h|h|h
+    · subst m
+      decide
+    · subst m
+      decide
+    · subst m
+      decide
   exact finite_heads tm2 (resetBaseInside m) (resetBaseInput m)
     (63 + 4*m) hcheck
 
