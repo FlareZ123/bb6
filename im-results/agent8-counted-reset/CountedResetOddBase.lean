@@ -40,10 +40,8 @@ theorem resetBase_source_matches (L n m : Nat) (hm : m < 3)
   intro y hy
   have hbin := binDec_odd_head L n hn hbound
   interval_cases m
-  · have hyb : -8 ≤ y ∧ y ≤ 14 := by
-      have hy0 : -7 ≤ y ∧ y ≤ 14 := by
-        simpa [resetBaseInside] using hy
-      omega
+  · have hyb : -7 ≤ y ∧ y ≤ 14 := by
+      simpa [resetBaseInside] using hy
     interval_cases y <;>
       norm_num [embed, resetBaseInput, resetBaseInput0,
         s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing, s0PhysicalRight,
