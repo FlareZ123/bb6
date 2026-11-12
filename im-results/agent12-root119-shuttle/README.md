@@ -41,3 +41,22 @@ For any `n : Nat`, any surrounding infinite tape `t`, and head `h`, suppose ever
 For every **positive** even run (`2(n+1)` consecutive ones then zero), the further locally Lean-checked theorem `evenSweep_to_B` in [Root119EvenExtra.lean](Root119EvenExtra.lean) proves **`2(n+1)+3` successful steps** return state B at `h+2(n+1)+1`: after the alternating sweep, the final F1 erased the left neighbor of D0, so a **D0, E0, A0** three-instruction sequence follows. The complete tape configuration is preserved in the constructive existential proof; no halting step is used. **This extra corollary is locally Lean checked with ordinary axioms only; a separate unchanged-repository-source CI compilation for this module has not succeeded/been recorded**, although its dependencies are independently source-CI proven. Distinguish the scopes.
 
 These two uniform run families provide a complete local dichotomy by parity whenever a D state enters a *finite* one-run followed by zero. Their hypotheses are conditional on actual tape contents. They do not establish that the genuine blank orbit forever satisfies the required boundary conditions or that future B/0 states are safe.
+
+
+## F/1 marker lifecycle for even right corridors, 2026-11-12
+
+The source-imported module [Root119F1MarkerLifecycle.lean](Root119F1MarkerLifecycle.lean) extends the even-sweep theorem to the actual F/1 marker-creation state. It compiles against the authentic Agent 42 transition table and the existing even-marker gate theorem. GitHub Actions source-check passed under Lean 4.36.0-rc2: [run 43171128258](https://github.com/FlareZ123/bb6/actions/runs/43171128258). The printed kernel dependencies contain only the ordinary Lean axioms `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx`.
+
+For a reached F/1 state at head (h), assume:
+- the left suffix is (110): (t(h-3)=t(h-2)=1), (t(h-1)=0);
+- (t(h)=1);
+- the next (2(n+1)) cells are all one;
+- the following cell is zero.
+
+The theorem `f1_even_run_exact` gives the exact complete-tape endpoint after (1+2(n+1)+3) primitive transitions: B at (h+2+2(n+1)). The even D/F sweep and final D/0-E/0-A/0 tail are all included; cells outside the explicit writes are preserved.
+
+If the cell immediately after that terminating zero is also zero, `f1_even_double_zero_halts` proves that the reached B/0 endpoint satisfies `MarkerB0Pattern n`. The existing marker-ladder theorem then reaches the C gate and the existing C-gate theorem reaches a stopping configuration. This is a genuine blank-root halting implication, not merely a local simulator observation.
+
+If instead that next cell is one, `f1_even_endpoint_one_to_F1` proves the exact B/1 transition and returns a reached F/1 state at (h+1+2(n+1)). Its three left cells are (011) (far-to-near), and the original (1100) marker remains strictly behind it. This closes the immediate endpoint case but deliberately does **not** claim that the resulting branch halts or is safe; the subsequent right corridor must be analyzed.
+
+The results are intermediate and conditional. They do not establish that the genuine blank orbit reaches such an even F/1 corridor, do not settle the endpoint-one continuation, and do not determine BB(6). Keep this work in `im-results/` unless the missing orbit-level argument is supplied.
