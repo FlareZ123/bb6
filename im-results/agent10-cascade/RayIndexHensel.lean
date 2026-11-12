@@ -547,6 +547,66 @@ theorem nestedOddNumerator_unique_lift (n j t k:Nat)
     (nestedOddNumerator_lift_criterion n j t k r hj hrlt hbase).mp hrdiv
   exact henselDigit_div q a ha r hrlt (by simpa [q,a] using hcrit)
 
+private theorem nestedOddNumerator_step_divisible (n j t k:Nat) :
+    (3:Int)^(k+1)∣
+      nestedOddNumerator (n+depthPeriod (k+1)) j t-
+        nestedOddNumerator n j t := by
+  have hz:=signedZ_index_step_divisible n j k
+  rcases hz with ⟨c,hc⟩
+  change
+    (2:Int)^(t+1)*signedZ (n+depthPeriod (k+1)) j+
+        5*(3:Int)^(t+1)-
+      ((2:Int)^(t+1)*signedZ n j+5*(3:Int)^(t+1)) =
+      (3:Int)^(k+1)*((2:Int)^(t+1)*c)
+  calc
+    _=(2:Int)^(t+1)*signedZ (n+depthPeriod (k+1)) j-
+        (2:Int)^(t+1)*signedZ n j:=by omega
+    _=(2:Int)^(t+1)*
+        (signedZ (n+depthPeriod (k+1)) j-signedZ n j):=by
+      rw [Int.mul_sub]
+    _=(2:Int)^(t+1)*((3:Int)^(k+1)*c):=by rw [hc]
+    _=(3:Int)^(k+1)*((2:Int)^(t+1)*c):=by ac_rfl
+
+private theorem nestedOddNumerator_step_mod (n j t k:Nat) :
+    nestedOddNumerator (n+depthPeriod (k+1)) j t%(3:Int)^(k+1) =
+      nestedOddNumerator n j t%(3:Int)^(k+1) := by
+  apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
+  exact Int.dvd_iff_emod_eq_zero.mp
+    (nestedOddNumerator_step_divisible n j t k)
+
+/-- Shifting the index by a full period preserves the numerator modulo
+    the current Hensel precision. -/
+private theorem nestedOddNumerator_period_mul (s j t h k m:Nat)
+    (hj:j%2=0) :
+    nestedOddNumerator (s+6*(h+m*3^k)) j t%(3:Int)^(k+1) =
+      nestedOddNumerator (s+6*h) j t%(3:Int)^(k+1) := by
+  induction m with
+  | zero => simp
+  | succ m ih =>
+      have hidx :
+          s+6*(h+(m+1)*3^k)=
+            (s+6*(h+m*3^k))+depthPeriod (k+1) := by
+        simp [depthPeriod,Nat.pow_succ,Nat.succ_mul]
+        omega
+      rw [hidx]
+      exact (nestedOddNumerator_step_mod (s+6*(h+m*3^k)) j t k).trans ih
+
+private theorem nestedOddNumerator_period_dvd_iff (s j t k h:Nat)
+    (hj:j%2=0) :
+    (3:Int)^(k+1)∣nestedOddNumerator (s+6*h) j t ↔
+      (3:Int)^(k+1)∣nestedOddNumerator (s+6*(h%3^k)) j t := by
+  rw [Int.dvd_iff_emod_eq_zero,Int.dvd_iff_emod_eq_zero]
+  have hperiod:=nestedOddNumerator_period_mul s j t (h%3^k) k (h/3^k) hj
+  have he : h%3^k+(h/3^k)*3^k=h:=Nat.mod_add_div' h (3^k)
+  rw [he] at hperiod
+  constructor
+  · intro hx
+    rw [←hperiod]
+    exact hx
+  · intro hy
+    rw [hperiod]
+    exact hy
+
 /-- At the t=3 high-q gate, the next index digit is exactly the
     quotient W_(j,3)(n)/3^8 modulo 3. -/
 theorem tThreeHighGate_digit_eq_quotient_mod_three (n j:Nat)
