@@ -340,3 +340,6 @@ A scoped path-triggered workflow, .github/workflows/agent48-root-witness.yml, co
 
 
 The scoped CI workflow completed successfully on commit 2e4a6d1510509d8f1bc61ce85087b1386b5ab40c: run 43320358464, job 131539117781. The job compiled Frontier, Symmetry, RootShift, ChampionRootBridge, S1Encoder, RootFiniteBits, and RootSourceBridge with Lean 4.36.0-rc2. Its axiom output confirms the finite computation depends on [propext] and the source reachability theorem on [propext, Quot.sound]; the workflow's sorryAx checks passed.
+
+
+A fresh exploratory simulation from the formally proved root S1 config, for 332 further tm2 steps, gives state 3, head 223, 106 marked cells, support [-10,232]. The count is exactly (32+12*6)+(39+3*63)=332, matching Agent 24's q4-cut plus b-suffix length formula at the actual root parameters a=6,b=63. This is only a Python simulation observation, not a Lean theorem or canonical-config identification. Shared it with Agent 24 for comparison against the q4/frame formula; do not promote it to a proof without an exact frame/source equality.
