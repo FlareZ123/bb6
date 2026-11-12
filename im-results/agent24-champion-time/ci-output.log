@@ -1,5 +1,5 @@
-RUN_ID=43155168935
-RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43155168935
+RUN_ID=43156639401
+RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43156639401
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
@@ -230,113 +230,892 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 'BB6Coverage.Agent8S1Encoder.s1PhysicalLeft_carrySuffix' depends on axioms: [propext, Quot.sound]
 'BB6Coverage.Agent8S1Encoder.s1PhysicalLeft_m0_zero' depends on axioms: [propext, Quot.sound]
 === CountedS1Carry ===
-TM63Uniform.Cfg : Type
-TM63Uniform.rawStart : Nat → Nat → List Bool → List Bool → TM63Uniform.Cfg
-TM63Uniform.rawEnd : Nat → Nat → List Bool → List Bool → TM63Uniform.Cfg
-TM63Uniform.counted_all (k c : Nat) (ls rs : List Bool) :
-  TM63Uniform.run (48 + 12 * k + 12 * c) (TM63Uniform.rawStart k c ls rs) = TM63Uniform.rawEnd k c ls rs
-TM63Uniform.counted_no_early_halt (k c : Nat) (ls rs : List Bool) (t : Nat) (ht : t ≤ 48 + 12 * k + 12 * c) :
-  ¬((TM63Uniform.run t (TM63Uniform.rawStart k c ls rs)).st = 0 ∧
-      (TM63Uniform.run t (TM63Uniform.rawStart k c ls rs)).h = true)
-TM63Uniform.run : Nat → TM63Uniform.Cfg → TM63Uniform.Cfg
-TM63Uniform.step (c : TM63Uniform.Cfg) : TM63Uniform.Cfg
-BB6.ChampionTerminal.Z : Type
-BB6.ChampionTerminal.Full : Type
-BB6.ChampionTerminal.embedFull (z : BB6.ChampionTerminal.Z) (position : Int) : BB6.ChampionTerminal.Full
-BB6.ChampionTerminal.fullStep (z : BB6.ChampionTerminal.Full) : Option BB6.ChampionTerminal.Full
-BB6.ChampionTerminal.fullRun : Nat → BB6.ChampionTerminal.Full → Option BB6.ChampionTerminal.Full
-BB6.ChampionTerminal.locatedStep (zp : BB6.ChampionTerminal.Z × Int) : Option (BB6.ChampionTerminal.Z × Int)
-BB6.ChampionTerminal.locatedRun : Nat → BB6.ChampionTerminal.Z × Int → Option (BB6.ChampionTerminal.Z × Int)
-BB6.ChampionTerminal.run_semiconjugacy (n : Nat) (z : BB6.ChampionTerminal.Z) (p : Int) :
-  Option.map (fun w => BB6.ChampionTerminal.embedFull w.fst w.snd) (BB6.ChampionTerminal.locatedRun n (z, p)) =
-    BB6.ChampionTerminal.fullRun n (BB6.ChampionTerminal.embedFull z p)
-BB6.ChampionTerminal.run_add (n m : Nat) (z : BB6.ChampionTerminal.Z) :
-  BB6.ChampionTerminal.run (n + m) z = (BB6.ChampionTerminal.run n z).bind (BB6.ChampionTerminal.run m)
-BB6.ChampionTerminal.sideBit : List Bool → Nat → Bool
-BB6Coverage.Config : Type
-BB6Coverage.rawStep (m : BB6Coverage.Machine) (c : BB6Coverage.Config) : Option BB6Coverage.Config
-BB6Coverage.run (m : BB6Coverage.Machine) : Nat → BB6Coverage.Config → Option BB6Coverage.Config
-BB6Coverage.Agent48Champion.tm2 : BB6Coverage.Machine
-BB6Coverage.Agent8S1Encoder.s1Config (L n m a z b : Nat) (h : Int) : BB6Coverage.Config
-BB6Coverage.Agent8S1Encoder.s1LeftFacing (L n m a z : Nat) : List Bool
-BB6Coverage.Agent8S1Encoder.s1PhysicalRight (b : Nat) : List Bool
-BB6Coverage.Agent8S1Encoder.s1LeftFacing_carryPrefix (L n m len q r : Nat) (hq : q < 2 ^ len) :
-  BB6Coverage.Agent8S1Encoder.s1LeftFacing L n m (len + 1 + r) ((2 * q + 1) * 2 ^ r) =
-    BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++ BB6Coverage.Agent8S1Encoder.binDec len q ++
-            BB6Coverage.Agent8S1Encoder.markerWord m ++
-          BB6Coverage.Agent8S1Encoder.d0 ++
-        BB6Coverage.Agent8S1Encoder.binDec L n ++
-      BB6Coverage.Agent8S1Encoder.lh
-BB6Coverage.Agent8S1Encoder.s1Config_left_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
-  (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h - ↑i) =
-    BB6Coverage.Agent8S1Encoder.sideBit (BB6Coverage.Agent8S1Encoder.s1LeftFacing L n m a z) i
-BB6Coverage.Agent8S1Encoder.s1Config_right_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
-  (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h + 1 + ↑i) =
-    BB6Coverage.Agent8S1Encoder.sideBit (BB6Coverage.Agent8S1Encoder.s1PhysicalRight b) i
-BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry (L n m a z b : Nat) (h : Int) (hz : 0 < z) (hzlt : z < 2 ^ a) :
-  ∃ q r len,
-    z = (2 * q + 1) * 2 ^ r ∧
-      a = len + 1 + r ∧
-        q < 2 ^ len ∧
-          ∀ (i : Nat),
-            (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h - ↑i) =
-              BB6Coverage.Agent8S1Encoder.sideBit
-                (BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++
-                          BB6Coverage.Agent8S1Encoder.binDec len q ++
-                        BB6Coverage.Agent8S1Encoder.markerWord m ++
-                      BB6Coverage.Agent8S1Encoder.d0 ++
-                    BB6Coverage.Agent8S1Encoder.binDec L n ++
-                  BB6Coverage.Agent8S1Encoder.lh)
-                i
-BB6Coverage.Agent8S1Encoder.binDec_even (len n : Nat) (hn : n < 2 ^ len) :
-  BB6Coverage.Agent8S1Encoder.binDec (len + 1) (2 * n) =
-    BB6Coverage.Agent8S1Encoder.d1 ++ BB6Coverage.Agent8S1Encoder.binDec len n
-BB6Coverage.Agent8S1Encoder.binDec_odd (len n : Nat) (hn : n < 2 ^ len) :
-  BB6Coverage.Agent8S1Encoder.binDec (len + 1) (2 * n + 1) =
-    BB6Coverage.Agent8S1Encoder.d0 ++ BB6Coverage.Agent8S1Encoder.binDec len n
-BB6Coverage.Agent8S1Encoder.d0 : List Bool
-BB6Coverage.Agent8S1Encoder.d1 : List Bool
-BB6Coverage.Agent8S1Encoder.d1pow : Nat → List Bool
-BB6Coverage.Agent8S1Encoder.sideBit : List Bool → Nat → Bool
-BB6.ChampionTerminal.locatedStep (zp : BB6.ChampionTerminal.Z × Int) : Option (BB6.ChampionTerminal.Z × Int)
-BB6.ChampionTerminal.locatedRun : Nat → BB6.ChampionTerminal.Z × Int → Option (BB6.ChampionTerminal.Z × Int)
-BB6.ChampionTerminal.run_add (n m : Nat) (z : BB6.ChampionTerminal.Z) :
-  BB6.ChampionTerminal.run (n + m) z = (BB6.ChampionTerminal.run n z).bind (BB6.ChampionTerminal.run m)
-BB6.ChampionTerminal.run_semiconjugacy (n : Nat) (z : BB6.ChampionTerminal.Z) (p : Int) :
-  Option.map (fun w => BB6.ChampionTerminal.embedFull w.fst w.snd) (BB6.ChampionTerminal.locatedRun n (z, p)) =
-    BB6.ChampionTerminal.fullRun n (BB6.ChampionTerminal.embedFull z p)
-BB6.ChampionTerminal.sideBit : List Bool → Nat → Bool
-CountedS1Carry.lean:49:7: error(lean.unknownIdentifier): Unknown constant `BB6Coverage.Config.ext`
-BB6Coverage.applyMove (c : BB6Coverage.Config) (t : BB6Coverage.Move) : BB6Coverage.Config
-BB6Coverage.rawStep (m : BB6Coverage.Machine) (c : BB6Coverage.Config) : Option BB6Coverage.Config
-BB6Coverage.run (m : BB6Coverage.Machine) : Nat → BB6Coverage.Config → Option BB6Coverage.Config
-BB6Coverage.Agent48Champion.tm2 : BB6Coverage.Machine
-BB6Coverage.Agent8S1Encoder.s1Config_left_carryCells (L n m len q r b : Nat) (h : Int) (i : Nat) (hq : q < 2 ^ len) :
-  (BB6Coverage.Agent8S1Encoder.s1Config L n m (len + 1 + r) ((2 * q + 1) * 2 ^ r) b h).tape (h - ↑i) =
-    BB6Coverage.Agent8S1Encoder.sideBit
-      (BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++
-                BB6Coverage.Agent8S1Encoder.binDec len q ++
-              BB6Coverage.Agent8S1Encoder.markerWord m ++
-            BB6Coverage.Agent8S1Encoder.d0 ++
-          BB6Coverage.Agent8S1Encoder.binDec L n ++
-        BB6Coverage.Agent8S1Encoder.lh)
-      i
-BB6Coverage.Agent8S1Encoder.s1PhysicalRight_source (b : Nat) :
-  BB6Coverage.Agent8S1Encoder.s1PhysicalRight b =
-    [false, true, true, true, false, false] ++ BB6Coverage.Agent8S1Encoder.d1pow (b + 1)
-BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry (L n m a z b : Nat) (h : Int) (hz : 0 < z) (hzlt : z < 2 ^ a) :
-  ∃ q r len,
-    z = (2 * q + 1) * 2 ^ r ∧
-      a = len + 1 + r ∧
-        q < 2 ^ len ∧
-          ∀ (i : Nat),
-            (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h - ↑i) =
-              BB6Coverage.Agent8S1Encoder.sideBit
-                (BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++
-                          BB6Coverage.Agent8S1Encoder.binDec len q ++
-                        BB6Coverage.Agent8S1Encoder.markerWord m ++
-                      BB6Coverage.Agent8S1Encoder.d0 ++
-                    BB6Coverage.Agent8S1Encoder.binDec L n ++
-                  BB6Coverage.Agent8S1Encoder.lh)
-                i
+CountedS1Carry.lean:31:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  c ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := st, l := l, h := b, r := r }.st
+ c := ↑st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 0, l := l, h := false, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 1, l := true :: l, h := false, r := [] }
+    | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 1, l := l, h := false, r := r }.st
+ b := ↑(match l with
+    | [] => { st := 2, l := [], h := false, r := true :: r }
+    | x :: xs => { st := 2, l := xs, h := x, r := true :: r }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 1, l := l, h := true, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 5, l := false :: l, h := false, r := [] }
+    | x :: xs => { st := 5, l := false :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 2, l := l, h := false, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 4, l := true :: l, h := false, r := [] }
+    | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 2, l := l, h := true, r := r }.st
+ b := ↑(match l with
+    | [] => { st := 3, l := [], h := false, r := false :: r }
+    | x :: xs => { st := 3, l := xs, h := x, r := false :: r }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 3, l := l, h := false, r := r }.st
+ b := ↑(match l with
+    | [] => { st := 2, l := [], h := false, r := false :: r }
+    | x :: xs => { st := 2, l := xs, h := x, r := false :: r }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 3, l := l, h := true, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 1, l := true :: l, h := false, r := [] }
+    | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 4, l := l, h := false, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 0, l := true :: l, h := false, r := [] }
+    | x :: xs => { st := 0, l := true :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 4, l := l, h := true, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 4, l := true :: l, h := false, r := [] }
+    | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 5, l := l, h := false, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 4, l := true :: l, h := false, r := [] }
+    | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).st
+CountedS1Carry.lean:34:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 6
+  0 ≤ a ≤ 5
+where
+ a := ↑{ st := 5, l := l, h := true, r := r }.st
+ b := ↑(match r with
+    | [] => { st := 3, l := false :: l, h := false, r := [] }
+    | x :: xs => { st := 3, l := false :: l, h := x, r := xs }).st
+CountedS1Carry.lean:45:72: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  c ≥ 6
+  1 ≤ a ≤ 5
+where
+ a := ↑{ st := st, l := l, h := b, r := r }.st
+ c := ↑st
+CountedS1Carry.lean:44:16: error: unsolved goals
+case mk.inl.false
+l r : List Bool
+hc : { st := 0, l := l, h := false, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.B (true :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 1, l := true :: l, h := false, r := [] }
+            | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 1, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 1, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 1, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).r }
+
+case mk.inr.inl.false
+l r : List Bool
+hc : { st := 1, l := l, h := false, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.C l.tail (l.head?.getD false) (true :: r) =
+    {
+      state :=
+        match
+          (match l with
+            | [] => { st := 2, l := [], h := false, r := true :: r }
+            | x :: xs => { st := 2, l := xs, h := x, r := true :: r }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match l with
+          | [] => { st := 2, l := [], h := false, r := true :: r }
+          | x :: xs => { st := 2, l := xs, h := x, r := true :: r }).l,
+      cur :=
+        (match l with
+          | [] => { st := 2, l := [], h := false, r := true :: r }
+          | x :: xs => { st := 2, l := xs, h := x, r := true :: r }).h,
+      right :=
+        (match l with
+          | [] => { st := 2, l := [], h := false, r := true :: r }
+          | x :: xs => { st := 2, l := xs, h := x, r := true :: r }).r }
+
+case mk.inr.inl.true
+l r : List Bool
+hc : { st := 1, l := l, h := true, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.F (false :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 5, l := false :: l, h := false, r := [] }
+            | x :: xs => { st := 5, l := false :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 5, l := false :: l, h := false, r := [] }
+          | x :: xs => { st := 5, l := false :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 5, l := false :: l, h := false, r := [] }
+          | x :: xs => { st := 5, l := false :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 5, l := false :: l, h := false, r := [] }
+          | x :: xs => { st := 5, l := false :: l, h := x, r := xs }).r }
+
+case mk.inr.inr.inl.false
+l r : List Bool
+hc : { st := 2, l := l, h := false, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.E (true :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 4, l := true :: l, h := false, r := [] }
+            | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).r }
+
+case mk.inr.inr.inl.true
+l r : List Bool
+hc : { st := 2, l := l, h := true, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.D l.tail (l.head?.getD false) (false :: r) =
+    {
+      state :=
+        match
+          (match l with
+            | [] => { st := 3, l := [], h := false, r := false :: r }
+            | x :: xs => { st := 3, l := xs, h := x, r := false :: r }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match l with
+          | [] => { st := 3, l := [], h := false, r := false :: r }
+          | x :: xs => { st := 3, l := xs, h := x, r := false :: r }).l,
+      cur :=
+        (match l with
+          | [] => { st := 3, l := [], h := false, r := false :: r }
+          | x :: xs => { st := 3, l := xs, h := x, r := false :: r }).h,
+      right :=
+        (match l with
+          | [] => { st := 3, l := [], h := false, r := false :: r }
+          | x :: xs => { st := 3, l := xs, h := x, r := false :: r }).r }
+
+case mk.inr.inr.inr.inl.false
+l r : List Bool
+hc : { st := 3, l := l, h := false, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.C l.tail (l.head?.getD false) (false :: r) =
+    {
+      state :=
+        match
+          (match l with
+            | [] => { st := 2, l := [], h := false, r := false :: r }
+            | x :: xs => { st := 2, l := xs, h := x, r := false :: r }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match l with
+          | [] => { st := 2, l := [], h := false, r := false :: r }
+          | x :: xs => { st := 2, l := xs, h := x, r := false :: r }).l,
+      cur :=
+        (match l with
+          | [] => { st := 2, l := [], h := false, r := false :: r }
+          | x :: xs => { st := 2, l := xs, h := x, r := false :: r }).h,
+      right :=
+        (match l with
+          | [] => { st := 2, l := [], h := false, r := false :: r }
+          | x :: xs => { st := 2, l := xs, h := x, r := false :: r }).r }
+
+case mk.inr.inr.inr.inl.true
+l r : List Bool
+hc : { st := 3, l := l, h := true, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.B (true :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 1, l := true :: l, h := false, r := [] }
+            | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 1, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 1, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 1, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 1, l := true :: l, h := x, r := xs }).r }
+
+case mk.inr.inr.inr.inr.inl.false
+l r : List Bool
+hc : { st := 4, l := l, h := false, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.A (true :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 0, l := true :: l, h := false, r := [] }
+            | x :: xs => { st := 0, l := true :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 0, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 0, l := true :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 0, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 0, l := true :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 0, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 0, l := true :: l, h := x, r := xs }).r }
+
+case mk.inr.inr.inr.inr.inl.true
+l r : List Bool
+hc : { st := 4, l := l, h := true, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.E (true :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 4, l := true :: l, h := false, r := [] }
+            | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).r }
+
+case mk.inr.inr.inr.inr.inr.false
+l r : List Bool
+hc : { st := 5, l := l, h := false, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.E (true :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 4, l := true :: l, h := false, r := [] }
+            | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 4, l := true :: l, h := false, r := [] }
+          | x :: xs => { st := 4, l := true :: l, h := x, r := xs }).r }
+
+case mk.inr.inr.inr.inr.inr.true
+l r : List Bool
+hc : { st := 5, l := l, h := true, r := r }.st < 6
+hsafe : True
+⊢ cfg Q.D (false :: l) (r.head?.getD false) r.tail =
+    {
+      state :=
+        match
+          (match r with
+            | [] => { st := 3, l := false :: l, h := false, r := [] }
+            | x :: xs => { st := 3, l := false :: l, h := x, r := xs }).st with
+        | 0 => Q.A
+        | 1 => Q.B
+        | 2 => Q.C
+        | 3 => Q.D
+        | 4 => Q.E
+        | 5 => Q.F
+        | x => Q.A,
+      left :=
+        (match r with
+          | [] => { st := 3, l := false :: l, h := false, r := [] }
+          | x :: xs => { st := 3, l := false :: l, h := x, r := xs }).l,
+      cur :=
+        (match r with
+          | [] => { st := 3, l := false :: l, h := false, r := [] }
+          | x :: xs => { st := 3, l := false :: l, h := x, r := xs }).h,
+      right :=
+        (match r with
+          | [] => { st := 3, l := false :: l, h := false, r := [] }
+          | x :: xs => { st := 3, l := false :: l, h := x, r := xs }).r }
+CountedS1Carry.lean:76:60: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  d ≥ 1
+  0 ≤ b ≤ 5
+  0 ≤ a ≤ 5
+where
+ a := ↑c.st
+ b := ↑(TM63Uniform.step c).st
+ d := ↑(TM63Uniform.run 0 c).st
+CountedS1Carry.lean:94:55: error: unsolved goals
+k c : Nat
+ls rs : List Bool
+⊢ (match k, c, ls, rs with
+      | 0, c, ls, rs =>
+        { st := 3, l := false :: true :: ls, h := false,
+          r := false :: (TM63Uniform.ones 3 ++ false :: false :: TM63Uniform.dTail c rs) }
+      | k.succ, c, ls, rs =>
+        { st := 3, l := TM63Uniform.ones (3 * k + 2) ++ false :: false :: true :: ls, h := true,
+          r := false :: true :: true :: true :: false :: false :: TM63Uniform.dTail c rs }).st <
+    6
+CountedS1Carry.lean:112:53: warning: This simp argument is unused:
+  h
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:123:22: warning: This simp argument is unused:
+  h
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:125:21: warning: This simp argument is unused:
+  h
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Option.bind_some, Option.map_some]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:139:20: warning: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp [hloc]
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+CountedS1Carry.lean:160:13: error: unsolved goals
+case mk.B.false
+h : Int
+t : Int → Bool
+hb : t h = false
+⊢ h - 1 = h + -1
+
+case mk.C.true
+h : Int
+t : Int → Bool
+hb : t h = true
+⊢ h - 1 = h + -1
+
+case mk.D.false
+h : Int
+t : Int → Bool
+hb : t h = false
+⊢ some { state := 2, head := h - 1, tape := fun x => !decide (x = h) && t x } =
+    Option.map (applyMove { state := 3, head := h, tape := t })
+      (match ↑3, false with
+      | 0, false => some { write := true, right := true, next := 1 }
+      | 0, true => none
+      | 1, false => some { write := true, right := false, next := 2 }
+      | 1, true => some { write := false, right := true, next := 5 }
+      | 2, false => some { write := true, right := true, next := 4 }
+      | 2, true => some { write := false, right := false, next := 3 }
+      | 3, false => some { write := false, right := false, next := 2 }
+      | 3, true => some { write := true, right := true, next := 1 }
+      | 4, false => some { write := true, right := true, next := 0 }
+      | 4, true => some { write := true, right := true, next := 4 }
+      | 5, false => some { write := true, right := true, next := 4 }
+      | 5, true => some { write := false, right := true, next := 3 }
+      | x, x_1 => none)
+
+case mk.D.true
+h : Int
+t : Int → Bool
+hb : t h = true
+⊢ some { state := 1, head := h + 1, tape := fun x => decide (x = h) || t x } =
+    Option.map (applyMove { state := 3, head := h, tape := t })
+      (match ↑3, true with
+      | 0, false => some { write := true, right := true, next := 1 }
+      | 0, true => none
+      | 1, false => some { write := true, right := false, next := 2 }
+      | 1, true => some { write := false, right := true, next := 5 }
+      | 2, false => some { write := true, right := true, next := 4 }
+      | 2, true => some { write := false, right := false, next := 3 }
+      | 3, false => some { write := false, right := false, next := 2 }
+      | 3, true => some { write := true, right := true, next := 1 }
+      | 4, false => some { write := true, right := true, next := 0 }
+      | 4, true => some { write := true, right := true, next := 4 }
+      | 5, false => some { write := true, right := true, next := 4 }
+      | 5, true => some { write := false, right := true, next := 3 }
+      | x, x_1 => none)
+
+case mk.E.false
+h : Int
+t : Int → Bool
+hb : t h = false
+⊢ some { state := 0, head := h + 1, tape := fun x => decide (x = h) || t x } =
+    Option.map (applyMove { state := 4, head := h, tape := t })
+      (match ↑4, false with
+      | 0, false => some { write := true, right := true, next := 1 }
+      | 0, true => none
+      | 1, false => some { write := true, right := false, next := 2 }
+      | 1, true => some { write := false, right := true, next := 5 }
+      | 2, false => some { write := true, right := true, next := 4 }
+      | 2, true => some { write := false, right := false, next := 3 }
+      | 3, false => some { write := false, right := false, next := 2 }
+      | 3, true => some { write := true, right := true, next := 1 }
+      | 4, false => some { write := true, right := true, next := 0 }
+      | 4, true => some { write := true, right := true, next := 4 }
+      | 5, false => some { write := true, right := true, next := 4 }
+      | 5, true => some { write := false, right := true, next := 3 }
+      | x, x_1 => none)
+
+case mk.E.true
+h : Int
+t : Int → Bool
+hb : t h = true
+⊢ some { state := 4, head := h + 1, tape := fun x => decide (x = h) || t x } =
+    Option.map (applyMove { state := 4, head := h, tape := t })
+      (match ↑4, true with
+      | 0, false => some { write := true, right := true, next := 1 }
+      | 0, true => none
+      | 1, false => some { write := true, right := false, next := 2 }
+      | 1, true => some { write := false, right := true, next := 5 }
+      | 2, false => some { write := true, right := true, next := 4 }
+      | 2, true => some { write := false, right := false, next := 3 }
+      | 3, false => some { write := false, right := false, next := 2 }
+      | 3, true => some { write := true, right := true, next := 1 }
+      | 4, false => some { write := true, right := true, next := 0 }
+      | 4, true => some { write := true, right := true, next := 4 }
+      | 5, false => some { write := true, right := true, next := 4 }
+      | 5, true => some { write := false, right := true, next := 3 }
+      | x, x_1 => none)
+
+case mk.F.false
+h : Int
+t : Int → Bool
+hb : t h = false
+⊢ some { state := 4, head := h + 1, tape := fun x => decide (x = h) || t x } =
+    Option.map (applyMove { state := 5, head := h, tape := t })
+      (match ↑5, false with
+      | 0, false => some { write := true, right := true, next := 1 }
+      | 0, true => none
+      | 1, false => some { write := true, right := false, next := 2 }
+      | 1, true => some { write := false, right := true, next := 5 }
+      | 2, false => some { write := true, right := true, next := 4 }
+      | 2, true => some { write := false, right := false, next := 3 }
+      | 3, false => some { write := false, right := false, next := 2 }
+      | 3, true => some { write := true, right := true, next := 1 }
+      | 4, false => some { write := true, right := true, next := 0 }
+      | 4, true => some { write := true, right := true, next := 4 }
+      | 5, false => some { write := true, right := true, next := 4 }
+      | 5, true => some { write := false, right := true, next := 3 }
+      | x, x_1 => none)
+
+case mk.F.true
+h : Int
+t : Int → Bool
+hb : t h = true
+⊢ some { state := 3, head := h + 1, tape := fun x => !decide (x = h) && t x } =
+    Option.map (applyMove { state := 5, head := h, tape := t })
+      (match ↑5, true with
+      | 0, false => some { write := true, right := true, next := 1 }
+      | 0, true => none
+      | 1, false => some { write := true, right := false, next := 2 }
+      | 1, true => some { write := false, right := true, next := 5 }
+      | 2, false => some { write := true, right := true, next := 4 }
+      | 2, true => some { write := false, right := false, next := 3 }
+      | 3, false => some { write := false, right := false, next := 2 }
+      | 3, true => some { write := true, right := true, next := 1 }
+      | 4, false => some { write := true, right := true, next := 0 }
+      | 4, true => some { write := true, right := true, next := 4 }
+      | 5, false => some { write := true, right := true, next := 4 }
+      | 5, true => some { write := false, right := true, next := 3 }
+      | x, x_1 => none)
+CountedS1Carry.lean:178:12: error: Type mismatch: After simplification, term
+  ih
+ has type
+  none = run Agent48Champion.tm2 n (fullToConfig f)
+but is expected to have type
+  run Agent48Champion.tm2 n (fullToConfig f) = none
+CountedS1Carry.lean:184:14: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  fullRun n f
+in the target expression
+  Option.map fullToConfig ((some g).bind fullStep) =
+    (run Agent48Champion.tm2 n (fullToConfig f)).bind (rawStep Agent48Champion.tm2)
+
+case succ.some
+f : Full
+n : Nat
+ih : Option.map fullToConfig (fullRun n f) = run Agent48Champion.tm2 n (fullToConfig f)
+g : Full
+h : fullRun n f = some g
+hrun : run Agent48Champion.tm2 n (fullToConfig f) = some (fullToConfig g)
+⊢ Option.map fullToConfig ((some g).bind fullStep) =
+    (run Agent48Champion.tm2 n (fullToConfig f)).bind (rawStep Agent48Champion.tm2)
+CountedS1Carry.lean:179:16: warning: This simp argument is unused:
+  h
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hrun]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:241:48: error: unsolved goals
+z : Z
+h : Int
+i : Nat
+hd : h + 1 + ↑i - h = ↑i + 1
+⊢ (match ↑i + 1 with
+    | Int.ofNat 0 => z.cur
+    | Int.ofNat n.succ => BB6.ChampionTerminal.sideBit z.right n
+    | Int.negSucc n => BB6.ChampionTerminal.sideBit z.left n) =
+    BB6.ChampionTerminal.sideBit z.right i
+CountedS1Carry.lean:244:4: warning: This simp argument is unused:
+  BB6.ChampionTerminal.sideBit
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [BB6.ChampionTerminal.embedFull, BB6.ChampionTerminal.relativeTape, hd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:267:14: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (embedFull ?z ?h).tape (?h - ↑?i)
+in the target expression
+  (fullToConfig (embedFull z h)).tape (h - ↑i) = (s1Config L n m a v b h).tape (h - ↑i)
+
+case pos
+z : Z
+h : Int
+L n m a v b : Nat
+hstate : z.state = Q.D
+hleft : z.cur :: z.left = s1LeftFacing L n m a v
+hright : ∀ (i : Nat), BB6.ChampionTerminal.sideBit z.right i = Agent8S1Encoder.sideBit (s1PhysicalRight b) i
+x : Int
+hle : x ≤ h
+i : Nat := (h - x).toNat
+hi : ↑i = h - x
+hx : x = h - ↑i
+⊢ (fullToConfig (embedFull z h)).tape (h - ↑i) = (s1Config L n m a v b h).tape (h - ↑i)
+CountedS1Carry.lean:273:14: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (embedFull ?z ?h).tape (?h + 1 + ↑?i)
+in the target expression
+  (fullToConfig (embedFull z h)).tape (h + 1 + ↑i) = (s1Config L n m a v b h).tape (h + 1 + ↑i)
+
+case neg
+z : Z
+h : Int
+L n m a v b : Nat
+hstate : z.state = Q.D
+hleft : z.cur :: z.left = s1LeftFacing L n m a v
+hright : ∀ (i : Nat), BB6.ChampionTerminal.sideBit z.right i = Agent8S1Encoder.sideBit (s1PhysicalRight b) i
+x : Int
+hle : ¬x ≤ h
+i : Nat := (x - h - 1).toNat
+hi : ↑i = x - h - 1
+hx : x = h + 1 + ↑i
+⊢ (fullToConfig (embedFull z h)).tape (h + 1 + ↑i) = (s1Config L n m a v b h).tape (h + 1 + ↑i)
+CountedS1Carry.lean:281:14: error: unsolved goals
+case succ
+r : Nat
+ih : d1pow r = TM63Uniform.ones (3 * r)
+⊢ true :: true :: true :: List.replicate (3 * r) true = List.replicate (3 * r + 3) true
+CountedS1Carry.lean:286:24: error(lean.unknownIdentifier): Unknown identifier `BB6Coverage.Agent8S1Encoder.d0pow`
+CountedS1Carry.lean:290:29: error(lean.unknownIdentifier): Unknown identifier `BB6Coverage.Agent8S1Encoder.d0pow`
+CountedS1Carry.lean:289:14: error: unsolved goals
+case succ
+r : Nat
+ih : TM63Uniform.tri r = sorry
+⊢ false :: false :: true :: sorry () = sorry ()
+CountedS1Carry.lean:291:8: warning: This simp argument is unused:
+  BB6Coverage.Agent8S1Encoder.d0
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [TM63Uniform.tri, BB6Coverage.Agent8S1Encoder.d0pow, ih]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:303:11: error: unsolved goals
+case succ
+b : Nat
+ls : List Bool
+r : Nat
+⊢ true :: (List.replicate (3 * r + 2) true ++ false :: false :: true :: ls) =
+    List.replicate (3 * r + 3) true ++ false :: false :: true :: ls
+CountedS1Carry.lean:306:8: warning: This simp argument is unused:
+  BB6Coverage.Agent8S1Encoder.d1
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, natToQ, TM63Uniform.rawStart, d1pow_eq_ones, TM63Uniform.ones, BB6Coverage.Agent8S1Encoder.d0,
+    Nat.mul_succ, List.append_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:313:4: error(lean.unknownIdentifier): Unknown identifier `BB6Coverage.Agent8S1Encoder.d0pow`
+CountedS1Carry.lean:319:8: error(lean.unknownIdentifier): Unknown identifier `BB6Coverage.Agent8S1Encoder.d0pow`
+CountedS1Carry.lean:316:9: error: unsolved goals
+case zero
+b : Nat
+ls : List Bool
+⊢ sorry () = []
+CountedS1Carry.lean:323:8: error(lean.unknownIdentifier): Unknown identifier `BB6Coverage.Agent8S1Encoder.d0pow`
+CountedS1Carry.lean:320:11: error: unsolved goals
+case succ
+b : Nat
+ls : List Bool
+r : Nat
+⊢ false :: false :: true :: (sorry () ++ true :: true :: true :: ls) = sorry () ++ true :: true :: true :: ls
+CountedS1Carry.lean:318:8: warning: This simp argument is unused:
+  TM63Uniform.dBoundaryZero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, natToQ, TM63Uniform.rawEnd, BB6Coverage.Agent8S1Encoder.d1, BB6Coverage.Agent8S1Encoder.d0pow]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:322:8: warning: This simp argument is unused:
+  TM63Uniform.tri
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, natToQ, TM63Uniform.rawEnd, tri_eq_d0pow, BB6Coverage.Agent8S1Encoder.d0pow,
+    BB6Coverage.Agent8S1Encoder.d0, BB6Coverage.Agent8S1Encoder.d1, List.append_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:324:8: warning: This simp argument is unused:
+  BB6Coverage.Agent8S1Encoder.d0
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, natToQ, TM63Uniform.rawEnd, TM63Uniform.tri, tri_eq_d0pow, BB6Coverage.Agent8S1Encoder.d0pow,
+    BB6Coverage.Agent8S1Encoder.d1, List.append_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:335:6: warning: This simp argument is unused:
+  BB6Coverage.Agent8S1Encoder.d1
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, TM63Uniform.rawStart, TM63Uniform.dBoundary, TM63Uniform.dTail, TM63Uniform.ones, d1pow_eq_ones]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:342:38: warning: This simp argument is unused:
+  TM63Uniform.dBoundaryZero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, TM63Uniform.rawEnd, TM63Uniform.scoredRight, TM63Uniform.ones, d1pow_eq_ones,
+    BB6Coverage.Agent8S1Encoder.d1]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:344:6: warning: This simp argument is unused:
+  BB6Coverage.Agent8S1Encoder.d1
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [cfgToZ, TM63Uniform.rawEnd, TM63Uniform.dBoundaryZero, TM63Uniform.scoredRight, TM63Uniform.ones,
+    d1pow_eq_ones]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CountedS1Carry.lean:364:38: error: unsolved goals
+L n m len q r b : Nat
+h : Int
+hq : q < 2 ^ len
+ls : List Bool := binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh
+zStart : Z := cfgToZ (TM63Uniform.rawStart r b ls [])
+zEnd : Z := cfgToZ (TM63Uniform.rawEnd r b ls [])
+⊢ (match
+      (match r, b, ls, [] with
+        | 0, c, ls, rs =>
+          { st := 3, l := false :: true :: ls, h := false,
+            r := false :: (TM63Uniform.ones 3 ++ false :: false :: TM63Uniform.dTail c rs) }
+        | k.succ, c, ls, rs =>
+          { st := 3, l := TM63Uniform.ones (3 * k + 2) ++ false :: false :: true :: ls, h := true,
+            r := false :: true :: true :: true :: false :: false :: TM63Uniform.dTail c rs }).st with
+    | 0 => Q.A
+    | 1 => Q.B
+    | 2 => Q.C
+    | 3 => Q.D
+    | 4 => Q.E
+    | 5 => Q.F
+    | x => Q.A) =
+    Q.D
+CountedS1Carry.lean:367:34: error: unsolved goals
+L n m len q r b : Nat
+h : Int
+hq : q < 2 ^ len
+ls : List Bool := binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh
+zStart : Z := cfgToZ (TM63Uniform.rawStart r b ls [])
+zEnd : Z := cfgToZ (TM63Uniform.rawEnd r b ls [])
+hzStart : zStart.state = Q.D
+⊢ (match
+      (match r, b, ls, [] with
+        | 0, c, ls, rs => { st := 3, l := true :: true :: ls, h := true, r := TM63Uniform.scoredRight c rs }
+        | k.succ, c, ls, rs =>
+          { st := 3, l := false :: true :: (TM63Uniform.tri k ++ true :: true :: true :: ls), h := false,
+            r := TM63Uniform.scoredRight c rs }).st with
+    | 0 => Q.A
+    | 1 => Q.B
+    | 2 => Q.C
+    | 3 => Q.D
+    | 4 => Q.E
+    | 5 => Q.F
+    | x => Q.A) =
+    Q.D
+CountedS1Carry.lean:384:8: error(lean.unknownIdentifier): Unknown identifier `BB6Coverage.Agent8S1Encoder.binDec_sub_one_carryPrefix`
+CountedS1Carry.lean:406:57: error: unsolved goals
+L n m len q r b : Nat
+h : Int
+hq : q < 2 ^ len
+ls : List Bool := binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh
+zStart : Z := cfgToZ (TM63Uniform.rawStart r b ls [])
+zEnd : Z := cfgToZ (TM63Uniform.rawEnd r b ls [])
+hzStart : zStart.state = Q.D
+hzEnd : zEnd.state = Q.D
+hleftStart : zStart.cur :: zStart.left = s1LeftFacing L n m (len + 1 + r) ((2 * q + 1) * 2 ^ r)
+hleftEnd : zEnd.cur :: zEnd.left = s1LeftFacing L n m (len + 1 + r) ((2 * q + 1) * 2 ^ r - 1)
+hrightStart : ∀ (i : Nat), BB6.ChampionTerminal.sideBit zStart.right i = Agent8S1Encoder.sideBit (s1PhysicalRight b) i
+hrightEnd : ∀ (i : Nat), BB6.ChampionTerminal.sideBit zEnd.right i = Agent8S1Encoder.sideBit (s1PhysicalRight (b + 1)) i
+⊢ (match r, b, ls, [] with
+      | 0, c, ls, rs =>
+        { st := 3, l := false :: true :: ls, h := false,
+          r := false :: (TM63Uniform.ones 3 ++ false :: false :: TM63Uniform.dTail c rs) }
+      | k.succ, c, ls, rs =>
+        { st := 3, l := TM63Uniform.ones (3 * k + 2) ++ false :: false :: true :: ls, h := true,
+          r := false :: true :: true :: true :: false :: false :: TM63Uniform.dTail c rs }).st <
+    6
+CountedS1Carry.lean:369:6: warning: This simp argument is unused:
+  TM63Uniform.dBoundaryZero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [zEnd, cfgToZ, natToQ, TM63Uniform.rawEnd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 LEAN_EXIT_CODE=1
