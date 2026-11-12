@@ -95,9 +95,9 @@ theorem blank_ne_six_seven_band (u v time : Nat) (hpair : (u+v)%4=0) :
     exact no_seven_incoming u v hpair (incoming_shrink 7 (time-7) _ hh)
 
 /-- Blank-origin Machine C sections also avoid the second strict
-    sixth/seventh image progression at every time. -/
+    sixth/seventh image slices at every time. -/
 theorem blank_ne_six_seven_band_s3 (u v time : Nat)
-    (hsector : u%4=1 ∧ (u+v)%16=3) :
+    (hsector : (u%4=1 ∧ (u+v)%16=3) ∨ (u%4=3 ∧ (u+v)%16=11)) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
       some (641+1024*u,574+1024*v) := by
   intro ht
