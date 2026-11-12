@@ -59,32 +59,27 @@ For the first packet ((k=1)), the bijection is explicit:
 - Sector (s=4): (j=0,2,4) correspond respectively to (h=0,2,1pmod3).
 - Sector (s=5): (j=0,2,4) correspond respectively to (h=0,1,2pmod3).
 
-## Nested odd-parent numerator
+## Nested odd-parent numerator at arbitrary even depth
 
-There is a second useful application to the exceptional high-valuation feeders. If an odd parent of the fatal target has the form
+The same mechanism applies after an odd parent of **any** even-depth canonical ray node. If
 [
-x=2^t d,qquad 3^{t+1}d=Z_0(n),
+x=2^t d,qquad 3^{t+1}d=Z_j(n),
 ]
 then
 [
-2x+5=rac{W_t(n)}{3^{t+1}},qquad
-W_t(n):=2^{t+1}Z_0(n)+5cdot3^{t+1}.
+2x+5=rac{W_{j,t}(n)}{3^{t+1}},qquad
+W_{j,t}(n):=2^{t+1}Z_j(n)+5cdot3^{t+1}.
 ]
-For every (t), (W_t(s+6h)equiv0pmod3) in both sectors (s=4,5). The exact shift under (nmapsto n+6cdot3^k) is
+For (s\in\{4,5\}) and even (j), (W_{j,t}(s+6h)\equiv0\pmod3) for every (h,t). Its exact three-digit shift is
 [
-W_t(n+6cdot3^k)
-=
-W_t(n)-2^{t+3}3^{k+1}
-+8cdot2^{n+t+1}3^{k+2}c_{k+1}.
+W_{j,t}(n+rD)
+\equiv W_{j,t}(n)-3^{k+1}2^{t+3}(2^{j+1}-1)r
+\pmod{3^{k+2}},
+\qquad D=2\cdot3^{k+1},\quad r\in\{0,1,2\}.
 ]
-The coefficient (2^{t+3}) is a 3-adic unit. The new Lean draft includes `nestedOddNumerator_sector_mod_three` and the exact one-digit criterion `nestedOddNumerator_lift_criterion):
-[
-3^{k+2}mid W_t(n+rD)
-quadLongleftrightarrowquad
-3mid rac{W_t(n)}{3^{k+1}}-2^{t+3}r,
-qquad D=2cdot3^{k+1},quad rin{0,1,2},
-]
-assuming (3^{k+1}mid W_t(n)). Thus precisely one of the three next index digits lifts the valuation. A full recursively named (W_t)-residue selector has not yet been added; the formal unique-digit theorem is already reusable for classifying nested odd-parent branches such as the exceptional 526/887 cases.
+The coefficient (2^{t+3}(2^{j+1}-1)) is a 3-adic unit for even (j). The Lean draft therefore proves `nestedOddNumerator_sector_mod_three`, the exact criterion `nestedOddNumerator_lift_criterion), and `nestedOddNumerator_unique_lift): whenever (3^{k+1}\mid W_{j,t}(n)), exactly one of the three next index digits preserves divisibility at (3^{k+2}).
+
+This is a complementary index-coordinate form of the translated high-gate Hensel selectors already used for (t=3): those fix the fatal index and solve for a depth class, while this theorem fixes the even depth and solves for the fatal-index digit. It can be iterated to build the full (W_{j,t}) residue selector; the recursive selector itself has not yet been added. The unique-digit theorem is already reusable for exceptional high-valuation feeder branches.
 
 ## BB(6) relevance and strict boundary
 
