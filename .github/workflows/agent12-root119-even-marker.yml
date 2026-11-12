@@ -39,9 +39,14 @@ jobs:
             echo "::error::Untrusted sorry axiom in even marker gate theorem"
             exit 1
           fi
-          lean "$S/Root119F1MarkerLifecycle.lean" 2>&1 | tee "$S/f1-marker-lifecycle-check.log"
+          lean -o "$S/Root119F1MarkerLifecycle.olean" "$S/Root119F1MarkerLifecycle.lean" 2>&1 | tee "$S/f1-marker-lifecycle-check.log"
           if grep -q 'sorryAx' "$S/f1-marker-lifecycle-check.log"; then
             echo "::error::Untrusted sorry axiom in F1 marker lifecycle theorem"
+            exit 1
+          fi
+          lean "$S/Root119B0ParentCone.lean" 2>&1 | tee "$S/b0-parent-cone-check.log"
+          if grep -q 'sorryAx' "$S/b0-parent-cone-check.log"; then
+            echo "::error::Untrusted sorry axiom in B0 predecessor cone theorem"
             exit 1
           fi
           lean -o "$A/Root119DFSweep.olean" "$A/Root119DFSweep.lean"
