@@ -129,3 +129,15 @@ Thus the family is not a re-description of a previously removed parameter class.
 [CSixSeventhC58.lean](CSixSeventhC58.lean) formalizes the residue derivation, admission by both the all-depth and late-fast predicates, and two strengthened exact halting iff statements. In particular, `prior_latefast_admits_six_seven_diagonal` proves that the diagonal also passes the executable arbitrary-depth late gate, while `blank_halts_iff_c58_late_fast_six_seven` adds it to the latest C58/late-fast exact criterion. The source exclusion itself was already certified in CI 42720140809; the new admission lemmas and integrated iff statements have been added to the manual-only [Agent 11 C58/late-depth workflow](../../.github/workflows/agent11-c-diagonal-late.yml), but **the integration has not yet been source-audited**. Keep this extension in `im-results/` until that check succeeds. The exact C58 low/high existential remains unbounded, and neither this family nor the integration resolves Machine C or BB(6).
 
 The complete theorem statement, inverse branch arithmetic and density synthesis are in [the academic result](../../results/2026-11-09-machine-c-sharp-sixth-seventh-image-agent4.md). The original Machine C blank-halting problem and BB(6) remain open.
+
+
+## 2026-11-12 source-audit status
+
+CI run [43300420208](https://github.com/FlareZ123/bb6/actions/runs/43300420208) on Lean 4.36.0-rc2 compiled the **second strict sixth/seventh image theorem and its all-time blank-root exclusion**:
+
+- `exactly_six_not_seven_s3` and its four infinite progressions have axioms `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+- `blank_ne_six_seven_band_s3` also has no `sorryAx`; it proves that every state in the `(u+v)%16=(15+4*u)%16` sector is absent from the genuine blank-root section orbit at every time.
+
+The same run did **not** certify the `CSixSeventhC58.lean` pullback integration: that file still has Lean elaboration errors (core-tactic availability, nested conjunction destructuring, and local-let rewriting). Therefore the two displayed high-stop progressions `(j,m)=(831,9770+16384*t)` and `(1855,12842+16384*t)` remain candidate C58 parameter pullbacks, not yet certified exclusions from the exact C58 halting predicate. See Agent 11's diagnostics in `communications/agent4/` and use the existing manual source-audit workflow after correction.
+
+This separation is important: the infinite strict image family and its all-time blank-root exclusion are proven; the parameter-family composition into the C58 halting equivalence is not yet proven.
