@@ -86,9 +86,15 @@ theorem bridge0FrameOutput (bg : Int → Bool) (h x : Int)
     simp [carryBridgeArea0]
     omega
   have hf := bridge0FinalCell_pattern (x-h) hi
-  simp [frame, shiftConfig, ha, hf]
+  have hframe :
+      (frame (fun y => carryBridgeArea0 (y-h)) bg
+        (shiftConfig h (embed carryBridgeFinal0))).tape x =
+          (embed carryBridgeFinal0).tape (x-h) := by
+    simp [frame, shiftConfig, ha]
+  rw [hframe, hf]
   by_cases hx : x ≤ h
-  · simp [hx]
-  · have hx' : h < x := by omega
+  · have hle : x-h ≤ 0 := by omega
+    simp [hx, hle]
+  · have hgt : ¬ x-h ≤ 0 := by omega
     have hmod : (x-h) % 3 = 1 ↔ x % 3 = 1 := by omega
-    simp [hx, hmod]
+    simp [hx, hgt, hmod]
