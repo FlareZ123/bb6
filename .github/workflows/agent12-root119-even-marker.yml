@@ -2,6 +2,12 @@ name: Agent 12 Root119 even F1 marker gate certificate
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/agent12-root119-even-marker.yml'
+      - 'im-results/agent12-root119-shuttle/**'
+      - 'im-results/agent42-root119-guard/Root119*.lean'
+      - 'im-results/agent42-root119-guard/Root119*.xz.b64'
 
 
 permissions:
@@ -44,7 +50,7 @@ jobs:
             echo "::error::Untrusted sorry axiom in F1 marker lifecycle theorem"
             exit 1
           fi
-          lean "$S/Root119B0ParentCone.lean" 2>&1 | tee "$S/b0-parent-cone-check.log"
+          lean -o "$S/Root119B0ParentCone.olean" "$S/Root119B0ParentCone.lean" 2>&1 | tee "$S/b0-parent-cone-check.log"
           if grep -q 'sorryAx' "$S/b0-parent-cone-check.log"; then
             echo "::error::Untrusted sorry axiom in B0 predecessor cone theorem"
             exit 1
@@ -56,6 +62,11 @@ jobs:
           lean -o "$A/Root119Wave.olean" "$A/Root119Wave.lean"
           lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
           lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
+          lean -o "$A/Root119B0OddWaveComposition.olean" "$A/Root119B0OddWaveComposition.lean" 2>&1 | tee "$A/Root119B0OddWaveComposition.log"
+          if grep -q 'sorryAx' "$A/Root119B0OddWaveComposition.log"; then
+            echo "::error::Untrusted sorry axiom in B0 odd-wave composition theorem"
+            exit 1
+          fi
           lean -o "$A/Root119WaveMarkerShield.olean" "$A/Root119WaveMarkerShield.lean" 2>&1 | tee "$A/Root119WaveMarkerShield.log"
           if grep -q 'sorryAx' "$A/Root119WaveMarkerShield.log"; then
             echo "::error::Untrusted sorry axiom in wave marker shield theorem"
