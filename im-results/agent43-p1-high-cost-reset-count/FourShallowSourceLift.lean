@@ -147,22 +147,22 @@ theorem source_low_word_four_no_wall
                 ((2:Int)^alpha)*I ((2:Int)^n) Wb (Ba+(alpha:Int)) =
                   I ((2:Int)^n) Wa Ba-(C1:Int)*(2:Int)^n+
                     (L1:Int)*Ba-(O1:Int) := by
-              simpa [Wa,Ba,Wb,hB1] using hSh1
+              simpa [Wa,Ba,Wb] using hSh1
             have hSh2Model :
                 ((2:Int)^beta)*I ((2:Int)^n) Wd (Bc+(beta:Int)) =
                   I ((2:Int)^n) Wc Bc-(C2:Int)*(2:Int)^n+
                     (L2:Int)*Bc-(O2:Int) := by
-              simpa [Wc,Bc,Wd,hB2] using hSh2
+              simpa [Wc,Bc,Wd] using hSh2
             have hSh3Model :
                 ((2:Int)^gamma)*I ((2:Int)^n) Wf (Be+(gamma:Int)) =
                   I ((2:Int)^n) We Be-(C3:Int)*(2:Int)^n+
                     (L3:Int)*Be-(O3:Int) := by
-              simpa [We,Be,Wf,hB3] using hSh3
+              simpa [We,Be,Wf] using hSh3
             have hSh4Model :
                 ((2:Int)^delta)*I ((2:Int)^n) Wh (Bg+(delta:Int)) =
                   I ((2:Int)^n) Wg Bg-(C4:Int)*(2:Int)^n+
                     (L4:Int)*Bg-(O4:Int) := by
-              simpa [Wg,Bg,Wh,hB4] using hSh4
+              simpa [Wg,Bg,Wh] using hSh4
             have hwallModel : Wj=12*(2:Int)^n := by
               dsimp [Wj]
               exact_mod_cast hwall
