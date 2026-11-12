@@ -83,6 +83,27 @@ For **every** such n,s and initial Q satisfying `3d<=2Q+6`, original D source ru
 
 **Original source CI [42521006551](https://github.com/FlareZ123/bb6/actions/runs/42521006551) passed**, with all new `#print axioms` audits restricted to Lean's standard logical axioms, no `sorryAx`.
 
+## q=4 exceptional E/E source-section return (actual-source CI pending)
+
+A stronger composition candidate is in [EERootBEA.lean](EERootBEA.lean), theorem `q4_exceptional_EE_BEA_section`. For every `m ≥ 0`, put
+`u=2187*m+1647=27*(81*m+61)`. Starting from Agent 2's `sourceStart(u,4)`, the first exceptional E/E macro reaches `M(192u+161,2,5;01^6)`. The explicit source path then has two B edges, one E edge, the existing E,p=2 reset, and the new B->E->A corridor, ending in a physical `regularSection` up to `ObsEq`.
+
+The parameters are
+```text
+z  = 81*m+61
+k0 = 1728*z+53
+k1 = 4608*z+144
+k2 = 12288*z+386
+k3 = 32768*z+1031
+h  = 1769472*m+1333253
+t  = 2097152*m+1580151
+```
+They satisfy `192u+161=3*k0+2`, `8*k0+10=3*k1+2`, `8*k1+10=3*k2+4`, `8*k2+9=3*k3+4`, `8*k3+5=1+12*h`, and `1+32*h=27*t+20`. The E2 reset leaves resource 10, exactly enough for the d=1 B->E->A corridor.
+
+**Evidence status:** the arithmetic and source-chain composition type-check in a local Lean harness with stubbed upstream declarations; that checks the composition interface, not the real machine source. The actual-source audit is configured in `.github/workflows/agent37-p2-k13.yml` but has not yet been dispatched. Do not cite this theorem as source-certified until that full workflow passes.
+
+**Scope limitation:** `sourceStart(u,4)` is an Agent 2 DRegular source section, not a proved blank-tape-root state. The missing fact is whether the blank-root prefix chain reaches `L(59049*m+44494,4,1)` for any `m). Agent 2 has been asked to identify or prove that prefix before this cylinder is treated as blank-root progress.
+
 ## New B-to-E-to-A corridor (Lean source composition verified)
 
 The B-exit partition has a third branch beyond B-to-A and B-to-B-to-A: after the E-chain, a B packet can move to E, then one more E packet can move directly to A. This is composed in [EChainBEExit.lean](EChainBEExit.lean). The focused manual source-audit workflow passed on 2026-11-12 (run 43273085496); all five new declarations have only standard `propext` and `Quot.sound` dependencies, with no `sorryAx` or native-decision axiom.
