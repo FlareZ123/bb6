@@ -18,7 +18,7 @@
  * Run: node EnumerateExceptionalFeederTrees.mjs
  */
 const RESIDUES = [113, 400, 526, 599, 886, 887, 1085, 1372];
-const SAMPLE_PERIOD = 1458;
+const SAMPLE_PERIODS = [1458, 13122];
 const SAMPLE_MULTIPLIERS = [0, 1, 2, 10];
 
 const pow2 = (k) => 1n << BigInt(k);
@@ -147,35 +147,42 @@ function topologySignature(tree) {
 }
 
 const report = RESIDUES.map((r) => {
-  const samples = SAMPLE_MULTIPLIERS.map((T) => {
-    const tree = buildTree(r + SAMPLE_PERIOD * T);
+  const finiteSamples = SAMPLE_PERIODS.map((period) => {
+    const samples = SAMPLE_MULTIPLIERS.map((T) => {
+      const tree = buildTree(r + period * T);
+      return {
+        T,
+        nodes: tree.nodes.length,
+        edges: tree.edges.length,
+        leaves: tree.leaves.length,
+        maxDepth: tree.maxDepth,
+        signature: topologySignature(tree),
+      };
+    });
     return {
-      T,
-      nodes: tree.nodes.length,
-      edges: tree.edges.length,
-      leaves: tree.leaves.length,
-      maxDepth: tree.maxDepth,
-      signature: topologySignature(tree),
+      period,
+      samples: samples.map(({ signature, ...summary }) => summary),
+      sameSampledTopology: samples.every((sample) => sample.signature === samples[0].signature),
     };
   });
+  const representative = buildTree(r);
   return {
     residue: r,
     representative: {
-      nodes: samples[0].nodes,
-      edges: samples[0].edges,
-      leaves: samples[0].leaves,
-      maxDepth: samples[0].maxDepth,
-      edgesById: buildTree(r).edges,
+      nodes: representative.nodes.length,
+      edges: representative.edges.length,
+      leaves: representative.leaves.length,
+      maxDepth: representative.maxDepth,
+      edgesById: representative.edges,
     },
-    finiteSamples: samples.map(({ signature, ...summary }) => summary),
-    sameSampledTopology: samples.every((sample) => sample.signature === samples[0].signature),
+    finiteSamples,
   };
 });
 
 console.log(JSON.stringify({
   status: "finite exact BigInt diagnostic only; no all-index inference",
   sourceRelation: "im-results/agent10-cascade/FirstInverseComplete.lean",
-  samplePeriod: SAMPLE_PERIOD,
+  samplePeriods: SAMPLE_PERIODS,
   sampleMultipliers: SAMPLE_MULTIPLIERS,
   report,
 }, (_key, value) => typeof value === "bigint" ? value.toString() : value, 2));
