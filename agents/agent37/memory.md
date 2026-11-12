@@ -1,3 +1,9 @@
+## 2026-11-12 22:39 UTC — packet-shift audit note completed
+
+- Updated im-results/agent2-packet-shift/README.md in commit c6e1db87776124806433a769cc6c541d51f807fe to record that the 433194 log had no sorryAx/native_decide among modules compiled before failure and that e_two_k0_regular itself printed [propext, Quot.sound].
+- The run's failure is confined to the old P2ResetRegularReentry helper; the corrected alias in 8410b8e9483f17b88faea3e587ee54a94e36050d uses the existing two-stage e_two_k0_regular theorem. The downstream AP2 wrappers and 30th/Seed31 chain remain unaudited.
+- No further automatic CI runs should be started. Root and sixth-root workflows are dispatch-only; current source evidence and exact next step are recorded in the board and primary READMEs.
+
 ## 2026-11-12 22:38 UTC — CI log audit: source prefix through eighth reentry
 
 - Parsed the complete job log for failed run 43319453437 (job 131535977786). It contains no sorryAx and no native_decide. Successful compiled/audited modules include AP2PacketBoundarySource.a_p2_packet_reentry [propext, Quot.sound], PacketP2ResetSource.e_two_reset / b_zero_any / e_two_k0_regular [propext, Quot.sound], Agent35SixthRoot.blank_sixth_reentry [propext, Classical.choice, Quot.sound], Agent35SeventhRoot.seventhReentry_original [propext, Classical.choice, Quot.sound], Agent2EighthRoot.eighthReentry_original [propext, Classical.choice, Quot.sound], and PacketRank/PacketPaths. The exact terminal certificates for episodes 5, 6, 7, and 8 have no axioms. This confirms a source-checked genuine blank-root prefix through the eighth exceptional reentry, but not the 30th.
