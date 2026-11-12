@@ -30,7 +30,7 @@ def markerWord (m : Nat) : List Bool :=
   else [true,true,false,true]
 
 /-- The fixed left-history word lh, in head-facing order. -/
-def lh : List Bool := [true,true]
+def lh : List Bool := [true,true,false,true,true,true]
 
 /-- Repetition of the source zero-digit block. -/
 def d1pow : Nat → List Bool
@@ -442,10 +442,10 @@ theorem s1PhysicalLeft_carrySuffix (L n m len q r : Nat)
   simp [List.reverse_append,d1pow_reverse,List.append_assoc]
 
 /-- Source m0/zero-counter specialization: the known terminal physical
-left word 11 ++ 111^L ++ 100 ++ 10 ++ 111^a. -/
+left word 111011 ++ 111^L ++ 100 ++ 10 ++ 111^a. -/
 theorem s1PhysicalLeft_m0_zero (L a : Nat) :
     s1PhysicalLeft L 0 0 a 0 =
-      [true,true] ++ d1pow L ++
+      [true,true,true,false,true,true] ++ d1pow L ++
         [true,false,false] ++ [true,false] ++ d1pow a := by
   unfold s1PhysicalLeft s1LeftFacing
   rw [binDec_zero a,binDec_zero L]
