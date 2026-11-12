@@ -173,3 +173,14 @@ A further S0-specific theorem was added in `CountedSuffixOutput.lean`:
   `run tm2 (48+12*r+12*b) (s0Config l a zIn b h) = some (s0Config l a zOut (b+1) h)`.
 
 This is the direct interface needed for Agent 8's `hInc0) premise, with arbitrary finite left exterior `l`. To instantiate it with a genuine decrement, take `zOut=z-1` and `r=v₂(z)`, then supply the prefix run, open boundary cells, right-run condition, exterior preservation, and left-output identity. The theorem source is now present and included in the manual terminal-source workflow, but **the actual repository module has not yet passed CI**; this is a proof candidate pending full compilation, not yet a certified `hInc0) result.
+
+
+## 2026-11-12: source S1 decrement composition (candidate, not CI-verified)
+
+Three new Lean sources extend the earlier counted-suffix interface:
+
+- `CountedCarryLeftOutputR23.lean`: residue (r=4k+2) and (r=4k+3) prefix theorems. Each supplies the exact left-output identity, the six local output cells, and right-exterior preservation. The bridge seed is placed at (h'=-12k-4) (r2, bridge2) or (h'=-12k-8) (r3, bridge1); only the finite bridge window and one source boundary cell need separate treatment.
+- `S1CarryOutputBridge.lean`: source-encoding lemma `s1Config_decrement_leftOutput`. It proves that the post-decrement S1 left stream is (d0^r ++ d1), while the input stream is (d1^r ++ d0), with the arbitrary encoded tail unchanged. The resulting tape agrees pointwise with `carryLeftOutputBit` on all (x\le 0).
+- `S1CarryInc0.lean`: source-window matching, right-run matching, shifted/unshifted prefix composition, and the candidate theorem `s1Config_counted_decrement_even`. Its intended statement is that every positive even bounded S1 counter has a full counted decrement, with runtime (48+12r+12b), where (z=(2q+1)2^r) and (r>0).
+
+The all-positive-(r) composition uses the existing r0 and short-r1 results, Agent 42's long-r1 shifted interface, and the new r2/r3 full-prefix theorems. It is conditional on the imported prefix modules and remains an **uncompiled proof candidate**. The existing manual-only workflow has been extended to compile and reject `sorryAx` in these sources; no push trigger was added. A green CI run is still required before promoting any of these statements to `results/`.
