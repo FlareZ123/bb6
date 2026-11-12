@@ -311,12 +311,15 @@ theorem root_after_3167_junc11_frontier :
       c21 = shiftConfig 12 (jConfig 21 11) := by
     rw [hhead21] at hstartCanonical
     simpa [translatedJ,shiftConfig,jConfig] using hstartCanonical
+  have hbranchJ :
+      run target429 1559 (jConfig 21 11) = some cBranch := by
+    simpa [jConfig] using hbranch
   let dEnd : Config := shiftConfig 12 cBranch
   have hbranchShift :
       run target429 1559 c21 = some dEnd := by
     rw [hstart]
     have h := run_shiftConfig target429 1559 12 (jConfig 21 11)
-    rw [hbranch] at h
+    rw [hbranchJ] at h
     simpa [dEnd] using h
   have htotal0 :
       run target429 (1608+1559) blank = some dEnd := by
@@ -354,8 +357,10 @@ theorem root_after_3167_junc11_frontier :
       have htime2 : t=1608+s := by dsimp [s]; omega
       have hraw : run target429 t blank = some eShift := by
         rw [htime2,run_add',hroot]
+        have heJ : run target429 s (jConfig 21 11) = some e := by
+          simpa [jConfig] using he
         have hshiftRun := run_shiftConfig target429 s 12 (jConfig 21 11)
-        rw [he] at hshiftRun
+        rw [heJ] at hshiftRun
         simpa [eShift,hstart] using hshiftRun
       exact ⟨eShift,hraw,by dsimp [eShift,shiftConfig]; omega⟩
   have hmark : dEnd.tape 36 = true := by
