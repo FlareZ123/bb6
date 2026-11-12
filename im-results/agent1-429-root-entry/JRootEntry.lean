@@ -183,6 +183,42 @@ theorem runWithHeadMax_head_bound (m : Machine) :
                   q.head ≤ max hm q.head := Int.le_max_right _ _
                   _ = h := hmax
 
+/-- Segment composition for the head-maximum monitor. The maximum over
+    a concatenated run is the maximum of the two segment maxima. -/
+theorem runWithHeadMax_add (m : Machine) (n k : Nat) (c : Config) :
+    runWithHeadMax m (n + k) c =
+      (runWithHeadMax m n c).bind (fun (d, h₁) =>
+        (runWithHeadMax m k d).map (fun (e, h₂) => (e, max h₁ h₂))) := by
+  induction k with
+  | zero =>
+      simp only [Nat.add_zero]
+      cases h : runWithHeadMax m n c with
+      | none => simp
+      | some p =>
+          rcases p with ⟨d, hm⟩
+          have hhead := (runWithHeadMax_head_bound m n c d hm h).2
+          simp [runWithHeadMax, Int.max_eq_left hhead]
+  | succ k ih =>
+      change (runWithHeadMax m (n + k) c).bind (fun (d, h₁) =>
+        (rawStep m d).map (fun e => (e, max h₁ e.head))) =
+        (runWithHeadMax m n c).bind (fun (d, h₁) =>
+          (runWithHeadMax m (k + 1) d).map (fun (e, h₂) => (e, max h₁ h₂)))
+      rw [ih]
+      simp [Option.bind_assoc, Option.map_bind, Option.bind_map]
+      congr 1
+      funext y
+      congr 1
+      funext z
+      simp [Function.comp_def, Int.max_assoc]
+
+/-- Exact two-step law for the head-maximum monitor, stated in terms of
+    the two primitive raw transitions. -/
+theorem runWithHeadMax_two_of_rawSteps (m : Machine) (c c₁ c₂ : Config)
+    (h₁ : rawStep m c = some c₁) (h₂ : rawStep m c₁ = some c₂) :
+    runWithHeadMax m 2 c =
+      some (c₂, max (max c.head c₁.head) c₂.head) := by
+  simp [runWithHeadMax, h₁, h₂, Int.max_assoc]
+
 /-- A raw step changes no tape cell other than its scanned cell. -/
 theorem rawStep_tape_eq_of_ne (m : Machine) (c d : Config)
     (hstep : rawStep m c = some d) (x : Int) (hx : x ≠ c.head) :
@@ -246,32 +282,84 @@ theorem runWithHeadMax_current_max_right_blank (m : Machine)
   rw [hhead, hunchanged]
   exact hblank (M + 1) (by omega)
 
+/-- Intermediate D/0 configuration reached by a C/0 gate. -/
+def c0GateMid (c : Config) : Config :=
+  { state := (3 : Fin 6)
+    head := c.head + 1
+    tape := writeAt c.tape c.head false }
+
 /-- Exact two-step continuation of a safe C/0 gate: C/0 writes 0 and
     moves right to D/0, then D/0 writes 1 and returns left to E/1. -/
 def c0GateAfterTwo (c : Config) : Config :=
-  applyMove (applyMove c ⟨false, true, 3⟩) ⟨true, false, 4⟩
+  { state := (4 : Fin 6)
+    head := c.head
+    tape := writeAt (writeAt c.tape c.head false) (c.head + 1) true }
+
+theorem source429_c0_gate_raw_steps (c : Config)
+    (hstate : c.state = (2 : Fin 6))
+    (hread : c.tape c.head = false)
+    (hright : c.tape (c.head + 1) = false) :
+    rawStep source429 c = some (c0GateMid c) ∧
+      rawStep source429 (c0GateMid c) = some (c0GateAfterTwo c) := by
+  have hfirst : rawStep source429 c = some (c0GateMid c) := by
+    simp [c0GateMid, rawStep, source429, move, applyMove, hstate, hread]
+    funext x
+    by_cases hx : x = c.head <;> simp [writeAt, hx]
+  have hslot1 : readSlot (c0GateMid c) = ((3 : Fin 6), false) := by
+    simp [readSlot, c0GateMid, writeAt, hright]
+  have hlookup1 : source429 (readSlot (c0GateMid c)) = move true false 4 := by
+    rw [hslot1]
+    rfl
+  have hsecond : rawStep source429 (c0GateMid c) = some (c0GateAfterTwo c) := by
+    change (source429 (readSlot (c0GateMid c))).map
+      (applyMove (c0GateMid c)) = _
+    rw [hlookup1]
+    simp only [move, Option.map_some]
+    apply congrArg some
+    have hhead : c.head + 1 + -1 = c.head := by omega
+    simp [c0GateMid, c0GateAfterTwo, applyMove, writeAt, hhead]
+    funext x
+    by_cases h1 : x = c.head + 1
+    · subst x
+      simp [writeAt]
+    · by_cases h2 : x = c.head
+      · subst x
+        simp [writeAt, h1]
+      · simp [writeAt, h1, h2]
+  exact ⟨hfirst, hsecond⟩
 
 theorem source429_c0_gate_two_steps (c : Config)
     (hstate : c.state = (2 : Fin 6))
     (hread : c.tape c.head = false)
     (hright : c.tape (c.head + 1) = false) :
     run source429 2 c = some (c0GateAfterTwo c) := by
-  let c1 : Config := applyMove c ⟨false, true, 3⟩
-  have hslot0 : readSlot c = ((2 : Fin 6), false) := by
-    simp [readSlot, hstate, hread]
-  have hlookup0 : source429 (readSlot c) = move false true 3 := by
-    rw [hslot0]
-    rfl
-  have hfirst : rawStep source429 c = some c1 := by
-    simp [rawStep, move, hlookup0, c1]
-  have hslot1 : readSlot c1 = ((3 : Fin 6), false) := by
-    simp [readSlot, c1, applyMove, hright]
-  have hlookup1 : source429 (readSlot c1) = move true false 4 := by
-    rw [hslot1]
-    rfl
-  have hsecond : rawStep source429 c1 = some (c0GateAfterTwo c) := by
-    simp [rawStep, move, hlookup1, c0GateAfterTwo, c1]
+  obtain ⟨hfirst, hsecond⟩ :=
+    source429_c0_gate_raw_steps c hstate hread hright
   simp [run, hfirst, hsecond]
+
+/-- A safe C/0 gate's two-step monitor has maximum exactly one cell
+    to the right of its input head. -/
+theorem source429_c0_gate_monitor (c : Config)
+    (hstate : c.state = (2 : Fin 6))
+    (hread : c.tape c.head = false)
+    (hright : c.tape (c.head + 1) = false) :
+    runWithHeadMax source429 2 c = some (c0GateAfterTwo c, c.head + 1) := by
+  obtain ⟨hfirst, hsecond⟩ :=
+    source429_c0_gate_raw_steps c hstate hread hright
+  have hmid : (c0GateMid c).head = c.head + 1 := by
+    rfl
+  have hend : (c0GateAfterTwo c).head = c.head := by
+    rfl
+  have hmax : max (max c.head (c0GateMid c).head) (c0GateAfterTwo c).head =
+      c.head + 1 := by
+    rw [hmid, hend]
+    have hinner : max c.head (c.head + 1) = c.head + 1 :=
+      Int.max_eq_right (by omega)
+    rw [hinner]
+    exact Int.max_eq_left (by omega)
+  simpa [hmax] using
+    (runWithHeadMax_two_of_rawSteps source429 c (c0GateMid c)
+      (c0GateAfterTwo c) hfirst hsecond)
 
 /-- The C/0-to-E/1 two-step gate writes the new rightmost mark one cell
     beyond its input head whenever the old tape had a right blank tail. -/
@@ -281,11 +369,11 @@ theorem c0GateAfterTwo_frontier (c : Config) (F : Int)
     (c0GateAfterTwo c).tape (c.head + 1) = true ∧
     (∀ x, c.head + 1 < x → (c0GateAfterTwo c).tape x = false) := by
   constructor
-  · simp [c0GateAfterTwo, applyMove]
+  · simp [c0GateAfterTwo, writeAt]
   · intro x hx
     have h1 : x ≠ c.head + 1 := by omega
     have h2 : x ≠ c.head := by omega
-    simp [c0GateAfterTwo, applyMove, h1, h2]
+    simp [c0GateAfterTwo, writeAt, h1, h2]
     exact hblank x (by omega)
 
 /-- The same 35-step root trace never visits a head coordinate above 6. -/
@@ -415,23 +503,52 @@ theorem root_after_277_computes :
     runWithHeadMax source429 277 blank = some rootAfter277 := by
   rfl
 
+theorem root_after_277_monitor_exact :
+    runWithHeadMax source429 277 blank =
+      some (c0GateAfterTwo rootAt275.1, 16) := by
+  have hgate := source429_c0_gate_monitor rootAt275.1 root_at_275_state
+    root_at_275_reads_zero root_at_275_safe_gate
+  have hcomp := runWithHeadMax_add source429 275 2 blank
+  simp [root_at_275_computes, hgate] at hcomp
+  rw [root_at_275_max, root_at_275_head] at hcomp
+  have hmax : max (15 : Int) (15 + 1) = 16 := by
+    rw [Int.max_eq_right (by omega)]
+    omega
+  rw [hmax] at hcomp
+  exact hcomp
+
+theorem root_after_277_pair :
+    rootAfter277 = (c0GateAfterTwo rootAt275.1, 16) := by
+  have hEq : some rootAfter277 =
+      some (c0GateAfterTwo rootAt275.1, 16) := by
+    rw [← root_after_277_computes]
+    exact root_after_277_monitor_exact
+  exact Option.some.inj hEq
+
+theorem root_after_277_is_gate_endpoint :
+    rootAfter277.1 = c0GateAfterTwo rootAt275.1 := by
+  exact congrArg Prod.fst root_after_277_pair
+
 theorem root_after_277_head_max : rootAfter277.2 = 16 := by
-  decide
+  rw [root_after_277_pair]
 
 theorem root_after_277_head : rootAfter277.1.head = 15 := by
-  decide
+  rw [root_after_277_pair]
+  exact root_at_275_head
 
 theorem root_after_277_state : rootAfter277.1.state = (4 : Fin 6) := by
-  decide
+  rw [root_after_277_pair]
+  rfl
 
 theorem root_after_277_mark : rootAfter277.1.tape 16 = true := by
-  decide
+  rw [root_after_277_pair]
+  simpa [root_at_275_head] using root_at_275_gate_frontier.1
 
 theorem root_after_277_blank_right (x : Int) (hx : 16 < x) :
     rootAfter277.1.tape x = false := by
-  rw [runWithHeadMax_tape_above source429 277 blank rootAfter277.1 16
-    root_after_277_computes x hx]
-  rfl
+  rw [root_after_277_pair]
+  have hx' : rootAt275.1.head + 1 < x := by rw [root_at_275_head]; exact hx
+  simpa using root_at_275_gate_frontier.2 x hx'
 
 /-- Candidate exact raw root entry: blank A reaches the physical J(0,0)
     tape after 35 primitive transitions. The manual CI workflow checks it. -/
@@ -456,7 +573,11 @@ theorem blank_root_frontier_base :
 #print axioms root_high0_frontier_base
 #print axioms runWithHeadMax_head_bound
 #print axioms runWithHeadMax_current_max_right_blank
+#print axioms source429_c0_gate_raw_steps
 #print axioms source429_c0_gate_two_steps
+#print axioms source429_c0_gate_monitor
+#print axioms runWithHeadMax_two_of_rawSteps
+#print axioms runWithHeadMax_add
 #print axioms c0GateAfterTwo_frontier
 #print axioms rawStep_tape_eq_of_ne
 #print axioms runWithHeadMax_tape_above
@@ -470,6 +591,8 @@ theorem blank_root_frontier_base :
 #print axioms root_at_275_gate_two_steps
 #print axioms root_at_275_gate_frontier
 #print axioms root_after_277_computes
+#print axioms root_after_277_monitor_exact
+#print axioms root_after_277_pair
 #print axioms root_after_277_mark
 #print axioms root_after_277_blank_right
 #print axioms blank_reaches_j00_after_35
