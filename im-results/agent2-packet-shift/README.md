@@ -125,7 +125,7 @@ Thus the only remaining p≡2 normalizer boundary is the E,p=2 changed-tail rese
 
 ## E/A and E/E exceptional packet closure by residue (new Lean composition; CI pending)
 
-The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem. The A-terminal p≡2 boundary is implemented in [AP2PacketBoundarySource.lean](./AP2PacketBoundarySource.lean).
+The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem. The A-terminal p≡2 boundary is implemented in [AP2PacketBoundarySource.lean](./AP2PacketBoundarySource.lean). The quantified wrapper theorems are `exceptional_EA_all_reentry` and `exceptional_EE_all_reentry_or_reset`.
 
 For every t and q≥2, the E/A family `L(9t+10,q,1)` first reaches `M(24t+21,0,2q;0 1^6)`. If q is not 1 modulo 3, `all_safe_packets_regular` closes the packet directly. If q≡1 (mod3), it is an A-terminal p≡2 packet; `AP2PacketBoundarySource.a_p2_packet_reentry` consumes it by the original A-code 110111 macro. In general, `M(3k+3,q,3r+2;0 1^6)` returns to `L(8k+2q+8r+11,3,3)`. For the E/A family, k=8t+6, the packet q-parameter is 0, and 3r+2=2q, so the endpoint is `L(64t+8r+59,3,3)`.
 
