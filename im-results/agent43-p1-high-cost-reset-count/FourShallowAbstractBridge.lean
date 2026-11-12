@@ -14,9 +14,6 @@ def fourProfileAlpha (t : Nat) : Nat := if t=0 then 1 else 2
 def fourProfileStep (x t : Nat) : Prop :=
   fourProfileAlpha t ≤ x ∧ (x-fourProfileAlpha t)%3=0
 
-def fourProfileStep (x t : Nat) : Prop :=
-  fourProfileAlpha t ≤ x ∧ (x-fourProfileAlpha t)%3=0
-
 def fourRootRem (n s t1 : Nat) : Nat := Id.run do
   let (_,_,L,O) := triple t1
   let q := 8^s
@@ -179,7 +176,7 @@ private theorem residue_peel_nodiv
      calc
        _ = K*2^e := by rw [←hpop]; simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
        _ = A*2^t+R := heq
-       _ = (2^t)*(A+d) := by rw [hd]; simp [Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+       _ = (2^t)*(A+d) := by rw [hd]; simp [Nat.add_mul,Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
    exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) htest
  have hle : d≤R := by
    have hpos2 : 1≤(2:Nat)^t := Nat.one_le_pow t 2 (by decide)
@@ -266,7 +263,8 @@ private theorem four_layer_finite_barrier
       omega
     exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) (by rw [hP,hcomp])
   have hDdiv : 8^s ∣ 14*n+92 := ⟨d,hD.symm⟩
-  have hqle : 8^s≤14*n+92 := Nat.le_of_dvd (by omega) hDdiv
+  have hqle : 8^s≤14*n+92 :=
+    Nat.le_of_dvd (show 0 < 14*n+92 by omega) hDdiv
   have hs3 : s≤3 := by
     by_cases hs3 : s≤3
     · exact hs3
@@ -275,10 +273,10 @@ private theorem four_layer_finite_barrier
       have hpow : (8:Nat)^4=4096 := by decide
       rw [hpow] at hpw
       omega
-  have hPmod : 2^n%8^s=0 := Nat.mod_eq_zero_of_dvd ⟨p,hP⟩
+  have hPmod : 2^n%8^s=0 := Nat.mod_eq_zero_of_dvd ⟨p,hP.symm⟩
   have hDmod : (14*n+92)%8^s=0 := Nat.mod_eq_zero_of_dvd hDdiv
   have hdq : (14*n+92)/(8^s)=d := by
-    rw [hD]
+    rw [←hD]
     exact Nat.mul_div_cancel_left d (Nat.pow_pos (by decide))
 
   have hL1 : L1≤84 := by
@@ -325,8 +323,8 @@ private theorem four_layer_finite_barrier
     simp [fourRootRem,←hp1,hdq,T1]
     omega
   have hrootFinBool := four_root_no_overflow
-    (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
-    (⟨t1,ht1⟩ : Fin 2)
+    (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
+    (⟨t1,by omega⟩ : Fin 2)
   have hrootMod : R1%2^e≠0 := by
     simpa [fourRootOverflow,hPmod,hDmod,hrootEq,e,Nat.sub_add_cancel hn14]
       using hrootFinBool
@@ -370,12 +368,11 @@ private theorem four_layer_finite_barrier
   have hR1mod : R1%2^x1=0 := Nat.mod_eq_zero_of_dvd ⟨d1,hR1div⟩
   have hSecondFinBool := four_second_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
-    (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
-    (⟨t2,ht2⟩ : Fin 2)
+    (⟨t1,ht1⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
+    (⟨t2,by omega⟩ : Fin 2)
   let S2 := R2+d1
   have hR2formula : R2+O2=L2*(T1+x1) := by
-    dsimp [T1,x1]
-    exact hR2
+    simpa [T1,x1,Nat.add_assoc] using hR2
   have hS2eq : fourSecondRem n s t1 x1 t2=S2 := by
     simp [fourSecondRem,S2,hR1quot,←hp2,hR2formula,T1]
     omega
@@ -393,8 +390,8 @@ private theorem four_layer_finite_barrier
       K*2^(e-x1)=(A2*(A3*(A4*E+R4)+R3)+R2)+d1 := hEq1'
       _=(A3*(A4*E+R4)+R3)*2^x2+(R2+d1) := by
         rw [hA2]
-        simp [Nat.mul_add]
-        ac_rfl
+        simp [Nat.mul_add,Nat.add_mul,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm,
+          Nat.add_assoc,Nat.add_comm,Nat.add_left_comm]
       _=(A3*(A4*E+R4)+R3)*2^x2+S2 := by rfl
   have hS2pos : 0<S2 := by dsimp [S2]; omega
   obtain ⟨d2,hx2le,hS2div,hEq2',hd2le,hpow2le⟩ :=
@@ -420,12 +417,11 @@ private theorem four_layer_finite_barrier
   have hThirdFinBool := four_third_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
     (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
-    (⟨t2,ht2⟩ : Fin 2) (⟨x2,hx2bound⟩ : Fin 14)
-    (⟨t3,ht3⟩ : Fin 2)
+    (⟨t2,ht2⟩ : Fin 2) (⟨x2,by omega⟩ : Fin 14)
+    (⟨t3,by omega⟩ : Fin 2)
   let S3 := R3+d2
   have hR3formula : R3+O3=L3*(T1+x1+x2) := by
-    dsimp [T1,x1,x2]
-    exact hR3
+    simpa [T1,x1,x2,Nat.add_assoc] using hR3
   have hS3eq : fourThirdRem n s t1 x1 t2 x2 t3=S3 := by
     simp [fourThirdRem,S3,hS2quot,←hp3,hR3formula,T1]
     omega
@@ -444,8 +440,8 @@ private theorem four_layer_finite_barrier
       K*2^(e-x1-x2)=(A3*(A4*E+R4)+R3)+d2 := hEq2'
       _=(A4*E+R4)*2^x3+(R3+d2) := by
         rw [hA3]
-        simp [Nat.mul_add]
-        ac_rfl
+        simp [Nat.mul_add,Nat.add_mul,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm,
+          Nat.add_assoc,Nat.add_comm,Nat.add_left_comm]
       _=(A4*E+R4)*2^x3+S3 := by rfl
   have hS3pos : 0<S3 := by dsimp [S3]; omega
   obtain ⟨d3,hx3le,hS3div,hEq3',hd3le,hpow3le⟩ :=
@@ -472,12 +468,11 @@ private theorem four_layer_finite_barrier
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
     (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
     (⟨t2,ht2⟩ : Fin 2) (⟨x2,hx2bound⟩ : Fin 14)
-    (⟨t3,ht3⟩ : Fin 2) (⟨x3,hx3bound⟩ : Fin 15)
-    (⟨t4,ht4⟩ : Fin 2)
+    (⟨t3,ht3⟩ : Fin 2) (⟨x3,by omega⟩ : Fin 15)
+    (⟨t4,by omega⟩ : Fin 2)
   let S4 := R4+d3
   have hR4formula : R4+O4=L4*(T1+x1+x2+x3) := by
-    dsimp [T1,x1,x2,x3]
-    exact hR4
+    simpa [T1,x1,x2,x3,Nat.add_assoc] using hR4
   have hS4eq : fourFourthRem n s t1 x1 t2 x2 t3 x3 t4 = S4 := by
     simp [fourFourthRem,S4,hS3quot,←hp4,hR4formula,T1]
     omega
@@ -504,8 +499,11 @@ private theorem four_layer_finite_barrier
       _=A4*E+(R4+d3) := by omega
       _=A4*E+S4 := by rfl
   have hS4pos : 0<S4 := by dsimp [S4]; omega
+  have hEq4pow : K*2^(e-x1-x2-x3)=E*2^x4+S4 := by
+    rw [hEq4,hA4]
+    ac_rfl
   obtain ⟨d4,hx4le,hS4div,hEq4',hd4le,hpow4le⟩ :=
-    residue_peel_nodiv (e-x1-x2-x3) x4 K E S4 hS4pos hnot4 hEq4
+    residue_peel_nodiv (e-x1-x2-x3) x4 K E S4 hS4pos hnot4 hEq4pow
   have hT4le : T1+x1+x2+x3≤129 := by dsimp [T1]; omega
   have hR4le : R4≤10836 := by
     have hprod : L4*(T1+x1+x2+x3)≤84*129 := Nat.mul_le_mul hL4 hT4le
@@ -530,7 +528,9 @@ private theorem four_layer_finite_barrier
     dsimp [Emax,fourEmax,x1,x2,x3,x4]
     omega
   have hKformula : fourCoeff s t1 x1 t2 x2 t3 x3 t4=K := by
-    have hK' := hK
+    have hK' : K+98 =
+        C1*8^s+C2*(8^s*A1)+C3*(8^s*(A1*A2))+C4*(8^s*((A1*A2)*A3)) := by
+      simpa [A1,A2,A3] using hK
     rw [hA1,hA2,hA3] at hK'
     rw [←Nat.pow_add,←Nat.pow_add] at hK'
     have hKfactor : K+98 =
