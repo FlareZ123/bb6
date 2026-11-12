@@ -55,6 +55,43 @@ theorem v2_pow2 (b : Nat) : v2 (2^b) = b := by
       have hdiv : 2^(b+1) / 2 = 2^b := by rw [hpow]; omega
       simp [v2,Nat.not_le_of_gt hgt,hmod,hdiv,ih]
 
+
+/-- The odd part contributes no trailing zeros, so the valuation of
+(2*q+1)*2^r is exactly r. This identifies the carry exponent in the S1
+factorization with the cost parameter used by the uniform local theorem. -/
+theorem v2_odd_factor (q r : Nat) :
+    v2 ((2*q+1)*2^r) = r := by
+  induction r with
+  | zero =>
+      have hodd : (2*q+1) % 2 ≠ 0 := by omega
+      simpa using v2_of_odd (2*q+1) hodd
+  | succ r ih =>
+      have hpow : 2^(r+1) = 2*2^r := by
+        rw [Nat.pow_succ]
+        ac_rfl
+      have hprod : (2*q+1)*2^(r+1) =
+          2*((2*q+1)*2^r) := by
+        rw [hpow]
+        ac_rfl
+      have hpos : 0 < (2*q+1)*2^r :=
+        Nat.mul_pos (by omega) (Nat.pow_pos (by decide))
+      have hgt : 1 < 2*((2*q+1)*2^r) := by omega
+      have hmod : (2*((2*q+1)*2^r)) % 2 = 0 := by omega
+      have hdiv : (2*((2*q+1)*2^r)) / 2 = (2*q+1)*2^r := by omega
+      calc
+        v2 ((2*q+1)*2^(r+1)) =
+            v2 (2*((2*q+1)*2^r)) := by rw [hprod]
+        _ = 1 + v2 ((2*((2*q+1)*2^r))/2) :=
+            v2_of_even _ hgt hmod
+        _ = 1 + v2 ((2*q+1)*2^r) := by rw [hdiv]
+        _ = r+1 := by rw [ih]
+
+/-- Factorization witnesses expose the exact valuation used by Inc0. -/
+theorem v2_of_odd_factorization (z q r : Nat)
+    (hz : z = (2*q+1)*2^r) : v2 z = r := by
+  rw [hz]
+  exact v2_odd_factor q r
+
 /-- Adding a nonzero number smaller than 2^b to 2^b does not change
 its 2-adic valuation. This is the key dyadic shift identity behind the
 palindromic carry pattern. -/
@@ -281,6 +318,8 @@ theorem countedRst012_of_prefix
   rw [hdecomp,run_add,hprefix,drainCost_binary b]
   exact htail
 
+#print axioms v2_odd_factor
+#print axioms v2_of_odd_factorization
 #print axioms v2_add_pow
 #print axioms descV2_binary
 #print axioms drainCost_binary_closed
