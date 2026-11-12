@@ -278,7 +278,7 @@ private theorem stage43_decomposition (v k : Nat) :
       (BB429Low3Delta.ar_pairs_delta (2*v+3)
         (tens (2*k) ++ ones 6) [false,true])
   have h4 : runWithDelta 4 zAR = some (zC0, (4:Int)) := by
-    simpa [zAR,zC0,List.append_assoc] using
+    simpa [zAR,zC0,low43_C0_zipper,List.append_assoc] using
       (low3_tail_delta_local (ones (4*v+6) ++ (tens (2*k) ++ ones 6)))
   have hrepStage : Represents (stage43 v k) (stage43Config v k) := by
     simpa [stage43Config] using stage43_represented v k
@@ -291,7 +291,7 @@ private theorem stage43_decomposition (v k : Nat) :
     source_runWithDelta_rep 4 zAR c2 hrep2 zC0 4 h4
   rcases hrep3 with ⟨hstate,hcur,hleftRep,hrightRep⟩
   have hrep3' : Represents (low43_C0_zipper v k) c3 := by
-    simpa [zC0] using (show Represents zC0 c3 from ⟨hstate,hcur,hleftRep,hrightRep⟩)
+    simpa [zC0,low43_C0_zipper] using (show Represents zC0 c3 from ⟨hstate,hcur,hleftRep,hrightRep⟩)
   have hstate' : c3.state.val=2 := by simpa [zC0] using hstate
   have hcur' : c3.tape c3.head=false := by simpa [zC0] using hcur
   have hright' : c3.tape (c3.head+1)=false := by
