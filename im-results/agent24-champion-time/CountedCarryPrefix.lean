@@ -182,9 +182,9 @@ theorem carryLeftSweep_closed (s : Nat) (T : Int → Bool)
   have hn : (4*s-1)+1 = 4*s := by omega
   have hon' : leftOnes T 0 ((4*s-1)+1) := by simpa [hn] using hon
   have h := swept_closed (4*s-1) T 0 hon' hzero
-  have hcoord : -((4*s-1:Int)) = 1-4*(s:Int) := by omega
+  have hcoord : (0:Int)-((4*s-1:Int)) = 1-4*(s:Int) := by omega
   rw [hcoord] at h
-  simpa [hn] using h
+  exact h
 
 /-- Every cell from the post-sweep head+2 through coordinate 4 is one. -/
 theorem carryLeftSweep_marked (r s : Nat) (T : Int → Bool)
@@ -194,10 +194,8 @@ theorem carryLeftSweep_marked (r s : Nat) (T : Int → Bool)
     sweptLeft (4*s) T 0 x = true := by
   have hon := carryInput_leftOnes r s T hmatch hbound
   have hzero : T 1 = false := by
-    apply carryInput_unmarked r T hmatch 1
-    · omega
-    · omega
-    · simp [carryInputBit]; omega
+    exact carryInput_unmarked r T hmatch 1 (by omega) (by omega) (by
+      simp [carryInputBit]; omega)
   have hclosed := carryLeftSweep_closed s T hs hon hzero
   rw [hclosed]
   by_cases hx1 : x=1
@@ -244,16 +242,16 @@ theorem frame_head_segment (inside : Int → Bool) (T : Int → Bool)
   intro i hi
   by_cases hiz : i=0
   · subst i
-    have hcoord : h+u-h = u := by omega
-    simp only [frame,shiftConfig]
-    rw [hcoord]
-    simp [hin,hmark]
+    change (if inside ((h+u)-h) = true then c.tape ((h+u)-h)
+      else T (h+u)) = true
+    have hcoord : (h+u)-h = u := by omega
+    simp [hcoord,hin,hmark]
   · have hnot := hout i (by omega)
     have hval := hbg i hi
-    have hcoord : h+u+(i:Int)-h = u+(i:Int) := by omega
-    simp only [frame,shiftConfig]
-    rw [hcoord]
-    simp [hnot,hval]
+    change (if inside ((h+u+(i:Int))-h) = true then
+      c.tape ((h+u+(i:Int))-h) else T (h+u+(i:Int))) = true
+    have hcoord : (h+u+(i:Int))-h = u+(i:Int) := by omega
+    simp [hcoord,hnot,hval]
 
 /-- Composition of exact source runs. -/
 theorem run_compose (m : Machine) (n1 n2 : Nat)
