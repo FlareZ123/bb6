@@ -221,7 +221,9 @@ theorem indexResidue_lt (s j k:Nat) :
       have hd: d<3:=henselDigit_lt q a
       have hle:d≤2:=by omega
       have hmul:=Nat.mul_le_mul_right (3^k) hle
-      have hpow:3^(k+1)=3*3^k:=by rw [Nat.pow_succ]
+      have hpow:3^(k+1)=3*3^k:=by
+        rw [Nat.pow_succ]
+        exact Nat.mul_comm _ _
       change b+d*3^k<3^(k+1)
       omega
 
@@ -324,6 +326,7 @@ theorem indexResidue_iff (s j k h:Nat)
       have hstep:pn=3*P:=by
         dsimp [pn,P]
         rw [Nat.pow_succ]
+        exact Nat.mul_comm _ _
       have hdiv:(3:Int)^(k+1)∣(3:Int)^(k+2):=by
         refine ⟨3,?_⟩
         rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
