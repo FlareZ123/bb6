@@ -101,9 +101,9 @@ The strongest new exact criterion is `blank_halts_iff_c58_late_fast_all_s3`: it 
 The older `blank_halts_iff_c58_late_fast_all_s3` extends the C58/late-fast criterion. The newer `CSixSeventhSixAll.lean` goes further: it composes the same strict-image exclusion with `Agent11SixAll.blank_halts_iff_six_both`, whose high predicate already includes the C58/late-fast base, the odd-diagonal filter, both m=0 guards, and the six-sector source-exact normalizer.
 
 The new admission lemma `prior_six_all_admits_s3_image_family` proves that **every** s3 high-stop parameter still passes that latest pre-existing high predicate:
-- The stopping equation forces (m\equiv10\pmod{32}), while the additional odd-diagonal filter requires (m\equiv j+25\equiv24\pmod{32}).
-- Both m=0 guards are vacuous because (m\ge7).
-- At the source target ((x,y)=(641+1024u,574+1024v)), (x\equiv1\pmod{16}), (y\equiv0\pmod2), (x+y\equiv3\pmod4), and (x+y\equiv7\pmod8). These residues make all six branches of `sixForcedNormalize` inapplicable, so `sixForcedExcluded x y=false`.
+- The stopping equation forces `m % 32 = 10`, while the additional odd-diagonal filter requires `m % 32 = (j+25) % 32 = 24`.
+- Both m=0 guards are vacuous because `m ≥ 7`.
+- At the source target `(x,y) = (641+1024u, 574+1024v)`, `x % 16 = 1`, `y % 2 = 0`, `(x+y) % 4 = 3`, and `(x+y) % 8 = 7`. These residues make all six branches of `sixForcedNormalize` inapplicable, so `sixForcedExcluded x y=false`.
 
 Thus the s3 family is not already removed by the latest combined sieve. The new exact iff `blank_halts_iff_six_both_s3` adds it as a genuine infinite high-parameter exclusion while preserving the latest exact low branch and fixed-target decision.
 
