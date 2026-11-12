@@ -148,23 +148,22 @@ theorem binDec_carryPrefix (len q r : Nat) (hq : q < 2^len) :
 Uniqueness is not needed by the encoder theorem. -/
 theorem exists_odd_factor (z : Nat) (hz : 0 < z) :
     ∃ q r, z = (2*q+1)*2^r := by
-  induction z using Nat.strong_induction_on with
-  | h z ih =>
-      by_cases he : z % 2 = 0
-      · have hdiv : 0 < z/2 := by omega
-        obtain ⟨q,r,hr⟩ := ih (z/2) (by omega) hdiv
-        refine ⟨q,r+1,?_⟩
-        calc
-          z = 2*(z/2) := by omega
-          _ = 2*((2*q+1)*2^r) := by rw [hr]
-          _ = (2*q+1)*2^(r+1) := by
-            rw [Nat.pow_succ]
-            ac_rfl
-      · have hmod : z % 2 < 2 := Nat.mod_lt z (by decide)
-        have hodd : z % 2 = 1 := by omega
-        refine ⟨z/2,0,?_⟩
+  induction z using Nat.strongRecOn with
+  | ind z ih =>
+      by_cases hod : z % 2 = 1
+      · refine ⟨z/2,0,?_⟩
         have hdecomp : z = 2*(z/2)+1 := by omega
-        simp [hdecomp]
+        simpa using hdecomp
+      · have hmod : z % 2 = 0 := by omega
+        let m := z/2
+        have hmEq : 2*m = z := by dsimp [m]; omega
+        have hmpos : 0 < m := by dsimp [m]; omega
+        have hmlt : m < z := by dsimp [m]; omega
+        obtain ⟨q,r,hr⟩ := ih m hmlt hmpos
+        refine ⟨q,r+1,?_⟩
+        have hh : z = 2*((2*q+1)*2^r) := by rw [← hmEq,hr]
+        rw [hh,Nat.pow_succ]
+        ac_rfl
 
 /-- The source zero counter is exactly a repetition of d1. -/
 theorem binDec_zero (len : Nat) : binDec len 0 = d1pow len := by
@@ -179,11 +178,28 @@ theorem binDec_zero (len : Nat) : binDec len 0 = d1pow len := by
         _ = d1pow (len+1) := by simp [d1pow,ih]
 
 /-- The repeated d1 word is invariant under reversal. -/
+private theorem d1pow_append_d1 (n : Nat) :
+    d1pow n ++ d1 = d1 ++ d1pow n := by
+  induction n with
+  | zero => simp [d1pow]
+  | succ n ih =>
+      calc
+        d1pow (n+1) ++ d1 = d1 ++ (d1pow n ++ d1) := by
+          simp [d1pow,List.append_assoc]
+        _ = d1 ++ (d1 ++ d1pow n) := by rw [ih]
+        _ = d1 ++ d1pow (n+1) := by simp [d1pow]
+
 theorem d1pow_reverse (n : Nat) : (d1pow n).reverse = d1pow n := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [d1pow,d1,ih,List.reverse_append]
+      calc
+        (d1pow (n+1)).reverse =
+            (d1pow n).reverse ++ d1 := by
+              simp [d1pow,List.reverse_append,d1]
+        _ = d1pow n ++ d1 := by rw [ih]
+        _ = d1 ++ d1pow n := d1pow_append_d1 n
+        _ = d1pow (n+1) := by simp [d1pow]
 
 /-- Length of the physical block word on the valid source domain. -/
 theorem d1pow_length (n : Nat) : (d1pow n).length = 3*n := by
@@ -287,7 +303,6 @@ theorem s0LeftFacing_carryPrefix (l : List Bool) (a len q r : Nat)
       d1pow r ++ d0 ++ binDec len q ++ l := by
   unfold s0LeftFacing
   rw [binDec_carryPrefix len q r hq]
-  simp [List.append_assoc]
 
 /-- Physical left-to-right form of the S0 boundary: the exact suffix
 immediately before the head is d0 ++ d1^r. -/
@@ -345,7 +360,6 @@ theorem s1LeftFacing_carryPrefix (L n m len q r : Nat)
         markerWord m ++ d0 ++ binDec L n ++ lh := by
   unfold s1LeftFacing
   rw [binDec_carryPrefix len q r hq]
-  simp [List.append_assoc]
 
 /-- The actual S1 tape exposes the entire carry prefix at its D head. -/
 theorem s1Config_left_carryCells (L n m len q r b : Nat)
