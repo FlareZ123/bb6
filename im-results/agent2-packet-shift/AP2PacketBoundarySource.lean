@@ -19,7 +19,7 @@ def input (k q r : Nat) : Cfg :=
   ⟨[],false,
     List.replicate (3*k+3) true ++
       CryptidBoundary.oppairs q ++
-      List.replicate (3*r+2) true ++ fixedTail,
+      false :: (List.replicate (3*r+2) true ++ fixedTail),
     5⟩
 
 def endpoint (k q r : Nat) : Cfg :=
