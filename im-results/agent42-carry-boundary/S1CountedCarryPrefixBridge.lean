@@ -271,3 +271,165 @@ theorem s1Config_evenCounter_carryPrefix
 #print axioms s1Config_evenCounter_carryPrefix
 
 end BB6Coverage.Agent42CarryPrefixBridge
+
+
+namespace BB6Coverage.Agent42CarryPrefixBridge
+
+open BB6Coverage
+open BB6Coverage.Agent48Champion
+
+/-- The suffix shared by the one-trailing-zero macro: it starts at E/head 7
+with the six-cell open carry boundary and an arbitrary unary right counter. -/
+def evenOpenFinalSweepTape (c : Nat) (P : Int → Bool) : Int → Bool :=
+  sweptLeft (5+3*c) (afterEZero P (even_rightStop c)) (even_rightStop c)
+
+private theorem even_open_middle_ones (P : Int → Bool) (c : Nat)
+    (h6 : P 6 = true)
+    (hone : ∀ i : Nat, i<3*(c+1) → P (7+(i:Int))=true) :
+    leftOnes (afterEZero P (even_rightStop c))
+      (even_rightStop c) (5+3*c) := by
+  intro i hi
+  by_cases hi0 : i=0
+  · subst i
+    simp [afterEZero]
+  · have hdiff : even_rightStop c-(i:Int) ≠ even_rightStop c := by omega
+    have hdiff1 : even_rightStop c-(i:Int) ≠ even_rightStop c+1 := by omega
+    have hdiff2 : even_rightStop c-(i:Int) ≠ even_rightStop c+2 := by omega
+    simp only [afterEZero,if_neg hdiff,if_neg hdiff1,if_neg hdiff2]
+    by_cases h6pos : even_rightStop c-(i:Int)=6
+    · rw [h6pos]
+      exact h6
+    · have hxgt : 7 ≤ even_rightStop c-(i:Int) := by
+        unfold even_rightStop at *
+        omega
+      have hk : ∃ k : Nat,
+          even_rightStop c-(i:Int)=7+(k:Int) ∧ k<3*(c+1) := by
+        refine ⟨(even_rightStop c-(i:Int)-7).toNat,?_,?_⟩
+        · have hnonneg : 0 ≤ even_rightStop c-(i:Int)-7 := by omega
+          have hcast := Int.toNat_of_nonneg hnonneg
+          omega
+        · have hcast := Int.toNat_of_nonneg (by omega)
+          unfold even_rightStop at *
+          omega
+      obtain ⟨k,heq,hk⟩ := hk
+      rw [heq]
+      exact hone k hk
+
+private theorem even_open_sweep_local (P : Int → Bool) (c : Nat)
+    (h1 : P 1=true) (h2 : P 2=true) (h3 : P 3=true)
+    (h4 : P 4=true) (h5 : P 5=false) (h6 : P 6=true)
+    (hone : ∀ i : Nat, i<3*(c+1) → P (7+(i:Int))=true)
+    (x : Int) (hx : 1≤x) (hy : x≤6) :
+    evenOpenFinalSweepTape c P x =
+      decide (x ∈ even_tailBase.marked) := by
+  have hon := even_open_middle_ones P c h6 hone
+  have hright : afterEZero P (even_rightStop c)
+      (even_rightStop c+1) = false := by
+    simp [afterEZero]
+  have hcount : 5+3*c=(4+3*c)+1 := by omega
+  unfold evenOpenFinalSweepTape
+  rw [hcount,even_swept_closed (4+3*c)
+    (afterEZero P (even_rightStop c)) (even_rightStop c)
+    (by simpa [hcount] using hon) hright]
+  have h6coord : even_rightStop c-((4+3*c):Int)=6 := by
+    unfold even_rightStop
+    omega
+  have haway : x ≠ even_rightStop c+1 := by
+    unfold even_rightStop
+    omega
+  simp only [h6coord,if_neg haway]
+  by_cases hx6 : x=6
+  · subst x
+    simp [even_tailBase]
+  · have haway0 : x ≠ even_rightStop c := by
+      unfold even_rightStop
+      omega
+    have haway2 : x ≠ even_rightStop c+2 := by
+      unfold even_rightStop
+      omega
+    have hvalue : P x = decide (x ∈ even_tailBase.marked) := by
+      have hcases : x=1 ∨ x=2 ∨ x=3 ∨ x=4 ∨ x=5 := by omega
+      rcases hcases with h1x | h2x | h3x | h4x | h5x
+      · subst x
+        simp [even_tailBase,h1]
+      · subst x
+        simp [even_tailBase,h2]
+      · subst x
+        simp [even_tailBase,h3]
+      · subst x
+        simp [even_tailBase,h4]
+      · subst x
+        simp [even_tailBase,h5]
+    simpa [hx6,afterEZero,haway0,haway2] using hvalue
+
+private theorem even_open_tail_match (P : Int → Bool) (c : Nat)
+    (h1 : P 1=true) (h2 : P 2=true) (h3 : P 3=true)
+    (h4 : P 4=true) (h5 : P 5=false) (h6 : P 6=true)
+    (hone : ∀ i : Nat, i<3*(c+1) → P (7+(i:Int))=true) :
+    frame even_tailArea (evenOpenFinalSweepTape c P) (embed even_tailBase) =
+      (⟨3,5,evenOpenFinalSweepTape c P⟩ : Config) := by
+  unfold frame
+  apply congrArg (fun f : Int → Bool => (Config.mk 3 5 f))
+  funext x
+  by_cases ha : even_tailArea x=true
+  · have harea : 1≤x ∧ x≤6 := by simpa [even_tailArea] using ha
+    simp only [ha,if_pos]
+    exact (even_open_sweep_local P c h1 h2 h3 h4 h5 h6 hone
+      x harea.1 harea.2).symm
+  · simp [ha]
+
+/-- Exact 33+12c source suffix from an open E/head-7 counter boundary.
+Only cells 1 through 6 and the right unary counter are inspected; the
+left exterior is deliberately unrestricted. -/
+theorem even_counted_suffix_from_open (P : Int → Bool) (c : Nat)
+    (h1 : P 1=true) (h2 : P 2=true) (h3 : P 3=true)
+    (h4 : P 4=true) (h5 : P 5=false) (h6 : P 6=true)
+    (hone : ∀ i : Nat, i<3*(c+1) → P (7+(i:Int))=true)
+    (h0 : P (even_rightStop c)=false)
+    (hstop1 : P (even_rightStop c+1)=false)
+    (hstop2 : P (even_rightStop c+2)=false) :
+    run tm2 (33+12*c) ⟨(4 : Fin 6),7,P⟩ =
+      some (frame even_tailArea (evenOpenFinalSweepTape c P)
+        (embed even_tailFinal)) := by
+  let stop := even_rightStop c
+  let B := afterEZero P stop
+  let U := sweptLeft (5+3*c) B stop
+  have hlinear : linearRightOnes P 7 (3*(c+1)) := by
+    intro i hi
+    exact hone i hi
+  have hs0 := E_scan P 7 (3*(c+1)) hlinear
+  have hs : run tm2 (3*(c+1)) ⟨(4 : Fin 6),7,P⟩ =
+      some ⟨(4 : Fin 6),stop,P⟩ := by
+    simpa [stop,even_rightStop] using hs0
+  have hz := E_zero_bridge P stop h0 hstop1 hstop2
+  have hon := even_open_middle_ones P c h6 hone
+  have hright : B (stop+1)=false := by
+    simp [B,afterEZero]
+  have hl0 := counted_left_sweep (4+3*c) B stop
+    (by simpa [B] using hon) hright
+  have hhead : stop-((5+3*c):Int)=5 := by
+    dsimp [stop,even_rightStop]
+    omega
+  have hl : run tm2 (3*(5+3*c)) ⟨(3 : Fin 6),stop,B⟩ =
+      some ⟨(3 : Fin 6),5,U⟩ := by
+    simpa [B,U,stop,evenOpenFinalSweepTape,hhead] using hl0
+  have hmatch := even_open_tail_match P c h1 h2 h3 h4 h5 h6 hone
+  have ht : run tm2 11 ⟨(3 : Fin 6),5,U⟩ =
+      some (frame even_tailArea U (embed even_tailFinal)) := by
+    rw [← hmatch]
+    exact even_tail11 U
+  have h12 := run_compose tm2 (3*(c+1)) 4
+    ⟨(4 : Fin 6),7,P⟩ ⟨(4 : Fin 6),stop,P⟩ ⟨(3 : Fin 6),stop,B⟩ hs hz
+  have h123 := run_compose tm2 (3*(c+1)+4) (3*(5+3*c))
+    ⟨(4 : Fin 6),7,P⟩ ⟨(3 : Fin 6),stop,B⟩ ⟨(3 : Fin 6),5,U⟩ h12 hl
+  have h1234 := run_compose tm2
+    (3*(c+1)+4+3*(5+3*c)) 11
+    ⟨(4 : Fin 6),7,P⟩ ⟨(3 : Fin 6),5,U⟩
+    (frame even_tailArea U (embed even_tailFinal)) h123 ht
+  have hcost : 33+12*c =
+      3*(c+1)+4+3*(5+3*c)+11 := by omega
+  simpa [hcost,Nat.add_assoc] using h1234
+
+#print axioms even_counted_suffix_from_open
+
+end BB6Coverage.Agent42CarryPrefixBridge
