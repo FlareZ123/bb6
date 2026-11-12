@@ -13,6 +13,10 @@ theorem e_two_reset_regular_reentry (k q : Nat) :
       (BB6.Agent31PacketSource.packet (3*k+4) q 2
         (false :: List.replicate 6 true)) =
       DRegularSource.sourceSection ⟨8*k+6,3,2⟩ := by
+  change run (BB6.Agent2PacketP2Reset.eTwoTime k q)
+    (BB6.Agent31PacketSource.packet (3*k+4) q 2
+      (false :: List.replicate 6 true)) =
+      DRegularSource.sourceSection ⟨8*k+6,3,2⟩
   rw [BB6.Agent2PacketP2Reset.e_two_reset]
   rw [BB6.ERemaining.source_rep (8*k+6) 3 2 (by omega)]
   unfold BB6.Agent2PacketP2Reset.marker
