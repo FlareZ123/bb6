@@ -68,7 +68,12 @@ set_option maxRecDepth 8192
 theorem low_three_excluded :
     BB6.Agent11SixForced.sixForcedExcluded 1
       (2^(2*3+3)-(3*3+4))=true := by
-  decide
+  simp [BB6.Agent11SixForced.sixForcedExcluded,
+    BB6.Agent11SixForced.sixForcedNormalize,
+    BB6.Agent3.oddLowGate, BB6.Agent3.evenSevenGate,
+    BB6.Agent3.evenAffineGate, BB6.Agent46.sixEvenRightGate,
+    BB6.Agent3ValSix.valSixGate,
+    BB6.Agent11SixForced.evenOddFourGate]
 
 /-- The first new low stopping target from the added sector is
     m=3: it survives every previous full C58/ValSix low parameter
