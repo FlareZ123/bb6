@@ -46,6 +46,22 @@ theorem tm2_halts_after_terminal_prefix
     run tm2 (n + terminalMoves L a + 1) blank = none
   exact ⟨by simp [hlive], hhalt⟩
 
+
+/-- Generic score bridge: any proved TM63 blank-root halting time at or
+after its nine-step common-root configuration gives an attainable champion
+score exactly six successful moves later, plus the final halt query. -/
+theorem champion_attainable_of_tm2_haltsAfter
+    (N : Nat) (hN : 9 ≤ N) (h : HaltsAfter tm2 N) :
+    Attainable (N+7) := by
+  obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hN
+  have htm2 : HaltsAfter tm2 (9+k) := by
+    simpa [hk] using h
+  have hchamp := (champion_halts_offset k).mpr htm2
+  refine ⟨championTable, N+6, ?_, ?_⟩
+  · have hscore : 15+k = N+6 := by omega
+    simpa [hscore] using hchamp
+  · rfl
+
 /-- Root-corrected champion halting theorem. The source TM63 prefix plus
 terminal macro has N successful moves; the published champion's A-root is
 six moves earlier than TM63's E-root, so its successful-move count is N+6. -/
