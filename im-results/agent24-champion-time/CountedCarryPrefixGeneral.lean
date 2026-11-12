@@ -46,26 +46,27 @@ theorem carryBridge0_input_match (k : Nat) (T : Int → Bool)
   rcases hcases with hneg | hzero | hone | hpos
   · subst i
     have hblank := carryInput_unmarked (4*k) T hmatch
-      (-(4*(3*(k:Int)))-1) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int))) + (-1)) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k) (3*k) T hmatch hs hb
-      (-(4*(3*(k:Int)))-1) (by omega) (by omega)
+      (-(4*(3*(k:Int))) + (-1)) (by omega) (by omega)
     have hmem : (-1:Int) ∉ ([2,3,4,5,6,7,8,9,10] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hblank := carryInput_unmarked (4*k) T hmatch
-      (-(4*(3*(k:Int)))) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int)))) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k) (3*k) T hmatch hs hb
       (-(4*(3*(k:Int)))) (by omega) (by omega)
     have hmem : (0:Int) ∉ ([2,3,4,5,6,7,8,9,10] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hval := carryLeftSweep_boundary_zero (4*k) (3*k) T hmatch hs hb
+    have hcoord : 1-4*(3*(k:Int)) = -(4*(3*(k:Int)))+1 := by omega
     have hmem : (1:Int) ∉ ([2,3,4,5,6,7,8,9,10] : List Int) := by simp
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hcoord,hmem] using hval
   · have hval := carryLeftSweep_marked (4*k) (3*k) T hmatch hs hb
       (-(4*(3*(k:Int)))+i) (by omega) (by omega)
     have hmem : i ∈ ([2,3,4,5,6,7,8,9,10] : List Int) := by simp; omega
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval
 
 /-- rho=1: the residual one and the rightward run give the bridge window. -/
 theorem carryBridge1_input_match (k : Nat) (T : Int → Bool)
@@ -81,33 +82,34 @@ theorem carryBridge1_input_match (k : Nat) (T : Int → Bool)
   rcases hcases with hneg | hzero | hone | hboundary | hpos
   · subst i
     have hblank := carryInput_unmarked (4*k+3) T hmatch
-      (-(4*(3*(k:Int)+2))-2) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int)+2)) + (-2)) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k+3) (3*k+2) T hmatch hs hb
-      (-(4*(3*(k:Int)+2))-2) (by omega) (by omega)
+      (-(4*(3*(k:Int)+2)) + (-2)) (by omega) (by omega)
     have hmem : (-2:Int) ∉ ([0,2,3,4,5,6] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hblank := carryInput_unmarked (4*k+3) T hmatch
-      (-(4*(3*(k:Int)+2))-1) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int)+2)) + (-1)) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k+3) (3*k+2) T hmatch hs hb
-      (-(4*(3*(k:Int)+2))-1) (by omega) (by omega)
+      (-(4*(3*(k:Int)+2)) + (-1)) (by omega) (by omega)
     have hmem : (-1:Int) ∉ ([0,2,3,4,5,6] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hone' := carryInput_marked (4*k+3) T hmatch
       (-(4*(3*(k:Int)+2))) (Or.inl (by constructor <;> omega))
     have hval := carryLeftSweep_preserves_at (4*k+3) (3*k+2) T hmatch hs hb
       (-(4*(3*(k:Int)+2))) (by omega) (by omega)
     have hmem : (0:Int) ∈ ([0,2,3,4,5,6] : List Int) := by simp
-    convert hval.trans hone' using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hone'
   · subst i
     have hval := carryLeftSweep_boundary_zero (4*k+3) (3*k+2) T hmatch hs hb
+    have hcoord : 1-4*(3*(k:Int)+2) = -(4*(3*(k:Int)+2))+1 := by omega
     have hmem : (1:Int) ∉ ([0,2,3,4,5,6] : List Int) := by simp
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hcoord,hmem] using hval
   · have hval := carryLeftSweep_marked (4*k+3) (3*k+2) T hmatch hs hb
       (-(4*(3*(k:Int)+2))+i) (by omega) (by omega)
     have hmem : i ∈ ([0,2,3,4,5,6] : List Int) := by simp; omega
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval
 
 /-- rho=2: two residual ones, a rightward guard, and the zero boundary. -/
 theorem carryBridge2_input_match (k : Nat) (T : Int → Bool)
@@ -123,40 +125,41 @@ theorem carryBridge2_input_match (k : Nat) (T : Int → Bool)
   rcases hcases with hneg | hzero | hone1 | hone0 | hboundary | hpos
   · subst i
     have hblank := carryInput_unmarked (4*k+2) T hmatch
-      (-(4*(3*(k:Int)+1))-3) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int)+1)) + (-3)) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb
-      (-(4*(3*(k:Int)+1))-3) (by omega) (by omega)
+      (-(4*(3*(k:Int)+1)) + (-3)) (by omega) (by omega)
     have hmem : (-3:Int) ∉ ([-1,0,2] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hblank := carryInput_unmarked (4*k+2) T hmatch
-      (-(4*(3*(k:Int)+1))-2) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int)+1)) + (-2)) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb
-      (-(4*(3*(k:Int)+1))-2) (by omega) (by omega)
+      (-(4*(3*(k:Int)+1)) + (-2)) (by omega) (by omega)
     have hmem : (-2:Int) ∉ ([-1,0,2] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hone := carryInput_marked (4*k+2) T hmatch
-      (-(4*(3*(k:Int)+1))-1) (Or.inl (by constructor <;> omega))
+      (-(4*(3*(k:Int)+1)) + (-1)) (Or.inl (by constructor <;> omega))
     have hval := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb
-      (-(4*(3*(k:Int)+1))-1) (by omega) (by omega)
+      (-(4*(3*(k:Int)+1)) + (-1)) (by omega) (by omega)
     have hmem : (-1:Int) ∈ ([-1,0,2] : List Int) := by simp
-    convert hval.trans hone using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hone
   · subst i
     have hone := carryInput_marked (4*k+2) T hmatch
       (-(4*(3*(k:Int)+1))) (Or.inl (by constructor <;> omega))
     have hval := carryLeftSweep_preserves_at (4*k+2) (3*k+1) T hmatch hs hb
       (-(4*(3*(k:Int)+1))) (by omega) (by omega)
     have hmem : (0:Int) ∈ ([-1,0,2] : List Int) := by simp
-    convert hval.trans hone using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hone
   · subst i
     have hval := carryLeftSweep_boundary_zero (4*k+2) (3*k+1) T hmatch hs hb
+    have hcoord : 1-4*(3*(k:Int)+1) = -(4*(3*(k:Int)+1))+1 := by omega
     have hmem : (1:Int) ∉ ([-1,0,2] : List Int) := by simp
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hcoord,hmem] using hval
   · have hval := carryLeftSweep_marked (4*k+2) (3*k+1) T hmatch hs hb
       (-(4*(3*(k:Int)+1))+i) (by omega) (by omega)
     have hmem : (2:Int) ∈ ([-1,0,2] : List Int) := by simp
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval
 
 /-- rho=3 for k>0: the three residual ones and the zero boundary. -/
 theorem carryBridge3_input_match (k : Nat) (T : Int → Bool)
@@ -172,43 +175,44 @@ theorem carryBridge3_input_match (k : Nat) (T : Int → Bool)
   rcases hcases with hneg | hzero | hone2 | hone1 | hone0 | hboundary
   · subst i
     have hblank := carryInput_unmarked (4*k+1) T hmatch
-      (-(4*(3*(k:Int)+1))) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int)+1))) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb
       (-(4*(3*(k:Int)+1))) (by omega) (by omega)
     have hmem : (-4:Int) ∉ ([-2,-1,0] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hblank := carryInput_unmarked (4*k+1) T hmatch
-      (-(4*(3*(k:Int)))-3) (by omega) (by omega) (by simp [carryInputBit])
+      (-(4*(3*(k:Int))) + (-3)) (by omega) (by omega) (by simp [carryInputBit]; omega)
     have hval := carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb
-      (-(4*(3*(k:Int)))-3) (by omega) (by omega)
+      (-(4*(3*(k:Int))) + (-3)) (by omega) (by omega)
     have hmem : (-3:Int) ∉ ([-2,-1,0] : List Int) := by simp
-    convert hval.trans hblank using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hblank
   · subst i
     have hone := carryInput_marked (4*k+1) T hmatch
-      (-(4*(3*(k:Int)))-2) (Or.inl (by constructor <;> omega))
+      (-(4*(3*(k:Int))) + (-2)) (Or.inl (by constructor <;> omega))
     have hval := carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb
-      (-(4*(3*(k:Int)))-2) (by omega) (by omega)
+      (-(4*(3*(k:Int))) + (-2)) (by omega) (by omega)
     have hmem : (-2:Int) ∈ ([-2,-1,0] : List Int) := by simp
-    convert hval.trans hone using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hone
   · subst i
     have hone := carryInput_marked (4*k+1) T hmatch
-      (-(4*(3*(k:Int)))-1) (Or.inl (by constructor <;> omega))
+      (-(4*(3*(k:Int))) + (-1)) (Or.inl (by constructor <;> omega))
     have hval := carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb
-      (-(4*(3*(k:Int)))-1) (by omega) (by omega)
+      (-(4*(3*(k:Int))) + (-1)) (by omega) (by omega)
     have hmem : (-1:Int) ∈ ([-2,-1,0] : List Int) := by simp
-    convert hval.trans hone using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hone
   · subst i
     have hone := carryInput_marked (4*k+1) T hmatch
       (-(4*(3*(k:Int)))) (Or.inl (by constructor <;> omega))
     have hval := carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb
       (-(4*(3*(k:Int)))) (by omega) (by omega)
     have hmem : (0:Int) ∈ ([-2,-1,0] : List Int) := by simp
-    convert hval.trans hone using 1 <;> simp [hmem] <;> omega
+    simpa [hmem] using hval.trans hone
   · subst i
     have hval := carryLeftSweep_boundary_zero (4*k+1) (3*k) T hmatch hs hb
+    have hcoord : 1-4*(3*(k:Int)) = -(4*(3*(k:Int)))+1 := by omega
     have hmem : (1:Int) ∉ ([-2,-1,0] : List Int) := by simp
-    convert hval using 1 <;> simp [hmem] <;> omega
+    simpa [hcoord,hmem] using hval
 
 /-- The r=1 short branch enters the rho=3 bridge without a left sweep. -/
 theorem carryBridge3_input_match_r1 (T : Int → Bool)
