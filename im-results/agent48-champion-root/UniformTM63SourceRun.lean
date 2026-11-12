@@ -43,6 +43,28 @@ private theorem toNat_sub_one (z : Int) (hz : 1 ≤ z) :
     Int.toNat_of_nonneg (by omega)
   omega
 
+private theorem moveR_left (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
+    sideBit ((TM63Uniform.moveR c b s).h :: (TM63Uniform.moveR c b s).l)
+      (n + 1) = sideBit (b :: c.l) n := by
+  cases c.r <;> rfl
+
+private theorem moveR_head (c : TM63Uniform.Cfg) (b : Bool) (s : Nat) :
+    (TM63Uniform.moveR c b s).h = sideBit c.r 0 := by
+  cases c.r <;> rfl
+
+private theorem moveR_right (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
+    sideBit (TM63Uniform.moveR c b s).r n = sideBit c.r (n + 1) := by
+  cases c.r <;> rfl
+
+private theorem moveL_left (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
+    sideBit ((TM63Uniform.moveL c b s).h :: (TM63Uniform.moveL c b s).l) n =
+      sideBit (c.h :: c.l) (n + 1) := by
+  cases c.l <;> cases n <;> rfl
+
+private theorem moveL_right (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
+    sideBit (TM63Uniform.moveL c b s).r (n + 1) = sideBit c.r n := by
+  cases c.l <;> rfl
+
 /-- Moving the zipper head right corresponds to writing at the old head and
 moving the physical head one cell right. -/
 theorem uniformTapeAt_moveR (c : TM63Uniform.Cfg) (h : Int)
@@ -57,33 +79,32 @@ theorem uniformTapeAt_moveR (c : TM63Uniform.Cfg) (h : Int)
       exact toNat_add_one (h - x) (by omega)
     by_cases heq : x = h
     · subst x
-      simp [uniformTapeAt, TM63Uniform.moveR, sideBit]
+      simp [uniformTapeAt, hx', moveR_left, sideBit]
     · have hn : Int.toNat (h - x) ≠ 0 := by
         intro hz
         have hcast : (Int.toNat (h - x) : Int) = h - x :=
           Int.toNat_of_nonneg (by omega)
         simp [hz] at hcast
         omega
-      simp [uniformTapeAt, hx, hx', hidx, heq, hn,
-        TM63Uniform.moveR, sideBit]
+      simp only [uniformTapeAt, if_pos hx, if_pos hx']
+      rw [hidx, moveR_left]
+      simp only [if_neg heq]
+      cases hn' : Int.toNat (h - x) with
+      | zero => simp [hn'] at hn
+      | succ n => simp [sideBit]
   · by_cases hx' : x ≤ h + 1
     · have heq : x = h + 1 := by omega
       subst x
-      cases hr : c.r with
-      | nil =>
-          simp [uniformTapeAt, TM63Uniform.moveR, sideBit]
-      | cons y ys =>
-          simp [uniformTapeAt, TM63Uniform.moveR, sideBit]
+      simp [uniformTapeAt, hx, hx', moveR_head, sideBit]
     · have hidx : Int.toNat (x - (h + 1) - 1) + 1 =
           Int.toNat (x - h - 1) := by
         have heq : x - (h + 1) - 1 = (x - h - 1) - 1 := by omega
         rw [heq]
         exact toNat_sub_one (x - h - 1) (by omega)
-      cases hr : c.r with
-      | nil =>
-          simp [uniformTapeAt, hx, hx', TM63Uniform.moveR, sideBit]
-      | cons y ys =>
-          simp [uniformTapeAt, hx, hx', hidx, TM63Uniform.moveR, sideBit]
+      have hne : x ≠ h := by omega
+      simp only [uniformTapeAt, if_neg hx, if_neg hx']
+      rw [moveR_right, hidx]
+      simp [hne]
 
 /-- Moving the zipper head left corresponds to writing at the old head and
 moving the physical head one cell left. -/
@@ -93,29 +114,30 @@ theorem uniformTapeAt_moveL (c : TM63Uniform.Cfg) (h : Int)
       (fun x => if x = h then b else uniformTapeAt c h x) := by
   funext x
   by_cases hx : x < h
-  · have hidx : Int.toNat (h - 1 - x) + 1 = Int.toNat (h - x) := by
+  · have hxL : x ≤ h - 1 := by omega
+    have hxR : x ≤ h := by omega
+    have hidx : Int.toNat (h - 1 - x) + 1 = Int.toNat (h - x) := by
       have heq : h - 1 - x = (h - x) - 1 := by omega
       rw [heq]
       exact toNat_sub_one (h - x) (by omega)
-    cases hl : c.l with
-    | nil =>
-        simp [uniformTapeAt, hx, hidx, TM63Uniform.moveL, sideBit]
-    | cons y ys =>
-        simp [uniformTapeAt, hx, hidx, TM63Uniform.moveL, sideBit]
+    simp only [uniformTapeAt, if_pos hxL, if_pos hxR]
+    rw [moveL_left, hidx]
+    simp [hx]
   · by_cases heq : x = h
     · subst x
-      simp [uniformTapeAt, TM63Uniform.moveL, sideBit]
-    · have hx' : h < x := by omega
+      have hnot : ¬ h ≤ h - 1 := by omega
+      simp [uniformTapeAt, hnot, moveL_right, sideBit]
+    · have hxG : h < x := by omega
+      have hnotL : ¬ x ≤ h - 1 := by omega
+      have hnotR : ¬ x ≤ h := by omega
       have hidx : Int.toNat (x - (h - 1) - 1) =
           Int.toNat (x - h - 1) + 1 := by
         have heq : x - (h - 1) - 1 = (x - h - 1) + 1 := by omega
         rw [heq]
         exact toNat_add_one (x - h - 1) (by omega)
-      cases hl : c.l with
-      | nil =>
-          simp [uniformTapeAt, hx', hidx, TM63Uniform.moveL, sideBit, heq]
-      | cons y ys =>
-          simp [uniformTapeAt, hx', hidx, TM63Uniform.moveL, sideBit, heq]
+      simp only [uniformTapeAt, if_neg hnotL, if_neg hnotR]
+      rw [moveL_right, hidx]
+      simp [heq]
 
 /-- The total zipper transition preserves the six-state range. -/
 theorem step_state_lt (c : TM63Uniform.Cfg) (hc : c.st < 6) :
@@ -214,7 +236,7 @@ theorem run_uniform_source (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
     BB6Coverage.run tm2 n (uniformConfigAt h c hc) =
       some (uniformConfigAt (h + headOffset n c) (TM63Uniform.run n c)
         (run_state_lt n c hc)) := by
-  induction n generalizing c h hc hsafe with
+  induction n generalizing c h hc with
   | zero =>
       simp [BB6Coverage.run, TM63Uniform.run, headOffset, uniformConfigAt]
   | succ n ih =>
@@ -233,8 +255,15 @@ theorem run_uniform_source (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
           (BB6Coverage.rawStep tm2) = _
       rw [hIH]
       simp only [Option.bind_some]
-      rw [hstep, hrun, hoff]
-      simp [uniformConfigAt, Int.add_assoc]
+      rw [hstep]
+      have hcfg :
+          uniformConfigAt (h + headOffset n c + headDelta (TM63Uniform.run n c))
+              (TM63Uniform.step (TM63Uniform.run n c))
+              (step_state_lt (TM63Uniform.run n c) hcN) =
+            uniformConfigAt (h + headOffset (n + 1) c)
+              (TM63Uniform.run (n + 1) c) (run_state_lt (n + 1) c hc) := by
+        simp [hrun, hoff, uniformConfigAt, Int.add_assoc]
+      exact congrArg some hcfg
 
 #print axioms uniformStep_rawStep
 #print axioms run_uniform_source
