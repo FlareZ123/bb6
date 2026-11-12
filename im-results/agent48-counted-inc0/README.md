@@ -85,3 +85,12 @@ The new theorem `champion_attainable_after_s1_countedRst012` specializes `champi
 - the existing positivity condition `0<a`.
 
 This does **not** prove the blank-root or reset-prefix witnesses. It isolates the remaining champion obligation as the prefix reachability theorem, rather than leaving the generic one-step decrement premise as a separate dependency. The module locally type-checks against interface stubs for the source S1 theorem and terminal bridge. The manual workflow now compiles it immediately after `TerminalEncoderBridge.lean` and audits its axioms for `sorryAx`.
+
+
+The intended Agent 42 pre-drain prefix target has left context
+`markerWord (nextMarker m) ++ d0 ++ binDec L (n-1) ++ lh`. Since
+`nextMarker m = (m+2)%3`, the terminal bridge's fixed context is reached at
+`m=1,n=1` (`nextMarker 1=0`, `1-1=0`). The module therefore also exposes
+`champion_attainable_after_s1_countedRst012_m1n1`, whose prefix premise is
+written directly in the terminal bridge's S0 form. This is the exact parameter
+specialization to target once the Rst0/Rst1/Rst2 prefix theorem is source-proved.
