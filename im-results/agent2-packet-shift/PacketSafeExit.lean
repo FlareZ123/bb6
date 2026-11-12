@@ -134,6 +134,39 @@ theorem normalize_safe_exit (c : Packet) (ha : c.a ≥ 4)
   have hzero : d.a % 3 = 0 := by omega
   exact Or.inl hzero
 
+/-- For p≡2 (mod 3), the guarded normalizer can only terminate
+    at A, at B with q=0, or at the exceptional E,p=2 boundary. -/
+theorem normalize_p2_exit (c : Packet) (ha : c.a ≥ 4)
+    (hp : c.p % 3 = 2) :
+    let d := (normalizeWithCount c).2
+    d.a % 3 = 0 ∨ (d.a % 3 = 2 ∧ d.q = 0) ∨
+      (d.a % 3 = 1 ∧ d.p = 2) := by
+  let d := (normalizeWithCount c).2
+  change d.a % 3 = 0 ∨ (d.a % 3 = 2 ∧ d.q = 0) ∨
+    (d.a % 3 = 1 ∧ d.p = 2)
+  have he : advance d = none := normalize_terminal c
+  have hamin : d.a ≥ 4 := normalize_amin c ha
+  have hpmod : d.p % 3 = 2 := by
+    simpa [d,hp] using normalize_pmod c
+  by_cases h2 : d.a % 3 = 2
+  · have hq : d.q = 0 := by
+      by_contra hq
+      unfold advance at he
+      simp [h2,hq] at he
+    exact Or.inr (Or.inl ⟨h2,hq⟩)
+  by_cases h1 : d.a % 3 = 1
+  · have hp2 : d.p = 2 := by
+      by_contra hp2
+      have hge : 3 ≤ d.p := by omega
+      have ha' : ¬ d.a < 4 := by omega
+      unfold advance at he
+      simp [h1,ha',hge] at he
+    exact Or.inr (Or.inr ⟨h1,hp2⟩)
+  have hzero : d.a % 3 = 0 := by omega
+  exact Or.inl hzero
+
+#print axioms normalize_p2_exit
+
 #print axioms advance_pmod
 #print axioms normalize_pmod
 #print axioms normalize_amin
