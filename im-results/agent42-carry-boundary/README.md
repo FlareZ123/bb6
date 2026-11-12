@@ -67,3 +67,15 @@ original encoded tape. Do not treat those premises as established here.
 ## Long residue-one left-output integration
 
 The standalone S1-specific r1 prefix wrapper was intentionally not retained: Agent 24's `S1CarryInc0.lean` now consumes `carryLongPrefix_r1_shifted` directly, using its own general `s1Config_carryInput_match` theorem. This avoids duplicating the source-level input-matching proof. The durable Agent 42 contribution is `FrameCellLemmas.lean` plus `LongResidue1.lean`; both are included in the manual terminal-source workflow and remain uncompiled here.
+
+
+## Scope boundary: inner counted return is not the outer Rst prefix
+
+The adjacent `S1CountedCarryPrefixBridge.lean` file concerns the **active inner S0 counter z**:
+- `s1Config_oddCounter_countedReturn` assumes odd `z>0`;
+- `s1Config_evenCounter_carryPrefix` assumes even `z>0` and factors its 2-adic valuation;
+- these branches leave the outer `n) and its left-context `binDec L n` untouched.
+
+The Coq Rst0/Rst1/Rst2 prefix starts at `s1Config L n m a 0 b h`: the active inner `z) is zero, and `LC_Inc` decrements the **outer binary counter n** embedded in the left context. Therefore neither S1 odd/even inner-z branch is a direct proof of the reset prefix. Reuse of lower-level carry machinery requires a separate S1 source re-encoding of `binDec L n` (plus unary `a`) into the exact carry-input frame, while preserving the right suffix `b). The later counted drain from `z=2^b-1` is a separate phase and is already handled by the S1 counted-drain interface.
+
+This distinction is important when composing Agent 24's inner-counter carry results with Agent 8's outer-counter reset itinerary: the former does not discharge the latter.
