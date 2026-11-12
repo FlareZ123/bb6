@@ -1,17 +1,6 @@
-name: D blank-root source chain through thirtieth reentry (manual)
+name: D blank-root source chain through thirtieth reentry (manual audit)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'im-results/agent37-d-timing-cocycle/Seed31Probe.lean'
-      - 'im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.lean'
-      - 'im-results/agent2-packet-shift/AP2PacketBoundarySource.lean'
-      - 'im-results/agent2-packet-shift/PacketP2ReentryOrE.lean'
-      - 'im-results/agent2-packet-shift/P2ResetRegularReentry.lean'
-      - 'im-results/agent2-packet-shift/ExceptionalEPacketClosure.lean'
-      - 'im-results/agent37-d-timing-cocycle/BlankThirtiethRejoin.lean'
-      - '.github/workflows/agent25-eleventh-root.yml'
 permissions:
   contents: read
 jobs:
@@ -35,7 +24,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Verify DRegular root chain through twenty-sixth source reentry
+      - name: Verify DRegular root chain through thirtieth source reentry and Seed31 probe
         shell: bash
         run: |
           set -euo pipefail
