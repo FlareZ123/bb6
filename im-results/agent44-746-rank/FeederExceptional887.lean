@@ -108,6 +108,9 @@ private theorem narrow_exact_two_t2 (k x u a q : Nat)
     (hodd : 27*(2*2^k+a+k+3)=8*(2*x+5))
     (hband : 6*2^k-1≤x ∧ x≤8*2^k-3)
     (hp : ResetParent q x) : q=u ∨ q=a := by
+  have hpow1 : 2^k=2*2^(k-1) := by
+    have he : k=(k-1)+1 := by omega
+    rw [he,Nat.pow_succ]
   rcases hp with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
   · have hm : m=k := even_band_scale_unique x m k hbm hband
     left
@@ -305,6 +308,14 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
   rcases hnmod with ⟨hn6561,hp6561⟩
   have h2xmod729 : (2*x+5)%729=324 := by omega
   have hpk : p=2^k := by rfl
+  have hpk1 : 2^k=2*2^(k-1) := by
+    have he : k=(k-1)+1 := by omega
+    rw [he,Nat.pow_succ]
+  have hpk2 : 2^k=4*2^(k-2) := by
+    have he : k=(k-2)+2 := by omega
+    calc
+      2^k = 2^((k-2)+2) := congrArg (fun z : Nat => 2^z) he
+      _ = 4*2^(k-2) := by rw [Nat.pow_add]; norm_num
   have hpj : p=4*2^j := by
     dsimp [p,j]
     have he : n-2=(n-4)+2 := by omega
@@ -448,10 +459,12 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     omega
   have haGap0 :
       2*2^(k-1)<(2*a+5)/3 ∧ (2*a+5)/3<3*2^(k-1) := by
+    rw [←hpk, hpk1]
     omega
   have haGap1 :
       2*2^(k-2)<2*((2*a+5)/9) ∧
       2*((2*a+5)/9)<3*2^(k-2) := by
+    rw [←hpk, hpk2]
     omega
   have haUniq : ∀q, ResetParent q a → q=b := by
     intro q hq
