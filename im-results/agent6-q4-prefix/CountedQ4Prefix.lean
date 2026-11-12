@@ -1,9 +1,11 @@
 import CountedSweep
+import CountedOddBase
 import S1Encoder
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent6Q4Prefix
 
+open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 
@@ -28,7 +30,7 @@ theorem sweptLeft_preserves_left (n : Nat) (T : Int → Bool) (h x : Int)
   | succ n ih =>
       rw [sweptLeft]
       have hx' : x ≤ (h - 1) - (n : Int) := by omega
-      rw [ih (holeThree T h) (h - 1) x hx']
+      rw [ih (holeThree T h) (h - 1) hx']
       have hx0 : x ≠ h := by omega
       have hx1 : x ≠ h + 1 := by omega
       simp [holeThree, hx0, hx1]
@@ -38,7 +40,8 @@ theorem sweptLeft_leftmost (n : Nat) (T : Int → Bool) (h : Int) :
     sweptLeft (n+1) T h (h - (n : Int)) = false := by
   induction n generalizing T h with
   | zero =>
-      simp [sweptLeft, holeThree]
+      have hne : h ≠ h+1 := by omega
+      simp [sweptLeft, holeThree, hne]
   | succ n ih =>
       rw [sweptLeft]
       have heq : h - ((n+1 : Nat) : Int) = (h - 1) - (n : Int) := by omega
@@ -55,7 +58,7 @@ theorem sweptLeft_preserves_right (n : Nat) (T : Int → Bool) (h x : Int)
   | succ n ih =>
       rw [sweptLeft]
       have hx' : (h - 1) + 2 ≤ x := by omega
-      rw [ih (holeThree T h) (h - 1) x hx']
+      rw [ih (holeThree T h) (h - 1) hx']
       have hx0 : x ≠ h := by omega
       have hx1 : x ≠ h + 1 := by omega
       simp [holeThree, hx0, hx1]
@@ -97,7 +100,8 @@ theorem sweptLeft_block (N j : Nat) (T : Int → Bool) (h : Int)
         have hp := sweptLeft_plus1 k (holeThree T h) (h-1)
         have heq : (h-1)+1 = h := by omega
         simpa [heq] using hp
-      · obtain ⟨j', rfl⟩ : j = j'+1 := by omega
+      · obtain ⟨j', hjEq⟩ := Nat.exists_eq_succ_of_ne_zero hj0
+        subst j
         have hj' : j'+1 < N := by omega
         have hp := ih (holeThree T h) (h-1) j' hj'
         have heq : h - ((j'+1 : Nat) : Int) = (h-1) - (j' : Int) := by omega
@@ -116,7 +120,7 @@ theorem sideBit_append_left (xs ys : List Bool) (i : Nat)
       | zero => rfl
       | succ i =>
           have hi' : i < xs.length := by simp at hi; omega
-          simpa [sideBit] using ih ys i hi'
+          simpa [sideBit] using ih i hi'
 
 /-- sideBit on an append, after the first list ends. -/
 theorem sideBit_append_right (xs ys : List Bool) (i : Nat)
@@ -141,7 +145,14 @@ theorem sideBit_d1pow_true (a i : Nat) (hi : i < 3*a) :
       omega
   | succ a ih =>
       by_cases hi3 : i < 3
-      · interval_cases i <;> simp [d1pow, d1, sideBit]
+      · have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
+        rcases hcases with h | h | h
+        · subst i
+          simp [d1pow, d1, sideBit]
+        · subst i
+          simp [d1pow, d1, sideBit]
+        · subst i
+          simp [d1pow, d1, sideBit]
       · have hrem : i-3 < 3*a := by omega
         have heq : i = (i-3)+3 := by omega
         rw [heq]
@@ -177,7 +188,7 @@ theorem binDec_odd_head_local (L n : Nat)
     by_contra hL0
     have hL0' : L = 0 := by omega
     subst L
-    have hn0 : n = 0 := by norm_num at hbound; omega
+    have hn0 : n = 0 := by have hsmall : n < 1 := by simpa using hbound; omega
     simp [hn0] at hn
   have hLid : L = (L-1)+1 := by omega
   have hpow : 2^L = 2^(L-1)*2 := by
@@ -930,7 +941,12 @@ theorem oddRst2_q4_prefix (L n a b : Nat) (h : Int)
       | succ i =>
           have hi4 : i < 4 := by omega
           have hq : sideBit (q4RightFacing b) i = true := by
-            interval_cases i <;> simp [q4RightFacing,sideBit]
+            have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 := by omega
+            rcases hcases with h | h | h | h
+            · subst i; simp [q4RightFacing,sideBit]
+            · subst i; simp [q4RightFacing,sideBit]
+            · subst i; simp [q4RightFacing,sideBit]
+            · subst i; simp [q4RightFacing,sideBit]
           have h := hrightT i
           rw [hq] at h
           have heq : h+((i+1 : Nat) : Int) = h+1+(i:Int) := by omega
