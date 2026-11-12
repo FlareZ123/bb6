@@ -73,42 +73,47 @@ def fourThirdOverflow (n s t1 x1 t2 x2 t3 : Nat) : Bool := Id.run do
   if fourRootOverflow n s t1 then return false
   if x1<fourProfileAlpha t1 || (x1-fourProfileAlpha t1)%3 != 0 || x1>e then
     return false
-  if fourRootRem n s t1 % 2^x1 != 0 then return false
-  if fourSecondOverflow n s t1 x1 t2 then return false
+  let R1 := fourRootRem n s t1
+  if R1%2^x1 != 0 then return false
+  let S2 := fourSecondRem n s t1 x1 t2
+  if S2%2^(e-x1)==0 then return false
   if x2<fourProfileAlpha t2 || (x2-fourProfileAlpha t2)%3 != 0 || x2>e-x1 then
     return false
-  if fourSecondRem n s t1 x1 t2 % 2^x2 != 0 then return false
-  return fourThirdRem n s t1 x1 t2 x2 t3 % 2^(e-x1-x2) == 0
-
+  if S2%2^x2 != 0 then return false
+  let S3 := fourThirdRem n s t1 x1 t2 x2 t3
+  return S3%2^(e-x1-x2) == 0
 def fourFourthAudit (n s t1 x1 t2 x2 t3 x3 t4 : Nat) : Bool := Id.run do
   let q := 8^s
   let e := n-3*s
   if 2^n%q != 0 || (14*n+92)%q != 0 then return false
-  if fourRootOverflow n s t1 then return false
-  if x1<fourProfileAlpha t1 || (x1-fourProfileAlpha t1)%3 != 0 || x1>e then
-    return false
-  if fourRootRem n s t1 % 2^x1 != 0 then return false
-  if fourSecondOverflow n s t1 x1 t2 then return false
-  if x2<fourProfileAlpha t2 || (x2-fourProfileAlpha t2)%3 != 0 || x2>e-x1 then
-    return false
-  if fourSecondRem n s t1 x1 t2 % 2^x2 != 0 then return false
-  if fourThirdOverflow n s t1 x1 t2 x2 t3 then return false
-  if x3<fourProfileAlpha t3 || (x3-fourProfileAlpha t3)%3 != 0 || x3>e-x1-x2 then
-    return false
-  if fourThirdRem n s t1 x1 t2 x2 t3 % 2^x3 != 0 then return false
+  let R1 := fourRootRem n s t1
+  if R1%2^e==0 then return false
+  if x1<fourProfileAlpha t1 || (x1-fourProfileAlpha t1)%3 != 0 || x1>e then return false
+  if R1%2^x1 != 0 then return false
+  let S2 := fourSecondRem n s t1 x1 t2
+  if S2%2^(e-x1)==0 then return false
+  if x2<fourProfileAlpha t2 || (x2-fourProfileAlpha t2)%3 != 0 || x2>e-x1 then return false
+  if S2%2^x2 != 0 then return false
+  let S3 := fourThirdRem n s t1 x1 t2 x2 t3
+  if S3%2^(e-x1-x2)==0 then return false
+  if x3<fourProfileAlpha t3 || (x3-fourProfileAlpha t3)%3 != 0 || x3>e-x1-x2 then return false
+  if S3%2^x3 != 0 then return false
   let S4 := fourFourthRem n s t1 x1 t2 x2 t3 x3 t4
-  let h4 := e-x1-x2-x3
-  if S4%2^h4 == 0 then return true
+  let h3 := e-x1-x2-x3
+  if S4%2^h3 == 0 then return true
+  let hasCandidate := (List.range 16).any (fun x4 =>
+    fourProfileAlpha t4 ≤ x4 && (x4-fourProfileAlpha t4)%3 == 0 &&
+      x4≤h3 && S4%2^x4 == 0)
+  if !hasCandidate then return false
   let K := fourCoeff s t1 x1 t2 x2 t3 x3 t4
   let Emax := fourEmax n s x1 x2 x3
-  return K*2^h4 <= S4*(Emax+1)
-
+  return K*2^h3 <= S4*(Emax+1)
 set_option maxRecDepth 8192
 set_option maxHeartbeats 50000000
 
 theorem four_root_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
-    fourRootOverflow (n.val+14) s.val t1.val = false := by decide
+    fourRootOverflow (n.val+14) s.val t1.val = false  := by native_decide
 
 theorem four_second_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
