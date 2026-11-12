@@ -52,6 +52,14 @@ private theorem wordCode_false_repeat (q : Nat) :
     simp [CryptidA.wordCode,CryptidBoundary.pairs,
       List.replicate_succ,ih,List.append_assoc]
 
+private theorem replicate_append_true (n m : Nat) :
+    List.replicate n true ++ List.replicate m true =
+      List.replicate (n+m) true := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    simp [List.replicate_succ,ih,Nat.succ_add]
+
 private theorem wordCode_true_repeat (r : Nat) :
     CryptidA.wordCode (List.replicate r true) =
       List.replicate (3*r) true := by
@@ -59,7 +67,8 @@ private theorem wordCode_true_repeat (r : Nat) :
   | zero => rfl
   | succ r ih =>
     simp [CryptidA.wordCode,List.replicate_succ,ih,
-      List.replicate_add,List.append_assoc]
+      replicate_append_true,Nat.mul_succ,Nat.add_assoc,
+      Nat.add_comm,Nat.add_left_comm,List.append_assoc]
 
 private theorem false_cons_pairs (q : Nat) :
     false :: CryptidBoundary.pairs q =
@@ -101,7 +110,7 @@ theorem a_p2_packet_reentry (k q r : Nat) :
       CryptidBoundary.init,CryptidBoundary.oppairs,
       words_code,false_cons_pairs,false_cons_pairs_append,
       BB6.CryptidA110111CodeFirst.packet,
-      List.replicate_add,List.append_assoc]
+      replicate_append_true,List.append_assoc]
   have htail :
       false :: ([true,false,true,false,true] ++ ys) =
         CryptidBoundary.oppairs 3 ++ List.replicate 3 true := by
