@@ -86,7 +86,7 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     change (immF2 n b).tape x = b.tape x
     dsimp [immF2]
     have hne : x ≠ b.h-2 := by omega
-    rw [setBit_apply_ne _ _ _ _ hne]
+    rw [imm_setBit_away (immB1 n b).tape (b.h-2) x true hne]
     change oddWaveTape n (immF1 b).tape (b.h-1) x = b.tape x
     have h1 := oddWaveTape_outside_right n (immF1 b).tape
       (b.h-1) x (by omega)
@@ -103,8 +103,8 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     rw [hcoord]
     by_cases hj0 : j = 0
     · subst j
-      change oddWaveTape (n+2) (immF2 n b).tape (b.h-3) (b.h-3) = true
-      exact oddWaveTape_head (n+2) (immF2 n b).tape (b.h-3)
+      simpa [bout, immB2] using
+        (oddWaveTape_head (n+2) (immF2 n b).tape (b.h-3))
     · by_cases hjlast : j = 2*n+7
       · subst j
         have hkeep := htail (b.h+2*(n:Int)+4) (by omega)
@@ -119,8 +119,10 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
         rw [hidx]
         change oddWaveTape (n+2) (immF2 n b).tape
           (b.h-3) (b.h-3+1+((j-1:Int))) = true
-        exact oddWaveTape_filled (n+2) (immF2 n b).tape
-          (b.h-3) (j-1) hk
+        have hcast : ((j-1 : Nat) : Int) = (j : Int)-1 := by omega
+      rw [← hcast]
+      exact oddWaveTape_filled (n+2) (immF2 n b).tape
+        (b.h-3) (j-1) hk
 
   have hleftOut : leftAlternating k bout := by
     intro j hj
@@ -138,7 +140,7 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
 
   have hrightOut : rightAlternating k (n+4) bout := by
     intro j hj
-    have hidx : bout.h+2*((n+4):Int)+1+(j:Int) =
+    have hidx : bout.h+2*((n+4 : Nat) : Int)+1+(j:Int) =
         b.h+2*(n:Int)+5+(j:Int) := by
       rw [hhead]
       omega
@@ -157,13 +159,13 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
 
 /-- Total transition cost for k iterations of the two-wave pump. -/
 def twoWavePumpCost (k n : Nat) : Nat :=
-  8*n*k + 16*k*(k-1) + 28*k
+  8*n*k + 16*k*k + 12*k
 
 /-- The cost recurrence follows by adding one wave pair and shifting n by 4. -/
 theorem twoWavePumpCost_succ (k n : Nat) :
     twoWavePumpCost (k+1) n =
       (8*n+28)+twoWavePumpCost k (n+4) := by
-  simp [twoWavePumpCost]
+  simp [twoWavePumpCost, Nat.mul_add, Nat.add_mul]
   omega
 
 /-- Iterating the exact two-wave pump k times gives a reached B/0 whose
@@ -191,7 +193,7 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
   induction k with
   | zero =>
       intro n b hb hr hshield hleft hones hright
-      refine ⟨b,?_,hr,hb,hshield,?_,?_,?_,hleft,?⟩
+      refine ⟨b, ?_, hr, hb, hshield, ?_, ?_, ?_, hleft, ?_⟩
       · simp [twoWavePumpCost]
       · simp
       · intro x hx
