@@ -257,7 +257,7 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
             have hT2 : T2 (h'-3) = true := by
               simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell]
             have htarget : carryLeftOutputBit (4*k+1) T (h'-3) = true := by
-              simp [carryLeftOutputBit,hthreshold,hthreshold']
+              simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
             exact hT2.trans htarget.symm
           · have hlo : h'-2 ≤ x := by omega
             have hhi : x ≤ h'+9 := by
