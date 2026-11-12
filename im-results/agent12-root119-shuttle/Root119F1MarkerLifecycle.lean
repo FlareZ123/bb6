@@ -3,6 +3,14 @@ import Root119EvenMarkerGate
 
 namespace BB6Root119
 
+theorem setBit_apply_ne (t : Int → Bool) (loc x : Int) (b : Bool)
+    (hne : x ≠ loc) : setBit t loc b x = t x := by
+  simp [setBit,hne]
+
+theorem setBit_apply_eq (t : Int → Bool) (loc : Int) (b : Bool) :
+    setBit t loc b loc = b := by
+  simp [setBit]
+
 /-- The even D/F sweep leaves every cell strictly left of its start unchanged. -/
 theorem evenSweepTape_left (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : x < h) : evenSweepTape n t h x = t x := by
@@ -27,7 +35,8 @@ theorem evenSweepTape_D (n : Nat) (t : Int → Bool) (h : Int)
       | zero =>
           have hl := evenSweepTape_left n
             (setBit (setBit t h true) (h+1) false) (h+2) h (by omega)
-          simpa [evenSweepTape,setBit] using hl
+          have hne : h ≠ h+1 := by omega
+          simpa [evenSweepTape,setBit,hne] using hl
       | succ j =>
           have hj' : j < n := by omega
           have heq : h+2*((j+1:Nat):Int) = (h+2)+2*(j:Int) := by omega
@@ -47,7 +56,8 @@ theorem evenSweepTape_F (n : Nat) (t : Int → Bool) (h : Int)
       | zero =>
           have hl := evenSweepTape_left n
             (setBit (setBit t h true) (h+1) false) (h+2) (h+1) (by omega)
-          simpa [evenSweepTape,setBit] using hl
+          have hne : h+1 ≠ h := by omega
+          simpa [evenSweepTape,setBit,hne] using hl
       | succ j =>
           have hj' : j < n := by omega
           have heq : h+2*((j+1:Nat):Int)+1 = (h+2)+2*(j:Int)+1 := by omega
@@ -86,11 +96,19 @@ theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
     simp [next,hhead,t0,s]
   have hones0 : ∀ j : Nat, j < 2*(n+1) → t0 (s+(j:Int)) = true := by
     intro j hj
-    have hne : h+1+(j:Int) ≠ h := by omega
-    simpa [t0,s,setBit,hne] using hones j hj
+    have ht0 : t0 (s+(j:Int)) = t (s+(j:Int)) := by
+      dsimp [t0]
+      exact setBit_apply_ne t h (s+(j:Int)) false (by dsimp [s]; omega)
+    rw [ht0]
+    simpa [s] using hones j hj
   have hzero0 : t0 (s+((2*(n+1):Nat):Int)) = false := by
-    have hne : s+((2*(n+1):Nat):Int) ≠ h := by dsimp [s]; omega
-    simpa [t0,s,setBit,hne] using hzero
+    have ht0 : t0 (s+((2*(n+1):Nat):Int)) =
+        t (s+((2*(n+1):Nat):Int)) := by
+      dsimp [t0]
+      exact setBit_apply_ne t h (s+((2*(n+1):Nat):Int)) false
+        (by dsimp [s]; omega)
+    rw [ht0]
+    simpa [s] using hzero
   have hSweep : shuttleRun (2*(n+1)) (⟨.D,s,t0⟩ : Conf) =
       some ⟨.D,p,v⟩ := by
     simpa [s,p,v] using evenSweep (n+1) t0 s hones0
@@ -125,37 +143,62 @@ theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
 theorem f1EvenResult_left (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : x ≤ h) :
     (f1EvenResult n t h).tape x = setBit t h false x := by
-  have hs := evenSweepTape_left (n+1) (setBit t h false) (h+1) x (by omega)
-  simpa [f1EvenResult,setBit,
-    show x ≠ h+1+((2*(n+1):Nat):Int) by omega,
-    show x ≠ h+1+((2*(n+1):Nat):Int)-1 by omega] using hs
+  unfold f1EvenResult
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1) x true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x false (by omega)]
+  exact evenSweepTape_left (n+1) (setBit t h false) (h+1) x (by omega)
+
+theorem f1EvenResult_A (n : Nat) (t : Int → Bool) (h : Int) :
+    (f1EvenResult n t h).tape
+      (h+1+((2*(n+1):Nat):Int)) = true := by
+  unfold f1EvenResult
+  exact setBit_apply_eq _ _ true
+
+theorem f1EvenResult_E (n : Nat) (t : Int → Bool) (h : Int) :
+    (f1EvenResult n t h).tape
+      (h+1+((2*(n+1):Nat):Int)-1) = true := by
+  unfold f1EvenResult
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
+    (h+1+((2*(n+1):Nat):Int)-1) true (by omega)]
+  exact setBit_apply_eq _ _ true
 
 /-- The D/F-written cells in the exact even F/1 endpoint. -/
 theorem f1EvenResult_D (n : Nat) (t : Int → Bool) (h : Int)
     (j : Nat) (hj : j ≤ n) :
     (f1EvenResult n t h).tape (h+1+2*(j:Int)) = true := by
-  have hs := evenSweepTape_D (n+1) (setBit t h false) (h+1) j (by omega)
-  simpa [f1EvenResult,setBit,
-    show h+1+2*(j:Int) ≠ h+1+((2*(n+1):Nat):Int) by omega,
-    show h+1+2*(j:Int) ≠ h+1+((2*(n+1):Nat):Int)-1 by omega] using hs
+  unfold f1EvenResult
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
+    (h+1+2*(j:Int)) true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1)
+    (h+1+2*(j:Int)) true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
+    (h+1+2*(j:Int)) false (by omega)]
+  exact evenSweepTape_D (n+1) (setBit t h false) (h+1) j (by omega)
 
 theorem f1EvenResult_F (n : Nat) (t : Int → Bool) (h : Int)
     (j : Nat) (hj : j < n) :
     (f1EvenResult n t h).tape (h+2+2*(j:Int)) = false := by
-  have hs := evenSweepTape_F (n+1) (setBit t h false) (h+1) j (by omega)
-  simpa [f1EvenResult,setBit,
-    show h+2+2*(j:Int) ≠ h+1+((2*(n+1):Nat):Int) by omega,
-    show h+2+2*(j:Int) ≠ h+1+((2*(n+1):Nat):Int)-1 by omega] using hs
+  unfold f1EvenResult
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
+    (h+2+2*(j:Int)) true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1)
+    (h+2+2*(j:Int)) true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
+    (h+2+2*(j:Int)) false (by omega)]
+  exact evenSweepTape_F (n+1) (setBit t h false) (h+1) j (by omega)
 
 /-- Every cell strictly beyond the even sweep and its tail is untouched. -/
 theorem f1EvenResult_right (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : h+1+((2*(n+1):Nat):Int) < x) :
     (f1EvenResult n t h).tape x = t x := by
+  unfold f1EvenResult
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1) x true (by omega)]
+  rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x false (by omega)]
   have hs := evenSweepTape_right (n+1) (setBit t h false) (h+1) x (by omega)
-  simpa [f1EvenResult,setBit,
-    show x ≠ h+1+((2*(n+1):Nat):Int) by omega,
-    show x ≠ h+1+((2*(n+1):Nat):Int)-1 by omega,
-    show x ≠ h by omega] using hs
+  rw [setBit_apply_ne t h x false (by omega)] at hs
+  exact hs
 
 /-- The last F-written cell is zero, including the n=0 boundary case. -/
 theorem f1EvenResult_lastF (n : Nat) (t : Int → Bool) (h : Int) :
@@ -187,16 +230,20 @@ theorem f1_even_result_markerB0Pattern (n : Nat) (t : Int → Bool) (h : Int)
     rw [hpos]
     exact (f1EvenResult_right n t h _ (by omega)).trans hnext
   have hleft1' : b.tape (b.h-1) = true := by
-    simp [b,f1EvenResult]
+    have heq : b.h-1 = h+1+((2*(n+1):Nat):Int) := by rw [hpos]; omega
+    rw [heq]
+    simpa [b] using f1EvenResult_A n t h
   have hleft2' : b.tape (b.h-2) = true := by
-    simp [b,f1EvenResult]
+    have heq : b.h-2 = h+1+((2*(n+1):Nat):Int)-1 := by rw [hpos]; omega
+    rw [heq]
+    simpa [b] using f1EvenResult_E n t h
   have hleft3' : b.tape (b.h-3) = true := by
     have heq : b.h-3 = h+1+2*(n:Int) := by rw [hpos]; omega
     rw [heq]
     exact f1EvenResult_D n t h n (by omega)
   refine ⟨⟨by simp [b,f1EvenResult],hcur⟩,hleft1',hleft2',hleft3',?_,?_,?_,?_,?_⟩
   · intro i hi
-    have j : Nat := n-1-i
+    let j : Nat := n-1-i
     have hj : j < n := by dsimp [j]; omega
     have hFidx : b.h-4-2*(i:Int) = h+2+2*(j:Int) := by
       rw [hpos]
@@ -277,17 +324,32 @@ theorem f1_even_double_zero_halts (n : Nat) (c : Conf)
   have hp : MarkerB0Pattern n b :=
     f1_even_result_markerB0Pattern n t h hleft1 hleft2 hleft3 hzero2
   obtain ⟨g,hg,hgate⟩ := markerB0Pattern_to_CGate n b hb hp
-  exact reached_gate_has_stop g hg hgate
+  obtain ⟨d,hd,hgate⟩ := reached_C_gate_has_D_gate g hg hgate
+  exact reached_gate_has_stop d hd hgate
+
+theorem next_B_one (b : Conf) (hB : b.q = .B)
+    (hread : b.tape b.h = true) :
+    next b = some ⟨.F,b.h-1,setBit b.tape b.h true⟩ := by
+  rcases b with ⟨q,pos,tape⟩
+  change q = .B at hB
+  subst q
+  change tape pos = true at hread
+  simp [next,hread]
 
 /-- If the cell after the even corridor's terminating zero is one, the B
     endpoint instead steps left to a new F/1 state. Its left context is
     exactly 011, while the original 1100 marker is now strictly behind it. -/
 theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
+    (hc : Reach (⟨.F,h,t⟩ : Conf))
+    (hhead : t h = true)
+    (hones : ∀ j : Nat, j < 2*(n+1) →
+      t (h+1+(j:Int)) = true)
+    (hzero : t (h+1+((2*(n+1):Nat):Int)) = false)
     (hleft1 : t (h-1) = false)
     (hleft2 : t (h-2) = true)
     (hleft3 : t (h-3) = true)
     (hnext : t (h+2+((2*(n+1):Nat):Int)) = true) :
-    ∃ f, next (f1EvenResult n t h) = some f ∧
+    ∃ f, Reach f ∧ next (f1EvenResult n t h) = some f ∧
       f.q = .F ∧
       f.h = h+1+((2*(n+1):Nat):Int) ∧
       f.tape f.h = true ∧
@@ -302,44 +364,52 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
   let b := f1EvenResult n t h
   let p : Int := h+1+((2*(n+1):Nat):Int)
   let f : Conf := ⟨.F,p,setBit b.tape (p+1) true⟩
+  have hrun := f1_even_run_exact n t h hhead hones hzero
+  have hb : Reach b := reachable_of_shuttleRun hc (by simpa [b] using hrun)
   have hpos : b.h = p+1 := by simp [b,f1EvenResult,p]
+  have hnext' : t (p+1) = true := by simpa [p] using hnext
   have hread : b.tape b.h = true := by
     rw [hpos]
-    exact (f1EvenResult_right n t h _ (by dsimp [p]; omega)).trans hnext
+    exact (f1EvenResult_right n t h (p+1) (by dsimp [p]; omega)).trans hnext'
+  have hq : b.q = .B := by simp [b,f1EvenResult]
+  have hdest : b.h-1 = p := by rw [hpos]; omega
+  have hstep0 := next_B_one b hq hread
   have hstep : next b = some f := by
-    have hq : b.q = .B := by simp [b,f1EvenResult]
-    have hdest : b.h-1 = p := by omega
-    have hwrite : setBit b.tape b.h true = setBit b.tape (p+1) true := by rw [hpos]
-    cases b with
-    | mk q pos tape =>
-        change q = .B at hq
-        subst q
-        change tape pos = true at hread
-        simp [next,hread,hdest,f,hwrite]
+    simpa [f,hpos,hdest] using hstep0
   have hfhead : f.tape f.h = true := by
     have hBcell : b.tape p = true := by
-      simp [b,f1EvenResult,p]
-    simpa [f,p,setBit] using hBcell
+      simpa [b,p] using f1EvenResult_A n t h
+    change setBit b.tape (p+1) true p = true
+    rw [setBit_apply_ne b.tape (p+1) p true (by omega)]
+    exact hBcell
   have hfleft1 : f.tape (f.h-1) = true := by
     have hBcell : b.tape (p-1) = true := by
-      simp [b,f1EvenResult,p]
-    simpa [f,p,setBit] using hBcell
+      simpa [b,p] using f1EvenResult_E n t h
+    change setBit b.tape (p+1) true (p-1) = true
+    rw [setBit_apply_ne b.tape (p+1) (p-1) true (by omega)]
+    exact hBcell
   have hfleft2 : f.tape (f.h-2) = true := by
     have hBcell : b.tape (p-2) = true := by
       have heq : p-2 = h+1+2*(n:Int) := by dsimp [p]; omega
       rw [heq]
-      exact f1EvenResult_D n t h n (by omega)
-    simpa [f,p,setBit] using hBcell
+      simpa [b] using f1EvenResult_D n t h n (by omega)
+    change setBit b.tape (p+1) true (p-2) = true
+    rw [setBit_apply_ne b.tape (p+1) (p-2) true (by omega)]
+    exact hBcell
   have hfleft3 : f.tape (f.h-3) = false := by
     have hBcell : b.tape (p-3) = false := by
       have heq : p-3 = h+2*(n:Int) := by dsimp [p]; omega
       rw [heq]
-      exact f1EvenResult_lastF n t h
-    simpa [f,p,setBit] using hBcell
+      simpa [b] using f1EvenResult_lastF n t h
+    change setBit b.tape (p+1) true (p-3) = false
+    rw [setBit_apply_ne b.tape (p+1) (p-3) true (by omega)]
+    exact hBcell
   have hfar (x : Int) (hx : x ≤ h) :
       f.tape x = setBit t h false x := by
     have hbfar := f1EvenResult_left n t h x hx
-    simpa [f,p,setBit,show x ≠ p+1 by dsimp [p]; omega] using hbfar
+    change setBit b.tape (p+1) true x = setBit t h false x
+    rw [setBit_apply_ne b.tape (p+1) x true (by dsimp [p]; omega)]
+    exact hbfar
   have hmark3 : f.tape (h-3) = true := by
     rw [hfar (h-3) (by omega)]
     simpa [setBit,show h-3 ≠ h by omega] using hleft3
@@ -352,10 +422,11 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
   have hmark0 : f.tape h = false := by
     rw [hfar h (by omega)]
     simp [setBit]
-  refine ⟨f,hstep,rfl,?_,hfhead,hfleft1,hfleft2,hfleft3,
+  have hf : Reach f := Reach.follow hb hstep
+  refine ⟨f,hf,hstep,rfl,?_,hfhead,hfleft1,hfleft2,hfleft3,
     hmark3,hmark2,hmark1,hmark0,?_⟩
-  · simp [f,p]
-  · simp [p]
+  · rfl
+  · dsimp [p]
     omega
 
 #print axioms BB6Root119.f1_even_run_exact
