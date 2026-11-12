@@ -5,7 +5,7 @@ namespace CascadeFeederExceptional
 open CascadeSweep CascadeResetInverse CascadeFastReturn CascadeUniformFatal
 open CascadeAncestry CascadeFirstFork CascadeManyShield
 
-private theorem odd_gap (k v : Nat) (hlo : 2*2^k < v)
+theorem odd_gap (k v : Nat) (hlo : 2*2^k < v)
     (hhi : v < 3*2^k) :
     ∀j, ¬(6*2^j+1≤v ∧ v≤8*2^j-1) := by
   intro j hb
