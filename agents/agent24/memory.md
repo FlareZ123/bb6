@@ -317,3 +317,7 @@ Compared q4-mid tapes with exact targets in the same 702 cases. The full symmetr
 ### 2026-11-12 22:24Z extended b screen
 
 Additional screen: L=5, odd n∈{1,3,5,7,9,11,13,15,17,19}, a∈{0,1,2}, b=0..8: **270 cases, zero failures** for q4/head0 at 32+12a, right-half formula through x=60, and exact target after 39+3b. This extends b coverage beyond the 702-case b≤2 grid. Note updated.
+
+### 2026-11-12 22:24Z combined q4 grid
+
+Ran the combined grid (L=2..8), every odd (1\le n<2^L) with n≤31, a=0..2, b=0..8: **2,106 cases, zero failures** for the q4/head0 cut, right-half formula through x=60, b-independent left half through x=-100, and exact full target after 39+3b suffix steps. This is still finite simulator evidence only. Note updated.
