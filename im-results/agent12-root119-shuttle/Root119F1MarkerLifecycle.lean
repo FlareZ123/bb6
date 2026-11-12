@@ -201,6 +201,7 @@ theorem f1EvenResult_F (n : Nat) (t : Int → Bool) (h : Int)
     (h+2+2*(j:Int)) true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int))
     (h+2+2*(j:Int)) false (by omega)]
+  rw [show h+2+2*(j:Int) = h+1+2*(j:Int)+1 by omega]
   exact evenSweepTape_F (n+1) (setBit t h false) (h+1) j (by omega)
 
 /-- Every cell strictly beyond the even sweep and its tail is untouched. -/
