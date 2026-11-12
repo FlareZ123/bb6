@@ -113,7 +113,7 @@ This is an explicit infinite residue cylinder. Since \(8^6\equiv1\pmod{27}\), th
 | 4 | 7 | 7 |
 | 5 | 11 | 11 |
 
-The source-level composition is deliberately separated from the modular parameterization. The new manual workflow step is wired to compile this file after EChainDoubleBExit.lean; successful Lean compilation and the #print axioms audit are still required before promotion. This corridor does not cover the other B-to-E residue classes or establish authentic blank-root reachability.
+The source-level composition is deliberately separated from the modular parameterization. The focused manual workflow compiles EChainBEExit.lean after EChainBExit.lean; successful Lean compilation and the #print axioms audit are still required before promotion. The first attempted run stopped before reaching this file because the pre-existing EChainDoubleBExit.lean draft fails in b_twice and reset_double_B_to_A and reports sorryAx. That draft is now excluded from this focused workflow; its double-B claims remain unverified and must not be used as evidence. This corridor does not cover the other B-to-E residue classes or establish authentic blank-root reachability.
 
 ## Implications and limits
 
