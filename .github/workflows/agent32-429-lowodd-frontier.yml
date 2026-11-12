@@ -56,6 +56,8 @@ jobs:
           lean -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Return.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.olean im-results/agent6-429-one-sided-excursion/BB429SourceE1Delta.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadMax.olean im-results/agent1-429-w4-boundary/W4HeadMax.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent1-429-w4-boundary/W4HeadPrefix.olean im-results/agent1-429-w4-boundary/W4HeadPrefix.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent6-429-one-sided-excursion/BB429SourceRows.olean im-results/agent6-429-one-sided-excursion/BB429SourceRows.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.olean im-results/agent6-429-one-sided-excursion/BB429PhysicalBridge.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent32-429-raw-parent/BB429E1ShiftDelta.olean im-results/agent32-429-raw-parent/BB429E1ShiftDelta.lean 2>&1 | tee -a "$LOG"
