@@ -30,7 +30,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile original source and champion root bridge with axiom audit
         run: |
-          set -eu
+          set -euo pipefail
           mkdir -p /tmp/a48-root
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-root/
