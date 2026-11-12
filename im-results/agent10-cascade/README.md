@@ -8,7 +8,7 @@ The [index/depth Hensel analysis](RAY-INDEX-DEPTH-HENSEL.md) complements the exi
 
 The same Lean module now handles nested odd parents at every even depth. With W_(j,t)(n)=2^(t+1)*Z_j(n)+5*3^(t+1), it proves a unique next ternary lift and the full recursively named selector nestedOddIndexResidue, with nestedOddIndexResidue_iff giving the exact residue class modulo 3^k at every precision.
 
-For the t=3 high-q gate, the next index digit is e modulo 3, where e=W_(j,3)(n)/3^8. The source equation for the second t=3 parent's target index gives r=e+1 modulo 3. Thus the excluded r=0 case is digit 2, while the remaining r=1,2 cases are digits 0,1. See the bridge theorems tThreeHighGate_digit_eq_quotient_mod_three and tThreeSecondParent_index_relation.
+For the t=3 high-q gate, the local next index-shift digit from the actual index n is e modulo 3, where e=W_(j,3)(n)/3^8. The source equation for the second t=3 parent's target index R gives R=e+1 modulo 3. Thus the excluded R=0 case is local digit 2, while the remaining R=1,2 cases are local digits 0,1. This local shift digit is distinct from the canonical digit used recursively in nestedOddIndexResidue. See tThreeHighGate_digit_eq_quotient_mod_three and tThreeSecondParent_index_relation.
 
 Lean source: RayIndexHensel.lean. The existing manual Agent 10 ray/odd-strip workflow now includes this module after RayDepthHensel and RayDepthResidue. No successful CI result exists for this revision yet. These are arithmetic selector results, not proofs of the dyadic source band, blank-root reachability, or nonreachability of the even fatal predecessor. They remain in im-results pending source CI and adversarial review.
 
