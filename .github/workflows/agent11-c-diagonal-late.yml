@@ -362,3 +362,11 @@ jobs:
             echo "REJECTED: six/seven C58 integration contains sorryAx"
             exit 1
           fi
+          # Compose the s3 source-image exclusion with the latest merged
+          # C58 + odd-diagonal + m=0 + six-sector exact halting criterion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/CSixSeventhSixAll.lean .
+          lean -o CSixSeventhSixAll.olean CSixSeventhSixAll.lean 2>&1 | tee CSixSeventhSixAll.log
+          if grep -q sorryAx CSixSeventhSixAll.log; then
+            echo "REJECTED: latest six-sector s3 integration contains sorryAx"
+            exit 1
+          fi
