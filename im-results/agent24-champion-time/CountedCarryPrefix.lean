@@ -195,7 +195,7 @@ theorem carryLeftSweep_marked (r s : Nat) (T : Int → Bool)
   have hzero : T 1 = false := by
     apply carryInput_unmarked r T hmatch 1
     · simp
-    · norm_num
+    · omega
     · simp [carryInputBit]
   have hclosed := carryLeftSweep_closed s T hs hon hzero
   rw [hclosed]
@@ -222,7 +222,7 @@ theorem carryLeftSweep_rightOutside (r s : Nat) (T : Int → Bool)
   have hzero : T 1 = false := by
     apply carryInput_unmarked r T hmatch 1
     · simp
-    · norm_num
+    · omega
     · simp [carryInputBit]
   rw [carryLeftSweep_closed s T hs hon hzero]
   have h1 : x ≠ 1 := by omega
