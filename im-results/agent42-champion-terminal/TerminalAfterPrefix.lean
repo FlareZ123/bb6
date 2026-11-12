@@ -51,8 +51,9 @@ theorem tm2_halts_after_terminal_prefix
 after its nine-step common-root configuration gives an attainable champion
 score exactly six successful moves later, plus the final halt query. -/
 theorem champion_attainable_of_tm2_haltsAfter
-    (N : Nat) (hN : 9 ≤ N) (h : HaltsAfter tm2 N) :
+    (N : Nat) (h : HaltsAfter tm2 N) :
     Attainable (N+7) := by
+  have hN : 9 ≤ N := tm2_min_halt N h
   obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hN
   have htm2 : HaltsAfter tm2 (9+k) := by
     simpa [hk] using h
