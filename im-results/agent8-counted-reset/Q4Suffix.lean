@@ -61,7 +61,7 @@ theorem q4First10_at (T : Int → Bool) (h : Int)
   have hcases :
       x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 ∨
       x=5 ∨ x=6 ∨ x=7 ∨ x=8 ∨ x=9 := by omega
-  rcases hcases with h|h|h|h|h|h|h|h|h|h <;> subst x
+  rcases hcases with hx0|hx1|hx2|hx3|hx4|hx5|hx6|hx7|hx8|hx9 <;> subst x
   · simpa [q4First10Start] using h0 0 (by omega)
   · simpa [q4First10Start] using h0 1 (by omega)
   · simpa [q4First10Start] using h0 2 (by omega)
@@ -107,14 +107,12 @@ theorem q4First10_cells (T : Int → Bool) (h : Int) :
     simp [q4First10Inside,q4First10End]
   exact ⟨h5,h6,h7,h8,h9⟩
 
-private theorem q4First10_preserves_after (T : Int → Bool) (h : Int)
-    (x : Int) (hx : 10 ≤ x) :
-    (frameAt T h q4First10Inside q4First10End).tape (h+x) =
-      T (h+x) := by
+private theorem q4First10_preserves_after (T : Int → Bool) (h y : Int)
+    (hy : h+10 ≤ y) :
+    (frameAt T h q4First10Inside q4First10End).tape y = T y := by
   rw [frameAt_tape]
-  have heq : (h+x)-h = x := by omega
-  rw [heq]
-  simp [q4First10Inside,hx]
+  have hnot : ¬ (0 ≤ y-h ∧ y-h ≤ 9) := by omega
+  simp [q4First10Inside,hnot]
 
 /-- A state-1 head scans one three-one block in exactly three moves.
 The physical output block is 001 and the head advances three cells. -/
@@ -296,7 +294,7 @@ theorem q4Tail_at (T : Int → Bool) (h : Int)
   have hcases :
       x=(-4) ∨ x=(-3) ∨ x=(-2) ∨ x=(-1) ∨
       x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 := by omega
-  rcases hcases with h|h|h|h|h|h|h|h|h <;> subst x
+  rcases hcases with hx0|hx1|hx2|hx3|hx4|hx5|hx6|hx7|hx8 <;> subst x
   · simpa [q4TailStart] using hin.1
   · simpa [q4TailStart] using hin.2.1
   · simpa [q4TailStart] using hin.2.2.1
@@ -340,20 +338,20 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
     constructor
     · change (frameAt T h q4First10Inside q4First10End).tape
         (h+10+3*(i:Int)) = true
-      rw [q4First10_preserves_after T h (10+3*i) (by omega)]
+      rw [q4First10_preserves_after T h (h+10+3*(i:Int)) (by omega)]
       have heq : h+10+3*(i:Int) = h+7+((3*i+3:Int)) := by omega
       rw [heq]
       exact h79 (3*i+3) (by omega)
     constructor
     · change (frameAt T h q4First10Inside q4First10End).tape
         (h+10+3*(i:Int)+1) = true
-      rw [q4First10_preserves_after T h (10+3*i+1) (by omega)]
+      rw [q4First10_preserves_after T h (h+10+3*(i:Int)+1) (by omega)]
       have heq : h+10+3*(i:Int)+1 = h+7+((3*i+4:Int)) := by omega
       rw [heq]
       exact h79 (3*i+4) (by omega)
     · change (frameAt T h q4First10Inside q4First10End).tape
         (h+10+3*(i:Int)+2) = true
-      rw [q4First10_preserves_after T h (10+3*i+2) (by omega)]
+      rw [q4First10_preserves_after T h (h+10+3*(i:Int)+2) (by omega)]
       have heq : h+10+3*(i:Int)+2 = h+7+((3*i+5:Int)) := by omega
       rw [heq]
       exact h79 (3*i+5) (by omega)
@@ -423,9 +421,9 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
       change d0Sweep b T1 (h+10) (g+(i:Int)) = false
       rw [d0Sweep_after b T1 (h+10) (g+(i:Int)) (by dsimp [g]; omega)]
       have hpres : T1 (g+(i:Int)) = T (g+(i:Int)) := by
-        have heq : g+(i:Int) = h+(10+3*b+i:Int) := by dsimp [g]; omega
-        rw [heq]
-        exact q4First10_preserves_after T h (10+3*b+i) (by omega)
+        change (frameAt T h q4First10Inside q4First10End).tape
+          (g+(i:Int)) = T (g+(i:Int))
+        exact q4First10_preserves_after T h (g+(i:Int)) (by dsimp [g]; omega)
       rw [hpres]
       exact hzeros i hi
   have htailrun := q4Tail_at T2 g htail
