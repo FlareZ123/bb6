@@ -832,7 +832,7 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
       simp [carryAD12Area]
       omega
     · intro i hi
-      have x : Int := (-2+h')+12+(i:Int)
+      have x : Int := (h'-2)+12+(i:Int)
       have harea : carryBridgeArea3 (x-h') = false := by
         simp [carryBridgeArea3]
         omega
