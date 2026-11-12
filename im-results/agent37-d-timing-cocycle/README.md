@@ -124,7 +124,7 @@ The new [ExceptionalE7ThirdReturnEscape.lean](ExceptionalE7ThirdReturnEscape.lea
 
 ## Blank-root continuation through the thirtieth exceptional section (Lean submissions; CI pending)
 
-The arithmetic replay has been extended from the twentieth reentry through the twenty-ninth exceptional input. The new files compose existing original-source boundary theorems with exact DRegular runs; they are **proof submissions, not yet CI-verified results**.
+The arithmetic replay has been extended from the twentieth reentry through the thirtieth exceptional input. The new files compose existing original-source boundary theorems with exact DRegular runs; they are **proof submissions, not yet CI-verified results**.
 
 | Episode | DRegular sections from previous reentry | Exceptional source | t mod 27 | Submitted original-source continuation |
 |---:|---:|---|---:|---|
