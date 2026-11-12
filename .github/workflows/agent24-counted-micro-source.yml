@@ -11,14 +11,14 @@ permissions:
   contents: write
 jobs:
   expose-source:
-    if: \${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: \${{ github.event.pull_request.head.sha }}
-          repository: \${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
           persist-credentials: true
       - name: Decode and verify exact proof sources
@@ -39,7 +39,7 @@ jobs:
           wc -l im-results/agent24-champion-time/CountedOddUnary.lean im-results/agent24-champion-time/CountedOneZeroUnary.lean
       - name: Commit readable Lean sources to the PR branch
         env:
-          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
