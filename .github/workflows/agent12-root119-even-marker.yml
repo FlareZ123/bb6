@@ -1,13 +1,8 @@
 name: Agent 12 Root119 even F1 marker gate certificate
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'im-results/agent12-root119-shuttle/Root119EvenMarkerGate.lean'
-      - 'im-results/agent12-root119-shuttle/Root119F1MarkerLifecycle.lean'
-      - 'im-results/agent12-root119-shuttle/Root119F1AlternatingMarker.lean'
-      - '.github/workflows/agent12-root119-even-marker.yml'
+  workflow_dispatch:
+
 
 permissions:
   contents: read
