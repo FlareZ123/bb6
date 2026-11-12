@@ -171,13 +171,14 @@ private theorem middle_low_unique_odd_t0 (u j f q : Nat)
   rcases hp with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
   · exact False.elim (hgap m hbm)
   · have ht0 : t=0 := by
-      by_contra ht
-      have hpow : 9∣3^(t+1) :=
-        Nat.pow_dvd_pow 3 (by omega : 2≤t+1)
-      have hdiv : 9∣2*u+5 := by
-        rw [hout]
-        exact dvd_mul_of_dvd_left hpow d
-      exact hnot9 (Nat.mod_eq_zero_of_dvd hdiv)
+      by_cases ht : t=0
+      · exact ht
+      · have hpow : 9∣3^(t+1) :=
+          Nat.pow_dvd_pow 3 (by omega : 2≤t+1)
+        have hdiv : 9∣2*u+5 := by
+          rw [hout]
+          exact dvd_mul_of_dvd_left hpow d
+        exact False.elim (hnot9 (Nat.mod_eq_zero_of_dvd hdiv))
     subst t
     have hdval : 3*d=2*u+5 := by simpa using hout.symm
     have hdd : d=(2*u+5)/3 := by omega
