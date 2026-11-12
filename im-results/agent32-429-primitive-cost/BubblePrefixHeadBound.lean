@@ -111,7 +111,7 @@ theorem multi_bubble_prefix_head_bound
         have hbound := bubble_macro_prefix_head_bound m (2*j+1) s
           cStage c1 cFinal d hAF hAFhead hBubble
           (by simp [cStage,cFinal] <;> omega) hs hseg
-        exact ⟨d,hpre,by simpa [cStage] using hbound⟩
+        exact ⟨d,hpre,by omega⟩
 
 #print axioms multi_bubble_prefix_head_bound
 
