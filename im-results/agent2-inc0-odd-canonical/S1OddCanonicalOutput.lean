@@ -329,6 +329,8 @@ theorem oddCounterOutput_s1Successor
             L n m (len+1) (2*q) (b+1) h y hy7
           rw [hout,htarget]
 
+#print axioms sideBit_append_before
+#print axioms sideBit_append_after
 #print axioms sideBit_d1pow_formula
 #print axioms sideBit_s1PhysicalRight
 #print axioms s1Config_right_bit_formula
