@@ -25,9 +25,10 @@ private theorem no_even_band_from_gap (k u : Nat)
     ∀j, ¬(6*2^j-1≤u ∧ u≤8*2^j-3) := by
   intro j
   have hshift : (k+1)-1=k := by omega
-  exact TerminalExit.no_even_band (k+1) j u (by omega)
-    (by simpa [hshift] using hlo)
-    (by simpa [hshift] using hhi)
+  apply TerminalExit.no_even_band (k+1) j u
+  · omega
+  · simpa [hshift] using hlo
+  · simpa [hshift] using hhi
 
 private theorem even_backward (u v j : Nat)
     (hb : 6*2^j-1≤u ∧ u≤8*2^j-3)
@@ -68,13 +69,14 @@ private theorem only_even_parent_of_gap (u v j q : Nat)
     rw [hindex] at heq
     omega
   · have ht0 : t=0 := by
-      by_contra ht
-      have hpow : 9∣3^(t+1) :=
-        Nat.pow_dvd_pow 3 (by omega : 2≤t+1)
-      have hdiv : 9∣2*u+5 := by
-        rw [hout]
-        exact dvd_mul_of_dvd_left hpow d
-      exact hnot9 (Nat.mod_eq_zero_of_dvd hdiv)
+      by_cases ht : t=0
+      · exact ht
+      · have hpow : 9∣3^(t+1) :=
+          Nat.pow_dvd_pow 3 (by omega : 2≤t+1)
+        have hdiv : 9∣2*u+5 := by
+          rw [hout]
+          exact dvd_mul_of_dvd_left hpow d
+        exact False.elim (hnot9 (Nat.mod_eq_zero_of_dvd hdiv))
     subst t
     have hdval : 3*d=2*u+5 := by simpa using hout.symm
     have hdq : d=(2*u+5)/3 := by omega
@@ -116,13 +118,14 @@ private theorem middle_low_unique_odd_t1 (h k a q : Nat)
   rcases hp with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
   · exact False.elim (hgap m hbm)
   · have htle : t≤2 := by
-      by_contra ht
-      have hpow : 81∣3^(t+1) :=
-        Nat.pow_dvd_pow 3 (by omega : 4≤t+1)
-      have hdiv : 81∣2*h+5 := by
-        rw [hout]
-        exact dvd_mul_of_dvd_left hpow d
-      exact hnodiv81 (Nat.mod_eq_zero_of_dvd hdiv)
+      by_cases ht : t≤2
+      · exact ht
+      · have hpow : 81∣3^(t+1) :=
+          Nat.pow_dvd_pow 3 (by omega : 4≤t+1)
+        have hdiv : 81∣2*h+5 := by
+          rw [hout]
+          exact dvd_mul_of_dvd_left hpow d
+        exact False.elim (hnodiv81 (Nat.mod_eq_zero_of_dvd hdiv))
     by_cases ht0 : t=0
     · subst t
       have hdval : 3*d=2*h+5 := by simpa using hout.symm
