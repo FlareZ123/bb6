@@ -483,12 +483,12 @@ theorem parentCone_path_tight_first {n : Nat} {c d : Conf}
     ∃ u, next c = some u ∧ u.h=c.h-1 ∧
       Root119Path n u d ∧ d.h=u.h-(n:Int) := by
   cases hp with
-  | step hs ht =>
-      have hstep := parentCone_next_head_lower c _ hs
+  | @step n c u d hs ht =>
+      have hstep := parentCone_next_head_lower c u hs
       have htail := parentCone_path_head_lower ht
-      have hpos : _ = c.h-1 := by omega
-      have hdispTail : d.h = _-(n:Int) := by omega
-      exact ⟨_,hs,hpos,ht,hdispTail⟩
+      have hpos : u.h=c.h-1 := by omega
+      have hdispTail : d.h=u.h-(n:Int) := by omega
+      exact ⟨u,hs,hpos,ht,hdispTail⟩
 
 def parentConeNoBF (q : Q) : Prop := q ≠ .B ∧ q ≠ .F
 
