@@ -259,7 +259,7 @@ theorem uniformStep_terminalStep (c : TM63Uniform.Cfg) (h : Int)
       cases q with
       | zero =>
         cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
-          terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveL_add,
+          terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
           moveR_st, moveL_st, terminalSet_true, terminalSet_false]
       | succ q =>
         cases q with
