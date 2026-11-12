@@ -72,20 +72,30 @@ The new root theorem `blank_ne_six_seven_band_s3` excludes every state in the fu
 
 The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second image family has not yet passed original-source CI** and remains an intermediate result.
 
-## Pullback to two new high stopping-parameter progressions
+## Pullback to the full C58 high-stop parameter family
 
-Two explicit high stopping-parameter progressions from this second image family have been pulled back and shown to survive the prior C58 all-depth and late-fast filters.
+The second strict image family pulls back parametrically through the exact high-stop counter. Its high parameters satisfy
 
-1. For `j=831`, `m=9770+16384*t`, the exact stopping counter
-   `k=2^(2*m+2)*(j+3)-(j+3*m+5)` satisfies `k=574+1024*v` with `v=2 (mod 16)`. This is the `u=1) slice.
-2. For `j=1855`, `m=12842+16384*t`, the same counter satisfies `k=574+1024*v` with `v=8 (mod 16)`. This is the `u=3) slice.
+```
+j = 319+512*u
+k = 2^(2*m+2)*(j+3) - (j+3*m+5) = 574+1024*v
+(u+v) % 16 = (15+4*u) % 16
+m >= 7
+```
 
-For both progressions, `j=319 (mod 512)` and `m=42 (mod 512)`, so the full earlier ValSixFull+C58 and arbitrary-depth late gate admit them. Neither is in the original diagonal:
-- First progression: `(3*m)%4096=638`, while `(j+2879)%4096=3710`.
-- Second progression: `(3*m)%4096=1662`, while `(j+2879)%4096=638`.
+The new lemma `prior_latefast_admits_s3_image_family` proves that **every** such high-stop parameter passes the preceding ValSixFull+C58 all-depth and arbitrary-depth late-fast filters. In particular:
+- `j % 512 = 319`;
+- the stopping equation modulo 512 forces `m % 512 = 42`;
+- the dyadic all-depth and late-fast gates both require an odd residue for `m % 4`, while this family has `m % 4 = 2`;
+- the original diagonal is disjoint: it would force `u+v = 0 (mod 4)`, whereas this family has `u+v = 3 (mod 4)`.
 
-[CSixSeventhC58.lean](CSixSeventhC58.lean) formalizes the residue-pair admission, both exact image pullbacks, and the strengthened criterion `blank_halts_iff_c58_late_fast_six_seven_both`. The admission lemmas are `prior_latefast_admits_s3_parameter_family` and `prior_latefast_admits_s3_second_parameter_family`; the exclusions are `s3_parameter_family_removed` and `s3_second_parameter_family_removed`. The current high predicate removes both progressions while preserving the exact blank-halting iff. The other two residue slices have not yet been pulled back to high-stop parameters. **This integration has not yet passed original-source CI**; it remains in `im-results/` and is not a BB(6) solution.
+Two explicit high-stop progressions witness nonemptiness:
+1. `j=831`, `m=9770+16384*t`; then `k=574+1024*v` with `v=2 (mod 16)`, corresponding to `u=1).
+2. `j=1855`, `m=12842+16384*t`; then `k=574+1024*v` with `v=8 (mod 16)`, corresponding to `u=3).
 
+The strongest new exact criterion is `blank_halts_iff_c58_late_fast_all_s3`: it removes every high-stop target in this full second image family, not merely the two displayed progressions, while preserving the exact Machine C blank-halting iff. The narrower two-progression corollary `blank_halts_iff_c58_late_fast_six_seven_both` and explicit removal theorems are also retained. [CSixSeventhC58.lean](CSixSeventhC58.lean) contains the generic admission proof, both concrete pullbacks, and the exact criteria.
+
+**The current second-family strict-image proof and C58 integration have not yet passed original-source CI.** They remain in `im-results/` and do not determine BB(6).
 ## Independence from the integrated C58 all-depth sieve
 
 The four high-stop classes are exactly equivalent to the single diagonal
