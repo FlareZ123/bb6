@@ -19,7 +19,7 @@
  */
 const RESIDUES = [113, 400, 526, 599, 886, 887, 1085, 1372];
 const SAMPLE_PERIOD = 1458;
-const SAMPLE_MULTIPLIERS = [0, 1, 10];
+const SAMPLE_MULTIPLIERS = [0, 1, 2, 10];
 
 const pow2 = (k) => 1n << BigInt(k);
 const bitLength = (n) => n <= 0n ? 0 : n.toString(2).length;
