@@ -331,6 +331,88 @@ theorem s1Config_counted_decrement_r3
   exact s1Config_counted_decrement_of_prefix
     L n m len q (4*k+3) b h hq hprefix
 
+/-- Complete source-level S1 decrement for every positive carry
+valuation r. The four residue classes are closed by the r=0 bridge,
+the short/long r=1 bridges, and the new r=2/r=3 left-output bridges. -/
+theorem s1Config_counted_decrement_allPositive
+    (L n m len q r b : Nat) (h : Int)
+    (hq : q < 2^len) (hr : 0 < r) :
+    run tm2 (48+12*r+12*b)
+        (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h) =
+      some (s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h) := by
+  let k := r/4
+  have hdiv := Nat.mod_add_div r 4
+  have hdecomp : 4*k + r%4 = r := by
+    dsimp [k]
+    omega
+  have hmodlt : r%4 < 4 := Nat.mod_lt r (by omega)
+  have hmod : r%4=0 ∨ r%4=1 ∨ r%4=2 ∨ r%4=3 := by omega
+  let T : Int → Bool := fun x =>
+    (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+x)
+  have hmatch := s1Config_carryInput_match L n m len q r b h hq
+  rcases hmod with h0 | h1 | h2 | h3
+  · have hrEq : r = 4*k := by omega
+    have hm : ∀ x, carryInputArea (4*k) x = true →
+        T x = carryInputBit (4*k) x := by
+      simpa [hrEq] using hmatch
+    obtain ⟨Tgen,hrunGen,g1,g2,g3,g4,g5,g6,gout⟩ :=
+      carryPrefix_anyPositive (4*k) T (by omega) hm
+    obtain ⟨Tleft,hrunLeft,gleft⟩ :=
+      BB6Coverage.Agent3CarryLeftOutput.carryLongPrefix_r0_left
+        k T hm (by omega)
+    have hconf : (⟨4,7,Tgen⟩ : Config) = ⟨4,7,Tleft⟩ := by
+      apply Option.some.inj
+      calc
+        some (⟨4,7,Tgen⟩ : Config) =
+            run tm2 (15+12*(4*k)) ⟨3,0,T⟩ := hrunGen.symm
+        _ = some ⟨4,7,Tleft⟩ := hrunLeft
+    cases hconf
+    have hprefix :
+        ∃ T' : Int → Bool,
+          run tm2 (15+12*(4*k)) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+          T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+          T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+          (∀ x, 6 < x → T' x = T x) ∧
+          (∀ x, x ≤ 0 → T' x = carryLeftOutputBit (4*k) T x) := by
+      refine ⟨Tgen,hrunGen,g1,g2,g3,g4,g5,g6,gout,?_⟩
+      intro x hx
+      simpa using gleft x hx
+    exact s1Config_counted_decrement_of_prefix
+      L n m len q (4*k) b h hq (by simpa [hrEq] using hprefix)
+  · have hrEq : r = 4*k+1 := by omega
+    by_cases hk : k=0
+    · have hr1 : r=1 := by omega
+      have hm : ∀ x, carryInputArea 1 x = true →
+          T x = carryInputBit 1 x := by
+        simpa [hr1] using hmatch
+      obtain ⟨T',hrun,s1,s2,s3,s4,s5,s6,sout,sleft⟩ :=
+        carryShortPrefix_r1 T hm
+      have hleft : ∀ x, x ≤ 0 → T' x = carryLeftOutputBit 1 T x := by
+        intro x hx
+        simpa [carryLeftOutputBit] using sleft x hx
+      have hprefix :
+          ∃ T' : Int → Bool,
+            run tm2 (15+12*1) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+            T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+            T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+            (∀ x, 6 < x → T' x = T x) ∧
+            (∀ x, x ≤ 0 → T' x = carryLeftOutputBit 1 T x) := by
+        refine ⟨T',?_,s1,s2,s3,s4,s5,s6,sout,hleft⟩
+        simpa using hrun
+      exact s1Config_counted_decrement_of_prefix
+        L n m len q 1 b h hq (by simpa [hr1] using hprefix)
+    · have hdec := s1Config_counted_decrement_r1
+        L n m len q k b h hq hk
+      simpa [hrEq] using hdec
+  · have hrEq : r = 4*k+2 := by omega
+    have hdec := s1Config_counted_decrement_r2
+      L n m len q k b h hq
+    simpa [hrEq] using hdec
+  · have hrEq : r = 4*k+3 := by omega
+    have hdec := s1Config_counted_decrement_r3
+      L n m len q k b h hq
+    simpa [hrEq] using hdec
+
 #print axioms s1Config_carryInput_match
 #print axioms s1Config_carryRightOnes
 #print axioms s1Config_counted_decrement_of_prefix
