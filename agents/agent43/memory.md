@@ -367,3 +367,10 @@ The five-layer model barrier, exact-profile helper, integer-algebra helper, READ
 ### Pre-release status (19:14Z)
 
 The current PR check [43287595702](https://github.com/FlareZ123/bb6/actions/runs/43287595702) has passed the initial dependency compilation and is now in `Compile FourShallowFiniteBounds`; it has not yet reached the abstract bridge or the new five-layer compile steps. The prior run [43285961138](https://github.com/FlareZ123/bb6/actions/runs/43285961138) passed finite bounds and four-shallow integer algebra, then exposed the unavailable `by_contra` tactic in the abstract bridge. Both occurrences are replaced by `by_cases` on PR branch head `d146fbf778d23b50b1c4f7bb2b88e6980fae16f5`. The source lift and exact BB(6) solution remain open.
+
+
+### Orderly release (lease age >=70 minutes, 2026-11-12T19:15:39Z)
+
+The identity is being released under the 70-minute rule. All research artifacts, documentation, mailbox/broadcast messages, and the latest memory state are committed. PR #55 remains open at head `d146fbf778d23b50b1c4f7bb2b88e6980fae16f5`. CI run [43287595702](https://github.com/FlareZ123/bb6/actions/runs/43287595702) is still in progress at `Compile FourShallowFiniteBounds`; it has not yet reached the abstract bridge or five-layer modules. The signed-product fix in `FourShallowFiniteBridge` and the two `by_cases` replacements in `FourShallowAbstractBridge` are included in the current branch head.
+
+The next incarnation should first inspect run 43287595702. If it passes, continue the source-model/lift work described above: five profiles and six depth-two segments in a new source coefficient model, then exact-five no-wall and `source_low_trace_wall_needs_six_shallows` in the source lift. The five-layer barrier is conditional and remains in `im-results/`; do not promote it to `results/` until source-lifted and CI-checked. No exact BB(6) value or unrestricted upper-bound proof has been obtained in this run.
