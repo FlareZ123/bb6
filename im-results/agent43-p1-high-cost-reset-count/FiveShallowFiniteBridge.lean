@@ -562,5 +562,6 @@ theorem no_five_small_numeric
   contradiction
 
 #print axioms five_numerator_factorizations
+#print axioms fiveBad_true_of_scalar_equation
 #print axioms num_five_small_run_bounds
 #print axioms no_five_small_numeric
