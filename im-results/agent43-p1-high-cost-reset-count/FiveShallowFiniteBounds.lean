@@ -5,8 +5,10 @@ namespace BB6.Agent43FiveShallowFinite
 
 open BB6.Agent43TwoShallowFinite
 
-/-- Exact natural-number terminal equation for five shallow transitions and
-six depth-two runs. The root divisor is checked before any divisions. -/
+/-- Necessary successive integer-divisibility certificate for a source
+scalar equation with five shallow transitions and six depth-two runs. The
+root divisor is checked before any divisions; the final quotient is the
+negative terminal energy. -/
 def fiveBad (n s u v w x r t1 t2 t3 t4 t5 : Nat) : Bool := Id.run do
   let q := 8^s
   let P := 2^n
@@ -159,8 +161,10 @@ theorem rootPairs_complete :
 set_option maxRecDepth 4096
 set_option maxHeartbeats 80000000
 
-/-- The exact five-layer natural equation has no solutions on the complete
-bounded core: all five profiles and all five run lengths in {0,1,2}. -/
+/-- No recurrence-compatible five-layer tuple exists on the complete
+bounded core when all five profiles and run lengths lie in their finite
+ranges. The recurrence is a necessary consequence of the source scalar
+identity, established separately in FiveShallowFiniteBridge. -/
 theorem no_five_bad_rootPairs :
     ∀ i : Fin rootPairs.length,
       ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2,
