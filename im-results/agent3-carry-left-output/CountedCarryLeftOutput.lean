@@ -44,12 +44,13 @@ theorem carryFinishWithLeftPattern
   by_cases hlt : x < hB
   · simp [hlt, hseed x hlt]
   · have hge : hB ≤ x := by omega
-    have hgt : -3*(r:Int) < x := by omega
+    have hfarFalse : ¬ x < -3*(r:Int)-2 := by omega
+    have htermFalse : ¬ x ≤ -3*(r:Int) := by omega
     have hmodEq := carryIntModSub x hB hmod
     have htarget : carryLeftOutputBit r T x = decide (x % 3 = 1) := by
-      simp [carryLeftOutputBit, hgt]
+      simp [carryLeftOutputBit, hfarFalse, htermFalse]
     have hmodBool : decide ((x-hB) % 3 = 0) = decide (x % 3 = 1) := by
-      exact congrArg decide hmodEq
+      simp [hmodEq]
     simp [hlt,hmodBool,htarget]
 
 /-- Residue 0: the finite bridge seed is the terminal d1 block followed by
