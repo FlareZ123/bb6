@@ -93,6 +93,7 @@ jobs:
           for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
             lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
           done
+          lean -DmaxRecDepth=55000 -o "$P2/AP2PacketBoundarySource.olean" "$P2/AP2PacketBoundarySource.lean"
           lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
