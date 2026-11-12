@@ -62,6 +62,12 @@ theorem resetBase_exact (m : Nat) (hm : m < 3) :
       some (resetBaseOutput m) := by
   interval_cases m <;> decide
 
+/-- The local odd-base trace length agrees with the candidate reset-prefix
+cost at n=1, a=b=0. -/
+theorem resetBase_cost_eq (m : Nat) :
+    63 + 4*m = resetPrefixCost m 1 0 0 := by
+  norm_num [resetPrefixCost]
+
 /-- The base traces never query outside their local frame intervals. -/
 theorem resetBase_heads (m : Nat) (hm : m < 3) :
     ∀ k, k < 63 + 4*m → ∀ d,
