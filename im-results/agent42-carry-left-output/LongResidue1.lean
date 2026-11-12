@@ -156,11 +156,11 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     simpa [heq] using h6
 
   have hthreshold : -3*((4*k+1:Nat):Int)-2 = h'-5 := by
-    simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
+    rw [Int.natCast_add, Int.natCast_mul]
     dsimp [h']
     omega
   have hthreshold' : -3*((4*k+1:Nat):Int) = h'-3 := by
-    simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
+    rw [Int.natCast_add, Int.natCast_mul]
     dsimp [h']
     omega
   have ad12Seed (x : Int) (hlo : h'-2 ≤ x) (hhi : x ≤ h'+9) :
@@ -275,7 +275,7 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     dsimp [nR]
     omega
   have hbound : -3*((4*k+1:Nat):Int)+1 ≤ hB := by
-    simp only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
+    rw [Int.natCast_add, Int.natCast_mul]
     dsimp [hB,h']
     omega
   have hmod : hB % 3 = 1 := by
