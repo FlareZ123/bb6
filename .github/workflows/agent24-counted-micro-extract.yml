@@ -1,14 +1,16 @@
 name: Agent 24 one-time counted-micro source extraction
 on:
   workflow_run:
-    workflows: ["Agent 48 original champion-root six-step equivalence (manual)"]
+    workflows:
+      - "Agent 48 original champion-root six-step equivalence (manual)"
+      - "Agent 24 counted-micro source extraction (PR-open only)"
     types: [completed]
     branches: [main]
 permissions:
   contents: write
 jobs:
   expose:
-    if: \${{ github.event.workflow_run.id == 42740367928 && github.event.workflow_run.conclusion == 'success' }}
+    if: \${{ github.event.workflow_run.id == 43138692184 && github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
