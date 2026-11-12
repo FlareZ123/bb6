@@ -127,14 +127,18 @@ theorem carryBridge3_matches_carryAD12
   · have harea : -4 ≤ i ∧ i ≤ 1 := by simpa [carryBridgeArea3] using hin
     have hcases : i = -2 ∨ i = -1 ∨ i = 0 ∨ i = 1 := by omega
     rcases hcases with h2 | h1 | h0 | h1p
-    · subst i
-      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
-    · subst i
-      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
-    · subst i
-      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
-    · subst i
-      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig, carryBridgeArea3]
+    · have hk0 : x-(h-2) = 0 := by dsimp [i] at h2; omega
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig,
+        carryBridgeArea3, i, h2, hk0]
+    · have hk1 : x-(h-2) = 1 := by dsimp [i] at h1; omega
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig,
+        carryBridgeArea3, i, h1, hk1]
+    · have hk2 : x-(h-2) = 2 := by dsimp [i] at h0; omega
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig,
+        carryBridgeArea3, i, h0, hk2]
+    · have hk3 : x-(h-2) = 3 := by dsimp [i] at h1p; omega
+      simp [embed, carryAD12Base, carryBridgeFinal3, frame, shiftConfig,
+        carryBridgeArea3, i, h1p, hk3]
   · have hnot : carryBridgeArea3 i = false := by
       cases hh : carryBridgeArea3 i <;> simp_all
     have hiLo' : 2 ≤ i := by
@@ -142,17 +146,16 @@ theorem carryBridge3_matches_carryAD12
       omega
     have hR := hRight i hiLo' hiHi
     have hcoord : h+i = x := by dsimp [i]; omega
-    have hmem : x-(h-2) ∈ ([1,2,3,4,5,6,7,8,9,10,11,12] : List Int) := by
-      simp only [List.mem_cons]
-      omega
     have hbase : (embed carryAD12Base).tape (x-(h-2)) = true := by
-      simp [embed, carryAD12Base, hmem]
+      simp [embed, carryAD12Base]
+      omega
     have hout :
         (frame (fun y => carryBridgeArea3 (y-h)) T
           (shiftConfig h (embed carryBridgeFinal3))).tape x = true := by
-      simp [frame, shiftConfig, hnot, hcoord, hR]
+      simp [frame, shiftConfig, i, hnot, hcoord, hR]
     rw [hbase, hout]
 
+#print axioms carryBridge3_matches_carryAD12
 #print axioms carryAD12_trace
 #print axioms carryDTail15_trace
 #print axioms carryAReturn12_trace
