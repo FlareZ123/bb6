@@ -409,10 +409,10 @@ theorem num_four_small_r_bound
  have hR4int : (R4:Int)+(O4:Int)=
      (L4:Int)*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w:Int) := by exact_mod_cast hR4
  have hN4 : N4=-((2:Int)^delta)*(8:Int)^r*(E:Int) := by
-   dsimp [N4,Y] at *
-   rw [hImid3]
-   omega
+    dsimp [N4,Y] at *
+    rw [hImid3]
     rw [←hR4int]
+    omega
  by_cases hrBound : r≤2
  · exact hrBound
  · exfalso
