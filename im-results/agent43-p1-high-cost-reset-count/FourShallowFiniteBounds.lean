@@ -87,10 +87,81 @@ theorem four_third_overflow_false_76 :
       BB6.Agent43ThreeShallowFinite.thirdOverflow
         (n.val+14) s.val u.val v.val t1.val t2.val t3.val = false := by decide
 
+theorem four_fourth_overflow_false_14_29 :
+    ∀ n : Fin 16, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourthOverflow (n.val+14) s.val u.val v.val w.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
+theorem four_fourth_overflow_false_30_45 :
+    ∀ n : Fin 16, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourthOverflow (n.val+30) s.val u.val v.val w.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
+theorem four_fourth_overflow_false_46_60 :
+    ∀ n : Fin 15, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourthOverflow (n.val+46) s.val u.val v.val w.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
+theorem four_fourth_overflow_false_61_75 :
+    ∀ n : Fin 15, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourthOverflow (n.val+61) s.val u.val v.val w.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
 theorem four_fourth_overflow_false_76 :
     ∀ n : Fin 62, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3,
       ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
       fourthOverflow (n.val+14) s.val u.val v.val w.val
+        t1.val t2.val t3.val t4.val = false := by
+  intro n s u v w t1 t2 t3 t4
+  by_cases h0 : n.val < 16
+  · let n' : Fin 16 := ⟨n.val, h0⟩
+    simpa [show n.val+14=n'.val+14 by simp [n']] using
+      four_fourth_overflow_false_14_29 n' s u v w t1 t2 t3 t4
+  · by_cases h1 : n.val < 32
+    · let n' : Fin 16 := ⟨n.val-16, by omega⟩
+      have heq : n.val+14=n'.val+30 := by omega
+      simpa [heq] using
+        four_fourth_overflow_false_30_45 n' s u v w t1 t2 t3 t4
+    · by_cases h2 : n.val < 47
+      · let n' : Fin 15 := ⟨n.val-32, by omega⟩
+        have heq : n.val+14=n'.val+46 := by omega
+        simpa [heq] using
+          four_fourth_overflow_false_46_60 n' s u v w t1 t2 t3 t4
+      · let n' : Fin 15 := ⟨n.val-47, by omega⟩
+        have heq : n.val+14=n'.val+61 := by omega
+        simpa [heq] using
+          four_fourth_overflow_false_61_75 n' s u v w t1 t2 t3 t4
+
+theorem no_four_small_bad_14_29 :
+    ∀ n : Fin 16, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3,
+      ∀ w : Fin 3, ∀ r : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourBad (n.val+14) s.val u.val v.val w.val r.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
+theorem no_four_small_bad_30_45 :
+    ∀ n : Fin 16, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3,
+      ∀ w : Fin 3, ∀ r : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourBad (n.val+30) s.val u.val v.val w.val r.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
+theorem no_four_small_bad_46_60 :
+    ∀ n : Fin 15, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3,
+      ∀ w : Fin 3, ∀ r : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourBad (n.val+46) s.val u.val v.val w.val r.val
+        t1.val t2.val t3.val t4.val = false := by decide
+
+theorem no_four_small_bad_61_75 :
+    ∀ n : Fin 15, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3,
+      ∀ w : Fin 3, ∀ r : Fin 3,
+      ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
+      fourBad (n.val+61) s.val u.val v.val w.val r.val
         t1.val t2.val t3.val t4.val = false := by decide
 
 theorem no_four_small_bad_76 :
@@ -98,7 +169,23 @@ theorem no_four_small_bad_76 :
       ∀ w : Fin 3, ∀ r : Fin 3,
       ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
       fourBad (n.val+14) s.val u.val v.val w.val r.val
-        t1.val t2.val t3.val t4.val = false := by decide
+        t1.val t2.val t3.val t4.val = false := by
+  intro n s u v w r t1 t2 t3 t4
+  by_cases h0 : n.val < 16
+  · let n' : Fin 16 := ⟨n.val, h0⟩
+    simpa [show n.val+14=n'.val+14 by simp [n']] using
+      no_four_small_bad_14_29 n' s u v w r t1 t2 t3 t4
+  · by_cases h1 : n.val < 32
+    · let n' : Fin 16 := ⟨n.val-16, by omega⟩
+      have heq : n.val+14=n'.val+30 := by omega
+      simpa [heq] using no_four_small_bad_30_45 n' s u v w r t1 t2 t3 t4
+    · by_cases h2 : n.val < 47
+      · let n' : Fin 15 := ⟨n.val-32, by omega⟩
+        have heq : n.val+14=n'.val+46 := by omega
+        simpa [heq] using no_four_small_bad_46_60 n' s u v w r t1 t2 t3 t4
+      · let n' : Fin 15 := ⟨n.val-47, by omega⟩
+        have heq : n.val+14=n'.val+61 := by omega
+        simpa [heq] using no_four_small_bad_61_75 n' s u v w r t1 t2 t3 t4
 
 #print axioms four_first_overflow_false_76
 #print axioms four_second_overflow_false_76
