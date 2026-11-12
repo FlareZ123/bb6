@@ -445,6 +445,194 @@ theorem reached_B0_left10_F1_ancestor (c : Conf) (hc : Reach c)
   have hlen : (2*k+2)+1 = 2*k+3 := by omega
   exact ⟨k,f,hf,hF1,hFbit,hpos,by simpa [hlen] using hpathOut⟩
 
+
+
+/-! ## Tight left-path extraction
+
+A path whose length equals its net leftward displacement has no right-moving
+step. This turns the ancestry path above into a tape-word theorem, rather than
+merely an offset statement.
+-/
+
+theorem parentCone_next_head_lower (c d : Conf)
+    (hs : next c = some d) : c.h-1 ≤ d.h := by
+  rcases c with ⟨q,h,t⟩
+  cases q <;> cases hb : t h <;> simp [next,hb] at hs
+  all_goals cases hs
+  all_goals omega
+
+theorem parentCone_next_tape_away (c d : Conf)
+    (hs : next c = some d) (x : Int) (hx : x ≠ c.h) :
+    d.tape x = c.tape x := by
+  rcases c with ⟨q,h,t⟩
+  cases q <;> cases hb : t h <;> simp_all [next,setBit]
+
+theorem parentCone_path_head_lower {n : Nat} {c d : Conf}
+    (hp : Root119Path n c d) : c.h-(n:Int) ≤ d.h := by
+  induction hp with
+  | refl => simp
+  | @step n c u d hs ht ih =>
+      have hstep := parentCone_next_head_lower c u hs
+      omega
+
+/-- If a path has exactly its maximum possible leftward displacement, its
+    first transition is leftward and the tail is tight as well. -/
+theorem parentCone_path_tight_first {n : Nat} {c d : Conf}
+    (hp : Root119Path (n+1) c d)
+    (hdisp : d.h = c.h-((n+1:Nat):Int)) :
+    ∃ u, next c = some u ∧ u.h=c.h-1 ∧
+      Root119Path n u d ∧ d.h=u.h-(n:Int) := by
+  cases hp with
+  | step hs ht =>
+      have hstep := parentCone_next_head_lower c _ hs
+      have htail := parentCone_path_head_lower ht
+      have hpos : _ := by omega
+      have hdispTail : d.h = _ := by omega
+      exact ⟨_,hs,hpos,ht,hdispTail⟩
+
+def parentConeNoBF (q : Q) : Prop := q ≠ .B ∧ q ≠ .F
+
+theorem parentCone_next_left_preserves_noBF (c d : Conf)
+    (hc : parentConeNoBF c.q) (hs : next c = some d)
+    (hpos : d.h=c.h-1) : parentConeNoBF d.q := by
+  rcases c with ⟨q,h,t⟩
+  cases q <;> cases hb : t h <;>
+    simp_all [next,parentConeNoBF,hb] <;> omega
+
+/-- A tight all-left path cannot enter B or F if it starts in C, D, E, or A. -/
+theorem parentCone_path_left_preserves_noBF {n : Nat} {c d : Conf}
+    (hp : Root119Path n c d)
+    (hdisp : d.h=c.h-(n:Int))
+    (hc : parentConeNoBF c.q) : parentConeNoBF d.q := by
+  revert c d hp hdisp hc
+  induction n with
+  | zero =>
+      intro c d hp hdisp hc
+      cases hp
+      exact hc
+  | succ n ih =>
+      intro c d hp hdisp hc
+      obtain ⟨u,hs,hpos,ht,hdispTail⟩ :=
+        parentCone_path_tight_first hp hdisp
+      exact ih u d ht hdispTail
+        (parentCone_next_left_preserves_noBF c u hc hs hpos)
+
+/-- Along a tight leftward path, the final tape agrees with the initial tape
+    at every cell at or left of the final head: none of those cells was
+    visited by the head. -/
+theorem parentCone_path_tight_preserves_tape {n : Nat} {c d : Conf}
+    (hp : Root119Path n c d)
+    (hdisp : d.h=c.h-(n:Int))
+    (x : Int) (hx : x≤d.h) : d.tape x=c.tape x := by
+  revert c d hp hdisp x hx
+  induction n with
+  | zero =>
+      intro c d hp hdisp x hx
+      cases hp
+      rfl
+  | succ n ih =>
+      intro c d hp hdisp x hx
+      obtain ⟨u,hs,hpos,ht,hdispTail⟩ :=
+        parentCone_path_tight_first hp hdisp
+      have haway : u.tape x=c.tape x :=
+        parentCone_next_tape_away c u hs (by omega)
+      have htail : d.tape x=u.tape x :=
+        ih u d ht hdispTail x (by omega)
+      exact htail.trans haway
+
+/-- A tight path of 2k+1 left steps from F/0 to B/0 must read the alternating
+    F/0,B/1 corridor at every pair. The endpoint B/0 rules out an intermediate
+    B/0: its C successor can never return to B along an all-left path. -/
+theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
+    (hcF : c.q=.F) (hc0 : c.tape c.h=false)
+    (hdB : d.q=.B) (hd0 : d.tape d.h=false)
+    (hp : Root119Path (2*k+1) c d)
+    (hdisp : d.h=c.h-((2*k+1:Nat):Int)) :
+    ∀ i : Nat, i<k →
+      c.tape (c.h-2*(i:Int))=false ∧
+      c.tape (c.h-2*(i:Int)-1)=true := by
+  revert c d hcF hc0 hdB hd0 hp hdisp
+  induction k with
+  | zero =>
+      intro c d hcF hc0 hdB hd0 hp hdisp i hi
+      omega
+  | succ k ih =>
+      intro c d hcF hc0 hdB hd0 hp hdisp i hi
+      have hlen : 2*(k+1)+1=(2*k+2)+1 := by omega
+      have hp' : Root119Path ((2*k+2)+1) c d := by
+        simpa [hlen] using hp
+      have hdisp' : d.h=c.h-((2*k+3:Nat):Int) := by
+        simpa [hlen] using hdisp
+      obtain ⟨b,hstep1,hbpos,hp1,hdisp1⟩ :=
+        parentCone_path_tight_first hp' hdisp'
+      rw [next_F_zero_shape c hcF hc0] at hstep1
+      cases hstep1
+      have hlen2 : 2*k+2=(2*k+1)+1 := by omega
+      have hp1' : Root119Path ((2*k+1)+1) b d := by
+        simpa [hlen2] using hp1
+      obtain ⟨u,hstep2,hupos,hp2,hdisp2⟩ :=
+        parentCone_path_tight_first hp1' hdisp1
+      have hbBit : b.tape b.h=true := by
+        by_contra hbNot
+        have hbZero : b.tape b.h=false := by
+          cases hbit : b.tape b.h <;> simp_all
+        simp [next,hbZero] at hstep2
+        have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
+          (by simp [parentConeNoBF])
+        exact hno.1 hdB
+      rw [next_B_one b rfl hbBit] at hstep2
+      cases hstep2
+      obtain ⟨v,hstep3,hvpos,hp3,hdisp3⟩ :=
+        parentCone_path_tight_first hp2 hdisp2
+      have huZero : u.tape u.h=false := by
+        by_cases hu : u.tape u.h=false
+        · exact hu
+        · have huOne : u.tape u.h=true := by
+            cases hbit : u.tape u.h <;> simp_all
+          have hFone : next u =
+              some ⟨.D,u.h+1,setBit u.tape u.h false⟩ := by
+            simp [next,huOne]
+          rw [hFone] at hstep3
+          cases hstep3
+          omega
+      have hpat := ih u d rfl huZero hdB hd0 hp2 hdisp2
+      by_cases hi0 : i=0
+      · subst i
+        have hbtape : b.tape b.h=c.tape (c.h-1) := by
+          simp [setBit,show c.h-1 ≠ c.h by omega]
+        exact ⟨hc0,hbtape.symm.trans hbBit⟩
+      · have hi' : i-1<k := by omega
+        have hpatt := hpat (i-1) hi'
+        have hupos' : u.h=c.h-2 := by omega
+        have huTape (x : Int) (hx : x≤c.h-2) : u.tape x=c.tape x := by
+          calc
+            u.tape x = b.tape x := by
+              simp [setBit,show x ≠ b.h by rw [hbpos]; omega]
+            _ = c.tape x := by
+              simp [setBit,show x ≠ c.h by omega]
+        have hidx1 : u.h-2*((i-1:Int))=c.h-2*(i:Int) := by
+          rw [hupos']
+          omega
+        have hidx2 : u.h-2*((i-1:Int))-1=c.h-2*(i:Int)-1 := by
+          rw [hupos']
+          omega
+        constructor
+        · calc
+            c.tape (c.h-2*(i:Int)) =
+                u.tape (u.h-2*((i-1:Int))) := by
+                  rw [hidx1]
+                  symm
+                  exact huTape _ (by rw [hidx1]; omega)
+            _ = false := hpatt.1
+        · calc
+            c.tape (c.h-2*(i:Int)-1) =
+                u.tape (u.h-2*((i-1:Int))-1) := by
+                  rw [hidx2]
+                  symm
+                  exact huTape _ (by rw [hidx2]; omega)
+            _ = true := hpatt.2
+
+
 #print axioms BB6Root119.to_A_exact_parent
 #print axioms BB6Root119.to_D_exact_parent
 #print axioms BB6Root119.reached_D1_F0_successor_F1_parent
