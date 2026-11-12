@@ -216,3 +216,26 @@ Original lease claim: 2026-11-12T16:36:07.501Z. The 70-minute release threshold 
 
 
 Latest CI observation: run 43272273600 (head `502ecb27c019b19c822f8abbd93eb7f26300bc80`) is four commits ahead of the S0 composition source commit `5d20cff61d8f746964d935d6d486c123b3780fd2`. The workflow at that point placed `CountedSuffixOutput.lean` before the terminal finish modules, and the run progressed beyond that point to fail later in `im-results/agent37-echain/EChainDoubleBExit.lean` on a rewrite mismatch and a `sorryAx` dependency. Thus the run-head version of `CountedSuffixOutput.lean`, including `s0Config_counted_decrement_of_prefix`, passed Lean compilation. The captured log tail did not expose its individual `#print axioms` lines, so the explicit axiom list still needs artifact inspection; do not confuse the later Agent37 failure with a failure of this module.
+
+
+## 2026-11-12 19:22Z checkpoint — source-level even S1 decrement (uncompiled candidate)
+
+Current incarnation lease: `agent24-gpt6-20261112T184504Z-counted-prefix`, claimed 18:45:04.576Z. At this checkpoint the shared `main` head was `1b93bc3eb02e762356c4acaf4a8c2893147f2a34`.
+
+### New sources
+
+- `im-results/agent24-champion-time/CountedCarryLeftOutputR23.lean`: full unshifted prefix interfaces for (r=4k+2) and (r=4k+3). Each returns the 15+12r run, all six local output cells, right-exterior preservation, and the exact nonpositive left-output identity. The proof explicitly handles the one input boundary cell outside bridge2/bridge1's frame, then composes `carryFinishFromD` with `composeCarryRuns`.
+- `S1CarryOutputBridge.lean`: `s1Config_decrement_leftOutput` proves the source encoder's left stream changes from `d1pow r ++ d0 ++ tail` to `d0pow r ++ d1 ++ tail`, with the arbitrary tail unchanged. This is exactly `carryLeftOutputBit` for every (x\le0).
+- `S1CarryInc0.lean`: source-window input match, right-unary suffix match, shifted/unshifted prefix composers, r1/r2/r3 wrappers, and an all-positive-(r) composition split modulo 4. It combines Agent 3's r0 left-output theorem with `carryPrefix_anyPositive` by determinism; r=1 uses the short theorem or Agent 42's long-r1 shifted interface; r2/r3 use the new prefix sources.
+- Main candidate theorem: `s1Config_counted_decrement_even`. Under (0<z<2^a) and (z\bmod2=0), it obtains (z=(2q+1)2^r), (a=len+1+r), (q<2^{len}), (r>0), and proves the exact full S1 configuration transition to (z-1,b+1) in (48+12r+12b) steps.
+- Strengthening: `s1Config_evenCounter_countedReturn_canonical` reuses the same ((q,r,len)) witness from Agent 42's `s1Config_evenCounter_countedReturn` and proves its returned tape is exactly the canonical S1 encoding of (z-1,b+1), via equality of the two deterministic run results.
+
+### Coordination / audit state
+
+- Agent 42 reviewed the architecture of `S1CarryInc0.lean` and judged the source match, suffix composition, r1 integration, and mod-4 split sound at the design level; no Lean run was available. Their source-level `s1Config_evenCounter_carryPrefix_r1_left` is an optional interface; my r1 wrapper currently consumes `carryLongPrefix_r1_shifted` directly.
+- Agent 3 has been asked to adversarially review the r2/r3 prefix proof; no response received at this checkpoint.
+- `.github/workflows/agent42-champion-terminal-source.yml` remains manual `workflow_dispatch` only. It now includes the R23, source-output bridge, and S1 composition sources, and compiles Agent 42's FrameCell/LongResidue1 modules once (removed a duplicate insertion). The workflow still stops earlier at Agent 2's `S1OddCanonicalOutput.lean` `sorryAx`/elaboration gate; Agent 42 says Agent 2 is addressing that blocker.
+- Local Lean reconstruction via the uploaded split zip was attempted with both container shell and Python runtime, but both returned concrete `ClientError`; no local compilation occurred. No workflow dispatch tool is exposed in this invocation. Treat every new theorem above as **uncompiled** until the manual source audit reaches and compiles it.
+- All new work remains in `im-results/`; no `results/` claim or BB(6) value/bound claim was made.
+
+Next high-value actions: obtain Agent 3's line-level review of `CountedCarryLeftOutputR23.lean`; once Agent 2's gate is fixed, run the existing manual source audit and repair actual Lean diagnostics; then integrate the canonical even decrement with the S1 reset/odd-counter chain. Do not repeat the already established source/encoder derivations or promote these candidates before compilation.
