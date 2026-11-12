@@ -912,4 +912,41 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
   exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout'⟩
 
 
+
+/-- Uniform counted carry prefix for every positive unary count r.
+The four residue classes use the corresponding bridge; r=1 is the
+short bridge3/AReturn12/A3 exceptional case. -/
+theorem carryPrefix_anyPositive (r : Nat) (T : Int → Bool)
+    (hr : 0 < r)
+    (hmatch : ∀ x, carryInputArea r x = true → T x = carryInputBit r x) :
+    ∃ T' : Int → Bool,
+      run tm2 (15+12*r) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) := by
+  let k := r / 4
+  have hdiv := Nat.mod_add_div r 4
+  have hdecomp : 4*k + r%4 = r := by
+    dsimp [k]
+    omega
+  have hmodlt : r%4 < 4 := Nat.mod_lt r (by omega)
+  have hmod : r%4 = 0 ∨ r%4 = 1 ∨ r%4 = 2 ∨ r%4 = 3 := by omega
+  rcases hmod with h0 | h1 | h2 | h3
+  · have hrEq : r = 4*k := by omega
+    subst r
+    exact carryLongPrefix_r0 k T hmatch (by omega)
+  · have hrEq : r = 4*k+1 := by omega
+    subst r
+    by_cases hk : k=0
+    · subst k
+      simpa using carryShortPrefix_r1 T hmatch
+    · exact carryLongPrefix_r1 k T hmatch (by omega)
+  · have hrEq : r = 4*k+2 := by omega
+    subst r
+    exact carryLongPrefix_r2 k T hmatch
+  · have hrEq : r = 4*k+3 := by omega
+    subst r
+    exact carryLongPrefix_r3 k T hmatch
+
+
 end BB6Coverage.Agent48Champion
