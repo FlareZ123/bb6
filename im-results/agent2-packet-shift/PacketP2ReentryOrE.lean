@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import PacketNormalizeSource
 import BoundaryBZero
 import AP2PacketBoundarySource
+import PacketP2ResetSource
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -86,6 +87,39 @@ theorem p2_packet_reentry_or_E (c : Packet) (ha : c.a ≥ 4)
         8*k+9+d.p,1,5,hfinal⟩
     · exact Or.inr ⟨T0,d,h0,hE.1,hE.2⟩
 
+/-- Strengthening p2_packet_reentry_or_E: the only residual E,p=2
+    branch is immediately converted to the canonical changed-marker reset
+    packet used by the arbitrary-depth E-chain analysis. -/
+theorem p2_packet_reentry_or_reset (c : Packet) (ha : c.a ≥ 4)
+    (hp : c.p % 3 = 2) :
+    (∃ T a q b,
+      run T (packet c.a c.q c.p fixedTail) =
+        regularSection a q b) ∨
+    (∃ T k q,
+      run T (packet c.a c.q c.p fixedTail) =
+        packet (8*k+5) 0 (2*q+6)
+          BB6.Agent2PacketP2Reset.marker) := by
+  rcases p2_packet_reentry_or_E c ha hp with hL | hE
+  · exact Or.inl hL
+  · rcases hE with ⟨T0,d,h0,haE,hpE⟩
+    have hamin : d.a ≥ 4 := by
+      simpa [normalizeWithCount] using normalize_amin c ha
+    let k : Nat := (d.a-4)/3
+    have hk : 3*k+4=d.a := by dsimp [k]; omega
+    have hshape : packet d.a d.q d.p fixedTail =
+        packet (3*k+4) d.q 2 fixedTail := by
+      simp [hk,hpE]
+    have hreset := BB6.Agent2PacketP2Reset.e_two_reset k d.q
+    have hfinal :
+        run (T0+BB6.Agent2PacketP2Reset.eTwoTime k d.q)
+          (packet c.a c.q c.p fixedTail) =
+          packet (8*k+5) 0 (2*d.q+6)
+            BB6.Agent2PacketP2Reset.marker := by
+      rw [run_add,h0,hshape,hreset]
+    exact Or.inr ⟨T0+BB6.Agent2PacketP2Reset.eTwoTime k d.q,
+      k,d.q,hfinal⟩
+
 #print axioms p2_packet_reentry_or_E
+#print axioms p2_packet_reentry_or_reset
 
 end BB6.Agent2PacketP2ReentryOrE
