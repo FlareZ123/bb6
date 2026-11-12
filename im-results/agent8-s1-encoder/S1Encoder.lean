@@ -177,12 +177,13 @@ theorem exists_odd_factor_bounded (a z : Nat)
   have hmul := Nat.mul_le_mul_left (2^r) hodd
   have hpowle : 2^r ≤ z := by
     simpa [Nat.mul_comm,hr] using hmul
-  have hpowlt : 2^r < 2^a := lt_of_le_of_lt hpowle hzlt
+  have hpowlt : 2^r < 2^a := by omega
   have hra : r < a := by
-    by_contra hnot
-    have har : a ≤ r := by omega
-    have hp := Nat.pow_le_pow_right (show 0 < 2 by decide) har
-    omega
+    by_cases h : r < a
+    · exact h
+    · have har : a ≤ r := by omega
+      have hp := Nat.pow_le_pow_right (show 0 < 2 by decide) har
+      omega
   let len := a-r-1
   have ha : a = len+1+r := by dsimp [len]; omega
   have hpowadd : 2^a = 2^(len+1)*2^r := by
@@ -416,7 +417,7 @@ obligation remains for the caller. -/
 theorem s1Config_anyPositive_carry (L n m a z b : Nat) (h : Int)
     (hz : 0 < z) (hzlt : z < 2^a) :
     ∃ q r len, z = (2*q+1)*2^r ∧ a = len+1+r ∧ q < 2^len ∧
-      ∀ i, (s1Config L n m a z b h).tape (h-(i:Int)) =
+      ∀ i : Nat, (s1Config L n m a z b h).tape (h-(i:Int)) =
         sideBit
           (d1pow r ++ d0 ++ binDec len q ++
             markerWord m ++ d0 ++ binDec L n ++ lh) i := by
