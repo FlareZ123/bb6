@@ -42,11 +42,13 @@ theorem carryFinishWithLeftPattern
   · simp [hlt, hseed x hlt]
   · have hge : hB ≤ x := le_of_not_gt hlt
     have hgt : -3*(r:Int) < x := by omega
-    have hmodEq : (x-hB) % 3 = 0 ↔ x % 3 = 1 := by omega
+    have hmodEq : (x-hB) % 3 = 0 ↔ x % 3 = 1 := by omega only [hmod]
     have htarget : carryLeftOutputBit r T x = decide (x % 3 = 1) := by
       simp [carryLeftOutputBit, hgt]
       omega
-    simp [hlt,hmodEq,htarget]
+    have hmodBool : decide ((x-hB) % 3 = 0) = decide (x % 3 = 1) := by
+      exact congrArg decide hmodEq
+    simp [hlt,hmodBool,htarget]
 
 /-- Residue 0: the finite bridge seed is the terminal d1 block followed by
     three d0 marks; carryFinishFromD supplies all remaining d0 blocks. -/
