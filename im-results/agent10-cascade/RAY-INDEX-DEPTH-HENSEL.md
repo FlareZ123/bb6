@@ -84,7 +84,7 @@ quadLongleftrightarrowquad
 3mid rac{W_t(n)}{3^{k+1}}-2^{t+3}r,
 qquad D=2cdot3^{k+1},quad rin{0,1,2},
 ]
-assuming (3^{k+1}mid W_t(n)). Thus precisely one of the three next index digits lifts the valuation. A full recursively named (W_t)-residue selector has not yet been added; the exact criterion is already reusable for classifying nested odd-parent branches such as the exceptional 526/887 cases.
+assuming (3^{k+1}mid W_t(n)). Thus precisely one of the three next index digits lifts the valuation. A full recursively named (W_t)-residue selector has not yet been added; the formal unique-digit theorem is already reusable for classifying nested odd-parent branches such as the exceptional 526/887 cases.
 
 ## BB(6) relevance and strict boundary
 
