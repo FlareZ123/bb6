@@ -287,6 +287,34 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
 
 #print axioms carryIntModSub
 #print axioms carryFinishWithLeftPattern
+
+
+/-- Combine the left-output identity with the independently proved local
+terminal window and right-exterior preservation from the all-residue prefix
+theorem. Determinism identifies the two final tapes. -/
+theorem carryLongPrefix_r1_full (k : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea (4*k+1) x = true →
+      T x = carryInputBit (4*k+1) x) (hk : 0 < k) :
+    ∃ T' : Int → Bool,
+      run tm2 (15+12*(4*k+1)) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) ∧
+      (∀ x, x ≤ 0 → T' x = carryLeftOutputBit (4*k+1) T x) := by
+  obtain ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout⟩ :=
+    carryPrefix_anyPositive (4*k+1) T (by omega) hmatch
+  obtain ⟨Tleft,hrunLeft,hleft⟩ :=
+    carryLongPrefix_r1_left k T hmatch hk
+  have hconf : (⟨4,7,Tgen⟩ : Config) = ⟨4,7,Tleft⟩ := by
+    apply Option.some.inj
+    calc
+      some (⟨4,7,Tgen⟩ : Config) = run tm2 (15+12*(4*k+1)) ⟨3,0,T⟩ :=
+        hrunGen.symm
+      _ = some ⟨4,7,Tleft⟩ := hrunLeft
+  cases hconf
+  exact ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout,hleft⟩
+
 #print axioms carryLongPrefix_r1_left
+#print axioms carryLongPrefix_r1_full
 
 end BB6Coverage.Agent42CarryLeftOutput
