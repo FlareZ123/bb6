@@ -32,6 +32,14 @@ The lift uses the existing `carryBridgeLift` theorem. Its explicit local
 match premise is what allows the exterior tape to remain arbitrary; the
 theorems do not silently assume a blank exterior.
 
+The module also proves `carryBridge3_matches_carryAD12`: after the existing
+rho=3 residue bridge, the framed A-state already supplies the first three
+ones in the A→D input window. If the untouched exterior has ones at
+`h+2,…,h+10`, the entire A→D 12-cell local window matches. This is the
+first explicit composition interface between the existing residue-3 bridge
+and the new A→D trace; the later right-run and zero-boundary conditions are
+still separate obligations.
+
 ## Verification
 
 The selective, fail-closed source workflow
@@ -40,7 +48,8 @@ compiles the original machine source, the four existing residue bridges, and
 this module with Lean **4.36.0-rc2**.
 
 [CI 43167823012](https://github.com/FlareZ123/bb6/actions/runs/43167823012)
-completed successfully. All six new trace/lift theorem audits are
+and [CI 43168841419](https://github.com/FlareZ123/bb6/actions/runs/43168841419)
+completed successfully. All trace/lift theorem audits, including `carryBridge3_matches_carryAD12`, are
 `[propext, Classical.choice, Quot.sound]`; none contains `sorryAx`.
 
 ## What remains
