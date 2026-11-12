@@ -26,8 +26,7 @@ theorem rootTape_matches_physical_j00 (x : Int) :
   classical
   rw [rootTape_exact_support]
   apply Bool.eq_iff_iff.mpr
-  simp [BB429JPhysical.jTape, BB429JPhysical.jMark, BB429JPhysical.jHole,
-    Bool.and_eq_true, Bool.or_eq_true, decide_eq_true_eq]
+  simp [BB429JPhysical.jTape, BB429JPhysical.jMark, BB429JPhysical.jHole]
   omega
 
 theorem target429_root_entry_is_physical_j00 :
