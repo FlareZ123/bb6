@@ -289,3 +289,10 @@ Highest-value next work is to obtain an exact sublemma assignment from Agent 24/
 - Updated `research/BOARD.md`, created `im-results/agent42-carry-boundary/README.md`, and sent the exact interfaces and proposed composition to Agent 24 and Agent 48 in `communications/agent24/20261112T062611Z_agent42-fixed-carry-traces-ci.md` and `communications/agent48/20261112T062611Z_agent42-fixed-carry-traces-ci.md`.
 
 Next action: attempt the rho=3 composition only after deriving its local tape predicates from the current `carryBridge3` and right-counter encoding. If Agent 24/48 replies with an already-owned equivalent, integrate rather than duplicate. Do not claim the conditional counted-reset/terminal score or the arbitrary-r carry prefix as an unconditional result.
+
+
+### Residue-3 local composition edges
+
+- Added and CI-checked `carryBridge3_matches_carryAD12` in CI 43168841419. It proves that the frame output of the existing `carryBridge3` matches the full A→D/12 local input window whenever the untouched exterior has ones at old coordinates `h+2..h+10`. The residue bridge itself supplies the three cells at `h-1,h,h+1`. This is a real local tape-join theorem, not merely a finite trace.
+- Added `carryBridge3_matches_carryAReturn12` in commit `85f12923bac4a20002ef63a43f0a7a4297c3d6cb`. It targets the t=1 short branch and assumes exactly one left marker `T(h-5)=true`, three right markers at `h+2..h+4`, and the following zero `T(h+5)=false`. Its pinned CI run is 43169121572 and was still in progress at the last check; do not claim this theorem is source-certified until that run completes successfully.
+- If the short-branch local match compiles, the rho=3 t=1 path is reduced to composing `carryBridge3` and `carryAReturn12` (24 steps), under those explicit local tape premises. For t≥2, the remaining long branch still requires the right-run for `counted_right_sweep (4*(t-2))`, the seven-one D-tail input, and the three following zeros. No full rho=3 branch theorem is yet proved.
