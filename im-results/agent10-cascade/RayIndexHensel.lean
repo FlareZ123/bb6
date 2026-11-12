@@ -717,6 +717,7 @@ theorem nestedOddIndexResidue_lt (s j t k:Nat) :
       let q:Int:=nestedOddNumerator (s+6*b) j t/(3:Int)^(k+1)
       let d:=henselDigit q a
       have hd:d<3:=henselDigit_lt q a
+      have hb:b<3^k:=ih
       change b+d*3^k<3^(k+1)
       rw [Nat.pow_succ]
       have hmul:=Nat.mul_lt_mul_of_pos_right hd (Nat.pow_pos (by decide : 0<3))
