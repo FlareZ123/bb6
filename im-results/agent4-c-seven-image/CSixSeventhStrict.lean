@@ -229,7 +229,7 @@ theorem exactly_six_not_seven_s3_second_progression (t : Nat) :
     Incoming 6 (3713+16384*t,8766) ∧
     ¬ Incoming 7 (3713+16384*t,8766) := by
   have h := exactly_six_not_seven_s3 (3+16*t) 8 (by omega)
-  simpa using h
+  convert h using 1 <;> omega
 
 #print axioms exactly_six_not_seven_s3_second_progression
 /-- The u=0 residue progression in the same exact cone. -/
@@ -237,14 +237,14 @@ theorem exactly_six_not_seven_s3_zero_progression (t : Nat) :
     Incoming 6 (641+16384*t,15934) ∧
     ¬ Incoming 7 (641+16384*t,15934) := by
   have h := exactly_six_not_seven_s3 (16*t) 15 (by omega)
-  simpa using h
+  convert h using 1 <;> omega
 
 /-- The u=2 residue progression in the same exact cone. -/
 theorem exactly_six_not_seven_s3_two_progression (t : Nat) :
     Incoming 6 (2689+16384*t,5694) ∧
     ¬ Incoming 7 (2689+16384*t,5694) := by
   have h := exactly_six_not_seven_s3 (2+16*t) 5 (by omega)
-  simpa using h
+  convert h using 1 <;> omega
 
 #print axioms exactly_six_not_seven_s3_zero_progression
 #print axioms exactly_six_not_seven_s3_two_progression
