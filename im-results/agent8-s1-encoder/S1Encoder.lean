@@ -191,8 +191,9 @@ theorem exists_odd_factor_bounded (a z : Nat)
       2^a = 2^(len+1+r) := by rw [ha]
       _ = 2^(len+1)*2^r := by rw [Nat.pow_add]
   have hq : q < 2^len := by
-    by_contra hqnot
-    have hqge : 2^len ≤ q := by omega
+    by_cases hq' : q < 2^len
+    · exact hq'
+    · have hqge : 2^len ≤ q := by omega
     have hlargeOdd : 2^(len+1) < 2*q+1 := by
       rw [Nat.pow_succ]
       omega
