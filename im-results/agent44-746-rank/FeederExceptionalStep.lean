@@ -92,7 +92,7 @@ private theorem only_even_parent_of_gap (u v j q : Nat)
           rcases hpow with ⟨z,hz⟩
           refine ⟨z*d, ?_⟩
           rw [hout,hz]
-          ring
+          ac_rfl
         exact False.elim (hnot9 (Nat.mod_eq_zero_of_dvd hdiv))
     subst t
     have hdval : 3*d=2*u+5 := by simpa using hout.symm
@@ -143,7 +143,7 @@ private theorem middle_low_unique_odd_t1 (h k a q : Nat)
           rcases hpow with ⟨z,hz⟩
           refine ⟨z*d, ?_⟩
           rw [hout,hz]
-          ring
+          ac_rfl
         exact False.elim (hnodiv81 (Nat.mod_eq_zero_of_dvd hdiv))
     by_cases ht0 : t=0
     · subst t
@@ -208,7 +208,7 @@ private theorem middle_low_unique_odd_t0 (u j f q : Nat)
           rcases hpow with ⟨z,hz⟩
           refine ⟨z*d, ?_⟩
           rw [hout,hz]
-          ring
+          ac_rfl
         exact False.elim (hnot9 (Nat.mod_eq_zero_of_dvd hdiv))
     subst t
     have hdval : 3*d=2*u+5 := by simpa using hout.symm
