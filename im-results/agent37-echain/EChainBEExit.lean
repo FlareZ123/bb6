@@ -28,6 +28,7 @@ theorem b_then_e (kb ke qb p : Nat) (ys : List Bool)
   rw [hp, e_packet]
 
 /-- A complete B -> E -> A corridor after an arbitrary-depth E prefix.
+    The proof isolates the source path from the later residue parameterization.
     The congruence 1+4*8^d*h = 27*t+20 is the exact B-to-E residue
     cylinder.  The resource is three additional 1s for the B-successor E edge. -/
 theorem chain_B_E_A (d h t q p : Nat)
