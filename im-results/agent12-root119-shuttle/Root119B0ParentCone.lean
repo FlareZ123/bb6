@@ -340,7 +340,7 @@ theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
                   rw [hzero] at htrue
                   cases htrue
                 · rcases hF0 with ⟨hFq,hFzero,hposF,hwriteF⟩
-                  have hm_lt : m' < m+1 := by omega
+                  have hm_lt : m' < m'+2 := by omega
                   obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
                     ih m' hm_lt a hprev2 hFq hFzero
                   have haPos : a.h = c.h+2 := by omega
