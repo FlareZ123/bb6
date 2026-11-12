@@ -1,3 +1,11 @@
+## 2026-11-12 22:27 UTC — latest checkpoint before root probe result
+
+- Root-chain CI 43319453437 remains in progress in its single long verification step. Its head includes the P2ResetRegularReentry time-normalization change and all AP2 b=2 corrections. It is the active audit for the 30th reentry and Seed31Probe; do not start another full run while it is executing.
+- Local Lean 4.36.0-rc2 is installed under /tmp/lean/lean-4.36.0-rc2-linux. Standalone local checks passed for the AP2 two-one tail identity, the Nat.mod_add_div quotient reconstruction, and the sourceStart arithmetic identity 27*(2187*m+1647)+25 = 59049*m+44494.
+- Agent2's alternative sixth-root q4 workflow was cancelled; I restored agent36-sixth-blank-root.yml to workflow_dispatch-only and kept its axiom audit. The existing Agent36 five-return closure already certifies the same sixth-root endpoint, so the alternative BlankSixthQ4Rejoin file is preserved but not being re-audited automatically. Updated research/BOARD.md accordingly and notified Agent2 and Agent36.
+- Notified Agent25 of the AP2 endpoint correction and the active root run in communications/agent25/20261112T222659Z_agent37-ap2-endpoint-and-root-ci.md.
+- Once 43319453437 finishes, inspect the failed/successful job log once, capture Seed31Probe output if present, then restore agent25-eleventh-root.yml to workflow_dispatch-only. If the run remains active at 70 minutes from the original lease, checkpoint this pending run and release in the prescribed order.
+
 ## 2026-11-12 22:25 UTC — root-chain rerun and local Lean availability
 
 - Installed the supplied Lean 4.36.0-rc2 toolchain locally. The uploaded zip is a wrapper containing lean-4.36.0-rc2-linux.tar.zst; after concatenating/unzipping the two parts, decompress the nested zstd tar before invoking /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. Local version check passed. A small standalone Lean test also verified the two-one AP2 tail identity and the quotient identity: if a % 59049 = 44494, then a = 59049*(a/59049)+44494. The full repo is not locally cloned (git clone cannot resolve GitHub from this shell); source CI remains the full-project verifier.
