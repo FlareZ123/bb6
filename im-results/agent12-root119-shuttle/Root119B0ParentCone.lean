@@ -202,10 +202,137 @@ theorem reached_B0_left10_three_step_parent (c : Conf) (hc : Reach c)
   · rw [hGpos] at hBpos
     omega
 
+
+
+/-- A time-indexed version of Reach, used only to make backward descent
+    well-founded. -/
+inductive Root119ReachN : Nat → Conf → Prop where
+  | zero : Root119ReachN 0 blank
+  | step {n : Nat} {c d : Conf} :
+      Root119ReachN n c → next c = some d → Root119ReachN (n+1) d
+
+theorem reach_has_steps {c : Conf} (hc : Reach c) :
+    ∃ n, Root119ReachN n c := by
+  induction hc with
+  | initial =>
+      exact ⟨0,Root119ReachN.zero⟩
+  | @follow u v hu hstep ih =>
+      rcases ih with ⟨n,hn⟩
+      exact ⟨n+1,Root119ReachN.step hn hstep⟩
+
+theorem reach_of_steps {n : Nat} {c : Conf}
+    (hc : Root119ReachN n c) : Reach c := by
+  induction hc with
+  | zero =>
+      exact Reach.initial
+  | step hprev hstep ih =>
+      exact Reach.follow ih hstep
+
+/-- Exact finite transition paths, with their lengths retained in the type. -/
+inductive Root119Path : Nat → Conf → Conf → Prop where
+  | refl (c : Conf) : Root119Path 0 c c
+  | step {n : Nat} {c d e : Conf} :
+      next c = some d → Root119Path n d e → Root119Path (n+1) c e
+
+theorem root119Path_comp {n m : Nat} {a b c : Conf}
+    (h1 : Root119Path n a b) (h2 : Root119Path m b c) :
+    Root119Path (n+m) a c := by
+  induction h1 generalizing m c with
+  | refl =>
+      simpa using h2
+  | @step n a d b hstep hpath ih =>
+      have htail : Root119Path (n+m) d c := ih h2
+      have hcomp : Root119Path ((n+m)+1) a c :=
+        Root119Path.step hstep htail
+      have hlen : (n+1)+m = (n+m)+1 := by omega
+      simpa [hlen] using hcomp
+
+/-- Every reached F/0 has a D/1 ancestor at an odd rightward offset
+    2k-1. The proof is well-founded descent on the exact number of
+    transitions from blank: an F/0 predecessor is either D/1 immediately
+    to its left, or another F/0 two cells to the right through B/1. The
+    latter branch strictly decreases the time index by two. -/
+theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
+    (hc : Root119ReachN n c) (hF : c.q = .F)
+    (hzero : c.tape c.h = false) :
+    ∃ k d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+      d.h = c.h + (2*k : Int) - 1 ∧
+      Root119Path (2*k+1) d c := by
+  induction n using Nat.strong_induction_on generalizing c with
+  | h n ih =>
+      cases hc with
+      | zero =>
+          simp [blank] at hF
+      | @step m u v hprev hstep =>
+          rcases to_F hstep hF with hB | hD
+          · rcases hB with ⟨hBq,hbit,hpos⟩
+            cases hprev with
+            | zero =>
+                simp [blank] at hBq
+            | @step m' a _ hprev2 hstepA =>
+                rcases to_B hstepA hBq with hA | hF0
+                · rcases hA with ⟨hAq,hAzero,hposA,hwriteA⟩
+                  have hCshape : c =
+                      ⟨.F,u.h-1,setBit u.tape u.h true⟩ := by
+                    rw [next_B_one u hBq hbit] at hstep
+                    cases hstep
+                    rfl
+                  have htrue : c.tape c.h = true := by
+                    rw [hCshape]
+                    change setBit u.tape u.h true (u.h-1) = true
+                    exact (setBit_apply_ne u.tape u.h (u.h-1) true (by omega)).trans hwriteA
+                  rw [hzero] at htrue
+                  cases htrue
+                · rcases hF0 with ⟨hFq,hFzero,hposF,hwriteF⟩
+                  have hm_lt : m' < n := by omega
+                  obtain ⟨k,d,hd,hDq,hDbit,hdpos,hpath⟩ :=
+                    ih m' hm_lt a hprev2 hFq hFzero
+                  have haPos : a.h = c.h+2 := by omega
+                  have hpath2 : Root119Path 2 a c :=
+                    Root119Path.step hstepA
+                      (Root119Path.step hstep (Root119Path.refl c))
+                  have hpathOut := root119Path_comp hpath hpath2
+                  have hposOut : d.h = c.h + (2*(k+1) : Int) - 1 := by
+                    rw [haPos] at hdpos
+                    omega
+                  have hlen : (2*k+1)+2 = 2*(k+1)+1 := by omega
+                  exact ⟨k+1,d,hd,hDq,hDbit,hposOut,by simpa [hlen] using hpathOut⟩
+          · rcases hD with ⟨hDq,hbit,hpos,hwritten⟩
+            refine ⟨0,u,reach_of_steps hprev,hDq,hbit,?_,
+              Root119Path.step hstep (Root119Path.refl c)⟩
+            omega
+
+/-- Every reached B/0 in the all-time 10x sector has a D/1 ancestor exactly
+    2k cells to its right and a path of 2k+2 transitions from that D/1 to the
+    B/0. This is obtained by adjoining the forced F/0 predecessor of the
+    B/0 to the general F/0 ancestry theorem. -/
+theorem reached_B0_left10_D1_ancestor (c : Conf) (hc : Reach c)
+    (hB : c.q = .B) (hcurrent : c.tape c.h = false)
+    (hleft3 : c.tape (c.h-3) = true)
+    (hleft2 : c.tape (c.h-2) = false) :
+    ∃ k d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+      d.h = c.h + (2*k : Int) ∧
+      Root119Path (2*k+2) d c := by
+  obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
+    reached_B0_left10_parent c hc hB hcurrent hleft3 hleft2
+  obtain ⟨n,hn⟩ := reach_has_steps hg
+  obtain ⟨k,d,hd,hDq,hDbit,hdpos,hpath⟩ :=
+    reached_F0_D1_ancestor n g hn hG hGzero
+  have hpos : d.h = c.h + (2*k : Int) := by
+    rw [hGpos] at hdpos
+    omega
+  have hpath1 : Root119Path 1 g c :=
+    Root119Path.step hGstep (Root119Path.refl c)
+  have hpathOut := root119Path_comp hpath hpath1
+  have hlen : (2*k+1)+1 = 2*k+2 := by omega
+  exact ⟨k,d,hd,hDq,hDbit,hpos,by simpa [hlen] using hpathOut⟩
+
 #print axioms BB6Root119.to_A_exact_parent
 #print axioms BB6Root119.reached_B0_left10_parent
 #print axioms BB6Root119.reached_F0_parent_split
 #print axioms BB6Root119.reached_F0_left_zero_two_step_parent
 #print axioms BB6Root119.reached_B0_left10_three_step_parent
+#print axioms BB6Root119.reached_F0_D1_ancestor
+#print axioms BB6Root119.reached_B0_left10_D1_ancestor
 
 end BB6Root119
