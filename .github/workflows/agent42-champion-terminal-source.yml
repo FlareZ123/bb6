@@ -12,6 +12,10 @@ on:
       - 'im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'
       - 'im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'
       - 'im-results/agent8-s1-encoder/S1Encoder.lean'
+      - 'im-results/agent8-counted-reset/CountedReset.lean'
+      - 'im-results/agent24-champion-time/ChampionModular.lean'
+      - 'im-results/agent24-champion-time/CostRecurrence.lean'
+      - 'im-results/agent24-champion-time/CountPattern.lean'
       - 'im-results/agent8-coverage-contract/Frontier.lean'
       - 'im-results/agent8-coverage-contract/Symmetry.lean'
       - 'im-results/agent8-coverage-contract/RootShift.lean'
@@ -36,6 +40,8 @@ jobs:
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a42-terminal/
+          cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a42-terminal/
+          cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalAfterPrefix.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalEncoderBridge.lean /tmp/a42-terminal/
@@ -53,6 +59,15 @@ jobs:
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
           lean -o S1Encoder.olean S1Encoder.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          : > /tmp/a42-terminal/counted-reset-axioms.log
+          lean -o CountedReset.olean CountedReset.lean 2>&1 | tee /tmp/a42-terminal/counted-reset-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-reset-axioms.log; then
+            echo '::error::sorryAx found in counted reset theorem dependencies'
+            exit 1
+          fi
           lean -o TerminalFinish.olean TerminalFinish.lean
           lean -o TerminalLeft.olean TerminalLeft.lean
           lean -o TerminalBridge.olean TerminalBridge.lean
