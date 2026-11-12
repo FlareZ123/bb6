@@ -325,7 +325,8 @@ private theorem even_open_sweep_local (P : Int → Bool) (c : Nat)
   have hon := even_open_middle_ones P c h6 hone
   have hright : afterEZero P (even_rightStop c)
       (even_rightStop c+1) = false := by
-    simp [afterEZero]
+    have hne : even_rightStop c+1 ≠ even_rightStop c := by omega
+    simp [afterEZero,hne]
   have hcount : 5+3*c=(4+3*c)+1 := by omega
   unfold evenOpenFinalSweepTape
   rw [hcount,even_swept_closed (4+3*c)
@@ -397,13 +398,17 @@ theorem even_counted_suffix_from_open (P : Int → Bool) (c : Nat)
     intro i hi
     exact hone i hi
   have hs0 := E_scan P 7 (3*(c+1)) hlinear
+  have hstopEq : (7:Int)+(3*(c+1):Int)=even_rightStop c := by
+    unfold even_rightStop
+    omega
   have hs : run tm2 (3*(c+1)) ⟨(4 : Fin 6),7,P⟩ =
       some ⟨(4 : Fin 6),stop,P⟩ := by
-    simpa [stop,even_rightStop] using hs0
+    simpa [stop,hstopEq] using hs0
   have hz := E_zero_bridge P stop h0 hstop1 hstop2
   have hon := even_open_middle_ones P c h6 hone
   have hright : B (stop+1)=false := by
-    simp [B,afterEZero]
+    have hne : stop+1 ≠ stop := by omega
+    simp [B,afterEZero,hne]
   have hl0 := counted_left_sweep (5+3*c) B stop
     (by simpa [B] using hon) hright
   have hhead : stop-((5+3*c):Int)=5 := by
@@ -413,9 +418,12 @@ theorem even_counted_suffix_from_open (P : Int → Bool) (c : Nat)
       some ⟨(3 : Fin 6),5,U⟩ := by
     simpa [B,U,stop,evenOpenFinalSweepTape,hhead] using hl0
   have hmatch := even_open_tail_match P c h1 h2 h3 h4 h5 h6 hone
+  have hmatch' : frame even_tailArea U (embed even_tailBase) =
+      (⟨(3 : Fin 6),5,U⟩ : Config) := by
+    simpa [U,B,stop,evenOpenFinalSweepTape] using hmatch
   have ht : run tm2 11 ⟨(3 : Fin 6),5,U⟩ =
       some (frame even_tailArea U (embed even_tailFinal)) := by
-    rw [← hmatch]
+    rw [← hmatch']
     exact even_tail11 U
   have h12 := run_compose tm2 (3*(c+1)) 4
     ⟨(4 : Fin 6),7,P⟩ ⟨(4 : Fin 6),stop,P⟩ ⟨(3 : Fin 6),stop,B⟩ hs hz
@@ -427,7 +435,7 @@ theorem even_counted_suffix_from_open (P : Int → Bool) (c : Nat)
     (frame even_tailArea U (embed even_tailFinal)) h123 ht
   have hcost : 33+12*c =
       3*(c+1)+4+3*(5+3*c)+11 := by omega
-  simpa [hcost,Nat.add_assoc] using h1234
+  simpa [hcost,Nat.add_assoc,U,B,stop,evenOpenFinalSweepTape] using h1234
 
 #print axioms even_counted_suffix_from_open
 
