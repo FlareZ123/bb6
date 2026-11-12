@@ -244,6 +244,64 @@ theorem prior_latefast_admits_s3_second_parameter_family (t : Nat) :
     omega
   exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
 
+/-- Every high-stop parameter whose exact stopping target lies in
+    the second strict image family is admitted by the preceding
+    ValSixFull+C58 all-depth and arbitrary-depth late-fast predicates.
+    Its disjointness from the old diagonal follows from u+v=3 (mod 4). -/
+theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
+    (hm7 : 7≤m)
+    (hj : j=319+512*u)
+    (hk : (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v)
+    (hsector : (u+v)%16=(15+4*u)%16) :
+    lateFastHighAllowed j m := by
+  let k := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
+  have hstop : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by
+    simpa [k] using high_stop_identity j m
+  have hj512 : j%512=319 := by rw [hj]; omega
+  have hpow512 : 512 ∣ (2:Nat)^(2*m+2) := by
+    have h := Nat.pow_dvd_pow 2 (by omega : 9≤2*m+2)
+    simpa only [show (2:Nat)^9=512 by norm_num] using h
+  have hprod512 : 512 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+    rcases hpow512 with ⟨q,hq⟩
+    refine ⟨q*(j+3),?_⟩
+    rw [hq]
+    ac_rfl
+  have hstopmod512 : (k+j+3*m+5)%512=0 := by
+    rw [hstop]
+    exact Nat.mod_eq_zero_of_dvd hprod512
+  have hm512 : m%512=42 := by
+    rw [hk,hj] at hstopmod512
+    omega
+  have hprior := prior_c58_admits_residue_pair j m hm7 hj512 hm512
+  have hbool : BB6.Agent11C58Boolean.highAllowed j m :=
+    (BB6.Agent11C58Boolean.highAllowed_iff j m).mpr hprior
+  have hlate : BB6.Agent11LateDepthGate.allowedBool j m=true := by
+    apply (BB6.Agent11LateDepthGate.allowedBool_iff j m).mpr
+    intro r hr
+    rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
+    have hm4res : m%4=2 := by omega
+    have hodd : (2*r+1)%4=1 ∨ (2*r+1)%4=3 := by omega
+    omega
+  have hnotdiag :
+      ¬(7≤m ∧ j%512=319 ∧
+        (3*m)%4096=(j+2879)%4096) := by
+    rintro ⟨_,_,hpair⟩
+    have hpow4096 : 4096 ∣ (2:Nat)^(2*m+2) := by
+      have h := Nat.pow_dvd_pow 2 (by omega : 12≤2*m+2)
+      simpa only [show (2:Nat)^12=4096 by norm_num] using h
+    have hprod4096 : 4096 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+      rcases hpow4096 with ⟨q,hq⟩
+      refine ⟨q*(j+3),?_⟩
+      rw [hq]
+      ac_rfl
+    have hstopmod4096 : (k+j+3*m+5)%4096=0 := by
+      rw [hstop]
+      exact Nat.mod_eq_zero_of_dvd hprod4096
+    have hsector4 : (u+v)%4=3 := by omega
+    rw [hk,hj] at hstopmod4096
+    omega
+  exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
+
 /-- Exact original-source Machine C blank-halting iff after adding
     Agent 4's diagonal to the C58 all-depth plus arbitrary-depth
     late three-cone high predicate. -/
@@ -573,6 +631,7 @@ theorem s3_second_parameter_family_removed (t : Nat) :
 #print axioms blank_halts_iff_c58_late_fast_six_seven_both
 #print axioms s3_parameter_family_removed
 #print axioms prior_latefast_admits_s3_second_parameter_family
+#print axioms prior_latefast_admits_s3_image_family
 #print axioms s3_second_parameter_family_removed
 #print axioms blank_halts_iff_c58_late_fast_all_s3
 #print axioms s3_parameter_family_removed_from_all
