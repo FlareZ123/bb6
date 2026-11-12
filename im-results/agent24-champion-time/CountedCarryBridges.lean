@@ -13,7 +13,7 @@ theorem frame_eq_of_matches (inside bg : Int → Bool) (c : Config)
       have ht : (fun x => if inside x then tape x else bg x) = bg := by
         funext x
         by_cases hx : inside x = true
-        · simp [hx, hmatch x hx]
+        · simpa [hx] using hmatch x hx
         · simp [hx]
       simp [frame, ht]
 
@@ -47,13 +47,12 @@ theorem carryBridgeLift
     rw [shift_frame h inside bg0 base, hbg]
     rw [frame_eq_of_matches (fun x => inside (x-h)) T
       (shiftConfig h base) hmatch']
-    rfl
   have hrun0 := htrace bg0
   have hshift := shift_run h tm2 (frame inside bg0 base) steps
   rw [hrun0] at hshift
+  simp only [Option.map] at hshift
   rw [hinput] at hshift
-  rw [shift_frame h inside bg0 final, hbg] at hshift
-  exact hshift
+  simpa [shift_frame, bg0, Int.sub_add_cancel] using hshift
 
 /-- The rho=0 bridge: D at h, with the finite window [-1,10] equal to
 0 0 0 111111111, advances twelve steps to D at h+10. -/
