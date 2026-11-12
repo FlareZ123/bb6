@@ -33,7 +33,7 @@ private theorem no_even_band_from_gap (k u : Nat)
   · have hk0 : k=0 := by omega
     subst k
     have hu : u<5 := by simpa using hhi
-    intro j hb
+    intro hb
     rcases hb with ⟨ha,hb⟩
     by_cases hj : j=0
     · subst j
@@ -178,10 +178,15 @@ private theorem middle_low_unique_odd_t1 (h k a q : Nat)
         have hdq : d=(2*h+5)/27 := by omega
         have hshift1 : (k-1)+1=k := by omega
         have hpow1 : 2*2^(k-1)=2^k := by
-          rw [←hshift1, Nat.pow_succ]
-          omega
-        have hqlo : 2*2^(k-1)<4*d := by omega
-        have hqhi : 4*d<3*2^(k-1) := by omega
+          calc
+            2*2^(k-1) = 2^(k-1)*2 := by omega
+            _ = 2^((k-1)+1) := by rw [Nat.pow_succ]
+            _ = 2^k := by rw [hshift1]
+        have hlow27 : 8*2^k+5≤27*d := by omega
+        have hhigh27 : 27*d+1≤9*2^k := by omega
+        have hqlo : 2^k<4*d := by omega
+        have hscale : 6*2^(k-1)=3*2^k := by omega
+        have hqhi : 8*d<3*2^k := by omega
         exact False.elim (odd_gap (k-1) (4*d) hqlo hqhi m (by simpa using hbm))
 
 /-- In a middle-low gap, if v3(2u+5)=1 and its t=0 odd quotient is
