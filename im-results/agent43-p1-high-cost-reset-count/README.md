@@ -218,3 +218,11 @@ The bounded residual-core certificate is drafted in [FiveShallowFiniteBounds.lea
 This is a proof-construction plan, not an established finite result. The
 source theorem remains at least five shallow edges for 14<=n<=82 until the
 new fifth-overflow and residual finite certificates are completed.
+
+
+## Unrestricted-depth bridge (open)
+
+[HighDepthRestartPotential.md](HighDepthRestartPotential.md) derives an exact defect recurrence for arbitrary inverse depth. With
+`F=(b+4m+4n+20)-12*2^n-2(m+n+6)`, depth 0/1 steps force F negative under the mid-cost cap, depth>=3 forces F>=2^n/4-6 positive, and depth 2 preserves positivity after such a reset. Thus any path reaching the shifted wall after a depth>=3 edge must contain a later shallow edge.
+
+This is a structural decomposition, not yet a six-shallow theorem for unrestricted histories. The existing `source_low_trace_wall_needs_six_shallows` remains rooted at the original source and restricted to depths 0/1/2. The note also records the exact correction showing why the depth-two affine energy cannot be generalized by a naive total-exponent substitution. The next target is a shallow-suffix theorem from an arbitrary post-depth>=3 state.
