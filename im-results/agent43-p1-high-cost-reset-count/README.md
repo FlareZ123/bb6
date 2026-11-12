@@ -121,31 +121,47 @@ any depth>=3 step, exceptional inverse exits and unrestricted authentic
 blank-root reachability remain open. It does not determine P1 halting or
 the exact BB(6) score, and has not been qualified as externally publishable.
 
-## Four-shallow scalar energy barrier for every n>=76
+## Four-shallow original-source exclusion for every n>=76
 
-[FourShallowAllIndex.md](FourShallowAllIndex.md) gives a new all-index
-**scalar energy-model theorem**: four depth-0/1 transitions separated by
-arbitrary depth-two runs cannot satisfy the exact shifted-wall equation for
-any critical index n>=76. The proof adds a fourth positive dyadic remainder
-peel to the established three-shallow argument. Its decisive estimate is
+[FourShallowAllIndex.md](FourShallowAllIndex.md) gives the all-index
+**four-layer scalar energy barrier**: four depth-0/1 transitions separated
+by arbitrary depth-two runs cannot satisfy the exact shifted-wall equation
+for any critical index n>=76. The decisive gap is
 
 ```
 21,120,000,000,000 * (n+2)^5 < 2^n,  n>=76.
 ```
 
-The theorem uses the exact source-derived shallow profiles and depth-two
-energy cocycles already established above. It is not a finite history cutoff.
-The five-chain/four-shallow composition into the existing `SourceLowWord`
-induction has **not yet been added or Lean-compiled**; until that composition
-is checked, the formal source-language theorem remains
-`source_low_trace_wall_needs_four_shallows`. The new result is therefore
-kept as an intermediate mathematical derivation, not advertised as a
-source-certified P1 decision. Indices 14<=n<=75, five-or-more shallow steps,
-depth>=3 excursions, exceptional exits and blank-root reachability remain
-open.
+The scalar barrier is now lifted to the original source language. In
+[FourShallowSourceModel.lean](FourShallowSourceModel.lean), the four profile
+cocycles and five unchanged-source depth-two runs are composed into the
+four-layer energy identity. [FourShallowSourceLift.lean](FourShallowSourceLift.lean)
+then proves both:
+
+- `source_low_word_four_no_wall`: no genuine `SourceLowWord` with exactly
+  four depth-0/1 edges reaches the shifted wall when n>=76;
+- `source_low_trace_wall_needs_five_shallows`: every finite legal
+  `SourceLowTrace` over depths 0, 1 and 2 that reaches the shifted wall
+  has at least five shallow edges when n>=76.
+
+The lift uses the original unchanged-source `inverseAt` relations, exact
+parity/left-counter conditions, source mass propagation, and the existing
+stepwise-to-block normal form. It does not substitute a simulator or assume
+a bounded history length. The scalar barrier, abstract energy bridge,
+source model and source trace theorem compiled with Lean 4.36.0-rc2 in
+[targeted original-source CI 43173803054](https://github.com/FlareZ123/bb6/actions/runs/43173803054);
+the theorem-axiom check passed without `sorryAx`.
+
+**Scope:** This strengthens the restricted low-depth source trace condition
+from at least four shallow edges to at least five for n>=76. It does not
+exclude five-or-more shallow histories, depth>=3 excursions, exceptional
+inverse exits, or unrestricted blank-root reachability. The indices
+14<=n<=75 for four-shallow histories remain open. This is not a P1
+blank-root decision or a BB(6) solution, and remains an intermediate
+research result pending independent mathematical review.
 
 ## Finite right-five search and remaining frontier
 
 [Right-five endpoint enumeration](right_five_finite_search.md) and its [exact search script](right_five_finite_search.py) use source `inverseAt_iff_power_mass` equations and a strictly decreasing two-counter mass to exhaust each fixed-`n` inverse tree when no state cap is reached. Completed runs found no right-five hit for `n=14..1612` and `n=1616..2620`; `n=1614` and `n=2622` remained incomplete at their state limits. These are finite computational observations only.
 
-A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The three-shallow equation and its authentic original-source lift are now certified at every n>=14. The four-shallow scalar model is excluded for n>=76, but its formal source composition and the n=14..75 cases remain open; five-or-more shallow transitions and unrestricted high-depth excursions also remain open. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+A reproducible [two-shallow scalar-model scan](two_shallow_model_scan.py), independently run for every n=14..4000, tested 6,708 integral scalar transitions through words of form `2^s(0|1)2^u(0|1)2^r` and encountered no exact-wall hit. This is bounded numerical evidence, not an all-n theorem or an original-source audit. The all-n two-shallow theorem closes that exact two-shallow grammar, including the formerly open n14..47 sector. The three-shallow equation and its authentic original-source lift are certified at every n>=14. The four-shallow source trace is now excluded for n>=76, so any low-depth trace reaching the wall there must have at least five shallow edges; the n=14..75 four-shallow sector, five-or-more shallow transitions, and unrestricted high-depth excursions remain open. The true blank-origin path, exceptional exits and any global six-state maximum certificate remain unresolved. Broader proof history and superseded paper variants are preserved in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
