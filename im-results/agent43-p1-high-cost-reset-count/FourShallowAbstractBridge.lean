@@ -88,7 +88,7 @@ theorem no_four_shallow_energies
      rw [Int.mul_assoc]
    rw [hx] at hSh3
    omega
- have hlast : ((2:Int)^delta)*J4=-f*(E:Int) := by
+ have hlast : ((2:Int)^delta)*J4=-(f*(E:Int)) := by
    rw [hLast]
    dsimp [f]
    simp only [Int.mul_neg,Int.neg_mul]
@@ -100,7 +100,7 @@ theorem no_four_shallow_energies
      I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
    rw [hR4shift] at hSh4
    exact hSh4
- have hneg4 : -f*(E:Int)=I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
+ have hneg4 : -(f*(E:Int))=I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
    calc
      -f*(E:Int)=((2:Int)^delta)*J4 := hlast.symm
      _=I3-(C4:Int)*(2:Int)^n+(R4:Int) := hSh4'
