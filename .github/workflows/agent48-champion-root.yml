@@ -18,6 +18,10 @@ on:
       - 'im-results/agent48-champion-root/S0UniformBridge.lean'
       - 'im-results/agent48-champion-root/UniformTM63HeadOffset.lean'
       - 'im-results/agent48-champion-root/UniformTM63SourceRun.lean'
+      - 'im-results/agent42-champion-terminal/TerminalBridge.lean'
+      - 'im-results/agent42-champion-terminal/TerminalChampion.lean'
+      - 'im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'
+      - 'im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'
       - 'im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64'
 permissions:
   contents: read
@@ -48,6 +52,10 @@ jobs:
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
+          cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
+          cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a48-root/
+          cp im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64 /tmp/a48-root/
+          cp im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64 /tmp/a48-root/
           base64 --decode im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64 | xz --decompress > /tmp/a48-root/CountedOddUnary.lean
           base64 --decode im-results/agent24-champion-time/CountedOneZeroUnary.lean.xz.b64 | xz --decompress > /tmp/a48-root/CountedOneZeroUnary.lean
           cd /tmp/a48-root
@@ -87,6 +95,21 @@ jobs:
             echo "::error::sorryAx found in S0/uniform bridge theorem dependencies"
             exit 1
           fi
+          python3 - <<'PY'
+          import base64, io, lzma, tarfile
+          from pathlib import Path
+          root = Path("/tmp/a48-root")
+          archive = lzma.decompress(base64.b64decode((root / "TerminalProofs.tar.xz.b64").read_bytes()))
+          with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as tf:
+              tf.extractall(root)
+          left = lzma.decompress(base64.b64decode((root / "TerminalLeftExact.lean.xz.b64").read_bytes()))
+          (root / "TerminalLeft.lean").write_bytes(left)
+          PY
+          sha256sum TerminalFinish.lean TerminalLeft.lean TerminalBridge.lean TerminalChampion.lean
+          lean -o TerminalFinish.olean TerminalFinish.lean
+          lean -o TerminalLeft.olean TerminalLeft.lean
+          lean -o TerminalBridge.olean TerminalBridge.lean
+          lean -o TerminalChampion.olean TerminalChampion.lean
           lean -o UniformTM63HeadOffset.olean UniformTM63HeadOffset.lean
           : > /tmp/a48-root/source-run-axioms.log
           lean -o UniformTM63SourceRun.olean UniformTM63SourceRun.lean 2>&1 | tee /tmp/a48-root/source-run-axioms.log
