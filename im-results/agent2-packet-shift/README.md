@@ -115,6 +115,14 @@ These disjoint families cover seven of nine k residue classes modulo nine. The r
 
 The A branch is now source-closed by `AP2PacketBoundarySource.a_p2_packet_reentry`; the B,q=0 branch is covered by the existing B-zero source. Thus after rank normalization the only remaining p≡2 packet boundary is E,p=2, i.e. the changed-tail reset studied by the E-chain work. This isolates the genuine residual rather than treating every p≡2 packet as unresolved. The new theorem has an axiom-print check and is wired into both focused packet and D-root manual workflows, but it is not yet CI-verified.
 
+## Source-connected p≡2 packet reduction (new; CI pending)
+
+`PacketP2ReentryOrE.p2_packet_reentry_or_E` composes the p≡2 terminal trichotomy with the original-source A and B exits. For every source-valid packet with p≡2 (mod3), the original run either:
+- returns to a regular L section after normalization through A or B(q=0); or
+- reaches an explicit normalized packet with a≡1 (mod3) and p=2.
+
+Thus the only remaining p≡2 normalizer boundary is the E,p=2 changed-tail reset. The proof uses `PacketNormalizeSource.normalized_original_source`, `PacketSafeExit.normalize_p2_exit`, the universal A-p2 110111 source theorem, and `BoundaryBZero.b_zero_source`. This is a source-connected reduction, not merely a classification of the abstract normalizer. It has an axiom-print check and is wired into both packet and D-root manual workflows; CI remains pending.
+
 ## E/A and E/E exceptional packet closure by residue (new Lean composition; CI pending)
 
 The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem. The A-terminal p≡2 boundary is implemented in [AP2PacketBoundarySource.lean](./AP2PacketBoundarySource.lean).
