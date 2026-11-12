@@ -247,17 +247,73 @@ theorem root119Path_comp {n m : Nat} {a b c : Conf}
       have hlen : (n+1)+m = (n+m)+1 := by omega
       simpa [hlen] using hcomp
 
-/-- Every reached F/0 has a D/1 ancestor at an odd rightward offset
-    2k-1. The proof is well-founded descent on the exact number of
-    transitions from blank: an F/0 predecessor is either D/1 immediately
-    to its left, or another F/0 two cells to the right through B/1. The
-    latter branch strictly decreases the time index by two. -/
-theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
+ /-- Exact inverse transition classification for entry into D. -/
+theorem to_D_exact_parent {u v : Conf} (hstep : next u = some v)
+    (hD : v.q = .D) :
+    (u.q = .C ∧ u.tape u.h = false ∧ v.h = u.h-1 ∧
+      v.tape (v.h+1) = true) ∨
+    (u.q = .F ∧ u.tape u.h = true ∧ v.h = u.h+1 ∧
+      v.tape (v.h-1) = false) := by
+  cases u with
+  | mk q h t =>
+      cases q <;> cases hb : t h <;> simp [next,hb] at hstep
+      all_goals cases hstep
+      all_goals simp_all [setBit]
+
+/-- The exact D/1 transition, including its unique tape write. -/
+theorem next_D_one_shape (d : Conf) (hD : d.q = .D)
+    (hbit : d.tape d.h = true) :
+    next d = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
+  cases d with
+  | mk q h t =>
+      change q = .D at hD
+      subst q
+      change t h = true at hbit
+      simp [next,hbit]
+
+/-- A D/1 whose successor is F/0 must itself have an F/1 predecessor.
+    The other possible D predecessor, C/0, writes 1 into the cell that the
+    successor F/0 reads, so it is impossible. -/
+theorem reached_D1_F0_successor_F1_parent (d e : Conf)
+    (hd : Reach d) (hD : d.q = .D) (hbit : d.tape d.h = true)
+    (hstep : next d = some e) (hF : e.q = .F)
+    (hzero : e.tape e.h = false) :
+    ∃ f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+      f.h = d.h-1 ∧ next f = some d := by
+  cases hd with
+  | initial =>
+      simp [blank] at hD
+  | @follow f _ hf hstepF =>
+      rcases to_D_exact_parent hstepF hD with hC | hFparent
+      · rcases hC with ⟨hCq,hCzero,hpos,hwrite⟩
+        have hEshape : e =
+            ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
+          rw [next_D_one_shape d hD hbit] at hstep
+          cases hstep
+          rfl
+        have htrue : e.tape e.h = true := by
+          rw [hEshape]
+          change setBit d.tape d.h true (d.h+1) = true
+          exact (setBit_apply_ne d.tape d.h (d.h+1) true (by omega)).trans hwrite
+        rw [hzero] at htrue
+        cases htrue
+      · rcases hFparent with ⟨hFq,hFbit,hpos,hwrite⟩
+        refine ⟨f,hf,hFq,hFbit,?_,hstepF⟩
+        omega
+
+/-- Every reached F/0 has a D/1 ancestor at offset 2k-1 and a particular
+    F/0 successor of that D/1. The path from this F/0 successor to the
+    original F/0 has exactly 2k transitions. The proof is well-founded
+    descent on the exact number of transitions from blank: an F/0
+    predecessor is either D/1 immediately to its left, or another F/0 two
+    cells to the right through B/1. -/
+theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ k d e, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) - 1 ∧
-      Root119Path (2*k+1) d c := by
+      e.q = .F ∧ e.tape e.h = false ∧ next d = some e ∧
+      Root119Path (2*k) e c := by
   induction n using Nat.strong_induction_on generalizing c with
   | h n ih =>
       cases hc with
@@ -285,7 +341,7 @@ theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
                   cases htrue
                 · rcases hF0 with ⟨hFq,hFzero,hposF,hwriteF⟩
                   have hm_lt : m' < n := by omega
-                  obtain ⟨k,d,hd,hDq,hDbit,hdpos,hpath⟩ :=
+                  obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
                     ih m' hm_lt a hprev2 hFq hFzero
                   have haPos : a.h = c.h+2 := by omega
                   have hpath2 : Root119Path 2 a c :=
@@ -295,12 +351,46 @@ theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
                   have hposOut : d.h = c.h + (2*(k+1) : Int) - 1 := by
                     rw [haPos] at hdpos
                     omega
-                  have hlen : (2*k+1)+2 = 2*(k+1)+1 := by omega
-                  exact ⟨k+1,d,hd,hDq,hDbit,hposOut,by simpa [hlen] using hpathOut⟩
+                  have hlen : (2*k+2) = 2*(k+1) := by omega
+                  exact ⟨k+1,d,e,hd,hDq,hDbit,hposOut,hEq,hEzero,hstepD,
+                    by simpa [hlen] using hpathOut⟩
           · rcases hD with ⟨hDq,hbit,hpos,hwritten⟩
-            refine ⟨0,u,reach_of_steps hprev,hDq,hbit,?_,
-              Root119Path.step hstep (Root119Path.refl c)⟩
+            refine ⟨0,u,c,reach_of_steps hprev,hDq,hbit,?_,hF,hzero,hstep,
+              Root119Path.refl c⟩
             omega
+
+/-- The weaker D/1 ancestry statement, retained as a convenient projection. -/
+theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
+    (hc : Root119ReachN n c) (hF : c.q = .F)
+    (hzero : c.tape c.h = false) :
+    ∃ k d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+      d.h = c.h + (2*k : Int) - 1 ∧
+      Root119Path (2*k+1) d c := by
+  obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
+    reached_F0_D1_successor_path n c hc hF hzero
+  exact ⟨k,d,hd,hDq,hDbit,hdpos,Root119Path.step hstepD hpath⟩
+
+/-- Every reached F/0 has a reached F/1 ancestor at offset 2k-2 and an
+    exact path of 2k+2 transitions from that F/1 to the F/0. -/
+theorem reached_F0_F1_ancestor (n : Nat) (c : Conf)
+    (hc : Root119ReachN n c) (hF : c.q = .F)
+    (hzero : c.tape c.h = false) :
+    ∃ k f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+      f.h = c.h + (2*k : Int) - 2 ∧
+      Root119Path (2*k+2) f c := by
+  obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
+    reached_F0_D1_successor_path n c hc hF hzero
+  obtain ⟨f,hf,hF1,hFbit,hFpos,hstepF⟩ :=
+    reached_D1_F0_successor_F1_parent d e hd hDq hDbit hstepD hEq hEzero
+  have hpos : f.h = c.h + (2*k : Int) - 2 := by
+    rw [hdpos] at hFpos
+    omega
+  have hpath2 : Root119Path 2 f e :=
+    Root119Path.step hstepF
+      (Root119Path.step hstepD (Root119Path.refl e))
+  have hpathOut := root119Path_comp hpath2 hpath
+  have hlen : 2+2*k = 2*k+2 := by omega
+  exact ⟨k,f,hf,hF1,hFbit,hpos,by simpa [hlen] using hpathOut⟩
 
 /-- Every reached B/0 in the all-time 10x sector has a D/1 ancestor exactly
     2k cells to its right and a path of 2k+2 transitions from that D/1 to the
