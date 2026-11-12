@@ -196,10 +196,10 @@ theorem no_four_shallow_energies
      hR4pos hR4bound hEbound hEqNat
  · have hnsmall : n<76 := by omega
    have hdpos : 0<d := by
-     by_contra hd
-     have hd0 : d=0 := by omega
-     rw [hd0] at hD
-     omega
+     by_cases hd : d=0
+     · rw [hd] at hD
+       omega
+     · omega
    have hd1 : 1≤d := by omega
    have hqle : 8^s≤14*n+92 := by
      calc
