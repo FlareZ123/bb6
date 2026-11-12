@@ -494,7 +494,6 @@ private theorem four_layer_finite_barrier
       hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,hnot3mod,
       hprof3lt,hprof3mod,hx3le,hS3mod,hS4eq,hz,e,
       Nat.sub_add_cancel hn14] at hh
-    exact hh
   have hnot4 : ¬ 2^(e-x1-x2-x3)∣S4 := by
     intro hdiv
     exact hnot4mod (Nat.mod_eq_zero_of_dvd hdiv)
