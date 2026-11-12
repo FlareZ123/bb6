@@ -97,7 +97,7 @@ private theorem signedZ_index_period (n j k m : Nat) :
       rw [hidx,signedZ_index_step_mod,ih]
 
 /-- The three possible next index digits act linearly modulo 3^(k+2). -/
-private theorem signedZ_index_shift_digit_mod (n j k t : Nat)
+theorem signedZ_index_shift_digit_mod (n j k t : Nat)
     (ht:t<3) :
     signedZ (n+t*depthPeriod (k+1)) j%(3:Int)^(k+2) =
       (signedZ n j-(3:Int)^(k+1)*
@@ -192,7 +192,7 @@ private theorem pow_two_mod_three (m : Nat) :
 
 /-- The index-lift coefficient is a unit, and in fact equals one modulo
     three, at every even ray depth. -/
-private theorem indexCoeff_mod_three (j:Nat) (hj:j%2=0) :
+theorem indexCoeff_mod_three (j:Nat) (hj:j%2=0) :
     (4*((2:Int)^(j+1)-1))%3=1 := by
   have hpNat:(2:Nat)^(j+1)%3=2 := by
     rw [pow_two_mod_three]
