@@ -274,11 +274,12 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
     simpa [T3,hfinish] using hrunRight0
   have hseven := sweptRight_keeps_seven n T h hseg
   have hzeros := sweptRight_keeps_two_zeroes n T h hz0 hz1
-  have hlocal : ∀ x, carryDTail15OpenArea (x+2) = true →
-      (embed carryDTail15Base).tape (x+2) = T3 x := by
+  have hlocal : ∀ x, carryDTail15OpenArea (x-(-2)) = true →
+      (embed carryDTail15Base).tape (x-(-2)) = T3 x := by
     intro x hx
-    have hrange : -2 ≤ x ∧ x ≤ 6 := by
+    have haux : 0 ≤ x+2 ∧ x+2 ≤ 8 := by
       simpa [carryDTail15OpenArea] using hx
+    have hrange : -2 ≤ x ∧ x ≤ 6 := by omega
     have hcases : x = -2 ∨ x = -1 ∨ x = 0 ∨ x = 1 ∨ x = 2 ∨
         x = 3 ∨ x = 4 ∨ x = 5 ∨ x = 6 := by omega
     rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8
@@ -317,7 +318,7 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
       have hv' : T3 6 = false := by simpa [T3,hfinish] using hzeros.2
       simpa [embed,carryDTail15Base] using hv'
   have htail := carryDTail15_openEnd T3 (-2) hlocal
-  let T4 := (frame (fun x => carryDTail15OpenArea (x-(-2))) T3
+  let T4 := (frame (fun x => carryDTail15OpenArea (x+2)) T3
     (shiftConfig (-2) (embed carryDTail15Final))).tape
   have hrunTail : run tm2 15 ⟨3,-2,T3⟩ = some ⟨4,7,T4⟩ := by
     simpa [T4,shiftConfig,embed,carryDTail15Final] using htail
