@@ -1,5 +1,6 @@
 import S0UniformBridge
 import UniformTM63HeadOffset
+import TerminalChampion
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -19,6 +20,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48UniformBridge
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48UniformHeadOffset
+open BB6Coverage.TerminalBridge
 open TM63Uniform
 
 /-- Embed any valid finite zipper state at an absolute physical head. -/
@@ -215,65 +217,57 @@ theorem step_state_lt (c : TM63Uniform.Cfg) (hc : c.st < 6) :
             | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
             | succ q =>
               cases q with
-              | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
+              | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
               | succ q => omega
 
-/-- A single total zipper step is exactly one original TM63 primitive move,
-provided the current query is not the undefined A/1 halt. -/
-theorem uniformStep_rawStep (c : TM63Uniform.Cfg) (h : Int)
+/-- State-preserving map from the uniform zipper to the terminal full-tape
+configuration used by the independently verified source bridge. -/
+def terminalConfigAt (h : Int) (c : TM63Uniform.Cfg) : TerminalFinish.Conf :=
+  ⟨c.st, h, uniformTapeAt c h⟩
+
+/-- One uniform zipper step is exactly one partial terminal-machine step,
+away from the unique undefined A/1 query. -/
+theorem uniformStep_terminalStep (c : TM63Uniform.Cfg) (h : Int)
     (hc : c.st < 6) (hsafe : ¬ (c.st = 0 ∧ c.h = true)) :
-    BB6Coverage.rawStep tm2 (uniformConfigAt h c hc) =
-      some (uniformConfigAt (h + headDelta c) (TM63Uniform.step c)
-        (step_state_lt c hc)) := by
+    TerminalFinish.step (terminalConfigAt h c) =
+      some (terminalConfigAt (h + headDelta c) (TM63Uniform.step c)) := by
   cases c with
   | mk q l b r =>
     have hq : q < 6 := hc
-    have hstate : (⟨q, hc⟩ : Fin 6).val = q := rfl
     have hs : ¬ (q = 0 ∧ b = true) := hsafe
     cases q with
     | zero =>
       cases b with
       | false =>
-          simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
-            BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-            uniformTapeAt_head, uniformTapeAt_moveR, moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
+        simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
+          TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
+          uniformTapeAt_moveR, write_true, write_false]
       | true => exact False.elim (hs ⟨rfl, rfl⟩)
     | succ q =>
       cases q with
       | zero =>
-        cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
-          BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-          uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-          moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
+        cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
+          TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
+          uniformTapeAt_moveL_add, write_true, write_false]
       | succ q =>
         cases q with
         | zero =>
-          cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
-            BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-            uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-            moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
+          cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
+            TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
+            uniformTapeAt_moveR, uniformTapeAt_moveL_add, write_true, write_false]
         | succ q =>
           cases q with
           | zero =>
-            cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
-              BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-              uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-              moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
+            cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
+              TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
+              uniformTapeAt_moveR, uniformTapeAt_moveL_add, write_true, write_false]
           | succ q =>
             cases q with
             | zero =>
-              cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
-                BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-                uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-                moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
-            | succ q =>
-              cases q with
-              | zero =>
-                cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
-                  BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-                  uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL,
-                  moveR_st, moveL_st]
-              | succ q => omega
+              cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
+                TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
+                uniformTapeAt_moveR, uniformTapeAt_moveL_add, write_true, write_false]
+            | succ q => omega
 
 /-- Validity of the state component is invariant under the total zipper run. -/
 theorem run_state_lt (n : Nat) (c : TM63Uniform.Cfg) (hc : c.st < 6) :
@@ -282,23 +276,22 @@ theorem run_state_lt (n : Nat) (c : TM63Uniform.Cfg) (hc : c.st < 6) :
   | zero => exact hc
   | succ n ih => exact ih (TM63Uniform.step c) (step_state_lt c hc)
 
-/-- Transport a safe finite zipper run to the original infinite-tape
-semantics, preserving the exact accumulated physical head displacement. -/
-theorem run_uniform_source (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
+/-- Transport a safe finite zipper run to the full-tape terminal semantics,
+preserving the exact accumulated physical head displacement. -/
+theorem run_uniform_terminal (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
     (hc : c.st < 6)
     (hsafe : ∀ t, t ≤ n →
       ¬ ((TM63Uniform.run t c).st = 0 ∧ (TM63Uniform.run t c).h = true)) :
-    BB6Coverage.run tm2 n (uniformConfigAt h c hc) =
-      some (uniformConfigAt (h + headOffset n c) (TM63Uniform.run n c)
-        (run_state_lt n c hc)) := by
+    TerminalFinish.run n (terminalConfigAt h c) =
+      some (terminalConfigAt (h + headOffset n c) (TM63Uniform.run n c)) := by
   induction n generalizing c h hc with
   | zero =>
-      simp [BB6Coverage.run, TM63Uniform.run, headOffset, uniformConfigAt]
+      simp [TerminalFinish.run, terminalConfigAt, TM63Uniform.run, headOffset]
   | succ n ih =>
       have hsafeN := hsafe n (by omega)
       have hcN := run_state_lt n c hc
       have hIH := ih c h hc (fun t ht => hsafe t (by omega))
-      have hstep := uniformStep_rawStep (TM63Uniform.run n c)
+      have hstep := uniformStep_terminalStep (TM63Uniform.run n c)
         (h + headOffset n c) hcN hsafeN
       have hrun : TM63Uniform.run (n + 1) c =
           TM63Uniform.step (TM63Uniform.run n c) := by
@@ -306,21 +299,51 @@ theorem run_uniform_source (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
       have hoff : headOffset (n + 1) c =
           headOffset n c + headDelta (TM63Uniform.run n c) := by
         simpa [headOffset] using (headOffset_add n 1 c)
-      change (BB6Coverage.run tm2 n (uniformConfigAt h c hc)).bind
-          (BB6Coverage.rawStep tm2) = _
+      change (TerminalFinish.run n (terminalConfigAt h c)).bind
+          TerminalFinish.step = _
       rw [hIH]
       simp only [Option.bind_some]
       rw [hstep]
       have hcfg :
-          uniformConfigAt (h + headOffset n c + headDelta (TM63Uniform.run n c))
-              (TM63Uniform.step (TM63Uniform.run n c))
-              (step_state_lt (TM63Uniform.run n c) hcN) =
-            uniformConfigAt (h + headOffset (n + 1) c)
-              (TM63Uniform.run (n + 1) c) (run_state_lt (n + 1) c hc) := by
-        simp [hrun, hoff, uniformConfigAt, Int.add_assoc]
+          terminalConfigAt (h + headOffset n c + headDelta (TM63Uniform.run n c))
+              (TM63Uniform.step (TM63Uniform.run n c)) =
+            terminalConfigAt (h + headOffset (n + 1) c)
+              (TM63Uniform.run (n + 1) c) := by
+        simp [hrun, hoff, terminalConfigAt, Int.add_assoc]
       exact congrArg some hcfg
 
-#print axioms uniformStep_rawStep
+/-- The existing terminal embedding is exactly our uniform zipper embedding
+whenever the source state is in the six-state range. -/
+theorem terminalEmbedAt_eq_uniformConfigAt (h : Int) (c : TM63Uniform.Cfg)
+    (hc : c.st < 6) :
+    TerminalBridge.embed (terminalConfigAt h c) = uniformConfigAt h c hc := by
+  cases c with
+  | mk q l b r =>
+    simp [TerminalBridge.embed, terminalConfigAt, uniformConfigAt,
+      Nat.mod_eq_of_lt hc]
+
+/-- The full source-run transport to the original Agent 48 TM2 machine. -/
+theorem run_uniform_source (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
+    (hc : c.st < 6)
+    (hsafe : ∀ t, t ≤ n →
+      ¬ ((TM63Uniform.run t c).st = 0 ∧ (TM63Uniform.run t c).h = true)) :
+    BB6Coverage.run tm2 n (uniformConfigAt h c hc) =
+      some (uniformConfigAt (h + headOffset n c) (TM63Uniform.run n c)
+        (run_state_lt n c hc)) := by
+  let tc : TerminalFinish.Conf := terminalConfigAt h c
+  have hterm := run_uniform_terminal n c h hc hsafe
+  have hbridge := TerminalBridge.run_transport n tc hc
+  rw [hterm] at hbridge
+  simp only [Option.map_some] at hbridge
+  have hstart := terminalEmbedAt_eq_uniformConfigAt h c hc
+  have hend := terminalEmbedAt_eq_uniformConfigAt
+    (h + headOffset n c) (TM63Uniform.run n c) (run_state_lt n c hc)
+  rw [hend, hstart] at hbridge
+  rw [TerminalBridge.tm63_eq_tm2] at hbridge
+  exact hbridge.symm
+
+#print axioms uniformStep_terminalStep
+#print axioms run_uniform_terminal
 #print axioms run_uniform_source
 
 end BB6Coverage.Agent48UniformRun
