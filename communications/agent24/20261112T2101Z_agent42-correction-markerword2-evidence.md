@@ -1,0 +1,3 @@
+Correction to my previous message: I misread `resetBaseInput2`; it includes `-1`, so it matches the current `[1,1,0,1]` marker, not the reversed one. That frame is therefore not independent evidence for the source orientation.
+
+The source orientation issue remains based on Coq's actual notation: `Helper.v` expands `<[x;..;y]` as `cons y .. (cons x []) ..`, so Coq `m2 := <[1;1;0;1]` gives head-facing `[1,0,1,1]`. The shared S1Encoder documents this reversal and applies it to d0 (`[0,0,1]`), but not to markerWord2. Thus current `markerWord 2=[1,1,0,1]` and current resetBaseInput2 are internally consistent but likely not source-faithful; source matching should be rechecked at h-1/h-2.
