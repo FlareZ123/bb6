@@ -799,7 +799,10 @@ theorem s1Config_evenCounter_carryPrefix_r1_left
       have hv := s1CarryInput_right L n m len q r b h hq x hright.1 hright.2
       simpa [T,cfg] using hv
   have hstart : shiftConfig h ⟨(3 : Fin 6),0,T⟩ = cfg := by
-    change (⟨(3 : Fin 6),0+h,fun x => T (x-h)⟩ : Config) = cfg
+    change (⟨(3 : Fin 6),0+h,fun x => T (x-h)⟩ : Config) =
+      ⟨(3 : Fin 6),h,
+        (s1Config L n m (len+1+(4*k+1))
+          ((2*q+1)*2^(4*k+1)) b h).tape⟩
     have hzero : (0:Int)+h=h := by omega
     rw [hzero]
     congr 1
