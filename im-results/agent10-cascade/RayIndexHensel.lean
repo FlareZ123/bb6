@@ -547,15 +547,14 @@ theorem nestedOddNumerator_unique_lift (n j t k:Nat)
     (nestedOddNumerator_lift_criterion n j t k r hj hrlt hbase).mp hrdiv
   exact henselDigit_div q a ha r hrlt (by simpa [q,a] using hcrit)
 
-/-- For the t=3 high-q gate, the second t=3 parent height is
-    eight times the quotient q=W_(j,3)(n)/3^8.  Its residue mod 3 is
-    twice the unique next index digit.  Thus the three second-parent
-    classes correspond exactly to the three Hensel digits. -/
-theorem tThreeSecondParent_mod_three (n j:Nat) (hj:j%2=0) :
-    ((8:Int)*(nestedOddNumerator n j 3/(3:Int)^8))%3 =
-      (2*(henselDigit
-        (nestedOddNumerator n j 3/(3:Int)^8)
-        ((2:Int)^6*((2:Int)^(j+1)-1)):Int))%3 := by
+/-- At the t=3 high-q gate, the next index digit is exactly the
+    quotient W_(j,3)(n)/3^8 modulo 3. -/
+theorem tThreeHighGate_digit_eq_quotient_mod_three (n j:Nat)
+    (hj:j%2=0) :
+    (henselDigit
+      (nestedOddNumerator n j 3/(3:Int)^8)
+      ((2:Int)^6*((2:Int)^(j+1)-1)):Int) =
+      (nestedOddNumerator n j 3/(3:Int)^8)%3 := by
   let q:Int:=nestedOddNumerator n j 3/(3:Int)^8
   let a:Int:=(2:Int)^6*((2:Int)^(j+1)-1)
   let d:=henselDigit q a
@@ -572,16 +571,46 @@ theorem tThreeSecondParent_mod_three (n j:Nat) (hj:j%2=0) :
     norm_num
   have hmod:=henselDigit_mod q a (by rw [ha]; norm_num)
   have hd:=henselDigit_lt q a
-  have hcast:(d:Int)%3=(d:Int):=Int.emod_eq_of_lt (by omega) (by exact_mod_cast hd)
-  have hq:q%3=(d:Int):=by
+  have hcast:(d:Int)%3=(d:Int):=
+    Int.emod_eq_of_lt (by omega) (by exact_mod_cast hd)
+  have hq:(d:Int)=q%3:=by
     have h:=hmod
     rw [Int.mul_emod,ha,hcast] at h
-    simpa [d] using h.symm
-  have h8:(8:Int)%3=2:=by decide
-  change ((8:Int)*q)%3=(2*(d:Int))%3
-  calc
-    ((8:Int)*q)%3=((8:Int)%3)*(q%3)%3:=by rw [Int.mul_emod]
-    _=(2*(d:Int))%3:=by rw [h8,hq]; rfl
+    simpa [d] using h
+  simpa [q,d] using hq
+
+/-- In the source equation for the second t=3 parent, its level index
+    r satisfies r = 16*e - 2^(n-3) - n + 1.  The sector condition
+    makes 2^(n-3)+n divisible by 3, hence r = e+1 mod 3. -/
+theorem tThreeSecondParent_index_relation (n e r:Nat)
+    (hn:20≤n) (hsector:n%6=4∨n%6=5)
+    (hrrel:16*e=8*2^(n-6)+r+(n-6)+5) :
+    r%3=(e+1)%3 := by
+  have hpowNat : 8*2^(n-6)=2^(n-3) := by
+    calc
+      8*2^(n-6)=2^3*2^(n-6):=by norm_num
+      _=2^((n-6)+3):=by
+        rw [Nat.pow_add]
+        exact Nat.mul_comm _ _
+      _=2^(n-3):=by congr 1; omega
+  have hrrel' : 16*e+1=2^(n-3)+r+n := by
+    rw [hpowNat] at hrrel
+    omega
+  have hrrelI : (16:Int)*(e:Int)+1=(2:Int)^(n-3)+r+n := by
+    exact_mod_cast hrrel'
+  have hrformulaI : (r:Int)=16*e-(2:Int)^(n-3)-n+1 := by omega
+  have hconst : (2^(n-3)+n)%3=0 := by
+    have hpow:=pow_two_mod_three (n-3)
+    rcases hsector with hs4|hs5
+    · have hneq:(n-3)%2≠0:=by omega
+      rw [if_neg hneq] at hpow
+      omega
+    · have hpar:(n-3)%2=0:=by omega
+      rw [if_pos hpar] at hpow
+      omega
+  have hconstI : ((2:Int)^(n-3)+n)%3=0 := by exact_mod_cast hconst
+  have hrmodI : (r:Int)%3=((e:Int)+1)%3 := by omega
+  exact_mod_cast hrmodI
 
 /-- The nested numerator starts in the zero class on both surviving
     fatal sectors, for every even ray depth and odd-parent exponent t. -/
@@ -647,6 +676,7 @@ theorem indexResidue_bijective (s k:Nat) (hs:s=4∨s=5) :
 #print axioms indexResidue_bijective
 #print axioms nestedOddNumerator_lift_criterion
 #print axioms nestedOddNumerator_unique_lift
-#print axioms tThreeSecondParent_mod_three
 #print axioms nestedOddNumerator_sector_mod_three
+#print axioms tThreeHighGate_digit_eq_quotient_mod_three
+#print axioms tThreeSecondParent_index_relation
 end CascadeRayIndexHensel
