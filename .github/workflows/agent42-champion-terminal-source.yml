@@ -1,6 +1,9 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean'
 permissions:
   contents: read
 jobs:
@@ -81,6 +84,13 @@ jobs:
             echo '::error::sorryAx found in S1 counted carry bridge theorem dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/agent2-odd-canonical-axioms.log
+          lean -o S1OddCanonicalOutput.olean S1OddCanonicalOutput.lean 2>&1 | tee /tmp/a42-terminal/agent2-odd-canonical-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/agent2-odd-canonical-axioms.log; then
+            echo '::error::sorryAx found in Agent 2 odd canonical output theorem'
+            exit 1
+          fi
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
@@ -108,5 +118,6 @@ jobs:
             /tmp/a42-terminal/carry-prefix-general-axioms.log
             /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
+            /tmp/a42-terminal/agent2-odd-canonical-axioms.log
           if-no-files-found: ignore
           retention-days: 3
