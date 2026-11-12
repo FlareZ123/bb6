@@ -173,7 +173,8 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
       simp [T2,frame,shiftConfig,harea]
     have hcell := ad12FinalCell_mod (x-(h'-2)) hi
     have hh : h' % 3 = 0 := by
-      simp [h']
+      dsimp [h']
+      omega
     have hmod := ad12Offset_mod h' x hh
     have hnotfar : ¬ x < h'-5 := by omega
     have hnotterm : ¬ x ≤ h'-3 := by omega
