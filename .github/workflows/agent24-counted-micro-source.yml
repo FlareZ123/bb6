@@ -1,4 +1,5 @@
 name: Agent 24 counted-micro source extraction (PR-open only)
+# v2 branch: readable source extraction with corrected GitHub expression interpolation.
 on:
   pull_request:
     types: [opened, reopened]
