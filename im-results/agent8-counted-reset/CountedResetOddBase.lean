@@ -1,4 +1,5 @@
 import CountedResetBase
+import CountedCarryBridges
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent8CountedReset
