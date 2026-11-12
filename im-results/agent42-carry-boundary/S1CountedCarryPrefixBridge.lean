@@ -453,7 +453,7 @@ private theorem s1Config_right_unary_one
     (hi : i<3*(b+1)) :
     (s1Config L n m a z b h).tape (h+7+(i:Int)) = true := by
   have hcell := s1Config_right_cell L n m a z b h (6+i)
-  have hcoord : h+1+((6+i):Int)=h+7+(i:Int) := by omega
+  have hcoord : h+1+((6+i : Nat):Int)=h+7+(i:Int) := by omega
   rw [hcoord] at hcell
   have htail := sideBit_append_after
     ([false,true,true,true,false,false] : List Bool) (d1pow (b+1)) (6+i)
@@ -516,7 +516,7 @@ theorem s1Config_evenCounter_countedReturn
     have hvalue : Tpre (h+7+(i:Int))=true := by
       rw [hkeep]
       exact hsource
-    simpa [P] using hvalue
+    simpa [P,Int.add_assoc] using hvalue
   have hzero0 : P (even_rightStop b)=false := by
     have hfar : h+6 < h+even_rightStop b := by
       unfold even_rightStop
@@ -569,7 +569,7 @@ theorem s1Config_evenCounter_countedReturn
   rw [hstart] at hshift
   have hshift' : run tm2 (33+12*b) ⟨(4 : Fin 6),h+7,Tpre⟩ =
       some ⟨(3 : Fin 6),h,Tpost⟩ := by
-    simpa [shiftConfig,Tpost] using hshift
+    simpa [shiftConfig,Tpost,frame,embed,even_tailFinal] using hshift
   have hfull := run_compose tm2 (15+12*r) (33+12*b)
     (s1Config L n m a z b h) ⟨(4 : Fin 6),h+7,Tpre⟩
     ⟨(3 : Fin 6),h,Tpost⟩ hprefix hshift'
