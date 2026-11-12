@@ -148,8 +148,6 @@ theorem reached_F_left_zero_two_step_parent (c : Conf) (hc : Reach c)
         exact ⟨b,Reach.follow ha hstepA,hB,hbit,hpos,
           Or.inr ⟨a,ha,hq,hzero,hposA,hstepA⟩⟩
 
-/-- The exact even F/1 corridor execution, including its final D/0-E/0-A/0
-    tail. It uses only the original auxiliary transition table. -/
 /-- In an A/0 -> B/1 -> F transition, the two writes are at the
     F head and one cell to its right. Consequently the three cells to the
     left are preserved, and an F state with left suffix 110 came from an
@@ -197,17 +195,16 @@ theorem A0_B1_F1_parent_has_1100 (a b c : Conf)
     rw [setBit_apply_ne _ (a.h+1) x true hx2]
     rw [setBit_apply_ne _ a.h x true hx1]
   constructor
-  · exact hleft3.trans
-      (hcell (c.h-3) (by rw [hpos]; omega) (by rw [hpos]; omega))
+  · exact (hcell (c.h-3) (by rw [hpos]; omega) (by rw [hpos]; omega)).symm.trans hleft3
   constructor
-  · exact hleft2.trans
-      (hcell (c.h-2) (by rw [hpos]; omega) (by rw [hpos]; omega))
+  · exact (hcell (c.h-2) (by rw [hpos]; omega) (by rw [hpos]; omega)).symm.trans hleft2
   constructor
-  · exact hleft1.trans
-      (hcell (c.h-1) (by rw [hpos]; omega) (by rw [hpos]; omega))
+  · exact (hcell (c.h-1) (by rw [hpos]; omega) (by rw [hpos]; omega)).symm.trans hleft1
   · rw [←hpos]
     exact hzero
 
+/-- The exact even F/1 corridor execution, including its final D/0-E/0-A/0
+    tail. It uses only the original auxiliary transition table. -/
 theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
     (hhead : t h = true)
     (hones : ∀ j : Nat, j < 2*(n+1) →
@@ -579,6 +576,7 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
 #print axioms BB6Root119.reached_F_left_zero_parent
 #print axioms BB6Root119.to_B
 #print axioms BB6Root119.reached_F_left_zero_two_step_parent
+#print axioms BB6Root119.A0_B1_F1_parent_has_1100
 #print axioms BB6Root119.A0_B1_F1_parent_has_1100
 #print axioms BB6Root119.f1_even_run_exact
 #print axioms BB6Root119.f1_even_result_markerB0Pattern
