@@ -125,8 +125,8 @@ theorem reached_F0_parent_split (c : Conf) (hc : Reach c)
               rw [hcurrent] at htrue
               cases htrue
             · rcases hF0 with ⟨hFq,hzero,hposF,hwriteF⟩
-              refine Or.inr ⟨a,ha,hFq,hzero,?_,
-                u,Reach.follow ha hstepA,hBq,hbit,?_,hstepA,hstep⟩
+              refine Or.inr ⟨a,u,ha,hFq,hzero,?_,
+                Reach.follow ha hstepA,hBq,hbit,?_,hstepA,hstep⟩
               · omega
               · omega
       · rcases hD with ⟨hDq,hbit,hpos,hwritten⟩
@@ -310,12 +310,12 @@ theorem reached_D1_F0_successor_F1_parent (d e : Conf)
 theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k d e, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ k : Nat, d e, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) - 1 ∧
       e.q = .F ∧ e.tape e.h = false ∧ next d = some e ∧
       Root119Path (2*k) e c := by
-  induction n using Nat.strong_induction_on generalizing c with
-  | h n ih =>
+  induction n using Nat.strongRecOn generalizing c with
+  | ind n ih =>
       cases hc with
       | zero =>
           simp [blank] at hF
@@ -363,7 +363,7 @@ theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
 theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ k : Nat, d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) - 1 ∧
       Root119Path (2*k+1) d c := by
   obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
@@ -375,7 +375,7 @@ theorem reached_F0_D1_ancestor (n : Nat) (c : Conf)
 theorem reached_F0_F1_ancestor (n : Nat) (c : Conf)
     (hc : Root119ReachN n c) (hF : c.q = .F)
     (hzero : c.tape c.h = false) :
-    ∃ k f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+    ∃ k : Nat, f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h + (2*k : Int) - 2 ∧
       Root119Path (2*k+2) f c := by
   obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
@@ -465,7 +465,9 @@ theorem parentCone_next_tape_away (c d : Conf)
     (hs : next c = some d) (x : Int) (hx : x ≠ c.h) :
     d.tape x = c.tape x := by
   rcases c with ⟨q,h,t⟩
-  cases q <;> cases hb : t h <;> simp_all [next,setBit]
+  cases q <;> cases hb : t h <;> simp [next,hb] at hs
+  all_goals cases hs
+  all_goals simp [setBit,hx]
 
 theorem parentCone_path_head_lower {n : Nat} {c d : Conf}
     (hp : Root119Path n c d) : c.h-(n:Int) ≤ d.h := by
@@ -496,8 +498,9 @@ theorem parentCone_next_left_preserves_noBF (c d : Conf)
     (hc : parentConeNoBF c.q) (hs : next c = some d)
     (hpos : d.h=c.h-1) : parentConeNoBF d.q := by
   rcases c with ⟨q,h,t⟩
-  cases q <;> cases hb : t h <;>
-    simp_all [next,parentConeNoBF,hb] <;> omega
+  cases q <;> cases hb : t h <;> simp [next,hb] at hs
+  all_goals cases hs
+  all_goals simp_all [parentConeNoBF] <;> omega
 
 /-- A tight all-left path cannot enter B or F if it starts in C, D, E, or A. -/
 theorem parentCone_path_left_preserves_noBF {n : Nat} {c d : Conf}
@@ -514,7 +517,7 @@ theorem parentCone_path_left_preserves_noBF {n : Nat} {c d : Conf}
       intro c d hp hdisp hc
       obtain ⟨u,hs,hpos,ht,hdispTail⟩ :=
         parentCone_path_tight_first hp hdisp
-      exact ih u d ht hdispTail
+      exact ih (c := u) (d := d) ht hdispTail
         (parentCone_next_left_preserves_noBF c u hc hs hpos)
 
 /-- Along a tight leftward path, the final tape agrees with the initial tape
@@ -535,9 +538,9 @@ theorem parentCone_path_tight_preserves_tape {n : Nat} {c d : Conf}
       obtain ⟨u,hs,hpos,ht,hdispTail⟩ :=
         parentCone_path_tight_first hp hdisp
       have haway : u.tape x=c.tape x :=
-        parentCone_next_tape_away c u hs (by omega)
+        parentCone_next_tape_away c u hs x (by omega)
       have htail : d.tape x=u.tape x :=
-        ih u d ht hdispTail x (by omega)
+        ih (c := u) (d := d) ht hdispTail x (by omega)
       exact htail.trans haway
 
 /-- A tight path of 2k+1 left steps from F/0 to B/0 must read the alternating
@@ -561,8 +564,9 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       have hlen : 2*(k+1)+1=(2*k+2)+1 := by omega
       have hp' : Root119Path ((2*k+2)+1) c d := by
         simpa [hlen] using hp
+      have hlenInt : ((2*(k+1)+1:Nat):Int) = (2*k+3:Int) := by omega
       have hdisp' : d.h=c.h-((2*k+3:Nat):Int) := by
-        simpa [hlen] using hdisp
+        simpa [hlenInt] using hdisp
       obtain ⟨b,hstep1,hbpos,hp1,hdisp1⟩ :=
         parentCone_path_tight_first hp' hdisp'
       rw [next_F_zero_shape c hcF hc0] at hstep1
@@ -573,14 +577,15 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       obtain ⟨u,hstep2,hupos,hp2,hdisp2⟩ :=
         parentCone_path_tight_first hp1' hdisp1
       have hbBit : b.tape b.h=true := by
-        by_contra hbNot
-        have hbZero : b.tape b.h=false := by
-          cases hbit : b.tape b.h <;> simp_all
-        simp [next,hbZero] at hstep2
-        cases hstep2
-        have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
-          (by simp [parentConeNoBF])
-        exact hno.1 hdB
+        by_cases hb : b.tape b.h=true
+        · exact hb
+        · have hbZero : b.tape b.h=false := by
+            cases hbit : b.tape b.h <;> simp_all
+          simp [next,hbZero] at hstep2
+          cases hstep2
+          have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
+            (by simp [parentConeNoBF])
+          exact hno.1 hdB
       rw [next_B_one b rfl hbBit] at hstep2
       cases hstep2
       obtain ⟨v,hstep3,hvpos,hp3,hdisp3⟩ :=
@@ -643,7 +648,7 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     (hB : c.q=.B) (hcurrent : c.tape c.h=false)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
-    ∃ k f d e g,
+    ∃ k : Nat, f d e g,
       1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
         f.h=c.h+(2*k:Int)-1 ∧
       Reach d ∧ d.q=.D ∧ d.tape d.h=true ∧
@@ -675,8 +680,9 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     rw [heEq,hposD]
     omega
   have hkpos : 1≤k := by
-    by_contra hnot
-    have hk0 : k=0 := by omega
+    by_cases hk : 1≤k
+    · exact hk
+    · have hk0 : k=0 := by omega
     subst k
     have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
     have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
@@ -778,21 +784,21 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
     have heqLeft := hEF (f.h-1) (by omega) (by omega)
     have hleft : f.tape (f.h-1)=true := heqLeft.symm.trans heLeft
     have hpresG := parentCone_path_tight_preserves_tape
-      hpath hdispEG g.h le_rfl
+      hpath hdispEG g.h (by omega)
     have heG : e.tape g.h=false := hpresG.symm.trans hGzero
     have hidxF : f.h-2*(k:Int)+2=g.h := by
       rw [hposF,hGpos]
       omega
-    have heqG := hEF g.h (by rw [hidxF]; omega) (by rw [hposD,hidxF]; omega)
+    have heqG := hEF g.h (by rw [hidxF.symm]; omega) (by rw [hposD,hidxF.symm]; omega)
     have hfinalF : f.tape (f.h-2*(k:Int)+2)=false := by
       simpa [hidxF] using heqG.symm.trans heG
     have hpresC := parentCone_path_tight_preserves_tape
-      hpathEC hdispEC c.h le_rfl
+      hpathEC hdispEC c.h (by omega)
     have heC : e.tape c.h=false := hpresC.symm.trans hcurrent
     have hidxB : f.h-2*(k:Int)+1=c.h := by
       rw [hposF]
       omega
-    have heqC := hEF c.h (by rw [hidxB]; omega) (by rw [hposD,hidxB]; omega)
+    have heqC := hEF c.h (by rw [hidxB.symm]; omega) (by rw [hposD,hidxB.symm]; omega)
     have hfinalB : f.tape (f.h-2*(k:Int)+1)=false := by
       simpa [hidxB] using heqC.symm.trans heC
     exact ⟨hleft,hfinalF,hfinalB⟩
