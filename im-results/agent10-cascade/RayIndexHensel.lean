@@ -423,10 +423,12 @@ private theorem nestedOddNumerator_shift_digit_mod (n t k r:Nat)
         (signedZ n 0-P*4*r) := by
     apply Int.dvd_iff_emod_eq_zero.mpr
     exact (Int.emod_eq_emod_iff_emod_sub_eq_zero).1
-      (by simpa [P] using hz)
+      (by simpa [P,M] using hz)
   have hpow:(2:Int)^(t+3)=4*(2:Int)^(t+1):=by
     rw [show t+3=(t+1)+2 by omega,Int.pow_add]
-    norm_num
+    calc
+      (2:Int)^(t+1)*2^2=(2:Int)^(t+1)*4:=by norm_num
+      _=4*(2:Int)^(t+1):=Int.mul_comm _ _
   have hdiff :
       nestedOddNumerator (n+r*depthPeriod (k+1)) t-
         (nestedOddNumerator n t-P*(2:Int)^(t+3)*r) =
