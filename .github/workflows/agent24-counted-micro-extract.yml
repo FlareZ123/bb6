@@ -5,7 +5,7 @@ on:
       - "Agent 48 original champion-root six-step equivalence (manual)"
       - "Agent 24 counted-micro source extraction (PR-open only)"
     types: [completed]
-    branches: [main]
+    # Match the PR head branch as well as main; the receiving workflow runs on default branch.
 permissions:
   contents: write
 jobs:
