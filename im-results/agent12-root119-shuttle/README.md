@@ -94,3 +94,18 @@ At that endpoint the F/1 state has left suffix 110, a rightward run of exactly 2
 This is a conditional transition theorem, not an all-time blank-orbit classification. In particular, it does not prove that every reachable F/1 state with left suffix 110 has the alternating seed/retreat hypotheses. It belongs in `im-results/`, not `results/`, until that missing reachability grammar is proved.
 
 **Concrete m=200 replay instance.** The independent physical-tape replay identifies a seed F/1 at time index 3,193,652 and head -290. It satisfies the theorem's local hypotheses, including 200 alternating retreat pairs and no left 1100. After 406 = 2m+6 transitions it reaches F/1 at head -692, with left suffix 110 and a 405-cell right one-run. The next step exposes 1100 behind D/1 at head -691. The 813 = 4m+13-step odd-wave return reaches B/0 at head -693, with no left 1100; total cost is 1,219 = 6m+19. This exact replay is computational evidence for this instance; the Lean theorem proves the conditional family for arbitrary m.
+
+## Forced backward ancestry for the B/0 10x sector (2026-11-12)
+
+The new module [Root119B0ParentCone.lean](Root119B0ParentCone.lean) derives an exact backward transition cone for every genuine reached B/0 configuration satisfying
+`t(h)=0`, `t(h-3)=1`, and `t(h-2)=0`:
+
+```text
+F/0 at h+3  ->  B/1 at h+2  ->  F/0 at h+1  ->  B/0 at h.
+```
+
+The proof adds the exact inverse classification for entry into A. It rules out the A/0 immediate predecessor of the target B/0: if A/0 is noninitial, its E predecessor forces either the target's second-left cell or its current cell to be 1; if A/0 is initial, the third-left 1 hypothesis fails. It then specializes the existing F-left-zero predecessor cone to F/0, excluding the A/0 branch because that branch would make the target F cell read 1.
+
+This is a universal Reach theorem, not a finite-trace inference. It complements the all-time four-right theorem by exposing a forced three-transition ancestry for the same 10x sector and gives a concrete base for deeper backward classification along the right-hand run.
+
+**Verification status:** the new Lean module is authored but has not yet been compiled in this invocation. The manual-only workflow [agent12-root119-even-marker.yml](../../.github/workflows/agent12-root119-even-marker.yml) now builds the lifecycle module as an importable `.olean` and includes a fail-closed compile/axiom-audit step for `Root119B0ParentCone.lean`. Do not cite the new theorem as kernel-verified until that workflow succeeds. The theorem does not yet classify the remaining predecessor choices farther to the right, establish a global B/0 language, decide auxiliary #119, or determine BB(6).
