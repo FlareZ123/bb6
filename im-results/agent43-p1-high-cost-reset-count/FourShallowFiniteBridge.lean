@@ -404,14 +404,15 @@ theorem num_four_small_r_bound
  have hImid3 : Imid3=(C4:Int)*(2^n:Int)-(R4:Int)-
      ((2:Int)^delta)*(8:Int)^r*(E:Int) := by
    dsimp [Imid3]
-   rw [hN3,Int.mul_assoc,Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (2:Int)≠0) gamma)]
-   exact Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (8:Int)≠0) w)
+   rw [hN3,Int.mul_assoc,Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (2:Int)≠0))]
+   exact Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (8:Int)≠0))
  have hR4int : (R4:Int)+(O4:Int)=
      (L4:Int)*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w:Int) := by exact_mod_cast hR4
  have hN4 : N4=-((2:Int)^delta)*(8:Int)^r*(E:Int) := by
    dsimp [N4,Y] at *
    rw [hImid3]
    omega
+    rw [←hR4int]
  by_cases hrBound : r≤2
  · exact hrBound
  · exfalso
@@ -446,7 +447,7 @@ theorem num_four_small_r_bound
        ((2:Int)^delta)*(8:Int)^r*(E:Int)),by ac_rfl⟩
    have hN3mod : N3%((2:Int)^gamma)=0 := Int.emod_eq_zero_of_dvd hN3div
    have hJ3mod : (N3/((2:Int)^gamma))%((8:Int)^w)=0 := by
-     rw [hN3,Int.mul_assoc,Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (2:Int)≠0) gamma)]
+     rw [hN3,Int.mul_assoc,Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (2:Int)≠0))]
      exact Int.emod_eq_zero_of_dvd ⟨(C4:Int)*(2^n:Int)-(R4:Int)-
        ((2:Int)^delta)*(8:Int)^r*(E:Int),by ac_rfl⟩
    have hN4div : ((2:Int)^delta*512) ∣ N4 := by
