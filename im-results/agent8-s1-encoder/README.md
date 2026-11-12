@@ -18,7 +18,7 @@ Consequently, in head-facing order:
 
 - `d0 = [0,0,1]`, physically `100`;
 - `d1 = [1,1,1]`, physically `111`;
-- `lh = [1,1,0,1,1,1]`, physically `111011`;
+- `lh = [1,1]`, physically `11`;
 - `S0(l,a,z,b)` has left stream `BinDec(a,z) ++ l`;
 - `S0`'s physical right side is `0 ++ 11100 ++ 111^(1+b)`;
 - `S1(L,n,m,a,z,b)` has left stream
@@ -48,7 +48,7 @@ In `S1Encoder.lean`:
   TM63 tape, so counted local transition theorems can be applied without a
   second zipper or an implicit orientation change.
 - `s1PhysicalLeft_m0_zero` recovers the already-used physical word
-  `111011 ++ 111^L ++ 100 ++ 10 ++ 111^a`; the right word is
+  `11 ++ 111^L ++ 100 ++ 10 ++ 111^a`; the right word is
   `0 ++ 11100 ++ 111^(1+b)`.
 
 The length premise `q < 2^len` is explicit. A caller with
