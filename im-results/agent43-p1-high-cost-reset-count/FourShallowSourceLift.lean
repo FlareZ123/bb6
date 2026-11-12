@@ -4,6 +4,9 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent43FourShallowSourceLift
 
+set_option maxRecDepth 4096
+set_option maxHeartbeats 3000000
+
 open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent43SourceWord
 open BB6.Agent43FourShallowSourceModel BB6.Agent43TwoRun
 
