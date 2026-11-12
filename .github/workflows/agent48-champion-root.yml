@@ -1,10 +1,6 @@
 name: Agent 48 original champion-root six-step equivalence (manual)
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'im-results/agent46-rst1prime/**'
-      - '.github/workflows/agent48-champion-root.yml'
 permissions:
   contents: read
 jobs:
