@@ -340,7 +340,7 @@ theorem reached_F0_D1_successor_path (n : Nat) (c : Conf)
                   rw [hzero] at htrue
                   cases htrue
                 · rcases hF0 with ⟨hFq,hFzero,hposF,hwriteF⟩
-                  have hm_lt : m' < n := by omega
+                  have hm_lt : m' < m+1 := by omega
                   obtain ⟨k,d,e,hd,hDq,hDbit,hdpos,hEq,hEzero,hstepD,hpath⟩ :=
                     ih m' hm_lt a hprev2 hFq hFzero
                   have haPos : a.h = c.h+2 := by omega
@@ -400,7 +400,7 @@ theorem reached_B0_left10_D1_ancestor (c : Conf) (hc : Reach c)
     (hB : c.q = .B) (hcurrent : c.tape c.h = false)
     (hleft3 : c.tape (c.h-3) = true)
     (hleft2 : c.tape (c.h-2) = false) :
-    ∃ k : Nat, d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ (k : Nat) (d : Conf), Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) ∧
       Root119Path (2*k+2) d c := by
   obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
@@ -428,7 +428,7 @@ theorem reached_B0_left10_F1_ancestor (c : Conf) (hc : Reach c)
     (hB : c.q = .B) (hcurrent : c.tape c.h = false)
     (hleft3 : c.tape (c.h-3) = true)
     (hleft2 : c.tape (c.h-2) = false) :
-    ∃ k : Nat, f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+    ∃ (k : Nat) (f : Conf), Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h + (2*k : Int) - 1 ∧
       Root119Path (2*k+3) f c := by
   obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
@@ -460,6 +460,7 @@ theorem parentCone_next_head_lower (c d : Conf)
   cases q <;> cases hb : t h <;> simp [next,hb] at hs
   all_goals cases hs
   all_goals simp_all
+  all_goals omega
 
 theorem parentCone_next_tape_away (c d : Conf)
     (hs : next c = some d) (x : Int) (hx : x ≠ c.h) :
@@ -674,11 +675,9 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
   have heEq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
     have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
       hstepD.symm.trans hDshape
-    injection hsome with heq
-    exact heq
-  have hposE : e.h=f.h+2 := by
-    rw [heEq,hposD]
-    omega
+    exact Option.some.inj hsome
+  have hEhead : e.h=d.h+1 := by rw [heEq]; rfl
+  have hposE : e.h=f.h+2 := by omega
   have hkpos : 1≤k := by
     by_cases hk : 1≤k
     · exact hk
@@ -687,9 +686,8 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
       have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
       have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
         hstepD.symm.trans hDshape
-      have heq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
-        injection hsome with heq
-        exact heq
+      have heq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
+        Option.some.inj hsome
       cases hpath
       have hwrite : e.tape c.h=true := by
         rw [heq]
@@ -712,7 +710,7 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
     (hB : c.q=.B) (hcurrent : c.tape c.h=false)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
-    ∃ k : Nat, f,
+    ∃ (k : Nat) (f : Conf),
       1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
       f.h=c.h+(2*k:Int)-1 ∧
       f.tape (f.h+1)=true ∧ f.tape (f.h+2)=false ∧
@@ -764,9 +762,11 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
       rw [hposE]
       omega
     have he1 : e.tape (f.h-2-2*(i:Int))=false := by
-      simpa [hidx1] using hpatt.1
+      rw [← hidx1]
+      exact hpatt.1
     have he2 : e.tape (f.h-3-2*(i:Int))=true := by
-      simpa [hidx2] using hpatt.2
+      rw [← hidx2]
+      exact hpatt.2
     have heq1 := hEF (f.h-2-2*(i:Int)) (by omega) (by omega)
     have heq2 := hEF (f.h-3-2*(i:Int)) (by omega) (by omega)
     exact ⟨heq1.symm.trans he1,heq2.symm.trans he2⟩
@@ -816,7 +816,7 @@ theorem reached_B0_left10_left_tape_agreement (c : Conf) (hc : Reach c)
     (hB : c.q=.B) (hcurrent : c.tape c.h=false)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
-    ∃ k : Nat, f,
+    ∃ (k : Nat) (f : Conf),
       1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
       f.h=c.h+(2*k:Int)-1 ∧
       ∀ x : Int, x≤c.h → c.tape x=f.tape x := by
