@@ -565,3 +565,5 @@ theorem no_five_small_numeric
 #print axioms fiveBad_true_of_scalar_equation
 #print axioms num_five_small_run_bounds
 #print axioms no_five_small_numeric
+
+-- The finite certificate uses kernel reduction only; no native_decide or sorry.
