@@ -378,7 +378,7 @@ theorem s1Config_counted_decrement_allPositive
       intro x hx
       simpa using gleft x hx
     exact s1Config_counted_decrement_of_prefix
-      L n m len q (4*k) b h hq (by simpa [hrEq] using hprefix)
+      L n m len q (4*k) b h hq (by simpa [hrEq,T] using hprefix)
   · have hrEq : r = 4*k+1 := by omega
     by_cases hk : k=0
     · have hr1 : r=1 := by omega
@@ -400,7 +400,7 @@ theorem s1Config_counted_decrement_allPositive
         refine ⟨T',?_,s1,s2,s3,s4,s5,s6,sout,hleft⟩
         simpa using hrun
       exact s1Config_counted_decrement_of_prefix
-        L n m len q 1 b h hq (by simpa [hr1] using hprefix)
+        L n m len q 1 b h hq (by simpa [hr1,T] using hprefix)
     · have hdec := s1Config_counted_decrement_r1
         L n m len q k b h hq hk
       simpa [hrEq] using hdec
