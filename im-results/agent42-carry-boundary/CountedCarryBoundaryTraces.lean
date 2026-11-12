@@ -16,7 +16,7 @@ namespace BB6Coverage.Agent48Champion
 /-- A at head 0, twelve consecutive ones to the right. -/
 def carryAD12Area (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 12)
 def carryAD12Base : FConfig := ⟨0, 0, [1,2,3,4,5,6,7,8,9,10,11,12]⟩
-def carryAD12Final : FConfig := ⟨3, 12, [0,3,6,9,12]⟩
+def carryAD12Final : FConfig := ⟨3, 12, [9,6,3,0,12]⟩
 
 theorem carryAD12_trace (bg : Int → Bool) :
     run tm2 12 (frame carryAD12Area bg (embed carryAD12Base)) =
@@ -45,7 +45,7 @@ theorem carryAD12 (T : Int → Bool) (h : Int)
 /-- D at head 0 with the seven-cell terminal input 1111111. -/
 def carryDTail15Area (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 9)
 def carryDTail15Base : FConfig := ⟨3, 0, [0,1,2,3,4,5,6]⟩
-def carryDTail15Final : FConfig := ⟨4, 9, [0,3,4,5,6,8]⟩
+def carryDTail15Final : FConfig := ⟨4, 9, [8,6,5,4,3,0]⟩
 
 theorem carryDTail15_trace (bg : Int → Bool) :
     run tm2 15 (frame carryDTail15Area bg (embed carryDTail15Base)) =
@@ -77,7 +77,7 @@ def carryAReturn12Area (x : Int) : Bool := decide (-3 ≤ x ∧ x ≤ 7)
 def carryAReturn12Base : FConfig :=
   ⟨0, 0, [-3,-2,-1,1,2,3,4,5,6]⟩
 def carryAReturn12Final : FConfig :=
-  ⟨0, 6, [-3,-2,-1,0,3,4,5,7]⟩
+  ⟨0, 6, [5,4,7,3,0,-3,-2,-1]⟩
 
 theorem carryAReturn12_trace (bg : Int → Bool) :
     run tm2 12 (frame carryAReturn12Area bg (embed carryAReturn12Base)) =
