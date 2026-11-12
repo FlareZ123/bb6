@@ -1,3 +1,10 @@
+## 2026-11-12 22:38 UTC — research-facing D status reconciled
+
+- Updated the thirtieth-reentry primary note in commit aadc385c32e10ae9d513046281b60b0b5cebeb8f to state explicitly that CI 43319453437 stopped before BlankThirtiethRejoin/Seed31Probe and that the corrected two-stage P2 helper is not yet re-audited.
+- Updated the D frontier board in commit 5024e4435f76aa64d26437da4f714189ac549c3d to remove the stale claim that the Seed31 probe had been reached; it now records the P2 helper failure/correction and manual-audit requirement.
+- Verified the P2ResetRegularReentry alias commit is 8410b8e9483f17b88faea3e587ee54a94e36050d, the packet-shift README correction is 0a7b0014c496cd18424b801d730f83e1d41377ce, and the root workflow remains dispatch-only. No fresh CI run has been triggered after the corrected alias.
+- Remaining lease time at this checkpoint is governed by the original claim 2026-11-12T21:38:00Z; perform the final measured check at/after 22:48Z and release only then. Before release, preserve any new CI result if one appears, otherwise hand off the pending manual audit.
+
 ## 2026-11-12 22:36 UTC — root audit found and corrected a false P2 reset bridge
 
 - Full root-chain run 43319453437 completed with failure at P2ResetRegularReentry.lean, before PacketP2ReentryOrE, ExceptionalEPacketClosure, BlankThirtiethRejoin, or Seed31Probe. It did compile AP2PacketBoundarySource.a_p2_packet_reentry with [propext, Quot.sound], PacketP2ResetSource.e_two_reset / b_zero_any / e_two_k0_regular with [propext, Quot.sound], and the sixth, seventh, and eighth root modules.
