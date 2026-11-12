@@ -15,6 +15,9 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
       T x = carryInputBit (4*k+2) x) :
     ∃ T' : Int → Bool,
       run tm2 (15+12*(4*k+2)) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) ∧
       (∀ x, x ≤ 0 → T' x = carryLeftOutputBit (4*k+2) T x) := by
   let h' : Int := -(4*(3*(k:Int)+1))
   let T1 := sweptLeft (4*(3*k+1)) T 0
@@ -147,11 +150,46 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
           simp [T2,frame,shiftConfig,carryBridgeArea2,embed,carryBridgeFinal2,
             carryLeftOutputBit,h'] <;> omega only [h']
         simpa [hxEq] using hcase
-  have htotal := carryFinishWithLeftPattern (4*k+2)
-    (3*(4*(3*k+1))) 12 nR ⟨3,0,T⟩ ⟨3,h',T1⟩ T T2 (2+h')
-    hleft hbridge (by dsimp [nR]; omega) hfinish hseg hz0 hz1 hseed
-    (by dsimp [h']; omega) (by dsimp [h']; omega)
-  exact htotal
+  have hbound : -3*((4*k+2:Int))+1 ≤ 2+h' := by
+    dsimp [h']
+    omega
+  have hmod : (2+h') % 3 = 1 := by
+    dsimp [h']
+    omega
+  rcases carryFinishFromD T2 (2+h') nR hfinish hseg hz0 hz1 with
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout,hformula⟩
+  have htotal := composeCarryRuns (4*k+2) (3*(4*(3*k+1))) 12 nR
+    ⟨3,0,T⟩ ⟨3,h',T1⟩ ⟨3,2+h',T2⟩ ⟨4,7,Tout⟩
+    hleft hbridge hfinishRun (by dsimp [nR]; omega)
+  have hT2out : ∀ x, 6 < x → T2 x = T x := by
+    intro x hx
+    have ha : carryBridgeArea2 (x-h') = false := by
+      simp [carryBridgeArea2,h']
+      omega
+    have hleftout : T1 x = T x :=
+      carryLeftSweep_rightOutside (4*k+2) (3*k+1) T hmatch hs hb x hx
+    simp [T2,frame,shiftConfig,ha,hleftout]
+  have hout' : ∀ x, 6 < x → Tout x = T x := by
+    intro x hx
+    rw [hout x hx]
+    exact hT2out x hx
+  have hleft' : ∀ x, x ≤ 0 → Tout x = carryLeftOutputBit (4*k+2) T x := by
+    intro x hx
+    rw [hformula x hx]
+    by_cases hlt : x < 2+h'
+    · simp [hlt,hseed x hlt]
+    · have hge : 2+h' ≤ x := by omega
+      have hfarFalse : ¬ x < -3*((4*k+2:Int))-2 := by omega
+      have htermFalse : ¬ x ≤ -3*((4*k+2:Int)) := by omega
+      have hmodEq := carryIntModSub x (2+h') hmod
+      have htarget : carryLeftOutputBit (4*k+2) T x =
+          decide (x % 3 = 1) := by
+        simp [carryLeftOutputBit,hfarFalse,htermFalse]
+      have hmodBool : decide ((x-(2+h')) % 3 = 0) =
+          decide (x % 3 = 1) := by
+        simp [hmodEq]
+      simp [hlt,hmodBool,htarget]
+  exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout',hleft'⟩
 
 /-- Residue 3: the bridge seed is the terminal d1 block followed by
 the d0 stream. The common right sweep supplies the rest. -/
@@ -160,6 +198,9 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
       T x = carryInputBit (4*k+3) x) :
     ∃ T' : Int → Bool,
       run tm2 (15+12*(4*k+3)) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) ∧
       (∀ x, x ≤ 0 → T' x = carryLeftOutputBit (4*k+3) T x) := by
   let h' : Int := -(4*(3*(k:Int)+2))
   let T1 := sweptLeft (4*(3*k+2)) T 0
@@ -312,11 +353,46 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
           simp [T2,frame,shiftConfig,carryBridgeArea1,embed,carryBridgeFinal1,
             carryLeftOutputBit,h'] <;> omega only [h']
         simpa [hxEq] using hcase
-  have htotal := carryFinishWithLeftPattern (4*k+3)
-    (3*(4*(3*k+2))) 12 nR ⟨3,0,T⟩ ⟨3,h',T1⟩ T T2 (6+h')
-    hleft hbridge (by dsimp [nR]; omega) hfinish hseg hz0 hz1 hseed
-    (by dsimp [h']; omega) (by dsimp [h']; omega)
-  exact htotal
+  have hbound : -3*((4*k+3:Int))+1 ≤ 6+h' := by
+    dsimp [h']
+    omega
+  have hmod : (6+h') % 3 = 1 := by
+    dsimp [h']
+    omega
+  rcases carryFinishFromD T2 (6+h') nR hfinish hseg hz0 hz1 with
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout,hformula⟩
+  have htotal := composeCarryRuns (4*k+3) (3*(4*(3*k+2))) 12 nR
+    ⟨3,0,T⟩ ⟨3,h',T1⟩ ⟨3,6+h',T2⟩ ⟨4,7,Tout⟩
+    hleft hbridge hfinishRun (by dsimp [nR]; omega)
+  have hT2out : ∀ x, 6 < x → T2 x = T x := by
+    intro x hx
+    have ha : carryBridgeArea1 (x-h') = false := by
+      simp [carryBridgeArea1,h']
+      omega
+    have hleftout : T1 x = T x :=
+      carryLeftSweep_rightOutside (4*k+3) (3*k+2) T hmatch hs hb x hx
+    simp [T2,frame,shiftConfig,ha,hleftout]
+  have hout' : ∀ x, 6 < x → Tout x = T x := by
+    intro x hx
+    rw [hout x hx]
+    exact hT2out x hx
+  have hleft' : ∀ x, x ≤ 0 → Tout x = carryLeftOutputBit (4*k+3) T x := by
+    intro x hx
+    rw [hformula x hx]
+    by_cases hlt : x < 6+h'
+    · simp [hlt,hseed x hlt]
+    · have hge : 6+h' ≤ x := by omega
+      have hfarFalse : ¬ x < -3*((4*k+3:Int))-2 := by omega
+      have htermFalse : ¬ x ≤ -3*((4*k+3:Int)) := by omega
+      have hmodEq := carryIntModSub x (6+h') hmod
+      have htarget : carryLeftOutputBit (4*k+3) T x =
+          decide (x % 3 = 1) := by
+        simp [carryLeftOutputBit,hfarFalse,htermFalse]
+      have hmodBool : decide ((x-(6+h')) % 3 = 0) =
+          decide (x % 3 = 1) := by
+        simp [hmodEq]
+      simp [hlt,hmodBool,htarget]
+  exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout',hleft'⟩
 
 #print axioms carryLongPrefix_r2_left
 #print axioms carryLongPrefix_r3_left
