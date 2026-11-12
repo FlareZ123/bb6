@@ -1,17 +1,18 @@
 import FourLayerBarrier
+import FourShallowFiniteBridge
 import TwoShallowFiniteBounds
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent43FourShallowAbstract
 
-open BB6.Agent43TwoShallowFinite BB6.Agent43FourLayer
+open BB6.Agent43TwoShallowFinite BB6.Agent43FourLayer BB6.Agent43FourShallowFiniteBridge
 
 /-- Four source-profiled shallow cocycles, separated by depth-two energy
 divisions, imply an impossible terminal shifted-wall equation. -/
 theorem no_four_shallow_energies
  (n s u v w r t1 t2 t3 t4 p d alpha beta gamma delta
   C1 C2 C3 C4 L1 L2 L3 L4 O1 O2 O3 O4 K R1 R2 R3 R4 E : Nat)
- (hn : 76≤n) (hs : 3*s≤n)
+ (hn : 14≤n) (hs : 3*s≤n)
  (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1) (ht4 : t4≤1)
  (hp1 : (alpha,C1,L1,O1)=triple t1)
  (hp2 : (beta,C2,L2,O2)=triple t2)
@@ -187,11 +188,35 @@ theorem no_four_shallow_energies
      omega
    exact Nat.eq_of_mul_eq_mul_left (by omega : 0<(8:Nat)^s) (by
      rw [hP,hcomp])
- exact four_layer_abstract_barrier n s u v w r alpha beta gamma delta
-   (8^s) p (2^alpha) (2^beta) (2^gamma) (2^delta)
-   K R1 R2 R3 R4 E hn hP ⟨d,hD⟩ rfl hExp rfl rfl rfl rfl
-   hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
-   hR4pos hR4bound hEbound hEqNat
+ by_cases hlarge : 76≤n
+ · exact four_layer_abstract_barrier n s u v w r alpha beta gamma delta
+     (8^s) p (2^alpha) (2^beta) (2^gamma) (2^delta)
+     K R1 R2 R3 R4 E hlarge hP ⟨d,hD⟩ rfl hExp rfl rfl rfl rfl
+     hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
+     hR4pos hR4bound hEbound hEqNat
+ · have hnsmall : n<76 := by omega
+   have hdpos : 0<d := by
+     by_contra hd
+     have hd0 : d=0 := by omega
+     rw [hd0] at hD
+     omega
+   have hd1 : 1≤d := by omega
+   have hqle : 8^s≤14*n+92 := by
+     calc
+       8^s=8^s*1 := by omega
+       _≤8^s*d := Nat.mul_le_mul_left (8^s) hd1
+       _=14*n+92 := hD
+   have hDupper : 14*n+92≤1142 := by omega
+   have hs3 : s≤3 := by
+     by_contra hs3
+     have hpow : 8^4≤8^s :=
+       Nat.pow_le_pow_right (by decide : 0<(8:Nat)) (by omega)
+     norm_num at hpow
+     omega
+   exact no_four_small_numeric n s u v w r t1 t2 t3 t4 p d
+     alpha beta gamma delta C1 C2 C3 C4 L1 L2 L3 L4 O1 O2 O3 O4
+     K R1 R2 R3 R4 E hn hnsmall hs3 ht1 ht2 ht3 ht4
+     hp1 hp2 hp3 hp4 hP hD hR1 hR2 hR3 hR4 hE hK hEqNat
 
 #print axioms no_four_shallow_energies
 
