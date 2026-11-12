@@ -37,6 +37,41 @@ def d1pow : Nat → List Bool
   | 0 => []
   | n+1 => d1 ++ d1pow n
 
+
+/-- Repeated zero-digit blocks in the head-facing BinDec word. -/
+def d0pow : Nat → List Bool
+  | 0 => []
+  | n+1 => d0 ++ d0pow n
+
+/-- Repeated physical 100 blocks, in far-to-near order. -/
+def d0PhysicalPow : Nat → List Bool
+  | 0 => []
+  | n+1 => d0.reverse ++ d0PhysicalPow n
+
+private theorem d0PhysicalPow_append (n : Nat) :
+    d0PhysicalPow n ++ d0.reverse = d0.reverse ++ d0PhysicalPow n := by
+  induction n with
+  | zero => simp [d0PhysicalPow]
+  | succ n ih =>
+      calc
+        d0PhysicalPow (n+1) ++ d0.reverse =
+            d0.reverse ++ (d0PhysicalPow n ++ d0.reverse) := by
+              simp [d0PhysicalPow,List.append_assoc]
+        _ = d0.reverse ++ (d0.reverse ++ d0PhysicalPow n) := by rw [ih]
+        _ = d0.reverse ++ d0PhysicalPow (n+1) := by simp [d0PhysicalPow]
+
+theorem d0pow_reverse (n : Nat) :
+    (d0pow n).reverse = d0PhysicalPow n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      calc
+        (d0pow (n+1)).reverse = (d0pow n).reverse ++ d0.reverse := by
+          simp [d0pow,List.reverse_append]
+        _ = d0PhysicalPow n ++ d0.reverse := by rw [ih]
+        _ = d0.reverse ++ d0PhysicalPow n := d0PhysicalPow_append n
+        _ = d0PhysicalPow (n+1) := by simp [d0PhysicalPow]
+
 /-- A fuelled transcription of BusyCoq's positive BinaryCounter.
 The fuel is the declared number of counter digits; on the source domain
 n < 2^len, the complemented positive integer reaches its xH base
@@ -142,6 +177,43 @@ theorem binDec_carryPrefix (len q r : Nat) (hq : q < 2^len) :
   rw [binDec_mulpow2 (len+1) (2*q+1) r hbound]
   rw [binDec_odd len q hq]
   simp [List.append_assoc]
+
+
+/-- Decrementing the source counter reverses the carry blocks. If
+z=(2*q+1)*2^r, then the physical BinDec word for z ends in 100(111)^r,
+whereas the word for z-1 ends in 111(100)^r, with the same prefix.
+This is the adjacent-decrement boundary used by the counted TM63 Inc0
+macro. -/
+theorem binDec_sub_one_carryPrefix (len q r : Nat) (hq : q < 2^len) :
+    binDec (len+1+r) (((2*q+1)*2^r)-1) =
+      d0pow r ++ d1 ++ binDec len q := by
+  induction r with
+  | zero =>
+      simpa [d0pow] using (binDec_even len q hq)
+  | succ r ih =>
+      have hqpow : 2*q+1 < 2^(len+1) := by
+        rw [Nat.pow_succ]
+        omega
+      have hprod : (2*q+1)*2^r < 2^(len+1+r) := by
+        have hp : (2*q+1)*2^r < 2^(len+1)*2^r :=
+          Nat.mul_lt_mul_of_pos_right hqpow (Nat.pow_pos (a:=2) (n:=r) (by decide))
+        have hpow : 2^(len+1+r) = 2^(len+1)*2^r := by
+          calc
+            2^(len+1+r) = 2^((len+1)+r) := by congr 1 <;> omega
+            _ = 2^(len+1)*2^r := Nat.pow_add 2 (len+1) r
+        exact lt_of_lt_of_eq hp hpow.symm
+      have hApos : 0 < (2*q+1)*2^r :=
+        Nat.mul_pos (by omega) (Nat.pow_pos (a:=2) (n:=r) (by decide))
+      have hbound : ((2*q+1)*2^r)-1 < 2^(len+1+r) := by omega
+      have hstep : ((2*q+1)*2^(r+1))-1 =
+          2*(((2*q+1)*2^r)-1)+1 := by
+        rw [Nat.pow_succ]
+        have hmul : (2*q+1)*(2^r*2) = 2*((2*q+1)*2^r) := by ac_rfl
+        rw [hmul]
+        omega
+      rw [show len+1+(r+1) = (len+1+r)+1 by omega, hstep]
+      rw [binDec_odd (len+1+r) (((2*q+1)*2^r)-1) hbound, ih]
+      simp [d0pow,List.append_assoc]
 
 /-- Every positive natural has an odd-part/power-of-two factorization.
 Uniqueness is not needed by the encoder theorem. -/
@@ -441,6 +513,36 @@ theorem s1PhysicalLeft_carrySuffix (L n m len q r : Nat)
   rw [s1LeftFacing_carryPrefix L n m len q r hq]
   simp [List.reverse_append,d1pow_reverse,List.append_assoc]
 
+
+/-- Physical S1 word after decrementing a positive odd-factorized
+counter. It has the same prefix as the input word, followed by
+111(100)^r instead of 100(111)^r. -/
+theorem s1PhysicalLeft_decrementSuffix (L n m len q r : Nat)
+    (hq : q < 2^len) :
+    s1PhysicalLeft L n m (len+1+r) (((2*q+1)*2^r)-1) =
+      (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh).reverse
+        ++ d1.reverse ++ d0PhysicalPow r := by
+  unfold s1PhysicalLeft s1LeftFacing
+  rw [binDec_sub_one_carryPrefix len q r hq]
+  simp [List.reverse_append,d0pow_reverse,List.append_assoc]
+
+/-- Every valid positive S1 counter has the exact adjacent counted-carry
+boundary. The same arbitrary source prefix is preserved as the counter
+decrements: 100(111)^r -> 111(100)^r. -/
+theorem s1PhysicalLeft_anyPositive_adjacentCarry
+    (L n m a z : Nat) (hz : 0 < z) (hzlt : z < 2^a) :
+    ∃ q r len pre, z = (2*q+1)*2^r ∧ a = len+1+r ∧ q < 2^len ∧
+      s1PhysicalLeft L n m a z = pre ++ d0.reverse ++ d1pow r ∧
+      s1PhysicalLeft L n m a (z-1) = pre ++ d1.reverse ++ d0PhysicalPow r := by
+  obtain ⟨q,r,len,hr,ha,hq⟩ := exists_odd_factor_bounded a z hz hzlt
+  refine ⟨q,r,len,
+    (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh).reverse,
+    hr,ha,hq,?_,?_⟩
+  · rw [ha,hr]
+    exact s1PhysicalLeft_carrySuffix L n m len q r hq
+  · rw [ha,hr]
+    exact s1PhysicalLeft_decrementSuffix L n m len q r hq
+
 /-- Source m0/zero-counter specialization: the known terminal physical
 left word 111011 ++ 111^L ++ 100 ++ 10 ++ 111^a. -/
 theorem s1PhysicalLeft_m0_zero (L a : Nat) :
@@ -468,6 +570,9 @@ theorem s1PhysicalRight_source (b : Nat) :
 #print axioms s1Config_left_carryCells
 #print axioms s0PhysicalLeft_carrySuffix
 #print axioms s1PhysicalLeft_carrySuffix
+#print axioms binDec_sub_one_carryPrefix
+#print axioms s1PhysicalLeft_decrementSuffix
+#print axioms s1PhysicalLeft_anyPositive_adjacentCarry
 #print axioms s1PhysicalLeft_m0_zero
 
 end BB6Coverage.Agent8S1Encoder
