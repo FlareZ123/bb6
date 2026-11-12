@@ -57,8 +57,7 @@ theorem s1Config_carryInput_match
       (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh) i hbound
     have hbit : carryInputBit r (-(i:Int)) =
         decide (i < 3*r ∨ i = 3*r+2) := by
-      simp [carryInputBit]
-      omega
+      simp [carryInputBit] <;> omega
     have hcoord : h + (-(i:Int)) = h-(i:Int) := by omega
     rw [hcoord,hsource,hside,hbit]
   · obtain ⟨i, hxEq⟩ : ∃ i : Nat, x = 1+(i:Int) := by omega
