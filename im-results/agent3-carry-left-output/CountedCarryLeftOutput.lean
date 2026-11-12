@@ -12,6 +12,9 @@ def carryLeftOutputBit (r : Nat) (T : Int → Bool) (x : Int) : Bool :=
   else if x ≤ -3*(r:Int) then true
   else decide (x % 3 = 1)
 
+theorem carryIntModSub (x h : Int) (hh : h % 3 = 1) :
+    (x-h) % 3 = 0 ↔ x % 3 = 1 := by omega
+
 /-- Once the bridge seed is established, the common right-sweep/D-tail
     finish writes the remaining d0 blocks.  The bridge head is congruent
     to 1 modulo 3, so its every-third-cell output is the canonical d0 word. -/
@@ -42,10 +45,9 @@ theorem carryFinishWithLeftPattern
   · simp [hlt, hseed x hlt]
   · have hge : hB ≤ x := by omega
     have hgt : -3*(r:Int) < x := by omega
-    have hmodEq : (x-hB) % 3 = 0 ↔ x % 3 = 1 := by omega only [hmod]
+    have hmodEq := carryIntModSub x hB hmod
     have htarget : carryLeftOutputBit r T x = decide (x % 3 = 1) := by
       simp [carryLeftOutputBit, hgt]
-      omega
     have hmodBool : decide ((x-hB) % 3 = 0) = decide (x % 3 = 1) := by
       exact congrArg decide hmodEq
     simp [hlt,hmodBool,htarget]
@@ -141,7 +143,6 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
       rcases hcases with hi2 | hi1 | hi0 | hi1p | hi2p | hi3 |
           hi4 | hi5 | hi6 | hi7 | hi8 | hi9
       · have hxEq : x = h'+(-2) := by omega
-        rw [hxEq]
         have ha : carryBridgeArea0 ((h'+(-2))-h') = false := by
           simp [carryBridgeArea0]
         have hpres := carryLeftSweep_preserves_at (4*k) (3*k) T hmatch hs hb
@@ -155,11 +156,10 @@ theorem carryLongPrefix_r0_left (k : Nat) (T : Int → Bool)
         have hmark : T (h'+(-2)) = true := by
           rw [hmatch (h'+(-2)) harea]
           exact hbit
-        simp [T2,T1,frame,shiftConfig,ha,hpres,carryLeftOutputBit,h',hmark]
+        simp [T2,T1,frame,shiftConfig,ha,hpres,carryLeftOutputBit,h',hmark,hxEq]
       · have hxEq : x = h'+(-1) := by omega
-        rw [hxEq]
         simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
-          carryLeftOutputBit,h'] <;> omega
+          carryLeftOutputBit,h',hxEq] <;> omega only [h']
       · have hxEq : x = h'+0 := by omega
         rw [hxEq]
         simp [T2,frame,shiftConfig,carryBridgeArea0,embed,carryBridgeFinal0,
