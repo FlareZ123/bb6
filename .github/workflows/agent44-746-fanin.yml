@@ -2,12 +2,6 @@ name: Agent 44 #746 unbounded reset-parent fan-in (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'im-results/agent44-746-rank/FeederExceptional*.lean'
-
 permissions:
   contents: read
 
