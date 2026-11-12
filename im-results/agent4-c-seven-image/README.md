@@ -23,24 +23,24 @@ These four disjoint parameter classes occupy density `1/2097152` of all `(j,m)` 
 - [CSixSeventhRoot.lean](CSixSeventhRoot.lean): true blank-origin all-time nonreachability, using the actual first seven section returns
 - [CSixSeventhGate.lean](CSixSeventhGate.lean): original narrower high-stop subfamily (also certified)
 - [CSixSeventhGateWide.lean](CSixSeventhGateWide.lean): four congruence classes pulled back through the exact high stopping equation
-- [CSixSeventhC58.lean](CSixSeventhC58.lean): prior-sieve admission and strengthened exact C58 all-depth iff; pending original-source CI
+- [CSixSeventhC58.lean](CSixSeventhC58.lean): prior-sieve admission and strengthened exact C58/late-fast iff with two new high-stop progressions; pending original-source CI
 
-All five were checked against **unmodified original Lean machine and inverse source** by [CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809), success, with no printed `sorryAx`. The earlier widened source-image proof alone passed [CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275). The workflow is `.github/workflows/agent4-c-three-ancestry.yml`, restored to **manual-only** after successful checking.
+The original six/seven diagonal exclusion and its initial strict-image proof were checked against **unmodified original Lean machine and inverse source** by [CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809), success, with no printed `sorryAx`. The current second strict-image slice, its all-time root exclusion, and the C58/late-fast integration were added afterward and **have not yet been source-audited**. The earlier widened source-image proof alone passed [CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275). Both relevant workflows are manual-only.
 
 
 
-## A second strict sixth/seventh image slice
+## A second strict sixth/seventh image family
 
-The original strict cone used `u+v = 0 (mod 4)`. There is a second, disjoint slice:
+The original strict cone used `u+v = 0 (mod 4)`. A second, disjoint family is given by either of these two residue slices:
 
 ```
-u = 1 (mod 4)
-u+v = 3 (mod 16)
+u = 1 (mod 4),  u+v = 3 (mod 16)
+u = 3 (mod 4),  u+v = 11 (mod 16)
 ```
 
 Write the second parent in the H1 branch as
 `P=(1113+650*u+1298*v, 321+187*u+375*v)` and its parent as
-`R=(471+276*u+548*v, 644+374*u+750*v)`. On this slice,
+`R=(471+276*u+548*v, 644+374*u+750*v)`. On either slice,
 
 ```
 (P.x+P.y) % 8 = 1
@@ -51,27 +51,30 @@ R.y % 2 = 0
 
 So `P` lies in Agent34's all-source three-edge exclusion cone. The even/sum-one inverse theorem makes `P` the unique parent of `R`; hence `R` has no four-return ancestry. The unique-parent lemma for the H1 second branch then makes P2 have no five-return ancestry, and H1 has no six-return ancestry. The other two branches are unchanged: P0 has no one-return ancestry, and H3 has no three-return ancestry. Therefore the whole target band still has six genuine incoming returns but no seventh.
 
-The explicit infinite progression `u=1+16*t, v=2` gives
+The two explicit infinite progressions are:
 
 ```
-(641+1024*u, 574+1024*v) = (1665+16384*t, 2622)
+u=1+16*t, v=2  ->  (1665+16384*t, 2622)
+u=3+16*t, v=8  ->  (3713+16384*t, 8766)
 ```
 
-and the new root theorem `blank_ne_six_seven_band_s3` excludes every such state from the blank-origin orbit at every time. This slice is disjoint from the original diagonal because `u+v = 3 (mod 4)`, not zero.
+The new root theorem `blank_ne_six_seven_band_s3` excludes every state in both slices from the blank-origin orbit at every time. Both slices are disjoint from the original diagonal because `u+v = 3 (mod 4)), not zero.
 
-The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the new exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second slice has not yet passed original-source CI** and remains an intermediate result.
+The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second image family has not yet passed original-source CI** and remains an intermediate result.
 
-The second slice also pulls back to a genuinely new high stopping-parameter progression. For
-`j=831` and `m=9770+16384*t`, the exact stopping counter
+## Pullback to two new high stopping-parameter progressions
 
-```
-k = 2^(2*m+2)*(j+3) - (j+3*m+5)
-```
+The second image family yields two explicit high stopping-parameter progressions that survive the prior C58 all-depth and late-fast filters.
 
-satisfies `k = 574+1024*v` with `v = 2 (mod 16)`. Thus the high target is exactly
-`(1665,574+1024*v)`, the `u=1) member of the second strict slice. These parameters are admitted by the prior C58 all-depth and late-fast predicates: `j=831 =319 (mod 512)` and `m=42 (mod 512)`. They are not in the first diagonal, since `(3*m)%4096=638` while `(j+2879)%4096=3710`.
+1. For `j=831`, `m=9770+16384*t`, the exact stopping counter
+   `k=2^(2*m+2)*(j+3)-(j+3*m+5)` satisfies `k=574+1024*v` with `v=2 (mod 16)). This is the `u=1) slice.
+2. For `j=1855`, `m=12842+16384*t`, the same counter satisfies `k=574+1024*v` with `v=8 (mod 16)`. This is the `u=3) slice.
 
-[CSixSeventhC58.lean](CSixSeventhC58.lean) now adds this second progression to the exact criterion as well: `prior_latefast_admits_s3_parameter_family` proves old-sieve admission, `s3_high_target` identifies the image point, and `blank_halts_iff_c58_late_fast_six_seven_both` adds both independent source exclusions while preserving the exact iff. The explicit parameter progression is rejected by `s3_parameter_family_removed`. This is a stronger draft criterion, not a BB(6) solution.
+For both progressions, `j=319 (mod 512)` and `m=42 (mod 512)`, so the full earlier ValSixFull+C58 and arbitrary-depth late gate admit them. Neither is in the original diagonal:
+- First progression: `(3*m)%4096=638`, while `(j+2879)%4096=3710`.
+- Second progression: `(3*m)%4096=1662`, while `(j+2879)%4096=638`.
+
+[CSixSeventhC58.lean](CSixSeventhC58.lean) formalizes the residue-pair admission, both exact image pullbacks, and the strengthened criterion `blank_halts_iff_c58_late_fast_six_seven_both`. The admission lemmas are `prior_latefast_admits_s3_parameter_family` and `prior_latefast_admits_s3_second_parameter_family`; the exclusions are `s3_parameter_family_removed` and `s3_second_parameter_family_removed`. The current high predicate removes both progressions while preserving the exact blank-halting iff. **This integration has not yet passed original-source CI**; it remains in `im-results/` and is not a BB(6) solution.
 
 ## Independence from the integrated C58 all-depth sieve
 
@@ -97,8 +100,8 @@ This residue vector misses every conjunct of the preceding ValSixFull+C58 all-de
 - The Agent29 additions require `j % 8 = 5`, `j % 32 = 17`, `j % 64 = 57`, or `m % 32 = 6`; none holds.
 - The ValSix additions require `m % 8 = 4`, `j % 128 = 81`, or `j % 32 = 1`; none holds.
 - Agent19's arbitrary dyadic-depth gate requires `m % 4 = (2*r+3) % 4`, and the late three-cone gate requires `m % 4 = (2*r+1) % 4`; both right sides are always odd while `m % 4 = 2`.
-- The Agent19 four-link condition has `(j+3*m+19) % 64 = 16), not zero. The remaining ValSixFull rectangles likewise miss: `(j+3*m) % 128 = 61`, `j % 8 = 7`, and `m % 32 = 10`.
-- For the affine right-four guard, the exact stopping equation gives `k % 4 = 2), while `(2*j+3) % 4 = 1`. Their sum is 3 modulo 4, so affine normalization does not fire and its right coordinate is not four.
+- The Agent19 four-link condition has `(j+3*m+19) % 64 = 16`, not zero. The remaining ValSixFull rectangles likewise miss: `(j+3*m) % 128 = 61`, `j % 8 = 7`, and `m % 32 = 10`.
+- For the affine right-four guard, the exact stopping equation gives `k % 4 = 2`, while `(2*j+3) % 4 = 1`. Their sum is 3 modulo 4, so affine normalization does not fire and its right coordinate is not four.
 - The C58 rectangle would require `(j+3*m+5) % 256 = 198`, but the diagonal gives 194.
 
 Thus the family is not a re-description of a previously removed parameter class. The concrete progression `m=42, j=1343+4096*t` satisfies the diagonal for every `t : Nat`; it is an explicit infinite family admitted by the old all-depth predicate and rejected by the new source theorem.
