@@ -129,7 +129,11 @@ theorem multi_bubble_prefix_head_bound
           (by simp [cStage,cFinal] <;> omega) hs hseg
         have hbound' : d.head ≤ 2*(j:Int)+2 := by
           simpa [cStage] using hbound
-        exact ⟨d,hpre,by omega⟩
+        have hcast : 2*(j:Int)+2 = 2*((j+1:Nat):Int) := by
+          rw [Int.natCast_add]
+          rw [Int.mul_add]
+          simp
+        exact ⟨d,hpre,by rw [←hcast]; exact hbound'⟩
 
 #print axioms multi_bubble_prefix_head_bound
 
