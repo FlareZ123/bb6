@@ -579,6 +579,7 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
 #print axioms BB6Root119.reached_F_left_zero_parent
 #print axioms BB6Root119.to_B
 #print axioms BB6Root119.reached_F_left_zero_two_step_parent
+#print axioms BB6Root119.A0_B1_F1_parent_has_1100
 #print axioms BB6Root119.f1_even_run_exact
 #print axioms BB6Root119.f1_even_result_markerB0Pattern
 #print axioms BB6Root119.f1_even_double_zero_halts
