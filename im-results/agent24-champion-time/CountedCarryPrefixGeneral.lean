@@ -263,7 +263,8 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
       run tm2 (3*n+15) ⟨3,h,T⟩ = some ⟨4,7,T'⟩ ∧
       T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
       T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
-      (∀ x, 6 < x → T' x = T x) := by
+      (∀ x, 6 < x → T' x = T x) ∧
+      (∀ x, x ≤ 0 → T' x = (if x < h then T x else decide ((x-h) % 3 = 0))) := by
   let T3 := sweptRight n T h
   have hseg0 : carrySegmentOnes T h (3*n) := by
     intro i hi
@@ -341,7 +342,54 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
       rw [hfinish]
       omega
     simp [T4,frame,shiftConfig,harea,hfuture]
-  refine ⟨T4,hrun,?_,?_,?_,?_,?_,?_,hout⟩
+  have hleft : ∀ x, x ≤ 0 →
+      T4 x = (if x < h then T x else decide ((x-h) % 3 = 0)) := by
+    intro x hx
+    by_cases hlt : x < h
+    · have harea : carryDTail15OpenArea (x+2) = false := by
+        simp [carryDTail15OpenArea]
+        omega
+      have hpast : T3 x = T x := sweptRight_past n T h x (by omega)
+      change T4 x = (if x < h then T x else decide ((x-h) % 3 = 0))
+      simp [T4,frame,shiftConfig,harea,hpast,hlt]
+    · have hge : h ≤ x := by omega
+      by_cases hlow : x < -2
+      · have hupper : x < h+3*(n:Int) := by rw [hfinish]; omega
+        have hmod := sweptRight_at_mod n T h x hge hupper
+        have hT : T x = true := by
+          let i : Nat := (x-h).toNat
+          have hix : (i:Int) = x-h := by simp [i]; omega
+          have hi : i < 3*n+7 := by omega
+          have hv := hseg i hi
+          have heq : h+(i:Int)=x := by omega
+          simpa [heq] using hv
+        have harea : carryDTail15OpenArea (x+2) = false := by
+          simp [carryDTail15OpenArea]
+          omega
+        change T4 x = (if x < h then T x else decide ((x-h) % 3 = 0))
+        simp [T4,frame,shiftConfig,harea,hmod,hlt,hT]
+      · have hcases : x = -2 ∨ x = -1 ∨ x = 0 := by omega
+        rcases hcases with h0 | h1 | h2
+        · subst x
+          have hm : ((-2:Int)-h)%3 = 0 := by omega
+          have hnot : ¬(-2:Int) < h := by omega
+          change T4 (-2) = (if (-2:Int) < h then T (-2) else decide (((-2:Int)-h)%3=0))
+          simp [T4,frame,shiftConfig,carryDTail15OpenArea,carryDTail15Final,
+            embed,hm,hnot]
+        · subst x
+          have hm : ((-1:Int)-h)%3 ≠ 0 := by omega
+          have hnot : ¬(-1:Int) < h := by omega
+          change T4 (-1) = (if (-1:Int) < h then T (-1) else decide (((-1:Int)-h)%3=0))
+          simp [T4,frame,shiftConfig,carryDTail15OpenArea,carryDTail15Final,
+            embed,hm,hnot]
+        · subst x
+          have hm : ((0:Int)-h)%3 ≠ 0 := by omega
+          have hm' : (-h)%3 ≠ 0 := by simpa using hm
+          have hnot : ¬(0:Int) < h := by omega
+          change T4 0 = (if (0:Int) < h then T 0 else decide (((0:Int)-h)%3=0))
+          simp [T4,frame,shiftConfig,carryDTail15OpenArea,carryDTail15Final,
+            embed,hm,hm',hnot]
+  refine ⟨T4,hrun,?_,?_,?_,?_,?_,?_,hout,hleft⟩
   · have hv := hframe 1 (by omega) (by omega)
     simpa [embed,carryDTail15Final] using hv
   · have hv := hframe 2 (by omega) (by omega)
@@ -571,7 +619,7 @@ theorem carryLongPrefix_r0 (k : Nat) (T : Int → Bool)
     have heq : (10+h')+3*(nR:Int)+8 = 6 := by omega
     simpa [heq] using h6
   rcases carryFinishFromD T2 (10+h') nR hfinish hseg hz0 hz1 with
-    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout,_hleft⟩
   have hT2out : ∀ x, 6 < x → T2 x = T x := by
     intro x hx
     have ha : carryBridgeArea0 (x-h') = false := by
@@ -667,7 +715,7 @@ theorem carryLongPrefix_r2 (k : Nat) (T : Int → Bool)
     have heq : (2+h')+3*(nR:Int)+8 = 6 := by omega
     simpa [heq] using h6
   rcases carryFinishFromD T2 (2+h') nR hfinish hseg hz0 hz1 with
-    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout,_hleft⟩
   have hT2out : ∀ x, 6 < x → T2 x = T x := by
     intro x hx
     have ha : carryBridgeArea2 (x-h') = false := by
@@ -761,7 +809,7 @@ theorem carryLongPrefix_r3 (k : Nat) (T : Int → Bool)
     have heq : (6+h')+3*(nR:Int)+8 = 6 := by omega
     simpa [heq] using h6
   rcases carryFinishFromD T2 (6+h') nR hfinish hseg hz0 hz1 with
-    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout,_hleft⟩
   have hT2out : ∀ x, 6 < x → T2 x = T x := by
     intro x hx
     have ha : carryBridgeArea1 (x-h') = false := by
@@ -890,7 +938,7 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
     have heq : hB+3*(nR:Int)+8 = 6 := by omega
     simpa [heq] using h6
   rcases carryFinishFromD T2 hB nR hfinish hseg hz0 hz1 with
-    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout,_hleft⟩
   have hT2out : ∀ x, 6 < x → T2 x = T x := by
     intro x hx
     have ha : carryAD12Area (x-(h'-2)) = false := by

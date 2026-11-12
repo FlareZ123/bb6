@@ -102,6 +102,53 @@ theorem sweptRight_future (n : Nat) (T : Int → Bool) (h x : Int)
       have h2 : x ≠ h+2 := by omega
       simpa [sweptRight, afterRight3, h1, h2] using hrec
 
+/-- The counted right sweep leaves its strict left half untouched. -/
+theorem sweptRight_past (n : Nat) (T : Int → Bool) (h x : Int)
+    (hx : x ≤ h) : sweptRight n T h x = T x := by
+  induction n generalizing T h x with
+  | zero => simp [sweptRight]
+  | succ n ih =>
+    have hx' : x ≤ h+3 := by omega
+    have hrec := ih (afterRight3 T h) (h+3) x hx'
+    have h1 : x ≠ h+1 := by omega
+    have h2 : x ≠ h+2 := by omega
+    simpa [sweptRight, afterRight3, h1, h2] using hrec
+
+/-- Exact cellwise output of a counted right sweep: one cell survives at
+each three-cell boundary, and the next two are cleared. -/
+theorem sweptRight_at_mod (n : Nat) (T : Int → Bool) (h x : Int)
+    (hx0 : h ≤ x) (hx1 : x < h+3*(n:Int)) :
+    sweptRight n T h x =
+      (if (x-h) % 3 = 0 then T x else false) := by
+  induction n generalizing T h x with
+  | zero => omega
+  | succ n ih =>
+    by_cases h0 : x = h
+    · subst x
+      have hp := sweptRight_past n (afterRight3 T h) (h+3) h (by omega)
+      have hn1 : h ≠ h+1 := by omega
+      have hn2 : h ≠ h+2 := by omega
+      simp [sweptRight, hp, afterRight3, hn1, hn2]
+    · by_cases h1 : x = h+1
+      · subst x
+        have hp := sweptRight_past n (afterRight3 T h) (h+3) (h+1) (by omega)
+        have hn : h+1 ≠ h+2 := by omega
+        have hm : ((h+1)-h) % 3 ≠ 0 := by omega
+        simp [sweptRight, afterRight3, hp, hn, hm]
+      · by_cases h2 : x = h+2
+        · subst x
+          have hp := sweptRight_past n (afterRight3 T h) (h+3) (h+2) (by omega)
+          have hn1 : h+2 ≠ h+1 := by omega
+          have hm : ((h+2)-h) % 3 ≠ 0 := by omega
+          simp [sweptRight, afterRight3, hp, hn1, hm]
+        · have hx' : h+3 ≤ x := by omega
+          have hlt' : x < (h+3)+3*(n:Int) := by omega
+          have hrec := ih (afterRight3 T h) (h+3) x hx' hlt'
+          have hneq1 : x ≠ h+1 := by omega
+          have hneq2 : x ≠ h+2 := by omega
+          have hmod : (x-(h+3)) % 3 = (x-h) % 3 := by omega
+          simpa [sweptRight, afterRight3, hneq1, hneq2, hmod] using hrec
+
 /-- Seven ones immediately after a counted right sweep survive unchanged. -/
 theorem sweptRight_keeps_seven (n : Nat) (T : Int → Bool) (h : Int)
     (hseg : carrySegmentOnes T h (3*n+7)) :

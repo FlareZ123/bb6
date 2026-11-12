@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean'
+      - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
+      - 'im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean'
 permissions:
   contents: read
 jobs:
