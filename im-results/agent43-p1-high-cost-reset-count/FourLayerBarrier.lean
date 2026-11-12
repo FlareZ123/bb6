@@ -3,6 +3,8 @@ import ThreeLayerPeel
 
 namespace BB6.Agent43FourLayer
 
+open BB6.Agent43ThreeLayer
+
 set_option maxRecDepth 4096
 set_option maxHeartbeats 3000000
 
