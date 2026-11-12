@@ -57,7 +57,7 @@ P.y % 16 = 10
 R.y % 2 = 0
 ```
 
-So `P` lies in Agent34's all-source three-edge exclusion cone. The even/sum-one inverse theorem makes `P` the unique parent of `R`; hence `R` has no four-return ancestry. The unique-parent lemma for the H1 second branch then makes P2 have no five-return ancestry, and H1 has no six-return ancestry. The other two branches are unchanged: P0 has no one-return ancestry, and H3 has no three-return ancestry. Therefore the whole target band still has six genuine incoming returns but no seventh.
+The congruence is derived directly from the cone: `P.y % 16 = 10` is equivalent to `v = 15+3*u (mod 16)), which is the displayed family condition; substituting gives `(P.x+P.y)%8=1`. Also `u+v=3 (mod 4)), so `(R.x+R.y)%4=1`. Thus `P` lies in Agent34's all-source three-edge exclusion cone. The even/sum-one inverse theorem makes `P` the unique parent of `R`; hence `R` has no four-return ancestry. The unique-parent lemma for the H1 second branch then makes P2 have no five-return ancestry, and H1 has no six-return ancestry. The other two branches are unchanged: P0 has no one-return ancestry, and H3 has no three-return ancestry. Therefore the whole target band still has six genuine incoming returns but no seventh.
 
 Four explicit infinite progressions in the family are:
 
