@@ -665,9 +665,15 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     omega
   have hposD : d.h=f.h+1 := by omega
   have heReach : Reach e := Reach.follow hd hstepD
-  rw [next_D_one_shape d hD hDbit] at hstepD
-  cases hstepD
-  have hposE : e.h=f.h+2 := by rw [hposD]; rfl
+  have hDshape := next_D_one_shape d hD hDbit
+  have heEq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
+    have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
+      hstepD.symm.trans hDshape
+    injection hsome with heq
+    exact heq
+  have hposE : e.h=f.h+2 := by
+    rw [heEq,hposD]
+    omega
   exact ⟨k,f,d,e,g,hf,hF,hFbit,hposF,
     hd,hD,hDbit,hposD,hstepF,
     heReach,hE,hEzero,hposE,rfl,
@@ -800,5 +806,8 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
 #print axioms BB6Root119.reached_F0_D1_ancestor
 #print axioms BB6Root119.reached_B0_left10_D1_ancestor
 #print axioms BB6Root119.reached_B0_left10_F1_ancestor
+#print axioms BB6Root119.parentCone_f0_b0_corridor
+#print axioms BB6Root119.reached_B0_left10_path_components
+#print axioms BB6Root119.reached_B0_left10_odd_seed_conditions
 
 end BB6Root119
