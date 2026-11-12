@@ -113,6 +113,7 @@ private theorem narrow_exact_two_t2 (k x u a q : Nat)
     have he : k=(k-1)+1 := by omega
     rw [he,Nat.pow_succ]
     omega
+  have hpPos : 1≤2^k := by positivity
   rcases hp with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
   · have hm : m=k := even_band_scale_unique x m k hbm hband
     left
