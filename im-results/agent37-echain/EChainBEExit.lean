@@ -150,17 +150,20 @@ theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
     ∃ (T a q b : Nat),
       BB6.BoundaryPadding.ObsEq (run T c)
         (BB6.Agent2BoundaryBZero.regularSection a q b) := by
-  rcases h with ⟨T,n,hcases⟩
-  have hrep : List.replicate (n+1) true =
+  have hrep_all : ∀ n : Nat, List.replicate (n+1) true =
       List.replicate n true ++ [true] := by
+    intro n
     induction n with
     | zero => rfl
     | succ n ih =>
       calc
-        List.replicate (n+1+1) true =
+        List.replicate (Nat.succ n + 1) true =
             true :: List.replicate (n+1) true := by rfl
         _ = true :: (List.replicate n true ++ [true]) := by rw [ih]
-        _ = List.replicate (n+1) true ++ [true] := by rfl
+        _ = (true :: List.replicate n true) ++ [true] := by rfl
+        _ = List.replicate (Nat.succ n) true ++ [true] := by rfl
+  rcases h with ⟨T,n,hcases⟩
+  have hrep := hrep_all n
   rcases hcases with h0 | h1 | h2
   · refine ⟨T,n+1,2,2,?_⟩
     rw [h0]
@@ -178,7 +181,7 @@ theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
           (BB6.Agent2BoundaryBZero.regularSection (n+1) 2 2) := by
       simp [BB6.BoundaryPadding.represent,
         BB6.Agent2BoundaryBZero.regularSection,
-        CryptidBoundary.init, hrep, CryptidBoundary.oppairs,
+        hrep, CryptidBoundary.oppairs,
         List.append_assoc]
     rw [heq]
     exact BB6.Padding.cfgEq_refl _
@@ -196,7 +199,7 @@ theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
           (BB6.Agent2BoundaryBZero.regularSection n 0 0) := by
       simp [BB6.BoundaryPadding.represent,
         BB6.Agent2BoundaryBZero.regularSection,
-        CryptidBoundary.init, CryptidBoundary.oppairs]
+        CryptidBoundary.oppairs]
     rw [heq]
     exact BB6.Padding.cfgEq_refl _
   · refine ⟨T,n,4,0,?_⟩
@@ -210,7 +213,7 @@ theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
     apply BB6.Padding.cfgEq_symm
     simp only [BB6.BoundaryPadding.represent,
       BB6.Agent2BoundaryBZero.regularSection,
-      CryptidBoundary.init, List.replicate_zero]
+      List.replicate_zero]
     have hword : CryptidBoundary.oppairs 4 =
         [false,true,false,true,false,true,false,true] := by decide
     rw [hword]
