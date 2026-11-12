@@ -92,6 +92,45 @@ theorem runNoFatal_prefix (n t : Nat) (z z' : Zipper)
 def lowEvenStart : Zipper := junc 49 0 2
 def lowEvenEnd : Zipper := junc 11 0 98
 
+def rootSegmentStart : Zipper := junc 10 0 74
+def rootSegmentEnd : Zipper := junc 11 0 98
+
+/-- Exact C/0 event census for the 3619-step J(10,74) return. Each
+    entry records (time, head displacement from the segment entry,
+    whether the immediate right neighbor is marked). -/
+def cZeroEventTrace : Nat → Nat → Int → Zipper → List (Nat × Int × Bool)
+  | 0, t, delta, c =>
+      if c.state == 2 && !c.current then
+        [(t, delta, c.right.headD false)]
+      else []
+  | n+1, t, delta, c =>
+      let here :=
+        if c.state == 2 && !c.current then
+          [(t, delta, c.right.headD false)]
+        else []
+      match BB429OddExcursion.action c.state c.current with
+      | none => here
+      | some (_, _, rightward) =>
+          match BB429OddExcursion.one c with
+          | none => here
+          | some d =>
+              here ++ cZeroEventTrace n (t+1)
+                (delta + (if rightward then 1 else -1)) d
+
+/-- The two C/0 entries in the low-even r=96 return are both
+    blank-right and occur below its +84 head maximum. -/
+theorem rootSegment_czero_event_census :
+    cZeroEventTrace 3619 0 0 rootSegmentStart =
+      [(2924, 80, false), (3329, 83, false)] := by
+  decide
+
+/-- The complete J(10,74) -> J(11,98) source segment rejects every
+    fatal C/0 gateway, while allowing the two harmless blank-right
+    C/0 entries recorded above. -/
+theorem rootSegment_no_fatal_source :
+    runNoFatal 3619 rootSegmentStart = some rootSegmentEnd := by
+  decide
+
 /-- The concrete 719-step low-even r=96 return has exactly the
     required no-fatal-gateway property. The ordinary run endpoint and
     prefix maximum are independently recorded in Low43Continuation.lean. -/
