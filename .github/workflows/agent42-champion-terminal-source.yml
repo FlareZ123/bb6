@@ -35,7 +35,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile original Frontier and terminal theorem against unchanged source
         run: |
-          set -eu
+          set -euo pipefail
           mkdir -p /tmp/a42-terminal
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
