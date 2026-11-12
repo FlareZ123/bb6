@@ -175,10 +175,11 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     have hh : h' % 3 = 0 := by
       simp [h']
     have hmod := ad12Offset_mod h' x hh
+    have hnotfar : ¬ x < h'-5 := by omega
+    have hnotterm : ¬ x ≤ h'-3 := by omega
     have htarget : carryLeftOutputBit (4*k+1) T x =
         decide (x % 3 = 1) := by
-      simp [carryLeftOutputBit,hthreshold,hthreshold']
-      omega
+      simp [carryLeftOutputBit,hthreshold,hthreshold',hnotfar,hnotterm]
     rw [hT2,hcell]
     simpa [hmod,htarget]
 
@@ -226,7 +227,7 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
         have hT2 : T2 (h'-5) = true := by
           simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hT1]
         have htarget : carryLeftOutputBit (4*k+1) T (h'-5) = true := by
-          simp [carryLeftOutputBit,hthreshold,hthreshold']
+          simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
         exact hT2.trans htarget.symm
       · by_cases hbridge4 : x = h'-4
         · subst x
@@ -241,7 +242,7 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
           have hT2 : T2 (h'-4) = true := by
             simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell]
           have htarget : carryLeftOutputBit (4*k+1) T (h'-4) = true := by
-            simp [carryLeftOutputBit,hthreshold,hthreshold']
+            simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
           exact hT2.trans htarget.symm
         · by_cases hbridge3 : x = h'-3
           · subst x
