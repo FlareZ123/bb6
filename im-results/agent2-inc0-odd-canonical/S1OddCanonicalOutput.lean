@@ -109,7 +109,8 @@ theorem finalSweepTape_formula (c : Nat) (T : Int → Bool)
     unfold rightStop
     omega
   have hpos' : rightStop c - ↑(4+3*c) = 6 := by
-    simpa only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hpos
+    rw [Int.natCast_add, Int.natCast_mul]
+    exact hpos
   funext x
   change sweptLeft (5+3*c) (middleTape c T) (rightStop c) x = _
   rw [hn]
@@ -341,7 +342,7 @@ theorem oddCounterOutput_s1Successor
             rw [hfinaly]
             simp [hpre,hPbit]
             have hstop : rightStop (b+1) = rightStop b + 3 := by
-              simp only [rightStop, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
+              simp only [rightStop, Int.natCast_add]
               omega
             have hcut :
                 (if y = rightStop b+1 then true
