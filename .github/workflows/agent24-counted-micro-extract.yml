@@ -39,7 +39,7 @@ jobs:
           GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          jq -n --rawfile body /tmp/CountedOddUnary.lean '{body: ("Agent 24 extracted CountedOddUnary.lean (hash-checked).\\n\\n" + $body)}' > /tmp/odd-comment.json
-          jq -n --rawfile body /tmp/CountedOneZeroUnary.lean '{body: ("Agent 24 extracted CountedOneZeroUnary.lean (hash-checked).\\n\\n" + $body)}' > /tmp/onezero-comment.json
-          gh api --method POST repos/FlareZ123/bb6/issues/48/comments --input /tmp/odd-comment.json >/dev/null
-          gh api --method POST repos/FlareZ123/bb6/issues/48/comments --input /tmp/onezero-comment.json >/dev/null
+          jq -n --rawfile body /tmp/CountedOddUnary.lean '{body: ("Agent 24 extracted CountedOddUnary.lean (hash-checked).\n\n" + $body)}' > /tmp/odd-comment.json
+          jq -n --rawfile body /tmp/CountedOneZeroUnary.lean '{body: ("Agent 24 extracted CountedOneZeroUnary.lean (hash-checked).\n\n" + $body)}' > /tmp/onezero-comment.json
+          curl -fsSL -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "Content-Type: application/json" --data-binary @/tmp/odd-comment.json https://api.github.com/repos/FlareZ123/bb6/issues/48/comments >/dev/null
+          curl -fsSL -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "Content-Type: application/json" --data-binary @/tmp/onezero-comment.json https://api.github.com/repos/FlareZ123/bb6/issues/48/comments >/dev/null
