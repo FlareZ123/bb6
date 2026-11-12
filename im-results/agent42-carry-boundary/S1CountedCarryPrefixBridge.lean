@@ -601,8 +601,13 @@ private theorem s1Config_oddCounter_local
       x=3 ∨ x=4 ∨ x=5 ∨ x=6 := by omega
   rcases hcases with hneg | h0 | h1 | h2 | h3 | h4 | h5 | h6
   · subst x
-    have hcell := s1Config_left_carryCells L n m len q 0 b h 1 hq
-    have hcoord : h-(1:Int)=h+(-1:Int) := by omega
+    have hcell0 := s1Config_left_carryCells L n m len q 0 b h 1 hq
+    have hcell :
+        (s1Config L n m (len+1) (2*q+1) b h).tape (h-(1:Nat)) =
+          sideBit (d1pow 0 ++ d0 ++ binDec len q ++ markerWord m ++
+            d0 ++ binDec L n ++ lh) 1 := by
+      simpa using hcell0
+    have hcoord : h-(1:Nat)=h+(-1:Int) := by omega
     rw [hcoord] at hcell
     have hbit :
         sideBit (d1pow 0 ++ d0 ++ binDec len q ++ markerWord m ++
@@ -611,8 +616,13 @@ private theorem s1Config_oddCounter_local
     rw [hbit] at hcell
     simpa [embed,prefBase] using hcell
   · subst x
-    have hcell := s1Config_left_carryCells L n m len q 0 b h 0 hq
-    have hcoord : h-(0:Int)=h+0 := by omega
+    have hcell0 := s1Config_left_carryCells L n m len q 0 b h 0 hq
+    have hcell :
+        (s1Config L n m (len+1) (2*q+1) b h).tape (h-(0:Nat)) =
+          sideBit (d1pow 0 ++ d0 ++ binDec len q ++ markerWord m ++
+            d0 ++ binDec L n ++ lh) 0 := by
+      simpa using hcell0
+    have hcoord : h-(0:Nat)=h+0 := by omega
     rw [hcoord] at hcell
     have hbit :
         sideBit (d1pow 0 ++ d0 ++ binDec len q ++ markerWord m ++
@@ -622,37 +632,37 @@ private theorem s1Config_oddCounter_local
     simpa [embed,prefBase] using hcell
   · subst x
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 0
-    have hcoord : h+1+(0:Int)=h+1 := by omega
+    have hcoord : h+1+(0:Nat)=h+1 := by omega
     rw [hcoord] at hcell
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
       embed,prefBase] using hcell
   · subst x
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 1
-    have hcoord : h+1+(1:Int)=h+2 := by omega
+    have hcoord : h+1+(1:Nat)=h+2 := by omega
     rw [hcoord] at hcell
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
       embed,prefBase] using hcell
   · subst x
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 2
-    have hcoord : h+1+(2:Int)=h+3 := by omega
+    have hcoord : h+1+(2:Nat)=h+3 := by omega
     rw [hcoord] at hcell
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
       embed,prefBase] using hcell
   · subst x
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 3
-    have hcoord : h+1+(3:Int)=h+4 := by omega
+    have hcoord : h+1+(3:Nat)=h+4 := by omega
     rw [hcoord] at hcell
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
       embed,prefBase] using hcell
   · subst x
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 4
-    have hcoord : h+1+(4:Int)=h+5 := by omega
+    have hcoord : h+1+(4:Nat)=h+5 := by omega
     rw [hcoord] at hcell
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
       embed,prefBase] using hcell
   · subst x
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 5
-    have hcoord : h+1+(5:Int)=h+6 := by omega
+    have hcoord : h+1+(5:Nat)=h+6 := by omega
     rw [hcoord] at hcell
     simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
       embed,prefBase] using hcell
@@ -669,17 +679,16 @@ theorem s1Config_oddCounter_countedReturn
   obtain ⟨q,r,len,hfactor,ha,hq⟩ :=
     exists_odd_factor_bounded a z hz hzlt
   have hr : r=0 := by
-    by_contra hr0
-    have hrpos : 0<r := by omega
-    have hdivPow : 2 ∣ 2^r := by
-      cases r with
-      | zero => omega
-      | succ r => simp [Nat.pow_succ,Nat.mul_comm]
-    have hdiv : 2 ∣ z := by
-      rw [hfactor]
-      exact dvd_mul_of_dvd_right hdivPow (2*q+1)
-    have heven : z%2=0 := Nat.mod_eq_zero_of_dvd hdiv
-    omega
+    cases r with
+    | zero => rfl
+    | succ r =>
+      have hdivPow : 2 ∣ 2^(Nat.succ r) := by
+        simp [Nat.pow_succ,Nat.mul_comm]
+      have hdiv : 2 ∣ z := by
+        rw [hfactor]
+        exact dvd_mul_of_dvd_right hdivPow (2*q+1)
+      have heven : z%2=0 := Nat.mod_eq_zero_of_dvd hdiv
+      omega
   have hfactor' : z=2*q+1 := by simpa [hr] using hfactor
   have ha' : a=len+1 := by simpa [hr] using ha
   let cfg := s1Config L n m a z b h
