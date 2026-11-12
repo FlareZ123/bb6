@@ -697,6 +697,66 @@ theorem nestedOddNumerator_sector_mod_three (s h j t:Nat)
   rw [hz,hpow]
   simp [Int.mul_add,Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm] <;> omega
 
+/-- Recursive index selector for the nested odd-parent numerator
+    W_(j,t), fixing an even ray depth and selecting the fatal index. -/
+def nestedOddIndexResidue (s j t:Nat) : Nat→Nat
+  | 0 => 0
+  | k+1 =>
+      let b:=nestedOddIndexResidue s j t k
+      let a:Int:=(2:Int)^(t+3)*((2:Int)^(j+1)-1)
+      let q:Int:=nestedOddNumerator (s+6*b) j t/(3:Int)^(k+1)
+      b+henselDigit q a*3^k
+
+theorem nestedOddIndexResidue_lt (s j t k:Nat) :
+    nestedOddIndexResidue s j t k<3^k := by
+  induction k with
+  | zero => simp [nestedOddIndexResidue]
+  | succ k ih =>
+      let b:=nestedOddIndexResidue s j t k
+      let a:Int:=(2:Int)^(t+3)*((2:Int)^(j+1)-1)
+      let q:Int:=nestedOddNumerator (s+6*b) j t/(3:Int)^(k+1)
+      let d:=henselDigit q a
+      have hd:d<3:=henselDigit_lt q a
+      change b+d*3^k<3^(k+1)
+      rw [Nat.pow_succ]
+      have hmul:=Nat.mul_lt_mul_of_pos_right hd (Nat.pow_pos (by decide : 0<3))
+      omega
+
+/-- The recursively selected index residue really has the required
+    3-adic divisibility. -/
+theorem nestedOddIndexResidue_good (s j t k:Nat)
+    (hs:s=4∨s=5) (hj:j%2=0) :
+    (3:Int)^(k+1)∣
+      nestedOddNumerator (s+6*nestedOddIndexResidue s j t k) j t := by
+  induction k with
+  | zero =>
+      have hmod:=nestedOddNumerator_sector_mod_three s 0 j t hs hj
+      simpa [nestedOddIndexResidue] using
+        (Int.dvd_iff_emod_eq_zero.mpr hmod)
+  | succ k ih =>
+      let b:=nestedOddIndexResidue s j t k
+      let a:Int:=(2:Int)^(t+3)*((2:Int)^(j+1)-1)
+      let q:Int:=nestedOddNumerator (s+6*b) j t/(3:Int)^(k+1)
+      let d:=henselDigit q a
+      have hbase:(3:Int)^(k+1)∣nestedOddNumerator (s+6*b) j t:=ih
+      have ha:a%3≠0:=by
+        simpa [a] using nestedOddCoeff_unit j t hj
+      have hd:d<3:=henselDigit_lt q a
+      have hdiv:(3:Int)∣q-a*d:=by
+        simpa [d] using henselDigit_divides q a ha
+      have hgood:(3:Int)^(k+2)∣
+          nestedOddNumerator ((s+6*b)+d*depthPeriod (k+1)) j t:=
+        (nestedOddNumerator_lift_criterion (s+6*b) j t k d hj hd hbase).mpr
+          (by simpa [q,a] using hdiv)
+      have hshift:s+6*(b+d*3^k)=
+          (s+6*b)+d*depthPeriod (k+1):=by
+        simp [depthPeriod,Nat.pow_succ]
+        omega
+      change (3:Int)^(k+2)∣
+        nestedOddNumerator (s+6*(b+d*3^k)) j t
+      rw [hshift]
+      exact hgood
+
 /-- At each precision the even depth classes in one full depth period
     are in bijection with the fatal-index classes in a surviving sector.
     The inverse maps are the two Hensel selectors above. -/
