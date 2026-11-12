@@ -485,6 +485,8 @@ theorem s1Config_evenCounter_countedReturn_canonical
 #print axioms s1Config_carryInput_match
 #print axioms s1Config_carryRightOnes
 #print axioms s1Config_counted_decrement_of_prefix
+#print axioms s1Config_counted_decrement_of_shifted_prefix
+#print axioms s1Config_counted_decrement_r1
 #print axioms s1Config_counted_decrement_r2
 #print axioms s1Config_counted_decrement_r3
 
