@@ -110,6 +110,56 @@ CReach(A_s) <-> CReach(L_s) or CReach(B_0,s),    s odd.
 
 This is a finite, exact two-branch reduction for the entire odd-t ray, not a bounded inverse-depth approximation. The specialized parent iff and this reachability iff remain to be Lean-formalized.
 
+## New algebraic subfamily: s=32v+29 (original high-stop j=1895 mod 2048)
+
+The two-parent reduction above yields a further infinite exclusion candidate. Put `s=32v+29` and hence `t=2s+1=64v+59). Then
+
+```text
+A_s = (6162+6656v, 4502+4864v)
+S   = 1333+1440v.
+```
+
+S is odd and not a power of two: modulo 3 it is 1, forcing a hypothetical exponent even; modulo 5 it is 3, forcing the exponent to be 3 modulo 4. Thus A_s has exactly two parents:
+
+```text
+L = (10662+11520v, 2250+2432v)
+B = (2664+2880v, 6246+6752v).
+```
+
+**L branch.** Its sum quotient is
+```text
+(L.x+L.y)/8 = 1614+1744v = 2*(807+872v),
+```
+which has 2-adic valuation exactly 1 and is not a power of two. So L has exactly two parents:
+```text
+D = (12910+13952v, 1124+1216v)
+E = (3226+3488v, 5963+6448v).
+```
+D has even right coordinate and sum `14034+15168v ≡ 2 (mod 8)`; its six-of-eight unique parent is
+```text
+D' = (14032+15168v, 561+608v),
+```
+whose right coordinate is odd and whose sum is `1 (mod 4)`. E itself has odd right coordinate and sum `9189+9936v ≡ 1 (mod 4)`. Both D' and E are excluded by `blank_section_odd_image`. Hence L is blank-unreachable, conditional only on the specialized complete parent iff being formalized.
+
+**B branch.** Three forced six-of-eight inverses give
+```text
+B  = (2664+2880v, 6246+6752v), sum ≡ 6 (mod 8)
+D1 = (8908+9632v, 3122+3376v), sum ≡ 6 (mod 8)
+D2 = (12028+13008v,1560+1688v), sum ≡ 4 (mod 8)
+D3 = (13586+14696v, 779+844v), right odd, sum ≡ 1 (mod 4).
+```
+The right coordinates of B, D1, D2 are even and at least 6, so the six-of-eight theorem applies at every edge. D3 is excluded by `blank_section_odd_image`. Hence B is blank-unreachable.
+
+Therefore the algebraic parent disjunction would give `¬CReach(A_{32v+29})` for every v. The first two forced inverses from the original high-stop target to A(t) apply for odd t, so this translates to
+```text
+t = 64v+59
+j = 7+32*t = 1895+2048v
+k = 3*j+7 = 5692+6144v.
+```
+Thus the candidate all-time high m=0 exclusion is `j ≡ 1895 (mod 2048)`.
+
+**Status:** the arithmetic and composition above are checked algebraically, but the two specialized parent iff lemmas (for A_s and L) have not yet been added to Lean. This is not yet a source-CI-certified exclusion. Agent3 and Agent24 have been asked to check the parent disjunctions and six-of-eight hypotheses. Do not count this family as a proven BB(6) result until the original-source theorem is formalized and CI-audited.
+
 ## Important correction to the earlier scratch derivation
 
 The previous draft had two arithmetic errors. The even-a bounce cost is `2*k+a+7+3*n = x+2*y`, **not** `2*k+a+9+3*n = x+2*y`. Therefore
