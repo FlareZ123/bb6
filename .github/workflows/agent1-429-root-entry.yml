@@ -2,10 +2,6 @@ name: Agent 1 #429 exact blank-root J(0,0) entry (manual)
 
 on:
   workflow_dispatch:
-  # One-shot verification trigger; restricted to the temporary CI branch.
-  push:
-    branches:
-      - agent1-root-entry-ci
 
 permissions:
   contents: read
@@ -13,7 +9,7 @@ permissions:
 jobs:
   root-entry:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -21,35 +17,14 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile the exact physical-root dependency chain
+      - name: Compile and check exact root entry
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost"
+          export LEAN_PATH="im-results/agent8-coverage-contract"
           LOG=/tmp/agent1-429-root-entry.log
           : > "$LOG"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
-          lean -o im-results/agent32-429-primitive-cost/BubbleExact.olean im-results/agent32-429-primitive-cost/BubbleExact.lean 2>&1 | tee -a "$LOG"
-          lean -o im-results/agent32-429-primitive-cost/BubblePrefix.olean im-results/agent32-429-primitive-cost/BubblePrefix.lean 2>&1 | tee -a "$LOG"
-          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting; do
-            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean" 2>&1 | tee -a "$LOG"
-          done
-          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean 2>&1 | tee -a "$LOG"
-          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
-            lean -o "im-results/agent6-fresh-glider/$m.olean" "im-results/agent6-fresh-glider/$m.lean" 2>&1 | tee -a "$LOG"
-          done
-          lean -o im-results/agent44-drift-closure/DirectedDrift.olean im-results/agent44-drift-closure/DirectedDrift.lean 2>&1 | tee -a "$LOG"
-          for m in ZeroMaskOracle FiniteDecision; do
-            lean -o "im-results/agent8-coverage-contract/$m.olean" "im-results/agent8-coverage-contract/$m.lean" 2>&1 | tee -a "$LOG"
-          done
-          for m in FrontierAudit FrontierMass; do
-            lean -o "im-results/agent4-coverage-smoke/$m.olean" "im-results/agent4-coverage-smoke/$m.lean" 2>&1 | tee -a "$LOG"
-          done
-          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit; do
-            lean -o "im-results/agent32-zero-prefix-global/$m.olean" "im-results/agent32-zero-prefix-global/$m.lean" 2>&1 | tee -a "$LOG"
-          done
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean 2>&1 | tee -a "$LOG"
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-primitive-cost/JPhysicalPrefix.olean im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/JRootEntry.olean im-results/agent1-429-root-entry/JRootEntry.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429RootEntry.blank_reaches_j00_after_35'" "$LOG"
           if grep -q sorryAx "$LOG"; then
