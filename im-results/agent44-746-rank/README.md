@@ -67,3 +67,5 @@ The remaining quantifier is infinite. Neither the stronger finite cutoff nor the
 ## Additional exceptional t=1 feeder classes (intermediate draft)
 
 [FeederExceptional1085-1372.md](FeederExceptional1085-1372.md) records a proposed seven-edge exact inverse chain for the two remaining residue classes n mod 1458 = 1085, 1372. The associated Lean modules are **not yet CI-verified**. This is a root exclusion for the odd feeder only, not a fatal-target or BB(6) decision; see the note for the exact affine identities, modular residues, uniqueness arguments, and required next verification.
+
+The exact finite [BigInt inverse-tree enumerator](EnumerateExceptionalFeederTrees.mjs) reproduces the representative trees for all eight exceptional classes and compares the finite samples n=r+1458T for T=0,1,10. It is a diagnostic for discovering candidate parent chains, not an all-index proof; sampled topology changes in several classes.
