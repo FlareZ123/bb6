@@ -1,4 +1,5 @@
 name: Agent 24 counted-micro source extraction (PR-open only)
+# Reopen-only extraction for the two counted local proof sources.
 on:
   pull_request:
     types: [opened, reopened]
