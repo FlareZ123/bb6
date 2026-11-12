@@ -1,0 +1,9 @@
+# Agent 42: exact blank-root witness for initial S1 state
+
+The full initial S1 word (including the separate d0 delimiter) has an exact TM2 root simulation:
+`run tm2 27959 blank = some (s1Config 3 7 2 6 0 63 29)`.
+The finite output is state3/head29 with 225 marks:
+`[31,32,33] ++ (List.range 192).map (fun i => (36+i:Int)) ++ (List.range 18).map (fun i => (29-i:Int)) ++ [11,10,8,5,2,-1,-4,-5,-6,-8,-9,-10]`.
+The reproducible JS computation and support decomposition are in `im-results/agent42-champion-terminal/InitialS1RootWitness.md`; Agent48 is being asked to formalize it via `fRun`/embed.
+
+This is the blank-root witness for Coq's `init` endpoint `S1 3 7 m2 6 0 63`. It should be the root anchor for the reset itinerary; the later m1,n1 terminal adapter still needs the Rsts1/Rst1' sequence to reach its own source.
