@@ -304,13 +304,13 @@ private theorem even_open_middle_ones (P : Int → Bool) (c : Nat)
         omega
       have hk : ∃ k : Nat,
           even_rightStop c-(i:Int)=7+(k:Int) ∧ k<3*(c+1) := by
-        refine ⟨(even_rightStop c-(i:Int)-7).toNat,?_,?_⟩
-        · have hnonneg : 0 ≤ even_rightStop c-(i:Int)-7 := by omega
-          have hcast := Int.toNat_of_nonneg hnonneg
-          omega
-        · have hcast := Int.toNat_of_nonneg (by omega)
+        refine ⟨3*(c+1)-i,?_,?_⟩
+        · have hiBound : i ≤ 3*(c+1) := by
+            unfold even_rightStop at *
+            omega
           unfold even_rightStop at *
           omega
+        · omega
       obtain ⟨k,heq,hk⟩ := hk
       rw [heq]
       exact hone k hk
@@ -334,14 +334,13 @@ private theorem even_open_sweep_local (P : Int → Bool) (c : Nat)
   have h6coord : even_rightStop c-((4+3*c):Int)=6 := by
     unfold even_rightStop
     omega
-  have haway : x ≠ even_rightStop c+1 := by
-    unfold even_rightStop
-    omega
-  simp only [h6coord,if_neg haway]
   by_cases hx6 : x=6
   · subst x
-    simp [even_tailBase]
-  · have haway0 : x ≠ even_rightStop c := by
+    simp [h6coord,even_tailBase]
+  · have haway : x ≠ even_rightStop c+1 := by
+      unfold even_rightStop
+      omega
+    have haway0 : x ≠ even_rightStop c := by
       unfold even_rightStop
       omega
     have haway2 : x ≠ even_rightStop c+2 := by
@@ -360,7 +359,7 @@ private theorem even_open_sweep_local (P : Int → Bool) (c : Nat)
         simp [even_tailBase,h4]
       · subst x
         simp [even_tailBase,h5]
-    simpa [hx6,afterEZero,haway0,haway2] using hvalue
+    simpa [h6coord,hx6,afterEZero,haway,haway0,haway2,even_tailBase] using hvalue
 
 private theorem even_open_tail_match (P : Int → Bool) (c : Nat)
     (h1 : P 1=true) (h2 : P 2=true) (h3 : P 3=true)
@@ -374,7 +373,7 @@ private theorem even_open_tail_match (P : Int → Bool) (c : Nat)
   by_cases ha : even_tailArea x=true
   · have harea : 1≤x ∧ x≤6 := by simpa [even_tailArea] using ha
     simp only [ha,if_pos]
-    exact (even_open_sweep_local P c h1 h2 h3 h4 h5 h6 hone
+    simpa [embed] using (even_open_sweep_local P c h1 h2 h3 h4 h5 h6 hone
       x harea.1 harea.2).symm
   · simp [ha]
 
@@ -405,7 +404,7 @@ theorem even_counted_suffix_from_open (P : Int → Bool) (c : Nat)
   have hon := even_open_middle_ones P c h6 hone
   have hright : B (stop+1)=false := by
     simp [B,afterEZero]
-  have hl0 := counted_left_sweep (4+3*c) B stop
+  have hl0 := counted_left_sweep (5+3*c) B stop
     (by simpa [B] using hon) hright
   have hhead : stop-((5+3*c):Int)=5 := by
     dsimp [stop,even_rightStop]
