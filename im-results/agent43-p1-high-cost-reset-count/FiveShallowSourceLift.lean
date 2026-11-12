@@ -24,9 +24,9 @@ private theorem source_two_chain_mass (n s b d m B D M : Nat)
       omega
 
 /-- Five genuine depth-0/1 inverseAt transitions, with arbitrary depth-two
-runs between them, cannot reach the exact shifted wall for n>=83. -/
+runs between them, cannot reach the exact shifted wall for n>=14. -/
 theorem source_low_word_five_no_wall
-    (n b d m : Nat) (hn : 83≤n)
+    (n b d m : Nat) (hn14 : 14≤n)
     (h : SourceLowWord n 5 (14*2^n-2*n-16) 3 0 b d m)
     (hwall : b+4*m+4*n+20=12*2^n) : False := by
   cases h with
@@ -198,7 +198,7 @@ theorem source_low_word_five_no_wall
               exact no_five_shallow_model_from_source_coefficients
                 n s u v w x r t1 t2 t3 t4 t5
                 alpha beta gamma delta epsilon
-                C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5 hn
+                C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5 hn14
                 ht1 ht2 ht3 ht4 ht5 hpr1 hpr2 hpr3 hpr4 hpr5
                 Wa Ba Wb Wc Bc Wd We Be Wf Wg Bg Wh Wi Bi Wk Wj Bj
                 hpreModel hSh1Model hmid1Model hSh2Model hmid2Model
@@ -206,9 +206,9 @@ theorem source_low_word_five_no_wall
                 htailModel hwallModel
 
 /-- Every finite legal inverseAt trace restricted to depths 0,1,2 which
-reaches the exact shifted wall at n>=83 has at least six shallow edges. -/
+reaches the exact shifted wall at n>=14 has at least six shallow edges. -/
 theorem source_low_trace_wall_needs_six_shallows
-    (n z b d m : Nat) (hn : 83≤n)
+    (n z b d m : Nat) (hn14 : 14≤n)
     (h : SourceLowTrace n z (14*2^n-2*n-16) 3 0 b d m)
     (hwall : b+4*m+4*n+20=12*2^n) : 6≤z := by
   by_cases hsix : 6≤z
@@ -227,7 +227,7 @@ theorem source_low_trace_wall_needs_six_shallows
     · subst z
       exact False.elim (source_low_word_four_no_wall n b d m (by omega) hword hwall)
     · subst z
-      exact False.elim (source_low_word_five_no_wall n b d m hn hword hwall)
+      exact False.elim (source_low_word_five_no_wall n b d m hn14 hword hwall)
 
 #print axioms source_low_word_five_no_wall
 #print axioms source_low_trace_wall_needs_six_shallows
