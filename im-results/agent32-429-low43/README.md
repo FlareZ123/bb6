@@ -41,6 +41,33 @@ The 438- and 909-step zipper monitors are concrete finite Lean proofs by `decide
 
 **Correction of the previous candidate:** the earlier 119-step claim to `junc 0 9 25` was false. In this source, `tens 14` has 28 bits because `tens (n+1) = true :: false :: tens n`; it is not a 14-bit word. The exact 119-step execution ends in C with displacement (-59), not at `junc 0 9 25). The subsequent 45-step route to `junc 12 0 22` and the old `root_low43_branch_to_junc12` theorem have therefore been removed. The corrected route is to J(23,18), then J(11,62).
 
+## Concrete low-even r=96 root-route case
+
+A further finite source theorem now covers the next prepared low-even state
+in the simulated root itinerary. For (u=49,w=2), the deficit is
+(2u-w=96=4\cdot24), and the exact original-table zipper monitor proves
+
+```lean
+runWithMax 719 (junc 49 0 2) =
+  some (junc 11 0 98, -89, 12)
+```
+
+The physical lift `root_low_even_r96_physical` transports this to the
+complete original infinite tape: 719 primitive moves, endpoint J(11,98),
+head displacement (-89), and every intermediate head at most 12 cells
+to the right of the J(49,2) entry head. The proof is a concrete Lean
+`by decide` certificate over the exact source zipper transition table,
+with a separate signed-source-to-physical lift; it is not an extrapolation
+from the finite Python table.
+
+This is one exact instance of the conjectural (r=4k) row in
+[Agent 18's low-J chart](../agent18-429-low-j/README.md), not an
+all-parameter proof of that residue class. The independent blank-root
+simulation places J(49,2) at step 8524 (head 34, historical maximum 39)
+and J(11,98) at step 9243 (head -55, historical maximum 46). The
+prepared-tape theorem proves the local 719-step transition; the preceding
+blank-root composition to J(49,2) is still a separate obligation.
+
 ## Root and proof-status limits
 
 The root simulation reaches J(21,11) at step 1608 with head 12 and historical maximum 26. If that checkpoint is established by the separate blank-root source composition, the corrected 1559-step branch reaches J(11,62) at step 3167 with absolute head (-29) and historical maximum 36. This agrees with an independent raw simulation, but the full blank-root prefix to J(21,11) is not yet certified by this dossier.
