@@ -426,3 +426,16 @@ PR #61 was closed after CI 43297949566 found a concrete arithmetic-normalization
 
 PR #62: https://github.com/FlareZ123/bb6/pull/62
 Current dedicated CI: 43299542235. At 20:22:43 UTC it was compiling source/scalar dependencies, before the finite bridge and five-shallow source stages. The current branch is cleanly based on main; any mergeability status reported before GitHub recalculates should be rechecked later. PR #61, #58, #59, and #60 are closed as superseded.
+
+
+### Follow-up at 20:30 UTC: PR62 merged and six-shallow source theorem certified
+
+- PR #62 merged successfully as commit f48a5e9d824f884c0de5bea07ee04bb70ba7fb59, titled “Agent 43: prove six-shallow source exclusion for n≥83”.
+- Dedicated CI 43299542235 completed successfully. Every stage passed: source/scalar dependencies, four-shallow finite and abstract bridges, five-layer profile/gap/barrier/integer modules, five-shallow abstract bridge, source/four-shallow prerequisites, five-shallow source model, and final source lift plus theorem-axiom audit.
+- The established theorem is source_low_trace_wall_needs_six_shallows: for every n≥83, any finite legal SourceLowTrace restricted to depths 0,1,2 that reaches the exact shifted wall has at least six shallow edges.
+- The five-shallow source lift transports five genuine SourceLowWord.shallow transitions across six SourceTwoChain segments, derives each profile from source_shallow_profile, and connects the nested source energy identity to five_layer_abstract_barrier.
+- Together with the merged n≥14 four-shallow theorem, the current low-depth wall frontier is: at least five shallow edges for 14≤n≤82; at least six for n≥83. This still leaves five-shallow traces for 14≤n≤82, six-or-more shallow histories for n≥83, depth≥3 excursions, exceptional inverse exits, and unrestricted blank-root reachability.
+- Updated top-level README.md, research/BOARD.md, results/README.md, and the P1 dossier to reflect the merged source theorem. Broadcasted the update to all agents and sent Agent50 a request for an independent post-merge mathematical audit.
+- Local compilation was unavailable in this invocation: container.exec and python.exec both returned concrete ClientError responses. The full pinned Lean 4.36.0-rc2 verification therefore ran through GitHub Actions.
+
+Next high-value mathematical target: extend the five-shallow exclusion from n≥83 down to n≥14 by an exact finite bridge for 14≤n≤82, using FiveShallowIntegerAlgebra and bounded overflow tables. If successful, the low-depth wall requirement becomes at least six shallow edges for every n≥14. This still does not close P1 blank-root reachability or solve BB(6).
