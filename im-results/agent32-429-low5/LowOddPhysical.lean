@@ -1,4 +1,6 @@
 import LowOddSource
+import HeadDisplacement
+import BubblePrefixHeadBound
 import JPhysicalPrefix
 import BB429DeltaPhysicalBridge
 import Lean.Elab.Tactic.Omega
@@ -233,4 +235,251 @@ theorem lowOdd_raw_head (v n : Nat) :
 
 #print axioms stageOdd_represented
 #print axioms lowOdd_raw_head
+
+
+/-- Canonical physical configuration at the beginning of the odd stage. -/
+def stageOddConfig (v n : Nat) : Config :=
+  {state:=A,head:=2*(v:Int)+2,tape:=stageOddTape v n}
+
+/-- The odd stage splits into an extremal left sweep, an extremal right
+    sweep, and a final four-step right sweep ending at C/0.  Each source
+    segment is lifted to the original physical machine. -/
+private theorem stageOdd_decomposition (v n : Nat) :
+    ∃ c1 c2 c3 : Config,
+      run target429 (4*v+6) (stageOddConfig v n) = some c1 ∧
+      run target429 (4*v+6) c1 = some c2 ∧
+      run target429 4 c2 = some c3 ∧
+      c1.head = (stageOddConfig v n).head - (4*v+6) ∧
+      c2.head = (stageOddConfig v n).head ∧
+      c3.head = (stageOddConfig v n).head + 4 ∧
+      c3.state.val = 2 ∧
+      c3.tape c3.head = false ∧
+      c3.tape (c3.head+1) = false := by
+  let zMid : Zipper :=
+    z 0 (tens (2*n+1) ++ ones 6) false (tens (2*v+3) ++ [false,true])
+  let zAR : Zipper :=
+    z 0 (ones (4*v+6) ++ tens (2*n+1) ++ ones 6) false [false,true]
+  let zC0 : Zipper :=
+    z 2 (true::false::true::true::(ones (4*v+6) ++ tens (2*n+1) ++ ones 6))
+      false []
+  have hAF := BB429Low3Delta.af_pairs_delta
+    (2*v+2) (tens (2*(n+1)) ++ ones 6) [false,true]
+  have h2 := af_tail_delta
+    (tens (2*n+1) ++ ones 6) (tens (2*v+2) ++ [false,true])
+  have hleft : runWithDelta (4*v+6) (stageOdd v n) =
+      some (zMid, -(4*v+6)) := by
+    have htime : 4*v+6 = (4*v+4)+2 := by omega
+    rw [htime, runWithDelta_add]
+    rw [hAF]
+    simp only [Option.bind_some]
+    rw [h2]
+    simp [zMid, tens, List.append_assoc]
+  have hAR0 := BB429Low3Delta.ar_pairs_delta
+    (2*v+3) (tens (2*n+1) ++ ones 6) [false,true]
+  have hAR : runWithDelta (4*v+6) zMid =
+      some (zAR, (4*v+6 : Int)) := by
+    simpa [zMid,zAR,Nat.mul_add,Nat.add_mul,List.append_assoc] using hAR0
+  have h4 : runWithDelta 4 zAR = some (zC0, (4 : Int)) := by
+    simpa [zAR,zC0,List.append_assoc] using
+      low3_tail_delta (ones (4*v+6) ++ (tens (2*n+1) ++ ones 6))
+  have hrepStage : Represents (stageOdd v n) (stageOddConfig v n) := by
+    simpa [stageOddConfig] using stageOdd_represented v n
+  obtain ⟨c1,hleftP,hrep1,hhead1⟩ :=
+    source_runWithDelta_rep (4*v+6) (stageOdd v n) (stageOddConfig v n)
+      hrepStage zMid (-(4*v+6)) hleft
+  obtain ⟨c2,hARP,hrep2,hhead2⟩ :=
+    source_runWithDelta_rep (4*v+6) zMid c1 hrep1 zAR (4*v+6) hAR
+  obtain ⟨c3,h4P,hrep3,hhead3⟩ :=
+    source_runWithDelta_rep 4 zAR c2 hrep2 zC0 4 h4
+  rcases hrep3 with ⟨hstate,hcur,hleftRep,hrightRep⟩
+  have hstate' : c3.state.val = 2 := by
+    simpa [zC0] using hstate
+  have hcur' : c3.tape c3.head = false := by
+    simpa [zC0] using hcur
+  have hright' : c3.tape (c3.head+1) = false := by
+    have h := hrightRep 0
+    change c3.tape (c3.head+1) = false at h
+    exact h
+  have hhead1' : c1.head = (stageOddConfig v n).head - (4*v+6) := by
+    simpa using hhead1
+  have hhead2' : c2.head = (stageOddConfig v n).head := by
+    rw [hhead2,hhead1']
+    omega
+  have hhead3' : c3.head = (stageOddConfig v n).head + 4 := by
+    rw [hhead3,hhead2']
+  exact ⟨c1,c2,c3,hleftP,hARP,h4P,hhead1',hhead2',hhead3',
+    hstate',hcur',hright'⟩
+
+/-- Before the final four-step C/0 tail, the odd stage never exceeds
+    three cells beyond its entry head. -/
+private theorem stageOdd_prefix_head_bound (v n s : Nat)
+    (hs : s ≤ 8*v+15) :
+    ∃ d : Config,
+      run target429 s (stageOddConfig v n) = some d ∧
+      d.head ≤ (stageOddConfig v n).head + 3 := by
+  obtain ⟨c1,c2,c3,hleft,hAR,h4,hhead1,hhead2,hhead3,
+      hstate,hcur,hright⟩ := stageOdd_decomposition v n
+  let cStage : Config := stageOddConfig v n
+  let L : Nat := 4*v+6
+  have hhead1L : c1.head = cStage.head - (L:Int) := by
+    simpa [cStage,L] using hhead1
+  have hdisp1 : c1.head-cStage.head = -(L:Int) := by
+    rw [hhead1L]
+    omega
+  have hdisp2 : c2.head-c1.head = (L:Int) := by
+    rw [hhead2,hhead1L]
+    omega
+  have hdisp3 : c3.head-c2.head = 4 := by
+    rw [hhead3,hhead2]
+    omega
+  by_cases hs1 : s ≤ L
+  · obtain ⟨d,hpre⟩ :=
+      run_prefix_exists target429 L s cStage c1 hleft hs1
+    have hleftExact :=
+      run_prefix_left_extremal target429 L s cStage d c1
+        hleft hpre hs1 hdisp1
+    exact ⟨d,hpre,by rw [hleftExact]; omega⟩
+  · by_cases hs2 : s ≤ 2*L
+    · let r : Nat := s-L
+      have hr : r ≤ L := by
+        dsimp [r]
+        omega
+      obtain ⟨d,hpre2⟩ :=
+        run_prefix_exists target429 L r c1 c2 hAR hr
+      have hrightExact :=
+        run_prefix_right_extremal target429 L r c1 d c2
+          hAR hpre2 hr hdisp2
+      have htime : s=L+r := by
+        dsimp [r]
+        omega
+      have hpre : run target429 s cStage = some d := by
+        rw [htime,run_add',hleft]
+        simpa using hpre2
+      exact ⟨d,hpre,by rw [hrightExact,hhead1L]; omega⟩
+    · let r : Nat := s-2*L
+      have hL : 8*v+15 = 2*L+3 := by
+        dsimp [L]
+        omega
+      have hr : r ≤ 3 := by
+        dsimp [r]
+        omega
+      obtain ⟨d,hpre3⟩ :=
+        run_prefix_exists target429 4 r c2 c3 h4 (by omega)
+      have hrightExact :=
+        run_prefix_right_extremal target429 4 r c2 d c3
+          h4 hpre3 (by omega) hdisp3
+      have hleftAR : run target429 (L+L) cStage = some c2 := by
+        rw [run_add',hleft]
+        exact hAR
+      have htime : s=(L+L)+r := by
+        dsimp [r]
+        omega
+      have hpre : run target429 s cStage = some d := by
+        rw [htime,run_add',hleftAR]
+        simpa using hpre3
+      exact ⟨d,hpre,by rw [hrightExact,hhead2]; omega⟩
+
+/-- The first C/0 event on the low-odd branch is a strict physical
+    right-head record: every earlier primitive prefix stays at least one
+    cell behind it, and its right neighbour is blank. -/
+theorem lowOdd_first_C0_frontier (v n : Nat) :
+    ∃ cC : Config,
+      run target429 (4*v*v+18*v+22)
+        {state:=A,head:=0,tape:=jTape (v+2*n+3) (2*v+1)} = some cC ∧
+      cC.head = 2*(v:Int)+6 ∧
+      cC.state.val = 2 ∧
+      cC.tape cC.head = false ∧
+      cC.tape (cC.head+1) = false ∧
+      (∀ t : Nat, t < 4*v*v+18*v+22 →
+        ∀ d : Config,
+          run target429 t
+            {state:=A,head:=0,tape:=jTape (v+2*n+3) (2*v+1)} = some d →
+          d.head < cC.head) := by
+  let tape : Int → Bool := jTape (v+2*n+3) (2*v+1)
+  let c0 : Config := {state:=A,head:=0,tape:=tape}
+  let cStage : Config := stageOddConfig v n
+  let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
+  have hfirst : run target429 B c0 = some cStage := by
+    have hhead : 2*((v+1:Nat):Int) = 2*(v:Int)+2 := by omega
+    simpa only [hhead,stageOddConfig,stageOddTape,c0,tape,B] using
+      multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
+        (by decide) (by decide) (by decide) (by decide)
+        (lowOdd_holes v n) (lowOdd_odds v n) (lowOdd_right v n)
+  have hBubblePrefixBound :
+      ∀ t : Nat, t ≤ B →
+        ∃ d : Config, run target429 t c0 = some d ∧
+          d.head ≤ 2*(v:Int)+2 := by
+    intro t ht
+    obtain ⟨d,hpre,hbound⟩ :=
+      multi_bubble_prefix_head_bound target429 (v+1) (v+1) t tape
+        (by omega) (by decide) (by decide) (by decide) (by decide)
+        (lowOdd_holes v n) (lowOdd_odds v n) (lowOdd_right v n)
+        (by simpa [B] using ht)
+    exact ⟨d,hpre,by omega⟩
+  obtain ⟨c1,c2,cC,hleft,hAR,h4,hhead1,hhead2,hhead3,
+      hstate,hcur,hright⟩ := stageOdd_decomposition v n
+  let L : Nat := 4*v+6
+  have hleftAR : run target429 (L+L) cStage = some c2 := by
+    rw [run_add',hleft]
+    exact hAR
+  have hstageFull : run target429 (L+L+4) cStage = some cC := by
+    rw [run_add',hleftAR]
+    exact h4
+  have hS : 8*v+16 = L+L+4 := by
+    dsimp [L]
+    omega
+  have hstage : run target429 (8*v+16) cStage = some cC := by
+    rw [hS]
+    exact hstageFull
+  have htotal : run target429 (B+8*v+16) c0 = some cC := by
+    rw [run_add',hfirst]
+    exact hstage
+  have htime : B+8*v+16 = 4*v*v+18*v+22 := by
+    dsimp [B]
+    omega
+  have htotal' : run target429 (4*v*v+18*v+22) c0 = some cC := by
+    simpa [htime] using htotal
+  have hheadC : cC.head = 2*(v:Int)+6 := by
+    rw [hhead3]
+    simp [stageOddConfig]
+    omega
+  have hstageHead : cStage.head = 2*(v:Int)+2 := by
+    simp [cStage,stageOddConfig]
+  have hprev :
+      ∀ t : Nat, t < 4*v*v+18*v+22 →
+        ∀ d : Config, run target429 t c0 = some d →
+          d.head ≤ 2*(v:Int)+5 := by
+    intro t ht d hd
+    by_cases htb : t ≤ B
+    · obtain ⟨d',hpre,hbound⟩ := hBubblePrefixBound t htb
+      have heq : d=d' := Option.some.inj (hd.symm.trans hpre)
+      subst d
+      omega
+    · let s : Nat := t-B
+      have hs : s ≤ 8*v+15 := by
+        have hBS : B+8*v+16 = 4*v*v+18*v+22 := htime
+        dsimp [s]
+        omega
+      obtain ⟨d',hseg,hbound⟩ := stageOdd_prefix_head_bound v n s hs
+      have htime2 : t=B+s := by
+        dsimp [s]
+        omega
+      have hpre : run target429 t c0 = some d' := by
+        rw [htime2,run_add',hfirst]
+        exact hseg
+      have heq : d=d' := Option.some.inj (hd.symm.trans hpre)
+      subst d
+      omega
+  have hrecord :
+      ∀ t : Nat, t < 4*v*v+18*v+22 →
+        ∀ d : Config, run target429 t c0 = some d →
+          d.head < cC.head := by
+    intro t ht d hd
+    have hb := hprev t ht d hd
+    rw [hheadC]
+    omega
+  exact ⟨cC,by simpa [c0,tape] using htotal',hheadC,hstate,hcur,hright,hrecord⟩
+
+#print axioms lowOdd_first_C0_frontier
+
 end BB429LowOddPhysical
