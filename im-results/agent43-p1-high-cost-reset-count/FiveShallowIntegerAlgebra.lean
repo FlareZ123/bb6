@@ -22,8 +22,7 @@ theorem algebraic_first_five
  have hR1Int : (R1:Int)+(O1:Int)+(d:Int)=(L1:Int)*(T1:Int) := by
    exact_mod_cast hR1
  have hEqInt : (K:Int)*(p:Int) =
-   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
-       (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int)+(R5:Int))+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
    exact_mod_cast hEq
  have hKInt : ((K:Int)+98)*(p:Int)=
    (C1:Int)*(P:Int)+
@@ -59,8 +58,11 @@ theorem algebraic_first_five
    rw [Int.add_mul]
    simpa using hm
  have hEqExpanded : (K:Int)*(p:Int)=
-   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
-       (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int)))))+
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(R5:Int))))+
+   (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
+   (A1:Int)*((A2:Int)*(R3:Int))+
+   (A1:Int)*(R2:Int)+(R1:Int) := by
    rw [hEqInt]
    simp only [Int.mul_add,Int.add_assoc]
  have hKExpanded : (K:Int)*(p:Int)+98*(p:Int)=
