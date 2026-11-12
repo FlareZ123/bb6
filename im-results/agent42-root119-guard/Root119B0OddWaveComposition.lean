@@ -109,7 +109,10 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
     have hout :
         (⟨.B,c.h,oddWaveTape 0 f.tape f.h⟩ : Conf)=c :=
       Option.some.inj (hret'.symm.trans hrunInputShort)
-    exact Or.inl ⟨f,hf,hF,hFbit,by rw [hposF]; omega,hout.symm⟩
+    refine Or.inl ⟨f,hf,hF,hFbit,?_,?_⟩
+    · rw [hposF]
+      omega
+    · simpa [hhead] using hout.symm
   · have hk2 : 2≤k := by omega
     have hleftE : e.tape (f.h-1)=true := by
       have hpatt := hpattern 1 (by omega)
