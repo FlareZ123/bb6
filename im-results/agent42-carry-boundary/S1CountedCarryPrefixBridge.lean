@@ -580,3 +580,162 @@ theorem s1Config_evenCounter_countedReturn
 #print axioms s1Config_evenCounter_countedReturn
 
 end BB6Coverage.Agent42CarryPrefixBridge
+
+
+namespace BB6Coverage.Agent42CarryPrefixBridge
+
+open BB6Coverage
+open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent48Champion
+
+private theorem s1Config_oddCounter_local
+    (L n m len q b : Nat) (h : Int) (hq : q<2^len)
+    (x : Int) (hx : prefArea x=true) :
+    (s1Config L n m (len+1) (2*q+1) b h).tape (h+x) =
+      (embed prefBase).tape x := by
+  have hbounds : -1≤x ∧ x≤6 := by
+    simpa [prefArea] using hx
+  have hcases : x=(-1:Int) ∨ x=0 ∨ x=1 ∨ x=2 ∨
+      x=3 ∨ x=4 ∨ x=5 ∨ x=6 := by omega
+  rcases hcases with hneg | h0 | h1 | h2 | h3 | h4 | h5 | h6
+  · subst x
+    have hcell := s1Config_left_carryCells L n m len q 0 b h 1 hq
+    have hcoord : h-(1:Int)=h+(-1:Int) := by omega
+    rw [hcoord] at hcell
+    have hbit :
+        sideBit (d1pow 0 ++ d0 ++ binDec len q ++ markerWord m ++
+          d0 ++ binDec L n ++ lh) 1=false := by
+      simp [d1pow,d0,sideBit]
+    rw [hbit] at hcell
+    simpa [embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_left_carryCells L n m len q 0 b h 0 hq
+    have hcoord : h-(0:Int)=h+0 := by omega
+    rw [hcoord] at hcell
+    have hbit :
+        sideBit (d1pow 0 ++ d0 ++ binDec len q ++ markerWord m ++
+          d0 ++ binDec L n ++ lh) 0=false := by
+      simp [d1pow,d0,sideBit]
+    rw [hbit] at hcell
+    simpa [embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 0
+    have hcoord : h+1+(0:Int)=h+1 := by omega
+    rw [hcoord] at hcell
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 1
+    have hcoord : h+1+(1:Int)=h+2 := by omega
+    rw [hcoord] at hcell
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 2
+    have hcoord : h+1+(2:Int)=h+3 := by omega
+    rw [hcoord] at hcell
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 3
+    have hcoord : h+1+(3:Int)=h+4 := by omega
+    rw [hcoord] at hcell
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 4
+    have hcoord : h+1+(4:Int)=h+5 := by omega
+    rw [hcoord] at hcell
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      embed,prefBase] using hcell
+  · subst x
+    have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h 5
+    have hcoord : h+1+(5:Int)=h+6 := by omega
+    rw [hcoord] at hcell
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      embed,prefBase] using hcell
+
+/-- The valuation-zero S1 branch is exactly the original odd-counter
+macro after the S1 physical encoder is unfolded. -/
+theorem s1Config_oddCounter_countedReturn
+    (L n m a z b : Nat) (h : Int)
+    (hz : 0<z) (hzlt : z<2^a) (hodd : z%2=1) :
+    ∃ q len T',
+      z=2*q+1 ∧ a=len+1 ∧ q<2^len ∧
+      run tm2 (48+12*b) (s1Config L n m a z b h) =
+        some ⟨(3 : Fin 6),h,T'⟩ := by
+  obtain ⟨q,r,len,hfactor,ha,hq⟩ :=
+    exists_odd_factor_bounded a z hz hzlt
+  have hr : r=0 := by
+    by_contra hr0
+    have hrpos : 0<r := by omega
+    have hdivPow : 2 ∣ 2^r := by
+      cases r with
+      | zero => omega
+      | succ r => simp [Nat.pow_succ,Nat.mul_comm]
+    have hdiv : 2 ∣ z := by
+      rw [hfactor]
+      exact dvd_mul_of_dvd_right hdivPow (2*q+1)
+    have heven : z%2=0 := Nat.mod_eq_zero_of_dvd hdiv
+    omega
+  have hfactor' : z=2*q+1 := by simpa [hr] using hfactor
+  have ha' : a=len+1 := by simpa [hr] using ha
+  let cfg := s1Config L n m a z b h
+  have hcfg : cfg=s1Config L n m (len+1) (2*q+1) b h := by
+    simp [cfg,ha',hfactor']
+  let P : Int → Bool := fun x => cfg.tape (h+x)
+  have hlocal : ∀ x, prefArea x=true →
+      P x=(embed prefBase).tape x := by
+    intro x hx
+    have hv := s1Config_oddCounter_local L n m len q b h hq x hx
+    rw [← hcfg] at hv
+    simpa [P] using hv
+  have hframe : oddCounterInput P = (⟨(3 : Fin 6),0,P⟩ : Config) := by
+    unfold oddCounterInput
+    change (⟨(3 : Fin 6),0,
+      fun x => if prefArea x then (embed prefBase).tape x else P x⟩ : Config) =
+      ⟨(3 : Fin 6),0,P⟩
+    congr 1
+    funext x
+    by_cases hx : prefArea x=true
+    · have hv := hlocal x hx
+      simp [hx,hv]
+    · simp [hx]
+  have hstart : shiftConfig h (oddCounterInput P) = cfg := by
+    rw [hframe]
+    change (⟨(3 : Fin 6),0+h,fun x => P (x-h)⟩ : Config) = cfg
+    have hhead : (0:Int)+h=h := by omega
+    rw [hhead]
+    congr 1
+    funext x
+    dsimp [P]
+    congr 1
+    omega
+  have hone : ∀ i : Nat, i<3*(b+1) → P (7+(i:Int))=true := by
+    intro i hi
+    have hv := s1Config_right_unary_one L n m a z b h i hi
+    simpa [P,cfg,Int.add_assoc] using hv
+  have hzero0 : P (10+3*(b:Int))=false := by
+    have hv := s1Config_right_zero_after_counter L n m a z b h 0
+    simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
+  have hzero1 : P (11+3*(b:Int))=false := by
+    have hv := s1Config_right_zero_after_counter L n m a z b h 1
+    simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
+  have hzero2 : P (12+3*(b:Int))=false := by
+    have hv := s1Config_right_zero_after_counter L n m a z b h 2
+    simpa [P,cfg,even_rightStop,Int.add_assoc] using hv
+  have hrun := counted_odd_counter P b hone hzero0 hzero1 hzero2
+  let Tpost : Int → Bool := (oddCounterOutput b P).tape ∘ fun x => x-h
+  have hshift := shift_run h tm2 (oddCounterInput P) (48+12*b)
+  rw [hrun] at hshift
+  simp only [Option.map] at hshift
+  rw [hstart] at hshift
+  have hrunAbs : run tm2 (48+12*b) cfg =
+      some ⟨(3 : Fin 6),h,Tpost⟩ := by
+    simpa [shiftConfig,Tpost,oddCounterOutput,frame,embed,odd_tailFinal] using hshift
+  refine ⟨q,len,Tpost,hfactor',ha',hq,?_⟩
+  simpa [cfg] using hrunAbs
+
+#print axioms s1Config_oddCounter_countedReturn
+
+end BB6Coverage.Agent42CarryPrefixBridge
