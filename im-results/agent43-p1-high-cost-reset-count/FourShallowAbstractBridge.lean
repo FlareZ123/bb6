@@ -115,12 +115,12 @@ theorem four_root_no_overflow :
 theorem four_second_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
     ∀ x1 : Fin 13, ∀ t2 : Fin 2,
-    fourSecondOverflow (n.val+14) s.val t1.val x1.val t2.val = false := by decide
+    fourSecondOverflow (n.val+14) s.val t1.val x1.val t2.val = false := by native_decide
 
 theorem four_third_no_overflow :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
     ∀ x1 : Fin 13, ∀ t2 : Fin 2, ∀ x2 : Fin 14, ∀ t3 : Fin 2,
-    fourThirdOverflow (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val = false := by decide
+    fourThirdOverflow (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val = false := by native_decide
 
 theorem four_fourth_finite_audit :
   ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
@@ -367,8 +367,8 @@ private theorem four_layer_finite_barrier
     exact Nat.mul_div_cancel_left d1 (Nat.pow_pos (by decide))
   have hR1mod : R1%2^x1=0 := Nat.mod_eq_zero_of_dvd ⟨d1,hR1div⟩
   have hSecondFinBool := four_second_no_overflow
-    (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
-    (⟨t1,ht1⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
+    (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
+    (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
     (⟨t2,by omega⟩ : Fin 2)
   let S2 := R2+d1
   have hR2formula : R2+O2=L2*(T1+x1) := by
@@ -415,9 +415,9 @@ private theorem four_layer_finite_barrier
     have hβ := four_profile_alpha_eq t2 beta C2 L2 O2 ht2 hp2
     simpa [x2] using four_profile_step_of_affine t2 beta v hβ
   have hThirdFinBool := four_third_no_overflow
-    (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
-    (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
-    (⟨t2,ht2⟩ : Fin 2) (⟨x2,by omega⟩ : Fin 14)
+    (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
+    (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
+    (⟨t2,by omega⟩ : Fin 2) (⟨x2,by omega⟩ : Fin 14)
     (⟨t3,by omega⟩ : Fin 2)
   let S3 := R3+d2
   have hR3formula : R3+O3=L3*(T1+x1+x2) := by
@@ -465,10 +465,10 @@ private theorem four_layer_finite_barrier
     have hγ := four_profile_alpha_eq t3 gamma C3 L3 O3 ht3 hp3
     simpa [x3] using four_profile_step_of_affine t3 gamma w hγ
   have hFourthFinBool := four_fourth_finite_audit
-    (⟨n-14,by omega⟩ : Fin 62) (⟨s,hs3⟩ : Fin 4)
-    (⟨t1,ht1⟩ : Fin 2) (⟨x1,hx1bound⟩ : Fin 13)
-    (⟨t2,ht2⟩ : Fin 2) (⟨x2,hx2bound⟩ : Fin 14)
-    (⟨t3,ht3⟩ : Fin 2) (⟨x3,by omega⟩ : Fin 15)
+    (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
+    (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
+    (⟨t2,by omega⟩ : Fin 2) (⟨x2,by omega⟩ : Fin 14)
+    (⟨t3,by omega⟩ : Fin 2) (⟨x3,by omega⟩ : Fin 15)
     (⟨t4,by omega⟩ : Fin 2)
   let S4 := R4+d3
   have hR4formula : R4+O4=L4*(T1+x1+x2+x3) := by
@@ -487,9 +487,7 @@ private theorem four_layer_finite_barrier
       hprof2.1,hprof2.2,hS2mod,hS3eq,hnot3mod,
       hprof3.1,hprof3.2,hS3mod,hS4eq,hz,e,
       Nat.sub_add_cancel hn14] at hh
-  have hnot4 : ¬ 2^(e-x1-x2-x3)∣S4 := by
-    intro hdiv
-    exact hnot4mod (Nat.mod_eq_zero_of_dvd hdiv)
+    exact hh
   have hnot4 : ¬ 2^(e-x1-x2-x3)∣S4 := by
     intro hdiv
     exact hnot4mod (Nat.mod_eq_zero_of_dvd hdiv)
