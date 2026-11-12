@@ -136,7 +136,7 @@ theorem s1Config_decrement_leftOutput
         have hidx : i-3*r < 3 := by omega
         have hd1 : sideBit d1 (i-3*r) = true := by
           simpa [d1pow] using sideBit_d1pow_true 1 (i-3*r) (by omega)
-        simp [d1.length, hidx, hd1]
+        simp [d1, hidx, hd1]
       have hbit :
           carryLeftOutputBit r
             (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y))
@@ -144,8 +144,9 @@ theorem s1Config_decrement_leftOutput
         have hnotfar : ¬ (-(i:Int)) < -3*(r:Int)-2 := by omega
         have hle : (-(i:Int)) ≤ -3*(r:Int) := by omega
         simp [carryLeftOutputBit,hnotfar,hle]
-      rw [hbit,hout,hside]
-      simp [hcoord]
+      rw [hbit]
+      rw [hcoord]
+      rw [hout,hside]
     · have hsmall : i < 3*r := by omega
       have hside :
         sideBit
