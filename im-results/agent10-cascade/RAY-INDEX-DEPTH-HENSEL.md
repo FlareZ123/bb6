@@ -81,6 +81,13 @@ The coefficient (2^{t+3}(2^{j+1}-1)) is a 3-adic unit for even (j). The Lean dra
 
 This is a complementary index-coordinate form of the translated high-gate Hensel selectors already used for (t=3): those fix the fatal index and solve for a depth class, while this theorem fixes the even depth and solves for the fatal-index digit. It can be iterated to build the full (W_{j,t}) residue selector; the recursive selector itself has not yet been added. The unique-digit theorem is already reusable for exceptional high-valuation feeder branches.
 
+For the specific t=3 high-q gate, put e=W_{j,3}(n)/3^8=(2q+5)/81. Since 2^6(2^{j+1}-1) is 1 modulo 3 for even j, the next index Hensel digit is exactly e modulo 3 (Lean theorem `tThreeHighGate_digit_eq_quotient_mod_three`). The source equation for the second t=3 parent's target index,
+[
+16e=8\cdot2^{n-6}+r+(n-6)+5,
+]
+gives r=e+1 modulo 3 in sectors n=4,5 modulo 6 (Lean theorem `tThreeSecondParent_index_relation`). Hence r=d+1 modulo 3, where d is the nested Hensel digit. The already-excluded r=0 branch is d=2; the two remaining r=1,2 branches are d=0,1 respectively. This converts the three second-parent cases into the three index-lift digits without confusing the parent height 8e with the next target index r.
+
+
 ## BB(6) relevance and strict boundary
 
 An odd inverse parent at ray node (Z_j(n)) requires the appropriate divisibility (3^{t+1}mid Z_j(n)), in addition to the dyadic source-band condition. The selector therefore locates, exactly and at every valuation threshold, the fatal-sector indices at which a fixed even-depth node can have the required 3-adic valuation. The duality also identifies the unique even-depth class for a fixed fatal index.
