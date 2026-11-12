@@ -121,12 +121,17 @@ lemma. Do not conflate it with the already-proved all-ones drain.
 The composition theorem `q4_suffix_frame` establishes the exact
 (39+3b)-step run from a state-4 q4 cut, assuming its right-half shape.
 It returns the resulting tape as a composition of `frameAt` and the
-counted block-scan transformation. The left exterior is unrestricted.
+counted block-scan transformation. The left exterior is unrestricted;
+five blank cells beyond the right unary run suffice for this run theorem.
 
-This is **intermediate formalization**, not yet a completed canonical
-`s1Config` endpoint theorem: the adapter identifying the framed output
-with the target `s1Config` (and the upstream S1-to-q4 prefix theorem)
-remain to be proved. The new module is included in the manual
+The module also contains the list-level endpoint identity
+`binDec_pow2_sub_one` and `q4SuffixTargetLeft`:
+`binDec (a+b+2) (2^b-1) = d0pow b ++ d1pow (a+2)`, and the target
+left-facing word is
+`d0pow b ++ d1pow 2 ++ (q4LeftFacing L n a).drop 1`.
+Thus the remaining endpoint work is to connect the framed output's
+left/right cell values to these words (the actual q4 source has an
+infinite blank tail), and to prove the upstream S1-to-q4 prefix theorem. The new module is included in the manual
 `agent48-champion-root` Lean workflow, but no CI compilation has yet
 been run for this addition. Do not cite the draft as a verified theorem
 until that workflow compiles it and its axiom audit passes.
