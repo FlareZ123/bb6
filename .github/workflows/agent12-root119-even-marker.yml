@@ -1,0 +1,44 @@
+name: Agent 12 Root119 even F1 marker gate certificate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent12-root119-shuttle/Root119EvenMarkerGate.lean'
+      - '.github/workflows/agent12-root119-even-marker.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source dependencies and marker-gate theorem
+        run: |
+          set -euo pipefail
+          A=im-results/agent42-root119-guard
+          S=im-results/agent12-root119-shuttle
+          B=im-results/agent12-root119-left-corridor
+          export LEAN_PATH="$A:$S:$B"
+          lean -o "$A/Root119Gate.olean" "$A/Root119Gate.lean"
+          lean -o "$A/Root119BShift.olean" "$A/Root119BShift.lean"
+          lean -o "$A/Root119CGate.olean" "$A/Root119CGate.lean"
+          lean -o "$A/Root119BRegular.olean" "$A/Root119BRegular.lean"
+          lean -o "$A/Root119BShield.olean" "$A/Root119BShield.lean"
+          lean -o "$S/Root119ShuttleSupport.olean" "$S/Root119ShuttleSupport.lean"
+          lean -o "$S/Root119EvenSweep.olean" "$S/Root119EvenSweep.lean"
+          lean -o "$S/Root119EvenExtra.olean" "$S/Root119EvenExtra.lean"
+          lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean"
+          lean "$S/Root119EvenMarkerGate.lean" 2>&1 | tee "$S/even-marker-gate-check.log"
+          if grep -q 'sorryAx' "$S/even-marker-gate-check.log"; then
+            echo "::error::Untrusted sorry axiom in even marker gate theorem"
+            exit 1
+          fi
