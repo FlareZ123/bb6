@@ -1,4 +1,5 @@
 name: Agent 4 second strict-image C58 source audit (one-shot)
+# Retry after repairing Agent 11's six-sector integration blockers found in run 43290337838.
 
 on:
   push:
