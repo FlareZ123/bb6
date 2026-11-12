@@ -36,26 +36,34 @@ theorem q4_exceptional_EE_BEA_section (m : Nat) :
   let t : Nat := 2097152*m+1580151
   have hu : u=27*z := by
     dsimp [u,z]
+    simp only [Nat.mul_add]
     omega
   have hA0 : 192*u+161=3*k0+2 := by
     dsimp [u,z,k0]
+    simp only [Nat.mul_add]
     omega
   have hB1 : 8*k0+10=3*k1+2 := by
     dsimp [k0,k1]
+    simp only [Nat.mul_add]
     omega
   have hB2 : 8*k1+10=3*k2+4 := by
     dsimp [k1,k2]
+    simp only [Nat.mul_add]
     omega
   have hE : 8*k2+9=3*k3+4 := by
     dsimp [k2,k3]
+    simp only [Nat.mul_add]
     omega
   have hReset : 8*k3+5=1+4*3*h := by
     dsimp [k3,h,z]
+    simp only [Nat.mul_add]
     omega
   have hBEA : 1+4*8*h=27*t+20 := by
     dsimp [h,t]
+    simp only [Nat.mul_add]
     omega
   have houter : 8*(24*u+19)+9=192*u+161 := by
+    simp only [Nat.mul_add]
     omega
   have hEE0 :=
     BB6.Agent2E7SecondSafe.exceptional_EE_packet u 4 (by omega)
