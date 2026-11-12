@@ -121,7 +121,7 @@ The A branch is now source-closed by `AP2PacketBoundarySource.a_p2_packet_reentr
 - returns to a regular L section after normalization through A or B(q=0); or
 - reaches an explicit normalized packet with a≡1 (mod3) and p=2.
 
-Thus the only remaining p≡2 normalizer boundary is the E,p=2 changed-tail reset. The proof uses `PacketNormalizeSource.normalized_original_source`, `PacketSafeExit.normalize_p2_exit`, the universal A-p2 110111 source theorem, and `BoundaryBZero.b_zero_source`. This is a source-connected reduction, not merely a classification of the abstract normalizer. It has an axiom-print check and is wired into both packet and D-root manual workflows; CI remains pending.
+Thus the only remaining p≡2 normalizer boundary is the E,p=2 changed-tail reset. The proof uses `PacketNormalizeSource.normalized_original_source`, `PacketSafeExit.normalize_p2_exit`, the universal A-p2 110111 source theorem, and `BoundaryBZero.b_zero_source`. This is a source-connected reduction, not merely a classification of the abstract normalizer. It has an axiom-print check and is wired into both packet and D-root manual workflows; CI remains pending. The strengthened theorem `p2_packet_reentry_or_reset` additionally composes the E,p=2 residual with `PacketP2ResetSource.e_two_reset`: every p≡2 packet either returns to regular L or reaches the canonical changed-marker packet `M(8k+5,0,2q+6;marker)` used by the arbitrary-depth E-chain work.
 
 ## E/A and E/E exceptional packet closure by residue (new Lean composition; CI pending)
 
