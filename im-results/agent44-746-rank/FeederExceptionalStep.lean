@@ -24,11 +24,26 @@ private theorem no_even_band_from_gap (k u : Nat)
     (hlo : 4*2^k-3 < u) (hhi : u < 6*2^k-1) :
     ∀j, ¬(6*2^j-1≤u ∧ u≤8*2^j-3) := by
   intro j
-  have hshift : (k+1)-1=k := by omega
-  apply TerminalExit.no_even_band (k+1) j u
-  · omega
-  · simpa [hshift] using hlo
-  · simpa [hshift] using hhi
+  by_cases hk : 1≤k
+  · have hshift : (k+1)-1=k := by omega
+    apply TerminalExit.no_even_band (k+1) j u
+    · omega
+    · simpa [hshift] using hlo
+    · simpa [hshift] using hhi
+  · have hk0 : k=0 := by omega
+    subst k
+    have hu : u<5 := by simpa using hhi
+    intro j hb
+    rcases hb with ⟨ha,hb⟩
+    by_cases hj : j=0
+    · subst j
+      simp at ha
+      omega
+    · have hj1 : 1≤j := by omega
+      have hp : 2≤2^j :=
+        Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hj1
+      have hlow : 11≤6*2^j-1 := by omega
+      omega
 
 private theorem even_backward (u v j : Nat)
     (hb : 6*2^j-1≤u ∧ u≤8*2^j-3)
@@ -74,15 +89,17 @@ private theorem only_even_parent_of_gap (u v j q : Nat)
       · have hpow : 9∣3^(t+1) :=
           Nat.pow_dvd_pow 3 (by omega : 2≤t+1)
         have hdiv : 9∣2*u+5 := by
-          rw [hout]
-          exact dvd_mul_of_dvd_left hpow d
+          rcases hpow with ⟨z,hz⟩
+          refine ⟨z*d, ?_⟩
+          rw [hout,hz]
+          ring
         exact False.elim (hnot9 (Nat.mod_eq_zero_of_dvd hdiv))
     subst t
     have hdval : 3*d=2*u+5 := by simpa using hout.symm
     have hdq : d=(2*u+5)/3 := by omega
     have hgap' : 2*2^(j+1)<d ∧ d<3*2^(j+1) := by
       simpa [hdq] using hgap
-    exact False.elim (odd_gap (j+1) d hgap'.1 hgap'.2 m hbm)
+    exact False.elim (odd_gap (j+1) d hgap'.1 hgap'.2 m (by simpa using hbm))
 
 private theorem even_backward_gap (u v j : Nat)
     (hj : 1≤j)
@@ -123,20 +140,28 @@ private theorem middle_low_unique_odd_t1 (h k a q : Nat)
       · have hpow : 81∣3^(t+1) :=
           Nat.pow_dvd_pow 3 (by omega : 4≤t+1)
         have hdiv : 81∣2*h+5 := by
-          rw [hout]
-          exact dvd_mul_of_dvd_left hpow d
+          rcases hpow with ⟨z,hz⟩
+          refine ⟨z*d, ?_⟩
+          rw [hout,hz]
+          ring
         exact False.elim (hnodiv81 (Nat.mod_eq_zero_of_dvd hdiv))
     by_cases ht0 : t=0
     · subst t
       have hdval : 3*d=2*h+5 := by simpa using hout.symm
       have hdq : d=(2*h+5)/3 := by omega
-      have hqlo : 2*2^k<d := by rw [hdq]; omega
-      have hqhi : d<3*2^k := by rw [hdq]; omega
-      exact False.elim (odd_gap k d hqlo hqhi m hbm)
+      have hqlo : 2*2^k<d := by omega
+      have hqhi : d<3*2^k := by omega
+      exact False.elim (odd_gap k d hqlo hqhi m (by simpa using hbm))
     · by_cases ht1 : t=1
       · subst t
         have h9 : 9*d=2*h+5 := by simpa using hout.symm
         have hdd : d=(2*h+5)/9 := by omega
+        have hpow : 2^k=4*2^(k-2) := by
+          have ht : k=(k-2)+2 := by omega
+          calc
+            2^k = 2^((k-2)+2) := congrArg (fun z : Nat => 2^z) ht
+            _ = 2^(k-2)*4 := by rw [Nat.pow_add]
+            _ = 4*2^(k-2) := by omega
         have hband : 6*2^(k-2)+1≤2*((2*h+5)/9) ∧
             2*((2*h+5)/9)≤8*2^(k-2)-1 := by
           rw [←hdd]
@@ -151,9 +176,13 @@ private theorem middle_low_unique_odd_t1 (h k a q : Nat)
         subst t
         have h27 : 27*d=2*h+5 := by simpa using hout.symm
         have hdq : d=(2*h+5)/27 := by omega
-        have hqlo : 2*2^(k-1)<4*d := by rw [hdq]; omega
-        have hqhi : 4*d<3*2^(k-1) := by rw [hdq]; omega
-        exact False.elim (odd_gap (k-1) (4*d) hqlo hqhi m hbm)
+        have hshift1 : (k-1)+1=k := by omega
+        have hpow1 : 2*2^(k-1)=2^k := by
+          rw [←hshift1, Nat.pow_succ]
+          omega
+        have hqlo : 2*2^(k-1)<4*d := by omega
+        have hqhi : 4*d<3*2^(k-1) := by omega
+        exact False.elim (odd_gap (k-1) (4*d) hqlo hqhi m (by simpa using hbm))
 
 /-- In a middle-low gap, if v3(2u+5)=1 and its t=0 odd quotient is
     in a specified odd image band, that odd parent is unique. -/
@@ -176,8 +205,10 @@ private theorem middle_low_unique_odd_t0 (u j f q : Nat)
       · have hpow : 9∣3^(t+1) :=
           Nat.pow_dvd_pow 3 (by omega : 2≤t+1)
         have hdiv : 9∣2*u+5 := by
-          rw [hout]
-          exact dvd_mul_of_dvd_left hpow d
+          rcases hpow with ⟨z,hz⟩
+          refine ⟨z*d, ?_⟩
+          rw [hout,hz]
+          ring
         exact False.elim (hnot9 (Nat.mod_eq_zero_of_dvd hdiv))
     subst t
     have hdval : 3*d=2*u+5 := by simpa using hout.symm
