@@ -68,6 +68,6 @@ The remaining quantifier is infinite. Neither the stronger finite cutoff nor the
 
 [FeederExceptional1085-1372.md](FeederExceptional1085-1372.md) records a proposed seven-edge exact inverse chain for the two remaining residue classes n mod 1458 = 1085, 1372. The associated Lean modules are **not yet CI-verified**. This is a root exclusion for the odd feeder only, not a fatal-target or BB(6) decision; see the note for the exact affine identities, modular residues, uniqueness arguments, and required next verification.
 
-The exact finite [BigInt inverse-tree enumerator](EnumerateExceptionalFeederTrees.mjs) reproduces the representative trees for all eight exceptional classes and compares the finite samples n=r+1458T for T=0,1,2,10. It is a diagnostic for discovering candidate parent chains, not an all-index proof; sampled topology changes in several classes.
+The exact finite [BigInt inverse-tree enumerator](EnumerateExceptionalFeederTrees.mjs) reproduces the representative trees for all eight exceptional classes and compares finite samples n=r+LT for L=1458 and 13122, T=0,1,2,10. It is a diagnostic for discovering candidate parent chains, not an all-index proof; sampled topology changes in several classes.
 
 A compact candidate for the 887 class is documented in [FeederExceptional887.md](FeederExceptional887.md). It proposes a period-13122, six-node inverse-tree exclusion with two terminal no-parent leaves. This is a proof blueprint only: its modular period, quotient gaps, and exhaustive parent classification have not yet been formalized or CI-checked.
