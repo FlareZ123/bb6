@@ -109,6 +109,8 @@ jobs:
           lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/PacketZeroBoundarySource.olean" "$P2/PacketZeroBoundarySource.lean"
+          lean -o "$P2/PacketOneReentry.olean" "$P2/PacketOneReentry.lean"
+          lean -o "$P2/PacketSafeReentry.olean" "$P2/PacketSafeReentry.lean"
           lean -DmaxRecDepth=55000 -o "$P2/EFirstAPacket.olean" "$P2/EFirstAPacket.lean"
           V=im-results/agent37-cryptid-model-bridge
           lean -o "$V/CrossModelBridge.olean" "$V/CrossModelBridge.lean"
@@ -133,6 +135,7 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
           lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
+          lean -DmaxRecDepth=55000 -o "$P2/ExceptionalEPacketClosure.olean" "$P2/ExceptionalEPacketClosure.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentySecondRejoin.olean" "$T/BlankTwentySecondRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyThirdRejoin.olean" "$T/BlankTwentyThirdRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
