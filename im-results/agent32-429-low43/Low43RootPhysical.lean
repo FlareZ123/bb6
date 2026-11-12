@@ -249,11 +249,45 @@ theorem root_low_even_r96_physical
     exact ⟨e,he,by omega⟩
   exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
 
+
+/-- Physical all-prefix lift of the prepared J(11,62) -> J(10,74)
+    high-three/low-odd route. The complete segment maximum is +68. -/
+theorem root_junc11_to_junc10_physical
+    (c : Config) (hrep : Represents (junc 11 0 62) c) :
+    ∃ d : Config,
+      run target429 2457 c = some d ∧
+      Represents (junc 10 0 74) d ∧
+      d.head=c.head-9 ∧
+      (∀ t : Nat, t≤2457 →
+        ∃ e : Config,
+          run target429 t c = some e ∧ e.head≤c.head+68) := by
+  let z11 : Zipper := junc 11 0 62
+  have hmax :
+      runWithMax 2457 z11 =
+        some (junc 10 0 74, -9, 68) := by
+    simpa [z11] using root_junc11_to_junc10_max
+  have hdelta :
+      runWithDelta 2457 z11 = some (junc 10 0 74,-9) := by
+    simpa [hmax] using runWithMax_toDelta 2457 z11
+  obtain ⟨d,hrun,hrepD,hhead⟩ :=
+    source_runWithDelta_rep 2457 z11 c hrep (junc 10 0 74) (-9) hdelta
+  have hprefix :
+      ∀ t : Nat, t≤2457 →
+        ∃ e : Config,
+          run target429 t c = some e ∧ e.head≤c.head+68 := by
+    intro t ht
+    obtain ⟨e,he,hh⟩ :=
+      physical_source_max_prefix_bound 2457 t z11 c hrep
+        (junc 10 0 74,-9,68) hmax ht
+    exact ⟨e,he,by omega⟩
+  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+
 #print axioms physical_source_max_prefix_bound
 #print axioms root_low43_C0_to_junc_physical
 #print axioms root_low43_C0_to_junc11_physical
 #print axioms root_low43_branch_to_junc
 #print axioms root_low43_branch_to_junc11
 #print axioms root_low_even_r96_physical
+#print axioms root_junc11_to_junc10_physical
 
 end BB429Low43RootPhysical
