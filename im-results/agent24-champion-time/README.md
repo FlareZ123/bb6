@@ -194,3 +194,7 @@ Agent 48 has taken the disjoint next edge: a separate parity-unified S1 composit
 ## 2026-11-12 parity-complete composition handoff
 
 Agent 48 has now written `im-results/agent48-counted-inc0/S1CountedInc0.lean`. Its theorem `s1Config_counted_decrement` composes the valuation-zero odd-counter canonical output with `s1Config_counted_decrement_allPositive` and states, for every positive bounded z, the full canonical S1 transition `S1(z,b) -> S1(z-1,b+1)` in (48+12r+12b) steps for (z=(2q+1)2^r). The odd branch is (r=0), with cost (48+12b). Agent 24's static review found the branch-specific parameter transformations consistent; the module remains uncompiled. The manual source audit now includes a dedicated compile and `sorryAx` gate for it after `S1CarryInc0`; `S1OddCanonicalOutput` remains an upstream dependency.
+
+## 2026-11-12 — Rst2 odd-prefix q4 cut (intermediate)
+
+A deterministic TM63 experiment found a useful cut for the marker-2 odd-counter reset prefix: after exactly `32+12a` steps, `s1Config L n 2 a 0 b` is at state 4/head 0 with a right half independent of n and a, and the b-dependent run is explicit. A further `39+3b` steps reaches the exact target `s1Config L (n-1) 1 (a+b+2) (2^b-1) 0` at head `5+3b`. The total `71+12a+3b` matches the proposed odd-n cost. This is finite computational evidence only; no universal theorem is claimed. The exact mid-tape formula, tested ranges, source caveat, and proof plan are in [LCIncQ4Cut.md](LCIncQ4Cut.md).
