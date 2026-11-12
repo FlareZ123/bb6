@@ -181,7 +181,7 @@ theorem s1Config_oddCounter_countedReturn_canonical
     simpa [P,hcoord] using hv
   have hcfg : (⟨(3 : Fin 6),h,Tpost⟩ : Config) =
       s1Config L n m (len+1) (2*q) (b+1) h := by
-    simp [s1Config,hcanonical]
+    simp [s1Config,s0Config,hcanonical]
   calc
     run tm2 (48+12*b)
         (s1Config L n m (len+1) (2*q+1) b h) =
