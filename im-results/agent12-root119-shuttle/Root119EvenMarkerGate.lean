@@ -210,7 +210,7 @@ theorem cphase_d1_tail_raw (c : Conf)
     simp [d2,f,d,setBit,hzero1]
   have heread : e.tape e.h = false := by
     simp [e,d2,f,d,setBit]
-  have hare ad : a.tape a.h = false := by
+  have haread : a.tape a.h = false := by
     simp [a,e,d2,f,d,setBit]
   have hs1 : next c = some d := by
     simp [next,hC,hCzero,d]
