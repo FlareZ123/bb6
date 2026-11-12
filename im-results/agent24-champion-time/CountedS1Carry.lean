@@ -40,3 +40,18 @@ import UniformTM63
 #check BB6Coverage.Agent8S1Encoder.d1
 #check BB6Coverage.Agent8S1Encoder.d1pow
 #check BB6Coverage.Agent8S1Encoder.sideBit
+#check BB6.ChampionTerminal.locatedStep
+#check BB6.ChampionTerminal.locatedRun
+#check BB6.ChampionTerminal.run_add
+#check BB6.ChampionTerminal.run_semiconjugacy
+#check BB6.ChampionTerminal.sideBit
+
+#check BB6Coverage.Config.ext
+#check BB6Coverage.applyMove
+#check BB6Coverage.rawStep
+#check BB6Coverage.run
+#check BB6Coverage.Agent48Champion.tm2
+
+#check BB6Coverage.Agent8S1Encoder.s1Config_left_carryCells
+#check BB6Coverage.Agent8S1Encoder.s1PhysicalRight_source
+#check BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry
