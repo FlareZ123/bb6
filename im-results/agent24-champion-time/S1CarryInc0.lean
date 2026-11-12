@@ -73,7 +73,7 @@ theorem s1Config_carryInput_match
         ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
         carryInputBit r (1+(i:Int)) := by
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-      all_goals subst i <;> simp [sideBit,carryInputBit]
+      all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
     rw [hxEq,hsource,hside]
 
 /-- The source S1 right side supplies the entire 111^(b+1) run
