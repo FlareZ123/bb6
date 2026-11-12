@@ -23,7 +23,6 @@ theorem source429_eq_target429 :
     J(0,0) tape, translated by its absolute head coordinate 3. -/
 theorem rootTape_matches_physical_j00 (x : Int) :
     rootTape x = BB429JPhysical.jTape 0 0 (x - 3) := by
-  classical
   rw [rootTape_exact_support]
   apply Bool.eq_iff_iff.mpr
   simp [BB429JPhysical.jTape, BB429JPhysical.jMark, BB429JPhysical.jHole]
