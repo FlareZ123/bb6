@@ -189,6 +189,33 @@ def lateFastHighAllowed (j m : Nat) : Prop :=
   ¬(7≤m ∧ j%512=319 ∧
     (3*m)%4096=(j+2879)%4096)
 
+/-- A second explicit high-stop parameter progression survives all
+    current C58/late-fast filters: j=831, m=9770 (mod 16384). -/
+theorem prior_latefast_admits_s3_parameter_family (t : Nat) :
+    lateFastHighAllowed 831 (9770+16384*t) := by
+  let m := 9770+16384*t
+  have hm7 : 7≤m := by dsimp [m]; omega
+  have hj : 831%512=319 := by norm_num
+  have hm512 : m%512=42 := by dsimp [m]; omega
+  have hprior := prior_c58_admits_residue_pair 831 m hm7 hj hm512
+  have hbool : BB6.Agent11C58Boolean.highAllowed 831 m :=
+    (BB6.Agent11C58Boolean.highAllowed_iff 831 m).mpr hprior
+  have hlate : BB6.Agent11LateDepthGate.allowedBool 831 m=true := by
+    apply (BB6.Agent11LateDepthGate.allowedBool_iff 831 m).mpr
+    intro r hr
+    rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
+    have hm4res : m%4=2 := by dsimp [m]; omega
+    have hodd : (2*r+1)%4=1 ∨ (2*r+1)%4=3 := by omega
+    omega
+  have hnotdiag :
+      ¬(7≤m ∧ 831%512=319 ∧
+        (3*m)%4096=(831+2879)%4096) := by
+    rintro ⟨_,_,hpair⟩
+    have h3m : (3*m)%4096=638 := by dsimp [m]; omega
+    have hjmod : (831+2879)%4096=3710 := by norm_num
+    omega
+  exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
+
 /-- Exact original-source Machine C blank-halting iff after adding
     Agent 4's diagonal to the C58 all-depth plus arbitrary-depth
     late three-cone high predicate. -/
