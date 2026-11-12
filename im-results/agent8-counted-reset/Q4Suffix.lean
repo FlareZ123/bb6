@@ -435,7 +435,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
         run tm2 (10+(3*b+29)) ⟨4,h,T⟩ := by congr 1 <;> omega
     _ = (run tm2 10 ⟨4,h,T⟩).bind
           (fun d => run tm2 (3*b+29) d) :=
-        run_append
+        by rw [run_append]
     _ = run tm2 (3*b+29)
           (frameAt T h q4First10Inside q4First10End) := by
         rw [hfirst]
@@ -443,7 +443,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
     _ = (run tm2 (3*b)
           (frameAt T h q4First10Inside q4First10End)).bind
           (fun d => run tm2 29 d) :=
-        run_append
+        by rw [run_append]
     _ = run tm2 29 ⟨1,g,T2⟩ := by
         rw [hscan]
         rfl
