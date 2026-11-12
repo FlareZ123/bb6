@@ -570,7 +570,8 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       obtain ⟨b,hstep1,hbpos,hp1,hdisp1⟩ :=
         parentCone_path_tight_first hp' hdisp'
       rw [next_F_zero_shape c hcF hc0] at hstep1
-      cases hstep1
+      have hbShape : b = (⟨.B,c.h-1,setBit c.tape c.h true⟩ : Conf) :=
+        (Option.some.inj hstep1).symm
       have hlen2 : 2*k+2=(2*k+1)+1 := by omega
       have hp1' : Root119Path ((2*k+1)+1) b d := by
         simpa [hlen2] using hp1
@@ -583,12 +584,14 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
         · exact hb
         · have hbZero : b.tape b.h=false := by
             cases hbit : b.tape b.h <;> simp_all
-          simp [next,hbZero] at hstep2
+          have hcLeftZero : c.tape (c.h-1)=false := by
+            simpa [hbShape,setBit,show c.h-1 ≠ c.h by omega] using hbZero
+          simp [next,hbShape,hcLeftZero] at hstep2
           cases hstep2
           have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
             (by simp [parentConeNoBF])
           exact hno.1 hdB
-      rw [next_B_one b rfl hbBit] at hstep2
+      rw [next_B_one b (by simpa [hbShape]) hbBit] at hstep2
       cases hstep2
       obtain ⟨v,hstep3,hvpos,hp3,hdisp3⟩ :=
         parentCone_path_tight_first hp2 hdisp2
@@ -607,7 +610,7 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
       by_cases hi0 : i=0
       · subst i
         have hbtape : b.tape b.h=c.tape (c.h-1) := by
-          simp [setBit,show c.h-1 ≠ c.h by omega]
+          simp [hbShape,setBit,show c.h-1 ≠ c.h by omega]
         exact ⟨hc0,hbtape.symm.trans hbBit⟩
       · have hi' : i-1<k := by omega
         have hpatt := hpat (i-1) hi'
@@ -690,10 +693,10 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
       have heq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
         Option.some.inj hsome
       cases hpath
-      have hwrite : e.tape c.h=true := by
+      have hwrite : g.tape c.h=true := by
         rw [heq]
         simp [setBit,hdpos0]
-      have hcopy : c.tape c.h=e.tape c.h :=
+      have hcopy : c.tape c.h=g.tape c.h :=
         parentCone_next_tape_away g c hGstep c.h (by rw [hGpos]; omega)
       rw [hcurrent] at hcopy
       rw [hwrite] at hcopy
