@@ -4,7 +4,7 @@ import W4HeadPrefix
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 30000000
-set_option maxRecDepth 32768
+set_option maxRecDepth 65536
 
 namespace BB429Low43Continuation
 
@@ -69,10 +69,26 @@ theorem root_low43_C0_to_junc11 :
       (z 2 (true::false::true::true::
         (ones 26 ++ tens 14 ++ ones 6)) false []))
 
+
+/-- A concrete prepared low-even return on the simulated root route:
+    J(49,2) has deficit 96=4*24 and reaches J(11,98) in 719 moves. -/
+theorem root_low_even_r96_max :
+    runWithMax 719 (junc 49 0 2) =
+      some (junc 11 0 98, -89, 12) := by
+  decide
+
+theorem root_low_even_r96 :
+    runWithDelta 719 (junc 49 0 2) =
+      some (junc 11 0 98, -89) := by
+  simpa [root_low_even_r96_max] using
+    (runWithMax_toDelta 719 (junc 49 0 2))
+
 #print axioms root_low43_C0_to_junc_max
 #print axioms root_low43_C0_to_junc
 #print axioms root_low43_junc23_to_junc11_max
 #print axioms root_low43_C0_to_junc11_max
 #print axioms root_low43_C0_to_junc11
+#print axioms root_low_even_r96_max
+#print axioms root_low_even_r96
 
 end BB429Low43Continuation
