@@ -243,3 +243,40 @@ This result does not settle n=14,...,75 in the four-shallow language,
 five-or-more shallow transitions, any inverse depth>=3, exceptional
 inverse exits, P1 blank-root reachability, or BB(6). It is a genuine
 all-index arithmetic advance, not a complete P1 or Busy Beaver result.
+
+
+## Original-source lift
+
+The scalar obstruction is now composed with the authentic source transition
+system. The new Lean modules are:
+
+- `FourLayerGap.lean`: kernel-proved quintic gap
+  `21,120,000,000,000*(n+2)^5 < 2^n` for n>=76.
+- `FourLayerBarrier.lean`: four successive dyadic remainder peels and the
+  final lower/upper energy contradiction.
+- `FourShallowAbstractBridge.lean`: derives the nested four-layer scalar
+  equation from the four shallow energy recurrences and the terminal suffix.
+- `FourShallowSourceModel.lean`: obtains the exact profiles, remainder
+  bounds, root divisor and energy identities from genuine source-compatible
+  `TwoRun` segments.
+- `FourShallowSourceLift.lean`: transports five arbitrary depth-two
+  `SourceTwoChain` blocks and four legal shallow `inverseAt` edges into the
+  model theorem, then lifts the result through the stepwise
+  `SourceLowTrace.toWord` normal form.
+
+The public source theorems are
+`BB6.Agent43FourShallowSourceLift.source_low_word_four_no_wall` and
+`BB6.Agent43FourShallowSourceLift.source_low_trace_wall_needs_five_shallows`.
+For every n>=76, the first rules out an exact shifted-wall endpoint after
+exactly four shallow edges; the second proves that any finite legal
+depth-0/1/2 `SourceLowTrace` reaching the wall has at least five shallow
+edges. The source proof retains the original `inverseAt` legality tests,
+including the left-counter, parity, output and mass constraints, and uses
+unbounded depth-two segment lengths.
+
+The full original-source Lean chain and the terminal theorem-axiom audit
+passed in [CI 43173803054](https://github.com/FlareZ123/bb6/actions/runs/43173803054)
+under Lean 4.36.0-rc2, with no `sorryAx`. This remains a restricted
+low-depth inverse-language theorem: it does not cover depth>=3 edges,
+five-or-more shallow edges, exceptional exits, or unrestricted blank-root
+reachability, and does not determine P1 halting or BB(6).
