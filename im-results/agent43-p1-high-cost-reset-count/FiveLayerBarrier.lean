@@ -16,8 +16,9 @@ private theorem twice_quotient_le (t d R : Nat) (ht : 1≤t)
     cases t with
     | zero => omega
     | succ k =>
-      have hpos : 0<2^k := Nat.pow_pos (by decide)
-      have hmul : 2≤2^k*2 := Nat.mul_le_mul_right 2 (by omega)
+      have hpowPos : 1≤2^k := Nat.one_le_pow k 2 (by decide)
+      have hmul : 2≤2^k*2 := by
+        simpa using Nat.mul_le_mul_right 2 hpowPos
       simpa [Nat.pow_succ] using hmul
   calc
     2*d≤2^t*d := Nat.mul_le_mul_right d hpow
