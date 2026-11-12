@@ -481,6 +481,7 @@ theorem s1Config_evenCounter_countedReturn_canonical
   refine ⟨q,r,len,T',hfactor,ha,hq,hr,hrun,?_⟩
   exact congrArg Config.tape hcfg
 
+#print axioms s1Config_evenCounter_countedReturn_canonical
 #print axioms s1Config_carryInput_match
 #print axioms s1Config_carryRightOnes
 #print axioms s1Config_counted_decrement_of_prefix
