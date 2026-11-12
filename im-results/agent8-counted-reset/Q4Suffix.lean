@@ -308,6 +308,42 @@ theorem q4Tail_at (T : Int → Bool) (h : Int)
   · simpa [q4TailStart] using hin.2.2.2.2 3 (by omega)
   · simpa [q4TailStart] using hin.2.2.2.2 4 (by omega)
 
+/-- The q4 prefix's expected head-facing left stream at the head-0 cut.
+Its first bit is the marked head cell; after that come the a unary blocks,
+the canonical marker-1 word, and the decremented inner source suffix. -/
+def q4LeftFacing (L n a : Nat) : List Bool :=
+  [true] ++ d1pow a ++ markerWord 1 ++ d0 ++ binDec L n ++ lh
+
+/-- The all-ones low counter value has exactly b leading d0 blocks in
+BinDec, followed by the all-ones word of length a+2. -/
+theorem binDec_pow2_sub_one (a b : Nat) :
+    binDec (a+b+2) (2^b-1) = d0pow b ++ d1pow (a+2) := by
+  have hpos : 0 < 2^(a+1) := by positivity
+  have hbase := binDec_sub_one_carryPrefix (a+1) 0 b (by omega)
+  have hlen : a+b+2 = (a+1)+1+b := by omega
+  rw [hlen]
+  simpa [binDec_zero,d1pow,List.append_assoc] using hbase
+
+/-- Repeated d1 blocks commute as words because every block is identical. -/
+theorem d1pow_add_right (a b : Nat) :
+    d1pow (a+b) = d1pow b ++ d1pow a := by
+  induction b with
+  | zero => simp [d1pow]
+  | succ b ih =>
+      rw [Nat.add_succ]
+      simp [d1pow,ih,List.append_assoc]
+
+/-- Canonical left-facing endpoint identity for the q4 suffix.  The
+q4 rightward motion must expose d0^b ++ d1^2 in front of the old
+left stream with its already-consumed head bit removed. -/
+theorem q4SuffixTargetLeft (L n a b : Nat) :
+    s1LeftFacing L n 1 (a+b+2) (2^b-1) =
+      d0pow b ++ d1pow 2 ++ (q4LeftFacing L n a).drop 1 := by
+  unfold s1LeftFacing q4LeftFacing
+  rw [binDec_pow2_sub_one]
+  rw [d1pow_add_right a 2]
+  simp [List.drop,List.append_assoc]
+
 /-- Exact right-half shape at the q4/head-0 cut.  The first five cells are
 ones, then 00, then 3(b+1) ones, then at least five blank cells. -/
 def q4RightShape (T : Int → Bool) (h : Int) (b : Nat) : Prop :=
