@@ -160,7 +160,8 @@ theorem exists_odd_factor (z : Nat) (hz : 0 < z) :
           _ = (2*q+1)*2^(r+1) := by
             rw [Nat.pow_succ]
             ac_rfl
-      · have hodd : z % 2 = 1 := by omega
+      · have hmod : z % 2 < 2 := Nat.mod_lt z (by decide)
+        have hodd : z % 2 = 1 := by omega
         refine ⟨z/2,0,?_⟩
         have hdecomp : z = 2*(z/2)+1 := by omega
         simp [hdecomp]
@@ -209,7 +210,8 @@ theorem binDec_length (len n : Nat) (hn : n < 2^len) :
         rw [hnEq,binDec_even len k hk]
         simp [d1,ih k hk]
         omega
-      · have ho : n % 2 = 1 := by omega
+      · have hmod : n % 2 < 2 := Nat.mod_lt n (by decide)
+        have ho : n % 2 = 1 := by omega
         let k := n/2
         have hnEq : n = 2*k+1 := by dsimp [k]; omega
         have hk : k < 2^len := by dsimp [k]; omega
