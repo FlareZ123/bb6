@@ -140,25 +140,26 @@ private theorem residue_peel_nodiv
  (heq : K*2^e = A*2^t+R) :
  ∃ d, t≤e ∧ R=2^t*d ∧ K*2^(e-t)=A+d ∧ d≤R ∧ 2^t≤R := by
  have htle : t≤e := by
-   by_contra ht
-   have hrev : e≤t := by omega
-   have hdiv : 2^e ∣ 2^t := Nat.pow_dvd_pow 2 hrev
-   have hleft : 2^e ∣ K*2^e := Nat.dvd_mul_left _ _
-   have hright : 2^e ∣ A*2^t := by
-     obtain ⟨w,hw⟩ := hdiv
-     refine ⟨A*w, ?_⟩
-     rw [hw]
-     ac_rfl
-   have hh := Nat.dvd_sub hleft hright
-   have he : K*2^e-A*2^t=R := by omega
-   rw [he] at hh
-   exact hnot hh
+   by_cases ht : t≤e
+   · exact ht
+   · have hrev : e≤t := by omega
+     have hdiv : 2^e ∣ 2^t := Nat.pow_dvd_pow 2 hrev
+     have hleft : 2^e ∣ K*2^e := Nat.dvd_mul_left _ _
+     have hright : 2^e ∣ A*2^t := by
+       obtain ⟨w,hw⟩ := hdiv
+       refine ⟨A*w, ?_⟩
+       rw [hw]
+       simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+     have hh := Nat.dvd_sub hleft hright
+     have he : K*2^e-A*2^t=R := by omega
+     rw [he] at hh
+     exact False.elim (hnot hh)
  have hdiv : 2^t ∣ 2^e := Nat.pow_dvd_pow 2 htle
  have hleft : 2^t ∣ K*2^e := by
    obtain ⟨w,hw⟩ := hdiv
    refine ⟨K*w, ?_⟩
    rw [hw]
-   ac_rfl
+   simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
  have hright : 2^t ∣ A*2^t := Nat.dvd_mul_left _ _
  have hh := Nat.dvd_sub hleft hright
  have he : K*2^e-A*2^t=R := by omega
@@ -171,9 +172,9 @@ private theorem residue_peel_nodiv
  have hq : K*2^(e-t)=A+d := by
    have htest : (2^t)*(K*2^(e-t))=(2^t)*(A+d) := by
      calc
-       _ = K*2^e := by rw [←hpop]; ac_rfl
+       _ = K*2^e := by rw [←hpop]; simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
        _ = A*2^t+R := heq
-       _ = (2^t)*(A+d) := by rw [hd]; simp [Nat.mul_add]; ac_rfl
+       _ = (2^t)*(A+d) := by rw [hd]; simp [Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
    exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) htest
  have hle : d≤R := by
    have hpos2 : 1≤(2:Nat)^t := Nat.one_le_pow t 2 (by decide)
@@ -207,10 +208,10 @@ private theorem four_profile_step_of_affine
 
 private theorem four_exp_lt
     (x b k : Nat) (hpow : 2^x≤b) (hbound : b<2^k) : x<k := by
-  by_contra hx
-  have hk : k≤x := by omega
-  have hp := Nat.pow_le_pow_right (show (2:Nat)>0 by decide) hk
-  omega
+  by_cases hk : k≤x
+  · have hp := Nat.pow_le_pow_right (show (2:Nat)>0 by decide) hk
+    omega
+  · omega
 
 /-- Finite four-shallow exclusion for 14 <= n <= 75.  The four finite
 nondivisibility checks replace the large-n quintic estimate. -/
@@ -259,14 +260,16 @@ private theorem four_layer_finite_barrier
       congr 1
       omega
     exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) (by rw [hP,hcomp])
-  have hDdiv : 8^s ∣ 14*n+92 := ⟨d,hD⟩
+  have hDdiv : 8^s ∣ 14*n+92 := ⟨d,hD.symm⟩
   have hqle : 8^s≤14*n+92 := Nat.le_of_dvd (by omega) hDdiv
   have hs3 : s≤3 := by
-    by_contra h
-    have hs4 : 4≤s := by omega
-    have hpw := Nat.pow_le_pow_right (show (8:Nat)>0 by decide) hs4
-    norm_num at hpw
-    omega
+    by_cases hs3 : s≤3
+    · exact hs3
+    · have hs4 : 4≤s := by omega
+      have hpw := Nat.pow_le_pow_right (show (8:Nat)>0 by decide) hs4
+      have hpow : (8:Nat)^4=4096 := by decide
+      rw [hpow] at hpw
+      omega
   have hPmod : 2^n%8^s=0 := Nat.mod_eq_zero_of_dvd ⟨p,hP⟩
   have hDmod : (14*n+92)%8^s=0 := Nat.mod_eq_zero_of_dvd hDdiv
   have hrootDiv : fourRootDivides n s := ⟨hPmod,hDmod⟩
@@ -353,7 +356,7 @@ private theorem four_layer_finite_barrier
     residue_peel_nodiv e x1 K (A2*(A3*(A4*E+R4)+R3)+R2) R1
       hR1pos hnot1 hEq1
   have hR1lt : R1<2^13 := by
-    have hpow : 2^13=8192 := by norm_num
+    have hpow : 2^13=8192 := by decide
     omega
   have hx1lt : x1<13 := four_exp_lt x1 R1 13 hpow1le hR1lt
   have hx1bound : x1≤12 := by omega
@@ -398,7 +401,7 @@ private theorem four_layer_finite_barrier
     omega
   have hS2le : S2≤16128 := by dsimp [S2]; omega
   have hS2lt : S2<2^14 := by
-    have hpow : 2^14=16384 := by norm_num
+    have hpow : 2^14=16384 := by decide
     omega
   have hx2lt : x2<14 := four_exp_lt x2 S2 14 hpow2le hS2lt
   have hx2bound : x2≤13 := by omega
@@ -449,7 +452,7 @@ private theorem four_layer_finite_barrier
     omega
   have hS3le : S3≤25788 := by dsimp [S3]; omega
   have hS3lt : S3<2^15 := by
-    have hpow : 2^15=32768 := by norm_num
+    have hpow : 2^15=32768 := by decide
     omega
   have hx3lt : x3<15 := four_exp_lt x3 S3 15 hpow3le hS3lt
   have hx3bound : x3≤14 := by omega
@@ -500,7 +503,7 @@ private theorem four_layer_finite_barrier
     omega
   have hS4le : S4≤36624 := by dsimp [S4]; omega
   have hS4lt : S4<2^16 := by
-    have hpow : 2^16=65536 := by norm_num
+    have hpow : 2^16=65536 := by decide
     omega
   have hx4lt : x4<16 := four_exp_lt x4 S4 16 hpow4le hS4lt
   have hx4bound : x4≤15 := by omega
