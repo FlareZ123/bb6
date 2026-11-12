@@ -891,6 +891,7 @@ theorem indexResidue_bijective (s k:Nat) (hs:s=4∨s=5) :
 #print axioms nestedOddNumerator_lift_criterion
 #print axioms nestedOddNumerator_unique_lift
 #print axioms nestedOddNumerator_sector_mod_three
+#print axioms nestedOddIndexResidue_lt
 #print axioms nestedOddIndexResidue_good
 #print axioms nestedOddIndexResidue_iff
 #print axioms tThreeHighGate_digit_eq_quotient_mod_three
