@@ -315,6 +315,53 @@ theorem carryLongPrefix_r1_full (k : Nat) (T : Int → Bool)
   exact ⟨Tgen,hrunGen,h1,h2,h3,h4,h5,h6,hout,hleft⟩
 
 #print axioms carryLongPrefix_r1_left
+
+
+/-- Spatially translate the complete residue-one prefix theorem. This is
+the form consumed by the S0 suffix composition theorem at an arbitrary head h. -/
+theorem carryLongPrefix_r1_shifted (k : Nat) (T : Int → Bool) (h : Int)
+    (hmatch : ∀ x, carryInputArea (4*k+1) x = true →
+      T x = carryInputBit (4*k+1) x) (hk : 0 < k) :
+    ∃ Tpre : Int → Bool,
+      run tm2 (15+12*(4*k+1)) (shiftConfig h ⟨3,0,T⟩) =
+        some ⟨4,h+7,Tpre⟩ ∧
+      Tpre (h+1) = true ∧ Tpre (h+2) = true ∧
+      Tpre (h+3) = true ∧ Tpre (h+4) = true ∧
+      Tpre (h+5) = false ∧ Tpre (h+6) = true ∧
+      (∀ x, 6 < x → Tpre (h+x) = T x) ∧
+      (∀ x, x ≤ 0 →
+        Tpre (h+x) = carryLeftOutputBit (4*k+1) T x) := by
+  obtain ⟨T',hrun,h1,h2,h3,h4,h5,h6,hout,hleft⟩ :=
+    carryLongPrefix_r1_full k T hmatch hk
+  let Tpre : Int → Bool := fun x => T' (x-h)
+  have hshift : shiftConfig h (⟨4,7,T'⟩ : Config) =
+      ⟨4,h+7,Tpre⟩ := by
+    cases (⟨4,7,T'⟩ : Config) with
+    | mk state head tape =>
+      have hh : (7:Int)+h = h+7 := by omega
+      simp [shiftConfig,Tpre,hh]
+  have hrunShift :
+      run tm2 (15+12*(4*k+1)) (shiftConfig h ⟨3,0,T⟩) =
+        some ⟨4,h+7,Tpre⟩ := by
+    calc
+      run tm2 (15+12*(4*k+1)) (shiftConfig h ⟨3,0,T⟩) =
+          (run tm2 (15+12*(4*k+1)) ⟨3,0,T⟩).map (shiftConfig h) :=
+        shift_run h tm2 ⟨3,0,T⟩ (15+12*(4*k+1))
+      _ = some (shiftConfig h ⟨4,7,T'⟩) := by simp [hrun]
+      _ = some ⟨4,h+7,Tpre⟩ := by rw [hshift]
+  refine ⟨Tpre,hrunShift,?_,?_,?_,?_,?_,?_,?_,?_⟩
+  · simpa [Tpre] using h1
+  · simpa [Tpre] using h2
+  · simpa [Tpre] using h3
+  · simpa [Tpre] using h4
+  · simpa [Tpre] using h5
+  · simpa [Tpre] using h6
+  · intro x hx
+    simpa [Tpre] using hout x hx
+  · intro x hx
+    simpa [Tpre] using hleft x hx
+
 #print axioms carryLongPrefix_r1_full
+#print axioms carryLongPrefix_r1_shifted
 
 end BB6Coverage.Agent42CarryLeftOutput
