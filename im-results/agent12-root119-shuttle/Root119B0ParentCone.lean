@@ -89,6 +89,49 @@ theorem reached_B0_left10_parent (c : Conf) (hc : Reach c)
         refine ⟨u,hu,hFq,hFread,?_,hstep⟩
         omega
 
+ /-- Every reached F/0 has exactly two possible backward shapes:
+    either D/1 immediately to its left, or F/0 two cells to its right with
+    the intervening B/1. The A/0 branch is impossible because its write
+    would make the target F cell read 1. -/
+theorem reached_F0_parent_split (c : Conf) (hc : Reach c)
+    (hF : c.q = .F) (hcurrent : c.tape c.h = false) :
+    (∃ d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+      d.h = c.h-1 ∧ next d = some c) ∨
+    (∃ f b, Reach f ∧ f.q = .F ∧ f.tape f.h = false ∧
+      f.h = c.h+2 ∧
+      Reach b ∧ b.q = .B ∧ b.tape b.h = true ∧
+      b.h = c.h+1 ∧ next f = some b ∧ next b = some c) := by
+  cases hc with
+  | initial =>
+      simp [blank] at hF
+  | @follow u _ hu hstep =>
+      rcases to_F hstep hF with hB | hD
+      · rcases hB with ⟨hBq,hbit,hpos⟩
+        cases hu with
+        | initial =>
+            simp [blank] at hBq
+        | @follow a _ ha hstepA =>
+            rcases to_B hstepA hBq with hA | hF0
+            · rcases hA with ⟨hAq,hzero,hposA,hwriteA⟩
+              have hCshape : c =
+                  ⟨.F,u.h-1,setBit u.tape u.h true⟩ := by
+                rw [next_B_one u hBq hbit] at hstep
+                cases hstep
+                rfl
+              have htrue : c.tape c.h = true := by
+                rw [hCshape]
+                change setBit u.tape u.h true (u.h-1) = true
+                exact (setBit_apply_ne u.tape u.h (u.h-1) true (by omega)).trans hwriteA
+              rw [hcurrent] at htrue
+              cases htrue
+            · rcases hF0 with ⟨hFq,hzero,hposF,hwriteF⟩
+              refine Or.inr ⟨a,ha,hFq,hzero,?_,
+                u,Reach.follow ha hstepA,hBq,hbit,?_,hstepA,hstep⟩
+              · omega
+              · omega
+      · rcases hD with ⟨hDq,hbit,hpos,hwritten⟩
+        exact Or.inl ⟨u,hu,hDq,hbit,by omega,hstep⟩
+
 /-- A reached F/0 whose left neighbor is zero has a forced two-step
     predecessor cone: F/0 at h+2 -> B/1 at h+1 -> F/0 at h. The A/0
     alternative would write 1 at the target F head, contradicting F/0. -/
@@ -161,6 +204,7 @@ theorem reached_B0_left10_three_step_parent (c : Conf) (hc : Reach c)
 
 #print axioms BB6Root119.to_A_exact_parent
 #print axioms BB6Root119.reached_B0_left10_parent
+#print axioms BB6Root119.reached_F0_parent_split
 #print axioms BB6Root119.reached_F0_left_zero_two_step_parent
 #print axioms BB6Root119.reached_B0_left10_three_step_parent
 
