@@ -33,13 +33,15 @@ def descV2 : Nat → List Nat
   | n+1 => v2 (n+1) :: descV2 n
 
 theorem v2_of_odd (n : Nat) (hmod : n % 2 ≠ 0) : v2 n = 0 := by
+  rw [v2.eq_1]
   by_cases hsmall : n ≤ 1
-  · simp [v2,hsmall]
-  · simp [v2,hsmall,hmod]
+  · simp [hsmall]
+  · rw [dif_neg hsmall, if_neg hmod]
 
 theorem v2_of_even (n : Nat) (hgt : 1 < n) (hmod : n % 2 = 0) :
     v2 n = 1 + v2 (n/2) := by
-  simp [v2,Nat.not_le_of_gt hgt,hmod]
+  rw [v2.eq_1]
+  simp [Nat.not_le_of_gt hgt,hmod]
 
 /-- The 2-adic valuation of a power of two is its exponent. -/
 theorem v2_pow2 (b : Nat) : v2 (2^b) = b := by
@@ -54,6 +56,7 @@ theorem v2_pow2 (b : Nat) : v2 (2^b) = b := by
       have hmod : 2^(b+1) % 2 = 0 := by rw [hpow]; omega
       have hdiv : 2^(b+1) / 2 = 2^b := by rw [hpow]; omega
       simp [v2,Nat.not_le_of_gt hgt,hmod,hdiv,ih]
+      omega
 
 
 /-- The odd part contributes no trailing zeros, so the valuation of
@@ -84,7 +87,7 @@ theorem v2_odd_factor (q r : Nat) :
         _ = 1 + v2 ((2*((2*q+1)*2^r))/2) :=
             v2_of_even _ hgt hmod
         _ = 1 + v2 ((2*q+1)*2^r) := by rw [hdiv]
-        _ = r+1 := by rw [ih]
+        _ = r+1 := by rw [ih]; omega
 
 /-- Factorization witnesses expose the exact valuation used by Inc0. -/
 theorem v2_of_odd_factorization (z q r : Nat)
@@ -133,12 +136,11 @@ theorem v2_add_pow (b k : Nat) (hk0 : 0 < k) (hklt : k < 2^b) :
           _ = 1 + v2 t := by rw [ih t ht0 htlt]
           _ = v2 k := by
             rw [v2_of_even k hgtK he]
-            simp [t]
       · have hmodK : k % 2 < 2 := Nat.mod_lt k (by decide)
         have hoddK : k % 2 ≠ 0 := by omega
         have hmodPow : (2^(b+1)) % 2 = 0 := by
           rw [hpow]
-          omega
+          simp
         have hmodSum : (2^(b+1)+k) % 2 ≠ 0 := by
           rw [Nat.add_mod,hmodPow]
           simpa using hoddK
@@ -150,7 +152,18 @@ theorem descV2_shift (b n : Nat) (hn : n < 2^b) :
     descV2 (2^b+n) = descV2 n ++ [b] ++ descV2 (2^b-1) := by
   induction n with
   | zero =>
-      simp [descV2,v2_pow2]
+      have hpos : 0 < 2^b := Nat.pow_pos (by decide)
+      have hsplit : 2^b = (2^b-1)+1 := by omega
+      have h1 := congrArg descV2 hsplit
+      have h2 := congrArg v2 hsplit
+      have hstep : descV2 (2^b) = v2 (2^b) :: descV2 (2^b-1) := by
+        calc
+          descV2 (2^b) = descV2 ((2^b-1)+1) := h1
+          _ = v2 ((2^b-1)+1) :: descV2 (2^b-1) := rfl
+          _ = v2 (2^b) :: descV2 (2^b-1) := by rw [← h2]
+      change descV2 (2^b) = [b] ++ descV2 (2^b-1)
+      rw [hstep,v2_pow2]
+      rfl
   | succ n ih =>
       have hn' : n < 2^b := by omega
       have harg : 2^b+n+1 = 2^b+(n+1) := by omega
@@ -201,10 +214,18 @@ theorem drainCost_binary (b : Nat) :
 
 /-- Closed form for the all-ones drain, obtained from the actual v2
 sequence rather than an independent cost fit. -/
-theorem drainCost_binary_closed (b : Nat) :
-    drainCost (2^b-1) 0 = 6*4^b + 42*2^b - 12*b - 48 := by
+/-- Additive closed form; this is the natural equation for composing
+the drain with the reset prefix without relying on truncated subtraction. -/
+theorem drainCost_binary_additive (b : Nat) :
+    drainCost (2^b-1) 0 + 12*b + 48 = 6*4^b + 42*2^b := by
   rw [drainCost_binary]
   exact drainPattern_closed b
+
+/-- Equivalent subtractive closed form for the all-ones drain. -/
+theorem drainCost_binary_closed (b : Nat) :
+    drainCost (2^b-1) 0 = 6*4^b + 42*2^b - 12*b - 48 := by
+  have h := drainCost_binary_additive b
+  omega
 
 /-- Composition law for the original primitive TM63 run semantics. -/
 theorem run_add (m : Machine) (c : Config) (a b : Nat) :
@@ -279,7 +300,7 @@ candidate prefix plus the proved geometric all-ones drain. -/
 theorem proposedIncrementCost_decomp (m n a b : Nat) :
     proposedIncrementCost m n a b =
       resetPrefixCost m n a b + drainCost (2^b-1) 0 := by
-  rw [drainCost_binary_closed]
+  have h := drainCost_binary_additive b
   unfold proposedIncrementCost resetPrefixCost
   omega
 
@@ -295,7 +316,8 @@ theorem resetDrainBound (a b m : Nat) (ha : 0 < a) :
     unfold resetDelta
     split <;> omega
   have hpow : 2^b ≤ 2^(a+b+resetDelta m) :=
-    Nat.pow_le_pow_right (by decide : 0 < 2) hexp
+    Nat.pow_le_pow_right (by decide : 0 < 2) (Nat.le_of_lt hexp)
+  have hpos : 0 < 2^b := Nat.pow_pos (by decide)
   omega
 
 /-- If the counted prefix of a reset stage reaches its S0 all-ones
