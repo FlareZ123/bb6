@@ -224,4 +224,6 @@ theorem exactly_six_not_seven (u v : Nat) (hpair : (u+v)%4=0) :
   ⟨six_incoming_exist u v, no_seven_incoming u v hpair⟩
 
 #print axioms exactly_six_not_seven
+#print axioms exactly_six_not_seven_s3
+#print axioms exactly_six_not_seven_s3_progression
 end BB6.Agent4Seven
