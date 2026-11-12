@@ -212,16 +212,6 @@ theorem four_layer_abstract_barrier
   have hRem4Bound : R4+d3≤2200*X := by
     have hd3Bound := Nat.le_trans hd3le hRem3Bound
     omega
-  have hqA1A2A3Bound : q*A1*A2*A3≤9600000000*X^4 := by
-    calc
-      q*A1*A2*A3≤(9600000000*X^4)*(1600*X) := by
-        -- The first three factors are bounded by the previous product estimate.
-        have hqA1A2 : q*A1*A2≤6000000*X^3 := hqA1A2Bound
-        exact Nat.mul_le_mul hqA1A2 hA3Bound
-      _=15360000000000*X^5 := by
-        rw [show (15360000000000:Nat)=9600000000*1600 by decide]
-        simp only [Nat.pow_succ,Nat.pow_zero]
-        ac_rfl
   have hqA1A2A3Bound' : q*A1*A2*A3≤9600000000*X^4 := by
     calc
       q*A1*A2*A3≤(6000000*X^3)*(1600*X) := Nat.mul_le_mul hqA1A2Bound hA3Bound
