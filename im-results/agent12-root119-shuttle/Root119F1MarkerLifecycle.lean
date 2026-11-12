@@ -150,6 +150,77 @@ theorem reached_F_left_zero_two_step_parent (c : Conf) (hc : Reach c)
 
 /-- The exact even F/1 corridor execution, including its final D/0-E/0-A/0
     tail. It uses only the original auxiliary transition table. -/
+/-- If the F1/110 state is reached through the A/0 branch of its
+    two-step predecessor cone, then the A/0 source already had the 1100
+    block at its head. Thus a first-birth argument can discard this branch. -/
+theorem reached_F1_left110_parent_A0_already_marked (c : Conf) (hc : Reach c)
+    (hF : c.q = .F)
+    (hleft1 : c.tape (c.h-1) = false)
+    (hleft2 : c.tape (c.h-2) = true)
+    (hleft3 : c.tape (c.h-3) = true) :
+    ∃ b a, Reach b ∧ b.q = .B ∧ b.tape b.h = true ∧
+      b.h = c.h+1 ∧ next b = some c ∧
+      Reach a ∧ a.q = .A ∧ a.tape a.h = false ∧
+      a.h = c.h ∧ a.tape (c.h-3) = true ∧
+      a.tape (c.h-2) = true ∧ a.tape (c.h-1) = false ∧
+      a.tape c.h = false ∧ next a = some b := by
+  obtain ⟨b,hb,hB,hbit,hpos,hstepB,hparents⟩ :=
+    reached_F_left_zero_two_step_parent c hc hF hleft1
+  rcases hparents with hA | hF0
+  · rcases hA with ⟨a,ha,hq,hzero,hposA,hstepA⟩
+    have hBShape : b = ⟨.B,a.h+1,setBit a.tape a.h true⟩ := by
+      rcases a with ⟨q,pos,tape⟩
+      change q = .A at hq
+      subst q
+      change tape pos = false at hzero
+      have hlocal : next (⟨.A,pos,tape⟩ : Conf) =
+          some ⟨.B,pos+1,setBit tape pos true⟩ := by
+        simp [next,hzero]
+      rw [hlocal] at hstepA
+      cases hstepA
+      rfl
+    have hCShape : c = ⟨.F,b.h-1,setBit b.tape b.h true⟩ := by
+      rcases b with ⟨q,pos,tape⟩
+      change q = .B at hB
+      subst q
+      change tape pos = true at hbit
+      have hlocal : next (⟨.B,pos,tape⟩ : Conf) =
+          some ⟨.F,pos-1,setBit tape pos true⟩ := by
+        simp [next,hbit]
+      rw [hlocal] at hstepB
+      cases hstepB
+      rfl
+    have hctape : c.tape =
+        setBit (setBit a.tape a.h true) (a.h+1) true := by
+      have ht := congrArg Conf.tape hCShape
+      simpa [hBShape] using ht
+    have hcell (x : Int) (hx1 : x ≠ a.h) (hx2 : x ≠ a.h+1) :
+        c.tape x = a.tape x := by
+      rw [hctape]
+      rw [setBit_apply_ne _ (a.h+1) x true hx2]
+      rw [setBit_apply_ne _ a.h x true hx1]
+    have ha3 : a.tape (c.h-3) = true := by
+      exact hleft3.trans
+        (hcell (c.h-3) (by rw [hposA]; omega) (by rw [hposA]; omega))
+    have ha2 : a.tape (c.h-2) = true := by
+      exact hleft2.trans
+        (hcell (c.h-2) (by rw [hposA]; omega) (by rw [hposA]; omega))
+    have ha1 : a.tape (c.h-1) = false := by
+      exact hleft1.trans
+        (hcell (c.h-1) (by rw [hposA]; omega) (by rw [hposA]; omega))
+    have ha0 : a.tape c.h = false := by
+      rw [←hposA]
+      exact hzero
+    exact ⟨b,a,hb,hB,hbit,hpos,hstepB,ha,hq,hzero,hposA,
+      ha3,ha2,ha1,ha0,hstepA⟩
+  · exact False.elim (by
+      rcases hF0 with ⟨a,ha,hq,hzero,hposA,hstepA⟩
+      exact (by
+        -- The F/0 branch is disjoint from the requested A/0 predecessor.
+        intro h
+        rcases h with ⟨a',_,hq',_,_,_,_⟩
+        exact (by cases hq' : a'.q <;> simp_all) : False))
+
 theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
     (hhead : t h = true)
     (hones : ∀ j : Nat, j < 2*(n+1) →
