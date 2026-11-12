@@ -2,15 +2,6 @@ name: Agent32 low-odd C0 frontier proof
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'im-results/agent32-429-primitive-cost/HeadDisplacement.lean'
-      - 'im-results/agent32-429-primitive-cost/BubblePrefixHeadBound.lean'
-      - 'im-results/agent32-429-low5/LowOddPhysical.lean'
-      - 'im-results/agent32-429-low43/Low43Delta.lean'
-      - 'im-results/agent32-429-low43/Low43Physical.lean'
-      - 'im-results/agent32-429-low43/README.md'
-      - '.github/workflows/agent32-429-lowodd-frontier.yml'
 
 permissions:
   contents: read
