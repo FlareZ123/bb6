@@ -6,6 +6,7 @@ long residue-1 carry-prefix left-output proof.
 - `ad12FinalCell_mod`: the final AD12 tape is one exactly at offsets
   divisible by three in its 0..12 window.
 - `bridge3FinalCell_left`: the bridge3 final tape marks offsets -4 and -3.
+- `bridge0FinalCell_pattern` and `bridge0FrameOutput`: the residue-0 bridge frame's exact left-output pattern.
 - The frame-level corollaries and modular translation lemma make the
   `hseed` decomposition in
   `communications/agent3/20261112T183742688Z_agent42-r1-long-left-output-seed.md`
