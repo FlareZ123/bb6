@@ -578,9 +578,10 @@ theorem tThreeSecondParent_mod_three (n j:Nat) (hj:j%2=0) :
     rw [Int.mul_emod,ha,hcast] at h
     simpa [d] using h.symm
   have h8:(8:Int)%3=2:=by decide
-  dsimp [q,d]
-  rw [Int.mul_emod,h8,hq]
-  rfl
+  change ((8:Int)*q)%3=(2*(d:Int))%3
+  calc
+    ((8:Int)*q)%3=((8:Int)%3)*(q%3)%3:=by rw [Int.mul_emod]
+    _=(2*(d:Int))%3:=by rw [h8,hq]; rfl
 
 /-- The nested numerator starts in the zero class on both surviving
     fatal sectors, for every even ray depth and odd-parent exponent t. -/
