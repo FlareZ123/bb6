@@ -394,4 +394,21 @@ theorem fatal_root_reduces_to_even_parent_1085_1372 (n : Nat)
   · rw [hqx] at hqc
     exact False.elim (hxNo ((root_reset_chain_iff x).mpr hqc))
 
+
+/-- In the 1085/1372 classes, fatal-root reachability is exactly equivalent
+    to reachability of the unique even predecessor after the odd feeder is
+    excluded. The reverse implication is just one genuine ResetParent edge. -/
+theorem fatal_root_iff_even_parent_1085_1372 (n : Nat)
+    (hn : n%1458=1085 ∨ n%1458=1372) :
+    (ReachC (2,0) (fatal n,0) ↔
+      ReachC (2,0) (16*2^(n-2)-3*n-7,0)) := by
+  let y := 16*2^(n-2)-3*n-7
+  constructor
+  · exact fatal_root_reduces_to_even_parent_1085_1372 n hn
+  · intro hy
+    have hparent : ResetParent y (fatal n) := by
+      simpa [y] using (fatal_parent_set_1085_1372 n hn).1
+    have hc : ResetChain 2 y := (root_reset_chain_iff y).mp hy
+    exact (root_reset_chain_iff (fatal n)).mpr (ResetChain.append hc hparent)
+
 end CascadeFeederExceptional
