@@ -321,7 +321,7 @@ theorem carryFinishFromD (T : Int → Bool) (h : Int) (n : Nat)
   let T4 := (frame (fun x => carryDTail15OpenArea (x+2)) T3
     (shiftConfig (-2) (embed carryDTail15Final))).tape
   have hrunTail : run tm2 15 ⟨3,-2,T3⟩ = some ⟨4,7,T4⟩ := by
-    simpa [T4,shiftConfig,embed,carryDTail15Final] using htail
+    simpa [T4,frame,shiftConfig,embed,carryDTail15Final] using htail
   have hrun := run_compose tm2 (3*n) 15
     ⟨3,h,T⟩ ⟨3,-2,T3⟩ ⟨4,7,T4⟩ hrunRight hrunTail
   have hframe : ∀ x, -2 ≤ x → x ≤ 6 →
