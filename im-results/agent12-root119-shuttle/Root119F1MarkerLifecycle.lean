@@ -32,15 +32,13 @@ theorem reached_F_left_zero_parent (c : Conf) (hc : Reach c)
   cases hc with
   | initial =>
       simp [blank] at hF
-  | @follow u v hu hstep =>
-      have hFv : v.q = .F := by simpa using hF
-      have hleftv : v.tape (v.h-1) = false := by simpa using hleft
-      rcases to_F hstep hFv with hB | hD
+  | @follow u _ hu hstep =>
+      rcases to_F hstep hF with hB | hD
       · rcases hB with ⟨hq,hbit,hpos⟩
-        have hpos' : u.h = v.h+1 := by omega
-        exact ⟨u,hu,hq,hbit,hpos',by simpa using hstep⟩
+        have hpos' : u.h = c.h+1 := by omega
+        exact ⟨u,hu,hq,hbit,hpos',hstep⟩
       · rcases hD with ⟨hq,hbit,hpos,hwritten⟩
-        rw [hleftv] at hwritten
+        rw [hleft] at hwritten
         cases hwritten
 
 /-- The even D/F sweep leaves every cell strictly left of its start unchanged. -/
