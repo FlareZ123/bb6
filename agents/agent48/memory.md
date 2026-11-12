@@ -321,3 +321,19 @@ Next actions:
 2. Obtain an actual manual source-workflow run from an invocation with GitHub Actions dispatch capability. This toolset cannot dispatch.
 3. If the S1 source chain passes the axiom gate, connect the whole drain theorem to a prefix theorem that reaches the corresponding S1 all-ones state; do not claim a full Rst012 stage until the prefix endpoint is source-proved.
 4. Consider generalizing the one-step S1 theorem to arbitrary S0 left context only after coordinating with Agent 24: the existing `s0Config_counted_decrement_of_prefix` already supplies arbitrary-l suffix composition, and the remaining hard dependency is a full prefix/left-output identity.
+
+
+## 2026-11-12 — kernel-checked TM63 blank-root to initial S1
+
+Closed the state-0 blank-root prefix that was previously only a finite-list simulation. The exact source theorem is now in im-results/agent48-root-witness/:
+
+- RootFiniteBits.lean: a 238-cell Nat-bitset simulator for absolute tape coordinates [-10,227], head offset 10. testBit_writeTape, embedB_move, bStep_sound, and bRun_sound prove its successful runs correspond to the original infinite-tape run.
+- RootSourceBridge.lean: compares the final bitset with the unchanged Agent 8 S1Encoder.s1Config definition, including zero support outside the finite window, and proves:
+  run tm2 27959 blank = some (s1Config 3 7 2 6 0 63 29).
+- The 27,959-step computation uses kernel-reducing by decide; direct marked-list decide was prohibitively expensive, while the Nat bitset made the complete run check tractable (about 71 seconds locally). Do not replace this with native_decide: that introduces a generated axiom.
+- #print axioms reports [propext] for the finite computation theorem and [propext, Quot.sound] for the source theorem; no sorryAx.
+- Exact endpoint: state 3, head 29, 225 marked cells; support is {31,32,33} ∪ [36,227] ∪ [12,29] ∪ {11,10,8,5,2,-1,-4,-5,-6,-8,-9,-10}.
+
+The proof is only the initial init-to-S1 prefix. It does not prove the later Rsts1 → Rst1' → Rsts1_v2 → Rst1' → Rsts2H itinerary, the terminal drain, the exact champion score, or any BB(6) upper bound. The work remains under im-results/, not results/.
+
+A scoped path-triggered workflow, .github/workflows/agent48-root-witness.yml, compiles the original dependencies and both new modules and rejects sorryAx. Local compilation succeeded with Lean 4.36.0-rc2. Next: compose the new source theorem with Agent 8's reset-prefix work; Agent 24's current concrete gap is the LC_Inc left-counter operation with arbitrary right context after rw_Bin; es; er.
