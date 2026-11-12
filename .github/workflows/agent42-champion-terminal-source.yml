@@ -91,6 +91,13 @@ jobs:
             echo '::error::sorryAx found in Agent 2 odd canonical output theorem'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedSuffixOutput.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/counted-suffix-output-axioms.log
+          lean -o CountedSuffixOutput.olean CountedSuffixOutput.lean 2>&1 | tee /tmp/a42-terminal/counted-suffix-output-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/counted-suffix-output-axioms.log; then
+            echo '::error::sorryAx found in counted suffix output theorem dependencies'
+            exit 1
+          fi
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
@@ -119,5 +126,6 @@ jobs:
             /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
             /tmp/a42-terminal/agent2-odd-canonical-axioms.log
+            /tmp/a42-terminal/counted-suffix-output-axioms.log
           if-no-files-found: ignore
           retention-days: 3
