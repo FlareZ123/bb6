@@ -26,7 +26,7 @@ def endpoint (k q r : Nat) : Cfg :=
   let m := 4*k+3+CryptidA.wordInc (words q r)
   ⟨[],false,
     List.replicate (2*m+5) true ++
-      CryptidBoundary.oppairs 3 ++ List.replicate 3 true,
+      CryptidBoundary.oppairs 3 ++ List.replicate 2 true,
     5⟩
 
 def sourceTime (k q r : Nat) : Nat :=
@@ -145,7 +145,7 @@ theorem a_p2_packet_reentry (k q r : Nat) :
     rfl
   have htail :
       [false,true,false,true,false,true,true,true] =
-        CryptidBoundary.oppairs 3 ++ List.replicate 3 true := by
+        CryptidBoundary.oppairs 3 ++ List.replicate 2 true := by
     decide
   rw [hshape]
   simpa [sourceTime,endpoint,ys,htail,
