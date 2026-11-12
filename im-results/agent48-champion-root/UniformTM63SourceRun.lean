@@ -63,13 +63,13 @@ private theorem write_false (h : Int) (t : Int → Bool) :
 
 private theorem terminalSet_true (t : Int → Bool) (h : Int) :
     TerminalFinish.set t h true =
-      (fun x => decide (x = h) || t x) := by
+      (fun x => if x = h then true else t x) := by
   funext x
   by_cases hx : x = h <;> simp [TerminalFinish.set, hx]
 
 private theorem terminalSet_false (t : Int → Bool) (h : Int) :
     TerminalFinish.set t h false =
-      (fun x => ! decide (x = h) && t x) := by
+      (fun x => if x = h then false else t x) := by
   funext x
   by_cases hx : x = h <;> simp [TerminalFinish.set, hx]
 
