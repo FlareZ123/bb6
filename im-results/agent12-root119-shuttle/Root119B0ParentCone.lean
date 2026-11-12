@@ -799,6 +799,42 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
   exact ⟨k,f,hkpos,hf,hF,hFbit,hposF,hones,hzero,hfb,hretreat⟩
 
 
+
+
+/-- The complete half-line at and left of a reached left-10 B/0 target is
+    identical to that of its F/1 ancestor. The two rightward prefix writes
+    lie strictly to the right of the target; the remaining path is tight and
+    leftward, so it never writes at or left of the target head. -/
+theorem reached_B0_left10_left_tape_agreement (c : Conf) (hc : Reach c)
+    (hB : c.q=.B) (hcurrent : c.tape c.h=false)
+    (hleft3 : c.tape (c.h-3)=true)
+    (hleft2 : c.tape (c.h-2)=false) :
+    ∃ k f,
+      1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
+      f.h=c.h+(2*k:Int)-1 ∧
+      ∀ x : Int, x≤c.h → c.tape x=f.tape x := by
+  obtain ⟨k,f,d,e,g,hkpos,hf,hF,hFbit,hposF,hd,hD,hDbit,hposD,
+    hstepF,he,hE,hEzero,hposE,hstepD,hg,hG,hGzero,hGpos,hpath,hGstep⟩ :=
+      reached_B0_left10_path_components c hc hB hcurrent hleft3 hleft2
+  have hpathGC : Root119Path 1 g c :=
+    Root119Path.step hGstep (Root119Path.refl c)
+  have hpathEC : Root119Path (2*k+1) e c := by
+    simpa using root119Path_comp hpath hpathGC
+  have hdispEC : c.h=e.h-((2*k+1:Nat):Int) := by
+    rw [hposE,hposF]
+    omega
+  have hEF (x : Int) (hxf : x≠f.h) (hxd : x≠d.h) :
+      e.tape x=f.tape x :=
+    (parentCone_next_tape_away d e hstepD x hxd).trans
+      (parentCone_next_tape_away f d hstepF x hxf)
+  refine ⟨k,f,hkpos,hf,hF,hFbit,hposF,?_⟩
+  intro x hx
+  have hpres := parentCone_path_tight_preserves_tape
+    hpathEC hdispEC x hx
+  have hEFx := hEF x (by omega) (by omega)
+  exact hpres.trans hEFx
+
+
 #print axioms BB6Root119.to_A_exact_parent
 #print axioms BB6Root119.to_D_exact_parent
 #print axioms BB6Root119.reached_D1_F0_successor_F1_parent
@@ -814,5 +850,6 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
 #print axioms BB6Root119.parentCone_f0_b0_corridor
 #print axioms BB6Root119.reached_B0_left10_path_components
 #print axioms BB6Root119.reached_B0_left10_odd_seed_conditions
+#print axioms BB6Root119.reached_B0_left10_left_tape_agreement
 
 end BB6Root119
