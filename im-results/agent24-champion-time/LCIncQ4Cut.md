@@ -89,3 +89,12 @@ I broadened the simulator check beyond L=5. Across **702** cases with (L=2,\ldot
 - exact full-tape equality to the stated S1 target after a further (39+3b) steps.
 
 This remains finite simulator evidence. It strengthens confidence in the cut but does not replace the two quantified frame proofs.
+
+## q4 suffix rewrite: exact finite difference sets
+
+For each of the same 702 cases, I also compared the entire q4-mid tape against the exact target tape. The set of differing cells was independent of (L,n,a) and depended only on (b):
+- (b=0): ({5,12,13,14});
+- (b=1): ({5,6,7,8,9,15,16,17});
+- (b=2): ({5,6,7,8,10,11,12,18,19,20}).
+
+Hence the q4 suffix preserves every cell (x\le4) in all tested cases; its complete tape effect is a right-side rewrite determined only by b. This is strong evidence for a suffix theorem quantified over arbitrary left exterior, with an explicit right-output rewrite. The displayed difference sets are only the b=0,1,2 cases; no general closed form for (D_b) is claimed.
