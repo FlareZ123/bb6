@@ -17,6 +17,7 @@ namespace BB6Coverage.Agent48UniformRun
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48UniformBridge
+open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48UniformHeadOffset
 open TM63Uniform
 
@@ -121,8 +122,25 @@ theorem step_state_lt (c : TM63Uniform.Cfg) (hc : c.st < 6) :
     (TM63Uniform.step c).st < 6 := by
   cases c with
   | mk q l b r =>
-    unfold TM63Uniform.step
-    split <;> simp_all [TM63Uniform.moveR, TM63Uniform.moveL] <;> omega
+    have hq : q < 6 := hc
+    cases q with
+    | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+    | succ q =>
+      cases q with
+      | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+      | succ q =>
+        cases q with
+        | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+        | succ q =>
+          cases q with
+          | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+          | succ q =>
+            cases q with
+            | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+            | succ q =>
+              cases q with
+              | zero => cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL]
+              | succ q => omega
 
 /-- A single total zipper step is exactly one original TM63 primitive move,
 provided the current query is not the undefined A/1 halt. -/
@@ -196,7 +214,7 @@ theorem run_uniform_source (n : Nat) (c : TM63Uniform.Cfg) (h : Int)
     BB6Coverage.run tm2 n (uniformConfigAt h c hc) =
       some (uniformConfigAt (h + headOffset n c) (TM63Uniform.run n c)
         (run_state_lt n c hc)) := by
-  induction n with
+  induction n generalizing c h hc hsafe with
   | zero =>
       simp [BB6Coverage.run, TM63Uniform.run, headOffset, uniformConfigAt]
   | succ n ih =>
