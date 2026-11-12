@@ -124,36 +124,36 @@ theorem four_fourth_overflow_false_76 :
       fourthOverflow (n.val+14) s.val u.val v.val w.val t1.val t2.val t3.val t4.val = false := by
   intro n s u v w t1 t2 t3 t4
   by_cases h0 : n.val < 8
-    let n' : Fin 8 := ⟨n.val-0, by omega⟩
+  · let n' : Fin 8 := ⟨n.val, by omega⟩
     have heq : n.val+14=n'.val+14 := by simp [n']
-    simpa [heq] using four_fourth_overflow_false_14_21 n' s u v w t1 t2 t3 t4
-    by_cases h1 : n.val < 16
-      let n' : Fin 8 := ⟨n.val-8, by omega⟩
+    simpa [heq] using four_fourth_overflow_false_76_14_21 n' s u v w t1 t2 t3 t4
+  · by_cases h1 : n.val < 16
+    · let n' : Fin 8 := ⟨n.val-8, by omega⟩
       have heq : n.val+14=n'.val+22 := by omega
-      simpa [heq] using four_fourth_overflow_false_22_29 n' s u v w t1 t2 t3 t4
-      by_cases h2 : n.val < 24
-        let n' : Fin 8 := ⟨n.val-16, by omega⟩
+      simpa [heq] using four_fourth_overflow_false_76_22_29 n' s u v w t1 t2 t3 t4
+    · by_cases h2 : n.val < 24
+      · let n' : Fin 8 := ⟨n.val-16, by omega⟩
         have heq : n.val+14=n'.val+30 := by omega
-        simpa [heq] using four_fourth_overflow_false_30_37 n' s u v w t1 t2 t3 t4
-        by_cases h3 : n.val < 32
-          let n' : Fin 8 := ⟨n.val-24, by omega⟩
+        simpa [heq] using four_fourth_overflow_false_76_30_37 n' s u v w t1 t2 t3 t4
+      · by_cases h3 : n.val < 32
+        · let n' : Fin 8 := ⟨n.val-24, by omega⟩
           have heq : n.val+14=n'.val+38 := by omega
-          simpa [heq] using four_fourth_overflow_false_38_45 n' s u v w t1 t2 t3 t4
-          by_cases h4 : n.val < 40
-            let n' : Fin 8 := ⟨n.val-32, by omega⟩
+          simpa [heq] using four_fourth_overflow_false_76_38_45 n' s u v w t1 t2 t3 t4
+        · by_cases h4 : n.val < 40
+          · let n' : Fin 8 := ⟨n.val-32, by omega⟩
             have heq : n.val+14=n'.val+46 := by omega
-            simpa [heq] using four_fourth_overflow_false_46_53 n' s u v w t1 t2 t3 t4
-            by_cases h5 : n.val < 48
-              let n' : Fin 8 := ⟨n.val-40, by omega⟩
+            simpa [heq] using four_fourth_overflow_false_76_46_53 n' s u v w t1 t2 t3 t4
+          · by_cases h5 : n.val < 48
+            · let n' : Fin 8 := ⟨n.val-40, by omega⟩
               have heq : n.val+14=n'.val+54 := by omega
-              simpa [heq] using four_fourth_overflow_false_54_61 n' s u v w t1 t2 t3 t4
-              by_cases h6 : n.val < 56
-                let n' : Fin 8 := ⟨n.val-48, by omega⟩
+              simpa [heq] using four_fourth_overflow_false_76_54_61 n' s u v w t1 t2 t3 t4
+            · by_cases h6 : n.val < 56
+              · let n' : Fin 8 := ⟨n.val-48, by omega⟩
                 have heq : n.val+14=n'.val+62 := by omega
-                simpa [heq] using four_fourth_overflow_false_62_69 n' s u v w t1 t2 t3 t4
-                let n' : Fin 6 := ⟨n.val-56, by omega⟩
-                have heq : n.val+14=n'.val+70 := by omega
-                simpa [heq] using four_fourth_overflow_false_70_75 n' s u v w t1 t2 t3 t4
+                simpa [heq] using four_fourth_overflow_false_76_62_69 n' s u v w t1 t2 t3 t4
+                · let n' : Fin 6 := ⟨n.val-56, by omega⟩
+                  have heq : n.val+14=n'.val+70 := by omega
+                  simpa [heq] using four_fourth_overflow_false_76_70_75 n' s u v w t1 t2 t3 t4
 
 theorem no_four_small_bad_14_17 :
     ∀ n : Fin 4, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3, ∀ r : Fin 3, ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
@@ -224,68 +224,68 @@ theorem no_four_small_bad_76 :
       fourBad (n.val+14) s.val u.val v.val w.val r.val t1.val t2.val t3.val t4.val = false := by
   intro n s u v w r t1 t2 t3 t4
   by_cases h0 : n.val < 4
-    let n' : Fin 4 := ⟨n.val-0, by omega⟩
+  · let n' : Fin 4 := ⟨n.val, by omega⟩
     have heq : n.val+14=n'.val+14 := by simp [n']
-    simpa [heq] using no_four_small_bad_14_17 n' s u v w r t1 t2 t3 t4
-    by_cases h1 : n.val < 8
-      let n' : Fin 4 := ⟨n.val-4, by omega⟩
+    simpa [heq] using no_four_small_bad_76_14_17 n' s u v w r t1 t2 t3 t4
+  · by_cases h1 : n.val < 8
+    · let n' : Fin 4 := ⟨n.val-4, by omega⟩
       have heq : n.val+14=n'.val+18 := by omega
-      simpa [heq] using no_four_small_bad_18_21 n' s u v w r t1 t2 t3 t4
-      by_cases h2 : n.val < 12
-        let n' : Fin 4 := ⟨n.val-8, by omega⟩
+      simpa [heq] using no_four_small_bad_76_18_21 n' s u v w r t1 t2 t3 t4
+    · by_cases h2 : n.val < 12
+      · let n' : Fin 4 := ⟨n.val-8, by omega⟩
         have heq : n.val+14=n'.val+22 := by omega
-        simpa [heq] using no_four_small_bad_22_25 n' s u v w r t1 t2 t3 t4
-        by_cases h3 : n.val < 16
-          let n' : Fin 4 := ⟨n.val-12, by omega⟩
+        simpa [heq] using no_four_small_bad_76_22_25 n' s u v w r t1 t2 t3 t4
+      · by_cases h3 : n.val < 16
+        · let n' : Fin 4 := ⟨n.val-12, by omega⟩
           have heq : n.val+14=n'.val+26 := by omega
-          simpa [heq] using no_four_small_bad_26_29 n' s u v w r t1 t2 t3 t4
-          by_cases h4 : n.val < 20
-            let n' : Fin 4 := ⟨n.val-16, by omega⟩
+          simpa [heq] using no_four_small_bad_76_26_29 n' s u v w r t1 t2 t3 t4
+        · by_cases h4 : n.val < 20
+          · let n' : Fin 4 := ⟨n.val-16, by omega⟩
             have heq : n.val+14=n'.val+30 := by omega
-            simpa [heq] using no_four_small_bad_30_33 n' s u v w r t1 t2 t3 t4
-            by_cases h5 : n.val < 24
-              let n' : Fin 4 := ⟨n.val-20, by omega⟩
+            simpa [heq] using no_four_small_bad_76_30_33 n' s u v w r t1 t2 t3 t4
+          · by_cases h5 : n.val < 24
+            · let n' : Fin 4 := ⟨n.val-20, by omega⟩
               have heq : n.val+14=n'.val+34 := by omega
-              simpa [heq] using no_four_small_bad_34_37 n' s u v w r t1 t2 t3 t4
-              by_cases h6 : n.val < 28
-                let n' : Fin 4 := ⟨n.val-24, by omega⟩
+              simpa [heq] using no_four_small_bad_76_34_37 n' s u v w r t1 t2 t3 t4
+            · by_cases h6 : n.val < 28
+              · let n' : Fin 4 := ⟨n.val-24, by omega⟩
                 have heq : n.val+14=n'.val+38 := by omega
-                simpa [heq] using no_four_small_bad_38_41 n' s u v w r t1 t2 t3 t4
-                by_cases h7 : n.val < 32
-                  let n' : Fin 4 := ⟨n.val-28, by omega⟩
+                simpa [heq] using no_four_small_bad_76_38_41 n' s u v w r t1 t2 t3 t4
+              · by_cases h7 : n.val < 32
+                · let n' : Fin 4 := ⟨n.val-28, by omega⟩
                   have heq : n.val+14=n'.val+42 := by omega
-                  simpa [heq] using no_four_small_bad_42_45 n' s u v w r t1 t2 t3 t4
-                  by_cases h8 : n.val < 36
-                    let n' : Fin 4 := ⟨n.val-32, by omega⟩
+                  simpa [heq] using no_four_small_bad_76_42_45 n' s u v w r t1 t2 t3 t4
+                · by_cases h8 : n.val < 36
+                  · let n' : Fin 4 := ⟨n.val-32, by omega⟩
                     have heq : n.val+14=n'.val+46 := by omega
-                    simpa [heq] using no_four_small_bad_46_49 n' s u v w r t1 t2 t3 t4
-                    by_cases h9 : n.val < 40
-                      let n' : Fin 4 := ⟨n.val-36, by omega⟩
+                    simpa [heq] using no_four_small_bad_76_46_49 n' s u v w r t1 t2 t3 t4
+                  · by_cases h9 : n.val < 40
+                    · let n' : Fin 4 := ⟨n.val-36, by omega⟩
                       have heq : n.val+14=n'.val+50 := by omega
-                      simpa [heq] using no_four_small_bad_50_53 n' s u v w r t1 t2 t3 t4
-                      by_cases h10 : n.val < 44
-                        let n' : Fin 4 := ⟨n.val-40, by omega⟩
+                      simpa [heq] using no_four_small_bad_76_50_53 n' s u v w r t1 t2 t3 t4
+                    · by_cases h10 : n.val < 44
+                      · let n' : Fin 4 := ⟨n.val-40, by omega⟩
                         have heq : n.val+14=n'.val+54 := by omega
-                        simpa [heq] using no_four_small_bad_54_57 n' s u v w r t1 t2 t3 t4
-                        by_cases h11 : n.val < 48
-                          let n' : Fin 4 := ⟨n.val-44, by omega⟩
+                        simpa [heq] using no_four_small_bad_76_54_57 n' s u v w r t1 t2 t3 t4
+                      · by_cases h11 : n.val < 48
+                        · let n' : Fin 4 := ⟨n.val-44, by omega⟩
                           have heq : n.val+14=n'.val+58 := by omega
-                          simpa [heq] using no_four_small_bad_58_61 n' s u v w r t1 t2 t3 t4
-                          by_cases h12 : n.val < 52
-                            let n' : Fin 4 := ⟨n.val-48, by omega⟩
+                          simpa [heq] using no_four_small_bad_76_58_61 n' s u v w r t1 t2 t3 t4
+                        · by_cases h12 : n.val < 52
+                          · let n' : Fin 4 := ⟨n.val-48, by omega⟩
                             have heq : n.val+14=n'.val+62 := by omega
-                            simpa [heq] using no_four_small_bad_62_65 n' s u v w r t1 t2 t3 t4
-                            by_cases h13 : n.val < 56
-                              let n' : Fin 4 := ⟨n.val-52, by omega⟩
+                            simpa [heq] using no_four_small_bad_76_62_65 n' s u v w r t1 t2 t3 t4
+                          · by_cases h13 : n.val < 56
+                            · let n' : Fin 4 := ⟨n.val-52, by omega⟩
                               have heq : n.val+14=n'.val+66 := by omega
-                              simpa [heq] using no_four_small_bad_66_69 n' s u v w r t1 t2 t3 t4
-                              by_cases h14 : n.val < 60
-                                let n' : Fin 4 := ⟨n.val-56, by omega⟩
+                              simpa [heq] using no_four_small_bad_76_66_69 n' s u v w r t1 t2 t3 t4
+                            · by_cases h14 : n.val < 60
+                              · let n' : Fin 4 := ⟨n.val-56, by omega⟩
                                 have heq : n.val+14=n'.val+70 := by omega
-                                simpa [heq] using no_four_small_bad_70_73 n' s u v w r t1 t2 t3 t4
-                                let n' : Fin 2 := ⟨n.val-60, by omega⟩
-                                have heq : n.val+14=n'.val+74 := by omega
-                                simpa [heq] using no_four_small_bad_74_75 n' s u v w r t1 t2 t3 t4
+                                simpa [heq] using no_four_small_bad_76_70_73 n' s u v w r t1 t2 t3 t4
+                                · let n' : Fin 2 := ⟨n.val-60, by omega⟩
+                                  have heq : n.val+14=n'.val+74 := by omega
+                                  simpa [heq] using no_four_small_bad_76_74_75 n' s u v w r t1 t2 t3 t4
 
 #print axioms four_first_overflow_false_76
 #print axioms four_second_overflow_false_76
