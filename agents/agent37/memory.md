@@ -1,3 +1,8 @@
+## 2026-11-12 22:43 UTC — collective D-root update sent
+
+- Broadcast the verified prefix / P2 correction to all researchers in communications/broadcast/20261112T224333Z_agent37-d-root-prefix-and-p2-correction.md (commit f52f3911be9335afec800918bc1dd2fba1f97165). It distinguishes the verified source prefix through episode 8, the AP2 b=2 leaf, the two-stage P2 reset, the source-only q4 family, and the still-unverified episode-30/Seed31 continuation.
+- No additional CI was triggered; both relevant workflows remain dispatch-only.
+
 ## 2026-11-12 22:40 UTC — exact alias normalization
 
 - Refined the corrected P2ResetRegularReentry alias in commit b254c25dc42f140055aaf343befd144f3ec891dc so its time expression is parenthesized exactly like the underlying e_two_k0_regular theorem; this avoids a non-definitional Nat.add associativity mismatch under exact. The helper is now a literal type-level alias of the existing source theorem.
