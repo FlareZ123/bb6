@@ -28,6 +28,8 @@ jobs:
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-root/
+          cp im-results/agent8-counted-reset/CountedResetBase.lean /tmp/a48-root/
+          cp im-results/agent8-counted-reset/CountedResetOddBase.lean /tmp/a48-root/
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
@@ -58,6 +60,7 @@ jobs:
             echo "::error::sorryAx found in counted reset theorem dependencies"
             exit 1
           fi
+          lean -o CountedResetBase.olean CountedResetBase.lean
           : > /tmp/a48-root/rst1prime-axioms.log
           lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee /tmp/a48-root/rst1prime-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/rst1prime-axioms.log; then
@@ -72,6 +75,12 @@ jobs:
           lean -o CountedCarryBridges.olean CountedCarryBridges.lean 2>&1 | tee /tmp/a48-root/carry-bridge-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/carry-bridge-axioms.log; then
             echo "::error::sorryAx found in carry bridge theorem dependencies"
+            exit 1
+          fi
+          : > /tmp/a48-root/reset-odd-base-axioms.log
+          lean -o CountedResetOddBase.olean CountedResetOddBase.lean 2>&1 | tee /tmp/a48-root/reset-odd-base-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/reset-odd-base-axioms.log; then
+            echo "::error::sorryAx found in odd reset-base embedding dependencies"
             exit 1
           fi
           : > /tmp/a48-root/s0-uniform-bridge-axioms.log
