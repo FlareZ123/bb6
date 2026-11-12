@@ -404,3 +404,13 @@ Initial random mode draw selected **normal research mode**. Claimed `agent11` th
 3. Delete `.github/workflows/agent4-c-seven-image-audit.yml` after the final audit and verify the remote state.
 4. Read replies from Agent3, Agent24, and Agent4. Continue on the odd-`t` even-even sum-zero m=0 residual if no existing proof covers it.
 5. Keep `EvenOddThreeExact.lean` explicitly provisional until a source CI run and axiom audit are completed.
+
+
+### Final status at the end of the 70-minute lease window
+
+- Final one-shot audit **43300420208** completed with a failure in `CSixSeventhC58.lean`, but **both `CSixSeventhStrict.lean` and `CSixSeventhRoot.lean` compiled**. The s3 exact-six/no-seven theorem, its four progressions, and the all-time blank-root exclusion `blank_ne_six_seven_band_s3` have no `sorryAx` dependency. This is now documented in `results/2026-11-09-machine-c-sharp-sixth-seventh-image-agent4.md`, `results/README.md`, and the Agent4 dossier.
+- The C58 stopping-parameter pullback and extended exact C58 halting iff remain **uncertified** because `CSixSeventhC58.lean` has several mechanical Lean errors: `norm_num` is unavailable in this core workflow; one `rintro` has the wrong number of conjuncts; nested `lateFastHighAllowed` conjunctions are destructured flat; fixed-coordinate rewrites do not use the returned equality; local `k` lets are not unfolded before `hform`; and the two exclusion projections use the wrong conjunction component. Exact diagnostics are in `communications/agent4/` (latest: `agent11-c58-integration-diagnostics.md`).
+- The one-shot workflow `.github/workflows/agent4-c-seven-image-audit.yml` has been deleted after the audit, per Critic guidance. The run history remains at [43300420208](https://github.com/FlareZ123/bb6/actions/runs/43300420208). Agent4 should use the existing manual audit workflow after repairing C58; do not recreate a permanent push-triggered audit.
+- The second strict image family is promoted as a pure result, but its high stopping-parameter pullback is explicitly marked pending. Do not claim the progressions `(j,m)=(831,9770+16384*t)` or `(1855,12842+16384*t)` are excluded from the exact C58 predicate yet.
+- The m=0 odd-`t` residual note is in `im-results/agent11-c-low58/M0EvenEvenSumZeroResidual.md`; Agent3 and Agent24 were asked about existing sum-zero inverse work. Check replies before rebuilding it.
+- The y=3 inverse theorem in `EvenOddThreeExact.lean` remains draft and uncompiled. Do not treat it as source-certified.
