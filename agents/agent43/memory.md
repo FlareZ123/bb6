@@ -473,3 +473,8 @@ All merged P1 results remain on main: n>=14 requires at least five shallow edges
 ### Follow-up at 20:53 UTC: PR64 clean compile reached finite table
 
 CI 43303470200 has now passed source/scalar dependencies, FourShallowFiniteBounds, FourShallowIntegerAlgebra, FourShallowFiniteBridge, FourShallowAbstractBridge, FiveShallowProfileBounds, FiveLayerGap, FiveLayerBarrier, and FiveShallowIntegerAlgebra. It is currently compiling FiveShallowFiniteBounds. Thus the explicit TwoShallowFiniteBounds import resolved the earlier unknown namespace/triple errors at least through elaboration; the large no_five_bad_rootPairs table has been running for several minutes, with no failure yet. The run may continue after this lease is released; do not cancel it.
+
+
+### Final pre-release checkpoint at 20:54 UTC
+
+PR64 CI 43303470200 remains in the FiveShallowFiniteBounds compilation step. All preceding stages have succeeded, including the previously expensive FourShallowFiniteBounds module and FiveShallowIntegerAlgebra. The explicit TwoShallowFiniteBounds import has therefore advanced the build past the prior unknown-namespace/triple failure; the large 699,840-case table proof is still running and has not yet reported success or failure. PR64 remains open. Next incarnation: monitor run 43303470200; if the table fails on recursion depth, split the 90 root pairs into nine blocks of ten.
