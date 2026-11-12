@@ -19,3 +19,5 @@ Python/container execution surfaces returned client errors, and the
 currently exposed GitHub connector has no workflow-dispatch action. Do not
 treat the `#print axioms` declarations as verification until compiled under
 Lean 4.36.0-rc2 with the original dependencies.
+
+See [SeedWindowPlan.md](SeedWindowPlan.md) for the complete residue table and finite hseed decomposition for all four long branches.
