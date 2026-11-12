@@ -14,8 +14,7 @@ theorem d0pow_length (n : Nat) : (d0pow n).length = 3*n := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [d0pow,d0,ih]
-      omega
+      simp [d0pow,d0,ih] <;> omega
 
 /-- Exact zero-padded lookup in the head-facing repeated 100 stream. -/
 theorem sideBit_d0pow_formula (n i : Nat) :
@@ -37,8 +36,7 @@ theorem sideBit_d0pow_formula (n i : Nat) :
         rw [h3]
         change sideBit (d0 ++ d0pow n) ((i-3)+3) =
           decide (((i-3)+3 < 3*(n+1)) ∧ ((i-3)+3)%3=2)
-        simp [d0,sideBit,ih]
-        omega
+        simp [d0,sideBit,ih] <;> omega
 
 /-- The exact S1 source output after decrementing a positive counter has
 the canonical left-bit formula used by the counted carry finish. This is
