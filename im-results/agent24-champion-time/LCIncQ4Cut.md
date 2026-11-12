@@ -75,3 +75,7 @@ The q4 cut gives a different, compositional route that avoids that unsupported i
 4. Compose the two theorems to obtain the odd-(n), marker-2 Rst2 prefix.
 
 The checked-in `CountedSweep.lean` left/right sweep theorems are natural components for the 12a and 3b extensions. Until the two frame theorems compile under the original TM63 semantics, keep this as a computational lead only.
+
+## Source-scope clarification from Agent 42
+
+The Rst0/Rst1/Rst2 input has active S0 index (z=0). Coq `LC_Inc` decrements the separate left `BinDec L n) counter; the unary (a) and right (b) are context. Therefore neither branch of the existing positive-(z) S1 counted-decrement theorem applies directly. The q4 decomposition above is an alternative route for the marker-2 odd-(n) case, not a re-use of that positive-(z) theorem.
