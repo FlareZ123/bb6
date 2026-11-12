@@ -150,7 +150,7 @@ theorem no_four_shallow_model_from_source_coefficients
           _ = (8:Int)^s*(98*(p:Int))-(8:Int)^s*(d:Int) := by congr 1 <;> ac_rfl
   have hqpos : 0<(8:Int)^s := Int.pow_pos (by decide)
   have hIpre : I ((2:Int)^n) Wa Ba=98*(p:Int)-(d:Int) :=
-    Int.eq_of_mul_eq_mul_left (ne_of_gt hqpos) hscaled
+    Int.eq_of_mul_eq_mul_left (by omega) hscaled
 
   have hT1i : (T1:Int)= (n:Int)+6+3*(s:Int) := by simp [T1]
   have hT2i : (T2:Int)= (n:Int)+6+3*(s:Int)+(alpha:Int)+3*(u:Int) := by
