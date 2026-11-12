@@ -42,7 +42,13 @@ theorem evenodd_three_parent_iff (a k x : Nat) (hx : x%8=6) :
   · intro hedge
     have hp := (section_preimage_all_iff a k x 3).mp hedge
     by_cases ha0 : a=0
-    · simp [sectionPreimageAll,ha0] at hp
+    · subst a
+      by_cases hk0 : k=0
+      · simp [sectionPreimageAll,hk0] at hp
+      · by_cases hk1 : k=1
+        · simp [sectionPreimageAll,hk0,hk1] at hp
+          omega
+        · simp [sectionPreimageAll,hk0,hk1] at hp
     · by_cases ha1 : a=1
       · subst a
         by_cases hk0 : k=0
