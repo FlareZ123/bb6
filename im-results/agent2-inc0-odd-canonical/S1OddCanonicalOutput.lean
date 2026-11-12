@@ -340,10 +340,25 @@ theorem oddCounterOutput_s1Successor
             simp [oddCounterOutput,frame,tailArea,harea,hpre] at *
             rw [hfinaly]
             simp [hpre,hPbit]
-            by_cases hs0 : y = rightStop b <;>
-              by_cases hs1 : y = rightStop b+1 <;>
-              by_cases hs2 : y = rightStop b+2 <;>
-              simp [hs0,hs1,hs2,rightStop] <;> omega
+            have hstop : rightStop (b+1) = rightStop b + 3 := by
+              simp only [rightStop, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
+              omega
+            have hcut :
+                (if y = rightStop b+1 then true
+                 else if y = rightStop b then true
+                 else if y = rightStop b+2 then true
+                 else decide (y < rightStop b)) =
+                decide (y < rightStop (b+1)) := by
+              by_cases hs1 : y = rightStop b+1
+              · simp [hs1,hstop]
+              · by_cases hs0 : y = rightStop b
+                · simp [hs0,hstop]
+                · by_cases hs2 : y = rightStop b+2
+                  · simp [hs2,hstop]
+                  · have hiff : (y < rightStop b) ↔ (y < rightStop (b+1)) := by
+                      rw [hstop]
+                      omega
+                    simp [hs1,hs0,hs2,hiff]
           have htarget := s1Config_right_bit_formula
             L n m (len+1) (2*q) (b+1) h y hy7
           rw [hout,htarget]
