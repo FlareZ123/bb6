@@ -1,4 +1,5 @@
 import ChampionRootBridge
+import S1Encoder
 
 /-!
 # Finite root-to-initial-S1 computation
@@ -27,3 +28,17 @@ theorem tm2_blank_reaches_initialS1_finite :
   decide
 
 end BB6Coverage.Agent42InitialS1Root
+
+
+open BB6Coverage.Agent8S1Encoder
+
+/-- The ascending source-tape support on the interval [-40,227]. -/
+def initialS1Support : List Int :=
+  ((List.range 268).map (fun i => (i : Int) - 40)).filter
+    (fun x => (s1Config 3 7 2 6 0 63 29).tape x)
+
+/-- The finite-run output and the S1 source tape have the same marked cells
+    throughout an interval containing the complete source support. -/
+theorem tm2_initialS1_marks_perm :
+    initialS1Marks.Perm initialS1Support := by
+  decide
