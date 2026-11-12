@@ -644,7 +644,7 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
     ∃ k f d e g,
-      Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
+      1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
         f.h=c.h+(2*k:Int)-1 ∧
       Reach d ∧ d.q=.D ∧ d.tape d.h=true ∧
         d.h=f.h+1 ∧ next f=some d ∧
@@ -674,9 +674,28 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
   have hposE : e.h=f.h+2 := by
     rw [heEq,hposD]
     omega
-  exact ⟨k,f,d,e,g,hf,hF,hFbit,hposF,
+  have hkpos : 1≤k := by
+    by_contra hnot
+    have hk0 : k=0 := by omega
+    subst k
+    have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
+    have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
+      hstepD.symm.trans hDshape
+    have heq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
+      injection hsome with heq
+      exact heq
+    cases hpath
+    have hwrite : e.tape c.h=true := by
+      rw [heq]
+      simp [setBit,hdpos0]
+    have hcopy : c.tape c.h=e.tape c.h :=
+      parentCone_next_tape_away g c hGstep c.h (by rw [hGpos]; omega)
+    rw [hcurrent] at hcopy
+    rw [hwrite] at hcopy
+    cases hcopy
+  exact ⟨k,f,d,e,g,hkpos,hf,hF,hFbit,hposF,
     hd,hD,hDbit,hposD,hstepF,
-    heReach,hE,hEzero,hposE,rfl,
+    heReach,hE,hEzero,hposE,hstepD,
     hg,hG,hGzero,hGpos,hpath,hGstep⟩
 
 /-- Every reached B/0 in the left-10 sector has an F/1 ancestor whose first
@@ -698,23 +717,9 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
         f.tape (f.h-1)=true ∧
         f.tape (f.h-2*(k:Int)+2)=false ∧
         f.tape (f.h-2*(k:Int)+1)=false) := by
-  obtain ⟨k,f,d,e,g,hf,hF,hFbit,hposF,hd,hD,hDbit,hposD,
+  obtain ⟨k,f,d,e,g,hkpos,hf,hF,hFbit,hposF,hd,hD,hDbit,hposD,
     hstepF,he,hE,hEzero,hposE,hstepD,hg,hG,hGzero,hGpos,hpath,hGstep⟩ :=
       reached_B0_left10_path_components c hc hB hcurrent hleft3 hleft2
-  have hkpos : 1≤k := by
-    by_contra hnot
-    have hk0 : k=0 := by omega
-    subst k
-    have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
-    rw [next_D_one_shape d hD hDbit] at hstepD
-    cases hstepD
-    cases hpath
-    have hwrite : e.tape c.h=true := by simp [setBit,hdpos0]
-    have hcopy : c.tape c.h=e.tape c.h :=
-      parentCone_next_tape_away g c hGstep c.h (by rw [hGpos]; omega)
-    rw [hcurrent] at hcopy
-    rw [hwrite] at hcopy
-    cases hcopy
   have hpathGC : Root119Path 1 g c :=
     Root119Path.step hGstep (Root119Path.refl c)
   have hpathEC : Root119Path (2*k+1) e c := by
