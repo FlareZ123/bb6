@@ -146,13 +146,14 @@ theorem carryBridge3_matches_carryAD12
       omega
     have hR := hRight i hiLo' hiHi
     have hcoord : h+i = x := by dsimp [i]; omega
+    have hR' : T x = true := by simpa [hcoord] using hR
     have hbase : (embed carryAD12Base).tape (x-(h-2)) = true := by
       simp [embed, carryAD12Base]
       omega
     have hout :
         (frame (fun y => carryBridgeArea3 (y-h)) T
           (shiftConfig h (embed carryBridgeFinal3))).tape x = true := by
-      simp [frame, shiftConfig, i, hnot, hcoord, hR]
+      simp [frame, shiftConfig, i, hnot, hR']
     rw [hbase, hout]
 
 #print axioms carryBridge3_matches_carryAD12
