@@ -68,7 +68,7 @@ jobs:
           grep -F "'BB429High0Source.high0_to_junc' depends on axioms:" /tmp/agent18-high0.log
           if grep -q 'sorryAx' /tmp/agent18-high0.log; then echo "ERROR sorryAx" >&2; exit 1; fi
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent18-429-junc-canonical/JuncCanonical.olean im-results/agent18-429-junc-canonical/JuncCanonical.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent32-429-root-bridge/RootToJunc.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent32-429-root-bridge/RootToJunc.olean im-results/agent32-429-root-bridge/RootToJunc.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           grep -F "'BB429RootToJunc.root_after_145_junc_frontier' depends on axioms:" /tmp/agent32-root-bridge.log
           if grep -q 'sorryAx' /tmp/agent32-root-bridge.log; then echo "ERROR sorryAx in root-to-Junc bridge" >&2; exit 1; fi
 
