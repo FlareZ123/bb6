@@ -239,8 +239,9 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
             omega
           have hbridgeCell : (embed carryBridgeFinal3).tape (-4) = true :=
             bridge3FinalCell_left (-4) (Or.inl rfl)
+          have hcoord : (h'-4)-h' = -4 := by omega
           have hT2 : T2 (h'-4) = true := by
-            simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell]
+            simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell,hcoord]
           have htarget : carryLeftOutputBit (4*k+1) T (h'-4) = true := by
             simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
           exact hT2.trans htarget.symm
@@ -254,8 +255,9 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
               omega
             have hbridgeCell : (embed carryBridgeFinal3).tape (-3) = true :=
               bridge3FinalCell_left (-3) (Or.inr rfl)
+            have hcoord : (h'-3)-h' = -3 := by omega
             have hT2 : T2 (h'-3) = true := by
-              simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell]
+              simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hbridgeCell,hcoord]
             have htarget : carryLeftOutputBit (4*k+1) T (h'-3) = true := by
               simp [carryLeftOutputBit,hthreshold,hthreshold'] <;> omega
             exact hT2.trans htarget.symm
