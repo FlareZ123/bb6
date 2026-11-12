@@ -16,7 +16,7 @@ where (t_1=\alpha+3u), (t_2=\beta+3v), (t_3=\gamma+3w), (t_4=\delta+3x), and (t_
 
 The cumulative times are
 [
-T_1=n+6+3s,\quad T_{i+1}=T_i+t_i,
+T_1=n+6+3s,\quad T_{i+1}=T_i+e_i,
 ]
 and the five source profiles ((C_i,L_i,O_i)) give
 [
