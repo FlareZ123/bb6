@@ -108,14 +108,13 @@ These disjoint families cover seven of nine k residue classes modulo nine. The r
 
 ## E/A and E/E exceptional packet closure by residue (new Lean composition; CI pending)
 
-The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem.
+The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem. The A-terminal p≡2 boundary is implemented in [AP2PacketBoundarySource.lean](./AP2PacketBoundarySource.lean).
 
-For every t and q≥2 with q not congruent to 1 modulo 3, the E/A family
-`L(9t+10,q,1)` first reaches `M(24t+21,0,2q;0 1^6)`; because `2q mod 3` is then 0 or 1, `all_safe_packets_regular` gives a finite original-source return to regular L.
+For every t and q≥2, the E/A family `L(9t+10,q,1)` first reaches `M(24t+21,0,2q;0 1^6)`. If q is not 1 modulo 3, `all_safe_packets_regular` closes the packet directly. If q≡1 (mod3), it is an A-terminal p≡2 packet; `AP2PacketBoundarySource.a_p2_packet_reentry` consumes it by the original A-code 110111 macro. In general, `M(3k+3,q,3r+2;0 1^6)` returns to `L(8k+2q+8r+11,3,3)`. For the E/A family, k=8t+6, the packet q-parameter is 0, and 3r+2=2q, so the endpoint is `L(64t+8r+59,3,3)`.
 
 For every u and q≥3 with q not congruent to 1 modulo 3, the E/E family
 `L(27u+25,q,1)` first reaches `M(192u+161,2,2q-3;0 1^6)`; here `(2q-3) mod 3` is likewise 0 or 1, so the same universal packet theorem closes it to regular L.
 
-This gives a single quantified source composition for two entire exceptional families, covering q≡0,2 (mod3) without requiring a separate terminal-case analysis for each parameter. The residual class q≡1 (mod3) maps to p≡2 (mod3), outside the safe-packet theorem; it still requires a p=2 terminal analysis. The result is a synthetic source-family closure, not a statement that every such section occurs on the authentic blank orbit.
+This gives a quantified source composition for the entire E/A exceptional family and for the q≡0,2 (mod3) portion of E/E. The E/E residual q≡1 (mod3) still maps to p≡2 (mod3); its packet normalizer may exit through A, B with q=0, or E with p=2, and the latter remains the difficult changed-tail case. These are synthetic source-family closures, not statements that every such section occurs on the authentic blank orbit.
 
-The new wrapper includes axiom-print checks, but **has not yet been compiled in a successful CI run**. The D-root workflow now compiles it after PacketOneReentry, PacketSafeReentry, and ExceptionalE7SecondSafe; do not promote this entry to the verified theorem table until the manual workflow succeeds.
+The A-p2 boundary and closure wrappers include axiom-print checks, but **have not yet been compiled in a successful CI run**. The focused workflow `.github/workflows/agent2-a-one-packet-boundary.yml` compiles AP2PacketBoundarySource after the packet modules; the D-root workflow also compiles it after A110111CodeFirst and ExceptionalEPacketClosure after PacketOneReentry, PacketSafeReentry, and ExceptionalE7SecondSafe. Do not promote these entries to the verified theorem table until a manual workflow succeeds.
