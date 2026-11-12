@@ -105,24 +105,21 @@ private theorem s1CarryInput_left
     · have hx : x = -(3*(r:Int)) := by
         have hi : (i:Int) = -x := hix
         omega
-      rw [h0,hx] at hcell''
       have hbit : carryInputBit r (-(3*(r:Int))) = false := by
         simp [carryInputBit] <;> omega
-      simpa [d0,sideBit,hbit] using hcell''
+      simpa [h0,hx,d0,sideBit,hbit] using hcell''
     · have hx : x = -(3*(r:Int))-1 := by
         have hi : (i:Int) = -x := hix
         omega
-      rw [h1,hx] at hcell''
       have hbit : carryInputBit r (-(3*(r:Int))-1) = false := by
         simp [carryInputBit] <;> omega
-      simpa [d0,sideBit,hbit] using hcell''
+      simpa [h1,hx,d0,sideBit,hbit] using hcell''
     · have hx : x = -(3*(r:Int))-2 := by
         have hi : (i:Int) = -x := hix
         omega
-      rw [h2,hx] at hcell''
       have hbit : carryInputBit r (-(3*(r:Int))-2) = true := by
         simp [carryInputBit]
-      simpa [d0,sideBit,hbit] using hcell''
+      simpa [h2,hx,d0,sideBit,hbit] using hcell''
 
 /-- The source S1 right boundary is 0 111 00; the unary counter
 starts beyond the six-cell carry window and remains unrestricted. -/
@@ -150,40 +147,34 @@ private theorem s1CarryInput_right
   have hvalue : sideBit (s1PhysicalRight b) i = carryInputBit r x := by
     rcases hcases with h0 | h1 | h2 | h3 | h4 | h5
     · have hx : x=1 := by omega
-      rw [hx]
       have hneq : (1:Int) ≠ -(3*(r:Int))-2 := by omega
       have hbit : carryInputBit r 1 = false := by
         simp [carryInputBit,hneq]
-      simpa [h0,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      simpa [h0,hx,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
         d1pow,hbit]
     · have hx : x=2 := by omega
-      rw [hx]
       have hbit : carryInputBit r 2 = true := by simp [carryInputBit]
-      simpa [h1,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      simpa [h1,hx,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
         d1pow,hbit]
     · have hx : x=3 := by omega
-      rw [hx]
       have hbit : carryInputBit r 3 = true := by simp [carryInputBit]
-      simpa [h2,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      simpa [h2,hx,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
         d1pow,hbit]
     · have hx : x=4 := by omega
-      rw [hx]
       have hbit : carryInputBit r 4 = true := by simp [carryInputBit]
-      simpa [h3,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      simpa [h3,hx,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
         d1pow,hbit]
     · have hx : x=5 := by omega
-      rw [hx]
       have hneq : (5:Int) ≠ -(3*(r:Int))-2 := by omega
       have hbit : carryInputBit r 5 = false := by
         simp [carryInputBit,hneq]
-      simpa [h4,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      simpa [h4,hx,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
         d1pow,hbit]
     · have hx : x=6 := by omega
-      rw [hx]
       have hneq : (6:Int) ≠ -(3*(r:Int))-2 := by omega
       have hbit : carryInputBit r 6 = false := by
         simp [carryInputBit,hneq]
-      simpa [h5,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
+      simpa [h5,hx,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,
         d1pow,hbit]
   exact hcell'.trans hvalue
 
@@ -233,7 +224,15 @@ theorem s1Config_evenCounter_carryPrefix
   obtain ⟨Tout,hrun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩ :=
     carryPrefix_anyPositive r T hr hmatch
   have hstart : shiftConfig h ⟨(3 : Fin 6),0,T⟩ = cfg := by
-    simp [shiftConfig,T,cfg,s1Config,s0Config,s0Tape,Int.add_sub_cancel_left]
+    change (⟨(3 : Fin 6),0+h,fun x => T (x-h)⟩ : Config) =
+      ⟨(3 : Fin 6),h,(s1Config L n m a z b h).tape⟩
+    have hzero : (0:Int)+h = h := by omega
+    rw [hzero]
+    congr 1
+    funext x
+    dsimp [T,cfg]
+    congr 1
+    omega
   let Tfinal : Int → Bool := fun x => Tout (x-h)
   have hrunAbs : run tm2 (15+12*r) cfg =
       some ⟨(4 : Fin 6),h+7,Tfinal⟩ := by
