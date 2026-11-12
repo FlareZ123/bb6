@@ -73,6 +73,7 @@ theorem algebraic_first_four
    simp only [Int.mul_add,Int.mul_sub]
    omega
  rw [htarget]
+ rw [←hR1Int]
  omega
 
 #print axioms algebraic_first_four
