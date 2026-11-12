@@ -19,26 +19,39 @@ def fiveBad (n s u v w x r t1 t2 t3 t4 t5 : Nat) : Bool := Id.run do
   let (gamma,C3,L3,O3) := triple t3
   let (delta,C4,L4,O4) := triple t4
   let (epsilon,C5,L5,O5) := triple t5
-  let A1 := 2^alpha*8^u
-  let A2 := 2^beta*8^v
-  let A3 := 2^gamma*8^w
-  let A4 := 2^delta*8^x
-  let A5 := 2^epsilon*8^r
   let T1 := n+6+3*s
+  let N1 : Int := 98*(p:Int)-(d:Int)-(C1:Int)*(P:Int)+
+    (L1:Int)*(T1:Int)-(O1:Int)
+  if N1 % ((2:Int)^alpha) != 0 then return false
+  let J1 := N1 / ((2:Int)^alpha)
+  if J1 % ((8:Int)^u) != 0 then return false
   let T2 := T1+alpha+3*u
+  let N2 : Int := J1/((8:Int)^u)-(C2:Int)*(P:Int)+
+    (L2:Int)*(T2:Int)-(O2:Int)
+  if N2 % ((2:Int)^beta) != 0 then return false
+  let J2 := N2 / ((2:Int)^beta)
+  if J2 % ((8:Int)^v) != 0 then return false
   let T3 := T2+beta+3*v
+  let N3 : Int := J2/((8:Int)^v)-(C3:Int)*(P:Int)+
+    (L3:Int)*(T3:Int)-(O3:Int)
+  if N3 % ((2:Int)^gamma) != 0 then return false
+  let J3 := N3 / ((2:Int)^gamma)
+  if J3 % ((8:Int)^w) != 0 then return false
   let T4 := T3+gamma+3*w
+  let N4 : Int := J3/((8:Int)^w)-(C4:Int)*(P:Int)+
+    (L4:Int)*(T4:Int)-(O4:Int)
+  if N4 % ((2:Int)^delta) != 0 then return false
+  let J4 := N4 / ((2:Int)^delta)
+  if J4 % ((8:Int)^x) != 0 then return false
   let T5 := T4+delta+3*x
+  let N5 : Int := J4/((8:Int)^x)-(C5:Int)*(P:Int)+
+    (L5:Int)*(T5:Int)-(O5:Int)
+  if N5 % ((2:Int)^epsilon) != 0 then return false
+  let J5 := N5 / ((2:Int)^epsilon)
   let T6 := T5+epsilon+3*r
-  let R1 := L1*T1-O1-d
-  let R2 := L2*T2-O2
-  let R3 := L3*T3-O3
-  let R4 := L4*T4-O4
-  let R5 := L5*T5-O5
   let E := 112*T6-384
-  let K := C1*q+C2*q*A1+C3*q*A1*A2+C4*q*A1*A2*A3+
-    C5*q*A1*A2*A3*A4-98
-  return K*p == A1*(A2*(A3*(A4*(A5*E+R5)+R4)+R3)+R2)+R1
+  if J5 % ((8:Int)^r) != 0 then return false
+  return J5 / ((8:Int)^r) == -(E:Int)
 
 /-- All root-compatible (n,s) pairs for 14<=n<=82 and s<=3. -/
 def rootPairs : List (Nat × Nat) := [
