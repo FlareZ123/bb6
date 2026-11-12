@@ -1,4 +1,4 @@
-import RayDepthHensel
+import RayDepthResidue
 set_option maxHeartbeats 0
 
 /-!
@@ -12,7 +12,7 @@ coordinates on the same 3-adic congruence surface.
 -/
 
 namespace CascadeRayIndexHensel
-open CascadeRayDepthHensel CascadeRayPeriod
+open CascadeRayDepthHensel CascadeRayDepthResidue CascadeRayPeriod
 
 /-- One step of the fatal-sector index is six in the original n-coordinate. -/
 def indexSector (s h : Nat) : Nat := s+6*h
