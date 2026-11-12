@@ -203,6 +203,22 @@ jobs:
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
           lean -o "$AG43/FiveShallowAbstractBridge.olean" "$AG43/FiveShallowAbstractBridge.lean"
+      - name: Compile source and four-shallow prerequisites
+        run: |
+          set -e
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-two-reset
+          AG8=im-results/agent8-p1-fixed-reset
+          AG50SUB=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
+          /usr/bin/time -v lean -o "$AG43/SourceOneShallowLift.olean" "$AG43/SourceOneShallowLift.lean"
+          /usr/bin/time -v lean -o "$AG43/SourceLowDepth.olean" "$AG43/SourceLowDepth.lean"
+          /usr/bin/time -v lean -o "$AG43/FourShallowSourceModel.olean" "$AG43/FourShallowSourceModel.lean"
+          /usr/bin/time -v lean -o "$AG43/FourShallowSourceLift.olean" "$AG43/FourShallowSourceLift.lean"
       - name: Compile FiveShallowSourceModel
         run: |
           set -e
@@ -228,8 +244,4 @@ jobs:
           AG8=im-results/agent8-p1-fixed-reset
           AG50SUB=im-results/agent50-p1-subwall
           export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG8:$AG50SUB"
-          /usr/bin/time -v lean -o "$AG43/SourceOneShallowLift.olean" "$AG43/SourceOneShallowLift.lean"
-          /usr/bin/time -v lean -o "$AG43/SourceLowDepth.olean" "$AG43/SourceLowDepth.lean"
-          /usr/bin/time -v lean -o "$AG43/FourShallowSourceModel.olean" "$AG43/FourShallowSourceModel.lean"
-          /usr/bin/time -v lean -o "$AG43/FourShallowSourceLift.olean" "$AG43/FourShallowSourceLift.lean"
           /usr/bin/time -v lean -o "$AG43/FiveShallowSourceLift.olean" "$AG43/FiveShallowSourceLift.lean"
