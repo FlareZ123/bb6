@@ -486,8 +486,8 @@ theorem parentCone_path_tight_first {n : Nat} {c d : Conf}
   | step hs ht =>
       have hstep := parentCone_next_head_lower c _ hs
       have htail := parentCone_path_head_lower ht
-      have hpos : _ := by omega
-      have hdispTail : d.h = _ := by omega
+      have hpos : _ = c.h-1 := by omega
+      have hdispTail : d.h = _-(n:Int) := by omega
       exact ⟨_,hs,hpos,ht,hdispTail⟩
 
 def parentConeNoBF (q : Q) : Prop := q ≠ .B ∧ q ≠ .F
@@ -577,6 +577,7 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
         have hbZero : b.tape b.h=false := by
           cases hbit : b.tape b.h <;> simp_all
         simp [next,hbZero] at hstep2
+        cases hstep2
         have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
           (by simp [parentConeNoBF])
         exact hno.1 hdB
