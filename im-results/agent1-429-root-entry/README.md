@@ -1,47 +1,46 @@
 # Exact blank-root entry into the #429 J chart
 
-This intermediate result closes the initial physical-entry gap for the
-#429 source chart.
+## Candidate result
 
-## Theorem
+The source machine's blank A-root reaches the physical J(0,0) tape after
+35 primitive transitions. An independent raw simulation gives:
 
-`JRootEntry.lean` proves, in the original twelve-slot #429 transition
-table, that the blank A-root reaches the canonical `J(0,0)` physical
-configuration after exactly **35 ordinary transitions**.
+- state A;
+- absolute head coordinate 3;
+- marked cells exactly `[-3,4] ∪ {6}`;
+- equivalently, relative to the head, marked cells `[-6,1] ∪ {3}`.
 
-The endpoint has A at absolute head coordinate 3. Relative to that head,
-its tape is one exactly on
+This is the physical tape specified by the J-chart definition at (u=w=0).
 
-[
-[-6,1]\cup\{3\},
-]
+`JRootEntry.lean` records the complete twelve-slot #429 table, including
+the D/1 halt, and the ordered 35-write trace. It attempts to prove the
+raw-run equality in `BB6Coverage.run`.
 
-and blank elsewhere. Equivalently, the absolute marked cells are
-`[-3,4] ∪ {6}`. This is the `jTape 0 0` configuration from
-`BB429JPhysical.jMark`: for (u=w=0), the hole predicate is empty and
-the mark interval is ([-6,1]), with the additional mark at (3).
+<badge color="warning">Lean CI not yet passing</badge>
 
-The proof is a kernel-checked computation of the actual raw run, not an
-inference from a sampled trajectory or from the high-level arithmetic map.
+The first CI attempts exposed an important modeling issue: the existing
+`BB429PhysicalFrontier.target429` is a completion of an eleven-slot
+*partial* table, not the concrete source machine. It cannot be used as a
+computable full-table root trace. The current candidate therefore defines
+the complete original table explicitly as `source429`. The proof still
+requires a successful kernel check; do not treat the theorem as established
+until the manual workflow passes.
 
 ## Why it matters
 
-The source chart's `J(0,0)` start is now connected directly to the genuine
-blank tape in the repository's `BB6Coverage.run` semantics. Future
-all-time chart/frontier arguments can use this theorem as their base case,
-without assuming a prepared J configuration.
+A successful check will connect the genuine blank root directly to the
+canonical J(0,0) physical configuration. That supplies the base case for
+the all-time J/Junc chart and global head-frontier argument.
 
-## What remains open
+## Remaining open problem
 
-This theorem proves only the 35-step entry. It does **not** prove that the
-subsequent J/Junc orbit stays inside a safe chart, that every later C/0
-event is a new global head record, or that #429 never halts. The main
-remaining task is the all-time physical frontier/history invariant across
-the complete J/Junc transition family.
+The 35-step entry alone does not prove that the subsequent J/Junc orbit
+stays in a safe chart, that later C/0 events are global head records, or
+that #429 never halts. The central remaining task is the all-time
+physical frontier/history invariant across the complete J/Junc transition
+family.
 
 ## Reproduction
 
-The manual workflow `.github/workflows/agent1-429-root-entry.yml`
-rebuilds the source dependency chain and compiles this theorem under Lean
-4.36.0-rc2. The file prints its theorem axioms for the CI log; no
-`sorryAx` is permitted.
+Run `.github/workflows/agent1-429-root-entry.yml` manually under Lean
+4.36.0-rc2. The workflow rejects any theorem depending on `sorryAx`.
