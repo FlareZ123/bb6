@@ -159,9 +159,9 @@ theorem five_layer_abstract_barrier
   have hRem2Small : R2+d1<2^(e-t1) := by
     have hbound : 1200000*X^3≤576000000000000*X^6 := by
       calc
-        1200000*X^3≤1200000*X^4 := Nat.mul_le_mul_left 3000000 hx34
-        _≤1200000*X^5 := Nat.mul_le_mul_left 3000000 hx45
-        _≤1200000*X^6 := Nat.mul_le_mul_left 3000000 hx56
+        1200000*X^3≤1200000*X^4 := Nat.mul_le_mul_left 1200000 hx34
+        _≤1200000*X^5 := Nat.mul_le_mul_left 1200000 hx45
+        _≤1200000*X^6 := Nat.mul_le_mul_left 1200000 hx56
         _≤576000000000000*X^6 :=
           Nat.mul_le_mul_right _ (by decide : 1200000≤576000000000000)
     have hb : (q*A1)*(R2+d1)<(q*A1)*2^(e-t1) := by
