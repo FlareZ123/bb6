@@ -113,10 +113,11 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
   · have hk2 : 2≤k := by omega
     have hleftE : e.tape (f.h-1)=true := by
       have hpatt := hpattern 1 (by omega)
-      have hidx : e.h-2*(1:Int)-1=f.h-1 := by
+      have hidxLeft : e.h-3=f.h-1 := by
         rw [hposE]
         omega
-      simpa [hidx] using hpatt.2
+      rw [← hidxLeft]
+      simpa using hpatt.2
     have heLeft := hEF (f.h-1) (by omega) (by omega)
     have hleft : f.tape (f.h-1)=true := heLeft.symm.trans hleftE
 
@@ -132,27 +133,29 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
         rw [hposE]
         omega
       have he1 : e.tape (f.h-2-2*(i:Int))=false := by
-        simpa [hidx1] using hpatt.1
+        rw [← hidx1]
+        exact hpatt.1
       have he2 : e.tape (f.h-3-2*(i:Int))=true := by
-        simpa [hidx2] using hpatt.2
+        rw [← hidx2]
+        exact hpatt.2
       have heq1 := hEF (f.h-2-2*(i:Int)) (by omega) (by omega)
       have heq2 := hEF (f.h-3-2*(i:Int)) (by omega) (by omega)
       exact ⟨heq1.symm.trans he1,heq2.symm.trans he2⟩
 
     have hpresG :=
-      parentCone_path_tight_preserves_tape hpath hdispEG g.h le_rfl
+      parentCone_path_tight_preserves_tape hpath hdispEG g.h (by omega)
     have heG : e.tape g.h=false := hpresG.symm.trans hGzero
     have hidxF : f.h-2*(k:Int)+2=g.h := by
       rw [hposF,hGpos]
       omega
     have heqG := hEF g.h
-      (by rw [hidxF]; omega)
+      (by rw [hidxF.symm]; omega)
       (by rw [hposD,hidxF.symm]; omega)
     have hfinalF : f.tape (f.h-2*(k:Int)+2)=false := by
       simpa [hidxF] using heqG.symm.trans heG
 
     have hpresC :=
-      parentCone_path_tight_preserves_tape hpathEC hdispEC c.h le_rfl
+      parentCone_path_tight_preserves_tape hpathEC hdispEC c.h (by omega)
     have heC : e.tape c.h=false := hpresC.symm.trans hcurrent
     have hidxB : f.h-2*(k:Int)+1=c.h := by
       rw [hposF]
