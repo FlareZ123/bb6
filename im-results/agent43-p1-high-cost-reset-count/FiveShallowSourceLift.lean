@@ -9,7 +9,7 @@ set_option maxRecDepth 4096
 set_option maxHeartbeats 5000000
 
 open BB6.Agent47P1 BB6.Agent1Quarter BB6.Agent43SourceWord
-open BB6.Agent43FiveShallowSourceModel BB6.Agent43TwoRun
+open BB6.Agent43FiveShallowSourceModel BB6.Agent43FourShallowSourceLift BB6.Agent43TwoRun
 
 private theorem source_two_chain_mass (n s b d m B D M : Nat)
     (h : SourceTwoChain n s b d m B D M)
