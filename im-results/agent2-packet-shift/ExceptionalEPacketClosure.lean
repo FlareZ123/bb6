@@ -82,23 +82,23 @@ theorem exceptional_EA_all_reentry (t q : Nat) (hq : 2 ≤ q) :
         (BB6.Agent2AP2PacketBoundary.words 0 r))+5
     have hendpoint :
         BB6.Agent2AP2PacketBoundary.endpoint k 0 r =
-          BB6.Agent2BoundaryBZero.regularSection a 3 3 := by
+          BB6.Agent2BoundaryBZero.regularSection a 3 2 := by
       simp [a,BB6.Agent2AP2PacketBoundary.endpoint,
         BB6.Agent2BoundaryBZero.regularSection]
     have hA2 : ObsEq
         (run (BB6.Agent2AP2PacketBoundary.sourceTime k 0 r)
           (packet c.a c.q c.p fixedTail))
-        (BB6.Agent2BoundaryBZero.regularSection a 3 3) := by
+        (BB6.Agent2BoundaryBZero.regularSection a 3 2) := by
       rw [hshape,hAP2,hendpoint]
       exact BB6.Padding.cfgEq_refl _
     exact ⟨BB6.Agent2EFirstAPacket.duration t q +
         BB6.Agent2AP2PacketBoundary.sourceTime k 0 r,
-      a,3,3,
+      a,3,2,
       source_chain (BB6.Agent2EFirstAPacket.duration t q)
         (BB6.Agent2AP2PacketBoundary.sourceTime k 0 r)
         (DRegularSource.sourceSection ⟨9*t+10,q,1⟩)
         (packet c.a c.q c.p fixedTail)
-        (BB6.Agent2BoundaryBZero.regularSection a 3 3) hEA hA2⟩
+        (BB6.Agent2BoundaryBZero.regularSection a 3 2) hEA hA2⟩
 
 /-- The second E/E exceptional family produces a packet with p=2q-3.
     For q not 1 modulo 3, its original-source orbit also returns to
