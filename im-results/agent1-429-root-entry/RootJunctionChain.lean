@@ -119,7 +119,9 @@ private theorem root_runWithHeadMax_prefix_monitor (m : Machine)
           have heq : (q.1,max p.2 q.2) = (d,h) := by
             simpa [hp,hq] using hfull
           have hmax : max p.2 q.2 = h := congrArg Prod.snd heq
-          exact ⟨p.1,p.2,hp,by rw [← hmax]; exact Int.le_max_left _ _⟩
+          have hp' : runWithHeadMax m t c = some (p.1,p.2) := by
+            simpa using hp
+          exact ⟨p.1,p.2,hp',by rw [← hmax]; exact Int.le_max_left _ _⟩
 
 /-- Turn the prefix-monitor lemma into an ordinary raw-run head bound. -/
 private theorem root_runWithHeadMax_prefix_raw (m : Machine)
@@ -173,7 +175,7 @@ private theorem root_runWithHeadMax_bound_of_prefix (m : Machine) :
       obtain ⟨e,he,hb⟩ := hprefix 0 (by omega)
       have heq : e=c := by
         have hh : some c = some e := by simpa [run] using he
-        exact Option.some.inj hh
+        exact (Option.some.inj hh).symm
       subst e
       simp only [runWithHeadMax,Option.some.injEq,Prod.mk.injEq] at hmon
       rcases hmon with ⟨rfl,rfl⟩
@@ -211,7 +213,7 @@ private theorem root_runWithHeadMax_bound_of_prefix (m : Machine) :
               subst e
               have hmax : max hprev q.head = h := congrArg Prod.snd hpair
               rw [← hmax]
-              exact max_le hprevBound hb
+              omega
 
 /-- The authentic blank root reaches J(21,11) after 1608 moves. Its
     cumulative head maximum is exactly the rightmost marked cell 26. -/
