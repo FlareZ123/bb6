@@ -23,7 +23,7 @@ The physical tape and all original machine transitions are modeled directly as a
 - [`TerminalFinish.lean` and original left-cycle checkpoint](TerminalProofs.tar.xz.b64): UTF-8 Base64-encoded XZ-compressed TAR, with the final rightward theorem and its dependencies. `TerminalFinish.lean` SHA-256: `12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7`.
 - [`TerminalLeftExact.lean.xz.b64`](TerminalLeftExact.lean.xz.b64): **authoritative latest `TerminalLeft.lean` source**, superseding the left module in the earlier TAR checkpoint; XZ-compressed and Base64 encoded, decoded SHA-256 `1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff`.
 
-Use Python's standard `base64` and `lzma` libraries (and `tarfile` for the first archive) to decode. The manually triggered [workflow](../../.github/workflows/agent42-champion-terminal-source.yml) compiles `TerminalFinish.lean`, the authoritative `TerminalLeft.lean`, `TerminalBridge.lean`, `TerminalChampion.lean`, and the new `TerminalAfterPrefix.lean` against the unmodified original `Frontier`, `Symmetry`, `RootShift`, and `ChampionRootBridge` imports using Lean **4.36.0-rc2**. [CI 42739779283](https://github.com/FlareZ123/bb6/actions/runs/42739779283) completed successfully, with no errors or `sorry`. `#print axioms literalS1_section` is `[propext, Quot.sound]`; `#print axioms literalS1_terminalExact` is `[propext, Classical.choice, Quot.sound]`. Other individual arithmetic and run lemmas have similarly standard-only audits. A Lean linter warning for an unused simp argument is harmless.
+Use Python's standard `base64` and `lzma` libraries (and `tarfile` for the first archive) to decode. The selective path-triggered [workflow](../../.github/workflows/agent42-champion-terminal-source.yml) compiles `TerminalFinish.lean`, the authoritative `TerminalLeft.lean`, `TerminalBridge.lean`, `TerminalChampion.lean`, `TerminalAfterPrefix.lean`, the original `S1Encoder.lean` and `CountedReset.lean`, and `TerminalEncoderBridge.lean` against the original `Frontier`, `Symmetry`, `RootShift`, and `ChampionRootBridge` imports using Lean **4.36.0-rc2**. [CI 43165423005](https://github.com/FlareZ123/bb6/actions/runs/43165423005) completed successfully. The new `s0_reset_sectionBits` audit is `[propext, Quot.sound]`; `champion_attainable_after_countedRst012` is `[propext, Classical.choice, Quot.sound]`. Neither has `sorryAx`; the workflow also rejects `sorryAx` in the counted-reset dependency audit. The earlier [CI 42739779283](https://github.com/FlareZ123/bb6/actions/runs/42739779283) remains the original terminal theorem check.
 
 ## Critical remaining mathematical work
 
@@ -40,4 +40,23 @@ This verifies **one** important source-table terminal macro formula. For the pub
 - `champion_attainable_of_tm2_haltsAfter` immediately yields `Attainable (N+7)`, including the final undefined-query convention. This generic adapter has no S1 or tape-shape premise.
 - `champion_halts_after_terminal_prefix` and `champion_attainable_after_terminal_prefix` provide the corresponding terminal-section corollaries.
 
-This is a conditional integration result, not a full champion witness or a BB(6) solution: the genuine counted blank-prefix run to the terminal section remains the hard premise. The new leaf is included in the existing manual-only source workflow, but has **not yet been run through that workflow**. Treat it as a pending Lean proof candidate until the pinned compile succeeds. Local shell/Python execution returned `ClientError` in the current invocation, so no unverified compile claim is made.
+## Source S0 reset endpoint to terminal section
+
+[TerminalEncoderBridge.lean](TerminalEncoderBridge.lean) imports the original [S1Encoder](../agent8-s1-encoder/S1Encoder.lean) and [CountedReset](../agent8-counted-reset/CountedReset.lean) definitions. Its new theorem `s0_reset_sectionBits` proves, for every `L,a,b : Nat` and `h : Int`, that
+```lean
+TerminalFinish.SectionBits L a
+  (s0Config (markerWord 0 ++ d0 ++ binDec L 0 ++ lh) a 0 b h).tape h
+```
+The proof is a direct list-index argument from the source `s0Config_left_cell` and `s0Config_right_cell`; it does not assume a particular exterior tape or any reset dynamics. The right counter is arbitrary because the terminal section constrains only the first seven right-facing cells.
+
+The generic `champion_attainable_after_s0_reset_prefix` converts a genuine blank-root run reaching that endpoint into `Attainable (n + terminalMoves L a + 7)`. More importantly, `champion_attainable_after_countedRst012` now composes the existing `countedRst012_of_prefix` theorem with this terminal adapter and the six-step champion root correction. Its output is
+```lean
+Attainable
+  (rootSteps + proposedIncrementCost m n a b
+    + terminalMoves L (a+b+resetDelta m) + 7)
+```
+under the explicit premises `hblank` (a genuine blank-root prefix to the reset configuration), `hprefix` (the source counted-reset prefix), and `hInc0` (the universally quantified original-machine Inc0 run). The theorem makes the exact endpoint parameter match explicit: terminal left length `a+b+resetDelta m`, right counter `2^b-1`.
+
+This is now kernel-checked in [CI 43165423005](https://github.com/FlareZ123/bb6/actions/runs/43165423005), including the original `S1Encoder`, `CountedReset`, terminal source modules and the new composition. The new SectionBits theorem depends only on `[propext, Quot.sound]`; the counted-reset composition depends on `[propext, Classical.choice, Quot.sound]`. The earlier forward-reference defect in `TerminalAfterPrefix.lean` was fixed by ordering the generic score adapter before its specialization, and the source workflow now compiles that file successfully.
+
+This remains a conditional integration result, not a full champion witness or a BB(6) solution. In particular, the genuine blank-root prefix, the universal `hInc0` proof, and the other earlier itinerary obligations are not discharged here. No exact global champion score or universal BB(6) upper bound is claimed.
