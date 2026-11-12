@@ -25,7 +25,7 @@ affine source profiles into the five-layer scalar barrier. -/
 theorem no_five_shallow_model_from_source_coefficients
  (n s u v w x r t1 t2 t3 t4 t5 alpha beta gamma delta epsilon
   C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5 : Nat)
- (hn : 83≤n)
+ (hn14 : 14≤n)
  (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1) (ht4 : t4≤1) (ht5 : t5≤1)
  (hpr1 : (alpha,C1,L1,O1)=triple t1)
  (hpr2 : (beta,C2,L2,O2)=triple t2)
@@ -55,7 +55,6 @@ theorem no_five_shallow_model_from_source_coefficients
        (L5:Int)*Bi-(O5:Int))
  (hsuf : TwoRun ((2:Int)^n) Wk (Bi+(epsilon:Int)) r Wj Bj)
  (hwall : Wj=12*(2:Int)^n) : False := by
-  have hn14 : 14≤n := by omega
   obtain ⟨hs,hDdiv⟩ := root_two_prefix_divisor n s Wa Ba hn14 hpre
   have hpow : (8:Nat)^s=2^(3*s) := by
     simpa only [show (8:Nat)=2^3 by decide] using (Nat.pow_mul 2 3 s).symm
@@ -395,10 +394,11 @@ theorem no_five_shallow_model_from_source_coefficients
     simpa [A1,A2,A3,A4] using hKlower''
 
   exact no_five_shallow_energies
-    n s u v w x r alpha beta gamma delta epsilon
+    n s u v w x r t1 t2 t3 t4 t5 alpha beta gamma delta epsilon
     p d C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
-    K R1 R2 R3 R4 R5 E hn hs
+    K R1 R2 R3 R4 R5 E hn14 hs
     hprof1.1 hprof2.1 hprof3.1 hprof4.1 hprof5.1
+    ht1 ht2 ht3 ht4 ht5 hpr1 hpr2 hpr3 hpr4 hpr5
     hP hD
     (by simpa [T1] using hR1eq)
     (by simpa [T2,T1] using hR2eq)
