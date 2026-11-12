@@ -127,7 +127,7 @@ The same file proves `regularEndpoint_reentry`, converting all three endpoint sh
 
 - first endpoint: `regularSection (n+1) 2 2`, exactly;
 - second endpoint: `regularSection n 0 0`, exactly;
-- third endpoint: `regularSection n 4 0` up to one explicit trailing blank zero, handled by `TapeEq.pad`.
+- third endpoint: `regularSection n 4 0` up to one explicit trailing blank zero, handled by `BB6.Padding.tapeEq_pad`.
 
 The wrappers `chain_B_E_A_reentry`, `reset_B_E_A_reentry`, and `source_chain_B_E_A_reentry` expose this bridge. The source-chain wrapper requires an already-proved `ObsEq` prefix to the canonical marker; it does not establish that a blank-root orbit reaches that marker.
 
