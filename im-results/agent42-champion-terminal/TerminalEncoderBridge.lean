@@ -17,6 +17,8 @@ namespace BB6Coverage.Agent42TerminalJoin
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent8CountedReset
+open BB6ChampionArithmetic
 
 private theorem terminal_sideBit_three_ones (xs : List Bool) (i : Nat) :
     sideBit (true::true::true::xs) i =
