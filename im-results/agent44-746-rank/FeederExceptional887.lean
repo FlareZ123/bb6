@@ -111,6 +111,7 @@ private theorem narrow_exact_two_t2 (k x u a q : Nat)
   have hpow1 : 2^k=2*2^(k-1) := by
     have he : k=(k-1)+1 := by omega
     rw [he,Nat.pow_succ]
+    omega
   rcases hp with ⟨m,hbm,heq⟩ | ⟨m,t,d,hdodd,hbm,hout,hq⟩
   · have hm : m=k := even_band_scale_unique x m k hbm hband
     left
@@ -148,7 +149,7 @@ private theorem narrow_exact_two_t2 (k x u a q : Nat)
             have he : k=(k-2)+2 := by omega
             calc
               2^k = 2^((k-2)+2) := congrArg (fun z : Nat => 2^z) he
-              _ = 4*2^(k-2) := by rw [Nat.pow_add]; norm_num
+              _ = 4*2^(k-2) := by rw [Nat.pow_add]; norm_num; omega
           have hband2 : 6*2^(k-2)+1≤4*d ∧
               4*d≤8*2^(k-2)-1 := by
             constructor <;> omega
@@ -285,6 +286,7 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     have he : n=(n-2)+2 := by omega
     rw [he,Nat.pow_add]
     norm_num
+    omega
   have hfdiv : (2*CascadeUniformFatal.fatal n+5)%9=0 :=
     CascadeFirstFork.fatal_divnine n hn4 (Or.inr h18)
   have hfquot : 9*((2*CascadeUniformFatal.fatal n+5)/9)=
@@ -299,7 +301,6 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     omega
   have hx : 9*x+17*n+39=56*p := by
     dsimp [x,CascadeFirstFork.oddPre]
-    rw [hfquot]
     omega
   have hbig : 10000*n+10000≤p :=
     CascadeFeederSix.growth n (by omega)
@@ -311,16 +312,18 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
   have hpk1 : 2^k=2*2^(k-1) := by
     have he : k=(k-1)+1 := by omega
     rw [he,Nat.pow_succ]
+    omega
   have hpk2 : 2^k=4*2^(k-2) := by
     have he : k=(k-2)+2 := by omega
     calc
       2^k = 2^((k-2)+2) := congrArg (fun z : Nat => 2^z) he
-      _ = 4*2^(k-2) := by rw [Nat.pow_add]; norm_num
+      _ = 4*2^(k-2) := by rw [Nat.pow_add]; norm_num; omega
   have hpj : p=4*2^j := by
     dsimp [p,j]
     have he : n-2=(n-4)+2 := by omega
     rw [he,Nat.pow_add]
     norm_num
+    omega
   have hjpos : 1≤j := by dsimp [j]; omega
   have hkpos : 3≤k := by dsimp [k]; omega
 
@@ -342,19 +345,23 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     dsimp [dx]
     omega
   let a : Nat := 8*dx-2*p-n-1
-  have haxeq : 27*(2*2^k+a+k+3)=8*(2*x+5) := by
+  have hlinearA : 8*dx=2*2^k+a+k+3 := by
     dsimp [a]
     rw [←hpk]
-    rw [←hdx]
-    dsimp [dx] at *
     omega
+  have haxeq : 27*(2*2^k+a+k+3)=8*(2*x+5) := by
+    calc
+      27*(2*2^k+a+k+3) = 27*(8*dx) := by rw [hlinearA]
+      _ = 8*(27*dx) := by ring
+      _ = 8*(2*x+5) := by rw [hdx]
   have haLin : 243*a+515*n+507=410*p := by omega
   have hamod27 : a%27=2 := by omega
 
   let b : Nat := 2*a-2*p-n+4
+  have hscaleA : 8*2^j=2*p := by rw [hpj]; omega
   have habeq : 2*a=8*2^j+b+j := by
     dsimp [b]
-    rw [←hpj]
+    rw [hscaleA]
     dsimp [j]
     omega
   have hbLin : 243*b+1273*n+42=334*p := by omega
@@ -476,9 +483,10 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
       (2*b+5)/3≤8*2^(j-1)-1 := by
     rw [←hpj1]
     omega
+  have hdbq : (2*b+5)/3=db := by omega
   have hqBEq :
       2*((2*b+5)/3)=8*2^(j-1)+c+(j-1)+5 := by
-    rw [←hdb]
+    rw [hdbq]
     exact hbcEq
   have hbUniq : ∀q, ResetParent q b → q=c := by
     intro q hq
