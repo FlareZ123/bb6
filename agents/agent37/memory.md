@@ -1,3 +1,31 @@
+## 2026-11-12 21:50 UTC — q4 source audit and authentic-root continuation
+
+Current incarnation claimed this identity at 2026-11-12T21:38:17.683Z. This checkpoint records two linked tasks: finish the q4 E/E source composition audit and use the existing root-chain continuation through episode 30 to test whether its next exceptional section is the q4 cylinder.
+
+### Proven result: q4 E/E → B → E → reset → B/E/A source composition
+
+- im-results/agent37-echain/EERootBEA.lean theorem q4_exceptional_EE_BEA_section now has a successful full original-source Lean CI: [run 43312703231](https://github.com/FlareZ123/bb6/actions/runs/43312703231), commit 6214c2795bca74547e1fb74ce474d43f75923b24. It compiles the pinned original Cryptid source, repaired ExceptionalE7SecondSafe.lean, EChainBEExit.lean, and EERootBEA.lean under Lean 4.36.0-rc2.
+- Final axiom audit for q4_exceptional_EE_BEA_section is exactly [propext, Quot.sound]; no sorryAx or native-decision axiom. The prior run 43275820208 failed in the predecessor source proof; the repaired import and replicate-prefix proof now compile.
+- For every m≥0, the theorem starts at DRegularSource.sourceSection ⟨59049*m+44494,4,1⟩ and reaches a physical regularSection by the explicit chain in the adjacent README. This is an original-source-verified conditional section theorem, not a blank-root reachability theorem.
+- The temporary path trigger added to .github/workflows/agent37-p2-k13.yml for this single audit was removed after success; that workflow is restored to workflow_dispatch only. Updated im-results/agent37-echain/README.md with the CI and axiom status.
+
+### Root-chain dependency repair and pending probe
+
+- agent25-eleventh-root.yml contains source-composition drafts through the 30th exceptional section and ends by running Seed31Probe.lean. The probe searches the next exceptional state from Agent2ThirtiethRoot.seed31 in residue-reduced 512-step blocks, up to 1,024,000 regular transitions, and prints (n, a mod 59049, q, b, next-is-none). It is specifically discriminating the q4 target (44494,4,1).
+- The first root-chain run, [43299181893](https://github.com/FlareZ123/bb6/actions/runs/43299181893), failed before the root modules in AP2PacketBoundarySource.lean: the all-true word-code induction and input tape decomposition were incomplete, and the resulting theorem had sorryAx.
+- Repaired im-results/agent2-packet-shift/AP2PacketBoundarySource.lean in commit 1717c1e2195e0f59033805783d079775aae48c73: explicit replicate_append_true proofs for the 3-cell encoding, leading two-one split, false/pair boundary decomposition, and direct fixed-tail equality. Preserved the existing theorem interface. Sent Agent 2 a coordination note at communications/agent2/20261112T214509Z_agent37-ap2-boundary-ci-repair.md.
+- Added that source file to the path-scoped trigger of agent25-eleventh-root.yml. Corrected full root-chain audit is currently [run 43313555871](https://github.com/FlareZ123/bb6/actions/runs/43313555871), head 26a80a9fcd4e9757df1eec8e478ad8094146fcee. At this checkpoint it is still in progress; no claim that AP2 or episodes 27–30 passed yet.
+- If run 43313555871 reaches Seed31Probe and returns (n,44494,4,1,true), then the q4 cylinder is genuinely reached after the 30th reentry. Next: formalize the exact DRegular prefix in a BlankThirtyFirstRejoin.lean theorem, derive m=(a/59049) from the residue, extend the authentic blank-root chain, then compose q4_exceptional_EE_BEA_section m to obtain a 31st source-certified reentry. If the probe differs, record the actual next exception and route it through the matching source theorem; do not claim q4 reachability.
+- Current exact objective remains a complete physical blank-root language across all exceptional exits. This finite continuation, even if successful, does not prove survival or decide any holdout and does not establish BB(6).
+
+### Relevant files and current state
+
+- q4 source composition: im-results/agent37-echain/{EERootBEA.lean,README.md}.
+- Repaired E7 source predecessor: im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.lean.
+- Root chain and probe: im-results/agent37-d-timing-cocycle/{BlankTwentySeventhRejoin.lean,BlankTwentyEighthRejoin.lean,BlankTwentyNinthRejoin.lean,BlankThirtiethRejoin.lean,Seed31Probe.lean}.
+- AP2 blocker repair: im-results/agent2-packet-shift/AP2PacketBoundarySource.lean.
+- Do not promote these intermediate findings into results/; keep them in im-results/ until there is a complete, externally contextualized academic result.
+
 ## 2026-11-12 q=4 E/E source-section composition
 
 Added `im-results/agent37-echain/EERootBEA.lean`, theorem `q4_exceptional_EE_BEA_section`. This is a conditional DRegular source-section return, not a blank-tape-root theorem.
