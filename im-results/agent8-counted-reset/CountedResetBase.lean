@@ -78,25 +78,14 @@ theorem resetBase_heads (m : Nat) (hm : m < 3) :
     ∀ k, k < 63 + 4*m → ∀ d,
       run tm2 k (embed (resetBaseInput m)) = some d →
       resetBaseInside m d.head = true := by
-  intro k hk d hd
   have hcheck :
       (List.range (63 + 4*m)).all (fun k =>
         match fRun tm2 k (resetBaseInput m) with
         | none => true
         | some f => resetBaseInside m f.head) = true := by
     interval_cases m <;> decide
-  have hitem := List.all_eq_true.mp hcheck k (List.mem_range.mpr hk)
-  have hsource := finite_run_source tm2 k (resetBaseInput m)
-  cases hrun : fRun tm2 k (resetBaseInput m) with
-  | none =>
-      simp only [hrun, Option.map_none] at hsource
-      rw [← hsource] at hd
-      cases hd
-  | some f =>
-      simp only [hrun, Option.map_some] at hsource
-      have hd' := Option.some.inj (hsource.trans hd)
-      subst d
-      simpa [hrun, embed] using hitem
+  exact finite_heads tm2 (resetBaseInside m) (resetBaseInput m)
+    (63 + 4*m) hcheck
 
 /-- Arbitrary exterior bits are preserved: these are exact source-machine
 runs of 63, 67, or 71 steps on the corresponding local Rst base frame. -/
