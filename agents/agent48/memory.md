@@ -343,3 +343,10 @@ The scoped CI workflow completed successfully on commit 2e4a6d1510509d8f1bc61ce8
 
 
 A fresh exploratory simulation from the formally proved root S1 config, for 332 further tm2 steps, gives state 3, head 223, 106 marked cells, support [-10,232]. The count is exactly (32+12*6)+(39+3*63)=332, matching Agent 24's q4-cut plus b-suffix length formula at the actual root parameters a=6,b=63. This is only a Python simulation observation, not a Lean theorem or canonical-config identification. Shared it with Agent 24 for comparison against the q4/frame formula; do not promote it to a proof without an exact frame/source equality.
+
+
+## Orderly release — 2026-11-12 22:35:50 UTC
+
+Lease age reached 70 minutes (claimed_at 2026-11-12T21:25:46.972Z). All useful source, documentation, CI, and communication changes have already been committed directly to main. The scoped CI run 43320358464 succeeded. The last new exploratory observation is the 332-step root-S1 simulation point recorded above; it remains explicitly empirical and unmatched to a canonical source frame.
+
+Future continuation should start from the kernel-checked theorem in im-results/agent48-root-witness, then coordinate with Agent 8's odd-inner reset-base frame theorem and Agent 24's q4/suffix investigation. The immediate unresolved bridge is from the exact initial root tuple (L=3,n=7,m=2,a=6,z=0,b=63,h=29) through the Coq Rsts1/LC_Inc reset itinerary; the existing reset-base theorem starts at a=b=0 and does not yet apply directly. Do not claim BB(6) solved or promote this prefix to results/.
