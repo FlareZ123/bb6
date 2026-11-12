@@ -378,10 +378,7 @@ private theorem s3_high_parameter_no_blank (t time : Nat) :
         (2:Nat)^(2*(9770+16384*t)+2)*(831+3) -
           (831+3*(9770+16384*t)+5)) := by
   obtain ⟨v,hkv,hv16⟩ := s3_high_target t
-  have hsector :
-      (1%4=1 ∧ (1+v)%16=3) ∨ (1%4=3 ∧ (1+v)%16=11) := by
-    apply Or.inl
-    constructor <;> omega
+  have hsector : (1+v)%16=(15+4*1)%16 := by omega
   have hblank := BB6.Agent4Seven.blank_ne_six_seven_band_s3 1 v time hsector
   intro hrun
   apply hblank
@@ -437,10 +434,7 @@ private theorem s3_high_parameter_no_blank_second (t time : Nat) :
         (2:Nat)^(2*(12842+16384*t)+2)*(1855+3) -
           (1855+3*(12842+16384*t)+5)) := by
   obtain ⟨v,hkv,hv16⟩ := s3_high_target_second t
-  have hsector :
-      (3%4=1 ∧ (3+v)%16=3) ∨ (3%4=3 ∧ (3+v)%16=11) := by
-    apply Or.inr
-    constructor <;> omega
+  have hsector : (3+v)%16=(15+4*3)%16 := by omega
   have hblank := BB6.Agent4Seven.blank_ne_six_seven_band_s3 3 v time hsector
   intro hrun
   apply hblank
