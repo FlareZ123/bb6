@@ -4,13 +4,13 @@ namespace BB6Root119
 
 /-- A finite alternating left corridor, read nearest cell first: 1,0,1,0,... . -/
 def leftAlternating (k : Nat) (b : Conf) : Prop :=
-  ∀ j : Nat, j < 4*k+4 →
+  ∀ j : Nat, j < 4*k →
     b.tape (b.h-1-(j:Int)) = decide (j % 2 = 0)
 
 /-- A finite alternating right sentinel after a 1-run, read from the first
     cell after the run: 0,1,0,1,... . -/
 def rightAlternating (k n : Nat) (b : Conf) : Prop :=
-  ∀ j : Nat, j < 4*k+4 →
+  ∀ j : Nat, j < 4*k →
     b.tape (b.h+2*(n:Int)+1+(j:Int)) = decide (j % 2 = 1)
 
 /-- One exact two-wave return consumes four alternating cells on each side
@@ -45,18 +45,6 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
   have hl4 : b.tape (b.h-4) = false := by
     have h := hleft 3 (by omega)
     simpa using h
-  have hl5 : b.tape (b.h-5) = true := by
-    have h := hleft 4 (by omega)
-    simpa using h
-  have hl6 : b.tape (b.h-6) = false := by
-    have h := hleft 5 (by omega)
-    simpa using h
-  have hl7 : b.tape (b.h-7) = true := by
-    have h := hleft 6 (by omega)
-    simpa using h
-  have hl8 : b.tape (b.h-8) = false := by
-    have h := hleft 7 (by omega)
-    simpa using h
   have hz1 : b.tape (b.h+2*(n:Int)+1) = false := by
     have h := hright 0 (by omega)
     simpa using h
@@ -68,18 +56,6 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     simpa using h
   have ho3 : b.tape (b.h+2*(n:Int)+4) = true := by
     have h := hright 3 (by omega)
-    simpa using h
-  have hz3 : b.tape (b.h+2*(n:Int)+5) = false := by
-    have h := hright 4 (by omega)
-    simpa using h
-  have ho4 : b.tape (b.h+2*(n:Int)+6) = true := by
-    have h := hright 5 (by omega)
-    simpa using h
-  have hz4 : b.tape (b.h+2*(n:Int)+7) = false := by
-    have h := hright 6 (by omega)
-    simpa using h
-  have ho5 : b.tape (b.h+2*(n:Int)+8) = true := by
-    have h := hright 7 (by omega)
     simpa using h
 
   let bout : Conf := immB2 n (n+2) b
@@ -154,7 +130,7 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     rw [hidx]
     have hkeep := hleftTape (b.h-1-((j+4):Int)) (by omega)
     rw [hkeep]
-    have hj' : j+4 < 4*(k+1)+4 := by omega
+    have hj' : j+4 < 4*(k+1) := by omega
     have hv := hleft (j+4) hj'
     have hmod : (j+4)%2 = j%2 := by omega
     simpa [hmod] using hv
@@ -171,7 +147,7 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
     have hcoord : b.h+2*(n:Int)+5+(j:Int) =
         b.h+2*(n:Int)+1+((j+4):Int) := by omega
     rw [hcoord]
-    have hj' : j+4 < 4*(k+1)+4 := by omega
+    have hj' : j+4 < 4*(k+1) := by omega
     have hv := hright (j+4) hj'
     have hmod : (j+4)%2 = j%2 := by omega
     simpa [hmod] using hv
