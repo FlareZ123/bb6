@@ -111,11 +111,12 @@ jobs:
           lean -o "$A/EleventhPacketFive.olean" "$A/EleventhPacketFive.lean"
           lean -DmaxRecDepth=55000 -o "$A/BlankEleventhRejoin.olean" "$A/BlankEleventhRejoin.lean"
           T=im-results/agent37-d-timing-cocycle
-          lean -DmaxRecDepth=55000 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
-          lean -DmaxRecDepth=55000 "$D/BlankSixthQ4Rejoin.lean"
+          lean -DmaxRecDepth=55000 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean" | tee -a axioms.log
+          lean -DmaxRecDepth=55000 "$D/BlankSixthQ4Rejoin.lean" | tee -a axioms.log
           lean -DmaxRecDepth=8192 -o "$T/TwelfthPacket.olean" "$T/TwelfthPacket.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwelfthRejoin.olean" "$T/BlankTwelfthRejoin.lean"
           K=im-results/agent36-sixth-packet
           lean -o "$K/FiveReturn.olean" "$K/FiveReturn.lean"
-          lean -DmaxRecDepth=55000 "$K/SixthBlankRoot.lean"
+          lean -DmaxRecDepth=55000 "$K/SixthBlankRoot.lean" | tee -a axioms.log
+          if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
 
