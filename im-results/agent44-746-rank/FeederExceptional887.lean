@@ -553,8 +553,8 @@ theorem fatal_root_iff_even_parent_887_subresidue (n : Nat)
   have h1458 : n%1458=887 := by omega
   have hEight :
       n%1458=113 ∨ n%1458=400 ∨ n%1458=526 ∨ n%1458=599 ∨
-        n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372 := by
-    omega
+        n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372 :=
+    Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl h1458)))))
   have hfeed := fatal_feeder_887_subresidue_root_exclusion n hn
   exact CascadeFeederExceptional.fatal_root_iff_even_parent_eight_exceptional
     n hEight hfeed.2
