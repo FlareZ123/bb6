@@ -94,6 +94,13 @@ the 277-step monitored frontier certificate to the repository's canonical
 physical #429 table. The generic monitored-record C/0 frontier theorem is
 also transferred to `target429`.
 
+The bridge now imports the canonical `JPhysicalPrefix` module and proves
+`rootTape_matches_physical_j00`: the 35-step endpoint tape is exactly
+`BB429JPhysical.jTape 0 0`, translated by the absolute head coordinate 3.
+Thus the root entry is not merely shape-compatible with a locally defined
+predicate; it is identified with the physical J(0,0) tape used by the
+source-connected J/Junc developments.
+
 The bridge has been locally preflighted against a minimal replica of the
 repository's `PartialMachine`, `refine`, and eleven-entry completion
 definitions. This confirms the proof script and table equality, but is not a
