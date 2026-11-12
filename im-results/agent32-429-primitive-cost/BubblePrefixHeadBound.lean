@@ -59,7 +59,9 @@ theorem multi_bubble_prefix_head_bound
               4*((j+1)*(j+1))+2*(j+1) := by
                 rw [Nat.mul_assoc]
           _ = 4*(j*j+2*j+1)+2*(j+1) := by rw [hmul]
-          _ = (4*j*j+2*j) + (4*(2*j+1)+2) := by omega
+          _ = (4*j*j+2*j) + (4*(2*j+1)+2) := by
+            simp only [Nat.mul_assoc]
+            omega
       have hBubble : run m (4*(2*j+1)+2) cStage = some cFinal := by
         have hcomp := run_add' m (4*j*j+2*j) (4*(2*j+1)+2) c0
         rw [htime] at hFull
