@@ -1,0 +1,39 @@
+name: Agent 24 counted-micro source extraction (PR-open only)
+on:
+  pull_request:
+    types: [opened]
+    branches: [main]
+    paths:
+      - "im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64"
+      - "im-results/agent24-champion-time/CountedOneZeroUnary.lean.xz.b64"
+      - ".github/workflows/agent24-counted-micro-source.yml"
+permissions:
+  contents: write
+jobs:
+  expose-source:
+    if: \${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: \${{ github.head_ref }}
+          persist-credentials: true
+      - name: Decode and verify exact proof sources
+        run: |
+          set -euo pipefail
+          base64 --decode im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64 | xz --decompress > im-results/agent24-champion-time/CountedOddUnary.lean
+          base64 --decode im-results/agent24-champion-time/CountedOneZeroUnary.lean.xz.b64 | xz --decompress > im-results/agent24-champion-time/CountedOneZeroUnary.lean
+          printf '%s  %s\\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' im-results/agent24-champion-time/CountedOddUnary.lean | sha256sum --check
+          printf '%s  %s\\n' '0d1acc16c377f17e3f2c624a74f9874bafdf255f2fcdc9749c9d00c83b4f6737' im-results/agent24-champion-time/CountedOneZeroUnary.lean | sha256sum --check
+          wc -l im-results/agent24-champion-time/CountedOddUnary.lean im-results/agent24-champion-time/CountedOneZeroUnary.lean
+      - name: Commit readable Lean sources to the PR branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent24-champion-time/CountedOddUnary.lean im-results/agent24-champion-time/CountedOneZeroUnary.lean
+          if ! git diff --cached --quiet; then
+            git commit -m "Agent 24: expose counted micro proof sources"
+            git push origin "HEAD:\${GITHUB_HEAD_REF}"
+          fi
