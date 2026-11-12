@@ -47,42 +47,29 @@ theorem tm2_halts_after_terminal_prefix
   exact ⟨by simp [hlive], hhalt⟩
 
 
-/-- Generic score bridge: any proved TM63 blank-root halting time at or
-after its nine-step common-root configuration gives an attainable champion
-score exactly six successful moves later, plus the final halt query. -/
-theorem champion_attainable_of_tm2_haltsAfter
+/-- Generic halting-time bridge: any proved TM63 blank-root halting
+time N is transported to the published champion's root, six successful
+moves earlier. The lower bound N≥9 follows from tm2_min_halt. -/
+theorem champion_halts_after_tm2_haltsAfter
     (N : Nat) (h : HaltsAfter tm2 N) :
-    Attainable (N+7) := by
+    HaltsAfter championTable (N+6) := by
   have hN : 9 ≤ N := tm2_min_halt N h
   obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hN
   have htm2 : HaltsAfter tm2 (9+k) := by
     simpa [hk] using h
   have hchamp := (champion_halts_offset k).mpr htm2
-  refine ⟨championTable, N+6, ?_, ?_⟩
-  · have hscore : 15+k = N+6 := by omega
-    simpa [hscore] using hchamp
-  · rfl
-
-/-- Root-corrected champion halting theorem. The source TM63 prefix plus
-terminal macro has N successful moves; the published champion's A-root is
-six moves earlier than TM63's E-root, so its successful-move count is N+6. -/
-theorem champion_halts_after_terminal_prefix
-    (n L a : Nat) (t : Int → Bool) (h : Int)
-    (hprefix : run tm2 n blank = some ⟨3,h,t⟩)
-    (hsection : TerminalFinish.SectionBits L a t h) :
-    HaltsAfter championTable (n + terminalMoves L a + 6) := by
-  have htm2 := tm2_halts_after_terminal_prefix n L a t h hprefix hsection
-  have hlarge : 9 ≤ n + terminalMoves L a := by
-    unfold terminalMoves
-    omega
-  obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hlarge
-  have htm2' : HaltsAfter tm2 (9+k) := by
-    simpa [hk] using htm2
-  have hchamp := (champion_halts_offset k).mpr htm2'
-  have hscore : 15+k = n + terminalMoves L a + 6 := by
-    unfold terminalMoves
-    omega
+  have hscore : 15+k = N+6 := by omega
   simpa [hscore] using hchamp
+
+/-- Minimal attainable-score adapter for any original-source TM63
+blank-root halting theorem. The final undefined query contributes the
+seventh move relative to the TM63 successful-move count. -/
+theorem champion_attainable_of_tm2_haltsAfter
+    (N : Nat) (h : HaltsAfter tm2 N) :
+    Attainable (N+7) := by
+  refine ⟨championTable, N+6,
+    champion_halts_after_tm2_haltsAfter N h, ?_⟩
+  rfl
 
 /-- Direct attainable-score interface for downstream counted-prefix proofs.
 No root offset or final halt-query arithmetic remains to be reconstructed. -/
@@ -91,9 +78,9 @@ theorem champion_attainable_after_terminal_prefix
     (hprefix : run tm2 n blank = some ⟨3,h,t⟩)
     (hsection : TerminalFinish.SectionBits L a t h) :
     Attainable (n + terminalMoves L a + 7) := by
-  refine ⟨championTable, n + terminalMoves L a + 6,
-    champion_halts_after_terminal_prefix n L a t h hprefix hsection, ?_⟩
-  rfl
+  exact champion_attainable_of_tm2_haltsAfter
+    (n + terminalMoves L a)
+    (tm2_halts_after_terminal_prefix n L a t h hprefix hsection)
 
 #print axioms tm2_halts_after_terminal_prefix
 #print axioms champion_halts_after_terminal_prefix
