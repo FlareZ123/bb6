@@ -67,6 +67,8 @@ jobs:
           cp ../bb6/im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean BB6Agent/
           cp ../bb6/im-results/agent32-zero-prefix-global/LassoTraceAudit.lean BB6Agent/
           cp ../bb6/im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean BB6Agent/
+          cp ../bb6/im-results/agent1-429-root-entry/JRootEntry.lean BB6Agent/
+          cp ../bb6/im-results/agent1-429-root-entry/SourceBridge.lean BB6Agent/
           cp ../bb6/im-results/agent32-429-primitive-cost/BubbleExact.lean BB6Agent/
           cp ../bb6/im-results/agent32-429-primitive-cost/BubblePrefix.lean BB6Agent/
           cp ../bb6/im-results/agent32-429-primitive-cost/BCFuture.lean BB6Agent/
@@ -81,14 +83,23 @@ jobs:
         working-directory: cryptids
         run: |
           export LEAN_PATH="BB6Agent"
+          set -euo pipefail
+          LOG=/tmp/agent1-429-j-source-bridge.log
+          : > "$LOG"
           for module in \
             Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle \
             FiniteHalting Symmetry RayMacro EntryMacroOracle EntryMacroLeft DirectedDrift \
             ZeroMaskOracle FiniteDecision FrontierAudit FrontierMass ZeroPathAudit \
             ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit \
-            BB429PhysicalFrontier BubbleExact BubblePrefix BCFuture JPhysicalPrefix JF0Prefix \
+            BB429PhysicalFrontier JRootEntry SourceBridge BubbleExact BubblePrefix BCFuture JPhysicalPrefix JF0Prefix \
             JFirstBranch RelativeTape CryptidsTapeAdapter JSourceBridge
           do
-            echo "Compiling $module"
-            lake env lean -o "BB6Agent/$module.olean" "BB6Agent/$module.lean"
+            echo "Compiling $module" | tee -a "$LOG"
+            lake env lean -o "BB6Agent/$module.olean" "BB6Agent/$module.lean" 2>&1 | tee -a "$LOG"
           done
+          grep -F "BB429RootEntry.source429_eq_target429" "$LOG"
+          grep -F "BB429RootEntry.target429_root_277_frontier_base" "$LOG"
+          if grep -q "sorryAx" "$LOG"; then
+            echo "unexpected sorryAx in root/source bridge compilation"
+            exit 1
+          fi
