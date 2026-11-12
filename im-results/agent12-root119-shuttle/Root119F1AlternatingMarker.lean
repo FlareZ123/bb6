@@ -281,7 +281,11 @@ theorem alternating_f1_marker_return (m : Nat) (t : Int → Bool) (h : Int)
         by rw [←h2]; exact hpat.2.2.1,
         by rw [←h3]; exact hpat.2.2.2⟩
     have hbound : f.h ≤ h := by rw [hfhead]; omega
-    exact hn x (le_trans hx hbound) hpat'
+    have hxold : x+4 ≤ h := by
+      calc
+        x+4 ≤ f.h := hx
+        _ ≤ h := hbound
+    exact hn x hxold hpat'
   have honesF : ∀ j : Nat, j < 2*m+5 →
       f.tape (f.h+1+(j:Int)) = true := by
     intro j hj
