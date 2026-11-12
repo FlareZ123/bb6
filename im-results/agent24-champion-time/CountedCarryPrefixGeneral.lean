@@ -816,6 +816,7 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
       (h'+i) (by omega) (by omega)
     simpa [T1] using hv
   have hADmatch := carryBridge3_matches_carryAD12 T1 h' hRight
+  have hk1 : (k-1)+1=k := by omega
   have hA := carryAD12 Tbridge (h'-2) hADmatch
   let hB : Int := 12+(h'-2)
   let T2 := (frame (fun x => carryAD12Area (x-(h'-2))) Tbridge
@@ -832,16 +833,17 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
       simp [carryAD12Area]
       omega
     · intro i hi
-      have x : Int := (h'-2)+12+(i:Int)
+      let x : Int := (h'-2)+12+(i:Int)
       have harea : carryBridgeArea3 (x-h') = false := by
-        simp [carryBridgeArea3]
+        simp [carryBridgeArea3,x,h']
         omega
       have hbridgeOutside : Tbridge x = T1 x := by
         simp [Tbridge,frame,shiftConfig,harea]
       have hleftMarked : T1 x = true := by
-        have hv := carryLeftSweep_marked (4*k+1) (3*k) T hmatch hs hb x
-          (by omega) (by omega)
-        simpa [T1] using hv
+        have hxlo : 2-4*(3*(k:Int)) ≤ x := by dsimp [x,h']; omega
+        have hxhi : x ≤ 4 := by dsimp [x,h']; omega
+        have hv := carryLeftSweep_marked (4*k+1) (3*k) T hmatch hs hb x hxlo hxhi
+        simpa [T1,x] using hv
       simpa [x] using hbridgeOutside.trans hleftMarked
   have hseg : carrySegmentOnes T2 hB (3*(4*(k-1))+7) := by
     simpa [hB,Int.add_comm] using hseg0
