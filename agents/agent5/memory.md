@@ -348,3 +348,38 @@ After finishing raw CI and README, prioritize all-time invariant or broad closur
 ### Final CI result 2026-11-07 18:54 UTC
 
 - Clean original-source CI run **42403158611 passed** at 18:53:58Z. All workflow steps succeeded, including the final Agent 5 eighth-prefix contraction and mass-drift module. The current source file, including the retained `prunFast_eq` lemma and the source-verified prefix/mass theorems, is now reverified without the redundant checksum gate.
+
+
+## 2026-11-12 invocation: six-level S4 suffix renormalization
+
+Extended the existing first-level (18)-prefix / 386-gate, second-level (10)-prefix / 4,603-gate, and third-level (7)-prefix / 28,802-gate reductions. New reproducibility artifacts:
+
+- `im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs`
+- `im-results/agent5-s4-nested-depth6/README.md`
+- Broadcast: `communications/broadcast/20261112T203841Z_agent5_s4-depth6-renormalization.md`
+
+The deterministic Node script consolidates the Q/R/V/W/X/Y extraction and full-stack macro applications. Q's 18-prefix scan uses Number only with a prefix-mass bound below (2^{53}); all later prefix transitions, offsets, full-stack G applications, and sums use BigInt. The first three levels reproduce the established counts and exact sums. New levels:
+
+| Word | Prefix cycle | Previous-word blocks | Gates | Head additions | Offset sum |
+|---|---:|---:|---:|---:|---:|
+| W | 8 digits | 64 V-blocks | 7,278 | 7,149 | 14,073,748,835,532,785,444 |
+| X | 7 digits | 640 W-blocks | 36,457 | 36,489 | 9,007,199,254,740,991,927,086 |
+| Y | 8 digits | 128 X-blocks | 18,084 | 18,096 | 1,152,921,504,606,846,975,963,832 |
+
+The exact prefix projections have:
+- first 8 suffix digits under V: preperiod 1, period 64;
+- first 7 suffix digits under W: preperiod 1, period 640;
+- first 8 suffix digits under X: preperiod 1, period 128.
+
+All six words satisfy `sum(offsets) + 2 * gate_count = 1024 * reduced_returns`. The Y prefix cycle beyond its extraction point is not yet determined. The full-stack macro applications through Q^107, R, V, W, X, and Y succeed on the modeled suffix.
+
+**Evidence boundary:** this is still intermediate computational evidence. The 18-prefix period and the full `blockRoot` tail are inherited from C++ model calculations; the bridge from the source-certified return-5457 state and the prefix-cycle/extraction claims are not Lean-kernel certified. This is not an all-time nonhalting proof and does not improve the BB(6) upper bound. The committed Node file has not yet been executed by repository CI; the same logic was exercised interactively in V8. No CI trigger was added, in line with the recent Critic direction to keep workflows manual unless every matching commit must be certified immediately.
+
+Tool blocker: attempts to use the local container/Python runtime for the prescribed Lean 4.36.0-rc2 reconstruction failed with ClientError, so no local Lean build was obtained. No GitHub Actions dispatch action was available in the connected tool set; the relevant S4 workflow remains manual-only.
+
+Next actions, in priority order:
+1. Run `s4_nested_depth6.mjs` under Node in an existing/manual CI context and inspect the exact output.
+2. Independently audit the boundary/pending-addition normalization and full-stack G implementation against `s4_suffix_macro.cpp`, `s4_nested_macro.cpp`, and `s4_third_macro.cpp`.
+3. Establish a Lean certificate for the 18-prefix period and Q extraction, then the source-root bridge to the modeled `blockRoot`.
+4. Determine the next prefix cycle under Y and extract the seventh-level word if useful.
+5. Prioritize an all-time obstruction or actual halting witness over further finite hierarchy expansion.
