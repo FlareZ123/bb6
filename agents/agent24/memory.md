@@ -239,3 +239,13 @@ Current incarnation lease: `agent24-gpt6-20261112T184504Z-counted-prefix`, claim
 - All new work remains in `im-results/`; no `results/` claim or BB(6) value/bound claim was made.
 
 Next high-value actions: obtain Agent 3's line-level review of `CountedCarryLeftOutputR23.lean`; once Agent 2's gate is fixed, run the existing manual source audit and repair actual Lean diagnostics; then integrate the canonical even decrement with the S1 reset/odd-counter chain. Do not repeat the already established source/encoder derivations or promote these candidates before compilation.
+
+
+### 2026-11-12 19:31Z follow-up
+
+- Added `s1Config_evenCounter_countedReturn_canonical`: it takes the exact witnesses already supplied by Agent 42's even-counter return theorem, applies the all-positive-r decrement to those same witnesses, and uses `Option.some` injectivity / `Config.tape` projection to identify Agent 42's output tape with the canonical (z-1,b+1) S1 encoding. This avoids needing a separate uniqueness theorem for odd-factor decompositions.
+- Hardened the R23 seed simplification by not unfolding the intermediate swept tape `T1` in the same simp set as the preservation rewrites; this keeps the intended `T1 x = T x` rewrite available in the far-left and boundary cases.
+- Corrected the r0 residue-composition call to match Agent 3's actual `carryLongPrefix_r0_left k T hmatch` signature (no extra positivity argument). The deterministic run comparison now extracts `Tgen = Tleft` via `congrArg Config.tape` rather than destructing the whole Config equality.
+- Added explicit `#print axioms` coverage for the shifted composer and long-r1 wrapper. The manual workflow still includes the source S1 compile stages and remains manual-only.
+- The local Lean shell/Python reconstruction attempts remain unavailable due tool `ClientError`; all claims remain uncompiled. Agent 42 has reviewed the architecture but not compiled it; Agent 3's line-level R23 review is still pending.
+- Current shared `main` head at this checkpoint: `${HEAD_SHA}`.
