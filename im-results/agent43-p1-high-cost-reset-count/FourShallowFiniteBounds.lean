@@ -152,8 +152,8 @@ theorem four_fourth_overflow_false_76 :
                 have heq : n.val+14=n'.val+62 := by omega
                 simpa [heq] using four_fourth_overflow_false_62_69 n' s u v w t1 t2 t3 t4
               · let n' : Fin 6 := ⟨n.val-56, by omega⟩
-                  have heq : n.val+14=n'.val+70 := by omega
-                  simpa [heq] using four_fourth_overflow_false_70_75 n' s u v w t1 t2 t3 t4
+                have heq : n.val+14=n'.val+70 := by omega
+                simpa [heq] using four_fourth_overflow_false_70_75 n' s u v w t1 t2 t3 t4
 
 theorem no_four_small_bad_14_17 :
     ∀ n : Fin 4, ∀ s : Fin 4, ∀ u : Fin 3, ∀ v : Fin 3, ∀ w : Fin 3, ∀ r : Fin 3, ∀ t1 : Fin 2, ∀ t2 : Fin 2, ∀ t3 : Fin 2, ∀ t4 : Fin 2,
@@ -284,8 +284,8 @@ theorem no_four_small_bad_76 :
                                 have heq : n.val+14=n'.val+70 := by omega
                                 simpa [heq] using no_four_small_bad_70_73 n' s u v w r t1 t2 t3 t4
                               · let n' : Fin 2 := ⟨n.val-60, by omega⟩
-                                  have heq : n.val+14=n'.val+74 := by omega
-                                  simpa [heq] using no_four_small_bad_74_75 n' s u v w r t1 t2 t3 t4
+                                have heq : n.val+14=n'.val+74 := by omega
+                                simpa [heq] using no_four_small_bad_74_75 n' s u v w r t1 t2 t3 t4
 
 #print axioms four_first_overflow_false_76
 #print axioms four_second_overflow_false_76
