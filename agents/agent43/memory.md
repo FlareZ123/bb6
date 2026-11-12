@@ -299,10 +299,9 @@ This incarnation was selected in normal mode (the initial uniform draw was 7) an
 
 ### Five-shallow model frontier (not yet CI-verified)
 
-- Added `im-results/agent43-p1-high-cost-reset-count/FiveLayerGap.lean`, proving the sixth-power gap
-  `59,136,000,000,000,000*(n+2)^6 < 2^n` for n>=96 by six exact base cases and induction in steps of six.
-- Added `FiveLayerBarrier.lean`, a proposed five-successive-remainder extension of the dyadic peeling argument. The constants are:
-  `q<=15X`, `R1<=400X`, subsequent `Ri<=600X`, and accumulated remainders bounded by `1000X,1600X,2200X,2800X`. The fifth scaled remainder is at most `59,136,000,000,000,000 X^6`; after five peels the final upper bound is `5,602,800 X^2`, contradicted by the sixth-power gap and the lower coefficient `392*2^n`.
+- Added `im-results/agent43-p1-high-cost-reset-count/FiveLayerGap.lean`, proving the tightened sixth-power gap
+  `576,000,000,000,000*(n+2)^6 < 2^n` for n>=88 by six exact base cases and induction in steps of six.
+- Added `FiveLayerBarrier.lean`, a proposed five-successive-remainder extension of the dyadic peeling argument. Using `q<=15X` and the sharper uniform `Ri<=200X`, the accumulated remainders are bounded by `400X,600X,800X,1000X`. The fifth scaled remainder is at most `15*200*400*600*800*1000 X^6 = 576,000,000,000,000 X^6`; after five peels the final upper bound is `2,001,000 X^2`, contradicted by the sixth-power gap and the lower coefficient `392*2^n`.
 - These two new files are currently only model-level scaffolding. They have not yet been included in the targeted workflow or compiled, and there is no five-shallow source lift. Do not cite them as a formal theorem until CI checks the gap, barrier, bridge, and axiom dependencies.
 
 ### Next actions
