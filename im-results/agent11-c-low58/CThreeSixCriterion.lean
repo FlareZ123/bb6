@@ -57,7 +57,7 @@ theorem blank_halts_iff_six_forced :
 /-- The genuinely new inverse-sector filter rejects a concrete original
     m=0 stopping parameter admitted by the entire previous full criterion.
     An independent theorem M0OddRayValTwo proves an infinite extension. -/
-set_option maxRecDepth 8192 in
+set_option maxRecDepth 8192
 theorem six_forced_rejects_1031 :
     BB6.Agent11SixForced.sixForcedExcluded 2065 3100=true := by
   decide
@@ -78,7 +78,12 @@ theorem six_forced_strict_1031 :
   have heq : (2:Nat)^(2*0+2)*(1031+3)-(1031+3*0+5) = 3100 := by decide
   have hh : BB6.Agent11SixForced.sixForcedExcluded 2065 3100=false := by
     simpa only [heq] using h.2
-  exact (by have ht := six_forced_rejects_1031; omega : False)
+  have hne : true = false := by
+    calc
+      true = BB6.Agent11SixForced.sixForcedExcluded 2065 3100 :=
+        six_forced_rejects_1031.symm
+      _ = false := hh
+  cases hne
 
 #print axioms blank_halts_iff_six_forced
 #print axioms six_forced_rejects_1031
