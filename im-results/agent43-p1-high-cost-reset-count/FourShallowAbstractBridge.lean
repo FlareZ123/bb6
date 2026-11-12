@@ -377,6 +377,7 @@ private theorem four_layer_finite_barrier
     exact hR2
   have hS2eq : fourSecondRem n s t1 x1 t2=S2 := by
     simp [fourSecondRem,S2,hR1quot,←hp2,hR2formula,T1]
+    omega
   have hnot2mod : S2%2^(e-x1)≠0 := by
     simpa [hS2eq,e,Nat.sub_add_cancel hn14] using hSecondFin
   have hnot2 : ¬ 2^(e-x1)∣S2 := by
@@ -427,6 +428,7 @@ private theorem four_layer_finite_barrier
     exact hR3
   have hS3eq : fourThirdRem n s t1 x1 t2 x2 t3=S3 := by
     simp [fourThirdRem,S3,hS2quot,←hp3,hR3formula,T1]
+    omega
   have hnot3mod : S3%2^(e-x1-x2)≠0 := by
     simpa [hS3eq,e,Nat.sub_add_cancel hn14] using hThirdFin
   have hnot3 : ¬ 2^(e-x1-x2)∣S3 := by
@@ -478,8 +480,9 @@ private theorem four_layer_finite_barrier
   have hR4formula : R4+O4=L4*(T1+x1+x2+x3) := by
     dsimp [T1,x1,x2,x3]
     exact hR4
-  have hS4eq : fourFourthRem n s t1 x1 t2 x2 x3 t3 x3 t4 = S4 := by
+  have hS4eq : fourFourthRem n s t1 x1 t2 x2 t3 x3 t4 = S4 := by
     simp [fourFourthRem,S4,hS3quot,←hp4,hR4formula,T1]
+    omega
   have hnot4mod : S4%2^(e-x1-x2-x3)≠0 := by
     have h := hFourthFin.1
     simpa [hS4eq,e,Nat.sub_add_cancel hn14] using h
