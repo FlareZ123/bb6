@@ -34,18 +34,14 @@ theorem run_head_displacement_bound (m : Machine) (n : Nat)
       constructor <;> simp
   | succ n ih =>
       simp only [BB6Coverage.run] at h
-      cases hr : rawStep m c with
+      cases hr : run m n c with
       | none => simp [hr] at h
       | some d =>
-          simp [hr] at h
-          cases ht : run m n d with
-          | none => simp [ht] at h
-          | some e =>
-              have he : e = c' := by simpa [ht] using h
-              subst c'
-              have hstep := rawStep_head_displacement m c d hr
-              have htail := ih d e ht
-              rcases hstep with hstep | hstep <;> constructor <;> omega
+          have hstep : rawStep m d = some c' := by
+            simpa [hr] using h
+          have htail := ih c d hr
+          have hlast := rawStep_head_displacement m d c' hstep
+          rcases hlast with hlast | hlast <;> constructor <;> omega
 
 /-- Every prefix of a successful run is itself successful. -/
 theorem run_prefix_exists (m : Machine) (n t : Nat) (c e : Config)
