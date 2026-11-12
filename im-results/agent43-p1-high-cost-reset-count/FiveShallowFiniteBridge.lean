@@ -386,3 +386,86 @@ theorem num_five_small_run_bounds
     contradiction
 
   exact ⟨huBound,hvBound,hwBound,hxBound,hrBound⟩
+
+
+/-- No exact five-shallow source-wall equation exists in the finite
+index range 14<=n<83. The overflow certificates bound every intervening
+depth-two run by two, after which the residual finite table applies. -/
+theorem no_five_small_numeric
+ (n s u v w x r t1 t2 t3 t4 t5 p d
+  alpha beta gamma delta epsilon
+  C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
+  K R1 R2 R3 R4 R5 E : Nat)
+ (hn14 : 14≤n) (hn83 : n<83) (hs : s≤3)
+ (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1)
+ (ht4 : t4≤1) (ht5 : t5≤1)
+ (hprofile1 : (alpha,C1,L1,O1)=triple t1)
+ (hprofile2 : (beta,C2,L2,O2)=triple t2)
+ (hprofile3 : (gamma,C3,L3,O3)=triple t3)
+ (hprofile4 : (delta,C4,L4,O4)=triple t4)
+ (hprofile5 : (epsilon,C5,L5,O5)=triple t5)
+ (hP : (8:Nat)^s*p=2^n) (hD : (8:Nat)^s*d=14*n+92)
+ (hR1 : R1+O1+d=L1*(n+6+3*s))
+ (hR2 : R2+O2=L2*(n+6+3*s+alpha+3*u))
+ (hR3 : R3+O3=L3*(n+6+3*s+alpha+3*u+beta+3*v))
+ (hR4 : R4+O4=L4*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w))
+ (hR5 : R5+O5=L5*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x))
+ (hE : E+384=112*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r))
+ (hK : K+98=C1*8^s+C2*(8^s*(2^alpha*8^u))+
+   C3*(8^s*((2^alpha*8^u)*(2^beta*8^v)))+
+   C4*(8^s*(((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w)))+
+   C5*(8^s*((((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w))*(2^delta*8^x))))
+ (hEq : K*p=(2^alpha*8^u)*((2^beta*8^v)*
+   ((2^gamma*8^w)*((2^delta*8^x)*((2^epsilon*8^r)*E+R5)+R4)+R3)+R2)+R1) :
+   False := by
+  have hbounds := num_five_small_run_bounds
+    n s u v w x r t1 t2 t3 t4 t5 p d
+    alpha beta gamma delta epsilon
+    C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
+    K R1 R2 R3 R4 R5 E hn14 hn83 hs ht1 ht2 ht3 ht4 ht5
+    hprofile1 hprofile2 hprofile3 hprofile4 hprofile5
+    hP hD hR1 hR2 hR3 hR4 hR5 hK hEq
+  rcases hbounds with ⟨hu,hv,hw,hx,hr⟩
+  have hmodP : 2^n % 8^s = 0 := Nat.mod_eq_zero_of_dvd ⟨p,hP.symm⟩
+  have hmodD : (14*n+92) % 8^s = 0 := Nat.mod_eq_zero_of_dvd ⟨d,hD.symm⟩
+  have hpDiv : 2^n / 8^s = p := by
+    rw [←hP]
+    exact Nat.mul_div_cancel_left p (Nat.pow_pos (by decide))
+  have hdDiv : (14*n+92) / 8^s = d := by
+    rw [←hD]
+    exact Nat.mul_div_cancel_left d (Nat.pow_pos (by decide))
+  have hroot : (n,s) ∈ rootPairs := by
+    have hh := rootPairs_complete
+      (⟨n-14,by omega⟩ : Fin 69) (⟨s,by omega⟩ : Fin 4)
+    simpa [Fin.val,Nat.sub_add_cancel hn14] using hh hmodD
+  obtain ⟨i,hi⟩ := List.mem_iff_get.mp hroot
+  have hR1nat : L1*(n+6+3*s)-O1-d=R1 := by omega
+  have hR2nat : L2*(n+6+3*s+alpha+3*u)-O2=R2 := by omega
+  have hR3nat : L3*(n+6+3*s+alpha+3*u+beta+3*v)-O3=R3 := by omega
+  have hR4nat : L4*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w)-O4=R4 := by omega
+  have hR5nat :
+      L5*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x)-O5=R5 := by omega
+  have hEnat :
+      112*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r)-384=E := by omega
+  have hKnat :
+      C1*8^s+C2*(8^s*(2^alpha*8^u))+
+      C3*(8^s*((2^alpha*8^u)*(2^beta*8^v)))+
+      C4*(8^s*(((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w)))+
+      C5*(8^s*((((2^alpha*8^u)*(2^beta*8^v))*(2^gamma*8^w))*(2^delta*8^x)))-98=K := by
+    omega
+  have hBad : fiveBad n s u v w x r t1 t2 t3 t4 t5 = true := by
+    simp [fiveBad,hmodP,hmodD,hprofile1.symm,hprofile2.symm,
+      hprofile3.symm,hprofile4.symm,hprofile5.symm,hpDiv,hdDiv,
+      hR1nat,hR2nat,hR3nat,hR4nat,hR5nat,hEnat,hKnat,hEq]
+  have hF : fiveBad n s u v w x r t1 t2 t3 t4 t5 = false := by
+    have hh := no_five_bad_rootPairs i
+      ⟨t1,by omega⟩ ⟨t2,by omega⟩ ⟨t3,by omega⟩
+      ⟨t4,by omega⟩ ⟨t5,by omega⟩
+      ⟨u,hu⟩ ⟨v,hv⟩ ⟨w,hw⟩ ⟨x,hx⟩ ⟨r,hr⟩
+    simpa [hi] using hh
+  rw [hBad] at hF
+  contradiction
+
+#print axioms five_numerator_factorizations
+#print axioms num_five_small_run_bounds
+#print axioms no_five_small_numeric
