@@ -438,7 +438,7 @@ private theorem nestedOddNumerator_shift_digit_mod (n t k r:Nat)
     dsimp [nestedOddNumerator]
     rw [hpow]
     simp [Int.mul_sub,Int.mul_add,Int.sub_add_assoc,Int.add_sub_assoc,
-      Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+      Int.mul_assoc,Int.mul_comm,Int.mul_left_comm] <;> omega
   have hdivW : M∣
       nestedOddNumerator (n+r*depthPeriod (k+1)) t-
         (nestedOddNumerator n t-P*(2:Int)^(t+3)*r) := by
