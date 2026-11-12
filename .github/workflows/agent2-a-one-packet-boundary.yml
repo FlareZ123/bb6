@@ -60,7 +60,7 @@ jobs:
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean" | tee -a axioms.log
           lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
-          lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean"
+          lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean" | tee -a axioms.log
           lean -o "$D/PacketNormalizeSource.olean" "$D/PacketNormalizeSource.lean"
           lean -o "$D/PacketOneReentry.olean" "$D/PacketOneReentry.lean" | tee -a axioms.log
           lean -o "$D/PacketZeroBoundarySource.olean" "$D/PacketZeroBoundarySource.lean" | tee -a axioms.log
