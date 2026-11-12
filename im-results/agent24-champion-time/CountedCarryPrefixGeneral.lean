@@ -413,7 +413,9 @@ theorem carryShortPrefix_r1 (T : Int → Bool)
       run tm2 27 ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
       T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
       T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
-      (∀ x, 6 < x → T' x = T x) := by
+      (∀ x, 6 < x → T' x = T x) ∧
+      (∀ x, x ≤ 0 → T' x =
+        (if x < -5 then T x else if x ≤ -3 then true else decide (x%3=1))) := by
   let T1 := (frame carryBridgeArea3 T (embed carryBridgeFinal3)).tape
   have hmatch3 : ∀ i : Int, -4 ≤ i → i ≤ 1 →
       T (0+i) = decide (i ∈ ([-2,-1,0] : List Int)) := by
@@ -525,7 +527,50 @@ theorem carryShortPrefix_r1 (T : Int → Bool)
     ⟨3,0,T⟩ ⟨0,-2,T1⟩ ⟨0,4,T2⟩ hbridgeRun hreturnRun
   have htotal := run_compose tm2 24 3
     ⟨3,0,T⟩ ⟨0,4,T2⟩ ⟨4,7,T3⟩ htotal1 hA3Run
-  refine ⟨T3,?_,hT3one,hT3two,hT3three,hT3four,hT3five,hT3six,hout⟩
+  have hleft : ∀ x, x ≤ 0 →
+      T3 x = (if x < -5 then T x else if x ≤ -3 then true else decide (x%3=1)) := by
+    intro x hx
+    by_cases hbelow : x < -5
+    · have hA3 : carryA3Area (x-4) = false := by
+        simp [carryA3Area]
+        omega
+      have hret : carryAReturn12Area (x+2) = false := by
+        simp [carryAReturn12Area]
+        omega
+      have hbridge : carryBridgeArea3 x = false := by
+        simp [carryBridgeArea3]
+        omega
+      simp [T3,T2,T1,frame,shiftConfig,hA3,hret,hbridge,hbelow]
+    · have hge : -5 ≤ x := by omega
+      have hA3 : carryA3Area (x-4) = false := by
+        simp [carryA3Area]
+        omega
+      have hret : carryAReturn12Area (x+2) = true := by
+        simp [carryAReturn12Area]
+        omega
+      have hframe : T3 x =
+          decide (x+2 ∈ ([5,4,7,3,0,-3,-2,-1] : List Int)) := by
+        simp [T3,T2,frame,shiftConfig,hA3,hret,embed,carryAReturn12Final]
+      have hnot : ¬ x < -5 := by omega
+      have hpat :
+          decide (x+2 ∈ ([5,4,7,3,0,-3,-2,-1] : List Int)) =
+            (if x < -5 then T x else if x ≤ -3 then true else decide (x%3=1)) := by
+        simp only [if_neg hnot]
+        apply Bool.eq_iff_iff.mpr
+        simp only [decide_eq_true_eq]
+        by_cases hbase : x ≤ -3
+        · simp [hbase]
+          omega
+        · have hcases : x = -2 ∨ x = -1 ∨ x = 0 := by omega
+          rcases hcases with hx0 | hx1 | hx2
+          · subst x
+            simp
+          · subst x
+            simp
+          · subst x
+            simp
+      rw [hframe,hpat]
+  refine ⟨T3,?_,hT3one,hT3two,hT3three,hT3four,hT3five,hT3six,hout,hleft⟩
   simpa using htotal
 
 
@@ -993,7 +1038,10 @@ theorem carryPrefix_anyPositive (r : Nat) (T : Int → Bool)
       have hm : ∀ x, carryInputArea 1 x = true →
           T x = carryInputBit 1 x := by
         simpa [hr1] using hmatch
-      simpa [hr1] using carryShortPrefix_r1 T hm
+      obtain ⟨T',hrun,h1,h2,h3,h4,h5,h6,hout,_hleft⟩ :=
+        carryShortPrefix_r1 T hm
+      refine ⟨T',?_,h1,h2,h3,h4,h5,h6,hout⟩
+      simpa [hr1] using hrun
     · have hm : ∀ x, carryInputArea (4*k+1) x = true →
           T x = carryInputBit (4*k+1) x := by
         simpa [hrEq] using hmatch
