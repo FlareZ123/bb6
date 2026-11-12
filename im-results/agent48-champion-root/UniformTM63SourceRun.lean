@@ -191,7 +191,7 @@ theorem uniformTapeAt_moveL_add (c : TM63Uniform.Cfg) (h : Int)
     (b : Bool) (s : Nat) :
     uniformTapeAt (TM63Uniform.moveL c b s) (h + (-1)) =
       (fun x => if x = h then b else uniformTapeAt c h x) := by
-  simpa [sub_eq_add_neg] using uniformTapeAt_moveL c h b s
+  exact uniformTapeAt_moveL c h b s
 
 /-- The total zipper transition preserves the six-state range. -/
 theorem step_state_lt (c : TM63Uniform.Cfg) (hc : c.st < 6) :
@@ -215,7 +215,7 @@ theorem step_state_lt (c : TM63Uniform.Cfg) (hc : c.st < 6) :
             | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st]
             | succ q =>
               cases q with
-              | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk]
+              | zero => cases b <;> simp [TM63Uniform.step, moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
               | succ q => omega
 
 /-- A single total zipper step is exactly one original TM63 primitive move,
@@ -228,6 +228,7 @@ theorem uniformStep_rawStep (c : TM63Uniform.Cfg) (h : Int)
   cases c with
   | mk q l b r =>
     have hq : q < 6 := hc
+    have hstate : (⟨q, hc⟩ : Fin 6).val = q := rfl
     have hs : ¬ (q = 0 ∧ b = true) := hsafe
     cases q with
     | zero =>
@@ -235,7 +236,7 @@ theorem uniformStep_rawStep (c : TM63Uniform.Cfg) (h : Int)
       | false =>
           simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
             BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
-            uniformTapeAt_head, uniformTapeAt_moveR, moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk]
+            uniformTapeAt_head, uniformTapeAt_moveR, moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
       | true => exact False.elim (hs ⟨rfl, rfl⟩)
     | succ q =>
       cases q with
@@ -243,28 +244,28 @@ theorem uniformStep_rawStep (c : TM63Uniform.Cfg) (h : Int)
         cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
           BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
           uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-          moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk]
+          moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
       | succ q =>
         cases q with
         | zero =>
           cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
             BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
             uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-            moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk]
+            moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
         | succ q =>
           cases q with
           | zero =>
             cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
               BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
               uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-              moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk]
+              moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
           | succ q =>
             cases q with
             | zero =>
               cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
                 BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
                 uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL_add,
-                moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk]
+                moveR_st, moveL_st, write_true, write_false, Fin.val, Fin.val_mk, hstate]
             | succ q =>
               cases q with
               | zero =>
