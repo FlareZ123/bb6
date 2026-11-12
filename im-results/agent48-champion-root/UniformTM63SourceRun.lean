@@ -25,6 +25,10 @@ open TM63Uniform
 def uniformConfigAt (h : Int) (c : TM63Uniform.Cfg) (hc : c.st < 6) : Config :=
   ⟨⟨c.st, hc⟩, h, uniformTapeAt c h⟩
 
+@[simp] theorem uniformTapeAt_head (c : TM63Uniform.Cfg) (h : Int) :
+    uniformTapeAt c h h = c.h := by
+  simp [uniformTapeAt, sideBit]
+
 private theorem toNat_add_one (z : Int) (hz : 0 ≤ z) :
     Int.toNat (z + 1) = Int.toNat z + 1 := by
   have hz' : 0 ≤ z + 1 := by omega
@@ -75,6 +79,11 @@ private theorem moveL_right (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
   cases c with
   | mk q l h r => cases l <;> rfl
 
+private theorem moveL_right_zero (c : TM63Uniform.Cfg) (b : Bool) (s : Nat) :
+    sideBit (TM63Uniform.moveL c b s).r 0 = b := by
+  cases c with
+  | mk q l h r => cases l <;> rfl
+
 private theorem moveL_st (c : TM63Uniform.Cfg) (b : Bool) (s : Nat) :
     (TM63Uniform.moveL c b s).st = s := by
   cases c with
@@ -95,8 +104,7 @@ theorem uniformTapeAt_moveR (c : TM63Uniform.Cfg) (h : Int)
     by_cases heq : x = h
     · subst x
       have hcoord : h + 1 - h = 1 := by omega
-      rw [hcoord]
-      simp [uniformTapeAt, hx', moveR_left, sideBit]
+      simp [uniformTapeAt, hcoord, hx', moveR_left, sideBit]
     · have hn : Int.toNat (h - x) ≠ 0 := by
         intro hz
         have hcast : (Int.toNat (h - x) : Int) = h - x :=
@@ -147,7 +155,7 @@ theorem uniformTapeAt_moveL (c : TM63Uniform.Cfg) (h : Int)
     · subst x
       have hnot : ¬ h ≤ h - 1 := by omega
       have hcoord : h - (h - 1) = 1 := by omega
-      simp [uniformTapeAt, hnot, hcoord, TM63Uniform.moveL, sideBit]
+      simp [uniformTapeAt, hnot, hcoord, moveL_right_zero, sideBit]
     · have hxG : h < x := by omega
       have hnotL : ¬ x ≤ h - 1 := by omega
       have hnotR : ¬ x ≤ h := by omega
@@ -194,51 +202,50 @@ theorem uniformStep_rawStep (c : TM63Uniform.Cfg) (h : Int)
         (step_state_lt c hc)) := by
   cases c with
   | mk q l b r =>
-    have hq : q < 6 := hc
     have hs : ¬ (q = 0 ∧ b = true) := hsafe
     cases q with
     | zero =>
       cases b with
       | false =>
-          simp [TM63Uniform.step, TM63Uniform.moveR, headDelta,
-            uniformConfigAt, tm2, BB6Coverage.rawStep, BB6Coverage.readSlot,
-            BB6Coverage.applyMove, uniformTapeAt_moveR]
+          simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
+            BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
+            uniformTapeAt_head, uniformTapeAt_moveR, moveR_st, moveL_st]
       | true => exact False.elim (hs ⟨rfl, rfl⟩)
     | succ q =>
       cases q with
       | zero =>
-        cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL,
-          headDelta, uniformConfigAt, tm2, BB6Coverage.rawStep,
-          BB6Coverage.readSlot, BB6Coverage.applyMove,
-          uniformTapeAt_moveR, uniformTapeAt_moveL]
+        cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
+          BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
+          uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL,
+          moveR_st, moveL_st]
       | succ q =>
         cases q with
         | zero =>
-          cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL,
-            headDelta, uniformConfigAt, tm2, BB6Coverage.rawStep,
-            BB6Coverage.readSlot, BB6Coverage.applyMove,
-            uniformTapeAt_moveR, uniformTapeAt_moveL]
+          cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
+            BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
+            uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL,
+            moveR_st, moveL_st]
         | succ q =>
           cases q with
           | zero =>
-            cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL,
-              headDelta, uniformConfigAt, tm2, BB6Coverage.rawStep,
-              BB6Coverage.readSlot, BB6Coverage.applyMove,
-              uniformTapeAt_moveR, uniformTapeAt_moveL]
+            cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
+              BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
+              uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL,
+              moveR_st, moveL_st]
           | succ q =>
             cases q with
             | zero =>
-              cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL,
-                headDelta, uniformConfigAt, tm2, BB6Coverage.rawStep,
-                BB6Coverage.readSlot, BB6Coverage.applyMove,
-                uniformTapeAt_moveR, uniformTapeAt_moveL]
+              cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
+                BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
+                uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL,
+                moveR_st, moveL_st]
             | succ q =>
               cases q with
               | zero =>
-                cases b <;> simp [TM63Uniform.step, TM63Uniform.moveR, TM63Uniform.moveL,
-                  headDelta, uniformConfigAt, tm2, BB6Coverage.rawStep,
-                  BB6Coverage.readSlot, BB6Coverage.applyMove,
-                  uniformTapeAt_moveR, uniformTapeAt_moveL]
+                cases b <;> simp [TM63Uniform.step, headDelta, uniformConfigAt, tm2,
+                  BB6Coverage.rawStep, BB6Coverage.readSlot, BB6Coverage.applyMove,
+                  uniformTapeAt_head, uniformTapeAt_moveR, uniformTapeAt_moveL,
+                  moveR_st, moveL_st]
               | succ q => omega
 
 /-- Validity of the state component is invariant under the total zipper run. -/
