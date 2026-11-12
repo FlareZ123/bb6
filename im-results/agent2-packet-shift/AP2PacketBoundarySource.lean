@@ -70,6 +70,17 @@ private theorem false_cons_pairs (q : Nat) :
     simp [CryptidBoundary.pairs,CryptidBoundary.oppairs,
       List.append_assoc,ih]
 
+private theorem false_cons_pairs_append (q : Nat) (xs : List Bool) :
+    false :: (CryptidBoundary.pairs q ++ xs) =
+      CryptidBoundary.oppairs q ++ false :: xs := by
+  calc
+    false :: (CryptidBoundary.pairs q ++ xs) =
+        (false :: CryptidBoundary.pairs q) ++ xs := by rfl
+    _ = (CryptidBoundary.oppairs q ++ [false]) ++ xs := by
+      rw [false_cons_pairs]
+    _ = CryptidBoundary.oppairs q ++ false :: xs := by
+      simp [List.append_assoc]
+
 private theorem words_code (q r : Nat) :
     CryptidA.wordCode (words q r) =
       CryptidBoundary.pairs q ++ List.replicate (3*r) true := by
@@ -88,7 +99,8 @@ theorem a_p2_packet_reentry (k q r : Nat) :
               BB6.CryptidA110111CodeFirst.packet ys)) := by
     simp [input,fixedTail,words,ys,
       CryptidBoundary.init,CryptidBoundary.oppairs,
-      words_code,false_cons_pairs,BB6.CryptidA110111CodeFirst.packet,
+      words_code,false_cons_pairs,false_cons_pairs_append,
+      BB6.CryptidA110111CodeFirst.packet,
       List.replicate_add,List.append_assoc]
   have htail :
       false :: ([true,false,true,false,true] ++ ys) =
