@@ -564,6 +564,7 @@ theorem fatal_root_iff_even_parent_887_subresidue (n : Nat)
   exact CascadeFeederExceptional.fatal_root_iff_even_parent_eight_exceptional
     n hEight hfeed.2
 
+#print axioms narrow_exact_two_t2
 #print axioms fatal_feeder_887_subresidue_root_exclusion
 #print axioms fatal_root_iff_even_parent_887_subresidue
 
