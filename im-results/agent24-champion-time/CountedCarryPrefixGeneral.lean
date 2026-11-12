@@ -935,20 +935,30 @@ theorem carryPrefix_anyPositive (r : Nat) (T : Int → Bool)
   have hmod : r%4 = 0 ∨ r%4 = 1 ∨ r%4 = 2 ∨ r%4 = 3 := by omega
   rcases hmod with h0 | h1 | h2 | h3
   · have hrEq : r = 4*k := by omega
-    subst r
-    exact carryLongPrefix_r0 k T hmatch (by omega)
+    have hm : ∀ x, carryInputArea (4*k) x = true →
+        T x = carryInputBit (4*k) x := by
+      simpa [hrEq] using hmatch
+    simpa [hrEq] using carryLongPrefix_r0 k T hm (by omega)
   · have hrEq : r = 4*k+1 := by omega
-    subst r
     by_cases hk : k=0
-    · subst k
-      simpa using carryShortPrefix_r1 T hmatch
-    · exact carryLongPrefix_r1 k T hmatch (by omega)
+    · have hr1 : r=1 := by omega
+      have hm : ∀ x, carryInputArea 1 x = true →
+          T x = carryInputBit 1 x := by
+        simpa [hr1] using hmatch
+      simpa [hr1] using carryShortPrefix_r1 T hm
+    · have hm : ∀ x, carryInputArea (4*k+1) x = true →
+          T x = carryInputBit (4*k+1) x := by
+        simpa [hrEq] using hmatch
+      simpa [hrEq] using carryLongPrefix_r1 k T hm (by omega)
   · have hrEq : r = 4*k+2 := by omega
-    subst r
-    exact carryLongPrefix_r2 k T hmatch
+    have hm : ∀ x, carryInputArea (4*k+2) x = true →
+        T x = carryInputBit (4*k+2) x := by
+      simpa [hrEq] using hmatch
+    simpa [hrEq] using carryLongPrefix_r2 k T hm
   · have hrEq : r = 4*k+3 := by omega
-    subst r
-    exact carryLongPrefix_r3 k T hmatch
-
+    have hm : ∀ x, carryInputArea (4*k+3) x = true →
+        T x = carryInputBit (4*k+3) x := by
+      simpa [hrEq] using hmatch
+    simpa [hrEq] using carryLongPrefix_r3 k T hm
 
 end BB6Coverage.Agent48Champion
