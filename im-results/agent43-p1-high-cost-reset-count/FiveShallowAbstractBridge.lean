@@ -1,9 +1,12 @@
 import FiveLayerBarrier
+import FiveShallowFiniteBridge
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent43FiveShallowAbstract
 
 open BB6.Agent43FiveLayer
+open BB6.Agent43TwoShallowFinite
+open BB6.Agent43FiveShallowFiniteBridge
 
 set_option maxRecDepth 4096
 set_option maxHeartbeats 5000000
@@ -11,12 +14,19 @@ set_option maxHeartbeats 5000000
 /-- Five source-profiled shallow cocycles, separated by six genuine
 depth-two energy runs, force the five-layer scalar wall equation. -/
 theorem no_five_shallow_energies
- (n s u v w x r alpha beta gamma delta epsilon
+ (n s u v w x r t1 t2 t3 t4 t5 alpha beta gamma delta epsilon
   p d C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
   K R1 R2 R3 R4 R5 E : Nat)
- (hn : 83≤n) (hs : 3*s≤n)
+ (hn14 : 14≤n) (hs : 3*s≤n)
  (halpha : 1≤alpha) (hbeta : 1≤beta) (hgamma : 1≤gamma)
  (hdelta : 1≤delta) (hepsilon : 1≤epsilon)
+ (ht1 : t1≤1) (ht2 : t2≤1) (ht3 : t3≤1)
+ (ht4 : t4≤1) (ht5 : t5≤1)
+ (hprofile1 : (alpha,C1,L1,O1)=triple t1)
+ (hprofile2 : (beta,C2,L2,O2)=triple t2)
+ (hprofile3 : (gamma,C3,L3,O3)=triple t3)
+ (hprofile4 : (delta,C4,L4,O4)=triple t4)
+ (hprofile5 : (epsilon,C5,L5,O5)=triple t5)
  (hP : (8:Nat)^s*p=2^n) (hD : (8:Nat)^s*d=14*n+92)
  (hR1 : R1+O1+d=L1*(n+6+3*s))
  (hR2 : R2+O2=L2*(n+6+3*s+alpha+3*u))
@@ -229,13 +239,29 @@ theorem no_five_shallow_energies
      omega
    exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide : 0<(8:Nat))) (by
      rw [hP,hcomp])
- exact five_layer_abstract_barrier
-   n s u v w x r alpha beta gamma delta epsilon
-   (8^s) p (2^alpha) (2^beta) (2^gamma) (2^delta) (2^epsilon)
-   K R1 R2 R3 R4 R5 E hn hP ⟨d,hD⟩ rfl hExp rfl rfl rfl rfl rfl
-   halpha hbeta hgamma hdelta hepsilon
-   hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
-   hR4pos hR4bound hR5pos hR5bound hEbound hEqNat
+ by_cases hn83 : 83≤n
+ · exact five_layer_abstract_barrier
+     n s u v w x r alpha beta gamma delta epsilon
+     (8^s) p (2^alpha) (2^beta) (2^gamma) (2^delta) (2^epsilon)
+     K R1 R2 R3 R4 R5 E hn83 hP ⟨d,hD⟩ rfl hExp rfl rfl rfl rfl rfl
+     halpha hbeta hgamma hdelta hepsilon
+     hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
+     hR4pos hR4bound hR5pos hR5bound hEbound hEqNat
+ · have hs3 : s≤3 := by
+     have hDpos : 0<14*n+92 := by omega
+     have hqle : 8^s≤14*n+92 := Nat.le_of_dvd hDpos ⟨d,hD.symm⟩
+     by_contra hs3
+     have hs4 : 4≤s := by omega
+     have hpow : 8^4≤8^s := Nat.pow_le_pow_right (by decide : 0<8) hs4
+     norm_num at hpow
+     omega
+   exact no_five_small_numeric
+     n s u v w x r t1 t2 t3 t4 t5
+     (8^s) p d alpha beta gamma delta epsilon
+     C1 C2 C3 C4 C5 L1 L2 L3 L4 L5 O1 O2 O3 O4 O5
+     K R1 R2 R3 R4 R5 E hn14 (by omega) hs3
+     ht1 ht2 ht3 ht4 ht5 hprofile1 hprofile2 hprofile3 hprofile4 hprofile5
+     hP hD hR1 hR2 hR3 hR4 hR5 hE hK hEqNat
 
 #print axioms no_five_shallow_energies
 
