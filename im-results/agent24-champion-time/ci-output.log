@@ -1,5 +1,5 @@
-RUN_ID=43154080992
-RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43154080992
+RUN_ID=43154696921
+RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43154696921
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
@@ -209,9 +209,8 @@ Hint: Omit it from the simp argument list.
   [apply] simp [hp, hd]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-S1Encoder.lean:182:5: error: unknown tactic
-S1Encoder.lean:180:29: error(lean.unknownIdentifier): Unknown identifier `lt_of_le_of_lt`
-S1Encoder.lean:181:22: error: unsolved goals
+S1Encoder.lean:194:5: error: unknown tactic
+S1Encoder.lean:193:25: error: unsolved goals
 a z : Nat
 hz : 0 < z
 hzlt : z < 2 ^ a
@@ -221,7 +220,11 @@ hodd : 1 ≤ 2 * q + 1
 hmul : 2 ^ r * 1 ≤ 2 ^ r * (2 * q + 1)
 hpowle : 2 ^ r ≤ z
 hpowlt : 2 ^ r < 2 ^ a
-⊢ r < a
+hra : r < a
+len : Nat := a - r - 1
+ha : a = len + 1 + r
+hpowadd : 2 ^ a = 2 ^ (len + 1) * 2 ^ r
+⊢ q < 2 ^ len
 S1Encoder.lean:174:60: error: unsolved goals
 a z : Nat
 hz : 0 < z
@@ -233,30 +236,18 @@ hmul : 2 ^ r * 1 ≤ 2 ^ r * (2 * q + 1)
 hpowle : 2 ^ r ≤ z
 hpowlt : 2 ^ r < 2 ^ a
 hra : r < a
+len : Nat := a - r - 1
+ha : a = len + 1 + r
+hpowadd : 2 ^ a = 2 ^ (len + 1) * 2 ^ r
+hq : q < 2 ^ len
 ⊢ ∃ q r len, z = (2 * q + 1) * 2 ^ r ∧ a = len + 1 + r ∧ q < 2 ^ len
-S1Encoder.lean:237:26: warning: This simp argument is unused:
+S1Encoder.lean:238:26: warning: This simp argument is unused:
   List.reverse_append
 
 Hint: Omit it from the simp argument list.
   [apply] simp [d1pow, d1]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-S1Encoder.lean:422:52: error: Application type mismatch: The argument
-  i
-has type
-  Int
-but is expected to have type
-  Nat
-in the application
-  sideBit (d1pow r ++ d0 ++ binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh) i
-S1Encoder.lean:431:51: error: Application type mismatch: The argument
-  i
-has type
-  Int
-but is expected to have type
-  Nat
-in the application
-  s1Config_left_carryCells L n m len q r b h i
 'BB6Coverage.Agent8S1Encoder.binDec_even' depends on axioms: [propext, Quot.sound]
 'BB6Coverage.Agent8S1Encoder.binDec_odd' depends on axioms: [propext, Quot.sound]
 'BB6Coverage.Agent8S1Encoder.binDec_mulpow2' depends on axioms: [propext, Quot.sound]
