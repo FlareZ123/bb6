@@ -73,27 +73,29 @@ This is the index-coordinate complement to translated high-gate Hensel selectors
 
 ## 4. The t=3 second-parent split
 
-For the t=3 high-q gate, put e=W_(j,3)(n)/3^8. Since
+For the t=3 high-q gate, put e=W_(j,3)(n)/3^8. The local next index-shift digit from this particular high-gate index n is u=e modulo 3. Since
 
 ~~~text
 2^6*(2^(j+1)-1) = 1 (mod 3)
 ~~~
 
-for even j, the next nested index Hensel digit d is exactly e modulo 3. This is formalized by tThreeHighGate_digit_eq_quotient_mod_three.
+for even j, this is exactly the unique shift digit that lifts W from divisibility by 3^8 to divisibility by 3^9. This local digit identity is formalized by tThreeHighGate_digit_eq_quotient_mod_three.
 
-The source equation for the second t=3 parent's target index,
-
-~~~text
-16*e = 8*2^(n-6) + r + (n-6) + 5,
-~~~
-
-and n modulo 6 in {4,5} imply r=e+1 modulo 3. This is formalized by tThreeSecondParent_index_relation. Therefore
+The source equation for the second t=3 parent's target index R,
 
 ~~~text
-r = d+1 (mod 3).
+16*e = 8*2^(n-6) + R + (n-6) + 5,
 ~~~
 
-The already-excluded r=0 branch corresponds to d=2. The remaining r=1,2 branches correspond to d=0,1 respectively. This separates the parent height 8*e from the next target index r and gives a precise index-digit parameterization of the two unresolved branches.
+and n modulo 6 in {4,5} imply R=e+1 modulo 3. This is formalized by tThreeSecondParent_index_relation. Therefore
+
+~~~text
+R = u+1 (mod 3).
+~~~
+
+The already-excluded R=0 branch corresponds to local lift digit u=2. The remaining R=1,2 branches correspond to local digits u=0,1 respectively.
+
+Important distinction: u is the unique shift digit from the actual high-gate index n. It is not the canonical digit used internally when recursively constructing nestedOddIndexResidue at a chosen base representative. The full selector describes all index classes; the local quotient identity describes which of the three possible next shifts applies at a particular representative. The relation above concerns the second-parent target index R, not the parent height 8*e.
 
 ## 5. BB(6) relevance and strict boundary
 
