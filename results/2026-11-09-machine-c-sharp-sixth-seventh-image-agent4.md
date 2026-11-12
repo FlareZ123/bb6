@@ -110,3 +110,32 @@ This is an explicit-density statement for a union of proven missing-image famili
 This gives a new positive-density infinite strict (I_6\setminus I_7) family, a fully exhaustive inverse-branch argument, and two genuine-blank nonreachability consequences. The result also demonstrates how branches with recursive-bounce preimages can be controlled beyond a simple direct-lift strategy. A prior naive second lift of the fifth/sixth cone was [formally disproved by an eight-edge counterexample](../im-results/agent4-c-five-image/CAltSeventhCounterexample.lean), so the extra inverse analysis here is essential.
 
 The original Machine C's complete stopping behavior remains open. No bound for all six-state machines, and no exact value of BB(6), follows from this single strict-image family.
+
+
+## Second strict sixth/seventh image family: the s3 sector
+
+A second, disjoint source-image family is now formally established. For all (u,v\in\mathbb N) satisfying
+[
+(u+v)\bmod16=(15+4u)\bmod16,
+]
+put
+[
+V(u,v)=(641+1024u,\;574+1024v).
+]
+The Lean theorem `exactly_six_not_seven_s3` proves that (V(u,v)) has six genuine section predecessors but no seven. The companion theorem `blank_ne_six_seven_band_s3` proves the stronger all-time statement: (V(u,v)) is not in the blank-root section orbit at any time. The proof enumerates the three exact source-parent branches; the new s3 condition places the affine parent in the first Agent 34 three-edge exclusion cone, while the other branches are excluded by the existing source theorems.
+
+Four explicit infinite progressions inside this sector are formally proved:
+[
+egin{aligned}
+(u,v)&=(1+16t,2),\
+(u,v)&=(3+16t,8),\
+(u,v)&=(16t,15),\
+(u,v)&=(2+16t,5),
+end{aligned}
+qquad t\in\mathbb N.
+]
+The sector is disjoint from the earlier ((u+v)\bmod4=0) strict family: the new condition forces (u+v\equiv3\pmod4).
+
+**Source verification.** Lean 4.36.0-rc2 CI run [43300420208](https://github.com/FlareZ123/bb6/actions/runs/43300420208) compiled `CSixSeventhStrict.lean` and `CSixSeventhRoot.lean`; the relevant declarations have no `sorryAx` dependency.
+
+**Scope limitation.** The separate `CSixSeventhC58.lean` parameter-pullback integration did not compile in that run. In particular, the candidate high stopping progressions (j=831,;m=9770+16384t) and (j=1855,;m=12842+16384t) are not yet certified as exclusions from the exact C58 halting predicate. The strict image and all-time blank-root theorems above do not depend on that unfinished pullback.
