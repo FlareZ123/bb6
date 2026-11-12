@@ -140,11 +140,23 @@ theorem no_four_shallow_energies
    rw [hraw]
    simp only [Int.mul_add,Int.mul_sub]
    omega
+ have hrootExpand :
+   (98:Int)*(p:Int)-(C1:Int)*(2^n:Int)+(R1:Int) =
+     a*((C2:Int)*(2^n:Int))-a*(R2:Int)+
+     a*(b*((C3:Int)*(2^n:Int)))-a*(b*(R3:Int))+
+     a*(b*(c*((C4:Int)*(2^n:Int))))-a*(b*(c*(R4:Int)))-
+     a*(b*(c*(f*(E:Int)))) := by
+   omega
  have hexp :
    a*(b*(c*(f*(E:Int)+(R4:Int))+(R3:Int))+(R2:Int)) =
      a*(b*(c*(f*(E:Int))))+a*(b*(c*(R4:Int)))+
        a*(b*(R3:Int))+a*(R2:Int) := by
    simp only [Int.mul_add]
+ have hKprod' : (K:Int)*(p:Int)+98*(p:Int)=
+   (C1:Int)*(2^n:Int)+a*((C2:Int)*(2^n:Int))+
+     a*(b*((C3:Int)*(2^n:Int)))+
+     a*(b*(c*((C4:Int)*(2^n:Int)))) := by
+   simpa only [Int.add_mul] using hKprod
  have hEqI : (K:Int)*(p:Int)=
    a*(b*(c*(f*(E:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
    rw [hexp]
