@@ -93,7 +93,7 @@ jobs:
           for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
             lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
           done
-          lean -DmaxRecDepth=55000 -o "$P2/AP2PacketBoundarySource.olean" "$P2/AP2PacketBoundarySource.lean"
+          lean -DmaxRecDepth=55000 -o "$P2/AP2PacketBoundarySource.olean" "$P2/AP2PacketBoundarySource.lean" | tee -a axioms.log
           lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
           lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/BoundaryBZero.olean" "$P2/BoundaryBZero.lean"
@@ -136,7 +136,7 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentiethRejoin.olean" "$T/BlankTwentiethRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFirstRejoin.olean" "$T/BlankTwentyFirstRejoin.lean"
           lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7SecondSafe.olean" "$T/ExceptionalE7SecondSafe.lean"
-          lean -DmaxRecDepth=55000 -o "$P2/ExceptionalEPacketClosure.olean" "$P2/ExceptionalEPacketClosure.lean"
+          lean -DmaxRecDepth=55000 -o "$P2/ExceptionalEPacketClosure.olean" "$P2/ExceptionalEPacketClosure.lean" | tee -a axioms.log
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentySecondRejoin.olean" "$T/BlankTwentySecondRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyThirdRejoin.olean" "$T/BlankTwentyThirdRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyFourthRejoin.olean" "$T/BlankTwentyFourthRejoin.lean"
