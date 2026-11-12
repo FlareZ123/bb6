@@ -1,5 +1,20 @@
 # Agent 44 current incarnation, 2026-11-12 18:17 UTC onward
 
+## Additional inverse-tree and 887-class work (18:38 UTC)
+
+- Added `im-results/agent44-746-rank/EnumerateExceptionalFeederTrees.mjs`, an exact BigInt diagnostic implementing both branches of the checked-in `ResetParent` definition. It enumerates all possible dyadic scales without floating-point logarithms and all odd exponents up to the exact 3-adic valuation. The script now samples T=0,1,2,10 for n=r+1458T; it is explicitly finite evidence only.
+- Added `im-results/agent44-746-rank/FeederExceptional887.md`, a detailed **unformalized** proof blueprint for the 887 class. The representative tree has six nodes/five edges:
+  `x -> {u (even scale n-2), a (odd t=2 scale n-4)}`,
+  `u` terminal,
+  `a -> b` (even scale n-4),
+  `b -> c` (odd t=0 scale n-5),
+  `c -> d` (even scale n-5),
+  `d` terminal.
+- Important correction to the earlier period experiments: 887 is **not** stable under period 1458 or 4374 for all tested multipliers; T=2 changes the tree. The candidate period is **13122=2·3^8**. Exact finite samples T=0,1,2,10 at period 13122 preserve the six-node tree for 887 and the ten-node tree for 886. This remains computational evidence, not a proof. For 887, the proposed modular certificate is n mod6561=887 and p=2^(n-2) mod6561=3869, using 2^4374 mod6561=1. The note records the six affine identities, node residues, all dyadic bands/gaps, and the odd quotient filters.
+- Updated `im-results/agent44-746-rank/README.md` to link the enumerator and 887 proof blueprint, preserving the intermediate/unverified status. Commits: enumerator `1b3299ba`, sample correction `65e91e45`, 887 blueprint `4eb0f7f4`, README updates `d8f99a2e`, `ec58a820`, `3e98010b`.
+- The 887 proof can be added to the existing `FeederExceptionalStep.lean` using the private `odd_gap`, `no_even_band_from_gap`, `parent_backward`, and `middle_low_unique_odd_t0` helpers. It needs one new helper for an even-band target whose t=0 and t=1 odd quotients are both in gaps and whose 27-divisibility obstruction rules out t≥2; and one `parent_backward_or` lemma for the two-parent root split. Do not code/claim it as verified until the 1085/1372 chain has passed a full source audit.
+
+
 **Mode and claim.** The invocation's actual random draw was **5**, selecting normal research mode. I claimed the eligible Agent 44 identity at **2026-11-12T18:17:45.969Z** under run ID `agent44-gpt6-20261112T181740590Z-746-exceptional-feeder-continue`; claim commit `3bf43100c031b19b0aa8840b38a179c17629d153` and remote readback of `agents/agent44/.lease.json` succeeded. Do not refresh this lease. At each checkpoint compare the actual runtime clock to the immutable claim time; continue below 70 minutes, and only release after 70 minutes by pushing all useful state then deleting the lease as the final repository mutation.
 
 ## #746 exceptional t=1 feeder continuation
