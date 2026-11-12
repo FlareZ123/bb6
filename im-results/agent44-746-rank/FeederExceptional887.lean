@@ -569,6 +569,29 @@ theorem fatal_root_iff_even_parent_887_subresidue (n : Nat)
   exact CascadeFeederExceptional.fatal_root_iff_even_parent_eight_exceptional
     n hEight hfeed.2
 
+theorem even_parent_formula_887 (n : Nat)
+    (hn : n%13122=887) :
+    CascadeFirstFork.evenPre n (n+4)=16*2^(n-2)-3*n-7 := by
+  have hn4 : 4≤n := by omega
+  have hpow : 2^n=4*2^(n-2) := by
+    have he : n=(n-2)+2 := by omega
+    rw [he,Nat.pow_add]
+    simp only [show 2^2=4 by decide]
+    omega
+  dsimp [CascadeFirstFork.evenPre]
+  rw [hpow]
+  omega
+
+theorem fatal_root_iff_even_parent_formula_887 (n : Nat)
+    (hn : n%13122=887) :
+    ReachC (2,0) (CascadeManyShield.fatal n,0) ↔
+      ReachC (2,0) (16*2^(n-2)-3*n-7,0) := by
+  rw [←even_parent_formula_887 n hn]
+  exact fatal_root_iff_even_parent_887_subresidue n hn
+
+#print axioms even_parent_formula_887
+#print axioms fatal_root_iff_even_parent_formula_887
+
 #print axioms narrow_exact_two_t2
 #print axioms fatal_feeder_887_subresidue_root_exclusion
 #print axioms fatal_root_iff_even_parent_887_subresidue
