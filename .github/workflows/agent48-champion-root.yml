@@ -28,7 +28,7 @@ jobs:
           cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/{ChampionModular,CostRecurrence,CountPattern}.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/CountedReset.lean /tmp/a48-root/
-          cp im-results/agent46-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
