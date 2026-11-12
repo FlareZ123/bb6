@@ -68,13 +68,17 @@ theorem evenSweepTape_F (n : Nat) (t : Int → Bool) (h : Int)
 
 /-- Exact B endpoint after an even F/1 right corridor. The initial F/1 write
     and the D/F sweep are represented on the complete signed tape. -/
+def f1EvenTape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
+  setBit
+    (setBit
+      (setBit
+        (evenSweepTape (n+1) (setBit t h false) (h+1))
+        (h+1+((2*(n+1):Nat):Int)) false)
+      (h+((2*(n+1):Nat):Int)) true)
+    (h+1+((2*(n+1):Nat):Int)) true
+
 def f1EvenResult (n : Nat) (t : Int → Bool) (h : Int) : Conf :=
-  let t0 := setBit t h false
-  let p := h+1+((2*(n+1):Nat):Int)
-  let v := evenSweepTape (n+1) t0 (h+1)
-  let v1 := setBit v p false
-  let v2 := setBit v1 (p-1) true
-  ⟨.B,p+1,setBit v2 p true⟩
+  ⟨.B,h+2+((2*(n+1):Nat):Int),f1EvenTape n t h⟩
 
 /-- The exact even F/1 corridor execution, including its final D/0-E/0-A/0
     tail. It uses only the original auxiliary transition table. -/
@@ -139,14 +143,14 @@ theorem f1_even_run_exact (n : Nat) (t : Int → Bool) (h : Int)
     rw [shuttleRun_add 1 (2*(n+1)+3)]
     rw [hOne]
     simp [hDRun]
-  simpa [f1EvenResult,t0,s,p,v,v1,v2,b] using hRun
+  simpa [f1EvenResult,f1EvenTape,t0,s,p,v,v1,v2,b] using hRun
 
 /-- The even F/1 result preserves the tape weakly left of the original head,
     except for the F/1 transition's write of zero at that head. -/
 theorem f1EvenResult_left (n : Nat) (t : Int → Bool) (h x : Int)
     (hx : x ≤ h) :
     (f1EvenResult n t h).tape x = setBit t h false x := by
-  dsimp [f1EvenResult]
+  unfold f1EvenResult f1EvenTape
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)-1) x true (by omega)]
   rw [setBit_apply_ne _ (h+1+((2*(n+1):Nat):Int)) x false (by omega)]
