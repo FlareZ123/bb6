@@ -35,6 +35,7 @@ This verifies **one** important source-table terminal macro formula. For the pub
 [TerminalAfterPrefix.lean](TerminalAfterPrefix.lean) adds a reusable final composition layer:
 
 - `tm2_halts_after_terminal_prefix` composes any genuine original-source TM63 blank-root prefix reaching state D on a tape satisfying `TerminalFinish.SectionBits L a` with the exact arbitrary-exterior terminal macro. The total TM63 successful-move count is `n + 59 + 12*(L+a)`.
+- `tm2_halts_after_literalS1_prefix` and `champion_attainable_after_literalS1_prefix` provide the corresponding direct interface for the concrete zero-exterior `TerminalFinish.literalS1Tape`, avoiding a separate `SectionBits` proof when the counted endpoint is definitionally that tape.
 - `champion_halts_after_tm2_haltsAfter` transports any already-proved `HaltsAfter tm2 N` to `HaltsAfter championTable (N+6)`, using `tm2_min_halt` and the six-step root-offset theorem.
 - `champion_attainable_of_tm2_haltsAfter` immediately yields `Attainable (N+7)`, including the final undefined-query convention. This generic adapter has no S1 or tape-shape premise.
 - `champion_halts_after_terminal_prefix` and `champion_attainable_after_terminal_prefix` provide the corresponding terminal-section corollaries.
