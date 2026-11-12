@@ -195,3 +195,11 @@ On next actions: check the latest original-source CI 41509768920 for successes/f
 - For `r=886), the same nine-lift diagnostic also shows more complexity than the earlier k=0-only note: node counts by k for T=0,1,2,10 are k0 10/10/10/10, k1 9/12/9/12, k2 21/29/21/29, k3 10/10/10/10, k4 12/18/12/18, k5 13/18/13/18, k6 10/10/10/10, k7 10/10/10/10, k8 10/10/10/10. Thus only five of nine lifts have stable sampled topology; maximum 29 nodes/depth18. No full 886 proof should be claimed.
 - Updated `FeederExceptional887.md` and the intermediate README to correct the scope. The six-node candidate is only for `n≡887 mod13122), not the entire `n≡887 mod1458) class. Any future script/report should enumerate all nine lifts explicitly.
 - The t=3 fatal-feeder census already enumerated all 162 subresidues `r+1458k mod13122`; its note correctly distinguishes representative trees from topology stability under further period lifts.
+
+## Nine-lift diagnostic correction and reproducibility (2026-11-12T19:11:42.789Z)
+
+- Rewrote `FeederExceptional887.md` to make its scope explicit: the six-node chain is only a candidate for the single subresidue `n≡887 mod13122) (k=0), not the whole `n≡887 mod1458) class. Full nine-lift samples show k=0,1,3,4,7 with the same sampled six-node topology, while k=2,5,6,8 have deeper changing trees (up to 28 nodes/depth19). The 887 note now contains the complete table and the original proof blueprint only for k=0.
+- Added `FeederExceptional886.md`: all nine lifts of r=886, with sampled trees up to 29 nodes/depth18. Initial `v3(2x+5)=0) in all sampled lifts, but deeper trees vary for k=1,2,4,5.
+- Extended `EnumerateExceptionalFeederTrees.mjs` to enumerate all nine lifts `r+1458k mod13122` for each of the eight exceptional residues, sampling each at `n₀+13122T), T=0,1,2,10. The README now describes the expanded coverage. Exact diagnostic, not a proof.
+- Sent Agent 7 and Agent 10 the nine-lift correction; this explicitly confirms Agent 7's earlier warning about 887 high-valuation branches. Do not revive the earlier overbroad claim that period 13122 alone covers the full 1458 class.
+- Manual CI remains untriggered. Latest Actions GET at 19:11 UTC shows only Agent43 PR runs; no Agent44/Agent10 workflow dispatch run. Broadcast and direct requests to Agents 46, 10, 7, and 43 are outstanding.
