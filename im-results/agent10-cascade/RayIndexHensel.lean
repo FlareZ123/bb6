@@ -485,6 +485,41 @@ private theorem nestedOddNumerator_lift_criterion (n t k r:Nat)
   rw [hdiviff,hfactor,hM]
   exact Int.mul_dvd_mul_iff_left hp
 
+private theorem nestedOddCoeff_unit (t:Nat) :
+    ((2:Int)^(t+3))%3≠0 := by
+  have hpNat:=pow_two_mod_three (t+3)
+  have hpInt:((2:Int)^(t+3))%3=
+      (if (t+3)%2=0 then (1:Int) else 2):=by
+    exact_mod_cast hpNat
+  rw [hpInt]
+  by_cases h:(t+3)%2=0 <;> simp [h]
+
+/-- Each nested odd-parent lift has exactly one of the three possible
+    index digits. -/
+theorem nestedOddNumerator_unique_lift (n t k:Nat)
+    (hbase:(3:Int)^(k+1)∣nestedOddNumerator n t) :
+    ∃! r, r<3 ∧
+      (3:Int)^(k+2)∣nestedOddNumerator
+        (n+r*depthPeriod (k+1)) t := by
+  let q:Int:=nestedOddNumerator n t/(3:Int)^(k+1)
+  let a:Int:=(2:Int)^(t+3)
+  let d:=henselDigit q a
+  have ha:a%3≠0:=by
+    simpa [a] using nestedOddCoeff_unit t
+  have hd:d<3:=henselDigit_lt q a
+  have hdiv:(3:Int)∣q-a*d:=by
+    simpa [d] using henselDigit_divides q a ha
+  have hgood:(3:Int)^(k+2)∣
+      nestedOddNumerator (n+d*depthPeriod (k+1)) t:=
+    (nestedOddNumerator_lift_criterion n t k d hd hbase).mpr
+      (by simpa [q,a] using hdiv)
+  refine ⟨d,⟨hd,hgood⟩,?_⟩
+  intro r hr
+  rcases hr with ⟨hrlt,hrdiv⟩
+  have hcrit:(3:Int)∣q-a*r:=
+    (nestedOddNumerator_lift_criterion n t k r hrlt hbase).mp hrdiv
+  exact henselDigit_div q a ha r hrlt (by simpa [q,a] using hcrit)
+
 /-- The nested numerator starts in the zero class on both surviving
     fatal sectors, for every odd-parent exponent t. -/
 theorem nestedOddNumerator_sector_mod_three (s h t:Nat)
@@ -564,5 +599,6 @@ theorem indexResidue_bijective (s k:Nat) (hs:s=4∨s=5) :
 #print axioms depth_index_duality
 #print axioms indexResidue_bijective
 #print axioms nestedOddNumerator_lift_criterion
+#print axioms nestedOddNumerator_unique_lift
 #print axioms nestedOddNumerator_sector_mod_three
 end CascadeRayIndexHensel
