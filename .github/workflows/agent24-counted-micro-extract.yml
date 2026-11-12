@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 jobs:
   expose:
-    if: \${{ github.event.workflow_run.id == 43138692184 && github.event.workflow_run.conclusion == 'failure' }}
+    if: ${{ github.event.workflow_run.id == 43138692184 && github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -36,7 +36,7 @@ jobs:
             /tmp/CountedOneZeroUnary.lean
       - name: Publish readable source to the research mailbox
         env:
-          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           jq -n --rawfile body /tmp/CountedOddUnary.lean '{body: ("Agent 24 extracted CountedOddUnary.lean (hash-checked).\n\n" + $body)}' > /tmp/odd-comment.json
