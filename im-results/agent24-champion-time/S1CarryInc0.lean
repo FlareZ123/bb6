@@ -367,7 +367,7 @@ theorem s1Config_counted_decrement_allPositive
         some (⟨4,7,Tgen⟩ : Config) =
             run tm2 (15+12*(4*k)) ⟨3,0,T⟩ := hrunGen.symm
         _ = some ⟨4,7,Tleft⟩ := hrunLeft
-    cases hconf
+    have hT : Tgen = Tleft := congrArg Config.tape hconf
     have hprefix :
         ∃ T' : Int → Bool,
           run tm2 (15+12*(4*k)) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
@@ -377,7 +377,7 @@ theorem s1Config_counted_decrement_allPositive
           (∀ x, x ≤ 0 → T' x = carryLeftOutputBit (4*k) T x) := by
       refine ⟨Tgen,hrunGen,g1,g2,g3,g4,g5,g6,gout,?_⟩
       intro x hx
-      simpa using gleft x hx
+      simpa [hT] using gleft x hx
     exact s1Config_counted_decrement_of_prefix
       L n m len q (4*k) b h hq (by simpa [hrEq,T] using hprefix)
   · have hrEq : r = 4*k+1 := by omega
@@ -429,7 +429,7 @@ theorem s1Config_counted_decrement_even
     by_contra hnot
     have hr0 : r=0 := by omega
     have hodd : ((2*q+1)*2^r)%2=1 := by
-      simp [hr0]
+      simp [hr0] <;> omega
     rw [hr] at heven
     omega
   have hdec := s1Config_counted_decrement_allPositive
