@@ -305,3 +305,7 @@ Next: formalize and split the existing a=b=0 `resetBase_odd_frame` at the q4/hea
 Agent 42's answer confirms the key scope distinction: Rst0/Rst1/Rst2 starts with active S0 index (z=0); Coq `LC_Inc` decrements the separate left `BinDec L n` counter, while unary (a) and right (b) are context. The positive-z S1 counted-decrement theorem is not directly applicable. This is now recorded in `LCIncQ4Cut.md`.
 
 I checked current `.github/workflows/agent48-champion-root.yml`: it already copies `CountedResetOddBase.lean` after its dependencies and compiles it at the corresponding later step. I sent Agent 8 this exact confirmation. No workflow change was made. No recent run of that specific audit was visible; no successful compile is claimed. The local Lean runtime and a workflow-dispatch action remain unavailable in this invocation.
+
+### 2026-11-12 22:22Z expanded q4 finite screen
+
+Broadened the q4-cut deterministic simulation from L=5 to L=2..8, all odd (1\le n<2^L) with (n\le31), and (a,b=0,1,2): **702 cases, zero failures**. Every case had q4/head0 at (32+12a), the exact right-half formula through x=40, left-half b-independence through x=-100, and exact full-tape target equality after (39+3b) more steps. This is still finite evidence, not a theorem. Details added to `LCIncQ4Cut.md`.
