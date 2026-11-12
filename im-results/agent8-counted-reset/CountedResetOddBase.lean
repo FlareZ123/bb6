@@ -46,19 +46,19 @@ theorem resetBase_source_matches (L n m : Nat) (hm : m < 3)
       omega
     interval_cases y <;>
       norm_num [embed, resetBaseInput, resetBaseInput0,
-        s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing,
+        s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing, s0PhysicalRight,
         markerWord, d0, d1pow, d1, lh, sideBit, binDec_zero, hbin]
   · have hyb : -8 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     interval_cases y <;>
       norm_num [embed, resetBaseInput, resetBaseInput1,
-        s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing,
+        s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing, s0PhysicalRight,
         markerWord, d0, d1pow, d1, lh, sideBit, binDec_zero, hbin]
   · have hyb : -8 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     interval_cases y <;>
       norm_num [embed, resetBaseInput, resetBaseInput2,
-        s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing,
+        s1Config, s0Config, s0Tape, s0LeftFacing, s0RightFacing, s0PhysicalRight,
         markerWord, d0, d1pow, d1, lh, sideBit, binDec_zero, hbin]
 
 /-- The tape of an S1 configuration is covariant under root translation. -/
