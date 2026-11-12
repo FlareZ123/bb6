@@ -47,6 +47,41 @@ theorem tm2_halts_after_terminal_prefix
   exact ⟨by simp [hlive], hhalt⟩
 
 
+/-- Literal S1 endpoint adapter. This variant consumes the exact finite
+source tape `literalS1Tape` and does not require a separate SectionBits proof. -/
+theorem tm2_halts_after_literalS1_prefix
+    (n L a b : Nat) (h : Int)
+    (hprefix : run tm2 n blank =
+      some ⟨3,h,TerminalFinish.literalS1Tape L a b h⟩) :
+    HaltsAfter tm2 (n + terminalMoves L a) := by
+  obtain ⟨c, hterminal, hquery⟩ := tm2_terminal_query L a b h
+  have hlive : run tm2 (n + terminalMoves L a) blank = some c := by
+    rw [show n + terminalMoves L a = n + (59+12*(L+a)) by rfl]
+    rw [run_append, hprefix]
+    simpa [terminalMoves] using hterminal
+  have hhalt : run tm2 (n + terminalMoves L a + 1) blank = none := by
+    have hsum : n + terminalMoves L a + 1 =
+        n + (59+12*(L+a)+1) := by
+      unfold terminalMoves
+      omega
+    rw [hsum, run_append, hprefix]
+    simpa [terminalMoves] using hquery
+  change (run tm2 (n + terminalMoves L a) blank).isSome = true ∧
+    run tm2 (n + terminalMoves L a + 1) blank = none
+  exact ⟨by simp [hlive], hhalt⟩
+
+/-- Attainable score after a prefix reaching the concrete literal S1 terminal
+word; useful when the counted encoder proves tape equality rather than
+SectionBits directly. -/
+theorem champion_attainable_after_literalS1_prefix
+    (n L a b : Nat) (h : Int)
+    (hprefix : run tm2 n blank =
+      some ⟨3,h,TerminalFinish.literalS1Tape L a b h⟩) :
+    Attainable (n + terminalMoves L a + 7) := by
+  exact champion_attainable_of_tm2_haltsAfter
+    (n + terminalMoves L a)
+    (tm2_halts_after_literalS1_prefix n L a b h hprefix)
+
 /-- Generic halting-time bridge: any proved TM63 blank-root halting
 time N is transported to the published champion's root, six successful
 moves earlier. The lower bound N≥9 follows from tm2_min_halt. -/
