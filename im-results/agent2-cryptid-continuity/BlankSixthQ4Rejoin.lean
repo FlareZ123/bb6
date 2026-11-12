@@ -161,8 +161,11 @@ def s6 : Nat := (u6-7)/9
     u6 = 484 (mod 2187), hence u6 = 7 (mod 9). -/
 theorem u6_mod2187 : u6 % 2187 = 484 := by decide
 
+theorem t6_mod3 : BB6.Agent25SixthRoot.t6 % 3 = 2 := by decide
+
 theorem u6_form :
     BB6.Agent25SixthRoot.t6 = 3*u6+2 := by
+  have hmod := t6_mod3
   dsimp [u6]
   omega
 
