@@ -1,6 +1,13 @@
 name: D blank-root source chain through thirtieth reentry (manual)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent37-d-timing-cocycle/Seed31Probe.lean'
+      - 'im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.lean'
+      - 'im-results/agent37-d-timing-cocycle/BlankThirtiethRejoin.lean'
+      - '.github/workflows/agent25-eleventh-root.yml'
 permissions:
   contents: read
 jobs:
@@ -147,3 +154,4 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyEighthRejoin.olean" "$T/BlankTwentyEighthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankTwentyNinthRejoin.olean" "$T/BlankTwentyNinthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$T/BlankThirtiethRejoin.olean" "$T/BlankThirtiethRejoin.lean"
+          lean -DmaxRecDepth=55000 "$T/Seed31Probe.lean"
