@@ -1,0 +1,66 @@
+name: Agent 48 TM63 blank-root to initial S1 bridge
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/agent48-root-witness.yml"
+      - "im-results/agent48-root-witness/**"
+      - "im-results/agent8-coverage-contract/Frontier.lean"
+      - "im-results/agent8-coverage-contract/Symmetry.lean"
+      - "im-results/agent8-coverage-contract/RootShift.lean"
+      - "im-results/agent48-champion-root/ChampionRootBridge.lean"
+      - "im-results/agent8-s1-encoder/S1Encoder.lean"
+
+permissions:
+  contents: read
+
+jobs:
+  root-witness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile source dependencies and root-reachability theorem
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent48-root
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/agent48-root/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/agent48-root/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/agent48-root/
+          cp im-results/agent48-root-witness/{RootFiniteBits,RootSourceBridge}.lean /tmp/agent48-root/
+          cd /tmp/agent48-root
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          : > root-finite-axioms.log
+          lean -o RootFiniteBits.olean RootFiniteBits.lean 2>&1 | tee root-finite-axioms.log
+          if grep -q 'sorryAx' root-finite-axioms.log; then
+            echo '::error::sorryAx found in bounded bitset root computation'
+            exit 1
+          fi
+          : > root-source-axioms.log
+          lean -o RootSourceBridge.olean RootSourceBridge.lean 2>&1 | tee root-source-axioms.log
+          if grep -q 'sorryAx' root-source-axioms.log; then
+            echo '::error::sorryAx found in original-source root bridge'
+            exit 1
+          fi
+      - name: Upload Lean diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent48-root-witness-diagnostics-\${{ github.run_id }}
+          path: |
+            /tmp/agent48-root/root-finite-axioms.log
+            /tmp/agent48-root/root-source-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
