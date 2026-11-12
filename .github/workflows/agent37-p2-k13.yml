@@ -57,5 +57,6 @@ jobs:
           lean -o im-results/agent37-echain/EChainBResidues.olean im-results/agent37-echain/EChainBResidues.lean | tee -a axioms.log
           lean -o im-results/agent37-echain/EChainBExit.olean im-results/agent37-echain/EChainBExit.lean | tee -a axioms.log
           lean im-results/agent37-echain/EChainDoubleBExit.lean | tee -a axioms.log
+          lean -o im-results/agent37-echain/EChainBEExit.olean im-results/agent37-echain/EChainBEExit.lean | tee -a axioms.log
           lean "$K/P2K13Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
