@@ -70,18 +70,6 @@ theorem tm2_halts_after_literalS1_prefix
     run tm2 (n + terminalMoves L a + 1) blank = none
   exact ⟨by simp [hlive], hhalt⟩
 
-/-- Attainable score after a prefix reaching the concrete literal S1 terminal
-word; useful when the counted encoder proves tape equality rather than
-SectionBits directly. -/
-theorem champion_attainable_after_literalS1_prefix
-    (n L a b : Nat) (h : Int)
-    (hprefix : run tm2 n blank =
-      some ⟨3,h,TerminalFinish.literalS1Tape L a b h⟩) :
-    Attainable (n + terminalMoves L a + 7) := by
-  exact champion_attainable_of_tm2_haltsAfter
-    (n + terminalMoves L a)
-    (tm2_halts_after_literalS1_prefix n L a b h hprefix)
-
 /-- Generic halting-time bridge: any proved TM63 blank-root halting
 time N is transported to the published champion's root, six successful
 moves earlier. The lower bound N≥9 follows from tm2_min_halt. -/
@@ -105,6 +93,18 @@ theorem champion_attainable_of_tm2_haltsAfter
   refine ⟨championTable, N+6,
     champion_halts_after_tm2_haltsAfter N h, ?_⟩
   rfl
+
+/-- Attainable score after a prefix reaching the concrete literal S1 terminal
+word; useful when the counted encoder proves tape equality rather than
+SectionBits directly. -/
+theorem champion_attainable_after_literalS1_prefix
+    (n L a b : Nat) (h : Int)
+    (hprefix : run tm2 n blank =
+      some ⟨3,h,TerminalFinish.literalS1Tape L a b h⟩) :
+    Attainable (n + terminalMoves L a + 7) := by
+  exact champion_attainable_of_tm2_haltsAfter
+    (n + terminalMoves L a)
+    (tm2_halts_after_literalS1_prefix n L a b h hprefix)
 
 /-- Root-corrected champion halting theorem for a terminal S1 prefix. -/
 theorem champion_halts_after_terminal_prefix
