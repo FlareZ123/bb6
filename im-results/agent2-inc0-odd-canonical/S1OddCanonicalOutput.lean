@@ -76,9 +76,13 @@ theorem sideBit_s1PhysicalRight (b i : Nat) :
       (d1pow (b+1)) i (by simpa using hi)
     rw [h]
     simp [hi]
-  · have h := sideBit_append_after
+  · have hlen : ([false,true,true,true,false,false] : List Bool).length = 6 := by rfl
+    have hi6 : 6 ≤ i := Nat.le_of_not_gt hi
+    have hguard : ([false,true,true,true,false,false] : List Bool).length ≤ i := by
+      simpa [hlen] using hi6
+    have h := sideBit_append_after
       ([false,true,true,true,false,false] : List Bool)
-      (d1pow (b+1)) i (by omega)
+      (d1pow (b+1)) i hguard
     rw [h, sideBit_d1pow_formula]
     simp [hi]
 
@@ -103,11 +107,13 @@ theorem finalSweepTape_formula (c : Nat) (T : Int → Bool)
   have hpos : rightStop c - (4+3*c:Int) = 6 := by
     unfold rightStop
     omega
+  have hpos' : rightStop c - ↑(4+3*c) = 6 := by
+    simpa only [Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hpos
   funext x
   change sweptLeft (5+3*c) (middleTape c T) (rightStop c) x = _
   rw [hn]
   have hsx := congrFun hs x
-  rw [hpos] at hsx
+  rw [hpos'] at hsx
   rw [hsx]
   by_cases hx6 : x = 6
   · simp [hx6]
@@ -156,19 +162,27 @@ theorem oddCounterOutput_s1Successor
       s1LeftFacing L n m (len+1) (2*q+1) = d0 ++ rest := by
     unfold s1LeftFacing rest
     rw [binDec_odd len q hq]
+    simp [List.append_assoc]
   have htgtList :
       s1LeftFacing L n m (len+1) (2*q) = d1 ++ rest := by
     unfold s1LeftFacing rest
     rw [binDec_even len q hq]
+    simp [List.append_assoc]
   have hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
     intro i hi
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h (6+i)
     have hcoord : h+1+((6+i:Nat):Int) = h+7+(i:Int) := by omega
     rw [hcoord] at hcell
+    have hguardLen : ([false,true,true,true,false,false] : List Bool).length = 6 := by rfl
+    have hguardAfter : ([false,true,true,true,false,false] : List Bool).length ≤ 6+i := by
+      simp only [hguardLen]
+      omega
     have htail := sideBit_append_after
       ([false,true,true,true,false,false] : List Bool)
-      (d1pow (b+1)) (6+i) (by omega)
-    have hidx : 6+i-6 = i := by omega
+      (d1pow (b+1)) (6+i) hguardAfter
+    have hidx : 6+i-([false,true,true,true,false,false] : List Bool).length = i := by
+      simp [hguardLen]
+      omega
     rw [s1PhysicalRight_source, htail, hidx, sideBit_d1pow_formula] at hcell
     have hbit : decide (i < 3*(b+1)) = true := by simp [hi]
     rw [hbit] at hcell
@@ -194,7 +208,7 @@ theorem oddCounterOutput_s1Successor
       simp [h6,h1,h0,h2,hpre] at hv
       exact hv
     have hout : (oddCounterOutput b P).tape y = P y := by
-      simp [oddCounterOutput,frame,harea,hfinaly]
+      simp [oddCounterOutput,frame,tailArea,harea,hfinaly]
     let i : Nat := (-y).toNat
     have hi : (i:Int) = -y := by
       dsimp [i]
@@ -207,10 +221,15 @@ theorem oddCounterOutput_s1Successor
     have hbit : sideBit (d0 ++ rest) i = sideBit (d1 ++ rest) i := by
       by_cases hi2 : i=2
       · subst i
-        simp [sideBit,d0,d1]
+        have hd0 : sideBit d0 2 = true := by simp [sideBit,d0]
+        have hd1 : sideBit d1 2 = true := by simp [sideBit,d1]
+        rw [sideBit_append_before d0 rest 2 (by simp [d0])]
+        rw [sideBit_append_before d1 rest 2 (by simp [d1])]
+        rw [hd0,hd1]
       · have hi3 : 3 ≤ i := by omega
         rw [sideBit_append_after d0 rest i (by simp [d0]; omega)]
         rw [sideBit_append_after d1 rest i (by simp [d1]; omega)]
+        simp [d0,d1]
     have hP : P y = sideBit (d0 ++ rest) i := by
       simpa [P] using hsrc
     have htarget : (s1Config L n m (len+1) (2*q) (b+1) h).tape (h+y) = P y := by
@@ -220,7 +239,7 @@ theorem oddCounterOutput_s1Successor
   · by_cases hyNeg1 : y = -1
     · have harea : tailArea y = true := by simp [tailArea,hyNeg1]
       have hout : (oddCounterOutput b P).tape y = true := by
-        simp [oddCounterOutput,frame,harea,embed,tailFinal,hyNeg1]
+        simp [oddCounterOutput,frame,tailArea,harea,embed,tailFinal,hyNeg1]
       have hcoord : h-(1:Int) = h+y := by omega
       have htgt := s1Config_left_cell L n m (len+1) (2*q) (b+1) h 1
       rw [hcoord,htgtList] at htgt
@@ -230,7 +249,7 @@ theorem oddCounterOutput_s1Successor
     · by_cases hy0 : y = 0
       · have harea : tailArea y = true := by simp [tailArea,hy0]
         have hout : (oddCounterOutput b P).tape y = true := by
-          simp [oddCounterOutput,frame,harea,embed,tailFinal,hy0]
+          simp [oddCounterOutput,frame,tailArea,harea,embed,tailFinal,hy0]
         have htgt := s1Config_left_cell L n m (len+1) (2*q) (b+1) h 0
         rw [htgtList] at htgt
         have htarget : (s1Config L n m (len+1) (2*q) (b+1) h).tape (h+y) = true := by
@@ -241,9 +260,9 @@ theorem oddCounterOutput_s1Successor
           rcases hcases with h1 | h2 | h3 | h4 | h5 | h6
           · subst y
             have hout : (oddCounterOutput b P).tape 1 = false := by
-              simp [oddCounterOutput,frame,tailArea,embed,tailFinal]
+              simp [oddCounterOutput,frame,tailArea,tailArea,embed,tailFinal]
             have htgt := s1Config_right_cell L n m (len+1) (2*q) (b+1) h 0
-            have hcoord : h+1+(0:Int) = h+1 := by omega
+            have hcoord : h+1+(0:Nat) = h+1 := by omega
             rw [hcoord,s1PhysicalRight_source] at htgt
             have hside : sideBit
                 (([false,true,true,true,false,false] : List Bool) ++ d1pow (b+2)) 0 = false := by
@@ -252,9 +271,9 @@ theorem oddCounterOutput_s1Successor
             simpa using hout.trans htgt.symm
           · subst y
             have hout : (oddCounterOutput b P).tape 2 = true := by
-              simp [oddCounterOutput,frame,tailArea,embed,tailFinal]
+              simp [oddCounterOutput,frame,tailArea,tailArea,embed,tailFinal]
             have htgt := s1Config_right_cell L n m (len+1) (2*q) (b+1) h 1
-            have hcoord : h+1+(1:Int) = h+2 := by omega
+            have hcoord : h+1+(1:Nat) = h+2 := by omega
             rw [hcoord,s1PhysicalRight_source] at htgt
             have hside : sideBit
                 (([false,true,true,true,false,false] : List Bool) ++ d1pow (b+2)) 1 = true := by
@@ -263,9 +282,9 @@ theorem oddCounterOutput_s1Successor
             simpa using hout.trans htgt.symm
           · subst y
             have hout : (oddCounterOutput b P).tape 3 = true := by
-              simp [oddCounterOutput,frame,tailArea,embed,tailFinal]
+              simp [oddCounterOutput,frame,tailArea,tailArea,embed,tailFinal]
             have htgt := s1Config_right_cell L n m (len+1) (2*q) (b+1) h 2
-            have hcoord : h+1+(2:Int) = h+3 := by omega
+            have hcoord : h+1+(2:Nat) = h+3 := by omega
             rw [hcoord,s1PhysicalRight_source] at htgt
             have hside : sideBit
                 (([false,true,true,true,false,false] : List Bool) ++ d1pow (b+2)) 2 = true := by
@@ -274,9 +293,9 @@ theorem oddCounterOutput_s1Successor
             simpa using hout.trans htgt.symm
           · subst y
             have hout : (oddCounterOutput b P).tape 4 = true := by
-              simp [oddCounterOutput,frame,tailArea,embed,tailFinal]
+              simp [oddCounterOutput,frame,tailArea,tailArea,embed,tailFinal]
             have htgt := s1Config_right_cell L n m (len+1) (2*q) (b+1) h 3
-            have hcoord : h+1+(3:Int) = h+4 := by omega
+            have hcoord : h+1+(3:Nat) = h+4 := by omega
             rw [hcoord,s1PhysicalRight_source] at htgt
             have hside : sideBit
                 (([false,true,true,true,false,false] : List Bool) ++ d1pow (b+2)) 3 = true := by
@@ -285,9 +304,9 @@ theorem oddCounterOutput_s1Successor
             simpa using hout.trans htgt.symm
           · subst y
             have hout : (oddCounterOutput b P).tape 5 = false := by
-              simp [oddCounterOutput,frame,tailArea,embed,tailFinal]
+              simp [oddCounterOutput,frame,tailArea,tailArea,embed,tailFinal]
             have htgt := s1Config_right_cell L n m (len+1) (2*q) (b+1) h 4
-            have hcoord : h+1+(4:Int) = h+5 := by omega
+            have hcoord : h+1+(4:Nat) = h+5 := by omega
             rw [hcoord,s1PhysicalRight_source] at htgt
             have hside : sideBit
                 (([false,true,true,true,false,false] : List Bool) ++ d1pow (b+2)) 4 = false := by
@@ -296,9 +315,9 @@ theorem oddCounterOutput_s1Successor
             simpa using hout.trans htgt.symm
           · subst y
             have hout : (oddCounterOutput b P).tape 6 = false := by
-              simp [oddCounterOutput,frame,tailArea,embed,tailFinal]
+              simp [oddCounterOutput,frame,tailArea,tailArea,embed,tailFinal]
             have htgt := s1Config_right_cell L n m (len+1) (2*q) (b+1) h 5
-            have hcoord : h+1+(5:Int) = h+6 := by omega
+            have hcoord : h+1+(5:Nat) = h+6 := by omega
             rw [hcoord,s1PhysicalRight_source] at htgt
             have hside : sideBit
                 (([false,true,true,true,false,false] : List Bool) ++ d1pow (b+2)) 5 = false := by
@@ -317,7 +336,7 @@ theorem oddCounterOutput_s1Successor
               s1Config_right_bit_formula L n m (len+1) (2*q+1) b h y hy7
           have hout : (oddCounterOutput b P).tape y =
               decide (y < rightStop (b+1)) := by
-            simp [oddCounterOutput,frame,harea,hpre] at *
+            simp [oddCounterOutput,frame,tailArea,harea,hpre] at *
             rw [hfinaly]
             simp [hpre,hPbit]
             by_cases hs0 : y = rightStop b <;>
