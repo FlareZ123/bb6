@@ -1,5 +1,6 @@
 import ChampionRootBridge
 import S1Encoder
+import CountedReset
 import UniformTM63
 import Lean.Elab.Tactic.Omega
 
@@ -26,8 +27,22 @@ def uniformTapeAt (c : TM63Uniform.Cfg) (h : Int) : Int → Bool :=
       sideBit c.r (Int.toNat (x-h-1))
 
 /-- All relevant zipper endpoints are in D, so their source Config is direct. -/
-def uniformConfigAt3 (h : Int) (c : TM63Uniform.Cfg) : Config :=
+def uniformConfigAt3 (h : Int) (c : TM63Uniform.Cfg) (_hc : c.st = 3) : Config :=
   ⟨(3 : Fin 6), h, uniformTapeAt c h⟩
+
+theorem rawStart_state (k c : Nat) (ls rs : List Bool) :
+    (TM63Uniform.rawStart k c ls rs).st = 3 := by
+  cases k <;> rfl
+
+theorem rawEnd_state (k c : Nat) (ls rs : List Bool) :
+    (TM63Uniform.rawEnd k c ls rs).st = 3 := by
+  cases k <;> rfl
+
+/-- The uniform all-k cost is exactly the source Inc0 cost once the
+odd-factor valuation is identified. -/
+theorem inc0Cost_eq_uniformCountedCost (q k c : Nat) :
+    Agent8CountedReset.inc0Cost ((2*q+1)*2^k) c = 48+12*k+12*c := by
+  simp [Agent8CountedReset.inc0Cost, Agent8CountedReset.v2_odd_factor]
 
 theorem d1pow_eq_uniformOnes (n : Nat) :
     d1pow n = TM63Uniform.ones (3*n) := by
@@ -145,7 +160,8 @@ theorem s0Config_eq_uniformRawStart
     (hq : q < 2^len) :
     s0Config l (len+1+k) ((2*q+1)*2^k) c h =
       uniformConfigAt3 h
-        (TM63Uniform.rawStart k c (binDec len q ++ l) []) := by
+        (TM63Uniform.rawStart k c (binDec len q ++ l) [])
+        (rawStart_state k c (binDec len q ++ l) []) := by
   let ls := binDec len q ++ l
   have hleft :
       (TM63Uniform.rawStart k c ls []).h ::
@@ -179,7 +195,8 @@ theorem s0Config_eq_uniformRawEnd
     (hq : q < 2^len) :
     s0Config l (len+1+k) (((2*q+1)*2^k)-1) (c+1) h =
       uniformConfigAt3 h
-        (TM63Uniform.rawEnd k c (binDec len q ++ l) []) := by
+        (TM63Uniform.rawEnd k c (binDec len q ++ l) [])
+        (rawEnd_state k c (binDec len q ++ l) []) := by
   let ls := binDec len q ++ l
   have hleft :
       (TM63Uniform.rawEnd k c ls []).h ::
@@ -207,6 +224,7 @@ theorem s0Config_eq_uniformRawEnd
     simp only [s0Tape, uniformTapeAt, if_neg hx]
     rw [← hright (Int.toNat (x-h-1))]
 
+#print axioms inc0Cost_eq_uniformCountedCost
 #print axioms s0Config_eq_uniformRawStart
 #print axioms s0Config_eq_uniformRawEnd
 
