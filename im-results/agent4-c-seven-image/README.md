@@ -28,6 +28,39 @@ These four disjoint parameter classes occupy density `1/2097152` of all `(j,m)` 
 All five were checked against **unmodified original Lean machine and inverse source** by [CI 42720140809](https://github.com/FlareZ123/bb6/actions/runs/42720140809), success, with no printed `sorryAx`. The earlier widened source-image proof alone passed [CI 42719852275](https://github.com/FlareZ123/bb6/actions/runs/42719852275). The workflow is `.github/workflows/agent4-c-three-ancestry.yml`, restored to **manual-only** after successful checking.
 
 
+
+## A second strict sixth/seventh image slice
+
+The original strict cone used `u+v = 0 (mod 4)`. There is a second, disjoint slice:
+
+```
+u = 1 (mod 4)
+u+v = 3 (mod 16)
+```
+
+Write the second parent in the H1 branch as
+`P=(1113+650*u+1298*v, 321+187*u+375*v)` and its parent as
+`R=(471+276*u+548*v, 644+374*u+750*v)`. On this slice,
+
+```
+(P.x+P.y) % 8 = 1
+P.y % 16 = 10
+(R.x+R.y) % 4 = 1
+R.y % 2 = 0
+```
+
+So `P` lies in Agent34's all-source three-edge exclusion cone. The even/sum-one inverse theorem makes `P` the unique parent of `R`; hence `R` has no four-return ancestry. The unique-parent lemma for the H1 second branch then makes P2 have no five-return ancestry, and H1 has no six-return ancestry. The other two branches are unchanged: P0 has no one-return ancestry, and H3 has no three-return ancestry. Therefore the whole target band still has six genuine incoming returns but no seventh.
+
+The explicit infinite progression `u=1+16*t, v=2` gives
+
+```
+(641+1024*u, 574+1024*v) = (1665+16384*t, 2622)
+```
+
+and the new root theorem `blank_ne_six_seven_band_s3` excludes every such state from the blank-origin orbit at every time. This slice is disjoint from the original diagonal because `u+v = 3 (mod 4)`, not zero.
+
+The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the new exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second slice has not yet passed original-source CI** and remains an intermediate result.
+
 ## Independence from the integrated C58 all-depth sieve
 
 The four high-stop classes are exactly equivalent to the single diagonal
