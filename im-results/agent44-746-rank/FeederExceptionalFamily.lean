@@ -368,7 +368,7 @@ theorem fatal_parent_set_1085_1372 (n : Nat)
           exact False.elim
             (odd_gap (n-1) (4*d) hgap2.1 hgap2.2 m (by simpa using hbm))
 
-  simpa [p,u,x,y] using ⟨hyparent,hxparent,huniq⟩
+  simpa [p,k,u,x,y] using ⟨hyparent,hxparent,huniq⟩
 
 /-- If a fatal height in the 1085/1372 classes is root-reachable, its
     even predecessor is root-reachable: the only other immediate parent
