@@ -127,7 +127,7 @@ No Lean file for this candidate has yet been written. The six-node tree at k=0 a
 
 The single k=0 subresidue has now been formalized as an intermediate Lean draft in [FeederExceptional887.lean](FeederExceptional887.lean).
 
-- `CascadeFeeder887.narrow_exact_two_t2` is the reusable valuation-four parent classifier. It proves that an even-band target with the displayed t=2 odd parent has exactly two immediate parents: the even parent and that t=2 parent. The odd t=0,1,3 branches are eliminated by the three quotient gaps; t≥4 is eliminated by 243-nondivisibility.
+- `CascadeFeeder887.narrow_exact_two_t2` is the reusable t=2 parent classifier under 243-nondivisibility. It proves that an even-band target with the displayed t=2 odd parent has exactly two immediate parents: the even parent and that t=2 parent. The odd t=0,1,3 branches are eliminated by the three quotient gaps; t≥4 is eliminated by 243-nondivisibility.
 - `CascadeFeeder887.fatal_feeder_887_subresidue_root_exclusion` proves the exact tree above for every `n % 13122 = 887`, including both terminal branches u and d.
 - `CascadeFeeder887.fatal_root_iff_even_parent_887_subresidue` composes this exclusion with the existing eight-class fatal-parent theorem and reduces fatal-root reachability to the even fatal predecessor on this one lift.
 
