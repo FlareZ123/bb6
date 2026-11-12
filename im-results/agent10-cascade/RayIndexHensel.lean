@@ -410,6 +410,7 @@ private theorem depthResidue_even (n k:Nat)
   have h3pow:(3:Int)∣(3:Int)^(k+1):=by
     refine ⟨(3:Int)^k,?_⟩
     rw [Int.pow_succ]
+    exact Int.mul_comm _ _
   have h3:(3:Int)∣signedZ n (depthResidue n k):=
     Int.dvd_trans h3pow hdiv
   have hmod:=Int.dvd_iff_emod_eq_zero.mp h3
