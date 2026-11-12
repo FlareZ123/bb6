@@ -122,9 +122,7 @@ theorem s1Config_decrement_leftOutput
           (-(i:Int)) =
         (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h-(i:Int)) := by
       have hlt : (-(i:Int)) < -3*(r:Int)-2 := by omega
-      simp [carryLeftOutputBit,hlt]
-      congr 1
-      omega
+      simp [carryLeftOutputBit,hlt] <;> congr 1 <;> omega
     rw [hbit]
     simpa [hcoord] using hsame
   · have hnear : i < 3*r+3 := by omega
