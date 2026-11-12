@@ -1,12 +1,6 @@
 name: Agent 36/2 D sixth blank-root q4 continuation (manual plus targeted push)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'im-results/agent2-cryptid-continuity/BlankSixthQ4Rejoin.lean'
-      - 'im-results/agent37-d-timing-cocycle/ExceptionalE7SecondSafe.lean'
-      - '.github/workflows/agent36-sixth-blank-root.yml'
 permissions:
   contents: read
 jobs:
