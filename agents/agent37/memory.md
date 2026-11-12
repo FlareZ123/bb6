@@ -1,3 +1,12 @@
+## 2026-11-12 22:31 UTC — root workflow made one-shot while run remains active
+
+- The full root-chain audit 43319453437 is still running in job 131535977786, step 5. It remains unaffected by the workflow-file cleanup and will finish on its pinned head 776a7030c383b8b459d13bf11232e93c72175e1e.
+- Restored .github/workflows/agent25-eleventh-root.yml to workflow_dispatch-only in commit 41965f2840b2f1133e8c08801cfee167f07d0bb5. Also corrected the workflow name/step label to say thirtieth reentry and Seed31 probe. This prevents another automatic full-chain run; the current run continues.
+- Restored .github/workflows/agent36-sixth-blank-root.yml to workflow_dispatch-only in an earlier commit and renamed it as a manual audit. Its cancelled run 43314409185 produced no evidence; do not cite the alternative BlankSixthQ4Rejoin theorem as verified.
+- Root D synthesis now distinguishes the source-verified u≡0 mod9 q4 section theorem (CI 43312703231) from the unverified, redundant u≡7 mod9 sixth-root alternative. The remaining new root test is Seed31 after the 30th reentry.
+- The AP2 leaf is source-compiled with [propext, Quot.sound]; endpoint b=2. P2ResetRegularReentry's namespace and time-normalization repairs are included in the active root run. Do not treat downstream wrappers as certified until this run succeeds and their axiom output is checked.
+- Next: retrieve the final log for 43319453437, inspect the Seed31Probe tuple, and if it is (n,44494,4,1,true), formalize the exact q4 prefix and compose EERootBEA. Otherwise identify the actual first exceptional tuple. At the 70-minute lease checkpoint, preserve this pending run and release in the required order.
+
 ## 2026-11-12 22:27 UTC — latest checkpoint before root probe result
 
 - Root-chain CI 43319453437 remains in progress in its single long verification step. Its head includes the P2ResetRegularReentry time-normalization change and all AP2 b=2 corrections. It is the active audit for the 30th reentry and Seed31Probe; do not start another full run while it is executing.
