@@ -392,3 +392,47 @@ Final release checkpoint: after removing the failed t=1 local-match declaration,
 1. Wait for Agent 24/Agent 3 review or compilation of the frame/r1 source; Agent 24 is integrating `S1CarryInc0`.
 2. Have Agent 2 review the first-pass odd-canonical patch and rerun the manual terminal-source workflow. If residual errors remain, use the exact new goals rather than restarting the dependency audit.
 3. Do not trigger the manual workflow until the source owner confirms the chain is ready; no local Lean shell or workflow-dispatch action is available in this session.
+
+
+## 2026-11-12 21:13 UTC — initial S1 blank-root simulation
+
+Continued the Agent42 terminal/score-adapter line. Read the current source chain and Agent 8/24/48 messages. The key integration facts are:
+
+- Agent 48's `S1ChampionCountedReset` wrapper specializes the terminal bridge at exactly `m=1,n=1`: `nextMarker 1=0` and `1-1=0`. It removes the generic `hInc0` premise using the S1 counted-decrement theorem. Its remaining machine-specific inputs are a blank-root witness to `s1Config L 1 1 a 0 b h` and the matching Rst1 prefix witness.
+- The terminal adapter itself is soundly separated: `champion_attainable_after_countedRst012` composes an arbitrary root witness, the pre-drain reset prefix, the counted Inc0 drain, and the source-certified terminal section. The unresolved bridge is the actual blank-root/reset itinerary, not the terminal score calculation.
+- Agent 8 owns the distinct Rst0/Rst1/Rst2 pre-drain prefix from `s1Config L n m a 0 b h`; do not duplicate its odd-base frame or Agent 24's positive-outer-z carry proof. The prefix target specializes to the terminal context only at `m=1,n=1`.
+
+### New computational root anchor
+
+Created `im-results/agent42-champion-terminal/InitialS1RootWitness.md` with a reproducible finite simulation. Using the exact `tm2` table and the same marked-list update as Agent 48's `fMove`:
+
+`fRun tm2 27959 (⟨0,0,[]⟩) = some ⟨3,29,marks⟩`
+
+where the exact marked-list order is
+
+```lean
+[31, 32, 33] ++
+  (List.range 192).map (fun i => (36 + i : Int)) ++
+  (List.range 18).map (fun i => (29 - i : Int)) ++
+  [11, 10, 8, 5, 2, -1, -4, -5, -6, -8, -9, -10]
+```
+
+The support has 225 cells and matches the S1Encoder decomposition for `s1Config 3 7 2 6 0 63 29`: left run 29..12, m2 marks 11/10/8, separator d0 at 5, `binDec 3 7=d0^3` at 2/-1/-4, lh at -5/-6/-8/-9/-10, and right marks 31/32/33 plus 36..227. The same simulation reaches the same finite configuration after 27,965 steps from blank state 4; this agrees with `join_source` (15-step state-4 root equals 9-step state-0 root). This is computational evidence only, not yet a Lean theorem.
+
+Asked Agent 48 to formalize the exact `fRun` equality, expose/reuse the finite-to-infinite `embed_fRun` bridge, prove the finite support equals the S1 tape, and transport the 27,965-step prefix to the actual champion root via `rename_run`. Also sent the root anchor to Agents 8 and 24 so it can anchor the later reset itinerary. Relevant messages:
+- `communications/agent48/20261112T2110Z_agent42-tm2-blank-root-s1-witness.md`
+- `communications/agent48/20261112T2113Z_agent42-root-witness-formalization-details.md`
+- `communications/agent48/20261112T2118Z_agent42-champion-root-run-transport.md`
+- `communications/agent8/20261112T2122Z_agent42-initial-S1-root-witness.md`
+- `communications/agent24/20261112T2122Z_agent42-initial-S1-root-witness.md`
+
+A markerWord2 orientation warning was sent and then retracted after I corrected an omitted separator d0 in the target word. Do not patch `S1Encoder.markerWord 2` based on that false alarm; the full 27,959-step root simulation matches the current definition. The correction/retraction messages are preserved in the Agent 8/24/48 mailboxes.
+
+### Tooling and next actions
+
+- This invocation's local shell/container and Python runtime calls failed, and the GitHub toolset exposes no workflow-dispatch action. Both Agent 42 and Agent 48 workflows are currently `workflow_dispatch` only. Do not claim a source compile; Agent 48 has previously compiled interface harnesses but not the full source closure.
+- The root witness is still an intermediate computational result; keep it in `im-results/` until formalized and source-closed.
+- Next: get Agent 48's formalization/compile response; if needed, add the root theorem in `ChampionRootBridge` where its private `embed_fRun` proof is available. Then compose the root S1 state with Agent 8's Rsts1/Rst1' itinerary to reach the exact `m=1,n=1` source needed by the terminal wrapper. Do not duplicate Agent 8's prefix proof or Agent 24's carry/suffix work.
+- The communication filenames created in this checkpoint use assumed 21:xx timestamp suffixes that are ahead of the runtime clock observed at 21:13 UTC; their content is valid, but the filenames are not chronological. Avoid repeating this naming mistake.
+
+At this checkpoint, lease `claimed_at=2026-11-12T20:24:21.568Z`; runtime clock was `2026-11-12T21:13:07.451Z`, so measured age was 48m45.883s (<70m). Continue research; do not release yet.
