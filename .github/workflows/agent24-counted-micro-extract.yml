@@ -5,9 +5,10 @@ on:
       - "Agent 48 original champion-root six-step equivalence (manual)"
       - "Agent 24 counted-micro source extraction (PR-open only)"
     types: [completed]
-    # Match the PR head branch as well as main; the receiving workflow runs on default branch.
 permissions:
-  contents: write
+  contents: read
+  issues: write
+  pull-requests: write
 jobs:
   expose:
     if: \${{ github.event.workflow_run.id == 43138692184 && github.event.workflow_run.conclusion == 'failure' }}
@@ -18,29 +19,27 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          persist-credentials: true
       - name: Decode and hash-check the exact Lean sources
         run: |
           set -euo pipefail
-          base64 --decode im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64 | xz --decompress > im-results/agent24-champion-time/CountedOddUnary.lean
-          base64 --decode im-results/agent24-champion-time/CountedOneZeroUnary.lean.xz.b64 | xz --decompress > im-results/agent24-champion-time/CountedOneZeroUnary.lean
-          printf '%s  %s\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' im-results/agent24-champion-time/CountedOddUnary.lean | sha256sum --check
-          printf '%s  %s\n' '0d1acc16c377f17e3f2c624a74f9874bafdf255f2fcdc9749c9d00c83b4f6737' im-results/agent24-champion-time/CountedOneZeroUnary.lean | sha256sum --check
-          wc -l im-results/agent24-champion-time/CountedOddUnary.lean im-results/agent24-champion-time/CountedOneZeroUnary.lean
-      - name: Push readable source branch
+          base64 --decode im-results/agent24-champion-time/CountedOddUnary.lean.xz.b64 | xz --decompress > /tmp/CountedOddUnary.lean
+          base64 --decode im-results/agent24-champion-time/CountedOneZeroUnary.lean.xz.b64 | xz --decompress > /tmp/CountedOneZeroUnary.lean
+          printf '%s  %s\n' 'a035f6248194043509d47dd1aeee02c89374b37561db13897bb6b7d44f2e2cb4' /tmp/CountedOddUnary.lean | sha256sum --check
+          printf '%s  %s\n' '0d1acc16c377f17e3f2c624a74f9874bafdf255f2fcdc9749c9d00c83b4f6737' /tmp/CountedOneZeroUnary.lean | sha256sum --check
+          wc -l /tmp/CountedOddUnary.lean /tmp/CountedOneZeroUnary.lean
+      - name: Publish readable source to the research mailbox
+        env:
+          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: FlareZ123/bb6
         run: |
           set -euo pipefail
-          branch="agent24-counted-micro-readable-\${{ github.event.workflow_run.id }}"
-          git checkout -b "$branch"
-          git add im-results/agent24-champion-time/CountedOddUnary.lean im-results/agent24-champion-time/CountedOneZeroUnary.lean
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Agent 24: expose counted micro proof sources"
-          git push origin "HEAD:refs/heads/$branch"
-      - name: Preserve source artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: agent24-counted-micro-readable-sources
-          path: |
-            im-results/agent24-champion-time/CountedOddUnary.lean
-            im-results/agent24-champion-time/CountedOneZeroUnary.lean
+          {
+            echo "Agent 24 source extraction: exact decompressed Lean files, hash-checked in workflow_run $GITHUB_RUN_ID."
+            echo
+            echo "===== CountedOddUnary.lean ====="
+            cat /tmp/CountedOddUnary.lean
+            echo
+            echo "===== CountedOneZeroUnary.lean ====="
+            cat /tmp/CountedOneZeroUnary.lean
+          } > /tmp/comment.md
+          gh api --method POST repos/FlareZ123/bb6/issues/48/comments -f body="$(cat /tmp/comment.md)" >/dev/null
