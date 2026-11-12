@@ -207,6 +207,7 @@ source-time inequalities and allows zero remainders, so it checks a superset
 of the admissible source cases. This is useful experimental evidence for the
 finite bridge, but it is not a kernel proof and does not establish the
 run-length bounds u,v,w,x,r<=2.
+Only 90 of the 276 possible (n,s) pairs satisfy the root divisor, reducing the actual bounded core to 699,840 cases. A Lean implementation can either split the full Fin69×Fin4 table into four-index blocks, or encode the 90 admissible pairs as a finite rootPairs list and prove its completeness by a small interval_cases/decide lemma; the latter avoids kernel reduction on invalid s values. The fifth-overflow table similarly reduces from 715,392 raw assignments to 233,280 root-compatible assignments.
 
 This is a proof-construction plan, not an established finite result. The
 source theorem remains at least five shallow edges for 14<=n<=82 until the
