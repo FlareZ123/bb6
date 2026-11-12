@@ -51,47 +51,79 @@ theorem physical_source_max_prefix_bound
     source_runWithDelta_rep t z c hrep p.1 p.2.1 hproj
   exact ⟨d,hrun,by omega⟩
 
-/-- The concrete v=5,k=7 C/0 checkpoint continues for 119 moves to
-    Junc(0,9,25), with a certified maximum rightward displacement of one. -/
+/-- The concrete v=5,k=7 C/0 context continues for 438 moves to
+    J(23,18), with a certified maximum rightward displacement of one. -/
 theorem root_low43_C0_to_junc_physical
     (c : Config) (hrep : Represents (low43_C0_zipper 5 7) c) :
     ∃ d : Config,
-      run target429 119 c = some d ∧
-      Represents (junc 0 9 25) d ∧
-      d.head=c.head-45 ∧
-      (∀ t : Nat, t≤119 →
+      run target429 438 c = some d ∧
+      Represents (junc 23 0 18) d ∧
+      d.head=c.head-20 ∧
+      (∀ t : Nat, t≤438 →
         ∃ e : Config,
           run target429 t c = some e ∧ e.head≤c.head+1) := by
   let zC0 : Zipper := low43_C0_zipper 5 7
   have hmax :
-      runWithMax 119 zC0 =
-        some (junc 0 9 25, -45, 1) := by
+      runWithMax 438 zC0 =
+        some (junc 23 0 18, -20, 1) := by
     simpa [zC0,low43_C0_zipper] using root_low43_C0_to_junc_max
   have hdelta :
-      runWithDelta 119 zC0 = some (junc 0 9 25,-45) := by
-    simpa [hmax] using runWithMax_toDelta 119 zC0
+      runWithDelta 438 zC0 = some (junc 23 0 18,-20) := by
+    simpa [hmax] using runWithMax_toDelta 438 zC0
   obtain ⟨d,hrun,hrepD,hhead⟩ :=
-    source_runWithDelta_rep 119 zC0 c hrep (junc 0 9 25) (-45) hdelta
+    source_runWithDelta_rep 438 zC0 c hrep (junc 23 0 18) (-20) hdelta
   have hprefix :
-      ∀ t : Nat, t≤119 →
+      ∀ t : Nat, t≤438 →
         ∃ e : Config,
           run target429 t c = some e ∧ e.head≤c.head+1 := by
     intro t ht
     obtain ⟨e,he,hh⟩ :=
-      physical_source_max_prefix_bound 119 t zC0 c hrep
-        (junc 0 9 25,-45,1) hmax ht
+      physical_source_max_prefix_bound 438 t zC0 c hrep
+        (junc 23 0 18,-20,1) hmax ht
     exact ⟨e,he,by omega⟩
   exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
 
-/-- Full physical low-43 branch from J(21,11) to Junc(0,9,25).
-    Every prefix remains at or left of the new rightmost mark, 17. -/
+/-- The complete 1347-step C/0 continuation reaches J(11,62). Its
+    all-prefix maximum is eight cells to the right of the C/0 entry. -/
+theorem root_low43_C0_to_junc11_physical
+    (c : Config) (hrep : Represents (low43_C0_zipper 5 7) c) :
+    ∃ d : Config,
+      run target429 1347 c = some d ∧
+      Represents (junc 11 0 62) d ∧
+      d.head=c.head-57 ∧
+      (∀ t : Nat, t≤1347 →
+        ∃ e : Config,
+          run target429 t c = some e ∧ e.head≤c.head+8) := by
+  let zC0 : Zipper := low43_C0_zipper 5 7
+  have hmax :
+      runWithMax 1347 zC0 =
+        some (junc 11 0 62, -57, 8) := by
+    simpa [zC0,low43_C0_zipper] using root_low43_C0_to_junc11_max
+  have hdelta :
+      runWithDelta 1347 zC0 = some (junc 11 0 62,-57) := by
+    simpa [hmax] using runWithMax_toDelta 1347 zC0
+  obtain ⟨d,hrun,hrepD,hhead⟩ :=
+    source_runWithDelta_rep 1347 zC0 c hrep (junc 11 0 62) (-57) hdelta
+  have hprefix :
+      ∀ t : Nat, t≤1347 →
+        ∃ e : Config,
+          run target429 t c = some e ∧ e.head≤c.head+8 := by
+    intro t ht
+    obtain ⟨e,he,hh⟩ :=
+      physical_source_max_prefix_bound 1347 t zC0 c hrep
+        (junc 11 0 62,-57,8) hmax ht
+    exact ⟨e,he,by omega⟩
+  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+
+/-- Full physical low-43 branch from J(21,11) to J(23,18).
+    Every prefix remains at or left of local coordinate 17. -/
 theorem root_low43_branch_to_junc :
     ∃ cEnd : Config,
-      run target429 331
+      run target429 650
         {state:=A,head:=0,tape:=jTape 21 11} = some cEnd ∧
-      Represents (junc 0 9 25) cEnd ∧
-      cEnd.head = -29 ∧
-      (∀ t : Nat, t≤331 →
+      Represents (junc 23 0 18) cEnd ∧
+      cEnd.head = -4 ∧
+      (∀ t : Nat, t≤650 →
         ∃ d : Config,
           run target429 t {state:=A,head:=0,tape:=jTape 21 11} = some d ∧
           d.head≤17) := by
@@ -99,19 +131,19 @@ theorem root_low43_branch_to_junc :
     low43_C0_record 5 7
   obtain ⟨cEnd,hcont,hEndRep,hEndHead,hcontPrefix⟩ :=
     root_low43_C0_to_junc_physical cC hCRep
-  have htotal0 : run target429 (212+119)
+  have htotal0 : run target429 (212+438)
       {state:=A,head:=0,tape:=jTape 21 11} = some cEnd := by
     rw [run_add',hCrun]
     exact hcont
-  have htime : 212+119=331 := by omega
-  have htotal : run target429 331
+  have htime : 212+438=650 := by omega
+  have htotal : run target429 650
       {state:=A,head:=0,tape:=jTape 21 11} = some cEnd := by
     simpa [htime] using htotal0
-  have hhead : cEnd.head = -29 := by
+  have hhead : cEnd.head = -4 := by
     rw [hEndHead,hChead]
     norm_num
   have hprefix :
-      ∀ t : Nat, t≤331 →
+      ∀ t : Nat, t≤650 →
         ∃ d : Config,
           run target429 t {state:=A,head:=0,tape:=jTape 21 11} = some d ∧
           d.head≤17 := by
@@ -123,7 +155,7 @@ theorem root_low43_branch_to_junc :
       · subst t
         exact ⟨cC,hCrun,by rw [hChead]; omega⟩
       · let s : Nat := t-212
-        have hs : s≤119 := by dsimp [s]; omega
+        have hs : s≤438 := by dsimp [s]; omega
         obtain ⟨d,hseg,hb⟩ := hcontPrefix s hs
         have htime2 : t=212+s := by dsimp [s]; omega
         have hraw : run target429 t
@@ -133,63 +165,61 @@ theorem root_low43_branch_to_junc :
         exact ⟨d,hraw,by rw [hChead] at hb; omega⟩
   exact ⟨cEnd,htotal,hEndRep,hhead,hprefix⟩
 
-/-- The regular zero-left return closes the root-specific low-43 branch at
-    Junc(12,0,22), conserving the new rightmost mark at coordinate 17. -/
-theorem root_low43_branch_to_junc12 :
+/-- Continue the same root-specific branch through J(23,18) to J(11,62).
+    Every primitive prefix from J(21,11) remains at or left of local
+    coordinate 24; the endpoint head is -41. -/
+theorem root_low43_branch_to_junc11 :
     ∃ cEnd : Config,
-      run target429 376
+      run target429 1559
         {state:=A,head:=0,tape:=jTape 21 11} = some cEnd ∧
-      Represents (junc 12 0 22) cEnd ∧
-      cEnd.head = -8 ∧
-      (∀ t : Nat, t≤376 →
+      Represents (junc 11 0 62) cEnd ∧
+      cEnd.head = -41 ∧
+      (∀ t : Nat, t≤1559 →
         ∃ d : Config,
           run target429 t {state:=A,head:=0,tape:=jTape 21 11} = some d ∧
-          d.head≤17) := by
-  obtain ⟨cJ,hJrun,hJrep,hJhead,hJprefix⟩ :=
-    root_low43_branch_to_junc
-  have hJrep' : Represents (junc 0 9 (22+3)) cJ := by
-    simpa using hJrep
-  obtain ⟨cEnd,hzero,hEndRep,hfrontier⟩ :=
-    physical_zero_regular_frontier_conserved 9 22 cJ hJrep'
-  have htotal0 : run target429 (331+45)
+          d.head≤24) := by
+  obtain ⟨cC,hCrun,hChead,hCRep,hCstate,hCcur,hCright,hCprev⟩ :=
+    low43_C0_record 5 7
+  obtain ⟨cEnd,hcont,hEndRep,hEndHead,hcontPrefix⟩ :=
+    root_low43_C0_to_junc11_physical cC hCRep
+  have htotal0 : run target429 (212+1347)
       {state:=A,head:=0,tape:=jTape 21 11} = some cEnd := by
-    rw [run_add',hJrun]
-    simpa using hzero
-  have htime : 331+45=376 := by omega
-  have htotal : run target429 376
+    rw [run_add',hCrun]
+    exact hcont
+  have htime : 212+1347=1559 := by omega
+  have htotal : run target429 1559
       {state:=A,head:=0,tape:=jTape 21 11} = some cEnd := by
     simpa [htime] using htotal0
-  have hhead : cEnd.head=-8 := by
-    have hfrontier' :
-        cEnd.head+25 = (-29: Int)+(2*9+22+6) := by
-      simpa [hJhead] using hfrontier
-    omega
+  have hhead : cEnd.head = -41 := by
+    rw [hEndHead,hChead]
+    norm_num
   have hprefix :
-      ∀ t : Nat, t≤376 →
+      ∀ t : Nat, t≤1559 →
         ∃ d : Config,
           run target429 t {state:=A,head:=0,tape:=jTape 21 11} = some d ∧
-          d.head≤17 := by
+          d.head≤24 := by
     intro t ht
-    by_cases hlt : t≤331
-    · exact hJprefix t hlt
-    · let s : Nat := t-331
-      have hs : s≤45 := by dsimp [s]; omega
-      obtain ⟨d,hseg,hb⟩ :=
-        physical_zero_regular_all_prefixes_before_old_mark 9 22 s cJ hJrep' hs
-      have htime2 : t=331+s := by dsimp [s]; omega
-      have hraw : run target429 t
-          {state:=A,head:=0,tape:=jTape 21 11} = some d := by
-        rw [htime2,run_add',hJrun]
-        exact hseg
-      have hmark : cJ.head+(2*9+22+6)=17 := by
-        rw [hJhead]
-        norm_num
-      exact ⟨d,hraw,by rw [hmark] at hb; omega⟩
+    by_cases hlt : t<212
+    · obtain ⟨d,hd,hb⟩ := hCprev t hlt
+      exact ⟨d,hd,by rw [hChead] at hb; omega⟩
+    · by_cases heq : t=212
+      · subst t
+        exact ⟨cC,hCrun,by rw [hChead]; omega⟩
+      · let s : Nat := t-212
+        have hs : s≤1347 := by dsimp [s]; omega
+        obtain ⟨d,hseg,hb⟩ := hcontPrefix s hs
+        have htime2 : t=212+s := by dsimp [s]; omega
+        have hraw : run target429 t
+            {state:=A,head:=0,tape:=jTape 21 11} = some d := by
+          rw [htime2,run_add',hCrun]
+          exact hseg
+        exact ⟨d,hraw,by rw [hChead] at hb; omega⟩
   exact ⟨cEnd,htotal,hEndRep,hhead,hprefix⟩
 
 #print axioms physical_source_max_prefix_bound
 #print axioms root_low43_C0_to_junc_physical
+#print axioms root_low43_C0_to_junc11_physical
 #print axioms root_low43_branch_to_junc
-#print axioms root_low43_branch_to_junc12
+#print axioms root_low43_branch_to_junc11
 
 end BB429Low43RootPhysical
