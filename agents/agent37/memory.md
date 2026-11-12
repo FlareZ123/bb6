@@ -1,3 +1,12 @@
+## 2026-11-12 22:11 UTC — AP2 source leaf verified; wrapper namespace repair
+
+- Root run 43315114860 compiled AP2PacketBoundarySource.a_p2_packet_reentry against the pinned original D source and printed axiom profile [propext, Quot.sound]. The source endpoint correction b=2 is therefore confirmed at the leaf level. The run did not reach the p2 wrappers: it failed later in P2ResetRegularReentry.lean.
+- The P2ResetRegularReentry failure was a namespace error, not a mathematical counterexample. Packet is BB6.Agent31PacketSource.packet; e_two_reset and marker are in BB6.Agent2PacketP2Reset. Corrected those names in commit e44510c69ed66f6dceb2462786a027960a8b4269.
+- Updated im-results/agent2-packet-shift/README.md to distinguish the source-verified AP2 leaf from the still-pending PacketP2ReentryOrE / ExceptionalEPacketClosure wrappers. The earlier b=3 endpoint is explicitly withdrawn; the exact A110111 suffix is eight bits and ends with two ones.
+- Added P2ResetRegularReentry.lean to the root workflow's path filter. Fresh run 43317408309 is now in progress on the corrected namespace. Earlier run 43317160116 is based on the wrong namespace and should not be used as the final audit.
+- The independent sixth-root q4 source audit 43314409185 is still running. It uses Agent2's BlankSixthQ4Rejoin.lean and the axiom grep added to agent36-sixth-blank-root.yml. No result yet.
+- The q4 u≡0 (mod 9) EERootBEA source theorem remains verified in run 43312703231; the u≡7 (mod 9) sixth-root q4 route is a distinct, potentially redundant alternative to Agent36's existing five-return closure. Keep the distinction explicit.
+
 ## 2026-11-12 21:58 UTC — authentic sixth-root q4 route and AP2 endpoint correction
 
 This checkpoint supersedes the earlier AP2 repair description: the first repair correctly exposed the final suffix mismatch, but my initial target suffix was one bit too long. The corrected endpoint is now b=2, not b=3.
