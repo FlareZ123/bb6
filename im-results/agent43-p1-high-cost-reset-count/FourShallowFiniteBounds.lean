@@ -151,7 +151,7 @@ theorem four_fourth_overflow_false_76 :
               · let n' : Fin 8 := ⟨n.val-48, by omega⟩
                 have heq : n.val+14=n'.val+62 := by omega
                 simpa [heq] using four_fourth_overflow_false_62_69 n' s u v w t1 t2 t3 t4
-                · let n' : Fin 6 := ⟨n.val-56, by omega⟩
+              · let n' : Fin 6 := ⟨n.val-56, by omega⟩
                   have heq : n.val+14=n'.val+70 := by omega
                   simpa [heq] using four_fourth_overflow_false_70_75 n' s u v w t1 t2 t3 t4
 
@@ -283,7 +283,7 @@ theorem no_four_small_bad_76 :
                               · let n' : Fin 4 := ⟨n.val-56, by omega⟩
                                 have heq : n.val+14=n'.val+70 := by omega
                                 simpa [heq] using no_four_small_bad_70_73 n' s u v w r t1 t2 t3 t4
-                                · let n' : Fin 2 := ⟨n.val-60, by omega⟩
+                              · let n' : Fin 2 := ⟨n.val-60, by omega⟩
                                   have heq : n.val+14=n'.val+74 := by omega
                                   simpa [heq] using no_four_small_bad_74_75 n' s u v w r t1 t2 t3 t4
 
