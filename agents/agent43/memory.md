@@ -243,3 +243,12 @@ Targeted PR workflow:
 4. Continue toward the actual P1 objective by addressing five-or-more shallow edges and depth>=3 inverse transitions. Avoid another generic finite scan; the next useful step is a symbolic higher-layer invariant or source-level closure.
 
 No BB(6) value or unrestricted blank-root P1 decision is established by this work.
+
+
+### Checkpoint update (16:58Z): finite bridge compile isolation
+
+The first targeted PR run `43260084015` failed in the combined compile step; the follow-up `43262110952` reached the finite-bound module but its step was cancelled by runner shutdown (no Lean diagnostic was available from the installed tool set). The targeted workflow now has per-module compile steps and an 8-GiB swap stage. Current run `43263819297` has completed all source/scalar dependencies and is compiling `FourShallowFiniteBounds`; it has not yet established a final result.
+
+A likely portability issue in the later abstract bridge was proactively removed in branch commit `67688ad08798658cf32ec096d0b56238874ab6ca`: the small-index proof now uses `decide` and `omega` instead of `norm_num`, so it depends only on Lean core tactics. Because the workflow is opened/reopened-only, this branch update needs a PR reopen after the current run completes to be tested.
+
+The original-source trace theorem is already present in `FourShallowSourceLift.lean` as `source_low_trace_wall_needs_five_shallows`; the branch changes its threshold to n>=14 and calls the finite/large-index four-word exclusion. No separate trace-lift module is needed.
