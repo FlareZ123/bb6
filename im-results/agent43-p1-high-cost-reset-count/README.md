@@ -198,6 +198,16 @@ blocks (at most 124,416 residual-core cases and 165,888 fifth-overflow cases
 per block) rather than one monolithic decide proof. The first four overflow
 tables also need the seven additional indices 76<=n<=82.
 
+An exact BigInt reconnaissance scan is preserved in
+[five_shallow_finite_scan.js](five_shallow_finite_scan.js). It checks all
+**699,840 root-compatible bounded assignments** (90 admissible (n,s) pairs,
+32 profile masks, and 3^5 run-length tuples) and finds zero solutions to the
+five-layer natural equation. The scan deliberately omits additional
+source-time inequalities and allows zero remainders, so it checks a superset
+of the admissible source cases. This is useful experimental evidence for the
+finite bridge, but it is not a kernel proof and does not establish the
+run-length bounds u,v,w,x,r<=2.
+
 This is a proof-construction plan, not an established finite result. The
 source theorem remains at least five shallow edges for 14<=n<=82 until the
 new fifth-overflow and residual finite certificates are completed.
