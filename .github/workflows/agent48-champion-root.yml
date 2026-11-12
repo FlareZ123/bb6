@@ -16,6 +16,8 @@ on:
       - 'im-results/agent8-coverage-contract/RootShift.lean'
       - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
       - 'im-results/agent48-champion-root/S0UniformBridge.lean'
+      - 'im-results/agent48-champion-root/UniformTM63HeadOffset.lean'
+      - 'im-results/agent48-champion-root/UniformTM63SourceRun.lean'
       - 'im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64'
 permissions:
   contents: read
@@ -38,10 +40,6 @@ jobs:
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/S0UniformBridge.lean /tmp/a48-root/
           base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a48-root/UniformTM63.lean
-          echo "### UniformTM63 source, lines 1-240"
-          sed -n '1,240p' /tmp/a48-root/UniformTM63.lean
-          echo "### UniformTM63 source, lines 241-483"
-          sed -n '241,483p' /tmp/a48-root/UniformTM63.lean
           cp im-results/agent24-champion-time/CountedSweep.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedCarryBridges.lean /tmp/a48-root/
           cp im-results/agent24-champion-time/CountedOddBase.lean /tmp/a48-root/
@@ -85,5 +83,12 @@ jobs:
           lean -o S0UniformBridge.olean S0UniformBridge.lean 2>&1 | tee /tmp/a48-root/s0-uniform-bridge-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/s0-uniform-bridge-axioms.log; then
             echo "::error::sorryAx found in S0/uniform bridge theorem dependencies"
+            exit 1
+          fi
+          lean -o UniformTM63HeadOffset.olean UniformTM63HeadOffset.lean
+          : > /tmp/a48-root/source-run-axioms.log
+          lean -o UniformTM63SourceRun.olean UniformTM63SourceRun.lean 2>&1 | tee /tmp/a48-root/source-run-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/source-run-axioms.log; then
+            echo "::error::sorryAx found in original-source run transport"
             exit 1
           fi
