@@ -62,7 +62,9 @@ theorem champion_halts_after_terminal_prefix
   have htm2' : HaltsAfter tm2 (9+k) := by
     simpa [hk] using htm2
   have hchamp := (champion_halts_offset k).mpr htm2'
-  have hscore : 15+k = n + terminalMoves L a + 6 := by omega
+  have hscore : 15+k = n + terminalMoves L a + 6 := by
+    unfold terminalMoves
+    omega
   simpa [hscore] using hchamp
 
 /-- Direct attainable-score interface for downstream counted-prefix proofs.
