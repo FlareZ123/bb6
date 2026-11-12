@@ -60,3 +60,35 @@ theorem ad12Offset_mod (h x : Int) (hh : h % 3 = 0) :
 #print axioms ad12Offset_mod
 
 end BB6Coverage.Agent42CarryLeftR1
+
+
+/-- The bridge0 final tape is true at offsets -1 and 0, then follows
+the every-third pattern at positive offsets in its active window. -/
+theorem bridge0FinalCell_pattern (i : Int) (hi : -1 ≤ i ∧ i ≤ 10) :
+    (embed carryBridgeFinal0).tape i =
+      (if i ≤ 0 then true else decide (i % 3 = 1)) := by
+  have hc : i = -1 ∨ i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨
+      i = 4 ∨ i = 5 ∨ i = 6 ∨ i = 7 ∨ i = 8 ∨
+      i = 9 ∨ i = 10 := by omega
+  rcases hc with hneg | h0 | h1 | h2 | h3 | h4 | h5 |
+      h6 | h7 | h8 | h9 | h10
+  all_goals subst i <;> simp [embed, carryBridgeFinal0]
+
+/-- Shifted bridge0 frame output, expressed in absolute tape coordinates.
+If the old head is 0 modulo 3, the frame writes the canonical left output
+pattern on its active interval. -/
+theorem bridge0FrameOutput (bg : Int → Bool) (h x : Int)
+    (hh : h % 3 = 0) (hi : -1 ≤ x-h ∧ x-h ≤ 10) :
+    (frame (fun y => carryBridgeArea0 (y-h)) bg
+      (shiftConfig h (embed carryBridgeFinal0))).tape x =
+        (if x ≤ h then true else decide (x % 3 = 1)) := by
+  have ha : carryBridgeArea0 (x-h) = true := by
+    simp [carryBridgeArea0]
+    omega
+  have hf := bridge0FinalCell_pattern (x-h) hi
+  simp [frame, shiftConfig, ha, hf]
+  by_cases hx : x ≤ h
+  · simp [hx]
+  · have hx' : h < x := by omega
+    have hmod : (x-h) % 3 = 1 ↔ x % 3 = 1 := by omega
+    simp [hx, hmod]
