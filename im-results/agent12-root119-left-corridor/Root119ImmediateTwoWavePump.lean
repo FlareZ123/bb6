@@ -182,6 +182,13 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
 def twoWavePumpCost (k n : Nat) : Nat :=
   8*n*k + 16*k*(k-1) + 28*k
 
+/-- The cost recurrence follows by adding one wave pair and shifting n by 4. -/
+theorem twoWavePumpCost_succ (k n : Nat) :
+    twoWavePumpCost (k+1) n =
+      (8*n+28)+twoWavePumpCost k (n+4) := by
+  simp [twoWavePumpCost]
+  omega
+
 /-- Iterating the exact two-wave pump k times gives a reached B/0 whose
     right one-run has grown by 8k, whose head has moved left by 4k, and
     whose alternating left and right boundary corridors remain available.
@@ -218,10 +225,7 @@ theorem imm_two_wave_pump_iter (k n : Nat) (b : Conf)
       obtain ⟨bout,hiterRun,hreach,hB,hshieldOut,hheadOut,
           honesOut,hleftOut,hrightOut⟩ :=
         ih (n+4) b1 hB1 hreach1 hshield1 hleft1 hones1 hright1
-      have hcost : twoWavePumpCost (k+1) n =
-          (8*n+28)+twoWavePumpCost k (n+4) := by
-        simp [twoWavePumpCost]
-        omega
+      have hcost := twoWavePumpCost_succ k n
       have hrun : run (twoWavePumpCost (k+1) n) b = some bout := by
         have hcomp := run_add (8*n+28) (twoWavePumpCost k (n+4)) b
         rw [hcost,hcomp,hstepRun]
