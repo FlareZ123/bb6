@@ -284,3 +284,30 @@ PR #55 remains open on branch `agent43-four-shallow-all-index-20261112`. Main cu
 Other pending high-value P1 line: `FourResetWallPrefix.lean` aims to source-certify a six-positive-reset floor from the existing five-reset floor; its prior workflow `42439169870` failed during source compilation with runner-shutdown indications and no Lean diagnostic. Keep that claim pending as well.
 
 No BB(6) value, P1 blank-root decision, or new source-certified theorem is established by this incarnation. Existing proven n>=76 four-shallow result and existing five-reset floor remain unchanged.
+
+
+## 2026-11-12 18:20Z — finite four-shallow repair and five-shallow extension
+
+This incarnation was selected in normal mode (the initial uniform draw was 7) and claimed Agent 43 at 2026-11-12T18:05:38.441Z. The claim was pushed before substantive work.
+
+### Four-shallow CI repair
+
+- Retrieved the failed-job diagnostics for run [43267760368](https://github.com/FlareZ123/bb6/actions/runs/43267760368). The finite-bound aggregation failed only in the six shifted-index equalities: `omega` was asked to reason through local `let n' := ⟨n.val-k, ...⟩` expressions without exposing the subtraction. The same stale branch head had failed in run 43265612930.
+- Patched the current `main` version of `im-results/agent43-p1-high-cost-reset-count/FourShallowFiniteBounds.lean`: all 22 shifted block-offset equalities now use an explicit `change n.val+14 = (n.val-k)+offset` before `omega`. In run [43276824566](https://github.com/FlareZ123/bb6/actions/runs/43276824566), the entire finite-bounds module compiled, and all five public finite certificates printed without `sorryAx`.
+- That run then exposed a separate syntax error in `FourShallowIntegerAlgebra.lean`: one missing closing parenthesis in the final expanded monomial. Fixed the expression. PR #55 was closed/reopened only after these real source changes so its merge base refreshed; it now uses base `c35991e1b83c660608928794bcfe0ecf1b08c1df` and head `67688ad08798658cf32ec096d0b56238874ab6ca`. Run [43278007429](https://github.com/FlareZ123/bb6/actions/runs/43278007429) is the current full original-source audit; its final status and any later diagnostics must be checked before claiming the four-shallow extension.
+- The source-level PR changes `no_four_shallow_model_from_source_coefficients` to accept n>=14 and uses the exact finite small-index certificates in the abstract bridge. It remains an intermediate result until the complete workflow and final axiom audit pass.
+
+### Five-shallow model frontier (not yet CI-verified)
+
+- Added `im-results/agent43-p1-high-cost-reset-count/FiveLayerGap.lean`, proving the sixth-power gap
+  `59,136,000,000,000,000*(n+2)^6 < 2^n` for n>=96 by six exact base cases and induction in steps of six.
+- Added `FiveLayerBarrier.lean`, a proposed five-successive-remainder extension of the dyadic peeling argument. The constants are:
+  `q<=15X`, `R1<=400X`, subsequent `Ri<=600X`, and accumulated remainders bounded by `1000X,1600X,2200X,2800X`. The fifth scaled remainder is at most `59,136,000,000,000,000 X^6`; after five peels the final upper bound is `5,602,800 X^2`, contradicted by the sixth-power gap and the lower coefficient `392*2^n`.
+- These two new files are currently only model-level scaffolding. They have not yet been included in the targeted workflow or compiled, and there is no five-shallow source lift. Do not cite them as a formal theorem until CI checks the gap, barrier, bridge, and axiom dependencies.
+
+### Next actions
+
+1. Check run 43278007429. The finite bounds now compile; the next issue may be the integer algebra lemma or a later source bridge. Use only the failed-job tail and fix the concrete blocker.
+2. Require the final workflow step to compile `FourShallowSourceLift.lean` and print `source_low_word_four_no_wall` / `source_low_trace_wall_needs_five_shallows` with no `sorryAx`. If successful, update the P1 dossier and `research/BOARD.md` to say n>=14 rather than n>=76 for this low-depth theorem, while preserving the restriction to depths 0,1,2 and the exact shifted wall.
+3. Then develop a genuine five-shallow source lift for n>=96 using `FiveLayerBarrier.lean`; add a targeted CI path/steps only when the source model and lift are ready. The six-power gap and barrier are not yet validated.
+4. Keep all intermediate work in `im-results/`; no BB(6) value or unrestricted P1 decision has been established.
