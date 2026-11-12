@@ -369,3 +369,26 @@ Final release checkpoint: after removing the failed t=1 local-match declaration,
 2. Integrate the shifted r1 interface with `s0Config_counted_decrement_of_prefix` once the input `hmatch` and the other residue branches are available.
 3. Follow Agent 24's r2/r3 progress and Agent 3's r0 status; do not duplicate their branch proofs.
 4. If Agent 2 remains inactive, consider helping patch `S1OddCanonicalOutput.lean` beginning with the six earliest errors; otherwise let its owner apply the diagnostic.
+
+
+## 2026-11-12 19:24Z checkpoint — S1 r1 integration and odd-output repair pass
+
+### S1 counted decrement integration
+
+- Agent 24's new `im-results/agent24-champion-time/S1CarryInc0.lean` now composes the all-positive valuation split r mod 4 and directly consumes `carryLongPrefix_r1_shifted` from Agent 42's `LongResidue1.lean`. It defines a generic S1 carry-input match and right-run lemma, then feeds the shifted prefix into `s0Config_counted_decrement_of_prefix`.
+- Reviewed the source composition: the r=0 branch uses Agent 3's theorem; r=1 splits k=0 short vs k>0 long; r=2/r=3 use Agent 24's new `CountedCarryLeftOutputR23.lean`. The final theorem is a candidate source-level all-positive S1 counted-decrement result, not yet compiled.
+- Added a standalone `s1Config_evenCounter_carryPrefix_r1_left` interface to `im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean`. It derives the carry-input match from the file's existing private left/right cell lemmas, applies the shifted r1 prefix theorem, and returns the local six cells, right-exterior preservation, and left-output identity. It is an optional modular interface; Agent 24's direct `S1CarryInc0` composition already subsumes it.
+- Updated the manual-only `agent42-champion-terminal-source.yml` to compile `FrameCellLemmas` and `LongResidue1` after `CountedCarryPrefixGeneral` and before `S1CountedCarryPrefixBridge`. No dispatch was triggered.
+
+### Agent 2 odd-canonical source patch (uncompiled)
+
+- Applied a first-pass source repair to `im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean` in commits `e968f3e`, `ce44c5b`, `93ab969`, `fe3ca44`, `a35e5f5`, and `d076b5f`.
+- Changes: explicit six-cell list lengths for append lemmas; normalized `rightStop` Nat/Int cast; append associativity after binary odd/even rewrites; explicit offset index length; append-before proof at index 2 and normalized append-tail case; unfold `tailArea` in output frame simplifications; use Nat-cast coordinate literals matching the S1 cell lemmas; replace the final nested `by_cases/simp/omega` with an explicit cutoff lemma for the three newly written rightmost cells.
+- The final cutoff lemma has been explicitly applied with `exact hcut`. These edits are **not compiled**. Agent 2 has been sent the commit references and asked to review/run the manual audit. Do not claim the local proof errors are fixed until CI confirms.
+- The earlier diagnosis is unchanged: `sorryAx` in the composite declarations came from Lean error recovery for local elaboration failures, not transitive axioms.
+
+### Current next actions
+
+1. Wait for Agent 24/Agent 3 review or compilation of the frame/r1 source; Agent 24 is integrating `S1CarryInc0`.
+2. Have Agent 2 review the first-pass odd-canonical patch and rerun the manual terminal-source workflow. If residual errors remain, use the exact new goals rather than restarting the dependency audit.
+3. Do not trigger the manual workflow until the source owner confirms the chain is ready; no local Lean shell or workflow-dispatch action is available in this session.
