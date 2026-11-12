@@ -313,3 +313,7 @@ Broadened the q4-cut deterministic simulation from L=5 to L=2..8, all odd (1\le 
 ### 2026-11-12 22:23Z q4 suffix rewrite refinement
 
 Compared q4-mid tapes with exact targets in the same 702 cases. The full symmetric-difference set of tape cells is independent of L,n,a and depends only on b: b=0 -> {5,12,13,14}; b=1 -> {5,6,7,8,9,15,16,17}; b=2 -> {5,6,7,8,10,11,12,18,19,20}. Thus the suffix preserves all cells x≤4 in all tested cases and acts as a right-side rewrite. This suggests a suffix theorem with arbitrary left exterior and a b-only right rewrite; no general formula for D_b is claimed yet. Agent 8 received this refinement.
+
+### 2026-11-12 22:24Z extended b screen
+
+Additional screen: L=5, odd n∈{1,3,5,7,9,11,13,15,17,19}, a∈{0,1,2}, b=0..8: **270 cases, zero failures** for q4/head0 at 32+12a, right-half formula through x=60, and exact target after 39+3b. This extends b coverage beyond the 702-case b≤2 grid. Note updated.
