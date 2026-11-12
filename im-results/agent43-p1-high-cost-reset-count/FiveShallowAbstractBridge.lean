@@ -198,7 +198,10 @@ theorem no_five_shallow_energies
    omega
  have hexp :
    a*(b*(c*(f*(g*(E:Int)+(R5:Int))+(R4:Int))+(R3:Int))+(R2:Int)) =
-     a*(b*(c*(f*(g*(E:Int)))+a*0)+0) := by
+     a*(b*(c*(f*(g*(E:Int)))))+
+       a*(b*(c*(f*(R5:Int))))+
+       a*(b*(c*(R4:Int)))+
+       a*(b*(R3:Int))+a*(R2:Int) := by
    simp only [Int.mul_add]
  have hKprod' : (K:Int)*(p:Int)+98*(p:Int)=
    (C1:Int)*(2^n:Int)+a*((C2:Int)*(2^n:Int))+
