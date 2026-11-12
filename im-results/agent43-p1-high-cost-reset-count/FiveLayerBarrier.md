@@ -77,7 +77,7 @@ The exact gap
 \[
 576{,}000{,}000{,}000{,}000(n+2)^6<2^n
 \]
-holds for every \(n\ge88\): check \(n=88,89,90,91,92,93\), then induct in steps of six using \(n+8\le2(n+2)\).
+holds for every \(n\ge88\): it fails at \(n=87\), while at \(n=88\) the two sides are \(306110016000000000000000000\) and \(309485009821345068724781056\), respectively. Check \(n=88,89,90,91,92,93\), then induct in steps of six using \(n+8\le2(n+2)\).
 
 After four peels, the terminal equation is
 \[
@@ -88,7 +88,7 @@ The fifth peel gives \(A_5\le S_5\le1000X\). Since \(T_6\le2n+6\), \(E\le2000X\)
 K2^{e-e_1-e_2-e_3-e_4}
 \le S_5(E+1)\le1000X\cdot2001X=2{,}001{,}000X^2.
 \]
-On the other hand, the final coefficient term and \(C_5\ge392\) give \(K\ge392qA_1A_2A_3A_4\). Since
+On the other hand, \(K+98\) is the sum of the five positive coefficient terms. The preceding terms already include \(C_1q\ge392>98\), so subtracting 98 still leaves at least the final term; hence \(K\ge C_5qA_1A_2A_3A_4\ge392qA_1A_2A_3A_4\). Since
 \[
 qA_1A_2A_3A_4\cdot2^{e-e_1-e_2-e_3-e_4}=2^n,
 \]
