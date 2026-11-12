@@ -91,7 +91,7 @@ jobs:
             FiniteHalting Symmetry RayMacro EntryMacroOracle EntryMacroLeft DirectedDrift \
             ZeroMaskOracle FiniteDecision FrontierAudit FrontierMass ZeroPathAudit \
             ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit \
-            BB429PhysicalFrontier JRootEntry SourceBridge BubbleExact BubblePrefix BCFuture JPhysicalPrefix JF0Prefix \
+            BB429PhysicalFrontier JRootEntry BubbleExact BubblePrefix BCFuture JPhysicalPrefix SourceBridge JF0Prefix \
             JFirstBranch RelativeTape CryptidsTapeAdapter JSourceBridge
           do
             echo "Compiling $module" | tee -a "$LOG"
