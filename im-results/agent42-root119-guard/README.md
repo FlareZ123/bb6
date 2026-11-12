@@ -94,3 +94,11 @@ Final compact source-import and 10M audit run: [42416197936](https://github.com/
 The sharpness theorem `b0_odd_even_chain_to_b0_exact_bad_boundary` was added and source-verified in [CI run 42416523909](https://github.com/FlareZ123/bb6/actions/runs/42416523909). It proves the exact return output is unshielded whenever the boundary pattern 110 occurs.
 
 The exact odd-even criterion is now formalized by `b0_odd_even_chain_to_b0_NoLeft4_iff_boundary`: under the family hypotheses and input shield, the return output satisfies `NoLeft4` if and only if the three-cell boundary guard holds. Source CI [42416716883](https://github.com/FlareZ123/bb6/actions/runs/42416716883) passed with the iff and sharpness theorems.
+
+
+## 2026-11-12: F/1-created 1100 marker return
+
+- Intermediate census and reproducible script: [f1-1100-creation-census.md](f1-1100-creation-census.md). In the first 10M blank-root transitions, exactly one F/1/1 with left context 110 created a 1100 factor behind the head; its right run was 405=2*202+1.
+- Source-level conditional theorem: `Root119WaveMarkerShield.lean`. It packages `Root119WaveNormal.wave_explicit`, proves restoration of the F/1 head cell (erasing the temporary marker), and transports a NoLeft1100 property to the returned B/0 head.
+- Lean CI: [run 43145126198](https://github.com/FlareZ123/bb6/actions/runs/43145126198), passed at commit `6a601a4a3d5d39cd49961d6f95aefc30f4fe378d`. The workflow checks the source theorem axioms for `sorryAx`.
+- This is conditional progress only. The Reach classification of all F/1/1 marker-creation states remains open; the finite 10M census is not an all-time proof.
