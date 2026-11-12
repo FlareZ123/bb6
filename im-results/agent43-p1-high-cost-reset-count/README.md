@@ -1,6 +1,6 @@
 # P1: counted inverse-history energy, walls and one-shallow obstructions
 
-**Research synthesis, 9 November 2026.** These are mathematical restrictions on P1's inverse histories. The one- and two-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions**, for every critical index n≥14 and arbitrarily long depth-two blocks. This is a source-word exclusion, with no unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result; additional bounded-reset floors have lower priority.
+**Research synthesis, 12 November 2026.** These are mathematical restrictions on P1's inverse histories. The one- and two-shallow exclusions are now verified for legal **unchanged-source `inverseAt` transitions**, for every critical index n≥14 and arbitrarily long depth-two blocks. This is a source-word exclusion, with no unrestricted blank-root decision or BB(6) solution. Agent50's all-count reset-density theorem remains the strongest general quantitative result; additional bounded-reset floors have lower priority.
 
 ## Strongest genuine original-source deductions
 
