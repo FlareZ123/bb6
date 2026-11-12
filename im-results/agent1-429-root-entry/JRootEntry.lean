@@ -210,7 +210,7 @@ theorem runWithHeadMax_add (m : Machine) (n k : Nat) (c : Config) :
           simp [hprefix]
       | some y =>
           rcases y with ⟨d, h₁⟩
-          simp only [hprefix, Option.some_bind]
+          simp [hprefix]
           cases hmid : runWithHeadMax m k d with
           | none =>
               simp [runWithHeadMax, hmid]
