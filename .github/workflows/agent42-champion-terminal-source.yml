@@ -1,6 +1,21 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent42-champion-terminal-source.yml'
+      - 'im-results/agent42-champion-terminal/TerminalEncoderBridge.lean'
+      - 'im-results/agent42-champion-terminal/TerminalAfterPrefix.lean'
+      - 'im-results/agent42-champion-terminal/TerminalChampion.lean'
+      - 'im-results/agent42-champion-terminal/TerminalBridge.lean'
+      - 'im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'
+      - 'im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'
+      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
+      - 'im-results/agent8-coverage-contract/Frontier.lean'
+      - 'im-results/agent8-coverage-contract/Symmetry.lean'
+      - 'im-results/agent8-coverage-contract/RootShift.lean'
+      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
 permissions:
   contents: read
 jobs:
@@ -20,6 +35,7 @@ jobs:
           mkdir -p /tmp/a42-terminal
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a42-terminal/
           cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a42-terminal/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalChampion.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalAfterPrefix.lean /tmp/a42-terminal/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a42-terminal/
@@ -35,8 +51,10 @@ jobs:
           lean -o Symmetry.olean Symmetry.lean
           lean -o RootShift.olean RootShift.lean
           lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o S1Encoder.olean S1Encoder.lean
           lean -o TerminalFinish.olean TerminalFinish.lean
           lean -o TerminalLeft.olean TerminalLeft.lean
           lean -o TerminalBridge.olean TerminalBridge.lean
           lean -o TerminalChampion.olean TerminalChampion.lean
-          lean TerminalAfterPrefix.lean
+          lean -o TerminalAfterPrefix.olean TerminalAfterPrefix.lean
+          lean -o TerminalEncoderBridge.olean TerminalEncoderBridge.lean
