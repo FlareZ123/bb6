@@ -8,6 +8,7 @@ namespace BB429RootToJunc
 
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
 open BB429RootEntry BB429High0Physical BB429High3Ladder BB429JuncCanonical
+open BB429PhysicalBridge BB429FinishScanEDelta
 
 /-- The exact 35-step blank-root endpoint is the translated physical J(0,0)
     configuration used by the source-certified high-zero branch. -/
