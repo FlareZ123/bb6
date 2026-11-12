@@ -464,10 +464,84 @@ theorem root_after_5624_junc10_frontier :
   refine ⟨d,htotal,hrepD,hhead,hmark,hblank,hprefix,?_⟩
   simpa [hmonExact] using hmonProof
 
+
+/-- Continue the blank-root chain through two high-three branches and
+    the concrete low-even r=96 return. At step 9243 the source reaches
+    J(11,98), with head -55 and exact global maximum 46. -/
+theorem root_after_9243_junc11_98_frontier :
+    ∃ d : Config,
+      run target429 9243 blank = some d ∧
+      Represents (junc 11 0 98) d ∧
+      d.head = -55 ∧
+      d.tape 46 = true ∧
+      (∀ x : Int, 46 < x → d.tape x = false) ∧
+      (∀ t : Nat, t≤9243 →
+        ∃ e : Config,
+          run target429 t blank = some e ∧ e.head≤46) ∧
+      runWithHeadMax target429 9243 blank = some (d,46) := by
+  rcases root_after_5624_junc10_frontier with
+    ⟨c10,hroot,hrep10,hhead10,hmark39,hblank39,hrootPrefix,hrootMon⟩
+  obtain ⟨d,hbranch,hrepD,hbranchHead,hbranchPrefix⟩ :=
+    root_junc10_to_junc11_r96_physical c10 hrep10
+  have htotal0 :
+      run target429 (5624+3619) blank = some d := by
+    rw [run_add',hroot]
+    exact hbranch
+  have htime : 5624+3619=9243 := by omega
+  have htotal : run target429 9243 blank = some d := by
+    simpa [htime] using htotal0
+  have hhead : d.head=-55 := by
+    rw [hbranchHead,hhead10]
+    norm_num
+  have hprefix :
+      ∀ t : Nat, t≤9243 →
+        ∃ e : Config,
+          run target429 t blank = some e ∧ e.head≤46 := by
+    intro t ht
+    by_cases hle : t≤5624
+    · obtain ⟨e,he,hb⟩ := hrootPrefix t hle
+      exact ⟨e,he,by omega⟩
+    · let s : Nat := t-5624
+      have hs : s≤3619 := by dsimp [s]; omega
+      obtain ⟨e,he,hb⟩ := hbranchPrefix s hs
+      have htime2 : t=5624+s := by dsimp [s]; omega
+      have hraw : run target429 t blank = some e := by
+        rw [htime2,run_add',hroot]
+        exact he
+      have hstart : c10.head=-38 := hhead10
+      exact ⟨e,hraw,by rw [hstart] at hb; omega⟩
+  have hmark : d.tape 46=true := by
+    rw [represented_junc_cell 11 98 d hrepD 46]
+    rw [hhead]
+    norm_num [jTape,jMark,jHole]
+  have hblank : ∀ x : Int, 46<x → d.tape x=false := by
+    intro x hx
+    rw [represented_junc_cell 11 98 d hrepD x]
+    rw [hhead]
+    simp [jTape,jMark,jHole]
+    omega
+  obtain ⟨hmonValue,hmonProof⟩ :=
+    root_runWithHeadMax_exists_of_run target429 9243 blank d htotal
+  have hupper :=
+    root_runWithHeadMax_bound_of_prefix target429 9243 blank d hmonValue
+      46 hmonProof hprefix
+  have hlower : 46≤hmonValue := by
+    by_contra hlt
+    have hunchanged :=
+      runWithHeadMax_tape_above target429 9243 blank d hmonValue hmonProof
+        46 (by omega)
+    have hblank0 : blank.tape 46=false := by rfl
+    rw [hmark,hblank0] at hunchanged
+    contradiction
+  have hmonExact : hmonValue=46 := by omega
+  refine ⟨d,htotal,hrepD,hhead,hmark,hblank,hprefix,?_⟩
+  simpa [hmonExact] using hmonProof
+
 #print axioms root_junc0_to_junc21_max
 #print axioms root_junc0_to_junc21_physical
 #print axioms root_after_1608_junc21_frontier
 #print axioms root_after_3167_junc11_frontier
 #print axioms root_after_5624_junc10_frontier
+#print axioms root_after_9243_junc11_98_frontier
 
 end BB429RootJunctionChain
