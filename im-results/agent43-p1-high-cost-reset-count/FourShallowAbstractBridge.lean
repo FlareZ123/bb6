@@ -211,7 +211,10 @@ theorem no_four_shallow_energies
      by_contra hs3
      have hpow : 8^4≤8^s :=
        Nat.pow_le_pow_right (by decide : 0<(8:Nat)) (by omega)
-     norm_num at hpow
+     have hpow' : 4096≤8^s := by
+       calc
+         4096 = 8^4 := by decide
+         _ ≤ 8^s := hpow
      omega
    exact no_four_small_numeric n s u v w r t1 t2 t3 t4 p d
      alpha beta gamma delta C1 C2 C3 C4 L1 L2 L3 L4 O1 O2 O3 O4
