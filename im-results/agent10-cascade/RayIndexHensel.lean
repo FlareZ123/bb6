@@ -816,7 +816,7 @@ theorem nestedOddIndexResidue_iff (s j t k h:Nat)
         have hshift:s+6*(h%pn)=
             (s+6*b)+((h%pn)/P)*depthPeriod (k+1):=by
           rw [hsplit,haidx]
-          simp [depthPeriod,Nat.pow_succ]
+          simp [P,depthPeriod,Nat.pow_succ]
           omega
         have hbase:(3:Int)^(k+1)∣nestedOddNumerator (s+6*b) j t:=
           (nestedOddIndexResidue_good s j t k hs hj)
