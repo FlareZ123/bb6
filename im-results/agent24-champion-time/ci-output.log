@@ -1,5 +1,5 @@
-RUN_ID=43154824814
-RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43154824814
+RUN_ID=43155168935
+RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43155168935
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
@@ -209,26 +209,7 @@ Hint: Omit it from the simp argument list.
   [apply] simp [hp, hd]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-S1Encoder.lean:196:4: error: unsolved goals
-case neg
-a z : Nat
-hz : 0 < z
-hzlt : z < 2 ^ a
-q r : Nat
-hr : z = (2 * q + 1) * 2 ^ r
-hodd : 1 ≤ 2 * q + 1
-hmul : 2 ^ r * 1 ≤ 2 ^ r * (2 * q + 1)
-hpowle : 2 ^ r ≤ z
-hpowlt : 2 ^ r < 2 ^ a
-hra : r < a
-len : Nat := a - r - 1
-ha : a = len + 1 + r
-hpowadd : 2 ^ a = 2 ^ (len + 1) * 2 ^ r
-hq' : ¬q < 2 ^ len
-hqge : 2 ^ len ≤ q
-⊢ q < 2 ^ len
-S1Encoder.lean:197:4: error: No goals to be solved
-S1Encoder.lean:239:26: warning: This simp argument is unused:
+S1Encoder.lean:240:26: warning: This simp argument is unused:
   List.reverse_append
 
 Hint: Omit it from the simp argument list.
@@ -248,4 +229,114 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 'BB6Coverage.Agent8S1Encoder.s0PhysicalLeft_carrySuffix' depends on axioms: [propext, Quot.sound]
 'BB6Coverage.Agent8S1Encoder.s1PhysicalLeft_carrySuffix' depends on axioms: [propext, Quot.sound]
 'BB6Coverage.Agent8S1Encoder.s1PhysicalLeft_m0_zero' depends on axioms: [propext, Quot.sound]
+=== CountedS1Carry ===
+TM63Uniform.Cfg : Type
+TM63Uniform.rawStart : Nat → Nat → List Bool → List Bool → TM63Uniform.Cfg
+TM63Uniform.rawEnd : Nat → Nat → List Bool → List Bool → TM63Uniform.Cfg
+TM63Uniform.counted_all (k c : Nat) (ls rs : List Bool) :
+  TM63Uniform.run (48 + 12 * k + 12 * c) (TM63Uniform.rawStart k c ls rs) = TM63Uniform.rawEnd k c ls rs
+TM63Uniform.counted_no_early_halt (k c : Nat) (ls rs : List Bool) (t : Nat) (ht : t ≤ 48 + 12 * k + 12 * c) :
+  ¬((TM63Uniform.run t (TM63Uniform.rawStart k c ls rs)).st = 0 ∧
+      (TM63Uniform.run t (TM63Uniform.rawStart k c ls rs)).h = true)
+TM63Uniform.run : Nat → TM63Uniform.Cfg → TM63Uniform.Cfg
+TM63Uniform.step (c : TM63Uniform.Cfg) : TM63Uniform.Cfg
+BB6.ChampionTerminal.Z : Type
+BB6.ChampionTerminal.Full : Type
+BB6.ChampionTerminal.embedFull (z : BB6.ChampionTerminal.Z) (position : Int) : BB6.ChampionTerminal.Full
+BB6.ChampionTerminal.fullStep (z : BB6.ChampionTerminal.Full) : Option BB6.ChampionTerminal.Full
+BB6.ChampionTerminal.fullRun : Nat → BB6.ChampionTerminal.Full → Option BB6.ChampionTerminal.Full
+BB6.ChampionTerminal.locatedStep (zp : BB6.ChampionTerminal.Z × Int) : Option (BB6.ChampionTerminal.Z × Int)
+BB6.ChampionTerminal.locatedRun : Nat → BB6.ChampionTerminal.Z × Int → Option (BB6.ChampionTerminal.Z × Int)
+BB6.ChampionTerminal.run_semiconjugacy (n : Nat) (z : BB6.ChampionTerminal.Z) (p : Int) :
+  Option.map (fun w => BB6.ChampionTerminal.embedFull w.fst w.snd) (BB6.ChampionTerminal.locatedRun n (z, p)) =
+    BB6.ChampionTerminal.fullRun n (BB6.ChampionTerminal.embedFull z p)
+BB6.ChampionTerminal.run_add (n m : Nat) (z : BB6.ChampionTerminal.Z) :
+  BB6.ChampionTerminal.run (n + m) z = (BB6.ChampionTerminal.run n z).bind (BB6.ChampionTerminal.run m)
+BB6.ChampionTerminal.sideBit : List Bool → Nat → Bool
+BB6Coverage.Config : Type
+BB6Coverage.rawStep (m : BB6Coverage.Machine) (c : BB6Coverage.Config) : Option BB6Coverage.Config
+BB6Coverage.run (m : BB6Coverage.Machine) : Nat → BB6Coverage.Config → Option BB6Coverage.Config
+BB6Coverage.Agent48Champion.tm2 : BB6Coverage.Machine
+BB6Coverage.Agent8S1Encoder.s1Config (L n m a z b : Nat) (h : Int) : BB6Coverage.Config
+BB6Coverage.Agent8S1Encoder.s1LeftFacing (L n m a z : Nat) : List Bool
+BB6Coverage.Agent8S1Encoder.s1PhysicalRight (b : Nat) : List Bool
+BB6Coverage.Agent8S1Encoder.s1LeftFacing_carryPrefix (L n m len q r : Nat) (hq : q < 2 ^ len) :
+  BB6Coverage.Agent8S1Encoder.s1LeftFacing L n m (len + 1 + r) ((2 * q + 1) * 2 ^ r) =
+    BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++ BB6Coverage.Agent8S1Encoder.binDec len q ++
+            BB6Coverage.Agent8S1Encoder.markerWord m ++
+          BB6Coverage.Agent8S1Encoder.d0 ++
+        BB6Coverage.Agent8S1Encoder.binDec L n ++
+      BB6Coverage.Agent8S1Encoder.lh
+BB6Coverage.Agent8S1Encoder.s1Config_left_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
+  (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h - ↑i) =
+    BB6Coverage.Agent8S1Encoder.sideBit (BB6Coverage.Agent8S1Encoder.s1LeftFacing L n m a z) i
+BB6Coverage.Agent8S1Encoder.s1Config_right_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
+  (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h + 1 + ↑i) =
+    BB6Coverage.Agent8S1Encoder.sideBit (BB6Coverage.Agent8S1Encoder.s1PhysicalRight b) i
+BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry (L n m a z b : Nat) (h : Int) (hz : 0 < z) (hzlt : z < 2 ^ a) :
+  ∃ q r len,
+    z = (2 * q + 1) * 2 ^ r ∧
+      a = len + 1 + r ∧
+        q < 2 ^ len ∧
+          ∀ (i : Nat),
+            (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h - ↑i) =
+              BB6Coverage.Agent8S1Encoder.sideBit
+                (BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++
+                          BB6Coverage.Agent8S1Encoder.binDec len q ++
+                        BB6Coverage.Agent8S1Encoder.markerWord m ++
+                      BB6Coverage.Agent8S1Encoder.d0 ++
+                    BB6Coverage.Agent8S1Encoder.binDec L n ++
+                  BB6Coverage.Agent8S1Encoder.lh)
+                i
+BB6Coverage.Agent8S1Encoder.binDec_even (len n : Nat) (hn : n < 2 ^ len) :
+  BB6Coverage.Agent8S1Encoder.binDec (len + 1) (2 * n) =
+    BB6Coverage.Agent8S1Encoder.d1 ++ BB6Coverage.Agent8S1Encoder.binDec len n
+BB6Coverage.Agent8S1Encoder.binDec_odd (len n : Nat) (hn : n < 2 ^ len) :
+  BB6Coverage.Agent8S1Encoder.binDec (len + 1) (2 * n + 1) =
+    BB6Coverage.Agent8S1Encoder.d0 ++ BB6Coverage.Agent8S1Encoder.binDec len n
+BB6Coverage.Agent8S1Encoder.d0 : List Bool
+BB6Coverage.Agent8S1Encoder.d1 : List Bool
+BB6Coverage.Agent8S1Encoder.d1pow : Nat → List Bool
+BB6Coverage.Agent8S1Encoder.sideBit : List Bool → Nat → Bool
+BB6.ChampionTerminal.locatedStep (zp : BB6.ChampionTerminal.Z × Int) : Option (BB6.ChampionTerminal.Z × Int)
+BB6.ChampionTerminal.locatedRun : Nat → BB6.ChampionTerminal.Z × Int → Option (BB6.ChampionTerminal.Z × Int)
+BB6.ChampionTerminal.run_add (n m : Nat) (z : BB6.ChampionTerminal.Z) :
+  BB6.ChampionTerminal.run (n + m) z = (BB6.ChampionTerminal.run n z).bind (BB6.ChampionTerminal.run m)
+BB6.ChampionTerminal.run_semiconjugacy (n : Nat) (z : BB6.ChampionTerminal.Z) (p : Int) :
+  Option.map (fun w => BB6.ChampionTerminal.embedFull w.fst w.snd) (BB6.ChampionTerminal.locatedRun n (z, p)) =
+    BB6.ChampionTerminal.fullRun n (BB6.ChampionTerminal.embedFull z p)
+BB6.ChampionTerminal.sideBit : List Bool → Nat → Bool
+CountedS1Carry.lean:49:7: error(lean.unknownIdentifier): Unknown constant `BB6Coverage.Config.ext`
+BB6Coverage.applyMove (c : BB6Coverage.Config) (t : BB6Coverage.Move) : BB6Coverage.Config
+BB6Coverage.rawStep (m : BB6Coverage.Machine) (c : BB6Coverage.Config) : Option BB6Coverage.Config
+BB6Coverage.run (m : BB6Coverage.Machine) : Nat → BB6Coverage.Config → Option BB6Coverage.Config
+BB6Coverage.Agent48Champion.tm2 : BB6Coverage.Machine
+BB6Coverage.Agent8S1Encoder.s1Config_left_carryCells (L n m len q r b : Nat) (h : Int) (i : Nat) (hq : q < 2 ^ len) :
+  (BB6Coverage.Agent8S1Encoder.s1Config L n m (len + 1 + r) ((2 * q + 1) * 2 ^ r) b h).tape (h - ↑i) =
+    BB6Coverage.Agent8S1Encoder.sideBit
+      (BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++
+                BB6Coverage.Agent8S1Encoder.binDec len q ++
+              BB6Coverage.Agent8S1Encoder.markerWord m ++
+            BB6Coverage.Agent8S1Encoder.d0 ++
+          BB6Coverage.Agent8S1Encoder.binDec L n ++
+        BB6Coverage.Agent8S1Encoder.lh)
+      i
+BB6Coverage.Agent8S1Encoder.s1PhysicalRight_source (b : Nat) :
+  BB6Coverage.Agent8S1Encoder.s1PhysicalRight b =
+    [false, true, true, true, false, false] ++ BB6Coverage.Agent8S1Encoder.d1pow (b + 1)
+BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry (L n m a z b : Nat) (h : Int) (hz : 0 < z) (hzlt : z < 2 ^ a) :
+  ∃ q r len,
+    z = (2 * q + 1) * 2 ^ r ∧
+      a = len + 1 + r ∧
+        q < 2 ^ len ∧
+          ∀ (i : Nat),
+            (BB6Coverage.Agent8S1Encoder.s1Config L n m a z b h).tape (h - ↑i) =
+              BB6Coverage.Agent8S1Encoder.sideBit
+                (BB6Coverage.Agent8S1Encoder.d1pow r ++ BB6Coverage.Agent8S1Encoder.d0 ++
+                          BB6Coverage.Agent8S1Encoder.binDec len q ++
+                        BB6Coverage.Agent8S1Encoder.markerWord m ++
+                      BB6Coverage.Agent8S1Encoder.d0 ++
+                    BB6Coverage.Agent8S1Encoder.binDec L n ++
+                  BB6Coverage.Agent8S1Encoder.lh)
+                i
 LEAN_EXIT_CODE=1
