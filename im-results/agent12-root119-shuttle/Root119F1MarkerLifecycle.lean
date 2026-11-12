@@ -22,6 +22,18 @@ theorem to_F {u v : Conf} (hstep : next u = some v) (hF : v.q = .F) :
       all_goals cases hstep
       all_goals simp_all [setBit]
 
+/-- Exact inverse transition classification for entry into state B. -/
+theorem to_B {u v : Conf} (hstep : next u = some v) (hB : v.q = .B) :
+    (u.q = .A ∧ u.tape u.h = false ∧ v.h = u.h+1 ∧
+      v.tape (v.h-1) = true) ∨
+    (u.q = .F ∧ u.tape u.h = false ∧ v.h = u.h-1 ∧
+      v.tape (v.h+1) = true) := by
+  cases u with
+  | mk q h t =>
+      cases q <;> cases hb : t h <;> simp [next,hb] at hstep
+      all_goals cases hstep
+      all_goals simp_all [setBit]
+
 /-- A reachable F configuration whose left neighbor is zero can only have
     arrived from B/1 immediately to its right: the alternative D/1
     predecessor necessarily writes one into that left neighbor. -/
@@ -109,6 +121,32 @@ def f1EvenTape (n : Nat) (t : Int → Bool) (h : Int) : Int → Bool :=
 
 def f1EvenResult (n : Nat) (t : Int → Bool) (h : Int) : Conf :=
   ⟨.B,h+1+((2*(n+1):Nat):Int)+1,f1EvenTape n t h⟩
+
+/-- The two-step backward cone of any reached F state with a zero
+    immediately to its left. Its B/1 predecessor must itself have come
+    either from A/0 at the F head or from F/0 two cells to its right. -/
+theorem reached_F_left_zero_two_step_parent (c : Conf) (hc : Reach c)
+    (hF : c.q = .F) (hleft : c.tape (c.h-1) = false) :
+    ∃ b, Reach b ∧ b.q = .B ∧ b.tape b.h = true ∧ b.h = c.h+1 ∧
+      ((∃ a, Reach a ∧ a.q = .A ∧ a.tape a.h = false ∧
+          a.h = c.h ∧ next a = some b) ∨
+       (∃ a, Reach a ∧ a.q = .F ∧ a.tape a.h = false ∧
+          a.h = c.h+2 ∧ next a = some b)) := by
+  obtain ⟨b,hb,hB,hbit,hpos,hstepB⟩ :=
+    reached_F_left_zero_parent c hc hF hleft
+  cases hb with
+  | initial =>
+      simp [blank] at hB
+  | @follow a _ ha hstepA =>
+      rcases to_B hstepA hB with hA | hF0
+      · rcases hA with ⟨hq,hzero,hposB,hwritten⟩
+        have hposA : a.h = c.h := by omega
+        exact ⟨b,Reach.follow ha hstepA,hB,hbit,hpos,
+          Or.inl ⟨a,ha,hq,hzero,hposA,hstepA⟩⟩
+      · rcases hF0 with ⟨hq,hzero,hposB,hwritten⟩
+        have hposA : a.h = c.h+2 := by omega
+        exact ⟨b,Reach.follow ha hstepA,hB,hbit,hpos,
+          Or.inr ⟨a,ha,hq,hzero,hposA,hstepA⟩⟩
 
 /-- The exact even F/1 corridor execution, including its final D/0-E/0-A/0
     tail. It uses only the original auxiliary transition table. -/
@@ -481,6 +519,8 @@ theorem f1_even_endpoint_one_to_F1 (n : Nat) (t : Int → Bool) (h : Int)
 
 #print axioms BB6Root119.to_F
 #print axioms BB6Root119.reached_F_left_zero_parent
+#print axioms BB6Root119.to_B
+#print axioms BB6Root119.reached_F_left_zero_two_step_parent
 #print axioms BB6Root119.f1_even_run_exact
 #print axioms BB6Root119.f1_even_result_markerB0Pattern
 #print axioms BB6Root119.f1_even_double_zero_halts
