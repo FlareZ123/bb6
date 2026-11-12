@@ -47,8 +47,7 @@ The selective, fail-closed source workflow
 compiles the original machine source, the four existing residue bridges, and
 this module with Lean **4.36.0-rc2**.
 
-[CI 43167823012](https://github.com/FlareZ123/bb6/actions/runs/43167823012)
-and [CI 43168841419](https://github.com/FlareZ123/bb6/actions/runs/43168841419)
+[CI 43167823012](https://github.com/FlareZ123/bb6/actions/runs/43167823012), [CI 43168841419](https://github.com/FlareZ123/bb6/actions/runs/43168841419), and the clean-tree regression check [CI 43169403690](https://github.com/FlareZ123/bb6/actions/runs/43169403690)
 completed successfully. All trace/lift theorem audits, including `carryBridge3_matches_carryAD12`, are
 `[propext, Classical.choice, Quot.sound]`; none contains `sorryAx`.
 
