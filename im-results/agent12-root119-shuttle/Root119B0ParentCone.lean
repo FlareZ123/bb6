@@ -676,7 +676,7 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
       hstepD.symm.trans hDshape
     exact Option.some.inj hsome
-  have hEhead : e.h=d.h+1 := by rw [heEq]; rfl
+  have hEhead : e.h=d.h+1 := by rw [heEq]
   have hposE : e.h=f.h+2 := by omega
   have hkpos : 1≤k := by
     by_cases hk : 1≤k
