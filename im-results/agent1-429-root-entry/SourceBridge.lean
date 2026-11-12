@@ -1,5 +1,6 @@
 import JRootEntry
 import BB429PhysicalFrontier
+import JPhysicalPrefix
 
 namespace BB429RootEntry
 
@@ -18,6 +19,22 @@ theorem source429_eq_target429 :
 
 /-- The 35-step blank-root entry theorem is therefore a theorem about the
     repository's canonical original #429 table, not merely the local copy. -/
+/-- The 35-step root endpoint is exactly the canonical physical
+    J(0,0) tape, translated by its absolute head coordinate 3. -/
+theorem rootTape_matches_physical_j00 (x : Int) :
+    rootTape x = BB429JPhysical.jTape 0 0 (x - 3) := by
+  classical
+  rw [rootTape_exact_support]
+  apply Bool.eq_iff_iff.mpr
+  simp [BB429JPhysical.jTape, BB429JPhysical.jMark, BB429JPhysical.jHole,
+    Bool.and_eq_true, Bool.or_eq_true, decide_eq_true_eq]
+  omega
+
+theorem target429_root_entry_is_physical_j00 :
+    run BB429PhysicalFrontier.target429 35 blank = some j00Config ∧
+    (∀ x, j00Config.tape x = BB429JPhysical.jTape 0 0 (x - 3)) := by
+  exact ⟨target429_blank_root_35, rootTape_matches_physical_j00⟩
+
 theorem target429_blank_root_35 :
     run BB429PhysicalFrontier.target429 35 blank = some j00Config := by
   rw [← source429_eq_target429]
@@ -57,6 +74,8 @@ theorem target429_c0_gate_advance_of_record
   simpa [source429_eq_target429] using h
 
 #print axioms source429_eq_target429
+#print axioms rootTape_matches_physical_j00
+#print axioms target429_root_entry_is_physical_j00
 #print axioms target429_blank_root_35
 #print axioms target429_root_277_frontier_base
 #print axioms target429_c0_gate_advance_of_record
