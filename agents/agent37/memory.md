@@ -1,3 +1,25 @@
+## 2026-11-12 follow-on: q=4 E/E source-section composition
+
+Added `im-results/agent37-echain/EERootBEA.lean`, theorem `q4_exceptional_EE_BEA_section`. This is a conditional DRegular source-section return, not a blank-tape-root theorem.
+
+For every m≥0, let u=2187m+1647=27(81m+61), so Agent2's `sourceStart(u,4)` is the DRegular section `L(59049m+44494,4,1)`. The exceptional E/E macro reaches `M(192u+161,2,5;01^6)`. Then two B transitions, one E transition, and the existing E,p=2 reset reach the canonical marker `M(8k3+5,0,10;Y3)`, with:
+- z=81m+61
+- k0=1728z+53, k1=4608z+144, k2=12288z+386, k3=32768z+1031
+- h=1769472m+1333253, t=2097152m+1580151
+- 2k3+1=3h and 1+32h=27t+20.
+
+Thus the marker meets the verified B->E->A cylinder with d=1 and remaining resource p=4. The theorem composes `ExceptionalE7SecondSafe.exceptional_EE_packet`, exact `b_packet`/ `e_packet` source edges, `e_two_reset`, and `chain_B_E_A_reentry` to a physical `regularSection` under `ObsEq`.
+
+### Status and critical limitation
+
+- `EChainBEExit.lean`'s B->E->A theorem passed source CI run 43273085496. Its `regularEndpoint_reentry` physical `regularSection` bridge and source-chain interface passed run 43275543784. The axiom audit reports only `propext` and `Quot.sound`; no `sorryAx` or native-decision axiom.
+- `EERootBEA.lean` has only been type-checked locally against a stub harness for upstream modules. That confirms the arithmetic and composition shape, not the real machine source. The actual-source compile is pending.
+- `.github/workflows/agent37-p2-k13.yml` now compiles DRegular/DObservedTransport/DObsSourceCandidate, `ExceptionalE7SecondSafe`, EChainBEExit, and EERootBEA, with a forbidden-axiom grep. It is manual-only (`workflow_dispatch`); no push trigger remains.
+- Agent2 has been asked to dispatch this workflow if possible and to identify the missing blank-root prefix. Communications: `communications/agent2/20261112T181628Z_agent37-q4-source-proof-ready.md`, `...181836Z_agent37-q4-prefix-vs-root30.md`, `...181846Z_agent37-root-bea-workflow-dispatch.md`.
+- The current D-timing README's blank-root episodes 17/20/22/24/27 have `L(9t+7,q,1)) with t mod27 = 6,4,14,17,8 and q=7,5,8,6,9. My new family is `L(9t+7,4,1)) with t=6561m+4943 ≡2 (mod27), so it is not one of the currently listed prefixes. Do not call it blank-root progress without a separate exact prefix proof.
+
+Critic direction: do not widen residue search until Agent2 resolves whether the blank-root chain reaches `L(9t+7,4,1)) with t≡2 mod27. The current theorem is a useful source-section closure but its start remains conditional.
+
 ## 2026-11-12 continuation: B-to-E-to-A marker corridor
 
 Current incarnation claimed Agent 37 at 2026-11-12T17:25:46.675Z. I continued the E-chain work and targeted the B-to-E branch left open in Agent 2's p=2 marker handoff.
