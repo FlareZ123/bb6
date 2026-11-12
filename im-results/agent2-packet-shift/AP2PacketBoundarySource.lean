@@ -66,9 +66,16 @@ private theorem wordCode_true_repeat (r : Nat) :
   induction r with
   | zero => rfl
   | succ r ih =>
-    simp [CryptidA.wordCode,List.replicate_succ,ih,
-      replicate_append_true,Nat.mul_succ,Nat.add_assoc,
-      Nat.add_comm,Nat.add_left_comm,List.append_assoc]
+    calc
+      CryptidA.wordCode (List.replicate (r+1) true) =
+          [true,true,true] ++ List.replicate (3*r) true := by
+        simp [CryptidA.wordCode,List.replicate_succ,ih]
+      _ = List.replicate (3 + 3*r) true := by
+        simpa [List.replicate_succ] using
+          (replicate_append_true 3 (3*r))
+      _ = List.replicate (3*(r+1)) true := by
+        congr 1
+        omega
 
 private theorem false_cons_pairs (q : Nat) :
     false :: CryptidBoundary.pairs q =
@@ -100,19 +107,44 @@ private theorem words_code (q r : Nat) :
 theorem a_p2_packet_reentry (k q r : Nat) :
     run (sourceTime k q r) (input k q r) =
       endpoint k q r := by
+  have hlead :
+      List.replicate (3*k+3) true =
+        [true,true] ++ List.replicate (3*k+1) true := by
+    have hN : 3*k+3 = 2 + (3*k+1) := by omega
+    rw [hN]
+    simpa [List.replicate_succ] using
+      (replicate_append_true 2 (3*k+1)).symm
+  have hrep :
+      List.replicate (3*r) true ++ [true,true] =
+        List.replicate (3*r+2) true := by
+    simpa [List.replicate_succ] using
+      (replicate_append_true (3*r) 2)
+  have htail :
+      List.replicate (3*r) true ++
+          [true,true,false,true,true,true,true,true,true] =
+        List.replicate (3*r+2) true ++
+          [false,true,true,true,true,true,true] := by
+    calc
+      _ = (List.replicate (3*r) true ++ [true,true]) ++
+            [false,true,true,true,true,true,true] := by
+        simp [List.append_assoc]
+      _ = _ := by rw [hrep]
   have hshape :
       input k q r =
         CryptidBoundary.init
           (List.replicate (3*k+1) true ++
             false :: (CryptidA.wordCode (words q r) ++
               BB6.CryptidA110111CodeFirst.packet ys)) := by
-    simp [input,fixedTail,words,ys,
-      CryptidBoundary.init,CryptidBoundary.oppairs,
-      words_code,false_cons_pairs,false_cons_pairs_append,
-      BB6.CryptidA110111CodeFirst.packet,
-      replicate_append_true,List.append_assoc]
+    simp only [input,fixedTail,ys,CryptidBoundary.init,
+      BB6.CryptidA110111CodeFirst.packet]
+    rw [hlead]
+    rw [words_code]
+    simp only [List.append_assoc]
+    rw [false_cons_pairs_append]
+    rw [htail]
+    rfl
   have htail :
-      false :: ([true,false,true,false,true] ++ ys) =
+      [false,true,false,true,false,true,true,true] =
         CryptidBoundary.oppairs 3 ++ List.replicate 3 true := by
     decide
   rw [hshape]
