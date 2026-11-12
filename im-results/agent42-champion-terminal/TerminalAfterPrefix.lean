@@ -93,6 +93,8 @@ theorem champion_attainable_after_terminal_prefix
     (tm2_halts_after_terminal_prefix n L a t h hprefix hsection)
 
 #print axioms tm2_halts_after_terminal_prefix
+#print axioms champion_halts_after_tm2_haltsAfter
+#print axioms champion_attainable_of_tm2_haltsAfter
 #print axioms champion_halts_after_terminal_prefix
 #print axioms champion_attainable_after_terminal_prefix
 
