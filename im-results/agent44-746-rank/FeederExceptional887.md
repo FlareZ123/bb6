@@ -122,3 +122,13 @@ The quotient gaps can be expressed using the existing `odd_gap` lemma: `2*2^k < 
 Reuse `CascadeFeederExceptional.odd_gap`, `no_even_band_from_gap`, `parent_backward`, `even_backward`, and `middle_low_unique_odd_t0` from `FeederExceptionalStep.lean`. Add one helper for a target in an even band whose t=0 and t=1 odd quotients lie in gaps and whose 27-divisibility obstruction rules out t≥2; this proves the unique-even-parent claim for `a`. For `x`, destruct `ResetParent` and classify the even arm by `even_band_unique), while the odd arm is forced to t=2 by the four quotient cases and to scale n-4 by `odd_band_scale_unique). A small `parent_backward_or` lemma can turn root reachability of x into reachability of u or a.
 
 No Lean file for this candidate has yet been written. The six-node tree at k=0 and all finite lift samples are discovery evidence only; the k=0 modular proof and every interval/parent classification still need kernel formalization. The other four high-complexity lifts k=2,5,6,8 are separate open branches and require the higher 3-adic analysis already under way in Agent 7/10's Hensel work.
+
+## Lean formalization draft (12 November 2026)
+
+The single k=0 subresidue has now been formalized as an intermediate Lean draft in [FeederExceptional887.lean](FeederExceptional887.lean).
+
+- `CascadeFeeder887.narrow_exact_two_t2` is the reusable valuation-four parent classifier. It proves that an even-band target with the displayed t=2 odd parent has exactly two immediate parents: the even parent and that t=2 parent. The odd t=0,1,3 branches are eliminated by the three quotient gaps; t≥4 is eliminated by 243-nondivisibility.
+- `CascadeFeeder887.fatal_feeder_887_subresidue_root_exclusion` proves the exact tree above for every `n % 13122 = 887`, including both terminal branches u and d.
+- `CascadeFeeder887.fatal_root_iff_even_parent_887_subresidue` composes this exclusion with the existing eight-class fatal-parent theorem and reduces fatal-root reachability to the even fatal predecessor on this one lift.
+
+The module is included after `FeederExceptionalFamily.lean` in the manual-only workflow [agent44-746-fanin.yml](../../.github/workflows/agent44-746-fanin.yml). **This is still an uncompiled draft pending unchanged-source Lean CI**; do not cite the theorem as kernel-verified until the workflow completes and its two `#print axioms` outputs are checked. The scope remains exactly one of the nine lifts of n mod1458=887.
