@@ -2,9 +2,138 @@ import FourLayerBarrier
 import TwoShallowFiniteBounds
 import Lean.Elab.Tactic.Omega
 
+
 namespace BB6.Agent43FourShallowAbstract
 
 open BB6.Agent43TwoShallowFinite BB6.Agent43FourLayer
+
+/-- The first four dyadic remainders in the source-profiled four-shallow
+terminal equation. -/
+def fourProfileAlpha (t : Nat) : Nat := if t=0 then 1 else 2
+
+def fourProfileStep (x t : Nat) : Prop :=
+  fourProfileAlpha t ≤ x ∧ (x-fourProfileAlpha t)%3=0
+
+def fourRootDivides (n s : Nat) : Prop :=
+  2^n % 8^s = 0 ∧ (14*n+92)%8^s=0
+
+def fourRootRem (n s t1 : Nat) : Nat := Id.run do
+  let (_,_,L,O) := triple t1
+  let q := 8^s
+  return L*(n+6+3*s)-O-(14*n+92)/q
+
+def fourSecondRem (n s t1 x1 t2 : Nat) : Nat := Id.run do
+  let (_,_,L2,O2) := triple t2
+  let R1 := fourRootRem n s t1
+  let d1 := R1/2^x1
+  return L2*(n+6+3*s+x1)-O2+d1
+
+def fourThirdRem (n s t1 x1 t2 x2 t3 : Nat) : Nat := Id.run do
+  let (_,_,L3,O3) := triple t3
+  let S2 := fourSecondRem n s t1 x1 t2
+  let d2 := S2/2^x2
+  return L3*(n+6+3*s+x1+x2)-O3+d2
+
+def fourFourthRem (n s t1 x1 t2 x2 t3 x3 t4 : Nat) : Nat := Id.run do
+  let (_,_,L4,O4) := triple t4
+  let S3 := fourThirdRem n s t1 x1 t2 x2 t3
+  let d3 := S3/2^x3
+  return L4*(n+6+3*s+x1+x2+x3)-O4+d3
+
+def fourCoeff (s t1 x1 t2 x2 t3 x3 t4 : Nat) : Nat := Id.run do
+  let (_,C1,_,_) := triple t1
+  let (_,C2,_,_) := triple t2
+  let (_,C3,_,_) := triple t3
+  let (_,C4,_,_) := triple t4
+  let q := 8^s
+  return q*(C1+C2*2^x1+C3*2^(x1+x2)+C4*2^(x1+x2+x3))-98
+
+def fourEmax (n s x1 x2 x3 : Nat) : Nat :=
+  112*(n+6+3*s+x1+x2+x3+15)-384
+
+set_option maxRecDepth 8192
+set_option maxHeartbeats 50000000
+
+/-- Exact finite nondivisibility at the root, for every source profile and
+every possible root prefix with 14 <= n <= 75. -/
+theorem four_root_no_overflow :
+  ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
+    fourRootDivides (n.val+14) s.val →
+    fourRootRem (n.val+14) s.val t1.val %
+      2^(n.val+14-3*s.val) ≠ 0 := by decide
+
+/-- The second shallow remainder is not divisible by the remaining
+root-power after any legal first shallow exponent. -/
+theorem four_second_no_overflow :
+  ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
+    ∀ x1 : Fin 13, ∀ t2 : Fin 2,
+    fourRootDivides (n.val+14) s.val →
+    fourRootRem (n.val+14) s.val t1.val %
+      2^(n.val+14-3*s.val) ≠ 0 →
+    x1.val ≤ n.val+14-3*s.val →
+    fourProfileStep x1.val t1.val →
+    fourRootRem (n.val+14) s.val t1.val % 2^x1.val = 0 →
+    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val %
+      2^(n.val+14-3*s.val-x1.val) ≠ 0 := by decide
+
+/-- The third shallow remainder is not divisible by the remaining
+root-power after any legal first two shallow exponents. -/
+theorem four_third_no_overflow :
+  ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
+    ∀ x1 : Fin 13, ∀ t2 : Fin 2, ∀ x2 : Fin 14, ∀ t3 : Fin 2,
+    fourRootDivides (n.val+14) s.val →
+    fourRootRem (n.val+14) s.val t1.val %
+      2^(n.val+14-3*s.val) ≠ 0 →
+    x1.val ≤ n.val+14-3*s.val →
+    fourProfileStep x1.val t1.val →
+    fourRootRem (n.val+14) s.val t1.val % 2^x1.val = 0 →
+    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val %
+      2^(n.val+14-3*s.val-x1.val) ≠ 0 →
+    x2.val ≤ n.val+14-3*s.val-x1.val →
+    fourProfileStep x2.val t2.val →
+    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val % 2^x2.val = 0 →
+    fourThirdRem (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val %
+      2^(n.val+14-3*s.val-x1.val-x2.val) ≠ 0 := by decide
+
+/-- Final finite certificate for the 14..75 four-shallow sector.  Once the
+first three remainders have been peeled, the fourth remainder is not divisible
+by the remaining power, and the exact coefficient exceeds the largest
+possible fourth-remainder terminal contribution (using x4 <= 15). -/
+theorem four_fourth_finite_audit :
+  ∀ n : Fin 62, ∀ s : Fin 4, ∀ t1 : Fin 2,
+    ∀ x1 : Fin 13, ∀ t2 : Fin 2, ∀ x2 : Fin 14,
+    ∀ t3 : Fin 2, ∀ x3 : Fin 15, ∀ t4 : Fin 2,
+    fourRootDivides (n.val+14) s.val →
+    fourRootRem (n.val+14) s.val t1.val %
+      2^(n.val+14-3*s.val) ≠ 0 →
+    x1.val ≤ n.val+14-3*s.val →
+    fourProfileStep x1.val t1.val →
+    fourRootRem (n.val+14) s.val t1.val % 2^x1.val = 0 →
+    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val %
+      2^(n.val+14-3*s.val-x1.val) ≠ 0 →
+    x2.val ≤ n.val+14-3*s.val-x1.val →
+    fourProfileStep x2.val t2.val →
+    fourSecondRem (n.val+14) s.val t1.val x1.val t2.val % 2^x2.val = 0 →
+    fourThirdRem (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val %
+      2^(n.val+14-3*s.val-x1.val-x2.val) ≠ 0 →
+    x3.val ≤ n.val+14-3*s.val-x1.val-x2.val →
+    fourProfileStep x3.val t3.val →
+    fourThirdRem (n.val+14) s.val t1.val x1.val t2.val x2.val t3.val %
+      2^x3.val = 0 →
+    (fourFourthRem (n.val+14) s.val t1.val x1.val t2.val x2.val
+        t3.val x3.val t4.val %
+        2^(n.val+14-3*s.val-x1.val-x2.val-x3.val) ≠ 0 ∧
+      fourCoeff s.val t1.val x1.val t2.val x2.val t3.val x3.val t4.val *
+        2^(n.val+14-3*s.val-x1.val-x2.val-x3.val) >
+        fourFourthRem (n.val+14) s.val t1.val x1.val t2.val x2.val
+          t3.val x3.val t4.val *
+          (fourEmax (n.val+14) s.val x1.val x2.val x3.val+1)) := by
+  native_decide
+
+#print axioms four_root_no_overflow
+#print axioms four_second_no_overflow
+#print axioms four_third_no_overflow
+#print axioms four_fourth_finite_audit
 
 /-- Four source-profiled shallow cocycles, separated by depth-two energy
 divisions, imply an impossible terminal shifted-wall equation. -/
