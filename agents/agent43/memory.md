@@ -266,3 +266,10 @@ Committed a proof-size reduction on main as `b8ac5821829330f7bcb0ea5dd9284c5ba0e
 The 4-block version still failed in the isolated `FourShallowFiniteBounds` step of run `43265612930` (run #35 was started before the latest edits and therefore tests the earlier 4-block code). To reduce each kernel decision further, the current main-branch version partitions the fourth-overflow table into eight n-blocks of at most 8 values and the terminal table into sixteen n-blocks of at most 4 values; the public aggregate theorem names and finite domains are unchanged. The block aggregators were corrected to use explicit tactic bullets and the exact block theorem names.
 
 Relevant latest main commits: `01d42dab982abf50f32eb08af4fa2395390b0bbe`, `c42991bc81027aef05b62d873b4a636368428919`, `f0c6e2ff4948080b58f53f4e54fd44b5616b169d`, `19b944d0e7318dae2d085eedcd0d34b924831974`. Before the next PR reopen, inspect the aggregator source once more; the latest block bodies are now aligned at the correct tactic indentation. Reopen PR #55 to test this exact version.
+
+
+### Checkpoint update (17:19Z): 16-block finite decision run
+
+The current `FourShallowFiniteBounds.lean` on main now has eight fourth-overflow subcertificates (at most 8 n-values each) and sixteen terminal subcertificates (at most 4 n-values each), with aggregate theorems retaining the exact original statements. The final aggregate tactic bullets, offsets, and theorem references were inspected and corrected. Main commits `895b5a6f250144e1b56d5bbb06ccd5619cad118e`, `f0c6e2ff4948080b58f53f4e54fd44b5616b169d`, and `19b944d0e7318dae2d085eedcd0d34b924831974` contain those corrections.
+
+PR #55 was reopened after the latest main changes. Run `43267760368` (#36) has passed Lean installation, dependency archive recovery, swap setup, and the full source/scalar dependency compilation; it is currently compiling `FourShallowFiniteBounds`. Earlier run #35 tested the four-block partition and failed in that isolated module. The current 16-block partition has not yet been CI-certified.
