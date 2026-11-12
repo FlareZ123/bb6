@@ -25,6 +25,17 @@ theorem next_A_zero_shape (a : Conf) (hA : a.q = .A)
       change t h = false at hzero
       simp [next,hzero]
 
+/-- The exact F/0 transition, including its unique tape write. -/
+theorem next_F_zero_shape (f : Conf) (hF : f.q = .F)
+    (hzero : f.tape f.h = false) :
+    next f = some ⟨.B,f.h-1,setBit f.tape f.h true⟩ := by
+  cases f with
+  | mk q h t =>
+      change q = .F at hF
+      subst q
+      change t h = false at hzero
+      simp [next,hzero]
+
 /-- Every noninitial reached B/0 in the 10x left-context sector has an
     immediate F/0 predecessor one cell to its right. The only alternative
     B predecessor, A/0, is excluded by tracing the A state one step farther
@@ -127,9 +138,17 @@ theorem reached_B0_left10_three_step_parent (c : Conf) (hc : Reach c)
       next f = some b ∧ next b = some g ∧ next g = some c := by
   obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
     reached_B0_left10_parent c hc hB hcurrent hleft3 hleft2
+  have hGshape : c = ⟨.B,g.h-1,setBit g.tape g.h true⟩ := by
+    rw [next_F_zero_shape g hG hGzero] at hGstep
+    cases hGstep
+    rfl
   have hGleft : g.tape (g.h-1) = false := by
-    rw [hGpos]
-    exact hcurrent
+    have hcell : c.tape c.h = g.tape (g.h-1) := by
+      rw [hGshape]
+      change setBit g.tape g.h true (g.h-1) = g.tape (g.h-1)
+      exact setBit_apply_ne g.tape g.h (g.h-1) true (by omega)
+    rw [hcurrent] at hcell
+    exact hcell.symm
   obtain ⟨f,hf,hF,hFzero,hFpos,b,hb,hB1,hbit,hBpos,hFstep,hBstep⟩ :=
     reached_F0_left_zero_two_step_parent g hg hG hGzero hGleft
   refine ⟨f,b,g,hf,hF,hFzero,?_,
