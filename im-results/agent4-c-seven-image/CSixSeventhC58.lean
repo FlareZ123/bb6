@@ -42,16 +42,23 @@ private theorem high_stop_identity (j m : Nat) :
   have h := Nat.sub_add_cancel (high_score_nonnegative j m)
   omega
 
-/-- The Agent 4 six/seven diagonal is admitted by the complete
-    source-certified ValSixFull+C58 high sieve, including its affine
-    right-four exclusion. -/
-theorem prior_c58_admits_six_seven_diagonal (j m : Nat)
-    (hm : 7≤m) (hj : j%512=319)
-    (hpair : (3*m)%4096=(j+2879)%4096) :
+private theorem residue_vector_of_mod512 (j m : Nat)
+    (hj : j%512=319) (hm512 : m%512=42) :
+    j%256=63 ∧ j%128=63 ∧ j%64=63 ∧ j%32=31 ∧
+    j%16=15 ∧ j%8=7 ∧ j%4=3 ∧
+    m%256=42 ∧ m%128=42 ∧ m%64=42 ∧
+    m%32=10 ∧ m%16=10 ∧ m%8=2 ∧ m%4=2 := by
+  omega
+
+/-- The residue pair j=319 (mod 512), m=42 (mod 512)
+    is admitted by the complete source-certified ValSixFull+C58
+    all-depth high sieve, including its affine right-four exclusion. -/
+private theorem prior_c58_admits_residue_pair (j m : Nat)
+    (hm : 7≤m) (hj : j%512=319) (hm512 : m%512=42) :
     BB6.Agent11C58AllDepth.highAllowed j m := by
   obtain ⟨hj256,hj128,hj64,hj32,hj16,hj8,hj4,
       hm512,hm256,hm128,hm64,hm32,hm16,hm8,hm4⟩ :=
-    diagonal_residues j m hj hpair
+    residue_vector_of_mod512 j m hj hm512
 
   have hbase : BB6.Agent3.jointHighAllowed j m := by
     unfold BB6.Agent3.jointHighAllowed
@@ -126,6 +133,17 @@ theorem prior_c58_admits_six_seven_diagonal (j m : Nat)
   rintro ⟨_,_,_,hmr,hres⟩
   have hodd : (2*r+3)%4=1 ∨ (2*r+3)%4=3 := by omega
   omega
+
+
+/-- The original six/seven diagonal is a special case of the residue-pair
+    admission lemma. -/
+theorem prior_c58_admits_six_seven_diagonal (j m : Nat)
+    (hm : 7≤m) (hj : j%512=319)
+    (hpair : (3*m)%4096=(j+2879)%4096) :
+    BB6.Agent11C58AllDepth.highAllowed j m := by
+  obtain ⟨_,_,_,_,_,_,_,hm512,_,_,_,_,_,_,_⟩ :=
+    diagonal_residues j m hj hpair
+  exact prior_c58_admits_residue_pair j m hm hj hm512
 
 /-- A concrete infinite progression survives every preceding
     ValSixFull+C58 all-depth restriction. -/
