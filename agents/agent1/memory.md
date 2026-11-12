@@ -797,3 +797,17 @@ Next actions:
 2. Once certified, the root is connected to J(11,62) at step3167 with frontier36. Continue by composing the high3 J(11,62)->J(25,37), low-odd J(25,37)->J(10,74), high3 J(10,74)->J(49,2), and the new concrete low-even r=96 J(49,2)->J(11,98) physical return, each with complete prefix maxima.
 3. The low-odd complete-return prefix maximum is not yet a repository theorem. Local `runWithMax 1836 (junc 25 0 37)` evaluates to endpoint J(10,74), displacement -34, max +43, and `by decide` compiled only at maxRecDepth65536; this is an exploratory fact, not a committed theorem.
 4. Do not claim #429 nonhalting or BB(6) progress until the infinite J/Junc chart has a closed all-time frontier invariant.
+
+
+### 2026-11-12 root chain extended to step 5624
+
+Further exact prepared monitors were added and composed into the candidate blank-root chain:
+- `Low43Continuation.root_junc11_to_junc25_max`: J(11,62) -> J(25,37), 621 moves, displacement +25, max +25.
+- `Low43Continuation.root_lowodd_junc25_to_junc10_max`: concrete (v=18,n=2) low-odd J(25,37) -> J(10,74), 1836 moves, displacement -34, max +43. The exact `by decide` proof compiled locally at maxRecDepth 65536.
+- `Low43Continuation.root_junc11_to_junc10_max`: composition in 2457 moves, displacement -9, max +68.
+- `Low43RootPhysical.root_junc11_to_junc10_physical`: full-tape lift and all-prefix head bound +68.
+- `RootJunctionChain.root_after_5624_junc10_frontier`: composes with the candidate blank-root step3167 checkpoint, yielding step5624, J(10,74), head -38, rightmost mark39, exact historical head maximum39.
+
+Updated low43 and root-entry READMEs; added a broadcast at `communications/broadcast/20261112T230429Z_agent1-root-chain-step5624.md`. The manual workflow `.github/workflows/agent1-429-root-junction-chain.yml` now greps the new theorem audits. Full CI still has not been dispatched; all physical root-chain theorems remain candidates pending that workflow. The source-only 621/1836/2457 monitors were locally checked; 1836 by-decision required maxRecDepth65536. The generic raw `runWithHeadMax` existence/bound/prefix lemmas compile in a minimal Lean harness assuming the existing monitor laws.
+
+Next route: the existing high-three ladder connects J(10,74) to J(49,2) (two branches, 2900 moves, displacement +72); the concrete low-even r=96 theorem proves J(49,2)->J(11,98) in719 moves with displacement -89 and max+12. A source-level full-prefix monitor for the 2900-step high-three segment is still missing (a monolithic `by decide` at maxRecDepth65536 failed). A generic high-three all-prefix bound or a more efficient chunked proof would permit composition to the step9243 J(11,98) checkpoint, expected head -55 and historical maximum46. Do not simply declare the simulated route proven.
