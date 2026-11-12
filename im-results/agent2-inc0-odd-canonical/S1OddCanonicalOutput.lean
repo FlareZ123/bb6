@@ -350,15 +350,15 @@ theorem oddCounterOutput_s1Successor
                  else decide (y < rightStop b)) =
                 decide (y < rightStop (b+1)) := by
               by_cases hs1 : y = rightStop b+1
-              · simp [hs1,hstop]
+              · simp [hs1,hstop] <;> omega
               · by_cases hs0 : y = rightStop b
-                · simp [hs0,hstop]
+                · simp [hs0,hstop] <;> omega
                 · by_cases hs2 : y = rightStop b+2
-                  · simp [hs2,hstop]
+                  · simp [hs2,hstop] <;> omega
                   · have hiff : (y < rightStop b) ↔ (y < rightStop (b+1)) := by
                       rw [hstop]
                       omega
-                    simp [hs1,hs0,hs2,hiff]
+                    simp [hs1,hs0,hs2,hiff] <;> omega
           have htarget := s1Config_right_bit_formula
             L n m (len+1) (2*q) (b+1) h y hy7
           rw [hout,htarget]
