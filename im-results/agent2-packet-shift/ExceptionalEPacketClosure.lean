@@ -3,6 +3,7 @@ import EFirstAPacket
 import ExceptionalE7SecondSafe
 import PacketSafeReentry
 import AP2PacketBoundarySource
+import PacketP2ReentryOrE
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -138,6 +139,73 @@ theorem exceptional_EE_safe_reentry (u q : Nat) (hq : 3 ≤ q)
 
 #print axioms exceptional_EA_safe_reentry
 #print axioms exceptional_EA_all_reentry
+/-- The complete E/E exceptional family is now reduced for every q≥3:
+    it either returns to regular L, or reaches the canonical E2 marker packet.
+    The q≡1 residue is handled by the source-connected p≡2 reduction. -/
+theorem exceptional_EE_all_reentry_or_reset (u q : Nat) (hq : 3 ≤ q) :
+    (∃ T a q' b,
+      ObsEq
+        (run T (DRegularSource.sourceSection ⟨27*u+25,q,1⟩))
+        (BB6.Agent2BoundaryBZero.regularSection a q' b)) ∨
+    (∃ T k q2,
+      ObsEq
+        (run T (DRegularSource.sourceSection ⟨27*u+25,q,1⟩))
+        (packet (8*k+5) 0 (2*q2+6)
+          BB6.Agent2PacketP2Reset.marker)) := by
+  by_cases hclass : q % 3 ≠ 1
+  · obtain ⟨T,a,q',b,h⟩ := exceptional_EE_safe_reentry u q hq hclass
+    exact Or.inl ⟨T,a,q',b,h⟩
+  · have hqmod : q % 3 = 1 := by omega
+    let c : BB6.Agent31PacketRank.Packet := ⟨192*u+161,2,2*q-3⟩
+    have hEE0 := BB6.Agent2E7SecondSafe.exceptional_EE_packet u q hq
+    have ha0 : 8*(24*u+19)+9=192*u+161 := by omega
+    have hEE : ObsEq
+        (run (BB6.Agent2E7SecondSafe.eTime u q +
+          BB6.Agent2E7SecondSafe.middleTime u)
+          (DRegularSource.sourceSection ⟨27*u+25,q,1⟩))
+        (packet c.a c.q c.p fixedTail) := by
+      simpa [BB6.Agent2E7SecondSafe.sourceStart,
+        BB6.Agent2E7SecondSafe.secondOutput,c,fixedTail,ha0,
+        packet,word,CryptidBoundary.packetThree,
+        BB6.Agent2E7SecondSafe.suffix2,CryptidBoundary.oppairs] using hEE0
+    have ha : c.a ≥ 4 := by simp [c]; omega
+    have hp : c.p % 3 = 2 := by
+      dsimp [c]
+      omega
+    rcases BB6.Agent2PacketP2ReentryOrE.p2_packet_reentry_or_reset
+        c ha hp with hL | hR
+    · rcases hL with ⟨T,a,q',b,hEq⟩
+      have hP2 : ObsEq (run T (packet c.a c.q c.p fixedTail))
+          (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
+        rw [hEq]
+        exact BB6.Padding.cfgEq_refl _
+      exact Or.inl ⟨BB6.Agent2E7SecondSafe.eTime u q +
+          BB6.Agent2E7SecondSafe.middleTime u + T,
+        a,q',b,
+        source_chain
+          (BB6.Agent2E7SecondSafe.eTime u q +
+            BB6.Agent2E7SecondSafe.middleTime u) T
+          (DRegularSource.sourceSection ⟨27*u+25,q,1⟩)
+          (packet c.a c.q c.p fixedTail)
+          (BB6.Agent2BoundaryBZero.regularSection a q' b) hEE hP2⟩
+    · rcases hR with ⟨T,k,q2,hEq⟩
+      have hP2 : ObsEq (run T (packet c.a c.q c.p fixedTail))
+          (packet (8*k+5) 0 (2*q2+6)
+            BB6.Agent2PacketP2Reset.marker) := by
+        rw [hEq]
+        exact BB6.Padding.cfgEq_refl _
+      exact Or.inr ⟨BB6.Agent2E7SecondSafe.eTime u q +
+          BB6.Agent2E7SecondSafe.middleTime u + T,
+        k,q2,
+        source_chain
+          (BB6.Agent2E7SecondSafe.eTime u q +
+            BB6.Agent2E7SecondSafe.middleTime u) T
+          (DRegularSource.sourceSection ⟨27*u+25,q,1⟩)
+          (packet c.a c.q c.p fixedTail)
+          (packet (8*k+5) 0 (2*q2+6)
+            BB6.Agent2PacketP2Reset.marker) hEE hP2⟩
+
 #print axioms exceptional_EE_safe_reentry
+#print axioms exceptional_EE_all_reentry_or_reset
 
 end BB6.Agent2ExceptionalEPacketClosure
