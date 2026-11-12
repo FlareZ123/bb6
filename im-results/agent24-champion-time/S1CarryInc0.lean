@@ -98,6 +98,71 @@ theorem s1Config_carryRightOnes
     exact sideBit_d1pow_true (b+1) i hi
   exact hside
 
+/-- Direct composition interface for prefix theorems already shifted
+to the source configuration's absolute head coordinate. -/
+theorem s1Config_counted_decrement_of_shifted_prefix
+    (L n m len q r b : Nat) (h : Int) (hq : q < 2^len)
+    (hprefix :
+      ∃ Tpre : Int → Bool,
+        run tm2 (15+12*r)
+          (shiftConfig h ⟨3,0,fun x =>
+            (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+x)⟩) =
+          some ⟨4,h+7,Tpre⟩ ∧
+        Tpre (h+1) = true ∧ Tpre (h+2) = true ∧ Tpre (h+3) = true ∧
+        Tpre (h+4) = true ∧ Tpre (h+5) = false ∧ Tpre (h+6) = true ∧
+        (∀ x, 6 < x →
+          Tpre (h+x) =
+            (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+x)) ∧
+        (∀ x, x ≤ 0 →
+          Tpre (h+x) = carryLeftOutputBit r
+            (fun y =>
+              (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x)) :
+    run tm2 (48+12*r+12*b)
+        (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h) =
+      some (s1Config L n m (len+1+r) (((2*q+1)*2^r)-1) (b+1) h) := by
+  let c0 := s1Config L n m (len+1+r) ((2*q+1)*2^r) b h
+  let T : Int → Bool := fun x => c0.tape (h+x)
+  rcases hprefix with
+    ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩
+  let P : Int → Bool := fun x => Tpre (h+x)
+  have hP1 : P 1 = true := by simpa [P] using h1
+  have hP2 : P 2 = true := by simpa [P] using h2
+  have hP3 : P 3 = true := by simpa [P] using h3
+  have hP4 : P 4 = true := by simpa [P] using h4
+  have hP5 : P 5 = false := by simpa [P] using h5
+  have hP6 : P 6 = true := by simpa [P] using h6
+  have hpreserveP : ∀ x, 6 < x →
+      P x = c0.tape (h+x) := by
+    intro x hx
+    simpa [P,c0,s1Config] using hpreserve x hx
+  have honeP : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
+    intro i hi
+    rw [hpreserveP (7+(i:Int)) (by omega)]
+    exact s1Config_carryRightOnes L n m len q r b h hq i hi
+  have hleftP : ∀ x, x ≤ 0 →
+      P x = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+        (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
+    intro x hx
+    calc
+      P x = Tpre (h+x) := rfl
+      _ = carryLeftOutputBit r
+          (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x :=
+        hleft x hx
+      _ = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+          (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
+        simpa [s1Config] using
+          s1Config_decrement_leftOutput L n m len q r b h hq x hx
+  have hprefix0 : run tm2 (15+12*r)
+      (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+        (len+1+r) ((2*q+1)*2^r) b h) =
+      some ⟨4,h+7,Tpre⟩ := by
+    simpa [c0,s1Config] using hrun
+  have hdec := s0Config_counted_decrement_of_prefix
+    (markerWord m ++ d0 ++ binDec L n ++ lh)
+    (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h P
+    hprefix0 hP1 hP2 hP3 hP4 hP5 hP6 honeP hpreserveP hleftP
+  simpa [s1Config] using hdec
+
 /-- Generic source composition: once the primitive carry prefix has its
 local six-cell output, right exterior, and exact left-output identity, the
 existing suffix theorem proves a full S1 decrement. -/
