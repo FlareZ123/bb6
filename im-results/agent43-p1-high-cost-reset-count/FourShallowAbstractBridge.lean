@@ -432,7 +432,7 @@ private theorem four_layer_finite_barrier
   have hnot3mod : S3%2^(e-x1-x2)≠0 := by
     have hh := hThirdFinBool
     simp [fourThirdOverflow,fourRootOverflow,
-      hPmod,hDmod,hrootEq,hrootMod,hprof1lt,hprof1mod,hx1le,
+      hPmod,hDmod,hrootEq,hrootMod,hprof1lt,hprof1mod,hx1le',
       hR1mod,hS2eq,hnot2mod,hprof2lt,hprof2mod,hx2le',hS2mod,hS3eq,
       e,Nat.sub_add_cancel hn14] at hh
     exact hh
@@ -489,8 +489,8 @@ private theorem four_layer_finite_barrier
     intro hz
     have hh := hFourthFinBool
     simp [fourFourthAudit,hPmod,hDmod,hrootEq,hrootMod,
-      hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
-      hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,hnot3mod,
+      hprof1lt,hprof1mod,hx1le',hR1mod,hS2eq,hnot2mod,
+      hprof2lt,hprof2mod,hx2le',hS2mod,hS3eq,hnot3mod,
       hprof3lt,hprof3mod,hx3le',hS3mod,hS4eq,hz,e,
       Nat.sub_add_cancel hn14] at hh
   have hnot4 : ¬ 2^(e-x1-x2-x3)∣S4 := by
@@ -554,9 +554,9 @@ private theorem four_layer_finite_barrier
   have hfinal : K*2^(e-x1-x2-x3)>S4*(Emax+1) := by
     have hh := hFourthFinBool
     simp [fourFourthAudit,hPmod,hDmod,hrootEq,hrootMod,
-      hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
-      hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,hnot3mod,
-      hprof3lt,hprof3mod,hx3le,hS3mod,hS4eq,hnot4mod,hhasCandidate,
+      hprof1lt,hprof1mod,hx1le',hR1mod,hS2eq,hnot2mod,
+      hprof2lt,hprof2mod,hx2le',hS2mod,hS3eq,hnot3mod,
+      hprof3lt,hprof3mod,hx3le',hS3mod,hS4eq,hnot4mod,hhasCandidate,
       hKformula,Emax,fourEmax,e,Nat.sub_add_cancel hn14] at hh
     exact hh
   have hupper : K*2^(e-x1-x2-x3)≤S4*(Emax+1) := by
