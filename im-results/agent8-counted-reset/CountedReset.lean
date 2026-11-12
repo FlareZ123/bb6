@@ -183,6 +183,7 @@ theorem descV2_binary (b : Nat) :
       have hpow : 2^(b+1) = 2*2^b := by
         rw [Nat.pow_succ]
         ac_rfl
+      have hbase : 0 < 2^b := Nat.pow_pos (by decide)
       have hlt : 2^b-1 < 2^b := by omega
       have hsplit : 2^(b+1)-1 = 2^b+(2^b-1) := by
         rw [hpow]
@@ -212,10 +213,10 @@ theorem drainCost_binary (b : Nat) :
   rw [drainCost_eq_charge,descV2_binary]
   rfl
 
-/-- Closed form for the all-ones drain, obtained from the actual v2
-sequence rather than an independent cost fit. -/
-/-- Additive closed form; this is the natural equation for composing
-the drain with the reset prefix without relying on truncated subtraction. -/
+/-- Additive closed form for the all-ones drain, obtained from the
+actual v2 sequence rather than an independent cost fit. This is the natural
+equation for composing the drain with the reset prefix without relying on
+truncated subtraction. -/
 theorem drainCost_binary_additive (b : Nat) :
     drainCost (2^b-1) 0 + 12*b + 48 = 6*4^b + 42*2^b := by
   rw [drainCost_binary]
