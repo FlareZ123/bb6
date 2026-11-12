@@ -61,6 +61,15 @@ private theorem wordCode_true_repeat (r : Nat) :
     simp [CryptidA.wordCode,List.replicate_succ,ih,
       List.replicate_add,List.append_assoc]
 
+private theorem false_cons_pairs (q : Nat) :
+    false :: CryptidBoundary.pairs q =
+      CryptidBoundary.oppairs q ++ [false] := by
+  induction q with
+  | zero => rfl
+  | succ q ih =>
+    simp [CryptidBoundary.pairs,CryptidBoundary.oppairs,
+      List.append_assoc,ih]
+
 private theorem words_code (q r : Nat) :
     CryptidA.wordCode (words q r) =
       CryptidBoundary.pairs q ++ List.replicate (3*r) true := by
@@ -79,7 +88,7 @@ theorem a_p2_packet_reentry (k q r : Nat) :
               BB6.CryptidA110111CodeFirst.packet ys)) := by
     simp [input,fixedTail,words,ys,
       CryptidBoundary.init,CryptidBoundary.oppairs,
-      words_code,BB6.CryptidA110111CodeFirst.packet,
+      words_code,false_cons_pairs,BB6.CryptidA110111CodeFirst.packet,
       List.replicate_add,List.append_assoc]
   have htail :
       false :: ([true,false,true,false,true] ++ ys) =
