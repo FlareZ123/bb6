@@ -83,6 +83,41 @@ theorem root_low_even_r96 :
   simpa [root_low_even_r96_max] using
     (runWithMax_toDelta 719 (junc 49 0 2))
 
+
+/-- The next prepared root-route high-three branch, J(11,62) -> J(25,37). -/
+theorem root_junc11_to_junc25_max :
+    runWithMax 621 (junc 11 0 62) =
+      some (junc 25 0 37, 25, 25) := by
+  decide
+
+/-- Concrete low-odd return at v=18,n=2: J(25,37) -> J(10,74).
+    This finite monitor includes the full prefix maximum, not only the
+    first C/0 record. -/
+theorem root_lowodd_junc25_to_junc10_max :
+    runWithMax 1836 (junc 25 0 37) =
+      some (junc 10 0 74, -34, 43) := by
+  decide
+
+/-- Compose the two prepared transitions. From J(11,62), the 2457-step
+    route reaches J(10,74), with displacement -9 and maximum +68. -/
+theorem root_junc11_to_junc10_max :
+    runWithMax 2457 (junc 11 0 62) =
+      some (junc 10 0 74, -9, 68) := by
+  have h1 : runWithMax 621 (junc 11 0 62) =
+      some (junc 25 0 37, 25, 25) := root_junc11_to_junc25_max
+  have h2 : runWithMax 1836 (junc 25 0 37) =
+      some (junc 10 0 74, -34, 43) :=
+    root_lowodd_junc25_to_junc10_max
+  have ht : 621+1836=2457 := by omega
+  rw [← ht, runWithMax_add, h1]
+  simp [h2, Int.max_def]
+
+theorem root_junc11_to_junc10 :
+    runWithDelta 2457 (junc 11 0 62) =
+      some (junc 10 0 74, -9) := by
+  simpa [root_junc11_to_junc10_max] using
+    (runWithMax_toDelta 2457 (junc 11 0 62))
+
 #print axioms root_low43_C0_to_junc_max
 #print axioms root_low43_C0_to_junc
 #print axioms root_low43_junc23_to_junc11_max
@@ -90,5 +125,9 @@ theorem root_low_even_r96 :
 #print axioms root_low43_C0_to_junc11
 #print axioms root_low_even_r96_max
 #print axioms root_low_even_r96
+#print axioms root_junc11_to_junc25_max
+#print axioms root_lowodd_junc25_to_junc10_max
+#print axioms root_junc11_to_junc10_max
+#print axioms root_junc11_to_junc10
 
 end BB429Low43Continuation
