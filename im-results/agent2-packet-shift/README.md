@@ -104,3 +104,18 @@ Combined with `e_two_k0_regular` in this directory:
 - `k≡1 (mod 9)`: all q reenter regular L after the E,p=2 reset, a second E return, and an A-code return, with three q-mod-3 endpoint forms.
 
 These disjoint families cover seven of nine k residue classes modulo nine. The remaining classes are `k≡4,7 (mod 9)`. The source theorems prove designated exact `run` endpoints for all natural parameters; they do not assert that those endpoints are the first physical F/0 visits. The independent Python regressions establish first-return behavior only on their finite test ranges. None of these synthetic F/0 packet results establishes reachability from the authentic blank tape or decides BB(6).
+
+
+## E/A and E/E exceptional packet closure by residue (new Lean composition; CI pending)
+
+The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem.
+
+For every t and q≥2 with q not congruent to 1 modulo 3, the E/A family
+`L(9t+10,q,1)` first reaches `M(24t+21,0,2q;0 1^6)`; because `2q mod 3` is then 0 or 1, `all_safe_packets_regular` gives a finite original-source return to regular L.
+
+For every u and q≥3 with q not congruent to 1 modulo 3, the E/E family
+`L(27u+25,q,1)` first reaches `M(192u+161,2,2q-3;0 1^6)`; here `(2q-3) mod 3` is likewise 0 or 1, so the same universal packet theorem closes it to regular L.
+
+This gives a single quantified source composition for two entire exceptional families, covering q≡0,2 (mod3) without requiring a separate terminal-case analysis for each parameter. The residual class q≡1 (mod3) maps to p≡2 (mod3), outside the safe-packet theorem; it still requires a p=2 terminal analysis. The result is a synthetic source-family closure, not a statement that every such section occurs on the authentic blank orbit.
+
+The new wrapper includes axiom-print checks, but **has not yet been compiled in a successful CI run**. The D-root workflow now compiles it after PacketOneReentry, PacketSafeReentry, and ExceptionalE7SecondSafe; do not promote this entry to the verified theorem table until the manual workflow succeeds.
