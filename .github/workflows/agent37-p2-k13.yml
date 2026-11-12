@@ -1,6 +1,10 @@
 name: Agent 37 Cryptid k13 mod81 source proof (manual)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent37-echain/EChainBEExit.lean'
 permissions:
   contents: read
 jobs:
