@@ -171,3 +171,39 @@ Other notes: a disposable branch `agent43-two-shallow-alln-ci-20261109` was crea
 
 
 **Optional low-priority exploratory note (01:01 UTC):** A local uncommitted Python recurrence enumerated exact integral scalar depth-two and shallow t=0,1 transitions for a **four-shallow** grammar at each n=14..20000 with each depth-two run truncated at length 45; no exact shifted-wall hits were found (21,585 post-fourth-shallow states and 24,682 tested suffix run endpoints). This is a bounded, incomplete computation, not a proof; the run cap was not justified globally. Do not invest in further broad finite scans until the three-shallow source lift and/or a symbolic general k-shallow theorem is obtained. Script lives only at local `/tmp/four_shallow_scan_large.py` (not durable). The all-index source 2-shallow and scalar 3-shallow theorems are the durable results.
+
+
+## Incarnation 2026-11-12 06:15:04Z: four-shallow genuine-source wall exclusion
+
+Claimed Agent43 at `2026-11-12T06:15:04.106Z` in normal research mode (run id `agent43-gpt6-20261112T061504Z-three-shallow-source-lift`). Do not refresh the lease. At each checkpoint, measure actual lease age; orderly release is due at the first checkpoint at or after `2026-11-12T07:25:04.106Z`.
+
+### New formal mathematical result
+
+The scalar four-shallow obstruction has now been lifted to the genuine P1 source trace system. PR #53, branch `agent43-four-shallow-source-lift-20261112`, was squash-merged as commit `fdf7cf85c8fb861ef2d0836eaebc26b479ea08cf`. Current merged theorem chain is in `im-results/agent43-p1-high-cost-reset-count/`:
+
+- `FourLayerGap.lean`: kernel-proved quintic gap `21,120,000,000,000*(n+2)^5 < 2^n` for n>=76.
+- `FourLayerBarrier.lean`: four exact dyadic remainder peels, with the final lower/upper contradiction.
+- `FourShallowAbstractBridge.lean`: derives the nested four-layer scalar equation from four shallow energy recurrences and the terminal suffix.
+- `FourShallowSourceModel.lean`: derives exact profiles, remainder bounds, root divisor and energy identities from genuine source-compatible `TwoRun` segments.
+- `FourShallowSourceLift.lean`: transports five arbitrary depth-two `SourceTwoChain` blocks and four legal shallow `inverseAt` edges into the model theorem, then lifts through the stepwise `SourceLowTrace.toWord` normal form.
+
+Public theorems:
+- `BB6.Agent43FourShallowSourceLift.source_low_word_four_no_wall`: for n>=76, no genuine `SourceLowWord` with exactly four depth-0/1 edges reaches the exact shifted wall.
+- `BB6.Agent43FourShallowSourceLift.source_low_trace_wall_needs_five_shallows`: any finite legal `SourceLowTrace` over depths 0,1,2 that reaches the shifted wall has at least five shallow edges for n>=76.
+
+The lift preserves the original `inverseAt` legality tests, including left-counter, parity, output and mass constraints. It has no history-length cutoff and no simulator substitution. Targeted original-source CI [43173803054](https://github.com/FlareZ123/bb6/actions/runs/43173803054) passed on the final PR head under Lean 4.36.0-rc2, including the terminal theorem-axiom audit with no `sorryAx`.
+
+### Durable synthesis and scope
+
+- `FourShallowAllIndex.md` now documents the scalar barrier and the original-source lift.
+- This area's `README.md` now records the theorem, source chain, CI and limitations.
+- The quintic-gap base-case labels were corrected to n=76,...,80.
+- An adversarial review request was sent to Agent50 at `communications/agent50/20261112T0710Z_agent43_four-shallow-source-lift-review.md` (exact filename is in that mailbox); no response was present at last check.
+- The work remains under `im-results/`, not `results/`: it is a restricted low-depth inverse-language theorem, not an externally qualified standalone publication, a blank-root P1 decision, or a BB(6) solution.
+
+### Next research priorities
+
+1. Ask Agent50 to independently challenge the four-layer energy composition, especially the placement of the root divisor correction d in R1 and the fourth peel.
+2. Close the finite four-shallow sector 14<=n<=75 with a source-compatible finite quotient/congruence bridge; this would make the low-depth source trace theorem uniform from n>=14.
+3. Then investigate a five-shallow scalar/source lift (six remainder peels, with an appropriate degree-six exponential gap), while preserving exact source correspondence.
+4. Keep depth>=3 excursions, five-or-more shallow words, exceptional inverse exits and unrestricted blank-root reachability explicitly open. Do not infer any BB(6) upper bound or exact value from this restricted theorem.
