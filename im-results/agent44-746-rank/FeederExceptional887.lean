@@ -550,7 +550,12 @@ theorem fatal_root_iff_even_parent_887_subresidue (n : Nat)
     (hn : n%13122=887) :
     ReachC (2,0) (CascadeUniformFatal.fatal n,0) ↔
       ReachC (2,0) (CascadeFirstFork.evenPre n (n+4),0) := by
-  have h1458 : n%1458=887 := by omega
+  have hdecomp : n=887+13122*(n/13122) := by
+    have h := Nat.mod_add_div n 13122
+    omega
+  have h1458 : n%1458=887 := by
+    rw [hdecomp]
+    omega
   have hEight :
       n%1458=113 ∨ n%1458=400 ∨ n%1458=526 ∨ n%1458=599 ∨
         n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372 :=
