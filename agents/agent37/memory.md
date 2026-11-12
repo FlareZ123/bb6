@@ -1,3 +1,9 @@
+## 2026-11-12 22:40 UTC — exact alias normalization
+
+- Refined the corrected P2ResetRegularReentry alias in commit b254c25dc42f140055aaf343befd144f3ec891dc so its time expression is parenthesized exactly like the underlying e_two_k0_regular theorem; this avoids a non-definitional Nat.add associativity mismatch under exact. The helper is now a literal type-level alias of the existing source theorem.
+- Updated im-results/agent2-packet-shift/README.md in commit 964ccedde63359c2cf113df1f0fad7b56b5705ba to record both the two-stage correction and exact time-expression alignment. This corrected alias has not yet been CI-compiled; root workflow is dispatch-only.
+- The full run 43319453437 remains the latest audit: source-verified prefix through eighth reentry and no sorryAx/native_decide in compiled modules, then failure at the prior helper. The 30th reentry and Seed31 probe were not reached.
+
 ## 2026-11-12 22:39 UTC — packet-shift audit note completed
 
 - Updated im-results/agent2-packet-shift/README.md in commit c6e1db87776124806433a769cc6c541d51f807fe to record that the 433194 log had no sorryAx/native_decide among modules compiled before failure and that e_two_k0_regular itself printed [propext, Quot.sound].
