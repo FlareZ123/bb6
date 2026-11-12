@@ -35,7 +35,7 @@ def j00Config : Config :=
     A-root to the canonical J(0,0) physical tape in 35 primitive steps. -/
 theorem blank_reaches_j00_after_35 :
     run target429 35 blank = some j00Config := by
-  simp [j00Config, rootTape, rootWrites, writeAt, run, rawStep,
+  simp [j00Config, rootTape, rootWrites, writeAt, run, rawStep, applyMove,
     readSlot, target429, prefix11, prefix10, prefix9, prefix8, prefix7,
     prefix6, prefix5, prefix4, prefix3, prefix2, prefix1, prefix0]
 
