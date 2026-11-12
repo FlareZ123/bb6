@@ -1,72 +1,93 @@
 import Lean
+import Lean.Elab.Tactic.Omega
 
-namespace BB6.Agent43FiveShallow
+namespace BB6.Agent43FiveShallowAlgebra
 
-/-- Expand the five-shallow source equation into the first shallow remainder. -/
+/-- The first five-shallow numerator expands into the five nested
+dyadic remainder terms. -/
 theorem algebraic_first_five
-  (p P q d T1 C1 C2 C3 C4 C5 L1 O1
-   A1 A2 A3 A4 A5 R1 R2 R3 R4 R5 E K : Nat)
-  (hPInt : (q:Int)*(p:Int)=(P:Int))
-  (hDInt : (q:Int)*(d:Int)=14*(T1:Int)-6)
-  (hKInt :
-    (K:Int)+98 =
-      (C1:Int)*(q:Int)+(C2:Int)*(q:Int)*(A1:Int)+
-      (C3:Int)*(q:Int)*(A1:Int)*(A2:Int)+
-      (C4:Int)*(q:Int)*(A1:Int)*(A2:Int)*(A3:Int)+
-      (C5:Int)*(q:Int)*(A1:Int)*(A2:Int)*(A3:Int)*(A4:Int))
-  (hR1Int : (R1:Int)+(O1:Int)+(d:Int)=(L1:Int)*(T1:Int))
-  (hEqInt :
-    (K:Int)*(p:Int) =
-      (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
-        (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int)) :
-  (98:Int)*(p:Int)-(d:Int)-(C1:Int)*(P:Int)+(L1:Int)*(T1:Int)-(O1:Int) =
-    (A1:Int)*((C2:Int)*(P:Int))-(A1:Int)*(R2:Int)+
-    (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))-(A1:Int)*((A2:Int)*(R3:Int))+
-    (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))-
-      (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
-    (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int)))))-
-      (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(R5:Int))))-
-      (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int)))) := by
-  have hKExpanded :
-      (K:Int)*(p:Int)+98*(p:Int) =
-        (C1:Int)*(P:Int)+(A1:Int)*((C2:Int)*(P:Int))+
-        (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))+
-        (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))+
-        (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int))))) := by
-    calc
-      (K:Int)*(p:Int)+98*(p:Int)=((K:Int)+98)*(p:Int) := by omega
-      _=((C1:Int)*(q:Int)+(C2:Int)*(q:Int)*(A1:Int)+
-          (C3:Int)*(q:Int)*(A1:Int)*(A2:Int)+
-          (C4:Int)*(q:Int)*(A1:Int)*(A2:Int)*(A3:Int)+
-          (C5:Int)*(q:Int)*(A1:Int)*(A2:Int)*(A3:Int)*(A4:Int))*(p:Int) := by
-        rw [hKInt]
-      _=(C1:Int)*(P:Int)+(A1:Int)*((C2:Int)*(P:Int))+
-          (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))+
-          (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))+
-          (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int))))) := by
-        rw [←hPInt]
-        simp only [Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
-  have hEqExpanded :
-      (K:Int)*(p:Int) =
-        (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
-          (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int)) := by
-    rw [hEqInt]
-    simp only [Int.mul_add,Int.add_assoc]
-  have htarget :
-      (98:Int)*(p:Int)-(C1:Int)*(P:Int)+(R1:Int) =
-        (A1:Int)*((C2:Int)*(P:Int))-(A1:Int)*(R2:Int)+
-        (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))-(A1:Int)*((A2:Int)*(R3:Int))+
-        (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))-
-          (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
-        (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int)))))-
-          (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(R5:Int))))-
-          (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))))) := by
-    simp only [Int.mul_add,Int.mul_sub]
-    omega
-  rw [htarget]
-  rw [←hR1Int]
-  omega
+ (P q p d C1 C2 C3 C4 C5 L1 O1 K R1 R2 R3 R4 R5 E T1
+  A1 A2 A3 A4 A5 : Nat)
+ (hP : q*p=P)
+ (hR1 : R1+O1+d=L1*T1)
+ (hK : K+98=C1*q+C2*(q*A1)+C3*(q*(A1*A2))+
+   C4*(q*((A1*A2)*A3))+C5*(q*(((A1*A2)*A3)*A4)))
+ (hEq : K*p=A1*(A2*(A3*(A4*(A5*E+R5)+R4)+R3)+R2)+R1) :
+ (98*(p:Int)-(d:Int)-(C1:Int)*(P:Int)+(L1:Int)*(T1:Int)-(O1:Int)) =
+ (A1:Int)*((C2:Int)*(P:Int)-(R2:Int)+
+   (A2:Int)*((C3:Int)*(P:Int)-(R3:Int)+
+     (A3:Int)*((C4:Int)*(P:Int)-(R4:Int)+
+       (A4:Int)*((C5:Int)*(P:Int)-(R5:Int)-(A5:Int)*(E:Int))))) := by
+ have hPInt : (q:Int)*(p:Int)=(P:Int) := by exact_mod_cast hP
+ have hR1Int : (R1:Int)+(O1:Int)+(d:Int)=(L1:Int)*(T1:Int) := by
+   exact_mod_cast hR1
+ have hEqInt : (K:Int)*(p:Int) =
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
+       (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
+   exact_mod_cast hEq
+ have hKInt : ((K:Int)+98)*(p:Int)=
+   (C1:Int)*(P:Int)+
+   (A1:Int)*((C2:Int)*(P:Int))+
+   (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))+
+   (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))+
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int))))) := by
+   have hcast : (↑(K+98):Int) =
+       ↑(C1*q+C2*(q*A1)+C3*(q*(A1*A2))+
+         C4*(q*((A1*A2)*A3))+C5*(q*(((A1*A2)*A3)*A4))) :=
+     congrArg (fun x : Nat => (x:Int)) hK
+   simp only [Int.natCast_add,Int.natCast_mul] at hcast
+   have hm := congrArg (fun x : Int => x*(p:Int)) hcast
+   simp only [Int.add_mul,Int.mul_assoc] at hm
+   have h1 : (C1:Int)*((q:Int)*(p:Int))=(C1:Int)*(P:Int) := by rw [hPInt]
+   have h2 : (C2:Int)*((q:Int)*((A1:Int)*(p:Int)))=
+       (A1:Int)*((C2:Int)*(P:Int)) := by
+     rw [←hPInt]
+     ac_rfl
+   have h3 : (C3:Int)*((q:Int)*((A1:Int)*((A2:Int)*(p:Int))))=
+       (A1:Int)*((A2:Int)*((C3:Int)*(P:Int))) := by
+     rw [←hPInt]
+     ac_rfl
+   have h4 : (C4:Int)*((q:Int)*((A1:Int)*((A2:Int)*((A3:Int)*(p:Int)))))=
+       (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int)))) := by
+     rw [←hPInt]
+     ac_rfl
+   have h5 : (C5:Int)*((q:Int)*((A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(p:Int))))))=
+       (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int))))) := by
+     rw [←hPInt]
+     ac_rfl
+   rw [h1,h2,h3,h4,h5] at hm
+   rw [Int.add_mul]
+   simpa using hm
+ have hEqExpanded : (K:Int)*(p:Int)=
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
+       (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
+   rw [hEqInt]
+   simp only [Int.mul_add,Int.add_assoc]
+ have hKExpanded : (K:Int)*(p:Int)+98*(p:Int)=
+   (C1:Int)*(P:Int)+
+   (A1:Int)*((C2:Int)*(P:Int))+
+   (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))+
+   (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))+
+   (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int))))) := by
+   simpa only [Int.add_mul] using hKInt
+ have htarget : (A1:Int)*((C2:Int)*(P:Int)-(R2:Int)+
+     (A2:Int)*((C3:Int)*(P:Int)-(R3:Int)+
+       (A3:Int)*((C4:Int)*(P:Int)-(R4:Int)+
+         (A4:Int)*((C5:Int)*(P:Int)-(R5:Int)-(A5:Int)*(E:Int))))) =
+   (A1:Int)*((C2:Int)*(P:Int))-(A1:Int)*(R2:Int)+
+     (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))-
+     (A1:Int)*((A2:Int)*(R3:Int))+
+     (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))-
+     (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
+     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int)))))-
+     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(R5:Int))))-
+     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))))) := by
+   simp only [Int.mul_add,Int.mul_sub]
+   omega
+ rw [htarget]
+ rw [←hR1Int]
+ omega
 
 #print axioms algebraic_first_five
 
-end BB6.Agent43FiveShallow
+end BB6.Agent43FiveShallowAlgebra
