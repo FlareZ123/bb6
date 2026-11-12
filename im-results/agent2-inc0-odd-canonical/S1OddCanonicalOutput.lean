@@ -49,15 +49,19 @@ theorem sideBit_d1pow_formula (n i : Nat) :
       | zero => simp [d1pow, d1, sideBit]
       | succ i =>
           cases i with
-          | zero => simp [d1pow, d1, sideBit]
+          | zero =>
+              have h : 1 < 3*(n+1) := by omega
+              simp [d1pow, d1, sideBit, h]
           | succ i =>
               cases i with
-              | zero => simp [d1pow, d1, sideBit]
+              | zero =>
+                  have h : 2 < 3*(n+1) := by omega
+                  simp [d1pow, d1, sideBit, h]
               | succ i =>
-                  simp only [d1pow, d1, sideBit]
+                  change sideBit (d1pow n) i = decide (i+3 < 3*(n+1))
                   rw [ih]
-                  congr 1
-                  omega
+                  have h : (i < 3*n) ↔ (i+3 < 3*(n+1)) := by omega
+                  simp [h]
 
 /-- The encoded right side is exactly the six-cell guard followed by
 3(b+1) marked cells, with zero padding after the block. -/
@@ -75,7 +79,7 @@ theorem sideBit_s1PhysicalRight (b i : Nat) :
     simp [hi]
   · have h := sideBit_append_after
       ([false,true,true,true,false,false] : List Bool)
-      (d1pow (b+1)) i (by simp)
+      (d1pow (b+1)) i (by omega)
     rw [h, sideBit_d1pow_formula]
     simp [hi]
 
@@ -126,7 +130,7 @@ theorem s1Config_right_bit_formula
   rw [hcoord] at hcell
   have htail := sideBit_append_after
     ([false,true,true,true,false,false] : List Bool)
-    (d1pow (b+1)) i (by simp)
+    (d1pow (b+1)) i (by dsimp [i]; omega)
   rw [s1PhysicalRight_source, htail, sideBit_d1pow_formula] at hcell
   have hindex : (i-6 < 3*(b+1)) ↔ y < rightStop b := by
     have hi' : (i:Int) = y-1 := hi
@@ -164,7 +168,7 @@ theorem oddCounterOutput_s1Successor
     rw [hcoord] at hcell
     have htail := sideBit_append_after
       ([false,true,true,true,false,false] : List Bool)
-      (d1pow (b+1)) (6+i) (by simp)
+      (d1pow (b+1)) (6+i) (by omega)
     have hidx : 6+i-6 = i := by omega
     rw [s1PhysicalRight_source, htail, hidx, sideBit_d1pow_formula] at hcell
     have hbit : decide (i < 3*(b+1)) = true := by simp [hi]
