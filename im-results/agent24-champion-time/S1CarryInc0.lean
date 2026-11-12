@@ -1,5 +1,6 @@
 import S1CarryOutputBridge
 import CountedCarryLeftOutputR23
+import LongResidue1
 import CountedSuffixOutput
 import Lean.Elab.Tactic.Omega
 
@@ -254,6 +255,47 @@ theorem s1Config_counted_decrement_of_prefix
     (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
     hprefix0' hP1 hP2 hP3 hP4 hP5 hP6 honeP hpreserveP hleftP
   simpa [s1Config] using hdec
+
+/-- Long residue one: consume Agent 42's already-shifted prefix
+interface directly, translating only the duplicate left-output definition. -/
+theorem s1Config_counted_decrement_r1
+    (L n m len q k b : Nat) (h : Int) (hq : q < 2^len) (hk : 0 < k) :
+    run tm2 (48+12*(4*k+1)+12*b)
+        (s1Config L n m (len+1+(4*k+1))
+          ((2*q+1)*2^(4*k+1)) b h) =
+      some (s1Config L n m (len+1+(4*k+1))
+        (((2*q+1)*2^(4*k+1))-1) (b+1) h) := by
+  let T : Int → Bool := fun x =>
+    (s1Config L n m (len+1+(4*k+1))
+      ((2*q+1)*2^(4*k+1)) b h).tape (h+x)
+  have hmatch := s1Config_carryInput_match L n m len q (4*k+1) b h hq
+  obtain ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩ :=
+    BB6Coverage.Agent42CarryLeftOutput.carryLongPrefix_r1_shifted
+      k T h hmatch hk
+  have hprefix :
+      ∃ Tpre : Int → Bool,
+        run tm2 (15+12*(4*k+1))
+          (shiftConfig h ⟨3,0,fun x =>
+            (s1Config L n m (len+1+(4*k+1))
+              ((2*q+1)*2^(4*k+1)) b h).tape (h+x)⟩) =
+          some ⟨4,h+7,Tpre⟩ ∧
+        Tpre (h+1) = true ∧ Tpre (h+2) = true ∧ Tpre (h+3) = true ∧
+        Tpre (h+4) = true ∧ Tpre (h+5) = false ∧ Tpre (h+6) = true ∧
+        (∀ x, 6 < x →
+          Tpre (h+x) =
+            (s1Config L n m (len+1+(4*k+1))
+              ((2*q+1)*2^(4*k+1)) b h).tape (h+x)) ∧
+        (∀ x, x ≤ 0 →
+          Tpre (h+x) = carryLeftOutputBit (4*k+1)
+            (fun y =>
+              (s1Config L n m (len+1+(4*k+1))
+                ((2*q+1)*2^(4*k+1)) b h).tape (h+y)) x) := by
+    refine ⟨Tpre,hrun,h1,h2,h3,h4,h5,h6,hpreserve,?_⟩
+    intro x hx
+    simpa [BB6Coverage.Agent42CarryLeftOutput.carryLeftOutputBit,
+      BB6Coverage.Agent3CarryLeftOutput.carryLeftOutputBit] using hleft x hx
+  exact s1Config_counted_decrement_of_shifted_prefix
+    L n m len q (4*k+1) b h hq hprefix
 
 /-- The even-valuation residue-2 carry prefix is a complete source S1
 counted decrement, including the canonical full tape after the suffix. -/
