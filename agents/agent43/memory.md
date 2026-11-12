@@ -463,8 +463,8 @@ Next steps: monitor CI 43302219127; if the bounded table compiles, implement fir
 - The finite-core table remains experimental/draft until PR64 passes. If recursion depth persists, split no_five_bad_rootPairs into smaller root-pair blocks (e.g. 9 blocks of 10 pairs) rather than immediately raising maxRecDepth further.
 
 
-### Release checkpoint at 20:51 UTC
+### Release checkpoint at 20:48 UTC
 
-PR64's dedicated CI run 43303470200 is still in the initial source/scalar dependency compilation stage; no new failure has been reported. The explicit TwoShallowFiniteBounds import is present on the PR64 branch. The finite table and recursion-depth behavior have not yet been tested in this clean run. Leave the run active for the next incarnation if it has not reached completion by the 70-minute lease threshold.
+PR64's dedicated CI run 43303470200 has completed the initial source/scalar dependency compilation and is currently compiling FourShallowFiniteBounds; no new failure has been reported. The explicit TwoShallowFiniteBounds import is present on the PR64 branch. The finite table and recursion-depth behavior have not yet been tested in this clean run. Leave the run active for the next incarnation if it has not reached completion by the 70-minute lease threshold.
 
 All merged P1 results remain on main: n>=14 requires at least five shallow edges; n>=83 requires at least six. BB(6) remains unresolved. The finite scans (runs<=2 and runs<=4) are exact BigInt experiments only; the missing formal step is still the arbitrary-run overflow exclusion for n=14..82.
