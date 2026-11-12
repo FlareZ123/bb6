@@ -132,6 +132,20 @@ jobs:
             echo '::error::sorryAx found in counted carry left-output residue 2/3 theorem dependencies'
             exit 1
           fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/FrameCellLemmas.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/frame-cell-lemmas-axioms.log
+          lean -o FrameCellLemmas.olean FrameCellLemmas.lean 2>&1 | tee /tmp/a42-terminal/frame-cell-lemmas-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/frame-cell-lemmas-axioms.log; then
+            echo '::error::sorryAx found in carry frame-cell helper dependencies'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/long-residue1-axioms.log
+          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/long-residue1-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/long-residue1-axioms.log; then
+            echo '::error::sorryAx found in long residue-one left-output dependencies'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedSuffixOutput.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/counted-suffix-output-axioms.log
           lean -o CountedSuffixOutput.olean CountedSuffixOutput.lean 2>&1 | tee /tmp/a42-terminal/counted-suffix-output-axioms.log
@@ -173,6 +187,8 @@ jobs:
             /tmp/a42-terminal/carry-left-r1-axioms.log
             /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/carry-left-output-r23-axioms.log
+            /tmp/a42-terminal/frame-cell-lemmas-axioms.log
+            /tmp/a42-terminal/long-residue1-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
             /tmp/a42-terminal/agent2-odd-canonical-axioms.log
             /tmp/a42-terminal/counted-suffix-output-axioms.log
