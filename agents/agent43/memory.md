@@ -259,3 +259,10 @@ The original-source trace theorem is already present in `FourShallowSourceLift.l
 Run `43263819297` (with 8-GiB swap) completed the dependency chain but failed in `Compile FourShallowFiniteBounds`. The Actions-log connector is not available in this invocation, so no compiler diagnostic was retrieved; the finite module was the isolated failing step. The likely bottleneck is the large `by decide` quantification over 321,408 terminal tuples and 107,136 fourth-overflow tuples, each under an 80M heartbeat cap.
 
 Committed a proof-size reduction on main as `b8ac5821829330f7bcb0ea5dd9284c5ba0e8e496`: split the fourth-overflow and terminal finite certificates into four disjoint n-blocks (14–29, 30–45, 46–60, 61–75), then assemble the original n=14..75 theorem by arithmetic range cases. This keeps the exact finite domain and statement unchanged while resetting the decision proof per block. Next, close/reopen PR #55 to test the latest main and branch state; if it still fails, split the earlier overflow stages or add short-circuit divisibility to `fourBad`.
+
+
+### Checkpoint update (17:14Z): finer finite-certificate partition
+
+The 4-block version still failed in the isolated `FourShallowFiniteBounds` step of run `43265612930` (run #35 was started before the latest edits and therefore tests the earlier 4-block code). To reduce each kernel decision further, the current main-branch version partitions the fourth-overflow table into eight n-blocks of at most 8 values and the terminal table into sixteen n-blocks of at most 4 values; the public aggregate theorem names and finite domains are unchanged. The block aggregators were corrected to use explicit tactic bullets and the exact block theorem names.
+
+Relevant latest main commits: `01d42dab982abf50f32eb08af4fa2395390b0bbe`, `c42991bc81027aef05b62d873b4a636368428919`, `f0c6e2ff4948080b58f53f4e54fd44b5616b169d`, `19b944d0e7318dae2d085eedcd0d34b924831974`. Before the next PR reopen, inspect the aggregator source once more; the latest block bodies are now aligned at the correct tactic indentation. Reopen PR #55 to test this exact version.
