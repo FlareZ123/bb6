@@ -400,7 +400,7 @@ theorem reached_B0_left10_D1_ancestor (c : Conf) (hc : Reach c)
     (hB : c.q = .B) (hcurrent : c.tape c.h = false)
     (hleft3 : c.tape (c.h-3) = true)
     (hleft2 : c.tape (c.h-2) = false) :
-    ∃ k d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
+    ∃ k : Nat, d, Reach d ∧ d.q = .D ∧ d.tape d.h = true ∧
       d.h = c.h + (2*k : Int) ∧
       Root119Path (2*k+2) d c := by
   obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
@@ -428,7 +428,7 @@ theorem reached_B0_left10_F1_ancestor (c : Conf) (hc : Reach c)
     (hB : c.q = .B) (hcurrent : c.tape c.h = false)
     (hleft3 : c.tape (c.h-3) = true)
     (hleft2 : c.tape (c.h-2) = false) :
-    ∃ k f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+    ∃ k : Nat, f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h + (2*k : Int) - 1 ∧
       Root119Path (2*k+3) f c := by
   obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
@@ -601,7 +601,7 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
           rw [hFone] at hstep3
           cases hstep3
           omega
-      have hpat := ih u d rfl huZero hdB hd0 hp2 hdisp2
+      have hpat := ih (c := u) (d := d) rfl huZero hdB hd0 hp2 hdisp2
       by_cases hi0 : i=0
       · subst i
         have hbtape : b.tape b.h=c.tape (c.h-1) := by
@@ -683,22 +683,22 @@ theorem reached_B0_left10_path_components (c : Conf) (hc : Reach c)
     by_cases hk : 1≤k
     · exact hk
     · have hk0 : k=0 := by omega
-    subst k
-    have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
-    have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
-      hstepD.symm.trans hDshape
-    have heq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
-      injection hsome with heq
-      exact heq
-    cases hpath
-    have hwrite : e.tape c.h=true := by
-      rw [heq]
-      simp [setBit,hdpos0]
-    have hcopy : c.tape c.h=e.tape c.h :=
-      parentCone_next_tape_away g c hGstep c.h (by rw [hGpos]; omega)
-    rw [hcurrent] at hcopy
-    rw [hwrite] at hcopy
-    cases hcopy
+      subst k
+      have hdpos0 : d.h=c.h := by rw [hposF] at hposD; omega
+      have hsome : some e = some ⟨.F,d.h+1,setBit d.tape d.h true⟩ :=
+        hstepD.symm.trans hDshape
+      have heq : e = ⟨.F,d.h+1,setBit d.tape d.h true⟩ := by
+        injection hsome with heq
+        exact heq
+      cases hpath
+      have hwrite : e.tape c.h=true := by
+        rw [heq]
+        simp [setBit,hdpos0]
+      have hcopy : c.tape c.h=e.tape c.h :=
+        parentCone_next_tape_away g c hGstep c.h (by rw [hGpos]; omega)
+      rw [hcurrent] at hcopy
+      rw [hwrite] at hcopy
+      cases hcopy
   exact ⟨k,f,d,e,g,hkpos,hf,hF,hFbit,hposF,
     hd,hD,hDbit,hposD,hstepF,
     heReach,hE,hEzero,hposE,hstepD,
@@ -712,7 +712,7 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
     (hB : c.q=.B) (hcurrent : c.tape c.h=false)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
-    ∃ k f,
+    ∃ k : Nat, f,
       1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
       f.h=c.h+(2*k:Int)-1 ∧
       f.tape (f.h+1)=true ∧ f.tape (f.h+2)=false ∧
@@ -776,11 +776,12 @@ theorem reached_B0_left10_odd_seed_conditions (c : Conf) (hc : Reach c)
       f.tape (f.h-2*(k:Int)+1)=false := by
     intro hk2
     have hp1 := hpattern 1 (by omega)
-    have hidxLeft : e.h-2*(1:Int)-1=f.h-1 := by
+    have hidxLeft : e.h-3=f.h-1 := by
       rw [hposE]
       omega
     have heLeft : e.tape (f.h-1)=true := by
-      simpa [hidxLeft] using hp1.2
+      rw [← hidxLeft]
+      simpa using hp1.2
     have heqLeft := hEF (f.h-1) (by omega) (by omega)
     have hleft : f.tape (f.h-1)=true := heqLeft.symm.trans heLeft
     have hpresG := parentCone_path_tight_preserves_tape
@@ -815,7 +816,7 @@ theorem reached_B0_left10_left_tape_agreement (c : Conf) (hc : Reach c)
     (hB : c.q=.B) (hcurrent : c.tape c.h=false)
     (hleft3 : c.tape (c.h-3)=true)
     (hleft2 : c.tape (c.h-2)=false) :
-    ∃ k f,
+    ∃ k : Nat, f,
       1≤k ∧ Reach f ∧ f.q=.F ∧ f.tape f.h=true ∧
       f.h=c.h+(2*k:Int)-1 ∧
       ∀ x : Int, x≤c.h → c.tape x=f.tape x := by
