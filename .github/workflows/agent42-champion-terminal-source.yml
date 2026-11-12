@@ -79,7 +79,7 @@ jobs:
             echo '::error::sorryAx found in carry boundary trace theorem dependencies'
             exit 1
           fi
-          cp im-results/agent24-champion-time/CountedCarryPrefix.lean /tmp/a42-terminal/
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryPrefix.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/carry-prefix-axioms.log
           lean -o CountedCarryPrefix.olean CountedCarryPrefix.lean 2>&1 | tee /tmp/a42-terminal/carry-prefix-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/carry-prefix-axioms.log; then
