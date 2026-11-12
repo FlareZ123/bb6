@@ -509,14 +509,21 @@ private theorem four_layer_finite_barrier
   have hx4bound : x4≤15 := by omega
   let Emax := fourEmax n s x1 x2 x3
   have hEbound : E≤Emax := by
-    dsimp [Emax,fourEmax,x1,x2,x3,x4] at *
+    dsimp [Emax,fourEmax,x1,x2,x3,x4]
     omega
   have hKformula : fourCoeff s t1 x1 t2 x2 t3 x3 t4=K := by
     have hK' := hK
     rw [hA1,hA2,hA3] at hK'
-    simp [fourCoeff,←hp1,←hp2,←hp3,←hp4]
     rw [←Nat.pow_add,←Nat.pow_add] at hK'
-    simp only [Nat.mul_add,Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm] at hK'
+    have hKfactor : K+98 =
+        8^s*(C1+C2*2^x1+C3*2^(x1+x2)+C4*2^(x1+x2+x3)) := by
+      calc
+        K+98 = C1*8^s+C2*(8^s*2^x1)+
+            C3*(8^s*2^(x1+x2))+C4*(8^s*2^(x1+x2+x3)) := by
+          simpa [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm] using hK'
+        _ = 8^s*(C1+C2*2^x1+C3*2^(x1+x2)+C4*2^(x1+x2+x3)) := by
+          simp [Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+    simp [fourCoeff,←hp1,←hp2,←hp3,←hp4,hKfactor]
     omega
   have hfinal : K*2^(e-x1-x2-x3)>S4*(Emax+1) := hFourthFin.2
   have hupper : K*2^(e-x1-x2-x3)≤S4*(Emax+1) := by
