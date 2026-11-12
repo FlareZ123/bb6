@@ -160,6 +160,40 @@ Thus the candidate all-time high m=0 exclusion is `j ≡ 1895 (mod 2048)`.
 
 **Status:** the arithmetic and composition above are checked algebraically, but the two specialized parent iff lemmas (for A_s and L) have not yet been added to Lean. This is not yet a source-CI-certified exclusion. Agent3 and Agent24 have been asked to check the parent disjunctions and six-of-eight hypotheses. Do not count this family as a proven BB(6) result until the original-source theorem is formalized and CI-audited.
 
+## Second algebraic subfamily: s=128w+5 (original high-stop j=359 mod 8192)
+
+A second disjoint progression closes by the same parent grammar and forced inverses. Put `s=128w+5`, so `t=2s+1=256w+11`. Since S=28+45s=253+5760w is odd, A_s again has exactly two parents:
+```text
+L=(2022+46080w,426+9728w)
+B=(504+11520w,1182+27008w).
+```
+
+For L, its sum quotient is `306+6976w=2*(153+3488w)`, of exact 2-adic valuation 1. Its two parents are
+```text
+D=(2446+55808w,212+4864w)
+E=(610+13952w,1127+25792w).
+```
+E is odd-right with sum `1737+39744w ≡1 (mod4)`. D has even-right sum `2658+60672w ≡2 (mod8)`, so its unique six-of-eight parent is `D'=(2656+60672w,105+2432w)`, odd-right with sum `2761+63104w ≡1 (mod4)`. Thus L is blank-unreachable.
+
+For B, five forced six-of-eight inverses give
+```text
+B  = (504+11520w,1182+27008w), sum ≡6 (mod8)
+D1 = (1684+38528w,590+13504w), sum ≡2 (mod8)
+D2 = (2272+52032w,294+6752w), sum ≡6 (mod8)
+D3 = (2564+58784w,146+3376w), sum ≡6 (mod8)
+D4 = (2708+62160w,72+1688w), sum ≡4 (mod8)
+D5 = (2778+63848w,35+844w), right odd, sum ≡1 (mod4).
+```
+All right coordinates along B through D4 are even and at least 6, so each six-of-eight inverse applies. D5 is excluded by `blank_section_odd_image`. Hence A_s is blank-unreachable, conditional on the specialized parent-necessity lemmas.
+
+Translating back gives the second candidate high-stop exclusion:
+```text
+t=256w+11
+j=7+32*t=359+8192w
+k=3*j+7=1084+24576w.
+```
+This is disjoint from the `j=1895+2048v` family above. As with the first family, this is an algebraic proof sketch only; it is not source-CI-certified until the two parent-necessity lemmas are formalized.
+
 ## Important correction to the earlier scratch derivation
 
 The previous draft had two arithmetic errors. The even-a bounce cost is `2*k+a+7+3*n = x+2*y`, **not** `2*k+a+9+3*n = x+2*y`. Therefore
