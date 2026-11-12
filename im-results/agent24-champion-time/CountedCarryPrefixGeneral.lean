@@ -780,4 +780,136 @@ theorem carryLongPrefix_r3 (k : Nat) (T : Int → Bool)
   exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout'⟩
 
 
+
+/-- Residue 1 with k>0: bridge3 is followed by the exact AD12 boundary
+trace, then the common counted right sweep and open-end tail. -/
+theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea (4*k+1) x = true →
+      T x = carryInputBit (4*k+1) x) (hk : 0 < k) :
+    ∃ T' : Int → Bool,
+      run tm2 (15+12*(4*k+1)) ⟨3,0,T⟩ = some ⟨4,7,T'⟩ ∧
+      T' 1 = true ∧ T' 2 = true ∧ T' 3 = true ∧
+      T' 4 = true ∧ T' 5 = false ∧ T' 6 = true ∧
+      (∀ x, 6 < x → T' x = T x) := by
+  let h' : Int := -(4*(3*(k:Int)))
+  let T1 := sweptLeft (4*(3*k)) T 0
+  have hs : 0 < 3*k := by omega
+  have hb : 4*(3*k) ≤ 3*(4*k+1) := by omega
+  have hon := carryInput_leftOnes (4*k+1) (3*k) T hmatch hb
+  have hzero : T 1 = false := by
+    exact carryInput_unmarked (4*k+1) T hmatch 1 (by omega) (by omega) (by
+      simp [carryInputBit]; omega)
+  have hleft0 := counted_left_sweep (4*(3*k)) T 0 hon hzero
+  have hleft : run tm2 (3*(4*(3*k))) ⟨3,0,T⟩ =
+      some ⟨3,h',T1⟩ := by
+    simpa [h',T1,Int.zero_sub] using hleft0
+  have hmatchB := carryBridge3_input_match k T hmatch hk
+  have hbridge0 := carryBridge3 T1 h' hmatchB
+  let Tbridge := (frame (fun x => carryBridgeArea3 (x-h')) T1
+    (shiftConfig h' (embed carryBridgeFinal3))).tape
+  have hbridge : run tm2 12 ⟨3,h',T1⟩ =
+      some ⟨0,-2+h',Tbridge⟩ := by
+    simpa [Tbridge,frame,shiftConfig,embed,carryBridgeFinal3] using hbridge0
+  have hRight : ∀ i : Int, 2 ≤ i → i ≤ 10 → T1 (h'+i) = true := by
+    intro i hlo hhi
+    have hv := carryLeftSweep_marked (4*k+1) (3*k) T hmatch hs hb
+      (h'+i) (by omega) (by omega)
+    simpa [T1] using hv
+  have hADmatch := carryBridge3_matches_carryAD12 T1 h' hRight
+  have hA := carryAD12 Tbridge (-2+h') hADmatch
+  let hB : Int := 12+(-2+h')
+  let T2 := (frame (fun x => carryAD12Area (x-(-2+h'))) Tbridge
+    (shiftConfig (-2+h') (embed carryAD12Final))).tape
+  have hARun : run tm2 12 ⟨0,-2+h',Tbridge⟩ =
+      some ⟨3,hB,T2⟩ := by
+    simpa [hB,T2,frame,shiftConfig,embed,carryAD12Final] using hA
+  have hseg0 : carrySegmentOnes T2 ((-2+h')+12) (3*(4*(k-1))+7) := by
+    apply frame_head_segment carryAD12Area Tbridge (embed carryAD12Final)
+      (-2+h') 12 (3*(4*(k-1))+7)
+    · simp [carryAD12Area]
+    · simp [embed,carryAD12Final]
+    · intro i hi
+      simp [carryAD12Area]
+      omega
+    · intro i hi
+      have x : Int := (-2+h')+12+(i:Int)
+      have harea : carryBridgeArea3 (x-h') = false := by
+        simp [carryBridgeArea3]
+        omega
+      have hbridgeOutside : Tbridge x = T1 x := by
+        simp [Tbridge,frame,shiftConfig,harea]
+      have hleftMarked : T1 x = true := by
+        have hv := carryLeftSweep_marked (4*k+1) (3*k) T hmatch hs hb x
+          (by omega) (by omega)
+        simpa [T1] using hv
+      simpa [x] using hbridgeOutside.trans hleftMarked
+  have hseg : carrySegmentOnes T2 hB (3*(4*(k-1))+7) := by
+    simpa [hB,Int.add_comm,Int.add_left_comm,Int.add_assoc] using hseg0
+  have h5input : T 5 = false := by
+    exact carryInput_unmarked (4*k+1) T hmatch 5 (by omega) (by omega) (by
+      simp [carryInputBit]; omega)
+  have h6input : T 6 = false := by
+    exact carryInput_unmarked (4*k+1) T hmatch 6 (by omega) (by omega) (by
+      simp [carryInputBit]; omega)
+  have h5sweep : T1 5 = T 5 := by
+    exact carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb 5
+      (by omega) (by omega)
+  have h6sweep : T1 6 = T 6 := by
+    exact carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb 6
+      (by omega) (by omega)
+  have h5bridgeArea : carryBridgeArea3 (5-h') = false := by
+    simp [carryBridgeArea3,h']
+    omega
+  have h6bridgeArea : carryBridgeArea3 (6-h') = false := by
+    simp [carryBridgeArea3,h']
+    omega
+  have h5bridge : Tbridge 5 = T1 5 := by
+    simp [Tbridge,frame,shiftConfig,h5bridgeArea]
+  have h6bridge : Tbridge 6 = T1 6 := by
+    simp [Tbridge,frame,shiftConfig,h6bridgeArea]
+  have h5ADArea : carryAD12Area (5-(-2+h')) = false := by
+    simp [carryAD12Area,h']
+    omega
+  have h6ADArea : carryAD12Area (6-(-2+h')) = false := by
+    simp [carryAD12Area,h']
+    omega
+  have h5 : T2 5 = false := by
+    simp [T2,frame,shiftConfig,h5ADArea,h5bridge,h5sweep,h5input]
+  have h6 : T2 6 = false := by
+    simp [T2,frame,shiftConfig,h6ADArea,h6bridge,h6sweep,h6input]
+  let nR := 4*(k-1)
+  have hfinish : hB+3*(nR:Int) = -2 := by
+    dsimp [hB,h',nR]
+    omega
+  have hz0 : T2 (hB+3*(nR:Int)+7) = false := by
+    have heq : hB+3*(nR:Int)+7 = 5 := by omega
+    simpa [heq] using h5
+  have hz1 : T2 (hB+3*(nR:Int)+8) = false := by
+    have heq : hB+3*(nR:Int)+8 = 6 := by omega
+    simpa [heq] using h6
+  rcases carryFinishFromD T2 hB nR hfinish hseg hz0 hz1 with
+    ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+  have hT2out : ∀ x, 6 < x → T2 x = T x := by
+    intro x hx
+    have ha : carryAD12Area (x-(-2+h')) = false := by
+      simp [carryAD12Area,h']
+      omega
+    have hb3 : carryBridgeArea3 (x-h') = false := by
+      simp [carryBridgeArea3,h']
+      omega
+    have hleftout : T1 x = T x :=
+      carryLeftSweep_rightOutside (4*k+1) (3*k) T hmatch hs hb x hx
+    simp [T2,Tbridge,frame,shiftConfig,ha,hb3,hleftout]
+  have hout' : ∀ x, 6 < x → Tout x = T x := by
+    intro x hx
+    rw [hout x hx]
+    exact hT2out x hx
+  have hbridgeAD := run_compose tm2 12 12
+    ⟨3,h',T1⟩ ⟨0,-2+h',Tbridge⟩ ⟨3,hB,T2⟩ hbridge hARun
+  have htotal := composeCarryRuns (4*k+1) (3*(4*(3*k))) 24 nR
+    ⟨3,0,T⟩ ⟨3,h',T1⟩ ⟨3,hB,T2⟩ ⟨4,7,Tout⟩
+    hleft hbridgeAD hfinishRun (by dsimp [hB,h',nR]; omega)
+  exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout'⟩
+
+
 end BB6Coverage.Agent48Champion
