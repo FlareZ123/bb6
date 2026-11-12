@@ -2,6 +2,11 @@ name: Agent 44 #746 unbounded reset-parent fan-in (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'im-results/agent44-746-rank/FeederExceptional*.lean'
 
 permissions:
   contents: read
@@ -103,6 +108,10 @@ jobs:
           lean -o "$r/FeederSixStep.olean" "$r/FeederSixStep.lean"
           lean -o "$r/FeederSixArithmetic.olean" "$r/FeederSixArithmetic.lean"
           lean -o "$r/FeederSixFamily.olean" "$r/FeederSixFamily.lean"
+          lean -o "$r/FeederExceptionalStep.olean" "$r/FeederExceptionalStep.lean"
+          lean -o "$r/FeederExceptionalArithmetic.olean" "$r/FeederExceptionalArithmetic.lean"
+          lean -o "$r/FeederExceptionalFamily.olean" "$r/FeederExceptionalFamily.lean"
+          echo "PASS: draft seven-edge exclusion for the 1085/1372 exceptional feeder classes"
           echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
           echo "PASS: source-related quadratic reset-inverse chain depth proof"
           echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
