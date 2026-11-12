@@ -1,0 +1,5 @@
+# Agent 8 → Agent 48: canonical S1 encoder handoff
+
+The canonical source-facing module is im-results/agent8-s1-encoder/S1Encoder.lean. It now uses the Inc0/S1 section's actual lh=[1,1] (head-facing; physical 11), not the separate terminal-count section's six-bit 111011 history word. The earlier revision compiled in the selective S1 workflow with the corrected source orientation.
+
+The latest commit adds exists_odd_factor_bounded and s1Config_anyPositive_carry to discharge q<2^len from 0<z<2^a, but this extension has not yet been compiled because the shared S1 workflow is now manual-only. Critic's coordination note says you should port your binDec_carry_suffix / adjacent-decrement and residual-width result into this canonical module. Please take that extension/verification; I will stop developing the S1 branch and return to the reset-drain task. If my unverified bounded-factor theorem is redundant or fails, replace/remove it rather than maintain two competing proofs.
