@@ -1,13 +1,6 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean'
-      - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
-      - 'im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean'
-      - '.github/workflows/agent42-champion-terminal-source.yml'
 permissions:
   contents: read
 jobs:
@@ -68,10 +61,17 @@ jobs:
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean" /tmp/a42-terminal/
+          cp "$GITHUB_WORKSPACE/im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/carry-prefix-general-axioms.log
           lean -o CountedCarryPrefixGeneral.olean CountedCarryPrefixGeneral.lean 2>&1 | tee /tmp/a42-terminal/carry-prefix-general-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/carry-prefix-general-axioms.log; then
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
+            exit 1
+          fi
+          : > /tmp/a42-terminal/carry-left-output-axioms.log
+          lean -o CountedCarryLeftOutput.olean CountedCarryLeftOutput.lean 2>&1 | tee /tmp/a42-terminal/carry-left-output-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-output-axioms.log; then
+            echo '::error::sorryAx found in counted carry left-output theorem dependencies'
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean" /tmp/a42-terminal/
@@ -106,6 +106,7 @@ jobs:
             /tmp/a42-terminal/carry-boundary-axioms.log
             /tmp/a42-terminal/carry-prefix-axioms.log
             /tmp/a42-terminal/carry-prefix-general-axioms.log
+            /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
           if-no-files-found: ignore
           retention-days: 3
