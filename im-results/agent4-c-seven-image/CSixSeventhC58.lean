@@ -167,7 +167,7 @@ theorem prior_latefast_admits_six_seven_diagonal (j m : Nat)
     apply (BB6.Agent11LateDepthGate.allowedBool_iff j m).mpr
     intro r hr
     rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
-    obtain ⟨_,_,_,_,_,_,_,_,_,_,_,_,_,hm4diag⟩ :=
+    obtain ⟨_,_,_,_,_,_,_,_,_,_,_,_,_,_,hm4diag⟩ :=
       diagonal_residues j m hj hpair
     have hodd : (2*r+1)%4=1 ∨ (2*r+1)%4=3 := by omega
     omega
