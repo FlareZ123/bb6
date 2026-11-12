@@ -417,12 +417,45 @@ theorem reached_B0_left10_D1_ancestor (c : Conf) (hc : Reach c)
   have hlen : (2*k+1)+1 = 2*k+2 := by omega
   exact ⟨k,d,hd,hDq,hDbit,hpos,by simpa [hlen] using hpathOut⟩
 
+
+
+/-- Every reached B/0 in the 10x sector has a reached F/1 ancestor at an
+    odd offset 2k-1 to its right and an exact path of 2k+3 transitions from
+    that F/1 to the B/0. Thus the backward chain is not merely known to end
+    at D/1: its endpoint is forced to have an F/1 parent because the next
+    state on the chain is F/0. -/
+theorem reached_B0_left10_F1_ancestor (c : Conf) (hc : Reach c)
+    (hB : c.q = .B) (hcurrent : c.tape c.h = false)
+    (hleft3 : c.tape (c.h-3) = true)
+    (hleft2 : c.tape (c.h-2) = false) :
+    ∃ k f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+      f.h = c.h + (2*k : Int) - 1 ∧
+      Root119Path (2*k+3) f c := by
+  obtain ⟨g,hg,hG,hGzero,hGpos,hGstep⟩ :=
+    reached_B0_left10_parent c hc hB hcurrent hleft3 hleft2
+  obtain ⟨n,hn⟩ := reach_has_steps hg
+  obtain ⟨k,f,hf,hF1,hFbit,hFpos,hpath⟩ :=
+    reached_F0_F1_ancestor n g hn hG hGzero
+  have hpos : f.h = c.h + (2*k : Int) - 1 := by
+    rw [hGpos] at hFpos
+    omega
+  have hpath1 : Root119Path 1 g c :=
+    Root119Path.step hGstep (Root119Path.refl c)
+  have hpathOut := root119Path_comp hpath hpath1
+  have hlen : (2*k+2)+1 = 2*k+3 := by omega
+  exact ⟨k,f,hf,hF1,hFbit,hpos,by simpa [hlen] using hpathOut⟩
+
 #print axioms BB6Root119.to_A_exact_parent
+#print axioms BB6Root119.to_D_exact_parent
+#print axioms BB6Root119.reached_D1_F0_successor_F1_parent
+#print axioms BB6Root119.reached_F0_D1_successor_path
+#print axioms BB6Root119.reached_F0_F1_ancestor
 #print axioms BB6Root119.reached_B0_left10_parent
 #print axioms BB6Root119.reached_F0_parent_split
 #print axioms BB6Root119.reached_F0_left_zero_two_step_parent
 #print axioms BB6Root119.reached_B0_left10_three_step_parent
 #print axioms BB6Root119.reached_F0_D1_ancestor
 #print axioms BB6Root119.reached_B0_left10_D1_ancestor
+#print axioms BB6Root119.reached_B0_left10_F1_ancestor
 
 end BB6Root119
