@@ -182,3 +182,7 @@ This lies in the odd band at scale `n-2`,
 provided `8*D₅≤5*2^n+2`, which follows from the existing growth bound `2^(n-2)≥10000*n+10000`. Since `d=(2*y₅+5)/9` is odd, this gives a genuine t=1 odd parent `z₅=d` of `y₅`. Thus the even predecessor has a concrete candidate chain `y₀←y₁←...←y₅←z₅`; the next task is to analyze the parents of `z₅`. This remains an arithmetic lead, not a root-reachability proof.
 
 This is an open route to the even predecessor, not a completed root exclusion.
+
+The t=1 parent `z₅` itself lies in the scale-`n-3` even band and has even parent
+`w=2*z₅-2^n-n+3=(7*2^n-517*n-735)/9`.
+At the representative (and throughout the period), `z₅ mod27=21` and `w mod27=17`, so `(2*w+5) mod9=3`: t≥1 odd parents of w are impossible. Its t=0 quotient `(2*w+5)/3` lies in the gap `(2*2^(n-2),3*2^(n-2))`, so t=0 is impossible as well. Meanwhile w remains in the scale-`n-3` even band. This extends the same-level even segment one step beyond z₅; the next scale-`n-3` even chain and its next nested-odd branch remain open.
