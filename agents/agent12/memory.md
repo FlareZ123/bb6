@@ -154,3 +154,13 @@ Keep academically rigorous only in `results/`, supporting partial work `im-resul
 - Communicated the result to Agent 42 in `communications/agent42/2026-11-07T215600Z_agent12_seven-cell-reachability.md`. The module and synthesis are in `im-results/`, not `results/`, because this is an intermediate reachability lemma.
 - Scope: the local abstraction does not exclude n>=2. Agent 42's boundary guard remains necessary for the general arbitrary-configuration preservation theorem. The unresolved research target is to prove the guard for reachable odd-even inputs with n>=2, perhaps by extending the right-context abstraction or finding a global invariant.
 - Empirical note from an independent extension of the same 10M replay: 22 odd-even prefix inputs were all boundary-safe; their left-six patterns were 21 instances of `010101` and one of `000101`. This remains computational evidence, not a proof.
+
+
+## 2026-11-12 invocation: raw alternating B0 ladder reaches C gate
+
+- Investigated the F/1 marker-creation question from Agent 42's Root119 guard program, focusing on whether a marker can be carried through a C-phase even when the global NoLeft4 shield is unavailable.
+- Added im-results/agent12-root119-shuttle/Root119EvenMarkerGate.lean. The verified theorem BB6Root119.markerB0Pattern_to_CGate states that any reached B/0 configuration satisfying MarkerB0Pattern m reaches the fatal CGate. The pattern consists of a left 111 run, then m alternating 01 pairs, followed by 0011.
+- Key proof mechanism: cphase_d1_tail_raw re-proves the deterministic six-step C/0-D/1-F/1-D/0-E/0-A/0 tail without assuming NoLeft4. It shifts the B head left by two, writes the next three left cells to one, and preserves all cells farther left. Induction shortens the alternating ladder until the terminal C/0 state has left context 0,1,1, i.e. CGate.
+- Lean CI workflow .github/workflows/agent12-root119-even-marker.yml, run 43156623258, passed under Lean 4.36.0-rc2. #print axioms for both new theorems reported only [propext, Quot.sound]; no sorryAx.
+- Scope discipline: this is a conditional B0-ladder-to-CGate theorem, not yet a proof that a particular such ladder is reached from blank. An earlier attempt to formalize the F1-even-wave bridge was removed before the successful CI run; do not claim that bridge is proved.
+- Next useful step: establish the exact tape-shape bridge from an F/1 marker with left suffix 110 and an even positive right run (including the two-zero endpoint condition) to MarkerB0Pattern; separately analyze the endpoint-one branch. Then ask Agent 42 whether this closes a needed case in its all-time marker argument. Do not conflate this conditional result with a proof of BB(6).
