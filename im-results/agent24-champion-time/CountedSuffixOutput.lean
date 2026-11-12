@@ -6,6 +6,7 @@ namespace BB6Coverage.Agent24ChampionTime
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent42CarryPrefixBridge
+open BB6Coverage.Agent8S1Encoder
 
 set_option maxHeartbeats 1000000
 
@@ -138,6 +139,158 @@ theorem even_counted_suffix_tape_output (P : Int → Bool) (c : Nat)
       simp [afterEZero,hstop,hstop1,hstop2]
     rw [hU]
     simp [frame,harea,h6neq,hstop1,hB]
+
+
+/-- Splitting a nearest-first physical side at a finite prefix. -/
+theorem sideBit_append (xs ys : List Bool) (i : Nat) :
+    sideBit (xs ++ ys) i =
+      if i < xs.length then sideBit xs i else sideBit ys (i-xs.length) := by
+  induction xs generalizing i with
+  | nil =>
+      simp [sideBit]
+  | cons a xs ih =>
+      cases i with
+      | zero =>
+          simp [sideBit]
+      | succ i =>
+          simp [sideBit,ih]
+
+/-- Every cell in a repeated 111 block is one. -/
+theorem sideBit_d1pow_true (n i : Nat) (hi : i < 3*n) :
+    sideBit (d1pow n) i = true := by
+  induction n generalizing i with
+  | zero =>
+      omega
+  | succ n ih =>
+      by_cases h0 : i < 3
+      · have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
+        rcases hcases with h | h | h <;> subst i <;> simp [d1pow,d1,sideBit]
+      · have h3 : i = (i-3)+3 := by omega
+        have hlt : i-3 < 3*n := by omega
+        have hrec := ih (i-3) hlt
+        rw [h3]
+        change sideBit (d1 ++ d1pow n) ((i-3)+3) = true
+        simp [d1,sideBit]
+        exact hrec
+
+/-- The zero-padded tail of a repeated 111 block is blank. -/
+theorem sideBit_d1pow_false (n i : Nat) (hi : 3*n ≤ i) :
+    sideBit (d1pow n) i = false := by
+  induction n generalizing i with
+  | zero =>
+      simp [d1pow,sideBit]
+  | succ n ih =>
+      have h0 : ¬ i < 3 := by omega
+      have h3 : i = (i-3)+3 := by omega
+      have hlt : 3*n ≤ i-3 := by omega
+      rw [h3]
+      change sideBit (d1 ++ d1pow n) ((i-3)+3) = false
+      simp [d1,sideBit]
+      exact ih (i-3) hlt
+
+/-- The old S1 right side is blank beyond its six-cell guard and unary word. -/
+theorem s1Config_right_far_zero (L n m a z b : Nat) (h : Int) (i : Nat)
+    (hi : 9+3*b ≤ i) :
+    (s1Config L n m a z b h).tape (h+1+(i:Int)) = false := by
+  rw [s1Config_right_cell]
+  change sideBit (s1PhysicalRight b) i = false
+  simp only [s1PhysicalRight,s0PhysicalRight,s0RightFacing]
+  rw [sideBit_append]
+  have hi6 : ¬ i < 6 := by omega
+  simp [hi6]
+  have hiD : 3*(b+1) ≤ i-6 := by omega
+  exact sideBit_d1pow_false (b+1) (i-6) hiD
+
+/-- Prefix preservation transports the source S1 zero-padded right exterior
+to the relative tape consumed by the counted suffix. -/
+theorem s1Config_prefix_far_zero
+    (L n m a z b : Nat) (h : Int) (P : Int → Bool)
+    (hpreserve : ∀ x, 6 < x →
+      P x = (s1Config L n m a z b h).tape (h+x)) :
+    ∀ x, even_rightStop b+3 ≤ x → P x = false := by
+  intro x hx
+  let i : Nat := (x-1).toNat
+  have hpos : 0 ≤ x-1 := by
+    unfold even_rightStop at hx
+    omega
+  have hcast : (i:Int) = x-1 := by
+    dsimp [i]
+    exact Int.toNat_sub_of_le (by omega)
+  have hi : 9+3*b ≤ i := by
+    unfold even_rightStop at hx
+    omega
+  have hpres := hpreserve x (by
+    unfold even_rightStop at hx
+    omega)
+  have hcell := s1Config_right_far_zero L n m a z b h i hi
+  have hcoord : h+x = h+1+(i:Int) := by
+    rw [hcast]
+    omega
+  rw [hpres,hcoord]
+  exact hcell
+
+/--
+The final even suffix has exactly the canonical S1 right-facing word for
+counter b+1.  The prefix's preserved far exterior supplies the only
+nonlocal premise needed to prove the zero-padded tail.
+-/
+theorem even_counted_suffix_matches_s1_right_of_prefix
+    (L n m a zIn zOut b : Nat) (h : Int) (P : Int → Bool)
+    (h6 : P 6 = true)
+    (hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true)
+    (hpreserve : ∀ x, 6 < x →
+      P x = (s1Config L n m a zIn b h).tape (h+x)) :
+    ∀ i : Nat,
+      (frame even_tailArea (evenOpenFinalSweepTape b P) (embed even_tailFinal)).tape
+        (1+(i:Int)) =
+      (s1Config L n m a zOut (b+1) h).tape (h+1+(i:Int)) := by
+  have hfar := s1Config_prefix_far_zero L n m a zIn b h P hpreserve
+  have hright := even_counted_suffix_rightFacing P b h6 hone hfar
+  intro i
+  rw [s1Config_right_cell]
+  simpa [s1PhysicalRight,s0PhysicalRight] using hright i
+
+/--
+Canonical glue interface for the counted even return.  The caller supplies
+the remaining nonpositive tape identity from the prefix proof; the suffix
+theorem above proves the entire positive half and the exact right counter
+growth without any further machine-specific assumptions.
+-/
+theorem even_counted_suffix_canonical_of_left
+    (L n m a zIn zOut b : Nat) (h : Int) (P : Int → Bool)
+    (h6 : P 6 = true)
+    (hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true)
+    (hpreserve : ∀ x, 6 < x →
+      P x = (s1Config L n m a zIn b h).tape (h+x))
+    (hleft : ∀ x, x ≤ 0 →
+      P x = (s1Config L n m a zOut (b+1) h).tape (h+x)) :
+    ∀ x,
+      (frame even_tailArea (evenOpenFinalSweepTape b P) (embed even_tailFinal)).tape x =
+        (s1Config L n m a zOut (b+1) h).tape (h+x) := by
+  have hright := even_counted_suffix_matches_s1_right_of_prefix
+    L n m a zIn zOut b h P h6 hone hpreserve
+  intro x
+  by_cases hx : x ≤ 0
+  · have hQ := (even_counted_suffix_tape_output P b h6 hone).1 x hx
+    rw [hQ,hleft x hx]
+  · have hpos : 1 ≤ x := by omega
+    let i : Nat := (x-1).toNat
+    have hcast : (i:Int) = x-1 := by
+      dsimp [i]
+      exact Int.toNat_sub_of_le (by omega)
+    have heq : x = 1+(i:Int) := by omega
+    rw [heq]
+    rw [hright i]
+    have hcoord : h+1+(i:Int) = h+(1+(i:Int)) := by omega
+    rw [hcoord]
+
+#print axioms sideBit_append
+#print axioms sideBit_d1pow_true
+#print axioms sideBit_d1pow_false
+#print axioms s1Config_right_far_zero
+#print axioms s1Config_prefix_far_zero
+#print axioms even_counted_suffix_matches_s1_right_of_prefix
+#print axioms even_counted_suffix_canonical_of_left
 
 #print axioms even_counted_suffix_tape_output
 
