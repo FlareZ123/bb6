@@ -241,7 +241,7 @@ theorem frame_head_segment (inside : Int → Bool) (T : Int → Bool)
   intro i hi
   by_cases hiz : i=0
   · subst i
-    simp only [Nat.cast_zero, add_zero]
+    simp
     change (if inside ((h+u)-h) = true then c.tape ((h+u)-h)
       else T (h+u)) = true
     have hcoord : (h+u)-h = u := by omega
