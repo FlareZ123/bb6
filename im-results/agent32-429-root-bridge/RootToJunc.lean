@@ -14,8 +14,11 @@ open BB429PhysicalBridge BB429FinishScanEDelta
     configuration used by the source-certified high-zero branch. -/
 theorem j00Config_eq_shifted_jConfig :
     j00Config = shiftConfig 3 (jConfig 0 0) := by
-  ext <;> simp [j00Config, shiftConfig, jConfig,
-    rootTape_matches_physical_j00]
+  apply Config.ext
+  · rfl
+  · rfl
+  · funext x
+    exact rootTape_matches_physical_j00 x
 
 /-- The endpoint of the 110-step high-zero continuation from the authentic
     root J(0,0) state is exactly the translated canonical Junc(0,0,12)
@@ -44,7 +47,13 @@ theorem rootAfterHigh0_endpoint_eq :
   have hcanon := represented_junc_eq_translatedJ 0 12 c hrep
   have hhead' : c.head = -6 := by simpa using hhead
   rw [hcanon, hhead']
-  ext <;> simp [shiftConfig, translatedJ] <;> omega
+  apply Config.ext
+  · rfl
+  · simp [shiftConfig, translatedJ]
+  · funext x
+    simp only [shiftConfig, translatedJ]
+    congr 1
+    omega
 
 /-- Cumulative maximum-head monitor for the genuine blank-root run through
     the high-zero return. The two segments are composed with the monitor's
