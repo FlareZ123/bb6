@@ -1,5 +1,7 @@
 import FeederExceptionalStep
+set_option maxRecDepth 8192
 set_option maxHeartbeats 0
+set_option exponentiation.threshold 2048
 
 namespace CascadeFeederExceptional
 open CascadeFeederSix
