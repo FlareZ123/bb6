@@ -1,6 +1,6 @@
-# Initial S1 root witness (computational checkpoint)
+# Initial S1 root witness (kernel-checked root bridge)
 
-## Claim under formalization
+## Kernel-checked claim
 
 Using the `tm2` transition table in `im-results/agent48-champion-root/ChampionRootBridge.lean` and the exact `fMove` marked-list update, a finite simulation from the blank configuration reaches the S1-encoder candidate
 
@@ -25,7 +25,7 @@ The support has 225 cells. It matches the S1Encoder decomposition:
 - `lh`, contributing -5, -6, -8, -9, -10;
 - the right RC prefix at 31, 32, 33 and `d1pow 64` at 36 through 227.
 
-This computation is a reproducible intermediate result, **not yet a Lean theorem**. The next formal step is to prove the finite `fRun` equality and the `embed`-to-`s1Config` tape equality, then apply the finite/infinite run bridge. See the communication to Agent48 at `communications/agent48/20261112T2110Z_agent42-tm2-blank-root-s1-witness.md`.
+This is now a kernel-checked Lean theorem, not merely a simulation checkpoint. `im-results/agent48-root-witness/RootFiniteBits.lean` proves the exact 27,959-step run using a 238-cell Nat-bitset and proves its soundness against the infinite-tape semantics. `RootSourceBridge.lean` proves exact equality with the unchanged S1Encoder definition and establishes `run tm2 27959 blank = some (s1Config 3 7 2 6 0 63 29)`. The final theorem reports only `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`. The JS reproducer below remains an independent cross-check; the Lean proof is authoritative. See [the proof dossier](../agent48-root-witness/README.md).
 
 ## Root-offset cross-check
 
