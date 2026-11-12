@@ -517,11 +517,11 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
   have huNoBand : ∀m, ¬(6*2^m-1≤u ∧ u≤8*2^m-3) :=
     no_even_band_from_gap k u huGap.1 huGap.2
   have huDead : ¬ReachC (2,0) (u,0) :=
-    CascadeFeederExceptional.root_excludes_nonimage u (by omega) huNoBand
+    CascadeSweep.root_excludes_nonimage u (by omega) huNoBand
   have hdNoBand : ∀m, ¬(6*2^m-1≤d ∧ d≤8*2^m-3) :=
     no_even_band_from_gap (j-1) d hdGap.1 hdGap.2
   have hdDead : ¬ReachC (2,0) (d,0) :=
-    CascadeFeederExceptional.root_excludes_nonimage d (by omega) hdNoBand
+    CascadeSweep.root_excludes_nonimage d (by omega) hdNoBand
 
   have hxNe : x≠2 := by omega
   have hsplit :
