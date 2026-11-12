@@ -301,7 +301,7 @@ theorem reached_D1_F0_successor_F1_parent (d e : Conf)
         refine ⟨f,hf,hFq,hFbit,?_,hstepF⟩
         omega
 
-/-- Every reached F/0 has a D/1 ancestor at offset 2k-1 and a particular
+/-- Every reached F/0 has a D/1 ancestor at signed offset 2k-1 and a particular
     F/0 successor of that D/1. The path from this F/0 successor to the
     original F/0 has exactly 2k transitions. The proof is well-founded
     descent on the exact number of transitions from blank: an F/0
@@ -419,8 +419,8 @@ theorem reached_B0_left10_D1_ancestor (c : Conf) (hc : Reach c)
 
 
 
-/-- Every reached B/0 in the 10x sector has a reached F/1 ancestor at an
-    odd offset 2k-1 to its right and an exact path of 2k+3 transitions from
+/-- Every reached B/0 in the 10x sector has a reached F/1 ancestor at
+    offset 2k-1 and an exact path of 2k+3 transitions from
     that F/1 to the B/0. Thus the backward chain is not merely known to end
     at D/1: its endpoint is forced to have an F/1 parent because the next
     state on the chain is F/0. -/
