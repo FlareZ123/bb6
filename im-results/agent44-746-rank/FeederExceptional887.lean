@@ -100,7 +100,7 @@ private theorem parent_backward (u v : Nat)
 /-- A narrow even-band target with a displayed odd t=2 parent and
     243-nondivisibility: t=0,1,3 are quotient gaps, t=2 is the unique
     odd image, and t>=4 is excluded by 243-nondivisibility. -/
-private theorem narrow_exact_two_t2 (k x u a q : Nat)
+theorem narrow_exact_two_t2 (k x u a q : Nat)
     (hk : 3≤k)
     (hhigh : 6*2^k≤x)
     (hnarrow : 4*x+10<27*2^k)
