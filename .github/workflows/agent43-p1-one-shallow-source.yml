@@ -2,7 +2,7 @@ name: Agent43 P1 shallow genuine-source word proof (manual / targeted PR)
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened, reopened]
+    types: [opened]
     paths:
       - 'im-results/agent43-p1-high-cost-reset-count/FourLayerGap.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourLayerBarrier.lean'
