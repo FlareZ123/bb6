@@ -357,7 +357,9 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
       _ = 8*(27*dx) := by ring
       _ = 8*(2*x+5) := by rw [hdx]
   have haLin : 243*a+515*n+507=410*p := by omega
-  have hamod27 : a%27=2 := by omega
+  have hamod27 : a%27=2 := by
+    dsimp [a]
+    omega
 
   let b : Nat := 2*a-2*p-n+4
   have hscaleA : 8*2^j=2*p := by
@@ -370,7 +372,9 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     dsimp [j]
     omega
   have hbLin : 243*b+1273*n+42=334*p := by omega
-  have hbmod27 : b%27=23 := by omega
+  have hbmod27 : b%27=23 := by
+    dsimp [b]
+    omega
 
   have h2bmod9 : (2*b+5)%9=6 := by omega
   have hdivb3 : (2*b+5)%3=0 := by omega
@@ -394,7 +398,9 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     dsimp [j]
     omega
   have hcLin : 729*c+5821*n-2262=607*p := by omega
-  have hcmod9 : c%9=3 := by omega
+  have hcmod9 : c%9=3 := by
+    dsimp [c]
+    omega
 
   let d : Nat := 2*c-p-n+5
   have hcdEq : 2*c=8*2^(j-1)+d+(j-1) := by
@@ -403,7 +409,9 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     dsimp [j]
     omega
   have hdLin : 729*d+12371*n-8169=485*p := by omega
-  have hdmod9 : d%9=7 := by omega
+  have hdmod9 : d%9=7 := by
+    dsimp [d]
+    omega
 
   have hxband : 6*2^k-1≤x ∧ x≤8*2^k-3 := by
     rw [←hpk]
