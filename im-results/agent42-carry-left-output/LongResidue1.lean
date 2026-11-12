@@ -155,10 +155,12 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     have heq : hB+3*(nR:Int)+8 = 6 := by omega
     simpa [heq] using h6
 
-  have hthreshold : -3*((4*k+1:Int))-2 = h'-5 := by
+  have hthreshold : -3*((4*k+1:Nat):Int)-2 = h'-5 := by
+    push_cast
     dsimp [h']
     omega
-  have hthreshold' : -3*((4*k+1:Int)) = h'-3 := by
+  have hthreshold' : -3*((4*k+1:Nat):Int) = h'-3 := by
+    push_cast
     dsimp [h']
     omega
   have ad12Seed (x : Int) (hlo : h'-2 ≤ x) (hhi : x ≤ h'+9) :
@@ -180,6 +182,9 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
     rw [hT2,hcell]
     simpa [hmod,htarget]
 
+  have hB_eq : hB = h'+10 := by
+    dsimp [hB]
+    omega
   have hseed : ∀ x, x < hB → T2 x = carryLeftOutputBit (4*k+1) T x := by
     intro x hx
     by_cases hfar : x < h'-5
@@ -189,9 +194,11 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
       have hADArea : carryAD12Area (x-(h'-2)) = false := by
         simp [carryAD12Area]
         omega
+      have hfar' : x < -(4*(3*(k:Int)))-5 := by
+        simpa [h'] using hfar
       have hpres : T1 x = T x :=
         carryLeftSweep_preserves_at (4*k+1) (3*k) T hmatch hs hb x
-          (by dsimp [h']; omega) (by dsimp [h']; omega)
+          (by omega) (by omega)
       simp [T2,Tbridge,frame,shiftConfig,hADArea,hbridgeArea,hpres,
         carryLeftOutputBit,hthreshold,hfar]
     · by_cases hspecial : x = h'-5
@@ -253,7 +260,7 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
             exact hT2.trans htarget.symm
           · have hlo : h'-2 ≤ x := by omega
             have hhi : x ≤ h'+9 := by
-              have hxB : x < h'+10 := by simpa [hB] using hx
+              have hxB : x < h'+10 := by rw [hB_eq] at hx; exact hx
               omega
             have hmid := ad12Seed x hlo hhi
             exact hmid
@@ -263,7 +270,8 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
   have hsteps : 3*(4*(3*k)) + 24 + (3*nR+15) = 15+12*(4*k+1) := by
     dsimp [nR]
     omega
-  have hbound : -3*((4*k+1:Int))+1 ≤ hB := by
+  have hbound : -3*((4*k+1:Nat):Int)+1 ≤ hB := by
+    push_cast
     dsimp [hB,h']
     omega
   have hmod : hB % 3 = 1 := by
