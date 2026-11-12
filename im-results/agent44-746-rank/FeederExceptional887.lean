@@ -358,7 +358,10 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
   have hamod27 : a%27=2 := by omega
 
   let b : Nat := 2*a-2*p-n+4
-  have hscaleA : 8*2^j=2*p := by rw [hpj]; omega
+  have hscaleA : 8*2^j=2*p := by
+    calc
+      8*2^j = 2*(4*2^j) := by omega
+      _ = 2*p := by rw [hpj]
   have habeq : 2*a=8*2^j+b+j := by
     dsimp [b]
     rw [hscaleA]
@@ -434,7 +437,10 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
   have hdxParentEq :
       2*(2^2*dx)=8*2^j+a+j+5 := by
     have hlinear : 8*dx=2*2^k+a+k+3 := by omega
-    have hscale : 2*2^k=8*2^j := by rw [hpj]; omega
+    have hscale : 2*2^k=8*2^j := by
+      calc
+        2*2^k = 2*p := by rw [←hpk]
+        _ = 8*2^j := hscaleA.symm
     have hshift : k+3=j+5 := by dsimp [k,j]; omega
     omega
   have hxeven : ResetParent u x := Or.inl ⟨k,hxband,hxeq⟩
