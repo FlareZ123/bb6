@@ -347,7 +347,7 @@ Agent48 was asked to add `CountedReset.lean` and dependencies (`S1Encoder`, `Cos
 - The working module was initially mislabelled under agent46; it has been moved to im-results/agent8-rst1prime and its namespace/workflow path corrected. The obsolete path was deleted.
 - Next: get CI compilation; prove `sweptLeft`/`sweptRight` cell formulas, source-level sweep preconditions and bridge-window matches, then the final S1 target tape equality and run composition. Keep intermediate artifacts in im-results/ until a complete, independently checkable mathematical result exists.
 
-## 2026-11-12 20:45 UTC — odd-inner reset-base frame lift
+## 2026-11-12 20:17 UTC — odd-inner reset-base frame lift
 
 Created `im-results/agent8-counted-reset/CountedResetOddBase.lean`.
 
