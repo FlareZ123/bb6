@@ -98,8 +98,7 @@ theorem no_four_shallow_energies
    omega
  have hSh4' : ((2:Int)^delta)*J4=
      I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
-   rw [hR4shift] at hSh4
-   exact hSh4
+   omega
  have hneg4 : -(f*(E:Int))=I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
    calc
      -f*(E:Int)=((2:Int)^delta)*J4 := hlast.symm
