@@ -123,10 +123,10 @@ theorem five_layer_abstract_barrier
   have hR1smallProd : q*R1<2^n := by
     have hsmall : 2520*X^2≤19172403734400*X^6 := by
       calc
-        2520*X^2≤3000*X^3 := Nat.mul_le_mul_left 3000 hx23
-        _≤3000*X^4 := Nat.mul_le_mul_left 3000 hx34
-        _≤3000*X^5 := Nat.mul_le_mul_left 3000 hx45
-        _≤3000*X^6 := Nat.mul_le_mul_left 3000 hx56
+        2520*X^2≤2520*X^3 := Nat.mul_le_mul_left 2520 hx23
+        _≤2520*X^4 := Nat.mul_le_mul_left 2520 hx34
+        _≤2520*X^5 := Nat.mul_le_mul_left 2520 hx45
+        _≤2520*X^6 := Nat.mul_le_mul_left 2520 hx56
         _≤19172403734400*X^6 :=
           Nat.mul_le_mul_right _ (by decide : 2520≤19172403734400)
     exact Nat.lt_of_le_of_lt (Nat.le_trans hR1prod hsmall) hGapX
@@ -178,9 +178,9 @@ theorem five_layer_abstract_barrier
   have hRem2Small : R2+d1<2^(e-t1) := by
     have hbound : 635040*X^3≤19172403734400*X^6 := by
       calc
-        635040*X^3≤1200000*X^4 := Nat.mul_le_mul_left 1200000 hx34
-        _≤1200000*X^5 := Nat.mul_le_mul_left 1200000 hx45
-        _≤1200000*X^6 := Nat.mul_le_mul_left 1200000 hx56
+        635040*X^3≤635040*X^4 := Nat.mul_le_mul_left 635040 hx34
+        _≤635040*X^5 := Nat.mul_le_mul_left 635040 hx45
+        _≤635040*X^6 := Nat.mul_le_mul_left 635040 hx56
         _≤19172403734400*X^6 :=
           Nat.mul_le_mul_right _ (by decide : 635040≤19172403734400)
     have hb : (q*A1)*(R2+d1)<(q*A1)*2^(e-t1) := by
@@ -234,8 +234,8 @@ theorem five_layer_abstract_barrier
   have hRem3Small : R3+d2<2^((e-t1)-t2) := by
     have hbound : 186701760*X^4≤19172403734400*X^6 := by
       calc
-        186701760*X^4≤720000000*X^5 := Nat.mul_le_mul_left 720000000 hx45
-        _≤720000000*X^6 := Nat.mul_le_mul_left 720000000 hx56
+        186701760*X^4≤186701760*X^5 := Nat.mul_le_mul_left 186701760 hx45
+        _≤186701760*X^6 := Nat.mul_le_mul_left 186701760 hx56
         _≤19172403734400*X^6 :=
           Nat.mul_le_mul_right _ (by decide : 186701760≤19172403734400)
     have hb : (q*A1*A2)*(R3+d2)<(q*A1*A2)*2^((e-t1)-t2) := by
@@ -291,8 +291,8 @@ theorem five_layer_abstract_barrier
   have hRem4Small : R4+d3<2^(((e-t1)-t2)-t3) := by
     have hbound : 58811054400*X^5≤19172403734400*X^6 := by
       calc
-        58811054400*X^5≤576000000000*X^6 :=
-          Nat.mul_le_mul_left 576000000000 hx56
+        58811054400*X^5≤58811054400*X^6 :=
+          Nat.mul_le_mul_left 58811054400 hx56
         _≤19172403734400*X^6 :=
           Nat.mul_le_mul_right _ (by decide : 58811054400≤19172403734400)
     have hb : (q*A1*A2*A3)*(R4+d3)<
@@ -401,10 +401,10 @@ theorem five_layer_abstract_barrier
   have hSmallFinal : 652326*X^2<2^n := by
     have hsmall : 652326*X^2≤19172403734400*X^6 := by
       calc
-        652326*X^2≤2001000*X^3 := Nat.mul_le_mul_left 2001000 hx23
-        _≤2001000*X^4 := Nat.mul_le_mul_left 2001000 hx34
-        _≤2001000*X^5 := Nat.mul_le_mul_left 2001000 hx45
-        _≤2001000*X^6 := Nat.mul_le_mul_left 2001000 hx56
+        652326*X^2≤652326*X^3 := Nat.mul_le_mul_left 652326 hx23
+        _≤652326*X^4 := Nat.mul_le_mul_left 652326 hx34
+        _≤652326*X^5 := Nat.mul_le_mul_left 652326 hx45
+        _≤652326*X^6 := Nat.mul_le_mul_left 652326 hx56
         _≤19172403734400*X^6 :=
           Nat.mul_le_mul_right _ (by decide : 652326≤19172403734400)
     exact Nat.lt_of_le_of_lt hsmall hGapX
