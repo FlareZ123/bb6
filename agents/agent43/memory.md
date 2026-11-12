@@ -343,3 +343,10 @@ The five-layer Lean barrier now uses the sharpened constants throughout: raw rem
 ### Late checkpoint correction (19:03Z): terminal wall bound
 
 The five-layer terminal bound is now sharpened once more. From (E=112T_6-384) and (T_6le2n+6), directly obtain (E+1le224(n+2)). Combined with (S_5le326X), the final upper bound is (73024X^2), replacing the earlier (652326X^2). Updated `FiveLayerBarrier.lean` and `FiveLayerBarrier.md`; the already-running CI run [43284665405](https://github.com/FlareZ123/bb6/actions/runs/43284665405) predates this last edit, so another run is needed after it finishes.
+
+
+### Checkpoint update (19:02Z): normalize the signed terminal product
+
+Run [43284665405](https://github.com/FlareZ123/bb6/actions/runs/43284665405) passed the algebra module and profile-bound helper, then reached `FourShallowFiniteBridge.hN4`. The remaining `omega` failure was a genuine syntactic normalization issue: `-((2:Int)^delta)*(8:Int)^r*(E:Int)` parses as ((-(2^\delta))8^rE), while the preceding recurrence supplies (-(2^\delta 8^rE)). Parenthesized the whole product in both `Y` and the target. The latest run is [43285961138](https://github.com/FlareZ123/bb6/actions/runs/43285961138).
+
+The current five-layer barrier uses the final terminal estimate (E+1\le224X), hence (73024X^2), not the earlier (652326X^2). Run 432859 includes the latest barrier, profile helper, and five-layer algebra files.
