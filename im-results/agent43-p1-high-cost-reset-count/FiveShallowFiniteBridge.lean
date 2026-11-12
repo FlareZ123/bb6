@@ -474,11 +474,13 @@ theorem fiveBad_true_of_scalar_equation
     exact Int.emod_eq_zero_of_dvd hdiv
   have hJ5eq : N5/((2:Int)^epsilon)=-((8:Int)^r*(E:Int)) := by
     rw [hN5prod,Int.mul_ediv_cancel_left _ hepos]
+  have hJ5eq' : N5/((2:Int)^epsilon)=(8:Int)^r*(-(E:Int)) := by
+    rw [hJ5eq,←Int.mul_neg]
   have hJ5mod : (N5/((2:Int)^epsilon)) % ((8:Int)^r)=0 := by
-    rw [hJ5eq]
+    rw [hJ5eq']
     exact Int.emod_eq_zero_of_dvd ⟨-(E:Int),by ac_rfl⟩
   have hJ5div : ((N5/((2:Int)^epsilon))/((8:Int)^r))=-(E:Int) := by
-    rw [hJ5eq,Int.mul_ediv_cancel_left _ hrpos]
+    rw [hJ5eq',Int.mul_ediv_cancel_left _ hrpos]
   have hEnat :
       112*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r)-384=E := by
     omega
