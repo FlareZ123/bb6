@@ -195,8 +195,10 @@ private theorem root_runWithHeadMax_bound_of_prefix (m : Machine) :
                     ∃ e : Config, run m t c = some e ∧ e.head≤F := by
                 intro t ht
                 exact hprefix t (by omega)
+              have hprevMon : runWithHeadMax m n c = some (p,hprev) := by
+                simpa using hp
               have hprevBound : hprev≤F :=
-                ih c p hprev F hp hprevPrefix
+                ih c p hprev F hprevMon hprevPrefix
               have hrunFinal : run m (n+1) c = some q := by
                 have hmon' :
                     runWithHeadMax m (n+1) c =
