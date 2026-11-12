@@ -172,7 +172,7 @@ theorem s1Config_oddCounter_countedReturn_canonical
   have hrunAbs : run tm2 (48+12*b)
       (s1Config L n m (len+1) (2*q+1) b h) =
       some ⟨(3 : Fin 6),h,Tpost⟩ := by
-    simpa [shiftConfig,Tpost] using hshift
+    simpa [shiftConfig,Tpost,oddCounterOutput,frame,embed,tailFinal] using hshift
   have hcanonical : Tpost =
       (s1Config L n m (len+1) (2*q) (b+1) h).tape := by
     funext x
@@ -201,17 +201,16 @@ theorem s1Config_counted_decrement_odd
   obtain ⟨q,r,len,hfactor,ha,hq⟩ :=
     exists_odd_factor_bounded a z hz hzlt
   have hr : r = 0 := by
-    by_contra hnot
-    have hpos : 0 < r := by omega
-    have hdivPow : 2 ∣ 2^r := by
-      cases r with
-      | zero => omega
-      | succ r => simp [Nat.pow_succ,Nat.mul_comm]
-    have hdiv : 2 ∣ z := by
-      rw [hfactor]
-      exact dvd_mul_of_dvd_right hdivPow (2*q+1)
-    have heven : z % 2 = 0 := Nat.mod_eq_zero_of_dvd hdiv
-    omega
+    cases r with
+    | zero => rfl
+    | succ r =>
+        have hdivPow : 2 ∣ 2^(Nat.succ r) := by
+          simp [Nat.pow_succ,Nat.mul_comm]
+        have hdiv : 2 ∣ z := by
+          rw [hfactor]
+          exact dvd_mul_of_dvd_right hdivPow (2*q+1)
+        have heven : z % 2 = 0 := Nat.mod_eq_zero_of_dvd hdiv
+        omega
   have hfactor' : z = 2*q+1 := by simpa [hr] using hfactor
   have ha' : a = len+1 := by simpa [hr] using ha
   have hsub : z-1 = 2*q := by omega
