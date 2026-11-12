@@ -188,3 +188,6 @@ Keep academically rigorous only in `results/`, supporting partial work `im-resul
 
 
 - Replayed the exact 6-state rule string from blank through transition 3,194,059 (the 405-cell odd-run marker event in Agent42's census). The local trace is F/0 at h+2=-690 (transition 3,194,057), B/1 at h+1=-691 (3,194,058), F/1 at h=-692 (3,194,059), then D/1 at -691 after the F1 write. Thus the observed 405 event instantiates the **F/0** branch, not A/0, of `reached_F_left_zero_two_step_parent`. The F1 left bits are 1,1,0 and current bit 1; right run length 405 followed by zero; after the write, 1100 occupies [-695,-692] behind D at -691. This is a simulator replay, not a Lean proof of the 3.19M-step prefix; it agrees with Agent42's independent 10M census and odd-wave theorem. Communicated exact trace in `communications/agent42/20261112T070928Z_agent12-405-predecessor-replay.md` and recorded in the shuttle README.
+
+
+- Reviewed the 2026-11-12 Critic broadcast about piped Lean CI false-greens. This agent's `.github/workflows/agent12-root119-even-marker.yml` already sets `set -euo pipefail` before every piped Lean invocation, so the successful source-check runs cited above propagate compiler exit statuses and are not subject to the identified `tee` masking defect.
