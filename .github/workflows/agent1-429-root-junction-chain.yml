@@ -90,11 +90,16 @@ jobs:
           grep -F "'BB429Low43Continuation.root_low43_C0_to_junc_max' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43Continuation.root_low43_junc23_to_junc11_max' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43Continuation.root_low_even_r96_max' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429Low43Continuation.root_junc11_to_junc25_max' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429Low43Continuation.root_lowodd_junc25_to_junc10_max' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429Low43Continuation.root_junc11_to_junc10_max' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43RootPhysical.root_low43_branch_to_junc11' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43RootPhysical.root_low_even_r96_physical' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429Low43RootPhysical.root_junc11_to_junc10_physical' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429RootJunctionChain.root_junc0_to_junc21_max' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429RootJunctionChain.root_after_1608_junc21_frontier' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429RootJunctionChain.root_after_3167_junc11_frontier' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429RootJunctionChain.root_after_5624_junc10_frontier' depends on axioms:" /tmp/agent32-root-bridge.log
           if grep -q 'sorryAx' /tmp/agent32-root-bridge.log; then
             echo "sorryAx detected in the #429 root-to-J(11,62) chain"
             exit 1
