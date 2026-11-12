@@ -177,7 +177,7 @@ theorem source_low_word_four_no_wall
 /-- Every finite legal inverseAt trace restricted to depths 0,1,2 which
 reaches the exact shifted wall at n>=14 has at least five shallow edges. -/
 theorem source_low_trace_wall_needs_five_shallows
-    (n z b d m : Nat) (hn : 76≤n)
+    (n z b d m : Nat) (hn : 14≤n)
     (h : SourceLowTrace n z (14*2^n-2*n-16) 3 0 b d m)
     (hwall : b+4*m+4*n+20=12*2^n) : 5≤z := by
   by_cases hfive : 5≤z
