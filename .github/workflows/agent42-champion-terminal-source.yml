@@ -173,6 +173,13 @@ jobs:
           lean -o TerminalChampion.olean TerminalChampion.lean
           lean -o TerminalAfterPrefix.olean TerminalAfterPrefix.lean
           lean -o TerminalEncoderBridge.olean TerminalEncoderBridge.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent48-counted-inc0/S1ChampionCountedReset.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
+          lean -o S1ChampionCountedReset.olean S1ChampionCountedReset.lean 2>&1 | tee /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/s1-champion-counted-reset-axioms.log; then
+            echo '::error::sorryAx found in S1-specialized champion counted-reset composition'
+            exit 1
+          fi
 
       - name: Upload Lean compiler diagnostics on failure
         if: failure()
@@ -194,5 +201,6 @@ jobs:
             /tmp/a42-terminal/s1-carry-inc0-axioms.log
             /tmp/a42-terminal/s1-counted-inc0-axioms.log
             /tmp/a42-terminal/s1-counted-drain-axioms.log
+            /tmp/a42-terminal/s1-champion-counted-reset-axioms.log
           if-no-files-found: ignore
           retention-days: 3
