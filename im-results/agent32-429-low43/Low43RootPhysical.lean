@@ -216,10 +216,44 @@ theorem root_low43_branch_to_junc11 :
         exact ⟨d,hraw,by rw [hChead] at hb; omega⟩
   exact ⟨cEnd,htotal,hEndRep,hhead,hprefix⟩
 
+
+/-- Full-tape physical lift of the concrete low-even r=96 transition
+    J(49,2) -> J(11,98), retaining the complete prefix head maximum. -/
+theorem root_low_even_r96_physical
+    (c : Config) (hrep : Represents (junc 49 0 2) c) :
+    ∃ d : Config,
+      run target429 719 c = some d ∧
+      Represents (junc 11 0 98) d ∧
+      d.head=c.head-89 ∧
+      (∀ t : Nat, t≤719 →
+        ∃ e : Config,
+          run target429 t c = some e ∧ e.head≤c.head+12) := by
+  let z49 : Zipper := junc 49 0 2
+  have hmax :
+      runWithMax 719 z49 =
+        some (junc 11 0 98, -89, 12) := by
+    simpa [z49] using root_low_even_r96_max
+  have hdelta :
+      runWithDelta 719 z49 = some (junc 11 0 98,-89) := by
+    simpa [hmax] using runWithMax_toDelta 719 z49
+  obtain ⟨d,hrun,hrepD,hhead⟩ :=
+    source_runWithDelta_rep 719 z49 c hrep (junc 11 0 98) (-89) hdelta
+  have hprefix :
+      ∀ t : Nat, t≤719 →
+        ∃ e : Config,
+          run target429 t c = some e ∧ e.head≤c.head+12 := by
+    intro t ht
+    obtain ⟨e,he,hh⟩ :=
+      physical_source_max_prefix_bound 719 t z49 c hrep
+        (junc 11 0 98,-89,12) hmax ht
+    exact ⟨e,he,by omega⟩
+  exact ⟨d,hrun,hrepD,by simpa using hhead,hprefix⟩
+
 #print axioms physical_source_max_prefix_bound
 #print axioms root_low43_C0_to_junc_physical
 #print axioms root_low43_C0_to_junc11_physical
 #print axioms root_low43_branch_to_junc
 #print axioms root_low43_branch_to_junc11
+#print axioms root_low_even_r96_physical
 
 end BB429Low43RootPhysical
