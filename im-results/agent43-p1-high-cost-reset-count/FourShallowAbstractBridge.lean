@@ -37,13 +37,12 @@ def fourFourthRem (n s t1 x1 t2 x2 t3 x3 t4 : Nat) : Nat := Id.run do
   let d3 := S3/2^x3
   return L4*(n+6+3*s+x1+x2+x3)-O4+d3
 
-def fourCoeff (s t1 x1 t2 x2 t3 x3 t4 : Nat) : Nat := Id.run do
+def fourCoeff (s t1 x1 t2 x2 t3 x3 t4 : Nat) : Nat :=
   let (_,C1,_,_) := triple t1
   let (_,C2,_,_) := triple t2
   let (_,C3,_,_) := triple t3
   let (_,C4,_,_) := triple t4
-  let q := 8^s
-  return q*(C1+C2*2^x1+C3*2^(x1+x2)+C4*2^(x1+x2+x3))-98
+  (8^s)*(C1+C2*2^x1+C3*2^(x1+x2)+C4*2^(x1+x2+x3))-98
 
 def fourEmax (n s x1 x2 x3 : Nat) : Nat :=
   112*(n+6+3*s+x1+x2+x3+15)-384
@@ -376,17 +375,12 @@ private theorem four_layer_finite_barrier
     simpa [T1,x1,Nat.add_assoc] using hR2
   have hS2eq : fourSecondRem n s t1 x1 t2=S2 := by
     simp [fourSecondRem,S2,hR1quot,←hp2,←hR2formula,T1]
-    omega
   have hprof1lt : ¬ x1 < fourProfileAlpha t1 := Nat.not_lt.mpr hprof1.1
   have hprof1mod : (x1-fourProfileAlpha t1)%3=0 := hprof1.2
-  have hprof2lt : ¬ x2 < fourProfileAlpha t2 := Nat.not_lt.mpr hprof2.1
-  have hprof2mod : (x2-fourProfileAlpha t2)%3=0 := hprof2.2
-  have hprof3lt : ¬ x3 < fourProfileAlpha t3 := Nat.not_lt.mpr hprof3.1
-  have hprof3mod : (x3-fourProfileAlpha t3)%3=0 := hprof3.2
   have hnot2mod : S2%2^(e-x1)≠0 := by
     have hh := hSecondFinBool
     simp [fourSecondOverflow,fourRootOverflow,hPmod,hDmod,hrootEq,hrootMod,
-      fourProfileAlpha,hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,e,
+      hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,e,
       Nat.sub_add_cancel hn14] at hh
     exact hh
   have hnot2 : ¬ 2^(e-x1)∣S2 := by
@@ -421,6 +415,8 @@ private theorem four_layer_finite_barrier
   have hprof2 : fourProfileStep x2 t2 := by
     have hβ := four_profile_alpha_eq t2 beta C2 L2 O2 ht2 hp2
     simpa [x2] using four_profile_step_of_affine t2 beta v hβ
+  have hprof2lt : ¬ x2 < fourProfileAlpha t2 := Nat.not_lt.mpr hprof2.1
+  have hprof2mod : (x2-fourProfileAlpha t2)%3=0 := hprof2.2
   have hThirdFinBool := four_third_no_overflow
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
     (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
@@ -431,11 +427,10 @@ private theorem four_layer_finite_barrier
     simpa [T1,x1,x2,Nat.add_assoc] using hR3
   have hS3eq : fourThirdRem n s t1 x1 t2 x2 t3=S3 := by
     simp [fourThirdRem,S3,hS2quot,←hp3,←hR3formula,T1]
-    omega
   have hnot3mod : S3%2^(e-x1-x2)≠0 := by
     have hh := hThirdFinBool
     simp [fourThirdOverflow,fourRootOverflow,
-      hPmod,hDmod,hrootEq,hrootMod,fourProfileAlpha,hprof1lt,hprof1mod,hx1le,
+      hPmod,hDmod,hrootEq,hrootMod,hprof1lt,hprof1mod,hx1le,
       hR1mod,hS2eq,hnot2mod,hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,
       e,Nat.sub_add_cancel hn14] at hh
     exact hh
@@ -471,6 +466,8 @@ private theorem four_layer_finite_barrier
   have hprof3 : fourProfileStep x3 t3 := by
     have hγ := four_profile_alpha_eq t3 gamma C3 L3 O3 ht3 hp3
     simpa [x3] using four_profile_step_of_affine t3 gamma w hγ
+  have hprof3lt : ¬ x3 < fourProfileAlpha t3 := Nat.not_lt.mpr hprof3.1
+  have hprof3mod : (x3-fourProfileAlpha t3)%3=0 := hprof3.2
   have hFourthFinBool := four_fourth_finite_audit
     (⟨n-14,by omega⟩ : Fin 62) (⟨s,by omega⟩ : Fin 4)
     (⟨t1,by omega⟩ : Fin 2) (⟨x1,by omega⟩ : Fin 13)
@@ -490,7 +487,7 @@ private theorem four_layer_finite_barrier
     intro hz
     have hh := hFourthFinBool
     simp [fourFourthAudit,hPmod,hDmod,hrootEq,hrootMod,
-      fourProfileAlpha,hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
+      hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
       hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,hnot3mod,
       hprof3lt,hprof3mod,hx3le,hS3mod,hS4eq,hz,e,
       Nat.sub_add_cancel hn14] at hh
@@ -554,7 +551,7 @@ private theorem four_layer_finite_barrier
   have hfinal : K*2^(e-x1-x2-x3)>S4*(Emax+1) := by
     have hh := hFourthFinBool
     simp [fourFourthAudit,hPmod,hDmod,hrootEq,hrootMod,
-      fourProfileAlpha,hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
+      hprof1lt,hprof1mod,hx1le,hR1mod,hS2eq,hnot2mod,
       hprof2lt,hprof2mod,hx2le,hS2mod,hS3eq,hnot3mod,
       hprof3lt,hprof3mod,hx3le,hS3mod,hS4eq,hnot4mod,hhasCandidate,
       hKformula,Emax,fourEmax,e,Nat.sub_add_cancel hn14] at hh
