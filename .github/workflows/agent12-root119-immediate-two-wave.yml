@@ -2,6 +2,10 @@ name: Agent 12 Root119 immediate two-wave original-source certificate (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent12-root119-left-corridor/Root119ImmediateTwoWavePump.lean'
 
 permissions:
   contents: read
@@ -41,10 +45,22 @@ jobs:
           lean -o "$A/Root119WaveNormal.olean" "$A/Root119WaveNormal.lean"
           lean -o "$A/Root119OddWaveRetreat.olean" "$A/Root119OddWaveRetreat.lean"
           lean -o "$A/Root119TwoWaveRootPrefix.olean" "$A/Root119TwoWaveRootPrefix.lean"
-          lean "$B/Root119ImmediateTwoWave.lean" 2>&1 | tee "$B/immediate-two-wave-check.log"
+          lean -o "$B/Root119ImmediateTwoWave.olean" "$B/Root119ImmediateTwoWave.lean" 2>&1 | tee "$B/immediate-two-wave-check.log"
           if grep -q 'sorryAx' "$B/immediate-two-wave-check.log"; then
             echo "::error::Untrusted sorry axiom in immediate two-wave return"
             exit 1
           fi
           grep -q 'imm_two_wave_exact.*depends on axioms' "$B/immediate-two-wave-check.log"
           grep -q 'imm_two_wave_endpoint_shield.*depends on axioms' "$B/immediate-two-wave-check.log"
+
+          lean -o "$B/Root119ImmediateTwoWaveCorridor.olean" "$B/Root119ImmediateTwoWaveCorridor.lean" 2>&1 | tee "$B/immediate-two-wave-corridor-check.log"
+          if grep -q 'sorryAx' "$B/immediate-two-wave-corridor-check.log"; then
+            echo "::error::Untrusted sorry axiom in concrete immediate two-wave corridor"
+            exit 1
+          fi
+          lean "$B/Root119ImmediateTwoWavePump.lean" 2>&1 | tee "$B/immediate-two-wave-pump-check.log"
+          if grep -q 'sorryAx' "$B/immediate-two-wave-pump-check.log"; then
+            echo "::error::Untrusted sorry axiom in immediate two-wave pump theorem"
+            exit 1
+          fi
+          grep -q 'imm_two_wave_pump.*depends on axioms' "$B/immediate-two-wave-pump-check.log"
