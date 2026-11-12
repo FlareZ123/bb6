@@ -31,19 +31,18 @@ theorem carryAD12_trace (bg : Int → Bool) :
   rw [run_frame tm2 carryAD12Area bg (embed carryAD12Base) 12
     (finite_heads tm2 carryAD12Area carryAD12Base 12 hc)]
   rw [← finite_run_source tm2 12 carryAD12Base, he]
-  simp
+  rfl
 
 theorem carryAD12 (T : Int → Bool) (h : Int)
     (hlocal : ∀ x, carryAD12Area (x-h) = true →
       (embed carryAD12Base).tape (x-h) = T x) :
-    run tm2 12
-      (frame (fun x => carryAD12Area (x-h)) T
-        (shiftConfig h (embed carryAD12Base))) =
+    run tm2 12 ⟨0,h,T⟩ =
       some (frame (fun x => carryAD12Area (x-h)) T
         (shiftConfig h (embed carryAD12Final))) := by
-  exact carryBridgeLift carryAD12Area
+  have hmain := carryBridgeLift carryAD12Area
     (embed carryAD12Base) (embed carryAD12Final) 12
     carryAD12_trace T h hlocal
+  simpa [embed, carryAD12Base, shiftConfig] using hmain
 
 /-- D at head 0 with the seven-cell terminal input 1111111. -/
 def carryDTail15Area (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 9)
@@ -61,19 +60,18 @@ theorem carryDTail15_trace (bg : Int → Bool) :
   rw [run_frame tm2 carryDTail15Area bg (embed carryDTail15Base) 15
     (finite_heads tm2 carryDTail15Area carryDTail15Base 15 hc)]
   rw [← finite_run_source tm2 15 carryDTail15Base, he]
-  simp
+  rfl
 
 theorem carryDTail15 (T : Int → Bool) (h : Int)
     (hlocal : ∀ x, carryDTail15Area (x-h) = true →
       (embed carryDTail15Base).tape (x-h) = T x) :
-    run tm2 15
-      (frame (fun x => carryDTail15Area (x-h)) T
-        (shiftConfig h (embed carryDTail15Base))) =
+    run tm2 15 ⟨3,h,T⟩ =
       some (frame (fun x => carryDTail15Area (x-h)) T
         (shiftConfig h (embed carryDTail15Final))) := by
-  exact carryBridgeLift carryDTail15Area
+  have hmain := carryBridgeLift carryDTail15Area
     (embed carryDTail15Base) (embed carryDTail15Final) 15
     carryDTail15_trace T h hlocal
+  simpa [embed, carryDTail15Base, shiftConfig] using hmain
 
 /-- The exceptional rho=3, t=1 branch: A returns to A after twelve
 steps rather than entering the longer A→D scan. -/
@@ -94,19 +92,18 @@ theorem carryAReturn12_trace (bg : Int → Bool) :
   rw [run_frame tm2 carryAReturn12Area bg (embed carryAReturn12Base) 12
     (finite_heads tm2 carryAReturn12Area carryAReturn12Base 12 hc)]
   rw [← finite_run_source tm2 12 carryAReturn12Base, he]
-  simp
+  rfl
 
 theorem carryAReturn12 (T : Int → Bool) (h : Int)
     (hlocal : ∀ x, carryAReturn12Area (x-h) = true →
       (embed carryAReturn12Base).tape (x-h) = T x) :
-    run tm2 12
-      (frame (fun x => carryAReturn12Area (x-h)) T
-        (shiftConfig h (embed carryAReturn12Base))) =
+    run tm2 12 ⟨0,h,T⟩ =
       some (frame (fun x => carryAReturn12Area (x-h)) T
         (shiftConfig h (embed carryAReturn12Final))) := by
-  exact carryBridgeLift carryAReturn12Area
+  have hmain := carryBridgeLift carryAReturn12Area
     (embed carryAReturn12Base) (embed carryAReturn12Final) 12
     carryAReturn12_trace T h hlocal
+  simpa [embed, carryAReturn12Base, shiftConfig] using hmain
 
 #print axioms carryAD12_trace
 #print axioms carryDTail15_trace
