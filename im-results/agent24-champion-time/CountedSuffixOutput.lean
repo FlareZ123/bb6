@@ -444,7 +444,7 @@ theorem s0Config_counted_decrement_of_prefix
     have hsource := s0Config_right_zero_after_counter l a zIn b h 0
     have hvalue : Tpre (h+even_rightStop b) = false := by
       rw [hkeep]
-      exact hsource
+      simpa [even_rightStop,Int.add_assoc] using hsource
     simpa [P] using hvalue
   have hzero1 : P (even_rightStop b+1) = false := by
     have hfar : 6 < even_rightStop b+1 := by
@@ -454,7 +454,7 @@ theorem s0Config_counted_decrement_of_prefix
     have hsource := s0Config_right_zero_after_counter l a zIn b h 1
     have hvalue : Tpre (h+(even_rightStop b+1)) = false := by
       rw [hkeep]
-      exact hsource
+      simpa [even_rightStop,Int.add_assoc] using hsource
     simpa [P] using hvalue
   have hzero2 : P (even_rightStop b+2) = false := by
     have hfar : 6 < even_rightStop b+2 := by
@@ -464,7 +464,7 @@ theorem s0Config_counted_decrement_of_prefix
     have hsource := s0Config_right_zero_after_counter l a zIn b h 2
     have hvalue : Tpre (h+(even_rightStop b+2)) = false := by
       rw [hkeep]
-      exact hsource
+      simpa [even_rightStop,Int.add_assoc] using hsource
     simpa [P] using hvalue
   have hsuffix := even_counted_suffix_from_open P b
     hP1 hP2 hP3 hP4 hP5 hP6 honeP hzero0 hzero1 hzero2
