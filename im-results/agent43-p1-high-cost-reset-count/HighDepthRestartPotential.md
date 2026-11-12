@@ -42,7 +42,7 @@ Since `d>=1`, mass gives
 For t=0,
 `2(F'+6) <= 2B-10P-6 <= -5P+n+4 < 0`
 for n>=14. For t=1,
-`4(F'+6) <= 2B-6P-6 <= -P+n+4`.
+`4(F'+6) <= 2B-6P-6 <= -P+n+4 < 0`.
 Thus every shallow edge (depth 0 or 1) sends `F'` strictly negative under the global cost cap.
 
 On the other hand, `W>=0` gives `F+2B=W-12P>=-12P`. For t>=3,
