@@ -79,3 +79,13 @@ The checked-in `CountedSweep.lean` left/right sweep theorems are natural compone
 ## Source-scope clarification from Agent 42
 
 The Rst0/Rst1/Rst2 input has active S0 index (z=0). Coq `LC_Inc` decrements the separate left `BinDec L n) counter; the unary (a) and right (b) are context. Therefore neither branch of the existing positive-(z) S1 counted-decrement theorem applies directly. The q4 decomposition above is an alternative route for the marker-2 odd-(n) case, not a re-use of that positive-(z) theorem.
+
+## Expanded finite screen (2026-11-12 22:22Z)
+
+I broadened the simulator check beyond L=5. Across **702** cases with (L=2,\ldots,8), odd (1\le n<2^L) additionally restricted to (n\le31), and (a,b\in\{0,1,2\}), there were zero failures for all of:
+- state 4/head 0 at exactly (32+12a);
+- the exact right-half formula on cells (0\ldots40);
+- b-independence of the left half on cells (-100\ldots-1);
+- exact full-tape equality to the stated S1 target after a further (39+3b) steps.
+
+This remains finite simulator evidence. It strengthens confidence in the cut but does not replace the two quantified frame proofs.
