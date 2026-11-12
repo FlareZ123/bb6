@@ -1,5 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import EChainBExit
+import BoundaryPadding
+import BoundaryBZero
 
 namespace BB6.Agent37EChainBEExit
 open CryptidBoundary BB6.Agent31PacketSource
@@ -142,9 +144,106 @@ theorem reset_B_E_A_mod27 (d k h Q : Nat)
     simpa [n] using hn
   exact reset_B_E_A_resource d k h t Q hh hd hk ha hQ
 
+/-- Convert each exact F/0 endpoint into Agent 2's physical regularSection
+    language.  The third endpoint differs only by one explicit far blank zero. -/
+theorem regularEndpoint_reentry (c : Cfg) (h : regularEndpoint c) :
+    ∃ (T a q b : Nat),
+      BB6.BoundaryPadding.ObsEq (run T c)
+        (BB6.Agent2BoundaryBZero.regularSection a q b) := by
+  rcases h with ⟨T,n,hcases⟩
+  rcases hcases with h0 | h1 | h2
+  · refine ⟨T,n+1,2,3,?_⟩
+    rw [h0]
+    simp [BB6.BoundaryPadding.ObsEq,
+      BB6.BoundaryPadding.represent,
+      BB6.Agent2BoundaryBZero.regularSection,
+      BB6.Agent31PacketSource.oppairs,
+      List.replicate_succ, List.append_assoc,
+      BB6.Padding.CfgEq, BB6.Padding.TapeEq, BB6.Padding.bitAt]
+  · refine ⟨T,n,0,0,?_⟩
+    rw [h1]
+    simp [BB6.BoundaryPadding.ObsEq,
+      BB6.BoundaryPadding.represent,
+      BB6.Agent2BoundaryBZero.regularSection,
+      BB6.Agent31PacketSource.oppairs,
+      BB6.Padding.CfgEq, BB6.Padding.TapeEq, BB6.Padding.bitAt]
+  · refine ⟨T,n,4,0,?_⟩
+    rw [h2]
+    change BB6.Padding.CfgEq
+      (BB6.BoundaryPadding.represent
+        (⟨[],false,List.replicate n true ++
+          [false,true,false,true,false,true,false,true,false],5⟩ : Cfg))
+      (BB6.BoundaryPadding.represent
+        (BB6.Agent2BoundaryBZero.regularSection n 4 0))
+    apply BB6.Padding.cfgEq_symm
+    simp only [BB6.BoundaryPadding.represent,
+      BB6.Agent2BoundaryBZero.regularSection,
+      List.replicate_zero]
+    have hword : BB6.Agent31PacketSource.oppairs 4 =
+        [false,true,false,true,false,true,false,true] := by decide
+    rw [hword]
+    refine ⟨BB6.Padding.tapeEq_refl _, rfl, ?_, rfl⟩
+    simpa [List.append_assoc] using
+      (BB6.Padding.tapeEq_pad
+        (List.replicate n true ++
+          [false,true,false,true,false,true,false,true]) 1)
+
+/-- The B -> E -> A corridor returns directly to the physical regularSection
+    language used by the blank-root exceptional-family development. -/
+theorem chain_B_E_A_reentry (d h t q p : Nat)
+    (hh : 1 ≤ h) (hd : 1 ≤ d)
+    (ha : 1+4*8^d*h=27*t+20) :
+    ∃ (T a q' b : Nat),
+      BB6.BoundaryPadding.ObsEq
+        (run T
+          (packet (1+4*3^d*h) q (3*d+(3+p))
+            BB6.Agent35K4Shapes.marker))
+        (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
+  exact regularEndpoint_reentry _
+    (chain_B_E_A d h t q p hh hd ha)
+
+/-- Source-chain integration interface: any authentic prefix that reaches
+    this canonical marker cylinder now continues to Agent 2's regularSection. -/
+theorem source_chain_B_E_A_reentry (source : Cfg) (Troot d h t q p : Nat)
+    (hh : 1 ≤ h) (hd : 1 ≤ d)
+    (ha : 1+4*8^d*h=27*t+20)
+    (hroot : BB6.BoundaryPadding.ObsEq
+      (run Troot source)
+      (packet (1+4*3^d*h) q (3*d+(3+p))
+        BB6.Agent35K4Shapes.marker)) :
+    ∃ (T a q' b : Nat),
+      BB6.BoundaryPadding.ObsEq (run T source)
+        (BB6.Agent2BoundaryBZero.regularSection a q' b) := by
+  obtain ⟨Ttail,a,q',b,htail⟩ :=
+    chain_B_E_A_reentry d h t q p hh hd ha
+  exact ⟨Troot+Ttail,a,q',b,
+    BB6.BoundaryPadding.source_chain Troot Ttail source
+      (packet (1+4*3^d*h) q (3*d+(3+p))
+        BB6.Agent35K4Shapes.marker)
+      (BB6.Agent2BoundaryBZero.regularSection a q' b)
+      hroot htail⟩
+
+/-- Fixed-tail p=2 version of the same regularSection reentry bridge. -/
+theorem reset_B_E_A_reentry (d k h t Q p : Nat)
+    (hh : 1 ≤ h) (hd : 1 ≤ d)
+    (hk : 2*k+1=3^d*h)
+    (ha : 1+4*8^d*h=27*t+20)
+    (hp : 2*Q+6=3*d+(3+p)) :
+    ∃ (T a q b : Nat),
+      BB6.BoundaryPadding.ObsEq
+        (run T
+          (packet (3*k+4) Q 2 (false::List.replicate 6 true)))
+        (BB6.Agent2BoundaryBZero.regularSection a q b) := by
+  exact regularEndpoint_reentry _
+    (reset_B_E_A d k h t Q p hh hd hk ha hp)
+
 #print axioms b_then_e
 #print axioms chain_B_E_A
 #print axioms reset_B_E_A
 #print axioms reset_B_E_A_resource
 #print axioms reset_B_E_A_mod27
+#print axioms regularEndpoint_reentry
+#print axioms chain_B_E_A_reentry
+#print axioms source_chain_B_E_A_reentry
+#print axioms reset_B_E_A_reentry
 end BB6.Agent37EChainBEExit
