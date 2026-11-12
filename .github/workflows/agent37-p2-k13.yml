@@ -1,6 +1,10 @@
 name: Agent 37 Cryptid k13 mod81 source proof (manual)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent37-echain/EChainBEExit.lean'
 permissions:
   contents: read
 jobs:
@@ -50,6 +54,8 @@ jobs:
           lean -o im-results/agent37-echain/EChainSource.olean im-results/agent37-echain/EChainSource.lean | tee axioms.log
           lean -o im-results/agent37-echain/EChainResidues.olean im-results/agent37-echain/EChainResidues.lean | tee -a axioms.log
           lean -o "$D/BoundaryBZero.olean" "$D/BoundaryBZero.lean"
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean -o "$D/PacketP2ResetSource.olean" "$D/PacketP2ResetSource.lean"
           lean -o "$C/P2K4Shapes.olean" "$C/P2K4Shapes.lean"
           lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
