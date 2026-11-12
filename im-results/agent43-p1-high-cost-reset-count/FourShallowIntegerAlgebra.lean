@@ -69,7 +69,7 @@ theorem algebraic_first_four
      (A1:Int)*((A2:Int)*(R3:Int))+
      (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))-
      (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))-
-     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int))) := by
+     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int)))) := by
    simp only [Int.mul_add,Int.mul_sub]
    omega
  rw [htarget]
