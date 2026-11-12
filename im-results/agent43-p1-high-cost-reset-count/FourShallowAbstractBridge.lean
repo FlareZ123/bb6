@@ -479,7 +479,6 @@ private theorem four_layer_finite_barrier
     simpa [T1,x1,x2,x3,Nat.add_assoc] using hR4
   have hS4eq : fourFourthRem n s t1 x1 t2 x2 t3 x3 t4 = S4 := by
     simp [fourFourthRem,S4,hS3quot,←hp4,←hR4formula,T1]
-    omega
   have hprof4 : fourProfileStep x4 t4 := by
     have hδ := four_profile_alpha_eq t4 delta C4 L4 O4 ht4 hp4
     simpa [x4] using four_profile_step_of_affine t4 delta r hδ
