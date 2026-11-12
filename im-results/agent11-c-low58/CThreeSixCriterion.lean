@@ -60,7 +60,12 @@ set_option maxRecDepth 8192
     An independent theorem M0OddRayValTwo proves an infinite extension. -/
 theorem six_forced_rejects_1031 :
     BB6.Agent11SixForced.sixForcedExcluded 2065 3100=true := by
-  decide
+  simp [BB6.Agent11SixForced.sixForcedExcluded,
+    BB6.Agent11SixForced.sixForcedNormalize,
+    BB6.Agent3.oddLowGate, BB6.Agent3.evenSevenGate,
+    BB6.Agent3.evenAffineGate, BB6.Agent46.sixEvenRightGate,
+    BB6.Agent3ValSix.valSixGate,
+    BB6.Agent11SixForced.evenOddFourGate]
 
 theorem six_forced_strict_1031 :
     BB6.Agent11M0DeepFull.highAllowed 1031 0 ∧
