@@ -48,8 +48,14 @@ private theorem first_mid_shape (u q : Nat) (hq : 3 ≤ q) :
       have hN : 2*(r+1)+2=3+(2*q-3) := by omega
       rw [hN,←List.replicate_append_replicate]
       rfl
+    have hlead :
+        List.replicate (8*(9*u+7)+5) true =
+          [true,true] ++ List.replicate (3*(24*u+19)+2) true := by
+      have hN : 8*(9*u+7)+5 = 2 + (3*(24*u+19)+2) := by omega
+      rw [hN, ← List.replicate_append_replicate]
+      rfl
     simp only [BB6.Agent32EAll.output,List.append_nil]
-    rw [hp]
+    rw [hp, hlead]
     simp [init,suffix2,List.append_assoc]
 
 def secondOutput (u q : Nat) : Cfg :=
