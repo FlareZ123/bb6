@@ -453,3 +453,11 @@ Next steps: monitor CI 43302219127; if the bounded table compiles, implement fir
 
 - A broader exact BigInt scan is preserved in five_shallow_finite_scan_upto4.js. It finds zero solutions across 9,000,000 root-compatible assignments with all five run lengths in 0..4. This is still experimental and does not establish the needed run-length upper bounds; it may be useful if a <=4 source bound is easier to prove than <=2.
 - For the root divisor in 14<=n<=82, the admissible pairs have a simple classification: s=0 for every n; s=1 exactly when n≡2 mod 4; s=2 exactly at n=30,62; s=3 exactly at n=30. This gives 90 pairs total and may simplify or split finite certificates.
+
+
+### Follow-up at 20:45 UTC: finite-core CI failure and PR64 repair
+
+- PR #63 CI 43302219127 compiled every prerequisite through FiveShallowIntegerAlgebra, then failed at FiveShallowFiniteBounds.lean. The actual diagnostics were: unknown namespace BB6.Agent43TwoShallowFinite; unknown identifier triple at five profile destructurings; and maximum recursion depth at the large no_five_bad_rootPairs decide theorem.
+- The primary concrete fix is an explicit import of TwoShallowFiniteBounds in addition to FiveShallowIntegerAlgebra. The recursion-depth error may be downstream of the unresolved triple identifiers; reassess only after a clean import compile.
+- PR #63 is closed as superseded. PR #64 is the clean branch/PR with the import fix: https://github.com/FlareZ123/bb6/pull/64. Its targeted CI had not appeared yet as of 20:45:34 UTC.
+- The finite-core table remains experimental/draft until PR64 passes. If recursion depth persists, split no_five_bad_rootPairs into smaller root-pair blocks (e.g. 9 blocks of 10 pairs) rather than immediately raising maxRecDepth further.
