@@ -31,16 +31,24 @@ The original six/seven diagonal exclusion and its initial strict-image proof wer
 
 ## A second strict sixth/seventh image family
 
-The original strict cone used `u+v = 0 (mod 4)`. A second, disjoint family is given by either of these two residue slices:
+The original strict cone used `u+v = 0 (mod 4)`. A second, disjoint family is described compactly by
 
 ```
-u = 1 (mod 4),  u+v = 3 (mod 16)
-u = 3 (mod 4),  u+v = 11 (mod 16)
+(u+v) % 16 = (15+4*u) % 16
+```
+
+Equivalently, its four residue slices are:
+
+```
+u = 0 (mod 4), u+v = 15 (mod 16)
+u = 1 (mod 4), u+v = 3  (mod 16)
+u = 2 (mod 4), u+v = 7  (mod 16)
+u = 3 (mod 4), u+v = 11 (mod 16)
 ```
 
 Write the second parent in the H1 branch as
 `P=(1113+650*u+1298*v, 321+187*u+375*v)` and its parent as
-`R=(471+276*u+548*v, 644+374*u+750*v)`. On either slice,
+`R=(471+276*u+548*v, 644+374*u+750*v)`. On the full family,
 
 ```
 (P.x+P.y) % 8 = 1
@@ -51,30 +59,32 @@ R.y % 2 = 0
 
 So `P` lies in Agent34's all-source three-edge exclusion cone. The even/sum-one inverse theorem makes `P` the unique parent of `R`; hence `R` has no four-return ancestry. The unique-parent lemma for the H1 second branch then makes P2 have no five-return ancestry, and H1 has no six-return ancestry. The other two branches are unchanged: P0 has no one-return ancestry, and H3 has no three-return ancestry. Therefore the whole target band still has six genuine incoming returns but no seventh.
 
-The two explicit infinite progressions are:
+Four explicit infinite progressions in the family are:
 
 ```
-u=1+16*t, v=2  ->  (1665+16384*t, 2622)
-u=3+16*t, v=8  ->  (3713+16384*t, 8766)
+u=16*t,   v=15  ->  (641+16384*t, 15934)
+u=1+16*t, v=2   ->  (1665+16384*t, 2622)
+u=2+16*t, v=5   ->  (2689+16384*t, 5694)
+u=3+16*t, v=8   ->  (3713+16384*t, 8766)
 ```
 
-The new root theorem `blank_ne_six_seven_band_s3` excludes every state in both slices from the blank-origin orbit at every time. Both slices are disjoint from the original diagonal because `u+v = 3 (mod 4)), not zero.
+The new root theorem `blank_ne_six_seven_band_s3` excludes every state in the full four-residue family from the blank-origin orbit at every time. The family is disjoint from the original diagonal because `u+v = 3 (mod 4)), not zero.
 
 The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second image family has not yet passed original-source CI** and remains an intermediate result.
 
 ## Pullback to two new high stopping-parameter progressions
 
-The second image family yields two explicit high stopping-parameter progressions that survive the prior C58 all-depth and late-fast filters.
+Two explicit high stopping-parameter progressions from this second image family have been pulled back and shown to survive the prior C58 all-depth and late-fast filters.
 
 1. For `j=831`, `m=9770+16384*t`, the exact stopping counter
-   `k=2^(2*m+2)*(j+3)-(j+3*m+5)` satisfies `k=574+1024*v` with `v=2 (mod 16)). This is the `u=1) slice.
+   `k=2^(2*m+2)*(j+3)-(j+3*m+5)` satisfies `k=574+1024*v` with `v=2 (mod 16)`. This is the `u=1) slice.
 2. For `j=1855`, `m=12842+16384*t`, the same counter satisfies `k=574+1024*v` with `v=8 (mod 16)`. This is the `u=3) slice.
 
 For both progressions, `j=319 (mod 512)` and `m=42 (mod 512)`, so the full earlier ValSixFull+C58 and arbitrary-depth late gate admit them. Neither is in the original diagonal:
 - First progression: `(3*m)%4096=638`, while `(j+2879)%4096=3710`.
 - Second progression: `(3*m)%4096=1662`, while `(j+2879)%4096=638`.
 
-[CSixSeventhC58.lean](CSixSeventhC58.lean) formalizes the residue-pair admission, both exact image pullbacks, and the strengthened criterion `blank_halts_iff_c58_late_fast_six_seven_both`. The admission lemmas are `prior_latefast_admits_s3_parameter_family` and `prior_latefast_admits_s3_second_parameter_family`; the exclusions are `s3_parameter_family_removed` and `s3_second_parameter_family_removed`. The current high predicate removes both progressions while preserving the exact blank-halting iff. **This integration has not yet passed original-source CI**; it remains in `im-results/` and is not a BB(6) solution.
+[CSixSeventhC58.lean](CSixSeventhC58.lean) formalizes the residue-pair admission, both exact image pullbacks, and the strengthened criterion `blank_halts_iff_c58_late_fast_six_seven_both`. The admission lemmas are `prior_latefast_admits_s3_parameter_family` and `prior_latefast_admits_s3_second_parameter_family`; the exclusions are `s3_parameter_family_removed` and `s3_second_parameter_family_removed`. The current high predicate removes both progressions while preserving the exact blank-halting iff. The other two residue slices have not yet been pulled back to high-stop parameters. **This integration has not yet passed original-source CI**; it remains in `im-results/` and is not a BB(6) solution.
 
 ## Independence from the integrated C58 all-depth sieve
 
