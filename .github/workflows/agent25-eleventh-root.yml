@@ -107,7 +107,7 @@ jobs:
           lean -o "$S/AAlternating.olean" "$S/AAlternating.lean"
           lean -o "$S/CryptidThree.olean" "$S/CryptidThree.lean"
           lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean" | tee -a axioms.log
-          lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
+          lean -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean" | tee -a axioms.log
           lean -DmaxRecDepth=55000 -o "$P2/PacketP2ReentryOrE.olean" "$P2/PacketP2ReentryOrE.lean" | tee -a axioms.log
           lean -DmaxRecDepth=4096 -o "$P2/AOnePacketBoundarySource.olean" "$P2/AOnePacketBoundarySource.lean"
           lean -DmaxRecDepth=4096 -o "$P2/PacketZeroBoundarySource.olean" "$P2/PacketZeroBoundarySource.lean"
