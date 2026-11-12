@@ -287,13 +287,17 @@ theorem fatal_parent_set_1085_1372 (n q : Nat)
 theorem fatal_root_reduces_to_even_parent_1085_1372 (n : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
     ReachC (2,0) (fatal n,0) →
-      ReachC (2,0) (16*2^(n-2)-3*n-7,0) := by
+      ReachC (2,0) (evenPre n (n+4),0) := by
   let u := fatal n
   let x := oddPre n u
-  let y := 16*2^(n-2)-3*n-7
+  let y := evenPre n (n+4)
   have hne : u≠2 := by dsimp [u,fatal]; omega
   have huniq : ∀q, ResetParent q u → q=y ∨ q=x := by
-    simpa [u,x,y] using (fatal_parent_set_1085_1372 n hn).2.2
+    intro q hpq
+    have h := (fatal_parent_set_1085_1372 n q hn).mp (by simpa [u] using hpq)
+    rcases h with hodd | heven
+    · exact Or.inr (by simpa [x,u] using hodd)
+    · exact Or.inl (by simpa [y] using heven)
   have hxNo : ¬ReachC (2,0) (x,0) := by
     simpa [x,u] using (fatal_feeder_1085_1372_root_exclusion n hn).2
   intro hu
@@ -305,21 +309,34 @@ theorem fatal_root_reduces_to_even_parent_1085_1372 (n : Nat)
   · rw [hqx] at hqc
     exact False.elim (hxNo ((root_reset_chain_iff x).mpr hqc))
 
-
 /-- In the 1085/1372 classes, fatal-root reachability is exactly equivalent
     to reachability of the unique even predecessor after the odd feeder is
-    excluded. The reverse implication is just one genuine ResetParent edge. -/
+    excluded. The reverse implication is one genuine ResetParent edge. -/
 theorem fatal_root_iff_even_parent_1085_1372 (n : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
     (ReachC (2,0) (fatal n,0) ↔
-      ReachC (2,0) (16*2^(n-2)-3*n-7,0)) := by
-  let y := 16*2^(n-2)-3*n-7
+      ReachC (2,0) (evenPre n (n+4),0)) := by
+  let y := evenPre n (n+4)
   constructor
   · exact fatal_root_reduces_to_even_parent_1085_1372 n hn
   · intro hy
     have hparent : ResetParent y (fatal n) := by
-      simpa [y] using (fatal_parent_set_1085_1372 n hn).1
+      exact (fatal_parent_set_1085_1372 n y hn).mpr (Or.inr rfl)
     have hc : ResetChain 2 y := (root_reset_chain_iff y).mp hy
     exact (root_reset_chain_iff (fatal n)).mpr (ResetChain.append hc hparent)
+
+/-- The even predecessor in the exact parent-set theorem is the affine
+    height 16*2^(n-2)-3*n-7 used in the research notes. -/
+theorem fatal_even_parent_formula_1085_1372 (n : Nat)
+    (hn : n%1458=1085 ∨ n%1458=1372) :
+    evenPre n (n+4)=16*2^(n-2)-3*n-7 := by
+  have hpow : 2^n=4*2^(n-2) := by
+    have he : n=(n-2)+2 := by omega
+    rw [he,Nat.pow_add]
+    simp only [show 2^2=4 by decide]
+    omega
+  dsimp [evenPre]
+  rw [hpow]
+  omega
 
 end CascadeFeederExceptional
