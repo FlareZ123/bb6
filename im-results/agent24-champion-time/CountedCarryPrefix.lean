@@ -84,7 +84,9 @@ theorem rightOnes_of_segment (n : Nat) (T : Int → Bool) (h : Int)
   have h0 := hseg (3*i) (by omega)
   have h1 := hseg (3*i+1) (by omega)
   have h2 := hseg (3*i+2) (by omega)
-  exact ⟨by simpa using h0, by simpa using h1, by simpa using h2⟩
+  have e1 : h+(3*(i:Int)+1) = h+3*(i:Int)+1 := by omega
+  have e2 : h+(3*(i:Int)+2) = h+3*(i:Int)+2 := by omega
+  exact ⟨by simpa using h0, by simpa [e1] using h1, by simpa [e2] using h2⟩
 
 /-- The right sweep changes only cells strictly before its final head. -/
 theorem sweptRight_future (n : Nat) (T : Int → Bool) (h x : Int)
