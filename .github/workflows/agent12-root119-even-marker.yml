@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'im-results/agent12-root119-shuttle/Root119EvenMarkerGate.lean'
+      - 'im-results/agent12-root119-shuttle/Root119F1MarkerLifecycle.lean'
       - '.github/workflows/agent12-root119-even-marker.yml'
 
 permissions:
@@ -37,8 +38,13 @@ jobs:
           lean -o "$S/Root119EvenSweep.olean" "$S/Root119EvenSweep.lean"
           lean -o "$S/Root119EvenExtra.olean" "$S/Root119EvenExtra.lean"
           lean -o "$A/Root119CPhaseReturn.olean" "$A/Root119CPhaseReturn.lean"
-          lean "$S/Root119EvenMarkerGate.lean" 2>&1 | tee "$S/even-marker-gate-check.log"
+          lean -o "$S/Root119EvenMarkerGate.olean" "$S/Root119EvenMarkerGate.lean" 2>&1 | tee "$S/even-marker-gate-check.log"
           if grep -q 'sorryAx' "$S/even-marker-gate-check.log"; then
             echo "::error::Untrusted sorry axiom in even marker gate theorem"
+            exit 1
+          fi
+          lean "$S/Root119F1MarkerLifecycle.lean" 2>&1 | tee "$S/f1-marker-lifecycle-check.log"
+          if grep -q 'sorryAx' "$S/f1-marker-lifecycle-check.log"; then
+            echo "::error::Untrusted sorry axiom in F1 marker lifecycle theorem"
             exit 1
           fi
