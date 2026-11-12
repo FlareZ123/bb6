@@ -33,6 +33,21 @@ jobs:
           base64 -d "$target/count-bridge.tar.xz.b64" > /tmp/count.tar.xz
           echo "5b8a74e3e101e389c09a891cd8bda6da803d3bb70abbcb75fdfab8071e804895  /tmp/count.tar.xz" | sha256sum -c -
           tar -xJf /tmp/count.tar.xz -C "$target"
+      - name: Add swap space and record runner resources
+        run: |
+          set -e
+          echo "Resources before swap:"
+          free -h
+          df -h /
+          sudo swapoff -a || true
+          sudo rm -f /swapfile
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          echo "Resources after swap:"
+          free -h
+          swapon --show
       - name: Compile source and scalar dependencies
         run: |
           set -e
