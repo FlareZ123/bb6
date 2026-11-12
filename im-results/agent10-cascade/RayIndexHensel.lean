@@ -553,6 +553,7 @@ private theorem nestedOddNumerator_step_divisible (n j t k:Nat) :
         nestedOddNumerator n j t := by
   have hz:=signedZ_index_step_divisible n j k
   rcases hz with ⟨c,hc⟩
+  refine ⟨(2:Int)^(t+1)*c,?_⟩
   change
     (2:Int)^(t+1)*signedZ (n+depthPeriod (k+1)) j+
         5*(3:Int)^(t+1)-
