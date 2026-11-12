@@ -98,3 +98,7 @@ For each of the same 702 cases, I also compared the entire q4-mid tape against t
 - (b=2): ({5,6,7,8,10,11,12,18,19,20}).
 
 Hence the q4 suffix preserves every cell (x\le4) in all tested cases; its complete tape effect is a right-side rewrite determined only by b. This is strong evidence for a suffix theorem quantified over arbitrary left exterior, with an explicit right-output rewrite. The displayed difference sets are only the b=0,1,2 cases; no general closed form for (D_b) is claimed.
+
+## Extended b suffix screen
+
+A further 270-case screen fixed (L=5), ranged over odd (n\in\{1,3,5,7,9,11,13,15,17,19\}), (a\in\{0,1,2\}), and (b=0,\ldots,8). All 270 cases passed the q4/head-0 cut, the right-half formula through cell 60, and exact full-tape equality after (39+3b) suffix steps. This extends the b-parameter evidence beyond the earlier (b\le2) grid. The q4-to-target difference sets for b=0..8 are not summarized as a general closed form; the target S1 encoding itself is the clean output specification.
