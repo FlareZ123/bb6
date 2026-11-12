@@ -18,8 +18,9 @@ private theorem markerEq :
   decide
 
 /-- An infinite subfamily of Agent 2's q=4 exceptional E/E source sections
-    returns to a physical regularSection.  The path is two B edges, one E
-    edge, the original E,p=2 reset, then the source-certified B->E->A corridor. -/
+    returns to a physical regularSection for u ≡ 1647 (mod 2187).  The path
+    is two B edges, one E edge, the original E,p=2 reset, then the
+    source-certified B->E->A corridor. -/
 theorem q4_exceptional_EE_BEA_section (m : Nat) :
     ∃ (T a q b : Nat),
       ObsEq (run T
