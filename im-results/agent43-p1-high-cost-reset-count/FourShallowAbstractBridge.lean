@@ -167,7 +167,7 @@ theorem no_four_shallow_energies
      rw [hP,hcomp])
  exact four_layer_abstract_barrier n s u v w r alpha beta gamma delta
    (8^s) p (2^alpha) (2^beta) (2^gamma) (2^delta)
-   K R1 R2 R3 R4 E hn hP hD rfl hExp rfl rfl rfl rfl
+   K R1 R2 R3 R4 E hn hP ⟨d,hD⟩ rfl hExp rfl rfl rfl rfl
    hKlower hR1pos hR1bound hR2pos hR2bound hR3pos hR3bound
    hR4pos hR4bound hEbound hEqNat
 
