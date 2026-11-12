@@ -368,7 +368,7 @@ theorem num_four_small_r_bound
  let Imid3 : Int := (N3/((2:Int)^gamma))/((8:Int)^w)
  let N4 : Int := Imid3-(C4:Int)*(2^n:Int)+
    (L4:Int)*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w:Int)-(O4:Int)
- let Y : Int := -((2:Int)^delta)*(8:Int)^r*(E:Int)
+ let Y : Int := -(((2:Int)^delta)*(8:Int)^r*(E:Int))
  have hN1eq : N1=((2:Int)^alpha)*(8:Int)^u*X := by
    simpa only [N1,X,Int.natCast_mul,Int.natCast_pow,Int.mul_assoc] using hN1
  have hapos : (2:Int)^alpha ≠ 0 := Int.pow_ne_zero (by decide)
@@ -408,7 +408,7 @@ theorem num_four_small_r_bound
    exact Int.mul_ediv_cancel_left _ (Int.pow_ne_zero (by decide : (8:Int)≠0))
  have hR4int : (R4:Int)+(O4:Int)=
      (L4:Int)*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w:Int) := by exact_mod_cast hR4
- have hN4 : N4=-((2:Int)^delta)*(8:Int)^r*(E:Int) := by
+ have hN4 : N4=-(((2:Int)^delta)*(8:Int)^r*(E:Int)) := by
     dsimp [N4,Y] at *
     rw [hImid3]
     rw [←hR4int]
