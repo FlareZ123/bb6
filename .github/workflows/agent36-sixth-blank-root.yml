@@ -1,4 +1,4 @@
-name: Agent 36/2 D sixth blank-root q4 continuation (manual plus targeted push)
+name: Agent 36/2 D sixth blank-root q4 continuation (manual audit)
 on:
   workflow_dispatch:
 permissions:
