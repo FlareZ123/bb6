@@ -51,7 +51,7 @@ private theorem signedZ_index_step (n j k : Nat) :
   dsimp [signedZ]
   push_cast
   rw [hpowInt,hlin]
-  simp only [Int.mul_add,Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+  simp only [Int.mul_add,Int.add_mul,Int.mul_sub,Int.sub_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
   omega
 
 private theorem signedZ_index_step_divisible (n j k : Nat) :
@@ -129,7 +129,7 @@ private theorem signedZ_index_shift_digit_mod (n j k t : Nat)
     dsimp [signedZ]
     push_cast
     rw [hpowInt,hlin]
-    simp only [Int.mul_add,Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+    simp only [Int.mul_add,Int.add_mul,Int.mul_sub,Int.sub_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
     omega
   apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
   apply Int.emod_eq_zero_of_dvd
@@ -198,7 +198,9 @@ private theorem indexResidue_good (s j k:Nat)
       constructor
       · simp [indexResidue]
       · have hsector:(s+6*0)%6=4∨(s+6*0)%6=5:=by
-          rcases hs with h|h <;> simp [h]
+          rcases hs with hs4|hs5
+          · rw [hs4]; simp
+          · rw [hs5]; simp
         have hmod: signedZ s j%3=0 :=
           (signedZ_mod_three_even_iff s j hsector).mpr hj
         have hdiv:(3:Int)∣signedZ s j :=
@@ -262,7 +264,9 @@ theorem indexResidue_iff (s j k h:Nat)
   induction k generalizing h with
   | zero =>
       have hsector:(indexSector s h)%6=4∨(indexSector s h)%6=5:=by
-        rcases hs with h|h <;> simp [indexSector,h]
+        rcases hs with hs4|hs5
+        · rw [hs4]; simp [indexSector]
+        · rw [hs5]; simp [indexSector]
       have hmod:(signedZ (indexSector s h) j)%3=0 :=
         (signedZ_mod_three_even_iff (indexSector s h) j hsector).mpr hj
       have hdiv:(3:Int)∣signedZ (indexSector s h) j :=
@@ -347,7 +351,9 @@ theorem depth_index_duality (s h j k:Nat)
     j%depthPeriod k=depthResidue (indexSector s h) k ↔
       h%3^k=indexResidue s j k := by
   have hsector:(indexSector s h)%6=4∨(indexSector s h)%6=5:=by
-    rcases hs with h|h <;> simp [indexSector,h]
+    rcases hs with hs4|hs5
+    · rw [hs4]; simp [indexSector]
+    · rw [hs5]; simp [indexSector]
   have hdepth:=depthResidue_iff (indexSector s h) k j hsector
   have hindex:=indexResidue_iff s j k h hs hj
   exact hdepth.symm.trans hindex
