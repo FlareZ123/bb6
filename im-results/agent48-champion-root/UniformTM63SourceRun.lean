@@ -61,6 +61,18 @@ private theorem write_false (h : Int) (t : Int → Bool) :
   funext x
   by_cases hx : x = h <;> simp [hx]
 
+private theorem terminalSet_true (t : Int → Bool) (h : Int) :
+    TerminalFinish.set t h true =
+      (fun x => decide (x = h) || t x) := by
+  funext x
+  by_cases hx : x = h <;> simp [TerminalFinish.set, hx]
+
+private theorem terminalSet_false (t : Int → Bool) (h : Int) :
+    TerminalFinish.set t h false =
+      (fun x => ! decide (x = h) && t x) := by
+  funext x
+  by_cases hx : x = h <;> simp [TerminalFinish.set, hx]
+
 private theorem moveR_left (c : TM63Uniform.Cfg) (b : Bool) (s n : Nat) :
     sideBit ((TM63Uniform.moveR c b s).h :: (TM63Uniform.moveR c b s).l)
       (n + 1) = sideBit (b :: c.l) n := by
@@ -240,34 +252,40 @@ theorem uniformStep_terminalStep (c : TM63Uniform.Cfg) (h : Int)
       cases b with
       | false =>
         simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
-          TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
-          uniformTapeAt_moveR, write_true, write_false]
+          terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveR,
+          moveR_st, moveL_st, terminalSet_true, terminalSet_false]
       | true => exact False.elim (hs ⟨rfl, rfl⟩)
     | succ q =>
       cases q with
       | zero =>
         cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
-          TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
-          uniformTapeAt_moveL_add, write_true, write_false]
+          terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveL_add,
+          moveR_st, moveL_st, terminalSet_true, terminalSet_false]
       | succ q =>
         cases q with
         | zero =>
           cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
-            TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
-            uniformTapeAt_moveR, uniformTapeAt_moveL_add, write_true, write_false]
+            terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveR,
+            uniformTapeAt_moveL_add, moveR_st, moveL_st, terminalSet_true, terminalSet_false]
         | succ q =>
           cases q with
           | zero =>
             cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
-              TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
-              uniformTapeAt_moveR, uniformTapeAt_moveL_add, write_true, write_false]
+              terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveR,
+              uniformTapeAt_moveL_add, moveR_st, moveL_st, terminalSet_true, terminalSet_false]
           | succ q =>
             cases q with
             | zero =>
               cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
-                TerminalFinish.set, terminalConfigAt, headDelta, uniformTapeAt_head,
-                uniformTapeAt_moveR, uniformTapeAt_moveL_add, write_true, write_false]
-            | succ q => omega
+                terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveR,
+                uniformTapeAt_moveL_add, moveR_st, moveL_st, terminalSet_true, terminalSet_false]
+            | succ q =>
+              cases q with
+              | zero =>
+                cases b <;> simp [TM63Uniform.step, TerminalFinish.step, TerminalFinish.action,
+                  terminalConfigAt, headDelta, uniformTapeAt_head, uniformTapeAt_moveR,
+                  uniformTapeAt_moveL_add, moveR_st, moveL_st, terminalSet_true, terminalSet_false]
+              | succ q => omega
 
 /-- Validity of the state component is invariant under the total zipper run. -/
 theorem run_state_lt (n : Nat) (c : TM63Uniform.Cfg) (hc : c.st < 6) :
