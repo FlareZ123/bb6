@@ -9,27 +9,42 @@ set_option maxRecDepth 4096
 set_option maxHeartbeats 5000000
 
 /-- Five shallow transitions, with arbitrary intervening depth-two runs,
-cannot satisfy the exact shifted-wall scalar equation once n>=88. -/
+cannot satisfy the exact shifted-wall scalar equation once n>=83. -/
+private theorem twice_quotient_le (t d R : Nat) (ht : 1≤t)
+    (hR : R=2^t*d) : 2*d≤R := by
+  have hpow : 2≤2^t := by
+    cases t with
+    | zero => omega
+    | succ k =>
+      have hpos : 0<2^k := Nat.pow_pos (by decide)
+      have hmul : 2≤2^k*2 := Nat.mul_le_mul_right 2 (by omega)
+      simpa [Nat.pow_succ] using hmul
+  calc
+    2*d≤2^t*d := Nat.mul_le_mul_right d hpow
+    _=R := hR.symm
+
 theorem five_layer_abstract_barrier
   (n s u v w x r alpha beta gamma delta epsilon q p a b c f g
    K R1 R2 R3 R4 R5 E : Nat)
-  (hn : 88≤n)
+  (hn : 83≤n)
   (hqp : q*p=2^n)
   (hqd : ∃ d, q*d=14*n+92)
   (hq : q=8^s) (hExp : p=2^(n-3*s))
   (ha : a=2^alpha) (hb : b=2^beta)
   (hc : c=2^gamma) (hf : f=2^delta) (hg : g=2^epsilon)
+  (halpha : 1≤alpha) (hbeta : 1≤beta) (hgamma : 1≤gamma)
+  (hdelta : 1≤delta) (hepsilon : 1≤epsilon)
   (hK : 392*(q*((a*8^u)*((b*8^v)*((c*8^w)*(f*8^x)))))≤K)
-  (hR1 : 0<R1) (hR1bound : R1≤200*(n+2))
+  (hR1 : 0<R1) (hR1bound : R1≤168*(n+2))
   (hR2 : 0<R2)
-  (hR2bound : alpha+3*u≤n-3*s → R2≤200*(n+2))
+  (hR2bound : alpha+3*u≤n-3*s → R2≤168*(n+2))
   (hR3 : 0<R3)
-  (hR3bound : alpha+3*u+beta+3*v≤n-3*s → R3≤200*(n+2))
+  (hR3bound : alpha+3*u+beta+3*v≤n-3*s → R3≤168*(n+2))
   (hR4 : 0<R4)
-  (hR4bound : alpha+3*u+beta+3*v+gamma+3*w≤n-3*s → R4≤200*(n+2))
+  (hR4bound : alpha+3*u+beta+3*v+gamma+3*w≤n-3*s → R4≤168*(n+2))
   (hR5 : 0<R5)
   (hR5bound : alpha+3*u+beta+3*v+gamma+3*w+delta+3*x≤n-3*s →
-    R5≤200*(n+2))
+    R5≤168*(n+2))
   (hEbound : alpha+3*u+beta+3*v+gamma+3*w+delta+3*x+epsilon+3*r≤n-3*s →
     E≤2000*(n+2))
   (heq : K*p =
@@ -67,8 +82,8 @@ theorem five_layer_abstract_barrier
       X^5 = X^5*1 := by omega
       _ ≤ X^5*X := Nat.mul_le_mul_left _ hX
       _ = X^6 := (Nat.pow_succ X 5).symm
-  have hGapX : 576000000000000*X^6<2^n := by
-    simpa [X] using sixth_gap_88 n hn
+  have hGapX : 19172403734400*X^6<2^n := by
+    simpa [X] using sixth_gap_83 n hn
   have hA1 : A1=2^t1 := by
     dsimp [A1,t1]
     rw [ha,show (8:Nat)=2^3 by decide,←Nat.pow_mul,Nat.pow_add]
@@ -98,22 +113,22 @@ theorem five_layer_abstract_barrier
       simpa using hh
     dsimp [X]
     omega
-  have hR1prod : q*R1≤3000*X^2 := by
+  have hR1prod : q*R1≤2520*X^2 := by
     calc
-      q*R1≤(15*X)*(200*X) := Nat.mul_le_mul hqle hR1bound
-      _ = 3000*X^2 := by
-        rw [show (3000:Nat)=15*200 by decide]
+      q*R1≤(15*X)*(168*X) := Nat.mul_le_mul hqle hR1bound
+      _ = 2520*X^2 := by
+        rw [show (2520:Nat)=15*168 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hR1smallProd : q*R1<2^n := by
-    have hsmall : 3000*X^2≤576000000000000*X^6 := by
+    have hsmall : 2520*X^2≤19172403734400*X^6 := by
       calc
-        3000*X^2≤3000*X^3 := Nat.mul_le_mul_left 3000 hx23
+        2520*X^2≤3000*X^3 := Nat.mul_le_mul_left 3000 hx23
         _≤3000*X^4 := Nat.mul_le_mul_left 3000 hx34
         _≤3000*X^5 := Nat.mul_le_mul_left 3000 hx45
         _≤3000*X^6 := Nat.mul_le_mul_left 3000 hx56
-        _≤576000000000000*X^6 :=
-          Nat.mul_le_mul_right _ (by decide : 3000≤576000000000000)
+        _≤19172403734400*X^6 :=
+          Nat.mul_le_mul_right _ (by decide : 2520≤19172403734400)
     exact Nat.lt_of_le_of_lt (Nat.le_trans hR1prod hsmall) hGapX
   have hR1small : R1<2^e := by
     have hh : q*R1<q*p := by rw [hqp]; exact hR1smallProd
@@ -125,27 +140,31 @@ theorem five_layer_abstract_barrier
     simpa only [A1,A2,A3,A4,A5,Nat.mul_comm,Nat.mul_assoc,Nat.mul_left_comm] using heq
   obtain ⟨d1,ht1le,hR1eq,hEq2,hd1le,hA1le⟩ :=
     residue_peel e t1 K (A2*(A3*(A4*(A5*E+R5)+R4)+R3)+R2) R1 hR1 hR1small hEq1
-  have hA1Bound : A1≤200*X := by
+  have ht1pos : 1≤t1 := by dsimp [t1]; omega
+  have hhalf1 : 2*d1≤R1 := twice_quotient_le t1 d1 R1 ht1pos hR1eq
+  have hA1Bound : A1≤168*X := by
     rw [hA1]
     exact Nat.le_trans hA1le hR1bound
-  have hR2small : R2≤200*X := hR2bound (by simpa only [t1,e] using ht1le)
+  have hR2small : R2≤168*X := hR2bound (by simpa only [t1,e] using ht1le)
   have hRem2Pos : 0<R2+d1 := by omega
-  have hRem2Bound : R2+d1≤400*X := by
-    have hd1Bound := Nat.le_trans hd1le hR1bound
+  have hRem2Bound : R2+d1≤252*X := by
+    have hd1Bound : d1≤84*X := by
+      have hdouble : 2*d1≤168*X := Nat.le_trans hhalf1 hR1bound
+      omega
     omega
-  have hqA1Bound : q*A1≤3000*X^2 := by
+  have hqA1Bound : q*A1≤2520*X^2 := by
     calc
-      q*A1≤(15*X)*(200*X) := Nat.mul_le_mul hqle hA1Bound
-      _=3000*X^2 := by
-        rw [show (3000:Nat)=15*200 by decide]
+      q*A1≤(15*X)*(168*X) := Nat.mul_le_mul hqle hA1Bound
+      _=2520*X^2 := by
+        rw [show (2520:Nat)=15*168 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
-  have hqA1RemBound : q*A1*(R2+d1)≤1200000*X^3 := by
+  have hqA1RemBound : q*A1*(R2+d1)≤635040*X^3 := by
     calc
-      q*A1*(R2+d1)≤(3000*X^2)*(400*X) :=
+      q*A1*(R2+d1)≤(2520*X^2)*(252*X) :=
         Nat.mul_le_mul hqA1Bound hRem2Bound
-      _=1200000*X^3 := by
-        rw [show (1200000:Nat)=3000*400 by decide]
+      _=635040*X^3 := by
+        rw [show (635040:Nat)=2520*252 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hprod1 : (q*A1)*2^(e-t1)=2^n := by
@@ -157,13 +176,13 @@ theorem five_layer_abstract_barrier
         rw [heqT]
       _=2^n := by rw [←hExp]; exact hqp
   have hRem2Small : R2+d1<2^(e-t1) := by
-    have hbound : 1200000*X^3≤576000000000000*X^6 := by
+    have hbound : 635040*X^3≤19172403734400*X^6 := by
       calc
-        1200000*X^3≤1200000*X^4 := Nat.mul_le_mul_left 1200000 hx34
+        635040*X^3≤1200000*X^4 := Nat.mul_le_mul_left 1200000 hx34
         _≤1200000*X^5 := Nat.mul_le_mul_left 1200000 hx45
         _≤1200000*X^6 := Nat.mul_le_mul_left 1200000 hx56
-        _≤576000000000000*X^6 :=
-          Nat.mul_le_mul_right _ (by decide : 1200000≤576000000000000)
+        _≤19172403734400*X^6 :=
+          Nat.mul_le_mul_right _ (by decide : 635040≤19172403734400)
     have hb : (q*A1)*(R2+d1)<(q*A1)*2^(e-t1) := by
       rw [hprod1]
       exact Nat.lt_of_le_of_lt (Nat.le_trans hqA1RemBound hbound) hGapX
@@ -175,27 +194,31 @@ theorem five_layer_abstract_barrier
   obtain ⟨d2,ht2le,hR2eq,hEq3,hd2le,hA2le⟩ :=
     residue_peel (e-t1) t2 K (A3*(A4*(A5*E+R5)+R4)+R3) (R2+d1)
       hRem2Pos hRem2Small hEq2'
-  have hA2Bound : A2≤400*X := by
+  have ht2pos : 1≤t2 := by dsimp [t2]; omega
+  have hhalf2 : 2*d2≤R2+d1 := twice_quotient_le t2 d2 (R2+d1) ht2pos hR2eq
+  have hA2Bound : A2≤252*X := by
     rw [hA2]
     exact Nat.le_trans hA2le hRem2Bound
-  have hR3small : R3≤200*X := hR3bound (by omega)
+  have hR3small : R3≤168*X := hR3bound (by omega)
   have hRem3Pos : 0<R3+d2 := by omega
-  have hRem3Bound : R3+d2≤600*X := by
-    have hd2Bound := Nat.le_trans hd2le hRem2Bound
+  have hRem3Bound : R3+d2≤294*X := by
+    have hd2Bound : d2≤126*X := by
+      have hdouble : 2*d2≤252*X := Nat.le_trans hhalf2 hRem2Bound
+      omega
     omega
-  have hqA1A2Bound : q*A1*A2≤1200000*X^3 := by
+  have hqA1A2Bound : q*A1*A2≤635040*X^3 := by
     calc
-      q*A1*A2≤(3000*X^2)*(400*X) := Nat.mul_le_mul hqA1Bound hA2Bound
-      _=1200000*X^3 := by
-        rw [show (1200000:Nat)=3000*400 by decide]
+      q*A1*A2≤(2520*X^2)*(252*X) := Nat.mul_le_mul hqA1Bound hA2Bound
+      _=635040*X^3 := by
+        rw [show (635040:Nat)=2520*252 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
-  have hqA1A2RemBound : q*A1*A2*(R3+d2)≤720000000*X^4 := by
+  have hqA1A2RemBound : q*A1*A2*(R3+d2)≤186701760*X^4 := by
     calc
-      q*A1*A2*(R3+d2)≤(1200000*X^3)*(600*X) :=
+      q*A1*A2*(R3+d2)≤(635040*X^3)*(600*X) :=
         Nat.mul_le_mul hqA1A2Bound hRem3Bound
-      _=720000000*X^4 := by
-        rw [show (720000000:Nat)=1200000*600 by decide]
+      _=186701760*X^4 := by
+        rw [show (186701760:Nat)=635040*294 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hprod2 : (q*A1*A2)*2^((e-t1)-t2)=2^n := by
@@ -209,12 +232,12 @@ theorem five_layer_abstract_barrier
         rw [heqT]
       _=2^n := hprod1
   have hRem3Small : R3+d2<2^((e-t1)-t2) := by
-    have hbound : 720000000*X^4≤576000000000000*X^6 := by
+    have hbound : 186701760*X^4≤19172403734400*X^6 := by
       calc
-        720000000*X^4≤720000000*X^5 := Nat.mul_le_mul_left 720000000 hx45
+        186701760*X^4≤720000000*X^5 := Nat.mul_le_mul_left 720000000 hx45
         _≤720000000*X^6 := Nat.mul_le_mul_left 720000000 hx56
-        _≤576000000000000*X^6 :=
-          Nat.mul_le_mul_right _ (by decide : 720000000≤576000000000000)
+        _≤19172403734400*X^6 :=
+          Nat.mul_le_mul_right _ (by decide : 186701760≤19172403734400)
     have hb : (q*A1*A2)*(R3+d2)<(q*A1*A2)*2^((e-t1)-t2) := by
       rw [hprod2]
       exact Nat.lt_of_le_of_lt (Nat.le_trans hqA1A2RemBound hbound) hGapX
@@ -226,28 +249,32 @@ theorem five_layer_abstract_barrier
   obtain ⟨d3,ht3le,hR3eq,hEq4,hd3le,hA3le⟩ :=
     residue_peel ((e-t1)-t2) t3 K (A4*(A5*E+R5)+R4) (R3+d2)
       hRem3Pos hRem3Small hEq3'
-  have hA3Bound : A3≤600*X := by
+  have ht3pos : 1≤t3 := by dsimp [t3]; omega
+  have hhalf3 : 2*d3≤R3+d2 := twice_quotient_le t3 d3 (R3+d2) ht3pos hR3eq
+  have hA3Bound : A3≤294*X := by
     rw [hA3]
     exact Nat.le_trans hA3le hRem3Bound
-  have hR4small : R4≤200*X := hR4bound (by omega)
+  have hR4small : R4≤168*X := hR4bound (by omega)
   have hRem4Pos : 0<R4+d3 := by omega
-  have hRem4Bound : R4+d3≤800*X := by
-    have hd3Bound := Nat.le_trans hd3le hRem3Bound
+  have hRem4Bound : R4+d3≤315*X := by
+    have hd3Bound : d3≤147*X := by
+      have hdouble : 2*d3≤294*X := Nat.le_trans hhalf3 hRem3Bound
+      omega
     omega
-  have hqA1A2A3Bound : q*A1*A2*A3≤720000000*X^4 := by
+  have hqA1A2A3Bound : q*A1*A2*A3≤186701760*X^4 := by
     calc
-      q*A1*A2*A3≤(1200000*X^3)*(600*X) :=
+      q*A1*A2*A3≤(635040*X^3)*(600*X) :=
         Nat.mul_le_mul hqA1A2Bound hA3Bound
-      _=720000000*X^4 := by
-        rw [show (720000000:Nat)=1200000*600 by decide]
+      _=186701760*X^4 := by
+        rw [show (186701760:Nat)=635040*294 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
-  have hqA1A2A3RemBound : q*A1*A2*A3*(R4+d3)≤576000000000*X^5 := by
+  have hqA1A2A3RemBound : q*A1*A2*A3*(R4+d3)≤58811054400*X^5 := by
     calc
-      q*A1*A2*A3*(R4+d3)≤(720000000*X^4)*(800*X) :=
+      q*A1*A2*A3*(R4+d3)≤(186701760*X^4)*(315*X) :=
         Nat.mul_le_mul hqA1A2A3Bound hRem4Bound
-      _=576000000000*X^5 := by
-        rw [show (576000000000:Nat)=720000000*800 by decide]
+      _=58811054400*X^5 := by
+        rw [show (58811054400:Nat)=186701760*315 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hprod3 : (q*A1*A2*A3)*2^(((e-t1)-t2)-t3)=2^n := by
@@ -262,12 +289,12 @@ theorem five_layer_abstract_barrier
         rw [heqT]
       _=2^n := hprod2
   have hRem4Small : R4+d3<2^(((e-t1)-t2)-t3) := by
-    have hbound : 576000000000*X^5≤576000000000000*X^6 := by
+    have hbound : 58811054400*X^5≤19172403734400*X^6 := by
       calc
-        576000000000*X^5≤576000000000*X^6 :=
+        58811054400*X^5≤576000000000*X^6 :=
           Nat.mul_le_mul_left 576000000000 hx56
-        _≤576000000000000*X^6 :=
-          Nat.mul_le_mul_right _ (by decide : 576000000000≤576000000000000)
+        _≤19172403734400*X^6 :=
+          Nat.mul_le_mul_right _ (by decide : 58811054400≤19172403734400)
     have hb : (q*A1*A2*A3)*(R4+d3)<
         (q*A1*A2*A3)*2^(((e-t1)-t2)-t3) := by
       rw [hprod3]
@@ -284,30 +311,34 @@ theorem five_layer_abstract_barrier
   obtain ⟨d4,ht4le,hR4eq,hEq5,hd4le,hA4le⟩ :=
     residue_peel (((e-t1)-t2)-t3) t4 K (A5*E+R5) (R4+d3)
       hRem4Pos hRem4Small hEq4Peel
-  have hA4Bound : A4≤800*X := by
+  have ht4pos : 1≤t4 := by dsimp [t4]; omega
+  have hhalf4 : 2*d4≤R4+d3 := twice_quotient_le t4 d4 (R4+d3) ht4pos hR4eq
+  have hA4Bound : A4≤315*X := by
     rw [hA4]
     exact Nat.le_trans hA4le hRem4Bound
-  have hR5small : R5≤200*X := hR5bound (by omega)
+  have hR5small : R5≤168*X := hR5bound (by omega)
   have hRem5Pos : 0<R5+d4 := by omega
-  have hRem5Bound : R5+d4≤1000*X := by
-    have hd4Bound := Nat.le_trans hd4le hRem4Bound
+  have hRem5Bound : R5+d4≤326*X := by
+    have hd4Bound : d4≤158*X := by
+      have hdouble : 2*d4≤315*X := Nat.le_trans hhalf4 hRem4Bound
+      omega
     omega
-  have hqA1A2A3A4Bound : q*A1*A2*A3*A4≤576000000000*X^5 := by
+  have hqA1A2A3A4Bound : q*A1*A2*A3*A4≤58811054400*X^5 := by
     calc
-      q*A1*A2*A3*A4≤(720000000*X^4)*(800*X) :=
+      q*A1*A2*A3*A4≤(186701760*X^4)*(315*X) :=
         Nat.mul_le_mul hqA1A2A3Bound hA4Bound
-      _=576000000000*X^5 := by
-        rw [show (576000000000:Nat)=720000000*800 by decide]
+      _=58811054400*X^5 := by
+        rw [show (58811054400:Nat)=186701760*315 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hqA1A2A3A4RemBound :
-      q*A1*A2*A3*A4*(R5+d4)≤576000000000000*X^6 := by
+      q*A1*A2*A3*A4*(R5+d4)≤19172403734400*X^6 := by
     calc
       q*A1*A2*A3*A4*(R5+d4)≤
-          (576000000000*X^5)*(1000*X) :=
+          (58811054400*X^5)*(326*X) :=
         Nat.mul_le_mul hqA1A2A3A4Bound hRem5Bound
-      _=576000000000000*X^6 := by
-        rw [show (576000000000000:Nat)=576000000000*1000 by decide]
+      _=19172403734400*X^6 := by
+        rw [show (19172403734400:Nat)=576000000000*1000 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hprod4 : (q*A1*A2*A3*A4)*2^((((e-t1)-t2)-t3)-t4)=2^n := by
@@ -336,7 +367,7 @@ theorem five_layer_abstract_barrier
   obtain ⟨d5,ht5le,hR5eq,hEq6,hd5le,hA5le⟩ :=
     residue_peel ((((e-t1)-t2)-t3)-t4) t5 K E (R5+d4)
       hRem5Pos hRem5Small hEq5Peel
-  have hA5Bound : A5≤1000*X := by
+  have hA5Bound : A5≤326*X := by
     rw [hA5]
     exact Nat.le_trans hA5le hRem5Bound
   have hEsmall : E≤2000*X := hEbound (by omega)
@@ -348,13 +379,13 @@ theorem five_layer_abstract_barrier
       simp
     rw [hEq5']
     omega
-  have hUpperX : (R5+d4)*(E+1)≤2001000*X^2 := by
+  have hUpperX : (R5+d4)*(E+1)≤652326*X^2 := by
     have hEplus : E+1≤2001*X := by omega
     calc
-      (R5+d4)*(E+1)≤(1000*X)*(2001*X) :=
+      (R5+d4)*(E+1)≤(326*X)*(2001*X) :=
         Nat.mul_le_mul hRem5Bound hEplus
-      _=2001000*X^2 := by
-        rw [show (2001000:Nat)=1000*2001 by decide]
+      _=652326*X^2 := by
+        rw [show (652326:Nat)=326*2001 by decide]
         simp only [Nat.pow_succ,Nat.pow_zero]
         ac_rfl
   have hK' : 392*(q*A1*A2*A3*A4)≤K := by
@@ -367,15 +398,15 @@ theorem five_layer_abstract_barrier
       ac_rfl
     rw [hc]
     simpa only [Nat.mul_assoc] using hh
-  have hSmallFinal : 2001000*X^2<2^n := by
-    have hsmall : 2001000*X^2≤576000000000000*X^6 := by
+  have hSmallFinal : 652326*X^2<2^n := by
+    have hsmall : 652326*X^2≤19172403734400*X^6 := by
       calc
-        2001000*X^2≤2001000*X^3 := Nat.mul_le_mul_left 2001000 hx23
+        652326*X^2≤2001000*X^3 := Nat.mul_le_mul_left 2001000 hx23
         _≤2001000*X^4 := Nat.mul_le_mul_left 2001000 hx34
         _≤2001000*X^5 := Nat.mul_le_mul_left 2001000 hx45
         _≤2001000*X^6 := Nat.mul_le_mul_left 2001000 hx56
-        _≤576000000000000*X^6 :=
-          Nat.mul_le_mul_right _ (by decide : 2001000≤576000000000000)
+        _≤19172403734400*X^6 :=
+          Nat.mul_le_mul_right _ (by decide : 652326≤19172403734400)
     exact Nat.lt_of_le_of_lt hsmall hGapX
   omega
 
