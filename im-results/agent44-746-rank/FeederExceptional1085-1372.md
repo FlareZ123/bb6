@@ -63,7 +63,7 @@ so `v₃(s)=3` exactly. Therefore an odd `ResetParent` of F can only have t=0,1,
 ```text
 y = 2F - 8*2^(n-1) - (n-1) = 16p - 3n - 7.
 ```
-The new Lean draft declarations `fatal_parent_set_1085_1372`, `fatal_root_reduces_to_even_parent_1085_1372`, and `fatal_root_iff_even_parent_1085_1372` state that the complete immediate parent set is exactly `{x,y}`, and prove the exact equivalence `ReachC(F) ↔ ReachC(y)`: the forward direction uses the exclusion of x, and the reverse direction appends the genuine edge y→F. This is a stronger bridge to the unresolved even-parent ray, but remains unverified until the manual source audit passes.
+The new Lean draft declarations `fatal_parent_set_1085_1372`, `fatal_root_reduces_to_even_parent_1085_1372`, and `fatal_root_iff_even_parent_1085_1372` state that the complete immediate parent set is exactly `{x,y}`, and prove the exact equivalence `ReachC(F) ↔ ReachC(y)`: the forward direction uses the exclusion of x, and the reverse direction appends the genuine edge y→F. The Lean wrapper now reuses the existing generic theorem `CascadeFirstFork.near_top_exact_two_at81` from `FirstForkAt81.lean`; the only new arithmetic obligation is the mod-81 nondivisibility certificate derived from `exceptional_numeric`. This avoids duplicating the generic odd/even parent classification. The result remains unverified until the manual source audit passes.
 
 ## Draft Lean modules and next steps
 
