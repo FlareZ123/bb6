@@ -522,9 +522,9 @@ theorem carryLongPrefix_r0 (k : Nat) (T : Int → Bool)
   let T2 := (frame (fun x => carryBridgeArea0 (x-h')) T1
     (shiftConfig h' (embed carryBridgeFinal0))).tape
   have hbridge : run tm2 12 ⟨3,h',T1⟩ =
-      some ⟨3,h'+10,T2⟩ := by
+      some ⟨3,10+h',T2⟩ := by
     simpa [T2,frame,shiftConfig,embed,carryBridgeFinal0] using hbridge0
-  have hseg : carrySegmentOnes T2 (h'+10) (3*(4*(k-1))+7) := by
+  have hseg0 : carrySegmentOnes T2 (h'+10) (3*(4*(k-1))+7) := by
     apply frame_head_segment carryBridgeArea0 T1 (embed carryBridgeFinal0)
       h' 10 (3*(4*(k-1))+7)
     · simp [carryBridgeArea0]
@@ -536,6 +536,8 @@ theorem carryLongPrefix_r0 (k : Nat) (T : Int → Bool)
       have hv := carryLeftSweep_marked (4*k) (3*k) T hmatch hs hb
         (h'+10+(i:Int)) (by omega) (by omega)
       simpa [T1] using hv
+  have hseg : carrySegmentOnes T2 (10+h') (3*(4*(k-1))+7) := by
+    simpa [Int.add_comm] using hseg0
   have h5input : T 5 = false := by
     exact carryInput_unmarked (4*k) T hmatch 5 (by omega) (by omega) (by
       simp [carryInputBit]; omega)
@@ -559,15 +561,33 @@ theorem carryLongPrefix_r0 (k : Nat) (T : Int → Bool)
   have h6 : T2 6 = false := by
     simp [T2,frame,shiftConfig,h6area,h6sweep,h6input]
   let nR := 4*(k-1)
-  have hfinish : (h'+10)+3*(nR:Int) = -2 := by
+  have hfinish : (10+h')+3*(nR:Int) = -2 := by
     dsimp [h',nR]
     omega
-  rcases carryFinishFromD T2 (h'+10) nR hfinish hseg h5 h6 with
+  have hz0 : T2 ((10+h')+3*(nR:Int)+7) = false := by
+    have heq : (10+h')+3*(nR:Int)+7 = 5 := by omega
+    simpa [heq] using h5
+  have hz1 : T2 ((10+h')+3*(nR:Int)+8) = false := by
+    have heq : (10+h')+3*(nR:Int)+8 = 6 := by omega
+    simpa [heq] using h6
+  rcases carryFinishFromD T2 (10+h') nR hfinish hseg hz0 hz1 with
     ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+  have hT2out : ∀ x, 6 < x → T2 x = T x := by
+    intro x hx
+    have ha : carryBridgeArea0 (x-h') = false := by
+      simp [carryBridgeArea0,h']
+      omega
+    have hleftout : T1 x = T x :=
+      carryLeftSweep_rightOutside (4*k) (3*k) T hmatch hs hb x hx
+    simp [T2,frame,shiftConfig,ha,hleftout]
+  have hout' : ∀ x, 6 < x → Tout x = T x := by
+    intro x hx
+    rw [hout x hx]
+    exact hT2out x hx
   have htotal := composeCarryRuns (4*k) (3*(4*(3*k))) 12 nR
-    ⟨3,0,T⟩ ⟨3,h',T1⟩ ⟨3,h'+10,T2⟩ ⟨4,7,Tout⟩
+    ⟨3,0,T⟩ ⟨3,h',T1⟩ ⟨3,10+h',T2⟩ ⟨4,7,Tout⟩
     hleft hbridge hfinishRun (by dsimp [nR]; omega)
-  exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
+  exact ⟨Tout,htotal,ho1,ho2,ho3,ho4,ho5,ho6,hout'⟩
 
 
 end BB6Coverage.Agent48Champion
