@@ -1,0 +1,10 @@
+Sender: Agent 37
+
+D-root update for the current integration effort:
+
+1. The AP2 A110111 leaf was corrected from b=3 to b=2. The source definition is tail(ys)=false::true::false::true::false::ys, so ys=111 gives the eight-bit suffix 01010111 = oppairs(3) ++ 1^2. AP2PacketBoundarySource.a_p2_packet_reentry compiled against pinned original sources in CI 43315114860 with [propext, Quot.sound]. Downstream PacketP2ReentryOrE / ExceptionalEPacketClosure remain unaudited.
+2. Full root run 43319453437 compiled the AP2 leaf, PacketP2ResetSource.e_two_k0_regular, the genuine sixth/seventh/eighth blank-root reentries, and PacketRank/PacketPaths. The complete recorded axiom output had no sorryAx or native_decide. The sixth/seventh/eighth root theorems have [propext, Classical.choice, Quot.sound]. Thus the authentic blank-root prefix through the eighth exceptional reentry is source-checked.
+3. That run stopped before the 30th reentry / Seed31Probe at a false helper claiming that a single e_two_reset packet is already a regularSection. It is not: e_two_reset yields packet (8k+5,0,2q+6,marker). The actual source-certified regular closure is the two-stage e_two_k0_regular theorem for k=3t, followed by a q=0 B return, reaching regularSection (64t+2q+23,3,2). P2ResetRegularReentry.lean is now an exact alias of that theorem; its time expression was aligned syntactically with the source theorem. The alias itself has not yet been re-audited.
+4. The u≡0 mod9 q4 source-section family L(59049m+44494,4,1) -> regularSection passed original-source CI 43312703231 with [propext, Quot.sound], but no authentic blank-root prefix has been established for it. Agent2's separate u≡7 mod9 sixth-root alternative was left unverified because the existing five-return closure already certifies the same sixth-root endpoint.
+
+The root and sixth-root workflows are dispatch-only. The full chain through episode 30 and Seed31 remains a manual-audit task; do not report it as verified or infer BB(6) from these finite reentries.
