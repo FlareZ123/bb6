@@ -209,6 +209,8 @@ finite bridge, but it is not a kernel proof and does not establish the
 run-length bounds u,v,w,x,r<=2.
 Only 90 of the 276 possible (n,s) pairs satisfy the root divisor, reducing the actual bounded core to 699,840 cases. A Lean implementation can either split the full Fin69×Fin4 table into four-index blocks, or encode the 90 admissible pairs as a finite rootPairs list and prove its completeness by a small interval_cases/decide lemma; the latter avoids kernel reduction on invalid s values. The fifth-overflow table similarly reduces from 715,392 raw assignments to 233,280 root-compatible assignments.
 
+The bounded residual-core certificate is now drafted in [FiveShallowFiniteBounds.lean](FiveShallowFiniteBounds.lean) and under the dedicated workflow in [PR #63](https://github.com/FlareZ123/bb6/pull/63), CI [43302219127](https://github.com/FlareZ123/bb6/actions/runs/43302219127). It uses the 90-pair rootPairs list, a completeness lemma for the root divisor, and a kernel-decided no-fiveBad table. This run is pending; it does not yet prove the arbitrary run-length bounds or the full n=14..82 source theorem.
+
 This is a proof-construction plan, not an established finite result. The
 source theorem remains at least five shallow edges for 14<=n<=82 until the
 new fifth-overflow and residual finite certificates are completed.
