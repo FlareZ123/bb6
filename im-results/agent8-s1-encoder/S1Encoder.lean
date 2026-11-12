@@ -194,15 +194,16 @@ theorem exists_odd_factor_bounded (a z : Nat)
     by_cases hq' : q < 2^len
     · exact hq'
     · have hqge : 2^len ≤ q := by omega
-    have hlargeOdd : 2^(len+1) < 2*q+1 := by
-      rw [Nat.pow_succ]
-      omega
-    have hlarge :
-        2^(len+1)*2^r < (2*q+1)*2^r :=
-      Nat.mul_lt_mul_of_pos_right hlargeOdd (Nat.pow_pos (by decide))
-    have hsmall : (2*q+1)*2^r < 2^(len+1)*2^r := by
-      simpa [hr,hpowadd] using hzlt
-    omega
+      have hlargeOdd : 2^(len+1) < 2*q+1 := by
+        rw [Nat.pow_succ]
+        omega
+      have hlarge :
+          2^(len+1)*2^r < (2*q+1)*2^r :=
+        Nat.mul_lt_mul_of_pos_right hlargeOdd (Nat.pow_pos (by decide))
+      have hsmall : (2*q+1)*2^r < 2^(len+1)*2^r := by
+        simpa [hr,hpowadd] using hzlt
+      have hcontr : False := by omega
+      exact hcontr.elim
   exact ⟨q,r,len,hr,ha,hq⟩
 
 /-- The source zero counter is exactly a repetition of d1. -/
