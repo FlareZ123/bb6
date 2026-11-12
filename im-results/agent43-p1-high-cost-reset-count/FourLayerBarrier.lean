@@ -1,6 +1,7 @@
 import ThreeLayerPeel
 
 namespace BB6.Agent43FourLayer
+open BB6.Agent43ThreeLayer
 
 set_option maxRecDepth 4096
 set_option maxHeartbeats 3000000
@@ -22,7 +23,6 @@ theorem quintic_gap_76 (n : Nat) (hn : 76≤n) :
           (n+2)^5≤(2*((n-5)+2))^5 := hpow
           _ =32*((n-5)+2)^5 := by
             rw [show (32:Nat)=2^5 by decide, Nat.mul_pow]
-            rfl
       have hscale2 :
           21120000000000*(n+2)^5 ≤
             32*(21120000000000*((n-5)+2)^5) := by
@@ -31,8 +31,10 @@ theorem quintic_gap_76 (n : Nat) (hn : 76≤n) :
             Nat.mul_le_mul_left _ hscale
           _ = 32*(21120000000000*((n-5)+2)^5) := by ac_rfl
       have hpow2 : 2^n=32*2^(n-5) := by
-        have he : n=(n-5)+5 := by omega
-        rw [he,Nat.pow_add,show (2:Nat)^5=32 by decide]
+        have hpow : 2^n=2^(n-5)*2^5 := by
+          have he : n=(n-5)+5 := by omega
+          rw [he,Nat.pow_add]
+        rw [hpow,show (2:Nat)^5=32 by decide]
         ac_rfl
       omega
 
