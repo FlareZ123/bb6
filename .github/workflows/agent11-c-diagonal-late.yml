@@ -339,3 +339,26 @@ jobs:
             echo "REJECTED: incomplete source integration"
             exit 1
           fi
+          # Agent 4's sharp sixth/seventh source cone and its
+          # independent integration into the complete C58 all-depth
+          # blank-halting criterion.
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-c-degree-profile/ThreeConeProper.lean .
+          lean -o ThreeConeProper.olean ThreeConeProper.lean
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-four-step-image/{CThreeToFourSource,CFourHierarchy,CAllDepthBlank}.lean .
+          for f in CThreeToFourSource CFourHierarchy CAllDepthBlank; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-five-image/{CAltFifthArithmetic,CAltFifthSource,CAltFifthStrict,CAltSixthStrict}.lean .
+          for f in CAltFifthArithmetic CAltFifthSource CAltFifthStrict CAltSixthStrict; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/{CSixSeventhArithmetic,CSixSeventhStrict,CSixSeventhRoot,CSixSeventhGateWide,CSixSeventhDiagonal}.lean .
+          for f in CSixSeventhArithmetic CSixSeventhStrict CSixSeventhRoot CSixSeventhGateWide CSixSeventhDiagonal; do
+            lean -o "$f.olean" "$f.lean"
+          done
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/CSixSeventhC58.lean .
+          lean -o CSixSeventhC58.olean CSixSeventhC58.lean 2>&1 | tee CSixSeventhC58.log
+          if grep -q sorryAx CSixSeventhC58.log; then
+            echo "REJECTED: six/seven C58 integration contains sorryAx"
+            exit 1
+          fi
