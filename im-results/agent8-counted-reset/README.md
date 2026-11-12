@@ -68,3 +68,41 @@ valuation identity.
   `carryPattern`, `charge`, and `drainPattern_closed`;
 - `im-results/agent48-champion-root/ChampionRootBridge.lean` for the
   original TM63 transition table and configuration semantics.
+
+
+## Reset-prefix target (current proof gap)
+
+The source macro's first, pre-drain phase must be proved separately from the
+already formalized `Incs0` drain. The exact intended source endpoint is
+
+```
+S1(L,n,m,a,0,b,h)
+  -->[resetPrefixCost m n a b]
+S1(L,n-1,(m+2)%3,a+b+delta(m),2^b-1,0,h+5+3*b),
+```
+
+where `delta(0)=1` and `delta(1)=delta(2)=2`. In S0 notation, the target is
+`s0Config (markerWord ((m+2)%3) ++ d0 ++ binDec L (n-1) ++ lh)
+  (a+b+delta(m)) (2^b-1) (h+5+3*b)`.
+The head displacement is **`5+3*b`**, not zero. This is required when
+feeding the endpoint into `countedRst012_of_prefix` and the downstream
+terminal bridge.
+
+The arithmetic decomposition is exact:
+
+```
+resetPrefixCost m n a b
+  = inc0Cost n a + 15 + 4*m + 3*b.
+```
+
+A direct simulator using the source TM63 transition table matched the full
+pre-drain endpoint (state, complete tape, and head displacement) in 684
+finite parameter cases with `L<=5`, `n<=5` within the length bound,
+`m in {0,1,2}`, `a<=3`, and `b<=2`. The observed head shift was exactly
+`5+3*b` in every case. This is **computational evidence only**; it is not
+a universal proof and must not be cited as one.
+
+Ownership split: Agent 8 is taking this S1-to-S0 pre-drain prefix; Agent 24
+retains the generic arbitrary-valuation `Inc0` theorem; Agent 42 owns the
+downstream terminal/score adapter. The prefix remains the missing source-level
+lemma. Do not conflate it with the already-proved all-ones drain.
