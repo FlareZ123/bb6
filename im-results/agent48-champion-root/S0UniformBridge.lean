@@ -101,11 +101,8 @@ theorem rawEnd_left (k c : Nat) (ls : List Bool) :
 /-- rawEnd's right word is exactly the next S0 unary counter. -/
 theorem rawEnd_right (k c : Nat) (ls : List Bool) :
     (TM63Uniform.rawEnd k c ls []).r = s0RightFacing (c+1) := by
-  cases k with
-  | zero =>
-      simp only [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing, List.append_nil]
-  | succ k =>
-      simp only [TM63Uniform.rawEnd, TM63Uniform.scoredRight, s0RightFacing, List.append_nil]
+  cases k <;> simp [TM63Uniform.rawEnd, TM63Uniform.scoredRight,
+    s0RightFacing, d1pow_eq_uniformOnes, TM63Uniform.ones, List.append_nil]
 
 theorem sideBit_false_of_all_false (xs : List Bool) :
     (∀ b ∈ xs, b = false) → ∀ i, sideBit xs i = false := by
