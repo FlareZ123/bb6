@@ -48,7 +48,7 @@ theorem carryDTail15_openEnd (T : Int → Bool) (h : Int)
 ending at E on the next (unqueried) cell. -/
 def carryA3Area (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 2)
 def carryA3Base : FConfig := ⟨0, 0, [1]⟩
-def carryA3Final : FConfig := ⟨4, 3, [0,2]⟩
+def carryA3Final : FConfig := ⟨4, 3, [2,0]⟩
 
 theorem carryA3_trace (bg : Int → Bool) :
     run tm2 3 (frame carryA3Area bg (embed carryA3Base)) =
@@ -84,11 +84,7 @@ theorem rightOnes_of_segment (n : Nat) (T : Int → Bool) (h : Int)
   have h0 := hseg (3*i) (by omega)
   have h1 := hseg (3*i+1) (by omega)
   have h2 := hseg (3*i+2) (by omega)
-  have e0 : h+3*(i:Int) = h+((3*i:Int)) := by norm_num
-  have e1 : h+3*(i:Int)+1 = h+((3*i+1:Int)) := by norm_num
-  have e2 : h+3*(i:Int)+2 = h+((3*i+2:Int)) := by norm_num
-  exact ⟨by simpa [e0] using h0, by simpa [e1] using h1,
-    by simpa [e2] using h2⟩
+  exact ⟨by simpa using h0, by simpa using h1, by simpa using h2⟩
 
 /-- The right sweep changes only cells strictly before its final head. -/
 theorem sweptRight_future (n : Nat) (T : Int → Bool) (h x : Int)
@@ -99,7 +95,7 @@ theorem sweptRight_future (n : Nat) (T : Int → Bool) (h x : Int)
       simp [sweptRight]
   | succ n ih =>
       have hx' : h+3+3*(n:Int) ≤ x := by omega
-      have hrec := ih (afterRight3 T h) (h+3) x hx'
+      have hrec := ih (afterRight3 T h) (h+3) hx'
       have h1 : x ≠ h+1 := by omega
       have h2 : x ≠ h+2 := by omega
       simpa [sweptRight, afterRight3, h1, h2] using hrec
