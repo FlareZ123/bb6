@@ -808,24 +808,24 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
   let Tbridge := (frame (fun x => carryBridgeArea3 (x-h')) T1
     (shiftConfig h' (embed carryBridgeFinal3))).tape
   have hbridge : run tm2 12 ⟨3,h',T1⟩ =
-      some ⟨0,-2+h',Tbridge⟩ := by
-    simpa [Tbridge,frame,shiftConfig,embed,carryBridgeFinal3] using hbridge0
+      some ⟨0,h'-2,Tbridge⟩ := by
+    simpa [Tbridge,frame,shiftConfig,embed,carryBridgeFinal3,Int.sub_eq_add_neg,Int.add_comm] using hbridge0
   have hRight : ∀ i : Int, 2 ≤ i → i ≤ 10 → T1 (h'+i) = true := by
     intro i hlo hhi
     have hv := carryLeftSweep_marked (4*k+1) (3*k) T hmatch hs hb
       (h'+i) (by omega) (by omega)
     simpa [T1] using hv
   have hADmatch := carryBridge3_matches_carryAD12 T1 h' hRight
-  have hA := carryAD12 Tbridge (-2+h') hADmatch
-  let hB : Int := 12+(-2+h')
-  let T2 := (frame (fun x => carryAD12Area (x-(-2+h'))) Tbridge
-    (shiftConfig (-2+h') (embed carryAD12Final))).tape
-  have hARun : run tm2 12 ⟨0,-2+h',Tbridge⟩ =
+  have hA := carryAD12 Tbridge (h'-2) hADmatch
+  let hB : Int := 12+(h'-2)
+  let T2 := (frame (fun x => carryAD12Area (x-(h'-2))) Tbridge
+    (shiftConfig (h'-2) (embed carryAD12Final))).tape
+  have hARun : run tm2 12 ⟨0,h'-2,Tbridge⟩ =
       some ⟨3,hB,T2⟩ := by
     simpa [hB,T2,frame,shiftConfig,embed,carryAD12Final] using hA
-  have hseg0 : carrySegmentOnes T2 ((-2+h')+12) (3*(4*(k-1))+7) := by
+  have hseg0 : carrySegmentOnes T2 ((h'-2)+12) (3*(4*(k-1))+7) := by
     apply frame_head_segment carryAD12Area Tbridge (embed carryAD12Final)
-      (-2+h') 12 (3*(4*(k-1))+7)
+      (h'-2) 12 (3*(4*(k-1))+7)
     · simp [carryAD12Area]
     · simp [embed,carryAD12Final]
     · intro i hi
@@ -844,7 +844,7 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
         simpa [T1] using hv
       simpa [x] using hbridgeOutside.trans hleftMarked
   have hseg : carrySegmentOnes T2 hB (3*(4*(k-1))+7) := by
-    simpa [hB,Int.add_comm,Int.add_left_comm,Int.add_assoc] using hseg0
+    simpa [hB,Int.add_comm] using hseg0
   have h5input : T 5 = false := by
     exact carryInput_unmarked (4*k+1) T hmatch 5 (by omega) (by omega) (by
       simp [carryInputBit]; omega)
@@ -867,10 +867,10 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
     simp [Tbridge,frame,shiftConfig,h5bridgeArea]
   have h6bridge : Tbridge 6 = T1 6 := by
     simp [Tbridge,frame,shiftConfig,h6bridgeArea]
-  have h5ADArea : carryAD12Area (5-(-2+h')) = false := by
+  have h5ADArea : carryAD12Area (5-(h'-2)) = false := by
     simp [carryAD12Area,h']
     omega
-  have h6ADArea : carryAD12Area (6-(-2+h')) = false := by
+  have h6ADArea : carryAD12Area (6-(h'-2)) = false := by
     simp [carryAD12Area,h']
     omega
   have h5 : T2 5 = false := by
@@ -891,7 +891,7 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
     ⟨Tout,hfinishRun,ho1,ho2,ho3,ho4,ho5,ho6,hout⟩
   have hT2out : ∀ x, 6 < x → T2 x = T x := by
     intro x hx
-    have ha : carryAD12Area (x-(-2+h')) = false := by
+    have ha : carryAD12Area (x-(h'-2)) = false := by
       simp [carryAD12Area,h']
       omega
     have hb3 : carryBridgeArea3 (x-h') = false := by
@@ -905,7 +905,7 @@ theorem carryLongPrefix_r1 (k : Nat) (T : Int → Bool)
     rw [hout x hx]
     exact hT2out x hx
   have hbridgeAD := run_compose tm2 12 12
-    ⟨3,h',T1⟩ ⟨0,-2+h',Tbridge⟩ ⟨3,hB,T2⟩ hbridge hARun
+    ⟨3,h',T1⟩ ⟨0,h'-2,Tbridge⟩ ⟨3,hB,T2⟩ hbridge hARun
   have htotal := composeCarryRuns (4*k+1) (3*(4*(3*k))) 24 nR
     ⟨3,0,T⟩ ⟨3,h',T1⟩ ⟨3,hB,T2⟩ ⟨4,7,Tout⟩
     hleft hbridgeAD hfinishRun (by dsimp [hB,h',nR]; omega)
