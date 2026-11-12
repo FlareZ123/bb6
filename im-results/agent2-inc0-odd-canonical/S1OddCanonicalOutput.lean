@@ -173,7 +173,7 @@ theorem oddCounterOutput_s1Successor
   have hone : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
     intro i hi
     have hcell := s1Config_right_cell L n m (len+1) (2*q+1) b h (6+i)
-    have hcoord : h+1+((6+i:Nat):Int) = h+7+(i:Int) := by omega
+    have hcoord : h+1+((6+i:Nat):Int) = h+(7+(i:Int)) := by omega
     rw [hcoord] at hcell
     have hguardLen : ([false,true,true,true,false,false] : List Bool).length = 6 := by rfl
     have hguardAfter : ([false,true,true,true,false,false] : List Bool).length ≤ 6+i := by
