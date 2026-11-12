@@ -278,3 +278,24 @@ The strongest contribution is the parity-complete candidate in `im-results/agent
 The actual source chain remains uncompiled. The manual-only workflow now has a dedicated parity-module compile and `sorryAx` gate after S1CarryInc0, but the upstream Agent 2 S1OddCanonicalOutput gate must pass and a manual dispatch must still be run. Local Lean execution failed with ClientError; no dispatch capability was available here. All work remains under `im-results/`; `results/` was not changed. No exact BB(6) value or universal bound is established.
 
 Next: pass and run the manual source audit; resolve actual Lean diagnostics; then continue integrating the canonical S1 decrement into the full original-machine counted itinerary. Agent 3's line-level R23 review remains pending. Shared `main` head immediately before this memory commit: `a334871421e12688dcd4e7e2207a01cc86dcaf18`.
+
+## 2026-11-12 22:15Z — Rst2 odd-prefix q4 cut
+
+Current lease for this incarnation: `agents/agent24/.lease.json`, claimed_at `2026-11-12T21:15:20.931Z`; measured release threshold `22:25:20.931Z`. Do not refresh the lease. At every checkpoint, compare this original timestamp with an actual system clock; if age reaches 70 minutes, perform the orderly release procedure.
+
+### New structural observation (intermediate, simulator-only)
+
+For the TM63 marker-2 reset prefix and odd n, a deterministic simulation found a much cleaner split than trying to force the entire `LC_Inc` segment into the current canonical state-3 S1 counted-decrement theorem:
+
+- from `s1Config L n 2 a 0 b`, after exactly `32+12a` steps the machine is in state 4/head 0;
+- at this q4 cut the right half is `1^5 00 1^(3(b+1)) 00 0^ω`, equivalently (T(x)=1) iff (x=0), (1\le x\le4), or (7\le x\le9+3b);
+- for fixed L,n,a the left half at the cut is independent of b, and the right half is independent of n,a;
+- the remaining `39+3b` steps reach `s1Config L (n-1) 1 (a+b+2) (2^b-1) 0` with head (5+3b).
+
+The total (71+12a+3b) is exactly the proposed odd-n `resetPrefixCost 2 n a b). Empirical coverage: L=5, odd n=1,3,...,19, a,b=0,1,2 for cut/right-half properties; exact target equality checked for odd n=1,3,5,7,9 and a,b=0,1,2. This is not a Lean theorem, not a new BB(6) result, and not yet a source-integrated counted reset proof.
+
+Durable note: `im-results/agent24-champion-time/LCIncQ4Cut.md`; directory README now links it. Agent 8 received two messages, first warning that the raw Coq `LC_Inc` interface has arbitrary right context and no direct definitional match to the existing state-3 S1 counted theorem, then the q4-cut decomposition and exact mid right-word formula. The useful formal route is to split the marker-2 odd reset into (i) a `32+12a` prefix-to-q4 theorem with arbitrary right exterior and b-independent left output, and (ii) a `39+3b` q4 suffix with a parameterized left-context/output relation and explicit right unary run. The suffix does modify the left outer-counter encoding; do not claim it ignores the left tape.
+
+The local Lean reconstruction was attempted with the supplied split Lean 4.36.0-rc2 archives, but both container shell and Python runtime returned concrete `ClientError`; no local Lean compile occurred. No workflow-dispatch tool is exposed in this invocation. Keep all q4 findings in `im-results/`; do not promote them to `results/` or claim a BB(6) score/bound.
+
+Next: formalize and split the existing a=b=0 `resetBase_odd_frame` at the q4/head-0 intermediate; then prove the 12a prefix extension using the existing counted sweep/frame machinery; prove the 39+3b q4 suffix with an explicit left-context output relation and right sweep; compose. Do not retry the failed direct S1 re-encoding without an actual state/frame bridge.
