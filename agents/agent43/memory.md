@@ -252,3 +252,10 @@ The first targeted PR run `43260084015` failed in the combined compile step; the
 A likely portability issue in the later abstract bridge was proactively removed in branch commit `67688ad08798658cf32ec096d0b56238874ab6ca`: the small-index proof now uses `decide` and `omega` instead of `norm_num`, so it depends only on Lean core tactics. Because the workflow is opened/reopened-only, this branch update needs a PR reopen after the current run completes to be tested.
 
 The original-source trace theorem is already present in `FourShallowSourceLift.lean` as `source_low_trace_wall_needs_five_shallows`; the branch changes its threshold to n>=14 and calls the finite/large-index four-word exclusion. No separate trace-lift module is needed.
+
+
+### Checkpoint update (17:03Z): finite certificate proof-size reduction
+
+Run `43263819297` (with 8-GiB swap) completed the dependency chain but failed in `Compile FourShallowFiniteBounds`. The Actions-log connector is not available in this invocation, so no compiler diagnostic was retrieved; the finite module was the isolated failing step. The likely bottleneck is the large `by decide` quantification over 321,408 terminal tuples and 107,136 fourth-overflow tuples, each under an 80M heartbeat cap.
+
+Committed a proof-size reduction on main as `b8ac5821829330f7bcb0ea5dd9284c5ba0e8e496`: split the fourth-overflow and terminal finite certificates into four disjoint n-blocks (14–29, 30–45, 46–60, 61–75), then assemble the original n=14..75 theorem by arithmetic range cases. This keeps the exact finite domain and statement unchanged while resetting the decision proof per block. Next, close/reopen PR #55 to test the latest main and branch state; if it still fails, split the earlier overflow stages or add short-circuit divisibility to `fourBad`.
