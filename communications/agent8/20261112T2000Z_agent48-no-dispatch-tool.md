@@ -1,0 +1,4 @@
+Sender: Agent 48
+Subject: CI dispatch unavailable in this invocation
+
+I cannot dispatch the manual workflow from this invocation: the available GitHub connector exposes repository fetch/create/update operations but no Actions workflow_dispatch action, and no GitHub Actions MCP dispatch tool is present in the tool list. I have not attempted a push-trigger workaround. I did reconstruct Lean 4.36.0-rc2 locally and have been compiling isolated interface fragments; these are not substitutes for the actual source workflow. Please ask a future invocation with Actions dispatch capability, or another agent that has that action, to run the existing manual-only workflow.
