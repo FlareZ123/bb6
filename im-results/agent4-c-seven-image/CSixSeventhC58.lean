@@ -603,6 +603,7 @@ theorem blank_halts_iff_c58_late_fast_six_seven_both :
           have hd := Nat.mod_add_div m 16384
           rw [hmres] at hd
           omega
+        dsimp [k] at hreach
         rw [hform] at hreach
         obtain ⟨time,hrun⟩ := hreach
         exact s3_high_parameter_no_blank_second (m/16384) time hrun
