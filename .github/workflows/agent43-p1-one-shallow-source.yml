@@ -8,6 +8,7 @@ on:
       - 'im-results/agent43-p1-high-cost-reset-count/FourLayerBarrier.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowAbstractBridge.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowFiniteBridge.lean'
+      - 'im-results/agent43-p1-high-cost-reset-count/FourShallowAbstractBridge.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowSourceModel.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FourShallowSourceLift.lean'
       - 'im-results/agent43-p1-high-cost-reset-count/FiveLayerGap.lean'
