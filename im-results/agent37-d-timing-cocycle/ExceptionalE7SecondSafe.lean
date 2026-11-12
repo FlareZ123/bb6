@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import EAllDouble
 import CryptidThree
 import DObsSourceCandidate
+import ExceptionalBGeneral
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 16384
@@ -40,19 +41,23 @@ private theorem first_mid_shape (u q : Nat) (hq : 3 ≤ q) :
       init (List.replicate (3*(24*u+19)+2) true ++
         false :: ([true,true,true] ++ suffix2 q)) := by
   have hn : 8*(9*u+7)+5=3*(24*u+19)+4 := by omega
-  have hqrep : 2*(q-1)+2=3+(2*q-3) := by omega
   have hrep : List.replicate (8*(9*u+7)+5) true =
       true::true::List.replicate (3*(24*u+19)+2) true := by
     rw [hn,show 3*(24*u+19)+4=2+(3*(24*u+19)+2) by omega]
     rw [←List.replicate_append_replicate]
     rfl
-  have hp : List.replicate (2*(q-1)+2) true =
-      [true,true,true] ++ List.replicate (2*q-3) true := by
-    rw [hqrep,←List.replicate_append_replicate]
-    rfl
-  simp only [BB6.Agent32EAll.output,List.append_nil]
-  rw [hrep,hp]
-  simp [init,suffix2,List.append_assoc]
+  cases hq1 : q-1 with
+  | zero => omega
+  | succ r =>
+    have hqr : q=r+2 := by omega
+    have hp : List.replicate (2*(r+1)+2) true =
+        [true,true,true] ++ List.replicate (2*q-3) true := by
+      have hN : 2*(r+1)+2=3+(2*q-3) := by omega
+      rw [hN,←List.replicate_append_replicate]
+      rfl
+    simp only [BB6.Agent32EAll.output,List.append_nil,hq1]
+    rw [hrep,hp]
+    simp [init,suffix2,List.append_assoc]
 
 def secondOutput (u q : Nat) : Cfg :=
   ⟨[],false,List.replicate (8*(24*u+19)+9) true ++
