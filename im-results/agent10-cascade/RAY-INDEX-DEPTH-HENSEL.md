@@ -59,6 +59,33 @@ For the first packet ((k=1)), the bijection is explicit:
 - Sector (s=4): (j=0,2,4) correspond respectively to (h=0,2,1pmod3).
 - Sector (s=5): (j=0,2,4) correspond respectively to (h=0,1,2pmod3).
 
+## Nested odd-parent numerator
+
+There is a second useful application to the exceptional high-valuation feeders. If an odd parent of the fatal target has the form
+[
+x=2^t d,qquad 3^{t+1}d=Z_0(n),
+]
+then
+[
+2x+5=rac{W_t(n)}{3^{t+1}},qquad
+W_t(n):=2^{t+1}Z_0(n)+5cdot3^{t+1}.
+]
+For every (t), (W_t(s+6h)equiv0pmod3) in both sectors (s=4,5). The exact shift under (nmapsto n+6cdot3^k) is
+[
+W_t(n+6cdot3^k)
+=
+W_t(n)-2^{t+3}3^{k+1}
++8cdot2^{n+t+1}3^{k+2}c_{k+1}.
+]
+The coefficient (2^{t+3}) is a 3-adic unit. The new Lean draft includes `nestedOddNumerator_sector_mod_three` and the exact one-digit criterion `nestedOddNumerator_lift_criterion):
+[
+3^{k+2}mid W_t(n+rD)
+quadLongleftrightarrowquad
+3mid rac{W_t(n)}{3^{k+1}}-2^{t+3}r,
+qquad D=2cdot3^{k+1},quad rin{0,1,2},
+]
+assuming (3^{k+1}mid W_t(n)). Thus precisely one of the three next index digits lifts the valuation. A full recursively named (W_t)-residue selector has not yet been added; the exact criterion is already reusable for classifying nested odd-parent branches such as the exceptional 526/887 cases.
+
 ## BB(6) relevance and strict boundary
 
 An odd inverse parent at ray node (Z_j(n)) requires the appropriate divisibility (3^{t+1}mid Z_j(n)), in addition to the dyadic source-band condition. The selector therefore locates, exactly and at every valuation threshold, the fatal-sector indices at which a fixed even-depth node can have the required 3-adic valuation. The duality also identifies the unique even-depth class for a fixed fatal index.
