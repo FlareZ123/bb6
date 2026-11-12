@@ -54,10 +54,10 @@ theorem blank_halts_iff_six_forced :
     · exact Or.inl hlow
     · exact Or.inr ⟨j,m,hprior,hroot⟩
 
+set_option maxRecDepth 8192
 /-- The genuinely new inverse-sector filter rejects a concrete original
     m=0 stopping parameter admitted by the entire previous full criterion.
     An independent theorem M0OddRayValTwo proves an infinite extension. -/
-set_option maxRecDepth 8192
 theorem six_forced_rejects_1031 :
     BB6.Agent11SixForced.sixForcedExcluded 2065 3100=true := by
   decide
