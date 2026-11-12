@@ -1,6 +1,12 @@
-name: Agent 3 #429 exact C-zero section grammar (manual)
+name: Agent 3 #429 exact C-zero section grammar (path-filtered)
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/agent3-429-root-language.yml"
+      - "im-results/agent3-429-root-language/**"
+      - "im-results/agent39-429-frontier-left/Frontier429.lean"
+      - "im-results/agent32-429-root-typeii-odd/**"
 permissions:
   contents: read
 jobs:
@@ -18,16 +24,18 @@ jobs:
           printf '%s  %s\n' '0a0a3208617e9eab92f1041efa83ad94d405e69d172fb654a62dbfa9fbc5313b' "$RUNNER_TEMP/lean.tar.zst" | sha256sum -c -
           tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/lean-4.36.0-rc2-linux/bin" >> "$GITHUB_PATH"
-      - name: Check original exact model and quantified fatal corridor
+      - name: Check original exact model and quantified root-section corridors
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent39-429-frontier-left:im-results/agent3-429-root-language"
+          export LEAN_PATH="im-results/agent39-429-frontier-left:im-results/agent3-429-root-language:im-results/agent32-429-root-typeii-odd"
           lean -o im-results/agent39-429-frontier-left/Frontier429.olean im-results/agent39-429-frontier-left/Frontier429.lean
           lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootLanguageFatal.lean | tee /tmp/agent3-root-grammar.log
           lean -o im-results/agent3-429-root-language/BB429RootPairNormalizer.olean im-results/agent3-429-root-language/BB429RootPairNormalizer.lean | tee -a /tmp/agent3-root-grammar.log
-          lean -DmaxHeartbeats=10000000 im-results/agent3-429-root-language/BB429RootOddSection.lean | tee -a /tmp/agent3-root-grammar.log
+          lean -o im-results/agent3-429-root-language/BB429RootOddSection.olean im-results/agent3-429-root-language/BB429RootOddSection.lean | tee -a /tmp/agent3-root-grammar.log
+          lean -DmaxHeartbeats=30000000 -o im-results/agent32-429-root-typeii-odd/BB429RootTypeIIOddReturn.olean im-results/agent32-429-root-typeii-odd/BB429RootTypeIIOddReturn.lean | tee -a /tmp/agent3-root-grammar.log
           grep -F "'BB429RootOddSection.c0_odd_pairs_to_e0' depends on axioms:" /tmp/agent3-root-grammar.log
           grep -F "'BB429RootLanguageFatal.root_grammar_contains_fatal_family' depends on axioms:" /tmp/agent3-root-grammar.log
           grep -F "'BB429RootLanguageFatal.root_grammar_fatal_halts' depends on axioms:" /tmp/agent3-root-grammar.log
+          grep -F "'BB429RootTypeIIOddReturn.c0_typeII_odd_endpoint' depends on axioms:" /tmp/agent3-root-grammar.log
           if grep -q 'sorryAx' /tmp/agent3-root-grammar.log; then exit 1; fi
