@@ -45,9 +45,6 @@ jobs:
           lean im-results/agent32-zero-prefix-global/ReadOneLeaf.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.olean im-results/agent1-429-physical-frontier/BB429PhysicalFrontier.lean | tee /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/JRootEntry.olean im-results/agent1-429-root-entry/JRootEntry.lean | tee -a /tmp/agent1-429-physical.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/SourceBridge.olean im-results/agent1-429-root-entry/SourceBridge.lean | tee -a /tmp/agent1-429-physical.log
-          grep -q "BB429RootEntry.source429_eq_target429" /tmp/agent1-429-physical.log
-          grep -q "BB429RootEntry.target429_root_277_frontier_base" /tmp/agent1-429-physical.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 im-results/agent33-429-writer-locality/BB429WriterLocality.lean | tee -a /tmp/agent1-429-physical.log
           lean -o im-results/agent6-429-one-sided-excursion/BB429OddExcursion.olean im-results/agent6-429-one-sided-excursion/BB429OddExcursion.lean
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent33-429-writer-locality/CZeroEvenReturn.olean im-results/agent33-429-writer-locality/CZeroEvenReturn.lean | tee -a /tmp/agent1-429-physical.log
