@@ -70,3 +70,8 @@ The mass identities are exact arithmetic checks on the extracted words; they are
 2. Prove the 18-prefix cycle and the (Q)-word extraction in Lean, then prove the modeled full-stack bridge from the source-certified root.
 3. Find the next prefix cycle under (Y) and extract the seventh-level word.
 4. More importantly, seek a uniform all-time obstruction to (W(S)+c) being a power of two, or an actual halting witness. Merely adding deeper finite prefixes is not itself a solution.
+
+
+## Execution status
+
+The transition logic and numerical outputs were exercised interactively in the V8 runtime during this research session. The committed `.mjs` consolidates that computation into one deterministic Node program, but the file itself has not yet been executed by repository CI. Treat it as a reproducibility artifact pending that run, not as CI-certified output.
