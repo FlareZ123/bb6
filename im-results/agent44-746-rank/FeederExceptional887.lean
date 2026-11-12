@@ -201,7 +201,7 @@ private theorem only_even_parent_two_gaps (bandK gapK a b q : Nat)
     · subst t
       have hN : 2*a+5=3*d := by simpa using hout
       have hdq : d=(2*a+5)/3 := by omega
-      have hgap : 2*2^(k-1)<d ∧ d<3*2^(k-1) := by
+      have hgap : 2*2^(gapK-1)<d ∧ d<3*2^(gapK-1) := by
         simpa [hdq] using hgap0
       exact False.elim
         (CascadeFeederExceptional.odd_gap (gapK-1) d hgap.1 hgap.2 m
@@ -210,7 +210,7 @@ private theorem only_even_parent_two_gaps (bandK gapK a b q : Nat)
       subst t
       have hN : 9*d=2*a+5 := by simpa using hout.symm
       have hdq : d=(2*a+5)/9 := by omega
-      have hgap : 2*2^(k-2)<2*d ∧ 2*d<3*2^(k-2) := by
+      have hgap : 2*2^(gapK-2)<2*d ∧ 2*d<3*2^(gapK-2) := by
         simpa [hdq] using hgap1
       exact False.elim
         (CascadeFeederExceptional.odd_gap (gapK-2) (2*d) hgap.1 hgap.2 m
