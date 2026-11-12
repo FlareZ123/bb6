@@ -261,6 +261,43 @@ theorem fatal_parent_set_of_not81 (n q : Nat)
   exact CascadeFirstFork.near_top_exact_two_at81 n (fatal n) (n+4) q
     (by omega) (by omega) hclose hsize hdiv9 hnot81
 
+/-- All eight exceptional t=1 feeder residue classes have fatal
+    numerators not divisible by 81, so their fatal targets have exactly
+    the generic even-parent / t=1-feeder parent set. -/
+theorem fatal_not81_of_eight_exceptional (n : Nat)
+    (hn : n%1458=113 ∨ n%1458=400 ∨ n%1458=526 ∨ n%1458=599 ∨
+      n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372) :
+    (2*fatal n+5)%81≠0 := by
+  let p := 2^(n-2)
+  have hp : p=2^(n-2) := rfl
+  have hpow : 2^n=4*p := by
+    have he : n=(n-2)+2 := by omega
+    rw [he,Nat.pow_add]
+    simp only [show 2^2=4 by decide]
+    dsimp [p]
+    omega
+  have hnum : 2*fatal n+5=32*p-2*n-3 := by
+    dsimp [fatal]
+    rw [hpow]
+    omega
+  have hnumres := exceptional_eight_numeric n p hp hn
+  rcases hnumres with ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ |
+      ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ |
+      ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ | ⟨hnmod,hpmod⟩ <;>
+    rw [hnum] <;> omega
+
+/-- The generic exact fatal parent set applies uniformly to all eight
+    exceptional t=1 feeder classes. -/
+theorem fatal_parent_set_eight_exceptional (n q : Nat)
+    (hn : n%1458=113 ∨ n%1458=400 ∨ n%1458=526 ∨ n%1458=599 ∨
+      n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372) :
+    ResetParent q (fatal n) ↔
+      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+  have hnlow : 76≤n := by omega
+  have hres : n%18=4 ∨ n%18=5 := by omega
+  exact fatal_parent_set_of_not81 n q hnlow hres
+    (fatal_not81_of_eight_exceptional n hn)
+
 /-- The mod-729 certificate for the 1085/1372 classes gives the mod-81
     nondivisibility needed by the generic exact parent-set theorem. -/
 private theorem fatal_not81_1085_1372 (n : Nat)
