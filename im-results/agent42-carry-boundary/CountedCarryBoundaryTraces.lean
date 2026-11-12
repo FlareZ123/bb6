@@ -225,9 +225,15 @@ theorem carryBridge3_matches_carryAReturn12
         have hR := hRight i hiLo' hiHi'
         have hcoord : h+i = x := by dsimp [i]; omega
         have hT : T x = true := by simpa [hcoord] using hR
+        have hcases : i = 2 ∨ i = 3 ∨ i = 4 := by omega
         have hbase : (embed carryAReturn12Base).tape (x-(h-2)) = true := by
-          simp [embed, carryAReturn12Base, hk]
-          omega
+          rcases hcases with h2 | h3 | h4
+          · have hk4 : x-(h-2) = 4 := by dsimp [i] at h2; omega
+            simp [embed, carryAReturn12Base, hk4]
+          · have hk5 : x-(h-2) = 5 := by dsimp [i] at h3; omega
+            simp [embed, carryAReturn12Base, hk5]
+          · have hk6 : x-(h-2) = 6 := by dsimp [i] at h4; omega
+            simp [embed, carryAReturn12Base, hk6]
         have hout :
             (frame (fun y => carryBridgeArea3 (y-h)) T
               (shiftConfig h (embed carryBridgeFinal3))).tape x = true := by
