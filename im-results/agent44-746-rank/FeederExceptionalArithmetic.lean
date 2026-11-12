@@ -290,4 +290,79 @@ theorem geom_f (n p j f : Nat)
     omega
   exact ⟨hlow,hhigh⟩
 
+
+/-- Exact mod-729 data for all eight exceptional t=1 feeder residues.
+    The period-1458 power lemma reduces every exponent to a small
+    representative, so this is a finite arithmetic certificate. -/
+theorem exceptional_eight_numeric (n p : Nat)
+    (hp : p=2^(n-2))
+    (hr : n%1458=113 ∨ n%1458=400 ∨ n%1458=526 ∨ n%1458=599 ∨
+      n%1458=886 ∨ n%1458=887 ∨ n%1458=1085 ∨ n%1458=1372) :
+    (n%729=113 ∧ p%729=332) ∨
+    (n%729=400 ∧ p%729=112) ∨
+    (n%729=526 ∧ p%729=544) ∨
+    (n%729=599 ∧ p%729=332) ∨
+    (n%729=157 ∧ p%729=112) ∨
+    (n%729=158 ∧ p%729=224) ∨
+    (n%729=356 ∧ p%729=332) ∨
+    (n%729=643 ∧ p%729=112) := by
+  rcases hr with h113 | h400 | h526 | h599 | h886 | h887 | h1085 | h1372
+  · have hn : n%729=113 := by omega
+    have hexp : n-2=111+1458*(n/1458) := by omega
+    have hpm : p%729=332 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 111 (n/1458)]
+      decide
+    exact Or.inl ⟨hn,hpm⟩
+  · have hn : n%729=400 := by omega
+    have hexp : n-2=398+1458*(n/1458) := by omega
+    have hpm : p%729=112 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 398 (n/1458)]
+      decide
+    exact Or.inr (Or.inl ⟨hn,hpm⟩)
+  · have hn : n%729=526 := by omega
+    have hexp : n-2=524+1458*(n/1458) := by omega
+    have hpm : p%729=544 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 524 (n/1458)]
+      decide
+    exact Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩))
+  · have hn : n%729=599 := by omega
+    have hexp : n-2=597+1458*(n/1458) := by omega
+    have hpm : p%729=332 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 597 (n/1458)]
+      decide
+    exact Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩)))
+  · have hn : n%729=157 := by omega
+    have hexp : n-2=884+1458*(n/1458) := by omega
+    have hpm : p%729=112 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 884 (n/1458)]
+      decide
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩))))
+  · have hn : n%729=158 := by omega
+    have hexp : n-2=885+1458*(n/1458) := by omega
+    have hpm : p%729=224 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 885 (n/1458)]
+      decide
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩)))))
+  · have hn : n%729=356 := by omega
+    have hexp : n-2=1083+1458*(n/1458) := by omega
+    have hpm : p%729=332 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 1083 (n/1458)]
+      decide
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨hn,hpm⟩))))))
+  · have hn : n%729=643 := by omega
+    have hexp : n-2=1370+1458*(n/1458) := by omega
+    have hpm : p%729=112 := by
+      rw [hp,hexp]
+      rw [pow_period1458_many 1370 (n/1458)]
+      decide
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr ⟨hn,hpm⟩))))))
+
+
 end CascadeFeederExceptional
