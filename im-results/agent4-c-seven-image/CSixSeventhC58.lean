@@ -38,8 +38,9 @@ private theorem high_score_nonnegative (j m : Nat) :
 
 private theorem high_stop_identity (j m : Nat) :
     (2:Nat)^(2*m+2)*(j+3) - (j+3*m+5) + j+3*m+5 =
-      (2:Nat)^(2*m+2)*(j+3) :=
-  Nat.sub_add_cancel (high_score_nonnegative j m)
+      (2:Nat)^(2*m+2)*(j+3) := by
+  have h := Nat.sub_add_cancel (high_score_nonnegative j m)
+  omega
 
 /-- The Agent 4 six/seven diagonal is admitted by the complete
     source-certified ValSixFull+C58 high sieve, including its affine
@@ -104,8 +105,6 @@ theorem prior_c58_admits_six_seven_diagonal (j m : Nat)
     rw [hstop]
     exact Nat.mod_eq_zero_of_dvd hprod4
   have hk4 : k%4=2 := by omega
-  have hk7 : 7≤k :=
-    BB6.Agent15.second_halt_k_ge_seven j m k hstop
   have hguard : ¬(4≤k ∧ k%2=0 ∧ ((2*j+3)+k)%4=1) := by omega
   have hnorm :
       BB6.Agent15.affineNormalize (2*j+3) k=(2*j+3,k) := by
