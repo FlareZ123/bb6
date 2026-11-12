@@ -119,9 +119,8 @@ private theorem root_runWithHeadMax_prefix_monitor (m : Machine)
           have heq : (q.1,max p.2 q.2) = (d,h) := by
             simpa [hp,hq] using hfull
           have hmax : max p.2 q.2 = h := congrArg Prod.snd heq
-          have hp' : runWithHeadMax m t c = some (p.1,p.2) := by
-            simpa using hp
-          exact ⟨p.1,p.2,hp',by rw [← hmax]; exact Int.le_max_left _ _⟩
+          exact ⟨p.1,p.2,by cases p; rfl,
+            by rw [← hmax]; exact Int.le_max_left _ _⟩
 
 /-- Turn the prefix-monitor lemma into an ordinary raw-run head bound. -/
 private theorem root_runWithHeadMax_prefix_raw (m : Machine)
@@ -144,8 +143,8 @@ private theorem root_runWithHeadMax_exists_of_run (m : Machine) :
   | zero =>
       intro c d hrun
       have hd : d=c := by
-        have hh : some c = some d := by simpa [run] using hrun
-        exact (Option.some.inj hh).symm
+        have hh : some d = some c := by simpa [run] using hrun.symm
+        exact Option.some.inj hh
       subst d
       exact ⟨c.head,by simp [runWithHeadMax]⟩
   | succ n ih =>
@@ -174,8 +173,8 @@ private theorem root_runWithHeadMax_bound_of_prefix (m : Machine) :
       intro c d h F hmon hprefix
       obtain ⟨e,he,hb⟩ := hprefix 0 (by omega)
       have heq : e=c := by
-        have hh : some c = some e := by simpa [run] using he
-        exact (Option.some.inj hh).symm
+        have hh : some e = some c := by simpa [run] using he.symm
+        exact Option.some.inj hh
       subst e
       simp only [runWithHeadMax,Option.some.injEq,Prod.mk.injEq] at hmon
       rcases hmon with ⟨rfl,rfl⟩
