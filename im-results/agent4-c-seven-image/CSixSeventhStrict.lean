@@ -212,7 +212,9 @@ theorem exactly_six_not_seven_s3_progression (t : Nat) :
     Incoming 6 (1665+16384*t,2622) ∧
     ¬ Incoming 7 (1665+16384*t,2622) := by
   have h := exactly_six_not_seven_s3 (1+16*t) 2 (by omega)
-  convert h using 1 <;> omega
+  have hx : 641+1024*(1+16*t)=1665+16384*t := by omega
+  have hy : 574+1024*2=2622 := by omega
+  simpa [hx,hy] using h
 
 /-- Strict sixth-return image, outside the seventh, for every u,v. -/
 theorem exactly_six_not_seven (u v : Nat) (hpair : (u+v)%4=0) :
@@ -229,7 +231,9 @@ theorem exactly_six_not_seven_s3_second_progression (t : Nat) :
     Incoming 6 (3713+16384*t,8766) ∧
     ¬ Incoming 7 (3713+16384*t,8766) := by
   have h := exactly_six_not_seven_s3 (3+16*t) 8 (by omega)
-  convert h using 1 <;> omega
+  have hx : 641+1024*(3+16*t)=3713+16384*t := by omega
+  have hy : 574+1024*8=8766 := by omega
+  simpa [hx,hy] using h
 
 #print axioms exactly_six_not_seven_s3_second_progression
 /-- The u=0 residue progression in the same exact cone. -/
@@ -237,14 +241,18 @@ theorem exactly_six_not_seven_s3_zero_progression (t : Nat) :
     Incoming 6 (641+16384*t,15934) ∧
     ¬ Incoming 7 (641+16384*t,15934) := by
   have h := exactly_six_not_seven_s3 (16*t) 15 (by omega)
-  convert h using 1 <;> omega
+  have hx : 641+1024*(16*t)=641+16384*t := by omega
+  have hy : 574+1024*15=15934 := by omega
+  simpa [hx,hy] using h
 
 /-- The u=2 residue progression in the same exact cone. -/
 theorem exactly_six_not_seven_s3_two_progression (t : Nat) :
     Incoming 6 (2689+16384*t,5694) ∧
     ¬ Incoming 7 (2689+16384*t,5694) := by
   have h := exactly_six_not_seven_s3 (2+16*t) 5 (by omega)
-  convert h using 1 <;> omega
+  have hx : 641+1024*(2+16*t)=2689+16384*t := by omega
+  have hy : 574+1024*5=5694 := by omega
+  simpa [hx,hy] using h
 
 #print axioms exactly_six_not_seven_s3_zero_progression
 #print axioms exactly_six_not_seven_s3_two_progression
