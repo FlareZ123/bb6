@@ -82,64 +82,61 @@ private theorem signedZ_index_step_mod (n j k : Nat) :
   apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
   exact Int.dvd_iff_emod_eq_zero.mp (signedZ_index_step_divisible n j k)
 
-private theorem signedZ_index_step_mod_next (n j k : Nat) :
-    signedZ (n+depthPeriod (k+1)) j%(3:Int)^(k+2) =
-      (signedZ n j-(3:Int)^(k+1)*(4*((2:Int)^(j+1)-1)))%(3:Int)^(k+2) := by
-  rw [signedZ_index_step]
-  simp [Int.add_emod,Int.mul_emod]
+/-- Every full index stride preserves divisibility at the current precision. -/
+private theorem signedZ_index_period (n j k m : Nat) :
+    signedZ (n+m*depthPeriod (k+1)) j%(3:Int)^(k+1) =
+      signedZ n j%(3:Int)^(k+1) := by
+  induction m with
+  | zero =>
+      simp
+  | succ m ih =>
+      have hidx : n+(m+1)*depthPeriod (k+1) =
+          (n+m*depthPeriod (k+1))+depthPeriod (k+1) := by
+        rw [Nat.succ_mul]
+        omega
+      rw [hidx,signedZ_index_step_mod,ih]
 
-/-- Repeating the index stride gives the exact linear digit action modulo
-    the next power of three. -/
-private theorem signedZ_index_shift_mod (n j k t : Nat) :
+/-- The three possible next index digits act linearly modulo 3^(k+2). -/
+private theorem signedZ_index_shift_digit_mod (n j k t : Nat)
+    (ht:t<3) :
     signedZ (n+t*depthPeriod (k+1)) j%(3:Int)^(k+2) =
       (signedZ n j-(3:Int)^(k+1)*
         (4*((2:Int)^(j+1)-1)*t))%(3:Int)^(k+2) := by
-  induction t with
-  | zero =>
-      simp
-  | succ t ih =>
-      have hidx : n+(t+1)*depthPeriod (k+1) =
-          (n+t*depthPeriod (k+1))+depthPeriod (k+1) := by
-        rw [Nat.succ_mul]
-        omega
-      rw [hidx,signedZ_index_step_mod_next,ih]
-      push_cast
-      simp only [Int.mul_add,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
-      omega
-
-/-- The exact next-digit criterion in the fatal-index direction. -/
-private theorem signedZ_index_lift_criterion (n j k t : Nat)
-    (hbase : (3:Int)^(k+1) ∣ signedZ n j) :
-    (3:Int)^(k+2) ∣ signedZ (n+t*depthPeriod (k+1)) j ↔
-      (3:Int) ∣
-        (signedZ n j/(3:Int)^(k+1)-
-          4*((2:Int)^(j+1)-1)*t) := by
-  let P : Int := (3:Int)^(k+1)
-  let M : Int := (3:Int)^(k+2)
-  let a : Int := 4*((2:Int)^(j+1)-1)
-  have hp : P≠0 := by
-    dsimp [P]
-    exact_mod_cast (Nat.ne_of_gt (Nat.pow_pos (by decide : 0<3)))
-  have hM : M=3*P := by
-    dsimp [M,P]
-    rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
-    exact Int.mul_comm _ _
-  have hmod := signedZ_index_shift_mod n j k t
-  have hmod' : signedZ (n+t*depthPeriod (k+1)) j%M =
-      (signedZ n j-P*(a*t))%M := by
-    simpa [P,M,a,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] using hmod
-  have hdiviff : M∣signedZ (n+t*depthPeriod (k+1)) j ↔
-      M∣(signedZ n j-P*(a*t)) := by
-    rw [Int.dvd_iff_emod_eq_zero,Int.dvd_iff_emod_eq_zero,hmod']
-  have hquot : P*(signedZ n j/P)=signedZ n j :=
-    Int.mul_ediv_cancel_of_dvd hbase
-  have hfactor : signedZ n j-P*(a*t)=
-      P*(signedZ n j/P-a*t) := by
+  have hpowNat : (2:Nat)^(n+t*depthPeriod (k+1)) =
+      (2:Nat)^n*(1+t*3^(k+2)*depthCoeff (k+1)+
+        3^(k+3)*depthError (k+1) t) := by
     calc
-      _ = P*(signedZ n j/P)-P*(a*t) := by rw [hquot]
-      _ = P*(signedZ n j/P-a*t) := by rw [Int.mul_sub]
-  rw [hdiviff,hfactor,hM]
-  exact Int.mul_dvd_mul_iff_left hp
+      (2:Nat)^(n+t*depthPeriod (k+1)) =
+          (2:Nat)^n*(2:Nat)^(t*depthPeriod (k+1)) := by
+            rw [Nat.pow_add]
+      _ = (2:Nat)^n*(1+t*3^(k+2)*depthCoeff (k+1)+
+          3^(k+3)*depthError (k+1) t) := by
+            rw [pow_period_digit (k+1) t ht]
+  have hpowInt : (2:Int)^(n+t*depthPeriod (k+1)) =
+      (2:Int)^n*(1+t*(3:Int)^(k+2)*depthCoeff (k+1)+
+        (3:Int)^(k+3)*depthError (k+1) t) := by
+    exact_mod_cast hpowNat
+  have hlin : (2:Int)*(n+t*depthPeriod (k+1))+3 =
+      (2:Int)*n+3+4*(3:Int)^(k+1)*t := by
+    simp [depthPeriod,Nat.pow_succ]
+    omega
+  have hz : signedZ (n+t*depthPeriod (k+1)) j =
+      signedZ n j-(3:Int)^(k+1)*
+        (4*((2:Int)^(j+1)-1)*t)
+        +(3:Int)^(k+2)*
+          (8*(2:Int)^n*(t*depthCoeff (k+1)+
+            3*depthError (k+1) t)) := by
+    dsimp [signedZ]
+    push_cast
+    rw [hpowInt,hlin]
+    simp only [Int.mul_add,Int.add_mul,Int.mul_assoc,Int.mul_comm,Int.mul_left_comm]
+    omega
+  apply (Int.emod_eq_emod_iff_emod_sub_eq_zero).2
+  apply Int.emod_eq_zero_of_dvd
+  refine ⟨8*(2:Int)^n*(t*depthCoeff (k+1)+
+    3*depthError (k+1) t),?_⟩
+  rw [hz]
+  omega
 
 private theorem pow_two_mod_three (m : Nat) :
     2^m%3 = if m%2=0 then 1 else 2 := by
@@ -221,7 +218,7 @@ private theorem indexResidue_good (s j k:Nat)
         simpa [d] using henselDigit_divides q a ha
       have hlift: (3:Int)^(k+2)∣
           signedZ (indexSector s b+d*depthPeriod (k+1)) j :=
-        (signedZ_index_lift_criterion (indexSector s b) j k d hbase).mpr
+        (signedZ_index_lift_criterion (indexSector s b) j k d hd hbase).mpr
           (by simpa [q,a] using hdiv)
       have hshift:indexSector s (b+d*3^k)=
           indexSector s b+d*depthPeriod (k+1):=by
@@ -321,7 +318,7 @@ theorem indexResidue_iff (s j k h:Nat)
           exact hz
         have hcrit:(3:Int)∣q-a*((h%pn)/P):=
           (signedZ_index_lift_criterion (indexSector s b) j k
-            ((h%pn)/P) hbase).mp hshiftdiv
+            ((h%pn)/P) ht hbase).mp hshiftdiv
         have haunit:a%3≠0:=by
           simpa [a] using indexCoeff_mod_three j hj
         have hdigit:((h%pn)/P)=d:=
