@@ -1,5 +1,5 @@
-RUN_ID=43154696921
-RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43154696921
+RUN_ID=43154824814
+RUN_URL=https://github.com/FlareZ123/bb6/actions/runs/43154824814
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
 warning: could not canonicalize path: '/home/runner/.elan/toolchains'
@@ -209,8 +209,8 @@ Hint: Omit it from the simp argument list.
   [apply] simp [hp, hd]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-S1Encoder.lean:194:5: error: unknown tactic
-S1Encoder.lean:193:25: error: unsolved goals
+S1Encoder.lean:196:4: error: unsolved goals
+case neg
 a z : Nat
 hz : 0 < z
 hzlt : z < 2 ^ a
@@ -224,24 +224,11 @@ hra : r < a
 len : Nat := a - r - 1
 ha : a = len + 1 + r
 hpowadd : 2 ^ a = 2 ^ (len + 1) * 2 ^ r
+hq' : ¬q < 2 ^ len
+hqge : 2 ^ len ≤ q
 ⊢ q < 2 ^ len
-S1Encoder.lean:174:60: error: unsolved goals
-a z : Nat
-hz : 0 < z
-hzlt : z < 2 ^ a
-q r : Nat
-hr : z = (2 * q + 1) * 2 ^ r
-hodd : 1 ≤ 2 * q + 1
-hmul : 2 ^ r * 1 ≤ 2 ^ r * (2 * q + 1)
-hpowle : 2 ^ r ≤ z
-hpowlt : 2 ^ r < 2 ^ a
-hra : r < a
-len : Nat := a - r - 1
-ha : a = len + 1 + r
-hpowadd : 2 ^ a = 2 ^ (len + 1) * 2 ^ r
-hq : q < 2 ^ len
-⊢ ∃ q r len, z = (2 * q + 1) * 2 ^ r ∧ a = len + 1 + r ∧ q < 2 ^ len
-S1Encoder.lean:238:26: warning: This simp argument is unused:
+S1Encoder.lean:197:4: error: No goals to be solved
+S1Encoder.lean:239:26: warning: This simp argument is unused:
   List.reverse_append
 
 Hint: Omit it from the simp argument list.
