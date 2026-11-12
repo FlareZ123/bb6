@@ -37,9 +37,13 @@ theorem twoPow_add (a b : Nat) :
   | zero =>
       simp [twoPow]
   | succ b ih =>
-      simp only [Nat.add_succ, twoPow]
-      rw [ih]
-      simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+      calc
+        twoPow (a+(b+1)) = 2*twoPow (a+b) := by
+          rw [Nat.add_succ, twoPow]
+        _ = 2*(twoPow a*twoPow b) := by rw [ih]
+        _ = twoPow a*(2*twoPow b) := by
+          simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+        _ = twoPow a*twoPow (b+1) := by rw [twoPow]
 
 theorem twoPow_lt_succ (n : Nat) : twoPow n < twoPow (n+1) := by
   have hp := twoPow_pos n
@@ -72,19 +76,19 @@ theorem bitsLE_pow2_odd (k r u : Nat) (hr : r < k) (hu : u % 2 = 1) :
   | zero =>
       have hk : k = (k-1)+1 := by omega
       have huRep : u = 2*((u-1)/2)+1 := by omega
-      conv_lhs => rw [show twoPow 0 = 1 by rfl]
-      conv_lhs => rw [hk]
+      rw [hk]
+      have htail : ((k-1)+1)-0-1 = k-1 := by omega
+      rw [htail, show twoPow 0 = 1 by rfl]
       rw [huRep, bitsLE_odd]
       simp
   | succ r ih =>
       have hk : k = (k-1)+1 := by omega
       have hpow : twoPow (r+1)*u = 2*(twoPow r*u) := by
         simp [twoPow, Nat.mul_assoc]
-      conv_lhs => rw [hk]
-      rw [hpow, bitsLE_even]
+      rw [hk, hpow, bitsLE_even]
       have hrec := ih (k-1) u (by omega) hu
       rw [hrec]
-      have heq : (k-1)-r-1 = k-(r+1)-1 := by omega
+      have heq : ((k-1)+1)-(r+1)-1 = (k-1)-r-1 := by omega
       rw [heq]
       simp [List.replicate_succ, List.append_assoc]
 
@@ -97,8 +101,9 @@ theorem bitsLE_pow2_sub_one (k r u : Nat) (hr : r < k) (hu : u % 2 = 1) :
   | zero =>
       have hk : k = (k-1)+1 := by omega
       have huRep : u-1 = 2*((u-1)/2) := by omega
-      conv_lhs => rw [show twoPow 0 = 1 by rfl]
-      conv_lhs => rw [hk]
+      rw [hk]
+      have htail : ((k-1)+1)-0-1 = k-1 := by omega
+      rw [htail, show twoPow 0 = 1 by rfl]
       rw [huRep, bitsLE_even]
       simp
   | succ r ih =>
@@ -110,11 +115,10 @@ theorem bitsLE_pow2_sub_one (k r u : Nat) (hr : r < k) (hu : u % 2 = 1) :
         simp [twoPow, Nat.mul_assoc]
       have hpow : twoPow (r+1)*u - 1 =
           2*(twoPow r*u - 1)+1 := by omega
-      conv_lhs => rw [hk]
-      rw [hpow, bitsLE_odd]
+      rw [hk, hpow, bitsLE_odd]
       have hrec := ih (k-1) u (by omega) hu
       rw [hrec]
-      have heq : (k-1)-r-1 = k-(r+1)-1 := by omega
+      have heq : ((k-1)+1)-(r+1)-1 = (k-1)-r-1 := by omega
       rw [heq]
       simp [List.replicate_succ, List.append_assoc]
 
@@ -191,11 +195,11 @@ theorem binDec_carry_suffix
     (hu : u % 2 = 1)
     (hcomplement : twoPow (width-r) = u+v)
     (hv : v % 2 = 1) :
-    ∃ prefix : List Bool,
+    ∃ pre : List Bool,
       binDecWord width (n+1) =
-        prefix ++ d0 ++ repeatBlock true r ∧
+        pre ++ d0 ++ repeatBlock true r ∧
       binDecWord width n =
-        prefix ++ d1 ++ repeatBlock false r := by
+        pre ++ d1 ++ repeatBlock false r := by
   have hsum : r + (width-r) = width := by omega
   have hpow : twoPow width = twoPow r * (u+v) := by
     calc
@@ -262,11 +266,11 @@ theorem s1LeftWord_carry
     (hu : u%2=1)
     (hcomplement : twoPow (width1-r)=u+v)
     (hv : v%2=1) :
-    ∃ prefix : List Bool,
+    ∃ pre : List Bool,
       s1LeftWord width0 a0 marker width1 (n+1) =
-        prefix ++ d0 ++ repeatBlock true r ∧
+        pre ++ d0 ++ repeatBlock true r ∧
       s1LeftWord width0 a0 marker width1 n =
-        prefix ++ d1 ++ repeatBlock false r := by
+        pre ++ d1 ++ repeatBlock false r := by
   obtain ⟨p,hIn,hOut⟩ :=
     binDec_carry_suffix width1 n r u v hr hfactor hu hcomplement hv
   refine ⟨[true,true,true,false,true,true] ++
