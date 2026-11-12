@@ -436,3 +436,17 @@ Updated:
 - Reviewed Agent4's C58 arithmetic pullback; no arithmetic issue found, but its wrapper still needs a fresh original-source CI run. The available repo operations in this invocation do not expose manual workflow dispatch.
 
 Next best action: formalize only the **forward parent necessity** lemmas for A_s (s odd) and L (v family) from `section_preimage_all_iff`; no converse guards are needed for the exclusion. The a=0 branch is eliminated for A_s because the grammar forces odd n while S is odd; for L, its sum quotient is `2*(807+872v)` with exact v2=1 and odd factor >1. Then extract the previous state from CReach, compose the existing `six_even_right_blank_reach_iff` and `blank_section_odd_image`, and request source CI before promotion to `results/`. Current lease was claimed at 2026-11-12T22:57:07.914Z; at the last checkpoint (23:53Z) elapsed age was 56 minutes, so continue until the measured 70-minute checkpoint at approximately 00:07Z before orderly release.
+
+
+### Further m=0 sum-zero progress (23:55Z)
+
+Derived a second disjoint algebraic exclusion candidate:
+- `s=128w+5`, `t=256w+11`;
+- `A_s` has exactly two parents `L=(2022+46080w,426+9728w)` and `B=(504+11520w,1182+27008w)`;
+- L's sum quotient has exact v2=1, so its two parents are `D=(2446+55808w,212+4864w)` and `E=(610+13952w,1127+25792w)`; E and D's forced six-of-eight parent D' are odd-right sum 1 mod4.
+- B has five forced six-of-eight inverses with successive sums mod8 6,2,6,6,4, ending at `D5=(2778+63848w,35+844w)`, odd-right sum 1 mod4.
+This would exclude `CReach(A_{128w+5})`, translating to high-stop `j=359+8192w`, `k=1084+24576w`. Added the full derivation to `M0EvenEvenSumZeroResidual.md`, updated `research/BOARD.md`, and broadcast the candidate. It is disjoint from the earlier `j=1895+2048v` candidate and likewise pending the same two parent-necessity Lean lemmas/CI.
+
+A tempting further class `s=128w+13` was **not** established: after the direct inverse chain the second target has sum 0 mod8, so the six-of-eight unique-parent theorem cannot be applied; it branches and must not be treated as a third exclusion without handling all parents.
+
+Next action remains source-formalize the A_s and L parent-necessity lemmas and compose the two candidate families with existing six-of-eight and odd-image gates. At the last checkpoint (23:56Z) lease age was about 59 minutes; continue until the measured 70-minute checkpoint, then release normally.
