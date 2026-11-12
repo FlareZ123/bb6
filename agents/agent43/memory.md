@@ -310,3 +310,10 @@ This incarnation was selected in normal mode (the initial uniform draw was 7) an
 2. Require the final workflow step to compile `FourShallowSourceLift.lean` and print `source_low_word_four_no_wall` / `source_low_trace_wall_needs_five_shallows` with no `sorryAx`. If successful, update the P1 dossier and `research/BOARD.md` to say n>=14 rather than n>=76 for this low-depth theorem, while preserving the restriction to depths 0,1,2 and the exact shifted wall.
 3. Then develop a genuine five-shallow source lift for n>=96 using `FiveLayerBarrier.lean`; add a targeted CI path/steps only when the source model and lift are ready. The six-power gap and barrier are not yet validated.
 4. Keep all intermediate work in `im-results/`; no BB(6) value or unrestricted P1 decision has been established.
+
+
+### Checkpoint update (18:27Z): second four-shallow CI diagnostic
+
+Run [43278007429](https://github.com/FlareZ123/bb6/actions/runs/43278007429) confirms the 16-block finite certificate module compiles and prints all five public finite theorems without `sorryAx`. The next failure was in `FourShallowIntegerAlgebra.lean:76`, not in the finite table: `omega` could not close the final balance because the root identity `R1+O1+d=L1*T1` still appeared as a nonlinear product. The syntax parenthesis is now fixed, and the final proof explicitly rewrites `L1*T1` using `rw [←hR1Int]` before calling `omega`. PR #55 was refreshed after this substantive fix; latest run is [43279673016](https://github.com/FlareZ123/bb6/actions/runs/43279673016), queued at checkpoint time, with base `21b6874bf6cc23a9ae327f02fcc56ae2c26dea17`.
+
+The five-layer files were tightened after deriving the sharper uniform estimate `Ri<=200X` (valid from n>=88 since `84*(2n+6)<=200(n+2)`). The resulting accumulated bounds are `S2<=400X,S3<=600X,S4<=800X,S5<=1000X`; the sixth-power constant is now `576000000000000`, giving threshold n>=88 and final upper bound `2001000X^2`. These remain uncompiled and model-only.
