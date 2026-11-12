@@ -43,17 +43,21 @@ theorem multi_bubble_prefix_head_bound
       have hFull : run m (4*(j+1)*(j+1)+2*(j+1)) c0 = some cFinal := by
         simpa [c0,cFinal] using
           multi_bubble_prefix m u (j+1) tape hju hmA1 hmF1 hmA0 hmB1 hz ho hr
-      have hmul : (j+1)*(j+1)=j*j+j+j+1 := by
+      have hmul1 : (j+1)*j = j*j+j := by
+        rw [Nat.add_mul]
+        simp
+      have hmul : (j+1)*(j+1)=j*j+2*j+1 := by
         calc
           (j+1)*(j+1) = (j+1)*j+(j+1) := by rw [Nat.mul_succ]
-          _ = (j*j+j)+(j+1) := by rw [Nat.add_mul]; simp
-          _ = j*j+j+j+1 := by omega
+          _ = (j*j+j)+(j+1) := by rw [hmul1]
+          _ = j*j+2*j+1 := by omega
       have htime :
           4*(j+1)*(j+1)+2*(j+1) =
             (4*j*j+2*j) + (4*(2*j+1)+2) := by
         calc
           4*(j+1)*(j+1)+2*(j+1) =
-              4*(j*j+j+j+1)+2*(j+1) := by rw [hmul]
+              4*((j+1)*(j+1))+2*(j+1) := by simp [Nat.mul_assoc]
+          _ = 4*(j*j+2*j+1)+2*(j+1) := by rw [hmul]
           _ = (4*j*j+2*j) + (4*(2*j+1)+2) := by omega
       have hBubble : run m (4*(2*j+1)+2) cStage = some cFinal := by
         have hcomp := run_add' m (4*j*j+2*j) (4*(2*j+1)+2) c0
@@ -120,6 +124,8 @@ theorem multi_bubble_prefix_head_bound
         have hbound := bubble_macro_prefix_head_bound m (2*j+1) s
           cStage c1 cFinal d hAF hAFhead hBubble
           (by simp [cStage,cFinal] <;> omega) hs hseg
+        have hbound' : d.head ≤ 2*(j:Int)+2 := by
+          simpa [cStage] using hbound
         exact ⟨d,hpre,by omega⟩
 
 #print axioms multi_bubble_prefix_head_bound
