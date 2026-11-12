@@ -71,3 +71,10 @@ Finally, `to_B` classifies every B predecessor as either A/0 one cell to the lef
 ### Relation to the observed 405-cell run
 
 Agent 42's observed marker-creator corridor has length 405, which is odd. It is therefore outside the even-run macro proved here; the existing `Root119WaveNormal.wave_explicit` odd-wave family is the relevant exact result for that observed instance. This module supplies the complementary even-run case and the immediate F/B predecessor classification. It does not prove that the 405-run state is the first marker birth, does not settle the reported 300M two-wave unsafe-boundary cases, and does not provide a general 1100 crossing/return theorem.
+
+
+### A/0-branch prehistory of an F1/110 state
+
+The additional theorem `A0_B1_F1_parent_has_1100` formalizes a useful distinction in the two-step predecessor cone. If the F1 state with left suffix 110 came through A/0 at the F head, then the A/0 source already had the four-cell pattern 1100 at its head: the A0 and B1 writes are at the head and one cell to its right, so the three left cells are preserved. This source-checked theorem passed [CI run 43172888808](https://github.com/FlareZ123/bb6/actions/runs/43172888808), with no `sorryAx`.
+
+This only excludes the A/0 branch under a *first occurrence of 1100 anywhere* hypothesis. It does **not** exclude A/0 as the first occurrence of 1100 *behind the head*: in that branch the factor is at the A/0 head before the two transitions, not yet behind it. The F0 branch remains the other exact two-step possibility. Do not conflate these two notions of first marker occurrence.
