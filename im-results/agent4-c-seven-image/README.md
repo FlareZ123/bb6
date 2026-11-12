@@ -61,6 +61,18 @@ and the new root theorem `blank_ne_six_seven_band_s3` excludes every such state 
 
 The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the new exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second slice has not yet passed original-source CI** and remains an intermediate result.
 
+The second slice also pulls back to a genuinely new high stopping-parameter progression. For
+`j=831` and `m=9770+16384*t`, the exact stopping counter
+
+```
+k = 2^(2*m+2)*(j+3) - (j+3*m+5)
+```
+
+satisfies `k = 574+1024*v` with `v = 2 (mod 16)`. Thus the high target is exactly
+`(1665,574+1024*v)`, the `u=1) member of the second strict slice. These parameters are admitted by the prior C58 all-depth and late-fast predicates: `j=831 =319 (mod 512)` and `m=42 (mod 512)`. They are not in the first diagonal, since `(3*m)%4096=638` while `(j+2879)%4096=3710`.
+
+[CSixSeventhC58.lean](CSixSeventhC58.lean) now adds this second progression to the exact criterion as well: `prior_latefast_admits_s3_parameter_family` proves old-sieve admission, `s3_high_target` identifies the image point, and `blank_halts_iff_c58_late_fast_six_seven_both` adds both independent source exclusions while preserving the exact iff. The explicit parameter progression is rejected by `s3_parameter_family_removed`. This is a stronger draft criterion, not a BB(6) solution.
+
 ## Independence from the integrated C58 all-depth sieve
 
 The four high-stop classes are exactly equivalent to the single diagonal
