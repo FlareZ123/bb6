@@ -172,4 +172,13 @@ Modulo 3, `D_m` alternates `1,0`, so `y_m mod3` alternates `1,2`. Terms with `y_
 `q₀=(2*y_m+5)/3=(8*2^n-2*D_m+5)/3`
 lies strictly in `(2*2^n,3*2^n)` throughout the even-band range, so the t=0 branch is excluded by `odd_gap`.
 
-**Do not extend this t=0 gap argument to t≥1.** The actual odd-parent band value at exponent t is `2^t*(2*y_m+5)/3^(t+1)=(2/3)^t*q₀), not `2^t*q₀`. In fact `D_m mod9` cycles `4,3,1,6,7,0`; for odd m, `(2*y_m+5) mod9` cycles `3,6,0`, so t=1 divisibility can occur when `m≡5 (mod 6)`. The higher-t branches require the nested 3-adic analysis; the first departure from the scale-`n-1` even band may also enter a lower-scale band rather than terminate. This is an open route to the even predecessor, not a completed root exclusion.
+**Do not extend this t=0 gap argument to t≥1.** The actual odd-parent band value at exponent t is `2^t*(2*y_m+5)/3^(t+1)=(2/3)^t*q₀), not `2^t*q₀`. In fact `D_m mod9` cycles `4,3,1,6,7,0`; for odd m, `(2*y_m+5) mod9` cycles `3,6,0`, so t=1 divisibility can occur when `m≡5 (mod 6)`. The higher-t branches require the nested 3-adic analysis; the first departure from the scale-`n-1` even band may also enter a lower-scale band rather than terminate.
+
+A concrete t=1 branch occurs after five same-scale even parents:
+`D₅=127*n+193`, so `D₅ mod9=0` because `n mod9=5`. Therefore `2*y₅+5` is divisible by 9 and
+`v₅=2*(2*y₅+5)/9=(16*2^n-4*D₅+10)/9`.
+This lies in the odd band at scale `n-2`,
+`6*2^(n-2)+1 ≤ v₅ ≤ 8*2^(n-2)-1`,
+provided `8*D₅≤5*2^n+2`, which follows from the existing growth bound `2^(n-2)≥10000*n+10000`. Since `d=(2*y₅+5)/9` is odd, this gives a genuine t=1 odd parent `z₅=d` of `y₅`. Thus the even predecessor has a concrete candidate chain `y₀←y₁←...←y₅←z₅`; the next task is to analyze the parents of `z₅`. This remains an arithmetic lead, not a root-reachability proof.
+
+This is an open route to the even predecessor, not a completed root exclusion.
