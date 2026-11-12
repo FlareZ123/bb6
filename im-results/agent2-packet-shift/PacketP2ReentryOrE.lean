@@ -62,16 +62,16 @@ theorem p2_packet_reentry_or_E (c : Packet) (ha : c.a ≥ 4)
         (BB6.Agent2AP2PacketBoundary.words d.q r))+5
     have hendpoint :
         BB6.Agent2AP2PacketBoundary.endpoint k d.q r =
-          regularSection a 3 3 := by
+          regularSection a 3 2 := by
       simp [a,BB6.Agent2AP2PacketBoundary.endpoint,
         BB6.Agent2BoundaryBZero.regularSection]
     have hfinal :
         run (T0+BB6.Agent2AP2PacketBoundary.sourceTime k d.q r)
           (packet c.a c.q c.p fixedTail) =
-          regularSection a 3 3 := by
+          regularSection a 3 2 := by
       rw [run_add,h0,hshape,hAP2,hendpoint]
     exact Or.inl ⟨T0+BB6.Agent2AP2PacketBoundary.sourceTime k d.q r,
-      a,3,3,hfinal⟩
+      a,3,2,hfinal⟩
   · rcases hRest with hB | hE
     · let k : Nat := (d.a-2)/3
       have hk : 3*k+2=d.a := by dsimp [k]; omega
