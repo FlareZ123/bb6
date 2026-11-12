@@ -121,7 +121,7 @@ any depth>=3 step, exceptional inverse exits and unrestricted authentic
 blank-root reachability remain open. It does not determine P1 halting or
 the exact BB(6) score, and has not been qualified as externally publishable.
 
-## Four-shallow scalar energy barrier for every n>=77
+## Four-shallow scalar energy barrier for every n>=76
 
 [FourShallowAllIndex.md](FourShallowAllIndex.md) gives a new all-index
 **scalar energy-model theorem**: four depth-0/1 transitions separated by
@@ -140,7 +140,7 @@ induction has **not yet been added or Lean-compiled**; until that composition
 is checked, the formal source-language theorem remains
 `source_low_trace_wall_needs_four_shallows`. The new result is therefore
 kept as an intermediate mathematical derivation, not advertised as a
-source-certified P1 decision. Indices 14<=n<77, five-or-more shallow steps,
+source-certified P1 decision. Indices 14<=n<76, five-or-more shallow steps,
 depth>=3 excursions, exceptional exits and blank-root reachability remain
 open.
 

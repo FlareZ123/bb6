@@ -135,7 +135,7 @@ inverse paths, with no length, cost or shallow-edge ordering restriction.
 
 ## Open quantifiers and next mathematical frontier
 
-The four-shallow scalar energy equation is now excluded for every n>=77 by
+The four-shallow scalar energy equation is now excluded for every n>=76 by
 [FourShallowAllIndex.md](FourShallowAllIndex.md), using a fourth exact
 dyadic-remainder peel and a quintic exponential gap. This is a deductive
 model-level result from the source-certified shallow profiles and
@@ -144,7 +144,7 @@ induction has not yet been Lean-compiled. Accordingly, the existing
 formal source theorem still guarantees only four shallow steps.
 
 The remaining low-depth frontier is the four-shallow scalar/source case
-14<=n<77 and five-or-more shallow transitions. More general inverse words
+14<=n<76 and five-or-more shallow transitions. More general inverse words
 also permit depth>=3 and exceptional exits. None of these restrictions is
 an authentic blank-root P1 decision or a BB(6) maximality result. Avoid
 repeating bounded scans of the already excluded one-, two- and three-shallow
