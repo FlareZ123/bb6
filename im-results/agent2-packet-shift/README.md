@@ -117,6 +117,13 @@ The A branch is now source-closed by `AP2PacketBoundarySource.a_p2_packet_reentr
 
 ## Source-connected p≡2 packet reduction (new; CI pending)
 
+**Endpoint correction (2026-11-12):** the exact A110111 tail for ys=111 is
+[false,true,false,true,false,true,true,true] = oppairs(3) ++ 1^2, not
+oppairs(3) ++ 1^3. Therefore the A-terminal p≡2 source return is
+regularSection a 3 2. Earlier draft statements ending in 3 3 were off by one;
+AP2PacketBoundarySource, PacketP2ReentryOrE, and ExceptionalEPacketClosure
+have been corrected to preserve the actual source endpoint.
+
 `PacketP2ReentryOrE.p2_packet_reentry_or_E` composes the p≡2 terminal trichotomy with the original-source A and B exits. For every source-valid packet with p≡2 (mod3), the original run either:
 - returns to a regular L section after normalization through A or B(q=0); or
 - reaches an explicit normalized packet with a≡1 (mod3) and p=2.
@@ -127,10 +134,10 @@ Thus the only remaining p≡2 normalizer boundary is the E,p=2 changed-tail rese
 
 The new [ExceptionalEPacketClosure.lean](./ExceptionalEPacketClosure.lean) composes the already source-certified E-first/E-second exceptional packet maps with the universal fixed-tail safe-packet reentry theorem. The A-terminal p≡2 boundary is implemented in [AP2PacketBoundarySource.lean](./AP2PacketBoundarySource.lean). The quantified wrapper theorems are `exceptional_EA_all_reentry` and `exceptional_EE_all_reentry_or_reset`.
 
-For every t and q≥2, the E/A family `L(9t+10,q,1)` first reaches `M(24t+21,0,2q;0 1^6)`. If q is not 1 modulo 3, `all_safe_packets_regular` closes the packet directly. If q≡1 (mod3), it is an A-terminal p≡2 packet; `AP2PacketBoundarySource.a_p2_packet_reentry` consumes it by the original A-code 110111 macro. In general, `M(3k+3,q,3r+2;0 1^6)` returns to `L(8k+2q+8r+11,3,3)`. For the E/A family, k=8t+6, the packet q-parameter is 0, and 3r+2=2q, so the endpoint is `L(64t+8r+59,3,3)`.
+For every t and q≥2, the E/A family `L(9t+10,q,1)` first reaches `M(24t+21,0,2q;0 1^6)`. If q is not 1 modulo 3, `all_safe_packets_regular` closes the packet directly. If q≡1 (mod3), it is an A-terminal p≡2 packet; `AP2PacketBoundarySource.a_p2_packet_reentry` consumes it by the original A-code 110111 macro. In general, `M(3k+3,q,3r+2;0 1^6)` returns to `L(8k+2q+8r+11,3,2)`. For the E/A family, k=8t+6, the packet q-parameter is 0, and 3r+2=2q, so the endpoint is `L(64t+8r+59,3,2)`.
 
 For every u and q≥3, the E/E family `L(27u+25,q,1)` first reaches `M(192u+161,2,2q-3;0 1^6)`. If q≠1 (mod3), the universal safe-packet theorem closes it to regular L. If q≡1 (mod3), the packet has p≡2 and `PacketP2ReentryOrE.p2_packet_reentry_or_reset` proves that it either returns to regular L or reaches the canonical changed-marker packet `M(8k+5,0,2q'+6;marker)`.
 
 Consequently, both E/A (all q≥2) and E/E (all q≥3) exceptional source families are now reduced to regular L or, for the E/E q≡1 branch, the canonical E2 marker family consumed by Agent37's arbitrary-depth E-chain. The remaining issue is the subsequent canonical E2 orbit, not the A/B exits of p≡2 normalization. These are prepared-source family results, not statements that every such section occurs on the authentic blank orbit.
 
-The A-p2 boundary, p2 reduction, and E/A/E/E wrappers include axiom-print checks, but **have not yet been compiled in a successful CI run**. The focused workflow `.github/workflows/agent2-a-one-packet-boundary.yml` compiles AP2PacketBoundarySource and PacketP2ReentryOrE after their dependencies; the D-root workflow also compiles PacketP2ReentryOrE before ExceptionalEPacketClosure. Do not promote these entries to the verified theorem table until a manual workflow succeeds.
+The A-p2 boundary, p2 reduction, and E/A/E/E wrappers include axiom-print checks, but **have not yet been compiled in a successful CI run**. Root-chain CI 43313555871 exposed the off-by-one in the old endpoint claim: the proof failed exactly when equating the eight-bit A110111 tail with a nine-bit `oppairs 3 ++ 1^3` suffix. The corrected files now use the two-one suffix; a fresh full-source audit is required. The focused workflow `.github/workflows/agent2-a-one-packet-boundary.yml` compiles AP2PacketBoundarySource and PacketP2ReentryOrE after their dependencies; the D-root workflow also compiles PacketP2ReentryOrE before ExceptionalEPacketClosure. Do not promote these entries to the verified theorem table until a manual workflow succeeds.
