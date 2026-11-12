@@ -93,6 +93,17 @@ theorem no_four_shallow_energies
    dsimp [f]
    simp only [Int.mul_neg,Int.neg_mul]
    ac_rfl
+ have hR4shift :
+     (L4:Int)*(n+6+3*s+alpha+3*u+beta+3*v+gamma+3*w:Int)-(O4:Int)=(R4:Int) := by
+   omega
+ have hSh4' : ((2:Int)^delta)*J4=
+     I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
+   rw [hR4shift] at hSh4
+   exact hSh4
+ have hneg4 : -f*(E:Int)=I3-(C4:Int)*(2:Int)^n+(R4:Int) := by
+   calc
+     -f*(E:Int)=((2:Int)^delta)*J4 := hlast.symm
+     _=I3-(C4:Int)*(2:Int)^n+(R4:Int) := hSh4'
  have h4 : f*(E:Int)=(C4:Int)*(2:Int)^n-(R4:Int)-I3 := by
    omega
  have h2' : I1=(C2:Int)*(2^n:Int)-(R2:Int)+b*I2 := by omega
