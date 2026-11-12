@@ -559,7 +559,7 @@ theorem q4LeftFacing_source_tail (L n a i : Nat)
   have hsrc : s1LeftFacing L n 2 a 0 =
       q4SourcePrefix a ++ q4SharedTail L n := by
     unfold s1LeftFacing
-    rw [binDec_zero a, binDec_odd_head L n hn hbound]
+    rw [binDec_zero a, binDec_odd_head_local L n hn hbound]
     simp [q4SourcePrefix, q4SharedTail, List.append_assoc]
   have htgt : q4LeftFacing L (n-1) a =
       q4TargetPrefix a ++ q4SharedTail L n := by
