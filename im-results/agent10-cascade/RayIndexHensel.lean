@@ -757,6 +757,96 @@ theorem nestedOddIndexResidue_good (s j t k:Nat)
       rw [hshift]
       exact hgood
 
+/-- Exact index-coordinate characterization of every nested odd-parent
+    valuation threshold.  For fixed even depth j and exponent t, the
+    admissible fatal indices form one residue class modulo 3^k. -/
+theorem nestedOddIndexResidue_iff (s j t k h:Nat)
+    (hs:s=4∨s=5) (hj:j%2=0) :
+    (3:Int)^(k+1)∣nestedOddNumerator (s+6*h) j t ↔
+      h%3^k=nestedOddIndexResidue s j t k := by
+  induction k generalizing h with
+  | zero =>
+      have hmod:nestedOddNumerator (s+6*h) j t%3=0 :=
+        nestedOddNumerator_sector_mod_three s h j t hs hj
+      have hdiv:(3:Int)∣nestedOddNumerator (s+6*h) j t:=
+        Int.dvd_iff_emod_eq_zero.mpr hmod
+      have hres:h%3^0=nestedOddIndexResidue s j t 0:=by
+        simp [nestedOddIndexResidue]
+      constructor
+      · intro _
+        exact hres
+      · intro _
+        simpa [nestedOddIndexResidue] using hdiv
+  | succ k ih =>
+      let P:=3^k
+      let pn:=3^(k+1)
+      let b:=nestedOddIndexResidue s j t k
+      let a:Int:=(2:Int)^(t+3)*((2:Int)^(j+1)-1)
+      let q:Int:=nestedOddNumerator (s+6*b) j t/(3:Int)^(k+1)
+      let d:=henselDigit q a
+      have hstep:pn=3*P:=by
+        dsimp [pn,P]
+        rw [Nat.pow_succ]
+        exact Nat.mul_comm _ _
+      have hdiv:(3:Int)^(k+1)∣(3:Int)^(k+2):=by
+        refine ⟨3,?_⟩
+        rw [show k+2=(k+1)+1 by omega,Int.pow_succ]
+      constructor
+      · intro hx
+        have hz:(3:Int)^(k+2)∣
+            nestedOddNumerator (s+6*(h%pn)) j t:=
+          (nestedOddNumerator_period_dvd_iff s j t (k+1) h hj).mp hx
+        have hlo:(3:Int)^(k+1)∣
+            nestedOddNumerator (s+6*(h%pn)) j t:=by
+          rcases hz with ⟨w,hw⟩
+          rcases hdiv with ⟨v,hv⟩
+          refine ⟨v*w,?_⟩
+          rw [hw,hv]
+          ac_rfl
+        have haidx:(h%pn)%P=b:=(ih (h%pn)).mp hlo
+        have hp:0<P:=Nat.pow_pos (by decide)
+        have hjlt:h%pn<3*P:=by
+          have hh:=Nat.mod_lt h (Nat.pow_pos (by decide))
+          simpa only [pn,hstep] using hh
+        have ht:(h%pn)/P<3:=
+          (Nat.div_lt_iff_lt_mul hp).mpr hjlt
+        have hsplit:h%pn=(h%pn)%P+((h%pn)/P)*P:=
+          Nat.mod_add_div' (h%pn) P
+        have hshift:s+6*(h%pn)=
+            (s+6*b)+((h%pn)/P)*depthPeriod (k+1):=by
+          rw [hsplit,haidx]
+          simp [depthPeriod,Nat.pow_succ]
+          omega
+        have hbase:(3:Int)^(k+1)∣nestedOddNumerator (s+6*b) j t:=
+          (nestedOddIndexResidue_good s j t k hs hj)
+        have hshiftdiv:(3:Int)^(k+2)∣
+            nestedOddNumerator
+              ((s+6*b)+((h%pn)/P)*depthPeriod (k+1)) j t:=by
+          rw [←hshift]
+          exact hz
+        have hcrit:(3:Int)∣q-a*((h%pn)/P):=
+          (nestedOddNumerator_lift_criterion (s+6*b) j t k
+            ((h%pn)/P) hj ht hbase).mp hshiftdiv
+        have haunit:a%3≠0:=by
+          simpa [a] using nestedOddCoeff_unit j t hj
+        have hdigit:((h%pn)/P)=d:=
+          henselDigit_div q a haunit ((h%pn)/P) ht
+            (by simpa [q,a] using hcrit)
+        have htarget:h%pn=b+d*P:=by
+          rw [hsplit,haidx,hdigit]
+        have hnext:nestedOddIndexResidue s j t (k+1)=b+d*P:=rfl
+        have hcanon:h%pn=nestedOddIndexResidue s j t (k+1):=by
+          rw [hnext]
+          exact htarget
+        change h%3^(k+1)=nestedOddIndexResidue s j t (k+1)
+        simpa [pn] using hcanon
+      · intro hx
+        have hcanon:h%pn=nestedOddIndexResidue s j t (k+1):=by
+          simpa [pn] using hx
+        apply (nestedOddNumerator_period_dvd_iff s j t (k+1) h hj).mpr
+        rw [hcanon]
+        exact nestedOddIndexResidue_good s j t (k+1) hs hj
+
 /-- At each precision the even depth classes in one full depth period
     are in bijection with the fatal-index classes in a surviving sector.
     The inverse maps are the two Hensel selectors above. -/
@@ -800,6 +890,8 @@ theorem indexResidue_bijective (s k:Nat) (hs:s=4∨s=5) :
 #print axioms nestedOddNumerator_lift_criterion
 #print axioms nestedOddNumerator_unique_lift
 #print axioms nestedOddNumerator_sector_mod_three
+#print axioms nestedOddIndexResidue_good
+#print axioms nestedOddIndexResidue_iff
 #print axioms tThreeHighGate_digit_eq_quotient_mod_three
 #print axioms tThreeSecondParent_index_relation
 end CascadeRayIndexHensel
