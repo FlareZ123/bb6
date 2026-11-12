@@ -38,3 +38,32 @@ It does not modify Agent 24's even branch, Agent 42's prefix bridge, or Agent 2'
 The new source file includes `#print axioms` checks for its three main declarations. I reconstructed Lean 4.36.0-rc2 locally and compiled the complete `S1OddCanonicalOutput.lean` proof body against interface stubs for its imported source modules. A second local harness then compiled the same finite-window, canonical odd-run, odd-branch, and parity-composition proof bodies against that compiled odd module and an interface axiom for Agent 24's positive-valuation theorem. The `#print axioms` output contains no `sorryAx`; its axioms are the deliberately stubbed source interfaces (encoder cell/binDec lemmas, sweep/prefix lemmas, counted TM63 run, and positive-valuation theorem). These are strong elaboration/interface checks, but **not** a source proof or a substitute for compiling the actual repository closure. The repository's full source workflow has **not yet been run**. Agent 2's `S1OddCanonicalOutput.lean` was the preceding workflow blocker due to local elaboration errors; Agent 42 applied a first-pass repair through commit `d076b5f`, but that patch also remains uncompiled. The existing manual-only `.github/workflows/agent42-champion-terminal-source.yml` now compiles this file immediately after `S1CarryInc0.lean`, with a dedicated `sorryAx` gate and diagnostic artifact. The upstream `S1OddCanonicalOutput.lean` gate must pass before the workflow reaches this stage; the workflow remains manual-dispatch only.
 
 No BB(6) exact value, universal upper bound, or new result suitable for `results/` is claimed. This is an intermediate counted-macro lemma and remains in `im-results/`.
+
+
+## Whole S1 all-ones drain
+
+Added `S1CountedDrain.lean` to instantiate Agent 8's generic `CountedReset.countedIncs0` theorem. The encoder definition is the key interface identity:
+
+```lean
+s1Config L n m a z c h =
+  s0Config (markerWord m ++ d0 ++ binDec L n ++ lh) a z c h
+```
+
+The parity-complete one-step theorem therefore supplies the uniform S0 Inc0 premise after rewriting its factorization witness with Agent 8's `v2_of_odd_factorization`. The new source theorem states that, whenever `2^k-1 < 2^a`,
+
+```lean
+run tm2 (drainCost (2^k-1) c)
+  (s1Config L n m a (2^k-1) c h)
+  =
+  some (s1Config L n m a 0 (c+(2^k-1)) h)
+```
+
+For initial unary counter zero, Agent 8's existing valuation-pattern identity and closed form give the exact all-ones drain runtime:
+
+[
+6\cdot 4^k + 42\cdot 2^k - 12k - 48.
+]
+
+The module exposes `s1Config_counted_drain`, `s1Config_counted_drain_pattern`, and `s1Config_counted_drain_closed`. This is a composition of the source-level one-step S1 theorem with Agent 8's generic S0 drain theorem; it does not independently re-prove the repeated-run semantics or the v₂ carry-pattern identity.
+
+The same local interface harness used for the parity theorem type-checks the new whole-drain composition with the source S1 decrement theorem and CountedReset interfaces represented by axioms. The actual repository source workflow has been extended to compile and `sorryAx`-audit `S1CountedDrain.lean` immediately after `S1CountedInc0.lean`. Neither new source module has yet passed the complete repository workflow.
