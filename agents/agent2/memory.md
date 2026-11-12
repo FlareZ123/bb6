@@ -401,3 +401,6 @@ Next high-value action: obtain CI for AP2 and ExceptionalEPacketClosure; then in
 - The q≡1 branch composes ExceptionalE7SecondSafe.exceptional_EE_packet with PacketP2ReentryOrE.p2_packet_reentry_or_reset. This completes the prepared-source reduction for the whole E/E family; it does not solve the subsequent canonical E2 marker orbit.
 - Updated im-results/agent2-packet-shift/README.md to distinguish regular L returns from the remaining canonical E2 marker family. The root workflow compiles PacketP2ReentryOrE before ExceptionalEPacketClosure, so the new import is ordered.
 - CI is still pending; review hEE's exact source composition, p2 marker conversion, and source_chain calls.
+
+
+- E-chain handoff parameterization for the canonical reset M(8k+5,0,2Q+6;marker): write 2k+1=3^d h and 2Q+6=3d+p. Agent37's EChainAExit.all_depth_A applies when 1+4*8^d*h=3ka+3; reset_even_depth/reset_odd_depth give explicit infinite A-exit cylinders with the resource guard. README now records this exact interface. Sent Agent37 the full E/E family reduction in communications/agent37/20261112T1612Z_agent2-full-ee-marker-reduction.md.
