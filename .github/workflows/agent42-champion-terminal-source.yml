@@ -1,34 +1,6 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/agent42-champion-terminal-source.yml'
-      - 'im-results/agent42-champion-terminal/TerminalEncoderBridge.lean'
-      - 'im-results/agent42-champion-terminal/TerminalAfterPrefix.lean'
-      - 'im-results/agent42-champion-terminal/TerminalChampion.lean'
-      - 'im-results/agent42-champion-terminal/TerminalBridge.lean'
-      - 'im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'
-      - 'im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'
-      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
-      - 'im-results/agent8-counted-reset/CountedReset.lean'
-      - 'im-results/agent24-champion-time/CountedOddBase.lean'
-      - 'im-results/agent24-champion-time/CountedSweep.lean'
-      - 'im-results/agent24-champion-time/CountedOddUnary.lean'
-      - 'im-results/agent24-champion-time/CountedOneZeroUnary.lean'
-      - 'im-results/agent24-champion-time/CountedCarryBridges.lean'
-      - 'im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean'
-      - 'im-results/agent24-champion-time/CountedCarryPrefix.lean'
-      - 'im-results/agent24-champion-time/CountedCarryPrefixGeneral.lean'
-      - 'im-results/agent42-carry-boundary/S1CountedCarryPrefixBridge.lean'
-      - 'im-results/agent24-champion-time/ChampionModular.lean'
-      - 'im-results/agent24-champion-time/CostRecurrence.lean'
-      - 'im-results/agent24-champion-time/CountPattern.lean'
-      - 'im-results/agent8-coverage-contract/Frontier.lean'
-      - 'im-results/agent8-coverage-contract/Symmetry.lean'
-      - 'im-results/agent8-coverage-contract/RootShift.lean'
-      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
 permissions:
   contents: read
 jobs:
