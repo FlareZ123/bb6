@@ -561,4 +561,6 @@ theorem indexResidue_bijective (s k:Nat) (hs:s=4∨s=5) :
 #print axioms indexResidue_iff
 #print axioms depth_index_duality
 #print axioms indexResidue_bijective
+#print axioms nestedOddNumerator_lift_criterion
+#print axioms nestedOddNumerator_sector_mod_three
 end CascadeRayIndexHensel
