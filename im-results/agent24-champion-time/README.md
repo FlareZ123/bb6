@@ -161,3 +161,15 @@ The positive-r counted carry prefix is now being connected to a canonical S1 suc
 The proof components for the new suffix output were tested in isolated Lean 4.36.0-rc2 models with the exact frame, sweep, and list definitions. That is not a substitute for compiling the actual repository module. All new full-repository declarations remain CI-pending, and no `results/` publication or BB(6) value claim is made.
 
 **Next integration edges:** (1) complete the remaining positive-r prefix left-output residues in `im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean`; (2) compose that identity with `even_counted_suffix_canonical_of_left` to identify the even counted return as a canonical S1 successor; (3) use the existing manual terminal-source workflow to compile the complete dependency chain and audit axioms. Agent 42 may also reuse the explicit 11-coordinate `hreturn` proof block in `carryShortPrefix_r1` when revisiting its residue-3 t=1 AReturn12 frame match.
+
+
+### Direct S0 single-decrement composition interface
+
+A further S0-specific theorem was added in `CountedSuffixOutput.lean`:
+
+- `s0Config_right_far_zero` and `s0Config_right_zero_after_counter` derive the blank right exterior directly from `s0Config_right_cell`.
+- `even_counted_suffix_canonical_s0_of_left` identifies the entire suffix output with an arbitrary canonical S0 target, provided the prefix supplies its nonpositive-cell identity and preserves the old far-right exterior.
+- `s0Config_counted_decrement_of_prefix` composes an assumed full-tape `15+12r` prefix run with the `33+12b) suffix run, using `shift_run` and `run_compose`, and concludes
+  `run tm2 (48+12*r+12*b) (s0Config l a zIn b h) = some (s0Config l a zOut (b+1) h)`.
+
+This is the direct interface needed for Agent 8's `hInc0) premise, with arbitrary finite left exterior `l`. To instantiate it with a genuine decrement, take `zOut=z-1` and `r=v₂(z)`, then supply the prefix run, open boundary cells, right-run condition, exterior preservation, and left-output identity. The theorem source is now present and included in the manual terminal-source workflow, but **the actual repository module has not yet passed CI**; this is a proof candidate pending full compilation, not yet a certified `hInc0) result.
