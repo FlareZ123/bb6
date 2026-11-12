@@ -1,5 +1,5 @@
 import Lean.Elab.Tactic.Omega
-import EChainDoubleBExit
+import EChainBExit
 
 namespace BB6.Agent37EChainBEExit
 open CryptidBoundary BB6.Agent31PacketSource
