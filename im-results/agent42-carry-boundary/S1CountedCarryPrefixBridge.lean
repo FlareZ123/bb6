@@ -440,3 +440,143 @@ theorem even_counted_suffix_from_open (P : Int → Bool) (c : Nat)
 #print axioms even_counted_suffix_from_open
 
 end BB6Coverage.Agent42CarryPrefixBridge
+
+
+namespace BB6Coverage.Agent42CarryPrefixBridge
+
+open BB6Coverage
+open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent48Champion
+
+private theorem s1Config_right_unary_one
+    (L n m a z b : Nat) (h : Int) (i : Nat)
+    (hi : i<3*(b+1)) :
+    (s1Config L n m a z b h).tape (h+7+(i:Int)) = true := by
+  have hcell := s1Config_right_cell L n m a z b h (6+i)
+  have hcoord : h+1+((6+i):Int)=h+7+(i:Int) := by omega
+  rw [hcoord] at hcell
+  have htail := sideBit_append_after
+    ([false,true,true,true,false,false] : List Bool) (d1pow (b+1)) (6+i)
+    (by simp)
+  have hside : sideBit (s1PhysicalRight b) (6+i) =
+      sideBit (d1pow (b+1)) i := by
+    simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing] using htail
+  have hbit : sideBit (d1pow (b+1)) i = true :=
+    sideBit_d1pow_true (b+1) i (by omega)
+  rw [hside,hbit] at hcell
+  exact hcell
+
+private theorem s1Config_right_zero_after_counter
+    (L n m a z b : Nat) (h : Int) (k : Nat) :
+    (s1Config L n m a z b h).tape (h+(10+3*b+k:Int)) = false := by
+  let i : Nat := 9+3*b+k
+  have hcell := s1Config_right_cell L n m a z b h i
+  have hcoord : h+1+(i:Int)=h+(10+3*b+k:Int) := by
+    dsimp [i]
+    omega
+  rw [hcoord] at hcell
+  have hlen : (s1PhysicalRight b).length = 9+3*b := by
+    simp [s1PhysicalRight,s0PhysicalRight,s0RightFacing,d1pow_length]
+    omega
+  have htail := sideBit_append_after (s1PhysicalRight b) ([] : List Bool) i (by
+    rw [hlen]
+    dsimp [i]
+    omega)
+  have hside : sideBit (s1PhysicalRight b) i = false := by
+    simpa [sideBit] using htail
+  rw [hside] at hcell
+  exact hcell
+
+/-- Complete counted even-counter return in the original S1 encoder.
+For z=(2q+1)2^r with r>0, the carry prefix and open-head suffix compose
+to exactly 48+12r+12b successful TM63 transitions, returning to D at
+the original head. -/
+theorem s1Config_evenCounter_countedReturn
+    (L n m a z b : Nat) (h : Int)
+    (hz : 0<z) (hzlt : z<2^a) (heven : z%2=0) :
+    ∃ q r len T',
+      z=(2*q+1)*2^r ∧ a=len+1+r ∧ q<2^len ∧ 0<r ∧
+      run tm2 (48+12*r+12*b) (s1Config L n m a z b h) =
+        some ⟨(3 : Fin 6),h,T'⟩ := by
+  obtain ⟨q,r,len,Tpre,hfactor,ha,hq,hr,hprefix,hpre1,hpre2,hpre3,
+      hpre4,hpre5,hpre6,hpreserve⟩ :=
+    s1Config_evenCounter_carryPrefix L n m a z b h hz hzlt heven
+  let P : Int → Bool := fun x => Tpre (h+x)
+  have hP1 : P 1=true := by simpa [P] using hpre1
+  have hP2 : P 2=true := by simpa [P] using hpre2
+  have hP3 : P 3=true := by simpa [P] using hpre3
+  have hP4 : P 4=true := by simpa [P] using hpre4
+  have hP5 : P 5=false := by simpa [P] using hpre5
+  have hP6 : P 6=true := by simpa [P] using hpre6
+  have hone : ∀ i : Nat, i<3*(b+1) → P (7+(i:Int))=true := by
+    intro i hi
+    have hfar : h+6 < h+7+(i:Int) := by omega
+    have hkeep := hpreserve (h+7+(i:Int)) hfar
+    have hsource := s1Config_right_unary_one L n m a z b h i hi
+    have hvalue : Tpre (h+7+(i:Int))=true := by
+      rw [hkeep]
+      exact hsource
+    simpa [P] using hvalue
+  have hzero0 : P (even_rightStop b)=false := by
+    have hfar : h+6 < h+even_rightStop b := by
+      unfold even_rightStop
+      omega
+    have hkeep := hpreserve (h+even_rightStop b) hfar
+    have hsource := s1Config_right_zero_after_counter L n m a z b h 0
+    have hvalue : Tpre (h+even_rightStop b)=false := by
+      rw [hkeep]
+      simpa [even_rightStop] using hsource
+    simpa [P] using hvalue
+  have hzero1 : P (even_rightStop b+1)=false := by
+    have hfar : h+6 < h+(even_rightStop b+1) := by
+      unfold even_rightStop
+      omega
+    have hkeep := hpreserve (h+(even_rightStop b+1)) hfar
+    have hsource := s1Config_right_zero_after_counter L n m a z b h 1
+    have hvalue : Tpre (h+(even_rightStop b+1))=false := by
+      rw [hkeep]
+      simpa [even_rightStop] using hsource
+    simpa [P] using hvalue
+  have hzero2 : P (even_rightStop b+2)=false := by
+    have hfar : h+6 < h+(even_rightStop b+2) := by
+      unfold even_rightStop
+      omega
+    have hkeep := hpreserve (h+(even_rightStop b+2)) hfar
+    have hsource := s1Config_right_zero_after_counter L n m a z b h 2
+    have hvalue : Tpre (h+(even_rightStop b+2))=false := by
+      rw [hkeep]
+      simpa [even_rightStop] using hsource
+    simpa [P] using hvalue
+  have hsuffix := even_counted_suffix_from_open P b
+    hP1 hP2 hP3 hP4 hP5 hP6 hone hzero0 hzero1 hzero2
+  have hstart : shiftConfig h ⟨(4 : Fin 6),7,P⟩ =
+      ⟨(4 : Fin 6),h+7,Tpre⟩ := by
+    change (⟨(4 : Fin 6),7+h,fun x => P (x-h)⟩ : Config) =
+      ⟨(4 : Fin 6),h+7,Tpre⟩
+    have hhead : (7:Int)+h=h+7 := by omega
+    rw [hhead]
+    congr 1
+    funext x
+    dsimp [P]
+    congr 1
+    omega
+  let Tpost : Int → Bool :=
+    fun x => (frame even_tailArea (evenOpenFinalSweepTape b P)
+      (embed even_tailFinal)).tape (x-h)
+  have hshift := shift_run h tm2 ⟨(4 : Fin 6),7,P⟩ (33+12*b)
+  rw [hsuffix] at hshift
+  simp only [Option.map] at hshift
+  rw [hstart] at hshift
+  have hshift' : run tm2 (33+12*b) ⟨(4 : Fin 6),h+7,Tpre⟩ =
+      some ⟨(3 : Fin 6),h,Tpost⟩ := by
+    simpa [shiftConfig,Tpost] using hshift
+  have hfull := run_compose tm2 (15+12*r) (33+12*b)
+    (s1Config L n m a z b h) ⟨(4 : Fin 6),h+7,Tpre⟩
+    ⟨(3 : Fin 6),h,Tpost⟩ hprefix hshift'
+  have hcost : (15+12*r)+(33+12*b)=48+12*r+12*b := by omega
+  refine ⟨q,r,len,Tpost,hfactor,ha,hq,hr,?_⟩
+  simpa [hcost] using hfull
+
+#print axioms s1Config_evenCounter_countedReturn
+
+end BB6Coverage.Agent42CarryPrefixBridge
