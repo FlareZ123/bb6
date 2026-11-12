@@ -55,3 +55,5 @@ import UniformTM63
 #check BB6Coverage.Agent8S1Encoder.s1Config_left_carryCells
 #check BB6Coverage.Agent8S1Encoder.s1PhysicalRight_source
 #check BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry
+
+-- Compile gate after repairing the upstream S1 encoder declarations.
