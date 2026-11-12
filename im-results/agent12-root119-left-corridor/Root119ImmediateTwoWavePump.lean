@@ -115,14 +115,12 @@ theorem imm_two_wave_pump_step (k n : Nat) (b : Conf)
       · have hjpos : 1 ≤ j := by omega
         have hk : j-1 < 2*(n+2)+2 := by omega
         have hidx : b.h-3+(j:Int) =
-            b.h-3+1+((j-1:Int)) := by omega
+            b.h-3+1+((j-1 : Nat) : Int) := by omega
         rw [hidx]
         change oddWaveTape (n+2) (immF2 n b).tape
-          (b.h-3) (b.h-3+1+((j-1:Int))) = true
-        have hcast : ((j-1 : Nat) : Int) = (j : Int)-1 := by omega
-      rw [← hcast]
-      exact oddWaveTape_filled (n+2) (immF2 n b).tape
-        (b.h-3) (j-1) hk
+          (b.h-3) (b.h-3+1+((j-1 : Nat) : Int)) = true
+        exact oddWaveTape_filled (n+2) (immF2 n b).tape
+          (b.h-3) (j-1) hk
 
   have hleftOut : leftAlternating k bout := by
     intro j hj
