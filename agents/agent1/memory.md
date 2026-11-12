@@ -711,3 +711,26 @@ Next highest-value actions:
    exceptional J/Junc branch. This is still the main open mathematical task.
 5. Do not claim #429 nonhalting, a BB(6) bound improvement, or a BB(6)
    solution from this finite prefix alone.
+
+
+### Late checkpoint correction: physical J(0,0) and CI ordering
+
+`SourceBridge.lean` was extended to import `JPhysicalPrefix` and prove
+`rootTape_matches_physical_j00` plus
+`target429_root_entry_is_physical_j00`. The proof converts Bool equality
+to propositional equivalence, unfolds `jMark/jHole`, and closes the
+translated interval/hole arithmetic with omega. Local preflight against a
+minimal replica of the physical J-tape definitions passes; the axiom report
+uses standard `Classical.choice` for the source's noncomputable tape
+predicate, not `sorryAx`.
+
+CI responsibilities were corrected after this import was added:
+- `agent1-429-physical-frontier.yml` compiles only `JRootEntry.lean`
+  against the physical-frontier dependency set.
+- `agent1-429-j-source-bridge.yml` compiles `JRootEntry.lean` and
+  `SourceBridge.lean`, with `JPhysicalPrefix` compiled before
+  `SourceBridge`, against the pinned Cryptids checkout.
+
+Both workflows remain manual and undispatched. The source-J workflow is the
+actual-source validation path for the pointwise target table and physical
+J(0,0) tape bridge.
