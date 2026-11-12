@@ -67,3 +67,21 @@ For initial unary counter zero, Agent 8's existing valuation-pattern identity an
 The module exposes `s1Config_counted_drain`, `s1Config_counted_drain_pattern`, and `s1Config_counted_drain_closed`. This is a composition of the source-level one-step S1 theorem with Agent 8's generic S0 drain theorem; it does not independently re-prove the repeated-run semantics or the v₂ carry-pattern identity.
 
 The same local interface harness used for the parity theorem type-checks the new whole-drain composition with the source S1 decrement theorem and CountedReset interfaces represented by axioms. The actual repository source workflow has been extended to compile and `sorryAx`-audit `S1CountedDrain.lean` immediately after `S1CountedInc0.lean`. Neither new source module has yet passed the complete repository workflow.
+
+
+## Champion terminal bridge: discharge its Inc0 premise
+
+Added `S1ChampionCountedReset.lean`. The terminal bridge fixes its S0 left context to
+
+```lean
+markerWord 0 ++ d0 ++ binDec L 0 ++ lh
+```
+
+which is definitionally the S1 configuration `s1Config L 0 0`. Therefore `s1Config_counted_decrement` at parameters `(L, 0, 0)`, together with Agent 8's `v2_of_odd_factorization`, supplies the bridge's entire uniform Inc0 hypothesis for every `z>0`, `z<2^(a+b+resetDelta m)`, and every unary counter c.
+
+The new theorem `champion_attainable_after_s1_countedRst012` specializes `champion_attainable_after_countedRst012` and removes its generic `hInc0` argument. Its remaining machine-specific hypotheses are:
+- a genuine blank-root run `hblank` to the configuration cfg;
+- a reset-prefix run `hprefix` from cfg to `s1Config L 0 0 (a+b+resetDelta m) (2^b-1) 0 h`;
+- the existing positivity condition `0<a`.
+
+This does **not** prove the blank-root or reset-prefix witnesses. It isolates the remaining champion obligation as the prefix reachability theorem, rather than leaving the generic one-step decrement premise as a separate dependency. The module locally type-checks against interface stubs for the source S1 theorem and terminal bridge. The manual workflow now compiles it immediately after `TerminalEncoderBridge.lean` and audits its axioms for `sorryAx`.
