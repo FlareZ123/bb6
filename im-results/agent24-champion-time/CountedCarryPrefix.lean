@@ -126,6 +126,136 @@ theorem sweptRight_keeps_two_zeroes (n : Nat) (T : Int → Bool) (h : Int)
   rw [sweptRight_future n T h _ hx0, sweptRight_future n T h _ hx1]
   exact ⟨h0,h1⟩
 
+
+/-- The exact source-facing tape window before the counted carry prefix. -/
+def carryInputArea (r : Nat) (x : Int) : Bool :=
+  decide (-(3*(r:Int))-2 ≤ x ∧ x ≤ 6)
+
+def carryInputBit (r : Nat) (x : Int) : Bool :=
+  decide (x = -(3*(r:Int))-2 ∨
+    (-(3*(r:Int))+1 ≤ x ∧ x ≤ 0) ∨ x=2 ∨ x=3 ∨ x=4)
+
+/-- A bit in the unary run or in the fixed 111 guard is one. -/
+theorem carryInput_marked (r : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea r x = true → T x = carryInputBit r x)
+    (x : Int)
+    (hmarked : (-(3*(r:Int))+1 ≤ x ∧ x ≤ 0) ∨ x=2 ∨ x=3 ∨ x=4) :
+    T x = true := by
+  have harea : carryInputArea r x = true := by
+    simp [carryInputArea]
+    rcases hmarked with h | h | h | h <;> omega
+  have hbit : carryInputBit r x = true := by
+    simp [carryInputBit]
+    rcases hmarked with h | h | h | h <;> omega
+  rw [hmatch x harea, hbit]
+
+/-- Any unmarked cell in the source input window is blank. -/
+theorem carryInput_unmarked (r : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea r x = true → T x = carryInputBit r x)
+    (x : Int) (hlo : -(3*(r:Int))-2 ≤ x) (hhi : x ≤ 6)
+    (hnot : ¬ (x = -(3*(r:Int))-2 ∨
+      (-(3*(r:Int))+1 ≤ x ∧ x ≤ 0) ∨ x=2 ∨ x=3 ∨ x=4)) :
+    T x = false := by
+  have harea : carryInputArea r x = true := by
+    simp [carryInputArea]
+    omega
+  have hbit : carryInputBit r x = false := by
+    simp [carryInputBit, hnot]
+  rw [hmatch x harea, hbit]
+
+/-- The left source word supplies exactly the cells required by the
+first 4s left-sweep transitions. -/
+theorem carryInput_leftOnes (r s : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea r x = true → T x = carryInputBit r x)
+    (hbound : 4*s ≤ 3*r) : leftOnes T 0 (4*s) := by
+  intro i hi
+  have hmarked : (-(3*(r:Int))+1 ≤ -(i:Int) ∧ -(i:Int) ≤ 0) := by
+    constructor <;> omega
+  simpa using carryInput_marked r T hmatch (-(i:Int)) (Or.inl hmarked)
+
+/-- Closed form for a nonempty left sweep over 4s cells. -/
+theorem carryLeftSweep_closed (s : Nat) (T : Int → Bool)
+    (hs : 0 < s) (hon : leftOnes T 0 (4*s)) (hzero : T 1 = false) :
+    sweptLeft (4*s) T 0 =
+      (fun x => if x = 1-4*(s:Int) then false else
+        if x=1 then true else T x) := by
+  have hn : (4*s-1)+1 = 4*s := by omega
+  have hon' : leftOnes T 0 ((4*s-1)+1) := by simpa [hn] using hon
+  have h := swept_closed (4*s-1) T 0 hon' hzero
+  have hcoord : (0:Int)-((4*s-1:Int)) = 1-4*(s:Int) := by omega
+  simpa [hn,hcoord] using h
+
+/-- Every cell from the post-sweep head+2 through coordinate 4 is one. -/
+theorem carryLeftSweep_marked (r s : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea r x = true → T x = carryInputBit r x)
+    (hs : 0 < s) (hbound : 4*s ≤ 3*r)
+    (x : Int) (hlo : 2-4*(s:Int) ≤ x) (hhi : x ≤ 4) :
+    sweptLeft (4*s) T 0 x = true := by
+  have hon := carryInput_leftOnes r s T hmatch hbound
+  have hzero : T 1 = false := by
+    apply carryInput_unmarked r T hmatch 1
+    · simp
+    · norm_num
+    · simp [carryInputBit]
+  have hclosed := carryLeftSweep_closed s T hs hon hzero
+  rw [hclosed]
+  by_cases hx1 : x=1
+  · simp [hx1]
+  · have hxb : x ≠ 1-4*(s:Int) := by omega
+    simp [hx1,hxb]
+    by_cases hx0 : x ≤ 0
+    · apply carryInput_marked r T hmatch
+      exact Or.inl ⟨by omega,hx0⟩
+    · have hcases : x=2 ∨ x=3 ∨ x=4 := by omega
+      rcases hcases with h | h | h
+      · exact carryInput_marked r T hmatch x (Or.inr (Or.inl h))
+      · exact carryInput_marked r T hmatch x (Or.inr (Or.inr (Or.inl h)))
+      · exact carryInput_marked r T hmatch x (Or.inr (Or.inr (Or.inr h)))
+
+/-- A nonempty left sweep leaves every cell strictly right of 6 unchanged. -/
+theorem carryLeftSweep_rightOutside (r s : Nat) (T : Int → Bool)
+    (hmatch : ∀ x, carryInputArea r x = true → T x = carryInputBit r x)
+    (hs : 0 < s) (hbound : 4*s ≤ 3*r)
+    (x : Int) (hx : 6 < x) :
+    sweptLeft (4*s) T 0 x = T x := by
+  have hon := carryInput_leftOnes r s T hmatch hbound
+  have hzero : T 1 = false := by
+    apply carryInput_unmarked r T hmatch 1
+    · simp
+    · norm_num
+    · simp [carryInputBit]
+  rw [carryLeftSweep_closed s T hs hon hzero]
+  have h1 : x ≠ 1 := by omega
+  have h2 : x ≠ 1-4*(s:Int) := by omega
+  simp [h1,h2]
+
+/-- A frame whose final head is marked and whose frame ends at that head
+provides a counted one-run by adjoining the unchanged exterior segment. -/
+theorem frame_head_segment (inside : Int → Bool) (T : Int → Bool)
+    (c : Config) (h u : Int) (n : Nat)
+    (hin : inside u = true) (hmark : c.tape u = true)
+    (hout : ∀ i : Nat, 0<i → inside (u+(i:Int)) = false)
+    (hbg : ∀ i : Nat, i<n → T (h+u+(i:Int)) = true) :
+    carrySegmentOnes
+      (frame (fun x => inside (x-h)) T (shiftConfig h c)).tape
+      (h+u) n := by
+  intro i hi
+  by_cases hiz : i=0
+  · subst i
+    simp [frame,shiftConfig,hin,hmark]
+  · have hnot := hout i (by omega)
+    have hval := hbg i hi
+    simp [frame,shiftConfig,hnot,hval]
+
+/-- Composition of exact source runs. -/
+theorem run_compose (m : Machine) (n1 n2 : Nat)
+    (c0 c1 c2 : Config)
+    (h1 : run m n1 c0 = some c1)
+    (h2 : run m n2 c1 = some c2) :
+    run m (n1+n2) c0 = some c2 := by
+  rw [run_append,h1]
+  simpa using h2
+
 #print axioms carryDTail15Open_trace
 #print axioms carryDTail15_openEnd
 #print axioms carryA3_trace
