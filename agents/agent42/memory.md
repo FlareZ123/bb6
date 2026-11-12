@@ -275,3 +275,17 @@ Messages sent:
 Current division of labour: Agent 8 owns the S1 encoder and counted Incs0 drain/reset-prefix interface; Agent 24 owns the arbitrary-valuation/carry-run and uniform Inc0 source proof; Agent 48 owns the general S1/BinDec encoder and has simulator-derived phase-bridge structure; Agent 46 owns the separate Rst1' reset-core/blank-root path. Do not duplicate these broad investigations without a specific unclaimed lemma from their owners.
 
 Highest-value next work is to obtain an exact sublemma assignment from Agent 24/8/48 and close one of the two remaining premises of `champion_attainable_after_countedRst012`: the universal physical `hInc0` count or the genuine blank-root prefix into the counted reset stage. Preserve the explicit assumptions; do not claim the conditional score as attained. BB(6) and the universal upper bound remain unresolved.
+
+
+### Additional counted-carry boundary traces (CI 43167823012)
+
+- Added `im-results/agent42-carry-boundary/CountedCarryBoundaryTraces.lean` and README. It imports the actual `CountedCarryBridges` source and proves three finite traces from `fRun tm2`, each lifted to arbitrary exterior tape / arbitrary head displacement by `carryBridgeLift`:
+  - `carryAD12_trace` / `carryAD12`: A/head 0, ones 1..12 → D/head 12, physical marks {0,3,6,9,12}, 12 moves.
+  - `carryDTail15_trace` / `carryDTail15`: D/head 0, ones 0..6 → E/head 9, physical marks {0,3,4,5,6,8}, 15 moves.
+  - `carryAReturn12_trace` / `carryAReturn12`: A/head 0, marks {-3,-2,-1,1..6} → A/head 6, physical marks {-3,-2,-1,0,3,4,5,7}, 12 moves.
+- The `FConfig.marked` list order is not sorted; the final lists were corrected to match exact `fRun` output, not merely set equality. CI run 43167185970 caught the initial list-order mismatch and frame-map closure omissions. The corrected proof in CI 43167823012 succeeds.
+- All six new theorem axiom audits are `[propext, Classical.choice, Quot.sound]`; no `sorryAx`. The workflow compiles CountedOddBase, CountedSweep, CountedOddUnary, CountedOneZeroUnary, CountedCarryBridges, then this module, and now uses `set -euo pipefail`.
+- The proposed rho=3 composition is now explicit but not yet proved: t=1 uses residue-3 bridge + A→A/12 (24 moves); t≥2 uses residue-3 bridge + A→D/12 + `counted_right_sweep (4*(t-2))` + D-tail15 (12*t+15 moves). Still required: derive each local-match premise, the contiguous right-run predicate, and the three-cell zero boundary from the actual encoded tape. These are not established by the fixed traces alone.
+- Updated `research/BOARD.md`, created `im-results/agent42-carry-boundary/README.md`, and sent the exact interfaces and proposed composition to Agent 24 and Agent 48 in `communications/agent24/20261112T062611Z_agent42-fixed-carry-traces-ci.md` and `communications/agent48/20261112T062611Z_agent42-fixed-carry-traces-ci.md`.
+
+Next action: attempt the rho=3 composition only after deriving its local tape predicates from the current `carryBridge3` and right-counter encoding. If Agent 24/48 replies with an already-owned equivalent, integrate rather than duplicate. Do not claim the conditional counted-reset/terminal score or the arbitrary-r carry prefix as an unconditional result.
