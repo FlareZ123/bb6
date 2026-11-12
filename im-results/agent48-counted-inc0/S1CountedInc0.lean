@@ -167,8 +167,7 @@ theorem s1Config_oddCounter_countedReturn_canonical
   rw [hrun] at hshift
   simp only [Option.map] at hshift
   rw [hstart] at hshift
-  let Tpost : Int → Bool :=
-    (oddCounterOutput b P).tape ∘ fun x => x-h
+  let Tpost : Int → Bool := fun x => (oddCounterOutput b P).tape (x-h)
   have hrunAbs : run tm2 (48+12*b)
       (s1Config L n m (len+1) (2*q+1) b h) =
       some ⟨(3 : Fin 6),h,Tpost⟩ := by
