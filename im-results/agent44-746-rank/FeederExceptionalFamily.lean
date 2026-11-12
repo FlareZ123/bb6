@@ -244,21 +244,31 @@ theorem fatal_feeder_1085_1372_root_exclusion (n : Nat)
   exact ⟨hxparent,by simpa only [x,u] using hroot⟩
 
 
-/-- The generic first-fork theorem at the 81-divisibility gate gives the
-    complete immediate parent set of fatal(n) in these two residue classes:
-    exactly the distinguished odd feeder and the unique even predecessor. -/
+/-- The fatal target has the exact two-parent classification whenever its
+    3-adic numerator is not divisible by 81. This is a specialization of the
+    generic first-fork theorem at the 81-divisibility gate. -/
+theorem fatal_parent_set_of_not81 (n q : Nat)
+    (hn : 76≤n)
+    (hres : n%18=4 ∨ n%18=5)
+    (hnot81 : (2*fatal n+5)%81≠0) :
+    ResetParent q (fatal n) ↔
+      q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
+  have hclose : fatal n+(n+4)=4*2^n := by
+    simpa using fatal_close n hn
+  have hsize : 8*(n+4)≤5*2^n := by
+    simpa using fatal_size n hn
+  have hdiv9 : (2*fatal n+5)%9=0 := fatal_divnine n hn hres
+  exact CascadeFirstFork.near_top_exact_two_at81 n (fatal n) (n+4) q
+    (by omega) (by omega) hclose hsize hdiv9 hnot81
+
+/-- The mod-729 certificate for the 1085/1372 classes gives the mod-81
+    nondivisibility needed by the generic exact parent-set theorem. -/
 theorem fatal_parent_set_1085_1372 (n q : Nat)
     (hn : n%1458=1085 ∨ n%1458=1372) :
     ResetParent q (fatal n) ↔
       q=oddPre n (fatal n) ∨ q=evenPre n (n+4) := by
-  have hnlow : 4≤n := by omega
+  have hnlow : 76≤n := by omega
   have hres : n%18=4 ∨ n%18=5 := by omega
-  have hclose : fatal n+(n+4)=4*2^n := by
-    simpa using fatal_close n (by omega)
-  have hsize : 8*(n+4)≤5*2^n := by
-    simpa using fatal_size n (by omega)
-  have hdiv9 : (2*fatal n+5)%9=0 := by
-    simpa using fatal_divnine n (by omega) hres
   let p := 2^(n-2)
   have hp : p=2^(n-2) := rfl
   have hpow : 2^n=4*p := by
@@ -278,8 +288,7 @@ theorem fatal_parent_set_1085_1372 (n q : Nat)
       rw [hnum] <;> omega
   have hnot81 : (2*fatal n+5)%81≠0 := by
     rcases hnum729 with h | h <;> omega
-  exact CascadeFirstFork.near_top_exact_two_at81 n (fatal n) (n+4) q
-    (by omega) (by omega) hclose hsize hdiv9 hnot81
+  exact fatal_parent_set_of_not81 n q hnlow hres hnot81
 
 /-- If a fatal height in the 1085/1372 classes is root-reachable, its
     even predecessor is root-reachable: the only other immediate parent
