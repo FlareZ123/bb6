@@ -18,7 +18,7 @@ theorem algebraic_first_five
   (hEqInt :
     (K:Int)*(p:Int) =
       (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
-        (A4:Int)*(R5:Int))+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int)) :
+        (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int)) :
   (98:Int)*(p:Int)-(d:Int)-(C1:Int)*(P:Int)+(L1:Int)*(T1:Int)-(O1:Int) =
     (A1:Int)*((C2:Int)*(P:Int))-(A1:Int)*(R2:Int)+
     (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))-(A1:Int)*((A2:Int)*(R3:Int))+
@@ -49,7 +49,7 @@ theorem algebraic_first_five
   have hEqExpanded :
       (K:Int)*(p:Int) =
         (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))+
-          (A4:Int)*(R5:Int))+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int) := by
+          (A4:Int)*(R5:Int)+(R4:Int))+(R3:Int))+(R2:Int))+(R1:Int)) := by
     rw [hEqInt]
     simp only [Int.mul_add,Int.add_assoc]
   have htarget :
@@ -60,7 +60,7 @@ theorem algebraic_first_five
           (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
         (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((C5:Int)*(P:Int)))))-
           (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(R5:Int))))-
-          (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int)))) := by
+          (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*((A5:Int)*(E:Int))))) := by
     simp only [Int.mul_add,Int.mul_sub]
     omega
   rw [htarget]
