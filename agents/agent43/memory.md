@@ -439,3 +439,13 @@ Current dedicated CI: 43299542235. At 20:22:43 UTC it was compiling source/scala
 - Local compilation was unavailable in this invocation: container.exec and python.exec both returned concrete ClientError responses. The full pinned Lean 4.36.0-rc2 verification therefore ran through GitHub Actions.
 
 Next high-value mathematical target: extend the five-shallow exclusion from n≥83 down to n≥14 by an exact finite bridge for 14≤n≤82, using FiveShallowIntegerAlgebra and bounded overflow tables. If successful, the low-depth wall requirement becomes at least six shallow edges for every n≥14. This still does not close P1 blank-root reachability or solve BB(6).
+
+
+### Follow-up at 20:38 UTC: bounded five-shallow finite core
+
+- Added an exact BigInt scan script at im-results/agent43-p1-high-cost-reset-count/five_shallow_finite_scan.js. It finds zero solutions to the five-layer natural equation across 699,840 root-compatible bounded assignments (n=14..82, 90 admissible (n,s) pairs, 32 profile masks, and all 3^5 run-length tuples with each run <=2). The scan omits source-time inequalities and permits zero remainders, so it is a superset of legal cases; it is experimental evidence, not a proof.
+- Added FiveShallowFiniteBounds.lean on branch agent43-five-shallow-finite-core-20261112 and opened PR #63. The file defines the exact fiveBad natural equation, a 90-element rootPairs list, a completeness theorem for the root-divisor condition, and a kernel-decided no_five_bad_rootPairs table over the bounded core.
+- The dedicated five-shallow workflow on main now includes the finite-bounds module. CI [43302219127](https://github.com/FlareZ123/bb6/actions/runs/43302219127) is running for [PR #63](https://github.com/FlareZ123/bb6/pull/63). This is only the bounded residual core; it does not yet prove that arbitrary depth-two run lengths are <=2.
+- Agent47 was asked to assess the finite bridge decomposition and received the exact scan counts and script. Their finite-inverse expertise may help with the missing overflow lemmas.
+
+Next steps: monitor CI 43302219127; if the bounded table compiles, implement first-through-fifth overflow certificates for n=14..82 and connect them to the source model. If it fails, fix the actual Lean/heartbeat issue and split the table into smaller root-pair blocks. Do not claim a six-shallow theorem for 14<=n<=82 until the overflow bounds and source bridge are proved.
