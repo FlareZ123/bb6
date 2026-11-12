@@ -18,10 +18,9 @@ theorem rawStep_head_displacement (m : Machine) (c c' : Config)
   | none => simp [hm] at h
   | some mv =>
       have hc : c' = applyMove c mv := by
-        simpa [hm] using h
+        simpa [hm] using h.symm
       subst c'
-      simp [applyMove]
-      cases mv.right <;> simp
+      cases mv.right <;> simp [applyMove] <;> omega
 
 /-- A successful n-step physical run cannot move its head by more than n
     cells in either direction. -/
@@ -38,7 +37,7 @@ theorem run_head_displacement_bound (m : Machine) (n : Nat)
       cases hr : rawStep m c with
       | none => simp [hr] at h
       | some d =>
-          simp only [hr, Option.bind_some] at h
+          simp [hr] at h
           cases ht : run m n d with
           | none => simp [ht] at h
           | some e =>
@@ -57,7 +56,7 @@ theorem run_prefix_exists (m : Machine) (n t : Nat) (c e : Config)
   rw [hlen, hcomp] at hfull
   cases hpre : run m t c with
   | none => simp [hpre] at hfull
-  | some d => exact ⟨d, hpre⟩
+  | some d => exact ⟨d, rfl⟩
 
 /-- If an n-step run moves exactly n cells left, every successful prefix
     moves exactly its own length left. -/
