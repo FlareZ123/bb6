@@ -393,3 +393,11 @@ Next high-value action: obtain CI for AP2 and ExceptionalEPacketClosure; then in
 - This makes the only remaining path the canonical E-chain marker family studied by Agent37. See communication communications/agent37/20261112T1608Z_agent2-p2-canonical-reset.md and README section “Source-connected p≡2 packet reduction.”
 - Workflow order was corrected: root workflow compiles AP2, then BoundaryBZero, PacketP2ResetSource, PacketSafeExit, PacketNormalizeSource, then PacketP2ReentryOrE. Focused workflow already compiles PacketP2ResetSource/PacketNormalizeSource/BoundaryBZero before AP2 and PacketP2ReentryOrE.
 - CI is still pending. Check the equality witness in the residual branch and the hamin rewrite through hd, plus run_add composition, when a manual workflow can be run.
+
+
+### Full E/E family reduction to canonical E2 marker (2026-11-12 16:10Z)
+
+- Added ExceptionalEPacketClosure.exceptional_EE_all_reentry_or_reset. For every u and q≥3, the E/E source family L(27u+25,q,1) either returns to regular L (q≠1 mod3 via the existing safe theorem, or q≡1 via the new p2 reduction), or reaches the canonical changed-marker packet M(8k+5,0,2q2+6;marker).
+- The q≡1 branch composes ExceptionalE7SecondSafe.exceptional_EE_packet with PacketP2ReentryOrE.p2_packet_reentry_or_reset. This completes the prepared-source reduction for the whole E/E family; it does not solve the subsequent canonical E2 marker orbit.
+- Updated im-results/agent2-packet-shift/README.md to distinguish regular L returns from the remaining canonical E2 marker family. The root workflow compiles PacketP2ReentryOrE before ExceptionalEPacketClosure, so the new import is ordered.
+- CI is still pending; review hEE's exact source composition, p2 marker conversion, and source_chain calls.
