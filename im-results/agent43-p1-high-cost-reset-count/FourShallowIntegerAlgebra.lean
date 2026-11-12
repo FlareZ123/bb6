@@ -80,20 +80,10 @@ theorem algebraic_first_four
  let X3 : Int := (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))
  let X4 : Int := (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))
  have hEqLin : (K:Int)*(p:Int)=V+U+W+Z+(R1:Int) := by
-   change (K:Int)*(p:Int)=
-     (A1:Int)*((A2:Int)*((A3:Int)*((A4:Int)*(E:Int))))+
-     (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))+
-     (A1:Int)*((A2:Int)*(R3:Int))+
-     (A1:Int)*(R2:Int)+(R1:Int)
-   exact hEqExpanded
+   simpa only [V,U,W,Z,Int.mul_add,Int.add_assoc] using hEqExpanded
  have hKLin : (K:Int)*(p:Int)+98*(p:Int)=
      (C1:Int)*(P:Int)+X2+X3+X4 := by
-   change (K:Int)*(p:Int)+98*(p:Int)=
-     (C1:Int)*(P:Int)+
-     (A1:Int)*((C2:Int)*(P:Int))+
-     (A1:Int)*((A2:Int)*((C3:Int)*(P:Int)))+
-     (A1:Int)*((A2:Int)*((A3:Int)*((C4:Int)*(P:Int))))
-   exact hKExpanded
+   simpa only [X2,X3,X4] using hKExpanded
  have hU : (A1:Int)*((A2:Int)*((A3:Int)*(R4:Int)))=U := rfl
  have hW : (A1:Int)*((A2:Int)*(R3:Int))=W := rfl
  have hZ : (A1:Int)*(R2:Int)=Z := rfl
