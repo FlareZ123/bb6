@@ -57,3 +57,5 @@ import UniformTM63
 #check BB6Coverage.Agent8S1Encoder.s1Config_anyPositive_carry
 
 -- Compile gate after repairing the upstream S1 encoder declarations.
+
+-- Retest after completing the S1 bounded-factor proof.
