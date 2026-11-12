@@ -1,0 +1,333 @@
+import ChampionRootBridge
+import Lean.Elab.Tactic.Omega
+
+/-!
+# Source-exact S0/S1 physical encoder for TM63
+
+This mirrors the pinned BusyCoq definitions in verify/Helper.v,
+verify/BinaryCounter.v, verify/BinaryCounter_v2.v, and verify/SOBCv5.v.
+
+Important orientation convention: Coq's l <* xs is Str_app xs l,
+so xs is prepended to the head-facing left stream. Coq's <[x;y;z]
+reverses the displayed physical block. Thus d0 and d1 below are in
+head-facing order, not left-to-right physical order.
+-/
+
+namespace BB6Coverage.Agent8S1Encoder
+
+open BB6Coverage.Agent48Champion
+
+/-- Coq <[1;0;0], in head-facing list order. -/
+def d0 : List Bool := [false,false,true]
+
+/-- Coq <[1;1;1]; this block is palindromic. -/
+def d1 : List Bool := [true,true,true]
+
+/-- The head-facing marker words m0, m1 and m2. -/
+def markerWord (m : Nat) : List Bool :=
+  if m % 3 = 0 then [false,true]
+  else if m % 3 = 1 then [true,false,true]
+  else [true,true,false,true]
+
+/-- The fixed left-history word lh, in head-facing order. -/
+def lh : List Bool := [true,true,false,true,true,true]
+
+/-- Repetition of the source zero-digit block. -/
+def d1pow : Nat → List Bool
+  | 0 => []
+  | n+1 => d1 ++ d1pow n
+
+/-- A fuelled transcription of BusyCoq's positive BinaryCounter.
+The fuel is the declared number of counter digits; on the source domain
+n < 2^len, the complemented positive integer reaches its xH base
+exactly when the fuel is exhausted. -/
+def binaryCounterFuel : Nat → Nat → List Bool
+  | 0, _ => []
+  | fuel+1, p =>
+      if p ≤ 1 then []
+      else if p % 2 = 0 then d0 ++ binaryCounterFuel fuel (p / 2)
+      else d1 ++ binaryCounterFuel fuel (p / 2)
+
+/-- The finite block prefix of source BinDec d0 d1 len n tail, with
+the arbitrary source tail omitted. The complemented integer is exactly
+the one in BinaryCounter_v2.v: 2^(len+1)-1-n. -/
+def binDec (len n : Nat) : List Bool :=
+  binaryCounterFuel len (2^(len+1)-1-n)
+
+private theorem binaryCounterFuel_even (fuel n : Nat) (hn : 0 < n) :
+    binaryCounterFuel (fuel+1) (2*n) =
+      d0 ++ binaryCounterFuel fuel n := by
+  have hp : ¬ 2*n ≤ 1 := by omega
+  have hm : (2*n) % 2 = 0 := by omega
+  have hd : (2*n) / 2 = n := by omega
+  rw [binaryCounterFuel]
+  simp [hp,hm,hd]
+
+private theorem binaryCounterFuel_odd (fuel n : Nat) (hn : 0 < n) :
+    binaryCounterFuel (fuel+1) (2*n+1) =
+      d1 ++ binaryCounterFuel fuel n := by
+  have hp : ¬ (2*n+1) ≤ 1 := by omega
+  have hm : (2*n+1) % 2 ≠ 0 := by omega
+  have hd : (2*n+1) / 2 = n := by omega
+  rw [binaryCounterFuel]
+  simp [hp,hm,hd]
+
+/-- Source BinDec_mul2: an even counter value prefixes d1. -/
+theorem binDec_even (len n : Nat) (hn : n < 2^len) :
+    binDec (len+1) (2*n) = d1 ++ binDec len n := by
+  unfold binDec
+  have hpow : 2^(len+2) = 2*2^(len+1) := by
+    rw [show len+2 = (len+1)+1 by omega, Nat.pow_succ]
+    ac_rfl
+  have harg :
+      2^(len+2)-1-2*n =
+        2*(2^(len+1)-1-n)+1 := by omega
+  have hpos : 0 < 2^(len+1)-1-n := by
+    have hpow' : 2^len ≤ 2^(len+1) := by
+      rw [Nat.pow_succ]
+      omega
+    omega
+  rw [harg]
+  exact binaryCounterFuel_odd len (2^(len+1)-1-n) hpos
+
+/-- Source BinDec_mul2add1: an odd counter value prefixes d0. -/
+theorem binDec_odd (len n : Nat) (hn : n < 2^len) :
+    binDec (len+1) (2*n+1) = d0 ++ binDec len n := by
+  unfold binDec
+  have hpow : 2^(len+2) = 2*2^(len+1) := by
+    rw [show len+2 = (len+1)+1 by omega, Nat.pow_succ]
+    ac_rfl
+  have harg :
+      2^(len+2)-1-(2*n+1) =
+        2*(2^(len+1)-1-n) := by omega
+  have hpos : 0 < 2^(len+1)-1-n := by
+    have hpow' : 2^len ≤ 2^(len+1) := by
+      rw [Nat.pow_succ]
+      omega
+    omega
+  rw [harg]
+  exact binaryCounterFuel_even len (2^(len+1)-1-n) hpos
+
+/-- Repeated source BinDec_mul2: low zero bits are d1 blocks at the
+actual head-facing boundary. -/
+theorem binDec_mulpow2 (len n i : Nat) (hn : n < 2^len) :
+    binDec (len+i) (n*2^i) =
+      d1pow i ++ binDec len n := by
+  induction i with
+  | zero =>
+      simp [binDec,d1pow]
+  | succ i ih =>
+      have hpow : 2^(len+i) = 2^len * 2^i := by
+        rw [Nat.pow_add]
+      have hpos : 0 < 2^i := Nat.pow_pos (by decide)
+      have hbound : n*2^i < 2^(len+i) := by
+        rw [hpow]
+        exact Nat.mul_lt_mul_of_pos_right hn hpos
+      have hlen : len+(i+1) = (len+i)+1 := by omega
+      have hnum : n*2^(i+1) = 2*(n*2^i) := by
+        rw [Nat.pow_succ]
+        ac_rfl
+      rw [hlen,hnum,binDec_even (len+i) (n*2^i) hbound,ih]
+      simp [d1pow,List.append_assoc]
+
+/-- Exact source carry-prefix expansion. If the counter value has odd
+part 2*q+1 and 2-adic exponent r, its head-facing BinDec word is
+d1^r ++ d0 ++ BinDec(q). -/
+theorem binDec_carryPrefix (len q r : Nat) (hq : q < 2^len) :
+    binDec (len+1+r) ((2*q+1)*2^r) =
+      d1pow r ++ d0 ++ binDec len q := by
+  have hpow : 2^(len+1) = 2*2^len := by
+    rw [Nat.pow_succ]
+    ac_rfl
+  have hbound : 2*q+1 < 2^(len+1) := by omega
+  rw [binDec_mulpow2 (len+1) (2*q+1) r hbound]
+  rw [binDec_odd len q hq]
+  simp [List.append_assoc]
+
+/-- Every positive natural has an odd-part/power-of-two factorization.
+Uniqueness is not needed by the encoder theorem. -/
+theorem exists_odd_factor (z : Nat) (hz : 0 < z) :
+    ∃ q r, z = (2*q+1)*2^r := by
+  induction z using Nat.strong_induction_on with
+  | h z ih =>
+      by_cases he : z % 2 = 0
+      · have hdiv : 0 < z/2 := by omega
+        obtain ⟨q,r,hr⟩ := ih (z/2) (by omega) hdiv
+        refine ⟨q,r+1,?_⟩
+        calc
+          z = 2*(z/2) := by omega
+          _ = 2*((2*q+1)*2^r) := by rw [hr]
+          _ = (2*q+1)*2^(r+1) := by
+            rw [Nat.pow_succ]
+            ac_rfl
+      · have hodd : z % 2 = 1 := by omega
+        refine ⟨z/2,0,?_⟩
+        have hdecomp : z = 2*(z/2)+1 := by omega
+        simp [hdecomp]
+
+/-- The source zero counter is exactly a repetition of d1. -/
+theorem binDec_zero (len : Nat) : binDec len 0 = d1pow len := by
+  induction len with
+  | zero =>
+      simp [binDec,binaryCounterFuel,d1pow]
+  | succ len ih =>
+      have hbound : 0 < 2^len := Nat.pow_pos (by decide)
+      rw [binDec_even len 0 hbound,ih]
+      rfl
+
+/-- Length of the physical block word on the valid source domain. -/
+theorem d1pow_length (n : Nat) : (d1pow n).length = 3*n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp [d1pow,d1,ih,Nat.mul_succ]
+
+theorem binDec_length (len n : Nat) (hn : n < 2^len) :
+    (binDec len n).length = 3*len := by
+  induction len generalizing n with
+  | zero =>
+      have hn0 : n = 0 := by omega
+      subst n
+      simp [binDec,binaryCounterFuel]
+  | succ len ih =>
+      have hpow : 2^(len+1) = 2*2^len := by
+        rw [Nat.pow_succ]
+        ac_rfl
+      by_cases he : n % 2 = 0
+      · let k := n/2
+        have hnEq : n = 2*k := by dsimp [k]; omega
+        have hk : k < 2^len := by dsimp [k]; omega
+        rw [hnEq,binDec_even len k hk]
+        simp [d1,ih k hk]
+        omega
+      · have ho : n % 2 = 1 := by omega
+        let k := n/2
+        have hnEq : n = 2*k+1 := by dsimp [k]; omega
+        have hk : k < 2^len := by dsimp [k]; omega
+        rw [hnEq,binDec_odd len k hk]
+        simp [d0,ih k hk]
+        omega
+
+/-- Head-facing S0 left stream: BinDec is prepended to its arbitrary
+left context, exactly as l <* xs is defined in Helper.v. -/
+def s0LeftFacing (l : List Bool) (a z : Nat) : List Bool :=
+  binDec a z ++ l
+
+/-- The right-facing S0 suffix includes the separator zero before RC. -/
+def s0RightFacing (b : Nat) : List Bool :=
+  [false,true,true,true,false,false] ++ d1pow (b+1)
+
+/-- The full left-facing S1 stream, obtained by the source's nested
+S0 (LC ... <* d0 <* m) definition. -/
+def s1LeftFacing (L n m a z : Nat) : List Bool :=
+  binDec a z ++ markerWord m ++ d0 ++ binDec L n ++ lh
+
+/-- The literal physical left-to-right word is the reverse of the
+head-facing stream; its last cell is the cell under the D head. -/
+def s1PhysicalLeft (L n m a z : Nat) : List Bool :=
+  (s1LeftFacing L n m a z).reverse
+
+/-- The literal physical right word following the D-head cell. -/
+def s1PhysicalRight (b : Nat) : List Bool := s0RightFacing b
+
+/-- Zero-padded lookup from a nearest-first physical side. -/
+def sideBit : List Bool → Nat → Bool
+  | [], _ => false
+  | h::_, 0 => h
+  | _::t, n+1 => sideBit t n
+
+/-- The complete original-source tape, with absolute head coordinate h.
+For x≤h, index zero is the cell under the head and subsequent indices
+run left; for x>h, index zero is the first cell to the right. -/
+def s1Tape (L n m a z b : Nat) (h x : Int) : Bool :=
+  if x ≤ h then
+    sideBit (s1LeftFacing L n m a z) (Int.toNat (h-x))
+  else
+    sideBit (s0RightFacing b) (Int.toNat (x-h-1))
+
+/-- The actual BB6Coverage.Config for the published TM63 S1 section.
+Its state is the original D state (Fin 6 index 3), not a copied state. -/
+def s1Config (L n m a z b : Nat) (h : Int) : BB6Coverage.Config :=
+  ⟨(3 : Fin 6),h,s1Tape L n m a z b h⟩
+
+@[simp] theorem s1Config_state (L n m a z b : Nat) (h : Int) :
+    (s1Config L n m a z b h).state = (3 : Fin 6) := rfl
+
+@[simp] theorem s1Config_head (L n m a z b : Nat) (h : Int) :
+    (s1Config L n m a z b h).head = h := rfl
+
+/-- Exact physical cell lookup to the left of the genuine D head. -/
+theorem s1Config_left_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
+    (s1Config L n m a z b h).tape (h-(i:Int)) =
+      sideBit (s1LeftFacing L n m a z) i := by
+  unfold s1Config s1Tape
+  have hle : h-(i:Int) ≤ h := by omega
+  have hdiff : h-(h-(i:Int)) = (i:Int) := by omega
+  simp [hle,hdiff]
+
+/-- Exact physical cell lookup to the right of the genuine D head. -/
+theorem s1Config_right_cell (L n m a z b : Nat) (h : Int) (i : Nat) :
+    (s1Config L n m a z b h).tape (h+1+(i:Int)) =
+      sideBit (s0RightFacing b) i := by
+  unfold s1Config s1Tape
+  have hgt : ¬ h+1+(i:Int) ≤ h := by omega
+  have hdiff : h+1+(i:Int)-h-1 = (i:Int) := by omega
+  simp [hgt,hdiff]
+
+/-- The universal S0 carry boundary in head-facing order. -/
+theorem s0LeftFacing_carryPrefix (l a len q r : Nat)
+    (hq : q < 2^len) :
+    s0LeftFacing l (len+1+r) ((2*q+1)*2^r) =
+      d1pow r ++ d0 ++ binDec len q ++ l := by
+  unfold s0LeftFacing
+  rw [binDec_carryPrefix len q r hq]
+  simp [List.append_assoc]
+
+/-- The universal S1 carry boundary at the actual D-head position. -/
+theorem s1LeftFacing_carryPrefix (L n m len q r : Nat)
+    (hq : q < 2^len) :
+    s1LeftFacing L n m (len+1+r) ((2*q+1)*2^r) =
+      d1pow r ++ d0 ++ binDec len q ++
+        markerWord m ++ d0 ++ binDec L n ++ lh := by
+  unfold s1LeftFacing
+  rw [binDec_carryPrefix len q r hq]
+  simp [List.append_assoc]
+
+/-- Physical left-to-right form of the same boundary: immediately before
+the head-facing end, the exact suffix is d0 ++ d1^r. -/
+theorem s1PhysicalLeft_carrySuffix (L n m len q r : Nat)
+    (hq : q < 2^len) :
+    s1PhysicalLeft L n m (len+1+r) ((2*q+1)*2^r) =
+      (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh).reverse
+        ++ d0.reverse ++ d1pow r := by
+  unfold s1PhysicalLeft
+  rw [s1LeftFacing_carryPrefix L n m len q r hq]
+  simp [List.reverse_append,d1pow_reverse,List.append_assoc]
+
+/-- Source m0/zero-counter specialization: the known terminal physical
+left word 111011 ++ 111^L ++ 100 ++ 10 ++ 111^a. -/
+theorem s1PhysicalLeft_m0_zero (L a : Nat) :
+    s1PhysicalLeft L 0 0 a 0 =
+      [true,true,true,false,true,true] ++ d1pow L ++
+        [true,false,false] ++ [true,false] ++ d1pow a := by
+  unfold s1PhysicalLeft s1LeftFacing
+  rw [binDec_zero L,binDec_zero a]
+  simp [markerWord,d0,lh,List.reverse_append,d1pow_reverse,List.append_assoc]
+
+/-- Source right word 0 ++ 11100 ++ 111^(1+b). -/
+theorem s1PhysicalRight_source (b : Nat) :
+    s1PhysicalRight b =
+      [false,true,true,true,false,false] ++ d1pow (b+1) := rfl
+
+#print axioms binDec_even
+#print axioms binDec_odd
+#print axioms binDec_mulpow2
+#print axioms binDec_carryPrefix
+#print axioms exists_odd_factor
+#print axioms binDec_length
+#print axioms s1Config_left_cell
+#print axioms s1LeftFacing_carryPrefix
+#print axioms s1PhysicalLeft_carrySuffix
+#print axioms s1PhysicalLeft_m0_zero
+
+end BB6Coverage.Agent8S1Encoder
