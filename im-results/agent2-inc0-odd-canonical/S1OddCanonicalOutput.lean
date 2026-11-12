@@ -362,6 +362,7 @@ theorem oddCounterOutput_s1Successor
                       rw [hstop]
                       omega
                     simp [hs1,hs0,hs2,hiff]
+            exact hcut
           have htarget := s1Config_right_bit_formula
             L n m (len+1) (2*q) (b+1) h y hy7
           rw [hout,htarget]
