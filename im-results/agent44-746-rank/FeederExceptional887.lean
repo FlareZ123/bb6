@@ -272,32 +272,32 @@ private theorem only_even_parent_band (k c d q : Nat)
     with u and d terminal. -/
 theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     (hn : n%13122=887) :
-    ResetParent (CascadeFirstFork.oddPre n (CascadeUniformFatal.fatal n))
-      (CascadeUniformFatal.fatal n) ∧
+    ResetParent (CascadeFirstFork.oddPre n (CascadeManyShield.fatal n))
+      (CascadeManyShield.fatal n) ∧
     ¬ReachC (2,0)
-      (CascadeFirstFork.oddPre n (CascadeUniformFatal.fatal n),0) := by
+      (CascadeFirstFork.oddPre n (CascadeManyShield.fatal n),0) := by
   have hn4 : 4≤n := by omega
   have h18 : n%18=5 := by omega
   let p : Nat := 2^(n-2)
   let k : Nat := n-2
   let j : Nat := n-4
-  let x : Nat := CascadeFirstFork.oddPre n (CascadeUniformFatal.fatal n)
+  let x : Nat := CascadeFirstFork.oddPre n (CascadeManyShield.fatal n)
   have hp4 : 2^n=4*p := by
     dsimp [p]
     have he : n=(n-2)+2 := by omega
     rw [he,Nat.pow_add]
     norm_num
     omega
-  have hfdiv : (2*CascadeUniformFatal.fatal n+5)%9=0 :=
+  have hfdiv : (2*CascadeManyShield.fatal n+5)%9=0 :=
     CascadeFirstFork.fatal_divnine n hn4 (Or.inr h18)
-  have hfquot : 9*((2*CascadeUniformFatal.fatal n+5)/9)=
-      2*CascadeUniformFatal.fatal n+5 := by
-    have h := Nat.mod_add_div (2*CascadeUniformFatal.fatal n+5) 9
+  have hfquot : 9*((2*CascadeManyShield.fatal n+5)/9)=
+      2*CascadeManyShield.fatal n+5 := by
+    have h := Nat.mod_add_div (2*CascadeManyShield.fatal n+5) 9
     rw [hfdiv] at h
     omega
   have hFlinear :
-      2*CascadeUniformFatal.fatal n+5+2*n+3=32*p := by
-    dsimp [CascadeUniformFatal.fatal]
+      2*CascadeManyShield.fatal n+5+2*n+3=32*p := by
+    dsimp [CascadeManyShield.fatal]
     rw [hp4]
     omega
   have hx : 9*x+17*n+39=56*p := by
@@ -540,7 +540,7 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
       have hdroot := parent_backward c d hcNe hcUniq hcroot
       exact hdDead hdroot
 
-  have hxfatal : ResetParent x (CascadeUniformFatal.fatal n) :=
+  have hxfatal : ResetParent x (CascadeManyShield.fatal n) :=
     CascadeFirstFork.fatal_has_odd_parent n hn4 h18
   exact ⟨by simpa [x] using hxfatal, by simpa [x] using hNoX⟩
 
@@ -548,7 +548,7 @@ theorem fatal_feeder_887_subresidue_root_exclusion (n : Nat)
     even fatal predecessor. -/
 theorem fatal_root_iff_even_parent_887_subresidue (n : Nat)
     (hn : n%13122=887) :
-    ReachC (2,0) (CascadeUniformFatal.fatal n,0) ↔
+    ReachC (2,0) (CascadeManyShield.fatal n,0) ↔
       ReachC (2,0) (CascadeFirstFork.evenPre n (n+4),0) := by
   have hdecomp : n=887+13122*(n/13122) := by
     have h := Nat.mod_add_div n 13122
