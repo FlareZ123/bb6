@@ -157,3 +157,19 @@ The table shows the uniform valuation/residue conditions needed by the six-node 
 - `c mod 9` and `d mod 9` are never 2 modulo 3, excluding their odd parents.
 
 The affine dyadic-band/gap inequalities are uniform in all five lifts once the common growth bound is available. Thus this table strongly supports extending the Lean proof to all five stable lifts by replacing the k=0 residue equalities with the five-way modular disjunctions. **That five-lift extension is not yet formalized**; the current Lean draft remains restricted to `n mod 13122 = 887`.
+
+## Open even-predecessor chain (arithmetic lead, not yet formalized)
+
+For the k=0 lift, the explicit even predecessor is
+`y₀ = 4*2^n - 3*n - 7`. Its same-scale even parent at `k=n-1` is
+`y₁ = 2*y₀ - 8*2^(n-1) - (n-1) = 4*2^n - 7*n - 13`.
+More generally, while the chain remains in the scale-`n-1` even band, write
+`y_m=4*2^n-D_m`; the same-scale even-parent recurrence is
+`D₀=3*n+7`, `D_(m+1)=2*D_m+n-1`.
+The band condition is exactly `3≤D_m≤2^n+1`.
+
+Modulo 3, `D_m` alternates `1,0`, so `y_m mod3` alternates `1,2`. Terms with `y_m mod3=1` have no odd parent at all. For terms with `y_m mod3=2`, the t=0 odd quotient
+`q₀=(2*y_m+5)/3=(8*2^n-2*D_m+5)/3`
+lies strictly in `(2*2^n,3*2^n)` throughout the even-band range, so the t=0 branch is excluded by `odd_gap`.
+
+**Do not extend this t=0 gap argument to t≥1.** The actual odd-parent band value at exponent t is `2^t*(2*y_m+5)/3^(t+1)=(2/3)^t*q₀), not `2^t*q₀`. In fact `D_m mod9` cycles `4,3,1,6,7,0`; for odd m, `(2*y_m+5) mod9` cycles `3,6,0`, so t=1 divisibility can occur when `m≡5 (mod 6)`. The higher-t branches require the nested 3-adic analysis; the first departure from the scale-`n-1` even band may also enter a lower-scale band rather than terminate. This is an open route to the even predecessor, not a completed root exclusion.
