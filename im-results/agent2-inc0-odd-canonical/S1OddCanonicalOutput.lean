@@ -330,6 +330,8 @@ theorem oddCounterOutput_s1Successor
           rw [hout,htarget]
 
 #print axioms sideBit_d1pow_formula
+#print axioms sideBit_s1PhysicalRight
+#print axioms s1Config_right_bit_formula
 #print axioms finalSweepTape_formula
 #print axioms oddCounterOutput_s1Successor
 
