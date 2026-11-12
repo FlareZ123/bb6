@@ -1,9 +1,14 @@
-name: Agent 48 general TM63 S1 encoder (selective check)
+name: General TM63 S1 physical encoder (selective check)
 on:
+  workflow_dispatch:
+  push:
+    paths:
+      - im-results/agent8-s1-encoder/S1Encoder.lean
+      - im-results/agent8-s1-encoder/README.md
   pull_request:
     types: [opened, reopened]
     paths:
-      - im-results/agent48-champion-root/S1Encoder.lean
+      - im-results/agent8-s1-encoder/S1Encoder.lean
 permissions:
   contents: read
 jobs:
@@ -23,7 +28,8 @@ jobs:
           set -eu
           mkdir -p /tmp/a48-s1
           cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a48-s1/
-          cp im-results/agent48-champion-root/{ChampionRootBridge,S1Encoder}.lean /tmp/a48-s1/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a48-s1/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a48-s1/
           cd /tmp/a48-s1
           export LEAN_PATH=.
           lean --version
