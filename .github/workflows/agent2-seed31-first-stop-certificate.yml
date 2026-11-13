@@ -7,9 +7,17 @@ on:
         required: true
         default: "43402524711"
         type: string
+      source_ref:
+        description: Exact source commit used by the staged root audit
+        required: true
+        default: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
+        type: string
   workflow_call:
     inputs:
       source_run_id:
+        required: true
+        type: string
+      source_ref:
         required: true
         type: string
 permissions:
@@ -22,8 +30,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 27
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source snapshot used by the staged audit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+          path: source
+      - name: Checkout current proof submission
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: proof
       - name: Restore pinned original D sources and DRegular proof
+        working-directory: source
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
@@ -42,13 +60,16 @@ jobs:
           name: d-root-seed31-audit
           run-id: ${{ inputs.source_run_id }}
           github-token: ${{ github.token }}
-          path: source
-      - name: Restore audited Lean objects and prior log
+          path: source-artifact
+      - name: Restore audited Lean objects, prior log, and proof submission
         run: |
-          cp source/lean-audit.log lean-audit.log
-          cp source/seed31-probe.txt prior-seed31-probe.txt
-          tar -xzf source/lean-stage.tar.gz -C .
+          cp source-artifact/lean-audit.log source/lean-audit.log
+          cp source-artifact/seed31-probe.txt source/prior-seed31-probe.txt
+          tar -xzf source-artifact/lean-stage.tar.gz -C source
+          mkdir -p source/im-results/agent2-root-language-exit
+          cp proof/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean source/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.lean
       - name: Compile probe module and kernel-check first-stop/source-lift theorem
+        working-directory: source
         shell: bash
         run: |
           set -euo pipefail
@@ -68,8 +89,8 @@ jobs:
         with:
           name: seed31-first-stop-certificate
           path: |
-            lean-audit.log
-            prior-seed31-probe.txt
-            seed31-probe.txt
-            im-results/agent2-root-language-exit/Seed31FirstStopCertificate.olean
+            source/lean-audit.log
+            source/prior-seed31-probe.txt
+            source/seed31-probe.txt
+            source/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.olean
           if-no-files-found: warn
