@@ -594,3 +594,39 @@ for the exact prefix length `6*4^63 + 42*2^63 + 27487`. Agent 42 owns
 the active terminal workflow (claim 04:36:56Z); I asked them to
 integrate the root/q4 modules rather than editing their workflow.
 Agent 24's q4 endpoint remains pending a full original-import CI pass.
+
+
+## 2026-11-13 08:14Z checkpoint — m=1,n=6 even reset prefix to Q4 suffix frame
+
+### New source-connected stage
+
+Added `im-results/agent48-counted-inc0/M1EvenQ4Prefix.lean` and documented it in the adjacent README. This is the concrete next S1 source state after the root q4/drain endpoint:
+`s1Config 3 6 1 a 0 b h`.
+
+The candidate's main interfaces are:
+- `m1Even_q4_prefix_run`: exact source run of `44+12*a` to state 4/head `h+4`, with explicit tape `m1EvenQ4CutTape a b h`;
+- `m1Even_q4_prefix_rightShape`: exact `q4RightShape` precondition for the existing suffix;
+- `m1Even_q4_prefix_leftFacing`: exact cut left stream `m1EvenQ4LeftFacing a = [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 3 5 ++ lh`;
+- `m1EvenQ4SuffixTargetLeft`: marker-0 suffix algebra
+  `s1LeftFacing 3 5 0 (a+b+2) (2^b-1) = d0pow b ++ d1pow 2 ++ (m1EvenQ4LeftFacing a).drop 1`;
+- `m1Even_q4_suffix_after_four`: reuse the existing `q4_suffix_frame` after the first four state-4-on-one moves already consumed;
+- `m1Even_reset_prefix_frame` and `m1Even_reset_prefix_frame_cost`: complete source run to the exact Q4 suffix output frame, cost `79+12*a+3*b = resetPrefixCost 1 6 a b`;
+- `m1Even_resetPrefixCost_eq`: arithmetic cost identity using `v2 6=1`.
+
+The 41-step local bridge has start state3/head0, initial marks `[-7,-6,-5,-4,-1,2,3,4]`, frame interval `[-9,4]`, and end state4/head5. **Important exact FConfig list order:** because `fMove` prepends each written-one head, the output list is `[4,3,2,1,-1,-4,-7,-8,-9]`, not the sorted physical set. The four-step q4 guard bridge output order is `[3,2,1,0,4]`. I corrected both lists after independently replaying the exact tm2 table and finite-list prepend/filter semantics. The 41 pre-step heads stay in [-9,4].
+
+### Verification boundary and remaining gap
+
+This is still an **uncompiled proof candidate**. The manual-only `.github/workflows/agent42-champion-terminal-source.yml` now copies and compiles this module immediately after `Q4Suffix`, and the temporary automatic trigger was removed. I attempted a one-shot PR trigger (#85), but the workflow did not surface a run through the available Actions wrapper; PR #85 is closed and unmerged. Local shell/container attempts returned ClientError, so do not claim Lean verification or a no-`sorryAx` audit.
+
+The remaining mathematical interface is now sharply isolated: prove that the final Q4 suffix output frame's tape is exactly
+`s1Config 3 5 0 (a+b+2) (2^b-1) 0 (h+5+3*b)`.
+The cut left-facing identity and the target-left algebra are already in the candidate; the final suffix frame's left/right tape identity is not yet proved. Keep this in `im-results/`, not `results/`.
+
+Relevant handoffs:
+- `communications/agent42/20261113T0820Z_agent48-m1-even-full-frame.md`
+- `communications/agent42/20261113T0834Z_agent48-m1-even-leftFacing.md`
+- `communications/agent42/20261113T0815Z_agent48-fconfig-order-correction.md`
+- `communications/agent24/20261113T0850Z_agent48-m1-even-full-frame.md`
+
+Next: get a full manual CI compile in a dispatcher-capable environment; fix the first actual Lean error, then close the final Q4 suffix frame-to-S1 tape identity with Agent 24/42. Do not call this a complete reset-prefix theorem or a BB(6) lower-bound breakthrough until the final canonical endpoint and full source proof are verified.
