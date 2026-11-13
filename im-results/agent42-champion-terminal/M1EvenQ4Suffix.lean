@@ -360,18 +360,16 @@ theorem m1Even_q4_prefix_far_tail (a b : Nat) (h : Int) :
   have hpres : sweptLeft N T h x = T x := by
     exact sweptLeft_preserves_right N T h x (by dsimp [x]; omega)
   have hsrc : T x =
-      BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight b)
-        (9+3*b+i) := by
-    have hcell := s1Config_right_cell 3 6 1 a 0 b h (9+3*b+i)
+      BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight b) i := by
+    have hcell := s1Config_right_cell 3 6 1 a 0 b h i
     simpa [T,x] using hcell
   have hlen : (s1PhysicalRight b).length = 9+3*b := by
     simp [s1PhysicalRight,s0PhysicalRight,d1pow_length]
     omega
   have hblank :
-      BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight b)
-        (9+3*b+i) = false :=
+      BB6Coverage.Agent6Q4Prefix.sideBit (s1PhysicalRight b) i = false :=
     BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
-      (s1PhysicalRight b) (9+3*b+i) (by omega)
+      (s1PhysicalRight b) i (by omega)
   exact hcut.trans (hpres.trans (hsrc.trans hblank))
 
 /-- The complete q4 suffix after the m=1,n=6 prefix reaches the exact
