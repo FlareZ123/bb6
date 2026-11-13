@@ -27,7 +27,7 @@ theorem terminal2040_certificate :
     · dsimp [seed20]
       omega
     · simp [seed20]
-  rw [BB6.Agent2Fast64.fastRun_correct 2040 seed20 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 2040 seed20 hcanon]
   decide
 
 theorem terminal2040_exact :
