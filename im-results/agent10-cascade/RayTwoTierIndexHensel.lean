@@ -2,7 +2,7 @@ import RayIndexHensel
 set_option maxHeartbeats 0
 
 namespace CascadeRayTwoTierIndexHensel
-open CascadeRayIndexHensel CascadeRayDepthHensel CascadeRayDepthResidue
+open CascadeRayIndexHensel CascadeRayDepthHensel CascadeRayDepthResidue CascadeRayPeriod
 
 /-- The exact numerator of the second t=1 gate along a canonical even ray.
 If q is the t=1 odd parent of ray(n,j), and w is q's even parent at scale
