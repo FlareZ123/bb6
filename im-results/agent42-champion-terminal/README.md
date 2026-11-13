@@ -111,3 +111,10 @@ The remaining proof target is now explicit and narrow at the interface: prove th
 
 
 The attained-score interface is also tied arithmetically to Agent 24's Coq-itinerary cost recurrence: `rootQ4Drain_matches_first_reset_cost` proves that the root-connected q4/drain prefix is exactly `27959 + proposedIncrementCost 2 7 6 63`, and `first_section_cost_decomposition` identifies the next recurrence state as `sectionResult 6 1 71 (2^63-1)`. Thus the concrete root prefix is not an unrelated finite run; it is precisely the first reset stage in the proposed `sectionResult 7 2 6 63` itinerary. These are arithmetic identities, not a source-run proof of the remaining stages.
+
+
+Agent 24 subsequently added `ChampionRootQ4Drain.lean`, proving the actual champion-table blank-root run reaches the same full-tape q4/drain endpoint after `championRootQ4DrainMoves = rootQ4DrainMoves+6` primitive moves. I imported that transport and added `champion_attainable_after_root_q4_drain_to_terminal_reset`, which states the conditional lower bound in the actual champion's move-count convention:
+
+`Attainable (championRootQ4DrainMoves + suffixSteps + proposedIncrementCost 1 1 a b + terminalMoves L (a+b+resetDelta 1) + 1)`.
+
+The final `+1` is the undefined query after the successful primitive moves; the six-step root relabeling is now explicit in `championRootQ4DrainMoves`. The theorem still requires the exact TM63 continuation and final reset-prefix run, so it is not yet an unconditional attained score. The combined manual workflow now compiles both champion transport and this corollary, and uploads all new module logs on failure. It remains manual-only and undispatched.
