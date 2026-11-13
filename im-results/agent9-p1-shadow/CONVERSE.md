@@ -76,6 +76,8 @@ The feeder roots satisfy the required source mass and initial coefficient equati
 
 ## Scope
 
+The current induction uses the width inequality $L+M\le2^{N-M-3}$ as its central quantitative input; $N\ge2M+7$ is a simple uniform sufficient condition for the feeder range $N+8\le L\le N+9$. A direct-width version should permit larger finite windows for a fixed $q$, but is not yet formalized.
+
 This result would establish exact correspondence for every *fixed finite cost window* once $q\ge\lceil (2M+7)/16\rceil$. It does **not** establish:
 - a lift of arbitrarily high cost at one fixed $q$;
 - an infinite original-source inverse path;
