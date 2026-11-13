@@ -118,3 +118,16 @@ The manual workflow `.github/workflows/agent32-429-lowodd-frontier.yml` compiles
 ## Remaining mathematical gap
 
 The result closes one prepared low-J (deficit (4k+3)) entrance and a concrete finite continuation. It does not prove that the genuine blank run remains in a closed J/Junc chart for all time. The next root-specific state is J(11,62), whose low-J deficit is (-40); the corresponding complete source return and its history-sensitive maximum must be established. More importantly, the preceding blank-root chain to J(21,11) must be composed and source-verified. No nonhalting conclusion for #429, and no BB(6) bound, follows from these finite branches.
+
+
+## Prepared root gap: J(381,3) -> J(387,2)
+
+The candidate module [Low43RootGap381To387.lean](Low43RootGap381To387.lean) isolates the root-relevant low43 instance `(v,k)=(1,189)`:
+
+- 44 steps: `J(381,3) -> low43_C0_zipper(1,189)`, displacement and prefix maximum both (+8).
+- 7,338 steps: the C/0 zipper continues to `J(387,2)`, displacement (-4), prefix maximum (+1).
+- Composition: 7,382 steps from `J(381,3)` to `J(387,2)`, displacement (+4), prefix maximum (+9).
+
+The physical theorem lifts the complete zipper run to every physical configuration represented by `J(381,3)`, retains the full-tape endpoint representation, bounds every head prefix by (+9), and excludes the fatal C/01 gateway at every prefix using the endpoint-live converse in `PhysicalNoFatalConverse.lean`.
+
+**Status: Lean proof candidate, not yet CI-certified.** The manual-only `agent32-429-lowodd-frontier.yml` workflow now compiles the converse and this module and checks their printed axiom reports. Do not treat the claim as validated until that workflow succeeds. This is a prepared-input segment, not a blank-root nonhalting proof.
