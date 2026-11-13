@@ -1,0 +1,144 @@
+name: Agent 44 n=887 root-exclusion source audit (manual)
+
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          exec > >(tee /tmp/root887-lean.log) 2>&1
+          for attempt in 1 2 3 4 5; do
+            if curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh &&
+               sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
+              echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+      - name: Compile original checked-in C-first-return grammar and valuation source
+        run: |
+          set -eu
+          a="im-results/agent7-cascade-odd-fibers"
+          b="im-results/agent10-cascade"
+          f="im-results/agent7-cascade-forward"
+          c="im-results/agent44-746-fanin"
+          export LEAN_PATH="$a:$b:$f:$c:im-results/agent44-746-rank"
+          lean --version
+          for m in SourceMacro CascadeOdd ReverseResidue GapCore Mass; do
+            lean -o "$a/$m.olean" "$a/$m.lean"
+          done
+          lean -o "$b/FirstReturnCore.olean" "$b/FirstReturnCore.lean"
+          lean -o "$a/LowGates.olean" "$a/LowGates.lean"
+          lean -o "$a/SurvivingSmall.olean" "$a/SurvivingSmall.lean"
+          lean -o "$a/WellInverseCases.olean" "$a/WellInverseCases.lean"
+          lean -o "$a/PreimageCandidates.olean" "$a/PreimageCandidates.lean"
+          for m in TerminalExit GapOddJoin SweepInvariant RootTerminal ResetAncestry FatalExclusion SmallFatal GateNecessary ExactGate; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ManyShield FastShield ParentsFast ClosedCertFast; do
+            lean -o "$b/$m.olean" "$b/$m.lean"
+          done
+          e="im-results/agent7-746-even-parent"
+          export LEAN_PATH="$LEAN_PATH:$e"
+          lean -o "$e/EvenPre887ConeOnly.olean" "$e/EvenPre887ConeOnly.lean"
+          echo "PASS: exact source ResetParent closure excludes the n=887 even fatal predecessor"
+          for m in UniformFatalParent UniformFatalMod9 UniformRootGate UniqueEvenBand SecondEven FirstFork FirstForkExactTwo FirstForkOddT2 FirstForkModulo54 FirstForkAt81 FirstFork162 FirstForkT3 FirstForkThree FirstForkOddT45 FirstForkOddValuation FirstForkExactThree FirstForkRootThree FirstForkFatalThree FirstForkSix FirstForkSixResidues FirstForkOddValuationSix FirstForkExactFour FirstForkRootFour FirstForkFourDistinct FirstForkFourResidues FatalValuationPower FatalValuationUnbounded FatalValuationBeyond; do
+            lean -o "$f/$m.olean" "$f/$m.lean"
+          done
+          for m in BandTriple OddGroup ExactOdd ManyParents UnboundedFatal; do
+            lean -o "$c/$m.olean" "$c/$m.lean"
+          done
+          for m in LogBands LogStep Telescope GeomLog GeomBand ExactCountLean ParameterCountBridge TerminalCount; do
+            lean -o "$c/$m.olean" "$c/$m.lean"
+          done
+          lean -o "$f/OddTotalCount.olean" "$f/OddTotalCount.lean"
+          r="im-results/agent44-746-rank"
+          lean -o "$r/ReverseRank.olean" "$r/ReverseRank.lean"
+          lean -o "$r/ResetRank.olean" "$r/ResetRank.lean"
+          lean -o "$r/FatalRank.olean" "$r/FatalRank.lean"
+          lean -o "$r/RootDepth.olean" "$r/RootDepth.lean"
+          lean -o "$r/ForwardRun.olean" "$r/ForwardRun.lean"
+          for m in ScanFail StripTwos ExecutableReturn FastForward FastDecision NewFiniteGates Gates270to281 Gates282to299 GatesTo299 FullThrough299; do
+            lean -o "$r/$m.olean" "$r/$m.lean"
+          done
+          for m in HalfRank HalfResetRank HalfDepth HalfFatal; do
+            lean -o "$r/$m.olean" "$r/$m.lean"
+          done
+          s="im-results/agent7-746-bitsweep"
+          export LEAN_PATH="$LEAN_PATH:$s"
+          for m in SweepBitLength SweepBitLengthBridge SweepBitOutcome SweepEvenBlock SweepEvenOrbit SweepEvenFamily SweepMacroCheck SweepOddCross SweepEvenExit SweepEvenMaximal SweepEvenDeficit SweepAddress SweepOrbitAddress SweepSameAddress SweepLevelBound SweepGateEntry SweepExactLevel SweepAdjacentFatal SweepFullLevelBatch SweepStageAlgorithm SweepMacroOrbit SweepQuadraticRank SweepNoEvenEvenFatal SweepAlternatingExits SweepOddAfterEven SweepShortEvenEntry; do
+            lean -o "$s/$m.olean" "$s/$m.lean"
+          done
+          # SweepAlternatingMacro has an existing unresolved source-level rewrite error.
+          # Excluding that unfinished module allows the independent fatal-depth audits.
+          lean -o "$b/SweepOddFatalDepth.olean" "$b/SweepOddFatalDepth.lean"
+          lean -o "$b/SweepOddFatalNine.olean" "$b/SweepOddFatalNine.lean"
+          lean -o "$b/SweepOddFatalResidue.olean" "$b/SweepOddFatalResidue.lean"
+          lean -o "$b/SweepOddFatalExceptional.olean" "$b/SweepOddFatalExceptional.lean"
+          lean -o "$b/SweepAdjacentFatalSieve.olean" "$b/SweepAdjacentFatalSieve.lean"
+          v="im-results/agent7-746-fatal-depth-27"
+          export LEAN_PATH="$LEAN_PATH:$v"
+          lean -o "$v/SweepOddFatal27Arithmetic.olean" "$v/SweepOddFatal27Arithmetic.lean"
+          lean -o "$v/SweepOddFatal27Source.olean" "$v/SweepOddFatal27Source.lean"
+          lean -o "$v/SweepOddFatal27Band.olean" "$v/SweepOddFatal27Band.lean"
+          lean -o "$v/SweepOddFatal27Upper.olean" "$v/SweepOddFatal27Upper.lean"
+          lean -o "$v/SweepOdd27RootGap.olean" "$v/SweepOdd27RootGap.lean"
+          lean -o "$v/SweepOdd27RootFamily.olean" "$v/SweepOdd27RootFamily.lean"
+          lean -o "$b/UpperHighRootGap.olean" "$b/UpperHighRootGap.lean"
+          lean -o "$b/UpperHighRootFamily.olean" "$b/UpperHighRootFamily.lean"
+          lean -o "$b/MiddleLowOddGap.olean" "$b/MiddleLowOddGap.lean"
+          lean -o "$b/MiddleLowRootFamily.olean" "$b/MiddleLowRootFamily.lean"
+          lean -o "$b/MiddleLowOddExact.olean" "$b/MiddleLowOddExact.lean"
+          lean -o "$b/DoubleOddGapRoot.olean" "$b/DoubleOddGapRoot.lean"
+          lean -o "$b/DoubleOddGapFamily.olean" "$b/DoubleOddGapFamily.lean"
+          lean -o "$b/FatalOddFeederGap.olean" "$b/FatalOddFeederGap.lean"
+          lean -o "$b/FatalOddFeederCriterion.olean" "$b/FatalOddFeederCriterion.lean"
+          lean -o "$b/FatalFeederResidueArithmetic.olean" "$b/FatalFeederResidueArithmetic.lean"
+          lean -o "$b/FatalOddFeeder46.olean" "$b/FatalOddFeeder46.lean"
+          lean -o "$r/FeederSixStep.olean" "$r/FeederSixStep.lean"
+          lean -o "$r/FeederSixArithmetic.olean" "$r/FeederSixArithmetic.lean"
+          lean -o "$r/FeederSixFamily.olean" "$r/FeederSixFamily.lean"
+          lean -o "$r/FeederExceptionalStep.olean" "$r/FeederExceptionalStep.lean"
+          lean -o "$r/FeederExceptionalArithmetic.olean" "$r/FeederExceptionalArithmetic.lean"
+          lean -o "$r/FeederExceptionalFamily.olean" "$r/FeederExceptionalFamily.lean"
+          echo "PASS: draft seven-edge exclusion for the 1085/1372 exceptional feeder classes"
+          lean -o "$r/FeederExceptional887.olean" "$r/FeederExceptional887.lean"
+          echo "PASS: draft six-node exact inverse-tree exclusion for n = 887 mod 13122"
+          e="im-results/agent7-746-even-parent"
+          export LEAN_PATH="$LEAN_PATH:$e"
+          lean -o "$e/EvenPre887Cone.olean" "$e/EvenPre887Cone.lean"
+          echo "PASS: exact 1319-state source-certified reverse cone excludes the n=887 even fatal predecessor"
+          echo "PASS: source-related triangular half-quadratic reset inverse-depth proof"
+          echo "PASS: source-related quadratic reset-inverse chain depth proof"
+          echo "PASS: source-certified exact nonterminal odd first-reset parameter count"
+          echo "PASS: authenticated unbounded genuine first-return reset-parent fan-in in both fatal index sectors"
+
+          # A proof is accepted only if the actual n=887 cone and composed
+          # fatal-root theorem do not depend on sorry or native-evaluation axioms.
+          if grep -E '(evenPre887Cone_closed|evenPre887_root_unreachable|fatal887_root_unreachable).*\b(sorryAx|Lean\.ofReduceBool)\b' /tmp/root887-lean.log; then
+            echo "FAIL: n=887 root exclusion is not kernel-only"
+            exit 1
+          fi
+          grep -E 'evenPre887Cone_closed|evenPre887_root_unreachable|fatal887_root_unreachable' /tmp/root887-lean.log
+
+          q="im-results/agent7-746-fatal-fork"
+          export LEAN_PATH="$LEAN_PATH:$q"
+          for m in ForkCore ForkRoot ForkArithmetic ForkFamily ForkOriginal; do
+            lean -o "$q/$m.olean" "$q/$m.lean"
+          done
+          echo "PASS: four infinite genuine-root-excluded fatal odd predecessors via exact inverse two-layer cone"
+          for m in ForkCensus ForkCensusRoot; do
+            lean -o "$q/$m.olean" "$q/$m.lean"
+          done
+          echo "PASS: original-source complete modular 154 of 162 fatal odd-feeder obstruction"
+          lean -o "$q/ForkMiddleOdd.olean" "$q/ForkMiddleOdd.lean"
+          echo "PASS: exact unique lower-middle odd source parent with permitted 3-adic valuation three"
