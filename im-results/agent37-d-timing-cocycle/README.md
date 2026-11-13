@@ -122,25 +122,45 @@ The intermediate proofs are [BlankFourteenthRejoin.lean](BlankFourteenthRejoin.l
 The new [ExceptionalE7ThirdReturnEscape.lean](ExceptionalE7ThirdReturnEscape.lean) formalizes the general q≥3, t=3u+1 three-return E/E/E source route. It reaches the off-L packet I_(8*(64u+31)+9)(P4 0 1^(2q-6) 0 1^6) through EAllDouble, full_E_three, and full_E_triple_pairs. Root-transport drafts now exist: [BlankEighteenthRejoin.lean](BlankEighteenthRejoin.lean), [BlankNineteenthRejoin.lean](BlankNineteenthRejoin.lean), and [BlankTwentiethEscape.lean](BlankTwentiethEscape.lean). The 18th and 19th drafts apply the existing E/B and E/A general theorems; the 20th draft transports the t mod 27 = 4, q=5 exception into the off-L E/E/E packet. These files are included in the manual source workflow, but this inclusion alone is not a successful source-CI verification; treat the 18–20 extension as provisional until a successful run and axiom audit are recorded.
 
 
-## Blank-root continuation through the thirtieth exceptional section (Lean submissions; CI pending)
+## Blank-root continuation through the thirtieth exceptional section
 
-The arithmetic replay has been extended from the twentieth reentry through the thirtieth exceptional input. The new files compose existing original-source boundary theorems with exact DRegular runs; they are **proof submissions, not yet CI-verified results**.
+The original-source D-start blank-root chain is now kernel-checked through the **sixteenth exceptional reentry**. The twelfth and thirteenth reentries were previously verified in CI [42089877845](https://github.com/FlareZ123/bb6/actions/runs/42089877845) and [42306192563](https://github.com/FlareZ123/bb6/actions/runs/42306192563). The later root audit [43394857303](https://github.com/FlareZ123/bb6/actions/runs/43394857303), on commit `2ef829a09a362dbbe1f174e9ad9779d3d18390cb`, compiled the fourteenth, fifteenth, and sixteenth original-source reentries. Its printed theorem audits were:
+
+- `BB6.Agent2FourteenthRoot.blank_fourteenth_reentry`: [propext, Classical.choice, Quot.sound].
+- `BB6.Agent2FifteenthRoot.blank_fifteenth_reentry`: [propext, Classical.choice, Quot.sound].
+- `BB6.Agent2SixteenthRoot.blank_sixteenth_reentry`: [propext, Classical.choice, Quot.sound].
+
+The run then received a runner shutdown signal at 09:09:30 UTC and exited 143. This was an infrastructure termination, not a Lean proof failure. It stopped before compiling the seventeenth reentry; consequently the thirtieth reentry and `Seed31Probe` remain unverified. The final whole-log forbidden-axiom scan did not run, so the three module-level axiom reports above are the precise verified scope of this attempt.
+
+### Remaining submitted chain
+
+The source-connected Lean submissions for episodes 17–30 remain to be audited:
 
 | Episode | DRegular sections from previous reentry | Exceptional source | t mod 27 | Submitted original-source continuation |
 |---:|---:|---|---:|---|
+| 17 | 2,656 | L(9t+7,7,1) | 6 | E/E/A three-return escape; rejoin L(512u+119,3,2) |
+| 18 | 2,902 | L(9t+4,3,1) | 22 | E/B, parameter 1; rejoin L(64t+23,1,5) |
+| 19 | 9,780 | L(9t+10,9,1) | 12 | E/A, parameter 2; rejoin pure unary L(64t+113,0,0) |
+| 20 | 2,040 | L(9t+7,5,1) | 4 | E/E/E escape; rejoin L(8k+9,8,5) |
 | 21 | 12,588 | L(9t+4,8,1) | 6 | E/B, parameter 6; rejoin L(64t+33,1,5) |
-| 22 | 730 | L(9t+7,8,1) | 14 | E/E packet (192u+161,2,13); one B normalization, then E-one rejoin |
+| 22 | 730 | L(9t+7,8,1) | 14 | E/E packet (192u+161,2,13); B normalization, then E-one rejoin |
 | 23 | 3,636 | L(9t+4,2,1) | 21 | B-general rejoin L(64t+21,1,5) |
-| 24 | 4,510 | L(9t+7,6,1) | 17 | E/E packet (192u+161,2,9); one B normalization, then A-zero rejoin |
+| 24 | 4,510 | L(9t+7,6,1) | 17 | E/E packet (192u+161,2,9); B normalization, then A-zero rejoin |
 | 25 | 1,718 | L(9t+4,8,1) | 16 | E/B, parameter 6; rejoin L(64t+33,1,5) |
 | 26 | 8,516 | L(9t+10,8,1) | 25 | E/A packet (24t+21,0,16); A-one rejoin to pure unary |
-| 27 | 1,684 | L(9t+7,9,1) | 8 | E/E packet (192u+161,2,15); one B normalization to (512u+434,1,15), then A-zero rejoin to pure unary |
+| 27 | 1,684 | L(9t+7,9,1) | 8 | E/E packet (192u+161,2,15); B normalization, then A-zero rejoin |
 | 28 | 2,590 | L(9t+4,9,1) | 23 | E/B, parameter 7; rejoin L(64t+35,1,5) |
 | 29 | 6,443 | L(9t+10,6,1) | 22 | E/A packet (24t+21,0,12); A-zero rejoin to pure unary |
 | 30 | 2,613 | L(9t+10,8,1) | 22 | E/A packet (24t+21,0,16); A-one rejoin to pure unary |
 
-Here u=(t-2)/3 in the E/E rows. The new source files are [BlankTwentySeventhRejoin.lean](BlankTwentySeventhRejoin.lean), [BlankTwentyEighthRejoin.lean](BlankTwentyEighthRejoin.lean), and [BlankTwentyNinthRejoin.lean](BlankTwentyNinthRejoin.lean), plus [BlankThirtiethRejoin.lean](BlankThirtiethRejoin.lean). The exact arithmetic endpoints in the new files use DRegularFast.fastRun_correct; the E/E, E/B, E/A, packet-normalization, and A-zero steps reuse the existing original-machine source theorems.
+Here u=(t-2)/3 in the E/E rows. The corresponding modules are `BlankSeventeenthRejoin.lean` through `BlankThirtiethRejoin.lean`, with `ExceptionalE7ThirdReturnEscape.lean`, `ExceptionalE7SecondSafe.lean`, and `ExceptionalEPacketClosure.lean` supplying shared branches. These files are submissions until the staged audit succeeds.
 
-The manual workflow [agent25-eleventh-root.yml](../../.github/workflows/agent25-eleventh-root.yml) is dispatch-only and configured to compile the chain through the thirtieth reentry in dependency order. The latest attempt, [CI 43319453437](https://github.com/FlareZ123/bb6/actions/runs/43319453437), compiled the corrected AP2 leaf, PacketP2ResetSource (including e_two_k0_regular), the sixth-through-eighth blank-root reentries, and PacketRank/PacketPaths. The recorded axiom outputs for all compiled modules contained no sorryAx or native_decide; the AP2 leaf and e_two_k0_regular have [propext, Quot.sound], while the sixth/seventh/eighth root reentries have [propext, Classical.choice, Quot.sound]. The run then stopped at P2ResetRegularReentry before reaching the 30th module or Seed31Probe. The failure exposed a false one-stage reset-to-regularSection helper; that helper has now been corrected to the existing two-stage e_two_k0_regular theorem. **The corrected helper and remainder of the chain have not yet been re-audited.** A future manual dispatch and axiom audit are required before describing the thirtieth reentry as source-CI verified.
+### Verification workflow and next root question
 
-The arithmetic continuation is finite and conditional on the earlier source chain. It does not prove that the D machine runs forever, does not resolve a six-state holdout, and does not improve the BB(6) lower or upper bound. It remains in im-results/ for that reason.
+The manual/reusable workflow [agent25-eleventh-root.yml](../../.github/workflows/agent25-eleventh-root.yml) now carries compiled `.olean` files and the accumulated audit log between five bounded jobs: dependencies through episode 13; episodes 14–17; 18–21; 22–26; and 27–30 plus the Seed31 probe. This avoids repeating the already compiled prefix when a runner terminates. The dependency `BlankTwentyFirstRejoin.lean` is explicitly compiled before `BlankTwentySecondRejoin.lean`, which imports it.
+
+The probe `Seed31Probe.lean` is a diagnostic computation over up to 1,024,000 DRegular transitions. It reports the first exceptional state found, its residue modulo 59049, q, b, and whether the next transition is undefined. Its output is not itself a proof. The next mathematical step is to certify the observed first-exit count and state with `DRegularFast.fastRun_correct`, lift that prefix through `DRegularSource`/`ObsEq`, and compose only the source theorem matching the actual state.
+
+In particular, do not assume the q=4 target `L(59049*m+44494,4,1)` is reached: the current `t30 mod 27 = 22` certificate does not determine `t30 mod 81`. The one-step regular-model preimage calculation in [Q4RegularPreimages.md](../agent2-root-language-exit/Q4RegularPreimages.md) is a constraint, not a blank-root path. The separate conditional exception-41 candidate with `k41 ≡ 76 (mod 81)` is covered by Agent35's source-certified `P2K4Source.close_one` subfamily `k=27t+22`; this closes that particular model candidate, not the entire `k ≡ 4 (mod 9)` family or the independent `k ≡ 7 (mod 9)` family. Neither conditional packet closure proves blank-root reachability.
+
+The chain is a finite ancestry result. It does not establish that the D machine runs forever, decide that holdout, or improve either BB(6) bound.
