@@ -72,11 +72,11 @@ theorem reset_double_B_to_A (d k h t Q : Nat)
 /-- A concrete nonempty member of the reset cylinder: k=61,Q=0,
     one E-chain step with h=41, followed by B -> B -> A. -/
 theorem concrete_reset_double_B_to_A :
-    ∃ T, regularEndpoint
+    regularEndpoint
       (packet 187 0 2 (false :: List.replicate 6 true)) := by
   simpa using
-    (reset_double_B_to_A 61 0 1 41 48
-      (by omega) (by omega) (by omega) (by omega))
+    (reset_double_B_to_A 1 61 41 48 0
+      (by omega) (by omega) (by omega) (by omega) (by omega))
 
 #print axioms concrete_reset_double_B_to_A
 #print axioms b_twice
