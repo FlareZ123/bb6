@@ -46,7 +46,10 @@ The prefix theorem and uniform single-step `Inc0` theorem remain explicit premis
 The finite-base support changes are:
 - use `BB6ChampionArithmetic.v2` explicitly in `resetBase_cost_eq`;
 - use `even_finite_heads` from `CountedOneZeroUnary` in `resetBase_heads`;
-- compile `CountedOddUnary` and `CountedOneZeroUnary` before `CountedResetBase` in the manual champion-root workflow.
+- compile `CountedOddUnary` and `CountedOneZeroUnary` before `CountedResetBase` in the manual champion-root workflow;
+- capture the reset-base compilation output and reject `sorryAx` with a dedicated CI gate.
+
+These are source and workflow repairs, not a verified result yet: the manual-only champion-root workflow has not been dispatched after these commits.
 
 These bases cover only `a=b=0`. They do not prove the universal prefix with arbitrary `a,b,v₂(n)`.
 
