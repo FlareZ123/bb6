@@ -19,15 +19,22 @@ open BB6.Agent2ThirtyFirstProbe
 def terminal12267 : DRegular.L := firstExceptionFromSeed31.2
 
 /-- The quotient parameter in the q=8 E/A source shape. -/
-def t31 : Nat := Classical.choose firstExceptionFromSeed31_shape
+def t31 : Nat := (terminal12267.a-10)/9
 
 theorem t31_spec :
     terminal12267.a = 9*t31+10 ∧
       t31 % 27 = 2 ∧
       terminal12267.q = 8 ∧
       terminal12267.b = 1 := by
-  simpa [t31,terminal12267] using
-    (Classical.choose_spec firstExceptionFromSeed31_shape)
+  rcases firstExceptionFromSeed31_shape with ⟨t,ha,ht,hq,hb⟩
+  have htEq : t = t31 := by
+    dsimp [t31,terminal12267]
+    rw [ha]
+    omega
+  subst t
+  exact ⟨by simpa [terminal12267] using ha, ht,
+    by simpa [terminal12267] using hq,
+    by simpa [terminal12267] using hb⟩
 
 theorem terminal12267_shape :
     terminal12267 = ⟨9*t31+10,8,1⟩ := by
