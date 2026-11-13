@@ -654,7 +654,9 @@ theorem blank_no_A_s85 (w : Nat) :
     ¬ BB6.Agent3.CReach (17810+53248*w) (13014+38912*w) := by
   let s := 256*w+85
   have hx : 130+208*s=17810+53248*w := by dsimp [s]; omega
-  have hy : 94+152*s=13014+38912*w := by dsimp [s]; omega
+  have hy : 94+152*s=13014+38912*w := by
+    simp only [s, Nat.mul_add]
+    omega
   intro hA
   have hA' : BB6.Agent3.CReach (130+208*s) (94+152*s) := by
     simpa only [hx,hy] using hA
@@ -668,7 +670,9 @@ theorem blank_no_A_s85 (w : Nat) :
   · subst a
     subst k
     have hxB : 54+90*s=7704+23040*w := by dsimp [s]; omega
-    have hyB : 127+211*s=18062+54016*w := by dsimp [s]; omega
+    have hyB : 127+211*s=18062+54016*w := by
+      simp only [s, Nat.mul_add]
+      omega
     have hB : BB6.Agent3.CReach
         (7704+23040*w) (18062+54016*w) := by
       simpa only [hxB,hyB] using hprev
@@ -687,7 +691,9 @@ theorem blank_no_high_m0_j5479 (w : Nat) :
     simpa only [hx,hy] using hr
   have hA := mzero_first_two_reach t hroot
   have hxA : 26+104*t=17810+53248*w := by dsimp [t]; omega
-  have hyA : 18+76*t=13014+38912*w := by dsimp [t]; omega
+  have hyA : 18+76*t=13014+38912*w := by
+    simp only [t, Nat.mul_add]
+    omega
   have hA' : BB6.Agent3.CReach
       (17810+53248*w) (13014+38912*w) := by
     simpa only [hxA,hyA] using hA
@@ -704,7 +710,7 @@ theorem high_stop_mzero_5479 (j k : Nat)
   have hp : (2:Nat)^(2*0+2)=4 := by decide
   rw [hp] at hstop
   have hkform : k=16444+49152*w := by rw [hjform] at hstop; omega
-  have hxform : 2*j+3=2*(5479+16384*w)+3 := by rw [hjform]; rfl
+  have hxform : 2*j+3=2*(5479+16384*w)+3 := by rw [hjform]
   intro hr
   have hr' : BB6.Agent3.CReach
       (2*(5479+16384*w)+3) (16444+49152*w) := by
