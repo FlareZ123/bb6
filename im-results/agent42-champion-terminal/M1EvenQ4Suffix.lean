@@ -71,7 +71,7 @@ private theorem first10_six (T : Int → Bool) (h : Int)
   rw [hcoord]
   rcases hc with h0 | h1 | h2 | h3 | h4 | h5 <;>
     subst i <;>
-    norm_num [q4First10Inside, q4First10End]
+    simp [q4First10Inside, q4First10End]
 
 /-- Generic left-stream transport through the q4 suffix.  No particular
 S1 marker or encoder is assumed: the suffix preserves the input stream
@@ -379,6 +379,9 @@ theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
     simpa [U,T1,T2,g] using
       q4_suffix_right_word T h b hshape8 htail
   have hframe := m1Even_reset_prefix_frame a b h
+  have hframe' :
+      run tm2 (79+12*a+3*b) (s1Config 3 6 1 a 0 b h) = some U := by
+    simpa [U,T1,T2,g] using hframe
   let H : Int := h+5+(3*b:Int)
   have htarget : U =
       s1Config 3 5 0 (a+b+2) (2^b-1) 0 H := by
@@ -430,7 +433,7 @@ theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
                 (H+1+(i:Int)) := by
                 exact (s1Config_right_cell
                   3 5 0 (a+b+2) (2^b-1) 0 H i).symm
-  rw [m1Even_resetPrefixCost_eq,hframe,htarget]
+  rw [m1Even_resetPrefixCost_eq,hframe',htarget]
 
 /-- A complete source-level Rst1 decrement for n=6, including its
 geometric all-ones drain.  This is exactly the first proposed increment
