@@ -594,3 +594,34 @@ The new 20,687-step root endpoint `Junc(11,0,146)` admits a promising source-cer
 5. The subsequent parameter map may expose a recurring low-deficit sequence; inspect the existing Low43/LowOdd/Low42 formalizations and exact root reachability before assuming a cycle or all-time invariant.
 
 Relevant files: `im-results/agent32-429-loweven-r32/LowEvenR32RootChain.lean`, `im-results/agent1-429-root-entry/RootJunc136To45.lean`, `im-results/agent1-429-root-entry/RootOuterLow42NoFatal.lean`, `im-results/agent6-429-low42/Low42Physical.lean`, `im-results/agent32-429-low5/LowOddPhysical.lean`, `im-results/agent30-429-positive-safe/OuterSafe.lean`. Keep all intermediate candidates in `im-results/`; no exact BB(6) value or universal six-state upper bound is established.
+
+
+## 2026-11-13T06:32Z checkpoint: extend the concrete root prefix to 43,862 steps
+
+Added `im-results/agent32-429-loweven-r32/LowEvenR32RootExtension.lean` to PR #81. It is a new **source candidate**, not yet CI-certified. The file contains:
+- a generic `source_no_fatal_physical` lift: a `runNoFatal` source certificate transports through `Represents` to every complete-tape physical prefix;
+- a generic `outer_no_fatal_segment` lift: `BB429OuterSafe.physical_outer_no_czero` gives C/0-free prefixes before the endpoint, and the endpoint Junc state is A;
+- a generic `physical_prefix_compose` helper preserving exact primitive-time endpoint and all-prefix C/01-freedom;
+- three concrete `runNoFatal` certificates proved by `decide`, and their physical lifts:
+  - Low42 j=34,k=9: `Junc(53,0,68) -> Junc(0,0,184)`, 5,613 steps;
+  - low-odd v=6,n=42: `Junc(93,0,13) -> Junc(90,0,26)`, 1,300 steps;
+  - Low42 j=13,k=38: `Junc(90,0,26) -> Junc(0,0,216)`, 1,725 steps.
+- composed theorem `BB429LowEvenR32RootExtension.blank_root_lowEvenR32_to_junc0_216`, extending the prior 20,687-step root candidate with outer-safe transitions and the three guarded returns. It states the absolute blank-root checkpoints:
+  - step 20,687: Junc(11,0,146);
+  - step 24,085: Junc(53,0,68);
+  - step 29,698: Junc(0,0,184);
+  - step 40,837: Junc(93,0,13);
+  - step 42,137: Junc(90,0,26);
+  - step 43,862: Junc(0,0,216).
+  C/01 is excluded at every physical prefix through step 43,862. This is only a finite prefix, not an all-time nonhalting theorem.
+
+Updated main's manual-only `.github/workflows/agent6-429-low42.yml` in commit `8d2fb2d5970bb51fcf1bca805e867602a544f6b7` to compile `LowEvenR32RootExtension` after the r=32 leaf and root composition, and to audit all seven public declarations under the existing fail-closed global `sorryAx` check. The workflow remains `workflow_dispatch` only. Agent 48 and Agent 6 were notified in `communications/agent48/20261113T063204Z_agent32-43862-root-extension.md` and `communications/agent6/20261113T063204Z_agent32-43862-root-extension.md`. There is still no dispatch-capable action in this invocation, so the integrated workflow has not been run; do not claim either new composition theorem is certified.
+
+PR #81 now has four changed files (concrete leaf, root composition, root extension, README), title `Agent 32: concrete low-even r=32 blank-root chain to 43,862`, and an updated validation disclaimer. The parameterized 4k candidate remains separate in draft PR #82. Main workflow changes are not part of PR #81's diff.
+
+### Next useful work after the integrated audit
+
+- Get the integrated manual workflow dispatched and address only actual Lean diagnostics. The earlier 43365025686 run remains red due to unrelated `Low43Continuation.lean`, despite the concrete r=32 leaf compiling and its own axiom reports being clean.
+- If the 43,862-step theorem compiles, the next concrete frontier is `Junc(0,0,216)`. Its outer-safe sequence (U=0,3,9,21,45,93) leads to `Junc(93,0,45)); inspect the resulting deficit and use existing LowOdd/Low42/Low43 families rather than guessing a recurrence. Keep source nofatal guards and complete-tape lifts explicit.
+- The general low-odd `4k+1` physical family is already present in `im-results/agent32-429-low5/LowOddPhysical.lean`; for the current concrete branch v=6,n=42 the new module uses a direct 1,300-step guarded source certificate. Do not reopen the family proof.
+- All current contributions remain under `im-results/`; no BB(6) exact value or universal upper bound is established.
