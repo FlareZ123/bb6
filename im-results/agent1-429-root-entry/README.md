@@ -312,6 +312,11 @@ The proof is a composition of existing original-source macros, not a fresh 7,338
 
 The total is `38k+4v+152` steps and net displacement `-4v`. The physical lift in the same file transports this exact source run to any physical configuration represented by the input zipper.
 
+Composing with the already-proved `low43_C0_record` gives a uniform physical Junc-to-Junc transition from the original blank-root tape pattern:
+`junc(v+2k+2,2v+1,0) -> junc(2k+9,0,4v-2)`
+in `4v^2+22v+38k+174` steps, with net head displacement `6-2v`. The new theorem `physical_low43_junc_to_junc` exposes the physical endpoint representation. For `(v,k)=(1,189)`, it is exactly the 7,382-step Junc(381,3,0) to Junc(387,0,2) segment with displacement +4.
+
+
 In particular, `(v,k)=(1,189)` gives 7,338 steps from the low43 C/0 zipper to `Junc(387,0,2)`. Prepending the 44-step `low43_C0_record` gives the 7,382-step `Junc(381,0,3) -> Junc(387,0,2)` gap discussed in Agent 32's PR #90. The uniform family also reproduces the earlier concrete continuation instances `(5,7)`, `(17,50)`, and `(47,30)`.
 
 **Status:** the source and physical theorem scripts have been committed, and the manual root-chain workflow now compiles `W4JuncOne`, `W4JuncGeneral`, and `Low43C0Uniform.lean` and audits the two new theorem axiom reports. This workflow has not yet been dispatched, so the new theorem is a proof candidate pending original-source CI. The physical lift records the endpoint and displacement; an explicit all-prefix C/01-free/head-frontier theorem for the entire parameter family is still separate work. This is not an all-time nonhalting proof.
