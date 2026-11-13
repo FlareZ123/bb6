@@ -1,10 +1,6 @@
 name: One-shot inspect D-root audit artifact
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/agent37-seed31-artifact-inspect.yml
+  workflow_dispatch:
 permissions:
   actions: read
   contents: write
