@@ -1,10 +1,6 @@
 name: One-shot trigger for D-root stage 2a
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/agent2-root-stage2-once.yml
 permissions:
   contents: read
   actions: read
