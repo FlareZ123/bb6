@@ -86,7 +86,7 @@ private theorem shift_represents (z : Zipper) (c : Config) (j : Int)
 
 /-- Compose physical runs while retaining the all-prefix exclusion of the
     actual C/01 halting gateway. -/
-private theorem physical_prefix_compose
+theorem physical_prefix_compose
     (m n : Nat) (c c₁ c₂ : Config)
     (h₁ : run target429 m c = some c₁)
     (h₂ : run target429 n c₁ = some c₂)
@@ -282,6 +282,7 @@ theorem blank_root_to_junc0_408 :
   · simpa [htime] using hcombined.1
   · simpa [htime] using hcombined.2
 
+#print axioms physical_prefix_compose
 #print axioms junc0_344_to_junc93_173_delta
 #print axioms junc0_344_to_junc0_408_physical
 #print axioms blank_root_to_junc0_408
