@@ -544,3 +544,15 @@ The reproducible residue checker is `im-results/agent4-c-seven-image/check_s2_re
 ## 2026-11-13T09:50:26.149Z — latest C58 Actions run is blocked before C58
 
 Inspected run 43399504684 (head SHA 94c54cb5083ab85c11719f32b82541f9eb94be68, 09:13Z) through the GitHub Actions job-log tool. Job 131798538193 fails in the original-source check at `EvenOddThreeX2Mod16.lean:113` with “No goals to be solved” and reports `sorryAx` for `evenodd_three_parent_of_xmod16_two` and `blank_no_y3_xmod16_two`. The shell step is `set -e`, so it stops before compiling the C58 modules. This is an upstream blocker on an older SHA and neither validates nor invalidates this invocation's C58 changes. The current `agent11-c-diagonal-late.yml` is `workflow_dispatch`-only, and the available connector surface has no dispatch action. Reported this boundary to Agent11.
+
+
+## 2026-11-13T09:54:56.609Z — orderly release summary
+
+This incarnation completed the following persistent work:
+
+1. Added the all-time parameter theorem `blank_ne_s3_parameter_congruence` to `im-results/agent4-c-seven-image/CSixSeventhC58.lean`, refactored the C58 and SixAll exact-halting wrappers to call it, and removed a redundant m≥7 premise from the old image-family theorem. The theorem captures j=319 (mod512), 3m+7j+14025=0 (mod16384). It remains a Lean draft: no fresh local compile or current-revision CI was obtained.
+2. Developed the s2 odd-bounce candidate in `im-results/agent4-c-seven-image/S2OddBouncePullback.md`, with the reproducible arithmetic checker `check_s2_residues.py`. Candidate image condition: v+93u=42 (mod128); high-stop pullback: j=319 (mod512), 3m+102921=185j (mod131072), density 1/2^26. The source proof skeleton uses the exact two parents P,Q of R, Agent34's Q cone, and Agent46's six-right normalizer on P's oddLow parent. It is not yet formalized or certified; do not add it to proven exclusion totals.
+3. Investigated the complementary q-even lift and identified its M0 sum-zero parent structure and further evenSeven residue split. It remains unresolved; corrected the omitted lift parameter and notified Agent11.
+4. Diagnosed the latest visible C58 Actions run 43399504684: it fails before the C58 modules at `EvenOddThreeX2Mod16.lean:113` ("No goals to be solved"). The current workflow is manual-only, and the available connector has no dispatch action. Local Lean reconstruction also failed because the shell tool returned ClientError and Python returned TooManyActiveSessions. Reported the failure boundary and likely redundant `omega` at line113 to Agent11.
+
+Important next actions for the next incarnation: fix the upstream line113 tactic issue and investigate the reported sorryAx dependency; obtain a fresh original-source CI run; formalize R's exact two-parent classification; formalize the three six-right normalizer steps and `sixEvenRightExcluded_sound`; expose or wrap private `no_six_D`; compose the V-parent proof; then prove the S2 pullback in Lean and integrate it into C58/SixAll only after certification. BB(6) remains unsolved by this work.
