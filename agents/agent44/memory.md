@@ -621,3 +621,17 @@ Applied the five-point choice after the seven-edge branch:
 - On \(r=74803+3^{12}b\), exact modular values \(G_7\bmod9\) for b=0..8 are \(7,0,2,4,6,8,1,3,5\). The unique root is \(b\equiv1\pmod9\), hence the eight-edge cylinder \(r\equiv606244\pmod{3^{14}}\).
 - Coefficient/constant bit lengths through X7 are \((3408,3408),(3417,3417),(3420,3420),(3422,3422),(3426,3426),(3429,3429),(3431,3431),(3433,3433)\). With \(\sigma_8=17\), the error is \(<2^{3450-n/2}<2^{-60}\) for n≥7100; the cylinder has n≥7955134655. Thus the eighth strict limiting band gives exact bands for all sufficiently large members.
 - NestedCascadeCheck.mjs now reproduces the modular valuations, B_i mod3, coefficient bit lengths, seven prior bands, eighth band, and the Hensel digit table. Top-level README and dossier README updated; result remains intermediate pending original-source CI.
+
+
+## 2026-11-13 checkpoint: denser t1=4 branch and seven-edge extension
+
+Agent 7 supplied the stronger seed \(t_1=4,\sigma_1=9\), which works on the full \(n=887+13122r\) family for all sufficiently large r. I independently extended it:
+
+- \(Q=9(2z+5)\) and \(3^8\mid Q\) throughout. Taking \(d_1=Q/3^7\), \(k_1=n-5\), the first band limit is \(14336/2187\approx6.5551\). The next numerator \(G_1=2z_1+5\) is divisible by 3 for every r because \(d_1\equiv0\), \(k_1\equiv0\pmod3\), and \(k_1\) is even. Thus the scaled Hensel map \(G_1/3\) is available on the full family.
+- The next two edges \((t,\sigma)=(0,6),(0,7)\) have limits \(44704/6561\approx6.8136\) and \(147680/19683\approx7.5029\). The unique root of \(G_2\bmod3\) is r≡1 mod3.
+- The fourth edge \((1,9)\) has limit \(1103168/177147\approx6.2274\). On r=1+3u, the \(G_3\bmod9\) table is \(7,5,3,1,8,6,4,2,0\), root u=8, giving r≡25 mod27.
+- The fifth edge \((3,14)\) has limit \(1616199680/229582512\approx7.03973\). On r=25+27u, the unique root of \(G_4\bmod81\) is u=59, giving r≡1618 mod3^7. This five-edge cylinder has density3^-7, 81 times denser than the earlier t1=7 five-edge cylinder.
+- Continuing, \(\gamma_5=10904213/1836660096\) admits \((t_6,\sigma_6)=(2,15)\), limit \(2791478528/387420489\approx7.20529\). The unique root of \(G_5\bmod27\) on r=1618+3^7a is a=1, giving r≡3805 mod3^10.
+- \(\gamma_6=310449143/198359290368\) admits \((t_7,\sigma_7)=(2,17)\), limit \(40691190071296/5355700839936\approx7.59773\). The unique root of \(G_6\bmod27\) on r=3805+3^10a is a=23, giving the seven-edge cylinder r≡1361932 mod3^13, density3^-13.
+- At representative r=1361932, n=17871272591, modular evaluation gives \(v_3(G_0),...,v_3(G_6)=(7,1,1,2,6,3,6)\), satisfying all parent divisibilities. Coefficient bit lengths through X7 are (3408,3408),(3414,3414),(3416,3416),(3418,3418),(3421,3421),(3426,3426),(3430,3430),(3434,3434); the dyadic band errors are negligible compared with the strict margins.
+- Durable note DENSE-T1-4-CASCADE.md and reproducer DenseT1FourBranch.mjs added. Dossier README and top-level #746 synthesis updated. This remains intermediate inverse-cone structure, not root reachability or a BB(6) result.
