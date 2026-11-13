@@ -1,0 +1,89 @@
+name: Agent 24 m0 odd q4 prefix Lean verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent24-m0-odd-q4-prefix.yml'
+      - 'im-results/agent24-champion-time/M0OddQ4Bridges.lean'
+      - 'im-results/agent24-champion-time/M0OddQ4Prefix.lean'
+      - 'im-results/agent24-champion-time/Q4RightEndpoint.lean'
+      - 'im-results/agent24-champion-time/CountedSweep.lean'
+      - 'im-results/agent24-champion-time/CountedOddBase.lean'
+      - 'im-results/agent6-q4-prefix/CountedQ4Prefix.lean'
+      - 'im-results/agent8-s1-encoder/S1Encoder.lean'
+      - 'im-results/agent8-counted-reset/CountedReset.lean'
+      - 'im-results/agent8-counted-reset/Q4Suffix.lean'
+      - 'im-results/agent8-rst1prime/CountedRst1Prime.lean'
+      - 'im-results/agent48-champion-root/ChampionRootBridge.lean'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Stage exact source dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a24-m0
+          cp im-results/agent8-coverage-contract/{Frontier,Symmetry,RootShift}.lean /tmp/a24-m0/
+          cp im-results/agent48-champion-root/ChampionRootBridge.lean /tmp/a24-m0/
+          base64 --decode im-results/agent26-tm63-uniform/UniformTM63-verified.lean.gz.b64 | gzip --decompress > /tmp/a24-m0/UniformTM63.lean
+          cp im-results/agent24-champion-time/{CountedSweep,CountedOddBase,ChampionModular,CostRecurrence,CountPattern,Q4RightEndpoint}.lean /tmp/a24-m0/
+          cp im-results/agent8-s1-encoder/S1Encoder.lean /tmp/a24-m0/
+          cp im-results/agent8-counted-reset/{CountedReset,Q4Suffix}.lean /tmp/a24-m0/
+          cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a24-m0/
+          cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a24-m0/
+          cp im-results/agent24-champion-time/{M0OddQ4Bridges,M0OddQ4Prefix}.lean /tmp/a24-m0/
+      - name: Compile dependencies and new m0 odd q4 proof
+        run: |
+          set -euo pipefail
+          cd /tmp/a24-m0
+          export LEAN_PATH=.
+          lean --version
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
+          lean -o ChampionRootBridge.olean ChampionRootBridge.lean
+          lean -o UniformTM63.olean UniformTM63.lean
+          lean -o CountedSweep.olean CountedSweep.lean
+          lean -o CountedOddBase.olean CountedOddBase.lean
+          lean -o S1Encoder.olean S1Encoder.lean
+          lean -o ChampionModular.olean ChampionModular.lean
+          lean -o CostRecurrence.olean CostRecurrence.lean
+          lean -o CountPattern.olean CountPattern.lean
+          lean -o CountedReset.olean CountedReset.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
+          lean -o Q4Suffix.olean Q4Suffix.lean
+          lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
+          : > m0-odd-q4-axioms.log
+          if ! lean -o M0OddQ4Bridges.olean M0OddQ4Bridges.lean > m0-odd-q4-axioms.log 2>&1; then
+            echo '## M0OddQ4Bridges compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 100 m0-odd-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-odd-q4-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-odd-q4-axioms.log; then
+            echo '::error::sorryAx found in m0 finite bridge proofs'
+            exit 1
+          fi
+          if ! lean -o M0OddQ4Prefix.olean M0OddQ4Prefix.lean >> m0-odd-q4-axioms.log 2>&1; then
+            echo '## M0OddQ4Prefix compilation failed' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 140 m0-odd-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
+            cat m0-odd-q4-axioms.log
+            exit 1
+          fi
+          if grep -q 'sorryAx' m0-odd-q4-axioms.log; then
+            echo '::error::sorryAx found in m0 odd q4 prefix proof'
+            exit 1
+          fi
+          echo '## m=0,n=5 q4 prefix Lean verification' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Both new modules compile under Lean 4.36.0-rc2 without sorryAx.' >> "$GITHUB_STEP_SUMMARY"
