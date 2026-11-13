@@ -207,7 +207,7 @@ Thus \(|B_i|,|C_i|<2^{3430}\) for every coefficient used in the five band tests.
 2^{10}\frac{2^{3430}(n+1)}{2^n}
 <2^{3440-n/2}\le2^{-60}.
 \]
-Consequently every exact ratio remains strictly between 6 and 8 with margin greater than \(0.1\). Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.09\cdot2^{k_i}>1\). The integer bands \(6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1\) therefore hold for every \(n\ge7000\) in the class. In particular, the least representative \(r=74803\) itself gives a genuine five-edge chain, and so does every nonnegative member of the class.
+Consequently every exact ratio remains strictly between 6 and 8 with margin greater than \(0.09\). Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.09\cdot2^{k_i}>1\). The integer bands \(6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1\) therefore hold for every \(n\ge7000\) in the class. In particular, the least representative \(r=74803\) itself gives a genuine five-edge chain, and so does every nonnegative member of the class.
 
 The exact modular residues and coefficient bit lengths are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). The calculation checks the finite specialization; the band-compatible induction above is the arbitrary-depth mathematical argument.
 
