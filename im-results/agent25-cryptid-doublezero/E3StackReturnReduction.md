@@ -1,6 +1,6 @@
 # E3 finite-suffix first return: mirror reduction and blocked stack bridge
 
-**Status:** exact mirror reduction; direct entry into the DeepMind stack system is not established. The first-return theorem remains open. This note does not claim E3 totality, a blank-root result, or a BB(6) result.
+**Status:** exact mirror reduction and a three-step entry into the DeepMind DL stack mode for a restricted suffix language. The first-return theorem remains open. This note does not claim E3 totality, a blank-root result, or a BB(6) result.
 
 ## 1. Exact machine mirror
 
@@ -37,26 +37,32 @@ at position 6. Under the mirror, this is 85 A scanning 0, with 1s at positions
 -1 through -4, a zero at -5, the reversed suffix on positions -6 and farther
 left, and a blank right tape.
 
-The first two 85 steps are fixed:
-`A0 → B0 → C0`.
-The head is then at position 2 in state C scanning 0. Its head-adjacent
-left cell (position 1) is 0, written by the B0 step. By contrast,
-`encLeft R` has head bit 1 whenever R is nonempty
-(the source lemma `encLeft_head`). Since this configuration has a nonempty
-left tape but head-adjacent bit 0, it is **not** a `CR_n_n` configuration
-of the DeepMind stack system. This blocks the naive two-step bridge; no
-condition on the remote suffix Y can repair this fixed local mismatch.
+The first three 85 steps are fixed:
+`A0 → B0 → C0 → D0`.
+At the resulting D/0 head, the left tape from nearest to farthest is
+`1 0 11111 0 Y`: the first 1 is written by A0, the next 0 by B0, the
+five consecutive 1s consist of the four original 1s plus the 1 written by
+C0, and the delimiter 0 precedes Y. The right tape begins with the current
+blank 0 and is blank thereafter.
 
-The first-event correspondence itself is exact: D F/1 maps to 85 A/1 halt,
-and D F/0 with no 1 anywhere to the left maps to 85 A/0 with no 1 anywhere
-to the right. Thus the E3 problem becomes a first-return problem for 85 from
-the reflected A/0 seed to an A/0 boundary with blank right, or halt.
+This is exactly a `DL_0_n` stack configuration
+`cfg_DL_0_n L=[] R` whenever the finite word
+`1 0 11111 0 Y` is in the `encLeft` run-length language. A sufficient
+condition is that Y is empty, or begins with 1 and has no adjacent zeros:
+then the displayed left word is a concatenation of nonempty 1-runs
+separated by single zeros, with the final blank providing any trailing
+separator. The run lengths determine R (with second coordinate 0). This is
+a genuine three-step stack-entry lemma for that suffix language, unlike the
+naive two-step CR entry, which fails because its head-adjacent left cell is 0.
 
-A useful next question is whether a *longer, explicitly source-verified
-prefix* from this A/0 seed reaches one of the four encoded stack modes
-CR/EL/DL/DR. If so, the suffix language must also be checked against the
-exact `encLeft`/`encRight` conventions. The pair-stack reduction cannot
-be applied before that entry lemma is proved.
+The first-event correspondence is exact: D F/1 maps to 85 A/1 halt, and D
+F/0 with no 1 anywhere to the left maps to 85 A/0 with no 1 anywhere to the
+right. After three further steps from that A/0 boundary, 85 again reaches a
+`DL_0_n` configuration with L empty, provided the returned suffix is in the
+same run-length language. Thus, on this language, the E3 first-event problem
+is equivalent to a first-return problem for the 85 stack system: from
+`DL_0_n L=[] R`, eventually reach another `DL_0_n L=[] R'` (the E3
+return), or halt.
 
 ## 4. Relation to existing E3 evidence
 
@@ -66,27 +72,28 @@ The remote-reentry DAG is a conservative finite abstraction; its cycles
 show why arbitrary remote reentry alone does not prove finite-tail totality.
 Both are computational evidence, not a proof for all finite Y.
 
-The DeepMind stack reduction is a possible tool, but the direct two-step
-entry argument fails: the mirrored seed reaches C/0 with a head-adjacent
-left zero, whereas the CR encoding requires a head-adjacent left one. No
-suffix-language condition on Y fixes this local mismatch. A longer
-source-verified prefix into CR/EL/DL/DR would have to be discovered and
-proved before the stack closure theorem can be used. Even after such an
-entry lemma, closure to an arbitrary stack mode would not by itself prove
-the E3 first-return property.
+The three-step DL entry is valid for the stated run-length suffix language.
+It does not yet establish that every root-reachable E3 suffix belongs to
+that language; this must be proved from the upstream source grammar. It also
+does not prove that the DL/EL/DR/CR stack-mode trajectory returns to DL with
+L empty. The DeepMind `stack_system_closed` theorem gives a finite
+transition to *some* stack mode or halt, which is weaker than the needed
+first-return property.
 
 ## 5. Correct next proof target
 
-First prove or refute a uniform stack-entry lemma:
+There are two precise remaining obligations.
 
-```
-∀ Y in the root-reachable E3 suffix language,
-  ∃ cfg, Reaches (mirrorE3Seed Y) cfg ∧ IsInStackSystem cfg
-```
+1. Prove that every E3 suffix Y actually reachable from the blank-root
+   trajectory is empty or begins with 1 and contains no adjacent zeros.
+   Then the three-step entry above applies uniformly to root-reachable
+   E3 seeds.
 
-The prefix and the exact `encLeft`/`encRight` tape-language hypotheses
-must be explicit. Then strengthen the stack-mode analysis to show that
-these particular entries eventually reach an A/0 configuration with blank
-right tape (the E3 return), or halt. The existing theorem that reaches
-*some* stack mode is insufficient. If no such entry lemma exists, the
-DeepMind stack reduction is not currently a route to E3 totality.
+2. Strengthen the stack-mode analysis to prove, for the corresponding
+   `DL_0_n L=[] R` inputs, eventual return to another `DL_0_n L=[] R'`
+   configuration or halt. Reaching an arbitrary CR/EL/DL/DR mode is not
+   sufficient.
+
+The first obligation is a language-invariant problem; the second is a
+well-founded first-return problem across the stack modes. Neither is proved
+here.
