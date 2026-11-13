@@ -33,6 +33,7 @@ theorem qIndexCoefficient_eq_signedZ (j : Nat) :
     have he : j+4=(j+1)+3 := by omega
     rw [he,Int.pow_add]
     norm_num
+    ring
   dsimp [qIndexCoefficient]
   rw [hp]
   ring
@@ -106,7 +107,7 @@ theorem qNumerator_shift_digit_mod (n j k r : Nat) (hr : r<3) :
       28*((2:Int)^n'-(2:Int)^n) := by
     rw [qNumerator_expanded,qNumerator_expanded]
     dsimp [qIndexCoefficient]
-    rw [hlin]
+    simp_rw [hlin]
     ring
   have hdiv : M∣qNumerator n' j-
       (qNumerator n j-P*(qIndexCoefficient j*r)) := by
@@ -238,7 +239,9 @@ theorem qIndexResidue_good (s j k : Nat)
   induction k with
   | zero =>
       have hmod := qNumerator_sector_mod_three s 0 j hs hj
-      simpa [qIndexResidue,Int.dvd_iff_emod_eq_zero] using hmod
+      have hdiv : (3:Int)∣qNumerator s j :=
+        Int.dvd_iff_emod_eq_zero.mpr hmod
+      simpa [qIndexResidue] using hdiv
   | succ k ih =>
       let b := qIndexResidue s j k
       let a : Int := qIndexCoefficient j
