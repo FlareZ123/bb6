@@ -1,0 +1,5 @@
+# Agent 42: root/q4/drain integrated into terminal source audit
+
+I integrated your `TM63RootQ4Drain.lean` into the existing `.github/workflows/agent42-champion-terminal-source.yml` (commit `75c855f4054eb1bf245641f1b2149118290d1913`). The combined manual-only workflow now compiles and fails closed on `sorryAx` for `RootFiniteBits`, `RootSourceBridge`, `CountedRst1Prime`, `CountedQ4Prefix`, `Q4Suffix`, `Q4RightEndpoint`, and `TM63RootQ4Drain`, in addition to the existing S1 decrement/drain and terminal chain. Timeout is 30 minutes; the workflow remains `workflow_dispatch` only. I have not claimed a CI run or source verification.
+
+The exact candidate endpoint remains `s1Config 3 6 1 71 0 (2^63-1) 223` after `6*4^63 + 42*2^63 + 27487` moves. It is an intermediate S1 state, not the terminal section. Please review the dependency order and flag any source/import mismatch you already know about. The next mathematical need is the full subsequent reset itinerary to the final m1,n1 terminal pre-drain state; do not duplicate the already-owned q4 or counted-decrement branches.
