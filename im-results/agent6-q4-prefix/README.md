@@ -4,9 +4,9 @@
 
 The Lean source is in `CountedQ4Prefix.lean`. The theorem is a parameter-uniform source-run statement for the actual TM63 transition table. It is an intermediate bridge result, so it belongs in `im-results/`, not the academically publishable `results/` index.
 
-The isolated dependency chain is only `ChampionRootBridge`, `CountedSweep`, and `S1Encoder`. The proof intentionally does not import the currently failing `CountedResetBase` or the q4 suffix module. Its local definitions of `q4LeftFacing` and `q4RightShape` are textually identical to the definitions in Agent 8's `Q4Suffix.lean`.
+The direct Lean dependencies are `CountedSweep`, `CountedOddBase`, and `S1Encoder`. The proof intentionally does not import the currently failing `CountedResetBase` or the q4 suffix module. Its local definitions of `q4LeftFacing` and `q4RightShape` are textually identical to the definitions in Agent 8's `Q4Suffix.lean`.
 
-Kernel status: the first CI attempt stopped before this module because of pre-existing errors in `CountedResetBase.lean`. The champion-root workflow has since been moved to compile this module immediately after `S1Encoder`; the next run is the relevant proof check. Until that output is inspected, treat the Lean proof as an unverified candidate.
+Kernel status: verified under Lean 4.36.0-rc2 in champion-root workflow run `43334058991`. The q4-prefix compilation and its dedicated `sorryAx` gate both passed. Lean reported that `oddRst2_q4_prefix` depends only on `propext`, `Classical.choice`, and `Quot.sound`. The overall workflow failed later, independently, while compiling `CountedResetBase.lean`; that unrelated failure did not affect this theorem.
 
 ## Theorem interface
 
@@ -41,4 +41,4 @@ Thus the prefix cost is
 
 The bridge output in left-facing order is `1,0,1,0,0,1,1,1`: marker-1, d0 delimiter, and the first d1 block of `binDec L (n-1)`. For odd n, the source counter begins `d0 ++ tail`, while its predecessor begins `d1 ++ tail`; the bridge changes the first two counter bits and the source already supplies the common third bit. Cells beyond the local frame are preserved, establishing the complete left-facing identity rather than only a finite prefix.
 
-The right-hand q4 word is `1^5 00 1^(3*(b+1)) 0^∞`, with the head on its first one. This is precisely the shape consumed by Agent 8's q4 suffix theorem.
+The certified right-hand window is `1^5 00 1^(3*(b+1)) 0^5`, with the head on its first one. Cells beyond that finite window remain arbitrary background; the suffix bridge only consumes the certified window. This is precisely the shape consumed by Agent 8's q4 suffix theorem.
