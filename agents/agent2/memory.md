@@ -483,3 +483,29 @@ Re-read the exact failure log for `43389968596`: both `p2_packet_reentry_or_E` a
 - Replaced the existential tactic with an explicit witness `q' := q-2`, proved `q=q'+2) by `dsimp [q']; omega`, then rewrote the goal before using `hqsub) and `hlen`. Commit `e7009d5be533dec9432949b804dbdef06f88e478`.
 - Triggered root retry5 `43394857303` on current main and retired the one-shot trigger. This is still in progress. If it does not finish before lease release, leave it running and have the next Agent 2 incarnation inspect its result/artifact.
 - Local Lean 4.36.0-rc2 was successfully reconstructed from the two uploaded zip chunks under `/tmp/lean/lean-4.36.0-rc2-linux`. The container initially returned transient ClientErrors, then worked. A direct `git clone` of the repository failed because the container could not resolve github.com, so local compilation against the repository sources was unavailable; CI remains the source verifier.
+
+
+### Orderly release — 13 Nov 2026 (70-minute lease)
+
+This incarnation reached the 70-minute threshold at `2026-11-13T08:46:43.932Z` and is releasing Agent 2.
+
+**Durable verified result**
+- `im-results/agent2-packet-shift/P2K4SourceReentry.lean` adds `close_one_regular_reentry` and `source_chain_close_one`. GitHub Actions run `43391093227` succeeded; both theorem axiom profiles are `[propext, Quot.sound]`. The bridge converts Agent 35's q≡1 (mod 3), p=2 `close_one` endpoint to the physical `regularSection` language.
+- For the proposed #41 packet, `k41=81*s+76=firstK (3*s+2)`, q=7 is u=2, and the packet is `(243*s+232,7,2,false::replicate 6 true)`. The verified bridge applies to that entire parameterized family, conditional on proving the upstream root prefix.
+- The q=4 arithmetic/preimage analysis is preserved in `im-results/agent2-root-language-exit/Q4RegularPreimages.md`; its README links it. It distinguishes the EERootBEA subcylinder `L(243*u+25,4,1)` from the separate q=4 family `L(243*s+214,4,1)`. These are exact regular-model predecessor calculations, not blank-root reachability proofs.
+
+**Current blocker / pending CI**
+- The p2 packet modules, including `p2_packet_reentry_or_E` and `p2_packet_reentry_or_reset`, compiled with only `[propext, Quot.sound]` in root audit `43392641829`.
+- `EFirstAPacket.output_shape` had a failed attempt to synthesize `q'` existentially. Current main replaces that with explicit `q' := q-2`, proves `q=q'+2`, then uses the successor and replicate-length identities (commit `e7009d5be533dec9432949b804dbdef06f88e478`).
+- Root retry5 **`43394857303`** is still `in_progress` at lease release. It is the first run containing the explicit witness fix. Do not trigger a duplicate before inspecting this run. Retrieve its artifact `d-root-seed31-audit`; if `seed31-probe.txt` exists, use its exact first-stop count and state.
+- Prior root runs `43389968596` and `43391359969` failed before the Seed31 probe; the latter used the old EFirstAPacket proof. The latest run may continue after this lease is released.
+
+**Next incarnation's highest-value actions**
+1. Inspect run `43394857303` and its artifact/log. If EFirstAPacket passes, continue through `BlankThirtiethRejoin` and read the Seed31 probe.
+2. Prove the exact DRegular transition from seed31 with `DRegularFast.fastRun_correct`; compose it with the physical blank-root prefix using `Agent25RootChain.extend_regular`.
+3. Identify the actual first exception and apply its source-certified reentry family. If it is the EERootBEA q=4 target, use `EERootBEA.q4_exceptional_EE_BEA_section`; retain the verified K4 bridge for the model's #41 packet.
+4. Request Agent 37's exact corrected #31–40 state/branch table if still unavailable; avoid independently rebuilding a trace already computed by that identity.
+
+Lean 4.36.0-rc2 was reconstructed locally under `/tmp/lean/lean-4.36.0-rc2-linux` from the two uploaded archive chunks. A local repository clone was blocked by DNS resolution of github.com, so source verification was performed in GitHub Actions. The one-shot artifact-inspect workflow was restored to manual-only; the K4 and Seed31 retry workflows are also manual-only after their controlled dispatches.
+
+**BB(6) is not solved by this work.** The verified K4 bridge is a reusable source-level closure; the blank-root path through exception #41 and the universal six-state upper bound remain open.
