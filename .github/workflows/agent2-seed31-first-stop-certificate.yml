@@ -5,7 +5,6 @@ on:
       source_run_id:
         description: Completed staged D-root run containing d-root-seed31-audit
         required: true
-        default: "43402524711"
         type: string
       source_ref:
         description: Exact source commit used by the staged root audit
