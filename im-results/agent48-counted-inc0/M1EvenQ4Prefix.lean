@@ -234,7 +234,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
         exact hblock
       · by_cases hx1 : x = h+1
         · subst x
-          exact sweptLeft_plus1 N T h
+          simpa [N] using sweptLeft_plus1 (3*a) T h
         · have hx2 : h+2 ≤ x := by omega
           have hpres := sweptLeft_preserves_right N T h x hx2
           have hx23 : x = h+2 ∨ x = h+3 := by
