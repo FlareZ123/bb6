@@ -91,3 +91,47 @@ u_{r+1}=8u_r+146,\qquad s_{r+1}=s_r+6
 for \(u=b-6d\) and \(s=b+d\) under reverse depth two. The new identity supplies a source-certified reason that this is the only possible terminal suffix after the final shallow edge, rather than merely a convenient case split.
 
 No claim is made here that the preceding prefix is low-depth, that the wall is unreachable, or that BB(6) is determined.
+
+
+## Quantitative bound on the terminal depth-two suffix
+
+Let \(K\ge1\) be the total number of shallow edges, let the last shallow edge have depth \(\tau\in\{0,1\}\), and let \(r\ge0\) be the number of depth-two edges after it. Write \(s_*\) for the cumulative cost immediately before that last shallow edge. Then
+\[
+m=s_*+(\tau+1)+3r.
+\]
+Equation (2), after dropping all negative high-depth contributions, bounds \(N\) by the shallow contributions alone. The \(K\) shallow starting costs are distinct and all at most \(s_*\).
+
+- If \(\tau=0\), the sum of the \(K\) largest possible powers is \(2^{s_*+1}(1-2^{-K})\), and every shallow coefficient is at most 6. Thus
+\[
+N<6\,2^{s_*+1}(1-2^{-K}).
+\]
+- If \(\tau=1\), the final shallow coefficient is 4 and the other \(K-1\) coefficients are at most 6. The \(K-1\) largest powers strictly below \(2^{s_*}\) sum to \(2^{s_*}(1-2^{-(K-1)})\). Thus
+\[
+N<(10-6\,2^{-(K-1)})2^{s_*}.
+\]
+
+On the other hand, (1) gives
+\[
+\frac{N}{2^m}>
+\frac{m+n+3}{P},
+\]
+because \((n+3)S+T-1>0\). Combining the bounds yields the exact necessary inequalities
+\[
+\boxed{
+8^r(m+n+3)<6(1-2^{-K})P\quad(\tau=0),
+}
+\]
+and
+\[
+\boxed{
+8^r(m+n+3)<
+\left(\frac52-\frac32\,2^{-(K-1)}\right)P
+\quad(\tau=1).
+}
+\]
+For example, if \(K\le5\) and \(r\ge1\), these imply respectively
+\[
+m+n+3<\frac{93}{128}P,\qquad
+m+n+3<\frac{77}{256}P.
+\]
+These are necessary cost/suffix bounds, not exclusions. They may be useful when combining the terminal depth-two suffix with reset-count lower bounds or the preceding high-depth restart analysis.
