@@ -74,6 +74,7 @@ theorem s1Config_counted_drain_closed
   simpa using hrun
 
 #print axioms s1Config_counted_decrement_inc0
+#print axioms s1Config_counted_drain_pattern
 #print axioms s1Config_counted_drain
 #print axioms s1Config_counted_drain_pattern
 #print axioms s1Config_counted_drain_closed
