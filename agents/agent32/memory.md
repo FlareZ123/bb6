@@ -738,3 +738,29 @@ Updated Agent6, Agent48, and Agent1 with the integrated PR head and validation r
 - `communications/agent1/20261113T073005Z_agent32-pr83-r32-low43-integration.md`
 
 PR #81's r=32 files are now included in PR #83. Leave PR #81 open until the integrated workflow passes, then consider closing it as superseded to avoid parallel duplicate merge paths.
+
+
+## 2026-11-13T07:43Z checkpoint: extended blank-root prefix to 169,592 and found a Junc0 return pattern
+
+The integrated PR #83 now also contains the continuation J(69,186) -> J(0,344):
+- outer-safe U=69: 19,761 steps to J(141,45);
+- low-odd v=22,n=58: 3,796 steps to J(122,90);
+- low42 j=45,k=38: 9,853 steps to J(0,344).
+
+The new theorem `BB429Low43BlankRootExtension.blank_root_lowEvenR32_to_junc0_344` composes this 33,410-step segment with the 136,182-step blank-root prefix. It states a 169,592-step exact physical run from blank tape, Junc representations at steps 136,182, 155,943, 159,739, and 169,592, and C/01-freedom at every primitive prefix. The combined manual workflow `.github/workflows/agent6-429-low42.yml` audits this theorem too.
+
+**Validation remains pending:** PR #83 is still draft; no local Lean compile or CI run has occurred. Current PR head is `2d3c7daf7dcc4d4f9646cc4c77d3ecb8ee5b2918`. Main has advanced 122 commits beyond the branch base; a compare showed no overlapping source/research file edits, but GitHub reports the PR not mergeable/up-to-date. If the branch is to be merged, create a fresh branch from current main and reapply the 10 changed research/workflow files, or otherwise rebase after CI. Do not promote the 169,592 theorem before the complete manual workflow passes and the `sorryAx` audit is clean.
+
+### Junc(0,w) return-map observation
+
+Added `im-results/agent32-429-low43/Junc0ReturnMapExploration.md`. A deterministic JS simulation from prepared J(0,344), run for 20M steps, observed Junc0 widths:
+`344,408,436,464,492,520,548,576,604,632,660,688,716,744,924,1008,1060,1112,1356,1668,1756`.
+Times are recorded in the note and are empirical, not proof.
+
+A useful algebraic candidate explains the repeated +28 returns for w divisible by 4 with 408≤w≤736:
+- outer ladder U=0,3,9,21,45: J(0,w) -> J(93,w-171), 11,139 steps;
+- outer U=93: J(93,w-171) -> J(189,w-360), 35,553 steps;
+- set j=(w-360)/2 and k=(188-j)/2; then j+2k+1=189, 2j=w-360, and generic low42 endpoint formula returns J(0,4j+4k+12)=J(0,w+28).
+The candidate cycle time is `(w-360)^2 + 13*((w-360)/2) + 48,463`. At w=744, k=-2, so this branch stops applying; the simulation observes a different regime J(0,744)->J(0,924).
+
+This parameterized +28 map is not yet a Lean theorem. Formalization should compose the existing outer-safe macros with `low42_raw_head_all` from `Low42Physical.lean`; a generic nofatal-prefix argument is additional work. Do not infer infinite nonhalting from the simulation.
