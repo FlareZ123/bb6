@@ -1,4 +1,6 @@
 import CountedReset
+import CountedSweep
+import CountedQ4Prefix
 import ChampionRootBridge
 import S1Encoder
 import Lean.Elab.Tactic.Omega
@@ -18,6 +20,7 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
+open BB6Coverage.Agent6Q4Prefix
 
 def m0EvenQ4Inside (x : Int) : Bool := decide (-9 ≤ x ∧ x ≤ 3)
 
@@ -25,7 +28,7 @@ def m0EvenQ4BridgeStart : FConfig :=
   ⟨3, 0, [-7,-6,-5,-4,-1,2,3]⟩
 
 def m0EvenQ4BridgeEnd : FConfig :=
-  ⟨4, 3, [-9,-8,-7,-4,-1,1,2,3]⟩
+  ⟨4, 3, [2,1,-1,-4,-7,-8,-9,3]⟩
 
 theorem m0EvenQ4Bridge_exact :
     fRun tm2 39 m0EvenQ4BridgeStart = some m0EvenQ4BridgeEnd := by
