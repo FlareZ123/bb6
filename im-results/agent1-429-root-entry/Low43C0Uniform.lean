@@ -197,6 +197,29 @@ theorem physical_low43_C0_to_junc (v k : Nat) (hv : 1 ≤ v)
 #print axioms low43_C0_six_delta
 #print axioms low43_C0_to_sourceScanE_delta
 #print axioms low43_C0_to_junc_delta
+
+/-- Uniform physical Junc-to-Junc segment obtained by composing the
+    certified low43 entry record with the new C/0 continuation. -/
+theorem physical_low43_junc_to_junc (v k : Nat) (hv : 1 ≤ v) :
+    ∃ c' : Config,
+      run target429 (4*v*v+22*v+38*k+174)
+        {state:=A,head:=0,tape:=jTape (v+2*k+2) (2*v+1)} = some c' ∧
+      Represents (junc (2*k+9) 0 (4*v-2)) c' ∧
+      c'.head = 6 - 2*(v : Int) := by
+  obtain ⟨cC,hentry,hheadC,hrepC,hstate,hcurrent,hright,hprior⟩ :=
+    low43_C0_record v k
+  obtain ⟨c',hcont,hrep',hhead⟩ :=
+    physical_low43_C0_to_junc v k hv cC hrepC
+  have htime :
+      4*v*v+22*v+38*k+174 =
+        (4*v*v+18*v+22)+(38*k+4*v+152) := by omega
+  refine ⟨c', ?_, hrep', ?_⟩
+  · rw [htime, run_add']
+    simpa [hentry] using hcont
+  · rw [hheadC] at hhead
+    omega
+
 #print axioms physical_low43_C0_to_junc
+#print axioms physical_low43_junc_to_junc
 
 end BB429Low43UniformContinuation
