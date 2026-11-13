@@ -88,10 +88,10 @@ jobs:
           : > m0-even-q4-axioms.log
           : > rst1-prime-axioms.log
           lean -o CountedReset.olean CountedReset.lean
-          lean -o Q4Suffix.olean Q4Suffix.lean
           lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
           lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee rst1-prime-axioms.log
           if grep -q 'sorryAx' rst1-prime-axioms.log; then echo '::error::sorryAx in CountedRst1Prime'; exit 1; fi
+          lean -o Q4Suffix.olean Q4Suffix.lean
           lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
           if ! lean -o M0EvenQ4Bridge.olean M0EvenQ4Bridge.lean > m0-even-q4-axioms.log 2>&1; then
             echo '## M0EvenQ4Bridge compilation failed' >> "$GITHUB_STEP_SUMMARY"
