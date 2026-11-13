@@ -73,7 +73,7 @@ theorem m0OddBridge12At (T : Int → Bool) (h : Int)
 /-- Nine-step bridge shifts the state-B phase three cells right. -/
 def m0OddBridge9Inside (x : Int) : Bool := decide (-3 ≤ x ∧ x ≤ 3)
 def m0OddBridge9Start : FConfig := ⟨1,0,[-1,1,2,3]⟩
-def m0OddBridge9End : FConfig := ⟨1,3,[-3,-2,-1,2,3]⟩
+def m0OddBridge9End : FConfig := ⟨1,3,[2,-1,-2,-3,3]⟩
 
 theorem m0OddBridge9_exact :
     fRun tm2 9 m0OddBridge9Start = some m0OddBridge9End := by decide
@@ -96,7 +96,7 @@ theorem m0OddBridge9At (T : Int → Bool) (h : Int)
 /-- Final three-step bridge enters the E-state rightward scan. -/
 def m0OddBridge3RightInside (x : Int) : Bool := decide (0 ≤ x ∧ x ≤ 2)
 def m0OddBridge3RightStart : FConfig := ⟨1,0,[0,2]⟩
-def m0OddBridge3RightEnd : FConfig := ⟨4,3,[1,2]⟩
+def m0OddBridge3RightEnd : FConfig := ⟨4,3,[2,1]⟩
 
 theorem m0OddBridge3Right_exact :
     fRun tm2 3 m0OddBridge3RightStart =
@@ -133,7 +133,7 @@ its output is E-state at offset +3 with the local marks needed for the
 remaining E-scan. -/
 def m0OddQ4Bridge27Inside (x : Int) : Bool := decide (-6 ≤ x ∧ x ≤ 3)
 def m0OddQ4Bridge27Start : FConfig := ⟨3,0,[-4,-1,2,3]⟩
-def m0OddQ4Bridge27End : FConfig := ⟨4,3,[-6,-5,-4,-1,1,2,3]⟩
+def m0OddQ4Bridge27End : FConfig := ⟨4,3,[2,1,-1,-4,-5,-6,3]⟩
 
 theorem m0OddQ4Bridge27_exact :
     fRun tm2 27 m0OddQ4Bridge27Start =
