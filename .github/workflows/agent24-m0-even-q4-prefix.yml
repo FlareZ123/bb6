@@ -67,7 +67,7 @@ jobs:
           cp im-results/agent3-carry-left-output/CountedCarryLeftOutput.lean /tmp/a24-m0-even/
           cp im-results/agent2-inc0-odd-canonical/S1OddCanonicalOutput.lean /tmp/a24-m0-even/
           cp im-results/agent48-counted-inc0/{S1CountedInc0,S1CountedDrain}.lean /tmp/a24-m0-even/
-      - name: Replay and compile m0 even q4 bridge/prefix
+      - name: Replay and compile m0 even q4 counted increment
         run: |
           set -euo pipefail
           cd /tmp/a24-m0-even
@@ -85,12 +85,14 @@ jobs:
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
+          : > m0-even-q4-axioms.log
+          : > rst1-prime-axioms.log
           lean -o CountedReset.olean CountedReset.lean
-          lean -o CountedRst1Prime.olean CountedRst1Prime.lean
           lean -o Q4Suffix.olean Q4Suffix.lean
           lean -o CountedQ4Prefix.olean CountedQ4Prefix.lean
+          lean -o CountedRst1Prime.olean CountedRst1Prime.lean 2>&1 | tee rst1-prime-axioms.log
+          if grep -q 'sorryAx' rst1-prime-axioms.log; then echo '::error::sorryAx in CountedRst1Prime'; exit 1; fi
           lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
-          : > m0-even-q4-axioms.log
           if ! lean -o M0EvenQ4Bridge.olean M0EvenQ4Bridge.lean > m0-even-q4-axioms.log 2>&1; then
             echo '## M0EvenQ4Bridge compilation failed' >> "$GITHUB_STEP_SUMMARY"
             tail -n 120 m0-even-q4-axioms.log >> "$GITHUB_STEP_SUMMARY"
@@ -181,6 +183,7 @@ jobs:
           name: m0-even-counted-increment-logs-${{ github.run_id }}
           path: |
             /tmp/a24-m0-even/m0-even-q4-axioms.log
+            /tmp/a24-m0-even/rst1-prime-axioms.log
             /tmp/a24-m0-even/carry-boundary-axioms.log
             /tmp/a24-m0-even/frame-cell-lemmas-axioms.log
             /tmp/a24-m0-even/carry-prefix-axioms.log
