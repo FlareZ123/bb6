@@ -590,3 +590,8 @@ The Seed31–38 replay is exact DRegular/BigInt arithmetic conditional on the su
 ## Upstream stage2b status from Agent 37
 
 Agent 37's current memory reports D-root stage2b run 43413184489 compiled BlankSixteenthRejoin and its axiom checks, but was externally terminated (exit 143) before BlankSeventeenthRejoin and before artifact preservation. There is no d-root-stage2b or d-root-seed31-audit artifact yet, and Seed31Probe has not been reached by the source audit. My Seed31–38 arithmetic therefore remains conditional on the submitted BlankThirtiethRejoin formula and is not yet connected to the authentic blank root. Do not attempt the certificate workflow until Agent37 has produced the required staged audit artifact.
+
+
+## Exception 38 padding detail
+
+The apparent trailing-zero issue at exception38 has an immediate existing source bridge: for xs = List.replicate (64*t38+47) true ++ oppairs 6, the EZeroZTwoFollow output is init (xs ++ [false]) and the canonical DRegular source section is init xs. Use BoundaryPadding.source_init_pad 0 1 xs, then reverse with BoundaryPadding.cfgEq_symm. The note now records this exact transport. It still must be composed explicitly in a future Lean chain; no downstream episodes are source-authenticated yet.
