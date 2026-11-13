@@ -252,7 +252,7 @@ theorem q1b1_rejoins_regular (k : Nat) :
       · left
         omega
     · have h2 : k % 3 = 2 := by omega
-      let t := (k-2) / 3
+      let t := k / 3
       have hk : k = 3*t+2 := by omega
       rw [hk]
       refine ⟨eDuration t, ⟨64*t+49,6,0⟩, ?_, q1b1_regular_rejoin_E t⟩
