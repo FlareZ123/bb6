@@ -154,7 +154,8 @@ theorem outer_ladder_0_to_93
     h0' h3' hp0' hp3'
 
   have hr9' : Represents (junc 9 0 (w-12)) c9 := by
-    simpa [show (w-3)-9 = w-12 by omega] using hr9
+    have hsub : ((w-3)-6)-3 = w-12 := by omega
+    simpa [hsub] using hr9
   obtain ⟨c21,h9,hr21,hp9⟩ :=
     outer_no_fatal_segment 9 0 (w-12) c9 hr9' (by omega)
   have cost9 : outerCost 9 0 = 441 := by
@@ -168,7 +169,8 @@ theorem outer_ladder_0_to_93
     chain120.1 h9' chain120.2 hp9'
 
   have hr21' : Represents (junc 21 0 (w-33)) c21 := by
-    simpa [show (w-12)-21 = w-33 by omega] using hr21
+    have hsub : ((w-12)-18)-3 = w-33 := by omega
+    simpa [hsub] using hr21
   obtain ⟨c45,h21,hr45,hp21⟩ :=
     outer_no_fatal_segment 21 0 (w-33) c21 hr21' (by omega)
   have cost21 : outerCost 21 0 = 2001 := by
@@ -182,7 +184,8 @@ theorem outer_ladder_0_to_93
     chain561.1 h21' chain561.2 hp21'
 
   have hr45' : Represents (junc 45 0 (w-78)) c45 := by
-    simpa [show (w-33)-45 = w-78 by omega] using hr45
+    have hsub : ((w-33)-42)-3 = w-78 := by omega
+    simpa [hsub] using hr45
   obtain ⟨c93,h45,hr93,hp45⟩ :=
     outer_no_fatal_segment 45 0 (w-78) c45 hr45' (by omega)
   have cost45 : outerCost 45 0 = 8577 := by
@@ -194,7 +197,7 @@ theorem outer_ladder_0_to_93
     simpa [cost45] using hp45
   have chain11139 := physical_prefix_compose 2562 8577 c c45 c93
     chain2562.1 h45' chain2562.2 hp45'
-  have hfinal : (w-78)-93 = w-171 := by omega
+  have hfinal : ((w-78)-90)-3 = w-171 := by omega
   refine ⟨c93, chain11139.1, ?_, chain11139.2⟩
   simpa [hfinal] using hr93
 
