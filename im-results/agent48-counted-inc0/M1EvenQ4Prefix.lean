@@ -299,7 +299,6 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
     omega
   simpa [T,N,T1,hN,T2,m1EvenQ4CutTape,hnum] using htotal
 
-end BB6Coverage.Agent48CountedInc0
 
 
 private theorem sideBit_false_after_length_local (xs : List Bool) (i : Nat)
@@ -916,3 +915,4 @@ theorem m1Even_reset_prefix_frame_cost (a b : Nat) (h : Int) :
   rw [m1Even_resetPrefixCost_eq]
   exact m1Even_reset_prefix_frame a b h
 
+end BB6Coverage.Agent48CountedInc0
