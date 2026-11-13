@@ -143,6 +143,12 @@ For each j-class modulo 512, the second congruence fixes one m-class modulo 1310
 
 **1/(512*131072) = 1/2^26.**
 
+Writing j=319+512u, the same class can be written explicitly as
+
+**m = 72746+75264u (mod 131072).**
+
+This is an immediate inverse of 3 modulo 131072 applied to the linear congruence above, and it visibly reduces to m=42 (mod 512).
+
 The family is disjoint from the older diagonal (u+v=0 mod 4) and the previous s3 cylinder (u+v=3 mod 4), since (S2) forces u+v=2 mod 4.
 
 If the source-root composition is formalized, the combined three-family exclusion density becomes 41/2^26, leaving 215 of the 256 m-classes modulo 131072 in the common j=319,m=42 modulo 512 base cylinder outside these three exclusions.
