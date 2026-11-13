@@ -210,6 +210,12 @@ jobs:
             echo "REJECTED: S31 w13 q275 high-stop proof contains sorryAx"
             exit 1
           fi
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31W13Q403.lean .
+          lean -o M0EvenEvenSumZeroS31W13Q403.olean M0EvenEvenSumZeroS31W13Q403.lean 2>&1 | tee M0EvenEvenSumZeroS31W13Q403.log
+          if grep -q sorryAx M0EvenEvenSumZeroS31W13Q403.log; then
+            echo "REJECTED: S31 w13 q403 high-stop proof contains sorryAx"
+            exit 1
+          fi
 
           # New exact x=2 mod 16 y=3 inverse boundary for the u=5 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX2Mod16.lean .
