@@ -90,6 +90,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=32768 -o im-results/agent1-429-root-entry/Low43C0Uniform.olean im-results/agent1-429-root-entry/Low43C0Uniform.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43UniformContinuation.low43_C0_to_junc_delta' depends on axioms:" /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43UniformContinuation.physical_low43_C0_to_junc' depends on axioms:" /tmp/agent32-root-bridge.log
+          grep -F "'BB429Low43UniformContinuation.physical_low43_junc_to_junc' depends on axioms:" /tmp/agent32-root-bridge.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low43/Low43RootPhysical.olean im-results/agent32-429-low43/Low43RootPhysical.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent1-429-root-entry/RootJunctionChain.olean im-results/agent1-429-root-entry/RootJunctionChain.lean 2>&1 | tee -a /tmp/agent32-root-bridge.log
           grep -F "'BB429Low43Continuation.root_low43_C0_to_junc_max' depends on axioms:" /tmp/agent32-root-bridge.log
