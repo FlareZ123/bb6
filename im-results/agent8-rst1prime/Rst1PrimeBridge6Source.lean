@@ -1183,7 +1183,8 @@ theorem rst1PrimeAfterBridge30_leftFacing
   let Hf : Int := h+5+3*(b:Int)
   let H0 : Int := h-((3*a+1:Int))
   let H2 : Int := H0-2-((3*L+5:Int))
-  rw [rst1Prime_target_leftFacing_compact L a b]
+  have hHf : h+5+3*(b:Int) = Hf := by rfl
+  rw [rst1Prime_target_leftFacing_compact L a b,hHf]
   by_cases hi0 : i<3*b
   · rw [sideBit_append_left (d0pow b)
       (markerWord 2 ++ d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
@@ -1193,6 +1194,7 @@ theorem rst1PrimeAfterBridge30_leftFacing
     rw [sideBit_append_right (d0pow b)
       (markerWord 2 ++ d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
       i (by rw [rst1Prime_d0pow_length]; exact hi0')]
+    rw [rst1Prime_d0pow_length]
     let j0 : Nat := i-3*b
     by_cases hj0 : j0<4
     · rw [sideBit_append_left (markerWord 2)
@@ -1217,6 +1219,7 @@ theorem rst1PrimeAfterBridge30_leftFacing
       rw [sideBit_append_right (markerWord 2)
         (d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
         j0 (by simp [markerWord]; exact hj0')]
+      simp [markerWord]
       let j1 : Nat := j0-4
       by_cases hj1 : j1<3*(a+1)
       · rw [sideBit_append_left (d0pow (a+1))
@@ -1231,6 +1234,7 @@ theorem rst1PrimeAfterBridge30_leftFacing
         rw [sideBit_append_right (d0pow (a+1))
           (d1 ++ d0pow (L+1) ++ lh)
           j1 (by rw [rst1Prime_d0pow_length]; exact hj1')]
+        rw [rst1Prime_d0pow_length]
         let j2 : Nat := j1-3*(a+1)
         by_cases hj2 : j2<3
         · rw [sideBit_append_left d1
@@ -1251,6 +1255,7 @@ theorem rst1PrimeAfterBridge30_leftFacing
         · have hj2' : 3≤j2 := by omega
           rw [sideBit_append_right d1
             (d0pow (L+1) ++ lh) j2 (by simp [d1]; exact hj2')]
+          simp [d1]
           let j3 : Nat := j2-3
           by_cases hj3 : j3<3*(L+1)
           · rw [sideBit_append_left (d0pow (L+1)) lh j3
@@ -1263,6 +1268,7 @@ theorem rst1PrimeAfterBridge30_leftFacing
           · have hj3' : 3*(L+1)≤j3 := by omega
             rw [sideBit_append_right (d0pow (L+1)) lh j3
               (by rw [rst1Prime_d0pow_length]; exact hj3')]
+            rw [rst1Prime_d0pow_length]
             let j4 : Nat := j3-3*(L+1)
             by_cases hj4 : j4<6
             · rw [sideBit_append_left lh [] j4 (by simp [lh]; exact hj4)]
