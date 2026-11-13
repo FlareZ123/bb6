@@ -116,23 +116,25 @@ theorem exception33_q5_rejoin (u : Nat) :
   have h1 := eall_source_return u
   have htransport2 := BB6.BoundaryPadding.source_congr
     (eThreeTime u) (eall_to_etriple_input u)
+  have hraw2 :
+      run (eThreeTime u) (eThreeInput u) = eThreeOutput u := by
+    simpa [eThreeTime, eThreeInput, eThreeOutput, eThreeK] using
+      (CryptidBoundary.full_E_three (eThreeK u)
+        (List.replicate 7 true ++ (false :: List.replicate 6 true)))
   have h2 :
       ObsEq (run (eThreeTime u) (eAllOutput u)) (eThreeOutput u) := by
     rw [eall_to_etriple_input] at htransport2
-    have hraw := CryptidBoundary.full_E_three
-      (eThreeK u) (List.replicate 7 true ++ (false :: List.replicate 6 true))
-    rw [eThreeTime, eThreeInput, eThreeOutput] at hraw
-    rw [hraw] at htransport2
+    rw [hraw2] at htransport2
     exact htransport2
   have htransport3 := BB6.BoundaryPadding.source_congr
     (aCodeTime u) (etriple_to_acode_input u)
+  have hraw3 :
+      run (aCodeTime u) (aCodeInput u) = aCodeOutput u := by
+    simpa [aCodeTime, aCodeInput, aCodeOutput] using
+      (BB6.Agent35.full_A_code (aCodeK u) aCodeWord [])
   have h3 :
       ObsEq (run (aCodeTime u) (eThreeOutput u)) (aCodeOutput u) := by
-    rw [aCodeInput] at htransport3
-    have hraw := BB6.Agent35.full_A_code
-      (aCodeK u) aCodeWord []
-    rw [aCodeTime, aCodeInput, aCodeOutput] at hraw
-    rw [hraw] at htransport3
+    rw [hraw3] at htransport3
     exact htransport3
   have h12 := BB6.BoundaryPadding.source_chain
     (eAllTime u) (eThreeTime u) (sourceStart u)
