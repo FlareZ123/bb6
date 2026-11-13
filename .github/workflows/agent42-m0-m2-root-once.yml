@@ -1,8 +1,6 @@
-name: Agent 42 M0/M2 root composition source audit (one-shot)
+name: Agent 42 M0/M2 root composition source audit (manual milestone)
 on:
-  push:
-    paths:
-      - .github/workflows/agent42-m0-m2-root-once.yml
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
