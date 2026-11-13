@@ -7,12 +7,13 @@ on:
       - .github/workflows/agent37-seed31-artifact-inspect.yml
 permissions:
   actions: read
-  contents: read
+  contents: write
 jobs:
   inspect:
     if: ${{ !contains(github.event.head_commit.message, 'retire one-shot') }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Download completed audit artifact
         uses: actions/download-artifact@v4
         with:
@@ -20,7 +21,7 @@ jobs:
           run-id: 43383130552
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: /tmp/audit
-      - name: Publish concise diagnostics in check summary
+      - name: Write concise diagnostics to a repository note
         shell: bash
         run: |
           set -euo pipefail
@@ -37,3 +38,23 @@ jobs:
               tail -n 80 "$f" >> "$GITHUB_STEP_SUMMARY"
             fi
           done
+          {
+            echo "# D-root Seed31 audit diagnostic"
+            echo
+            echo "Source workflow run: 43383130552"
+            echo
+            echo "## Error and axiom markers"
+            grep -nE 'error:|unknown constant|application type mismatch|Rejected forbidden|sorryAx|native_decide' /tmp/audit/lean-audit.log | tail -n 80 || true
+            echo
+            echo "## Final 100 audit lines"
+            tail -n 100 /tmp/audit/lean-audit.log
+            echo
+            echo "## Seed31 probe output"
+            cat /tmp/audit/seed31-probe.txt 2>/dev/null || true
+          } > im-results/agent37-d-timing-cocycle/CI-43383130552-diagnostic.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent37-d-timing-cocycle/CI-43383130552-diagnostic.md
+          git commit -m "Agent 37: capture Seed31 audit failure diagnostic"
+          git pull --rebase origin main
+          git push origin HEAD:main
