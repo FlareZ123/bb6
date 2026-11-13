@@ -271,7 +271,8 @@ private theorem stage43_decomposition (v k : Nat) :
     have htime : (4*v+4)+2=4*v+6 := by omega
     have hdelta : -((4*v+4:Nat):Int)+(-2) =
         -((4*v+6:Nat):Int) := by omega
-    convert hleft0 using 1 <;> omega
+    rw [← htime, ← hdelta]
+    exact hleft0
   have hAR : runWithDelta (4*v+6) zMid =
       some (zAR, ((4*v+6:Nat):Int)) := by
     simpa [zMid,zAR,show 2*(2*v+3)=4*v+6 by omega,
@@ -397,11 +398,8 @@ theorem low43_C0_record (v k : Nat) :
   let cStage : Config := stage43Config v k
   let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
   have hfirst : run target429 B c0=some cStage := by
-    change run target429 (4*(v+1)*(v+1)+2*(v+1))
-      {state:=A,head:=0,tape:=jTape (v+2*k+2) (2*v+1)} =
-      some {state:=A,head:=2*(v:Int)+2,
-        tape:=negFill (jTape (v+2*k+2) (2*v+1)) (v+1)}
-    simpa [tape,Nat.cast_mul,Nat.cast_add] using
+    simpa [c0,cStage,B,stage43Config,stage43Tape,tape,
+      Nat.cast_mul,Nat.cast_add] using
       multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
         (by decide) (by decide) (by decide) (by decide)
         (low43_holes v k) (low43_odds v k) (low43_right v k)
