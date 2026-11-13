@@ -12,7 +12,7 @@ namespace BB429Low43Physical
 
 open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
 open BB429OddExcursion BB429SourceE1Return BB429SourceE1Delta
-open BB429FinishScanEDelta BB429PhysicalBridge BB429Low43Delta BB429Low3Delta
+open BB429FinishScanEDelta BB429PhysicalBridge BB429DeltaPhysicalBridge BB429HeadDisplacement BB429Low43Delta BB429Low3Delta
 
 private theorem getD_append {α : Type} (xs ys : List α) (j : Nat) (d : α) :
     (xs ++ ys).getD j d =
@@ -81,7 +81,7 @@ private theorem stage43_left_char (v k j : Nat) :
     by_cases ht : j-(4*v+4)<4*k+2
     · rw [if_pos ht,tens_getD]
       have hp :
-          ((j-(4*v+4)<2*(2*k+1) ∧ (j-(4*v+4))%2=0) ↔
+          (j-(4*v+4)<2*(2*k+1) ∧ (j-(4*v+4))%2=0) ↔
             (j < 4*v+4*k+12 ∧
               ¬(4*v+4 ≤ j ∧ j<4*v+4*k+6 ∧ j%2=1)) := by omega
       simp [hp]
@@ -254,6 +254,7 @@ private theorem stage43_decomposition (v k : Nat) :
       (BB429Low3Delta.af_pairs_delta (2*v+2)
         (tens (2*k+1) ++ ones 6) [false,true])
   have h2 : runWithDelta 2 zFirst = some (zMid, -2) := by
+    dsimp [zFirst]
     rw [show tens (2*k+1) = true::false::tens (2*k) by rfl]
     change runWithDelta 2
       (z 0 (true::false::(tens (2*k) ++ ones 6)) true
@@ -270,7 +271,8 @@ private theorem stage43_decomposition (v k : Nat) :
     have htime : (4*v+4)+2=4*v+6 := by omega
     have hdelta : -((4*v+4:Nat):Int)+(-2) =
         -((4*v+6:Nat):Int) := by omega
-    simpa [htime,hdelta] using hleft0
+    rw [← htime, ← hdelta]
+    exact hleft0
   have hAR : runWithDelta (4*v+6) zMid =
       some (zAR, ((4*v+6:Nat):Int)) := by
     simpa [zMid,zAR,show 2*(2*v+3)=4*v+6 by omega,
@@ -286,20 +288,28 @@ private theorem stage43_decomposition (v k : Nat) :
     source_runWithDelta_rep (4*v+6) (stage43 v k) (stage43Config v k)
       hrepStage zMid (-((4*v+6:Nat):Int)) hleft
   obtain ⟨c2,hARP,hrep2,hhead2⟩ :=
-    source_runWithDelta_rep (4*v+6) zMid c1 hrep1 zAR (4*v+6) hAR
+    source_runWithDelta_rep (4*v+6) zMid c1 hrep1 zAR ((4*v+6:Nat):Int) hAR
   obtain ⟨c3,h4P,hrep3,hhead3⟩ :=
     source_runWithDelta_rep 4 zAR c2 hrep2 zC0 4 h4
   rcases hrep3 with ⟨hstate,hcur,hleftRep,hrightRep⟩
   have hrep3' : Represents (low43_C0_zipper v k) c3 := by
     simpa [zC0,low43_C0_zipper] using (show Represents zC0 c3 from ⟨hstate,hcur,hleftRep,hrightRep⟩)
-  have hstate' : c3.state.val=2 := by simpa [zC0] using hstate
-  have hcur' : c3.tape c3.head=false := by simpa [zC0] using hcur
+  have hstate' : c3.state.val=2 := by
+    change c3.state.val = (low43_C0_zipper v k).state at hstate
+    have hz : (low43_C0_zipper v k).state = 2 := rfl
+    rw [hz] at hstate
+    exact hstate
+  have hcur' : c3.tape c3.head=false := by
+    change c3.tape c3.head = (low43_C0_zipper v k).current at hcur
+    have hz : (low43_C0_zipper v k).current = false := rfl
+    rw [hz] at hcur
+    exact hcur
   have hright' : c3.tape (c3.head+1)=false := by
     have h := hrightRep 0
     change c3.tape (c3.head+1)=false at h
     exact h
   have hhead1' : c1.head=(stage43Config v k).head-(4*v+6) := by
-    simpa using hhead1
+    omega
   have hhead2' : c2.head=(stage43Config v k).head := by
     rw [hhead2,hhead1']
     omega
@@ -336,7 +346,8 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
     have hleftExact :=
       run_prefix_left_extremal target429 L s cStage d c1
         hleft hpre hs1 hdisp1
-    exact ⟨d,hpre,by rw [hleftExact]; omega⟩
+    have hC : cStage.head = (stage43Config v k).head := rfl
+    exact ⟨d,hpre,by omega⟩
   · by_cases hs2 : s≤2*L
     · let r : Nat := s-L
       have hr : r≤L := by dsimp [r]; omega
@@ -349,7 +360,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       have hpre : run target429 s cStage=some d := by
         rw [htime,run_add',hleft]
         simpa using hpre2
-      exact ⟨d,hpre,by rw [hrightExact,hhead1L]; omega⟩
+      have hC : cStage.head = (stage43Config v k).head := rfl
+      have h := hrightExact
+      rw [hhead1L] at h
+      exact ⟨d,hpre,by omega⟩
     · let r : Nat := s-2*L
       have hL : 8*v+15=2*L+3 := by dsimp [L]; omega
       have hr : r≤3 := by dsimp [r]; omega
@@ -365,7 +379,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       have hpre : run target429 s cStage=some d := by
         rw [htime,run_add',hleftAR]
         simpa using hpre3
-      exact ⟨d,hpre,by rw [hrightExact,hhead2]; omega⟩
+      have hC : cStage.head = (stage43Config v k).head := rfl
+      have h := hrightExact
+      rw [hhead2] at h
+      exact ⟨d,hpre,by omega⟩
 
 /-- On every odd-deficit-4k+3 input, the first certified C/0 checkpoint is
     a strict physical right-head record. Its right neighbour is blank, and
@@ -388,9 +405,10 @@ theorem low43_C0_record (v k : Nat) :
   let c0 : Config := {state:=A,head:=0,tape:=tape}
   let cStage : Config := stage43Config v k
   let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
+  have hhead : 2*((v:Int)+1)=2*(v:Int)+2 := by omega
+  have htape : stage43Tape v k = negFill tape (v+1) := rfl
   have hfirst : run target429 B c0=some cStage := by
-    have hhead : 2*((v+1:Nat):Int)=2*(v:Int)+2 := by omega
-    simpa only [hhead,stage43Config,stage43Tape,c0,tape,B] using
+    simpa [c0,cStage,B,stage43Config,hhead,htape] using
       multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
         (by decide) (by decide) (by decide) (by decide)
         (low43_holes v k) (low43_odds v k) (low43_right v k)
@@ -418,12 +436,28 @@ theorem low43_C0_record (v k : Nat) :
   have hstage : run target429 (8*v+16) cStage=some cC := by
     rw [hS]
     exact hstageFull
-  have htotal : run target429 (B+8*v+16) c0=some cC := by
+  have htotal : run target429 (B+(8*v+16)) c0=some cC := by
     rw [run_add',hfirst]
     exact hstage
-  have htime : B+8*v+16=4*v*v+18*v+22 := by
-    dsimp [B]
+  have hsq : (v+1)*(v+1)=v*v+2*v+1 := by
+    rw [Nat.mul_add,Nat.add_mul]
+    simp
     omega
+  have hmult : 4*(2*v)=8*v := by
+    rw [← Nat.mul_assoc]
+  have htime : B+(8*v+16)=4*v*v+18*v+22 := by
+    dsimp [B]
+    calc
+      4*(v+1)*(v+1)+2*(v+1)+(8*v+16)
+          = 4*((v+1)*(v+1))+2*(v+1)+(8*v+16) := by rw [Nat.mul_assoc]
+      _ = 4*(v*v+2*v+1)+2*(v+1)+(8*v+16) := by rw [hsq]
+      _ = 4*(v*v)+4*(2*v)+4+(2*v+2)+(8*v+16) := by simp [Nat.mul_add]
+      _ = 4*(v*v)+8*v+4+2*v+2+8*v+16 := by
+        rw [hmult]
+        omega
+      _ = 4*v*v+18*v+22 := by
+        rw [← Nat.mul_assoc]
+        omega
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
     simpa [htime] using htotal
   have hheadC : cC.head=2*(v:Int)+6 := by
