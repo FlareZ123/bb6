@@ -176,3 +176,25 @@ the end of the complete first seven-increment section. The declaration-order and
 The manual-only Agent42 source workflow now includes the M0-even bridge/prefix/suffix and the first-section continuation, with the independent M0-even suffix compiled before the M1-even prefix blocker. The workflow remains manual-only; no push/PR trigger was added, and this invocation had no workflow-dispatch action. The next source obligation after the first-section endpoint is the Rst1' reset core, for which Agent 8 has the existing intermediate bridge itinerary in im-results/agent8-rst1prime/.
 
 **Qualification:** the M0-even prefix is source-certified; the full (0,2) counted increment, first-section blank-root composition, Rst1' continuation, complete champion runtime, and universal BB(6) upper bound remain open. All of this work remains intermediate in im-results/, not a publishable result.
+
+
+## Rst1' source itinerary through bridge30 (13 November 2026)
+
+The Rst1' source itinerary has now been decomposed into reusable, parameterized source modules:
+
+1. [Rst1PrimeFirstSweep.lean](../agent4-rst1prime/Rst1PrimeFirstSweep.lean): the initial 3a+1 left sweep.
+2. [Rst1PrimeBridge8Source.lean](../agent4-rst1prime/Rst1PrimeBridge8Source.lean): exact bridge8 window agreement and source composition.
+3. [Rst1PrimeSecondSweep.lean](../agent4-rst1prime/Rst1PrimeSecondSweep.lean): the 3L+5 second left sweep.
+4. [Rst1PrimeBridge20Source.lean](../agent4-rst1prime/Rst1PrimeBridge20Source.lean): bridge20 window agreement and the following right sweep.
+5. [Rst1PrimeBridge9Source.lean](../agent4-rst1prime/Rst1PrimeBridge9Source.lean): bridge9 window agreement and the next right-sweep preconditions.
+6. [Rst1PrimeBridge6Source.lean](../agent8-rst1prime/Rst1PrimeBridge6Source.lean): bridge6 source composition, final b-block right sweep, and bridge30.
+
+Agent 8 also added the target counter-word identities and right-sweep invariants to [CountedRst1Prime.lean](../agent8-rst1prime/CountedRst1Prime.lean). The final bridge6 source module now reaches a post-bridge30 frame. Identifying that frame with the canonical S1 successor is still open.
+
+The manual Agent42 workflow stages these modules in dependency order, with separate axiom logs and sorryAx gates. The generic sweep/bridge modules are compiled immediately after CountedSuffixOutput, before the S1 carry/drain and M1-even blocker; their logical application follows the first-section endpoint above. The final Bridge6Source module is compiled after Bridge9Source. The workflow remains manual-only.
+
+**Current verification limitation:** the latest targeted M0-even source audit (run 43423638298) reaches CountedRst1Prime but fails in its new right-sweep and binDec lemmas (sweptRight_lastBlock recursive-unfold mismatch, all-ones base case, and an unavailable norm_num tactic). These errors were sent to Agent 8 with suggested fixes. The previous M0-even bridge/prefix pass (43420529873) predates these CountedRst1Prime edits. Thus the Rst1' itinerary and M0-even suffix are not yet certified by a clean current-source compile.
+
+The next mathematical step after bridge30 is to identify the post-bridge30 local frame with the canonical S1 successor, then compose that reset/section transition with the first-section endpoint
+S1(3,0,1,tm63FirstSection.exponent,0,tm63FirstSection.right,tm63AfterFirstSectionHead).
+All these modules remain intermediate in im-results/; they do not establish a complete BB(6) runtime or universal upper bound.
