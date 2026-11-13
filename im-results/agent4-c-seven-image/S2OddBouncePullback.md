@@ -51,7 +51,7 @@ The complete section-preimage grammar then gives exactly two parents of R:
 
 **Q(u,v) = (601+650t+162v, 1598+1723t+431v).**
 
-Reason: R.x+R.y is odd, so the even-a bounce branch is impossible. The a=0 branch is impossible for the same parity reason; the exceptional a=1 branch is impossible because R.x+R.y+1 has valuation exactly 4 and is far larger than 16. The a≥2, k=0 branch would force R.y=2, also impossible since R.y≥644. In the a odd bounce branch, the second equation forces the bounce exponent n to be odd. Since a+3 is even and v2(R.x+R.y+1)=4, n≤2, hence n=1. Solving the two source equations gives Q above. The remaining 2k≤a branch is exactly P.
+Reason: R.x+R.y is odd, so the even-a bounce branch is impossible. The a=0 branch is impossible for the same parity reason; the exceptional a=1 branch is impossible because R.x+R.y+1 has valuation exactly 4 and is far larger than 16. The a≥2, k=0 branch would force R.y=2, also impossible since R.y≥644. In the a odd bounce branch, the special y=3 alternative is impossible because R.y≥644. In the remaining y≥5 branch, the second equation forces the bounce exponent n to be odd. Since a+3 is even and v2(R.x+R.y+1)=4, n≤2, hence n=1. Solving the two source equations gives Q above. The remaining 2k≤a branch is exactly P.
 
 This exact parent enumeration should be formalized from section_preimage_all_iff; it is not yet a committed Lean theorem.
 
