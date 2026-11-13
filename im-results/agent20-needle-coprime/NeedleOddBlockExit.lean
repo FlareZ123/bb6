@@ -35,8 +35,14 @@ theorem odd_block_exit_terminal_identity
     ⟨q, v, hq, _⟩
   have hsource : 2^v*(2*q+3) = 5^t*m+1 := by
     have hfactor := oddTower_factor q v
+    have hP : 1 ≤ 5^t*m := by
+      have hp : 0 < 5^t*m :=
+        Nat.mul_pos (Nat.pow_pos (by decide)) hm
+      omega
     rw [← hq] at hfactor
-    omega
+    have hshift : (5^t*m-1)+2 = 5^t*m+1 := by omega
+    rw [hshift] at hfactor
+    exact hfactor.symm
   have hfeed :
       2^(k+2)+3 = (2^(v+1)+3)*(2*q+3)+2*v :=
     (predecessor_power_identity q v k).mp (by simpa [hq] using hterm)
@@ -75,7 +81,7 @@ theorem odd_block_exit_terminal_nonzero_mod_five
       5^t*m-1 = oddTower q v ∧
       runHigh t (some (.N (2^t*m-1))) = some (.N (5^t*m-1)) ∧
       (5^t*m-1) % 2 = 0 ∧
-      5 ∤ (2^v*(2*v+4)+3) := by
+      ¬ 5 ∣ (2^v*(2*v+4)+3) := by
   rcases odd_block_exit_terminal_identity t m k ht hm hmOdd hterm with
     ⟨q, v, hq, hblock, hExitEven, hidentity⟩
   have hpowNonzero : 2^(k+v+2) % 5 ≠ 0 := by
@@ -101,7 +107,7 @@ theorem odd_block_exit_terminal_nonzero_mod_five
     have h := congrArg (fun z : Nat => z % 5) hidentity
     rw [hleft, hright] at h
     exact h
-  have hnonzero : 5 ∤ 2^v*(2*v+4)+3 := by
+  have hnonzero : ¬ 5 ∣ 2^v*(2*v+4)+3 := by
     intro hdiv
     have hzero : (2^v*(2*v+4)+3) % 5 = 0 :=
       Nat.dvd_iff_mod_eq_zero.mp hdiv
