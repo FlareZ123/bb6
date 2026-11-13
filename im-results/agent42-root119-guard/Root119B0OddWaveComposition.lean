@@ -28,7 +28,7 @@ theorem reached_B0_left10_exact_wave_output (c : Conf) (hc : Reach c)
     (∃ f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h+1 ∧
       c = (⟨.B,f.h-1,oddWaveTape 0 f.tape f.h⟩ : Conf)) ∨
-    (∃ (m : Nat) f, Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
+    (∃ (m : Nat) (f : Conf), Reach f ∧ f.q = .F ∧ f.tape f.h = true ∧
       f.h = c.h+2*(m:Int)+3 ∧
       c = (⟨.B,f.h-3-2*(m:Int),
         setBit (fbMany m
