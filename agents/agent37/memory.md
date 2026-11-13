@@ -337,3 +337,10 @@ The user has received durable progress responses for first three CI successes an
 - `EERootBEA.q4_exceptional_EE_BEA_section` ultimately calls `EChainBEExit.chain_B_E_A_reentry` with `d=1`, `q=0`, `p=4`. In `P2MarkerA.all_A_marker_returns`, p=4 decomposes as `3*1+1`, so the middle `close_one` branch returns a *pure unary* F/0 endpoint; `EChainBEExit.regularEndpoint_reentry` maps that branch to `regularSection n 0 0`.
 - The current q4 theorem hides this stronger endpoint in an existential `regularSection a q b`. After the blank-root q4 prefix is established, strengthen/specialize the chain at p=4 to expose `q=b=0` and the explicit unary endpoint parameter. This gives a clean seed for the next DRegular probe rather than an opaque existential.
 - If the Seed31 probe returns the q4 state, prove reachability with a generic `firstStopAux_sound` / `firstStopBlocks_sound` lemma using `DRegularFast.fastRun_correct`, `run_add`, and `run_canon`; then use the q4 residue `a mod 59049=44494` to identify `sourceStart (2187*m+1647) 4` and compose the existing EERootBEA theorem.
+
+
+### Fifth audit blocker: fixed-tail normalization
+
+- CI `43388459155` passed the corrected P2 alias and the `PacketSafeExit` core-tactic fix, then stopped in `PacketP2ReentryOrE.lean` at two rewrites. The source lemmas `b_zero_source` and `e_two_reset` return packets with explicit `false :: List.replicate 6 true`, while the composed goal retained `fixedTail`.
+- Agent2 independently fixed this on main in commit `2749b329` by introducing `hB0'` and `hreset'` and normalizing with `simpa [fixedTail]`. Do not duplicate or overwrite that change. The failed run used the pre-fix snapshot.
+- A fresh full audit should now be triggered against the current main after the fixed-tail commit. If it passes these helpers, the next remaining target is the original-source root chain and `Seed31Probe`; only then can the first-event state be formally certified.
