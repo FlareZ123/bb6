@@ -155,3 +155,7 @@ A new intermediate m=2,n=4 even-branch candidate is in [M2EvenQ4.md](M2EvenQ4.md
 The root-connected chain has been extended in [TM63M0M2RootComposition.md](TM63M0M2RootComposition.md), with source in [TM63M0M2RootComposition.lean](TM63M0M2RootComposition.lean). It composes the authentic blank-root q4/drain endpoint through the (1,6), (0,5), and (2,4) counted increments, ending at the S1(3,3,1,...) state. It also splits the earlier five-stage conditional residual into the two newly source-proved increments plus a shorter residual beginning after M2-even.
 
 **Qualification:** this root-composition source and the M2-even leaf are not yet Lean-compiled in this invocation. The existing manual-only workflow now includes the M0 bridge/prefix and root-composition compilation steps with transitive `sorryAx` gates. No workflow dispatch or push trigger was available/added.
+
+## Next branch: M1,n=3 odd q4 bridge (13 November 2026)
+
+A 26-step finite bridge for the next `(m,n)=(1,3)` odd reset stage is documented in [M1OddQ4Bridge.md](M1OddQ4Bridge.md) and certified by [M1OddQ4Bridge.lean](M1OddQ4Bridge.lean). The exact finite-list run and head confinement compile locally under Lean 4.36.0-rc2; the repository manual workflow includes the source lemma with a `sorryAx` gate. The full parametric frame/cut/suffix proof remains open.
