@@ -115,11 +115,14 @@ Initially
 Q(n)=28\cdot2^n+B_0n+C_0,\qquad
 B_0=-2-2^{3407}\equiv2\pmod3.
 \]
-For a stage with cumulative exponent \(E_i\), write
+For the first edge, take \(X_0=Q\), \(G_0=Q/9\), and
+\(E_1=t_1+3\), so that \(X_1=3^{E_1}G_1\). For every later stage
+\(i\ge1\), write
 \[
 X_i(n)=3^{E_i}G_i(n)=A_i2^n+B_i n+C_i,
 \]
-where \(A_i,C_i\in\mathbb Z[1/2]\), \(B_i\in\mathbb Z\), and \(3\nmid B_i\). At the first stage \(E_1=t_1+3\), because \(G_0=Q/9\). At later stages
+where \(A_i,C_i\in\mathbb Z[1/2]\), \(B_i\in\mathbb Z\), and
+\(3\nmid B_i\). At later stages
 \[
 E_{i+1}=E_i+t_{i+1}+1.
 \]
@@ -128,8 +131,10 @@ The parent formula gives the exact recurrence
 X_{i+1}
 =4\cdot2^{t_{i+1}}X_i
 -16\cdot2^{n+t_{i+1}-\sigma_{i+1}}3^{E_{i+1}}
--(2(n+t_{i+1}-\sigma_{i+1})+5)3^{E_{i+1}}.
+-(2(n+t_{i+1}-\sigma_{i+1})+5)3^{E_{i+1}},
 \]
+valid for \(i\ge1\), with the same displayed formula for \(X_1\) when
+\(i=0\) and \(X_0=Q\).
 In particular,
 \[
 B_{i+1}=4\cdot2^{t_{i+1}}B_i-2\cdot3^{E_{i+1}}
