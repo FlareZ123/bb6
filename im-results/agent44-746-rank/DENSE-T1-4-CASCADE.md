@@ -149,3 +149,56 @@ which satisfies all seven divisibility requirements. The coefficient/constant bi
 \]
 With \(\sigma_i\le17\), the error for the seventh band is bounded by
 \(2^{3451}(n+1)/2^n\), far below \(2^{-60}\) on this cylinder.
+
+
+## 6. Denser eight-edge path on the same t=4 seed
+
+A different continuation after the fourth edge gives a denser eight-edge
+cylinder. Take
+\[
+(t_i)=(4,0,0,1,1,1,0,1),\qquad
+(\sigma_i)=(9,6,7,9,11,12,12,14).
+\]
+At r=1618, n=21232283, the exponents are
+\(E_i=(2,7,8,9,11,13,15,16,18)\), and modular evaluation gives
+\[
+v_3(Q)=9,\qquad
+(v_3(G_1),\ldots,v_3(G_7))=(1,1,2,4,3,1,5).
+\]
+The last selector is visible on the three lifts
+\(r=1618+a3^9\), \(a=0,1,2\):
+\[
+G_7\bmod9=(0,6,3).
+\]
+Thus the unique final digit is a=0 and the eight-edge cylinder is
+\[
+\boxed{r\equiv1618\pmod{3^{10}}},
+\]
+of density \(3^{-10}=1/59049\).
+
+The eight limiting band ratios are
+\[
+\frac{14336}{2187},\
+\frac{44704}{6561},\
+\frac{147680}{19683},\
+\frac{1103168}{177147},\
+\frac{12626560}{1594323},\
+\frac{99988288}{14348907},\
+\frac{340741280}{43046721},\
+\frac{2696870336}{387420489},
+\]
+with decimal values approximately
+\(6.5551,6.8136,7.5029,6.2274,7.9197,6.9684,7.9156,6.9611\).
+All are strictly in (6,8).
+
+The coefficient bit lengths through X7 are
+\(3408,3414,3416,3418,3421,3424,3427,3429\) for both B_i and C_i.
+The normalized factors \(2^{\sigma_i}/3^{E_i}\) are all below 1
+(the maximum is \(512/2187\)); hence the band-ratio error is below
+\(2^{-59}\) for n≥7000. The least n in this cylinder is 21232283,
+so the integer bands hold uniformly.
+
+This is the strongest t1=4 branch currently checked: eight edges on
+density \(3^{-10}\), denser than the earlier t1=7 eight-edge cylinder
+\(3^{-14}\). It is still an intermediate inverse-cone result, not a
+blank-root reachability proof.
