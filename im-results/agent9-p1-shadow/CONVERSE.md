@@ -1,6 +1,6 @@
 # Bounded finite-word converse: shadow paths lift to original P1 inverse cones
 
-**Status (2026-11-13):** Agent 50 independently reviewed the core source-size and exceptional-counter argument under the earlier, stronger $N\ge2M+16$ margin. The width estimate has since been sharpened to $N\ge2M+7$; that constant reduction still awaits independent review and Lean CI. This is an intermediate result in `im-results/`, not a publishable theorem yet.
+**Status (2026-11-13):** Agent 50 independently reviewed the core source-size and exceptional-counter argument under the earlier, stronger $N\ge2M+16$ margin. The Lean candidate now accepts the more general direct width hypothesis $L+M\le2^{N-M-3}$. For the feeder range $N+8\le L\le N+9$, the simple sufficient condition $N\ge2M+7$ implies this width bound; that sharpening and the direct-width formalization still await independent review and Lean CI. This is an intermediate result in `im-results/`, not a publishable theorem yet.
 
 ## Statement
 
@@ -10,13 +10,15 @@ Let $N=16q$, let $L=N+h$ with $h\in\{8,9\}$, and use the corresponding feeder ro
 
 where $u+4q+3=7\cdot2^N$.
 
-The proposed theorem is:
+The proposed general theorem is:
 
 > For every abstract feeder-rooted `ShadowReach` path ending at cost $m\le M$, if
-> $$N\ge2M+7,$$
+> $N+8\le L,\qquad L+M\le2^{N-M-3},$
 > then that path has a realization by the original source `OddCone` and the unchanged `inverseAt` definition.
 
-Equivalently, for a fixed finite path-cost budget $M$, every $q\ge\lceil (2M+7)/16\rceil$ admits source realizations of all such shadow paths. This is a finite-word converse, not a bound uniform over unbounded $M$ at fixed $q$.
+For the two feeders, $L\in\{N+8,N+9\}$. A simple uniform sufficient condition is $N\ge2M+7$: with $K=N-M-3$, this gives $K\ge M+4\ge4$ and
+> $L+M\le N+M+9=K+2M+12\le3K+4\le2^K.$
+> The feeder corollaries therefore apply whenever $q\ge\lceil (2M+7)/16\rceil$. The direct width hypothesis is stronger and allows larger finite windows at fixed $q$. This is a finite-word converse, not a bound uniform over unbounded $M$ at fixed $q$.
 
 The formal candidate is [ShadowGraphConverse.lean](./ShadowGraphConverse.lean), with feeder corollaries `l0_bounded_shadow_word_has_source` and `l1_bounded_shadow_word_has_source`.
 
@@ -76,7 +78,7 @@ The feeder roots satisfy the required source mass and initial coefficient equati
 
 ## Scope
 
-The current induction uses the width inequality $L+M\le2^{N-M-3}$ as its central quantitative input; $N\ge2M+7$ is a simple uniform sufficient condition for the feeder range $N+8\le L\le N+9$. A direct-width version should permit larger finite windows for a fixed $q$, but is not yet formalized.
+The current induction is formalized under the direct width inequality $L+M\le2^{N-M-3}$. The simple $N\ge2M+7$ feeder corollary is a convenient closed-form bound, not an optimal finite-window threshold.
 
 This result would establish exact correspondence for every *fixed finite cost window* once $q\ge\lceil (2M+7)/16\rceil$. It does **not** establish:
 - a lift of arbitrarily high cost at one fixed $q$;
