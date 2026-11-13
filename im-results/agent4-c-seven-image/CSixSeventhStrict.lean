@@ -86,6 +86,13 @@ private theorem no_six_D (u v : Nat) :
     (by dsimp [t]; omega) (by dsimp [r,t]; omega)
     h0 h1 h2 h3 h4 h5
 
+
+/-- Public source-certified interface to the six-edge obstruction used by
+    the third strict-image pullback. -/
+theorem no_six_D_public (u v : Nat) :
+    ¬ Incoming 6 (1213+1024*u+1024*v,286+512*v) :=
+  no_six_D u v
+
 /-- No seven original-source returns enter the new 1 mod 4 first-counter band. -/
 theorem no_seven_incoming (u v : Nat) (hpair : (u+v)%4=0) :
     ¬ Incoming 7 (641+1024*u,574+1024*v) := by
