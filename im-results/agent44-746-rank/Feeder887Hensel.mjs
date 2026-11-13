@@ -63,20 +63,32 @@ assert(roots.every((x, i) => x.residue === expectedRoots[i]),
 
 const bandCompatible = [];
 for (let t = 1; t <= 60; t++) {
-  const left = 6n * 6561n * 3n ** BigInt(t - 1);
-  const right = 8n * 6561n * 3n ** BigInt(t - 1);
+  const scale = 3n ** BigInt(t - 1);
+  const left = 6n * 6561n * scale;
+  const right = 8n * 6561n * scale;
   for (let j = 0; j <= 2 * t + 20; j++) {
-    const middle = 463n * 2n ** BigInt(t + j);
-    if (left < middle && middle < right) {
-      bandCompatible.push({ t, j });
+    const numerator = 463n * 2n ** BigInt(t + j);
+    if (left < numerator && numerator < right) {
+      let evenChain = 0;
+      for (let m = 1; m <= 30; m++) {
+        const two = 2n ** BigInt(m - 1);
+        if (numerator * two > scale * 6561n * (8n * two - 1n))
+          evenChain = m;
+        else
+          break;
+      }
+      bandCompatible.push({ t, j, evenChain });
       break;
     }
   }
 }
-const expectedBand = [[2,6],[5,8],[7,9],[10,11],[12,12],
-  [15,14],[17,15],[19,16],[22,18],[24,19],[27,21],[29,22]];
-assert(expectedBand.every(([t,j], i) =>
-  bandCompatible[i]?.t === t && bandCompatible[i]?.j === j),
-  "band-compatible exponent sequence changed");
+const expectedBand = [[2,6,0],[5,8,1],[7,9,0],[10,11,2],
+  [12,12,0],[15,14,4],[17,15,1],[19,16,0],
+  [22,18,1],[24,19,0],[27,21,3],[29,22,0]];
+assert(expectedBand.every(([t,j,m], i) =>
+  bandCompatible[i]?.t === t &&
+  bandCompatible[i]?.j === j &&
+  bandCompatible[i]?.evenChain === m),
+  "band-compatible exponent/chain sequence changed");
 
 console.log(JSON.stringify({ roots, bandCompatible }, null, 2));
