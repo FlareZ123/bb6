@@ -26,11 +26,12 @@ def t3Depths : List Nat :=
 def t3LeafDepths : List Nat := [96,258,420,582,744]
 
 /-- The five terminal t'=0 children of the t=3 roots. -/
-def t3Leaves : List Nat :=
-  t3LeafDepths.map (fun j =>
-    let q := t3Root j
-    let e := (2*q+5)/3
-    2*e - 2^886 - 888)
+def t3Leaf (j : Nat) : Nat :=
+  let q := t3Root j
+  let e := (2*q+5)/3
+  2*e - 2^886 - 888
+
+def t3Leaves : List Nat := t3LeafDepths.map t3Leaf
 
 /-- The sole t=6 first-tier parent at depth 474 (odd-band scale 882). -/
 def t6Root : Nat :=
@@ -59,6 +60,27 @@ theorem sideParentPairs_source (p : Nat × Nat)
   have h := (List.all_eq_true.mp sideParentPairs_valid) p hp
   exact (parentsFast_iff p.1 p.2).mp (List.contains_iff_mem.mp h)
 
+/-- Exact second-parent census for all sixteen t=3 roots. -/
+theorem t3_parent_lists_exact :
+    t3Depths.all (fun j =>
+      parentsFast (t3Root j) =
+        if j ∈ t3LeafDepths then [t3Leaf j] else []) = true := by
+  decide
+
+/-- Exact second-parent census for the single t=6 root. -/
+theorem t6_parent_list_exact : parentsFast t6Root = [t6Leaf] := by
+  decide
+
+/-- All six second-tier states are terminal in the exact inverse grammar. -/
+theorem sideLeaves_terminal :
+    t3Leaves.all (fun u => (parentsFast u).isEmpty) = true ∧
+      parentsFast t6Leaf = [] := by
+  constructor <;> decide
+
+theorem sideRoots_length : sideRoots.length = 17 := by decide
+theorem sideCone_length : sideCone.length = 23 := by decide
+theorem sideCone_nodup : sideCone.Nodup := by decide
+
 /-- The 23 states are closed under every exact ResetParent edge. -/
 theorem sideCone_closed : closedCertFast sideCone = true := by
   decide
@@ -70,6 +92,9 @@ theorem sideCone_no_root (u : Nat) (hu : u ∈ sideCone) :
   closedCertFast_excludes u sideCone sideCone_closed hu (by decide)
 
 #print axioms sideParentPairs_source
+#print axioms t3_parent_lists_exact
+#print axioms t6_parent_list_exact
+#print axioms sideLeaves_terminal
 #print axioms sideCone_closed
 #print axioms sideCone_no_root
 
