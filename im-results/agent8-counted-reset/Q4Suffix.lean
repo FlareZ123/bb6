@@ -33,7 +33,7 @@ def q4First10Start : FConfig :=
   ⟨4, 0, [0,1,2,3,4,7,8,9]⟩
 
 def q4First10End : FConfig :=
-  ⟨1, 10, [5,6,9]⟩
+  ⟨1, 10, [9,6,5,4,3,2,1,0]⟩
 
 theorem q4First10_exact :
     fRun tm2 10 q4First10Start = some q4First10End := by
