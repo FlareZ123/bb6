@@ -225,9 +225,11 @@ theorem q1b1_regular_rejoin_E (t : Nat) :
 theorem q1b1_rejoins_regular (k : Nat) :
     ∃ n s, DRegular.Canon s ∧
       ObsEq (run n (sourceStartK k)) (DRegularSource.sourceSection s) := by
+  have hdecomp : k = 3*(k/3) + k%3 := by
+    simpa [Nat.add_comm] using (Nat.mod_add_div k 3).symm
   by_cases h0 : k % 3 = 0
   · let t := k / 3
-    have hk : k = 3*t := by omega
+    have hk : k = 3*t := by simpa [t, h0] using hdecomp
     rw [hk]
     refine ⟨duration t, ⟨64*t+27,0,0⟩, ?_, ?_⟩
     · constructor
@@ -243,7 +245,7 @@ theorem q1b1_rejoins_regular (k : Nat) :
       exact q1b1_regular_rejoin t
   · by_cases h1 : k % 3 = 1
     · let t := (k-1) / 3
-      have hk : k = 3*t+1 := by omega
+      have hk : k = 3*t+1 := by simpa [t, h1] using hdecomp
       rw [hk]
       refine ⟨bDuration t, ⟨64*t+37,3,0⟩, ?_, q1b1_regular_rejoin_B t⟩
       constructor
@@ -253,7 +255,7 @@ theorem q1b1_rejoins_regular (k : Nat) :
         omega
     · have h2 : k % 3 = 2 := by omega
       let t := k / 3
-      have hk : k = 3*t+2 := by omega
+      have hk : k = 3*t+2 := by simpa [t, h2] using hdecomp
       rw [hk]
       refine ⟨eDuration t, ⟨64*t+49,6,0⟩, ?_, q1b1_regular_rejoin_E t⟩
       constructor
