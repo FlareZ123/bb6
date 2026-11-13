@@ -435,7 +435,7 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
           simpa [T1] using h6
         · have hb1 : b=1 := by omega
           subst b
-          have heq1 : h+6+3*(1:Int) = h+9 := by omega
+          have heq1 : h+6+3*(↑(1:Nat):Int) = h+9 := by omega
           rw [heq1]
           simpa [T1] using h9
       · have hb2 : 2≤b := by omega
