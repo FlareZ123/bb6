@@ -31,15 +31,15 @@ The 512/256 implementations both use the exact DRegular recurrence, reducing a m
 The following are the subsequent first-stop signatures obtained by iterating the existing submitted source-return formulas. The transition counts and residues are exact in the DRegular arithmetic model. The source compositions listed below still need a single staged Lean audit and, where noted, an explicit padding bridge.
 
 | Exception | DRegular transitions | a mod 59049 | q,b | t mod 27 | t mod 81 | Candidate source continuation |
-|---:|---:|---:|---:|---:|---|
+|---:|---:|---:|---:|---:|---:|---|
 | 31 | 12,267 | 39,637 | 8,1 | 2 | 29 | E/A q=8 packet p=16; A-one boundary returns to L(64t+117,0,0) |
-| 32 | 6,106 | 58,126 | 1,1 | 5 | 59 | EAllDouble q=0, then EZeroZTwoA at k=3t; returns to L(64t+27,0,0) |
+| 32 | 6,106 | 58,126 | 1,1 | 5 | 59 | Agent25 q1,b1 branch-A source bridge; returns to L(64t+27,0,0) |
 | 33 | 9,276 | 49,579 | 5,1 | 0 | 0 | EAllDouble q=4, E-three, then generic A-code word [false,false,true,true,false,true,true]; proposed pure-unary return L(512u+129,0,0), u=t/3 |
 | 34 | 12,638 | 55,039 | 6,1 | 13 | 40 | E/B general return to L(64t+29,1,5) |
 | 35 | 335 | 54,265 | 9,1 | 8 | 35 | E/B general return to L(64t+35,1,5) |
 | 36 | 615 | 27,469 | 7,1 | 0 | 54 | E/A all-reentry packet closure; returns to L(64t+91,3,2) |
 | 37 | 2,348 | 50,584 | 6,1 | 4 | 31 | E/B general return to L(64t+29,1,5) |
-| 38 | 1,341 | 24,670 | 1,1 | 13 | 67 | EAllDouble q=0, then EZeroZTwoFollow; output has explicit tail13 = oppairs(6) ++ [false] |
+| 38 | 1,341 | 24,670 | 1,1 | 13 | 67 | Agent25 q1,b1 branch-E source bridge; returns to L(64t+49,6,0) with explicit one-blank ObsEq |
 
 The q=8 first return at exception 31 is covered by the already-existing EFirstAPacket.exceptional_EA_packet and AOnePacketBoundarySource.a_p1_boundary: the E packet has p=16=3*5+1, so the candidate reentry is the same pure-unary form L(64*t31+117,0,0) used at exception 30.
 
