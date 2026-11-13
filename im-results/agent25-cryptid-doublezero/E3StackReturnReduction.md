@@ -1,6 +1,6 @@
-# E3 finite-suffix first return as a stack-system problem
+# E3 finite-suffix first return: mirror reduction and blocked stack bridge
 
-**Status:** reduction and representation bridge; the first-return theorem remains open. This note does not claim E3 totality, a blank-root result, or a BB(6) result.
+**Status:** exact mirror reduction; direct entry into the DeepMind stack system is not established. The first-return theorem remains open. This note does not claim E3 totality, a blank-root result, or a BB(6) result.
 
 ## 1. Exact machine mirror
 
@@ -28,7 +28,7 @@ F0 1RC    F1 1RA
 
 The state permutation is
 `D_F→85_A, D_E→85_B, D_C→85_C, D_A→85_D, D_B→85_E, D_D→85_F`,
-with tape reflection (imapsto-i). Each of the twelve nonhalting transitions
+with tape reflection `i ↦ -i`. Each of the twelve nonhalting transitions
 is preserved by this mirror, and D_F1 halt maps to 85_A1 halt.
 
 An E3 seed in D is F scanning 0, blank to the left, with four 1s at
@@ -66,23 +66,27 @@ The remote-reentry DAG is a conservative finite abstraction; its cycles
 show why arbitrary remote reentry alone does not prove finite-tail totality.
 Both are computational evidence, not a proof for all finite Y.
 
-The stack bridge potentially narrows the problem for root-reachable suffixes:
-if the actual E3 suffix language is shown to lie in the `encLeft` language,
-then the existing pair-stack reduction applies to every such seed. The
-first-return theorem remains the missing step. Even a proof for this
-restricted language would not establish totality for arbitrary finite Y
-without a separate argument.
+The DeepMind stack reduction is a possible tool, but the direct two-step
+entry argument fails: the mirrored seed reaches C/0 with a head-adjacent
+left zero, whereas the CR encoding requires a head-adjacent left one. No
+suffix-language condition on Y fixes this local mismatch. A longer
+source-verified prefix into CR/EL/DL/DR would have to be discovered and
+proved before the stack closure theorem can be used. Even after such an
+entry lemma, closure to an arbitrary stack mode would not by itself prove
+the E3 first-return property.
 
-## 5. Next proof target
+## 5. Correct next proof target
 
-Prove a source-level theorem for the stack system with initial mode
-`CR_n_n`, L empty, and R in the image of the run-length encoding above:
+First prove or refute a uniform stack-entry lemma:
 
 ```
-∃ R', Reaches (cfg_CR_n_n [] R) (cfg_CR_n_n [] R') ∨
-       ∃ cfg, Reaches (cfg_CR_n_n [] R) cfg ∧ step cfg = none
+∀ Y in the root-reachable E3 suffix language,
+  ∃ cfg, Reaches (mirrorE3Seed Y) cfg ∧ IsInStackSystem cfg
 ```
 
-Then transport this result through the exact mirror and the two-step prefix
-to the D E3 first-event classification. If the proof only reaches an
-arbitrary stack mode, it has not closed the E3 no-event branch.
+The prefix and the exact `encLeft`/`encRight` tape-language hypotheses
+must be explicit. Then strengthen the stack-mode analysis to show that
+these particular entries eventually reach an A/0 configuration with blank
+right tape (the E3 return), or halt. The existing theorem that reaches
+*some* stack mode is insufficient. If no such entry lemma exists, the
+DeepMind stack reduction is not currently a route to E3 totality.
