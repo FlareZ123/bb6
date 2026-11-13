@@ -60,7 +60,7 @@ private theorem m1EvenSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
   rw [hleft] at hcell
   simp only [List.append_assoc] at hcell hside
   rw [hside] at hcell
-  exact hcell
+  simpa only [show 3*a+1+k-3*a = 1+k by omega] using hcell
 
 private theorem m1EvenSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
     sweptLeft (3*a+1) (s1Config 3 6 1 a 0 b h).tape h
@@ -200,18 +200,17 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
     have hcell := s1Config_left_cell 3 6 1 a 0 b h i
     have hside : sideBit (s1LeftFacing 3 6 1 a 0) i = true := by
       rw [hleftFacing]
-      simp only [List.append_assoc]
+      let R : List Bool := markerWord 1 ++ (d0 ++ (d1 ++ (d0 ++ (d0 ++ lh))))
+      change sideBit (d1pow a ++ R) i = true
       by_cases hi3 : i < 3*a
       · have hiLen : i < (d1pow a).length := by
           simpa [d1pow_length] using hi3
-        rw [sideBit_append_left (d1pow a)
-          (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) i hiLen]
+        rw [sideBit_append_left (d1pow a) R i hiLen]
         exact sideBit_d1pow_true a i hi3
       · have hieq : i = 3*a := by omega
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
-        rw [sideBit_append_right (d1pow a)
-          (markerWord 1 ++ d0 ++ d1 ++ d0 ++ d0 ++ lh) (3*a) (by simpa [hlen])]
+        rw [sideBit_append_right (d1pow a) R (3*a) (by simpa [hlen])]
         simp [markerWord, d1pow_length]
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
@@ -257,7 +256,7 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
         rw [hcoord]
         exact hblock
       · by_cases hx1 : x = h+1
-        · subst x
+        · rw [hx1]
           simpa [T1,N] using sweptLeft_plus1 (3*a) T h
         · have hx2 : h+2 ≤ x := by omega
           have hx23 : x = h+2 ∨ x = h+3 := by
@@ -656,6 +655,11 @@ private theorem binDec_three_five :
 def m1EvenQ4LeftFacing (a : Nat) : List Bool :=
   [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec 3 5 ++ lh
 
+private theorem sideBit_append_after_local (xs ys : List Bool) (i : Nat)
+    (hi : xs.length ≤ i) :
+    sideBit (xs ++ ys) i = sideBit ys (i-xs.length) := by
+  exact BB6Coverage.Agent6Q4Prefix.sideBit_append_right xs ys i hi
+
 private theorem sideBit_binDec36_eq_binDec35_after5 (j : Nat) (hj : 5 ≤ j) :
     sideBit (d1 ++ d0 ++ d0 ++ lh) j =
       sideBit (d0 ++ d1 ++ d0 ++ lh) j := by
@@ -667,13 +671,13 @@ private theorem sideBit_binDec36_eq_binDec35_after5 (j : Nat) (hj : 5 ≤ j) :
         sideBit (d1 ++ d0 ++ d0 ++ lh) j =
           sideBit (d0 ++ lh) (j-6) := by
       simpa [List.append_assoc,d1,d0] using
-        sideBit_append_after (d1 ++ d0) (d0 ++ lh) j
+        sideBit_append_after_local (d1 ++ d0) (d0 ++ lh) j
           (by simpa [d1,d0] using hj6)
     have ht :
         sideBit (d0 ++ d1 ++ d0 ++ lh) j =
           sideBit (d0 ++ lh) (j-6) := by
       simpa [List.append_assoc,d1,d0] using
-        sideBit_append_after (d0 ++ d1) (d0 ++ lh) j
+        sideBit_append_after_local (d0 ++ d1) (d0 ++ lh) j
           (by simpa [d1,d0] using hj6)
     rw [hs,ht]
 
@@ -691,11 +695,11 @@ private theorem m1EvenQ4LeftFacingTail (a i : Nat)
         ([true] ++ d1pow a ++ markerWord 0 ++ d0) ++
           (d0 ++ d1 ++ d0 ++ lh) := by
     simp [m1EvenQ4LeftFacing,binDec_three_five,List.append_assoc]
-  have hs := sideBit_append_after (d1pow a ++ markerWord 1 ++ d0)
+  have hs := sideBit_append_after_local (d1pow a ++ markerWord 1 ++ d0)
     (d1 ++ d0 ++ d0 ++ lh) i (by
       simp [d1pow_length,markerWord,d0]
       omega)
-  have ht := sideBit_append_after ([true] ++ d1pow a ++ markerWord 0 ++ d0)
+  have ht := sideBit_append_after_local ([true] ++ d1pow a ++ markerWord 0 ++ d0)
     (d0 ++ d1 ++ d0 ++ lh) i (by
       simp [d1pow_length,markerWord,d0]
       omega)
@@ -717,7 +721,7 @@ private theorem m1EvenQ4LeftFacingPrefixTrue (a i : Nat)
     simp [hlist,sideBit]
   · have hpos : 1 ≤ i := by omega
     rw [hlist]
-    rw [sideBit_append_after [true]
+    rw [sideBit_append_after_local [true]
       (d1pow a ++ (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh)) i
       (by simp; omega)]
     have hrest := sideBit_append_left (d1pow a)
@@ -737,7 +741,7 @@ private theorem m1EvenQ4LeftFacingBoundaryBit (a k : Nat)
           (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh) := by
     simp [m1EvenQ4LeftFacing,binDec_three_five,List.append_assoc]
   rw [hlist]
-  rw [sideBit_append_after ([true] ++ d1pow a)
+  rw [sideBit_append_after_local ([true] ++ d1pow a)
     (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh)
     (3*a+1+k) (by simp [d1pow_length]; omega)]
   have hkCases : k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 ∨ k = 5 ∨
@@ -843,7 +847,7 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
                     (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) := by
               simp [m1EvenQ4LeftFacing,List.append_assoc]
             rw [hlist]
-            rw [sideBit_append_after ([true] ++ d1pow a)
+            rw [sideBit_append_after_local ([true] ++ d1pow a)
               (markerWord 0 ++ d0 ++ binDec 3 5 ++ lh) (3*a+1)
               (by simp [d1pow_length])]
             simp [markerWord,sideBit]
