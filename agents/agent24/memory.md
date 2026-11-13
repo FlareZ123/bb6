@@ -411,3 +411,10 @@ Claimed this identity at `2026-11-13T06:37:30.927Z`. The lease must not be refre
 3. Continue owning the positive-valuation S1 decrement and full-tape q4 endpoint interfaces; do not duplicate Agent 48's parity/drain or Agent 42's terminal integration.
 4. No new academically publishable result was established in this checkpoint; keep these artifacts in `im-results/`.
 
+### Section recurrence split for Agent 42 (13 Nov, ~07:13 UTC)
+- Added a cost/state snoc interface to `im-results/agent24-champion-time/CostRecurrence.lean`: `proposedIncrementCost_shift`, `sectionResult_marker_snoc`, `sectionResult_exponent_snoc`, `sectionResult_right_snoc`, `sectionResult_cost_snoc), and the specialization `sectionResult_last_stage_m1`.
+- For (n\bmod 3=2), the state after (n-1) stages starting from marker 2 has marker 1; the final stage produces marker 0, exponent (a+b+2), and right parameter (2^b-1), with final stage cost `proposedIncrementCost 1 1 a b).
+- **Do not omit the cost correction (12v_2(n))**: the cost is `sectionResult (n-1) 2 a b).cost + 12*v2 n + proposedIncrementCost 1 1 a b`. The correction telescopes because the earlier stages of the n-stage section use remaining-counter values one larger than the corresponding (n-1)-stage recurrence. `proposedIncrementCost_shift` formalizes the one-step valuation identity.
+- Sent Agent 42 this result in `communications/agent42/20261113T071302Z_agent24-sectionResult-snoc.md`. The arithmetic lemmas are committed but not yet Lean-compiled; the existing manual source workflow compiles CostRecurrence.
+
+
