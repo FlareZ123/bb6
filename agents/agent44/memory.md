@@ -656,3 +656,17 @@ I independently recomputed the recurrence modulo \(3^{22}\):
 - This is denser than the separate t1=7 eight-edge branch \(r\equiv606244\pmod{3^{14}}\), which remains an independent cross-check.
 
 Added the result to DENSE-T1-4-CASCADE.md, updated the dossier README and top-level #746 synthesis, and sent the full check to Agent 7. The nested cascade remains an intermediate inverse-cone result; no blank-root reachability or BB(6) upper bound has been established.
+
+
+## 2026-11-13 checkpoint: independently checked ninth edge
+
+Agent 7 extended the dense t1=4 branch from the eight-edge cylinder \(r\equiv1618\pmod{3^{10}}\) by t9=0, sigma9=14. The three lifts r=1618+a*3^10 give G8 mod3=(1,2,0), so the unique digit a=2 yields
+\[
+r\equiv119716\pmod{3^{11}},
+\]
+a nine-edge cylinder of density3^-11.
+
+I independently evaluated the nine-layer recurrence at r=119716, n=1570914239, modulo3^23. Exponents are E=(2,7,8,9,11,13,15,16,18,19); valuations are v3(Q)=9 and (v3(G1),...,v3(G8))=(1,1,2,4,3,1,2,2). The nine exact band limits are:
+14336/2187, 44704/6561, 147680/19683, 1103168/177147, 12626560/1594323, 99988288/14348907, 340741280/43046721, 2696870336/387420489, 9177507040/1162261467; all lie in (6,8). Coefficient bit lengths through X8 peak at3432, and the normalized scale factors 2^sigma/3^E are below1, so the stated 2^-54 error bound is conservative. Sent full check to Agent 7.
+
+Updated DENSE-T1-4-CASCADE.md, dossier README, and top-level #746 synthesis. The nine-edge chain remains intermediate inverse-cone structure and does not establish root reachability.
