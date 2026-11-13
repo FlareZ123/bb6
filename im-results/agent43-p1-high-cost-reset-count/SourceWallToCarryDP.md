@@ -134,3 +134,21 @@ R=2^L(L+c+3)+(c+3)S+T
 is strictly positive, so P·N=R−(d₀−1)/2>−P. It is an integer multiple of P, hence N≥0.
 
 The last-shallow-edge argument in §3 therefore applies after every such high-depth restart: the suffix must contain a shallow edge, the last edge whose cost differs from 3 must be shallow, and every edge after it has cost exactly 3. This is a paper derivation from the exact source recurrence and the existing defect bound. The general restart identity and the resulting suffix theorem have not yet been added as Lean theorems; formalizing them is a high-value next step.
+
+## 7. Exact initial energy at a high-depth restart
+
+The existing five-shallow source model starts its depth-two prefix at the original root, where its affine energy is
+
+    I(P,W₀,B₀)=98P−(14n+92).
+
+For a general restart state (b₀,d₀,m₀), using the same coordinates
+W₀=b₀+4m₀+4n+20 and B₀=m₀+n+6, the restart mass equation gives
+
+    W₀ = 14P−d₀+2m₀+2n+7,
+    I(P,W₀,B₀) = 98P−49d₀−14(m₀+n)+55.
+
+Thus the exact remainder replacing 14n+92 is
+
+    D₀ = 49d₀+14(m₀+n)−55.
+
+A depth-two prefix of length s still divides I by 8^s, so the generalized source model would need to control 98P−D₀ (including its sign) and the divisibility of D₀. The high-depth defect bound d₀≤7P/4+1 controls the d₀ term, but by itself does not ensure D₀<98P when m₀ is large. This is the precise obstacle to reusing FiveShallowSourceModel.lean unchanged after a high-depth restart. A useful next step is to derive a sharper joint bound on m₀ and d₀ from the high-depth transition and the remaining wall suffix, then generalize the five-shallow affine barrier with that bound.
