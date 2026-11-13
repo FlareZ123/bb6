@@ -167,8 +167,7 @@ theorem tm63_last_stage_m1 :
       tm63LastPreSection.cost + 12*v2 tm63Index2 +
         proposedIncrementCost 1 1 tm63FinalA tm63FinalB := by
   have h := sectionResult_last_stage_m1 tm63Index2
-    tm63MiddleSection.right (nextRight tm63MiddleSection.right)
-    tm63_second_index_two
+    tm63MiddleSection.right tm63MiddleSection.right tm63_second_index_two
   simpa [tm63LastSection, tm63LastPreSection, tm63FinalA, tm63FinalB] using h
 
 theorem tm63FinalA_pos : 0 < tm63FinalA := by
