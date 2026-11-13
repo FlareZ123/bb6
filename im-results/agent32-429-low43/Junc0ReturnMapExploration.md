@@ -86,3 +86,20 @@ The 20M-step scan of the J(0,744) regime exposes a second repeated macro at J(11
 For w=774,806,838 the parameters are (N,K)=(183,19),(199,11),(215,3), and the predicted interval times are 202,417; 227,073; and 253,777. These exactly match the observed intervals J(11,774)->J(11,806)->J(11,838)->J(11,870). At w=870, N=231 and K=-5, so this low-even branch no longer applies. The observed path then goes through J(25,845), J(53,792), J(109,683), J(221,462), J(445,17), J(440,34), and returns to J(0,924).
 
 As above, the endpoint/time algebra is suggested by existing macro formulas, but the combined parameterized physical/no-fatal theorem has not been formalized. The J(381,3)->J(387,2) transition preceding J(11,774) is also not yet identified/formalized; the listed intermediate Junc states are simulation observations.
+
+
+## Observed w=744 to w=924 regime
+
+The simulation's J(0,744)->J(0,924) interval (1,158,049 steps) decomposes at the observed Junc checkpoints as follows:
+
+| Segment | Steps | Endpoint |
+|---|---:|---|
+| Outer U=0,3,9,21,45,93,189 | 191,493 | J(381,3) |
+| Unidentified low-width transition | 7,382 | J(387,2) |
+| Low-even-4k N=1,K=193 | 3,761 | J(11,774) |
+| Three J(11,w)->J(11,w+32) cycles, w=774,806,838 | 683,267 | J(11,870) |
+| Outer U=11,25,53,109,221 | 261,433 | J(445,17) |
+| Low-odd v=8,n=217 | 5,306 | J(440,34) |
+| Low42 j=17,k=211 | 5,407 | J(0,924) |
+
+All endpoint/time values other than the J(381,3)->J(387,2) segment are explained by the existing outer-safe, low-even-4k, low-odd, and low42 macro formulas; the latter segment is presently only an observed simulation transition. The sum is exactly 1,158,049. This decomposition is a roadmap, not a proof: it still needs a formal physical lift for the generic macros and a theorem for the unidentified 7,382-step transition.
