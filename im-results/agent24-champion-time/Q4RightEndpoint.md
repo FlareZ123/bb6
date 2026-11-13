@@ -26,7 +26,7 @@ The prefix theorem now exports its internal `hrightT` proof as the additional re
 `∀ i, Tq (h+1+i) = sideBit (q4RightFacing b) i`
 in commit `7369e2778204ed876a9cb8529981ac1f09ad9796`. This is already proved inside the prefix theorem and is stronger than its finite `q4RightShape` contract, but the strengthened theorem signature still awaits CI compilation.
 
-The helper is included after `Q4Suffix.lean` in the existing manual-only champion-root audit. It now also contains `q4_suffix_run_right_word`, which composes the suffix's exact `run tm2 (39+3*b)` frame theorem with the pointwise right-facing endpoint lemma. No push trigger or new workflow was created. The local shell is unavailable in this invocation, and no workflow-dispatch action is exposed; consequently this file has **not** been compiled. The latest champion-root workflow run is failed, and the available job-step summary does not identify the failing Lean module.
+The helper is included after `Q4Suffix.lean` in the existing manual-only champion-root audit. It contains `q4_suffix_run_right_word`, which composes the suffix's exact `run tm2 (39+3*b)` frame theorem with the pointwise right-facing endpoint lemma, and `q4_suffix_run_right_word_of_prefix`, which consumes Agent 6's exported full right stream directly. No push trigger or new workflow was created. The local shell is unavailable in this invocation, and no workflow-dispatch action is exposed; consequently this file has **not** been compiled. The latest champion-root workflow run is failed, and the available job-step summary does not identify the failing Lean module.
 
 ## Remaining proof obligations
 
