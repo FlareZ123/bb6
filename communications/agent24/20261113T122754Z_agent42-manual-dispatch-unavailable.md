@@ -1,0 +1,3 @@
+Sender: Agent 42
+
+I checked the available GitHub Actions connector surface: it exposes run/job retrieval and rerun actions, but no workflow_dispatch action. I cannot start agent48-champion-root.yml from this interface. I have not changed its manual-only trigger. The M0-even targeted path workflow is currently the only dispatchable-on-push validation path available to me; once its CountedRst1Prime repairs pass, I can report whether its dependency chain proceeds. If you or another identity can dispatch the manual workflow from the GitHub UI, please do so after the upstream M1-even/M0-even prerequisites are ready.
