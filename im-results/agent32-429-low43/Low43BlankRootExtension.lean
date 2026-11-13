@@ -329,10 +329,97 @@ theorem blank_root_lowEvenR32_to_junc69_186 :
     chain136182.1,hrep69,
     chain136182.2⟩
 
+def lowOddV22N58Start : Zipper := junc 141 0 45
+def lowOddV22N58End : Zipper := junc 122 0 90
+def low42J45K38Start : Zipper := junc 122 0 90
+def low42J45K38End : Zipper := junc 0 0 344
+
+/-- Concrete guarded low-odd instance v=22,n=58. -/
+theorem lowOdd_v22_n58_no_fatal_source :
+    runNoFatal 3796 lowOddV22N58Start = some lowOddV22N58End := by
+  decide
+
+/-- Concrete guarded low42 instance j=45,k=38. -/
+theorem low42_j45_k38_no_fatal_source :
+    runNoFatal 9853 low42J45K38Start = some low42J45K38End := by
+  decide
+
+theorem lowOdd_v22_n58_no_fatal_physical (c : Config)
+    (hrep : Represents lowOddV22N58Start c) :
+    ∃ d : Config,
+      BB6Coverage.run target429 3796 c = some d ∧
+      Represents lowOddV22N58End d ∧
+      (∀ t : Nat, t ≤ 3796 →
+        ∃ e : Config, BB6Coverage.run target429 t c = some e ∧ C01Free e) :=
+  source_no_fatal_physical 3796 lowOddV22N58Start lowOddV22N58End c hrep
+    lowOdd_v22_n58_no_fatal_source
+
+theorem low42_j45_k38_no_fatal_physical (c : Config)
+    (hrep : Represents low42J45K38Start c) :
+    ∃ d : Config,
+      BB6Coverage.run target429 9853 c = some d ∧
+      Represents low42J45K38End d ∧
+      (∀ t : Nat, t ≤ 9853 →
+        ∃ e : Config, BB6Coverage.run target429 t c = some e ∧ C01Free e) :=
+  source_no_fatal_physical 9853 low42J45K38Start low42J45K38End c hrep
+    low42_j45_k38_no_fatal_source
+
+/-- Continue the blank-root prefix from J(69,186) through the
+    U=69 outer-safe return, low-odd v=22,n=58, and low42 j=45,k=38.
+    The resulting exact blank-root prefix ends at J(0,344), step 169592. -/
+theorem blank_root_lowEvenR32_to_junc0_344 :
+    ∃ c69 c141 c122 c344 : Config,
+      BB6Coverage.run target429 136182 blank = some c69 ∧
+      Represents (junc 69 0 186) c69 ∧
+      BB6Coverage.run target429 155943 blank = some c141 ∧
+      Represents (junc 141 0 45) c141 ∧
+      BB6Coverage.run target429 159739 blank = some c122 ∧
+      Represents (junc 122 0 90) c122 ∧
+      BB6Coverage.run target429 169592 blank = some c344 ∧
+      Represents (junc 0 0 344) c344 ∧
+      (∀ t : Nat, t ≤ 169592 →
+        ∃ e : Config,
+          BB6Coverage.run target429 t blank = some e ∧ C01Free e) := by
+  obtain ⟨c69, h136182, hrep69, hprefix136182⟩ :=
+    blank_root_lowEvenR32_to_junc69_186
+  obtain ⟨c141,houter,hrep141,hprefOuter⟩ :=
+    outer_no_fatal_segment 69 0 186 c69 hrep69 (by omega)
+  have cost69 : outerCost 69 0 = 19761 := by
+    norm_num [outerCost, juncPosFullTime]
+  have houter' : BB6Coverage.run target429 19761 c69 = some c141 := by
+    simpa [cost69] using houter
+  have hprefOuter' : ∀ t : Nat, t ≤ 19761 →
+      ∃ e : Config, BB6Coverage.run target429 t c69 = some e ∧ C01Free e := by
+    simpa [cost69] using hprefOuter
+  have chain155943 := physical_prefix_compose 136182 19761 blank c69 c141
+    h136182 houter' hprefix136182 hprefOuter'
+
+  obtain ⟨c122, hodd,hrep122,hprefOdd⟩ :=
+    lowOdd_v22_n58_no_fatal_physical c141 (by simpa [lowOddV22N58Start] using hrep141)
+  have chain159739 := physical_prefix_compose 155943 3796 blank c141 c122
+    chain155943.1 hodd chain155943.2 hprefOdd
+
+  obtain ⟨c344, h42,hrep344,hpref42⟩ :=
+    low42_j45_k38_no_fatal_physical c122 (by simpa [low42J45K38Start] using hrep122)
+  have chain169592 := physical_prefix_compose 159739 9853 blank c122 c344
+    chain159739.1 h42 chain159739.2 hpref42
+
+  exact ⟨c69,c141,c122,c344,
+    h136182,hrep69,
+    chain155943.1,hrep141,
+    chain159739.1,hrep122,
+    chain169592.1,hrep344,
+    chain169592.2⟩
+
 #print axioms lowOdd_v22_n34_no_fatal_source
 #print axioms low42_j45_k14_no_fatal_source
 #print axioms lowOdd_v38_n26_no_fatal_source
 #print axioms outer_ladder_0_to_93
 #print axioms blank_root_lowEvenR32_to_junc69_186
+#print axioms lowOdd_v22_n58_no_fatal_source
+#print axioms low42_j45_k38_no_fatal_source
+#print axioms lowOdd_v22_n58_no_fatal_physical
+#print axioms low42_j45_k38_no_fatal_physical
+#print axioms blank_root_lowEvenR32_to_junc0_344
 
 end BB429Low43BlankRootExtension
