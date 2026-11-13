@@ -20,6 +20,17 @@ For the two feeders, $L\in\{N+8,N+9\}$. A simple uniform sufficient condition is
 > $L+M\le N+M+9=K+2M+12\le3K+4\le2^K.$
 > The feeder corollaries therefore apply whenever $q\ge\lceil (2M+7)/16\rceil$. The direct width hypothesis is stronger and allows larger finite windows at fixed $q$. This is a finite-word converse, not a bound uniform over unbounded $M$ at fixed $q$.
 
+For scale, solving the direct width inequality exactly gives the following maximum cost budgets for the first few feeder sizes (the condition is monotone in $M$):
+
+| $q$ | L0 maximum $M$ | L1 maximum $M$ | simple $N\ge2M+7$ maximum |
+|---:|---:|---:|---:|
+| 1 | 8 | 7 | 4 |
+| 2 | 23 | 23 | 12 |
+| 3 | 38 | 38 | 20 |
+| 4 | 54 | 54 | 28 |
+
+These are direct substitutions into $L+M\le2^{N-M-3}$, not additional CI-verified claims.
+
 The formal candidate is [ShadowGraphConverse.lean](./ShadowGraphConverse.lean), with exact-width feeder corollaries `l0_bounded_shadow_word_has_source_of_width` and `l1_bounded_shadow_word_has_source_of_width`, plus simple linear-budget wrappers `l0_bounded_shadow_word_has_source` and `l1_bounded_shadow_word_has_source`.
 
 ## Proof architecture
