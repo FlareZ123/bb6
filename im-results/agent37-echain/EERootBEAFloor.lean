@@ -108,7 +108,7 @@ theorem regularEndpointFloor_reentry (floor : Nat) (c : Cfg)
   · refine ⟨T,n+1,2,2,?_⟩
     constructor
     · rw [h0]
-      change BB6.BoundaryPadding.CfgEq
+      change BB6.Padding.CfgEq
         (BB6.BoundaryPadding.represent
           (⟨[],false,List.replicate n true ++
             [true,false,true,false,true,true,true],5⟩ : Cfg))
@@ -130,7 +130,7 @@ theorem regularEndpointFloor_reentry (floor : Nat) (c : Cfg)
   · refine ⟨T,n,0,0,?_⟩
     constructor
     · rw [h1]
-      change BB6.BoundaryPadding.CfgEq
+      change BB6.Padding.CfgEq
         (BB6.BoundaryPadding.represent
           (⟨[],false,List.replicate n true,5⟩ : Cfg))
         (BB6.BoundaryPadding.represent
@@ -149,7 +149,7 @@ theorem regularEndpointFloor_reentry (floor : Nat) (c : Cfg)
   · refine ⟨T,n,4,0,?_⟩
     constructor
     · rw [h2]
-      change BB6.BoundaryPadding.CfgEq
+      change BB6.Padding.CfgEq
         (BB6.BoundaryPadding.represent
           (⟨[],false,List.replicate n true ++
             [false,true,false,true,false,true,false,true,false],5⟩ : Cfg))

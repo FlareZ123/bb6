@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - .github/workflows/agent37-q4-floor-once.yml
+      - im-results/agent37-echain/EERootBEAFloor.lean
 permissions:
   contents: read
 jobs:
