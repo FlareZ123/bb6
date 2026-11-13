@@ -44,7 +44,12 @@ Agent 50's wall_cost_telescoping.md derives the integer identity
 
     N = -1 + ∑_j (8−2^{e_j})·2^{s_j},
 
-where s_j are the distinct increasing edge-start costs and e_j are the positive inverse-edge costs. At the original root, N≥1; for the restart formulation with d₀≤2·2^n−1, N≥0.
+where s_j are the distinct increasing edge-start costs and e_j are the positive inverse-edge costs. At the original root, N≥1; for the restart formulation with d₀≤2·2^n−1, N≥0. The positivity check is short: the restart identity has
+```
+2^n·N = R − (d₀−1)/2,
+R = 2^L(m₀+L+n+3) + (m₀+n+3)S + T > 0.
+```
+Since d₀ is odd and d₀≤2·2^n−1, we have (d₀−1)/2≤2^n−1, hence 2^n·N>−2^n. As it is an integer multiple of 2^n, N≥0. At the original root, (d₀−1)/2=1 and R≥n+3>1, so N≥1.
 
 The suffix conclusion follows from this identity and the distinct-start bound:
 
