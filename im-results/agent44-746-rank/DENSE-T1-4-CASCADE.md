@@ -102,3 +102,50 @@ The fifth band uses X4, whose coefficients have at most 3421 bits. Since \(\sigm
 For n≥7000 this is below \(2^{-60}\), while the cylinder has n≥21232283. Hence all five strict limiting ratios give exact integer bands uniformly for sufficiently large members of the cylinder. Parent positivity follows from the lower band bound and large k.
 
 This branch is substantially denser at depth five than the separate t1=7 branch \(r\equiv74803\pmod{3^{11}}\): its five-edge cylinder has density \(3^{-7}\), rather than \(3^{-11}\). It remains an intermediate inverse-cone result; it does not establish blank-root reachability or determine BB(6).
+
+
+## 5. Sixth and seventh edges on a denser subcascade
+
+The five-edge branch has
+\[
+\gamma_5=10904213/1836660096.
+\]
+Choose \(t_6=2,\sigma_6=15\), giving
+\[
+R_6=2791478528/387420489\approx7.20529.
+\]
+On \(r=1618+3^7a\), the unique root of \(G_5\bmod3^3\) is \(a\equiv1\pmod{27}\). This gives
+\[
+r\equiv3805\pmod{3^{10}}.
+\]
+
+The next gamma is
+\[
+\gamma_6=310449143/198359290368.
+\]
+Choose \(t_7=2,\sigma_7=17\), giving
+\[
+R_7=40691190071296/5355700839936\approx7.59773.
+\]
+On \(r=3805+3^{10}a\), the unique root of \(G_6\bmod3^3\) is
+\(a\equiv23\pmod{27}\), hence the seven-edge cylinder
+\[
+\boxed{r\equiv1361932\pmod{3^{13}}},
+\]
+of density \(3^{-13}\). Its full parameter sequence is
+\[
+(t_i)=(4,0,0,1,3,2,2),\qquad
+(\sigma_i)=(9,6,7,9,14,15,17).
+\]
+
+At the representative \(r=1361932\), \(n=17871272591\), modular evaluation gives
+\[
+(v_3(G_0),\ldots,v_3(G_6))=(7,1,1,2,6,3,6),
+\]
+which satisfies all seven divisibility requirements. The coefficient/constant bit lengths through X7 are
+\[
+(3408,3408),(3414,3414),(3416,3416),(3418,3418),
+(3421,3421),(3426,3426),(3430,3430),(3434,3434).
+\]
+With \(\sigma_i\le17\), the error for the seventh band is bounded by
+\(2^{3451}(n+1)/2^n\), far below \(2^{-60}\) on this cylinder.
