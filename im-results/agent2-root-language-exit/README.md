@@ -32,21 +32,24 @@ These results prove that **all four first arithmetic-language exceptions have kn
 
 ## Highest-value outstanding proof
 
-A decisive next contribution is a **single original-source rooted return-chain lifting theorem** connecting each modeled regular branch and the exact positive physical first-return guard, including padding equivalence, to a physically proved blank-start seed. A concise inductive interface would then carry the arithmetic Lean first-exit theorem across all 1,711/8,394/9,458/7,611 modeled steps without repeatedly computing their gigantic unary values in raw-machine Lean.
+The D-start blank-root chain now has an original-source continuation through the sixteenth exceptional reentry; see the [timing-cocycle dossier](../agent37-d-timing-cocycle/README.md). A staged five-job Lean audit is running as [CI 43402524711](https://github.com/FlareZ123/bb6/actions/runs/43402524711), with compiled `.olean` checkpoints carried between jobs. Episodes 17–30 and the Seed31 first-exit computation remain unverified until that workflow completes.
 
-This is a root-directed bridge to an already-known exception, and **not a complete D-machine invariant**: further excursions through changed markers, E3 no-event alternatives, and halting prefixes still require an unbounded closure theorem. For the current strongest all-suffix E source interface, use [Agent 2's complete F/E first-event dossier](../agent2-e-seam-root/README.md), original-source [CI 42579563004](https://github.com/FlareZ123/bb6/actions/runs/42579563004).
+The immediate next proof boundary is the first undefined successor of `DRegular` after the thirtieth reentry. `Seed31Probe.lean` searches up to 1,024,000 regular transitions using 512-step `DRegularFast.fastRun` blocks and a linear scan of the first failed block. Its `#eval` output is only diagnostic; it must not be treated as a proof of the first exit.
 
-## Reproduction
+I added `Seed31FirstStopCertificate.lean` as an intermediate proof submission. It aims to prove, for every canonical seed, that the block-search/linear-scan algorithm returns the exact first state with undefined `DRegular.next` whenever the result is below its cap. It also gives a conditional `Agent25RootChain.extend_regular` lift from the authentic blank root through episode 30 to that first exceptional state. **This module has not yet been Lean-verified.** The artifact-reusing workflow `agent2-seed31-first-stop-certificate.yml` can compile it from the final `d-root-seed31-audit` artifact without repeating the 30-episode chain.
 
-Compile `DRegularFirstExit.lean` directly with Lean 4.36.0-rc2; it imports `Lean` only. Run `check_first_regular_exit.py` in the repository using Python 3.10+ and the unmodified sibling `agent37-root-language-pilot/macro_engine.py`. The former certifies arithmetic execution and prefix nonexit; the latter compares two independent model encodings. Neither imports original-source physical `Boundary.lean` transitions, so neither should be cited as an original-machine proof.
+Once the probe output is available:
 
+1. Verify whether the returned count is below 1,024,000. If not, extend the search bound rather than claiming that the first exit was found.
+2. Prove the exact count and state signature in Lean (including `a % 59049`, `q`, and `b`) using a kernel-checked computation, then discharge the first-stop certificate's bound premise.
+3. If and only if the actual first state is `L(59049*m+44494,4,1)`, compose the source theorem `q4_exceptional_EE_BEA_section`. Its `sourceStart u 4` is `DRegularSource.sourceSection ⟨27*u+25,4,1⟩`; setting `u=2187*m+1647` gives the target. Otherwise classify the actual state and select a source theorem that matches it.
 
-## q=4 root-preimage constraint
+The current certificate `t30 mod 27 = 22` does not determine `t30 mod 81`. The new certificate module includes a diagnostic `#eval t30 % 81`; it is not yet run. Do not assume the q4 cylinder is reached.
 
-`Q4RegularPreimages.md` records the exhaustive one-step predecessor classes
-for the EERootBEA target subcylinder `L(243*u+25,4,1)), distinguishes it from
-the separate sixth-root q=4 subfamily `L(243*s+214,4,1)), and derives the
-exact seed31 expression and its first three regular-model transitions.
-These are arithmetic constraints only; they do not establish blank-root
-reachability. The source closure is available in
-`im-results/agent37-echain/EERootBEA.lean`.
+A complete blank-root proof still needs both:
+
+1. A universal symbolic invariant or a machine-specific inductive argument for the full blank-origin orbit.
+2. A finite or inductive source proof showing that every exceptional family reached by that orbit either returns to the regular language or enters a separately proved terminal/nonhalting behavior.
+
+The existing q4 closure and the exception-41 `k=27t+22` subfamily are conditional local source theorems. Neither establishes blank-root reachability, closes all of `k ≡ 4 (mod 9)`, or resolves the independent `k ≡ 7 (mod 9)` family. No conclusion about all-time nonhalting or the exact BB(6) value follows from the current finite prefix.
+
