@@ -207,3 +207,5 @@ The new theorem `blank_root_lowEvenR32_to_junc0_344` composes this with the 136,
 
 
 The exploratory note `Junc0ReturnMapExploration.md` records a deterministic 20M-step Junc(0,w) return scan and the algebraic candidate for a repeated +28 return when w is divisible by 4 in [408,736]. It is explicitly not a Lean theorem or an infinite nonhalting proof, but may guide a parameterized low42/outer-safe composition.
+
+The same exploration note also maps the observed J(0,744)->J(0,924) interval into known outer/low-even/low-odd/low42 macros plus one unresolved 7,382-step transition J(381,3)->J(387,2). This is an empirical decomposition and formalization target, not part of the 169,592-step Lean candidate.
