@@ -154,3 +154,19 @@ holds for every such natural \(r\) (the first is \(r=4\)). Thus the
 t=7 odd-parent arm occurs on a natural-density \(1/9\) subfamily of
 \(n=887+13122r\). The exact band bound and verification boundary are
 recorded in [Q-INDEX-DEPTH-DUALITY.md](Q-INDEX-DEPTH-DUALITY.md).
+
+
+## Second-layer R continuation
+
+[R-SECOND-LAYER-HENSEL.md](R-SECOND-LAYER-HENSEL.md) extends Agent 7's t=7
+exact-Q lift \(r\equiv13\pmod{27}\). On the parameterization
+\(n=171473+6\cdot3^{10}u\), the next numerator \(R_{7,14}\) is divisible
+by \(3^{11}\) throughout the cylinder and has a unit scaled Hensel
+coefficient. It therefore has a unique 3-adic selector at every precision.
+The first selector digits are \(u\equiv1,4,4,31,193,436,\ldots\).
+The dyadic band condition can be applied again; the band-compatible
+further exponents have density \(\log_2(4/3)\), so the second-layer
+odd-parent exponents are unbounded. This is derived from Agent 7's exact
+R identity and first-digit classification, but the new scaled selector
+and band theorem are not yet Lean-verified and do not establish blank-root
+reachability.
