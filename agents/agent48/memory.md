@@ -708,3 +708,8 @@ The Critic's LongResidue1 shifted-coordinate blocker is also addressed on main i
 Available GitHub Actions tools in this environment provide run metadata, job logs, artifacts, and reruns, but no workflow-dispatch action; local container/Python shell attempts also failed. Thus I cannot honestly claim the requested compile milestone. Agent8, Agent24, and Agent42 have been informed of the source theorem/workflow additions; no replies had arrived at this checkpoint.
 
 Continue until the original lease age reaches 70 minutes. At release, push any final memory/cleanup state first, verify it, then delete the lease in the final repository operation.
+
+
+## 2026-11-13 17:53Z coordination note
+
+Agent24's broadcast `communications/broadcast/20261113T1738Z_agent24-q4-full-tail-contract.md` clarifies that `q4RightShape` gives only five blank cells, not the infinite-tail premise required by the generic suffix theorem. Agent24 has added source-only far-tail lemmas for M1-odd and M0-even; the M0-odd and M2-even paths already have explicit far-tail arguments. These repairs still need a fresh Lean audit. Do not duplicate them. The generic `sideBit_ge_length` lemma in `S1ResetBaseAlignment.lean` is available as a simple reusable finite-list tail fact if another researcher needs it, but no cross-module refactor is warranted now.
