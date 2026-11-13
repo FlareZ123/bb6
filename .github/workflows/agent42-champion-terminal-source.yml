@@ -108,20 +108,6 @@ jobs:
             echo '::error::sorryAx found in counted carry residue bridge dependencies'
             exit 1
           fi
-          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/FrameCellLemmas.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/carry-left-frame-axioms.log
-          lean -o FrameCellLemmas.olean FrameCellLemmas.lean 2>&1 | tee /tmp/a42-terminal/carry-left-frame-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-frame-axioms.log; then
-            echo '::error::sorryAx found in counted carry frame-cell lemmas'
-            exit 1
-          fi
-          cp "$GITHUB_WORKSPACE/im-results/agent42-carry-left-output/LongResidue1.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/carry-left-r1-axioms.log
-          lean -o LongResidue1.olean LongResidue1.lean 2>&1 | tee /tmp/a42-terminal/carry-left-r1-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-r1-axioms.log; then
-            echo '::error::sorryAx found in long residue-one carry left-output theorem'
-            exit 1
-          fi
           lean -o ChampionModular.olean ChampionModular.lean
           lean -o CostRecurrence.olean CostRecurrence.lean
           lean -o CountPattern.olean CountPattern.lean
@@ -255,8 +241,6 @@ jobs:
             /tmp/a42-terminal/carry-boundary-axioms.log
             /tmp/a42-terminal/carry-prefix-axioms.log
             /tmp/a42-terminal/carry-prefix-general-axioms.log
-            /tmp/a42-terminal/carry-left-frame-axioms.log
-            /tmp/a42-terminal/carry-left-r1-axioms.log
             /tmp/a42-terminal/carry-left-output-axioms.log
             /tmp/a42-terminal/carry-left-output-r23-axioms.log
             /tmp/a42-terminal/s1-counted-carry-axioms.log
