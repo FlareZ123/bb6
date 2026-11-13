@@ -17,7 +17,7 @@ L=13122=2\cdot3^8,\qquad n(r)=887+Lr,\qquad
 F(r)=Q_{3402}(n(r))/3^8.
 \]
 
-The base divisibility \(3^8\mid Q_{3402}(887)\) is confirmed by the exact modular census in UIndexHenselCensus.mjs. The branch also contains a Lean qDepthResidue_887_table / qDepthResidue_iff proof asserting the same precision-7 selector \(j=3402\bmod4374\), but its original-source CI has not yet passed; do not count that module as source-verified.
+The base divisibility \(3^8\mid Q_{3402}(887)\) is confirmed by the exact modular census in UIndexHenselCensus.mjs. The branch also contains Lean qDepthResidue_887_table / qDepthResidue_iff declarations for the precision-7 selector \(j=3402\bmod4374\). Agent 44 inspected run 43397274339 and confirmed that QDepthDefs, QDepthLift, QDepthBase, QDepthSelectorBase, QDepthSelector, QDepth887, and QDepthHensel all compiled there with axiom profile \([propext, Classical.choice, Quot.sound]\). The workflow failed only later in UParentCone887.lean:75; the constructor-shape repair is committed but not yet rerun. Do not infer that the complete U-parent cone passed.
 
 ## 2. A 3-adic isometry in the family parameter
 
