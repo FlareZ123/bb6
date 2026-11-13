@@ -419,11 +419,15 @@ theorem qIndexResidue_all_sectors_iff (n j k : Nat)
     (hn : n%6=4∨n%6=5) (hj : j%2=0) :
     (3:Int)^(k+1)∣qNumerator n j ↔
       (n/6)%3^k=qIndexResidue (n%6) j k := by
-  have hdecomp : n%6+6*(n/6)=n := by
-    have h := Nat.mod_add_div' n 6
+  let s := n%6
+  let h := n/6
+  have hs : s=4∨s=5 := by simpa [s] using hn
+  have hdecomp : s+6*h=n := by
+    dsimp [s,h]
+    have h' := Nat.mod_add_div' n 6
     omega
-  rw [←hdecomp]
-  exact qIndexResidue_iff (n%6) j k (n/6) hn hj
+  have hmain := qIndexResidue_iff s j k h hs hj
+  simpa [s,h,hdecomp] using hmain
 
 /-- The 887 family is the sector-5 specialization
 n=5+6*(147+2187*r). -/
@@ -456,20 +460,23 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
     have he : n+1=(n-2)+3 := by omega
     rw [he,Int.pow_add]
     norm_num
+    ring
   have h8d : 8*(d:Int)=
       (2:Int)^(n+2)+2*q+2*n+6 := by
     calc
       8*(d:Int)=2*(4*(d:Int)) := by ring
       _=2*(8*(2:Int)^(n-2)+q+(n-2)+5) := by rw [hparentI]
-      _=2*((2:Int)^(n+1)+q+n+3) := by rw [hpow]; ring
+      _=2*((2:Int)^(n+1)+q+n+3) := by rw [hpow]; omega
       _=(2:Int)^(n+2)+2*q+2*n+6 := by
         rw [show (2:Int)^(n+2)=(2:Int)^(n+1)*2 by
           rw [Int.pow_succ]]
         ring
   dsimp [qNumerator]
   rw [hz]
-  rw [h8d]
-  ring
+  calc
+    8*(9*(d:Int))-9*((2:Int)^(n+2)+2*n+1) =
+        9*(8*(d:Int)-((2:Int)^(n+2)+2*n+1)) := by ring
+    _=9*(2*q+5) := by rw [h8d]; ring
 
 #print axioms qNumerator_shift_digit_mod
 #print axioms qNumerator_lift_criterion
