@@ -578,3 +578,9 @@ The original lease claim was 2026-11-13T09:26:00.807Z; release threshold is 10:3
 ## Dependency qualification
 
 The Seed31–38 replay is exact DRegular/BigInt arithmetic conditional on the submitted BlankThirtiethRejoin.seed31 definition. The repository D-root README still reports the episode 17–30 original-source continuation as pending CI. Therefore none of the new downstream signatures or blank-root modules should be described as an authenticated blank-root theorem until that upstream source chain and the new Seed31 certificate/reentry workflow both pass.
+
+
+## 2026-11-13 11:50Z: consolidate the primary root-exit dossier
+
+- Rewrote the Highest-value outstanding proof section of im-results/agent2-root-language-exit/README.md to replace the obsolete q4-first-stop assumption with the conditional exact q8 Seed31 arithmetic result, its source-status qualification, the q8 and q1 reentry submissions, and the next proof obligations. Detailed residues and limits remain in seed31-38-exact-replay.md.
+- The q8 branch is conditional on the submitted episode17–30 BlankThirtiethRejoin chain, which the D-root primary dossier still marks as pending original-source CI. Do not promote this to results or describe it as a genuine blank-root theorem until upstream and downstream manual workflows pass.
