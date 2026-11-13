@@ -72,6 +72,14 @@ The new root theorem `blank_ne_six_seven_band_s3` excludes every state in the fu
 
 The formal extension is in [CSixSeventhStrict.lean](CSixSeventhStrict.lean) and [CSixSeventhRoot.lean](CSixSeventhRoot.lean), with the exact six/not-seven and all-time root theorems printed for axiom auditing. Both manual source workflows now compile the affine-inverse dependency required by this proof. **This second image family and its all-time blank-root exclusion passed original-source CI 43300420208 with no `sorryAx`.** Its C58 parameter pullback remains intermediate pending a separate successful audit.
 
+## Exact parameter-only pullback
+
+The auxiliary image coordinates can be eliminated entirely. The full second s3 family pulls back exactly to
+
+\[j\equiv319\pmod{512},\qquad 3m+7j+14025\equiv0\pmod{16384}.\]
+
+Equivalently, writing \(j=319+512u\), one has \(m\equiv42-6656u\pmod{16384}\). This forces \(m\equiv42\pmod{512}\), so every member has \(m\ge42\). The parameter cylinder has exact natural density \(2^{-23}\), and is disjoint from the earlier six/seven diagonal. The complete paper derivation, including the small-\(m\) exclusion needed for the converse, is in [S3PullbackCongruence.md](S3PullbackCongruence.md). This is an arithmetic normal form; it does not upgrade the still-pending C58 source integration.
+
 ## Pullback to the full C58 high-stop parameter family
 
 The second strict image family pulls back parametrically through the exact high-stop counter. Its high parameters satisfy
