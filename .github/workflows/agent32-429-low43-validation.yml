@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census:im-results/agent6-429-low2:im-results/agent18-429-low-j:im-results/agent32-429-low43"
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent1-429-physical-frontier:im-results/agent32-429-raw-parent:im-results/agent32-429-primitive-cost:im-results/agent18-429-lastwriter:im-results/agent6-429-one-sided-excursion:im-results/agent32-429-high2-prefix:im-results/agent1-429-w4-boundary:im-results/agent33-429-writer-locality:im-results/agent4-429-ordinary-frontier:im-results/agent1-429-w2-census:im-results/agent6-429-low2:im-results/agent18-429-low-j:im-results/agent32-429-low43:im-results/agent1-429-root-entry"
           LOG=/tmp/agent32-low43-validation.log
           : > "$LOG"
           lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean 2>&1 | tee -a "$LOG"
@@ -67,8 +67,9 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent32-429-low43/Low43Continuation.olean im-results/agent32-429-low43/Low43Continuation.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-primitive-cost/JPhysicalPrefix.olean im-results/agent32-429-primitive-cost/JPhysicalPrefix.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low43/Low43Physical.olean im-results/agent32-429-low43/Low43Physical.lean 2>&1 | tee -a "$LOG"
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=65536 -o im-results/agent1-429-root-entry/Low43ParityShift.olean im-results/agent1-429-root-entry/Low43ParityShift.lean 2>&1 | tee -a "$LOG"
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=8192 -o im-results/agent32-429-low43/Low43RootPhysical.olean im-results/agent32-429-low43/Low43RootPhysical.lean 2>&1 | tee -a "$LOG"
-          grep -E "'BB429Low43.* (depends on axioms:|does not depend on any axioms)" "$LOG"
+          grep -E "'BB429(Low43|ParityShiftedEntry).* (depends on axioms:|does not depend on any axioms)" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "sorryAx detected in low43 source/physical chain"
             exit 1

@@ -367,6 +367,66 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
         simpa using hpre3
       exact ⟨d,hpre,by rw [hrightExact,hhead2]; omega⟩
 
+
+/-- Every prefix of the prepared 8v+16 stage stays at or to the right of
+    the endpoint of its initial left-extremal AF sweep. -/
+private theorem stage43_prefix_head_lower_bound (v k s : Nat)
+    (hs : s ≤ 8*v+16) :
+    ∃ d : Config,
+      run target429 s (stage43Config v k) = some d ∧
+      (stage43Config v k).head - (4*v+6:Int) ≤ d.head := by
+  obtain ⟨c1,c2,c3,hleft,hAR,h4,hhead1,hhead2,hhead3,
+      hstate,hcur,hright⟩ := stage43_decomposition v k
+  let cStage : Config := stage43Config v k
+  let L : Nat := 4*v+6
+  have hhead1L : c1.head = cStage.head-(L:Int) := by
+    simpa [cStage,L] using hhead1
+  have hdisp1 : c1.head-cStage.head=-(L:Int) := by
+    rw [hhead1L]
+    omega
+  have hdisp2 : c2.head-c1.head=(L:Int) := by
+    rw [hhead2,hhead1L]
+    omega
+  have hdisp3 : c3.head-c2.head=4 := by
+    rw [hhead3,hhead2]
+    omega
+  by_cases hs1 : s≤L
+  · obtain ⟨d,hpre⟩ :=
+      run_prefix_exists target429 L s cStage c1 hleft hs1
+    have hleftExact :=
+      run_prefix_left_extremal target429 L s cStage d c1
+        hleft hpre hs1 hdisp1
+    exact ⟨d,hpre,by rw [hleftExact]; omega⟩
+  · by_cases hs2 : s≤2*L
+    · let r : Nat := s-L
+      have hr : r≤L := by dsimp [r]; omega
+      obtain ⟨d,hpre2⟩ :=
+        run_prefix_exists target429 L r c1 c2 hAR hr
+      have hrightExact :=
+        run_prefix_right_extremal target429 L r c1 d c2
+          hAR hpre2 hr hdisp2
+      have htime : s=L+r := by dsimp [r]; omega
+      have hpre : run target429 s cStage=some d := by
+        rw [htime,run_add',hleft]
+        simpa using hpre2
+      exact ⟨d,hpre,by rw [hrightExact,hhead1L]; omega⟩
+    · let r : Nat := s-2*L
+      have hL : 8*v+16=2*L+4 := by dsimp [L]; omega
+      have hr : r≤4 := by dsimp [r]; omega
+      obtain ⟨d,hpre3⟩ :=
+        run_prefix_exists target429 4 r c2 c3 h4 (by omega)
+      have hrightExact :=
+        run_prefix_right_extremal target429 4 r c2 d c3
+          h4 hpre3 (by omega) hdisp3
+      have hleftAR : run target429 (L+L) cStage=some c2 := by
+        rw [run_add',hleft]
+        exact hAR
+      have htime : s=(L+L)+r := by dsimp [r]; omega
+      have hpre : run target429 s cStage=some d := by
+        rw [htime,run_add',hleftAR]
+        simpa using hpre3
+      exact ⟨d,hpre,by rw [hrightExact,hhead2]; omega⟩
+
 /-- On every odd-deficit-4k+3 input, the first certified C/0 checkpoint is
     a strict physical right-head record. Its right neighbour is blank, and
     every earlier primitive prefix lies at least one cell to its left. -/
@@ -462,6 +522,59 @@ theorem low43_C0_record (v k : Nat) :
     rw [hheadC]
     omega
   exact ⟨cC,by simpa [c0,tape] using htotal',hheadC,hrepC,hstate,hcur,hright,hrecord⟩
+
+
+/-- Uniform all-prefix lower bound for the original physical low43 record.
+    Its exact minimum is bounded by the AF sweep in the final prepared
+    stage, at coordinate -2v-4. -/
+theorem low43_C0_record_head_floor (v k : Nat) :
+    ∀ t : Nat, t ≤ 4*v*v+18*v+22 →
+      ∀ d : Config,
+        run target429 t
+          {state:=A,head:=0,tape:=jTape (v+2*k+2) (2*v+1)}=some d →
+        -2*(v:Int)-4 ≤ d.head := by
+  let tape : Int → Bool := jTape (v+2*k+2) (2*v+1)
+  let c0 : Config := {state:=A,head:=0,tape:=tape}
+  let cStage : Config := stage43Config v k
+  let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
+  have hfirst : run target429 B c0=some cStage := by
+    have hhead : 2*((v+1:Nat):Int)=2*(v:Int)+2 := by omega
+    simpa only [hhead,stage43Config,stage43Tape,c0,tape,B] using
+      multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
+        (by decide) (by decide) (by decide) (by decide)
+        (low43_holes v k) (low43_odds v k) (low43_right v k)
+  intro t ht d hd
+  by_cases htb : t≤B
+  · obtain ⟨d',hpre,hbound⟩ :=
+      multi_bubble_prefix_head_lower_bound target429 (v+1) (v+1) t tape
+        (by omega) (by decide) (by decide) (by decide) (by decide)
+        (low43_holes v k) (low43_odds v k) (low43_right v k)
+        (by simpa [B] using htb)
+    have heq : d=d' := Option.some.inj (hd.symm.trans hpre)
+    subst d
+    omega
+  · let s : Nat := t-B
+    have htime : B+8*v+16=4*v*v+18*v+22 := by
+      dsimp [B]
+      omega
+    have hs : s≤8*v+16 := by
+      dsimp [s]
+      omega
+    obtain ⟨d',hseg,hbound⟩ := stage43_prefix_head_lower_bound v k s hs
+    have htime2 : t=B+s := by dsimp [s]; omega
+    have hpre : run target429 t c0=some d' := by
+      rw [htime2,run_add',hfirst]
+      exact hseg
+    have heq : d=d' := Option.some.inj (hd.symm.trans hpre)
+    subst d
+    have hcalc : (stage43Config v k).head - ((4*v+6:Nat):Int) =
+        -2*(v:Int)-4 := by
+      simp [stage43Config]
+      omega
+    rw [hcalc] at hbound
+    exact hbound
+
+#print axioms low43_C0_record_head_floor
 
 #print axioms stage43_represented
 #print axioms low43_C0_record
