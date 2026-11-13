@@ -1,10 +1,7 @@
 import SectionAllInverse
 import GenericSection
 import OddOddVal3Orbit
-import OddOddLowVal
-import EvenOddFourExact
 import HighSumTwo
-import M0EvenEvenSumZero
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent11Y3X32
@@ -111,77 +108,44 @@ theorem y3_x32_parents (t a k : Nat) (ht : 1≤t)
                 constructor <;> omega
             · omega
 
-/-- The y=3 terminal is blank-unreachable on the infinite cylinder
-    x=1024z+650.  Both exact source parents are eliminated: the n=2
-    parent by odd-sum-two, and the n=0 parent by val-3, even/odd-four,
-    odd/odd-lowval, then odd-sum-one. -/
-theorem blank_no_y3_x32 (z : Nat) :
-    ¬ CReach (1024*z+650) 3 := by
-  let q := 8*z+5
-  let t := 4*q
-  have ht : 1≤t := by dsimp [t,q]; omega
-  have htarget : 1024*z+650=32*t+10 := by
-    dsimp [t,q]
-    omega
-  have hmain : ¬ CReach (32*t+10) 3 := by
-    intro hr
-    rcases hr with ⟨n,hn⟩
-    cases n with
-    | zero =>
-        simp [BB6.Agent8Section.run] at hn
-        omega
-    | succ n =>
-        cases hprev : BB6.Agent8Section.run secNext n (some (5,1)) with
-        | none => simp [BB6.Agent8Section.run,hprev] at hn
-        | some p =>
-            rcases p with ⟨a,k⟩
-            have hsrc : secNext (a,k)=some (32*t+10,3) := by
-              simpa [BB6.Agent8Section.run,hprev] using hn
-            rcases y3_x32_parents t a k ht hsrc with hP0|hP2
-            · have hreachP0 : CReach (16*t+5) (8*t+3) := by
-                refine ⟨n,?_⟩
-                simpa [hP0.1,hP0.2] using hprev
-              have hQ0 : CReach (12*t+2) (10*t+1) := by
-                have hh := (oddodd_val3_blank_reach_iff
-                  (16*t+5) (8*t+3)
-                  (by omega) (by omega) (by omega)
-                  (by dsimp [t,q]; omega) (by omega)).mp hreachP0
-                convert hh using 1 <;> omega
-              have hR0 : CReach (11*t-1) ((21*t-2)/2) := by
-                have hh := (evenodd_four_blank_reach_iff
-                  (12*t+2) (10*t+1)
-                  (by omega) (by omega) (by omega)
-                  (by dsimp [t,q]; omega)).mp hQ0
-                convert hh using 1 <;> omega
-              have hS0 : CReach (43*q-3) ((85*q-7)/2) := by
-                have hh := (oddodd_lowval_blank_reach_iff
-                  (11*t-1) ((21*t-2)/2)
-                  (by dsimp [t,q]; omega)
-                  (by dsimp [t,q]; omega)
-                  (by dsimp [t,q]; omega)
-                  (by dsimp [t,q]; omega)
-                  (by dsimp [t,q]; omega)
-                  (by dsimp [t,q]; omega)).mp hR0
-                convert hh using 1 <;> dsimp [t,q] <;> omega
-              have hforbid := BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
-                (43*q-3) ((85*q-7)/2)
-                (by dsimp [q]; omega)
-                (by dsimp [q]; omega)
-                (by dsimp [q]; omega)
-                (by dsimp [q]; omega)
-              exact hforbid hS0
-            · have hreachP2 : CReach (16*q-1) (56*q+3) := by
-                refine ⟨n,?_⟩
-                simpa [hP2.1,hP2.2,t,q] using hprev
-              exact BB6.Agent11High.blank_no_odd_sum_two
-                (16*q-1) (56*q+3)
-                (by dsimp [q]; omega)
-                (by dsimp [q]; omega)
-                (by dsimp [q]; omega)
-                hreachP2
-  simpa [htarget] using hmain
+/-- For even t, the second source parent of (32t+10,3) is
+    excluded by the source-certified odd-sum-two obstruction.  Therefore
+    any blank reachability must pass through the first parent, and the
+    val-3 odd/odd inverse then forces the even/odd state (12t+2,10t+1). -/
+theorem y3_x32_even_t_reach_implies_q0 (t : Nat)
+    (ht : 1≤t) (hteven : t%2=0)
+    (h : CReach (32*t+10) 3) :
+    CReach (12*t+2) (10*t+1) := by
+  rcases h with ⟨time,hh⟩
+  cases time with
+  | zero =>
+      simp [BB6.Agent8Section.run] at hh
+      omega
+  | succ n =>
+      cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
+      | none =>
+          simp [BB6.Agent8Section.run,hp] at hh
+      | some p =>
+          rcases p with ⟨a,k⟩
+          have hsec : secNext (a,k)=some (32*t+10,3) := by
+            simpa [BB6.Agent8Section.run,hp] using hh
+          rcases y3_x32_parents t a k ht hsec with h0|h2
+          · have hP0 : CReach (16*t+5) (8*t+3) := by
+              refine ⟨n,?_⟩
+              simpa [h0.1,h0.2] using hp
+            have hQ0 := (oddodd_val3_blank_reach_iff
+              (16*t+5) (8*t+3)
+              (by omega) (by omega) (by omega)
+              (by omega) (by omega)).mp hP0
+            convert hQ0 using 1 <;> omega
+          · have hP2 : CReach (4*t-1) (14*t+3) := by
+              refine ⟨n,?_⟩
+              simpa [h2.1,h2.2] using hp
+            exact False.elim (BB6.Agent11High.blank_no_odd_sum_two
+              (4*t-1) (14*t+3)
+              (by omega) (by omega) (by omega) hP2)
 
 #print axioms y3_x32_parents
 #print axioms oddeven_sum3_blank_reach_iff
-#print axioms blank_no_y3_x32
+#print axioms y3_x32_even_t_reach_implies_q0
 end BB6.Agent11Y3X32
