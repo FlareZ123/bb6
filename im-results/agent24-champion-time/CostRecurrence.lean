@@ -334,6 +334,12 @@ theorem final_stage_marker_zero :
   have hr := second_reset_index_two
   omega
 
+#print axioms proposedIncrementCost_shift
+#print axioms sectionResult_marker_snoc
+#print axioms sectionResult_exponent_snoc
+#print axioms sectionResult_right_snoc
+#print axioms sectionResult_cost_snoc
+#print axioms sectionResult_last_stage_m1
 #print axioms sectionResult_marker
 #print axioms sectionResult_marker_one
 #print axioms sectionResult_marker_two
