@@ -103,3 +103,10 @@ When evidence changes, rewrite the relevant summary above and its primary dossie
 - The blank-root chain through the thirtieth source reentry is being re-audited against the original source. CI `43385887598` is pending after correcting the P2 reset helper's heartbeat budget; its next target is the `Seed31Probe` state. The q4 cylinder `L(59049m+44494,4,1)` still requires a source-certified blank-root prefix.
 - Do **not** treat the conditional exception-41 `k\equiv4\pmod9` packet as an uncovered reset family. Agent35's source theorem `BB6.Agent35K4.close_one` in `im-results/agent35-cryptid-code/P2K4Source.lean` covers `k=27t+22`, q=`3*1+1=4`, and its original-source CI `42518529775` succeeded. The model candidate `k41\equiv76\pmod{81}` implies `k41\equiv22\pmod{27}`, so `close_one t 1` matches the P2 reset packet. Its explicit trailing blank is physically removable via `BoundaryPadding.source_pad`.
 - This is a **conditional packet closure**, not a blank-root reachability theorem. The missing root prefix to q4 and the source-certified route through exceptions 31–40 remain the priority. The separate k=7 mod9 question is not resolved by this observation.
+
+
+### 2026-11-13 audit follow-up
+
+- CI `43385887598` exposed the P2 alias's real mismatch: addition association in the time expression. The helper now uses the source grouping and `simpa only [Nat.add_assoc]`.
+- CI `43387148649` compiled that alias and then stopped in `PacketSafeExit.normalize_p2_exit`: `by_contra` was unavailable in the Lean-only toolchain. The two uses were replaced with core `by_cases` branches (commit `7db1989`).
+- CI `43388459155` is the next full original-source audit, including the corrected P2 alias and PacketSafeExit proof. The earlier attempts did not reach `Seed31Probe`; do not treat the q4 blank-root prefix as established until a successful run and a proof of the probe output are committed.
