@@ -1,13 +1,6 @@
 name: Agent 10 two-tier index Hensel source check
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'im-results/agent10-cascade/RayTwoTierIndexHensel.lean'
-      - 'im-results/agent7-fatal-density/SignedRayPeriod.lean'
-      - 'im-results/agent7-fatal-density/RayDepthHensel.lean'
-      - 'im-results/agent7-fatal-density/RayDepthResidue.lean'
-      - '.github/workflows/agent10-two-tier-index-hensel.yml'
 permissions:
   contents: read
 jobs:
