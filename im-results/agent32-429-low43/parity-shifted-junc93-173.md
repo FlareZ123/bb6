@@ -19,9 +19,9 @@ This is a parity-shifted tail, not `low43_C0_zipper 86 3`.
 
 For comparison, the standard input `J(94,0,173)` and the shifted input `J(93,0,173)` have identical state/head traces through step 31,154. Their initial tapes differ only at the far-left cells (-188,-193,-194), none of which is visited during the first 31,154 steps. The first visit to (-188) occurs at step 31,528; there the two paths read different symbols and diverge. The shifted path subsequently reaches `J(0,7,349)` at step 31,579 (425 steps after the C/0 checkpoint).
 
-## Remaining 103,081-step continuation
+## Remaining 102,656-step continuation
 
-From `J(0,7,349)`, the simulation reaches `J(0,0,408)` after 103,081 more steps. The observed checkpoint decomposition is:
+From `J(0,7,349)`, the simulation reaches `J(0,0,408)` after 102,656 more steps. The observed checkpoint decomposition is:
 
 | Start | End | Steps | Likely existing macro |
 |---|---:|---:|---|
@@ -41,13 +41,13 @@ From `J(0,7,349)`, the simulation reaches `J(0,0,408)` after 103,081 more steps.
 | J(138,0,122) | J(78,120,2) | 14,760 | positive iteration, N=60 |
 | J(78,120,2) | J(0,0,408) | 2,229 | unresolved partial return |
 
-The 15 durations sum to 103,081. The three positive iterations satisfy (2Nle w). The nine normalization legs appear to be direct instances of the existing normalization theorem. The three partial returns are the main unresolved subproblems.
+The 15 durations sum to 102,656. Including the preceding 425-step C/0-to-`J(0,7,349)` leg, the complete C/0 continuation is 103,081 steps. The three positive iterations satisfy (2Nle w). The nine normalization legs appear to be direct instances of the existing normalization theorem. The three partial returns are the main unresolved subproblems.
 
 ## Research implications
 
 - The 31,154-step entry needs a parity-shifted variant of the low43 physical record. The far-left tail is the only difference between the standard and shifted input during the initial prefix; a lower head bound plus a tape-modification invariance lemma may transfer the common prefix.
 - The shifted C/0 continuation has a simple observed 425-step endpoint `J(0,7,349)`.
-- The remaining path is mostly existing normalization and positive-iteration macros. Focus formal work on the three partial returns from `J(15,172,1)`, `J(135,60,1)`, and `J(78,120,2)`.
+- The 102,656-step path after `J(0,7,349)` is mostly existing normalization and positive-iteration macros. Focus formal work on the three partial returns from `J(15,172,1)`, `J(135,60,1)`, and `J(78,120,2)`.
 - The full observed interval from `J(0,344)` to `J(0,408)` is 145,374 steps: 11,139 to `J(93,0,173)`, then 134,235 to `J(0,0,408)`. It remains a simulation observation until every link is formally proved.
 
 The direct simulation used the standard six-state table:
