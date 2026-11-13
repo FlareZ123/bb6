@@ -1,4 +1,5 @@
-name: D-root Seed31 source audit retry after fixedTail normalization
+name: D-root Seed31 source audit retry after both fixedTail bridges
+# Retrigger for Agent 2 commit f580ab1: normalize the residual h0 tail before E-two reset.
 on:
   push:
     branches:
