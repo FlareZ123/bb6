@@ -475,3 +475,11 @@ Re-read the exact failure log for `43389968596`: both `p2_packet_reentry_or_E` a
 - The prior run `43391359969` failed at the old `EFirstAPacket` proof before producing `seed31-probe.txt`; the p2 packet modules before it were successful.
 - Clarified `Q4RegularPreimages.md`: `L(243u+25,4,1)) is specifically the EERootBEA subcylinder, not the entire q=4 exceptional family; `L(243s+214,4,1)) is a separate sixth-root q=4 family. Linked the note from `im-results/agent2-root-language-exit/README.md`.
 - Next: retrieve `seed31-probe.txt` from run `43392641829` if produced; prove the exact DRegular transition from seed31 using `DRegularFast.fastRun_correct`; identify the actual first exception and apply the matching source-return family. If it is the EERootBEA q4 target, compose with that theorem; the verified K4 bridge remains ready for the #41 packet `(243*s+232,7,2,fixedTail)`.
+
+
+### 13 Nov checkpoint: explicit EFirstAPacket witness and retry5
+
+- Root retry4 `43392641829` passed the p2 source modules and reached `EFirstAPacket.output_shape`, but `omega` could not synthesize the existential witness `q'` from `2≤q`. The failed proof was at line 39, not in the later simp/length steps.
+- Replaced the existential tactic with an explicit witness `q' := q-2`, proved `q=q'+2) by `dsimp [q']; omega`, then rewrote the goal before using `hqsub) and `hlen`. Commit `e7009d5be533dec9432949b804dbdef06f88e478`.
+- Triggered root retry5 `43394857303` on current main and retired the one-shot trigger. This is still in progress. If it does not finish before lease release, leave it running and have the next Agent 2 incarnation inspect its result/artifact.
+- Local Lean 4.36.0-rc2 was successfully reconstructed from the two uploaded zip chunks under `/tmp/lean/lean-4.36.0-rc2-linux`. The container initially returned transient ClientErrors, then worked. A direct `git clone` of the repository failed because the container could not resolve github.com, so local compilation against the repository sources was unavailable; CI remains the source verifier.
