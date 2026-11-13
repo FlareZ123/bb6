@@ -448,7 +448,7 @@ with the true cell at offset two in each block. -/
 theorem rst1Prime_sideBit_d0pow_pattern
     (n i : Nat) (hi : i < 3*n) :
     sideBit (d0pow n) i = decide (i%3=2) := by
-  induction n with
+  induction n generalizing i with
   | zero => omega
   | succ n ih =>
       by_cases hsmall : i<3
@@ -500,9 +500,10 @@ theorem rst1Prime_sweptRight_headFacing_d0pow
   · rw [hcoord,hr0]
     simpa [hside,hr0] using hblock.2.2
   · rw [hcoord,hr1]
-    have hcoord1 : h+3*(j:Int)+2-(1:Int) = h+3*(j:Int)+1 := by omega
-    rw [hcoord1]
-    simpa [hside,hr1] using hblock.2.1
+    have hsideFalse : sideBit (d0pow n) k = false := by
+      simpa [hside,hr1]
+    rw [hsideFalse]
+    convert hblock.2.1 using 1 <;> omega
   · rw [hcoord,hr2]
     simpa [hside,hr2,hT] using hblock.1
 
@@ -514,7 +515,7 @@ theorem rst1Prime_d0pow_append_right (n : Nat) :
   induction n with
   | zero => simp [d0pow]
   | succ n ih =>
-      simp [d0pow,List.append_assoc,ih]
+      simp [d0pow,List.append_assoc,ih] <;> omega
 
 #print axioms rst1Prime_sideBit_d0pow_pattern
 #print axioms rst1Prime_sweptRight_headFacing_d0pow
@@ -526,7 +527,7 @@ theorem rst1Prime_d0pow_length (n : Nat) :
     (d0pow n).length = 3*n := by
   induction n with
   | zero => simp [d0pow]
-  | succ n ih => simp [d0pow,d0,ih]
+  | succ n ih => simp [d0pow,d0,ih] <;> omega
 
 /-- Glue n scanned d0 blocks to a final bridge-supplied d0 block. The
 resulting head-facing word is d0pow (n+1). -/
@@ -538,13 +539,16 @@ theorem rst1Prime_d0pow_segment
     (hprefix : ∀ k, k<3*n →
       F (head-(k:Int)) =
         sweptRight (n+1) T h (head-(k:Int)))
-    (hboundary : ∀ r, r<3 →
-      F (head-((3*n+r:Int))) = sideBit d0 r) :
+    (hboundary : ∀ r : Nat, r<3 →
+      F (head-(3*(n:Int)+(r:Int))) = sideBit d0 r) :
     ∀ k, k<3*(n+1) →
       F (head-(k:Int)) = sideBit (d0pow (n+1)) k := by
   intro k hk
   by_cases hsmall : k<3*n
   · have hsweep := rst1Prime_sweptRight_headFacing_d0pow n T h hpre k hsmall
+    have hsweep' : sweptRight (n+1) T h (head-(k:Int)) =
+        sideBit (d0pow n) k := by
+      simpa [hhead] using hsweep
     have hword : sideBit (d0pow (n+1)) k = sideBit (d0pow n) k := by
       rw [← rst1Prime_d0pow_append_right n]
       exact sideBit_append_left (d0pow n) d0 k (by
@@ -553,7 +557,7 @@ theorem rst1Prime_d0pow_segment
     calc
       F (head-(k:Int)) =
           sweptRight (n+1) T h (head-(k:Int)) := hprefix k hsmall
-      _ = sideBit (d0pow n) k := hsweep
+      _ = sideBit (d0pow n) k := hsweep'
       _ = sideBit (d0pow (n+1)) k := hword.symm
   · have hlarge : 3*n≤k := by omega
     have hrem : k-3*n<3 := by omega
