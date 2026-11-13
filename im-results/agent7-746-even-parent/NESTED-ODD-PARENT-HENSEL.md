@@ -200,9 +200,9 @@ After \(d\) parent edges and the final seed digit, the class has modulus
 \]
 It contains infinitely many natural \(r\). Each of the finitely many band ratios is strictly inside \((6,8)\), so all corresponding integer band conditions hold once \(r\) is sufficiently large. This proves the stated arbitrary-finite-depth result and its positive density for each fixed depth.
 
-## Explicit eight-edge specialization
+## Explicit nine-edge specialization
 
-The uniform-density initial edge also gives a dense concrete eight-edge branch. Choose
+The uniform-density initial edge gives a dense concrete nine-edge branch. Choose
 \[
 \begin{aligned}
 &(t_1,\sigma_1)=(4,9),\quad
@@ -212,7 +212,8 @@ The uniform-density initial edge also gives a dense concrete eight-edge branch. 
 (t_5,\sigma_5)=(1,11),\quad
 (t_6,\sigma_6)=(1,12),\\
 &(t_7,\sigma_7)=(0,12),\quad
-(t_8,\sigma_8)=(1,14).
+(t_8,\sigma_8)=(1,14),\quad
+(t_9,\sigma_9)=(0,14).
 \end{aligned}
 \]
 The limiting band ratios are
@@ -226,16 +227,17 @@ i&R_i\\\hline
 5&12626560/1594323\approx7.9197001\\
 6&99988288/14348907\approx6.9683557\\
 7&340741280/43046721\approx7.9156152\\
-8&2696870336/387420489\approx6.9610937
+8&2696870336/387420489\approx6.9610937\\
+9&9177507040/1162261467\approx7.8962499
 \end{array}
 \]
 and all lie strictly inside \((6.2,7.93)\).
 
-The exact Hensel digit choices give the eight-edge class
+The exact Hensel digit choices give the nine-edge class
 \[
-\boxed{r\equiv1618\pmod{59049}.}
+\boxed{r\equiv119716\pmod{177147}.}
 \]
-The least representative has \(n=887+13122\cdot1618=21232283\). The successive unique lifts are:
+The least representative has \(n=887+13122\cdot119716=1570914239\). The successive unique lifts are:
 \[
 \begin{array}{c|c}
 \text{condition}&\text{selected residue}\\\hline
@@ -248,47 +250,50 @@ The least representative has \(n=887+13122\cdot1618=21232283\). The successive u
 9\mid G_5&r\equiv1618\pmod{2187}\\
 3\mid G_6&r\equiv1618\pmod{6561}\\
 3\mid G_7&r\equiv1618\pmod{19683}\\
-9\mid G_7&r\equiv1618\pmod{59049}
+9\mid G_7&r\equiv1618\pmod{59049}\\
+3\mid G_8&r\equiv119716\pmod{177147}
 \end{array}
 \]
-For the final lift, the three candidates \(r=1618,21301,40984\) give \(G_7\bmod9=(0,6,3)\), so the first is the unique digit making \(9\mid G_7\).
+For the final lift, the three candidates \(r=1618,60667,119716\) give \(G_8\bmod3=(1,2,0)\), so the third is the unique digit making \(3\mid G_8\).
 
 At the representative, modular evaluation gives
 \[
 \begin{aligned}
-&Q\equiv224937324\pmod{3^{18}},\qquad
-G_1\equiv18582\pmod{3^{11}},\qquad
-G_2\equiv45384\pmod{3^{10}},\\
-&G_3\equiv7605\pmod{3^9},\qquad
-G_4\equiv1296\pmod{3^7},\qquad
-G_5\equiv108\pmod{3^5},\\
-&G_6\equiv6\pmod{3^3},\qquad
-G_7\equiv0\pmod{3^2}.
+&Q\equiv612357813\pmod{3^{19}},\qquad
+G_1\equiv195729\pmod{3^{12}},\qquad
+G_2\equiv104433\pmod{3^{11}},\\
+&G_3\equiv27288\pmod{3^{10}},\qquad
+G_4\equiv3483\pmod{3^8},\qquad
+G_5\equiv594\pmod{3^6},\\
+&G_6\equiv60\pmod{3^4},\qquad
+G_7\equiv9\pmod{3^3},\qquad
+G_8\equiv0\pmod3.
 \end{aligned}
 \]
 Thus
 \[
 v_3(Q)=9,\quad v_3(G_1)=1,\quad v_3(G_2)=1,\quad
 v_3(G_3)=2,\quad v_3(G_4)=4,\quad v_3(G_5)=3,\quad
-v_3(G_6)=1,\quad 9\mid G_7.
+v_3(G_6)=1,\quad v_3(G_7)=2,\quad 3\mid G_8.
 \]
-A shift \(r\mapsto r+3^{10}a\) changes \(n\) by \(2a3^{18}\). The affine-exponential shift law therefore changes \(Q,G_1,\ldots,G_7\) by multiples of \(3^{18},3^{11},3^{10},3^9,3^7,3^5,3^3,3^2\), respectively. All displayed valuations and divisibilities consequently hold throughout the full class \(r\equiv1618\pmod{59049}\). Its density is \(1/59049\).
+A shift \(r\mapsto r+3^{11}a\) changes \(n\) by \(2a3^{19}\). The affine-exponential shift law therefore changes \(Q,G_1,\ldots,G_8\) by multiples of \(3^{19},3^{12},3^{11},3^{10},3^8,3^6,3^4,3^3,3\), respectively. All displayed valuations and divisibilities consequently hold throughout the full class \(r\equiv119716\pmod{177147}\). Its density is \(1/177147\).
 
-The eight band tests use the linear/constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_7\), whose bit lengths are
+The nine band tests use the linear/constant coefficients \((B_i,C_i)\) of \(Q=X_0,X_1,\ldots,X_8\), whose bit lengths are
 \[
 (3408,3408),\ (3414,3414),\ (3416,3416),\ (3418,3418),\
-(3421,3421),\ (3424,3424),\ (3427,3427),\ (3429,3429).
+(3421,3421),\ (3424,3424),\ (3427,3427),\ (3429,3429),\
+(3432,3432).
 \]
-Thus \(|B_i|,|C_i|<2^{3430}\) for every coefficient used in the eight band tests. Each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{11}\). For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
+Thus \(|B_i|,|C_i|<2^{3433}\) for every coefficient used in the nine band tests. Each factor \(2^{\sigma_i}/3^{t_i+1}\) is below \(2^{13}\). For \(n\ge7000\), \(n+1<2^{n/2}\), so the difference between each exact normalized band ratio and its limit is less than
 \[
-2^{11}\frac{2^{3430}(n+1)}{2^n}
-<2^{3441-n/2}\le2^{-59}.
+2^{13}\frac{2^{3433}(n+1)}{2^n}
+<2^{3446-n/2}\le2^{-54}.
 \]
-Consequently every exact ratio lies in \((6.19,7.94)\), with margin greater than \(0.06\) from both endpoints 6 and 8. Also \(k_i=n+t_i-\sigma_i\ge n-13\), so \(0.06\cdot2^{k_i}>1\). The exact integer bands
+Consequently every exact ratio lies in \((6.19,7.94)\), with margin greater than \(0.06\) from both endpoints 6 and 8. Also \(k_i=n+t_i-\sigma_i\ge n-14\), so \(0.06\cdot2^{k_i}>1\). The exact integer bands
 \[
 6\cdot2^{k_i}+1\le2^{t_i}e_i\le8\cdot2^{k_i}-1
 \]
-therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine eight-edge chain, and so does every nonnegative member of the class.
+therefore hold for every \(n\ge7000\) in the class. In particular, the least representative itself gives a genuine nine-edge chain, and so does every nonnegative member of the class. The last digit also makes \(3\mid G_8\), seeding a tenth edge.
 
 The exact modular residues, unique Hensel digits, coefficient bit lengths, and limiting ratios are reproduced by the accompanying NestedOddParentHenselCheck.mjs, using only modular BigInt exponentiation (it never constructs \(2^n\) as a full integer). Agent 44 independently checked an alternate eight-edge branch beginning with \((t_1,\sigma_1)=(7,14)\) modulo \(3^{28}\) in [NestedCascadeCheck.mjs](../agent44-746-rank/NestedCascadeCheck.mjs); that independent check is complementary to the denser \(t_1=4\) branch above.
 
