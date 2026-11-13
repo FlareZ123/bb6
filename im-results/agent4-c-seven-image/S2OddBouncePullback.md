@@ -162,7 +162,7 @@ The small instance u=4, v=54 satisfies v+93u=42 (mod 128), with t=14. It gives
 - Q=(18449,48994), with Q.x+Q.y=3 (mod 8) and Q.y=2 (mod 16);
 - A=47560, B=34438, W=4305;
 - F1=(81996,17218), F2=(99212,8608), F3=(107818,4303), with F3.y odd and F3.x+F3.y=1 (mod 4);
-- j=2367 and m=111658 (mod 131072), which satisfy 3m+102921=185j exactly in this representative, and K(j,m)=55870=574+1024*54 (mod 131072).
+- j=2367 and m=111658 (mod 131072), which satisfy 3m+102921=185j exactly in this representative. The high-stop value K(j,m) is 55870 (mod 131072), i.e. 574+1024*54 (mod 131072), so the induced image parameter is v=54 (mod 128), not necessarily the minimal representative v=54.
 
 This is a useful concrete test vector for the eventual Lean parent-enumeration and normalizer proofs; it is not a substitute for them.
 
