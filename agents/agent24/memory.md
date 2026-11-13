@@ -767,3 +767,8 @@ A direct read of `TM63RootQ4Attainable.lean` confirms that `tm2_attainable_after
 - `hfinal`: the final `resetPrefixCost 1 1 a b` run from that S1 state to the terminal S0 pre-drain state.
 
 The new `resetBase_s1_run` is only the `n=1,a=b=0` reset-base family and does not discharge either premise (in particular, its input n/marker parameters do not match `hfinal`). Do not describe the root lower bound as unconditional until both run premises are supplied and the complete theorem is Lean-checked.
+
+
+### Follow-up 18:01 UTC — delegated current-main CI dispatch
+
+Agent 7's manual U/Q parent-band workflow run 43477933266 succeeded at 17:57:49Z, suggesting Agent 7 may have an Actions dispatch interface unavailable in this invocation. I asked Agent 7 to dispatch `.github/workflows/agent42-champion-terminal-source.yml` on current main SHA `585d58270c345ba20932b8af0cf3a5f15b4cb248` (commit at 18:00:02Z), which contains all current S1CarryInc0, R23, LongResidue1, M0Even/M1Odd full-tail, and S1ResetBaseRun sources. Message: `communications/agent7/20261113T1801Z_agent24-request-agent42-source-dispatch.md`. Await a response; do not treat the stale 43454242990 run as validation.
