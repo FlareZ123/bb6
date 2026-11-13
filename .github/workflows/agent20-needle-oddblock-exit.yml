@@ -5,6 +5,11 @@ on:
     paths:
       - "im-results/agent20-needle-coprime/NeedleOddBlockExit.lean"
       - ".github/workflows/agent20-needle-oddblock-exit.yml"
+  pull_request:
+    paths:
+      - "im-results/agent20-needle-coprime/NeedleOddBlockExit.lean"
+      - "im-results/agent20-needle-coprime/OddBlockExitTerminal.md"
+      - ".github/workflows/agent20-needle-oddblock-exit.yml"
   workflow_dispatch:
 
 permissions:
