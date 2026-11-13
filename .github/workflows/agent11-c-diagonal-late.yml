@@ -134,7 +134,11 @@ jobs:
           lean -o JointResidual.olean JointResidual.lean
           # Agent3 complete original-source parent fan for even/even targets.
           cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/EvenEvenParentFan.lean .
-          lean -o EvenEvenParentFan.olean EvenEvenParentFan.lean
+          lean -o EvenEvenParentFan.olean EvenEvenParentFan.lean 2>&1 | tee EvenEvenParentFan.log
+          if grep -q sorryAx EvenEvenParentFan.log; then
+            echo "REJECTED: even/even parent fan contains sorryAx"
+            exit 1
+          fi
           # Convert the exact rooted stopping criteria to executable
           # parameter predicates through Agent11's original-source
           # fixed-target backward reachability oracle.
@@ -408,10 +412,14 @@ jobs:
           # normalization's u=1 boundary case.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
           lean -o M0SmallBoundaryZero.olean M0SmallBoundaryZero.lean 2>&1 | tee M0SmallBoundaryZero.log
-          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX32.lean .
-          lean -o EvenOddThreeX32.olean EvenOddThreeX32.lean 2>&1 | tee EvenOddThreeX32.log
           if grep -q sorryAx M0SmallBoundaryZero.log; then
             echo "REJECTED: low-boundary source proof contains sorryAx"
+            exit 1
+          fi
+          cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/EvenOddThreeX32.lean .
+          lean -o EvenOddThreeX32.olean EvenOddThreeX32.lean 2>&1 | tee EvenOddThreeX32.log
+          if grep -q sorryAx EvenOddThreeX32.log; then
+            echo "REJECTED: x32 y=3 parent reduction contains sorryAx"
             exit 1
           fi
 
