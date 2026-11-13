@@ -411,6 +411,15 @@ jobs:
             exit 1
           fi
 
+          # Source-check the odd-seven unique-parent reduction for the
+          # residual E4 state in the nested S31 bounce analysis.
+          cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/OddSevenS31Residual.lean .
+          lean -o OddSevenS31Residual.olean OddSevenS31Residual.lean 2>&1 | tee OddSevenS31Residual.log
+          if grep -q sorryAx OddSevenS31Residual.log; then
+            echo "REJECTED: odd-seven S31 residual parent proof contains sorryAx"
+            exit 1
+          fi
+
           # Audit the exact y=0/y=2 source fibres needed for the odd-v2
           # normalization's u=1 boundary case.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0SmallBoundaryZero.lean .
