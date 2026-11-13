@@ -100,4 +100,7 @@ jobs:
             source/prior-seed31-probe.txt
             source/seed31-probe.txt
             source/im-results/agent2-root-language-exit/Seed31FirstStopCertificate.olean
+            source/im-results/agent2-root-language-exit/BlankThirtyFirstRejoin.olean
+            source/im-results/agent25-cryptid-doublezero/E3SourceRejoin.olean
+            source/im-results/agent2-root-language-exit/BlankThirtySecondRejoin.olean
           if-no-files-found: warn
