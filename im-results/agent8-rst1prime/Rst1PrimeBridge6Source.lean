@@ -710,4 +710,133 @@ theorem rst1PrimeAfterBridge30_left_blank
 #print axioms rst1PrimeAfterBridge30_left_blank
 
 
+/-- The final bridge is inactive on every cell at or to the left of
+the final head. -/
+theorem rst1PrimeAfterBridge30_eq_afterRightSweepB_left
+    (L a b : Nat) (h x : Int)
+    (hx : x ≤ h+5+3*(b:Int)) :
+    (rst1PrimeAfterBridge30 L a b h).tape x =
+      (rst1PrimeAfterRightSweepB L a b h).tape x := by
+  change (frameAt (rst1PrimeAfterRightSweepB L a b h).tape
+    (h+9+3*(b:Int)) inside30 bridge30End).tape x =
+      (rst1PrimeAfterRightSweepB L a b h).tape x
+  have hout : inside30 (x-(h+9+3*(b:Int))) = false := by
+    simp [inside30,inWindow]
+    omega
+  rw [frameAt_tape]
+  simp [hout]
+
+/-- On the region through h+5, bridge30 and the final b-sweep leave
+the bridge6 output unchanged. -/
+theorem rst1PrimeAfterBridge30_eq_afterBridge6_left
+    (L a b : Nat) (h x : Int) (hx : x ≤ h+5) :
+    (rst1PrimeAfterBridge30 L a b h).tape x =
+      (rst1PrimeAfterBridge6 L a b h).tape x := by
+  rw [rst1PrimeAfterBridge30_eq_afterRightSweepB_left L a b h x (by omega)]
+  change sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9) x =
+    (rst1PrimeAfterBridge6 L a b h).tape x
+  apply rst1Prime_sweptRight_preserves_left
+  omega
+
+/-- On the region through h+1, the later bridge6/final-sweep/bridge30
+stages leave the fourth-sweep output unchanged. -/
+theorem rst1PrimeAfterBridge30_eq_afterRightSweepA_left
+    (L a b : Nat) (h x : Int) (hx : x ≤ h+1) :
+    (rst1PrimeAfterBridge30 L a b h).tape x =
+      (rst1PrimeAfterRightSweepA L a b h).tape x := by
+  rw [rst1PrimeAfterBridge30_eq_afterBridge6_left L a b h x (by omega)]
+  change (frameAt (rst1PrimeAfterRightSweepA L a b h).tape
+    ((h-((3*a+1:Int))+3)+3*((a+1):Int))
+    inside6 bridge6End).tape x =
+      (rst1PrimeAfterRightSweepA L a b h).tape x
+  have hout : inside6
+      (x-((h-((3*a+1:Int))+3)+3*((a+1):Int))) = false := by
+    simp [inside6,inWindow]
+    omega
+  rw [frameAt_tape]
+  simp [hout]
+
+/-- On the region through H0-4, the final tape is exactly the output of
+the third right sweep after bridge20. -/
+theorem rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
+    (L a b : Nat) (h x : Int)
+    (hx : x ≤ h-((3*a+1:Int))-4) :
+    (rst1PrimeAfterBridge30 L a b h).tape x =
+      sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
+        (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4) x := by
+  let H0 : Int := h-((3*a+1:Int))
+  let H2 : Int := H0-2-((3*L+5:Int))
+  let H3 : Int := H2+4
+  let Hs : Int := H0+3
+  let H6 : Int := Hs+3*((a+1):Int)
+  let H8 : Int := h+9+3*(b:Int)
+  change
+    (frameAt
+      (sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9))
+      H8 inside30 bridge30End).tape x =
+      sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x
+  have hout30 : inside30 (x-H8) = false := by
+    simp [inside30,inWindow]
+    dsimp [H0,H2,H3,Hs,H6,H8]
+    omega
+  rw [frameAt_tape]
+  simp only [hout30]
+  have hleftB :
+      sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9) x =
+        (rst1PrimeAfterBridge6 L a b h).tape x := by
+    apply rst1Prime_sweptRight_preserves_left
+    dsimp [H0,H2,H3,Hs,H6,H8]
+    omega
+  rw [hleftB]
+  change
+    (frameAt
+      (sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs)
+      H6 inside6 bridge6End).tape x =
+      sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x
+  have hout6 : inside6 (x-H6) = false := by
+    simp [inside6,inWindow]
+    dsimp [H0,H2,H3,Hs,H6,H8]
+    omega
+  rw [frameAt_tape]
+  simp only [hout6]
+  have hleftA :
+      sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs x =
+        (rst1PrimeAfterBridge9 L a b h).tape x := by
+    apply rst1Prime_sweptRight_preserves_left
+    dsimp [H0,H2,H3,Hs,H6,H8]
+    omega
+  rw [hleftA]
+  change
+    (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
+      H0 inside9 bridge9End).tape x =
+      sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x
+  have hout9 : inside9 (x-H0) = false := by
+    simp [inside9,inWindow]
+    dsimp [H0,H2,H3,Hs,H6,H8]
+    omega
+  rw [frameAt_tape]
+  simp [hout9]
+
+/-- The later source-connected stages preserve the third-sweep region
+to the left of bridge9. -/
+theorem rst1PrimeAfterBridge30_eq_afterBridge9_left
+    (L a b : Nat) (h x : Int)
+    (hx : x ≤ h-((3*a+1:Int))+2) :
+    (rst1PrimeAfterBridge30 L a b h).tape x =
+      (rst1PrimeAfterBridge9 L a b h).tape x := by
+  rw [rst1PrimeAfterBridge30_eq_afterRightSweepA_left L a b h x (by omega)]
+  change (rst1PrimeAfterRightSweepA L a b h).tape x =
+    (rst1PrimeAfterBridge9 L a b h).tape x
+  unfold rst1PrimeAfterRightSweepA
+  apply rst1Prime_sweptRight_preserves_left
+  omega
+
+#print axioms rst1PrimeAfterBridge30_eq_afterRightSweepB_left
+#print axioms rst1PrimeAfterBridge30_eq_afterBridge6_left
+#print axioms rst1PrimeAfterBridge30_eq_afterRightSweepA_left
+#print axioms rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
+#print axioms rst1PrimeAfterBridge30_eq_afterBridge9_left
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
