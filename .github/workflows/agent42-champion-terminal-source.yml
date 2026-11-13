@@ -204,6 +204,7 @@ jobs:
             exit 1
           fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/M2EvenQ4Prefix.lean" /tmp/a42-terminal/
+          python3 "$GITHUB_WORKSPACE/im-results/agent42-champion-terminal/m2_even_q4_replay.py"
           : > /tmp/a42-terminal/m2-even-q4-axioms.log
           lean -o M2EvenQ4Prefix.olean M2EvenQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m2-even-q4-axioms.log
           if grep -q 'sorryAx' /tmp/a42-terminal/m2-even-q4-axioms.log; then
