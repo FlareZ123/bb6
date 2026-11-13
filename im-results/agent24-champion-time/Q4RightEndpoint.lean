@@ -69,19 +69,19 @@ theorem q4_suffix_right_word (T : Int → Bool) (h : Int) (b : Nat)
   change U.tape (h+6+(3*b:Int)+(i:Int)) =
     sideBit (s0RightFacing 0) i
   by_cases hi : i < 9
-  · have hcases :
+  · have hcoord :
+        h+6+(3*b:Int)+(i:Int) = g+(-4+(i:Int)) := by
+      dsimp [g]
+      omega
+    rw [hcoord]
+    have hrange : -4 ≤ (-4+(i:Int)) ∧ (-4+(i:Int)) ≤ 4 := by omega
+    have hv := q4_tail_frame_cell T2 g (-4+(i:Int)) hrange
+    have hcases :
         i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨
         i=5 ∨ i=6 ∨ i=7 ∨ i=8 := by omega
     rcases hcases with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8
     all_goals
       subst i
-      have hcoord :
-          h+6+(3*b:Int)+(i:Int) = g+(-4+(i:Int)) := by
-        dsimp [g]
-        omega
-      rw [hcoord]
-      have hrange : -4 ≤ (-4+(i:Int)) ∧ (-4+(i:Int)) ≤ 4 := by omega
-      have hv := q4_tail_frame_cell T2 g (-4+(i:Int)) hrange
       simpa [U, q4TailEnd, s0RightFacing, d1pow, d1, sideBit] using hv
   · have hi9 : 9 ≤ i := by omega
     let x : Int := h+6+(3*b:Int)+(i:Int)
