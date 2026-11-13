@@ -99,7 +99,10 @@ theorem odd_block_exit_terminal_factorization
     have hshift : (5^t*m-1)+2 = 5^t*m+1 := by omega
     rw [hshift] at hfactor
     exact hfactor.symm
-  have htargetEven : (5^t*m+1) % 2 = 0 := by omega
+  have hshiftEven : 5^t*m+1 = (5^t*m-1)+2 := by omega
+  have htargetEven : (5^t*m+1) % 2 = 0 := by
+    rw [hshiftEven]
+    omega
   have hvpos : 0 < v := by
     by_contra hv
     have hv0 : v = 0 := by omega
@@ -111,7 +114,8 @@ theorem odd_block_exit_terminal_factorization
     calc
       _ = 2^v*((2*v-1)+5) := by rw [hlin]
       _ = 2^v*(2*v-1)+2^v*5 := by rw [Nat.mul_add]
-      _ = 2^v*(2*v-1)+5*2^v := by rw [Nat.mul_comm]
+      _ = 2^v*(2*v-1)+5*2^v := by
+        rw [Nat.mul_comm (2^v) 5]
   have hcomm :
       5^t*m*(2^(v+1)+3) + (2^v*(2*v-1)+5*2^v) + 3 =
         (5^t*m*(2^(v+1)+3)+2^v*(2*v-1)+3)+5*2^v := by
