@@ -337,7 +337,8 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
     have hleftExact :=
       run_prefix_left_extremal target429 L s cStage d c1
         hleft hpre hs1 hdisp1
-    exact ⟨d,hpre,by rw [hleftExact]; omega⟩
+    have hC : cStage.head = (stage43Config v k).head := rfl
+      exact ⟨d,hpre,by omega⟩
   · by_cases hs2 : s≤2*L
     · let r : Nat := s-L
       have hr : r≤L := by dsimp [r]; omega
@@ -350,7 +351,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       have hpre : run target429 s cStage=some d := by
         rw [htime,run_add',hleft]
         simpa using hpre2
-      exact ⟨d,hpre,by rw [hrightExact,hhead1L]; omega⟩
+      have hC : cStage.head = (stage43Config v k).head := rfl
+      have h := hrightExact
+      rw [hhead1L] at h
+      exact ⟨d,hpre,by omega⟩
     · let r : Nat := s-2*L
       have hL : 8*v+15=2*L+3 := by dsimp [L]; omega
       have hr : r≤3 := by dsimp [r]; omega
@@ -366,7 +370,10 @@ private theorem stage43_prefix_head_bound (v k s : Nat)
       have hpre : run target429 s cStage=some d := by
         rw [htime,run_add',hleftAR]
         simpa using hpre3
-      exact ⟨d,hpre,by rw [hrightExact,hhead2]; omega⟩
+      have hC : cStage.head = (stage43Config v k).head := rfl
+      have h := hrightExact
+      rw [hhead2] at h
+      exact ⟨d,hpre,by omega⟩
 
 /-- On every odd-deficit-4k+3 input, the first certified C/0 checkpoint is
     a strict physical right-head record. Its right neighbour is blank, and
@@ -390,8 +397,11 @@ theorem low43_C0_record (v k : Nat) :
   let cStage : Config := stage43Config v k
   let B : Nat := 4*(v+1)*(v+1)+2*(v+1)
   have hfirst : run target429 B c0=some cStage := by
-    have hhead : 2*((v+1:Nat):Int)=2*(v:Int)+2 := by omega
-    simpa only [hhead,stage43Config,stage43Tape,c0,tape,B,cStage] using
+    change run target429 (4*(v+1)*(v+1)+2*(v+1))
+      {state:=A,head:=0,tape:=jTape (v+2*k+2) (2*v+1)} =
+      some {state:=A,head:=2*(v:Int)+2,
+        tape:=negFill (jTape (v+2*k+2) (2*v+1)) (v+1)}
+    simpa [tape,Nat.cast_mul,Nat.cast_add] using
       multi_bubble_prefix target429 (v+1) (v+1) tape (by omega)
         (by decide) (by decide) (by decide) (by decide)
         (low43_holes v k) (low43_odds v k) (low43_right v k)
@@ -422,9 +432,15 @@ theorem low43_C0_record (v k : Nat) :
   have htotal : run target429 (B+(8*v+16)) c0=some cC := by
     rw [run_add',hfirst]
     exact hstage
+  have hsq : (v+1)*(v+1)=v*v+2*v+1 := by
+    rw [Nat.mul_add,Nat.add_mul]
+    simp
+    omega
   have htime : B+(8*v+16)=4*v*v+18*v+22 := by
     dsimp [B]
-    ring
+    rw [hsq]
+    simp [Nat.mul_add,Nat.add_mul]
+    omega
   have htotal' : run target429 (4*v*v+18*v+22) c0=some cC := by
     simpa [htime] using htotal
   have hheadC : cC.head=2*(v:Int)+6 := by
