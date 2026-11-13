@@ -839,4 +839,212 @@ theorem rst1PrimeAfterBridge30_eq_afterBridge9_left
 #print axioms rst1PrimeAfterBridge30_eq_afterBridge9_left
 
 
+/-- The bridge6 output's far-left three cells are one d0 block. -/
+theorem rst1PrimeAfterBridge6_local_right_d0
+    (L a b : Nat) (h : Int) (r : Nat) (hr : r<3) :
+    (rst1PrimeAfterBridge6 L a b h).tape (h+8-(r:Int)) =
+      sideBit d0 r := by
+  have hlocal := rst1PrimeAfterBridge6_local_right L a b h
+  have hcases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hcases with hr0 | hr1 | hr2
+  · subst r
+    have hcoord : h+8-(0:Int)=h+8 := by omega
+    rw [hcoord]
+    simpa [d0,sideBit] using hlocal.2.2
+  · subst r
+    have hcoord : h+8-(1:Int)=h+7 := by omega
+    rw [hcoord]
+    simpa [d0,sideBit] using hlocal.2.1
+  · subst r
+    have hcoord : h+8-(2:Int)=h+6 := by omega
+    rw [hcoord]
+    simpa [d0,sideBit] using hlocal.1
+
+/-- The bridge9 output's far-left three cells are one d0 block. -/
+theorem rst1PrimeAfterBridge9_local_right_d0
+    (L a b : Nat) (h : Int) (r : Nat) (hr : r<3) :
+    (rst1PrimeAfterBridge9 L a b h).tape
+      (h-((3*a+1:Int))+2-(r:Int)) = sideBit d0 r := by
+  let H0 : Int := h-((3*a+1:Int))
+  have hcases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hcases with hr0 | hr1 | hr2
+  · subst r
+    change (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
+        (((H0-2)-((3*L+5:Int)))+4))
+      H0 inside9 bridge9End).tape (H0+2) = false
+    rw [frameAt_tape]
+    simp [inside9,inWindow,bridge9End,d0,sideBit,H0]
+  · subst r
+    change (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
+        (((H0-2)-((3*L+5:Int)))+4))
+      H0 inside9 bridge9End).tape (H0+1) = false
+    rw [frameAt_tape]
+    simp [inside9,inWindow,bridge9End,d0,sideBit,H0]
+  · subst r
+    change (frameAt
+      (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
+        (((H0-2)-((3*L+5:Int)))+4))
+      H0 inside9 bridge9End).tape H0 = true
+    rw [frameAt_tape]
+    simp [inside9,inWindow,bridge9End,d0,sideBit,H0]
+
+/-- The bridge20 output's far-left three cells are one d0 block. -/
+theorem rst1PrimeAfterBridge20_local_right_d0
+    (L a b : Nat) (h : Int) (r : Nat) (hr : r<3) :
+    (rst1PrimeAfterBridge20 L a b h).tape
+      (h-((3*a+1:Int))-2-((3*L+5:Int))+3-(r:Int)) =
+      sideBit d0 r := by
+  let H0 : Int := h-((3*a+1:Int))
+  let H2 : Int := H0-2-((3*L+5:Int))
+  have hcases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hcases with hr0 | hr1 | hr2
+  · subst r
+    change (frameAt
+      (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (H0-2))
+      H2 inside20 bridge20End).tape (H2+3) = false
+    rw [frameAt_tape]
+    simp [inside20,inWindow,bridge20End,d0,sideBit,H0,H2]
+  · subst r
+    change (frameAt
+      (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (H0-2))
+      H2 inside20 bridge20End).tape (H2+2) = false
+    rw [frameAt_tape]
+    simp [inside20,inWindow,bridge20End,d0,sideBit,H0,H2]
+  · subst r
+    change (frameAt
+      (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (H0-2))
+      H2 inside20 bridge20End).tape (H2+1) = true
+    rw [frameAt_tape]
+    simp [inside20,inWindow,bridge20End,d0,sideBit,H0,H2]
+
+/-- The complete d0^b word is supplied by the first b-1 blocks of the
+final sweep and the d0 boundary left by bridge6. -/
+theorem rst1PrimeAfterBridge30_d0pow_b
+    (L a b : Nat) (h : Int) (k : Nat) (hk : k<3*b) :
+    (rst1PrimeAfterBridge30 L a b h).tape
+      (h+5+3*(b:Int)-(k:Int)) =
+      sideBit (d0pow b) k := by
+  by_cases hb : b=0
+  · subst b
+    omega
+  · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
+    let Hf : Int := h+5+3*((n+1):Int)
+    let T : Int → Bool := (rst1PrimeAfterBridge6 L a (n+1) h).tape
+    have hpre := rst1Prime_rightSweep_preconditions_after_bridge6 L a (n+1) h
+    have hhead : Hf = (h+9)+3*(n:Int)-1 := by
+      dsimp [Hf]
+      omega
+    have hprefix : ∀ j, j<3*n →
+        (rst1PrimeAfterBridge30 L a (n+1) h).tape (Hf-(j:Int)) =
+          sweptRight (n+1) T (h+9) (Hf-(j:Int)) := by
+      intro j hj
+      have heq := rst1PrimeAfterBridge30_eq_afterRightSweepB_left
+        L a (n+1) h (Hf-(j:Int)) (by dsimp [Hf]; omega)
+      rw [heq]
+      rfl
+    have hboundary : ∀ r, r<3 →
+        (rst1PrimeAfterBridge30 L a (n+1) h).tape
+          (Hf-((3*n+r:Int))) = sideBit d0 r := by
+      intro r hr
+      have hcoord : Hf-((3*n+r:Int)) = h+8-(r:Int) := by
+        dsimp [Hf]
+        omega
+      have heq := rst1PrimeAfterBridge30_eq_afterRightSweepB_left
+        L a (n+1) h (Hf-((3*n+r:Int))) (by dsimp [Hf]; omega)
+      rw [heq,hcoord]
+      change sweptRight (n+1) T (h+9) (h+8-(r:Int)) = sideBit d0 r
+      have hleft := rst1Prime_sweptRight_preserves_left
+        (n+1) T (h+9) (h+8-(r:Int)) (by omega)
+      rw [hleft]
+      exact rst1PrimeAfterBridge6_local_right_d0 L a (n+1) h r hr
+    have hseg := rst1Prime_d0pow_segment n T (h+9) Hf
+      (rst1PrimeAfterBridge30 L a (n+1) h).tape hpre hhead hprefix hboundary
+    have hcoord : Hf = h+5+3*((n+1):Int) := by rfl
+    simpa [hcoord] using hseg k (by omega)
+
+/-- The d0^(a+1) word is supplied by the first a blocks of the fourth
+sweep and the d0 boundary left by bridge9. -/
+theorem rst1PrimeAfterBridge30_d0pow_a
+    (L a b : Nat) (h : Int) (k : Nat) (hk : k<3*(a+1)) :
+    (rst1PrimeAfterBridge30 L a b h).tape (h+1-(k:Int)) =
+      sideBit (d0pow (a+1)) k := by
+  let H0 : Int := h-((3*a+1:Int))
+  let Hs : Int := H0+3
+  have hpre := rst1Prime_rightSweep_preconditions_after_bridge9 L a b h
+  have hhead : h+1 = Hs+3*(a:Int)-1 := by
+    dsimp [Hs,H0]
+    omega
+  have hprefix : ∀ j, j<3*a →
+      (rst1PrimeAfterBridge30 L a b h).tape (h+1-(j:Int)) =
+        sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs
+          (h+1-(j:Int)) := by
+    intro j hj
+    have heq := rst1PrimeAfterBridge30_eq_afterRightSweepA_left
+      L a b h (h+1-(j:Int)) (by omega)
+    rw [heq]
+    rfl
+  have hboundary : ∀ r, r<3 →
+      (rst1PrimeAfterBridge30 L a b h).tape
+        (h+1-((3*a+r:Int))) = sideBit d0 r := by
+    intro r hr
+    have hcoord : h+1-((3*a+r:Int)) = H0+2-(r:Int) := by
+      dsimp [H0]
+      omega
+    have heq := rst1PrimeAfterBridge30_eq_afterBridge9_left
+      L a b h (h+1-((3*a+r:Int))) (by dsimp [H0]; omega)
+    rw [heq,hcoord]
+    exact rst1PrimeAfterBridge9_local_right_d0 L a b h r hr
+  have hseg := rst1Prime_d0pow_segment a
+    (rst1PrimeAfterBridge9 L a b h).tape Hs (h+1)
+    (rst1PrimeAfterBridge30 L a b h).tape hpre hhead hprefix hboundary
+  exact hseg k hk
+
+/-- The d0^(L+1) word is supplied by the first L blocks of the third
+sweep and the d0 boundary left by bridge20. -/
+theorem rst1PrimeAfterBridge30_d0pow_L
+    (L a b : Nat) (h : Int) (k : Nat) (hk : k<3*(L+1)) :
+    (rst1PrimeAfterBridge30 L a b h).tape
+      (h-((3*a+1:Int))-4-(k:Int)) =
+      sideBit (d0pow (L+1)) k := by
+  let H0 : Int := h-((3*a+1:Int))
+  let H2 : Int := H0-2-((3*L+5:Int))
+  let H3 : Int := H2+4
+  let Hhead : Int := H0-4
+  have hpre := rst1Prime_rightSweep_preconditions_after_bridge20 L a b h
+  have hhead : Hhead = H3+3*(L:Int)-1 := by
+    dsimp [Hhead,H3,H2,H0]
+    omega
+  have hprefix : ∀ j, j<3*L →
+      (rst1PrimeAfterBridge30 L a b h).tape (Hhead-(j:Int)) =
+        sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3
+          (Hhead-(j:Int)) := by
+    intro j hj
+    have heq := rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
+      L a b h (Hhead-(j:Int)) (by dsimp [Hhead,H0]; omega)
+    rw [heq]
+    rfl
+  have hboundary : ∀ r, r<3 →
+      (rst1PrimeAfterBridge30 L a b h).tape
+        (Hhead-((3*L+r:Int))) = sideBit d0 r := by
+    intro r hr
+    have hcoord : Hhead-((3*L+r:Int)) = H2+3-(r:Int) := by
+      dsimp [Hhead,H2,H0]
+      omega
+    have heq := rst1PrimeAfterBridge30_eq_afterBridge20_left
+      L a b h (Hhead-((3*L+r:Int))) (by dsimp [Hhead,H2,H0]; omega)
+    rw [heq,hcoord]
+    exact rst1PrimeAfterBridge20_local_right_d0 L a b h r hr
+  have hseg := rst1Prime_d0pow_segment L
+    (rst1PrimeAfterBridge20 L a b h).tape H3 Hhead
+    (rst1PrimeAfterBridge30 L a b h).tape hpre hhead hprefix hboundary
+  have hcoord : Hhead = h-((3*a+1:Int))-4 := by rfl
+  simpa [hcoord] using hseg k hk
+
+#print axioms rst1PrimeAfterBridge30_d0pow_b
+#print axioms rst1PrimeAfterBridge30_d0pow_a
+#print axioms rst1PrimeAfterBridge30_d0pow_L
+
+
 end BB6Coverage.Agent8Rst1PrimeTail
