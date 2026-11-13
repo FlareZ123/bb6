@@ -935,3 +935,6 @@ Draft PR #91 (`Agent 32: formalize parity-shifted Junc continuation`) contains `
 
 
 A second boundary law was discovered for the w=2 partial return. For odd u≥1, v≥1, the A/0 zipper `z 0 (ones (2*v+9) ++ pairs01 (u-1) ++ ones 5) false [true]` empirically reaches `junc 0 0 (2*u+2*v+14)` in `9*u+6*v+76` steps with displacement `-(2*u+2*v+9)`. This passed 220 cases u=1,3,...,21 and v=1,...,20; root instance (77,120) is 1,489 steps, -403, J(0,0,408). Reproducer: `im-results/agent32-429-low43/test_odd_u_a0_boundary.js`. Agent 1 and Agent 6 were sent the conjecture. The concrete 1,489-step proof is in draft PR #91 via `by decide`; the general law remains empirical.
+
+
+The remaining entry obligation is isolated in `parity-shifted-junc93-173.md`: prove the standard `low43_C0_record 86 3` run has every prefix head ≥ -176, then use deterministic-run invariance for the three untouched differing cells -188,-193,-194 to transfer the 31,154-step endpoint from J(94,0,173) to the shifted C/0 zipper for J(93,0,173). The observed traces agree through step31,154 and first diverge at step31,528 when -188 is first read. The stage43 left sweep reaches -2v-4=-176; the multi-bubble prefix appears nonnegative. This is the sole remaining link before composing the 103,081-step PR #91 continuation into a 134,235-step source-level route.
