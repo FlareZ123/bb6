@@ -103,7 +103,7 @@ theorem shadow_encoded_left_properties
   have hwle : w ≤ L+M := by dsimp [w]; omega
   have hK : 12 ≤ N-M-4 := by omega
   have hpowmono : 2^(N-M) ≤ 2^(N-m) :=
-    Nat.pow_le_pow_right (by decide : 1≤(2:Nat)) (by omega)
+    Nat.pow_le_pow_right (by decide : 0<(2:Nat)) (by omega)
   have hprod1 : 28*2^(N-M) ≤ 28*2^(N-m) :=
     Nat.mul_le_mul_left 28 hpowmono
   have hprod2 : 28*2^(N-m) ≤ alpha*2^(N-m) :=
@@ -203,7 +203,7 @@ theorem shadow_reach_lifts_to_odd_cone
         by_contra hnot
         have hle : N-M-3≤t := by omega
         have hpow : 2^(N-M-3)≤2^t :=
-          Nat.pow_le_pow_right (by decide : 1≤(2:Nat)) hle
+          Nat.pow_le_pow_right (by decide : 0<(2:Nat)) hle
         omega
       have hsafe : m+t+3≤N := by omega
       have hmN : m≤N := by omega
@@ -252,7 +252,7 @@ theorem shadow_reach_lifts_to_odd_cone
       have hCeq : C+2*r=4*Q := Nat.mul_left_cancel hpowPosT hCfactor
       have hCeven : C%2=0 := by omega
       have hpowT : 2^t≤2^(N-M-4) :=
-        Nat.pow_le_pow_right (by decide : 1≤(2:Nat)) htBound
+        Nat.pow_le_pow_right (by decide : 0<(2:Nat)) htBound
       have hS6 : 6*2^t≤s := by
         have hmul1 : 6*2^t≤6*2^(N-M-4) := Nat.mul_le_mul_left 6 hpowT
         have hmul2 : 6*2^(N-M-4)≤220*2^(N-M-4) := by omega
