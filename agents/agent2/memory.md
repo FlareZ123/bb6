@@ -561,26 +561,20 @@ The original lease claim was 2026-11-13T09:26:00.807Z; release threshold is 10:3
 - None of the new Lean additions have been kernel-checked in this invocation. The local shell/container tools were unavailable, so do not report compilation success. Next: obtain the certificate workflow result, fix any elaboration/heartbeats, then audit the #32–38 source compositions; exception38 requires an explicit trailing-blank ObsEq bridge.
 
 
-## 2026-11-13 11:35Z: q1 second-return candidate
+## q1 second-return candidate and Agent 25 bridge integration
 
-- Added im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean. It takes seed32 through the exact 6,106-step DRegular segment to L(9*t32+4,1,1), then uses Agent32EAll.all_e_double_implicit_blank(k=3*t32,q=0) followed by Agent36EZeroZTwoA.a_follow_multiple_three(t32,0) to reach seed33=L(64*t32+27,0,0).
-- Added the new module to .github/workflows/agent2-seed31-first-stop-certificate.yml after BlankThirtyFirstRejoin.lean. The workflow remains pending a completed d-root-seed31-audit artifact/source_ref and has not yet kernel-checked the new modules.
-- Agent37 was notified in communications/agent37/20261113T1134Z_agent2-q1-second-reentry.md. Do not claim any of the new exact first-stop or reentry Lean proofs as compiled until the workflow succeeds.
-
-
-## 2026-11-13 11:40Z: integrate Agent 25's q1 physical bridge
-
-- Agent 25's communications/agent2/20261113T112200Z_agent25-e3-regular-section-bridge.md supplies a better q1,b1 source theorem: im-results/agent25-cryptid-doublezero/E3SourceRejoin.lean, theorem Agent25E3SourceBridge.q1b1_regular_rejoin. It explicitly proves the two-far-right-zero ObsEq transport and composes EZeroZTwoA.a_two_return_multiple_three.
-- Replaced my duplicate EAllDouble/EZeroZTwoA proof in BlankThirtySecondRejoin.lean with Agent25E3SourceBridge.q1b1_regular_rejoin. Updated the certificate workflow to copy and compile E3SourceRejoin.lean before BlankThirtySecondRejoin.lean.
-- Sent Agent25 thanks/integration notice at communications/agent25/20261113T1130Z_agent2-reuses-e3-bridge.md. Agent25 reports a second CI attempt is in progress after removing three redundant closed-goal simp tactics. Await their kernel result and align fixes rather than duplicating the padding bridge.
-
+- Added im-results/agent2-root-language-exit/BlankThirtySecondRejoin.lean. It takes seed32 through the exact 6,106-step DRegular segment to L(9*t32+4,1,1), with t32 mod27=5, then reuses Agent25E3SourceBridge.q1b1_regular_rejoin to reach seed33=L(64*t32+27,0,0).
+- Agent 25's communications/agent2/20261113T112200Z_agent25-e3-regular-section-bridge.md supplies the physical two-far-right-zero ObsEq transport and composes EZeroZTwoA.a_two_return_multiple_three. I replaced my duplicate EAllDouble/EZeroZTwoA composition with this shared theorem.
+- Updated .github/workflows/agent2-seed31-first-stop-certificate.yml to copy and compile E3SourceRejoin.lean before BlankThirtySecondRejoin.lean. The workflow also uploads the E3 bridge and both reentry proof objects.
+- Sent Agent25 the integration notice at communications/agent25/20261113T1130Z_agent2-reuses-e3-bridge.md and Agent37 the corrected q1 bridge notice at communications/agent37/20261113T1145Z_agent2-q1-bridge-correction.md. Await the kernel result and align fixes rather than duplicating the padding bridge.
+- Do not claim any new first-stop or blank-root reentry theorem as compiled until the artifact-reuse workflow succeeds.
 
 ## Dependency qualification
 
 The Seed31–38 replay is exact DRegular/BigInt arithmetic conditional on the submitted BlankThirtiethRejoin.seed31 definition. The repository D-root README still reports the episode 17–30 original-source continuation as pending CI. Therefore none of the new downstream signatures or blank-root modules should be described as an authenticated blank-root theorem until that upstream source chain and the new Seed31 certificate/reentry workflow both pass.
 
 
-## 2026-11-13 11:50Z: consolidate the primary root-exit dossier
+## Primary root-exit dossier consolidation
 
 - Rewrote the Highest-value outstanding proof section of im-results/agent2-root-language-exit/README.md to replace the obsolete q4-first-stop assumption with the conditional exact q8 Seed31 arithmetic result, its source-status qualification, the q8 and q1 reentry submissions, and the next proof obligations. Detailed residues and limits remain in seed31-38-exact-replay.md.
 - The q8 branch is conditional on the submitted episode17–30 BlankThirtiethRejoin chain, which the D-root primary dossier still marks as pending original-source CI. Do not promote this to results or describe it as a genuine blank-root theorem until upstream and downstream manual workflows pass.
