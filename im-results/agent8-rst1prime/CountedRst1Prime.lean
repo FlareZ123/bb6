@@ -324,4 +324,88 @@ theorem rst1Prime_sweptRight_lastBlock
 #print axioms rst1Prime_sweptRight_lastBlock
 
 
+/-! Closed-form source-word identities for the proposed Rst1' target.
+These are independent of the still-unproved source-run composition. -/
+
+/-- An all-ones binary counter is exactly a repeated d0 word. -/
+theorem rst1Prime_binDec_ones (n : Nat) :
+    binDec n (2^n-1) = d0pow n := by
+  induction n with
+  | zero =>
+      simp [binDec,d0pow]
+  | succ n ih =>
+      have hn : 2^n-1 < 2^n := by omega
+      have harg : 2^(n+1)-1 = 2*(2^n-1)+1 := by
+        rw [Nat.pow_succ]
+        omega
+      rw [harg,binDec_odd n (2^n-1) hn]
+      simp [d0pow,ih]
+
+/-- The new high counter in the Rst1' target has the exact digit word
+d0^a, d1, d0^(L+1). -/
+theorem rst1Prime_binDec_reset (L a : Nat) :
+    binDec (L+a+2) (2^(L+a+2)-2^a-1) =
+      d0pow a ++ d1 ++ d0pow (L+1) := by
+  induction a with
+  | zero =>
+      have hlen : L+0+2 = (L+1)+1 := by omega
+      have hpow : 2^(L+2) = 2*2^(L+1) := by
+        rw [show L+2 = (L+1)+1 by omega,Nat.pow_succ]
+        omega
+      have harg : 2^(L+2)-2^0-1 = 2*(2^(L+1)-1) := by
+        rw [hpow]
+        norm_num
+        omega
+      rw [show L+0+2 = L+2 by omega,harg]
+      rw [binDec_even (L+1) (2^(L+1)-1) (by omega)]
+      simp [rst1Prime_binDec_ones]
+  | succ a ih =>
+      let R : Nat := 2^(L+a+2)-2^a-1
+      have hExp : a+1 ≤ L+a+2 := by omega
+      have hpow : 2^(a+1) ≤ 2^(L+a+2) :=
+        Nat.pow_le_pow_right (show 0<2 by decide) hExp
+      have hdouble : 2^(a+1) = 2*2^a := by
+        rw [Nat.pow_succ]
+        omega
+      have hpos : 0 < 2^a := Nat.pow_pos (by decide)
+      have hlarge : 2^a+1 ≤ 2^(L+a+2) := by
+        rw [← hdouble]
+        omega
+      have hbound : R < 2^(L+a+2) := by
+        dsimp [R]
+        omega
+      have hlen : L+(a+1)+2 = (L+a+2)+1 := by omega
+      have hpowN : 2^(L+(a+1)+2) = 2*2^(L+a+2) := by
+        rw [hlen,Nat.pow_succ]
+        omega
+      have harg :
+          2^(L+(a+1)+2)-2^(a+1)-1 = 2*R+1 := by
+        dsimp [R]
+        rw [hpowN,hdouble]
+        omega
+      rw [hlen,harg,binDec_odd (L+a+2) R hbound]
+      rw [ih]
+      simp [d0pow]
+
+/-- The proposed target's complete head-facing word, reduced to the
+three nested d0 blocks and the single d1 boundary. -/
+theorem rst1Prime_target_leftFacing (L a b : Nat) :
+    s1LeftFacing (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) =
+      d0pow b ++ markerWord 2 ++ d0 ++ d0pow a ++ d1 ++
+        d0pow (L+1) ++ lh := by
+  simp [s1LeftFacing,rst1Prime_binDec_ones,rst1Prime_binDec_reset,
+    List.append_assoc]
+
+/-- The proposed target's right-facing word is the fixed S0 separator
+followed by one three-one block. -/
+theorem rst1Prime_target_rightFacing :
+    s0RightFacing 0 = [false,true,true,true,false,false] ++ d1pow 1 := by
+  rfl
+
+#print axioms rst1Prime_binDec_ones
+#print axioms rst1Prime_binDec_reset
+#print axioms rst1Prime_target_leftFacing
+#print axioms rst1Prime_target_rightFacing
+
+
 end BB6Coverage.Agent8Rst1Prime
