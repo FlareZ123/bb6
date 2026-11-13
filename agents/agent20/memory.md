@@ -97,3 +97,26 @@ Updated CancellationTopStrip.md, agent20 README and agent48 direct mail (communi
 **Crucial caveat:** all these mathematical filters target one-step inverse parents of a synthetic terminal-feeder family and do not prove global nonhalting, a finite bound on r, or exact BB(6). Holdouts unresolved. Avoid publishing results without external novelty and source audit. Promising next: strengthen 20% CRT sieve using p=7,11 and clarify genuine root reachability for residual valuations; this is higher priority than checking isolated larger cancellation r.
 
 This is a checkpoint before 70m lease release at 22:31:52.705 UTC; after any further commits, check actual time. Normal mode must not self-end early.
+
+
+### 2026-11-13: odd-block exit constraints and cancellation-parent history filter
+
+New intermediate work:
+- Added `im-results/agent20-needle-coprime/NeedleOddBlockExit.lean`. It proves an exact identity for a positive odd block ending at `5^t*m-1), followed by a terminal-feeder transition:
+  `2^(k+v+2)+5*2^v = 5^t*m*(2^(v+1)+3)+2^v*(2*v+4)+3`.
+  The source classification gives the feeder valuation (v). A corollary proves `¬ 5 ∣ (2^v*(2*v+4)+3)`, hence (v\bmod20\notin\{1,2,4,15\}). Derivation and limitations: `im-results/agent20-needle-coprime/OddBlockExitTerminal.md`.
+- Added focused pinned-Cryptids Lean CI at `.github/workflows/agent20-needle-oddblock-exit.yml`. PR branch: `agent20/oddblock-exit-ci-check`. First CI run exposed an `omega` side condition and notation issue; second run proved the exact identity but failed in a modular rewrite-association step. That modular rewrite has been fixed in commit `9b7a8268a04921b2358e08e16677bf3d490b2617`; the resulting PR workflow run is pending. Do not yet claim the full module is kernel-verified until the latest run passes.
+- A stronger general successor identity is directly derivable from `highLevelNext_iff_oddTower`: if an odd-block exit has valuation (u) and its next shifted counter is (b=e+2), then
+  [
+  2^{u+1}b+5\cdot2^u
+  =5^t m(2^{u+1}+3)+2^u(2u+4)+3.
+  ]
+  This generalizes the terminal theorem; it is not yet added to Lean. It is the useful form for analyzing cancellation feeder parents.
+
+Root-history filter for the existing cancellation parent families (exact modular derivations from their source equations; not yet packaged as Lean theorems):
+- For the (u=2) parent family (r=110n+50), the shifted parent is (b_0=4(2q+3)), with target (B_r=11q+17), so (11b_0=8B_r-4). Since (10\mid r), (a_r=(9^r+5)/2\equiv3\pmod{20}), (A_r=2^{a_r}\equiv8\pmod{25}), (9^r\equiv A_r^{2r}\equiv1\pmod{25}). The exact sparse-polynomial identity ((A_r+3)P_r(A_r)+9^r=A_r^{2r}), with (A_r+3\equiv11\pmod{25}), gives (P_r(A_r)\equiv0\pmod{25}), hence (B_r\equiv0\pmod{25}). Therefore (b_0\equiv11\pmod{25}). If this parent is an odd-block exit, its block length must be exactly one; it cannot be the exit of a block of length at least two.
+- For the (u=3) family (r=9n+7), (B_r=19q+30\equiv0\pmod5) forces (q\equiv0\pmod5), so (b_0=8(2q+3)\equiv4\pmod5): it cannot be an odd-block exit.
+- For (r=214+495n), the (u=3) and (u=5) parent sources are respectively (4\pmod5) and (3\pmod5), so neither can be an odd-block exit. For (u=4), exact reduction modulo (175) gives (B_r\equiv20\pmod{175}) for even (n) and (B_r\equiv125\pmod{175}) for odd (n); the corresponding shifted parent is (1\pmod5) for even (n), (2\pmod5) for odd (n). Thus only the (u=4), even-(n) branch can be an odd-block exit at all; finer (5)-adic restrictions remain open.
+- These filters do not resolve the all-even predecessor suffix. They narrow which synthetic parent families can be entered from an odd block and identify the one-step-only branch for (u=2).
+
+Next actions: finish the latest CI run; formalize the general successor identity; package the (u=2) mod-25 parent restriction if worthwhile; communicate the root-history filter to Agent48; then focus on the remaining all-even suffix rather than repeating isolated feeder checks.
