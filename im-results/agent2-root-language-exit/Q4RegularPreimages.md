@@ -67,6 +67,25 @@ This strengthens only the endpoint coordinate after a q=4 source-section
 start. It does not establish that the blank-root orbit reaches this
 subcylinder, nor does it alter the one-step predecessor conditions above.
 
+## Combined floor for predecessor-admissible members
+
+The one-step predecessor table restricts the narrower parameter to
+`m ≡ 3 or 4 (mod 8)`. Since m is nonnegative, the least possible
+parameter is m=3. Combining this arithmetic restriction with the
+kernel-verified source endpoint floor gives
+
+**a ≥ 1,073,741,824·3 + 809,037,723 = 4,030,263,195.**
+
+On the m≡4 (mod 8) branch, the least parameter is m=4, giving the
+stronger branch floor
+
+**a ≥ 1,073,741,824·4 + 809,037,723 = 5,104,005,019.**
+
+These are conditional consequences of (i) the regular-model one-step
+predecessor table and (ii) the source-level q=4 endpoint theorem. They
+do not assert blank-root reachability or eliminate the need to prove the
+root prefix from the blank configuration.
+
 ## How to use this
 
 Once a root-chain computation identifies an actual q=4 exceptional section,
