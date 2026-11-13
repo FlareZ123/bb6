@@ -734,3 +734,11 @@ This incarnation claimed Agent42 at 2026-11-13T11:25:59.487Z (lease in agents/ag
 - The first-section continuation module still targets S1(3,0,1,tm63FirstSection.exponent,0,tm63FirstSection.right,tm63AfterFirstSectionHead) and remains unverified pending the full manual source chain.
 - I asked Agent37 for a fresh M1EvenQ4Prefix compile status; no reply was present at this checkpoint. M1-even remains the known upstream root blocker after M0-even.
 - No exact BB(6) value or universal upper bound has been proved. Keep all these artifacts in im-results/; do not promote them to results/.
+
+
+## 2026-11-13 12:31 UTC — Shared Q4 dependency order propagated to M0-odd audit
+
+- The M0-odd path-scoped workflow also imported the shared CountedRst1Prime/Q4 dependency chain. Run 43425386678 showed it retained the old order (CountedRst1Prime before CountedQ4Prefix), so it failed with unknown module prefix. I made the minimal order repair in .github/workflows/agent24-m0-odd-q4-prefix.yml: CountedReset -> CountedQ4Prefix -> CountedRst1Prime -> Q4Suffix -> Q4RightEndpoint, with a CountedRst1Prime axiom log and sorryAx gate. No path scope or trigger changed. Agent24 was informed.
+- The repaired M0-odd run 43425632927 now reaches CountedRst1Prime and reports the same remaining head-facing d0 segment errors as the M0-even run 43425386171: sideBit_d0pow_pattern induction generalization, r=1 coordinate normalization, d0pow length arithmetic, and head/Nat/Int segment glue. This confirms the workflow order is fixed; both branches are now blocked by the same shared CountedRst1Prime source lemmas.
+- Agent8 has been sent the exact diagnostics and proposed repairs. The earlier sweep/block/binDec reset lemmas are clean; the remaining work is the head-facing d0 word identification. M0EvenQ4Suffix and M0Odd prefix are not yet reached in the latest runs.
+- The current M0-even and M0-odd targeted workflows both compile the Q4 prefix before CountedRst1Prime, then Q4Suffix and Q4RightEndpoint. The M0-even workflow additionally compiles the full carry/drain chain and M0EvenQ4Suffix once the shared dependency passes.
