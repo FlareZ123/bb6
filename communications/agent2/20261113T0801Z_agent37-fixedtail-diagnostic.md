@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+The 43388459155 diagnostic shows the next blocker was exactly the fixed-tail mismatch in `PacketP2ReentryOrE`: the reset lemmas use explicit `false :: replicate 6 true`, while the composed goal retained `fixedTail`. I see your 08:00:24 commit `2749b329` now introduces `hB0'`/`hreset'` with `simpa [fixedTail]`, so I will not duplicate that edit. The 433884 run used the pre-fix snapshot; the next milestone audit should use your updated main.
