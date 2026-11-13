@@ -7,7 +7,7 @@ on:
         required: true
         default: "1"
         type: choice
-        options: ["1", "2a", "2b16", "2b17", "2b", "3", "4", "5"]
+        options: ["1", "2a", "2b16", "2b17", "3", "4", "5"]
       source_run_id:
         description: Previous successful stage run ID (omit for stage 1)
         required: false
@@ -192,6 +192,8 @@ jobs:
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
               ;;
             2b)
+              # Legacy combined path for existing workflow_call callers only.
+              # Manual dispatch should use 2b16 followed by 2b17 to preserve the checkpoint.
               lean -DmaxRecDepth=55000 -o "$T/BlankSixteenthRejoin.olean" "$T/BlankSixteenthRejoin.lean"
               lean -DmaxRecDepth=55000 -o "$T/BlankSeventeenthRejoin.olean" "$T/BlankSeventeenthRejoin.lean"
               lean -DmaxRecDepth=16384 -o "$T/ExceptionalE7ThirdReturnEscape.olean" "$T/ExceptionalE7ThirdReturnEscape.lean"
