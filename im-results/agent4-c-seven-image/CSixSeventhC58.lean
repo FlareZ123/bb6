@@ -512,7 +512,8 @@ private theorem s3_pullback_forces_m_ge7 (j m u v : Nat)
   have hstop : (574+1024*v)+j+3*m+5 =
       (2:Nat)^(2*m+2)*(j+3) := by
     rw [← hk]
-    exact Nat.sub_add_cancel (high_score_nonnegative j m)
+    have h := Nat.sub_add_cancel (high_score_nonnegative j m)
+    omega
   rw [hj] at hstop
   by_contra hm
   have hmle : m≤6 := by omega
@@ -563,14 +564,24 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
       rw [hjmod] at hd
       omega
     have hm512 : m%512=42 := by
-      rw [hj] at hcong
+      have hdiv512 : 512 ∣ 16384 := by decide
+      have hmod512 : (3*m+7*j+14025)%512=0 := by
+        calc
+          (3*m+7*j+14025)%512 =
+              ((3*m+7*j+14025)%16384)%512 := by
+            symm
+            exact Nat.mod_mod_of_dvd _ hdiv512
+          _ = 0%512 := by rw [hcong]
+          _ = 0 := by decide
+      rw [hj] at hmod512
       omega
     have hm42 : 42≤m := by omega
     have hm7 : 7≤m := by omega
     let k : Nat := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
     have hstop : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by
       dsimp [k]
-      exact Nat.sub_add_cancel (high_score_nonnegative j m)
+      have h := Nat.sub_add_cancel (high_score_nonnegative j m)
+      omega
     have hpow : 16384 ∣ (2:Nat)^(2*m+2) := by
       have hp : (2:Nat)^14 ∣ (2:Nat)^(2*m+2) :=
         Nat.pow_dvd_pow 2 (by omega)
@@ -584,7 +595,7 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
       rw [hstop]
       exact Nat.mod_eq_zero_of_dvd hprod
     have hmodK : k%16384=(15934+3072*u)%16384 := by
-      rw [hj] at hmodStop
+      rw [hj] at hmodStop hcong
       omega
     have hdiv : 1024 ∣ 16384 := by decide
     have hkmod1024 : k%1024=574 := by
