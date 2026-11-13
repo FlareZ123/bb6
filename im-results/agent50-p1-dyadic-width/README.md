@@ -131,3 +131,14 @@ This is a finite-generation result only: no asymptotic extinction theorem or
 infinite-path measure claim has been proved. The calculations remain in the
 abstract shadow model; the original-source lift is still one-way, so no P1 or
 BB(6) decision follows.
+
+
+## Separate original-source wall-path identity (13 November 2026)
+
+The [exact cumulative-cost identity](wall_cost_telescoping.md) is a distinct source-level result for genuine P1 CountCone histories ending at the right-five wall. It proves that every such history contains a shallow inverse edge and, more strongly, that after its last depth-0/1 edge the remaining suffix consists only of depth-2 edges. The note gives the exact identity
+
+\[
+2^n(7S-2^m)=2^m(m+n+3)+(n+3)S+T-1,
+\]
+
+with \(S=\sum_j2^{s_j}\), \(T=\sum_js_j2^{s_j}\), and cumulative costs \(s_j\). This is an all-count, all-cost necessary condition, not a wall exclusion or a BB(6) result. It is source-level and must not be conflated with the abstract shadow statistics above.
