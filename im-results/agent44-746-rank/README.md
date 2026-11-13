@@ -182,10 +182,10 @@ next-digit selections; this is not a Lean certificate.
 
 ## Denser t=4 seed
 
-[DENSE-T1-4-CASCADE.md](DENSE-T1-4-CASCADE.md) gives a separate five-edge
-branch starting with \(t_1=4,\sigma_1=9\), which works on the full
-\(n=887+13122r\) family for all sufficiently large r. The next two
-edges also need no selector digit; the remaining selectors give the
-five-edge cylinder \(r\equiv1618\pmod{2187}\), of density \(1/2187\).
-This is denser at depth five than the t=7 branch above. The exact modular
-reproducer is [DenseT1FourBranch.mjs](DenseT1FourBranch.mjs).
+[DENSE-T1-4-CASCADE.md](DENSE-T1-4-CASCADE.md) gives a separate cascade
+starting with \(t_1=4,\sigma_1=9\), which works on the full
+\(n=887+13122r\) family for all sufficiently large r. It has a
+five-edge cylinder \(r\equiv1618\pmod{3^7}\) of density \(3^{-7}\), and
+a seven-edge subcascade \(r\equiv1361932\pmod{3^{13}}\). This is denser
+at depth five than the t=7 branch above. The exact modular reproducer is
+[DenseT1FourBranch.mjs](DenseT1FourBranch.mjs).
