@@ -374,7 +374,7 @@ B=(25687098+47673192d,23315807+43272268d),
 \]
 whose right coordinate is odd and whose sum is \(1\pmod4\). Hence the direct parent is also excluded. This proves the L-parent exclusion on the displayed cylinder, provided the imported source lemmas are compiled against the original dependency chain.
 
-The all-parameter B_s exclusion is already established by blank_no_B_s31. Applying blank_no_sumzero_target to \(A_s=(130+208s,94+152s)\), with \(S=28+45s\equiv3\pmod4\), then excludes \(A_s\). Pulling back through mzero_first_two_reach yields the high-stop exclusion
+The existing S31 B_s draft theorem blank_no_B_s31 is parameter-uniform in w. Applying blank_no_sumzero_target to \(A_s=(130+208s,94+152s)\), with \(S=28+45s\equiv3\pmod4\), then excludes \(A_s\). Pulling back through mzero_first_two_reach yields the high-stop exclusion
 \[
 j\equiv9039847\pmod{16777216},\qquad k=3j+7.
 \]
