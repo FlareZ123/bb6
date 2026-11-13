@@ -250,7 +250,14 @@ theorem shadow_reach_lifts_to_odd_cone
             norm_num [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
       have hpowPosT : 0<2^t := Nat.two_pow_pos t
       have hCeq : C+2*r=4*Q := Nat.mul_left_cancel hpowPosT hCfactor
-      have hCeven : C%2=0 := by omega
+      have hCdiv2 : 2∣C := by
+        have h1 : 2∣C+2*r := by
+          rw [hCeq]
+          exact ⟨2*Q, by omega⟩
+        have h2 : 2∣2*r := ⟨r,rfl⟩
+        have h := Nat.dvd_sub h1 h2
+        simpa using h
+      have hCeven : C%2=0 := Nat.dvd_iff_mod_eq_zero.mp hCdiv2
       have hpowT : 2^t≤2^(N-M-4) :=
         Nat.pow_le_pow_right (by decide : 0<(2:Nat)) htBound
       have hS6 : 6*2^t≤s := by
