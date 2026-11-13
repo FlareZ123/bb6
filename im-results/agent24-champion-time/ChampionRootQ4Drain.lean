@@ -31,8 +31,8 @@ def championRootQ4DrainMoves : Nat := rootQ4DrainMoves + 6
 
 theorem championRootQ4DrainMoves_closed :
     championRootQ4DrainMoves = 6*4^63 + 42*2^63 + 27493 := by
-  rw [rootQ4DrainMoves_closed]
   unfold championRootQ4DrainMoves
+  rw [rootQ4DrainMoves_closed]
   omega
 
 /-- Run-level form of the six-step blank-root transport.  The full tape,
