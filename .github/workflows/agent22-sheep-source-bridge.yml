@@ -2,12 +2,6 @@ name: Agent 22 Sheep source-level semantic bridge (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/agent22-sheep-source-bridge.yml
-      - im-results/agent40-sheep-power486/SheepPower486Raw.lean
 
 permissions:
   contents: read
@@ -131,7 +125,11 @@ jobs:
           done
           lake env lean -o ".lake/build/lib/lean/SheepPower486Source.olean" SheepPower486Source.lean
           cp "$ROOT486/SheepPower486Raw.lean" SheepPower486Raw.lean
-          lake env lean -o ".lake/build/lib/lean/SheepPower486Raw.olean" SheepPower486Raw.lean
+          lake env lean -o ".lake/build/lib/lean/SheepPower486Raw.olean" SheepPower486Raw.lean 2>&1 | tee /tmp/sheep-power486-raw-axioms.log
+          if grep -q 'sorryAx' /tmp/sheep-power486-raw-axioms.log; then
+            echo '::error::sorryAx in SheepPower486Raw exported theorems'
+            exit 1
+          fi
 
           # Agent14: full source-exact r138 first-predecessor theorem,
           # including two authenticated rational-child alternatives.
