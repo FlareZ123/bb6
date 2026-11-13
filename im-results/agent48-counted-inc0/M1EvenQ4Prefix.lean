@@ -101,11 +101,16 @@ theorem m1EvenQ4Bridge_input_match (a b : Nat) (h : Int) :
     have hbits :
         sideBit (markerWord 1 ++ d0 ++ d1 ++ d0 ++ lh) (1+k) =
           decide (y ∈ m1EvenQ4BridgeStart.marked) := by
-      interval_cases y <;>
-        simp [k, m1EvenQ4BridgeStart, markerWord, d0, d1, lh, sideBit]
+      have hyCases : y = -9 ∨ y = -8 ∨ y = -7 ∨ y = -6 ∨ y = -5 ∨
+          y = -4 ∨ y = -3 ∨ y = -2 ∨ y = -1 ∨ y = 0 := by omega
+      rcases hyCases with h9 | h8 | h7 | h6 | h5 | h4 | h3 | h2 | h1 | h0
+      all_goals subst y
+      all_goals simp [k, m1EvenQ4BridgeStart, markerWord, d0, d1, lh, sideBit]
     exact hleft.trans hbits
   · have hypos : 1 ≤ y := by omega
-    interval_cases y
+    have hyCases : y = 1 ∨ y = 2 ∨ y = 3 ∨ y = 4 := by omega
+    rcases hyCases with h1 | h2 | h3 | h4
+    all_goals subst y
     · have hleft := sweptLeft_leftmost (3*a)
         (s1Config 3 6 1 a 0 b h).tape h
       have hcoord :
@@ -341,7 +346,9 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
   let T := (s1Config 3 6 1 a 0 b h).tape
   constructor
   · intro i hi
-    interval_cases i
+    have hiCases : i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 := by omega
+    rcases hiCases with h0 | h1 | h2 | h3 | h4
+    all_goals subst i
     · by_cases ha0 : a = 0
       · subst a
         have hrel : (h+0) - (h-(1:Int)) = 1 := by omega
@@ -719,8 +726,11 @@ private theorem m1EvenQ4LeftFacingBoundaryBit (a k : Nat)
   rw [sideBit_append_after ([true] ++ d1pow a)
     (markerWord 0 ++ d0 ++ d0 ++ d1 ++ d0 ++ lh)
     (3*a+1+k) (by simp [d1pow_length]; omega)]
-  interval_cases k <;>
-    simp [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
+  have hkCases : k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 ∨ k = 5 ∨
+      k = 6 ∨ k = 7 ∨ k = 8 ∨ k = 9 := by omega
+  rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
+  all_goals subst k
+  all_goals simp [m1EvenQ4BridgeEnd,markerWord,d0,d1,lh,sideBit]
 
 private theorem m1EvenQ4CutTape_eq_source_left
     (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+11 ≤ i) :
