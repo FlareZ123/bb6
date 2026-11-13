@@ -1,4 +1,5 @@
 import NoFatalGuard
+import BubbleExact
 import BB429FinishScanEDelta
 import BB429JuncHeadExcursion
 import BB429PhysicalBridge
@@ -9,7 +10,7 @@ set_option maxRecDepth 65536
 
 namespace BB429LowEvenR32
 
-open BB6Coverage BB429OddExcursion BB429FinishScanEDelta
+open BB6Coverage BB429OddExcursion BB429SourceE1Delta BB429FinishScanEDelta
 open BB429JuncHeadExcursion BB429PhysicalFrontier BB429PhysicalBridge
 open BB429DeltaPhysicalBridge BB429NoFatalGuard
 
@@ -31,7 +32,7 @@ theorem lowEvenR32_segment1_delta :
     runWithDelta 3192 lowEvenStart = some (lowEvenMid, 56) := by
   have h := juncPos_iter_mid_delta 28 45 0 58 (by omega) (by omega) (by omega)
   have ht : juncPosMidTime 28 0 = 3192 := by
-    norm_num [juncPosMidTime]
+    decide
   simpa [lowEvenStart, lowEvenMid, ht] using h
 
 /-- Exact second segment of the concrete r=32 return. -/
@@ -56,13 +57,13 @@ theorem lowEvenR32_total_delta :
     simp only [Option.bind_some]
     rw [h2]
     simp only [Option.map_some]
-    norm_num
-  have ht : (3192+346)+869 = 4407 := by norm_num
+    omega
+  have ht : (3192+346)+869 = 4407 := by omega
   rw [← ht, runWithDelta_add, h12]
   simp only [Option.bind_some]
   rw [h3]
   simp only [Option.map_some]
-  norm_num
+  omega
 
 /-- First guarded segment. The guard rejects only the genuine C/01
     halting gateway, not harmless C/0 visits with a blank right cell. -/
@@ -90,7 +91,7 @@ theorem lowEvenR32_no_fatal_source :
   have htotal : runNoFatal ((3192+346)+869) lowEvenStart = some lowEvenEnd :=
     runNoFatal_compose (3192+346) 869 lowEvenStart lowEvenTurn lowEvenEnd
       h12 lowEvenR32_segment3_no_fatal
-  have ht : (3192+346)+869 = 4407 := by norm_num
+  have ht : (3192+346)+869 = 4407 := by omega
   simpa [ht] using htotal
 
 /-- The guarded source execution is the ordinary original-source zipper run. -/
