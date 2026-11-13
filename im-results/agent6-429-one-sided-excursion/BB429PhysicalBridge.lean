@@ -14,6 +14,15 @@ def Represents (z : Zipper) (c : Config) : Prop :=
   (∀ j : Nat, c.tape (c.head - fcast j) = z.left.getD j false) ∧
   (∀ j : Nat, c.tape (c.head + fcast j) = z.right.getD j false)
 
+/-- The first represented right-stack bit is exactly the physical cell
+    immediately to the right of the head. This exposes the private
+    coordinate convention used by Represents to downstream safety proofs. -/
+theorem represents_right_one (z : Zipper) (c : Config)
+    (h : Represents z c) :
+    c.tape (c.head + 1) = z.right.getD 0 false := by
+  rcases h with ⟨_, _, _, hr⟩
+  simpa [fcast] using hr 0
+
 private theorem getD_tail (xs : List Bool) (j : Nat) :
     xs.tail.getD j false = xs.getD (j+1) false := by
   cases xs <;> rfl
@@ -312,6 +321,7 @@ theorem odd_original_source_halts (k : Nat) :
   rw [hc]
   exact hstop
 
+#print axioms represents_right_one
 #print axioms rightRep
 #print axioms leftRep
 #print axioms sim_one
