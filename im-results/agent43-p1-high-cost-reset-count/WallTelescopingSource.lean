@@ -55,8 +55,7 @@ theorem source_weighted_sum_invariant
           _ = 2^(mp+t+1)*(c+3)+2*(mp+n+3)*2^mp := by
             have hpows : 2^mp * 2^(t+1) = 2^(mp+t+1) := by
               rw [← Nat.pow_add]
-              congr 1
-              omega
+              rfl
             have hfirst :
                 2^mp*(2^(t+1)*(c+3)) = 2^(mp+t+1)*(c+3) := by
               rw [← Nat.mul_assoc, hpows]
@@ -76,16 +75,13 @@ theorem source_weighted_sum_invariant
         _ = 2^(mp+t+1)*(c+3)+2*(U+(n+3+mp)*2^mp) := by
           have hcoeff :
               2*(mp+n+3)*2^mp = 2*((n+3+mp)*2^mp) := by ac_rfl
-          have hsum :
-              2*((n+3+mp)*2^mp)+2*U =
-                2*(U+(n+3+mp)*2^mp) := by
-            calc
-              _ = 2*U+2*((n+3+mp)*2^mp) := by ac_rfl
-              _ = 2*(U+(n+3+mp)*2^mp) :=
-                (Nat.mul_add 2 U ((n+3+mp)*2^mp)).symm
-          rw [hcoeff, hsum]
+          rw [hcoeff]
+          calc
+            _ = 2^(mp+t+1)*(c+3)+(2*((n+3+mp)*2^mp)+2*U) := by ac_rfl
+            _ = 2^(mp+t+1)*(c+3)+2*(U+(n+3+mp)*2^mp) := by
+              rw [← Nat.mul_add]
+              ac_rfl
         _ = 2^(mp+t+1)*((c+4)-1)+2*(U+(n+3+mp)*2^mp) := by
-          congr 1
           omega
 
 /-- Exact source-wall telescoping identity in subtraction-free Nat form.
