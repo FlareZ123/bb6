@@ -1,6 +1,6 @@
 # m=0 even-even sum-zero: odd-valuation normalization and residual candidates
 
-**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean, ; the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean; and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean. All four files were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
+**Status:** The first theorem below has a complete paper-level derivation from the source-certified parent and inverse lemmas in M0EvenEvenSumZero.lean, but its **general induction has not yet been Lean-formalized or CI-checked**. The explicit s=2048w+293 instance now has a Lean draft in M0EvenEvenSumZeroS293.lean, its exact-criterion integration is drafted in CThreeDiagonalM0SumZeroS293Full.lean;  the u=1 low-boundary lemmas are drafted in M0SmallBoundaryZero.lean; and the x=2 mod 16 y=3 boundary is drafted in EvenOddThreeX2Mod16.lean. All four files were added to the existing manual agent11-c-diagonal-late.yml workflow, which has not yet been run on these commits. Nothing here is in results/. Candidates 5 and 6 remain algebraic drafts. Do not report any of these extensions as source-certified until the original-source workflow passes with no sorryAx.
 
 ## General odd-valuation branch
 
@@ -57,7 +57,7 @@ If \(u=5\) and \(r\equiv3\pmod4\), the same \(r\) six-even-right steps are licen
 \]
 Since \(s\equiv5\pmod8\) and \(r\equiv3\pmod4\), \(x\equiv2\pmod{16}\). The q=1 gate uses \(2u=10\equiv2\pmod8\), and the q=2 and q>=3 gates are the same as above. The exact source lemma **blank_no_y3_xmod16_two** in EvenOddThreeX2Mod16.lean shows that every source of such a y=3 target is the unique parent \((x/2,(x+2)/4)\), which has odd right counter at least \(5\) and coordinate sum \(2\pmod4\); **blank_no_odd_sum_two** excludes that parent. This file is included in the manual workflow but has not yet been CI-checked.
 
-In all three cases \(B_s\) is unreachable. \(\square\`
+In all three cases \(B_s\) is unreachable. \(\square\)
 
 Since \(s\equiv5\pmod8\), the quotient \(S=28+45s\) for \(A_s\) is odd, greater than two, and nonzero modulo four. The source-certified theorem **blank_no_sumzero_target** applies to \(A_s\): its direct parent is \(L_s\), and its bounce parent is \(B_s\). Both are now excluded. Therefore \(A_s\) is unreachable under the same hypotheses.
 
