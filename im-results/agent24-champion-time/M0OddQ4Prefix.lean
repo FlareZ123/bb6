@@ -321,8 +321,7 @@ private theorem m0OddQ4LeftFacingPrefixTrue (a i : Nat)
       i (by simp; omega)]
     simp only [List.length_singleton]
     have hlen : i-1 < (d1pow (a-1)).length := by
-      simp [d1pow_length]
-      omega
+      simp [d1pow_length] <;> omega
     rw [Agent6Q4Prefix.sideBit_append_left (d1pow (a-1))
       (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) (i-1) hlen]
     exact sideBit_d1pow_true (a-1) (i-1)
@@ -471,8 +470,7 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
           simp [m0OddQ4LeftFacing,List.append_assoc]
         rw [hlist]
         have hlenP : ([true] ++ d1pow (a-1)).length = 3*a-2 := by
-          simp [d1pow_length]
-          omega
+          simp [d1pow_length] <;> omega
         have hside := sideBit_append_after_local
           ([true] ++ d1pow (a-1))
           (markerWord 2 ++ d0 ++ binDec 3 4 ++ lh) i
@@ -502,7 +500,9 @@ theorem m0Odd_q4_prefix_leftFacing (a b : Nat) (h : Int)
             m0OddQ4CutTape a b h x =
               decide ((2-(j:Int)) ∈ m0OddQ4Bridge27End.marked) := by
           have hcut'' := hcut
-          rw [hrel] at hcut''
+          have hrel' : x-(h-3*(a:Int)) = 2-(j:Int) := by
+            simpa using hrel
+          rw [hrel'] at hcut''
           exact hcut''
         exact hcut'.trans htarget.symm
       simpa [x] using hval
@@ -645,8 +645,7 @@ theorem m0Odd_q4_prefix_rightShape (a b : Nat) (h : Int)
         · intro i hi
           have hr := m0Odd_q4_prefix_rightFacing a b h ha (9+3*b+i)
           have hlen : (q4RightFacing b).length = 9+3*b := by
-            simp [q4RightFacing,d1pow_length]
-            omega
+            simp [q4RightFacing,d1pow_length] <;> omega
           have hblank := sideBit_false_after_length_local
             (q4RightFacing b) (9+3*b+i) (by omega)
           have hcoord :
@@ -662,8 +661,7 @@ theorem m0Odd_q4_prefix_far_tail (a b : Nat) (h : Int)
   intro i hi
   have hr := m0Odd_q4_prefix_rightFacing a b h ha i
   have hlen : (q4RightFacing b).length = 9+3*b := by
-    simp [q4RightFacing,d1pow_length]
-    omega
+    simp [q4RightFacing,d1pow_length] <;> omega
   have hblank := sideBit_false_after_length_local
     (q4RightFacing b) i (by omega)
   exact hr.trans hblank
