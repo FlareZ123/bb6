@@ -432,17 +432,6 @@ theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
                   3 5 0 (a+b+2) (2^b-1) 0 H i).symm
   rw [m1Even_resetPrefixCost_eq,hframe,htarget]
 
-/-- The complete m=1,n=6 reset prefix, before its counted all-ones drain. -/
-theorem m1Even_q4_reset_prefix_source (a b : Nat) (h : Int) :
-    run tm2 (resetPrefixCost 1 6 a b)
-      (s1Config 3 6 1 a 0 b h) =
-      some (s1Config 3 5 0 (a+b+2) (2^b-1) 0
-        (h+5+3*b)) := by
-  have hp := m1Even_q4_prefix_run a b h
-  have hs := m1Even_q4_suffix_source a b h
-  rw [m1Even_resetPrefixCost_eq,run_add,hp]
-  simpa using hs
-
 /-- A complete source-level Rst1 decrement for n=6, including its
 geometric all-ones drain.  This is exactly the first proposed increment
 in the TM63 recurrence. -/
@@ -460,9 +449,7 @@ theorem m1Even_q4_counted_increment_source
   simpa [s1Config] using hdrain
 
 #print axioms q4_suffix_left_word_of_stream
-#print axioms q4_suffix_after_four
 #print axioms m1Even_q4_prefix_far_tail
-#print axioms m1Even_q4_suffix_source
 #print axioms m1Even_q4_reset_prefix_source
 #print axioms m1Even_q4_counted_increment_source
 
