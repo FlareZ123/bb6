@@ -82,7 +82,8 @@ theorem source_weighted_sum_invariant
               rw [← Nat.mul_add]
               ac_rfl
         _ = 2^(mp+t+1)*((c+4)-1)+2*(U+(n+3+mp)*2^mp) := by
-          omega
+          have hcd : c+3 = (c+4)-1 := by omega
+          rw [hcd]
 
 /-- Exact source-wall telescoping identity in subtraction-free Nat form.
     The first witness is the sum of 2^s over edge-start costs; the second
