@@ -214,7 +214,8 @@ theorem resetBase_s1_run (L m : Nat) (hL : 0 < L) (hm : m < 3) (h : Int) :
   have hshiftOut :
       shiftConfig h c1 =
         s1Config L 0 ((m+2)%3) (resetDelta m) 0 0 (h+5) := by
-    simpa [c1, Int.add_sub_cancel_right] using
+    have hdelta : (h+5:Int)-5 = h := by omega
+    simpa [c1, hdelta] using
       s1Config_shift L 0 ((m+2)%3) (resetDelta m) 0 0 5 (h+5)
   calc
     run tm2 (resetPrefixCost m 1 0 0) (s1Config L 1 m 0 0 0 h) =
