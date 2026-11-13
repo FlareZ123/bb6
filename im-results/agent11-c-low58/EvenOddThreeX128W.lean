@@ -80,7 +80,7 @@ theorem y3_x128w_parents (w a k : Nat) (hw : 1≤w)
                 have hn3 : 3≤n := by omega
                 have hpowdiv : 8∣2^n := by
                   have hh : 2^3∣2^n := Nat.pow_dvd_pow 2 hn3
-                  simpa only [show (2:Nat)^3=8 by norm_num] using hh
+                  simpa only [show (2:Nat)^3=8 by decide] using hh
                 have hfacdiv : 4∣2*a+6 := by
                   refine ⟨(a+3)/2,?_⟩
                   omega
@@ -107,7 +107,7 @@ theorem y3_x128w_parents (w a k : Nat) (hw : 1≤w)
                 constructor <;> omega
               · subst n
                 have hax : 128*w+16=8*(a+3) := by
-                  norm_num at hpow'
+                  simp at hpow'
                   omega
                 have haeq : a=16*w-1 := by omega
                 have hkeq : k=56*w+3 := by omega
