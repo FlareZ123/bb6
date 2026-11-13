@@ -482,7 +482,8 @@ theorem twoTierNumerator_parent_identity (n j:Nat) (d q w:Int)
     have he:n=(n-2)+2:=by omega
     have hpow:(2:Int)^n=4*(2:Int)^(n-2):=by
       rw [he,Int.pow_add]
-      decide
+      rw [show (2:Int)^2=4 by decide]
+      ac_rfl
     omega
   dsimp [twoTierNumerator]
   rw [hz]
