@@ -108,6 +108,26 @@ if (coefficientBits.slice(0,5).some(x => x.B > 3426 || x.C > 3426)) {
   throw new Error("Unexpected coefficient bound for the five band estimates");
 }
 
+const limitingRatios = [
+  [458752n, 59049n],
+  [3560896n, 531441n],
+  [11481056n, 1594323n],
+  [326640896n, 43046721n],
+  [2471264192n, 387420489n]
+];
+for (const [num,den] of limitingRatios) {
+  if (5n*num <= 31n*den || 10n*num >= 79n*den) {
+    throw new Error("A limiting band ratio is outside (6.2,7.9)");
+  }
+}
+const bandParameters = [[7,14],[1,9],[0,9],[2,13],[1,13]];
+for (const [t,sigma] of bandParameters) {
+  if ((1n << BigInt(sigma)) >= p3(t+1) * 1024n) {
+    throw new Error("A band scaling factor is not below 2^10");
+  }
+}
+if (n < 7000n) throw new Error("The explicit index is below the band-bound threshold");
+
 const output = {
   r: r.toString(),
   modulus: "177147",
@@ -124,6 +144,7 @@ const output = {
   G5mod3: g5mod3.toString(),
   exponents: [[7, 14], [1, 9], [0, 9], [2, 13], [1, 13]],
   coefficientBitLengths: coefficientBits,
+  limitingBandRatios: limitingRatios.map(([num,den]) => ({num:num.toString(),den:den.toString()})),
   bandBound: "for n >= 7000, all five normalized ratios differ from their limits by < 2^-60"
 };
 console.log(JSON.stringify(output, null, 2));
