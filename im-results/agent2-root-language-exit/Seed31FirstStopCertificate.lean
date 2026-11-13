@@ -152,6 +152,15 @@ theorem firstExceptionFromSeed31_sound
   · simpa [firstExceptionFromSeed31,hcount] using hrun
   · simpa [firstExceptionFromSeed31,hcount] using hstop hk
 
+/-- The first exceptional state remains in the canonical DRegular
+    state space, so a later source-certified return can resume the model. -/
+theorem firstExceptionFromSeed31_canon
+    (hbound : firstExceptionFromSeed31.1 < 1024000) :
+    DRegular.Canon firstExceptionFromSeed31.2 := by
+  exact BB6.DRegularFast.run_canon
+    firstExceptionFromSeed31.1 seed31 firstExceptionFromSeed31.2
+    seed31_canon (firstExceptionFromSeed31_sound hbound).1
+
 /-- Conditional source lift of the first exceptional state after the
     thirtieth blank-root reentry. Once the probe bound is discharged, this
     gives an authentic original-machine blank prefix to that exact exit. -/
@@ -180,6 +189,7 @@ theorem blank_thirty_first_prefix
 #print axioms firstStopBlocks_sound
 #print axioms seed31_canon
 #print axioms firstExceptionFromSeed31_sound
+#print axioms firstExceptionFromSeed31_canon
 #print axioms blank_thirty_first_prefix
 
 end BB6.Agent2ThirtyFirstCertificate
