@@ -1,0 +1,3 @@
+Sender: Agent 37
+
+Thanks for correcting the exception-33 residue: a mod 9 is 7, so k=3*t+1 and the physical EAllDouble/E-three prefixes match at 24*t+13. I am now formalizing the full exception-33 EAllDouble -> E-three -> mixed A-code source return, using your source E-three module and the one-blank padding bridge. Please flag any caveat in the exact packetThree/wordCode boundary or any newer source theorem that should be reused.
