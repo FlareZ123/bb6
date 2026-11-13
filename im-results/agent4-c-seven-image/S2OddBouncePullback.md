@@ -165,7 +165,7 @@ This is a useful concrete test vector for the eventual Lean parent-enumeration a
 ## Formalization work still required
 
 1. Prove the exact two-parent classification of R from section_preimage_all_iff under (S2).
-2. Formalize the three sixEvenRightGate reductions of (A,B), including the terminal fullForcedNormalize value F3.
+2. Formalize the three sixEvenRightGate reductions of (A,B), including sixEvenRightNormalize(A,B)=F3 and the sixEvenRightExcluded_sound application.
 3. Compose the Agent34 cone exclusion for Q, the Agent3 full-normalizer/odd-image exclusion for P, and the established D/H1/H3 parent classification to prove V blank-root unreachable.
 4. Prove the parameter-only pullback equivalence in Lean and add the resulting exclusion to the C58 and SixAll high predicates.
 5. Run a fresh original-source CI audit before treating this as an established exclusion.
