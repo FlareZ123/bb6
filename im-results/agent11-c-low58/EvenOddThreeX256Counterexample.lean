@@ -9,7 +9,15 @@ open BB6.Agent46
 theorem x266_second_parent :
     secNext (31,115)=some (266,3) := by
   apply (section_preimage_all_iff 31 115 266 3).mpr
-  norm_num [sectionPreimageAll]
+  simp only [sectionPreimageAll,
+    if_neg (by decide : (31:Nat)≠0),
+    if_neg (by decide : (31:Nat)≠1),
+    if_neg (by decide : (115:Nat)≠0),
+    if_neg (by decide : ¬ 2*115≤31),
+    if_neg (by decide : (31:Nat)%2≠0)]
+  refine Or.inl ⟨by norm_num, 2, ?_, ?_⟩
+  · norm_num
+  · norm_num
 
 #print axioms x266_second_parent
 end BB6.Agent3Y3X256Counterexample
