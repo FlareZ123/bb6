@@ -902,7 +902,8 @@ theorem m1EvenQ4SuffixTargetLeft (a b : Nat) :
 
 theorem m1Even_resetPrefixCost_eq (a b : Nat) :
     resetPrefixCost 1 6 a b = 79+12*a+3*b := by
-  have hv : BB6ChampionArithmetic.v2 6 = 1 := by decide
+  have hv : BB6ChampionArithmetic.v2 6 = 1 := by
+    simp [BB6ChampionArithmetic.v2]
   simp [resetPrefixCost,hv]
   omega
 
