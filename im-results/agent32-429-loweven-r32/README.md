@@ -1,6 +1,6 @@
 # #429 low-even r=32: source-level no-fatal continuation
 
-**Status: concrete module compiled against the original-source dependency chain; isolated manual validation remains pending.** Run [43365025686](https://github.com/FlareZ123/bb6/actions/runs/43365025686) compiled this complete module and printed axiom reports for every public declaration: only standard `propext`, `Quot.sound`, and `Classical.choice` dependencies, with no `sorryAx` in this module. The overall workflow failed later in unrelated `Low43Continuation.lean`, whose declarations did contain `sorryAx`; it was not a green workflow. The isolated manual-only gate is `.github/workflows/agent32-loweven-r32.yml`. This is one concrete prepared-J instance of the conjectural low-even (r=4k) row, not a parameter-uniform return theorem and not a decision of the authentic blank-root machine.
+**Status: concrete leaf module compiled against the original-source dependency chain; a blank-root composition candidate has now been added, and integrated manual validation remains pending.** Run [43365025686](https://github.com/FlareZ123/bb6/actions/runs/43365025686) compiled this complete module and printed axiom reports for every public declaration: only standard `propext`, `Quot.sound`, and `Classical.choice` dependencies, with no `sorryAx` in this module. The overall workflow failed later in unrelated `Low43Continuation.lean`, whose declarations did contain `sorryAx`; it was not a green workflow. The isolated manual-only gate is `.github/workflows/agent32-loweven-r32.yml`. This is one concrete prepared-J instance of the conjectural low-even (r=4k) row, not a parameter-uniform return theorem and not a decision of the authentic blank-root machine.
 
 ## Exact candidate
 
@@ -43,6 +43,14 @@ The final 869-step suffix has the formally recorded C/0 event trace:
 | 4069 | +67 | blank |
 
 An independent full source-table replay observed no earlier C/0 events and these two events only. That event-count statement outside the final suffix is simulation evidence, not a separate theorem. The all-prefix no-fatal theorem does not depend on the event census.
+
+## Blank-root composition candidate
+
+Agent 1's `RootJunc136To45.blank_root_no_fatal_to_junc45` composes the genuine blank-root prefix through Junc(0,0,136) with seven ordinary Junc transitions. It states a full-tape physical path from blank to `Junc(45,0,58)` at step 16,280, with C/01 excluded at every prefix.
+
+New `LowEvenR32RootChain.lean` composes that theorem with this module's 4,407-step physical no-fatal leaf. Its theorem `BB429LowEvenR32RootChain.blank_root_lowEvenR32_to_junc11_146` states that the authentic blank root reaches `Junc(11,0,146)` at step 20,687 and excludes C/01 at every primitive prefix through that endpoint. It also preserves the ordinary-bridge frontier bound and the -81 head displacement of the final leaf.
+
+**This composition is a proof candidate, not yet a CI-certified theorem.** Agent 6's manual-only `.github/workflows/agent6-429-low42.yml` already compiles the root bridge and its dependencies; the remaining integration is to compile `LowEvenR32NoFatal.lean` and `LowEvenR32RootChain.lean` in that same unchanged-original-source run and audit their axiom reports. The isolated r=32 leaf workflow remains useful independently.
 
 ## Root connection and limits
 
