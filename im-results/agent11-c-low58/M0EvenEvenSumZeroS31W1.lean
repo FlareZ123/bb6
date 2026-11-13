@@ -26,6 +26,7 @@ theorem l_s31_w1mod4_parent_reduction (z : Nat)
   let x := 11382+11520*w
   let y := 2402+2432*w
   let S := 1723+1744*w
+  have hxgt : 5<x := by dsimp [x]; omega
   have hx0 : 0<x := by dsimp [x]; omega
   have hxe : x%2=0 := by dsimp [x]; omega
   have hyge : 6≤y := by dsimp [y]; omega
@@ -34,7 +35,7 @@ theorem l_s31_w1mod4_parent_reduction (z : Nat)
   have hS4 : S%4≠0 := by dsimp [S]; omega
   have hSgt : 2<S := by dsimp [S]; omega
   obtain ⟨a,k,hprev,hstep⟩ :=
-    BB6.Agent3.cReach_parent_of_left_gt5 x y hx0 hL
+    BB6.Agent3.cReach_parent_of_left_gt5 x y hxgt hL
   have hparents := BB6.Agent11M0SumZeroVerified.even_even_sumzero_parent
     a k x y S hx0 hxe hyge hye hsum hS4 hSgt hstep
   rcases hparents with hD | hE
