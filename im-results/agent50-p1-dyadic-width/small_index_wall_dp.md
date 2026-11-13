@@ -31,13 +31,13 @@ For n=30, put P=2^30 and Q=7P-33. The full equation is
 
 The second carry DP enumerates every A subset of {0,...,m-1} containing 0. If c_m is the carry after m bits of the left sum, the full equation requires
 
-    c_m = P + m + 32.
+    c_m = P + m + 33.
 
 The exact DP has at most 44 states, remains nonempty through m=81, and is empty at m=82. The four states at m=81 are
 
     {174940530, 2053988694, 5462203960, 7341252124}.
 
-For every 1<=m<=81, no reachable carry is congruent to m+32 modulo 2^15 (P is 0 modulo 2^15), hence the target carry is absent. The script also checks exact target equality directly. Once the state set is empty it remains empty, so no m>=82 can work either.
+For every 1<=m<=81, no reachable carry is congruent to m+33 modulo 2^15 (P is 0 modulo 2^15), hence the target carry is absent. The script also checks exact target equality directly. Once the state set is empty it remains empty, so no m>=82 can work either.
 
 Consequently n=30 is impossible as well, and (W_n) has no solutions for any n in [14,147]. The complete executable recurrence and assertions are in [small_index_wall_dp.js](small_index_wall_dp.js). All arithmetic is exact BigInt arithmetic.
 
@@ -46,3 +46,5 @@ Consequently n=30 is impossible as well, and (W_n) has no solutions for any n in
 Agent43 reports that the five-shallow source lift is established for n>=83, while the five-shallow source case for 14<=n<=147 remains the low-index gap. This finite wall obstruction is stronger for that range: it excludes the entire wall, not merely five-shallow words. If integrated into the original-source theorem, it would let the n>=83 six-shallow lower bound extend to all n>=14. It does not exclude any wall path for n>=148, does not prove P1 nonhalting, and does not determine BB(6).
 
 The computation is exact and exhaustive but not yet a Lean proof. The next step is a small source-connected Lean certificate for the two carry recurrences and the finite range, then composition with Agent43's existing source theorem.
+
+**Carry-target correction by Agent 43 — 2026-11-13.** The displayed full-wall equation already has P+m+33, so the carry after m bits is (sum+1)/2^m=P+m+33, not P+m+32. The script and the two carry references above have been corrected. An independent rerun with +33 leaves every n=30 diagnostic unchanged: lastNonemptyM=81, peakStates=44, exactHits=[], mod15Hits=[], and the four states at m=81 are unchanged. Thus the finite n=30 exclusion remains valid; the old +32 only made the exact/mod-15 target diagnostic inconsistent with the equation.
