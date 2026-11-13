@@ -1,13 +1,14 @@
-// Independent modular check of Agent 7's nested odd-parent branch.
-// All arithmetic is exact BigInt and modular exponentiation.
+// Independent modular check of Agent 7's nested odd-parent branch
+// through an explicit eighth edge. All arithmetic is exact BigInt.
 
 const j = 3402n;
 const r0 = 74803n;
-const branchModulus = 3n ** 11n;
-const nextModulus = 3n ** 12n;
-const M = 3n ** 28n;
-const ts = [7n, 1n, 0n, 2n, 1n, 0n];
-const sigmas = [14n, 9n, 9n, 13n, 13n, 13n];
+const fiveEdgeModulus = 3n ** 11n;
+const sevenEdgeModulus = 3n ** 12n;
+const eightEdgeModulus = 3n ** 14n;
+const M = 3n ** 30n;
+const ts = [7n, 1n, 0n, 2n, 1n, 0n, 0n];
+const sigmas = [14n, 9n, 9n, 13n, 13n, 13n, 14n];
 
 function powMod(a, e, m) {
   let x = a % m;
@@ -50,17 +51,13 @@ function evaluate(r, modulus) {
   const rows = [{
     i: 0,
     E: "2",
-    v3X: valuationMod3(X, 28),
-    v3G: valuationMod3(X, 28) - 2,
+    v3X: valuationMod3(X, 30),
+    v3G: valuationMod3(X, 30) - 2,
   }];
   let B = -(2n + 2n ** (j + 5n));
   let C = 15n - 3n * 2n ** (j + 4n);
   const bMods = [String(mod(B, 3n))];
-  const coefficientBits = [{
-    i: 0,
-    B: bitLength(B),
-    C: bitLength(C),
-  }];
+  const coefficientBits = [{ i: 0, B: bitLength(B), C: bitLength(C) }];
 
   for (let i = 0; i < ts.length; i++) {
     const t = ts[i];
@@ -75,11 +72,7 @@ function evaluate(r, modulus) {
     );
     B = 4n * (2n ** t) * B - 2n * 3n ** E;
     C = 4n * (2n ** t) * C - (2n * t - 2n * sigma + 5n) * 3n ** E;
-    coefficientBits.push({
-      i: i + 1,
-      B: bitLength(B),
-      C: bitLength(C),
-    });
+    coefficientBits.push({ i: i + 1, B: bitLength(B), C: bitLength(C) });
     Xs.push(X);
     Es.push(E);
     rows.push({
@@ -87,16 +80,16 @@ function evaluate(r, modulus) {
       t: String(t),
       sigma: String(sigma),
       E: String(E),
-      v3X: valuationMod3(X, 28),
-      v3G: valuationMod3(X, 28) - Number(E),
+      v3X: valuationMod3(X, 30),
+      v3G: valuationMod3(X, 30) - Number(E),
     });
     bMods.push(String(mod(B, 3n)));
   }
   return { n, rows, bMods, coefficientBits, Xs, Es };
 }
 
-function quotientMod3(value, exponent) {
-  return mod(value / (3n ** exponent), 3n);
+function quotientMod(value, exponent, modulus) {
+  return mod(value / (3n ** exponent), modulus);
 }
 
 function gcd(a, b) {
@@ -132,38 +125,52 @@ for (let i = 0; i < ts.length; i++) {
   gammaD = nextD;
 }
 
-// Seventh edge: t=0, sigma=14, after the sixth (t=0, sigma=13) edge.
-const [r7n, r7d] = reduce(gammaN * 2n ** 14n, gammaD * 3n);
-const seventh = {
-  t: 0,
-  sigma: 14,
-  ratio: String(r7n) + "/" + String(r7d),
-  inside: 6n * r7d < r7n && r7n < 8n * r7d,
-  decimal: Number(r7n) / Number(r7d),
+// Eighth edge: t=1, sigma=17, after the seven listed layers.
+const [r8n, r8d] = reduce(gammaN * 2n ** 17n, gammaD * 3n ** 2n);
+const eighth = {
+  t: 1,
+  sigma: 17,
+  ratio: String(r8n) + "/" + String(r8d),
+  inside: 6n * r8d < r8n && r8n < 8n * r8d,
+  decimal: Number(r8n) / Number(r8d),
 };
 
 const base = evaluate(r0, M);
-const cylinderChecks = [];
+const sevenDigitChecks = [];
 for (let a = 0n; a < 3n; a++) {
-  const r = r0 + branchModulus * a;
+  const r = r0 + fiveEdgeModulus * a;
   const ev = evaluate(r, M);
-  cylinderChecks.push({
+  sevenDigitChecks.push({
     nextDigit: String(a),
     r: String(r),
-    G5mod3: String(quotientMod3(ev.Xs[5], ev.Es[5])),
-    G6mod3: String(quotientMod3(ev.Xs[6], ev.Es[6])),
+    G5mod3: String(quotientMod(ev.Xs[5], ev.Es[5], 3n)),
+    G6mod3: String(quotientMod(ev.Xs[6], ev.Es[6], 3n)),
+  });
+}
+
+const eighthDigitChecks = [];
+for (let b = 0n; b < 9n; b++) {
+  const r = r0 + sevenEdgeModulus * b;
+  const ev = evaluate(r, M);
+  eighthDigitChecks.push({
+    nextDigit: String(b),
+    r: String(r),
+    G7mod9: String(quotientMod(ev.Xs[7], ev.Es[7], 9n)),
   });
 }
 
 console.log(JSON.stringify({
   r0: String(r0),
-  fiveEdgeCylinderModulus: String(branchModulus),
-  sevenEdgeCylinderModulus: String(nextModulus),
+  fiveEdgeCylinderModulus: String(fiveEdgeModulus),
+  sevenEdgeCylinderModulus: String(sevenEdgeModulus),
+  eightEdgeCylinderModulus: String(eightEdgeModulus),
   nAtRepresentative: String(base.n),
   valuationsAtRepresentative: base.rows,
   B_i_mod3: base.bMods,
   coefficientBitLengths: base.coefficientBits,
-  sixBandLimits: bandRows,
-  seventhBandLimit: seventh,
-  nextDigitChecks: cylinderChecks,
+  sevenBandLimits: bandRows,
+  eighthBandLimit: eighth,
+  sevenDigitChecks: sevenDigitChecks,
+  eighthDigitChecks: eighthDigitChecks,
+  eighthCylinderResidue: String(r0 + sevenEdgeModulus),
 }, null, 2));
