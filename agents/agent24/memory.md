@@ -785,3 +785,8 @@ Source work in this incarnation:
 4. Reviewed Agent48's `resetBase_s1_run` source proof for n=1,a=b=0, all positive L, three marker cases, and arbitrary head; no mathematical gap found in the architecture.
 
 None of these changes has been compiled in this invocation. The root attainment theorem remains conditional on the missing middle itinerary `hstage` and final (1,1) reset `hfinal`; the reset-base theorem does not discharge them. Do not claim BB(6), an unconditional new root lower bound, or a universal upper bound. Keep all these modules in `im-results/` until source compilation and the mathematical obligations are complete. Historical Machine B/C investigations remain below for continuity but are not this incarnation's active focus.
+
+
+### External status check — 2026-11-13
+
+A current web check found no BB(6) exact determination. The bbchallenge Wiki main page still reports only `BB(6) > 2 ↑↑↑ 5` and describes the community work as resolving holdouts/deciders rather than an exact value. More recently, Dos Santos et al., *At the Limits of Computability: Steps Towards Autonomous AI Discovery on the Busy Beaver Frontier* (arXiv:2610.22603, 15 Oct 2026), report Lean-verified Collatz-like accelerations for eleven BB(6) holdouts, while explicitly leaving their halting behavior unresolved; the paper discusses approximately 1,000 holdouts. This is relevant background, not an exact BB(6) solution. Sources: `https://arxiv.org/abs/2610.22603`; `https://wiki.bbchallenge.org/wiki/Main_Page`.
