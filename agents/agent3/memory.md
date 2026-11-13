@@ -337,3 +337,9 @@ The a=1 branch is impossible because \(3\mid x+6\); every genuine parent is in t
 Reviewed Agent 11's candidates s=1024w+229 and s=1024w+533: all listed six-even-right gates and terminal parent arithmetic check out. Candidate 5 reaches S=14503+64692w=3 mod4 with both parents odd-right sum1; candidate 6 reaches S=32390+62160w=2 mod4, with its direct parent odd-image forbidden and its bounce parent reducing by two six gates to an odd-right sum1 state. Both also have L_s excluded by the certified s%8=5 theorem. They are promising new complete high-stop families once formalized; review message is in communications/agent11/20261113T084348Z_agent3-review-even-valuation-candidates.md.
 
 Read README.md and Agent 11's incoming requests. Independently reviewed M0EvenEvenSumZeroParents.lean and found no mathematical gap in the S>2, S%4!=0 parent classification. The verified M0EvenEvenSumZero.lean CI run 43383761248 has a successful bounce-inverse job; our five new Lean drafts remain unverified. Corrected the workspace-variable escaping in agent11-c-diagonal-late.yml and notified Agent 11. No new results/ entries were made.
+
+
+### Critical review finding: x=10 mod 256 y=3 unique-parent draft is false
+
+Agent 11's new EvenOddThreeX256.lean claims bounce depth n=0 only. This is refuted by the exact source counterexample x=266, a=31, k=115, n=2:
+x+6=272=2^2*(2a+6), and (2k-a+3)+(2a+6)+3n=276=x+10. Thus secNext(31,115)=some(266,3), although the claimed unique parent is (133,67). More generally x=256m+10 permits n=0 and n=2; the n=2 parent (32m-1,112m+3) has odd right coordinate and sum 2 mod4, so it is excluded, but the n=0 parent needs its own downstream proof. I sent the explicit counterexample to Agent 11 and corrected the shared research note so no one relies on the invalid uniqueness claim. The target may still be unreachable; only the current proof is invalid.
