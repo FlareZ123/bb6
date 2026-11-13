@@ -70,6 +70,43 @@ qDepthResidue(s+6h_1,k)=qDepthResidue(s+6h_2,k)
 
 Thus (h\bmod3^k\mapsto qDepthResidue(s+6h,k)/2\bmod3^k) is a bijective isometry, with inverse given by the index selector. Compatibility of the recursive selectors across precisions then identifies the inverse-limit zero locus with the graph of a 3-adic isometry between the fatal-index coordinate and the half-depth coordinate. This is a structural corollary, not a root exclusion; it is conditional on the Q-state selector's eventual source-CI verification.
 
+## Nested odd-parent exponent is a single index cylinder
+
+The source-coordinate identity in `qNumerator_t1_parent_identity` is
+[
+Q_j(n)=9(2q+5)
+]
+for the actual parent (q) of the ray state under the t=1 odd arm. It therefore shifts the 3-adic valuation by exactly two:
+[
+3^{t+3}\mid Q_j(n)
+\iff 3^{t+1}\mid(2q+5).
+]
+Combining this with `qIndexResidue_iff` at precision (k=t+2) gives
+[
+3^{t+1}\mid(2q+5)
+\iff h\bmod3^{t+2}
+ =qIndexResidue(s,j,t+2),
+\qquad n=s+6h.
+]
+So, conditional on the explicit source t=1 parent equations, a further odd parent with exponent at least (t) is supported on exactly one index residue class modulo (3^{t+2}). Exact exponent (t) is obtained by removing the unique next-level lift at precision (t+3); the other two lifts of the lower cylinder have exact valuation (v_3(2q+5)=t+1).
+
+The short Lean bridge to add after the source identity is:
+
+```lean
+theorem qNumerator_t1_divisibility (n j q t : Nat)
+    (hQ : qNumerator n j = 9*(2*q+5)) :
+    (3:Int)^(t+3) ∣ qNumerator n j ↔
+      (3:Int)^(t+1) ∣ (2*q+5) := by
+  rw [hQ]
+  have hpow : (3:Int)^(t+3)=9*(3:Int)^(t+1) := by
+    rw [show t+3=(t+1)+2 by omega, Int.pow_add]
+    norm_num
+  rw [hpow]
+  exact Int.mul_dvd_mul_iff_left (by norm_num : (9:Int)≠0)
+```
+
+Composing this with `qIndexResidue_iff` at (t+2) gives the unique index cylinder. This makes the generic Q-index selector directly reusable for the next odd-parent layer, rather than only for the first U/Q numerator. The statement is conditional on the source t=1 hypotheses and the unverified Q-state Lean module; it does not assert that every such cylinder satisfies the dyadic image band.
+
 ## Verification boundary
 
 - Agent 7's `QDepthDefs`, `QDepthLift`, `QDepthSelectorBase`, `QDepthSelector`, and `QDepth887` all compiled in original-source workflow run [43397274339](https://github.com/FlareZ123/bb6/actions/runs/43397274339), at head `4a8ee37bd33aab1a63d327f612d1fb89baafe781`. The log printed `qDepthResidue_iff`, `qDepthResidue_unique_in_period`, and `qDepthResidue_887_table` with axiom profile `[propext, Classical.choice, Quot.sound]`; the workflow later failed in the unrelated `UParentCone887.lean:75` application.
