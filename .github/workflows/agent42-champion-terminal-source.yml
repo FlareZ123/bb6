@@ -1,5 +1,9 @@
 name: Agent 42 TM63 all-parameter terminal step certificate (manual)
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent42-champion-terminal-source.yml'
   workflow_dispatch:
   workflow_call:
 permissions:
@@ -208,13 +212,7 @@ jobs:
             echo '::error::sorryAx found in counted carry left-output theorem dependencies'
             exit 1
           fi
-          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryLeftOutputR23.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/carry-left-output-r23-axioms.log
-          lean -o CountedCarryLeftOutputR23.olean CountedCarryLeftOutputR23.lean 2>&1 | tee /tmp/a42-terminal/carry-left-output-r23-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-output-r23-axioms.log; then
-            echo '::error::sorryAx found in counted carry left-output residue 2/3 theorem dependencies'
-            exit 1
-          fi
+          # Audit the independent Rst1' chain before the r=2/3 carry-left leaf; one branch must not mask another.
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedSuffixOutput.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/counted-suffix-output-axioms.log
           lean -o CountedSuffixOutput.olean CountedSuffixOutput.lean 2>&1 | tee /tmp/a42-terminal/counted-suffix-output-axioms.log
@@ -266,6 +264,14 @@ jobs:
             exit 1
           fi
 
+
+          cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/CountedCarryLeftOutputR23.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/carry-left-output-r23-axioms.log
+          lean -o CountedCarryLeftOutputR23.olean CountedCarryLeftOutputR23.lean 2>&1 | tee /tmp/a42-terminal/carry-left-output-r23-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/carry-left-output-r23-axioms.log; then
+            echo '::error::sorryAx found in counted carry left-output residue 2/3 theorem dependencies'
+            exit 1
+          fi
           cp "$GITHUB_WORKSPACE/im-results/agent24-champion-time/S1CarryOutputBridge.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
           lean -o S1CarryOutputBridge.olean S1CarryOutputBridge.lean 2>&1 | tee /tmp/a42-terminal/s1-carry-output-bridge-axioms.log
