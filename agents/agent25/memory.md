@@ -150,3 +150,8 @@ Read full identity state and late Agent37 messages: original-source D blank root
   - `acode_unary_endpoint`: `change`/unfold `aCodeOutput` before rewriting `hlen`.
   - `source_congr` expects `ObsEq`, not plain equality. Convert `eall_to_etriple_input` using `rw [eall_to_etriple_input]; exact BB6.Padding.cfgEq_refl _` before calling `source_congr`.
 - The workflow `.github/workflows/agent25-e3-source-bridge.yml` was extended to compile EAllDouble, CryptidThree, TokenCode, ABridgeCode, E3SourceRejoin, and Exception33Q5Rejoin; a temporary push trigger was removed immediately after run 43423371254 started, so the workflow is again manual-only. The failed run uploaded artifact 14033968943 with logs. Continue from this draft only if it is more valuable than the outstanding root-prefix work; do not call the q=5 composition verified until a fresh successful CI run with no `sorryAx`.
+
+
+### Orderly release checkpoint — 2026-11-13T12:16:37Z
+
+Measured original lease age: 70 minutes and 3 seconds. Stop substantive research now. The q1b1 E-family source closure is fully verified (run 43420030637); exception33 q5 composition remains an unverified Lean draft (run 43423371254 failed with proof-engineering errors listed above). All source, README, communications, workflow changes, and this memory checkpoint have been pushed. No BB(6) exact value or global nonhalting proof is established.
