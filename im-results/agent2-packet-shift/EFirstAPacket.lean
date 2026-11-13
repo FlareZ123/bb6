@@ -36,11 +36,13 @@ private theorem input_shape (t q : Nat) (hq : 2 ≤ q) :
 
 private theorem output_shape (t q : Nat) (hq : 2 ≤ q) :
     BB6.Agent32EAll.output (3*t+2) (q-1) [] = packetOutput t q := by
-  have hlen : 2*(q-1)+2 = 2*q := by omega
+  obtain ⟨q', rfl⟩ : ∃ q', q = q'+2 := by omega
+  have hqsub : (q'+2)-1 = q'+1 := by omega
+  have hlen : 2*(q'+1)+2 = 2*(q'+2) := by omega
   have ha : 8*(3*t+2)+5 = 24*t+21 := by omega
   simp [packetOutput, BB6.Agent32EAll.output,
     BB6.Agent31PacketSource.packet, BB6.Agent31PacketSource.word,
-    fixedTail, hlen, ha, CryptidBoundary.oppairs]
+    fixedTail, hqsub, hlen, ha, CryptidBoundary.oppairs]
 
 /--
 One E-double return sends every source section of shape
