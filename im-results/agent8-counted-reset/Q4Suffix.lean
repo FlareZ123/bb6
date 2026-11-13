@@ -24,6 +24,7 @@ open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent8S1Encoder
 
 /-- The fixed first ten moves only inspect cells 0 through 9. -/
 def q4First10Inside (x : Int) : Bool :=
@@ -70,8 +71,10 @@ theorem q4First10_at (T : Int → Bool) (h : Int)
   · simpa [q4First10Start] using h56.1
   · simpa [q4First10Start] using h56.2
   · simpa [q4First10Start] using h79 0 (by omega)
-  · simpa [q4First10Start] using h79 1 (by omega)
-  · simpa [q4First10Start] using h79 2 (by omega)
+  · have hh := h79 1 (by omega)
+    convert hh using 1 <;> omega
+  · have hh := h79 2 (by omega)
+    convert hh using 1 <;> omega
 
 /-- After the first ten moves, the five-cell q4 output is fixed. -/
 theorem q4First10_cells (T : Int → Bool) (h : Int) :
@@ -111,8 +114,10 @@ private theorem q4First10_preserves_after (T : Int → Bool) (h y : Int)
     (hy : h+10 ≤ y) :
     (frameAt T h q4First10Inside q4First10End).tape y = T y := by
   rw [frameAt_tape]
-  have hnot : ¬ (0 ≤ y-h ∧ y-h ≤ 9) := by omega
-  simp [q4First10Inside,hnot]
+  have hnot' : ¬ (0 ≤ y-h ∧ y-h ≤ 9) := by omega
+  have hnot : q4First10Inside (y-h) = false := by
+    simp [q4First10Inside,hnot']
+  simp [frameAt_tape,hnot]
 
 /-- A state-1 head scans one three-one block in exactly three moves.
 The physical output block is 001 and the head advances three cells. -/
@@ -143,7 +148,7 @@ theorem state1_one_d1_block (T : Int → Bool) (h : Int)
   · funext x
     by_cases hx1 : x=h+1 <;> by_cases hx2 : x=h+2 <;>
       by_cases hx0 : x=h <;>
-      simp [afterD1Block,hx1,hx2,hx0,h0,neh1,neh2]
+      simp [afterD1Block,hx1,hx2,hx0,h0,neh1,neh2] <;> omega
 
 /-- The next b three-one blocks are the only cells changed by the repeated
 state-1 digit scan. -/
@@ -161,20 +166,23 @@ private theorem d1BlocksOn_tail (T : Int → Bool) (h : Int) (n : Nat)
   have e0 : h+3+3*(i:Int) = h+3*((i+1:Int)) := by omega
   have e1 : h+3+3*(i:Int)+1 = h+3*((i+1:Int))+1 := by omega
   have e2 : h+3+3*(i:Int)+2 = h+3*((i+1:Int))+2 := by omega
-  have n0 : h+3+3*(i:Int) ≠ h := by omega
-  have n1 : h+3+3*(i:Int)+1 ≠ h := by omega
-  have n2 : h+3+3*(i:Int)+2 ≠ h := by omega
-  have n3 : h+3+3*(i:Int) ≠ h+1 := by omega
-  have n4 : h+3+3*(i:Int)+1 ≠ h+1 := by omega
-  have n5 : h+3+3*(i:Int)+2 ≠ h+1 := by omega
-  have n6 : h+3+3*(i:Int) ≠ h+2 := by omega
-  have n7 : h+3+3*(i:Int)+1 ≠ h+2 := by omega
-  have n8 : h+3+3*(i:Int)+2 ≠ h+2 := by omega
+  have n0 : h+3*((i+1:Int)) ≠ h := by omega
+  have n3 : h+3*((i+1:Int)) ≠ h+1 := by omega
+  have n6 : h+3*((i+1:Int)) ≠ h+2 := by omega
+  have n1 : h+3*((i+1:Int))+1 ≠ h := by omega
+  have n4 : h+3*((i+1:Int))+1 ≠ h+1 := by omega
+  have n7 : h+3*((i+1:Int))+1 ≠ h+2 := by omega
+  have n2 : h+3*((i+1:Int))+2 ≠ h := by omega
+  have n5 : h+3*((i+1:Int))+2 ≠ h+1 := by omega
+  have n8 : h+3*((i+1:Int))+2 ≠ h+2 := by omega
   constructor
-  · simpa [afterD1Block,e0,n0,n3,n6] using a
+  · rw [e0]
+    simpa [afterD1Block,n0,n3,n6] using a
   constructor
-  · simpa [afterD1Block,e1,n1,n4,n7] using b
-  · simpa [afterD1Block,e2,n2,n5,n8] using c
+  · rw [e1]
+    simpa [afterD1Block,n1,n4,n7] using b
+  · rw [e2]
+    simpa [afterD1Block,n2,n5,n8] using c
 
 /-- Tape after b successive state-1 three-one scans. -/
 def d0Sweep : Nat → (Int → Bool) → Int → (Int → Bool)
@@ -189,7 +197,7 @@ theorem d0Sweep_before (n : Nat) (T : Int → Bool) (h x : Int)
   | succ n ih =>
       simp only [d0Sweep]
       have hx' : x < h+3 := by omega
-      rw [ih (afterD1Block T h) (h+3) x hx']
+      rw [ih (afterD1Block T h) (h+3) hx']
       have n0 : x ≠ h := by omega
       have n1 : x ≠ h+1 := by omega
       have n2 : x ≠ h+2 := by omega
@@ -203,7 +211,7 @@ theorem d0Sweep_after (n : Nat) (T : Int → Bool) (h x : Int)
   | succ n ih =>
       simp only [d0Sweep]
       have hx' : h+3+(3*n:Int) ≤ x := by omega
-      rw [ih (afterD1Block T h) (h+3) x hx']
+      rw [ih (afterD1Block T h) (h+3) hx']
       have n0 : x ≠ h := by omega
       have n1 : x ≠ h+1 := by omega
       have n2 : x ≠ h+2 := by omega
@@ -229,7 +237,8 @@ theorem d0Sweep_block (n : Nat) (T : Int → Bool) (h : Int)
           rw [d0Sweep_before n (afterD1Block T h) (h+3) (h+2) (by omega)]
           simp [afterD1Block]
         simpa [d0Sweep] using ⟨h0,h1,h2⟩
-      · obtain ⟨j,rfl⟩ : ∃ j, i=j+1 := by omega
+      · refine ⟨i-1, ?_⟩
+        omega
         have hsub := ih (afterD1Block T h) (h+3) j (by omega)
         have e0 : h+3+3*(j:Int) = h+3*((j+1:Int)) := by omega
         have e1 : h+3+3*(j:Int)+1 = h+3*((j+1:Int))+1 := by omega
@@ -245,7 +254,10 @@ theorem state1_d1_blocks_right (n : Nat) (T : Int → Bool) (h : Int)
   | zero => simp [run,d0Sweep]
   | succ n ih =>
       obtain ⟨h0,h1,h2⟩ := hon 0 (by omega)
-      have hstep := state1_one_d1_block T h h0 h1 h2
+      have hh0 : T h = true := by simpa using h0
+      have hh1 : T (h+1) = true := by simpa using h1
+      have hh2 : T (h+2) = true := by simpa using h2
+      have hstep := state1_one_d1_block T h hh0 hh1 hh2
       have htail := ih (afterD1Block T h) (h+3)
         (d1BlocksOn_tail T h n hon)
       have hnum : 3*(n+1) = 3+3*n := by omega
@@ -298,10 +310,14 @@ theorem q4Tail_at (T : Int → Bool) (h : Int)
       x=(-4) ∨ x=(-3) ∨ x=(-2) ∨ x=(-1) ∨
       x=0 ∨ x=1 ∨ x=2 ∨ x=3 ∨ x=4 := by omega
   rcases hcases with hx0|hx1|hx2|hx3|hx4|hx5|hx6|hx7|hx8 <;> subst x
-  · simpa [q4TailStart] using hin.1
-  · simpa [q4TailStart] using hin.2.1
-  · simpa [q4TailStart] using hin.2.2.1
-  · simpa [q4TailStart] using hin.2.2.2.1
+  · have hh := hin.1
+    convert hh using 1 <;> omega
+  · have hh := hin.2.1
+    convert hh using 1 <;> omega
+  · have hh := hin.2.2.1
+    convert hh using 1 <;> omega
+  · have hh := hin.2.2.2.1
+    convert hh using 1 <;> omega
   · simpa [q4TailStart] using hin.2.2.2.2 0 (by omega)
   · simpa [q4TailStart] using hin.2.2.2.2 1 (by omega)
   · simpa [q4TailStart] using hin.2.2.2.2 2 (by omega)
