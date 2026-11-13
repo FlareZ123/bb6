@@ -491,6 +491,50 @@ theorem l1_bounded_shadow_word_has_source
     hgraph hm
   simpa using h
 
+/-- Under the direct width bound, a finite L0 shadow path exists at
+    cost m iff an authentic original-source L0 OddCone state with b%4=0
+    exists at that same cost. -/
+theorem l0_shadow_path_iff_source_cone_of_width
+    (q M u m : Nat)
+    (hwidth : 16*q+8+M ≤ 2^(16*q-M-3))
+    (hu : u+4*q+3=7*2^(16*q)) (hu1 : 1≤u)
+    (hm : m≤M) :
+    (∃ z, ShadowReach (16*q+8) (12*q+4) m z) ↔
+    (∃ b d, OddCone (4*u-4) (4*u+9) b d m ∧ b%4=0) := by
+  constructor
+  · rintro ⟨z,hgraph⟩
+    obtain ⟨b,d,alpha,hcone,_,hb4,_,_,_,_⟩ :=
+      l0_bounded_shadow_word_has_source_of_width q M u m z hwidth hu hgraph hm
+    exact ⟨b,d,hcone,hb4⟩
+  · rintro ⟨b,d,hcone,hb4⟩
+    have hmargin := width_forces_exponent (16*q) (16*q+8) M (by omega) hwidth
+    have hcost : m+2≤16*q := by omega
+    obtain ⟨w,z,alpha,hgraph,_,_,_,_⟩ :=
+      bounded_l0_cone_in_shadow_graph q u b d m hu hu1 hcone hb4 hcost
+    exact ⟨z,hgraph⟩
+
+/-- Under the direct width bound, a finite L1 shadow path exists at
+    cost m iff an authentic original-source L1 OddCone state with b%4=0
+    exists at that same cost. -/
+theorem l1_shadow_path_iff_source_cone_of_width
+    (q M u m : Nat)
+    (hwidth : 16*q+9+M ≤ 2^(16*q-M-3))
+    (hu : u+4*q+3=7*2^(16*q)) (hu1 : 1≤u)
+    (hm : m≤M) :
+    (∃ z, ShadowReach (16*q+9) (10*q+4) m z) ↔
+    (∃ b d, OddCone (6*u-2) (2*u+5) b d m ∧ b%4=0) := by
+  constructor
+  · rintro ⟨z,hgraph⟩
+    obtain ⟨b,d,alpha,hcone,_,hb4,_,_,_,_⟩ :=
+      l1_bounded_shadow_word_has_source_of_width q M u m z hwidth hu hgraph hm
+    exact ⟨b,d,hcone,hb4⟩
+  · rintro ⟨b,d,hcone,hb4⟩
+    have hmargin := width_forces_exponent (16*q) (16*q+9) M (by omega) hwidth
+    have hcost : m+2≤16*q := by omega
+    obtain ⟨w,z,alpha,hgraph,_,_,_,_⟩ :=
+      bounded_l1_cone_in_shadow_graph q u b d m hu hu1 hcone hb4 hcost
+    exact ⟨z,hgraph⟩
+
 #print axioms shadow_width_bound
 #print axioms shadow_encoded_left_properties
 #print axioms shadow_reach_lifts_to_odd_cone_of_width
@@ -499,5 +543,7 @@ theorem l1_bounded_shadow_word_has_source
 #print axioms l1_bounded_shadow_word_has_source_of_width
 #print axioms l0_bounded_shadow_word_has_source
 #print axioms l1_bounded_shadow_word_has_source
+#print axioms l0_shadow_path_iff_source_cone_of_width
+#print axioms l1_shadow_path_iff_source_cone_of_width
 
 end BB6.Shadow
