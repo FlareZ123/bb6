@@ -90,7 +90,11 @@ def t16 : Nat := (terminal2077.a-4)/9
     this avoids normalizing the full huge unary seed at every transition. -/
 theorem terminal2077_exact :
     DRegular.run 2077 seed16 = some ⟨9*t16+4,5,1⟩ := by
-  have hcanon : DRegular.Canon seed16 := by decide
+  have hcanon : DRegular.Canon seed16 := by
+    constructor
+    · dsimp [seed16]
+      omega
+    · simp [seed16]
   rw [BB6.Agent2Fast64.fastRun_correct 2077 seed16 hcanon]
   decide
 
