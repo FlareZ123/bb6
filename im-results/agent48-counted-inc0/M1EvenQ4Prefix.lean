@@ -839,3 +839,16 @@ theorem m1Even_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             have hbits := m1EvenQ4LeftFacingTail a i (by omega)
             exact htail.trans hbits
 
+
+
+/-- Algebraic endpoint identity for the m=1,n=6 branch.  Combined with
+the q4 suffix's d0-sweep left-facing tape formula, this yields the
+canonical target marker-0 S1 left stream. -/
+theorem m1EvenQ4SuffixTargetLeft (a b : Nat) :
+    s1LeftFacing 3 5 0 (a+b+2) (2^b-1) =
+      d0pow b ++ d1pow 2 ++ (m1EvenQ4LeftFacing a).drop 1 := by
+  unfold s1LeftFacing m1EvenQ4LeftFacing
+  rw [binDec_pow2_sub_one]
+  rw [d1pow_add_right a 2]
+  simp [List.drop,List.append_assoc]
+
