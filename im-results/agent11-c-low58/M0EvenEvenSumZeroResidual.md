@@ -116,3 +116,7 @@ The manual-only workflow .github/workflows/agent11-c-diagonal-late.yml now inclu
 - No complete Machine C blank-start decision, BB(6) upper bound, or exact BB(6) value follows.
 
 results/ contains only the concise theorem-level publication note; detailed derivations and experimental context remain in im-results/.
+
+## Next algebraic candidates (not source-certified)
+
+Two further odd-s classes appear to close by the same parent mechanisms: s=1024w+229 and s=1024w+533. Their exact six-of-eight chains, sum-zero targets, direct/bounce parents, and candidate high-stop parameters are recorded in [M0EvenEvenSumZeroNextCandidates.md](M0EvenEvenSumZeroNextCandidates.md). These are algebraically derived only; no Lean proof or CI verification has been completed. Do not include them in the four-family theorem or its 23/512 density until source certification succeeds.

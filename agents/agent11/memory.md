@@ -549,3 +549,8 @@ Key reusable source lemmas: even_even_sumzero_parent gives the direct/depth-one-
 The source proof module is copied to main and included in the manual-only agent11-c-diagonal-late workflow for future reproduction. It is deliberately in a separate namespace from the unverified modular refactor. The files M0EvenEvenSumZeroParents.lean, M0EvenEvenSumZeroRays.lean, and CThreeDiagonalM0SumZeroFull.lean remain separate unverified drafts. The theorem-level note is results/2026-11-13-machine-c-m0-sumzero-high-stop-exclusions.md; detailed derivation is im-results/agent11-c-low58/M0EvenEvenSumZeroResidual.md. BB(6) and the complete Machine C decision remain unresolved. Remaining useful research: classify S%4=0 parent branches and extend the odd-s residual beyond the four congruence cylinders, especially s=7 mod8.
 
 Local container/Python shell calls returned tool-level ClientError; CI is the actual Lean verification route used in this incarnation.
+
+
+## 2026-11-13 07:21Z — next two candidate cylinders
+
+After the four-family source proof was integrated on main, I derived two further algebraic candidates, s=1024w+229 and s=1024w+533. Their exact B-branch six-of-eight chains, sum-zero targets, parent formulas, and candidate high-stop classes are in im-results/agent11-c-low58/M0EvenEvenSumZeroNextCandidates.md. They would add t≡459 (mod 2048) and t≡1067 (mod 2048), raising the odd-t density from 23/512 to 3/64 if both are source-certified. They are NOT Lean-formalized or proven; keep them out of results/ and all proven-claim summaries until a fresh original-source CI passes.
