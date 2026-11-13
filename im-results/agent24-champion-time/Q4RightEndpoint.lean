@@ -14,6 +14,7 @@ right tail; this module isolates that interface.
 
 namespace BB6Coverage.Agent24Q4Endpoint
 
+open BB6Coverage
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8Rst1Prime
 open BB6Coverage.Agent8S1Encoder
