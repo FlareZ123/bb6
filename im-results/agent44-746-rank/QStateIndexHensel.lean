@@ -510,6 +510,8 @@ theorem qNumerator_t1_parent_identity (n j u q d : Nat)
         9*(8*(d:Int)-((2:Int)^(n+2)+2*n+1)) := by ring
     _=9*(2*q+5) := by rw [h8d]; ring
 
+#print axioms qNumerator_eq_signedZ
+#print axioms qIndexCoefficient_eq_signedZ
 #print axioms qNumerator_mod_three_even_iff
 #print axioms qNumerator_shift_digit_mod
 #print axioms qNumerator_lift_criterion
