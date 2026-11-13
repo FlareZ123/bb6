@@ -27,9 +27,17 @@ const counts = {
   evenPrefix: 0,
   oddEvenPrefix: 0,
   twoWaveRoot: 0,
-  prefixUnmatched: 0,
   cphaseD1: 0,
+  zeroLeftEven: 0,
+  cphaseD0Odd: 0,
+  c0D1Odd: 0,
+  prefixUnmatched: 0,
   other: 0,
+};
+const residualParameters = {
+  zeroLeftEven: {},
+  cphaseD0Odd: {},
+  c0D1Odd: {},
 };
 const cphaseRuns = {};
 const twoWavePairs = {};
@@ -72,6 +80,60 @@ function prefixAtBZero(h, time) {
     return { type: 'oddEvenPrefix', m, returnTime: time + 3 * m + 20, returnHead: h + m + 2 };
   }
   return { type: 'prefixUnmatched', m };
+}
+
+/** Exact B/0 -> F/1 -> D/0 even-run return with three zero cells left. */
+function zeroLeftEvenAtBZero(h, time) {
+  if (tape.has(h - 1) || tape.has(h - 2) || tape.has(h - 3)) return null;
+  const length = rightRunLength(h + 1);
+  if (length % 2 !== 0 ||
+      tape.has(h + length + 1) ||
+      tape.has(h + length + 2)) return null;
+  return {
+    n: length / 2,
+    returnTime: time + length + 12,
+    returnHead: h + length + 2,
+  };
+}
+
+/** C-phase D0/E1/A0 branch, odd F1 wave, then alternating retreat. */
+function cphaseD0OddAtBZero(h, time) {
+  let r = 0;
+  while (tape.has(h - 1 - r)) r++;
+  if (tape.has(h - 1 - r) ||
+      tape.has(h - 2 - r) ||
+      !tape.has(h - 3 - r) ||
+      tape.has(h - 4 - r) ||
+      !tape.has(h - 5 - r)) return null;
+  let m = 0;
+  while (!tape.has(h - 6 - r - 2 * m) &&
+      tape.has(h - 7 - r - 2 * m)) m++;
+  if (tape.has(h - 6 - r - 2 * m) ||
+      tape.has(h - 7 - r - 2 * m)) return null;
+  return {
+    r, m,
+    returnTime: time + r + 2 * m + 13,
+    returnHead: h - r - 7 - 2 * m,
+  };
+}
+
+/** Immediate C0/D1 prefix, odd D1 shuttle, then alternating retreat. */
+function c0D1OddAtBZero(h, time) {
+  if (tape.has(h - 1) || !tape.has(h - 2) ||
+      tape.has(h - 3) || !tape.has(h - 4)) return null;
+  const length = rightRunLength(h + 1);
+  if (length % 2 !== 0) return null;
+  const n = (length + 2) / 2;
+  let m = 0;
+  while (!tape.has(h - 5 - 2 * m) &&
+      tape.has(h - 6 - 2 * m)) m++;
+  if (tape.has(h - 5 - 2 * m) ||
+      tape.has(h - 6 - 2 * m)) return null;
+  return {
+    n, m,
+    returnTime: time + 4 * n + 2 * m + 8,
+    returnHead: h - 6 - 2 * m,
+  };
 }
 
 /** @param {number} h @param {number} time */
@@ -139,6 +201,9 @@ for (let time = 0; time < LIMIT; time++) {
     const prefix = prefixAtBZero(head, time);
     const cphase = cphaseD1AtBZero(head, time);
     const twoWave = twoWaveRootAtBZero(head, time);
+    const zeroLeftEven = zeroLeftEvenAtBZero(head, time);
+    const cphaseD0Odd = cphaseD0OddAtBZero(head, time);
+    const c0D1Odd = c0D1OddAtBZero(head, time);
     const twoWaveShield = twoWave === null ? null : noLeft1100(head);
     const leftSix = Array.from({ length: 6 }, (_, i) =>
       tape.has(head - 6 + i) ? '1' : '0').join('');
@@ -178,12 +243,17 @@ for (let time = 0; time < LIMIT; time++) {
         previousBZero.prefix.type !== 'prefixUnmatched';
       const validCphase = previousBZero.cphase !== null;
       const validTwoWave = previousBZero.twoWave !== null;
-      assert(!(expected && (validPrefix || validCphase || validTwoWave)),
+      const validZeroLeftEven = previousBZero.zeroLeftEven !== null;
+      const validCphaseD0Odd = previousBZero.cphaseD0Odd !== null;
+      const validC0D1Odd = previousBZero.c0D1Odd !== null;
+      const validMacros = [
+        validPrefix, validCphase, validTwoWave,
+        validZeroLeftEven, validCphaseD0Odd, validC0D1Odd,
+      ].filter(Boolean).length;
+      assert(!(expected && validMacros > 0),
         'A wave prediction overlaps a macro return');
-      assert(!(validPrefix && validCphase),
-        'The even-wave and C-phase macro hypotheses overlap');
-      assert(!(validTwoWave && (validPrefix || validCphase)),
-        'The two-wave root and another macro hypothesis overlap');
+      assert(validMacros <= 1,
+        'Two source macro hypotheses overlap at one B/0 interval');
 
       if (expected) {
         assert.equal(head, expected.head, 'Wave theorem endpoint disagrees with raw machine');
@@ -270,6 +340,38 @@ for (let time = 0; time < LIMIT; time++) {
         lastIntervalClass = 'cphaseD1';
         const r = previousBZero.cphase.r;
         cphaseRuns[r] = (cphaseRuns[r] || 0) + 1;
+      } else if (validZeroLeftEven) {
+        assert.equal(time, previousBZero.zeroLeftEven.returnTime,
+          'Zero-left even-run return time disagrees with raw machine');
+        assert.equal(head, previousBZero.zeroLeftEven.returnHead,
+          'Zero-left even-run return head disagrees with raw machine');
+        counts.zeroLeftEven++;
+        lastIntervalClass = 'zeroLeftEven';
+        const n = previousBZero.zeroLeftEven.n;
+        residualParameters.zeroLeftEven[n] =
+          (residualParameters.zeroLeftEven[n] || 0) + 1;
+      } else if (validCphaseD0Odd) {
+        assert.equal(time, previousBZero.cphaseD0Odd.returnTime,
+          'C-phase D0 odd-wave return time disagrees with raw machine');
+        assert.equal(head, previousBZero.cphaseD0Odd.returnHead,
+          'C-phase D0 odd-wave return head disagrees with raw machine');
+        counts.cphaseD0Odd++;
+        lastIntervalClass = 'cphaseD0Odd';
+        const key = previousBZero.cphaseD0Odd.r + ',' +
+          previousBZero.cphaseD0Odd.m;
+        residualParameters.cphaseD0Odd[key] =
+          (residualParameters.cphaseD0Odd[key] || 0) + 1;
+      } else if (validC0D1Odd) {
+        assert.equal(time, previousBZero.c0D1Odd.returnTime,
+          'C0/D1 odd-retreat return time disagrees with raw machine');
+        assert.equal(head, previousBZero.c0D1Odd.returnHead,
+          'C0/D1 odd-retreat return head disagrees with raw machine');
+        counts.c0D1Odd++;
+        lastIntervalClass = 'c0D1Odd';
+        const key = previousBZero.c0D1Odd.n + ',' +
+          previousBZero.c0D1Odd.m;
+        residualParameters.c0D1Odd[key] =
+          (residualParameters.c0D1Odd[key] || 0) + 1;
       } else {
         counts.other++;
         lastIntervalClass = 'other';
@@ -304,7 +406,8 @@ for (let time = 0; time < LIMIT; time++) {
     const incomingClass = lastIntervalClass;
     const incomingChainKnown = prefixReachKnown;
     previousBZero = {
-      time, head, incomingClass, incomingChainKnown, prefix, cphase, twoWave, cphaseShield, prefixShield,
+      time, head, incomingClass, incomingChainKnown, prefix, cphase, twoWave,
+      zeroLeftEven, cphaseD0Odd, c0D1Odd, cphaseShield, prefixShield,
       twoWaveShield, oddEvenBoundarySafe, prefixLeftSix, leftSix, right10, leftRun, rightRun, noLeft4,
     };
   }
@@ -324,9 +427,12 @@ assert.deepEqual(counts, {
   evenPrefix: 21,
   oddEvenPrefix: 22,
   twoWaveRoot: 8,
-  prefixUnmatched: 0,
   cphaseD1: 15_198,
-  other: 49,
+  zeroLeftEven: 18,
+  cphaseD0Odd: 29,
+  c0D1Odd: 2,
+  prefixUnmatched: 0,
+  other: 0,
 });
 assert.deepEqual(cphaseRuns, { 2: 1, 3: 15_176, 4: 21 });
 assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), bZeros - 1);
@@ -346,8 +452,10 @@ assert.equal(twoWaveIncomingAudit.prefixUnmatched || 0, 0,
   'A two-wave-root start follows an unmatched-prefix interval: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(twoWaveIncomingAudit.oldWave || 0, 8,
   'Two-wave-root starts do not all follow an old-wave interval: ' + JSON.stringify(twoWaveIncomingAudit));
-assert.equal(twoWaveIncomingAudit.chainUnknown || 0, 8,
-  'Unexpected cumulative-prefix status for two-wave-root starts: ' + JSON.stringify(twoWaveIncomingAudit));
+assert.equal(twoWaveIncomingAudit.chainKnown || 0, 8,
+  'Two-wave-root starts are not connected to the blank-root prefix: ' + JSON.stringify(twoWaveIncomingAudit));
+assert.equal(twoWaveIncomingAudit.chainUnknown || 0, 0,
+  'Unexpected cumulative-prefix gap before two-wave-root starts: ' + JSON.stringify(twoWaveIncomingAudit));
 assert.equal(predictions.size, 0, 'Unfinished wave predictions at cutoff');
 const report = {
   rawSteps: LIMIT,
@@ -355,6 +463,7 @@ const report = {
   firstReturnClasses: counts,
   cphaseD1RunLengths: cphaseRuns,
   cphaseD1ShieldAudit: { inputShielded: cphaseShieldInputs, outputShielded: cphaseShieldOutputs },
+  residualMacroParameters: residualParameters,
   prefixShieldAudit,
   prefixLeftSixAudit,
   twoWaveRootAudit: {
