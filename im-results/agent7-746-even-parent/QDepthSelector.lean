@@ -49,7 +49,7 @@ theorem qDepthResidue_iff (n k j : Nat)
           have hh:=Nat.mod_add_div' (j%pn) p
           omega
         have hd':=((q_small_digit_unique n k hn ((j%pn)/p) ht).mp
-          (by rw [ₐheq]; exact hz))
+          (by rw [←heq]; exact hz))
         have hnext:qDepthResidue n (k+1)=b+d*p:=rfl
         have hdnum:(j%pn)/p=d:=by simpa only [b,d] using hd'
         have htarget:j%pn=b+d*p:=by rw [←hdnum]; exact heq
