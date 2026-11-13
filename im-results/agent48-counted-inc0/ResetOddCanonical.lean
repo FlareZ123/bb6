@@ -203,7 +203,7 @@ theorem resetBase_odd_local_output
     have hyb : -7 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     rcases hyb with ⟨hlo,hhi⟩
-  rcases int_range_neg7_14 y hlo hhi with
+    rcases int_range_neg7_14 y hlo hhi with
       h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 |
       h11 | h12 | h13 | h14 | h15 | h16 | h17 | h18 | h19 |
       h20 | h21 <;> subst y <;>
@@ -214,7 +214,7 @@ theorem resetBase_odd_local_output
     have hyb : -8 ≤ y ∧ y ≤ 14 := by
       simpa [resetBaseInside] using hy
     rcases hyb with ⟨hlo,hhi⟩
-  rcases int_range_neg8_14 y hlo hhi with
+    rcases int_range_neg8_14 y hlo hhi with
       h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 |
       h11 | h12 | h13 | h14 | h15 | h16 | h17 | h18 | h19 |
       h20 | h21 | h22 <;> subst y <;>
