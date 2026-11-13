@@ -187,8 +187,26 @@ theorem q4_suffix_run_right_word (T : Int → Bool) (h : Int) (b : Nat)
   · simpa [U, T1, T2, g] using q4_suffix_frame T h b hshape
   · simpa [U, T1, T2, g] using q4_suffix_right_word T h b hshape htail
 
+/-- Direct interface from Agent 6's exported prefix stream to the
+    source-connected q4 suffix right endpoint. -/
+theorem q4_suffix_run_right_word_of_prefix
+    (Tq : Int → Bool) (h : Int) (b : Nat)
+    (hshape : q4RightShape Tq h b)
+    (hright : ∀ i : Nat,
+      Tq (h+1+(i:Int)) =
+        BB6Coverage.Agent8S1Encoder.sideBit
+          (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) :
+    ∃ U,
+      run tm2 (39+3*b) ⟨4,h,Tq⟩ = some U ∧
+      (∀ i : Nat,
+        U.tape (h+6+(3*b:Int)+(i:Int)) =
+          sideBit (s0RightFacing 0) i) := by
+  exact q4_suffix_run_right_word Tq h b hshape
+    (q4_prefix_far_tail b Tq h hright)
+
 #print axioms q4_prefix_far_tail
 #print axioms q4_suffix_right_word
 #print axioms q4_suffix_run_right_word
+#print axioms q4_suffix_run_right_word_of_prefix
 
 end BB6Coverage.Agent24Q4Endpoint
