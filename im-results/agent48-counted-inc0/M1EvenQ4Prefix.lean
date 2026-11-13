@@ -221,7 +221,15 @@ theorem m1Even_q4_prefix_run (a b : Nat) (h : Int) :
     m1EvenQ4Bridge_exact m1EvenQ4Bridge_heads hmatch
   have hBridge' :
       run tm2 41 ⟨3,hN,T1⟩ = some ⟨4,hN+5,T2⟩ := by
-    simpa [T2,frameAt,shiftConfig,m1EvenQ4BridgeEnd] using hBridge
+    have hframeConfig :
+        frameAt T1 hN m1EvenQ4Inside m1EvenQ4BridgeEnd =
+          (⟨4,hN+5,T2⟩ : Config) := by
+      apply config_ext
+      · simp [frameAt_state,m1EvenQ4BridgeEnd]
+      · simp [frameAt_head,m1EvenQ4BridgeEnd] <;> omega
+      · rfl
+    rw [hframeConfig] at hBridge
+    exact hBridge
   have hlinear : linearRightOnes T2 (hN+5) (3*a) := by
     intro i hi
     let x : Int := hN+5+(i:Int)
@@ -416,7 +424,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hcut := m1EvenQ4CutTape_eq_swept a b h (h+2) hout
         have hpres := sweptLeft_preserves_right (3*a+1) T h (h+2) (by omega)
         have hsrc : T (h+2) = true := by
-          simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 1
+          simpa [T,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 6 1 a 0 b h 1
         exact hcut.trans (hpres.trans hsrc)
     · by_cases ha0 : a = 0
       · subst a
@@ -435,7 +443,7 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hcut := m1EvenQ4CutTape_eq_swept a b h (h+3) hout
         have hpres := sweptLeft_preserves_right (3*a+1) T h (h+3) (by omega)
         have hsrc : T (h+3) = true := by
-          simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 2
+          simpa [T,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 6 1 a 0 b h 2
         exact hcut.trans (hpres.trans hsrc)
     · have hout : m1EvenQ4Inside
           ((h+4)-(h-((3*a+1 : Nat) : Int))) = false := by
@@ -444,17 +452,17 @@ theorem m1Even_q4_prefix_rightShape (a b : Nat) (h : Int) :
       have hcut := m1EvenQ4CutTape_eq_swept a b h (h+4) hout
       have hpres := sweptLeft_preserves_right (3*a+1) T h (h+4) (by omega)
       have hsrc : T (h+4) = true := by
-        simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 3
+        simpa [T,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 6 1 a 0 b h 3
       exact hcut.trans (hpres.trans hsrc)
   · constructor
     · have hcut := m1EvenQ4CutTape_eq_source_right a b h (h+5) (by omega)
       have hsrc : T (h+5) = false := by
-        simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 4
+        simpa [T,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 6 1 a 0 b h 4
       simpa [T] using hcut.trans hsrc
     · constructor
       · have hcut := m1EvenQ4CutTape_eq_source_right a b h (h+6) (by omega)
         have hsrc : T (h+6) = false := by
-          simpa [T,s0RightFacing] using s1Config_right_cell 3 6 1 a 0 b h 5
+          simpa [T,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 6 1 a 0 b h 5
         simpa [T] using hcut.trans hsrc
       · constructor
         · intro i hi
@@ -595,7 +603,7 @@ theorem m1EvenQ4First4_at (T : Int → Bool) (h : Int)
 /-- Reuse the established Q4 suffix after the four guard moves already
 performed by the m=1,n=6 even prefix. -/
 theorem m1Even_q4_suffix_after_four (T : Int → Bool) (h : Int) (b : Nat)
-    (hshape : q4RightShape T h b) :
+    (hshape : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
     run tm2 (35+3*b) ⟨4,h+4,T⟩ =
       some (frameAt
         (d0Sweep b
