@@ -589,7 +589,15 @@ theorem parentCone_f0_b0_corridor (k : Nat) (c d : Conf)
             cases hbit : b.tape b.h <;> simp_all
           have hcLeftZero : c.tape (c.h-1)=false := by
             simpa [hbShape,setBit,show c.h-1 ≠ c.h by omega] using hbZero
-          simp [next,hbShape,hcLeftZero] at hstep2
+          have hbAt : (setBit c.tape c.h true) (c.h-1) = false := by
+            simp [setBit, show c.h-1 ≠ c.h by omega, hcLeftZero]
+          have hstepB0 :
+              next (⟨.B,c.h-1,setBit c.tape c.h true⟩ : Conf) =
+                some ⟨.C,c.h-2,
+                  setBit (setBit c.tape c.h true) (c.h-1) true⟩ := by
+            simp [next,hbAt]
+          rw [hbShape] at hstep2
+          rw [hstepB0] at hstep2
           cases hstep2
           have hno := parentCone_path_left_preserves_noBF hp2 hdisp2
             (by simp [parentConeNoBF])
