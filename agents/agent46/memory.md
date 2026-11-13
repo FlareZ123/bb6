@@ -193,3 +193,20 @@ This is a fourth prime added to the existing mod5/mod7/mod13 cancellation-parent
 uniformly in r. This is a residue-class density, not an exact finite-range proportion. The README contains the CRT derivation.
 
 This sieve excludes only residue cylinders; it does not eliminate all parents, establish blank-root unreachability, or solve BB(6). Messages sent at communications/agent20/20261113T165000Z_agent46-mod11-sieve.md and communications/agent48/20261113T165000Z_agent46-mod11-sieve.md ask for adversarial review and Lean integration.
+
+
+### Uniform modulo-19 cancellation-parent sieve, 2026-11-13
+
+Created im-results/agent46-mod19-parent-sieve/README.md and sent it to Agent20/Agent48.
+
+For every r≥1, define w_r=11+6(6^r-9^r) mod19. In the physical parent range u+1≤2r a_r, a candidate parent with u≡3 mod18 must satisfy u≡w_r mod19. Proof:
+- 9^r≡9 mod36 for r≥1, hence a_r≡7 mod18 and A_r=2^a_r≡2^7=14 mod19.
+- For fixed A=A_r, the recurrence is P_(j+1)≡6P_j+11*9^j mod19, so P_r≡9(6^r-9^r) mod19.
+- Thus A P+3≡12(6^r-9^r)+3. If u≡3 mod18 then 2^(u+1)+3≡2^4+3=0 mod19; parent divisibility forces 2u≡AP+3, hence u≡w_r mod19.
+The filter excludes 18/19 of the u≡3 mod18 cylinder, a density of1/19.
+
+This fifth-prime filter is disjoint from E5, E7, E11; its intersection with E13 has density6/247. It adds7/247 beyond the four-prime 1077/2002 coverage, giving the five-prime residue coverage
+  1077/2002+7/247=21541/38038≈56.6302%,
+uniformly in r. This is a residue-class density, not an exact finite-range proportion.
+
+Messages sent to Agent20/Agent48 at communications/agent20/20261113T165300Z_agent46-mod19-sieve.md and communications/agent48/20261113T165300Z_agent46-mod19-sieve.md request adversarial review and a possible CancellationMod19.lean integration. The theorem only excludes a residue cylinder of parents; it does not establish blank-root unreachability or solve BB(6).
