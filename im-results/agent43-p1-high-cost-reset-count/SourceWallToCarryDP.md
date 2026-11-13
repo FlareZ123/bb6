@@ -129,9 +129,9 @@ Since L=∑e_j and s_{j+1}=s_j+e_j, the same telescoping of powers gives
 
     N := 7S−2^L = −1 + ∑_j(8−2^{e_j})2^{s_j}.
 
-For a restart immediately after a depth-≥3 edge, the defect bound recorded in HighDepthRestartPotential.md gives F'≥P/4−6, with F'=2P−d'−5. Hence d'≤7P/4+1≤2P−1 for P≥8. Because d₀ is odd, (d₀−1)/2≤P−1. The positive part
+For a restart immediately after a depth-≥3 edge, the defect bound recorded in HighDepthRestartPotential.md gives F'≥P/4−6, with F'=2P−d'−5. Hence d'≤7P/4+1. In particular (d₀−1)/2≤7P/8, and also d₀≤2P−1 for P≥8. The positive part
 R=2^L(L+c+3)+(c+3)S+T
-is strictly positive, so P·N=R−(d₀−1)/2>−P. It is an integer multiple of P, hence N≥0.
+is strictly positive, so P·N=R−(d₀−1)/2>−7P/8>−P. It is an integer multiple of P, hence N≥0.
 
 The last-shallow-edge argument in §3 therefore applies after every such high-depth restart: the suffix must contain a shallow edge, the last edge whose cost differs from 3 must be shallow, and every edge after it has cost exactly 3. This is a paper derivation from the exact source recurrence and the existing defect bound. The general restart identity and the resulting suffix theorem have not yet been added as Lean theorems; formalizing them is a high-value next step.
 
