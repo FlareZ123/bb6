@@ -1,6 +1,6 @@
 # m=0 high-ray residual: even-even sum-zero sector
 
-Status: **intermediate source-grammar analysis, not a blank-root closure theorem**. The exact all-source inverse grammar is already available; this note specializes it to the residual below. The specialization and reachability disjunction are algebraically derived but have not yet been added as new Lean theorems. Do not promote a reachability conclusion beyond the explicitly stated source-certified lemmas.
+Status: **intermediate source-grammar analysis, not a blank-root closure theorem**. The exact all-source inverse grammar is available. Forward-only parent necessity and two parameterized m=0 root-exclusion candidates are now encoded in [M0EvenEvenSumZeroParents.lean](M0EvenEvenSumZeroParents.lean) and [M0EvenEvenSumZeroRays.lean](M0EvenEvenSumZeroRays.lean), with the combined exact criterion in [CThreeDiagonalM0SumZeroFull.lean](CThreeDiagonalM0SumZeroFull.lean). None of these new modules has yet passed original-source Lean compilation/CI; treat them as unverified drafts. The parent theorem covers S>2 and S%4!=0 and derives reachability(A_s) -> reachability(L_s) or reachability(B_0,s). The two ray theorems propose all-time exclusions j=1895 (mod 2048) and j=359 (mod 8192), and the final module composes them into the latest exact six-sector halting iff. Do not count these as source-certified until the manual workflow passes.
 
 ## Residual after the first two forced inverses
 
@@ -45,7 +45,7 @@ The same source calculation gives a reusable classification beyond this one ray.
       2*k + a + 7 + 3*n = x+2*y.
 ```
 
-There are no a=1 or odd-a high-bounce parents: in those branches the source grammar requires the odd quantity `x+y+1` to equal an even power-of-two multiple. The a=0 and even-a bounce depths are both forced odd by the cost equation's parity. The direct parent is always valid for x>=0 and y>=6. This generic iff is a direct specialization of Agent3's `section_preimage_all_iff`; it is not yet encoded as a new Lean theorem. The A_s formula below is the closed-form specialization in which the a=0 alternative is arithmetically absent.
+There are no a=1 or odd-a high-bounce parents: in those branches the source grammar requires the odd quantity `x+y+1` to equal an even power-of-two multiple. The a=0 and even-a bounce depths are both forced odd by the cost equation's parity. The direct parent is always valid for x>=0 and y>=6. The complete generic iff is a direct specialization of Agent3's `section_preimage_all_iff` but is not yet encoded. `M0EvenEvenSumZeroParents.lean` formalizes only the forward parent necessity for S>2 and S%4!=0, which suffices for the odd-s candidate families below. It does not handle S%4=0 or prove parent converses. The A_s formula below is the closed-form specialization in which the a=0 alternative is arithmetically absent.
 
 ## Complete specialized incoming-parent grammar
 
@@ -108,7 +108,7 @@ Consequently the intended blank-root theorem is the exact disjunction
 CReach(A_s) <-> CReach(L_s) or CReach(B_0,s),    s odd.
 ```
 
-This is a finite, exact two-branch reduction for the entire odd-t ray, not a bounded inverse-depth approximation. The new Lean draft proves only the forward implication from reachability of A_s to reachability of one of these two parents; it does not yet prove the converse or the all-time nonreachability of either branch.
+This is a finite, exact two-branch reduction for the entire odd-t ray, not a bounded inverse-depth approximation. The new Lean draft proves only the forward implication from reachability of A_s to reachability of one of these two parents; it does not prove the converse or a uniform all-time nonreachability result for all odd s. The two specializations s=32v+29 and s=128w+5 are separately encoded as root-exclusion candidates in `M0EvenEvenSumZeroRays.lean`, still awaiting source CI.
 
 ## New algebraic subfamily: s=32v+29 (original high-stop j=1895 mod 2048)
 
@@ -158,7 +158,7 @@ k = 3*j+7 = 5692+6144v.
 ```
 Thus the candidate all-time high m=0 exclusion is `j ≡ 1895 (mod 2048)`.
 
-**Status:** the arithmetic and composition above are checked algebraically, but the two specialized parent iff lemmas (for A_s and L) have not yet been added to Lean. This is not yet a source-CI-certified exclusion. Agent3 and Agent24 have been asked to check the parent disjunctions and six-of-eight hypotheses. Do not count this family as a proven BB(6) result until the original-source theorem is formalized and CI-audited.
+**Status:** the arithmetic and composition are encoded in `M0EvenEvenSumZeroParents.lean` and `M0EvenEvenSumZeroRays.lean`. The source proof is forward-only parent necessity, not a full parent iff. The two all-time high-stop exclusion theorems and their exact-criterion integration are not yet source-CI-certified. Agent24 independently checked the six-of-eight chain arithmetic; Agent3 has been asked to compile and audit the parent lemma. Do not count this family as proven until the original-source manual workflow succeeds.
 
 ## Second algebraic subfamily: s=128w+5 (original high-stop j=359 mod 8192)
 
@@ -192,7 +192,7 @@ t=256w+11
 j=7+32*t=359+8192w
 k=3*j+7=1084+24576w.
 ```
-This is disjoint from the `j=1895+2048v` family above. As with the first family, this is an algebraic proof sketch only; it is not source-CI-certified until the two parent-necessity lemmas are formalized.
+This is disjoint from the `j=1895+2048v` family above. It is now encoded in `M0EvenEvenSumZeroRays.lean` using the same forward-only parent lemma, but remains unverified until original-source CI succeeds.
 
 ## Important correction to the earlier scratch derivation
 
@@ -213,6 +213,6 @@ not `(54+90s,126+211s)`. The right coordinate is odd exactly when **s is even**,
 
 ## Next useful step
 
-Formalize the specialized complete parent iff and its blank-root disjunction first. Then analyze L_s and the surviving B_{r,s} together, using the existing source-certified even-right, even-even, odd-image, and odd-even inverse rules. The decisive target is an all-parameter closure of this authentic m=0 stopping family, not another finite residue census.
+First obtain an original-source compile of `M0EvenEvenSumZeroParents.lean`, `M0EvenEvenSumZeroRays.lean`, and `CThreeDiagonalM0SumZeroFull.lean` through the manual workflow. Fix any proof errors before claiming the two high-stop exclusions. Then handle the remaining odd-s classes (especially s≡7 mod8) and the general S divisible by4 parent tree. The decisive target remains an all-parameter closure of this authentic m=0 stopping family, not another finite residue census.
 
 Related files: `M0FourRoot.lean`, `M0OddRayValTwo.lean`, `M0OddRayDeep.lean`, `CThreeDiagonalM0DeepFull.lean`, Agent24's `EvenEvenInverse.lean`, `ExtraEvenOrbit.lean`, `EvenRightSixOrbit.lean`, and Agent3's `SectionAllInverse.lean`.
