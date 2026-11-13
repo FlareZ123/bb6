@@ -442,4 +442,79 @@ theorem rst1Prime_target_rightFacing :
 
 
 
+/-- Within a repeated d0 word, precisely every third cell is true,
+with the true cell at offset two in each block. -/
+theorem rst1Prime_sideBit_d0pow_pattern
+    (n i : Nat) (hi : i < 3*n) :
+    sideBit (d0pow n) i = decide (i%3=2) := by
+  induction n with
+  | zero => omega
+  | succ n ih =>
+      by_cases hsmall : i<3
+      · interval_cases i <;> simp [d0pow,d0,sideBit]
+      · have hlarge : 3≤i := by omega
+        have htail : i-3 < 3*n := by omega
+        rw [d0pow]
+        rw [sideBit_append_right d0 (d0pow n) i (by simp [d0]; omega)]
+        have hmod : (i-3)%3 = i%3 := by omega
+        simpa [hmod] using ih (i-3) htail
+
+/-- The first n blocks of a right sweep, read from their right edge
+towards the left, form exactly d0pow n. The final scanned block is
+deliberately excluded; it is supplied by the following bridge. -/
+theorem rst1Prime_sweptRight_headFacing_d0pow
+    (n : Nat) (T : Int → Bool) (h : Int)
+    (hpre : rightOnes T h (n+1)) (k : Nat)
+    (hk : k < 3*n) :
+    sweptRight (n+1) T h
+      (h+3*(n:Int)-1-(k:Int)) =
+      sideBit (d0pow n) k := by
+  let q : Nat := k/3
+  let r : Nat := k%3
+  let j : Nat := n-1-q
+  have hdecomp : k = 3*q+r := by
+    dsimp [q,r]
+    omega
+  have hr : r<3 := by
+    dsimp [r]
+    exact Nat.mod_lt _ (by decide)
+  have hq : q<n := by
+    dsimp [q]
+    omega
+  have hj : j<n+1 := by
+    dsimp [j]
+    omega
+  have hcoord :
+      h+3*(n:Int)-1-(k:Int) =
+        h+3*(j:Int)+2-(r:Int) := by
+    dsimp [q,r,j]
+    omega
+  have hblock := rst1Prime_sweptRight_block (n+1) T h j hj
+  have hT : T (h+3*(j:Int)) = true := (hpre j hj).1
+  have hside : sideBit (d0pow n) k = decide (r=2) := by
+    simpa [r] using rst1Prime_sideBit_d0pow_pattern n k hk
+  have hrcases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hrcases with hr0 | hr1 | hr2
+  · rw [hcoord,hr0]
+    simpa [hside,hr0] using hblock.2.2
+  · rw [hcoord,hr1]
+    simpa [hside,hr1] using hblock.2.1
+  · rw [hcoord,hr2]
+    simpa [hside,hr2,hT] using hblock.1
+
+/-- Repeated d0 blocks can be appended on either side without changing
+the word; this form is convenient when the final block comes from a
+bridge boundary. -/
+theorem rst1Prime_d0pow_append_right (n : Nat) :
+    d0pow n ++ d0 = d0pow (n+1) := by
+  induction n with
+  | zero => simp [d0pow]
+  | succ n ih =>
+      simp [d0pow,List.append_assoc,ih]
+
+#print axioms rst1Prime_sideBit_d0pow_pattern
+#print axioms rst1Prime_sweptRight_headFacing_d0pow
+#print axioms rst1Prime_d0pow_append_right
+
+
 end BB6Coverage.Agent8Rst1Prime
