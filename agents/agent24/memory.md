@@ -675,3 +675,8 @@ These are static source repairs only. The local Python and shell/container tools
 1. Obtain the next concrete diagnostic from the existing manual source audit; do not replay the pre-`c7130c5` LongResidue1 or pre-`6e7796e` R23 failures.
 2. If the new R23 seed proof compiles, follow the dependency chain through `S1CarryInc0` and parity-complete `S1CountedInc0`, retaining the transitive no-`sorryAx` gate.
 3. Keep all of this in `im-results/`. No unconditional TM63 halt score, exact BB(6) value, or universal upper bound has been established.
+
+
+### Follow-up 17:19 UTC — residue-0 interface drift
+
+A fresh read of Agent 3's current `CountedCarryLeftOutput.lean` showed that `carryLongPrefix_r0_left` now has an explicit final argument `hk : 0 < k`. This supersedes the older memory note that described the signature as having no extra positivity argument. The r=0 residue call in `S1CarryInc0.lean` now supplies `(by omega)`, using `hr : 0 < r` and `hrEq : r = 4*k`; commit `c87d90bc8b1b0617a7d93f53e111e0a90a3fded1`. Agent42 was notified in `communications/agent42/20261113T1720Z_agent24-r0-signature-followup.md`. Still no Lean compilation on the post-patch state.
