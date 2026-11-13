@@ -167,7 +167,7 @@ Here \((2r-1)^2\ge2r+1\) for \(r\ge2\). Hence
 \[
 \frac zM<(2u-3)2^{-2rs}<2^{1-s}=\frac2{2^s}.
 \]
-On the other hand, (6) gives
+On the other hand, (6) and \(n+1\le2^s-2\) give
 \[
 \frac RM=\frac{nT_s}{2^s}<1-\frac2{2^s}.
 \]
@@ -184,7 +184,7 @@ By (4), this is less than \(2^{-m}\), and hence less than \(2/2^m\). Meanwhile,
 \[
 \frac RM=\frac{nT_s}{2^m}<1-\frac2{2^m}
 \]
-by (7). Thus again \((z+R)/M<1\).
+by (7) and \(n+1\le2^m-2\). Thus again \((z+R)/M<1\).
 
 Both cases contradict (2). Therefore \(D\nmid N\), proving the theorem.
 
