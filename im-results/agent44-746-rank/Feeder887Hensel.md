@@ -321,3 +321,76 @@ rule out a parameterized proof: the Hensel selector and the irrational
 rotation together describe exactly why the finite cone width grows.
 The result remains an unformalized mathematical derivation; a Lean
 source proof of the common path and isometry is still required.
+
+
+## 5. Unbounded even-chain depth in the same family
+
+The same irrational rotation also forces arbitrarily long *even-parent
+continuations* below some of the odd parents counted above.
+
+For t in S, let j_t be its unique scale offset and set
+
+```
+R_t = 463*2^(t+j_t) / (6561*3^(t-1)),   6 < R_t < 8.
+```
+
+The sequence R_t is dense in (6,8): the translated logarithms
+`j_t + log2(463/2187) - t*log2(3/2)` are dense in
+`(log2(6),3)`.
+
+Fix such a t and choose r in the Hensel class as in section 4, large
+enough that the first odd parent q_0 exists at scale
+`k=n-2-j_t). Define its repeated even parents at the *same* scale by
+
+```
+q_(m+1) = 2*q_m - 8*2^k - k.
+```
+
+For each fixed m, as r tends to infinity along that Hensel progression,
+
+```
+q_m / 2^k -> 8 - 2^(m+1)*(8-R_t).
+```
+
+This follows from `q_0/2^k -> 2*R_t-8`, `k/2^k -> 0`,
+and the affine recurrence. The limiting ratios decrease with m.
+Consequently the first m targets `q_0,...,q_(m-1)` all lie strictly
+inside the even band (6,8) in normalized coordinates exactly when
+
+```
+R_t > 8 - 2^(1-m).
+```
+
+If this strict inequality holds, sufficiently large r makes all m
+integer band conditions hold simultaneously, yielding m consecutive
+genuine even ResetParent edges below q_0. The states are distinct
+because the even-parent map strictly decreases a target inside the
+band.
+
+Since R_t is dense in (6,8), for every m there is t in S with
+`R_t > 8 - 2^(1-m)`. Choosing r sufficiently large in the compatible
+Hensel class gives an actual branch with at least m consecutive even
+parents. Thus reverse-cone depth, as well as immediate odd-parent
+fan-in, is unbounded across this subresidue.
+
+The first examples from exact rational windows are:
+
+| t | j_t | R_t (decimal) | consecutive even parents |
+|---:|---:|---:|---:|
+| 2 | 6 | 6.021846263 | 0 |
+| 5 | 8 | 7.137002979 | 1 |
+| 7 | 9 | 6.344002648 | 0 |
+| 10 | 11 | 7.518817953 | 2 |
+| 12 | 12 | 6.683393736 | 0 |
+| 15 | 14 | 7.921059243 | 4 |
+| 17 | 15 | 7.040941549 | 1 |
+| 19 | 16 | 6.258614710 | 0 |
+| 22 | 18 | 7.417617434 | 1 |
+| 24 | 19 | 6.593437719 | 0 |
+| 27 | 21 | 7.814444704 | 3 |
+| 29 | 22 | 6.946173071 | 0 |
+
+This is another obstruction to any fixed finite reverse-cone template.
+It still leaves a viable parameterized route: classify the 3-adic
+divisibility class, the unique dyadic scale, and the even-chain length
+as functions of t and the Hensel digits.
