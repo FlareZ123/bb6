@@ -1,4 +1,5 @@
 import Lean.Elab.Tactic.Omega
+import DRegularFast
 import BlankTwentyFourthRejoin
 import ExceptionalBGeneral
 
@@ -24,7 +25,7 @@ theorem terminal1718_certificate :
     · dsimp [seed25]
       omega
     · simp [seed25]
-  rw [BB6.Agent2Fast64.fastRun_correct 1718 seed25 hcanon]
+  rw [BB6.DRegularFast.fastRun_correct 1718 seed25 hcanon]
   decide
 
 theorem terminal1718_exact :
