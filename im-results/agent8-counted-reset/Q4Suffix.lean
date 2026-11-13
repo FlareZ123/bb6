@@ -433,10 +433,10 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
         rw [heq]
         by_cases hb0 : b=0
         · subst b
-          simpa using h6
+          simpa [T1] using h6
         · have hb1 : b=1 := by omega
           subst b
-          simpa using h9
+          simpa [T1] using h9
       · have hb2 : 2≤b := by omega
         let i := b-2
         have hi : i<b := by dsimp [i]; omega
@@ -448,8 +448,10 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
     · change d0Sweep b T1 (h+10) (g-3) = false
       by_cases hb : b=0
       · subst b
+        have heq : g-3 = h+7 := by dsimp [g]; omega
+        rw [heq]
         rw [d0Sweep_before 0 T1 (h+10) (h+7) (by omega)]
-        exact h7
+        simpa [T1] using h7
       · let i := b-1
         have hi : i<b := by dsimp [i]; omega
         obtain ⟨hc,_,_⟩ := d0Sweep_block b T1 (h+10) i hi
@@ -460,8 +462,10 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
     · change d0Sweep b T1 (h+10) (g-2) = false
       by_cases hb : b=0
       · subst b
+        have heq : g-2 = h+8 := by dsimp [g]; omega
+        rw [heq]
         rw [d0Sweep_before 0 T1 (h+10) (h+8) (by omega)]
-        exact h8
+        simpa [T1] using h8
       · let i := b-1
         have hi : i<b := by dsimp [i]; omega
         obtain ⟨_,hc,_⟩ := d0Sweep_block b T1 (h+10) i hi
@@ -472,8 +476,10 @@ theorem q4_suffix_frame (T : Int → Bool) (h : Int) (b : Nat)
     · change d0Sweep b T1 (h+10) (g-1) = true
       by_cases hb : b=0
       · subst b
+        have heq : g-1 = h+9 := by dsimp [g]; omega
+        rw [heq]
         rw [d0Sweep_before 0 T1 (h+10) (h+9) (by omega)]
-        exact h9
+        simpa [T1] using h9
       · let i := b-1
         have hi : i<b := by dsimp [i]; omega
         obtain ⟨_,_,hc⟩ := d0Sweep_block b T1 (h+10) i hi
