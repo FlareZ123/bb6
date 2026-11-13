@@ -26,8 +26,7 @@ theorem y3_x256_parents (t a k : Nat) (ht : 1≤t)
       · simp [sectionPreimageAll,hk0,hk1] at hp
         omega
   · by_cases ha1 : a=1
-    · subst a
-      by_cases hk0 : k=0
+    · by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hp
       · by_cases hk1 : k=1
         · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hp
@@ -107,7 +106,8 @@ theorem y3_x256_parents (t a k : Nat) (ht : 1≤t)
                 constructor <;> omega
               · subst n
                 have hax : 256*t+16=8*(a+3) := by
-                  simpa using hpow'
+                  norm_num at hpow'
+                  omega
                 have haeq : a=32*t-1 := by omega
                 have hkeq : k=112*t+3 := by omega
                 right
