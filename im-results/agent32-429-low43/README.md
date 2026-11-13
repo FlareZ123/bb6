@@ -137,3 +137,19 @@ The source-level `runNoFatal` certificates guard both pieces and their compositi
 The C/0 entry at local head +40 is a strict record: the existing uniform `low43_C0_record` theorem bounds every earlier head by +39 and proves the right neighbour at the C/0 checkpoint is blank. The composed endpoint has deficit `2*109-66 = 152 = 4*38`, making it the next root-relevant low-even (r=4k) candidate.
 
 **Validation status:** this new module and the extended manual-only workflow are committed on the `agent32/429-low43-root-next-20261113` branch, but have not yet been compiled by CI in this invocation. Do not treat these new declarations as kernel-validated until the workflow compiles them and its fail-closed `sorryAx` audit passes. The transition is a prepared-Junc result; it does not by itself establish that the blank-root run reaches J(119,35), nor prove an all-time nonhalting claim.
+
+
+## Prepared continuation through the low-even 4k instance
+
+The new `Low43RootNext.lean` now continues the prepared J(119,35) branch beyond J(109,66):
+
+| Segment | Steps | Endpoint | Head displacement | Prefix maximum |
+| --- | ---: | --- | ---: | ---: |
+| J(109,66) low-even 4k return (N=33,k=38) | 6,027 | J(11,282) | -209 | +76 |
+| Full prepared branch from J(119,35) | 9,631 | J(11,282) | -237 | +48 |
+
+The concrete low-even return has direct `runNoFatal` and `runWithMax` certificates in the candidate Lean module. An independent exploratory zipper simulation found C/0 visits at local steps 4,696 and 5,553, both with blank right neighbours; the Lean `runNoFatal` proof, not the simulation, is the intended certificate. The composed 9,631-step branch exposes every guarded source prefix and lifts to the physical tape with endpoint representation and all-prefix head bound.
+
+The next arithmetic candidate is the outer-safe ladder U=11,25,53 from J(11,282) to J(109,95), followed by low43 parameters v=47,k=30. These steps are not included in the current theorem.
+
+**Validation remains pending:** PR #83 is draft and the extended manual-only workflow has not yet been run. None of the new declarations should be described as kernel-validated until CI compiles the module and the fail-closed `sorryAx` audit passes. This is still a prepared-Junc result, not a blank-root composition or all-time nonhalting proof.
