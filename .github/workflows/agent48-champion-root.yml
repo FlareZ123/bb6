@@ -33,6 +33,7 @@ jobs:
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-root/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-root/
           cp im-results/agent6-q4-prefix/CountedQ4Prefix.lean /tmp/a48-root/
+          cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63HeadOffset.lean /tmp/a48-root/
           cp im-results/agent48-champion-root/UniformTM63SourceRun.lean /tmp/a48-root/
           cp im-results/agent42-champion-terminal/TerminalBridge.lean /tmp/a48-root/
@@ -78,6 +79,12 @@ jobs:
           lean -o Q4Suffix.olean Q4Suffix.lean 2>&1 | tee /tmp/a48-root/q4-suffix-axioms.log
           if grep -q 'sorryAx' /tmp/a48-root/q4-suffix-axioms.log; then
             echo '::error::sorryAx found in q4 suffix proof dependencies'
+            exit 1
+          fi
+          : > /tmp/a48-root/q4-right-endpoint-axioms.log
+          lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean 2>&1 | tee /tmp/a48-root/q4-right-endpoint-axioms.log
+          if grep -q 'sorryAx' /tmp/a48-root/q4-right-endpoint-axioms.log; then
+            echo '::error::sorryAx found in q4 right-endpoint proof'
             exit 1
           fi
           lean -o CountedResetBase.olean CountedResetBase.lean
